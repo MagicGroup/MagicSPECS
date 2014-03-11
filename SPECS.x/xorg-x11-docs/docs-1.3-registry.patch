@@ -1,0 +1,12 @@
+diff -up xorg-docs-1.6/Makefile.am.registry xorg-docs-1.6/Makefile.am
+--- xorg-docs-1.6/Makefile.am.registry	2010-12-16 23:47:37.000000000 +0100
++++ xorg-docs-1.6/Makefile.am	2011-01-13 14:11:58.257705581 +0100
+@@ -22,7 +22,7 @@
+ 
+ SUBDIRS = general man specs
+ 
+-dist_doc_DATA = MAINTAINERS
++dist_doc_DATA = MAINTAINERS registry
+ 
+ MAINTAINERCLEANFILES = ChangeLog INSTALL
+ EXTRA_DIST = \

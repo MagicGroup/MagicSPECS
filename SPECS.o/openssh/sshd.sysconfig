@@ -1,0 +1,15 @@
+# Configuration file for the sshd service.
+
+# The server keys are automatically generated if they ommited
+# to change the automatic creation uncomment the approprite 
+# line. The default is RSAONLY
+
+# AUTOCREATE_SERVER_KEYS=RSAONLY
+# AUTOCREATE_SERVER_KEYS=NO
+# AUTOCREATE_SERVER_KEYS=YES
+
+# Do not change this option unless you have hardware random
+# generator and you REALLY know what you are doing
+
+SSH_USE_STRONG_RNG=0
+# SSH_USE_STRONG_RNG=1

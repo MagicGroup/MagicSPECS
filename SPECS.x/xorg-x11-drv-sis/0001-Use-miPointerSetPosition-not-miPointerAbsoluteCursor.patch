@@ -1,0 +1,60 @@
+From 1e3c6ba82f34afdfa9fe9835c37b4d88e86d1d10 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Mon, 31 Oct 2011 15:03:21 +1000
+Subject: [PATCH] Use miPointerSetPosition, not miPointerAbsoluteCursor
+
+miPointerAbsoluteCursor was removed in '09.
+
+Technically this shouldn't just work on the VCP since any master pointer may
+end up in the dead area. However, I suspect the Venn diagramm of MPX users
+and sis merged framebuffer users shows little overlap.
+
+miPointerSetPosition's prototype changed a few times, these are a bunch of
+untested ifdefs that should be correct according to the git history.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/sis_driver.c |   19 ++++++++++++++++++-
+ 1 files changed, 18 insertions(+), 1 deletions(-)
+
+diff --git a/src/sis_driver.c b/src/sis_driver.c
+index 6f7a15e..3218239 100644
+--- a/src/sis_driver.c
++++ b/src/sis_driver.c
+@@ -85,6 +85,10 @@
+ #include <X11/extensions/dpms.h>
+ #endif
+
++#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 15
++#include <inputstr.h> /* for inputInfo */
++#endif
++
+
+ #ifdef XF86DRI
+ #include "dri.h"
+@@ -9346,9 +9350,22 @@ SISMergedPointerMoved(int scrnIndex, int x, int y)
+	}
+      }
+      if(doit) {
+-	UpdateCurrentTime();
+	sigstate = xf86BlockSIGIO();
++#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 15
++        {
++            double dx = x, dy = y;
++            miPointerSetPosition(inputInfo.pointer, Absolute, &dx, &dy);
++            x = (int)dx;
++            y = (int)dy;
++        }
++#elif GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 11
++	miPointerSetPosition(inputInfo.pointer, Absolute, x, y);
++#elif GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 5
++	miPointerSetPosition(inputInfo.pointer, x, y);
++#else
++	UpdateCurrentTime();
+	miPointerAbsoluteCursor(x, y, currentTime.milliseconds);
++#endif
+	xf86UnblockSIGIO(sigstate);
+	return;
+      }
+--
+1.7.7.4

@@ -1,0 +1,11 @@
+--- ezusb.c	2002-04-12 06:08:01.000000000 +0200
++++ ezusb.c.new	2006-12-07 23:57:04.000000000 +0100
+@@ -29,7 +29,7 @@
+ # include  <sys/ioctl.h>
+ 
+ # include  <linux/version.h>
+-# include  <linux/usb.h>
++# include  <linux/usb/ch9.h>
+ # include  <linux/usbdevice_fs.h>
+ 
+ # include "ezusb.h"

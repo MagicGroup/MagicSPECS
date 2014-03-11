@@ -1,0 +1,17 @@
+--- alsa-lib-1.0.16/doc/no_date_footer.html	1969-12-31 16:00:00.000000000 -0800
++++ alsa-lib-1.0.16-dox/doc/no_date_footer.html	2008-04-03 17:52:52.000000000 -0700
+@@ -0,0 +1,6 @@
++<hr size="1"><address style="text-align: right;"><small>
++Generated for $projectname by&nbsp;<a href="http://www.doxygen.org/
++index.html"><img src="doxygen.png" alt="doxygen" align="middle" border="0"></a>
++$doxygenversion</small></address>
++</body>
++</html>
+--- alsa-lib-1.0.16/doc/doxygen.cfg.in	2008-02-05 01:23:44.000000000 -0800
++++ alsa-lib-1.0.16-dox/doc/doxygen.cfg.in	2008-04-03 17:58:01.000000000 -0700
+@@ -117,3 +117,5 @@
+ 
+ #INPUT_FILTER	 = inputfilter
+ #FILTER_SOURCE_FILES = YES
++
++HTML_FOOTER      = no_date_footer.html

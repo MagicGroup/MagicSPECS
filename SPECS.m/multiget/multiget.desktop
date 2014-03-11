@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=multiget
+GenericName=File Downloader
+GenericName[zh_CN]=文件下载工具
+GenericName[zh_TW]=文檔下載工具
+Comment[zh_CN]=基于 wxWidgets 的图形界面文件下载管理器
+Comment[zh_TW]=基于 wxWidgets 的圖形界面文檔下載管理器
+Exec=multiget
+Icon=mg_32.xpm
+Terminal=false
+Categories=Application;Network;
+

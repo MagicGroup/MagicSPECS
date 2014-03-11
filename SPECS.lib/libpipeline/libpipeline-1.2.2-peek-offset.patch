@@ -1,0 +1,19 @@
+diff -upr libpipeline-1.2.2.orig/lib/pipeline.c libpipeline-1.2.2/lib/pipeline.c
+--- libpipeline-1.2.2.orig/lib/pipeline.c	2012-03-04 18:43:07.000000000 +0100
++++ libpipeline-1.2.2/lib/pipeline.c	2012-11-30 14:46:14.395724863 +0100
+@@ -2168,8 +2168,13 @@ const char *pipeline_readline (pipeline
+ {
+ 	size_t buflen;
+ 	const char *buffer = get_line (p, &buflen);
+-	if (buffer)
+-		p->peek_offset -= buflen;
++	if (buffer) {
++		if (p->peek_offset > buflen) {
++			p->peek_offset -= buflen;
++		} else {
++			p->peek_offset = 0;
++		}
++	}
+ 	return buffer;
+ }
+ 

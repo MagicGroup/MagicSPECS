@@ -1,0 +1,11 @@
+diff -up bareword-filehandles-0.003/lib/bareword/filehandles.pm.orig bareword-filehandles-0.003/lib/bareword/filehandles.pm
+--- bareword-filehandles-0.003/lib/bareword/filehandles.pm.orig	2011-03-15 07:03:09.000000000 -0600
++++ bareword-filehandles-0.003/lib/bareword/filehandles.pm	2012-04-09 10:42:07.000000000 -0600
+@@ -8,7 +8,6 @@ BEGIN {
+ use strict;
+ use warnings;
+ 
+-use Lexical::SealRequireHints;
+ use B::Hooks::OP::Check;
+ use XSLoader;
+ 

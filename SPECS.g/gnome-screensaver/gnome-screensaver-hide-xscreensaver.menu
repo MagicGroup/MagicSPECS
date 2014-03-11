@@ -1,0 +1,15 @@
+<Menu>
+<!-- We have to exclude xscreensaver in two places, since the menu 
+     hierarchy changes when you install the preferences-menus package
+ -->
+<Name>Preferences</Name>
+  <Exclude>
+    <Filename>xscreensaver-properties.desktop</Filename>
+  </Exclude>
+  <Menu>
+    <Name>Look and Feel</Name>
+    <Exclude>
+      <Filename>xscreensaver-properties.desktop</Filename>
+    </Exclude>
+  </Menu>
+</Menu>

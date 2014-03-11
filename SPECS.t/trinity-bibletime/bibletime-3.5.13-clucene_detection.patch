@@ -1,0 +1,20 @@
+--- clucene.m4.ORI	2011-11-30 19:22:02.284530031 +0100
++++ clucene.m4	2011-11-30 20:03:45.704532045 +0100
+@@ -28,7 +28,7 @@
+ 
+ dnl try to find CLucene library files
+ AC_MSG_CHECKING([for CLucene library files])
+-ac_clucene_library_dirs="$ac_clucene_dir/lib $exec_prefix/lib $prefix/lib /usr/lib /usr/lib64 /usr/local/lib"
++ac_clucene_library_dirs="/usr/lib/clucene09 /usr/lib64/clucene09 $ac_clucene_dir/lib $exec_prefix/lib $prefix/lib /usr/lib /usr/lib64 /usr/local/lib"
+ 
+ if test "x$ac_static_clucene" = "xYES"; then
+ 	SEARCH_LIBS="libclucene.a";
+@@ -62,7 +62,7 @@
+ 
+ dnl -- try to find CLucene include files --
+ AC_MSG_CHECKING([for Clucene include files])
+-ac_clucene_include_dirs="$ac_clucene_dir/include $exec_prefix/include $prefix/include /usr/include /usr/local/include"
++ac_clucene_include_dirs=" /usr/include/clucene09 $ac_clucene_dir/include $exec_prefix/include $prefix/include /usr/include /usr/local/include"
+ 
+ AC_CACHE_VAL(ac_cv_clucene_incdir, AC_FIND_FILE(CLucene.h, $ac_clucene_include_dirs, ac_cv_clucene_incdir))
+ 

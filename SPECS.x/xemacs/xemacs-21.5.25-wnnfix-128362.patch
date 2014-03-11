@@ -1,0 +1,61 @@
+--- src/mule-wnnfns.c.orig	2011-04-29 07:31:16.000000000 -0600
++++ src/mule-wnnfns.c	2011-05-03 14:00:02.625969757 -0600
+@@ -316,7 +316,7 @@
+ Lisp_Object	Qwnn_jisho, Qwnn_sbn, Qwnn_dbn_len, Qwnn_sbn_cnt, Qwnn_suuji;
+ Lisp_Object	Qwnn_kana, Qwnn_eisuu, Qwnn_kigou, Qwnn_toji_kakko, Qwnn_fuzokogo, Qwnn_kaikakko;
+ Lisp_Object	Vwnn_server_type;
+-Lisp_Object	Vcwnn_zhuyin;
++//Lisp_Object	Vcwnn_zhuyin;
+ Lisp_Object	Vwnnenv_sticky;
+ Lisp_Object	Vwnn_uniq_level;
+ Lisp_Object     Qchinese_sisheng;
+@@ -1914,9 +1914,11 @@
+   DEFVAR_LISP ("wnn-server-type", &Vwnn_server_type /*
+ *jserver, cserver ..
+ */ );
+-  DEFVAR_LISP ("cwnn-zhuyin", &Vcwnn_zhuyin /*
++#if 0
++   DEFVAR_LISP ("cwnn-zhuyin", &Vcwnn_zhuyin /*
+ *pinyin or zhuyin
+ */ );
++#endif
+   DEFVAR_LISP ("wnnenv-sticky", &Vwnnenv_sticky /*
+ *If non-nil, make environment sticky
+ */ );
+@@ -1925,7 +1927,7 @@
+ */ );
+ 
+   Vwnn_server_type = Qjserver;
+-  Vcwnn_zhuyin = Qnil;
++  //Vcwnn_zhuyin = Qnil;
+   Vwnnenv_sticky = Qnil;
+ 
+   DEFSYMBOL (Qchinese_sisheng);
+@@ -1952,10 +1954,14 @@
+ 	case 0x80:
+ 	  if (EQ(Vwnn_server_type, Qcserver))
+ 	    {
++#if 0
+ 	      len = cwnn_yincod_pzy (pzy, wc,
+ 				     NILP (Vcwnn_zhuyin)
+ 				     ? CWNN_PINYIN
+ 				     : CWNN_ZHUYIN);
++#else
++	      len = 0;
++#endif
+ 	      for (i = 0; i < len; i++)
+ 		{
+ 		  if (pzy[i] & 0x80)
+@@ -2055,8 +2061,12 @@
+       else	       *pin = *w;
+       w++; pin++;
+     }
++#if 0
+   len = cwnn_pzy_yincod (ybuf, pbuf,
+ 			 NILP (Vcwnn_zhuyin) ? CWNN_PINYIN : CWNN_ZHUYIN);
++#else
++  return;
++#endif
+   if (len <= 0)
+     return;
+ 

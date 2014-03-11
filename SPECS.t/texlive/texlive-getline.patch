@@ -1,0 +1,142 @@
+diff -up texlive-2007/texk/afm2pl/afm2pl.c.getline texlive-2007/texk/afm2pl/afm2pl.c
+--- texlive-2007/texk/afm2pl/afm2pl.c.getline	2006-01-17 22:41:51.000000000 +0100
++++ texlive-2007/texk/afm2pl/afm2pl.c	2009-04-02 15:18:30.000000000 +0200
+@@ -345,7 +345,7 @@ P2C (register int, x, register int, y)
+ 
+ /* read a line from infile into buffer and obuffer */
+ int
+-  getline
++  _getline
+ P1H (void)
+ {
+   register char *p;
+@@ -781,7 +781,7 @@ P1H (void)
+     afmencoding->vec[i] = ".notdef";
+   afmencoding->name = "Unspecified";
+ 
+-  while (getline ()) {
++  while (_getline ()) {
+     switch (interest (paramstring ())) {
+     case FontName:
+       fontname = paramnewstring ();
+@@ -963,7 +963,7 @@ gettoken ()
+ 
+   while (1) {
+     while (param == 0 || *param == 0) {
+-      if (getline () == 0)
++      if (_getline () == 0)
+         error ("! premature end in encoding file");
+     }
+     if (param[0] == '%') {
+@@ -1540,7 +1540,7 @@ extraligkerninfo ()
+     encfilename =
+       openin (encfilename, kpse_enc_format, ".enc");
+     for (lig_it = 0; lig_it < 2; lig_it++) {
+-      while (getline ()) {
++      while (_getline ()) {
+         /* search for (ligkern) comment in line */
+         for (p = buffer; *p; p++)
+           if (*p == '%') {
+@@ -1576,7 +1576,7 @@ extraligkerninfo ()
+     for (i = 0; i < ligfilenames->n; i++) {
+       ligfilename = openin (ligfilenames->names[i],
+                             kpse_lig_format, ".lig");
+-      while (getline ())
++      while (_getline ())
+         checkligkern (buffer, 0);       /* 2nd param 0: lig file */
+       fclose (infile);
+     }
+@@ -1607,7 +1607,7 @@ extraligkerninfo ()
+   for (i = 0; i < Ligfilenames->n; i++) {
+     ligfilename = openin (Ligfilenames->names[i],
+                           kpse_lig_format, ".lig");
+-    while (getline ())
++    while (_getline ())
+       checkligkern (buffer, 0);       /* 2nd param 0: lig file */
+     fclose (infile);
+   }
+diff -up texlive-2007/texk/dvipsk/afm2tfm.c.getline texlive-2007/texk/dvipsk/afm2tfm.c
+--- texlive-2007/texk/dvipsk/afm2tfm.c.getline	2009-04-02 15:10:49.000000000 +0200
++++ texlive-2007/texk/dvipsk/afm2tfm.c	2009-04-02 15:20:59.000000000 +0200
+@@ -257,7 +257,7 @@ transform P2C(register int, x, register 
+ }
+ 
+ int
+-getline P1H(void) {
++_getline P1H(void) {
+    register char *p ;
+    register int c ;
+ 
+@@ -612,7 +612,7 @@ readadobe P1H(void) {
+    ai = newchar() ;
+    ai->adobenum = -1 ;
+    ai->adobename = "||" ; /* boundary character name */
+-   while (getline()) {
++   while (_getline()) {
+       switch(interest(paramstring())) {
+ case FontName:
+          fontname = paramnewstring() ;
+@@ -1888,7 +1888,7 @@ char *gettoken() {
+ 
+    while (1) {
+       while (param == 0 || *param == 0) {
+-         if (getline() == 0)
++         if (_getline() == 0)
+             error("! premature end in encoding file") ;
+          for (p=buffer; *p; p++)
+             if (*p == '%') {
+@@ -1979,7 +1979,7 @@ struct encoding *readencoding P1C(char *
+       p = gettoken() ;
+       if (strcmp(p, "]"))
+          error("! token 258 in encoding must be make-array (])") ;
+-      while (getline()) {
++      while (_getline()) {
+          for (p=buffer; *p; p++)
+             if (*p == '%') {
+                if (ignoreligkern == 0)
+diff -up texlive-2007/texk/web2c/cpascal.h.getline texlive-2007/texk/web2c/cpascal.h
+--- texlive-2007/texk/web2c/cpascal.h.getline	2006-12-27 00:37:34.000000000 +0100
++++ texlive-2007/texk/web2c/cpascal.h	2009-04-02 15:10:49.000000000 +0200
+@@ -14,6 +14,7 @@
+ 
+ /* We must include this first, to resolve many C issues.  */
+ #include "config.h"
++#define getline _getline
+ 
+ /* We only use getopt in the applications, not in web2c itself.  */
+ #include <kpathsea/getopt.h>
+diff -up texlive-2007/texk/web2c/mpware/mpto.c.getline texlive-2007/texk/web2c/mpware/mpto.c
+--- texlive-2007/texk/web2c/mpware/mpto.c.getline	2006-11-28 14:24:53.000000000 +0100
++++ texlive-2007/texk/web2c/mpware/mpto.c	2009-04-02 15:10:50.000000000 +0200
+@@ -99,7 +95,7 @@ usage(char *progn)
+ }
+ 
+ char *
+-getline(void)
++_getline(void)
+ {				/* returns NULL on EOF or error, otherwise buf */
+     int c;
+     unsigned loc = 0;
+@@ -304,11 +300,11 @@ copytex(void)
+     while (*aa == ' ' || *aa == '\t')
+ 	aa++;
+     if (*aa == 0)
+-	if ((aa = getline()) == NULL)
++	if ((aa = _getline()) == NULL)
+ 	    err("btex section does not end");
+     do {
+ 	if (*aa == 0)
+-	    if ((aa = getline()) == NULL)
++	    if ((aa = _getline()) == NULL)
+ 		err("btex section does not end");
+ 	    else
+ 		printf("\n");
+@@ -465,7 +461,7 @@ Current maintainer: Taco Hoekwater.\n");
+ 	postverb = troff_postverb;
+     }
+     printf("%s", predoc);
+-    while (getline() != NULL)
++    while (_getline() != NULL)
+ 	do_line();
+     printf("%s", postdoc);
+     exit(0);

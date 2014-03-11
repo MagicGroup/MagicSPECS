@@ -1,0 +1,30 @@
+From e8bd7c2dc3329fa0da3078b6d2cc0ffa43b428e5 Mon Sep 17 00:00:00 2001
+From: Dave Airlie <airlied@redhat.com>
+Date: Wed, 31 Jul 2013 11:24:48 +1000
+Subject: [PATCH] modesetting: change output names for secondary GPUs
+
+if we are a secondary GPU modify the output name to avoid clashes.
+
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+---
+ src/drmmode_display.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/drmmode_display.c b/src/drmmode_display.c
+index ce90cea..4fb4d21 100644
+--- a/src/drmmode_display.c
++++ b/src/drmmode_display.c
+@@ -1010,6 +1010,10 @@ drmmode_output_init(ScrnInfoPtr pScrn, drmmode_ptr drmmode, int num, int *num_dv
+ 	/* need to do smart conversion here for compat with non-kms ATI driver */
+ 	if (koutput->connector_type >= MS_ARRAY_SIZE(output_names))
+ 		snprintf(name, 32, "Unknown-%d", koutput->connector_type_id - 1);
++#ifdef MODESETTING_OUTPUT_SLAVE_SUPPORT
++	else if (pScrn->is_gpu)
++		snprintf(name, 32, "%s-%d-%d", output_names[koutput->connector_type], pScrn->scrnIndex - GPU_SCREEN_OFFSET + 1, koutput->connector_type_id - 1);
++#endif
+ 	else
+ 		snprintf(name, 32, "%s-%d", output_names[koutput->connector_type], koutput->connector_type_id - 1);
+ 
+-- 
+1.8.3.1
+

@@ -1,0 +1,275 @@
+diff --git a/common/rpackage.cc b/common/rpackage.cc
+index da0a112..9af062f 100644
+--- a/common/rpackage.cc
++++ b/common/rpackage.cc
+@@ -72,7 +72,7 @@
+ 
+ static char descrBuffer[8192];
+ 
+-static char *parseDescription(string descr);
++static const char *parseDescription(string descr);
+ 
+ 
+ RPackage::RPackage(RPackageLister *lister, pkgDepCache *depcache,
+@@ -1076,7 +1076,7 @@ void RPackage::setRemoveWithDeps(bool shallow, bool purge)
+ 
+ 
+ // description parser stuff
+-static char *debParser(string descr)
++static const char *debParser(string descr)
+ {
+    unsigned int i;
+    string::size_type nlpos=0;
+@@ -1114,7 +1114,7 @@ static char *debParser(string descr)
+    strcpy(descrBuffer, descr.c_str());
+    return descrBuffer;
+ }
+-static char *rpmParser(string descr)
++static const char *rpmParser(string descr)
+ {
+    string::size_type pos = descr.find('\n');
+    // delete first line
+@@ -1125,7 +1125,7 @@ static char *rpmParser(string descr)
+    return descrBuffer;
+ }
+ 
+-static char *stripWsParser(string descr)
++static const char *stripWsParser(string descr)
+ {
+    const char *end;
+    const char *p;
+@@ -1171,7 +1171,7 @@ static char *stripWsParser(string descr)
+ }
+ 
+ 
+-static char *parseDescription(string descr)
++static const char *parseDescription(string descr)
+ {
+ 
+    if (descr.size() > sizeof(descrBuffer))
+@@ -1261,7 +1261,7 @@ string RPackage::label()
+ // class that finds out what do display to get user
+ void RPackageStatus::init()
+ {
+-   char *status_short[N_STATUS_COUNT] = {
++   const char *status_short[N_STATUS_COUNT] = {
+       "install", "reinstall", "upgrade", "downgrade", "remove",
+       "purge", "available", "available-locked",
+       "installed-updated", "installed-outdated", "installed-locked",
+@@ -1269,7 +1269,7 @@ void RPackageStatus::init()
+    };
+    memcpy(PackageStatusShortString, status_short, sizeof(status_short));
+ 
+-   char *status_long[N_STATUS_COUNT] = {
++   const char *status_long[N_STATUS_COUNT] = {
+       _("Marked for installation"),
+       _("Marked for re-installation"),
+       _("Marked for upgrade"),
+diff --git a/common/rpackagefilter.cc b/common/rpackagefilter.cc
+index 2873c7d..4c03f3c 100644
+--- a/common/rpackagefilter.cc
++++ b/common/rpackagefilter.cc
+@@ -40,7 +40,7 @@
+ 
+ using namespace std;
+ 
+-char *RPatternPackageFilter::TypeName[] = {
++const char *RPatternPackageFilter::TypeName[] = {
+    N_("Name"),
+    N_("Description"),
+    N_("Maintainer"),
+diff --git a/common/rpackagefilter.h b/common/rpackagefilter.h
+index 91ce0fb..12c1085 100644
+--- a/common/rpackagefilter.h
++++ b/common/rpackagefilter.h
+@@ -141,7 +141,7 @@ class RPatternPackageFilter : public RPackageFilter {
+ 
+  public:
+ 
+-   static char *TypeName[];
++   static const char *TypeName[];
+ 
+    RPatternPackageFilter() : and_mode(true) {};
+    RPatternPackageFilter(RPatternPackageFilter &f);
+diff --git a/common/sections_trans.cc b/common/sections_trans.cc
+index 5982a8b..efca2d0 100644
+--- a/common/sections_trans.cc
++++ b/common/sections_trans.cc
+@@ -7,7 +7,7 @@
+ 
+ #include "sections_trans.h"
+ 
+-char *transtable[][2] = {
++const char *transtable[][2] = {
+    // TRANSLATORS: Alias for the Debian package section "admin"
+    {"admin", _("System Administration")},
+    // TRANSLATORS: Alias for the Debian package section "base"
+diff --git a/gtk/gsynaptic.cc b/gtk/gsynaptic.cc
+index 5e5e9c4..d5c333b 100644
+--- a/gtk/gsynaptic.cc
++++ b/gtk/gsynaptic.cc
+@@ -40,6 +40,8 @@
+ #include <fcntl.h>
+ #include <signal.h>
+ #include <cassert>
++#include <cstring>
++#include <cstdlib>
+ #include <errno.h>
+ #include <fstream>
+ 
+diff --git a/gtk/rgaboutpanel.cc b/gtk/rgaboutpanel.cc
+index 290b430..b947a98 100644
+--- a/gtk/rgaboutpanel.cc
++++ b/gtk/rgaboutpanel.cc
+@@ -23,6 +23,7 @@
+  */
+ 
+ #include <cassert>
++#include <cstring>
+ #include "config.h"
+ #include "rgaboutpanel.h"
+ #include "i18n.h"
+diff --git a/gtk/rgfetchprogress.cc b/gtk/rgfetchprogress.cc
+index 750a238..c1a59eb 100644
+--- a/gtk/rgfetchprogress.cc
++++ b/gtk/rgfetchprogress.cc
+@@ -373,7 +373,7 @@ void RGFetchProgress::stopDownload(GtkWidget *self, void *data)
+ GdkPixmap *RGFetchProgress::statusDraw(int width, int height, int status)
+ {
+    int x, y;
+-   char *str = "";
++   const char *str = "";
+    GdkPixmap *pix;
+    int px, pw;
+ 
+diff --git a/gtk/rgfiltermanager.cc b/gtk/rgfiltermanager.cc
+index 462b6c9..3b0c807 100644
+--- a/gtk/rgfiltermanager.cc
++++ b/gtk/rgfiltermanager.cc
+@@ -25,6 +25,7 @@
+ 
+ #include <stdio.h>
+ #include <cassert>
++#include <cstring>
+ #include "config.h"
+ #include "rpackageview.h"
+ #include "rgfiltermanager.h"
+diff --git a/gtk/rgfindwindow.cc b/gtk/rgfindwindow.cc
+index aaa6fb5..112dae0 100644
+--- a/gtk/rgfindwindow.cc
++++ b/gtk/rgfindwindow.cc
+@@ -23,6 +23,7 @@
+ #include "config.h"
+ 
+ #include <cassert>
++#include <cstring>
+ 
+ #include "rgfindwindow.h"
+ #include "rgmisc.h"
+diff --git a/gtk/rggladewindow.cc b/gtk/rggladewindow.cc
+index ceb9571..8bb566d 100644
+--- a/gtk/rggladewindow.cc
++++ b/gtk/rggladewindow.cc
+@@ -114,7 +114,7 @@ bool RGGladeWindow::setLabel(const char *widget_name, const long value)
+ bool RGGladeWindow::setTreeList(const char *widget_name, vector<string> values,
+ 				bool use_markup)
+ {
+-   char *type;
++   const char *type;
+    string strVal;
+    GtkWidget *widget = glade_xml_get_widget(_gladeXML, widget_name);
+    if (widget == NULL) {
+diff --git a/gtk/rgiconlegend.cc b/gtk/rgiconlegend.cc
+index 8624a04..08557eb 100644
+--- a/gtk/rgiconlegend.cc
++++ b/gtk/rgiconlegend.cc
+@@ -62,7 +62,7 @@ RGIconLegendPanel::RGIconLegendPanel(RGWindow *parent)
+ 
+    // package support status 
+    hbox = gtk_hbox_new(FALSE, 12);
+-   gchar *filename = "../pixmaps/package-supported.png";
++   const gchar *filename = "../pixmaps/package-supported.png";
+    if (!FileExists(filename)) {
+       filename = SYNAPTIC_PIXMAPDIR "package-supported.png";
+    }
+diff --git a/gtk/rginstallprogress.cc b/gtk/rginstallprogress.cc
+index be8a167..3c9ebfd 100644
+--- a/gtk/rginstallprogress.cc
++++ b/gtk/rginstallprogress.cc
+@@ -32,6 +32,8 @@
+ 
+ #include <unistd.h>
+ #include <stdio.h>
++#include <cstring>
++#include <cstdlib>
+ 
+ #include "i18n.h"
+ 
+@@ -119,7 +121,7 @@ void RGInstallProgress::startUpdate()
+ void RGInstallProgress::finishUpdate()
+ {
+    char buf[1024];
+-   bzero(buf, 1024);
++   memset(buf, 0, 1024);
+    int len = read(_childin, buf, 1023);
+    if (len > 0) {
+       GtkWidget *dia = gtk_message_dialog_new(GTK_WINDOW(this->window()),
+diff --git a/gtk/rglogview.cc b/gtk/rglogview.cc
+index 82361dc..2924486 100644
+--- a/gtk/rglogview.cc
++++ b/gtk/rglogview.cc
+@@ -21,6 +21,7 @@
+  */
+ 
+ #include <cassert>
++#include <cstring>
+ #include <map>
+ #include "config.h"
+ #include "rglogview.h"
+diff --git a/gtk/rgmisc.cc b/gtk/rgmisc.cc
+index 793656e..88d1d2b 100644
+--- a/gtk/rgmisc.cc
++++ b/gtk/rgmisc.cc
+@@ -27,7 +27,8 @@
+ #include "i18n.h"
+ #include "rgmisc.h"
+ #include <stdio.h>
+-
++#include <cstring>
++#include <cstdlib>
+ 
+ void RGFlushInterface()
+ {
+@@ -182,7 +183,7 @@ RGPackageStatus RGPackageStatus::pkgStatus;
+ 
+ void RGPackageStatus::initColors()
+ {
+-   char *default_status_colors[N_STATUS_COUNT] = {
++   const char *default_status_colors[N_STATUS_COUNT] = {
+       "#83a67f",  // install
+       "#83a67f",  // re-install
+       "#eed680",  // upgrade
+diff --git a/gtk/rgpreferenceswindow.cc b/gtk/rgpreferenceswindow.cc
+index eda0f80..5d3ca7a 100644
+--- a/gtk/rgpreferenceswindow.cc
++++ b/gtk/rgpreferenceswindow.cc
+@@ -28,6 +28,7 @@
+ #include <apt-pkg/configuration.h>
+ #include <gtk/gtk.h>
+ #include <cassert>
++#include <cstring>
+ 
+ #include "rconfiguration.h"
+ #include "rgpreferenceswindow.h"
+diff --git a/gtk/rgslideshow.cc b/gtk/rgslideshow.cc
+index 1c574f7..37e22b6 100644
+--- a/gtk/rgslideshow.cc
++++ b/gtk/rgslideshow.cc
+@@ -5,6 +5,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <algorithm>
+ 
+ #include "rgslideshow.h"
+ 

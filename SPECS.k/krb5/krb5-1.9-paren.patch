@@ -1,0 +1,13 @@
+Upstream commit #24477.
+diff -up krb5-1.9/src/slave/kpropd.c krb5-1.9/src/slave/kpropd.c
+--- krb5-1.9/src/slave/kpropd.c	2011-03-18 13:14:24.020999947 -0400
++++ krb5-1.9/src/slave/kpropd.c	2011-03-18 13:14:34.159999947 -0400
+@@ -993,7 +993,7 @@ unsigned int backoff_from_master(int *cn
+     btime = (unsigned int)(2<<(*cnt));
+     if (btime > MAX_BACKOFF) {
+         btime = MAX_BACKOFF;
+-        *cnt--;
++        (*cnt)--;
+     }
+ 
+     return (btime);

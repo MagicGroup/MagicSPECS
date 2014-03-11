@@ -1,0 +1,13 @@
+Index: trunk/Xlib/support/unix_connect.py
+===================================================================
+--- trunk.orig/Xlib/support/unix_connect.py	2008-07-23 11:33:36.000000000 -0400
++++ trunk/Xlib/support/unix_connect.py	2009-11-05 06:06:50.000000000 -0500
+@@ -60,6 +60,8 @@
+ 
+     name = display
+     host = m.group(1)
++    if host == 'unix':
++        host = ''
+     dno = int(m.group(2))
+     screen = m.group(4)
+     if screen:

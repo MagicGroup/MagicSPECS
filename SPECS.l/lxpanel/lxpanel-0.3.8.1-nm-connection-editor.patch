@@ -1,0 +1,25 @@
+diff -dur lxpanel-0.3.8.1.orig/src/plugins/netstatus/netstatus.c lxpanel-0.3.8.1/src/plugins/netstatus/netstatus.c
+--- lxpanel-0.3.8.1.orig/src/plugins/netstatus/netstatus.c	2008-04-20 10:44:13.000000000 +0200
++++ lxpanel-0.3.8.1/src/plugins/netstatus/netstatus.c	2009-01-06 06:28:35.000000000 +0100
+@@ -125,7 +125,7 @@
+     else
+     {
+         ns->iface = g_strdup("eth0");
+-        ns->config_tool = g_strdup("network-admin --configure %i");
++        ns->config_tool = g_strdup("nm-connection-editor");
+     }
+ 
+     iface = netstatus_iface_new(ns->iface);
+diff -dur lxpanel-0.3.8.1.orig/src/plugins/netstatus/netstatus-dialog.c lxpanel-0.3.8.1/src/plugins/netstatus/netstatus-dialog.c
+--- lxpanel-0.3.8.1.orig/src/plugins/netstatus/netstatus-dialog.c	2008-04-20 10:44:13.000000000 +0200
++++ lxpanel-0.3.8.1/src/plugins/netstatus/netstatus-dialog.c	2009-01-06 06:28:35.000000000 +0100
+@@ -42,7 +42,8 @@
+ 
+ #if 0 /* stripped-down version does nothing to configurators. */
+ static const char *network_config_tools[] = {
+-  "network-admin --configure %i",
++  "nm-connection-editor",
++  "system-config-network",
+   "redhat-config-network",
+   "system-control-network"
+ };

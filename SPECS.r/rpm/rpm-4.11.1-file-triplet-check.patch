@@ -1,0 +1,27 @@
+commit 65c7cc17664358051f0358de272e616dd88ab624
+Author: Panu Matilainen <pmatilai@redhat.com>
+Date:   Tue Aug 27 15:15:40 2013 +0300
+
+    Relax the filename triplet sanity check a bit (RhBug:1001553)
+    
+    - At least unowned directories can cause orphans to be left around
+      in RPMTAG_DIRNAMES, in which case its possible for number of
+      dirnames to be larger than the number of basenames. This is
+      arguably a bug in the relocation code but doesn't seem worth
+      the trouble... so just relax the check to simply permit non-empty
+      dirnames array, the index bound checking is far more important.
+
+diff --git a/lib/rpmfi.c b/lib/rpmfi.c
+index 30663d0..00506ce 100644
+--- a/lib/rpmfi.c
++++ b/lib/rpmfi.c
+@@ -1128,7 +1128,8 @@ static int indexSane(rpmtd xd, rpmtd yd, rpmtd zd)
+     uint32_t zc = rpmtdCount(zd);
+ 
+     /* check that the amount of data in each is sane */
+-    if (xc > 0 && yc > 0 && yc <= xc && zc == xc) {
++    /* normally yc <= xc but larger values are not fatal (RhBug:1001553) */
++    if (xc > 0 && yc > 0 && zc == xc) {
+ 	uint32_t * i;
+ 	/* ...and that the indexes are within bounds */
+ 	while ((i = rpmtdNextUint32(zd))) {

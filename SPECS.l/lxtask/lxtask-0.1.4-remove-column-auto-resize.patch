@@ -1,0 +1,24 @@
+From 6cfc929d3f3d3c57216379625229c92f64f0a577 Mon Sep 17 00:00:00 2001
+From: root <root@dgod.(none)>
+Date: Thu, 5 Jan 2012 15:11:38 +0800
+Subject: [PATCH] remove column auto resize
+
+---
+ src/interface.c |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+diff --git a/src/interface.c b/src/interface.c
+index 91d4fc6..52c6727 100644
+--- a/src/interface.c
++++ b/src/interface.c
+@@ -174,7 +174,6 @@ void create_list_store(void)
+ 
+     column = gtk_tree_view_column_new_with_attributes(_("Command"), cell_renderer, "text", COLUMN_NAME, NULL);
+     gtk_tree_view_column_set_resizable(column, TRUE);
+-    gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+     gtk_tree_view_column_set_sort_column_id(column, COLUMN_NAME);
+     gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(list_store), COLUMN_NAME, compare_string_list_item, (void *)COLUMN_NAME, NULL);
+     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+-- 
+1.7.4.1
+

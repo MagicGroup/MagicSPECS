@@ -1,0 +1,20 @@
+--- xine/backend.cpp	2009-07-31 10:01:24.000000000 +0800
++++ xine/backend.cpp	2009-07-31 10:02:01.000000000 +0800
+@@ -620,7 +620,7 @@
+                             "when the KDE runtime is broken. The technical term 'Platform Plugin' "
+                             "might help users to find a solution, so it might make sense to leave "
+                             "that term untranslated."),
+-                        /*icon name */"audio-card", outputPlugins[i], false, true);
++                        /*icon name */"audio-card", outputPlugins[i]);
+             } else if (0 == strcmp(outputPlugins[i], "oss")) {
+                 // we just list /dev/dsp for fallback when the platform plugin fails to list
+                 // devices
+@@ -630,7 +630,7 @@
+                             "when the KDE runtime is broken. The technical term 'Platform Plugin' "
+                             "might help users to find a solution, so it might make sense to leave "
+                             "that term untranslated."),
+-                        /*icon name */"audio-card", outputPlugins[i], false, true);
++                        /*icon name */"audio-card", outputPlugins[i]);
+             } else if (0 == strcmp(outputPlugins[i], "none")
+                     || 0 == strcmp(outputPlugins[i], "file")) {
+                 // ignore these drivers (hardware devices are listed by the KDE platform plugin)

@@ -1,0 +1,51 @@
+--- kdebase-3.4.90/drkonqi/debuggers/gdbrc.orig	2005-08-06 05:47:22.000000000 -0400
++++ kdebase-3.4.90/drkonqi/debuggers/gdbrc	2005-09-20 18:04:31.000000000 -0400
+@@ -144,3 +144,4 @@
+ FrameRegExp=\\n#[0-9]+\\s+0x[0-9A-Fa-f]+
+ NeededInValidBacktraceRegExp=\\n#5
+ KCrashRegExp=\\n0x[0123456789abcdefABCDEF]+.*<signal handler called>[ ]*\\n
++LoadSymbolCommand=add-symbol-file-from-memory 0xffffe000
+\ No newline at end of file
+--- kdebase-3.4.90/drkonqi/krashconf.h.orig	2005-09-20 18:07:13.000000000 -0400
++++ kdebase-3.4.90/drkonqi/krashconf.h	2005-09-20 18:09:41.000000000 -0400
+@@ -60,6 +60,7 @@
+   TQString debugger() const { return m_debugger; }
+   TQString debuggerBatch() const { return m_debuggerBatch; }
+   TQString tryExec() const { return m_tryExec; }
++  TQString loadSymbolCommand() const { return m_loadSymbolCommand; }
+   TQString backtraceCommand() const { return m_backtraceCommand; }
+   TQString removeFromBacktraceRegExp() const { return m_removeFromBacktraceRegExp; }
+   TQString invalidStackFrameRegExp() const { return m_invalidStackFrameRegExp; }
+@@ -101,6 +102,7 @@
+   TQString m_debugger;
+   TQString m_debuggerBatch;
+   TQString m_tryExec;
++  TQString m_loadSymbolCommand;
+   TQString m_backtraceCommand;
+   TQString m_removeFromBacktraceRegExp;
+   TQString m_invalidStackFrameRegExp;
+--- kdebase-3.4.90/drkonqi/krashconf.cpp.orig	2005-09-20 18:06:47.000000000 -0400
++++ kdebase-3.4.90/drkonqi/krashconf.cpp	2005-09-20 18:08:49.000000000 -0400
+@@ -105,6 +105,7 @@
+   m_debugger = debuggers.readPathEntry("Exec");
+   m_debuggerBatch = debuggers.readPathEntry("ExecBatch");
+   m_tryExec = debuggers.readPathEntry("TryExec");
++  m_loadSymbolCommand = debuggers.readEntry("LoadSymbolCommand");
+   m_backtraceCommand = debuggers.readEntry("BacktraceCommand");
+   m_removeFromBacktraceRegExp = debuggers.readEntry("RemoveFromBacktraceRegExp");
+   m_invalidStackFrameRegExp = debuggers.readEntry("InvalidStackFrameRegExp");
+--- kdebase-3.4.90/drkonqi/backtrace.cpp.orig	2005-09-20 18:10:12.000000000 -0400
++++ kdebase-3.4.90/drkonqi/backtrace.cpp	2005-09-20 18:13:18.000000000 -0400
+@@ -86,8 +86,12 @@
+   m_temp = new KTempFile;
+   m_temp->setAutoDelete(TRUE);
+   int handle = m_temp->handle();
++  TQString loadSymbolCommand = m_krashconf->loadSymbolCommand();
++  const char* ls = loadSymbolCommand.latin1();
+   TQString backtraceCommand = m_krashconf->backtraceCommand();
+   const char* bt = backtraceCommand.latin1();
++  ::write(handle, ls, strlen(ls));
++  ::write(handle, "\n", 1);
+   ::write(handle, bt, strlen(bt)); // the command for a backtrace
+   ::write(handle, "\n", 1);
+   ::fsync(handle);

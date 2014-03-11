@@ -1,0 +1,11 @@
+--- festival/config/config.in.orig	2007-03-15 16:16:24.000000000 -0400
++++ festival/config/config.in	2007-03-15 16:16:50.000000000 -0400
+@@ -10,7 +10,7 @@
+ ###########################################################################
+ ## Which speech tools to use
+ 
+-EST=$(TOP)/../speech_tools
++EST=$(TOP)/speech_tools
+ 
+ ###########################################################################
+ ## Where the festival tree will be installed.

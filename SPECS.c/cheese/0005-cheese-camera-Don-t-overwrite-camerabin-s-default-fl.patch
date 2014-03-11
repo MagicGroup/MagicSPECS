@@ -1,0 +1,61 @@
+From 90d318aadb255be77c7e27764716df6cd5a1fe0e Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Fri, 8 Jun 2012 23:18:32 +0200
+Subject: [PATCH] cheese-camera: Don't overwrite camerabin's default flags
+
+The comment above this code said: "Set flags to enable conversions", but
+camerabin has conversion enabled in the necessary places by default, all
+the code does is add an extra, unneeded ffmpegcsp element at the beginning
+of the pipeline.
+
+This results in a huge number of reported caps on pads further down the
+pipeline, which when intersected with input caps of later ffmpegcsp elements
+leads to an explosion of possible combinations and gst_caps_intersect_full
+starts consuming the cpu for 100% for seconds (various Fedora users have
+reported startup delays of upto a minute).
+
+On my test system, with a Logitech webcam 9000 pro, the time to create
+the camerabin pipeline (not start, not configure, just create!) drops
+from 7 seconds to 0.7 seconds by elimenating the unnecessary ffmpegcsp
+element at the beginning of the pipe.
+
+The only reason the ffmpegcsp element this patch removes could be useful
+would be for cameras producing only jpeg data, but since cheese always uses
+v4l2src, and that should always be compiled with libv4l2 support (otherwise
+a lot of camera specific video formats will not be understood), libv4l2 will
+take care of jpeg decompression, so there really is no reason for having
+this extra element, and thus no reason to override the default camerabin
+flags.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ libcheese/cheese-camera.c |   12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/libcheese/cheese-camera.c b/libcheese/cheese-camera.c
+index 7b8eb70..73cda1a 100644
+--- a/libcheese/cheese-camera.c
++++ b/libcheese/cheese-camera.c
+@@ -1494,19 +1494,7 @@ cheese_camera_setup (CheeseCamera *camera, const gchar *uuid, GError **error)
+   g_object_set (G_OBJECT (video_sink), "async", FALSE, NULL);
+   g_object_set (G_OBJECT (priv->camerabin), "viewfinder-sink", video_sink, NULL);
+ 
+-  /* Set flags to enable conversions*/
+-
+-  g_object_set (G_OBJECT (priv->camerabin), "flags",
+-                GST_CAMERABIN_FLAG_SOURCE_RESIZE |
+-                GST_CAMERABIN_FLAG_SOURCE_COLOR_CONVERSION |
+-                GST_CAMERABIN_FLAG_VIEWFINDER_SCALE |
+-                GST_CAMERABIN_FLAG_AUDIO_CONVERSION |
+-                GST_CAMERABIN_FLAG_IMAGE_COLOR_CONVERSION |
+-                GST_CAMERABIN_FLAG_VIDEO_COLOR_CONVERSION,
+-                NULL);
+-
+   /* Set caps to filter, so it doesn't defaults to I420 format*/
+-
+   caps = gst_caps_from_string ("video/x-raw-yuv; video/x-raw-rgb");
+   g_object_set (G_OBJECT (priv->camerabin), "filter-caps", caps, NULL);
+   gst_caps_unref (caps);
+-- 
+1.7.10.2
+

@@ -1,0 +1,451 @@
+diff -up netkit-rsh-0.17/rcp/rcp.c.ipv6 netkit-rsh-0.17/rcp/rcp.c
+--- netkit-rsh-0.17/rcp/rcp.c.ipv6	2008-10-03 12:44:22.000000000 +0200
++++ netkit-rsh-0.17/rcp/rcp.c	2008-10-03 12:44:22.000000000 +0200
+@@ -262,9 +262,9 @@ toremote(const char *targ, int argc, cha
+ 					nospace();
+ 				(void)snprintf(bp, len, "%s -t %s", cmd, targ);
+ 				host = thost;
+-					rem = rcmd(&host, port, pwd->pw_name,
++					rem = rcmd_af(&host, port, pwd->pw_name,
+ 					    tuser ? tuser : pwd->pw_name,
+-					    bp, 0);
++					    bp, 0, AF_UNSPEC);
+ 				if (rem < 0)
+ 					exit(1);
+ #ifdef IP_TOS
+@@ -325,7 +325,8 @@ tolocal(int argc, char *argv[])
+ 		if (!(bp = malloc(len)))
+ 			nospace();
+ 		(void)snprintf(bp, len, "%s -f %s", cmd, src);
+-			rem = rcmd(&host, port, pwd->pw_name, suser, bp, 0);
++			rem = rcmd_af(&host, port, pwd->pw_name, suser, bp, 0,
++				AF_UNSPEC);
+ 		(void)free(bp);
+ 		if (rem < 0) {
+ 			++errs;
+diff -up netkit-rsh-0.17/rlogind/network.c.ipv6 netkit-rsh-0.17/rlogind/network.c
+--- netkit-rsh-0.17/rlogind/network.c.ipv6	1999-12-12 16:15:40.000000000 +0100
++++ netkit-rsh-0.17/rlogind/network.c	2008-10-03 12:44:22.000000000 +0200
+@@ -88,47 +88,78 @@ local_domain(const char *h)
+ 	return(0);
+ }
+ 
++static int
++soaddr_eq_ip(const struct sockaddr *s1, const struct sockaddr *s2)
++{
++	if (s1->sa_family != s2->sa_family)
++		return 0;
++	if (s2->sa_family == AF_INET6)
++		return (memcmp(
++			(const void*)(
++				&((const struct sockaddr_in6 *)s1)->sin6_addr
++				),
++			(const void*)(
++				&((const struct sockaddr_in6 *)s2)->sin6_addr
++				),
++			sizeof(struct in6_addr))
++				== 0);
++	else
++		return (memcmp(
++			(const void*)(
++				&((const struct sockaddr_in *)s1)->sin_addr
++				),
++			(const void*)(
++				&((const struct sockaddr_in *)s2)->sin_addr
++				),
++			sizeof(struct in_addr))
++				== 0);
++}
+ 
+ static char *
+-find_hostname(const struct sockaddr_in *fromp, int *hostokp)
++find_hostname(struct sockaddr *fromp, socklen_t fromlen,
++	char *portname, int *hostokp)
+ {
+-	struct hostent *hop;
++	int error;
+ 	char *hname;
++	char hname_buf[NI_MAXHOST];
+ 	int hostok = 0;
+ 
+-	hop = gethostbyaddr((const char *)&fromp->sin_addr, 
+-			    sizeof(struct in_addr), fromp->sin_family);
+-	if (hop == NULL) {
+-		hname = strdup(inet_ntoa(fromp->sin_addr));
+-		hostok = 1;
+-	} 
+-	else if (check_all || local_domain(hop->h_name)) {
++	error = getnameinfo(fromp, fromlen,
++		hname_buf, sizeof(hname_buf), portname, NI_MAXSERV,
++		NI_NUMERICSERV);
++	assert(error == 0);
++
++	if (check_all || local_domain(hname_buf)) {
+ 		/*
+-		 * If name returned by gethostbyaddr is in our domain,
++		 * If name returned is in our domain,
+ 		 * attempt to verify that we haven't been fooled by someone
+ 		 * in a remote net; look up the name and check that this
+ 		 * address corresponds to the name.
+ 		 */
+-		hname = strdup(hop->h_name);
+-		hop = gethostbyname(hname);
+-		if (hop) {
+-		    for (; hop->h_addr_list[0]; hop->h_addr_list++) {
+-			if (!memcmp(hop->h_addr_list[0], &fromp->sin_addr,
+-				    sizeof(fromp->sin_addr))) {
++		struct addrinfo hints;
++		struct addrinfo *res0, *res;
++
++		memset(&hints, 0, sizeof(hints));
++		hints.ai_family = PF_UNSPEC;
++		error = getaddrinfo(hname_buf, NULL, &hints, &res);
++		assert(error == 0);
++
++		res0 = res;
++		while (res) {
++			if (soaddr_eq_ip(fromp, res->ai_addr)) {
+ 				hostok = 1;
+ 				break;
+ 			}
+-		    }
+-		    /* not clear if this is worthwhile */
+-		    free(hname);
+-		    hname = strdup(hop->h_name);
++			res = res->ai_next;
+ 		}
++		freeaddrinfo(res0);
+ 	} 
+ 	else {
+-		hname = strdup(hop->h_name);
+ 		hostok = 1;
+ 	}
+ 
++	hname = strdup(hname_buf);
++
+ 	/* 
+ 	 * Actually it might be null if we're out of memory, but
+ 	 * where do we go then? We'd have to bail anyhow.
+@@ -145,14 +176,14 @@ find_hostname(const struct sockaddr_in *
+ char * 
+ network_init(int f, int *hostokp)
+ {
+-	struct sockaddr_in from, *fromp;
++	struct sockaddr_storage from, *fromp;
+ 	socklen_t fromlen;
+ 	int on = 1;
+ 	char c;
+ 	char *hname;
++	char portname[NI_MAXSERV];
+ 	int port;
+ 
+-	from.sin_family = AF_INET;
+ 	fromlen = sizeof (from);
+ 	if (getpeername(f, (struct sockaddr *)&from, &fromlen) < 0) {
+ 		syslog(LOG_ERR,"Can't get peer name of remote host: %m");
+@@ -177,13 +208,19 @@ network_init(int f, int *hostokp)
+ 
+ 	alarm(0);
+ 
+-	hname = find_hostname(fromp, hostokp);
++	hname = find_hostname((struct sockaddr *)fromp, fromlen,
++		portname, hostokp);
++	assert(hname != NULL);
+ 
+-	port = ntohs(fromp->sin_port);
+-	if (fromp->sin_family != AF_INET ||
++	port = atoi(portname);
++	if (! port) {
++	    syslog(LOG_NOTICE, "Unknown port %s", portname);
++	    fatal(f, "Permission denied", 0);
++	}
++	if ((fromp->ss_family != AF_INET && fromp->ss_family != AF_INET6) ||
+ 	    port >= IPPORT_RESERVED || port < IPPORT_RESERVED/2) {
+ 	    syslog(LOG_NOTICE, "Connection from %s on illegal port",
+-		   inet_ntoa(fromp->sin_addr));
++	    	portname);
+ 	    fatal(f, "Permission denied", 0);
+ 	}
+ 
+diff -up netkit-rsh-0.17/rlogin/rlogin.c.ipv6 netkit-rsh-0.17/rlogin/rlogin.c
+--- netkit-rsh-0.17/rlogin/rlogin.c.ipv6	2008-10-03 12:44:22.000000000 +0200
++++ netkit-rsh-0.17/rlogin/rlogin.c	2008-10-03 12:44:22.000000000 +0200
+@@ -280,7 +280,7 @@ main(int argc, char **argv)
+ 	/* will use SIGUSR1 for window size hack, so hold it off */
+ 	omask = sigblock(sigmask(SIGURG) | sigmask(SIGUSR1));
+ 
+-	rem = rcmd(&host, sp->s_port, pw->pw_name, user, term, 0);
++	rem = rcmd_af(&host, sp->s_port, pw->pw_name, user, term, 0, AF_UNSPEC);
+ 
+ 	if (rem < 0) exit(1);
+ 
+diff -up netkit-rsh-0.17/rshd/rshd.c.ipv6 netkit-rsh-0.17/rshd/rshd.c
+--- netkit-rsh-0.17/rshd/rshd.c.ipv6	2008-10-03 12:44:22.000000000 +0200
++++ netkit-rsh-0.17/rshd/rshd.c	2008-10-03 12:53:08.000000000 +0200
+@@ -109,7 +109,7 @@ char	*envinit[] =
+ extern	char	**environ;
+ 
+ static void error(const char *fmt, ...);
+-static void doit(struct sockaddr_in *fromp);
++static void doit(struct sockaddr_storage *fromp, socklen_t fromlen);
+ static void getstr(char *buf, int cnt, const char *err);
+ 
+ extern int _check_rhosts_file;
+@@ -284,19 +284,37 @@ static struct passwd *doauth(const char 
+ #endif
+ }
+ 
+-static const char *findhostname(struct sockaddr_in *fromp,
++static const char *findhostname(struct sockaddr *fromp,
++				socklen_t fromlen,
+ 				const char *remuser, const char *locuser,
+ 				const char *cmdbuf) 
+ {
+-	struct hostent *hp;
+ 	const char *hostname;
++	char remote_address[INET6_ADDRSTRLEN];
++	char remote_hostname[NI_MAXHOST];
++	struct addrinfo hints;
++	struct addrinfo *res0, *res;
++
++	if (! inet_ntop(fromp->sa_family,
++		(( fromp->sa_family == AF_INET6 )
++		? ( &((struct sockaddr_in6 *)fromp)->sin6_addr )
++		: ( &((struct sockaddr_in *)fromp)->sin_addr )),
++		remote_address, sizeof(remote_address))) {
++	    syslog(LOG_NOTICE|LOG_AUTH,
++	    	"Failed to retrieve the socket remote address");
++	    exit(1);
++	}
+ 
+-	hp = gethostbyaddr((char *)&fromp->sin_addr, sizeof (struct in_addr),
+-			   fromp->sin_family);
++	if (getnameinfo(fromp, fromlen, remote_hostname, NI_MAXHOST,
++		NULL, 0, 0)) {
++	    syslog(LOG_NOTICE|LOG_AUTH,
++	    	"Failed to retrieve the hostname information for %s",
++	    	remote_address);
++	    exit(1);
++	}
+ 
+ 	errno = ENOMEM; /* malloc (thus strdup) may not set it */
+-	if (hp) hostname = strdup(hp->h_name);
+-	else hostname = strdup(inet_ntoa(fromp->sin_addr));
++	hostname = strdup(remote_hostname);
+ 
+ 	if (hostname==NULL) {
+ 	    /* out of memory? */
+@@ -307,31 +325,43 @@ static const char *findhostname(struct s
+ 	/*
+ 	 * Attempt to confirm the DNS. 
+ 	 */
+-#ifdef	RES_DNSRCH
+-	_res.options &= ~RES_DNSRCH;
+-#endif
+-	hp = gethostbyname(hostname);
+-	if (hp == NULL) {
+-	    syslog(LOG_INFO, "Couldn't look up address for %s", hostname);
++	memset(&hints, 0, sizeof(hints));
++	hints.ai_family = PF_UNSPEC;
++	if (getaddrinfo(hostname, NULL, &hints, &res)) {
++	    syslog(LOG_INFO, "Couldn't look up address for %s/%s",
++		   hostname, remote_address);
+ 	    fail("Couldn't get address for your host (%s)\n", 
+-		 remuser, inet_ntoa(fromp->sin_addr), locuser, cmdbuf);
+-	} 
+-	while (hp->h_addr_list[0] != NULL) {
+-	    if (!memcmp(hp->h_addr_list[0], &fromp->sin_addr,
+-			sizeof(fromp->sin_addr))) {
+-		return hostname;
++		 remuser, hostname, locuser, cmdbuf);
++	}
++
++	res0 = res;
++	while (res) {
++	    struct sockaddr *sa;
++	    char res_address[INET6_ADDRSTRLEN];
++	    sa = res->ai_addr;
++
++	    if (inet_ntop(sa->sa_family,
++		(( sa->sa_family == AF_INET6 )
++		? ( &((struct sockaddr_in6 *)sa)->sin6_addr )
++		: ( &((struct sockaddr_in *)sa)->sin_addr )),
++		res_address, sizeof(res_address))
++		&& strcmp(remote_address, res_address) == 0) {
++		    freeaddrinfo(res0);
++		    return hostname;
+ 	    }
+-	    hp->h_addr_list++;
++	    res = res->ai_next;
+ 	}
++	freeaddrinfo(res0);
++
+ 	syslog(LOG_NOTICE, "Host addr %s not listed for host %s",
+-	       inet_ntoa(fromp->sin_addr), hp->h_name);
++	       remote_address, hostname);
+ 	fail("Host address mismatch for %s\n", 
+-	     remuser, inet_ntoa(fromp->sin_addr), locuser, cmdbuf);
++	     remuser, hostname, locuser, cmdbuf);
+ 	return NULL; /* not reachable */
+ }
+ 
+ static void
+-doit(struct sockaddr_in *fromp)
++doit(struct sockaddr_storage *fromp, socklen_t fromlen)
+ {
+ 	char cmdbuf[ARG_MAX+1];
+ 	const char *theshell, *shellname;
+@@ -351,8 +381,12 @@ doit(struct sockaddr_in *fromp)
+ 	alarm(0);
+ 
+ 	if (port != 0) {
++		struct sockaddr_storage second_connect;
+ 		int lport = IPPORT_RESERVED - 1;
+-		sock = rresvport(&lport);
++
++		memcpy((void *)&second_connect, (void *)fromp, fromlen);
++		sock = rresvport_af(&lport,
++			((struct sockaddr *)&second_connect)->sa_family);
+ 		if (sock < 0) {
+ 		    syslog(LOG_ERR, "can't get stderr port: %m");
+ 		    exit(1);
+@@ -361,10 +395,15 @@ doit(struct sockaddr_in *fromp)
+ 		    syslog(LOG_ERR, "2nd port not reserved\n");
+ 		    exit(1);
+ 		}
+-		fromp->sin_port = htons(port);
+-		if (connect(sock, (struct sockaddr *)fromp,
+-			    sizeof(*fromp)) < 0) {
+-		    syslog(LOG_INFO, "connect second port: %m");
++		if (((struct sockaddr *)&second_connect)->sa_family == AF_INET6)
++		    ((struct sockaddr_in6 *)&second_connect)->sin6_port
++		    						= htons(port);
++		else
++		    ((struct sockaddr_in *)&second_connect)->sin_port
++		    						= htons(port);
++		if (connect(sock, (struct sockaddr *)&second_connect,
++			fromlen) < 0) {
++		    syslog(LOG_INFO, "connect second port %d: %m", port);
+ 		    exit(1);
+ 		}
+ 	}
+@@ -381,7 +420,8 @@ doit(struct sockaddr_in *fromp)
+ 	getstr(cmdbuf, sizeof(cmdbuf), "command");
+ 	if (!strcmp(locuser, "root")) paranoid = 1;
+ 
+-	hostname = findhostname(fromp, remuser, locuser, cmdbuf);
++	hostname = findhostname((struct sockaddr *)fromp, fromlen,
++		remuser, locuser, cmdbuf);
+ 
+ 	setpwent();
+ 	pwd = doauth(remuser, hostname, locuser);
+@@ -496,15 +536,19 @@ doit(struct sockaddr_in *fromp)
+ 	exit(1);
+ }
+ 
+-static void network_init(int fd, struct sockaddr_in *fromp)
++static void network_init(int fd,
++	struct sockaddr_storage *fromp, socklen_t *fromlenp)
+ {
+ 	struct linger linger;
+-	socklen_t fromlen;
++	char hostname[NI_MAXHOST];
++	char portname[NI_MAXSERV];
++	sa_family_t family;
++
++	int error;
+ 	int on=1;
+ 	int port;
+ 
+-	fromlen = sizeof(*fromp);
+-	if (getpeername(fd, (struct sockaddr *) fromp, &fromlen) < 0) {
++	if (getpeername(fd, (struct sockaddr *)fromp, fromlenp) < 0) {
+ 		syslog(LOG_ERR, "getpeername: %m");
+ 		_exit(1);
+ 	}
+@@ -518,9 +562,20 @@ static void network_init(int fd, struct 
+ 	    sizeof (linger)) < 0)
+ 		syslog(LOG_WARNING, "setsockopt (SO_LINGER): %m");
+ 
+-	if (fromp->sin_family != AF_INET) {
++	family = ((struct sockaddr *)fromp)->sa_family;
++	if (family != AF_INET && family != AF_INET6) {
+ 	    syslog(LOG_ERR, "malformed \"from\" address (af %d)\n",
+-		   fromp->sin_family);
++	    	family);
++	    exit(1);
++	}
++
++	error = getnameinfo((struct sockaddr *)fromp, *fromlenp,
++		hostname, sizeof(hostname), portname, sizeof(portname),
++		NI_NUMERICSERV);
++	if (error) {
++	    syslog(LOG_NOTICE|LOG_AUTH,
++	    	"Failed to retrieve address and port of the connection: %s",
++		gai_strerror(error));
+ 	    exit(1);
+ 	}
+ #ifdef IP_OPTIONS
+@@ -550,7 +605,7 @@ static void network_init(int fd, struct 
+ 		syslog(LOG_NOTICE,
+ 		       "Connection received from %s using IP options"
+ 		       " (ignored): %s",
+-		       inet_ntoa(fromp->sin_addr), lbuf);
++		       hostname, lbuf);
+ 
+ 		if (setsockopt(0, ipproto, IP_OPTIONS, NULL, optsize) != 0) {
+ 			syslog(LOG_ERR, "setsockopt IP_OPTIONS NULL: %m");
+@@ -563,10 +618,15 @@ static void network_init(int fd, struct 
+ 	/*
+ 	 * Check originating port for validity.
+ 	 */
+-	port = ntohs(fromp->sin_port);
++	port = atoi(portname);
++	if (! port) {
++	    syslog(LOG_NOTICE|LOG_AUTH, "Unknown port %s", portname);
++	    exit(1);
++	}
+ 	if (port >= IPPORT_RESERVED || port < IPPORT_RESERVED/2) {
+-	    syslog(LOG_NOTICE|LOG_AUTH, "Connection from %s on illegal port",
+-		   inet_ntoa(fromp->sin_addr));
++	    syslog(LOG_NOTICE|LOG_AUTH,
++	    	"Connection from %s from illegal port %s",
++		   hostname, portname);
+ 	    exit(1);
+ 	}
+ }
+@@ -575,7 +635,8 @@ int
+ main(int argc, char *argv[])
+ {
+ 	int ch;
+-	struct sockaddr_in from;
++	struct sockaddr_storage from;
++	socklen_t fromlen;
+ 	_check_rhosts_file=1;
+ 
+ 	openlog("rshd", LOG_PID | LOG_ODELAY, LOG_DAEMON);
+@@ -618,8 +679,9 @@ main(int argc, char *argv[])
+                                "pam_rhosts_auth in /etc/pam.conf");
+ #endif /* USE_PAM */
+ 
+-	network_init(0, &from);
+-	doit(&from);
++	fromlen = sizeof(from);
++	network_init(0, &from, &fromlen);
++	doit(&from, fromlen);
+ 	return 0;
+ }
+ 
+diff -up netkit-rsh-0.17/rsh/rsh.c.ipv6 netkit-rsh-0.17/rsh/rsh.c
+--- netkit-rsh-0.17/rsh/rsh.c.ipv6	2000-07-23 06:16:24.000000000 +0200
++++ netkit-rsh-0.17/rsh/rsh.c	2008-10-03 12:44:22.000000000 +0200
+@@ -163,7 +163,8 @@ main(int argc, char *argv[])
+ 		exit(1);
+ 	}
+ 
+-	rem = rcmd(&host, sp->s_port, pw->pw_name, user, args, &rfd2);
++	rem = rcmd_af(&host, sp->s_port, pw->pw_name, user, args, &rfd2,
++		AF_UNSPEC);
+ 
+ 	if (rem < 0)
+ 		exit(1);

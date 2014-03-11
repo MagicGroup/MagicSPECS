@@ -1,0 +1,25 @@
+From d04f16f60047b3d4c52fb4799aa34462f7fe62b7 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 5 Jul 2012 14:30:45 +0200
+Subject: [PATCH] install user/group adm for journal
+
+---
+ modules.d/98systemd/module-setup.sh |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/modules.d/98systemd/module-setup.sh b/modules.d/98systemd/module-setup.sh
+index d712724..d20d18d 100755
+--- a/modules.d/98systemd/module-setup.sh
++++ b/modules.d/98systemd/module-setup.sh
+@@ -101,6 +101,11 @@ install() {
+         fi
+     fi
+ 
++    # install adm user/group for journald
++    dracut_install nologin
++    egrep '^adm:' "$initdir/etc/passwd" 2>/dev/null >> "$initdir/etc/passwd"
++    egrep '^adm:' /etc/group >> "$initdir/etc/group"
++
+     ln -fs $systemdutildir/systemd "$initdir/init"
+ 
+     rm -f "${initdir}${systemdsystemunitdir}/emergency.service"

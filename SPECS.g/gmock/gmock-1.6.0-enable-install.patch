@@ -1,0 +1,54 @@
+diff -urN gmock-1.6.0.orig/gtest/Makefile.am gmock-1.6.0/gtest/Makefile.am
+--- gmock-1.6.0.orig/gtest/Makefile.am	2011-04-07 08:17:54.000000000 +0100
++++ gmock-1.6.0/gtest/Makefile.am	2011-09-14 00:24:34.057330892 +0100
+@@ -295,8 +295,6 @@
+ 
+ install-exec-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Test into your build system."
+-	false
+ 
+ install-data-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Test into your build system."
+-	false
+diff -urN gmock-1.6.0.orig/gtest/Makefile.in gmock-1.6.0/gtest/Makefile.in
+--- gmock-1.6.0.orig/gtest/Makefile.in	2011-04-15 20:55:41.000000000 +0100
++++ gmock-1.6.0/gtest/Makefile.in	2011-09-14 00:24:42.421226330 +0100
+@@ -1318,11 +1318,9 @@
+ 
+ install-exec-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Test into your build system."
+-	false
+ 
+ install-data-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Test into your build system."
+-	false
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+diff -urN gmock-1.6.0.orig/Makefile.am gmock-1.6.0/Makefile.am
+--- gmock-1.6.0.orig/Makefile.am	2011-04-15 20:51:15.000000000 +0100
++++ gmock-1.6.0/Makefile.am	2011-09-14 00:21:29.782634640 +0100
+@@ -202,8 +202,6 @@
+ 
+ install-exec-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Mock into your build system."
+-	false
+ 
+ install-data-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Mock into your build system."
+-	false
+diff -urN gmock-1.6.0.orig/Makefile.in gmock-1.6.0/Makefile.in
+--- gmock-1.6.0.orig/Makefile.in	2011-04-15 20:55:44.000000000 +0100
++++ gmock-1.6.0/Makefile.in	2011-09-14 00:21:17.150792559 +0100
+@@ -1310,11 +1310,9 @@
+ 
+ install-exec-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Mock into your build system."
+-	false
+ 
+ install-data-local:
+ 	echo "'make install' is dangerous and not supported. Instead, see README for how to integrate Google Mock into your build system."
+-	false
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.

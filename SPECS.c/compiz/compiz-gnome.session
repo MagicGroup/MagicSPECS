@@ -1,0 +1,6 @@
+[GNOME Session]
+Name=Classic GNOME with Compiz
+RequiredComponents=gnome-panel;gnome-settings-daemon;
+RequiredProviders=windowmanager;notifications;
+DefaultProvider-windowmanager=compiz-gtk
+DefaultProvider-notifications=notification-daemon

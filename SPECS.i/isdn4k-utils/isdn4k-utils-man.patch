@@ -1,0 +1,20 @@
+--- isdn4k-utils/xmonisdn/Makefile.in.man	Mon Oct 18 04:35:44 1999
++++ isdn4k-utils/xmonisdn/Makefile.in	Tue Jun 19 21:36:11 2001
+@@ -51,7 +51,7 @@
+ 	CFLAGS= ; MAKEFLAGS= ; $(MAKE) -f Makefile EXTRA_DEFINES="$(I4LU_DEFINES)"
+ 	rm -rf X11
+ 
+-xmonisdn.man: xmonisdn.man.in Makefile
++xmonisdn.man: xmonisdn.man.in
+ 	MANDATE=`grep CHECKIN $< | awk '{print $$4}'`; \
+ 	sed \
+ 	   -e "s#\@MANDATE\@#$${MANDATE}#g" \
+@@ -60,7 +60,7 @@
+            -e s,\@CONFIG_XMONISDN_DOWNCMD\@,${CONFIG_XMONISDN_DOWNCMD},g \
+ 	   < $< > $@
+ 
+-config:
++config: xmonisdn.man
+ 	@cp Makefile.in GNUmakefile
+ 	@xmkmf
+ 

@@ -1,0 +1,13 @@
+diff -ru libmpeg3-1.7-orig/Makefile libmpeg3-1.7/Makefile
+--- libmpeg3-1.7-orig/Makefile  2013-06-05 07:43:44.000000000 -0400
++++ libmpeg3-1.7/Makefile       2013-06-05 07:44:02.000000000 -0400
+@@ -1,7 +1,7 @@
+ CC = gcc
+ NASM = nasm
+-USE_MMX = 1
+-USE_CSS = 1
++USE_MMX = 0
++USE_CSS = 0
+ A52DIR := $(shell expr a52dec* )
+ 
+ 

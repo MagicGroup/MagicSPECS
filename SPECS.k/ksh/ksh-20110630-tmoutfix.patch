@@ -1,0 +1,12 @@
+diff -up ksh-20110630/src/cmd/ksh93/bltins/read.c.tmoutfix ksh-20110630/src/cmd/ksh93/bltins/read.c
+--- ksh-20110630/src/cmd/ksh93/bltins/read.c.tmoutfix	2011-09-22 09:30:20.421888036 +0200
++++ ksh-20110630/src/cmd/ksh93/bltins/read.c	2011-09-22 09:31:14.148350534 +0200
+@@ -726,7 +726,7 @@ done:
+ 	if(!was_share)
+ 		sfset(iop,SF_SHARE,0);
+ 	nv_close(np);
+-	if((flags>>D_FLAG) && (shp->fdstatus[fd]&IOTTY))
++	if(shp->fdstatus[fd]&IOTTY)
+ 		tty_cooked(fd);
+ 	if(flags&S_FLAG)
+ 		hist_flush(shp->gd->hist_ptr);

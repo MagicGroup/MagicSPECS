@@ -1,0 +1,36 @@
+commit 7cf1ad2dbb5af9b9012ba67b9687ad28c02578d6
+Author: Panu Matilainen <pmatilai@redhat.com>
+Date:   Wed Feb 3 12:52:30 2010 +0200
+
+    Enable strict python bytecompile mode (if rpm supports it)
+    - with %_python_bytecompile_errors_terminate_build set to non-zero,
+      byte-compilation errors will abort the build, this helps catch out
+      silly "improt foo" syntax errors early on
+    - not all .py files are valid python (they can be templates, inteded for
+      jython consumption etc), and what's valid can depend on the python
+      version (notably 2.x vs 3.x) so allow overriding from spec
+
+diff --git a/macros b/macros
+index 77844f0..7721fe0 100644
+--- a/macros
++++ b/macros
+@@ -95,7 +95,7 @@
+     %{!?__debug_package:/usr/lib/rpm/redhat/brp-strip %{__strip}} \
+     /usr/lib/rpm/redhat/brp-strip-static-archive %{__strip} \
+     /usr/lib/rpm/redhat/brp-strip-comment-note %{__strip} %{__objdump} \
+-    /usr/lib/rpm/brp-python-bytecompile %{__python} \
++    /usr/lib/rpm/brp-python-bytecompile %{__python} %{?_python_bytecompile_errors_terminate_build} \
+     /usr/lib/rpm/redhat/brp-python-hardlink \
+     %{!?__jar_repack:/usr/lib/rpm/redhat/brp-java-repack-jars} \
+ %{nil}
+@@ -167,6 +167,10 @@ unset DISPLAY\
+ # Should unpackaged files in a build root terminate a build?
+ %_unpackaged_files_terminate_build    1
+ 
++#
++## Should python bytecompilation errors terminate a build?
++%_python_bytecompile_errors_terminate_build 1
++
+ # Use SHA-256 for FILEDIGESTS instead of default MD5
+ %_source_filedigest_algorithm 8
+ %_binary_filedigest_algorithm 8

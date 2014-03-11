@@ -1,0 +1,17 @@
+244063: RHEL4 SIGSEGV in xinetd when application's logfile hit size limit
+
+Written-By: Jan Safranek <jsafrane@redhat.com>
+
+Initialize xl_callback_arg, so xinetd does not crash when it gets dereferenced.
+
+diff -up xinetd-2.3.13/libs/src/xlog/xlog.c.orig xinetd-2.3.13/libs/src/xlog/xlog.c
+--- xinetd-2.3.13/libs/src/xlog/xlog.c.orig	2003-05-31 23:58:58.000000000 +0200
++++ xinetd-2.3.13/libs/src/xlog/xlog.c	2007-12-05 15:31:08.000000000 +0100
+@@ -216,6 +216,7 @@ int xlog_control( xlog_h pxlog, xlog_cmd
+ 		
+ 		case XLOG_CALLBACK:
+ 			xp->xl_callback = va_arg( ap, voidfunc ) ;
++			xp->xl_callback_arg = va_arg( ap, void * );
+ 			break ;
+ 			
+ 		case XLOG_GETFLAG:

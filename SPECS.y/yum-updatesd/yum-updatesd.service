@@ -1,0 +1,11 @@
+[Unit]
+Description=YUM Package	Update Service
+After=syslog.target
+
+[Service]
+Type=dbus
+BusName=edu.duke.linux.yum
+ExecStart=/usr/sbin/yum-updatesd -f
+
+[Install]
+WantedBy=multi-user.target

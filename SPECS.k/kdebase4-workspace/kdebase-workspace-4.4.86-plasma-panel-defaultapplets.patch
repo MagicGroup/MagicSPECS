@@ -1,0 +1,20 @@
+diff -Nuarp plasma.orig/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js plasma/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js
+--- plasma.orig/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js	2010-06-19 09:23:43.000000000 +0800
++++ plasma/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js	2010-06-19 09:28:02.000000000 +0800
+@@ -5,6 +5,16 @@ if (panelIds.length == 1) {
+ }
+ panel.height = 26
+ panel.addWidget("launcher")
++panel.addWidget("showdesktop")
++var icon1 = panel.addWidget("icon")
++icon1.writeConfig("Url","/opt/kde4/share/applications/kde4/dolphin.desktop")
++icon1.reloadConfig()
++var icon2 = panel.addWidget("icon")
++icon2.writeConfig("Url","/usr/share/applications/mozilla-firefox.desktop")
++icon2.reloadConfig()
++var icon3 = panel.addWidget("icon")
++icon3.writeConfig("Url","/opt/kde4/share/applications/kde4/konsole.desktop")
++icon3.reloadConfig()
+ panel.addWidget("pager")
+ panel.addWidget("tasks")
+ panel.addWidget("systemtray")

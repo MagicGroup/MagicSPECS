@@ -1,0 +1,47 @@
+diff -up at-3.1.14/at.c.shell at-3.1.14/at.c
+--- at-3.1.14/at.c.shell	2014-01-06 17:58:17.555564746 +0100
++++ at-3.1.14/at.c	2014-01-06 17:59:17.699720002 +0100
+@@ -62,11 +62,8 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#ifdef TM_IN_SYS_TIME
+ #include <sys/time.h>
+-#else
+ #include <time.h>
+-#endif
+ 
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+@@ -239,6 +236,12 @@ writefile(time_t runtimer, char queue)
+     int kill_errno;
+     int rc;
+     int mailsize = 128;
++    struct timeval tv;
++    struct timezone tz;
++    long int i;
++
++    gettimeofday(&tv, &tz);
++    srandom(getpid()+tv.tv_usec);
+ 
+ /* Install the signal handler for SIGINT; terminate after removing the
+  * spool file if necessary
+@@ -449,6 +452,9 @@ writefile(time_t runtimer, char queue)
+     fprintf(fp, " || {\n\t echo 'Execution directory "
+ 	    "inaccessible' >&2\n\t exit 1\n}\n");
+ 
++    i = random();
++    fprintf(fp, "${SHELL:-/bin/sh} << \'marcinDELIMITER%08lx\'\n", i);
++
+     istty = isatty(fileno(stdin));
+     if (istty) {
+ 	fprintf(stderr, "at> ");
+@@ -464,7 +470,7 @@ writefile(time_t runtimer, char queue)
+     if (istty) {
+ 	fprintf(stderr, "<EOT>\n");
+     }
+-    fprintf(fp, "\n");
++    fprintf(fp, "marcinDELIMITER%08lx\n", i);
+     if (ferror(fp))
+ 	panic("Output error");
+ 

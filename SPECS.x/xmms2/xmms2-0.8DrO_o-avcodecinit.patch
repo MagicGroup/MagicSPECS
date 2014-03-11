@@ -1,0 +1,41 @@
+diff -ur xmms2-0.8DrO_o.orig/src/plugins/avcodec/avcodec.c xmms2-0.8DrO_o/src/plugins/avcodec/avcodec.c
+--- xmms2-0.8DrO_o.orig/src/plugins/avcodec/avcodec.c	2013-07-05 16:45:45.187111648 +0000
++++ xmms2-0.8DrO_o/src/plugins/avcodec/avcodec.c	2013-07-05 16:46:56.464110594 +0000
+@@ -28,6 +28,10 @@
+ 
+ #define AVCODEC_BUFFER_SIZE 16384
+ 
++#if LIBAVCODEC_VERSION_MAJOR >= 55
++#define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000
++#endif
++
+ typedef struct {
+ 	AVCodecContext *codecctx;
+ 
+@@ -134,7 +138,7 @@
+ 
+ 	xmms_xform_private_data_set (xform, data);
+ 
+-	avcodec_init ();
++	//avcodec_init ();
+ 	avcodec_register_all ();
+ 
+ 	mimetype = xmms_xform_indata_get_str (xform,
+@@ -200,7 +204,7 @@
+ 		}
+ 	}
+ 
+-	data->codecctx = avcodec_alloc_context ();
++	data->codecctx = avcodec_alloc_context3 (codec);
+ 	data->codecctx->sample_rate = data->samplerate;
+ 	data->codecctx->channels = data->channels;
+ 	data->codecctx->bit_rate = data->bitrate;
+@@ -211,7 +215,7 @@
+ 	data->codecctx->codec_id = codec->id;
+ 	data->codecctx->codec_type = codec->type;
+ 
+-	if (avcodec_open (data->codecctx, codec) < 0) {
++	if (avcodec_open2 (data->codecctx, codec, NULL) < 0) {
+ 		XMMS_DBG ("Opening decoder '%s' failed", codec->name);
+ 		goto err;
+ 	} else {

@@ -1,0 +1,212 @@
+Index: kdelibs-4.1.85/kdeui/widgets/khelpmenu.h
+===================================================================
+--- kdelibs-4.1.85.orig/kdeui/widgets/khelpmenu.h	2008-09-26 16:57:12.000000000 +0200
++++ kdelibs-4.1.85/kdeui/widgets/khelpmenu.h	2008-12-11 18:22:51.000000000 +0100
+@@ -170,7 +170,9 @@
+       menuAboutApp = 2,
+       menuAboutKDE = 3,
+       menuReportBug = 4,
+-      menuSwitchLanguage = 5
++      menuSwitchLanguage = 5,
++      menuMagicGetHelpOnline = 100,
++      menuKDECNGetHelpOnline = 101
+     };
+ 
+     /**
+@@ -206,6 +208,16 @@
+     void aboutApplication();
+ 
+     /**
++     * Launches the browser for KDE China Community Online Help
++     */
++    void kdecnGetHelpOnline();
++
++    /**
++     * Launches the browser for Magic Linux Community Online Help
++     */
++    void magicGetHelpOnline();
++
++    /**
+      * Opens the standard "About KDE" dialog box.
+      */
+     void aboutKDE();
+Index: kdelibs-4.1.85/kdeui/widgets/khelpmenu.cpp
+===================================================================
+--- kdelibs-4.1.85.orig/kdeui/widgets/khelpmenu.cpp	2008-12-04 09:36:05.000000000 +0100
++++ kdelibs-4.1.85/kdeui/widgets/khelpmenu.cpp	2008-12-11 18:22:51.000000000 +0100
+@@ -48,6 +48,7 @@
+ #include <kswitchlanguagedialog_p.h>
+ #include <ktoolinvocation.h>
+ #include <kstandarddirs.h>
++#include <kprocess.h>
+ 
+ #include <config.h>
+ #ifdef Q_WS_X11
+@@ -70,6 +71,8 @@
+         mHandBookAction = 0;
+         mWhatsThisAction = 0;
+         mReportBugAction = 0;
++        mMagicGetHelpOnlineAction = 0;
++        mKDECNGetHelpOnlineAction = 0;
+         mAboutAppAction = 0;
+         mAboutKDEAction = 0;
+     }
+@@ -95,6 +98,7 @@
+     bool mShowWhatsThis;
+ 
+     KAction *mHandBookAction, *mWhatsThisAction;
++    QAction *mMagicGetHelpOnlineAction, *mKDECNGetHelpOnlineAction;
+     QAction *mReportBugAction, *mSwitchApplicationLanguageAction, *mAboutAppAction, *mAboutKDEAction;
+ 
+     const KAboutData *mAboutData;
+@@ -124,6 +128,8 @@
+     if (showWhatsThis)
+       actions->addAction(KStandardAction::WhatsThis, this, SLOT(contextHelpActivated()));
+     actions->addAction(KStandardAction::ReportBug, this, SLOT(reportBug()));
++    actions->addAction(KStandardAction::MagicGetHelpOnline, this, SLOT(magicGetHelpOnline()));
++    actions->addAction(KStandardAction::KDECNGetHelpOnline, this, SLOT(kdecnGetHelpOnline()));
+     actions->addAction(KStandardAction::SwitchApplicationLanguage, this, SLOT(switchApplicationLanguage()));
+     actions->addAction(KStandardAction::AboutApp, this, SLOT(aboutApplication()));
+     actions->addAction(KStandardAction::AboutKDE, this, SLOT(aboutKDE()));
+@@ -188,6 +194,23 @@
+     if (need_separator)
+       d->mMenu->addSeparator();
+ 
++    need_separator = false;
++
++    if (KAuthorized::authorizeKAction("magic_get_help_online"))
++    {
++      d->mMagicGetHelpOnlineAction = d->mMenu->addAction( "Linux 公社技术支持(&G)", this, SLOT( magicGetHelpOnline() ) );
++      need_separator = true;
++    }
++
++    if (KAuthorized::authorizeKAction("kdecn_get_help_online"))
++    {
++      d->mKDECNGetHelpOnlineAction = d->mMenu->addAction( "KDE 中国社区技术支持(&T)", this, SLOT( kdecnGetHelpOnline() ) );
++      need_separator = true;
++    }
++
++    if (need_separator)
++      d->mMenu->addSeparator();
++
+     if (KAuthorized::authorizeKAction("help_about_app"))
+     {
+       d->mAboutAppAction = d->mMenu->addAction( qApp->windowIcon(),
+@@ -223,6 +248,14 @@
+       return d->mSwitchApplicationLanguageAction;
+     break;
+ 
++    case menuMagicGetHelpOnline:
++      return d->mMagicGetHelpOnlineAction;
++    break;
++
++    case menuKDECNGetHelpOnline:
++      return d->mKDECNGetHelpOnlineAction;
++    break;
++
+     case menuAboutApp:
+       return d->mAboutAppAction;
+     break;
+@@ -287,6 +320,22 @@
+ }
+ 
+ 
++void KHelpMenu::magicGetHelpOnline()
++{
++  KProcess *proc = new KProcess;
++  *proc << "xdg-open http://www.linuxfans.org/bbs/forum-17-1.html";
++  proc->start();
++}
++
++
++void KHelpMenu::kdecnGetHelpOnline()
++{
++  KProcess *proc = new KProcess;
++  *proc << "xdg-open http://forum.kdecn.org/";
++  proc->start();
++}
++
++
+ void KHelpMenu::aboutKDE()
+ {
+   if( !d->mAboutKDE )
+Index: kdelibs-4.1.85/kdeui/actions/kstandardaction.h
+===================================================================
+--- kdelibs-4.1.85.orig/kdeui/actions/kstandardaction.h	2008-11-28 16:40:11.000000000 +0100
++++ kdelibs-4.1.85/kdeui/actions/kstandardaction.h	2008-12-11 18:22:51.000000000 +0100
+@@ -160,7 +160,9 @@
+     FullScreen,
+     Clear,
+     PasteText,
+-    SwitchApplicationLanguage
++    SwitchApplicationLanguage,
++    MagicGetHelpOnline = 200,
++    KDECNGetHelpOnline = 201
+   };
+ 
+   /**
+@@ -570,6 +572,16 @@
+   KDEUI_EXPORT KAction *reportBug(const QObject *recvr, const char *slot, QObject *parent);
+ 
+   /**
++   * Launch the browser for Magic Linux Community Online Help
++   */
++  KDEUI_EXPORT KAction *magicGetHelpOnline(const QObject *recvr, const char *slot, QObject *parent);
++
++  /**
++   * Launch the browser for KDE China Community Online Help
++   */
++  KDEUI_EXPORT KAction *kdecnGetHelpOnline(const QObject *recvr, const char *slot, QObject *parent);
++
++  /**
+    * Display the application's About box.
+    */
+   KDEUI_EXPORT KAction *aboutApp(const QObject *recvr, const char *slot, QObject *parent);
+Index: kdelibs-4.1.85/kdeui/actions/kstandardaction_p.h
+===================================================================
+--- kdelibs-4.1.85.orig/kdeui/actions/kstandardaction_p.h	2008-09-26 16:57:12.000000000 +0200
++++ kdelibs-4.1.85/kdeui/actions/kstandardaction_p.h	2008-12-11 18:22:51.000000000 +0100
+@@ -113,6 +113,8 @@
+   { TipofDay,      KStandardShortcut::TipofDay, "help_show_tip", I18N_NOOP("Tip of the &Day"), 0, "help-hint" },
+   { ReportBug,     KStandardShortcut::ReportBug, "help_report_bug", I18N_NOOP("&Report Bug..."), 0, "tools-report-bug" },
+   { SwitchApplicationLanguage, KStandardShortcut::SwitchApplicationLanguage, "switch_application_language", I18N_NOOP("Switch Application &Language..."), 0, 0 },
++  { MagicGetHelpOnline, KStandardShortcut::AccelNone, "magic_get_help_online", "Linux 公社技术支持(&G)", 0, 0 },
++  { KDECNGetHelpOnline, KStandardShortcut::AccelNone, "kdecn_get_help_online", "KDE 中国社区技术支持(&T)", 0, 0 },
+   { AboutApp,      KStandardShortcut::AccelNone, "help_about_app", I18N_NOOP("&About %1"), 0, 0 },
+   { AboutKDE,      KStandardShortcut::AccelNone, "help_about_kde", I18N_NOOP("About &KDE"), 0, "kde" },
+   { ActionNone,    KStandardShortcut::AccelNone, 0, 0, 0, 0 }
+Index: kdelibs-4.1.85/kdeui/actions/kstandardaction.cpp
+===================================================================
+--- kdelibs-4.1.85.orig/kdeui/actions/kstandardaction.cpp	2008-10-01 18:20:39.000000000 +0200
++++ kdelibs-4.1.85/kdeui/actions/kstandardaction.cpp	2008-12-11 18:22:51.000000000 +0100
+@@ -614,6 +614,16 @@
+   return KStandardAction::create( SwitchApplicationLanguage, recvr, slot, parent );
+ }
+ 
++KAction *kdecnGetHelpOnline( const QObject *recvr, const char *slot, QObject *parent )
++{
++  return KStandardAction::create( KDECNGetHelpOnline, recvr, slot, parent );
++}
++
++KAction *magicGetHelpOnline( const QObject *recvr, const char *slot, QObject *parent )
++{
++  return KStandardAction::create( MagicGetHelpOnline, recvr, slot, parent );
++}
++
+ KAction *aboutApp( const QObject *recvr, const char *slot, QObject *parent )
+ {
+   return KStandardAction::create( AboutApp, recvr, slot, parent );
+Index: kdelibs-4.1.85/kdeui/xmlgui/ui_standards.rc
+===================================================================
+--- kdelibs-4.1.85.orig/kdeui/xmlgui/ui_standards.rc	2008-05-21 13:08:34.000000000 +0200
++++ kdelibs-4.1.85/kdeui/xmlgui/ui_standards.rc	2008-12-11 18:22:51.000000000 +0100
+@@ -182,6 +182,9 @@
+     <Separator/>
+     <Action name="switch_application_language"/>
+     <Separator/>
++    <Action name="magic_get_help_online"/>
++    <Action name="kdecn_get_help_online"/>
++    <Separator/>
+     <MergeLocal name="about_merge"/>
+     <Action name="help_about_app"/>
+     <Action name="help_about_kde"/>

@@ -1,0 +1,12 @@
+diff -ur kaffeine-git20111215.orig/kaffeine/src/instwizard.cpp kaffeine-git20111215/kaffeine/src/instwizard.cpp
+--- kaffeine-git20111215.orig/kaffeine/src/instwizard.cpp	2011-12-15 12:51:09.000000000 -0500
++++ kaffeine-git20111215/kaffeine/src/instwizard.cpp	2011-12-15 14:00:51.000000000 -0500
+@@ -229,7 +229,7 @@
+ 		KProcess process;
+ 
+ 		TQStringList dirs = KGlobal::dirs()->findDirs("data", "kaffeine");
+-		TQString homePath = KGlobal::dirs()->localtdedir();
++		TQString homePath = KGlobal::dirs()->localkdedir();
+ 		kdDebug() << "WizardDialog: KDE homedir: " << homePath << endl;
+ 		TQString dataPath;
+ 		if (dirs[0].left(homePath.length()) != homePath) /* global data path */

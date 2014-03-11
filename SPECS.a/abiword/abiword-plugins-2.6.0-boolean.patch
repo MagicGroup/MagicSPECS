@@ -1,0 +1,26 @@
+diff -u -r abiword-plugins-2.6.0.orig/tools/abigrammar/linkgrammarwrap/LinkGrammarWrap.h abiword-plugins-2.6.0/tools/abigrammar/linkgrammarwrap/LinkGrammarWrap.h
+--- abiword-plugins-2.6.0.orig/tools/abigrammar/linkgrammarwrap/LinkGrammarWrap.h	2008-03-18 23:18:02.000000000 +0100
++++ abiword-plugins-2.6.0/tools/abigrammar/linkgrammarwrap/LinkGrammarWrap.h	2008-03-25 17:16:04.000000000 +0100
+@@ -20,6 +20,9 @@
+ #ifndef __LinkGrammarWrap_h__
+ #define __LinkGrammarWrap_h__
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif /* TRUE */
+ extern "C" {
+ #include <link-grammar/link-includes.h>
+ }
+diff -u -r abiword-plugins-2.6.0.orig/wp/impexp/OpenDocument/imp/xp/ODi_Style_Style.h abiword-plugins-2.6.0/wp/impexp/OpenDocument/imp/xp/ODi_Style_Style.h
+--- abiword-plugins-2.6.0.orig/wp/impexp/OpenDocument/imp/xp/ODi_Style_Style.h	2008-03-18 23:18:20.000000000 +0100
++++ abiword-plugins-2.6.0/wp/impexp/OpenDocument/imp/xp/ODi_Style_Style.h	2008-03-25 17:16:04.000000000 +0100
+@@ -23,6 +23,9 @@
+ #ifndef _ODI_STYLE_STYLE_H_
+ #define _ODI_STYLE_STYLE_H_
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif /* TRUE */
+ // Internal includes
+ #include "ODi_ListenerState.h"
+ 

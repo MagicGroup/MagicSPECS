@@ -1,0 +1,36 @@
+diff -up unixodbc-gui-qt/ODBCTestQ4/conn.cpp.debug unixodbc-gui-qt/ODBCTestQ4/conn.cpp
+--- unixodbc-gui-qt/ODBCTestQ4/conn.cpp.debug	2009-01-16 04:56:09.000000000 +0100
++++ unixodbc-gui-qt/ODBCTestQ4/conn.cpp	2011-12-08 14:01:34.797508045 +0100
+@@ -3113,9 +3113,9 @@ void dFullConnect::Ok()
+      */
+     if ( !hand )
+     {
+-        pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_ENV, henv ));
++       pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_ENV, henv, "" ));
+     }
+-    pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_DBC, hdbc ));
++    pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_DBC, hdbc, "" ));
+     pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_STMT, hstmt, pOdbcTest->listHandle  ));
+ 
+     pOdbcTest->out_win->append( "Full Connect Succeeded\n" );
+@@ -4058,7 +4058,7 @@ void dAllocConnect::Ok()
+         txt.sprintf( "    *phdbc: %p", hdbc );
+         pOdbcTest->out_win->append( txt );
+ 
+-        pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_DBC, hdbc ) );
++        pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_DBC, hdbc, "" ) );
+     }
+ 
+     pOdbcTest->out_win->append( "" );
+diff -up unixodbc-gui-qt/ODBCTestQ4/DlgEnvAllocEnv.cpp.debug unixodbc-gui-qt/ODBCTestQ4/DlgEnvAllocEnv.cpp
+--- unixodbc-gui-qt/ODBCTestQ4/DlgEnvAllocEnv.cpp.debug	2010-02-27 09:18:46.000000000 +0100
++++ unixodbc-gui-qt/ODBCTestQ4/DlgEnvAllocEnv.cpp	2011-12-08 14:01:34.807508043 +0100
+@@ -63,7 +63,7 @@ void DlgEnvAllocEnv::slotDone()
+         txt.sprintf( "    *phenv: %p", henv );
+         pOdbcTest->out_win->append( txt );
+ 
+-        pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_ENV, henv ) );
++        pOdbcTest->listHandle.append( new OdbcHandle( SQL_HANDLE_ENV, henv, "" ) );
+     }
+ 
+     pOdbcTest->out_win->append( "" );

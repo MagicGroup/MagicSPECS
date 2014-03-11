@@ -1,0 +1,10 @@
+--- libwhisker2-2.4/Makefile.orig	2007-05-08 16:02:49.000000000 +0200
++++ libwhisker2-2.4/Makefile	2007-05-08 16:02:21.000000000 +0200
+@@ -11,6 +11,7 @@ build:
+ install:
+ 	export DESTDIR
+ 	perl Makefile.pl install
++	perl Makefile.pl install_lw1
+ 
+ clean:
+ 	perl Makefile.pl clean

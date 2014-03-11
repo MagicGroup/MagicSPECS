@@ -1,0 +1,321 @@
+diff -up openssh-5.9p1/Makefile.in.sesandbox openssh-5.9p1/Makefile.in
+--- openssh-5.9p1/Makefile.in.sesandbox	2011-09-19 04:10:05.706521484 +0200
++++ openssh-5.9p1/Makefile.in	2011-09-19 04:10:15.092646473 +0200
+@@ -90,7 +90,7 @@ SSHDOBJS=sshd.o auth-rhosts.o auth-passw
+ 	loginrec.o auth-pam.o auth-shadow.o auth-sia.o md5crypt.o \
+ 	sftp-server.o sftp-common.o \
+ 	roaming_common.o roaming_serv.o \
+-	sandbox-null.o sandbox-rlimit.o sandbox-systrace.o sandbox-darwin.o
++	sandbox-null.o sandbox-rlimit.o sandbox-systrace.o sandbox-darwin.o sandbox-selinux.o
+ 
+ MANPAGES	= moduli.5.out scp.1.out ssh-add.1.out ssh-agent.1.out ssh-keygen.1.out ssh-keyscan.1.out ssh.1.out sshd.8.out sftp-server.8.out sftp.1.out ssh-keysign.8.out ssh-pkcs11-helper.8.out sshd_config.5.out ssh_config.5.out
+ MANPAGES_IN	= moduli.5 scp.1 ssh-add.1 ssh-agent.1 ssh-keygen.1 ssh-keyscan.1 ssh.1 sshd.8 sftp-server.8 sftp.1 ssh-keysign.8 ssh-pkcs11-helper.8 sshd_config.5 ssh_config.5
+diff -up openssh-5.9p1/configure.ac.sesandbox openssh-5.9p1/configure.ac
+--- openssh-5.9p1/configure.ac.sesandbox	2011-08-18 06:48:24.000000000 +0200
++++ openssh-5.9p1/configure.ac	2011-09-19 04:10:15.193521356 +0200
+@@ -2476,7 +2476,7 @@ AC_SUBST([SSH_PRIVSEP_USER])
+ # Decide which sandbox style to use
+ sandbox_arg=""
+ AC_ARG_WITH([sandbox],
+-	[  --with-sandbox=style    Specify privilege separation sandbox (no, darwin, rlimit, systrace)],
++	[  --with-sandbox=style    Specify privilege separation sandbox (no, darwin, rlimit, systrace, selinux)],
+ 	[
+ 		if test "x$withval" = "xyes" ; then
+ 			sandbox_arg=""
+@@ -2499,6 +2499,10 @@ elif test "x$sandbox_arg" = "xdarwin" ||
+ 		AC_MSG_ERROR([Darwin seatbelt sandbox requires sandbox.h and sandbox_init function])
+ 	SANDBOX_STYLE="darwin"
+ 	AC_DEFINE([SANDBOX_DARWIN], [1], [Sandbox using Darwin sandbox_init(3)])
++elif test "x$sandbox_arg" = "xselinux"  || \
++    test "x$WITH_SELINUX" = "x1"; then
++	SANDBOX_STYLE="selinux"
++	AC_DEFINE([SANDBOX_SELINUX], [1], [Sandbox using selinux(8)])
+ elif test "x$sandbox_arg" = "xrlimit" || \
+      ( test -z "$sandbox_arg" && test "x$ac_cv_func_setrlimit" = "xyes" ) ; then
+ 	test "x$ac_cv_func_setrlimit" != "xyes" && \
+diff -up openssh-5.9p1/openbsd-compat/port-linux.c.sesandbox openssh-5.9p1/openbsd-compat/port-linux.c
+--- openssh-5.9p1/openbsd-compat/port-linux.c.sesandbox	2011-09-19 04:10:14.731521450 +0200
++++ openssh-5.9p1/openbsd-compat/port-linux.c	2011-09-19 04:10:15.292521265 +0200
+@@ -459,24 +459,24 @@ ssh_selinux_setup_pty(char *pwname, cons
+ 	debug3("%s: done", __func__);
+ }
+ 
+-void
++int
+ ssh_selinux_change_context(const char *newname)
+ {
+-	int len, newlen;
++	int len, newlen, rv = -1;
+ 	char *oldctx, *newctx, *cx;
+ 	void (*switchlog) (const char *fmt,...) = logit;
+ 
+ 	if (!ssh_selinux_enabled())
+-		return;
++		return -2;
+ 
+ 	if (getcon((security_context_t *)&oldctx) < 0) {
+ 		logit("%s: getcon failed with %s", __func__, strerror(errno));
+-		return;
++		return -1;
+ 	}
+ 	if ((cx = index(oldctx, ':')) == NULL || (cx = index(cx + 1, ':')) ==
+ 	    NULL) {
+ 		logit ("%s: unparseable context %s", __func__, oldctx);
+-		return;
++		return -1;
+ 	}
+ 
+ 	/*
+@@ -484,8 +484,10 @@ ssh_selinux_change_context(const char *n
+ 	 * security context.
+ 	 */
+ 	if (strncmp(cx, SSH_SELINUX_UNCONFINED_TYPE,
+-	    sizeof(SSH_SELINUX_UNCONFINED_TYPE) - 1) == 0)
++	    sizeof(SSH_SELINUX_UNCONFINED_TYPE) - 1) == 0) {
+ 		switchlog = debug3;
++		rv = -2;
++	}
+ 
+ 	newlen = strlen(oldctx) + strlen(newname) + 1;
+ 	newctx = xmalloc(newlen);
+@@ -499,8 +501,11 @@ ssh_selinux_change_context(const char *n
+ 	if (setcon(newctx) < 0)
+ 		switchlog("%s: setcon %s from %s failed with %s", __func__,
+ 		    newctx, oldctx, strerror(errno));
++	else
++		rv = 0;
+ 	xfree(oldctx);
+ 	xfree(newctx);
++	return rv;
+ }
+ 
+ void
+diff -up openssh-5.9p1/openbsd-compat/port-linux.h.sesandbox openssh-5.9p1/openbsd-compat/port-linux.h
+--- openssh-5.9p1/openbsd-compat/port-linux.h.sesandbox	2011-09-19 04:10:14.817647868 +0200
++++ openssh-5.9p1/openbsd-compat/port-linux.h	2011-09-19 04:10:15.401648009 +0200
+@@ -23,7 +23,7 @@
+ int ssh_selinux_enabled(void);
+ void ssh_selinux_setup_pty(char *, const char *);
+ void ssh_selinux_setup_exec_context(char *);
+-void ssh_selinux_change_context(const char *);
++int ssh_selinux_change_context(const char *);
+ void ssh_selinux_chopy_context(void);
+ void ssh_selinux_setfscreatecon(const char *);
+ #endif
+diff -up openssh-5.9p1/sandbox-darwin.c.sesandbox openssh-5.9p1/sandbox-darwin.c
+--- openssh-5.9p1/sandbox-darwin.c.sesandbox	2011-06-26 23:18:21.000000000 +0200
++++ openssh-5.9p1/sandbox-darwin.c	2011-09-19 04:10:15.490523231 +0200
+@@ -83,6 +83,12 @@ ssh_sandbox_child(struct ssh_sandbox *bo
+ }
+ 
+ void
++ssh_sandbox_privileged_child(struct ssh_sandbox *box)
++{
++	/* empty */
++}
++
++void
+ ssh_sandbox_parent_finish(struct ssh_sandbox *box)
+ {
+ 	free(box);
+diff -up openssh-5.9p1/sandbox-null.c.sesandbox openssh-5.9p1/sandbox-null.c
+--- openssh-5.9p1/sandbox-null.c.sesandbox	2011-06-23 11:45:51.000000000 +0200
++++ openssh-5.9p1/sandbox-null.c	2011-09-19 04:10:15.599458687 +0200
+@@ -58,6 +58,12 @@ ssh_sandbox_child(struct ssh_sandbox *bo
+ }
+ 
+ void
++ssh_sandbox_privileged_child(struct ssh_sandbox *box)
++{
++	/* empty */
++}
++
++void
+ ssh_sandbox_parent_finish(struct ssh_sandbox *box)
+ {
+ 	free(box);
+diff -up openssh-5.9p1/sandbox-rlimit.c.sesandbox openssh-5.9p1/sandbox-rlimit.c
+--- openssh-5.9p1/sandbox-rlimit.c.sesandbox	2011-06-23 11:45:51.000000000 +0200
++++ openssh-5.9p1/sandbox-rlimit.c	2011-09-19 04:10:16.077647289 +0200
+@@ -78,6 +78,12 @@ ssh_sandbox_child(struct ssh_sandbox *bo
+ }
+ 
+ void
++ssh_sandbox_privileged_child(struct ssh_sandbox *box)
++{
++	/* empty */
++}
++
++void
+ ssh_sandbox_parent_finish(struct ssh_sandbox *box)
+ {
+ 	free(box);
+diff -up openssh-5.9p1/sandbox-selinux.c.sesandbox openssh-5.9p1/sandbox-selinux.c
+--- openssh-5.9p1/sandbox-selinux.c.sesandbox	2011-09-19 04:10:16.179526059 +0200
++++ openssh-5.9p1/sandbox-selinux.c	2011-09-19 04:39:00.058646230 +0200
+@@ -0,0 +1,122 @@
++/* $Id: sandbox-selinux.c,v 1.0 2011/01/17 10:15:30 jfch Exp $ */
++ 
++/*
++ * Copyright 2011 Red Hat, Inc.  All rights reserved.
++ * Use is subject to license terms.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
++ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ *
++ * Red Hat author: Jan F. Chadima <jchadima@redhat.com>
++ */
++
++
++#include "includes.h"
++
++#ifdef SANDBOX_SELINUX
++
++#include <sys/types.h>
++
++#include <errno.h>
++#include <stdarg.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/resource.h>
++
++#include "log.h"
++#include "ssh-sandbox.h"
++#include "xmalloc.h"
++#include "openbsd-compat/port-linux.h"
++
++/* selinux based sandbox */
++
++struct ssh_sandbox {
++	pid_t child_pid;
++};
++
++struct ssh_sandbox *
++ssh_sandbox_init(void)
++{
++	struct ssh_sandbox *box;
++
++	/*
++	 * Strictly, we don't need to maintain any state here but we need
++	 * to return non-NULL to satisfy the API.
++	 */
++	debug3("selinux sandbox init");
++	box = xcalloc(1, sizeof(*box));
++	box->child_pid = 0;
++	return box;
++}
++
++void
++ssh_sandbox_child(struct ssh_sandbox *box)
++{
++	struct rlimit rl_zero;
++
++	rl_zero.rlim_cur = rl_zero.rlim_max = 0;
++
++	if (setrlimit(RLIMIT_FSIZE, &rl_zero) == -1)
++		fatal("%s: setrlimit(RLIMIT_FSIZE, { 0, 0 }): %s",
++			__func__, strerror(errno));
++	if (setrlimit(RLIMIT_NOFILE, &rl_zero) == -1)
++		fatal("%s: setrlimit(RLIMIT_NOFILE, { 0, 0 }): %s",
++			__func__, strerror(errno));
++#ifdef HAVE_RLIMIT_NPROC
++	if (setrlimit(RLIMIT_NPROC, &rl_zero) == -1)
++		fatal("%s: setrlimit(RLIMIT_NPROC, { 0, 0 }): %s",
++			__func__, strerror(errno));
++#endif
++}
++
++void
++ssh_sandbox_privileged_child(struct ssh_sandbox *box)
++{
++	switch (ssh_selinux_change_context("sshd_sandbox_t")) {
++	case 0:
++		debug3("selinux sandbox child sucessfully enabled");
++		break;
++	case -2:
++		logit("selinux sandbox not useful");
++		break;
++	case -1:
++		fatal("cannot set up selinux sandbox");
++	default:
++		fatal("inmternal error in selinux sandbox");
++	}
++}
++
++void
++ssh_sandbox_parent_finish(struct ssh_sandbox *box)
++{
++	free(box);
++	debug3("%s: finished", __func__);
++}
++
++void
++ssh_sandbox_parent_preauth(struct ssh_sandbox *box, pid_t child_pid)
++{
++	debug3("selinux sandbox parent sucessfully enabled");
++	box->child_pid = child_pid;
++}
++
++#endif /* SANDBOX_NULL */
+diff -up openssh-5.9p1/sandbox-systrace.c.sesandbox openssh-5.9p1/sandbox-systrace.c
+--- openssh-5.9p1/sandbox-systrace.c.sesandbox	2011-08-05 22:16:23.000000000 +0200
++++ openssh-5.9p1/sandbox-systrace.c	2011-09-19 04:10:16.268646532 +0200
+@@ -109,6 +109,12 @@ ssh_sandbox_child(struct ssh_sandbox *bo
+ 	close(box->child_sock);
+ }
+ 
++void
++ssh_sandbox_privileged_child(struct ssh_sandbox *box)
++{
++	/* empty */
++}
++
+ static void
+ ssh_sandbox_parent(struct ssh_sandbox *box, pid_t child_pid,
+     const struct sandbox_policy *allowed_syscalls)
+diff -up openssh-5.9p1/ssh-sandbox.h.sesandbox openssh-5.9p1/ssh-sandbox.h
+--- openssh-5.9p1/ssh-sandbox.h.sesandbox	2011-06-23 11:45:51.000000000 +0200
++++ openssh-5.9p1/ssh-sandbox.h	2011-09-19 04:10:16.392523931 +0200
+@@ -19,5 +19,6 @@ struct ssh_sandbox;
+ 
+ struct ssh_sandbox *ssh_sandbox_init(void);
+ void ssh_sandbox_child(struct ssh_sandbox *);
++void ssh_sandbox_privileged_child(struct ssh_sandbox *);
+ void ssh_sandbox_parent_finish(struct ssh_sandbox *);
+ void ssh_sandbox_parent_preauth(struct ssh_sandbox *, pid_t);
+diff -up openssh-5.9p1/sshd.c.sesandbox openssh-5.9p1/sshd.c
+--- openssh-5.9p1/sshd.c.sesandbox	2011-09-19 04:10:14.564467584 +0200
++++ openssh-5.9p1/sshd.c	2011-09-19 04:36:43.324520132 +0200
+@@ -728,10 +730,12 @@ privsep_preauth(Authctxt *authctxt)
+ 		set_log_handler(mm_log_handler, pmonitor);
+ 
+ 		/* Demote the child */
+-		if (getuid() == 0 || geteuid() == 0)
++		if (getuid() == 0 || geteuid() == 0) {
++			ssh_sandbox_privileged_child(box);
+ 			privsep_preauth_child();
++		}
+ 		setproctitle("%s", "[net]");
+ 		if (box != NULL) {
+ 			ssh_sandbox_child(box);
+ 			xfree(box);
+ 		}

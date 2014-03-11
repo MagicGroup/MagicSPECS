@@ -1,0 +1,10 @@
+--- Format-Human-Bytes-0.06/Makefile.PL	2010-09-14 13:58:36.000000000 +0200
++++ Format-Human-Bytes-0.06/Makefile.PL.autoinstall	2010-09-15 16:07:21.303195916 +0200
+@@ -7,7 +7,5 @@
+ 
+ test_requires 'Test::More';
+ 
+-auto_install;
+-
+ WriteAll;
+ 

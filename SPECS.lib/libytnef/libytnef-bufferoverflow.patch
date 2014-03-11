@@ -1,0 +1,30 @@
+From 492f2ea1326d7825943f48aff31ed0ddc89fd2b7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 4 Jul 2012 17:04:44 +0200
+Subject: [PATCH] Fix off-by-one error when copying RTF header
+
+The RTF header (RTF_PREBUF) string is copied to temporary buffer. The
+terminating '\0' is never accessed, so it's not needed and cannot be
+written after the allocated buffer.
+
+<http://sourceforge.net/tracker/?func=detail&aid=2949686&group_id=70352&atid=527487>
+<https://bugzilla.redhat.com/show_bug.cgi?id=831322>
+---
+ ytnef.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/ytnef.c b/ytnef.c
+index 482ecdc..970c048 100644
+--- a/ytnef.c
++++ b/ytnef.c
+@@ -1328,7 +1328,7 @@ unsigned char *DecompressRTF(variableLength *p, int *size) {
+ 
+     comp_Prebuf.size = strlen(RTF_PREBUF);
+     comp_Prebuf.data = calloc(comp_Prebuf.size, 1);
+-    strcpy(comp_Prebuf.data, RTF_PREBUF);
++    memcpy(comp_Prebuf.data, RTF_PREBUF, comp_Prebuf.size);
+ 
+     src = p->data;
+     in = 0;
+-- 
+1.7.7.6

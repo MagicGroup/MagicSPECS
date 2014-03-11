@@ -1,0 +1,24 @@
+diff -ur bmp-0.9.7.1.orig/beep/Makefile.am bmp-0.9.7.1/beep/Makefile.am
+--- bmp-0.9.7.1.orig/beep/Makefile.am	2013-02-16 00:29:24.740467230 +0000
++++ bmp-0.9.7.1/beep/Makefile.am	2013-02-16 00:29:44.786470144 +0000
+@@ -7,7 +7,7 @@
+ 
+ beep_LDFLAGS = -export-dynamic
+ beep_LDADD = \
+-	$(X_LIBS) $(X_PRE_LIBS) -lX11 $(X_EXTRA_LIBS) \
++	$(X_LIBS) $(X_PRE_LIBS) -lX11 -lm $(X_EXTRA_LIBS) \
+ 	$(GTK_LIBS)      \
+ 	$(LIBGLADE_LIBS) \
+ 	$(LTLIBINTL)     \
+diff -ur bmp-0.9.7.1.orig/beep/Makefile.in bmp-0.9.7.1/beep/Makefile.in
+--- bmp-0.9.7.1.orig/beep/Makefile.in	2013-02-16 00:29:24.742467226 +0000
++++ bmp-0.9.7.1/beep/Makefile.in	2013-02-16 00:29:55.075467984 +0000
+@@ -319,7 +319,7 @@
+ beepincludedir = $(includedir)/bmp
+ beep_LDFLAGS = -export-dynamic
+ beep_LDADD = \
+-	$(X_LIBS) $(X_PRE_LIBS) -lX11 $(X_EXTRA_LIBS) \
++	$(X_LIBS) $(X_PRE_LIBS) -lX11 -lm $(X_EXTRA_LIBS) \
+ 	$(GTK_LIBS)      \
+ 	$(LIBGLADE_LIBS) \
+ 	$(LTLIBINTL)     \

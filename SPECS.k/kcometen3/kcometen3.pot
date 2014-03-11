@@ -1,0 +1,179 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-07-06 03:42+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/kcometen3.cpp:40 ../src/kcometen3.moc.cpp:24
+#: ../src/kcometen3.moc.cpp:28 ../src/kcometen3.moc.cpp:34
+#: ../src/kcometen3.moc.cpp:42 ../src/kcometen3.moc.cpp:56
+#: ../src/kcometen3.moc.cpp:70
+msgid "KCometen3"
+msgstr ""
+
+#: ../src/kcometen3.cpp:41
+msgid "2.2.0"
+msgstr ""
+
+#: ../src/kcometen3.moc.cpp:97 ../src/kcometen3.moc.cpp:101
+#: ../src/kcometen3.moc.cpp:107 ../src/kcometen3.moc.cpp:115
+#: ../src/kcometen3.moc.cpp:135 ../src/kcometen3.moc.cpp:149
+msgid "KCometen3Setup"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:188
+msgid "Screen Saver Config"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:189
+msgid "&OK"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:190
+msgid "C&ancel"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:191
+msgid "Alt+A"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:193
+msgid "Color"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:194
+msgid "Size Scale"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:195
+msgid "Camera Speed"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:196
+msgid "Free Camera"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:198
+msgid "Max FPS"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:199
+msgid "Comet Interval"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:200
+msgid "Time Scale"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:202
+msgid "Red"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:203
+msgid "Blue"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:204
+msgid "Green"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:205
+msgid "All Colors"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:206
+msgid "Random Colors"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:207
+msgid "Optio&ns"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:209
+msgid "Split Comet"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:211
+msgid "&Lightning"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:212
+msgid "Alt+L"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:213
+msgid "Rotate Comet"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:215
+msgid "Curve Comet"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:217
+msgid "Slowmotion"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:219
+msgid "Camera Rotation"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:221
+msgid "Effects"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:224
+msgid "128x128"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:225
+msgid "256x256"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:226
+msgid "512x512"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:227
+msgid "Real Size"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:228
+msgid "Size"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:229
+msgid "Desktop"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:230
+msgid "File"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:232
+msgid "Random File"
+msgstr ""
+
+#: ../src/kcometen3ui.cpp:233
+msgid "&Background"
+msgstr ""
+
+#: ../src/kglcometen3.cpp:145
+msgid "*.jpg;*.jpeg;*.png;*.gif"
+msgstr ""
+
+#: ../src/kglcometen3.cpp:161
+msgid "data"
+msgstr ""

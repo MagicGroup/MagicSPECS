@@ -1,0 +1,41 @@
+From 6079e2ecba0da7a432663f8213345f60978513f5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 21 Aug 2012 17:04:58 +0200
+Subject: [PATCH] Fix deprecated use of qw//
+
+<https://bugzilla.redhat.com/show_bug.cgi?id=754689>
+<https://rt.cpan.org/Public/Bug/Display.html?id=69048>
+---
+ lib/CGI/Session.pm | 2 +-
+ t/ip_matches.t     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/CGI/Session.pm b/lib/CGI/Session.pm
+index 67eaf39..92c0c4d 100644
+--- a/lib/CGI/Session.pm
++++ b/lib/CGI/Session.pm
+@@ -879,7 +879,7 @@ sub _load_pluggables {
+                        id         => "ID",
+                        );
+     my $dsn = $self->{_DSN};
+-    foreach my $plug qw(driver serializer id) {
++    foreach my $plug (qw(driver serializer id)) {
+         my $mod_name = $dsn->{ $plug };
+         if (not defined $mod_name) {
+             $mod_name = $DEFAULT_FOR{ $plug };
+diff --git a/t/ip_matches.t b/t/ip_matches.t
+index 1137d4a..8db31e9 100644
+--- a/t/ip_matches.t
++++ b/t/ip_matches.t
+@@ -36,7 +36,7 @@ is($session->param('TEST'),'VALUE','TEST param still set');
+ 
+ $session->flush;
+ # Testing with ip_match set.
+-CGI::Session->import qw/-ip_match/;
++CGI::Session->import (qw/-ip_match/);
+ 
+ is($CGI::Session::IP_MATCH,1,'ip_match switched on');
+ 
+-- 
+1.7.11.4
+

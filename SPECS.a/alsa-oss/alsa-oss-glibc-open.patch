@@ -1,0 +1,12 @@
+--- alsa-oss-1.0.14/alsa/alsa-oss.c.orig	2007-05-31 03:11:51.000000000 -0500
++++ alsa-oss-1.0.14/alsa/alsa-oss.c	2007-08-16 16:21:27.000000000 -0500
+@@ -284,6 +284,9 @@ static int mixer_open_helper(const char 
+ 	return fd;
+ } 
+ 
++#undef open
++#undef open64
++
+ #define DECL_OPEN(name, callback) \
+ int name(const char *file, int oflag, ...) \
+ { \

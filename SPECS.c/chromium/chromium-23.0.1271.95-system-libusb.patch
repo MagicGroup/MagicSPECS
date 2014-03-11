@@ -1,0 +1,141 @@
+diff -up chromium-23.0.1271.95/build/all.gyp.system-libusb chromium-23.0.1271.95/build/all.gyp
+--- chromium-23.0.1271.95/build/all.gyp.system-libusb	2012-12-12 16:58:49.740146159 -0500
++++ chromium-23.0.1271.95/build/all.gyp	2012-12-12 16:58:49.982146385 -0500
+@@ -47,7 +47,6 @@
+             '../third_party/ffmpeg/ffmpeg.gyp:*',
+             '../third_party/iccjpeg/iccjpeg.gyp:*',
+             '../third_party/libpng/libpng.gyp:*',
+-            '../third_party/libusb/libusb.gyp:*',
+             '../third_party/libwebp/libwebp.gyp:*',
+             '../third_party/libxslt/libxslt.gyp:*',
+             '../third_party/lzma_sdk/lzma_sdk.gyp:*',
+diff -up chromium-23.0.1271.95/build/linux/system.gyp.system-libusb chromium-23.0.1271.95/build/linux/system.gyp
+--- chromium-23.0.1271.95/build/linux/system.gyp.system-libusb	2012-12-12 16:58:49.968146372 -0500
++++ chromium-23.0.1271.95/build/linux/system.gyp	2012-12-12 16:58:50.035146434 -0500
+@@ -841,6 +841,27 @@
+             ],
+           },
+         }],
++      ],
++    },
++    {
++      'target_name': 'libusb',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(<(pkg-config) --cflags libusb-1.0)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(<(pkg-config) --libs-only-L --libs-only-other libusb-1.0)',
++            ],
++            'libraries': [
++              '<!@(<(pkg-config) --libs-only-l libusb-1.0)',
++            ],
++          },
++        }],
+       ],
+     },
+     {
+diff -up chromium-23.0.1271.95/chrome/browser/usb/usb_device.cc.system-libusb chromium-23.0.1271.95/chrome/browser/usb/usb_device.cc
+--- chromium-23.0.1271.95/chrome/browser/usb/usb_device.cc.system-libusb	2012-11-27 21:02:09.000000000 -0500
++++ chromium-23.0.1271.95/chrome/browser/usb/usb_device.cc	2012-12-12 16:58:49.984146387 -0500
+@@ -7,7 +7,7 @@
+ #include "base/stl_util.h"
+ #include "base/synchronization/lock.h"
+ #include "chrome/browser/usb/usb_service.h"
+-#include "third_party/libusb/libusb.h"
++#include <libusb.h>
+ 
+ namespace {
+ 
+diff -up chromium-23.0.1271.95/chrome/browser/usb/usb_service.cc.system-libusb chromium-23.0.1271.95/chrome/browser/usb/usb_service.cc
+--- chromium-23.0.1271.95/chrome/browser/usb/usb_service.cc.system-libusb	2012-11-27 21:02:09.000000000 -0500
++++ chromium-23.0.1271.95/chrome/browser/usb/usb_service.cc	2012-12-12 16:58:49.985146388 -0500
+@@ -9,7 +9,7 @@
+ #include "base/logging.h"
+ #include "base/stl_util.h"
+ #include "chrome/browser/usb/usb_device.h"
+-#include "third_party/libusb/libusb.h"
++#include <libusb.h>
+ 
+ // The UsbEventHandler works around a design flaw in the libusb interface. There
+ // is currently no way to signal to libusb that any caller into one of the event
+diff -up chromium-23.0.1271.95/chrome/browser/usb/usb_service.h.system-libusb chromium-23.0.1271.95/chrome/browser/usb/usb_service.h
+--- chromium-23.0.1271.95/chrome/browser/usb/usb_service.h.system-libusb	2012-11-27 21:02:09.000000000 -0500
++++ chromium-23.0.1271.95/chrome/browser/usb/usb_service.h	2012-12-12 16:58:49.985146388 -0500
+@@ -12,7 +12,7 @@
+ #include "base/threading/platform_thread.h"
+ #include "chrome/browser/profiles/profile_keyed_service.h"
+ #include "chrome/browser/usb/usb_device.h"
+-#include "third_party/libusb/libusb.h"
++#include <libusb.h>
+ 
+ class UsbEventHandler;
+ typedef libusb_context* PlatformUsbContext;
+diff -up chromium-23.0.1271.95/chrome/chrome_browser_extensions.gypi.system-libusb chromium-23.0.1271.95/chrome/chrome_browser_extensions.gypi
+--- chromium-23.0.1271.95/chrome/chrome_browser_extensions.gypi.system-libusb	2012-12-12 16:58:49.662146087 -0500
++++ chromium-23.0.1271.95/chrome/chrome_browser_extensions.gypi	2012-12-12 16:58:49.986146389 -0500
+@@ -37,7 +37,7 @@
+         '../third_party/bzip2/bzip2.gyp:bzip2',
+         '../build/linux/system.gyp:icu',
+         '../third_party/leveldatabase/leveldatabase.gyp:leveldatabase',
+-        '../third_party/libusb/libusb.gyp:libusb',
++        '../build/linux/system.gyp:libusb',
+         '../third_party/re2/re2.gyp:re2',
+         '../ui/base/strings/ui_strings.gyp:ui_strings',
+         '../ui/ui.gyp:ui',
+@@ -682,7 +682,7 @@
+             ['include', '^browser/extensions/api/web_request/web_request_time_tracker.cc'],
+           ],
+           'dependencies!': [
+-            '../third_party/libusb/libusb.gyp:libusb',
++            '../build/linux/system.gyp:libusb',
+           ],
+         }],
+         ['OS=="linux" and use_aura==1', {
+diff -up chromium-23.0.1271.95/chrome/chrome_browser.gypi.system-libusb chromium-23.0.1271.95/chrome/chrome_browser.gypi
+--- chromium-23.0.1271.95/chrome/chrome_browser.gypi.system-libusb	2012-12-12 16:58:49.665146090 -0500
++++ chromium-23.0.1271.95/chrome/chrome_browser.gypi	2012-12-12 16:58:49.989146392 -0500
+@@ -57,7 +57,7 @@
+         '../third_party/leveldatabase/leveldatabase.gyp:leveldatabase',
+         '../third_party/libjingle/libjingle.gyp:libjingle',
+         '../third_party/libphonenumber/libphonenumber.gyp:libphonenumber',
+-        '../third_party/libusb/libusb.gyp:libusb',
++        '../build/linux/system.gyp:libusb',
+         '../third_party/libxml/libxml.gyp:libxml',
+         '../third_party/npapi/npapi.gyp:npapi',
+         '../third_party/re2/re2.gyp:re2',
+@@ -2206,7 +2206,7 @@
+         }, {  # safe_browsing==0
+           'dependencies!': [
+             'safe_browsing_report_proto',
+-            '../third_party/libusb/libusb.gyp:libusb',
++            '../build/linux/system.gyp:libusb',
+           ],
+           'sources!': [
+             'browser/renderer_host/safe_browsing_resource_throttle.cc',
+diff -up chromium-23.0.1271.95/chrome/chrome_browser_ui.gypi.system-libusb chromium-23.0.1271.95/chrome/chrome_browser_ui.gypi
+--- chromium-23.0.1271.95/chrome/chrome_browser_ui.gypi.system-libusb	2012-12-12 17:00:23.033180990 -0500
++++ chromium-23.0.1271.95/chrome/chrome_browser_ui.gypi	2012-12-12 17:01:06.909182579 -0500
+@@ -60,7 +60,7 @@
+         '../third_party/leveldatabase/leveldatabase.gyp:leveldatabase',
+         '../third_party/libjingle/libjingle.gyp:libjingle',
+         '../third_party/libphonenumber/libphonenumber.gyp:libphonenumber',
+-        '../third_party/libusb/libusb.gyp:libusb',
++        '../build/linux/system.gyp:libusb',
+         '../third_party/libxml/libxml.gyp:libxml',
+         '../third_party/npapi/npapi.gyp:npapi',
+         '../third_party/re2/re2.gyp:re2',
+@@ -2072,7 +2072,7 @@
+         }, {  # safe_browsing==0
+           'dependencies!': [
+             'safe_browsing_report_proto',
+-            '../third_party/libusb/libusb.gyp:libusb',
++            '../build/linux/system.gyp:libusb',
+           ],
+         }],
+         ['toolkit_views == 0', {

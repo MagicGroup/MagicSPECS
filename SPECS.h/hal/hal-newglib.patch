@@ -1,0 +1,106 @@
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-generic-backlight.c hal-git20111212/hald/linux/addons/addon-generic-backlight.c
+--- hal-git20111212.orig/hald/linux/addons/addon-generic-backlight.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-generic-backlight.c	2011-12-12 09:40:12.000000000 -0500
+@@ -35,7 +35,7 @@
+ #include <sys/stat.h>
+ #include <unistd.h> 
+ 
+-#include <glib/gmain.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-imac-backlight.c hal-git20111212/hald/linux/addons/addon-imac-backlight.c
+--- hal-git20111212.orig/hald/linux/addons/addon-imac-backlight.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-imac-backlight.c	2011-12-12 09:40:12.000000000 -0500
+@@ -29,7 +29,7 @@
+ #include <stdlib.h>
+ #include <sys/io.h>
+ 
+-#include <glib/gmain.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-input.c hal-git20111212/hald/linux/addons/addon-input.c
+--- hal-git20111212.orig/hald/linux/addons/addon-input.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-input.c	2011-12-12 09:40:12.000000000 -0500
+@@ -41,8 +41,7 @@
+ #else
+   #include <linux/input.h>
+ #endif
+-#include <glib/gmain.h>
+-#include <glib/gprintf.h>
++#include <glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include "libhal/libhal.h"
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-ipw-killswitch.c hal-git20111212/hald/linux/addons/addon-ipw-killswitch.c
+--- hal-git20111212.orig/hald/linux/addons/addon-ipw-killswitch.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-ipw-killswitch.c	2011-12-12 09:40:12.000000000 -0500
+@@ -36,7 +36,6 @@
+ #include <unistd.h> 
+ 
+ #include <glib.h>
+-#include <glib/gmain.h>
+ #include <glib/gstdio.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-leds.c hal-git20111212/hald/linux/addons/addon-leds.c
+--- hal-git20111212.orig/hald/linux/addons/addon-leds.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-leds.c	2011-12-12 09:40:12.000000000 -0500
+@@ -36,7 +36,6 @@
+ #include <unistd.h> 
+ 
+ #include <glib.h>
+-#include <glib/gmain.h>
+ #include <glib/gstdio.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-macbookpro-backlight.c hal-git20111212/hald/linux/addons/addon-macbookpro-backlight.c
+--- hal-git20111212.orig/hald/linux/addons/addon-macbookpro-backlight.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-macbookpro-backlight.c	2011-12-12 09:40:12.000000000 -0500
+@@ -39,7 +39,7 @@
+ #include <pci/pci.h>
+ #include <unistd.h> 
+ 
+-#include <glib/gmain.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-rfkill-killswitch.c hal-git20111212/hald/linux/addons/addon-rfkill-killswitch.c
+--- hal-git20111212.orig/hald/linux/addons/addon-rfkill-killswitch.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-rfkill-killswitch.c	2011-12-12 09:40:12.000000000 -0500
+@@ -36,7 +36,6 @@
+ #include <unistd.h> 
+ 
+ #include <glib.h>
+-#include <glib/gmain.h>
+ #include <glib/gstdio.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-storage.c hal-git20111212/hald/linux/addons/addon-storage.c
+--- hal-git20111212.orig/hald/linux/addons/addon-storage.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-storage.c	2011-12-12 09:40:12.000000000 -0500
+@@ -39,7 +39,7 @@
+ #include <string.h>
+ #include <sys/ioctl.h>
+ #include <unistd.h>
+-#include <glib/gmain.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+diff -ur hal-git20111212.orig/hald/linux/addons/addon-usb-csr.c hal-git20111212/hald/linux/addons/addon-usb-csr.c
+--- hal-git20111212.orig/hald/linux/addons/addon-usb-csr.c	2011-12-12 09:39:38.000000000 -0500
++++ hal-git20111212/hald/linux/addons/addon-usb-csr.c	2011-12-12 09:40:12.000000000 -0500
+@@ -29,7 +29,7 @@
+ #include <string.h>
+ #include <usb.h>
+ 
+-#include <glib/gmain.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 

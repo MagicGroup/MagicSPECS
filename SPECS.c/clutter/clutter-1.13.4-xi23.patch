@@ -1,0 +1,65 @@
+From b58a1d66816c19eda079a1bd7cecd1ad03644e69 Mon Sep 17 00:00:00 2001
+From: "Jasper St. Pierre" <jstpierre@mecheye.net>
+Date: Wed, 23 Jan 2013 17:09:59 -0500
+Subject: [PATCH] x11: Always request XI2.2
+
+The X server should fill in the minor version that it supports in the
+case where it only supports the older version. We should not get a
+BadRequest or fail the version check if we pass something higher.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=692466
+---
+ clutter/x11/clutter-backend-x11.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/clutter/x11/clutter-backend-x11.c b/clutter/x11/clutter-backend-x11.c
+index 2d8f4ba..26f9581 100644
+--- a/clutter/x11/clutter-backend-x11.c
++++ b/clutter/x11/clutter-backend-x11.c
+@@ -239,12 +239,7 @@ clutter_backend_x11_create_device_manager (ClutterBackendX11 *backend_x11)
+             {
+ #ifdef HAVE_XINPUT_2
+               int major = 2;
+-
+-#ifdef HAVE_XINPUT_2_2
+               int minor = 2;
+-#else
+-              int minor = 0;
+-#endif /* HAVE_XINPUT_2_2 */
+ 
+               if (XIQueryVersion (backend_x11->xdpy, &major, &minor) != BadRequest)
+                 {
+-- 
+1.8.1.2
+
+From 3e1450ba17fce90a8034cc525c67a87ff3cdd53d Mon Sep 17 00:00:00 2001
+From: "Jasper St. Pierre" <jstpierre@mecheye.net>
+Date: Wed, 23 Jan 2013 14:49:26 -0500
+Subject: [PATCH] clutter-backend: Request XI2.3
+
+Since XIQueryVersion, the bad API that it is, chooses the first client
+version that it gets, we need to ensure that we pass XIQueryVersion the
+new XI2.3 version, knowing fully well that Clutter won't be confused
+by the new features.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=692466
+---
+ clutter/x11/clutter-backend-x11.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/clutter/x11/clutter-backend-x11.c b/clutter/x11/clutter-backend-x11.c
+index 26f9581..1015f4c 100644
+--- a/clutter/x11/clutter-backend-x11.c
++++ b/clutter/x11/clutter-backend-x11.c
+@@ -239,7 +239,7 @@ clutter_backend_x11_create_device_manager (ClutterBackendX11 *backend_x11)
+             {
+ #ifdef HAVE_XINPUT_2
+               int major = 2;
+-              int minor = 2;
++              int minor = 3;
+ 
+               if (XIQueryVersion (backend_x11->xdpy, &major, &minor) != BadRequest)
+                 {
+-- 
+1.8.1.2
+

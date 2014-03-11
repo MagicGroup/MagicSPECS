@@ -1,0 +1,12 @@
+diff -up isdn4k-utils-CVS-2006-07-20/capi20/capidyn.c.orig isdn4k-utils-CVS-2006-07-20/capi20/capidyn.c
+--- isdn4k-utils-CVS-2006-07-20/capi20/capidyn.c.orig	2009-01-19 15:18:10.000000000 +0100
++++ isdn4k-utils-CVS-2006-07-20/capi20/capidyn.c	2009-01-19 15:19:30.000000000 +0100
+@@ -26,7 +26,7 @@
+ #include <dlfcn.h>
+ 
+ 
+-#define LIBCAPI	"libcapi20.so"
++#define LIBCAPI	"libcapi20.so.3"
+ static int loadlib(void);
+ 
+ /* ---------------------------------------------------------------------- */

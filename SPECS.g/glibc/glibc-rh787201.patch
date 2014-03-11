@@ -1,0 +1,12 @@
+diff -rup a/fedora/glibc.spec.in b/fedora/glibc.spec.in
+--- a/fedora/glibc.spec.in	2011-10-19 05:04:41.000000000 -0600
++++ b/fedora/glibc.spec.in	2012-02-03 09:26:36.669828253 -0700
+@@ -316,7 +316,7 @@ GCC="gcc -m64"
+ GXX="g++ -m64"
+ %endif
+ %ifarch ppc64
+-BuildFlags="-mno-minimal-toc"
++BuildFlags=
+ GCC="gcc -m64"
+ GXX="g++ -m64"
+ %endif

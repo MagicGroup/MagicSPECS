@@ -1,0 +1,55 @@
+XIM=uim
+XIM_PROGRAM=/usr/bin/uim-xim
+SHORT_DESC=UIM
+ICON=/usr/share/uim/pixmaps/uim-icon.png
+
+gtkimm_exists () {
+	# check if any immodules installed
+	for dir in /usr/lib*/gtk-3.0/*/immodules; do
+		[ -x ${dir}/im-$1.so ] && return 0
+	done
+	for dir in /usr/lib*/gtk-2.0/*/immodules; do
+		[ -x ${dir}/im-$1.so ] && return 0
+	done
+	return 1
+}
+
+if [[ -x /usr/bin/uim-pref-gtk3 ]]; then
+	PREFERENCE_PROGRAM=/usr/bin/uim-pref-gtk3
+else
+	PREFERENCE_PROGRAM=/usr/bin/uim-pref-gtk
+fi
+if [[ -x /usr/bin/uim-toolbar-gtk3-systray ]]; then
+	AUXILIARY_PROGRAM=/usr/bin/uim-toolbar-gtk3-systray
+else
+	AUXILIARY_PROGRAM=/usr/bin/uim-toolbar-gtk-systray
+fi
+if gtkimm_exists uim; then
+	GTK_IM_MODULE=uim
+else
+	GTK_IM_MODULE=xim
+fi
+
+qtimm_exists () {
+	# check if any immodule installed
+	for dir in /usr/lib*/qt4/plugins/inputmethods; do
+		[ -x ${dir}/$1.so ] && return 0
+	done
+	return 1
+}
+
+if qtimm_exists libuiminputcontextplugin; then
+	QT_IM_MODULE=uim
+else
+	QT_IM_MODULE=xim
+fi
+
+if [ "x$DESKTOP_SESSION" = "xkde" ]; then
+	if test -x /usr/libexec/uim-candwin-qt; then
+		UIM_CANDWIN_PROG=/usr/libexec/uim-candwin-qt
+		export UIM_CANDWIN_PROG
+	fi
+#	if test -x /usr/bin/uim-pref-qt; then
+#		PREFERENCE_PROGRAM=/usr/bin/uim-pref-qt
+#	fi
+fi

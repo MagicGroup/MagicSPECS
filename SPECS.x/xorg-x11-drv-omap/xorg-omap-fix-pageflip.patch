@@ -1,0 +1,59 @@
+diff --git a/src/drmmode_display.c b/src/drmmode_display.c
+index c3cf4f8..77f7575 100644
+--- a/src/drmmode_display.c
++++ b/src/drmmode_display.c
+@@ -1314,6 +1314,7 @@ drmmode_remove_fb(ScrnInfoPtr pScrn)
+ typedef struct {
+ 	drmmode_ptr mode;
+ 	uint32_t old_fb_id;
++	int flip_count;
+ 	void *priv;
+ } drmmode_flipdata_rec, *drmmode_flipdata_ptr;
+ 
+@@ -1322,9 +1323,11 @@ page_flip_handler(int fd, unsigned int sequence, unsigned int tv_sec,
+ 		unsigned int tv_usec, void *user_data)
+ {
+ 	drmmode_flipdata_ptr flipdata = user_data;
+-	OMAPDRI2SwapComplete(flipdata->priv);
+-	drmModeRmFB(flipdata->mode->fd, flipdata->old_fb_id);
+-	free(flipdata);
++	if (--(flipdata->flip_count) <= 0) {
++		OMAPDRI2SwapComplete(flipdata->priv);
++		drmModeRmFB(flipdata->mode->fd, flipdata->old_fb_id);
++		free(flipdata);
++	}
+ }
+ 
+ static drmEventContext event_context = {
+@@ -1361,6 +1364,7 @@ drmmode_page_flip(DrawablePtr pDraw, PixmapPtr back, void *priv)
+ 	flipdata->priv = priv;
+ 	flipdata->mode = mode;
+ 	flipdata->old_fb_id = old_fb_id;
++	flipdata->flip_count = 0;
+ 
+ 	DEBUG_MSG("flip: %d -> %d", mode->fb_id, old_fb_id);
+ 
+@@ -1368,6 +1372,13 @@ drmmode_page_flip(DrawablePtr pDraw, PixmapPtr back, void *priv)
+ 	for (i = 0; i < config->num_crtc; i++) {
+ 		crtc = config->crtc[i]->driver_private;
+ 
++		if (config->crtc[i]->enabled)
++			flipdata->flip_count++;
++	}
++
++	for (i = 0; i < config->num_crtc; i++) {
++		crtc = config->crtc[i]->driver_private;
++
+ 		if (!config->crtc[i]->enabled)
+ 			continue;
+ 
+@@ -1375,7 +1386,8 @@ drmmode_page_flip(DrawablePtr pDraw, PixmapPtr back, void *priv)
+ 				mode->fb_id, DRM_MODE_PAGE_FLIP_EVENT, flipdata);
+ 		if (ret) {
+ 			WARNING_MSG("flip queue failed: %s", strerror(errno));
+-			return FALSE;
++			free(flipdata);
++			goto error;
+ 		}
+ 	}
+ 

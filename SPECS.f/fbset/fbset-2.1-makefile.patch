@@ -1,0 +1,44 @@
+--- fbset-2.1/Makefile.makefile	Sun Jan 17 14:15:46 1999
++++ fbset-2.1/Makefile	Thu Jun 15 11:10:30 2000
+@@ -7,6 +7,12 @@
+ FLEX =		flex
+ INSTALL =	install
+ RM =		rm -f
++PREFIX =
++
++prefix =	/usr
++sbindir =	$(prefix)/sbin
++mandir =	$(prefix)/man
++sysconfdir =	/etc
+ 
+ All:		fbset
+ 
+@@ -24,18 +30,16 @@
+ 		$(BISON) modes.y
+ 
+ install:	fbset
+-		if [ -f /sbin/fbset ]; then rm /sbin/fbset; fi
+-		$(INSTALL) fbset /usr/sbin
+-		$(INSTALL) fbset.8 /usr/man/man8
+-		$(INSTALL) fb.modes.5 /usr/man/man5
+-		if [ ! -c /dev/fb0 ]; then mknod /dev/fb0 c 29 0; fi
+-		if [ ! -c /dev/fb1 ]; then mknod /dev/fb1 c 29 32; fi
+-		if [ ! -c /dev/fb2 ]; then mknod /dev/fb2 c 29 64; fi
+-		if [ ! -c /dev/fb3 ]; then mknod /dev/fb3 c 29 96; fi
+-		if [ ! -c /dev/fb4 ]; then mknod /dev/fb4 c 29 128; fi
+-		if [ ! -c /dev/fb5 ]; then mknod /dev/fb5 c 29 160; fi
+-		if [ ! -c /dev/fb6 ]; then mknod /dev/fb6 c 29 192; fi
+-		if [ ! -c /dev/fb7 ]; then mknod /dev/fb7 c 29 224; fi
++		if [ -f $(PREFIX)/sbin/fbset ]; then rm $(PREFIX)/sbin/fbset; fi
++		mkdir -p $(PREFIX)$(sbindir)
++		$(INSTALL) -m 755 fbset $(PREFIX)$(sbindir)/
++		$(INSTALL) -m 755 modeline2fb $(PREFIX)$(sbindir)/
++		mkdir -p $(PREFIX)$(mandir)/man8
++		$(INSTALL) -m 644 fbset.8 $(PREFIX)$(mandir)/man8/
++		mkdir -p $(PREFIX)$(sysconfdir)
++		$(INSTALL) -m 644 etc/fb.modes.ATI $(PREFIX)$(sysconfdir)/fb.modes
++		mkdir -p $(PREFIX)$(mandir)/man5
++		$(INSTALL) -m 644 fb.modes.5 $(PREFIX)$(mandir)/man5/
+ 
+ clean:
+ 		$(RM) *.o fbset lex.yy.c modes.tab.c modes.tab.h

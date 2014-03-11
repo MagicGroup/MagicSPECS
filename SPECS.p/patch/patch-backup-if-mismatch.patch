@@ -1,0 +1,31 @@
+diff -up patch-2.6.1/src/patch.c.backup-if-mismatch patch-2.6.1/src/patch.c
+--- patch-2.6.1/src/patch.c.backup-if-mismatch	2011-02-16 16:43:54.575850844 +0000
++++ patch-2.6.1/src/patch.c	2011-02-16 16:44:56.907995789 +0000
+@@ -106,6 +106,7 @@ main (int argc, char **argv)
+     char numbuf[LINENUM_LENGTH_BOUND + 1];
+     bool written_to_rejname = false;
+     bool apply_empty_patch = false;
++    bool posixly_correct_set;
+ 
+     exit_failure = 2;
+     program_name = argv[0];
+@@ -125,7 +126,7 @@ main (int argc, char **argv)
+ 			 i < 0 ? shell_quoting_style : (enum quoting_style) i);
+     }
+ 
+-    posixly_correct = getenv ("POSIXLY_CORRECT") != 0;
++    posixly_correct_set = posixly_correct = getenv ("POSIXLY_CORRECT") != 0;
+     backup_if_mismatch = ! posixly_correct;
+     patch_get = ((val = getenv ("PATCH_GET"))
+ 		 ? numeric_string (val, true, "PATCH_GET value")
+@@ -151,6 +152,10 @@ main (int argc, char **argv)
+     Argv = argv;
+     get_some_switches();
+ 
++    /* Let --posix cause --no-backup-if-mismatch. */
++    if (! posixly_correct_set && posixly_correct && backup_if_mismatch)
++      backup_if_mismatch = false;
++
+     if (make_backups | backup_if_mismatch)
+       backup_type = get_version (version_control_context, version_control);
+ 

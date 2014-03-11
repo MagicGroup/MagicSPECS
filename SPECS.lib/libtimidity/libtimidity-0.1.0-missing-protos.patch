@@ -1,0 +1,22 @@
+diff -up libtimidity-0.1.0/tests/midi2raw.c~ libtimidity-0.1.0/tests/midi2raw.c
+--- libtimidity-0.1.0/tests/midi2raw.c~	2008-04-03 15:00:42.000000000 +0200
++++ libtimidity-0.1.0/tests/midi2raw.c	2008-04-03 15:00:42.000000000 +0200
+@@ -3,6 +3,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include "timidity.h"
+ 
+ void
+diff -up libtimidity-0.1.0/tests/playmidi.c~ libtimidity-0.1.0/tests/playmidi.c
+--- libtimidity-0.1.0/tests/playmidi.c~	2008-04-03 15:01:01.000000000 +0200
++++ libtimidity-0.1.0/tests/playmidi.c	2008-04-03 15:01:01.000000000 +0200
+@@ -3,6 +3,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <ao/ao.h>
+ #include "timidity.h"
+ 

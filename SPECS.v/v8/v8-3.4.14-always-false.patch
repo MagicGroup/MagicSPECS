@@ -1,0 +1,14 @@
+diff -up v8-3.4.14-20110721svn8716/src/runtime.cc.always-false v8-3.4.14-20110721svn8716/src/runtime.cc
+--- v8-3.4.14-20110721svn8716/src/runtime.cc.always-false	2011-07-21 11:02:26.000000000 -0400
++++ v8-3.4.14-20110721svn8716/src/runtime.cc	2011-07-21 12:32:58.420346531 -0400
+@@ -4188,8 +4188,8 @@ RUNTIME_FUNCTION(MaybeObject*, Runtime_S
+   StrictModeFlag strict_mode = kNonStrictMode;
+   if (args.length() == 5) {
+     CONVERT_SMI_ARG_CHECKED(strict_unchecked, 4);
+-    RUNTIME_ASSERT(strict_unchecked == kStrictMode ||
+-                   strict_unchecked == kNonStrictMode);
++    // RUNTIME_ASSERT(strict_unchecked == kStrictMode ||
++    //               strict_unchecked == kNonStrictMode);
+     strict_mode = static_cast<StrictModeFlag>(strict_unchecked);
+   }
+ 

@@ -1,0 +1,21 @@
+diff -ur kde-workspace-4.10.3.orig/kdm/kfrontend/kfdialog.cpp kde-workspace-4.10.3/kdm/kfrontend/kfdialog.cpp
+--- kde-workspace-4.10.3.orig/kdm/kfrontend/kfdialog.cpp	2013-05-31 05:17:10.000000000 +0000
++++ kde-workspace-4.10.3/kdm/kfrontend/kfdialog.cpp	2013-05-31 05:37:02.000000000 +0000
+@@ -28,6 +28,7 @@
+ 
+ #include <KGuiItem>
+ #include <KPushButton>
++#include <KGlobalSettings>
+ 
+ #include <QApplication>
+ #include <QDesktopWidget>
+@@ -172,6 +173,9 @@
+     QLabel *label1 = new QLabel(this);
+     label1->setPixmap(QMessageBox::standardIcon(type));
+     QLabel *label2 = new QLabel(text, this);
++    QRect d = KGlobalSettings::desktopGeometry(this);
++    if ( label2->fontMetrics().size( 0, text).width() > d.width() * 3 / 5)
++          label2->setWordWrap( true );
+     KPushButton *button = new KPushButton(KStandardGuiItem::ok(), this);
+     button->setDefault(true);
+     button->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));

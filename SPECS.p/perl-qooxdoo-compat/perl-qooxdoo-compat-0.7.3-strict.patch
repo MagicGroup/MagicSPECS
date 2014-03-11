@@ -1,0 +1,11 @@
+--- qooxdoo-0.7.3-backend/backend/perl/Qooxdoo/JSONRPC.pm~	2008-01-14 15:24:16.000000000 +0100
++++ qooxdoo-0.7.3-backend/backend/perl/Qooxdoo/JSONRPC.pm	2008-10-05 22:44:25.000000000 +0200
+@@ -18,7 +18,7 @@
+ # The JSON-RPC implementation.
+ # Use perldoc on this file to view documentation
+ 
+-use strict;
++#use strict;
+ 
+ use JSON;
+ 

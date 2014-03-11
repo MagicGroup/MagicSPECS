@@ -1,0 +1,32 @@
+From 754ee50a440d6b4a68c759b188d7da93a21d8727 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Mon, 8 Nov 2010 09:48:45 +1000
+Subject: [PATCH] Backport of configure flags for xbiff
+
+commit 070c9d45cc0678708d5766804d0c529bc6f8bee3
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Jul 1 16:38:53 2010 -0700
+
+    Xmu functions are called directly, so include it in PKG_CHECK_MODULES
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ xbiff-1.0.2/configure.ac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/xbiff-1.0.2/configure.ac b/xbiff-1.0.2/configure.ac
+index 1ded032..0ce1b1b 100644
+--- a/xbiff-1.0.2/configure.ac
++++ b/xbiff-1.0.2/configure.ac
+@@ -38,7 +38,7 @@ AC_PROG_INSTALL
+ 
+ XORG_DEFAULT_OPTIONS
+ 
+-PKG_CHECK_MODULES(XBIFF, xaw7 xbitmaps xext)
++PKG_CHECK_MODULES(XBIFF, xaw7 xmu xbitmaps xext x11)
+ 
+ AC_SUBST(XBIFF_CFLAGS)
+ AC_SUBST(XBIFF_LIBS)
+-- 
+1.7.3.2
+

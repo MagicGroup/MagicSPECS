@@ -1,0 +1,96 @@
+diff -up scim-bridge-0.4.16/agent/scim-bridge-agent.cpp.1-hotkey-help scim-bridge-0.4.16/agent/scim-bridge-agent.cpp
+--- scim-bridge-0.4.16/agent/scim-bridge-agent.cpp.1-hotkey-help	2009-03-08 23:07:29.000000000 +1000
++++ scim-bridge-0.4.16/agent/scim-bridge-agent.cpp	2009-05-02 09:49:03.000000000 +1000
+@@ -542,6 +542,27 @@ void ScimBridgeAgentImpl::slot_reload_co
+     scim_global_config_flush ();
+ 
+     scim_keyboard_layout = scim_get_default_keyboard_layout ();
++
++    // Hot key name, hot key config key.
++    // ! Update hotkey_list_length according to updated list length.
++    int hotkey_list_length = 6;
++    String hotkey_list[][2] = {
++        { "Toggle on/off - ", "/Hotkeys/FrontEnd/Trigger" },
++        { "Turn on - ", "/Hotkeys/FrontEnd/On" },
++        { "Turn off - ", "/Hotkeys/FrontEnd/Off" },
++        { "Next input method - ", "/Hotkeys/FrontEnd/NextFactory" },
++        { "Previous input method - ", "/Hotkeys/FrontEnd/PreviousFactory" },
++        { "Show input method menu - ", "/Hotkeys/FrontEnd/ShowFactoryMenu" }
++    };
++                           
++    // Undefined hot keys are hidden from help window.
++    String help_hotkeys = "\nGlobal Hotkeys:";
++    for ( int i = 0; i < hotkey_list_length; i++ ) {
++        String tmp_hotkeys = scim_config->read (String (hotkey_list[i][1]), String (""));
++        if ( tmp_hotkeys != "" )
++            help_hotkeys += "\n" + hotkey_list[i][0] + "<" + tmp_hotkeys + ">";
++    }
++    ScimBridgeAgentIMContext::set_help_hotkeys (help_hotkeys);
+ }
+ 
+ 
+diff -up scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.cpp.1-hotkey-help scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.cpp
+--- scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.cpp.1-hotkey-help	2009-02-04 00:36:14.000000000 +1000
++++ scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.cpp	2009-05-02 09:51:26.000000000 +1000
+@@ -60,6 +60,8 @@ static unsigned int imengine_id = 0;
+ 
+ static bool on_the_spot_enabled = true;
+ 
++static String help_hotkeys = "";
++
+ /* Class definition */
+ class ScimBridgeAgentIMContextImpl: public ScimBridgeAgentIMContext
+ {
+@@ -274,6 +276,12 @@ void ScimBridgeAgentIMContext::set_on_th
+ }
+ 
+ 
++void ScimBridgeAgentIMContext::set_help_hotkeys (const String &hotkey_str)
++{
++    help_hotkeys = hotkey_str;
++}
++
++
+ ScimBridgeAgentIMContextImpl::ScimBridgeAgentIMContextImpl (ScimBridgeAgentClientListener *new_client_listener):
+ client_listener (new_client_listener), imengine (NULL), enabled (false), focused(false) ,preedit_mode (PREEDIT_ANY),
+ preedit_shown (false), preedit_cursor_position (0)
+@@ -923,9 +931,11 @@ void ScimBridgeAgentIMContextImpl::panel
+ 
+ void ScimBridgeAgentIMContextImpl::panel_request_help ()
+ {
+-    String help =  String ("Smart Common Input Method platform ") +
+-        String (SCIM_VERSION) +
+-        String ("\n(C) 2002-2005 James Su <suzhe@tsinghua.org.cn>\n\n");
++    String help =  String ("SCIM Bridge") + 
++        String (VERSION) +
++        String ("\n(C) 2006-2008 Ryo Dairiki <ryo-dairiki@users.sourceforge.net>\n") +
++        help_hotkeys +
++        String ("\n\n");
+ 
+         IMEngineFactoryPointer factory = scim_backend->get_factory (get_imengine ()->get_factory_uuid ());
+         if (factory.null ()) factory = fallback_imengine_factory;
+diff -up scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.h.1-hotkey-help scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.h
+--- scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.h.1-hotkey-help	2008-11-02 16:44:49.000000000 +1000
++++ scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.h	2009-05-02 09:49:03.000000000 +1000
+@@ -130,6 +130,21 @@ class ScimBridgeAgentIMContext
+         static void set_enabled_by_default (bool enabled);
+ 
+         /**
++         * Get the hotkey help messages.
++         *
++         * @return help messages about hotkeys.
++         */
++        static scim::String get_help_hotkeys ();
++
++        /**
++         * Set the hotkey help messages.
++         *
++         * @param hotkey_str Help message about hotkeys.
++         *
++         */
++        static void set_help_hotkeys (const scim::String &hotkey_str);
++
++        /**
+          * Destructor.
+          */
+         virtual ~ScimBridgeAgentIMContext () {}

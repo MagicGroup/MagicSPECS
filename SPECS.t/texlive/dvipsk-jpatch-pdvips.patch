@@ -1,0 +1,120 @@
+diff -up texlive-2007/texk/configure.in.pdvips texlive-2007/texk/configure.in
+--- texlive-2007/texk/configure.in.pdvips	2007-01-10 17:36:20.000000000 +0100
++++ texlive-2007/texk/configure.in	2008-08-27 15:26:38.000000000 +0200
+@@ -62,6 +62,7 @@ PKGS='
+  dvipng
+  dvipos
+  dvipsk
++ pdvipsk
+  gsftopk
+  lacheck
+  makeindexk
+diff -up texlive-2007/texk/configure.pdvips texlive-2007/texk/configure
+--- texlive-2007/texk/configure.pdvips	2007-01-10 17:36:44.000000000 +0100
++++ texlive-2007/texk/configure	2008-08-27 15:26:38.000000000 +0200
+@@ -6604,6 +6604,7 @@ PKGS='
+  dvipng
+  dvipos
+  dvipsk
++ pdvipsk
+  gsftopk
+  lacheck
+  makeindexk
+diff -up texlive-2007/texk/pdvipsk/dvips.c.pdvips texlive-2007/texk/pdvipsk/dvips.c
+--- texlive-2007/texk/pdvipsk/dvips.c.pdvips	2008-08-27 15:26:38.000000000 +0200
++++ texlive-2007/texk/pdvipsk/dvips.c	2008-08-27 15:26:38.000000000 +0200
+@@ -597,7 +597,7 @@ main P2C(int, argc, char **, argv)
+ #endif
+ 
+ #ifdef KPATHSEA
+-   kpse_set_program_name (argv[0], "dvips");
++   kpse_set_program_name (argv[0], "pdvips");
+    kpse_set_program_enabled (kpse_pk_format, MAKE_TEX_PK_BY_DEFAULT, kpse_src_compile);
+ #endif
+    
+diff -up texlive-2007/texk/pdvipsk/Makefile.in.pdvips texlive-2007/texk/pdvipsk/Makefile.in
+--- texlive-2007/texk/pdvipsk/Makefile.in.pdvips	2008-08-27 15:26:38.000000000 +0200
++++ texlive-2007/texk/pdvipsk/Makefile.in	2008-08-27 15:26:38.000000000 +0200
+@@ -20,6 +20,8 @@ kpse_include ../make/cross.mk
+ kpse_include ../make/texi.mk
+ prog_cflags = -DUNIX -DKPATHSEA -DNeedFunctionPrototypes -DSHIFTLOWCHARS
+ 
++ppsheaderdir = $(texmf)/pdvips
++
+ # The `t[mp]-' business is so that we don't create an empty .pro file,
+ # if running squeeze fails for some reason.  A dependency on squeeze
+ # fails here, so we include it below.
+@@ -36,11 +38,11 @@ scalewidth.o dosection.o dopage.o reside
+ header.o repack.o virtualfont.o dpicheck.o finclude.o writet1.o		\
+ pprescan.o papersiz.o color.o bbox.o hps.o t1part.o
+ 
+-program = dvips
++program = pdvips
+ programs = afm2tfm $(program)
+ 
+ 
+-default all: $(programs) $(prologues) dvips.info
++default all: $(programs) $(prologues)
+ 
+ $(program): $(kpathsea) $(objects)
+ 	$(kpathsea_link) $(objects) $(LOADLIBES) 
+@@ -93,16 +95,16 @@ uninstall-exec:
+ 	for p in $(programs); do rm -f $(bindir)/$$p; done
+ 	rm -f $(bindir)/o$(program)
+ 
+-install-data: $(program).info
+-	$(SHELL) $(top_srcdir)/../mkinstalldirs $(man1dir) $(infodir) $(psheaderdir)/base
++install-data:
++	$(SHELL) $(top_srcdir)/../mkinstalldirs $(man1dir) $(infodir) $(ppsheaderdir)/base
+ # PostScript prologues and encodings.
+-	for h in $(prologues); do $(INSTALL_DATA) $$h $(psheaderdir)/base/$$h; done
++	for h in $(prologues); do $(INSTALL_DATA) $$h $(ppsheaderdir)/base/$$h; done
+ #	cd $(srcdir)/reencode && \
+ #	  for e in *.enc; do $(INSTALL_DATA) $$e $(psheaderdir)/base/$$e; done
+ # config.ps. Any one config.ps will be wrong for most people, so don't
+ # install anything by default.
+-	$(INSTALL) -d $(psheaderdir)/config
+-	$(INSTALL_DATA) $(srcdir)/config.ps $(psheaderdir)/config/config.ps
++	$(INSTALL) -d $(ppsheaderdir)/config
++	$(INSTALL_DATA) $(srcdir)/config.ps $(ppsheaderdir)/config/config.ps
+ # psfonts.map.
+ #	if test ! -r $(psheaderdir)/base/psfonts.map 			\
+ #	   || grep 'original psfonts.map --' $(psheaderdir)/base/psfonts.map \
+@@ -110,11 +112,8 @@ install-data: $(program).info
+ #	  $(INSTALL_DATA) $(srcdir)/psfonts.map $(psheaderdir)/base/psfonts.map; \
+ #        else true; fi
+ # psfonts_jp.map.
+-	$(INSTALL) -d $(texmf)/fonts/map/dvips/ptex
+-	$(INSTALL_DATA) $(srcdir)/psfonts_jp.map $(texmf)/fonts/map/dvips/ptex/psfonts_jp.map
+-# Info files.
+-	cd $(srcdir) && for i in $(program).i*; do \
+-	  $(INSTALL_DATA) $$i $(infodir)/$$i; done
++	$(INSTALL) -d $(texmf)/fonts/map/pdvips
++	$(INSTALL_DATA) $(srcdir)/psfonts_jp.map $(fontdir)/map/pdvips/psfonts_jp.map
+ # Man pages.
+ 	$(INSTALL_DATA) $(srcdir)/$(program).1 $(man1dir)/$(program).$(manext)
+ 	rm -f $(man1dir)/o$(program).$(manext)
+@@ -124,9 +123,6 @@ install-data: $(program).info
+ #	cd $(srcdir)/tex && for m in *.tex; do \
+ #	  $(INSTALL_DATA) $$m $(dvips_plain_macrodir)/$$m; done
+ 	$(POST_INSTALL)
+-	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+-	  install-info --info-dir=$(infodir) $(infodir)/$(program).info; \
+-	else true; fi
+ 
+ uninstall-data:
+ 	$(PRE_UNINSTALL)
+@@ -149,11 +145,11 @@ uninstall-data:
+ 	rm -f $(man1dir)/dvips.$(manext) $(man1dir)/afm2tfm.$(manext)
+ 
+ distname = dvipsk
+-program_files = *.texi *.info* *.lpro psfonts.map *.1 texc.script \
++program_files = *.texi *.lpro psfonts.map *.1 texc.script \
+   dvips.help $(program).aux $(program).cps dvipstst.dvi
+ version_files = dvips.h afm2tfm.c dvips.c
+ 
+-pre-dist-$(distname): INSTALL $(program).info $(program).dvi
++pre-dist-$(distname): INSTALL $(program).dvi
+ post-dist-$(distname):
+ 	ln -s `pwd`/contrib `pwd`/tex $(distdir)
+ 	mkdir $(distdir)/reencode; ln -s $(fontname)/*.enc $(distdir)/reencode

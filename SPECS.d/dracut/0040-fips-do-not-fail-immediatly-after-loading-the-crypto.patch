@@ -1,0 +1,23 @@
+From 26a077fc7e5a381284a9b474acdf22a58fb47dda Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 29 Apr 2013 11:34:26 +0200
+Subject: [PATCH] fips: do not fail immediatly after loading the crypto modules
+
+Fail only if tcrypt insmod failed.
+---
+ modules.d/01fips/fips.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules.d/01fips/fips.sh b/modules.d/01fips/fips.sh
+index ce3e49c..0095416 100755
+--- a/modules.d/01fips/fips.sh
++++ b/modules.d/01fips/fips.sh
+@@ -63,7 +63,7 @@ do_fips()
+     info "Loading and integrity checking all crypto modules"
+     for module in $FIPSMODULES; do
+         if [ "$module" != "tcrypt" ]; then
+-            modprobe ${module} || return 1
++            modprobe ${module}
+         fi
+     done
+     info "Self testing crypto algorithms"

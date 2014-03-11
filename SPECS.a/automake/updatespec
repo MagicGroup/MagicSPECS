@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+MAJORVER=$(echo $1|cut -d"." -f1).$(echo $1|cut -d"." -f2)
+MINORVER=$(echo $1|cut -d"." -f3)
+sed -i "s/%global api_version.*/%global api_version $MAJORVER/g" automake.spec
+if ! [ x"$MINORVER" = x"" ]; then
+	sed -i "s/Version:    %{api_version}.*/Version:    %{api_version}.$MINORVER/g" automake.spec
+else
+	sed -i "s/Version:    %{api_version}.*/Version:    %{api_version}/g" automake.spec
+fi
+popd

@@ -1,0 +1,26 @@
+From d9acef3be4ca926d0f138184535e3f16b15d6045 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 22 Dec 2010 09:31:28 +0100
+Subject: [PATCH] Do not install README etc.
+
+---
+ Makefile.in |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 522ac0a..8f37d05 100755
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -554,9 +554,6 @@ install_unix: startup.yss libYap.a
+ 	mkdir -p $(DESTDIR)$(SHAREDIR)/Yap
+ 	mkdir -p $(DESTDIR)$(SHAREDIR)/Yap/pl
+ 	mkdir -p $(DESTDIR)$(DOCSDIR)
+-	$(INSTALL) $(srcdir)/Artistic $(DESTDIR)$(DOCSDIR)
+-	$(INSTALL) $(srcdir)/README $(DESTDIR)$(DOCSDIR)
+-	$(INSTALL) $(srcdir)/COPYING $(DESTDIR)$(DOCSDIR)
+ 	for f in $(PL_SOURCES); do $(INSTALL) $$f $(DESTDIR)$(SHAREDIR)/Yap/pl; done
+ 	@INSTALL_DLLS@ (cd packages/PLStream; $(MAKE) install)
+ 	@INSTALL_DLLS@ (cd library/lammpi; $(MAKE) install)
+-- 
+1.7.3.4
+

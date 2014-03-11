@@ -1,0 +1,26 @@
+Separating "package" and package names by a newline results in
+rpm provides not being generated for the package, which is
+exactly what we want in these cases, as they're private modules.
+
+--- lib/Text/Autoformat.pm
++++ lib/Text/Autoformat.pm
+@@ -649,7 +649,8 @@
+     return 1;
+ }
+ 
+-package Hang;
++package # hide from rpm
++    Hang;
+ use strict;
+ 
+ # ROMAN NUMERALS
+@@ -851,7 +852,8 @@
+ 
+ sub empty { 0 }
+ 
+-package NullHang;
++package # hide from rpm
++    NullHang;
+ use strict;
+ 
+ sub new       { bless {}, $_[0] }

@@ -1,0 +1,2 @@
+<ttyUSB>=/dev/ttyUSB*
+<console>  0660 <ttyUSB> 0660 root.uucp

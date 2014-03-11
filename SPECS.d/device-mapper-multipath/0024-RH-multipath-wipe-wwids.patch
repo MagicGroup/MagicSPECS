@@ -1,0 +1,164 @@
+---
+ libmultipath/wwids.c  |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ libmultipath/wwids.h  |    1 +
+ multipath/main.c      |   29 +++++++++++++++++++++++++++--
+ multipath/multipath.8 |    5 ++++-
+ 4 files changed, 76 insertions(+), 3 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/wwids.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/wwids.c
++++ multipath-tools-130222/libmultipath/wwids.c
+@@ -82,6 +82,50 @@ write_out_wwid(int fd, char *wwid) {
+ }
+ 
+ int
++replace_wwids(vector mp)
++{
++	int i, fd, can_write;
++	struct multipath * mpp;
++	size_t len;
++	int ret = -1;
++
++	fd = open_file(conf->wwids_file, &can_write, WWIDS_FILE_HEADER);
++	if (fd < 0)
++		goto out;
++	if (!can_write) {
++		condlog(0, "cannot replace wwids. wwids file is read-only");
++		goto out_file;
++	}
++	if (ftruncate(fd, 0) < 0) {
++		condlog(0, "cannot truncate wwids file : %s", strerror(errno));
++		goto out_file;
++	}
++	len = strlen(WWIDS_FILE_HEADER);
++	if (write_all(fd, WWIDS_FILE_HEADER, len) != len) {
++		condlog(0, "Can't write wwid file header : %s",
++			strerror(errno));
++		/* cleanup partially written header */
++		if (ftruncate(fd, 0) < 0)
++			condlog(0, "Cannot truncate header : %s",
++				strerror(errno));
++		goto out_file;
++	}
++	if (!mp || !mp->allocated) {
++		ret = 0;
++		goto out_file;
++	}
++	vector_foreach_slot(mp, mpp, i) {
++		if (write_out_wwid(fd, mpp->wwid) < 0)
++			goto out_file;
++	}
++	ret = 0;
++out_file:
++	close(fd);
++out:
++	return ret;
++}
++
++int
+ do_remove_wwid(int fd, char *str) {
+ 	char buf[4097];
+ 	char *ptr;
+Index: multipath-tools-130222/libmultipath/wwids.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/wwids.h
++++ multipath-tools-130222/libmultipath/wwids.h
+@@ -16,5 +16,6 @@ int should_multipath(struct path *pp, ve
+ int remember_wwid(char *wwid);
+ int check_wwids_file(char *wwid, int write_wwid);
+ int remove_wwid(char *wwid);
++int replace_wwids(vector mp);
+ 
+ #endif /* _WWIDS_H */
+Index: multipath-tools-130222/multipath/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipath/main.c
++++ multipath-tools-130222/multipath/main.c
+@@ -83,7 +83,7 @@ usage (char * progname)
+ {
+ 	fprintf (stderr, VERSION_STRING);
+ 	fprintf (stderr, "Usage:\n");
+-	fprintf (stderr, "  %s [-c|-w] [-d] [-r] [-v lvl] [-p pol] [-b fil] [-q] [dev]\n", progname);
++	fprintf (stderr, "  %s [-c|-w|-W] [-d] [-r] [-v lvl] [-p pol] [-b fil] [-q] [dev]\n", progname);
+ 	fprintf (stderr, "  %s -l|-ll|-f [-v lvl] [-b fil] [dev]\n", progname);
+ 	fprintf (stderr, "  %s -F [-v lvl]\n", progname);
+ 	fprintf (stderr, "  %s -t\n", progname);
+@@ -105,6 +105,7 @@ usage (char * progname)
+ 		"  -p      policy failover|multibus|group_by_serial|group_by_prio\n" \
+ 		"  -b fil  bindings file location\n" \
+ 		"  -w      remove a device from the wwids file\n" \
++		"  -W      reset the wwids file include only the current devices\n" \
+ 		"  -p pol  force all maps to specified path grouping policy :\n" \
+ 		"          . failover            one path per priority group\n" \
+ 		"          . multibus            all paths in one priority group\n" \
+@@ -450,7 +451,7 @@ main (int argc, char *argv[])
+ 	if (dm_prereq())
+ 		exit(1);
+ 
+-	while ((arg = getopt(argc, argv, ":dchl::FfM:v:p:b:Brtqw")) != EOF ) {
++	while ((arg = getopt(argc, argv, ":dchl::FfM:v:p:b:BrtqwW")) != EOF ) {
+ 		switch(arg) {
+ 		case 1: printf("optarg : %s\n",optarg);
+ 			break;
+@@ -518,6 +519,9 @@ main (int argc, char *argv[])
+ 		case 'w':
+ 			conf->dry_run = 3;
+ 			break;
++		case 'W':
++			conf->dry_run = 4;
++			break;
+ 		case ':':
+ 			fprintf(stderr, "Missing option argument\n");
+ 			usage(argv[0]);
+@@ -573,6 +577,27 @@ main (int argc, char *argv[])
+ 		condlog(0, "the -w option requires a device");
+ 		goto out;
+ 	}
++	if (conf->dry_run == 4) {
++		struct multipath * mpp;
++		int i;
++		vector curmp;
++
++		curmp = vector_alloc();
++		if (!curmp) {
++			condlog(0, "can't allocate memory for mp list");
++			goto out;
++		}
++		if (dm_get_maps(curmp) == 0)
++			r = replace_wwids(curmp);
++		if (r == 0)
++			printf("successfully reset wwids\n");
++		vector_foreach_slot_backwards(curmp, mpp, i) {
++			vector_del_slot(curmp, i);
++			free_multipath(mpp, KEEP_PATHS);
++		}
++		vector_free(curmp);
++		goto out;
++	}
+ 	if (conf->remove == FLUSH_ONE) {
+ 		if (conf->dev_type == DEV_DEVMAP) {
+ 			r = dm_suspend_and_flush_map(conf->dev);
+Index: multipath-tools-130222/multipath/multipath.8
+===================================================================
+--- multipath-tools-130222.orig/multipath/multipath.8
++++ multipath-tools-130222/multipath/multipath.8
+@@ -8,7 +8,7 @@ multipath \- Device mapper target autoco
+ .RB [\| \-b\ \c
+ .IR bindings_file \|]
+ .RB [\| \-d \|]
+-.RB [\| \-h | \-l | \-ll | \-f | \-t | \-F | \-B | \-c | \-q | \|-r | \-w \|]
++.RB [\| \-h | \-l | \-ll | \-f | \-t | \-F | \-B | \-c | \-q | \|-r | \-w | \-W \|]
+ .RB [\| \-p\ \c
+ .BR failover | multibus | group_by_serial | group_by_prio | group_by_node_name \|]
+ .RB [\| device \|]
+@@ -71,6 +71,9 @@ allow device tables with queue_if_no_pat
+ .B \-w
+ remove the wwid for the specified device from the wwids file
+ .TP
++.B \-W
++reset the wwids file to only include the current multipath devices
++.TP
+ .BI \-p " policy"
+ force new maps to use the specified policy:
+ .RS 1.2i

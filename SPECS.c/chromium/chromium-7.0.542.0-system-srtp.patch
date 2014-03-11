@@ -1,0 +1,42 @@
+diff -up chromium-7.0.542.0/build/linux/system.gyp.system-srtp chromium-7.0.542.0/build/linux/system.gyp
+--- chromium-7.0.542.0/build/linux/system.gyp.system-srtp	2010-10-05 17:26:00.110229216 -0400
++++ chromium-7.0.542.0/build/linux/system.gyp	2010-10-05 17:26:00.149110175 -0400
+@@ -389,6 +389,26 @@
+       }]]
+     },
+     {
++      'target_name': 'libsrtp',
++      'type': 'settings',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags libsrtp)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other libsrtp)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l libsrtp)',
++            ],
++          },
++      }]]
++    },
++    {
+       'target_name': 'gnome-keyring',
+       'type': 'settings',
+       'conditions': [
+diff -up chromium-7.0.542.0/remoting/remoting.gyp.system-srtp chromium-7.0.542.0/remoting/remoting.gyp
+--- chromium-7.0.542.0/remoting/remoting.gyp.system-srtp	2010-10-05 17:26:00.000000000 -0400
++++ chromium-7.0.542.0/remoting/remoting.gyp	2010-10-05 17:26:43.713123473 -0400
+@@ -301,7 +301,7 @@
+         '../build/linux/system.gyp:jinglep2p',
+         '../build/linux/system.gyp:jinglesessionphone',
+         '../build/linux/system.gyp:jinglesessiontunnel',
+-        '../third_party/libsrtp/libsrtp.gyp:libsrtp',
++        '../build/linux/system.gyp:libsrtp',
+       ],
+       'export_dependent_settings': [
+         '../build/linux/system.gyp:jingle',

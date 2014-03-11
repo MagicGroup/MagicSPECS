@@ -1,0 +1,13 @@
+diff -ur tdenetwork-git20111221.orig/kopete/plugins/motionautoaway/motionawayplugin.cpp tdenetwork-git20111221/kopete/plugins/motionautoaway/motionawayplugin.cpp
+--- tdenetwork-git20111221.orig/kopete/plugins/motionautoaway/motionawayplugin.cpp	2011-12-21 00:10:17.000000000 -0500
++++ tdenetwork-git20111221/kopete/plugins/motionautoaway/motionawayplugin.cpp	2011-12-21 08:51:28.000000000 -0500
+@@ -75,7 +75,7 @@
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,5,50)
+ #define _LINUX_TIME_H
+ #endif
+-#include <linux/videodev.h>
++#include <libv4l1-videodev.h>
+ 
+ #define DEF_WIDTH			352
+ #define DEF_HEIGHT		288
+

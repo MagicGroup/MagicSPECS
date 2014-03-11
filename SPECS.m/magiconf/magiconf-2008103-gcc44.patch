@@ -1,0 +1,22 @@
+diff -ur magiconf-2008103/src/moduledata.cpp ../BUILD/magiconf-2008103/src/moduledata.cpp
+--- magiconf-2008103/src/moduledata.cpp	2008-10-03 12:16:37.000000000 +0800
++++ ../BUILD/magiconf-2008103/src/moduledata.cpp	2009-05-19 11:56:14.000000000 +0800
+@@ -20,6 +20,7 @@
+ #include "moduledata.h"
+ 
+ #include <qdir.h>
++#include <stdlib.h>
+ 
+ #include "var.h"
+ #ifdef _DEBUG_
+diff -ur magiconf-2008103/src/mrun.cpp ../BUILD/magiconf-2008103/src/mrun.cpp
+--- magiconf-2008103/src/mrun.cpp	2008-10-03 12:16:38.000000000 +0800
++++ ../BUILD/magiconf-2008103/src/mrun.cpp	2009-05-19 11:56:39.000000000 +0800
+@@ -27,6 +27,7 @@
+ #include "mrun.h"
+ 
+ #include <sys/types.h>
++#include <stdlib.h>
+ 
+ #include <kservice.h>
+ #include <kstartupinfo.h>

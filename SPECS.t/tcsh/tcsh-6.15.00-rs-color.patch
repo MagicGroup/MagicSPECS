@@ -1,0 +1,11 @@
+diff -up tcsh-6.17.00/tw.color.c_old tcsh-6.17.00/tw.color.c
+--- tcsh-6.17.00/tw.color.c_old	2009-07-20 15:14:22.000000000 +0200
++++ tcsh-6.17.00/tw.color.c	2009-07-20 15:15:26.000000000 +0200
+@@ -87,6 +87,7 @@ static Variable variables[] = {
+     VAR(NOS, "st", ""),		/* Sticky dir (+t) but not other writable */
+     VAR(NOS, "rs", "0"),	/* Reset to normal color */
+     VAR(NOS, "ca", ""),		/* file with capability */
++    VAR(NOS, "hl", ""),		/* Hardlink */
+ };
+ 
+ enum FileType {

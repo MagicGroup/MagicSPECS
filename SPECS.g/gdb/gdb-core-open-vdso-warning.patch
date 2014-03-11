@@ -1,0 +1,131 @@
+http://sourceware.org/ml/gdb-patches/2009-10/msg00142.html
+Subject: [patch] Fix GNU/Linux core open: Can't read pathname for load map:  Input/output error.
+
+[ New patch variant.  ]
+
+Index: gdb-7.4.50.20120703/gdb/solib-svr4.c
+===================================================================
+--- gdb-7.4.50.20120703.orig/gdb/solib-svr4.c	2012-07-06 15:39:57.000000000 +0200
++++ gdb-7.4.50.20120703/gdb/solib-svr4.c	2012-07-06 15:40:01.124816148 +0200
+@@ -1221,8 +1221,17 @@ svr4_read_so_list (CORE_ADDR lm, struct
+ 			  SO_NAME_MAX_PATH_SIZE - 1, &errcode);
+       if (errcode != 0)
+ 	{
+-	  warning (_("Can't read pathname for load map: %s."),
+-		   safe_strerror (errcode));
++	  /* During the first ever DSO list reading some strings may be
++	     unreadable as residing in the ld.so readonly memory not being
++	     present in a dumped core file.  Delay the error check after
++	     the first pass of DSO list scanning when ld.so should be
++	     already mapped in and all the DSO list l_name memory gets
++	     readable.  */
++
++	  if (master_so_list () != NULL)
++	    warning (_("Can't read pathname for load map: %s."),
++		     safe_strerror (errcode));
++
+ 	  do_cleanups (old_chain);
+ 	  continue;
+ 	}
+Index: gdb-7.4.50.20120703/gdb/solib.c
+===================================================================
+--- gdb-7.4.50.20120703.orig/gdb/solib.c	2012-07-06 15:38:39.000000000 +0200
++++ gdb-7.4.50.20120703/gdb/solib.c	2012-07-06 15:40:01.125816147 +0200
+@@ -672,7 +672,7 @@ solib_used (const struct so_list *const
+    processes we've just attached to, so that's okay.  */
+ 
+ static void
+-update_solib_list (int from_tty, struct target_ops *target)
++update_solib_list_1 (int from_tty, struct target_ops *target)
+ {
+   struct target_so_ops *ops = solib_ops (target_gdbarch);
+   struct so_list *inferior = ops->current_sos();
+@@ -843,6 +843,21 @@ Do you need \"set solib-search-path\" or
+     }
+ }
+ 
++/* Wrapper for Fedora: gdb-core-open-vdso-warning.patch  */
++
++static void
++update_solib_list (int from_tty, struct target_ops *target)
++{
++  struct so_list *saved_so_list_head = so_list_head;
++
++  update_solib_list_1 (from_tty, target);
++
++  /* If this was the very first DSO list scan and we possibly read in ld.so
++     recheck all the formerly unreadable DSO names strings.  */
++
++  if (saved_so_list_head == NULL && so_list_head != NULL)
++    update_solib_list_1 (from_tty, target);
++}
+ 
+ /* Return non-zero if NAME is the libpthread shared library.
+ 
+Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.base/corefile.exp
+===================================================================
+--- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.base/corefile.exp	2012-07-06 15:39:41.000000000 +0200
++++ gdb-7.4.50.20120703/gdb/testsuite/gdb.base/corefile.exp	2012-07-06 15:40:10.322805539 +0200
+@@ -286,3 +286,19 @@ if {$buildid == ""} {
+     gdb_test "info files" "Local exec file:\r\n\[ \t\]*`[string_to_regexp $debugdir/$buildid]', file type .*"
+     pass $wholetest
+ }
++
++
++# Test Linux specific vDSO warning:
++# warning: Can't read pathname for load map: Input/output error.
++
++clean_restart ${testfile}
++
++set test "core-file vdso warning"
++gdb_test_multiple "core-file $corefile" $test {
++    -re "warning: Can't read pathname for load map: Input/output error\\.\r\n.*\r\n$gdb_prompt $" {
++	fail $test
++    }
++    -re "\r\n$gdb_prompt $" {
++	pass $test
++    }
++}
+Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.base/solib-symbol.exp
+===================================================================
+--- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.base/solib-symbol.exp	2012-07-06 15:38:39.000000000 +0200
++++ gdb-7.4.50.20120703/gdb/testsuite/gdb.base/solib-symbol.exp	2012-07-06 15:40:01.127816145 +0200
+@@ -27,7 +27,8 @@ set lib_flags [list debug ldflags=-Wl,-B
+ # Binary file.
+ set testfile "solib-symbol-main"
+ set srcfile ${srcdir}/${subdir}/${testfile}.c
+-set binfile ${objdir}/${subdir}/${testfile}
++set executable ${testfile}
++set binfile ${objdir}/${subdir}/${executable}
+ set bin_flags [list debug shlib=${binfile_lib}]
+ 
+ if [get_compiler_info] {
+@@ -72,8 +73,26 @@ gdb_test "br foo2" \
+ 	 "Breakpoint.*: foo2. .2 locations..*" \
+ 	 "foo2 in mdlib"
+ 
+-gdb_exit
++# Test GDB warns for shared libraris which have not been found.
+ 
+-return 0
++gdb_test "info sharedlibrary" "/${libname}.*"
+ 
++clean_restart ${executable}
++gdb_breakpoint "main"
++gdb_run_cmd
++set test "no warning for missing libraries"
++gdb_test_multiple "" $test {
++    -re "warning: Could not load shared library symbols for \[0-9\]+ libraries,.*\r\n$gdb_prompt $" {
++	fail $test
++    }
++    -re "Breakpoint \[0-9\]+, main .*\r\n$gdb_prompt $" {
++	pass $test
++    }
++}
+ 
++clean_restart ${executable}
++gdb_test_no_output "set solib-absolute-prefix /doESnotEXIST"
++gdb_breakpoint "main"
++gdb_run_cmd
++gdb_test "" "warning: Could not load shared library symbols for \[0-9\]+ libraries,.*\r\nBreakpoint \[0-9\]+, main .*" \
++	 "warning for missing libraries"

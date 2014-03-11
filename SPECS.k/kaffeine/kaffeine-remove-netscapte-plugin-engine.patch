@@ -1,0 +1,13 @@
+diff -u -r kaffeine-0.8.4.orig/kaffeine/src/kaffeine.cpp kaffeine-0.8.4/kaffeine/src/kaffeine.cpp
+--- kaffeine-0.8.4.orig/kaffeine/src/kaffeine.cpp	2007-04-21 14:26:56.000000000 +0800
++++ kaffeine-0.8.4/kaffeine/src/kaffeine.cpp	2007-04-21 14:27:16.000000000 +0800
+@@ -692,7 +692,8 @@
+ 	for(KTrader::OfferList::Iterator it = offers.begin(); it != end; ++it)
+ 	{
+ 		KService::Ptr ptr = (*it);
+-
++		if (ptr->name().contains("Netscape"))
++			continue;
+ 		action = new KAction(ptr->name(), ptr->icon(), 0, mapper, TQT_SLOT(map()), actionCollection());
+ 		if (!ptr->comment().isNull())
+ 			action->setToolTip(ptr->comment());

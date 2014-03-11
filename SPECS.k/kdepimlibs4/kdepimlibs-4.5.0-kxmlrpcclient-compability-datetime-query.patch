@@ -1,0 +1,12 @@
+diff -Nuarp kxmlrpcclient.old/query.cpp kxmlrpcclient/query.cpp
+--- kxmlrpcclient.old/query.cpp	2010-08-14 12:40:14.000000000 +0800
++++ kxmlrpcclient/query.cpp	2010-08-14 12:46:00.000000000 +0800
+@@ -248,7 +248,7 @@ QString Query::Private::marshal( const Q
+     case QVariant::DateTime:
+       {
+         return "<value><dateTime.iso8601>" +
+-          arg.toDateTime().toString( Qt::ISODate ) +
++          arg.toDateTime().toString( Qt::ISODate ).remove(QChar('-')) + // YY-MM-DD to YYMMDD for compability with Windows Live Writer  --- nihui
+           "</dateTime.iso8601></value>\r\n";
+       }
+     case QVariant::List:

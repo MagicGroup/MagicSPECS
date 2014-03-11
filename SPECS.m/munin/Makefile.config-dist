@@ -1,0 +1,24 @@
+include Makefile.config
+
+CGIDIR      =  $(DESTDIR)/var/www/cgi-bin
+CGITMPDIR   =  /var/tmp
+CHGRP       := echo Not done: chgrp
+CHMOD       := echo Not done: chmod
+CHOWN       := echo Not done: chown
+CONFDIR     =  $(DESTDIR)/etc/munin
+DBDIR       =  $(DESTDIR)/var/lib/munin
+DBDIRNODE   =  $(DESTDIR)/var/lib/munin-node
+DOCDIR      =  $(DESTDIR)/usr/share/doc/munin-$(VERSION)
+GROUP       := nobody
+HOSTNAME    =  localhost.localdomain
+HTMLDIR     =  $(DESTDIR)/var/www/html/munin
+LIBDIR      =  $(DESTDIR)/usr/share/munin
+LOGDIR      =  $(DESTDIR)/var/log/munin
+PERLSITELIB := /usr/share/perl5/vendor_perl
+PERL        := /usr/bin/perl
+PLUGSTATE   =  $(DBDIR)/plugin-state
+PREFIX      =  $(DESTDIR)/usr
+PYTHON      := /usr/bin/python
+RUBY        := /usr/bin/ruby
+USER        := nobody
+

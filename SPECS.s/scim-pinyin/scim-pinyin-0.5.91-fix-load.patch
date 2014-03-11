@@ -1,0 +1,203 @@
+diff -up scim-pinyin-0.5.91/src/scim_pinyin_phrase.cpp.fix-load scim-pinyin-0.5.91/src/scim_pinyin_phrase.cpp
+--- scim-pinyin-0.5.91/src/scim_pinyin_phrase.cpp.fix-load	2007-11-15 15:06:10.000000000 +0800
++++ scim-pinyin-0.5.91/src/scim_pinyin_phrase.cpp	2007-11-15 15:06:27.000000000 +0800
+@@ -351,17 +351,24 @@ PinyinPhraseLib::input (std::istream &is
+ 						std::istream &is_pylib,
+ 						std::istream &is_idx)
+ {
+-	if (m_phrase_lib.input (is_lib)) {
+-		if (is_idx && input_pinyin_lib (*m_validator, is_pylib)) {
+-			if (!input_indexes (is_idx)) {
++	is_lib.exceptions (std::ifstream::failbit);
++	is_pylib.exceptions (std::ifstream::failbit);
++	is_idx.exceptions (std::ifstream::failbit);
++	try {
++		if (m_phrase_lib.input (is_lib)) {
++			if (is_idx && input_pinyin_lib (*m_validator, is_pylib)) {
++				if (!input_indexes (is_idx)) {
++					create_pinyin_index ();
++					return true;
++				}
++			} else {
+ 				create_pinyin_index ();
+ 				return true;
+ 			}
+-		} else {
+-			create_pinyin_index ();
+ 			return true;
+ 		}
+-		return true;
++	} catch (std::ifstream::failure e) {
++		std::cerr << "Reading pinyin phrase lib failed" << std::endl;
+ 	}
+ 	return false;
+ }
+diff -up scim-pinyin-0.5.91/src/scim_pinyin.cpp.fix-load scim-pinyin-0.5.91/src/scim_pinyin.cpp
+--- scim-pinyin-0.5.91/src/scim_pinyin.cpp.fix-load	2005-08-08 14:11:16.000000000 +0800
++++ scim-pinyin-0.5.91/src/scim_pinyin.cpp	2007-11-15 15:06:20.000000000 +0800
+@@ -1561,83 +1561,92 @@ PinyinTable::input (std::istream &is)
+     bool binary;
+ 
+     if (!is) return false;
+-    
+-    is.getline (header, 40);
+ 
+-    if (strncmp (header,
+-        scim_pinyin_table_text_header,
+-        strlen (scim_pinyin_table_text_header)) == 0) {
+-        binary = false;
+-    } else if (strncmp (header,
+-        scim_pinyin_table_binary_header,
+-        strlen (scim_pinyin_table_binary_header)) == 0) {
+-        binary = true;
+-    } else {
+-        return false;
+-    }
++    is.exceptions (std::ifstream::failbit);
+ 
+-    is.getline (header, 40);
+-    if (strncmp (header, scim_pinyin_table_version, strlen (scim_pinyin_table_version)) != 0)
++    try {
++         
++         is.getline (header, 40);
++
++         if (strncmp (header,
++             scim_pinyin_table_text_header,
++             strlen (scim_pinyin_table_text_header)) == 0) {
++             binary = false;
++         } else if (strncmp (header,
++             scim_pinyin_table_binary_header,
++             strlen (scim_pinyin_table_binary_header)) == 0) {
++             binary = true;
++         } else {
++             return false;
++         }
++
++         is.getline (header, 40);
++         if (strncmp (header, scim_pinyin_table_version, strlen (scim_pinyin_table_version)) != 0)
++             return false;
++
++         uint32 i;
++         uint32 n;
++         PinyinEntryVector::iterator ev;
++
++         if (!binary) {
++             is >> n;
++
++             // load pinyin table
++             for (i=0; i<n; i++) {
++                 PinyinEntry entry (*m_validator, is, false);
++
++                 if (!m_custom.use_tone) {
++                     entry.set_key (PinyinKey (entry.get_key ().get_initial (),
++                                                   entry.get_key ().get_final (),
++                                                   SCIM_PINYIN_ZeroTone));
++                 }
++
++                 if (entry.get_key().get_final() == SCIM_PINYIN_ZeroFinal) {
++                     std::cerr << "Invalid entry: " << entry << "\n";
++                 } else {
++                     if ((ev = find_exact_entry (entry)) == m_table.end())
++                         m_table.push_back (entry);
++                     else {
++                         for (uint32 i=0; i<entry.size(); i++) {
++                             ev->insert (entry.get_char_with_frequency_by_index (i));
++                         }
++                     }
++                 }
++             }
++         } else {
++             unsigned char bytes [8];
++             is.read ((char*) bytes, sizeof (unsigned char) * 4);
++             n = scim_bytestouint32 (bytes);
++
++             // load pinyin table
++             for (i=0; i<n; i++) {
++                 PinyinEntry entry (*m_validator, is, true);
++
++                 if (!m_custom.use_tone) {
++                     entry.set_key (PinyinKey (entry.get_key ().get_initial (),
++                                                   entry.get_key ().get_final (),
++                                                   SCIM_PINYIN_ZeroTone));
++                 }
++
++                 if (entry.get_key().get_final() == SCIM_PINYIN_ZeroFinal) {
++                     std::cerr << "Invalid entry: " << entry << "\n";
++                 } else {
++                     if ((ev = find_exact_entry (entry)) == m_table.end())
++                         m_table.push_back (entry);
++                     else {
++                         for (uint32 i=0; i<entry.size(); i++) {
++                             ev->insert (entry.get_char_with_frequency_by_index (i));
++                         }
++                     }
++                 }
++             }
++         }
++         sort ();
++    }
++    catch (std::ifstream::failure e) {
++        std::cerr << "Reading pinyin table failed" << std::endl;
+         return false;
+-
+-    uint32 i;
+-    uint32 n;
+-    PinyinEntryVector::iterator ev;
+-
+-    if (!binary) {
+-        is >> n;
+-
+-        // load pinyin table
+-        for (i=0; i<n; i++) {
+-            PinyinEntry entry (*m_validator, is, false);
+-
+-            if (!m_custom.use_tone) {
+-                entry.set_key (PinyinKey (entry.get_key ().get_initial (),
+-                                              entry.get_key ().get_final (),
+-                                              SCIM_PINYIN_ZeroTone));
+-            }
+-
+-            if (entry.get_key().get_final() == SCIM_PINYIN_ZeroFinal) {
+-                std::cerr << "Invalid entry: " << entry << "\n";
+-            } else {
+-                if ((ev = find_exact_entry (entry)) == m_table.end())
+-                    m_table.push_back (entry);
+-                else {
+-                    for (uint32 i=0; i<entry.size(); i++) {
+-                        ev->insert (entry.get_char_with_frequency_by_index (i));
+-                    }
+-                }
+-            }
+-        }
+-    } else {
+-        unsigned char bytes [8];
+-        is.read ((char*) bytes, sizeof (unsigned char) * 4);
+-        n = scim_bytestouint32 (bytes);
+-
+-        // load pinyin table
+-        for (i=0; i<n; i++) {
+-            PinyinEntry entry (*m_validator, is, true);
+-
+-            if (!m_custom.use_tone) {
+-                entry.set_key (PinyinKey (entry.get_key ().get_initial (),
+-                                              entry.get_key ().get_final (),
+-                                              SCIM_PINYIN_ZeroTone));
+-            }
+-
+-            if (entry.get_key().get_final() == SCIM_PINYIN_ZeroFinal) {
+-                std::cerr << "Invalid entry: " << entry << "\n";
+-            } else {
+-                if ((ev = find_exact_entry (entry)) == m_table.end())
+-                    m_table.push_back (entry);
+-                else {
+-                    for (uint32 i=0; i<entry.size(); i++) {
+-                        ev->insert (entry.get_char_with_frequency_by_index (i));
+-                    }
+-                }
+-            }
+-        }
+     }
+-    sort ();
+ 
+     return true;
+ }

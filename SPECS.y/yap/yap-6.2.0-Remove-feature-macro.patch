@@ -1,0 +1,27 @@
+From 9419d68dc09a4e3f7adfe7e654ef3952327cd9bf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 7 Dec 2011 14:14:25 +0100
+Subject: [PATCH] Remove feature macro
+
+This macro clashes with struct ppc_debug_info member in <asm/ptrace.h>
+on PPC. The macro is not used anywhere in yap.
+---
+ packages/PLStream/pl-incl.h |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/packages/PLStream/pl-incl.h b/packages/PLStream/pl-incl.h
+index aa7b99c..8bf63de 100755
+--- a/packages/PLStream/pl-incl.h
++++ b/packages/PLStream/pl-incl.h
+@@ -363,8 +363,6 @@ typedef struct PL_local_data {
+ 
+ #define usedStack(D) 0
+ 
+-#define features		(LD->feature.mask)
+-
+ extern PL_local_data_t lds;
+ 
+ #define exception_term		(LD->exception.term)
+-- 
+1.7.7.4
+

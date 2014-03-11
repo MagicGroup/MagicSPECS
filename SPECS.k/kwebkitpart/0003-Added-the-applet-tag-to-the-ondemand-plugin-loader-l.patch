@@ -1,0 +1,31 @@
+From 2b7fab9d0141973ee2b6772560bd25f9f1b9db5f Mon Sep 17 00:00:00 2001
+From: Dawit Alemayehu <adawit@kde.org>
+Date: Sat, 22 Sep 2012 11:58:43 -0400
+Subject: [PATCH 3/7] Added the <applet> tag to the ondemand plugin loader
+ list
+
+---
+ src/webpluginfactory.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/webpluginfactory.cpp b/src/webpluginfactory.cpp
+index c3791c1..56e2f2c 100644
+--- a/src/webpluginfactory.cpp
++++ b/src/webpluginfactory.cpp
+@@ -107,10 +107,12 @@ void FakePluginWidget::load (bool loadAll)
+     QList<QWebFrame*> frames;
+     frames.append(view->page()->mainFrame());
+ 
+-    QString selector = QLatin1String("object:not([type]),embed:not([type]),object[type=\"");
++    QString selector (QLatin1String("applet:not([type]),embed:not([type]),object:not([type]),applet[type=\""));
+     selector += m_mimeType;
+     selector += QLatin1String("\"],embed[type=\"");
+     selector += m_mimeType;
++    selector += QLatin1String("\"],object[type=\"");
++    selector += m_mimeType;
+     selector += QLatin1String("\"]");
+ 
+     while (!frames.isEmpty()) {
+-- 
+1.7.12.1
+

@@ -1,0 +1,38 @@
+From 069fbf819d748f6e433dca3e8eb3eb72b354cda0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 3 Jan 2013 17:20:55 +0100
+Subject: [PATCH] [sharutils] Fix swapping on big-endian machines
+
+4.13.1 release replaced SWAP() macro with function. However there were
+two bugs. First the function always retuned 0 because it ignored
+input argument. Second it indexed input array off-by-one. As
+result, shar-1 test failed on S390 or PPC.
+
+This patch fixes it.
+---
+ lib/md5.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/lib/md5.c b/lib/md5.c
+index 076f6ef..6dea827 100644
+--- a/lib/md5.c
++++ b/lib/md5.c
+@@ -54,10 +54,11 @@ SWAP(md5_uint32 n)
+     md5_uint32    uiv;
+   } v, res;
+ 
+-  res.cv[0] = v.cv[sizeof(md5_uint32) - 0];
+-  res.cv[1] = v.cv[sizeof(md5_uint32) - 1];
+-  res.cv[2] = v.cv[sizeof(md5_uint32) - 2];
+-  res.cv[3] = v.cv[sizeof(md5_uint32) - 3];
++  v.uiv = n;
++  res.cv[0] = v.cv[sizeof(md5_uint32) - 1];
++  res.cv[1] = v.cv[sizeof(md5_uint32) - 2];
++  res.cv[2] = v.cv[sizeof(md5_uint32) - 3];
++  res.cv[3] = v.cv[sizeof(md5_uint32) - 4];
+   return res.uiv;
+ }
+ 
+-- 
+1.7.11.7
+

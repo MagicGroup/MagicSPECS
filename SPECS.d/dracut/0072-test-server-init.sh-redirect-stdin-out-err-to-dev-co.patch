@@ -1,0 +1,57 @@
+From 4dda0095a1aabb86486f1e4c1b9a8b32250cc960 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 11 Jul 2012 08:40:45 +0200
+Subject: [PATCH] test/*/server-init.sh: redirect stdin,out,err to
+ /dev/console
+
+---
+ test/TEST-20-NFS/server-init.sh      |    2 +-
+ test/TEST-30-ISCSI/server-init.sh    |    2 ++
+ test/TEST-40-NBD/server-init.sh      |    2 ++
+ test/TEST-50-MULTINIC/server-init.sh |    2 +-
+ 4 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/test/TEST-20-NFS/server-init.sh b/test/TEST-20-NFS/server-init.sh
+index c3c0238..58fdeee 100755
+--- a/test/TEST-20-NFS/server-init.sh
++++ b/test/TEST-20-NFS/server-init.sh
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-exec >/dev/console 2>&1
++exec </dev/console >/dev/console 2>&1
+ set -x
+ export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+ export TERM=linux
+diff --git a/test/TEST-30-ISCSI/server-init.sh b/test/TEST-30-ISCSI/server-init.sh
+index 6f24b60..091f4ee 100755
+--- a/test/TEST-30-ISCSI/server-init.sh
++++ b/test/TEST-30-ISCSI/server-init.sh
+@@ -1,4 +1,6 @@
+ #!/bin/sh
++exec </dev/console >/dev/console 2>&1
++set -x
+ export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+ export TERM=linux
+ export PS1='nfstest-server:\w\$ '
+diff --git a/test/TEST-40-NBD/server-init.sh b/test/TEST-40-NBD/server-init.sh
+index e8f899c..8d2dd6d 100755
+--- a/test/TEST-40-NBD/server-init.sh
++++ b/test/TEST-40-NBD/server-init.sh
+@@ -1,4 +1,6 @@
+ #!/bin/sh
++exec </dev/console >/dev/console 2>&1
++set -x
+ export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+ export TERM=linux
+ export PS1='nbdtest-server:\w\$ '
+diff --git a/test/TEST-50-MULTINIC/server-init.sh b/test/TEST-50-MULTINIC/server-init.sh
+index 01470e1..43d7f40 100755
+--- a/test/TEST-50-MULTINIC/server-init.sh
++++ b/test/TEST-50-MULTINIC/server-init.sh
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-exec >/dev/console 2>&1
++exec </dev/console >/dev/console 2>&1
+ set -x
+ export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+ export TERM=linux

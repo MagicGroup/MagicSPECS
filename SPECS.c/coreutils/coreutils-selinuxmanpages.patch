@@ -1,0 +1,15 @@
+diff -urNp coreutils-6.10-orig/doc/coreutils.texi coreutils-6.10/doc/coreutils.texi
+--- coreutils-6.10-orig/doc/coreutils.texi	2008-04-07 17:52:11.000000000 +0200
++++ coreutils-6.10/doc/coreutils.texi	2008-04-07 18:01:43.000000000 +0200
+@@ -6981,6 +6981,11 @@ for i; do
+ exit $fail
+ @end example
+ 
++@item -c
++@cindex SELinux security context information, preserving
++Preserve SELinux security context of the original files if possible.
++Some file systems don't support storing of SELinux security context.
++
+ @item --copy-contents
+ @cindex directories, copying recursively
+ @cindex copying directories recursively

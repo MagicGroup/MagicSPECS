@@ -1,0 +1,126 @@
+From 4f6953de531316e0385aaace9ae5f2400e4451c8 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Sun, 10 Jun 2012 14:50:54 +0200
+Subject: [PATCH] cheese-thumb-view: Don't set columns to 5000 in horizontal
+ mode
+
+Rather then assuming 5000 will be enough, just set the number of columns to
+the number of thumbnails we have.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ src/cheese-window.vala            |    4 ++--
+ src/thumbview/cheese-thumb-view.c |   21 ++++++++++++++++++++-
+ src/thumbview/cheese-thumb-view.h |    1 +
+ src/vapi/cheese-thumbview.vapi    |    1 +
+ 4 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/src/cheese-window.vala b/src/cheese-window.vala
+index 12ef2e0..0ab0d2d 100644
+--- a/src/cheese-window.vala
++++ b/src/cheese-window.vala
+@@ -837,7 +837,7 @@ public class Cheese.MainWindow : Gtk.Window
+ 
+     if (is_wide_mode)
+     {
+-      thumb_view.set_columns (1);
++      thumb_view.set_vertical (true);
+       thumb_nav.set_vertical (true);
+       if (thumbnails_bottom.get_child () != null)
+       {
+@@ -850,7 +850,7 @@ public class Cheese.MainWindow : Gtk.Window
+     }
+     else
+     {
+-      thumb_view.set_columns (5000);
++      thumb_view.set_vertical (false);
+       thumb_nav.set_vertical (false);
+       if (thumbnails_right.get_child () != null)
+       {
+diff --git a/src/thumbview/cheese-thumb-view.c b/src/thumbview/cheese-thumb-view.c
+index 49bc31a..243d325 100644
+--- a/src/thumbview/cheese-thumb-view.c
++++ b/src/thumbview/cheese-thumb-view.c
+@@ -51,6 +51,7 @@ typedef struct
+   GFileMonitor   *video_file_monitor;
+   GnomeDesktopThumbnailFactory *factory;
+   gboolean multiplex_thumbnail_generator;
++  gboolean vertical;
+   guint n_items;
+   guint idle_id;
+   GQueue *thumbnails;
+@@ -601,7 +602,10 @@ cheese_thumb_view_row_inserted_cb (GtkTreeModel    *tree_model,
+   CheeseThumbViewPrivate *priv = CHEESE_THUMB_VIEW_GET_PRIVATE (thumb_view);
+ 
+   priv->n_items++;
+-  gtk_widget_set_size_request (GTK_WIDGET (thumb_view), -1, -1);
++  if (!priv->vertical)
++    gtk_icon_view_set_columns(GTK_ICON_VIEW (thumb_view), priv->n_items);
++  else
++    gtk_widget_set_size_request (GTK_WIDGET (thumb_view), -1, -1);
+ }
+ 
+ static void
+@@ -616,6 +620,8 @@ cheese_thumb_view_row_deleted_cb (GtkTreeModel    *tree_model,
+     gtk_widget_set_size_request (GTK_WIDGET (thumb_view),
+                                  THUMB_VIEW_MINIMUM_WIDTH,
+                                  THUMB_VIEW_MINIMUM_HEIGHT);
++  else if (!priv->vertical)
++    gtk_icon_view_set_columns(GTK_ICON_VIEW (thumb_view), priv->n_items);
+ }
+ 
+ static void
+@@ -684,6 +690,7 @@ cheese_thumb_view_constructed (GObject *object)
+                                         THUMBNAIL_BASENAME_URL_COLUMN, GTK_SORT_ASCENDING);
+                                         
+   cheese_thumb_view_fill (thumb_view);
++  cheese_thumb_view_set_vertical (thumb_view, FALSE);
+ }
+ 
+ GtkWidget *
+@@ -696,6 +703,18 @@ cheese_thumb_view_new ()
+ }
+ 
+ void
++cheese_thumb_view_set_vertical (CheeseThumbView *thumb_view, gboolean vertical)
++{
++  CheeseThumbViewPrivate *priv = CHEESE_THUMB_VIEW_GET_PRIVATE (thumb_view);
++
++  priv->vertical = vertical;
++  if (!priv->vertical && priv->n_items)
++    gtk_icon_view_set_columns(GTK_ICON_VIEW (thumb_view), priv->n_items);
++  else
++    gtk_icon_view_set_columns(GTK_ICON_VIEW (thumb_view), 1);
++}
++
++void
+ cheese_thumb_view_start_monitoring_photo_path (CheeseThumbView *thumb_view, const char *path_photos)
+ {
+   CheeseThumbViewPrivate *priv = CHEESE_THUMB_VIEW_GET_PRIVATE (thumb_view);
+diff --git a/src/thumbview/cheese-thumb-view.h b/src/thumbview/cheese-thumb-view.h
+index 140a283..b2ca2b3 100644
+--- a/src/thumbview/cheese-thumb-view.h
++++ b/src/thumbview/cheese-thumb-view.h
+@@ -54,6 +54,7 @@ GList *cheese_thumb_view_get_selected_images_list (CheeseThumbView *thumb_view);
+ char * cheese_thumb_view_get_selected_image (CheeseThumbView *thumb_view);
+ guint  cheese_thumb_view_get_n_selected (CheeseThumbView *thumbview);
+ void   cheese_thumb_view_remove_item (CheeseThumbView *thumb_view, GFile *file);
++void   cheese_thumb_view_set_vertical (CheeseThumbView *thumb_view, gboolean vertical);
+ void cheese_thumb_view_start_monitoring_photo_path (CheeseThumbView *thumbview, const char *path_photos);
+ void cheese_thumb_view_start_monitoring_video_path (CheeseThumbView *thumbview, const char *path_videos);
+ 
+diff --git a/src/vapi/cheese-thumbview.vapi b/src/vapi/cheese-thumbview.vapi
+index 669b724..61b323e 100644
+--- a/src/vapi/cheese-thumbview.vapi
++++ b/src/vapi/cheese-thumbview.vapi
+@@ -9,6 +9,7 @@ namespace Cheese
+     public List<GLib.File> get_selected_images_list ();
+     public int             get_n_selected ();
+     public void            remove_item (GLib.File file);
++    public void            set_vertical (bool vertical);
+     public void            start_monitoring_photo_path (string path_photos);
+     public void            start_monitoring_video_path (string path_videos);
+   }
+-- 
+1.7.10.2
+

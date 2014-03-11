@@ -1,0 +1,43 @@
+diff -up scim-pinyin-0.5.91/src/scim_pinyin_imengine.cpp.orig scim-pinyin-0.5.91/src/scim_pinyin_imengine.cpp
+--- scim-pinyin-0.5.91/src/scim_pinyin_imengine.cpp.orig	2007-11-09 16:51:49.000000000 +0800
++++ scim-pinyin-0.5.91/src/scim_pinyin_imengine.cpp	2007-11-09 16:52:06.000000000 +0800
+@@ -656,6 +656,11 @@ PinyinFactory::refresh ()
+ void
+ PinyinFactory::save_user_library ()
+ {
++    String tmp_user_pinyin_table = m_user_pinyin_table + ".tmp";
++    String tmp_user_phrase_lib = m_user_phrase_lib + ".tmp";
++    String tmp_user_pinyin_phrase_lib = m_user_pinyin_phrase_lib + ".tmp";
++    String tmp_user_pinyin_phrase_index = m_user_pinyin_phrase_index + ".tmp";
++
+     // First make the user data directory.
+     if (access (m_user_data_directory.c_str (), R_OK | W_OK) != 0) {
+         mkdir (m_user_data_directory.c_str (), S_IRUSR | S_IWUSR | S_IXUSR);
+@@ -670,11 +675,23 @@ PinyinFactory::save_user_library ()
+         lib->optimize_phrase_frequencies ();
+     }
+ 
+-    m_pinyin_global.save_pinyin_table (m_user_pinyin_table.c_str (), m_user_data_binary);
+-    m_pinyin_global.save_user_phrase_lib (m_user_phrase_lib.c_str (),
+-                                          m_user_pinyin_phrase_lib.c_str (),
+-                                          m_user_pinyin_phrase_index.c_str (),
++    // save user data in tmp files
++    m_pinyin_global.save_pinyin_table (tmp_user_pinyin_table.c_str (), m_user_data_binary);
++    m_pinyin_global.save_user_phrase_lib (tmp_user_phrase_lib.c_str (),
++                                          tmp_user_pinyin_phrase_lib.c_str (),
++                                          tmp_user_pinyin_phrase_index.c_str (),
+                                           m_user_data_binary);
++
++   // unlink old user data files, and rename tmp files.
++   unlink (m_user_pinyin_table.c_str ());
++   rename (tmp_user_pinyin_table.c_str (), m_user_pinyin_table.c_str ());
++   
++   unlink (m_user_phrase_lib.c_str ());
++   unlink (m_user_pinyin_phrase_lib.c_str ());
++   unlink (m_user_pinyin_phrase_index.c_str ());
++   rename (tmp_user_phrase_lib.c_str (), m_user_phrase_lib.c_str ());
++   rename (tmp_user_pinyin_phrase_lib.c_str (), m_user_pinyin_phrase_lib.c_str ());
++   rename (tmp_user_pinyin_phrase_index.c_str (), m_user_pinyin_phrase_index.c_str ());
+ }
+ 
+ void

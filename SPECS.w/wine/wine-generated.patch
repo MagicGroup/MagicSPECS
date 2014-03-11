@@ -1,0 +1,17 @@
+Only in wine-1.0-rc2: \
+diff -u -r wine-1.0-rc2.orig/tools/wineprefixcreate.in wine-1.0-rc2/tools/wineprefixcreate.in
+--- wine-1.0-rc2.orig/tools/wineprefixcreate.in	2008-05-24 14:47:28.000000000 +0800
++++ wine-1.0-rc2/tools/wineprefixcreate.in	2008-05-24 14:50:02.000000000 +0800
+@@ -126,6 +126,11 @@
+ WINEPREFIX=`cd "$WINEPREFIX" && pwd`
+ export WINEPREFIX
+ 
++#copy user.reg to $WINEPREFIX
++if [ -f /etc/wine/user.reg ] && [ ! -f "$WINEPREFIX/user.reg" ];then
++    cp /etc/wine/user.reg  "$WINEPREFIX/user.reg"
++fi
++
+ if [ -d "$WINEPREFIX/dosdevices" ]
+ then
+     "${WINELOADER:-$bindir/wine}" wineboot.exe --update
+Only in wine-1.0-rc2/tools: wineprefixcreate.in.orig

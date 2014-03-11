@@ -1,0 +1,22 @@
+diff -ur qsopcast-0.4.85.orig/src/channel_ppstream.cpp qsopcast-0.4.85/src/channel_ppstream.cpp
+--- qsopcast-0.4.85.orig/src/channel_ppstream.cpp	2013-01-04 03:07:06.000000000 +0000
++++ qsopcast-0.4.85/src/channel_ppstream.cpp	2013-01-04 03:07:36.000000000 +0000
+@@ -19,6 +19,7 @@
+ */
+ 
+ #include <stdlib.h>// for srand() and rand()
++#include <unistd.h>// for close()
+ 
+ #include <QObject>
+ #include <QProcess>
+diff -ur qsopcast-0.4.85.orig/src/channel_sopcast.cpp qsopcast-0.4.85/src/channel_sopcast.cpp
+--- qsopcast-0.4.85.orig/src/channel_sopcast.cpp	2013-01-04 03:07:06.000000000 +0000
++++ qsopcast-0.4.85/src/channel_sopcast.cpp	2013-01-04 03:07:56.000000000 +0000
+@@ -20,6 +20,7 @@
+ 
+ #include <stdio.h>// for fprintf()
+ #include <stdlib.h>// for srand() and rand()
++#include <unistd.h>// for close()
+ 
+ #include <QObject>
+ #include <QBuffer>

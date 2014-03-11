@@ -1,0 +1,22 @@
+--- kaffeine-0.8.4/kaffeine/src/player-parts/xine-part/xine_part.cpp.orig	2007-06-21 14:45:03.000000000 +0800
++++ kaffeine-0.8.4/kaffeine/src/player-parts/xine-part/xine_part.cpp	2007-06-21 14:45:26.000000000 +0800
+@@ -1476,7 +1476,7 @@
+ 	m_isOsdTimer = config->readBoolEntry("Osd Timer", false);
+ 
+ 	config->setGroup("Visualization");
+-	QString visual = config->readEntry("Visual Plugin", "goom");
++	QString visual = config->readEntry("Visual Plugin", "none");
+ 	m_audioVisual->setCurrentItem(m_audioVisual->items().findIndex(visual));
+ 	m_xine->slotSetVisualPlugin(visual);
+ 
+--- kaffeine-0.8.4/kaffeine/src/player-parts/gstreamer-part/gstreamer_part.cpp.orig	2007-06-21 14:46:05.000000000 +0800
++++ kaffeine-0.8.4/kaffeine/src/player-parts/gstreamer-part/gstreamer_part.cpp	2007-06-21 14:46:30.000000000 +0800
+@@ -657,7 +657,7 @@
+ 
+ 	m_audioSinkName = config->readEntry("Audio Sink", "alsasink");
+ 	m_videoSinkName = config->readEntry("Video Sink", "xvimagesink");
+-	m_visualPluginName = config->readEntry("Visual Plugin", "goom");
++	m_visualPluginName = config->readEntry("Visual Plugin", "none");
+ 	m_savedVolume = config->readNumEntry("Volume", 25);
+ 	m_device = config->readEntry("CD Device", "/dev/dvd");
+ }

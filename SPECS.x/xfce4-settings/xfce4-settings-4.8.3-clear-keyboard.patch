@@ -1,0 +1,43 @@
+From 6d5cf80f7b7826e791d503713c965e969549ea15 Mon Sep 17 00:00:00 2001
+From: Eric Koegel <eric.koegel@gmail.com>
+Date: Sun, 12 Feb 2012 11:41:41 +0000
+Subject: Clear out all the old entries before resetting to defaults
+
+When resetting the keyboard shortcuts to their default entries we
+need to clear out all the old entires in the list to prevent
+duplicates from appearing. (Bug 8138)
+---
+diff --git a/dialogs/keyboard-settings/xfce-keyboard-settings.c b/dialogs/keyboard-settings/xfce-keyboard-settings.c
+index 8776a69..e8b6811 100644
+--- a/dialogs/keyboard-settings/xfce-keyboard-settings.c
++++ b/dialogs/keyboard-settings/xfce-keyboard-settings.c
+@@ -958,7 +958,9 @@ xfce_keyboard_settings_delete_button_clicked (XfceKeyboardSettings *settings)
+ static void
+ xfce_keyboard_settings_reset_button_clicked (XfceKeyboardSettings *settings)
+ {
+-  gint response;
++  gint          response;
++  GObject      *view;
++  GtkListStore *store;
+ 
+   g_return_if_fail (XFCE_IS_KEYBOARD_SETTINGS (settings));
+ 
+@@ -971,7 +973,15 @@ xfce_keyboard_settings_reset_button_clicked (XfceKeyboardSettings *settings)
+                                   NULL);
+ 
+   if (G_LIKELY (response == GTK_RESPONSE_YES))
+-    xfce_shortcuts_provider_reset_to_defaults (settings->priv->provider);
++    {
++      view = gtk_builder_get_object (GTK_BUILDER (settings), "kbd_shortcuts_view");
++
++      /* Clear out all the previous entries */
++      store = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (view)));
++      gtk_list_store_clear (store);
++
++      xfce_shortcuts_provider_reset_to_defaults (settings->priv->provider);
++    }
+ }
+ 
+ 
+--
+cgit v0.9.0.2

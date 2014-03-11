@@ -1,0 +1,13 @@
+--- eb-4.3/m4/eb4.m4~	2006-06-28 17:20:01.000000000 +1000
++++ eb-4.3/m4/eb4.m4	2007-02-14 13:10:47.000000000 +1000
+@@ -49,8 +49,8 @@
+ dnl *
+ AC_ARG_WITH(eb-conf,
+ AC_HELP_STRING([--with-eb-conf=FILE],
+-    [eb.conf file is FILE [[SYSCONFDIR/eb.conf]]]),
+-[ebconf="${withval}"], [ebconf=$sysconfdir/eb.conf])
++    [eb.conf file is FILE [[LIBDIR/eb.conf]]]),
++[ebconf="${withval}"], [ebconf=$libdir/eb.conf])
+ if test X$prefix = XNONE; then
+    PREFIX=$ac_default_prefix
+ else

@@ -1,0 +1,22 @@
+diff -ur libmad-0.15.1b.orig/configure libmad-0.15.1b/configure
+--- libmad-0.15.1b.orig/configure	2009-05-18 13:01:30.000000000 +0800
++++ libmad-0.15.1b/configure	2009-05-18 13:02:06.000000000 +0800
+@@ -19099,7 +19099,6 @@
+     case "$optimize" in
+ 	-O|"-O "*)
+ 	    optimize="-O"
+-	    optimize="$optimize -fforce-mem"
+ 	    optimize="$optimize -fforce-addr"
+ 	    : #x optimize="$optimize -finline-functions"
+ 	    : #- optimize="$optimize -fstrength-reduce"
+diff -ur libmad-0.15.1b.orig/configure.ac libmad-0.15.1b/configure.ac
+--- libmad-0.15.1b.orig/configure.ac	2009-05-18 13:01:30.000000000 +0800
++++ libmad-0.15.1b/configure.ac	2009-05-18 13:02:01.000000000 +0800
+@@ -140,7 +140,6 @@
+     case "$optimize" in
+ 	-O|"-O "*)
+ 	    optimize="-O"
+-	    optimize="$optimize -fforce-mem"
+ 	    optimize="$optimize -fforce-addr"
+ 	    : #x optimize="$optimize -finline-functions"
+ 	    : #- optimize="$optimize -fstrength-reduce"

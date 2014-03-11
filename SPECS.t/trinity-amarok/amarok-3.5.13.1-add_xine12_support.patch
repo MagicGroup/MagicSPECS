@@ -1,0 +1,14 @@
+--- amarok-3.5.13.1/amarok/src/engine/xine/xine-engine.cpp.ORI	2012-10-02 20:00:20.751039350 +0000
++++ amarok-3.5.13.1/amarok/src/engine/xine/xine-engine.cpp	2012-10-02 20:05:34.336512276 +0000
+@@ -1131,7 +1131,11 @@
+ 
+ bool XineEngine::getAudioCDContents(const TQString &device, KURL::List &urls)
+ {
++#if XINE_MAJOR_VERSION > 1 || ( XINE_MAJOR_VERSION == 1 && XINE_MINOR_VERSION >= 2 )
++    const char * const* xine_urls = NULL;
++#else
+     char **xine_urls = NULL;
++#endif
+     int num;
+     int i = 0;
+ 

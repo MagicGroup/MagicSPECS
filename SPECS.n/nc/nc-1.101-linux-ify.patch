@@ -1,0 +1,136 @@
+--- a/netcat.c	2011-01-09 23:16:46.000000000 +0100
++++ b/netcat.c	2011-03-08 09:21:31.599560952 +0100
+@@ -67,7 +67,6 @@
+ /* Command Line Options */
+ int	dflag;					/* detached, no stdin */
+ unsigned int iflag;				/* Interval Flag */
+-int	jflag;					/* use jumbo frames if we can */
+ int	kflag;					/* More than one connect */
+ int	lflag;					/* Bind to local port */
+ int	nflag;					/* Don't do name look up */
+@@ -85,7 +84,6 @@
+ int	Oflag;					/* TCP send buffer size */
+ int	Sflag;					/* TCP MD5 signature option */
+ int	Tflag = -1;				/* IP Type of Service */
+-u_int	rtableid;
+ 
+ int timeout = -1;
+ int family = AF_UNSPEC;
+@@ -130,7 +128,7 @@
+ 	sv = NULL;
+ 
+ 	while ((ch = getopt(argc, argv,
+-	    "46DdhI:i:jklnO:P:p:rSs:tT:UuV:vw:X:x:z")) != -1) {
++	    "46DdhI:i:klnO:P:p:rSs:tT:Uuvw:X:x:z")) != -1) {
+ 		switch (ch) {
+ 		case '4':
+ 			family = AF_INET;
+@@ -162,9 +160,6 @@
+ 			if (errstr)
+ 				errx(1, "interval %s: %s", errstr, optarg);
+ 			break;
+-		case 'j':
+-			jflag = 1;
+-			break;
+ 		case 'k':
+ 			kflag = 1;
+ 			break;
+@@ -192,12 +187,6 @@
+ 		case 'u':
+ 			uflag = 1;
+ 			break;
+-		case 'V':
+-			rtableid = (unsigned int)strtonum(optarg, 0,
+-			    RT_TABLEID_MAX, &errstr);
+-			if (errstr)
+-				errx(1, "rtable %s: %s", errstr, optarg);
+-			break;
+ 		case 'v':
+ 			vflag = 1;
+ 			break;
+@@ -274,8 +263,8 @@
+ 		} else {
+ 			strlcpy(unix_dg_tmp_socket_buf, "/tmp/nc.XXXXXXXXXX",
+ 				UNIX_DG_TMP_SOCKET_SIZE);
+-			if (mktemp(unix_dg_tmp_socket_buf) == NULL)
+-				err(1, "mktemp");
++			if (mkstemp(unix_dg_tmp_socket_buf) == -1)
++				err(1, "mkstemp");
+ 			unix_dg_tmp_socket = unix_dg_tmp_socket_buf;
+ 		}
+ 	}
+@@ -346,7 +335,7 @@
+ 				struct sockaddr_storage z;
+ 
+ 				len = sizeof(z);
+-				plen = jflag ? 16384 : 2048;
++				plen = 2048;
+ 				rv = recvfrom(s, buf, plen, MSG_PEEK,
+ 				    (struct sockaddr *)&z, &len);
+ 				if (rv < 0)
+@@ -551,18 +540,10 @@
+ 		    res0->ai_protocol)) < 0)
+ 			continue;
+ 
+-		if (rtableid) {
+-			if (setsockopt(s, SOL_SOCKET, SO_RTABLE, &rtableid,
+-			    sizeof(rtableid)) == -1)
+-				err(1, "setsockopt SO_RTABLE");
+-		}
+-
+ 		/* Bind to a local port or source address if specified. */
+ 		if (sflag || pflag) {
+ 			struct addrinfo ahints, *ares;
+ 
+-			/* try SO_BINDANY, but don't insist */
+-			setsockopt(s, SOL_SOCKET, SO_BINDANY, &on, sizeof(on));
+ 			memset(&ahints, 0, sizeof(struct addrinfo));
+ 			ahints.ai_family = res0->ai_family;
+ 			ahints.ai_socktype = uflag ? SOCK_DGRAM : SOCK_STREAM;
+@@ -625,13 +606,7 @@
+ 		    res0->ai_protocol)) < 0)
+ 			continue;
+ 
+-		if (rtableid) {
+-			if (setsockopt(s, IPPROTO_IP, SO_RTABLE, &rtableid,
+-			    sizeof(rtableid)) == -1)
+-				err(1, "setsockopt SO_RTABLE");
+-		}
+-
+-		ret = setsockopt(s, SOL_SOCKET, SO_REUSEPORT, &x, sizeof(x));
++		ret = setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &x, sizeof(x));
+ 		if (ret == -1)
+ 			err(1, NULL);
+ 
+@@ -668,7 +643,7 @@
+ 	int lfd = fileno(stdout);
+ 	int plen;
+ 
+-	plen = jflag ? 16384 : 2048;
++	plen = 2048;
+ 
+ 	/* Setup Network FD */
+ 	pfd[0].fd = nfd;
+@@ -851,11 +826,6 @@
+ 			&x, sizeof(x)) == -1)
+ 			err(1, NULL);
+ 	}
+-	if (jflag) {
+-		if (setsockopt(s, SOL_SOCKET, SO_JUMBO,
+-			&x, sizeof(x)) == -1)
+-			err(1, NULL);
+-	}
+ 	if (Tflag != -1) {
+ 		if (setsockopt(s, IPPROTO_IP, IP_TOS,
+ 		    &Tflag, sizeof(Tflag)) == -1)
+--- a/socks.c	2011-02-12 16:54:18.000000000 +0100
++++ b/socks.c	2011-03-07 16:24:37.198561350 +0100
+@@ -38,7 +38,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <resolv.h>
+-#include <readpassphrase.h>
++#include <bsd/readpassphrase.h>
+ #include "atomicio.h"
+ 
+ #define SOCKS_PORT	"1080"

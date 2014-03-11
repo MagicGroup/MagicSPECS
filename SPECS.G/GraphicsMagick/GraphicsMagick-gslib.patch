@@ -1,0 +1,26 @@
+--- GraphicsMagick-1.1.7/configure.ac.orig	2006-07-31 00:24:43.000000000 +0200
++++ GraphicsMagick-1.1.7/configure.ac	2006-07-31 00:25:02.000000000 +0200
+@@ -1684,8 +1684,8 @@
+     AC_MSG_RESULT()
+     failed=0;
+     passed=0;
+-    AC_CHECK_HEADER(ps/iapi.h,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
+-    AC_CHECK_HEADER(ps/errors.h,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
++    AC_CHECK_HEADER(ghostscript/iapi.h,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
++    AC_CHECK_HEADER(ghostscript/errors.h,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
+     AC_CHECK_LIB(gs,gsapi_new_instance,passed=`expr $passed + 1`,failed=`expr $failed + 1`,)
+     AC_MSG_CHECKING(if Ghostscript library package is complete)
+     if test $passed -gt 0
+--- GraphicsMagick-1.1.7/magick/delegate.h.orig	2006-07-31 00:25:33.000000000 +0200
++++ GraphicsMagick-1.1.7/magick/delegate.h	2006-07-31 00:25:51.000000000 +0200
+@@ -46,8 +46,8 @@
+ #if defined(MAGICK_IMPLEMENTATION)
+ 
+ #if defined(HasGS)
+-#include "ps/iapi.h"
+-#include "ps/errors.h"
++#include "ghostscript/iapi.h"
++#include "ghostscript/errors.h"
+ #endif
+ 
+ #ifndef gs_main_instance_DEFINED

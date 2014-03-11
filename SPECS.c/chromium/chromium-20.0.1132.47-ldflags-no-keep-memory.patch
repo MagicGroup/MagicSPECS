@@ -1,0 +1,18 @@
+diff -up chromium-20.0.1132.47/chrome/chrome_exe.gypi.ldflags chromium-20.0.1132.47/chrome/chrome_exe.gypi
+--- chromium-20.0.1132.47/chrome/chrome_exe.gypi.ldflags	2012-06-28 09:02:24.000000000 -0400
++++ chromium-20.0.1132.47/chrome/chrome_exe.gypi	2012-07-06 15:46:13.008003437 -0400
+@@ -30,6 +30,14 @@
+         'app/metro_driver_win.h',
+         '../content/app/startup_helper_win.cc',
+       ],
++      # Hey, I know what would be an awesome idea.
++      # Let us statically compile EVERYTHING into one giant
++      # freaking executable. Too bad this means we can't build
++      # natively on an IA32 machine. If only someone would
++      # invent shared library objects. Idiots.
++      'ldflags': [
++        '-Wl,--no-keep-memory'
++      ],
+       'mac_bundle_resources': [
+         'app/app-Info.plist',
+       ],

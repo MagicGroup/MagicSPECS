@@ -1,0 +1,37 @@
+diff -up ./src/display/lrmi.c.xf86int10 ./src/display/lrmi.c
+--- ./src/display/lrmi.c.xf86int10	2006-04-25 02:38:23.000000000 +1000
++++ ./src/display/lrmi.c	2008-11-24 17:01:19.000000000 +1000
+@@ -13,6 +13,15 @@ This software has NO WARRANTY.  Use it a
+ #ifdef HAVE_CONFIG_H
+ #include <config.h>
+ #endif
++#define X86_TF_MASK		0x00000100
++#define X86_IF_MASK		0x00000200
++#define X86_IOPL_MASK		0x00003000
++#define X86_NT_MASK		0x00004000
++#define X86_VM_MASK		0x00020000
++#define X86_AC_MASK		0x00040000
++#define X86_VIF_MASK		0x00080000	/* virtual interrupt flag */
++#define X86_VIP_MASK		0x00100000	/* virtual interrupt pending */
++#define X86_ID_MASK		0x00200000
+ 
+ #ifdef USING_VGA
+ #if defined(linux)
+@@ -176,7 +185,7 @@ LRMI_free_real(void *m)
+ 	}
+ 
+ 
+-#define DEFAULT_VM86_FLAGS 	(IF_MASK | IOPL_MASK)
++#define DEFAULT_VM86_FLAGS 	(X86_IF_MASK | X86_IOPL_MASK)
+ #define DEFAULT_STACK_SIZE 	0x1000
+ #define RETURN_TO_32_INT 	255
+ 
+@@ -790,7 +799,7 @@ run_vm86(void)
+ 
+ 			context.vm.regs.cs = get_int_seg(v);
+ 			context.vm.regs.eip = get_int_off(v);
+-			context.vm.regs.eflags &= ~(VIF_MASK | TF_MASK);
++			context.vm.regs.eflags &= ~(X86_VIF_MASK | X86_TF_MASK);
+ 
+ 			continue;
+ 			}

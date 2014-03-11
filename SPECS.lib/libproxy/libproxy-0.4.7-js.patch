@@ -1,0 +1,12 @@
+diff -ur libproxy-0.4.7.orig/libproxy/modules/pacrunner_mozjs.cpp libproxy-0.4.7/libproxy/modules/pacrunner_mozjs.cpp
+--- libproxy-0.4.7.orig/libproxy/modules/pacrunner_mozjs.cpp	2012-01-11 06:58:08.000000000 -0500
++++ libproxy-0.4.7/libproxy/modules/pacrunner_mozjs.cpp	2012-01-11 06:58:36.000000000 -0500
+@@ -31,7 +31,7 @@
+ #define XP_WIN
+ #endif
+ #endif
+-#include <jsapi.h>
++#include <js/jsapi.h>
+ #include "pacutils.h"
+ 
+ #ifndef INET_ADDRSTRLEN

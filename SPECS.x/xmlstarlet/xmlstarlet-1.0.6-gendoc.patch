@@ -1,0 +1,102 @@
+diff -uNr xmlstarlet-1.0.6-orig/doc/gen-doc xmlstarlet-1.0.6/doc/gen-doc
+--- xmlstarlet-1.0.6-orig/doc/gen-doc	2011-03-07 19:48:17.000000000 -0500
++++ xmlstarlet-1.0.6/doc/gen-doc	2011-03-26 14:42:44.417907852 -0400
+@@ -15,7 +15,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml"
+-../src/xml 2>&1
++../xml 2>&1
+ 
+ echo ""
+ echo ""
+@@ -24,7 +24,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml sel --help"
+-../src/xml sel --help 2>&1
++../xml sel --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -33,7 +33,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml ed --help"
+-../src/xml ed --help 2>&1
++../xml ed --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -42,7 +42,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml tr --help"
+-../src/xml tr --help 2>&1
++../xml tr --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -51,7 +51,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml fo --help"
+-../src/xml fo --help 2>&1
++../xml fo --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -60,7 +60,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml val --help"
+-../src/xml val --help 2>&1
++../xml val --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -69,7 +69,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml el --help"
+-../src/xml el --help 2>&1
++../xml el --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -79,7 +79,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml esc --help"
+-../src/xml esc --help 2>&1
++../xml esc --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -89,7 +89,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml ls --help"
+-../src/xml ls --help 2>&1
++../xml ls --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -99,7 +99,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml c14n --help"
+-../src/xml c14n --help 2>&1
++../xml c14n --help 2>&1
+ 
+ echo ""
+ echo ""
+@@ -109,7 +109,7 @@
+ echo "===================================================="
+ echo ""
+ echo "xml pyx --help"
+-../src/xml pyx --help 2>&1
++../xml pyx --help 2>&1
+ 
+ echo ""
+ echo ""

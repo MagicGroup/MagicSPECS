@@ -1,0 +1,19 @@
+# HG changeset patch
+# User Ned Batchelder <ned@nedbatchelder.com>
+# Date 1349312975 14400
+# Node ID 16020b834643bb8b9953b8d4bcc09691deb549b9
+# Parent  70e174f7312c87101b0b5be7ec7dd1acf7869f12
+Fix #193: The status.dat file written by py2 can't be read by py3
+
+diff -r 70e174f7312c87101b0b5be7ec7dd1acf7869f12 -r 16020b834643bb8b9953b8d4bcc09691deb549b9 coverage/html.py
+--- a/coverage/html.py	Wed Oct 03 07:48:04 2012 -0400
++++ b/coverage/html.py	Wed Oct 03 21:09:35 2012 -0400
+@@ -281,7 +281,7 @@
+                 status = pickle.load(fstatus)
+             finally:
+                 fstatus.close()
+-        except IOError:
++        except (IOError, ValueError):
+             usable = False
+         else:
+             usable = True

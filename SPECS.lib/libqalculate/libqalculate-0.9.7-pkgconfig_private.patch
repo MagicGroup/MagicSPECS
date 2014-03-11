@@ -1,0 +1,12 @@
+diff -up libqalculate-0.9.7/libqalculate.pc.in.pkgconfig_private libqalculate-0.9.7/libqalculate.pc.in
+--- libqalculate-0.9.7/libqalculate.pc.in.pkgconfig_private	2009-12-02 14:24:25.000000000 -0600
++++ libqalculate-0.9.7/libqalculate.pc.in	2010-02-13 17:22:21.671796422 -0600
+@@ -5,7 +5,7 @@ includedir=@includedir@
+ 
+ Name: libqalculate
+ Description: libqalculate
+-Requires: glib-2.0 libxml-2.0
++Requires.private: glib-2.0 libxml-2.0
+ Version: @VERSION@
+ Libs: -L${libdir} @CLN_LIBS@ -lpthread -lqalculate
+ Cflags: -I${includedir} @CLN_CPPFLAGS@

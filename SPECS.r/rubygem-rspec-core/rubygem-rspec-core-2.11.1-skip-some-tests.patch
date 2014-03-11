@@ -1,0 +1,36 @@
+--- rspec-core-2.11.1/spec/spec_helper.rb.orig	2012-10-11 17:43:44.550615644 +0900
++++ rspec-core-2.11.1/spec/spec_helper.rb	2012-10-11 17:45:57.631226844 +0900
+@@ -17,10 +17,10 @@
+ Spork.prefork do
+   require 'rspec/autorun'
+   require 'autotest/rspec2'
+-  require 'aruba/api'
+-  require 'fakefs/spec_helpers'
++  #require 'aruba/api'
++  #require 'fakefs/spec_helpers'
+ 
+-  Dir['./spec/support/**/*.rb'].map {|f| require f}
++  Dir['./spec/support/**/*.rb'].map {|f| require f unless f.include?("config_options_helper")}
+ 
+   class NullObject
+     private
+@@ -71,15 +71,15 @@
+     c.alias_it_behaves_like_to 'it_has_behavior'
+     c.around {|example| sandboxed { example.run }}
+     c.include(RSpecHelpers)
+-    c.include Aruba::Api, :example_group => {
+-      :file_path => /spec\/command_line/
+-    }
++    #c.include Aruba::Api, :example_group => {
++      #:file_path => /spec\/command_line/
++    #}
+ 
+     # runtime options
+     c.treat_symbols_as_metadata_keys_with_true_values = true
+     c.color = !in_editor?
+     c.filter_run :focus
+-    c.include FakeFS::SpecHelpers, :fakefs
++    #c.include FakeFS::SpecHelpers, :fakefs
+     c.run_all_when_everything_filtered = true
+     c.filter_run_excluding :ruby => lambda {|version|
+       case version.to_s

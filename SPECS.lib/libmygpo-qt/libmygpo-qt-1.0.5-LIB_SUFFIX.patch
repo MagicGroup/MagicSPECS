@@ -1,0 +1,12 @@
+diff -up libmygpo-qt.1.0.5/CMakeLists.txt.LIB_SUFFIX libmygpo-qt.1.0.5/CMakeLists.txt
+--- libmygpo-qt.1.0.5/CMakeLists.txt.LIB_SUFFIX	2011-11-08 17:11:00.000000000 -0600
++++ libmygpo-qt.1.0.5/CMakeLists.txt	2011-11-09 06:51:31.760938782 -0600
+@@ -46,7 +46,7 @@ set( CPACK_DEBIAN_PACKAGE_MAINTAINER "gp
+ set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "A c++/qt library to access the APIs provided by gpodder.net." )
+ 
+ set(LIB_INSTALL_DIR_SUFFIX "" CACHE STRING "The directories where to install libraries to")
+-set(LIB_INSTALL_DIR lib${LIB_INSTALL_DIR_SUFFIX} )
++set(LIB_INSTALL_DIR lib${LIB_SUFFIX} )
+ set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include/mygpo-qt" CACHE PATH "The directory the headers are installed in")
+ set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/mygpo-qt ) 
+ # SET (CMAKE_MODULES_INSTALL_DIR "${CMAKE_ROOT}/Modules" CACHE PATH "The directory to install FindLibmygpo-qt.cmake to")

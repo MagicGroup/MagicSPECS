@@ -1,0 +1,21 @@
+diff -ruN HTTP-Proxy-0.17-orig/lib/HTTP/Proxy/BodyFilter/save.pm HTTP-Proxy-0.17/lib/HTTP/Proxy/BodyFilter/save.pm
+--- HTTP-Proxy-0.17-orig/lib/HTTP/Proxy/BodyFilter/save.pm	2005-09-28 22:26:09.000000000 +0100
++++ HTTP-Proxy-0.17/lib/HTTP/Proxy/BodyFilter/save.pm	2006-03-06 20:50:50.000000000 +0000
+@@ -279,7 +279,7 @@
+ Returning C<""> or C<undef> will prevent the creation of the file.
+ This lets a filter decide even more precisely what to save or not,
+ even though this should be done in the match subroutine (see
+-HTTP::Proxy's C<pushè_filte()> method).
++HTTP::Proxy's C<push_filter()> method).
+ 
+ =back
+ 
+@@ -389,7 +389,7 @@
+ 
+ Thanks to Nicolas Chuche for telling me about C<O_EXCL>.
+ 
+-Thanks to Rafaël Garcia-Suarez and David Rigaudiere for their help on
++Thanks to RafaÃ«l Garcia-Suarez and David Rigaudiere for their help on
+ irc while coding the nasty C<begin()> method. C<;-)>
+ 
+ Thanks to Howard Jones for the inspiration and initial patch for the

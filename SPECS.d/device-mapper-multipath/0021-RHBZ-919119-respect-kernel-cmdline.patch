@@ -1,0 +1,30 @@
+---
+ multipath/multipath.rules     |    2 ++
+ multipathd/multipathd.service |    1 +
+ 2 files changed, 3 insertions(+)
+
+Index: multipath-tools-130222/multipath/multipath.rules
+===================================================================
+--- multipath-tools-130222.orig/multipath/multipath.rules
++++ multipath-tools-130222/multipath/multipath.rules
+@@ -2,6 +2,8 @@
+ # so name them after their devmap name
+ SUBSYSTEM!="block", GOTO="end_mpath"
+ 
++IMPORT{cmdline}="nompath"
++ENV{nompath}=="?*", GOTO="end_mpath"
+ ENV{MPATH_SBIN_PATH}="/sbin"
+ TEST!="$env{MPATH_SBIN_PATH}/multipath", ENV{MPATH_SBIN_PATH}="/usr/sbin"
+ 
+Index: multipath-tools-130222/multipathd/multipathd.service
+===================================================================
+--- multipath-tools-130222.orig/multipathd/multipathd.service
++++ multipath-tools-130222/multipathd/multipathd.service
+@@ -3,6 +3,7 @@ Description=Device-Mapper Multipath Devi
+ Before=iscsi.service iscsid.service lvm2-activation-early.service
+ After=syslog.target
+ ConditionPathExists=/etc/multipath.conf
++ConditionKernelCommandLine=!nompath
+ DefaultDependencies=no
+ Conflicts=shutdown.target
+ 

@@ -1,0 +1,18 @@
+--- gst-plugins-ugly-0.10.9/gst/mpegaudioparse/gstmpegaudioparse.c	2008/10/13 09:04:15	1.103
++++ gst-plugins-ugly-0.10.9/gst/mpegaudioparse/gstmpegaudioparse.c	2008/10/14 19:28:05	1.104
+@@ -1349,10 +1349,12 @@
+           mp3parse->spf = 384;
+         else if (mp3parse->layer == 2)
+           mp3parse->spf = 1152;
+-        else if (mp3parse->version == 2) {
+-          mp3parse->spf = 576;
+-        } else
++        else if (mp3parse->version == 1) {
+           mp3parse->spf = 1152;
++        } else {
++          /* MPEG-2 or "2.5" */
++          mp3parse->spf = 576;
++        }
+       }
+ 
+       mp3parse->bit_rate = bitrate;

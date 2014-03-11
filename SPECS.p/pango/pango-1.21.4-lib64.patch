@@ -1,0 +1,33 @@
+diff -up pango-1.21.4/pango/Makefile.am.lib64 pango-1.21.4/pango/Makefile.am
+--- pango-1.21.4/pango/Makefile.am.lib64	2008-08-06 04:38:38.000000000 -0400
++++ pango-1.21.4/pango/Makefile.am	2008-08-11 23:05:06.000000000 -0400
+@@ -19,6 +19,7 @@ INCLUDES =						\
+ 	-DPANGO_ENABLE_BACKEND				\
+ 	-DPANGO_ENABLE_ENGINE				\
+ 	-DSYSCONFDIR=\"$(sysconfdir)\"			\
++	-DHOST=\"$(host_triplet)\"                      \
+ 	-DLIBDIR=\"$(libdir)\"				\
+ 	-I$(top_srcdir)					\
+ 	$(PANGO_DEBUG_FLAGS)				\
+diff -up pango-1.21.4/pango/Makefile.in.lib64 pango-1.21.4/pango/Makefile.in
+--- pango-1.21.4/pango/Makefile.in.lib64	2008-08-11 19:36:44.000000000 -0400
++++ pango-1.21.4/pango/Makefile.in	2008-08-11 23:05:37.000000000 -0400
+@@ -427,6 +427,7 @@ INCLUDES = \
+ 	-DPANGO_ENABLE_BACKEND				\
+ 	-DPANGO_ENABLE_ENGINE				\
+ 	-DSYSCONFDIR=\"$(sysconfdir)\"			\
++	-DHOST=\"$(host_triplet)\"                      \
+ 	-DLIBDIR=\"$(libdir)\"				\
+ 	-I$(top_srcdir)					\
+ 	$(PANGO_DEBUG_FLAGS)				\
+diff -up pango-1.21.4/pango/modules.c.lib64 pango-1.21.4/pango/modules.c
+--- pango-1.21.4/pango/modules.c.lib64	2008-07-05 14:34:52.000000000 -0400
++++ pango-1.21.4/pango/modules.c	2008-08-11 23:01:27.000000000 -0400
+@@ -508,6 +508,7 @@ read_modules (void)
+ 
+   if (!file_str)
+     file_str = g_build_filename (pango_get_sysconf_subdirectory (),
++				 HOST,
+ 				 "pango.modules",
+ 				 NULL);
+ 

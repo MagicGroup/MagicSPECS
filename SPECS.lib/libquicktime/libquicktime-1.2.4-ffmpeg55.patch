@@ -1,0 +1,59 @@
+diff -ur libquicktime-1.2.4.orig/plugins/ffmpeg/audio.c libquicktime-1.2.4/plugins/ffmpeg/audio.c
+--- libquicktime-1.2.4.orig/plugins/ffmpeg/audio.c	2013-07-04 18:46:07.608282666 +0000
++++ libquicktime-1.2.4/plugins/ffmpeg/audio.c	2013-07-04 18:46:37.006282230 +0000
+@@ -45,6 +45,10 @@
+ #define ENCODE_AUDIO 1
+ #endif
+ 
++#if LIBAVCODEC_VERSION_MAJOR >= 55
++#define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000
++#endif
++
+ /* The following code was ported from gmerlin_avdecoder (http://gmerlin.sourceforge.net) */
+ 
+ /* MPEG Audio header parsing code */
+diff -ur libquicktime-1.2.4.orig/plugins/ffmpeg/params.c libquicktime-1.2.4/plugins/ffmpeg/params.c
+--- libquicktime-1.2.4.orig/plugins/ffmpeg/params.c	2013-07-04 18:46:07.608282666 +0000
++++ libquicktime-1.2.4/plugins/ffmpeg/params.c	2013-07-04 18:46:37.006282230 +0000
+@@ -202,8 +202,8 @@
+   PARAM_INT("ff_max_b_frames",max_b_frames);
+   PARAM_FLOAT("ff_b_quant_factor",b_quant_factor);
+   PARAM_INT("ff_b_frame_strategy",b_frame_strategy);
+-  PARAM_INT("ff_luma_elim_threshold",luma_elim_threshold);
+-  PARAM_INT("ff_chroma_elim_threshold",chroma_elim_threshold);
++  //PARAM_INT("ff_luma_elim_threshold",luma_elim_threshold);
++  //PARAM_INT("ff_chroma_elim_threshold",chroma_elim_threshold);
+   PARAM_INT("ff_strict_std_compliance",strict_std_compliance);
+   PARAM_QP2LAMBDA("ff_b_quant_offset",b_quant_offset);
+   PARAM_INT("ff_rc_min_rate",rc_min_rate);
+@@ -241,8 +241,8 @@
+   PARAM_QP2LAMBDA("ff_lmax", lmax);
+   PARAM_INT("ff_noise_reduction",noise_reduction);
+   PARAM_INT_SCALE("ff_rc_initial_buffer_occupancy",rc_initial_buffer_occupancy,1000);
+-  PARAM_INT("ff_inter_threshold",inter_threshold);
+-  PARAM_INT("ff_quantizer_noise_shaping",quantizer_noise_shaping);
++  //PARAM_INT("ff_inter_threshold",inter_threshold);
++  //PARAM_INT("ff_quantizer_noise_shaping",quantizer_noise_shaping);
+   PARAM_INT("ff_thread_count",thread_count);
+   PARAM_INT("ff_me_threshold",me_threshold);
+   PARAM_INT("ff_mb_threshold",mb_threshold);
+@@ -272,8 +272,8 @@
+   PARAM_FLAG("ff_flag_bitexact",CODEC_FLAG_BITEXACT);
+   PARAM_FLAG("ff_flag_ac_pred",CODEC_FLAG_AC_PRED);
+   //  PARAM_FLAG("ff_flag_h263p_umv",CODEC_FLAG_H263P_UMV); // Unused
+-  PARAM_FLAG("ff_flag_cbp_rd",CODEC_FLAG_CBP_RD);
+-  PARAM_FLAG("ff_flag_qp_rd",CODEC_FLAG_QP_RD);
++  //PARAM_FLAG("ff_flag_cbp_rd",CODEC_FLAG_CBP_RD);
++  //PARAM_FLAG("ff_flag_qp_rd",CODEC_FLAG_QP_RD);
+ 
+ #if LIBAVCODEC_VERSION_MAJOR >= 54
+   PARAM_DICT_FLAG("ff_flag_h263p_aiv", "aiv");
+@@ -288,7 +288,7 @@
+   PARAM_FLAG("ff_flag_loop_filter",CODEC_FLAG_LOOP_FILTER);
+   PARAM_FLAG("ff_flag_closed_gop",CODEC_FLAG_CLOSED_GOP);
+   PARAM_FLAG2("ff_flag2_fast",CODEC_FLAG2_FAST);
+-  PARAM_FLAG2("ff_flag2_strict_gop",CODEC_FLAG2_STRICT_GOP);
++  //PARAM_FLAG2("ff_flag2_strict_gop",CODEC_FLAG2_STRICT_GOP);
+   PARAM_ENUM("ff_coder_type",coder_type,coder_type);
+   
+   }

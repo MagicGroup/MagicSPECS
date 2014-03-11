@@ -1,0 +1,40 @@
+From 12ca7d4feb3f9501b34088d9dd823cb4d93f0eab Mon Sep 17 00:00:00 2001
+From: Dawit Alemayehu <adawit@kde.org>
+Date: Thu, 6 Sep 2012 14:58:14 -0400
+Subject: [PATCH 1/7] Removed unnecessary debug statements
+
+---
+ src/kwebkitpart.cpp | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/kwebkitpart.cpp b/src/kwebkitpart.cpp
+index a288218..1d4cbcb 100644
+--- a/src/kwebkitpart.cpp
++++ b/src/kwebkitpart.cpp
+@@ -433,7 +433,6 @@ bool KWebKitPart::openFile()
+ 
+ void KWebKitPart::slotLoadStarted()
+ {
+-    kDebug() << "main frame:" << page()->mainFrame() << "current frame:" << page()->currentFrame();
+     emit started(0);
+     updateActions();
+ }
+@@ -441,7 +440,6 @@ void KWebKitPart::slotLoadStarted()
+ void KWebKitPart::slotFrameLoadFinished(bool ok)
+ {
+     QWebFrame* frame = (sender() ? qobject_cast<QWebFrame*>(sender()) : page()->mainFrame());
+-    kDebug() << "finished ok?" << ok << "FRAME:" << frame << "SENDER:" << sender();
+ 
+     if (ok) {
+         const QUrl currentUrl (frame->baseUrl().resolved(frame->url()));
+@@ -455,7 +453,6 @@ void KWebKitPart::slotFrameLoadFinished(bool ok)
+             } else {
+                 // Attempt to fill the web form...
+                 KWebWallet *webWallet = page() ? page()->wallet() : 0;
+-                kDebug() << "FOUND WALLET:" << webWallet;
+                 if (webWallet) {
+                     webWallet->fillFormData(frame, false);
+                 }
+-- 
+1.7.12.1
+

@@ -1,0 +1,84 @@
+--- cmake/FindTBB.cmake.orig	2012-08-08 12:01:17.166691535 +0300
++++ cmake/FindTBB.cmake	2012-08-08 12:02:58.463757028 +0300
+@@ -25,8 +25,8 @@
+ find_library(TBB_LIBRARY tbb
+     HINTS ${PC_TBB_LIBDIR} ${PC_TBB_LIBRARY_DIRS})
+ 
+-find_library(TBB_DEBUG_LIBRARY tbb_debug
+-    HINTS ${PC_TBB_LIBDIR} ${PC_TBB_LIBRARY_DIRS})
++#find_library(TBB_DEBUG_LIBRARY tbb_debug
++#    HINTS ${PC_TBB_LIBDIR} ${PC_TBB_LIBRARY_DIRS})
+ 
+ #find_library(TBB_MALLOC_LIBRARY tbbmalloc
+ #    HINTS ${PC_TBB_LIBDIR} ${PC_TBB_LIBRARY_DIRS})
+@@ -46,12 +46,12 @@
+ #set(TBB_LIBRARIES ${TBB_LIBRARY};${TBB_MALLOC_LIBRARY};${TBB_MALLOC_PROXY_LIBRARY})
+ set(TBB_LIBRARIES ${TBB_LIBRARY})
+ #set(TBB_DEBUG_LIBRARIES ${TBB_DEBUG_LIBRARY};${TBB_MALLOC_DEBUG_LIBRARY};${TBB_MALLOC_PROXY_DEBUG_LIBRARY})
+-set(TBB_DEBUG_LIBRARIES ${TBB_DEBUG_LIBRARY})
++#set(TBB_DEBUG_LIBRARIES ${TBB_DEBUG_LIBRARY})
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(tbb DEFAULT_MSG TBB_LIBRARIES TBB_INCLUDE_DIRS)
+-find_package_handle_standard_args(tbb_debug DEFAULT_MSG TBB_DEBUG_LIBRARIES TBB_INCLUDE_DIRS)
++#find_package_handle_standard_args(tbb_debug DEFAULT_MSG TBB_DEBUG_LIBRARIES TBB_INCLUDE_DIRS)
+ 
+-mark_as_advanced(TBB_LIBRARY TBB_DEBUG_LIBRARY TBB_INCLUDE_DIR)
++mark_as_advanced(TBB_LIBRARY TBB_INCLUDE_DIR)
+ #mark_as_advanced(TBB_LIBRARY TBB_DEBUG_LIBRARY TBB_MALLOC_LIBRARY TBB_DEBUG_MALLOC_LIBRARY TBB_MALLOC_PROXY_LIBRARY TBB_MALLOC_PROXY_DEBUG_LIBRARY TBB_INCLUDE_DIR)
+ 
+--- CMakeLists.txt.tbb	2011-12-23 13:16:09.000000000 +0200
++++ CMakeLists.txt	2012-08-08 12:08:22.420567655 +0300
+@@ -106,21 +106,12 @@
+ 
+ # find Intel TBB
+ find_package(TBB)
+-if(TBB_FOUND AND TBB_DEBUG_FOUND)
++if(TBB_FOUND)
+     message(STATUS "Intel TBB include dir: " ${TBB_INCLUDE_DIRS})
+     message(STATUS "Intel TBB libs: " ${TBB_LIBRARIES})
+-    message(STATUS "Intel TBB libs (debug): " ${TBB_DEBUG_LIBRARIES})
+ 	include_directories(${TBB_INCLUDE_DIRS})
+-endif(TBB_FOUND AND TBB_DEBUG_FOUND)
+-
+-# print additional info
+-if(TBB_FOUND AND NOT TBB_DEBUG_FOUND)
+-    message(STATUS "Only the Intel TBB (release) libraries were found")
+-endif()
+-
+-if(TBB_DEBUG_FOUND AND NOT TBB_FOUND)
+-    message(STATUS "Only the Intel TBB (debug) libraries were found")
+-endif()
++    add_definitions(-DTBB)
++endif(TBB_FOUND)
+ 
+ if(NOT TBB_FOUND AND NOT TBB_DEBUG_FOUND)
+     message(STATUS "No intel TBB libraries were found")
+--- examples/CMakeLists.txt.orig	2012-08-08 12:22:31.864321217 +0300
++++ examples/CMakeLists.txt	2012-08-08 12:29:40.276119054 +0300
+@@ -3,9 +3,13 @@
+ 
+ if (BUILD_C_BINDINGS)
+     add_executable(flann_example_c flann_example.c)
+-    target_link_libraries(flann_example_c flann)
++    if (NOT TBB_FOUND)
++        target_link_libraries(flann_example_c flann)
++    endif()
++    if (TBB_FOUND)
++        target_link_libraries(flann_example_c flann ${TBB_LIBRARIES})
++    endif()
+     set_target_properties(flann_example_c PROPERTIES COMPILE_FLAGS -std=c99)
+-
+     add_dependencies(examples flann_example_c)
+     install (TARGETS flann_example_c DESTINATION bin )
+ endif()
+@@ -18,6 +22,9 @@
+     if (HDF5_IS_PARALLEL)
+         target_link_libraries(flann_example_cpp ${MPI_LIBRARIES})
+     endif()
++    if (TBB_FOUND)
++        target_link_libraries(flann_example_cpp ${MPI_LIBRARIES} ${TBB_LIBRARIES})
++    endif()
+ 
+     add_dependencies(examples flann_example_cpp)
+     install (TARGETS flann_example_cpp DESTINATION bin)

@@ -1,0 +1,11 @@
+--- isdn4k-utils-CVS-2006-07-20/ipppd/main.c.org	2008-07-06 00:10:14.000000000 +0900
++++ isdn4k-utils-CVS-2006-07-20/ipppd/main.c	2008-07-06 00:11:11.000000000 +0900
+@@ -1302,7 +1302,7 @@
+          * what gets passed for a va_list is like a void * in some sense.
+          */
+         a = va_arg(args, void *);
+-#ifdef __alpha__       /* always do this? */
++#if defined(__alpha__) || defined(__sh__)       /* always do this? */
+ 	n = fmtmsg(buf, buflen + 1, f, a);
+ #else
+ 	n = vfmtmsg(buf, buflen + 1, f, a);

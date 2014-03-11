@@ -1,0 +1,12 @@
+diff -up gobject-introspection-1.33.4/gir/glib-2.0.c.keyfile-load gobject-introspection-1.33.4/gir/glib-2.0.c
+--- gobject-introspection-1.33.4/gir/glib-2.0.c.keyfile-load	2012-07-20 14:10:18.237088099 -0400
++++ gobject-introspection-1.33.4/gir/glib-2.0.c	2012-07-20 14:10:26.307088221 -0400
+@@ -16899,7 +16899,7 @@
+ /**
+  * g_key_file_load_from_data:
+  * @key_file: an empty #GKeyFile struct
+- * @data: (array length=length): key file loaded in memory
++ * @data: key file loaded in memory
+  * @length: the length of @data in bytes (or -1 if data is nul-terminated)
+  * @flags: flags from #GKeyFileFlags
+  * @error: return location for a #GError, or %NULL

@@ -1,0 +1,11 @@
+--- teTeX-1.0/latex2html-2K.1beta/config/config.pl.DB	Wed Jan 16 13:08:34 2002
++++ teTeX-1.0/latex2html-2K.1beta/config/config.pl	Wed Jan 16 13:09:14 2002
+@@ -587,7 +587,7 @@
+ 
+ &checking('if perl supports some dbm');
+ 
+-use DB_File;
++use DB;
+ my %array;
+ unless(eval {dbmopen(%array,'DBMtest',0755)}) {
+   my $err = $@ || 'dbmopen failed';

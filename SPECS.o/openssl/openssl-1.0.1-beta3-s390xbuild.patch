@@ -1,0 +1,26 @@
+diff -up openssl-1.0.1-beta3/crypto/rc4/asm/rc4-s390x.pl.s390xbuild openssl-1.0.1-beta3/crypto/rc4/asm/rc4-s390x.pl
+--- openssl-1.0.1-beta3/crypto/rc4/asm/rc4-s390x.pl.s390xbuild	2012-02-29 17:40:30.000000000 +0100
++++ openssl-1.0.1-beta3/crypto/rc4/asm/rc4-s390x.pl	2012-02-29 20:03:39.642182906 +0100
+@@ -171,10 +171,10 @@ $ikey="%r7";
+ $iinp="%r8";
+ 
+ $code.=<<___;
+-.globl	RC4_set_key
+-.type	RC4_set_key,\@function
++.globl	private_RC4_set_key
++.type	private_RC4_set_key,\@function
+ .align	64
+-RC4_set_key:
++private_RC4_set_key:
+ 	stm${g}	%r6,%r8,6*$SIZE_T($sp)
+ 	lhi	$cnt,256
+ 	la	$idx,0(%r0)
+@@ -210,7 +210,7 @@ RC4_set_key:
+ .Ldone:
+ 	lm${g}	%r6,%r8,6*$SIZE_T($sp)
+ 	br	$rp
+-.size	RC4_set_key,.-RC4_set_key
++.size	private_RC4_set_key,.-private_RC4_set_key
+ 
+ ___
+ }

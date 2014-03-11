@@ -1,0 +1,646 @@
+diff -up chromium-14.0.835.186/build/download_nacl_irt.py.buildnaclirt chromium-14.0.835.186/build/download_nacl_irt.py
+--- chromium-14.0.835.186/build/download_nacl_irt.py.buildnaclirt	2011-09-20 04:26:40.000000000 -0400
++++ chromium-14.0.835.186/build/download_nacl_irt.py	2011-09-27 14:36:29.112004069 -0400
+@@ -1,205 +0,0 @@
+-#!/usr/bin/env python
+-# Copyright (c) 2011 The Chromium Authors. All rights reserved.
+-# Use of this source code is governed by a BSD-style license that can be
+-# found in the LICENSE file.
+-
+-import hashlib
+-import optparse
+-import os
+-import urllib2
+-import sys
+-import time
+-
+-
+-# Print a dot every time this number of bytes is read.
+-PROGRESS_SPACING = 128 * 1024
+-
+-
+-def ReadFile(filename):
+-  fh = open(filename, 'r')
+-  try:
+-    return fh.read()
+-  finally:
+-    fh.close()
+-
+-
+-def WriteFile(filename, data):
+-  fh = open(filename, 'w')
+-  try:
+-    fh.write(data)
+-  finally:
+-    fh.close()
+-
+-
+-def HashFile(filename):
+-  hasher = hashlib.sha1()
+-  fh = open(filename, 'rb')
+-  try:
+-    while True:
+-      data = fh.read(4096)
+-      if len(data) == 0:
+-        break
+-      hasher.update(data)
+-  finally:
+-    fh.close()
+-  return hasher.hexdigest()
+-
+-
+-def CopyStream(input_stream, output_stream):
+-  """Copies the contents of input_stream to output_stream.  Prints
+-  dots to indicate progress.
+-  """
+-  bytes_read = 0
+-  dots_printed = 0
+-  while True:
+-    data = input_stream.read(4096)
+-    if len(data) == 0:
+-      break
+-    output_stream.write(data)
+-    bytes_read += len(data)
+-    if bytes_read / PROGRESS_SPACING > dots_printed:
+-      sys.stdout.write('.')
+-      sys.stdout.flush()
+-      dots_printed += 1
+-
+-
+-def RenameWithRetry(old_path, new_path):
+-  # Renames of files that have recently been closed are known to be
+-  # unreliable on Windows, because virus checkers like to keep the
+-  # file open for a little while longer.  This tends to happen more
+-  # for files that look like Windows executables, which does not apply
+-  # to our files, but we retry the rename here just in case.
+-  if sys.platform in ('win32', 'cygwin'):
+-    for i in range(5):
+-      try:
+-        if os.path.exists(new_path):
+-          os.remove(new_path)
+-        os.rename(old_path, new_path)
+-        return
+-      except Exception, exn:
+-        sys.stdout.write('Rename failed with %r.  Retrying...\n' % str(exn))
+-        sys.stdout.flush()
+-        time.sleep(1)
+-    raise Exception('Unabled to rename irt file')
+-  else:
+-    os.rename(old_path, new_path)
+-
+-
+-def DownloadFile(dest_path, url):
+-  url_path = '%s.url' % dest_path
+-  temp_path = '%s.temp' % dest_path
+-  if os.path.exists(url_path) and ReadFile(url_path).strip() == url:
+-    # The URL matches that of the file we previously downloaded, so
+-    # there should be nothing to do.
+-    return
+-  sys.stdout.write('Downloading %r to %r\n' % (url, dest_path))
+-  output_fh = open(temp_path, 'wb')
+-  stream = urllib2.urlopen(url)
+-  CopyStream(stream, output_fh)
+-  output_fh.close()
+-  sys.stdout.write(' done\n')
+-  if os.path.exists(url_path):
+-    os.unlink(url_path)
+-  RenameWithRetry(temp_path, dest_path)
+-  WriteFile(url_path, url + '\n')
+-  stream.close()
+-
+-
+-def DownloadFileWithRetry(dest_path, url):
+-  for i in range(5):
+-    try:
+-      DownloadFile(dest_path, url)
+-      break
+-    except urllib2.HTTPError, exn:
+-      if exn.getcode() == 404:
+-        raise
+-      sys.stdout.write('Download failed with error %r.  Retrying...\n'
+-                       % str(exn))
+-      sys.stdout.flush()
+-      time.sleep(1)
+-
+-
+-def EvalDepsFile(path):
+-  scope = {'Var': lambda name: scope['vars'][name]}
+-  execfile(path, {}, scope)
+-  return scope
+-
+-
+-def Main():
+-  parser = optparse.OptionParser()
+-  parser.add_option(
+-      '--base_url', dest='base_url',
+-      # For a view of this site that includes directory listings, see:
+-      # http://gsdview.appspot.com/nativeclient-archive2/
+-      # (The trailing slash is required.)
+-      default=('http://commondatastorage.googleapis.com/'
+-               'nativeclient-archive2/irt'),
+-      help='Base URL from which to download.')
+-  parser.add_option(
+-      '--nacl_revision', dest='nacl_revision',
+-      help='Download an IRT binary that was built from this '
+-        'SVN revision of Native Client.')
+-  parser.add_option(
+-      '--file_hash', dest='file_hashes', action='append', nargs=2, default=[],
+-      metavar='ARCH HASH',
+-      help='ARCH gives the name of the architecture (e.g. "x86_32") for '
+-        'which to download an IRT binary.  '
+-        'HASH gives the expected SHA1 hash of the file.')
+-  options, args = parser.parse_args()
+-  if len(args) != 0:
+-    parser.error('Unexpected arguments: %r' % args)
+-
+-  if options.nacl_revision is None and len(options.file_hashes) == 0:
+-    # The script must have been invoked directly with no arguments,
+-    # rather than being invoked by gclient.  In this case, read the
+-    # DEPS file ourselves rather than having gclient pass us values
+-    # from DEPS.
+-    deps_data = EvalDepsFile(os.path.join('src', 'DEPS'))
+-    options.nacl_revision = deps_data['vars']['nacl_revision']
+-    options.file_hashes = [
+-        ('x86_32', deps_data['vars']['nacl_irt_hash_x86_32']),
+-        ('x86_64', deps_data['vars']['nacl_irt_hash_x86_64']),
+-        ]
+-
+-  nacl_dir = os.path.join('src', 'native_client')
+-  if not os.path.exists(nacl_dir):
+-    # If "native_client" is not present, this might be because the
+-    # developer has put '"src/native_client": None' in their
+-    # '.gclient' file, because they don't want to build Chromium with
+-    # Native Client support.  So don't create 'src/native_client',
+-    # because that would interfere with checking it out from SVN
+-    # later.
+-    sys.stdout.write(
+-        'The directory %r does not exist: skipping downloading binaries '
+-        'for Native Client\'s IRT library\n' % nacl_dir)
+-    return
+-  if len(options.file_hashes) == 0:
+-    sys.stdout.write('No --file_hash arguments given: nothing to update\n')
+-
+-  new_deps = []
+-  for arch, expected_hash in options.file_hashes:
+-    url = '%s/r%s/irt_%s.nexe' % (options.base_url,
+-                                  options.nacl_revision,
+-                                  arch)
+-    dest_dir = os.path.join(nacl_dir, 'irt_binaries')
+-    if not os.path.exists(dest_dir):
+-      os.makedirs(dest_dir)
+-    dest_path = os.path.join(dest_dir, 'nacl_irt_%s.nexe' % arch)
+-    DownloadFileWithRetry(dest_path, url)
+-    downloaded_hash = HashFile(dest_path)
+-    if downloaded_hash != expected_hash:
+-      sys.stdout.write(
+-          'Hash mismatch: the file downloaded from URL %r had hash %r, '
+-          'but we expected %r\n' % (url, downloaded_hash, expected_hash))
+-      new_deps.append('  "nacl_irt_hash_%s": "%s",\n'
+-                      % (arch, downloaded_hash))
+-
+-  if len(new_deps) > 0:
+-    sys.stdout.write('\nIf you have changed nacl_revision, the DEPS file '
+-                     'probably needs to be updated with the following:\n%s\n'
+-                     % ''.join(new_deps))
+-    sys.exit(1)
+-
+-
+-if __name__ == '__main__':
+-  Main()
+diff -up chromium-14.0.835.186/chrome/build_nacl_irt.py.buildnaclirt chromium-14.0.835.186/chrome/build_nacl_irt.py
+--- chromium-14.0.835.186/chrome/build_nacl_irt.py.buildnaclirt	2011-09-27 14:36:29.113004069 -0400
++++ chromium-14.0.835.186/chrome/build_nacl_irt.py	2011-09-27 14:59:04.196915446 -0400
+@@ -0,0 +1,269 @@
++#!/usr/bin/python
++# Copyright (c) 2011 The Chromium Authors. All rights reserved.
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++import optparse
++import os
++import re
++import shutil
++import subprocess
++import sys
++
++
++# Where things are in relation to this script.
++SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
++SRC_DIR = os.path.dirname(SCRIPT_DIR)
++NACL_DIR = os.path.join(SRC_DIR, 'native_client')
++
++# Pathing to the two command_buffer directories (relative to native_client).
++NACL_CMD_BUFFER_DIR = os.path.join('src', 'shared',
++                                   'ppapi_proxy', 'command_buffer')
++GPU_CMD_BUFFER_DIR = os.path.join('..', 'gpu', 'command_buffer')
++
++
++def RelativePath(path, base):
++  """Find the relative path.
++
++  Arguments:
++    path: path we want a relative path to.
++    base: path we want a relative path from.
++  Returns:
++    The relative path from base to path.
++  """
++  path = os.path.abspath(path)
++  base = os.path.abspath(base)
++  path_parts = path.split(os.sep)
++  base_parts = base.split(os.sep)
++  while path_parts and base_parts and path_parts[0] == base_parts[0]:
++    path_parts = path_parts[1:]
++    base_parts = base_parts[1:]
++  rel_parts = ['..'] * len(base_parts) + path_parts
++  return os.sep.join(rel_parts)
++
++
++def CrawlDirectorySources(path, dst_set):
++  """Find all source files under a directory
++
++  Ignores all directories starting with a dot.
++  Args:
++    path: path to walk
++    dst_set: a set to add the files found to.
++  """
++  for root, dirs, files in os.walk(path, topdown=True):
++    for d in dirs:
++      if d.startswith('.'):
++        dirs.remove(d)
++    for f in files:
++      if os.path.splitext(f)[1] in ['.cc', '.c', '.S', '.h', '.x']:
++        dst_set.add(os.path.join(root, f))
++
++
++def PrintRelativePaths(inputs):
++  """Print a set of file paths in sorted order relative to SRC_DIR.
++
++  Args:
++    inputs: a set of absolute paths.
++  """
++  # Check that everything exists and make it script relative.
++  # Exclude things above SRC_DIR.
++  rel_inputs = set()
++  for f in inputs:
++    nf = os.path.join(NACL_DIR, f)
++    if not os.path.exists(nf):
++      raise Exception('missing input file "%s"' % nf)
++    # If the relative path from SRC_DIR to the file starts with ../ ignore it.
++    # (i.e. the file is outside the client).
++    if RelativePath(nf, SRC_DIR).startswith('..' + os.sep):
++      continue
++    rel_inputs.add(RelativePath(nf, SCRIPT_DIR).replace(os.sep, '/'))
++  # Print it sorted.
++  rel_inputs = sorted(list(rel_inputs))
++  for f in rel_inputs:
++    print f
++
++
++def CheapPrintInputs():
++  """Approximate the inputs to the nacl irt build step cheaply."""
++  inputs = set()
++  for base in [
++      'base',
++      'build',
++      'gpu/GLES2',
++      'gpu/KHR',
++      'gpu/command_buffer',
++      'native_client/src/include',
++      'native_client/src/shared/gio',
++      'native_client/src/shared/imc',
++      'native_client/src/shared/platform',
++      'native_client/src/shared/srpc',
++      'native_client/src/third_party/dlmalloc',
++      'native_client/src/third_party/valgrind',
++      'native_client/src/trusted/desc',
++      'native_client/src/trusted/nacl_base',
++      'native_client/src/trusted/service_runtime',
++      'native_client/src/untrusted/irt',
++      'native_client/src/untrusted/nacl',
++      'native_client/src/untrusted/pthread',
++      'native_client/src/untrusted/stubs',
++      'ppapi/c',
++      'ppapi/cpp',
++      'ppapi/native_client/src/shared/ppapi_proxy',
++      'ui/gfx/gl',
++      ]:
++    CrawlDirectorySources(os.path.join(SRC_DIR, base), inputs)
++  inputs.add(os.path.join(SRC_DIR, 'DEPS'))
++  PrintRelativePaths(inputs)
++
++
++def PrintInputs(platforms):
++  """Print all the transitive inputs required to build the IRT.
++
++  Arguments:
++    platforms: list of platform names to build for.
++  """
++  inputs = set()
++  for platform in platforms:
++    # Invoke scons to get dependency tree.
++    cmd = [
++        sys.executable, 'scons.py', '-n', '--tree=all',
++        '--mode=nacl', 'platform=' + platform,
++        'scons-out/nacl_irt-' + platform + '/staging/irt.nexe',
++    ]
++    p = subprocess.Popen(cmd, cwd=NACL_DIR,
++                         stdout=subprocess.PIPE,
++                         stderr=subprocess.PIPE)
++    (p_stdout, p_stderr) = p.communicate()
++    # If things fail on windows, try running --help, if that fails,
++    # emit this script as an input (to satiate gyp), and assume we're being
++    # run on a test only bot.
++    # TODO(bradnelson): add plumbing to the buildbots to allow this script
++    #     to know its on a test only bot + make scons return a _particular_
++    #     return code so we can detect this kind of fail in one step.
++    if p.returncode != 0 and sys.platform == 'win32':
++      cmd = [sys.executable, 'scons.py', '--help']
++      p = subprocess.Popen(cmd, cwd=NACL_DIR,
++                           stdout=subprocess.PIPE,
++                           stderr=subprocess.PIPE)
++      (p_stdout, p_stderr) = p.communicate()
++      if p.returncode !=0:
++        # If scons can't even run, emit just this script as an input.
++        # See comment above this one.
++        print RelativePath(__file__, SCRIPT_DIR).replace(os.sep, '/')
++        return
++    if p.returncode != 0:
++      sys.exit(2)
++    # Extract unique inputs.
++    for line in p_stdout.splitlines():
++      m = re.match('^[ -+|]*\+\-(.+)', line)
++      if not m:
++        continue
++      filename = m.group(1)
++      if '[' in filename:
++        continue
++      if filename.startswith('scons-out'):
++        continue
++      if filename.endswith('.nexe'):
++        continue
++      # Apply the underlay of gpu/command_buffer (to match scons).
++      if filename.startswith(NACL_CMD_BUFFER_DIR + os.sep):
++        filename = GPU_CMD_BUFFER_DIR + filename[len(NACL_CMD_BUFFER_DIR):]
++      inputs.add(filename)
++  # Print it.
++  PrintRelativePaths(inputs)
++
++
++def BuildIRT(platforms, out_dir):
++  """Build the IRT for several platforms.
++
++  Arguments:
++    platforms: list of platform names to build for.
++    out_dir: directory to output the IRT to.
++  """
++  # Make out_dir absolute.
++  out_dir = os.path.abspath(out_dir)
++  # Clean.
++  scons_out = os.path.join(NACL_DIR, 'scons-out')
++  if os.path.exists(scons_out):
++    shutil.rmtree(scons_out)
++  # Build for each platform.
++  for platform in platforms:
++    cmd = [
++        sys.executable, 'scons.py', '--verbose', '-j8',
++        '--mode=nacl', 'platform=' + platform,
++        'scons-out/nacl_irt-' + platform + '/staging/irt.nexe',
++    ]
++    print 'Running: ' + ' '.join(cmd)
++    # Work around the fact that python's readline module (used by scons),
++    # attempts to alter file handle state on stdin in a way that blocks if
++    # a process is not a member of a foreground job on a tty on OSX.
++    # e.g. On a Mac:
++    #
++    # hydric:test mseaborn$ python -c 'import readline' &
++    # [1] 67058
++    # hydric:test mseaborn$
++    # [1]+  Stopped                 python -c 'import readline'
++    #
++    # i.e. the process receives a stop signal when it's a background job.
++    if sys.platform == 'darwin':
++      devnull = open(os.devnull, 'r')
++    else:
++      devnull = None
++    p = subprocess.Popen(cmd, cwd=NACL_DIR, stdin=devnull)
++    p.wait()
++    if p.returncode != 0:
++      sys.exit(3)
++  # Copy out each platform after stripping.
++  for platform in platforms:
++    uplatform = platform.replace('-', '_')
++    platform2 = {'x86-32': 'i686', 'x86-64': 'x86_64'}.get(platform, platform)
++    cplatform = {
++        'win32': 'win',
++        'cygwin': 'win',
++        'darwin': 'mac',
++    }.get(sys.platform, 'linux')
++    nexe = os.path.join(out_dir, 'nacl_irt_' + uplatform + '.nexe')
++    cmd = [
++      '../native_client/toolchain/' + cplatform + '_x86_newlib/bin/' +
++          platform2 + '-nacl-strip',
++      '--strip-debug',
++      '../native_client/scons-out/nacl_irt-' + platform + '/staging/irt.nexe',
++      '-o', nexe
++    ]
++    print 'Running: ' + ' '.join(cmd)
++    p = subprocess.Popen(cmd, cwd=SCRIPT_DIR)
++    p.wait()
++    if p.returncode != 0:
++      sys.exit(4)
++
++
++def Main(argv):
++  parser = optparse.OptionParser()
++  parser.add_option('--inputs', dest='inputs', default=False,
++                    action='store_true',
++                    help='only emit the transitive inputs to the irt build')
++  parser.add_option('--cheap', dest='cheap', default=False,
++                    action='store_true',
++                    help='use an approximation of the IRT\'s inputs')
++  parser.add_option('--platform', dest='platforms', action='append',
++                    default=[],
++                    help='add a platform to build for (x86-32|x86-64)')
++  parser.add_option('--outdir', dest='outdir',
++                    help='directory to out irt to')
++  (options, args) = parser.parse_args(argv[1:])
++  if args or not options.platforms or (
++      not options.inputs and not options.outdir):
++    parser.print_help()
++    sys.exit(1)
++
++  if options.inputs:
++    if options.cheap:
++      CheapPrintInputs()
++    else:
++      PrintInputs(options.platforms)
++  else:
++    BuildIRT(options.platforms, options.outdir)
++
++
++if __name__ == '__main__':
++  Main(sys.argv)
+diff -up chromium-14.0.835.186/chrome/nacl.gypi.buildnaclirt chromium-14.0.835.186/chrome/nacl.gypi
+--- chromium-14.0.835.186/chrome/nacl.gypi.buildnaclirt	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/nacl.gypi	2011-09-27 14:56:15.190983470 -0400
+@@ -53,12 +53,19 @@
+       }],
+     ],
+   },
++  'conditions': [
++    ['disable_nacl!=1', {
+   'targets': [
+     {
+       'target_name': 'nacl',
+       'type': 'static_library',
+       'variables': {
+         'nacl_target': 1,
++        'irt_build_cmd': [
++          'python', 'build_nacl_irt.py', '--outdir', '<(PRODUCT_DIR)',
++        ],
++        'irt_inputs_cmd':
++            'python build_nacl_irt.py --inputs --cheap',
+       },
+       'dependencies': [
+         # TODO(gregoryd): chrome_resources and chrome_strings could be
+@@ -80,25 +87,56 @@
+         ],
+       },
+       'conditions': [
+-        ['target_arch=="ia32"', {
+-           'copies': [
+-             {
+-               'destination': '<(PRODUCT_DIR)',
+-               'files': [
+-                 '../native_client/irt_binaries/nacl_irt_x86_32.nexe',
+-               ],
+-             },
+-           ],
++        ['OS=="win"', {
++          # Windows needs both the x86-32 and x86-64 IRT.
++          'actions': [
++            {
++              'action_name': 'nacl_irt',
++              'message': 'Building NaCl IRT',
++              'inputs': [
++                '<!@(<(irt_inputs_cmd) --platform=x86-32 --platform=x86-64)',
++              ],
++              'outputs': ['<(PRODUCT_DIR)/nacl_irt_x86_32.nexe',
++                          '<(PRODUCT_DIR)/nacl_irt_x86_64.nexe'],
++              'action': [
++                '<@(irt_build_cmd)',
++                '--platform', 'x86-32',
++                '--platform', 'x86-64',
++              ],
++            },
++          ],
+         }],
+-        ['target_arch=="x64" or OS=="win"', {
+-           'copies': [
+-             {
+-               'destination': '<(PRODUCT_DIR)',
+-               'files': [
+-                 '../native_client/irt_binaries/nacl_irt_x86_64.nexe',
+-               ],
+-             },
+-           ],
++        ['OS!="win" and target_arch=="ia32" and chromeos==0', {
++          # Linux-x86-32 and OSX need only the x86-32 IRT.
++          'actions': [
++            {
++              'action_name': 'nacl_irt',
++              'message': 'Building NaCl IRT',
++              'inputs': [
++                '<!@(<(irt_inputs_cmd) --platform=x86-32)',
++              ],
++              'outputs': ['<(PRODUCT_DIR)/nacl_irt_x86_32.nexe'],
++              'action': [
++                '<@(irt_build_cmd)', '--platform', 'x86-32',
++              ],
++            },
++          ],
++        }],
++        ['OS!="win" and target_arch=="x64" and chromeos==0', {
++          # Linux-x86-64 needs only the x86-64 IRT.
++          'actions': [
++            {
++              'action_name': 'nacl_irt',
++              'message': 'Building NaCl IRT',
++              'inputs': [
++                '<!@(<(irt_inputs_cmd) --platform=x86-64)',
++              ],
++              'outputs': ['<(PRODUCT_DIR)/nacl_irt_x86_64.nexe'],
++              'action': [
++                '<@(irt_build_cmd)', '--platform', 'x86-64',
++              ],
++            },
++          ],
+         }],
+       ],
+     },
+@@ -169,4 +207,14 @@
+       ],
+     }],
+   ],
++   }, {  # else (disable_nacl==1)
++       'targets': [
++         {
++           'target_name': 'nacl',
++           'type': 'none',
++           'sources': [],
++         },
++      ],
++   }],
++  ],
+ }
+diff -up chromium-14.0.835.186/DEPS.buildnaclirt chromium-14.0.835.186/DEPS
+--- chromium-14.0.835.186/DEPS.buildnaclirt	2011-09-20 04:27:11.000000000 -0400
++++ chromium-14.0.835.186/DEPS	2011-09-27 14:36:29.129004069 -0400
+@@ -7,10 +7,6 @@ vars = {
+   "webkit_revision": "91698",
+   "chromium_git": "http://git.chromium.org/git",
+   "swig_revision": "69281",
+-  # These hashes need to be updated when nacl_revision is changed.
+-  # After changing nacl_revision, run 'gclient runhooks' to get the new values.
+-  "nacl_irt_hash_x86_32": "02c4c8443656cf202562a2b9c9a63f3231fa1fbb",
+-  "nacl_irt_hash_x86_64": "caa69972df32882635a78f9212ea1d759380ab51",
+   "nacl_revision": "6268",
+   # After changing nacl_revision, run 'glient sync' and check native_client/DEPS
+   # to update other nacl_*_revision's.
+@@ -392,15 +388,4 @@ hooks = [
+     "pattern": ".",
+     "action": ["python", "src/build/gyp_chromium"],
+   },
+-  {
+-    # This downloads binaries for Native Client's integrated runtime (IRT)
+-    # library, which is built as NaCl untrusted code.
+-    "pattern": ".",
+-    "action": ["python", "src/build/download_nacl_irt.py",
+-	       "--base_url",
+-               "http://commondatastorage.googleapis.com/nativeclient-archive2/irt/branches/m14",
+-               "--nacl_revision", Var("nacl_revision"),
+-               "--file_hash", "x86_32", Var("nacl_irt_hash_x86_32"),
+-               "--file_hash", "x86_64", Var("nacl_irt_hash_x86_64")],
+-  },
+ ]
+diff -up chromium-14.0.835.186/tools/export_tarball/export_tarball.py.buildnaclirt chromium-14.0.835.186/tools/export_tarball/export_tarball.py
+--- chromium-14.0.835.186/tools/export_tarball/export_tarball.py.buildnaclirt	2011-09-20 04:26:08.000000000 -0400
++++ chromium-14.0.835.186/tools/export_tarball/export_tarball.py	2011-09-27 14:36:29.139004069 -0400
+@@ -98,17 +98,6 @@ def main(argv):
+     print 'Cannot find the src directory.'
+     return 1
+ 
+-  nacl_download_path = os.path.join(
+-      GetSourceDirectory(), 'build', 'download_nacl_irt.py')
+-  nacl_cwd = os.path.join(GetSourceDirectory(), '..')
+-  if subprocess.call(['python', nacl_download_path], cwd=nacl_cwd) != 0:
+-    # The error is not fatal - NaCl is still experimental.
+-    print 'Failed to download NaCl integrated runtime files.'
+-    print 'The NaCl-enabled build will fail. You can pass -Ddisable_nacl=1'
+-    print 'to gyp as a workaround. For more info see'
+-    print ('http://groups.google.com/a/chromium.org/group/chromium-dev/'
+-           'browse_thread/thread/1fe6e2c3f9e78c2b')
+-
+   output_fullname = args[0] + '.tar.bz2'
+   output_basename = os.path.basename(args[0])
+ 

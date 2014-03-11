@@ -1,0 +1,41 @@
+--- obmenu.orig	2006-02-02 04:03:38.000000000 -0800
++++ obmenu	2006-10-15 18:49:44.000000000 -0700
+@@ -470,6 +470,38 @@
+ 		if len(sys.argv) == 2:
+ 			# must be a path to a menu
+ 			self.menu_path = sys.argv[1]
++		elif len(sys.argv) == 1:
++			self.menu_path = os.getenv("HOME") + "/.config/openbox/menu.xml"
++			##### HERE'S THE NEW CODE ######
++			if not os.path.isfile("%s/.config/openbox/menu.xml" % (os.getenv("HOME"))):				
++				if not os.path.isdir("%s/.config/" % (os.getenv("HOME"))):
++					try:
++						os.mkdir("%s/.config/" % (os.getenv("HOME")))
++					except:
++						print "Error: Can't create ~/.config directory!"
++						return
++					
++				if not os.path.isdir("%s/.config/openbox" % (os.getenv("HOME"))):
++					try:
++						os.mkdir("%s/.config/openbox" % (os.getenv("HOME")))
++					except:
++						print "Error: Can't create ~/.config/openbox directory!"
++						return
++			
++				if not os.path.isfile("/etc/xdg/openbox/menu.xml"):
++					print "Error: Couldn't find default menu file!"
++					return
++				
++				try:
++					orig = open("/etc/xdg/openbox/menu.xml", "r")
++					dest = open("%s/.config/openbox/menu.xml" % (os.getenv("HOME")), "w")
++					dest.write(orig.read())
++					orig.close()
++					dest.close()
++				except:
++					print "Error: Couldn't create default menu file!"
++					return
++			##### END OF NEW CODE ######
+ 		elif len(sys.argv) == 1:
+ 			self.menu_path = os.getenv("HOME") + "/.config/openbox/menu.xml"
+ 		else:

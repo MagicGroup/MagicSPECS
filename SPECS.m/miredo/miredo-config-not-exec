@@ -1,0 +1,17 @@
+diff -ru miredo-1.1.6/misc/client-hook.iproute miredo-1.1.6-new/misc/client-hook.iproute
+--- miredo-1.1.6/misc/client-hook.iproute	2008-12-17 16:14:23.000000000 +0100
++++ miredo-1.1.6-new/misc/client-hook.iproute	2009-06-28 01:24:22.000000000 +0200
+@@ -1,4 +1,4 @@
+-#! /bin/sh
++#!/bin/sh
+ #
+ # Miredo client hook script for Linux/iproute2
+ # Copyright © 2007 Rémi Denis-Courmont.
+diff -ru miredo-1.1.6/misc/miredo.conf-in miredo-1.1.6-new/misc/miredo.conf-in
+--- miredo-1.1.6/misc/miredo.conf-in	2009-04-09 18:31:30.000000000 +0200
++++ miredo-1.1.6-new/misc/miredo.conf-in	2009-06-28 01:24:29.000000000 +0200
+@@ -1,4 +1,3 @@
+-#! @sbindir@/miredo -f -c
+ #
+ # Sample configuration file for Miredo
+ 

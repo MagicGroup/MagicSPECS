@@ -1,0 +1,21 @@
+diff -up redhat-rpm-config-9.1.0/macros.jx redhat-rpm-config-9.1.0/macros
+--- redhat-rpm-config-9.1.0/macros.jx	2011-08-03 15:42:20.267064981 -0400
++++ redhat-rpm-config-9.1.0/macros	2011-08-03 15:44:46.581058603 -0400
+@@ -184,8 +184,15 @@ unset DISPLAY\
+ %__find_provides        /usr/lib/rpm/redhat/find-provides
+ %__find_requires        /usr/lib/rpm/redhat/find-requires
+ 
+-%__global_cflags	-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4
+-%__global_ldflags	-Wl,-z,relro
++%_hardening_cflags	-specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
++%_hardening_ldflags	-specs=/usr/lib/rpm/redhat/redhat-hardened-ld
++
++#_hardened_build	0
++%_hardened_cflags	%{?_hardened_build:%{_hardening_cflags}}
++%_hardened_ldflags	%{?_hardened_build:%{_hardening_ldflags}}
++
++%__global_cflags	-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 %{_hardened_cflags}
++%__global_ldflags	-Wl,-z,relro %{_hardened_ldflags}
+ 
+ # Use these macros to differentiate between RH and other KMP implementation(s).
+ redhat_kernel_module_package	1

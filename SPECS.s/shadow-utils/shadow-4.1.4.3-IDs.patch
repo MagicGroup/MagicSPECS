@@ -1,0 +1,115 @@
+diff -up shadow-4.1.4.3/libmisc/find_new_gid.c.IDs shadow-4.1.4.3/libmisc/find_new_gid.c
+--- shadow-4.1.4.3/libmisc/find_new_gid.c.IDs	2011-12-20 13:28:13.042668305 +0100
++++ shadow-4.1.4.3/libmisc/find_new_gid.c	2011-12-20 13:35:40.011817589 +0100
+@@ -32,6 +32,7 @@
+ 
+ #include <assert.h>
+ #include <stdio.h>
++#include <errno.h>
+ 
+ #include "prototypes.h"
+ #include "groupio.h"
+@@ -65,8 +66,6 @@ int find_new_gid (bool sys_group,
+ 		gid_max = (gid_t) getdef_ulong ("GID_MIN", 1000UL) - 1;
+ 		gid_max = (gid_t) getdef_ulong ("SYS_GID_MAX", (unsigned long) gid_max);
+ 	}
+-	used_gids = alloca (sizeof (bool) * (gid_max +1));
+-	memset (used_gids, false, sizeof (bool) * (gid_max + 1));
+ 
+ 	if (   (NULL != preferred_gid)
+ 	    && (*preferred_gid >= gid_min)
+@@ -80,6 +79,14 @@ int find_new_gid (bool sys_group,
+ 		return 0;
+ 	}
+ 
++	used_gids = malloc (sizeof (bool) * (gid_max +1));
++	if(used_gids==NULL) {
++                fprintf (stderr,
++                         _("%s: failed to allocate memory. %s\n"), Prog, strerror (errno));
++		return -1;
++	}
++	memset (used_gids, false, sizeof (bool) * (gid_max + 1));
++
+         /* if we did not find free preffered system gid, we start to look for
+          * one in the range assigned to dynamic system IDs */
+         if (sys_group)
+@@ -162,6 +169,7 @@ int find_new_gid (bool sys_group,
+ 				         Prog);
+ 				SYSLOG ((LOG_WARN,
+ 				         "no more available GID on the system"));
++				free(used_gids);
+ 				return -1;
+ 			}
+ 		}
+@@ -177,12 +185,14 @@ int find_new_gid (bool sys_group,
+ 				         _("%s: Can't get unique GID (no more available GIDs)\n"),
+ 				         Prog);
+ 				SYSLOG ((LOG_WARN, "no more available GID on the system"));
++				free(used_gids);
+ 				return -1;
+ 			}
+ 		}
+ 	}
+ 
+ 	*gid = group_id;
++	free(used_gids);
+ 	return 0;
+ }
+ 
+diff -up shadow-4.1.4.3/libmisc/find_new_uid.c.IDs shadow-4.1.4.3/libmisc/find_new_uid.c
+--- shadow-4.1.4.3/libmisc/find_new_uid.c.IDs	2011-02-13 18:58:11.000000000 +0100
++++ shadow-4.1.4.3/libmisc/find_new_uid.c	2011-12-20 13:37:27.415023688 +0100
+@@ -32,6 +32,7 @@
+ 
+ #include <assert.h>
+ #include <stdio.h>
++#include <errno.h>
+ 
+ #include "prototypes.h"
+ #include "pwio.h"
+@@ -65,8 +66,6 @@ int find_new_uid (bool sys_user,
+ 		uid_max = (uid_t) getdef_ulong ("UID_MIN", 1000UL) - 1;
+ 		uid_max = (uid_t) getdef_ulong ("SYS_UID_MAX", (unsigned long) uid_max);
+ 	}
+-	used_uids = alloca (sizeof (bool) * (uid_max +1));
+-	memset (used_uids, false, sizeof (bool) * (uid_max + 1));
+ 
+ 	if (   (NULL != preferred_uid)
+ 	    && (*preferred_uid >= uid_min)
+@@ -80,6 +79,13 @@ int find_new_uid (bool sys_user,
+ 		return 0;
+ 	}
+ 
++	used_uids = malloc (sizeof (bool) * (uid_max +1));
++	if(used_uids==NULL) {
++                fprintf (stderr,
++                         _("%s: failed to allocate memory. %s\n"), Prog, strerror (errno));
++		return -1;
++	}
++	memset (used_uids, false, sizeof (bool) * (uid_max + 1));
+ 
+ 	/*
+ 	 * Search the entire password file,
+@@ -158,6 +164,7 @@ int find_new_uid (bool sys_user,
+ 				         Prog);
+ 				SYSLOG ((LOG_WARN,
+ 				         "no more available UID on the system"));
++				free(used_uids);
+ 				return -1;
+ 			}
+ 		}
+@@ -173,12 +180,14 @@ int find_new_uid (bool sys_user,
+ 				         _("%s: Can't get unique UID (no more available UIDs)\n"),
+ 				         Prog);
+ 				SYSLOG ((LOG_WARN, "no more available UID on the system"));
++				free(used_uids);
+ 				return -1;
+ 			}
+ 		}
+ 	}
+ 
+ 	*uid = user_id;
++	free(used_uids);
+ 	return 0;
+ }
+ 

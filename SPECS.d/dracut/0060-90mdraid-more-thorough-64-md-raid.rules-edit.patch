@@ -1,0 +1,25 @@
+From ae816bb6aa461eb561debc9188e69f726b31d805 Mon Sep 17 00:00:00 2001
+From: Michal Soltys <soltys@ziu.info>
+Date: Thu, 22 Sep 2011 17:23:21 +0200
+Subject: [PATCH] 90mdraid: more thorough 64-md-raid.rules edit
+
+Catch more variations of incremental assembly.
+
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+---
+ modules.d/90mdraid/module-setup.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/90mdraid/module-setup.sh b/modules.d/90mdraid/module-setup.sh
+index d4a9870..5e819b1 100755
+--- a/modules.d/90mdraid/module-setup.sh
++++ b/modules.d/90mdraid/module-setup.sh
+@@ -54,7 +54,7 @@ install() {
+         # 65-md-inc*.rules and its fine-grained controls, or cause other problems
+         # when we explicitly don't want certain components to be incrementally
+         # assembled
+-        sed -i -e '/^ENV{ID_FS_TYPE}==.*ACTION=="add".*RUN+="\/sbin\/mdadm --incremental $env{DEVNAME}"$/d' "${initdir}/lib/udev/rules.d/64-md-raid.rules"
++        sed -ire '/RUN\+?="[[:alpha:]/]*mdadm[[:blank:]]+(--incremental|-I)[[:blank:]]+(\$env\{DEVNAME\}|\$tempnode)"/d' "${initdir}/lib/udev/rules.d/64-md-raid.rules"
+     fi
+ 
+     inst_rules "$moddir/65-md-incremental-imsm.rules"

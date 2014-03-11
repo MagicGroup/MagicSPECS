@@ -1,0 +1,13 @@
+diff -ur hal-0.5.13.orig/hald/linux/blockdev.c hal-0.5.13/hald/linux/blockdev.c
+--- hal-0.5.13.orig/hald/linux/blockdev.c	2009-11-24 22:15:12.000000000 +0800
++++ hal-0.5.13/hald/linux/blockdev.c	2009-11-24 22:16:31.000000000 +0800
+@@ -1486,7 +1486,8 @@
+ 		}
+ 		hal_device_property_set_string (d, "info.product", buf);
+ 
+-		volume_label = strdup_valid_utf8 (hotplug_event->sysfs.fslabel);
++		//volume_label = strdup_valid_utf8 (hotplug_event->sysfs.fslabel);
++		volume_label = g_convert (hotplug_event->sysfs.fslabel, 255, "UTF-8", "GBK", NULL, NULL, NULL);
+ 		if (volume_label) {
+ 	                hal_device_property_set_string (d, "volume.label", volume_label);
+ 			if (volume_label[0] != '\0') {

@@ -1,0 +1,12 @@
+diff -up isdn4k-utils-CVS-2009-10-20/pppdcapiplugin/Makefile.template.me isdn4k-utils-CVS-2009-10-20/pppdcapiplugin/Makefile.template
+--- isdn4k-utils-CVS-2009-10-20/pppdcapiplugin/Makefile.template.me	2009-10-20 14:08:23.000000000 +0200
++++ isdn4k-utils-CVS-2009-10-20/pppdcapiplugin/Makefile.template	2009-10-20 14:09:17.000000000 +0200
+@@ -8,7 +8,7 @@
+ #  as published by the Free Software Foundation; either version
+ #  2 of the License, or (at your option) any later version.
+ 
+-PLUGINDIR=${DESTDIR}/usr/lib/pppd/$(PPPVERSION)
++PLUGINDIR=${DESTDIR}/$(LIBDIR)/pppd/$(PPPVERSION)
+ 
+ include $(TOPDIR)/Rules.make
+ 

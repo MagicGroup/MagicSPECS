@@ -1,0 +1,32 @@
+diff -ur libunicap-0.9.12.orig/configure.ac libunicap-0.9.12/configure.ac
+--- libunicap-0.9.12.orig/configure.ac	2011-05-18 01:01:35.000000000 -0400
++++ libunicap-0.9.12/configure.ac	2011-05-18 01:02:38.000000000 -0400
+@@ -121,6 +121,9 @@
+   AC_SUBST(RT_LIBS)
+ fi
+ 
++# Check for videodev.h
++AC_CHECK_HEADER([linux/videodev.h], [have_videodev=true])
++AM_CONDITIONAL(HAVE_VIDEODEV, test x$have_videodev = xtrue)
+ 
+ # Check for raw1394
+ pkg_modules="libraw1394 <= 1.0.0"
+diff -ur libunicap-0.9.12.orig/cpi/Makefile.am libunicap-0.9.12/cpi/Makefile.am
+--- libunicap-0.9.12.orig/cpi/Makefile.am	2011-05-18 01:01:35.000000000 -0400
++++ libunicap-0.9.12/cpi/Makefile.am	2011-05-18 01:08:22.000000000 -0400
+@@ -8,6 +8,7 @@
+ DIR_DCAM = dcam
+ endif
+ 
++if HAVE_VIDEODEV
+ if BUILD_V4L
+ DIR_V4L = v4l
+ endif
+@@ -15,6 +16,7 @@
+ if BUILD_V4L2
+ DIR_V4L2 = v4l2cpi
+ endif
++endif
+ 
+ if BUILD_EUVCCAM
+ DIR_EUVCCAM = euvccam

@@ -1,0 +1,11 @@
+diff -ur xine-lib-1.1.20/configure.ac xine-lib-1.1.20-link-libdvdread/configure.ac
+--- xine-lib-1.1.20/configure.ac	2011-11-13 02:36:20.000000000 +0100
++++ xine-lib-1.1.20-link-libdvdread/configure.ac	2011-11-20 05:46:16.000000000 +0100
+@@ -1773,6 +1773,7 @@
+   AM_PATH_DVDNAV(0.1.9,
+ 	  AC_DEFINE(HAVE_DVDNAV,1,[Define this if you have a suitable version of libdvdnav]),
+ 	  [AC_MSG_RESULT([*** no usable version of libdvdnav found, using internal copy ***])])
++  AC_CHECK_LIB(dvdread, navRead_DSI, DVDNAV_LIBS="$DVDNAV_LIBS -ldvdread",)
+ else
+   AC_MSG_RESULT([Use included DVDNAV support])
+ fi

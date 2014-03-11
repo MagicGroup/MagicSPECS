@@ -1,0 +1,32 @@
+From 2238af14b654218696220f83b5ee39ae49c2ad98 Mon Sep 17 00:00:00 2001
+From: fujiwarat <takao.fujiwara1@gmail.com>
+Date: Wed, 7 Sep 2011 15:25:27 +0900
+Subject: [PATCH] Added a workaround to disable preedit in gnome-shell
+
+https://bugzilla.gnome.org/show_bug.cgi?id=658420
+---
+ client/gtk2/ibusimcontext.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
+
+diff --git a/client/gtk2/ibusimcontext.c b/client/gtk2/ibusimcontext.c
+index 327a5d9..39d2d0c 100644
+--- a/client/gtk2/ibusimcontext.c
++++ b/client/gtk2/ibusimcontext.c
+@@ -583,6 +583,14 @@ ibus_im_context_init (GObject *obj)
+ #else
+     ibusimcontext->caps = IBUS_CAP_PREEDIT_TEXT | IBUS_CAP_FOCUS;
+ #endif
++    if (!g_getenv ("IBUS_GNOME_SHELL_ENABLE_PREEDIT_TEXT")) {
++        const gchar * prgname = g_get_prgname ();
++        if (g_strcmp0 (prgname, "gnome-shell") == 0) {
++            if (ibusimcontext->caps | IBUS_CAP_PREEDIT_TEXT) {
++                ibusimcontext->caps ^= IBUS_CAP_PREEDIT_TEXT;
++            }
++        }
++    }
+ 
+ 
+     // Create slave im context
+-- 
+1.7.5.4
+

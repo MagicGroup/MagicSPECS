@@ -1,0 +1,17 @@
+diff -up tsocks-1.8/tsocks.8.orig tsocks-1.8/tsocks.8
+--- tsocks-1.8/tsocks.8.orig	2010-01-06 15:21:30.943839291 -0500
++++ tsocks-1.8/tsocks.8	2010-01-06 15:22:25.271556160 -0500
+@@ -15,11 +15,11 @@ specified below:
+  
+ Bash, Ksh and Bourne shell -
+ 
+-export LD_PRELOAD=/lib/libtsocks.so
++export LD_PRELOAD=libtsocks.so
+ 
+ C Shell - 
+ 
+-setenv LD_PRELOAD=/lib/libtsocks.so
++setenv LD_PRELOAD=libtsocks.so
+ 
+ This process can be automated (for Bash, Bourne and Korn shell 
+ users) for a single command or for all commands in a shell session

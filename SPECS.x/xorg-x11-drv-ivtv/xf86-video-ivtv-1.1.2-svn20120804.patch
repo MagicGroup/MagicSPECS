@@ -1,0 +1,403 @@
+Seulement dans xdriver/src: compat-api.h
+diff -ur xf86-video-ivtv-1.1.2/src/ivtv.c xdriver/src/ivtv.c
+--- xf86-video-ivtv-1.1.2/src/ivtv.c	2010-12-26 16:22:12.000000000 +0100
++++ xdriver/src/ivtv.c	2012-08-04 09:37:49.664672954 +0200
+@@ -33,9 +33,7 @@
+ # include "config.h"
+ #endif
+ 
+-#include "ivtv_hw.h"
+-#include "ivtv_xv.h"
+-#include "ivtv.h"
++#include <stdint.h>
+ 
+ /* all drivers need this */
+ #include "xf86.h"
+@@ -60,6 +58,12 @@
+ # include "xf86xv.h"
+ #endif
+ 
++#include "compat-api.h"
++
++#include "ivtv_hw.h"
++#include "ivtv_xv.h"
++#include "ivtv.h"
++
+ enum HAUPPAUGE_CHIPTAGS
+ {
+     PVR_UNKNOWN = 0,
+@@ -97,9 +101,8 @@
+ static void IVTVDevIdentify(int flags);
+ static Bool IVTVDevProbe(DriverPtr drv, int flags);
+ static Bool IVTVDevPreInit(ScrnInfoPtr pScrn, int flags);
+-static Bool IVTVDevScreenInit(int Index, ScreenPtr pScreen, int argc,
+-    char **argv);
+-static Bool IVTVDevCloseScreen(int scrnIndex, ScreenPtr pScreen);
++static Bool IVTVDevScreenInit(SCREEN_INIT_ARGS_DECL);
++static Bool IVTVDevCloseScreen(CLOSE_SCREEN_ARGS_DECL);
+ 
+ /* -------------------------------------------------------------------- */
+ 
+@@ -113,8 +116,8 @@
+ #define IVTVDEV_NAME		"IVTV"
+ #define IVTVDEV_DRIVER_NAME	"ivtv"
+ #define IVTVDEV_VERSION_MAJOR	1
+-#define IVTVDEV_VERSION_MINOR	1
+-#define IVTVDEV_VERSION_PATCH	2
++#define IVTVDEV_VERSION_MINOR	2
++#define IVTVDEV_VERSION_PATCH	0
+ #define IVTVDEV_VERSION	((IVTVDEV_VERSION_MAJOR << 16) | \
+ 			(IVTVDEV_VERSION_MINOR << 8) | \
+ 			(IVTVDEV_VERSION_PATCH))
+@@ -220,7 +223,7 @@
+ #ifdef IVTVDEVHW_BYTE_SWAP
+     switch (pScrn->bitsPerPixel) {
+     case 32: {
+-	unsigned long *display;
++	uint32_t *display;
+ 	int x, y, shadow_offset;
+ 
+ 	while (nbox--) {
+@@ -242,7 +245,7 @@
+     }
+ 
+     case 16: {
+-	unsigned short *display;
++	uint16_t *display;
+ 	int x, y, shadow_offset;
+ 
+ 	while (nbox--) {
+@@ -316,7 +319,7 @@
+     int i;
+     GDevPtr *devSections;
+     int numDevSections;
+-    char *dev;
++    const char *dev;
+     Bool foundScreen = FALSE;
+     int *usedChips;
+     int numUsed;
+@@ -588,7 +591,7 @@
+ }
+ 
+ static Bool
+-IVTVDevScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv)
++IVTVDevScreenInit(SCREEN_INIT_ARGS_DECL)
+ {
+     ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
+     IVTVDevPtr devPtr = IVTVDEVPTR(pScrn);
+@@ -613,30 +616,30 @@
+     ivtvHWSave(pScrn);
+ 
+     if (!ivtvHWModeInit(pScrn, pScrn->currentMode)) {
+-	xf86DrvMsg(scrnIndex, X_ERROR, "DevScreenInit: Mode init failed\n");
++	xf86DrvMsg(pScrn->scrnIndex, X_ERROR, "DevScreenInit: Mode init failed\n");
+ 	return FALSE;
+     }
+     ivtvHWSaveScreen(pScreen, SCREEN_SAVER_ON);
+-    ivtvHWAdjustFrame(scrnIndex, 0, 0, 0);
++    ivtvHWAdjustFrame(ADJUST_FRAME_ARGS(pScrn, 0, 0));
+ 
+     /* mi layer */
+     miClearVisualTypes();
+     if (pScrn->bitsPerPixel > 8) {
+ 	if (!miSetVisualTypes
+ 	    (pScrn->depth, TrueColorMask, pScrn->rgbBits, TrueColor)) {
+-	    xf86DrvMsg(scrnIndex, X_ERROR,
++	    xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 			"DevScreenInit: Set >8bpp visual types failed\n");
+ 	    return FALSE;
+ 	}
+     } else if (!miSetVisualTypes(pScrn->depth,
+ 		miGetDefaultVisualMask(pScrn->depth),
+ 		pScrn->rgbBits, pScrn->defaultVisual)) {
+-	xf86DrvMsg(scrnIndex, X_ERROR,
++	xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 		    "DevScreenInit: Set visual types failed\n");
+ 	return FALSE;
+     }
+     if (!miSetPixmapDepths()) {
+-	xf86DrvMsg(scrnIndex, X_ERROR,
++	xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 		    "DevScreenInit: Set pixmap depths failed\n");
+ 	return FALSE;
+     }
+@@ -647,7 +650,7 @@
+     /* shadowfb */
+     if ((devPtr->shadowmem = calloc(1, pScrn->virtualX * pScrn->virtualY *
+ 		pScrn->bitsPerPixel)) == NULL) {
+-	xf86DrvMsg(scrnIndex, X_ERROR,
++	xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 	    "DevScreenInit: Allocation of shadow memory failed\n");
+ 	return FALSE;
+     }
+@@ -682,13 +685,13 @@
+ 	    "RENDER extension initialisation failed.\n");
+ 
+     if (devPtr->shadowmem && !IVTVDevShadowInit(pScreen)) {
+-	xf86DrvMsg(scrnIndex, X_ERROR,
++	xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 	    "DevScreenInit: Shadow framebuffer initialization failed.\n");
+ 	return FALSE;
+     }
+ 
+     if (pScrn->bitsPerPixel == 24)
+-	xf86DrvMsg(scrnIndex, X_WARNING,
++	xf86DrvMsg(pScrn->scrnIndex, X_WARNING,
+ 	    "Rotation might be broken in 24 bpp\n");
+ 
+     xf86SetBlackWhitePixels(pScreen);
+@@ -731,9 +734,13 @@
+ }
+ 
+ static Bool
+-IVTVDevCloseScreen(int scrnIndex, ScreenPtr pScreen)
++IVTVDevCloseScreen(CLOSE_SCREEN_ARGS_DECL)
+ {
++#ifndef XF86_SCRN_INTERFACE
+     ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++#else
++    ScrnInfoPtr pScrn = xf86ScreenToScrn(pScreen);
++#endif
+     IVTVDevPtr devPtr = IVTVDEVPTR(pScrn);
+ 
+     /* Before we go, wipe the screen. If there is no console
+@@ -756,5 +763,5 @@
+     }
+ 
+     pScreen->CloseScreen = devPtr->CloseScreen;
+-    return (*pScreen->CloseScreen) (scrnIndex, pScreen);
++    return (*pScreen->CloseScreen) (CLOSE_SCREEN_ARGS);
+ }
+diff -ur xf86-video-ivtv-1.1.2/src/ivtv_hw.c xdriver/src/ivtv_hw.c
+--- xf86-video-ivtv-1.1.2/src/ivtv_hw.c	2010-12-26 16:22:12.000000000 +0100
++++ xdriver/src/ivtv_hw.c	2012-08-04 09:37:49.663672951 +0200
+@@ -40,20 +40,13 @@
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ 
+-#include "ivtv_compat.h"
+-#include "ivtv_hw.h"
+-#include "ivtv.h"
+-
+ /* all drivers need this */
+ #include "xf86.h"
+ #include "xf86_OSproc.h"
+ 
+ /* pci stuff */
+-#include "xf86PciInfo.h"
+ #include "xf86Pci.h"
+ 
+-#include "xf86cmap.h"
+-
+ #include "globals.h"
+ #ifdef HAVE_XEXTPROTO_71
+ # include <X11/extensions/dpmsconst.h>
+@@ -62,6 +55,12 @@
+ # include <X11/extensions/dpms.h>
+ #endif
+ 
++#include "compat-api.h"
++
++#include "ivtv_compat.h"
++#include "ivtv_hw.h"
++#include "ivtv.h"
++
+ #if IVTVDEBUG
+ # define TRACE_ENTER(str)	ErrorF("ivtv_hw: " str " %d\n",pScrn->scrnIndex)
+ #else
+@@ -168,12 +167,12 @@
+ /* open correct framebuffer device                                      */
+ 
+ static int
+-ivtv_open(int scrnIndex, char *dev, char **namep, IVTVDevPtr devPtr)
++ivtv_open(int scrnIndex, const char *dev, char **namep, IVTVDevPtr devPtr)
+ {
+     struct fb_fix_screeninfo fix;
+     int fbufId = 255;
+     int yuvId;
+-    char *devid;
++    const char *devid;
+     int fd;
+ 
+     /* try argument (from XF86Config) first */
+@@ -340,9 +339,9 @@
+ 
+ Bool
+ #if XSERVER_LIBPCIACCESS
+-ivtvHWProbe(struct pci_device *PciInfo, char *device, char **namep)
++ivtvHWProbe(struct pci_device *PciInfo, const char *device, char **namep)
+ #else
+-ivtvHWProbe(pciVideoPtr pPci, char *device, char **namep)
++ivtvHWProbe(pciVideoPtr pPci, const char *device, char **namep)
+ #endif
+ {
+     int fd;
+@@ -372,9 +371,9 @@
+ 
+ Bool
+ #if XSERVER_LIBPCIACCESS
+-ivtvHWInit(ScrnInfoPtr pScrn, struct pci_device *PciInfo, char *device)
++ivtvHWInit(ScrnInfoPtr pScrn, struct pci_device *PciInfo, const char *device)
+ #else
+-ivtvHWInit(ScrnInfoPtr pScrn, pciVideoPtr pPci, char *device)
++ivtvHWInit(ScrnInfoPtr pScrn, pciVideoPtr pPci, const char *device)
+ #endif
+ {
+     TRACE_ENTER("Init");
+@@ -689,9 +688,9 @@
+ /* these can be hooked directly into ScrnInfoRec                        */
+ 
+ int
+-ivtvHWValidMode(int scrnIndex, DisplayModePtr mode, Bool verbose, int flags)
++ivtvHWValidMode(SCRN_ARG_TYPE arg, DisplayModePtr mode, Bool verbose, int flags)
+ {
+-    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++    SCRN_INFO_PTR(arg);
+     IVTVDevPtr devPtr = IVTVDEVPTR(pScrn);
+     struct fb_var_screeninfo var;
+ 
+@@ -701,7 +700,7 @@
+     xfree2ivtv_fblayout(pScrn, &devPtr->var);
+     var.activate = FB_ACTIVATE_TEST;
+     if (0 != ioctl(devPtr->fd, FBIOPUT_VSCREENINFO, (void *)(&devPtr->var))) {
+-	xf86DrvMsg(scrnIndex, X_ERROR,
++	xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 	    "ValidMode: FBIOPUT_VSCREENINFO failed (%s)\n", strerror(errno));
+ 	return MODE_BAD;
+     }
+@@ -709,16 +708,16 @@
+ }
+ 
+ Bool
+-ivtvHWSwitchMode(int scrnIndex, DisplayModePtr mode, int flags)
++ivtvHWSwitchMode(SWITCH_MODE_ARGS_DECL) //int scrnIndex, DisplayModePtr mode, int flags)
+ {
+-    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++    SCRN_INFO_PTR(arg);
+     IVTVDevPtr devPtr = IVTVDEVPTR(pScrn);
+ 
+     TRACE_ENTER("SwitchMode");
+     xfree2ivtv_timing(mode, &devPtr->var);
+     xfree2ivtv_fblayout(pScrn, &devPtr->var);
+     if (0 != ioctl(devPtr->fd, FBIOPUT_VSCREENINFO, (void *)(&devPtr->var))) {
+-	xf86DrvMsg(scrnIndex, X_ERROR,
++	xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 	    "SwitchMode: FBIOPUT_VSCREENINFO failed (%s)\n", strerror(errno));
+ 	return FALSE;
+     }
+@@ -726,35 +725,35 @@
+ }
+ 
+ void
+-ivtvHWAdjustFrame(int scrnIndex, int x, int y, int flags)
++ivtvHWAdjustFrame(ADJUST_FRAME_ARGS_DECL)
+ {
+-    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++    SCRN_INFO_PTR(arg);
+     IVTVDevPtr devPtr = IVTVDEVPTR(pScrn);
+ 
+     devPtr->var.xoffset = x;
+     devPtr->var.yoffset = y;
+     if (-1 == ioctl(devPtr->fd, FBIOPAN_DISPLAY, (void *)&devPtr->var)) {
+-	xf86DrvMsgVerb(scrnIndex, 5, X_WARNING,
++	xf86DrvMsgVerb(pScrn->scrnIndex, 5, X_WARNING,
+ 	    "AdjustFrame: FBIOPAN_DISPLAY failed (%s)\n", strerror(errno));
+     }
+ }
+ 
+ Bool
+-ivtvHWEnterVT(int scrnIndex, int flags)
++ivtvHWEnterVT(VT_FUNC_ARGS_DECL)
+ {
+-    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++    SCRN_INFO_PTR(arg);
+ 
+     TRACE_ENTER("EnterVT");
+     if (!ivtvHWModeInit(pScrn, pScrn->currentMode))
+ 	return FALSE;
+-    ivtvHWAdjustFrame(scrnIndex, pScrn->frameX0, pScrn->frameY0, 0);
++    ivtvHWAdjustFrame(ADJUST_FRAME_ARGS(pScrn, pScrn->frameX0, pScrn->frameY0));
+     return TRUE;
+ }
+ 
+ void
+-ivtvHWLeaveVT(int scrnIndex, int flags)
++ivtvHWLeaveVT(VT_FUNC_ARGS_DECL)
+ {
+-    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++    SCRN_INFO_PTR(arg);
+ 
+     TRACE_ENTER("LeaveVT");
+     ivtvHWRestore(pScrn);
+diff -ur xf86-video-ivtv-1.1.2/src/ivtv_hw.h xdriver/src/ivtv_hw.h
+--- xf86-video-ivtv-1.1.2/src/ivtv_hw.h	2010-12-26 16:22:12.000000000 +0100
++++ xdriver/src/ivtv_hw.h	2012-08-04 09:37:49.664672954 +0200
+@@ -48,6 +48,8 @@
+ #include <pciaccess.h>
+ #endif
+ 
++#include <X11/Xarch.h>
++
+ #define IVTVDEVHWPTR(p) ((ivtvHWPtr)(IVTVDEVHWPTRLVAL(p)))
+ 
+ #define PCI_HAUPPAUGE_VENDOR_ID       0x4444
+@@ -57,11 +59,11 @@
+ #endif
+ 
+ #if XSERVER_LIBPCIACCESS
+-Bool ivtvHWProbe(struct pci_device *PciInfo, char *device, char **namep);
+-Bool ivtvHWInit(ScrnInfoPtr pScrn, struct pci_device *PciInfo, char *device);
++Bool ivtvHWProbe(struct pci_device *PciInfo, const char *device, char **namep);
++Bool ivtvHWInit(ScrnInfoPtr pScrn, struct pci_device *PciInfo, const char *device);
+ #else
+-Bool ivtvHWProbe(pciVideoPtr pPci, char *device, char **namep);
+-Bool ivtvHWInit(ScrnInfoPtr pScrn, pciVideoPtr pPci, char *device);
++Bool ivtvHWProbe(pciVideoPtr pPci, const char *device, char **namep);
++Bool ivtvHWInit(ScrnInfoPtr pScrn, pciVideoPtr pPci, const char *device);
+ #endif
+ char *ivtvHWGetName(ScrnInfoPtr pScrn);
+ int ivtvHWGetDepth(ScrnInfoPtr pScrn, int *fbbpp);
+@@ -82,11 +84,11 @@
+ void ivtvHWRestore(ScrnInfoPtr pScrn);
+ void ivtvHWLoadPalette(ScrnInfoPtr pScrn, int numColors, int *indices,
+     LOCO * colors, VisualPtr pVisual);
+-int ivtvHWValidMode(int scrnIndex, DisplayModePtr mode, Bool verbose, int flags);
+-Bool ivtvHWSwitchMode(int scrnIndex, DisplayModePtr mode, int flags);
+-void ivtvHWAdjustFrame(int scrnIndex, int x, int y, int flags);
+-Bool ivtvHWEnterVT(int scrnIndex, int flags);
+-void ivtvHWLeaveVT(int scrnIndex, int flags);
++int ivtvHWValidMode(SCRN_ARG_TYPE arg, DisplayModePtr mode, Bool verbose, int flags);
++Bool ivtvHWSwitchMode(SWITCH_MODE_ARGS_DECL);
++void ivtvHWAdjustFrame(ADJUST_FRAME_ARGS_DECL);
++Bool ivtvHWEnterVT(VT_FUNC_ARGS_DECL);
++void ivtvHWLeaveVT(VT_FUNC_ARGS_DECL);
+ void ivtvHWDPMSSet(ScrnInfoPtr pScrn, int mode, int flags);
+ Bool ivtvHWSaveScreen(ScreenPtr pScreen, int mode);
+ Bool ivtvHWSendDMA(ScrnInfoPtr pScrn, void *ptr, int x1, int x2, int y1, int y2);
+diff -ur xf86-video-ivtv-1.1.2/src/ivtv_xv.c xdriver/src/ivtv_xv.c
+--- xf86-video-ivtv-1.1.2/src/ivtv_xv.c	2010-12-26 16:22:12.000000000 +0100
++++ xdriver/src/ivtv_xv.c	2012-08-04 09:37:49.663672951 +0200
+@@ -37,15 +37,19 @@
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+-#include "ivtv_compat.h"
+-#include "ivtv_hw.h"
+-#include "ivtv.h"
++
+ #include "xf86.h"
+ #include "xf86xv.h"
+ #include <X11/extensions/Xv.h>
+ #include "fourcc.h"
+ #include "regionstr.h"
+ 
++#include "compat-api.h"
++
++#include "ivtv_compat.h"
++#include "ivtv_hw.h"
++#include "ivtv.h"
++
+ #define MAKE_ATOM(a) MakeAtom(a, sizeof(a) - 1, TRUE)
+ 
+ #if !defined(XvExtension) || !defined(IVTV_IOC_DMA_FRAME)
+Seulement dans xdriver/: .svn

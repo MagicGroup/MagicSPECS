@@ -1,0 +1,21 @@
+--- datfiles/riddles	2004-03-05 05:29:56.000000000 -0800
++++ datfiles/riddles.pc	2005-03-14 06:09:08.290062640 -0800
+@@ -419,9 +419,6 @@
+ Q:	What's a light-year?
+ A:	One-third less calories than a regular year.
+ %
+-Q:	What's a WASP's idea of open-mindedness?
+-A:	Dating a Canadian.
+-%
+ Q:	What's buried in Grant's tomb?
+ A:	A corpse.
+ %
+--- datfiles/off/unrotated/riddles	2004-03-05 05:29:56.000000000 -0800
++++ datfiles/off/unrotated/riddles.new	2005-03-14 06:11:01.351874632 -0800
+@@ -1098,3 +1098,6 @@
+ Why is it that there are so many more horses' asses than there are horses?
+ 		-- G. Gordon Liddy
+ %
++Q:     What's a WASP's idea of open-mindedness?
++A:     Dating a Canadian.
++%

@@ -1,0 +1,8 @@
+# Either a tty name, or IrDA interface name, or FIR module name.
+# See irattach(8) for more info
+DEVICE=/dev/ttyS2
+
+# `-s' starts discovery of remote devices
+# `-d dongle' attaches an additional dongle driver `dobgle' to the IrDA port
+#OPTIONS="-s -d actisys+"
+OPTIONS="-s"

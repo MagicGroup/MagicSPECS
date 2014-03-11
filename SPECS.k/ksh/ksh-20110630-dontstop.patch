@@ -1,0 +1,21 @@
+diff -up ksh-20110630/src/cmd/ksh93/sh/xec.c.dontstop ksh-20110630/src/cmd/ksh93/sh/xec.c
+--- ksh-20110630/src/cmd/ksh93/sh/xec.c.dontstop	2011-11-29 09:13:47.264075568 +0100
++++ ksh-20110630/src/cmd/ksh93/sh/xec.c	2011-11-29 09:15:17.679734283 +0100
+@@ -3382,7 +3382,8 @@ static void sh_funct(Shell_t *shp,Namval
+ 	struct funenv fun;
+ 	char *fname = nv_getval(SH_FUNNAMENOD);
+ 	struct Level	*lp =(struct Level*)(SH_LEVELNOD->nvfun);
+-	int		level, pipepid=shp->pipepid;
++	int		level, pipepid=shp->pipepid, comsub=shp->comsub;
++	shp->comsub = 0;
+ 	shp->pipepid = 0;
+ 	sh_stats(STAT_FUNCT);
+ 	if(!lp->hdr.disc)
+@@ -3424,6 +3425,7 @@ static void sh_funct(Shell_t *shp,Namval
+ 	lp->maxlevel = level;
+ 	SH_LEVELNOD->nvalue.s = lp->maxlevel;
+ 	shp->last_root = nv_dict(DOTSHNOD);
++	shp->comsub = comsub;
+ #if 0
+ 	nv_putval(SH_FUNNAMENOD,shp->st.funname,NV_NOFREE);
+ #else

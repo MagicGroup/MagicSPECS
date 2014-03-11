@@ -1,0 +1,17 @@
+Index: Xlib/support/unix_connect.py
+===================================================================
+--- Xlib/support/unix_connect.py
++++ Xlib/support/unix_connect.py	2010-09-03 00:49:15.066186229 +0200
+@@ -112,7 +112,11 @@
+         family = xauth.FamilyLocal
+         addr = socket.gethostname()
+ 
+-    au = xauth.Xauthority()
++    try:
++        au = xauth.Xauthority()
++    except error.XauthError:
++        return old_get_auth(sock, dname, host, dno)
++
+     while 1:
+         try:
+             return au.get_best_auth(family, addr, dno)

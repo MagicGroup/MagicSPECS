@@ -1,0 +1,12 @@
+Index: src/main.cpp
+===================================================================
+--- src/main.cpp	(revision 1312)
++++ src/main.cpp	(working copy)
+@@ -28,6 +28,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <unistd.h>
+ 
+ //==============================================================================
+ // Crash Handler: Save the backtrace info to /var/tmp as qterm.pid.timestamp

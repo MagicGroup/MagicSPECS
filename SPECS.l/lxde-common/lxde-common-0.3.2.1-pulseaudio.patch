@@ -1,0 +1,24 @@
+--- lxde-common-0.3.2.1.orig/autostart	2008-04-20 10:26:19.000000000 +0200
++++ lxde-common-0.3.2.1/autostart	2008-11-30 19:03:47.000000000 +0100
+@@ -1,4 +1,5 @@
+ @lxde-settings
++@pulseaudio -D
+ @xscreensaver -no-splash
+ @lxpanel --profile LXDE
+ @pcmanfm -d
+--- lxde-common-0.3.2.1.orig/default	2008-04-20 13:20:53.000000000 +0200
++++ lxde-common-0.3.2.1/default	2008-11-30 19:04:34.000000000 +0100
+@@ -1,4 +1,5 @@
+ lxde-settings
++pulseaudio -D
+ smproxy
+ xscreensaver -no-splash
+ openbox --config-file $XDG_CONFIG_HOME/openbox/lxde-rc.xml
+--- lxde-common-0.3.2.1.orig/default.in	2008-04-20 10:26:19.000000000 +0200
++++ lxde-common-0.3.2.1/default.in	2008-11-30 19:04:52.000000000 +0100
+@@ -1,4 +1,5 @@
+ lxde-settings
++pulseaudio -D
+ smproxy
+ xscreensaver -no-splash
+ openbox --config-file $XDG_CONFIG_HOME/openbox/lxde-rc.xml

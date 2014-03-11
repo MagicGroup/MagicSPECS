@@ -1,0 +1,14 @@
+diff -uNr --exclude '*~' gcc-4.7.0-RC-20120302/gcc/intl.c gcc-4.7.0-RC-20120302-old/gcc/intl.c
+--- gcc/intl.c	2010-12-01 17:29:12.000000000 +0000
++++ gcc/intl.c	2012-03-15 14:49:19.709968148 +0000
+@@ -56,8 +56,8 @@
+   setlocale (LC_ALL, "");
+ #endif
+ 
+-  (void) bindtextdomain ("gcc", LOCALEDIR);
+-  (void) textdomain ("gcc");
++  (void) bindtextdomain ("cross-gcc", LOCALEDIR);
++  (void) textdomain ("cross-gcc");
+ 
+   /* Opening quotation mark.  */
+   open_quote = _("`");

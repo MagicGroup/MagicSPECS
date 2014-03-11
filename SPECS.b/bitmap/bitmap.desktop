@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Bitmap
+GenericName=X Window Bitmaps Editor
+Comment=xBitmap editor for the X Window System
+Exec=bitmap
+Icon=bitmap
+Terminal=false
+Type=Application
+Categories=Utility;

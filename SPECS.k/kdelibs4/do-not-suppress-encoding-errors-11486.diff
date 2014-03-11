@@ -1,0 +1,22 @@
+--- kate/document/katedocument.cpp.orig	2009-11-03 14:22:32.758739716 +0200
++++ kate/document/katedocument.cpp	2009-11-03 14:23:49.164989260 +0200
+@@ -3249,8 +3249,7 @@
+     // this file can't be saved again without killing it
+     setReadWrite( false );
+ 
+-    if(!suppressOpeningErrorDialogs())
+-      KMessageBox::information (parentWidget
++    KMessageBox::information (parentWidget
+         , i18n ("The file %1 is a binary, saving it will result in a corrupt file.", this->url().pathOrUrl())
+         , i18n ("Binary File Opened")
+         , "Binary File Opened Warning");
+@@ -3266,8 +3265,7 @@
+     // this file can't be saved again without killing it
+     setReadWrite( false );
+ 
+-    if (!suppressOpeningErrorDialogs())
+-      KMessageBox::information (parentWidget
++    KMessageBox::information (parentWidget
+         , i18n ("The file %1 was opened with UTF-8 encoding but contained invalid characters."
+                 " It is set to read-only mode, as saving might destroy its content."
+                 " Either reopen the file with the correct encoding chosen or enable the read-write mode again in the menu to be able to edit it.", this->url().pathOrUrl())

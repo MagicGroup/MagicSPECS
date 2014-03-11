@@ -1,0 +1,127 @@
+--- kdesvn/src/svnqt/cache/LogCache.cpp.stringliteral	2011-08-17 23:41:23.000000000 +0200
++++ kdesvn/src/svnqt/cache/LogCache.cpp	2012-08-05 12:44:59.038119225 +0200
+@@ -187,7 +187,7 @@
+             TQDataBase db = TQSqlDatabase::addDatabase(SQLTYPE,_key);
+             db->setDatabaseName(m_BasePath+"/maindb.db");
+             if (!db->open()) {
+-                qWarning("Failed to open main database: " + db->lastError().text());
++                qWarning("%s", (TQString("Failed to open main database: " + db->lastError().text())).ascii());
+             } else {
+                 m_mainDB.setLocalData(new ThreadDBStore);
+                 m_mainDB.localData()->key = _key;
+@@ -269,12 +269,12 @@
+ #endif
+     TQDataBase mainDB = m_CacheData->getMainDB();
+     if (!mainDB || !mainDB->open()) {
+-        qWarning("Failed to open main database: " + (mainDB?mainDB->lastError().text():"No database object."));
++        qWarning("%s", ("Failed to open main database: " + (mainDB?mainDB->lastError().text():"No database object.")).ascii());
+     } else {
+         TQSqlQuery q(TQString(), mainDB);
+         mainDB->transaction();
+         if (!q.exec("CREATE TABLE IF NOT EXISTS \""+TQString(SQLMAINTABLE)+"\" (\"reposroot\" TEXT,\"id\" INTEGER PRIMARY KEY NOT NULL);")) {
+-            qWarning("Failed create main database: " + mainDB->lastError().text());
++            qWarning("%s", ("Failed create main database: " + mainDB->lastError().text()).ascii());
+         }
+         mainDB->commit();
+     }
+@@ -321,7 +321,7 @@
+     TQSqlQuery cur(TQString(),mainDB);
+     cur.prepare(s_q);
+     if (!cur.exec()) {
+-        qDebug(cur.lastError().text().TOUTF8().data());
++        qDebug("%s", (TQString(cur.lastError().text().TOUTF8().data())).ascii());
+         throw svn::cache::DatabaseException(TQString("Could not retrieve values: ")+cur.lastError().text());
+         return _res;
+     }
+--- kdesvn/src/svnqt/cache/ReposLog.cpp.ORI	2012-08-05 12:50:50.352685697 +0200
++++ kdesvn/src/svnqt/cache/ReposLog.cpp	2012-08-05 12:55:39.515888432 +0200
+@@ -68,7 +68,7 @@
+     TQString q("select revision from 'logentries' order by revision DESC limit 1");
+     TQSqlQuery _q(TQString(), m_Database);
+     if (!_q.exec(q)) {
+-        qDebug(_q.lastError().text().TOUTF8().data());
++        qDebug("%s", (TQString(_q.lastError().text().TOUTF8().data())).ascii());
+         return svn::Revision::UNDEFINED;
+     }
+     int _r;
+@@ -76,7 +76,7 @@
+         //qDebug("Sel result: %s",_q.value(0).toString().TOUTF8().data());
+         _r = _q.value(0).toInt();
+     } else {
+-        qDebug(_q.lastError().text().TOUTF8().data());
++        qDebug("%s", (TQString(_q.lastError().text().TOUTF8().data())).ascii());
+         return svn::Revision::UNDEFINED;
+     }
+     return _r;
+@@ -197,7 +197,7 @@
+     bcount.bindValue(0,TQ_LLONG(end.revnum()));
+     bcount.bindValue(1,TQ_LLONG(start.revnum()));
+     if (!bcount.exec()) {
+-        qDebug(bcount.lastError().text().TOUTF8().data());
++        qDebug("%s", (TQString(bcount.lastError().text().TOUTF8().data())).ascii());
+         throw svn::cache::DatabaseException(TQString("Could not retrieve count: ")+bcount.lastError().text());
+         return false;
+     }
+@@ -211,7 +211,7 @@
+     bcur.bindValue(1,TQ_LLONG(start.revnum()));
+ 
+     if (!bcur.exec()) {
+-        qDebug(bcur.lastError().text().TOUTF8().data());
++        qDebug("%s", (TQString(bcur.lastError().text().TOUTF8().data())).ascii());
+         throw svn::cache::DatabaseException(TQString("Could not retrieve values: ")+bcur.lastError().text());
+         return false;
+     }
+@@ -220,7 +220,7 @@
+         revision = bcur.value(0).toLongLong();
+         cur.bindValue(0,revision);
+         if (!cur.exec()) {
+-            qDebug(cur.lastError().text().TOUTF8().data());
++            qDebug("%s", (TQString(cur.lastError().text().TOUTF8().data())).ascii());
+             throw svn::cache::DatabaseException(TQString("Could not retrieve values: ")+cur.lastError().text()
+                     ,cur.lastError().number());
+             return false;
+@@ -264,7 +264,7 @@
+     TQSqlQuery query("select revision,date from logentries order by revision desc limit 1",m_Database);
+ 
+     if (query.lastError().type()!=TQSqlError::None) {
+-        qDebug(query.lastError().text().TOUTF8().data());
++        qDebug("%s", (TQString(query.lastError().text().TOUTF8().data())).ascii());
+     }
+     bool must_remote=!noNetwork;
+     if (query.next()) {
+@@ -283,7 +283,7 @@
+     query.bindValue(0,TQ_LLONG(aRev.date()));
+     query.exec();
+     if (query.lastError().type()!=TQSqlError::None) {
+-        qDebug(query.lastError().text().TOUTF8().data());
++        qDebug("%s", (TQString(query.lastError().text().TOUTF8().data())).ascii());
+     }
+     if (query.next()) {
+         return query.value(0).toInt();
+@@ -320,7 +320,7 @@
+     if (!_q.exec()) {
+         m_Database->rollback();
+         qDebug("Could not insert values: %s",_q.lastError().text().TOUTF8().data());
+-        qDebug(_q.lastQuery().TOUTF8().data());
++        qDebug("%s", (TQString(_q.lastQuery().TOUTF8().data())).ascii());
+         throw svn::cache::DatabaseException(TQString("Could not insert values: ")+_q.lastError().text(),_q.lastError().number());
+     }
+     _q.prepare(qPathes);
+@@ -334,7 +334,7 @@
+         if (!_q.exec()) {
+             m_Database->rollback();
+             qDebug("Could not insert values: %s",_q.lastError().text().TOUTF8().data());
+-            qDebug(_q.lastQuery().TOUTF8().data());
++            qDebug("%s", (TQString(_q.lastQuery().TOUTF8().data())).ascii());
+             throw svn::cache::DatabaseException(TQString("Could not insert values: ")+_q.lastError().text(),_q.lastError().number());
+         }
+     }
+@@ -375,7 +375,7 @@
+     _q.prepare(query_string);
+     if (!_q.exec()) {
+         qDebug("Could not select values: %s",_q.lastError().text().TOUTF8().data());
+-        qDebug(_q.lastQuery().TOUTF8().data());
++        qDebug("%s", (TQString(_q.lastQuery().TOUTF8().data())).ascii());
+         throw svn::cache::DatabaseException(TQString("Could not select values: ")+_q.lastError().text(),_q.lastError().number());
+     }
+     while(_q.next()) {

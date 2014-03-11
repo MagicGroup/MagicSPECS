@@ -1,0 +1,12 @@
+diff -up symlinks-1.4/symlinks.c.coverity-overrun-dynamic symlinks-1.4/symlinks.c
+--- symlinks-1.4/symlinks.c.coverity-overrun-dynamic	2011-05-20 14:10:25.682843723 +0100
++++ symlinks-1.4/symlinks.c	2011-05-20 14:11:15.792920839 +0100
+@@ -44,7 +44,7 @@ static int substr (char *s, char *old, c
+ 		newlen = strlen(new);
+ 
+ 	if (newlen > oldlen) {
+-		if ((tmp = malloc(strlen(s))) == NULL) {
++		if ((tmp = malloc(strlen(s)+1)) == NULL) {
+ 			fprintf(stderr, "no memory\n");
+ 			exit (1);
+ 		}

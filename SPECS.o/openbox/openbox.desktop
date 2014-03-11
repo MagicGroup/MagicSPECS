@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Openbox
+Exec=openbox
+Icon=openbox
+NoDisplay=true
+X-GNOME-Autostart-Phase=WindowManager
+X-GNOME-Provides=windowmanager
+X-GNOME-Autostart-Notify=true

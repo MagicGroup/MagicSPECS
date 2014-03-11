@@ -1,0 +1,12 @@
+diff -ur kde-baseapps-4.10.3.orig/konqueror/src/konqtabs.cpp kde-baseapps-4.10.3/konqueror/src/konqtabs.cpp
+--- kde-baseapps-4.10.3.orig/konqueror/src/konqtabs.cpp	2013-05-31 16:58:24.000000000 +0000
++++ kde-baseapps-4.10.3/konqueror/src/konqtabs.cpp	2013-05-31 17:33:11.000000000 +0000
+@@ -122,7 +122,7 @@
+   connect( this, SIGNAL(mouseMiddleClick(QWidget*)),
+            SLOT(slotMouseMiddleClick(QWidget*)) );
+   connect( this, SIGNAL(mouseDoubleClick()),
+-           m_pViewManager->mainWindow(), SLOT(slotAddTab()) );
++           m_pViewManager->mainWindow(), SLOT(slotRemoveTab()) );
+ 
+   connect( this, SIGNAL(testCanDecode(const QDragMoveEvent*,bool&)),
+            SLOT(slotTestCanDecode(const QDragMoveEvent*,bool&)) );

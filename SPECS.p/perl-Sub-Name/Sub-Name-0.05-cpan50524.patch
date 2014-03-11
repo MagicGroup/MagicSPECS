@@ -1,0 +1,92 @@
+Closes RT#50524
+---
+ Name.xs   |   34 ++++++++++++++++++++++++++++++++++
+ t/smoke.t |   18 +++++++++++++++++-
+ 2 files changed, 51 insertions(+), 1 deletions(-)
+
+diff --git a/Name.xs b/Name.xs
+index f6d7bc2..89d2dd8 100644
+--- a/Name.xs
++++ b/Name.xs
+@@ -64,6 +64,40 @@ subname(name, sub)
+ 		*end = saved;
+ 		name = end;
+ 	}
++
++	/* under debugger, provide information about sub location */
++	if (PL_DBsub && CvGV(cv)) {
++		HV *hv = GvHV(PL_DBsub);
++
++		char* new_pkg = HvNAME(stash);
++
++		char* old_name = GvNAME( CvGV(cv) );
++		char* old_pkg = HvNAME( GvSTASH(CvGV(cv)) );
++
++		int old_len = strlen(old_name) + strlen(old_pkg);
++		int new_len = strlen(name) + strlen(new_pkg);
++
++		char* full_name;
++		Newz(39, full_name, (old_len > new_len ? old_len : new_len) + 3, char);
++
++		strcat(full_name, old_pkg);
++		strcat(full_name, "::");
++		strcat(full_name, old_name);
++
++		SV** old_data = hv_fetch(hv, full_name, strlen(full_name), 0);
++
++		if (old_data) {
++			strcpy(full_name, new_pkg);
++			strcat(full_name, "::");
++			strcat(full_name, name);
++
++			SvREFCNT_inc(*old_data);
++			if (!hv_store(hv, full_name, strlen(full_name), *old_data, 0))
++				SvREFCNT_dec(*old_data);
++		}
++		Safefree(full_name);
++	}
++
+ 	gv = (GV *) newSV(0);
+ 	gv_init(gv, stash, name, s - name, TRUE);
+ 
+diff --git a/t/smoke.t b/t/smoke.t
+index 87508ed..a383789 100644
+--- a/t/smoke.t
++++ b/t/smoke.t
+@@ -1,11 +1,15 @@
+ #!/usr/bin/perl
+ 
+-BEGIN { print "1..5\n"; }
++BEGIN { print "1..10\n"; $^P |= 0x210 }
+ 
+ 
+ use Sub::Name;
+ 
+ my $x = subname foo => sub { (caller 0)[3] };
++my $line = __LINE__ - 1;
++my $file = __FILE__;
++my $anon = $DB::sub{"main::__ANON__[${file}:${line}]"};
++
+ print $x->() eq "main::foo" ? "ok 1\n" : "not ok 1\n";
+ 
+ 
+@@ -26,4 +30,16 @@ for (4 .. 5) {
+ 	print $x->() eq "Blork::Dynamic $_" ? "ok $_\n" : "not ok $_\n";
+ }
+ 
++print $DB::sub{"main::foo"} eq $anon ? "ok 6\n" : "not ok 6\n";
++
++for (4 .. 5) {
++	print $DB::sub{"Blork::Dynamic $_"} eq $anon ? "ok ".($_+3)."\n" : "not ok ".($_+3)."\n";
++}
++
++my $i = 9;
++for ("Blork:: Bar!", "Foo::Bar::Baz") {
++	print $DB::sub{$_} eq $anon  ? "ok $i\n" : "not ok $_ \n";
++	$i++;
++}
++
+ # vim: ft=perl
+-- 
+1.7.0.4
+

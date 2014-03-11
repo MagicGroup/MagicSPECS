@@ -1,0 +1,29 @@
+diff -Nuar kdebase/kdm.ORI/config.def kdebase/kdm/config.def
+--- kdebase/kdm.ORI/config.def	2012-01-05 19:29:01.956728364 +0100
++++ kdebase/kdm/config.def	2012-01-05 19:28:53.165728336 +0100
+@@ -2630,3 +2630,12 @@
+ Description:
+  The theme to use for the greeter. Can point to either a directory or an XML
+  file.
++
++Key: HideMenuButton
++Type: bool
++Default: false
++User: greeter
++Instance: */
++Comment: &
++Description:
++ Determines if the "menu" button should be hidden on KDM login prompt.
+diff -Nuar kdebase/kdm.ORI/kfrontend/kgreeter.cpp kdebase/kdm/kfrontend/kgreeter.cpp
+--- kdebase/kdm.ORI/kfrontend/kgreeter.cpp	2012-01-05 19:29:01.955735413 +0100
++++ kdebase/kdm/kfrontend/kgreeter.cpp	2012-01-05 19:30:39.538730206 +0100
+@@ -892,6 +892,9 @@
+ 	else
+ 		menuButton->hide();
+ 
++	if ( _hideMenuButton)
++		menuButton->hide();
++
+ 	pluginSetup();
+ 
+ 	verify->start();

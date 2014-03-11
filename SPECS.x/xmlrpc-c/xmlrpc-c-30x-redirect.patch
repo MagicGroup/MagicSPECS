@@ -1,0 +1,27 @@
+From 255ebf4b1204124123971a3bb27741cccbb51692 Mon Sep 17 00:00:00 2001
+From: Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
+Date: Thu, 29 Jul 2010 19:25:32 +0200
+Subject: [PATCH 5/8] allow 30x redirections
+
+---
+ lib/curl_transport/curltransaction.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/lib/curl_transport/curltransaction.c b/lib/curl_transport/curltransaction.c
+index 0f76fc2..6292aee 100644
+--- a/lib/curl_transport/curltransaction.c
++++ b/lib/curl_transport/curltransaction.c
+@@ -600,6 +600,10 @@ setupCurlSession(xmlrpc_env *               const envP,
+     curl_easy_setopt(curlSessionP, CURLOPT_POST, 1);
+     curl_easy_setopt(curlSessionP, CURLOPT_URL, transP->serverUrl);
+ 
++    curl_easy_setopt(curlSessionP, CURLOPT_FOLLOWLOCATION, 1);
++    curl_easy_setopt(curlSessionP, CURLOPT_MAXREDIRS, (long)10);
++    curl_easy_setopt(curlSessionP, CURLOPT_POSTREDIR, CURL_REDIR_POST_ALL);
++
+     XMLRPC_MEMBLOCK_APPEND(char, envP, transP->postDataP, "\0", 1);
+     if (!envP->fault_occurred) {
+         curl_easy_setopt(curlSessionP, CURLOPT_POSTFIELDS, 
+-- 
+1.7.10.4
+

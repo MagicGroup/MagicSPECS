@@ -1,0 +1,25 @@
+From 3c1feedfd1e175119c26f0dd29e4c03eac1f1f7c Mon Sep 17 00:00:00 2001
+From: Colin Guthrie <colin@mageia.org>
+Date: Sat, 7 Jul 2012 16:48:01 +0100
+Subject: [PATCH] plymouth: Use latest plymouth's populate script.
+
+The latest plymouth no longer relies on dracut to provide functions
+needed to install binaries/libs so the check for a variable name
+no longer works and the old, built-in script is used instead thus
+breaking the new drm and framebuffer plymouth module installation.
+---
+ modules.d/50plymouth/module-setup.sh |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/modules.d/50plymouth/module-setup.sh b/modules.d/50plymouth/module-setup.sh
+index 9cdcc63..10aa0da 100755
+--- a/modules.d/50plymouth/module-setup.sh
++++ b/modules.d/50plymouth/module-setup.sh
+@@ -65,7 +65,6 @@ installkernel() {
+ 
+ install() {
+     if grep -q nash /usr/libexec/plymouth/plymouth-populate-initrd \
+-        || ! grep -q PLYMOUTH_POPULATE_SOURCE_FUNCTIONS /usr/libexec/plymouth/plymouth-populate-initrd \
+         || [ ! -x /usr/libexec/plymouth/plymouth-populate-initrd ]; then
+         . "$moddir"/plymouth-populate-initrd.sh
+     else

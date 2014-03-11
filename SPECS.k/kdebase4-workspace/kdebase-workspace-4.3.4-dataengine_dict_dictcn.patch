@@ -1,0 +1,254 @@
+diff -Nuarp dict.orig/dictengine.cpp dict/dictengine.cpp
+--- dict.orig/dictengine.cpp	2009-12-22 14:16:52.000000000 +0800
++++ dict/dictengine.cpp	2009-12-22 14:12:04.000000000 +0800
+@@ -17,197 +17,40 @@
+  */
+ 
+ #include "dictengine.h"
+-#include <iostream>
+ 
+-#include <QtNetwork/QTcpSocket>
+-#include <KDebug>
++#include <QByteArray>
++#include <QTextCodec>
++#include <QDomDocument>
+ #include <KLocale>
+ 
+ #include <Plasma/DataContainer>
+ 
+ DictEngine::DictEngine(QObject* parent, const QVariantList& args)
+     : Plasma::DataEngine(parent, args)
+-    , tcpSocket(0)
+ {
+-    Q_UNUSED(args)
+-    serverName="dict.org"; //In case we need to switch it later
+-    dictName="wn"; //Default, good dictionary
+ }
+ 
+ DictEngine::~DictEngine()
+ {
+ }
+ 
+-void DictEngine::setDict(const QString &dict)
+-{
+-    dictName = dict;
+-}
+-
+-void DictEngine::setServer(const QString &server)
+-{
+-    serverName = server;
+-}
+-
+-static QString wnToHtml(const QString &word, QByteArray &text)
+-{
+-    QList<QByteArray> splitText = text.split('\n');
+-    QString def;
+-    def += "<dl>\n";
+-    QRegExp linkRx("\\{(.*)\\}");
+-    linkRx.setMinimal(true);
+-
+-    bool isFirst=true;
+-    while (!splitText.empty()) {
+-        //150 n definitions retrieved - definitions follow
+-        //151 word database name - text follows
+-        //250 ok (optional timing information here)
+-        //552 No match
+-        QString currentLine = splitText.takeFirst();
+-        if (currentLine.startsWith("151")) {
+-            isFirst = true;
+-            continue;
+-        }
+-
+-        if (currentLine.startsWith('.')) {
+-            def += "</dd>";
+-            continue;
+-        }
+-
+-        if (!(currentLine.startsWith("150") || currentLine.startsWith("151")
+-           || currentLine.startsWith("250") || currentLine.startsWith("552"))) {
+-            currentLine.replace(linkRx,"<a href=\"\\1\">\\1</a>");
+-
+-            if (isFirst) {
+-                def += "<dt><b>" + currentLine + "</b></dt>\n<dd>";
+-                isFirst = false;
+-                continue;
+-            } else {
+-                if (currentLine.contains(QRegExp("([1-9]{1,2}:)"))) {
+-                    def += "\n<br>\n";
+-                }
+-                currentLine.replace(QRegExp("^([\\s\\S]*[1-9]{1,2}:)"), "<b>\\1</b>");
+-                def += currentLine;
+-                continue;
+-            }
+-        }
+-
+-    }
+-
+-    def += "</dl>";
+-    return def;
+-}
+-
+ void DictEngine::getDefinition()
+ {
+-    tcpSocket->readAll();
+-    QByteArray ret;
+-
+-    tcpSocket->write(QByteArray("DEFINE "));
+-    tcpSocket->write(dictName.toAscii());
+-    tcpSocket->write(QByteArray(" \""));
+-    tcpSocket->write(currentWord.toUtf8());
+-    tcpSocket->write(QByteArray("\"\n"));
+-    tcpSocket->flush();
+-
+-    while (!ret.contains("250") && !ret.contains("552")) {
+-        tcpSocket->waitForReadyRead();
+-        ret += tcpSocket->readAll();
+-    }
+-
+-    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(socketClosed()));
+-    tcpSocket->disconnectFromHost();
+-    //       setData(currentWord, dictName, ret);
+-    //       qWarning()<<ret;
+-    setData(currentWord, "text", wnToHtml(currentWord,ret));
+-}
+-
+-void DictEngine::getDicts()
+-{
+-    QMap<QString, QString> theHash;
+-    tcpSocket->readAll();
+-    QByteArray ret;
+-
+-    tcpSocket->write(QByteArray("SHOW DB\n"));;
+-    tcpSocket->flush();
+-
+-    tcpSocket->waitForReadyRead();
+-    while (!ret.contains("250")) {
+-        tcpSocket->waitForReadyRead();
+-        ret += tcpSocket->readAll();
+-    }
+-
+-    QList<QByteArray> retLines = ret.split('\n');
+-    QString tmp1, tmp2;
+-
+-    while (!retLines.empty()) {
+-        QString curr(retLines.takeFirst());
+-
+-        if (curr.startsWith("554")) {
+-            //TODO: What happens if no DB available?
+-            //TODO: Eventually there will be functionality to change the server...
+-            break;
+-        }
+-
+-        // ignore status code and empty lines
+-        if (curr.startsWith("250") || curr.startsWith("110") || curr.isEmpty()) {
+-            continue;
+-        }
+-
+-        if (!curr.startsWith('-') && !curr.startsWith('.')) {
+-            curr = curr.trimmed();
+-            tmp1 = curr.section(' ', 0, 0);
+-            tmp2 = curr.section(' ', 1);
+-  //          theHash.insert(tmp1, tmp2);
+-            //kDebug() << tmp1 + "  " + tmp2;
+-            setData("list-dictionaries", tmp1, tmp2);
+-        }
+-    }
+-
+-    tcpSocket->disconnectFromHost();
+-//    setData("list-dictionaries", "dictionaries", QByteArray(theHash);
+-}
+-
+-
+-
+-void DictEngine::socketClosed()
+-{
+-    tcpSocket->deleteLater();
+-    tcpSocket = 0;
++    QByteArray ret = reply->readAll().data();
++    QTextCodec* codec = QTextCodec::codecForName( "GB18030" );
++    QString string = codec->toUnicode( ret );
++    string = string.replace( QString( "a href=\'/scb/?word=" ), QString( "a href=\'" ) );
++    string = string.replace( QString( "a href=\"http://dict.cn/search.php?q=" ), QString( "a href=\"" ) );
++    string = string.replace( QString( "<i>" ), QString( "<br /><i>" ) );
++    setData(currentWord, "text", string );
+ }
+ 
+ bool DictEngine::sourceRequestEvent(const QString &word)
+ {
+-    // FIXME: this is COMPLETELY broken .. it can only look up one word at a time!
+-    //        a DataContainer subclass that does the look up should probably be made
+-    if (currentWord == word) {
+-        return false;
+-    }
+-
+-    if (tcpSocket) {
+-        tcpSocket->abort(); //stop if lookup is in progress and new word is requested
+-        tcpSocket->deleteLater();
+-        tcpSocket = 0;
+-    }
+-
+     currentWord = word;
+-
+-    if (currentWord.simplified().isEmpty()) {
+-        setData(currentWord, dictName, QString());
+-    } else {
+-        setData(currentWord, dictName, QString());
+-        tcpSocket = new QTcpSocket(this);
+-        tcpSocket->abort();
+-        connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(socketClosed()));
+-
+-        if (currentWord == "list-dictionaries") {
+-            connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(getDicts()));
+-        } else {
+-            connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(getDefinition()));
+-        }
+-
+-        tcpSocket->connectToHost(serverName, 2628);
+-    }
+-
++    request.setUrl( QUrl( QString( "http://dict.cn/mini.php?q=" ) + word ) );
++    reply = manager.get( request );
++    connect( reply, SIGNAL( readyRead() ), this, SLOT( getDefinition() ) );
+     return true;
+ }
+ 
+diff -Nuarp dict.orig/dictengine.h dict/dictengine.h
+--- dict.orig/dictengine.h	2009-12-22 14:16:55.000000000 +0800
++++ dict/dictengine.h	2009-12-22 13:28:47.000000000 +0800
+@@ -18,9 +18,10 @@
+ 
+ #ifndef DICTENGINE_H
+ #define DICTENGINE_H
++#include <QNetworkAccessManager>
++#include <QNetworkRequest>
++#include <QNetworkReply>
+ #include <Plasma/DataEngine>
+-#include <QMap>
+-class QTcpSocket;
+ 
+ /**
+  * This class evaluates the basic expressions given in the interface.
+@@ -40,19 +41,12 @@ class DictEngine: public Plasma::DataEng
+ 
+     private slots:
+         void getDefinition();
+-        void socketClosed();
+-        void getDicts();
+ 
+     private:
+-        void setDict(const QString &dict);
+-        void setServer(const QString &server);
+-
+-        QHash<QString, QString> dictNameToDictCode;
+-	QTcpSocket *tcpSocket;
+-	QString currentWord;
+-	QString dictName;
+-        QString serverName;
+-
++        QNetworkAccessManager manager;
++        QNetworkRequest request;
++        QNetworkReply* reply;
++        QString currentWord;
+ };
+ 
+ K_EXPORT_PLASMA_DATAENGINE(dict, DictEngine)

@@ -1,0 +1,168 @@
+#!/bin/bash
+#
+### BEGIN INIT INFO
+# Provides: munin-asyncd
+# Required-Start: $local_fs $remote_fs $network
+# Required-Stop: $local_fs $remote_fs $network
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Starts and stops munin-asyncd
+# Description: munin-asyncd enables asyncronous fetching of
+#              metrics from munin-node in a Munin monitoring setup.
+### END INIT INFO
+
+ASYNC_BIN=munin-asyncd
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/${ASYNC_BIN}
+PIDFILE=/var/run/${ASYNC_BIN}.pid
+
+is_running () {
+	if [ ! -e "$PIDFILE" ]; then
+		return 3 # No PID file exists, ${ASYNC_BIN} must not be running
+	else
+		kill -0 $(cat $PIDFILE) 2> /dev/null
+		if [ "$?" -eq "0" ]; then
+			return 0 # PID file exists, and PID found in file is in use
+		else
+			rm $PIDFILE 2> /dev/null
+			if [ "$?" -eq "0" ]; then
+				return 1 # PID file exists, but no process with the PID was found. Deletion of the PID file was a success
+			else
+				return 2 # PID file exists, but no process with the PID was found. Deletion of the PID file failed
+			fi
+		fi
+	fi
+}
+
+check_root () {
+	operation=$1
+	if [ "$(id -u)" -ne "0" ]; then
+		echo "Root permissions are required in order to perform the \"$operation\" operation."
+		exit 4
+	fi
+}
+
+sanity_check () {
+	if [ ! "$(type -p pidof)" ]; then
+		echo "The program \"pidof\" is required in order for this script to work properly, and will not run without it."
+		exit 1
+	fi
+	
+	if [ ! -d "$(dirname $PIDFILE)" ]; then
+		mkdir -p $(dirname $PIDFILE) 2> /dev/null
+		if [ "$?" -ne "0" ]; then
+			echo "The directory for a PID file is missing ($(dirname $PIDFILE)), and could not be created automatically. Please correct this and try again."
+			exit 1
+		fi
+	fi
+	
+	if [ ! -x "$DAEMON" ]; then
+		echo "${ASYNC_BIN} was expected at $DAEMON, but was not found. Are you sure Munin is correctly installed?"
+		exit 5
+	fi
+}
+
+case $1 in
+	start)
+		check_root $1
+		sanity_check
+		
+		echo -n "Starting ${ASYNC_BIN} ... "
+		
+		is_running
+		if [ "$?" -eq "0" ]; then
+			echo "Already running (PID: $(cat $PIDFILE))."
+			exit 0
+		fi
+		
+		$DAEMON > /dev/null 2> /dev/null < /dev/null &
+		
+		sleep 0.5 # Give ${ASYNC_BIN} time to fail, if it fails
+		
+		pid=$(pidof -o %PPID -x $DAEMON)
+		if [ "$?" -eq "0" ]; then
+			echo $pid > $PIDFILE
+			echo "Done."
+			exit 0
+		else
+			echo "Start failed for some reason, restarting ${ASYNC_BIN} so you can see why:"
+			$DAEMON
+			echo
+			echo "A \"Connection refused\" message typically is because munin-node is not started prior to ${ASYNC_BIN}."
+		fi
+	;;
+	stop)
+		check_root $1
+		sanity_check
+		
+		echo -n "Stopping ${ASYNC_BIN} ... "
+		
+		# If a PID file is not found, we perform an extra check if ${ASYNC_BIN} still should be running, and if it does, then create a PID file
+		if [ ! -e "$PIDFILE" ]; then
+			pid=$(pidof -o %PPID -x $DAEMON)
+			if [ "$?" -eq "0" ]; then
+				echo $pid > $PIDFILE
+			fi
+		fi
+		
+		is_running
+		if [ "$?" -ne "0" ]; then
+			echo "Not running."
+			exit 0
+		fi
+		
+		PID=$(cat $PIDFILE)
+		kill -15 $PID 2> /dev/null
+		HALFSECONDS="0"
+		while true; do
+			kill -0 $PID 2> /dev/null
+			if [ "$?" -eq "1" ]; then
+				break
+			fi
+			sleep 0.5
+			HALFSECONDS=$(expr $HALFSECONDS + 1)
+			if [ "$HALFSECONDS" -ge "10" ]; then
+				kill -9 $PID 2> /dev/null
+				echo "Not stopping gracefully, killed!"
+				exit 0
+			fi
+		done
+		echo "Done."
+		exit 0
+	;;
+	restart|try-restart|force-reload)
+		check_root $1
+		sanity_check
+		
+		$0 stop
+		$0 start
+		
+		exit 0
+	;;
+	reload)
+		echo "The \"reload\" operation is not supported by ${ASYNC_BIN}. You probably want to run \"restart\" instead."
+		exit 3
+	;;
+	status)
+		is_running
+		return="$?"
+		if [ "$return" -eq "0" ]; then
+			echo "${ASYNC_BIN} is running (PID: $(cat $PIDFILE))."
+			exit 0
+		elif [ "$return" -eq "1" ]; then
+			echo "${ASYNC_BIN} is not running, but PID file still existed (has been removed now)."
+			exit 1
+		elif [ "$return" -eq "2" ]; then
+			echo "${ASYNC_BIN} is not running, but PID file still exists (could not be removed)."
+			exit 1
+		elif [ "$return" -eq "3" ]; then
+			echo "${ASYNC_BIN} is not running."
+			exit 3
+		fi
+		exit 4
+	;;
+	*)
+		echo "Usage: $0 {start|stop|restart|try-restart|force-reload|reload|status}"
+		exit 2
+	;;
+esac

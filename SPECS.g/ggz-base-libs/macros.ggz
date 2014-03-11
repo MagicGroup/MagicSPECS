@@ -1,0 +1,8 @@
+%_ggz_config %{_bindir}/ggz-config
+
+%_ggz_configdir %(%{_ggz_config} --configdir)
+%_ggz_datadir %(%{_ggz_config} --datadir)
+%_ggz_gamedir  %(%{_ggz_config} --gamedir)
+%_ggz_protocol %(%{_ggz_config} --protocol)
+%_ggz_version %(%{_ggz_config} --version)
+

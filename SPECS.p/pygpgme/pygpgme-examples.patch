@@ -1,0 +1,12 @@
+=== modified file 'MANIFEST.in'
+--- MANIFEST.in	2006-01-18 07:31:13 +0000
++++ MANIFEST.in	2009-01-22 07:03:54 +0000
+@@ -1,6 +1,7 @@
+ include Makefile
+ include MANIFEST.in
+ include test_all.py
++recursive-include examples *.py
+ 
+ recursive-include gpgme *.py
+ include gpgme/tests/keys/*.pub
+

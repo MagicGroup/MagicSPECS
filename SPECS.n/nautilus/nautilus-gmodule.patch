@@ -1,0 +1,11 @@
+diff -up nautilus-3.3.3/configure.in.gmodule nautilus-3.3.3/configure.in
+--- nautilus-3.3.3/configure.in.gmodule	2011-12-21 00:00:52.794433308 -0500
++++ nautilus-3.3.3/configure.in	2011-12-21 00:01:24.098433776 -0500
+@@ -315,6 +315,7 @@ PKG_CHECK_MODULES(NAUTILUS, [
+ 	gthread-2.0 >= glib_minver
+ 	gio-2.0 >= glib_minver
+ 	gio-unix-2.0 >= glib_minver
++        gmodule-no-export-2.0 >= glib_minver
+ 	gsettings-desktop-schemas
+ 	libnotify >= notify_minver
+ ])

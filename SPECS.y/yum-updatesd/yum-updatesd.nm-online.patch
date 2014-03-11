@@ -1,0 +1,11 @@
+--- yum-updatesd.orig	2007-12-18 04:46:26.000000000 +0100
++++ yum-updatesd	2012-02-17 18:54:55.543850850 +0100
+@@ -47,7 +47,7 @@
+ updateInfo = []
+ helperProcess = None
+ 
+-NM_ONLINE = 3
++NM_ONLINE = 70
+ 
+ class UDConfig(BaseConfig):
+     """Config format for the daemon"""

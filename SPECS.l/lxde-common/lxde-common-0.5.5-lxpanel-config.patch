@@ -1,0 +1,61 @@
+diff -dur lxde-common-0.5.0.orig/lxpanel/panel.in lxde-common-0.5.0/lxpanel/panel.in
+--- lxde-common-0.5.0.orig/lxpanel/panel.in	2008-06-16 10:10:24.000000000 +0200
++++ lxde-common-0.5.0/lxpanel/panel.in	2009-12-12 14:48:17.000000000 +0100
+@@ -13,9 +13,9 @@
+     alpha=0
+     setdocktype=1
+     setpartialstrut=1
+-    usefontcolor=1
++    usefontcolor=0
+     fontcolor=#ffffff
+-    background=1
++    background=0
+     backgroundfile=@prefix@/share/lxpanel/images/background.png
+ }
+ 
+@@ -29,12 +29,13 @@
+ Plugin {
+     type = menu
+     Config {
+-        image=@prefix@/share/lxde/images/lxde-icon.png
++        image=@prefix@/share/icons/Bluecurve/24x24/apps/icon-panel-menu.png
+         system {
+         }
+         separator {
+         }
+         item {
++            image=gnome-run
+             command=run
+         }
+         separator {
+@@ -50,10 +51,10 @@
+     type = launchbar
+     Config {
+         Button {
+-            id=pcmanfm.desktop
++            id=fedora-pcmanfm.desktop
+         }
+         Button {
+-            id=firefox.desktop
++            id=fedora-lxterminal.desktop
+         }
+     }
+ }
+@@ -70,6 +71,7 @@
+     Config {
+         Button1=iconify
+         Button2=shade
++        Toggle=1
+     }
+ }
+ 
+@@ -134,6 +136,9 @@
+     type = launchbar
+     Config {
+         Button {
++            id=lxde-lock-screen.desktop
++        }
++        Button {
+             id=lxde-logout.desktop
+         }
+     }

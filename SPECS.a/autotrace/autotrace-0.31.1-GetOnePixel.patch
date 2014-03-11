@@ -1,0 +1,15 @@
+diff -ru autotrace-0.31.1.orig/input-magick.c autotrace-0.31.1/input-magick.c
+--- autotrace-0.31.1.orig/input-magick.c	2009-03-02 12:08:45.000000000 +0000
++++ autotrace-0.31.1/input-magick.c	2009-03-02 12:12:21.000000000 +0000
+@@ -83,7 +83,11 @@
+ 
+   for(j=0,runcount=0,point=0;j<image->rows;j++)
+     for(i=0;i<image->columns;i++) {
++#if (MagickLibVersion < 0x0645) || (MagickLibVersion >= 0x0649)
+       p=GetOnePixel(image,i,j);
++#else
++      GetOnePixel(image,i,j,pixel);
++#endif
+       AT_BITMAP_BITS(bitmap)[point++]=pixel->red; /* if gray: red=green=blue */
+       if(np==3) {
+         AT_BITMAP_BITS(bitmap)[point++]=pixel->green;

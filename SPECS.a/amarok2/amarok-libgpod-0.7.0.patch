@@ -1,0 +1,38 @@
+Index: src/collection/ipodcollection/handler/IpodHandler.cpp
+===================================================================
+--- src/collection/ipodcollection/handler/IpodHandler.cpp	(revision 871432)
++++ src/collection/ipodcollection/handler/IpodHandler.cpp	(revision 871434)
+@@ -1025,12 +1025,17 @@
+     QFileInfo tempImageFileInfo( tempImageFile ); // get info for path
+     QString tempImagePath = tempImageFileInfo.absoluteFilePath(); // path
+ 
++#ifdef ITDB_THUMB_COVER_SMALL
+     Itdb_Thumb *thumb = NULL;
++#endif
+     GdkPixbuf *gpixbuf = NULL;
+     QString thumbPath;
+ 
+     // pull image out of ipod
+ 
++#ifdef ITDB_THUMB_COVER_SMALL
++    // we've got libgpod 0.6.0 here
++
+     if( ipodtrack->has_artwork == 0x01 )
+     {
+         // try small first
+@@ -1115,7 +1120,15 @@
+             }
+         }
+     }
++#else
++    // libgpod 0.7.0
+ 
++    if( itdb_track_has_thumbnails ( ipodtrack ) )
++    {
++        gpixbuf = (GdkPixbuf*) itdb_track_get_thumbnail (ipodtrack, -1, -1 );
++    }
++#endif
++
+     if(gpixbuf != NULL)
+     {
+         // temporarily save to file

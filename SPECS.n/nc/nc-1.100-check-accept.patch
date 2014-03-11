@@ -1,0 +1,13 @@
+diff --git a/netcat.c b/netcat.c
+index ad57e4e..81cdea8 100644
+--- a/netcat.c
++++ b/netcat.c
+@@ -356,6 +356,8 @@ main(int argc, char *argv[])
+ 				len = sizeof(cliaddr);
+ 				connfd = accept(s, (struct sockaddr *)&cliaddr,
+ 				    &len);
++				if (connfd == -1)
++					errx(1, "accept failed: %s", strerror(errno));
+ 				readwrite(connfd);
+ 				close(connfd);
+ 			}

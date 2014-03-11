@@ -1,0 +1,19 @@
+--- kdebase/startkde.tdeicon	2012-08-09 10:33:24.000000000 +0200
++++ kdebase/startkde	2012-08-09 10:34:11.484608675 +0200
+@@ -302,6 +302,16 @@
+   fi
+ fi
+ 
++# Default Start Button icon for TDE
++if [ ! -e  $kdehome/share/config/kickerrc ]; then
++  if [ -r "%{tde_starticon}" ]; then
++    cat <<EOF >$kdehome/share/config/kickerrc
++[KMenu]
++CustomIcon=%{tde_starticon}
++EOF
++  fi
++fi
++
+ # XCursor mouse theme needs to be applied here to work even for kded or ksmserver.
+ if test -n "$kcminputrc_mouse_cursortheme" -o -n "$kcminputrc_mouse_cursorsize" ; then
+   kapplymousetheme "$kcminputrc_mouse_cursortheme" "$kcminputrc_mouse_cursorsize"

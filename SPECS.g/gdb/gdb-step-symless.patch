@@ -1,0 +1,160 @@
+http://sourceware.org/ml/gdb-patches/2012-09/msg00598.html
+Subject: [patch+7.5] Fix ppc32 7.5 stepping crash regression
+
+Hello,
+
+since
+	[PATCH] PowerPC 32 with Secure PLT
+	http://sourceware.org/ml/gdb-patches/2012-01/msg00655.html
+	http://sourceware.org/ml/gdb-patches/2012-01/msg00656.html
+	commit 4d19ed66762845cdcce95f8b1daaceb97cf90c71
+	Author: eager <eager>
+	Date:   Mon Jan 30 17:09:37 2012 +0000
+	    Support stepping through PPC PLT with securePLT.
+
+(gdb) step
+Single stepping until exit from function main,
+which has no line number information.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000100898d8 in powerpc_linux_in_dynsym_resolve_code (pc=268436636) at ppc-linux-tdep.c:651
+651	  if ((strcmp (SYMBOL_LINKAGE_NAME (sym), "__glink") == 0)
+(gdb) p sym
+$1 = (struct minimal_symbol *) 0x0
+(gdb) bt
+#0  0x00000000100898d8 in powerpc_linux_in_dynsym_resolve_code (pc=268436636) at ppc-linux-tdep.c:651
+#1  0x00000000103fdf44 in in_solib_dynsym_resolve_code (pc=268436636) at solib.c:1185
+#2  0x000000001025d848 in handle_inferior_event (ecs=0xfffffbbdcf0) at infrun.c:4737
+[...]
+
+I will check it in.
+
+Not regression tested.
+
+
+Regards,
+Jan
+
+
+gdb/
+2012-09-26  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	Fix crash during stepping on ppc32.
+	* ppc-linux-tdep.c (powerpc_linux_in_dynsym_resolve_code): Test NULL
+	SYM.
+
+gdb/testsuite/
+2012-09-26  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	Fix crash during stepping on ppc32.
+	* gdb.base/step-symless.c: New file.
+	* gdb.base/step-symless.exp: New file.
+
+diff --git a/gdb/ppc-linux-tdep.c b/gdb/ppc-linux-tdep.c
+index c7b70db..ccded83 100644
+--- a/gdb/ppc-linux-tdep.c
++++ b/gdb/ppc-linux-tdep.c
+@@ -648,8 +648,9 @@ powerpc_linux_in_dynsym_resolve_code (CORE_ADDR pc)
+ 
+   /* Check if we are in the resolver.  */
+   sym = lookup_minimal_symbol_by_pc (pc);
+-  if ((strcmp (SYMBOL_LINKAGE_NAME (sym), "__glink") == 0)
+-      || (strcmp (SYMBOL_LINKAGE_NAME (sym), "__glink_PLTresolve") == 0))
++  if (sym != NULL
++      && (strcmp (SYMBOL_LINKAGE_NAME (sym), "__glink") == 0
++	  || strcmp (SYMBOL_LINKAGE_NAME (sym), "__glink_PLTresolve") == 0))
+     return 1;
+ 
+   return 0;
+diff --git a/gdb/testsuite/gdb.base/step-symless.c b/gdb/testsuite/gdb.base/step-symless.c
+new file mode 100644
+index 0000000..97eaf5e
+--- /dev/null
++++ b/gdb/testsuite/gdb.base/step-symless.c
+@@ -0,0 +1,38 @@
++/* This testcase is part of GDB, the GNU debugger.
++
++   Copyright 2012 Free Software Foundation, Inc.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
++
++static volatile int v;
++
++static void
++symful (void)
++{
++  v++;
++}
++
++static void
++symless (void)
++{
++  v++;
++}
++
++int
++main (void)
++{
++  symless ();
++  symful ();
++  return 0;
++}
+diff --git a/gdb/testsuite/gdb.base/step-symless.exp b/gdb/testsuite/gdb.base/step-symless.exp
+new file mode 100644
+index 0000000..d79edb2
+--- /dev/null
++++ b/gdb/testsuite/gdb.base/step-symless.exp
+@@ -0,0 +1,41 @@
++# Copyright (C) 2012 Free Software Foundation, Inc.
++
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++standard_testfile
++if {[build_executable ${testfile}.exp ${testfile} ${srcfile} {nodebug}] == -1} {
++    return -1
++}
++
++# We need those symbols global to access them from the .S file.
++set test "strip stub symbols"
++set objcopy_program [transform objcopy]
++set result [catch "exec $objcopy_program -N symless ${binfile}" output]
++verbose "result is $result"
++verbose "output is $output"
++if {$result != 0} {
++    fail $test
++    return
++}
++pass $test
++
++clean_restart $testfile
++
++if ![runto_main] {
++    return -1
++}
++
++gdb_breakpoint symful
++
++gdb_test "step" "Single stepping until exit.*no line number information.*\r\nBreakpoint \[^\r\n\]* in \\.?symful \\(\\)"
+

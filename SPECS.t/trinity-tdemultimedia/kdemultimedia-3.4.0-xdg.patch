@@ -1,0 +1,10 @@
+--- kdemultimedia-3.4.0/kappfinder-data/kde-multimedia-music.menu.tn	2005-04-25 16:16:32.000000000 +0200
++++ kdemultimedia-3.4.0/kappfinder-data/kde-multimedia-music.menu	2005-04-25 16:17:51.000000000 +0200
+@@ -2,6 +2,7 @@
+   "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+ 
+ <Menu>
++<Name>Applications</Name>
+ <Menu>
+ 	<Name>Multimedia</Name>
+ 	<Exclude>

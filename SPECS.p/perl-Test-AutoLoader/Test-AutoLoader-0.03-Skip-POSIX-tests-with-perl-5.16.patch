@@ -1,0 +1,48 @@
+From 7f347d684936c6108e658ba6c12e43b7e62562f3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 21 Jun 2012 10:49:01 +0200
+Subject: [PATCH] Skip POSIX tests with perl 5.16
+
+---
+ t/00basic.t |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/t/00basic.t b/t/00basic.t
+index 94f1a4f..462d8e0 100644
+--- a/t/00basic.t
++++ b/t/00basic.t
+@@ -35,6 +35,7 @@ require EmptyModule;
+ my @unreadable = (File::Spec->catdir(qw(tlib auto TestBusted1)),
+                   File::Spec->catfile(qw(tlib auto TestBusted2 no_ready.al)));
+ my $CAN_CHMOD =  chmod 0000, @unreadable;
++my $POSIX_USES_AUTOLOAD = $^V lt v5.16.0;
+ my $file_errors;
+ $file_errors .=<<DIAG if $CAN_CHMOD;
+     couldn't load no_ready.al: Permission denied
+@@ -46,8 +47,6 @@ DIAG
+ 
+ 
+ my @tests = (
+-  [ ['POSIX'],{ok=>1,name=>"Autoload of POSIX (all files)"},"Standard-distribution module, all files"],
+-  [ [qw(POSIX strcpy)],{ok=>1,name=>"Autoload of POSIX (listed subroutines)"},"Standard-distribution module, one file"],
+   [ [qw(POSIX no_such_function)], {ok=>0,diag=>"    couldn't load no_such_function.al: No such file or directory"}, "Standard-distribution, bad subroutine name"],
+   [ [qw(strict)], {ok=>0,diag=>"Unable to find valid autoload directory for strict"}, "Non-existent auto directory"],
+   [ [qw(EmptyModule)], {ok=>0,diag=>"No autoloaded files found"}, "No files in auto directory"],
+@@ -59,6 +58,14 @@ my @tests = (
+ 
+ );
+ 
++if ($POSIX_USES_AUTOLOAD) {
++    push @tests,
++      [ ['POSIX'],{ok=>1,name=>"Autoload of POSIX (all files)"},"Standard-distribution module, all files"],
++      [ [qw(POSIX strcpy)],{ok=>1,name=>"Autoload of POSIX (listed subroutines)"},"Standard-distribution module, one file"];
++} else {
++  SKIP:{skip "POSIX module does not use AutoLoader",12}
++}
++
+ if ($CAN_CHMOD) {
+     push @tests, 
+       [ [qw(TestBusted1)], {ok=>0,diag=>"Unable to find valid autoload directory for TestBusted1"}, "Unreadable auto directory"],
+-- 
+1.7.7.6
+

@@ -1,0 +1,48 @@
+Patch by Robert Scheck <robert@fedoraproject.org> for perl(DateTime::Format::Excel) >= 0.31, which fixes
+the upstream build requirement for perl(DateTime), as per RPM versioning 0.1705 > 0.50, but according to
+CPAN versioning 0.50 > 0.1705.
+
+--- DateTime-Format-Excel-0.31/Build.PL					2010-06-11 08:28:17.000000000 +0200
++++ DateTime-Format-Excel-0.31/Build.PL.versioning			2011-01-02 21:14:05.000000000 +0100
+@@ -5,7 +5,7 @@
+ Module::Build->new( module_name => 'DateTime::Format::Excel',
+                     author      => 'Achim Bursian <aburs@cpan.com>',
+                     license     => 'perl',
+-                    requires    => { 'DateTime' => 0.1705,
++                    requires    => { 'DateTime' => 0.18,
+                                      'Test::More' => '0.47',
+                                    },
+                     create_makefile_pl => 'traditional',
+--- DateTime-Format-Excel-0.31/Makefile.PL				2010-10-20 11:54:57.000000000 +0200
++++ DateTime-Format-Excel-0.31/Makefile.PL.versioning			2011-01-02 21:14:57.000000000 +0100
+@@ -5,7 +5,7 @@
+           'NAME' => 'DateTime::Format::Excel',
+           'VERSION_FROM' => 'lib/DateTime/Format/Excel.pm',
+           'PREREQ_PM' => {
+-                           'DateTime' => '0.1705',
++                           'DateTime' => '0.18',
+                            'Test::More' => '0.47'
+                          },
+           'INSTALLDIRS' => 'site',
+--- DateTime-Format-Excel-0.31/lib/DateTime/Format/Excel.pm		2010-10-20 11:53:44.000000000 +0200
++++ DateTime-Format-Excel-0.31/lib/DateTime/Format/Excel.pm.versioning	2011-01-02 21:15:39.000000000 +0100
+@@ -10,7 +10,7 @@
+ use strict;
+ use 5.005;
+ use Carp;
+-use DateTime 0.1705;
++use DateTime 0.18;
+ use vars qw( $VERSION );
+ 
+ $VERSION = '0.31';
+--- DateTime-Format-Excel-0.31/META.yml					2010-10-20 11:54:58.000000000 +0200
++++ DateTime-Format-Excel-0.31/META.yml.versioning			2011-01-02 21:15:16.000000000 +0100
+@@ -16,7 +16,7 @@
+     file: lib/DateTime/Format/Excel.pm
+     version: 0.31
+ requires:
+-  DateTime: 0.1705
++  DateTime: 0.18
+   Test::More: 0.47
+ resources:
+   license: http://dev.perl.org/licenses/

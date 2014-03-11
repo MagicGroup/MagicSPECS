@@ -1,0 +1,22 @@
+From 9ede75b1ce0ecbeb103fe5960d3d91f53e5bbb91 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 10 Jul 2012 10:32:43 +0200
+Subject: [PATCH] TEST-01-BASIC: enable selinux
+
+---
+ test/TEST-01-BASIC/test.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/TEST-01-BASIC/test.sh b/test/TEST-01-BASIC/test.sh
+index 22feab5..850da77 100755
+--- a/test/TEST-01-BASIC/test.sh
++++ b/test/TEST-01-BASIC/test.sh
+@@ -14,7 +14,7 @@ test_run() {
+ 	-m 256M -nographic \
+ 	-net none -kernel /boot/vmlinuz-$KVERSION \
+ 	-watchdog ib700 -watchdog-action poweroff \
+-	-append "root=LABEL=dracut rw systemd.log_level=debug systemd.log_target=console rd.retry=3 rd.info console=ttyS0,115200n81 selinux=0 rd.debug $DEBUGFAIL" \
++	-append "root=LABEL=dracut rw systemd.log_level=debug systemd.log_target=console rd.retry=3 rd.debug console=ttyS0,115200n81 $DEBUGFAIL" \
+ 	-initrd $TESTDIR/initramfs.testing || return 1
+     grep -m 1 -q dracut-root-block-success $TESTDIR/result || return 1
+ }

@@ -1,0 +1,22 @@
+--- Crypt-RSA/Changes
++++ Crypt-RSA/Changes
+@@ -163,7 +163,7 @@
+ 
+   * Fixed a bug in ::ES::PKCS1v15 caused by inclusion of null characters
+     in the padding string. Null chars are used as delimiters in PKCS #1
+-    v1.5 encoding. Thanks to Ganèche <gramanoudjame@promonetic.com> 
++    v1.5 encoding. Thanks to GanÃ¨che <gramanoudjame@promonetic.com> 
+     for reporting this bug.
+ 
+ 
+--- Crypt-RSA/lib/Crypt/RSA.pm
++++ Crypt-RSA/lib/Crypt/RSA.pm
+@@ -530,7 +530,7 @@ Vipul Ved Prakash, E<lt>mail@vipul.netE<
+ =head1 ACKNOWLEDGEMENTS
+ 
+ Thanks to Ilya Zakharevich for help with Math::Pari, Benjamin Trott for
+-several patches including SSH key support, Genèche Ramanoudjame for
++several patches including SSH key support, GenÃ¨che Ramanoudjame for
+ extensive testing and numerous bug reports, Shizukesa on #perl for
+ suggesting the error handling method used in this module, and Dave Paris
+ for good advice.

@@ -1,0 +1,12 @@
+--- master/lib/Munin/Master/Utils.pm.orig	2012-07-30 09:25:33.000000000 -0500
++++ master/lib/Munin/Master/Utils.pm	2012-08-05 14:07:57.236121331 -0500
+@@ -904,6 +904,9 @@
+ 
+ 	my $storable_filename_tmp = $storable_filename . ".tmp.$$";
+ 
++	use Carp qw(cluck);
++	cluck "data is null at " unless $data;
++
+ 	# Write datafile.storable, in network order to be architecture indep
+         Storable::nstore($data, $storable_filename_tmp);
+ 

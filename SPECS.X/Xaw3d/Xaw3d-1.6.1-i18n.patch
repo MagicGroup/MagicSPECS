@@ -1,0 +1,10 @@
+--- libXaw3d-1.6.1/src/MultiSrc.c.orig	2011-09-19 15:42:36.000000000 -0600
++++ libXaw3d-1.6.1/src/MultiSrc.c	2012-02-25 14:33:44.336534494 -0700
+@@ -728,6 +728,7 @@
+ 
+   if ( string_set || (old_src->multi_src.type != src->multi_src.type) ) {
+     RemoveOldStringOrFile(old_src, string_set);
++    src->multi_src.allocated_string = old_src->multi_src.allocated_string;
+     file = InitStringOrFile(src, string_set);
+ 
+     /* Load pieces does this logic for us, but it shouldn't.  Its messy.*/

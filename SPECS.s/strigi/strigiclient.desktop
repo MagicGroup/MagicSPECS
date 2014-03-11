@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Icon=
+Exec=/usr/bin/strigiclient
+Name=strigi client
+Comment=Strigi daemon configuration tool
+Categories=Qt;KDE;Settings;

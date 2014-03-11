@@ -1,0 +1,69 @@
+--- kdebase-runtime-4.1.96/kurifilter-plugins/ikws/kuriikwsfiltereng.cpp.orig	2009-01-17 10:09:51.000000000 +0800
++++ kdebase-runtime-4.1.96/kurifilter-plugins/ikws/kuriikwsfiltereng.cpp	2009-01-23 17:48:48.000000000 +0800
+@@ -207,14 +207,64 @@
+   return l;
+ }
+ 
++static QString encode( const QString& segment, int encoding_hint )
++{
++  const char *encode_string = "@<>#\"&%?={}|^~[]\'`\\:+";
++
++  QByteArray local;
++  QTextCodec * textCodec = QTextCodec::codecForMib( encoding_hint );
++  if (!textCodec)
++    local = segment.toLocal8Bit();
++  else
++    local = textCodec->fromUnicode( segment );
++
++  int old_length = local.length();
++
++  if ( !old_length )
++    return segment.isNull() ? QString::null : QString(""); // differentiate null and empty
++
++  // a worst case approximation
++  QChar *new_segment = new QChar[ old_length * 3 + 1 ];
++  int new_length = 0;
++
++  for ( int i = 0; i < old_length; i++ )
++  {
++    // 'unsave' and 'reserved' characters
++    // according to RFC 1738,
++    // 2.2. URL Character Encoding Issues (pp. 3-4)
++    // WABA: Added non-ascii
++    unsigned char character = local[i];
++    if ( (character <= 32) || (character >= 127) ||
++         strchr(encode_string, character) )
++    {
++      new_segment[ new_length++ ] = '%';
++
++      unsigned int c = character / 16;
++      c += (c > 9) ? ('A' - 10) : '0';
++      new_segment[ new_length++ ] = c;
++
++      c = character % 16;
++      c += (c > 9) ? ('A' - 10) : '0';
++      new_segment[ new_length++ ] = c;
++
++    }
++    else
++      new_segment[ new_length++ ] = local.data()[i];
++  }
++
++  QString result = QString(new_segment, new_length);
++  delete [] new_segment;
++  return result;
++}
++
+ static QString encodeString(const QString &s, int mib)
+ {
+-  Q_UNUSED( mib ); // removed in KDE4/Qt4.
+   QStringList l = s.split(' ');
+   for(QStringList::Iterator it = l.begin();
+       it != l.end(); ++it)
+   {
+-     *it =  QLatin1String( QUrl::toPercentEncoding( *it ) ); //KUrl::encode_string(*it);
++     // convert from utf8 string to codechint encoded string
++     *it = encode( *it, mib );
+   }
+   return l.join("+");
+ }

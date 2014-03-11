@@ -1,0 +1,20 @@
+diff -up cmake-2.8.8/Modules/FindRuby.cmake.findruby cmake-2.8.8/Modules/FindRuby.cmake
+--- cmake-2.8.8/Modules/FindRuby.cmake.findruby	2012-04-18 12:10:54.000000000 -0600
++++ cmake-2.8.8/Modules/FindRuby.cmake	2012-05-21 10:36:19.206076083 -0600
+@@ -92,14 +92,8 @@ IF(RUBY_EXECUTABLE  AND NOT  RUBY_VERSIO
+    _RUBY_CONFIG_VAR("sitearchdir" RUBY_SITEARCH_DIR)
+    _RUBY_CONFIG_VAR("sitelibdir" RUBY_SITELIB_DIR)
+ 
+-   # vendor_ruby available ?
+-   EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r vendor-specific -e "print 'true'"
+-      OUTPUT_VARIABLE RUBY_HAS_VENDOR_RUBY  ERROR_QUIET)
+-
+-   IF(RUBY_HAS_VENDOR_RUBY)
+-      _RUBY_CONFIG_VAR("vendorlibdir" RUBY_VENDORLIB_DIR)
+-      _RUBY_CONFIG_VAR("vendorarchdir" RUBY_VENDORARCH_DIR)
+-   ENDIF(RUBY_HAS_VENDOR_RUBY)
++   _RUBY_CONFIG_VAR("vendorlibdir" RUBY_VENDORLIB_DIR)
++   _RUBY_CONFIG_VAR("vendorarchdir" RUBY_VENDORARCH_DIR)
+ 
+    # save the results in the cache so we don't have to run ruby the next time again
+    SET(RUBY_VERSION_MAJOR    ${RUBY_VERSION_MAJOR}    CACHE PATH "The Ruby major version" FORCE)

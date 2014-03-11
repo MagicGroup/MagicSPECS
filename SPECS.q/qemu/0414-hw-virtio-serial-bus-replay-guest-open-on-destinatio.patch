@@ -1,0 +1,54 @@
+From 5b6831175b21aa5a3405a21dd79e1ef0a81bbdb3 Mon Sep 17 00:00:00 2001
+From: Alon Levy <alevy@redhat.com>
+Date: Fri, 16 Nov 2012 16:24:47 +0200
+Subject: [PATCH 2/2] hw/virtio-serial-bus: replay guest open on destination
+
+This is rewrite of a patch carried in Fedora previously based
+on new code upstream, here is the original message, it still applies:
+(the original fedora patch was commit id
+a9bc20afc1f0604ee81c23b7c67d627e51d2e8d4, this is useful for grepping in
+logs, it isn't in upstream)
+
+When migrating a host with with a spice agent running the mouse becomes
+non operational after the migration. This is rhbz #725965.
+
+The problem is that after migration spice doesn't know the guest agent
+is open.  Spice is just a char dev here. And a chardev cannot query it's
+device, the device has to let the chardev know when it is open. Right
+now after migration the chardev which is recreated is in it's default
+state, which assumes the guest is disconnected.
+
+Char devices carry no information across migration, but the
+virtio-serial does already carry the guest_connected state. This patch
+passes that bit to the chardev.
+---
+ hw/virtio-serial-bus.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/hw/virtio-serial-bus.c b/hw/virtio-serial-bus.c
+index a028877..a6ec2df 100644
+--- a/hw/virtio-serial-bus.c
++++ b/hw/virtio-serial-bus.c
+@@ -641,6 +641,7 @@ static void virtio_serial_post_load_timer_cb(void *opaque)
+     VirtIOSerial *s = opaque;
+     VirtIOSerialPort *port;
+     uint8_t host_connected;
++    VirtIOSerialPortClass *vsc;
+ 
+     for (i = 0 ; i < s->post_load.nr_active_ports; ++i) {
+         port = s->post_load.connected[i].port;
+@@ -653,6 +654,11 @@ static void virtio_serial_post_load_timer_cb(void *opaque)
+             send_control_event(port, VIRTIO_CONSOLE_PORT_OPEN,
+                                port->host_connected);
+         }
++        vsc = VIRTIO_SERIAL_PORT_GET_CLASS(port);
++        if (port->guest_connected && vsc->guest_open) {
++            /* replay guest open */
++            vsc->guest_open(port);
++        }
+     }
+     g_free(s->post_load.connected);
+     s->post_load.connected = NULL;
+-- 
+1.8.0
+

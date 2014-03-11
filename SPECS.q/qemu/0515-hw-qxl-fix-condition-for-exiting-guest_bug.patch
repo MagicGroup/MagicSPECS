@@ -1,0 +1,29 @@
+From 73a691f6799e05afda0be01c1cd5e2f6914e8773 Mon Sep 17 00:00:00 2001
+From: Alon Levy <alevy@redhat.com>
+Date: Tue, 2 Oct 2012 11:39:14 +0200
+Subject: [PATCH 515/647] hw/qxl: fix condition for exiting guest_bug
+
+Reported and suggested by Paolo Bonzini, thanks.
+
+Signed-off-by: Alon Levy <alevy@redhat.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ hw/qxl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/hw/qxl.c b/hw/qxl.c
+index a2dd020..e3a164a 100644
+--- a/hw/qxl.c
++++ b/hw/qxl.c
+@@ -1461,7 +1461,7 @@ static void ioport_write(void *opaque, target_phys_addr_t addr,
+     qxl_async_io async = QXL_SYNC;
+     uint32_t orig_io_port = io_port;
+ 
+-    if (d->guest_bug && !io_port == QXL_IO_RESET) {
++    if (d->guest_bug && io_port != QXL_IO_RESET) {
+         return;
+     }
+ 
+-- 
+1.7.12.1
+

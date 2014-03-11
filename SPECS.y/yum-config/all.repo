@@ -1,0 +1,5 @@
+[all]
+name=Magic-2.5 - All
+repo=all
+baseurl=http://apt.magiclinux.org/magic/2.5/unstable/RPMS.all
+gpgcheck=0

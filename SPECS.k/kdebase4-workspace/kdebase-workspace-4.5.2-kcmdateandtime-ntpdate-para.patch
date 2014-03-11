@@ -1,0 +1,12 @@
+diff -Nuarp kdebase-workspace-4.5.2/kcontrol/dateandtime/helper.cpp kdebase-workspace-4.5.2/kcontrol/dateandtime/helper.cpp
+--- kdebase-workspace-4.5.2/kcontrol/dateandtime/helper.cpp	2010-10-16 05:04:16.000000000 -0400
++++ kdebase-workspace-4.5.2/kcontrol/dateandtime/helper.cpp	2010-10-16 05:05:27.000000000 -0400
+@@ -75,7 +75,7 @@ int ClockHelper::ntp( const QStringList&
+     }
+ 
+     KProcess proc;
+-    proc << ntpUtility << timeServer;
++    proc << ntpUtility << "-u" << timeServer;
+     if ( proc.execute() != 0 ) {
+       ret |= NTPError;
+     }

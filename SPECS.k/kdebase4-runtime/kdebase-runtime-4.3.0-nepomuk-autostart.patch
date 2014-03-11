@@ -1,0 +1,12 @@
+Index: nepomukserver.desktop
+===================================================================
+--- runtime/nepomuk/server/nepomukserver.desktop	(revision 989231)
++++ runtime/nepomuk/server/nepomukserver.desktop	(revision 989232)
+@@ -2,6 +2,7 @@
+ Type=Service
+ Exec=nepomukserver
+ X-KDE-StartupNotify=false
++X-KDE-autostart-condition=nepomukserverrc:Basic Settings:Start Nepomuk:true
+ OnlyShowIn=KDE;
+ X-KDE-autostart-phase=1
+ Name=Nepomuk Server

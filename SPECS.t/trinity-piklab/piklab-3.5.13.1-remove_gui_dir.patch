@@ -1,0 +1,7 @@
+--- piklab-3.5.13.1/src/progs/sdcdb/Makefile.am.ORI	2012-10-04 22:23:26.210470311 +0200
++++ piklab-3.5.13.1/src/progs/sdcdb/Makefile.am	2012-10-04 22:23:30.531371664 +0200
+@@ -1,3 +1,3 @@
+ INCLUDES = -I$(top_srcdir)/src $(all_includes)
+ METASOURCES = AUTO
+-SUBDIRS = base gui
++SUBDIRS = base

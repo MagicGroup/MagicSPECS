@@ -1,0 +1,304 @@
+diff -Nrup a/elf/dl-close.c b/elf/dl-close.c
+--- a/elf/dl-close.c	2012-06-30 13:12:34.000000000 -0600
++++ b/elf/dl-close.c	2012-08-20 11:07:56.027477028 -0600
+@@ -31,6 +31,7 @@
+ #include <sys/mman.h>
+ #include <sysdep-cancel.h>
+ #include <tls.h>
++#include <stap-probe.h>
+ 
+ 
+ /* Type of the constructor functions.  */
+@@ -468,6 +469,7 @@ _dl_close_worker (struct link_map *map)
+   struct r_debug *r = _dl_debug_initialize (0, nsid);
+   r->r_state = RT_DELETE;
+   _dl_debug_state ();
++  LIBC_PROBE (unmap_start, 2, nsid, r);
+ 
+   if (unload_global)
+     {
+@@ -484,7 +486,7 @@ _dl_close_worker (struct link_map *map)
+ 	/* Speed up removing most recently added objects.  */
+ 	j = cnt;
+       else
+- 	for (i = 0; i < cnt; i++)
++	for (i = 0; i < cnt; i++)
+ 	  if (ns_msl->r_list[i]->l_removed == 0)
+ 	    {
+ 	      if (i != j)
+@@ -640,6 +642,10 @@ _dl_close_worker (struct link_map *map)
+ 	      assert (nsid != LM_ID_BASE);
+ #endif
+ 	      ns->_ns_loaded = imap->l_next;
++
++	      /* Update the pointer to the head of the list
++		 we leave for debuggers to examine.  */
++	      r->r_map = (void *) ns->_ns_loaded;
+ 	    }
+ 
+ 	  --ns->_ns_nloaded;
+@@ -737,6 +743,7 @@ _dl_close_worker (struct link_map *map)
+   /* Notify the debugger those objects are finalized and gone.  */
+   r->r_state = RT_CONSISTENT;
+   _dl_debug_state ();
++  LIBC_PROBE (unmap_complete, 2, nsid, r);
+ 
+   /* Recheck if we need to retry, release the lock.  */
+  out:
+diff -Nrup a/elf/dl-load.c b/elf/dl-load.c
+--- a/elf/dl-load.c	2012-08-20 11:05:53.042962577 -0600
++++ b/elf/dl-load.c	2012-08-20 11:06:30.009816633 -0600
+@@ -35,6 +35,7 @@
+ #include <stackinfo.h>
+ #include <caller.h>
+ #include <sysdep.h>
++#include <stap-probe.h>
+ 
+ #include <dl-dst.h>
+ 
+@@ -880,7 +881,7 @@ _dl_init_paths (const char *llp)
+ static void
+ __attribute__ ((noreturn, noinline))
+ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
+-      const char *msg, struct r_debug *r)
++      const char *msg, struct r_debug *r, Lmid_t nsid)
+ {
+   /* The file might already be closed.  */
+   if (fd != -1)
+@@ -894,6 +895,7 @@ lose (int code, int fd, const char *name
+     {
+       r->r_state = RT_CONSISTENT;
+       _dl_debug_state ();
++      LIBC_PROBE (map_failed, 2, nsid, r);
+     }
+ 
+   _dl_signal_error (code, name, NULL, msg);
+@@ -932,7 +934,7 @@ _dl_map_object_from_fd (const char *name
+       errval = errno;
+     call_lose:
+       lose (errval, fd, name, realname, l, errstring,
+-	    make_consistent ? r : NULL);
++	    make_consistent ? r : NULL, nsid);
+     }
+ 
+   /* Look again to see if the real name matched another already loaded.  */
+@@ -1039,6 +1041,7 @@ _dl_map_object_from_fd (const char *name
+ 	 linking has not been used before.  */
+       r->r_state = RT_ADD;
+       _dl_debug_state ();
++      LIBC_PROBE (map_start, 2, nsid, r);
+       make_consistent = true;
+     }
+   else
+@@ -1744,7 +1747,7 @@ open_verify (const char *name, struct fi
+ 	      name = strdupa (realname);
+ 	      free (realname);
+ 	    }
+-	  lose (errval, fd, name, NULL, NULL, errstring, NULL);
++	  lose (errval, fd, name, NULL, NULL, errstring, NULL, 0);
+ 	}
+ 
+       /* See whether the ELF header is what we expect.  */
+diff -Nrup a/elf/dl-open.c b/elf/dl-open.c
+--- a/elf/dl-open.c	2012-06-30 13:12:34.000000000 -0600
++++ b/elf/dl-open.c	2012-08-20 11:06:30.010816629 -0600
+@@ -32,6 +32,7 @@
+ #include <caller.h>
+ #include <sysdep-cancel.h>
+ #include <tls.h>
++#include <stap-probe.h>
+ 
+ #include <dl-dst.h>
+ 
+@@ -291,6 +292,7 @@ dl_open_worker (void *a)
+   struct r_debug *r = _dl_debug_initialize (0, args->nsid);
+   r->r_state = RT_CONSISTENT;
+   _dl_debug_state ();
++  LIBC_PROBE (map_complete, 3, args->nsid, r, new);
+ 
+   /* Print scope information.  */
+   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES, 0))
+@@ -376,10 +378,19 @@ dl_open_worker (void *a)
+ 	}
+     }
+ 
++  int relocation_in_progress = 0;
++
+   for (size_t i = nmaps; i-- > 0; )
+     {
+       l = maps[i];
+ 
++      if (! relocation_in_progress)
++	{
++	  /* Notify the debugger that relocations are about to happen.  */
++	  LIBC_PROBE (reloc_start, 2, args->nsid, r);
++	  relocation_in_progress = 1;
++	}
++
+ #ifdef SHARED
+       if (__builtin_expect (GLRO(dl_profile) != NULL, 0))
+ 	{
+@@ -544,6 +555,10 @@ cannot load any more object with static
+ 	}
+     }
+ 
++  /* Notify the debugger all new objects have been relocated.  */
++  if (relocation_in_progress)
++    LIBC_PROBE (reloc_complete, 3, args->nsid, r, new);
++
+   /* Run the initializer functions of new objects.  */
+   _dl_init (new, args->argc, args->argv, args->env);
+ 
+diff -Nrup a/elf/rtld-debugger-interface.txt b/elf/rtld-debugger-interface.txt
+--- a/elf/rtld-debugger-interface.txt	1969-12-31 17:00:00.000000000 -0700
++++ b/elf/rtld-debugger-interface.txt	2012-08-20 11:06:30.011816625 -0600
+@@ -0,0 +1,122 @@
++Standard debugger interface
++===========================
++
++The run-time linker exposes a rendezvous structure to allow debuggers
++to interface with it.  This structure, r_debug, is defined in link.h.
++If the executable's dynamic section has a DT_DEBUG element, the
++run-time linker sets that element's value to the address where this
++structure can be found.
++
++The r_debug structure contains (amongst others) the following fields:
++
++  struct link_map *r_map:
++    A linked list of loaded objects.
++
++  enum { RT_CONSISTENT, RT_ADD, RT_DELETE } r_state:
++    The current state of the r_map list.  RT_CONSISTENT means that r_map
++    is not currently being modified and may safely be inspected.  RT_ADD
++    means that an object is being added to r_map, and that the list is
++    not guaranteed to be consistent.  Likewise RT_DELETE means that an
++    object is being removed from the list.
++
++  ElfW(Addr) r_brk:
++    The address of a function internal to the run-time linker which is
++    called whenever r_state is changed.  The debugger should set a
++    breakpoint at this address if it wants to notice mapping changes.
++
++This protocol is widely supported, but somewhat limited in that it
++has no provision to provide access to multiple namespaces, and that
++the notifications (via r_brk) only refer to changes to r_map--the
++debugger is notified that a new object has been added, for instance,
++but there is no way for the debugger to discover whether any of the
++objects in the link-map have been relocated or not.
++
++
++Probe-based debugger interface
++==============================
++
++Systemtap is a dynamic tracing/instrumenting tool available on Linux.
++Probes that are not fired at run time have close to zero overhead.
++glibc contains a number of probes that debuggers can set breakpoints
++on in order to notice certain events.
++
++All rtld probes have the following arguments:
++
++  arg1: Lmid_t lmid:
++    The link-map ID of the link-map list that the object was loaded
++    into.  This will be LM_ID_BASE for the application's main link-map
++    list, or some other value for different namespaces.
++
++  arg2: struct r_debug *r_debug:
++    A pointer to the r_debug structure containing the link-map list
++    that the object was loaded into.  This will be the value stored in
++    DT_DEBUG for the application's main link-map list, or some other
++    value for different namespaces.
++
++map_complete and reloc_complete may have the following additional
++argument:
++
++  arg3: struct link_map *new:
++    A pointer which, if not NULL, points to the entry in the specified
++    r_debug structure's link-map list corresponding to the first new
++    object to have been mapped or relocated, with new->l_next pointing
++    to the link-map of the next new object to have been mapped or
++    relocated, and so on.  Note that because `new' is an entry in a
++    larger list, new->l_prev (if not NULL) will point to what was the
++    last link-map in the link-map list prior to the new objects being
++    mapped or relocated.
++
++The following probes are available:
++
++  init_start:
++    This is called once, when the linker is about to fill in the main
++    r_debug structure at application startup.  init_start always has
++    lmid set to LM_ID_BASE and r_debug set to the value stored in
++    DT_DEBUG.  r_debug is not guaranteed to be consistent until
++    init_complete is fired.
++
++  init_complete:
++    This is called once, when the linker has filled in the main
++    r_debug structure at application startup. init_complete always
++    has lmid set to LM_ID_BASE and r_debug set to the value stored
++    in DT_DEBUG.  The r_debug structure is consistent and may be
++    inspected, and all objects in the link-map are guaranteed to
++    have been relocated.
++
++  map_start:
++    The linker is about to map new objects into the specified
++    namespace.  The namespace's r_debug structure is not guaranteed
++    to be consistent until a corresponding map_complete is fired.
++
++  map_complete:
++    The linker has finished mapping new objects into the specified
++    namespace.  The namespace's r_debug structure is consistent and
++    may be inspected, although objects in the namespace's link-map
++    are not guaranteed to have been relocated.
++
++  map_failed:
++    The linker failed while attempting to map new objects into
++    the specified namespace.  The namespace's r_debug structure
++    is consistent and may be inspected.
++
++  reloc_start:
++    The linker is about to relocate all unrelocated objects in the
++    specified namespace.  The namespace's r_debug structure is not
++    guaranteed to be consistent until a corresponding reloc_complete
++    is fired.
++
++  reloc_complete:
++    The linker has relocated all objects in the specified namespace.
++    The namespace's r_debug structure is consistent and may be
++    inspected, and all objects in the namespace's link-map are
++    guaranteed to have been relocated.
++
++  unmap_start:
++    The linker is about to remove objects from the specified
++    namespace.  The namespace's r_debug structure is not guaranteed to
++    be consistent until a corresponding unmap_complete is fired.
++
++  unmap_complete:
++    The linker has finished removing objects into the specified
++    namespace.  The namespace's r_debug structure is consistent and
++    may be inspected.
+diff -Nrup a/elf/rtld.c b/elf/rtld.c
+--- a/elf/rtld.c	2012-08-20 11:05:52.905963117 -0600
++++ b/elf/rtld.c	2012-08-20 11:06:30.016816605 -0600
+@@ -39,6 +39,7 @@
+ #include <dl-osinfo.h>
+ #include <dl-procinfo.h>
+ #include <tls.h>
++#include <stap-probe.h>
+ #include <stackinfo.h>
+ 
+ #include <assert.h>
+@@ -1681,6 +1682,7 @@ ERROR: ld.so: object '%s' cannot be load
+   /* We start adding objects.  */
+   r->r_state = RT_ADD;
+   _dl_debug_state ();
++  LIBC_PROBE (init_start, 2, LM_ID_BASE, r);
+ 
+   /* Auditing checkpoint: we are ready to signal that the initial map
+      is being constructed.  */
+@@ -2399,6 +2401,7 @@ ERROR: ld.so: object '%s' cannot be load
+   r = _dl_debug_initialize (0, LM_ID_BASE);
+   r->r_state = RT_CONSISTENT;
+   _dl_debug_state ();
++  LIBC_PROBE (init_complete, 2, LM_ID_BASE, r);
+ 
+ #ifndef MAP_COPY
+   /* We must munmap() the cache file.  */

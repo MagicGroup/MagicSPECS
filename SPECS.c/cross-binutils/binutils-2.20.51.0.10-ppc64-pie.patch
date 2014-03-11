@@ -1,0 +1,14 @@
+*** ../binutils-2.23.51.0.2.orig/bfd/elf64-ppc.c	2012-09-11 12:13:00.637448573 +0100
+--- bfd/elf64-ppc.c	2012-09-11 12:13:17.922449052 +0100
+*************** ppc64_elf_relocate_section (bfd *output_
+*** 13523,13528 ****
+--- 13523,13531 ----
+  		{
+  		  BFD_ASSERT (h->elf.dynindx != -1);
+  		  outrel.r_info = ELF64_R_INFO (h->elf.dynindx, r_type);
++ 		  if (h->elf.dynindx == -1
++ 		      && h->elf.root.type == bfd_link_hash_undefweak)
++ 		    memset (&outrel, 0, sizeof outrel);
+  		}
+  	      else
+  		{

@@ -1,0 +1,34 @@
+From 84f7e2e5ac18dd130d1656b677d40ebdd7cda9a1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 22 Dec 2010 10:18:17 +0100
+Subject: [PATCH] Install info pages non-executable
+
+---
+ Makefile.in |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 8f37d05..c513d0c 100755
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -709,7 +709,7 @@ yap.dll:  libYap.a
+ install_info:
+ 	$(MAKE) info; \
+ 	mkdir -p $(DESTDIR)$(INFODIR); \
+-	$(INSTALL) yap.info* $(DESTDIR)$(INFODIR); \
++	$(INSTALL_DATA) yap.info* $(DESTDIR)$(INFODIR); \
+ 	if test -e $(DESTDIR)$(INFODIR)/emacs.bz2; then \
+ 	  bzip2 --quiet --force $(DESTDIR)$(INFODIR)/yap.info*; \
+ 	else \
+@@ -719,7 +719,7 @@ install_info:
+ 	fi; \
+ 	$(INSTALL_INFO) --quiet --section "Programming Languages" yap.info $(DESTDIR)$(INFODIR)/dir; \
+ 	cd $(srcdir)/LGPL/pillow/doc ; \
+-	$(INSTALL) pillow_doc.info $(DESTDIR)$(INFODIR); \
++	$(INSTALL_DATA) pillow_doc.info $(DESTDIR)$(INFODIR); \
+ 	if test -e $(DESTDIR)$(INFODIR)/emacs.bz2; then \
+ 	  bzip2 --quiet --force $(DESTDIR)$(INFODIR)/pillow_doc.info; \
+ 	else \
+-- 
+1.7.3.4
+

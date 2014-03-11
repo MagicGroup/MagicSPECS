@@ -1,0 +1,21 @@
+diff -ur kde-baseapps-4.10.3.orig/dolphin/src/settings/dolphin_generalsettings.kcfg kde-baseapps-4.10.3/dolphin/src/settings/dolphin_generalsettings.kcfg
+--- kde-baseapps-4.10.3.orig/dolphin/src/settings/dolphin_generalsettings.kcfg	2013-05-31 16:58:24.000000000 +0000
++++ kde-baseapps-4.10.3/dolphin/src/settings/dolphin_generalsettings.kcfg	2013-05-31 17:00:16.000000000 +0000
+@@ -67,7 +67,7 @@
+         </entry>
+         <entry name="ShowCopyMoveMenu" type="Bool">
+             <label>Show 'Copy To' and 'Move To' commands in context menu</label>
+-            <default>false</default>
++            <default>true</default>
+         </entry>
+         <entry name="ViewPropsTimestamp" type="DateTime" >
+             <label>Timestamp since when the view properties are valid</label>
+@@ -82,7 +82,7 @@
+         </entry>
+         <entry name="ShowSpaceInfo" type="Bool">
+             <label>Show the space information in the statusbar</label>
+-            <default>false</default>
++            <default>true</default>
+         </entry>
+         <entry name="LockPanels" type="Bool">
+             <label>Lock the layout of the panels</label>

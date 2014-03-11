@@ -1,0 +1,16 @@
+Fedora's openssl is patched to keep OPENSSL_VERSION_NUMBER stable
+to give the appearance of ABI stability, which breaks tests like
+this one; fortunately it's safe to roll back the version number
+in a way that works with genuine 1.0.0 releases.
+
+--- IO-Socket-SSL/t/dhe.t
++++ IO-Socket-SSL/t/dhe.t
+@@ -35,7 +35,7 @@
+     # openssl 1.0.1(beta2) complains about the rsa key too small, unless
+     # we explicitly set version to tlsv1 or sslv3
+     # unfortunatly the workaround fails for older openssl versions :(
+-    (Net::SSLeay::OPENSSL_VERSION_NUMBER() >= 0x10001000)
++    (Net::SSLeay::OPENSSL_VERSION_NUMBER() >= 0x10000000)
+         ? ( SSL_version   => 'tlsv1' ):()
+ ) || do {
+     notok($!);

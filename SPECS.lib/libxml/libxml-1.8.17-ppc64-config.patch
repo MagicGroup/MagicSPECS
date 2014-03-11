@@ -1,0 +1,25 @@
+--- libxml-1.8.17/config.guess	2002-01-23 22:49:14.000000000 +0000
++++ libxml-1.8.17/config.guess	2008-05-21 10:53:14.000000000 +0100
+@@ -811,6 +811,9 @@
+ 	rm -f $dummy.c $dummy
+ 	echo powerpc-unknown-linux-gnu${LIBC}
+ 	exit 0 ;;
++    ppc64:Linux:*:*)
++	echo powerpc64-unknown-linux-gnu
++	exit ;;
+     alpha:Linux:*:*)
+ 	cat <<EOF >$dummy.s
+ 	  .data
+--- libxml-1.8.17/config.sub	2002-01-23 22:49:14.000000000 +0000
++++ libxml-1.8.17/config.sub	2008-05-21 11:25:57.000000000 +0100
+@@ -721,6 +721,10 @@
+ 	        ;;
+ 	ppc-*)	basic_machine=powerpc-`echo $basic_machine | sed 's/^[^-]*-//'`
+ 		;;
++	ppc64)  basic_machine=powerpc64-unknown
++		;;
++	ppc64-*) basic_machine=powerpc64-`echo $basic_machine | sed 's/^[^-]*-//'`
++		;;
+ 	ppcle | powerpclittle | ppc-le | powerpc-little)
+ 		basic_machine=powerpcle-unknown
+ 	        ;;

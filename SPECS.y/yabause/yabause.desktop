@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Yabause
+GenericName=Sega Saturn Emulator
+Comment=A Sega Saturn emulator
+Exec=yabause
+Icon=yabause
+Terminal=false
+Type=Application
+Categories=Game;Emulator;

@@ -1,0 +1,13 @@
+diff -u -r apt-0.5.15lorg3.94a.orig/etc/rpmpriorities apt-0.5.15lorg3.94a/etc/rpmpriorities
+--- apt-0.5.15lorg3.94a.orig/etc/rpmpriorities	2008-01-25 15:19:22.000000000 +0800
++++ apt-0.5.15lorg3.94a/etc/rpmpriorities	2008-01-25 18:45:22.000000000 +0800
+@@ -9,6 +9,7 @@
+   initscripts
+   module-init-tools
+   pam
++  magic-release
+   rpm
+   setup
+   util-linux
+Only in apt-0.5.15lorg3.94a/etc: rpmpriorities.orig
+Only in apt-0.5.15lorg3.94a/etc: rpmpriorities.rej

@@ -1,0 +1,76 @@
+diff -up libtpcmisc/include/memory_handler.h.shared libtpcmisc/include/memory_handler.h
+--- libtpcmisc/include/memory_handler.h.shared	2010-03-24 07:53:57.000000000 -0400
++++ libtpcmisc/include/memory_handler.h	2011-08-08 14:11:39.726676115 -0400
+@@ -8,6 +8,7 @@
+ #define DEBUG_BUFFER_BORDER 256
+ /*#define DEBUG_MEMORY*/
+ #define DEBUG_BUFFER_VALUE 69
++#define DEBUG 0
+ 
+ int init_memory_handler();
+ void* allocate_memory( int size );
+diff -up libtpcmisc/Makefile.shared libtpcmisc/Makefile
+--- libtpcmisc/Makefile.shared	2010-10-27 08:49:40.000000000 -0400
++++ libtpcmisc/Makefile	2011-08-08 14:12:39.759914041 -0400
+@@ -42,9 +42,12 @@ SOURCES 	= substitutions.c backup.c idcr
+                   petunits.c datetime.c memory_handler.c libtpcmiscv.c
+ OBJECTS 	= ${SOURCES:.c=.o}
+ LIBARCHIVE	= ${LIBRARY}.a
++SHLIBSHORT	= ${LIBRARY}.so
++SHLIBMAJOR	= ${SHLIBSHORT}.0
++SHLIBARCHIVE	= ${SHLIBMAJOR}.0.0
+ DOXYGEN		= doxygen
+ CC		= gcc
+-CFLAGS 		= -std=gnu99 -s -Wall -O2 ${INCLUDE} ${ANSI}
++CFLAGS 		= -std=gnu99 -s -Wall -O2 ${INCLUDE} ${ANSI} -fPIC -DPIC
+ LIBS 		= ${LDFLAGS} -ltpcmisc -L.
+ ZIP		= zip
+ PRVERS		= progvers -opt=-b
+@@ -61,14 +64,20 @@ endif
+ LIBEXEC 	= ${LIBRARY}${EXT}
+ 
+ # ------------- Compilation: --------------------------------------------------#
+-compile: ${LIBARCHIVE} ${LIBEXEC}
++compile: ${LIBARCHIVE} ${SHLIBARCHIVE} ${LIBEXEC}
+ 
+-# Compile library
++# Compile static library
+ ${LIBARCHIVE}: ${OBJECTS}
+ 	${AR} -rvs ${LIBARCHIVE} ${OBJECTS}
+ 
++# Compile shared library
++${SHLIBARCHIVE}: ${OBJECTS}
++	${CC} -shared -o $@ ${OBJECTS} -Wl,-soname=${SHLIBMAJOR} -lm
++	ln -s ${SHLIBARCHIVE} ${SHLIBMAJOR}
++	ln -s ${SHLIBARCHIVE} ${SHLIBSHORT}
++
+ # Compile executable
+-${LIBEXEC}: ${LIBARCHIVE} ${LIBRARY}.c
++${LIBEXEC}: ${SHLIBARCHIVE} ${LIBRARY}.c
+ 	${CC} ${LIBRARY}.c -o ${LIBEXEC}  ${CFLAGS} ${LIBS}
+ 
+ ifneq ($(OS),Windows_NT)
+@@ -84,8 +93,9 @@ ${LIBRARY}.version: ${LIBEXEC}
+ # ------------- Installation: -------------------------------------------------#
+ install: libversion libinstall execinstall
+ 
+-libinstall: ${LIBARCHIVE}
++libinstall: ${LIBARCHIVE} ${SHAREDLIBARCHIVE}
+ 	${ADDDATE} -i=${LIBRARY}.version -o=${PET_LIB} -nodate -copy ${LIBARCHIVE}
++	${ADDDATE} -i=${LIBRARY}.version -o=${PET_LIB} -nodate -copy ${SHLIBARCHIVE}
+ 
+ execinstall: ${LIBEXEC}
+ 	${ADDDATE} -i=${LIBRARY}.version -o=${PET_BIN} -nodate -copy ${LIBEXEC}
+diff -up libtpcmisc/memory_handler.c.shared libtpcmisc/memory_handler.c
+--- libtpcmisc/memory_handler.c.shared	2010-03-24 07:53:57.000000000 -0400
++++ libtpcmisc/memory_handler.c	2011-08-08 14:11:39.726676115 -0400
+@@ -60,9 +60,6 @@
+ 
+ #include "include/memory_handler.h"
+ 
+-extern int DEBUG;
+-
+-
+ /** Structure for one-way list to keep track of used memory */
+ struct Memory_handler {
+    /** Pointer to next structure */

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Epydoc
+Comment=Python API documentation generator
+Exec=epydocgui
+Type=Application
+Terminal=false
+Categories=Application;Development;

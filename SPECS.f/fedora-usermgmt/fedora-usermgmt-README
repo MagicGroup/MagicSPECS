@@ -1,0 +1,61 @@
+Please see http://fedoraproject.org/wiki/PackageUserCreation for a
+more complete documentation of the fedora-usermgmt tools.
+
+
+
+This package provides wrappers around useradd, userdel, groupadd and
+groupdel to allow predictable but configurable uids/gids. The syntax
+of these wrappers is:
+
+* fedora-useradd  <hint-uid> <options>+
+* fedora-userdel  <options>+
+* fedora-groupadd <hint-gid> <options>+
+* fedora-groupdel <option>+
+
+'<options>' are arguments understood by the shadow-utils programs
+also. The '<hint-uid>'/'<hint-gid>' parameters of the fedora-*add
+wrappers are relative UID/GID. E.g.
+
+| fedora-useradd 42 -r -d /home/joe joe
+
+will create the user 'joe' having '/home/joe' as homedirectory. The
+number '42' specifies an UID which is added to a configured, system-wide
+base. By default, this base is '300' so that 'joe' will have the uid
+342.
+
+
+The base can be configured by putting a single integer value into
+
+* /etc/fedora/usermgmt/baseuid for bases of uids, and
+* /etc/fedora/usermgmt/basegid for bases of gids
+
+As hinted above, both values default to '300'.
+
+
+
+This package requires customizations for the used backend programs
+(e.g. useradd from shadow-utils). This is done by putting executable
+files or links into /etc/fedora/usermgmt/scripts/ which are named like
+the backend programs (useradd/-del, ...) and get called with the same
+arguments like the fedora-* wrappers but with already expanded UID/GID
+numbers.
+
+For shadow-utils, such an /etc/fedora/usermgmt/scripts/useradd
+executable could be:
+
+| #! /bin/sh
+| u=$1
+| shift
+| exec /usr/sbin/useradd -u "$u" "$@"
+
+
+
+This package supports logging of the executed commands and their
+output; a 'log' symlink must be created in /etc/fedora/usermgmt to
+enable this feature; e.g. with
+
+| # ln -s /var/log/usermgmt /etc/fedora/usermgmt/log
+| # touch /var/log/usermgmt
+
+
+Comments and complaints should be reported at http://bugzilla.redhat.com.

@@ -1,0 +1,157 @@
+From ac3447ab680ef5319717fc6b85a4c5b22e652e5e Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Fri, 7 Dec 2012 17:01:42 -0800
+Subject: iscsiadm, iscsid: newroot command to survive switch_root
+
+When started from initramfs, iscsid needs to be able to chroot itself
+to the runtime filesystem before the switch_root occurs.  In the
+initramfs "iscsiadm --newroot {root fs mount before switch}" should be
+called before the switch_root.
+
+Signed-off-by: Chris Leech <cleech@redhat.com>
+---
+ usr/iscsiadm.c | 30 ++++++++++++++++++++++++++++++
+ usr/mgmt_ipc.c | 11 +++++++++++
+ usr/mgmt_ipc.h |  6 +++++-
+ 3 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/usr/iscsiadm.c b/usr/iscsiadm.c
+index 8f9de05..323d0a8 100644
+--- a/usr/iscsiadm.c
++++ b/usr/iscsiadm.c
+@@ -111,6 +111,7 @@ static struct option const long_options[] =
+ 	{"packetsize", required_argument, NULL, 'b'},
+ 	{"count", required_argument, NULL, 'c'},
+ 	{"interval", required_argument, NULL, 'i'},
++	{"newroot", required_argument, NULL, 0},
+ 	{NULL, 0, NULL, 0},
+ };
+ static char *short_options = "RlDVhm:a:b:c:C:p:P:T:H:i:I:U:k:L:d:r:n:v:o:sSt:u";
+@@ -131,6 +132,7 @@ iscsiadm -m session [ -hV ] [ -d debug_level ] [ -P  printlevel] [ -r sessionid
+ iscsiadm -m iface [ -hV ] [ -d debug_level ] [ -P printlevel ] [ -I ifacename | -H hostno|MAC ] [ [ -o  operation  ] [ -n name ] [ -v value ] ] [ -C ping [ -a ip ] [ -b packetsize ] [ -c count ] [ -i interval ] ]\n\
+ iscsiadm -m fw [ -l ]\n\
+ iscsiadm -m host [ -P printlevel ] [ -H hostno|MAC ] [ -C chap [ -o operation ] [ -v chap_tbl_idx ] ]\n\
++iscsiadm --newroot switch_root_path\n\
+ iscsiadm -k priority\n");
+ 	}
+ 	exit(status);
+@@ -251,6 +253,22 @@ static void kill_iscsid(int priority)
+ 	}
+ }
+ 
++static void do_newroot(char *newroot)
++{
++	iscsiadm_req_t req;
++	iscsiadm_rsp_t rsp;
++	int rc;
++
++	memset(&req, 0, sizeof(req));
++	req.command = MGMT_IPC_NEWROOT;
++	strncpy(req.u.newroot.path, newroot, PATH_MAX);
++	rc = iscsid_exec_req(&req, &rsp, 0);
++	if (rc) {
++		iscsi_err_print_msg(rc);
++		log_error("Could not send NEWROOT command");
++	}
++}
++
+ /*
+  * TODO: we can display how the ifaces are related to node records.
+  * And we can add a scsi_host mode which would display how
+@@ -2397,6 +2415,7 @@ main(int argc, char **argv)
+ {
+ 	char *ip = NULL, *name = NULL, *value = NULL;
+ 	char *targetname = NULL, *group_session_mgmt_mode = NULL;
++	char *newroot = NULL;
+ 	int ch, longindex, mode=-1, port=-1, do_login=0, do_rescan=0;
+ 	int rc=0, sid=-1, op=OP_NOOP, type=-1, do_logout=0, do_stats=0;
+ 	int do_login_all=0, do_logout_all=0, info_level=-1, num_ifaces = 0;
+@@ -2433,6 +2452,12 @@ main(int argc, char **argv)
+ 	while ((ch = getopt_long(argc, argv, short_options,
+ 				 long_options, &longindex)) >= 0) {
+ 		switch (ch) {
++		case 0:
++			if (long_options[longindex].flag != 0)
++				break;
++			if (!strcmp(long_options[longindex].name, "newroot"))
++				newroot = optarg;
++			break;
+ 		case 'k':
+ 			killiscsid = atoi(optarg);
+ 			if (killiscsid < 0) {
+@@ -2579,6 +2604,11 @@ main(int argc, char **argv)
+ 		goto free_ifaces;
+ 	}
+ 
++	if (newroot) {
++		do_newroot(newroot);
++		goto free_ifaces;
++	}
++
+ 	if (mode < 0)
+ 		usage(ISCSI_ERR_INVAL);
+ 
+diff --git a/usr/mgmt_ipc.c b/usr/mgmt_ipc.c
+index 87bd346..5cb7143 100644
+--- a/usr/mgmt_ipc.c
++++ b/usr/mgmt_ipc.c
+@@ -226,6 +226,16 @@ mgmt_ipc_immediate_stop(queue_task_t *qtask)
+ }
+ 
+ static int
++mgmt_ipc_newroot(queue_task_t *qtask)
++{
++	char *newroot = qtask->req.u.newroot.path;
++	if (chdir(newroot) || chroot(".") || chdir("/"))
++		return ISCSI_ERR;
++	mgmt_ipc_write_rsp(qtask, ISCSI_SUCCESS);
++	return ISCSI_SUCCESS;
++}
++
++static int
+ mgmt_ipc_conn_remove(queue_task_t *qtask)
+ {
+ 	return ISCSI_ERR;
+@@ -534,6 +544,7 @@ static mgmt_ipc_fn_t *	mgmt_ipc_functions[__MGMT_IPC_MAX_COMMAND] = {
+ [MGMT_IPC_NOTIFY_DEL_NODE]	= mgmt_ipc_notify_del_node,
+ [MGMT_IPC_NOTIFY_ADD_PORTAL]	= mgmt_ipc_notify_add_portal,
+ [MGMT_IPC_NOTIFY_DEL_PORTAL]	= mgmt_ipc_notify_del_portal,
++[MGMT_IPC_NEWROOT]		= mgmt_ipc_newroot,
+ };
+ 
+ void mgmt_ipc_handle(int accept_fd)
+diff --git a/usr/mgmt_ipc.h b/usr/mgmt_ipc.h
+index 55972ed..102ffff 100644
+--- a/usr/mgmt_ipc.h
++++ b/usr/mgmt_ipc.h
+@@ -22,6 +22,7 @@
+ #include "types.h"
+ #include "iscsi_if.h"
+ #include "config.h"
++#include "limits.h"
+ 
+ #define ISCSIADM_NAMESPACE	"ISCSIADM_ABSTRACT_NAMESPACE"
+ #define PEERUSER_MAX		64
+@@ -46,6 +47,7 @@ typedef enum iscsiadm_cmd {
+ 	MGMT_IPC_NOTIFY_DEL_NODE	= 17,
+ 	MGMT_IPC_NOTIFY_ADD_PORTAL	= 18,
+ 	MGMT_IPC_NOTIFY_DEL_PORTAL	= 19,
++	MGMT_IPC_NEWROOT		= 20,
+ 
+ 	__MGMT_IPC_MAX_COMMAND
+ } iscsiadm_cmd_e;
+@@ -75,8 +77,10 @@ typedef struct iscsiadm_req {
+ 			int param;
+ 			/* TODO: make this variable len to support */
+ 			char value[IFNAMSIZ + 1];
+-
+ 		} set_host_param;
++		struct ipc_msg_newroot {
++			char path[PATH_MAX + 1];
++		} newroot;
+ 	} u;
+ } iscsiadm_req_t;
+ 
+-- 
+1.7.11.7
+

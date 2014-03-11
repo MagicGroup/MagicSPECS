@@ -1,0 +1,45 @@
+diff -up graphviz-2.34.0/cmd/lefty/os/unix/io.c.orig graphviz-2.34.0/cmd/lefty/os/unix/io.c
+--- graphviz-2.34.0/cmd/lefty/os/unix/io.c.orig	2013-09-07 03:07:52.000000000 +0200
++++ graphviz-2.34.0/cmd/lefty/os/unix/io.c	2013-10-30 17:38:59.746296595 +0100
+@@ -285,9 +285,8 @@ int IOwriteline (int ioi, char *bufp) {
+ 
+ static FILE *serverconnect (char *name) {
+     char *host, *portp, buf[1024];
+-    int port;
+-    struct hostent *hp;
+-    struct sockaddr_in sin;
++    struct addrinfo *ai;
++    struct addrinfo hints;
+     int cfd;
+ 
+     strcpy (buf, name);
+@@ -295,17 +294,18 @@ static FILE *serverconnect (char *name)
+     portp = strchr (host, '/');
+     if (*host == 0 || !portp)
+         return NULL;
+-    *portp++ = 0, port = atoi (portp);
+-    if (!(hp = gethostbyname (host)))
+-        return NULL;
+-    memset ((char *) &sin, 1, sizeof (sin));
+-    memcpy ((char *) &sin.sin_addr, hp->h_addr, hp->h_length);
+-    sin.sin_family = hp->h_addrtype;
+-    sin.sin_port = htons (port);
+-    if ((cfd = socket (hp->h_addrtype, SOCK_STREAM, 0)) < 0)
+-        return NULL;
+-    if (connect (cfd, (struct sockaddr *) &sin, sizeof (sin)) < 0)
+-        return NULL;
++    *portp++ = 0;
++    memset (&hints, 0, sizeof (hints));
++    hints.ai_family = AF_UNSPEC;
++    hints.ai_flags = AI_ADDRCONFIG | AI_NUMERICSERV;
++    hints.ai_socktype = SOCK_STREAM;
++    if (getaddrinfo (host, portp, &hints, &ai))
++        return freeaddrinfo(ai), NULL;
++    if ((cfd = socket (ai->ai_family, ai->ai_socktype, ai->ai_protocol)) < 0)
++        return freeaddrinfo(ai), NULL;
++    if (connect (cfd, ai->ai_addr, ai->ai_addrlen) < 0)
++        return freeaddrinfo(ai), NULL;
++    freeaddrinfo(ai);
+     return fdopen (cfd, "w+");
+ }
+ 

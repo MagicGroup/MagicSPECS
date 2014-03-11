@@ -1,0 +1,34 @@
+diff --git a/icotool/main.c b/icotool/main.c
+--- a/icotool/main.c
++++ b/icotool/main.c
+@@ -17,6 +17,7 @@
+  */
+ 
+ #include <config.h>
++#include <locale.h>
+ #include <unistd.h>		/* POSIX */
+ #include <errno.h>		/* C89 */
+ #include <stdio.h>		/* C89 */
+diff --git a/wrestool/extract.c b/wrestool/extract.c
+--- a/wrestool/extract.c
++++ b/wrestool/extract.c
+@@ -172,7 +172,7 @@
+ 		    if (iconsize != icondir->entries[c].bytes_in_res) {
+ 			warn(_("%s: mismatch of size in icon resource `%s' and group (%d vs %d)"), fi->name, name, iconsize, icondir->entries[c].bytes_in_res);
+ 		    }
+-		    size += iconsize; /* size += icondir->entries[c].bytes_in_res; */
++		    size += iconsize < icondir->entries[c].bytes_in_res ? icondir->entries[c].bytes_in_res : iconsize;
+ 
+ 		    /* cursor resources have two additional WORDs that contain
+ 		     * hotspot info */
+diff --git a/wrestool/main.c b/wrestool/main.c
+--- a/wrestool/main.c
++++ b/wrestool/main.c
+@@ -17,6 +17,7 @@
+  */
+ 
+ #include <config.h>
++#include <locale.h>
+ #include "gettext.h"			/* Gnulib */
+ #include "configmake.h"
+ #define _(s) gettext(s)

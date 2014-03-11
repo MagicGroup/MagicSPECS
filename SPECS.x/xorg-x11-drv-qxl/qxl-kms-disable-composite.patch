@@ -1,0 +1,37 @@
+diff -up xf86-video-qxl-20130514/src/qxl_kms.c.da xf86-video-qxl-20130514/src/qxl_kms.c
+diff -up xf86-video-qxl-20130514/src/qxl_uxa.c.da xf86-video-qxl-20130514/src/qxl_uxa.c
+--- xf86-video-qxl-20130514/src/qxl_uxa.c.da	2013-06-18 10:08:56.113709355 +1000
++++ xf86-video-qxl-20130514/src/qxl_uxa.c	2013-06-18 10:10:08.775610941 +1000
+@@ -222,11 +222,15 @@ qxl_has_composite (qxl_screen_t *qxl)
+ #ifdef XF86DRM_MODE
+     if (qxl->kms_enabled) {
+ 	static Bool result, checked;
++#if 0 /* KMS Composite support seems broken - needs better hw support */
+ 	if (!checked) {
+ 	    result = qxl_kms_check_cap(qxl, SPICE_DISPLAY_CAP_COMPOSITE);
+ 	    checked = TRUE;
+ 	}
+ 	return result;
++#else
++	return FALSE;
++#endif
+     }
+ #endif
+ #ifndef XSPICE
+@@ -244,12 +248,16 @@ qxl_has_a8_surfaces (qxl_screen_t *qxl)
+ {
+ #ifdef XF86DRM_MODE
+     if (qxl->kms_enabled) {
++#if 0 /* KMS Composite support seems broken - needs better hw support */
+         static Bool result, checked;
+ 	if (!checked) {
+             result = qxl_kms_check_cap(qxl, SPICE_DISPLAY_CAP_A8_SURFACE);
+ 	    checked = TRUE;
+ 	}
+ 	return result;
++#else
++	return FALSE;
++#endif
+     }
+ #endif
+ #ifndef XSPICE

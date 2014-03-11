@@ -1,0 +1,65 @@
+--- webkit-qtwebkit-23/Source/JavaScriptCore/assembler/MIPSAssembler.h.mips64el1	2013-03-14 13:24:37.000000000 +0000
++++ webkit-qtwebkit-23/Source/JavaScriptCore/assembler/MIPSAssembler.h	2013-12-26 05:40:43.038412946 +0000
+@@ -38,7 +38,7 @@
+ 
+ namespace JSC {
+ 
+-typedef uint32_t MIPSWord;
++typedef intptr_t MIPSWord;
+ 
+ namespace MIPSRegisters {
+ typedef enum {
+@@ -779,7 +779,7 @@
+ 
+     static void repatchPointer(void* from, void* to)
+     {
+-        repatchInt32(from, reinterpret_cast<int32_t>(to));
++        repatchInt32(from, reinterpret_cast<intptr_t>(to));
+     }
+ 
+     static void* readPointer(void* from)
+@@ -886,12 +886,12 @@
+                 continue;
+ 
+             if ((*insn & 0xfc000000) == 0x08000000) { // j
+-                int offset = *insn & 0x03ffffff;
+-                int oldInsnAddress = (int)insn - (int)newBase + (int)oldBase;
+-                int topFourBits = (oldInsnAddress + 4) >> 28;
+-                int oldTargetAddress = (topFourBits << 28) | (offset << 2);
+-                int newTargetAddress = oldTargetAddress - (int)oldBase + (int)newBase;
+-                int newInsnAddress = (int)insn;
++                intptr_t offset = *insn & 0x03ffffff;
++                intptr_t oldInsnAddress = (intptr_t)insn - (intptr_t)newBase + (intptr_t)oldBase;
++                intptr_t topFourBits = (oldInsnAddress + 4) >> 28;
++                intptr_t oldTargetAddress = (topFourBits << 28) | (offset << 2);
++                intptr_t newTargetAddress = oldTargetAddress - (intptr_t)oldBase + (intptr_t)newBase;
++                intptr_t newInsnAddress = (intptr_t)insn;
+                 if (((newInsnAddress + 4) >> 28) == (newTargetAddress >> 28))
+                     *insn = 0x08000000 | ((newTargetAddress >> 2) & 0x3ffffff);
+                 else {
+@@ -903,10 +903,10 @@
+                     *(insn + 2) = 0x00000008 | (MIPSRegisters::t9 << OP_SH_RS);
+                 }
+             } else if ((*insn & 0xffe00000) == 0x3c000000) { // lui
+-                int high = (*insn & 0xffff) << 16;
+-                int low = *(insn + 1) & 0xffff;
+-                int oldTargetAddress = high | low;
+-                int newTargetAddress = oldTargetAddress - (int)oldBase + (int)newBase;
++                intptr_t high = (*insn & 0xffff) << 16;
++                intptr_t low = *(insn + 1) & 0xffff;
++                intptr_t oldTargetAddress = high | low;
++                intptr_t newTargetAddress = oldTargetAddress - (intptr_t)oldBase + (intptr_t)newBase;
+                 /* lui */
+                 *insn = 0x3c000000 | (MIPSRegisters::t9 << OP_SH_RT) | ((newTargetAddress >> 16) & 0xffff);
+                 /* ori */
+--- webkit-qtwebkit-23/Source/JavaScriptCore/assembler/MacroAssemblerMIPS.h.orig	2013-12-26 05:47:07.374547226 +0000
++++ webkit-qtwebkit-23/Source/JavaScriptCore/assembler/MacroAssemblerMIPS.h	2013-12-26 05:47:39.274954184 +0000
+@@ -2251,7 +2251,7 @@
+ 
+     static void revertJumpReplacementToBranchPtrWithPatch(CodeLocationLabel instructionStart, RegisterID, void* initialValue)
+     {
+-        MIPSAssembler::revertJumpToMove(instructionStart.dataLocation(), immTempRegister, reinterpret_cast<int>(initialValue) & 0xffff);
++        MIPSAssembler::revertJumpToMove(instructionStart.dataLocation(), immTempRegister, reinterpret_cast<intptr_t>(initialValue) & 0xffff);
+     }
+ 
+     static CodeLocationLabel startOfPatchableBranchPtrWithPatchOnAddress(CodeLocationDataLabelPtr)

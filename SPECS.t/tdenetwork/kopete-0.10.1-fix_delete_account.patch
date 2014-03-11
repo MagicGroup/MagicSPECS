@@ -1,0 +1,28 @@
+--- kopete-0.10.1/kopete/libkopete/kopeteaccountmanager.cpp.old	2005-07-22 13:14:57.191688544 +0800
++++ kopete-0.10.1/kopete/libkopete/kopeteaccountmanager.cpp	2005-07-22 13:16:33.403062192 +0800
+@@ -259,11 +259,23 @@
+ 	d->accounts.remove( account );
+ 
+ 	// Clean up configuration
+-	configgroup->deleteGroup();
+-	configgroup->sync();
++	//configgroup->deleteGroup();
++	//configgroup->sync();
++
++	KGlobal::config()->deleteGroup(QString::fromLatin1("Account_%1_%2").arg(account->protocol()->pluginId(),account->accountId()));
++	KGlobal::config()->sync();
+ 
+ 	delete account;
+ 
++//	QStringList sl=KGlobal::config()->groupList();
++//	QStringList::Iterator it=sl.begin();
++//	
++//	for(;it!=sl.end();++it)
++//	{
++//		fprintf(stderr,"%s\n",(*it).latin1());
++//	}
++
++
+ 	if ( accounts( protocol ).isEmpty() )
+ 	{
+ 		// FIXME: pluginId() should return the internal name and not the class name, so

@@ -1,0 +1,14 @@
+diff -ur zbar-0.10.orig/configure.ac zbar-0.10/configure.ac
+--- zbar-0.10.orig/configure.ac	2013-01-14 17:17:01.000000000 +0000
++++ zbar-0.10/configure.ac	2013-01-14 17:17:39.000000000 +0000
+@@ -63,6 +63,10 @@
+ dnl programs
+ 
+ AC_PROG_CC
++# automake 1.12 seems to require this, but automake 1.11 doesn't recognize it
++m4_pattern_allow([AM_PROG_AR])
++AM_PROG_AR
++
+ AM_PROG_CC_C_O
+ AC_PROG_CXX
+ 

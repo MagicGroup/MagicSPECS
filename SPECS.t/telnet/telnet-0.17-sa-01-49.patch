@@ -1,0 +1,203 @@
+--- netkit-telnet-0.17/telnetd/ext.h.sa-01-49	Sun Dec 12 15:59:44 1999
++++ netkit-telnet-0.17/telnetd/ext.h	Tue Jul 31 14:16:01 2001
+@@ -86,7 +86,10 @@
+ extern int pcc, ncc;
+ 
+ /* printf into netobuf */
+-void netoprintf(const char *fmt, ...) __attribute((format (printf, 1, 2))); 
++/* void netoprintf(const char *fmt, ...) __attribute((format (printf, 1, 2))); */
++#define netoprintf output_data
++int	output_data(const char *, ...) __attribute((format (printf, 1, 2))); 
++void	output_datalen(const char *, int);
+ 
+ extern int pty, net;
+ extern char *line;
+@@ -182,7 +185,10 @@
+ void tty_tspeed(int);
+ void willoption(int);
+ void wontoption(int);
++
++#if 0
+ void writenet(unsigned char *, int);
++#endif
+ 
+ #if defined(ENCRYPT)
+ extern void (*encrypt_output)(unsigned char *, int);
+--- netkit-telnet-0.17/telnetd/slc.c.sa-01-49	Sun Dec 12 15:59:44 1999
++++ netkit-telnet-0.17/telnetd/slc.c	Tue Jul 31 14:16:01 2001
+@@ -183,7 +183,7 @@
+ 	else {
+ 	    snprintf(slcbuf+slcoff, sizeof(slcbuf)-slcoff, "%c%c", IAC, SE);
+ 	    slcoff += 2;
+-	    writenet(slcbuf, slcoff);
++	    output_datalen(slcbuf, slcoff);
+ 	    netflush();  /* force it out immediately */
+ 	}
+     }
+--- netkit-telnet-0.17/telnetd/state.c.sa-01-49	Sun Dec 12 20:41:44 1999
++++ netkit-telnet-0.17/telnetd/state.c	Tue Jul 31 14:16:01 2001
+@@ -37,6 +37,7 @@
+ char state_rcsid[] = 
+   "$Id: state.c,v 1.12 1999/12/12 19:41:44 dholland Exp $";
+ 
++#include <stdarg.h>
+ #include "telnetd.h"
+ 
+ int not42 = 1;
+@@ -1365,7 +1366,7 @@
+     ADD(IAC);
+     ADD(SE);
+ 
+-    writenet(statusbuf, ncp - statusbuf);
++    output_datalen(statusbuf, ncp - statusbuf);
+     netflush();	/* Send it on its way */
+ 
+     DIAG(TD_OPTIONS, {printsub('>', statusbuf, ncp - statusbuf); netflush();});
+--- netkit-telnet-0.17/telnetd/termstat.c.sa-01-49	Sun Dec 12 15:59:45 1999
++++ netkit-telnet-0.17/telnetd/termstat.c	Tue Jul 31 14:16:01 2001
+@@ -128,7 +128,6 @@
+ 	void
+ localstat()
+ {
+-	void netflush();
+ 	int need_will_echo = 0;
+ 
+ 	/*
+--- netkit-telnet-0.17/telnetd/utility.c.sa-01-49	Tue Jul 31 14:16:01 2001
++++ netkit-telnet-0.17/telnetd/utility.c	Tue Jul 31 14:46:15 2001
+@@ -38,8 +38,9 @@
+   "$Id: utility.c,v 1.11 1999/12/12 14:59:45 dholland Exp $";
+ 
+ #define PRINTOPTIONS
+-
++#define _GNU_SOURCE
+ #include <stdarg.h>
++#include <stdio.h>   
+ #include <sys/utsname.h>
+ 
+ #ifdef AUTHENTICATE
+@@ -52,6 +53,53 @@
+  * utility functions performing io related tasks
+  */
+ 
++/*
++ * This function appends data to nfrontp and advances nfrontp.
++ * Returns the number of characters written altogether (the
++ * buffer may have been flushed in the process).
++ */
++
++int
++output_data(const char *format, ...)
++{
++	va_list args;
++	int len;
++	char *buf;
++
++	va_start(args, format);
++	if ((len = vasprintf(&buf, format, args)) == -1)
++		return -1;
++	output_datalen(buf, len);
++	va_end(args);
++	free(buf);
++	return (len);
++}
++
++void
++output_datalen(const char *buf, int len)
++{
++	int remaining, copied;
++	
++	remaining = BUFSIZ - (nfrontp - netobuf);
++	while (len > 0) {
++		/* Free up enough space if the room is too low*/
++		if ((len > BUFSIZ ? BUFSIZ : len) > remaining) {
++			netflush();
++			remaining = BUFSIZ - (nfrontp - netobuf);
++		}
++
++		/* Copy out as much as will fit */
++		copied = remaining > len ? len : remaining;
++		memmove(nfrontp, buf, copied);
++		nfrontp += copied;
++		len -= copied;
++		remaining -= copied;
++		buf += copied;
++	}
++	return;
++}
++
++/**
+ void
+ netoprintf(const char *fmt, ...)
+ {
+@@ -67,7 +115,7 @@
+       va_end(ap);
+ 
+       if (len<0 || len==maxsize) {
+-	 /* didn't fit */
++		/ * did not fit * /
+ 	 netflush();
+       }
+       else {
+@@ -76,6 +124,7 @@
+    }
+    nfrontp += len;
+ }
++*/
+ 
+ /*
+  * ttloop
+@@ -273,10 +322,15 @@
+     int n;
+ 
+     if ((n = nfrontp - nbackp) > 0) {
++
++#if 0
++	/* XXX This causes output_data() to recurse and die */
+ 	DIAG(TD_REPORT,
+ 	    { netoprintf("td: netflush %d chars\r\n", n);
+ 	      n = nfrontp - nbackp;  /* update count */
+ 	    });
++#endif
++
+ #if	defined(ENCRYPT)
+ 	if (encrypt_output) {
+ 		char *s = nclearto ? nclearto : nbackp;
+@@ -310,11 +364,14 @@
+ 	    }
+ 	}
+     }
+-    if (n < 0) {
+-	if (errno == EWOULDBLOCK || errno == EINTR)
+-		return;
+-	cleanup(0);
+-    }
++
++	 if (n == -1) {
++		if (errno == EWOULDBLOCK || errno == EINTR)
++		  return;
++		cleanup(0);
++		/* NOTREACHED */
++	 }
++
+     nbackp += n;
+ #if	defined(ENCRYPT)
+     if (nbackp > nclearto)
+@@ -332,7 +389,7 @@
+     return;
+ }  /* end of netflush */
+ 
+-
++#if 0
+ /*
+  * writenet
+  *
+@@ -355,7 +412,7 @@
+ 	nfrontp += len;
+ 
+ }  /* end of writenet */
+-
++#endif
+ 
+ /*
+  * miscellaneous functions doing a variety of little jobs follow ...

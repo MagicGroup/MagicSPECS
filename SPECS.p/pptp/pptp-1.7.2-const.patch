@@ -1,0 +1,52 @@
+diff -up pptp-1.7.2/pptp.c.const pptp-1.7.2/pptp.c
+--- pptp-1.7.2/pptp.c.const	2011-11-30 18:58:39.713148113 +0000
++++ pptp-1.7.2/pptp.c	2011-12-01 09:23:29.716446618 +0000
+@@ -565,10 +565,13 @@ int get_call_id(int sock, pid_t gre, pid
+ void launch_pppd(char *ttydev, int argc, char **argv)
+ {
+     char *new_argv[argc + 4];/* XXX if not using GCC, hard code a limit here. */
++    char str_pppd[] = PPPD_BINARY;
++    char str_direct[] = "-direct";
++    char str_38400[] = "38400";
+     int i = 0, j;
+-    new_argv[i++] = PPPD_BINARY;
++    new_argv[i++] = str_pppd;
+ #ifdef USER_PPP
+-    new_argv[i++] = "-direct";
++    new_argv[i++] = str_direct;
+     /* ppp expects to have stdin connected to ttydev */
+     if ((j = open(ttydev, O_RDWR)) == -1)
+         fatal("Cannot open %s: %s", ttydev, strerror(errno));
+@@ -577,7 +580,7 @@ void launch_pppd(char *ttydev, int argc,
+     close(j);
+ #else
+     new_argv[i++] = ttydev;
+-    new_argv[i++] = "38400";
++    new_argv[i++] = str_38400;
+ #endif
+     for (j = 0; j < argc; j++)
+         new_argv[i++] = argv[j];
+diff -up pptp-1.7.2/util.c.const pptp-1.7.2/util.c
+--- pptp-1.7.2/util.c.const	2008-05-14 07:33:55.000000000 +0100
++++ pptp-1.7.2/util.c	2011-11-30 18:58:39.719148114 +0000
+@@ -16,7 +16,7 @@
+ #endif
+ 
+ /* implementation of log_string, defined as extern in util.h */
+-char *log_string = "anon";
++const char *log_string = "anon";
+ 
+ static void open_log(void) __attribute__ ((constructor));
+ static void close_log(void) __attribute__ ((destructor));
+diff -up pptp-1.7.2/util.h.const pptp-1.7.2/util.h
+--- pptp-1.7.2/util.h.const	2008-05-14 07:33:55.000000000 +0100
++++ pptp-1.7.2/util.h	2011-11-30 18:59:47.458171318 +0000
+@@ -10,7 +10,7 @@
+ /* log_string is an identifier for this pptp process, passed from
+    command line using --log-string=X, and included with every log message.
+    Useful for people with multiple pptp sessions open at a time */
+-extern char * log_string;
++extern const char * log_string;
+ 
+ /* log_level sets the logging verbosity. Values range from 0 (errors only)
+    to 1 (errors and warnings) to 2 (high verbosity, for debugging) */

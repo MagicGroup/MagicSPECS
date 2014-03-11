@@ -1,0 +1,19 @@
+[Protocol]
+exec=kaffeine "%u"
+protocol=rtsp
+defaultMimetype=audio/x-pn-realaudio
+Icon=www
+Class=:internet
+URIMode=url
+Description=Real Media Server Protocol
+Description[zh_CN]=Real 媒体服务器协议
+Description[zh_HK]=Real Media Server 協定
+Description[zh_TW]=Real Media Server 協定
+input=none
+output=none
+helper=true
+reading=false
+listing=false
+writing=false
+makedir=false
+deleting=false

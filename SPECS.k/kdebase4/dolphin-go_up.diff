@@ -1,0 +1,11 @@
+diff -ur kde-baseapps-4.10.3.orig/dolphin/src/dolphinui.rc kde-baseapps-4.10.3/dolphin/src/dolphinui.rc
+--- kde-baseapps-4.10.3.orig/dolphin/src/dolphinui.rc	2013-05-31 16:58:24.000000000 +0000
++++ kde-baseapps-4.10.3/dolphin/src/dolphinui.rc	2013-05-31 17:01:35.000000000 +0000
+@@ -61,6 +61,7 @@
+             <Separator/>
+             <Action name="go_back" />
+             <Action name="go_forward" />
++	    <Action name="go_up" />
+         </disable>
+     </State>
+     <State name="has_selection" >

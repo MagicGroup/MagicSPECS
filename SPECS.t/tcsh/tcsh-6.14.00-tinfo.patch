@@ -1,0 +1,12 @@
+diff -up tcsh-6.15.00/configure.in.tinfo tcsh-6.15.00/configure.in
+--- tcsh-6.15.00/configure.in.tinfo	2007-03-03 21:01:26.000000000 +0100
++++ tcsh-6.15.00/configure.in	2008-08-29 12:27:47.000000000 +0200
+@@ -263,7 +263,7 @@ fi
+ dnl Checks for libraries
+ AC_SEARCH_LIBS(crypt, crypt)
+ AC_SEARCH_LIBS(getspnam, sec)
+-AC_SEARCH_LIBS(tgetent, termlib termcap curses ncurses)
++AC_SEARCH_LIBS(tgetent, tinfo)
+ AC_SEARCH_LIBS(gethostbyname, nsl)
+ AC_SEARCH_LIBS(connect, socket)
+ AM_ICONV

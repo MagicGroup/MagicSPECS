@@ -1,0 +1,45 @@
+diff -Nur amarok-1.4.9.1/amarok/src/metabundle.cpp amarok-1.4.9.1.local_fix_flac/amarok/src/metabundle.cpp
+--- amarok-1.4.9.1/amarok/src/metabundle.cpp	2008-04-11 04:16:37.000000000 +0800
++++ amarok-1.4.9.1.local_fix_flac/amarok/src/metabundle.cpp	2008-07-05 08:04:21.000000000 +0800
+@@ -512,6 +512,9 @@
+         if ( tag )
+         {
+             #define strip( x ) TStringToTQString( x ).stripWhiteSpace()
++            const TQString ext = Amarok::extension( m_url.url() ).lower();
++            if( ext == "flac" )
++            {
+             setTitle( strip( tag->title() ) );
+             setArtist( strip( tag->artist() ) );
+             setAlbum( strip( tag->album() ) );
+@@ -519,6 +522,15 @@
+             setGenre( strip( tag->genre() ) );
+             setYear( tag->year() );
+             setTrack( tag->track() );
++            }
++            else
++            {
++            setTitle( TQString::fromLocal8Bit(strip( tag->title()).latin1()) );
++            setArtist( TQString::fromLocal8Bit(strip( tag->artist() ).latin1()) );
++            setAlbum( TQString::fromLocal8Bit(strip( tag->album() ).latin1()) );
++            setComment( TQString::fromLocal8Bit(strip( tag->comment() ).latin1()) );
++            setGenre( TQString::fromLocal8Bit(strip( tag->genre() ).latin1()) );
++            }
+             #undef strip
+ 
+             m_isValidMedia = true;
+@@ -1472,6 +1484,15 @@
+     {
+         TagLib::Tag * t = f->tag();
+         if ( t ) { // f.tag() can return null if the file couldn't be opened for writing
++            const TQString ext = Amarok::extension( m_url.url() ).lower();
++            if( ext == "flac" )
++            {
++                #define TQStringToTString(s) TagLib::String(s.utf8().data(), TagLib::String::UTF8)
++            }
++            else
++            {
++                #define TQStringToTString(s) TagLib::String(s.local8Bit().data())
++            }
+             t->setTitle( TQStringToTString( title().stripWhiteSpace() ) );
+             t->setArtist( TQStringToTString( artist().string().stripWhiteSpace() ) );
+             t->setAlbum( TQStringToTString( album().string().stripWhiteSpace() ) );

@@ -1,0 +1,31 @@
+diff --git a/fig2dev/Imakefile b/fig2dev/Imakefile
+index 90d67ca..2f76e0b 100755
+--- a/fig2dev/Imakefile
++++ b/fig2dev/Imakefile
+@@ -34,7 +34,7 @@ XCOMM ******
+ XCOMM You should point XFIGLIBDIR to the same directory you did when you compiled
+ XCOMM and installed xfig.
+ 
+-XFIGLIBDIR =	/usr/local/lib/X11/xfig
++XFIGLIBDIR =	$(PROJECTROOT)/share/xfig
+ 
+ XCOMM ******
+ XCOMM If your system doesn't have the strerror() function (has sys_errlist) then
+@@ -62,7 +62,7 @@ XCOMM Note that this changed slightly from the previous versions - you need
+ XCOMM the full name (rgb.txt) now.
+ XCOMM
+ 
+-RGB = $(LIBDIR)/rgb.txt
++RGB = $(PROJECTROOT)/share/X11/rgb.txt
+ 
+ XCOMM Comment out the following #define USEPNG if you don't want PNG support
+ XCOMM Uncomment the #define for USEPNG if you want to be able to import
+@@ -141,7 +141,7 @@ XCOMM Comment out the next line if you have any problems with locale not being f
+ 
+ #ifdef I18N
+ I18N_DEFS = -DI18N 
+-FIG2DEV_LIBDIR = /usr/local/lib/fig2dev
++FIG2DEV_LIBDIR = $(PROJECTROOT)/share/fig2dev
+ I18N_DEV_DEFS = $(I18N_DEFS) -DFIG2DEV_LIBDIR=$(FIG2DEV_LIBDIR) -DFIG2DEV_LIBDIR_STR=\\\"$(FIG2DEV_LIBDIR)\\\"
+ 
+ #endif /* I18N */

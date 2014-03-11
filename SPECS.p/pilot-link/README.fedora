@@ -1,0 +1,84 @@
+Additional information for Fedora pilot-link users
+==================================================
+
+pilot-link-0.12.2-10.fc8 and later versions are configured to enable 
+the use of libusb for console users - permissions are now handled by
+PolicyKit. For more information on libusb see README.libusb.
+
+IMPORTANT:
+
+If your Palm device is plugged in at the time of the upgrade (or you
+are experiencing difficuly with having the Palm device recognized) you
+should probably unplug and replugin in your device after the upgrade
+for the new HAL configuration to take effect.
+
+If kernel module 'visor' is activated then the HAL USB solution may not
+work - so it may be necessary to remove it manually
+(use command /sbin/modprobe visor) or reboot the computer.
+
+pilot-link libusb support is relatively new and may still be 
+incompatible with some handheld devices. If you experience such a
+problem you may want to try the older "visor module" USB method 
+described below. A long discussion about this problem is at:
+https://bugzilla.redhat.com/show_bug.cgi?id=280251.
+
+If this discussion does not help you, please report a bug to:
+https://bugzilla.redhat.com/
+
+
+Visor module setup
+------------------
+
+ Note since F-12, the default access for libusb pilot-link has changed
+ again to use udev, so you may need to remove
+ /lib/udev/rules.d/69-pilot-link.rules before executing the following.
+ For more discussion see:
+
+ https://bugzilla.redhat.com/show_bug.cgi?id=529259
+
+The Visor module is a backwards compatibility solution to expose the USB
+connection of newer Palm handhelds as a serial device, which is what
+older versions of pilot-link and dependent packages require to work.
+
+Unfortunately this solution is inherently imperfect when used with udev
+(as Fedora does) - you may have to tweak your individual setup.
+
+1) disable libusb: remove (or comment out the contents) of
+/etc/modprobe.d/blacklist-visor
+
+2) Configure udev to detect the Palm:
+2a) copy 60-libpisock.rules from /usr/share/pilot-link/udev/ to 
+/etc/udev/rules.d/
+2b) within 60-libpisock.rules change all instances of GROUP="dialout" to
+GROUP="uucp"
+
+3) Configure permissions so that a console user can access /dev/pilot:
+copy 60-pilot.perms from /usr/share/pilot-link/udev/ to
+/etc/security/console.perms.d/
+
+When you connect your Palm handheld, watch /var/log/messages - the visor
+module should create two ttyUSB devices. Depending on your handheld
+model you will need to use either the first or second of these as the
+--port argument with pilot-link based programs.
+
+Some users like the convenience of linking this device to /dev/pilot.
+To do this add SYMLINK="pilot" and one of either KERNEL=="ttyUSB[02468]"
+or KERNEL=="ttyUSB[13579]" to each line in 60-libpisock.rules, depending
+on whether you need to use the first or second visor ttyUSB device.
+N.B. This is inherently unreliable since another driver could create an
+odd number of ttyUSB devices before the /dev/pilot symlink is created.
+
+For further discussion of the inherent problems related to the Visor 
+module, see:
+https://bugzilla.redhat.com/show_bug.cgi?id=158809
+
+
+Old serial (non-USB) handhelds
+------------------------------
+
+Older serial (non-USB) handhelds can be directly addressed by pilot link
+on their serial port (e.g. /dev/ttyS0) or /dev/pilot can be symlinked to
+the serial port.
+
+Kevin R. Page, 2007-12-11
+Alex Lancaster, 2009-11-15

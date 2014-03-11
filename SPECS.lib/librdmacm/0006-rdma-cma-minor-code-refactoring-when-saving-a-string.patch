@@ -1,0 +1,33 @@
+From 404c828cadf8a5370c80d0edffc4f23c97e229f2 Mon Sep 17 00:00:00 2001
+From: Dotan Barak <dotanb@dev.mellanox.co.il>
+Date: Mon, 31 Oct 2011 08:53:07 -0700
+Subject: [PATCH 6/9] rdma/cma: minor code refactoring when saving a string
+ content
+
+In this case, using strdup will provide a cleaner code
+(and maybe a little bit faster too).
+
+Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
+Signed-off-by: Sean Hefty <sean.hefty@intel.com>
+---
+ src/addrinfo.c |    4 +---
+ 1 files changed, 1 insertions(+), 3 deletions(-)
+
+diff --git a/src/addrinfo.c b/src/addrinfo.c
+index 695430b..34c7fb4 100755
+--- a/src/addrinfo.c
++++ b/src/addrinfo.c
+@@ -137,9 +137,7 @@ static int ucma_convert_to_rai(struct rdma_addrinfo *rai,
+ 	if (!addr)
+ 		return ERR(ENOMEM);
+ 
+-	canonname = ai->ai_canonname ? malloc(strlen(ai->ai_canonname) + 1) : NULL;
+-	if (canonname)
+-		strcpy(canonname, ai->ai_canonname);
++	canonname = ai->ai_canonname ? strdup(ai->ai_canonname) : NULL;
+ 
+ 	memcpy(addr, ai->ai_addr, ai->ai_addrlen);
+ 	if (ai->ai_flags & RAI_PASSIVE) {
+-- 
+1.7.6.4
+

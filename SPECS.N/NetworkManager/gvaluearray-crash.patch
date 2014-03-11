@@ -1,0 +1,26 @@
+From b95b6c8aa1b2e2d6a662e93843e50b50d5a9c6c6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ji=C5=99=C3=AD=20Klime=C5=A1?= <jklimes@redhat.com>
+Date: Thu, 11 Oct 2012 14:56:37 +0200
+Subject: [PATCH] core: fix a crash due to GValueArray/GArray freeing mismatch
+ (rh #865009)
+
+---
+ src/nm-dispatcher.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/nm-dispatcher.c b/src/nm-dispatcher.c
+index 0f17ed9..61dfd7c 100644
+--- a/src/nm-dispatcher.c
++++ b/src/nm-dispatcher.c
+@@ -200,7 +200,7 @@ dispatcher_done_cb (DBusGProxy *proxy, DBusGProxyCall *call, gpointer user_data)
+ 			} else
+ 				nm_log_dbg (LOGD_CORE, "Dispatcher result element %d invalid type", i);
+ 
+-			g_array_unref ((GArray *) item);
++			g_value_array_free (item);
+ 		}
+ 		g_ptr_array_free (results, TRUE);
+ 	} else {
+-- 
+1.7.12.1
+

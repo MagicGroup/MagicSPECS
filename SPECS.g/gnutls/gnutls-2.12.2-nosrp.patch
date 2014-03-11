@@ -1,0 +1,53 @@
+diff -up gnutls-2.12.2/doc/cha-auth.texi.nosrp gnutls-2.12.2/doc/cha-auth.texi
+--- gnutls-2.12.2/doc/cha-auth.texi.nosrp	2011-04-08 02:30:44.000000000 +0200
++++ gnutls-2.12.2/doc/cha-auth.texi	2011-04-19 09:46:25.000000000 +0200
+@@ -255,9 +255,9 @@ authenticated using a certificate with R
+ 
+ If clients supporting @acronym{SRP} know the username and password
+ before the connection, should initialize the client credentials and
+-call the function @ref{gnutls_srp_set_client_credentials}.
++call the function gnutls_srp_set_client_credentials.
+ Alternatively they could specify a callback function by using the
+-function @ref{gnutls_srp_set_client_credentials_function}.  This has
++function gnutls_srp_set_client_credentials_function.  This has
+ the advantage that allows probing the server for @acronym{SRP}
+ support.  In that case the callback function will be called twice per
+ handshake.  The first time is before the ciphersuite is negotiated,
+@@ -272,20 +272,20 @@ In server side the default behaviour of 
+ the usernames and @acronym{SRP} verifiers from password files. These
+ password files are the ones used by the @emph{Stanford srp libraries}
+ and can be specified using the
+-@ref{gnutls_srp_set_server_credentials_file}.  If a different
++gnutls_srp_set_server_credentials_file.  If a different
+ password file format is to be used, then the function
+-@ref{gnutls_srp_set_server_credentials_function}, should be called,
++gnutls_srp_set_server_credentials_function, should be called,
+ in order to set an appropriate callback.
+ 
+ Some helper functions such as
+ 
+ @itemize
+ 
+-@item @ref{gnutls_srp_verifier}
++@item gnutls_srp_verifier
+ 
+-@item @ref{gnutls_srp_base64_encode}
++@item gnutls_srp_base64_encode
+ 
+-@item @ref{gnutls_srp_base64_decode}
++@item gnutls_srp_base64_decode
+ 
+ @end itemize
+ 
+diff -up gnutls-2.12.2/doc/cha-library.texi.nosrp gnutls-2.12.2/doc/cha-library.texi
+--- gnutls-2.12.2/doc/cha-library.texi.nosrp	2011-04-08 02:30:44.000000000 +0200
++++ gnutls-2.12.2/doc/cha-library.texi	2011-04-19 09:44:58.000000000 +0200
+@@ -174,7 +174,7 @@ data to the transport layer.
+ @end itemize
+ 
+ Other callback functions such as the one set by
+-@ref{gnutls_srp_set_server_credentials_function}, may require more
++gnutls_srp_set_server_credentials_function, may require more
+ complicated input, including data to be allocated.  These callbacks
+ should allocate and free memory using the functions shown below.
+ 

@@ -1,0 +1,36 @@
+commit 5397edac120350bd5fd8284819c1a900cb41546c
+Author: Steve Dickson <steved@redhat.com>
+Date:   Fri Mar 16 09:34:43 2012 -0400
+
+    nfsd: Bump up the default to 8 nprocs
+    
+    When the nproc argument is not given the rpc.nfsd
+    a default number of processes is created. This
+    patch bumps that default up from 1 to 8.
+    
+    Signed-off-by: Steve Dickson <steved@redhat.com>
+
+diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+index 8bc5d3a..2a3f5cc 100644
+--- a/utils/nfsd/nfsd.c
++++ b/utils/nfsd/nfsd.c
+@@ -27,6 +27,10 @@
+ #include "nfssvc.h"
+ #include "xlog.h"
+ 
++#ifndef NFSD_NPROC
++#define NFSD_NPROC 8
++#endif
++
+ static void	usage(const char *);
+ 
+ static struct option longopts[] =
+@@ -90,7 +94,7 @@ nfsd_enable_protos(unsigned int *proto4, unsigned int *proto6)
+ int
+ main(int argc, char **argv)
+ {
+-	int	count = 1, c, error = 0, portnum = 0, fd, found_one;
++	int	count = NFSD_NPROC, c, error = 0, portnum = 0, fd, found_one;
+ 	char *p, *progname, *port;
+ 	char *haddr = NULL;
+ 	int	socket_up = 0;

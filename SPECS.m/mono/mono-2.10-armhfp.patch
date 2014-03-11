@@ -1,0 +1,22 @@
+Index: mono-2.10.6/configure
+===================================================================
+--- mono-2.10.6.orig/configure
++++ mono-2.10.6/configure
+@@ -23729,11 +23729,12 @@ main ()
+   return 0;
+ }
+ _ACEOF
+-if ac_fn_c_try_compile "$LINENO"; then :
+-  fpu=FPA
+-else
+-  fpu=NONE
+-fi
++#if ac_fn_c_try_compile "$LINENO"; then :
++#  fpu=FPA
++#else
++#  fpu=NONE
++#fi
++fpu=VFP
+ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ 
+ 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $fpu" >&5

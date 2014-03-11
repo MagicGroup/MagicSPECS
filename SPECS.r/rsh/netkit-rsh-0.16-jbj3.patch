@@ -1,0 +1,180 @@
+--- netkit-rsh-0.16/rlogind/auth.c.jbj3	Mon Jan 10 13:40:26 2000
++++ netkit-rsh-0.16/rlogind/auth.c	Mon Jan 10 13:46:25 2000
+@@ -31,6 +31,9 @@
+  * SUCH DAMAGE.
+  */
+ 
++#include <sys/types.h>
++#include <pwd.h>
++
+ #include "rlogind.h"
+ 
+ #ifdef USE_PAM
+@@ -47,10 +50,8 @@
+ #include <syslog.h>
+ #include <unistd.h>
+ #include <string.h>
+-#include <pwd.h>
+ #include <grp.h>
+ 
+-#include <sys/types.h>
+ #include <security/pam_appl.h>
+ #include <security/pam_misc.h>
+ 
+@@ -68,7 +69,10 @@
+ }
+ 
+ void auth_finish(void) {
+-    pam_end(pamh, PAM_SUCCESS);
++    if (pamh) {
++	pam_end(pamh, PAM_SUCCESS);
++	pamh = NULL;
++    }
+ }
+ 
+ static int attempt_auth(void) {
+@@ -78,11 +82,7 @@
+     if (retval == PAM_SUCCESS) {
+ 	retval = pam_acct_mgmt(pamh, 0);
+     }
+-    switch (retval) {
+-    default:
+-    case PAM_SUCCESS:
+-	break;
+-    case PAM_NEW_AUTHTOK_REQD:
++    if (retval == PAM_NEW_AUTHTOK_REQD) {
+ 	retval = pam_chauthtok(pamh, PAM_CHANGE_EXPIRED_AUTHTOK);
+ 	if (retval == PAM_SUCCESS) {
+ 	    /* 
+@@ -98,7 +98,6 @@
+ 	     */
+ 	    retval = attempt_auth();
+ 	}
+-	break;
+     }
+     return retval;
+ }
+@@ -108,7 +107,7 @@
+  * or return 0 on authentication success. Dying is discouraged.
+  */
+ int auth_checkauth(const char *remoteuser, const char *host,
+-		   char *localuser, int localuserlen) 
++		   char *localuser, size_t localusersize) 
+ {
+     static struct pam_conv conv = { sock_conv, NULL };
+     int retval;
+@@ -140,8 +139,8 @@
+ 	     */
+ 	    return -1;
+ 	}
+-	strncpy(localuser, ln, localuserlen-1);
+-	localuser[localuserlen-1] = '\0';
++	strncpy(localuser, ln, localusersize-1);
++	localuser[localusersize-1] = '\0';
+ 
+ 	pwd = getpwnam(localuser);
+ 	if (pwd == NULL || setgid(pwd->pw_gid) != 0) {
+@@ -171,7 +170,6 @@
+ 
+ #include <sys/socket.h>   /* for ruserok() in libc5 (!) */
+ #include <netdb.h>        /* for ruserok() in glibc (!) */
+-#include <pwd.h>
+ 
+ #if defined(__GLIBC__) && (__GLIBC__ >= 2)
+ #define _check_rhosts_file  __check_rhosts_file
+@@ -187,9 +185,11 @@
+  * or return 0 on authentication success. Dying is discouraged.
+  */
+ int auth_checkauth(const char *remoteuser, const char *host,
+-		   char *localuser, int localuserlen) 
++		   char *localuser, size_t localusersize) 
+ {
+     struct passwd *pwd;
++
++    (void)localusersize;
+     pwd = getpwnam(localuser);
+     if (pwd == NULL) return -1;
+ 
+--- netkit-rsh-0.16/rlogind/rlogind.c.jbj3	Mon Jan 10 13:46:41 2000
++++ netkit-rsh-0.16/rlogind/rlogind.c	Mon Jan 10 13:50:24 2000
+@@ -52,6 +52,7 @@
+  *	data
+  */
+ 
++#include <sys/types.h>   /* for size_t */
+ #include <sys/param.h>   /* for MAXPATHLEN */
+ #include <sys/stat.h>    /* for chmod() */
+ #include <sys/ioctl.h>   /* for TIOCPKT */
+@@ -298,7 +299,7 @@
+     chown(line, 0, 0);
+ 
+     /* all done */
+-    exit(1);
++    exit(0);
+ }
+ 
+ 
+@@ -334,24 +335,22 @@
+ static void child(const char *hname, const char *termtype,
+ 		  const char *localuser, int authenticated)
+ {
+-    char *env[2];
+-    char *termenv;
++    char *termenv[2];
+ 
+     setup_term(0, termtype);
+ 
+-    termenv = malloc(strlen(termtype)+6);
+-    if (termenv) {   /* shouldn't ever fail, mind you */
+-	strcpy(termenv, "TERM=");
+-	strcat(termenv, termtype);
++    termenv[0] = malloc(strlen(termtype)+6);
++    if (termenv[0]) {   /* shouldn't ever fail, mind you */
++	strcpy(termenv[0], "TERM=");
++	strcat(termenv[0], termtype);
+     }
+-    env[0] = termenv;
+-    env[1] = NULL;
++    termenv[1] = NULL;
+ 
+     if (authenticated) {
+ 	auth_finish();
+ 	closeall();
+ 	execle(_PATH_LOGIN, "login", "-p",
+-	       "-h", hname, "-f", localuser, NULL, env);
++	       "-h", hname, "-f", localuser, NULL, termenv);
+     } 
+     else {
+ 	if (localuser[0] == '-') {
+@@ -361,7 +360,7 @@
+ 	auth_finish();
+ 	closeall();
+ 	execle(_PATH_LOGIN, "login", "-p",
+-	       "-h", hname, localuser, NULL, env);
++	       "-h", hname, localuser, NULL, termenv);
+     }
+     /* Can't exec login, croak */
+     fatal(STDERR_FILENO, _PATH_LOGIN, 1);
+@@ -402,8 +401,10 @@
+      * this will break anything or give away state secrets.
+      */
+     if (hostok) {
+-	if (auth_checkauth(rusername, hname, lusername, sizeof(lusername)) == 0)
++	if (auth_checkauth(rusername, hname,
++			   lusername, sizeof(lusername)) == 0) {
+ 	    authenticated=1;
++	}
+     }
+     network_confirm();
+ 
+--- netkit-rsh-0.16/rlogind/rlogind.h.jbj3	Mon Jan 10 13:50:37 2000
++++ netkit-rsh-0.16/rlogind/rlogind.h	Mon Jan 10 13:51:06 2000
+@@ -12,7 +12,7 @@
+ void auth_checkoptions(void);
+ void auth_finish(void);
+ int auth_checkauth(const char *remoteuser, const char *host,
+-		   char *localuser, int localuserlen);
++		   char *localuser, size_t localuserlen);
+ 
+ /* 
+  * Global flag variables 

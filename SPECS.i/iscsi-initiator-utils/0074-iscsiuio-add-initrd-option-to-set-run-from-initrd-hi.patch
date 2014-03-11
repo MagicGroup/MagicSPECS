@@ -1,0 +1,51 @@
+From fefc8e39129dbdeadf2a0b6ba7a28e9e47597e11 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 19 Dec 2012 21:37:18 -0800
+Subject: iscsiuio add --initrd option to set run from initrd hint for systemd
+
+See http://www.freedesktop.org/wiki/Software/systemd/RootStorageDaemons
+---
+ src/unix/main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/unix/main.c b/src/unix/main.c
+index ef9e069..c5fb5ab 100644
+--- a/src/unix/main.c
++++ b/src/unix/main.c
+@@ -82,12 +82,15 @@ static char default_pid_filepath[] = "/var/run/iscsiuio.pid";
+ /*******************************************************************************
+  *  Global Variables
+  ******************************************************************************/
++static int initrd = 0;
++
+ static const struct option long_options[] = {
+ 	{"foreground", no_argument, NULL, 'f'},
+ 	{"debug", required_argument, NULL, 'd'},
+ 	{"pid", required_argument, NULL, 'p'},
+ 	{"version", no_argument, NULL, 'v'},
+ 	{"help", no_argument, NULL, 'h'},
++	{"initrd", no_argument, &initrd, 1},
+ 	{0, 0, 0, 0}
+ };
+ 
+@@ -176,6 +179,7 @@ iscsiuio daemon.\n\
+   -f, --foreground        make the program run in the foreground\n\
+   -d, --debug debuglevel  print debugging information\n\
+   -p, --pid=pidfile       use pid file (default  %s).\n\
++      --initrd            systemd initrd hint\n\
+   -h, --help              display this help and exit\n\
+   -v, --version           display version and exit\n\
+ ", default_pid_filepath);
+@@ -279,6 +283,9 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
++	if (initrd)
++		argv[0][0] = '@';
++
+ 	if (main_log.enabled == LOGGER_ENABLED) {
+ 		/*  initialize the logger */
+ 		rc = init_logger(main_log.log_file);
+-- 
+1.7.11.7
+

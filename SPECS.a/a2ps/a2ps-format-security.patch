@@ -1,0 +1,12 @@
+diff -up a2ps-4.14/lib/output.c.format-security a2ps-4.14/lib/output.c
+--- a2ps-4.14/lib/output.c.format-security	2013-12-03 15:49:51.675971847 +0000
++++ a2ps-4.14/lib/output.c	2013-12-03 15:49:59.862013165 +0000
+@@ -525,7 +525,7 @@ output_file (struct output * out, a2ps_j
+ 		     expand_user_string (job, FIRST_FILE (job),
+ 					 (const uchar *) "Expand: requirement",
+ 					 (const uchar *) token));
+-	output (dest, expansion);
++	output (dest, "%s", expansion);
+ 	continue;
+       }
+ 

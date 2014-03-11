@@ -1,0 +1,236 @@
+diff -aurp open-iscsi-2.0-872-rc1-bnx2i/usr/initiator.c open-iscsi-2.0-872-rc1-bnx2i.work/usr/initiator.c
+--- open-iscsi-2.0-872-rc1-bnx2i/usr/initiator.c	2010-05-18 17:58:00.000000000 -0500
++++ open-iscsi-2.0-872-rc1-bnx2i.work/usr/initiator.c	2010-05-18 21:40:44.000000000 -0500
+@@ -1096,6 +1096,18 @@ static void iscsi_login_timedout(void *d
+ 	}
+ }
+ 
++static void iscsi_uio_poll_login_timedout(void *data)
++{
++	struct queue_task *qtask = data;
++	struct iscsi_conn *conn = qtask->conn;
++	iscsi_session_t *session = conn->session;
++
++	log_debug(3, "timeout waiting for UIO ...\n");
++	mgmt_ipc_write_rsp(qtask, MGMT_IPC_ERR_TRANS_TIMEOUT);
++	conn_delete_timers(conn);
++	__session_destroy(session);
++}
++
+ static void iscsi_login_redirect(iscsi_conn_t *conn)
+ {
+ 	iscsi_session_t *session = conn->session;
+@@ -2049,6 +2061,52 @@ cleanup:
+ 	session_conn_shutdown(conn, qtask, err);
+ }
+ 
++static void session_conn_uio_poll(void *data)
++{
++	struct iscsi_conn_context *conn_context = data;
++	iscsi_conn_t *conn = conn_context->conn;
++	struct iscsi_session *session = conn->session;
++	queue_task_t *qtask = conn_context->data;
++	int rc;
++
++	log_debug(4, "retrying uio poll");
++	rc = __set_net_config(session->t, session, &conn->session->nrec.iface);
++	if (rc != 0) {
++		if (rc == -EAGAIN) {
++			conn_context->data = qtask;
++			iscsi_sched_conn_context(conn_context, conn, 2,
++						 EV_UIO_POLL);
++			return;
++		} else {
++			log_error("session_conn_uio_poll() "
++				  "connection failure [0x%x]", rc);
++			actor_delete(&conn->login_timer);
++			iscsi_login_eh(conn, qtask, MGMT_IPC_ERR_INTERNAL);
++			iscsi_conn_context_put(conn_context);
++			return;
++		}
++	}
++	iscsi_conn_context_put(conn_context);
++
++	actor_delete(&conn->login_timer);
++	log_debug(4, "UIO ready trying connect");
++
++	/*  uIP is ready try to connect */
++	if (gettimeofday(&conn->initial_connect_time, NULL))
++		log_error("Could not get initial connect time. If "
++			  "login errors iscsid may give up the initial "
++			  "login early. You should manually login.");
++
++        conn->state = STATE_XPT_WAIT;
++        if (iscsi_conn_connect(conn, qtask)) {
++		int delay = ISCSI_CONN_ERR_REOPEN_DELAY;
++		log_debug(4, "Waiting %u seconds before trying to reconnect.\n",
++			  delay);
++		queue_delayed_reopen(qtask, delay);
++        }
++}
++
++
+ void iscsi_sched_conn_context(struct iscsi_conn_context *conn_context,
+ 			      struct iscsi_conn *conn, unsigned long tmo,
+ 			      int event)
+@@ -2085,6 +2143,11 @@ void iscsi_sched_conn_context(struct isc
+ 			  conn_context);
+ 		actor_schedule(&conn_context->actor);
+ 		break;
++	case EV_UIO_POLL:
++		actor_new(&conn_context->actor, session_conn_uio_poll,
++			  conn_context);
++		actor_schedule(&conn_context->actor);
++		break;
+ 	case EV_CONN_LOGOUT_TIMER:
+ 		actor_timer(&conn_context->actor, tmo * 1000,
+ 			    iscsi_logout_timedout, conn_context);
+@@ -2150,8 +2213,10 @@ static int session_is_running(node_rec_t
+ }
+ 
+ static int iface_set_param(struct iscsi_transport *t, struct iface_rec *iface,
+-			   struct iscsi_session *session)
++			   queue_task_t *qtask)
+ {
++	struct iscsi_conn *conn = qtask->conn;
++	struct iscsi_session *session = conn->session;
+ 	int rc = 0;
+ 
+ 	log_debug(3, "setting iface %s, dev %s, set ip %s, hw %s, "
+@@ -2170,6 +2235,29 @@ static int iface_set_param(struct iscsi_
+ 	}
+ 
+ 	rc = __set_net_config(t, session, iface);
++	if (rc == -EAGAIN && t->template->set_net_config) {
++		struct iscsi_conn_context *conn_context;
++
++		conn_context = iscsi_conn_context_get(conn, 0);
++		if (!conn_context) {
++			/* while reopening the recv pool should be full */
++			log_error("BUG: __session_conn_reopen could "
++				  "not get conn context for recv.");
++			return ENOMEM;
++		}
++		conn_context->data = qtask;
++		conn->state = STATE_XPT_WAIT;
++
++		iscsi_sched_conn_context(conn_context, conn, 0, EV_UIO_POLL);
++
++		log_debug(3, "Setting login UIO poll timer "
++			     "%p timeout %d", &conn->login_timer,
++			  conn->login_timeout);
++		actor_timer(&conn->login_timer, conn->login_timeout * 1000,
++	 		    iscsi_uio_poll_login_timedout, qtask);
++
++		return EAGAIN;
++	}
+ 	if (rc != 0)
+ 		return rc;
+ 
+@@ -2203,6 +2291,7 @@ session_login_task(node_rec_t *rec, queu
+ 	iscsi_session_t *session;
+ 	iscsi_conn_t *conn;
+ 	struct iscsi_transport *t;
++	int rc;
+ 
+ 	if (session_is_running(rec))
+ 		return MGMT_IPC_ERR_EXISTS;
+@@ -2276,7 +2365,16 @@ session_login_task(node_rec_t *rec, queu
+ 	conn = &session->conn[0];
+ 	qtask->conn = conn;
+ 
+-	if (iface_set_param(t, &rec->iface, session)) {
++	rc =  iface_set_param(t, &rec->iface, qtask);
++	if (rc == EAGAIN)  {
++		/*
++		 * Cannot block iscsid, so caller is going to internally
++		 * retry the operation.
++		 */
++		qtask->rsp.command = MGMT_IPC_SESSION_LOGIN;
++		qtask->rsp.err = MGMT_IPC_OK;
++		return MGMT_IPC_OK;
++	} else if (rc) {
+ 		__session_destroy(session);
+ 		return MGMT_IPC_ERR_LOGIN_FAILURE;
+ 	}
+Only in open-iscsi-2.0-872-rc1-bnx2i.work/usr/: initiator.c.orig
+diff -aurp open-iscsi-2.0-872-rc1-bnx2i/usr/initiator.h open-iscsi-2.0-872-rc1-bnx2i.work/usr/initiator.h
+--- open-iscsi-2.0-872-rc1-bnx2i/usr/initiator.h	2010-05-18 17:58:00.000000000 -0500
++++ open-iscsi-2.0-872-rc1-bnx2i.work/usr/initiator.h	2010-05-18 18:13:12.000000000 -0500
+@@ -88,6 +88,7 @@ typedef enum iscsi_event_e {
+ 	EV_CONN_ERROR,
+ 	EV_CONN_LOGOUT_TIMER,
+ 	EV_CONN_STOP,
++	EV_UIO_POLL,
+ } iscsi_event_e;
+ 
+ struct queue_task;
+diff -aurp open-iscsi-2.0-872-rc1-bnx2i/usr/iscsid_req.c open-iscsi-2.0-872-rc1-bnx2i.work/usr/iscsid_req.c
+--- open-iscsi-2.0-872-rc1-bnx2i/usr/iscsid_req.c	2010-05-18 17:58:00.000000000 -0500
++++ open-iscsi-2.0-872-rc1-bnx2i.work/usr/iscsid_req.c	2010-05-18 21:16:21.000000000 -0500
+@@ -217,6 +217,8 @@ int uip_broadcast(void *buf, size_t buf_
+ 		return err;
+ 	}
+ 
++	log_debug(3, "connected to uIP daemon");
++
+ 	/*  Send the data to uIP */
+ 	if ((err = write(fd, buf, buf_len)) != buf_len) {
+ 		log_error("got write error (%d/%d), daemon died?",
+@@ -225,6 +227,8 @@ int uip_broadcast(void *buf, size_t buf_
+ 		return -EIO;
+ 	}
+ 
++	log_debug(3, "send iface config to uIP daemon");
++
+ 	/*  Set the socket to a non-blocking read, this way if there are
+ 	 *  problems waiting for uIP, iscsid can bailout early */
+ 	flags = fcntl(fd, F_GETFL, 0);
+@@ -243,8 +247,10 @@ int uip_broadcast(void *buf, size_t buf_
+ 		/*  Wait for the response */
+ 		err = read(fd, &rsp, sizeof(rsp));
+ 		if (err == sizeof(rsp)) {
+-			log_debug(3, "Broadcasted to uIP with length: %ld\n",
+-				  buf_len);
++			log_debug(3, "Broadcasted to uIP with length: %ld "
++				     "cmd: 0x%x rsp: 0x%x\n", buf_len,
++				     rsp.command, rsp.err);
++			err = 0;
+ 			break;
+ 		} else if((err == -1) && (errno == EAGAIN)) {
+ 			usleep(250000);
+@@ -256,12 +262,17 @@ int uip_broadcast(void *buf, size_t buf_
+ 		}
+ 	}
+ 
+-	if(count == MAX_UIP_BROADCAST_READ_TRIES)
+-		log_error("Could not broadcast to uIP");
++	if (count == MAX_UIP_BROADCAST_READ_TRIES) {
++		log_error("Could not broadcast to uIP after %d tries",
++			  count);
++		err = -EAGAIN;
++	} else if (rsp.err != ISCISD_UIP_MGMT_IPC_DEVICE_UP) {
++		log_debug(3, "Device is not ready\n");
++		err = -EAGAIN;
++	}
+ 
+ 	close(fd);
+-
+-	return 0;
++	return err;
+ }
+ 
+ void iscsid_handle_error(mgmt_ipc_err_e err)
+Only in open-iscsi-2.0-872-rc1-bnx2i.work/usr/: iscsid_req.c.orig
+diff -aurp open-iscsi-2.0-872-rc1-bnx2i/usr/uip_mgmt_ipc.h open-iscsi-2.0-872-rc1-bnx2i.work/usr/uip_mgmt_ipc.h
+--- open-iscsi-2.0-872-rc1-bnx2i/usr/uip_mgmt_ipc.h	2010-05-18 17:58:00.000000000 -0500
++++ open-iscsi-2.0-872-rc1-bnx2i.work/usr/uip_mgmt_ipc.h	2010-05-18 18:13:12.000000000 -0500
+@@ -55,6 +55,8 @@ typedef enum iscsid_uip_mgmt_ipc_err {
+         ISCISD_UIP_MGMT_IPC_ERR                    = 1,
+         ISCISD_UIP_MGMT_IPC_ERR_NOT_FOUND          = 2,
+         ISCISD_UIP_MGMT_IPC_ERR_NOMEM              = 3,
++	ISCISD_UIP_MGMT_IPC_DEVICE_UP              = 4,
++	ISCISD_UIP_MGMT_IPC_DEVICE_INITIALIZING    = 5,
+ } iscsid_uip_mgmt_ipc_err_e;
+ 
+ /* IPC Response */

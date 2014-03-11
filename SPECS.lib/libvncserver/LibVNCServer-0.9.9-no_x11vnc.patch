@@ -1,0 +1,26 @@
+diff -up LibVNCServer-0.9.9/configure.ac.system_minilzo LibVNCServer-0.9.9/configure.ac
+--- LibVNCServer-0.9.9/configure.ac.system_minilzo	2012-05-04 11:27:08.000000000 -0500
++++ LibVNCServer-0.9.9/configure.ac	2012-05-07 08:22:19.473583597 -0500
+@@ -992,7 +992,7 @@ if test "$build_x11vnc" = "yes"; then
+ 	#
+ 	# configure.ac:690: required file `x11vnc/Makefile.in' not found
+ 	#
+-	AC_CONFIG_FILES([x11vnc/Makefile x11vnc/misc/Makefile x11vnc/misc/turbovnc/Makefile])
++	#AC_CONFIG_FILES([x11vnc/Makefile x11vnc/misc/Makefile x11vnc/misc/turbovnc/Makefile])
+ 
+ 	if test ! -z "$with_system_libvncserver" -a "x$with_system_libvncserver" != "xno"; then
+ 		# need to move local tarball rfb headers aside:
+diff -up LibVNCServer-0.9.9/Makefile.am.system_minilzo LibVNCServer-0.9.9/Makefile.am
+--- LibVNCServer-0.9.9/Makefile.am.system_minilzo       2012-05-04 09:19:00.000000000 -0500
++++ LibVNCServer-0.9.9/Makefile.am      2012-05-07 08:22:19.475583573 -0500
+@@ -1,6 +1,6 @@
+-if WITH_X11VNC
+-X11VNC=x11vnc
+-endif
++#if WITH_X11VNC
++#X11VNC=x11vnc
++#endif
+
+ SUBDIRS=libvncserver examples libvncclient vncterm webclients client_examples test $(X11VNC)
+ DIST_SUBDIRS=libvncserver examples libvncclient vncterm webclients client_examples test
+

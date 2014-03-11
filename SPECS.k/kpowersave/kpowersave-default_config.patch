@@ -1,0 +1,12 @@
+diff -u -r kpowersave-0.7.3.orig/src/config/kpowersaverc_default kpowersave-0.7.3/src/config/kpowersaverc_default
+--- kpowersave-0.7.3.orig/src/config/kpowersaverc_default	2008-06-13 10:57:08.000000000 +0800
++++ kpowersave-0.7.3/src/config/kpowersaverc_default	2008-06-13 10:57:43.000000000 +0800
+@@ -10,7 +10,7 @@
+ buttonsAllowedActions=SHUTDOWN,LOGOUT_DIALOG,SUSPEND2DISK,SUSPEND2RAM
+ AutoSuspendCountdown=true
+ AutoSuspendCountdownTimeOut=30
+-Autostart=true
++Autostart=false
+ AutostartNeverAsk=false
+ unmountExternalOnSuspend=true
+ callSetPowerSaveOnAC=true

@@ -1,0 +1,958 @@
+diff -u -r -N kfuseiso-20061108/po/Makefile.in kfuseiso-20061108.new/po/Makefile.in
+--- kfuseiso-20061108/po/Makefile.in	2006-11-08 10:44:37.000000000 +0800
++++ kfuseiso-20061108.new/po/Makefile.in	2008-10-20 06:33:13.000000000 +0800
+@@ -317,7 +317,7 @@
+ POFILES = AUTO
+ #>- SUBDIRS = $(AUTODIRS)
+ #>+ 1
+-SUBDIRS =. pl
++SUBDIRS =. pl zh_CN
+ #>- all: all-recursive
+ #>+ 1
+ all: docs-am  all-recursive
+diff -u -r -N kfuseiso-20061108/po/zh_CN/iso_image_plugin.po kfuseiso-20061108.new/po/zh_CN/iso_image_plugin.po
+--- kfuseiso-20061108/po/zh_CN/iso_image_plugin.po	1970-01-01 08:00:00.000000000 +0800
++++ kfuseiso-20061108.new/po/zh_CN/iso_image_plugin.po	2008-10-20 06:33:13.000000000 +0800
+@@ -0,0 +1,43 @@
++# SOME DESCRIPTIVE TITLE.
++# This file is put in the public domain.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: kfuseiso 20061108\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2006-11-08 10:40+0800\n"
++"PO-Revision-Date: 2007-02-07 07:51+0800\n"
++"Last-Translator: Liu Di <liudidi@gmail.com>\n"
++"Language-Team: zh_CN <zh@linuxfans.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: iso_image_plugin.cpp:78 iso_image_plugin.cpp:107
++msgid "Umount image"
++msgstr "卸载镜像"
++
++#: iso_image_plugin.cpp:111
++msgid "Mount image"
++msgstr "挂载镜像"
++
++#: iso_image_plugin.cpp:114
++msgid "Mount image and browse"
++msgstr "挂载镜像并浏览"
++
++#: iso_image_plugin.cpp:131 iso_image_plugin.cpp:144
++msgid ""
++"Error while mounting image:\n"
++"%1"
++msgstr ""
++"挂载镜像时发生错误：\n"
++"%1"
++
++#: iso_image_plugin.cpp:154
++msgid ""
++"Error while unmounting image:\n"
++"%1"
++msgstr ""
++"卸载镜像时发生错误：\n"
++"%1"
+diff -u -r -N kfuseiso-20061108/po/zh_CN/kfile_iso_image.po kfuseiso-20061108.new/po/zh_CN/kfile_iso_image.po
+--- kfuseiso-20061108/po/zh_CN/kfile_iso_image.po	1970-01-01 08:00:00.000000000 +0800
++++ kfuseiso-20061108.new/po/zh_CN/kfile_iso_image.po	2008-10-20 06:33:13.000000000 +0800
+@@ -0,0 +1,104 @@
++# SOME DESCRIPTIVE TITLE.
++# This file is put in the public domain.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++# Liu Di <liudidi@gmail.com>, 2007.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: kfuseiso 20061108\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2006-11-08 10:40+0800\n"
++"PO-Revision-Date: 2007-02-07 07:55+0800\n"
++"Last-Translator: Liu Di <liudidi@gmail.com>\n"
++"Language-Team: zh_CN <zh@linuxfans.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: kfile_iso_image.cpp:209
++msgid "Iso disk image information"
++msgstr "ISO 光盘镜像信息"
++
++#: kfile_iso_image.cpp:213
++msgid "Image type"
++msgstr "镜像类型"
++
++#: kfile_iso_image.cpp:214
++msgid "System identifier"
++msgstr "系统标识"
++
++#: kfile_iso_image.cpp:215
++msgid "Volume identifier"
++msgstr "卷标"
++
++#: kfile_iso_image.cpp:217
++msgid "Volume set identifier"
++msgstr "卷集标"
++
++#: kfile_iso_image.cpp:220
++msgid "Publisher identifier"
++msgstr "发行人标识"
++
++#: kfile_iso_image.cpp:223
++msgid "Data preparer identifier"
++msgstr "数据调制标识"
++
++#: kfile_iso_image.cpp:225
++msgid "Application identifier"
++msgstr "应用程序标识"
++
++#: kfile_iso_image.cpp:227
++msgid "Copyright file identifier"
++msgstr "版权文件标识"
++
++#: kfile_iso_image.cpp:228
++msgid "Abstract file identifier"
++msgstr "摘要文件标识"
++
++#: kfile_iso_image.cpp:229
++msgid "Bibliographic file identifier"
++msgstr "目录文件标识"
++
++#: kfile_iso_image.cpp:230
++msgid "Volume creation date and time"
++msgstr "卷建立日期和时间"
++
++#: kfile_iso_image.cpp:231
++msgid "Volume modification date and time"
++msgstr "卷修改日期和时间"
++
++#: kfile_iso_image.cpp:232
++msgid "Volume expiration date and time"
++msgstr "卷过期日期和时间"
++
++#: kfile_iso_image.cpp:233
++msgid "Volume effective date and time"
++msgstr "卷有效日期和时间"
++
++#: kfile_iso_image.cpp:234
++msgid "ISO image icon"
++msgstr "ISO 镜像图标"
++
++#: kfile_iso_image.cpp:292
++msgid "ISO9660 image"
++msgstr "ISO9660 镜像"
++
++#: kfile_iso_image.cpp:295
++msgid "MODE1 image"
++msgstr "MODE1 镜像"
++
++#: kfile_iso_image.cpp:298
++msgid "MODE2 image"
++msgstr "MODE2 镜像"
++
++#: kfile_iso_image.cpp:301
++msgid "MODE2 RAW image"
++msgstr "MODE2 RAW 镜像"
++
++#: kfile_iso_image.cpp:304
++msgid "MODE2/2336 image"
++msgstr "MODE2/2336 镜像"
++
++#: kfile_iso_image.cpp:307
++msgid "NRG image"
++msgstr "NRG 镜像"
+diff -u -r -N kfuseiso-20061108/po/zh_CN/kfuseisomount.po kfuseiso-20061108.new/po/zh_CN/kfuseisomount.po
+--- kfuseiso-20061108/po/zh_CN/kfuseisomount.po	1970-01-01 08:00:00.000000000 +0800
++++ kfuseiso-20061108.new/po/zh_CN/kfuseisomount.po	2008-10-20 06:33:13.000000000 +0800
+@@ -0,0 +1,47 @@
++# SOME DESCRIPTIVE TITLE.
++# This file is put in the public domain.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++# Liu Di <liudidi@gmail.com>, 2007.
++msgid ""
++msgstr ""
++"Project-Id-Version: kfuseiso 20061108\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2006-11-06 18:09+0800\n"
++"PO-Revision-Date: 2007-02-07 08:04+0800\n"
++"Last-Translator: Liu Di <liudidi@gmail.comm>\n"
++"Language-Team: zh_CN <zh_CN@linuxfans.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: kfuseisomount.cpp:66
++msgid "Open mounted image in new window"
++msgstr "在新窗口中打开已挂载的镜像"
++
++#: kfuseisomount.cpp:97
++msgid "Utility to mount ISO image"
++msgstr "挂载 ISO 镜像的工具"
++
++#: kfuseisomount.cpp:107
++msgid "ISO image filename"
++msgstr "ISO 镜像文件名"
++
++#: kfuseisomount.cpp:109
++msgid "Mount ISO image"
++msgstr "挂载 ISO 镜像"
++
++#: kfuseisomount.cpp:118
++msgid "All supported files"
++msgstr "所有支持的文件"
++
++#: kfuseisomount.cpp:119
++msgid "All files"
++msgstr "所有文件"
++
++#: kfuseisomount.cpp:137
++msgid ""
++"Error while mounting image:\n"
++"%1"
++msgstr ""
++"挂载镜像时发生错误：\n"
++"%1"
+diff -u -r -N kfuseiso-20061108/po/zh_CN/kio_isomedia.po kfuseiso-20061108.new/po/zh_CN/kio_isomedia.po
+--- kfuseiso-20061108/po/zh_CN/kio_isomedia.po	1970-01-01 08:00:00.000000000 +0800
++++ kfuseiso-20061108.new/po/zh_CN/kio_isomedia.po	2008-10-20 06:33:13.000000000 +0800
+@@ -0,0 +1,27 @@
++# SOME DESCRIPTIVE TITLE.
++# This file is put in the public domain.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++# Liu Di <liudidi@gmail.com>, 2007.
++msgid ""
++msgstr ""
++"Project-Id-Version: kfuseiso 20061108\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2006-10-01 06:49+0900\n"
++"PO-Revision-Date: 2007-02-07 08:09+0800\n"
++"Last-Translator: Liu Di <liudidi@gmail.com>\n"
++"Language-Team: zh_CN <zh_CN@linuxfans.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: kio_isomedia.cpp:43
++msgid "Protocol name"
++msgstr "协议名称"
++
++#: kio_isomedia.cpp:44 kio_isomedia.cpp:45
++msgid "Socket name"
++msgstr "套接字名称"
++
++#: kio_isomedia.cpp:102
++msgid "Mount ISO image file"
++msgstr "挂载 ISO 镜像文件"
+diff -u -r -N kfuseiso-20061108/po/zh_CN/Makefile.am kfuseiso-20061108.new/po/zh_CN/Makefile.am
+--- kfuseiso-20061108/po/zh_CN/Makefile.am	1970-01-01 08:00:00.000000000 +0800
++++ kfuseiso-20061108.new/po/zh_CN/Makefile.am	2008-10-20 06:33:13.000000000 +0800
+@@ -0,0 +1,2 @@
++KDE_LANG = zh_CN
++POFILES = AUTO
+diff -u -r -N kfuseiso-20061108/po/zh_CN/Makefile.in kfuseiso-20061108.new/po/zh_CN/Makefile.in
+--- kfuseiso-20061108/po/zh_CN/Makefile.in	1970-01-01 08:00:00.000000000 +0800
++++ kfuseiso-20061108.new/po/zh_CN/Makefile.in	2008-10-20 06:33:13.000000000 +0800
+@@ -0,0 +1,614 @@
++# Makefile.in generated by automake 1.9.6 from Makefile.am.
++# KDE tags expanded automatically by am_edit - $Revision: 483858 $ 
++# @configure_input@
++
++# Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
++# 2003, 2004, 2005  Free Software Foundation, Inc.
++# This Makefile.in is free software; the Free Software Foundation
++# gives unlimited permission to copy and/or distribute it,
++# with or without modifications, as long as this notice is preserved.
++
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
++# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
++# PARTICULAR PURPOSE.
++
++@SET_MAKE@
++srcdir = @srcdir@
++top_srcdir = @top_srcdir@
++VPATH = @srcdir@
++pkgdatadir = $(datadir)/@PACKAGE@
++pkglibdir = $(libdir)/@PACKAGE@
++pkgincludedir = $(includedir)/@PACKAGE@
++top_builddir = ../..
++am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
++INSTALL = @INSTALL@
++install_sh_DATA = $(install_sh) -c -m 644
++install_sh_PROGRAM = $(install_sh) -c
++install_sh_SCRIPT = $(install_sh) -c
++INSTALL_HEADER = $(INSTALL_DATA)
++transform = $(program_transform_name)
++NORMAL_INSTALL = :
++PRE_INSTALL = :
++POST_INSTALL = :
++NORMAL_UNINSTALL = :
++PRE_UNINSTALL = :
++POST_UNINSTALL = :
++build_triplet = @build@
++host_triplet = @host@
++target_triplet = @target@
++subdir = po/pl
++DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
++ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
++am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
++	$(top_srcdir)/configure.in
++am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
++	$(ACLOCAL_M4)
++mkinstalldirs = $(SHELL) $(top_srcdir)/admin/mkinstalldirs
++CONFIG_HEADER = $(top_builddir)/config.h
++CONFIG_CLEAN_FILES =
++SOURCES =
++DIST_SOURCES =
++#>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
++#>+ 1
++#>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
++#>+ 1
++DISTFILES = $(GMOFILES) $(POFILES) $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
++ACLOCAL = @ACLOCAL@
++AMDEP_FALSE = @AMDEP_FALSE@
++AMDEP_TRUE = @AMDEP_TRUE@
++AMTAR = @AMTAR@
++AR = @AR@
++ARTSCCONFIG = @ARTSCCONFIG@
++AUTOCONF = @AUTOCONF@
++AUTODIRS = @AUTODIRS@
++AUTOHEADER = @AUTOHEADER@
++AUTOMAKE = @AUTOMAKE@
++AWK = @AWK@
++CC = @CC@
++CCDEPMODE = @CCDEPMODE@
++CFLAGS = @CFLAGS@
++CONF_FILES = @CONF_FILES@
++CPP = @CPP@
++CPPFLAGS = @CPPFLAGS@
++CXX = @CXX@
++CXXCPP = @CXXCPP@
++CXXDEPMODE = @CXXDEPMODE@
++CXXFLAGS = @CXXFLAGS@
++CYGPATH_W = @CYGPATH_W@
++DCOPIDL = @DCOPIDL@
++DCOPIDL2CPP = @DCOPIDL2CPP@
++DCOPIDLNG = @DCOPIDLNG@
++DCOP_DEPENDENCIES = @DCOP_DEPENDENCIES@
++DEFS = @DEFS@
++DEPDIR = @DEPDIR@
++ECHO = @ECHO@
++ECHO_C = @ECHO_C@
++ECHO_N = @ECHO_N@
++ECHO_T = @ECHO_T@
++EGREP = @EGREP@
++ENABLE_PERMISSIVE_FLAG = @ENABLE_PERMISSIVE_FLAG@
++EXEEXT = @EXEEXT@
++F77 = @F77@
++FFLAGS = @FFLAGS@
++FRAMEWORK_COREAUDIO = @FRAMEWORK_COREAUDIO@
++FUSEISO = @FUSEISO@
++FUSERMOUNT = @FUSERMOUNT@
++GMSGFMT = @GMSGFMT@
++GREP = @GREP@
++HAVE_GCC_VISIBILITY = @HAVE_GCC_VISIBILITY@
++INSTALL_DATA = @INSTALL_DATA@
++INSTALL_PROGRAM = @INSTALL_PROGRAM@
++INSTALL_SCRIPT = @INSTALL_SCRIPT@
++INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
++KCFG_DEPENDENCIES = @KCFG_DEPENDENCIES@
++KCONFIG_COMPILER = @KCONFIG_COMPILER@
++KDECONFIG = @KDECONFIG@
++KDE_CHECK_PLUGIN = @KDE_CHECK_PLUGIN@
++KDE_EXTRA_RPATH = @KDE_EXTRA_RPATH@
++KDE_INCLUDES = @KDE_INCLUDES@
++KDE_LDFLAGS = @KDE_LDFLAGS@
++KDE_MT_LDFLAGS = @KDE_MT_LDFLAGS@
++KDE_MT_LIBS = @KDE_MT_LIBS@
++KDE_NO_UNDEFINED = @KDE_NO_UNDEFINED@
++KDE_PLUGIN = @KDE_PLUGIN@
++KDE_RPATH = @KDE_RPATH@
++KDE_USE_CLOSURE_FALSE = @KDE_USE_CLOSURE_FALSE@
++KDE_USE_CLOSURE_TRUE = @KDE_USE_CLOSURE_TRUE@
++KDE_USE_FINAL_FALSE = @KDE_USE_FINAL_FALSE@
++KDE_USE_FINAL_TRUE = @KDE_USE_FINAL_TRUE@
++KDE_USE_FPIE = @KDE_USE_FPIE@
++KDE_USE_NMCHECK_FALSE = @KDE_USE_NMCHECK_FALSE@
++KDE_USE_NMCHECK_TRUE = @KDE_USE_NMCHECK_TRUE@
++KDE_USE_PIE = @KDE_USE_PIE@
++KDE_XSL_STYLESHEET = @KDE_XSL_STYLESHEET@
++LDFLAGS = @LDFLAGS@
++LDFLAGS_AS_NEEDED = @LDFLAGS_AS_NEEDED@
++LDFLAGS_NEW_DTAGS = @LDFLAGS_NEW_DTAGS@
++LIBCOMPAT = @LIBCOMPAT@
++LIBCRYPT = @LIBCRYPT@
++LIBDL = @LIBDL@
++LIBJPEG = @LIBJPEG@
++LIBOBJS = @LIBOBJS@
++LIBPNG = @LIBPNG@
++LIBPTHREAD = @LIBPTHREAD@
++LIBRESOLV = @LIBRESOLV@
++LIBS = @LIBS@
++LIBSM = @LIBSM@
++LIBSOCKET = @LIBSOCKET@
++LIBTOOL = @LIBTOOL@
++LIBUCB = @LIBUCB@
++LIBUTIL = @LIBUTIL@
++LIBZ = @LIBZ@
++LIB_KAB = @LIB_KAB@
++LIB_KABC = @LIB_KABC@
++LIB_KDECORE = @LIB_KDECORE@
++LIB_KDED = @LIB_KDED@
++LIB_KDEPIM = @LIB_KDEPIM@
++LIB_KDEPRINT = @LIB_KDEPRINT@
++LIB_KDEUI = @LIB_KDEUI@
++LIB_KDNSSD = @LIB_KDNSSD@
++LIB_KFILE = @LIB_KFILE@
++LIB_KFM = @LIB_KFM@
++LIB_KHTML = @LIB_KHTML@
++LIB_KIMPROXY = @LIB_KIMPROXY@
++LIB_KIO = @LIB_KIO@
++LIB_KJS = @LIB_KJS@
++LIB_KNEWSTUFF = @LIB_KNEWSTUFF@
++LIB_KPARTS = @LIB_KPARTS@
++LIB_KSPELL = @LIB_KSPELL@
++LIB_KSYCOCA = @LIB_KSYCOCA@
++LIB_KUNITTEST = @LIB_KUNITTEST@
++LIB_KUTILS = @LIB_KUTILS@
++LIB_POLL = @LIB_POLL@
++LIB_QPE = @LIB_QPE@
++LIB_QT = @LIB_QT@
++LIB_SMB = @LIB_SMB@
++LIB_X11 = @LIB_X11@
++LIB_XEXT = @LIB_XEXT@
++LIB_XRENDER = @LIB_XRENDER@
++LN_S = @LN_S@
++LTLIBOBJS = @LTLIBOBJS@
++MAKEINFO = @MAKEINFO@
++MAKEKDEWIDGETS = @MAKEKDEWIDGETS@
++MCOPIDL = @MCOPIDL@
++MEINPROC = @MEINPROC@
++MOC = @MOC@
++MSGFMT = @MSGFMT@
++NOOPT_CFLAGS = @NOOPT_CFLAGS@
++NOOPT_CXXFLAGS = @NOOPT_CXXFLAGS@
++OBJEXT = @OBJEXT@
++PACKAGE = @PACKAGE@
++PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
++PACKAGE_NAME = @PACKAGE_NAME@
++PACKAGE_STRING = @PACKAGE_STRING@
++PACKAGE_TARNAME = @PACKAGE_TARNAME@
++PACKAGE_VERSION = @PACKAGE_VERSION@
++PATH_SEPARATOR = @PATH_SEPARATOR@
++PERL = @PERL@
++QTE_NORTTI = @QTE_NORTTI@
++QT_INCLUDES = @QT_INCLUDES@
++QT_LDFLAGS = @QT_LDFLAGS@
++RANLIB = @RANLIB@
++SET_MAKE = @SET_MAKE@
++SHELL = @SHELL@
++STRIP = @STRIP@
++TOPSUBDIRS = @TOPSUBDIRS@
++UIC = @UIC@
++UIC_TR = @UIC_TR@
++USER_INCLUDES = @USER_INCLUDES@
++USER_LDFLAGS = @USER_LDFLAGS@
++USE_EXCEPTIONS = @USE_EXCEPTIONS@
++USE_RTTI = @USE_RTTI@
++USE_THREADS = @USE_THREADS@
++VERSION = @VERSION@
++WOVERLOADED_VIRTUAL = @WOVERLOADED_VIRTUAL@
++XGETTEXT = @XGETTEXT@
++XMKMF = @XMKMF@
++XMLLINT = @XMLLINT@
++X_EXTRA_LIBS = @X_EXTRA_LIBS@
++X_INCLUDES = @X_INCLUDES@
++X_LDFLAGS = @X_LDFLAGS@
++X_PRE_LIBS = @X_PRE_LIBS@
++X_RPATH = @X_RPATH@
++ac_ct_CC = @ac_ct_CC@
++ac_ct_CXX = @ac_ct_CXX@
++ac_ct_F77 = @ac_ct_F77@
++all_includes = @all_includes@
++all_libraries = @all_libraries@
++am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
++am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
++am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
++am__fastdepCXX_TRUE = @am__fastdepCXX_TRUE@
++am__include = @am__include@
++am__leading_dot = @am__leading_dot@
++am__quote = @am__quote@
++am__tar = @am__tar@
++am__untar = @am__untar@
++bindir = @bindir@
++build = @build@
++build_alias = @build_alias@
++build_cpu = @build_cpu@
++build_os = @build_os@
++build_vendor = @build_vendor@
++datadir = @datadir@
++datarootdir = @datarootdir@
++docdir = @docdir@
++dvidir = @dvidir@
++exec_prefix = @exec_prefix@
++host = @host@
++host_alias = @host_alias@
++host_cpu = @host_cpu@
++host_os = @host_os@
++host_vendor = @host_vendor@
++htmldir = @htmldir@
++include_ARTS_FALSE = @include_ARTS_FALSE@
++include_ARTS_TRUE = @include_ARTS_TRUE@
++include_x11_FALSE = @include_x11_FALSE@
++include_x11_TRUE = @include_x11_TRUE@
++includedir = @includedir@
++infodir = @infodir@
++install_sh = @install_sh@
++kde_appsdir = @kde_appsdir@
++kde_bindir = @kde_bindir@
++kde_confdir = @kde_confdir@
++kde_datadir = @kde_datadir@
++kde_htmldir = @kde_htmldir@
++kde_icondir = @kde_icondir@
++kde_includes = @kde_includes@
++kde_kcfgdir = @kde_kcfgdir@
++kde_libraries = @kde_libraries@
++kde_libs_htmldir = @kde_libs_htmldir@
++kde_libs_prefix = @kde_libs_prefix@
++kde_locale = @kde_locale@
++kde_mimedir = @kde_mimedir@
++kde_moduledir = @kde_moduledir@
++kde_qtver = @kde_qtver@
++kde_servicesdir = @kde_servicesdir@
++kde_servicetypesdir = @kde_servicetypesdir@
++kde_sounddir = @kde_sounddir@
++kde_styledir = @kde_styledir@
++kde_templatesdir = @kde_templatesdir@
++kde_wallpaperdir = @kde_wallpaperdir@
++kde_widgetdir = @kde_widgetdir@
++kdeinitdir = @kdeinitdir@
++libdir = @libdir@
++libexecdir = @libexecdir@
++localedir = @localedir@
++localstatedir = @localstatedir@
++mandir = @mandir@
++mkdir_p = @mkdir_p@
++oldincludedir = @oldincludedir@
++pdfdir = @pdfdir@
++prefix = @prefix@
++program_transform_name = @program_transform_name@
++psdir = @psdir@
++qt_includes = @qt_includes@
++qt_libraries = @qt_libraries@
++sbindir = @sbindir@
++sharedstatedir = @sharedstatedir@
++sysconfdir = @sysconfdir@
++target = @target@
++target_alias = @target_alias@
++target_cpu = @target_cpu@
++target_os = @target_os@
++target_vendor = @target_vendor@
++unsermake_enable_pch_FALSE = @unsermake_enable_pch_FALSE@
++unsermake_enable_pch_TRUE = @unsermake_enable_pch_TRUE@
++x_includes = @x_includes@
++x_libraries = @x_libraries@
++xdg_appsdir = @xdg_appsdir@
++xdg_directorydir = @xdg_directorydir@
++xdg_menudir = @xdg_menudir@
++KDE_LANG = zh_CN
++#>- POFILES = AUTO
++#>+ 2
++POFILES = kfuseisomount.po iso_image_plugin.po kio_isomedia.po kfile_iso_image.po
++GMOFILES = kfuseisomount.gmo iso_image_plugin.gmo kio_isomedia.gmo kfile_iso_image.gmo
++#>- all: all-am
++#>+ 1
++all: all-nls docs-am  all-am
++
++.SUFFIXES:
++$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++#>- 	@for dep in $?; do \
++#>- 	  case '$(am__configure_deps)' in \
++#>- 	    *$$dep*) \
++#>- 	      cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh \
++#>- 		&& exit 0; \
++#>- 	      exit 1;; \
++#>- 	  esac; \
++#>- 	done; \
++#>- 	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  po/zh_CN/Makefile'; \
++#>- 	cd $(top_srcdir) && \
++#>- 	  $(AUTOMAKE) --gnu  po/zh_CN/Makefile
++#>+ 12
++	@for dep in $?; do \
++	  case '$(am__configure_deps)' in \
++	    *$$dep*) \
++	      cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh \
++		&& exit 0; \
++	      exit 1;; \
++	  esac; \
++	done; \
++	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  po/zh_CN/Makefile'; \
++	cd $(top_srcdir) && \
++	  $(AUTOMAKE) --gnu  po/zh_CN/Makefile
++	cd $(top_srcdir) && perl admin/am_edit -padmin po/zh_CN/Makefile.in
++.PRECIOUS: Makefile
++Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
++	@case '$?' in \
++	  *config.status*) \
++	    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh;; \
++	  *) \
++	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)'; \
++	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe);; \
++	esac;
++
++$(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
++	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
++
++$(top_srcdir)/configure:  $(am__configure_deps)
++	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
++$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
++
++mostlyclean-libtool:
++	-rm -f *.lo
++
++clean-libtool:
++	-rm -rf .libs _libs
++
++distclean-libtool:
++	-rm -f libtool
++uninstall-info-am:
++tags: TAGS
++TAGS:
++
++ctags: CTAGS
++CTAGS:
++
++
++#>- distdir: $(DISTFILES)
++#>+ 1
++distdir: distdir-nls  $(DISTFILES)
++	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
++	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
++	list='$(DISTFILES)'; for file in $$list; do \
++	  case $$file in \
++	    $(srcdir)/*) file=`echo "$$file" | sed "s|^$$srcdirstrip/||"`;; \
++	    $(top_srcdir)/*) file=`echo "$$file" | sed "s|^$$topsrcdirstrip/|$(top_builddir)/|"`;; \
++	  esac; \
++	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
++	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
++	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
++	    dir="/$$dir"; \
++	    $(mkdir_p) "$(distdir)$$dir"; \
++	  else \
++	    dir=''; \
++	  fi; \
++	  if test -d $$d/$$file; then \
++	    if test -d $(srcdir)/$$file && test $$d != $(srcdir); then \
++	      cp -pR $(srcdir)/$$file $(distdir)$$dir || exit 1; \
++	    fi; \
++	    cp -pR $$d/$$file $(distdir)$$dir || exit 1; \
++	  else \
++	    test -f $(distdir)/$$file \
++	    || cp -p $$d/$$file $(distdir)/$$file \
++	    || exit 1; \
++	  fi; \
++	done
++check-am: all-am
++check: check-am
++all-am: Makefile
++installdirs:
++install: install-am
++install-exec: install-exec-am
++install-data: install-data-am
++#>- uninstall: uninstall-am
++#>+ 1
++uninstall: uninstall-nls  uninstall-am
++
++install-am: all-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++
++installcheck: installcheck-am
++install-strip:
++	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
++	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
++	  `test -z '$(STRIP)' || \
++	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
++mostlyclean-generic:
++
++clean-generic:
++
++distclean-generic:
++	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
++
++maintainer-clean-generic:
++	@echo "This command is intended for maintainers to use"
++	@echo "it deletes files that may require special tools to rebuild."
++#>- clean: clean-am
++#>+ 1
++clean: kde-rpo-clean  clean-am
++
++#>- clean-am: clean-generic clean-libtool mostlyclean-am
++#>+ 1
++clean-am: clean-bcheck  clean-generic clean-libtool mostlyclean-am
++
++distclean: distclean-am
++	-rm -f Makefile
++distclean-am: clean-am distclean-generic distclean-libtool
++
++dvi: dvi-am
++
++dvi-am:
++
++html: html-am
++
++info: info-am
++
++info-am:
++
++#>- install-data-am:
++#>+ 1
++install-data-am: install-nls 
++
++install-exec-am:
++
++install-info: install-info-am
++
++install-man:
++
++installcheck-am:
++
++#>- maintainer-clean: maintainer-clean-am
++#>+ 1
++maintainer-clean: clean-nls  maintainer-clean-am
++	-rm -f Makefile
++maintainer-clean-am: distclean-am maintainer-clean-generic
++
++mostlyclean: mostlyclean-am
++
++mostlyclean-am: mostlyclean-generic mostlyclean-libtool
++
++pdf: pdf-am
++
++pdf-am:
++
++ps: ps-am
++
++ps-am:
++
++uninstall-am: uninstall-info-am
++
++.PHONY: all all-am check check-am clean clean-generic clean-libtool \
++	distclean distclean-generic distclean-libtool distdir dvi \
++	dvi-am html html-am info info-am install install-am \
++	install-data install-data-am install-exec install-exec-am \
++	install-info install-info-am install-man install-strip \
++	installcheck installcheck-am installdirs maintainer-clean \
++	maintainer-clean-generic mostlyclean mostlyclean-generic \
++	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
++	uninstall-info-am
++
++# Tell versions [3.59,3.63) of GNU make to not export all variables.
++# Otherwise a system limit (for SysV at least) may be exceeded.
++.NOEXPORT:
++
++
++#>+ 2
++KDE_DIST=Makefile.in iso_image_plugin.po kfile_iso_image.gmo kio_isomedia.gmo iso_image_plugin.gmo kio_isomedia.po kfuseisomount.po kfuseisomount.gmo kfile_iso_image.po Makefile.am 
++
++#>+ 13
++kfuseisomount.gmo: kfuseisomount.po
++	rm -f kfuseisomount.gmo; $(GMSGFMT) -o kfuseisomount.gmo $(srcdir)/kfuseisomount.po
++	test ! -f kfuseisomount.gmo || touch kfuseisomount.gmo
++iso_image_plugin.gmo: iso_image_plugin.po
++	rm -f iso_image_plugin.gmo; $(GMSGFMT) -o iso_image_plugin.gmo $(srcdir)/iso_image_plugin.po
++	test ! -f iso_image_plugin.gmo || touch iso_image_plugin.gmo
++kio_isomedia.gmo: kio_isomedia.po
++	rm -f kio_isomedia.gmo; $(GMSGFMT) -o kio_isomedia.gmo $(srcdir)/kio_isomedia.po
++	test ! -f kio_isomedia.gmo || touch kio_isomedia.gmo
++kfile_iso_image.gmo: kfile_iso_image.po
++	rm -f kfile_iso_image.gmo; $(GMSGFMT) -o kfile_iso_image.gmo $(srcdir)/kfile_iso_image.po
++	test ! -f kfile_iso_image.gmo || touch kfile_iso_image.gmo
++
++#>+ 3
++clean-nls:
++	-rm -f  kfuseisomount.gmo iso_image_plugin.gmo kio_isomedia.gmo kfile_iso_image.gmo
++
++#>+ 10
++install-nls:
++	$(mkinstalldirs) $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES
++	@for base in kfuseisomount iso_image_plugin kio_isomedia kfile_iso_image ; do \
++	  echo $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES/$$base.mo ;\
++	  if test -f $$base.gmo; then $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES/$$base.mo ;\
++	  elif test -f $(srcdir)/$$base.gmo; then $(INSTALL_DATA) $(srcdir)/$$base.gmo $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES/$$base.mo ;\
++	  fi ;\
++	done
++
++
++#>+ 6
++uninstall-nls:
++	rm -f $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES/kfuseisomount.mo
++	rm -f $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES/iso_image_plugin.mo
++	rm -f $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES/kio_isomedia.mo
++	rm -f $(DESTDIR)$(kde_locale)/$(KDE_LANG)/LC_MESSAGES/kfile_iso_image.mo
++
++#>+ 2
++all-nls: $(GMOFILES)
++
++#>+ 8
++distdir-nls:$(GMOFILES)
++	for file in $(POFILES); do \
++	  cp $(srcdir)/$$file $(distdir); \
++	done
++	for file in $(GMOFILES); do \
++	  cp $(srcdir)/$$file $(distdir); \
++	done
++
++#>+ 2
++docs-am:
++
++#>+ 15
++force-reedit:
++		@for dep in $?; do \
++	  case '$(am__configure_deps)' in \
++	    *$$dep*) \
++	      cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh \
++		&& exit 0; \
++	      exit 1;; \
++	  esac; \
++	done; \
++	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  po/zh_CN/Makefile'; \
++	cd $(top_srcdir) && \
++	  $(AUTOMAKE) --gnu  po/zh_CN/Makefile
++	cd $(top_srcdir) && perl admin/am_edit -padmin po/zh_CN/Makefile.in
++
++
++#>+ 21
++clean-bcheck: 
++	rm -f *.bchecktest.cc *.bchecktest.cc.class a.out
++
++bcheck: bcheck-am
++
++bcheck-am:
++	@for i in ; do \
++	    if test $(srcdir)/$$i -nt $$i.bchecktest.cc; then \
++	        echo "int main() {return 0;}" > $$i.bchecktest.cc ; \
++	        echo "#include \"$$i\"" >> $$i.bchecktest.cc ; \
++	        echo "$$i"; \
++	        if ! $(CXX) $(DEFS) -I. -I$(srcdir) -I$(top_builddir) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS)  --dump-class-hierarchy -c $$i.bchecktest.cc; then \
++	            rm -f $$i.bchecktest.cc; exit 1; \
++	        fi ; \
++	        echo "" >> $$i.bchecktest.cc.class; \
++	        perl $(top_srcdir)/admin/bcheck.pl $$i.bchecktest.cc.class || { rm -f $$i.bchecktest.cc; exit 1; }; \
++	        rm -f a.out; \
++	    fi ; \
++	done
++
++
++#>+ 3
++final:
++	$(MAKE) all-am
++
++#>+ 3
++final-install:
++	$(MAKE) install-am
++
++#>+ 3
++no-final:
++	$(MAKE) all-am
++
++#>+ 3
++no-final-install:
++	$(MAKE) install-am
++
++#>+ 3
++kde-rpo-clean:
++	-rm -f *.rpo
++
++#>+ 3
++nmcheck: 
++nmcheck-am: nmcheck
+diff -u -r -N kfuseiso-20061108/src/fuseisolib.cpp kfuseiso-20061108.new/src/fuseisolib.cpp
+--- kfuseiso-20061108/src/fuseisolib.cpp	2006-11-06 17:31:45.000000000 +0800
++++ kfuseiso-20061108.new/src/fuseisolib.cpp	2008-10-20 06:33:34.000000000 +0800
+@@ -173,7 +173,7 @@
+     KProcess proc;
+     
+     proc << "fuseiso";
+-    proc << "-p" << url.path() << mount_point.path();
++    proc << "-p" << QString::fromLocal8Bit(url.path()) << mount_point.path();
+     
+     connect( &proc, SIGNAL( receivedStdout( KProcess *, char *, int ) ),
+         this, SLOT( onReceivedStdout( KProcess *, char *, int ) ) );
+diff -u -r -N kfuseiso-20061108/src/iso_image_plugin.cpp kfuseiso-20061108.new/src/iso_image_plugin.cpp
+--- kfuseiso-20061108/src/iso_image_plugin.cpp	2006-11-08 10:05:17.000000000 +0800
++++ kfuseiso-20061108.new/src/iso_image_plugin.cpp	2008-10-20 06:33:29.000000000 +0800
+@@ -79,7 +79,7 @@
+             SLOT(slotUmount()), actionCollection(), "iso_image_umount_menu");
+         addAction(action);
+     } else if(file_url.isLocalFile()) { // local file to mount/umount/browse
+-        image_file = file_url.path();
++        image_file = file_url.path().local8Bit();
+         
+         if(!image_file) {
+             return;
+diff -u -r -N kfuseiso-20061108/src/kfile_iso_image.cpp kfuseiso-20061108.new/src/kfile_iso_image.cpp
+--- kfuseiso-20061108/src/kfile_iso_image.cpp	2006-11-08 10:07:49.000000000 +0800
++++ kfuseiso-20061108.new/src/kfile_iso_image.cpp	2008-10-20 06:33:39.000000000 +0800
+@@ -282,7 +282,7 @@
+     /// @todo move vd read stuff info fuseisolib and make it kde-transparent
+     struct iso_primary_descriptor vd;
+     memset(&vd, 0, sizeof(struct iso_volume_descriptor));
+-    int mode = read_volume_descriptor(url.path().ascii(), (struct iso_volume_descriptor*)&vd);
++    int mode = read_volume_descriptor(url.path().local8Bit(), (struct iso_volume_descriptor*)&vd);
+     if(mode < 0) {
+         return false;
+     };
+@@ -314,39 +314,39 @@
+     
+     str = QString::fromAscii(vd.system_id, 32).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "SystemId", str);
++        appendItem(group, "SystemId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.volume_id, 32).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "VolumeId", str);
++        appendItem(group, "VolumeId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.volume_set_id, 128).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "VolumeSetId", str);
++        appendItem(group, "VolumeSetId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.publisher_id, 128).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "PublisherId", str);
++        appendItem(group, "PublisherId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.preparer_id, 128).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "PreparerId", str);
++        appendItem(group, "PreparerId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.application_id, 128).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "ApplicationId", str);
++        appendItem(group, "ApplicationId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.copyright_file_id, 37).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "CopyrightFileId", str);
++        appendItem(group, "CopyrightFileId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.abstract_file_id, 37).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "AbstractFileId", str);
++        appendItem(group, "AbstractFileId", QString::fromLocal8Bit(str));
+     };
+     str = QString::fromAscii(vd.bibliographic_file_id, 37).stripWhiteSpace();
+     if(str != "") {
+-        appendItem(group, "BibliographicFileId", str);
++        appendItem(group, "BibliographicFileId", QString::fromLocal8Bit(str));
+     };
+     
+     QDateTime date;

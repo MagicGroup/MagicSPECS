@@ -1,0 +1,47 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH TLA-GPG-CHECK "1" "2006-07-25" GNU
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+tla-gpg-check \- GNU Arch revision signature checker
+.SH SYNOPSIS
+.B tla-gpg-check
+gpg_command="\fIgpg_command\fR"
+.SH DESCRIPTION
+Checks whether a revision is correctly signed. This is indended to be
+used in tla's signing hooks. It calls \fIgpg_command\fR on the
+standard input and makes sure only one signed message is given.
+.PP
+Here is how to setup a simple automatic tla signature check:
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+.\" respectively.
+.nf
+mkdir -p -m 700 ~/.arch-params/signing/
+echo 'tla-gpg-check gpg_command="gpg --verify-files -"' \\
+  > ~/.arch-params/signing/=default.check
+echo 'gpg --clearsign --use-agent' > ~/.arch-params/signing/=default
+.fi
+.SH SEE ALSO
+.BR tla (1)
+.br
+http://www.gnuarch.org/gnuarchwiki/ArchiveSigning
+.SH AUTHOR
+tla-gpg-check was written by Tom Lord.
+.PP
+This manual page was written by Sylvain Beucler <beuc@beuc.net>,
+for the Debian project (but may be used by others).

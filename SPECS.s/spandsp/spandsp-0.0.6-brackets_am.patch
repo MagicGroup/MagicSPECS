@@ -1,0 +1,12 @@
+diff -up spandsp-0.0.6/configure.ac.brackets spandsp-0.0.6/configure.ac
+--- spandsp-0.0.6/configure.ac.brackets	2010-08-01 02:01:22.000000000 -0500
++++ spandsp-0.0.6/configure.ac	2011-12-27 15:28:10.251165461 -0600
+@@ -258,7 +258,7 @@ then
+     case "${host}" in
+     x86_64-*)
+         # X86_64 Linux machines may have both 64 bit and 32 bit libraries. We need to choose the right set
+-        AX_CHECK_REAL_FILE([${prefix}/lib64], libdir='$(exec_prefix)/lib64')
++        AX_CHECK_REAL_FILE([${prefix}/lib64], libdir='${exec_prefix}/lib64')
+         AX_CHECK_REAL_FILE([/usr/X11R6/lib64], [TESTLIBS="$TESTLIBS -L/usr/X11R6/lib64"], AC_CHECK_FILE([/usr/X11R6/lib], [TESTLIBS="$TESTLIBS -L/usr/X11R6/lib"]))
+         # The very oldest AMD 64 bit chips support SSE2, SSE and MMX
+         enable_sse2="yes"

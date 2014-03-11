@@ -1,0 +1,16 @@
+diff -uNrp kdebase-3.5.3-orig/kdm.pamd kdebase-3.5.3/kdm.pamd
+--- kdebase-3.5.3-orig/kdm.pamd	1970-01-01 01:00:00.000000000 +0100
++++ kdebase-3.5.3/kdm.pamd	2006-07-13 14:26:10.000000000 +0100
+@@ -0,0 +1,12 @@
++#%PAM-1.0
++auth       sufficient	pam_timestamp.so
++auth       include     system-auth
++account    required	pam_nologin.so
++account    include     system-auth
++password   include     system-auth
++session	   optional	pam_keyinit.so force revoke
++session    include	system-auth
++session    required    pam_loginuid.so
++session    optional	pam_timestamp.so
++session    optional    pam_selinux.so
++session    optional	pam_console.so

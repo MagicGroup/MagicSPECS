@@ -1,0 +1,12 @@
+diff -up symlinks-1.4/symlinks.c.coverity-readlink symlinks-1.4/symlinks.c
+--- symlinks-1.4/symlinks.c.coverity-readlink	2009-10-09 15:03:55.000000000 +0100
++++ symlinks-1.4/symlinks.c	2011-05-20 14:10:25.682843723 +0100
+@@ -160,7 +160,7 @@ static void fix_symlink (char *path, dev
+ 	struct stat stbuf, lstbuf;
+ 	int c, fix_abs = 0, fix_messy = 0, fix_long = 0;
+ 
+-	if ((c = readlink(path, lpath, sizeof(lpath))) == -1) {
++	if ((c = readlink(path, lpath, sizeof(lpath)-1)) == -1) {
+ 		perror(path);
+ 		return;
+ 	}

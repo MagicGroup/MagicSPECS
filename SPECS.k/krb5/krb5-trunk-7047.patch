@@ -1,0 +1,28 @@
+commit 59a8a0861d5aacd4e985ad4dc4d46a11c2ebc136
+Author: ghudson <ghudson@dc483132-0cff-0310-8789-dd5450dbe970>
+Date:   Wed Dec 7 19:38:22 2011 +0000
+
+    ticket: 7047
+    subject: Allow S4U2Proxy service tickets to be cached
+    
+    Previous to this change, the GSS code avoids caching S4U2Proxy results
+    for fear of the memory cache growing without bound, but that seems
+    unlikely to be a serious problem.  Allow these to be cached.
+    
+    git-svn-id: svn://anonsvn.mit.edu/krb5/trunk@25530 dc483132-0cff-0310-8789-dd5450dbe970
+
+diff --git a/src/lib/gssapi/krb5/init_sec_context.c b/src/lib/gssapi/krb5/init_sec_context.c
+index d7b9ffa..07baefa 100644
+--- a/src/lib/gssapi/krb5/init_sec_context.c
++++ b/src/lib/gssapi/krb5/init_sec_context.c
+@@ -148,9 +148,7 @@ static krb5_error_code get_credentials(context, cred, server, now,
+         !krb5_principal_compare(context, cred->impersonator, server->princ)) {
+         krb5_creds mcreds;
+ 
+-        flags |= KRB5_GC_CANONICALIZE |
+-            KRB5_GC_NO_STORE |
+-            KRB5_GC_CONSTRAINED_DELEGATION;
++        flags |= KRB5_GC_CANONICALIZE | KRB5_GC_CONSTRAINED_DELEGATION;
+ 
+         memset(&mcreds, 0, sizeof(mcreds));
+ 

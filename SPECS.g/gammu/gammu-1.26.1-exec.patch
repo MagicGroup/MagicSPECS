@@ -1,0 +1,29 @@
+diff -up gammu-1.26.1/contrib/smscgi/sms_cgi.c.orig gammu-1.26.1/contrib/smscgi/sms_cgi.c
+--- gammu-1.26.1/contrib/smscgi/sms_cgi.c.orig	2010-06-10 14:55:30.000000000 +0200
++++ gammu-1.26.1/contrib/smscgi/sms_cgi.c	2010-06-10 15:01:45.000000000 +0200
+@@ -76,6 +76,7 @@ static void NORETURN cgi_child(GSM_State
+ 	int errfd;
+ 	char script_name[300];
+ 	const char*data;
++	char *empty_argv[1] = { NULL };
+ 	strcpy(script_name, cgi_path); /**<                     prepend script path */
+ 
+ 	/* ---------------------------------------------------- get the script name */
+@@ -115,7 +116,7 @@ static void NORETURN cgi_child(GSM_State
+ 	smprintf(s, CGI_ENGINE "Executing > %s\n", script_name);
+ 
+ 	/* Execute script */
+-	execv(script_name, NULL);
++	execv(script_name, empty_argv);
+ 
+ 	/* ------------------------------------------------------ failed to execute */
+ 	smprintf(s, CGI_ENGINE "Failed to execure %s : %s\n", script_name, strerror(errno));
+@@ -140,7 +141,7 @@ static void NORETURN cgi_child(GSM_State
+ 	smprintf(s, CGI_ENGINE "Executing > %s\n", script_name);
+ 
+ 	/* Execute script */
+-	execv(script_name, NULL);
++	execv(script_name, empty_argv);
+ 
+ 	error:
+ 	/* ------------------------------------------------------ failed to execute */

@@ -1,0 +1,753 @@
+--- avmb1/avmcapictrl.man.in	2010-12-16 10:20:08.000000000 +0000
++++ avmb1/avmcapictrl.man.in	2011-01-30 16:23:27.000000000 +0000
+@@ -24,7 +24,7 @@ 
+ .I avmcapictrl
+ is used to register active AVM ISA cards kernelcapi system and
+ therewith to the isdn system. You need it also to upload the
+-firmware to any active AVM card. If an error occure please also
++firmware to any active AVM card. If an error occurred please also
+ check the kernel error messages by using the command dmesg(8).
+ .LP
+ .SH COMMANDS
+@@ -73,12 +73,12 @@ 
+ point to point
+ .br
+ .I DN1:SPID1 DN2:SPID2
+-is for the american protocols 5ESS and NI1.
++is for the North American 5ESS and NI1 protocols.
+ .LP
+ .TP 5
+ .B reset [contrnr]
+ is used to reset a card if loading has failed.
+-This function only make sence if card is not successfully loaded.
++This function only make sense if card is not successfully loaded.
+ .br
+ .I contrnr
+ is the number of the controller (card) starting from 1.
+@@ -100,7 +100,7 @@ 
+ is the number of the controller (card) starting from 1.
+ .br
+ .I off
+-switch traceing off
++switch tracing off
+ .br
+ .I short
+ switch one line per CAPI2.0 message tracing on
+@@ -138,7 +138,7 @@ 
+ memory address if needed by driver
+ .br
+ .I cardnr
+-only usefull with driver t1isa
++only useful with driver t1isa
+ 
+ .SH AUTHOR
+ Carsten Paeth <calle@calle.in-berlin.de>
+--- pppdcapiplugin/capiplugin.8	2010-12-22 23:20:39.000000000 +0000
++++ pppdcapiplugin/capiplugin.8	2010-12-22 23:22:14.000000000 +0000
+@@ -35,18 +35,18 @@
+ In this case, the party called has to reject the call and call back soon.
+ When using dial-on-demand it is possible let both parties setup the connection,
+ that means while the pppd is in dial-on-demand mode not only an outgoing
+-paket but also an incoming call can trigger the connection setup. This
++packet but also an incoming call can trigger the connection setup. This
+ can also combined with callback to assign the cost to one side only (COSO).
+ 
+ .SH PPPD VERSIONS
+ .LP
+-The plugin interface of the pppd is binary incompartible between different
++The plugin interface of the pppd is binary incompatible between different
+ version of the pppd. So you need a different capiplugin for every version
+ of the pppd. The different plugins will be in the directory
+ /usr/lib/ppp/\fI<pppd-version>\fR.
+ Since 2.4.1 pppd checks if the version of the plugin matches and also search
+ the plugins in these directories. With pppd versions before 2.4.1 you need
+-to specify the absolut pathname of the plugin.
++to specify the absolute pathname of the plugin.
+ 
+ .SH HOW IT WORKS
+ .LP
+@@ -55,7 +55,7 @@
+ set up a connection and sets the global variable devnam.
+ The capiplugin will register a timer function that is
+ called every second to handle the CAPI messages while pppd is running.
+-To notify pppd when CAPI messages arrive, the CAPI file desciptor
++To notify pppd when CAPI messages arrive, the CAPI file descriptor
+ is added to the list of file descriptors which the pppd monitors for input.
+ Once the connection is set up the pppd will start PPP negotiation
+ on device devnam. When the pppd enters the DEAD phase, the connection will
+@@ -63,7 +63,7 @@
+ When operating in dial-on-demand mode with wakeup on incoming calls,
+ in phase DORMANT the plugin will setup CAPI2.0 to accept incoming calls.
+ To wakeup pppd when an incoming call arrives, the plugin will generate
+-an UDP paket to the discard port (9) of the gateway, so don't filter this paket
++an UDP packet to the discard port (9) of the gateway, so don't filter this packet
+ or wakeup by incoming a call will not work.
+ 
+ .SH MODES OF OPERATION
+@@ -124,8 +124,8 @@
+ .B dial out on demand on an incoming phone call 
+ Initiate the connection only on demand, i.e. when data traffic is present
+ or an incoming phone call is detected and drop the connection after a fix
+-amount of idle time. This is usefull if you are not at home and ypou want
+-your computer to make an connection to the internet.
++amount of idle time. This is useful if you are not at home and you want
++your computer to make an connection to the Internet.
+ .br
+ Required options: \fInumber\fR and \fIcli\fR.
+ .br
+@@ -258,7 +258,7 @@
+ 
+ .TP
+ .B clicb
+-The option is retained for compartiblity reasons only.
++The option is retained for compatibility reasons only.
+ Use option \fIcoso local\fR or \fIcoso remote\fR instead.
+ .br
+ Enable callback mode.
+@@ -273,7 +273,7 @@
+ before PPP negotiation starts. Default value is 0 seconds.
+ This option is useful when connecting with protocol \fImodem\fR.
+ Some Internet access servers will hang up if they receive data
+-immediatly after the connection is established.
++immediately after the connection is established.
+ 
+ .TP
+ .B controller \fI<controller specification>
+@@ -298,7 +298,7 @@
+ .TP
+ .B coso remote
+ The costs are assigned to the remote party.
+-On an outcoming call the remote party will reject the call and callback.
++On an outgoing call the remote party will reject the call and callback.
+ 
+ .TP
+ .B dialmax \fI<times>
+@@ -568,10 +568,10 @@
+ .LP
+ Do not provide option \fIcli\fR to the capiplugin.
+ Start a pppd for every b channel.
+-Authorization is checked using PAP or CHAP and the ip numbers are assigned
++Authorization is checked using PAP or CHAP and the IP addresses are assigned
+ according to the /etc/ppp/pap-secrets or /etc/ppp/chap-secrets file.
+-Assume that the server has ip number 192.168.0.1, the clients are
+-to be assigned the ip numbers starting from 192.168.0.2, and the hostname of the
++Assume that the server has IP address 192.168.0.1, the clients are
++to be assigned IP addresses starting from 192.168.0.2, and the hostname of the
+ server is "dialinserver".
+ Add these two lines to the /etc/inittab file:
+ .IP
+@@ -606,8 +606,8 @@
+ \fIinmsn\fR, \fIcli\fR and \fIprotocol\fI.
+ .LP
+ Start a pppd for every client.
+-Assume that the server has ip number 192.168.0.1 and the clients are to be
+-assigned the ip numbers starting from 192.168.0.2.
++Assume that the server has IP address 192.168.0.1 and the clients are to be
++assigned IP addresses starting from 192.168.0.2.
+ Add these three lines to the /etc/inittab file:
+ .IP
+ p0:23:respawn:/usr/sbin/pppd call incoming-cli cli 04711 192.168.0.1:192.168.0.2
+@@ -637,8 +637,8 @@
+ and call back.
+ .LP
+ Start a pppd for every client.
+-Assume that the server has ip number 192.168.0.1 and the clients are to be
+-assigned the ip numbers starting from 192.168.0.2.
++Assume that the server has IP address 192.168.0.1 and the clients are to be
++assigned IP addresses starting from 192.168.0.2.
+ Add these three lines to the /etc/inittab file.
+ .IP
+ p0:23:respawn:/usr/sbin/pppd call incoming-cli cli 04711 cbnumber 4711 192.168.0.1:192.168.0.2
+@@ -662,8 +662,8 @@
+ 
+ .SH EXAMPLE OF A LEASED LINE CONNECTION WITH HDLC
+ .LP
+-Assume that the server has ip number 192.168.0.1 and the peer has
+-the ip number 192.168.0.2.
++Assume that the server has IP address 192.168.0.1 and the peer has
++the IP address 192.168.0.2.
+ Add this line to the /etc/inittab file:
+ .IP
+ p0:23:respawn:/usr/sbin/pppd call leased-hdlc controller 1 channels 1 192.168.0.1:192.168.0.2
+@@ -695,8 +695,8 @@
+ 
+ .SH EXAMPLE OF A LEASED LINE CONNECTION WITH V42BIS
+ .LP
+-Assume that the server has ip number 192.168.0.1 and the peer has
+-the ip number 192.168.0.2.
++Assume that the server has IP address 192.168.0.1 and the peer has
++the IP address 192.168.0.2.
+ Add this line to the /etc/inittab file for server 1 (192.168.0.1):
+ .IP
+ p0:23:respawn:/usr/sbin/pppd call leased-v42bis controller 1 channels 1 192.168.0.1:192.168.0.2
+--- ipppd/ipppd.man.in	2010-12-16 10:20:09.000000000 +0000
++++ ipppd/ipppd.man.in	2010-12-22 16:51:39.000000000 +0000
+@@ -133,7 +133,7 @@
+ .TP
+ .B callback \fI<string>
+ Request the peer to call back at the location given in
+-<string>. Ususally this is a phone number, but it may be interpreted
++<string>. Usually this is a phone number, but it may be interpreted
+ differently (or ignored) depending on the \fBcallback-type\fR option.
+ If <string> is the empty string, \fIipppd\fR automatically tries to
+ negotiate a callback type that does not need a location to be specified.
+@@ -332,7 +332,7 @@
+ .TP
+ .B ipx-routing \fI<n>
+ Set the routing protocol to be received by this option. Use a
+-comma-serperated list if you want to specify more than one 
++comma-separated list if you want to specify more than one 
+ protocol.
+ The '\fInone\fR'
+ option (0) may be specified as the only instance of ipx-routing. The
+@@ -367,7 +367,7 @@
+ send before it rejects the options. The default value is 3.
+ .TP
+ .B ipxcp-max-terminate \fI<n>
+-Set the maximum nuber of IPXCP terminate request frames before the
++Set the maximum number of IPXCP terminate request frames before the
+ local system considers that the peer is not listening to them. The
+ default value is 3.
+ .TP
+@@ -562,7 +562,7 @@
+ protocols must be loaded or this option will be ignored.
+ .TP
+ .B -pred1comp
+-Do not accept Predictor-1 comprssion, even if the peer wants to send
++Do not accept Predictor-1 compression, even if the peer wants to send
+ this type of compression and support has been defined in the kernel.
+ .TP
+ .B proxyarp
+--- doc/isdn_audio.man.in	2011-02-06 20:07:20.000000000 +0000
++++ doc/isdn_audio.man.in	2011-02-06 21:13:52.000000000 +0000
+@@ -169,7 +169,7 @@
+ is sent to the application, while stopping data transfer with one
+ of the DLE sequences,
+ .B VCON
+-is sent. In any case, the message is preceeded by the appropriate
++is sent. In any case, the message is preceded by the appropriate
+ DLE sequence for end of audio data and/or abort respectively.
+ 
+ On outgoing voice calls, the emulator responds with
+--- isdnlog/isdnconf/isdnconf.1.in	2011-01-11 11:59:55.000000000 +0000
++++ isdnlog/isdnconf/isdnconf.1.in	2011-01-12 15:27:47.000000000 +0000
+@@ -25,10 +25,10 @@
+ 
+ You can use this program to build your own phonebook. These files are
+ used by many of the other ISDN utilities that use phone numbers, to
+-display a number symbolicly instead of as a plain number.
++display a number symbolically instead of as a plain number.
+ 
+ .SH OPTIONS
+-Note: usage of the options -A and -D is dangerous! The
++Note: use of the options -A and -D is dangerous! The
+ complete structure of the file may be changed, and all comments are
+ removed! Make backups of your data files before trying these.
+ 
+@@ -37,7 +37,7 @@
+ .TP 4
+ .B \-A
+ Add a new entry, which is read from standard input. The following
+-values are asked for (here with examples):
++values are asked for (shown here with examples):
+ .RS
+ .nf
+ 
+@@ -54,7 +54,7 @@
+ Time:           8-20
+ Flags:          (control-D here indicates end of flags)
+ 
+-Alias:          (control-D here indicated end of entries)
++Alias:          (control-D here indicates end of entries)
+ 
+ .fi
+ If you want another [Flags] entry, simply enter the data for another
+@@ -64,7 +64,7 @@
+ If you want to add another number, simply enter the data for the next
+ number at the Alias prompt.
+ 
+-You can also pipe the data into this program; the input data then must
++You can also pipe the data into the program; the input data must
+ correspond to the prompts that the program gives! Note that you can
+ only add one number at a time then (there's no way of telling
+ .I isdnconf
+@@ -93,7 +93,7 @@
+ will display entries which match the data given.
+ 
+ .B DATA OPTIONS:
+-(none applicable for -A)
++(not applicable for -A)
+ .TP 4
+ .B \-n 'number'
+ number: match the given number. It can contain wildcards.
+--- isdnlog/isdnlog/isdn.conf.5.in	2011-02-07 09:57:45.000000000 +0000
++++ isdnlog/isdnlog/isdn.conf.5.in	2011-02-07 14:00:19.000000000 +0000
+@@ -124,7 +124,7 @@
+ 
+ .TP
+ .B REBOOTCMD
+-Isdnlog can use this command to reboot linux (when all else fails).
++Isdnlog can use this command to reboot Linux (when all else fails).
+ Default value is "@REBOOTCMD@". Optional.
+ 
+ .TP
+@@ -157,7 +157,7 @@
+ .B REPOPTIONS
+ General commandline options for isdnrep. The options noted here have
+ the same effect as appended to each isdnrep commandline. Options are
+-seperated by
++separated by
+ .B ;
+ instead of the usual space.
+ .br
+--- doc/isdnctrl.man.in	2011-02-06 20:07:20.000000000 +0000
++++ doc/isdnctrl.man.in	2011-02-06 22:40:47.000000000 +0000
+@@ -48,10 +48,10 @@
+ Create a slave interface.
+ .RS
+ Creates a slave interface for RAW-device channel-bundling.
+-These devices behave like network-interfaces, execpt they
++These devices behave like network-interfaces, except they
+ are invisible to user. Only
+ .SM ISDN
+-parameters can be controlled, but no IP-parameters. IP-parameters
++parameters can be controlled, not IP-parameters. IP-parameters
+ are inherited from the corresponding master-device.
+ .TP
+ Argument:
+@@ -81,7 +81,7 @@
+ .I arg
+ should point to a zero terminated string of max. 10 characters
+ naming an existing interface which will be deleted. If the interface
+-is a master interface, all it's slave-interfaces will be deleted also.
++is a master interface, all its slave-interfaces will be deleted also.
+ .TP
+ Return:
+ On success, the call returns 0. On failure, an error code is returned.
+@@ -98,7 +98,7 @@
+ .TP
+ Argument:
+ .I arg
+-shoud point to a
++should point to a
+ .I struct isdn_net_ioctl_cfg
+ (defined in linux/isdn.h)
+ .TP
+@@ -117,7 +117,7 @@
+ .TP
+ Argument:
+ .I arg
+-shoud point to a
++should point to a
+ .I struct isdn_net_ioctl_cfg
+ (defined in linux/isdn.h) which will be filled by the current setup.
+ .TP
+@@ -135,7 +135,7 @@
+ .TP
+ Argument:
+ .I arg
+-shoud point to a
++should point to a
+ .I struct isdn_net_ioctl_phone
+ which contains necessary information.
+ .TP
+@@ -153,7 +153,7 @@
+ .TP
+ Argument:
+ .I arg
+-shoud point to a
++should point to a
+ .I struct isdn_net_ioctl_phone
+ which contains necessary information.
+ .TP
+@@ -172,7 +172,7 @@
+ .TP
+ Argument:
+ .I arg
+-shoud point to a a union of
++should point to a union of
+ .I struct isdn_net_ioctl_phone
+ and a buffer, large enough to hold a concatenated list of
+ strings containing the phone numbers.
+@@ -193,7 +193,7 @@
+ network interface, if it is not connected. Normally, this ioctl is not
+ needed, because
+ .SM ISDN
+-network interface perform dial on demand by deafult.
++network interface perform dial on demand by default.
+ .TP
+ Argument:
+ .I arg
+@@ -457,7 +457,7 @@
+ filled correctly. The arg component inside isdn_ioctl_struct is
+ handed down to the driver's ioctl function. Its meaning is not
+ defined here and depends on the lowlevel driver. See documentation
+-for the various lewlevel drivers for information about driver-
++for the various lowlevel drivers for information about driver-
+ specific ioctl.
+ .TP
+ Return:
+--- isdnctrl/isdnctrl.man.in	2010-12-16 10:20:09.000000000 +0000
++++ isdnctrl/isdnctrl.man.in	2010-12-19 22:54:16.000000000 +0000
+@@ -39,17 +39,13 @@
+ interface
+ .IR name " to the kernel. If " name
+ is omitted, the kernel will use
+-.BI eth X,
+-where
+-.I X
+-is an increasing number starting from 0. This is probably not useful with
+-.SM ISDN
+-so using a name like
++.BI ethX,
++where X is an increasing number starting from 0. This is not ideal so providing a name such as
+ .B isdn0
+ (for raw ip interfaces) or
+ .B ippp0
+ (for synchronous PPP interfaces)
+-is always recommended.
++is strongly recommended.
+ .TP
+ .BI delif " name " [force]
+ Removes the
+@@ -66,7 +62,7 @@
+ .B reset [force]
+ Removes all
+ .SM ISDN
+-interfaces from the kernel if it is possible. If the optional keyword
++interfaces from the kernel if possible. If the optional keyword
+ .B force
+ is appended,
+ .BR isdnctrl " executes"
+@@ -74,9 +70,9 @@
+ before removing an interface.
+ .TP
+ .BI ifdefaults " name "
+-resets the interface
++resets interface
+ .IR name
+-to some reasonable defaults.
++to reasonable defaults.
+ .TP
+ .BI dialmode " name " [ off | manual | auto ]
+ Sets the dial mode of the interface to one of:
+@@ -85,7 +81,7 @@
+ .B off
+ .br
+ no connection can be made; an existing connection is terminated immediately.
+-Incoming connections are also not possible.
++Also, incoming connections are not possible.
+ .LP
+ .B manual
+ .br
+@@ -145,7 +141,7 @@
+ .B isdnctrl addphone
+ repeatedly. If more than one number is set, these will be tried
+ one after another (the last added number is tried first, etc.).
+-When using a german SPV-type connection,
++When using a German SPV-type connection,
+ the number has to be prefixed by a capital S.
+ .TP
+ .BI addphone " name " in " num"
+@@ -357,7 +353,7 @@
+ .I encapsulation
+ is omitted, the current setting is printed.
+ .TP
+-.BI l2_prot " name " [ protocol ]
++.BI l2_prot " name " [protocol]
+ Set the layer-2 protocol for interface 
+ .IR name .
+ Possible values for 
+@@ -368,7 +364,7 @@
+ .I protocol
+ is omitted the current setting is printed.
+ .TP
+-.B l3_prot " name " [ protocol ]
++.B l3_prot " name " [protocol]
+ Set the layer-3 protocol for interface 
+ .IR name .
+ At the moment only
+@@ -385,7 +381,7 @@
+ .I name
+ is
+ .BR all ,
+-then all interfaces are listed.
++all interfaces are listed.
+ .TP
+ .BI status " name"
+ Show the connection status for interface
+--- isdnctrl/.isdnctrl_conf.man.in	2010-12-16 10:20:09.000000000 +0000
++++ isdnctrl/.isdnctrl_conf.man.in	2010-12-19 23:10:18.000000000 +0000
+@@ -81,14 +81,14 @@
+ CBDELAY = 5
+ .TP 5
+ .BI "DIALMAX = " num
+-Set the number of dial atempts to
++Set the number of dial attempts to
+ .IR num .
+ 
+ .B Example:
+ DIALMAX = 1
+ .TP 5
+ .BI "HUPTIMEOUT = " seconds
+-Set the hanguptime to
++Set the hangup time to
+ .IR seconds .
+ 
+ .B Example:
+@@ -168,7 +168,7 @@
+ .BI "PPPBIND = " num
+ Binds the current interface to the ippp device
+ .BI /dev/ippp X .
+-This works only for syncronous ppp.
++This works only for synchronous PPP.
+ The value must be a number.
+ 
+ .B Example:
+--- isdnlog/isdnlog/isdnlog.8.in	2010-12-16 10:20:09.000000000 +0000
++++ isdnlog/isdnlog/isdnlog.8.in	2010-12-19 23:21:26.000000000 +0000
+@@ -71,7 +71,7 @@
+ 
+ .TP
+ .B \-R\fIprefix\fB	preselected="value"
+-Set the preselected (i.e the provider choosen, if no prefix is dialed)
++Set the preselected (i.e the provider chosen, if no prefix is dialed)
+ provider to value. Value should be without \fIvbn\fR.
+ 
+ .TP
+@@ -107,7 +107,7 @@
+ 
+ .TP
+ .B \-i\fIx\fB	internS0="value"
+-Telefon number shorter then
++Telephone numbers shorter then
+ .I value
+ are considered to be internal numbers on your PABX.
+ 
+@@ -425,7 +425,7 @@
+ This needs a kernel patch to work. If the kernel patch is not found
+ a simulation is done.
+ .br
+-Note: depending on your telefon provider local area calls may or may not
++Note: depending on your telephone provider local area calls may or may not
+ be routed to alternate providers.
+ For changing the ISP a script is called. s. next option 'providerchange'
+ 
+--- isdnlog/tools/isdnrate.man	2011-01-11 11:59:55.000000000 +0000
++++ isdnlog/tools/isdnrate.man	2011-01-12 16:09:35.000000000 +0000
+@@ -1,7 +1,7 @@
+ .\" CHECKIN $Date: 2004/07/13 21:44:20 $
+-.TH ISDNRATE 1 "@MANDATE@" -lt-
++.TH ISDNRATE 1 "@MANDATE@" -lt-
+ .SH NAME
+-isdnrate \- Print telefon rates and various info from rate\-files(5).
++isdnrate \- Print telephone rates and various info from rate\-files(5).
+ .SH SYNOPSIS
+ .BI "isdnrate \-b" best " \-d" day " \-f" from " \-h" hour " \-l" len
+ .B \-o
+@@ -18,14 +18,14 @@
+ .SH DESCRIPTION
+ The
+ .B isdnrate
+-program prints various information from rate\-files(5). It's main purpose
+-is the calculation of telefon rates from your location to an arbitrary
++program prints various information from rate\-files(5). Its main purpose
++is the calculation of telephone rates from your location to an arbitrary
+ destination at a certain time and of a certain length for all the providers in a rate\-file.
+ .P
+ .SS
+ .B NUMBER
+ .P
+-A telefon number may be
++A telephone number may be
+ .IP
+ .B 1234
+ a local area number
+@@ -51,7 +51,7 @@
+ .B -s
+ is also given).
+ .P
+-Note that currently only city names in AT, DE, NL are supported plus some international capitals.
++Note that currently only city names in AT, DE and NL are supported plus some international capitals.
+ .br
+ Note also, spaces in country- or service names may be given as underscores.
+ .SS
+@@ -88,7 +88,7 @@
+ Default is now.
+ .P
+ .BI \-f from
+-Callers location. Default ist from
++Callers location. Default is from
+ .IR isdn.conf .
+ .P
+ .BI \-h hour
+@@ -102,7 +102,7 @@
+ .IR isdn.conf .
+ .P
+ .BI \-l len
+-Length of call in second. Default value is 153 secs.
++Length of call in seconds. Default is 153 seconds.
+ .P
+ .B \-o
+ Show only booked providers. These are providers, which are listed in
+@@ -118,8 +118,8 @@
+ for business providers.
+ .P
+ \fB\-r\fPv\fINN\fP
+-Show only providers whose vbn begins with \fINN\fP.
+-The vbn is also known as provider prefix consisting of VBN and provider number.
++Show only providers whose VBN begins with \fINN\fP.
++The VBN is also known as provider prefix consisting of VBN and provider number.
+ .P
+ .B \-s
+ Consider
+@@ -141,7 +141,7 @@
+ .B DISPLAY AND RUN OPTIONS
+ .P
+ .B \-C
+-Connect to a running isdnrate daemon. This avoids long startup times.
++Connect to a running isdnrate daemon. This avoids long start-up times.
+ .P
+ .B \-D
+ Start as a daemon, waiting for connections from a client. The socket
+@@ -230,8 +230,8 @@
+ .br
+ shows the rate for provider 1 and the cheapest rate to this service.
+ .P
+-Note: Various output options may not be used together. If you gave conflicting
+-options you'll see a warning.
++Note: Various output options may not be used together. Conflicting
++options will produce a warning.
+ .br
+ Note also: Sort by name or providernumber and
+ .BI -b best
+@@ -241,7 +241,7 @@
+ .br
+ And finally: Some options like
+ .IR \-X50 ", " \-X51 ", " \-X52 ", " \-D ", " \-V
+-don't require a telefon
++don't require a telephone
+ .IR NUMBER .
+ .SH FILES
+ .IR rate-CC.dat ,
+@@ -279,7 +279,9 @@
+ .I isdnrate -CX -p1_2,24 +1
+ .br
+ Show rates and zones for destination USA for providers
+-.IR "1_2 " and " 24" .
++.IR "1, 2"
++and
++.IR "24" .
+ .P
+ .I isdnrate -C -l60 -rv010 HAM
+ .br
+@@ -301,7 +303,7 @@
+ .br
+ Show rates and numbers for service
+ .I Internet
+-for a 1 minutes call.
++for a 1 minute call.
+ .P
+ .I isdnrate -CZ 19430
+ .br
+--- isdnlog/isdnrep/isdnrep.1.in.manpages	2009-10-20 11:07:28.000000000 +0200
++++ isdnlog/isdnrep/isdnrep.1.in	2011-03-16 18:04:52.000000000 +0100
+@@ -4,7 +4,7 @@
+ 
+ .PD 0
+ .SH NAME
+-isdnrep \- report isdn activity
++isdnrep \- report ISDN activity
+ 
+ .SH DESCRIPTION
+ Isdnrep reads the isdnlog log files, generates reports, does statistics,
+@@ -95,12 +95,12 @@
+ 
+ .TP
+ .B \-v	verbose
+-Display warnings on startup.
++Display warnings on start-up.
+ 
+ .TP
+ .B \-c	ignore default options
+ Do not append the "REPOPTIONS" setting from @I4LCONFDIR@/@CONFFILE@
+-to the commandline.
++to the command line.
+ 
+ .TP
+ .B \-p [n][m]'number'[,[m]'number'...]	phonenumber
+@@ -171,13 +171,13 @@
+ .RE
+ .sp
+ This will display all calls on Tuesdays, Wednesdays, or Thursdays
+-that are no holidays with a start time between 09:00 and 12:00 or
++that are not holidays with a start time between 09:00 and 12:00 or
+ 15:00 and 17:00.
+ 
+ .TP
+ .B \-u	unknown caller
+ At the end of the report, all numbers not aliased in callerid.conf or
+-~/.isdn are displayed. This option is not available when HTML output
++~/.isdn are displayed. This option is unavailable when HTML output
+ is requested.
+ 
+ .TP
+@@ -389,7 +389,7 @@
+ and can be used with
+ .B -Fshort.
+ 
+-Without showing the transfered bytes, this string also fits into 80 chars:
++Without showing the transferred bytes, this string also fits into 80 chars:
+ .sp
+ .RS
+ "  %X %D %16.16H %T %-25.25F %U"
+@@ -509,18 +509,18 @@
+ .RE
+ .fi
+ 
+-The package NAS (Network Audio System) may be needed.
++The NAS (Network Audio System) package may be needed.
+ 
+ Now, when the browser is started, it will recognize WAV files and start
+-the corresponding program to handle these. The WAV format has been chosen
+-as this can also be played from a Windows pc.
++the corresponding program to handle them. The WAV format has been chosen
++as it can also be played from a Windows PC.
+ 
+ 
+ .cu
+ faxes received by mgetty
+ 
+ When %G is used in the isdnrep output format, any faxes received by mgetty
+-will be accessible via a HTML link, in the same manner as the ansering
++will be accessible via a HTML link, in the same manner as the answering
+ machine messages.
+ 
+ For the faxes the following entry in the [ISDNLOG] section in isdn.conf
+@@ -594,7 +594,7 @@
+ already installed if you want to use this feature :-)
+ 
+ The advantage of the JPEG format is that it can also be displayed by
+-a browser running on a Windows pc.
++a browser running on a Windows PC.
+ 
+ .cu
+ summary
+@@ -674,7 +674,7 @@
+ there was no connection, as the called party didn't pick up the phone
+ .TP
+  (5)
+-"the number you have dialled is not connected. Hang up and dial again. ..."
++"the number you have dialed is not connected. Hang up and dial again. ..."
+ .TP
+  (6)
+ total time for incoming calls
+@@ -810,7 +810,7 @@
+ 
+ .TP
+ [CC]YY\-MM\-DDThh:mm:ss
+-specifies a year, a moment, or something between.  Each seperator
++specifies a year, a moment, or something between.  Each separator
+ \'-', 'T', and ':' can be omitted or not.  If the first '-' is
+ missing, the century must be given.
+ 

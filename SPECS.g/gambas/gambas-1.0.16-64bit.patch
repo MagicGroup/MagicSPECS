@@ -1,0 +1,28 @@
+--- gambas-1.0.16/src/comp/gbi.c.BAD	2006-07-10 13:43:34.000000000 -0500
++++ gambas-1.0.16/src/comp/gbi.c	2006-07-10 13:48:55.000000000 -0500
+@@ -115,7 +115,11 @@
+     strncpy(_root, FILE_get_dir(FILE_get_dir(path)), MAX_PATH);
+   }
+   
++#if defined(__x86_64__) || defined(__ia64__) || defined(__ppc64__) || defined(__sparc64__) || defined(__mips64)
++  strcpy(_lib_path, FILE_cat(_root, "lib64/gambas", NULL));
++#else
+   strcpy(_lib_path, FILE_cat(_root, "lib/gambas", NULL));
++#endif
+   strcpy(_info_path, FILE_cat(_root, "share/gambas/info", NULL));
+ 
+   if (lt_dlinit())
+--- gambas-1.0.16/src/exec/gbx_project.c.BAD	2006-07-10 13:59:40.000000000 -0500
++++ gambas-1.0.16/src/exec/gbx_project.c	2006-07-10 14:00:11.000000000 -0500
+@@ -254,7 +254,11 @@
+   
+   STRING_new(&PROJECT_exec_path, FILE_get_dir(FILE_get_dir(path)), -1);
+ 
++#if defined(__x86_64__) || defined(__ia64__) || defined(__ppc64__) || defined(__sparc64__) || defined(__mips64)
++  STRING_new(&PROJECT_lib_path, FILE_cat(PROJECT_exec_path, "lib64/gambas", NULL), 0);
++#else
+   STRING_new(&PROJECT_lib_path, FILE_cat(PROJECT_exec_path, "lib/gambas", NULL), 0);
++#endif
+ 
+   /* fichier projet */
+ 

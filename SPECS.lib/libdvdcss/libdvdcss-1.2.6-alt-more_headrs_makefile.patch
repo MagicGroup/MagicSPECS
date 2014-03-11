@@ -1,0 +1,12 @@
+--- libdvdcss-1.2.6/src/Makefile.am	2003-03-10 20:57:09 +0300
++++ libdvdcss-1.2.6/src/Makefile.am.more_headers	2003-04-24 14:16:22 +0400
+@@ -1,5 +1,9 @@
+ SUBDIRS = dvdcss
+ 
++pkgincludedir = $(includedir)/dvdcss
++
++pkginclude_HEADERS = libdvdcss.h css.h 
++
+ lib_LTLIBRARIES = libdvdcss.la
+ 
+ libdvdcss_la_SOURCES = \

@@ -1,0 +1,206 @@
+diff -ur multiget.orig/src/mgurlparser.cpp multiget-1.2.0/src/mgurlparser.cpp
+--- multiget.orig/src/mgurlparser.cpp	2009-04-03 11:35:33.000000000 +0800
++++ multiget-1.2.0/src/mgurlparser.cpp	2009-01-30 12:03:28.000000000 +0800
+@@ -90,11 +90,78 @@
+     m_bValidMirrorUrl = false;
+ }
+ 
++static inline int GetIndex(const char c)
++{
++   if (c >= 'A' && c <= 'Z')
++      return c - 'A';
++   else if (c >= 'a' && c <= 'z')
++      return c - 'a' + 26;
++   else if (c >= '0' && c <= '9')
++      return c - '0' + 52;
++   else if (c == '+')
++      return 62;
++   else if (c == '/')
++      return 63;
++   else if (c == '=')
++      return 64;
++
++   return -1;
++}
++
++static std::string ConvertXunleiLink(const std::string &xunlei_link)
++{
++   char chr1, chr2, chr3;
++   int  enc1, enc2, enc3, enc4;
++   int  i;
++   int  length = xunlei_link.length();
++
++   std::string decoded = "";
++
++   if (xunlei_link.compare(0, 10, "thunder://") == 0)
++      i = 10;
++   else if (xunlei_link.compare(0, 11, "flashget://") == 0)
++      i = 11;
++   else if (xunlei_link.compare(0, 7, "qqdl://") == 0)
++      i = 7;
++   else
++      return xunlei_link;
++
++   while (1)
++   {
++      enc1 = ((i < length) ? GetIndex(xunlei_link[i++]) : -1);
++      enc2 = ((i < length) ? GetIndex(xunlei_link[i++]) : -1);
++      enc3 = ((i < length) ? GetIndex(xunlei_link[i++]) : -1);
++      enc4 = ((i < length) ? GetIndex(xunlei_link[i++]) : -1);
++
++      if (enc1 == -1 || enc2 == -1 || enc3 == -1 || enc4 == -1)
++         break;
++
++      chr1 = (enc1 << 2) | (enc2 >> 4);
++      chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
++      chr3 = ((enc3 & 3) << 6) | enc4;
++
++      decoded += chr1;
++
++      if (enc3 != 64)
++         decoded += chr2;
++
++      if (enc4 != 64)
++         decoded += chr3;
++   }
++
++   if (decoded.compare(0, 2, "AA") == 0)
++      return decoded.substr(2, decoded.rfind("ZZ") - 2);
++   else if (decoded.compare(0, 10, "[FLASHGET]") == 0)
++      return decoded.substr(10, decoded.rfind("[FLASHGET]") - 10);
++
++   return decoded;
++}
++
+ //返回false是不支持的协议或错误的地址格式
+ bool CUrlParser::SetUrl( std::string url )
+ {
+-
+     Trim( url );
++    url = ConvertXunleiLink( url );
+ 
+     m_bValidMirrorUrl = false;
+     //协议检查
+@@ -321,25 +388,25 @@
+ 
+     //look for @
+     //while ( *p != '@' && *p != 0 )
+-    //    p++;
++    //    p++;
+ 
+ findat:
+     while ( *p != '@' && p != url )
+         p--;
+ 
+-	//根据提交的BUG，有时后面会有这个@字符，添加检查过滤无效的@
+-	if ( *p == '@' )
+-	{
+-		//检查是否前方的'/'位置是否是第2个'/'
+-		char *q=p;
++	//根据提交的BUG，有时后面会有这个@字符，添加检查过滤无效的@
++	if ( *p == '@' )
++	{
++		//检查是否前方的'/'位置是否是第2个'/'
++		char *q=p;
+ 		while ( *q != '/' && q > url )
+-            q--;
+-
+-		if( q == url ) return false; //其实不会出现这个情况
+-		char *m = url; //从前向后找第二个'/'，应该等于q
+-		while ( *m != '/' ) m++;
+-		if( q != m + 1 ) { p--; goto findat; }
+-	}
++            q--;
++
++		if( q == url ) return false; //其实不会出现这个情况
++		char *m = url; //从前向后找第二个'/'，应该等于q
++		while ( *m != '/' ) m++;
++		if( q != m + 1 ) { p--; goto findat; }
++	}
+ 
+     if ( *p == '@' )
+     { //get @
+@@ -422,24 +489,24 @@
+     //look for @
+     //while ( *p != '@' && *p != 0 )
+     //    p++;
+-
++
+ findat:
+     while ( *p != '@' && p != url )
+         p--;
+-
+-	//根据提交的BUG，有时后面会有这个@字符，添加检查过滤无效的@
+-	if ( *p == '@' )
+-	{
+-		//检查是否前方的'/'位置是否是第2个'/'
+-		char *q=p;
++
++	//根据提交的BUG，有时后面会有这个@字符，添加检查过滤无效的@
++	if ( *p == '@' )
++	{
++		//检查是否前方的'/'位置是否是第2个'/'
++		char *q=p;
+ 		while ( *q != '/' && q > url )
+-            q--;
+-
+-		if( q == url ) return false; //其实不会出现这个情况
+-		char *m = url; //从前向后找第二个'/'，应该等于q
+-		while ( *m != '/' ) m++;
+-		if( q != m + 1 ) { p--; goto findat; }
+-	}
++            q--;
++
++		if( q == url ) return false; //其实不会出现这个情况
++		char *m = url; //从前向后找第二个'/'，应该等于q
++		while ( *m != '/' ) m++;
++		if( q != m + 1 ) { p--; goto findat; }
++	}
+ 
+     if ( *p == '@' )
+     {
+@@ -664,24 +731,24 @@
+     char* h = p;
+ 
+     p = url + strlen( url );
+-
++
+ findat:
+     while ( *p != '@' && p != url )
+         p--;
+-
+-	//根据提交的BUG，有时后面会有这个@字符，添加检查过滤无效的@
+-	if ( *p == '@' )
+-	{
+-		//检查是否前方的'/'位置是否是第2个'/'
+-		char *q=p;
++
++	//根据提交的BUG，有时后面会有这个@字符，添加检查过滤无效的@
++	if ( *p == '@' )
++	{
++		//检查是否前方的'/'位置是否是第2个'/'
++		char *q=p;
+ 		while ( *q != '/' && q > url )
+-            q--;
+-
+-		if( q == url ) return false; //其实不会出现这个情况
+-		char *m = url; //从前向后找第二个'/'，应该等于q
+-		while ( *m != '/' ) m++;
+-		if( q != m + 1 ) { p--; goto findat; }
+-	}
++            q--;
++
++		if( q == url ) return false; //其实不会出现这个情况
++		char *m = url; //从前向后找第二个'/'，应该等于q
++		while ( *m != '/' ) m++;
++		if( q != m + 1 ) { p--; goto findat; }
++	}
+ 
+     if ( p == url )
+     {
+@@ -964,4 +1031,4 @@
+     }
+ 
+     *t = '\0';
+-}
++}

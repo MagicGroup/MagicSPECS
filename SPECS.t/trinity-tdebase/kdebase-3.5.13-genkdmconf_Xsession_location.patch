@@ -1,0 +1,11 @@
+--- kdebase/kdm/kfrontend/genkdmconf.c.ORI	2011-11-01 21:59:14.450046357 +0100
++++ kdebase/kdm/kfrontend/genkdmconf.c	2011-11-01 21:59:34.449045801 +0100
+@@ -676,7 +676,7 @@
+ "    ;;\n"
+ "esac\n"
+ "# invoke global X session script\n"
+-". /etc/X11/Xsession\n";
++". /etc/X11/xinit/Xsession\n";
+ 
+ static const char def_background[] =
+ "[Desktop0]\n"

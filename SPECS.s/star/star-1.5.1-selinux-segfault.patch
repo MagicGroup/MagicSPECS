@@ -1,0 +1,13 @@
+diff --git a/star/xattr.c b/star/xattr.c
+index 6493447..4034287 100644
+--- a/star/xattr.c
++++ b/star/xattr.c
+@@ -202,7 +202,7 @@ setselinux(info)
+        register FINFO *info;
+ {
+ #if defined(USE_XATTR) && defined(HAVE_SETXATTR) && defined(WITH_SELINUX)
+-       if (info->f_xattr) {
++       if (info->f_xflags & XF_XATTR) {
+                star_xattr_t    *xap;
+                for (xap = info->f_xattr; xap->name != NULL; xap++) {
+                  if (strcmp(xap->name, "security.selinux") == 0) {

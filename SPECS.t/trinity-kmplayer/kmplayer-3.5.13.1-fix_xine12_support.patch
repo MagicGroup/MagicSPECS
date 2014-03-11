@@ -1,0 +1,14 @@
+--- kmplayer-3.5.13.1/src/xineplayer.cpp.ORI	2012-10-04 19:44:38.403679339 +0200
++++ kmplayer-3.5.13.1/src/xineplayer.cpp	2012-10-04 19:48:14.399221962 +0200
+@@ -528,7 +528,11 @@
+     xine_event_create_listener_thread (event_queue, event_listener, NULL);
+     if (mrl == "cdda:/") {
+         int nr;
++#if XINE_MAJOR_VERSION > 1 || ( XINE_MAJOR_VERSION == 1 && XINE_MINOR_VERSION >= 2 )
++        const char * const* mrls = xine_get_autoplay_mrls (xine, "CD", &nr);
++#else
+         char ** mrls = xine_get_autoplay_mrls (xine, "CD", &nr);
++#endif
+         running = 1;
+         for (int i = 0; i < nr; i++) {
+             TQString m (mrls[i]);

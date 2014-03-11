@@ -1,0 +1,37 @@
+diff -ur wine-0.9.55/dlls/gdi32/freetype.c wine-0.9.55.new/dlls/gdi32/freetype.c
+--- wine-0.9.55/dlls/gdi32/freetype.c	2008-02-08 23:44:36.000000000 +0800
++++ wine-0.9.55.new/dlls/gdi32/freetype.c	2008-02-15 09:31:12.000000000 +0800
+@@ -2988,7 +2988,22 @@
+     if(!strcmpiW(lf.lfFaceName, SymbolW))
+         lf.lfCharSet = SYMBOL_CHARSET;
+ 
+-    if(!TranslateCharsetInfo((DWORD*)(INT_PTR)lf.lfCharSet, &csi, TCI_SRCCHARSET)) {
++    if( lf.lfCharSet == DEFAULT_CHARSET || lf.lfCharSet == ANSI_CHARSET)
++    {
++       int codepage = 936; /* I'm Chinese. Let me do something selfish. */
++       char *env_wdc = getenv("WINE_DEFAULT_CODEPAGE");
++       if (env_wdc != NULL)
++       {
++           codepage = atoi(env_wdc);
++       }
++       FIXME("Dirty hack. Default and ansi charset is translated to getenv(\"WINE_DEFAULT_CODEPAGE\")\n");
++       if(!TranslateCharsetInfo((DWORD*)(INT)codepage, &csi, TCI_SRCCODEPAGE)) {
++           FIXME("OMG. Even this dirty hack doesn't work.  Let's PRAY.\n");
++           csi.fs.fsCsb[0] = 0;
++       }
++       lf.lfCharSet = csi.ciCharset;
++    }
++    else if(!TranslateCharsetInfo((DWORD*)(INT_PTR)lf.lfCharSet, &csi, TCI_SRCCHARSET)) {
+         switch(lf.lfCharSet) {
+ 	case DEFAULT_CHARSET:
+ 	    csi.fs.fsCsb[0] = 0;
+@@ -3213,6 +3228,9 @@
+         ret->scale_y = 1.0;
+     TRACE("font scale y: %f\n", ret->scale_y);
+ 
++    if (0 <= height && height <12) height =12;
++    else if ( 0 > height && height > -12) height = -12;
++
+     ret->ft_face = OpenFontFace(ret, face, width, height);
+ 
+     if (!ret->ft_face)

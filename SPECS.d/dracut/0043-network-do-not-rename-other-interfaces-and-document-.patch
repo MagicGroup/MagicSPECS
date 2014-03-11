@@ -1,0 +1,152 @@
+From 1760dfc051dfd84e932dbd63ba2b3c7e8b6ecf50 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 6 Jul 2012 12:31:31 +0200
+Subject: [PATCH] network: do not rename other interfaces and document the
+ ifname usage
+
+We do not support renaming in the kernel namespace anymore (as udev does
+that not anymore). So, if a user wants to use ifname, he has to rename
+to a custom namespace. "eth[0-9]+" is not allowed anymore.
+---
+ dracut.cmdline.7.asc                   |   49 +++++++++++++++++++++++++-------
+ modules.d/40network/ifname-genrules.sh |    7 +----
+ modules.d/40network/net-genrules.sh    |    4 +--
+ modules.d/40network/net-lib.sh         |   10 +++++++
+ modules.d/95fcoe/fcoe-genrules.sh      |    2 +-
+ 5 files changed, 53 insertions(+), 19 deletions(-)
+
+diff --git a/dracut.cmdline.7.asc b/dracut.cmdline.7.asc
+index 5f0396c..755d641 100644
+--- a/dracut.cmdline.7.asc
++++ b/dracut.cmdline.7.asc
+@@ -295,24 +295,51 @@ Network
+ **ip=**_<interface>_:_{dhcp|on|any|dhcp6|auto6}_[:[_<mtu>_][:_<macaddr>_]]::
+     This parameter can be specified multiple times.
+ +
++=====================
+ dhcp|on|any|dhcp6::: get ip from dhcp server on a specific interface
+ auto6::: do IPv6 autoconfiguration
+-<macaddr>::: optionally set <macaddr> on the <interface>
++<macaddr>::: optionally **set** <macaddr> on the <interface>. This
++cannot be used in conjunction with the **ifname** argument for the
++same <interface>.
++=====================
++
++[IMPORTANT]
++=====================
++It is recommended to either bind <interface> to a MAC with the **ifname**
++argument. Or use biosdevname to name your interfaces, which will then have names according to their hardware location.
++
++em<port>::: for embedded NICs
++p<slot>#<port>_<virtual instance>::: for cards in PCI slots
++=====================
+ 
+ **ip=**_<client-IP>_:_<server-IP>_:_<gateway-IP>_:_<netmask>_:_<client_hostname>_:_<interface>_:_{none|off|dhcp|on|any|dhcp6|auto6|ibft}_[:[_<mtu>_][:_<macaddr>_]]::
+     explicit network configuration. If you want do define a IPv6 address, put it
+     in brackets (e.g. [2001:DB8::1]). This parameter can be specified multiple
+     times.
+ +
+-<macaddr>::: optionally set <macaddr> on the <interface>
++=====================
++<macaddr>::: optionally **set** <macaddr> on the <interface>. This
++cannot be used in conjunction with the **ifname** argument for the
++same <interface>.
++=====================
++
++[IMPORTANT]
++=====================
++It is recommended to either bind <interface> to a MAC with the **ifname**
++argument. Or use biosdevname to name your interfaces, which will then have names according to their hardware location.
++
++em<port>::: for embedded NICs
++p<slot>#<port>_<virtual instance>::: for cards in PCI slots
++=====================
+ 
+ **ifname=**_<interface>_:_<MAC>_::
+-    Assign network device name <interface> (ie eth0) to the NIC with MAC <MAC>.
+-    Note: If you use this option you _must_ specify an ifname= argument for all
+-    interfaces used in ip= or fcoe= arguments. However, if the interface in
+-    ip= or fcoe= is a bridge, bonding or vlan interface, you should specify
+-    an ifname= for _each_ of its underlying interfaces. This parameter can be
+-    specified multiple times.
++    Assign network device name <interface> (ie "bootnet") to the NIC with MAC <MAC>.
+++
++[IMPORTANT]
++
++Do **not** use the default kernel naming scheme for the interface name,
++as it can conflict with the kernel names. So, don't use "eth[0-9]+" for the
++interface name. Better name it "bootnet" or "bluesocket".
+ 
+ **bootdev=**_<interface>_::
+     specify network interface to use routing and netroot information from.
+@@ -430,8 +457,10 @@ FCoE
+ **fcoe=**_<edd|interface|MAC>_:_{dcb|nodcb}_::
+     Try to connect to a FCoE SAN through the NIC specified by _<interface>_ or
+     _<MAC>_ or EDD settings. For the second argument, currently only nodcb is
+-    supported. This parameter can be specified multiple times. Note: letters in
+-    the MAC-address must be lowercase!
++    supported. This parameter can be specified multiple times.
+++
++[NOTE]
++letters in the MAC-address must be lowercase!
+ 
+ NBD
+ ~~~
+diff --git a/modules.d/40network/ifname-genrules.sh b/modules.d/40network/ifname-genrules.sh
+index b0b429c..d5f8b0f 100755
+--- a/modules.d/40network/ifname-genrules.sh
++++ b/modules.d/40network/ifname-genrules.sh
+@@ -15,9 +15,4 @@ command -v parse_ifname_opts >/dev/null || . /lib/net-lib.sh
+         printf 'SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="%s", ATTR{type}=="1", NAME="%s"\n' "$ifname_mac" "$ifname_if"
+     done
+ 
+-    # Rename non named interfaces out of the way for named ones.
+-    for p in $(getargs ifname=); do
+-        parse_ifname_opts $p
+-        printf 'SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="?*", ATTR{type}=="1", NAME!="?*", KERNEL=="%s", NAME="%%k-renamed"\n' "$ifname_if"
+-    done
+-} > /etc/udev/rules.d/50-ifname.rules
++} >> /etc/udev/rules.d/80-ifname.rules
+diff --git a/modules.d/40network/net-genrules.sh b/modules.d/40network/net-genrules.sh
+index 3bb5d80..8aeee2d 100755
+--- a/modules.d/40network/net-genrules.sh
++++ b/modules.d/40network/net-genrules.sh
+@@ -54,7 +54,7 @@ fix_bootif() {
+ 
+     # Default: We don't know the interface to use, handle all
+     else
+-        printf 'SUBSYSTEM=="net", RUN+="%s"\n' "/sbin/initqueue --onetime $ifup" > /etc/udev/rules.d/61-default-net.rules
++        printf 'SUBSYSTEM=="net", RUN+="%s"\n' "/sbin/initqueue --onetime $ifup" > /etc/udev/rules.d/91-default-net.rules
+     fi
+ 
+-} > /etc/udev/rules.d/60-net.rules
++} > /etc/udev/rules.d/90-net.rules
+diff --git a/modules.d/40network/net-lib.sh b/modules.d/40network/net-lib.sh
+index 9a1e004..641b21e 100644
+--- a/modules.d/40network/net-lib.sh
++++ b/modules.d/40network/net-lib.sh
+@@ -304,4 +304,14 @@ parse_ifname_opts() {
+             die "Invalid arguments for ifname="
+             ;;
+     esac
++
++    case $ifname_if in
++        eth[0-9]|eth[0-9][0-9]|eth[0-9][0-9][0-9]|eth[0-9][0-9][0-9][0-9])
++            warn "ifname=$ifname_if uses the kernel name space for interfaces"
++            warn "This can fail for multiple network interfaces and is discouraged!"
++            warn "Please use a custom name like \"netboot\" or \"bluesocket\""
++            warn "or use biosdevname and no ifname= at all."
++            ;;
++    esac
++
+ }
+diff --git a/modules.d/95fcoe/fcoe-genrules.sh b/modules.d/95fcoe/fcoe-genrules.sh
+index d87f72c..80894ed 100755
+--- a/modules.d/95fcoe/fcoe-genrules.sh
++++ b/modules.d/95fcoe/fcoe-genrules.sh
+@@ -13,4 +13,4 @@
+     else
+         printf 'ACTION=="add", SUBSYSTEM=="net", NAME=="%s", RUN+="/sbin/initqueue --onetime --unique --name fcoe-up-$env{INTERFACE} /sbin/fcoe-up $env{INTERFACE} %s"\n' "$fcoe_interface" "$fcoe_dcb"
+     fi
+-} > /etc/udev/rules.d/60-fcoe.rules
++} > /etc/udev/rules.d/92-fcoe.rules

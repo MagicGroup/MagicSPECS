@@ -1,0 +1,19 @@
+diff -Nuarp kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlookuptable.cpp kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlookuptable.cpp
+--- kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlookuptable.cpp	2010-04-17 14:58:39.000000000 +0800
++++ kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlookuptable.cpp	2010-04-17 15:00:40.000000000 +0800
+@@ -172,11 +172,11 @@ void KIMLookupTable::resizeEvent(QResize
+         m_view->setSceneRect(m_widget->mapToScene(m_widget->boundingRect()).boundingRect());
+         m_view->centerOn(m_widget);
+     }
+-    if ((width() + x() > m_desktop.availableGeometry().width()) ||
+-        (height() + y() > m_desktop.availableGeometry().height())) {
++    if ((width() + x() > m_desktop.screenGeometry().width()) ||
++        (height() + y() > m_desktop.screenGeometry().height())) {
+ 
+-        move(qMin(m_desktop.availableGeometry().width()-width(),x()),
+-            qMin(m_desktop.availableGeometry().height()-height(),y()));
++        move(qMin(m_desktop.screenGeometry().width()-width(),x()),
++            qMin(m_desktop.screenGeometry().height()-height(),y()));
+     }
+ }
+ 

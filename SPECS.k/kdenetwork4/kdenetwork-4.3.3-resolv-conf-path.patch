@@ -1,0 +1,21 @@
+diff -up kdenetwork-4.3.3/kppp/connect.cpp.resolv-conf-path kdenetwork-4.3.3/kppp/connect.cpp
+--- kdenetwork-4.3.3/kppp/connect.cpp.resolv-conf-path	2008-01-05 00:59:27.000000000 +0100
++++ kdenetwork-4.3.3/kppp/connect.cpp	2009-11-23 14:42:15.629662654 +0100
+@@ -1491,7 +1491,7 @@ void addpeerdns() {
+   int fd, fd2;
+ 
+   if((fd = Requester::rq->openResolv(O_WRONLY|O_APPEND)) >= 0) {
+-    if((fd2 = open("/etc/ppp/resolv.conf", O_RDONLY)) >= 0) {
++    if((fd2 = open("/var/run/ppp/resolv.conf", O_RDONLY)) >= 0) {
+       char c;
+       int i = 0;
+       while(i++ < 100 && read(fd2, &c, 1) == 1) {
+@@ -1502,7 +1502,7 @@ void addpeerdns() {
+       }
+       close(fd2);
+     } else
+-      fprintf(stderr, "failed to read from /etc/ppp/resolv.conf\n");
++      fprintf(stderr, "failed to read from /var/run/ppp/resolv.conf\n");
+     close(fd);
+   }
+   add_domain(gpppdata.domain());

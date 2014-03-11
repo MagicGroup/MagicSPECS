@@ -1,0 +1,20 @@
+--- kdebase-3.5.13.1/kcontrol/displayconfig/displayconfig.desktop.ORI	2012-10-04 23:36:14.085070870 +0200
++++ kdebase-3.5.13.1/kcontrol/displayconfig/displayconfig.desktop	2012-10-04 23:36:23.449879298 +0200
+@@ -3,7 +3,7 @@
+ Comment=Configure display
+ Comment[en_US]=Configure display
+ DocPath=kcontrol/displayconfig.html
+-Exec[$e]=kcmshell displayconfig
++Exec=kcmshell displayconfig
+ GenericName=
+ GenericName[en_US]=
+ Icon=background
+@@ -12,7 +12,7 @@
+ Name=Monitor & Display
+ Name[en_US]=Monitor & Display
+ NoDisplay=false
+-Path[$e]=
++Path=
+ StartupNotify=true
+ Terminal=false
+ TerminalOptions=

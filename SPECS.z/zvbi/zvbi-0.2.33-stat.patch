@@ -1,0 +1,33 @@
+diff -Nrbu zvbi-0.2.33/contrib/ntsc-cc.c zvbi-0.2.33-OK/contrib/ntsc-cc.c
+--- zvbi-0.2.33/contrib/ntsc-cc.c	2007-11-27 20:39:34.000000000 +0300
++++ zvbi-0.2.33-OK/contrib/ntsc-cc.c	2010-02-21 17:57:17.000000000 +0300
+@@ -32,6 +32,7 @@
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <locale.h>
++#include <sys/stat.h>
+ #include <sys/ioctl.h>
+ #include <sys/types.h>
+ #include <sys/time.h>
+diff -Nrbu zvbi-0.2.33/src/io-dvb.c zvbi-0.2.33-OK/src/io-dvb.c
+--- zvbi-0.2.33/src/io-dvb.c	2008-02-24 17:18:21.000000000 +0300
++++ zvbi-0.2.33-OK/src/io-dvb.c	2010-02-21 17:57:32.000000000 +0300
+@@ -27,6 +27,7 @@
+ 
+ #include <unistd.h>		/* read() */
+ #include <errno.h>
++#include <sys/stat.h>
+ #include <sys/select.h>
+ #include <sys/ioctl.h>
+ 
+diff -Nrbu zvbi-0.2.33/src/io-v4l.c zvbi-0.2.33-OK/src/io-v4l.c
+--- zvbi-0.2.33/src/io-v4l.c	2008-02-24 17:17:28.000000000 +0300
++++ zvbi-0.2.33-OK/src/io-v4l.c	2010-02-21 17:57:47.000000000 +0300
+@@ -40,6 +40,7 @@
+ #include <errno.h>
+ #include <unistd.h>		/* read(), dup2(), getuid() */
+ #include <assert.h>
++#include <sys/stat.h>
+ #include <sys/time.h>		/* timeval */
+ #include <sys/types.h>		/* fd_set, uid_t */
+ #include <sys/ioctl.h>		/* for (_)videodev.h */

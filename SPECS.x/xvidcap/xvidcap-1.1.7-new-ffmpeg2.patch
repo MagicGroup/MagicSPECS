@@ -1,0 +1,184 @@
+diff -ur xvidcap-1.1.7.orig/src/codecs.c xvidcap-1.1.7/src/codecs.c
+--- xvidcap-1.1.7.orig/src/codecs.c	2012-04-06 07:15:21.000000000 -0400
++++ xvidcap-1.1.7/src/codecs.c	2012-04-06 07:30:39.000000000 -0400
+@@ -43,8 +43,8 @@
+ #include <locale.h>
+ 
+ #ifdef USE_FFMPEG
+-#include <ffmpeg/avcodec.h>
+-#include <ffmpeg/avformat.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
+ #endif     // USE_FFMPEG
+ 
+ #include "app_data.h"
+diff -ur xvidcap-1.1.7.orig/src/main.c xvidcap-1.1.7/src/main.c
+--- xvidcap-1.1.7.orig/src/main.c	2012-04-06 07:15:21.000000000 -0400
++++ xvidcap-1.1.7/src/main.c	2012-04-06 07:30:51.000000000 -0400
+@@ -45,7 +45,7 @@
+ #include <locale.h>
+ 
+ #ifdef USE_FFMPEG
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ #endif     // USE_FFMPEG
+ 
+ #include "control.h"
+@@ -217,9 +217,6 @@
+ 
+     if (app)
+         xvc_appdata_free (app);
+-#ifdef USE_FFMPEG
+-    av_free_static ();
+-#endif
+ }
+ 
+ /**
+diff -ur xvidcap-1.1.7.orig/src/Makefile.in xvidcap-1.1.7/src/Makefile.in
+--- xvidcap-1.1.7.orig/src/Makefile.in	2012-04-06 07:15:21.000000000 -0400
++++ xvidcap-1.1.7/src/Makefile.in	2012-04-06 08:27:58.000000000 -0400
+@@ -173,7 +173,7 @@
+ INTLTOOL_XML_RULE = @INTLTOOL_XML_RULE@
+ LDFLAGS = @LDFLAGS@
+ LIBOBJS = @LIBOBJS@
+-LIBS = @LIBS@
++LIBS = @LIBS@ -lavcodec -lavformat -lx264 -lfaac -lgsm -lopencore-amrnb -lopencore-amrwb -lopenjpeg -lspeex -lvorbis -lvorbisenc -ltheoraenc -ltheoradec -lbz2 -lz 
+ LTLIBOBJS = @LTLIBOBJS@
+ MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+diff -ur xvidcap-1.1.7.orig/src/xtoffmpeg.c xvidcap-1.1.7/src/xtoffmpeg.c
+--- xvidcap-1.1.7.orig/src/xtoffmpeg.c	2012-04-06 07:15:21.000000000 -0400
++++ xvidcap-1.1.7/src/xtoffmpeg.c	2012-04-06 08:26:13.000000000 -0400
+@@ -56,13 +56,13 @@
+ #include "xvidcap-intl.h"
+ 
+ // ffmpeg stuff
+-#include <ffmpeg/avcodec.h>
+-#include <ffmpeg/avformat.h>
+-#include <ffmpeg/avdevice.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
++#include <libavdevice/avdevice.h>
+ //#include <ffmpeg/dsputil.h>
+-#include <ffmpeg/swscale.h>
+-#include <ffmpeg/rgb2rgb.h>
+-#include <ffmpeg/fifo.h>
++#include <libswscale/swscale.h>
++//#include <libswscale/rgb2rgb.h>
++#include <libavutil/fifo.h>
+ #define swscale_isRGB(x) ((x)==PIX_FMT_BGR32 || (x)==PIX_FMT_RGB24 \
+                         || (x)==PIX_FMT_RGB565 || (x)==PIX_FMT_RGB555 \
+                         || (x)==PIX_FMT_RGB8 || (x)==PIX_FMT_RGB4 \
+@@ -96,7 +96,7 @@
+                         || (x)==PIX_FMT_YUVJ420P || (x)==PIX_FMT_YUVJ422P \
+                         || (x)==PIX_FMT_YUVJ444P)
+ 
+-#define PIX_FMT_ARGB32 PIX_FMT_RGBA32  /* this is just my personal
++#define PIX_FMT_ARGB32 PIX_FMT_RGB32  /* this is just my personal
+                                         * convenience */
+ 
+ /*
+@@ -361,7 +361,7 @@
+     }
+     // put sample parameters
+     au_c->codec_id = xvc_audio_codecs[job->au_targetCodec].ffmpeg_id;
+-    au_c->codec_type = CODEC_TYPE_AUDIO;
++    au_c->codec_type = AVMEDIA_TYPE_AUDIO;
+     au_c->bit_rate = target->sndsize;
+     au_c->sample_rate = target->sndrate;
+     au_c->channels = target->sndchannels;
+@@ -567,7 +567,7 @@
+                     av_rescale_q (enc->coded_frame->pts, enc->time_base,
+                                   ost->st->time_base);
+             }
+-            pkt.flags |= PKT_FLAG_KEY;
++            pkt.flags |= AV_PKT_FLAG_KEY;
+             pkt.stream_index = ost->st->index;
+ 
+             pkt.data = audio_out;
+@@ -627,7 +627,7 @@
+             pkt.pts =
+                 av_rescale_q (enc->coded_frame->pts, enc->time_base,
+                               ost->st->time_base);
+-        pkt.flags |= PKT_FLAG_KEY;
++        pkt.flags |= AV_PKT_FLAG_KEY;
+         av_interleaved_write_frame (s, &pkt);
+     }
+ 
+@@ -681,7 +681,7 @@
+     if (ret <= 0) {
+         ret = avcodec_encode_audio (enc, bit_buffer, bit_buffer_size, NULL);
+     }
+-    pkt.flags |= PKT_FLAG_KEY;
++    pkt.flags |= AV_PKT_FLAG_KEY;
+ 
+     if (samples) {
+         av_free (samples);
+@@ -905,7 +905,7 @@
+                               ost->time_base);
+         }
+         if (enc->coded_frame->key_frame)
+-            pkt.flags |= PKT_FLAG_KEY;
++            pkt.flags |= AV_PKT_FLAG_KEY;
+     }
+ 
+     pkt.stream_index = ost->index;
+@@ -1157,7 +1157,7 @@
+     }
+ 
+     st->codec->codec_id = codec_id;
+-    st->codec->codec_type = CODEC_TYPE_VIDEO;
++    st->codec->codec_type = AVMEDIA_TYPE_VIDEO;
+ 
+     // find the video encoder
+     codec = avcodec_find_encoder (st->codec->codec_id);
+@@ -1248,7 +1248,11 @@
+     st->codec->flags |= CODEC_FLAG2_FAST;
+     // there is no trellis quantiser in libav* for mjpeg
+     if (st->codec->codec_id != CODEC_ID_MJPEG)
++#if LIBAVCODEC_VERSION_INT < ((52<<16)+(0<<8)+0)
+         st->codec->flags |= CODEC_FLAG_TRELLIS_QUANT;
++#else
++	st->codec->trellis = 1;
++#endif
+     st->codec->flags &= ~CODEC_FLAG_OBMC;
+     // some formats want stream headers to be seperate
+     if (oc->oformat->flags & AVFMT_GLOBALHEADER)
+@@ -1439,13 +1443,13 @@
+         // guess AVOutputFormat
+         if (job->target >= CAP_MF)
+             file_oformat =
+-                guess_format (xvc_formats[job->target].ffmpeg_name, NULL, NULL);
++                av_guess_format (xvc_formats[job->target].ffmpeg_name, NULL, NULL);
+         else {
+             char tmp_fn[30];
+ 
+             snprintf (tmp_fn, 29, "test-%%d.%s",
+                       xvc_formats[job->target].extensions[0]);
+-            file_oformat = guess_format (NULL, tmp_fn, NULL);
++            file_oformat = av_guess_format (NULL, tmp_fn, NULL);
+         }
+         if (!file_oformat) {
+             fprintf (stderr,
+@@ -1466,7 +1470,7 @@
+ #endif     // DEBUG
+ 
+         // prepare AVFormatContext
+-        output_file = av_alloc_format_context ();
++        output_file = avformat_alloc_context ();
+         if (!output_file) {
+             fprintf (stderr,
+                      _
+只在 xvidcap-1.1.7/src 存在：xtoffmpeg.c.orig
+diff -ur xvidcap-1.1.7.orig/src/xvidcap-client-bindings.h xvidcap-1.1.7/src/xvidcap-client-bindings.h
+--- xvidcap-1.1.7.orig/src/xvidcap-client-bindings.h	2012-04-06 07:15:21.000000000 -0400
++++ xvidcap-1.1.7/src/xvidcap-client-bindings.h	2012-04-06 08:26:21.000000000 -0400
+@@ -1,7 +1,6 @@
+ /* Generated by dbus-binding-tool; do not edit! */
+ 
+-#include <glib/gtypes.h>
+-#include <glib/gerror.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ 
+ G_BEGIN_DECLS

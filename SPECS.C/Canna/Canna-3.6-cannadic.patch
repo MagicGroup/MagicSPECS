@@ -1,0 +1,10 @@
+--- Canna36/dic/ideo/words/dics.dir.orig	Sat Jan  5 23:03:06 2002
++++ Canna36/dic/ideo/words/dics.dir	Sat Jan  5 23:04:54 2002
+@@ -40,3 +40,7 @@
+ software.ctd(.mwd)		-software---
+ zipcode.ctd(.mwd)		-zipcode---
+ geo.ctd(.mwd)		-geo---
++gcanna.cbd(gcanna.mwd)		-gcanna---
++gcanna.cld(gcanna.mwd)		-gcanna---
++gcannaf.cbd(gcannaf.swd)	-gcannaf---
++gcannaf.cld(gcannaf.swd)	-gcannaf---

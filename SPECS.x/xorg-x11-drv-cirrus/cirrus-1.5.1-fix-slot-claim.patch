@@ -1,0 +1,50 @@
+From bc04e9ed659be51a3c712f34a038bd60f639f9c5 Mon Sep 17 00:00:00 2001
+From: Dave Airlie <airlied@redhat.com>
+Date: Mon, 20 Aug 2012 13:49:19 +1000
+Subject: [PATCH] cirrus: fix falling back after kernel check
+
+if we find a kernel driver the code leave the pci slot claimed which
+stops us falling back. unclaim the pci slot.
+
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+---
+ src/cir_driver.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/cir_driver.c b/src/cir_driver.c
+index 5468b6b..c8d5aae 100644
+--- a/src/cir_driver.c
++++ b/src/cir_driver.c
+@@ -237,9 +237,10 @@ CIRProbe(DriverPtr drv, int flags)
+ 				    CIRChipsets, CIRPciChipsets, devSections,
+  				    numDevSections, drv, &usedChips);
+     /* Free it since we don't need that list after this */
+-    free(devSections);
+-    if (numUsed <= 0)
++    if (numUsed <= 0) {
++        free(devSections);
+  	return FALSE;
++    }
+     if (flags & PROBE_DETECT)
+  	foundScreen = TRUE;
+     else for (i = 0; i < numUsed; i++) {
+@@ -257,6 +258,8 @@ CIRProbe(DriverPtr drv, int flags)
+                    pPci->device_id, pPci->bus, pPci->domain, pPci->dev, pPci->func);
+         xf86DrvMsg(0, X_ERROR,
+                    "cirrus: This driver cannot operate until it has been unloaded.\n");
++	xf86UnclaimPciSlot(pPci, devSections[0]);
++        free(devSections);
+         return FALSE;
+     }
+ #endif
+@@ -290,6 +293,7 @@ CIRProbe(DriverPtr drv, int flags)
+  	    pScrn->Probe	 = NULL;
+  	}
+     }
++    free(devSections);
+     free(usedChips);
+      
+     return foundScreen;
+-- 
+1.7.10.2
+

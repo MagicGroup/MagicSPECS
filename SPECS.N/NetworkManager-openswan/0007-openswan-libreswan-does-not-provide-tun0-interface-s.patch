@@ -1,0 +1,98 @@
+From db46fa8f456b7b21ad259ffab4a5b4e51e8c5809 Mon Sep 17 00:00:00 2001
+From: Avesh Agarwal <avagarwa@redhat.com>
+Date: Tue, 10 Dec 2013 13:58:50 -0500
+Subject: [PATCH 07/20] openswan/libreswan does not provide tun0 interface, so
+ fixed the code where it sends tun0 interface.
+
+---
+ src/nm-openswan-service-helper.c | 26 ++++++++++++++++++++------
+ src/nm-openswan-service.h        |  4 ++++
+ 2 files changed, 24 insertions(+), 6 deletions(-)
+
+diff --git a/src/nm-openswan-service-helper.c b/src/nm-openswan-service-helper.c
+index d0b4e19..35cd9d9 100644
+--- a/src/nm-openswan-service-helper.c
++++ b/src/nm-openswan-service-helper.c
+@@ -202,12 +202,13 @@ int
+ main (int argc, char *argv[])
+ {
+ 	DBusGConnection *connection;
+-	char *tmp;
++	char *tmp=NULL;
+ 	GHashTable *config;
+ 	GValue *val;
+ 	GError *err = NULL;
+-	//struct in_addr temp_addr;
++	struct in_addr temp_addr;
+ 	//long int mtu = 1412;
++	char nmask[16]="255.255.255.255";
+ 
+ #if !GLIB_CHECK_VERSION (2, 35, 0)
+ 	g_type_init ();
+@@ -237,13 +238,25 @@ main (int argc, char *argv[])
+ 	else
+ 		helper_failed (connection, "Openswan Pluto Right Peer (VPN Gateway)");
+ 
++
++	/*
++	 * Tunnel device
++	 * Indicate that openswan plugin doesn't use tun/tap device
++	 */
++	val = g_slice_new0 (GValue);
++	g_value_init (val, G_TYPE_STRING);
++	g_value_set_string (val, NM_VPN_PLUGIN_IP4_CONFIG_TUNDEV_NONE);
++	g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_TUNDEV, val);
++
++#if 0
+ 	/* Tunnel device */
+ 	//val = str_to_gvalue (getenv ("TUNDEV"), FALSE);
+-	val = str_to_gvalue ("tun0", FALSE);
++	//val = str_to_gvalue ("tun0", FALSE);
+ 	if (val)
+ 		g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_TUNDEV, val);
+ 	else
+ 		helper_failed (connection, "Tunnel Device");
++#endif
+ 
+ 	/* IP address */
+ 	val = addr_to_gvalue (getenv ("PLUTO_MY_SOURCEIP"));
+@@ -258,9 +271,10 @@ main (int argc, char *argv[])
+ 		g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_PTP, val);
+ 	else
+ 		helper_failed (connection, "IP4 PTP Address");
+-#if 0
++//#if 0
+ 	/* Netmask */
+-	tmp = getenv ("INTERNAL_IP4_NETMASK");
++	//tmp = getenv ("INTERNAL_IP4_NETMASK");
++	tmp = nmask;
+ 	if (tmp && inet_pton (AF_INET, tmp, &temp_addr) > 0) {
+ 		GValue *value;
+ 
+@@ -270,7 +284,7 @@ main (int argc, char *argv[])
+ 
+ 		g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_PREFIX, value);
+ 	}
+-#endif
++//#endif
+ 
+ 	/* DNS */
+ 	val = addr_list_to_gvalue (getenv ("PLUTO_CISCO_DNS_INFO"));
+diff --git a/src/nm-openswan-service.h b/src/nm-openswan-service.h
+index cd79b43..0b6022d 100644
+--- a/src/nm-openswan-service.h
++++ b/src/nm-openswan-service.h
+@@ -54,6 +54,10 @@
+ #define NM_OPENSWAN_PW_TYPE_ASK    "ask"
+ #define NM_OPENSWAN_PW_TYPE_UNUSED "unused"
+ 
++#ifndef NM_VPN_PLUGIN_IP4_CONFIG_TUNDEV_NONE
++#define NM_VPN_PLUGIN_IP4_CONFIG_TUNDEV_NONE "_none_"
++#endif
++
+ typedef struct {
+ 	NMVPNPlugin parent;
+ } NMOPENSWANPlugin;
+-- 
+1.8.3.1
+

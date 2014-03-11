@@ -1,0 +1,19 @@
+--- synaptic/gtk/rgmainwindow.cc.firefox	2005-07-12 22:24:04.000000000 +0300
++++ synaptic/gtk/rgmainwindow.cc	2005-07-12 22:24:57.000000000 +0300
+@@ -2293,7 +2293,15 @@
+        system("konqueror ghelp:///" PACKAGE_DATA_DIR "/gnome/help/synaptic/C/synaptic.xml &");
+     }
+ #endif
+-   else if (is_binary_in_path("mozilla")) {
++   else if (is_binary_in_path("firefox")) {
++      // mozilla eats bookmarks when run under sudo (because it does not
++      // change $HOME) - is this needed for firefox as well?
++      if(getenv("SUDO_USER") != NULL) {
++         struct passwd *pw = getpwuid(0);
++         setenv("HOME", pw->pw_dir, 1);
++      }
++      system("firefox " PACKAGE_DATA_DIR "/synaptic/html/index.html &");
++   } else if (is_binary_in_path("mozilla")) {
+       // mozilla eats bookmarks when run under sudo (because it does not
+       // change $HOME)
+       if(getenv("SUDO_USER") != NULL) {

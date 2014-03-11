@@ -1,0 +1,71 @@
+--- netkit-telnet-0.17/telnetd/ext.h.linemode	2005-04-19 15:48:42.000000000 +0200
++++ netkit-telnet-0.17/telnetd/ext.h	2005-04-19 15:48:42.000000000 +0200
+@@ -96,9 +96,9 @@
+ extern int SYNCHing;		/* we are in TELNET SYNCH mode */
+ 
+ void _termstat(void);
+-void add_slc(int, int, int);
++void add_slc(char func, char flag, cc_t val);
+ void check_slc(void);
+-void change_slc(int, int, int);
++void change_slc(char func, char flag, cc_t val);
+ void cleanup(int);
+ void clientstat(int, int, int);
+ void copy_termbuf(char *, int);
+--- netkit-telnet-0.17/telnetd/telnetd.c.linemode	2005-04-19 15:48:42.000000000 +0200
++++ netkit-telnet-0.17/telnetd/telnetd.c	2005-04-19 15:48:42.000000000 +0200
+@@ -1024,7 +1024,7 @@
+ 		if (pcc <= 0)
+ 		    break;
+ 		pty_read_ok = 1;	/* mark connection up for read */
+-#ifdef	LINEMODE
++#if (defined LINEMODE) && (defined TIOCPKT_IOCTL)
+ 				/*
+ 				 * If ioctl from pty, pass it through net
+ 				 */
+--- netkit-telnet-0.17/telnetd/defs.h.linemode	2005-04-19 16:04:39.000000000 +0200
++++ netkit-telnet-0.17/telnetd/defs.h	2005-04-19 16:06:23.000000000 +0200
+@@ -214,3 +214,11 @@
+ 
+ #define his_will_wont_is_changing	my_do_dont_is_changing
+ #define his_do_dont_is_changing		my_will_wont_is_changing
++
++#ifndef EXTPROC
++#define EXTPROC 0200000
++#endif
++
++#ifndef TIOCPKT_IOCTL
++#define TIOCPKT_IOCTL 64
++#endif
+--- netkit-telnet-0.17/telnetd/state.c.linemode	2005-04-19 15:48:42.000000000 +0200
++++ netkit-telnet-0.17/telnetd/state.c	2005-04-19 15:48:42.000000000 +0200
+@@ -119,8 +119,8 @@
+ 	      * if CRMOD is set, which it normally is).
+ 	      */
+ 	     if ((c == '\r') && his_state_is_wont(TELOPT_BINARY)) {
+-#if defined(ENCRYPT)
+ 		 int nc = *netip;
++#if defined(ENCRYPT)
+ 		 if (decrypt_input) {
+ 		     nc = (*decrypt_input)(nc & 0xff);
+ 		 }
+--- netkit-telnet-0.17/telnetd/Makefile.linemode	1999-12-14 01:43:30.000000000 +0100
++++ netkit-telnet-0.17/telnetd/Makefile	2005-04-19 15:48:44.000000000 +0200
+@@ -9,7 +9,7 @@
+ # take out -DPARANOID_TTYS.
+ 
+ CFLAGS += '-DISSUE_FILE="/etc/issue.net"' -DPARANOID_TTYS \
+-	   -DNO_REVOKE -DKLUDGELINEMODE -DDIAGNOSTICS
++	   -DNO_REVOKE -DKLUDGELINEMODE -DDIAGNOSTICS -DLINEMODE
+ # LIBS += $(LIBTERMCAP)
+ 
+ OBJS = telnetd.o state.o termstat.o slc.o sys_term.o utility.o \
+@@ -27,7 +27,7 @@
+ telnetd.o: ../version.h
+ 
+ install: telnetd
+-	install -s -m$(DAEMONMODE) telnetd $(INSTALLROOT)$(SBINDIR)/in.telnetd
++	install -m$(DAEMONMODE) telnetd $(INSTALLROOT)$(SBINDIR)/in.telnetd
+ 	install -m$(MANMODE) issue.net.5 $(INSTALLROOT)$(MANDIR)/man5/
+ 	install -m$(MANMODE) telnetd.8 $(INSTALLROOT)$(MANDIR)/man8/in.telnetd.8
+ 	ln -sf in.telnetd.8 $(INSTALLROOT)$(MANDIR)/man8/telnetd.8

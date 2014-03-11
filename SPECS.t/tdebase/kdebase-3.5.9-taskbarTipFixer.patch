@@ -1,0 +1,39 @@
+diff -Nur kdebase-3.5.9.orig/kicker/taskbar/taskbar.kcfg kdebase-3.5.9/kicker/taskbar/taskbar.kcfg
+--- kdebase-3.5.9.orig/kicker/taskbar/taskbar.kcfg	2007-05-14 15:55:39.000000000 +0800
++++ kdebase-3.5.9/kicker/taskbar/taskbar.kcfg	2008-08-15 21:30:38.000000000 +0800
+@@ -74,6 +74,11 @@
+             <label>Show window list button</label>
+             <whatsthis>Selecting this option causes the taskbar to display a button that, when clicked, shows a list of all windows in a popup menu.</whatsthis>
+         </entry>
++        <entry key="ShowTaskBarTips" type="Bool" >
++		<default>true</default>
++		<label>Show Task Bar Tips</label>
++		<whatsthis></whatsthis>
++        </entry>
+         <entry key="$(Button)Action" type="Enum" >
+             <parameter name="Button" type="Enum">
+                 <values>
+diff -Nur kdebase-3.5.9.orig/kicker/taskbar/taskcontainer.cpp kdebase-3.5.9/kicker/taskbar/taskcontainer.cpp
+--- kdebase-3.5.9.orig/kicker/taskbar/taskcontainer.cpp	2007-05-14 15:55:39.000000000 +0800
++++ kdebase-3.5.9/kicker/taskbar/taskcontainer.cpp	2008-08-15 21:31:42.000000000 +0800
+@@ -1529,6 +1529,12 @@
+ 
+ void TaskContainer::updateKickerTip(KickerTip::Data& data)
+ {
++/*
++ *modified by lovewilliam <lovewilliam@gmail.com>
++ * Disable or Enable task bar tip
++ * for beryl offers a better implement
++ */
++if(TaskBarSettings::showTaskBarTips()){
+     if (m_startup)
+     {
+         data.message = m_startup->text();
+@@ -1631,6 +1637,7 @@
+     data.icon = pixmap;
+     data.direction = KickerLib::arrowToDirection(arrowType);
+ }
++}
+ 
+ void TaskContainer::finish()
+ {

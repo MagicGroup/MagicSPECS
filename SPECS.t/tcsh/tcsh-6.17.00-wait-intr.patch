@@ -1,0 +1,34 @@
+--- tcsh-6.17.00/sh.proc.c	2009-06-25 23:15:37.000000000 +0200
++++ sh.proc.c	2010-11-25 17:36:16.500751242 +0100
+@@ -596,6 +596,10 @@ loop:
+ 	    pp->p_flags & PRUNNING) {
+ 	    handle_pending_signals();
+ 	    sigsuspend(&pause_mask);
++	    if (pintr_pending) {
++		handle_pending_signals();
++		break;
++	    }
+ 	    handle_pending_signals();
+ 	    goto loop;
+ 	}
+--- tcsh-6.17.00/sh.h	2009-06-25 23:27:37.000000000 +0200
++++ sh.h	2010-11-26 11:42:16.160119671 +0100
+@@ -533,6 +533,7 @@ typedef union {
+  * Global flags
+  */
+ EXTERN int    chkstop IZERO;	/* Warned of stopped jobs... allow exit */
++EXTERN volatile sig_atomic_t pintr_pending;	/* Interrupted by SIGINT */
+ 
+ #if (defined(FIOCLEX) && defined(FIONCLEX)) || defined(F_SETFD)
+ # define CLOSE_ON_EXEC
+--- tcsh-6.17.00/tc.sig.c	2006-08-24 22:56:31.000000000 +0200
++++ tc.sig.c	2010-11-26 11:40:09.779223509 +0100
+@@ -55,7 +55,7 @@ sigset_interrupting(int sig, void (*fn) 
+ static volatile sig_atomic_t alrmcatch_pending; /* = 0; */
+ static volatile sig_atomic_t pchild_pending; /* = 0; */
+ static volatile sig_atomic_t phup_pending; /* = 0; */
+-static volatile sig_atomic_t pintr_pending; /* = 0; */
++volatile sig_atomic_t pintr_pending; /* = 0; */
+ int alrmcatch_disabled; /* = 0; */
+ int phup_disabled; /* = 0; */
+ int pchild_disabled; /* = 0; */

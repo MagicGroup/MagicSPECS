@@ -1,0 +1,38 @@
+diff -u -r wine-0.9.20.orig/libs/wine/mmap.c wine-0.9.20/libs/wine/mmap.c
+--- wine-0.9.20.orig/libs/wine/mmap.c	2006-08-24 22:11:45.000000000 +0800
++++ wine-0.9.20/libs/wine/mmap.c	2006-08-28 11:40:55.000000000 +0800
+@@ -183,6 +183,23 @@
+ 
+ #endif  /* (__svr4__ || __NetBSD__) && !MAP_TRYFIXED */
+ 
++static void *get_anon_mmap_null_address(size_t size)
++{
++    static int got_override = 0;
++    static void *low_alloc_ptr = NULL;
++    void * current_low_alloc_ptr;
++
++    if (!got_override)
++    {
++            low_alloc_ptr = (void*)0x10000000;
++            got_override = 1;
++    }
++    current_low_alloc_ptr = low_alloc_ptr;
++    if (low_alloc_ptr)
++        low_alloc_ptr += size;
++
++    return current_low_alloc_ptr;
++   }
+ 
+ /***********************************************************************
+  *		wine_anon_mmap
+@@ -213,6 +230,10 @@
+             return start;
+ #endif
+     }
++ 
++    if ((start == NULL) && !(flags & MAP_FIXED))
++    start = get_anon_mmap_null_address(size);
++
+     return mmap( start, size, prot, flags, get_fdzero(), 0 );
+ }
+ 

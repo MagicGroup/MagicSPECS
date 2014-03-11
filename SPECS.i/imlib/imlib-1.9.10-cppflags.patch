@@ -1,0 +1,22 @@
+--- imlib-1.9.15/configure.in.cppflags	2004-09-23 02:13:45.000000000 +0100
++++ imlib-1.9.15/configure.in		2008-08-29 09:11:06.000000000 +0100
+@@ -141,8 +141,6 @@
+ fi
+ AC_SUBST(GX_LIBS)
+ 
+-CPPFLAGS="$CPPFLAGS -I$includedir -I$prefix/include"
+-
+ SUPPORT_LIBS=""
+ 
+ dnl Test for shared memory headers and semantics, unless we are
+--- imlib-1.9.15/configure.cppflags	2010-05-14 11:08:05.000000000 +0100
++++ imlib-1.9.15/configure		2010-05-14 11:09:03.000000000 +0100
+@@ -22314,8 +22314,6 @@
+ fi
+ 
+ 
+-CPPFLAGS="$CPPFLAGS -I$includedir -I$prefix/include"
+-
+ SUPPORT_LIBS=""
+ 
+ if test "x$enable_shm" = "xyes"; then

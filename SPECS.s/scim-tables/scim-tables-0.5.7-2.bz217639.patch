@@ -1,0 +1,10 @@
+--- scim-tables-0.5.7/src/scim_table_imengine.cpp.bz217639	2007-03-19 15:52:33.000000000 +1000
++++ scim-tables-0.5.7/src/scim_table_imengine.cpp	2007-03-19 15:52:55.000000000 +1000
+@@ -788,6 +788,7 @@
+ TableInstance::focus_out ()
+ {
+     m_focused = false;
++    reset ();
+ }
+ 
+ void

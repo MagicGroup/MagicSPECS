@@ -1,0 +1,28 @@
+diff -Nur mxd/src/settingdialog.cpp mxd.new/src/settingdialog.cpp
+--- mxd/src/settingdialog.cpp	2005-11-29 18:54:15.000000000 +0800
++++ mxd.new/src/settingdialog.cpp	2007-04-22 21:28:00.000000000 +0800
+@@ -690,19 +690,21 @@
+ void SettingDialog::saveProgramConfig( )
+ {
+ 	QString autoStartDir = QDir::homeDirPath() + "/.kde/Autostart";
+-	QString desktopFile = autoStartDir +  "/mxd.desktop";
++	QString desktopFile = autoStartDir +  "/00-mxd.desktop";
+ 	QFile file(desktopFile);
+ 	if(file.exists()) file.remove();
+ 	if(chbAutoStart->isChecked()){
+ 		KDesktopFile *autoStart = new KDesktopFile(desktopFile);
+ 		autoStart->writeEntry("Encoding", "UTF-8");
+ 		autoStart->writeEntry("Name", "Magic xDSL Dialer");
+-		autoStart->writeEntry("Exec", "mxd --start");
++		autoStart->writeEntry("Exec", "mxd-restart");
+ 		autoStart->writeEntry("Icon", "mxd");
+ 		autoStart->writeEntry("Type", "Application");
++		autoStart->writeEntry("X-KDE-autostart-phase", "2");
++		autoStart->writeEntry("StartupNotify", "false");
+ 		autoStart->writeEntry("Comment", "Magic xDSL Dialer. A convenient tool to handle "
+ 					"\"Roaring Penguin PPPoE\".");
+-		autoStart->writeEntry("Comment[zh_CN]", i18n("Magic xDSL Dialer. A convenient tool to handle \"Roaring Penguin PPPoE\"."));
++		autoStart->writeEntry("Comment\[zh_CN\]", i18n("Magic xDSL Dialer. A convenient tool to handle \"Roaring Penguin PPPoE\"."));
+ 	
+ 		delete autoStart;
+ 	}

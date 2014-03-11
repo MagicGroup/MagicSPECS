@@ -1,0 +1,11 @@
+diff -up tcsh-6.15.00/tcsh.man.set tcsh-6.15.00/tcsh.man
+--- tcsh-6.15.00/tcsh.man.set	2008-09-03 11:43:55.000000000 +0200
++++ tcsh-6.15.00/tcsh.man	2008-09-03 11:43:55.000000000 +0200
+@@ -3213,7 +3213,6 @@ The fifth form sets the \fIindex\fR'th c
+ this component must already exist.
+ The sixth form lists only the names of all shell variables that are read-only.
+ The seventh form makes \fIname\fR read-only, whether or not it has a value.
+-The second form sets \fIname\fR to the null string.
+ The eighth form is the same as the third form, but
+ make \fIname\fR read-only at the same time.
+ .PD

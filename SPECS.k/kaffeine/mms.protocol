@@ -1,0 +1,19 @@
+[Protocol]
+exec=kaffeine "%u"
+protocol=mms
+defaultMimetype=uri/mms
+Icon=www
+Class=:internet
+URIMode=url
+Description=Microsoft Media Server Protocol
+Description[zh_CN]=Microsoft 媒体服务器协议
+Description[zh_HK]=Microsoft Media Server 協定
+Description[zh_TW]=Microsoft Media Server 協定
+input=none
+output=none
+helper=true
+reading=false
+listing=false
+writing=false
+makedir=false
+deleting=false

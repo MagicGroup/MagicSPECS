@@ -1,0 +1,21 @@
+--- kdebase-workspace-4.4.2/kcontrol/fonts/fonts.cpp	2010-04-13 22:08:18.000000000 +0800
++++ kdebase-workspace-4.4.2/kcontrol/fonts/fonts.cpp	2010-04-13 22:09:58.000000000 +0800
+@@ -511,12 +511,12 @@ KFonts::KFonts(QWidget *parent, const QV
+ 
+   // NOTE: keep in sync with kdelibs/kdeui/kernel/kglobalsettings.cpp
+ 
+-  QFont f0("Sans Serif", 9); // general/menu/desktop
+-  QFont f1("Monospace", 9);
+-  QFont f2("Sans Serif", 8); // toolbar
+-  QFont f3("Sans Serif", 8); // window title
+-  QFont f4("Sans Serif", 9); // taskbar
+-  QFont f5("Sans Serif", 8); // smallestReadableFont
++  QFont f0("Sans Serif", 10); // general/menu/desktop
++  QFont f1("Monospace", 10);
++  QFont f2("Sans Serif", 10); // toolbar
++  QFont f3("Sans Serif", 10); // window title
++  QFont f4("Sans Serif", 10); // taskbar
++  QFont f5("Sans Serif", 9); // smallestReadableFont
+ 
+   defaultFontList << f0 << f1 << f5 << f2 << f0 << f3 << f4 << f0;
+ 

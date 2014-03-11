@@ -1,0 +1,50 @@
+From 8a707dacf8615f88615a53ffe6eeb1ad65d94967 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Wed, 6 Jun 2012 11:23:47 +0200
+Subject: [PATCH 3/4] main-window-ui: Fix images missing from effect buttons
+
+Commit 4cb11731e62b51c684993e43000c933ea97785c2 fixed the images missing from
+the photo / video / burst buttons, but the same problem also affects the
+previous effects-page, effects, next effects-page buttons. This patch fixes
+them too.
+
+Note that unlike the commit message of commit 4cb11731 suggest this
+not only fixes the printing of warnings to the console, it also fixes
+the pixmaps actually missing from the buttons.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ data/cheese-main-window.ui |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/data/cheese-main-window.ui b/data/cheese-main-window.ui
+index bdc84c5..b0760bd 100644
+--- a/data/cheese-main-window.ui
++++ b/data/cheese-main-window.ui
+@@ -126,6 +126,7 @@
+                         <property name="column-spacing">0</property>
+                         <child>
+                           <object class="GtkButton" id="effects_prev_page_button">
++                            <property name="use-action-appearance">False</property>
+                             <property name="related-action">effects_page_prev</property>
+                             <property name="width-request">32</property>
+                             <property name="relief">GTK_RELIEF_NONE</property>
+@@ -141,6 +142,7 @@
+                           <object class="GtkToggleButton" id="effects_toggle_button">
+                             <property name="vexpand">False</property>
+                             <property name="hexpand">False</property>
++                            <property name="use-action-appearance">False</property>
+                             <property name="related-action">effects_toggle</property>
+                             <property name="tooltip_text" translatable="yes">Effects</property>
+                             <child>
+@@ -165,6 +167,7 @@
+                         </child>
+                         <child>
+                           <object class="GtkButton" id="effects_next_page_button">
++                            <property name="use-action-appearance">False</property>
+                             <property name="related-action">effects_page_next</property>
+                             <property name="width-request">32</property>
+                             <property name="relief">GTK_RELIEF_NONE</property>
+-- 
+1.7.10.2
+

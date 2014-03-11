@@ -1,0 +1,4587 @@
+From 01be09a104c4714e5150adc8dbbcbb5fb1df593d Mon Sep 17 00:00:00 2001
+From: Akira TAGOH <akira@tagoh.org>
+Date: Fri, 2 Mar 2012 18:56:06 +0900
+Subject: [PATCH] Update po
+
+---
+ po/af.po          |    2 +-
+ po/am.po          |    2 +-
+ po/ar.po          |    2 +-
+ po/as.po          |  141 ++++++++++++++++++++++++-----------------------
+ po/ast.po         |  157 +++++++++++++++++++++++++++++------------------------
+ po/az.po          |    8 ++--
+ po/be.po          |    2 +-
+ po/bg.po          |    2 +-
+ po/bn.po          |    2 +-
+ po/bn_IN.po       |    2 +-
+ po/bs.po          |    2 +-
+ po/ca.po          |    2 +-
+ po/cs.po          |    2 +-
+ po/cy.po          |    2 +-
+ po/da.po          |    2 +-
+ po/de.po          |    2 +-
+ po/de_CH.po       |   10 ++--
+ po/el.po          |    2 +-
+ po/en_GB.po       |    2 +-
+ po/eo.po          |    9 ++--
+ po/es.po          |    2 +-
+ po/es_MX.po       |   78 ++++++++++++++------------
+ po/et.po          |    2 +-
+ po/eu_ES.po       |    2 +-
+ po/fa.po          |    2 +-
+ po/fi.po          |    2 +-
+ po/fr.po          |    2 +-
+ po/ga.po          |    9 ++--
+ po/gl.po          |    2 +-
+ po/gu.po          |   11 ++--
+ po/he.po          |    2 +-
+ po/hi.po          |   11 ++--
+ po/hr.po          |    2 +-
+ po/hu.po          |    2 +-
+ po/hy.po          |    2 +-
+ po/id.po          |    2 +-
+ po/imsettings.pot |    2 +-
+ po/is.po          |    2 +-
+ po/it.po          |    2 +-
+ po/ja.po          |  107 +++++++++++++++++++------------------
+ po/ka.po          |    2 +-
+ po/kn.po          |   11 ++--
+ po/ko.po          |   89 ++++++++++++++++---------------
+ po/ku.po          |    2 +-
+ po/ky.po          |  152 +++++++++++++++++++++++++++------------------------
+ po/la.po          |    8 ++--
+ po/lo.po          |    2 +-
+ po/lt.po          |    2 +-
+ po/lv.po          |    2 +-
+ po/mk.po          |    2 +-
+ po/ml.po          |   88 ++++++++++++++++--------------
+ po/mn.po          |   84 +++++------------------------
+ po/mr.po          |   11 ++--
+ po/ms.po          |    2 +-
+ po/my.po          |    2 +-
+ po/nb.po          |    2 +-
+ po/nds.po         |   78 ++++++++++++++------------
+ po/nl.po          |    2 +-
+ po/nn.po          |    2 +-
+ po/nso.po         |    2 +-
+ po/or.po          |    7 ++-
+ po/pa.po          |   49 +++++++++--------
+ po/pl.po          |    2 +-
+ po/pt.po          |    2 +-
+ po/pt_BR.po       |    2 +-
+ po/ro.po          |    2 +-
+ po/ru.po          |    2 +-
+ po/si.po          |    2 +-
+ po/sk.po          |    2 +-
+ po/sl.po          |    2 +-
+ po/sq.po          |    2 +-
+ po/sr.po          |    2 +-
+ po/sr@latin.po    |    2 +-
+ po/sv.po          |    2 +-
+ po/ta.po          |    2 +-
+ po/te.po          |    2 +-
+ po/th.po          |    2 +-
+ po/tl.po          |   10 ++--
+ po/tr.po          |    2 +-
+ po/uk.po          |    2 +-
+ po/ur.po          |    2 +-
+ po/vi.po          |    2 +-
+ po/xh.po          |    8 ++--
+ po/zh_CN.po       |    2 +-
+ po/zh_TW.po       |    2 +-
+ po/zu.po          |    2 +-
+ 86 files changed, 635 insertions(+), 629 deletions(-)
+
+diff --git a/po/af.po b/po/af.po
+index 148a694..5dee268 100644
+--- a/po/af.po
++++ b/po/af.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/am.po b/po/am.po
+index 97499e8..6b45962 100644
+--- a/po/am.po
++++ b/po/am.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/ar.po b/po/ar.po
+index 41f58f5..db2762d 100644
+--- a/po/ar.po
++++ b/po/ar.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/as.po b/po/as.po
+index 9719543..e6a2576 100644
+--- a/po/as.po
++++ b/po/as.po
+@@ -5,12 +5,13 @@
+ # Amitakhya Phukan <aphukan@redhat.com>, 2008, 2010.
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # Amitakhya Phukan <aphukan@fedoraproject.org>, 2008.
++# ngoswami <ngoswami@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
+-"PO-Revision-Date: 2011-06-01 00:16+0000\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
++"PO-Revision-Date: 2012-03-02 18:42+0900\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: as\n"
+@@ -29,15 +30,15 @@ msgstr "সমকালীনভাবে এটা চাবিৰ ঘটনা
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+-msgstr ""
++msgstr "ব্যৱহাৰ কৰিব লগিয়া D-Bus ঠিকনা"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr ""
++msgstr "ADDRESS"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+-msgstr "ব্যৱহাৰৰ উদ্দেশ্যে X প্ৰদৰ্শন"
++msgstr "ব্যৱহাৰ কৰিব লগিয়া X প্ৰদৰ্শন"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "DISPLAY"
+@@ -45,15 +46,15 @@ msgstr "DISPLAY"
+ 
+ #: ../backends/xim/main.c:157
+ msgid "Replace the running XIM server with new instance."
+-msgstr "চলি থকা XIM সেৱকক নতুন চানেকিৰে প্ৰতিস্থাপন কৰক ।"
++msgstr "চলি থকা XIM চাৰ্ভাৰক নতুন উদাহৰণৰে প্ৰতিস্থাপন কৰক।"
+ 
+ #: ../backends/xim/main.c:158
+ msgid "Output the debugging logs"
+-msgstr "ডিবাগৰ লগক নিৰ্গম কৰক"
++msgstr "ডিবাগৰ লগক আউটপুট কৰক"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM server connects to, for debugging purpose only"
+-msgstr "XIM সেৱকে সংযোগ কৰে, অকল ডিবাগৰ সংক্ৰান্তত"
++msgstr "XIM চাৰ্ভাৰে সংযোগ কৰে, অকল ডিবাগৰ সংক্ৰান্তত"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM"
+@@ -63,43 +64,43 @@ msgstr "XIM"
+ #: ../utils/imsettings-check.c:268 ../utils/imsettings-info.c:69
+ #: ../utils/imsettings-reload.c:64 ../utils/imsettings-switch.c:81
+ msgid "Unknown error in parsing the command lines."
+-msgstr "আদেশ শাৰী বিশ্লেষণ কৰোঁতে অজ্ঞাত ভুল ।"
++msgstr "কমান্ড শাৰী বিশ্লেষণ কৰোঁতে অজ্ঞাত ত্ৰুটি।"
+ 
+ #: ../backends/xim/proxy.c:2968
+ msgid "XIM server name"
+-msgstr "XIM সেৱকৰ নাম"
++msgstr "XIM চাৰ্ভাৰৰ নাম"
+ 
+ #: ../backends/xim/proxy.c:2969
+ msgid "The name of XIM server for the connection"
+-msgstr "সংযোগৰ কাৰণে XIM সেৱকৰ নাম"
++msgstr "সংযোগৰ কাৰণে XIM চাৰ্ভাৰৰ নাম"
+ 
+ #: ../backends/xim/proxy.c:2974
+ msgid "Signals for Protocol class"
+-msgstr "আচাৰ-বিধিৰ শ্ৰেণীৰ কাৰণে চিগ্নেল"
++msgstr "প্ৰটোকল শ্ৰেণীৰ বাবে সংকেতবোৰ"
+ 
+ #: ../backends/xim/proxy.c:2975
+ msgid "A structure of signals for Protocol class"
+-msgstr "আচাৰ-বিধিৰ শ্ৰেণীৰ কাৰণে চিগ্নেলৰ এটা আকৃতি"
++msgstr "প্ৰটোকল শ্ৰেণীৰ বাবে সংকেতৰ এটা গঠন"
+ 
+ #: ../imsettings/imsettings-client.c:161
+ msgid "Locale"
+-msgstr "লোকেল"
++msgstr "স্থানীয়"
+ 
+ #: ../imsettings/imsettings-client.c:162
+ msgid "Locale to get the imsettings information"
+-msgstr "imsettings তথ্য পোৱাৰ লোকেল"
++msgstr "imsettings তথ্য পোৱাৰ স্থানীয়"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "নাম"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+-msgstr ""
++msgstr "imsettings বেকএণ্ডৰ বাবে এটা মডিউল নাম"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+-msgstr "নিবেশ পদ্ধতি চলাই ৰাখিবলৈ অক্ষম"
++msgstr "ইনপুট পদ্ধতি চলাই ৰাখিবলৈ অক্ষম"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:203
+ #, c-format
+@@ -107,26 +108,26 @@ msgid ""
+ "Giving up to bring the process up because %s Input Method process for %s "
+ "rapidly died many times. See .imsettings.log for more details."
+ msgstr ""
+-"প্ৰক্ৰিয়াক আৰম্ভ কৰিবলৈ চেষ্টা এৰি দিয়া হৈছে কাৰণ %s নিবেশ পদ্ধতিৰ প্ৰক্ৰিয়া %s ৰ "
+-"কাৰণে বহুবাৰ শেষ হৈছে । অধিক বিৱৰণৰ কাৰণে .imsettings.log চাওক ।"
++"প্ৰক্ৰিয়াক আৰম্ভ কৰিবলৈ চেষ্টা এৰি দিয়া হৈছে কাৰণ %s ইনপুট পদ্ধতিৰ প্ৰক্ৰিয়া %s ৰ "
++"কাৰণে বহুবাৰ শেষ হৈছে। অধিক বিৱৰণৰ কাৰণে .imsettings.log চাওক।"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+ msgid "[BUG] %s process is still running [pid: %d]\n"
+-msgstr ""
++msgstr "[BUG] %s প্ৰক্ৰিয়া এতিয়াও চলি আছে [pid: %d]¶\n"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+ msgid "Couldn't send a signal to the %s process successfully."
+-msgstr "%s প্ৰক্ৰিয়ালৈ সফলভাবে চিগ্নেল পঠিয়াব নোৱাৰি ।"
++msgstr "%s প্ৰক্ৰিয়ালৈ সফলভাবে সংকেত পঠিয়াব পৰা নগল।"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+ msgid "A GObject to be a IMSettingsInfo"
+-msgstr ""
++msgstr "এটা IMSettingsInfo হবলে এটা GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+@@ -134,43 +135,43 @@ msgstr "DBus সংযোগ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+-msgstr ""
++msgstr "এটা DBus সংযোগ হবলে এটা GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+ msgid "Logging"
+-msgstr ""
++msgstr "লগিং"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+ msgid "A boolean value whether the logging facility is enabled or not."
+-msgstr ""
++msgstr "লগিং সুবিধা উপলব্ধ হয় নে তাৰ এটা বুলিয়ান মান।"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+ msgid "Home directory"
+-msgstr "ঘৰৰ পঞ্জিকা"
++msgstr "ঘৰ ডাইৰেকটৰি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:433
+ #: ../imsettings-daemon/imsettings-server.c:434
+ msgid "xinputrc directory"
+-msgstr "xinputrc পঞ্জিকা"
++msgstr "xinputrc ডাইৰেকটৰি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:439
+ #: ../imsettings-daemon/imsettings-server.c:440
+ msgid "xinput directory"
+-msgstr "xinput পঞ্জিকা"
++msgstr "xinput ডাইৰেকটৰি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+-msgstr ""
++msgstr "মডিউল ডাইৰেকটৰি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:446
+ msgid "IMSettings module directory"
+-msgstr ""
++msgstr "IMSettings মডিউল ডাইৰেকটৰি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+ msgid "No such input method on your system: %s"
+-msgstr "আপোনাৰ ব্যৱস্থাপ্ৰণালীত এনে কোনো নিবেশ পদ্ধতি নাই: %s"
++msgstr "আপোনাৰ চিস্টেমত এনে কোনো ইনপুট পদ্ধতি নাই: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:716
+ #: ../imsettings-daemon/imsettings-server.c:840
+@@ -178,50 +179,50 @@ msgstr "আপোনাৰ ব্যৱস্থাপ্ৰণালীত এ
+ #: ../imsettings-daemon/imsettings-server.c:1103
+ #, c-format
+ msgid "Out of memory"
+-msgstr ""
++msgstr "মেমৰিৰ বাহিৰ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+ msgid "Failed to revert the backup file: %s"
+-msgstr "নকল নথিপত্ৰ ওভতাওঁতে বিফল: %s"
++msgstr "বেকআপ নথিপত্ৰ ওভতাওঁতে ব্যৰ্থ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:781
+ #, c-format
+ msgid "Failed to create a backup file: %s"
+-msgstr "নকল নথিপত্ৰ সৃষ্টি কৰোঁতে বিফল: %s"
++msgstr "বেকআপ নথিপত্ৰ সৃষ্টি কৰোঁতে ব্যৰ্থ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:791
+ #, c-format
+ msgid "Failed to remove a .xinputrc file: %s"
+-msgstr "এটা .xinputৰc নথিপত্ৰ আঁতৰুৱাত বিফল: %s"
++msgstr "এটা .xinputৰc নথিপত্ৰ আঁতৰুৱাত ব্যৰ্থ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+ msgid "Failed to create a symlink: %s"
+-msgstr ""
++msgstr "এটা symlink সৃষ্টি কৰিবলে ব্যৰ্থ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+-msgstr ""
++msgstr "কোনো চিস্টেম-বিস্তাৰিত xinputrc উপলব্ধ নাই"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+-msgstr ""
++msgstr "কোনো .xinputrc অথবা চিস্টেম-বিস্তাৰিত xinputrc উপলব্ধ নাই"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+ msgid "No such input method: %s"
+-msgstr ""
++msgstr "এনে কোনো ইনপুট পদ্ধতি নাই: %s"
+ 
+ #: ../imsettings-daemon/main.c:111
+ msgid "Replace the instance of the imsettings daemon."
+-msgstr ""
++msgstr "imsettings ডিমনৰ উদাহৰণ প্ৰতিস্থাপন কৰক।"
+ 
+ #: ../imsettings-daemon/main.c:112
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+-msgstr ""
++msgstr "চিস্টেম-বিস্তাৰিত xinputrc ডাইৰেকটৰি সংহতি কৰক (ডিবাগ কৰাৰ বাবে)"
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+@@ -230,67 +231,67 @@ msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+-msgstr ""
++msgstr "IM সংৰূপ ডাইৰেকটৰি সংহতি কৰক (ডিবাগ কৰাৰ বাবে)"
+ 
+ #: ../imsettings-daemon/main.c:114
+ msgid "Set a home directory (for debugging purpose)"
+-msgstr ""
++msgstr "এটা ঘৰ ডাইৰেকটৰি সংহতি কৰক (ডিবাগ কৰাৰ বাবে)"
+ 
+ #: ../imsettings-daemon/main.c:115
+ msgid "Set the imsettings module directory (for debugging purpose)"
+-msgstr ""
++msgstr "imsettings মডিউল ডাইৰেকটৰি সংহতি কৰক (ডিবাগ কৰাৰ বাবে)"
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+-msgstr "এটা লগ নথিপত্ৰ সৃষ্টি নকৰিব ।"
++msgstr "এটা লগ নথিপত্ৰ সৃষ্টি নকৰিব।"
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+-msgstr ""
++msgstr "X প্ৰদৰ্শন খোলিবলে অক্ষম"
+ 
+ #: ../utils/imsettings-check.c:93
+ msgid "XSETTINGS manager isn't running"
+-msgstr ""
++msgstr "XSETTINGS ব্যৱস্থাপক চলি থকা নাই"
+ 
+ #: ../utils/imsettings-check.c:124 ../utils/imsettings-check.c:177
+ #: ../utils/imsettings-info.c:76 ../utils/imsettings-list.c:64
+ #: ../utils/imsettings-reload.c:72 ../utils/imsettings-switch.c:88
+ #, c-format
+ msgid "Unable to create a client instance."
+-msgstr ""
++msgstr "এটা ক্লাএন্ট উদাহৰণ সৃষ্টি কৰিবলে অক্ষম।"
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+ msgid "imsettings version mismatch"
+-msgstr ""
++msgstr "imsettings সংস্কৰণ অমিল"
+ 
+ #: ../utils/imsettings-check.c:145 ../utils/imsettings-check.c:211
+ msgid "No modules loaded"
+-msgstr ""
++msgstr "কোনো মডিউল ল'ড কৰা হোৱা নাই"
+ 
+ #: ../utils/imsettings-check.c:203
+ msgid "Please see .imsettings.log for more details"
+-msgstr ""
++msgstr "অধিক বিৱৰণৰ বাবে .imsettings.log চাওক"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-check.c:241
+ msgid "Output the detail information for the result"
+-msgstr ""
++msgstr "ফলাফলৰ বাবে বিৱৰিত তথ্য আউটপুট কৰক"
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "DBus চলি আছে নে নীৰিক্ষণ কৰি চাওক"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "কোনো বৈধ মডিউল ল'ড কৰা হৈছে নে নীৰিক্ষণ কৰি চাওক"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "সকলো মডিউলৰ সংগত হয় নে নীৰিক্ষণ কৰক চাওক"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "XSETTINGS ব্যৱস্থাপক চলি আছে নে নীৰিক্ষণ কৰি চাওক"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+@@ -303,56 +304,58 @@ msgid ""
+ "Currently a different version of imsettings is running.\n"
+ "Running \"imsettings-reload\" may help but it will restart the Input Method\n"
+ msgstr ""
++"বৰ্তমানে imsettings ৰ এটা অন্য সংস্কৰণ চলি আছে।¶\n"
++"\"imsettings-reload\" চলালে সহায় হব পাৰে কিন্তু ই ইনপুট পদ্ধতি পুনৰাম্ভ কৰিব¶\n"
+ 
+ #: ../utils/imsettings-info.c:100
+ #, c-format
+ msgid "Unable to obtain an Input Method Information: %s\n"
+-msgstr ""
++msgstr "এটা ইনপুট পদ্ধতি তথ্য প্ৰাপ্ত কৰিবলে অক্ষম: %s¶\n"
+ 
+ #: ../utils/imsettings-reload.c:43
+ msgid "Force reloading imsettings-daemon (deprecated)."
+-msgstr ""
++msgstr "imsettings-daemon পুনৰল'ড কৰা বলৱৎ কৰক (স্খলিত)।"
+ 
+ #: ../utils/imsettings-reload.c:103
+ #, c-format
+ msgid "Reloaded.\n"
+-msgstr ""
++msgstr "পুনৰ ল'ড কৰা হল।\n"
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+-msgstr "নিবেশ পদ্ধতি আৰম্ভকৰ্তা"
++msgstr "ইনপুট পদ্ধতি আৰম্ভক"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:46
+ msgid "Force restarting the IM process regardless of any errors."
+-msgstr "কোনো ভুল হোৱা স্বত্বেও IM প্ৰক্ৰিয়া বলবৎ ভাবে পুনৰাৰম্ভ কৰক ।"
++msgstr "কোনো ভুল নহোৱা স্বত্বেও IM প্ৰক্ৰিয়া বলবৎ ভাবে পুনাৰম্ভ কৰা।"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:48
+ msgid "Do not update .xinputrc."
+-msgstr ".xinputrc উন্নত নকৰিব ।"
++msgstr ".xinputrc উন্নত নকৰিব।"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:50
+ msgid "Shut up the extra messages."
+-msgstr "অতিৰিক্ত সম্বাদসমূহ বন্ধ কৰক ।"
++msgstr "অতিৰিক্ত বাৰ্তাসমূহ বন্ধ কৰক।"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+ msgid "Restart input method"
+-msgstr ""
++msgstr "ইনপুট পদ্ধতি পুনাৰম্ভ কৰক"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+ msgid "Read xinputrc to determine the input method"
+-msgstr ""
++msgstr "ইনপুট পদ্ধতি নিৰ্ধাৰণ কৰিবলে xinputrc পঢ়ক"
+ 
+ #: ../utils/imsettings-switch.c:120
+ #, c-format
+ msgid "No Input Method running to be restarted.\n"
+-msgstr ""
++msgstr "পুনাৰম্ভ কৰিবলে কোনো ইনপুট পদ্ধতি চলি থকা নাই।\n"
+ 
+ #: ../utils/imsettings-switch.c:133
+ #, c-format
+ msgid "Restarted %s\n"
+-msgstr ""
++msgstr "%s পুনাৰম্ভ কৰা হল\n"
+diff --git a/po/ast.po b/po/ast.po
+index 7974d6f..334e9fc 100644
+--- a/po/ast.po
++++ b/po/ast.po
+@@ -1,103 +1,106 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Yuri Chornoivan <yurchor@ukr.net>, 2011.
++# Maxim Dziumanenko <dziumanenko@gmail.com>, 2007.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+ msgid "Synchronous"
+-msgstr ""
++msgstr "Синхронно"
+ 
+ #: ../backends/xim/loopback.c:224
+ msgid "Request to send a key event synchronously"
+-msgstr ""
++msgstr "Синхронне надсилання повідомлень про події натискання клавіш"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+-msgstr ""
++msgstr "Адреса D-Bus, яку слід використовувати"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr ""
++msgstr "АДРЕСА"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+-msgstr ""
++msgstr "Дисплей графічного сервера, який слід використовувати"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "DISPLAY"
+-msgstr ""
++msgstr "ДИСПЛЕЙ"
+ 
+ #: ../backends/xim/main.c:157
+ msgid "Replace the running XIM server with new instance."
+-msgstr ""
++msgstr "Замінити запущений сервер XIM новим екземпляром."
+ 
+ #: ../backends/xim/main.c:158
+ msgid "Output the debugging logs"
+-msgstr ""
++msgstr "Виводити дані до діагностичних журналів"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM server connects to, for debugging purpose only"
+ msgstr ""
++"Сервер XIM, з яким слід встановлювати з’єднання. Лише для діагностичних "
++"потреб."
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM"
+-msgstr ""
++msgstr "XIM"
+ 
+ #: ../backends/xim/main.c:187 ../imsettings-daemon/main.c:141
+ #: ../utils/imsettings-check.c:268 ../utils/imsettings-info.c:69
+ #: ../utils/imsettings-reload.c:64 ../utils/imsettings-switch.c:81
+ msgid "Unknown error in parsing the command lines."
+-msgstr ""
++msgstr "Невідома помилка під час обробки рядків команди."
+ 
+ #: ../backends/xim/proxy.c:2968
+ msgid "XIM server name"
+-msgstr ""
++msgstr "Назва сервера XIM"
+ 
+ #: ../backends/xim/proxy.c:2969
+ msgid "The name of XIM server for the connection"
+-msgstr ""
++msgstr "Назва сервера XIM для встановлення з’єднання"
+ 
+ #: ../backends/xim/proxy.c:2974
+ msgid "Signals for Protocol class"
+-msgstr ""
++msgstr "Сигнали для класу Protocol"
+ 
+ #: ../backends/xim/proxy.c:2975
+ msgid "A structure of signals for Protocol class"
+-msgstr ""
++msgstr "Структура сигналів для класу Protocol"
+ 
+ #: ../imsettings/imsettings-client.c:161
+ msgid "Locale"
+-msgstr ""
++msgstr "Локаль"
+ 
+ #: ../imsettings/imsettings-client.c:162
+ msgid "Locale to get the imsettings information"
+-msgstr ""
++msgstr "Локаль для отримання даних щодо параметрів способу введення"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "Назва"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+-msgstr ""
++msgstr "Назва модуля сервера способів введення"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+-msgstr ""
++msgstr "Не вдалося уникнути завершення роботи системи способів введення"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:203
+ #, c-format
+@@ -105,68 +108,73 @@ msgid ""
+ "Giving up to bring the process up because %s Input Method process for %s "
+ "rapidly died many times. See .imsettings.log for more details."
+ msgstr ""
++"Не вдалося запустити процес, оскільки процес системи способів введення %s "
++"для %s після спроби запуску одразу завершував роботу декілька разів. "
++"Докладніші відомості можна знайти у файлі .imsettings.log."
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+ msgid "[BUG] %s process is still running [pid: %d]\n"
+-msgstr ""
++msgstr "[ВАДА] роботу процесу %s не завершено [pid: %d]\n"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+ msgid "Couldn't send a signal to the %s process successfully."
+-msgstr ""
++msgstr "Не вдалося успішно надіслати сигнал процесу %s."
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+ msgid "A GObject to be a IMSettingsInfo"
+-msgstr ""
++msgstr "GObject, який міститиме дані IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+-msgstr ""
++msgstr "З’єднання DBus"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+-msgstr ""
++msgstr "Об’єкт GObject, який відповідатиме за з’єднання DBus"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+ msgid "Logging"
+-msgstr ""
++msgstr "Ведення журналу"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+ msgid "A boolean value whether the logging facility is enabled or not."
+ msgstr ""
++"Логічне значення («так» або «ні»), яке визначає, чи увімкнено ведення "
++"журналу."
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+ msgid "Home directory"
+-msgstr ""
++msgstr "Домашній каталог"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:433
+ #: ../imsettings-daemon/imsettings-server.c:434
+ msgid "xinputrc directory"
+-msgstr ""
++msgstr "каталог xinputrc"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:439
+ #: ../imsettings-daemon/imsettings-server.c:440
+ msgid "xinput directory"
+-msgstr ""
++msgstr "каталог xinput"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+-msgstr ""
++msgstr "каталог модулів"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:446
+ msgid "IMSettings module directory"
+-msgstr ""
++msgstr "Каталог модулів IMSettings"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+ msgid "No such input method on your system: %s"
+-msgstr ""
++msgstr "Такого способу введення у вашій системі немає: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:716
+ #: ../imsettings-daemon/imsettings-server.c:840
+@@ -174,123 +182,123 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:1103
+ #, c-format
+ msgid "Out of memory"
+-msgstr ""
++msgstr "Не вистачає пам'яті"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+ msgid "Failed to revert the backup file: %s"
+-msgstr ""
++msgstr "Не вдалося відновити файл з резервної копії: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:781
+ #, c-format
+ msgid "Failed to create a backup file: %s"
+-msgstr ""
++msgstr "Не вдалося створити файл резервної копії: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:791
+ #, c-format
+ msgid "Failed to remove a .xinputrc file: %s"
+-msgstr ""
++msgstr "Не вдалося вилучити файл .xinputrc: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+ msgid "Failed to create a symlink: %s"
+-msgstr ""
++msgstr "Не вдалося створити символічне посилання: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+-msgstr ""
++msgstr "Не знайдено загальносистемного файла xinputrc"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+-msgstr ""
++msgstr "Не знайдено .xinputrc або загальносистемного файла xinputrc"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+ msgid "No such input method: %s"
+-msgstr ""
++msgstr "Такого способу введення немає: %s"
+ 
+ #: ../imsettings-daemon/main.c:111
+ msgid "Replace the instance of the imsettings daemon."
+-msgstr ""
++msgstr "Замінити поточний екземпляр фонової служби imsettings."
+ 
+ #: ../imsettings-daemon/main.c:112
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+-msgstr ""
++msgstr "Встановити загальносистемний каталог xinputrc (з метою діагностики)"
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+ msgid "DIR"
+-msgstr ""
++msgstr "КАТАЛОГ"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+-msgstr ""
++msgstr "Встановити каталог налаштувань способів введення (з метою діагностики)"
+ 
+ #: ../imsettings-daemon/main.c:114
+ msgid "Set a home directory (for debugging purpose)"
+-msgstr ""
++msgstr "Встановити домашній каталог (з метою діагностики)"
+ 
+ #: ../imsettings-daemon/main.c:115
+ msgid "Set the imsettings module directory (for debugging purpose)"
+-msgstr ""
++msgstr "Встановити каталог модулів imsettings (з метою діагностики)"
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+-msgstr ""
++msgstr "Не створювати файла журналу."
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+-msgstr ""
++msgstr "Не вдалося відкрити канал роботи з дисплеєм"
+ 
+ #: ../utils/imsettings-check.c:93
+ msgid "XSETTINGS manager isn't running"
+-msgstr ""
++msgstr "Керування XSETTINGS не запущено"
+ 
+ #: ../utils/imsettings-check.c:124 ../utils/imsettings-check.c:177
+ #: ../utils/imsettings-info.c:76 ../utils/imsettings-list.c:64
+ #: ../utils/imsettings-reload.c:72 ../utils/imsettings-switch.c:88
+ #, c-format
+ msgid "Unable to create a client instance."
+-msgstr ""
++msgstr "Не вдалося створити екземпляр клієнтської програми."
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+ msgid "imsettings version mismatch"
+-msgstr ""
++msgstr "Невідповідність версій imsettings"
+ 
+ #: ../utils/imsettings-check.c:145 ../utils/imsettings-check.c:211
+ msgid "No modules loaded"
+-msgstr ""
++msgstr "Не завантажено жодного модуля"
+ 
+ #: ../utils/imsettings-check.c:203
+ msgid "Please see .imsettings.log for more details"
+-msgstr ""
++msgstr "Докладніші дані можна знайти у файлі .imsettings.log"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-check.c:241
+ msgid "Output the detail information for the result"
+-msgstr ""
++msgstr "Показувати докладні відомості щодо результату"
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "Перевірити, чи запущено DBus"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "Перевірити, чи завантажено коректні модулі"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "Перевірити, чи є сумісними значення параметрів всіх модулів"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "Перевірити, чи запущено керування XSETTINGS"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+-msgstr ""
++msgstr "[Назва способу введення|xinput.conf]"
+ 
+ #: ../utils/imsettings-info.c:82 ../utils/imsettings-list.c:70
+ #: ../utils/imsettings-switch.c:94
+@@ -299,56 +307,63 @@ msgid ""
+ "Currently a different version of imsettings is running.\n"
+ "Running \"imsettings-reload\" may help but it will restart the Input Method\n"
+ msgstr ""
++"Зараз запущено іншу версію imsettings.\n"
++"Команда \"imsettings-reload\" може допомогти, але вона призведе до "
++"перезапуску системи способів введення.\n"
+ 
+ #: ../utils/imsettings-info.c:100
+ #, c-format
+ msgid "Unable to obtain an Input Method Information: %s\n"
+-msgstr ""
++msgstr "Не вдалося отримати дані щодо способу введення: %s\n"
+ 
+ #: ../utils/imsettings-reload.c:43
+ msgid "Force reloading imsettings-daemon (deprecated)."
+ msgstr ""
++"Примусове перезавантаження фонової служби imsettings (застарілий параметр)."
+ 
+ #: ../utils/imsettings-reload.c:103
+ #, c-format
+ msgid "Reloaded.\n"
+-msgstr ""
++msgstr "Перезавантажено.\n"
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+-msgstr ""
++msgstr "Запуск системи способів введення"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:46
+ msgid "Force restarting the IM process regardless of any errors."
+ msgstr ""
++"Примусовий перезапуск процесу системи способів введення, незважаючи на "
++"помилки."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:48
+ msgid "Do not update .xinputrc."
+-msgstr ""
++msgstr "Не оновлювати .xinputrc."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:50
+ msgid "Shut up the extra messages."
+-msgstr ""
++msgstr "Не показувати додаткові повідомлення."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+ msgid "Restart input method"
+-msgstr ""
++msgstr "Перезапустити систему способів введення"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+ msgid "Read xinputrc to determine the input method"
+-msgstr ""
++msgstr "Прочитати xinputrc для визначення способу введення"
+ 
+ #: ../utils/imsettings-switch.c:120
+ #, c-format
+ msgid "No Input Method running to be restarted.\n"
+ msgstr ""
++"Оскільки системи способів введення не запущено, нічого перезапускати.\n"
+ 
+ #: ../utils/imsettings-switch.c:133
+ #, c-format
+ msgid "Restarted %s\n"
+-msgstr ""
++msgstr "Перезапущено %s\n"
+diff --git a/po/az.po b/po/az.po
+index 7974d6f..8dc6d0f 100644
+--- a/po/az.po
++++ b/po/az.po
+@@ -1,20 +1,20 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Translators:
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+diff --git a/po/be.po b/po/be.po
+index 4c113bd..08a73e5 100644
+--- a/po/be.po
++++ b/po/be.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/bg.po b/po/bg.po
+index 4da1ea8..d213e92 100644
+--- a/po/bg.po
++++ b/po/bg.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/bn.po b/po/bn.po
+index c210c24..8b5e132 100644
+--- a/po/bn.po
++++ b/po/bn.po
+@@ -6,7 +6,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/bn_IN.po b/po/bn_IN.po
+index 56da21d..7925b08 100644
+--- a/po/bn_IN.po
++++ b/po/bn_IN.po
+@@ -10,7 +10,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: Bengali (India) (http://www.transifex.net/projects/p/"
+diff --git a/po/bs.po b/po/bs.po
+index 0d56a9d..88672e4 100644
+--- a/po/bs.po
++++ b/po/bs.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/ca.po b/po/ca.po
+index 4f76d1b..d090f1c 100644
+--- a/po/ca.po
++++ b/po/ca.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/cs.po b/po/cs.po
+index f5925de..964e2c5 100644
+--- a/po/cs.po
++++ b/po/cs.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/cy.po b/po/cy.po
+index 17cd12d..8dfdcc4 100644
+--- a/po/cy.po
++++ b/po/cy.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/da.po b/po/da.po
+index bfdfd43..e576620 100644
+--- a/po/da.po
++++ b/po/da.po
+@@ -9,7 +9,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-07-18 20:17+0000\n"
+ "Last-Translator: kristho <lakristho@gmail.com>\n"
+ "Language-Team: Danish (http://www.transifex.net/projects/p/imsettings/team/"
+diff --git a/po/de.po b/po/de.po
+index 1bd5dda..47f1983 100644
+--- a/po/de.po
++++ b/po/de.po
+@@ -11,7 +11,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/de_CH.po b/po/de_CH.po
+index 7974d6f..74825bc 100644
+--- a/po/de_CH.po
++++ b/po/de_CH.po
+@@ -1,20 +1,22 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Egemen Metin Turan <mturan@aegee-ankara.org>, 2007.
++# Ismail ASCI <ismail.asci@gmail.com>, 2006.
++# Translators:
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+diff --git a/po/el.po b/po/el.po
+index dd22fb4..23a57ff 100644
+--- a/po/el.po
++++ b/po/el.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/en_GB.po b/po/en_GB.po
+index 19602c0..fee0fcb 100644
+--- a/po/en_GB.po
++++ b/po/en_GB.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/eo.po b/po/eo.po
+index 7974d6f..82d773e 100644
+--- a/po/eo.po
++++ b/po/eo.po
+@@ -1,20 +1,21 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Dimitris Glezos <dimitris@glezos.com>, 2006, 2007.
++# Translators:
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+diff --git a/po/es.po b/po/es.po
+index 51e7aa2..4f1c084 100644
+--- a/po/es.po
++++ b/po/es.po
+@@ -10,7 +10,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-07-26 16:04+0000\n"
+ "Last-Translator: logan <logan@fedoraproject.org>\n"
+ "Language-Team: Spanish (Castilian) <trans-es@lists.fedoraproject.org>\n"
+diff --git a/po/es_MX.po b/po/es_MX.po
+index 7974d6f..6d9f5b8 100644
+--- a/po/es_MX.po
++++ b/po/es_MX.po
+@@ -1,29 +1,32 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Akira  <akira+transifex@tagoh.org>, 2011.
++# Shankar Prasad <svenkate@redhat.com>, 2008, 2009.
++# shankar Prasad <svenkate@redhat.com>, 2006.
++# shankar prasad <svenkate@redhat.com>, 2006.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+ msgid "Synchronous"
+-msgstr ""
++msgstr "ಹೊಂದಿಕೊಳ್ಳುವಂತೆ"
+ 
+ #: ../backends/xim/loopback.c:224
+ msgid "Request to send a key event synchronously"
+-msgstr ""
++msgstr "ಒಂದು ಕೀಲಿ ಘಟನೆಯನ್ನು ಹೊಂದಿಕೊಳ್ಳುವಂತೆ ಕಳುಹಿಸುವ ಮನವಿ"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+@@ -35,57 +38,57 @@ msgstr ""
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+-msgstr ""
++msgstr "ಬಳಕೆಗಾಗಿ X ಪ್ರದರ್ಶಕ"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "DISPLAY"
+-msgstr ""
++msgstr "DISPLAY"
+ 
+ #: ../backends/xim/main.c:157
+ msgid "Replace the running XIM server with new instance."
+-msgstr ""
++msgstr "ಚಲಾಯಿಸಲ್ಪಡುತ್ತಿರುವ XIM ಪರಿಚಾರಕವನ್ನು ಹೊಸ ಸನ್ನಿವೇಶದಿಂದ(ಇನ್ಸನ್ಸ್‍) ಬದಲಾಯಿಸಿ."
+ 
+ #: ../backends/xim/main.c:158
+ msgid "Output the debugging logs"
+-msgstr ""
++msgstr "ದೋಷ ನಿವಾರಣಾ ದಾಖಲೆಗಳನ್ನು ಔಟ್‌ಪುಟ್ ಮಾಡು"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM server connects to, for debugging purpose only"
+-msgstr ""
++msgstr "ಸಂಪರ್ಕಸಾಧಿಸಬೇಕಿರುವ XIM ಪರಿಚಾರಕ, ದೋಷ ನಿವಾರಣೆಗಾಗಿ ಮಾತ್ರ"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM"
+-msgstr ""
++msgstr "XIM"
+ 
+ #: ../backends/xim/main.c:187 ../imsettings-daemon/main.c:141
+ #: ../utils/imsettings-check.c:268 ../utils/imsettings-info.c:69
+ #: ../utils/imsettings-reload.c:64 ../utils/imsettings-switch.c:81
+ msgid "Unknown error in parsing the command lines."
+-msgstr ""
++msgstr "ಆಜ್ಞಾ ಸಾಲುಗಳನ್ನು ವಿವರಿಸುವಲ್ಲಿ ಅಜ್ಞಾತ ದೋಷ."
+ 
+ #: ../backends/xim/proxy.c:2968
+ msgid "XIM server name"
+-msgstr ""
++msgstr "XIM ಪರಿಚಾರಕದ ಹೆಸರು"
+ 
+ #: ../backends/xim/proxy.c:2969
+ msgid "The name of XIM server for the connection"
+-msgstr ""
++msgstr "ಸಂಪರ್ಕಕ್ಕಾಗಿನ XIM ಪರಿಚಾರಕದ ಹೆಸರು"
+ 
+ #: ../backends/xim/proxy.c:2974
+ msgid "Signals for Protocol class"
+-msgstr ""
++msgstr "ಪ್ರೊಟೊಕಾಲ್ ವರ್ಗಕ್ಕಾಗಿ ಸಂಜ್ಞೆಗಳು"
+ 
+ #: ../backends/xim/proxy.c:2975
+ msgid "A structure of signals for Protocol class"
+-msgstr ""
++msgstr "ಪ್ರೊಟೊಕಾಲ್ ವರ್ಗಕ್ಕಾಗಿ ಸಂಜ್ಞೆಗಳ ಒಂದು ರಚನೆ"
+ 
+ #: ../imsettings/imsettings-client.c:161
+ msgid "Locale"
+-msgstr ""
++msgstr "ಲೊಕ್ಯಾಲ್"
+ 
+ #: ../imsettings/imsettings-client.c:162
+ msgid "Locale to get the imsettings information"
+-msgstr ""
++msgstr "imsettings ನ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಲು ಲೊಕ್ಯಾಲ್"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+@@ -97,7 +100,7 @@ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+-msgstr ""
++msgstr "ಇನ್‌ಪುಟ್ ವಿಧಾನವನ್ನು ಚಾಲನೆಯಲ್ಲಿಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:203
+ #, c-format
+@@ -105,6 +108,9 @@ msgid ""
+ "Giving up to bring the process up because %s Input Method process for %s "
+ "rapidly died many times. See .imsettings.log for more details."
+ msgstr ""
++"ಪ್ರಕ್ರಿಯೆಯನ್ನು ಚಾಲನೆಗೆ ತರುವ ಪ್ರಯತ್ನವನ್ನು ಬಿಟ್ಟು ಬಿಡಲಾಗುತ್ತಿದೆ ಏಕೆಂದರೆ %s (%s ಗಾಗಿನ) "
++"ಇನ್‌ಪುಟ್ ವಿಧಾನ ಪ್ರಕ್ರಿಯೆಯು ಹಲವು ಬಾರಿ ಶೀಘ್ಘ್ರವಾಗಿ ಕೊಲ್ಲಲ್ಪಟ್ಟಿದೆ. ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಳಿಗಾಗಿ ."
++"imsettings.log ಅನ್ನು ನೋಡಿ."
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+@@ -114,7 +120,7 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+ msgid "Couldn't send a signal to the %s process successfully."
+-msgstr ""
++msgstr "%s ಪ್ರಕ್ರಿಯೆಗೆ ಯಶಸ್ವಿಯಾಗಿ ಸೂಚನೆಯನ್ನು ಕಳುಹಿಸಲಾಗಲಿಲ್ಲ."
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+@@ -126,7 +132,7 @@ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+-msgstr ""
++msgstr "DBus ಸಂಪರ್ಕ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+@@ -143,17 +149,17 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+ msgid "Home directory"
+-msgstr ""
++msgstr "ನೆಲೆ ಕೋಶ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:433
+ #: ../imsettings-daemon/imsettings-server.c:434
+ msgid "xinputrc directory"
+-msgstr ""
++msgstr "xinputrc ಕೋಶ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:439
+ #: ../imsettings-daemon/imsettings-server.c:440
+ msgid "xinput directory"
+-msgstr ""
++msgstr "xinput ಕೋಶ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+@@ -166,7 +172,7 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+ msgid "No such input method on your system: %s"
+-msgstr ""
++msgstr "ಅಂತಹ ಯಾವುದೆ ಇನ್‌ಪುಟ್ ವಿಧಾನವು ನಿಮ್ಮ ಗಣಕದಲ್ಲಿ ಇಲ್ಲ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:716
+ #: ../imsettings-daemon/imsettings-server.c:840
+@@ -179,17 +185,17 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+ msgid "Failed to revert the backup file: %s"
+-msgstr ""
++msgstr "ಬ್ಯಾಕ್ಅಪ್ ಕಡತವನ್ನು ಮರಳಿಸುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:781
+ #, c-format
+ msgid "Failed to create a backup file: %s"
+-msgstr ""
++msgstr "ಒಂದು ಬ್ಯಾಕ್ಅಪ್ ಕಡತವನ್ನು ರಚಿಸುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:791
+ #, c-format
+ msgid "Failed to remove a .xinputrc file: %s"
+-msgstr ""
++msgstr "ಒಂದು .xinputrc ಕಡತವನ್ನು ತೆಗೆದುಹಾಕುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+@@ -222,7 +228,7 @@ msgstr ""
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+ msgid "DIR"
+-msgstr ""
++msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+@@ -238,7 +244,7 @@ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+-msgstr ""
++msgstr "ಒಂದು ದಾಖಲೆ ಕಡತವನ್ನು ರಚಿಸಬೇಡ."
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+@@ -290,7 +296,7 @@ msgstr ""
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+-msgstr ""
++msgstr "[xinput.conf]"
+ 
+ #: ../utils/imsettings-info.c:82 ../utils/imsettings-list.c:70
+ #: ../utils/imsettings-switch.c:94
+@@ -316,22 +322,22 @@ msgstr ""
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+-msgstr ""
++msgstr "ಇನ್‌ಪುಟ್ ವಿಧಾನ ಆರಂಭಗಾರ"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:46
+ msgid "Force restarting the IM process regardless of any errors."
+-msgstr ""
++msgstr "ಯಾವುದೆ ದೋಷಗಳಿದ್ದರೂ ಸಹ IM ಪ್ರಕ್ರಿಯೆಗಳನ್ನು ಒತ್ತಾಯಪೂರ್ವಕವಾಗಿ ಆರಂಭಿಸಿ."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:48
+ msgid "Do not update .xinputrc."
+-msgstr ""
++msgstr ".xinputrc ಅನ್ನು ಅಪ್‍ಡೇಟ್ ಮಾಡಬೇಡ."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:50
+ msgid "Shut up the extra messages."
+-msgstr ""
++msgstr "ಹೆಚ್ಚಿನ ಸಂದೇಶಗಳನ್ನು ಮುಚ್ಚು."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+diff --git a/po/et.po b/po/et.po
+index d084fd5..a4d4bfb 100644
+--- a/po/et.po
++++ b/po/et.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/eu_ES.po b/po/eu_ES.po
+index c210c24..8b5e132 100644
+--- a/po/eu_ES.po
++++ b/po/eu_ES.po
+@@ -6,7 +6,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/fa.po b/po/fa.po
+index a27cfe1..c12a79f 100644
+--- a/po/fa.po
++++ b/po/fa.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/fi.po b/po/fi.po
+index b3add93..cf4b9e0 100644
+--- a/po/fi.po
++++ b/po/fi.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/fr.po b/po/fr.po
+index 62dca5a..b669c10 100644
+--- a/po/fr.po
++++ b/po/fr.po
+@@ -13,7 +13,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-07-12 06:08+0000\n"
+ "Last-Translator: dominique <chepioq@gmail.com>\n"
+ "Language-Team: French <trans-fr@lists.fedoraproject.org>\n"
+diff --git a/po/ga.po b/po/ga.po
+index 7974d6f..9f23303 100644
+--- a/po/ga.po
++++ b/po/ga.po
+@@ -1,20 +1,21 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Ali Ghareb <ali.gareb@gmail.com>, 2007.
++# Translators:
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+diff --git a/po/gl.po b/po/gl.po
+index 1a16463..6baaf86 100644
+--- a/po/gl.po
++++ b/po/gl.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/gu.po b/po/gu.po
+index 294fbc0..c51c01a 100644
+--- a/po/gu.po
++++ b/po/gu.po
+@@ -6,11 +6,12 @@
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # Sweta Kothari <swkothar@redhat.com>, 2009.
+ # sweta <swkothar@redhat.com>, 2011.
++# swkothar <swkothar@redhat.com>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: sweta <swkothar@redhat.com>\n"
+ "Language-Team: Gujarati (http://www.transifex.net/projects/p/imsettings/team/"
+@@ -280,19 +281,19 @@ msgstr "પરિણામ માટે વિગતવાર જાણકાર
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "ચકાસો જો DBus ચાલી રહી છે"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "ચકાસો જો કોઇપણ માન્ય મોડ્યુલો લાવેલ છે"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "ચકાસો જો બધા મોડ્યુલ સુયોજનો સુસંગત છે"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "ચકાસો જો XSETTINGS સંચાલક ચાલી રહ્યુ છે"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+diff --git a/po/he.po b/po/he.po
+index 2cb893e..44bb6fd 100644
+--- a/po/he.po
++++ b/po/he.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/hi.po b/po/hi.po
+index b4282a5..2d5093e 100644
+--- a/po/hi.po
++++ b/po/hi.po
+@@ -5,11 +5,12 @@
+ # Rajesh Ranjan <rajesh672@gmail.com>, 2009.
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # Rajesh Ranjan <rranjan@redhat.com>, 2006, 2008, 2011.
++# rajesh <rajesh@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: rajeshr <rranjan@redhat.com>\n"
+ "Language-Team: Hindi (http://www.transifex.net/projects/p/imsettings/team/"
+@@ -279,19 +280,19 @@ msgstr "परिणाम के लिए विस्तार से सू
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "जाँचे कि क्या DBus चल रहा है"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "क्लिक करें कि क्या कोई वैध मॉड्यूल लोड किया हुआ है"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "जाँचें कि क्या सभी मॉड्यूल सेटिंग में संगतता है"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "जाँचें कि क्या XSETTINGS प्रबंधक चल रहा है"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+diff --git a/po/hr.po b/po/hr.po
+index 735d3c3..49aea6f 100644
+--- a/po/hr.po
++++ b/po/hr.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/hu.po b/po/hu.po
+index 5bc50f3..18867c4 100644
+--- a/po/hu.po
++++ b/po/hu.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/hy.po b/po/hy.po
+index 8cf5029..5f0fdde 100644
+--- a/po/hy.po
++++ b/po/hy.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/id.po b/po/id.po
+index a3372ee..37e6ec4 100644
+--- a/po/id.po
++++ b/po/id.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/is.po b/po/is.po
+index a197e8f..8bf7f8e 100644
+--- a/po/is.po
++++ b/po/is.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/it.po b/po/it.po
+index 8508444..23339ca 100644
+--- a/po/it.po
++++ b/po/it.po
+@@ -9,7 +9,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: perplex <perplesso82@gmail.com>\n"
+ "Language-Team: Italian (http://www.transifex.net/projects/p/imsettings/team/"
+diff --git a/po/ja.po b/po/ja.po
+index fb64c15..66fc28b 100644
+--- a/po/ja.po
++++ b/po/ja.po
+@@ -14,7 +14,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+@@ -88,23 +88,23 @@ msgstr "プロトコルクラスのシグナルの構造"
+ 
+ #: ../imsettings/imsettings-client.c:161
+ msgid "Locale"
+-msgstr "言語地域"
++msgstr "ロケール"
+ 
+ #: ../imsettings/imsettings-client.c:162
+ msgid "Locale to get the imsettings information"
+-msgstr "imsettings情報を得る為の言語地域"
++msgstr "imsettings 情報を得るためのロケール"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "名前"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+-msgstr ""
++msgstr "imsettings バックエンドのモジュール名"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+-msgstr "入力メソッドを起動出来ませんでした"
++msgstr "入力メソッドの実行を継続できません"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:203
+ #, c-format
+@@ -112,26 +112,26 @@ msgid ""
+ "Giving up to bring the process up because %s Input Method process for %s "
+ "rapidly died many times. See .imsettings.log for more details."
+ msgstr ""
+-"%2$sの%1$s入力メソッドプロセスが何度もすぐに停止するため、プロセスの起動を止"
+-"めました。詳しくは.imsettings.logを参照してください。"
++"%2$sの%1$s入力メソッドプロセスの停止が短期間に多発するため、 プロセスの起動を"
++"停止しました。 詳しくは .imsettings.log を参照してください。"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+ msgid "[BUG] %s process is still running [pid: %d]\n"
+-msgstr ""
++msgstr "[BUG] %s プロセスが [pid: %d] を実行したままです\n"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+ msgid "Couldn't send a signal to the %s process successfully."
+-msgstr "%s プロセスに信号を正しく送信出来ませんでした。"
++msgstr "%s プロセスに正しく信号を送信できませんでした。"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+ msgid "A GObject to be a IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo となる GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+@@ -139,15 +139,15 @@ msgstr "DBus 接続"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+-msgstr ""
++msgstr "DBus 接続となる GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+ msgid "Logging"
+-msgstr ""
++msgstr "ログ機能"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+ msgid "A boolean value whether the logging facility is enabled or not."
+-msgstr ""
++msgstr "ログ機能を有効にするかどうかの boolean 値です。"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+@@ -157,20 +157,20 @@ msgstr "ホームディレクトリー"
+ #: ../imsettings-daemon/imsettings-server.c:433
+ #: ../imsettings-daemon/imsettings-server.c:434
+ msgid "xinputrc directory"
+-msgstr "xinputrcディレクトリー"
++msgstr "xinputrc ディレクトリー"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:439
+ #: ../imsettings-daemon/imsettings-server.c:440
+ msgid "xinput directory"
+-msgstr "xinputディレクトリー"
++msgstr "xinput ディレクトリー"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+-msgstr ""
++msgstr "モジュールディレクトリー"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:446
+ msgid "IMSettings module directory"
+-msgstr ""
++msgstr "IMSettings モジュールディレクトリー"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+@@ -183,7 +183,7 @@ msgstr "使用中のシステム上にそのような入力メソッドはあり
+ #: ../imsettings-daemon/imsettings-server.c:1103
+ #, c-format
+ msgid "Out of memory"
+-msgstr ""
++msgstr "メモリー不足"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+@@ -203,30 +203,30 @@ msgstr ".xinputrc ファイルの削除に失敗しました: %s"
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+ msgid "Failed to create a symlink: %s"
+-msgstr ""
++msgstr "symlink の作成に失敗しました: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+-msgstr ""
++msgstr "システム全体の xinputrc はありません"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+-msgstr ""
++msgstr ".xinputrc およびシステム全体の xinputrc はいずれもありません"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+ msgid "No such input method: %s"
+-msgstr ""
++msgstr "そのような入力メソッドはありません: %s"
+ 
+ #: ../imsettings-daemon/main.c:111
+ msgid "Replace the instance of the imsettings daemon."
+-msgstr ""
++msgstr "imsettings デーモンのインスタンスを入れ替えます。"
+ 
+ #: ../imsettings-daemon/main.c:112
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+-msgstr ""
++msgstr "システム全体の xinputrc ディレクトリーのセット (デバッグ用)"
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+@@ -235,67 +235,67 @@ msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+-msgstr ""
++msgstr "IM 設定ディレクトリーのセット (デバッグ用)"
+ 
+ #: ../imsettings-daemon/main.c:114
+ msgid "Set a home directory (for debugging purpose)"
+-msgstr ""
++msgstr "ホームディレクトリーのセット (デバッグ用)"
+ 
+ #: ../imsettings-daemon/main.c:115
+ msgid "Set the imsettings module directory (for debugging purpose)"
+-msgstr ""
++msgstr "imsettings モジュールディレクトリーのセット (デバッグ用)"
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+-msgstr "ログファイルを作成しない"
++msgstr "ログファイルを作成しません。"
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+-msgstr ""
++msgstr "X ディスプレイを開けません"
+ 
+ #: ../utils/imsettings-check.c:93
+ msgid "XSETTINGS manager isn't running"
+-msgstr ""
++msgstr "XSETTINGS マネージャーが実行していません"
+ 
+ #: ../utils/imsettings-check.c:124 ../utils/imsettings-check.c:177
+ #: ../utils/imsettings-info.c:76 ../utils/imsettings-list.c:64
+ #: ../utils/imsettings-reload.c:72 ../utils/imsettings-switch.c:88
+ #, c-format
+ msgid "Unable to create a client instance."
+-msgstr ""
++msgstr "クライアントインスタンスを作成できません"
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+ msgid "imsettings version mismatch"
+-msgstr ""
++msgstr "imsettings のバージョンが違います"
+ 
+ #: ../utils/imsettings-check.c:145 ../utils/imsettings-check.c:211
+ msgid "No modules loaded"
+-msgstr ""
++msgstr "ロードされているモジュールがありません"
+ 
+ #: ../utils/imsettings-check.c:203
+ msgid "Please see .imsettings.log for more details"
+-msgstr ""
++msgstr "詳細は .imsettings.log を参照してください"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-check.c:241
+ msgid "Output the detail information for the result"
+-msgstr ""
++msgstr "結果の詳細情報を出力"
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "DBus が実行しているかを確認"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "有効なモジュールがロードされているを確認"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "全モジュールの設定に整合性があるかを確認"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "XSETTINGS マネージャーが実行しているかを確認"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+@@ -308,56 +308,59 @@ msgid ""
+ "Currently a different version of imsettings is running.\n"
+ "Running \"imsettings-reload\" may help but it will restart the Input Method\n"
+ msgstr ""
++"現在、 異なるバージョンの imsettings が実行中です。\n"
++"\"imsettings-reload\" を実行すると修正できるかもしれませんが、 入力メソッドが"
++"再起動されることになります。\n"
+ 
+ #: ../utils/imsettings-info.c:100
+ #, c-format
+ msgid "Unable to obtain an Input Method Information: %s\n"
+-msgstr ""
++msgstr "入力メソッドの情報を取得できませんでした: %s\n"
+ 
+ #: ../utils/imsettings-reload.c:43
+ msgid "Force reloading imsettings-daemon (deprecated)."
+-msgstr ""
++msgstr "強制的に imsettings-daemon を再ロードします (廃止予定)。"
+ 
+ #: ../utils/imsettings-reload.c:103
+ #, c-format
+ msgid "Reloaded.\n"
+-msgstr ""
++msgstr "再ロードしました。\n"
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+-msgstr "入力メソッドスターター"
++msgstr "入力メソッドのスターター"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:46
+ msgid "Force restarting the IM process regardless of any errors."
+-msgstr "エラーに関わらず強制的に IM プロセスを再起動する"
++msgstr "エラーの種類に関わらず強制的に IM プロセスを再起動します。"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:48
+ msgid "Do not update .xinputrc."
+-msgstr ".xinputrc は更新しないで下さい。"
++msgstr ".xinputrc を更新しません。"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:50
+ msgid "Shut up the extra messages."
+-msgstr "余計なメッセージを出力しない"
++msgstr "余計なメッセージを出力させないようにします。"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+ msgid "Restart input method"
+-msgstr ""
++msgstr "入力メソッドの再起動"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+ msgid "Read xinputrc to determine the input method"
+-msgstr ""
++msgstr "xinputrc を読み込んで入力メソッドを確定"
+ 
+ #: ../utils/imsettings-switch.c:120
+ #, c-format
+ msgid "No Input Method running to be restarted.\n"
+-msgstr ""
++msgstr "再起動させるべき実行中の入力メソッドがありません。\n"
+ 
+ #: ../utils/imsettings-switch.c:133
+ #, c-format
+ msgid "Restarted %s\n"
+-msgstr ""
++msgstr "%s を再起動しました\n"
+diff --git a/po/ka.po b/po/ka.po
+index dcc34e3..77d47e8 100644
+--- a/po/ka.po
++++ b/po/ka.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/kn.po b/po/kn.po
+index b6da5ef..1f5cb0b 100644
+--- a/po/kn.po
++++ b/po/kn.po
+@@ -6,11 +6,12 @@
+ # Shankar Prasad <svenkate@redhat.com>, 2008, 2009.
+ # shankar Prasad <svenkate@redhat.com>, 2006.
+ # shankar prasad <svenkate@redhat.com>, 2006.
++# shanky <shanky@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+@@ -30,11 +31,11 @@ msgstr "ಒಂದು ಕೀಲಿ ಘಟನೆಯನ್ನು ಹೊಂದಿಕ
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+-msgstr ""
++msgstr "ಬಳಸಬೇಕಿರುವ D-Bus ವಿಳಾಸ"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr ""
++msgstr "ADDRESS"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+@@ -92,11 +93,11 @@ msgstr "imsettings ನ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಲು ಲ
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "ಹೆಸರು"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+-msgstr ""
++msgstr "imsettings ಬ್ಯಾಕೆಂಡ್‌ಗಾಗಿ ಮಾಡ್ಯೂಲ್ ಹೆಸರು"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+diff --git a/po/ko.po b/po/ko.po
+index ab4b0c4..d5eedc1 100644
+--- a/po/ko.po
++++ b/po/ko.po
+@@ -5,12 +5,13 @@
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # Hyunsok Oh <hoh@redhat.com>, 2010.
+ # Eunju Kim <eukim@redhat.com>, 2006, 2007, 2008, 2009.
++# eukim <eukim@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
+-"PO-Revision-Date: 2011-06-01 00:16+0000\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
++"PO-Revision-Date: 2012-03-02 18:44+0900\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: ko\n"
+@@ -29,11 +30,11 @@ msgstr "키 이벤트를 동기식으로 전송할 것을 요청"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+-msgstr ""
++msgstr "사용할 D-Bus 주소 "
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr ""
++msgstr "ADDRESS"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+@@ -91,11 +92,11 @@ msgstr "imsettings 정보를 얻기 위한 로케일 "
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "이름 "
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+-msgstr ""
++msgstr "imsettings 벡엔드의 모듈 이름 "
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+@@ -113,20 +114,20 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+ msgid "[BUG] %s process is still running [pid: %d]\n"
+-msgstr ""
++msgstr "[BUG] %s 프로세스가 아직 [pid: %d]을 실행하고 있습니다\n"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+ msgid "Couldn't send a signal to the %s process successfully."
+-msgstr "%s 프로세스에게 신호를 보낼 수 없음  "
++msgstr "%s 프로세스로 신호를 보낼 수 없음  "
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+ msgid "A GObject to be a IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo가 될 GObject "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+@@ -134,15 +135,15 @@ msgstr "DBus 연결 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+-msgstr ""
++msgstr "DBus 연결이 될 GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+ msgid "Logging"
+-msgstr ""
++msgstr "로그 기능 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+ msgid "A boolean value whether the logging facility is enabled or not."
+-msgstr ""
++msgstr "로그 기능이 활성화되었는지의 여부에 대한 부울 값 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+@@ -161,11 +162,11 @@ msgstr "xinput 디렉토리  "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+-msgstr ""
++msgstr "모듈 디렉토리 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:446
+ msgid "IMSettings module directory"
+-msgstr ""
++msgstr "IMSettings 모듈 디렉토리 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+@@ -178,7 +179,7 @@ msgstr "시스템에 없는 입력 방식: %s"
+ #: ../imsettings-daemon/imsettings-server.c:1103
+ #, c-format
+ msgid "Out of memory"
+-msgstr ""
++msgstr "메모리 부족 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+@@ -198,30 +199,30 @@ msgstr ".xinputrc 파일 삭제 실패: %s"
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+ msgid "Failed to create a symlink: %s"
+-msgstr ""
++msgstr "심볼릭 링크 생성 실패: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+-msgstr ""
++msgstr "시스템 전역 xinputrc을 사용할 수 없음 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+-msgstr ""
++msgstr ".xinputrc 또는 시스템 전역 xinputrc을 사용할 수 없음 "
+ 
+ #: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+ msgid "No such input method: %s"
+-msgstr ""
++msgstr "그러한 입력 방식이 없음: %s"
+ 
+ #: ../imsettings-daemon/main.c:111
+ msgid "Replace the instance of the imsettings daemon."
+-msgstr ""
++msgstr "imsettings 데몬의 인스턴스를 변경합니다. "
+ 
+ #: ../imsettings-daemon/main.c:112
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+-msgstr ""
++msgstr "시스템 전역 xinputrc 디렉토리 설정 (디버깅 목적) "
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+@@ -230,15 +231,15 @@ msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+-msgstr ""
++msgstr "IM 설정 디렉토리 구성 (디버깅 목적)"
+ 
+ #: ../imsettings-daemon/main.c:114
+ msgid "Set a home directory (for debugging purpose)"
+-msgstr ""
++msgstr "홈 디렉토리 설정 (디버깅 목적)"
+ 
+ #: ../imsettings-daemon/main.c:115
+ msgid "Set the imsettings module directory (for debugging purpose)"
+-msgstr ""
++msgstr "imsettings 모듈 디렉토리 설정 (디버깅 목적) "
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+@@ -246,51 +247,51 @@ msgstr "로그 파일을 생성하지 않음  "
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+-msgstr ""
++msgstr "X 디스플레이를 열 수 없음 "
+ 
+ #: ../utils/imsettings-check.c:93
+ msgid "XSETTINGS manager isn't running"
+-msgstr ""
++msgstr "XSETTINGS 관리자가 실행되지 않음 "
+ 
+ #: ../utils/imsettings-check.c:124 ../utils/imsettings-check.c:177
+ #: ../utils/imsettings-info.c:76 ../utils/imsettings-list.c:64
+ #: ../utils/imsettings-reload.c:72 ../utils/imsettings-switch.c:88
+ #, c-format
+ msgid "Unable to create a client instance."
+-msgstr ""
++msgstr "클라이언트 인스턴스를 생성할 수 없습니다. "
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+ msgid "imsettings version mismatch"
+-msgstr ""
++msgstr "imsettings 버전 불일치 "
+ 
+ #: ../utils/imsettings-check.c:145 ../utils/imsettings-check.c:211
+ msgid "No modules loaded"
+-msgstr ""
++msgstr "로딩된 모듈이 없음 "
+ 
+ #: ../utils/imsettings-check.c:203
+ msgid "Please see .imsettings.log for more details"
+-msgstr ""
++msgstr "보다 자세한 내용은 .imsettings.log에서 참조하십시오 "
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-check.c:241
+ msgid "Output the detail information for the result"
+-msgstr ""
++msgstr "결과에 대한 자세한 정보를 출력 "
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "DBus가 실행되고 있는지를 확인 "
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "유효한 모듈이 로딩되어 있는지 확인 "
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "모든 모듈 설정에 일관성이 있는지 확인 "
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "XSETTINGS 관리자가 실행되고 있는지를 확인 "
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+@@ -303,20 +304,22 @@ msgid ""
+ "Currently a different version of imsettings is running.\n"
+ "Running \"imsettings-reload\" may help but it will restart the Input Method\n"
+ msgstr ""
++"현재 다른 버전의 imsettings가 실행되고 있습니다. \"imsettings-reload\"를 실행"
++"하면 해결될 수 도 있지만 이로 인해 입력 방식이 다시 시작되게 됩니다\n"
+ 
+ #: ../utils/imsettings-info.c:100
+ #, c-format
+ msgid "Unable to obtain an Input Method Information: %s\n"
+-msgstr ""
++msgstr "입력 방식 정보를 얻을 수 없음: %s\n"
+ 
+ #: ../utils/imsettings-reload.c:43
+ msgid "Force reloading imsettings-daemon (deprecated)."
+-msgstr ""
++msgstr "강제로 imsettings-daemon을 다시 로딩합니다. (사용 권장되지 않음) "
+ 
+ #: ../utils/imsettings-reload.c:103
+ #, c-format
+ msgid "Reloaded.\n"
+-msgstr ""
++msgstr "다시 로딩했습니다.\n"
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+@@ -340,19 +343,19 @@ msgstr "불필요한 메세지 없애기"
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+ msgid "Restart input method"
+-msgstr ""
++msgstr "입력 방식을 다시 시작 "
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+ msgid "Read xinputrc to determine the input method"
+-msgstr ""
++msgstr "입력 방식을 결정하기 위해 xinputrc 읽기 "
+ 
+ #: ../utils/imsettings-switch.c:120
+ #, c-format
+ msgid "No Input Method running to be restarted.\n"
+-msgstr ""
++msgstr "다시 시작해야 할 입력 방식이 없습니다.\n"
+ 
+ #: ../utils/imsettings-switch.c:133
+ #, c-format
+ msgid "Restarted %s\n"
+-msgstr ""
++msgstr "%s을 다시 시작함\n"
+diff --git a/po/ku.po b/po/ku.po
+index da02f35..c5cf2ca 100644
+--- a/po/ku.po
++++ b/po/ku.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/ky.po b/po/ky.po
+index 7974d6f..677efc3 100644
+--- a/po/ky.po
++++ b/po/ky.po
+@@ -1,103 +1,107 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Rahul Bhalerao <b.rahul.pm@gmail.com>, 2006.
++# Sandeep Shedmake <sandeep.shedmake@gmail.com>, 2008.
++# Akira  <akira+transifex@tagoh.org>, 2011.
++# Sandeep Shedmake <sshedmak@redhat.com>, 2009.
++# sandeeps <sshedmak@redhat.com>, 2011.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+ msgid "Synchronous"
+-msgstr ""
++msgstr "समरित्या"
+ 
+ #: ../backends/xim/loopback.c:224
+ msgid "Request to send a key event synchronously"
+-msgstr ""
++msgstr "कि घटना समरित्या पाठवण्यासाठी विनंती"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+-msgstr ""
++msgstr "वापरण्याजोगी D-Bus पत्ता"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr ""
++msgstr "ADDRESS"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+-msgstr ""
++msgstr "वापरावयाचे X प्रदर्शन"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "DISPLAY"
+-msgstr ""
++msgstr "DISPLAY"
+ 
+ #: ../backends/xim/main.c:157
+ msgid "Replace the running XIM server with new instance."
+-msgstr ""
++msgstr "कार्यरत XIM सर्व्हरला नवीन घटनाशी बदलवा."
+ 
+ #: ../backends/xim/main.c:158
+ msgid "Output the debugging logs"
+-msgstr ""
++msgstr "डिबगींग लॉगस्चे आउटपुट"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM server connects to, for debugging purpose only"
+-msgstr ""
++msgstr "XIM सर्व्हर फक्त डिबगींग कारणास्तवच जुळवणी करतो"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM"
+-msgstr ""
++msgstr "XIM"
+ 
+ #: ../backends/xim/main.c:187 ../imsettings-daemon/main.c:141
+ #: ../utils/imsettings-check.c:268 ../utils/imsettings-info.c:69
+ #: ../utils/imsettings-reload.c:64 ../utils/imsettings-switch.c:81
+ msgid "Unknown error in parsing the command lines."
+-msgstr ""
++msgstr "आदेश ओळ वाचतेवेळी अपरिचीत त्रुटी आढळली."
+ 
+ #: ../backends/xim/proxy.c:2968
+ msgid "XIM server name"
+-msgstr ""
++msgstr "XIM सर्व्हरचे नाव"
+ 
+ #: ../backends/xim/proxy.c:2969
+ msgid "The name of XIM server for the connection"
+-msgstr ""
++msgstr "जुळवणीकरीता XIM सर्व्हरचे नाव"
+ 
+ #: ../backends/xim/proxy.c:2974
+ msgid "Signals for Protocol class"
+-msgstr ""
++msgstr "प्रोटोकॉल वर्ग करीता संकेत"
+ 
+ #: ../backends/xim/proxy.c:2975
+ msgid "A structure of signals for Protocol class"
+-msgstr ""
++msgstr "प्रोटोकॉल वर्ग करीता संकेतांचे रूप"
+ 
+ #: ../imsettings/imsettings-client.c:161
+ msgid "Locale"
+-msgstr ""
++msgstr "लोकेल"
+ 
+ #: ../imsettings/imsettings-client.c:162
+ msgid "Locale to get the imsettings information"
+-msgstr ""
++msgstr "imsettings माहिती प्राप्त करायचे ते लोकेल"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "नाव"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+-msgstr ""
++msgstr "imsettings बॅकएंडकरीता घटकाचे नाव"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+-msgstr ""
++msgstr "इंपुट पद्धत चालू ठेवण्यास अशक्य"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:203
+ #, c-format
+@@ -105,68 +109,70 @@ msgid ""
+ "Giving up to bring the process up because %s Input Method process for %s "
+ "rapidly died many times. See .imsettings.log for more details."
+ msgstr ""
++"%s इंपुट पद्धत कार्य, %s साठी अनेक प्रयत्नांतर बंद झाल्यामुळे कार्यची सक्रीयता तपासण्याची "
++"क्रिया वगळत आहे. अधिक तपशीलकरीता .imsettings.log पहा."
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+ msgid "[BUG] %s process is still running [pid: %d]\n"
+-msgstr ""
++msgstr "[BUG] %s प्रोसेस् अजूनही सुरू आहे [pid: %d]\n"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+ msgid "Couldn't send a signal to the %s process successfully."
+-msgstr ""
++msgstr "%s पध्दती करीता संकेत यशस्वीरित्या पाठवू शकले नाही."
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+ msgid "A GObject to be a IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo करीता GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+-msgstr ""
++msgstr "DBus जुळवणी"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+-msgstr ""
++msgstr "DBus जोडणीकरीता GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+ msgid "Logging"
+-msgstr ""
++msgstr "प्रवेश करणे"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+ msgid "A boolean value whether the logging facility is enabled or not."
+-msgstr ""
++msgstr "प्रवेश करण्याची सुविधा सुरू किंवा बंद असल्यावर बूलिअल मूल्य."
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+ msgid "Home directory"
+-msgstr ""
++msgstr "होम डिरेक्ट्री"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:433
+ #: ../imsettings-daemon/imsettings-server.c:434
+ msgid "xinputrc directory"
+-msgstr ""
++msgstr "xinputrc डिरेक्ट्री"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:439
+ #: ../imsettings-daemon/imsettings-server.c:440
+ msgid "xinput directory"
+-msgstr ""
++msgstr "xinput डिरेक्ट्री"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+-msgstr ""
++msgstr "घटक डिरेक्ट्री"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:446
+ msgid "IMSettings module directory"
+-msgstr ""
++msgstr "IMSettings घटक डिरेक्ट्री"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+ msgid "No such input method on your system: %s"
+-msgstr ""
++msgstr "तुमच्या प्रणालीवर इंपुट पद्धत आढळली नाही: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:716
+ #: ../imsettings-daemon/imsettings-server.c:840
+@@ -174,103 +180,103 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:1103
+ #, c-format
+ msgid "Out of memory"
+-msgstr ""
++msgstr "स्मृतीच्या बाहेर"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+ msgid "Failed to revert the backup file: %s"
+-msgstr ""
++msgstr "प्रतिकृती फाइल कडे जाऊ शकण्यास अपयशी: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:781
+ #, c-format
+ msgid "Failed to create a backup file: %s"
+-msgstr ""
++msgstr "प्रतिकृती फाइल बनविण्यास अपयशी: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:791
+ #, c-format
+ msgid "Failed to remove a .xinputrc file: %s"
+-msgstr ""
++msgstr ".xinputrc फाइल काढूण टाकण्यास अपयशी: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+ msgid "Failed to create a symlink: %s"
+-msgstr ""
++msgstr "सिमलिंक निर्माण करण्यास अपयशी: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+-msgstr ""
++msgstr "प्रणाली-भर xinputrc उपलब्ध नाही"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+-msgstr ""
++msgstr ".xinputrc किंवा प्रणाली-भर xinputrc उपलब्ध नाही"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+ msgid "No such input method: %s"
+-msgstr ""
++msgstr "याप्रकारचे इंपुट पद्धती आढळली नाही: %s"
+ 
+ #: ../imsettings-daemon/main.c:111
+ msgid "Replace the instance of the imsettings daemon."
+-msgstr ""
++msgstr "imsettings डिमनची घटना बदलवा."
+ 
+ #: ../imsettings-daemon/main.c:112
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+-msgstr ""
++msgstr "प्रणाली-भर xinputrc डिरेक्ट्री सेट करा (डिबगिंग कारणास्तव)"
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+ msgid "DIR"
+-msgstr ""
++msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+-msgstr ""
++msgstr "IM संरचना डिरेक्ट्री करा (डिबगिंग कारणास्तव)"
+ 
+ #: ../imsettings-daemon/main.c:114
+ msgid "Set a home directory (for debugging purpose)"
+-msgstr ""
++msgstr "होम डिरेक्ट्री सेट करा (डिबगिंग कारणास्तव)"
+ 
+ #: ../imsettings-daemon/main.c:115
+ msgid "Set the imsettings module directory (for debugging purpose)"
+-msgstr ""
++msgstr "imsettings घटक डिरेक्ट्री सेट करा (डिबगिंग कारणास्तव)"
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+-msgstr ""
++msgstr "लॉग फाइल निर्माण करू नका."
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+-msgstr ""
++msgstr "X डिस्पले उघडण्यास अपयशी"
+ 
+ #: ../utils/imsettings-check.c:93
+ msgid "XSETTINGS manager isn't running"
+-msgstr ""
++msgstr "XSETTINGS व्यवस्थापक सुरू नाही"
+ 
+ #: ../utils/imsettings-check.c:124 ../utils/imsettings-check.c:177
+ #: ../utils/imsettings-info.c:76 ../utils/imsettings-list.c:64
+ #: ../utils/imsettings-reload.c:72 ../utils/imsettings-switch.c:88
+ #, c-format
+ msgid "Unable to create a client instance."
+-msgstr ""
++msgstr "क्लाएंट घटना निर्माण करणे अशक्य."
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+ msgid "imsettings version mismatch"
+-msgstr ""
++msgstr "imsettings आवृत्ती जुळवणी अशक्य"
+ 
+ #: ../utils/imsettings-check.c:145 ../utils/imsettings-check.c:211
+ msgid "No modules loaded"
+-msgstr ""
++msgstr "घटक लोड केले नाही"
+ 
+ #: ../utils/imsettings-check.c:203
+ msgid "Please see .imsettings.log for more details"
+-msgstr ""
++msgstr "अधिक तपशीलकरीता कृपया .imsettings.log पहा"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-check.c:241
+ msgid "Output the detail information for the result"
+-msgstr ""
++msgstr "परिणामकरीता तपशील माहिती आऊटपुट स्वरूपी दाखवा"
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+@@ -290,7 +296,7 @@ msgstr ""
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+-msgstr ""
++msgstr "[इंपुट पद्धतीचे नाव|xinput.conf]"
+ 
+ #: ../utils/imsettings-info.c:82 ../utils/imsettings-list.c:70
+ #: ../utils/imsettings-switch.c:94
+@@ -299,56 +305,58 @@ msgid ""
+ "Currently a different version of imsettings is running.\n"
+ "Running \"imsettings-reload\" may help but it will restart the Input Method\n"
+ msgstr ""
++"सध्या imsettings ची वेगळी आवृत्ती सुरू आहे.\n"
++"\"imsettings-reload\" चालवणे मदतीचे ठरू शकते परंतु त्यामुळे इंपुट पद्धती पुनः सुरू होईल\n"
+ 
+ #: ../utils/imsettings-info.c:100
+ #, c-format
+ msgid "Unable to obtain an Input Method Information: %s\n"
+-msgstr ""
++msgstr "इंपुट पद्धतीची माहिती प्राप्त करणे अशक्य: %s\n"
+ 
+ #: ../utils/imsettings-reload.c:43
+ msgid "Force reloading imsettings-daemon (deprecated)."
+-msgstr ""
++msgstr "imsettings-daemon जबरनरित्या पुनःलोड करा."
+ 
+ #: ../utils/imsettings-reload.c:103
+ #, c-format
+ msgid "Reloaded.\n"
+-msgstr ""
++msgstr "पुनःलोड केले.\n"
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+-msgstr ""
++msgstr "इंपुट पद्धत स्टार्टर"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:46
+ msgid "Force restarting the IM process regardless of any errors."
+-msgstr ""
++msgstr "कुठलिही त्रुटी आढळल्यास IM कार्य जबरनरित्या पुनःसुरू करा."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:48
+ msgid "Do not update .xinputrc."
+-msgstr ""
++msgstr ".xinputrc अद्ययावत करू नका."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:50
+ msgid "Shut up the extra messages."
+-msgstr ""
++msgstr "अगाऊ संदेश बंद करा."
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+ msgid "Restart input method"
+-msgstr ""
++msgstr "इंपुट पद्धती पुनः सुरू करा"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+ msgid "Read xinputrc to determine the input method"
+-msgstr ""
++msgstr "इंपुट पद्धती ओळखण्यासाठी xinputrc वाचा"
+ 
+ #: ../utils/imsettings-switch.c:120
+ #, c-format
+ msgid "No Input Method running to be restarted.\n"
+-msgstr ""
++msgstr "पुनः सुरू करण्यासाठी इंपुट पद्धती आढळली नाही.\n"
+ 
+ #: ../utils/imsettings-switch.c:133
+ #, c-format
+ msgid "Restarted %s\n"
+-msgstr ""
++msgstr "%s पुनः सुरू केले\n"
+diff --git a/po/la.po b/po/la.po
+index 7974d6f..8dc6d0f 100644
+--- a/po/la.po
++++ b/po/la.po
+@@ -1,20 +1,20 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Translators:
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+diff --git a/po/lo.po b/po/lo.po
+index 97e27d8..cdd5654 100644
+--- a/po/lo.po
++++ b/po/lo.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/lt.po b/po/lt.po
+index be6865c..3de3587 100644
+--- a/po/lt.po
++++ b/po/lt.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/lv.po b/po/lv.po
+index 70ea29c..c54aacb 100644
+--- a/po/lv.po
++++ b/po/lv.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/mk.po b/po/mk.po
+index 63b2f6d..958251a 100644
+--- a/po/mk.po
++++ b/po/mk.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/ml.po b/po/ml.po
+index 035037e..d3c9793 100644
+--- a/po/ml.po
++++ b/po/ml.po
+@@ -4,12 +4,13 @@
+ #
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # Ani Peter <apeter@redhat.com>, 2006, 2009.
++# anipeter <anipeter@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
+-"PO-Revision-Date: 2011-06-01 00:16+0000\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
++"PO-Revision-Date: 2012-03-02 18:44+0900\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: ml\n"
+@@ -28,11 +29,11 @@ msgstr "ഒരു കീ ഇവന്റ് സിന്‍ക്രൊണസാ
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+-msgstr ""
++msgstr "ഉപയോഗിയ്ക്കുവാനുള്ള ഡി-ബസ് വിലാസം"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr ""
++msgstr "വിലാസം"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+@@ -90,11 +91,11 @@ msgstr "ഐഎം വിവരങ്ങള്‍ ലഭ്യമാകുന്
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "പേരു്"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+-msgstr ""
++msgstr "imsettings ബാക്കെന്‍ഡിനുള്ളൊരു ഘടകനാമം"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+@@ -112,7 +113,7 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+ msgid "[BUG] %s process is still running [pid: %d]\n"
+-msgstr ""
++msgstr "[BUG] %s പ്രക്രിയ ഇപ്പോഴും [pid: %d] പ്രവര്‍ത്തിപ്പിയ്ക്കുന്നു ¶\n"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+@@ -121,11 +122,11 @@ msgstr "വിജയകരമായി %s പ്രക്രിയയിലേ
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+ msgid "A GObject to be a IMSettingsInfo"
+-msgstr ""
++msgstr "IMSettingsInfo ആകുന്നതിനുള്ളൊരു GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+@@ -133,15 +134,15 @@ msgstr "ഡിബസ് കണക്ഷന്‍"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+-msgstr ""
++msgstr "ഒരു ഡിബസ് കണക്ഷനിലേക്കുള്ളൊരു GObject"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+ msgid "Logging"
+-msgstr ""
++msgstr "പ്രവേശിയ്ക്കുന്നു"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+ msgid "A boolean value whether the logging facility is enabled or not."
+-msgstr ""
++msgstr "പ്രവേശന സൌകര്യം പ്രവര്‍ത്തന സജ്ജമാണോ എന്നറിയുന്നതിനായി ബൂളിയന്‍ മൂല്ല്യം."
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+@@ -160,11 +161,11 @@ msgstr "xinput ഡയറക്ടറി"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+-msgstr ""
++msgstr "ഘടകത്തിനുള്ള ഡയറക്ടറി"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:446
+ msgid "IMSettings module directory"
+-msgstr ""
++msgstr "IMSettings-നുള്ള ഘടക ഡയറക്ടറി"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+@@ -177,7 +178,7 @@ msgstr "നിങ്ങളുടെ സിസ്റ്റമില്‍ അത
+ #: ../imsettings-daemon/imsettings-server.c:1103
+ #, c-format
+ msgid "Out of memory"
+-msgstr ""
++msgstr "ആവശ്യമായ മെമ്മറി ലഭ്യമല്ല"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+@@ -197,30 +198,30 @@ msgstr "ഒരു .xinputrc ഫയല്‍ നീക്കം ചെയ്യ
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+ msgid "Failed to create a symlink: %s"
+-msgstr ""
++msgstr "ഒരു സിംലിങ്ക് തയ്യാറാക്കുന്നതില്‍ പരാജയം: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+-msgstr ""
++msgstr "സിസ്റ്റത്തിനുടനീളമുള്ള xinputrc ലഭ്യമല്ല"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+-msgstr ""
++msgstr "സിസ്റ്റത്തിനുടനീളമുള്ള xinputrc അല്ലെങ്കില്‍ .xinputrc ലഭ്യമല്ല"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+ msgid "No such input method: %s"
+-msgstr ""
++msgstr "അത്തരം ഇന്‍പുട്ട് രീതി ലഭ്യമല്ല: %s"
+ 
+ #: ../imsettings-daemon/main.c:111
+ msgid "Replace the instance of the imsettings daemon."
+-msgstr ""
++msgstr "imsettings ഡെമണിന്റെ ഇന്‍സ്റ്റന്‍സ് മാറ്റിസ്ഥാപിയ്ക്കുക."
+ 
+ #: ../imsettings-daemon/main.c:112
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+-msgstr ""
++msgstr "സിസ്റ്റത്തിനുടനീളമുള്ള xinputrc ഡയറക്ടറി സജ്ജമാക്കുക (ഡീബഗ്ഗിനായി)"
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+@@ -229,15 +230,15 @@ msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+-msgstr ""
++msgstr "ഐഎം ക്രമീകരണ ഡയറക്ടറി സജ്ജമാക്കുക (ഡീബഗ്ഗിനായി)"
+ 
+ #: ../imsettings-daemon/main.c:114
+ msgid "Set a home directory (for debugging purpose)"
+-msgstr ""
++msgstr "ഒരു ആസ്ഥാന ഡയറക്ടറി സജ്ജമാക്കുക (ഡീബഗ്ഗിനായി)"
+ 
+ #: ../imsettings-daemon/main.c:115
+ msgid "Set the imsettings module directory (for debugging purpose)"
+-msgstr ""
++msgstr "imsettings ഘടക ഡയറക്ടറി സജ്ജമാക്കുക (ഡീബഗ്ഗിനായി)"
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+@@ -245,51 +246,51 @@ msgstr "ഒരു ലോഗ് ഫയല്‍ ഉണ്ടാക്കേണ്
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+-msgstr ""
++msgstr "എക്സ് പ്രദര്‍ശനം തുറക്കുവാന്‍ സാധ്യമല്ല"
+ 
+ #: ../utils/imsettings-check.c:93
+ msgid "XSETTINGS manager isn't running"
+-msgstr ""
++msgstr "XSETTINGS മാനേജര്‍ പ്രവര്‍ത്തിയ്ക്കുന്നില്ല"
+ 
+ #: ../utils/imsettings-check.c:124 ../utils/imsettings-check.c:177
+ #: ../utils/imsettings-info.c:76 ../utils/imsettings-list.c:64
+ #: ../utils/imsettings-reload.c:72 ../utils/imsettings-switch.c:88
+ #, c-format
+ msgid "Unable to create a client instance."
+-msgstr ""
++msgstr "ഒരു ക്ലയന്റ് ഇന്‍സ്റ്റന്‍സ് തയ്യാറാക്കുവാന്‍ സാധ്യമല്ല."
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+ msgid "imsettings version mismatch"
+-msgstr ""
++msgstr "imsettings പതിപ്പു് ചേരുന്നില്ല"
+ 
+ #: ../utils/imsettings-check.c:145 ../utils/imsettings-check.c:211
+ msgid "No modules loaded"
+-msgstr ""
++msgstr "ഘടകങ്ങള്‍ ലഭ്യമാക്കുവാന്‍ സാധ്യമല്ല"
+ 
+ #: ../utils/imsettings-check.c:203
+ msgid "Please see .imsettings.log for more details"
+-msgstr ""
++msgstr "കൂടുതല്‍ വിവരങ്ങള്‍ക്കായി .imsettings.log ദയവായി കാണുക"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-check.c:241
+ msgid "Output the detail information for the result"
+-msgstr ""
++msgstr "ഫലത്തിനുള്ള വിശദമായ വിവരം ലഭ്യമാക്കുക"
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "ഡിബസ് പ്രവര്‍ത്തിക്കുന്നുവോ എന്നു് പരിശോധിയ്ക്കുക"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "ശരിയായ ഘടകങ്ങള്‍ ലഭ്യമോ എന്നു് പരിശോധിയ്ക്കുക"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "എല്ലാ ഘടക സജ്ജീകരണങ്ങള്‍ക്കും സ്ഥിരതയുണ്ടോ എന്നു് പരിശോധിയ്ക്കുക"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "XSETTINGS മാനേജര്‍ പ്രവര്‍ത്തിയ്ക്കുന്നോ എന്നു് പരിശോധിയ്ക്കുക"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+@@ -302,20 +303,23 @@ msgid ""
+ "Currently a different version of imsettings is running.\n"
+ "Running \"imsettings-reload\" may help but it will restart the Input Method\n"
+ msgstr ""
++"നിലവില്‍ imsettings-ന്റെ മറ്റൊരു പതിപ്പു് പ്രവര്‍ത്തിയ്ക്കുന്നു.¶\n"
++"\"imsettings-reload\" പ്രവര്‍ത്തിപ്പിയ്ക്കുന്നതു് ഒരു പക്ഷേ സഹായകമാണു്, പക്ഷേ ഇന്‍പുട്ട് രീതി "
++"വീണ്ടും ആരംഭിക്കേണ്ടതായുണ്ടു്¶\n"
+ 
+ #: ../utils/imsettings-info.c:100
+ #, c-format
+ msgid "Unable to obtain an Input Method Information: %s\n"
+-msgstr ""
++msgstr "ഒരു ഇന്‍പുട്ട് രീതിയ്ക്കുള്ള വിവരം ലഭ്യമാക്കുവാന്‍ സാധ്യമല്ല: %s¶\n"
+ 
+ #: ../utils/imsettings-reload.c:43
+ msgid "Force reloading imsettings-daemon (deprecated)."
+-msgstr ""
++msgstr "imsettings-daemon വീണ്ടും ലഭ്യമാക്കുന്നതിനു് നിര്‍ബന്ധിയ്ക്കുക (ഇല്ലാതാക്കിയിരിയ്ക്കുന്നു)"
+ 
+ #: ../utils/imsettings-reload.c:103
+ #, c-format
+ msgid "Reloaded.\n"
+-msgstr ""
++msgstr "വീണ്ടും ലഭ്യമാക്കിയിരിയ്ക്കുന്നു.¶\n"
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+@@ -339,19 +343,19 @@ msgstr "എക്സ്ട്രാ സന്ദേശങ്ങള്‍ അട
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+ msgid "Restart input method"
+-msgstr ""
++msgstr "ഇന്‍പുട്ട് രീതി വീണ്ടും ആരംഭിയ്ക്കുക"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+ msgid "Read xinputrc to determine the input method"
+-msgstr ""
++msgstr "ഇന്‍പുട്ട് രീതി കണ്ടുപിടിയ്ക്കുന്നതിനായി xinputrc ലഭ്യമാക്കുക"
+ 
+ #: ../utils/imsettings-switch.c:120
+ #, c-format
+ msgid "No Input Method running to be restarted.\n"
+-msgstr ""
++msgstr "പ്രവര്‍ത്തനത്തിലുള്ള ഒരു ഇന്‍പുട്ട് രീതിയും പ്രവര്‍ത്തിപ്പിയ്ക്കേണ്ടതില്ല.¶\n"
+ 
+ #: ../utils/imsettings-switch.c:133
+ #, c-format
+ msgid "Restarted %s\n"
+-msgstr ""
++msgstr "%s വീണ്ടും ആരംഭിച്ചിരിയ്ക്കുന്നു¶\n"
+diff --git a/po/mn.po b/po/mn.po
+index 9b1f392..563271e 100644
+--- a/po/mn.po
++++ b/po/mn.po
+@@ -1,123 +1,103 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# 
++#
+ # naranhuu <naranhuu@gmail.com>, 2007.
+ # naranhuu <naranhuu@localhost.localdomain>, 2007.
+ # Translators:
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+-"Report-Msgid-Bugs-To: http://github.com/tagoh/imsettings/issues\n"
+-"POT-Creation-Date: 2011-09-09 12:02+0900\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
++"Language: mn\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"Language: mn\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+ 
+ #: ../backends/xim/loopback.c:223
+-#, 
+ msgid "Synchronous"
+ msgstr ""
+ 
+ #: ../backends/xim/loopback.c:224
+-#, 
+ msgid "Request to send a key event synchronously"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:155
+-#, 
+ msgid "D-Bus address to use"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:155
+-#, 
+ msgid "ADDRESS"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:156
+-#, 
+ msgid "X display to use"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:156
+-#, 
+ msgid "DISPLAY"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:157
+-#, 
+ msgid "Replace the running XIM server with new instance."
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:158
+-#, 
+ msgid "Output the debugging logs"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:159
+-#, 
+ msgid "XIM server connects to, for debugging purpose only"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:159
+-#, 
+ msgid "XIM"
+ msgstr ""
+ 
+ #: ../backends/xim/main.c:187 ../imsettings-daemon/main.c:141
+ #: ../utils/imsettings-check.c:268 ../utils/imsettings-info.c:69
+ #: ../utils/imsettings-reload.c:64 ../utils/imsettings-switch.c:81
+-#, 
+ msgid "Unknown error in parsing the command lines."
+ msgstr ""
+ 
+ #: ../backends/xim/proxy.c:2968
+-#, 
+ msgid "XIM server name"
+ msgstr ""
+ 
+ #: ../backends/xim/proxy.c:2969
+-#, 
+ msgid "The name of XIM server for the connection"
+ msgstr ""
+ 
+ #: ../backends/xim/proxy.c:2974
+-#, 
+ msgid "Signals for Protocol class"
+ msgstr ""
+ 
+ #: ../backends/xim/proxy.c:2975
+-#, 
+ msgid "A structure of signals for Protocol class"
+ msgstr ""
+ 
+ #: ../imsettings/imsettings-client.c:161
+-#, 
+ msgid "Locale"
+ msgstr ""
+ 
+ #: ../imsettings/imsettings-client.c:162
+-#, 
+ msgid "Locale to get the imsettings information"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+-#, 
+ msgid "Name"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+-#, 
+ msgid "A module name for imsettings backend"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+-#, 
+ msgid "Unable to keep Input Method running"
+ msgstr ""
+ 
+@@ -139,60 +119,49 @@ msgid "Couldn't send a signal to the %s process successfully."
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+-#, 
+ msgid "IMSettingsInfo"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+-#, 
+ msgid "A GObject to be a IMSettingsInfo"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+-#, 
+ msgid "DBus connection"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+-#, 
+ msgid "A GObject to be a DBus connection"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+-#, 
+ msgid "Logging"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+-#, 
+ msgid "A boolean value whether the logging facility is enabled or not."
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+-#, 
+ msgid "Home directory"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:433
+ #: ../imsettings-daemon/imsettings-server.c:434
+-#, 
+ msgid "xinputrc directory"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:439
+ #: ../imsettings-daemon/imsettings-server.c:440
+-#, 
+ msgid "xinput directory"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+-#, 
+ msgid "module directory"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:446
+-#, 
+ msgid "IMSettings module directory"
+ msgstr ""
+ 
+@@ -202,91 +171,82 @@ msgid "No such input method on your system: %s"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:716
+-#: ../imsettings-daemon/imsettings-server.c:841
+-#: ../imsettings-daemon/imsettings-server.c:882
+-#: ../imsettings-daemon/imsettings-server.c:1104
++#: ../imsettings-daemon/imsettings-server.c:840
++#: ../imsettings-daemon/imsettings-server.c:881
++#: ../imsettings-daemon/imsettings-server.c:1103
+ #, c-format
+ msgid "Out of memory"
+ msgstr ""
+ 
+-#: ../imsettings-daemon/imsettings-server.c:769
++#: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+ msgid "Failed to revert the backup file: %s"
+ msgstr ""
+ 
+-#: ../imsettings-daemon/imsettings-server.c:782
++#: ../imsettings-daemon/imsettings-server.c:781
+ #, c-format
+ msgid "Failed to create a backup file: %s"
+ msgstr ""
+ 
+-#: ../imsettings-daemon/imsettings-server.c:792
++#: ../imsettings-daemon/imsettings-server.c:791
+ #, c-format
+ msgid "Failed to remove a .xinputrc file: %s"
+ msgstr ""
+ 
+-#: ../imsettings-daemon/imsettings-server.c:803
++#: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+ msgid "Failed to create a symlink: %s"
+ msgstr ""
+ 
+-#: ../imsettings-daemon/imsettings-server.c:834
++#: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+ msgstr ""
+ 
+-#: ../imsettings-daemon/imsettings-server.c:874
++#: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+ msgstr ""
+ 
+-#: ../imsettings-daemon/imsettings-server.c:1096
++#: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+ msgid "No such input method: %s"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:111
+-#, 
+ msgid "Replace the instance of the imsettings daemon."
+ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:112
+-#, 
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+-#, 
+ msgid "DIR"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:113
+-#, 
+ msgid "Set the IM configuration directory (for debugging purpose)"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:114
+-#, 
+ msgid "Set a home directory (for debugging purpose)"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:115
+-#, 
+ msgid "Set the imsettings module directory (for debugging purpose)"
+ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:116
+-#, 
+ msgid "Do not create a log file."
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:86
+-#, 
+ msgid "Unable to open X display"
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:93
+-#, 
+ msgid "XSETTINGS manager isn't running"
+ msgstr ""
+ 
+@@ -298,48 +258,39 @@ msgid "Unable to create a client instance."
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+-#, 
+ msgid "imsettings version mismatch"
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:145 ../utils/imsettings-check.c:211
+-#, 
+ msgid "No modules loaded"
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:203
+-#, 
+ msgid "Please see .imsettings.log for more details"
+ msgstr ""
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-check.c:241
+-#, 
+ msgid "Output the detail information for the result"
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:242
+-#, 
+ msgid "Check if DBus is running"
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:243
+-#, 
+ msgid "Check if any valid modules are loaded"
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:244
+-#, 
+ msgid "Check if all of the module settings has consistencies"
+ msgstr ""
+ 
+ #: ../utils/imsettings-check.c:245
+-#, 
+ msgid "Check if XSETTINGS manager is running"
+ msgstr ""
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+-#, 
+ msgid "[Input Method name|xinput.conf]"
+ msgstr ""
+ 
+@@ -357,7 +308,6 @@ msgid "Unable to obtain an Input Method Information: %s\n"
+ msgstr ""
+ 
+ #: ../utils/imsettings-reload.c:43
+-#, 
+ msgid "Force reloading imsettings-daemon (deprecated)."
+ msgstr ""
+ 
+@@ -367,37 +317,31 @@ msgid "Reloaded.\n"
+ msgstr ""
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+-#, 
+ msgid "Input Method starter"
+ msgstr ""
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:46
+-#, 
+ msgid "Force restarting the IM process regardless of any errors."
+ msgstr ""
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:48
+-#, 
+ msgid "Do not update .xinputrc."
+ msgstr ""
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:50
+-#, 
+ msgid "Shut up the extra messages."
+ msgstr ""
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+-#, 
+ msgid "Restart input method"
+ msgstr ""
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+-#, 
+ msgid "Read xinputrc to determine the input method"
+ msgstr ""
+ 
+diff --git a/po/mr.po b/po/mr.po
+index c6a730a..2885d53 100644
+--- a/po/mr.po
++++ b/po/mr.po
+@@ -7,11 +7,12 @@
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # Sandeep Shedmake <sshedmak@redhat.com>, 2009.
+ # sandeeps <sshedmak@redhat.com>, 2011.
++# sandeeps <sandeeps@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: sandeeps <sshedmak@redhat.com>\n"
+ "Language-Team: Marathi (http://www.transifex.net/projects/p/imsettings/team/"
+@@ -281,19 +282,19 @@ msgstr "परिणामकरीता तपशील माहिती आ
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "DBus सुरू आहे याची तपासणी करा"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "कोणतेहि वैध घटके लोड झाले आहेत याची तपासणी करा"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "सर्व घटकांच्या सेटिंग्स् सुस्थीत आहेत याची तपासणी करा"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "XSETTINGS व्यवस्थापक सुरू आहे याची तपासणी करा"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+diff --git a/po/ms.po b/po/ms.po
+index b9314cd..f8c651a 100644
+--- a/po/ms.po
++++ b/po/ms.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/my.po b/po/my.po
+index 576639f..f4e3533 100644
+--- a/po/my.po
++++ b/po/my.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/nb.po b/po/nb.po
+index 4762e27..e3a4743 100644
+--- a/po/nb.po
++++ b/po/nb.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/nds.po b/po/nds.po
+index 7974d6f..3bc151a 100644
+--- a/po/nds.po
++++ b/po/nds.po
+@@ -1,29 +1,32 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Runa Bhattacharjee <runab@fedoraproject.org>, 2008.
++# Akira  <akira+transifex@tagoh.org>, 2011.
++# Runa Bhattacharjee <runabh@gmail.com>, 2007.
++# Runa Bhattacharjee <runab@redhat.com>, 2006, 2009.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+ msgid "Synchronous"
+-msgstr ""
++msgstr "সুসংগত"
+ 
+ #: ../backends/xim/loopback.c:224
+ msgid "Request to send a key event synchronously"
+-msgstr ""
++msgstr "সুসংগতভাবে কি-ইভেন্ট প্রেরণের অনুরোধ"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "D-Bus address to use"
+@@ -35,57 +38,57 @@ msgstr ""
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+-msgstr ""
++msgstr "ব্যবহারের জন্য চিহ্নিত X ডিসপ্ল"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "DISPLAY"
+-msgstr ""
++msgstr "DISPLAY"
+ 
+ #: ../backends/xim/main.c:157
+ msgid "Replace the running XIM server with new instance."
+-msgstr ""
++msgstr "চলমান XIM সার্ভারের পুরোনো ইনস্ট্যান্স বন্ধ করে নতুন ইনস্ট্যান্স স্থাপন করুন।"
+ 
+ #: ../backends/xim/main.c:158
+ msgid "Output the debugging logs"
+-msgstr ""
++msgstr "ডিবাগ লগের আউটপুট"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM server connects to, for debugging purpose only"
+-msgstr ""
++msgstr "শুধুমাত্র ডিবাগ করার জন্য XIM সার্ভার দ্বারা সংযোগ করা হয়"
+ 
+ #: ../backends/xim/main.c:159
+ msgid "XIM"
+-msgstr ""
++msgstr "XIM"
+ 
+ #: ../backends/xim/main.c:187 ../imsettings-daemon/main.c:141
+ #: ../utils/imsettings-check.c:268 ../utils/imsettings-info.c:69
+ #: ../utils/imsettings-reload.c:64 ../utils/imsettings-switch.c:81
+ msgid "Unknown error in parsing the command lines."
+-msgstr ""
++msgstr "কমান্ড লাইন পার্স করতে অজানা সমস্যা।"
+ 
+ #: ../backends/xim/proxy.c:2968
+ msgid "XIM server name"
+-msgstr ""
++msgstr "XIM সার্ভারের নাম"
+ 
+ #: ../backends/xim/proxy.c:2969
+ msgid "The name of XIM server for the connection"
+-msgstr ""
++msgstr "সংযোগের জন্য ব্যবহারযোগ্য XIM সার্ভারের নাম"
+ 
+ #: ../backends/xim/proxy.c:2974
+ msgid "Signals for Protocol class"
+-msgstr ""
++msgstr "Protocol ক্লাসের জন্য সংকেত"
+ 
+ #: ../backends/xim/proxy.c:2975
+ msgid "A structure of signals for Protocol class"
+-msgstr ""
++msgstr "Protocol ক্লাসের জন্য ব্যবহারযোগ্য সংকেতের স্ট্রাকচার"
+ 
+ #: ../imsettings/imsettings-client.c:161
+ msgid "Locale"
+-msgstr ""
++msgstr "লোকেইল"
+ 
+ #: ../imsettings/imsettings-client.c:162
+ msgid "Locale to get the imsettings information"
+-msgstr ""
++msgstr "imsettings সংক্রান্ত তথ্য প্রাপ্ত করার উদ্দেশ্যে চিহ্নিত লোকেইল"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+@@ -97,7 +100,7 @@ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:193
+ msgid "Unable to keep Input Method running"
+-msgstr ""
++msgstr "ইনপুট পদ্ধতিকে চলমান রাখতে সমস্যা"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:203
+ #, c-format
+@@ -105,6 +108,9 @@ msgid ""
+ "Giving up to bring the process up because %s Input Method process for %s "
+ "rapidly died many times. See .imsettings.log for more details."
+ msgstr ""
++"%s ইনপুট পদ্ধতির প্রসেসটি %s-র জন্য বেশ কয়েকবার অতিদ্রুত বন্ধ হয়ে গিয়েছে এবং এই "
++"প্রসেসটি পুনরুদ্ধারের প্রচেষ্টা বন্ধ করা হচ্ছে। অধিক বিবরণের জন্য .imsettings.log "
++"দেখুন।"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+@@ -114,7 +120,7 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-proc.c:448
+ #, c-format
+ msgid "Couldn't send a signal to the %s process successfully."
+-msgstr ""
++msgstr "%s প্রসেসকে সংকেত পাঠানো যায়নি।"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:566
+ msgid "IMSettingsInfo"
+@@ -126,7 +132,7 @@ msgstr ""
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+-msgstr ""
++msgstr "DBus সংযোগ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+@@ -143,17 +149,17 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+ msgid "Home directory"
+-msgstr ""
++msgstr "ব্যক্তিগত ডিরেক্টরি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:433
+ #: ../imsettings-daemon/imsettings-server.c:434
+ msgid "xinputrc directory"
+-msgstr ""
++msgstr "xinputrc ডিরেক্টরি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:439
+ #: ../imsettings-daemon/imsettings-server.c:440
+ msgid "xinput directory"
+-msgstr ""
++msgstr "xinput ডিরেক্টরি"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:445
+ msgid "module directory"
+@@ -166,7 +172,7 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:707
+ #, c-format
+ msgid "No such input method on your system: %s"
+-msgstr ""
++msgstr "সিস্টেমের মধ্যে কোনো ইনপুট পদ্ধতি উপস্থিত নেই: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:716
+ #: ../imsettings-daemon/imsettings-server.c:840
+@@ -179,17 +185,17 @@ msgstr ""
+ #: ../imsettings-daemon/imsettings-server.c:768
+ #, c-format
+ msgid "Failed to revert the backup file: %s"
+-msgstr ""
++msgstr "ব্যাক-আপ ফাইলে প্রত্যাবর্তন করতে ব্যর্থ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:781
+ #, c-format
+ msgid "Failed to create a backup file: %s"
+-msgstr ""
++msgstr "ব্যাক-আপ ফাইল নির্মাণ করতে ব্যর্থ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:791
+ #, c-format
+ msgid "Failed to remove a .xinputrc file: %s"
+-msgstr ""
++msgstr ".xinputrc ফাইল মুছে ফেলতে ব্যর্থ: %s"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:802
+ #, c-format
+@@ -222,7 +228,7 @@ msgstr ""
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+ msgid "DIR"
+-msgstr ""
++msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+@@ -238,7 +244,7 @@ msgstr ""
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+-msgstr ""
++msgstr "লগ ফাইল নির্মাণ করা হবে না।"
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+@@ -290,7 +296,7 @@ msgstr ""
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+-msgstr ""
++msgstr "[Input Method name|xinput.conf]"
+ 
+ #: ../utils/imsettings-info.c:82 ../utils/imsettings-list.c:70
+ #: ../utils/imsettings-switch.c:94
+@@ -316,22 +322,22 @@ msgstr ""
+ 
+ #: ../utils/imsettings-start.desktop.in.h:1
+ msgid "Input Method starter"
+-msgstr ""
++msgstr "ইনপুট পদ্ধতি আরম্ভের প্রণালী"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:46
+ msgid "Force restarting the IM process regardless of any errors."
+-msgstr ""
++msgstr "ভুল ত্রুটি নির্বিশেষে IM প্রসেসটি বলপূর্বক পুনরায় আরম্ভ করা হচ্ছে।"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:48
+ msgid "Do not update .xinputrc."
+-msgstr ""
++msgstr ".xinputrc আপডেট করা হবে না।"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:50
+ msgid "Shut up the extra messages."
+-msgstr ""
++msgstr "অতিরিক্ত বার্তার প্রদর্শন বন্ধ করা হবে।"
+ 
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:52
+diff --git a/po/nl.po b/po/nl.po
+index 923cc74..90fbfe2 100644
+--- a/po/nl.po
++++ b/po/nl.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/nn.po b/po/nn.po
+index 802f760..a2d2dd8 100644
+--- a/po/nn.po
++++ b/po/nn.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/nso.po b/po/nso.po
+index 9d00375..7db09b2 100644
+--- a/po/nso.po
++++ b/po/nso.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/or.po b/po/or.po
+index 4c02986..db3b061 100644
+--- a/po/or.po
++++ b/po/or.po
+@@ -5,11 +5,12 @@
+ # Subhransu Behera <sbehera@redhat.com>, 2006.
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # Manoj Kumar Giri <mgiri@redhat.com>, 2009.
++# mgiri <mgiri@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+@@ -33,7 +34,7 @@ msgstr ""
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr ""
++msgstr "ଠିକଣା"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+@@ -91,7 +92,7 @@ msgstr "imsettings ସୂଚନା ପାଇବାକୁ ଲୋକେଲ"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:133
+ msgid "Name"
+-msgstr ""
++msgstr "ନାମ"
+ 
+ #: ../imsettings-daemon/imsettings-module.c:134
+ msgid "A module name for imsettings backend"
+diff --git a/po/pa.po b/po/pa.po
+index 955915d..67a01ec 100644
+--- a/po/pa.po
++++ b/po/pa.po
+@@ -6,12 +6,13 @@
+ # Jaswinder Singh <jsingh@redhat.com>, 2006, 2008, 2009.
+ # Akira  <akira+transifex@tagoh.org>, 2011.
+ # A S Alam <apreet.alam@gmail.com>, 2011.
++# jassy <jassy@fedoraproject.org>, 2012. #zanata
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
+-"PO-Revision-Date: 2011-06-01 00:16+0000\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
++"PO-Revision-Date: 2012-03-02 18:44+0900\n"
+ "Last-Translator: aalam <apreet.alam@gmail.com>\n"
+ "Language-Team: Panjabi (Punjabi) (http://www.transifex.net/projects/p/"
+ "imsettings/team/pa/)\n"
+@@ -35,7 +36,7 @@ msgstr "ਵਰਤਣ ਲਈ ਡੀ-ਬੱਸ ਐਡਰੈੱਸ"
+ 
+ #: ../backends/xim/main.c:155
+ msgid "ADDRESS"
+-msgstr "ਐਡਰੈਸ"
++msgstr "ਐਡਰੈੱਸ"
+ 
+ #: ../backends/xim/main.c:156
+ msgid "X display to use"
+@@ -109,8 +110,8 @@ msgid ""
+ "Giving up to bring the process up because %s Input Method process for %s "
+ "rapidly died many times. See .imsettings.log for more details."
+ msgstr ""
+-"Giving up to bring the process up because %s Input Method process for %s "
+-"rapidly died many times. See .imsettings.log for more details."
++"ਕਾਰਜ ਨੂੰ ਚਾਲ ਕਰ ਰਿਹਾ ਹੈ ਕਿਉਂਕਿ %s ਇੰਪੁੱਟ ਢੰਗ ਕਾਰਜ %s ਲਈ ਕਈ ਵਾਰ ਲਗਾਤਾਰ ਬੰਦ ਹੋ ਗਿਆ ਸੀ। "
++"ਹੋਰ ਵੇਰਵੇ ਲਈ .imsettings.log ਵੇਖੋ।"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:304
+ #, c-format
+@@ -128,7 +129,7 @@ msgstr "IMSettingsInfo"
+ 
+ #: ../imsettings-daemon/imsettings-proc.c:567
+ msgid "A GObject to be a IMSettingsInfo"
+-msgstr ""
++msgstr "ਇੱਕ GObject ਜੋ IMSettingsInfo ਹੋਵੇਗਾ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:415
+ msgid "DBus connection"
+@@ -136,7 +137,7 @@ msgstr "DBus ਕੁਨੈਕਸ਼ਨ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:416
+ msgid "A GObject to be a DBus connection"
+-msgstr ""
++msgstr "ਇੱਖ GObject ਜੋ ਇੱਕ DBus ਕੁਨੈਕਸ਼ਨ ਹੋਵੇਗਾ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:421
+ msgid "Logging"
+@@ -144,7 +145,7 @@ msgstr "ਲਾਗ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:422
+ msgid "A boolean value whether the logging facility is enabled or not."
+-msgstr ""
++msgstr "ਇੱਕ ਬੂਲੀਅਨ ਮੁੱਲ ਜੋ ਲਾਗਿੰਗ ਸਹੂਲਤ ਯੋਗ ਜਾਂ ਅਯੋਗ ਕਰਦਾ ਹੈ।"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:427
+ #: ../imsettings-daemon/imsettings-server.c:428
+@@ -205,12 +206,12 @@ msgstr "symlink ਬਣਾਉਣ ਲਈ ਫੇਲ੍ਹ: %s"
+ #: ../imsettings-daemon/imsettings-server.c:833
+ #, c-format
+ msgid "No system-wide xinputrc available"
+-msgstr ""
++msgstr "ਕੋਈ ਸਿਸਟਮ-ਅਧਾਰਿਤ xinputrc ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:873
+ #, c-format
+ msgid "No .xinputrc nor system-wide xinputrc available"
+-msgstr ""
++msgstr "ਕੋਈ .xinputrc ਜਾਂ ਸਿਸਟਮ-ਅਧਾਰਿਤ xinputrc ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ"
+ 
+ #: ../imsettings-daemon/imsettings-server.c:1095
+ #, c-format
+@@ -219,11 +220,11 @@ msgstr "ਕੋਈ ਇੰਪੁੱਟ ਢੰਗ ਨਹੀਂ ਹੈ: %s"
+ 
+ #: ../imsettings-daemon/main.c:111
+ msgid "Replace the instance of the imsettings daemon."
+-msgstr ""
++msgstr "imsettings ਡੈਮਨ ਦੀ ਉਦਾਹਰਨ ਨੂੰ ਹਟਾਓ।"
+ 
+ #: ../imsettings-daemon/main.c:112
+ msgid "Set the system-wide xinputrc directory (for debugging purpose)"
+-msgstr ""
++msgstr "ਸਿਸਟਮ-ਅਧਾਰਿਤ xinputrc ਡਾਇਰੈਕਟਰੀ ਸੈੰਟ ਕਰੋ (ਡੀਬੱਗਿੰਗ ਉਦੇਸ਼ ਲਈ)"
+ 
+ #: ../imsettings-daemon/main.c:112 ../imsettings-daemon/main.c:113
+ #: ../imsettings-daemon/main.c:114 ../imsettings-daemon/main.c:115
+@@ -232,15 +233,15 @@ msgstr "DIR"
+ 
+ #: ../imsettings-daemon/main.c:113
+ msgid "Set the IM configuration directory (for debugging purpose)"
+-msgstr ""
++msgstr "IM ਸੰਰਚਨਾ ਡਾਇਰੈਕਟਰੀ ਸੈੱਟ ਕੋਰ (ਡੀਬੱਗਿੰਗ ਉਦੇਸ਼ ਲਈ)"
+ 
+ #: ../imsettings-daemon/main.c:114
+ msgid "Set a home directory (for debugging purpose)"
+-msgstr ""
++msgstr "ਘਰੇਲੂ ਡਾਇਰੈਕਟਰੀ ਸੈੱਟ ਕਰੋ (ਡੀਬੱਗਿੰਗ ਉਦੇਸ਼ ਲਈ)"
+ 
+ #: ../imsettings-daemon/main.c:115
+ msgid "Set the imsettings module directory (for debugging purpose)"
+-msgstr ""
++msgstr "imsettings ਮੋਡੀਊਲ ਡਾਇਰੈਕਟਰੀ ਸੈੱਟ ਕਰੋ (ਡੀਬੱਗਿੰਗ ਉਦੇਸ਼ ਲਈ)"
+ 
+ #: ../imsettings-daemon/main.c:116
+ msgid "Do not create a log file."
+@@ -248,7 +249,7 @@ msgstr "ਲਾਗ ਫਾਇਲ ਨਾ ਬਣਾਓ।"
+ 
+ #: ../utils/imsettings-check.c:86
+ msgid "Unable to open X display"
+-msgstr ""
++msgstr "X ਦਰਿਸ਼ ਖੋਲਣ ਤੋਂ ਅਸਮਰਥ"
+ 
+ #: ../utils/imsettings-check.c:93
+ msgid "XSETTINGS manager isn't running"
+@@ -259,7 +260,7 @@ msgstr "XSETTINGS ਮੈਨੇਜਰ ਨਹੀਂ ਚੱਲ ਰਿਹਾ ਹੈ"
+ #: ../utils/imsettings-reload.c:72 ../utils/imsettings-switch.c:88
+ #, c-format
+ msgid "Unable to create a client instance."
+-msgstr ""
++msgstr "ਇੱਕ ਕਲਾਂਈਟ ਉਦਾਹਰਨ ਬਣਾਉਣ ਤੋਂ ਅਸਮਰਥ।"
+ 
+ #: ../utils/imsettings-check.c:132 ../utils/imsettings-check.c:185
+ msgid "imsettings version mismatch"
+@@ -280,19 +281,19 @@ msgstr "ਨਤੀਜੇ ਲਈ ਹੋਰ ਵੇਰਵੇ ਸਮੇਤ ਆਉਟ
+ 
+ #: ../utils/imsettings-check.c:242
+ msgid "Check if DBus is running"
+-msgstr ""
++msgstr "ਵੇਖੋ ਕਿਤੇ DBus ਤਾਂ ਨਹੀਂ ਚੱਲ ਰਿਹਾ"
+ 
+ #: ../utils/imsettings-check.c:243
+ msgid "Check if any valid modules are loaded"
+-msgstr ""
++msgstr "ਵੇਖੋ ਕਿਤੇ ਕੋਈ ਯੋਗ ਮੋਡੀਊਲ ਲੋਡ ਹੋਇਆ ਹੈ"
+ 
+ #: ../utils/imsettings-check.c:244
+ msgid "Check if all of the module settings has consistencies"
+-msgstr ""
++msgstr "ਵੇਖੋ ਕਿ ਸਭ ਮੋਡੀਊਲ ਸੈਟਿੰਗਾਂ ਇਕਸਾਰ ਹਨ"
+ 
+ #: ../utils/imsettings-check.c:245
+ msgid "Check if XSETTINGS manager is running"
+-msgstr ""
++msgstr "ਵੇਖੋ ਕਿ XSETTINGS ਮੈਨੇਜਰ ਚੱਲ ਰਿਹਾ ਹੈ"
+ 
+ #: ../utils/imsettings-info.c:50 ../utils/imsettings-switch.c:43
+ msgid "[Input Method name|xinput.conf]"
+@@ -305,6 +306,8 @@ msgid ""
+ "Currently a different version of imsettings is running.\n"
+ "Running \"imsettings-reload\" may help but it will restart the Input Method\n"
+ msgstr ""
++"ਹੁਣ ਇੱਕ ਵੱਖਰਾ imsettings ਵਰਜਨ ਚੱਲ ਰਿਹਾ ਹੈ। \"imsettings-reload\" ਚਲਾਉਣ ਨਾਲ ਮੱਦਦ ਹੋ "
++"ਸਕਦੀ ਹੈ ਪਰ ਇਹ ਇੰਪੁੱਟ ਢੰਗ ਨੂੰ ਮੁੜ-ਚਾਲੂ ਕਰੇਗਾ\n"
+ 
+ #: ../utils/imsettings-info.c:100
+ #, c-format
+@@ -313,7 +316,7 @@ msgstr "ਇੰਪੁੱਟਢੰਗ ਬਾਰੇ ਜਾਣਕਾਰੀ ਲੈਣ
+ 
+ #: ../utils/imsettings-reload.c:43
+ msgid "Force reloading imsettings-daemon (deprecated)."
+-msgstr ""
++msgstr "imsettings-daemon ਦੀ ਰੀਲੋਡਿੰਗ ਮਨਬੂਰ ਕਰੋ (ਛੱਡਿਆ ਗਿਆ ਹੈ)।"
+ 
+ #: ../utils/imsettings-reload.c:103
+ #, c-format
+@@ -347,7 +350,7 @@ msgstr "ਇੰਪੁੱਟ ਢੰਗ ਮੁੜ-ਚਾਲੂ ਕਰੋਇੰ"
+ #. For translators: this is a translation for the command-line option.
+ #: ../utils/imsettings-switch.c:54
+ msgid "Read xinputrc to determine the input method"
+-msgstr ""
++msgstr "ਇੱਪੁੱਟ ਢੰਗ ਪਤਾ ਕਰਨ ਲਈ xinputrc ਨੂੰ ਪੜ੍ਹੋ"
+ 
+ #: ../utils/imsettings-switch.c:120
+ #, c-format
+diff --git a/po/pl.po b/po/pl.po
+index dd9d2e8..721d767 100644
+--- a/po/pl.po
++++ b/po/pl.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 08:06+0000\n"
+ "Last-Translator: raven <piotrdrag@gmail.com>\n"
+ "Language-Team: Polish (http://www.transifex.net/projects/p/imsettings/team/"
+diff --git a/po/pt.po b/po/pt.po
+index 8879cec..ea4ad2a 100644
+--- a/po/pt.po
++++ b/po/pt.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/pt_BR.po b/po/pt_BR.po
+index a3a0d9a..3eee5e3 100644
+--- a/po/pt_BR.po
++++ b/po/pt_BR.po
+@@ -11,7 +11,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/ro.po b/po/ro.po
+index 7276b88..fde1072 100644
+--- a/po/ro.po
++++ b/po/ro.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/ru.po b/po/ru.po
+index 0166ae6..4c0808e 100644
+--- a/po/ru.po
++++ b/po/ru.po
+@@ -9,7 +9,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: Russian (http://www.transifex.net/projects/p/imsettings/team/"
+diff --git a/po/si.po b/po/si.po
+index ece2777..1a42c84 100644
+--- a/po/si.po
++++ b/po/si.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/sk.po b/po/sk.po
+index 1210ff6..d014682 100644
+--- a/po/sk.po
++++ b/po/sk.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/sl.po b/po/sl.po
+index 3ecbfc5..21358ce 100644
+--- a/po/sl.po
++++ b/po/sl.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/sq.po b/po/sq.po
+index f52ad6f..1a5d7b9 100644
+--- a/po/sq.po
++++ b/po/sq.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/sr.po b/po/sr.po
+index 5a7afee..f864fa0 100644
+--- a/po/sr.po
++++ b/po/sr.po
+@@ -9,7 +9,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/sr@latin.po b/po/sr@latin.po
+index 3cc9153..090f196 100644
+--- a/po/sr@latin.po
++++ b/po/sr@latin.po
+@@ -9,7 +9,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/sv.po b/po/sv.po
+index 5319fb1..b0cec9e 100644
+--- a/po/sv.po
++++ b/po/sv.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/ta.po b/po/ta.po
+index 22372f6..4bf7125 100644
+--- a/po/ta.po
++++ b/po/ta.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/te.po b/po/te.po
+index 5914f59..3ea03a1 100644
+--- a/po/te.po
++++ b/po/te.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 00:16+0000\n"
+ "Last-Translator: tagoh <akira+transifex@tagoh.org>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/th.po b/po/th.po
+index 3c9b1e5..1036bf5 100644
+--- a/po/th.po
++++ b/po/th.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/tl.po b/po/tl.po
+index 7974d6f..74825bc 100644
+--- a/po/tl.po
++++ b/po/tl.po
+@@ -1,20 +1,22 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Egemen Metin Turan <mturan@aegee-ankara.org>, 2007.
++# Ismail ASCI <ismail.asci@gmail.com>, 2006.
++# Translators:
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+diff --git a/po/tr.po b/po/tr.po
+index 0381fc7..63d2cfe 100644
+--- a/po/tr.po
++++ b/po/tr.po
+@@ -9,7 +9,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/uk.po b/po/uk.po
+index f480344..596619c 100644
+--- a/po/uk.po
++++ b/po/uk.po
+@@ -8,7 +8,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-01 18:52+0000\n"
+ "Last-Translator: yurchor <yurchor@ukr.net>\n"
+ "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
+diff --git a/po/ur.po b/po/ur.po
+index 179f2f9..bfd1c46 100644
+--- a/po/ur.po
++++ b/po/ur.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/vi.po b/po/vi.po
+index 8badb8e..88d4648 100644
+--- a/po/vi.po
++++ b/po/vi.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+diff --git a/po/xh.po b/po/xh.po
+index 7974d6f..8dc6d0f 100644
+--- a/po/xh.po
++++ b/po/xh.po
+@@ -1,20 +1,20 @@
+ # SOME DESCRIPTIVE TITLE.
+ # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+ # This file is distributed under the same license as the PACKAGE package.
+-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ #
+-#, fuzzy
++# Translators:
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+ "Language: \n"
+ "MIME-Version: 1.0\n"
+-"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: ../backends/xim/loopback.c:223
+diff --git a/po/zh_CN.po b/po/zh_CN.po
+index 7daef82..1072497 100644
+--- a/po/zh_CN.po
++++ b/po/zh_CN.po
+@@ -13,7 +13,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-07-17 04:33+0000\n"
+ "Last-Translator: ekd123 <zhtx10@gmail.com>\n"
+ "Language-Team: Chinese (China) (http://www.transifex.net/projects/p/"
+diff --git a/po/zh_TW.po b/po/zh_TW.po
+index 559c515..2616069 100644
+--- a/po/zh_TW.po
++++ b/po/zh_TW.po
+@@ -12,7 +12,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-06-17 10:36+0000\n"
+ "Last-Translator: zerng07 <pswo10680@gmail.com>\n"
+ "Language-Team: Chinese (Taiwan) (http://www.transifex.net/projects/p/"
+diff --git a/po/zu.po b/po/zu.po
+index c55a345..b5a19ea 100644
+--- a/po/zu.po
++++ b/po/zu.po
+@@ -7,7 +7,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: imsettings\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2012-02-10 11:33+0900\n"
++"POT-Creation-Date: 2012-03-02 18:45+0900\n"
+ "PO-Revision-Date: 2011-03-04 06:24+0000\n"
+ "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+ "Language-Team: LANGUAGE <LL@li.org>\n"
+-- 
+1.7.7.6
+

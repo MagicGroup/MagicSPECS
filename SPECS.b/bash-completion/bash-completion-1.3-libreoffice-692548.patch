@@ -1,0 +1,25 @@
+commit e10848b7e5613cf07d00f05d0bcafdc0625042ff
+Author: Matej Cepl <mcepl@redhat.com>
+Date:   Thu Mar 31 22:45:21 2011 +0300
+
+    Complete oo{writer,impress,calc,draw} on LibreOffice FlatXML extensions (RedHat: #692548).
+
+diff --git a/bash_completion b/bash_completion
+index 97da0e4..2b05b80 100644
+--- a/bash_completion
++++ b/bash_completion
+@@ -108,10 +108,10 @@ complete -f -X '!*.@([eE][xX][eE]?(.[sS][oO])|[cC][oO][mM]|[sS][cC][rR])' wine
+ complete -f -X '!*.@(zip|z|gz|tgz)' bzme
+ # konqueror not here on purpose, it's more than a web/html browser
+ complete -f -X '!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))' netscape mozilla lynx opera galeon dillo elinks amaya firefox mozilla-firefox iceweasel google-chrome chromium-browser epiphany
+-complete -f -X '!*.@(sxw|stw|sxg|sgl|doc?([mx])|dot?([mx])|rtf|txt|htm|html|odt|ott|odm)' oowriter
+-complete -f -X '!*.@(sxi|sti|pps?(x)|ppt?([mx])|pot?([mx])|odp|otp)' ooimpress
+-complete -f -X '!*.@(sxc|stc|xls?([bmx])|xlw|xlt?([mx])|[ct]sv|ods|ots)' oocalc
+-complete -f -X '!*.@(sxd|std|sda|sdd|odg|otg)' oodraw
++complete -f -X '!*.@(sxw|stw|sxg|sgl|doc?([mx])|dot?([mx])|rtf|txt|htm|html|?(f)odt|ott|odm)' oowriter
++complete -f -X '!*.@(sxi|sti|pps?(x)|ppt?([mx])|pot?([mx])|?(f)odp|otp)' ooimpress
++complete -f -X '!*.@(sxc|stc|xls?([bmx])|xlw|xlt?([mx])|[ct]sv|?(f)ods|ots)' oocalc
++complete -f -X '!*.@(sxd|std|sda|sdd|?(f)odg|otg)' oodraw
+ complete -f -X '!*.@(sxm|smf|mml|odf)' oomath
+ complete -f -X '!*.odb' oobase
+ complete -f -X '!*.[rs]pm' rpm2cpio

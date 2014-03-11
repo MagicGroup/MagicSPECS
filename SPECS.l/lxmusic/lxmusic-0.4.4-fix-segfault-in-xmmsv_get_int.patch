@@ -1,0 +1,27 @@
+From b036ee60a92473c8ed96093c9035afed800435f9 Mon Sep 17 00:00:00 2001
+From: Victor van den Elzen <victor.vde@gmail.com>
+Date: Tue, 23 Nov 2010 22:06:38 +0100
+Subject: [PATCH] Fix crash if "id" is not available.
+
+---
+ src/lxmusic.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/lxmusic.c b/src/lxmusic.c
+index b6628d1..d56990b 100644
+--- a/src/lxmusic.c
++++ b/src/lxmusic.c
+@@ -1900,8 +1900,8 @@ static int on_playlist_pos_changed( xmmsv_t* val, void* user_data )
+                     gtk_list_store_set(list_store, &it, COL_WEIGHT, PANGO_WEIGHT_BOLD, -1);
+ 
+ 		    /* update id of currently played track */
+-		    xmmsv_dict_get( val, "id", &int_value );
+-		    xmmsv_get_int( int_value, &cur_track_id );
++                    if( xmmsv_dict_get( val, "id", &int_value ) )
++                        xmmsv_get_int( int_value, &cur_track_id );
+                 }
+ 		/* scroll to currently played song */
+ 		gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(playlist_view), path, NULL, FALSE, 0.0, 0.0 );
+-- 
+1.7.3.2
+

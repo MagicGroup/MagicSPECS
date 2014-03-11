@@ -1,0 +1,161 @@
+<gconfschemafile>
+    <schemalist>
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/mms/command</key>
+            <applyto>/desktop/gnome/url-handlers/mms/command</applyto>
+            <owner>vlc</owner>
+            <type>string</type>
+            <default>vlc "%s"</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/mms/needs_terminal</key>
+            <applyto>/desktop/gnome/url-handlers/mms/needs_terminal</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>false</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/mms/enabled</key>
+            <applyto>/desktop/gnome/url-handlers/mms/enabled</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/rtp/command</key>
+            <applyto>/desktop/gnome/url-handlers/rtp/command</applyto>
+            <owner>vlc</owner>
+            <type>string</type>
+            <default>vlc "%s"</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/rtp/needs_terminal</key>
+            <applyto>/desktop/gnome/url-handlers/rtp/needs_terminal</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>false</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/rtp/enabled</key>
+            <applyto>/desktop/gnome/url-handlers/rtp/enabled</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/rtsp/command</key>
+            <applyto>/desktop/gnome/url-handlers/rtsp/command</applyto>
+            <owner>vlc</owner>
+            <type>string</type>
+            <default>vlc "%s"</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/rtsp/needs_terminal</key>
+            <applyto>/desktop/gnome/url-handlers/rtsp/needs_terminal</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>false</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/rtsp/enabled</key>
+            <applyto>/desktop/gnome/url-handlers/rtsp/enabled</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/mmsh/command</key>
+            <applyto>/desktop/gnome/url-handlers/mmsh/command</applyto>
+            <owner>vlc</owner>
+            <type>string</type>
+            <default>vlc "%s"</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/mmsh/needs_terminal</key>
+            <applyto>/desktop/gnome/url-handlers/mmsh/needs_terminal</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>false</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/url-handlers/mmsh/enabled</key>
+            <applyto>/desktop/gnome/url-handlers/mmsh/enabled</applyto>
+            <owner>vlc</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+    </schemalist>
+</gconfschemafile>

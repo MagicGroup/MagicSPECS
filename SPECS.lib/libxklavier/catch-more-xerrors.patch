@@ -1,0 +1,11 @@
+diff -up libxklavier-4.0/libxklavier/xklavier_evt.c.xerrors libxklavier-4.0/libxklavier/xklavier_evt.c
+--- libxklavier-4.0/libxklavier/xklavier_evt.c.xerrors	2009-12-10 00:50:24.786868859 -0500
++++ libxklavier-4.0/libxklavier/xklavier_evt.c	2009-12-10 00:51:23.563118385 -0500
+@@ -508,6 +508,7 @@ xkl_process_error(Display * dpy, XErrorE
+ 	case BadAccess:
+ 	case BadDrawable:
+ 	case BadWindow:
++	case BadMatch:
+ 		{
+ 			XGetErrorText(evt->display, evt->error_code, buf,
+ 				      sizeof(buf));

@@ -1,0 +1,5 @@
+#! /bin/sh
+
+g=$1
+shift
+exec /usr/sbin/groupadd -g "$g" "$@"

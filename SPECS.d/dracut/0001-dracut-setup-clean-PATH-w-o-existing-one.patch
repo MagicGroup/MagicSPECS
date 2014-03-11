@@ -1,0 +1,26 @@
+From 68910ba4a510e2d10e1c16adb348a8916a74b281 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 8 Feb 2012 17:02:17 +0100
+Subject: [PATCH] dracut: setup clean PATH w/o existing one
+
+---
+ dracut |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/dracut b/dracut
+index 86fcaf3..545f9db 100755
+--- a/dracut
++++ b/dracut
+@@ -284,9 +284,10 @@ for i in /usr/bin /bin /usr/sbin /sbin; do
+     if [ -L "$i" ]; then
+         rl=$(readlink -f $i)
+     fi
+-    PATH="$PATH:$rl"
++    NPATH="$NPATH:$rl"
+ done
+-export PATH
++export PATH="$NPATH"
++unset NPATH
+ unset LD_LIBRARY_PATH
+ unset GREP_OPTIONS
+ 

@@ -1,0 +1,65 @@
+diff -ur kdebase-workspace-4.3.95/libs/kworkspace/kdisplaymanager.cpp kdebase-workspace-4.3.95-ck-shutdown/libs/kworkspace/kdisplaymanager.cpp
+--- kdebase-workspace-4.3.95/libs/kworkspace/kdisplaymanager.cpp	2009-04-28 15:46:11.000000000 +0200
++++ kdebase-workspace-4.3.95-ck-shutdown/libs/kworkspace/kdisplaymanager.cpp	2010-01-30 17:31:58.000000000 +0100
+@@ -26,6 +26,7 @@
+ #include <QtDBus/QtDBus>
+ 
+ #include <QRegExp>
++#include <QLatin1String>
+ 
+ #include <X11/Xauth.h>
+ #include <X11/Xlib.h>
+@@ -85,6 +86,7 @@
+ 				strcpy( sa.sun_path, "/tmp/.gdm_socket" );
+ 				if (::connect( d->fd, (struct sockaddr *)&sa, sizeof(sa) )) {
+ 					::close( d->fd );
++					DMType = NoDM;
+ 					d->fd = -1;
+ 					break;
+ 				}
+@@ -186,6 +188,23 @@
+ bool
+ KDisplayManager::canShutdown()
+ {
++	if (DMType == NoDM) {
++		// No DM or newest GDM running, we'll try shutting down through ConsoleKit.
++		QDBusConnection systemBus = QDBusConnection::systemBus();
++		if (!systemBus.isConnected())
++			return false;
++		QDBusInterface consoleKit( QLatin1String( "org.freedesktop.ConsoleKit" ),
++		                           QLatin1String( "/org/freedesktop/ConsoleKit/Manager" ),
++		                           QLatin1String( "org.freedesktop.ConsoleKit.Manager" ),
++		                           systemBus );
++		if (!consoleKit.isValid())
++			return false;
++		// Unfortunately, at this point we don't know whether we should be querying
++		// CanStop or CanRestart. Let's do what the code below does and just use CanStop.
++		QDBusReply<bool> canStop = consoleKit.call( QLatin1String( "CanStop" ) );
++		return (canStop.isValid() && canStop.value());
++	}
++
+ 	if (DMType == OldKDM)
+ 		return strstr( ctl, ",maysd" ) != 0;
+ 
+@@ -205,6 +224,21 @@
+ 	if (shutdownType == KWorkSpace::ShutdownTypeNone || shutdownType == KWorkSpace::ShutdownTypeLogout)
+ 		return;
+ 
++        if (DMType == NoDM) {
++               // No DM or newest GDM running, try shutting down through ConsoleKit.
++               QDBusConnection systemBus = QDBusConnection::systemBus();
++               if (!systemBus.isConnected())
++                       return;
++               QDBusInterface consoleKit( QLatin1String( "org.freedesktop.ConsoleKit" ),
++                                          QLatin1String( "/org/freedesktop/ConsoleKit/Manager" ),
++                                          QLatin1String( "org.freedesktop.ConsoleKit.Manager" ),
++                                          systemBus );
++               if (consoleKit.isValid())
++                       consoleKit.call( QLatin1String( shutdownType == KWorkSpace::ShutdownTypeReboot ?
++                                                       "Restart" : "Stop" ) );
++               return;
++        }
++
+ 	bool cap_ask;
+ 	if (DMType == NewKDM) {
+ 		QByteArray re;

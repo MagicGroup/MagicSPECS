@@ -1,0 +1,39 @@
+diff -up Tk-Text-SuperText-0.9.4/SuperText.pm.hashref Tk-Text-SuperText-0.9.4/SuperText.pm
+--- Tk-Text-SuperText-0.9.4/SuperText.pm.hashref	2009-06-10 10:14:29.000000000 +0200
++++ Tk-Text-SuperText-0.9.4/SuperText.pm	2009-06-10 10:14:36.000000000 +0200
+@@ -527,7 +527,7 @@ sub insert
+ 
+ 	# match coupled chars
+ 	if((!defined $w->tag('ranges','sel')) && $w->cget('-showmatching') == 1) {
+-		if(exists %{$w->{MATCHINGCOUPLES}}->{$str}) {
++		if(exists $w->{MATCHINGCOUPLES}->{$str}) {
+ 			# calculate visible zone and search only in this one
+ 			my ($l,$c) = split('\.',$w->index('end'));
+ 			my ($slimit,$elimit) = $w->yview;
+@@ -719,7 +719,7 @@ sub SetCursor
+ 	$w->SUPER::SetCursor(@_);
+ 	
+ 	if((!defined $w->tag('ranges','sel')) && $w->cget('-showmatching') == 1) {
+-		if(exists %{$w->{MATCHINGCOUPLES}}->{$str=$w->get('insert','insert + 1c')}) {
++		if(exists $w->{MATCHINGCOUPLES}->{$str=$w->get('insert','insert + 1c')}) {
+ 			# calculate visible zone and search only in this one
+ 			my ($l,$c) = split('\.',$w->index('end'));
+ 			my ($slimit,$elimit) = $w->yview;
+@@ -749,7 +749,7 @@ sub Button1
+ 	$w->SUPER::Button1(@_);
+ 	
+ 	if((!defined $w->tag('ranges','sel')) && $w->cget('-showmatching') == 1) {
+-		if(exists %{$w->{MATCHINGCOUPLES}}->{$str=$w->get('insert','insert + 1c')}) {
++		if(exists $w->{MATCHINGCOUPLES}->{$str=$w->get('insert','insert + 1c')}) {
+ 			# calculate visible zone and search only in this one
+ 			my ($l,$c) = split('\.',$w->index('end'));
+ 			my ($slimit,$elimit) = $w->yview;
+@@ -1897,7 +1897,7 @@ sub flashMatchingChar
+ 	my $s = $w->index('insert');
+ 	my $str = $w->get('insert');
+ 	
+-	if(exists %{$w->{MATCHINGCOUPLES}}->{$str}) {
++	if(exists $w->{MATCHINGCOUPLES}->{$str}) {
+ 		my $i=$w->_FindMatchingChar($str,$s,"1.0","end");
+ 		if(defined $i) {
+ 			my $sel = Tk::catch {$w->tag('nextrange','match','1.0','end');};

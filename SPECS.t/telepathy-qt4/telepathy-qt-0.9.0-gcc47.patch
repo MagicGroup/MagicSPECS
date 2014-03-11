@@ -1,0 +1,36 @@
+diff -up telepathy-qt-0.9.0/TelepathyQt/client-registrar.cpp.gcc47 telepathy-qt-0.9.0/TelepathyQt/client-registrar.cpp
+--- telepathy-qt-0.9.0/TelepathyQt/client-registrar.cpp.gcc47	2011-12-20 14:33:46.000000000 -0600
++++ telepathy-qt-0.9.0/TelepathyQt/client-registrar.cpp	2012-02-09 11:10:47.208081294 -0600
+@@ -39,6 +39,8 @@
+ #include <TelepathyQt/MethodInvocationContext>
+ #include <TelepathyQt/PendingComposite>
+ #include <TelepathyQt/PendingReady>
++ 
++#include <stdint.h>
+ 
+ namespace Tp
+ {
+diff -up telepathy-qt-0.9.0/TelepathyQt/stream-tube-client.cpp.gcc47 telepathy-qt-0.9.0/TelepathyQt/stream-tube-client.cpp
+--- telepathy-qt-0.9.0/TelepathyQt/stream-tube-client.cpp.gcc47	2011-12-20 14:33:46.000000000 -0600
++++ telepathy-qt-0.9.0/TelepathyQt/stream-tube-client.cpp	2012-02-09 11:11:54.919234791 -0600
+@@ -38,6 +38,8 @@
+ #include <QAbstractSocket>
+ #include <QHash>
+ 
++#include <stdint.h>
++
+ namespace Tp
+ {
+ 
+diff -up telepathy-qt-0.9.0/TelepathyQt/stream-tube-server.cpp.gcc47 telepathy-qt-0.9.0/TelepathyQt/stream-tube-server.cpp
+--- telepathy-qt-0.9.0/TelepathyQt/stream-tube-server.cpp.gcc47	2011-12-20 14:33:46.000000000 -0600
++++ telepathy-qt-0.9.0/TelepathyQt/stream-tube-server.cpp	2012-02-09 11:12:07.010083632 -0600
+@@ -38,6 +38,8 @@
+ #include <TelepathyQt/OutgoingStreamTubeChannel>
+ #include <TelepathyQt/StreamTubeChannel>
+ 
++#include <stdint.h>
++
+ namespace Tp
+ {
+ 

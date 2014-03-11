@@ -1,0 +1,119 @@
+Patch by Jeff Johnson <jbj@rpm5.org> for popt >= 1.13, which reverts all POPT_fprintf()
+usage cases to avoid broken umlauts in --help output at some non-UTF8 locales. It should
+not break anything, just restore the behaviour of popt 1.12 again to not introduce a new
+regression. Clueless modified by Robert Scheck <robert@rpm5.org> to hide the last found
+two locale regression as well.
+
+--- popt-1.13/popthelp.c				2007-11-04 16:46:25.000000000 +0100
++++ popt-1.13/popthelp.c.popt_fprintf			2007-12-30 22:10:24.000000000 +0100
+@@ -281,7 +281,6 @@
+     char * left;
+     size_t nb = maxLeftCol + 1;
+     int displaypad = 0;
+-    int xx;
+ 
+     /* Make sure there's more than enough room in target buffer. */
+     if (opt->longName)	nb += strlen(opt->longName);
+@@ -406,9 +405,9 @@
+     }
+ 
+     if (help)
+-	xx = POPT_fprintf(fp,"  %-*s   ", (int)(maxLeftCol+displaypad), left);
++	fprintf(fp,"  %-*s   ", (int)(maxLeftCol+displaypad), left);
+     else {
+-	xx = POPT_fprintf(fp,"  %s\n", left); 
++	fprintf(fp,"  %s\n", left);
+ 	goto out;
+     }
+ 
+@@ -428,18 +427,19 @@
+ 	if (ch == help) break;		/* give up */
+ 	while (ch > (help + 1) && _isspaceptr(ch))
+ 	    ch = POPT_prev_char (ch);
+-	ch++;
++	ch = POPT_next_char(ch);
+ 
+ 	sprintf(format, "%%.%ds\n%%%ds", (int) (ch - help), (int) indentLength);
+ 	/*@-formatconst@*/
+-	xx = POPT_fprintf(fp, format, help, " ");
++	fprintf(fp, format, help, " ");
+ 	/*@=formatconst@*/
+ 	help = ch;
+-	while (_isspaceptr(help) && *help) help++;
++	while (_isspaceptr(help) && *help)
++	    help = POPT_next_char(help);
+ 	helpLength = strlen(help);
+     }
+ 
+-    if (helpLength) xx = POPT_fprintf(fp, "%s\n", help);
++    if (helpLength) fprintf(fp, "%s\n", help);
+     help = NULL;
+ 
+ out:
+@@ -553,7 +553,6 @@
+ {
+     const struct poptOption * opt;
+     const char *sub_transdom;
+-    int xx;
+ 
+     if (table == poptAliasOptions) {
+ 	itemHelp(fp, con->aliases, con->numAliases, columns, NULL);
+@@ -577,7 +576,7 @@
+ 	    sub_transdom = translation_domain;
+ 	    
+ 	if (opt->descrip)
+-	    xx = POPT_fprintf(fp, "\n%s\n", D_(sub_transdom, opt->descrip));
++	    fprintf(fp, "\n%s\n", D_(sub_transdom, opt->descrip));
+ 
+ 	singleTableHelp(con, fp, opt->arg, columns, sub_transdom);
+     }
+@@ -767,7 +766,7 @@
+ 	    translation_domain = (const char *)opt->arg;
+ 	} else if ((opt->argInfo & POPT_ARG_MASK) == POPT_ARG_INCLUDE_TABLE) {
+ 	    if (done) {
+-		int i;
++		int i = done->nopts;
+ 		if (done->opts != NULL)
+ 		for (i = 0; i < done->nopts; i++) {
+ 		    const void * that = done->opts[i];
+--- popt-1.13/poptint.c					2007-11-04 16:56:24.000000000 +0100
++++ popt-1.13/poptint.c.popt_fprintf			2007-12-30 22:10:24.000000000 +0100
+@@ -124,6 +124,18 @@
+     }
+ }
+ 
++char *
++POPT_next_char (const char *str)
++{
++    char *p = (char *)str;
++
++    while (1) {
++       p++;
++       if ((*p & 0xc0) != (char)0x80)
++           return (char *)p;
++    }
++}
++
+ int
+ POPT_fprintf (FILE* stream, const char *format, ...)
+ {
+--- popt-1.13/poptint.h					2007-12-11 19:02:29.000000000 +0100
++++ popt-1.13/poptint.h.popt_fprintf			2007-12-30 22:10:24.000000000 +0100
+@@ -144,11 +144,14 @@
+ #endif
+ #endif
+ 
++char *POPT_prev_char (/*@returned@*/ const char *str)
++	/*@*/;
++
++char *POPT_next_char (/*@returned@*/ const char *str)
++	/*@*/;
++
+ int   POPT_fprintf (FILE* stream, const char *format, ...)
+ 	/*@globals fileSystem @*/
+ 	/*@modifies stream, fileSystem @*/;
+ 
+-char *POPT_prev_char (/*@returned@*/ const char *str)
+-	/*@*/;
+-
+ #endif

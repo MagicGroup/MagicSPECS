@@ -1,0 +1,104 @@
+diff -up nacl-binutils-2.20.1-gite0648d3/bfd/doc/bfd.texinfo.fix nacl-binutils-2.20.1-gite0648d3/bfd/doc/bfd.texinfo
+--- nacl-binutils-2.20.1-gite0648d3/bfd/doc/bfd.texinfo.fix	2013-03-27 09:50:10.674908965 -0400
++++ nacl-binutils-2.20.1-gite0648d3/bfd/doc/bfd.texinfo	2013-03-27 09:50:25.635908965 -0400
+@@ -323,7 +323,7 @@ All of BFD lives in one directory.
+ @printindex cp
+ 
+ @tex
+-% I think something like @colophon should be in texinfo.  In the
++% I think something like @@colophon should be in texinfo.  In the
+ % meantime:
+ \long\def\colophon{\hbox to0pt{}\vfill
+ \centerline{The body of this manual is set in}
+@@ -334,7 +334,7 @@ All of BFD lives in one directory.
+ \centerline{{\sl\fontname\tensl\/}}
+ \centerline{are used for emphasis.}\vfill}
+ \page\colophon
+-% Blame: doc@cygnus.com, 28mar91.
++% Blame: doc@@cygnus.com, 28mar91.
+ @end tex
+ 
+ @bye
+diff -up nacl-binutils-2.20.1-gite0648d3/binutils/doc/binutils.texi.fix nacl-binutils-2.20.1-gite0648d3/binutils/doc/binutils.texi
+--- nacl-binutils-2.20.1-gite0648d3/binutils/doc/binutils.texi.fix	2013-03-27 09:47:20.338908965 -0400
++++ nacl-binutils-2.20.1-gite0648d3/binutils/doc/binutils.texi	2013-03-27 09:50:03.834908965 -0400
+@@ -142,7 +142,6 @@ in the section entitled ``GNU Free Docum
+ * objcopy::			Copy and translate object files
+ * objdump::                     Display information from object files
+ * ranlib::                      Generate index to archive contents
+-* readelf::                     Display the contents of ELF format files
+ * size::                        List section sizes and total size
+ * strings::                     List printable strings from files
+ * strip::                       Discard symbols
+@@ -150,9 +149,10 @@ in the section entitled ``GNU Free Docum
+ * cxxfilt: c++filt.             MS-DOS name for c++filt
+ * addr2line::			Convert addresses to file and line
+ * nlmconv::                     Converts object code into an NLM
+-* windres::			Manipulate Windows resources
+ * windmc::			Generator for Windows message resources
++* windres::                     Manipulate Windows resources
+ * dlltool::			Create files needed to build and use DLLs
++* readelf::                     Display the contents of ELF format files
+ * Common Options::              Command-line options for all utilities
+ * Selecting the Target System:: How these utilities determine the target
+ * Reporting Bugs::              Reporting Bugs
+diff -up nacl-binutils-2.20.1-gite0648d3/ld/ld.texinfo.fix nacl-binutils-2.20.1-gite0648d3/ld/ld.texinfo
+--- nacl-binutils-2.20.1-gite0648d3/ld/ld.texinfo.fix	2013-03-27 09:44:42.032908965 -0400
++++ nacl-binutils-2.20.1-gite0648d3/ld/ld.texinfo	2013-03-27 09:46:58.651908965 -0400
+@@ -138,15 +138,15 @@ in the section entitled ``GNU Free Docum
+ @ifset I960
+ * i960::                        ld and the Intel 960 family
+ @end ifset
++@ifset M68HC11
++* M68HC11/68HC12::              ld and the Motorola 68HC11 and 68HC12 families
++@end ifset
+ @ifset ARM
+ * ARM::				ld and the ARM family
+ @end ifset
+ @ifset HPPA
+ * HPPA ELF32::                  ld and HPPA 32-bit ELF
+ @end ifset
+-@ifset M68HC11
+-* M68HC11/68HC12::              ld and the Motorola 68HC11 and 68HC12 families
+-@end ifset
+ @ifset M68K
+ * M68K::                        ld and Motorola 68K family
+ @end ifset
+@@ -5708,6 +5708,9 @@ functionality are not listed.
+ @ifset I960
+ * i960::                        @command{ld} and the Intel 960 family
+ @end ifset
++@ifset M68HC11
++* M68HC11/68HC12::              @code{ld} and the Motorola 68HC11 and 68HC12 families
++@end ifset
+ @ifset ARM
+ * ARM::				@command{ld} and the ARM family
+ @end ifset
+@@ -5723,9 +5726,6 @@ functionality are not listed.
+ @ifset MSP430
+ * MSP430::			@command{ld} and MSP430
+ @end ifset
+-@ifset M68HC11
+-* M68HC11/68HC12::		@code{ld} and the Motorola 68HC11 and 68HC12 families
+-@end ifset
+ @ifset POWERPC
+ * PowerPC ELF32::		@command{ld} and PowerPC 32-bit ELF Support
+ @end ifset
+@@ -7509,7 +7509,7 @@ If you have more than one @code{SECT} st
+ @printindex cp
+ 
+ @tex
+-% I think something like @colophon should be in texinfo.  In the
++% I think something like @@colophon should be in texinfo.  In the
+ % meantime:
+ \long\def\colophon{\hbox to0pt{}\vfill
+ \centerline{The body of this manual is set in}
+@@ -7520,7 +7520,7 @@ If you have more than one @code{SECT} st
+ \centerline{{\sl\fontname\tensl\/}}
+ \centerline{are used for emphasis.}\vfill}
+ \page\colophon
+-% Blame: doc@cygnus.com, 28mar91.
++% Blame: doc@@cygnus.com, 28mar91.
+ @end tex
+ 
+ @bye

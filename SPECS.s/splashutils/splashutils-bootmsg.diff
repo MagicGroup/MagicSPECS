@@ -1,0 +1,12 @@
+diff -Nur splashutils-1.5.4.2.ori/src/common.h splashutils-1.5.4.2/src/common.h
+--- splashutils-1.5.4.2.ori/src/common.h	2008-07-22 06:30:12.000000000 +0800
++++ splashutils-1.5.4.2/src/common.h	2008-08-04 22:36:06.000000000 +0800
+@@ -50,7 +50,7 @@
+ #define MSG_WARN		2
+ #define MSG_INFO		3
+ 
+-#define SYSMSG_DEFAULT  "Initializing the kernel..."
++#define SYSMSG_DEFAULT  "初始化内核中……"
+ #define SYSMSG_BOOTUP	"Booting the system ($progress%)... Press F2 for verbose mode."
+ #define SYSMSG_REBOOT	"Rebooting the system ($progress%)... Press F2 for verbose mode."
+ #define SYSMSG_SHUTDOWN	"Shutting down the system ($progress%)... Press F2 for verbose mode."

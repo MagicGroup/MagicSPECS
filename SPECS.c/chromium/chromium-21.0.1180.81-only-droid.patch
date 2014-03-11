@@ -1,0 +1,51 @@
+diff -up chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.cc.only-droid chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.cc
+--- chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.cc.only-droid	2012-08-16 21:01:49.000000000 -0400
++++ chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.cc	2012-08-29 15:21:16.955000020 -0400
+@@ -8,6 +8,7 @@
+ 
+ using std::string;
+ 
++#if defined(OS_ANDROID)
+ StringByteSink::StringByteSink(string* dest) : dest_(dest) {}
+ 
+ StringByteSink::~StringByteSink() {}
+@@ -15,3 +16,4 @@ StringByteSink::~StringByteSink() {}
+ void StringByteSink::Append(const char* data, int32_t n) {
+   dest_->append(data, n);
+ }
++#endif
+diff -up chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.h.only-droid chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.h
+--- chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.h.only-droid	2012-08-16 21:01:49.000000000 -0400
++++ chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/string_byte_sink.h	2012-08-29 15:21:16.956000020 -0400
+@@ -9,6 +9,7 @@
+ 
+ #include <unicode/unistr.h>
+ 
++#if defined(OS_ANDROID)
+ // Implementation of a string byte sink needed when ICU is compiled without
+ // support for std::string which is the case on Android.
+ class StringByteSink : public icu::ByteSink {
+@@ -22,5 +23,6 @@ class StringByteSink : public icu::ByteS
+  private:
+   std::string* const dest_;
+ };
++#endif
+ 
+ #endif  // ENCODINGS_COMPACT_LANG_DET_STRING_BYTE_SINK_H_
+diff -up chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/win/cld_unicodetext.cc.only-droid chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/win/cld_unicodetext.cc
+--- chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/win/cld_unicodetext.cc.only-droid	2012-08-29 15:41:41.098003503 -0400
++++ chromium-21.0.1180.81/third_party/cld/encodings/compact_lang_det/win/cld_unicodetext.cc	2012-08-29 15:44:29.909003683 -0400
+@@ -28,9 +28,13 @@ std::string NormalizeText(const UChar* t
+   // for most web pages) and does pre-flighting followed by malloc for larger
+   // strings. We have to switch to obtaining the buffer with the maximum size
+   // (UTF-16 length * 3) without pre-flighting if necessary.
++#if defined(OS_ANDROID)
+   StringByteSink sink(&utf8);
+   normalized.toUTF8(sink);
+   return utf8;
++#else
++  return normalized.toUTF8String(utf8);
++#endif
+ }
+ 
+ 

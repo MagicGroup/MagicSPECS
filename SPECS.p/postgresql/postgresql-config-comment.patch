@@ -1,0 +1,19 @@
+Add note warning users that Postgres' port number is forced in the service
+file, mainly because it's traditional in Red Hat installations to set it
+there rather than in postgresql.conf.  (There are minor usability benefits
+to doing it this way though, for example that the postmaster's port number
+is visible in "ps" as part of its command line.)
+
+
+diff -Naur postgresql-9.2rc1.orig/src/backend/utils/misc/postgresql.conf.sample postgresql-9.2rc1/src/backend/utils/misc/postgresql.conf.sample
+--- postgresql-9.2rc1.orig/src/backend/utils/misc/postgresql.conf.sample	2012-08-23 18:06:49.000000000 -0400
++++ postgresql-9.2rc1/src/backend/utils/misc/postgresql.conf.sample	2012-09-01 21:57:55.498629897 -0400
+@@ -61,6 +61,8 @@
+ 					# defaults to 'localhost'; use '*' for all
+ 					# (change requires restart)
+ #port = 5432				# (change requires restart)
++# Note: In RHEL/Fedora installations, you can't set the port number here;
++# adjust it in the service file instead.
+ #max_connections = 100			# (change requires restart)
+ # Note:  Increasing max_connections costs ~400 bytes of shared memory per
+ # connection slot, plus lock space (see max_locks_per_transaction).

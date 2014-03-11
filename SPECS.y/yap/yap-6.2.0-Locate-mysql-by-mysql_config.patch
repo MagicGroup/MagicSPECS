@@ -1,0 +1,25 @@
+From 131213c12d09cdce8a56b5148ce753b0f5ae8e77 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 21 Dec 2010 10:32:02 +0100
+Subject: [PATCH] Locate mysql by mysql_config
+
+---
+ configure.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 4ce9538..80208e5 100755
+--- a/configure.in
++++ b/configure.in
+@@ -665,7 +665,7 @@ then
+ 	if test "$yap_cv_mysql" = yes 
+ 	then
+                 YAP_EXTRAS="$YAP_EXTRAS -DMYDDAS_MYSQL"
+-		LIBS="$LIBS -L${yap_cv_myddas}/lib/mysql -lmysqlclient "
++		LIBS="$LIBS $(mysql_config --libs) "
+ 	fi
+ 	
+ 	dnl check for odbc
+-- 
+1.7.3.4
+

@@ -1,0 +1,29 @@
+From 41bfa5dad1d0a1ccdef70bd74068e5d4d67d5e27 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 5 Apr 2013 16:34:36 +0200
+Subject: [PATCH] nfs/module-setup.sh: combine egreps for /etc/passwd and
+ /etc/group
+
+---
+ modules.d/95nfs/module-setup.sh | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/modules.d/95nfs/module-setup.sh b/modules.d/95nfs/module-setup.sh
+index 7c3a64d..6d4d412 100755
+--- a/modules.d/95nfs/module-setup.sh
++++ b/modules.d/95nfs/module-setup.sh
+@@ -62,12 +62,8 @@ install() {
+ 
+     # Rather than copy the passwd file in, just set a user for rpcbind
+     # We'll save the state and restart the daemon from the root anyway
+-    egrep '^nfsnobody:' /etc/passwd >> "$initdir/etc/passwd"
+-    egrep '^rpc:' /etc/passwd >> "$initdir/etc/passwd"
+-    egrep '^rpcuser:' /etc/passwd >> "$initdir/etc/passwd"
+-    #type -P nologin >/dev/null && dracut_install nologin
+-    egrep '^nobody:' /etc/group >> "$initdir/etc/group"
+-    egrep '^rpc:' /etc/group >> "$initdir/etc/group"
++    egrep '^nfsnobody:|^rpc:|^rpcuser:' /etc/passwd >> "$initdir/etc/passwd"
++    egrep '^nogroup:|^rpc:|^nobody:' /etc/group >> "$initdir/etc/group"
+ 
+     # rpc user needs to be able to write to this directory to save the warmstart
+     # file

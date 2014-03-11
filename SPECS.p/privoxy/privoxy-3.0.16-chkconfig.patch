@@ -1,0 +1,19 @@
+diff -up privoxy-3.0.16-stable/privoxy-generic.init.chkconfig privoxy-3.0.16-stable/privoxy-generic.init
+--- privoxy-3.0.16-stable/privoxy-generic.init.chkconfig	2010-03-25 14:33:47.000000000 +0100
++++ privoxy-3.0.16-stable/privoxy-generic.init	2010-03-25 14:34:45.000000000 +0100
+@@ -1,5 +1,15 @@
+ #!/bin/sh 
+ # 
++#
++# This is file /etc/rc.d/init.d/privoxy and was put here
++# by the privoxy rpm
++#
++# chkconfig: - 84 09
++#
++# description: Web proxy with advanced filtering capabilities \
++#              such as filtering web page content, managing \
++#              cookies and removing ads
++#
+ #  ********************************************************************
+ # 
+ #  File        :  $Source: /cvsroot/ijbswa/current/privoxy-generic.init,v $

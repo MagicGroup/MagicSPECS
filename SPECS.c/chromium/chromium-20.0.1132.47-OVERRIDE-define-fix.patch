@@ -1,0 +1,11 @@
+diff -up chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h.OVERRIDE chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h
+--- chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h.OVERRIDE	2012-07-06 15:36:24.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h	2012-07-06 15:38:31.129076007 -0400
+@@ -5,6 +5,7 @@
+ #ifndef CONTENT_RENDERER_P2P_PORT_ALLOCATOR_H_
+ #define CONTENT_RENDERER_P2P_PORT_ALLOCATOR_H_
+ 
++#include "base/compiler_specific.h"
+ #include "base/memory/ref_counted.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "net/base/net_util.h"

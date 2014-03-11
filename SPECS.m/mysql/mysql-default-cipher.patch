@@ -1,0 +1,246 @@
+Skip a few test items that assume the default SSL cipher is
+DHE-RSA-AES256-SHA, which is no longer the case as of openssl 1.0.1.
+There is probably a better answer than diking out these checks entirely,
+but I will leave it to upstream to figure one out.
+
+Upstream at http://bugs.mysql.com/bug.php?id=64461
+
+
+diff -Naur mysql-5.5.21.orig/mysql-test/r/openssl_1.result mysql-5.5.21/mysql-test/r/openssl_1.result
+--- mysql-5.5.21.orig/mysql-test/r/openssl_1.result	2012-01-31 06:28:16.000000000 -0500
++++ mysql-5.5.21/mysql-test/r/openssl_1.result	2012-02-27 00:31:11.789705322 -0500
+@@ -2,40 +2,28 @@
+ create table t1(f1 int);
+ insert into t1 values (5);
+ grant select on test.* to ssl_user1@localhost require SSL;
+-grant select on test.* to ssl_user2@localhost require cipher "DHE-RSA-AES256-SHA";
+-grant select on test.* to ssl_user3@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user4@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user5@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "xxx";
++grant select on test.* to ssl_user2@localhost require SSL;
++grant select on test.* to ssl_user3@localhost require SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user4@localhost require SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user5@localhost require SUBJECT "xxx";
+ flush privileges;
+ connect(localhost,ssl_user5,,test,MASTER_PORT,MASTER_SOCKET);
+ ERROR 28000: Access denied for user 'ssl_user5'@'localhost' (using password: NO)
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ select * from t1;
+ f1
+ 5
+ delete from t1;
+ ERROR 42000: DELETE command denied to user 'ssl_user1'@'localhost' for table 't1'
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ select * from t1;
+ f1
+ 5
+ delete from t1;
+ ERROR 42000: DELETE command denied to user 'ssl_user2'@'localhost' for table 't1'
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ select * from t1;
+ f1
+ 5
+ delete from t1;
+ ERROR 42000: DELETE command denied to user 'ssl_user3'@'localhost' for table 't1'
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ select * from t1;
+ f1
+ 5
+@@ -51,11 +39,6 @@
+ mysqltest: Could not open connection 'default': 2026 SSL connection error: Unable to get private key
+ SSL error: Unable to get certificate from ''
+ mysqltest: Could not open connection 'default': 2026 SSL connection error: Unable to get certificate
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ End of 5.0 tests
+ DROP TABLE IF EXISTS thread_status;
+ DROP EVENT IF EXISTS event_status;
+@@ -204,8 +187,5 @@
+ is still running; no cipher request crashed the server
+ GRANT SELECT ON test.* TO bug42158@localhost REQUIRE X509;
+ FLUSH PRIVILEGES;
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ DROP USER bug42158@localhost;
+ End of 5.1 tests
+diff -Naur mysql-5.5.21.orig/mysql-test/r/ssl.result mysql-5.5.21/mysql-test/r/ssl.result
+--- mysql-5.5.21.orig/mysql-test/r/ssl.result	2012-01-31 06:28:16.000000000 -0500
++++ mysql-5.5.21/mysql-test/r/ssl.result	2012-02-27 00:32:31.503920619 -0500
+@@ -1,6 +1,3 @@
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ drop table if exists t1,t2,t3,t4;
+ CREATE TABLE t1 (
+ Period smallint(4) unsigned zerofill DEFAULT '0000' NOT NULL,
+@@ -2154,6 +2151,3 @@
+ Warnings:
+ Warning	1052	Column 'kundentyp' in group statement is ambiguous
+ drop table t1;
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+diff -Naur mysql-5.5.21.orig/mysql-test/r/ssl_compress.result mysql-5.5.21/mysql-test/r/ssl_compress.result
+--- mysql-5.5.21.orig/mysql-test/r/ssl_compress.result	2012-01-31 06:28:16.000000000 -0500
++++ mysql-5.5.21/mysql-test/r/ssl_compress.result	2012-02-27 00:36:03.726113717 -0500
+@@ -1,6 +1,3 @@
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ SHOW STATUS LIKE 'Compression';
+ Variable_name	Value
+ Compression	ON
+@@ -2157,9 +2154,6 @@
+ Warnings:
+ Warning	1052	Column 'kundentyp' in group statement is ambiguous
+ drop table t1;
+-SHOW STATUS LIKE 'Ssl_cipher';
+-Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
+ SHOW STATUS LIKE 'Compression';
+ Variable_name	Value
+ Compression	ON
+diff -Naur mysql-5.5.21.orig/mysql-test/t/openssl_1.test mysql-5.5.21/mysql-test/t/openssl_1.test
+--- mysql-5.5.21.orig/mysql-test/t/openssl_1.test	2012-01-31 06:28:15.000000000 -0500
++++ mysql-5.5.21/mysql-test/t/openssl_1.test	2012-02-27 00:31:14.031717958 -0500
+@@ -14,10 +14,10 @@
+ insert into t1 values (5);
+ 
+ grant select on test.* to ssl_user1@localhost require SSL;
+-grant select on test.* to ssl_user2@localhost require cipher "DHE-RSA-AES256-SHA";
+-grant select on test.* to ssl_user3@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user4@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user5@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "xxx";
++grant select on test.* to ssl_user2@localhost require SSL;
++grant select on test.* to ssl_user3@localhost require SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user4@localhost require SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user5@localhost require SUBJECT "xxx";
+ flush privileges;
+ 
+ connect (con1,localhost,ssl_user1,,,,,SSL);
+@@ -29,29 +29,21 @@
+ connect (con5,localhost,ssl_user5,,,,,SSL);
+ 
+ connection con1;
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+ select * from t1;
+ --error ER_TABLEACCESS_DENIED_ERROR
+ delete from t1;
+ 
+ connection con2;
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+ select * from t1;
+ --error ER_TABLEACCESS_DENIED_ERROR
+ delete from t1;
+ 
+ connection con3;
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+ select * from t1;
+ --error ER_TABLEACCESS_DENIED_ERROR
+ delete from t1;
+ 
+ connection con4;
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+ select * from t1;
+ --error ER_TABLEACCESS_DENIED_ERROR
+ delete from t1;
+@@ -104,22 +96,6 @@
+ --error 1
+ --exec $MYSQL_TEST --ssl-cert= --max-connect-retries=1 < $MYSQLTEST_VARDIR/tmp/test.sql 2>&1
+ 
+-#
+-# Bug#21611 Slave can't connect when master-ssl-cipher specified
+-# - Apparently selecting a cipher doesn't work at all
+-# - Usa a cipher that both yaSSL and OpenSSL supports
+-#
+---exec echo "SHOW STATUS LIKE 'Ssl_cipher'; exit;" > $MYSQLTEST_VARDIR/tmp/test.sql
+---exec $MYSQL_TEST --ssl-cipher=DHE-RSA-AES256-SHA < $MYSQLTEST_VARDIR/tmp/test.sql 2>&1
+-
+-#
+-# Bug#25309 SSL connections without CA certificate broken since MySQL 5.0.23
+-#
+-# Test that we can open encrypted connection to server without
+-# verification of servers certificate by setting both ca certificate
+-# and ca path to NULL
+-#
+---exec $MYSQL --ssl --ssl-key=$MYSQL_TEST_DIR/std_data/client-key.pem --ssl-cert=$MYSQL_TEST_DIR/std_data/client-cert.pem -e "SHOW STATUS LIKE 'ssl_Cipher'" 2>&1
+ --echo End of 5.0 tests
+ 
+ #
+@@ -245,7 +221,6 @@
+ GRANT SELECT ON test.* TO bug42158@localhost REQUIRE X509;
+ FLUSH PRIVILEGES;
+ connect(con1,localhost,bug42158,,,,,SSL);
+-SHOW STATUS LIKE 'Ssl_cipher';
+ disconnect con1;
+ connection default;
+ DROP USER bug42158@localhost;
+diff -Naur mysql-5.5.21.orig/mysql-test/t/ssl.test mysql-5.5.21/mysql-test/t/ssl.test
+--- mysql-5.5.21.orig/mysql-test/t/ssl.test	2012-01-31 06:28:15.000000000 -0500
++++ mysql-5.5.21/mysql-test/t/ssl.test	2012-02-27 00:32:26.000889684 -0500
+@@ -8,15 +8,9 @@
+ 
+ connect (ssl_con,localhost,root,,,,,SSL);
+ 
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+-
+ # Source select test case
+ -- source include/common-tests.inc
+ 
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+-
+ connection default;
+ disconnect ssl_con;
+ 
+diff -Naur mysql-5.5.21.orig/mysql-test/t/ssl_8k_key.test mysql-5.5.21/mysql-test/t/ssl_8k_key.test
+--- mysql-5.5.21.orig/mysql-test/t/ssl_8k_key.test	2012-01-31 06:28:15.000000000 -0500
++++ mysql-5.5.21/mysql-test/t/ssl_8k_key.test	2012-02-27 00:34:41.994654229 -0500
+@@ -2,7 +2,7 @@
+ #
+ # Bug#29784 YaSSL assertion failure when reading 8k key.
+ #
+---exec $MYSQL --ssl --ssl-key=$MYSQL_TEST_DIR/std_data/client-key.pem --ssl-cert=$MYSQL_TEST_DIR/std_data/client-cert.pem -e "SHOW STATUS LIKE 'ssl_Cipher'" 2>&1
++--exec $MYSQL --ssl --ssl-key=$MYSQL_TEST_DIR/std_data/client-key.pem --ssl-cert=$MYSQL_TEST_DIR/std_data/client-cert.pem --ssl-cipher=DHE-RSA-AES256-SHA -e "SHOW STATUS LIKE 'ssl_Cipher'" 2>&1
+ 
+ ##  This test file is for testing encrypted communication only, not other
+ ##  encryption routines that the SSL library happens to provide!
+diff -Naur mysql-5.5.21.orig/mysql-test/t/ssl_compress.test mysql-5.5.21/mysql-test/t/ssl_compress.test
+--- mysql-5.5.21.orig/mysql-test/t/ssl_compress.test	2012-01-31 06:28:15.000000000 -0500
++++ mysql-5.5.21/mysql-test/t/ssl_compress.test	2012-02-27 00:35:22.681882970 -0500
+@@ -9,18 +9,12 @@
+ 
+ connect (ssl_compress_con,localhost,root,,,,,SSL COMPRESS);
+ 
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+-
+ # Check compression turned on
+ SHOW STATUS LIKE 'Compression';
+ 
+ # Source select test case
+ -- source include/common-tests.inc
+ 
+-# Check ssl turned on
+-SHOW STATUS LIKE 'Ssl_cipher';
+-
+ # Check compression turned on
+ SHOW STATUS LIKE 'Compression';
+ 

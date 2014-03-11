@@ -1,0 +1,12 @@
+diff -ruN Canna36p3.orig/lib/canna/alphamap.h Canna36p3/lib/canna/alphamap.h
+--- Canna36p3.orig/lib/canna/alphamap.h	2003-04-21 18:44:26.000000000 +0900
++++ Canna36p3/lib/canna/alphamap.h	2003-04-21 18:46:01.000000000 +0900
+@@ -65,7 +65,7 @@
+ /* C-l */       CANNA_FN_SelfInsert,
+ /* C-m */       CANNA_FN_SelfInsert,
+ /* C-n */       CANNA_FN_SelfInsert,
+-/* C-o */       CANNA_FN_JapaneseMode,
++/* C-o */       CANNA_FN_SelfInsert,
+ /* C-p */       CANNA_FN_SelfInsert,
+ /* C-q */       CANNA_FN_SelfInsert,
+ /* C-r */       CANNA_FN_SelfInsert,

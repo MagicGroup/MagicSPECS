@@ -1,0 +1,234 @@
+* Thu Dec  6 2007 Ville Skyttä <ville.skytta@iki.fi> - 0.82-2
+- Remove leftover "Affero GPL" from last license list sync (Todd Zullinger).
+
+* Thu Dec  6 2007 Ville Skyttä <ville.skytta@iki.fi> - 0.82-1
+- 0.82, fixes #362441, #388881, #399871, #409941.
+- Sync Fedora license list with Revision 0.61 (Wiki rev 98).
+
+* Fri Sep 28 2007 Todd Zullinger <tmz@pobox.com>
+- Sync Fedora license list with Revision 0.55 (Wiki rev 92).
+
+* Mon Sep  3 2007 Ville Skyttä <ville.skytta@iki.fi> - 0.81-1
+- 0.81, fixes #239611, #240840, #241471, #244835.
+- Improve Fedora license check (Todd Zullinger).
+- Sync Fedora license list with Wiki rev 87.
+
+* Wed Aug 29 2007 Ville Skyttä <ville.skytta@iki.fi>
+- Sync Fedora license list with Wiki rev 84 (Todd Zullinger).
+
+* Thu Aug 16 2007 Ville Skyttä <ville.skytta@iki.fi> - 0.80-3
+- Sync Fedora license list with Wiki rev 68.
+- Move pre-2006 changelog entries to CHANGES.package.old.
+
+* Tue Jul 31 2007 Tom "spot" Callaway <tcallawa@redhat.com> - 0.80-2
+- new fedora licensing scheme
+
+* Thu May 31 2007 Ville Skyttä <ville.skytta@iki.fi>
+- Filter hardcoded-library-path errors for /lib/udev.
+
+* Thu Apr 12 2007 Ville Skyttä <ville.skytta@iki.fi> - 0.80-1
+- 0.80, fixes #227389, #228645, #233795.
+- Accept "Redistributable, no modification permitted" as a valid license.
+- Filter messages about doc file dependencies on /bin/sh.
+- Add missing dependency on file.
+
+* Fri Feb  2 2007 Ville Skyttä <ville.skytta@iki.fi> - 0.79-1
+- 0.79, fixes #211417, #212491, #214605, #218250, #219068, #220061, #221116,
+  #222585, and #226879.
+- Accept *.elX disttags in default config.
+
+* Sun Oct 15 2006 Ville Skyttä <ville.skytta@iki.fi> - 0.78-2
+- Accumulated bugfixes since 0.78: #209876, #209889, #210110, 210261.
+- Filter messages about gpg-pubkeys for now.
+
+* Sun Sep 24 2006 Ville Skyttä <ville.skytta@iki.fi> - 0.78-1
+- 0.78, fixes #198605, #198616, #198705, #198707, #200032, #206383.
+- /etc/profile.d/* filtering no longer needed.
+
+* Sat Sep 16 2006 Ville Skyttä <ville.skytta@iki.fi> - 0.77-2
+- Filter false positives for /etc/profile.d/* file modes.
+- Ship *.pyc and *.pyo as usual.
+
+* Thu Jun 29 2006 Ville Skyttä <ville.skytta@iki.fi> - 0.77-1
+- 0.77, fixes #194466, #195962, #196008, #196985.
+- Make "disttag" configurable using the DistRegex config file option.
+- Sync standard users and groups with the FC setup package.
+- Disable MenuCheck by default, it's currently Mandriva specific.
+- Use upstream default valid License tag list, fixes #191078.
+- Use upstream default valid Group tag list (dynamically retrieved from
+  the GROUPS file shipped with rpm).
+- Allow /usr/libexec, fixes #195992.
+
+* Tue Apr 11 2006 Ville Skyttä <ville.skytta@iki.fi> - 0.76-1
+- 0.76.
+
+* Mon Mar 27 2006 Ville Skyttä <ville.skytta@iki.fi>
+- Don't pass -T to objdump for *.debug files (#185227).
+- lib64 library path fixes (#185228).
+
+* Wed Mar 15 2006 Ville Skyttä <ville.skytta@iki.fi>
+- Accept zlib License (#185501).
+
+* Tue Feb 28 2006 Ville Skyttä <ville.skytta@iki.fi>
+- Accept Ruby License (#183384) and SIL Open Font License (#176405).
+
+* Sat Feb 18 2006 Ville Skyttä <ville.skytta@iki.fi> - 0.75-1
+- 0.75 + -devel Epoch version check patch from CVS.
+
+* Tue Jan 17 2006 Ville Skyttä <ville.skytta@iki.fi> - 0.71-3
+- Sync with upstream CVS as of 2006-01-15, includes improved versions of
+  most of the earlier patches.
+- Add dependency on binutils.
+
+* Sun Nov 20 2005 Ville Skyttä <ville.skytta@iki.fi> - 0.71-2
+- Take file based dependencies into account in dangling symlink checks
+  (completes the fix for #165839).
+- Skip some checks for binaries not understood by objdump (#165173).
+- Improve long descriptions of some script warnings.
+- Fix command output parsing in non-English locales.
+- Import Enrico's latest DocFilesCheck (with some local tweaks).
+- Use rm instead of %%exclude.
+
+* Wed Nov 16 2005 Ville Skyttä <ville.skytta@iki.fi>
+- Add DocFilesCheck from Enrico Scholz.
+
+* Sat Sep  3 2005 Ville Skyttä <ville.skytta@iki.fi>
+- Improve accuracy of doc, info and games path regexps.
+- Improve error message when invoked on non-rpm files.
+- Filter more Mandriva specific warnings.
+
+* Sat Aug 13 2005 Ville Skyttä <ville.skytta@iki.fi>
+- Add dangling symlink exceptions tuned for Fedora to default config
+  (partially fixes #165839).
+
+* Wed Aug 10 2005 Ville Skyttä <ville.skytta@iki.fi> - 0.71-1
+- 0.71, confmsg patch and bits from initvars patch applied upstream.
+- Filter out Mandriva-specific errors about missing locales-* deps (#165457).
+- Patch to not warn about non-empty *.bs (in Perl packages).
+- Patch to clarify PreReq explanation, make it a warning instead of an error.
+- Patch to warn about use of BuildPreReq.
+
+* Thu Jul  7 2005 Ville Skyttä <ville.skytta@iki.fi> - 0.70-4
+- Fix false "positives" from libtool archives confused as scripts,
+  non-executable scripts installed in docs, FE disttags, unsuccessfully
+  expanded shell variables and quotation in init scripts.
+
+* Mon Jun 20 2005 Ville Skyttä <ville.skytta@iki.fi> - 0.70-3
+- 0.70, use sed instead of perl during build.
+- Default configuration improvements: allow Development/Debug group (for
+  debuginfo packages), filter out errors/warnings about non-indexed jars,
+  invalid LC_MESSAGES and man page dirs, and library packages containing
+  something else in addition to libraries.
+- Make info about non-config files in /etc more accurate.
+- Patch to warn about services that default to enabled after "chkconfig add",
+  not the other way around.
+
+* Thu May 26 2005 Ville Skyttä <ville.skytta@iki.fi> - 0.69-3
+- Filter out more not-that-useful messages in the default config.
+
+* Sat Apr 16 2005 Ville Skyttä <ville.skytta@iki.fi> - 0.69-2
+- 0.69.
+- Simplify bash-completion snippet installation, remove triggers.
+- Default configuration improvements: filter messages about missing packager,
+  Mandriva specific package naming conventions, %%ghost files without
+  %%post scriptlets, and 0664 source permissions.
+- Exclude check-install.py, it doesn't currently work with rpm >= 4.2.
+- Convert docs to UTF-8.
+- Improve summary.
+
+* Sun Mar 13 2005 Ville Skyttä <ville.skytta@iki.fi> - 0.68-2
+- 0.68, siteperl patch applied upstream.
+- Fix "no-dependency-on" filtering in default config.
+- Add LaTeX Project Public License to default config.
+- Remove upstream-only %%changelog entries.
+
+* Sun Feb 13 2005 Ville Skyttä <ville.skytta@iki.fi> - 0:0.67-1
+- 0.67.
+- Patch to catch more site_perl directories.
+- Default config improvements: filter Distribution and Vendor warnings,
+  use empty string instead of None for release extension (fixes -i).
+
+* Sat Jan 29 2005 Ville Skyttä <ville.skytta@iki.fi> - 0:0.65-1
+- Update to 0.65.
+
+* Sat Jan  1 2005 Ville Skyttä <ville.skytta@iki.fi> - 0:0.64-1
+- Update to 0.64.
+- Default config tweaks: don't mandate Epochs nor "fdr" in Release.
+
+* Tue Oct 19 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.61-0.fdr.2
+- Requires cpio (bug 2169).
+
+* Sun Oct  3 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.61-0.fdr.1
+- Update to 0.61.
+
+* Mon Aug 16 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.60-0.fdr.1
+- Update to 0.60.
+
+* Mon May  3 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.59-0.fdr.1
+- Update to 0.59.
+
+* Sun Feb 22 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.57.1-0.fdr.1
+- Update to 0.57.1.
+
+* Wed Feb 11 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.56-0.fdr.1
+- Update to 0.56.
+
+* Mon Feb  2 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.55-0.fdr.3
+- Correctly %%ghost %%{_sysconfdir}/rpmlint/config? (bug 1251).
+
+* Sun Feb  1 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.55-0.fdr.2
+- Add back %%ghost handling of not-installed compiled versions of *.py.
+
+* Fri Jan 30 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:0.55-0.fdr.1
+- Update to 0.55.
+- Spec cleanups.
+
+* Tue Dec 23 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.53-0.fdr.1
+- Update to 0.53.
+
+* Thu Oct  2 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.52-0.fdr.2
+- Add list of valid shells for post'n'friends scriptlets into default config.
+
+* Sat Sep 13 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.52-0.fdr.1
+- Update to 0.52.
+
+* Thu Sep  4 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.51.1-0.fdr.4
+- Filter more Mdk-specific warnings in default config.
+
+* Wed Sep  3 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.51.1-0.fdr.3
+- Upstream tarball reappeared, use it.
+
+* Sun Aug 24 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.51.1-0.fdr.2
+- Filter Mdk-specific python-related stuff in the default config.
+
+* Fri Aug 15 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.51.1-0.fdr.1
+- Update to 0.51.1.
+- Own %%ghost'ed *.py{c,o}, and ditto for the config file.
+- Add list of valid licenses to default config.
+- Set "Fedora Linux" as suggested distribution in default config.
+- Clean up %%doc list.
+
+* Fri May  9 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.50-0.fdr.1
+- Update to 0.50, all patches now applied upstream.
+
+* Mon May  5 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.49-0.fdr.2
+- %%{buildroot} -> $RPM_BUILD_ROOT.
+- Filter out mdk-specific "no-dependancy perl-base" messages in config.
+
+* Thu May  1 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.49-0.fdr.1
+- Update to 0.49.
+
+* Sun Apr 20 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.49-0.fdr.0.1.cvs20030420
+- Add one more strict Epoch checking patch.
+- Slightly enhanced default config.
+
+* Fri Apr 11 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.49-0.fdr.0.1.cvs20030411
+- Patch to work with installed packages (including -a) and rpm 4.2.
+- Remove spurious rpm-devel BuildRequirement.
+
+* Tue Apr  8 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.49-0.fdr.0.1.cvs20030408
+- Patch to work with packages signed with an unknown key.
+- Save .spec in UTF-8.
+
+* Sun Mar 30 2003 Ville Skyttä <ville.skytta@iki.fi> - 0:0.49-0.fdr.0.1.cvs20030330
+- First Fedora release, based on upstream spec.

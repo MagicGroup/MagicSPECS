@@ -1,0 +1,14 @@
+--- kdelibs-4.2.0/khtml/rendering/render_table.h~	2008-05-21 13:06:02.000000000 +0200
++++ kdelibs-4.2.0/khtml/rendering/render_table.h	2009-02-13 00:58:22.000000000 +0100
+@@ -273,8 +273,9 @@
+ 
+     int numColumns() const;
+ 
+-    signed short cRow;
+-    ushort cCol;
++    unsigned int cRow;
++    unsigned int cCol;
++      
+     bool needCellRecalc;
+ 
+     void recalcCells();

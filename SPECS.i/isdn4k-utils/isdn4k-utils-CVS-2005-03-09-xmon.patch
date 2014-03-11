@@ -1,0 +1,8 @@
+--- isdn4k-utils-CVS-2005-03-09/xmonisdn/Imakefile.tn	2005-11-16 11:43:34.000000000 +0100
++++ isdn4k-utils-CVS-2005-03-09/xmonisdn/Imakefile	2005-11-16 11:43:47.000000000 +0100
+@@ -25,4 +25,4 @@
+ 	  -e s,\@CONFIG_XMONISDN_DOWNCMD\@,${CONFIG_XMONISDN_DOWNCMD},g \
+ 	  < $< > $@
+ 
+-install.all: install 	install.man 	install.bitmap
++install.all: install 	install.man

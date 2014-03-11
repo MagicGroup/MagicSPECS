@@ -1,0 +1,29 @@
+--- libwhisker2-2.4/Makefile.pl.orig	2007-05-04 15:24:36.000000000 +0200
++++ libwhisker2-2.4/Makefile.pl	2007-05-04 15:25:07.000000000 +0200
+@@ -228,7 +228,7 @@ sub command_install_library {
+ 	command_build() if(!-e $TARGET);
+ 	die("Can not install without Config.pm") if($MODULES{Config}==0);
+ 	$CWD=&cwd if($MODULES{Cwd}>0);
+-	my $where=$DESTDIR . $Config{'installsitelib'};
++	my $where=$DESTDIR . $Config{'installvendorlib'};
+ 	if(!-e $where){
+ 	  print STDOUT "WARNING!\n\n",
+ 		"The local perl site directory does not exist:\n",
+@@ -256,7 +256,7 @@ sub command_install_library {
+ sub command_uninstall_library {
+ 	die("Can not uninstall without Config.pm") if($MODULES{Config}==0);
+ 	$CWD=&cwd if($MODULES{Cwd}>0);
+-	my $where=$DESTDIR . $Config{'installsitelib'};
++	my $where=$DESTDIR . $Config{'installvendorlib'};
+ 	chdir($where);
+ 	if(-e $TARGET){
+ 		unlink $TARGET;
+@@ -386,7 +386,7 @@ sub command_socket_diag {
+ sub command_install_compat {
+ 	die("Can not install without Config.pm") if($MODULES{Config}==0);
+ 	$CWD=&cwd if($MODULES{Cwd}>0);
+-	my $where=$DESTDIR . $Config{'installsitelib'};
++	my $where=$DESTDIR . $Config{'installvendorlib'};
+ 	if(!-e $where){
+ 	  print STDOUT "WARNING!\n\n",
+ 		"The local perl site directory does not exist:\n",

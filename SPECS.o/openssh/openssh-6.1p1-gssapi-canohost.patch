@@ -1,0 +1,21 @@
+diff -up openssh-6.1p1/sshconnect2.c.canohost openssh-6.1p1/sshconnect2.c
+--- openssh-6.1p1/sshconnect2.c.canohost	2012-10-30 10:52:59.593301692 +0100
++++ openssh-6.1p1/sshconnect2.c	2012-10-30 11:01:12.870301632 +0100
+@@ -699,12 +699,15 @@ userauth_gssapi(Authctxt *authctxt)
+ 	static u_int mech = 0;
+ 	OM_uint32 min;
+ 	int ok = 0;
+-	const char *gss_host;
++	const char *gss_host = NULL;
+ 
+ 	if (options.gss_server_identity)
+ 		gss_host = options.gss_server_identity;
+-	else if (options.gss_trust_dns)
++	else if (options.gss_trust_dns) {
+ 		gss_host = get_canonical_hostname(1);
++		if ( strcmp( gss_host, "UNKNOWN" )  == 0 )
++			gss_host = authctxt->host;
++	}
+ 	else
+ 		gss_host = authctxt->host;
+ 

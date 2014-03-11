@@ -1,0 +1,11 @@
+--- kdesdk-3.5.13.1/kbabel/ConfigureChecks.cmake.ORI	2012-09-30 21:50:19.573288788 +0200
++++ kdesdk-3.5.13.1/kbabel/ConfigureChecks.cmake	2012-09-30 21:50:26.499538745 +0200
+@@ -9,7 +9,7 @@
+ #
+ #################################################
+ 
+-find_program( LEX_EXECUTABLE "lex" )
++find_program( LEX_EXECUTABLE "flex" )
+ if( NOT LEX_EXECUTABLE )
+   tde_message_fatal( "lex is required, but was not found on your system" )
+ endif( )

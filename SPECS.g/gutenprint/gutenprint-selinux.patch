@@ -1,0 +1,12 @@
+diff -up gutenprint-5.2.2/src/cups/cups-genppdupdate.in.selinux gutenprint-5.2.2/src/cups/cups-genppdupdate.in
+--- gutenprint-5.2.2/src/cups/cups-genppdupdate.in.selinux	2008-11-20 16:08:57.000000000 +0000
++++ gutenprint-5.2.2/src/cups/cups-genppdupdate.in	2008-11-20 16:21:48.000000000 +0000
+@@ -667,6 +667,8 @@ default_loop:
+ 	unlink $tmpnew;
+ 	return 0;
+     }
++    my @args = ("chcon", "--reference=$ppd_dest_filename", $tmpnew);
++    system(@args);
+ 
+     if (! rename $tmpnew, $ppd_dest_filename) {
+ 	warn "Can't rename $tmpnew to $ppd_dest_filename: $!\n";

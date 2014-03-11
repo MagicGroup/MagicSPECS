@@ -1,0 +1,91 @@
+diff -ru munin-2.0.8.orig/common/lib/Munin/Common/Defaults.pm munin-2.0.8/common/lib/Munin/Common/Defaults.pm
+--- munin-2.0.8.orig/common/lib/Munin/Common/Defaults.pm	2012-11-09 06:10:22.000000000 -0600
++++ munin-2.0.8/common/lib/Munin/Common/Defaults.pm	2012-11-13 09:04:32.575210838 -0600
+@@ -25,7 +25,7 @@
+ our $MUNIN_LIBDIR     = '';
+ our $MUNIN_HTMLDIR    = '';
+ our $MUNIN_CGIDIR     = '';
+-our $MUNIN_CGITMPDIR     = '';
++our $MUNIN_CGITMPDIR  = '';
+ our $MUNIN_DBDIR      = '';
+ our $MUNIN_PLUGSTATE  = ''; 
+ our $MUNIN_SPOOLDIR   = '';
+diff -ru munin-2.0.8.orig/Makefile munin-2.0.8/Makefile
+--- munin-2.0.8.orig/Makefile	2012-11-09 06:10:22.000000000 -0600
++++ munin-2.0.8/Makefile	2012-11-13 09:04:32.573210662 -0600
+@@ -85,14 +85,14 @@
+ 	mkdir -p $(PERLLIB)/Munin/Master
+ 	mkdir -p $(HTMLDIR)
+ 	mkdir -p $(DBDIR)
+-	mkdir -p $(DBDIR)/cgi-tmp
++	mkdir -p $(CGITMPDIR)
+ 	mkdir -p $(CGIDIR)
+ 
+ 	$(CHOWN) $(USER) $(HTMLDIR) $(DBDIR)
+ 	$(CHMOD) 0755 $(DBDIR)
+ 
+-	$(CHOWN) $(CGIUSER) $(DBDIR)/cgi-tmp
+-	$(CHMOD) 0755 $(DBDIR)/cgi-tmp
++	$(CHOWN) $(CGIUSER) $(CGITMPDIR)
++	$(CHMOD) 0755 $(CGITMPDIR)
+ 
+ 	for p in master/www/*.tmpl ;  do \
+ 		$(INSTALL) -m 0644 "$$p" $(CONFDIR)/templates/ ; \
+@@ -278,6 +278,7 @@
+                   s{(VERSION	\s+=\s).*}{\1q{$(VERSION)};}x;     \
+                   s{(PLUGSTATE	\s+=\s).*}{\1q{$(PLUGSTATE)};}x;   \
+                   s{(CGIDIR	\s+=\s).*}{\1q{$(CGIDIR)};}x;      \
++                  s{(CGITMPDIR	\s+=\s).*}{\1q{$(CGITMPDIR)};}x;   \
+                   s{(USER	\s+=\s).*}{\1q{$(USER)};}x;        \
+                   s{(GROUP	\s+=\s).*}{\1q{$(GROUP)};}x;       \
+                   s{(PLUGINUSER	\s+=\s).*}{\1q{$(PLUGINUSER)};}x;  \
+diff -ru munin-2.0.8.orig/Makefile.config munin-2.0.8/Makefile.config
+--- munin-2.0.8.orig/Makefile.config	2012-11-13 09:03:48.687224173 -0600
++++ munin-2.0.8/Makefile.config	2012-11-13 09:04:32.574210750 -0600
+@@ -44,6 +44,9 @@
+ # Where to put internal data for master (RRD, internal files, ...)
+ DBDIR      = $(DESTDIR)/var/opt/munin
+ 
++# Where to put CGI cached files (for master only)
++CGITMPDIR  = $(DBDIR)/cgi-tmp
++
+ # Where to put internal data for node (plugin state, ...)
+ DBDIRNODE  = $(DESTDIR)/var/opt/munin-node
+ 
+diff -ru munin-2.0.8.orig/master/_bin/munin-cgi-graph.in munin-2.0.8/master/_bin/munin-cgi-graph.in
+--- munin-2.0.8.orig/master/_bin/munin-cgi-graph.in	2012-11-09 06:10:22.000000000 -0600
++++ munin-2.0.8/master/_bin/munin-cgi-graph.in	2012-11-13 09:04:32.576210926 -0600
+@@ -332,7 +332,7 @@
+     my $params  = shift;
+ 
+     # XXX - hack to fix cgitmpdir default 
+-    $config->{cgitmpdir} ||= "$Munin::Common::Defaults::MUNIN_DBDIR/cgi-tmp";
++    $config->{cgitmpdir} ||= "$Munin::Common::Defaults::MUNIN_CGITMPDIR";
+     my $cgi_tmp_dir = $config->{cgitmpdir} . "/munin-cgi-graph";
+ 
+     $params = $params ? "?$params" : "";
+diff -ru munin-2.0.8.orig/master/lib/Munin/Master/Config.pm munin-2.0.8/master/lib/Munin/Master/Config.pm
+--- munin-2.0.8.orig/master/lib/Munin/Master/Config.pm	2012-11-09 06:10:22.000000000 -0600
++++ munin-2.0.8/master/lib/Munin/Master/Config.pm	2012-11-13 09:04:32.576210926 -0600
+@@ -159,7 +159,7 @@
+ 		tls_verify_depth => 5,
+ 		tmpldir          => "$Munin::Common::Defaults::MUNIN_CONFDIR/templates",
+ 	        staticdir        => "$Munin::Common::Defaults::MUNIN_CONFDIR/static",
+-	        cgitmpdir        => "$Munin::Common::Defaults::MUNIN_DBDIR/cgi-tmp",
++	        cgitmpdir        => "$Munin::Common::Defaults::MUNIN_CGITMPDIR",
+ 	    }, $class ),
+ 
+ 	    oldconfig => bless ( {
+Only in munin-2.0.8.orig/master/lib/Munin/Master: Utils.pm.orig
+diff -ru munin-2.0.8.orig/master/munin.conf.in munin-2.0.8/master/munin.conf.in
+--- munin-2.0.8.orig/master/munin.conf.in	2012-11-09 06:10:22.000000000 -0600
++++ munin-2.0.8/master/munin.conf.in	2012-11-13 09:04:32.576210926 -0600
+@@ -21,7 +21,7 @@
+ # temporary cgi files are here. note that it has to be writable by 
+ # the cgi user (usually nobody or httpd).
+ #
+-# cgitmpdir @@DBDIR@@/cgi-tmp
++# cgitmpdir @@CGITMPDIR@@
+ 
+ # (Exactly one) directory to include all files from.
+ includedir @@CONFDIR@@/munin-conf.d

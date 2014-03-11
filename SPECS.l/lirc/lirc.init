@@ -1,0 +1,160 @@
+#!/bin/sh
+#
+# lirc         Startup script for the Linux Infrared Remote Control daemons
+#
+# chkconfig:   - 29 71
+# description: Enables infrared controls through LIRC.
+# processname: lircd
+# processname: lircmd
+# config:      /etc/lirc/lircd.conf
+# config:      /etc/lirc/lircmd.conf
+# pidfile:     /var/run/lirc/lircd.pid
+
+### BEGIN INIT INFO
+# Provides: lirc
+# Should-Start: $syslog $network
+# Should-Stop: $syslog $network
+# Short-Description: Linux Infrared Remote Control daemon
+# Description: Enables remote control devices through LIRC.
+### END INIT INFO
+
+# Source function library.
+. /etc/init.d/functions
+
+exec="/usr/sbin/lircd"
+exec2="/usr/sbin/lircmd"
+prog=$(basename $exec)
+prog2=$(basename $exec2)
+
+[ -e /etc/sysconfig/lirc ] && . /etc/sysconfig/lirc
+
+lockfile=/var/lock/subsys/lirc
+
+build_lirc_args ()
+{
+	local LIRC_ARGS="$*"
+
+	# For remote only detection support, we need
+	# LIRC_DEVICE undefined
+	if [ -z "$LIRC_DEVICE" ] ; then
+		for dev in /dev/lirc0; do
+			if [ -c $dev ]; then
+				LIRC_DEVICE="$dev"
+				break
+			fi
+		done
+	fi
+
+	# If we have a LIRC_DEVICE or LIRC_DRIVER defined (either because
+	# no devices were defined, OR if we explicitly did), then
+	# populate LIRC_ARGS
+	if [ ! -z "$LIRC_DEVICE" ] || [ ! -z "$LIRC_DRIVER" ]; then
+		if [ -n "$LIRC_DEVICE" ] && [ "$LIRC_DEVICE" != "none" ]; then
+			LIRC_ARGS="--device=$LIRC_DEVICE $LIRC_ARGS"
+		fi
+		if [ -n "$LIRC_DRIVER" ] && [ "$LIRC_DRIVER" != "none" ]; then
+			LIRC_ARGS="--driver=$LIRC_DRIVER $LIRC_ARGS"
+		fi
+	fi
+	echo $LIRC_ARGS
+}
+
+start() {
+    LIRC_ARGS=`build_lirc_args $LIRC_ARGS`
+
+    echo -n $"Starting infrared remote control daemon ($prog): "
+    daemon $exec $LIRC_ARGS $LIRCD_OPTIONS
+    retval=$?
+    echo
+    status $prog >/dev/null 2>&1
+    if [ $? -eq 0 -a "$ENABLE_LIRCMD" = "yes" ] ; then
+        echo -n $"Starting infrared remote control mouse daemon ($prog2): "
+        daemon $exec2 $LIRCMD_OPTIONS
+        retval=$?
+        echo
+    fi
+    [ $retval -eq 0 ] && touch $lockfile
+
+    # To prevent double key events w/both in-kernel and lirc decode,
+    # we disable the in-kernel decoding when lircd is started up
+    # successfully
+    if [ $retval -eq 0 ]; then
+        if [ $(echo "$LIRC_DRIVER" | grep -c "dev.*input") -lt 1 ]; then
+            rcs=$(find -L /sys/class/rc/ -maxdepth 2 -name protocols 2> /dev/null)
+            for rc in $rcs
+            do
+                echo lirc > ${rc}
+            done
+        fi
+    fi
+
+    return $retval
+}
+
+stop() {
+    retval=0
+    if status $prog2 >/dev/null 2>&1 ; then
+        echo -n $"Stopping infrared remote control mouse daemon ($prog2): "
+        killproc $prog2
+        retval=$?
+        echo
+    fi
+    if [ $retval -eq 0 ] ; then
+        echo -n $"Stopping infrared remote control daemon ($prog): "
+        killproc $prog
+        retval=$?
+        echo
+    fi
+    [ $retval -eq 0 ] && rm -f $lockfile
+
+    # On lircd shutdown, turn all the in-kernel IR decoders back on
+    rcs=$(find -L /sys/class/rc/ -maxdepth 2 -name protocols 2> /dev/null)
+    for rc in $rcs
+    do
+        echo none > ${rc}
+        protos=$(cat ${rc})
+        for p in $protos
+        do
+            echo "+${p}" > ${rc}
+        done
+    done
+
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    # lircmd doesn't apparently respond to HUP, so if it's running, restart.
+    if status $prog2 >/dev/null 2>&1 ; then
+        restart
+    else
+        echo -n $"Reloading infrared remote control daemon ($prog): "
+        killproc $prog -HUP
+        retval=$?
+        echo
+        return $retval
+    fi
+}
+
+case "$1" in
+    start|stop|restart|reload)
+        $1
+        ;;
+    force-reload)
+        reload || restart
+        ;;
+    status)
+        status $prog2
+        status $prog
+        ;;
+    try-restart|condrestart)
+  	[ ! -f $lockfile ] || restart
+	;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|try-restart|reload|force-reload}"
+        exit 2
+esac

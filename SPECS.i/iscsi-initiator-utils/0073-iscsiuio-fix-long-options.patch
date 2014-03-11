@@ -1,0 +1,31 @@
+From bff9048411c891d2eafab1e588077e4bfa56cb43 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 19 Dec 2012 21:32:44 -0800
+Subject: iscsiuio fix long options
+
+---
+ src/unix/main.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/src/unix/main.c b/src/unix/main.c
+index 2008913..ef9e069 100644
+--- a/src/unix/main.c
++++ b/src/unix/main.c
+@@ -83,9 +83,11 @@ static char default_pid_filepath[] = "/var/run/iscsiuio.pid";
+  *  Global Variables
+  ******************************************************************************/
+ static const struct option long_options[] = {
+-	{"debug", 0, 0, 0},
+-	{"version", 0, 0, 0},
+-	{"help", 0, 0, 0},
++	{"foreground", no_argument, NULL, 'f'},
++	{"debug", required_argument, NULL, 'd'},
++	{"pid", required_argument, NULL, 'p'},
++	{"version", no_argument, NULL, 'v'},
++	{"help", no_argument, NULL, 'h'},
+ 	{0, 0, 0, 0}
+ };
+ 
+-- 
+1.7.11.7
+

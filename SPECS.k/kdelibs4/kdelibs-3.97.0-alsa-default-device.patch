@@ -1,0 +1,27 @@
+diff -ur kdelibs-3.97.0/phonon/libkaudiodevicelist/audiodevice.cpp kdelibs-3.97.0-alsa-default-device/phonon/libkaudiodevicelist/audiodevice.cpp
+--- kdelibs-3.97.0/phonon/libkaudiodevicelist/audiodevice.cpp	2007-11-20 23:02:30.000000000 +0100
++++ kdelibs-3.97.0-alsa-default-device/phonon/libkaudiodevicelist/audiodevice.cpp	2008-01-04 16:23:04.000000000 +0100
+@@ -349,6 +349,8 @@
+     if (lines.size() > 1) {
+         d->cardName = i18n("%1 (%2)", d->cardName, lines[1]);
+     }
++    if (alsaDeviceName == "default")
++        d->initialPreference = 1000;
+     if (alsaDeviceName.startsWith("front:") ||
+             alsaDeviceName.startsWith("rear:") ||
+             alsaDeviceName.startsWith("center_lfe:") ||
+diff -ur kdelibs-3.97.0/phonon/libkaudiodevicelist/audiodeviceenumerator.cpp kdelibs-3.97.0-alsa-default-device/phonon/libkaudiodevicelist/audiodeviceenumerator.cpp
+--- kdelibs-3.97.0/phonon/libkaudiodevicelist/audiodeviceenumerator.cpp	2007-11-27 18:17:14.000000000 +0100
++++ kdelibs-3.97.0-alsa-default-device/phonon/libkaudiodevicelist/audiodeviceenumerator.cpp	2008-01-04 16:23:04.000000000 +0100
+@@ -188,6 +188,11 @@
+     }
+     snd_device_name_free_hint(hints);
+ 
++    DeviceHint defaultHint;
++    defaultHint.name = QString::fromLatin1("default");
++    defaultHint.description= QString::fromLatin1("ALSA Default Device");
++    deviceHints << defaultHint;
++
+     snd_config_update_free_global();
+     snd_config_update();
+     Q_ASSERT(snd_config);

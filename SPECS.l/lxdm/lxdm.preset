@@ -1,0 +1,2 @@
+enable lxdm.service
+disable gdm.service

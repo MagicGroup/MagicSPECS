@@ -1,0 +1,14 @@
+diff -up gutenprint-5.2.9/configure.ui2_libdeps gutenprint-5.2.9/configure
+--- gutenprint-5.2.9/configure.ui2_libdeps	2012-12-07 11:09:33.000000000 +0100
++++ gutenprint-5.2.9/configure	2012-12-07 11:12:13.535998238 +0100
+@@ -17849,8 +17849,8 @@ $as_echo "$ac_cv_lib_m_pow" >&6; }
+ if test "x$ac_cv_lib_m_pow" = xyes; then :
+   GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} -lm"
+              gutenprint_libdeps="${gutenprint_libdeps} -lm"
+-             GUTENPRINTUI2_LIBDEPS="${GUTENPRINT_LIBDEPS} -lm"
+-             gutenprintui2_libdeps="${gutenprint_libdeps} -lm"
++             GUTENPRINTUI2_LIBDEPS="${GUTENPRINTUI2_LIBDEPS} -lm"
++             gutenprintui2_libdeps="${gutenprintui2_libdeps} -lm"
+ 	     LIBM=-lm
+ 
+ fi

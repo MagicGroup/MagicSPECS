@@ -1,0 +1,85 @@
+From 0c5ccb35c7db77caf6317e1946387504b44132e5 Mon Sep 17 00:00:00 2001
+From: WANG Chao <chaowang@redhat.com>
+Date: Tue, 9 Apr 2013 18:56:40 +0800
+Subject: [PATCH] ifup.sh: Add support for bridge over a vlan tagged interface
+
+This patch add support for bridge a vlan tagged interface, like
+br0 -> bond0.7 -> bond0 -> eth0
+
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ modules.d/40network/ifup.sh | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/modules.d/40network/ifup.sh b/modules.d/40network/ifup.sh
+index 593f387..526251f 100755
+--- a/modules.d/40network/ifup.sh
++++ b/modules.d/40network/ifup.sh
+@@ -43,6 +43,20 @@ if [ -e /tmp/team.info ]; then
+     done
+ fi
+ 
++if [ -e /tmp/vlan.info ]; then
++    . /tmp/vlan.info
++    if [ "$netif" = "$phydevice" ]; then
++        if [ "$netif" = "$bondname" ] && [ -n "$DO_BOND_SETUP" ] ; then
++            : # We need to really setup bond (recursive call)
++        elif [ "$netif" = "$teammaster" ] && [ -n "$DO_TEAM_SETUP" ] ; then
++            : # We need to really setup team (recursive call)
++        else
++            netif="$vlanname"
++            use_vlan='true'
++        fi
++    fi
++fi
++
+ # bridge this interface?
+ if [ -e /tmp/bridge.info ]; then
+     . /tmp/bridge.info
+@@ -52,6 +66,8 @@ if [ -e /tmp/bridge.info ]; then
+                 : # We need to really setup bond (recursive call)
+             elif [ "$netif" = "$teammaster" ] && [ -n "$DO_TEAM_SETUP" ] ; then
+                 : # We need to really setup team (recursive call)
++            elif [ "$netif" = "$vlanname" ] && [ -n "$DO_VLAN_SETUP" ]; then
++                : # We need to really setup vlan (recursive call)
+             else
+                 netif="$bridgename"
+                 use_bridge='true'
+@@ -60,20 +76,6 @@ if [ -e /tmp/bridge.info ]; then
+     done
+ fi
+ 
+-if [ -e /tmp/vlan.info ]; then
+-    . /tmp/vlan.info
+-    if [ "$netif" = "$phydevice" ]; then
+-        if [ "$netif" = "$bondname" ] && [ -n "$DO_BOND_SETUP" ] ; then
+-            : # We need to really setup bond (recursive call)
+-        elif [ "$netif" = "$teammaster" ] && [ -n "$DO_TEAM_SETUP" ] ; then
+-            : # We need to really setup team (recursive call)
+-        else
+-            netif="$vlanname"
+-            use_vlan='true'
+-        fi
+-    fi
+-fi
+-
+ # disable manual ifup while netroot is set for simplifying our logic
+ # in netroot case we prefer netroot to bringup $netif automaticlly
+ [ -n "$2" -a "$2" = "-m" ] && [ -z "$netroot" ] && manualup="$2"
+@@ -223,6 +225,8 @@ if [ -e /tmp/bridge.info ]; then
+                 DO_BOND_SETUP=yes ifup $bondname -m
+             elif [ "$ethname" = "$teammaster" ] ; then
+                 DO_TEAM_SETUP=yes ifup $teammaster -m
++            elif [ "$ethname" = "$vlanname" ]; then
++                DO_VLAN_SETUP=yes ifup $vlanname -m
+             else
+                 linkup $ethname
+             fi
+@@ -252,6 +256,7 @@ if [ "$netif" = "$vlanname" ] && [ ! -e /tmp/net.$vlanname.up ]; then
+         linkup "$phydevice"
+     fi
+     ip link add dev "$vlanname" link "$phydevice" type vlan id "$(get_vid $vlanname)"
++    ip link set "$vlanname" up
+ fi
+ 
+ # setup nameserver

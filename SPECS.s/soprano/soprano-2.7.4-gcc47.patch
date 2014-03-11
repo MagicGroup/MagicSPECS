@@ -1,0 +1,11 @@
+diff -up soprano-2.7.4/backends/virtuoso/virtuosocontroller.cpp.gcc47 soprano-2.7.4/backends/virtuoso/virtuosocontroller.cpp
+--- soprano-2.7.4/backends/virtuoso/virtuosocontroller.cpp.gcc47	2011-12-02 09:27:49.000000000 -0600
++++ soprano-2.7.4/backends/virtuoso/virtuosocontroller.cpp	2012-01-14 18:02:02.835113403 -0600
+@@ -39,6 +39,7 @@
+ #include <sys/types.h>
+ #include <signal.h>
+ #include <sys/wait.h>
++#include <unistd.h>
+ #endif
+ 
+ Q_DECLARE_METATYPE( QProcess::ExitStatus )

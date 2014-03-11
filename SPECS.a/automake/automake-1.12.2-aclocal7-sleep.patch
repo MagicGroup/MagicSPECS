@@ -1,0 +1,15 @@
+diff -up automake-1.12.2/t/aclocal7.sh.sleep automake-1.12.2/t/aclocal7.sh
+--- automake-1.12.2/t/aclocal7.sh.sleep	2012-07-17 13:50:29.860646914 +0200
++++ automake-1.12.2/t/aclocal7.sh	2012-07-17 13:55:56.752112356 +0200
+@@ -45,6 +45,11 @@ AUTOMAKE_after_aclocal ()
+   $AUTOMAKE --no-force
+ }
+ 
++# aclocal will rewrite aclocal.m4 unless the input files are all older than the
++# existing aclocal.m4 -- sleep to ensure somedefs.m4 has an older timestamp
++# than the aclocal.m4 that the next aclocal call will generate.
++$sleep
++
+ $ACLOCAL -I m4
+ AUTOMAKE_after_aclocal
+ 

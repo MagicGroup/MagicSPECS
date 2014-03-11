@@ -1,0 +1,300 @@
+*** libxml-1.8.17/nanoftp.c.orig	2004-11-17 16:05:18.000000000 +0100
+--- libxml-1.8.17/nanoftp.c	2004-11-17 16:22:03.000000000 +0100
+*************** xmlNanoFTPScanURL(void *ctx, const char 
+*** 221,227 ****
+      }
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while (*cur != 0) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    ctxt->protocol = xmlMemStrdup(buf);
+--- 221,227 ----
+      }
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while ((*cur != 0) && (index < 4090)) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    ctxt->protocol = xmlMemStrdup(buf);
+*************** xmlNanoFTPScanURL(void *ctx, const char 
+*** 231,240 ****
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if (*cur == 0) return;
+  
+      buf[index] = 0;
+!     while (1) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    ctxt->hostname = xmlMemStrdup(buf);
+--- 231,240 ----
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if ((*cur == 0) || (index >= 4090)) return;
+  
+      buf[index] = 0;
+!     while (index < 4090) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    ctxt->hostname = xmlMemStrdup(buf);
+*************** xmlNanoFTPScanURL(void *ctx, const char 
+*** 258,269 ****
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if (*cur == 0) 
+          ctxt->path = xmlMemStrdup("/");
+      else {
+          index = 0;
+          buf[index] = 0;
+! 	while (*cur != 0)
+  	    buf[index++] = *cur++;
+  	buf[index] = 0;
+  	ctxt->path = xmlMemStrdup(buf);
+--- 258,269 ----
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if ((*cur == 0) || (index >= 4090))
+          ctxt->path = xmlMemStrdup("/");
+      else {
+          index = 0;
+          buf[index] = 0;
+! 	while ((*cur != 0) && (index < 4090))
+  	    buf[index++] = *cur++;
+  	buf[index] = 0;
+  	ctxt->path = xmlMemStrdup(buf);
+*************** xmlNanoFTPUpdateURL(void *ctx, const cha
+*** 301,307 ****
+      if (ctxt->hostname == NULL)
+  	return(-1);
+      buf[index] = 0;
+!     while (*cur != 0) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    if (strcmp(ctxt->protocol, buf))
+--- 301,307 ----
+      if (ctxt->hostname == NULL)
+  	return(-1);
+      buf[index] = 0;
+!     while ((*cur != 0) && (index < 4090)) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    if (strcmp(ctxt->protocol, buf))
+*************** xmlNanoFTPUpdateURL(void *ctx, const cha
+*** 312,322 ****
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if (*cur == 0)
+  	return(-1);
+  
+      buf[index] = 0;
+!     while (1) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    if (strcmp(ctxt->hostname, buf))
+--- 312,322 ----
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if ((*cur == 0) || (index >= 4090))
+  	return(-1);
+  
+      buf[index] = 0;
+!     while (index < 4090) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    if (strcmp(ctxt->hostname, buf))
+*************** xmlNanoFTPUpdateURL(void *ctx, const cha
+*** 348,359 ****
+  	ctxt->path = NULL;
+      }
+  
+!     if (*cur == 0) 
+          ctxt->path = xmlMemStrdup("/");
+      else {
+          index = 0;
+          buf[index] = 0;
+! 	while (*cur != 0)
+  	    buf[index++] = *cur++;
+  	buf[index] = 0;
+  	ctxt->path = xmlMemStrdup(buf);
+--- 348,359 ----
+  	ctxt->path = NULL;
+      }
+  
+!     if ((*cur == 0) || (index >= 4090))
+          ctxt->path = xmlMemStrdup("/");
+      else {
+          index = 0;
+          buf[index] = 0;
+! 	while ((*cur != 0) && (index < 4090))
+  	    buf[index++] = *cur++;
+  	buf[index] = 0;
+  	ctxt->path = xmlMemStrdup(buf);
+*************** xmlNanoFTPScanProxy(const char *URL) {
+*** 393,399 ****
+  #endif
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while (*cur != 0) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    index = 0;
+--- 393,399 ----
+  #endif
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while ((*cur != 0) && (index < 4090)) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    index = 0;
+*************** xmlNanoFTPScanProxy(const char *URL) {
+*** 402,411 ****
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if (*cur == 0) return;
+  
+      buf[index] = 0;
+!     while (1) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    proxy = xmlMemStrdup(buf);
+--- 402,411 ----
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if ((*cur == 0) || (index >= 4090)) return;
+  
+      buf[index] = 0;
+!     while (index < 4090) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    proxy = xmlMemStrdup(buf);
+*************** xmlNanoFTPConnect(void *ctx) {
+*** 827,832 ****
+--- 827,836 ----
+  	hp = gethostbyname(ctxt->hostname);
+      if (hp == NULL)
+          return(-1);
++     if (hp->h_length >
++         sizeof(((struct sockaddr_in *)&ctxt->ftpAddr)->sin_addr)) {
++         return(-1);
++     }
+  
+      /*
+       * Prepare the socket
+*** libxml-1.8.17/nanohttp.c.orig	2004-11-17 16:05:31.000000000 +0100
+--- libxml-1.8.17/nanohttp.c	2004-11-17 16:26:18.000000000 +0100
+*************** xmlNanoHTTPScanURL(xmlNanoHTTPCtxtPtr ct
+*** 177,183 ****
+      }
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while (*cur != 0) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    ctxt->protocol = xmlMemStrdup(buf);
+--- 177,183 ----
+      }
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while ((*cur != 0) || (index < 4090)) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    ctxt->protocol = xmlMemStrdup(buf);
+*************** xmlNanoHTTPScanURL(xmlNanoHTTPCtxtPtr ct
+*** 187,196 ****
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if (*cur == 0) return;
+  
+      buf[index] = 0;
+!     while (1) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    ctxt->hostname = xmlMemStrdup(buf);
+--- 187,196 ----
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if ((*cur == 0) || (index >= 4090)) return;
+  
+      buf[index] = 0;
+!     while (index < 4090) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    ctxt->hostname = xmlMemStrdup(buf);
+*************** xmlNanoHTTPScanURL(xmlNanoHTTPCtxtPtr ct
+*** 214,225 ****
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if (*cur == 0) 
+          ctxt->path = xmlMemStrdup("/");
+      else {
+          index = 0;
+          buf[index] = 0;
+! 	while (*cur != 0)
+  	    buf[index++] = *cur++;
+  	buf[index] = 0;
+  	ctxt->path = xmlMemStrdup(buf);
+--- 214,225 ----
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if ((*cur == 0) || (index >= 4090))
+          ctxt->path = xmlMemStrdup("/");
+      else {
+          index = 0;
+          buf[index] = 0;
+! 	while ((*cur != 0) && (index < 4090))
+  	    buf[index++] = *cur++;
+  	buf[index] = 0;
+  	ctxt->path = xmlMemStrdup(buf);
+*************** xmlNanoHTTPScanProxy(const char *URL) {
+*** 258,264 ****
+  #endif
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while (*cur != 0) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    index = 0;
+--- 258,264 ----
+  #endif
+      if (URL == NULL) return;
+      buf[index] = 0;
+!     while ((*cur != 0) && (index < 4090)) {
+          if ((cur[0] == ':') && (cur[1] == '/') && (cur[2] == '/')) {
+  	    buf[index] = 0;
+  	    index = 0;
+*************** xmlNanoHTTPScanProxy(const char *URL) {
+*** 267,276 ****
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if (*cur == 0) return;
+  
+      buf[index] = 0;
+!     while (1) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    proxy = xmlMemStrdup(buf);
+--- 267,276 ----
+  	}
+  	buf[index++] = *cur++;
+      }
+!     if ((*cur == 0) || (index >= 4090)) return;
+  
+      buf[index] = 0;
+!     while (index < 4090) {
+          if (cur[0] == ':') {
+  	    buf[index] = 0;
+  	    proxy = xmlMemStrdup(buf);

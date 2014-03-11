@@ -1,0 +1,11 @@
+--- dvipdfm/dvipdft.badscript	2006-05-24 16:48:16.000000000 -0700
++++ dvipdfm/dvipdft	2006-05-24 16:51:53.000000000 -0700
+@@ -31,7 +31,7 @@
+        $progname --help
+        $progname --version"
+ 
+-tmpdir=${TMPDIR-${TEMP-${TMP-/tmp}}}/$progname.$$
++tmpdir=`mktemp -d ${TMP-/tmp}/$progname.XXXXXX`
+ 
+ quoteit()
+ {

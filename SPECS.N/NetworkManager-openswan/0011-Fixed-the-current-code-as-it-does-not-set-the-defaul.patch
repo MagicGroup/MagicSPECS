@@ -1,0 +1,55 @@
+From 9a5e803eac0f3bd30517a4e615271f0f1d97ca02 Mon Sep 17 00:00:00 2001
+From: Avesh Agarwal <avagarwa@redhat.com>
+Date: Tue, 10 Dec 2013 14:37:22 -0500
+Subject: [PATCH 11/20] Fixed the current code as it does not set the default
+ route field NM_VPN_PLUGIN_IP4_CONFIG_NEVER_DEFAULT when sending VPN
+ information to nm-openswan plugin. This fix sets the field to TRUE.
+
+---
+ src/nm-openswan-service-helper.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/src/nm-openswan-service-helper.c b/src/nm-openswan-service-helper.c
+index e148b26..59d79f9 100644
+--- a/src/nm-openswan-service-helper.c
++++ b/src/nm-openswan-service-helper.c
+@@ -121,6 +121,17 @@ str_to_gvalue (const char *str, gboolean try_convert)
+ }
+ 
+ static GValue *
++bool_to_gvalue (gboolean b)
++{
++        GValue *val;
++
++        val = g_slice_new0 (GValue);
++        g_value_init (val, G_TYPE_BOOLEAN);
++        g_value_set_boolean (val, b);
++        return val;
++}
++
++static GValue *
+ uint_to_gvalue (guint32 num)
+ {
+ 	GValue *val;
+@@ -252,6 +263,7 @@ main (int argc, char *argv[])
+ 	/* Tunnel device */
+ 	//val = str_to_gvalue (getenv ("TUNDEV"), FALSE);
+ 	//val = str_to_gvalue ("tun0", FALSE);
++	val = str_to_gvalue ("lo", FALSE);
+ 	if (val)
+ 		g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_TUNDEV, val);
+ 	else
+@@ -302,6 +314,10 @@ main (int argc, char *argv[])
+ 	if (val)
+ 		g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_BANNER, val);
+ 
++	/* Routes */
++	/* No default route*/
++	g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_NEVER_DEFAULT,
++					bool_to_gvalue (TRUE));
+ 
+ 	/* Send the config info to nm-openswan-service */
+ 	send_ip4_config (connection, config);
+-- 
+1.8.3.1
+

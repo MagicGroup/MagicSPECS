@@ -1,0 +1,26 @@
+--- xorg-cf-files-1.0.0/Makefile.am.imake	2005-10-06 00:00:51.000000000 -0400
++++ xorg-cf-files-1.0.0/Makefile.am	2005-11-16 12:58:22.000000000 -0500
+@@ -3,7 +3,8 @@
+ 	site.def \
+ 	xf86site.def \
+ 	xorgsite.def \
+-	xorgversion.def
++	xorgversion.def \
++	host.def
+ 
+ RULEFILES = \
+ 	Imake.rules \
+--- xorg-cf-files-1.0.0/host.def.imake	2005-11-16 12:58:22.000000000 -0500
++++ xorg-cf-files-1.0.0/host.def	2005-11-16 12:58:22.000000000 -0500
+@@ -0,0 +1 @@
++#define BuildHtmlManPages       NO
+--- xorg-cf-files-1.0.0/xorg.cf.imake	2005-10-03 12:08:44.000000000 -0400
++++ xorg-cf-files-1.0.0/xorg.cf	2005-11-16 12:58:22.000000000 -0500
+@@ -10,7 +10,6 @@
+ 
+ /* Get and set version information. */
+ 
+-#include "date.def"
+ #include "xorgversion.def"
+ 
+ #if !defined(XorgVersionString) && \

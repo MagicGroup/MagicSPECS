@@ -1,0 +1,15 @@
+--- kdelibs-4.4.2/plasma/theme.cpp	2010-04-13 01:46:33.000000000 +0800
++++ kdelibs-4.4.2/plasma/theme.cpp	2010-04-13 01:47:41.000000000 +0800
+@@ -47,9 +47,9 @@
+ namespace Plasma
+ {
+ 
+-#define DEFAULT_WALLPAPER_THEME "Ethais"
+-#define DEFAULT_WALLPAPER_SUFFIX ".png"
+-static const int DEFAULT_WALLPAPER_WIDTH = 1920;
++#define DEFAULT_WALLPAPER_THEME "New_Air"
++#define DEFAULT_WALLPAPER_SUFFIX ".jpg"
++static const int DEFAULT_WALLPAPER_WIDTH = 1600;
+ static const int DEFAULT_WALLPAPER_HEIGHT = 1200;
+ 
+ class ThemePrivate

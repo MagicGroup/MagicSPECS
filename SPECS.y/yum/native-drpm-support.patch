@@ -1,0 +1,488 @@
+diff --git a/docs/yum.conf.5 b/docs/yum.conf.5
+index 62b76f8..4897dd7 100644
+--- a/docs/yum.conf.5
++++ b/docs/yum.conf.5
+@@ -372,6 +372,12 @@ default of 5 connections.  Note that there are also implicit per-mirror limits
+ and the downloader honors these too.
+ 
+ .IP
++\fBpresto\fR
++
++When non-zero, delta-RPM files are used if available.  The value specifies
++the maximum number of "applydeltarpm" processes Yum will spawn. (8 by default).
++
++.IP
+ \fBsslcacert \fR
+ Path to the directory containing the databases of the certificate authorities
+ yum should use to verify SSL certificates. Defaults to none - uses system
+@@ -930,6 +936,11 @@ repository.
+ Overrides the \fBip_resolve\fR option from the [main] section for this
+ repository.
+ 
++.IP
++\fBpresto\fR
++
++Overrides the \fBpresto\fR option from the [main] section for this
++repository.
+ 
+ .IP
+ \fBsslcacert \fR
+diff --git a/yum/__init__.py b/yum/__init__.py
+index b884a23..f03bcb8 100644
+--- a/yum/__init__.py
++++ b/yum/__init__.py
+@@ -90,6 +90,7 @@ from packages import YumUrlPackage, YumNotFoundPackage
+ from constants import *
+ from yum.rpmtrans import RPMTransaction,SimpleCliCallBack
+ from yum.i18n import to_unicode, to_str, exception2msg
++from yum.presto import Presto
+ 
+ import string
+ import StringIO
+@@ -2192,9 +2193,6 @@ much more problems).
+                 return 1
+             return 0
+         
+-        """download list of package objects handed to you, output based on
+-           callback, raise yum.Errors.YumBaseError on problems"""
+-
+         errors = {}
+         def adderror(po, msg):
+             errors.setdefault(po, []).append(msg)
+@@ -2210,131 +2208,158 @@ much more problems).
+         self.history.close()
+ 
+         self.plugins.run('predownload', pkglist=pkglist)
++        beenthere = set() # only once, please. BZ 468401
+         downloadonly = getattr(self.conf, 'downloadonly', False)
+-        repo_cached = False
+         remote_pkgs = []
+         remote_size = 0
+-        for po in pkglist:
+-            if hasattr(po, 'pkgtype') and po.pkgtype == 'local':
+-                continue
+-                    
++
++        def verify_local(po):
+             local = po.localPkg()
++            if local in beenthere:
++                # This is definitely a depsolver bug.  Make it fatal?
++                self.verbose_logger.warn(_("ignoring a dupe of %s") % po)
++                return True
++            beenthere.add(local)
+             if os.path.exists(local):
+-                if not self.verifyPkg(local, po, False):
+-                    if po.repo.cache:
+-                        repo_cached = True
+-                        adderror(po, _('package fails checksum but caching is '
+-                            'enabled for %s') % po.repo.id)
+-                else:
+-                    self.verbose_logger.debug(_("using local copy of %s") %(po,))
+-                    continue
+-                        
++                if self.verifyPkg(local, po, False):
++                    self.verbose_logger.debug(_("using local copy of %s") % po)
++                    return True
++                if po.repo.cache:
++                    adderror(po, _('package fails checksum but caching is '
++                        'enabled for %s') % po.repo.id)
++                    return False
++                if os.path.getsize(local) >= po.size:
++                    os.unlink(local)
+             if downloadonly:
+-                # download to temp file
+-                rpmfile = po.localpath
+                 po.localpath += '.%d.tmp' % os.getpid()
+-                try: os.rename(rpmfile, po.localpath)
++                try: os.rename(local, po.localpath)
+                 except OSError: pass
+                 po.basepath # prefetch now; fails when repos are closed
++            return False
++
++        pkgs = []
++        for po in pkglist:
++            if hasattr(po, 'pkgtype') and po.pkgtype == 'local':
++                continue
++            if verify_local(po):
++                continue
++            if errors:
++                return errors
++            pkgs.append(po)
+ 
++        # download presto metadata
++        presto = Presto(self, pkgs)
++        for po in pkgs:
++            if presto.to_drpm(po) and verify_local(po):
++                # there's .drpm already, use it
++                presto.rebuild(po, adderror)
++                continue
+             remote_pkgs.append(po)
+             remote_size += po.size
+-            
+-            # caching is enabled and the package 
+-            # just failed to check out there's no 
+-            # way to save this, report the error and return
+-            if (self.conf.cache or repo_cached) and errors:
+-                return errors
++        if presto.deltasize:
++            self.verbose_logger.info(_('Delta RPMs reduced %s of updates to %s (%d%% saved)'),
++                format_number(presto.rpmsize), format_number(presto.deltasize),
++                100 - presto.deltasize*100.0/presto.rpmsize)
++
+         if downloadonly:
+             # close DBs, unlock
+             self.repos.close()
+             self.closeRpmDB()
+             self.doUnlock()
+ 
+-        remote_pkgs.sort(mediasort)
+-        #  This is kind of a hack and does nothing in non-Fedora versions,
+-        # we'll fix it one way or anther soon.
+-        if (hasattr(urlgrabber.progress, 'text_meter_total_size') and
+-            len(remote_pkgs) > 1):
+-            urlgrabber.progress.text_meter_total_size(remote_size)
+-        beg_download = time.time()
+-        i = 0
+-        local_size = [0]
+-        done_repos = set()
+-        async = hasattr(urlgrabber.grabber, 'parallel_wait')
+-        for po in remote_pkgs:
+-            #  Recheck if the file is there, works around a couple of weird
+-            # edge cases.
+-            local = po.localPkg()
+-            i += 1
+-            if os.path.exists(local):
+-                if self.verifyPkg(local, po, False):
+-                    self.verbose_logger.debug(_("using local copy of %s") %(po,))
+-                    remote_size -= po.size
++        while True:
++            remote_pkgs.sort(mediasort)
++            #  This is kind of a hack and does nothing in non-Fedora versions,
++            # we'll fix it one way or anther soon.
++            if (hasattr(urlgrabber.progress, 'text_meter_total_size') and
++                len(remote_pkgs) > 1):
++                urlgrabber.progress.text_meter_total_size(remote_size)
++            beg_download = time.time()
++            i = 0
++            local_size = [0]
++            done_repos = set()
++            async = hasattr(urlgrabber.grabber, 'parallel_wait')
++            for po in remote_pkgs:
++                i += 1
++
++                def checkfunc(obj, po=po):
++                    self.verifyPkg(obj, po, 1)
++                    local_size[0] += po.size
+                     if hasattr(urlgrabber.progress, 'text_meter_total_size'):
+                         urlgrabber.progress.text_meter_total_size(remote_size,
+                                                                   local_size[0])
+-                    continue
+-                if os.path.getsize(local) >= po.size:
+-                    os.unlink(local)
+-
+-            def checkfunc(obj, po=po):
+-                self.verifyPkg(obj, po, 1)
+-                local_size[0] += po.size
+-                if hasattr(urlgrabber.progress, 'text_meter_total_size'):
+-                    urlgrabber.progress.text_meter_total_size(remote_size,
+-                                                              local_size[0])
+-                if po.repoid not in done_repos:
+-                    done_repos.add(po.repoid)
+-                    #  Check a single package per. repo. ... to give a hint to
+-                    # the user on big downloads.
+-                    result, errmsg = self.sigCheckPkg(po)
+-                    if result != 0:
+-                        self.verbose_logger.warn("%s", errmsg)
+-                po.localpath = obj.filename
+-                if po in errors:
+-                    del errors[po]
+-
+-            text = os.path.basename(po.relativepath)
+-            kwargs = {}
+-            if async and po.repo._async:
+-                kwargs['failfunc'] = lambda obj, po=po: adderror(po, exception2msg(obj.exception))
+-                kwargs['async'] = True
+-            elif not (i == 1 and not local_size[0] and remote_size == po.size):
+-                text = '(%s/%s): %s' % (i, len(remote_pkgs), text)
+-            try:
+-                po.repo.getPackage(po,
+-                                   checkfunc=checkfunc,
+-                                   text=text,
+-                                   cache=po.repo.http_caching != 'none',
+-                                   **kwargs
+-                                   )
+-            except Errors.RepoError, e:
+-                adderror(po, exception2msg(e))
+-        if async:
+-            urlgrabber.grabber.parallel_wait()
++                    if po in presto.deltas:
++                        presto.rebuild(po, adderror)
++                        return
++                    if po.repoid not in done_repos:
++                        done_repos.add(po.repoid)
++                        #  Check a single package per. repo. ... to give a hint to
++                        # the user on big downloads.
++                        result, errmsg = self.sigCheckPkg(po)
++                        if result != 0:
++                            self.verbose_logger.warn("%s", errmsg)
++                    po.localpath = obj.filename
++                    if po in errors:
++                        del errors[po]
++
++                text = os.path.basename(po.relativepath)
++                kwargs = {}
++                if async and po.repo._async:
++                    kwargs['failfunc'] = lambda obj, po=po: adderror(po, exception2msg(obj.exception))
++                    kwargs['async'] = True
++                elif not (i == 1 and not local_size[0] and remote_size == po.size):
++                    text = '(%s/%s): %s' % (i, len(remote_pkgs), text)
++                try:
++                    po.repo.getPackage(po,
++                                       checkfunc=checkfunc,
++                                       text=text,
++                                       cache=po.repo.http_caching != 'none',
++                                       **kwargs
++                                       )
++                except Errors.RepoError, e:
++                    adderror(po, exception2msg(e))
++            if async:
++                urlgrabber.grabber.parallel_wait()
++            presto.wait()
++
++            if hasattr(urlgrabber.progress, 'text_meter_total_size'):
++                urlgrabber.progress.text_meter_total_size(0)
++            if callback_total is not None and not errors:
++                callback_total(remote_pkgs, remote_size, beg_download)
+ 
+-        if hasattr(urlgrabber.progress, 'text_meter_total_size'):
+-            urlgrabber.progress.text_meter_total_size(0)
+-        if callback_total is not None and not errors:
+-            callback_total(remote_pkgs, remote_size, beg_download)
++            if downloadonly:
++                for po in remote_pkgs:
++                    rpmfile = po.localpath.rsplit('.', 2)[0]
++                    if po in errors:
++                        # we may throw away partial file here- but we don't lock,
++                        # so can't rename tempfile to rpmfile safely
++                        misc.unlink_f(po.localpath)
++
++                    #  Note that for file:// repos. urlgrabber won't "download"
++                    # so we have to check that po.localpath exists.
++                    elif os.path.exists(po.localpath):
++                        # verifyPkg() didn't complain, so (potentially)
++                        # overwriting another copy should not be a problem
++                        os.rename(po.localpath, rpmfile)
++                        po.localpath = rpmfile
++                    
++            fatal = False
++            for po in errors:
++                if po not in presto.deltas:
++                    fatal = True; break
++            if not errors or fatal:
++                break
+ 
+-        if downloadonly:
++            # there were drpm related errors *only*
++            remote_pkgs = errors.keys()
++            remote_size = 0
+             for po in remote_pkgs:
+-                rpmfile = po.localpath.rsplit('.', 2)[0]
+-                if po in errors:
+-                    # we may throw away partial file here- but we don't lock,
+-                    # so can't rename tempfile to rpmfile safely
+-                    misc.unlink_f(po.localpath)
+-
+-                #  Note that for file:// repos. urlgrabber won't "download"
+-                # so we have to check that po.localpath exists.
+-                if po not in errors and os.path.exists(po.localpath):
+-                    # verifyPkg() didn't complain, so (potentially)
+-                    # overwriting another copy should not be a problem
+-                    os.rename(po.localpath, rpmfile)
+-                po.localpath = rpmfile
+-        else:
++                presto.to_rpm(po) # needed, we don't rebuild() when DL fails
++                remote_size += po.size
++            self.verbose_logger.warn(_('Some delta RPMs failed to download or rebuild. Retrying..'))
++            presto.deltas.clear() # any error is now considered fatal
++
++        if not downloadonly:
+             # XXX: Run unlocked?  Skip this for now..
+             self.plugins.run('postdownload', pkglist=pkglist, errors=errors)
+ 
+diff --git a/yum/config.py b/yum/config.py
+index 3b22e41..4aae831 100644
+--- a/yum/config.py
++++ b/yum/config.py
+@@ -791,6 +791,7 @@ class YumConf(StartupConf):
+             allowed = ('ipv4', 'ipv6', 'whatever'),
+             mapper  = {'4': 'ipv4', '6': 'ipv6'})
+     max_connections = IntOption(0)
++    presto = IntOption(4)
+ 
+     http_caching = SelectionOption('all', ('none', 'packages', 'all'))
+     metadata_expire = SecondsOption(60 * 60 * 6) # Time in seconds (6h).
+@@ -949,6 +950,7 @@ class RepoConf(BaseConfig):
+     throttle = Inherit(YumConf.throttle)
+     timeout = Inherit(YumConf.timeout)
+     ip_resolve = Inherit(YumConf.ip_resolve)
++    presto = Inherit(YumConf.presto)
+ 
+     http_caching = Inherit(YumConf.http_caching)
+     metadata_expire = Inherit(YumConf.metadata_expire)
+diff --git a/yum/presto.py b/yum/presto.py
+new file mode 100644
+index 0000000..cb33918
+--- /dev/null
++++ b/yum/presto.py
+@@ -0,0 +1,151 @@
++#  Integrated delta rpm support
++#  Copyright 2013 Zdenek Pavlas
++
++#   This library is free software; you can redistribute it and/or
++#   modify it under the terms of the GNU Lesser General Public
++#   License as published by the Free Software Foundation; either
++#   version 2.1 of the License, or (at your option) any later version.
++#
++#   This library is distributed in the hope that it will be useful,
++#   but WITHOUT ANY WARRANTY; without even the implied warranty of
++#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++#   Lesser General Public License for more details.
++#
++#   You should have received a copy of the GNU Lesser General Public
++#   License along with this library; if not, write to the
++#      Free Software Foundation, Inc.,
++#      59 Temple Place, Suite 330,
++#      Boston, MA  02111-1307  USA
++
++from yum.constants import TS_UPDATE
++from yum.Errors import RepoError
++from yum.i18n import exception2msg, _
++from urlgrabber import grabber
++async = hasattr(grabber, 'parallel_wait')
++from xml.etree.cElementTree import iterparse
++import os, gzip
++
++class Presto:
++    def __init__(self, ayum, pkgs):
++        self.verbose_logger = ayum.verbose_logger
++        self.deltas = {}
++        self._rpmsave = {}
++        self.rpmsize = 0
++        self.deltasize = 0
++        self.jobs = {}
++        self.limit = ayum.conf.presto
++
++        # calculate update sizes
++        pinfo = {}
++        reposize = {}
++        for po in pkgs:
++            if not po.repo.presto:
++                continue
++            if po.state != TS_UPDATE and po.name not in ayum.conf.installonlypkgs:
++                continue
++            self.limit = max(self.limit, po.repo.presto)
++            pinfo.setdefault(po.repo, {})[po.pkgtup] = po
++            reposize[po.repo] = reposize.get(po.repo, 0) + po.size
++
++        # download delta metadata
++        mdpath = {}
++        for repo in reposize:
++            for name in ('prestodelta', 'deltainfo'):
++                try: data = repo.repoXML.getData(name); break
++                except: pass
++            else:
++                self.verbose_logger.warn(_('No Presto metadata available for %s'), repo)
++                continue
++            path = repo.cachedir +'/'+ os.path.basename(data.location[1])
++            if not os.path.exists(path) and int(data.size) > reposize[repo]:
++                self.verbose_logger.info(_('Not downloading Presto metadata for %s'), repo)
++                continue
++
++            def failfunc(e, name=name, repo=repo):
++                mdpath.pop(repo, None)
++                if hasattr(e, 'exception'): e = e.exception
++                self.verbose_logger.warn(_('Failed to download %s for repository %s: %s'),
++                                         name, repo, exception2msg(e))
++            kwargs = {}
++            if async and repo._async:
++                kwargs['failfunc'] = failfunc
++                kwargs['async'] = True
++            try: mdpath[repo] = repo._retrieveMD(name, **kwargs)
++            except Errors.RepoError, e: failfunc(e)
++        if async:
++            grabber.parallel_wait()
++
++        # parse metadata, populate self.deltas
++        for repo, path in mdpath.items():
++            pinfo_repo = pinfo[repo]
++            if path.endswith('.gz'):
++                path = gzip.open(path)
++            for ev, el in iterparse(path):
++                if el.tag != 'newpackage': continue
++                new = el.get('name'), el.get('arch'), el.get('epoch'), el.get('version'), el.get('release')
++                po = pinfo_repo.get(new)
++                if po:
++                    best = po.size * 0.75 # make this configurable?
++                    have = ayum._up.installdict.get(new[:2], [])
++                    for el in el.findall('delta'):
++                        size = int(el.find('size').text)
++                        old = el.get('oldepoch'), el.get('oldversion'), el.get('oldrelease')
++                        if size >= best or old not in have:
++                            continue
++                        best = size
++                        csum = el.find('checksum')
++                        csum = csum.get('type'), csum.text
++                        self.deltas[po] = size, el.find('filename').text, csum
++                el.clear()
++
++    def to_drpm(self, po):
++        try: size, remote, csum = self.deltas[po]
++        except KeyError: return False
++        self._rpmsave[po] = po.packagesize, po.relativepath, po.localpath
++
++        # update stats
++        self.rpmsize += po.packagesize
++        self.deltasize += size
++
++        # update size/path/checksum to drpm values
++        po.packagesize = size
++        po.relativepath = remote
++        po.localpath = os.path.dirname(po.localpath) +'/'+ os.path.basename(remote)
++        po.returnIdSum = lambda: csum
++        return True
++
++    def to_rpm(self, po):
++        if po not in self._rpmsave:
++            return
++        # revert back to RPM
++        po.packagesize, po.relativepath, po.localpath = self._rpmsave.pop(po)
++        del po.returnIdSum
++
++    def wait(self, limit = 1):
++        # wait for some jobs, run callbacks
++        while len(self.jobs) >= limit:
++            pid, code = os.wait()
++            # urlgrabber spawns child jobs, too.  But they exit synchronously,
++            # so we should never see an unknown pid here.
++            assert pid in self.jobs
++            callback = self.jobs.pop(pid)
++            callback(code)
++
++    def rebuild(self, po, adderror):
++        # restore rpm values
++        deltapath = po.localpath
++        po.packagesize, po.relativepath, po.localpath = self._rpmsave.pop(po)
++        del po.returnIdSum
++
++        # this runs when worker finishes
++        def callback(code):
++            if code != 0:
++                return adderror(po, _('Delta RPM rebuild failed'))
++            if not po.verifyLocalPkg():
++                return adderror(po, _('Checksum of the delta-rebuilt RPM failed'))
++            os.unlink(deltapath)
++
++        # spawn a worker process
++        self.wait(self.limit)
++        pid = os.spawnl(os.P_NOWAIT, '/usr/bin/applydeltarpm', 'applydeltarpm', deltapath, po.localpath)
++        self.jobs[pid] = callback

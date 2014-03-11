@@ -1,0 +1,12 @@
+diff -up ksh-20110630/src/cmd/ksh93/include/nval.h.ddotfix ksh-20110630/src/cmd/ksh93/include/nval.h
+--- ksh-20110630/src/cmd/ksh93/include/nval.h.ddotfix	2011-12-07 14:31:31.793236351 +0100
++++ ksh-20110630/src/cmd/ksh93/include/nval.h	2011-12-07 14:32:26.357677922 +0100
+@@ -198,7 +198,7 @@ struct Namval
+ 
+ /* name-value pair macros */
+ #define nv_isattr(np,f)		((np)->nvflag & (f))
+-#define nv_onattr(n,f)		((n)->nvflag |= (f))
++#define nv_onattr(n,f)		((n)?((n)->nvflag |= (f)):(f))
+ #define nv_offattr(n,f)		((n)->nvflag &= ~(f))
+ #define nv_isarray(np)		(nv_isattr((np),NV_ARRAY))
+ 

@@ -1,0 +1,14 @@
+diff -up libmspack-0.2alpha/doc/Doxyfile.in.orig libmspack-0.2alpha/doc/Doxyfile.in
+--- libmspack-0.2alpha/doc/Doxyfile.in.orig	2010-08-30 10:31:08.000000000 +0200
++++ libmspack-0.2alpha/doc/Doxyfile.in	2010-08-30 10:31:15.000000000 +0200
+@@ -10,9 +10,8 @@ SHOW_USED_FILES        = YES
+ INPUT                  = @top_srcdir@/mspack/mspack.h
+ FULL_PATH_NAMES        = NO
+ OPTIMIZE_FOR_C         = YES
+-12a15
+ GENERATE_HTML          = YES
+-HTML_OUTPUT            = .
++HTML_OUTPUT            = html
+ HTML_FILE_EXTENSION    = .html
+ HTML_TIMESTAMP         = NO
+ GENERATE_HTMLHELP      = NO

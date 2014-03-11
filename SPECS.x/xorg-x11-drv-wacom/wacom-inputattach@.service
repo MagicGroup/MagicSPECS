@@ -1,0 +1,8 @@
+[Unit]
+Description=inputattach for Wacom ISDv4-compatible serial devices
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/inputattach -w8001 /dev/%I
+Restart=on-success
+

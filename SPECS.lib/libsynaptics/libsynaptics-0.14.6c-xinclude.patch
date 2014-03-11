@@ -1,0 +1,24 @@
+diff -u -r libsynaptics-0.14.6b.orig/pad.cpp libsynaptics-0.14.6b/pad.cpp
+--- libsynaptics-0.14.6b.orig/pad.cpp	2006-07-22 08:30:20.000000000 -0400
++++ libsynaptics-0.14.6b/pad.cpp	2006-10-09 05:48:49.000000000 -0400
+@@ -14,7 +14,7 @@
+ 
+ #include "version.h"
+ 
+-#include <X11/Xdefs.h> // for typedef Bool
++#include </usr/X11R6/include/X11/Xdefs.h> // for typedef Bool
+ #include <sys/shm.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+diff -u -r libsynaptics-0.14.6b.orig/Shm_0_14_4 libsynaptics-0.14.6b/Shm_0_14_4
+--- libsynaptics-0.14.6b.orig/Shm_0_14_4	2006-07-22 08:30:20.000000000 -0400
++++ libsynaptics-0.14.6b/Shm_0_14_4	2006-10-09 05:48:34.000000000 -0400
+@@ -1,7 +1,7 @@
+ #ifndef SHM_0_14_4
+ #define SHM_0_14_4
+ 
+-#include <X11/Xdefs.h>  // Bool
++#include </usr/X11R6/include/X11/Xdefs.h>  // Bool
+ #include <stddef.h>     // offsetof
+ 
+ // scroll button repeat (min/max)

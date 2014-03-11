@@ -1,0 +1,48 @@
+diff -ur dia-0.97.orig/objects/custom/shape_typeinfo.c dia-0.97/objects/custom/shape_typeinfo.c
+--- dia-0.97.orig/objects/custom/shape_typeinfo.c	2012-02-16 05:56:12.000000000 -0500
++++ dia-0.97/objects/custom/shape_typeinfo.c	2012-02-16 06:02:22.000000000 -0500
+@@ -27,7 +27,7 @@
+ #include "custom_util.h"
+ #include <string.h>
+ #include <stdarg.h>
+-#include <glib/gstrfuncs.h>
++#include <glib.h>
+ #include <glib/gstdio.h>
+ #include <libxml/parser.h>
+ 
+diff -ur dia-0.97.orig/plug-ins/libart/export_png.c dia-0.97/plug-ins/libart/export_png.c
+--- dia-0.97.orig/plug-ins/libart/export_png.c	2012-02-16 05:56:13.000000000 -0500
++++ dia-0.97/plug-ins/libart/export_png.c	2012-02-16 05:57:15.000000000 -0500
+@@ -176,7 +176,7 @@
+   }
+ 
+   /* set error handling ... */
+-  if (setjmp(png->jmpbuf)) {
++  if (setjmp(png_jmpbuf(png))) {
+     fclose(fp);
+     png_destroy_write_struct(&png, &info);
+     message_error(_("Error occurred while writing PNG"));
+diff -ur dia-0.97.orig/tests/test-boundingbox.c dia-0.97/tests/test-boundingbox.c
+--- dia-0.97.orig/tests/test-boundingbox.c	2012-02-16 05:56:12.000000000 -0500
++++ dia-0.97/tests/test-boundingbox.c	2012-02-16 05:57:51.000000000 -0500
+@@ -29,7 +29,7 @@
+ #include <glib-object.h>
+ 
+ #if GLIB_CHECK_VERSION(2,16,0)
+-#include <glib/gtestutils.h>
++#include <glib.h>
+ #endif
+ #include "dialib.h"
+ 
+diff -ur dia-0.97.orig/tests/test-objects.c dia-0.97/tests/test-objects.c
+--- dia-0.97.orig/tests/test-objects.c	2012-02-16 05:56:12.000000000 -0500
++++ dia-0.97/tests/test-objects.c	2012-02-16 05:57:26.000000000 -0500
+@@ -29,7 +29,7 @@
+ #include <glib-object.h>
+ 
+ #if GLIB_CHECK_VERSION(2,16,0)
+-#include <glib/gtestutils.h>
++#include <glib.h>
+ #endif
+ 
+ #include "object.h"

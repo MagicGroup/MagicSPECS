@@ -1,0 +1,155 @@
+diff -up nss/cmd/manifest.mn.crypto nss/cmd/manifest.mn
+--- nss/cmd/manifest.mn.crypto	2013-05-28 14:43:24.000000000 -0700
++++ nss/cmd/manifest.mn	2013-05-29 20:04:30.060145083 -0700
+@@ -9,54 +9,10 @@ DEPTH	= ..
+ REQUIRES = nss nspr libdbm
+ 
+ DIRS = lib  \
+- addbuiltin \
+- atob  \
+  $(BLTEST_SRCDIR) \
+- btoa  \
+- certcgi \
+- certutil  \
+- checkcert  \
+- chktest  \
+- crlutil  \
+- crmftest \
+- dbtest \
+- derdump  \
+- digest  \
+- httpserv  \
+  $(FIPSTEST_SRCDIR)  \
+  $(LOWHASHTEST_SRCDIR)  \
+- listsuites \
+- makepqg  \
+- multinit \
+- ocspclnt  \
+- ocspresp \
+- oidcalc  \
+- p7content  \
+- p7env  \
+- p7sign  \
+- p7verify  \
+- pk12util \
+- pk11gcmtest \
+- pk11mode \
+- pk1sign  \
+- pkix-errcodes \
+- pp  \
+- pwdecrypt \
+- rsaperf \
+- sdrtest \
+- selfserv  \
+- signtool \
+- signver \
+  $(SHLIBSIGN_SRCDIR) \
+- smimetools  \
+- ssltap  \
+- strsclnt \
+- symkeyutil \
+- tests \
+- tstclnt  \
+- vfychain \
+- vfyserv \
+- modutil \
+  $(NULL)
+ 
+ TEMPORARILY_DONT_BUILD = \
+diff -up nss/cmd/platlibs.mk.crypto nss/cmd/platlibs.mk
+--- nss/cmd/platlibs.mk.crypto	2013-05-28 14:43:24.000000000 -0700
++++ nss/cmd/platlibs.mk	2013-05-29 20:04:30.061145091 -0700
+@@ -51,42 +51,13 @@ EXTRA_SHARED_LIBS += \
+ 	$(NULL)
+ endif
+ 
+-PKIXLIB = \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixtop.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixutil.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixsystem.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixcrlsel.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixmodule.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixstore.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixparams.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixchecker.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixpki.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixtop.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixresults.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkixcertsel.$(LIB_SUFFIX)
+-
+ # can't do this in manifest.mn because OS_ARCH isn't defined there.
+ ifeq ($(OS_ARCH), WINNT)
+ 
+ EXTRA_LIBS += \
+-	$(DIST)/lib/$(LIB_PREFIX)smime.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)ssl.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nss.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)ssl.$(LIB_SUFFIX) \
+ 	$(DIST)/lib/$(LIB_PREFIX)sectool.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkcs12.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkcs7.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)certhi.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)cryptohi.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pk11wrap.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)certdb.$(LIB_SUFFIX) \
+ 	$(SOFTOKENLIB) \
+ 	$(CRYPTOLIB) \
+-	$(DIST)/lib/$(LIB_PREFIX)nsspki.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nssdev.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nssb.$(LIB_SUFFIX) \
+-	$(PKIXLIB) \
+-	$(DBMLIB) \
+ 	$(DIST)/lib/$(LIB_PREFIX)$(SQLITE_LIB_NAME).$(LIB_SUFFIX) \
+ 	$(DIST)/lib/$(LIB_PREFIX)nssutil3.$(LIB_SUFFIX) \
+ 	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plc4.$(LIB_SUFFIX) \
+@@ -102,30 +73,9 @@ EXTRA_LIBS += \
+ else
+ 
+ EXTRA_LIBS += \
+-	$(DIST)/lib/$(LIB_PREFIX)smime.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)ssl.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nss.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)ssl.$(LIB_SUFFIX) \
+ 	$(DIST)/lib/$(LIB_PREFIX)sectool.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkcs12.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pkcs7.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)certhi.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pk11wrap.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)cryptohi.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)certhi.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nsspki.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pk11wrap.$(LIB_SUFFIX) \
+ 	$(SOFTOKENLIB) \
+-	$(DIST)/lib/$(LIB_PREFIX)certdb.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nsspki.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nssdev.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nssb.$(LIB_SUFFIX) \
+ 	$(CRYPTOLIB) \
+-	$(DBMLIB) \
+-	$(PKIXLIB) \
+-	$(DIST)/lib/$(LIB_PREFIX)nss.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)pk11wrap.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)certhi.$(LIB_SUFFIX) \
+ 	$(NULL)
+ 
+ ifeq ($(OS_ARCH), AIX) 
+@@ -158,9 +108,6 @@ ifeq ($(OS_ARCH), WINNT)
+ EXTRA_LIBS += \
+ 	$(DIST)/lib/$(LIB_PREFIX)sectool.$(LIB_SUFFIX) \
+ 	$(DIST)/lib/$(IMPORT_LIB_PREFIX)nssutil3$(IMPORT_LIB_SUFFIX) \
+-	$(DIST)/lib/$(IMPORT_LIB_PREFIX)smime3$(IMPORT_LIB_SUFFIX) \
+-	$(DIST)/lib/$(IMPORT_LIB_PREFIX)ssl3$(IMPORT_LIB_SUFFIX) \
+-	$(DIST)/lib/$(IMPORT_LIB_PREFIX)nss3$(IMPORT_LIB_SUFFIX) \
+ 	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plc4$(IMPORT_LIB_SUFFIX) \
+ 	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plds4$(IMPORT_LIB_SUFFIX) \
+ 	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)nspr4$(IMPORT_LIB_SUFFIX) \
+@@ -186,9 +133,6 @@ endif
+ # $(EXTRA_SHARED_LIBS) come before $(OS_LIBS), except on AIX.
+ EXTRA_SHARED_LIBS += \
+ 	-L$(DIST)/lib \
+-	-lssl3 \
+-	-lsmime3 \
+-	-lnss3 \
+ 	-L$(NSSUTIL_LIB_DIR) \
+ 	-lnssutil3 \
+ 	-L$(NSPR_LIB_DIR) \

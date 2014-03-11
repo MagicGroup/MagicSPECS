@@ -1,0 +1,10 @@
+--- abakus-3.5.13.1/CMakeLists.txt.ORI	2012-10-02 19:34:14.633927133 +0000
++++ abakus-3.5.13.1/CMakeLists.txt	2012-10-02 19:34:25.560708663 +0000
+@@ -66,6 +66,7 @@
+ 
+ ##### source directories ########################
+ 
++add_subdirectory( icons )
+ add_subdirectory( src )
+ tde_conditional_add_subdirectory( BUILD_DOC doc )
+ tde_conditional_add_subdirectory( BUILD_TRANSLATIONS po )

@@ -1,0 +1,32 @@
+diff -Nuarp phonon-4.3.80/mplayer/libmplayer/MPlayerProcess.cpp phonon-4.3.80/mplayer/libmplayer/MPlayerProcess.cpp
+--- phonon-4.3.80/mplayer/libmplayer/MPlayerProcess.cpp	2009-10-01 02:38:09.000000000 +0800
++++ phonon-4.3.80/mplayer/libmplayer/MPlayerProcess.cpp	2010-01-15 12:01:44.000000000 +0800
+@@ -44,19 +44,19 @@ MPlayerProcess::MPlayerProcess(QObject *
+ 	rx_winresolution("^VO: \\[(.*)\\] (\\d+)x(\\d+) => (\\d+)x(\\d+)"),
+ 	rx_ao("^AO: \\[(.*)\\]"),
+ 	rx_paused("^ID_PAUSED$"),
+-	rx_novideo("^Video: no video"),
+-	rx_play("^Starting playback..."),
+-	rx_playing("^Playing"),	//"Playing" does not mean the file is actually playing but only loading
+-	rx_file_not_found("^File not found:"),
++	rx_novideo("^\\x89c6\\x9891\\xff1a\\x6ca1\\x6709\\x89c6\\x9891\\x6d41"),// 视频：没有视频流
++	rx_play("^\\x5f00\\x59cb\\x64ad\\x653e\\.\\.\\."),// 开始播放...
++	rx_playing("^\\x6b63\\x5728\\x64ad\\x653e"),	// 正在播放 "Playing" does not mean the file is actually playing but only loading
++	rx_file_not_found("^\\x627e\\x4e0d\\x5230\\x6587\\x4ef6:"),// 找不到文件:
+ 	//rx_endoffile("^ID_EXIT=EOF$"),
+-	rx_endoffile("^Exiting... \\(End of file\\)"),
++	rx_endoffile("^\\x6b63\\x5728\\x9000\\x51fa\\.\\.\\.\\xff08\\x6587\\x4ef6\\x672b\\x5c3e\\xff09"),// 正在退出...（文件末尾）
+ 	rx_slowsystem("Your system is too SLOW to play this!"),
+ 
+ 	//Streaming
+-	rx_connecting("^Connecting to server (.*)..."),
+-	rx_resolving("^Resolving (.*)..."),
+-	rx_resolving_failed("^Couldn't resolve name for "),
+-	rx_cache_fill("^Cache fill: (.*)%"),
++	rx_connecting("^\\x6b63\\x5728\\x8fde\\x63a5\\x5230\\x670d\\x52a1\\x5668 (.*)\\.\\.\\."),// 正在连接到服务器
++	rx_resolving("^\\x6b63\\x5728\\x89e3\\x6790 (.*)\\.\\.\\."),// 正在解析
++	rx_resolving_failed("^\\x4e0d\\x80fd\\x4e3a.*\\x89e3\\x6790\\x540d\\x5b57"),// 不能为 .* 解析名字
++	rx_cache_fill("^\\x7f13\\x51b2\\x5df2\\x586b\\x5145\\xff1a (.*)%"),// 缓冲已填充：
+ 	rx_read_failed("^Read failed."),	//"Read failed" for a streaming media
+ 	rx_stream_not_found("^No stream found to handle url "),
+ 

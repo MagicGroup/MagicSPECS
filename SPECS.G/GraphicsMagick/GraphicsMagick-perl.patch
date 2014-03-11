@@ -1,0 +1,24 @@
+diff -up GraphicsMagick-1.1.10/PerlMagick/Makefile.PL.orig GraphicsMagick-1.1.10/PerlMagick/Makefile.PL
+--- GraphicsMagick-1.1.10/PerlMagick/Makefile.PL.orig	2008-01-28 17:48:28.000000000 +0100
++++ GraphicsMagick-1.1.10/PerlMagick/Makefile.PL	2008-01-28 17:48:58.000000000 +0100
+@@ -62,7 +62,7 @@ WriteMakefile
+    'INSTALLBIN'	=> '/usr/local/bin',
+ 
+    # Library specification
+-   'LIBS'	=> ['-L/usr/local/lib -R/usr/local/lib -L/usr/local/lib -L/usr/local/lib -L/home/glennrp/CVS/ImageMagick/magick -lGraphicsMagick -ljbig -llcms -ltiff -lfreetype -ljasper -ljpeg -lgs -lpng -lfpx -lwmflite -lXext -lSM -lICE -lX11 -lsocket -lnsl -lbz2 -lxml2 -lz -lpthread -lm'],
++   'LIBS'	=> ['-L/usr/local/lib -R/usr/local/lib -L/usr/local/lib -L/usr/local/lib -L/home/glennrp/CVS/ImageMagick/magick -L../magick/.libs -lGraphicsMagick -ljbig -llcms -ltiff -lfreetype -ljasper -ljpeg -lgs -lpng -lfpx -lwmflite -lXext -lSM -lICE -lX11 -lsocket -lnsl -lbz2 -lxml2 -lz -lpthread -lm'],
+ 
+    # Perl binary name (if a Perl binary is built)
+    'MAP_TARGET'	=> 'PerlMagick',
+diff -up GraphicsMagick-1.1.10/PerlMagick/Makefile.PL.in.orig GraphicsMagick-1.1.10/PerlMagick/Makefile.PL.in
+--- GraphicsMagick-1.1.10/PerlMagick/Makefile.PL.in.orig	2008-01-28 17:48:34.000000000 +0100
++++ GraphicsMagick-1.1.10/PerlMagick/Makefile.PL.in	2008-01-28 17:48:58.000000000 +0100
+@@ -57,7 +57,7 @@ WriteMakefile
+    'INSTALLBIN'	=> '@BIN_DIR@',
+ 
+    # Library specification
+-   'LIBS'	=> ['-L@MAGICKLIBDIR@ -lGraphicsMagick @LDFLAGS@ @MAGICK_DEP_LIBS@'],
++   'LIBS'	=> ['-L@MAGICKLIBDIR@ -L../magick/.libs -lGraphicsMagick @LDFLAGS@ @MAGICK_DEP_LIBS@'],
+ 
+    # Perl binary name (if a Perl binary is built)
+    'MAP_TARGET'	=> 'PerlMagick',

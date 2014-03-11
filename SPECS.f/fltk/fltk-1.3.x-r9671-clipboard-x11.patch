@@ -1,0 +1,166 @@
+diff -up fltk-1.3.x-r9671/src/Fl_x.cxx.clipboard-x11 fltk-1.3.x-r9671/src/Fl_x.cxx
+--- fltk-1.3.x-r9671/src/Fl_x.cxx.clipboard-x11	2013-08-21 15:34:03.445627071 -0500
++++ fltk-1.3.x-r9671/src/Fl_x.cxx	2013-08-21 15:34:03.455626970 -0500
+@@ -307,6 +307,9 @@ static Atom WM_PROTOCOLS;
+ static Atom fl_MOTIF_WM_HINTS;
+ static Atom TARGETS;
+ static Atom CLIPBOARD;
++static Atom TIMESTAMP;
++static Atom PRIMARY_TIMESTAMP;
++static Atom CLIPBOARD_TIMESTAMP;
+ Atom fl_XdndAware;
+ Atom fl_XdndSelection;
+ Atom fl_XdndEnter;
+@@ -667,6 +670,9 @@ void fl_open_display(Display* d) {
+   fl_MOTIF_WM_HINTS     = XInternAtom(d, "_MOTIF_WM_HINTS",     0);
+   TARGETS               = XInternAtom(d, "TARGETS",             0);
+   CLIPBOARD             = XInternAtom(d, "CLIPBOARD",           0);
++  TIMESTAMP             = XInternAtom(d, "TIMESTAMP",           0);
++  PRIMARY_TIMESTAMP     = XInternAtom(d, "PRIMARY_TIMESTAMP",   0);
++  CLIPBOARD_TIMESTAMP   = XInternAtom(d, "CLIPBOARD_TIMESTAMP", 0);
+   fl_XdndAware          = XInternAtom(d, "XdndAware",           0);
+   fl_XdndSelection      = XInternAtom(d, "XdndSelection",       0);
+   fl_XdndEnter          = XInternAtom(d, "XdndEnter",           0);
+@@ -900,6 +906,86 @@ void Fl::copy(const char *stuff, int len
+ }
+ 
+ ////////////////////////////////////////////////////////////////
++// Code for tracking clipboard changes:
++
++static Time primary_timestamp = -1;
++static Time clipboard_timestamp = -1;
++
++extern bool fl_clipboard_notify_empty(void);
++extern void fl_trigger_clipboard_notify(int source);
++
++static void poll_clipboard_owner(void) {
++  Window xid;
++
++  // No one is interested, so no point polling
++  if (fl_clipboard_notify_empty())
++    return;
++
++  // We need a window for this to work
++  if (!Fl::first_window())
++    return;
++  xid = fl_xid(Fl::first_window());
++  if (!xid)
++    return;
++
++  // Request an update of the selection time for both the primary and
++  // clipboard selections. Magic continues when we get a SelectionNotify.
++  if (!fl_i_own_selection[0])
++    XConvertSelection(fl_display, XA_PRIMARY, TIMESTAMP, PRIMARY_TIMESTAMP,
++                      xid, fl_event_time);
++  if (!fl_i_own_selection[1])
++    XConvertSelection(fl_display, CLIPBOARD, TIMESTAMP, CLIPBOARD_TIMESTAMP,
++                      xid, fl_event_time);
++}
++
++static void clipboard_timeout(void *data)
++{
++  // No one is interested, so stop polling
++  if (fl_clipboard_notify_empty())
++    return;
++
++  poll_clipboard_owner();
++
++  Fl::repeat_timeout(0.5, clipboard_timeout);
++}
++
++static void handle_clipboard_timestamp(int clipboard, Time time)
++{
++  Time *timestamp;
++
++  timestamp = clipboard ? &clipboard_timestamp : &primary_timestamp;
++
++  // Initial scan, just store the value
++  if (*timestamp == (Time)-1) {
++    *timestamp = time;
++    return;
++  }
++
++  // Same selection
++  if (time == *timestamp)
++    return;
++
++  *timestamp = time;
++
++  // Something happened! Let's tell someone!
++  fl_trigger_clipboard_notify(clipboard);
++}
++
++void fl_clipboard_notify_change() {
++  // Reset the timestamps if we've going idle so that you don't
++  // get a bogus immediate trigger next time they're activated.
++  if (fl_clipboard_notify_empty()) {
++    primary_timestamp = -1;
++    clipboard_timestamp = -1;
++  } else {
++    poll_clipboard_owner();
++
++    if (!Fl::has_timeout(clipboard_timeout))
++      Fl::add_timeout(0.5, clipboard_timeout);
++  }
++}
++
++////////////////////////////////////////////////////////////////
+ 
+ const XEvent* fl_xevent; // the current x event
+ ulong fl_event_time; // the last timestamp from an x event
+@@ -1023,7 +1109,6 @@ int fl_handle(const XEvent& thisevent)
+     return 0;
+ 
+   case SelectionNotify: {
+-    if (!fl_selection_requestor) return 0;
+     static unsigned char* buffer = 0;
+     if (buffer) {XFree(buffer); buffer = 0;}
+     long bytesread = 0;
+@@ -1039,6 +1124,19 @@ int fl_handle(const XEvent& thisevent)
+                              bytesread/4, 65536, 1, 0,
+                              &actual, &format, &count, &remaining,
+                              &portion)) break; // quit on error
++
++      if ((fl_xevent->xselection.property == PRIMARY_TIMESTAMP) ||
++          (fl_xevent->xselection.property == CLIPBOARD_TIMESTAMP)) {
++        if (portion && format == 32 && count == 1) {
++          Time t = *(unsigned int*)portion;
++          if (fl_xevent->xselection.property == CLIPBOARD_TIMESTAMP)
++            handle_clipboard_timestamp(1, t);
++          else
++            handle_clipboard_timestamp(0, t);
++        }
++        return true;
++      }
++
+       if (actual == TARGETS || actual == XA_ATOM) {
+ 	Atom type = XA_STRING;
+ 	for (unsigned i = 0; i<count; i++) {
+@@ -1075,6 +1173,9 @@ int fl_handle(const XEvent& thisevent)
+       buffer[bytesread] = 0;
+       convert_crlf(buffer, bytesread);
+     }
++
++    if (!fl_selection_requestor) return 0;
++
+     Fl::e_text = buffer ? (char*)buffer : (char *)"";
+     Fl::e_length = bytesread;
+     int old_event = Fl::e_number;
+@@ -1095,6 +1196,7 @@ int fl_handle(const XEvent& thisevent)
+   case SelectionClear: {
+     int clipboard = fl_xevent->xselectionclear.selection == CLIPBOARD;
+     fl_i_own_selection[clipboard] = 0;
++    poll_clipboard_owner();
+     return 1;}
+ 
+   case SelectionRequest: {
+@@ -1307,6 +1409,9 @@ int fl_handle(const XEvent& thisevent)
+   case FocusIn:
+     if (fl_xim_ic) XSetICFocus(fl_xim_ic);
+     event = FL_FOCUS;
++    // If the user has toggled from another application to this one,
++    // then it's a good time to check for clipboard changes.
++    poll_clipboard_owner();
+     break;
+ 
+   case FocusOut:

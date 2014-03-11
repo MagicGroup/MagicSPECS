@@ -1,0 +1,14 @@
+diff -ur google-gadgets-for-linux-0.11.2.orig/ggadget/gtk/main_loop.cc google-gadgets-for-linux-0.11.2/ggadget/gtk/main_loop.cc
+--- google-gadgets-for-linux-0.11.2.orig/ggadget/gtk/main_loop.cc	2012-03-25 14:47:32.000000000 -0400
++++ google-gadgets-for-linux-0.11.2/ggadget/gtk/main_loop.cc	2012-03-25 14:48:08.000000000 -0400
+@@ -16,9 +16,8 @@
+ 
+ #include <fcntl.h>
+ #include <stdint.h>
+-#include <glib/ghash.h>
++#include <glib.h>
+ #include <gtk/gtk.h>
+-#include <glib/gthread.h>
+ #include <ggadget/common.h>
+ #include "main_loop.h"
+ #include "utilities.h"

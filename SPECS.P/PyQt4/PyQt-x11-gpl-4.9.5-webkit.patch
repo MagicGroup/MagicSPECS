@@ -1,0 +1,37 @@
+diff -up PyQt-x11-gpl-4.9.5/configure.py.webkit PyQt-x11-gpl-4.9.5/configure.py
+--- PyQt-x11-gpl-4.9.5/configure.py.webkit	2012-10-11 14:37:49.000000000 +0200
++++ PyQt-x11-gpl-4.9.5/configure.py	2012-10-11 14:39:58.130639820 +0200
+@@ -379,16 +379,6 @@ class ConfigurePyQt4:
+         check_module("QtSvg", "qsvgwidget.h", "new QSvgWidget()")
+         if qt_version < 0x050000: check_module("QtTest", "QtTest", "QTest::qSleep(0)")
+ 
+-        # Qt v5-beta1 doesn't install the Headers directory for a framework
+-        # build of QtWebKit on OS/X.
+-        if qt_version >= 0x050000:
+-            webkit_inc_dirs = [os.path.join(qt_incdir, "QtWebKit")]
+-        else:
+-            webkit_inc_dirs = None
+-
+-        check_module("QtWebKit", "qwebpage.h", "new QWebPage()",
+-                extra_include_dirs=webkit_inc_dirs)
+-
+         check_module("QtXml", "qdom.h", "new QDomDocument()")
+ 
+         # Qt v5-beta1 causes compiler error messages.  Wait to see if it fixed
+@@ -537,16 +527,6 @@ class ConfigurePyQt4:
+         if "QtTest" in pyqt_modules:
+             generate_code("QtTest")
+ 
+-        if "QtWebKit" in pyqt_modules:
+-            # Qt v5-beta1 doesn't install the Headers directory for a framework
+-            # build of QtWebKit on OS/X.
+-            if qt_version >= 0x050000:
+-                webkit_inc_dirs = [os.path.join(qt_incdir, "QtWebKit")]
+-            else:
+-                webkit_inc_dirs = None
+-
+-            generate_code("QtWebKit", extra_include_dirs=webkit_inc_dirs)
+-
+         if "QtXml" in pyqt_modules:
+             generate_code("QtXml")
+ 

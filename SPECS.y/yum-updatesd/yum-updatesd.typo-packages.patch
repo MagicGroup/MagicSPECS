@@ -1,0 +1,11 @@
+--- yum-updatesd-helper.orig	2012-04-26 12:36:42.498246436 +0200
++++ yum-updatesd-helper	2012-04-26 12:37:05.593359315 +0200
+@@ -222,7 +222,7 @@
+         output += self._msgPacketList(updateInfo)
+         output += self._msgFooter()
+ 
+-        self._sendMessage("%d packets installed/updated" % num, output)
++        self._sendMessage("%d packages installed/updated" % num, output)
+ 
+     def updatesFailed(self, errmsgs):
+         output = self._msgGreeting()

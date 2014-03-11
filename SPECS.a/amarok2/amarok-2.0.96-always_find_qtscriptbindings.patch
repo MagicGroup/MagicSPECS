@@ -1,0 +1,12 @@
+diff -ur amarok-2.1.80.orig/cmake/modules/FindQtScriptQtBindings.cmake amarok-2.1.80/cmake/modules/FindQtScriptQtBindings.cmake
+--- amarok-2.1.80.orig/cmake/modules/FindQtScriptQtBindings.cmake	2009-09-16 18:03:26.000000000 +0800
++++ amarok-2.1.80/cmake/modules/FindQtScriptQtBindings.cmake	2009-09-16 18:04:55.000000000 +0800
+@@ -33,7 +33,7 @@
+         set(QTSCRIPTQTBINDINGS_FOUND TRUE)
+     else(BINDINGS_RUN_RESULT EQUAL 1)
+         message( STATUS "QtBindings not found. run `cd cmake/modules/bindingstest; mkdir build; cd build; cmake ..; make; ./bindingstest; echo $?` If it prints '0' then you're actually fine.")
+-        set(QTSCRIPTQTBINDINGS_FOUND FALSE)
++        set(QTSCRIPTQTBINDINGS_FOUND TRUE)
+     endif(BINDINGS_RUN_RESULT EQUAL 1)
+ 
+     set(CMAKE_REQUIRED_DEFINTIONS "" )

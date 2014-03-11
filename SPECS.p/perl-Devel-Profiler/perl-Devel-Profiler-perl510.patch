@@ -1,0 +1,40 @@
+diff -up Devel-Profiler-0.04/lib/Devel/Profiler.pm.BAD Devel-Profiler-0.04/lib/Devel/Profiler.pm
+--- Devel-Profiler-0.04/lib/Devel/Profiler.pm.BAD	2008-03-07 14:20:17.000000000 -0500
++++ Devel-Profiler-0.04/lib/Devel/Profiler.pm	2008-03-07 14:21:03.000000000 -0500
+@@ -151,9 +151,14 @@ sub scan {
+             }
+             
+             # found a code ref?  then instrument it
+-            instrument($pkg, $sym, $code) 
+-              if defined($code = *{$glob}{CODE}) and ref $code eq 'CODE';
+-              
++            if (ref \$glob ne 'GLOB') {
++                # Something stranger in the typeglob, which will expand to (at
++                # least) a prototype if we take a reference to it.
++                instrument($pkg, $sym, \&{"$pkg$sym"});
++            } else {
++                instrument($pkg, $sym, $code) 
++                    if defined($code = *{$glob}{CODE}) and ref $code eq 'CODE';
++            }            
+         }
+     }
+ }
+diff -up Devel-Profiler-0.04/t/09fcntl.t.BAD Devel-Profiler-0.04/t/09fcntl.t
+--- Devel-Profiler-0.04/t/09fcntl.t.BAD	2008-03-07 14:21:11.000000000 -0500
++++ Devel-Profiler-0.04/t/09fcntl.t	2008-03-07 14:21:27.000000000 -0500
+@@ -8,7 +8,14 @@ foo();
+ END
+ 
+ # make sure the call tree looks right
+-check_tree(<<END, "checking tree");
++if ($] > 5.009) {
++    # Fcntl's constants are now directly defined, so constant() isn't called.
++    check_tree(<<END, "checking tree");
++main::foo
++END
++} else {
++    check_tree(<<END, "checking tree");
+ main::foo
+    Fcntl::constant
+ END
++}

@@ -1,0 +1,22 @@
+diff -up nvidia-settings-1.0/src/libXNVCtrl/Imakefile.imake nvidia-settings-1.0/src/libXNVCtrl/Imakefile
+--- nvidia-settings-1.0/src/libXNVCtrl/Imakefile.imake	2007-06-14 04:00:19.000000000 +0200
++++ nvidia-settings-1.0/src/libXNVCtrl/Imakefile	2007-07-27 10:03:47.000000000 +0200
+@@ -1,7 +1,8 @@
+ XCOMM Imakefile for libXNVCtrl.a
+ 
+-#define DoNormalLib NormalLibXrandr
++#define DoSharedLib 1
+ #define LibName XNVCtrl
++#define SoRev SOREV
+ #define IncSubdir X11
+ #define IncSubSubdir extensions
+ 
+@@ -17,6 +18,8 @@ ALLOC_DEFINES = -DMALLOC_0_RETURNS_NULL
+          SRCS = NVCtrl.c
+          OBJS = NVCtrl.o
+      LINTLIBS = $(LINTXLIB)
++        SOREV = 0.0.0
++ REQUIREDLIBS = -lX11 -lXext
+ 
+ HEADERS = NVCtrlLib.h NVCtrl.h
+ 

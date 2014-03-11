@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=QtNX
+GenericName=A client for the NX protocol
+Comment=Connect to an NX/FreeNX server
+Exec=qtnx
+Terminal=false
+Type=Application
+Categories=Graphics;Network;
+

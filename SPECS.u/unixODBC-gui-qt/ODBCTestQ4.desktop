@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ODBC Test
+Comment=ODBC Test Tool
+Exec=ODBCTestQ4
+Icon=ODBCTestQ4
+Type=Application
+Terminal=false
+Categories=Settings;

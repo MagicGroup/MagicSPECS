@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=MlDonkey
+Type=Application
+GenericName=MlDonkey peer-to-peer client
+Exec=mlgui
+Icon=mldonkey
+Categories=GTK;Network;P2P;

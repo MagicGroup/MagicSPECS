@@ -1,0 +1,82 @@
+#!/bin/bash
+#
+# chkconfig: - 55 45
+# description:	The arpwatch daemon attempts to keep track of ethernet/ip \
+#		address pairings.
+# processname: arpwatch
+
+### BEGIN INIT INFO
+# Provides: arpwatch
+# Required-Start: $network $local_fs $remote_fs
+# Required-Stop: $network $local_fs $remote_fs
+# Should-Start: $syslog $named
+# Should-Stop: $syslog $named
+# Short-Description: start and stop arpwatch
+# Description: The arpwatch daemon attempts to keep track of ethernet/ip
+#              address pairings.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Get config.
+. /etc/sysconfig/network
+
+if [ -f /etc/sysconfig/arpwatch ];then 
+	. /etc/sysconfig/arpwatch
+fi
+
+prog=arpwatch
+lockfile=/var/lock/subsys/$prog
+
+start () {
+	# Check that networking is up.
+	[ "$NETWORKING" = "no" ] && exit 1
+
+	status $prog > /dev/null && return 0
+
+	echo -n $"Starting $prog: "
+	daemon $prog $OPTIONS
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch $lockfile
+	return $RETVAL
+}
+
+stop () {
+	echo -n $"Stopping $prog: "
+	killproc $prog
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f $lockfile
+	return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+	status $prog
+	;;
+  restart|force-reload)
+	stop
+	start
+	;;
+  try-restart|condrestart)
+	if status $prog > /dev/null; then
+	    stop
+	    start
+	fi
+	;;
+  reload)
+	exit 3
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|status|restart|try-restart|force-reload}"
+	exit 2
+esac

@@ -1,0 +1,12 @@
+diff -ur glibmm-2.30.0.orig/glib/glibmm/varianttype.cc glibmm-2.30.0/glib/glibmm/varianttype.cc
+--- glibmm-2.30.0.orig/glib/glibmm/varianttype.cc	2011-12-02 08:01:32.000000000 -0500
++++ glibmm-2.30.0/glib/glibmm/varianttype.cc	2011-12-02 08:01:55.000000000 -0500
+@@ -23,7 +23,7 @@
+ 
+ #include <glibmm/varianttype.h>
+ #include <glibmm/utility.h>
+-#include <glib/gvarianttype.h>
++#include <glib.h>
+ 
+ namespace Glib
+ {

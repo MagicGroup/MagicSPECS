@@ -1,0 +1,69 @@
+--- kcmautostart/src/autostart.desktop.ORI	2012-05-10 11:47:47.743164035 +0200
++++ kcmautostart/src/autostart.desktop	2012-05-10 11:49:15.127289325 +0200
+@@ -14,8 +14,10 @@
+ Comment=A KControl tool for managing what programs start up with TDE.
+ Comment[ca]=Panell de control per a gestionar els programes que s'inicien amb la sessió de TDE.
+ Comment[es]=Panel de control para gestionar los programas que se inician con la sesión de TDE.
++Comment[fr]=Paneau de contrôle pour gérer le démarrage des programmes à l'ouverture de session TDE.
+ Keywords=autostart manager
+ Name=Autostart Manager
+ Name[ca]=Autoengega
+ Name[es]=Arranque automático
++Name[fr]=Démarrage automatique
+ Categories=Qt;KDE;X-KDE-settings-components;
+diff -Nuar kcmautostart/po.ori//fr.po kcmautostart/po/fr.po
+--- kcmautostart/po.ori//fr.po	1970-01-01 01:00:00.000000000 +0100
++++ kcmautostart/po/fr.po	2012-05-10 19:27:38.107215981 +0200
+@@ -0,0 +1,52 @@
++msgid ""
++msgstr ""
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"PO-Revision-Date: 2012-05-10 12:01+0100\n"
++"Project-Id-Version: autostart_ca\n"
++"Language-Team:  <ca@li.org>\n"
++"X-Generator: KBabel 1.11.4\n"
++"MIME-Version: 1.0\n"
++"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
++"Last-Translator: Josep Febrer <josep@extens.info>\n"
++
++#: ../src/autostart.cpp:61
++msgid "Startup"
++msgstr "Démarrage"
++
++#: ../src/autostart.cpp:62
++msgid "Shutdown"
++msgstr "Arrêt"
++
++#: ../src/autostart.cpp:63
++msgid "ENV"
++msgstr "ENV"
++
++#: ../src/autostart.cpp:102
++msgid "Name"
++msgstr "Nom"
++
++#: ../src/autostart.cpp:103
++msgid "Command"
++msgstr "Commande"
++
++#: ../src/autostart.cpp:104
++msgid "Run on"
++msgstr "Executer"
++
++#: ../src/autostart.cpp:129
++msgid "&Add"
++msgstr "&Ajouter"
++
++#: ../src/autostart.cpp:131
++msgid "&Remove"
++msgstr "&Supprimer"
++
++#: ../src/autostart.cpp:133
++msgid "&Properties"
++msgstr "&Propiétés"
++
++#: ../src/autostart.cpp:317
++msgid "This module helps you configure which applications KDE runs When starting up and shutting down."
++msgstr "Ce module vous aide à configurer quelles applications sont exécutées à l'ouverture et à la fermeture de session de TDE."
++

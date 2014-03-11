@@ -1,0 +1,67 @@
+diff -Nur aMule-2.2.1/src/libs/common/Path.cpp aMule-2.2.1.fixgb18030/src/libs/common/Path.cpp
+--- aMule-2.2.1/src/libs/common/Path.cpp	2008-06-12 10:25:49.000000000 +0800
++++ aMule-2.2.1.fixgb18030/src/libs/common/Path.cpp	2008-06-12 18:31:28.000000000 +0800
+@@ -98,7 +98,7 @@
+ 			// "POSIX" and "C", which are only 7bit.
+ 			case wxFONTENCODING_SYSTEM:
+ 			case wxFONTENCODING_UTF8:
+-				result = wxConvISO8859_1.cMB2WC(fn);
++				result = wxConvLocal.cMB2WC(fn);
+ 				break;
+ 
+ 			default:
+@@ -300,7 +300,7 @@
+ 
+ CPath CPath::FromUniv(const wxString& path)
+ {
+-	wxCharBuffer fn = wxConvISO8859_1.cWC2MB(path);
++	wxCharBuffer fn = wxConvLocal.cWC2MB(path);
+ 
+ 	return CPath(wxConvFile.cMB2WC(fn));
+ 
+@@ -310,12 +310,12 @@
+ wxString CPath::ToUniv(const CPath& path)
+ {
+ 	// The logic behind this is that by saving the filename
+-	// as a raw bytestream (which is what ISO8859-1 amounts
++	// as a raw bytestream (which is what Local encoding amounts
+ 	// to), we can always recreate the on-disk filename, as
+ 	// if we had read it using wx functions.
+ 	wxCharBuffer fn = wxConvFile.cWC2MB(path.m_filesystem);
+ 
+-	return wxConvISO8859_1.cMB2WC(fn);
++	return wxConvLocal.cMB2WC(fn);
+ }
+ 
+ 
+diff -Nur aMule-2.2.1/src/SafeFile.cpp aMule-2.2.1.fixgb18030/src/SafeFile.cpp
+--- aMule-2.2.1/src/SafeFile.cpp	2008-06-12 10:25:48.000000000 +0800
++++ aMule-2.2.1.fixgb18030/src/SafeFile.cpp	2008-06-12 18:27:05.000000000 +0800
+@@ -241,12 +241,12 @@
+ 	} else if (bOptUTF8) {
+ 		str = UTF82unicode(val);
+ 		if (str.IsEmpty()) {
+-			// Fallback to Latin-1
+-			str = wxString(val, wxConvISO8859_1, raw_len);
++			// Fallback to Local encoding
++			str = wxString(val, wxConvLocal, raw_len);
+ 		}
+ 	} else {
+-		// Raw strings are written as Latin-1 (see CFileDataIO::WriteStringCore)
+-		str = wxString(val, wxConvISO8859_1, raw_len);
++		// Raw strings are written as Local encoding (see CFileDataIO::WriteStringCore)
++		str = wxString(val, wxConvLocal, raw_len);
+ 	}
+ 
+ 	return str;
+@@ -326,8 +326,8 @@
+ 			}
+ 		}
+ 		default: {
+-			// Non UTF-8 strings are saved as Latin-1
+-			wxCharBuffer s1 = wxConvISO8859_1.cWC2MB(str);
++			// Non UTF-8 strings are saved as Local encoding
++			wxCharBuffer s1 = wxConvLocal.cWC2MB(str);
+ 			WriteStringCore(s1, utf8strNone, SizeLen);			
+ 		}
+ 	}

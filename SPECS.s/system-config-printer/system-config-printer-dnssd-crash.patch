@@ -1,0 +1,21 @@
+diff -up system-config-printer-1.3.12/newprinter.py.dnssd-crash system-config-printer-1.3.12/newprinter.py
+--- system-config-printer-1.3.12/newprinter.py.dnssd-crash	2012-10-25 17:07:55.023003721 +0100
++++ system-config-printer-1.3.12/newprinter.py	2012-10-25 17:08:15.522058917 +0100
+@@ -2342,7 +2342,7 @@ class NewPrinterGUI(GtkGUI):
+                 (scheme, rest) = urllib.splittype (device.uri)
+                 (name, rest) = urllib.splithost (rest)
+                 (cupsqueue, rest) = urllib.splitquery (rest)
+-                if cupsqueue[0] == '/':
++                if cupsqueue != '' and cupsqueue[0] == '/':
+                     cupsqueue = cupsqueue[1:]
+                 if cupsqueue == 'cups':
+                     device.menuentry = _("Remote CUPS printer via DNS-SD")
+@@ -2493,7 +2493,7 @@ class NewPrinterGUI(GtkGUI):
+                 (scheme, rest) = urllib.splittype (device.uri)
+                 (name, rest) = urllib.splithost (rest)
+                 (cupsqueue, rest) = urllib.splitquery (rest)
+-                if cupsqueue[0] == '/':
++                if cupsqueue != '' and cupsqueue[0] == '/':
+                     cupsqueue = cupsqueue[1:]
+                 if cupsqueue == 'cups':
+                     text = _("Remote CUPS printer via DNS-SD")

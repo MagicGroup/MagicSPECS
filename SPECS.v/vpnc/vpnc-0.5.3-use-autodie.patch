@@ -1,0 +1,12 @@
+diff -up vpnc-0.5.3/makeman.pl.autodie vpnc-0.5.3/makeman.pl
+--- vpnc-0.5.3/makeman.pl.autodie	2009-11-19 18:03:47.000000000 +0100
++++ vpnc-0.5.3/makeman.pl	2013-03-07 11:21:43.524106709 +0100
+@@ -17,7 +17,7 @@
+ 
+ use strict;
+ use warnings;
+-use Fatal    qw(open close);
++use autodie  qw(open close);
+ use filetest qw(access);	# to always get errno-values on filetests
+ use POSIX    qw(strftime setlocale LC_ALL);
+ 

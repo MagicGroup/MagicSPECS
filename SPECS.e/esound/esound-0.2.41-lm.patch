@@ -1,0 +1,12 @@
+diff -ur esound-0.2.41.orig/Makefile.am esound-0.2.41/Makefile.am
+--- esound-0.2.41.orig/Makefile.am	2011-11-18 14:53:36.000000000 -0500
++++ esound-0.2.41/Makefile.am	2011-11-18 14:54:50.000000000 -0500
+@@ -123,7 +123,7 @@
+ 	$(getopt_src) \
+ 	esdplay.c
+ 
+-LDADD = libesd.la $(AUDIOFILE_LIBS)
++LDADD = libesd.la $(AUDIOFILE_LIBS) -lm
+ 
+ esd_LDADD = $(WRAP_LIB) $(LDADD)
+ 

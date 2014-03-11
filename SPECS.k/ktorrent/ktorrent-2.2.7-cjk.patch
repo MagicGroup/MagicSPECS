@@ -1,0 +1,20 @@
+diff -u -r ktorrent-2.2.7.orig/libktorrent/torrent/torrent.cpp ktorrent-2.2.7/libktorrent/torrent/torrent.cpp
+--- ktorrent-2.2.7.orig/libktorrent/torrent/torrent.cpp	2008-07-24 14:37:30.000000000 +0800
++++ ktorrent-2.2.7/libktorrent/torrent/torrent.cpp	2008-07-24 14:57:51.000000000 +0800
+@@ -33,6 +33,7 @@
+ #include "announcelist.h"
+ 
+ #include <klocale.h>
++#include <qtextcodec.h>
+ 
+ namespace bt
+ {
+@@ -69,6 +70,8 @@
+ 				encoding = enc->data().toString();
+ 				Out() << "Encoding : " << encoding << endl;
+ 			}
++			else
++				encoding = QTextCodec::codecForLocale()->name();
+ 
+ 			BValueNode* announce = dict->getValue("announce");
+ 			BListNode* nodes = dict->getList("nodes");

@@ -1,0 +1,11 @@
+--- BitStormLite-0.2b/src/utils.h.orig	2006-01-16 20:51:12.000000000 +0000
++++ BitStormLite-0.2b/src/utils.h	2006-01-16 20:45:22.000000000 +0000
+@@ -380,7 +380,7 @@
+ 	gsize bytes_written;
+ 	
+ 	gchar* ret = g_filename_from_utf8(input_text, -1, &bytes_read, &bytes_written, NULL);
+-	std::string result = ret;
++	std::string result = ret ? ret : input_text;
+ 	g_free(ret);
+ 	
+ 	return result;

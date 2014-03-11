@@ -1,0 +1,11 @@
+--- xemacs-sumo-20060510/xemacs-packages/xslt-process/lisp/xslt-process.el~	2001-05-01 08:41:45.000000000 +0300
++++ xemacs-sumo-20060510/xemacs-packages/xslt-process/lisp/xslt-process.el	2006-09-03 02:14:02.000000000 +0300
+@@ -47,7 +47,7 @@
+   "Run an XSLT processor on an Emacs buffer."
+   :group 'tools)
+ 
+-(defcustom xslt-process-default-processor (list 'Saxon)
++(defcustom xslt-process-default-processor (list 'TrAX)
+   "*The default XSLT processor to be applied to an XML document."
+   :group 'xslt-process
+   :type '(list

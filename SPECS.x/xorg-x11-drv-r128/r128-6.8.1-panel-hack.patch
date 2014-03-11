@@ -1,0 +1,27 @@
+diff -up xf86-video-r128-6.8.1/src/r128_driver.c.jx xf86-video-r128-6.8.1/src/r128_driver.c
+--- xf86-video-r128-6.8.1/src/r128_driver.c.jx	2009-07-28 01:15:42.000000000 -0400
++++ xf86-video-r128-6.8.1/src/r128_driver.c	2009-09-18 16:56:54.000000000 -0400
+@@ -1700,7 +1700,22 @@ static Bool R128PreInitModes(ScrnInfoPtr
+                 R128SetSyncRangeFromEdid(pScrn, 1);
+             if(pScrn->monitor->nVrefresh <= 0)
+                 R128SetSyncRangeFromEdid(pScrn, 0);
+-        }
++        } else if (info->PanelXRes && info->PanelYRes) {
++	    DisplayModePtr mode = xf86CVTMode(info->PanelXRes, info->PanelYRes,
++					      60, 0, 0);
++
++	    pScrn->monitor->nHsync = 1;
++	    pScrn->monitor->hsync[0].lo = 31.5;
++	    pScrn->monitor->hsync[0].hi =
++		(float)mode->Clock / (float)mode->HTotal;
++	    pScrn->monitor->nVrefresh = 1;
++	    pScrn->monitor->vrefresh[0].lo = 56.0;
++	    pScrn->monitor->vrefresh[0].hi =
++		(float)mode->Clock*1000.0 / (float)mode->HTotal /
++		(float)mode->VTotal;
++
++	    xfree(mode);
++	}
+ 
+         modesFound = xf86ValidateModes(pScrn,
+ 				   pScrn->monitor->Modes,

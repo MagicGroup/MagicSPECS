@@ -1,0 +1,97 @@
+diff -up chromium-23.0.1271.95/build/linux/system.gyp.speex chromium-23.0.1271.95/build/linux/system.gyp
+--- chromium-23.0.1271.95/build/linux/system.gyp.speex	2012-12-12 17:06:16.730294165 -0500
++++ chromium-23.0.1271.95/build/linux/system.gyp	2012-12-12 17:06:16.914294254 -0500
+@@ -405,6 +405,27 @@
+       ],
+     },
+     {
++      'target_name': 'speex',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags speex)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other speex)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l speex)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
+       'target_name': 'gnome_keyring',
+       'type': 'none',
+       'conditions': [
+diff -up chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc.speex chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc
+--- chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc.speex	2012-11-27 21:01:25.000000000 -0500
++++ chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc	2012-12-12 17:06:16.914294254 -0500
+@@ -11,7 +11,7 @@
+ #include "base/string_number_conversions.h"
+ #include "content/browser/speech/audio_buffer.h"
+ #include "third_party/flac/flac.h"
+-#include "third_party/speex/speex.h"
++#include <speex/speex.h>
+ 
+ using std::string;
+ using speech::AudioChunk;
+diff -up chromium-23.0.1271.95/content/content_browser.gypi.speex chromium-23.0.1271.95/content/content_browser.gypi
+--- chromium-23.0.1271.95/content/content_browser.gypi.speex	2012-11-27 21:01:27.000000000 -0500
++++ chromium-23.0.1271.95/content/content_browser.gypi	2012-12-12 17:06:16.915294255 -0500
+@@ -965,7 +965,7 @@
+     }, { # OS!="android"
+       'dependencies': [
+         '../third_party/flac/flac.gyp:libflac',
+-        '../third_party/speex/speex.gyp:libspeex',
++        '../build/linux/system.gyp:speex',
+       ],
+     }],
+     ['OS=="mac"', {
+diff -up chromium-23.0.1271.95/remoting/codec/audio_decoder_speex.cc.speex chromium-23.0.1271.95/remoting/codec/audio_decoder_speex.cc
+--- chromium-23.0.1271.95/remoting/codec/audio_decoder_speex.cc.speex	2012-12-12 17:08:27.849312544 -0500
++++ chromium-23.0.1271.95/remoting/codec/audio_decoder_speex.cc	2012-12-12 17:08:50.222312953 -0500
+@@ -11,9 +11,9 @@
+ #include "base/logging.h"
+ #include "base/stl_util.h"
+ #include "remoting/proto/audio.pb.h"
+-#include "third_party/speex/speex.h"
+-#include "third_party/speex/include/speex/speex_callbacks.h"
+-#include "third_party/speex/include/speex/speex_stereo.h"
++#include <speex/speex.h>
++#include <speex/speex_callbacks.h>
++#include <speex/speex_stereo.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-23.0.1271.95/remoting/codec/audio_encoder_speex.cc.speex chromium-23.0.1271.95/remoting/codec/audio_encoder_speex.cc
+--- chromium-23.0.1271.95/remoting/codec/audio_encoder_speex.cc.speex	2012-12-12 17:07:38.398308614 -0500
++++ chromium-23.0.1271.95/remoting/codec/audio_encoder_speex.cc	2012-12-12 17:08:15.339309373 -0500
+@@ -11,8 +11,8 @@
+ #include "base/logging.h"
+ #include "base/stl_util.h"
+ #include "remoting/proto/audio.pb.h"
+-#include "third_party/speex/speex.h"
+-#include "third_party/speex/include/speex/speex_stereo.h"
++#include <speex/speex.h>
++#include <speex/speex_stereo.h>
+ 
+ namespace {
+ // A quality of 8 in wide band mode corresponds to 27,800 bits per second.
+diff -up chromium-23.0.1271.95/remoting/remoting.gyp.speex chromium-23.0.1271.95/remoting/remoting.gyp
+--- chromium-23.0.1271.95/remoting/remoting.gyp.speex	2012-12-12 17:07:07.476304993 -0500
++++ chromium-23.0.1271.95/remoting/remoting.gyp	2012-12-12 17:07:24.149305386 -0500
+@@ -1174,7 +1174,7 @@
+         '../skia/skia.gyp:skia',
+         '../third_party/libvpx/libvpx.gyp:libvpx',
+         '../third_party/protobuf/protobuf.gyp:protobuf_lite',
+-        '../third_party/speex/speex.gyp:libspeex',
++        '../build/linux/system.gyp:speex',
+         '../third_party/zlib/zlib.gyp:zlib',
+         '../media/media.gyp:yuv_convert',
+         'remoting_jingle_glue',

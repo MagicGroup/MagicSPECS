@@ -1,0 +1,23 @@
+diff -up ksh-20110630/src/cmd/ksh93/sh/subshell.c.ifsfix ksh-20110630/src/cmd/ksh93/sh/subshell.c
+--- ksh-20110630/src/cmd/ksh93/sh/subshell.c.ifsfix	2011-06-09 15:16:19.000000000 +0200
++++ ksh-20110630/src/cmd/ksh93/sh/subshell.c	2011-08-03 07:58:55.749400810 +0200
+@@ -304,7 +304,7 @@ static void nv_restore(struct subshell *
+ 	register Namval_t *mp, *np;
+ 	const char *save = sp->shpwd;
+ 	Namval_t	*mpnext;
+-	int		flags;
++	int		flags,nofree;
+ 	sp->shpwd = 0;	/* make sure sh_assignok doesn't save with nv_unset() */
+ 	for(lp=sp->svar; lp; lp=lq)
+ 	{
+@@ -327,7 +327,9 @@ static void nv_restore(struct subshell *
+ 		nv_setsize(mp,nv_size(np));
+ 		if(!(flags&NV_MINIMAL))
+ 			mp->nvenv = np->nvenv;
+-		mp->nvfun = np->nvfun;
++		nofree = mp->nvfun?mp->nvfun->nofree:0;
++		if((mp->nvfun = np->nvfun) && nofree)
++			mp->nvfun->nofree = nofree;
+ 		if(nv_isattr(np,NV_IDENT))
+ 		{
+ 			nv_offattr(np,NV_IDENT);

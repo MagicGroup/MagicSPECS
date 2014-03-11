@@ -1,0 +1,18 @@
+Index: redhat-rpm-config-9.1.0/macros
+===================================================================
+--- redhat-rpm-config-9.1.0.orig/macros
++++ redhat-rpm-config-9.1.0/macros
+@@ -14,10 +14,10 @@
+ %_prefix		/usr
+ %_sysconfdir		/etc
+ %_localstatedir		/var
+-%_infodir		/usr/share/info
+-%_mandir		/usr/share/man
++%_infodir		%{_prefix}/share/info
++%_mandir		%{_prefix}/share/man
+ 
+-%_defaultdocdir		%{_usr}/share/doc
++%_defaultdocdir		%{_prefix}/share/doc
+ 
+ %_fmoddir		%{_libdir}/gfortran/modules
+ 

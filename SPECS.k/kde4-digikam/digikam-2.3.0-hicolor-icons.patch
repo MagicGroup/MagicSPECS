@@ -1,0 +1,162 @@
+commit beecc2628e0c4ad3a9a44b28a88360b391048c7d
+Author: Ananta Palani <anantapalani@gmail.com>
+Date:   Tue Nov 8 10:10:08 2011 +0000
+
+    Regression for collision of digiKam icons with Oxygen
+    
+    BUG: 286034
+
+diff --git a/data/icons/apps/hi128-app-digikam.png b/data/icons/apps/hi128-app-digikam.png
+new file mode 100644
+index 0000000..95dcfc4
+Binary files /dev/null and b/data/icons/apps/hi128-app-digikam.png differ
+diff --git a/data/icons/apps/hi128-app-showfoto.png b/data/icons/apps/hi128-app-showfoto.png
+new file mode 100644
+index 0000000..a64f441
+Binary files /dev/null and b/data/icons/apps/hi128-app-showfoto.png differ
+diff --git a/data/icons/apps/hi16-app-digikam.png b/data/icons/apps/hi16-app-digikam.png
+new file mode 100644
+index 0000000..da9d087
+Binary files /dev/null and b/data/icons/apps/hi16-app-digikam.png differ
+diff --git a/data/icons/apps/hi16-app-showfoto.png b/data/icons/apps/hi16-app-showfoto.png
+new file mode 100644
+index 0000000..d5629b1
+Binary files /dev/null and b/data/icons/apps/hi16-app-showfoto.png differ
+diff --git a/data/icons/apps/hi22-app-digikam.png b/data/icons/apps/hi22-app-digikam.png
+new file mode 100644
+index 0000000..7a915f4
+Binary files /dev/null and b/data/icons/apps/hi22-app-digikam.png differ
+diff --git a/data/icons/apps/hi22-app-showfoto.png b/data/icons/apps/hi22-app-showfoto.png
+new file mode 100644
+index 0000000..702452f
+Binary files /dev/null and b/data/icons/apps/hi22-app-showfoto.png differ
+diff --git a/data/icons/apps/hi256-app-digikam.png b/data/icons/apps/hi256-app-digikam.png
+new file mode 100644
+index 0000000..661cc3a
+Binary files /dev/null and b/data/icons/apps/hi256-app-digikam.png differ
+diff --git a/data/icons/apps/hi256-app-showfoto.png b/data/icons/apps/hi256-app-showfoto.png
+new file mode 100644
+index 0000000..b55f0fb
+Binary files /dev/null and b/data/icons/apps/hi256-app-showfoto.png differ
+diff --git a/data/icons/apps/hi32-app-digikam.png b/data/icons/apps/hi32-app-digikam.png
+new file mode 100644
+index 0000000..01cb96c
+Binary files /dev/null and b/data/icons/apps/hi32-app-digikam.png differ
+diff --git a/data/icons/apps/hi32-app-showfoto.png b/data/icons/apps/hi32-app-showfoto.png
+new file mode 100644
+index 0000000..ecb2612
+Binary files /dev/null and b/data/icons/apps/hi32-app-showfoto.png differ
+diff --git a/data/icons/apps/hi48-app-digikam.png b/data/icons/apps/hi48-app-digikam.png
+new file mode 100644
+index 0000000..ed1dd37
+Binary files /dev/null and b/data/icons/apps/hi48-app-digikam.png differ
+diff --git a/data/icons/apps/hi48-app-showfoto.png b/data/icons/apps/hi48-app-showfoto.png
+new file mode 100644
+index 0000000..bf43254
+Binary files /dev/null and b/data/icons/apps/hi48-app-showfoto.png differ
+diff --git a/data/icons/apps/hi64-app-digikam.png b/data/icons/apps/hi64-app-digikam.png
+new file mode 100644
+index 0000000..77c1126
+Binary files /dev/null and b/data/icons/apps/hi64-app-digikam.png differ
+diff --git a/data/icons/apps/hi64-app-showfoto.png b/data/icons/apps/hi64-app-showfoto.png
+new file mode 100644
+index 0000000..0818125
+Binary files /dev/null and b/data/icons/apps/hi64-app-showfoto.png differ
+diff --git a/data/icons/apps/hisc-app-digikam.svgz b/data/icons/apps/hisc-app-digikam.svgz
+new file mode 100644
+index 0000000..b8f0ff3
+Binary files /dev/null and b/data/icons/apps/hisc-app-digikam.svgz differ
+diff --git a/data/icons/apps/hisc-app-showfoto.svgz b/data/icons/apps/hisc-app-showfoto.svgz
+new file mode 100644
+index 0000000..1586bb5
+Binary files /dev/null and b/data/icons/apps/hisc-app-showfoto.svgz differ
+diff --git a/data/icons/apps/ox128-app-digikam.png b/data/icons/apps/ox128-app-digikam.png
+deleted file mode 100644
+index 95dcfc4..0000000
+Binary files a/data/icons/apps/ox128-app-digikam.png and /dev/null differ
+diff --git a/data/icons/apps/ox128-app-showfoto.png b/data/icons/apps/ox128-app-showfoto.png
+deleted file mode 100644
+index a64f441..0000000
+Binary files a/data/icons/apps/ox128-app-showfoto.png and /dev/null differ
+diff --git a/data/icons/apps/ox16-app-digikam.png b/data/icons/apps/ox16-app-digikam.png
+deleted file mode 100644
+index da9d087..0000000
+Binary files a/data/icons/apps/ox16-app-digikam.png and /dev/null differ
+diff --git a/data/icons/apps/ox16-app-showfoto.png b/data/icons/apps/ox16-app-showfoto.png
+deleted file mode 100644
+index d5629b1..0000000
+Binary files a/data/icons/apps/ox16-app-showfoto.png and /dev/null differ
+diff --git a/data/icons/apps/ox22-app-digikam.png b/data/icons/apps/ox22-app-digikam.png
+deleted file mode 100644
+index 7a915f4..0000000
+Binary files a/data/icons/apps/ox22-app-digikam.png and /dev/null differ
+diff --git a/data/icons/apps/ox22-app-showfoto.png b/data/icons/apps/ox22-app-showfoto.png
+deleted file mode 100644
+index 702452f..0000000
+Binary files a/data/icons/apps/ox22-app-showfoto.png and /dev/null differ
+diff --git a/data/icons/apps/ox256-app-digikam.png b/data/icons/apps/ox256-app-digikam.png
+deleted file mode 100644
+index 661cc3a..0000000
+Binary files a/data/icons/apps/ox256-app-digikam.png and /dev/null differ
+diff --git a/data/icons/apps/ox256-app-showfoto.png b/data/icons/apps/ox256-app-showfoto.png
+deleted file mode 100644
+index b55f0fb..0000000
+Binary files a/data/icons/apps/ox256-app-showfoto.png and /dev/null differ
+diff --git a/data/icons/apps/ox32-app-digikam.png b/data/icons/apps/ox32-app-digikam.png
+deleted file mode 100644
+index 01cb96c..0000000
+Binary files a/data/icons/apps/ox32-app-digikam.png and /dev/null differ
+diff --git a/data/icons/apps/ox32-app-showfoto.png b/data/icons/apps/ox32-app-showfoto.png
+deleted file mode 100644
+index ecb2612..0000000
+Binary files a/data/icons/apps/ox32-app-showfoto.png and /dev/null differ
+diff --git a/data/icons/apps/ox48-app-digikam.png b/data/icons/apps/ox48-app-digikam.png
+deleted file mode 100644
+index ed1dd37..0000000
+Binary files a/data/icons/apps/ox48-app-digikam.png and /dev/null differ
+diff --git a/data/icons/apps/ox48-app-showfoto.png b/data/icons/apps/ox48-app-showfoto.png
+deleted file mode 100644
+index bf43254..0000000
+Binary files a/data/icons/apps/ox48-app-showfoto.png and /dev/null differ
+diff --git a/data/icons/apps/ox64-app-digikam.png b/data/icons/apps/ox64-app-digikam.png
+deleted file mode 100644
+index 77c1126..0000000
+Binary files a/data/icons/apps/ox64-app-digikam.png and /dev/null differ
+diff --git a/data/icons/apps/ox64-app-showfoto.png b/data/icons/apps/ox64-app-showfoto.png
+deleted file mode 100644
+index 0818125..0000000
+Binary files a/data/icons/apps/ox64-app-showfoto.png and /dev/null differ
+diff --git a/data/icons/apps/oxsc-app-digikam.svgz b/data/icons/apps/oxsc-app-digikam.svgz
+deleted file mode 100644
+index b8f0ff3..0000000
+Binary files a/data/icons/apps/oxsc-app-digikam.svgz and /dev/null differ
+diff --git a/data/icons/apps/oxsc-app-showfoto.svgz b/data/icons/apps/oxsc-app-showfoto.svgz
+deleted file mode 100644
+index 1586bb5..0000000
+Binary files a/data/icons/apps/oxsc-app-showfoto.svgz and /dev/null differ
+diff --git a/digikam/CMakeLists.txt b/digikam/CMakeLists.txt
+index e015354..4e92cb7 100644
+--- a/digikam/CMakeLists.txt
++++ b/digikam/CMakeLists.txt
+@@ -256,7 +256,7 @@ ENDIF(USE_SCRIPT_IFACE)
+ 
+ QT4_ADD_DBUS_ADAPTOR(digikam_SRCS main/org.kde.digikam.xml main/digikamapp.h Digikam::DigikamApp)
+ 
+-KDE4_ADD_APP_ICON(digikam_SRCS "../data/icons/apps/ox*-app-digikam.png")
++KDE4_ADD_APP_ICON(digikam_SRCS "../data/icons/apps/hi*-app-digikam.png")
+ 
+ KDE4_ADD_EXECUTABLE(digikam ${digikam_SRCS})
+ 
+diff --git a/showfoto/CMakeLists.txt b/showfoto/CMakeLists.txt
+index 2b78690..658aad7 100644
+--- a/showfoto/CMakeLists.txt
++++ b/showfoto/CMakeLists.txt
+@@ -20,7 +20,7 @@ SET(showfoto_SRCS
+     main/showfoto.cpp
+    )
+ 
+-KDE4_ADD_APP_ICON(showfoto_SRCS "../data/icons/apps/ox*-app-showfoto.png")
++KDE4_ADD_APP_ICON(showfoto_SRCS "../data/icons/apps/hi*-app-showfoto.png")
+ 
+ KDE4_ADD_EXECUTABLE(showfoto ${showfoto_SRCS})
+ 

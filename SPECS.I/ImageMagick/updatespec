@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+patchlevel=`echo $1|cut -d"." -f 4`
+ver=`echo $1|sed -e "s/.$patchlevel$//g"`
+sed -i "s/%global VER.*/%global VER $ver/g" ImageMagick.spec
+sed -i "s/%global Patchlevel.*/%global Patchlevel $patchlevel/g" ImageMagick.spec
+popd

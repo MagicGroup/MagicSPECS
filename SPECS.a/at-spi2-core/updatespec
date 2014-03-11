@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+MAJORVER=$(echo $1|cut -d"." -f1).$(echo $1|cut -d"." -f2)
+sed -i "s/%define majorver.*/%define majorver $MAJORVER/g" at-spi2-core.spec
+sed -i "s/Version:.*/Version: $1/g" at-spi2-core.spec
+popd

@@ -1,0 +1,19 @@
+diff -ru yum-3.4.3-orig/yum/config.py yum-3.4.3/yum/config.py
+--- yum-3.4.3-orig/yum/config.py	2011-12-02 15:45:41.617448597 -0500
++++ yum-3.4.3/yum/config.py	2011-12-02 15:46:20.576285275 -0500
+@@ -45,10 +45,10 @@
+ # Alter/patch these to change the default checking...
+ __pkgs_gpgcheck_default__ = False
+ __repo_gpgcheck_default__ = False
+-__main_multilib_policy_default__ = 'all'
+-__main_failovermethod_default__ = 'roundrobin'
+-__main_installonly_limit_default__ = 0
+-__group_command_default__ = 'compat'
++__main_multilib_policy_default__ = 'best'
++__main_failovermethod_default__ = 'priority'
++__main_installonly_limit_default__ = 3
++__group_command_default__ = 'compat'
+
+ class Option(object):
+     """
+Only in yum-3.4.3/yum: config.py~

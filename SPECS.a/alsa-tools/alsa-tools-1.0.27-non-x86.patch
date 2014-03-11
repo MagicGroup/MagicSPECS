@@ -1,0 +1,12 @@
+diff -up alsa-tools-1.0.27/hda-verb/hda-verb.c.s390 alsa-tools-1.0.27/hda-verb/hda-verb.c
+--- alsa-tools-1.0.27/hda-verb/hda-verb.c.s390	2013-05-21 12:31:13.000000000 +0200
++++ alsa-tools-1.0.27/hda-verb/hda-verb.c	2013-05-21 12:31:42.000000000 +0200
+@@ -13,7 +13,7 @@
+ #include <ctype.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
+-#ifndef __PPC__
++#if defined(__i386__) || defined(__x86_64__)
+ #include <sys/io.h>
+ #endif
+ #include <sys/types.h>

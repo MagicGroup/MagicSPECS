@@ -1,0 +1,25 @@
+diff -up Crypt-SSLeay-0.57/SSLeay.xs.cryptdef Crypt-SSLeay-0.57/SSLeay.xs
+--- Crypt-SSLeay-0.57/SSLeay.xs.cryptdef	2007-08-13 19:42:33.000000000 +0200
++++ Crypt-SSLeay-0.57/SSLeay.xs	2008-09-24 15:33:48.000000000 +0200
+@@ -9,9 +9,6 @@
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+-#include "EXTERN.h"
+-#include "perl.h"
+-#include "XSUB.h"
+ 
+ /* build problem under openssl 0.9.6 and some builds of perl 5.8.x */
+ #ifndef PERL5
+@@ -25,6 +22,11 @@ extern "C" {
+ #include "crypt_ssleay_version.h"
+ 
+ #undef Free /* undo namespace pollution from crypto.h */
++
++#include "EXTERN.h"
++#include "perl.h"
++#include "XSUB.h"
++
+ #ifdef __cplusplus
+ }
+ #endif

@@ -1,0 +1,21 @@
+diff -up rpmlint-1.4/FilesCheck.py.py3 rpmlint-1.4/FilesCheck.py
+--- rpmlint-1.4/FilesCheck.py.py3	2012-08-14 15:28:27.143695431 -0400
++++ rpmlint-1.4/FilesCheck.py	2012-08-14 15:28:45.125694788 -0400
+@@ -285,7 +285,7 @@ def peek(filename, pkg, length=1024):
+     istext = float(len(t))/len(chunk) <= 0.30
+     return (chunk, istext)
+ 
+-# See Python/import.c (in the trunk and py3k branches) for a full list of
++# See Python/import.c (in the default and 2.x branches) for a full list of
+ # the values here.
+ _python_magic_values = {
+     '2.2': 60717,
+@@ -297,7 +297,7 @@ _python_magic_values = {
+     '3.0': 3130,
+     '3.1': 3150,
+     '3.2': 3180,
+-    '3.3': 3190,
++    '3.3': 3230,
+     }
+ 
+ def get_expected_pyc_magic(path):

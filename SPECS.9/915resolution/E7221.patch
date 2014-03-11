@@ -1,0 +1,54 @@
+--- 915resolution-0.5.3/915resolution.c.lr	2007-10-14 19:35:46.000000000 +0200
++++ 915resolution-0.5.3/915resolution.c	2007-10-14 19:38:49.000000000 +0200
+@@ -55,12 +55,12 @@ typedef unsigned char boolean;
+ typedef unsigned int cardinal;
+ 
+ typedef enum {
+-    CT_UNKWN, CT_830, CT_845G, CT_855GM, CT_865G, CT_915G, CT_915GM, CT_945G, CT_945GM,
++    CT_UNKWN, CT_830, CT_845G, CT_855GM, CT_865G, CT_915G, CT_E7221, CT_915GM, CT_945G, CT_945GM,
+     CT_946GZ, CT_G965, CT_965GM, CT_Q965
+ } chipset_type;
+ 
+ char * chipset_type_names[] = {
+-    "UNKNOWN", "830",  "845G", "855GM", "865G", "915G", "915GM", "945G", "945GM",
++    "UNKNOWN", "830",  "845G", "855GM", "865G", "915G", "E7221 (i915)", "915GM", "945G", "945GM",
+     "946GZ",   "G965", "965GM", "Q965"
+ };
+ 
+@@ -201,6 +201,10 @@ chipset_type get_chipset(cardinal id) {
+ 	type = CT_915G;
+ 	break;
+ 
++    case 0x25888086:
++	type = CT_E7221;
++	break;
++
+     case 0x25908086:
+         type = CT_915GM;
+         break;
+@@ -509,6 +513,7 @@ void unlock_vbios(vbios_map * map) {
+     case CT_845G:
+     case CT_865G:
+     case CT_915G:
++    case CT_E7221:
+     case CT_915GM:
+     case CT_945G:
+     case CT_945GM:
+@@ -550,6 +555,7 @@ void relock_vbios(vbios_map * map) {
+     case CT_845G:
+     case CT_865G:
+     case CT_915G:
++    case CT_E7221:
+     case CT_915GM:
+     case CT_945G:
+     case CT_945GM:
+@@ -800,6 +806,9 @@ int parse_args(int argc, char *argv[], c
+         else if (!strcmp(argv[index], "915G")) {
+             *forced_chipset = CT_915G;
+         }
++        else if (!strcmp(argv[index], "E7221")) {
++            *forced_chipset = CT_E7221;
++        }
+         else if (!strcmp(argv[index], "915GM")) {
+             *forced_chipset = CT_915GM;
+         }

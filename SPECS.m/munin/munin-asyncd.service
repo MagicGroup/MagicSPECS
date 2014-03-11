@@ -1,0 +1,13 @@
+[Unit]
+Description=Munin Async Server.
+Documentation=man:munin-node
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/munin/munin-node.pid
+ExecStart=/usr/sbin/munin-asyncd
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

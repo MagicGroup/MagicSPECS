@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Wine CMD
+Name[zh_CN]=Wine 命令
+Comment=Command Prompt
+Comment[zh_CN]=命令提示符
+Exec=wine cmd
+Terminal=true
+Type=Application
+Icon=wcmd
+Encoding=UTF-8
+Categories=X-Wine;

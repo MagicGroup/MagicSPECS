@@ -1,0 +1,23 @@
+diff -up gambas-2.0.0/main/Makefile.am.BAD gambas-2.0.0/main/Makefile.am
+--- gambas-2.0.0/main/Makefile.am.BAD	2008-01-29 14:14:07.000000000 -0500
++++ gambas-2.0.0/main/Makefile.am	2008-01-29 14:14:27.000000000 -0500
+@@ -1,6 +1,6 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+-SUBDIRS = libltdl gbx gbc lib share
++SUBDIRS = gbx gbc lib share
+ EXTRA_DIST = TODO reconf spec README mime
+ 
+ install-exec-local:
+diff -up gambas-2.0.0/acinclude.m4.BAD gambas-2.0.0/acinclude.m4
+--- gambas-2.0.0/acinclude.m4.BAD	2008-01-29 17:32:57.000000000 -0500
++++ gambas-2.0.0/acinclude.m4	2008-01-29 17:34:28.000000000 -0500
+@@ -3410,7 +3410,7 @@ AC_DEFUN([AC_LIBLTDL_CONVENIENCE],
+   "") enable_ltdl_convenience=yes
+       ac_configure_args="$ac_configure_args --enable-ltdl-convenience" ;;
+   esac
+-  LIBLTDL='${top_builddir}/'ifelse($#,1,[$1],['libltdl'])/libltdlc.la
++  LIBLTDL='-lltdl'
+   LTDLINCL='-I${top_srcdir}/'ifelse($#,1,[$1],['libltdl'])
+   # For backwards non-gettext consistent compatibility...
+   INCLTDL="$LTDLINCL"

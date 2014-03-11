@@ -1,0 +1,42 @@
+--- Makefile.in	2011-08-25 15:13:33.437818904 -0400
++++ Makefile.in.new	2011-08-26 23:55:59.007152188 -0400
+@@ -102,6 +102,8 @@
+ 
+ CC              = @CC@
+ CFLAGS          = @CFLAGS@ $(MPICH2_MAKE_CFLAGS)
++CXX             = @CXX@
++CXXFLAGS        = @CXXFLAGS@ $(MPICH2_MAKE_CXXFLAGS)
+ C_COMPILE       = $(CC) $(DEFS) $(INCLUDES) $(CFLAGS) $(CPPFLAGS)
+ # Build the shared library from the shared object files
+ lib/lib${MPILIBNAME}.@SHLIB_EXT@: lib/lib${MPILIBNAME}.la
+@@ -118,7 +120,7 @@
+ 	(cd lib && $(CREATESHLIB) --mode=link  -version-info "$(ABIVERSION)" -o lib${MPILIBNAME}f90.la  -rpath $(libdir) -L. @LDFLAGS_DEPS@ -l$(MPILIBNAME) @LIB_DEPS@ -ldflags "$(LDFLAGS)" $(LIBS))
+ # Build the shared library from the shared object files
+ lib/lib${MPICXXLIBNAME}.@SHLIB_EXT@: lib/lib${MPICXXLIBNAME}.la
+-	(cd lib && $(CREATESHLIB) --mode=link  -version-info "$(ABIVERSION)" -o lib${MPICXXLIBNAME}.la  -rpath $(libdir) -L. @LDFLAGS_DEPS@ -l$(MPILIBNAME) @LIB_DEPS@ -ldflags "$(LDFLAGS)" $(LIBS))
++	(cd lib && $(CREATESHLIB) --mode=link -cc="$(CXX)" -clink="$(CXX) $(CXXFLAGS) -shared" -version-info "$(ABIVERSION)" -o lib${MPICXXLIBNAME}.la  -rpath $(libdir) -L. @LDFLAGS_DEPS@ -l$(MPILIBNAME) @LIB_DEPS@ -ldflags "$(LDFLAGS)" $(LIBS))
+ 
+ # --------------------------------------------------------------------------
+ .libstamp0: 
+--- Makefile.in	2011-09-11 20:52:24.702958021 -0400
++++ Makefile.in.new	2011-09-12 09:34:52.824287092 -0400
+@@ -328,7 +328,7 @@
+ #    1) Build the debugger interface if requested
+ # Move the "pkglist.new" file to "pkglist" on successful completion
+ all-postamble:
+-	( cd examples && $(MAKE) )
++	( cd examples && $(MAKE) LDFLAGS='-L../lib/' LIBS='-lmpl -lopa' )
+ 	@if [ "@BUILD_TVDLL@" = "yes" ] ; then \
+ 	( cd src/mpi/debugger && $(MAKE) ./libtvmpich2.@SHLIB_EXT@ ) ; fi
+ 	@if [ -s lib/pkglist.new ] ; then mv -f lib/pkglist.new lib/pkglist ; fi
+--- src/util/createshlib.in	2010-11-06 11:02:44.000000000 -0400
++++ src/util/createshlib.in.new	2011-08-27 01:04:47.980532917 -0400
+@@ -99,7 +99,7 @@
+        # -cc and -clink allow us to override the commands used to 
+        # build the shared library
+        -cc=*|--cc=*) CC_SHL=$option ;;
+-       -clink=*|--clink=*) C_LINK_SHL=$option ;;
++       -clink=*|--clink=*) C_LINK_SHL=`echo $arg | sed -e 's/-clink=//'` ;;
+        -libtype=*|--libtype=*) libtype=$option ;;
+        -l*|-L*)
+        dependentLibs="$dependentLibs $arg"

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=XVidCap
+GenericName=X11 Screen Video Capture
+GenericName[zh_CN]=屏幕录像程序
+Comment=X11 Screencam
+Comment[zh_CN]=XWindows 下的屏幕录像程序
+Icon=xvidcap.png
+TryExec=xvidcap
+Exec=xvidcap
+Terminal=false
+Categories=GTK;Application;AudioVideo;Video;

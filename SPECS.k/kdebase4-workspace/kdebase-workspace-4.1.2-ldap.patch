@@ -1,0 +1,12 @@
+diff -up kdebase-workspace-4.1.2/kcontrol/kdm/CMakeLists.txt.ldap kdebase-workspace-4.1.2/kcontrol/kdm/CMakeLists.txt
+--- kdebase-workspace-4.1.2/kcontrol/kdm/CMakeLists.txt.ldap	2008-11-04 18:09:52.000000000 +0100
++++ kdebase-workspace-4.1.2/kcontrol/kdm/CMakeLists.txt	2008-11-04 18:17:11.000000000 +0100
+@@ -27,7 +27,7 @@ set(kcm_kdm_PART_SRCS ${kcmbackgroundlib
+ kde4_add_plugin(kcm_kdm ${kcm_kdm_PART_SRCS})
+ 
+ 
+-target_link_libraries(kcm_kdm ${KDE4_KDE3SUPPORT_LIBS} ${QIMAGEBLITZ_LIBRARIES} ${KDE4_KNEWSTUFF2_LIBS} ${X11_LIBRARIES})
++target_link_libraries(kcm_kdm ${KDE4_KDE3SUPPORT_LIBS} ${QIMAGEBLITZ_LIBRARIES} ${KDE4_KNEWSTUFF2_LIBS} ${X11_LIBRARIES} -lldap)
+ 
+ install(TARGETS kcm_kdm  DESTINATION ${PLUGIN_INSTALL_DIR})
+ 

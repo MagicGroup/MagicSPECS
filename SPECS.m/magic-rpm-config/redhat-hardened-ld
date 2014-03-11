@@ -1,0 +1,9 @@
+%rename self_spec rh_self_spec_old
+
+*self_spec:
+%{!shared:-pie} %(rh_self_spec_old)
+
+%rename link rh_link_old
+
+*link:
+-z now %(rh_link_old)

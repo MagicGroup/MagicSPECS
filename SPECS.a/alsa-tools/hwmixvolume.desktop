@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Hwmixvolume
+GenericName=Control the volume of individual streams on sound cards that use hardware mixing
+Comment=Control the volume of individual streams on sound cards that use hardware mixing
+Exec=hwmixvolume  
+Icon=hwmixvolume
+Terminal=false
+Type=Application
+Categories=Application;AudioVideo;
+Version=0.9.4

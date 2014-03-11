@@ -1,0 +1,79 @@
+--- irda-utils-0.9.17/irdadump/Makefile.rh3	2006-03-09 07:25:23.000000000 +0100
++++ irda-utils-0.9.17/irdadump/Makefile	2006-06-01 14:47:25.000000000 +0200
+@@ -8,8 +8,8 @@
+ 
+ RM_CMD = $(ECMD)$(RM) *.BAK *.bak *.o ,* *~ *.a
+ 
+-INCLUDES  = $(SYS_INCLUDES) -I../include/
+-LIBRARIES = $(SYS_LIBRARIES)
++INCLUDES  = $(SYS_INCLUDES) -I../include/ -I. `pkg-config --cflags glib-2.0`
++LIBRARIES = $(SYS_LIBRARIES) `pkg-config --cflags --libs glib-2.0`
+ LIBPATH   = $(SYS_LIBPATH)
+ 
+ #
+@@ -27,7 +27,7 @@
+ LIBIRDADUMP_TARGET = lib_irdadump.a
+ IRDADUMP_TARGET = irdadump
+ 
+-all: lib_irdadump.a irdadump
++all:  irdadump  lib_irdadump.a
+ 
+ 
+ lib_irdadump.a: $(LIBIRDADUMP_OBJS)
+@@ -40,7 +40,8 @@
+ 
+ irdadump: $(IRDADUMP_OBJS) $(LIBIRDADUMP_TARGET)
+ 	$(prn_cc_o)
+-	$(ECMD)$(CC) $(CFLAGS) `pkg-config --libs glib-2.0` -o  $(IRDADUMP_TARGET) $< $(LIBIRDADUMP_TARGET)
++	$(ECMD)$(CC) $(CFLAGS) $(LIBRARIES) -o  $(IRDADUMP_TARGET) $< $(LIBIRDADUMP_TARGET)
++	#$(ECMD)$(CC) $(CFLAGS) `pkg-config --cflags --libs glib-2.0` -o  $(IRDADUMP_TARGET) $< $(LIBIRDADUMP_TARGET)
+ 
+ 
+ .c.o:
+--- irda-utils-0.9.17/irnetd/Makefile.rh3	2006-03-09 07:25:19.000000000 +0100
++++ irda-utils-0.9.17/irnetd/Makefile	2006-06-01 14:47:25.000000000 +0200
+@@ -55,7 +55,7 @@
+ 
+ install: irnetd
+ 	$(prn_install)
+-	$(ECMD) install irnetd /usr/sbin/
++	$(ECMD) install irnetd $(ROOT)/usr/sbin/
+ 
+ 
+ clean:
+--- irda-utils-0.9.17/Makefile.rh3	2006-03-09 07:25:27.000000000 +0100
++++ irda-utils-0.9.17/Makefile	2006-06-01 14:48:21.000000000 +0200
+@@ -28,10 +28,11 @@
+ TARGET = test
+ 
+ DIRS = irattach irdaping etc man irnetd psion tekram findchip irdadump smcinit
+-CFLAGS= -O2 -W -Wall
++CFLAGS = -O2 -W -Wall
++INCLUDES = -I/usr/include/glib-2.0 -I./include -I.
+ 
+ all:
+-	@-(set -e ; for d in $(DIRS) ; do $(MAKE) $(MAKE_OUTPUT) -C $$d $@ ; done)
++	@-(set -e ; for d in $(DIRS) ; do $(MAKE) $(INCLUDES) $(MAKE_OUTPUT) -C $$d $@ ; done)
+ 
+ 
+ install:
+--- irda-utils-0.9.17/psion/Makefile.rh3	2006-03-09 07:25:19.000000000 +0100
++++ irda-utils-0.9.17/psion/Makefile	2006-06-01 14:47:25.000000000 +0200
+@@ -5,6 +5,7 @@
+ PSION_SRC= irpsion5.c
+ PSION_OBJS= irpsion5.o
+ PSION_TARGETS= irpsion5
++CFLAGS= -g -I../include -Wall -Wstrict-prototypes $(RPM_OPT_FLAGS)
+ 
+ all: $(PSION_TARGETS)
+ 
+@@ -22,7 +23,6 @@
+ 	$(ECMD)install $(PSION_TARGETS) $(ROOT)/usr/bin
+ 
+ 
+-CFLAGS += -g -I../include -Wall -Wstrict-prototypes $(RPM_OPT_FLAGS)
+ irpsion5: 
+ 	$(prn_cc_o)
+-	$(ECMD)$(CC) $(CFLAGS) $(PSION_SRC) -o $@
+\ Kein Zeilenumbruch am Dateiende.
++	$(ECMD)$(CC) $(CFLAGS) -g -I/usr/include/glib-2.0 -I../include -Wall -Wstrict-prototypes $(RPM_OPT_FLAGS) $(PSION_SRC) -o $@

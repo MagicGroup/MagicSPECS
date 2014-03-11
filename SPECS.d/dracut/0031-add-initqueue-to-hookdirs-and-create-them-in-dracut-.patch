@@ -1,0 +1,60 @@
+From 4fed3ddf16431524f07fc8bbad6aec913b6c0777 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 2 Mar 2012 14:46:11 +0100
+Subject: [PATCH] add "initqueue/*" to hookdirs and create them in dracut
+ itsself
+
+now we can just use
+    inst_hook initqueue/settled 99 "$moddir/pollcdrom.sh"
+---
+ dracut-functions.sh              |    6 ++++--
+ dracut.sh                        |    3 +++
+ modules.d/99base/module-setup.sh |    4 ----
+ 3 files changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/dracut-functions.sh b/dracut-functions.sh
+index 5cf24a7..05c1d3a 100755
+--- a/dracut-functions.sh
++++ b/dracut-functions.sh
+@@ -34,8 +34,10 @@ fi
+ 
+ # export standard hookdirs
+ [[ $hookdirs ]] || {
+-    hookdirs="cmdline pre-udev pre-trigger netroot initqueue pre-mount"
+-    hookdirs+=" pre-pivot mount emergency shutdown-emergency shutdown cleanup"
++    hookdirs="cmdline pre-udev pre-trigger netroot "
++    hookdirs+="initqueue initqueue/settled initqueue/finished initqueue/timeout "
++    hookdirs+="pre-mount pre-pivot mount "
++    hookdirs+="emergency shutdown-emergency shutdown cleanup "
+     export hookdirs
+ }
+ 
+diff --git a/dracut.sh b/dracut.sh
+index 88691ae..417008c 100755
+--- a/dracut.sh
++++ b/dracut.sh
+@@ -674,6 +674,9 @@ fi
+ 
+ if [[ $kernel_only != yes ]]; then
+     mkdir -p "${initdir}/etc/cmdline.d"
++    for _d in $hookdirs; do
++        mkdir -m 0755 -p ${initdir}/lib/dracut/hooks/$_d
++    done
+ fi
+ 
+ mkdir -p "$initdir/.kernelmodseen"
+diff --git a/modules.d/99base/module-setup.sh b/modules.d/99base/module-setup.sh
+index fd92644..5a97770 100755
+--- a/modules.d/99base/module-setup.sh
++++ b/modules.d/99base/module-setup.sh
+@@ -33,10 +33,6 @@ install() {
+     [ -e "${initdir}/lib" ] || mkdir -m 0755 -p ${initdir}/lib
+     mkdir -m 0755 -p ${initdir}/lib/dracut
+     mkdir -m 0755 -p ${initdir}/lib/dracut/hooks
+-    for _d in $hookdirs emergency \
+-        initqueue initqueue/timeout initqueue/finished initqueue/settled; do
+-        mkdir -m 0755 -p ${initdir}/lib/dracut/hooks/$_d
+-    done
+ 
+     mkdir -p ${initdir}/tmp
+ 

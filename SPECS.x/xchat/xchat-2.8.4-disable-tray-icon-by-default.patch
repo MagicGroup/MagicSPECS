@@ -1,0 +1,12 @@
+diff -ur xchat-2.8.4/src/common/cfgfiles.c xchat-2.8.4-disable-tray-icon-by-default/src/common/cfgfiles.c
+--- xchat-2.8.4/src/common/cfgfiles.c	2007-06-17 08:11:42.000000000 +0200
++++ xchat-2.8.4-disable-tray-icon-by-default/src/common/cfgfiles.c	2007-07-04 12:05:21.000000000 +0200
+@@ -670,7 +670,7 @@
+ 	prefs.autoopendccchatwindow = 1;
+ 	prefs.userhost = 1;
+ 	prefs.gui_url_mod = 4;	/* ctrl */
+-	prefs.gui_tray = 1;
++	prefs.gui_tray = 0;
+ 	prefs.gui_pane_left_size = 100;
+ 	prefs.gui_pane_right_size = 100;
+ 	prefs.mainwindow_save = 1;

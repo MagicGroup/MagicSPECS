@@ -1,0 +1,2092 @@
+diff -up webrtc-20121218svn2718/configure.ac.SANITY webrtc-20121218svn2718/configure.ac
+--- webrtc-20121218svn2718/configure.ac.SANITY	2012-12-18 21:36:22.477635839 -0500
++++ webrtc-20121218svn2718/configure.ac	2012-12-18 21:36:22.477635839 -0500
+@@ -0,0 +1,140 @@
++AC_INIT([webrtc], [0.1], [google-talk-open@googlegroups.com])
++AC_CANONICAL_SYSTEM
++AM_CONFIG_HEADER(config.h)
++AM_INIT_AUTOMAKE([dist-zip])
++AC_PROG_CC
++AC_PROG_CXX
++AM_PROG_AS
++AM_PROG_LIBTOOL
++LIBTOOL="$LIBTOOL --silent"
++AC_PROG_INSTALL
++AC_DEFINE(PRODUCTION_BUILD, 1, [Build as a production build])
++AC_DEFINE(PRODUCTION, 1, [Build as a production build])
++AC_DEFINE(POSIX, 1, [If we're using configure, we're on POSIX])
++
++WEBRTC_MAJORMINOR=0.1
++AC_SUBST(WEBRTC_MAJORMINOR)
++
++WEBRTC_LIBRARY_VERSION=0:0:0
++AC_SUBST(WEBRTC_LIBRARY_VERSION)
++
++# This is super hackish. Sorry.
++unamem=`uname -m | sed -e 's/i.86/i686/' -e 's/^armv.*/arm/'`
++AM_CONDITIONAL(ARM,test x"$unamem" == x"arm")
++
++enableval=no
++AC_MSG_CHECKING([whether to compile with armv7 optimized files])
++AC_ARG_ENABLE(armv7,
++  AS_HELP_STRING([--enable-armv7], [compile with arm7 optimized files]))
++case "${enableval}" in
++yes)
++  AC_MSG_RESULT(yes)
++  ;;
++no)
++  AC_MSG_RESULT(no)
++  ;;
++*)
++  AC_MSG_ERROR([bad value ${enableval} for --enable-armv7, needs yes or no])
++  ;;
++esac
++AM_CONDITIONAL(ARM7_ENABLED, test x"$enableval" = xyes)
++
++HAVE_JPEG=no
++AC_CHECK_LIB(jpeg, jpeg_destroy_decompress, HAVE_JPEG="yes")
++if test "x$HAVE_JPEG" = xyes ; then
++  JPEG_LIBS="-ljpeg"
++  AC_SUBST(JPEG_LIBS)
++else
++  AC_ERROR([libjpeg is required to build webrtc. You can get it from http://sourceforge.net/projects/libjpeg-turbo/])
++fi
++
++PKG_CHECK_MODULES(LIBYUV, libyuv, enable_libyuv=yes, enable_libyuv=no)
++if test x$enable_libyuv = xno ; then
++  AC_ERROR([libyuv is required to build webrtc.])
++else
++  AC_SUBST(LIBYUV_CFLAGS)
++  AC_SUBST(LIBYUV_LIBS)
++  AC_DEFINE(HAVE_LIBYUV, 1, [libyuv present])
++fi
++
++PKG_CHECK_MODULES(VPX, vpx, enable_vpx=yes, enable_vpx=no)
++if test x$enable_vpx = xno ; then
++  AC_ERROR([vpx is required to build webrtc.])
++else
++  AC_SUBST(VPX_CFLAGS)
++  AC_SUBST(VPX_LIBS)
++  AC_DEFINE(HAVE_LIBVPX, 1, [vpx present])
++fi
++
++AC_OUTPUT([Makefile
++          src/Makefile
++          src/common_audio/Makefile
++          src/common_audio/resampler/Makefile
++          src/common_audio/signal_processing/Makefile
++          src/common_audio/vad/Makefile
++          src/common_video/Makefile
++          src/common_video/jpeg/Makefile
++          src/common_video/libyuv/Makefile
++          src/system_wrappers/Makefile
++          src/system_wrappers/source/Makefile
++          src/modules/Makefile
++          src/modules/audio_coding/Makefile
++          src/modules/audio_coding/codecs/Makefile
++          src/modules/audio_coding/codecs/cng/Makefile
++          src/modules/audio_coding/codecs/g711/Makefile
++          src/modules/audio_coding/codecs/g722/Makefile
++          src/modules/audio_coding/codecs/ilbc/Makefile
++          src/modules/audio_coding/codecs/isac/Makefile
++          src/modules/audio_coding/codecs/isac/fix/Makefile
++          src/modules/audio_coding/codecs/isac/fix/source/Makefile
++          src/modules/audio_coding/codecs/isac/main/Makefile
++          src/modules/audio_coding/codecs/isac/main/source/Makefile
++          src/modules/audio_coding/codecs/pcm16b/Makefile
++          src/modules/audio_coding/main/Makefile
++          src/modules/audio_coding/main/source/Makefile
++          src/modules/audio_coding/neteq/Makefile
++          src/modules/audio_conference_mixer/Makefile
++          src/modules/audio_conference_mixer/source/Makefile
++          src/modules/audio_device/Makefile
++          src/modules/audio_device/main/Makefile
++          src/modules/audio_device/main/source/Makefile
++          src/modules/audio_processing/Makefile
++          src/modules/audio_processing/aec/Makefile
++          src/modules/audio_processing/aecm/Makefile
++          src/modules/audio_processing/agc/Makefile
++          src/modules/audio_processing/ns/Makefile
++          src/modules/audio_processing/utility/Makefile
++          src/modules/bitrate_controller/Makefile
++          src/modules/media_file/Makefile
++          src/modules/media_file/source/Makefile
++          src/modules/remote_bitrate_estimator/Makefile
++          src/modules/rtp_rtcp/Makefile
++          src/modules/rtp_rtcp/source/Makefile
++          src/modules/udp_transport/Makefile
++          src/modules/udp_transport/source/Makefile
++          src/modules/utility/Makefile
++          src/modules/utility/source/Makefile
++          src/modules/video_capture/Makefile
++          src/modules/video_capture/main/Makefile
++          src/modules/video_capture/main/source/Makefile
++          src/modules/video_coding/Makefile
++          src/modules/video_coding/codecs/Makefile
++          src/modules/video_coding/codecs/i420/Makefile
++          src/modules/video_coding/codecs/i420/main/Makefile
++          src/modules/video_coding/codecs/i420/main/source/Makefile
++          src/modules/video_coding/codecs/vp8/Makefile
++          src/modules/video_coding/main/Makefile
++          src/modules/video_coding/main/source/Makefile
++          src/modules/video_processing/Makefile
++          src/modules/video_processing/main/Makefile
++          src/modules/video_processing/main/source/Makefile
++          src/modules/video_render/Makefile
++          src/modules/video_render/main/Makefile
++          src/modules/video_render/main/source/Makefile
++          src/tools/Makefile
++          src/tools/converter/Makefile
++          src/tools/frame_analyzer/Makefile
++          src/tools/psnr_ssim_analyzer/Makefile
++          src/video_engine/Makefile
++          src/voice_engine/Makefile
++	  ])
+diff -up webrtc-20121218svn2718/Makefile.am.SANITY webrtc-20121218svn2718/Makefile.am
+--- webrtc-20121218svn2718/Makefile.am.SANITY	2012-12-18 21:36:22.478635840 -0500
++++ webrtc-20121218svn2718/Makefile.am	2012-12-18 21:36:22.478635840 -0500
+@@ -0,0 +1,4 @@
++SUBDIRS=src
++
++configdir = $(includedir)/webrtc
++config_HEADERS = config.h
+diff -up webrtc-20121218svn2718/src/common_audio/Makefile.am.SANITY webrtc-20121218svn2718/src/common_audio/Makefile.am
+--- webrtc-20121218svn2718/src/common_audio/Makefile.am.SANITY	2012-12-18 21:36:22.478635840 -0500
++++ webrtc-20121218svn2718/src/common_audio/Makefile.am	2012-12-18 21:36:22.478635840 -0500
+@@ -0,0 +1 @@
++SUBDIRS=signal_processing resampler vad
+diff -up webrtc-20121218svn2718/src/common_audio/resampler/Makefile.am.SANITY webrtc-20121218svn2718/src/common_audio/resampler/Makefile.am
+--- webrtc-20121218svn2718/src/common_audio/resampler/Makefile.am.SANITY	2012-12-18 21:36:22.479635841 -0500
++++ webrtc-20121218svn2718/src/common_audio/resampler/Makefile.am	2012-12-18 21:36:22.479635841 -0500
+@@ -0,0 +1,13 @@
++lib_LTLIBRARIES = libresampler.la
++
++libresampler_la_SOURCES = resampler.cc
++
++libresampler_la_LIBADD = ../signal_processing/libsignal_processing.la
++
++libresampler_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libresampler_includedir = $(includedir)/webrtc/common_audio/resampler
++
++nobase_libresampler_include_HEADERS = include/resampler.h
++
++AM_CXXFLAGS = -I../signal_processing/include -I../../ -Iinclude -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/common_audio/signal_processing/Makefile.am.SANITY webrtc-20121218svn2718/src/common_audio/signal_processing/Makefile.am
+--- webrtc-20121218svn2718/src/common_audio/signal_processing/Makefile.am.SANITY	2012-12-18 21:36:22.480635842 -0500
++++ webrtc-20121218svn2718/src/common_audio/signal_processing/Makefile.am	2012-12-18 21:36:22.480635842 -0500
+@@ -0,0 +1,65 @@
++lib_LTLIBRARIES = libsignal_processing.la
++
++libsignal_processing_la_SOURCES = auto_corr_to_refl_coef.c \
++                                  auto_correlation.c \
++                                  complex_fft.c \
++                                  copy_set_operations.c \
++                                  division_operations.c \
++                                  dot_product_with_scale.c \
++                                  energy.c \
++                                  filter_ar.c \
++                                  filter_ar_fast_q12.c \
++                                  filter_ma_fast_q12.c \
++                                  get_hanning_window.c \
++                                  get_scaling_square.c \
++                                  ilbc_specific_functions.c \
++                                  levinson_durbin.c \
++                                  lpc_to_refl_coef.c \
++                                  min_max_operations.c \
++                                  randomization_functions.c \
++                                  real_fft.c \
++                                  refl_coef_to_lpc.c \
++                                  resample.c \
++                                  resample_48khz.c \
++                                  resample_by_2.c \
++                                  resample_by_2_internal.c \
++                                  resample_fractional.c \
++                                  spl_sqrt.c \
++                                  spl_version.c \
++                                  splitting_filter.c \
++                                  sqrt_of_one_minus_x_squared.c \
++                                  vector_scaling_operations.c  
++
++if ARM7_ENABLED
++     libsignal_processing_la_SOURCES += complex_bit_reverse_arm.s \
++       	       	       	       	       	cross_correlation_neon.s \
++       	       	       	       	       	downsample_fast_neon.s \
++       	       	       	       	       	filter_ar_fast_q12_armv7.s \
++       	       	       	       	       	min_max_operations_neon.s \
++       	       	       	       	       	spl_sqrt_floor_arm.s \
++       	       	       	       	       	vector_scaling_operations_neon.s
++else
++     libsignal_processing_la_SOURCES += cross_correlation.c \
++                                        downsample_fast.c
++endif
++
++if ARM
++     libsignal_processing_la_SOURCES += complex_bit_reverse_arm.s \
++                                        spl_sqrt_floor_arm.s
++else
++     libsignal_processing_la_SOURCES +=	complex_bit_reverse.c \
++                                        spl_sqrt_floor.c
++endif
++
++libsignal_processing_la_LIBADD = 
++
++libsignal_processing_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libsignal_processing_includedir = $(includedir)/webrtc/common_audio/signal_processing
++
++nobase_libsignal_processing_include_HEADERS = include/real_fft.h \
++                                              include/signal_processing_library.h \
++                                              include/spl_inl.h \
++                                              resample_by_2_internal.h 
++
++AM_CFLAGS = -Iinclude/ -I../.. -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/common_audio/vad/Makefile.am.SANITY webrtc-20121218svn2718/src/common_audio/vad/Makefile.am
+--- webrtc-20121218svn2718/src/common_audio/vad/Makefile.am.SANITY	2012-12-18 21:36:22.480635842 -0500
++++ webrtc-20121218svn2718/src/common_audio/vad/Makefile.am	2012-12-18 21:36:22.481635843 -0500
+@@ -0,0 +1,21 @@
++lib_LTLIBRARIES = libvad.la
++
++libvad_la_SOURCES = webrtc_vad.c \
++                    vad_core.c \
++                    vad_filterbank.c \
++                    vad_gmm.c \
++                    vad_sp.c
++
++libvad_la_LIBADD = ../signal_processing/libsignal_processing.la
++
++libvad_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libvad_includedir = $(includedir)/webrtc/common_audio/vad
++
++nobase_libvad_include_HEADERS = include/webrtc_vad.h \
++                                vad_core.h \
++                                vad_filterbank.h \
++                                vad_gmm.h \
++                                vad_sp.h
++
++AM_CFLAGS = -Iinclude/ -I../.. -I../signal_processing/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/common_video/jpeg/Makefile.am.SANITY webrtc-20121218svn2718/src/common_video/jpeg/Makefile.am
+--- webrtc-20121218svn2718/src/common_video/jpeg/Makefile.am.SANITY	2012-12-18 21:36:22.481635843 -0500
++++ webrtc-20121218svn2718/src/common_video/jpeg/Makefile.am	2012-12-18 21:36:22.481635843 -0500
+@@ -0,0 +1,15 @@
++lib_LTLIBRARIES = libwebrtc_jpeg.la
++
++libwebrtc_jpeg_la_SOURCES = data_manager.cc \
++                            jpeg.cc
++
++libwebrtc_jpeg_la_LIBADD = $(JPEG_LIBS)
++
++libwebrtc_jpeg_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libwebrtc_jpeg_includedir = $(includedir)/webrtc/common_video/jpeg
++
++nobase_libwebrtc_jpeg_include_HEADERS = include/jpeg.h \
++                                        data_manager.h
++
++AM_CXXFLAGS = -Iinclude/ -I../.. -I../interface $(JPEG_CFLAGS) -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/common_video/libyuv/Makefile.am.SANITY webrtc-20121218svn2718/src/common_video/libyuv/Makefile.am
+--- webrtc-20121218svn2718/src/common_video/libyuv/Makefile.am.SANITY	2012-12-18 21:36:22.481635843 -0500
++++ webrtc-20121218svn2718/src/common_video/libyuv/Makefile.am	2012-12-18 21:36:22.481635843 -0500
+@@ -0,0 +1,15 @@
++lib_LTLIBRARIES = libwebrtc_libyuv.la
++
++libwebrtc_libyuv_la_SOURCES = webrtc_libyuv.cc \
++                              scaler.cc
++
++libwebrtc_libyuv_la_LIBADD = $(LIBYUV_LIBS)
++
++libwebrtc_libyuv_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libwebrtc_libyuv_includedir = $(includedir)/webrtc/common_video/libyuv
++
++nobase_libwebrtc_libyuv_include_HEADERS = include/webrtc_libyuv.h \
++                                          include/scaler.h
++
++AM_CXXFLAGS = -Iinclude/ -I../.. -I../interface $(LIBYUV_CFLAGS) -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/common_video/Makefile.am.SANITY webrtc-20121218svn2718/src/common_video/Makefile.am
+--- webrtc-20121218svn2718/src/common_video/Makefile.am.SANITY	2012-12-18 21:36:22.481635843 -0500
++++ webrtc-20121218svn2718/src/common_video/Makefile.am	2012-12-18 21:36:22.481635843 -0500
+@@ -0,0 +1,4 @@
++SUBDIRS = jpeg libyuv .
++
++libcommon_video_includedir = $(includedir)/webrtc/common_video/
++nobase_libcommon_video_include_HEADERS = interface/video_image.h
+diff -up webrtc-20121218svn2718/src/Makefile.am.SANITY webrtc-20121218svn2718/src/Makefile.am
+--- webrtc-20121218svn2718/src/Makefile.am.SANITY	2012-12-18 21:36:22.482635844 -0500
++++ webrtc-20121218svn2718/src/Makefile.am	2012-12-18 21:36:22.482635844 -0500
+@@ -0,0 +1,9 @@
++SUBDIRS=common_audio system_wrappers common_video modules voice_engine video_engine tools .
++
++src_includedir = $(includedir)/webrtc/
++
++nobase_src_include_HEADERS = common_types.h \
++                             engine_configurations.h \
++                             typedefs.h
++
++
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/cng/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/cng/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/cng/Makefile.am.SANITY	2012-12-18 21:36:22.482635844 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/cng/Makefile.am	2012-12-18 21:36:22.482635844 -0500
+@@ -0,0 +1,15 @@
++lib_LTLIBRARIES = libCNG.la
++
++libCNG_la_SOURCES = webrtc_cng.c \
++                    cng_helpfuns.c
++
++libCNG_la_LIBADD = ../../../../common_audio/signal_processing/libsignal_processing.la
++
++libCNG_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libCNG_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/cng/
++
++nobase_libCNG_include_HEADERS = include/webrtc_cng.h \
++                                cng_helpfuns.h
++
++AM_CFLAGS = -Iinclude -I../../../.. -I../../../../common_audio/signal_processing/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/g711/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/g711/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/g711/Makefile.am.SANITY	2012-12-18 21:36:22.482635844 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/g711/Makefile.am	2012-12-18 21:36:22.482635844 -0500
+@@ -0,0 +1,15 @@
++lib_LTLIBRARIES = libG711.la
++
++libG711_la_SOURCES = g711_interface.c \
++                     g711.c
++
++libG711_la_LIBADD = 
++
++libG711_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libG711_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/g711/
++
++nobase_libG711_include_HEADERS = include/g711_interface.h \
++                                 g711.h
++
++AM_CFLAGS = -Iinclude -I../../../.. -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/g722/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/g722/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/g722/Makefile.am.SANITY	2012-12-18 21:36:22.483635845 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/g722/Makefile.am	2012-12-18 21:36:22.483635845 -0500
+@@ -0,0 +1,16 @@
++lib_LTLIBRARIES = libG722.la
++
++libG722_la_SOURCES = g722_interface.c \
++                     g722_encode.c \
++                     g722_decode.c
++
++libG722_la_LIBADD = 
++
++libG722_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libG722_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/g722/
++
++nobase_libG722_include_HEADERS = include/g722_interface.h \
++                                 g722_enc_dec.h
++
++AM_CFLAGS = -Iinclude -I../../../.. -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/ilbc/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/ilbc/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/ilbc/Makefile.am.SANITY	2012-12-18 21:36:22.483635845 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/ilbc/Makefile.am	2012-12-18 21:36:22.483635845 -0500
+@@ -0,0 +1,149 @@
++lib_LTLIBRARIES = libiLBC.la
++
++libiLBC_la_SOURCES = abs_quant.c \
++                     abs_quant_loop.c \
++                     augmented_cb_corr.c \
++                     bw_expand.c \
++                     cb_construct.c \
++                     cb_mem_energy.c \
++                     cb_mem_energy_augmentation.c \
++                     cb_mem_energy_calc.c \
++                     cb_search.c \
++                     cb_search_core.c \
++                     cb_update_best_index.c \
++                     chebyshev.c \
++                     comp_corr.c \
++                     constants.c \
++                     create_augmented_vec.c \
++                     decode.c \
++                     decode_residual.c \
++                     decoder_interpolate_lsf.c \
++                     do_plc.c \
++                     encode.c \
++                     energy_inverse.c \
++                     enh_upsample.c \
++                     enhancer.c \
++                     enhancer_interface.c \
++                     filtered_cb_vecs.c \
++                     frame_classify.c \
++                     gain_dequant.c \
++                     gain_quant.c \
++                     get_cd_vec.c \
++                     get_lsp_poly.c \
++                     get_sync_seq.c \
++                     hp_input.c \
++                     hp_output.c \
++                     ilbc.c \
++                     index_conv_dec.c \
++                     index_conv_enc.c \
++                     init_decode.c \
++                     init_encode.c \
++                     interpolate.c \
++                     interpolate_samples.c \
++                     lpc_encode.c \
++                     lsf_check.c \
++                     lsf_interpolate_to_poly_dec.c \
++                     lsf_interpolate_to_poly_enc.c \
++                     lsf_to_lsp.c \
++                     lsf_to_poly.c \
++                     lsp_to_lsf.c \
++                     my_corr.c \
++                     nearest_neighbor.c \
++                     pack_bits.c \
++                     poly_to_lsf.c \
++                     poly_to_lsp.c \
++                     refiner.c \
++                     simple_interpolate_lsf.c \
++                     simple_lpc_analysis.c \
++                     simple_lsf_dequant.c \
++                     simple_lsf_quant.c \
++                     smooth.c \
++                     smooth_out_data.c \
++                     sort_sq.c \
++                     split_vq.c \
++                     state_construct.c \
++                     state_search.c \
++                     swap_bytes.c \
++                     unpack_bits.c \
++                     vq3.c \
++                     vq4.c \
++                     window32_w32.c \
++                     xcorr_coef.c
++
++libiLBC_la_LIBADD = ../../../../common_audio/signal_processing/libsignal_processing.la
++
++libiLBC_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libiLBC_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/ilbc/
++
++nobase_libiLBC_include_HEADERS = interface/ilbc.h \
++                                 abs_quant_loop.h \
++                                 augmented_cb_corr.h \
++                                 bw_expand.h \
++                                 cb_construct.h \
++                                 cb_mem_energy.h \
++                                 cb_mem_energy_augmentation.h \
++                                 cb_mem_energy_calc.h \
++                                 cb_search.h \
++                                 cb_search_core.h \
++                                 cb_update_best_index.h \
++                                 chebyshev.h \
++                                 comp_corr.h \
++                                 constants.h \
++                                 create_augmented_vec.h \
++                                 decode.h \
++                                 decode_residual.h \
++                                 decoder_interpolate_lsf.h \
++                                 do_plc.h \
++                                 encode.h \
++                                 energy_inverse.h \
++                                 enh_upsample.h \
++                                 enhancer.h \
++                                 enhancer_interface.h \
++                                 filtered_cb_vecs.h \
++                                 frame_classify.h \
++                                 gain_dequant.h \
++                                 gain_quant.h \
++                                 get_cd_vec.h \
++                                 get_lsp_poly.h \
++                                 get_sync_seq.h \
++                                 hp_input.h \
++                                 hp_output.h \
++                                 defines.h \
++                                 index_conv_dec.h \
++                                 index_conv_enc.h \
++                                 init_decode.h \
++                                 init_encode.h \
++                                 interpolate.h \
++                                 interpolate_samples.h \
++                                 lpc_encode.h \
++                                 lsf_check.h \
++                                 lsf_interpolate_to_poly_dec.h \
++                                 lsf_interpolate_to_poly_enc.h \
++                                 lsf_to_lsp.h \
++                                 lsf_to_poly.h \
++                                 lsp_to_lsf.h \
++                                 my_corr.h \
++                                 nearest_neighbor.h \
++                                 pack_bits.h \
++                                 poly_to_lsf.h \
++                                 poly_to_lsp.h \
++                                 refiner.h \
++                                 simple_interpolate_lsf.h \
++                                 simple_lpc_analysis.h \
++                                 simple_lsf_dequant.h \
++                                 simple_lsf_quant.h \
++                                 smooth.h \
++                                 smooth_out_data.h \
++                                 sort_sq.h \
++                                 split_vq.h \
++                                 state_construct.h \
++                                 state_search.h \
++                                 swap_bytes.h \
++                                 unpack_bits.h \
++                                 vq3.h \
++                                 vq4.h \
++                                 window32_w32.h \
++                                 xcorr_coef.h
++
++AM_CFLAGS = -Iinterface -I../../../.. -I../../../../common_audio/signal_processing/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/Makefile.am.SANITY	2012-12-18 21:36:22.483635845 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/Makefile.am	2012-12-18 21:36:22.483635845 -0500
+@@ -0,0 +1,5 @@
++SUBDIRS = source .
++
++isac_fix_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/isac/fix/
++nobase_isac_fix_include_HEADERS = interface/isacfix.h
++
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/source/Makefile.am.SANITY	2012-12-18 21:36:22.483635845 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/fix/source/Makefile.am	2012-12-18 21:36:22.483635845 -0500
+@@ -0,0 +1,63 @@
++lib_LTLIBRARIES = libiSACFix.la
++
++libiSACFix_la_SOURCES = arith_routines.c \
++                        arith_routines_hist.c \
++                        arith_routines_logist.c \
++                        bandwidth_estimator.c \
++                        decode.c \
++                        decode_bwe.c \
++                        decode_plc.c \
++                        encode.c \
++                        entropy_coding.c \
++                        fft.c \
++                        filterbank_tables.c \
++                        filterbanks.c \
++                        filters.c \
++                        initialize.c \
++                        isacfix.c \
++                        lattice.c \
++                        lpc_masking_model.c \
++                        lpc_tables.c \
++                        pitch_estimator.c \
++                        pitch_filter.c \
++                        pitch_gain_tables.c \
++                        pitch_lag_tables.c \
++                        spectrum_ar_model_tables.c \
++                        transform.c
++
++if ARM7_ENABLED
++libiSACFix_la_SOURCES += filterbanks_neon.S \
++                         filters_neon.S \
++                         lattice_neon.S \
++                         lattice_armv7.S \
++                         lpc_masking_model_neon.S \
++                         pitch_filter_armv6.S \
++                         transform_neon.S
++else
++libiSACFix_la_SOURCES += lattice_c.c \
++                         pitch_filter_c.c
++endif
++
++libiSACFix_la_LIBADD = ../../../../../../common_audio/signal_processing/libsignal_processing.la
++
++libiSACFix_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libiSACFix_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/isac/fix/
++
++libiSACFix_include_HEADERS = ../interface/isacfix.h \
++                          arith_routins.h \
++                          bandwidth_estimator.h \
++                          codec.h \
++                          entropy_coding.h \
++                          fft.h \
++                          filterbank_tables.h \
++                          lpc_masking_model.h \
++                          lpc_tables.h \
++                          pitch_estimator.h \
++                          pitch_gain_tables.h \
++                          pitch_lag_tables.h \
++                          settings.h \
++                          spectrum_ar_model_tables.h \
++                          structs.h
++
++AM_CFLAGS = -I../interface -I../../../../../.. -I../../../../../../common_audio/signal_processing/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/Makefile.am.SANITY	2012-12-18 21:36:22.484635846 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/Makefile.am	2012-12-18 21:36:22.484635846 -0500
+@@ -0,0 +1,5 @@
++SUBDIRS = source .
++
++isac_main_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/isac/main
++nobase_isac_main_include_HEADERS = interface/isac.h
++
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.485635847 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/main/source/Makefile.am	2012-12-18 21:36:22.485635847 -0500
+@@ -0,0 +1,60 @@
++lib_LTLIBRARIES = libiSAC.la
++
++libiSAC_la_SOURCES = arith_routines.c \
++                     arith_routines_hist.c \
++                     arith_routines_logist.c \
++                     bandwidth_estimator.c \
++                     crc.c \
++                     decode.c \
++                     decode_bwe.c \
++                     encode.c \
++                     encode_lpc_swb.c \
++                     entropy_coding.c \
++                     fft.c \
++                     filter_functions.c \
++                     filterbank_tables.c \
++                     intialize.c \
++                     isac.c \
++                     filterbanks.c \
++                     pitch_lag_tables.c \
++                     lattice.c \
++                     lpc_gain_swb_tables.c \
++                     lpc_analysis.c \
++                     lpc_shape_swb12_tables.c \
++                     lpc_shape_swb16_tables.c \
++                     lpc_tables.c \
++                     pitch_estimator.c \
++                     pitch_filter.c \
++                     pitch_gain_tables.c \
++                     spectrum_ar_model_tables.c \
++                     transform.c
++
++libiSAC_la_LIBADD = ../../../../../../common_audio/signal_processing/libsignal_processing.la
++
++libiSAC_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libiSAC_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/isac/
++
++libiSAC_include_HEADERS = ../interface/isac.h \
++                          arith_routines.h \
++                          bandwidth_estimator.h \
++                          codec.h \
++                          crc.h \
++                          encode_lpc_swb.h \
++                          entropy_coding.h \
++                          fft.h \
++                          filterbank_tables.h \
++                          lpc_gain_swb_tables.h \
++                          lpc_analysis.h \
++                          lpc_shape_swb12_tables.h \
++                          lpc_shape_swb16_tables.h \
++                          lpc_tables.h \
++                          pitch_estimator.h \
++                          pitch_gain_tables.h \
++                          pitch_lag_tables.h \
++                          settings.h \
++                          spectrum_ar_model_tables.h \
++                          structs.h \
++                          os_specific_inline.h
++
++AM_CFLAGS = -I../interface -I../../../../../.. -I../../../../../../common_audio/signal_processing/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/Makefile.am.SANITY	2012-12-18 21:36:22.485635847 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/isac/Makefile.am	2012-12-18 21:36:22.485635847 -0500
+@@ -0,0 +1 @@
++SUBDIRS = main fix
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/Makefile.am.SANITY	2012-12-18 21:36:22.485635847 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/Makefile.am	2012-12-18 21:36:22.485635847 -0500
+@@ -0,0 +1 @@
++SUBDIRS = cng g711 g722 ilbc isac pcm16b
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/codecs/pcm16b/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/codecs/pcm16b/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/codecs/pcm16b/Makefile.am.SANITY	2012-12-18 21:36:22.486635848 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/codecs/pcm16b/Makefile.am	2012-12-18 21:36:22.486635848 -0500
+@@ -0,0 +1,13 @@
++lib_LTLIBRARIES = libPCM16B.la
++
++libPCM16B_la_SOURCES = pcm16b.c
++
++libPCM16B_la_LIBADD = 
++
++libPCM16B_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libPCM16B_includedir = $(includedir)/webrtc/modules/audio_coding/codecs/pcm16b
++
++nobase_libPCM16B_include_HEADERS = include/pcm16b.h
++
++AM_CFLAGS = -Iinclude -I../../../.. -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/main/Makefile.am.SANITY	2012-12-18 21:36:22.486635848 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/main/Makefile.am	2012-12-18 21:36:22.486635848 -0500
+@@ -0,0 +1,6 @@
++SUBDIRS = source .
++
++audio_coding_main_includedir = $(includedir)/webrtc/modules/audio_coding/main/
++nobase_audio_coding_main_include_HEADERS = interface/audio_coding_module.h \
++                                           interface/audio_coding_module_typedefs.h
++
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.486635848 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/main/source/Makefile.am	2012-12-18 21:36:22.486635848 -0500
+@@ -0,0 +1,79 @@
++lib_LTLIBRARIES = libaudio_coding_module.la
++
++libaudio_coding_module_la_SOURCES = acm_amr.cc \
++                                    acm_amrwb.cc \
++                                    acm_celt.cc \
++                                    acm_cng.cc \
++                                    acm_codec_database.cc \
++                                    acm_dtmf_detection.cc \
++                                    acm_dtmf_playout.cc \
++                                    acm_g722.cc \
++                                    acm_g7221.cc \
++                                    acm_g7221c.cc \
++                                    acm_g729.cc \
++                                    acm_g7291.cc \
++                                    acm_generic_codec.cc \
++                                    acm_gsmfr.cc \
++                                    acm_ilbc.cc \
++                                    acm_isac.cc \
++                                    acm_neteq.cc \
++                                    acm_opus.cc \
++                                    acm_speex.cc \
++                                    acm_pcm16b.cc \
++                                    acm_pcma.cc \
++                                    acm_pcmu.cc \
++                                    acm_red.cc \
++                                    acm_resampler.cc \
++                                    audio_coding_module.cc \
++                                    audio_coding_module_impl.cc
++
++libaudio_coding_module_la_LIBADD = ../../codecs/cng/libCNG.la \
++                                   ../../codecs/g711/libG711.la \
++                                   ../../codecs/g722/libG722.la \
++                                   ../../codecs/ilbc/libiLBC.la \
++                                   ../../codecs/isac/main/source/libiSAC.la \
++                                   ../../codecs/isac/fix/source/libiSACFix.la \
++                                   ../../codecs/pcm16b/libPCM16B.la \
++                                   ../../neteq/libNetEq.la \
++                                   ../../../../common_audio/resampler/libresampler.la \
++                                   ../../../../common_audio/signal_processing/libsignal_processing.la \
++                                   ../../../../common_audio/vad/libvad.la \
++                                   ../../../../system_wrappers/source/libsystem_wrappers.la
++
++libaudio_coding_module_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libaudio_coding_module_includedir = $(includedir)/webrtc/modules/audio_coding/main/
++
++libaudio_coding_module_include_HEADERS = ../interface/audio_coding_module.h \
++                                         ../interface/audio_coding_module_typedefs.h \
++                                         acm_amr.h \
++                                         acm_amrwb.h \
++                                         acm_celt.h \
++                                         acm_cng.h \
++                                         acm_codec_database.h \
++                                         acm_dtmf_detection.h \
++                                         acm_dtmf_playout.h \
++                                         acm_g722.h \
++                                         acm_g7221.h \
++                                         acm_g7221c.h \
++                                         acm_g729.h \
++                                         acm_g7291.h \
++                                         acm_generic_codec.h \
++                                         acm_gsmfr.h \
++                                         acm_ilbc.h \
++                                         acm_isac.h \
++                                         acm_isac_macros.h \
++                                         acm_neteq.h \
++                                         acm_opus.h \
++                                         acm_speex.h \
++                                         acm_pcm16b.h \
++                                         acm_pcma.h \
++                                         acm_pcmu.h \
++                                         acm_red.h \
++                                         acm_resampler.h \
++                                         audio_coding_module_impl.h
++
++AM_CXXFLAGS = -I../interface -I../../../interface -I../../../.. -I../../../../common_audio/signal_processing/include -I../../neteq/interface \
++              -I../../../../system_wrappers/interface -I../../../../common_audio/vad/include -I../../codecs/cng/include -I../../codecs/g711/include \
++              -I../../../../common_audio/resampler/include -I../../codecs/isac/main/interface -I../../codecs/g722/include -I../../codecs/isac/fix/interface \
++              -I../../codecs/ilbc/interface -I../../codecs/opus/interface -I../../codecs/pcm16b/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/Makefile.am.SANITY	2012-12-18 21:36:22.486635848 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/Makefile.am	2012-12-18 21:36:22.487635849 -0500
+@@ -0,0 +1 @@
++SUBDIRS = codecs neteq main
+diff -up webrtc-20121218svn2718/src/modules/audio_coding/neteq/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_coding/neteq/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_coding/neteq/Makefile.am.SANITY	2012-12-18 21:36:22.487635849 -0500
++++ webrtc-20121218svn2718/src/modules/audio_coding/neteq/Makefile.am	2012-12-18 21:36:22.487635849 -0500
+@@ -0,0 +1,65 @@
++lib_LTLIBRARIES = libNetEq.la
++
++libNetEq_la_SOURCES = accelerate.c \
++                      automode.c \
++                      bgn_update.c \
++                      bufstats_decision.c \
++                      cng_internal.c \
++                      codec_db.c \
++                      correlator.c \
++                      dsp.c \
++                      dsp_helpfunctions.c \
++                      dtmf_buffer.c \
++                      dtmf_tonegen.c \
++                      expand.c \
++                      mcu_address_init.c \
++                      mcu_dsp_common.c \
++                      mcu_reset.c \
++                      merge.c \
++                      min_distortion.c \
++                      mix_voice_unvoice.c \
++                      mute_signal.c \
++                      normal.c \
++                      packet_buffer.c \
++                      peak_detection.c \
++                      preemptive_expand.c \
++                      random_vector.c \
++                      recin.c \
++                      recout.c \
++                      rtcp.c \
++                      rtp.c \
++                      set_fs.c \
++                      signal_mcu.c \
++                      split_and_insert.c \
++                      unmute_signal.c \
++                      webrtc_neteq.c
++
++libNetEq_la_LIBADD = ../../../common_audio/signal_processing/libsignal_processing.la \
++                     ../codecs/cng/libCNG.la
++
++libNetEq_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libNetEq_includedir = $(includedir)/webrtc/modules/audio_coding/neteq/
++
++nobase_libNetEq_include_HEADERS = interface/webrtc_neteq.h \
++                                  interface/webrtc_neteq_help_macros.h \
++                                  interface/webrtc_neteq_internal.h \
++                                  automode.h \
++                                  buffer_stats.h \
++                                  codec_db.h \
++                                  codec_db_defines.h \
++                                  delay_logging.h \
++                                  dsp.h \
++                                  dsp_helpfunctions.h \
++                                  dtmf_buffer.h \
++                                  dtmf_tonegen.h \
++                                  mcu.h \
++                                  mcu_dsp_common.h \
++                                  neteq_defines.h \
++                                  neteq_error_codes.h \
++                                  neteq_statistics.h \
++                                  packet_buffer.h \
++                                  rtcp.h \
++                                  rtp.h
++
++AM_CFLAGS = -Iinterface -I../../.. -I../../../common_audio/signal_processing/include -I../codecs/cng/include -DWEBRTC_LINUX -DNETEQ_VOICEENGINE_CODECS -DSCRATCH
+diff -up webrtc-20121218svn2718/src/modules/audio_conference_mixer/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_conference_mixer/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_conference_mixer/Makefile.am.SANITY	2012-12-18 21:36:22.487635849 -0500
++++ webrtc-20121218svn2718/src/modules/audio_conference_mixer/Makefile.am	2012-12-18 21:36:22.487635849 -0500
+@@ -0,0 +1,5 @@
++SUBDIRS = source .
++
++audio_conference_mixer_includedir = $(includedir)/webrtc/modules/audio_conference_mixer/
++nobase_audio_conference_mixer_include_HEADERS = interface/audio_conference_mixer.h \
++                                                interface/audio_conference_mixer_defines.h
+diff -up webrtc-20121218svn2718/src/modules/audio_conference_mixer/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_conference_mixer/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_conference_mixer/source/Makefile.am.SANITY	2012-12-18 21:36:22.487635849 -0500
++++ webrtc-20121218svn2718/src/modules/audio_conference_mixer/source/Makefile.am	2012-12-18 21:36:22.488635850 -0500
+@@ -0,0 +1,24 @@
++lib_LTLIBRARIES = libaudio_conference_mixer.la
++
++libaudio_conference_mixer_la_SOURCES = audio_frame_manipulator.cc \
++                                       level_indicator.cc \
++                                       audio_conference_mixer_impl.cc \
++                                       time_scheduler.cc
++
++libaudio_conference_mixer_la_LIBADD = ../../utility/source/libwebrtc_utility.la \
++                                      ../../../system_wrappers/source/libsystem_wrappers.la \
++                                      ../../audio_processing/libaudio_processing.la
++
++libaudio_conference_mixer_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libaudio_conference_mixer_includedir = $(includedir)/webrtc/modules/audio_conference_mixer/
++
++libaudio_conference_mixer_include_HEADERS = audio_frame_manipulator.h \
++                                            level_indicator.h \
++                                            memory_pool.h \
++                                            memory_pool_posix.h \
++                                            audio_conference_mixer_impl.h \
++                                            time_scheduler.h
++
++AM_CXXFLAGS = -I../interface -I../../interface -I../../.. -I../../utility/interface -DWEBRTC_LINUX \
++              -I../../../system_wrappers/interface -I../../audio_processing/include
+diff -up webrtc-20121218svn2718/src/modules/audio_device/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_device/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_device/main/Makefile.am.SANITY	2012-12-18 21:36:22.488635850 -0500
++++ webrtc-20121218svn2718/src/modules/audio_device/main/Makefile.am	2012-12-18 21:36:22.488635850 -0500
+@@ -0,0 +1,5 @@
++SUBDIRS = source .
++
++audio_device_main_includedir = $(includedir)/webrtc/modules/audio_device/main/
++nobase_audio_device_main_include_HEADERS = interface/audio_device.h \
++                                           interface/audio_device_defines.h
+diff -up webrtc-20121218svn2718/src/modules/audio_device/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_device/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_device/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.488635850 -0500
++++ webrtc-20121218svn2718/src/modules/audio_device/main/source/Makefile.am	2012-12-18 21:36:22.488635850 -0500
+@@ -0,0 +1,42 @@
++lib_LTLIBRARIES = libaudio_device.la
++
++libaudio_device_la_SOURCES = audio_device_buffer.cc \
++                             audio_device_generic.cc \
++                             audio_device_utility.cc \
++                             audio_device_impl.cc \
++                             linux/alsasymboltable_linux.cc \
++                             linux/audio_device_alsa_linux.cc \
++                             linux/audio_device_pulse_linux.cc \
++                             linux/audio_device_utility_linux.cc \
++                             linux/audio_mixer_manager_alsa_linux.cc \
++                             linux/audio_mixer_manager_pulse_linux.cc \
++                             linux/latebindingsymboltable_linux.cc \
++                             linux/pulseaudiosymboltable_linux.cc
++
++libaudio_device_la_LIBADD = -ldl ../../../../common_audio/resampler/libresampler.la \
++                            ../../../../common_audio/signal_processing/libsignal_processing.la \
++                            ../../../../system_wrappers/source/libsystem_wrappers.la
++
++libaudio_device_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libaudio_device_includedir = $(includedir)/webrtc/modules/audio_device/main/
++
++nobase_libaudio_device_include_HEADERS = audio_device_buffer.h \
++                                         audio_device_generic.h \
++                                         audio_device_utility.h \
++                                         audio_device_impl.h \
++                                         audio_device_config.h \
++                                         dummy/audio_device_dummy.h \
++                                         dummy/audio_device_utility_dummy.h \
++                                         linux/alsasymboltable_linux.h \
++                                         linux/audio_device_alsa_linux.h \
++                                         linux/audio_device_utility_linux.h \
++                                         linux/audio_mixer_manager_alsa_linux.h \
++                                         linux/latebindingsymboltable_linux.h \
++                                         linux/audio_device_pulse_linux.h \
++                                         linux/audio_mixer_manager_pulse_linux.h \
++                                         linux/pulseaudiosymboltable_linux.h  
++
++AM_CXXFLAGS = -I../interface -I../../../interface -I../../../.. -Ilinux -DWEBRTC_LINUX -DLINUX_ALSA -DLINUX_PULSE \
++              -I../../../../common_audio/resampler/include -I../../../../common_audio/signal_processing/include \
++              -I../../../../system_wrappers/interface -Idummy
+diff -up webrtc-20121218svn2718/src/modules/audio_device/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_device/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_device/Makefile.am.SANITY	2012-12-18 21:36:22.488635850 -0500
++++ webrtc-20121218svn2718/src/modules/audio_device/Makefile.am	2012-12-18 21:36:22.488635850 -0500
+@@ -0,0 +1 @@
++SUBDIRS = main
+diff -up webrtc-20121218svn2718/src/modules/audio_processing/aec/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_processing/aec/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_processing/aec/Makefile.am.SANITY	2012-12-18 21:36:22.489635851 -0500
++++ webrtc-20121218svn2718/src/modules/audio_processing/aec/Makefile.am	2012-12-18 21:36:22.489635851 -0500
+@@ -0,0 +1,34 @@
++lib_LTLIBRARIES = libaec.la
++
++libaec_la_SOURCES = echo_cancellation.c \
++                    aec_core.c \
++                    aec_rdft.c \
++                    aec_resampler.c
++
++if ARM
++# Do nothing for now.
++else
++libaec_la_SOURCES += aec_core_sse2.c \
++                     aec_rdft_sse2.c
++endif
++
++libaec_la_LIBADD = ../utility/libapm_util.la \
++                   ../../../common_audio/signal_processing/libsignal_processing.la
++
++libaec_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libaec_includedir = $(includedir)/webrtc/modules/audio_processing/aec/
++
++nobase_libaec_include_HEADERS = include/echo_cancellation.h \
++                                echo_cancellation_internal.h \
++                                aec_core.h \
++                                aec_rdft.h \
++                                aec_resampler.h
++
++AM_CFLAGS = -Iinclude -I../../.. -I../utility -I../../../common_audio/signal_processing/include -DWEBRTC_LINUX
++
++if ARM
++# Do nothing for now.
++else
++AM_CFLAGS += -msse2
++endif
+diff -up webrtc-20121218svn2718/src/modules/audio_processing/aecm/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_processing/aecm/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_processing/aecm/Makefile.am.SANITY	2012-12-18 21:36:22.489635851 -0500
++++ webrtc-20121218svn2718/src/modules/audio_processing/aecm/Makefile.am	2012-12-18 21:36:22.489635851 -0500
+@@ -0,0 +1,21 @@
++lib_LTLIBRARIES = libaecm.la
++
++libaecm_la_SOURCES = echo_control_mobile.c \
++                     aecm_core.c
++
++if ARM7_ENABLED
++libaecm_la_SOURCES += aecm_core_neon.c
++endif
++
++libaecm_la_LIBADD = ../utility/libapm_util.la \
++                    ../../../common_audio/signal_processing/libsignal_processing.la \
++                    ../../../system_wrappers/source/libsystem_wrappers.la
++
++libaecm_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libaecm_includedir = $(includedir)/webrtc/modules/audio_processing/aecm/
++
++nobase_libaecm_include_HEADERS = include/echo_control_mobile.h \
++                                 aecm_core.h
++
++AM_CFLAGS = -Iinclude -I../../.. -I../utility -I../../../common_audio/signal_processing/include -I../../../system_wrappers/interface -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_processing/agc/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_processing/agc/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_processing/agc/Makefile.am.SANITY	2012-12-18 21:36:22.489635851 -0500
++++ webrtc-20121218svn2718/src/modules/audio_processing/agc/Makefile.am	2012-12-18 21:36:22.489635851 -0500
+@@ -0,0 +1,16 @@
++lib_LTLIBRARIES = libagc.la
++
++libagc_la_SOURCES = analog_agc.c \
++                    digital_agc.c
++
++libagc_la_LIBADD = ../../../common_audio/signal_processing/libsignal_processing.la
++
++libagc_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libagc_includedir = $(includedir)/webrtc/modules/audio_processing/agc/
++
++nobase_libagc_include_HEADERS = include/gain_control.h \
++                                analog_agc.h \
++                                digital_agc.h
++
++AM_CFLAGS = -Iinclude -I../../.. -I../../../common_audio/signal_processing/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_processing/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_processing/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_processing/Makefile.am.SANITY	2012-12-18 21:36:22.493635854 -0500
++++ webrtc-20121218svn2718/src/modules/audio_processing/Makefile.am	2012-12-18 21:36:22.493635854 -0500
+@@ -0,0 +1,42 @@
++lib_LTLIBRARIES = libaudio_processing.la
++
++libaudio_processing_la_SOURCES = audio_buffer.cc \
++                                 audio_processing_impl.cc \
++                                 echo_cancellation_impl.cc \
++                                 echo_control_mobile_impl.cc \
++                                 gain_control_impl.cc \
++                                 high_pass_filter_impl.cc \
++                                 level_estimator_impl.cc \
++                                 noise_suppression_impl.cc \
++                                 splitting_filter.cc \
++                                 processing_component.cc \
++                                 voice_detection_impl.cc
++
++libaudio_processing_la_LIBADD = ../../common_audio/signal_processing/libsignal_processing.la \
++                                ../../common_audio/vad/libvad.la \
++                                ../../system_wrappers/source/libsystem_wrappers.la \
++                                aec/libaec.la \
++                                aecm/libaecm.la \
++                                agc/libagc.la \
++                                ns/libns.la
++
++libaudio_processing_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libaudio_processing_includedir = $(includedir)/webrtc/modules/audio_processing/
++
++nobase_libaudio_processing_include_HEADERS = include/audio_processing.h \
++                                             audio_buffer.h \
++                                             audio_processing_impl.h \
++                                             echo_cancellation_impl.h \
++                                             echo_control_mobile_impl.h \
++                                             gain_control_impl.h \
++                                             high_pass_filter_impl.h \
++                                             level_estimator_impl.h \
++                                             noise_suppression_impl.h \
++                                             splitting_filter.h \
++                                             processing_component.h \
++                                             voice_detection_impl.h
++
++AM_CXXFLAGS = -Iinclude -I../interface -I../.. -I../../common_audio/signal_processing/include -DWEBRTC_LINUX -DWEBRTC_NS_FLOAT \
++              -I../../common_audio/vad/include -I../../system_wrappers/interface -Iaec/include -Iaecm/include -Iagc/include \
++              -Ins/include
+diff -up webrtc-20121218svn2718/src/modules/audio_processing/ns/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_processing/ns/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_processing/ns/Makefile.am.SANITY	2012-12-18 21:36:22.493635854 -0500
++++ webrtc-20121218svn2718/src/modules/audio_processing/ns/Makefile.am	2012-12-18 21:36:22.494635855 -0500
+@@ -0,0 +1,21 @@
++lib_LTLIBRARIES = libns.la
++
++libns_la_SOURCES = noise_suppression.c \
++                   ns_core.c
++
++if ARM7_ENABLED
++libns_la_SOURCES += nsx_core_neon.c
++endif
++
++libns_la_LIBADD = ../utility/libapm_util.la \
++                    ../../../common_audio/signal_processing/libsignal_processing.la
++
++libns_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libns_includedir = $(includedir)/webrtc/modules/audio_processing/ns/
++
++nobase_libns_include_HEADERS = include/noise_suppression.h \
++                               defines.h \
++                               ns_core.h
++
++AM_CFLAGS = -Iinclude -I../../.. -I../utility -I../../../common_audio/signal_processing/include -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/audio_processing/utility/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/audio_processing/utility/Makefile.am
+--- webrtc-20121218svn2718/src/modules/audio_processing/utility/Makefile.am.SANITY	2012-12-18 21:36:22.494635855 -0500
++++ webrtc-20121218svn2718/src/modules/audio_processing/utility/Makefile.am	2012-12-18 21:36:22.494635855 -0500
+@@ -0,0 +1,20 @@
++lib_LTLIBRARIES = libapm_util.la
++
++libapm_util_la_SOURCES = delay_estimator.c \
++                         delay_estimator_wrapper.c \
++                         fft4g.c \
++                         ring_buffer.c
++
++libapm_util_la_LIBADD = ../../../common_audio/signal_processing/libsignal_processing.la
++
++libapm_util_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libapm_util_includedir = $(includedir)/webrtc/modules/audio_processing/utility/
++
++libapm_util_include_HEADERS = delay_estimator.h \
++                              delay_estimator_internal.h \
++                              delay_estimator_wrapper.h \
++                              fft4g.h \
++                              ring_buffer.h
++
++AM_CFLAGS = -Iinclude -I../interface -I../../.. -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/bitrate_controller/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/bitrate_controller/Makefile.am
+--- webrtc-20121218svn2718/src/modules/bitrate_controller/Makefile.am.SANITY	2012-12-18 21:36:22.495635856 -0500
++++ webrtc-20121218svn2718/src/modules/bitrate_controller/Makefile.am	2012-12-18 21:36:22.495635856 -0500
+@@ -0,0 +1,16 @@
++lib_LTLIBRARIES = libbitrate_controller.la
++
++libbitrate_controller_la_SOURCES = bitrate_controller_impl.cc \
++                                   send_side_bandwidth_estimation.cc
++
++libbitrate_controller_la_LIBADD = ../../system_wrappers/source/libsystem_wrappers.la
++
++libbitrate_controller_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libbitrate_controller_includedir = $(includedir)/webrtc/modules/bitrate_controller/
++
++nobase_libbitrate_controller_include_HEADERS = bitrate_controller_impl.h \
++                                               include/bitrate_controller.h \
++                                               send_side_bandwidth_estimation.h
++
++AM_CXXFLAGS = -Iinclude -I../interface -I../.. -I../../common_audio/signal_processing/include -I../rtp_rtcp/interface -DWEBRTC_LINUX 
+diff -up webrtc-20121218svn2718/src/modules/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/Makefile.am
+--- webrtc-20121218svn2718/src/modules/Makefile.am.SANITY	2012-12-18 21:36:22.495635856 -0500
++++ webrtc-20121218svn2718/src/modules/Makefile.am	2012-12-18 21:36:22.496635857 -0500
+@@ -0,0 +1,6 @@
++SUBDIRS = audio_coding video_coding utility audio_processing/utility audio_processing/aec audio_processing/aecm audio_processing/agc audio_processing/ns audio_processing \
++          audio_conference_mixer audio_device bitrate_controller media_file remote_bitrate_estimator rtp_rtcp udp_transport video_capture video_processing video_render .
++
++modules_includedir = $(includedir)/webrtc/modules/
++nobase_modules_include_HEADERS = interface/module_common_types.h \
++                                 interface/module.h
+diff -up webrtc-20121218svn2718/src/modules/media_file/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/media_file/Makefile.am
+--- webrtc-20121218svn2718/src/modules/media_file/Makefile.am.SANITY	2012-12-18 21:36:22.496635857 -0500
++++ webrtc-20121218svn2718/src/modules/media_file/Makefile.am	2012-12-18 21:36:22.496635857 -0500
+@@ -0,0 +1,5 @@
++SUBDIRS = source .
++
++media_file_includedir = $(includedir)/webrtc/modules/media_file/
++nobase_media_file_include_HEADERS = interface/media_file.h \
++                                    interface/media_file_defines.h
+diff -up webrtc-20121218svn2718/src/modules/media_file/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/media_file/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/media_file/source/Makefile.am.SANITY	2012-12-18 21:36:22.497635858 -0500
++++ webrtc-20121218svn2718/src/modules/media_file/source/Makefile.am	2012-12-18 21:36:22.497635858 -0500
+@@ -0,0 +1,20 @@
++lib_LTLIBRARIES = libmedia_file.la
++
++libmedia_file_la_SOURCES = avi_file.cc \
++                           media_file_impl.cc \
++                           media_file_utility.cc
++
++libmedia_file_la_LIBADD = ../../utility/source/libwebrtc_utility.la \
++                          ../../../system_wrappers/source/libsystem_wrappers.la
++
++libmedia_file_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libmedia_file_includedir = $(includedir)/webrtc/modules/media_file/
++
++libmedia_file_include_HEADERS = avi_file.h \
++                                media_file_impl.h \
++                                media_file_utility.h
++
++AM_CXXFLAGS = -I../interface -I../../interface -I../../utility/interface \
++              -DWEBRTC_LINUX -I../../.. -I../../../system_wrappers/interface \
++              -DWEBRTC_MODULE_UTILITY_VIDEO
+diff -up webrtc-20121218svn2718/src/modules/remote_bitrate_estimator/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/remote_bitrate_estimator/Makefile.am
+--- webrtc-20121218svn2718/src/modules/remote_bitrate_estimator/Makefile.am.SANITY	2012-12-18 21:36:22.497635858 -0500
++++ webrtc-20121218svn2718/src/modules/remote_bitrate_estimator/Makefile.am	2012-12-18 21:36:22.497635858 -0500
+@@ -0,0 +1,21 @@
++lib_LTLIBRARIES = libremote_bitrate_estimator.la
++
++libremote_bitrate_estimator_la_SOURCES = bitrate_estimator.cc \
++                                         overuse_detector.cc \
++                                         remote_bitrate_estimator.cc \
++                                         remote_rate_control.cc
++
++libremote_bitrate_estimator_la_LIBADD = ../../system_wrappers/source/libsystem_wrappers.la
++
++libremote_bitrate_estimator_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libremote_bitrate_estimator_includedir = $(includedir)/webrtc/modules/remote_bitrate_estimator/
++
++nobase_libremote_bitrate_estimator_include_HEADERS = include/bwe_defines.h \
++                                                     include/remote_bitrate_estimator.h \
++                                                     bitrate_estimator.h \
++                                                     overuse_detector.h \
++                                                     remote_rate_control.h
++
++AM_CXXFLAGS = -Iinclude -I../interface -I../.. -I../../system_wrappers/interface -DWEBRTC_LINUX \
++              -I../rtp_rtcp/interface
+diff -up webrtc-20121218svn2718/src/modules/rtp_rtcp/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/rtp_rtcp/Makefile.am
+--- webrtc-20121218svn2718/src/modules/rtp_rtcp/Makefile.am.SANITY	2012-12-18 21:36:22.498635859 -0500
++++ webrtc-20121218svn2718/src/modules/rtp_rtcp/Makefile.am	2012-12-18 21:36:22.498635859 -0500
+@@ -0,0 +1,6 @@
++SUBDIRS = source .
++
++rtp_rtcp_includedir = $(includedir)/webrtc/modules/rtp_rtcp/
++nobase_rtp_rtcp_include_HEADERS = interface/rtp_rtcp.h \
++                                  interface/rtp_rtcp_defines.h \
++                                  mocks/mock_rtp_rtcp.h
+diff -up webrtc-20121218svn2718/src/modules/rtp_rtcp/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/rtp_rtcp/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/rtp_rtcp/source/Makefile.am.SANITY	2012-12-18 21:36:22.499635860 -0500
++++ webrtc-20121218svn2718/src/modules/rtp_rtcp/source/Makefile.am	2012-12-19 09:59:43.741788029 -0500
+@@ -0,0 +1,68 @@
++lib_LTLIBRARIES = librtp_rtcp.la
++
++librtp_rtcp_la_SOURCES = bitrate.cc \
++                         rtp_rtcp_impl.cc \
++                         rtcp_receiver.cc \
++                         rtcp_receiver_help.cc \
++                         rtcp_sender.cc \
++                         rtcp_utility.cc \
++                         rtp_header_extension.cc \
++                         rtp_receiver.cc \
++                         rtp_sender.cc \
++                         rtp_utility.cc \
++                         ssrc_database.cc \
++                         tmmbr_help.cc \
++                         dtmf_queue.cc \
++                         rtp_receiver_audio.cc \
++                         rtp_sender_audio.cc \
++                         forward_error_correction.cc \
++                         forward_error_correction_internal.cc \
++                         producer_fec.cc \
++                         rtp_packet_history.cc \
++                         rtp_receiver_video.cc \
++                         rtp_sender_video.cc \
++                         receiver_fec.cc \
++                         rtp_format_vp8.cc \
++                         transmission_bucket.cc \
++                         vp8_partition_aggregator.cc
++
++librtp_rtcp_la_LIBADD = ../../../system_wrappers/source/libsystem_wrappers.la \
++                        ../../remote_bitrate_estimator/libremote_bitrate_estimator.la
++
++librtp_rtcp_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++librtp_rtcp_includedir = $(includedir)/webrtc/modules/rtp_rtcp/
++
++librtp_rtcp_include_HEADERS = Bitrate.h \
++                              rtp_rtcp_config.h \
++                              rtp_rtcp_impl.h \
++                              rtcp_receiver.h \
++                              rtcp_receiver_help.h \
++                              rtcp_sender.h \
++                              rtcp_utility.h \
++                              rtp_header_extension.h \
++                              rtp_receiver.h \
++                              rtp_sender.h \
++                              rtp_utility.h \
++                              ssrc_database.h \
++                              tmmbr_help.h \
++                              dtmf_queue.h \
++                              rtp_receiver_audio.h \
++                              rtp_sender_audio.h \
++                              fec_private_tables_random.h \
++                              fec_private_tables_bursty.h \
++                              forward_error_correction.h \
++                              forward_error_correction_internal.h \
++                              producer_fec.h \
++                              rtp_packet_history.h \
++                              rtp_receiver_video.h \
++                              rtp_sender_video.h \
++                              receiver_fec.h \
++                              video_codec_information.h \
++                              rtp_format_vp8.h \
++                              transmission_bucket.h \
++                              vp8_partition_aggregator.h
++
++AM_CXXFLAGS = -I../interface -I../../interface \
++              -DWEBRTC_LINUX -I../../.. -I../../../system_wrappers/interface \
++              -I../../remote_bitrate_estimator/include
+diff -up webrtc-20121218svn2718/src/modules/udp_transport/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/udp_transport/Makefile.am
+--- webrtc-20121218svn2718/src/modules/udp_transport/Makefile.am.SANITY	2012-12-18 21:36:22.499635860 -0500
++++ webrtc-20121218svn2718/src/modules/udp_transport/Makefile.am	2012-12-18 21:36:22.499635860 -0500
+@@ -0,0 +1,4 @@
++SUBDIRS = source .
++
++udp_transport_includedir = $(includedir)/webrtc/modules/udp_transport/
++nobase_udp_transport_include_HEADERS = interface/udp_transport.h
+diff -up webrtc-20121218svn2718/src/modules/udp_transport/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/udp_transport/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/udp_transport/source/Makefile.am.SANITY	2012-12-18 21:36:22.500635861 -0500
++++ webrtc-20121218svn2718/src/modules/udp_transport/source/Makefile.am	2012-12-18 21:36:22.500635861 -0500
+@@ -0,0 +1,22 @@
++lib_LTLIBRARIES = libudp_transport.la
++
++libudp_transport_la_SOURCES = udp_transport_impl.cc \
++                              udp_socket_wrapper.cc \
++                              udp_socket_manager_wrapper.cc \
++                              udp_socket_posix.cc \
++                              udp_socket_manager_posix.cc
++
++libudp_transport_la_LIBADD = ../../../system_wrappers/source/libsystem_wrappers.la
++
++libudp_transport_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libudp_transport_includedir = $(includedir)/webrtc/modules/udp_transport/
++
++libudp_transport_include_HEADERS = udp_transport_impl.h \
++                                   udp_socket_wrapper.h \
++                                   udp_socket_manager_wrapper.h \
++                                   udp_socket_posix.h \
++                                   udp_socket_manager_posix.h
++
++AM_CXXFLAGS = -I../interface -I../../interface -fno-strict-aliasing \
++              -DWEBRTC_LINUX -I../../.. -I../../../system_wrappers/interface
+diff -up webrtc-20121218svn2718/src/modules/utility/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/utility/Makefile.am
+--- webrtc-20121218svn2718/src/modules/utility/Makefile.am.SANITY	2012-12-18 21:36:22.501635862 -0500
++++ webrtc-20121218svn2718/src/modules/utility/Makefile.am	2012-12-18 21:36:22.501635862 -0500
+@@ -0,0 +1,8 @@
++SUBDIRS = source .
++
++modules_utility_includedir = $(includedir)/webrtc/modules/utility/
++nobase_modules_utility_include_HEADERS = interface/audio_frame_operations.h \
++                                         interface/file_player.h \
++                                         interface/file_recorder.h \
++                                         interface/process_thread.h \
++                                         interface/rtp_dump.h
+diff -up webrtc-20121218svn2718/src/modules/utility/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/utility/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/utility/source/Makefile.am.SANITY	2012-12-18 21:36:22.502635863 -0500
++++ webrtc-20121218svn2718/src/modules/utility/source/Makefile.am	2012-12-18 21:36:22.502635863 -0500
+@@ -0,0 +1,31 @@
++lib_LTLIBRARIES = libwebrtc_utility.la
++
++libwebrtc_utility_la_SOURCES = audio_frame_operations.cc \
++                               coder.cc \
++                               file_player_impl.cc \
++                               file_recorder_impl.cc \
++                               frame_scaler.cc \
++                               process_thread_impl.cc \
++                               rtp_dump_impl.cc \
++                               video_coder.cc \
++                               video_frames_queue.cc
++
++libwebrtc_utility_la_LIBADD = ../../audio_coding/main/source/libaudio_coding_module.la \
++                              ../../../common_audio/resampler/libresampler.la \
++                              ../../../system_wrappers/source/libsystem_wrappers.la \
++                              ../../video_coding/main/source/libwebrtc_video_coding.la
++
++libwebrtc_utility_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libwebrtc_utility_includedir = $(includedir)/webrtc/modules/utility/
++
++libwebrtc_utility_include_HEADERS = coder.h \
++                                    file_player_impl.h \
++                                    file_recorder_impl.h \
++                                    process_thread_impl.h \
++                                    rtp_dump_impl.h
++
++AM_CXXFLAGS = -I../interface -I../../interface -I../../media_file/interface \
++              -I../../audio_coding/main/interface -I../../video_coding/main/interface \
++              -DWEBRTC_LINUX -DWEBRTC_MODULE_UTILITY_VIDEO -I../../.. -I../../../system_wrappers/interface \
++              -I../../../common_audio/resampler/include
+diff -up webrtc-20121218svn2718/src/modules/video_capture/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_capture/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_capture/main/Makefile.am.SANITY	2012-12-18 21:36:22.502635863 -0500
++++ webrtc-20121218svn2718/src/modules/video_capture/main/Makefile.am	2012-12-18 21:36:22.502635863 -0500
+@@ -0,0 +1,7 @@
++SUBDIRS = source .
++
++video_capture_main_includedir = $(includedir)/webrtc/modules/video_capture/main/
++nobase_video_capture_main_include_HEADERS = interface/video_capture_defines.h \
++                                            interface/video_capture_factory.h \
++                                            interface/video_capture.h
++
+diff -up webrtc-20121218svn2718/src/modules/video_capture/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_capture/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_capture/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.503635864 -0500
++++ webrtc-20121218svn2718/src/modules/video_capture/main/source/Makefile.am	2012-12-18 21:36:22.503635864 -0500
+@@ -0,0 +1,26 @@
++lib_LTLIBRARIES = libvideo_capture_module.la
++
++libvideo_capture_module_la_SOURCES = video_capture_factory.cc \
++                                     video_capture_impl.cc \
++                                     device_info_impl.cc \
++                                     Linux/device_info_linux.cc \
++                                     Linux/video_capture_linux.cc
++
++libvideo_capture_module_la_LIBADD = ../../../../common_video/libyuv/libwebrtc_libyuv.la \
++                                    ../../../../system_wrappers/source/libsystem_wrappers.la \
++                                    ../../../utility/source/libwebrtc_utility.la
++
++libvideo_capture_module_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libvideo_capture_module_includedir = $(includedir)/webrtc/modules/video_capture/main/
++
++nobase_libvideo_capture_module_include_HEADERS = video_capture_config.h \
++       	       	       	       	                 video_capture_delay.h \
++       	       	       	       	                 video_capture_impl.h \
++       	       	       	       	                 device_info_impl.h \
++                                                 Linux/device_info_linux.h \
++               	                                 Linux/video_capture_linux.h
++
++AM_CXXFLAGS = -I../../../interface -I../interface -I../.. -I../../../.. -ILinux \
++              -I../../../../system_wrappers/interface -DWEBRTC_LINUX \
++              -I../../../utility/interface -I../../../../common_video/libyuv/include
+diff -up webrtc-20121218svn2718/src/modules/video_capture/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_capture/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_capture/Makefile.am.SANITY	2012-12-18 21:36:22.503635864 -0500
++++ webrtc-20121218svn2718/src/modules/video_capture/Makefile.am	2012-12-18 21:36:22.504635865 -0500
+@@ -0,0 +1 @@
++SUBDIRS = main
+diff -up webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/Makefile.am.SANITY	2012-12-18 21:36:22.504635865 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/Makefile.am	2012-12-18 21:36:22.504635865 -0500
+@@ -0,0 +1,4 @@
++SUBDIRS = source .
++
++video_coding_codecs_i420_main_includedir = $(includedir)/webrtc/modules/video_coding/codecs/i420/main/
++nobase_video_coding_codecs_i420_main_include_HEADERS = interface/i420.h
+diff -up webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.505635866 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/main/source/Makefile.am	2012-12-18 21:36:22.505635866 -0500
+@@ -0,0 +1,13 @@
++lib_LTLIBRARIES = libwebrtc_i420.la
++
++libwebrtc_i420_la_SOURCES = i420.cc
++
++libwebrtc_i420_la_LIBADD = ../../../../../../system_wrappers/source/libsystem_wrappers.la
++
++libwebrtc_i420_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libwebrtc_i420_includedir = $(includedir)/webrtc/modules/video_coding/codecs/i420
++
++libwebrtc_i420_include_HEADERS = 
++
++AM_CXXFLAGS = -I../interface -I../../../interface -I../../../../../../common_video/interface -I../../../../../.. -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/Makefile.am.SANITY	2012-12-18 21:36:22.505635866 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/codecs/i420/Makefile.am	2012-12-18 21:36:22.506635867 -0500
+@@ -0,0 +1 @@
++SUBDIRS = main
+diff -up webrtc-20121218svn2718/src/modules/video_coding/codecs/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/codecs/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/codecs/Makefile.am.SANITY	2012-12-18 21:36:22.506635867 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/codecs/Makefile.am	2012-12-18 21:36:22.506635867 -0500
+@@ -0,0 +1,6 @@
++SUBDIRS = vp8 i420 .
++
++video_coding_codecs_includedir = $(includedir)/webrtc/modules/video_coding/codecs/
++nobase_video_coding_codecs_include_HEADERS = interface/mock/mock_video_codec_interface.h \
++                                             interface/video_codec_interface.h \
++                                             interface/video_error_codes.h
+diff -up webrtc-20121218svn2718/src/modules/video_coding/codecs/vp8/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/codecs/vp8/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/codecs/vp8/Makefile.am.SANITY	2012-12-18 21:36:22.507635868 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/codecs/vp8/Makefile.am	2012-12-18 21:36:22.507635868 -0500
+@@ -0,0 +1,22 @@
++lib_LTLIBRARIES = libwebrtc_vp8.la
++
++libwebrtc_vp8_la_SOURCES = temporal_layers.cc \
++                           reference_picture_selection.cc \
++                           vp8.cc
++
++libwebrtc_vp8_la_LIBADD = $(VPX_LIBS) \
++                          ../../../../system_wrappers/source/libsystem_wrappers.la \
++                          ../../../../common_video/libyuv/libwebrtc_libyuv.la
++
++libwebrtc_vp8_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libwebrtc_vp8_includedir = $(includedir)/webrtc/modules/video_coding/codecs/vp8
++
++nobase_libwebrtc_vp8_include_HEADERS = temporal_layers.h \
++                                       reference_picture_selection.h \
++                                       include/vp8.h \
++                                       include/vp8_common_types.h
++
++AM_CXXFLAGS = -I../interface -I../../../interface -DWEBRTC_LIBVPX_VERSION=971 \
++              -I../../../../common_video/interface -I../../../.. -DWEBRTC_LINUX \
++              -I../../../../system_wrappers/interface -Iinclude
+diff -up webrtc-20121218svn2718/src/modules/video_coding/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/main/Makefile.am.SANITY	2012-12-18 21:36:22.507635868 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/main/Makefile.am	2012-12-18 21:36:22.508635869 -0500
+@@ -0,0 +1,6 @@
++SUBDIRS = source .
++
++video_coding_main_includedir = $(includedir)/webrtc/modules/video_coding/main/
++nobase_video_coding_main_include_HEADERS = interface/mock/mock_vcm_callbacks.h \
++                                           interface/video_coding_defines.h \
++                                           interface/video_coding.h
+diff -up webrtc-20121218svn2718/src/modules/video_coding/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.508635869 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/main/source/Makefile.am	2012-12-18 21:36:22.508635869 -0500
+@@ -0,0 +1,72 @@
++lib_LTLIBRARIES = libwebrtc_video_coding.la
++
++libwebrtc_video_coding_la_SOURCES = codec_database.cc\
++                                    codec_timer.cc \
++                                    content_metrics_processing.cc \
++                                    decoding_state.cc \
++                                    encoded_frame.cc \
++                                    exp_filter.cc \
++                                    frame_buffer.cc \
++                                    frame_dropper.cc \
++                                    generic_decoder.cc \
++                                    generic_encoder.cc \
++                                    inter_frame_delay.cc \
++                                    jitter_buffer.cc \
++                                    jitter_buffer_common.cc \
++                                    jitter_estimator.cc \
++                                    media_opt_util.cc \
++                                    media_optimization.cc \
++                                    packet.cc \
++                                    qm_select.cc \
++                                    receiver.cc \
++                                    rtt_filter.cc \
++                                    session_info.cc \
++                                    timestamp_extrapolator.cc \
++                                    timestamp_map.cc \
++                                    timing.cc \
++                                    video_coding_impl.cc
++
++libwebrtc_video_coding_la_LIBADD = ../../codecs/i420/main/source/libwebrtc_i420.la \
++                                   ../../codecs/vp8/libwebrtc_vp8.la \
++                                   ../../../../system_wrappers/source/libsystem_wrappers.la
++
++libwebrtc_video_coding_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libwebrtc_video_coding_includedir = $(includedir)/webrtc/modules/video_coding/main/
++
++libwebrtc_video_coding_include_HEADERS = codec_database.h \
++                                         codec_timer.h \
++                                         content_metrics_processing.h \
++                                         decoding_state.h \
++                                         encoded_frame.h \
++                                         er_tables_xor.h \
++                                         event.h \
++                                         exp_filter.h \
++                                         fec_tables_xor.h \
++                                         frame_buffer.h \
++                                         frame_dropper.h \
++                                         generic_decoder.h \
++                                         generic_encoder.h \
++                                         inter_frame_delay.h \
++                                         internal_defines.h \
++                                         jitter_buffer.h \
++                                         jitter_buffer_common.h \
++                                         jitter_estimator.h \
++                                         media_opt_util.h \
++                                         media_optimization.h \
++                                         nack_fec_tables.h \
++                                         packet.h \
++                                         qm_select_data.h \
++                                         qm_select.h \
++                                         receiver.h \
++                                         rtt_filter.h \
++                                         session_info.h \
++                                         tick_time_base.h \
++                                         timestamp_extrapolator.h \
++                                         timestamp_map.h \
++                                         timing.h \
++                                         video_coding_impl.h
++
++AM_CXXFLAGS = -I../interface -I../../../interface -I../../codecs/interface -I../../../.. \
++              -I../../../../common_video/interface -I../../../../system_wrappers/interface -DWEBRTC_LINUX \
++              -I../../codecs/vp8/include -I../../codecs/i420/main/interface
+diff -up webrtc-20121218svn2718/src/modules/video_coding/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_coding/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_coding/Makefile.am.SANITY	2012-12-18 21:36:22.509635870 -0500
++++ webrtc-20121218svn2718/src/modules/video_coding/Makefile.am	2012-12-18 21:36:22.509635870 -0500
+@@ -0,0 +1 @@
++SUBDIRS = codecs main
+diff -up webrtc-20121218svn2718/src/modules/video_processing/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_processing/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_processing/main/Makefile.am.SANITY	2012-12-18 21:36:22.510635871 -0500
++++ webrtc-20121218svn2718/src/modules/video_processing/main/Makefile.am	2012-12-18 21:36:22.510635871 -0500
+@@ -0,0 +1,5 @@
++SUBDIRS = source .
++
++video_processing_includedir = $(includedir)/webrtc/modules/video_processing/
++nobase_video_processing_include_HEADERS = interface/video_processing_defines.h \
++                                          interface/video_processing.h
+diff -up webrtc-20121218svn2718/src/modules/video_processing/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_processing/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_processing/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.510635871 -0500
++++ webrtc-20121218svn2718/src/modules/video_processing/main/source/Makefile.am	2012-12-18 21:36:22.510635871 -0500
+@@ -0,0 +1,48 @@
++lib_LTLIBRARIES = libvideo_processing.la
++
++libvideo_processing_la_SOURCES = brighten.cc \
++                                 brightness_detection.cc \
++                                 color_enhancement.cc \
++                                 content_analysis.cc \
++                                 deflickering.cc \
++                                 denoising.cc \
++                                 frame_preprocessor.cc \
++                                 spatial_resampler.cc \
++                                 video_decimator.cc \
++                                 video_processing_impl.cc
++
++if ARM
++# Do nothing for now.
++else
++libvideo_processing_la_SOURCES += content_analysis_sse2.cc
++endif
++
++libvideo_processing_la_LIBADD = ../../../../common_video/libyuv/libwebrtc_libyuv.la \
++                                ../../../../common_audio/signal_processing/libsignal_processing.la \
++                                ../../../../system_wrappers/source/libsystem_wrappers.la
++
++libvideo_processing_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libvideo_processing_includedir = $(includedir)/webrtc/modules/video_processing/main/
++
++libvideo_processing_include_HEADERS = brighten.h \
++                                      brightness_detection.h \
++                                      color_enhancement.h \
++                                      color_enhancement_private.h \
++                                      content_analysis.h \
++                                      deflickering.h \
++                                      denoising.h \
++                                      frame_preprocessor.h \
++                                      spatial_resampler.h \
++                                      video_decimator.h \
++                                      video_processing_impl.h
++
++AM_CXXFLAGS = -I../interface -I../../../interface -I../../../.. -DWEBRTC_LINUX \
++              -I../../../../common_video/libyuv/include -I../../../../common_audio/signal_processing/include \
++              -I../../../../system_wrappers/interface
++
++if ARM
++# Do nothing for now.
++else
++AM_CXXFLAGS += -msse2
++endif
+diff -up webrtc-20121218svn2718/src/modules/video_processing/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_processing/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_processing/Makefile.am.SANITY	2012-12-18 21:36:22.513635873 -0500
++++ webrtc-20121218svn2718/src/modules/video_processing/Makefile.am	2012-12-18 21:36:22.513635873 -0500
+@@ -0,0 +1 @@
++SUBDIRS = main
+diff -up webrtc-20121218svn2718/src/modules/video_render/main/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_render/main/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_render/main/Makefile.am.SANITY	2012-12-18 21:36:22.513635873 -0500
++++ webrtc-20121218svn2718/src/modules/video_render/main/Makefile.am	2012-12-18 21:36:22.513635873 -0500
+@@ -0,0 +1,6 @@
++SUBDIRS = source .
++
++video_render_main_includedir = $(includedir)/webrtc/modules/video_render/main/
++nobase_video_render_main_include_HEADERS = interface/video_render_defines.h \
++                                           interface/video_render.h
++
+diff -up webrtc-20121218svn2718/src/modules/video_render/main/source/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_render/main/source/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_render/main/source/Makefile.am.SANITY	2012-12-18 21:36:22.514635874 -0500
++++ webrtc-20121218svn2718/src/modules/video_render/main/source/Makefile.am	2012-12-18 21:36:22.514635874 -0500
+@@ -0,0 +1,30 @@
++lib_LTLIBRARIES = libvideo_render_module.la
++
++libvideo_render_module_la_SOURCES = incoming_video_stream.cc \
++                                    video_render_frames.cc \
++                                    video_render_impl.cc \
++                                    linux/video_render_linux_impl.cc \
++                                    linux/video_x11_channel.cc \
++                                    linux/video_x11_render.cc \
++                                    external/video_render_external_impl.cc
++
++libvideo_render_module_la_LIBADD = ../../../../common_video/libyuv/libwebrtc_libyuv.la \
++                                   ../../../../system_wrappers/source/libsystem_wrappers.la \
++                                   ../../../utility/source/libwebrtc_utility.la
++
++libvideo_render_module_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libvideo_render_module_includedir = $(includedir)/webrtc/modules/video_render/main/
++
++nobase_libvideo_render_module_include_HEADERS = incoming_video_stream.h \
++                                                video_render_frames.h \
++                                                video_render_impl.h \
++                                                i_video_render.h \
++                                                linux/video_render_linux_impl.h \
++                                                linux/video_x11_channel.h \
++                                                linux/video_x11_render.h \
++                                                external/video_render_external_impl.h
++
++AM_CXXFLAGS = -I../interface -I../../../interface -I../../ -I../../../.. -DWEBRTC_LINUX \
++              -I../../../../common_video/libyuv/include -I../../../../system_wrappers/interface \
++              -I../../../utility/interface -DWEBRTC_INCLUDE_INTERNAL_VIDEO_RENDER
+diff -up webrtc-20121218svn2718/src/modules/video_render/Makefile.am.SANITY webrtc-20121218svn2718/src/modules/video_render/Makefile.am
+--- webrtc-20121218svn2718/src/modules/video_render/Makefile.am.SANITY	2012-12-18 21:36:22.515635875 -0500
++++ webrtc-20121218svn2718/src/modules/video_render/Makefile.am	2012-12-18 21:36:22.515635875 -0500
+@@ -0,0 +1 @@
++SUBDIRS = main
+diff -up webrtc-20121218svn2718/src/system_wrappers/Makefile.am.SANITY webrtc-20121218svn2718/src/system_wrappers/Makefile.am
+--- webrtc-20121218svn2718/src/system_wrappers/Makefile.am.SANITY	2012-12-18 21:36:22.515635875 -0500
++++ webrtc-20121218svn2718/src/system_wrappers/Makefile.am	2012-12-18 21:36:22.515635875 -0500
+@@ -0,0 +1,30 @@
++SUBDIRS = source .
++
++system_wrappers_includedir = $(includedir)/webrtc/system_wrappers/
++nobase_system_wrappers_include_HEADERS = interface/aligned_malloc.h \
++                                  interface/atomic32.h \
++                                  interface/compile_assert.h \
++                                  interface/condition_variable_wrapper.h \
++                                  interface/constructor_magic.h \
++                                  interface/cpu_features_wrapper.h \
++                                  interface/cpu_info.h \
++                                  interface/cpu_wrapper.h \
++                                  interface/critical_section_wrapper.h \
++                                  interface/data_log_c.h \
++                                  interface/data_log.h \
++                                  interface/data_log_impl.h \
++                                  interface/event_wrapper.h \
++                                  interface/file_wrapper.h \
++                                  interface/fix_interlocked_exchange_pointer_win.h \
++                                  interface/list_wrapper.h \
++                                  interface/map_wrapper.h \
++                                  interface/ref_count.h \
++                                  interface/rw_lock_wrapper.h \
++                                  interface/scoped_ptr.h \
++                                  interface/scoped_refptr.h \
++                                  interface/sleep.h \
++                                  interface/sort.h \
++                                  interface/static_instance.h \
++                                  interface/thread_wrapper.h \
++                                  interface/tick_util.h \
++                                  interface/trace.h
+diff -up webrtc-20121218svn2718/src/system_wrappers/source/Makefile.am.SANITY webrtc-20121218svn2718/src/system_wrappers/source/Makefile.am
+--- webrtc-20121218svn2718/src/system_wrappers/source/Makefile.am.SANITY	2012-12-18 21:36:22.516635876 -0500
++++ webrtc-20121218svn2718/src/system_wrappers/source/Makefile.am	2012-12-18 21:36:22.516635876 -0500
+@@ -0,0 +1,48 @@
++lib_LTLIBRARIES = libsystem_wrappers.la
++                             
++libsystem_wrappers_la_SOURCES = aligned_malloc.cc \
++                                atomic32_posix.cc \
++                                condition_variable.cc \
++                                condition_variable_posix.cc \
++                                cpu.cc \
++                                cpu_info.cc \
++                                cpu_linux.cc \
++                                cpu_features.cc \
++                                critical_section.cc \
++                                critical_section_posix.cc \
++                                data_log.cc \
++                                data_log_c.cc \
++                                event.cc \
++                                event_posix.cc \
++                                file_impl.cc \
++                                list_no_stl.cc \
++                                map.cc \
++                                rw_lock.cc \
++                                rw_lock_posix.cc \
++                                sleep.cc \
++                                sort.cc \
++                                thread.cc \
++                                thread_posix.cc \
++                                trace_impl.cc \
++                                trace_posix.cc
++
++libsystem_wrappers_la_LIBADD = -lrt
++
++libsystem_wrappers_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libsystem_wrappers_includedir = $(includedir)/webrtc/system_wrappers
++
++nobase_libsystem_wrappers_include_HEADERS = condition_variable_posix.h \
++                                            cpu_linux.h \
++                                            critical_section_posix.h \
++                                            event_posix.h \
++                                            file_impl.h \
++                                            rw_lock_posix.h \
++                                            thread_posix.h \
++                                            set_thread_name_win.h \
++                                            trace_impl.h \
++                                            trace_posix.h \
++                                            spreadsortlib/constants.hpp \
++                                            spreadsortlib/spreadsort.hpp
++
++AM_CXXFLAGS = -Ispreadsortlib -I../interface -I../../ -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/tools/converter/Makefile.am.SANITY webrtc-20121218svn2718/src/tools/converter/Makefile.am
+--- webrtc-20121218svn2718/src/tools/converter/Makefile.am.SANITY	2012-12-18 21:36:22.518635878 -0500
++++ webrtc-20121218svn2718/src/tools/converter/Makefile.am	2012-12-18 21:36:22.518635878 -0500
+@@ -0,0 +1,7 @@
++bin_PROGRAMS = rgba_to_i420_converter
++
++rgba_to_i420_converter_SOURCES = converter.cc rgba_to_i420_converter.cc
++
++rgba_to_i420_converter_LDADD = ../libsimple_command_line_parser.la $(LIBYUV_LIBS)
++
++AM_CXXFLAGS = -I. -DWEBRTC_LINUX $(LIBYUV_CFLAGS) -I../..
+diff -up webrtc-20121218svn2718/src/tools/frame_analyzer/Makefile.am.SANITY webrtc-20121218svn2718/src/tools/frame_analyzer/Makefile.am
+--- webrtc-20121218svn2718/src/tools/frame_analyzer/Makefile.am.SANITY	2012-12-18 21:36:22.519635879 -0500
++++ webrtc-20121218svn2718/src/tools/frame_analyzer/Makefile.am	2012-12-18 21:36:22.519635879 -0500
+@@ -0,0 +1,18 @@
++lib_LTLIBRARIES = libvideo_quality_analysis.la
++
++bin_PROGRAMS = frame_analyzer
++
++frame_analyzer_SOURCES = frame_analyzer.cc
++
++frame_analyzer_LDADD = libvideo_quality_analysis.la ../libsimple_command_line_parser.la
++
++libvideo_quality_analysis_la_SOURCES = video_quality_analysis.cc
++
++libvideo_quality_analysis_la_LIBADD = $(LIBYUV_LIBS)
++
++libvideo_quality_analysis_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libvideo_quality_analysis_includedir = $(includedir)/webrtc/tools/frame_analyzer/
++nobase_libvideo_quality_analysis_include_HEADERS = video_quality_analysis.h
++
++AM_CXXFLAGS = -I. $(LIBYUV_CFLAGS) -I../.. -DWEBRTC_LINUX
+diff -up webrtc-20121218svn2718/src/tools/Makefile.am.SANITY webrtc-20121218svn2718/src/tools/Makefile.am
+--- webrtc-20121218svn2718/src/tools/Makefile.am.SANITY	2012-12-18 21:36:22.519635879 -0500
++++ webrtc-20121218svn2718/src/tools/Makefile.am	2012-12-18 21:36:22.519635879 -0500
+@@ -0,0 +1,14 @@
++SUBDIRS = . frame_analyzer psnr_ssim_analyzer converter
++
++lib_LTLIBRARIES = libsimple_command_line_parser.la
++
++libsimple_command_line_parser_la_SOURCES = simple_command_line_parser.cc
++
++libsimple_command_line_parser_la_LIBADD =
++
++libsimple_command_line_parser_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libsimple_command_line_parser_includedir = $(includedir)/webrtc/tools
++nobase_libsimple_command_line_parser_include_HEADERS = simple_command_line_parser.h
++
++AM_CXXFLAGS = -I. -I..
+diff -up webrtc-20121218svn2718/src/tools/psnr_ssim_analyzer/Makefile.am.SANITY webrtc-20121218svn2718/src/tools/psnr_ssim_analyzer/Makefile.am
+--- webrtc-20121218svn2718/src/tools/psnr_ssim_analyzer/Makefile.am.SANITY	2012-12-18 21:36:22.520635880 -0500
++++ webrtc-20121218svn2718/src/tools/psnr_ssim_analyzer/Makefile.am	2012-12-18 21:36:22.520635880 -0500
+@@ -0,0 +1,7 @@
++bin_PROGRAMS = psnr_ssim_analyzer
++
++psnr_ssim_analyzer_SOURCES = psnr_ssim_analyzer.cc
++
++psnr_ssim_analyzer_LDADD = ../frame_analyzer/libvideo_quality_analysis.la ../libsimple_command_line_parser.la
++
++AM_CXXFLAGS = -I. -DWEBRTC_LINUX -I../..
+diff -up webrtc-20121218svn2718/src/video_engine/Makefile.am.SANITY webrtc-20121218svn2718/src/video_engine/Makefile.am
+--- webrtc-20121218svn2718/src/video_engine/Makefile.am.SANITY	2012-12-18 21:36:22.521635881 -0500
++++ webrtc-20121218svn2718/src/video_engine/Makefile.am	2012-12-19 10:00:43.940790454 -0500
+@@ -0,0 +1,109 @@
++lib_LTLIBRARIES = libvideo_engine_core.la
++
++libvideo_engine_core_la_SOURCES = encoder_state_feedback.cc \
++                                  stream_synchronization.cc \
++                                  vie_base_impl.cc \
++                                  vie_capture_impl.cc \
++                                  vie_codec_impl.cc \
++                                  vie_encryption_impl.cc \
++                                  vie_external_codec_impl.cc \
++                                  vie_file_impl.cc \
++                                  vie_image_process_impl.cc \
++                                  vie_impl.cc \
++                                  vie_network_impl.cc \
++                                  vie_ref_count.cc \
++                                  vie_render_impl.cc \
++                                  vie_rtp_rtcp_impl.cc \
++                                  vie_shared_data.cc \
++                                  vie_capturer.cc \
++                                  vie_channel.cc \
++                                  vie_channel_group.cc \
++                                  vie_channel_manager.cc \
++                                  vie_encoder.cc \
++                                  vie_file_image.cc \
++                                  vie_file_player.cc \
++                                  vie_file_recorder.cc \
++                                  vie_frame_provider_base.cc \
++                                  vie_input_manager.cc \
++                                  vie_manager_base.cc \
++                                  vie_performance_monitor.cc \
++                                  vie_receiver.cc \
++                                  vie_remb.cc \
++                                  vie_renderer.cc \
++                                  vie_render_manager.cc \
++                                  vie_sender.cc \
++                                  vie_sync_module.cc
++
++libvideo_engine_core_la_LIBADD = ../common_video/libyuv/libwebrtc_libyuv.la \
++                                 ../common_video/jpeg/libwebrtc_jpeg.la \
++                                 ../modules/media_file/source/libmedia_file.la \
++                                 ../modules/rtp_rtcp/source/librtp_rtcp.la \
++                                 ../modules/udp_transport/source/libudp_transport.la \
++                                 ../modules/utility/source/libwebrtc_utility.la \
++                                 ../modules/bitrate_controller/libbitrate_controller.la \
++                                 ../modules/video_capture/main/source/libvideo_capture_module.la \
++                                 ../modules/video_coding/main/source/libwebrtc_video_coding.la \
++                                 ../modules/video_processing/main/source/libvideo_processing.la \
++                                 ../modules/video_render/main/source/libvideo_render_module.la \
++                                 ../voice_engine/libvoice_engine_core.la \
++                                 ../system_wrappers/source/libsystem_wrappers.la
++
++libvideo_engine_core_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libvideo_engine_core_includedir = $(includedir)/webrtc/video_engine
++
++nobase_libvideo_engine_core_include_HEADERS = include/vie_base.h \
++                                              include/vie_capture.h \
++                                              include/vie_codec.h \
++                                              include/vie_encryption.h \
++                                              include/vie_errors.h \
++                                              include/vie_external_codec.h \
++                                              include/vie_file.h \
++                                              include/vie_image_process.h \
++                                              include/vie_network.h \
++                                              include/vie_render.h \
++                                              include/vie_rtp_rtcp.h \
++                                              encoder_state_feedback.h \
++                                              stream_synchronization.h \
++                                              vie_base_impl.h \
++                                              vie_capture_impl.h \
++                                              vie_codec_impl.h \
++                                              vie_defines.h \
++                                              vie_encryption_impl.h \
++                                              vie_external_codec_impl.h \
++                                              vie_file_impl.h \
++                                              vie_image_process_impl.h \
++                                              vie_impl.h \
++                                              vie_network_impl.h \
++                                              vie_ref_count.h \
++                                              vie_remb.h \
++                                              vie_render_impl.h \
++                                              vie_rtp_rtcp_impl.h \
++                                              vie_shared_data.h \
++                                              vie_capturer.h \
++                                              vie_channel.h \
++                                              vie_channel_group.h \
++                                              vie_channel_manager.h \
++                                              vie_encoder.h \
++                                              vie_file_image.h \
++                                              vie_file_player.h \
++                                              vie_file_recorder.h \
++                                              vie_frame_provider_base.h \
++                                              vie_input_manager.h \
++                                              vie_manager_base.h \
++                                              vie_performance_monitor.h \
++                                              vie_receiver.h \
++                                              vie_renderer.h \
++                                              vie_render_manager.h \
++                                              vie_sender.h \
++                                              vie_sync_module.h
++
++AM_CXXFLAGS = -Iinclude -I.. -DWEBRTC_LINUX -I../common_video/interface -DWEBRTC_SVNREVISION='"n/a"' \
++              -I../modules/video_capture/main/interface -I../modules/video_render/main/interface \
++              -I../common_video/libyuv/include -I../common_video/jpeg/include \
++              -I../modules/media_file/interface -I../modules/rtp_rtcp/interface \
++              -I../modules/udp_transport/interface -I../modules/utility/interface \
++              -I../modules/bitrate_controller/include -I../modules/video_coding/main/interface \
++              -I../modules/video_processing/main/interface -I../voice_engine/include \
++              -I../system_wrappers/interface -I../modules/interface -I../modules/audio_coding/main/interface \
++              -I../modules/video_coding/codecs/interface
+diff -up webrtc-20121218svn2718/src/voice_engine/Makefile.am.SANITY webrtc-20121218svn2718/src/voice_engine/Makefile.am
+--- webrtc-20121218svn2718/src/voice_engine/Makefile.am.SANITY	2012-12-18 21:36:22.521635881 -0500
++++ webrtc-20121218svn2718/src/voice_engine/Makefile.am	2012-12-18 21:36:22.521635881 -0500
+@@ -0,0 +1,102 @@
++lib_LTLIBRARIES = libvoice_engine_core.la
++
++libvoice_engine_core_la_SOURCES = channel.cc \
++                                  channel_manager.cc \
++                                  channel_manager_base.cc \
++                                  dtmf_inband.cc \
++                                  dtmf_inband_queue.cc \
++                                  level_indicator.cc \
++                                  monitor_module.cc \
++                                  output_mixer.cc \
++                                  output_mixer_internal.cc \
++                                  shared_data.cc \
++                                  statistics.cc \
++                                  transmit_mixer.cc \
++                                  utility.cc \
++                                  voe_audio_processing_impl.cc \
++                                  voe_base_impl.cc \
++                                  voe_call_report_impl.cc \
++                                  voe_codec_impl.cc \
++                                  voe_dtmf_impl.cc \
++                                  voe_encryption_impl.cc \
++                                  voe_external_media_impl.cc \
++                                  voe_file_impl.cc \
++                                  voe_hardware_impl.cc \
++                                  voe_neteq_stats_impl.cc \
++                                  voe_network_impl.cc \
++                                  voe_rtp_rtcp_impl.cc \
++                                  voe_video_sync_impl.cc \
++                                  voe_volume_control_impl.cc \
++                                  voice_engine_impl.cc
++
++libvoice_engine_core_la_LIBADD = ../common_audio/resampler/libresampler.la \
++                                 ../common_audio/signal_processing/libsignal_processing.la \
++                                 ../modules/audio_coding/main/source/libaudio_coding_module.la \
++                                 ../modules/audio_conference_mixer/source/libaudio_conference_mixer.la \
++                                 ../modules/audio_device/main/source/libaudio_device.la \
++                                 ../modules/audio_processing/libaudio_processing.la \
++                                 ../modules/media_file/source/libmedia_file.la \
++                                 ../modules/rtp_rtcp/source/librtp_rtcp.la \
++                                 ../modules/udp_transport/source/libudp_transport.la \
++                                 ../modules/utility/source/libwebrtc_utility.la \
++                                 ../system_wrappers/source/libsystem_wrappers.la
++
++libvoice_engine_core_la_LDFLAGS = -version-info $(WEBRTC_LIBRARY_VERSION)
++
++libvoice_engine_core_includedir = $(includedir)/webrtc/voice_engine/
++
++nobase_libvoice_engine_core_include_HEADERS = channel.h \
++                                       channel_manager.h \
++                                       channel_manager_base.h \
++                                       dtmf_inband.h \
++                                       dtmf_inband_queue.h \
++                                       level_indicator.h \
++                                       monitor_module.h \
++                                       output_mixer.h \
++                                       output_mixer_internal.h \
++                                       shared_data.h \
++                                       statistics.h \
++                                       transmit_mixer.h \
++                                       utility.h \
++                                       include/voe_audio_processing.h \
++                                       include/voe_base.h \
++                                       include/voe_call_report.h \
++                                       include/voe_codec.h \
++                                       include/voe_dtmf.h \
++                                       include/voe_encryption.h \
++                                       include/voe_errors.h \
++                                       include/voe_external_media.h \
++                                       include/voe_file.h \
++                                       include/voe_hardware.h \
++                                       include/voe_neteq_stats.h \
++                                       include/voe_network.h \
++                                       include/voe_rtp_rtcp.h \
++                                       include/voe_video_sync.h \
++                                       include/voe_volume_control.h \
++                                       include/mock/mock_voe_connection_observer.h \
++                                       include/mock/mock_voe_observer.h \
++                                       voe_audio_processing_impl.h \
++                                       voe_base_impl.h \
++                                       voe_call_report_impl.h \
++                                       voe_codec_impl.h \
++                                       voe_dtmf_impl.h \
++                                       voe_encryption_impl.h \
++                                       voe_external_media_impl.h \
++                                       voe_file_impl.h \
++                                       voe_hardware_impl.h \
++                                       voe_neteq_stats_impl.h \
++                                       voe_network_impl.h \
++                                       voe_rtp_rtcp_impl.h \
++                                       voe_video_sync_impl.h \
++                                       voe_volume_control_impl.h \
++                                       voice_engine_defines.h \
++                                       voice_engine_impl.h
++
++AM_CXXFLAGS = -I../interface -DWEBRTC_LINUX -I../common_audio/resampler/include \
++              -I../common_audio/signal_processing/include -I../modules/audio_coding/main/interface \
++              -I../modules/audio_conference_mixer/interface -I../modules/audio_device/main/interface \
++              -I../modules/audio_processing/include -I../modules/media_file/interface \
++              -I../modules/rtp_rtcp/interface -I../modules/udp_transport/interface \
++              -I../modules/utility/interface -I../system_wrappers/interface \
++              -I../modules/audio_device/main/source -I../modules/interface \
++              -Iinclude -I.. -DWEBRTC_SVNREVISION='"n/a"'

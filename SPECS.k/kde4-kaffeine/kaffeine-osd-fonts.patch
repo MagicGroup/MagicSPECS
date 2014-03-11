@@ -1,0 +1,12 @@
+diff -u -r kaffeine-0.8.3.orig/kaffeine/src/player-parts/xine-part/kxinewidget.cpp kaffeine-0.8.3/kaffeine/src/player-parts/xine-part/kxinewidget.cpp
+--- kaffeine-0.8.3.orig/kaffeine/src/player-parts/xine-part/kxinewidget.cpp	2006-11-27 03:12:24.000000000 +0800
++++ kaffeine-0.8.3/kaffeine/src/player-parts/xine-part/kxinewidget.cpp	2007-01-01 10:33:08.000000000 +0800
+@@ -1182,7 +1182,7 @@
+ 	            NULL, 10, &KXineWidget::sizeForOSDMessagesChangedCallback, this);
+ 
+ 	m_osdFontInfo = strdup(i18n("Font for OSD Messages").local8Bit());
+-	m_osdFont = strdup((char*)xine_config_register_string(m_xineEngine, "osd.osd_font", "sans", m_osdFontInfo,
++	m_osdFont = strdup((char*)xine_config_register_string(m_xineEngine, "osd.osd_font", "heiti", m_osdFontInfo,
+ 	                   NULL, 10, &KXineWidget::fontForOSDMessagesChangedCallback, this));
+ 
+ 	/* init video driver */

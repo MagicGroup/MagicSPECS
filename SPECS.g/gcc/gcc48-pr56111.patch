@@ -1,0 +1,97 @@
+2013-02-13  Marc Glisse  <marc.glisse@inria.fr>                                                                                                    
+                                                                                                                                                   
+	PR libstdc++/56111                                                                                                                         
+	* include/std/complex (complex): Undefine.                                                                                                 
+	* include/c_compatibility/complex.h (complex): Only undefine if                                                                            
+	<complex> has been included.                                                                                                               
+	* testsuite/26_numerics/complex/56111.cc: New testcase.                                                                                    
+
+--- libstdc++-v3/include/std/complex	(revision 196018)
++++ libstdc++-v3/include/std/complex	(working copy)
+@@ -37,20 +37,23 @@
+ #define _GLIBCXX_COMPLEX 1
+ 
+ #pragma GCC system_header
+ 
+ #include <bits/c++config.h>
+ #include <bits/cpp_type_traits.h>
+ #include <ext/type_traits.h>
+ #include <cmath>
+ #include <sstream>
+ 
++// Get rid of a macro possibly defined in <complex.h>
++#undef complex
++
+ namespace std _GLIBCXX_VISIBILITY(default)
+ {
+ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+ 
+   /**
+    * @defgroup complex_numbers Complex Numbers
+    * @ingroup numerics
+    *
+    * Classes and functions for complex numbers.
+    * @{
+--- libstdc++-v3/include/c_compatibility/complex.h	(revision 196018)
++++ libstdc++-v3/include/c_compatibility/complex.h	(working copy)
+@@ -27,17 +27,20 @@
+  */
+ 
+ #include <bits/c++config.h>
+ 
+ #if __cplusplus >= 201103L
+ # include <ccomplex>
+ #endif
+ 
+ #if _GLIBCXX_HAVE_COMPLEX_H
+ # include_next <complex.h>
+-# undef complex
++# ifdef _GLIBCXX_COMPLEX
++// See PR56111, keep the macro in C++03 if possible.
++#  undef complex
++# endif
+ #endif
+ 
+ #ifndef _GLIBCXX_COMPLEX_H
+ #define _GLIBCXX_COMPLEX_H 1
+ 
+ #endif
+--- libstdc++-v3/testsuite/26_numerics/complex/56111.cc	(revision 0)
++++ libstdc++-v3/testsuite/26_numerics/complex/56111.cc	(revision 0)
+@@ -0,0 +1,36 @@
++// { dg-do compile }
++// { dg-options "-std=c++98" }
++
++// Copyright (C) 2013 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// libstdc++/56111
++// In C++03, we try to keep the macro "complex" as long as it does not
++// conflict (std::complex).
++#include <bits/c++config.h>
++#if _GLIBCXX_HAVE_COMPLEX_H
++# include <complex.h>
++#endif
++
++int main()
++{
++#if _GLIBCXX_HAVE_COMPLEX_H
++  double complex x = .5;
++  double complex y = cacos (x);
++  (void)y;
++#endif
++}

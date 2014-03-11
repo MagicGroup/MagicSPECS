@@ -1,0 +1,10 @@
+--- kdebase-3.5.2/applnk/kde-internet.directory.orig	2006-01-20 01:02:02.000000000 +0800
++++ kdebase-3.5.2/applnk/kde-internet.directory	2006-04-15 21:36:47.000000000 +0800
+@@ -38,6 +38,7 @@
+ Name[uk]=Інтернет
+ Name[uz]=Интернет
+ Name[wa]=Daegntoele
++Name[zh_CN]=互联网
+ Name[zh_TW]=網際網路
+ Icon=package_network
+ 

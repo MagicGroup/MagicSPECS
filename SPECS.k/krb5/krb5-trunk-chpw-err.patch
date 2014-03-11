@@ -1,0 +1,24 @@
+Don't suppress the error code from an error message when the error message
+contains e-data.  RT#6893
+Index: src/lib/krb5/krb/chpw.c
+===================================================================
+--- src/lib/krb5/krb/chpw.c	(revision 24838)
++++ src/lib/krb5/krb/chpw.c	(working copy)
+@@ -111,15 +111,11 @@
+             if ((ret = krb5_rd_error(context, packet, &krberror)))
+                 return(ret);
+ 
+-            if (krberror->e_data.data  == NULL)
+-                ret = ERROR_TABLE_BASE_krb5 + (krb5_error_code) krberror->error;
+-            else
+-                ret = KRB5KRB_AP_ERR_MODIFIED;
++            ret = ERROR_TABLE_BASE_krb5 + (krb5_error_code) krberror->error;
+             krb5_free_error(context, krberror);
+             return(ret);
+-        } else {
+-            return(KRB5KRB_AP_ERR_MODIFIED);
+         }
++        return(KRB5KRB_AP_ERR_MODIFIED);
+     }
+ 
+ 

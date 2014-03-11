@@ -1,0 +1,12 @@
+diff -ur vim73.orig/src/configure.in vim73/src/configure.in
+--- vim73.orig/src/configure.in	2013-06-05 19:47:22.564259854 +0000
++++ vim73/src/configure.in	2013-06-05 19:48:01.988259181 +0000
+@@ -1490,7 +1490,7 @@
+         if test -d "$rubyhdrdir/$rubyarch"; then
+           RUBY_CFLAGS="$RUBY_CFLAGS -I$rubyhdrdir/$rubyarch"
+         fi
+-        rubyversion=`$vi_cv_path_ruby -r rbconfig -e "print $ruby_rbconfig::CONFIG[['ruby_version']].gsub(/\./, '')[[0,2]]"`
++        rubyversion=`$vi_cv_path_ruby -r rbconfig -e "print $ruby_rbconfig::CONFIG[['MAJOR']]" -e "print $ruby_rbconfig::CONFIG[['MINOR']]"`
+         RUBY_CFLAGS="$RUBY_CFLAGS -DRUBY_VERSION=$rubyversion"
+ 	rubylibs=`$vi_cv_path_ruby -r rbconfig -e "print $ruby_rbconfig::CONFIG[['LIBS']]"`
+ 	if test "X$rubylibs" != "X"; then

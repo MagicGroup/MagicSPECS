@@ -1,0 +1,26 @@
+diff -up netkit-rsh-0.17/rshd/rshd.c.rh448904 netkit-rsh-0.17/rshd/rshd.c
+--- netkit-rsh-0.17/rshd/rshd.c.rh448904	2008-10-03 13:52:58.000000000 +0200
++++ netkit-rsh-0.17/rshd/rshd.c	2008-10-03 13:55:54.000000000 +0200
+@@ -382,6 +382,7 @@ static int log_audit(const char *usernam
+ 			int success)
+ {
+ #ifdef USE_AUDIT
++	int err;
+ 	int audit_fd = audit_open();
+ 	if (audit_fd < 0) {
+ 		if (errno != EINVAL && errno != EPROTONOSUPPORT &&
+@@ -391,8 +392,13 @@ static int log_audit(const char *usernam
+ 		int rc = audit_log_acct_message(audit_fd, AUDIT_USER_LOGIN,
+ 				NULL, "login", username, uid, hostname, NULL,
+ 				"rsh", success);
++		err = errno;
+ 		close(audit_fd);
+-		if (rc <= 0) 
++		/*
++		 * ECONNREFUSED is returned when kernel is compiled without
++		 * audit support
++		 */
++		if (rc <= 0 && err != ECONNREFUSED) 
+ 			return 1;
+ 	}
+ #endif

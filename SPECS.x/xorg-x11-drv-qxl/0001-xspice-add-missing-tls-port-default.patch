@@ -1,0 +1,25 @@
+From f637c79f121348b02b0fdae7613675acda380815 Mon Sep 17 00:00:00 2001
+From: Alon Levy <alevy@redhat.com>
+Date: Sat, 23 Jul 2011 20:07:04 +0300
+Subject: [PATCH xf86-video-qxl 01/10] xspice: add missing --tls-port default
+
+---
+ scripts/xspice |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/scripts/xspice b/scripts/xspice
+index f411619..3c6b49a 100755
+--- a/scripts/xspice
++++ b/scripts/xspice
+@@ -45,7 +45,7 @@ parser.add_argument('--config', default='spiceqxl.xorg.conf')
+ # Don't use any options that are already used by Xorg (unless we must)
+ # specifically, don't use -p and -s.
+ parser.add_argument('--port', type=int, help='standard spice port')
+-parser.add_argument('--tls-port', type=int, help='spice tls port')
++parser.add_argument('--tls-port', type=int, help='spice tls port', default=0)
+ add_boolean('--disable-ticketing', help="do not require a client password")
+ add_boolean('--sasl', help="enable sasl")
+ parser.add_argument('--x509-dir', help="x509 directory for tls", default='.')
+-- 
+1.7.6.2
+

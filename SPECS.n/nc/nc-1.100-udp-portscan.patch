@@ -1,0 +1,48 @@
+--- nc/netcat.c	2011-03-08 11:31:20.375563001 +0100
++++ nc/netcat.c.new	2011-03-08 11:39:27.466562356 +0100
+@@ -64,6 +64,8 @@
+ #define PORT_MAX_LEN	6
+ #define UNIX_DG_TMP_SOCKET_SIZE	19
+ 
++#define UDP_SCAN_TIMEOUT 3
++
+ /* Command Line Options */
+ int	dflag;					/* detached, no stdin */
+ unsigned int iflag;				/* Interval Flag */
+@@ -399,7 +401,7 @@
+ 				continue;
+ 
+ 			ret = 0;
+-			if (vflag || zflag) {
++			if ((vflag && !uflag) || zflag) {
+ 				/* For UDP, make sure we are connected. */
+ 				if (uflag) {
+ 					if (udptest(s) == -1) {
+@@ -813,15 +815,20 @@
+ int
+ udptest(int s)
+ {
+-	int i, ret;
++	int i, t;
+ 
+-	for (i = 0; i <= 3; i++) {
+-		if (write(s, "X", 1) == 1)
+-			ret = 1;
+-		else
+-			ret = -1;
++	if ((write(s, "X", 1) != 1) ||
++		((write(s, "X", 1) != 1) && ( errno == ECONNREFUSED)))
++		return -1;
++	
++	/* Give the remote host some time to reply */
++	for (i = 0, t = (timeout == -1) ? UDP_SCAN_TIMEOUT : (timeout / 1000);
++		 i < t; i++) {
++		sleep(1);
++		if ((write(s, "X", 1) != 1) && (errno == ECONNREFUSED))
++			return -1;
+ 	}
+-	return (ret);
++	return 1;
+ }
+ 
+ void

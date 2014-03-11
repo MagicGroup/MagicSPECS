@@ -1,0 +1,28 @@
+From ae68582193e0d4f49153fd426d5a9eb33d8e0d39 Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@src.gnome.org>
+Date: Thu, 18 Oct 2012 10:55:48 +0200
+Subject: [PATCH 2/2] empathy-call: Free the FsElementAddedNotifiers on
+ fs-conference-removed
+
+Fixes: https://bugzilla.gnome.org/686314
+---
+ src/empathy-call-window.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/empathy-call-window.c b/src/empathy-call-window.c
+index 8318720..f49901b 100644
+--- a/src/empathy-call-window.c
++++ b/src/empathy-call-window.c
+@@ -2446,6 +2446,9 @@ empathy_call_window_conference_removed_cb (EmpathyCallHandler *handler,
+   EmpathyCallWindow *self = EMPATHY_CALL_WINDOW (user_data);
+   EmpathyCallWindowPriv *priv = GET_PRIV (self);
+ 
++  g_list_free_full (priv->notifiers, g_object_unref);
++  priv->notifiers = NULL;
++
+   gst_bin_remove (GST_BIN (priv->pipeline), conference);
+   gst_element_set_state (conference, GST_STATE_NULL);
+ }
+-- 
+1.7.12.1
+

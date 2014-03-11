@@ -1,0 +1,14 @@
+diff --git a/src/verto-libev.c b/src/verto-libev.c
+index 2eb08fc..9c7c324 100644
+--- a/src/verto-libev.c
++++ b/src/verto-libev.c
+@@ -106,7 +106,9 @@ libev_ctx_set_flags(verto_mod_ctx *ctx, const verto_ev *ev,
+         if (verto_get_flags(ev) & VERTO_EV_FLAG_IO_WRITE)
+             events |= EV_WRITE;
+ 
++        ev_io_stop(ctx, (ev_io*) evpriv);
+         ev_io_set(((ev_io*) evpriv), verto_get_fd(ev), events);
++        ev_io_start(ctx, (ev_io*) evpriv);
+     }
+ }
+ 

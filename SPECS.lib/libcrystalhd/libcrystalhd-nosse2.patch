@@ -1,0 +1,105 @@
+diff -up libcrystalhd-20120405/linux_lib/libcrystalhd/libcrystalhd_int_if.cpp.nosse2 libcrystalhd-20120405/linux_lib/libcrystalhd/libcrystalhd_int_if.cpp
+--- libcrystalhd-20120405/linux_lib/libcrystalhd/libcrystalhd_int_if.cpp.nosse2	2011-03-14 21:02:54.000000000 +0100
++++ libcrystalhd-20120405/linux_lib/libcrystalhd/libcrystalhd_int_if.cpp	2012-08-03 20:04:23.700362339 +0200
+@@ -33,7 +33,9 @@
+ #include "libcrystalhd_int_if.h"
+ #include "libcrystalhd_fwcmds.h"
+ 
++#if __SSE2__ || !defined __GNUC__
+ #include <emmintrin.h>
++#endif
+ 
+ #define SV_MAX_LINE_SZ 128
+ #define PCI_GLOBAL_CONTROL MISC2_GLOBAL_CTRL
+@@ -1425,11 +1427,14 @@ BC_STATUS DtsCopyNV12(DTS_LIB_CONTEXT *C
+ }
+ 
+ // TODO: add sse2 detection
++#if __SSE2__
+ static bool gSSE2 = true; // most of the platforms will have it anyway:
++#endif
+ // 64 bits: no test necessary
+ // mac: no test necessary
+ // linux/windows: we might have to do the test.
+ 
++#if __SSE2__
+ static void fast_memcpy(uint8_t *dst, const uint8_t *src, uint32_t count)
+ {
+ 	// tested
+@@ -1466,6 +1471,9 @@ static void fast_memcpy(uint8_t *dst, co
+ 	while (count --)
+ 		*dst++ = *src++;
+ }
++#else
++#define fast_memcpy(a,b,c) memcpy(a,b,c)
++#endif
+ 
+ // this is not good.
+ // if we have 3 buffers, we cannot assume V is after U
+@@ -1504,6 +1512,7 @@ static BC_STATUS DtsCopy422ToUYVY(uint8_
+ 
+ 	for (__y = 0; __y < height; __y++)
+ 	{
++#if __SSE2__
+ 		if (gSSE2)
+ 		{
+ 			if (((((uintptr_t) dstY) & 0xf) == 0) && ((((uintptr_t) srcY) & 0xf) == 0))
+@@ -1529,6 +1538,7 @@ static BC_STATUS DtsCopy422ToUYVY(uint8_
+ 				}
+ 			}
+ 		}
++#endif
+ 
+ 		while (x < srcWidth-1)
+ 		{
+@@ -1548,6 +1558,7 @@ static BC_STATUS DtsCopy422ToUYVY(uint8_
+ // convert to NV12
+ static BC_STATUS DtsCopy422ToNV12(uint8_t *dstY, uint8_t *dstUV, const uint8_t *srcY, uint32_t srcWidth, uint32_t dstWidth, uint32_t height, uint32_t strideY, uint32_t strideUV)
+ {
++#if __SSE2__
+ 	// tested
+ 	uint32_t x, __y;
+ 
+@@ -1667,6 +1678,9 @@ static BC_STATUS DtsCopy422ToNV12(uint8_
+ 		dstY += strideY;
+ 	}
+ 	return BC_STS_SUCCESS;
++#else
++	return BC_STS_INV_ARG;
++#endif
+ }
+ 
+ 
+@@ -1681,6 +1695,7 @@ static BC_STATUS DtsCopy420ToYV12(uint8_
+ 
+ static BC_STATUS DtsCopy420ToYUY2(uint8_t *dstY, uint8_t *dstUV, const uint8_t *srcY, const uint8_t *srcUV, uint32_t srcWidth, uint32_t dstWidth, uint32_t height, uint32_t strideY, uint32_t strideUV)
+ {
++#if __SSE2__
+ 	// TODO, test this
+ 	uint32_t x, __y;
+ 
+@@ -1836,10 +1851,14 @@ static BC_STATUS DtsCopy420ToYUY2(uint8_
+ 	}
+ 
+ 	return BC_STS_SUCCESS;
++#else
++	return BC_STS_INV_ARG;
++#endif
+ }
+ 
+ static BC_STATUS DtsCopy420ToUYVY(uint8_t *dstY, uint8_t *dstUV, const uint8_t *srcY, const uint8_t *srcUV, uint32_t srcWidth, uint32_t dstWidth, uint32_t height, uint32_t strideY, uint32_t strideUV)
+ {
++#if __SSE2__
+ 	// TODO, test this
+ 	uint32_t x, __y;
+ 
+@@ -1993,6 +2012,9 @@ static BC_STATUS DtsCopy420ToUYVY(uint8_
+ 	}
+ 
+ 	return BC_STS_SUCCESS;
++#else
++	return BC_STS_INV_ARG;
++#endif
+ }
+ 
+ static BC_STATUS DtsCopy420ToNV12(uint8_t *dstY, uint8_t *dstUV, const uint8_t *srcY, const uint8_t *srcUV, uint32_t srcWidth, uint32_t dstWidth, uint32_t height, uint32_t strideY, uint32_t strideUV)

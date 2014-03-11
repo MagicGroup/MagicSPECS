@@ -1,0 +1,33 @@
+From 8300962b0235803287777f78b86aa1776d369769 Mon Sep 17 00:00:00 2001
+From: "Fuji, Goro" <gfuji@cpan.org>
+Date: Sat, 25 Jun 2011 11:16:10 +0900
+Subject: [PATCH] Use Scalar::Util::openhandle() instead of $io->opend
+
+---
+ lib/IO/Prompt.pm |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/lib/IO/Prompt.pm b/lib/IO/Prompt.pm
+index 343d204..e0db947 100644
+--- a/lib/IO/Prompt.pm
++++ b/lib/IO/Prompt.pm
+@@ -11,6 +11,7 @@ no warnings 'utf8';
+ our @EXPORT    = qw( prompt );
+ our @EXPORT_OK = qw( hand_print get_input );
+ 
++use Scalar::Util;
+ use IO::Handle;
+ use Term::ReadKey;
+ use POSIX qw( isprint );
+@@ -185,7 +186,7 @@ sub prompt {
+     else {
+         no strict 'refs';
+         my $ARGV = $caller . "::ARGV";
+-        unless (*$ARGV->opened) {
++        unless (Scalar::Util::openhandle(*$ARGV)) {
+             $$ARGV = shift(@$ARGV) || '-';
+             open $ARGV or croak "Can't open $$ARGV: $!";
+         }
+-- 
+1.7.5.4
+

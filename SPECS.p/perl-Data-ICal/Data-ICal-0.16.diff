@@ -1,0 +1,4004 @@
+diff -Naur Data-ICal-0.16.orig/inc/Module/AutoInstall.pm Data-ICal-0.16/inc/Module/AutoInstall.pm
+--- Data-ICal-0.16.orig/inc/Module/AutoInstall.pm	2009-07-10 16:52:29.000000000 +0200
++++ Data-ICal-0.16/inc/Module/AutoInstall.pm	2009-07-29 09:44:08.000000000 +0200
+@@ -1,4 +1,3 @@
+-#line 1
+ package Module::AutoInstall;
+ 
+ use strict;
+@@ -18,7 +17,9 @@
+ 
+ # various lexical flags
+ my ( @Missing, @Existing,  %DisabledTests, $UnderCPAN,     $HasCPANPLUS );
+-my ( $Config,  $CheckOnly, $SkipInstall,   $AcceptDefault, $TestOnly );
++my (
++    $Config, $CheckOnly, $SkipInstall, $AcceptDefault, $TestOnly, $AllDeps
++);
+ my ( $PostambleActions, $PostambleUsed );
+ 
+ # See if it's a testing or non-interactive session
+@@ -73,6 +74,9 @@
+         elsif ( $arg =~ /^--test(?:only)?$/ ) {
+             $TestOnly = 1;
+         }
++        elsif ( $arg =~ /^--all(?:deps)?$/ ) {
++            $AllDeps = 1;
++        }
+     }
+ }
+ 
+@@ -115,7 +119,12 @@
+         )[0]
+     );
+ 
+-    $UnderCPAN = _check_lock(1);    # check for $UnderCPAN
++    # We want to know if we're under CPAN early to avoid prompting, but
++    # if we aren't going to try and install anything anyway then skip the
++    # check entirely since we don't want to have to load (and configure)
++    # an old CPAN just for a cosmetic message
++
++    $UnderCPAN = _check_lock(1) unless $SkipInstall;
+ 
+     while ( my ( $feature, $modules ) = splice( @args, 0, 2 ) ) {
+         my ( @required, @tests, @skiptests );
+@@ -165,15 +174,24 @@
+             }
+ 
+             # XXX: check for conflicts and uninstalls(!) them.
+-            if (
+-                defined( my $cur = _version_check( _load($mod), $arg ||= 0 ) ) )
++            my $cur = _load($mod);
++            if (_version_cmp ($cur, $arg) >= 0)
+             {
+                 print "loaded. ($cur" . ( $arg ? " >= $arg" : '' ) . ")\n";
+                 push @Existing, $mod => $arg;
+                 $DisabledTests{$_} = 1 for map { glob($_) } @skiptests;
+             }
+             else {
+-                print "missing." . ( $arg ? " (would need $arg)" : '' ) . "\n";
++                if (not defined $cur)   # indeed missing
++                {
++                    print "missing." . ( $arg ? " (would need $arg)" : '' ) . "\n";
++                }
++                else
++                {
++                    # no need to check $arg as _version_cmp ($cur, undef) would satisfy >= above
++                    print "too old. ($cur < $arg)\n";
++                }
++
+                 push @required, $mod => $arg;
+             }
+         }
+@@ -187,6 +205,7 @@
+             and (
+                 $CheckOnly
+                 or ($mandatory and $UnderCPAN)
++                or $AllDeps
+                 or _prompt(
+                     qq{==> Auto-install the }
+                       . ( @required / 2 )
+@@ -235,21 +254,38 @@
+     *{'main::WriteMakefile'} = \&Write if caller(0) eq 'main';
+ }
+ 
++sub _running_under {
++    my $thing = shift;
++    print <<"END_MESSAGE";
++*** Since we're running under ${thing}, I'll just let it take care
++    of the dependency's installation later.
++END_MESSAGE
++    return 1;
++}
++
+ # Check to see if we are currently running under CPAN.pm and/or CPANPLUS;
+ # if we are, then we simply let it taking care of our dependencies
+ sub _check_lock {
+     return unless @Missing or @_;
+ 
++    my $cpan_env = $ENV{PERL5_CPAN_IS_RUNNING};
++
+     if ($ENV{PERL5_CPANPLUS_IS_RUNNING}) {
+-        print <<'END_MESSAGE';
++        return _running_under($cpan_env ? 'CPAN' : 'CPANPLUS');
++    }
+ 
+-*** Since we're running under CPANPLUS, I'll just let it take care
+-    of the dependency's installation later.
+-END_MESSAGE
+-        return 1;
++    require CPAN;
++
++    if ($CPAN::VERSION > '1.89') {
++        if ($cpan_env) {
++            return _running_under('CPAN');
++        }
++        return; # CPAN.pm new enough, don't need to check further
+     }
+ 
+-    _load_cpan();
++    # last ditch attempt, this -will- configure CPAN, very sorry
++
++    _load_cpan(1); # force initialize even though it's already loaded
+ 
+     # Find the CPAN lock-file
+     my $lock = MM->catfile( $CPAN::Config->{cpan_home}, ".lock" );
+@@ -285,7 +321,7 @@
+     while ( my ( $pkg, $ver ) = splice( @_, 0, 2 ) ) {
+ 
+         # grep out those already installed
+-        if ( defined( _version_check( _load($pkg), $ver ) ) ) {
++        if ( _version_cmp( _load($pkg), $ver ) >= 0 ) {
+             push @installed, $pkg;
+         }
+         else {
+@@ -324,7 +360,7 @@
+ 
+     # see if we have successfully installed them
+     while ( my ( $pkg, $ver ) = splice( @modules, 0, 2 ) ) {
+-        if ( defined( _version_check( _load($pkg), $ver ) ) ) {
++        if ( _version_cmp( _load($pkg), $ver ) >= 0 ) {
+             push @installed, $pkg;
+         }
+         elsif ( $args{do_once} and open( FAILED, '>> .#autoinstall.failed' ) ) {
+@@ -379,7 +415,7 @@
+         my $success;
+         my $obj = $modtree->{$pkg};
+ 
+-        if ( $obj and defined( _version_check( $obj->{version}, $ver ) ) ) {
++        if ( $obj and _version_cmp( $obj->{version}, $ver ) >= 0 ) {
+             my $pathname = $pkg;
+             $pathname =~ s/::/\\W/;
+ 
+@@ -472,7 +508,7 @@
+         my $obj     = CPAN::Shell->expand( Module => $pkg );
+         my $success = 0;
+ 
+-        if ( $obj and defined( _version_check( $obj->cpan_version, $ver ) ) ) {
++        if ( $obj and _version_cmp( $obj->cpan_version, $ver ) >= 0 ) {
+             my $pathname = $pkg;
+             $pathname =~ s/::/\\W/;
+ 
+@@ -536,7 +572,7 @@
+     my $ver   = shift;
+ 
+     return
+-      if defined( _version_check( _load($class), $ver ) );  # no need to upgrade
++      if _version_cmp( _load($class), $ver ) >= 0;  # no need to upgrade
+ 
+     if (
+         _prompt( "==> A newer version of $class ($ver) is required. Install?",
+@@ -633,7 +669,7 @@
+ 
+ # Load CPAN.pm and it's configuration
+ sub _load_cpan {
+-    return if $CPAN::VERSION;
++    return if $CPAN::VERSION and $CPAN::Config and not @_;
+     require CPAN;
+     if ( $CPAN::HandleConfig::VERSION ) {
+         # Newer versions of CPAN have a HandleConfig module
+@@ -645,9 +681,11 @@
+ }
+ 
+ # compare two versions, either use Sort::Versions or plain comparison
+-sub _version_check {
++# return values same as <=>
++sub _version_cmp {
+     my ( $cur, $min ) = @_;
+-    return unless defined $cur;
++    return -1 unless defined $cur;  # if 0 keep comparing
++    return 1 unless $min;
+ 
+     $cur =~ s/\s+$//;
+ 
+@@ -658,16 +696,13 @@
+             ) {
+ 
+             # use version.pm if it is installed.
+-            return (
+-                ( version->new($cur) >= version->new($min) ) ? $cur : undef );
++            return version->new($cur) <=> version->new($min);
+         }
+         elsif ( $Sort::Versions::VERSION or defined( _load('Sort::Versions') ) )
+         {
+ 
+             # use Sort::Versions as the sorting algorithm for a.b.c versions
+-            return ( ( Sort::Versions::versioncmp( $cur, $min ) != -1 )
+-                ? $cur
+-                : undef );
++            return Sort::Versions::versioncmp( $cur, $min );
+         }
+ 
+         warn "Cannot reliably compare non-decimal formatted versions.\n"
+@@ -676,7 +711,7 @@
+ 
+     # plain comparison
+     local $^W = 0;    # shuts off 'not numeric' bugs
+-    return ( $cur >= $min ? $cur : undef );
++    return $cur <=> $min;
+ }
+ 
+ # nothing; this usage is deprecated.
+@@ -766,4 +801,256 @@
+ 
+ __END__
+ 
+-#line 1004
++=pod
++
++=head1 NAME
++
++Module::AutoInstall - Automatic install of dependencies via CPAN
++
++=head1 SYNOPSIS
++
++In F<Makefile.PL>, with L<Module::Install> available on the author's system:
++
++    use inc::Module::Install;
++    
++    name        'Joe-Hacker';
++    abstract    'Perl Interface to Joe Hacker';
++    author      'Joe Hacker <joe@hacker.org>';
++    include     'Module::AutoInstall';
++    
++    requires    'Module0';          # mandatory modules
++    
++    feature     'Feature1',
++        -default    => 0,
++        'Module2'   => '0.1';
++    
++    feature     'Feature2',
++        -default    => 0,
++        'Module3'   => '1.0';
++    
++    auto_install(
++        make_args   => '--hello',   # option(s) for CPAN::Config
++        force       => 1,           # pseudo-option to force install
++        do_once     => 1,           # skip previously failed modules
++    );
++    
++    WriteAll;
++
++Invoking the resulting F<Makefile.PL>:
++
++    % perl Makefile.PL                  # interactive behaviour
++    % perl Makefile.PL --defaultdeps    # accept default value on prompts
++    % perl Makefile.PL --checkdeps      # check only, no Makefile produced
++    % perl Makefile.PL --skipdeps       # ignores all dependencies
++    % perl Makefile.PL --testonly       # don't write installation targets
++
++Note that the trailing 'deps' of arguments may be omitted, too.
++
++Using C<--defaultdeps> will make F<Makefile.PL> behave similarly to a regular
++Makefile.PL file with C<PREREQ_PM> dependencies.
++
++One can use environment variables (see "ENVIRONMENT") below to set a default
++behavior instead of specifying it in the command line for every invocation
++of F<Makefile.PL>.
++
++Using F<make> (or F<nmake>):
++
++    % make [all|test|install]           # install dependencies first
++    % make checkdeps                    # same as the --checkdeps above
++    % make installdeps                  # install dependencies only
++
++=head1 DESCRIPTION
++
++B<Module::AutoInstall> lets module writers to specify a more
++sophisticated form of dependency information than the C<PREREQ_PM>
++option offered by B<ExtUtils::MakeMaker>.
++
++This module works best with the B<Module::Install> framework,
++a drop-in replacement for MakeMaker.  However, this module also
++supports F<Makefile.PL> files based on MakeMaker; see L</EXAMPLES>
++for instructions.
++
++=head2 Prerequisites and Features
++
++Prerequisites are grouped into B<features>, and the user could choose
++yes/no on each one's dependencies; the module writer may also supply a
++boolean value via C<-default> to specify the default choice.
++
++The B<Core Features> marked by the name C<-core> will double-check with
++the user, if the user chooses not to install the mandatory modules.
++This differs from the pre-0.26 'silent install' behaviour.
++
++Starting from version 0.27, if C<-core> is set to the string C<all>
++(case-insensitive), every feature will be considered mandatory.
++
++The dependencies are expressed as pairs of C<Module> => C<version>
++inside an array reference.  If the order does not matter, and there
++are no C<-default>, C<-tests> or C<-skiptests> directives for that
++feature, you may also use a hash reference.
++
++=head2 The Installation Process
++
++Once B<Module::AutoInstall> has determined which module(s) are needed,
++it checks whether it's running under the B<CPAN> shell and should
++therefore let B<CPAN> handle the dependency.
++
++Finally, the C<WriteMakefile()> is overridden to perform some additional
++checks, as well as skips tests associated with disabled features by the
++C<-tests> option.
++
++The actual installation happens at the end of the C<make config> target;
++both C<make test> and C<make install> will trigger the installation of
++required modules.
++
++If it's not running under B<CPAN>, the installer will probe for an
++active connection by trying to resolve the domain C<cpan.org>, and check
++for the user's permission to use B<CPAN>.  If all went well, a separate
++    B<CPAN> instance is created to install the required modules.
++
++If you have the B<CPANPLUS> package installed in your system, it is
++preferred by default over B<CPAN>; it also accepts some extra options
++(e.g. C<-target =E<gt> 'skiptest', -skiptest =E<gt> 1> to skip testing).
++
++All modules scheduled to be installed will be deleted from C<%INC>
++first, so B<ExtUtils::MakeMaker> will check the newly installed modules.
++
++Additionally, you could use the C<make installdeps> target to install
++the modules, and the C<make checkdeps> target to check dependencies
++without actually installing them; the C<perl Makefile.PL --checkdeps>
++command has an equivalent effect.
++
++If the F<Makefile.PL> itself needs to use an independent module (e.g.
++B<Acme::KillarApp>, v1.21 or greater), then use something like below:
++
++    BEGIN {
++        require Module::AutoInstall;
++        # the first argument is an arrayref of the -config flags
++        Module::AutoInstall->install([], 'Acme::KillerApp' => 1.21);
++    }
++    use Acme::KillerApp 1.21;
++
++    Module::AutoInstall->import(
++        # ... arguments as usual ...
++    );
++
++Note the version test in the use clause; if you are so close to the
++cutting edge that B<Acme::KillerApp> 1.20 is the latest version on CPAN,
++this will prevent your module from going awry.
++
++=head2 User-Defined Hooks
++
++User-defined I<pre-installation> and I<post-installation> hooks are
++available via C<MY::preinstall> and C<MY::postinstall> subroutines,
++as shown below:
++
++    # pre-install handler; takes $module_name and $version
++    sub MY::preinstall  { return 1; } # return false to skip install
++
++    # post-install handler; takes $module_name, $version, $success
++    sub MY::postinstall { return; }   # the return value doesn't matter
++
++Note that since B<Module::AutoInstall> performs installation at the
++time of C<use> (i.e. before perl parses the remainder of
++F<Makefile.PL>), you have to declare those two handlers I<before> the
++C<use> statement for them to take effect.
++
++If the user did not choose to install a module or it already exists on
++the system, neither of the handlers is invoked.  Both handlers are invoked
++exactly once for each module when installation is attempted.
++
++C<MY::preinstall> takes two arguments, C<$module_name> and C<$version>;
++if it returns a false value, installation for that module will be
++skipped, and C<MY::postinstall> won't be called at all.
++
++C<MY::postinstall> takes three arguments, C<$module_name>, C<$version>
++and C<$success>.  The last one denotes whether the installation
++succeeded or not: C<1> means installation completed successfully, C<0>
++means failure during install, and C<undef> means that the installation
++was not attempted at all, possibly due to connection problems, or that
++module does not exist on CPAN at all.
++
++=head2 Customized C<MY::postamble>
++
++Starting from version 0.43, B<Module::AutoInstall> supports modules
++that require a C<MY::postamble> subroutine in their F<Makefile.PL>.
++The user-defined C<MY::postamble>, if present, is responsible for
++calling C<Module::AutoInstall::postamble> and include the output in
++its return value.
++
++For example, the B<DBD::*> (database driver) modules for the Perl DBI
++are required to include the postamble generated by the function
++C<dbd_postamble>, so their F<Makefile.PL> may contain lines like this:
++
++    sub MY::postamble {
++        return &Module::AutoInstall::postamble . &dbd_postamble;
++    }
++
++Note that the B<Module::AutoInstall> module does not export the
++C<postamble> function, so the name should always be fully qualified.
++
++=head1 CAVEATS
++
++B<Module::AutoInstall> will add C<UNINST=1> to your B<make install>
++flags if your effective uid is 0 (root), unless you explicitly disable
++it by setting B<CPAN>'s C<make_install_arg> configuration option (or the
++C<makeflags> option of B<CPANPLUS>) to include C<UNINST=0>.  This I<may>
++cause dependency problems if you are using a fine-tuned directory
++structure for your site.  Please consult L<CPAN/FAQ> for an explanation
++in detail.
++
++If either B<version> or B<Sort::Versions> is available, they will be
++used to compare the required version with the existing module's version
++and the CPAN module's.  Otherwise it silently falls back to use I<cmp>.
++This may cause inconsistent behaviours in pathetic situations.
++
++=head1 ENVIRONMENT
++
++B<Module::AutoInstall> uses a single environment variable,
++C<PERL_AUTOINSTALL>.  It is taken as the command line argument
++passed to F<Makefile.PL>; you could set it to C<--alldeps>, C<--defaultdeps>
++or C<--skipdeps> to avoid all interactive behaviour.
++
++C<--alldeps> will install all features, while
++C<--defaultdeps> will only install features for which the default answer is
++'y'.
++
++C<--skipdeps> will refrain from loading L<CPAN> and not install anything, unless
++you're running under L<CPAN> or L<CPANPLUS>, in which case required dependencies
++will be installed.
++
++It also read from the C<PERL_EXTUTILS_AUTOINSTALL> environment variable if
++C<PERL_AUTOINSTALL> is not defined.
++
++=head1 SEE ALSO
++
++L<Module::Install>
++
++L<perlmodlib>, L<ExtUtils::MakeMaker>, L<Sort::Versions>, L<CPAN>,
++L<CPANPLUS>
++
++=head1 AUTHORS
++
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++Matt S Trout E<lt>mst@shadowcat.co.uE<gt>
++
++=head1 IF THIS BREAKS
++
++Report a ticket to bugs-Module-Install <at> rt.cpan.org and cc Matt
++- I appear to have volunteered as primary maintainer for this stuff so
++if you run into any problems please tell me
++
++=head1 COPYRIGHT
++
++Copyright 2001, 2002, 2003, 2004, 2005, 2006 by Audrey Tang
++
++Some parts copyright 2006 Adam Kennedy
++
++This program is free software; you can redistribute it and/or
++modify it under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/Bundle.pm Data-ICal-0.16/inc/Module/Install/Admin/Bundle.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/Bundle.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/Bundle.pm	2009-05-27 18:46:14.000000000 +0200
+@@ -0,0 +1,73 @@
++package Module::Install::Admin::Bundle;
++
++use strict;
++use Module::Install::Base;
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA     = qw{Module::Install::Base};
++}
++
++sub bundle {
++    my $self       = shift;
++    my $bundle_dir = $self->_top->{bundle};
++
++    require Cwd;
++    require CPANPLUS::Backend;
++
++    my $cwd = Cwd::getcwd();
++
++    # This code is what we _should_ be doing, but CPANPLUS doesn't
++    # let you have multiple Backends in one program.
++    # my $cp   = CPANPLUS::Backend->new;
++    #
++    # Jos Boumans tells us that this is the best way to do what we want
++    # It still scares me.
++    my $cp      = CPANPLUS::Internals->_retrieve_id( CPANPLUS::Internals->_last_id )
++               || CPANPLUS::Backend->new;
++    my $conf    = $cp->configure_object;
++    my $modtree = $cp->module_tree;
++
++    $conf->set_conf( verbose   => 1 );
++    $conf->set_conf( signature => 0 );
++    $conf->set_conf( md5       => 0 );
++
++    mkdir $bundle_dir;
++
++    my %bundles;
++
++    while ( my ( $name, $version ) = splice( @_, 0, 2 ) ) {
++        my $mod = $cp->module_tree($name);
++        next unless $mod;
++        if ( $mod->package_is_perl_core or $self->{already_bundled}{$mod->package} ) {
++        	next;
++        }
++
++        my $where = $mod->fetch( fetchdir => $bundle_dir, );
++        next unless ($where);
++        my $file = Cwd::abs_path($where);
++
++        my $extract_result = $mod->extract(
++            files      => [ $file ],
++            extractdir => $bundle_dir,
++        );
++
++        unlink $file;
++        next unless ($extract_result);
++        $bundles{$name} = $extract_result;
++        $self->{already_bundled}{ $mod->package }++;
++
++    }
++
++    chdir $cwd;
++
++    local *FH;
++    open FH, ">> $bundle_dir.yml" or die "Cannot write to $bundle_dir.yml: $!";
++    foreach my $name ( sort keys %bundles ) {
++        print FH "$name: '$bundles{$name}'\n";
++    }
++    close FH;
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/Compiler.pm Data-ICal-0.16/inc/Module/Install/Admin/Compiler.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/Compiler.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/Compiler.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,27 @@
++package Module::Install::Admin::Compiler;
++
++use strict;
++use Module::Install::Base;
++use File::Remove  ();
++use Devel::PPPort ();
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA     = qw{Module::Install::Base};
++}
++
++sub ppport {
++	my $self   = shift;
++	my $file   = shift || 'ppport.h';
++	if ( -f $file ) {
++		# Update the file to a newer version
++		File::Remove::remove($file);
++	}
++
++	# Install the file (and remove on realclean)
++	Devel::PPPort::WriteFile( $file ) or die "Failed to write $file";
++	$self->realclean_files( $file );
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/Find.pm Data-ICal-0.16/inc/Module/Install/Admin/Find.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/Find.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/Find.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,77 @@
++package Module::Install::Admin::Find;
++
++use strict;
++use File::Find ();
++use Module::Install::Base ();
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA = qw(Module::Install::Base);
++}
++
++sub find_extensions {
++    my $self = shift;
++    $self->_top->find_extensions(@_);
++}
++
++sub find_in_inc {
++    my ($self, $pkg) = @_;
++
++    unless ($pkg =~ /\.pm$/) {
++        $pkg =~ s!::!/!g;
++        $pkg = "$pkg.pm";
++    }
++
++    my @found;
++    foreach my $inc (@INC) {
++        next if $inc eq $self->_top->{prefix} or ref($inc);
++        push @found, "$inc/$pkg" if -f "$inc/$pkg";
++    }
++
++    wantarray ? @found : $found[0];
++}
++
++sub glob_in_inc {
++    my ($self, $pkg) = @_;
++
++    unless ($pkg =~ /\.pm$/) {
++        $pkg =~ s!::!/!g;
++        $pkg = "$pkg.pm";
++    }
++
++    my @found;
++    foreach my $inc (@INC) {
++        next if $inc eq $self->_top->{prefix} or ref($inc);
++        push @found, [ do {
++            my $p = $_;
++            $p =~ s!^\Q$inc\E/!!;
++            $p =~ s!/!::!g;
++            $p =~ s!\.pm\Z!!gi;
++            $p
++        }, $_ ] for grep -e, glob("$inc/$pkg");
++    }
++
++    wantarray ? @found : $found[0];
++}
++
++sub find_files {
++    my ($self, $file, $path) = @_;
++    $path = '' if not defined $path;
++    $file = "$path/$file" if length($path);
++    if (-f $file) {
++        return ($file);
++    }
++    elsif (-d $file) {
++        my @files = ();
++        local *DIR;
++        opendir(DIR, $file) or die "Can't opendir $file";
++        while (my $new_file = readdir(DIR)) {
++            next if $new_file =~ /^(\.|\.\.)$/;
++            push @files, $self->find_files($new_file, $file);
++        }
++        return @files;
++    }
++    return ();
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/Include.pm Data-ICal-0.16/inc/Module/Install/Admin/Include.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/Include.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/Include.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,147 @@
++package Module::Install::Admin::Include;
++
++use strict;
++use Module::Install::Base;
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA     = qw{Module::Install::Base};
++}
++
++sub include {
++	my $self = shift;
++	foreach my $rv ( $self->admin->glob_in_inc($_[0]) ) {
++		$self->admin->copy_package(@$rv);
++	}
++}
++
++sub include_deps {
++	my $self = shift;
++	my $deps = $self->admin->scan_dependencies($_[0]) or return;
++	foreach my $key ( sort keys %$deps ) {
++		$self->include($key);
++	}
++}
++
++sub auto_include {
++	my $self = shift;
++	foreach my $module (
++		map  { $_->[0] }
++		map  { @$_     }
++		grep { $_      }
++		$self->build_requires
++	) {
++		$self->include($module);
++	}
++}
++
++sub auto_include_deps {
++	my $self = shift;
++	foreach my $module (
++		map  { $_->[0] }
++		map  { @$_     }
++		grep { $_      }
++		$self->build_requires
++	) {
++		$self->include_deps($module);
++	}
++}
++
++=pod
++
++=head1 NAME
++
++Module::Install::Admin::Include
++
++=head2 auto_include_dependent_dists
++
++Grabs everything in this module's build_requires and attempts to
++include everything (at the whole distribution level) recursively.
++
++=cut
++
++sub auto_include_dependent_dists {
++	my $self = shift;
++	foreach my $module (
++		map  { $_->[0] }
++		map  { @$_     }
++		grep { $_      }
++		$self->build_requires
++	) {
++		$self->include_dependent_dists($module);
++	}
++}
++
++=pod
++
++=head2 include_dependent_dists $package
++
++Given a module package name, recursively include every package that
++module needs.
++
++=cut
++
++sub include_dependent_dists {
++	my $self = shift;
++	my $pkg  = shift;
++	return unless $pkg;
++	return if $self->{including_dep_dist}->{ $self->_pkg_to_dist($pkg) }++;
++	$self->include_one_dist($pkg);
++	foreach my $mod ( @{ $self->_dist_to_mods( $self->_pkg_to_dist($pkg) ) } ) {
++		my $deps = $self->admin->scan_dependencies($mod) or return;
++		foreach my $key ( sort grep { $_ } keys %$deps ) {
++			$self->include_dependent_dists($key);
++		}
++	}
++}
++
++=pod
++
++=head2 include_one_dist $module
++
++Given a module name, C<$module>, figures out which modules are in the
++dist containing that module and copies all those files to ./inc. I bet
++there's a way to harness smarter logic from L<PAR>.
++
++=cut
++
++sub include_one_dist {
++	my $self = shift;
++	my @mods = $self->_dist_to_mods( $self->_pkg_to_dist($_[0]) );
++	foreach my $pattern ( grep { $_ } @mods ) {
++		foreach my $rv ( $self->admin->glob_in_inc($pattern) ) {
++			$self->admin->copy_package(@$rv);
++		}
++	}
++}
++
++=pod
++
++=for private _pkg_to_dist $modname
++
++Given a module name, returns the file on CPAN containing
++its latest version.
++
++=cut
++
++sub _pkg_to_dist {
++	require CPAN;
++	my $mod = CPAN::Shell->expand( Module => $_[1] ) or return;
++	$mod->cpan_file;
++}
++
++=pod
++
++=for private _dist_to_mods $distname
++
++Takes the output of CPAN::Module->cpan_file and return all the modules
++that CPAN.pm knows are in that dist. There's probably a beter way using CPANPLUS
++
++=cut
++
++sub _dist_to_mods {
++	CPAN::Shell->expand( Distribution => $_[1] )->containsmods;
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/Makefile.pm Data-ICal-0.16/inc/Module/Install/Admin/Makefile.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/Makefile.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/Makefile.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,53 @@
++package Module::Install::Admin::Makefile;
++
++use strict 'vars';
++use Module::Install::Base;
++use ExtUtils::MakeMaker ();
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA     = qw{Module::Install::Base};
++}
++
++sub postamble {
++    my ($self, $text) = @_;
++    my $class       = ref($self);
++    my $top_class   = ref($self->_top);
++    my $admin_class = join('::', @{$self->_top}{qw(name dispatch)});
++
++    $self->{postamble} ||= << "END_MAKEFILE";
++# --- $class section:
++
++realclean purge ::
++\t\$(RM_F) \$(DISTVNAME).tar\$(SUFFIX)
++\t\$(RM_F) MANIFEST.bak _build
++\t\$(PERL) "-Ilib" "-M$admin_class" -e "remove_meta()"
++\t\$(RM_RF) inc
++
++reset :: purge
++
++upload :: test dist
++\tcpan-upload -verbose \$(DISTVNAME).tar\$(SUFFIX)
++
++grok ::
++\tperldoc $top_class
++
++distsign ::
++\tcpansign -s
++
++END_MAKEFILE
++
++    $self->{postamble} .= $text if defined $text;
++    return $self->{postamble};
++}
++
++sub preop {
++    my $self = shift;
++    my ($user_preop) = @_;
++    my $admin_class = join('::', @{$self->_top}{qw(name dispatch)});
++    $user_preop = qq{\$(PERL) -I. "-M$admin_class" -e "dist_preop(q(\$(DISTVNAME)))"} unless $user_preop;
++    return { PREOP => $user_preop };
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/Manifest.pm Data-ICal-0.16/inc/Module/Install/Admin/Manifest.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/Manifest.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/Manifest.pm	2009-05-27 18:46:14.000000000 +0200
+@@ -0,0 +1,162 @@
++package Module::Install::Admin::Manifest;
++
++use strict;
++use Module::Install::Base;
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA     = qw{Module::Install::Base};
++}
++
++use Cwd;
++use File::Spec;
++
++# XXX I really want this method in Module::Install::Admin::Makefile
++# But you can't call across Admin modules. Audrey??
++sub dist_preop {
++	my ($self, $distdir) = @_;
++	return if $self->check_manifest;
++	print <<"END_MESSAGE";
++
++It appears that your MANIFEST does not contain the same components that
++are currently in the 'inc' directory. 
++
++Please try running 'make manifest' and then run 'make dist' again.
++
++Remember to use the MANIFEST.SKIP file to control things that should not
++end up in your MANIFEST. See 'perldoc ExtUtils::Manifest' for details.
++
++END_MESSAGE
++	return if $self->prompt(
++		'Do you *really* want to continue making a distribution?', 'n'
++	) =~ /^[Yy]/;
++
++	if ( -d $distdir ) {
++		require File::Path;
++		File::Path::rmtree($distdir);
++	}
++
++	exit(1);
++}
++
++# XXX Needs a refactoring.
++sub check_manifest {
++	my $self = shift;
++	my $prefix = $self->_top->{prefix};
++	my ($manifest, $manifest_path, $relative_path) = $self->_read_manifest or return;
++	my $manifest_skip = "$manifest_path.SKIP";
++	my @skip;
++
++	if ( -f "$manifest_path.SKIP" ) {
++		open SKIP, $manifest_skip 
++			or die "Can't open $manifest_skip for input:\n$!";
++		@skip = map {chomp; $_} <SKIP>;
++		close SKIP;
++	}
++
++	my %manifest;
++	for ( my $i = 0; $i < @$manifest; $i++ ) {
++		my $path = $manifest->[$i];
++		$path =~ s/\s.*//;
++		$path =~ s/^\.[\\\/]//;
++		$path =~ s/[\\\/]/\//g;
++		next unless $path =~ m/^\Q$prefix\E\b/i;
++		$manifest{$path} = \$manifest->[$i];
++	}
++
++	ADDLOOP:
++	for my $pathname ( sort $self->_find_files($prefix) ) {
++		$pathname = "$relative_path/$pathname" if length($relative_path);
++		$pathname =~ s!//+!/!g;
++		next unless -f $pathname;
++		if ( defined $manifest{$pathname} ) {
++			delete $manifest{$pathname};
++		} else {
++			for ( @skip ) {
++				next ADDLOOP if $pathname =~ /$_/;
++			}
++			return 0;
++		}
++	}
++	if ( keys %manifest ) {
++		foreach ( keys %manifest ) {
++			print "Found extra file $_\n";
++		}
++		return 0;
++	}
++	return 1;
++}
++
++sub _read_manifest {
++	my $manifest = [];
++	my $manifest_path = '';
++	my $relative_path = '';
++	my @relative_dirs = ();
++	my $cwd = Cwd::cwd();
++	my @cwd_dirs = File::Spec->splitdir($cwd);
++	while ( @cwd_dirs ) {
++		last unless -f File::Spec->catfile(@cwd_dirs, 'Makefile.PL');
++		my $path = File::Spec->catfile(@cwd_dirs, 'MANIFEST');
++		if ( -f $path ) {
++			$manifest_path = $path;
++			last;
++		}
++		unshift @relative_dirs, pop(@cwd_dirs);
++	}
++
++	unless ( length($manifest_path) ) {
++		warn "Can't locate the MANIFEST file for '$cwd'\n";
++		return;
++	}
++
++	$relative_path = join '/', @relative_dirs if @relative_dirs;
++
++	local *MANIFEST;
++	open MANIFEST, $manifest_path 
++		or die "Can't open $manifest_path for input:\n$!";
++	@$manifest = map { chomp; $_ } <MANIFEST>;
++	close MANIFEST;
++
++	return ($manifest, $manifest_path, $relative_path);
++}
++
++# XXX I copied this from M::I::A::Find because I can't call that one. Please
++# refactor/fix.
++sub _find_files {
++	my ($self, $file, $path) = @_;
++	$path = '' if not defined $path;
++	$file = "$path/$file" if length($path);
++	if ( -f $file ) {
++		return ( $file );
++	} elsif ( -d $file ) {
++		my @files = ();
++		local *DIR;
++		opendir(DIR, $file) or die "Can't opendir $file";
++		while (defined(my $new_file = readdir(DIR))) {
++			next if $new_file =~ /^(\.|\.\.)$/;
++			push @files, $self->_find_files($new_file, $file);
++		}
++		return @files;
++	}
++	return ();
++}
++
++1;
++
++__END__
++
++=pod
++
++=head1 COPYRIGHT
++
++Copyright 2003, 2004 by
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>,
++Brian Ingerson E<lt>ingy@cpan.orgE<gt>
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/Metadata.pm Data-ICal-0.16/inc/Module/Install/Admin/Metadata.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/Metadata.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/Metadata.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,185 @@
++package Module::Install::Admin::Metadata;
++
++use strict;
++use YAML::Tiny ();
++use Module::Install::Base;
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA     = 'Module::Install::Base';
++}
++
++sub read_meta {
++	(YAML::Tiny::LoadFile('META.yml'))[0];
++}
++
++sub meta_generated_by_us {
++	my $meta = $_[0]->read_meta;
++	my $want = ref($_[0]->_top);
++	if ( defined $_[1] ) {
++		$want .= " version $_[1]";
++	}
++	return $meta->{generated_by} =~ /^\Q$want\E/;
++}
++
++sub remove_meta {
++	my $self = shift;
++	my $ver  = $self->_top->VERSION;
++	return unless -f 'META.yml';
++	return unless $self->meta_generated_by_us($ver);
++	unless ( -w 'META.yml' ) {
++		warn "Can't remove META.yml file. Not writable.\n";
++		return;
++	}
++	# warn "Removing auto-generated META.yml\n";
++	unless ( unlink 'META.yml' ) {
++		die "Couldn't unlink META.yml:\n$!";
++	}
++	return;
++}
++
++sub write_meta {
++	my $self = shift;
++	if ( -f "META.yml" ) {
++		return unless $self->meta_generated_by_us();
++	} else {
++		$self->clean_files('META.yml');
++	}
++	print "Writing META.yml\n";
++	Module::Install::_write("META.yml", $self->dump_meta);
++	return;
++}
++
++sub dump_meta {
++	my $self = shift;
++	my $pkg  = ref( $self->_top );
++	my $ver  = $self->_top->VERSION;
++	my $val  = $self->Meta->{values};
++
++	delete $val->{sign};
++
++	my $perl_version = delete $val->{perl_version};
++	if ( $perl_version ) {
++		$val->{requires} ||= [];
++		my $requires = $val->{requires};
++
++		# Issue warnings for unversioned core modules that are
++		# already satisfied by the Perl version dependency.
++		require Module::CoreList;
++		my $corelist = $Module::CoreList::version{$perl_version};
++		if ( $corelist ) {
++			my @bad = grep { exists $corelist->{$_} }
++			          map  { $_->[0]   }
++			          grep { ! $_->[1] }
++			          @$requires;
++			foreach ( @bad ) {
++				# print "WARNING: Unversioned dependency on '$_' is pointless when Perl minimum version is $perl_version\n";
++			}
++		}
++
++		# Canonicalize to three-dot version after Perl 5.6
++		if ( $perl_version >= 5.006 ) {
++			$perl_version =~ s{^(\d+)\.(\d\d\d)(\d*)}{join('.', $1, int($2||0), int($3||0))}e
++		}
++		unshift @$requires, [ perl => $perl_version ];
++	}
++
++	# Set a default 'unknown' license
++	unless ( $val->{license} ) {
++		warn "No license specified, setting license = 'unknown'\n";
++		$val->{license} = 'unknown';
++	}
++
++	# Most distributions are modules
++	$val->{distribution_type} ||= 'module';
++
++	# Check and derive names
++	if ( $val->{name} =~ /::/ ) {
++		my $name = $val->{name};
++		$name =~ s/::/-/g;
++		die "Error in name(): '$val->{name}' should be '$name'!\n";
++	}
++	if ( $val->{module_name} and ! $val->{name} ) {
++		$val->{name} = $val->{module_name};
++		$val->{name} =~ s/::/-/g;
++	}
++
++	# Apply default no_index entries
++	$val->{no_index}              ||= {};
++	$val->{no_index}->{directory} ||= [];
++	SCOPE: {
++		my %seen = ();
++		$val->{no_index}->{directory} = [
++			sort
++			grep { not $seen{$_}++ }
++			grep { -d $_ } (
++				@{$val->{no_index}->{directory}},
++				qw{
++					share inc t xt test
++					example examples demo
++				},
++			)
++		];
++	}
++
++	# Generate the structure we'll be dumping
++	my $meta = {
++		resources => {},
++		license   => $val->{license},
++	};
++	foreach my $key ( $self->Meta_ScalarKeys ) {
++		next if $key eq 'installdirs';
++		next if $key eq 'tests';
++		$meta->{$key} = $val->{$key} if exists $val->{$key};
++	}
++	foreach my $key ( $self->Meta_ArrayKeys ) {
++		$meta->{$key} = $val->{$key} if exists $val->{$key};
++	}
++	foreach my $key ( $self->Meta_TupleKeys ) {
++		next unless exists $val->{$key};
++		$meta->{$key} = { map { @$_ } @{ $val->{$key} } };
++	}
++
++	if ( $self->_cmp( $meta->{configure_requires}->{'ExtUtils::MakeMaker'}, '6.36' ) >= 0 ) {
++		# Starting from this version ExtUtils::MakeMaker requires perl 5.6
++	        unless ( $perl_version && $self->perl_version($perl_version) >= 5.006 ) {
++	                $meta->{requires}->{perl} = '5.006';
++	        }
++	}
++
++	$meta->{provides}     = $val->{provides} if $val->{provides};
++	$meta->{author}     &&= [ $meta->{author} ];
++	$meta->{no_index}     = $val->{no_index};
++	$meta->{generated_by} = "$pkg version $ver";
++	$meta->{'meta-spec'}  = {
++		version => 1.4,
++		url     => 'http://module-build.sourceforge.net/META-spec-v1.4.html',
++	};
++	unless ( scalar keys %{$meta->{resources}} ) {
++		delete $meta->{resources};
++	}
++
++	# Support version.pm versions
++	if ( UNIVERSAL::isa($meta->{version}, 'version') ) {
++		$meta->{version} = $meta->{version}->numify;
++	}
++
++	YAML::Tiny::Dump($meta);
++}
++
++
++
++
++
++######################################################################
++# MYMETA.yml Support
++
++sub WriteMyMeta {
++	my $self = shift;
++	$self->configure_requires( 'YAML::Tiny' => 1.36 );
++	$self->write_mymeta;
++	return 1;
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/ScanDeps.pm Data-ICal-0.16/inc/Module/Install/Admin/ScanDeps.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/ScanDeps.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/ScanDeps.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,80 @@
++package Module::Install::Admin::ScanDeps;
++
++use strict;
++use Module::Install::Base ();
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA = qw(Module::Install::Base);
++}
++
++sub scan_dependencies {
++    my ($self, $pkg, $perl_version) = @_;
++
++    return if $pkg eq 'perl';
++
++    $perl_version ||= $self->perl_version or die <<'END_MESSAGE';
++Please first specify a required perl version, like this:
++    requires( perl => '5.005' );
++END_MESSAGE
++    $perl_version =~ s{^(\d+)\.(\d+)\.(\d+)}{$1 + $2/1_000 + $3/1_000_000}e;
++
++    require Module::ScanDeps;
++    require Module::CoreList;
++
++    die "Module::CoreList has no information on perl $perl_version"
++        unless exists $Module::CoreList::version{$perl_version};
++
++    if (my $min_version = Module::CoreList->first_release($pkg)) {
++        return if $min_version <= $perl_version;
++    }
++
++    my @files = scalar $self->admin->find_in_inc($pkg)
++        or die "Cannot find $pkg in \@INC";
++    my %result = ($pkg => $files[0]);
++
++    while (@files) {
++        my $deps = Module::ScanDeps::scan_deps(
++            files   => \@files,
++            recurse => 0,
++        );
++
++        @files = ();
++
++        foreach my $key (keys %$deps) {
++            if ($deps->{$key}{type} eq 'shared') {
++                foreach my $used_by (@{$deps->{$key}{used_by}}) {
++                    $used_by =~ s!/!::!g;
++                    $used_by =~ s!\.pm\Z!!i or next;
++                    next if exists $result{$used_by};
++                    $result{$used_by} = undef;
++                    my $min_version = Module::CoreList->first_release($used_by);
++                    print "skipped $used_by (needs shared library)\n"
++                      unless !$min_version || $min_version <= $perl_version;
++                }
++            }
++        }
++
++        foreach my $key (keys %$deps) {
++            my $dep_pkg = $key;
++            $dep_pkg =~ s!/!::!g;
++            $dep_pkg =~ s!\.pm\Z!!i or next;
++
++            if (my $min_version = Module::CoreList->first_release($dep_pkg)) {
++                next if $min_version <= $perl_version;
++            }
++            next if $dep_pkg =~ /^(?:DB|(?:Auto|Dyna|XS)Loader|threads|warnings)\b/i;
++            next if exists $result{$dep_pkg};
++
++            $result{$dep_pkg} = $deps->{$key}{file};
++            push @files, $deps->{$key}{file};
++        }
++    }
++
++    while (my($k,$v) = each %result) {
++        delete $result{$k} unless defined $v;
++    }
++    return \%result;
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin/WriteAll.pm Data-ICal-0.16/inc/Module/Install/Admin/WriteAll.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin/WriteAll.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin/WriteAll.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,20 @@
++package Module::Install::Admin::WriteAll;
++
++use strict;
++use Module::Install::Base;
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';;
++	@ISA     = qw{Module::Install::Base};
++}
++
++sub WriteAll {
++	my ($self, %args) = @_;
++	$self->load('Makefile');
++	if ( $args{check_nmake} ) {
++		$self->load($_) for qw(Makefile check_nmake can_run get_file);
++	}
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Admin.pm Data-ICal-0.16/inc/Module/Install/Admin.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Admin.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Admin.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,294 @@
++package Module::Install::Admin;
++
++use strict 'vars';
++use File::Path           ();
++use inc::Module::Install ();
++
++use vars qw{$VERSION @ISA};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install';
++}
++
++=pod
++
++=head1 NAME
++
++Module::Install::Admin - Author-side manager for Module::Install
++
++=head1 SYNOPSIS
++
++In a B<Module::Install> extension module:
++
++    sub extension_method {
++        my $self = shift;
++        $self->admin->some_method(@args);
++    }
++
++As an one-liner:
++
++    % perl "-MModule::Install::Admin" -e'&some_method(@args);'
++
++The two snippets above are really shorthands for
++
++    $some_obj->some_method(@args)
++
++where C<$some_obj> is the singleton object of a class under the
++C<Module::Install::Admin::*> namespace that provides the method
++C<some_method>.  See L</METHODS> for a list of built-in methods.
++
++=head1 DESCRIPTION
++
++This module implements the internal mechanism for initializing,
++including and managing extensions, and should only be of interest to
++extension developers; it is I<never> included under a distribution's
++F<inc/> directory, nor are any of the B<Module::Install::Admin::*>
++extensions.
++
++For normal usage of B<Module::Install>, please see L<Module::Install>
++and L<Module::Install/"COOKBOOK / EXAMPLES"> instead.
++
++=head2 Bootstrapping
++
++When someone runs a F<Makefile.PL> that has C<use inc::Module::Install>,
++and there is no F<inc/> in the current directory, B<Module::Install>
++will load this module bootstrap itself, through the steps below:
++
++=over 4
++
++=item *
++
++First, F<Module/Install.pm> is POD-stripped and copied from C<@INC> to
++F<inc/>.  This should only happen on the author's side, never on the
++end-user side.
++
++=item *
++
++Reload F<inc/Module/Install.pm> if the current file is somewhere else.
++This ensures that the included version of F<inc/Module/Install.pm> is
++always preferred over the installed version.
++
++=item *
++
++Look at F<inc/Module/Install/*.pm> and load all of them.
++
++=item *
++
++Set up a C<main::AUTOLOAD> function to delegate missing function calls
++to C<Module::Install::Admin::load> -- again, this should only happen
++at the author's side.
++
++=item *
++
++Provide a C<Module::Install::purge_self> function for removing included
++files under F<inc/>.
++
++=back
++
++=head1 METHODS
++
++=cut
++
++sub import {
++	my $class = shift;
++	my $self  = $class->new( _top => Module::Install->new, @_ );
++	*{caller(0) . "::AUTOLOAD"} = sub {
++		no strict 'vars';
++		$AUTOLOAD =~ /([^:]+)$/ or die "Cannot load";
++		return if uc($1) eq $1;
++		my $obj = $self->load($1) or return;
++		unshift @_, $obj;
++		goto &{$obj->can($1)};
++	}
++}
++
++sub new {
++	my ($class, %args) = @_;
++	return $class->SUPER::new(
++		%{$args{_top}}, %args,
++		extensions  => undef,
++		pathnames   => undef,
++	);
++}
++
++sub init {
++	my $self = shift;
++
++	$self->copy($INC{"$self->{path}.pm"} => $self->{file});
++
++	unless ( grep { $_ eq $self->{prefix} } @INC ) {
++		unshift @INC, $self->{prefix};
++	}
++
++	delete $INC{"$self->{path}.pm"};
++	local $^W;
++	do "$self->{path}.pm";
++}
++
++sub copy {
++	my ($self, $from, $to) = @_;
++
++	my @parts = split('/', $to);
++	File::Path::mkpath([ join('/', @parts[ 0 .. $#parts-1 ])]);
++
++	chomp $to;
++
++	local (*FROM, *TO, $_);
++	open FROM, "< $from" or die "Can't open $from for input:\n$!";
++	open TO,   "> $to"   or die "Can't open $to for output:\n$!";
++	print TO "#line 1\n";
++
++	my $content;
++	my $in_pod;
++
++	while ( <FROM> ) {
++		if ( /^=(?:b(?:egin|ack)|head\d|(?:po|en)d|item|(?:ove|fo)r)/ ) {
++			$in_pod = 1;
++		} elsif ( /^=cut\s*\z/ and $in_pod ) {
++			$in_pod = 0;
++			print TO "#line $.\n";
++		} elsif ( ! $in_pod ) {
++			print TO $_;
++		}
++	}
++
++	close FROM;
++	close TO;
++
++	print "include $to\n";
++}
++
++# scan through our target to find
++sub load_all_extensions {
++	my $self = shift;
++	unless ($self->{extensions}) {
++		$self->{extensions} = [];
++		foreach my $inc (@INC) {
++			next if ref($inc) or $inc eq $self->{prefix};
++			$self->load_extensions("$inc/$self->{path}", $self->{_top});
++		}
++	}
++	return @{$self->{extensions}};
++}
++
++sub load {
++	my ($self, $method, $copy) = @_;
++
++	my @extobj;
++	foreach my $obj ($self->load_all_extensions) {
++		next unless defined &{ref($obj)."::$method"};
++		my $is_admin = (ref($obj) =~ /^\Q$self->{name}::$self->{dispatch}::/);
++		# Don't ever include admin modules, and vice versa.
++		# $copy = 0 if $XXX and $is_admin;
++		push @extobj, $obj if $copy xor $is_admin;
++	}
++	unless ( @extobj ) {
++		die "Cannot find an extension with method '$method'";
++	}
++
++	# XXX - do we need to reload $obj from the new location?
++	my $obj = $self->pick($method, \@extobj);
++	$self->copy_package(ref($obj)) if $copy;
++
++	return $obj;
++}
++
++# Copy a package to inc/, with its @ISA tree. $pathname is optional.
++sub copy_package {
++	my ($self, $pkg, $pathname) = @_;
++	return unless ($pathname ||= $self->{pathnames}{$pkg});
++
++	my $file = $pkg; $file =~ s!::!/!g;
++	$file = "$self->{prefix}/$file.pm";
++	return if -f $file; # prevents infinite recursion
++
++	$self->copy($pathname => $file);
++	foreach my $pkg (@{"$pkg\::ISA"}) {
++		$self->copy_package($pkg);
++	}
++}
++
++sub pick {
++	# determine which name to load
++	my ($self, $method, $objects) = @_;
++
++	# XXX this whole thing needs to be discussed
++	return $objects->[0] unless $#{$objects} > 0 and -t STDIN;
++
++	# sort by last modified time
++	@$objects = map { $_->[0] }
++	            sort { $a->[1] <=> $b->[1] }
++	            map { [ $_ => -M $self->{pathnames}{ref($_)} ] } @$objects;
++
++	print "Multiple extensions found for method '$method':\n";
++	foreach my $i ( 1 .. @$objects ) {
++		print "\t$i. ", ref($objects->[$i-1]), "\n";
++	}
++
++	while ( 1 ) {
++		print "Please select one [1]: ";
++		chomp(my $choice = <STDIN>);
++		$choice ||= 1;
++		return $objects->[$choice-1] if $choice > 0 and $choice <= @$objects;
++		print "Invalid choice.  ";
++	}
++}
++
++sub delete_package {
++	my ($self, $pkg) = @_;
++
++	# expand to full symbol table name if needed
++	unless ( $pkg =~ /^main::.*::$/ ) {
++		$pkg = "main$pkg"   if     $pkg =~ /^::/;
++		$pkg = "main::$pkg" unless $pkg =~ /^main::/;
++		$pkg .= '::'        unless $pkg =~ /::$/;
++	}
++
++	my($stem, $leaf) = $pkg =~ m/(.*::)(\w+::)$/;
++	my $stem_symtab = *{$stem}{HASH};
++	return unless defined $stem_symtab and exists $stem_symtab->{$leaf};
++
++	# free all the symbols in the package
++	my $leaf_symtab = *{$stem_symtab->{$leaf}}{HASH};
++	foreach my $name (keys %$leaf_symtab) {
++		next if $name eq "$self->{dispatch}::";
++		undef *{$pkg . $name};
++	}
++
++	# delete the symbol table
++	foreach my $name (keys %$leaf_symtab) {
++		next if $name eq "$self->{dispatch}::";
++		delete $leaf_symtab->{$name};
++	}
++}
++
++sub AUTOLOAD {
++	goto &{shift->autoload};
++}
++
++sub DESTROY { }
++
++1;
++
++__END__
++
++=pod
++
++=head1 SEE ALSO
++
++L<Module::Install>
++
++=head1 AUTHORS
++
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++=head1 COPYRIGHT
++
++Copyright 2003, 2004 by Audrey Tang E<lt>autrijus@autrijus.orgE<gt>.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/AutoInstall.pm Data-ICal-0.16/inc/Module/Install/AutoInstall.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/AutoInstall.pm	2009-07-10 16:52:29.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/AutoInstall.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,14 +1,13 @@
+-#line 1
+ package Module::Install::AutoInstall;
+ 
+ use strict;
+-use Module::Install::Base;
++use Module::Install::Base ();
+ 
+-use vars qw{$VERSION $ISCORE @ISA};
++use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
+ 	$ISCORE  = 1;
+-	@ISA     = qw{Module::Install::Base};
+ }
+ 
+ sub AutoInstall { $_[0] }
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Base.pm Data-ICal-0.16/inc/Module/Install/Base.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Base.pm	2009-07-10 16:52:29.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/Base.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,10 +1,9 @@
+-#line 1
+ package Module::Install::Base;
+ 
+ use strict 'vars';
+ use vars qw{$VERSION};
+ BEGIN {
+-	$VERSION = '0.85';
++	$VERSION = '0.91';
+ }
+ 
+ # Suspend handler for "redefined" warnings
+@@ -13,42 +12,82 @@
+ 	$SIG{__WARN__} = sub { $w };
+ }
+ 
+-### This is the ONLY module that shouldn't have strict on
+-# use strict;
++=pod
+ 
+-#line 45
++=head1 NAME
+ 
+-sub new {
+-	my ($class, %args) = @_;
++Module::Install::Base - Base class for Module::Install extensions
+ 
+-	foreach my $method ( qw(call load) ) {
+-		next if defined &{"$class\::$method"};
+-		*{"$class\::$method"} = sub {
+-			shift()->_top->$method(@_);
+-		};
+-	}
++=head1 SYNOPSIS
++
++In a B<Module::Install> extension:
++
++    use Module::Install::Base ();
++    @ISA = qw(Module::Install::Base);
++
++=head1 DESCRIPTION
++
++This module provide essential methods for all B<Module::Install>
++extensions, in particular the common constructor C<new> and method
++dispatcher C<AUTOLOAD>.
++
++=head1 METHODS
++
++=over 4
++
++=item new(%args)
+ 
+-	bless( \%args, $class );
++Constructor -- need to preserve at least _top
++
++=cut
++
++sub new {
++	my $class = shift;
++	unless ( defined &{"${class}::call"} ) {
++		*{"${class}::call"} = sub { shift->_top->call(@_) };
++	}
++	unless ( defined &{"${class}::load"} ) {
++		*{"${class}::load"} = sub { shift->_top->load(@_) };
++	}
++	bless { @_ }, $class;
+ }
+ 
+-#line 66
++=pod
++
++=item AUTOLOAD
++
++The main dispatcher - copy extensions if missing
++
++=cut
+ 
+ sub AUTOLOAD {
+-	my $self = shift;
+ 	local $@;
+-	my $autoload = eval {
+-		$self->_top->autoload
+-	} or return;
+-	goto &$autoload;
++	my $func = eval { shift->_top->autoload } or return;
++	goto &$func;
+ }
+ 
+-#line 83
++=pod
++
++=item _top()
++
++Returns the top-level B<Module::Install> object.
++
++=cut
+ 
+ sub _top {
+ 	$_[0]->{_top};
+ }
+ 
+-#line 98
++=pod
++
++=item admin()
++
++Returns the C<_top> object's associated B<Module::Install::Admin> object
++on the first run (i.e. when there was no F<inc/> when the program
++started); on subsequent (user-side) runs, returns a fake admin object
++with an empty C<AUTOLOAD> method that does nothing at all.
++
++=cut
+ 
+ sub admin {
+ 	$_[0]->_top->{admin}
+@@ -56,7 +95,15 @@
+ 	Module::Install::Base::FakeAdmin->new;
+ }
+ 
+-#line 114
++=pod
++
++=item is_admin()
++
++Tells whether this is the first run of the installer (on
++author's side). That is when there was no F<inc/> at
++program start. True if that's the case. False, otherwise.
++
++=cut 
+ 
+ sub is_admin {
+ 	$_[0]->admin->VERSION;
+@@ -83,4 +130,25 @@
+ 
+ 1;
+ 
+-#line 162
++=pod
++
++=back
++
++=head1 SEE ALSO
++
++L<Module::Install>
++
++=head1 AUTHORS
++
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++=head1 COPYRIGHT
++
++Copyright 2003, 2004 by Audrey Tang E<lt>autrijus@autrijus.orgE<gt>.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Bundle.pm Data-ICal-0.16/inc/Module/Install/Bundle.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Bundle.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Bundle.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,195 @@
++package Module::Install::Bundle;
++
++use strict;
++use Cwd                   ();
++use File::Find            ();
++use File::Copy            ();
++use File::Basename        ();
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++sub auto_bundle {
++    my $self = shift;
++
++    # Flatten array of arrays into a single array
++    my @core = map @$_, map @$_, grep ref, $self->requires;
++
++    $self->bundle(@core);
++}
++
++sub bundle {
++    my $self = shift;
++    $self->admin->bundle(@_) if $self->is_admin;
++
++    my $cwd = Cwd::cwd();
++    my $bundles = $self->read_bundles;
++    my $bundle_dir = $self->_top->{bundle};
++    $bundle_dir =~ s/\W+/\\W+/g;
++
++    while (my ($name, $version) = splice(@_, 0, 2)) {
++        $version ||= 0;
++
++        my $source = $bundles->{$name} or die "Cannot find bundle source for $name";
++        my $target = File::Basename::basename($source);
++        $self->bundles($name, $target);
++
++        next if eval "use $name $version; 1";
++        mkdir $target or die $! unless -d $target;
++
++        # XXX - clean those directories upon "make clean"?
++        File::Find::find({
++            wanted => sub {
++                my $out = $_;
++                $out =~ s/$bundle_dir/./i;
++                mkdir $out if -d;
++                File::Copy::copy($_ => $out) unless -d;
++            },
++            no_chdir => 1,
++        }, $source);
++    }
++
++    chdir $cwd;
++}
++
++sub read_bundles {
++    my $self = shift;
++    my %map;
++
++    local *FH;
++    open FH, $self->_top->{bundle} . ".yml" or return {};
++    while (<FH>) {
++        /^(.*?): (['"])?(.*?)\2$/ or next;
++        $map{$1} = $3;
++    }
++    close FH;
++
++    return \%map;
++}
++
++
++sub auto_bundle_deps {
++    my $self = shift;
++
++    # Flatten array of arrays into a single array
++    my @core = map @$_, map @$_, grep ref, $self->requires;
++    while (my ($name, $version) = splice(@core, 0, 2)) {
++        next unless $name;
++         $self->bundle_deps($name, $version);
++         $self->bundle($name, $version);
++    }
++}
++
++sub bundle_deps {
++    my ($self, $pkg, $version) = @_;
++    my $deps = $self->admin->scan_dependencies($pkg) or return;
++
++    foreach my $key (sort keys %$deps) {
++        $self->bundle($key, ($key eq $pkg) ? $version : 0);
++    }
++}
++
++1;
++
++__END__
++
++=pod
++
++=head1 NAME
++
++Module::Install::Bundle - Bundle distributions along with your distribution
++
++=head1 SYNOPSIS
++
++Have your Makefile.PL read as follows:
++
++  use inc::Module::Install;
++  
++  name      'Foo-Bar';
++  all_from  'lib/Foo/Bar.pm';
++  requires  'Baz' => '1.60';
++  
++  # one of either:
++  bundle    'Baz' => '1.60';
++  # OR:
++  auto_bundle;
++  
++  WriteAll;
++
++=head1 DESCRIPTION
++
++Module::Install::Bundle allows you to bundle a CPAN distribution within your
++distribution. When your end-users install your distribution, the bundled
++distribution will be installed along with yours, unless a newer version of
++the bundled distribution already exists on their local filesystem.
++
++While bundling will increase the size of your distribution, it has several
++benefits:
++
++  Allows installation of bundled distributions when CPAN is unavailable
++  Allows installation of bundled distributions when networking is unavailable
++  Allows everything your distribution needs to be packaged in one place
++
++Bundling differs from auto-installation in that when it comes time to
++install, a bundled distribution will be installed based on the distribution
++bundled with your distribution, whereas with auto-installation the distibution
++to be installed will be acquired from CPAN and then installed.
++
++=head1 METHODS
++
++=over 4
++
++=item * auto_bundle()
++
++Takes no arguments, will bundle every distribution specified by a C<requires()>.
++When you, as a module author, do a C<perl Makefile.PL> the latest versions of
++the distributions to be bundled will be acquired from CPAN and placed in
++F<inc/BUNDLES/>.
++
++=item * bundle($name, $version)
++
++Takes a list of key/value pairs specifying a distribution name and version
++number. When you, as a module author, do a perl Makefile.PL the distributions
++that you specified with C<bundle()> will be acquired from CPAN and placed in
++F<inc/BUNDLES/>.
++
++=item * bundle_deps($name, $version)
++
++Same as C<bundle>, except that all dependencies of the bundled modules are
++also detected and bundled.  To use this function, you need to declare the
++minimum supported perl version first, like this:
++
++    requires( perl => 5.005 );
++
++=item * auto_bundle_deps
++
++Same as C<auto_bundle>, except that all dependencies of the bundled
++modules are also detected and bundled. This function has the same constraints as bundle_deps.
++
++=back
++
++=head1 BUGS
++
++Please report any bugs to (patches welcome):
++
++    http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Module-Install
++
++=head1 AUTHORS
++
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++Documentation by Adam Foxson E<lt>afoxson@pobox.comE<gt>
++
++=head1 COPYRIGHT
++
++Copyright 2003, 2004, 2005 by Audrey Tang E<lt>autrijus@autrijus.orgE<gt>.
++
++This program is free software; you can redistribute it and/or modify it under
++the same terms as Perl itself.
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Can.pm Data-ICal-0.16/inc/Module/Install/Can.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Can.pm	2009-07-10 16:52:30.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/Can.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,17 +1,16 @@
+-#line 1
+ package Module::Install::Can;
+ 
+ use strict;
+-use Module::Install::Base;
+-use Config              ();
+-use File::Spec          ();
+-use ExtUtils::MakeMaker ();
++use Config                ();
++use File::Spec            ();
++use ExtUtils::MakeMaker   ();
++use Module::Install::Base ();
+ 
+-use vars qw{$VERSION $ISCORE @ISA};
++use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
+ 	$ISCORE  = 1;
+-	@ISA     = qw{Module::Install::Base};
+ }
+ 
+ # check if we can load some module
+@@ -78,4 +77,80 @@
+ 
+ __END__
+ 
+-#line 156
++=pod
++
++=head1 NAME
++
++Module::Install::Can - Utility functions for capability detection
++
++=head1 DESCRIPTION
++
++C<Module::Install::Can> contains a number of functions for authors to use
++when creating customised smarter installers. The functions simplify
++standard tests so that you can express your dependencies and conditions
++much more simply, and make your installer much easier to maintain.
++
++=head1 COMMANDS
++
++=head2 can_use
++
++  can_use('Module::Name');
++  can_use('Module::Name', 1.23);
++
++The C<can_use> function tests the ability to load a specific named
++module. Currently it will also actually load the module in the
++process, although this may change in the future.
++
++Takes an optional second param of a version number. The currently
++installed version of the module will be tested to make sure it is
++equal to or greater than the specified version.
++
++Returns true if the module can be loaded, or false (in both scalar or
++list context) if not.
++
++=head2 can_run
++
++  can_run('cvs');
++
++The C<can_run> function tests the ability to run a named command or
++program on the local system.
++
++Returns true if so, or false (both in scalar and list context) if not.
++
++=head2 can_cc
++
++  can_cc();
++
++The C<can_cc> function test the ability to locate a C compiler on the
++local system. Returns true if the C compiler can be found, or false
++(both in scalar and list context) if not.
++
++=head1 TO DO
++
++Currently, the use of a C<can_foo> command in a single problem domain
++(for example C<can_use>) results in the inclusion of additional
++functionality from different problem domains (for example C<can_run>).
++
++This module should ultimately be broken up, and the individual
++functions redestributed to different domain-specific extensions.
++
++=head1 AUTHORS
++
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++=head1 SEE ALSO
++
++L<Module::Install>, L<Class::Inspector>
++
++=head1 COPYRIGHT
++
++Copyright 2006 Audrey Tang, Adam Kennedy.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Compiler.pm Data-ICal-0.16/inc/Module/Install/Compiler.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Compiler.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Compiler.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,123 @@
++package Module::Install::Compiler;
++
++use strict;
++use File::Basename        ();
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++sub ppport {
++	my $self = shift;
++	if ( $self->is_admin ) {
++		return $self->admin->ppport(@_);
++	} else {
++		# Fallback to just a check
++		my $file = shift || 'ppport.h';
++		unless ( -f $file ) {
++			die "Packaging error, $file is missing";
++		}
++	}
++}
++
++sub cc_files {
++	require Config;
++	my $self = shift;
++	$self->makemaker_args(
++		OBJECT => join ' ', map { substr($_, 0, -2) . $Config::Config{_o} } @_
++	);
++}
++
++sub cc_inc_paths {
++	my $self = shift;
++	$self->makemaker_args(
++		INC => join ' ', map { "-I$_" } @_
++	);
++}
++
++sub cc_lib_paths {
++	my $self = shift;
++	$self->makemaker_args(
++		LIBS => join ' ', map { "-L$_" } @_
++	);
++}
++
++sub cc_lib_links {
++	my $self = shift;
++	$self->makemaker_args(
++		LIBS => join ' ', $self->makemaker_args->{LIBS}, map { "-l$_" } @_
++	);
++}
++
++sub cc_optimize_flags {
++	my $self = shift;
++	$self->makemaker_args(
++		OPTIMIZE => join ' ', @_
++	);
++}
++
++1;
++
++__END__
++
++=pod
++
++=head1 NAME
++
++Module::Install::Compiler - Commands for interacting with the C compiler
++
++=head1 SYNOPSIS
++
++  To be completed
++
++=head1 DESCRIPTION
++
++Many Perl modules that contains C and XS code have fiendishly complex
++F<Makefile.PL> files, because L<ExtUtils::MakeMaker> doesn't itself provide
++a huge amount of assistance and automation in this area.
++
++B<Module::Install::Compiler> provides a number of commands that take care
++of common utility tasks, and try to take some of intricacy out of creating
++C and XS modules.
++
++=head1 COMMANDS
++
++To be completed
++
++=head1 TO DO
++
++The current implementation is relatively fragile and minimalistic.
++
++It only handles some very basic wrapper around L<ExtUtils::MakeMaker>.
++
++It is currently undergoing extensive refactoring to provide a more
++generic compiler flag generation capability. This may take some time,
++and if anyone who maintains a Perl module that makes use of the compiler
++would like to help out, your assistance would be greatly appreciated.
++
++=head1 SEE ALSO
++
++L<Module::Install>, L<ExtUtils::MakeMaker>
++
++=head1 AUTHORS
++
++Refactored by Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++Mostly by Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++Based on original works by Brian Ingerson E<lt>ingy@cpan.orgE<gt>
++
++=head1 COPYRIGHT
++
++Copyright 2002, 2003, 2004, 2006 by Adam Kennedy, Audrey Tang, Brian Ingerson.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Deprecated.pm Data-ICal-0.16/inc/Module/Install/Deprecated.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Deprecated.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Deprecated.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,115 @@
++package Module::Install::Deprecated;
++
++use strict;
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++
++
++
++
++#####################################################################
++# Previous API for Module::Install::Compoler
++
++sub c_files {
++	warn "c_files has been changed to cc_files to reduce confusion and keep all compiler commands as cc_";
++	shift()->cc_files(@_);
++}
++
++sub inc_paths {
++	warn "inc_paths has been changed to cc_inc_paths due to confusion between Perl and C";
++	shift()->cc_inc_paths(@_);
++}
++
++sub lib_paths {
++	warn "lib_paths has been changed to cc_lib_paths due to confusion between Perl and C";
++	shift()->cc_lib_paths(@_);
++}
++
++sub lib_links {
++	warn "lib_links has been changed to cc_lib_links due to confusion between Perl and C";
++	shift()->cc_lib_links(@_);
++}
++
++sub optimize_flags {
++	warn "optimize_flags has been changed to cc_optimize_flags for consistency reasons";
++	shift()->cc_optimize_flags(@_);
++}
++
++1;
++
++__END__
++
++=pod
++
++=head1 NAME
++
++Module::Install::Deprecated - Warnings and help for deprecated commands
++
++=head1 DESCRIPTION
++
++One of the nicest features of L<Module::Install> is that as it improves,
++there is no need to take into account user compatibility, because users do
++not need to install L<Module::Install> itself.
++
++As a result, the L<Module::Install> API changes at a faster rate than usual,
++and this results in deprecated commands.
++
++C<Module::Install::Deprecated> provides implementations of the deprecated
++commands, so that when an author is upgrading their L<Module::Install> and
++they are using a deprecated command they will be told that the command has
++been deprecated, and what the author should use instead.
++
++This extension should NEVER end up bundled into the distribution tarball.
++
++=head1 COMMANDS
++
++=head2 c_files
++
++The C<c_files> command has been changed to C<cc_files> to reduce confusion
++and keep all compiler commands within a consistent C<ff_foo> naming scheme.
++
++=head2 inc_paths
++
++The C<inc_paths> command has been changed to C<cc_inc_paths> due to
++confusion between Perl and C.
++
++=head2 lib_paths
++
++The C<lib_paths> command has been changed to C<cc_lib_paths> due to confusion
++between Perl and C.
++
++=head2 lib_links
++
++The C<lib_links> command has been changed to C<cc_lib_links> due to confusion
++between Perl and C.
++
++=head2 optimize_flags
++
++The C<optimize_flags> command has been changed to C<cc_optimize_flags> for
++consistency reasons.
++
++=head1 AUTHORS
++
++Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++=head1 SEE ALSO
++
++L<Module::Install>
++
++=head1 COPYRIGHT
++
++Copyright 2006 Adam Kennedy.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/DSL.pm Data-ICal-0.16/inc/Module/Install/DSL.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/DSL.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/DSL.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,91 @@
++package Module::Install::DSL;
++
++use strict;
++use vars qw{$VERSION $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	$ISCORE  = 1;
++	*inc::Module::Install::DSL::VERSION = *VERSION;
++	@inc::Module::Install::DSL::ISA     = __PACKAGE__;
++}
++
++sub import {
++	# Read in the rest of the Makefile.PL
++	open 0 or die "Couldn't open $0: $!";
++	my $dsl;
++	SCOPE: {
++		local $/ = undef;
++		$dsl = join "", <0>;
++	}
++
++	# Change inc::Module::Install::DSL to the regular one.
++	# Remove anything before the use inc::... line.
++	$dsl =~ s/.*?^\s*use\s+(?:inc::)?Module::Install::DSL(\b[^;]*);\s*\n//sm;
++
++	# Load inc::Module::Install as we would in a regular Makefile.Pl
++	SCOPE: {
++		package main;
++		require inc::Module::Install;
++		inc::Module::Install->import;
++	}
++
++	# Add the ::DSL plugin to the list of packages in /inc
++	my $admin = $Module::Install::MAIN->{admin};
++	if ( $admin ) {
++		my $from = $INC{"$admin->{path}/DSL.pm"};
++		my $to   = "$admin->{base}/$admin->{prefix}/$admin->{path}/DSL.pm";
++		$admin->copy( $from => $to );
++	}
++
++	# Convert the basic syntax to code
++	my $code = "package main;\n\n"
++	         . dsl2code($dsl)
++	         . "\n\nWriteAll();\n";
++
++	# Execute the script
++	eval $code;
++	print STDERR "Failed to execute the generated code" if $@;
++
++	exit(0);
++}
++
++sub dsl2code {
++	my $dsl = shift;
++
++	# Split into lines and strip blanks
++	my @lines = grep { /\S/ } split /[\012\015]+/, $dsl;
++
++	# Each line represents one command
++	my @code = ();
++	foreach my $line ( @lines ) {
++		# Split the lines into tokens
++		my @tokens = split /\s+/, $line;
++
++		# The first word is the command
++		my $command = shift @tokens;
++		my @params  = ();
++		my @suffix  = ();
++		while ( @tokens ) {
++			my $token = shift @tokens;
++			if ( $token eq 'if' or $token eq 'unless' ) {
++				# This is the beginning of a suffix
++				push @suffix, $token;
++				push @suffix, @tokens;
++				last;
++			} else {
++				# Convert to a string
++				$token =~ s/([\\\'])/\\$1/g;
++				push @params, "'$token'";
++			}	
++		};
++
++		# Merge to create the final line of code
++		@tokens = ( $command, @params ? join( ', ', @params ) : (), @suffix );
++		push @code, join( ' ', @tokens ) . ";\n";
++	}
++
++	# Join into the complete code block
++	return join( '', @code );
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/External.pm Data-ICal-0.16/inc/Module/Install/External.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/External.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/External.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,138 @@
++package Module::Install::External;
++
++# Provides dependency declarations for external non-Perl things
++
++use strict;
++use Module::Install::Base ();
++
++use vars qw{$VERSION $ISCORE @ISA};
++BEGIN {
++	$VERSION = '0.91';
++	$ISCORE  = 1;
++	@ISA     = qw{Module::Install::Base};
++}
++
++sub requires_external_cc {
++	my $self = shift;
++
++	# We need a C compiler, use the can_cc method for this
++	unless ( $self->can_cc ) {
++		print "Unresolvable missing external dependency.\n";
++		print "This package requires a C compiler.\n";
++		print STDERR "NA: Unable to build distribution on this platform.\n";
++		exit(0);
++	}
++
++	# Unlike some of the other modules, while we need to specify a
++	# C compiler as a dep, it needs to be a build-time dependency.
++
++	1;
++}
++
++sub requires_external_bin {
++	my ($self, $bin, $version) = @_;
++	if ( $version ) {
++		die "requires_external_bin does not support versions yet";
++	}
++
++	# Load the package containing can_run early,
++	# to avoid breaking the message below.
++	$self->load('can_run');
++
++	# Locate the bin
++	print "Locating required external dependency bin:$bin...";
++	my $found_bin = $self->can_run( $bin );
++	if ( $found_bin ) {
++		print " found at $found_bin.\n";
++	} else {
++		print " missing.\n";
++		print "Unresolvable missing external dependency.\n";
++		print "Please install '$bin' seperately and try again.\n";
++		print STDERR "NA: Unable to build distribution on this platform.\n";
++		exit(0);
++	}
++
++	# Once we have some way to specify external deps, do it here.
++	# In the mean time, continue as normal.
++
++	1;
++}
++
++1;
++
++__END__
++
++=pod
++
++=head1 NAME
++
++Module::Install::External - Specify dependencies on external non-Perl things
++
++=head1 DESCRIPTION
++
++C<Module::Install::External> provides command that allow you to
++declaratively specify a dependency on a program or system that is not
++Perl.
++
++The commands it provides are similar to those in L<Module::Install::Can>,
++except that they implement an explicit dependency, in addition to just
++working out if the particular thing is available.
++
++=head1 COMMANDS
++
++=head2 requires_external_cc
++
++  requires_external_cc;
++
++The C<requires_external_cc> command explicitly specifies that a C compiler
++is required in order to build (at F<make>-time) the distribution.
++
++It does not take any params, and aborts the F<Makefile.PL> execution
++in a way that an automated installation or testing system will interpret
++as a C<NA> ("not applicable to this platform") result.
++
++This maybe be changed to an alternative abort result at a later time.
++
++Returns true as a convenience.
++
++=head2 requires_external_bin
++
++  requires_external_bin 'cvs';
++
++The C<requires_external_bin> command takes the name of a system command
++or program, similar to the C<can_run> command, except that
++C<requires_external_bin> checks in a way that is a declarative explicit
++dependency.
++
++The takes a single param of the command/program name, and aborts the
++C<Makefile.PL> execution in a way that an automated installation or
++testing system will interpret as a C<NA> ("not applicable to this
++platform") result.
++
++Returns true as a convenience.
++
++=head1 TO DO
++
++Work out how to save the external dependency metadata, in agreement with
++the larger Perl community.
++
++Implement the agreed external dependency metadata solution.
++
++=head1 AUTHORS
++
++Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++=head1 SEE ALSO
++
++L<Module::Install>
++
++=head1 COPYRIGHT
++
++Copyright 2006 Adam Kennedy.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Fetch.pm Data-ICal-0.16/inc/Module/Install/Fetch.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Fetch.pm	2009-07-10 16:52:30.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/Fetch.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,14 +1,13 @@
+-#line 1
+ package Module::Install::Fetch;
+ 
+ use strict;
+-use Module::Install::Base;
++use Module::Install::Base ();
+ 
+-use vars qw{$VERSION $ISCORE @ISA};
++use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
+ 	$ISCORE  = 1;
+-	@ISA     = qw{Module::Install::Base};
+ }
+ 
+ sub get_file {
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Include.pm Data-ICal-0.16/inc/Module/Install/Include.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Include.pm	2009-07-10 16:52:29.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/Include.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,14 +1,13 @@
+-#line 1
+ package Module::Install::Include;
+ 
+ use strict;
+-use Module::Install::Base;
++use Module::Install::Base ();
+ 
+-use vars qw{$VERSION $ISCORE @ISA};
++use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
+ 	$ISCORE  = 1;
+-	@ISA     = qw{Module::Install::Base};
+ }
+ 
+ sub include {
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Inline.pm Data-ICal-0.16/inc/Module/Install/Inline.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Inline.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Inline.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,49 @@
++package Module::Install::Inline;
++
++use strict;
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++sub Inline { $_[0] }
++
++sub write {
++    my $self = shift;
++    my $name = $self->module_name || $self->name
++        or die "Please set name() before calling &Inline->write\n";
++    $name =~ s/-/::/g;
++    my $object = (split(/::/, $name))[-1] or return;
++    my $version = $self->version
++        or die "Please set version() or version_from() before calling &Inline->write\n";
++
++    $version =~ /^\d\.\d\d$/ or die <<"END_MESSAGE";
++Invalid version '$version' for $name.
++Must be of the form '#.##'. (For instance '1.23')
++END_MESSAGE
++
++    $self->clean_files('_Inline', "$object.inl");
++    $self->build_requires('Inline' => 0.44); # XXX: check for existing? yagni?
++
++    my $class = ref($self);
++    my $prefix = $self->_top->{prefix};
++    $self->postamble(<<"MAKEFILE");
++# --- $class section:
++
++.SUFFIXES: .pm .inl
++
++.pm.inl:
++\t\$(PERL) -I$prefix "-Mblib" "-MInline=NOISY,_INSTALL_" "-M$name" -e1 $version \$(INST_ARCHLIB)
++
++pure_all :: $object.inl
++
++MAKEFILE
++
++    $self->Makefile->write;
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Makefile.pm Data-ICal-0.16/inc/Module/Install/Makefile.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Makefile.pm	2009-07-10 16:52:30.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/Makefile.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,15 +1,14 @@
+-#line 1
+ package Module::Install::Makefile;
+ 
+ use strict 'vars';
+-use Module::Install::Base;
+-use ExtUtils::MakeMaker ();
++use ExtUtils::MakeMaker   ();
++use Module::Install::Base ();
+ 
+-use vars qw{$VERSION $ISCORE @ISA};
++use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
+ 	$ISCORE  = 1;
+-	@ISA     = qw{Module::Install::Base};
+ }
+ 
+ sub Makefile { $_[0] }
+@@ -265,4 +264,131 @@
+ 
+ __END__
+ 
+-#line 394
++=pod
++
++=head1 NAME
++
++Module::Install::MakeMaker - Extension Rules for ExtUtils::MakeMaker
++
++=head1 SYNOPSIS
++
++In your F<Makefile.PL>:
++
++    use inc::Module::Install;
++    WriteMakefile();
++
++=head1 DESCRIPTION
++
++This module is a wrapper around B<ExtUtils::MakeMaker>.  It exports
++two functions: C<prompt> (an alias for C<ExtUtils::MakeMaker::prompt>)
++and C<WriteMakefile>.
++
++The C<WriteMakefile> function will pass on keyword/value pair functions
++to C<ExtUtils::MakeMaker::WriteMakefile>. The required parameters
++C<NAME> and C<VERSION> (or C<VERSION_FROM>) are not necessary if
++it can find them unambiguously in your code.
++
++=head1 CONFIGURATION OPTIONS
++
++This module also adds some Configuration parameters of its own:
++
++=head2 NAME
++
++The NAME parameter is required by B<ExtUtils::MakeMaker>. If you have a
++single module in your distribution, or if the module name indicated by
++the current directory exists under F<lib/>, this module will use the
++guessed package name as the default.
++
++If this module can't find a default for C<NAME> it will ask you to specify
++it manually.
++
++=head2 VERSION
++
++B<ExtUtils::MakeMaker> requires either the C<VERSION> or C<VERSION_FROM>
++parameter.  If this module can guess the package's C<NAME>, it will attempt
++to parse the C<VERSION> from it.
++
++If this module can't find a default for C<VERSION> it will ask you to
++specify it manually.
++
++=head1 MAKE TARGETS
++
++B<ExtUtils::MakeMaker> provides you with many useful C<make> targets. A
++C<make> B<target> is the word you specify after C<make>, like C<test>
++for C<make test>. Some of the more useful targets are:
++
++=over 4
++
++=item * all
++
++This is the default target. When you type C<make> it is the same as
++entering C<make all>. This target builds all of your code and stages it
++in the C<blib> directory.
++
++=item * test
++
++Run your distribution's test suite.
++
++=item * install
++
++Copy the contents of the C<blib> directory into the appropriate
++directories in your Perl installation.
++
++=item * dist
++
++Create a distribution tarball, ready for uploading to CPAN or sharing
++with a friend.
++
++=item * clean distclean purge
++
++Remove the files created by C<perl Makefile.PL> and C<make>.
++
++=item * help
++
++Same as typing C<perldoc ExtUtils::MakeMaker>.
++
++=back
++
++This module modifies the behaviour of some of these targets, depending
++on your requirements, and also adds the following targets to your Makefile:
++
++=over 4
++
++=item * cpurge
++
++Just like purge, except that it also deletes the files originally added
++by this module itself.
++
++=item * chelp
++
++Short cut for typing C<perldoc Module::Install>.
++
++=item * distsign
++
++Short cut for typing C<cpansign -s>, for B<Module::Signature> users to
++sign the distribution before release.
++
++=back
++
++=head1 SEE ALSO
++
++L<Module::Install>, L<CPAN::MakeMaker>, L<CPAN::MakeMaker::Philosophy>
++
++=head1 AUTHORS
++
++Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++Brian Ingerson E<lt>INGY@cpan.orgE<gt>
++
++=head1 COPYRIGHT
++
++Some parts copyright 2008 - 2009 Adam Kennedy.
++
++Copyright 2002, 2003, 2004 Audrey Tang and Brian Ingerson.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/MakeMaker.pm Data-ICal-0.16/inc/Module/Install/MakeMaker.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/MakeMaker.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/MakeMaker.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,49 @@
++package Module::Install::MakeMaker;
++
++use strict;
++use ExtUtils::MakeMaker   ();
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++my $makefile;
++
++sub WriteMakefile {
++    my ($self, %args) = @_;
++    $makefile = $self->load('Makefile');
++
++    # mapping between MakeMaker and META.yml keys
++    $args{MODULE_NAME} = $args{NAME};
++    unless ( $args{NAME} = $args{DISTNAME} or ! $args{MODULE_NAME} ) {
++        $args{NAME} = $args{MODULE_NAME};
++        $args{NAME} =~ s/::/-/g;
++    }
++
++    foreach my $key ( qw{name module_name version version_from abstract author installdirs} ) {
++        my $value = delete($args{uc($key)}) or next;
++        $self->$key($value);
++    }
++
++    if (my $prereq = delete($args{PREREQ_PM})) {
++        while (my($k,$v) = each %$prereq) {
++            $self->requires($k,$v);
++        }
++    }
++
++    # put the remaining args to makemaker_args
++    $self->makemaker_args(%args);
++}
++
++END {
++    if ( $makefile ) {
++        $makefile->write;
++        $makefile->Meta->write;
++    }
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Metadata.pm Data-ICal-0.16/inc/Module/Install/Metadata.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Metadata.pm	2009-07-10 16:52:29.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/Metadata.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,19 +1,17 @@
+-#line 1
+ package Module::Install::Metadata;
+ 
+ use strict 'vars';
+-use Module::Install::Base;
++use Module::Install::Base ();
+ 
+ use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
+-	@ISA     = qw{Module::Install::Base};
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
+ 	$ISCORE  = 1;
+ }
+ 
+ my @boolean_keys = qw{
+ 	sign
+-	mymeta
+ };
+ 
+ my @scalar_keys = qw{
+@@ -440,21 +438,21 @@
+ 	/ixms ) {
+ 		my $license_text = $1;
+ 		my @phrases      = (
+-			'under the same (?:terms|license) as perl itself' => 'perl',        1,
+-			'GNU general public license'                      => 'gpl',         1,
+-			'GNU public license'                              => 'gpl',         1,
+-			'GNU lesser general public license'               => 'lgpl',        1,
+-			'GNU lesser public license'                       => 'lgpl',        1,
+-			'GNU library general public license'              => 'lgpl',        1,
+-			'GNU library public license'                      => 'lgpl',        1,
+-			'BSD license'                                     => 'bsd',         1,
+-			'Artistic license'                                => 'artistic',    1,
+-			'GPL'                                             => 'gpl',         1,
+-			'LGPL'                                            => 'lgpl',        1,
+-			'BSD'                                             => 'bsd',         1,
+-			'Artistic'                                        => 'artistic',    1,
+-			'MIT'                                             => 'mit',         1,
+-			'proprietary'                                     => 'proprietary', 0,
++			'under the same (?:terms|license) as (?:perl|the perl programming language) itself' => 'perl', 1,
++			'GNU general public license'         => 'gpl',         1,
++			'GNU public license'                 => 'gpl',         1,
++			'GNU lesser general public license'  => 'lgpl',        1,
++			'GNU lesser public license'          => 'lgpl',        1,
++			'GNU library general public license' => 'lgpl',        1,
++			'GNU library public license'         => 'lgpl',        1,
++			'BSD license'                        => 'bsd',         1,
++			'Artistic license'                   => 'artistic',    1,
++			'GPL'                                => 'gpl',         1,
++			'LGPL'                               => 'lgpl',        1,
++			'BSD'                                => 'bsd',         1,
++			'Artistic'                           => 'artistic',    1,
++			'MIT'                                => 'mit',         1,
++			'proprietary'                        => 'proprietary', 0,
+ 		);
+ 		while ( my ($pattern, $license, $osi) = splice(@phrases, 0, 3) ) {
+ 			$pattern =~ s{\s+}{\\s+}g;
+@@ -506,17 +504,29 @@
+ 	}
+ }
+ 
++sub test_requires_from {
++	my $self     = shift;
++	my $content  = Module::Install::_readperl($_[0]);
++	my @requires = $content =~ m/^use\s+([^\W\d]\w*(?:::\w+)*)\s+([\d\.]+)/mg;
++	while ( @requires ) {
++		my $module  = shift @requires;
++		my $version = shift @requires;
++		$self->test_requires( $module => $version );
++	}
++}
++
+ # Convert triple-part versions (eg, 5.6.1 or 5.8.9) to
+ # numbers (eg, 5.006001 or 5.008009).
+ # Also, convert double-part versions (eg, 5.8)
+ sub _perl_version {
+ 	my $v = $_[-1];
+-	$v =~ s/^([1-9])\.([1-9]\d?\d?)$/sprintf("%d.%03d",$1,$2)/e;	
++	$v =~ s/^([1-9])\.([1-9]\d?\d?)$/sprintf("%d.%03d",$1,$2)/e;
+ 	$v =~ s/^([1-9])\.([1-9]\d?\d?)\.(0|[1-9]\d?\d?)$/sprintf("%d.%03d%03d",$1,$2,$3 || 0)/e;
+ 	$v =~ s/(\.\d\d\d)000$/$1/;
+ 	$v =~ s/_.+$//;
+ 	if ( ref($v) ) {
+-		$v = $v + 0; # Numify
++		# Numify
++		$v = $v + 0;
+ 	}
+ 	return $v;
+ }
+@@ -526,23 +536,58 @@
+ 
+ 
+ ######################################################################
+-# MYMETA.yml Support
++# MYMETA Support
+ 
+ sub WriteMyMeta {
+ 	die "WriteMyMeta has been deprecated";
+ }
+ 
+-sub write_mymeta {
++sub write_mymeta_yaml {
+ 	my $self = shift;
+-	
+-	# If there's no existing META.yml there is nothing we can do
+-	return unless -f 'META.yml';
+ 
+ 	# We need YAML::Tiny to write the MYMETA.yml file
+ 	unless ( eval { require YAML::Tiny; 1; } ) {
+ 		return 1;
+ 	}
+ 
++	# Generate the data
++	my $meta = $self->_write_mymeta_data or return 1;
++
++	# Save as the MYMETA.yml file
++	print "Writing MYMETA.yml\n";
++	YAML::Tiny::DumpFile('MYMETA.yml', $meta);
++}
++
++sub write_mymeta_json {
++	my $self = shift;
++
++	# We need JSON to write the MYMETA.json file
++	unless ( eval { require JSON; 1; } ) {
++		return 1;
++	}
++
++	# Generate the data
++	my $meta = $self->_write_mymeta_data or return 1;
++
++	# Save as the MYMETA.yml file
++	print "Writing MYMETA.json\n";
++	Module::Install::_write(
++		'MYMETA.json',
++		JSON->new->pretty(1)->canonical->encode($meta),
++	);
++}
++
++sub _write_mymeta_data {
++	my $self = shift;
++
++	# If there's no existing META.yml there is nothing we can do
++	return undef unless -f 'META.yml';
++
++	# We need Parse::CPAN::Meta to load the file
++	unless ( eval { require Parse::CPAN::Meta; 1; } ) {
++		return undef;
++	}
++
+ 	# Merge the perl version into the dependencies
+ 	my $val  = $self->Meta->{values};
+ 	my $perl = delete $val->{perl_version};
+@@ -558,7 +603,7 @@
+ 	}
+ 
+ 	# Load the advisory META.yml file
+-	my @yaml = YAML::Tiny::LoadFile('META.yml');
++	my @yaml = Parse::CPAN::Meta::LoadFile('META.yml');
+ 	my $meta = $yaml[0];
+ 
+ 	# Overwrite the non-configure dependency hashs
+@@ -572,9 +617,7 @@
+ 		$meta->{build_requires} = { map { @$_ } @{ $val->{build_requires} } };
+ 	}
+ 
+-	# Save as the MYMETA.yml file
+-	print "Writing MYMETA.yml\n";
+-	YAML::Tiny::DumpFile('MYMETA.yml', $meta);	
++	return $meta;
+ }
+ 
+ 1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/PAR.pm Data-ICal-0.16/inc/Module/Install/PAR.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/PAR.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/PAR.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,274 @@
++package Module::Install::PAR;
++
++use strict;
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++=head1 NAME
++
++Module::Install::PAR - Module::Install Support for PAR::Dist packages
++
++=head1 SYNOPSIS
++
++To offer your users the possibility to install binaries if no C
++compiler was found, you could use this simplistic stub:
++
++    use inc::Module::Install;
++    
++    name            'Foo';
++    all_from        'lib/Foo.pm';
++    
++    # Which CPAN directory do we fetch binaries from?
++    par_base        'SMUELLER';
++    
++    unless ( can_cc() ) {
++        my $okay = extract_par( fetch_par );
++        if (not $okay) {
++            die "No compiler and no binary package found. Aborting.\n";
++        }
++    }
++    
++    WriteAll;
++
++=head1 DESCRIPTION
++
++This module adds a couple of directives to Module::Install
++related to installing and creating PAR::Dist distributions.
++
++=head2 par_base
++
++This directive sets the CPAN ID from whose CPAN directory to
++fetch binaries from. For example, you can choose to download
++binaries from http://www.cpan.org/authors/id/S/SM/SMUELLER/
++or its ftp counterpart by writing:
++
++  par_base 'SMUELLER';
++
++By default, the name of the file to fetch is generated from
++the distribution name, its version, your platform name and your
++perl version concatenated with dashes.
++
++The directive, however, takes an optional second
++argument which specifies the name of the file to fetch.
++(Though C<par_base> does not fetch files itself, see below.)
++
++  par_base 'SMUELLER', 'foo';
++
++Once C<fetch_par> is called, the file 'foo' will be downloaded
++from SMUELLER's CPAN directory. (It doesn't exist.)
++
++The second argument could be used to fetch platform-agnostic
++binaries:
++
++  par_base 'SMUELLER', "Some-Distribution-0.01.par";
++
++(Documentation TODO: Use the previously defined distribution
++name and version in example.)
++
++=cut
++
++sub par_base {
++    my ($self, $base, $file) = @_;
++    my $class     = ref($self);
++    my $inc_class = join('::', @{$self->_top}{qw(prefix name)});
++    my $ftp_base;
++
++    if ( defined $base and length $base ) {
++        if ( $base =~ m!^(([A-Z])[A-Z])[-_A-Z]+\Z! ) {
++            $self->{mailto} = "$base\@cpan.org";
++            $ftp_base = "ftp://ftp.cpan.org/pub/CPAN/authors/id/$2/$1/$base";
++            $base     = "http://www.cpan.org/authors/id/$2/$1/$base";
++        } elsif ( $base !~ m!^(\w+)://! ) {
++            die "Cannot recognize path '$base'; please specify an URL or CPAN ID";
++        }
++        $base     .= '/' unless $base     =~ m!/\Z!;
++        $ftp_base .= '/' unless $ftp_base =~ m!/\Z!;
++    }
++
++    require Config;
++    my $suffix = "$Config::Config{archname}-$Config::Config{version}.par";
++
++    unless ( $file ||= $self->{file} ) {
++        my $name    = $self->name    or return;
++        my $version = $self->version or return;
++        $name =~ s!::!-!g;
++        $self->{file} = $file = "$name-$version-$suffix";
++    }
++
++    my $perl = $^X;
++    $perl = Win32::GetShortPathName($perl)
++        if $perl =~ / / and defined &Win32::GetShortPathName;
++
++    $self->preamble(<<"END_MAKEFILE") if $base;
++# --- $class section:
++
++all ::
++\t\$(NOECHO) $perl "-M$inc_class" -e "extract_par(q($file))"
++
++END_MAKEFILE
++
++    $self->postamble(<<"END_MAKEFILE");
++# --- $class section:
++
++$file: all test
++\t\$(NOECHO) \$(PERL) "-M$inc_class" -e "make_par(q($file))"
++
++par :: $file
++\t\$(NOECHO) \$(NOOP)
++
++par-upload :: $file
++\tcpan-upload -verbose $file
++
++END_MAKEFILE
++
++    $self->{url}     = $base;
++    $self->{ftp_url} = $ftp_base;
++    $self->{suffix}  = $suffix;
++
++    return $self;
++}
++
++=head2 fetch_par
++
++Fetches the .par file previously referenced in the documentation
++of the C<par_base> directive.
++
++C<fetch_par> can be used without arguments given the C<par_base>
++directive was used before. It will return the name of the file it
++fetched.
++
++If the first argument is an URL or a CPAN user ID, the file is
++fetched from that directory unless an URL has been previously set.
++(Read that again.)
++
++If the second argument is a file name
++it is used as the name of the file to download.
++
++If the file could not be fetched, a suitable error message
++about no package being available, yada yada yada, is printed.
++You can turn this off by specifying a true third argument.
++
++  # Try to fetch the package (see par_base) but
++  # don't be verbose about failures
++  my $file = fetch_par('', '', undef);
++
++=cut
++
++sub fetch_par {
++    my ($self, $url, $file, $quiet) = @_;
++    $url = '' if not defined $url;
++    $file = '' if not defined $file;
++    
++    $url = $self->{url} || $self->par_base($url)->{url};
++    my $ftp_url = $self->{ftp_url};
++    $file ||= $self->{file};
++
++    return $file if -f $file or $self->get_file(
++        url     => "$url$file",
++        ftp_url => "$ftp_url$file"
++    );
++
++    require Config;
++    print <<"END_MESSAGE" if $self->{mailto} and ! $quiet;
++*** No installation package available for your architecture.
++However, you may wish to generate one with '$Config::Config{make} par' and send
++it to <$self->{mailto}>, so other people on the same platform
++can benefit from it.
++*** Proceeding with normal installation...
++END_MESSAGE
++    return;
++}
++
++=head2 extract_par
++
++Takes the name of a PAR::Dist archive file as first argument. The 'blib/'
++directory of this archive is extracted and the 'pm_to_blib' is created.
++
++Typical shorthand usage:
++
++  extract_par( fetch_par ) or die "Could not install PAR::Dist archive.";
++
++=cut
++
++sub extract_par {
++    my ($self, $file) = @_;
++    return unless -f $file;
++
++    if ( eval { require Archive::Zip; 1 } ) {
++        my $zip = Archive::Zip->new;
++        return unless $zip->read($file) == Archive::Zip::AZ_OK()
++                  and $zip->extractTree('', 'blib/') == Archive::Zip::AZ_OK();
++    } elsif ( $self->can_run('unzip') ) {
++        return if system( unzip => $file, qw(-d blib) );
++    }
++    else {
++        die <<'HERE';
++Could not extract .par archive because neither Archive::Zip nor a
++working 'unzip' binary are available. Please consider installing
++Archive::Zip.
++HERE
++    }
++
++    local *PM_TO_BLIB;
++    open PM_TO_BLIB, '> pm_to_blib' or die $!;
++    close PM_TO_BLIB or die $!;
++
++    return 1;
++}
++
++=head2 make_par
++
++This directive requires PAR::Dist (version 0.03 or up) on your system.
++(And checks that it is available before continuing.)
++
++Creates a PAR::Dist archive from the 'blib/' subdirectory.
++
++First argument must be the name of the PAR::Dist archive to create.
++
++If your Makefile.PL has a C<par_base> directive, the C<make par>
++make target will be available. It uses this C<make_par> directive
++internally, so on your development system, you can do this to create
++a .par binary archive for your platform:
++
++  perl Makefile.PL
++  make
++  make par
++
++=cut
++
++sub make_par {
++    my ($self, $file) = @_;
++    unlink $file if -f $file;
++
++    unless ( eval { require PAR::Dist; PAR::Dist->VERSION >= 0.03 } ) {
++        warn "Please install PAR::Dist 0.03 or above first.";
++        return;
++    }
++
++    return PAR::Dist::blib_to_par( dist => $file );
++}
++
++1;
++
++=head1 AUTHOR
++
++Audrey Tang <cpan@audreyt.org>
++
++With documentation from Steffen Mueller <smueller@cpan.org>
++
++=head1 COPYRIGHT
++
++Copyright (c) 2006. Audrey Tang.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Philosophy.pod Data-ICal-0.16/inc/Module/Install/Philosophy.pod
+--- Data-ICal-0.16.orig/inc/Module/Install/Philosophy.pod	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Philosophy.pod	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,187 @@
++=head1 NAME
++
++Module::Install::Philosophy - The concepts behind Module::Install
++
++=head1 SYNOPSIS
++
++This document describes the personal philosophy behind the creation of
++B<CPAN::MakeMaker> (the predecessor of B<Module::Install>).  The views
++expressed here belong to Brian Ingerson; if they are not of interest to
++you, you can safely ignore this document.
++
++=head1 I HAVE A DREAM
++
++I say to you today, my friends, that in spite of the difficulties and
++frustrations of the moment, I still have a dream. It is a dream deeply
++rooted in the Perl Module dream.
++
++I have a dream that one day this community will rise up and live out the
++true meaning of its creed: "We hold these truths to be self-evident:
++that all Perl authors are created equal."
++
++I have a dream that one day even the state of the C<CGI::> namespace, a
++desert state, sweltering with the heat of injustice and oppression, will
++be transformed into an oasis of freedom and justice.
++
++I have a dream that my four modules will one day live in an archive
++where they will not be judged by the number of their prerequisites but
++by the content of their source code.
++
++I have a dream today.
++
++=head1 DESCRIPTION
++
++The above is obviously a mutation of the monumental speech by great
++Martin Luther King (L<http://web66.coled.umn.edu/new/MLK/MLK.html>).
++While the contexts are vastly different, I feel that there are some
++serious parallelisms.
++
++The CPAN has become a place that is not free of injustice. This
++situation has arisen not out of directed oppression, but from a failure
++of our community to keep its tools sharp. It is the culmination of many
++small decisions made in the name of practicality. This is a sad state
++for an institution that was created to allow all interested people to
++contribute equally to the best of their ability.
++
++This assertion is rooted in my personal experience as an author. When I
++created my first Perl module, Inline.pm, I knew that I had done
++something important. But how was I to make a dent in vast Perl
++community?
++
++As a complete unknown in the Perl community, my voice did not travel
++far. I repeatedly tried to get even an acknowledgment from the gurus
++familiar with XS. No success. I resorted to sending messages with
++ridiculous subjects to C<modules@perl.org>. 
++(L<http://www.xray.mpe.mpg.de/mailing-lists/modules/2000-08/msg00078.html>) 
++No response. Through sheer determination and shameless self-promotion I
++eventually got the word out, and I hope the world is a slightly better
++place for it.
++
++Since then, Inline has won awards and I have had the privilege to meet almost
++all of Perl's finest. But I still remember the pain of starting out, and
++want to help invite more people into this wonderful world. 
++
++One thing I have learned from experience is that the Perl community (and
++throw in the Python and Ruby people as well) is a small drop in the vast
++ocean of programming. It's a giant pot of Java out there; and a sea of
++C. Perl may not be the biggest fish, but with some care and cunning we
++could become a much bigger school.
++
++These are the current problems that I see with CPAN and the core modules:
++
++=over 4
++
++=item * New Modules don't help Older Perls
++
++If I were to guess what percent of all Perl5 installations were at the
++current release level (5.8.0 in October 2002) I would say 3-5%. That may
++even be generous. I'd say that over 40% of installations might still be
++at 5.005 or earlier.
++
++The biggest problem with adding a module to the core is that it only
++helps a small subset of Perl users for a long long time. Worse yet, a
++good module author will still probably avoid using the core additions as
++prerequisites, because they want their new module to work as well on
++5.005 as on 5.8.
++
++CPAN::MakeMaker should be able to help in this regard. For example,
++instead of putting Inline.pm into the core for 5.9, I can now
++effectively get it into the core for every version of Perl that
++Inline supports.
++
++=item * Author Exclusiveness
++
++Not just anybody can get a module into the core. It seems you have to
++know people in high places. If I were a brilliant new talent with a
++great new module, it would have a harder time getting the ear of the
++pumpking, then if I were, say, Damian Conway. In fact, I probably
++wouldn't even know where to start.
++
++=item * Reduced Competition
++
++One comment I've heard from some very good Perl programmers is
++"Everything important has already been done". Their feeling is that
++even though a module is suboptimal, it would be a waste of time to
++write a competing module. Who would use it instead of the one already
++in the core?
++
++When I write a competing module, I know that I have to make it at least
++twice as good as the existing one to even get noticed. That's not a bad
++thing, but should everybody be forced into that situation?
++
++For example, let's say that you have created a really useful CGI script.
++Let's also say that it makes use of your own B<CGI::Special> module,
++because B<CGI.pm> doesn't meet your needs. Even though your script might be
++generally useful and worth sharing, the fact that it requires a
++non-standard module can only negatively affect its acceptance. Trying to
++get general acceptance for the superior B<CGI::Special> module will be
++harder still.
++
++Core modules are assumed by the general public to be "Best of Breed".
++While this may be true for some modules at some point in time, it keeps
++talented people from attempting to "breed" something better.
++
++=item * Core Bloat
++
++Every time we add a module to the core it gets bigger and bigger. And we
++can't ever remove modules from the core, once they've been added.
++
++If I had my druthers, we'd remove all modules from the core that weren't
++necessary for either running Perl or installing modules. Of course, we'd
++need to set things up so that installing modules was so easy, that it
++could be done on the fly if necessary. Is this easily accomplishable?
++Nope. Is it impossible? Nope. We have the best language in the world to
++help us do it!
++
++=item * Maintenance Bitrot
++
++Believe it or not, Perl authors can sometimes acquire a "Life Beyond
++Perl". They get families or new hobbies or even hit by a bus. (This
++would be a "Death Beyond Perl".) The fact is, that once somebody writes
++a piece of code and shares it with the world, they are expected to
++maintain it for all time.
++
++That is being generous. There are others that think that once their
++module has become popular or made it into the core, they don't need to
++keep fixing and improving it. I have personally been guilty of this sin.
++
++And then there's the Damian Conway Effect. This plagues the exceptional
++authors who are so innovative and prolific they simply don't have time
++to maintain everything they have written.
++
++=back
++
++I initially formalized these opinions at the YAPC (Yet Another Perl
++Conference) in June 2001. Since then I have been trying to think of
++technological solutions to fix these social problems.
++
++One idea was dubbed NAPC. NAPC is CPAN backwards. It is a large system
++of precompiled modules that can be installed on the fly, with the goal
++of reducing the number of modules in the core. NAPC hasn't got started
++yet. I'd still like to do it someday, but it's a big problem with a lot
++of issues.
++
++B<CPAN::MakeMaker> (and now B<Module::Install>) on the other hand, is
++simple and ultimately flexible.  It should work with all of the existing
++CPAN processes without requiring any changes from them. And new features
++can be continuously added. Even though it doesn't scratch all of my
++philosophical CPAN itches, it's a good start.
++
++=head1 CONCLUSION
++
++This is all just food for thought. Take it with a pinch of salt. 
++
++=head1 AUTHOR
++
++Brian Ingerson E<lt>INGY@cpan.orgE<gt>
++
++=head1 COPYRIGHT
++
++Copyright (c) 2002. Brian Ingerson.
++
++This document is free documentation; you can redistribute it and/or
++modify it under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Run.pm Data-ICal-0.16/inc/Module/Install/Run.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Run.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Run.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,15 @@
++package Module::Install::Run;
++
++use strict;
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++# eventually move the ipc::run / open3 stuff here.
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Scripts.pm Data-ICal-0.16/inc/Module/Install/Scripts.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Scripts.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Scripts.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,28 @@
++package Module::Install::Scripts;
++
++use strict 'vars';
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++sub install_script {
++	my $self = shift;
++	my $args = $self->makemaker_args;
++	my $exe  = $args->{EXE_FILES} ||= [];
++        foreach ( @_ ) {
++		if ( -f $_ ) {
++			push @$exe, $_;
++		} elsif ( -d 'script' and -f "script/$_" ) {
++			push @$exe, "script/$_";
++		} else {
++			die("Cannot find script '$_'");
++		}
++	}
++}
++
++1;
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Share.pm Data-ICal-0.16/inc/Module/Install/Share.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Share.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/Share.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,125 @@
++package Module::Install::Share;
++
++use strict;
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++sub install_share {
++	my $self = shift;
++	my $dir  = @_ ? pop   : 'share';
++	my $type = @_ ? shift : 'dist';
++	unless ( defined $type and $type eq 'module' or $type eq 'dist' ) {
++		die "Illegal or invalid share dir type '$type'";
++	}
++	unless ( defined $dir and -d $dir ) {
++		die "Illegal or missing directory install_share param";
++	}
++
++	# Split by type
++	my $S = ($^O eq 'MSWin32') ? "\\" : "\/";
++	if ( $type eq 'dist' ) {
++		die "Too many parameters to install_share" if @_;
++
++		# Set up the install
++		$self->postamble(<<"END_MAKEFILE");
++config ::
++\t\$(NOECHO) \$(MOD_INSTALL) \\
++\t\t"$dir" \$(INST_LIB)${S}auto${S}share${S}dist${S}\$(DISTNAME)
++
++END_MAKEFILE
++	} else {
++		my $module = Module::Install::_CLASS($_[0]);
++		unless ( defined $module ) {
++			die "Missing or invalid module name '$_[0]'";
++		}
++		$module =~ s/::/-/g;
++
++		# Set up the install
++		$self->postamble(<<"END_MAKEFILE");
++config ::
++\t\$(NOECHO) \$(MOD_INSTALL) \\
++\t\t"$dir" \$(INST_LIB)${S}auto${S}share${S}module${S}$module
++
++END_MAKEFILE
++	}
++
++	# The above appears to behave incorrectly when used with old versions
++	# of ExtUtils::Install (known-bad on RHEL 3, with 5.8.0)
++	# So when we need to install a share directory, make sure we add a
++	# dependency on a moderately new version of ExtUtils::MakeMaker.
++	$self->build_requires( 'ExtUtils::MakeMaker' => '6.11' );
++
++	# 99% of the time we don't want to index a shared dir
++	$self->no_index( directory => $dir );
++}
++
++1;
++
++__END__
++
++=pod
++
++=head1 NAME
++
++Module::Install::Share - Install non-code files for use during run-time
++
++=head1 SYNOPSIS
++
++    # Put everything inside ./share/ into the distribution 'auto' path
++    install_share 'share';
++
++    # Same thing as above using the default directory name
++    install_share;
++
++=head1 DESCRIPTION
++
++As well as Perl modules and Perl binary applications, some distributions
++need to install read-only data files to a location on the file system
++for use at run-time.
++
++XML Schemas, L<YAML> data files, and L<SQLite> databases are examples of
++the sort of things distributions might typically need to have available
++after installation.
++
++C<Module::Install::Share> is a L<Module::Install> extension that provides
++commands to allow these files to be installed to the applicable location
++on disk.
++
++To locate the files after installation so they can be used inside your
++module, see this extension's companion module L<File::ShareDir>.
++
++=head1 TO DO
++
++Currently C<install_share> installs not only the files you want, but
++if called by the author will also copy F<.svn> and other source-control
++directories, and other junk.
++
++Enhance this to copy only files under F<share> that are in the
++F<MANIFEST>, or possibly those not in F<MANIFEST.SKIP>.
++
++=head1 AUTHORS
++
++Audrey Tang E<lt>autrijus@autrijus.orgE<gt>
++
++Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++=head1 SEE ALSO
++
++L<Module::Install>, L<File::ShareDir>
++
++=head1 COPYRIGHT
++
++Copyright 2006 Audrey Tang, Adam Kennedy.
++
++This program is free software; you can redistribute it and/or modify it
++under the same terms as Perl itself.
++
++See L<http://www.perl.com/perl/misc/Artistic.html>
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/Win32.pm Data-ICal-0.16/inc/Module/Install/Win32.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/Win32.pm	2009-07-10 16:52:30.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/Win32.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,13 +1,12 @@
+-#line 1
+ package Module::Install::Win32;
+ 
+ use strict;
+-use Module::Install::Base;
++use Module::Install::Base ();
+ 
+ use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
+-	@ISA     = qw{Module::Install::Base};
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
+ 	$ISCORE  = 1;
+ }
+ 
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/With.pm Data-ICal-0.16/inc/Module/Install/With.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/With.pm	1970-01-01 01:00:00.000000000 +0100
++++ Data-ICal-0.16/inc/Module/Install/With.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -0,0 +1,159 @@
++package Module::Install::With;
++
++# See POD at end for docs
++
++use strict;
++use Module::Install::Base ();
++
++use vars qw{$VERSION @ISA $ISCORE};
++BEGIN {
++	$VERSION = '0.91';
++	@ISA     = 'Module::Install::Base';
++	$ISCORE  = 1;
++}
++
++
++
++
++
++#####################################################################
++# Installer Target
++
++# Are we targeting ExtUtils::MakeMaker (running as Makefile.PL)
++sub eumm {
++	!! ($0 =~ /Makefile.PL$/i);
++}
++
++# You should not be using this, but we'll keep the hook anyways
++sub mb {
++	!! ($0 =~ /Build.PL$/i);
++}
++
++
++
++
++
++#####################################################################
++# Testing and Configuration Contexts
++
++=pod
++
++=head2 interactive
++
++The C<interactive> function tests for an install that has a user present
++(or at least, one in which it is reasonable for us to present prompts
++and other similar types of things).
++
++Returns true if in an interactive environment, or false otherwise.
++
++=cut
++
++sub interactive {
++	# Treat things interactively ONLY based on input
++	!! (-t STDIN and ! automated_testing());
++}
++
++=pod
++
++=head2 automated_testing
++
++Are we currently running in an automated testing environment, such as
++CPAN Testers.
++
++This is primarily a cleaner and more human-readable equivalent of
++checking $ENV{AUTOMATED_TESTING} yourself, but may be improved in line
++with best practices at a later date.
++
++=cut
++
++sub automated_testing {
++	!! $ENV{AUTOMATED_TESTING};
++}
++
++=pod
++
++=head2 release_testing
++
++Are we currently running in an release testing environment. That is,
++are we in the process of running in a potential highly-intensive and
++high dependency bloat testing process prior to packaging a module for
++release.
++
++This is primarily a cleaner and more human-readable equivalent of
++checking $ENV{RELEASE_TESTING} yourself, but may be improved in line
++with best practices at a later date.
++
++=cut
++
++sub release_testing {
++	!! $ENV{RELEASE_TESTING};
++}
++
++sub author_context {
++	!! $Module::Install::AUTHOR;
++}
++
++
++
++
++
++#####################################################################
++# Operating System Convenience
++
++=pod
++
++=head2 win32
++
++The C<win32> function tests if the Makefile.PL is currently running in a
++native Microsoft Windows Perl, such as ActivePerl or Strawberry Perl.
++
++This is primarily a cleaner and more human-readable equivalent of
++checking C<$^O eq 'MSWin32'> yourself, but may be improved in line
++with best practices at a later date.
++
++=cut
++
++sub win32 {
++	!! ($^O eq 'MSWin32');
++}
++
++=pod
++
++=head2 winlike
++
++The C<winlike> function tests if the Makefile.PL is currently running
++in a Microsoft Windows Perl, under either cygwin or a native Win32 Perl.
++
++This is primarily a cleaner and more human-readable equivalent of
++checking C<$^O eq 'MSWin32' or $^O eq 'cygwin'>yourself, but may be
++improved in line with best practices at a later date.
++
++=cut
++
++sub winlike {
++	!! ($^O eq 'MSWin32' or $^O eq 'cygwin');
++}
++
++1;
++
++=pod
++
++=head1 SEE ALSO
++
++L<Module::Install>
++
++=head1 AUTHORS
++
++Adam Kennedy E<lt>adamk@cpan.orgE<gt>
++
++=head1 COPYRIGHT
++
++Copyright 2007 - 2009 Adam Kennedy.
++
++This program is free software; you can redistribute
++it and/or modify it under the same terms as Perl itself.
++
++The full text of the license can be found in the
++LICENSE file included with this module.
++
++=cut
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install/WriteAll.pm Data-ICal-0.16/inc/Module/Install/WriteAll.pm
+--- Data-ICal-0.16.orig/inc/Module/Install/WriteAll.pm	2009-07-10 16:52:30.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install/WriteAll.pm	2009-05-27 18:46:13.000000000 +0200
+@@ -1,12 +1,11 @@
+-#line 1
+ package Module::Install::WriteAll;
+ 
+ use strict;
+-use Module::Install::Base;
++use Module::Install::Base ();
+ 
+ use vars qw{$VERSION @ISA $ISCORE};
+ BEGIN {
+-	$VERSION = '0.85';
++	$VERSION = '0.91';;
+ 	@ISA     = qw{Module::Install::Base};
+ 	$ISCORE  = 1;
+ }
+@@ -41,8 +40,18 @@
+ 
+ 	# The Makefile write process adds a couple of dependencies,
+ 	# so write the META.yml files after the Makefile.
+-	$self->Meta->write        if $args{meta};
+-	$self->Meta->write_mymeta if $self->mymeta;
++	if ( $args{meta} ) {
++		$self->Meta->write;
++	}
++
++	# Experimental support for MYMETA
++	if ( $ENV{X_MYMETA} ) {
++		if ( $ENV{X_MYMETA} eq 'JSON' ) {
++			$self->Meta->write_mymeta_json;
++		} else {
++			$self->Meta->write_mymeta_yaml;
++		}
++	}
+ 
+ 	return 1;
+ }
+diff -Naur Data-ICal-0.16.orig/inc/Module/Install.pm Data-ICal-0.16/inc/Module/Install.pm
+--- Data-ICal-0.16.orig/inc/Module/Install.pm	2009-07-10 16:52:28.000000000 +0200
++++ Data-ICal-0.16/inc/Module/Install.pm	2009-07-29 09:44:13.000000000 +0200
+@@ -1,4 +1,3 @@
+-#line 1
+ package Module::Install;
+ 
+ # For any maintainers:
+@@ -28,7 +27,7 @@
+ 	# This is not enforced yet, but will be some time in the next few
+ 	# releases once we can make sure it won't clash with custom
+ 	# Module::Install extensions.
+-	$VERSION = '0.85';
++	$VERSION = '0.91';
+ 
+ 	# Storage for the pseudo-singleton
+ 	$MAIN    = undef;
+@@ -353,7 +352,7 @@
+ 	if ( $] >= 5.006 ) {
+ 		open( FH, '<', $_[0] ) or die "open($_[0]): $!";
+ 	} else {
+-		open( FH, "< $_[0]"  ) or die "open($_[0]): $!";	
++		open( FH, "< $_[0]"  ) or die "open($_[0]): $!";
+ 	}
+ 	my $string = do { local $/; <FH> };
+ 	close FH or die "close($_[0]): $!";
+@@ -384,7 +383,7 @@
+ 	if ( $] >= 5.006 ) {
+ 		open( FH, '>', $_[0] ) or die "open($_[0]): $!";
+ 	} else {
+-		open( FH, "> $_[0]"  ) or die "open($_[0]): $!";	
++		open( FH, "> $_[0]"  ) or die "open($_[0]): $!";
+ 	}
+ 	foreach ( 1 .. $#_ ) {
+ 		print FH $_[$_] or die "print($_[0]): $!";

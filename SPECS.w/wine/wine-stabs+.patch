@@ -1,0 +1,22 @@
+Index: wine/configure.ac
+===================================================================
+RCS file: /home/wine/wine/configure.ac,v
+retrieving revision 1.409
+diff -u -r1.409 configure.ac
+--- wine/configure.ac	21 Sep 2005 14:16:05 -0000	1.409
++++ wine/configure.ac	4 Oct 2005 00:00:00 -0000
+@@ -821,14 +821,6 @@
+     EXTRACFLAGS="$EXTRACFLAGS -fno-strict-aliasing"
+   fi
+ 
+-  dnl Check for -gstabs+ option
+-  AC_CACHE_CHECK([for gcc -gstabs+ support], ac_cv_c_gcc_gstabs,
+-      [WINE_TRY_CFLAGS([-gstabs+],ac_cv_c_gcc_gstabs="yes", ac_cv_c_gcc_gstabs="no")])
+-  if test "$ac_cv_c_gcc_gstabs" = "yes"
+-  then
+-    EXTRACFLAGS="$EXTRACFLAGS -gstabs+"
+-  fi
+-
+   dnl Check for -Wdeclaration-after-statement option
+   AC_CACHE_CHECK([for gcc -Wdeclaration-after-statement support], ac_cv_c_gcc_decl_after_statement,
+       [WINE_TRY_CFLAGS([-Wdeclaration-after-statement],ac_cv_c_gcc_decl_after_statement="yes", ac_cv_c_gcc_decl_after_statement="no")])

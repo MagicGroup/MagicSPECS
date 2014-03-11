@@ -1,0 +1,36 @@
+From 1d59e3e592066bd739e8c34290b87fbe97310d0d Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Sat, 30 Jun 2012 12:17:34 +0200
+Subject: [PATCH] TEST-02-SYSTEMD: enlarge the root disk
+
+---
+ test/TEST-02-SYSTEMD/create-root.sh |    2 +-
+ test/TEST-02-SYSTEMD/test.sh        |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test/TEST-02-SYSTEMD/create-root.sh b/test/TEST-02-SYSTEMD/create-root.sh
+index 0e91ab5..fe2ce12 100755
+--- a/test/TEST-02-SYSTEMD/create-root.sh
++++ b/test/TEST-02-SYSTEMD/create-root.sh
+@@ -7,7 +7,7 @@ rm /etc/lvm/lvm.conf
+ udevadm control --reload-rules
+ set -e
+ # save a partition at the beginning for future flagging purposes
+-sfdisk -C 1280 -H 2 -S 32 -L /dev/sda <<EOF
++sfdisk -C 2560 -H 2 -S 32 -L /dev/sda <<EOF
+ ,16
+ ,
+ EOF
+diff --git a/test/TEST-02-SYSTEMD/test.sh b/test/TEST-02-SYSTEMD/test.sh
+index 9eefce2..b535dbe 100755
+--- a/test/TEST-02-SYSTEMD/test.sh
++++ b/test/TEST-02-SYSTEMD/test.sh
+@@ -18,7 +18,7 @@ test_run() {
+ test_setup() {
+     rm -f $TESTDIR/root.ext3
+     # Create the blank file to use as a root filesystem
+-    dd if=/dev/null of=$TESTDIR/root.ext3 bs=1M seek=40
++    dd if=/dev/null of=$TESTDIR/root.ext3 bs=1M seek=80
+ 
+     kernel=$KVERSION
+     # Create what will eventually be our root filesystem onto an overlay

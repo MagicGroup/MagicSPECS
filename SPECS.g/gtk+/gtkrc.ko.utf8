@@ -1,0 +1,10 @@
+style "gtk-default-ko-utf8" {
+       fontset = "-*-gulim*-medium-r-normal--*-120-*-*-*-*-ksc5601.1987-0,\
+                  -*-gulim*-medium-r-normal--*-120-*-*-*-*-ksc5601.1987-0,\
+                  -*-kodig-medium-r-normal--*-120-*-*-*-*-ksc5601.1987-0,\
+                  -*-*-medium-r-normal--*-120-*-*-*-*-ksc5601.1987-0,\
+		  -adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*,\
+		  *"
+}
+class "GtkWidget" style "gtk-default-ko-utf8"
+

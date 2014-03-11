@@ -1,0 +1,80 @@
+diff -up libtar-1.2.11/lib/append.c.foo libtar-1.2.11/lib/append.c
+--- libtar-1.2.11/lib/append.c.foo	2003-01-07 02:40:59.000000000 +0100
++++ libtar-1.2.11/lib/append.c	2008-04-03 15:08:07.000000000 +0200
+@@ -13,6 +13,8 @@
+ #include <internal.h>
+ 
+ #include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <sys/param.h>
+diff -up libtar-1.2.11/configure.foo libtar-1.2.11/configure
+--- libtar-1.2.11/configure.foo	2008-04-03 15:08:07.000000000 +0200
++++ libtar-1.2.11/configure	2008-04-03 15:09:20.000000000 +0200
+@@ -4943,8 +4943,8 @@ main ()
+   for (i = 0; i < 256; i++)
+     if (XOR (islower (i), ISLOWER (i))
+ 	|| toupper (i) != TOUPPER (i))
+-      exit(2);
+-  exit (0);
++      return 2;
++  return 0;
+ }
+ _ACEOF
+ rm -f conftest$ac_exeext
+@@ -20083,8 +20083,8 @@ main ()
+   for (i = 0; i < 256; i++)
+     if (XOR (islower (i), ISLOWER (i))
+ 	|| toupper (i) != TOUPPER (i))
+-      exit(2);
+-  exit (0);
++      return (2);
++  return (0);
+ }
+ _ACEOF
+ rm -f conftest$ac_exeext
+@@ -22411,6 +22411,7 @@ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ 
+ #include <stdio.h>
++#include <string.h>
+ 
+ typedef struct {
+   int length;
+@@ -22437,10 +22438,10 @@ int main() {
+     if ((snprintf(test1, tests[i].length, "%s", tests[i].test)
+          != tests[i].retval) ||
+         (tests[i].result && strcmp(tests[i].result, test1)))
+-      exit(1);
++      return (1);
+   }
+ 
+-  exit(0);
++  return (0);
+ }
+ 
+ _ACEOF
+diff -up libtar-1.2.11/lib/output.c~ libtar-1.2.11/lib/output.c
+--- libtar-1.2.11/lib/output.c~	2008-04-03 15:11:07.000000000 +0200
++++ libtar-1.2.11/lib/output.c	2008-04-03 15:11:07.000000000 +0200
+@@ -13,6 +13,7 @@
+ #include <internal.h>
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <pwd.h>
+ #include <grp.h>
+ #include <time.h>
+diff -up libtar-1.2.11/lib/wrapper.c~ libtar-1.2.11/lib/wrapper.c
+--- libtar-1.2.11/lib/wrapper.c~	2008-04-03 15:11:28.000000000 +0200
++++ libtar-1.2.11/lib/wrapper.c	2008-04-03 15:11:28.000000000 +0200
+@@ -13,6 +13,7 @@
+ #include <internal.h>
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <sys/param.h>
+ #include <dirent.h>
+ #include <errno.h>

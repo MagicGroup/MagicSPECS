@@ -1,0 +1,17 @@
+From d284aa71cb426a99e28c5acfa1a99f932767fede Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 7 Jun 2012 15:36:16 +0100
+Subject: [PATCH 2/6] Ensure empty compilerlibs/ directory is created by git.
+
+This directory exists in the OCaml tarball, but is empty.  As a
+result, git ignores it unless we put a dummy file in it.
+---
+ 0 files changed
+ create mode 100644 compilerlibs/.exists
+
+diff --git a/compilerlibs/.exists b/compilerlibs/.exists
+new file mode 100644
+index 0000000..e69de29
+-- 
+1.7.11.4
+

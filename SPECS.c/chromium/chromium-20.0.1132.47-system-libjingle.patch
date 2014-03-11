@@ -1,0 +1,1479 @@
+diff -up chromium-20.0.1132.47/build/linux/system.gyp.jingle chromium-20.0.1132.47/build/linux/system.gyp
+--- chromium-20.0.1132.47/build/linux/system.gyp.jingle	2012-07-07 19:37:51.731006178 -0400
++++ chromium-20.0.1132.47/build/linux/system.gyp	2012-07-07 19:37:51.796006177 -0400
+@@ -405,6 +405,113 @@
+       ],
+     },
+     {
++      'target_name': 'jingle',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags jinglebase-0.6)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other jinglebase-0.6)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l jinglebase-0.6)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
++      'target_name': 'jingleappwebrtc',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags jingleappwebrtc-0.6)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other jingleappwebrtc-0.6)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l jingleappwebrtc-0.6)',
++            ],
++          },
++	}],
++      ],
++    },
++
++
++    {
++      'target_name': 'jinglep2p',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags jinglep2p-0.6)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other jinglep2p-0.6)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l jinglep2p-0.6)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
++      'target_name': 'jinglesessionphone',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags jinglesessionphone-0.6)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other jinglesessionphone-0.6)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l jinglesessionphone-0.6)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
++      'target_name': 'jinglesessiontunnel',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags jinglesessiontunnel-0.6)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other jinglesessiontunnel-0.6)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l jinglesessiontunnel-0.6)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
+       'target_name': 'gnome_keyring',
+       'type': 'none',
+       'conditions': [
+diff -up chromium-20.0.1132.47/chrome/browser/autofill/autofill_download.cc.jingle chromium-20.0.1132.47/chrome/browser/autofill/autofill_download.cc
+--- chromium-20.0.1132.47/chrome/browser/autofill/autofill_download.cc.jingle	2012-06-28 09:01:54.000000000 -0400
++++ chromium-20.0.1132.47/chrome/browser/autofill/autofill_download.cc	2012-07-07 19:37:51.797006177 -0400
+@@ -22,7 +22,7 @@
+ #include "googleurl/src/gurl.h"
+ #include "net/base/load_flags.h"
+ #include "net/http/http_response_headers.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlparser.h"
++#include <talk/xmllite/xmlparser.h>
+ 
+ namespace {
+ const char kAutofillQueryServerRequestUrl[] =
+diff -up chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.cc.jingle chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.cc
+--- chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.cc.jingle	2012-06-28 09:01:54.000000000 -0400
++++ chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.cc	2012-07-07 19:37:51.798006177 -0400
+@@ -8,7 +8,7 @@
+ #include <string.h>
+ 
+ #include "base/logging.h"
+-#include "third_party/libjingle/source/talk/xmllite/qname.h"
++#include <talk/xmllite/qname.h>
+ 
+ AutofillXmlParser::AutofillXmlParser()
+     : succeeded_(true) {
+diff -up chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.h.jingle chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.h
+--- chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.h.jingle	2012-07-07 19:37:51.784006177 -0400
++++ chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser.h	2012-07-07 19:37:51.798006177 -0400
+@@ -14,7 +14,7 @@
+ #include "chrome/browser/autofill/field_types.h"
+ #include "chrome/browser/autofill/form_structure.h"
+ #include <expat.h>
+-#include "third_party/libjingle/source/talk/xmllite/xmlparser.h"
++#include <talk/xmllite/xmlparser.h>
+ 
+ // The base class that contains common functionality between
+ // AutofillQueryXmlParser and AutofillUploadXmlParser.
+diff -up chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser_unittest.cc.jingle chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser_unittest.cc
+--- chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser_unittest.cc.jingle	2012-06-28 09:01:54.000000000 -0400
++++ chromium-20.0.1132.47/chrome/browser/autofill/autofill_xml_parser_unittest.cc	2012-07-07 19:37:51.799006177 -0400
+@@ -9,7 +9,7 @@
+ #include "chrome/browser/autofill/autofill_xml_parser.h"
+ #include "chrome/browser/autofill/field_types.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlparser.h"
++#include <talk/xmllite/xmlparser.h>
+ 
+ namespace {
+ 
+diff -up chromium-20.0.1132.47/chrome/browser/autofill/form_structure.cc.jingle chromium-20.0.1132.47/chrome/browser/autofill/form_structure.cc
+--- chromium-20.0.1132.47/chrome/browser/autofill/form_structure.cc.jingle	2012-06-28 09:01:54.000000000 -0400
++++ chromium-20.0.1132.47/chrome/browser/autofill/form_structure.cc	2012-07-07 19:37:51.799006177 -0400
+@@ -20,7 +20,7 @@
+ #include "chrome/browser/autofill/autofill_xml_parser.h"
+ #include "chrome/browser/autofill/field_types.h"
+ #include "chrome/browser/autofill/form_field.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ #include "webkit/forms/form_data.h"
+ #include "webkit/forms/form_data_predictions.h"
+ #include "webkit/forms/form_field.h"
+@@ -377,7 +377,7 @@ bool FormStructure::EncodeQueryRequest(
+     if (processed_forms.find(signature) != processed_forms.end())
+       continue;
+     processed_forms.insert(signature);
+-    scoped_ptr<buzz::XmlElement> encompassing_xml_element(
++    talk_base::scoped_ptr<buzz::XmlElement> encompassing_xml_element(
+         new buzz::XmlElement(buzz::QName(kXMLElementForm)));
+     encompassing_xml_element->SetAttr(buzz::QName(kAttributeSignature),
+                                       signature);
+diff -up chromium-20.0.1132.47/chrome/browser/chromeos/login/online_attempt.cc.jingle chromium-20.0.1132.47/chrome/browser/chromeos/login/online_attempt.cc
+--- chromium-20.0.1132.47/chrome/browser/chromeos/login/online_attempt.cc.jingle	2012-06-28 09:01:58.000000000 -0400
++++ chromium-20.0.1132.47/chrome/browser/chromeos/login/online_attempt.cc	2012-07-07 19:37:51.800006177 -0400
+@@ -21,7 +21,7 @@
+ #include "net/base/load_flags.h"
+ #include "net/base/net_errors.h"
+ #include "net/url_request/url_request_status.h"
+-#include "third_party/libjingle/source/talk/base/urlencode.h"
++#include <talk/base/urlencode.h>
+ 
+ using content::BrowserThread;
+ 
+diff -up chromium-20.0.1132.47/chrome/chrome_browser.gypi.jingle chromium-20.0.1132.47/chrome/chrome_browser.gypi
+--- chromium-20.0.1132.47/chrome/chrome_browser.gypi.jingle	2012-07-07 19:37:51.733006178 -0400
++++ chromium-20.0.1132.47/chrome/chrome_browser.gypi	2012-07-07 19:37:51.802006177 -0400
+@@ -47,7 +47,7 @@
+         '../third_party/hunspell/hunspell.gyp:hunspell',
+         '../build/linux/system.gyp:icu',
+         '../third_party/leveldatabase/leveldatabase.gyp:leveldatabase',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+         '../third_party/libphonenumber/libphonenumber.gyp:libphonenumber',
+         '../third_party/libxml/libxml.gyp:libxml',
+         '../third_party/npapi/npapi.gyp:npapi',
+diff -up chromium-20.0.1132.47/chrome/chrome.gyp.jingle chromium-20.0.1132.47/chrome/chrome.gyp
+--- chromium-20.0.1132.47/chrome/chrome.gyp.jingle	2012-07-07 19:37:51.778006177 -0400
++++ chromium-20.0.1132.47/chrome/chrome.gyp	2012-07-07 19:37:51.803006177 -0400
+@@ -311,7 +311,7 @@
+         '../net/net.gyp:net',
+         '../printing/printing.gyp:printing',
+         '../skia/skia.gyp:skia',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+       ],
+       'sources': [
+         'service/chrome_service_application_mac.h',
+diff -up chromium-20.0.1132.47/chrome/chrome_tests.gypi.jingle chromium-20.0.1132.47/chrome/chrome_tests.gypi
+--- chromium-20.0.1132.47/chrome/chrome_tests.gypi.jingle	2012-07-07 19:37:51.737006178 -0400
++++ chromium-20.0.1132.47/chrome/chrome_tests.gypi	2012-07-07 19:37:51.804006177 -0400
+@@ -989,7 +989,7 @@
+         '../third_party/cld/cld.gyp:cld',
+         '../build/linux/system.gyp:icu',
+         '../third_party/leveldatabase/leveldatabase.gyp:leveldatabase',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+         '../third_party/libxml/libxml.gyp:libxml',
+         '../tools/json_schema_compiler/test/json_schema_compiler_tests.gyp:json_schema_compiler_tests',
+         '../ui/gfx/gl/gl.gyp:gl',
+diff -up chromium-20.0.1132.47/content/content_renderer.gypi.jingle chromium-20.0.1132.47/content/content_renderer.gypi
+--- chromium-20.0.1132.47/content/content_renderer.gypi.jingle	2012-07-07 19:37:51.739006178 -0400
++++ chromium-20.0.1132.47/content/content_renderer.gypi	2012-07-07 19:37:51.805006177 -0400
+@@ -11,8 +11,8 @@
+     '../skia/skia.gyp:skia',
+     '../third_party/ffmpeg/ffmpeg.gyp:ffmpeg',
+     '../build/linux/system.gyp:icu',
+-    '../third_party/libjingle/libjingle.gyp:libjingle',
+-    '../third_party/libjingle/libjingle.gyp:libjingle_p2p',
++    '../build/linux/system.gyp:jingle',
++    '../build/linux/system.gyp:jinglep2p',
+     '../third_party/npapi/npapi.gyp:npapi',
+     '../third_party/WebKit/Source/WebKit/chromium/WebKit.gyp:webkit',
+     '../ui/surface/surface.gyp:surface',
+@@ -257,7 +257,7 @@
+     }],
+     ['enable_webrtc==1', {
+       'dependencies': [
+-        '../third_party/libjingle/libjingle.gyp:libjingle_peerconnection',
++        '../build/linux/system.gyp:jingleappwebrtc',
+         '../third_party/webrtc/modules/modules.gyp:video_capture_module',
+         '../third_party/webrtc/system_wrappers/source/system_wrappers.gyp:system_wrappers',
+         '../third_party/webrtc/video_engine/video_engine.gyp:video_engine_core',
+diff -up chromium-20.0.1132.47/content/content_tests.gypi.jingle chromium-20.0.1132.47/content/content_tests.gypi
+--- chromium-20.0.1132.47/content/content_tests.gypi.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/content_tests.gypi	2012-07-07 19:37:51.805006177 -0400
+@@ -139,7 +139,7 @@
+             'test/webrtc_audio_device_test.h',
+           ],
+           'dependencies': [
+-            '../third_party/libjingle/libjingle.gyp:libjingle_peerconnection',
++            '../build/linux/system.gyp:jingleappwebrtc',
+             '../third_party/webrtc/modules/modules.gyp:audio_device',
+             '../third_party/webrtc/modules/modules.gyp:video_capture_module',
+             '../third_party/webrtc/system_wrappers/source/system_wrappers.gyp:system_wrappers',
+@@ -186,7 +186,7 @@
+         '../skia/skia.gyp:skia',
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+         '../third_party/libvpx/libvpx.gyp:libvpx',
+         '../third_party/WebKit/Source/WebKit/chromium/WebKit.gyp:webkit',
+         '../ui/gfx/gl/gl.gyp:gl',
+@@ -309,7 +309,7 @@
+             'renderer/media/webrtc_audio_device_unittest.cc',
+           ],
+           'dependencies': [
+-            '../third_party/libjingle/libjingle.gyp:libjingle_peerconnection',
++            '../build/linux/system.gyp:jingleappwebrtc',
+             '../third_party/webrtc/modules/modules.gyp:video_capture_module',
+             '../third_party/webrtc/system_wrappers/source/system_wrappers.gyp:system_wrappers',
+             '../third_party/webrtc/video_engine/video_engine.gyp:video_engine_core',
+diff -up chromium-20.0.1132.47/content/renderer/media/media_stream_center.cc.jingle chromium-20.0.1132.47/content/renderer/media/media_stream_center.cc
+--- chromium-20.0.1132.47/content/renderer/media/media_stream_center.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/media_stream_center.cc	2012-07-07 19:37:51.806006177 -0400
+@@ -9,7 +9,7 @@
+ #include "base/logging.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "base/utf_string_conversions.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/jsep.h"
++#include <talk/app/webrtc/jsep.h>
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebICECandidateDescriptor.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebMediaStreamCenterClient.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebMediaStreamDescriptor.h"
+diff -up chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.cc.jingle chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.cc
+--- chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.cc	2012-07-07 19:37:51.806006177 -0400
+@@ -13,7 +13,7 @@
+ #include "content/renderer/p2p/ipc_socket_factory.h"
+ #include "content/renderer/p2p/port_allocator.h"
+ #include "jingle/glue/thread_wrapper.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/peerconnection.h"
++#include <talk/app/webrtc/peerconnection.h>
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+ 
+ class P2PPortAllocatorFactory : public webrtc::PortAllocatorFactoryInterface {
+diff -up chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.h.jingle chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.h
+--- chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/media_stream_dependency_factory.h	2012-07-07 19:37:51.806006177 -0400
+@@ -11,7 +11,7 @@
+ #include "base/memory/ref_counted.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "content/common/content_export.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/peerconnection.h"
++#include <talk/app/webrtc/peerconnection.h>
+ #include "webkit/glue/p2p_transport.h"
+ 
+ namespace content {
+diff -up chromium-20.0.1132.47/content/renderer/media/media_stream_impl.h.jingle chromium-20.0.1132.47/content/renderer/media/media_stream_impl.h
+--- chromium-20.0.1132.47/content/renderer/media/media_stream_impl.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/media_stream_impl.h	2012-07-07 19:37:51.807006177 -0400
+@@ -23,8 +23,8 @@
+ #include "content/public/renderer/render_view_observer.h"
+ #include "content/renderer/media/media_stream_dispatcher_eventhandler.h"
+ #include "content/renderer/media/rtc_video_decoder.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/mediastream.h"
+-#include "third_party/libjingle/source/talk/base/scoped_ref_ptr.h"
++#include <talk/app/webrtc/mediastream.h>
++#include <talk/base/scoped_ref_ptr.h>
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebUserMediaClient.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebUserMediaRequest.h"
+ #include "webkit/media/media_stream_client.h"
+diff -up chromium-20.0.1132.47/content/renderer/media/mock_media_stream_dependency_factory.cc.jingle chromium-20.0.1132.47/content/renderer/media/mock_media_stream_dependency_factory.cc
+--- chromium-20.0.1132.47/content/renderer/media/mock_media_stream_dependency_factory.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/mock_media_stream_dependency_factory.cc	2012-07-07 19:37:51.807006177 -0400
+@@ -5,8 +5,8 @@
+ #include "base/logging.h"
+ #include "content/renderer/media/mock_media_stream_dependency_factory.h"
+ #include "content/renderer/media/mock_peer_connection_impl.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/mediastreaminterface.h"
+-#include "third_party/libjingle/source/talk/base/scoped_ref_ptr.h"
++#include <talk/app/webrtc/mediastreaminterface.h>
++#include <talk/base/scoped_ref_ptr.h>
+ 
+ namespace webrtc {
+ 
+diff -up chromium-20.0.1132.47/content/renderer/media/mock_peer_connection_impl.h.jingle chromium-20.0.1132.47/content/renderer/media/mock_peer_connection_impl.h
+--- chromium-20.0.1132.47/content/renderer/media/mock_peer_connection_impl.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/mock_peer_connection_impl.h	2012-07-07 19:37:51.808006177 -0400
+@@ -9,7 +9,7 @@
+ 
+ #include "base/basictypes.h"
+ #include "base/compiler_specific.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/peerconnection.h"
++#include <talk/app/webrtc/peerconnection.h>
+ 
+ class MockMediaStreamDependencyFactory;
+ 
+diff -up chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_base.h.jingle chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_base.h
+--- chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_base.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_base.h	2012-07-07 19:37:51.808006177 -0400
+@@ -11,8 +11,8 @@
+ #include "base/memory/scoped_ptr.h"
+ #include "base/message_loop_proxy.h"
+ #include "content/common/content_export.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/mediastream.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/peerconnection.h"
++#include <talk/app/webrtc/mediastream.h>
++#include <talk/app/webrtc/peerconnection.h>
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebMediaStreamDescriptor.h"
+ 
+ class MediaStreamDependencyFactory;
+diff -up chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_jsep_unittest.cc.jingle chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_jsep_unittest.cc
+--- chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_jsep_unittest.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_jsep_unittest.cc	2012-07-07 19:37:51.809006177 -0400
+@@ -15,7 +15,7 @@
+ #include "content/renderer/media/rtc_video_decoder.h"
+ #include "jingle/glue/thread_wrapper.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/peerconnection.h"
++#include <talk/app/webrtc/peerconnection.h>
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebICECandidateDescriptor.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebICEOptions.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebMediaHints.h"
+diff -up chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_unittest.cc.jingle chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_unittest.cc
+--- chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_unittest.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/peer_connection_handler_unittest.cc	2012-07-07 19:37:51.810006177 -0400
+@@ -15,7 +15,7 @@
+ #include "content/renderer/media/rtc_video_decoder.h"
+ #include "jingle/glue/thread_wrapper.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/app/webrtc/peerconnection.h"
++#include <talk/app/webrtc/peerconnection.h>
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebMediaStreamDescriptor.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebMediaStreamSource.h"
+ 
+diff -up chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.cc.jingle chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.cc
+--- chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.cc	2012-07-07 19:37:51.810006177 -0400
+@@ -13,7 +13,7 @@
+ #include "media/base/limits.h"
+ #include "media/base/video_frame.h"
+ #include "media/base/video_util.h"
+-#include "third_party/libjingle/source/talk/session/phone/videoframe.h"
++#include <talk/session/phone/videoframe.h>
+ 
+ using media::CopyUPlane;
+ using media::CopyVPlane;
+diff -up chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.h.jingle chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.h
+--- chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder.h	2012-07-07 19:37:51.811006177 -0400
+@@ -13,8 +13,8 @@
+ #include "base/time.h"
+ #include "content/common/content_export.h"
+ #include "media/base/video_decoder.h"
+-#include "third_party/libjingle/source/talk/session/phone/mediachannel.h"
+-#include "third_party/libjingle/source/talk/session/phone/videorenderer.h"
++#include <talk/session/phone/mediachannel.h>
++#include <talk/session/phone/videorenderer.h>
+ 
+ class MessageLoop;
+ 
+diff -up chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder_unittest.cc.jingle chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder_unittest.cc
+--- chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder_unittest.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/media/rtc_video_decoder_unittest.cc	2012-07-07 19:37:51.811006177 -0400
+@@ -17,7 +17,7 @@
+ #include "media/base/mock_filters.h"
+ #include "media/base/video_frame.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/session/phone/videoframe.h"
++#include <talk/session/phone/videoframe.h>
+ 
+ using ::testing::_;
+ using ::testing::AnyNumber;
+diff -up chromium-20.0.1132.47/content/renderer/p2p/ipc_network_manager.h.jingle chromium-20.0.1132.47/content/renderer/p2p/ipc_network_manager.h
+--- chromium-20.0.1132.47/content/renderer/p2p/ipc_network_manager.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/p2p/ipc_network_manager.h	2012-07-07 19:37:51.812006177 -0400
+@@ -11,7 +11,7 @@
+ #include "base/memory/weak_ptr.h"
+ #include "content/common/content_export.h"
+ #include "content/renderer/p2p/socket_dispatcher.h"
+-#include "third_party/libjingle/source/talk/base/network.h"
++#include <talk/base/network.h>
+ #include "webkit/glue/network_list_observer.h"
+ 
+ namespace content {
+diff -up chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.cc.jingle chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.cc
+--- chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.cc	2012-07-07 19:37:51.812006177 -0400
+@@ -10,7 +10,7 @@
+ #include "content/renderer/p2p/socket_client.h"
+ #include "content/renderer/p2p/socket_dispatcher.h"
+ #include "jingle/glue/utils.h"
+-#include "third_party/libjingle/source/talk/base/asyncpacketsocket.h"
++#include <talk/base/asyncpacketsocket.h>
+ 
+ namespace content {
+ 
+diff -up chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.h.jingle chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.h
+--- chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/p2p/ipc_socket_factory.h	2012-07-07 19:37:51.812006177 -0400
+@@ -8,7 +8,7 @@
+ #include "base/basictypes.h"
+ #include "base/compiler_specific.h"
+ #include "content/common/content_export.h"
+-#include "third_party/libjingle/source/talk/base/packetsocketfactory.h"
++#include <talk/base/packetsocketfactory.h>
+ 
+ namespace content {
+ 
+diff -up chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.cc.jingle chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.cc
+--- chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.cc.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.cc	2012-07-07 19:37:51.813006177 -0400
+@@ -12,8 +12,8 @@
+ #include "jingle/glue/thread_wrapper.h"
+ #include "jingle/glue/utils.h"
+ #include "net/base/net_errors.h"
+-#include "third_party/libjingle/source/talk/p2p/base/p2ptransportchannel.h"
+-#include "third_party/libjingle/source/talk/p2p/client/basicportallocator.h"
++#include <talk/p2p/base/p2ptransportchannel.h>
++#include <talk/p2p/client/basicportallocator.h>
+ 
+ namespace content {
+ 
+diff -up chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.h.jingle chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.h
+--- chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/p2p/p2p_transport_impl.h	2012-07-07 19:37:51.813006177 -0400
+@@ -12,7 +12,7 @@
+ #include "base/memory/scoped_ptr.h"
+ #include "content/common/content_export.h"
+ #include "net/base/completion_callback.h"
+-#include "third_party/libjingle/source/talk/base/sigslot.h"
++#include <talk/base/sigslot.h>
+ #include "webkit/glue/p2p_transport.h"
+ 
+ namespace cricket {
+diff -up chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h.jingle chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h
+--- chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h.jingle	2012-06-28 09:01:27.000000000 -0400
++++ chromium-20.0.1132.47/content/renderer/p2p/port_allocator.h	2012-07-07 19:37:51.814006177 -0400
+@@ -8,7 +8,7 @@
+ #include "base/memory/ref_counted.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "net/base/net_util.h"
+-#include "third_party/libjingle/source/talk/p2p/client/basicportallocator.h"
++#include <talk/p2p/client/basicportallocator.h>
+ #include "third_party/WebKit/Source/WebKit/chromium/public/platform/WebURLLoaderClient.h"
+ #include "webkit/glue/p2p_transport.h"
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.cc.jingle chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.cc
+--- chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.cc.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.cc	2012-07-07 19:37:51.814006177 -0400
+@@ -11,7 +11,7 @@
+ #include "base/message_loop.h"
+ #include "net/base/io_buffer.h"
+ #include "net/base/net_errors.h"
+-#include "third_party/libjingle/source/talk/p2p/base/transportchannel.h"
++#include <talk/p2p/base/transportchannel.h>
+ 
+ namespace jingle_glue {
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.h.jingle chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.h
+--- chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.h.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/channel_socket_adapter.h	2012-07-07 19:37:51.814006177 -0400
+@@ -8,8 +8,8 @@
+ #include "base/callback_forward.h"
+ #include "base/compiler_specific.h"
+ #include "net/socket/socket.h"
+-#include "third_party/libjingle/source/talk/base/socketaddress.h"
+-#include "third_party/libjingle/source/talk/base/sigslot.h"
++#include <talk/base/socketaddress.h>
++#include <talk/base/sigslot.h>
+ 
+ class MessageLoop;
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/channel_socket_adapter_unittest.cc.jingle chromium-20.0.1132.47/jingle/glue/channel_socket_adapter_unittest.cc
+--- chromium-20.0.1132.47/jingle/glue/channel_socket_adapter_unittest.cc.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/channel_socket_adapter_unittest.cc	2012-07-07 19:37:51.815006177 -0400
+@@ -11,7 +11,7 @@
+ #include "net/socket/socket.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/p2p/base/transportchannel.h"
++#include <talk/p2p/base/transportchannel.h>
+ 
+ using net::IOBuffer;
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/fake_network_manager.cc.jingle chromium-20.0.1132.47/jingle/glue/fake_network_manager.cc
+--- chromium-20.0.1132.47/jingle/glue/fake_network_manager.cc.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/fake_network_manager.cc	2012-07-07 19:37:51.815006177 -0400
+@@ -9,7 +9,7 @@
+ #include "base/message_loop.h"
+ #include "net/base/ip_endpoint.h"
+ #include "jingle/glue/utils.h"
+-#include "third_party/libjingle/source/talk/base/socketaddress.h"
++#include <talk/base/socketaddress.h>
+ 
+ namespace jingle_glue {
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/fake_network_manager.h.jingle chromium-20.0.1132.47/jingle/glue/fake_network_manager.h
+--- chromium-20.0.1132.47/jingle/glue/fake_network_manager.h.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/fake_network_manager.h	2012-07-07 19:37:51.816006177 -0400
+@@ -11,7 +11,7 @@
+ #include "base/memory/scoped_ptr.h"
+ #include "base/memory/weak_ptr.h"
+ #include "net/base/net_util.h"
+-#include "third_party/libjingle/source/talk/base/network.h"
++#include <talk/base/network.h>
+ 
+ namespace jingle_glue {
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/fake_socket_factory.cc.jingle chromium-20.0.1132.47/jingle/glue/fake_socket_factory.cc
+--- chromium-20.0.1132.47/jingle/glue/fake_socket_factory.cc.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/fake_socket_factory.cc	2012-07-07 19:37:51.816006177 -0400
+@@ -7,7 +7,7 @@
+ #include "base/bind.h"
+ #include "base/message_loop.h"
+ #include "jingle/glue/utils.h"
+-#include "third_party/libjingle/source/talk/base/asyncsocket.h"
++#include <talk/base/asyncsocket.h>
+ 
+ namespace jingle_glue {
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/fake_socket_factory.h.jingle chromium-20.0.1132.47/jingle/glue/fake_socket_factory.h
+--- chromium-20.0.1132.47/jingle/glue/fake_socket_factory.h.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/fake_socket_factory.h	2012-07-07 19:37:51.816006177 -0400
+@@ -13,8 +13,8 @@
+ #include "base/memory/ref_counted.h"
+ #include "base/threading/non_thread_safe.h"
+ #include "net/base/ip_endpoint.h"
+-#include "third_party/libjingle/source/talk/base/asyncpacketsocket.h"
+-#include "third_party/libjingle/source/talk/base/packetsocketfactory.h"
++#include <talk/base/asyncpacketsocket.h>
++#include <talk/base/packetsocketfactory.h>
+ 
+ class MessageLoop;
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/jingle_glue_mock_objects.h.jingle chromium-20.0.1132.47/jingle/glue/jingle_glue_mock_objects.h
+--- chromium-20.0.1132.47/jingle/glue/jingle_glue_mock_objects.h.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/jingle_glue_mock_objects.h	2012-07-07 19:37:51.817006177 -0400
+@@ -6,7 +6,7 @@
+ #define JINGLE_GLUE_JINGLE_GLUE_MOCK_OBJECTS_H_
+ 
+ #include "testing/gmock/include/gmock/gmock.h"
+-#include "third_party/libjingle/source/talk/base/stream.h"
++#include <talk/base/stream.h>
+ 
+ namespace jingle_glue {
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/pseudotcp_adapter.h.jingle chromium-20.0.1132.47/jingle/glue/pseudotcp_adapter.h
+--- chromium-20.0.1132.47/jingle/glue/pseudotcp_adapter.h.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/pseudotcp_adapter.h	2012-07-07 19:37:51.817006177 -0400
+@@ -13,7 +13,7 @@
+ #include "base/threading/non_thread_safe.h"
+ #include "net/base/net_log.h"
+ #include "net/socket/stream_socket.h"
+-#include "third_party/libjingle/source/talk/p2p/base/pseudotcp.h"
++#include <talk/p2p/base/pseudotcp.h>
+ 
+ namespace jingle_glue {
+ 
+diff -up chromium-20.0.1132.47/jingle/glue/utils.cc.jingle chromium-20.0.1132.47/jingle/glue/utils.cc
+--- chromium-20.0.1132.47/jingle/glue/utils.cc.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/glue/utils.cc	2012-07-07 19:37:51.817006177 -0400
+@@ -11,9 +11,9 @@
+ #include "base/values.h"
+ #include "net/base/ip_endpoint.h"
+ #include "net/base/net_util.h"
+-#include "third_party/libjingle/source/talk/base/byteorder.h"
+-#include "third_party/libjingle/source/talk/base/socketaddress.h"
+-#include "third_party/libjingle/source/talk/p2p/base/candidate.h"
++#include <talk/base/byteorder.h>
++#include <talk/base/socketaddress.h>
++#include <talk/p2p/base/candidate.h>
+ 
+ namespace jingle_glue {
+ 
+diff -up chromium-20.0.1132.47/jingle/jingle.gyp.jingle chromium-20.0.1132.47/jingle/jingle.gyp
+--- chromium-20.0.1132.47/jingle/jingle.gyp.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/jingle.gyp	2012-07-07 19:37:51.818006177 -0400
+@@ -25,12 +25,10 @@
+         '../base/base.gyp:base',
+         '../base/third_party/dynamic_annotations/dynamic_annotations.gyp:dynamic_annotations',
+         '../net/net.gyp:net',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
+-        '../third_party/libjingle/libjingle.gyp:libjingle_p2p',
++        '../build/linux/system.gyp:jingle',
+       ],
+       'export_dependent_settings': [
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
+-        '../third_party/libjingle/libjingle.gyp:libjingle_p2p',
++        '../build/linux/system.gyp:jingle',
+       ],
+     },
+     # A library for sending and receiving peer-issued notifications.
+@@ -107,10 +105,10 @@
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../net/net.gyp:net',
+         '../third_party/expat/expat.gyp:expat',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+       ],
+       'export_dependent_settings': [
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+       ],
+       'conditions': [
+         ['toolkit_uses_gtk == 1', {
+@@ -199,7 +197,7 @@
+         '../net/net.gyp:net_test_support',
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+       ],
+     },
+   ],
+diff -up chromium-20.0.1132.47/jingle/notifier/base/chrome_async_socket.h.jingle chromium-20.0.1132.47/jingle/notifier/base/chrome_async_socket.h
+--- chromium-20.0.1132.47/jingle/notifier/base/chrome_async_socket.h.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/notifier/base/chrome_async_socket.h	2012-07-07 19:37:51.818006177 -0400
+@@ -7,6 +7,8 @@
+ #ifndef JINGLE_NOTIFIER_BASE_CHROME_ASYNC_SOCKET_H_
+ #define JINGLE_NOTIFIER_BASE_CHROME_ASYNC_SOCKET_H_
+ 
++#include <talk/config.h>
++
+ #if !defined(FEATURE_ENABLE_SSL)
+ #error ChromeAsyncSocket expects FEATURE_ENABLE_SSL to be defined
+ #endif
+diff -up chromium-20.0.1132.47/jingle/notifier/communicator/login_settings.h.jingle chromium-20.0.1132.47/jingle/notifier/communicator/login_settings.h
+--- chromium-20.0.1132.47/jingle/notifier/communicator/login_settings.h.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/notifier/communicator/login_settings.h	2012-07-07 19:37:51.819006177 -0400
+@@ -10,6 +10,7 @@
+ #include "jingle/notifier/base/server_information.h"
+ #include "jingle/notifier/communicator/xmpp_connection_generator.h"
+ #include "net/url_request/url_request_context_getter.h"
++#include <talk/base/scoped_ptr.h>
+ 
+ namespace buzz {
+ class XmppClientSettings;
+@@ -68,10 +69,10 @@ class LoginSettings {
+   scoped_refptr<net::URLRequestContextGetter> request_context_getter_;
+   const ServerList servers_;
+   // Used to handle redirects
+-  scoped_ptr<ServerInformation> server_override_;
++  talk_base::scoped_ptr<ServerInformation> server_override_;
+ 
+-  scoped_ptr<buzz::XmppClientSettings> user_settings_;
+-  scoped_ptr<ConnectionOptions> connection_options_;
++  talk_base::scoped_ptr<buzz::XmppClientSettings> user_settings_;
++  talk_base::scoped_ptr<ConnectionOptions> connection_options_;
+   std::string auth_mechanism_;
+ 
+   DISALLOW_COPY_AND_ASSIGN(LoginSettings);
+diff -up chromium-20.0.1132.47/jingle/notifier/communicator/xmpp_connection_generator.cc.jingle chromium-20.0.1132.47/jingle/notifier/communicator/xmpp_connection_generator.cc
+--- chromium-20.0.1132.47/jingle/notifier/communicator/xmpp_connection_generator.cc.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/notifier/communicator/xmpp_connection_generator.cc	2012-07-07 19:37:51.819006177 -0400
+@@ -24,6 +24,7 @@
+ #include "jingle/notifier/communicator/connection_settings.h"
+ #include "net/base/net_errors.h"
+ #include "net/base/sys_addrinfo.h"
++#include <talk/base/byteorder.h>
+ #include "talk/base/httpcommon-inl.h"
+ #include "talk/base/task.h"
+ #include "talk/base/thread.h"
+diff -up chromium-20.0.1132.47/jingle/notifier/listener/push_notifications_subscribe_task.cc.jingle chromium-20.0.1132.47/jingle/notifier/listener/push_notifications_subscribe_task.cc
+--- chromium-20.0.1132.47/jingle/notifier/listener/push_notifications_subscribe_task.cc.jingle	2012-06-28 09:01:48.000000000 -0400
++++ chromium-20.0.1132.47/jingle/notifier/listener/push_notifications_subscribe_task.cc	2012-07-07 19:37:51.820006177 -0400
+@@ -40,7 +40,7 @@ bool PushNotificationsSubscribeTask::Han
+ 
+ int PushNotificationsSubscribeTask::ProcessStart() {
+   VLOG(1) << "Push notifications: Subscription task started.";
+-  scoped_ptr<buzz::XmlElement> iq_stanza(
++  talk_base::scoped_ptr<buzz::XmlElement> iq_stanza(
+       MakeSubscriptionMessage(subscriptions_, GetClient()->jid(),
+                               task_id()));
+   std::string stanza_str = XmlElementToString(*iq_stanza.get());
+diff -up chromium-20.0.1132.47/remoting/client/plugin/pepper_network_manager.h.jingle chromium-20.0.1132.47/remoting/client/plugin/pepper_network_manager.h
+--- chromium-20.0.1132.47/remoting/client/plugin/pepper_network_manager.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/client/plugin/pepper_network_manager.h	2012-07-07 19:37:51.820006177 -0400
+@@ -9,7 +9,7 @@
+ #include "base/memory/weak_ptr.h"
+ #include "ppapi/cpp/instance_handle.h"
+ #include "ppapi/cpp/private/network_monitor_private.h"
+-#include "third_party/libjingle/source/talk/base/network.h"
++#include <talk/base/network.h>
+ 
+ namespace pp {
+ class NetworkListPrivate;
+diff -up chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.cc.jingle chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.cc
+--- chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.cc	2012-07-07 19:37:51.821006177 -0400
+@@ -10,7 +10,7 @@
+ #include "ppapi/cpp/private/net_address_private.h"
+ #include "ppapi/cpp/private/udp_socket_private.h"
+ #include "remoting/client/plugin/pepper_util.h"
+-#include "third_party/libjingle/source/talk/base/asyncpacketsocket.h"
++#include <talk/base/asyncpacketsocket.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.h.jingle chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.h
+--- chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/client/plugin/pepper_packet_socket_factory.h	2012-07-07 19:37:51.821006177 -0400
+@@ -7,7 +7,7 @@
+ 
+ #include "base/compiler_specific.h"
+ #include "ppapi/cpp/instance_handle.h"
+-#include "third_party/libjingle/source/talk/base/packetsocketfactory.h"
++#include <talk/base/packetsocketfactory.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/client/plugin/pepper_port_allocator.h.jingle chromium-20.0.1132.47/remoting/client/plugin/pepper_port_allocator.h
+--- chromium-20.0.1132.47/remoting/client/plugin/pepper_port_allocator.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/client/plugin/pepper_port_allocator.h	2012-07-07 19:37:51.821006177 -0400
+@@ -8,7 +8,7 @@
+ #include "base/compiler_specific.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "ppapi/cpp/instance_handle.h"
+-#include "third_party/libjingle/source/talk/p2p/client/httpportallocator.h"
++#include <talk/p2p/client/httpportallocator.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/host/heartbeat_sender.cc.jingle chromium-20.0.1132.47/remoting/host/heartbeat_sender.cc
+--- chromium-20.0.1132.47/remoting/host/heartbeat_sender.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/heartbeat_sender.cc	2012-07-07 19:37:51.822006177 -0400
+@@ -17,8 +17,8 @@
+ #include "remoting/jingle_glue/iq_sender.h"
+ #include "remoting/jingle_glue/jingle_thread.h"
+ #include "remoting/jingle_glue/signal_strategy.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/host/heartbeat_sender_unittest.cc.jingle chromium-20.0.1132.47/remoting/host/heartbeat_sender_unittest.cc
+--- chromium-20.0.1132.47/remoting/host/heartbeat_sender_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/heartbeat_sender_unittest.cc	2012-07-07 19:37:51.822006177 -0400
+@@ -17,8 +17,8 @@
+ #include "remoting/jingle_glue/mock_objects.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/host/host_port_allocator.cc.jingle chromium-20.0.1132.47/remoting/host/host_port_allocator.cc
+--- chromium-20.0.1132.47/remoting/host/host_port_allocator.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/host_port_allocator.cc	2012-07-07 19:37:51.823006177 -0400
+@@ -11,7 +11,7 @@
+ #include "net/http/http_status_code.h"
+ #include "net/url_request/url_request_context_getter.h"
+ #include "remoting/host/network_settings.h"
+-#include "third_party/libjingle/source/talk/base/basicpacketsocketfactory.h"
++#include <talk/base/basicpacketsocketfactory.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/host/host_port_allocator.h.jingle chromium-20.0.1132.47/remoting/host/host_port_allocator.h
+--- chromium-20.0.1132.47/remoting/host/host_port_allocator.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/host_port_allocator.h	2012-07-07 19:37:51.823006177 -0400
+@@ -9,7 +9,7 @@
+ 
+ #include "base/memory/scoped_ptr.h"
+ #include "remoting/host/url_fetcher.h"
+-#include "third_party/libjingle/source/talk/p2p/client/httpportallocator.h"
++#include <talk/p2p/client/httpportallocator.h>
+ 
+ namespace net {
+ class URLRequestContextGetter;
+diff -up chromium-20.0.1132.47/remoting/host/log_to_server.cc.jingle chromium-20.0.1132.47/remoting/host/log_to_server.cc
+--- chromium-20.0.1132.47/remoting/host/log_to_server.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/log_to_server.cc	2012-07-07 19:37:51.823006177 -0400
+@@ -13,8 +13,8 @@
+ #include "remoting/jingle_glue/jingle_thread.h"
+ #include "remoting/jingle_glue/signal_strategy.h"
+ #include "remoting/protocol/transport.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/host/log_to_server_unittest.cc.jingle chromium-20.0.1132.47/remoting/host/log_to_server_unittest.cc
+--- chromium-20.0.1132.47/remoting/host/log_to_server_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/log_to_server_unittest.cc	2012-07-07 19:37:51.824006177 -0400
+@@ -9,7 +9,7 @@
+ #include "testing/gmock_mutant.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using testing::_;
+ using testing::DeleteArg;
+diff -up chromium-20.0.1132.47/remoting/host/register_support_host_request.cc.jingle chromium-20.0.1132.47/remoting/host/register_support_host_request.cc
+--- chromium-20.0.1132.47/remoting/host/register_support_host_request.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/register_support_host_request.cc	2012-07-07 19:37:51.824006177 -0400
+@@ -14,8 +14,8 @@
+ #include "remoting/jingle_glue/iq_sender.h"
+ #include "remoting/jingle_glue/jingle_thread.h"
+ #include "remoting/jingle_glue/signal_strategy.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/host/register_support_host_request_unittest.cc.jingle chromium-20.0.1132.47/remoting/host/register_support_host_request_unittest.cc
+--- chromium-20.0.1132.47/remoting/host/register_support_host_request_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/register_support_host_request_unittest.cc	2012-07-07 19:37:51.825006177 -0400
+@@ -17,8 +17,8 @@
+ #include "remoting/jingle_glue/mock_objects.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/host/server_log_entry.cc.jingle chromium-20.0.1132.47/remoting/host/server_log_entry.cc
+--- chromium-20.0.1132.47/remoting/host/server_log_entry.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/server_log_entry.cc	2012-07-07 19:37:51.825006177 -0400
+@@ -7,7 +7,7 @@
+ #include "base/sys_info.h"
+ #include "remoting/base/constants.h"
+ #include "remoting/protocol/session.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using base::SysInfo;
+ using buzz::QName;
+diff -up chromium-20.0.1132.47/remoting/host/server_log_entry_unittest.cc.jingle chromium-20.0.1132.47/remoting/host/server_log_entry_unittest.cc
+--- chromium-20.0.1132.47/remoting/host/server_log_entry_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/host/server_log_entry_unittest.cc	2012-07-07 19:37:51.825006177 -0400
+@@ -5,7 +5,7 @@
+ #include "base/memory/scoped_ptr.h"
+ #include "remoting/host/server_log_entry.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using buzz::XmlAttr;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/fake_signal_strategy.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/fake_signal_strategy.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/fake_signal_strategy.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/fake_signal_strategy.cc	2012-07-07 19:37:51.826006177 -0400
+@@ -9,8 +9,8 @@
+ #include "base/message_loop.h"
+ #include "base/stl_util.h"
+ #include "base/string_number_conversions.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/iq_sender.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/iq_sender.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/iq_sender.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/iq_sender.cc	2012-07-07 19:37:51.826006177 -0400
+@@ -12,8 +12,8 @@
+ #include "base/string_number_conversions.h"
+ #include "base/time.h"
+ #include "remoting/jingle_glue/signal_strategy.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/iq_sender_unittest.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/iq_sender_unittest.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/iq_sender_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/iq_sender_unittest.cc	2012-07-07 19:37:51.826006177 -0400
+@@ -10,8 +10,8 @@
+ #include "remoting/jingle_glue/mock_objects.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ using ::testing::_;
+ using ::testing::DeleteArg;
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/javascript_signal_strategy.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/javascript_signal_strategy.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/javascript_signal_strategy.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/javascript_signal_strategy.cc	2012-07-07 19:37:51.827006177 -0400
+@@ -9,7 +9,7 @@
+ #include "base/logging.h"
+ #include "base/string_number_conversions.h"
+ #include "remoting/jingle_glue/xmpp_proxy.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.cc	2012-07-07 19:37:51.827006177 -0400
+@@ -10,9 +10,9 @@
+ #include "base/string_number_conversions.h"
+ #include "net/base/net_util.h"
+ #include "remoting/jingle_glue/iq_sender.h"
+-#include "third_party/libjingle/source/talk/base/socketaddress.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/base/socketaddress.h>
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.h.jingle chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.h
+--- chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/jingle_info_request.h	2012-07-07 19:37:51.828006177 -0400
+@@ -13,7 +13,7 @@
+ #include "base/callback.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "remoting/jingle_glue/iq_sender.h"
+-#include "third_party/libjingle/source/talk/base/sigslot.h"
++#include <talk/base/sigslot.h>
+ 
+ namespace buzz {
+ class XmlElement;
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.cc	2012-07-07 19:37:51.829006177 -0400
+@@ -9,7 +9,7 @@
+ #include "base/message_loop_proxy.h"
+ #include "base/message_pump.h"
+ #include "base/time.h"
+-#include "third_party/libjingle/source/talk/base/ssladapter.h"
++#include <talk/base/ssladapter.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.h.jingle chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.h
+--- chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/jingle_thread.h	2012-07-07 19:38:47.366014814 -0400
+@@ -10,7 +10,7 @@
+ #include "base/synchronization/waitable_event.h"
+ #include "third_party/libjingle/overrides/talk/base/messagequeue.h"
+ #include "third_party/libjingle/overrides/talk/base/thread.h"
+-#include "third_party/libjingle/source/talk/base/taskrunner.h"
++#include <talk/base/taskrunner.h>
+ 
+ namespace base {
+ class MessageLoopProxy;
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/mock_objects.h.jingle chromium-20.0.1132.47/remoting/jingle_glue/mock_objects.h
+--- chromium-20.0.1132.47/remoting/jingle_glue/mock_objects.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/mock_objects.h	2012-07-07 19:37:51.914006151 -0400
+@@ -6,7 +6,7 @@
+ #include "remoting/jingle_glue/iq_sender.h"
+ #include "remoting/jingle_glue/signal_strategy.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/ssl_socket_adapter.h.jingle chromium-20.0.1132.47/remoting/jingle_glue/ssl_socket_adapter.h
+--- chromium-20.0.1132.47/remoting/jingle_glue/ssl_socket_adapter.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/ssl_socket_adapter.h	2012-07-07 19:37:51.915006161 -0400
+@@ -12,8 +12,8 @@
+ #include "net/base/net_log.h"
+ #include "net/socket/ssl_client_socket.h"
+ #include "net/socket/stream_socket.h"
+-#include "third_party/libjingle/source/talk/base/asyncsocket.h"
+-#include "third_party/libjingle/source/talk/base/ssladapter.h"
++#include <talk/base/asyncsocket.h>
++#include <talk/base/ssladapter.h>
+ 
+ namespace net {
+ class CertVerifier;
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.cc	2012-07-07 19:37:51.916006177 -0400
+@@ -8,9 +8,9 @@
+ #include "jingle/notifier/base/gaia_token_pre_xmpp_auth.h"
+ #include "remoting/jingle_glue/jingle_thread.h"
+ #include "remoting/jingle_glue/xmpp_socket_adapter.h"
+-#include "third_party/libjingle/source/talk/base/asyncsocket.h"
+-#include "third_party/libjingle/source/talk/xmpp/prexmppauth.h"
+-#include "third_party/libjingle/source/talk/xmpp/saslcookiemechanism.h"
++#include <talk/base/asyncsocket.h>
++#include <talk/xmpp/prexmppauth.h>
++#include <talk/xmpp/saslcookiemechanism.h>
+ 
+ namespace {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.h.jingle chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.h
+--- chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/xmpp_signal_strategy.h	2012-07-07 19:37:51.917006185 -0400
+@@ -18,8 +18,8 @@
+ #include "base/observer_list.h"
+ #include "base/timer.h"
+ #include "base/threading/non_thread_safe.h"
+-#include "third_party/libjingle/source/talk/base/sigslot.h"
+-#include "third_party/libjingle/source/talk/xmpp/xmppclient.h"
++#include <talk/base/sigslot.h>
++#include <talk/xmpp/xmppclient.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.cc.jingle chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.cc
+--- chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.cc	2012-07-07 19:39:22.619981706 -0400
+@@ -10,12 +10,12 @@
+ #include "base/logging.h"
+ #include "remoting/jingle_glue/ssl_adapter.h"
+ #include "third_party/libjingle/overrides/talk/base/thread.h"
+-#include "third_party/libjingle/source/talk/base/byteorder.h"
+-#include "third_party/libjingle/source/talk/base/common.h"
+-#include "third_party/libjingle/source/talk/base/firewallsocketserver.h"
+-#include "third_party/libjingle/source/talk/base/socketadapters.h"
+-#include "third_party/libjingle/source/talk/base/ssladapter.h"
+-#include "third_party/libjingle/source/talk/xmpp/xmppengine.h"
++#include <talk/base/byteorder.h>
++#include <talk/base/common.h>
++#include <talk/base/firewallsocketserver.h>
++#include <talk/base/socketadapters.h>
++#include <talk/base/ssladapter.h>
++#include <talk/xmpp/xmppengine.h>
+ 
+ namespace remoting {
+ 
+diff -up chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.h.jingle chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.h
+--- chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/jingle_glue/xmpp_socket_adapter.h	2012-07-07 19:37:51.919006180 -0400
+@@ -9,10 +9,10 @@
+ 
+ #include "base/basictypes.h"
+ #include "base/compiler_specific.h"
+-#include "third_party/libjingle/source/talk/base/asyncsocket.h"
+-#include "third_party/libjingle/source/talk/xmpp/asyncsocket.h"
+-#include "third_party/libjingle/source/talk/xmpp/xmppclientsettings.h"
+-#include "third_party/libjingle/source/talk/xmpp/xmppengine.h"
++#include <talk/base/asyncsocket.h>
++#include <talk/xmpp/asyncsocket.h>
++#include <talk/xmpp/xmppclientsettings.h>
++#include <talk/xmpp/xmppengine.h>
+ 
+ #ifndef _WIN32
+ // Additional errors used by us from Win32 headers.
+diff -up chromium-20.0.1132.47/remoting/protocol/authenticator.cc.jingle chromium-20.0.1132.47/remoting/protocol/authenticator.cc
+--- chromium-20.0.1132.47/remoting/protocol/authenticator.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/authenticator.cc	2012-07-07 19:37:51.920006178 -0400
+@@ -5,7 +5,7 @@
+ #include "remoting/protocol/authenticator.h"
+ 
+ #include "remoting/base/constants.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ namespace remoting {
+ namespace protocol {
+diff -up chromium-20.0.1132.47/remoting/protocol/authenticator_test_base.cc.jingle chromium-20.0.1132.47/remoting/protocol/authenticator_test_base.cc
+--- chromium-20.0.1132.47/remoting/protocol/authenticator_test_base.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/authenticator_test_base.cc	2012-07-07 19:37:51.921006176 -0400
+@@ -13,7 +13,7 @@
+ #include "remoting/protocol/channel_authenticator.h"
+ #include "remoting/protocol/fake_session.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using testing::_;
+ using testing::SaveArg;
+diff -up chromium-20.0.1132.47/remoting/protocol/content_description.cc.jingle chromium-20.0.1132.47/remoting/protocol/content_description.cc
+--- chromium-20.0.1132.47/remoting/protocol/content_description.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/content_description.cc	2012-07-07 19:37:51.922006175 -0400
+@@ -8,7 +8,7 @@
+ #include "base/string_number_conversions.h"
+ #include "remoting/base/constants.h"
+ #include "remoting/protocol/authenticator.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/protocol/content_description.h.jingle chromium-20.0.1132.47/remoting/protocol/content_description.h
+--- chromium-20.0.1132.47/remoting/protocol/content_description.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/content_description.h	2012-07-07 19:37:51.923006175 -0400
+@@ -10,7 +10,7 @@
+ #include "base/memory/scoped_ptr.h"
+ #include "base/memory/ref_counted.h"
+ #include "remoting/protocol/session_config.h"
+-#include "third_party/libjingle/source/talk/p2p/base/sessiondescription.h"
++#include <talk/p2p/base/sessiondescription.h>
+ 
+ namespace buzz {
+ class XmlElement;
+diff -up chromium-20.0.1132.47/remoting/protocol/fake_authenticator.cc.jingle chromium-20.0.1132.47/remoting/protocol/fake_authenticator.cc
+--- chromium-20.0.1132.47/remoting/protocol/fake_authenticator.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/fake_authenticator.cc	2012-07-07 19:37:51.924006176 -0400
+@@ -10,7 +10,7 @@
+ #include "net/socket/stream_socket.h"
+ #include "remoting/base/constants.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ namespace remoting {
+ namespace protocol {
+diff -up chromium-20.0.1132.47/remoting/protocol/jingle_messages.cc.jingle chromium-20.0.1132.47/remoting/protocol/jingle_messages.cc
+--- chromium-20.0.1132.47/remoting/protocol/jingle_messages.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/jingle_messages.cc	2012-07-07 19:37:51.925006177 -0400
+@@ -8,7 +8,7 @@
+ #include "base/string_number_conversions.h"
+ #include "remoting/base/constants.h"
+ #include "remoting/protocol/content_description.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/protocol/jingle_messages.h.jingle chromium-20.0.1132.47/remoting/protocol/jingle_messages.h
+--- chromium-20.0.1132.47/remoting/protocol/jingle_messages.h.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/jingle_messages.h	2012-07-07 19:37:51.925006177 -0400
+@@ -9,8 +9,8 @@
+ #include <string>
+ 
+ #include "base/memory/scoped_ptr.h"
+-#include "third_party/libjingle/source/talk/p2p/base/candidate.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/p2p/base/candidate.h>
++#include <talk/xmllite/xmlelement.h>
+ 
+ 
+ namespace remoting {
+diff -up chromium-20.0.1132.47/remoting/protocol/jingle_messages_unittest.cc.jingle chromium-20.0.1132.47/remoting/protocol/jingle_messages_unittest.cc
+--- chromium-20.0.1132.47/remoting/protocol/jingle_messages_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/jingle_messages_unittest.cc	2012-07-07 19:37:51.926006177 -0400
+@@ -7,8 +7,8 @@
+ #include "base/logging.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
+-#include "third_party/libjingle/source/talk/xmpp/constants.h"
++#include <talk/xmllite/xmlelement.h>
++#include <talk/xmpp/constants.h>
+ 
+ using buzz::QName;
+ using buzz::XmlAttr;
+diff -up chromium-20.0.1132.47/remoting/protocol/jingle_session.cc.jingle chromium-20.0.1132.47/remoting/protocol/jingle_session.cc
+--- chromium-20.0.1132.47/remoting/protocol/jingle_session.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/jingle_session.cc	2012-07-07 19:37:51.928006177 -0400
+@@ -17,8 +17,8 @@
+ #include "remoting/protocol/jingle_messages.h"
+ #include "remoting/protocol/jingle_session_manager.h"
+ #include "remoting/protocol/session_config.h"
+-#include "third_party/libjingle/source/talk/p2p/base/candidate.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/p2p/base/candidate.h>
++#include <talk/xmllite/xmlelement.h>
+ 
+ using buzz::XmlElement;
+ 
+diff -up chromium-20.0.1132.47/remoting/protocol/jingle_session_manager.cc.jingle chromium-20.0.1132.47/remoting/protocol/jingle_session_manager.cc
+--- chromium-20.0.1132.47/remoting/protocol/jingle_session_manager.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/jingle_session_manager.cc	2012-07-07 19:37:51.928006177 -0400
+@@ -14,8 +14,8 @@
+ #include "remoting/protocol/jingle_session.h"
+ #include "remoting/protocol/transport.h"
+ #include "remoting/protocol/transport_config.h"
+-#include "third_party/libjingle/source/talk/base/socketaddress.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/base/socketaddress.h>
++#include <talk/xmllite/xmlelement.h>
+ 
+ using buzz::QName;
+ 
+diff -up chromium-20.0.1132.47/remoting/protocol/libjingle_transport_factory.cc.jingle chromium-20.0.1132.47/remoting/protocol/libjingle_transport_factory.cc
+--- chromium-20.0.1132.47/remoting/protocol/libjingle_transport_factory.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/libjingle_transport_factory.cc	2012-07-07 19:37:51.929006177 -0400
+@@ -12,11 +12,11 @@
+ #include "remoting/base/constants.h"
+ #include "remoting/protocol/channel_authenticator.h"
+ #include "remoting/protocol/transport_config.h"
+-#include "third_party/libjingle/source/talk/base/basicpacketsocketfactory.h"
+-#include "third_party/libjingle/source/talk/base/network.h"
+-#include "third_party/libjingle/source/talk/p2p/base/p2ptransportchannel.h"
+-#include "third_party/libjingle/source/talk/p2p/client/basicportallocator.h"
+-#include "third_party/libjingle/source/talk/p2p/client/httpportallocator.h"
++#include <talk/base/basicpacketsocketfactory.h>
++#include <talk/base/network.h>
++#include <talk/p2p/base/p2ptransportchannel.h>
++#include <talk/p2p/client/basicportallocator.h>
++#include <talk/p2p/client/httpportallocator.h>
+ 
+ namespace remoting {
+ namespace protocol {
+diff -up chromium-20.0.1132.47/remoting/protocol/me2me_host_authenticator_factory.cc.jingle chromium-20.0.1132.47/remoting/protocol/me2me_host_authenticator_factory.cc
+--- chromium-20.0.1132.47/remoting/protocol/me2me_host_authenticator_factory.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/me2me_host_authenticator_factory.cc	2012-07-07 19:37:51.930006177 -0400
+@@ -10,7 +10,7 @@
+ #include "remoting/protocol/channel_authenticator.h"
+ #include "remoting/protocol/negotiating_authenticator.h"
+ #include "remoting/protocol/v1_authenticator.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ namespace remoting {
+ namespace protocol {
+diff -up chromium-20.0.1132.47/remoting/protocol/message_decoder.cc.jingle chromium-20.0.1132.47/remoting/protocol/message_decoder.cc
+--- chromium-20.0.1132.47/remoting/protocol/message_decoder.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/message_decoder.cc	2012-07-07 19:37:51.931006177 -0400
+@@ -8,7 +8,7 @@
+ #include "net/base/io_buffer.h"
+ #include "remoting/base/compound_buffer.h"
+ #include "remoting/proto/internal.pb.h"
+-#include "third_party/libjingle/source/talk/base/byteorder.h"
++#include <talk/base/byteorder.h>
+ 
+ namespace remoting {
+ namespace protocol {
+diff -up chromium-20.0.1132.47/remoting/protocol/message_reader_unittest.cc.jingle chromium-20.0.1132.47/remoting/protocol/message_reader_unittest.cc
+--- chromium-20.0.1132.47/remoting/protocol/message_reader_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/message_reader_unittest.cc	2012-07-07 19:37:51.931006177 -0400
+@@ -16,7 +16,7 @@
+ #include "remoting/protocol/message_reader.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+-#include "third_party/libjingle/source/talk/base/byteorder.h"
++#include <talk/base/byteorder.h>
+ 
+ using testing::_;
+ using testing::DoAll;
+diff -up chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator.cc.jingle chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator.cc
+--- chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator.cc	2012-07-07 19:37:51.932006177 -0400
+@@ -12,7 +12,7 @@
+ #include "crypto/rsa_private_key.h"
+ #include "remoting/protocol/channel_authenticator.h"
+ #include "remoting/protocol/v2_authenticator.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ namespace remoting {
+ namespace protocol {
+diff -up chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator_unittest.cc.jingle chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator_unittest.cc
+--- chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/negotiating_authenticator_unittest.cc	2012-07-07 19:37:51.932006177 -0400
+@@ -11,7 +11,7 @@
+ #include "remoting/protocol/connection_tester.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using testing::_;
+ using testing::DeleteArg;
+diff -up chromium-20.0.1132.47/remoting/protocol/pepper_transport_factory.cc.jingle chromium-20.0.1132.47/remoting/protocol/pepper_transport_factory.cc
+--- chromium-20.0.1132.47/remoting/protocol/pepper_transport_factory.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/pepper_transport_factory.cc	2012-07-07 19:37:51.933006177 -0400
+@@ -19,7 +19,7 @@
+ #include "remoting/protocol/channel_authenticator.h"
+ #include "remoting/protocol/pepper_transport_socket_adapter.h"
+ #include "remoting/protocol/transport_config.h"
+-#include "third_party/libjingle/source/talk/p2p/base/candidate.h"
++#include <talk/p2p/base/candidate.h>
+ 
+ namespace remoting {
+ namespace protocol {
+diff -up chromium-20.0.1132.47/remoting/protocol/rtp_utils.cc.jingle chromium-20.0.1132.47/remoting/protocol/rtp_utils.cc
+--- chromium-20.0.1132.47/remoting/protocol/rtp_utils.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/rtp_utils.cc	2012-07-07 19:37:51.934006177 -0400
+@@ -5,7 +5,7 @@
+ #include "remoting/protocol/rtp_utils.h"
+ 
+ #include "base/logging.h"
+-#include "third_party/libjingle/source/talk/base/byteorder.h"
++#include <talk/base/byteorder.h>
+ 
+ using talk_base::GetBE16;
+ using talk_base::GetBE32;
+diff -up chromium-20.0.1132.47/remoting/protocol/ssl_hmac_channel_authenticator_unittest.cc.jingle chromium-20.0.1132.47/remoting/protocol/ssl_hmac_channel_authenticator_unittest.cc
+--- chromium-20.0.1132.47/remoting/protocol/ssl_hmac_channel_authenticator_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/ssl_hmac_channel_authenticator_unittest.cc	2012-07-07 19:37:51.934006177 -0400
+@@ -16,7 +16,7 @@
+ #include "remoting/protocol/fake_session.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using testing::_;
+ using testing::NotNull;
+diff -up chromium-20.0.1132.47/remoting/protocol/util.cc.jingle chromium-20.0.1132.47/remoting/protocol/util.cc
+--- chromium-20.0.1132.47/remoting/protocol/util.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/util.cc	2012-07-07 19:37:51.935006177 -0400
+@@ -8,7 +8,7 @@
+ #include "base/hash_tables.h"
+ #include "base/logging.h"
+ #include "net/base/io_buffer.h"
+-#include "third_party/libjingle/source/talk/base/byteorder.h"
++#include <talk/base/byteorder.h>
+ 
+ namespace {
+ 
+diff -up chromium-20.0.1132.47/remoting/protocol/v1_authenticator.cc.jingle chromium-20.0.1132.47/remoting/protocol/v1_authenticator.cc
+--- chromium-20.0.1132.47/remoting/protocol/v1_authenticator.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/v1_authenticator.cc	2012-07-07 19:37:51.935006177 -0400
+@@ -10,7 +10,7 @@
+ #include "remoting/base/constants.h"
+ #include "remoting/protocol/auth_util.h"
+ #include "remoting/protocol/ssl_hmac_channel_authenticator.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using buzz::QName;
+ using buzz::XmlElement;
+diff -up chromium-20.0.1132.47/remoting/protocol/v1_authenticator_unittest.cc.jingle chromium-20.0.1132.47/remoting/protocol/v1_authenticator_unittest.cc
+--- chromium-20.0.1132.47/remoting/protocol/v1_authenticator_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/v1_authenticator_unittest.cc	2012-07-07 19:37:51.936006177 -0400
+@@ -13,7 +13,7 @@
+ #include "remoting/protocol/fake_session.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using testing::_;
+ using testing::DeleteArg;
+diff -up chromium-20.0.1132.47/remoting/protocol/v2_authenticator.cc.jingle chromium-20.0.1132.47/remoting/protocol/v2_authenticator.cc
+--- chromium-20.0.1132.47/remoting/protocol/v2_authenticator.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/v2_authenticator.cc	2012-07-07 19:37:51.936006177 -0400
+@@ -9,7 +9,7 @@
+ #include "crypto/rsa_private_key.h"
+ #include "remoting/base/constants.h"
+ #include "remoting/protocol/ssl_hmac_channel_authenticator.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using crypto::P224EncryptedKeyExchange;
+ 
+diff -up chromium-20.0.1132.47/remoting/protocol/v2_authenticator_unittest.cc.jingle chromium-20.0.1132.47/remoting/protocol/v2_authenticator_unittest.cc
+--- chromium-20.0.1132.47/remoting/protocol/v2_authenticator_unittest.cc.jingle	2012-06-28 09:01:11.000000000 -0400
++++ chromium-20.0.1132.47/remoting/protocol/v2_authenticator_unittest.cc	2012-07-07 19:37:51.936006177 -0400
+@@ -11,7 +11,7 @@
+ #include "remoting/protocol/connection_tester.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/libjingle/source/talk/xmllite/xmlelement.h"
++#include <talk/xmllite/xmlelement.h>
+ 
+ using testing::_;
+ using testing::DeleteArg;
+diff -up chromium-20.0.1132.47/remoting/remoting.gyp.jingle chromium-20.0.1132.47/remoting/remoting.gyp
+--- chromium-20.0.1132.47/remoting/remoting.gyp.jingle	2012-06-28 09:01:12.000000000 -0400
++++ chromium-20.0.1132.47/remoting/remoting.gyp	2012-07-07 19:37:51.937006177 -0400
+@@ -1476,12 +1476,16 @@
+         '../base/base.gyp:base',
+         '../jingle/jingle.gyp:jingle_glue',
+         '../jingle/jingle.gyp:notifier',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
+-        '../third_party/libjingle/libjingle.gyp:libjingle_p2p',
++        '../build/linux/system.gyp:jingle',
++        '../build/linux/system.gyp:jinglep2p',
++        '../build/linux/system.gyp:jinglesessionphone',
++        '../build/linux/system.gyp:jinglesessiontunnel',
+       ],
+       'export_dependent_settings': [
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
+-        '../third_party/libjingle/libjingle.gyp:libjingle_p2p',
++        '../build/linux/system.gyp:jingle',
++        '../build/linux/system.gyp:jinglep2p',
++        '../build/linux/system.gyp:jinglesessionphone',
++        '../build/linux/system.gyp:jinglesessiontunnel',
+       ],
+       'sources': [
+         'jingle_glue/iq_sender.cc',
+diff -up chromium-20.0.1132.47/sync/sync.gyp.jingle chromium-20.0.1132.47/sync/sync.gyp
+--- chromium-20.0.1132.47/sync/sync.gyp.jingle	2012-06-28 09:01:28.000000000 -0400
++++ chromium-20.0.1132.47/sync/sync.gyp	2012-07-07 19:37:51.938006177 -0400
+@@ -198,7 +198,7 @@
+         '../base/base.gyp:base',
+         '../jingle/jingle.gyp:notifier',
+         '../third_party/cacheinvalidation/cacheinvalidation.gyp:cacheinvalidation',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+         'sync',
+       ],
+       'export_dependent_settings': [
+@@ -501,7 +501,7 @@
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+         '../third_party/cacheinvalidation/cacheinvalidation.gyp:cacheinvalidation',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+         'sync',
+         'sync_notifier',
+         'test_support_sync_notifier',
+@@ -515,7 +515,7 @@
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+         '../third_party/cacheinvalidation/cacheinvalidation.gyp:cacheinvalidation',
+-        '../third_party/libjingle/libjingle.gyp:libjingle',
++        '../build/linux/system.gyp:jingle',
+         'sync',
+         'sync_notifier',
+         'test_support_sync_notifier',

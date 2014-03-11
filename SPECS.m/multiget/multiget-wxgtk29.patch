@@ -1,0 +1,76 @@
+diff -ur multiget-svn20120118.orig/src/floatwin.cpp multiget-svn20120118/src/floatwin.cpp
+--- multiget-svn20120118.orig/src/floatwin.cpp	2012-01-18 07:18:05.000000000 -0500
++++ multiget-svn20120118/src/floatwin.cpp	2012-01-18 07:34:34.000000000 -0500
+@@ -68,7 +68,7 @@
+ 
+     wxCommandEvent event( mgEVT_URL_NOTICE, 1 );
+     event.SetString( url );
+-    m_pParent->AddPendingEvent( event );
++    m_pParent->GetEventHandler()->AddPendingEvent( event );
+ 
+ }
+ 
+diff -ur multiget-svn20120118.orig/src/listenpipe.cpp multiget-svn20120118/src/listenpipe.cpp
+--- multiget-svn20120118.orig/src/listenpipe.cpp	2012-01-18 07:18:05.000000000 -0500
++++ multiget-svn20120118/src/listenpipe.cpp	2012-01-18 07:34:45.000000000 -0500
+@@ -58,7 +58,7 @@
+ 
+         wxCommandEvent event( mgEVT_CMD_NOTICE, 1 );
+         event.SetString( wxString( buf, wxConvLocal ) );
+-        m_pParent->AddPendingEvent( event );
++        m_pParent->GetEventHandler()->AddPendingEvent( event );
+         fclose ( fp );
+         goto again;
+     }
+diff -ur multiget-svn20120118.orig/src/mgapp.cpp multiget-svn20120118/src/mgapp.cpp
+--- multiget-svn20120118.orig/src/mgapp.cpp	2012-01-18 07:18:05.000000000 -0500
++++ multiget-svn20120118/src/mgapp.cpp	2012-01-18 07:35:07.000000000 -0500
+@@ -299,5 +299,5 @@
+ {//seems can't catch this event?
+     wxCloseEvent post;
+     post.SetCanVeto( false );
+-    m_frame->AddPendingEvent( post );
++    m_frame->GetEventHandler()->AddPendingEvent( post );
+ }
+diff -ur multiget-svn20120118.orig/src/mgnewtaskdlg.cpp multiget-svn20120118/src/mgnewtaskdlg.cpp
+--- multiget-svn20120118.orig/src/mgnewtaskdlg.cpp	2012-01-18 07:18:05.000000000 -0500
++++ multiget-svn20120118/src/mgnewtaskdlg.cpp	2012-01-18 07:54:26.000000000 -0500
+@@ -839,9 +839,9 @@
+         //但是如果都等于缺省值就不重新构造地址
+ 
+         if (
+-            m_sUser.mb_str( wxConvLocal ) != "anonymous" ||
++            (const char*)m_sUser.mb_str( wxConvLocal ) != "anonymous" ||
+ //            m_sPass.mb_str( wxConvLocal ) != gDefFtpPass
+-				m_sPass.mb_str(wxConvLocal) != wxString::FromAscii(gDefFtpPass.c_str()).mb_str() //unicode patch
++				(const char*)m_sPass.mb_str(wxConvLocal) != (const char*)wxString::FromAscii(gDefFtpPass.c_str()).mb_str() //unicode patch
+         )
+         {
+             CUrlParser parser;
+diff -ur multiget-svn20120118.orig/src/mgsingletask.cpp multiget-svn20120118/src/mgsingletask.cpp
+--- multiget-svn20120118.orig/src/mgsingletask.cpp	2012-01-18 07:18:05.000000000 -0500
++++ multiget-svn20120118/src/mgsingletask.cpp	2012-01-18 07:55:15.000000000 -0500
+@@ -208,7 +208,7 @@
+     wxCommandEvent event( mgEVT_TASK_FINISH, m_nTaskID );
+     MainFrame *mainwin = ( MainFrame* ) ( wxGetApp().GetTopWindow() );
+ 
+-    mainwin->AddPendingEvent( event );
++    mainwin->GetEventHandler()->AddPendingEvent( event );
+     //wxPostEvent( mainwin, event );
+     pthread_mutex_unlock( &m_QuitMutex );
+ 
+diff -ur multiget-svn20120118.orig/src/propertydlg.cpp multiget-svn20120118/src/propertydlg.cpp
+--- multiget-svn20120118.orig/src/propertydlg.cpp	2012-01-18 07:18:05.000000000 -0500
++++ multiget-svn20120118/src/propertydlg.cpp	2012-01-18 07:56:37.000000000 -0500
+@@ -839,9 +839,9 @@
+         //但是如果都等于缺省值就不重新构造地址
+ 
+         if (
+-            m_sUser.mb_str( wxConvLocal ) != "anonymous" ||
++            (const char*)m_sUser.mb_str( wxConvLocal ) != "anonymous" ||
+             //m_sPass.mb_str( wxConvLocal ) != gDefFtpPass
+-				m_sPass.mb_str(wxConvLocal) != wxString::FromAscii( gDefFtpPass.c_str()).mb_str() //unicode patch
++				(const char*)m_sPass.mb_str(wxConvLocal) != (const char*)wxString::FromAscii( gDefFtpPass.c_str()).mb_str() //unicode patch
+         )
+         {
+             CUrlParser parser;

@@ -1,0 +1,13 @@
+Index: redhat-rpm-config-9.1.0/macros
+===================================================================
+--- redhat-rpm-config-9.1.0.orig/macros
++++ redhat-rpm-config-9.1.0/macros
+@@ -262,7 +262,7 @@ kernel_module_package_release	1
+ # actually set up the filtering bits 
+ %filter_setup %{expand: \
+ %global _use_internal_dependency_generator 0 \
+-%global __deploop() while read FILE; do /usr/lib/rpm/rpmdeps -%{1} ${FILE}; done | /bin/sort -u \
++%global __deploop() while read FILE; do echo "${FILE}" | /usr/lib/rpm/rpmdeps -%{1}; done | /bin/sort -u \
+ %global __find_provides /bin/sh -c "%{?__filter_prov_cmd} %{__deploop P} %{?__filter_from_prov}" \
+ %global __find_requires /bin/sh -c "%{?__filter_req_cmd}  %{__deploop R} %{?__filter_from_req}" \
+ }

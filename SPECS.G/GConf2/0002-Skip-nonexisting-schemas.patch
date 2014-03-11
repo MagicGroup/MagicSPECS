@@ -1,0 +1,57 @@
+From 120f116e608bc1f09cf65435333e40e00c6b8ad2 Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Thu, 19 Jan 2012 09:53:08 -0500
+Subject: [PATCH 2/3] Skip nonexisting schemas
+
+This can happen in practice, due to e.g. schemas being packaged
+in subpackages, while all the conversions are kept in a single
+file.
+---
+ gsettings/gsettings-data-convert.c |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+
+diff --git a/gsettings/gsettings-data-convert.c b/gsettings/gsettings-data-convert.c
+index 9b33700..595091e 100644
+--- a/gsettings/gsettings-data-convert.c
++++ b/gsettings/gsettings-data-convert.c
+@@ -65,6 +65,8 @@ handle_file (const gchar *filename)
+   gchar *str;
+   gint ii;
+   GSList *list, *l;
++  GSettingsSchemaSource *source;
++  GSettingsSchema *schema;
+   GSettings *settings;
+   GError *error;
+ 
+@@ -83,6 +85,7 @@ handle_file (const gchar *filename)
+     }
+ 
+   client = gconf_client_get_default ();
++  source = g_settings_schema_source_get_default ();
+ 
+   groups = g_key_file_get_groups (keyfile, NULL);
+   for (i = 0; groups[i]; i++)
+@@ -91,6 +94,20 @@ handle_file (const gchar *filename)
+ 
+       schema_path = g_strsplit (groups[i], ":", 2);
+ 
++      schema = g_settings_schema_source_lookup (source, schema_path[0], FALSE);
++      if (schema == NULL)
++        {
++          if (verbose)
++            {
++              g_print ("Schema '%s' not found, skipping\n", schema_path[0]);
++            }
++
++          g_strfreev (schema_path);
++          continue;
++        }
++
++      g_settings_schema_unref (schema);
++
+       if (verbose)
+         {
+           g_print ("Collecting settings for schema '%s'\n", schema_path[0]);
+-- 
+1.7.8.3
+

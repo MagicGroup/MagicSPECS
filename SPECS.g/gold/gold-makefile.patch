@@ -1,0 +1,101 @@
+--- Makefile.in	2010-05-05 22:44:37.000000000 +0100
++++ Makefile.in.new	2010-07-19 12:19:57.000000000 +0100
+@@ -66,6 +66,7 @@
+ libdir      = $(build_root)@libdir@
+ datadir     = $(build_root)@prefix@/data
+ siteperllibdir = $(build_root)@SITE_PERL_LIB_DIR@
++vendorperllibdir = $(build_root)@VENDOR_PERL_LIB_DIR@
+ logdir      = $(build_root)@LOG_DIR@
+ docdir      = $(build_root)@DOC_DIR@
+ DIST_DIR    = /software/dist/gold
+@@ -79,7 +80,7 @@
+ CGIBINS   = cgi-bin/prestatement.cgi cgi-bin/modify.cgi cgi-bin/create.cgi cgi-bin/delete.cgi cgi-bin/unknown.cgi cgi-bin/navbar.cgi cgi-bin/premodify.cgi cgi-bin/precreate.cgi cgi-bin/predeposit.cgi cgi-bin/refund.cgi cgi-bin/gold.cgi cgi-bin/adminAction.cgi cgi-bin/prerefund.cgi cgi-bin/undelete.cgi cgi-bin/login.cgi cgi-bin/withdraw.cgi cgi-bin/statement.cgi cgi-bin/deposit.cgi cgi-bin/transfer.cgi cgi-bin/prescreen.cgi cgi-bin/list.cgi cgi-bin/precharge.cgi cgi-bin/prewithdraw.cgi cgi-bin/selectAccount.cgi cgi-bin/status.cgi cgi-bin/balance.cgi cgi-bin/usage.cgi cgi-bin/pretransfer.cgi cgi-bin/welcome.cgi cgi-bin/index.cgi cgi-bin/logout.cgi
+ JAVASCRIPTS = cgi-bin/scripts/autosuggest.js cgi-bin/scripts/menus.js cgi-bin/scripts/sorttable.js
+ WRAPPERS    = bin/mybalance
+-SBINS       = sbin/goldd sbin/sqlite
++SBINS       = sbin/goldd
+ PERLLIBS    = lib/Gold.pm lib/Gold
+ CONFIGS     = etc/gold.conf etc/goldd.conf etc/goldg.conf
+ DOCS        = userguide
+@@ -134,53 +135,43 @@
+ test:
+ 
+ install:
+-	-mkdir -p $(build_root)$(prefix) && chown $(USER) $(build_root)$(prefix)
+-	-mkdir $(libdir) && chown $(USER) $(libdir)
+-	-mkdir $(libdir)/Gold && chown $(USER) $(libdir)/Gold && chmod 755 $(libdir)/Gold
+-	-mkdir $(sbindir) && chown $(USER) $(sbindir)
+-	-mkdir $(bindir) && chown $(USER) $(bindir)
+-	-mkdir $(sysconfdir) && chown $(USER) $(sysconfdir)
+-	-mkdir $(docdir) && chown $(USER) $(docdir)
+-	-mkdir $(logdir) && chown $(USER) $(logdir) && chmod 777 $(logdir)
+-	-[ "$(DB_TYPE)" = "SQLite" ] && mkdir $(datadir) && chown $(USER) $(datadir) && chmod 777 $(datadir)
+-	-@#mkdir $(mandir) && chown $(USER) $(mandir)
++	-mkdir -p $(DESTDIR)$(build_root)$(prefix)
++	-mkdir $(DESTDIR)$(libdir)
++	-mkdir $(DESTDIR)$(libdir)/Gold
++	-mkdir $(DESTDIR)$(sbindir)
++	-mkdir $(DESTDIR)$(bindir)
++	-mkdir $(DESTDIR)$(sysconfdir)
++	-mkdir $(DESTDIR)$(docdir)
++	-mkdir $(DESTDIR)$(logdir)
++	-[ "$(DB_TYPE)" = "SQLite" ] && mkdir $(DESTDIR)$(datadir)
++	-@#mkdir $(DESTDIR)$(mandir) && chown $(USER) $(DESTDIR)$(mandir)
+ 	for file in $(PERLLIBS); do \
+ 		basename=`echo $$file | sed -e 's#^.*/##'`; \
+-		(cp -r $$file $(@LIB_INSTALL_DIR@) && \
+-		cd $(@LIB_INSTALL_DIR@) && chown -R $(USER) $$basename && \
+-		chmod -R 755 $$basename); \
+-	done
+-	cp $(BINS) $(bindir) && \
+-		(cd $(bindir)/.. && chown $(USER) $(BINS) && chmod 4755 $(BINS))
+-	cp $(WRAPPERS) $(bindir) && \
+-		(cd $(bindir)/.. && chown $(USER) $(WRAPPERS) && chmod 755 $(WRAPPERS))
+-	cp $(SBINS) $(sbindir) && \
+-		(cd $(sbindir)/.. && chown $(USER) $(SBINS))
++		cp -r $$file $(DESTDIR)$(@LIB_INSTALL_DIR@); \
++	done
++	cp $(BINS) $(DESTDIR)$(bindir)
++	cp $(WRAPPERS) $(DESTDIR)$(bindir)
++	cp $(SBINS) $(DESTDIR)$(sbindir)
+ 	for file in $(DOCS); do \
+-		cp doc/$${file}.pdf $(docdir) && chown $(USER) $(docdir)/$${file}.pdf; \
+-		cp -r doc/$$file $(docdir) && chown -R $(USER) $(docdir)/$$file; \
++		cp doc/$${file}.pdf $(DESTDIR)$(docdir); \
++		cp -r doc/$$file $(DESTDIR)$(docdir); \
+ 	done
+-	[ -s $(sysconfdir)/gold.conf ] || \
+-		(cp etc/gold.conf.dist $(sysconfdir)/gold.conf && \
+-		chown $(USER) $(sysconfdir)/gold.conf)
+-	[ -s $(sysconfdir)/goldd.conf ] || \
+-		(cp etc/goldd.conf.dist $(sysconfdir)/goldd.conf && \
+-		chown $(USER) $(sysconfdir)/goldd.conf && \
+-		chmod 600 $(sysconfdir)/goldd.conf)
++	[ -s $(DESTDIR)$(sysconfdir)/gold.conf ] || \
++		cp etc/gold.conf.dist $(DESTDIR)$(sysconfdir)/gold.conf
++	[ -s $(DESTDIR)$(sysconfdir)/goldd.conf ] || \
++		cp etc/goldd.conf.dist $(DESTDIR)$(sysconfdir)/goldd.conf
+ 
+ install-gui:
+-	mkdir -p $(CGI_BIN)
+-	[ -s $(sysconfdir)/goldg.conf ] || \
+-		(cp etc/goldg.conf.dist $(sysconfdir)/goldg.conf && \
+-		chown $(USER) $(sysconfdir)/goldg.conf);
+-	if [ -d "$(CGI_BIN)" ]; then \
+-		cp -R cgi-bin/* $(CGI_BIN); \
+-		chown -R $(USER) $(CGI_BIN)/*; \
+-		chmod +x $(CGI_BIN)/*.cgi; \
++	mkdir -p $(DESTDIR)$(CGI_BIN)
++	[ -s $(DESTDIR)$(sysconfdir)/goldg.conf ] || \
++		cp etc/goldg.conf.dist $(DESTDIR)$(sysconfdir)/goldg.conf
++	if [ -d "$(DESTDIR)$(CGI_BIN)" ]; then \
++		cp -R cgi-bin/* $(DESTDIR)$(CGI_BIN); \
++		chmod +x $(DESTDIR)$(CGI_BIN)/*.cgi; \
+ 	fi
+ 
+ deps:
+-	PERL5LIB=$(libdir)/perl5:$(libdir)/perl5/site_perl; export PERL5LIB; \
++	PERL5LIB=$(PERL5LIB):$(siteperllibdir):$(vendorperllibdir); export PERL5LIB; \
+ 	for module_minversion in $(PERL_MODULES); do \
+ 		(LANG=en_US; PATH=/usr/local/bin:$${PATH}; export LANG PATH && cd src && $(PERL) check_module.pl $${module_minversion} && module_name=`echo $$module_minversion | sed 's/-[0-9].*//'` && module_bundledpackage=`ls $${module_name}-[0-9]*.tar.gz | head -1` && module_availversion=$${module_bundledpackage%%.tar.gz} && gzip -cd $${module_availversion}.tar.gz | tar xvf - && cd $${module_availversion} && (echo; echo; echo) | $(PERL) Makefile.PL@MAKEPL_ARG@ && make && make install || :); \
+ 	done

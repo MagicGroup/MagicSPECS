@@ -1,0 +1,48 @@
+---
+ libmpathpersist/mpath_updatepr.c |    3 ++-
+ libmultipath/uxsock.c            |    4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+Index: multipath-tools-130222/libmpathpersist/mpath_updatepr.c
+===================================================================
+--- multipath-tools-130222.orig/libmpathpersist/mpath_updatepr.c
++++ multipath-tools-130222/libmpathpersist/mpath_updatepr.c
+@@ -14,6 +14,7 @@
+ #include <debug.h>
+ #include "memory.h"
+ #include "../libmultipath/uxsock.h"
++#include "../libmultipath/defaults.h"
+ 
+ unsigned long mem_allocated;    /* Total memory used in Bytes */
+ 
+@@ -25,7 +26,7 @@ int update_prflag(char * arg1, char * ar
+ 	size_t len;
+ 	int ret = 0;
+ 
+-	fd = ux_socket_connect("/var/run/multipathd.sock");
++	fd = ux_socket_connect(DEFAULT_SOCKET);
+ 	if (fd == -1) {
+ 		condlog (0, "ux socket connect error");
+ 		return 1 ;
+Index: multipath-tools-130222/libmultipath/uxsock.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/uxsock.c
++++ multipath-tools-130222/libmultipath/uxsock.c
+@@ -31,7 +31,7 @@ int ux_socket_connect(const char *name)
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.sun_family = AF_LOCAL;
+ 	addr.sun_path[0] = '\0';
+-	len = strlen(name) + 1;
++	len = strlen(name) + 1 + sizeof(sa_family_t);
+ 	strncpy(&addr.sun_path[1], name, len);
+ 
+ 	fd = socket(AF_LOCAL, SOCK_STREAM, 0);
+@@ -62,7 +62,7 @@ int ux_socket_listen(const char *name)
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.sun_family = AF_LOCAL;
+ 	addr.sun_path[0] = '\0';
+-	len = strlen(name) + 1;
++	len = strlen(name) + 1 + sizeof(sa_family_t);
+ 	strncpy(&addr.sun_path[1], name, len);
+ 
+ 	if (bind(fd, (struct sockaddr *)&addr, len) == -1) {

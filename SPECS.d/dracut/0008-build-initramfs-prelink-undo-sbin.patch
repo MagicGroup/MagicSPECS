@@ -1,0 +1,25 @@
+From bc313467bdb49605aaddfec67823cab72396c29b Mon Sep 17 00:00:00 2001
+From: John Reiser <jreiser@bitwagon.com>
+Date: Thu, 18 Aug 2011 20:55:35 -0700
+Subject: [PATCH] build initramfs: prelink --undo /sbin/*
+
+Fix a typo (omitting the 's' in "sbin") which caused
+"prelink --undo" twice on      /bin/*,  and
+"prelink --undo" omitted for  /sbin/*.
+---
+ dracut |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/dracut b/dracut
+index dfa71a1..fd36805 100755
+--- a/dracut
++++ b/dracut
+@@ -643,7 +643,7 @@ type hardlink &>/dev/null && {
+ 
+ if strstr "$modules_loaded" " fips " && command -v prelink >/dev/null; then
+     for i in $initdir/bin/* \
+-       $initdir/bin/* \
++       $initdir/sbin/* \
+        $initdir/usr/bin/* \
+        $initdir/usr/sbin/*; do
+        [ -x $i ] && prelink -u $i &>/dev/null

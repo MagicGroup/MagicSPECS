@@ -1,0 +1,23 @@
+#! /bin/sh
+
+wm=
+
+case $# in
+1)
+        wm=$1
+        case $wm in
+        failsafe|custom)
+             ;;
+        *) 
+             echo $wm >$HOME/.wm_style
+             ;;
+        esac
+    ;;
+0)
+        if [ -f $HOME/.wm_style ] ; then
+             wm=`cat $HOME/.wm_style`
+        fi
+    ;;
+esac
+
+exec /etc/X11/xinit/Xsession $wm

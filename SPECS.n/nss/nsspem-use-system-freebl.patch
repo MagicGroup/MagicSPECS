@@ -1,0 +1,80 @@
+diff -up nss/lib/ckfw/pem/config.mk.systemfreebl nss/lib/ckfw/pem/config.mk
+--- nss/lib/ckfw/pem/config.mk.systemfreebl	2012-08-11 09:06:59.000000000 -0700
++++ nss/lib/ckfw/pem/config.mk	2013-04-04 16:02:33.805744145 -0700
+@@ -41,6 +41,11 @@ CONFIG_CVS_ID = "@(#) $RCSfile: config.m
+ #  are specifed as dependencies within rules.mk.
+ #
+ 
++
++EXTRA_LIBS += \
++	$(SOFTOKEN_LIB_DIR)/$(LIB_PREFIX)freebl.$(LIB_SUFFIX) \
++	$(NULL)
++
+ TARGETS        = $(SHARED_LIBRARY)
+ LIBRARY        =
+ IMPORT_LIBRARY =
+@@ -69,3 +74,22 @@ ifeq ($(OS_TARGET),SunOS)
+ MKSHLIB += -R '$$ORIGIN'
+ endif
+ 
++# If a platform has a system nssutil, set USE_SYSTEM_NSSUTIL to 1 and
++# NSSUTIL_LIBS to the linker command-line arguments for the system nssutil
++# (for example, -lnssutil3 on fedora) in the platform's config file in coreconf.
++ifdef USE_SYSTEM_NSSUTIL
++OS_LIBS += $(NSSUTIL_LIBS)
++else
++NSSUTIL_LIBS = $(DIST)/lib/$(LIB_PREFIX)nssutil3.$(LIB_SUFFIX)
++EXTRA_LIBS += $(NSSUTIL_LIBS)
++endif
++# If a platform has a system freebl, set USE_SYSTEM_FREEBL to 1 and
++# FREEBL_LIBS to the linker command-line arguments for the system nssutil
++# (for example, -lfreebl3 on fedora) in the platform's config file in coreconf.
++ifdef USE_SYSTEM_FREEBL
++OS_LIBS += $(FREEBL_LIBS)
++else
++FREEBL_LIBS = $(DIST)/lib/$(LIB_PREFIX)freebl3.$(LIB_SUFFIX)
++EXTRA_LIBS += $(FREEBL_LIBS)
++endif
++
+diff -up nss/lib/ckfw/pem/Makefile.systemfreebl nss/lib/ckfw/pem/Makefile
+--- nss/lib/ckfw/pem/Makefile.systemfreebl	2012-08-11 09:06:59.000000000 -0700
++++ nss/lib/ckfw/pem/Makefile	2013-04-04 16:02:33.806744154 -0700
+@@ -43,8 +43,7 @@ include config.mk
+ EXTRA_LIBS = \
+ 	$(DIST)/lib/$(LIB_PREFIX)nssckfw.$(LIB_SUFFIX) \
+ 	$(DIST)/lib/$(LIB_PREFIX)nssb.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)freebl.$(LIB_SUFFIX) \
+-	$(DIST)/lib/$(LIB_PREFIX)nssutil.$(LIB_SUFFIX) \
++	$(FREEBL_LIB_DIR)/$(LIB_PREFIX)freebl.$(LIB_SUFFIX) \
+ 	$(NULL)
+ 
+ # can't do this in manifest.mn because OS_TARGET isn't defined there.
+@@ -56,6 +55,9 @@ EXTRA_LIBS += \
+ 	-lplc4 \
+ 	-lplds4 \
+ 	-lnspr4 \
++	-L$(NSSUTIL_LIB_DIR) \
++	-lnssutil3 \
++	-lfreebl3
+ 	$(NULL)
+ else 
+ EXTRA_SHARED_LIBS += \
+@@ -74,6 +76,9 @@ EXTRA_LIBS += \
+ 	-lplc4 \
+ 	-lplds4 \
+ 	-lnspr4 \
++	-L$(NSSUTIL_LIB_DIR) \
++	-lnssutil3 \
++	-lfreebl3 \
+ 	$(NULL)
+ endif
+ 
+diff -up nss/lib/ckfw/pem/manifest.mn.systemfreebl nss/lib/ckfw/pem/manifest.mn
+--- nss/lib/ckfw/pem/manifest.mn.systemfreebl	2012-08-11 09:06:59.000000000 -0700
++++ nss/lib/ckfw/pem/manifest.mn	2013-04-04 16:02:33.807744163 -0700
+@@ -65,4 +65,4 @@ REQUIRES = nspr
+ 
+ LIBRARY_NAME = nsspem
+ 
+-#EXTRA_SHARED_LIBS = -L$(DIST)/lib -lnssckfw -lnssb -lplc4 -lplds4
++EXTRA_SHARED_LIBS = -L$(DIST)/lib -lnssckfw -lnssb -lplc4 -lplds4 -L$(NSS_LIB_DIR) -lnssutil3 -lfreebl3 -lsoftokn3

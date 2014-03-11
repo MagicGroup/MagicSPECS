@@ -1,0 +1,29 @@
+## Use these macros like
+##
+## =====
+## %bcond_without	fedora
+##
+## BuildRequires:	fedora-usermgmt-devel
+## %{?FE_USERADD_REQ}
+## ...
+## %pre
+## %__fe_groupadd <uid> -r ... &>/dev/null || :
+## %__fe_useradd  <uid> -r ... &>/dev/null || :
+##
+## %postun
+## %__fe_userdel  ... &>/dev/null || :
+## %__fe_groupdel ... &>/dev/null || :
+
+
+%__fe_useradd		%{?with_fedora:/usr/sbin/fedora-useradd}%{!?with_fedora:__useradd() { shift; /usr/sbin/useradd "$@"; }; __useradd}
+%___fe_userdel		test "$1" != 0 || %{?with_fedora:/usr/sbin/fedora-userdel}%{!?with_fedora:/usr/sbin/userdel}
+%__fe_userdel		%{?with_fedora_userdel:%___fe_userdel}%{!?with_fedora_userdel::}
+
+%__fe_groupadd		%{?with_fedora:/usr/sbin/fedora-groupadd}%{!?with_fedora:__groupadd() { shift; /usr/sbin/groupadd "$@"; }; __groupadd}
+%___fe_groupdel		test "$1" != 0 || %{?with_fedora:/usr/sbin/fedora-groupdel}%{!?with_fedora:/usr/sbin/groupdel}
+%__fe_groupdel		%{?with_fedora_userdel:%___fe_groupdel}%{!?with_fedora_userdel::}
+
+%FE_USERADD_REQ	\
+Requires(pre):		%{?with_fedora:fedora-usermgmt}%{!?with_fedora:shadow-utils}	\
+Requires(postun):	%{?with_fedora:fedora-usermgmt}%{!?with_fedora:shadow-utils}	\
+%nil

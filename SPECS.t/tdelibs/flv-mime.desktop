@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=MimeType
+Hidden=false
+MimeType=video/x-flv
+Icon=flv
+Patterns=*.flv;*.FLV;
+Comment=Flash Video File
+Comment[zh_CN]=Flash 视频文件
+Comment[zh_HK]=Flash 視頻檔案

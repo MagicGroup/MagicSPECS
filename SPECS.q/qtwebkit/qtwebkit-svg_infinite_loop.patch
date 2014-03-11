@@ -1,0 +1,13 @@
+diff -up qtwebkit-2.2.2-source/Source/WebCore/platform/graphics/qt/GraphicsContextQt.cpp.svn_infinite_loop qtwebkit-2.2.2-source/Source/WebCore/platform/graphics/qt/GraphicsContextQt.cpp
+--- qtwebkit-2.2.2-source/Source/WebCore/platform/graphics/qt/GraphicsContextQt.cpp.svn_infinite_loop	2012-05-22 09:30:37.000000000 -0500
++++ qtwebkit-2.2.2-source/Source/WebCore/platform/graphics/qt/GraphicsContextQt.cpp	2012-11-13 07:21:15.462272336 -0600
+@@ -1057,6 +1057,9 @@ void GraphicsContext::setLineDash(const
+             count *= 2;
+ 
+         float penWidth = narrowPrecisionToFloat(double(pen.widthF()));
++        if (penWidth <= 0.f)
++            penWidth = 1.f;
++
+         for (unsigned i = 0; i < count; i++)
+             pattern.append(dashes[i % dashLength] / penWidth);
+ 

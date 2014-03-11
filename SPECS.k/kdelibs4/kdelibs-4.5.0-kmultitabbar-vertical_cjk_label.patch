@@ -1,0 +1,95 @@
+--- a/kdeui/widgets/kmultitabbar.cpp	2010-08-21 13:10:54.000000000 +0800
++++ b/kdeui/widgets/kmultitabbar.cpp	2010-08-21 14:56:11.684206543 +0800
+@@ -399,24 +399,12 @@ void KMultiTabBarTab::paintEvent(QPaintE
+ 	QRect iconArea;
+ 	QRect labelArea;
+ 
+-	bool bottomIcon = false;
+ 	bool rtl = layoutDirection() == Qt::RightToLeft;
+-	if (isVertical()) {
+-		if (m_position == KMultiTabBar::Left && !rtl)
+-			bottomIcon = true;
+-		if (m_position == KMultiTabBar::Right && rtl)
+-			bottomIcon = true;
+-	}
+ 	//alignFlags = Qt::AlignLeading | Qt::AlignVCenter;
+ 
+ 	if (isVertical()) {
+-		if (bottomIcon) {
+-			labelArea = QRect(0, vMargin, width(), textRoom);
+-			iconArea  = QRect(0, vMargin + textRoom, width(), iconRoom);
+-		} else {
+-			labelArea = QRect(0, iconRoom, width(), textRoom);
+-			iconArea  = QRect(0, 0, width(), iconRoom);
+-		}
++		labelArea = QRect(0, iconRoom, width(), textRoom);
++		iconArea  = QRect(0, 0, width(), iconRoom);
+ 	} else {
+ 		// Pretty simple --- depends only on RTL/LTR
+ 		if (rtl) {
+@@ -441,18 +429,56 @@ void KMultiTabBarTab::paintEvent(QPaintE
+ 		labelPaintArea = QRect(0, 0, labelArea.height(), labelArea.width());
+ 
+ 		QTransform tr;
++		tr.translate(labelPaintArea.height() + labelArea.x(), labelArea.y());
++		tr.rotate(90);
+ 
+-		if (bottomIcon) {
+-			tr.translate(labelArea.x(), labelPaintArea.width() + labelArea.y());
+-			tr.rotate(-90);
+-		} else {
+-			tr.translate(labelPaintArea.height() + labelArea.x(), labelArea.y());
+-			tr.rotate(90);
+-		}
+ 		painter.setTransform(tr);
+-	}
+ 
+-	style()->drawItemText(&painter, labelPaintArea, Qt::AlignLeading | Qt::AlignVCenter,
++		const QFontMetrics& fm = fontMetrics();
++		int x = 0;
++		int y = 0;
++		int chPixelsWide = 0;
++		int chPixelsHigh = fm.height();
++		QRect chrect;
++		foreach (const QChar& ch, t) {
++			const unsigned short code = ch.unicode();
++			if (code >= 0x4E00 && code <= 0x9FBF// CJK Unified Ideographs
++				|| code >= 0x3400 && code <= 0x4DBF// CJK Unified Ideographs Extension A
++				|| code >= 0xF900 && code <= 0xFAFF// CJK Compatibility Ideographs
++				|| code >= 0x3040 && code <= 0x30FF// Hiragana, Katakana
++				|| code >= 0xAC00 && code <= 0xD7AF// Hangul Syllables
++				|| code >= 0x1100 && code <= 0x11FF// Hangul Jamo
++				|| code >= 0x31F0 && code <= 0x31FF// Katakana Phonetic Extensions
++				|| code >= 0x3130 && code <= 0x318F// Hangul Compatibility Jamo
++				|| code >= 0x2E80 && code <= 0x2EFF// CJK Radicals Supplement
++				|| code >= 0x3200 && code <= 0x33FF// Enclosed CJK Letters and Months, CJK Compatibility
++				|| code >= 0xFE30 && code <= 0xFE4F// CJK Compatibility Forms
++			) {
++				// http://en.wikipedia.org/wiki/Horizontal_and_vertical_writing_in_East_Asian_scripts
++				// NOTE: not perfect at all, but enough for tabbar labels --- nihui  ^^:)
++				painter.save();
++				painter.rotate(-90);
++				painter.translate(-labelPaintArea.height(), 0);
++				chPixelsWide = fm.width(ch);
++				chrect.setRect(y, x, labelPaintArea.height(), chPixelsHigh);
++				style()->drawItemText(&painter, chrect, Qt::AlignTop | Qt::AlignHCenter,
++							palette(), true, ch, QPalette::ButtonText);
++				painter.restore();
++				// We calculate the text width from cjk character width instead of height.
++				// It should be ok to fit the character height into its width for cjk characters.
++				x += chPixelsWide;
++			}
++			else {
++				chPixelsWide = fm.width(ch);
++				chrect.setRect(x, y, chPixelsWide, labelPaintArea.height());
++				style()->drawItemText(&painter, chrect, Qt::AlignLeading | Qt::AlignVCenter,
++							palette(), true, ch, QPalette::ButtonText);
++				x += chPixelsWide;
++			}
++		}
++	}
++	else
++		style()->drawItemText(&painter, labelPaintArea, Qt::AlignLeading | Qt::AlignVCenter,
+ 	                      palette(), true, t, QPalette::ButtonText);
+ }
+ 

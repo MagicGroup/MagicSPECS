@@ -1,0 +1,43 @@
+--- configure.ac	2010-05-18 21:18:36.000000000 +0100
++++ configure.ac.new	2010-07-19 12:03:19.000000000 +0100
+@@ -112,29 +112,37 @@
+ SITE_PERL_LIB_DIR=`$PERL '-V:installsitelib' | sed "s/.*'\(.*\)'.*/\1/"`
+ AC_SUBST(SITE_PERL_LIB_DIR)
+ 
++# Determine the vendor perl lib dir
++VENDOR_PERL_LIB_DIR=`$PERL '-V:installvendorlib' | sed "s/.*'\(.*\)'.*/\1/"`
++AC_SUBST(VENDOR_PERL_LIB_DIR)
++
+ # Determine where the prerequisite perl libs should be installed
+ AC_ARG_WITH(perl_libs,
+-  [  --with-perl-libs=local|site  install policy for prerequisite perl libs [[local]]],
++  [  --with-perl-libs=local|site|vendor  install policy for prerequisite perl libs [[local]]],
+   [PERL_LIBS=$withval],
+   [PERL_LIBS=local])
+ if test "$PERL_LIBS" = 'local'; then
+   MAKEPL_ARG=" LIB=\$(build_root)$prefix/lib/perl5"
+ elif test "$PERL_LIBS" = 'site'; then
+   :
++elif test "$PERL_LIBS" = 'vendor'; then
++  MAKEPL_ARG=" LIB=$vendorperllibdir"
+ else
+-  AC_MSG_ERROR([--with-perl-libs value must be either local or site])
++  AC_MSG_ERROR([--with-perl-libs value must be either local, site or vendor])
+ fi
+ AC_SUBST(MAKEPL_ARG)
+ 
+ # Determine where we will put the gold perl libs
+ AC_ARG_WITH(gold_libs,
+-  [  --with-gold-libs=local|site  install policy for Gold perl libs [[local]]],
++  [  --with-gold-libs=local|site|vendor  install policy for Gold perl libs [[local]]],
+   [GOLD_LIBS=$withval],
+   [GOLD_LIBS=local])
+ if test "$GOLD_LIBS" = 'local'; then
+   LIB_INSTALL_DIR="libdir"
+ elif test "$GOLD_LIBS" = 'site'; then
+   LIB_INSTALL_DIR="siteperllibdir"
++elif test "$GOLD_LIBS" = 'vendor'; then
++  LIB_INSTALL_DIR="vendorperllibdir"
+ else
+   AC_MSG_ERROR([--with-gold-libs value must be one of local or site])
+ fi

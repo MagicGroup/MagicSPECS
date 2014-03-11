@@ -1,0 +1,15 @@
+diff --git a/brp-python-hardlink b/brp-python-hardlink
+index a937529..210d69c 100755
+--- a/brp-python-hardlink
++++ b/brp-python-hardlink
+@@ -10,8 +10,8 @@ fi
+ find "$RPM_BUILD_ROOT" -type f -name "*.pyc" | while read pyc ; do
+        pyo="$(echo $pyc | sed -e 's/.pyc$/.pyo/')"
+        if [ -f "$pyo" ] ; then
+-               csha="$(sha1sum -b $pyc | cut -d' ' -f 1)" && \
+-               osha="$(sha1sum -b $pyo | cut -d' ' -f 1)" && \
++               csha="$(sha1sum -b "$pyc" | cut -d' ' -f 1)" && \
++               osha="$(sha1sum -b "$pyo" | cut -d' ' -f 1)" && \
+                if [ "$csha" = "$osha" ] ; then
+                        ln -f "$pyc" "$pyo"
+                fi

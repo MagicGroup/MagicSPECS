@@ -1,0 +1,24 @@
+From: Zdeněk Pavlas <zpavlas@redhat.com>
+Date: Thu, 11 Aug 2011 12:34:42 +0000 (+0200)
+Subject:  Fix check for repos in opts, in auto-update-debuginfo plugin. BZ 729964.
+X-Git-Url: http://yum.baseurl.org/gitweb?p=yum-utils.git;a=commitdiff_plain;h=efb3c7b3fb96523bb5997c163bf4e33ab897f1b8
+
+ Fix check for repos in opts, in auto-update-debuginfo plugin. BZ 729964.
+
+ Also hasattr(None, 'repos') == False, so we don't need
+to check for None explicitly.
+---
+
+diff --git a/plugins/auto-update-debuginfo/auto-update-debuginfo.py b/plugins/auto-update-debuginfo/auto-update-debuginfo.py
+index 39993ad..9ff927c 100644
+--- a/plugins/auto-update-debuginfo/auto-update-debuginfo.py
++++ b/plugins/auto-update-debuginfo/auto-update-debuginfo.py
+@@ -38,7 +38,7 @@ def _check_man_disable(mdrs, di):
+ def enable_debuginfo_repos(yb, conduit):
+     mdrs = set()
+     opts, args = conduit.getCmdLine()
+-    if opts is not None and hasattr(opts.repos) :
++    if hasattr(opts, 'repos'):
+         for opt, repoexp in opts.repos:
+             if opt == '--disablerepo':
+                 mdrs.add(repoexp)

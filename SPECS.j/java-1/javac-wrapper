@@ -1,0 +1,61 @@
+#!/usr/bin/perl -w
+use strict;
+use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
+use constant STRIP_ARGS => qw(-Werror -implicit:none);
+
+my ($ECJ_WARNINGS, $JAVAC_WARNINGS);
+
+if ("no" eq "yes")
+{
+    $ECJ_WARNINGS="-warn:-deprecation,serial,unused,warningToken";
+    $JAVAC_WARNINGS="-Xlint:unchecked,cast,divzero,empty,finally,overrides";
+}
+else
+{
+    $ECJ_WARNINGS="-nowarn";
+    $JAVAC_WARNINGS="-nowarn";
+}
+
+my @bcoption;
+push @bcoption, '-bootclasspath', glob '@RT_JAR@'
+    unless grep {$_ eq '-bootclasspath'} @ARGV;
+my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
+my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source', '-J-Xmx1024m');
+
+# Work around ecj's inability to handle duplicate command-line
+# options and unknown javac options.
+sub gen_ecj_opts
+{
+    my @new_args = @{$_[0]};
+
+    for my $opt (NO_DUP_ARGS) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	if (@indices > 1) {
+	    shift @indices;    # keep last instance only
+	    splice @new_args, $_, 2 for @indices;
+	}
+    }
+
+    for my $opt (STRIP_ARGS) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	splice @new_args, $_, 1 for @indices;
+    }
+
+    return @new_args;
+}
+
+if ( -e "/usr/lib/jvm/java-gcj/bin/javac" )
+{
+	my @ecj_args = gen_ecj_opts( \@ARGV );
+	exec '/usr/lib/jvm/java-gcj/bin/javac', @ecj_parms, @ecj_args ;
+}
+else
+{
+    my @ecj_args = gen_ecj_opts( \@ARGV );
+    my @CLASSPATH = ('/usr/share/java/eclipse-ecj.jar');
+    push @CLASSPATH, split /:/, $ENV{"CLASSPATH"} if exists $ENV{"CLASSPATH"};
+    $ENV{"CLASSPATH"} = join ':', @CLASSPATH;
+    exec '/usr/lib/jvm/java-gcj/bin/java', 'org.eclipse.jdt.internal.compiler.batch.Main', @ecj_parms, @ecj_args;
+}

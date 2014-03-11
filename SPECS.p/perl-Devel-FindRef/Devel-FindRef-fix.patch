@@ -1,0 +1,12 @@
+diff -up Devel-FindRef-1.422/FindRef.xs.orig Devel-FindRef-1.422/FindRef.xs
+--- Devel-FindRef-1.422/FindRef.xs.orig 2009-08-30 16:33:01.000000000 +0200
++++ Devel-FindRef-1.422/FindRef.xs      2012-02-01 10:17:35.698276247 +0100
+@@ -214,7 +214,7 @@ find_ (SV *target_ref)
+                                 if (GvSV (sv) == (SV *)targ) res_gv ('$');
+                                 if (GvAV (sv) == (AV *)targ) res_gv ('@');
+                                 if (GvHV (sv) == (HV *)targ) res_gv ('%');
+-                                if (GvCV (sv) == (CV *)targ) res_gv ('&');
++                                if (GvCVu(sv) == (CV *)targ) res_gv ('&');
+                               }
+
+                             break;

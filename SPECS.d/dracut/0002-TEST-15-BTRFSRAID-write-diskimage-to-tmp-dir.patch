@@ -1,0 +1,31 @@
+From 12018c91eac3e0165fe3d5df5bc1382fdf64d2a1 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 8 Feb 2012 17:02:57 +0100
+Subject: [PATCH] TEST-15-BTRFSRAID: write diskimage to tmp dir
+
+---
+ test/TEST-15-BTRFSRAID/test.sh |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/test/TEST-15-BTRFSRAID/test.sh b/test/TEST-15-BTRFSRAID/test.sh
+index bacdb4a..8f7839d 100755
+--- a/test/TEST-15-BTRFSRAID/test.sh
++++ b/test/TEST-15-BTRFSRAID/test.sh
+@@ -5,8 +5,8 @@ KVERSION=${KVERSION-$(uname -r)}
+ 
+ # Uncomment this to debug failures
+ #DEBUGFAIL="rd.shell"
+-DISKIMAGE=$TESTDIR/TEST-15-BTRFSRAID-root.img
+ test_run() {
++    DISKIMAGE=$TESTDIR/TEST-15-BTRFSRAID-root.img
+     $testdir/run-qemu \
+ 	-hda $DISKIMAGE \
+ 	-m 256M -nographic \
+@@ -18,6 +18,7 @@ test_run() {
+ 
+ test_setup() {
+     # Create the blank file to use as a root filesystem
++    DISKIMAGE=$TESTDIR/TEST-15-BTRFSRAID-root.img
+     rm -f $DISKIMAGE
+     dd if=/dev/null of=$DISKIMAGE bs=1M seek=1024
+ 

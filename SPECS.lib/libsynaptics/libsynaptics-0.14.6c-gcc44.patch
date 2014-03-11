@@ -1,0 +1,13 @@
+diff -ur libsynaptics-0.14.6c.orig/pad.cpp libsynaptics-0.14.6c/pad.cpp
+--- libsynaptics-0.14.6c.orig/pad.cpp	2009-05-19 13:49:39.000000000 +0800
++++ libsynaptics-0.14.6c/pad.cpp	2009-05-19 13:50:10.000000000 +0800
+@@ -3,6 +3,9 @@
+ #include "pad.h"
+ #include <pthread.h>
+ #include <unistd.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ #include <sys/shm.h>
+ 
+ //

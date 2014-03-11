@@ -1,0 +1,55 @@
+diff -ur libmusicbrainz-2.1.5/lib/comhttpsocket.cpp ../BUILD/libmusicbrainz-2.1.5/lib/comhttpsocket.cpp
+--- libmusicbrainz-2.1.5/lib/comhttpsocket.cpp	2006-11-15 00:34:49.000000000 +0800
++++ ../BUILD/libmusicbrainz-2.1.5/lib/comhttpsocket.cpp	2009-05-19 11:48:37.000000000 +0800
+@@ -19,6 +19,7 @@
+ #include "comsocket.h"
+ #endif
+ #include <stdlib.h>
++#include <string.h>
+ #include <assert.h>
+ 
+ const char* g_strCOMVer = "libmusicbrainz/"VERSION;
+diff -ur libmusicbrainz-2.1.5/lib/comsocket.cpp ../BUILD/libmusicbrainz-2.1.5/lib/comsocket.cpp
+--- libmusicbrainz-2.1.5/lib/comsocket.cpp	2006-11-15 00:34:49.000000000 +0800
++++ ../BUILD/libmusicbrainz-2.1.5/lib/comsocket.cpp	2009-05-19 11:48:55.000000000 +0800
+@@ -37,6 +37,7 @@
+ #include <netinet/tcp.h>
+ #include <errno.h>
+ #include <stdio.h>
++#include <string.h>
+ #include <sys/time.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+diff -ur libmusicbrainz-2.1.5/lib/c_wrapper.cpp ../BUILD/libmusicbrainz-2.1.5/lib/c_wrapper.cpp
+--- libmusicbrainz-2.1.5/lib/c_wrapper.cpp	2006-11-15 00:34:49.000000000 +0800
++++ ../BUILD/libmusicbrainz-2.1.5/lib/c_wrapper.cpp	2009-05-19 11:34:08.000000000 +0800
+@@ -24,6 +24,7 @@
+ #include "musicbrainz.h"
+ #include "trm.h"
+ #include "mb_c.h"
++#include <string.h>
+ 
+ extern "C"
+ {
+diff -ur libmusicbrainz-2.1.5/lib/http.cpp ../BUILD/libmusicbrainz-2.1.5/lib/http.cpp
+--- libmusicbrainz-2.1.5/lib/http.cpp	2007-05-11 14:21:21.000000000 +0800
++++ ../BUILD/libmusicbrainz-2.1.5/lib/http.cpp	2009-05-19 11:49:37.000000000 +0800
+@@ -24,6 +24,7 @@
+ ----------------------------------------------------------------------------*/
+ #include <stdlib.h>
+ #include <stdio.h> 
++#include <string.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <ctype.h>
+diff -ur libmusicbrainz-2.1.5/lib/sigclient.cpp ../BUILD/libmusicbrainz-2.1.5/lib/sigclient.cpp
+--- libmusicbrainz-2.1.5/lib/sigclient.cpp	2006-11-15 00:34:49.000000000 +0800
++++ ../BUILD/libmusicbrainz-2.1.5/lib/sigclient.cpp	2009-05-19 11:49:57.000000000 +0800
+@@ -33,6 +33,7 @@
+ #pragma warning(disable:4786)
+ #endif
+ 
++#include <string.h>
+ #include "sigclient.h"
+ #include "comhttpsocket.h"
+ 

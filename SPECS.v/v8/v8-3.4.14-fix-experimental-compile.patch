@@ -1,0 +1,243 @@
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.cc.BAD	2011-07-21 12:36:38.117525896 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.cc	2011-07-21 12:36:44.663541775 -0400
+@@ -25,7 +25,7 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-#include "src/extensions/experimental/break-iterator.h"
++#include "extensions/experimental/break-iterator.h"
+ 
+ #include <string.h>
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.h.BAD	2011-07-21 12:37:39.989539464 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/break-iterator.h	2011-07-21 12:37:47.271546557 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_BREAK_ITERATOR_H_
+ #define V8_EXTENSIONS_EXPERIMENTAL_BREAK_ITERATOR_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ #include "unicode/uversion.h"
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.cc.BAD	2011-07-21 12:38:32.892541085 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.cc	2011-07-21 12:38:42.536540200 -0400
+@@ -25,7 +25,7 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-#include "src/extensions/experimental/collator.h"
++#include "extensions/experimental/collator.h"
+ 
+ #include "unicode/coll.h"
+ #include "unicode/locid.h"
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.h.BAD	2011-07-21 12:40:38.695553065 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/collator.h	2011-07-21 12:40:46.604287238 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_COLLATOR_H
+ #define V8_EXTENSIONS_EXPERIMENTAL_COLLATOR_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ #include "unicode/uversion.h"
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.cc.BAD	2011-07-21 12:42:32.070546811 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.cc	2011-07-21 12:42:43.429540019 -0400
+@@ -25,11 +25,11 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-#include "src/extensions/experimental/datetime-format.h"
++#include "extensions/experimental/datetime-format.h"
+ 
+ #include <string.h>
+ 
+-#include "src/extensions/experimental/i18n-utils.h"
++#include "extensions/experimental/i18n-utils.h"
+ #include "unicode/dtfmtsym.h"
+ #include "unicode/dtptngen.h"
+ #include "unicode/locid.h"
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.h.BAD	2011-07-21 12:40:53.229295468 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/datetime-format.h	2011-07-21 12:41:00.279541337 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_DATETIME_FORMAT_H_
+ #define V8_EXTENSIONS_EXPERIMENTAL_DATETIME_FORMAT_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ #include "unicode/uversion.h"
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.cc.BAD	2011-07-21 12:42:51.682535397 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.cc	2011-07-21 12:43:10.905542088 -0400
+@@ -25,14 +25,14 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-#include "src/extensions/experimental/i18n-extension.h"
++#include "extensions/experimental/i18n-extension.h"
+ 
+-#include "src/extensions/experimental/break-iterator.h"
+-#include "src/extensions/experimental/collator.h"
+-#include "src/extensions/experimental/datetime-format.h"
+-#include "src/extensions/experimental/i18n-locale.h"
+-#include "src/extensions/experimental/i18n-natives.h"
+-#include "src/extensions/experimental/number-format.h"
++#include "extensions/experimental/break-iterator.h"
++#include "extensions/experimental/collator.h"
++#include "extensions/experimental/datetime-format.h"
++#include "extensions/experimental/i18n-locale.h"
++#include "extensions/experimental/i18n-natives.h"
++#include "extensions/experimental/number-format.h"
+ 
+ namespace v8 {
+ namespace internal {
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.h.BAD	2011-07-21 12:41:13.170538335 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-extension.h	2011-07-21 12:41:20.023540712 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_I18N_EXTENSION_H_
+ #define V8_EXTENSIONS_EXPERIMENTAL_I18N_EXTENSION_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ namespace v8 {
+ namespace internal {
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.cc.BAD	2011-07-21 12:43:18.896539148 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.cc	2011-07-21 12:43:32.626538677 -0400
+@@ -25,10 +25,10 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-#include "src/extensions/experimental/i18n-locale.h"
++#include "extensions/experimental/i18n-locale.h"
+ 
+-#include "src/extensions/experimental/i18n-utils.h"
+-#include "src/extensions/experimental/language-matcher.h"
++#include "extensions/experimental/i18n-utils.h"
++#include "extensions/experimental/language-matcher.h"
+ #include "unicode/locid.h"
+ #include "unicode/uloc.h"
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.h.BAD	2011-07-21 12:41:28.401292703 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-locale.h	2011-07-21 12:41:34.887302839 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_I18N_LOCALE_H_
+ #define V8_EXTENSIONS_EXPERIMENTAL_I18N_LOCALE_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ namespace v8 {
+ namespace internal {
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.cc.BAD	2011-07-21 12:43:40.641540032 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.cc	2011-07-21 12:43:47.258552856 -0400
+@@ -25,7 +25,7 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-#include "src/extensions/experimental/i18n-utils.h"
++#include "extensions/experimental/i18n-utils.h"
+ 
+ #include <string.h>
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.h.BAD	2011-07-21 12:41:47.436545325 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-utils.h	2011-07-21 12:41:53.749539656 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_I18N_UTILS_H_
+ #define V8_EXTENSIONS_EXPERIMENTAL_I18N_UTILS_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ #include "unicode/uversion.h"
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.cc.BAD	2011-07-21 12:43:55.484291257 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.cc	2011-07-21 12:47:31.316288453 -0400
+@@ -28,11 +28,11 @@
+ // TODO(cira): Remove LanguageMatcher from v8 when ICU implements
+ // language matching API.
+ 
+-#include "src/extensions/experimental/language-matcher.h"
++#include "extensions/experimental/language-matcher.h"
+ 
+ #include <string.h>
+ 
+-#include "src/extensions/experimental/i18n-utils.h"
++#include "extensions/experimental/i18n-utils.h"
+ #include "unicode/datefmt.h"  // For getAvailableLocales
+ #include "unicode/locid.h"
+ #include "unicode/uloc.h"
+@@ -43,7 +43,7 @@ namespace internal {
+ const unsigned int LanguageMatcher::kLanguageWeight = 75;
+ const unsigned int LanguageMatcher::kScriptWeight = 20;
+ const unsigned int LanguageMatcher::kRegionWeight = 5;
+-const unsigned int LanguageMatcher::kThreshold = 50;
++const int LanguageMatcher::kThreshold = 50;
+ const unsigned int LanguageMatcher::kPositionBonus = 1;
+ const char* const LanguageMatcher::kDefaultLocale = "root";
+ 
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.h.BAD	2011-07-21 12:42:00.374537754 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/language-matcher.h	2011-07-21 12:47:59.556286069 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_LANGUAGE_MATCHER_H_
+ #define V8_EXTENSIONS_EXPERIMENTAL_LANGUAGE_MATCHER_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ #include "unicode/uloc.h"
+ 
+@@ -76,7 +76,7 @@ class LanguageMatcher {
+   static const unsigned int kRegionWeight;
+ 
+   // LocaleID match score has to be over this number to accept the match.
+-  static const unsigned int kThreshold;
++  static const int kThreshold;
+ 
+   // For breaking ties in priority queue.
+   static const unsigned int kPositionBonus;
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.cc.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.cc
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.cc.BAD	2011-07-21 12:44:13.227297121 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.cc	2011-07-21 12:44:23.119292346 -0400
+@@ -25,11 +25,11 @@
+ // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-#include "src/extensions/experimental/number-format.h"
++#include "extensions/experimental/number-format.h"
+ 
+ #include <string.h>
+ 
+-#include "src/extensions/experimental/i18n-utils.h"
++#include "extensions/experimental/i18n-utils.h"
+ #include "unicode/dcfmtsym.h"
+ #include "unicode/decimfmt.h"
+ #include "unicode/locid.h"
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.h.BAD v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.h
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.h.BAD	2011-07-21 12:42:15.678549139 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/number-format.h	2011-07-21 12:42:22.940543222 -0400
+@@ -28,7 +28,7 @@
+ #ifndef V8_EXTENSIONS_EXPERIMENTAL_NUMBER_FORMAT_H_
+ #define V8_EXTENSIONS_EXPERIMENTAL_NUMBER_FORMAT_H_
+ 
+-#include "include/v8.h"
++#include "v8.h"
+ 
+ #include "unicode/uversion.h"
+ 

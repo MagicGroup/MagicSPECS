@@ -1,0 +1,11 @@
+diff -up chromium-14.0.827.10/webkit/glue/webkit_glue.gypi.system-nss chromium-14.0.827.10/webkit/glue/webkit_glue.gypi
+--- chromium-14.0.827.10/webkit/glue/webkit_glue.gypi.system-nss	2011-07-21 16:09:24.000000000 -0400
++++ chromium-14.0.827.10/webkit/glue/webkit_glue.gypi	2011-07-21 16:10:15.681543131 -0400
+@@ -451,6 +451,7 @@
+         ['toolkit_uses_gtk == 1', {
+           'dependencies': [
+             '<(DEPTH)/build/linux/system.gyp:gtk',
++            '<(DEPTH)/build/linux/system.gyp:nss',
+           ],
+           'sources!': [
+             'plugins/plugin_stubs.cc',

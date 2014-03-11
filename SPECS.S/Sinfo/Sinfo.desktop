@@ -1,0 +1,21 @@
+[Desktop Entry]
+Categories=Application;Settings;
+Comment[zh_CN]=桌面服务管理器
+Comment=桌面服务管理器
+Exec=/opt/Sinfo/Sinfo
+GenericName[zh_CN]=桌面服务管理器
+GenericName=桌面服务管理器
+Icon=quassel
+MimeType=
+Name[zh_CN]=Sinfo
+Name=Sinfo
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-DCOP-ServiceType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

@@ -1,0 +1,135 @@
+#!/bin/bash
+#
+# chkconfig: 2345 85 15
+# description: GPM adds mouse support to text-based Linux applications such \
+#              as the Midnight Commander. It also allows mouse-based console \
+#              cut-and-paste operations, and includes support for pop-up \
+#              menus on the console.
+# processname: gpm
+# pidfile: /var/run/gpm.pid
+# config: /etc/sysconfig/mouse
+
+### BEGIN INIT INFO
+# Provides: gpm
+# Required-Start: $syslog $local_fs
+# Required-Stop: $syslog $local_fs
+# Default-Start:  2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start and stop gpm daemon
+# Description: GPM adds mouse support to text-based Linux applications such
+#              as the Midnight Commander. It also allows mouse-based console
+#              cut-and-paste operations, and includes support for pop-up
+#              menus on the console.
+### END INIT INFO
+
+# source function library
+. /etc/init.d/functions
+
+if test -e /etc/sysconfig/mouse ; then
+    . /etc/sysconfig/mouse
+fi
+
+RETVAL=0
+
+check() {
+	# Check that we're a privileged user
+	[ `id -u` = 0 ] || exit 4
+	
+	# Check if acpid is executable
+	test -x /usr/sbin/gpm || exit 5
+}
+
+start() {
+
+	check
+		
+	if [ ! -f /var/lock/subsys/gpm ]; then
+		echo -n $"Starting console mouse services: "
+	
+		if [ -z "$MOUSETYPE" ]; then
+		    MOUSETYPE="exps2"
+		fi
+	
+		if [ -z "$DEVICE" ]; then
+		    DEVICE="/dev/input/mice"
+		fi
+	
+		if [ "$MOUSETYPE" = "none" ]; then
+			echo $"(no mouse is configured)"
+			exit 0
+		fi
+	
+		if [ "$MOUSETYPE" = "Microsoft" ]; then
+			MOUSETYPE=ms
+		fi
+	
+		if [ -n "$IMOUSETYPE" ]; then
+			if [ "$(pidofproc inputattach)" = "" ]; then
+				modprobe sermouse > /dev/null 2>&1
+				/usr/sbin/inputattach -$IMOUSETYPE $DEVICE --daemon
+				DEVICE="/dev/input/mice"
+				MOUSETYPE="exps2"
+			fi
+		fi
+	
+		if [ -n "$MOUSETYPE" ]; then
+			daemon /usr/sbin/gpm -m $DEVICE -t $MOUSETYPE $OPTIONS
+		else
+			daemon /usr/sbin/gpm -m $DEVICE $OPTIONS
+		fi
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/gpm
+		echo
+	fi
+	return $RETVAL
+}
+
+stop() {
+	
+	check
+	
+	echo -n $"Shutting down console mouse services: "
+	killproc /usr/sbin/gpm
+	if [ -n "$IMOUSETYPE" ]; then
+		killproc inputattach
+	fi
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/gpm
+	echo
+	return $RETVAL
+}
+
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  force-reload|reload)
+	echo "$0: Unimplemented feature."
+	RETVAL=3
+	;;
+  restart)
+	restart
+	;;
+  condrestart)
+	if [ -f /var/lock/subsys/gpm ]; then
+	    restart
+	fi
+	;;
+  status)
+	status gpm
+	RETVAL=$?
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|status|restart|condrestart|reload|force-reload}"
+	RETVAL=2
+esac
+
+exit $RETVAL

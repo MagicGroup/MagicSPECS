@@ -1,0 +1,12 @@
+diff -Nur commoncpp2-1.8.1/src/applog.cpp commoncpp2-1.8.1.new/src/applog.cpp
+--- commoncpp2-1.8.1/src/applog.cpp	2010-11-01 00:11:55.000000000 +0100
++++ commoncpp2-1.8.1.new/src/applog.cpp	2011-08-09 22:01:39.837000079 +0200
+@@ -45,6 +45,8 @@
+ #include <cstdlib>
+ #include <stdarg.h>
+ #include <errno.h>
++#include <sys/stat.h>
++
+ 
+ // TODO sc: test if has to move up now that it is into commoncpp
+ // NOTE: the order of inclusion is important do not move following include line

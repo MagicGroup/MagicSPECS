@@ -1,0 +1,9 @@
+--- Canna36/dic/ideo/words/dics.dir.orig	Tue Apr  2 18:08:49 2002
++++ Canna36/dic/ideo/words/dics.dir	Tue Apr  2 18:09:06 2002
+@@ -54,3 +54,6 @@
+ pub.cld(pub.mwd)                -pub---
+ scien.cld(scien.mwd)            -scien---
+ sup.cld(sup.mwd)                -sup---
++
++bonobo.cbd(bonobo.mwd)		-bonobo---
++bonobo.cld(bonobo.mwd)		-bonobo---

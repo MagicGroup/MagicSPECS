@@ -1,0 +1,10 @@
+PingAddresses = 127.0.0.1/255.255.255.0;
+PingNames = 
+AllowedAddresses = 127.0.0.1/255.255.255.0;
+BroadcastNetwork = 127.0.0.1/255.255.255.0;
+SearchUsingNmblookup = 0
+FirstWait = 30
+SecondWait = -1
+UpdatePeriod = 150
+DeliverUnnamedHosts = 1
+MaxPingsAtOnce = 256

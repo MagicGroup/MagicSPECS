@@ -1,0 +1,3880 @@
+From 904d4856dd019e32e16fc97c58548c47691f16cf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B8ren=20Sandmann=20Pedersen?= <ssp@redhat.com>
+Date: Thu, 3 Feb 2011 05:53:01 -0500
+Subject: [PATCH xf86-video-qxl 08/10] Add old driver in as a compatibility
+ layer
+
+---
+ configure.ac                   |    1 +
+ src/Makefile.am                |    2 +-
+ src/compat/Makefile.am         |   41 ++
+ src/compat/compat-lookup3.c    |  769 +++++++++++++++++++++
+ src/compat/compat-lookup3.h    |   26 +
+ src/compat/compat-qxl.h        |  610 +++++++++++++++++
+ src/compat/compat-qxl_cursor.c |  196 ++++++
+ src/compat/compat-qxl_driver.c | 1454 ++++++++++++++++++++++++++++++++++++++++
+ src/compat/compat-qxl_image.c  |  255 +++++++
+ src/compat/compat-qxl_mem.c    |  321 +++++++++
+ src/compat/compat-qxl_ring.c   |   97 +++
+ 11 files changed, 3771 insertions(+), 1 deletions(-)
+ create mode 100644 src/compat/Makefile.am
+ create mode 100644 src/compat/compat-lookup3.c
+ create mode 100644 src/compat/compat-lookup3.h
+ create mode 100644 src/compat/compat-qxl.h
+ create mode 100644 src/compat/compat-qxl_cursor.c
+ create mode 100644 src/compat/compat-qxl_driver.c
+ create mode 100644 src/compat/compat-qxl_image.c
+ create mode 100644 src/compat/compat-qxl_mem.c
+ create mode 100644 src/compat/compat-qxl_ring.c
+
+diff --git a/configure.ac b/configure.ac
+index 581521e..e775348 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -117,6 +117,7 @@ AC_CONFIG_FILES([
+                 Makefile
+                 src/Makefile
+                 src/uxa/Makefile
++		src/compat/Makefile
+                 scripts/Makefile
+                 examples/Makefile
+ ])
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 2695614..3dcdd16 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -25,7 +25,7 @@
+ # _ladir passes a dummy rpath to libtool so the thing will actually link
+ # TODO: -nostdlib/-Bstatic/-lgcc platform magic, not installing the .a, etc.
+ 
+-SUBDIRS=uxa
++SUBDIRS=uxa compat
+ 
+ AM_CFLAGS = $(SPICE_PROTOCOL_CFLAGS) $(XORG_CFLAGS) $(PCIACCESS_CFLAGS) $(CWARNFLAGS)
+ 
+diff --git a/src/compat/Makefile.am b/src/compat/Makefile.am
+new file mode 100644
+index 0000000..84a30f2
+--- /dev/null
++++ b/src/compat/Makefile.am
+@@ -0,0 +1,41 @@
++#  Copyright 2008 Red Hat, Inc.
++#
++#  Permission is hereby granted, free of charge, to any person obtaining a
++#  copy of this software and associated documentation files (the "Software"),
++#  to deal in the Software without restriction, including without limitation
++#  on the rights to use, copy, modify, merge, publish, distribute, sub
++#  license, and/or sell copies of the Software, and to permit persons to whom
++#  the Software is furnished to do so, subject to the following conditions:
++#
++#  The above copyright notice and this permission notice (including the next
++#  paragraph) shall be included in all copies or substantial portions of the
++#  Software.
++#
++#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++#  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  IN NO EVENT SHALL
++#  THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
++#  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++#  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++
++# this is obnoxious:
++# -module lets us name the module exactly how we want
++# -avoid-version prevents gratuitous .0.0.0 version numbers on the end
++# _ladir passes a dummy rpath to libtool so the thing will actually link
++# TODO: -nostdlib/-Bstatic/-lgcc platform magic, not installing the .a, etc.
++qxl_drv_la_LTLIBRARIES = qxl_drv.la
++qxl_drv_la_LDFLAGS = -module -avoid-version
++qxl_drv_ladir = @moduledir@/drivers
++AM_CFLAGS = -g
++AM_CFLAGS = $(XORG_CFLAGS) $(PCIACCESS_CFLAGS) $(CWARNFLAGS)
++
++qxl_drv_la_SOURCES =				\
++	compat-qxl.h					\
++	compat-qxl_driver.c				\
++	compat-qxl_image.c				\
++	compat-qxl_ring.c				\
++	compat-qxl_mem.c				\
++	compat-lookup3.c				\
++	compat-lookup3.h				\
++	compat-qxl_cursor.c
+diff --git a/src/compat/compat-lookup3.c b/src/compat/compat-lookup3.c
+new file mode 100644
+index 0000000..c301d85
+--- /dev/null
++++ b/src/compat/compat-lookup3.c
+@@ -0,0 +1,769 @@
++/*
++-------------------------------------------------------------------------------
++lookup3.c, by Bob Jenkins, May 2006, Public Domain.
++
++These are functions for producing 32-bit hashes for hash table lookup.
++hashword(), hashlittle(), hashlittle2(), hashbig(), mix(), and final() 
++are externally useful functions.  Routines to test the hash are included 
++if SELF_TEST is defined.  You can use this free for any purpose.  It's in
++the public domain.  It has no warranty.
++
++You probably want to use hashlittle().  hashlittle() and hashbig()
++hash byte arrays.  hashlittle() is is faster than hashbig() on
++little-endian machines.  Intel and AMD are little-endian machines.
++On second thought, you probably want hashlittle2(), which is identical to
++hashlittle() except it returns two 32-bit hashes for the price of one.  
++You could implement hashbig2() if you wanted but I haven't bothered here.
++
++If you want to find a hash of, say, exactly 7 integers, do
++  a = i1;  b = i2;  c = i3;
++  mix(a,b,c);
++  a += i4; b += i5; c += i6;
++  mix(a,b,c);
++  a += i7;
++  final(a,b,c);
++then use c as the hash value.  If you have a variable length array of
++4-byte integers to hash, use hashword().  If you have a byte array (like
++a character string), use hashlittle().  If you have several byte arrays, or
++a mix of things, see the comments above hashlittle().  
++
++Why is this so big?  I read 12 bytes at a time into 3 4-byte integers, 
++then mix those integers.  This is fast (you can do a lot more thorough
++mixing with 12*3 instructions on 3 integers than you can with 3 instructions
++on 1 byte), but shoehorning those bytes into integers efficiently is messy.
++-------------------------------------------------------------------------------
++*/
++
++#include <stdio.h>      /* defines printf for tests */
++#include <time.h>       /* defines time_t for timings in the test */
++#include "compat-lookup3.h"
++#ifdef linux
++# include <endian.h>    /* attempt to define endianness */
++#endif
++
++/*
++ * My best guess at if you are big-endian or little-endian.  This may
++ * need adjustment.
++ */
++#if (defined(__BYTE_ORDER) && defined(__LITTLE_ENDIAN) && \
++     __BYTE_ORDER == __LITTLE_ENDIAN) || \
++    (defined(i386) || defined(__i386__) || defined(__i486__) || \
++     defined(__i586__) || defined(__i686__) || defined(vax) || defined(MIPSEL))
++# define HASH_LITTLE_ENDIAN 1
++# define HASH_BIG_ENDIAN 0
++#elif (defined(__BYTE_ORDER) && defined(__BIG_ENDIAN) && \
++       __BYTE_ORDER == __BIG_ENDIAN) || \
++      (defined(sparc) || defined(POWERPC) || defined(mc68000) || defined(sel))
++# define HASH_LITTLE_ENDIAN 0
++# define HASH_BIG_ENDIAN 1
++#else
++# define HASH_LITTLE_ENDIAN 0
++# define HASH_BIG_ENDIAN 0
++#endif
++
++#define hashsize(n) ((uint32_t)1<<(n))
++#define hashmask(n) (hashsize(n)-1)
++#define rot(x,k) (((x)<<(k)) | ((x)>>(32-(k))))
++
++/*
++-------------------------------------------------------------------------------
++mix -- mix 3 32-bit values reversibly.
++
++This is reversible, so any information in (a,b,c) before mix() is
++still in (a,b,c) after mix().
++
++If four pairs of (a,b,c) inputs are run through mix(), or through
++mix() in reverse, there are at least 32 bits of the output that
++are sometimes the same for one pair and different for another pair.
++This was tested for:
++* pairs that differed by one bit, by two bits, in any combination
++  of top bits of (a,b,c), or in any combination of bottom bits of
++  (a,b,c).
++* "differ" is defined as +, -, ^, or ~^.  For + and -, I transformed
++  the output delta to a Gray code (a^(a>>1)) so a string of 1's (as
++  is commonly produced by subtraction) look like a single 1-bit
++  difference.
++* the base values were pseudorandom, all zero but one bit set, or 
++  all zero plus a counter that starts at zero.
++
++Some k values for my "a-=c; a^=rot(c,k); c+=b;" arrangement that
++satisfy this are
++    4  6  8 16 19  4
++    9 15  3 18 27 15
++   14  9  3  7 17  3
++Well, "9 15 3 18 27 15" didn't quite get 32 bits diffing
++for "differ" defined as + with a one-bit base and a two-bit delta.  I
++used http://burtleburtle.net/bob/hash/avalanche.html to choose 
++the operations, constants, and arrangements of the variables.
++
++This does not achieve avalanche.  There are input bits of (a,b,c)
++that fail to affect some output bits of (a,b,c), especially of a.  The
++most thoroughly mixed value is c, but it doesn't really even achieve
++avalanche in c.
++
++This allows some parallelism.  Read-after-writes are good at doubling
++the number of bits affected, so the goal of mixing pulls in the opposite
++direction as the goal of parallelism.  I did what I could.  Rotates
++seem to cost as much as shifts on every machine I could lay my hands
++on, and rotates are much kinder to the top and bottom bits, so I used
++rotates.
++-------------------------------------------------------------------------------
++*/
++#define mix(a,b,c) \
++{ \
++  a -= c;  a ^= rot(c, 4);  c += b; \
++  b -= a;  b ^= rot(a, 6);  a += c; \
++  c -= b;  c ^= rot(b, 8);  b += a; \
++  a -= c;  a ^= rot(c,16);  c += b; \
++  b -= a;  b ^= rot(a,19);  a += c; \
++  c -= b;  c ^= rot(b, 4);  b += a; \
++}
++
++/*
++-------------------------------------------------------------------------------
++final -- final mixing of 3 32-bit values (a,b,c) into c
++
++Pairs of (a,b,c) values differing in only a few bits will usually
++produce values of c that look totally different.  This was tested for
++* pairs that differed by one bit, by two bits, in any combination
++  of top bits of (a,b,c), or in any combination of bottom bits of
++  (a,b,c).
++* "differ" is defined as +, -, ^, or ~^.  For + and -, I transformed
++  the output delta to a Gray code (a^(a>>1)) so a string of 1's (as
++  is commonly produced by subtraction) look like a single 1-bit
++  difference.
++* the base values were pseudorandom, all zero but one bit set, or 
++  all zero plus a counter that starts at zero.
++
++These constants passed:
++ 14 11 25 16 4 14 24
++ 12 14 25 16 4 14 24
++and these came close:
++  4  8 15 26 3 22 24
++ 10  8 15 26 3 22 24
++ 11  8 15 26 3 22 24
++-------------------------------------------------------------------------------
++*/
++#define final(a,b,c) \
++{ \
++  c ^= b; c -= rot(b,14); \
++  a ^= c; a -= rot(c,11); \
++  b ^= a; b -= rot(a,25); \
++  c ^= b; c -= rot(b,16); \
++  a ^= c; a -= rot(c,4);  \
++  b ^= a; b -= rot(a,14); \
++  c ^= b; c -= rot(b,24); \
++}
++
++/*
++--------------------------------------------------------------------
++ This works on all machines.  To be useful, it requires
++ -- that the key be an array of uint32_t's, and
++ -- that the length be the number of uint32_t's in the key
++
++ The function hashword() is identical to hashlittle() on little-endian
++ machines, and identical to hashbig() on big-endian machines,
++ except that the length has to be measured in uint32_ts rather than in
++ bytes.  hashlittle() is more complicated than hashword() only because
++ hashlittle() has to dance around fitting the key bytes into registers.
++--------------------------------------------------------------------
++*/
++uint32_t hashword(
++    const uint32_t *k,                   /* the key, an array of uint32_t values */
++    size_t          length,               /* the length of the key, in uint32_ts */
++    uint32_t        initval)         /* the previous hash, or an arbitrary value */
++{
++  uint32_t a,b,c;
++
++  /* Set up the internal state */
++  a = b = c = 0xdeadbeef + (((uint32_t)length)<<2) + initval;
++
++  /*------------------------------------------------- handle most of the key */
++  while (length > 3)
++  {
++    a += k[0];
++    b += k[1];
++    c += k[2];
++    mix(a,b,c);
++    length -= 3;
++    k += 3;
++  }
++
++  /*------------------------------------------- handle the last 3 uint32_t's */
++  switch(length)                     /* all the case statements fall through */
++  { 
++  case 3 : c+=k[2];
++  case 2 : b+=k[1];
++  case 1 : a+=k[0];
++    final(a,b,c);
++  case 0:     /* case 0: nothing left to add */
++    break;
++  }
++  /*------------------------------------------------------ report the result */
++  return c;
++}
++
++
++/*
++--------------------------------------------------------------------
++hashword2() -- same as hashword(), but take two seeds and return two
++32-bit values.  pc and pb must both be nonnull, and *pc and *pb must
++both be initialized with seeds.  If you pass in (*pb)==0, the output 
++(*pc) will be the same as the return value from hashword().
++--------------------------------------------------------------------
++*/
++void hashword2 (
++const uint32_t *k,                   /* the key, an array of uint32_t values */
++size_t          length,               /* the length of the key, in uint32_ts */
++uint32_t       *pc,                      /* IN: seed OUT: primary hash value */
++uint32_t       *pb)               /* IN: more seed OUT: secondary hash value */
++{
++  uint32_t a,b,c;
++
++  /* Set up the internal state */
++  a = b = c = 0xdeadbeef + ((uint32_t)(length<<2)) + *pc;
++  c += *pb;
++
++  /*------------------------------------------------- handle most of the key */
++  while (length > 3)
++  {
++    a += k[0];
++    b += k[1];
++    c += k[2];
++    mix(a,b,c);
++    length -= 3;
++    k += 3;
++  }
++
++  /*------------------------------------------- handle the last 3 uint32_t's */
++  switch(length)                     /* all the case statements fall through */
++  { 
++  case 3 : c+=k[2];
++  case 2 : b+=k[1];
++  case 1 : a+=k[0];
++    final(a,b,c);
++  case 0:     /* case 0: nothing left to add */
++    break;
++  }
++  /*------------------------------------------------------ report the result */
++  *pc=c; *pb=b;
++}
++
++
++/*
++-------------------------------------------------------------------------------
++hashlittle() -- hash a variable-length key into a 32-bit value
++  k       : the key (the unaligned variable-length array of bytes)
++  length  : the length of the key, counting by bytes
++  initval : can be any 4-byte value
++Returns a 32-bit value.  Every bit of the key affects every bit of
++the return value.  Two keys differing by one or two bits will have
++totally different hash values.
++
++The best hash table sizes are powers of 2.  There is no need to do
++mod a prime (mod is sooo slow!).  If you need less than 32 bits,
++use a bitmask.  For example, if you need only 10 bits, do
++  h = (h & hashmask(10));
++In which case, the hash table should have hashsize(10) elements.
++
++If you are hashing n strings (uint8_t **)k, do it like this:
++  for (i=0, h=0; i<n; ++i) h = hashlittle( k[i], len[i], h);
++
++By Bob Jenkins, 2006.  bob_jenkins@burtleburtle.net.  You may use this
++code any way you wish, private, educational, or commercial.  It's free.
++
++Use for hash table lookup, or anything where one collision in 2^^32 is
++acceptable.  Do NOT use for cryptographic purposes.
++-------------------------------------------------------------------------------
++*/
++
++uint32_t hashlittle( const void *key, size_t length, uint32_t initval)
++{
++  uint32_t a,b,c;                                          /* internal state */
++  union { const void *ptr; size_t i; } u;     /* needed for Mac Powerbook G4 */
++
++  /* Set up the internal state */
++  a = b = c = 0xdeadbeef + ((uint32_t)length) + initval;
++
++  u.ptr = key;
++  if (HASH_LITTLE_ENDIAN && ((u.i & 0x3) == 0)) {
++    const uint32_t *k = (const uint32_t *)key;         /* read 32-bit chunks */
++#ifdef VALGRIND
++    const uint8_t  *k8;
++#endif
++
++    /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
++    while (length > 12)
++    {
++      a += k[0];
++      b += k[1];
++      c += k[2];
++      mix(a,b,c);
++      length -= 12;
++      k += 3;
++    }
++
++    /*----------------------------- handle the last (probably partial) block */
++    /* 
++     * "k[2]&0xffffff" actually reads beyond the end of the string, but
++     * then masks off the part it's not allowed to read.  Because the
++     * string is aligned, the masked-off tail is in the same word as the
++     * rest of the string.  Every machine with memory protection I've seen
++     * does it on word boundaries, so is OK with this.  But VALGRIND will
++     * still catch it and complain.  The masking trick does make the hash
++     * noticably faster for short strings (like English words).
++     */
++#ifndef VALGRIND
++
++    switch(length)
++    {
++    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
++    case 11: c+=k[2]&0xffffff; b+=k[1]; a+=k[0]; break;
++    case 10: c+=k[2]&0xffff; b+=k[1]; a+=k[0]; break;
++    case 9 : c+=k[2]&0xff; b+=k[1]; a+=k[0]; break;
++    case 8 : b+=k[1]; a+=k[0]; break;
++    case 7 : b+=k[1]&0xffffff; a+=k[0]; break;
++    case 6 : b+=k[1]&0xffff; a+=k[0]; break;
++    case 5 : b+=k[1]&0xff; a+=k[0]; break;
++    case 4 : a+=k[0]; break;
++    case 3 : a+=k[0]&0xffffff; break;
++    case 2 : a+=k[0]&0xffff; break;
++    case 1 : a+=k[0]&0xff; break;
++    case 0 : return c;              /* zero length strings require no mixing */
++    }
++
++#else /* make valgrind happy */
++
++    k8 = (const uint8_t *)k;
++    switch(length)
++    {
++    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
++    case 11: c+=((uint32_t)k8[10])<<16;  /* fall through */
++    case 10: c+=((uint32_t)k8[9])<<8;    /* fall through */
++    case 9 : c+=k8[8];                   /* fall through */
++    case 8 : b+=k[1]; a+=k[0]; break;
++    case 7 : b+=((uint32_t)k8[6])<<16;   /* fall through */
++    case 6 : b+=((uint32_t)k8[5])<<8;    /* fall through */
++    case 5 : b+=k8[4];                   /* fall through */
++    case 4 : a+=k[0]; break;
++    case 3 : a+=((uint32_t)k8[2])<<16;   /* fall through */
++    case 2 : a+=((uint32_t)k8[1])<<8;    /* fall through */
++    case 1 : a+=k8[0]; break;
++    case 0 : return c;
++    }
++
++#endif /* !valgrind */
++
++  } else if (HASH_LITTLE_ENDIAN && ((u.i & 0x1) == 0)) {
++    const uint16_t *k = (const uint16_t *)key;         /* read 16-bit chunks */
++    const uint8_t  *k8;
++
++    /*--------------- all but last block: aligned reads and different mixing */
++    while (length > 12)
++    {
++      a += k[0] + (((uint32_t)k[1])<<16);
++      b += k[2] + (((uint32_t)k[3])<<16);
++      c += k[4] + (((uint32_t)k[5])<<16);
++      mix(a,b,c);
++      length -= 12;
++      k += 6;
++    }
++
++    /*----------------------------- handle the last (probably partial) block */
++    k8 = (const uint8_t *)k;
++    switch(length)
++    {
++    case 12: c+=k[4]+(((uint32_t)k[5])<<16);
++             b+=k[2]+(((uint32_t)k[3])<<16);
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 11: c+=((uint32_t)k8[10])<<16;     /* fall through */
++    case 10: c+=k[4];
++             b+=k[2]+(((uint32_t)k[3])<<16);
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 9 : c+=k8[8];                      /* fall through */
++    case 8 : b+=k[2]+(((uint32_t)k[3])<<16);
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 7 : b+=((uint32_t)k8[6])<<16;      /* fall through */
++    case 6 : b+=k[2];
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 5 : b+=k8[4];                      /* fall through */
++    case 4 : a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 3 : a+=((uint32_t)k8[2])<<16;      /* fall through */
++    case 2 : a+=k[0];
++             break;
++    case 1 : a+=k8[0];
++             break;
++    case 0 : return c;                     /* zero length requires no mixing */
++    }
++
++  } else {                        /* need to read the key one byte at a time */
++    const uint8_t *k = (const uint8_t *)key;
++
++    /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
++    while (length > 12)
++    {
++      a += k[0];
++      a += ((uint32_t)k[1])<<8;
++      a += ((uint32_t)k[2])<<16;
++      a += ((uint32_t)k[3])<<24;
++      b += k[4];
++      b += ((uint32_t)k[5])<<8;
++      b += ((uint32_t)k[6])<<16;
++      b += ((uint32_t)k[7])<<24;
++      c += k[8];
++      c += ((uint32_t)k[9])<<8;
++      c += ((uint32_t)k[10])<<16;
++      c += ((uint32_t)k[11])<<24;
++      mix(a,b,c);
++      length -= 12;
++      k += 12;
++    }
++
++    /*-------------------------------- last block: affect all 32 bits of (c) */
++    switch(length)                   /* all the case statements fall through */
++    {
++    case 12: c+=((uint32_t)k[11])<<24;
++    case 11: c+=((uint32_t)k[10])<<16;
++    case 10: c+=((uint32_t)k[9])<<8;
++    case 9 : c+=k[8];
++    case 8 : b+=((uint32_t)k[7])<<24;
++    case 7 : b+=((uint32_t)k[6])<<16;
++    case 6 : b+=((uint32_t)k[5])<<8;
++    case 5 : b+=k[4];
++    case 4 : a+=((uint32_t)k[3])<<24;
++    case 3 : a+=((uint32_t)k[2])<<16;
++    case 2 : a+=((uint32_t)k[1])<<8;
++    case 1 : a+=k[0];
++             break;
++    case 0 : return c;
++    }
++  }
++
++  final(a,b,c);
++  return c;
++}
++
++
++/*
++ * hashlittle2: return 2 32-bit hash values
++ *
++ * This is identical to hashlittle(), except it returns two 32-bit hash
++ * values instead of just one.  This is good enough for hash table
++ * lookup with 2^^64 buckets, or if you want a second hash if you're not
++ * happy with the first, or if you want a probably-unique 64-bit ID for
++ * the key.  *pc is better mixed than *pb, so use *pc first.  If you want
++ * a 64-bit value do something like "*pc + (((uint64_t)*pb)<<32)".
++ */
++void hashlittle2( 
++  const void *key,       /* the key to hash */
++  size_t      length,    /* length of the key */
++  uint32_t   *pc,        /* IN: primary initval, OUT: primary hash */
++  uint32_t   *pb)        /* IN: secondary initval, OUT: secondary hash */
++{
++  uint32_t a,b,c;                                          /* internal state */
++  union { const void *ptr; size_t i; } u;     /* needed for Mac Powerbook G4 */
++
++  /* Set up the internal state */
++  a = b = c = 0xdeadbeef + ((uint32_t)length) + *pc;
++  c += *pb;
++
++  u.ptr = key;
++  if (HASH_LITTLE_ENDIAN && ((u.i & 0x3) == 0)) {
++    const uint32_t *k = (const uint32_t *)key;         /* read 32-bit chunks */
++#ifdef VALGRIND
++    const uint8_t  *k8;
++#endif
++
++    /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
++    while (length > 12)
++    {
++      a += k[0];
++      b += k[1];
++      c += k[2];
++      mix(a,b,c);
++      length -= 12;
++      k += 3;
++    }
++
++    /*----------------------------- handle the last (probably partial) block */
++    /* 
++     * "k[2]&0xffffff" actually reads beyond the end of the string, but
++     * then masks off the part it's not allowed to read.  Because the
++     * string is aligned, the masked-off tail is in the same word as the
++     * rest of the string.  Every machine with memory protection I've seen
++     * does it on word boundaries, so is OK with this.  But VALGRIND will
++     * still catch it and complain.  The masking trick does make the hash
++     * noticably faster for short strings (like English words).
++     */
++#ifndef VALGRIND
++
++    switch(length)
++    {
++    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
++    case 11: c+=k[2]&0xffffff; b+=k[1]; a+=k[0]; break;
++    case 10: c+=k[2]&0xffff; b+=k[1]; a+=k[0]; break;
++    case 9 : c+=k[2]&0xff; b+=k[1]; a+=k[0]; break;
++    case 8 : b+=k[1]; a+=k[0]; break;
++    case 7 : b+=k[1]&0xffffff; a+=k[0]; break;
++    case 6 : b+=k[1]&0xffff; a+=k[0]; break;
++    case 5 : b+=k[1]&0xff; a+=k[0]; break;
++    case 4 : a+=k[0]; break;
++    case 3 : a+=k[0]&0xffffff; break;
++    case 2 : a+=k[0]&0xffff; break;
++    case 1 : a+=k[0]&0xff; break;
++    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
++    }
++
++#else /* make valgrind happy */
++
++    k8 = (const uint8_t *)k;
++    switch(length)
++    {
++    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
++    case 11: c+=((uint32_t)k8[10])<<16;  /* fall through */
++    case 10: c+=((uint32_t)k8[9])<<8;    /* fall through */
++    case 9 : c+=k8[8];                   /* fall through */
++    case 8 : b+=k[1]; a+=k[0]; break;
++    case 7 : b+=((uint32_t)k8[6])<<16;   /* fall through */
++    case 6 : b+=((uint32_t)k8[5])<<8;    /* fall through */
++    case 5 : b+=k8[4];                   /* fall through */
++    case 4 : a+=k[0]; break;
++    case 3 : a+=((uint32_t)k8[2])<<16;   /* fall through */
++    case 2 : a+=((uint32_t)k8[1])<<8;    /* fall through */
++    case 1 : a+=k8[0]; break;
++    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
++    }
++
++#endif /* !valgrind */
++
++  } else if (HASH_LITTLE_ENDIAN && ((u.i & 0x1) == 0)) {
++    const uint16_t *k = (const uint16_t *)key;         /* read 16-bit chunks */
++    const uint8_t  *k8;
++
++    /*--------------- all but last block: aligned reads and different mixing */
++    while (length > 12)
++    {
++      a += k[0] + (((uint32_t)k[1])<<16);
++      b += k[2] + (((uint32_t)k[3])<<16);
++      c += k[4] + (((uint32_t)k[5])<<16);
++      mix(a,b,c);
++      length -= 12;
++      k += 6;
++    }
++
++    /*----------------------------- handle the last (probably partial) block */
++    k8 = (const uint8_t *)k;
++    switch(length)
++    {
++    case 12: c+=k[4]+(((uint32_t)k[5])<<16);
++             b+=k[2]+(((uint32_t)k[3])<<16);
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 11: c+=((uint32_t)k8[10])<<16;     /* fall through */
++    case 10: c+=k[4];
++             b+=k[2]+(((uint32_t)k[3])<<16);
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 9 : c+=k8[8];                      /* fall through */
++    case 8 : b+=k[2]+(((uint32_t)k[3])<<16);
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 7 : b+=((uint32_t)k8[6])<<16;      /* fall through */
++    case 6 : b+=k[2];
++             a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 5 : b+=k8[4];                      /* fall through */
++    case 4 : a+=k[0]+(((uint32_t)k[1])<<16);
++             break;
++    case 3 : a+=((uint32_t)k8[2])<<16;      /* fall through */
++    case 2 : a+=k[0];
++             break;
++    case 1 : a+=k8[0];
++             break;
++    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
++    }
++
++  } else {                        /* need to read the key one byte at a time */
++    const uint8_t *k = (const uint8_t *)key;
++
++    /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
++    while (length > 12)
++    {
++      a += k[0];
++      a += ((uint32_t)k[1])<<8;
++      a += ((uint32_t)k[2])<<16;
++      a += ((uint32_t)k[3])<<24;
++      b += k[4];
++      b += ((uint32_t)k[5])<<8;
++      b += ((uint32_t)k[6])<<16;
++      b += ((uint32_t)k[7])<<24;
++      c += k[8];
++      c += ((uint32_t)k[9])<<8;
++      c += ((uint32_t)k[10])<<16;
++      c += ((uint32_t)k[11])<<24;
++      mix(a,b,c);
++      length -= 12;
++      k += 12;
++    }
++
++    /*-------------------------------- last block: affect all 32 bits of (c) */
++    switch(length)                   /* all the case statements fall through */
++    {
++    case 12: c+=((uint32_t)k[11])<<24;
++    case 11: c+=((uint32_t)k[10])<<16;
++    case 10: c+=((uint32_t)k[9])<<8;
++    case 9 : c+=k[8];
++    case 8 : b+=((uint32_t)k[7])<<24;
++    case 7 : b+=((uint32_t)k[6])<<16;
++    case 6 : b+=((uint32_t)k[5])<<8;
++    case 5 : b+=k[4];
++    case 4 : a+=((uint32_t)k[3])<<24;
++    case 3 : a+=((uint32_t)k[2])<<16;
++    case 2 : a+=((uint32_t)k[1])<<8;
++    case 1 : a+=k[0];
++             break;
++    case 0 : *pc=c; *pb=b; return;  /* zero length strings require no mixing */
++    }
++  }
++
++  final(a,b,c);
++  *pc=c; *pb=b;
++}
++
++
++
++/*
++ * hashbig():
++ * This is the same as hashword() on big-endian machines.  It is different
++ * from hashlittle() on all machines.  hashbig() takes advantage of
++ * big-endian byte ordering. 
++ */
++uint32_t hashbig( const void *key, size_t length, uint32_t initval)
++{
++  uint32_t a,b,c;
++  union { const void *ptr; size_t i; } u; /* to cast key to (size_t) happily */
++
++  /* Set up the internal state */
++  a = b = c = 0xdeadbeef + ((uint32_t)length) + initval;
++
++  u.ptr = key;
++  if (HASH_BIG_ENDIAN && ((u.i & 0x3) == 0)) {
++    const uint32_t *k = (const uint32_t *)key;         /* read 32-bit chunks */
++#ifdef VALGRIND
++    const uint8_t  *k8;
++#endif
++
++    /*------ all but last block: aligned reads and affect 32 bits of (a,b,c) */
++    while (length > 12)
++    {
++      a += k[0];
++      b += k[1];
++      c += k[2];
++      mix(a,b,c);
++      length -= 12;
++      k += 3;
++    }
++
++    /*----------------------------- handle the last (probably partial) block */
++    /* 
++     * "k[2]<<8" actually reads beyond the end of the string, but
++     * then shifts out the part it's not allowed to read.  Because the
++     * string is aligned, the illegal read is in the same word as the
++     * rest of the string.  Every machine with memory protection I've seen
++     * does it on word boundaries, so is OK with this.  But VALGRIND will
++     * still catch it and complain.  The masking trick does make the hash
++     * noticably faster for short strings (like English words).
++     */
++#ifndef VALGRIND
++
++    switch(length)
++    {
++    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
++    case 11: c+=k[2]&0xffffff00; b+=k[1]; a+=k[0]; break;
++    case 10: c+=k[2]&0xffff0000; b+=k[1]; a+=k[0]; break;
++    case 9 : c+=k[2]&0xff000000; b+=k[1]; a+=k[0]; break;
++    case 8 : b+=k[1]; a+=k[0]; break;
++    case 7 : b+=k[1]&0xffffff00; a+=k[0]; break;
++    case 6 : b+=k[1]&0xffff0000; a+=k[0]; break;
++    case 5 : b+=k[1]&0xff000000; a+=k[0]; break;
++    case 4 : a+=k[0]; break;
++    case 3 : a+=k[0]&0xffffff00; break;
++    case 2 : a+=k[0]&0xffff0000; break;
++    case 1 : a+=k[0]&0xff000000; break;
++    case 0 : return c;              /* zero length strings require no mixing */
++    }
++
++#else  /* make valgrind happy */
++
++    k8 = (const uint8_t *)k;
++    switch(length)                   /* all the case statements fall through */
++    {
++    case 12: c+=k[2]; b+=k[1]; a+=k[0]; break;
++    case 11: c+=((uint32_t)k8[10])<<8;  /* fall through */
++    case 10: c+=((uint32_t)k8[9])<<16;  /* fall through */
++    case 9 : c+=((uint32_t)k8[8])<<24;  /* fall through */
++    case 8 : b+=k[1]; a+=k[0]; break;
++    case 7 : b+=((uint32_t)k8[6])<<8;   /* fall through */
++    case 6 : b+=((uint32_t)k8[5])<<16;  /* fall through */
++    case 5 : b+=((uint32_t)k8[4])<<24;  /* fall through */
++    case 4 : a+=k[0]; break;
++    case 3 : a+=((uint32_t)k8[2])<<8;   /* fall through */
++    case 2 : a+=((uint32_t)k8[1])<<16;  /* fall through */
++    case 1 : a+=((uint32_t)k8[0])<<24; break;
++    case 0 : return c;
++    }
++
++#endif /* !VALGRIND */
++
++  } else {                        /* need to read the key one byte at a time */
++    const uint8_t *k = (const uint8_t *)key;
++
++    /*--------------- all but the last block: affect some 32 bits of (a,b,c) */
++    while (length > 12)
++    {
++      a += ((uint32_t)k[0])<<24;
++      a += ((uint32_t)k[1])<<16;
++      a += ((uint32_t)k[2])<<8;
++      a += ((uint32_t)k[3]);
++      b += ((uint32_t)k[4])<<24;
++      b += ((uint32_t)k[5])<<16;
++      b += ((uint32_t)k[6])<<8;
++      b += ((uint32_t)k[7]);
++      c += ((uint32_t)k[8])<<24;
++      c += ((uint32_t)k[9])<<16;
++      c += ((uint32_t)k[10])<<8;
++      c += ((uint32_t)k[11]);
++      mix(a,b,c);
++      length -= 12;
++      k += 12;
++    }
++
++    /*-------------------------------- last block: affect all 32 bits of (c) */
++    switch(length)                   /* all the case statements fall through */
++    {
++    case 12: c+=k[11];
++    case 11: c+=((uint32_t)k[10])<<8;
++    case 10: c+=((uint32_t)k[9])<<16;
++    case 9 : c+=((uint32_t)k[8])<<24;
++    case 8 : b+=k[7];
++    case 7 : b+=((uint32_t)k[6])<<8;
++    case 6 : b+=((uint32_t)k[5])<<16;
++    case 5 : b+=((uint32_t)k[4])<<24;
++    case 4 : a+=k[3];
++    case 3 : a+=((uint32_t)k[2])<<8;
++    case 2 : a+=((uint32_t)k[1])<<16;
++    case 1 : a+=((uint32_t)k[0])<<24;
++             break;
++    case 0 : return c;
++    }
++  }
++
++  final(a,b,c);
++  return c;
++}
++
+diff --git a/src/compat/compat-lookup3.h b/src/compat/compat-lookup3.h
+new file mode 100644
+index 0000000..50c1cf4
+--- /dev/null
++++ b/src/compat/compat-lookup3.h
+@@ -0,0 +1,26 @@
++#ifndef __LOOKUP3_H
++#define __LOOKUP3_H
++
++#if defined(__GNUC__) || defined(__sun)
++
++#include <stdint.h>
++
++#else
++
++#ifdef QXLDD
++#include <windef.h>
++#include "os_dep.h"
++#else
++#include <stddef.h>
++#include <basetsd.h>
++#endif
++
++typedef UINT32 uint32_t;
++typedef UINT16 uint16_t;
++typedef UINT8 uint8_t;
++
++#endif
++
++uint32_t hashlittle( const void *key, size_t length, uint32_t initval);
++
++#endif
+diff --git a/src/compat/compat-qxl.h b/src/compat/compat-qxl.h
+new file mode 100644
+index 0000000..bec43b3
+--- /dev/null
++++ b/src/compat/compat-qxl.h
+@@ -0,0 +1,610 @@
++/*
++ * Copyright 2008 Red Hat, Inc.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * on the rights to use, copy, modify, merge, publish, distribute, sub
++ * license, and/or sell copies of the Software, and to permit persons to whom
++ * the Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
++ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "config.h"
++
++#include <stdint.h>
++
++#include "compiler.h"
++#include "xf86.h"
++#if GET_ABI_MAJOR(ABI_VIDEODRV_VERSION) < 6
++#include "xf86Resources.h"
++#endif
++#include "xf86PciInfo.h"
++#include "xf86Cursor.h"
++#include "xf86_OSproc.h"
++#include "xf86xv.h"
++#include "shadow.h"
++#include "micmap.h"
++#ifdef XSERVER_PCIACCESS
++#include "pciaccess.h"
++#endif
++#include "fb.h"
++#include "vgaHW.h"
++
++#define hidden _X_HIDDEN
++
++#define QXL_NAME		"qxl"
++#define QXL_DRIVER_NAME		"qxl"
++#define PCI_VENDOR_RED_HAT	0x1b36
++
++#define PCI_CHIP_QXL_0100	0x0100
++
++#pragma pack(push,1)
++
++/* I/O port definitions */
++enum {
++    QXL_IO_NOTIFY_CMD,
++    QXL_IO_NOTIFY_CURSOR,
++    QXL_IO_UPDATE_AREA,
++    QXL_IO_UPDATE_IRQ,
++    QXL_IO_NOTIFY_OOM,
++    QXL_IO_RESET,
++    QXL_IO_SET_MODE,
++    QXL_IO_LOG,
++};
++
++struct qxl_mode {
++    uint32_t id;
++    uint32_t x_res;
++    uint32_t y_res;
++    uint32_t bits;
++    uint32_t stride;
++    uint32_t x_mili;
++    uint32_t y_mili;
++    uint32_t orientation;
++};
++
++typedef enum
++{
++    QXL_CMD_NOP,
++    QXL_CMD_DRAW,
++    QXL_CMD_UPDATE,
++    QXL_CMD_CURSOR,
++    QXL_CMD_MESSAGE
++} qxl_command_type;
++
++struct qxl_command {
++    uint64_t data;
++    uint32_t type;
++    uint32_t pad;
++};
++
++struct qxl_rect {
++    uint32_t top;
++    uint32_t left;
++    uint32_t bottom;
++    uint32_t right;
++};
++
++union qxl_release_info {
++    uint64_t id;
++    uint64_t next;
++};
++
++struct qxl_clip {
++    uint32_t type;
++    uint64_t address;
++};
++
++struct qxl_point {
++    int x;
++    int y;
++};
++
++struct qxl_pattern {
++    uint64_t pat;
++    struct qxl_point pos;
++};
++
++typedef enum
++{
++    QXL_BRUSH_TYPE_NONE,
++    QXL_BRUSH_TYPE_SOLID,
++    QXL_BRUSH_TYPE_PATTERN
++} qxl_brush_type;
++
++struct qxl_brush {
++    uint32_t type;
++    union {
++	uint32_t color;
++	struct qxl_pattern pattern;
++    } u;
++};
++
++struct qxl_mask {
++    unsigned char flags;
++    struct qxl_point pos;
++    uint64_t bitmap;
++};
++
++typedef enum {
++    QXL_IMAGE_TYPE_BITMAP,
++    QXL_IMAGE_TYPE_QUIC,
++    QXL_IMAGE_TYPE_PNG,
++    QXL_IMAGE_TYPE_LZ_PLT = 100,
++    QXL_IMAGE_TYPE_LZ_RGB,
++    QXL_IMAGE_TYPE_GLZ_RGB,
++    QXL_IMAGE_TYPE_FROM_CACHE,
++} qxl_image_type;
++
++typedef enum {
++    QXL_IMAGE_CACHE = (1 << 0)
++} qxl_image_flags;
++
++struct qxl_image_descriptor
++{
++    uint64_t id;
++    uint8_t type;
++    uint8_t flags;
++    uint32_t width;
++    uint32_t height;
++};
++
++struct qxl_data_chunk {
++    uint32_t data_size;
++    uint64_t prev_chunk;
++    uint64_t next_chunk;
++    uint8_t data[0];
++};
++
++typedef enum
++{
++    QXL_BITMAP_FMT_INVALID,
++    QXL_BITMAP_FMT_1BIT_LE,
++    QXL_BITMAP_FMT_1BIT_BE,
++    QXL_BITMAP_FMT_4BIT_LE,
++    QXL_BITMAP_FMT_4BIT_BE,
++    QXL_BITMAP_FMT_8BIT,
++    QXL_BITMAP_FMT_16BIT,
++    QXL_BITMAP_FMT_24BIT,
++    QXL_BITMAP_FMT_32BIT,
++    QXL_BITMAP_FMT_RGBA,
++} qxl_bitmap_format;
++
++typedef enum {
++    QXL_BITMAP_PAL_CACHE_ME = (1 << 0),
++    QXL_BITMAP_PAL_FROM_CACHE = (1 << 1),
++    QXL_BITMAP_TOP_DOWN = (1 << 2),
++} qxl_bitmap_flags;
++
++struct qxl_bitmap {
++    uint8_t format;
++    uint8_t flags;		
++    uint32_t x;			/* actually width */
++    uint32_t y;			/* actually height */
++    uint32_t stride;		/* in bytes */
++    uint64_t palette;		/* Can be NULL */
++    uint64_t data;		/* A qxl_data_chunk that actually contains the data */
++};
++
++struct qxl_image {
++    struct qxl_image_descriptor descriptor;
++    union
++    {
++	struct qxl_bitmap bitmap;
++    } u;
++};
++
++struct qxl_fill {
++    struct qxl_brush brush;
++    unsigned short rop_descriptor;
++    struct qxl_mask mask;
++};
++
++struct qxl_opaque {
++    uint64_t src_bitmap;
++    struct qxl_rect src_area;
++    struct qxl_brush brush;
++    unsigned short rop_descriptor;
++    unsigned char scale_mode;
++    struct qxl_mask mask;
++};
++
++struct qxl_copy {
++    uint64_t src_bitmap;
++    struct qxl_rect src_area;
++    unsigned short rop_descriptor;
++    unsigned char scale_mode;
++    struct qxl_mask mask;
++};
++
++struct qxl_transparent {
++    uint64_t src_bitmap;
++    struct qxl_rect src_area;
++    uint32_t src_color;
++    uint32_t true_color;
++};
++
++struct qxl_alpha_blend {
++    unsigned char alpha;
++    uint64_t src_bitmap;
++    struct qxl_rect src_area;
++};
++
++struct qxl_copy_bits {
++    struct qxl_point src_pos;
++};
++
++struct qxl_blend { /* same as copy */
++    uint64_t src_bitmap;
++    struct qxl_rect src_area;
++    unsigned short rop_descriptor;
++    unsigned char scale_mode;
++    struct qxl_mask mask;
++};
++
++struct qxl_rop3 {
++    uint64_t src_bitmap;
++    struct qxl_rect src_area;
++    struct qxl_brush brush;
++    unsigned char rop3;
++    unsigned char scale_mode;
++    struct qxl_mask mask;
++};
++
++struct qxl_line_attr {
++    unsigned char flags;
++    unsigned char join_style;
++    unsigned char end_style;
++    unsigned char style_nseg;
++    int width;
++    int miter_limit;
++    uint64_t style;
++};
++
++struct qxl_stroke {
++    uint64_t path;
++    struct qxl_line_attr attr;
++    struct qxl_brush brush;
++    unsigned short fore_mode;
++    unsigned short back_mode;
++};
++
++struct qxl_text {
++    uint64_t str;
++    struct qxl_rect back_area;
++    struct qxl_brush fore_brush;
++    struct qxl_brush back_brush;
++    unsigned short fore_mode;
++    unsigned short back_mode;
++};
++
++struct qxl_blackness {
++    struct qxl_mask mask;
++};
++
++struct qxl_inverse {
++    struct qxl_mask mask;
++};
++
++struct qxl_whiteness {
++    struct qxl_mask mask;
++};
++
++/* Effects */
++typedef enum
++{
++    QXL_EFFECT_BLEND,
++    QXL_EFFECT_OPAQUE,
++    QXL_EFFECT_REVERT_ON_DUP,
++    QXL_EFFECT_BLACKNESS_ON_DUP,
++    QXL_EFFECT_WHITENESS_ON_DUP,
++    QXL_EFFECT_NOP_ON_DUP,
++    QXL_EFFECT_NOP,
++    QXL_EFFECT_OPAQUE_BRUSH
++} qxl_effect_type;
++
++typedef enum
++{
++    QXL_CLIP_TYPE_NONE,
++    QXL_CLIP_TYPE_RECTS,
++    QXL_CLIP_TYPE_PATH,
++} qxl_clip_type;
++
++typedef enum {
++    QXL_DRAW_NOP,
++    QXL_DRAW_FILL,
++    QXL_DRAW_OPAQUE,
++    QXL_DRAW_COPY,
++    QXL_COPY_BITS,
++    QXL_DRAW_BLEND,
++    QXL_DRAW_BLACKNESS,
++    QXL_DRAW_WHITENESS,
++    QXL_DRAW_INVERS,
++    QXL_DRAW_ROP3,
++    QXL_DRAW_STROKE,
++    QXL_DRAW_TEXT,
++    QXL_DRAW_TRANSPARENT,
++    QXL_DRAW_ALPHA_BLEND,
++} qxl_draw_type;
++
++struct qxl_drawable {
++    union qxl_release_info release_info;
++    unsigned char effect;
++    unsigned char type;
++    unsigned short bitmap_offset;
++    struct qxl_rect bitmap_area;
++    struct qxl_rect bbox;
++    struct qxl_clip clip;
++    uint32_t mm_time;
++    union {
++	struct qxl_fill fill;
++	struct qxl_opaque opaque;
++	struct qxl_copy copy;
++	struct qxl_transparent transparent;
++	struct qxl_alpha_blend alpha_blend;
++	struct qxl_copy_bits copy_bits;
++	struct qxl_blend blend;
++	struct qxl_rop3 rop3;
++	struct qxl_stroke stroke;
++	struct qxl_text text;
++	struct qxl_blackness blackness;
++	struct qxl_inverse inverse;
++	struct qxl_whiteness whiteness;
++    } u;
++};
++
++struct qxl_update_cmd {
++    union qxl_release_info release_info;
++    struct qxl_rect area;
++    uint32_t update_id;
++};
++
++struct qxl_point16 {
++    int16_t x;
++    int16_t y;
++};
++
++enum {
++    QXL_CURSOR_SET,
++    QXL_CURSOR_MOVE,
++    QXL_CURSOR_HIDE,
++    QXL_CURSOR_TRAIL,
++};
++
++#define QXL_CURSOR_DEVICE_DATA_SIZE 128
++
++enum {
++    CURSOR_TYPE_ALPHA,
++    CURSOR_TYPE_MONO,
++    CURSOR_TYPE_COLOR4,
++    CURSOR_TYPE_COLOR8,
++    CURSOR_TYPE_COLOR16,
++    CURSOR_TYPE_COLOR24,
++    CURSOR_TYPE_COLOR32,
++};
++
++struct qxl_cursor_header {
++    uint64_t unique;
++    uint16_t type;
++    uint16_t width;
++    uint16_t height;
++    uint16_t hot_spot_x;
++    uint16_t hot_spot_y;
++};
++
++struct qxl_cursor
++{
++    struct qxl_cursor_header header;
++    uint32_t data_size;
++    struct qxl_data_chunk chunk;
++};
++
++struct qxl_cursor_cmd {
++    union qxl_release_info release_info;
++    uint8_t type;
++    union {
++	struct {
++	    struct qxl_point16 position;
++	    unsigned char visible;
++	    uint64_t shape;
++	} set;
++	struct {
++	    uint16_t length;
++	    uint16_t frequency;
++	} trail;
++	struct qxl_point16 position;
++    } u;
++    uint8_t device_data[QXL_CURSOR_DEVICE_DATA_SIZE];
++};
++
++struct qxl_rom {
++    uint32_t magic;
++    uint32_t id;
++    uint32_t update_id;
++    uint32_t compression_level;
++    uint32_t log_level;
++    uint32_t mode;
++    uint32_t modes_offset;
++    uint32_t num_io_pages;
++    uint32_t pages_offset;
++    uint32_t draw_area_offset;
++    uint32_t draw_area_size;
++    uint32_t ram_header_offset;
++    uint32_t mm_clock;
++};
++
++struct qxl_ring_header {
++    uint32_t num_items;
++    uint32_t prod;
++    uint32_t notify_on_prod;
++    uint32_t cons;
++    uint32_t notify_on_cons;
++};
++
++#define QXL_LOG_BUF_SIZE 4096
++
++struct qxl_ram_header {
++    uint32_t magic;
++    uint32_t int_pending;
++    uint32_t int_mask;
++    unsigned char log_buf[QXL_LOG_BUF_SIZE];
++    struct qxl_ring_header  cmd_ring_hdr;
++    struct qxl_command	    cmd_ring[32];
++    struct qxl_ring_header  cursor_ring_hdr;
++    struct qxl_command	    cursor_ring[32];
++    struct qxl_ring_header  release_ring_hdr;
++    uint64_t		    release_ring[8];
++    struct qxl_rect	    update_area;
++};
++
++#pragma pack(pop)
++
++typedef struct _qxl_screen_t qxl_screen_t;
++
++struct _qxl_screen_t
++{
++    /* These are the names QXL uses */
++    void *			ram;	/* Video RAM */
++    void *			ram_physical;
++    void *			vram;	/* Command RAM */
++    struct qxl_rom *		rom;    /* Parameter RAM */
++    
++    struct qxl_ring *		command_ring;
++    struct qxl_ring *		cursor_ring;
++    struct qxl_ring *		release_ring;
++    
++    int				num_modes;
++    struct qxl_mode *		modes;
++    int				io_base;
++    int				draw_area_offset;
++    int				draw_area_size;
++
++    void *			fb;
++    int				bytes_per_pixel;
++
++    struct qxl_mem *		mem;	/* Context for qxl_alloc/free */
++    
++    EntityInfoPtr		entity;
++
++    void *			io_pages;
++    void *			io_pages_physical;
++    
++#ifdef XSERVER_LIBPCIACCESS
++    struct pci_device *		pci;
++#else
++    pciVideoPtr			pci;
++    PCITAG			pci_tag;
++#endif
++    vgaRegRec                   vgaRegs;
++
++    CreateScreenResourcesProcPtr create_screen_resources;
++    CloseScreenProcPtr		close_screen;
++    CreateGCProcPtr		create_gc;
++#if 0
++    PaintWindowProcPtr		paint_window_background;
++    PaintWindowProcPtr		paint_window_border;
++#endif
++    CopyWindowProcPtr		copy_window;
++    
++    DamagePtr			damage;
++    RegionRec			pending_copy;
++    RegionRec			to_be_sent;
++    
++    int16_t			cur_x;
++    int16_t			cur_y;
++    int16_t			hot_x;
++    int16_t			hot_y;
++    
++    ScrnInfoPtr			pScrn;
++};
++
++static inline uint64_t
++physical_address (qxl_screen_t *qxl, void *virtual)
++{
++    return (uint64_t) ((unsigned long)virtual + (((unsigned long)qxl->ram_physical - (unsigned long)qxl->ram)));
++}
++
++static inline void *
++virtual_address (qxl_screen_t *qxl, void *physical)
++{
++    return (void *) ((unsigned long)physical + ((unsigned long)qxl->ram - (unsigned long)qxl->ram_physical));
++}
++
++static inline void *
++u64_to_pointer (uint64_t u)
++{
++    return (void *)(unsigned long)u;
++}
++
++static inline uint64_t
++pointer_to_u64 (void *p)
++{
++    return (uint64_t)(unsigned long)p;
++}
++
++struct qxl_ring;
++
++/*
++ * HW cursor
++ */
++void              qxl_cursor_init        (ScreenPtr               pScreen);
++
++
++
++/*
++ * Rings
++ */
++struct qxl_ring * qxl_ring_create      (struct qxl_ring_header *header,
++					int                     element_size,
++					int                     n_elements,
++					int                     prod_notify);
++void              qxl_ring_push        (struct qxl_ring        *ring,
++					const void             *element);
++Bool              qxl_ring_pop         (struct qxl_ring        *ring,
++					void                   *element);
++void              qxl_ring_wait_idle   (struct qxl_ring        *ring);
++
++
++
++/*
++ * Images
++ */
++struct qxl_image *qxl_image_create     (qxl_screen_t           *qxl,
++					const uint8_t          *data,
++					int                     x,
++					int                     y,
++					int                     width,
++					int                     height,
++					int                     stride);
++void              qxl_image_destroy    (qxl_screen_t           *qxl,
++					struct qxl_image       *image);
++void		  qxl_drop_image_cache (qxl_screen_t	       *qxl);
++
++
++/*
++ * Malloc
++ */
++struct qxl_mem *  qxl_mem_create       (void                   *base,
++					unsigned long           n_bytes);
++void              qxl_mem_dump_stats   (struct qxl_mem         *mem,
++					const char             *header);
++void *            qxl_alloc            (struct qxl_mem         *mem,
++					unsigned long           n_bytes);
++void              qxl_free             (struct qxl_mem         *mem,
++					void                   *d);
++void              qxl_mem_free_all     (struct qxl_mem         *mem);
++void *            qxl_allocnf          (qxl_screen_t           *qxl,
++					unsigned long           size);
++
++
+diff --git a/src/compat/compat-qxl_cursor.c b/src/compat/compat-qxl_cursor.c
+new file mode 100644
+index 0000000..bb5387e
+--- /dev/null
++++ b/src/compat/compat-qxl_cursor.c
+@@ -0,0 +1,196 @@
++/*
++ * Copyright 2009 Red Hat, Inc.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * on the rights to use, copy, modify, merge, publish, distribute, sub
++ * license, and/or sell copies of the Software, and to permit persons to whom
++ * the Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
++ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <string.h>
++#include "compat-qxl.h"
++#include <cursorstr.h>
++
++static void
++push_cursor (qxl_screen_t *qxl, struct qxl_cursor_cmd *cursor)
++{
++    struct qxl_command cmd;
++
++    /* See comment on push_command() in qxl_driver.c */
++    if (qxl->rom->mode != ~0)
++    {
++        cmd.type = QXL_CMD_CURSOR;
++        cmd.data = physical_address (qxl, cursor);
++      
++        qxl_ring_push (qxl->cursor_ring, &cmd);
++    }
++}
++
++static struct qxl_cursor_cmd *
++qxl_alloc_cursor_cmd(qxl_screen_t *qxl)
++{
++    struct qxl_cursor_cmd *cmd =
++	qxl_allocnf (qxl, sizeof(struct qxl_cursor_cmd));
++
++    cmd->release_info.id = pointer_to_u64 (cmd) | 1;
++    
++    return cmd;
++}
++
++static void
++qxl_set_cursor_position(ScrnInfoPtr pScrn, int x, int y)
++{
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    struct qxl_cursor_cmd *cmd = qxl_alloc_cursor_cmd(qxl);
++
++    qxl->cur_x = x;
++    qxl->cur_y = y;
++    
++    cmd->type = QXL_CURSOR_MOVE;
++    cmd->u.position.x = qxl->cur_x + qxl->hot_x;
++    cmd->u.position.y = qxl->cur_y + qxl->hot_y;
++
++    push_cursor(qxl, cmd);
++}
++
++static void
++qxl_load_cursor_image(ScrnInfoPtr pScrn, unsigned char *bits)
++{
++}
++
++static void
++qxl_set_cursor_colors(ScrnInfoPtr pScrn, int bg, int fg)
++{
++    /* Should not be called since UseHWCursor returned FALSE */
++}
++
++static void
++qxl_load_cursor_argb (ScrnInfoPtr pScrn, CursorPtr pCurs)
++{
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    int w = pCurs->bits->width;
++    int h = pCurs->bits->height;
++    int size = w * h * sizeof (CARD32);
++
++    struct qxl_cursor_cmd *cmd = qxl_alloc_cursor_cmd (qxl);
++    struct qxl_cursor *cursor =
++	qxl_allocnf(qxl, sizeof(struct qxl_cursor) + size);
++
++    cursor->header.unique = 0;
++    cursor->header.type = CURSOR_TYPE_ALPHA;
++    cursor->header.width = w;
++    cursor->header.height = h;
++    /* I wonder if we can just tell the client that the hotspot is 0, 0
++     * always? The coordinates we are getting from X are for 0, 0 anyway,
++     * so the question is if the client uses the hotspot for anything else?
++     */
++    cursor->header.hot_spot_x = pCurs->bits->xhot;
++    cursor->header.hot_spot_y = pCurs->bits->yhot;
++
++    cursor->data_size = size;
++    
++    cursor->chunk.next_chunk = 0;
++    cursor->chunk.prev_chunk = 0;
++    cursor->chunk.data_size = size;
++
++    memcpy (cursor->chunk.data, pCurs->bits->argb, size);
++
++#if 0
++    int i, j;
++    for (j = 0; j < h; ++j)
++    {
++	for (i = 0; i < w; ++i)
++	{
++	    ErrorF ("%c", (pCurs->bits->argb[j * w + i] & 0xff000000) == 0xff000000? '#' : '.');
++	}
++
++	ErrorF ("\n");
++    }
++#endif
++
++    qxl->hot_x = pCurs->bits->xhot;
++    qxl->hot_y = pCurs->bits->yhot;
++    
++    cmd->type = QXL_CURSOR_SET;
++    cmd->u.set.position.x = qxl->cur_x + qxl->hot_x;
++    cmd->u.set.position.y = qxl->cur_y + qxl->hot_y;
++    cmd->u.set.shape = physical_address (qxl, cursor);
++    cmd->u.set.visible = TRUE;
++
++    push_cursor(qxl, cmd);
++}    
++
++static Bool
++qxl_use_hw_cursor (ScreenPtr pScrn, CursorPtr pCurs)
++{
++    /* Old-school bitmap cursors are not
++     * hardware accelerated for now.
++     */
++    return FALSE;
++}
++
++static Bool
++qxl_use_hw_cursorARGB (ScreenPtr pScrn, CursorPtr pCurs)
++{
++    return TRUE;
++}
++
++static void
++qxl_hide_cursor(ScrnInfoPtr pScrn)
++{
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    struct qxl_cursor_cmd *cursor = qxl_alloc_cursor_cmd(qxl);
++
++    cursor->type = QXL_CURSOR_HIDE;
++
++    push_cursor(qxl, cursor);
++}
++
++static void
++qxl_show_cursor(ScrnInfoPtr pScrn)
++{
++    /*
++     * slightly hacky, but there's no QXL_CURSOR_SHOW.  Could maybe do
++     * QXL_CURSOR_SET?
++     */
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++
++    qxl_set_cursor_position(pScrn, qxl->cur_x, qxl->cur_y);
++}
++
++hidden void
++qxl_cursor_init(ScreenPtr pScreen)
++{
++    xf86CursorInfoPtr cursor;
++
++    cursor = xcalloc(1, sizeof(xf86CursorInfoRec));
++    if (!cursor)
++	return;
++
++    cursor->MaxWidth = cursor->MaxHeight = 64;
++    /* cursor->Flags; */
++    cursor->SetCursorPosition = qxl_set_cursor_position;
++    cursor->LoadCursorARGB = qxl_load_cursor_argb;
++    cursor->UseHWCursor = qxl_use_hw_cursor;
++    cursor->UseHWCursorARGB = qxl_use_hw_cursorARGB;
++    cursor->LoadCursorImage = qxl_load_cursor_image;
++    cursor->SetCursorColors = qxl_set_cursor_colors;
++    cursor->HideCursor = qxl_hide_cursor;
++    cursor->ShowCursor = qxl_show_cursor;
++
++    if (!xf86InitCursor(pScreen, cursor))
++	xfree(cursor);
++}
+diff --git a/src/compat/compat-qxl_driver.c b/src/compat/compat-qxl_driver.c
+new file mode 100644
+index 0000000..7cd5f40
+--- /dev/null
++++ b/src/compat/compat-qxl_driver.c
+@@ -0,0 +1,1454 @@
++/*
++ * Copyright 2008 Red Hat, Inc.
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * on the rights to use, copy, modify, merge, publish, distribute, sub
++ * license, and/or sell copies of the Software, and to permit persons to whom
++ * the Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
++ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/** \file qxl_driver.c
++ * \author Adam Jackson <ajax@redhat.com>
++ *
++ * This is qxl, a driver for the Qumranet paravirtualized graphics device
++ * in qemu.
++ */
++
++#include <unistd.h>
++#include <string.h>
++#include <stdio.h>
++#include <errno.h>
++#include <time.h>
++#include <stdlib.h>
++#include "compat-qxl.h"
++#include "assert.h"
++
++#define CHECK_POINT()
++
++static int
++garbage_collect (qxl_screen_t *qxl)
++{
++    uint64_t id;
++    int i = 0;
++    
++    while (qxl_ring_pop (qxl->release_ring, &id))
++    {
++	while (id)
++	{
++	    /* We assume that there the two low bits of a pointer are
++	     * available. If the low one is set, then the command in
++	     * question is a cursor command
++	     */
++#define POINTER_MASK ((1 << 2) - 1)
++	    
++	    union qxl_release_info *info = u64_to_pointer (id & ~POINTER_MASK);
++	    struct qxl_cursor_cmd *cmd = (struct qxl_cursor_cmd *)info;
++	    struct qxl_drawable *drawable = (struct qxl_drawable *)info;
++	    int is_cursor = FALSE;
++
++	    if ((id & POINTER_MASK) == 1)
++		is_cursor = TRUE;
++
++	    if (is_cursor && cmd->type == QXL_CURSOR_SET)
++	    {
++		struct qxl_cursor *cursor = (void *)virtual_address (
++		    qxl, u64_to_pointer (cmd->u.set.shape));
++
++		qxl_free (qxl->mem, cursor);
++	    }
++	    else if (!is_cursor && drawable->type == QXL_DRAW_COPY)
++	    {
++		struct qxl_image *image = virtual_address (
++		    qxl, u64_to_pointer (drawable->u.copy.src_bitmap));
++
++		qxl_image_destroy (qxl, image);
++	    }
++	    
++	    id = info->next;
++	    
++	    qxl_free (qxl->mem, info);
++	}
++    }
++
++    return i > 0;
++}
++
++static void
++qxl_usleep (int useconds)
++{
++    struct timespec t;
++
++    t.tv_sec = useconds / 1000000;
++    t.tv_nsec = (useconds - (t.tv_sec * 1000000)) * 1000;
++
++    errno = 0;
++    while (nanosleep (&t, &t) == -1 && errno == EINTR)
++	;
++    
++}
++
++#if 0
++static void
++push_update_area (qxl_screen_t *qxl, const struct qxl_rect *area)
++{
++    struct qxl_update_cmd *update = qxl_allocnf (qxl, sizeof *update);
++    struct qxl_command cmd;
++
++    update->release_info.id = (uint64_t)update;
++    update->area = *area;
++    update->update_id = 0;
++
++    cmd.type = QXL_CMD_UDPATE;
++    cmd.data = physical_address (qxl, update);
++
++    qxl_ring_push (qxl->command_ring, &cmd);
++}
++#endif
++
++void *
++qxl_allocnf (qxl_screen_t *qxl, unsigned long size)
++{
++    void *result;
++    int n_attempts = 0;
++    static int nth_oom = 1;
++
++    garbage_collect (qxl);
++    
++    while (!(result = qxl_alloc (qxl->mem, size)))
++    {
++	struct qxl_ram_header *ram_header = (void *)((unsigned long)qxl->ram +
++						     qxl->rom->ram_header_offset);
++	
++	/* Rather than go out of memory, we simply tell the
++	 * device to dump everything
++	 */
++	ram_header->update_area.top = 0;
++	ram_header->update_area.bottom = 1280;
++	ram_header->update_area.left = 0;
++	ram_header->update_area.right = 800;
++	
++	outb (qxl->io_base + QXL_IO_UPDATE_AREA, 0);
++	
++ 	ErrorF ("eliminated memory (%d)\n", nth_oom++);
++
++	outb (qxl->io_base + QXL_IO_NOTIFY_OOM, 0);
++
++	qxl_usleep (10000);
++	
++	if (garbage_collect (qxl))
++	{
++	    n_attempts = 0;
++	}
++	else if (++n_attempts == 1000)
++	{
++	    qxl_mem_dump_stats (qxl->mem, "Out of mem - stats\n");
++	    
++	    fprintf (stderr, "Out of memory\n");
++	    exit (1);
++	}
++    }
++
++    return result;
++}
++
++static Bool
++qxl_blank_screen(ScreenPtr pScreen, int mode)
++{
++    return TRUE;
++}
++
++static void
++qxl_unmap_memory(qxl_screen_t *qxl, int scrnIndex)
++{
++#ifdef XSERVER_LIBPCIACCESS
++    if (qxl->ram)
++	pci_device_unmap_range(qxl->pci, qxl->ram, qxl->pci->regions[0].size);
++    if (qxl->vram)
++	pci_device_unmap_range(qxl->pci, qxl->vram, qxl->pci->regions[1].size);
++    if (qxl->rom)
++	pci_device_unmap_range(qxl->pci, qxl->rom, qxl->pci->regions[2].size);
++#else
++    if (qxl->ram)
++	xf86UnMapVidMem(scrnIndex, qxl->ram, (1 << qxl->pci->size[0]));
++    if (qxl->vram)
++	xf86UnMapVidMem(scrnIndex, qxl->vram, (1 << qxl->pci->size[1]));
++    if (qxl->rom)
++	xf86UnMapVidMem(scrnIndex, qxl->rom, (1 << qxl->pci->size[2]));
++#endif
++
++    qxl->ram = qxl->ram_physical = qxl->vram = qxl->rom = NULL;
++
++    qxl->num_modes = 0;
++    qxl->modes = NULL;
++}
++
++static Bool
++qxl_map_memory(qxl_screen_t *qxl, int scrnIndex)
++{
++#ifdef XSERVER_LIBPCIACCESS
++    pci_device_map_range(qxl->pci, qxl->pci->regions[0].base_addr, 
++			 qxl->pci->regions[0].size,
++			 PCI_DEV_MAP_FLAG_WRITABLE | PCI_DEV_MAP_FLAG_WRITE_COMBINE,
++			 &qxl->ram);
++    qxl->ram_physical = u64_to_pointer (qxl->pci->regions[0].base_addr);
++
++    pci_device_map_range(qxl->pci, qxl->pci->regions[1].base_addr, 
++			 qxl->pci->regions[1].size,
++			 PCI_DEV_MAP_FLAG_WRITABLE,
++			 &qxl->vram);
++
++    pci_device_map_range(qxl->pci, qxl->pci->regions[2].base_addr, 
++			 qxl->pci->regions[2].size, 0,
++			 (void **)&qxl->rom);
++
++    qxl->io_base = qxl->pci->regions[3].base_addr;
++#else
++    qxl->ram = xf86MapPciMem(scrnIndex, VIDMEM_FRAMEBUFFER,
++			     qxl->pci_tag, qxl->pci->memBase[0],
++			     (1 << qxl->pci->size[0]));
++    qxl->ram_physical = (void *)qxl->pci->memBase[0];
++    
++    qxl->vram = xf86MapPciMem(scrnIndex, VIDMEM_MMIO | VIDMEM_MMIO_32BIT,
++			      qxl->pci_tag, qxl->pci->memBase[1],
++			      (1 << qxl->pci->size[1]));
++    
++    qxl->rom = xf86MapPciMem(scrnIndex, VIDMEM_MMIO | VIDMEM_MMIO_32BIT,
++			     qxl->pci_tag, qxl->pci->memBase[2],
++			     (1 << qxl->pci->size[2]));
++    
++    qxl->io_base = qxl->pci->ioBase[3];
++#endif
++    if (!qxl->ram || !qxl->vram || !qxl->rom)
++	return FALSE;
++
++    xf86DrvMsg(scrnIndex, X_INFO, "ram at %p; vram at %p; rom at %p\n",
++	       qxl->ram, qxl->vram, qxl->rom);
++
++    qxl->num_modes = *(uint32_t *)((uint8_t *)qxl->rom + qxl->rom->modes_offset);
++    qxl->modes = (struct qxl_mode *)(((uint8_t *)qxl->rom) + qxl->rom->modes_offset + 4);
++
++    return TRUE;
++}
++
++static void
++qxl_save_state(ScrnInfoPtr pScrn)
++{
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++
++    vgaHWSaveFonts(pScrn, &qxl->vgaRegs);
++}
++
++static void
++qxl_restore_state(ScrnInfoPtr pScrn)
++{
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++
++    vgaHWRestoreFonts(pScrn, &qxl->vgaRegs);
++}
++
++static Bool
++qxl_close_screen(int scrnIndex, ScreenPtr pScreen)
++{
++    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++
++    if (pScrn->vtSema) {
++        qxl_restore_state(pScrn);
++	qxl_unmap_memory(qxl, scrnIndex);
++    }
++    pScrn->vtSema = FALSE;
++
++    xfree(qxl->fb);
++
++    pScreen->CreateScreenResources = qxl->create_screen_resources;
++    pScreen->CloseScreen = qxl->close_screen;
++
++    return pScreen->CloseScreen(scrnIndex, pScreen);
++}
++
++static Bool
++qxl_switch_mode(int scrnIndex, DisplayModePtr p, int flags)
++{
++    qxl_screen_t *qxl = xf86Screens[scrnIndex]->driverPrivate;
++    int mode_index = (int)(unsigned long)p->Private;
++    struct qxl_mode *m = qxl->modes + mode_index;
++    ScreenPtr pScreen = qxl->pScrn->pScreen;
++
++    if (!m)
++	return FALSE;
++
++    /* if (debug) */
++    xf86DrvMsg (scrnIndex, X_INFO, "Setting mode %d (%d x %d) (%d x %d) %p\n",
++		m->id, m->x_res, m->y_res, p->HDisplay, p->VDisplay, p);
++
++    outb(qxl->io_base + QXL_IO_RESET, 0);
++    
++    outb(qxl->io_base + QXL_IO_SET_MODE, m->id);
++
++    qxl->bytes_per_pixel = (qxl->pScrn->bitsPerPixel + 7) / 8;
++
++    /* If this happens out of ScreenInit, we won't have a screen yet. In that
++     * case createScreenResources will make things right.
++     */
++    if (pScreen)
++    {
++	PixmapPtr pPixmap = pScreen->GetScreenPixmap(pScreen);
++
++	if (pPixmap)
++	{
++	    pScreen->ModifyPixmapHeader(
++		pPixmap,
++		m->x_res, m->y_res,
++		-1, -1,
++		qxl->pScrn->displayWidth * qxl->bytes_per_pixel,
++		NULL);
++	}
++    }
++    
++    if (qxl->mem)
++    {
++	qxl_mem_free_all (qxl->mem);
++	qxl_drop_image_cache (qxl);
++    }
++
++    
++    return TRUE;
++}
++
++static void
++push_drawable (qxl_screen_t *qxl, struct qxl_drawable *drawable)
++{
++    struct qxl_command cmd;
++
++    /* When someone runs "init 3", the device will be 
++     * switched into VGA mode and there is nothing we
++     * can do about it. We get no notification.
++     * 
++     * However, if commands are submitted when the device
++     * is in VGA mode, they will be queued up, and then
++     * the next time a mode set set, an assertion in the
++     * device will take down the entire virtual machine.
++     * 
++     * The author of the QXL device is opposed to this
++     * for reasons I don't understand.
++     */
++    if (qxl->rom->mode != ~0)
++    {
++	cmd.type = QXL_CMD_DRAW;
++	cmd.data = physical_address (qxl, drawable);
++	    
++	qxl_ring_push (qxl->command_ring, &cmd);
++    }
++}
++
++static struct qxl_drawable *
++make_drawable (qxl_screen_t *qxl, uint8_t type,
++	       const struct qxl_rect *rect
++	       /* , pRegion clip */)
++{
++    struct qxl_drawable *drawable;
++
++    CHECK_POINT();
++    
++    drawable = qxl_allocnf (qxl, sizeof *drawable);
++
++    CHECK_POINT();
++
++    drawable->release_info.id = pointer_to_u64 (drawable);
++
++    drawable->type = type;
++
++    drawable->effect = QXL_EFFECT_OPAQUE;
++    drawable->bitmap_offset = 0;
++    drawable->bitmap_area.top = 0;
++    drawable->bitmap_area.left = 0;
++    drawable->bitmap_area.bottom = 0;
++    drawable->bitmap_area.right = 0;
++    /* FIXME: add clipping */
++    drawable->clip.type = QXL_CLIP_TYPE_NONE;
++
++    if (rect)
++	drawable->bbox = *rect;
++
++    drawable->mm_time = qxl->rom->mm_clock;
++
++    CHECK_POINT();
++    
++    return drawable;
++}
++
++enum ROPDescriptor {
++    ROPD_INVERS_SRC = (1 << 0),
++    ROPD_INVERS_BRUSH = (1 << 1),
++    ROPD_INVERS_DEST = (1 << 2),
++    ROPD_OP_PUT = (1 << 3),
++    ROPD_OP_OR = (1 << 4),
++    ROPD_OP_AND = (1 << 5),
++    ROPD_OP_XOR = (1 << 6),
++    ROPD_OP_BLACKNESS = (1 << 7),
++    ROPD_OP_WHITENESS = (1 << 8),
++    ROPD_OP_INVERS = (1 << 9),
++    ROPD_INVERS_RES = (1 <<10),
++};
++
++static void
++undamage_box (qxl_screen_t *qxl, const struct qxl_rect *rect)
++{
++    RegionRec region;
++    BoxRec box;
++
++    box.x1 = rect->left;
++    box.y1 = rect->top;
++    box.x2 = rect->right;
++    box.y2 = rect->bottom;
++
++    REGION_INIT (qxl->pScrn->pScreen, &region, &box, 0);
++
++    REGION_SUBTRACT (qxl->pScrn->pScreen, &(qxl->pending_copy), &(qxl->pending_copy), &region);
++
++    REGION_EMPTY (qxl->pScrn->pScreen, &(qxl->pending_copy));
++}
++
++static void
++clear_pending_damage (qxl_screen_t *qxl)
++{
++    REGION_EMPTY (qxl->pScrn->pScreen, &(qxl->pending_copy));
++}
++
++static void
++submit_fill (qxl_screen_t *qxl, const struct qxl_rect *rect, uint32_t color)
++{
++    struct qxl_drawable *drawable;
++
++    CHECK_POINT();
++    
++    drawable = make_drawable (qxl, QXL_DRAW_FILL, rect);
++
++    CHECK_POINT();
++
++    drawable->u.fill.brush.type = QXL_BRUSH_TYPE_SOLID;
++    drawable->u.fill.brush.u.color = color;
++    drawable->u.fill.rop_descriptor = ROPD_OP_PUT;
++    drawable->u.fill.mask.flags = 0;
++    drawable->u.fill.mask.pos.x = 0;
++    drawable->u.fill.mask.pos.y = 0;
++    drawable->u.fill.mask.bitmap = 0;
++
++    push_drawable (qxl, drawable);
++
++    undamage_box (qxl, rect);
++}
++
++static void
++translate_rect (struct qxl_rect *rect)
++{
++    rect->right -= rect->left;
++    rect->bottom -= rect->top;
++    rect->left = rect->top = 0;
++}
++
++static void
++submit_copy (qxl_screen_t *qxl, const struct qxl_rect *rect)
++{
++    struct qxl_drawable *drawable;
++    ScrnInfoPtr pScrn = qxl->pScrn;
++
++    if (rect->left == rect->right ||
++	rect->top == rect->bottom)
++    {
++	/* Empty rectangle */
++	return ;
++    }
++    
++    drawable = make_drawable (qxl, QXL_DRAW_COPY, rect);
++
++    drawable->u.copy.src_bitmap = physical_address (
++	qxl, qxl_image_create (qxl, qxl->fb, rect->left, rect->top,
++			       rect->right - rect->left,
++			       rect->bottom - rect->top,
++			       pScrn->displayWidth * qxl->bytes_per_pixel));
++    drawable->u.copy.src_area = *rect;
++    translate_rect (&drawable->u.copy.src_area);
++    drawable->u.copy.rop_descriptor = ROPD_OP_PUT;
++    drawable->u.copy.scale_mode = 0;
++    drawable->u.copy.mask.flags = 0;
++    drawable->u.copy.mask.pos.x = 0;
++    drawable->u.copy.mask.pos.y = 0;
++    drawable->u.copy.mask.bitmap = 0;
++
++    push_drawable (qxl, drawable);
++}
++
++static void
++print_region (const char *header, RegionPtr pRegion)
++{
++    int nbox = REGION_NUM_RECTS (pRegion);
++    BoxPtr pbox = REGION_RECTS (pRegion);
++
++    ErrorF ("%s \n", header);
++    
++    while (nbox--)
++    {
++	ErrorF ("   %d %d %d %d (size: %d %d)\n",
++		pbox->x1, pbox->y1, pbox->x2, pbox->y2,
++		pbox->x2 - pbox->x1, pbox->y2 - pbox->y1);
++
++	pbox++;
++    }
++}
++
++static void
++accept_damage (qxl_screen_t *qxl)
++{
++    REGION_UNION (qxl->pScrn->pScreen, &(qxl->to_be_sent), &(qxl->to_be_sent), 
++		  &(qxl->pending_copy));
++
++    REGION_EMPTY (qxl->pScrn->pScreen, &(qxl->pending_copy));
++}
++
++static void
++qxl_send_copies (qxl_screen_t *qxl)
++{
++    BoxPtr pBox;
++    int nbox;
++
++    nbox = REGION_NUM_RECTS (&qxl->to_be_sent);
++    pBox = REGION_RECTS (&qxl->to_be_sent);
++
++/*      if (REGION_NUM_RECTS (&qxl->to_be_sent) > 0)  */
++/*        	print_region ("send bits", &qxl->to_be_sent); */
++    
++    while (nbox--)
++    {
++	struct qxl_rect qrect;
++
++	qrect.top = pBox->y1;
++	qrect.left = pBox->x1;
++	qrect.bottom = pBox->y2;
++	qrect.right = pBox->x2;
++	
++	submit_copy (qxl, &qrect);
++
++	pBox++;
++    }
++
++    REGION_EMPTY(qxl->pScrn->pScreen, &qxl->to_be_sent);
++}
++
++static void
++paint_shadow (qxl_screen_t *qxl)
++{
++    struct qxl_rect qrect;
++
++    qrect.top = 0;
++    qrect.bottom = 1200;
++    qrect.left = 0;
++    qrect.right = 1600;
++
++    submit_copy (qxl, &qrect);
++}
++
++static void
++qxl_sanity_check (qxl_screen_t *qxl)
++{
++    /* read the mode back from the rom */
++    if (!qxl->rom || !qxl->pScrn)
++	return;
++
++    if (qxl->rom->mode == ~0) 
++    {
++ 	ErrorF("QXL device jumped back to VGA mode - resetting mode\n");
++ 	qxl_switch_mode(qxl->pScrn->scrnIndex, qxl->pScrn->currentMode, 0);
++    }
++}
++
++static void
++qxl_block_handler (pointer data, OSTimePtr pTimeout, pointer pRead)
++{
++    qxl_screen_t *qxl = (qxl_screen_t *) data;
++
++    if (!qxl->pScrn->vtSema)
++        return;
++
++    qxl_sanity_check(qxl);
++
++    accept_damage (qxl);
++
++    qxl_send_copies (qxl);
++}
++
++static void
++qxl_wakeup_handler (pointer data, int i, pointer LastSelectMask)
++{
++}
++
++/* Damage Handling
++ * 
++ * When something is drawn, X first generates a damage callback, then
++ * it calls the GC function to actually draw it. In most cases, we want
++ * to simply draw into the shadow framebuffer, then submit a copy to the
++ * device, but when the operation is hardware accelerated, we don't want
++ * to submit the copy. So, damage is first accumulated into 'pending_copy',
++ * then if we accelerated the operation, that damage is deleted. 
++ *
++ * If we _didn't_ accelerate, we need to union the pending_copy damage 
++ * onto the to_be_sent damage, and then submit a copy command in the block
++ * handler.
++ *
++ * This means that when new damage happens, if there is already pending
++ * damage, that must first be unioned onto to_be_sent, and then the new
++ * damage must be stored in pending_copy.
++ * 
++ * The qxl_screen_t struct contains two regions, "pending_copy" and 
++ * "to_be_sent". 
++ *
++ * Pending copy is 
++ * 
++ */
++static void
++qxl_on_damage (DamagePtr pDamage, RegionPtr pRegion, pointer closure)
++{
++    qxl_screen_t *qxl = closure;
++
++/*     print_region ("damage", pRegion); */
++    
++/*     print_region ("on_damage ", pRegion); */
++
++    accept_damage (qxl);
++
++/*     print_region ("accepting, qxl->to_be_sent is now", &qxl->to_be_sent); */
++
++    REGION_COPY (qxl->pScrn->pScreen, &(qxl->pending_copy), pRegion);
++}
++
++
++static Bool
++qxl_create_screen_resources(ScreenPtr pScreen)
++{
++    ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    Bool ret;
++    PixmapPtr pPixmap;
++
++    pScreen->CreateScreenResources = qxl->create_screen_resources;
++    ret = pScreen->CreateScreenResources (pScreen);
++    pScreen->CreateScreenResources = qxl_create_screen_resources;
++
++    if (!ret)
++	return FALSE;
++
++    qxl->damage = DamageCreate (qxl_on_damage, NULL,
++			        DamageReportRawRegion,
++				TRUE, pScreen, qxl);
++
++
++    pPixmap = pScreen->GetScreenPixmap(pScreen);
++
++    if (!RegisterBlockAndWakeupHandlers(qxl_block_handler, qxl_wakeup_handler, qxl))
++	return FALSE;
++
++    REGION_INIT (pScreen, &(qxl->pending_copy), NullBox, 0);
++
++    REGION_INIT (pScreen, &(qxl->to_be_sent), NullBox, 0);
++ 
++    DamageRegister (&pPixmap->drawable, qxl->damage);
++    return TRUE;
++}
++
++static PixmapPtr 
++get_window_pixmap (DrawablePtr pDrawable, int *xoff, int *yoff)
++{
++    ScreenPtr pScreen = pDrawable->pScreen;
++    PixmapPtr result;
++
++    if (pDrawable->type != DRAWABLE_WINDOW)
++	return NULL;
++
++    result = pScreen->GetWindowPixmap ((WindowPtr)pDrawable);
++
++    *xoff = pDrawable->x;
++    *yoff = pDrawable->y;
++
++    return result;
++}
++
++static void
++qxl_poly_fill_rect (DrawablePtr pDrawable,
++		 GCPtr	     pGC,
++		 int	     nrect,
++		 xRectangle *prect)
++{
++    ScrnInfoPtr pScrn = xf86Screens[pDrawable->pScreen->myNum];
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    PixmapPtr pPixmap;
++    int xoff, yoff;
++
++    if ((pPixmap = get_window_pixmap (pDrawable, &xoff, &yoff))	&&
++	pGC->fillStyle == FillSolid				&&
++	pGC->alu == GXcopy					&&
++	(unsigned int)pGC->planemask == FB_ALLONES)
++    {
++	RegionPtr pReg = RECTS_TO_REGION (pScreen, nrect, prect, CT_UNSORTED);
++	RegionPtr pClip = fbGetCompositeClip (pGC);
++	BoxPtr pBox;
++	int nbox;
++	
++	REGION_TRANSLATE(pScreen, pReg, xoff, yoff);
++	REGION_INTERSECT(pScreen, pReg, pClip, pReg);
++
++	pBox = REGION_RECTS (pReg);
++	nbox = REGION_NUM_RECTS (pReg);
++
++	while (nbox--)
++	{
++	    struct qxl_rect qrect;
++
++	    qrect.left = pBox->x1;
++	    qrect.right = pBox->x2;
++	    qrect.top = pBox->y1;
++	    qrect.bottom = pBox->y2;
++
++	    submit_fill (qxl, &qrect, pGC->fgPixel);
++
++	    pBox++;
++	}
++
++	REGION_DESTROY (pScreen, pReg);
++    }
++    
++    fbPolyFillRect (pDrawable, pGC, nrect, prect);
++}
++
++static void
++qxl_copy_n_to_n (DrawablePtr    pSrcDrawable,
++		 DrawablePtr    pDstDrawable,
++		 GCPtr	        pGC,
++		 BoxPtr	        pbox,
++		 int	        nbox,
++		 int	        dx,
++		 int	        dy,
++		 Bool	        reverse,
++		 Bool	        upsidedown,
++		 Pixel	        bitplane,
++		 void	       *closure)
++{
++    ScreenPtr pScreen = pSrcDrawable->pScreen;
++    ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    int src_xoff, src_yoff;
++    int dst_xoff, dst_yoff;
++    PixmapPtr pSrcPixmap, pDstPixmap;
++
++    if ((pSrcPixmap = get_window_pixmap (pSrcDrawable, &src_xoff, &src_yoff)) &&
++	(pDstPixmap = get_window_pixmap (pDstDrawable, &dst_xoff, &dst_yoff)))
++    {
++	int n = nbox;
++	BoxPtr b = pbox;
++	
++	assert (pSrcPixmap == pDstPixmap);
++
++/* 	ErrorF ("Accelerated copy: %d boxes\n", n); */
++
++	/* At this point we know that any pending damage must
++	 * have been caused by whatever copy operation triggered us.
++	 * 
++	 * Therefore we can clear it.
++	 *
++	 * We couldn't clear it at the toplevel function because 
++	 * the copy might end up being empty, in which case no
++	 * damage would have been generated. Which means the
++	 * pending damage would have been caused by some
++	 * earlier operation.
++	 */
++	if (n)
++	{
++/* 	    ErrorF ("Clearing pending damage\n"); */
++	    clear_pending_damage (qxl);
++	    
++	    /* We have to do this because the copy will cause the damage
++	     * to be sent to move.
++	     * 
++	     * Instead of just sending the bits, we could also move
++	     * the existing damage around; however that's a bit more 
++	     * complex, and the performance win is unlikely to be
++	     * very big.
++	     */
++	    qxl_send_copies (qxl);
++	}
++    
++	while (n--)
++	{
++	    struct qxl_drawable *drawable;
++	    struct qxl_rect qrect;
++	    
++	    qrect.top = b->y1;
++	    qrect.bottom = b->y2;
++	    qrect.left = b->x1;
++	    qrect.right = b->x2;
++
++/* 	    ErrorF ("   Translate %d %d %d %d by %d %d (offsets %d %d)\n", */
++/* 		    b->x1, b->y1, b->x2, b->y2, */
++/* 		    dx, dy, dst_xoff, dst_yoff); */
++	    
++	    drawable = make_drawable (qxl, QXL_COPY_BITS, &qrect);
++	    drawable->u.copy_bits.src_pos.x = b->x1 + dx;
++	    drawable->u.copy_bits.src_pos.y = b->y1 + dy;
++
++	    push_drawable (qxl, drawable);
++
++#if 0
++	    if (closure)
++		qxl_usleep (1000000);
++#endif
++	    
++#if 0
++	    submit_fill (qxl, &qrect, rand());
++#endif
++
++	    b++;
++	}
++    }
++/*     else */
++/* 	ErrorF ("Unaccelerated copy\n"); */
++
++    fbCopyNtoN (pSrcDrawable, pDstDrawable, pGC, pbox, nbox, dx, dy, reverse, upsidedown, bitplane, closure);
++}
++
++static RegionPtr
++qxl_copy_area(DrawablePtr pSrcDrawable, DrawablePtr pDstDrawable, GCPtr pGC,
++	    int srcx, int srcy, int width, int height, int dstx, int dsty)
++{
++    if (pSrcDrawable->type == DRAWABLE_WINDOW &&
++	pDstDrawable->type == DRAWABLE_WINDOW)
++    {
++	RegionPtr res;
++
++/* 	ErrorF ("accelerated copy %d %d %d %d %d %d\n",  */
++/* 		srcx, srcy, width, height, dstx, dsty); */
++
++	res = fbDoCopy (pSrcDrawable, pDstDrawable, pGC,
++			srcx, srcy, width, height, dstx, dsty,
++			qxl_copy_n_to_n, 0, NULL);
++
++	return res;
++    }
++    else
++    {
++/* 	ErrorF ("Falling back %d %d %d %d %d %d\n",  */
++/* 		srcx, srcy, width, height, dstx, dsty); */
++
++	return fbCopyArea (pSrcDrawable, pDstDrawable, pGC,
++			   srcx, srcy, width, height, dstx, dsty);
++    }
++}
++
++static void
++qxl_fill_region_solid (DrawablePtr pDrawable, RegionPtr pRegion, Pixel pixel)
++{
++    ScreenPtr pScreen = pDrawable->pScreen;
++    ScrnInfoPtr pScrn = xf86Screens[pScreen->myNum];
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    PixmapPtr pPixmap;
++    int xoff, yoff;
++
++    if ((pPixmap = get_window_pixmap (pDrawable, &xoff, &yoff)))
++    {
++	int nbox = REGION_NUM_RECTS (pRegion);
++	BoxPtr pBox = REGION_RECTS (pRegion);
++
++	while (nbox--)
++	{
++	    struct qxl_rect qrect;
++
++	    qrect.left = pBox->x1;
++	    qrect.right = pBox->x2;
++	    qrect.top = pBox->y1;
++	    qrect.bottom = pBox->y2;
++
++	    submit_fill (qxl, &qrect, pixel);
++
++	    pBox++;
++	}
++    }
++
++    fbFillRegionSolid (pDrawable, pRegion, 0,
++		       fbReplicatePixel (pixel, pDrawable->bitsPerPixel));
++}
++
++static void
++qxl_copy_window (WindowPtr pWin, DDXPointRec ptOldOrg, RegionPtr prgnSrc)
++{
++    RegionRec rgnDst;
++    int dx, dy;
++
++    dx = ptOldOrg.x - pWin->drawable.x;
++    dy = ptOldOrg.y - pWin->drawable.y;
++
++    REGION_TRANSLATE (pScreen, prgnSrc, -dx, -dy);
++
++    REGION_INIT (pScreen, &rgnDst, NullBox, 0);
++
++    REGION_INTERSECT(pScreen, &rgnDst, &pWin->borderClip, prgnSrc);
++
++    fbCopyRegion (&pWin->drawable, &pWin->drawable,
++		  NULL, 
++		  &rgnDst, dx, dy, qxl_copy_n_to_n, 0, NULL);
++
++    REGION_UNINIT (pScreen, &rgnDst);
++
++/*     REGION_TRANSLATE (pScreen, prgnSrc, dx, dy); */
++    
++/*     fbCopyWindow (pWin, ptOldOrg, prgnSrc); */
++}
++
++static int
++qxl_create_gc (GCPtr pGC)
++{
++    static GCOps ops;
++    static int initialized;
++    
++    if (!fbCreateGC (pGC))
++	return FALSE;
++
++    if (!initialized)
++    {
++	ops = *pGC->ops;
++	ops.PolyFillRect = qxl_poly_fill_rect;
++	ops.CopyArea = qxl_copy_area;
++
++	initialized = TRUE;
++    }
++    
++    pGC->ops = &ops;
++    return TRUE;
++}
++
++static Bool
++qxl_screen_init(int scrnIndex, ScreenPtr pScreen, int argc, char **argv)
++{
++    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    struct qxl_rom *rom;
++    struct qxl_ram_header *ram_header;
++    VisualPtr visual;
++
++    CHECK_POINT();
++
++    qxl->pScrn = pScrn;
++    
++    if (!qxl_map_memory(qxl, scrnIndex))
++	return FALSE;
++
++    rom = qxl->rom;
++    ram_header = (void *)((unsigned long)qxl->ram + (unsigned long)qxl->rom->ram_header_offset);
++
++    qxl_save_state(pScrn);
++    qxl_blank_screen(pScreen, SCREEN_SAVER_ON);
++    
++    miClearVisualTypes();
++    if (!miSetVisualTypes(pScrn->depth, miGetDefaultVisualMask(pScrn->depth),
++			  pScrn->rgbBits, pScrn->defaultVisual))
++	goto out;
++    if (!miSetPixmapDepths())
++	goto out;
++
++    /* Note we do this before setting pScrn->virtualY to match our current
++       mode, so as to allocate a buffer large enough for the largest mode.
++       FIXME: add support for resizing the framebuffer on modeset. */
++    qxl->fb = xcalloc(pScrn->virtualY * pScrn->displayWidth, 4);
++    if (!qxl->fb)
++	goto out;
++
++    pScrn->virtualX = pScrn->currentMode->HDisplay;
++    pScrn->virtualY = pScrn->currentMode->VDisplay;
++    
++    if (!fbScreenInit(pScreen, qxl->fb,
++		      pScrn->currentMode->HDisplay,
++		      pScrn->currentMode->VDisplay,
++		      pScrn->xDpi, pScrn->yDpi, pScrn->displayWidth,
++		      pScrn->bitsPerPixel))
++    {
++	goto out;
++    }
++
++    visual = pScreen->visuals + pScreen->numVisuals;
++    while (--visual >= pScreen->visuals) 
++    {
++	if ((visual->class | DynamicClass) == DirectColor) 
++	{
++	    visual->offsetRed = pScrn->offset.red;
++	    visual->offsetGreen = pScrn->offset.green;
++	    visual->offsetBlue = pScrn->offset.blue;
++	    visual->redMask = pScrn->mask.red;
++	    visual->greenMask = pScrn->mask.green;
++	    visual->blueMask = pScrn->mask.blue;
++	}
++    }
++
++    
++    fbPictureInit(pScreen, 0, 0);
++
++    qxl->create_screen_resources = pScreen->CreateScreenResources;
++    pScreen->CreateScreenResources = qxl_create_screen_resources;
++
++    /* Set up resources */
++    qxl->mem = qxl_mem_create ((void *)((unsigned long)qxl->ram + (unsigned long)rom->pages_offset),
++			       rom->num_io_pages * getpagesize());
++    qxl->io_pages = (void *)((unsigned long)qxl->ram + (unsigned long)rom->pages_offset);
++    qxl->io_pages_physical = (void *)((unsigned long)qxl->ram_physical + (unsigned long)rom->pages_offset);
++
++    qxl->command_ring = qxl_ring_create (&(ram_header->cmd_ring_hdr),
++					 sizeof (struct qxl_command),
++					 32, qxl->io_base + QXL_IO_NOTIFY_CMD);
++    qxl->cursor_ring = qxl_ring_create (&(ram_header->cursor_ring_hdr),
++					sizeof (struct qxl_command),
++					32, qxl->io_base + QXL_IO_NOTIFY_CURSOR);
++    qxl->release_ring = qxl_ring_create (&(ram_header->release_ring_hdr),
++					 sizeof (uint64_t),
++					 8, 0);
++					 
++    /* xf86DPMSInit(pScreen, xf86DPMSSet, 0); */
++
++#if 0 /* XV accel */
++    qxlInitVideo(pScreen);
++#endif
++
++    pScreen->SaveScreen = qxl_blank_screen;
++    qxl->close_screen = pScreen->CloseScreen;
++    pScreen->CloseScreen = qxl_close_screen;
++
++    qxl->create_gc = pScreen->CreateGC;
++    pScreen->CreateGC = qxl_create_gc;
++
++#if 0
++    qxl->paint_window_background = pScreen->PaintWindowBackground;
++    qxl->paint_window_border = pScreen->PaintWindowBorder;
++#endif
++    qxl->copy_window = pScreen->CopyWindow;
++#if 0
++    pScreen->PaintWindowBackground = qxl_paint_window;
++    pScreen->PaintWindowBorder = qxl_paint_window;
++#endif
++    pScreen->CopyWindow = qxl_copy_window;
++
++    miDCInitialize(pScreen, xf86GetPointerScreenFuncs());
++
++    if (!miCreateDefColormap(pScreen))
++	goto out;
++
++    qxl_cursor_init (pScreen);
++    
++    CHECK_POINT();
++
++    qxl_switch_mode(scrnIndex, pScrn->currentMode, 0);
++
++    CHECK_POINT();
++    
++    return TRUE;
++
++out:
++    return FALSE;
++}
++
++static Bool
++qxl_enter_vt(int scrnIndex, int flags)
++{
++    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++
++    qxl_save_state(pScrn);
++    qxl_switch_mode(scrnIndex, pScrn->currentMode, 0);
++
++    return TRUE;
++}
++
++static void
++qxl_leave_vt(int scrnIndex, int flags)
++{
++    ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
++
++    qxl_restore_state(pScrn);
++}
++
++static Bool
++qxl_color_setup(ScrnInfoPtr pScrn)
++{
++    int scrnIndex = pScrn->scrnIndex;
++    Gamma gzeros = { 0.0, 0.0, 0.0 };
++    rgb rzeros = { 0, 0, 0 };
++
++    if (!xf86SetDepthBpp(pScrn, 0, 0, 0, Support32bppFb))
++	return FALSE;
++
++    if (pScrn->depth != 15 && pScrn->depth != 24) 
++    {
++	xf86DrvMsg(scrnIndex, X_ERROR, "Depth %d is not supported\n",
++		   pScrn->depth);
++	return FALSE;
++    }
++    xf86PrintDepthBpp(pScrn);
++
++    if (!xf86SetWeight(pScrn, rzeros, rzeros))
++	return FALSE;
++
++    if (!xf86SetDefaultVisual(pScrn, -1))
++	return FALSE;
++
++    if (!xf86SetGamma(pScrn, gzeros))
++	return FALSE;
++
++    return TRUE;
++}
++
++static void
++print_modes (qxl_screen_t *qxl, int scrnIndex)
++{
++    int i;
++
++    for (i = 0; i < qxl->num_modes; ++i)
++    {
++	struct qxl_mode *m = qxl->modes + i;
++
++	xf86DrvMsg (scrnIndex, X_INFO,
++		    "%d: %dx%d, %d bits, stride %d, %dmm x %dmm, orientation %d\n",
++		    m->id, m->x_res, m->y_res, m->bits, m->stride, m->x_mili,
++		    m->y_mili, m->orientation);
++    }
++}
++
++static Bool
++qxl_check_device(ScrnInfoPtr pScrn, qxl_screen_t *qxl)
++{
++    int scrnIndex = pScrn->scrnIndex;
++    struct qxl_rom *rom = qxl->rom;
++    struct qxl_ram_header *ram_header = (void *)((unsigned long)qxl->ram + rom->ram_header_offset);
++
++    CHECK_POINT();
++    
++    if (rom->magic != 0x4f525851) { /* "QXRO" little-endian */
++	xf86DrvMsg(scrnIndex, X_ERROR, "Bad ROM signature %x\n", rom->magic);
++	return FALSE;
++    }
++
++    xf86DrvMsg(scrnIndex, X_INFO, "Device version %d.%d\n",
++	       rom->id, rom->update_id);
++
++    xf86DrvMsg(scrnIndex, X_INFO, "Compression level %d, log level %d\n",
++	       rom->compression_level,
++	       rom->log_level);
++
++    xf86DrvMsg(scrnIndex, X_INFO, "Currently using mode #%d, list at 0x%x\n",
++	       rom->mode, rom->modes_offset);
++
++    xf86DrvMsg(scrnIndex, X_INFO, "%d io pages at 0x%x\n",
++	       rom->num_io_pages, rom->pages_offset);
++
++    xf86DrvMsg(scrnIndex, X_INFO, "%d byte draw area at 0x%x\n",
++	       rom->draw_area_size, rom->draw_area_offset);
++
++    xf86DrvMsg(scrnIndex, X_INFO, "RAM header offset: 0x%x\n", rom->ram_header_offset);
++
++    if (ram_header->magic != 0x41525851) { /* "QXRA" little-endian */
++	xf86DrvMsg(scrnIndex, X_ERROR, "Bad RAM signature %x at %p\n",
++		   ram_header->magic,
++		   &ram_header->magic);
++	return FALSE;
++    }
++
++    xf86DrvMsg(scrnIndex, X_INFO, "Correct RAM signature %x\n", 
++	       ram_header->magic);
++
++    qxl->draw_area_offset = rom->draw_area_offset;
++    qxl->draw_area_size = rom->draw_area_size;
++    pScrn->videoRam = rom->draw_area_size / 1024;
++    
++    return TRUE;
++}
++
++static int
++qxl_find_native_mode(ScrnInfoPtr pScrn, DisplayModePtr p)
++{
++    int i;
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++
++    CHECK_POINT();
++    
++    for (i = 0; i < qxl->num_modes; i++) 
++    {
++	struct qxl_mode *m = qxl->modes + i;
++
++	if (m->x_res == p->HDisplay &&
++	    m->y_res == p->VDisplay &&
++	    m->bits == pScrn->bitsPerPixel)
++	{
++	    if (m->bits == 16) 
++	    {
++		/* What QXL calls 16 bit is actually x1r5g5b515 */
++		if (pScrn->depth == 15)
++		    return i;
++	    }
++	    else if (m->bits == 32)
++	    {
++		/* What QXL calls 32 bit is actually x8r8g8b8 */
++		if (pScrn->depth == 24)
++		    return i;
++	    }
++	}
++    }
++
++    return -1;
++}
++
++static ModeStatus
++qxl_valid_mode(int scrn, DisplayModePtr p, Bool flag, int pass)
++{
++    ScrnInfoPtr pScrn = xf86Screens[scrn];
++    qxl_screen_t *qxl = pScrn->driverPrivate;
++    int bpp = pScrn->bitsPerPixel;
++    int mode_idx;
++
++    /* FIXME: I don't think this is necessary now that we report the
++     * correct amount of video ram?
++     */
++    if (p->HDisplay * p->VDisplay * (bpp/8) > qxl->draw_area_size)
++	return MODE_MEM;
++
++    mode_idx = qxl_find_native_mode (pScrn, p);
++    if (mode_idx == -1)
++	return MODE_NOMODE;
++
++    p->Private = (void *)(unsigned long)mode_idx;
++    
++    return MODE_OK;
++}
++
++static void qxl_add_mode(ScrnInfoPtr pScrn, int width, int height, int type)
++{
++    DisplayModePtr mode;
++
++    /* Skip already present modes */
++    for (mode = pScrn->monitor->Modes; mode; mode = mode->next)
++        if (mode->HDisplay == width && mode->VDisplay == height)
++            return;
++
++    mode = xnfcalloc(1, sizeof(DisplayModeRec));
++
++    mode->status = MODE_OK;
++    mode->type = type;
++    mode->HDisplay   = width;
++    mode->HSyncStart = (width * 105 / 100 + 7) & ~7;
++    mode->HSyncEnd   = (width * 115 / 100 + 7) & ~7;
++    mode->HTotal     = (width * 130 / 100 + 7) & ~7;
++    mode->VDisplay   = height;
++    mode->VSyncStart = height + 1;
++    mode->VSyncEnd   = height + 4;
++    mode->VTotal     = height * 1035 / 1000;
++    mode->Clock = mode->HTotal * mode->VTotal * 60 / 1000;
++    mode->Flags = V_NHSYNC | V_PVSYNC;
++
++    xf86SetModeDefaultName(mode);
++    xf86ModesAdd(pScrn->monitor->Modes, mode);
++}
++
++static Bool
++qxl_pre_init(ScrnInfoPtr pScrn, int flags)
++{
++    int i, scrnIndex = pScrn->scrnIndex;
++    qxl_screen_t *qxl = NULL;
++    ClockRangePtr clockRanges = NULL;
++    int *linePitches = NULL;
++    DisplayModePtr mode;
++    unsigned int max_x = 0, max_y = 0;
++
++    CHECK_POINT();
++    
++    /* zaphod mode is for suckers and i choose not to implement it */
++    if (xf86IsEntityShared(pScrn->entityList[0])) {
++	xf86DrvMsg(scrnIndex, X_ERROR, "No Zaphod mode for you\n");
++	return FALSE;
++    }
++
++    if (!pScrn->driverPrivate)
++	pScrn->driverPrivate = xnfcalloc(sizeof(qxl_screen_t), 1);
++    qxl = pScrn->driverPrivate;
++    
++    qxl->entity = xf86GetEntityInfo(pScrn->entityList[0]);
++    qxl->pci = xf86GetPciInfoForEntity(qxl->entity->index);
++#ifndef XSERVER_LIBPCIACCESS
++    qxl->pci_tag = pciTag(qxl->pci->bus, qxl->pci->device, qxl->pci->func);
++#endif
++
++    pScrn->monitor = pScrn->confScreen->monitor;
++
++    if (!qxl_color_setup(pScrn))
++	goto out;
++
++    /* option parsing and card differentiation */
++    xf86CollectOptions(pScrn, NULL);
++    
++    if (!qxl_map_memory(qxl, scrnIndex))
++	goto out;
++
++    if (!qxl_check_device(pScrn, qxl))
++	goto out;
++
++    /* ddc stuff here */
++
++    clockRanges = xnfcalloc(sizeof(ClockRange), 1);
++    clockRanges->next = NULL;
++    clockRanges->minClock = 10000;
++    clockRanges->maxClock = 400000;
++    clockRanges->clockIndex = -1;
++    clockRanges->interlaceAllowed = clockRanges->doubleScanAllowed = 0;
++    clockRanges->ClockMulFactor = clockRanges->ClockDivFactor = 1;
++    pScrn->progClock = TRUE;
++
++    /* override QXL monitor stuff */
++    if (pScrn->monitor->nHsync <= 0) {
++	pScrn->monitor->hsync[0].lo =  29.0;
++	pScrn->monitor->hsync[0].hi = 160.0;
++	pScrn->monitor->nHsync = 1;
++    }
++    if (pScrn->monitor->nVrefresh <= 0) {
++	pScrn->monitor->vrefresh[0].lo = 50;
++	pScrn->monitor->vrefresh[0].hi = 75;
++	pScrn->monitor->nVrefresh = 1;
++    }
++
++    /* Add any modes not in xorg's default mode list */
++    for (i = 0; i < qxl->num_modes; i++)
++        if (qxl->modes[i].orientation == 0) {
++            qxl_add_mode(pScrn, qxl->modes[i].x_res, qxl->modes[i].y_res,
++                         M_T_DRIVER);
++            if (qxl->modes[i].x_res > max_x)
++                max_x = qxl->modes[i].x_res;
++            if (qxl->modes[i].y_res > max_y)
++                max_y = qxl->modes[i].y_res;
++        }
++
++    if (pScrn->display->virtualX == 0 && pScrn->display->virtualY == 0) {
++        /* It is possible for the largest x + largest y size combined leading
++           to a virtual size which will not fit into the framebuffer when this
++           happens we prefer max width and make height as large as possible */
++        if (max_x * max_y * (pScrn->bitsPerPixel / 8) > qxl->draw_area_size)
++            pScrn->display->virtualY = qxl->draw_area_size /
++                                       (max_x * (pScrn->bitsPerPixel / 8));
++        else
++            pScrn->display->virtualY = max_y;
++
++    	pScrn->display->virtualX = max_x;
++    }
++
++    if (0 >= xf86ValidateModes(pScrn, pScrn->monitor->Modes,
++			       pScrn->display->modes, clockRanges, linePitches,
++			       128, max_x, 128 * 4, 128, max_y,
++			       pScrn->display->virtualX,
++			       pScrn->display->virtualY,
++			       128 * 1024 * 1024, LOOKUP_BEST_REFRESH))
++	goto out;
++
++    CHECK_POINT();
++    
++    xf86PruneDriverModes(pScrn);
++    pScrn->currentMode = pScrn->modes;
++    /* If no modes are specified in xorg.conf, default to 1024x768 */
++    if (pScrn->display->modes == NULL || pScrn->display->modes[0] == NULL)
++        for (mode = pScrn->modes; mode; mode = mode->next)
++            if (mode->HDisplay == 1024 && mode->VDisplay == 768) {
++                pScrn->currentMode = mode;
++                break;
++            }
++
++    xf86PrintModes(pScrn);
++    xf86SetDpi(pScrn, 0, 0);
++
++    if (!xf86LoadSubModule(pScrn, "fb") ||
++	!xf86LoadSubModule(pScrn, "ramdac") ||
++	!xf86LoadSubModule(pScrn, "vgahw"))
++    {
++	goto out;
++    }
++
++    print_modes (qxl, scrnIndex);
++
++    /* VGA hardware initialisation */
++    if (!vgaHWGetHWRec(pScrn))
++        return FALSE;
++
++    /* hate */
++    qxl_unmap_memory(qxl, scrnIndex);
++
++    CHECK_POINT();
++    
++    xf86DrvMsg(scrnIndex, X_INFO, "PreInit complete\n");
++    return TRUE;
++
++out:
++    if (clockRanges)
++	xfree(clockRanges);
++    if (qxl)
++	xfree(qxl);
++
++    return FALSE;
++}
++
++#ifdef XSERVER_LIBPCIACCESS
++enum qxl_class
++{
++    CHIP_QXL_1,
++};
++
++static const struct pci_id_match qxl_device_match[] = {
++    {
++	PCI_VENDOR_RED_HAT, PCI_CHIP_QXL_0100, PCI_MATCH_ANY, PCI_MATCH_ANY,
++	0x00030000, 0x00ffffff, CHIP_QXL_1
++    },
++
++    { 0 },
++};
++#endif
++
++static SymTabRec qxlChips[] =
++{
++    { PCI_CHIP_QXL_0100,	"QXL 1", },
++    { -1, NULL }
++};
++
++#ifndef XSERVER_LIBPCIACCESS
++static PciChipsets qxlPciChips[] =
++{
++    { PCI_CHIP_QXL_0100,    PCI_CHIP_QXL_0100,	RES_SHARED_VGA },
++    { -1, -1, RES_UNDEFINED }
++};
++#endif
++
++static void
++qxl_identify(int flags)
++{
++    xf86PrintChipsets("qxl", "Driver for QXL virtual graphics", qxlChips);
++}
++
++static void
++qxl_init_scrn(ScrnInfoPtr pScrn)
++{
++    pScrn->driverVersion    = 0;
++    pScrn->driverName	    = pScrn->name = "qxl";
++    pScrn->PreInit	    = qxl_pre_init;
++    pScrn->ScreenInit	    = qxl_screen_init;
++    pScrn->SwitchMode	    = qxl_switch_mode;
++    pScrn->ValidMode	    = qxl_valid_mode;
++    pScrn->EnterVT	    = qxl_enter_vt;
++    pScrn->LeaveVT	    = qxl_leave_vt;
++}
+diff --git a/src/compat/compat-qxl_image.c b/src/compat/compat-qxl_image.c
+new file mode 100644
+index 0000000..d2ac12d
+--- /dev/null
++++ b/src/compat/compat-qxl_image.c
+@@ -0,0 +1,255 @@
++#include <string.h>
++#include <assert.h>
++#include <stdlib.h>
++#include "compat-qxl.h"
++#include "compat-lookup3.h"
++
++typedef struct image_info_t image_info_t;
++
++struct image_info_t
++{
++    struct qxl_image *image;
++    int ref_count;
++    image_info_t *next;
++};
++
++#define HASH_SIZE 4096
++static image_info_t *image_table[HASH_SIZE];
++
++static unsigned int
++hash_and_copy (const uint8_t *src, int src_stride,
++	       uint8_t *dest, int dest_stride,
++	       int bytes_per_pixel, int width, int height)
++{
++    unsigned int hash = 0;
++    int i;
++  
++    for (i = 0; i < height; ++i)
++    {
++	const uint8_t *src_line = src + i * src_stride;
++	uint8_t *dest_line = dest + i * dest_stride;
++	int n_bytes = width * bytes_per_pixel;
++
++	if (dest)
++	    memcpy (dest_line, src_line, n_bytes);
++
++	hash = hashlittle (src_line, n_bytes, hash);
++    }
++
++    return hash;
++}
++
++static image_info_t *
++lookup_image_info (unsigned int hash,
++		   int width,
++		   int height)
++{
++    struct image_info_t *info = image_table[hash % HASH_SIZE];
++
++    while (info)
++    {
++	struct qxl_image *image = info->image;
++
++	if (image->descriptor.id == hash		&&
++	    image->descriptor.width == width		&&
++	    image->descriptor.height == height)
++	{
++	    return info;
++	}
++
++	info = info->next;
++    }
++
++#if 0
++    ErrorF ("lookup of %u failed\n", hash);
++#endif
++    
++    return NULL;
++}
++
++static image_info_t *
++insert_image_info (unsigned int hash)
++{
++    struct image_info_t *info = malloc (sizeof (image_info_t));
++
++    if (!info)
++	return NULL;
++
++    info->next = image_table[hash % HASH_SIZE];
++    image_table[hash % HASH_SIZE] = info;
++    
++    return info;
++}
++
++static void
++remove_image_info (image_info_t *info)
++{
++    struct image_info_t **location = &image_table[info->image->descriptor.id % HASH_SIZE];
++
++    while (*location && (*location) != info)
++	location = &((*location)->next);
++
++    if (*location)
++	*location = info->next;
++
++    free (info);
++}
++
++struct qxl_image *
++qxl_image_create (qxl_screen_t *qxl, const uint8_t *data,
++		  int x, int y, int width, int height,
++		  int stride)
++{
++    unsigned int hash;
++    image_info_t *info;
++
++    data += y * stride + x * qxl->bytes_per_pixel;
++
++    hash = hash_and_copy (data, stride, NULL, -1, qxl->bytes_per_pixel, width, height);
++
++    info = lookup_image_info (hash, width, height);
++    if (info)
++    {
++	int i, j;
++	
++#if 0
++	ErrorF ("reusing image %p with hash %u (%d x %d)\n", info->image, hash, width, height);
++#endif
++	
++	info->ref_count++;
++
++	for (i = 0; i < height; ++i)
++	{
++	    struct qxl_data_chunk *chunk;
++	    const uint8_t *src_line = data + i * stride;
++	    uint32_t *dest_line;
++		
++	    chunk = virtual_address (qxl, u64_to_pointer (info->image->u.bitmap.data));
++	    
++	    dest_line = (uint32_t *)chunk->data + width * i;
++
++	    for (j = 0; j < width; ++j)
++	    {
++		uint32_t *s = (uint32_t *)src_line;
++		uint32_t *d = (uint32_t *)dest_line;
++		
++		if (d[j] != s[j])
++		{
++#if 0
++		    ErrorF ("bad collision at (%d, %d)! %d != %d\n", j, i, s[j], d[j]);
++#endif
++		    goto out;
++		}
++	    }
++	}
++    out:
++	return info->image;
++    }
++    else
++    {
++	struct qxl_image *image;
++	struct qxl_data_chunk *chunk;
++	int dest_stride = width * qxl->bytes_per_pixel;
++	image_info_t *info;
++
++#if 0
++	ErrorF ("Must create new image of size %d %d\n", width, height);
++#endif
++	
++	/* Chunk */
++	
++	/* FIXME: Check integer overflow */
++	chunk = qxl_allocnf (qxl, sizeof *chunk + height * dest_stride);
++	
++	chunk->data_size = height * dest_stride;
++	chunk->prev_chunk = 0;
++	chunk->next_chunk = 0;
++	
++	hash_and_copy (data, stride,
++		       chunk->data, dest_stride,
++		       qxl->bytes_per_pixel, width, height);
++
++	/* Image */
++	image = qxl_allocnf (qxl, sizeof *image);
++
++	image->descriptor.id = 0;
++	image->descriptor.type = QXL_IMAGE_TYPE_BITMAP;
++	
++	image->descriptor.flags = 0;
++	image->descriptor.width = width;
++	image->descriptor.height = height;
++
++	if (qxl->bytes_per_pixel == 2)
++	{
++	    image->u.bitmap.format = QXL_BITMAP_FMT_16BIT;
++	}
++	else
++	{
++	    image->u.bitmap.format = QXL_BITMAP_FMT_32BIT;
++	}
++
++	image->u.bitmap.flags = QXL_BITMAP_TOP_DOWN;
++	image->u.bitmap.x = width;
++	image->u.bitmap.y = height;
++	image->u.bitmap.stride = width * qxl->bytes_per_pixel;
++	image->u.bitmap.palette = 0;
++	image->u.bitmap.data = physical_address (qxl, chunk);
++
++#if 0
++	ErrorF ("%p has size %d %d\n", image, width, height);
++#endif
++	
++	/* Add to hash table */
++	if ((info = insert_image_info (hash)))
++	{
++	    info->image = image;
++	    info->ref_count = 1;
++
++	    image->descriptor.id = hash;
++	    image->descriptor.flags = QXL_IMAGE_CACHE;
++
++#if 0
++	    ErrorF ("added with hash %u\n", hash);
++#endif
++	}
++
++	return image;
++    }
++}
++
++void
++qxl_image_destroy (qxl_screen_t *qxl,
++		   struct qxl_image *image)
++{
++    struct qxl_data_chunk *chunk;
++    image_info_t *info;
++
++    chunk = virtual_address (qxl, u64_to_pointer (image->u.bitmap.data));
++    
++    info = lookup_image_info (image->descriptor.id,
++			      image->descriptor.width,
++			      image->descriptor.height);
++
++    if (info && info->image == image)
++    {
++	--info->ref_count;
++
++	if (info->ref_count != 0)
++	    return;
++
++#if 0
++	ErrorF ("removed %p from hash table\n", info->image);
++#endif
++	
++	remove_image_info (info);
++    }
++
++    qxl_free (qxl->mem, chunk);
++    qxl_free (qxl->mem, image);
++}
++
++void
++qxl_drop_image_cache (qxl_screen_t *qxl)
++{
++    memset (image_table, 0, HASH_SIZE * sizeof (image_info_t *));
++}
+diff --git a/src/compat/compat-qxl_mem.c b/src/compat/compat-qxl_mem.c
+new file mode 100644
+index 0000000..2f6fa6a
+--- /dev/null
++++ b/src/compat/compat-qxl_mem.c
+@@ -0,0 +1,321 @@
++#include <assert.h>
++#include <stdio.h>
++#include <stdlib.h>
++
++#include "compat-qxl.h"
++
++struct block
++{
++    unsigned long n_bytes;
++    
++    union
++    {
++	struct
++	{
++	    struct block *next;
++	} unused;
++
++	struct
++	{
++	    uint8_t data[0];
++	} used;
++    } u;
++};
++
++struct qxl_mem
++{
++    void *		base;
++    unsigned long	n_bytes;
++    
++    struct block *unused;
++    unsigned long total_allocated;
++    unsigned long total_freed;
++    unsigned long n_allocated_blocks;
++    unsigned long n_freed_blocks;
++};
++
++static void
++initialize (struct qxl_mem *mem)
++{
++    mem->unused = (struct block *)mem->base;
++    mem->unused->n_bytes = mem->n_bytes;
++    mem->unused->u.unused.next = NULL;    
++
++    mem->total_allocated = 0;
++    mem->total_freed = 0;
++    mem->n_allocated_blocks = 0;
++    mem->n_freed_blocks = 0;
++}
++
++struct qxl_mem *
++qxl_mem_create (void *base, unsigned long n_bytes)
++{
++    struct qxl_mem *mem = NULL;
++
++    mem = calloc (sizeof (*mem), 1);
++    if (!mem)
++	goto out;
++
++    mem->base = base;
++    mem->n_bytes = n_bytes;
++
++    initialize (mem);
++    
++out:
++    return mem;
++}
++
++void
++qxl_mem_free_all (struct qxl_mem *mem)
++{
++    initialize (mem);
++}
++
++void
++qxl_mem_dump_stats (struct qxl_mem *mem, const char *header)
++{
++    struct block *b;
++    int n_blocks;
++    unsigned long max_block = 0;
++    unsigned long min_block = 0xffffffffffffffffUL;
++    
++    fprintf (stderr, "%s\n", header);
++    
++    n_blocks = 0;
++    for (b = mem->unused; b != NULL; b = b->u.unused.next)
++    {
++	fprintf (stderr, "block: %p (%lu bytes)\n", b, b->n_bytes);
++	
++	if (b->u.unused.next && b >= b->u.unused.next)
++	{
++	    fprintf (stderr, "b: %p   b->next: %p\n",
++		     b, b->u.unused.next);
++	    assert (0);
++	}
++
++	if (b->u.unused.next && (void *)b + b->n_bytes >= b->u.unused.next)
++	{
++	    fprintf (stderr, "OVERLAPPING BLOCKS b: %p   b->next: %p\n",
++		     b, b->u.unused.next);
++	    assert (0);
++	}
++
++	if (b->n_bytes > max_block)
++	    max_block = b->n_bytes;
++
++	if (b->n_bytes < min_block)
++	    min_block = b->n_bytes;
++	
++	++n_blocks;
++    }
++
++    fprintf (stderr, "=========\n");
++
++    fprintf (stderr, "%d blocks\n", n_blocks);
++    fprintf (stderr, "min block: %lu bytes\n", min_block);
++    fprintf (stderr, "max block: %lu bytes\n", max_block);
++    fprintf (stderr, "total freed: %lu bytres\n", mem->total_freed);
++    fprintf (stderr, "total allocated: %lu bytes\n",
++	     mem->total_allocated - mem->total_freed);
++    fprintf (stderr, "total free: %lu bytes\n",
++	     mem->n_bytes - (mem->total_allocated - mem->total_freed));
++}
++
++void *
++qxl_alloc (struct qxl_mem *mem, unsigned long n_bytes)
++{
++    struct block *b, *prev;
++
++    mem->n_allocated_blocks++;
++    
++    /* Simply pretend the user asked to allocate the header as well. Then
++     * we can mostly ignore the difference between blocks and allocations
++     */
++    n_bytes += sizeof (unsigned long);
++
++    n_bytes = (n_bytes + 7) & ~((1 << 3) - 1);
++    
++    if (n_bytes < sizeof (struct block))
++	n_bytes = sizeof (struct block);
++
++    assert (mem->unused);
++    
++    prev = NULL;
++    for (b = mem->unused; b != NULL; prev = b, b = b->u.unused.next)
++    {
++	if (b->n_bytes >= n_bytes)
++	{
++	    struct block *new_block;
++
++	    if (b->n_bytes - n_bytes >= sizeof (struct block))
++	    {
++		new_block = (void *)b + n_bytes;
++
++		new_block->n_bytes = b->n_bytes - n_bytes;
++
++		if (prev)
++		{
++		    assert (prev < b);
++		    assert (prev->u.unused.next == NULL || prev < prev->u.unused.next);
++		    
++ 		    new_block->u.unused.next = b->u.unused.next;
++		    prev->u.unused.next = new_block;
++		}
++		else
++		{
++		    assert (mem->unused == b);
++
++		    new_block->u.unused.next = mem->unused->u.unused.next;
++		    mem->unused = new_block;
++		}
++
++		b->n_bytes = n_bytes;
++	    }
++	    else
++	    {
++#if 0
++		printf ("Exact match\n");
++#endif
++
++		if (prev)
++		{
++		    prev->u.unused.next = b->u.unused.next;
++		}
++		else
++		{
++		    mem->unused = b->u.unused.next;
++		}
++	    }
++
++	    mem->total_allocated += n_bytes;
++	    
++	    return (void *)b->u.used.data;
++	}
++	else
++	{
++#if 0
++	    printf ("Skipping small block %d\n", b->n_bytes);
++#endif
++	}
++    }
++
++    /* If we get here, we are out of memory, so print some stats */
++#if 0
++    fprintf (stderr, "Failing to allocate %lu bytes\n", n_bytes);
++    qxl_mem_dump_stats (mem, "out of memory");
++#endif
++    
++    return NULL;
++}
++
++/* Finds the unused block before and the unused block after @data. Both
++ * before and after can be NULL if data is before the first or after the
++ * last unused block.
++ */
++static void
++find_neighbours (struct qxl_mem *mem, void *data,
++		 struct block **before, struct block **after)
++{
++    struct block *b;
++    *before = NULL;
++    *after = NULL;
++    
++    for (b = mem->unused; b != NULL; b = b->u.unused.next)
++    {
++	if ((void *)b < data)
++	    *before = b;
++	
++	if ((void *)b > data)
++	{
++	    *after = b;
++	    break;
++	}
++    }
++
++    if (*before)
++	assert ((*before)->u.unused.next == *after);
++}
++
++void
++qxl_free (struct qxl_mem *mem, void *d)
++{
++    struct block *b = d - sizeof (unsigned long);
++    struct block *before, *after;
++
++    mem->total_freed += b->n_bytes;
++    mem->n_freed_blocks++;
++    
++#if 0
++    printf ("freeing %p (%d bytes)\n", b, b->n_bytes);
++    
++    qxl_mem_dump_stats (mem, "before free");
++#endif
++    
++    find_neighbours (mem, (void *)b, &before, &after);
++
++    if (before)
++    {
++#if 0
++	printf ("  free: merge before: %p\n", before->u.used.data);
++#endif
++	    
++	if ((void *)before + before->n_bytes == b)
++	{
++#if 0
++ 	    printf ("  free: merge with before (adding %d bytes)\n", b->n_bytes);
++#endif
++	    
++	    /* Merge before and b */
++	    before->n_bytes += b->n_bytes;
++	    b = before;
++	}
++	else
++	{
++#if 0
++	    printf ("  free: no merge with before\n");
++#endif
++	    
++	    before->u.unused.next = b;
++	}
++    }
++    else
++    {
++#if 0
++	printf ("  free: no before\n");
++#endif
++	mem->unused = b;
++    }
++    
++    if (after)
++    {
++#if 0
++	printf ("  free: after: %p\n", after->u.used.data);
++#endif
++	if ((void *)b + b->n_bytes == after)
++	{
++#if 0
++	    printf ("  merge with after\n");
++#endif
++	    b->n_bytes += after->n_bytes;
++	    b->u.unused.next = after->u.unused.next;
++	}
++	else
++	{
++#if 0
++	    printf ("  no merge with after\n");
++#endif
++	    b->u.unused.next = after;
++ 	}
++    }
++    else
++    {
++#if 0
++	printf ("  free: no after\n");
++#endif
++	b->u.unused.next = NULL;
++    }
++
++#if 0
++    qxl_mem_dump_stats (mem, "after free");
++#endif
++}
+diff --git a/src/compat/compat-qxl_ring.c b/src/compat/compat-qxl_ring.c
+new file mode 100644
+index 0000000..9a34583
+--- /dev/null
++++ b/src/compat/compat-qxl_ring.c
+@@ -0,0 +1,97 @@
++#include <string.h>
++#include <unistd.h>
++#include <stdlib.h>
++#include "compat-qxl.h"
++
++struct ring
++{
++    struct qxl_ring_header	header;
++    uint8_t			elements[0];
++};
++
++struct qxl_ring
++{
++    volatile struct ring *ring;
++    int			element_size;
++    int			n_elements;
++    int			prod_notify;
++};
++
++struct qxl_ring *
++qxl_ring_create (struct qxl_ring_header *header,
++		 int                     element_size,
++		 int                     n_elements,
++		 int			 prod_notify)
++{
++    struct qxl_ring *ring;
++
++    ring = malloc (sizeof *ring);
++    if (!ring)
++	return NULL;
++
++    ring->ring = (volatile struct ring *)header;
++    ring->element_size = element_size;
++    ring->n_elements = n_elements;
++    ring->prod_notify = prod_notify;
++    
++    return ring;
++}
++
++void
++qxl_ring_push (struct qxl_ring *ring,
++	       const void      *new_elt)
++{
++    volatile struct qxl_ring_header *header = &(ring->ring->header);
++    volatile uint8_t *elt;
++    int idx;
++
++    while (header->prod - header->cons == header->num_items)
++    {
++	header->notify_on_cons = header->cons + 1;
++
++	mem_barrier();
++    }
++
++    idx = header->prod & (ring->n_elements - 1);
++    elt = ring->ring->elements + idx * ring->element_size;
++
++    memcpy((void *)elt, new_elt, ring->element_size);
++
++    header->prod++;
++
++    mem_barrier();
++
++    if (header->prod == header->notify_on_prod)
++	outb (ring->prod_notify, 0);
++}
++
++Bool
++qxl_ring_pop (struct qxl_ring *ring,
++	      void            *element)
++{
++    volatile struct qxl_ring_header *header = &(ring->ring->header);
++    volatile uint8_t *ring_elt;
++    int idx;
++
++    if (header->cons == header->prod)
++	return FALSE;
++
++    idx = header->cons & (ring->n_elements - 1);
++    ring_elt = ring->ring->elements + idx * ring->element_size;
++
++    memcpy (element, (void *)ring_elt, ring->element_size);
++
++    header->cons++;
++
++    return TRUE;
++}
++
++void
++qxl_ring_wait_idle (struct qxl_ring *ring)
++{
++    while (ring->ring->header.cons != ring->ring->header.prod)
++    {
++	usleep (1000);
++	mem_barrier();
++    }
++}
+-- 
+1.7.6.2
+

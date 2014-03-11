@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=gambas2
+Icon=gambas2
+Terminal=false
+Name=Gambas2
+Name[es_ES]=Gambas2
+GenericName=Basic IDE
+Comment=IDE based on a Basic interpreter
+Comment[es_ES]=Gambas2 casi es Visual Basic
+Type=Application
+Categories=GNOME;GTK;Development;IDE;
+StartupNotify=true
+X-Desktop-File-Install-Version=0.10

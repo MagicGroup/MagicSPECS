@@ -1,0 +1,11 @@
+--- Net-IP-1.25/IP.pm.bz197425	2006-05-22 12:46:40.000000000 -0400
++++ Net-IP-1.25/IP.pm	2006-07-05 15:20:26.000000000 -0400
+@@ -410,7 +410,7 @@
+ 
+     my $int = ip_bintoint($self->binip());
+ 
+-    if (!$int) {
++    if (ref($int) ne "Math::BigInt") {
+         $self->{error} = $ERROR;
+         $self->{errno} = $ERRNO;
+         return;

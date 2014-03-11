@@ -1,0 +1,12 @@
+diff -up gperftools-2.0/src/base/linuxthreads.cc.glibc216 gperftools-2.0/src/base/linuxthreads.cc
+--- gperftools-2.0/src/base/linuxthreads.cc.glibc216	2012-08-03 10:36:20.142086568 -0400
++++ gperftools-2.0/src/base/linuxthreads.cc	2012-08-03 10:36:24.340086631 -0400
+@@ -193,7 +193,7 @@ static volatile int *sig_pids, sig_num_t
+ /* Signal handler to help us recover from dying while we are attached to
+  * other threads.
+  */
+-static void SignalHandler(int signum, siginfo_t *si, void *data) {
++static void SignalHandler(int signum, siginfo *si, void *data) {
+   if (sig_pids != NULL) {
+     if (signum == SIGABRT) {
+       while (sig_num_threads-- > 0) {

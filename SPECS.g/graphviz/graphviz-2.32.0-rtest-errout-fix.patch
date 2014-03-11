@@ -1,0 +1,24 @@
+diff --git a/rtest/rtest.sh b/rtest/rtest.sh
+index ad6e14b..94bc044 100755
+--- a/rtest/rtest.sh
++++ b/rtest/rtest.sh
+@@ -280,14 +280,16 @@ function doTest
+     $testcmd 2> errout
+     RVAL=$?
+ 
++    if [[ -s errout ]]
++    then
++      cat errout
++    fi
++    
+     if [[ $RVAL != 0 || ! -s $OUTPATH ]]
+     then
+       (( CRASH_CNT+=1 ))
+       print -u 2 "Test $TESTNAME:$i : == Layout failed =="
+       print -u 2 "  $testcmd"
+-    elif [[ -s errout ]]
+-    then
+-      cat errout
+     elif [[ $GENERATE == 1 ]]
+     then
+       continue

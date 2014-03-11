@@ -1,0 +1,18 @@
+---
+ libmultipath/discovery.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+Index: multipath-tools-130222/libmultipath/discovery.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/discovery.c
++++ multipath-tools-130222/libmultipath/discovery.c
+@@ -898,7 +898,8 @@ get_state (struct path * pp, int daemon)
+ 		c->timeout = DEF_TIMEOUT;
+ 	state = checker_check(c);
+ 	condlog(3, "%s: state = %s", pp->dev, checker_state_name(state));
+-	if (state != PATH_UP && strlen(checker_message(c)))
++	if (state != PATH_UP && state != PATH_GHOST &&
++	    strlen(checker_message(c)))
+ 		condlog(3, "%s: checker msg is \"%s\"",
+ 			pp->dev, checker_message(c));
+ 	return state;

@@ -1,0 +1,27 @@
+From 251a7c4bf1817a98140ab1ca80a0c636945d65bb Mon Sep 17 00:00:00 2001
+From: =?utf-8?q?Olivier=20Cr=C3=AAte?= <olivier.crete@collabora.co.uk>
+Date: Mon, 20 Dec 2010 16:27:12 +0530
+Subject: [PATCH] simpleigdthread: Add typecast to make newer GCC happy
+
+Report by Peter Robinson
+http://bugzilla.openedhand.com/show_bug.cgi?id=2209
+---
+ libgupnp-igd/gupnp-simple-igd-thread.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/libgupnp-igd/gupnp-simple-igd-thread.c b/libgupnp-igd/gupnp-simple-igd-thread.c
+index bd4476e..905880d 100644
+--- a/libgupnp-igd/gupnp-simple-igd-thread.c
++++ b/libgupnp-igd/gupnp-simple-igd-thread.c
+@@ -214,7 +214,7 @@ gupnp_simple_igd_thread_dispose (GObject *object)
+     {
+       GSource *src = g_idle_source_new ();
+ 
+-      g_source_set_callback (src, stop_loop, self, NULL);
++      g_source_set_callback (src, (GSourceFunc) stop_loop, self, NULL);
+       g_source_attach (src, self->priv->context);
+       g_source_unref (src);
+ 
+-- 
+1.6.1
+

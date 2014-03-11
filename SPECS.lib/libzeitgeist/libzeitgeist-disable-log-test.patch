@@ -1,0 +1,86 @@
+diff -u libzeitgeist-0.3.18/tests.ORIG/Makefile.am libzeitgeist-0.3.18/tests/Makefile.am
+--- libzeitgeist-0.3.18/tests.ORIG/Makefile.am	2012-05-05 05:50:06.815816354 -0500
++++ libzeitgeist-0.3.18/tests/Makefile.am	2012-05-05 05:50:41.530773132 -0500
+@@ -39,10 +39,6 @@
+ test_monitor_SOURCES = test-monitor.c $(helper_sources)
+ test_monitor_LDADD   = $(zeitgeist_libs)
+ 
+-TEST_PROGS      += test-log
+-test_log_SOURCES = test-log.c $(helper_sources)
+-test_log_LDADD   = $(zeitgeist_libs)
+-
+ TEST_PROGS        += test-event
+ test_event_SOURCES = test-event.c $(helper_sources)
+ test_event_LDADD   = $(zeitgeist_libs) $(GIO_UNIX_LIBS)
+diff -u libzeitgeist-0.3.18/tests.ORIG/Makefile.in libzeitgeist-0.3.18/tests/Makefile.in
+--- libzeitgeist-0.3.18/tests.ORIG/Makefile.in	2012-04-05 05:05:58.000000000 -0500
++++ libzeitgeist-0.3.18/tests/Makefile.in	2012-05-05 05:52:11.276661357 -0500
+@@ -52,7 +52,7 @@
+ CONFIG_CLEAN_FILES =
+ CONFIG_CLEAN_VPATH_FILES =
+ am__EXEEXT_1 = test-timerange$(EXEEXT) test-timestamp$(EXEEXT) \
+-	test-symbols$(EXEEXT) test-monitor$(EXEEXT) test-log$(EXEEXT) \
++	test-symbols$(EXEEXT) test-monitor$(EXEEXT) \
+ 	test-event$(EXEEXT) test-datasource$(EXEEXT) \
+ 	test-mimetypes$(EXEEXT)
+ PROGRAMS = $(noinst_PROGRAMS)
+@@ -70,9 +70,6 @@
+ am_test_event_OBJECTS = test-event.$(OBJEXT) $(am__objects_1)
+ test_event_OBJECTS = $(am_test_event_OBJECTS)
+ test_event_DEPENDENCIES = $(am__DEPENDENCIES_2)
+-am_test_log_OBJECTS = test-log.$(OBJEXT) $(am__objects_1)
+-test_log_OBJECTS = $(am_test_log_OBJECTS)
+-test_log_DEPENDENCIES = $(am__DEPENDENCIES_2)
+ am_test_mimetypes_OBJECTS = test-mimetypes.$(OBJEXT) $(am__objects_1)
+ test_mimetypes_OBJECTS = $(am_test_mimetypes_OBJECTS)
+ test_mimetypes_DEPENDENCIES = $(am__DEPENDENCIES_2)
+@@ -115,11 +112,11 @@
+ am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
+ am__v_GEN_0 = @echo "  GEN   " $@;
+ SOURCES = $(test_datasource_SOURCES) $(test_event_SOURCES) \
+-	$(test_log_SOURCES) $(test_mimetypes_SOURCES) \
++	$(test_mimetypes_SOURCES) \
+ 	$(test_monitor_SOURCES) $(test_symbols_SOURCES) \
+ 	$(test_timerange_SOURCES) $(test_timestamp_SOURCES)
+ DIST_SOURCES = $(test_datasource_SOURCES) $(test_event_SOURCES) \
+-	$(test_log_SOURCES) $(test_mimetypes_SOURCES) \
++	$(test_mimetypes_SOURCES) \
+ 	$(test_monitor_SOURCES) $(test_symbols_SOURCES) \
+ 	$(test_timerange_SOURCES) $(test_timestamp_SOURCES)
+ ETAGS = etags
+@@ -270,7 +267,7 @@
+ # initialize variables for unconditional += appending
+ EXTRA_DIST = test.desktop
+ TEST_PROGS = test-timerange test-timestamp test-symbols test-monitor \
+-	test-log test-event test-datasource test-mimetypes
++	test-event test-datasource test-mimetypes
+ INCLUDES = \
+   -I$(top_srcdir)/src -I$(top_builddir)/src \
+   $(GIO_UNIX_CFLAGS) \
+@@ -296,8 +293,6 @@
+ test_symbols_LDADD = $(zeitgeist_libs)
+ test_monitor_SOURCES = test-monitor.c $(helper_sources)
+ test_monitor_LDADD = $(zeitgeist_libs)
+-test_log_SOURCES = test-log.c $(helper_sources)
+-test_log_LDADD = $(zeitgeist_libs)
+ test_event_SOURCES = test-event.c $(helper_sources)
+ test_event_LDADD = $(zeitgeist_libs) $(GIO_UNIX_LIBS)
+ test_datasource_SOURCES = test-datasource.c $(helper_sources)
+@@ -354,9 +349,6 @@
+ test-event$(EXEEXT): $(test_event_OBJECTS) $(test_event_DEPENDENCIES) $(EXTRA_test_event_DEPENDENCIES) 
+ 	@rm -f test-event$(EXEEXT)
+ 	$(AM_V_CCLD)$(LINK) $(test_event_OBJECTS) $(test_event_LDADD) $(LIBS)
+-test-log$(EXEEXT): $(test_log_OBJECTS) $(test_log_DEPENDENCIES) $(EXTRA_test_log_DEPENDENCIES) 
+-	@rm -f test-log$(EXEEXT)
+-	$(AM_V_CCLD)$(LINK) $(test_log_OBJECTS) $(test_log_LDADD) $(LIBS)
+ test-mimetypes$(EXEEXT): $(test_mimetypes_OBJECTS) $(test_mimetypes_DEPENDENCIES) $(EXTRA_test_mimetypes_DEPENDENCIES) 
+ 	@rm -f test-mimetypes$(EXEEXT)
+ 	$(AM_V_CCLD)$(LINK) $(test_mimetypes_OBJECTS) $(test_mimetypes_LDADD) $(LIBS)
+@@ -381,7 +373,6 @@
+ 
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-datasource.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-event.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-log.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-mimetypes.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-monitor.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-symbols.Po@am__quote@

@@ -1,0 +1,69 @@
+diff -up gnome-panel-3.1.5/gnome-panel/menu.c.menus gnome-panel-3.1.5/gnome-panel/menu.c
+--- gnome-panel-3.1.5/gnome-panel/menu.c.menus	2011-08-01 13:39:56.000000000 -0400
++++ gnome-panel-3.1.5/gnome-panel/menu.c	2011-08-17 18:58:26.341620915 -0400
+@@ -1401,7 +1401,7 @@ create_main_menu (PanelWidget *panel)
+ {
+ 	GtkWidget *main_menu;
+ 
+-	main_menu = create_applications_menu ("applications.menu", NULL, TRUE);
++	main_menu = create_applications_menu ("gnome-applications.menu", NULL, TRUE);
+ 
+ 	g_object_set_data (G_OBJECT (main_menu), "menu_panel", panel);
+ 	/* FIXME need to update the panel on parent_set */
+diff -up gnome-panel-3.1.5/gnome-panel/panel-addto.c.menus gnome-panel-3.1.5/gnome-panel/panel-addto.c
+--- gnome-panel-3.1.5/gnome-panel/panel-addto.c.menus	2011-08-01 13:39:56.000000000 -0400
++++ gnome-panel-3.1.5/gnome-panel/panel-addto.c	2011-08-17 18:59:37.306668576 -0400
+@@ -666,7 +666,7 @@ panel_addto_make_application_model (Pane
+ 				    G_TYPE_POINTER,
+ 				    G_TYPE_STRING);
+ 
+-	tree = gmenu_tree_new ("applications.menu", GMENU_TREE_FLAGS_SORT_DISPLAY_NAME);
++	tree = gmenu_tree_new ("applications-gnome.menu", GMENU_TREE_FLAGS_SORT_DISPLAY_NAME);
+ 
+ 	if (!gmenu_tree_load_sync (tree, NULL)) {
+ 		g_object_unref (tree);
+@@ -675,7 +675,7 @@ panel_addto_make_application_model (Pane
+ 
+ 	if (tree != NULL && (root = gmenu_tree_get_root_directory (tree))) {
+ 		panel_addto_make_application_list (&dialog->application_list,
+-						   root, "applications.menu",
++						   root, "gnome-applications.menu",
+ 						   PANEL_ADDTO_MENU_SHOW_ALL);
+ 		panel_addto_populate_application_model (store, NULL, dialog->application_list);
+ 
+diff -up gnome-panel-3.1.5/gnome-panel/panel-menu-bar.c.menus gnome-panel-3.1.5/gnome-panel/panel-menu-bar.c
+--- gnome-panel-3.1.5/gnome-panel/panel-menu-bar.c.menus	2011-04-05 06:39:04.000000000 -0400
++++ gnome-panel-3.1.5/gnome-panel/panel-menu-bar.c	2011-08-17 18:58:26.388620946 -0400
+@@ -129,7 +129,7 @@ panel_menu_bar_init (PanelMenuBar *menub
+ 
+ 	menubar->priv->info = NULL;
+ 
+-	menubar->priv->applications_menu = create_applications_menu ("applications.menu", NULL, TRUE);
++	menubar->priv->applications_menu = create_applications_menu ("gnome-applications.menu", NULL, TRUE);
+ 
+ 	menubar->priv->applications_item = panel_image_menu_item_new ();
+ 	gtk_menu_item_set_label (GTK_MENU_ITEM (menubar->priv->applications_item),
+diff -up gnome-panel-3.1.5/gnome-panel/panel-menu-button.c.menus gnome-panel-3.1.5/gnome-panel/panel-menu-button.c
+--- gnome-panel-3.1.5/gnome-panel/panel-menu-button.c.menus	2011-08-01 13:39:56.000000000 -0400
++++ gnome-panel-3.1.5/gnome-panel/panel-menu-button.c	2011-08-17 18:58:26.345620917 -0400
+@@ -74,7 +74,7 @@ typedef struct {
+ } MenuPathRootItem;
+ 
+ static MenuPathRootItem root_items [] = {
+-	{ APPLICATIONS_MENU, "applications", "applications.menu" },
++	{ APPLICATIONS_MENU, "applications", "gnome-applications.menu" },
+ 	{ GNOMECC_MENU,      "gnomecc",      "gnomecc.menu"      }
+ };
+ 
+diff -up gnome-panel-3.1.5/gnome-panel/panel-run-dialog.c.menus gnome-panel-3.1.5/gnome-panel/panel-run-dialog.c
+--- gnome-panel-3.1.5/gnome-panel/panel-run-dialog.c.menus	2011-08-01 13:39:56.000000000 -0400
++++ gnome-panel-3.1.5/gnome-panel/panel-run-dialog.c	2011-08-17 18:59:14.635653222 -0400
+@@ -781,7 +781,7 @@ get_all_applications (void)
+ 	GMenuTreeDirectory *root;
+ 	GSList             *retval;
+ 
+-	tree = gmenu_tree_new ("applications.menu", GMENU_TREE_FLAGS_SORT_DISPLAY_NAME);
++	tree = gmenu_tree_new ("gnome-applications.menu", GMENU_TREE_FLAGS_SORT_DISPLAY_NAME);
+ 
+ 	if (!gmenu_tree_load_sync (tree, NULL))
+ 		return NULL;

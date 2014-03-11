@@ -1,0 +1,60 @@
+diff -up Math-GMP/Math-GMP-2.06/t/99_spellcheck.t.orig Math-GMP/Math-GMP-2.06/t/99_spellcheck.t
+--- Math-GMP/Math-GMP-2.06/t/99_spellcheck.t.orig	2009-09-17 20:06:44.000000000 +0100
++++ Math-GMP/Math-GMP-2.06/t/99_spellcheck.t	2011-02-09 13:39:04.968728263 +0000
+@@ -161,6 +161,7 @@ intify
+ jacobi
+ legendre
+ Makefile
++MERCHANTABILITY
+ mmod
+ mul
+ Mullane
+@@ -171,8 +172,8 @@ ok
+ Oxh
+ oxhoej
+ perl
+-perl
+ powm
++Probabilistically
+ README
+ redhat
+ Sabino
+@@ -181,6 +182,8 @@ sizeinbase
+ Spellcheck
+ spellchecking
+ sqrt
++Tels
++tels
+ tradeoff
+ tstbit
+ ui
+diff -up Math-GMP/Math-GMP-2.06/SIGNATURE.orig Math-GMP/Math-GMP-2.06/SIGNATURE
+--- Math-GMP/Math-GMP-2.06/SIGNATURE.orig	2009-09-17 20:09:24.000000000 +0100
++++ Math-GMP/Math-GMP-2.06/SIGNATURE	2011-02-09 13:39:17.341737674 +0000
+@@ -12,7 +12,7 @@ the distribution may already have been c
+ not run its Makefile.PL or Build.PL.
+ 
+ -----BEGIN PGP SIGNED MESSAGE-----
+-Hash: RIPEMD160
++Hash: SHA1
+ 
+ SHA1 19ac9eb1570ace4d76b4feed902e029b0bb68d16 .perlcriticrc
+ SHA1 b256632dcce76559734ff0a23330d2898b7d3a3b COPYING.LIB
+@@ -30,12 +30,13 @@ SHA1 c6d5b40068571194f3d6718dad8d8f500e9
+ SHA1 8e1dd95281414579132b797c10c1e9a35d2b6d01 t/01_gmppm.t
+ SHA1 6479bc4bcf09fb9876fc52e2c02a91d9452c3018 t/99_perlcritic.t
+ SHA1 9e5d32b76d38bf139b4798e16859fd484769fcf9 t/99_pod.t
+-SHA1 8c0bbafd6411fc80df153fb01ada46960e6d0b59 t/99_spellcheck.t
++SHA1 8448b64019d9205bb8b551dd5f1e3b3566e74b3d t/99_spellcheck.t
+ SHA1 762b0b761deaff9c2821400917698ded8983cc65 t/99_yaml.t
+ SHA1 9686bf338037ae19ef5dad7cd4dc8e5edbe02722 typemap
+ -----BEGIN PGP SIGNATURE-----
++Version: GnuPG v1.4.11 (GNU/Linux)
+ 
+-iEYEAREDAAYFAkqyiWQACgkQvJuQZxSWSsiOQwCg+c7DSOBlXYuNkvAPA1YCrwap
+-M/8AnjrJQcvcKX+WaB+/GVfRdqQOjWOT
+-=jjsW
++iD8DBQFNUpkCemWSzxYcBrERAsy4AJ48XSh4yV0/YG7YBonzlfeFAL4JMgCfTGOq
++sqyhklwF6YjmfWwNPyOyFH8=
++=QHCZ
+ -----END PGP SIGNATURE-----

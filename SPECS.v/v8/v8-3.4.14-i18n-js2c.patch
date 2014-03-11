@@ -1,0 +1,40 @@
+diff -up v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-js2c.py.i18n-js2c v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-js2c.py
+--- v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-js2c.py.i18n-js2c	2011-07-21 14:39:22.402295140 -0400
++++ v8-3.4.14-20110721svn8716/src/extensions/experimental/i18n-js2c.py	2011-07-21 14:39:28.328285018 -0400
+@@ -85,7 +85,7 @@ HEADER_TEMPLATE = """\
+ // want to make changes to this file you should either change the
+ // javascript source files or the i18n-js2c.py script.
+ 
+-#include "src/extensions/experimental/i18n-natives.h"
++#include "extensions/experimental/i18n-natives.h"
+ 
+ namespace v8 {
+ namespace internal {
+diff -up v8-3.4.14-20110721svn8716/src/SConscript.i18n-js2c v8-3.4.14-20110721svn8716/src/SConscript
+--- v8-3.4.14-20110721svn8716/src/SConscript.i18n-js2c	2011-07-21 14:38:49.828400947 -0400
++++ v8-3.4.14-20110721svn8716/src/SConscript	2011-07-21 14:38:49.869408897 -0400
+@@ -318,10 +318,6 @@ proxy.js
+ '''.split()
+ 
+ 
+-I18N_LIBRARY_FILES = '''
+-extensions/experimental/i18n.js
+-'''.split()
+-
+ def Abort(message):
+   print message
+   sys.exit(1)
+@@ -360,11 +356,8 @@ def ConfigureObjectFiles():
+     ['libraries.cc'], library_files, **BuildJS2CEnv('CORE'))
+   libraries_obj = context.ConfigureObject(env, libraries_src, CPPPATH=['.'])
+ 
+-  # Combine the experimental I18N JavaScript library files into a C++ file
+-  # and compile it.
+-  i18n_library_files = [ s for s in I18N_LIBRARY_FILES ]
+-  i18n_library_files.append('macros.py')
+-  i18n_libraries_src = env.JS2C(['i18n-libraries.cc'], i18n_library_files, **BuildJS2CEnv('I18N'))
++  # Compile the experimental I18N JavaScript C++ file we generated outside.
++  i18n_libraries_src = 'i18n-libraries.cc'
+   i18n_libraries_obj = context.ConfigureObject(env, i18n_libraries_src, CPPPATH=['.'])
+ 
+   # Combine the experimental JavaScript library files into a C++ file

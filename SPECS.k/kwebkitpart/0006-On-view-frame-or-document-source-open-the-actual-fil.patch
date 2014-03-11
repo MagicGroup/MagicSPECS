@@ -1,0 +1,82 @@
+From 89ff3fcfaac967f26e54fd1a193ac3652c5a4113 Mon Sep 17 00:00:00 2001
+From: Dawit Alemayehu <adawit@kde.org>
+Date: Fri, 28 Sep 2012 01:09:39 -0400
+Subject: [PATCH 6/7] On view frame or document source, open the actual file
+ when it is local page
+
+---
+ src/kwebkitpart_ext.cpp | 50 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 24 insertions(+), 26 deletions(-)
+
+diff --git a/src/kwebkitpart_ext.cpp b/src/kwebkitpart_ext.cpp
+index a31de06..a5d9a02 100644
+--- a/src/kwebkitpart_ext.cpp
++++ b/src/kwebkitpart_ext.cpp
+@@ -528,40 +528,38 @@ void WebKitBrowserExtension::slotViewDocumentSource()
+ {
+     if (!view())
+         return;
+-#if 0
+-    //FIXME: This workaround is necessary because freakin' QtWebKit does not provide
+-    //a means to obtain the original content of the frame. Actually it does, but the
+-    //returned content is royally screwed up! *sigh*
+-    KRun::runUrl(view()->page()->mainFrame()->url(), QL1S("text/plain"), view(), false);
+-#else
+-    KTemporaryFile tempFile;
+-    tempFile.setSuffix(QL1S(".html"));
+-    tempFile.setAutoRemove(false);
+-    if (tempFile.open()) {
+-        tempFile.write(view()->page()->mainFrame()->toHtml().toUtf8());
+-        KRun::runUrl(tempFile.fileName(), QL1S("text/plain"), view(), true, false);
++
++    const KUrl pageUrl (view()->url());
++    if (pageUrl.isLocalFile()) {
++        KRun::runUrl(pageUrl, QL1S("text/plain"), view(), false);
++    } else {
++        KTemporaryFile tempFile;
++        tempFile.setSuffix(QL1S(".html"));
++        tempFile.setAutoRemove(false);
++        if (tempFile.open()) {
++            tempFile.write(view()->page()->mainFrame()->toHtml().toUtf8());
++            KRun::runUrl(tempFile.fileName(), QL1S("text/plain"), view(), true, false);
++        }
+     }
+-#endif
+ }
+ 
+ void WebKitBrowserExtension::slotViewFrameSource()
+ {
+     if (!view())
+         return;
+-#if 0
+-    //FIXME: This workaround is necessary because freakin' QtWebKit does not provide
+-    //a means to obtain the original content of the frame. Actually it does, but the
+-    //returned content is royally screwed up! *sigh*
+-    KRun::runUrl(view()->page()->mainFrame()->url(), QL1S("text/plain"), view(), false);
+-#else
+-    KTemporaryFile tempFile;
+-    tempFile.setSuffix(QL1S(".html"));
+-    tempFile.setAutoRemove(false);
+-    if (tempFile.open()) {
+-        tempFile.write(view()->page()->currentFrame()->toHtml().toUtf8());
+-        KRun::runUrl(tempFile.fileName(), QL1S("text/plain"), view(), true, false);
++
++    const KUrl frameUrl(view()->page()->currentFrame()->url());
++    if (frameUrl.isLocalFile()) {
++        KRun::runUrl(frameUrl, QL1S("text/plain"), view(), false);
++    } else {
++        KTemporaryFile tempFile;
++        tempFile.setSuffix(QL1S(".html"));
++        tempFile.setAutoRemove(false);
++        if (tempFile.open()) {
++            tempFile.write(view()->page()->currentFrame()->toHtml().toUtf8());
++            KRun::runUrl(tempFile.fileName(), QL1S("text/plain"), view(), true, false);
++        }
+     }
+-#endif
+ }
+ 
+ static bool isMultimediaElement(const QWebElement& element)
+-- 
+1.7.12.1
+

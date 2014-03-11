@@ -1,0 +1,22 @@
+diff -up xf86-video-cirrus-1.3.2/src/alp_driver.c.jx xf86-video-cirrus-1.3.2/src/alp_driver.c
+--- xf86-video-cirrus-1.3.2/src/alp_driver.c.jx	2011-11-29 15:47:39.000000000 -0500
++++ xf86-video-cirrus-1.3.2/src/alp_driver.c	2011-11-29 15:49:48.043999760 -0500
+@@ -503,6 +503,7 @@ AlpPreInit(ScrnInfoPtr pScrn, int flags)
+ 	if (!vgaHWGetHWRec(pScrn))
+ 		return FALSE;
+ 	hwp = VGAHWPTR(pScrn);
++	vgaHWSetStdFuncs(hwp);
+ 	vgaHWGetIOBase(hwp);
+ 
+ 	/* Allocate the AlpRec driverPrivate */
+diff -up xf86-video-cirrus-1.3.2/src/lg_driver.c.jx xf86-video-cirrus-1.3.2/src/lg_driver.c
+--- xf86-video-cirrus-1.3.2/src/lg_driver.c.jx	2011-11-29 15:47:39.000000000 -0500
++++ xf86-video-cirrus-1.3.2/src/lg_driver.c	2011-11-29 15:50:07.912996219 -0500
+@@ -364,6 +364,7 @@ LgPreInit(ScrnInfoPtr pScrn, int flags)
+ 		return FALSE;
+ 
+ 	hwp = VGAHWPTR(pScrn);
++	vgaHWSetStdFuncs(hwp);
+ 	vgaHWGetIOBase(hwp);
+ 
+ 	/* Allocate the LgRec driverPrivate */

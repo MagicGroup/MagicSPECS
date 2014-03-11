@@ -1,0 +1,21 @@
+From d73bbd57ee901b8470d9e42f5e004e240e00af62 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 20 Oct 2011 12:33:33 +0200
+Subject: [PATCH] 90livenet: check() for wget
+
+---
+ modules.d/90livenet/module-setup.sh |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/modules.d/90livenet/module-setup.sh b/modules.d/90livenet/module-setup.sh
+index b166859..3ee7521 100755
+--- a/modules.d/90livenet/module-setup.sh
++++ b/modules.d/90livenet/module-setup.sh
+@@ -4,6 +4,7 @@
+ check() {
+     # a live, host-only image doesn't really make a lot of sense
+     [[ $hostonly ]] && return 1
++    command -v wget || return 1
+     return 0
+ }
+ 

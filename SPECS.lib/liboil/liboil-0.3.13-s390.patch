@@ -1,0 +1,12 @@
+diff -up liboil-0.3.13/liboil/liboilcpu-misc.c.s390 liboil-0.3.13/liboil/liboilcpu-misc.c
+--- liboil-0.3.13/liboil/liboilcpu-misc.c.s390	2008-02-22 14:59:17.000000000 -0500
++++ liboil-0.3.13/liboil/liboilcpu-misc.c	2008-02-22 22:38:36.000000000 -0500
+@@ -87,7 +87,7 @@ static unsigned long
+ oil_profile_stamp_s390(void)
+ {
+   uint64_t ts;
+-  __asm__ __volatile__ ("STCK %0\n" : : "m" (ts));
++  __asm__ __volatile__ ("STCK %0(%0)\n" : : "r" (&ts));
+   return ts;
+ }
+ 

@@ -1,0 +1,15 @@
+--- a/akode/plugins/ffmpeg_decoder/ffmpeg_decoder.cpp.ORI	2012-08-04 22:36:12.435734576 +0200
++++ a/akode/plugins/ffmpeg_decoder/ffmpeg_decoder.cpp	2012-08-04 22:37:20.153030459 +0200
+@@ -26,9 +26,9 @@
+ #include "decoder.h"
+ 
+ #include <assert.h>
+-#include <ffmpeg/avcodec.h>
+-#include <ffmpeg/avformat.h>
+-#include <ffmpeg/avio.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
++#include <libavformat/avio.h>
+ 
+ #include "ffmpeg_decoder.h"
+ #include <iostream>

@@ -1,0 +1,11 @@
+diff -up cups-1.5.2/scheduler/cups-polld.c.polld-reconnect cups-1.5.2/scheduler/cups-polld.c
+--- cups-1.5.2/scheduler/cups-polld.c.polld-reconnect	2011-05-07 00:07:28.000000000 +0100
++++ cups-1.5.2/scheduler/cups-polld.c	2012-02-23 10:50:57.272513141 +0000
+@@ -291,6 +291,7 @@ poll_server(http_t      *http,		/* I - H
+     fprintf(stderr, "ERROR: %s CUPS-Get-Printers failed: %s\n", prefix,
+             cupsLastErrorString());
+     ippDelete(response);
++    restart_polling = 1;
+     return (-1);
+   }
+ 

@@ -1,0 +1,26 @@
+From 8353633f4ec037a160e1cf551f71c44abc758c69 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 22 Nov 2012 11:58:37 +0100
+Subject: [PATCH] i18n/parse-i18n.sh: fix locale.conf caused by
+ 4dbc1d1bb3dcbb173b02
+
+https://bugzilla.redhat.com/show_bug.cgi?id=870632
+---
+ modules.d/10i18n/parse-i18n.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/modules.d/10i18n/parse-i18n.sh b/modules.d/10i18n/parse-i18n.sh
+index 5a3d804..9427194 100755
+--- a/modules.d/10i18n/parse-i18n.sh
++++ b/modules.d/10i18n/parse-i18n.sh
+@@ -26,8 +26,8 @@ inst_key_val '' /etc/vconsole.conf vconsole.font.unimap FONT_UNIMAP -d UNIMAP
+ inst_key_val 1  /etc/vconsole.conf vconsole.font.unicode UNICODE vconsole.unicode
+ inst_key_val '' /etc/vconsole.conf vconsole.keymap.ext  EXT_KEYMAP
+ 
+-inst_key_val '' /etc/locale.conf   LANG        locale.LANG
+-inst_key_val '' /etc/locale.conf   LC_ALL      locale.LC_ALL
++inst_key_val '' /etc/locale.conf   locale.LANG   LANG
++inst_key_val '' /etc/locale.conf   locale.LC_ALL LC_ALL
+ 
+ if [ -f /etc/locale.conf ]; then
+     . /etc/locale.conf

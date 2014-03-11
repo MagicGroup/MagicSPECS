@@ -1,0 +1,22 @@
+--- build.xml.sav	2006-03-28 14:34:52.000000000 +0300
++++ build.xml	2010-01-08 12:50:20.346608627 +0200
+@@ -76,4 +76,19 @@
+     </java>  
+     
+   </target>
++	
++	<target name="javadoc" >
++			<mkdir dir="${dist}/javadoc"/>
++			<javadoc 
++			destdir="${dist}/javadoc"
++			author="true"
++			version="true"
++			use="true"
++			windowtitle="java_cup API">
++
++			<fileset dir="src" defaultexcludes="yes">
++			</fileset>
++			</javadoc>
++
++		</target>
+ </project>

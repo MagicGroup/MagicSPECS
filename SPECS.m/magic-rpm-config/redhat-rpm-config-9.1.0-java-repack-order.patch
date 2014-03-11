@@ -1,0 +1,16 @@
+Index: redhat-rpm-config-9.1.0/brp-java-repack-jars
+===================================================================
+--- redhat-rpm-config-9.1.0.orig/brp-java-repack-jars
++++ redhat-rpm-config-9.1.0/brp-java-repack-jars
+@@ -79,7 +79,10 @@ if [ ! -z "$JARS" ]; then
+ 		pushd $JARDIR > /dev/null
+ 
+ 		if [ -n "`find -not -name '.'`" ]; then
+-			find * -not -name '.' | LC_ALL=C sort | /usr/bin/zip -q -X -9 $j -@
++			if [ -e META-INF/MANIFEST.MF ]; then
++			    /usr/bin/zip -q -X -9 $j META-INF/MANIFEST.MF
++			fi
++			find * -not -name '.' | LC_ALL=C sort | /usr/bin/zip -u -q -X -9 $j -@
+ 		else
+ 			# Put the empty jar back
+ 			touch $j

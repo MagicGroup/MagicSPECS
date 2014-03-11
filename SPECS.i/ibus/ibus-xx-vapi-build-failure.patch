@@ -1,0 +1,80 @@
+--- ibus-1.5.1/bindings/vala/Makefile.am.orig	2013-01-15 16:58:25.571433690 +0900
++++ ibus-1.5.1/bindings/vala/Makefile.am	2013-01-15 16:58:46.983455158 +0900
+@@ -20,17 +20,38 @@
+ # Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ # Boston, MA  02111-1307  USA
+ 
+--include $(VAPIGEN_MAKEFILE)
++vapidir = $(datadir)/vala/vapi
++dist_vapi_DATA = \
++	ibus-@IBUS_API_VERSION@.vapi \
++	ibus-@IBUS_API_VERSION@.deps \
++	$(NULL)
+ 
++# Don't rebuild vapi every time gir is updated.
++if ENABLE_LIBGNOMEKBD
+ vapi_deps = \
+-	IBus-1.0.metadata \
+-	IBus-1.0-custom.vala \
+-	$(top_builddir)/src/IBus-1.0.gir \
++	$(srcdir)/IBus-1.0.metadata \
++	$(srcdir)/IBus-1.0-custom.vala \
++	| \
++	$(builddir)/gkbd.vapi \
++	$(top_srcdir)/src/IBus-@IBUS_API_VERSION@.gir \
+ 	$(NULL)
++else
++vapi_deps = \
++	$(srcdir)/IBus-1.0.metadata \
++	$(srcdir)/IBus-1.0-custom.vala \
++	| \
++	$(top_srcdir)/src/IBus-@IBUS_API_VERSION@.gir \
++	$(NULL)
++endif
+ 
+-if ENABLE_LIBGNOMEKBD
+-vapi_deps += $(builddir)/gkbd.vapi
++ibus-@IBUS_API_VERSION@.vapi: $(vapi_deps)
++	$(AM_V_GEN) $(VAPIGEN) --library ibus-@IBUS_API_VERSION@ \
++			--pkg gio-2.0 \
++			--metadatadir=$(srcdir) \
++			$(top_srcdir)/src/IBus-@IBUS_API_VERSION@.gir \
++			$(srcdir)/IBus-1.0-custom.vala
+ 
++if ENABLE_LIBGNOMEKBD
+ $(builddir)/gkbd.vapi:
+ 	$(AM_V_GEN) $(VAPIGEN) --library gkbd \
+ 	    --metadatadir $(srcdir) \
+@@ -39,25 +60,10 @@ $(builddir)/gkbd.vapi:
+ 	$(NULL)
+ endif
+ 
+-ibus-1.0.vapi: $(vapi_deps)
+-
+-VAPIGEN_VAPIS = ibus-1.0.vapi
+-
+-ibus_1_0_vapi_DEPS = gio-2.0
+-ibus_1_0_vapi_METADATADIRS = $(srcdir)
+-ibus_1_0_vapi_FILES = \
+-	$(top_builddir)/src/IBus-1.0.gir \
+-	$(srcdir)/IBus-1.0-custom.vala \
+-	$(NULL)
+-
+-vapidir = $(datadir)/vala/vapi
+-vapi_DATA = $(VAPIGEN_VAPIS) $(VAPIGEN_VAPIS:.vapi=.deps)
+-
+ EXTRA_DIST = \
+ 	Gkbd-3.0.metadata \
+ 	IBus-1.0.metadata \
+ 	IBus-1.0-custom.vala \
+-	ibus-1.0.deps \
+ 	config.vapi \
+ 	xi.vapi \
+ 	Xkl-1.0.metadata \
+@@ -65,4 +71,6 @@ EXTRA_DIST = \
+ 
+ CLEANFILES = gkbd.vapi
+ 
++MAINTAINERCLEANFILES = ibus-@IBUS_API_VERSION@.vapi
++
+ -include $(top_srcdir)/git.mk

@@ -1,0 +1,16 @@
+diff -rcb kde-i18n-fr-3.5.10.ori/messages/kdebase/kdesktop.po kde-i18n-fr-3.5.10/messages/kdebase/kdesktop.po
+*** kde-i18n-fr-3.5.10.ori/messages/kdebase/kdesktop.po	2011-07-21 10:02:12.261100210 +0200
+--- kde-i18n-fr-3.5.10/messages/kdebase/kdesktop.po	2011-07-21 10:05:55.365975529 +0200
+***************
+*** 246,251 ****
+--- 246,255 ----
+  msgid "Run Command..."
+  msgstr "Exécuter une commande..."
+  
++ #: krootwm.cc:135 (Trinity Specific)
++ msgid "Open Terminal Here..."
++ msgstr "Ouvrir un Terminal..."
++ 
+  #: krootwm.cc:137
+  msgid "Configure Desktop..."
+  msgstr "Configurer le bureau..."

@@ -1,0 +1,22 @@
+From e0e9221e23f783ce670349df52da46bf6dc05c14 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 4 Oct 2011 13:06:33 +0200
+Subject: [PATCH] 90mdraid/mdraid_start.sh: fix path to md sysfs
+
+---
+ modules.d/90mdraid/mdraid_start.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/90mdraid/mdraid_start.sh b/modules.d/90mdraid/mdraid_start.sh
+index f79f16e..f4b7ad0 100755
+--- a/modules.d/90mdraid/mdraid_start.sh
++++ b/modules.d/90mdraid/mdraid_start.sh
+@@ -14,7 +14,7 @@ _md_force_run() {
+         strstr "$_udevinfo" "MD_LEVEL=container" && continue
+         strstr "$_udevinfo" "DEVTYPE=partition" && continue
+ 
+-        _path_s="$(udevadm info -q path -n "$md")/md/array_state"
++        _path_s="/sys/$(udevadm info -q path -n "$md")/md/array_state"
+         [ ! -r "$_path_s" ] && continue
+ 
+         # inactive ?

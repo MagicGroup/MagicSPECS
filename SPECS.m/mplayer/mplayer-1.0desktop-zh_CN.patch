@@ -1,0 +1,16 @@
+diff -u -r mplayer-1.0svn20071109.orig/etc/mplayer.desktop mplayer-1.0svn20071109/etc/mplayer.desktop
+--- mplayer-1.0svn20071109.orig/etc/mplayer.desktop	2007-11-09 21:59:32.000000000 +0800
++++ mplayer-1.0svn20071109/etc/mplayer.desktop	2007-11-09 22:02:56.000000000 +0800
+@@ -4,10 +4,8 @@
+ Name=MPlayer
+ GenericName=Multimedia player
+ Comment=Multimedia player
+-Comment[de]=Multimedia-Player
+-Comment[es]=Reproductor multimedia
+-Comment[fr]=Lecteur multimédia
+-Comment[it]=Lettore multimediale
++GenericName[zh_CN]=媒体播放器
++Comment[zh_CN]=媒体播放器
+ Icon=mplayer.xpm
+ TryExec=gmplayer
+ Exec=gmplayer %U

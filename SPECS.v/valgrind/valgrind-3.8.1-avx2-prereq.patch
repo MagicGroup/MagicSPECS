@@ -1,0 +1,21 @@
+--- valgrind/none/tests/amd64/avx2-1.vgtest	2012-09-19 16:40:20.675627549 +0200
++++ valgrind/none/tests/amd64/avx2-1.vgtest	2012-09-19 20:53:16.939765249 +0200
+@@ -1,3 +1,3 @@
+ prog: avx2-1
+-prereq: ../../../tests/x86_amd64_features amd64-avx
++prereq: test -x avx2-1 && ../../../tests/x86_amd64_features amd64-avx
+ vgopts: -q
+--- valgrind/none/tests/amd64/bmi.vgtest	2012-09-19 16:40:20.368622951 +0200
++++ valgrind/none/tests/amd64/bmi.vgtest	2012-09-19 20:54:31.168839454 +0200
+@@ -1,3 +1,3 @@
+ prog: bmi
+-prereq: ../../../tests/x86_amd64_features amd64-avx
++prereq: test -x bmi && ../../../tests/x86_amd64_features amd64-avx
+ vgopts: -q
+--- valgrind/none/tests/amd64/fma.vgtest	2012-09-19 16:40:20.755628747 +0200
++++ valgrind/none/tests/amd64/fma.vgtest	2012-09-19 20:54:58.851240219 +0200
+@@ -1,3 +1,3 @@
+ prog: fma
+-prereq: ../../../tests/x86_amd64_features amd64-avx
++prereq: test -x fma && ../../../tests/x86_amd64_features amd64-avx
+ vgopts: -q

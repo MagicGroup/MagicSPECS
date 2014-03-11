@@ -1,0 +1,49 @@
+From 97db3db45c7e96888ea48a54ff19b7ff5d08cca6 Mon Sep 17 00:00:00 2001
+From: Andy Grover <agrover@redhat.com>
+Date: Wed, 24 Oct 2012 15:37:28 -0700
+Subject: Update README for removal of DBM requirement
+
+Removed in 093b1f4 (2006)
+
+Signed-off-by: Andy Grover <agrover@redhat.com>
+---
+ README | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/README b/README
+index 7364b2d..ec22098 100644
+--- a/README
++++ b/README
+@@ -159,15 +159,20 @@ Usage: iscsid [OPTION]
+ 5. Open-iSCSI Configuration Utility
+ ===================================
+ 
+-Open-iSCSI persistent configuration is implemented as a DBM database
+-available on all Linux installations.
+-
+-The database contains two tables:
+-
+-- Discovery table (/etc/iscsi/send_targets);
+-- Node table (/etc/iscsi/nodes).
+-
+-The regular place for iSCSI database files: /etc/iscsi/nodes
++Open-iSCSI persistent configuration is stored in a number of
++directories under a configuration root directory, using a flat-file
++format. This configuration root directory is /etc/iscsi by default,
++but may also commonly be in /var/lib/iscsi.
++
++Configuration is contained in directories for:
++
++- nodes
++- slp
++- isns
++- static
++- fw
++- send_targets
++- ifaces
+ 
+ The iscsiadm utility is a command-line tool to manage (update, delete,
+ insert, query) the persistent database.
+-- 
+1.7.11.7
+

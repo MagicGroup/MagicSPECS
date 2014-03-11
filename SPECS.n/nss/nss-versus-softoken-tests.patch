@@ -1,0 +1,38 @@
+diff -up nss/tests/all.sh.crypto nss/tests/all.sh
+--- nss/tests/all.sh.crypto	2013-05-28 14:43:24.000000000 -0700
++++ nss/tests/all.sh	2013-06-13 12:14:12.741082184 -0700
+@@ -299,9 +299,10 @@ fi
+ # created, we check for modutil to know whether the build
+ # is complete. If a new file is created after that, the 
+ # following test for modutil should check for that instead.
++# Except when building softoken only where shlibsign is the last one built.
++export LAST_BUILT=[ ${NSS_BUILD_SOFTOKEN_ONLY} -eq "1" ] && shlibsign || modutil
+ 
+-if [ ! -f ${DIST}/${OBJDIR}/bin/modutil -a  \
+-     ! -f ${DIST}/${OBJDIR}/bin/modutil.exe ]; then
++if [ ! -f ${DIST}/${OBJDIR}/bin/${LAST_BUILT}${PROG_SUFFIX} -a ]; then
+     echo "Build Incomplete. Aborting test." >> ${LOGFILE}
+     html_head "Testing Initialization"
+     Exit "Checking for build"
+diff -up nss/tests/cipher/cipher.sh.crypto nss/tests/cipher/cipher.sh
+--- nss/tests/cipher/cipher.sh.crypto	2013-05-28 14:43:24.000000000 -0700
++++ nss/tests/cipher/cipher.sh	2013-06-13 11:58:00.956064976 -0700
+@@ -129,6 +129,16 @@ if [ ! -x ${DIST}/${OBJDIR}/bin/bltest${
+     return 0
+ fi
+ cipher_init
+-cipher_main
+-cipher_gcm
++if [ "${NSS_BUILD_SOFTOKEN_ONLY}" = "1" ]; then
++    echo "Skipping cipher_gcm because this is a softoken only build"
++    cipher_main
++elif [ "${NSS_BUILD_WITHOUT_SOFTOKEN}" = "1" ]; then
++    echo "Skipping cipher_main because this an nss without softoken build"
++    cipher_gcm
++else
++    # default is to run both
++    cipher_init
++    cipher_main
++    cipher_gcm
++fi
+ cipher_cleanup

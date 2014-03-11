@@ -1,0 +1,12 @@
+diff -up chromium-14.0.827.10/chrome/browser/ui/webui/options/chromeos/system_settings_provider.h.icu chromium-14.0.827.10/chrome/browser/ui/webui/options/chromeos/system_settings_provider.h
+--- chromium-14.0.827.10/chrome/browser/ui/webui/options/chromeos/system_settings_provider.h.icu	2011-07-21 05:54:51.000000000 -0400
++++ chromium-14.0.827.10/chrome/browser/ui/webui/options/chromeos/system_settings_provider.h	2011-07-21 16:07:16.437541420 -0400
+@@ -10,7 +10,7 @@
+ #include "base/string16.h"
+ #include "chrome/browser/chromeos/cros_settings_provider.h"
+ #include "chrome/browser/chromeos/system/timezone_settings.h"
+-#include "third_party/icu/public/i18n/unicode/timezone.h"
++#include <unicode/timezone.h>
+ 
+ namespace base {
+ class Value;

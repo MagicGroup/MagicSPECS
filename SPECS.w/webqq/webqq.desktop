@@ -1,0 +1,21 @@
+[Desktop Entry]
+Categories=Application;Network;
+Comment[zh_CN]=
+Comment=
+Exec=webqq
+GenericName[zh_CN]=
+GenericName=
+Icon=/opt/webqq/webqq.png
+MimeType=
+Name[zh_CN]=WebQQ 2.0
+Name=WebQQ 2.0
+Path=/opt/webqq/
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-DCOP-ServiceType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

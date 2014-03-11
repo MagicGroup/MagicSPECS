@@ -1,0 +1,13 @@
+[Unit]
+Description=GPS Service Daemon
+After=syslog.target network.target chronyd.service
+
+[Service]
+Type=simple
+PIDFile=/var/run/gpsd.pid
+EnvironmentFile=-/etc/sysconfig/gpsd
+ExecStart=/usr/sbin/gpsd -P /var/run/gpsd.pid -F /var/run/gpsd.sock -N $OPTIONS $DEVICE
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

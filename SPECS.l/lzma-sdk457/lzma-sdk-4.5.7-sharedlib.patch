@@ -1,0 +1,500 @@
+diff -up lzma457/C/Archive/7z/7zBuffer.c.shared lzma457/C/Archive/7z/7zBuffer.c
+--- lzma457/C/Archive/7z/7zBuffer.c.shared	2005-08-01 08:59:34.000000000 -0400
++++ lzma457/C/Archive/7z/7zBuffer.c	2011-10-18 11:31:37.829780685 -0400
+@@ -3,13 +3,13 @@
+ #include "7zBuffer.h"
+ #include "7zAlloc.h"
+ 
+-void SzByteBufferInit(CSzByteBuffer *buffer)
++MY_EXTERN_C void SzByteBufferInit(CSzByteBuffer *buffer)
+ {
+   buffer->Capacity = 0;
+   buffer->Items = 0;
+ }
+ 
+-int SzByteBufferCreate(CSzByteBuffer *buffer, size_t newCapacity, void * (*allocFunc)(size_t size))
++MY_EXTERN_C int SzByteBufferCreate(CSzByteBuffer *buffer, size_t newCapacity, void * (*allocFunc)(size_t size))
+ {
+   buffer->Capacity = newCapacity;
+   if (newCapacity == 0)
+@@ -21,7 +21,7 @@ int SzByteBufferCreate(CSzByteBuffer *bu
+   return (buffer->Items != 0);
+ }
+ 
+-void SzByteBufferFree(CSzByteBuffer *buffer, void (*freeFunc)(void *))
++MY_EXTERN_C void SzByteBufferFree(CSzByteBuffer *buffer, void (*freeFunc)(void *))
+ {
+   freeFunc(buffer->Items);
+   buffer->Items = 0;
+diff -up lzma457/C/Archive/7z/7zBuffer.h.shared lzma457/C/Archive/7z/7zBuffer.h
+--- lzma457/C/Archive/7z/7zBuffer.h.shared	2007-02-12 05:25:28.000000000 -0500
++++ lzma457/C/Archive/7z/7zBuffer.h	2011-10-18 11:31:37.829780685 -0400
+@@ -6,14 +6,20 @@
+ #include <stddef.h>
+ #include "../../Types.h"
+ 
++#ifdef __cplusplus
++  #define MY_EXTERN_C extern "C"
++#else
++  #define MY_EXTERN_C extern
++#endif
++
+ typedef struct _CSzByteBuffer
+ {
+   size_t Capacity;
+   Byte *Items;
+ }CSzByteBuffer;
+ 
+-void SzByteBufferInit(CSzByteBuffer *buffer);
+-int SzByteBufferCreate(CSzByteBuffer *buffer, size_t newCapacity, void * (*allocFunc)(size_t size));
+-void SzByteBufferFree(CSzByteBuffer *buffer, void (*freeFunc)(void *));
++MY_EXTERN_C void SzByteBufferInit(CSzByteBuffer *buffer);
++MY_EXTERN_C int SzByteBufferCreate(CSzByteBuffer *buffer, size_t newCapacity, void * (*allocFunc)(size_t size));
++MY_EXTERN_C void SzByteBufferFree(CSzByteBuffer *buffer, void (*freeFunc)(void *));
+ 
+ #endif
+diff -up lzma457/C/Archive/7z/7zDecode.c.shared lzma457/C/Archive/7z/7zDecode.c
+--- lzma457/C/Archive/7z/7zDecode.c.shared	2007-06-21 03:01:47.000000000 -0400
++++ lzma457/C/Archive/7z/7zDecode.c	2011-10-18 11:31:37.830780674 -0400
+@@ -318,7 +318,7 @@ SZ_RESULT SzDecode2(const CFileSize *pac
+   return SZ_OK;
+ }
+ 
+-SZ_RESULT SzDecode(const CFileSize *packSizes, const CFolder *folder,
++MY_EXTERN_C SZ_RESULT SzDecode(const CFileSize *packSizes, const CFolder *folder,
+     #ifdef _LZMA_IN_CB
+     ISzInStream *inStream, CFileSize startPos,
+     #else
+diff -up lzma457/C/Archive/7z/7zDecode.h.shared lzma457/C/Archive/7z/7zDecode.h
+--- lzma457/C/Archive/7z/7zDecode.h.shared	2007-06-21 02:50:00.000000000 -0400
++++ lzma457/C/Archive/7z/7zDecode.h	2011-10-18 11:31:37.830780674 -0400
+@@ -9,7 +9,13 @@
+ #include "7zIn.h"
+ #endif
+ 
+-SZ_RESULT SzDecode(const CFileSize *packSizes, const CFolder *folder,
++#ifdef __cplusplus
++  #define MY_EXTERN_C extern "C"
++#else
++  #define MY_EXTERN_C extern
++#endif
++
++MY_EXTERN_C SZ_RESULT SzDecode(const CFileSize *packSizes, const CFolder *folder,
+     #ifdef _LZMA_IN_CB
+     ISzInStream *stream, CFileSize startPos,
+     #else
+diff -up lzma457/C/Archive/7z/7zExtract.c.shared lzma457/C/Archive/7z/7zExtract.c
+--- lzma457/C/Archive/7z/7zExtract.c.shared	2007-06-21 02:53:23.000000000 -0400
++++ lzma457/C/Archive/7z/7zExtract.c	2011-10-18 11:31:37.831780663 -0400
+@@ -4,7 +4,7 @@
+ #include "7zDecode.h"
+ #include "../../7zCrc.h"
+ 
+-SZ_RESULT SzExtract(
++MY_EXTERN_C SZ_RESULT SzExtract(
+     ISzInStream *inStream, 
+     CArchiveDatabaseEx *db,
+     UInt32 fileIndex,
+diff -up lzma457/C/Archive/7z/7zExtract.h.shared lzma457/C/Archive/7z/7zExtract.h
+--- lzma457/C/Archive/7z/7zExtract.h.shared	2005-07-19 05:00:30.000000000 -0400
++++ lzma457/C/Archive/7z/7zExtract.h	2011-10-18 11:31:37.831780663 -0400
+@@ -5,6 +5,12 @@
+ 
+ #include "7zIn.h"
+ 
++#ifdef __cplusplus
++  #define MY_EXTERN_C extern "C"
++#else
++  #define MY_EXTERN_C extern
++#endif
++
+ /*
+   SzExtract extracts file from archive
+ 
+@@ -25,7 +31,7 @@
+     Free *outBuffer and set *outBuffer to 0, if you want to flush cache.
+ */
+ 
+-SZ_RESULT SzExtract(
++MY_EXTERN_C SZ_RESULT SzExtract(
+     ISzInStream *inStream, 
+     CArchiveDatabaseEx *db,
+     UInt32 fileIndex,         /* index of file */
+diff -up lzma457/C/Archive/7z/7zHeader.c.shared lzma457/C/Archive/7z/7zHeader.c
+--- lzma457/C/Archive/7z/7zHeader.c.shared	2005-03-17 16:16:10.000000000 -0500
++++ lzma457/C/Archive/7z/7zHeader.c	2011-10-18 11:31:37.832780652 -0400
+@@ -2,4 +2,4 @@
+ 
+ #include "7zHeader.h"
+ 
+-Byte k7zSignature[k7zSignatureSize] = {'7', 'z', 0xBC, 0xAF, 0x27, 0x1C};
++MY_EXTERN_C Byte k7zSignature[k7zSignatureSize] = {'7', 'z', 0xBC, 0xAF, 0x27, 0x1C};
+diff -up lzma457/C/Archive/7z/7zHeader.h.shared lzma457/C/Archive/7z/7zHeader.h
+--- lzma457/C/Archive/7z/7zHeader.h.shared	2007-02-12 05:25:37.000000000 -0500
++++ lzma457/C/Archive/7z/7zHeader.h	2011-10-18 11:31:37.832780652 -0400
+@@ -5,8 +5,14 @@
+ 
+ #include "../../Types.h"
+ 
++#ifdef __cplusplus
++  #define MY_EXTERN_C extern "C"
++#else
++  #define MY_EXTERN_C extern
++#endif
++
+ #define k7zSignatureSize 6
+-extern Byte k7zSignature[k7zSignatureSize];
++MY_EXTERN_C Byte k7zSignature[k7zSignatureSize];
+ 
+ #define k7zMajorVersion 0
+ 
+diff -up lzma457/C/Archive/7z/7zIn.c.shared lzma457/C/Archive/7z/7zIn.c
+--- lzma457/C/Archive/7z/7zIn.c.shared	2007-06-21 02:54:27.000000000 -0400
++++ lzma457/C/Archive/7z/7zIn.c	2011-10-18 11:31:37.833780641 -0400
+@@ -6,7 +6,7 @@
+ 
+ #define RINOM(x) { if((x) == 0) return SZE_OUTOFMEMORY; }
+ 
+-void SzArDbExInit(CArchiveDatabaseEx *db)
++MY_EXTERN_C void SzArDbExInit(CArchiveDatabaseEx *db)
+ {
+   SzArchiveDatabaseInit(&db->Database);
+   db->FolderStartPackStreamIndex = 0;
+@@ -15,7 +15,7 @@ void SzArDbExInit(CArchiveDatabaseEx *db
+   db->FileIndexToFolderIndexMap = 0;
+ }
+ 
+-void SzArDbExFree(CArchiveDatabaseEx *db, void (*freeFunc)(void *))
++MY_EXTERN_C void SzArDbExFree(CArchiveDatabaseEx *db, void (*freeFunc)(void *))
+ {
+   freeFunc(db->FolderStartPackStreamIndex);
+   freeFunc(db->PackStreamStartPositions);
+@@ -242,7 +242,7 @@ SZ_RESULT SafeReadDirectUInt64(ISzInStre
+   return SZ_OK;
+ }
+ 
+-int TestSignatureCandidate(Byte *testBytes)
++MY_EXTERN_C int TestSignatureCandidate(Byte *testBytes)
+ {
+   size_t i;
+   for (i = 0; i < k7zSignatureSize; i++)
+@@ -1301,7 +1301,7 @@ SZ_RESULT SzArchiveOpen2(
+   return res;
+ }
+ 
+-SZ_RESULT SzArchiveOpen(
++MY_EXTERN_C SZ_RESULT SzArchiveOpen(
+     ISzInStream *inStream, 
+     CArchiveDatabaseEx *db,
+     ISzAlloc *allocMain, 
+diff -up lzma457/C/Archive/7z/7zIn.h.shared lzma457/C/Archive/7z/7zIn.h
+--- lzma457/C/Archive/7z/7zIn.h.shared	2007-06-19 10:57:11.000000000 -0400
++++ lzma457/C/Archive/7z/7zIn.h	2011-10-18 11:31:37.834780630 -0400
+@@ -6,6 +6,12 @@
+ #include "7zHeader.h"
+ #include "7zItem.h"
+ #include "7zAlloc.h"
++
++#ifdef __cplusplus
++  #define MY_EXTERN_C extern "C"
++#else
++  #define MY_EXTERN_C extern
++#endif
+  
+ typedef struct _CInArchiveInfo
+ {
+@@ -23,8 +29,8 @@ typedef struct _CArchiveDatabaseEx
+   UInt32 *FileIndexToFolderIndexMap;
+ }CArchiveDatabaseEx;
+ 
+-void SzArDbExInit(CArchiveDatabaseEx *db);
+-void SzArDbExFree(CArchiveDatabaseEx *db, void (*freeFunc)(void *));
++MY_EXTERN_C void SzArDbExInit(CArchiveDatabaseEx *db);
++MY_EXTERN_C void SzArDbExFree(CArchiveDatabaseEx *db, void (*freeFunc)(void *));
+ CFileSize SzArDbGetFolderStreamPos(CArchiveDatabaseEx *db, UInt32 folderIndex, UInt32 indexInFolder);
+ int SzArDbGetFolderFullPackSize(CArchiveDatabaseEx *db, UInt32 folderIndex, CFileSize *resSize);
+ 
+@@ -46,10 +52,12 @@ typedef struct _ISzInStream
+ } ISzInStream;
+ 
+  
+-int SzArchiveOpen(
++MY_EXTERN_C int SzArchiveOpen(
+     ISzInStream *inStream, 
+     CArchiveDatabaseEx *db,
+     ISzAlloc *allocMain, 
+     ISzAlloc *allocTemp);
++
++MY_EXTERN_C int TestSignatureCandidate(Byte *testBytes);
+  
+ #endif
+diff -up lzma457/C/Archive/7z/7zItem.c.shared lzma457/C/Archive/7z/7zItem.c
+--- lzma457/C/Archive/7z/7zItem.c.shared	2007-06-16 04:34:43.000000000 -0400
++++ lzma457/C/Archive/7z/7zItem.c	2011-10-18 11:31:37.834780630 -0400
+@@ -3,7 +3,7 @@
+ #include "7zItem.h"
+ #include "7zAlloc.h"
+ 
+-void SzCoderInfoInit(CCoderInfo *coder)
++MY_EXTERN_C void SzCoderInfoInit(CCoderInfo *coder)
+ {
+   SzByteBufferInit(&coder->Properties);
+ }
+@@ -14,7 +14,7 @@ void SzCoderInfoFree(CCoderInfo *coder,
+   SzCoderInfoInit(coder);
+ }
+ 
+-void SzFolderInit(CFolder *folder)
++MY_EXTERN_C void SzFolderInit(CFolder *folder)
+ {
+   folder->NumCoders = 0;
+   folder->Coders = 0;
+@@ -40,7 +40,7 @@ void SzFolderFree(CFolder *folder, void
+   SzFolderInit(folder);
+ }
+ 
+-UInt32 SzFolderGetNumOutStreams(CFolder *folder)
++MY_EXTERN_C UInt32 SzFolderGetNumOutStreams(CFolder *folder)
+ {
+   UInt32 result = 0;
+   UInt32 i;
+@@ -49,7 +49,7 @@ UInt32 SzFolderGetNumOutStreams(CFolder
+   return result;
+ }
+ 
+-int SzFolderFindBindPairForInStream(CFolder *folder, UInt32 inStreamIndex)
++MY_EXTERN_C int SzFolderFindBindPairForInStream(CFolder *folder, UInt32 inStreamIndex)
+ {
+   UInt32 i;
+   for(i = 0; i < folder->NumBindPairs; i++)
+@@ -59,7 +59,7 @@ int SzFolderFindBindPairForInStream(CFol
+ }
+ 
+ 
+-int SzFolderFindBindPairForOutStream(CFolder *folder, UInt32 outStreamIndex)
++MY_EXTERN_C int SzFolderFindBindPairForOutStream(CFolder *folder, UInt32 outStreamIndex)
+ {
+   UInt32 i;
+   for(i = 0; i < folder->NumBindPairs; i++)
+@@ -68,7 +68,7 @@ int SzFolderFindBindPairForOutStream(CFo
+   return -1;
+ }
+ 
+-CFileSize SzFolderGetUnPackSize(CFolder *folder)
++MY_EXTERN_C CFileSize SzFolderGetUnPackSize(CFolder *folder)
+ { 
+   int i = (int)SzFolderGetNumOutStreams(folder);
+   if (i == 0)
+@@ -90,7 +90,7 @@ int FindPackStreamArrayIndex(int inStrea
+ }
+ */
+ 
+-void SzFileInit(CFileItem *fileItem)
++MY_EXTERN_C void SzFileInit(CFileItem *fileItem)
+ {
+   fileItem->IsFileCRCDefined = 0;
+   fileItem->HasStream = 1;
+@@ -106,7 +106,7 @@ void SzFileFree(CFileItem *fileItem, voi
+   SzFileInit(fileItem);
+ }
+ 
+-void SzArchiveDatabaseInit(CArchiveDatabase *db)
++MY_EXTERN_C void SzArchiveDatabaseInit(CArchiveDatabase *db)
+ {
+   db->NumPackStreams = 0;
+   db->PackSizes = 0;
+@@ -118,7 +118,7 @@ void SzArchiveDatabaseInit(CArchiveDatab
+   db->Files = 0;
+ }
+ 
+-void SzArchiveDatabaseFree(CArchiveDatabase *db, void (*freeFunc)(void *))
++MY_EXTERN_C void SzArchiveDatabaseFree(CArchiveDatabase *db, void (*freeFunc)(void *))
+ {
+   UInt32 i;
+   for (i = 0; i < db->NumFolders; i++)
+diff -up lzma457/C/Archive/7z/7zItem.h.shared lzma457/C/Archive/7z/7zItem.h
+--- lzma457/C/Archive/7z/7zItem.h.shared	2007-06-16 04:22:14.000000000 -0400
++++ lzma457/C/Archive/7z/7zItem.h	2011-10-18 11:31:37.835780619 -0400
+@@ -7,6 +7,12 @@
+ #include "7zHeader.h"
+ #include "7zBuffer.h"
+ 
++#ifdef __cplusplus
++  #define MY_EXTERN_C extern "C"
++#else
++  #define MY_EXTERN_C extern
++#endif
++
+ typedef struct _CCoderInfo
+ {
+   UInt32 NumInStreams;
+@@ -15,7 +21,7 @@ typedef struct _CCoderInfo
+   CSzByteBuffer Properties;
+ }CCoderInfo;
+ 
+-void SzCoderInfoInit(CCoderInfo *coder);
++MY_EXTERN_C void SzCoderInfoInit(CCoderInfo *coder);
+ void SzCoderInfoFree(CCoderInfo *coder, void (*freeFunc)(void *p));
+ 
+ typedef struct _CBindPair
+@@ -39,11 +45,11 @@ typedef struct _CFolder
+   UInt32 NumUnPackStreams;
+ }CFolder;
+ 
+-void SzFolderInit(CFolder *folder);
+-CFileSize SzFolderGetUnPackSize(CFolder *folder);
+-int SzFolderFindBindPairForInStream(CFolder *folder, UInt32 inStreamIndex);
+-UInt32 SzFolderGetNumOutStreams(CFolder *folder);
+-CFileSize SzFolderGetUnPackSize(CFolder *folder);
++MY_EXTERN_C void SzFolderInit(CFolder *folder);
++MY_EXTERN_C CFileSize SzFolderGetUnPackSize(CFolder *folder);
++MY_EXTERN_C int SzFolderFindBindPairForInStream(CFolder *folder, UInt32 inStreamIndex);
++MY_EXTERN_C UInt32 SzFolderGetNumOutStreams(CFolder *folder);
++MY_EXTERN_C CFileSize SzFolderGetUnPackSize(CFolder *folder);
+ 
+ typedef struct _CArchiveFileTime
+ {
+@@ -74,7 +80,7 @@ typedef struct _CFileItem
+   */
+ }CFileItem;
+ 
+-void SzFileInit(CFileItem *fileItem);
++MY_EXTERN_C void SzFileInit(CFileItem *fileItem);
+ 
+ typedef struct _CArchiveDatabase
+ {
+@@ -88,8 +94,8 @@ typedef struct _CArchiveDatabase
+   CFileItem *Files;
+ }CArchiveDatabase;
+ 
+-void SzArchiveDatabaseInit(CArchiveDatabase *db);
+-void SzArchiveDatabaseFree(CArchiveDatabase *db, void (*freeFunc)(void *));
++MY_EXTERN_C void SzArchiveDatabaseInit(CArchiveDatabase *db);
++MY_EXTERN_C void SzArchiveDatabaseFree(CArchiveDatabase *db, void (*freeFunc)(void *));
+ 
+ 
+ #endif
+diff -up lzma457/C/Compress/Branch/BranchX86_2.c.shared lzma457/C/Compress/Branch/BranchX86_2.c
+--- lzma457/C/Compress/Branch/BranchX86_2.c.shared	2011-10-18 11:32:39.635099082 -0400
++++ lzma457/C/Compress/Branch/BranchX86_2.c	2011-10-18 11:34:06.250158798 -0400
+@@ -37,7 +37,7 @@
+ // #define UpdateBit0(p) Range = bound; *(p) = (CProb)(*(p) + ((kBitModelTotal - *(p)) >> kNumMoveBits));
+ // #define UpdateBit1(p) Range -= bound; Code -= bound; *(p) = (CProb)(*(p) - (*(p) >> kNumMoveBits));
+ 
+-int x86_2_Decode(
++MY_EXTERN_C int x86_2_Decode(
+     const Byte *buf0, SizeT size0, 
+     const Byte *buf1, SizeT size1, 
+     const Byte *buf2, SizeT size2, 
+diff -up lzma457/C/Compress/Branch/BranchX86_2.h.shared lzma457/C/Compress/Branch/BranchX86_2.h
+--- lzma457/C/Compress/Branch/BranchX86_2.h.shared	2011-10-18 11:32:34.024160585 -0400
++++ lzma457/C/Compress/Branch/BranchX86_2.h	2011-10-18 11:34:32.900872791 -0400
+@@ -5,6 +5,12 @@
+ 
+ #include "BranchTypes.h"
+ 
++#ifdef __cplusplus
++  #define MY_EXTERN_C extern "C"
++#else
++  #define MY_EXTERN_C extern
++#endif
++
+ #define BCJ2_RESULT_OK 0
+ #define BCJ2_RESULT_DATA_ERROR 1
+ 
+@@ -18,7 +24,7 @@ If buf0 overlaps outBuf, there are two r
+   2) (buf0 + size0 >= outBuf + FullOutputSize).
+ */
+ 
+-int x86_2_Decode(
++MY_EXTERN_C int x86_2_Decode(
+     const Byte *buf0, SizeT size0, 
+     const Byte *buf1, SizeT size1, 
+     const Byte *buf2, SizeT size2, 
+diff -up lzma457/CPP/7zip/Compress/LZMA_Alone/makefile.gcc.shared lzma457/CPP/7zip/Compress/LZMA_Alone/makefile.gcc
+--- lzma457/CPP/7zip/Compress/LZMA_Alone/makefile.gcc.shared	2007-06-25 04:54:32.000000000 -0400
++++ lzma457/CPP/7zip/Compress/LZMA_Alone/makefile.gcc	2011-10-18 11:35:31.785246076 -0400
+@@ -1,7 +1,9 @@
+-PROG = lzma
+-CXX = g++ -O2 -Wall
+-CXX_C = gcc -O2 -Wall
+-LIB = -lm
++LIBRARY = liblzmasdk457.so
++LIBRARYMINOR = $(LIBRARY).4
++LIBRARYMAJOR = $(LIBRARYMINOR).5.7
++CXX = g++ -O2 -Wall -fPIC
++CXX_C = gcc -O2 -Wall -fPIC
++LIB = -lm -lstdc++
+ RM = rm -f
+ CFLAGS = -c
+ 
+@@ -42,15 +44,21 @@ OBJS = \
+   7zCrc.o \
+   Alloc.o \
+   BranchX86.o \
++  BranchX86_2.o \
+   MatchFinder.o \
+   LzmaDecode.o \
+   LzmaRamDecode.o \
++  7zBuffer.o \
++  7zDecode.o \
++  7zExtract.o \
++  7zHeader.o \
++  7zIn.o \
++  7zItem.o \
+ 
++all: $(LIBRARYMAJOR)
+ 
+-all: $(PROG)
+-
+-$(PROG): $(OBJS)
+-	$(CXX) -o $(PROG) $(LDFLAGS) $(OBJS) $(LIB) $(LIB2)
++$(LIBRARYMAJOR): $(OBJS)
++	$(CXX) -o $(LIBRARYMAJOR) -shared -Wl,-soname=$(LIBRARYMINOR) $(LDFLAGS) $(OBJS) $(LIB) $(LIB2)
+ 
+ LzmaAlone.o: LzmaAlone.cpp
+ 	$(CXX) $(CFLAGS) LzmaAlone.cpp
+@@ -116,15 +124,36 @@ StringToInt.o: ../../../Common/StringToI
+ MyVector.o: ../../../Common/MyVector.cpp
+ 	$(CXX) $(CFLAGS) ../../../Common/MyVector.cpp
+ 
++7zBuffer.o: ../../../../C/Archive/7z/7zBuffer.c
++	$(CXX_C) $(CFLAGS) ../../../../C/Archive/7z/7zBuffer.c
++
+ 7zCrc.o: ../../../../C/7zCrc.c
+ 	$(CXX_C) $(CFLAGS) ../../../../C/7zCrc.c
+ 
++7zDecode.o: ../../../../C/Archive/7z/7zDecode.c
++	$(CXX_C) $(CFLAGS) ../../../../C/Archive/7z/7zDecode.c
++
++7zExtract.o: ../../../../C/Archive/7z/7zExtract.c
++	$(CXX_C) $(CFLAGS) ../../../../C/Archive/7z/7zExtract.c
++
++7zHeader.o: ../../../../C/Archive/7z/7zHeader.c
++	$(CXX_C) $(CFLAGS) ../../../../C/Archive/7z/7zHeader.c
++
++7zIn.o: ../../../../C/Archive/7z/7zIn.c
++	$(CXX_C) $(CFLAGS) ../../../../C/Archive/7z/7zIn.c
++
++7zItem.o: ../../../../C/Archive/7z/7zItem.c
++	$(CXX_C) $(CFLAGS) ../../../../C/Archive/7z/7zItem.c
++
+ Alloc.o: ../../../../C/Alloc.c
+ 	$(CXX_C) $(CFLAGS) ../../../../C/Alloc.c
+ 
+ BranchX86.o: ../../../../C/Compress/Branch/BranchX86.c
+ 	$(CXX_C) $(CFLAGS) ../../../../C/Compress/Branch/BranchX86.c
+ 
++BranchX86_2.o: ../../../../C/Compress/Branch/BranchX86_2.c
++	$(CXX_C) $(CFLAGS) ../../../../C/Compress/Branch/BranchX86_2.c
++
+ MatchFinder.o: ../../../../C/Compress/Lz/MatchFinder.c
+ 	$(CXX_C) $(CFLAGS) ../../../../C/Compress/Lz/MatchFinder.c
+ 
+@@ -135,5 +164,5 @@ LzmaRamDecode.o: LzmaRamDecode.c
+ 	$(CXX_C) $(CFLAGS) LzmaRamDecode.c
+ 
+ clean:
+-	-$(RM) $(PROG) $(OBJS)
++	-$(RM) $(LIBRARYMAJOR) $(OBJS)
+ 

@@ -1,0 +1,32 @@
+From 08842612835a2ccf4051afc43213af9243dc6ecf Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 14 Mar 2012 16:00:42 +0100
+Subject: [PATCH] NEWS: update
+
+---
+ NEWS |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/NEWS b/NEWS
+index bed32ca..017fc9d 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,3 +1,18 @@
++dracut-018
++==========
++- converted manpage and documentation source to asciidoc
++- write-ifcfg fixes and cleanups
++- ifup is now done in the initqueue
++- netroot cleanup
++- initqueue/online is now for hooks, which require network
++- no more /tmp/root.info
++- 98pollcdrom: factored out the ugly cdrom polling in the main loop
++- simplified rd.luks.uuid testing
++- removed "egrep" and "ls" calls
++- speedup kernel module installation
++- make bzip2 optional
++- lots of bugfixes
++
+ dracut-017
+ ==========
+ - a _lot_ faster than dracut-016 in image creation

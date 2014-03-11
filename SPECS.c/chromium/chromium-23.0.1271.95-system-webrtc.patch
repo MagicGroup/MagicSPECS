@@ -1,0 +1,492 @@
+diff -up chromium-23.0.1271.95/build/linux/system.gyp.system-webrtc chromium-23.0.1271.95/build/linux/system.gyp
+--- chromium-23.0.1271.95/build/linux/system.gyp.system-webrtc	2012-12-12 16:30:22.942847413 -0500
++++ chromium-23.0.1271.95/build/linux/system.gyp	2012-12-12 16:30:22.956847427 -0500
+@@ -489,6 +489,115 @@
+       ],
+     },
+     {
++      'target_name': 'video_capture_module',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '-I/usr/include/webrtc -I/usr/include/webrtc/modules/interface -I/usr/include/webrtc/modules/video_capture/main/interface',
++            ],
++          },
++          'link_settings': {
++            'libraries': [
++              '-lvideo_capture_module',
++            ],
++          },
++	}],
++      ],
++    },
++    {
++      'target_name': 'video_render_module',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '-I/usr/include/webrtc -I/usr/include/webrtc/modules/interface -I/usr/include/webrtc/modules/video_render/main/interface',
++            ],
++          },
++          'link_settings': {
++            'libraries': [
++              '-lvideo_render_module',
++            ],
++          },
++        }],
++      ],
++    },
++    {
++      'target_name': 'system_wrappers',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '-I/usr/include/webrtc -I/usr/include/webrtc/system_wrappers/interface',
++            ],
++          },
++          'link_settings': {
++            'libraries': [
++              '-lsystem_wrappers',
++            ],
++          },
++        }],
++      ],
++    },
++    {
++      'target_name': 'video_engine_core',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '-I/usr/include/webrtc -I/usr/include/webrtc/common_video/libyuv/include -I/usr/include/webrtc/video_engine/include',
++            ],
++          },
++          'link_settings': {
++            'libraries': [
++              '-lvideo_engine_core',
++              '-lyuv',
++            ],
++          },
++        }],
++      ],
++    },
++    {
++      'target_name': 'voice_engine_core',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '-I/usr/include/webrtc -I/usr/include/webrtc/voice_engine',
++            ],
++          },
++          'link_settings': {
++            'libraries': [
++              '-lvoice_engine_core',
++            ],
++          },
++	}],
++      ],
++    },
++    {
++      'target_name': 'audio_device',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '-I/usr/include/webrtc',
++            ],
++          },
++          'link_settings': {
++            'libraries': [
++              '-laudio_device',
++            ],
++          },
++        }],
++      ],
++    },
++    {
+       'target_name': 'gnome_keyring',
+       'type': 'none',
+       'conditions': [
+diff -up chromium-23.0.1271.95/content/content_renderer.gypi.system-webrtc chromium-23.0.1271.95/content/content_renderer.gypi
+--- chromium-23.0.1271.95/content/content_renderer.gypi.system-webrtc	2012-12-12 16:30:21.000000000 -0500
++++ chromium-23.0.1271.95/content/content_renderer.gypi	2012-12-12 16:37:59.162854392 -0500
+@@ -310,10 +310,10 @@
+     ['enable_webrtc==1', {
+       'dependencies': [
+         '../third_party/libjingle/libjingle.gyp:libjingle_peerconnection',
+-        '../third_party/webrtc/system_wrappers/source/system_wrappers.gyp:system_wrappers',
+-        '../third_party/webrtc/modules/modules.gyp:audio_device',        
+-        '../third_party/webrtc/video_engine/video_engine.gyp:video_engine_core',
+-        '../third_party/webrtc/voice_engine/voice_engine.gyp:voice_engine_core',
++        '../build/linux/system.gyp:video_capture_module',
++        '../build/linux/system.gyp:system_wrappers',
++        '../build/linux/system.gyp:video_engine_core',
++        '../build/linux/system.gyp:voice_engine_core',
+         '<(DEPTH)/crypto/crypto.gyp:crypto',
+       ],
+       'sources': [
+diff -up chromium-23.0.1271.95/content/content_tests.gypi.system-webrtc chromium-23.0.1271.95/content/content_tests.gypi
+--- chromium-23.0.1271.95/content/content_tests.gypi.system-webrtc	2012-12-12 16:30:22.156847192 -0500
++++ chromium-23.0.1271.95/content/content_tests.gypi	2012-12-12 16:30:22.958847429 -0500
+@@ -189,11 +189,11 @@
+           ],
+           'dependencies': [
+             '../third_party/libjingle/libjingle.gyp:libjingle_peerconnection',
+-            '../third_party/webrtc/modules/modules.gyp:audio_device',
+-            '../third_party/webrtc/modules/modules.gyp:video_capture_module',
+-            '../third_party/webrtc/system_wrappers/source/system_wrappers.gyp:system_wrappers',
+-            '../third_party/webrtc/video_engine/video_engine.gyp:video_engine_core',
+-            '../third_party/webrtc/voice_engine/voice_engine.gyp:voice_engine_core'],
++            '../build/linux/system.gyp:audio_device',
++            '../build/linux/system.gyp:video_capture_module',
++            '../build/linux/system.gyp:system_wrappers',
++            '../build/linux/system.gyp:video_engine_core',
++            '../build/linux/system.gyp:voice_engine_core'],
+         }],
+         ['toolkit_uses_gtk == 1', {
+           'dependencies': [
+@@ -511,10 +511,10 @@
+           ],
+           'dependencies': [
+             '../third_party/libjingle/libjingle.gyp:libjingle_peerconnection',
+-            '../third_party/webrtc/modules/modules.gyp:video_capture_module',
+-            '../third_party/webrtc/system_wrappers/source/system_wrappers.gyp:system_wrappers',
+-            '../third_party/webrtc/video_engine/video_engine.gyp:video_engine_core',
+-            '../third_party/webrtc/voice_engine/voice_engine.gyp:voice_engine_core',
++            '../build/linux/system.gyp:video_capture_module',
++            '../build/linux/system.gyp:system_wrappers',
++            '../build/linux/system.gyp:video_engine_core',
++            '../build/linux/system.gyp:voice_engine_core',
+           ]
+         }],
+         # TODO(jrg): remove the OS=="android" section?
+diff -up chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_impl.h.system-webrtc chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_impl.h
+--- chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_impl.h.system-webrtc	2012-11-27 21:01:26.000000000 -0500
++++ chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_impl.h	2012-12-12 16:35:42.685850746 -0500
+@@ -16,7 +16,7 @@
+ #include "content/common/content_export.h"
+ #include "media/audio/audio_input_device.h"
+ #include "media/base/audio_renderer_sink.h"
+-#include "third_party/webrtc/modules/audio_device/main/interface/audio_device.h"
++#include <webrtc/modules/audio_device/main/interface/audio_device.h>
+ 
+ // A WebRtcAudioDeviceImpl instance implements the abstract interface
+ // webrtc::AudioDeviceModule which makes it possible for a user (e.g. webrtc::
+diff -up chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_unittest.cc.system-webrtc chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_unittest.cc
+--- chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_unittest.cc.system-webrtc	2012-11-27 21:01:26.000000000 -0500
++++ chromium-23.0.1271.95/content/renderer/media/webrtc_audio_device_unittest.cc	2012-12-12 16:36:16.228851629 -0500
+@@ -10,11 +10,11 @@
+ #include "media/audio/audio_manager.h"
+ #include "media/audio/audio_util.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+-#include "third_party/webrtc/voice_engine/include/voe_audio_processing.h"
+-#include "third_party/webrtc/voice_engine/include/voe_base.h"
+-#include "third_party/webrtc/voice_engine/include/voe_external_media.h"
+-#include "third_party/webrtc/voice_engine/include/voe_file.h"
+-#include "third_party/webrtc/voice_engine/include/voe_network.h"
++#include <webrtc/voice_engine/include/voe_audio_processing.h>
++#include <webrtc/voice_engine/include/voe_base.h>
++#include <webrtc/voice_engine/include/voe_external_media.h>
++#include <webrtc/voice_engine/include/voe_file.h>
++#include <webrtc/voice_engine/include/voe_network.h>
+ 
+ using testing::_;
+ using testing::AnyNumber;
+diff -up chromium-23.0.1271.95/content/test/webrtc_audio_device_test.cc.system-webrtc chromium-23.0.1271.95/content/test/webrtc_audio_device_test.cc
+--- chromium-23.0.1271.95/content/test/webrtc_audio_device_test.cc.system-webrtc	2012-11-27 21:01:23.000000000 -0500
++++ chromium-23.0.1271.95/content/test/webrtc_audio_device_test.cc	2012-12-12 16:36:42.486852344 -0500
+@@ -32,10 +32,10 @@
+ #include "net/url_request/url_request_test_util.h"
+ #include "testing/gmock/include/gmock/gmock.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/webrtc/voice_engine/include/voe_audio_processing.h"
+-#include "third_party/webrtc/voice_engine/include/voe_base.h"
+-#include "third_party/webrtc/voice_engine/include/voe_file.h"
+-#include "third_party/webrtc/voice_engine/include/voe_network.h"
++#include <webrtc/voice_engine/include/voe_audio_processing.h>
++#include <webrtc/voice_engine/include/voe_base.h>
++#include <webrtc/voice_engine/include/voe_file.h>
++#include <webrtc/voice_engine/include/voe_network.h>
+ 
+ using base::win::ScopedCOMInitializer;
+ using testing::_;
+diff -up chromium-23.0.1271.95/content/test/webrtc_audio_device_test.h.system-webrtc chromium-23.0.1271.95/content/test/webrtc_audio_device_test.h
+--- chromium-23.0.1271.95/content/test/webrtc_audio_device_test.h.system-webrtc	2012-11-27 21:01:23.000000000 -0500
++++ chromium-23.0.1271.95/content/test/webrtc_audio_device_test.h	2012-12-12 16:30:34.121847573 -0500
+@@ -16,7 +16,7 @@
+ #include "media/base/channel_layout.h"
+ #include "ipc/ipc_channel.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "third_party/webrtc/common_types.h"
++#include <webrtc/common_types.h>
+ 
+ class AudioInputRendererHost;
+ class AudioRendererHost;
+diff -up chromium-23.0.1271.95/third_party/libjingle/libjingle.gyp.system-webrtc chromium-23.0.1271.95/third_party/libjingle/libjingle.gyp
+--- chromium-23.0.1271.95/third_party/libjingle/libjingle.gyp.system-webrtc	2012-12-12 16:30:22.947847418 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/libjingle.gyp	2012-12-12 16:30:34.122847574 -0500
+@@ -696,11 +696,11 @@
+           'dependencies': [
+             # We won't build with WebRTC on Android.
+             '../../build/linux/system.gyp:libsrtp',
+-            '<(DEPTH)/third_party/webrtc/modules/modules.gyp:video_capture_module',
+-            '<(DEPTH)/third_party/webrtc/modules/modules.gyp:video_render_module',
+-            '<(DEPTH)/third_party/webrtc/video_engine/video_engine.gyp:video_engine_core',
+-            '<(DEPTH)/third_party/webrtc/voice_engine/voice_engine.gyp:voice_engine_core',
+-            '<(DEPTH)/third_party/webrtc/system_wrappers/source/system_wrappers.gyp:system_wrappers',
++            '<(DEPTH)/build/linux/system.gyp:video_capture_module',
++            '<(DEPTH)/build/linux/system.gyp:video_render_module',
++            '<(DEPTH)/build/linux/system.gyp:video_engine_core',
++            '<(DEPTH)/build/linux/system.gyp:voice_engine_core',
++            '<(DEPTH)/build/linux/system.gyp:system_wrappers',
+             'libjingle',
+             'libjingle_p2p',
+           ],
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/audiotrack.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/audiotrack.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/audiotrack.h.webrtc	2012-12-13 16:40:23.484795202 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/audiotrack.h	2012-12-13 16:40:35.969795580 -0500
+@@ -36,7 +36,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "modules/audio_device/main/interface/audio_device.h"
+ #else
+-#include "third_party/webrtc/modules/audio_device/main/interface/audio_device.h"
++#include <webrtc/modules/audio_device/main/interface/audio_device.h>
+ #endif
+ 
+ namespace webrtc {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/peerconnectionfactory.cc.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/peerconnectionfactory.cc
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/peerconnectionfactory.cc.webrtc	2012-12-13 16:38:45.813791075 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/peerconnectionfactory.cc	2012-12-13 16:39:02.827791629 -0500
+@@ -38,7 +38,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "modules/audio_device/main/interface/audio_device.h"
+ #else
+-#include "third_party/webrtc/modules/audio_device/main/interface/audio_device.h"
++#include <webrtc/modules/audio_device/main/interface/audio_device.h>
+ #endif
+ 
+ using talk_base::scoped_refptr;
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/videotrack.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/videotrack.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/videotrack.h.webrtc	2012-12-13 16:39:54.045794269 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/videotrack.h	2012-12-13 16:40:16.096794899 -0500
+@@ -40,7 +40,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "modules/video_capture/main/interface/video_capture.h"
+ #else
+-#include "third_party/webrtc/modules/video_capture/main/interface/video_capture.h"
++#include <webrtc/modules/video_capture/main/interface/video_capture.h>
+ #endif
+ 
+ namespace cricket {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcpassthroughrender.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcpassthroughrender.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcpassthroughrender.h.webrtc	2012-12-13 16:44:36.565803526 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcpassthroughrender.h	2012-12-13 16:44:46.113803815 -0500
+@@ -33,7 +33,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "modules/video_render/main/interface/video_render.h"
+ #else
+-#include "third_party/webrtc/modules/video_render/main/interface/video_render.h"
++#include <webrtc/modules/video_render/main/interface/video_render.h>
+ #endif
+ #include "talk/base/criticalsection.h"
+ 
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.cc.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.cc
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.cc.webrtc	2012-12-13 16:42:57.404800195 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.cc	2012-12-13 16:43:07.997800679 -0500
+@@ -41,7 +41,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "modules/video_capture/main/interface/video_capture_factory.h"
+ #else
+-#include "third_party/webrtc/modules/video_capture/main/interface/video_capture_factory.h"
++#include <webrtc/modules/video_capture/main/interface/video_capture_factory.h>
+ #endif
+ 
+ namespace cricket {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.h.webrtc	2012-12-13 16:42:41.309799636 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideocapturer.h	2012-12-13 16:42:51.801799982 -0500
+@@ -36,7 +36,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "modules/video_capture/main/interface/video_capture.h"
+ #else
+-#include "third_party/webrtc/modules/video_capture/main/interface/video_capture.h"
++#include <webrtc/modules/video_capture/main/interface/video_capture.h>
+ #endif
+ 
+ namespace cricket {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoengine.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoengine.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoengine.h.webrtc	2012-12-13 16:45:17.815805230 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoengine.h	2012-12-13 16:45:28.585805553 -0500
+@@ -39,7 +39,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "video_engine/include/vie_base.h"
+ #else
+-#include "third_party/webrtc/video_engine/include/vie_base.h"
++#include <webrtc/video_engine/include/vie_base.h>
+ #endif  // WEBRTC_RELATIVE_PATH
+ 
+ namespace webrtc {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoframe.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoframe.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoframe.h.webrtc	2012-12-13 16:45:45.760806084 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvideoframe.h	2012-12-13 16:45:59.628806512 -0500
+@@ -32,8 +32,8 @@
+ #include "common_types.h"
+ #include "modules/interface/module_common_types.h"
+ #else
+-#include "third_party/webrtc/common_types.h"
+-#include "third_party/webrtc/modules/interface/module_common_types.h"
++#include <webrtc/common_types.h>
++#include <webrtc/modules/interface/module_common_types.h>
+ #endif
+ #include "talk/base/buffer.h"
+ #include "talk/base/refcount.h"
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvie.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvie.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvie.h.webrtc	2012-12-13 16:43:22.067801109 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvie.h	2012-12-13 16:44:25.177803156 -0500
+@@ -46,18 +46,18 @@
+ #include "video_engine/include/vie_render.h"
+ #include "video_engine/include/vie_rtp_rtcp.h"
+ #else
+-#include "third_party/webrtc/common_types.h"
+-#include "third_party/webrtc/modules/interface/module_common_types.h"
+-#include "third_party/webrtc/modules/video_capture/main/interface/video_capture.h"
+-#include "third_party/webrtc/modules/video_render/main/interface/video_render.h"
+-#include "third_party/webrtc/video_engine/include/vie_base.h"
+-#include "third_party/webrtc/video_engine/include/vie_capture.h"
+-#include "third_party/webrtc/video_engine/include/vie_codec.h"
+-#include "third_party/webrtc/video_engine/include/vie_errors.h"
+-#include "third_party/webrtc/video_engine/include/vie_image_process.h"
+-#include "third_party/webrtc/video_engine/include/vie_network.h"
+-#include "third_party/webrtc/video_engine/include/vie_render.h"
+-#include "third_party/webrtc/video_engine/include/vie_rtp_rtcp.h"
++#include <webrtc/common_types.h>
++#include <webrtc/modules/interface/module_common_types.h>
++#include <webrtc/modules/video_capture/main/interface/video_capture.h>
++#include <webrtc/modules/video_render/main/interface/video_render.h>
++#include <webrtc/video_engine/include/vie_base.h>
++#include <webrtc/video_engine/include/vie_capture.h>
++#include <webrtc/video_engine/include/vie_codec.h>
++#include <webrtc/video_engine/include/vie_errors.h>
++#include <webrtc/video_engine/include/vie_image_process.h>
++#include <webrtc/video_engine/include/vie_network.h>
++#include <webrtc/video_engine/include/vie_render.h>
++#include <webrtc/video_engine/include/vie_rtp_rtcp.h>
+ #endif  // WEBRTC_RELATIVE_PATH
+ 
+ namespace cricket {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoe.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoe.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoe.h.webrtc	2012-12-13 16:40:55.142796205 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoe.h	2012-12-13 16:42:29.731799163 -0500
+@@ -49,21 +49,21 @@
+ #include "voice_engine/include/voe_video_sync.h"
+ #include "voice_engine/include/voe_volume_control.h"
+ #else
+-#include "third_party/webrtc/common_types.h"
+-#include "third_party/webrtc/modules/audio_device/main/interface/audio_device.h"
+-#include "third_party/webrtc/voice_engine/include/voe_audio_processing.h"
+-#include "third_party/webrtc/voice_engine/include/voe_base.h"
+-#include "third_party/webrtc/voice_engine/include/voe_codec.h"
+-#include "third_party/webrtc/voice_engine/include/voe_dtmf.h"
+-#include "third_party/webrtc/voice_engine/include/voe_errors.h"
+-#include "third_party/webrtc/voice_engine/include/voe_external_media.h"
+-#include "third_party/webrtc/voice_engine/include/voe_file.h"
+-#include "third_party/webrtc/voice_engine/include/voe_hardware.h"
+-#include "third_party/webrtc/voice_engine/include/voe_neteq_stats.h"
+-#include "third_party/webrtc/voice_engine/include/voe_network.h"
+-#include "third_party/webrtc/voice_engine/include/voe_rtp_rtcp.h"
+-#include "third_party/webrtc/voice_engine/include/voe_video_sync.h"
+-#include "third_party/webrtc/voice_engine/include/voe_volume_control.h"
++#include <webrtc/common_types.h>
++#include <webrtc/modules/audio_device/main/interface/audio_device.h>
++#include <webrtc/voice_engine/include/voe_audio_processing.h>
++#include <webrtc/voice_engine/include/voe_base.h>
++#include <webrtc/voice_engine/include/voe_codec.h>
++#include <webrtc/voice_engine/include/voe_dtmf.h>
++#include <webrtc/voice_engine/include/voe_errors.h>
++#include <webrtc/voice_engine/include/voe_external_media.h>
++#include <webrtc/voice_engine/include/voe_file.h>
++#include <webrtc/voice_engine/include/voe_hardware.h>
++#include <webrtc/voice_engine/include/voe_neteq_stats.h>
++#include <webrtc/voice_engine/include/voe_network.h>
++#include <webrtc/voice_engine/include/voe_rtp_rtcp.h>
++#include <webrtc/voice_engine/include/voe_video_sync.h>
++#include <webrtc/voice_engine/include/voe_volume_control.h>
+ #endif  // WEBRTC_RELATIVE_PATH
+ 
+ namespace cricket {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoiceengine.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoiceengine.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoiceengine.h.webrtc	2012-12-13 16:44:55.263804227 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtcvoiceengine.h	2012-12-13 16:45:06.556804731 -0500
+@@ -45,7 +45,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "voice_engine/include/voe_base.h"
+ #else
+-#include "third_party/webrtc/voice_engine/include/voe_base.h"
++#include <webrtc/voice_engine/include/voe_base.h>
+ #endif  // WEBRTC_RELATIVE_PATH
+ 
+ namespace cricket {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakeaudiocapturemodule.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakeaudiocapturemodule.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakeaudiocapturemodule.h.webrtc	2012-12-14 10:16:27.940757252 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakeaudiocapturemodule.h	2012-12-14 10:16:45.072757792 -0500
+@@ -45,8 +45,8 @@
+ #include "common_types.h"
+ #include "modules/audio_device/main/interface/audio_device.h"
+ #else
+-#include "third_party/webrtc/common_types.h"
+-#include "third_party/webrtc/modules/audio_device/main/interface/audio_device.h"
++#include <webrtc/common_types.h>
++#include <webrtc/modules/audio_device/main/interface/audio_device.h>
+ #endif  // WEBRTC_RELATIVE_PATH
+ 
+ namespace talk_base {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.cc.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.cc
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.cc.webrtc	2012-12-14 10:15:51.472752224 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.cc	2012-12-14 10:16:07.783752796 -0500
+@@ -38,8 +38,8 @@
+ #include "modules/video_capture/main/interface/video_capture_defines.h"
+ #include "modules/video_capture/main/interface/video_capture_factory.h"
+ #else
+-#include "third_party/webrtc/modules/video_capture/main/interface/video_capture_defines.h"
+-#include "third_party/webrtc/modules/video_capture/main/interface/video_capture_factory.h"
++#include <webrtc/modules/video_capture/main/interface/video_capture_defines.h>
++#include <webrtc/modules/video_capture/main/interface/video_capture_factory.h>
+ #endif
+ 
+ static const int kStartFrameRate = 30;
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.h.webrtc	2012-12-14 10:15:25.862751368 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/app/webrtc/test/fakevideocapturemodule.h	2012-12-14 10:15:43.357751894 -0500
+@@ -42,8 +42,8 @@
+ #include "common_types.h"
+ #include "modules/video_capture/main/interface/video_capture.h"
+ #else
+-#include "third_party/webrtc/common_types.h"
+-#include "third_party/webrtc/modules/video_capture/main/interface/video_capture.h"
++#include <webrtc/common_types.h>
++#include <webrtc/modules/video_capture/main/interface/video_capture.h>
+ #endif
+ 
+ namespace talk_base {
+diff -up chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtccommon.h.webrtc chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtccommon.h
+--- chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtccommon.h.webrtc	2012-12-14 10:13:17.366736763 -0500
++++ chromium-23.0.1271.95/third_party/libjingle/source/talk/media/webrtc/webrtccommon.h	2012-12-14 10:13:30.320737158 -0500
+@@ -32,7 +32,7 @@
+ #ifdef WEBRTC_RELATIVE_PATH
+ #include "common_types.h"
+ #else
+-#include "third_party/webrtc/common_types.h"
++#include <webrtc/common_types.h>
+ #endif  // WEBRTC_RELATIVE_PATH
+ 
+ namespace cricket {

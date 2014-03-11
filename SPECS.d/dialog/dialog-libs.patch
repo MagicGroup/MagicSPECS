@@ -1,0 +1,17 @@
+diff -up dialog-1.1-20110707/makefile.in.libs dialog-1.1-20110707/makefile.in
+--- dialog-1.1-20110707/makefile.in.libs	2011-06-25 02:27:56.000000000 +0200
++++ dialog-1.1-20110707/makefile.in	2011-07-26 13:04:50.389183890 +0200
+@@ -176,11 +176,11 @@ dialog$o \
+ $(OBJECTS) : $(srcdir)/dialog.h $(srcdir)/dlg_keys.h dlg_config.h VERSION
+ 
+ $(LIB) : $(LIB_OBJECT)
+-	$(LIBTOOL_CREATE) $(LIB) $(LIB_OBJECT)
++	$(LIBTOOL_CREATE) $(LIB) $(LIB_OBJECT) $(LIBS)
+ 	$(RANLIB) $@
+ 
+ dialog$x : $(LIB) dialog$o @INTLDIR_MAKE@ @INTLLIBS@
+-	$(LINK) -o $@ dialog$o -L. -l@PACKAGE@ $(LDFLAGS) $(LIBS)
++	$(LINK) -o $@ dialog$o -L. -l@PACKAGE@ $(LDFLAGS)
+ 
+ clean	\
+ distclean \

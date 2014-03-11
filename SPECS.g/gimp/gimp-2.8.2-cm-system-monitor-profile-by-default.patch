@@ -1,0 +1,48 @@
+From 9a3f047f90a79e96af54a73090313a670b2685d3 Mon Sep 17 00:00:00 2001
+From: Nils Philippsen <nils@redhat.com>
+Date: Mon, 19 Nov 2012 18:26:16 +0100
+Subject: [PATCH] patch: cm-system-monitor-profile-by-default
+
+Squashed commit of the following:
+
+commit 1430096d27ba12566739fadf96302c9a4ce8f98b
+Author: Nils Philippsen <nils@redhat.com>
+Date:   Mon Nov 19 18:25:28 2012 +0100
+
+    color mgmt: fix syntax error
+
+commit eb78c3a0cfd7ff796110fcd3cd161ca11005fca5
+Author: Richard Hughes <hughsient@gmail.com>
+Date:   Thu Nov 15 12:12:12 2012 +0100
+
+    color mgmt: try to use the system monitor profile by default
+---
+ etc/gimprc | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/etc/gimprc b/etc/gimprc
+index 8306571..1511cd6 100644
+--- a/etc/gimprc
++++ b/etc/gimprc
+@@ -285,14 +285,15 @@
+ 
+ # Defines the color management behavior.  This is a parameter list.
+ # 
+-# (color-management
++(color-management
+ #     (mode display)
+-#     (display-profile-from-gdk no)
++      (display-profile-from-gdk yes)
+ #     (display-rendering-intent perceptual)
+ #     (simulation-rendering-intent perceptual)
+ #     (simulation-gamut-check no)
+ #     (out-of-gamut-color (color-rgb 0.501961 0.501961 0.501961))
+-#     (display-module "CdisplayLcms"))
++#     (display-module "CdisplayLcms")
++)
+ 
+ # How to handle embedded color profiles when opening a file.  Possible values
+ # are ask, keep and convert.
+-- 
+1.7.11.7
+

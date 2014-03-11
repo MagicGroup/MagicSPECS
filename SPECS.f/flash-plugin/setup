@@ -1,0 +1,236 @@
+#!/bin/bash
+
+# These are the standard browser locations as found within Red Hat, Mandrake
+# and SuSE Linux, and the tarball installers.  If your RPM based distribution
+# has a different location for any browser, please contact linuxflash mailing list.
+# http://videl.ics.hawaii.edu/mailman/listinfo/linuxflash 
+LOCATIONS="/usr/lib/mozilla /usr/lib/mozilla-* /usr/lib/firefox-* /usr/lib/netscape /usr/lib/opera /usr/lib/MozillaFirebird /usr/lib/firefox /usr/local/netscape /usr/local/mozilla /usr/local/MozillaFirebird /usr/local/firefox /opt/mozilla /opt/netscape /opt/MozillaFirebird /opt/firefox" 
+
+deleteold() {
+# Detect, Backup and Delete old global Flash plugins
+# Old plugin files are saved in /root/oldflashplugins.tar.gz
+# tar and gzip must be installed
+if [ ! -f /root/oldflashplugins.tar.gz ]; then
+    FILES="libflashplayer.so ShockwaveFlash.class flashplayer.xpt"
+    for DIR in $LOCATIONS
+    do
+        # Skip symlinks
+        if [ -h $DIR ]; then continue; fi
+
+        for F in $FILES
+        do
+            # Add old plugin files to backup and delete lists
+            if [ -f $DIR/plugins/$F ]
+            then
+                BACKUPLIST="$BACKUPLIST $DIR/plugins/$F"
+                DELETELIST="$DELETELIST $DIR/plugins/$F"
+            fi
+            # Add symbolic links to the delete list
+            if [ -h $DIR/plugins/$F ]
+            then
+                DELETELIST="$DELETELIST $DIR/plugins/$F"
+            fi
+        done
+    done
+
+    # Backup and Delete files if delete list contains files.
+    if [ "x$DELETELIST" != "x" ]
+    then
+        # If tar is available, backup files
+        tar --version >& /dev/null
+        if [ $? -eq 0 ]; then
+            tar cfz /root/oldflashplugins.tar.gz $BACKUPLIST >& /dev/null
+            rm -f $DELETELIST
+            echo 
+            echo "NOTICE:"
+            echo "Files belonging to older Flash plugins have been removed from the filesystem.  For your safety these files have been saved in /root/oldflashplugins.tar.gz.  You may remove this tarball if these files are no longer required."
+        else
+            echo
+            echo "Error: tar is unavailable."
+            echo "Unable to backup old Flash plugin files, but in order to prevent possible conflicts they have been removed from the filesystem.  In most cases you will not need these files, but just in case you do they can be easily found on the Internet."
+        fi
+    fi
+fi
+}
+
+detectbrowsers() {
+# Detect Mozilla plugin compatible browsers
+for DIR in $LOCATIONS
+do
+    # Skip symlinks
+    if [ -h $DIR ]; then continue; fi
+    if [ -d $DIR/plugins ]; then export LIST="$LIST $DIR"; fi
+done
+# Detect Mozilla XPCOM compatible browsers
+for DIR in $LIST
+do
+    # Also include the generic /usr/lib/mozilla/plugins location
+    if [ -d $DIR/components ] && [ -f $DIR/xpicleanup ] || [ "$DIR" = "/usr/lib/mozilla" ]
+    then
+         XPTLIST=" $XPTLIST $DIR"
+    fi
+done
+}
+
+link() {
+# Link Mozilla plugin compatible browsers
+for DIR in $LIST
+do
+    ln -sf /usr/lib/flash-plugin/libflashplayer.so $DIR/plugins/libflashplayer.so
+done
+# Link Mozilla XPCOM compatible browsers
+for DIR in $XPTLIST
+do
+    ln -sf /usr/lib/flash-plugin/flashplayer.xpt $DIR/plugins/flashplayer.xpt
+done
+
+# Register flashplayer as XPCOM component
+for DIR in $XPTLIST
+do
+    # Skip if empty generic /usr/lib/mozilla/plugins location
+    if [ "$DIR" = "/usr/lib/mozilla" ] && [ ! -f $DIR/xpicleanup ]; then
+        continue
+    fi
+
+    rm -f $DIR/components/xpti.dat
+    echo
+    echo "Registering flashplayer as a XPCOM component in"
+    echo "$DIR"
+    export MOZILLA_FIVE_HOME=$DIR
+    export LD_LIBRARY_PATH=$DIR
+    $DIR/regxpcom > /dev/null 2> /dev/null
+    unset MOZILLA_FIVE_HOME
+    unset LD_LIBRARY_PATH
+    if [ -f $DIR/components/xpti.dat ];then
+        continue;
+    else
+        echo "ERROR: $DIR/$B failed XPCOM xpti.dat generation."
+    fi
+    
+    # Debug: Should never reach here
+    echo "ERROR!  SCRIPT SHOULD NEVER REACH HERE!"
+    echo "http://videl.ics.hawaii.edu/mailman/listinfo/linuxflash"
+    echo "Please send a list of files within $DIR to the linuxflash "
+    echo "mailing list along with your Linux distribution and what "
+    echo "browsers are installed.  Please include any error messages "
+    echo "that resulted from this package."
+    echo "Type the following command in order to create a file list."
+    echo 
+    echo "    find $DIR > /root/filelist.txt"
+done
+
+echo "Setup is complete."
+}
+
+deletelinks() {
+# Delete symlinks
+# Remove Mozilla plugin compatible browsers
+for DIR in $LIST
+do
+    rm -f $DIR/plugins/libflashplayer.so
+done
+# Remove Mozilla XPCOM compatible browsers
+for DIR in $XPTLIST
+do
+    rm -f $DIR/plugins/flashplayer.xpt
+done
+    rm -f /etc/flash.license
+}
+
+texteula() {
+clear
+more /usr/lib/flash-plugin/LICENSE
+echo
+echo "Do you accept the terms of this license?"
+echo "(Type exactly \"yes\" to accept.)"
+read INPUT
+if [ "$INPUT" = "yes" ]; then
+    return 0
+else
+    echo
+    echo " License declined.  Make sure you have typed exactly \"yes\""
+    echo " without the quotes.  Please run /usr/lib/flash-plugin"
+    echo " to try again."
+    echo
+    exit 0
+fi
+}
+
+licensecheck() {
+# Accepted before?  Skip EULA
+if [ -f /etc/flash.license ]; then
+    return 0
+fi
+/usr/lib/flash-plugin/show-license $1
+E=$?
+# 1    Decline
+# 2    X not available
+# 127  gtk+ or other library dependency not available
+if [ $E = 2 ] || [ $E = 127 ]; then
+    # GUI mode failure
+    if [ "$1" != "--auto" ]; then
+        # Text Mode EULA
+        texteula
+        if [ $? = 0 ]; then E=0; fi
+    fi
+fi
+if [ $E = 1 ] || [ $E = 2 ] || [ $E = 127 ]; then
+    # General Failure
+    echo
+    echo " NOTICE:"
+    echo " Please run /usr/lib/flash-plugin/setup "
+    echo " to enable Macromedia Flash Plugin 6."
+    echo
+    xmessage "NOTICE: Please run /usr/lib/flash-plugin/setup to enable Macromedia Flash Plugin 6." >& /dev/null || true &
+    exit 0
+fi
+if [ $E = 0 ]; then
+    # Accept
+    touch /etc/flash.license
+    return 0
+fi
+echo "ERROR: Script should never reach here.  Please collect as much "
+echo "information as you can and report this bug to linuxflash mailing list."
+echo "http://videl.ics.hawaii.edu/mailman/listinfo/linuxflash"
+exit 0
+}
+
+
+#=======================
+# Main Section
+#=======================
+# Pre-Uninstall
+if [ "$1" = "preun" ]; then
+    detectbrowsers
+    deletelinks
+    exit 0
+fi
+
+if [ "$1" = "install" ] || [ "$1" = "upgrade" ]; then
+    # RPM install or upgrade
+    licensecheck --auto
+else
+    # Manual invokation
+    licensecheck
+fi
+
+# Installation
+if [ "$1" = "install" ]; then
+    deleteold
+    detectbrowsers
+    link
+    exit 0
+fi
+
+# Upgrade
+if [ "$1" = "upgrade" ]; then
+    detectbrowsers
+    link
+    exit 0
+fi
+
+# Manual Setup
+
+detectbrowsers
+link
+

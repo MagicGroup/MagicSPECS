@@ -1,0 +1,21 @@
+diff -up silc-toolkit-1.1.5/configure.ac.libidn silc-toolkit-1.1.5/configure.ac
+--- silc-toolkit-1.1.5/configure.ac.libidn	2007-11-11 07:23:54.000000000 -0500
++++ silc-toolkit-1.1.5/configure.ac	2008-01-08 09:16:51.000000000 -0500
+@@ -155,7 +155,7 @@ AC_TYPE_PID_T
+ AC_CHECK_SIZEOF(long long, 0)
+ AC_SUBST(SILC_SIZEOF_LONG_LONG, $ac_cv_sizeof_long_long)
+ AC_CHECK_SIZEOF(long, 0)
+-AC_SUBST(SILC_SIZEOF_LONG, $ac_cv_sizeof_long)
++AC_SUBST(SILC_SIZEOF_LONG, "(__WORDSIZE / 8)")
+ AC_CHECK_SIZEOF(int, 0)
+ AC_SUBST(SILC_SIZEOF_INT, $ac_cv_sizeof_int)
+ AC_CHECK_SIZEOF(short, 0)
+@@ -163,7 +163,7 @@ AC_SUBST(SILC_SIZEOF_SHORT, $ac_cv_sizeo
+ AC_CHECK_SIZEOF(char, 0)
+ AC_SUBST(SILC_SIZEOF_CHAR, $ac_cv_sizeof_char)
+ AC_CHECK_SIZEOF(void *, 0)
+-AC_SUBST(SILC_SIZEOF_VOID_P, $ac_cv_sizeof_void_p)
++AC_SUBST(SILC_SIZEOF_VOID_P, "(__WORDSIZE / 8)")
+ AC_CHECK_TYPES(long long)
+ AC_CHECK_TYPES(long double)
+ 

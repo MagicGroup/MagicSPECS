@@ -1,0 +1,5 @@
+/var/log/dirmngr/dirmngr.log {
+    weekly
+    notifempty
+    missingok
+}

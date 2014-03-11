@@ -1,0 +1,8 @@
+ffado-bridgeco-downloader  -- Firmware downloader application for BridgeCo devices
+ffado-diag                 -- FFADO diagnostic utility
+ffado-dbus-server          -- Expose the mixer features of connected FFADO devices through DBus
+ffado-fireworks-downloader -- Firmware downloader application for ECHO Fireworks devices
+ffado-mixer                -- Qt based FFADO device mixer
+
+FFADO is work in progress, hence there are no useful manpages.
+Please refer to http://www.ffado.org/ for more information.

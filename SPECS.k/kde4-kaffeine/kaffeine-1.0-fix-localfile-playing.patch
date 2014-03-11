@@ -1,0 +1,17 @@
+diff -Nuarp kaffeine-1.0/src/backend-xine/xinemediawidget.cpp kaffeine-1.0.new/src/backend-xine/xinemediawidget.cpp
+--- kaffeine-1.0/src/backend-xine/xinemediawidget.cpp	2010-06-01 02:46:35.000000000 +0800
++++ kaffeine-1.0.new/src/backend-xine/xinemediawidget.cpp	2010-06-15 22:41:20.879408148 +0800
+@@ -322,7 +322,12 @@ void XineMediaWidget::playUrl(const KUrl
+ 		currentUrl = QByteArray("dvd://").append(url.encodedPath());
+ 		playEncodedUrl(currentUrl, PlayingDvd);
+ 	} else {
+-		currentUrl = url.toEncoded();
++		/// HACK: use locale encoded path for local files
++		/// otherwise, all UTF-8    --- nihui
++		if ( url.isLocalFile() )
++			currentUrl = url.path().toLocal8Bit();
++		else
++			currentUrl = url.toEncoded();
+ 		QByteArray encodedUrl = currentUrl;
+ 
+ 		if (subtitleUrl.isValid()) {

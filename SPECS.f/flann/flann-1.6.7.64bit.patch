@@ -1,0 +1,18 @@
+diff -up flann-1.6.7-src/cmake/flann_utils.cmake.64bit flann-1.6.7-src/cmake/flann_utils.cmake
+--- flann-1.6.7-src/cmake/flann_utils.cmake.64bit	2011-01-18 23:34:57.000000000 +0100
++++ flann-1.6.7-src/cmake/flann_utils.cmake	2011-02-05 14:47:28.000000000 +0100
+@@ -3,6 +3,14 @@ macro(GET_OS_INFO)
+     if(OS_IS_LINUX)
+         if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
+             set(FLANN_LIB_INSTALL_DIR "lib64")
++        elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ppc64")
++            set(FLANN_LIB_INSTALL_DIR "lib64")           
++        elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "s390x")
++            set(FLANN_LIB_INSTALL_DIR "lib64")           
++        elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "sparc64")
++            set(FLANN_LIB_INSTALL_DIR "lib64")           
++        elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "mips64")
++            set(FLANN_LIB_INSTALL_DIR "lib64")
+         else(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
+             set(FLANN_LIB_INSTALL_DIR "lib")
+         endif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")

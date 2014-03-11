@@ -1,0 +1,26 @@
+From c4f11e1f91c0b867d1bf7df550352eeec7b33cd6 Mon Sep 17 00:00:00 2001
+From: Mathieu Bridon <bochecha@fedoraproject.org>
+Date: Thu, 20 Jan 2011 14:36:11 +0800
+Subject: [PATCH] Uninteractive tests.
+
+Tests are run at build time, and they ask the user to "press enter to continue".
+This is unacceptable at build time, and is fixed by this patch.
+---
+ test.pl |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/test.pl b/test.pl
+index 5a86221..951e426 100755
+--- a/test.pl
++++ b/test.pl
+@@ -15,7 +15,5 @@ open S, "< sample" or die "Couldn't open sample demo file: $!; aborting";
+ print while <S>;
+ close S;
+ print "\n";
+-print "Press enter to execute this file.  \n";
+-<STDIN>;
+ system("perl -I./blib/lib -d:Trace sample");
+ $? and die "Problem running sample program: $? exit status\n";
+-- 
+1.7.4.2
+

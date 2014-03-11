@@ -1,0 +1,271 @@
+diff -ur eva.orig/src/api/evaipaddress.cpp eva/src/api/evaipaddress.cpp
+--- eva.orig/src/api/evaipaddress.cpp	2009-05-17 22:29:48.000000000 +0800
++++ eva/src/api/evaipaddress.cpp	2009-05-18 00:13:33.000000000 +0800
+@@ -20,6 +20,8 @@
+   
+ #include "evaipaddress.h"
+ #include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
+ 
+ EvaIPAddress::EvaIPAddress(const uint ip)
+ 	:isValidIP(false)
+diff -ur eva.orig/src/api/evaipaddress.h eva/src/api/evaipaddress.h
+--- eva.orig/src/api/evaipaddress.h	2009-05-17 22:29:48.000000000 +0800
++++ eva/src/api/evaipaddress.h	2009-05-18 00:13:15.000000000 +0800
+@@ -24,6 +24,8 @@
+  #include <inttypes.h>
+  #include <string>
+ 
++ typedef unsigned int uint;
++
+  /*
+  	this class is only for ipv4 addresses
+ 	this class can be used as below:
+diff -ur eva.orig/src/api/evapacketmanager.h eva/src/api/evapacketmanager.h
+--- eva.orig/src/api/evapacketmanager.h	2009-05-17 22:29:48.000000000 +0800
++++ eva/src/api/evapacketmanager.h	2009-05-17 23:59:42.000000000 +0800
+@@ -140,7 +140,7 @@
+ 			const unsigned int wanIp1, const unsigned short wanPort1,
+ 			const unsigned int wanIp2, const unsigned short wanPort2,
+ 			const unsigned int wanIp3, const unsigned short wanPort3,
+-			const unsigned int lanIp1, const unsigned short lanPort2,
++			const unsigned int lanIp1, const unsigned short lanPort1,
+ 			const unsigned int lanIp2, const unsigned short lanPort2,
+ 			const unsigned int lanIp3, const unsigned short lanPort3,
+ 			const unsigned int syncIp, const unsigned short syncPort,
+diff -ur eva.orig/src/api/filetrans/evafiledownloader.cpp eva/src/api/filetrans/evafiledownloader.cpp
+--- eva.orig/src/api/filetrans/evafiledownloader.cpp	2009-05-17 22:29:48.000000000 +0800
++++ eva/src/api/filetrans/evafiledownloader.cpp	2009-05-17 23:01:36.000000000 +0800
+@@ -26,6 +26,7 @@
+ #include <qdns.h>
+ #include <qtextcodec.h>
+ #include <qapplication.h>
++#include <stdint.h>
+ 
+ #define RELAY_SERVER_URL             "RelayServer2.tencent.com"
+ #define RELAY_SERVER_DEFAULT_IP      "219.133.40.38"
+diff -ur eva.orig/src/libeva/evaaddfriendex.h eva/src/libeva/evaaddfriendex.h
+--- eva.orig/src/libeva/evaaddfriendex.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evaaddfriendex.h	2009-05-17 23:55:55.000000000 +0800
+@@ -25,6 +25,9 @@
+ 
+ #include "evapacket.h"
+ #include <string>
++#include <string.h>
++#include <stdio.h>
++#include <stdlib.h>
+ 
+ class EvaAddFriendExPacket : public OutPacket
+ {
+diff -ur eva.orig/src/libeva/evaadvancedsearch.h eva/src/libeva/evaadvancedsearch.h
+--- eva.orig/src/libeva/evaadvancedsearch.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evaadvancedsearch.h	2009-05-17 23:56:15.000000000 +0800
+@@ -23,7 +23,10 @@
+  #include "evapacket.h"
+  #include "evadefines.h"
+  #include <string>
++ #include <string.h>
+  #include <list>
++ #include <stdio.h>
++ #include <stdlib.h>
+  
+  class AdvancedUser{
+  public:
+diff -ur eva.orig/src/libeva/evaextrainfo.h eva/src/libeva/evaextrainfo.h
+--- eva.orig/src/libeva/evaextrainfo.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evaextrainfo.h	2009-05-17 23:55:07.000000000 +0800
+@@ -23,6 +23,9 @@
+ #include "evapacket.h" 
+ #include <string>
+ #include <map>
++#include <string.h>
++#include <stdio.h>
++#include <stdlib.h>
+ 
+ class RequestExtraInfoPacket : public OutPacket
+ {
+diff -ur eva.orig/src/libeva/evafriend.cpp eva/src/libeva/evafriend.cpp
+--- eva.orig/src/libeva/evafriend.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evafriend.cpp	2009-05-17 22:30:42.000000000 +0800
+@@ -20,6 +20,8 @@
+ #include "evafriend.h"
+ #include "evadefines.h"
+ #include <string.h>
++#include <stdio.h>
++#include <stdlib.h>
+ #ifdef _WIN32
+ #include <winsock.h>
+ #else
+diff -ur eva.orig/src/libeva/evafriendlist.cpp eva/src/libeva/evafriendlist.cpp
+--- eva.orig/src/libeva/evafriendlist.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evafriendlist.cpp	2009-05-17 22:35:17.000000000 +0800
+@@ -19,6 +19,8 @@
+  ***************************************************************************/
+  #include "evafriendlist.h"
+  #include <stdio.h>
++ #include <stdlib.h>
++ #include <string.h>
+ 
+ QQFriend::sortItem QQFriend::field2Sort = Sort_Nick;
+ 
+diff -ur eva.orig/src/libeva/evafriendlist.h eva/src/libeva/evafriendlist.h
+--- eva.orig/src/libeva/evafriendlist.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evafriendlist.h	2009-05-17 22:58:53.000000000 +0800
+@@ -21,6 +21,9 @@
+ #define LIBEVAFRIENDLIST_H
+ #include <map>
+ #include <list>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ #include "evadefines.h"
+ #include "evafriend.h"
+ #include "evaonlinestatus.h"
+diff -ur eva.orig/src/libeva/evagroup.cpp eva/src/libeva/evagroup.cpp
+--- eva.orig/src/libeva/evagroup.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evagroup.cpp	2009-05-17 22:33:50.000000000 +0800
+@@ -21,6 +21,8 @@
+ #include "evagroup.h"
+ #include "evadefines.h"
+ #include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ #ifdef _WIN32
+ #include <winsock.h>
+ #else
+diff -ur eva.orig/src/libeva/evaimreceive.cpp eva/src/libeva/evaimreceive.cpp
+--- eva.orig/src/libeva/evaimreceive.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evaimreceive.cpp	2009-05-17 22:34:29.000000000 +0800
+@@ -21,6 +21,8 @@
+ #include "evadefines.h"
+ #include "evautil.h"
+ #include <string.h>
++#include <stdio.h>
++#include <stdlib.h>
+ #ifdef _WIN32
+ #include <winsock.h>
+ #else
+diff -ur eva.orig/src/libeva/evaimsend.cpp eva/src/libeva/evaimsend.cpp
+--- eva.orig/src/libeva/evaimsend.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evaimsend.cpp	2009-05-17 22:33:13.000000000 +0800
+@@ -21,6 +21,8 @@
+ #include "evaimsend.h"
+ #include "evadefines.h"
+ #include <string.h>
++#include <stdio.h>
++#include <stdlib.h>
+ #ifdef _WIN32
+ #include <winsock.h>
+ #else
+diff -ur eva.orig/src/libeva/evaimsend.h eva/src/libeva/evaimsend.h
+--- eva.orig/src/libeva/evaimsend.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evaimsend.h	2009-05-17 22:57:54.000000000 +0800
+@@ -25,6 +25,7 @@
+ #include "evautil.h"
+ #include <string>
+ #include <time.h>
++#include <stdio.h>
+ 
+ // note that all text in SendIMPacket class is assumed as
+ //  encoded in locale "GB18030"
+diff -ur eva.orig/src/libeva/evalevel.cpp eva/src/libeva/evalevel.cpp
+--- eva.orig/src/libeva/evalevel.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evalevel.cpp	2009-05-17 23:35:09.000000000 +0800
+@@ -24,6 +24,9 @@
+ #else
+ #include <arpa/inet.h>
+ #endif
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ 
+ EvaGetLevelPacket::EvaGetLevelPacket(const std::list<unsigned int> &l)
+ 	: OutPacket(QQ_CMD_GET_LEVEL, true), 
+diff -ur eva.orig/src/libeva/evalogin.cpp eva/src/libeva/evalogin.cpp
+--- eva.orig/src/libeva/evalogin.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evalogin.cpp	2009-05-17 22:32:32.000000000 +0800
+@@ -25,6 +25,7 @@
+ #endif
+ #include <string.h>
+ #include <stdlib.h>
++#include <stdio.h>
+ #include "evacrypt.h"
+ #include "evautil.h"
+ 
+diff -ur eva.orig/src/libeva/evalogintoken.cpp eva/src/libeva/evalogintoken.cpp
+--- eva.orig/src/libeva/evalogintoken.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evalogintoken.cpp	2009-05-17 23:25:25.000000000 +0800
+@@ -23,6 +23,7 @@
+ #include "evacrypt.h"
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ 
+ #ifdef _WIN32
+ #include <winsock.h>
+diff -ur eva.orig/src/libeva/evamemo.h eva/src/libeva/evamemo.h
+--- eva.orig/src/libeva/evamemo.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evamemo.h	2009-05-17 23:35:46.000000000 +0800
+@@ -24,6 +24,9 @@
+ #include "evadefines.h"
+ #include <string>
+ #include <vector>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ 
+ typedef std::vector<std::string> stringList;
+ 
+diff -ur eva.orig/src/libeva/evaqun.h eva/src/libeva/evaqun.h
+--- eva.orig/src/libeva/evaqun.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evaqun.h	2009-05-17 23:36:22.000000000 +0800
+@@ -26,6 +26,9 @@
+ #include <string>
+ #include <list>
+ #include <map>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ 
+ /*
+      this file does all qun operations
+diff -ur eva.orig/src/libeva/evasearchuser.h eva/src/libeva/evasearchuser.h
+--- eva.orig/src/libeva/evasearchuser.h	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evasearchuser.h	2009-05-17 22:31:49.000000000 +0800
+@@ -27,6 +27,9 @@
+ #endif
+ #include <string>
+ #include <list>
++#include <string.h>
++#include <stdio.h>
++#include <stdlib.h>
+ /**
+ @author yunfan
+ */
+diff -ur eva.orig/src/libeva/evauserinfo.cpp eva/src/libeva/evauserinfo.cpp
+--- eva.orig/src/libeva/evauserinfo.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evauserinfo.cpp	2009-05-17 23:24:41.000000000 +0800
+@@ -19,6 +19,9 @@
+  ***************************************************************************/ 
+ #include "evauserinfo.h"
+ #include "evadefines.h"
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ 
+ // important: all string stored are encoded by "GB18030"
+ 
+diff -ur eva.orig/src/libeva/evautil.cpp eva/src/libeva/evautil.cpp
+--- eva.orig/src/libeva/evautil.cpp	2009-05-17 22:29:49.000000000 +0800
++++ eva/src/libeva/evautil.cpp	2009-05-17 23:32:30.000000000 +0800
+@@ -19,6 +19,9 @@
+  ***************************************************************************/
+ #include "evautil.h"
+ #include <string>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ #ifdef _WIN32
+ #include <winsock.h>
+ #else

@@ -1,0 +1,17 @@
+diff -up chromium-9.0.600.0/native_client/src/trusted/service_runtime/arch/x86_32/service_runtime_x86_32.gyp.fPIC chromium-9.0.600.0/native_client/src/trusted/service_runtime/arch/x86_32/service_runtime_x86_32.gyp
+--- chromium-9.0.600.0/native_client/src/trusted/service_runtime/arch/x86_32/service_runtime_x86_32.gyp.fPIC	2010-12-03 06:56:29.000000000 -0500
++++ chromium-9.0.600.0/native_client/src/trusted/service_runtime/arch/x86_32/service_runtime_x86_32.gyp	2010-12-10 09:47:59.719297501 -0500
+@@ -64,6 +64,13 @@
+           ] },
+         ],
+       ],
++      'conditions': [
++        [ 'library=="shared_library"', {
++            'asflags': [
++              '-fPIC',
++            ],
++        }],
++      ],
+       'dependencies': [
+         '<(DEPTH)/native_client/src/trusted/validator_x86/validator_x86.gyp:ncvalidate_gen',
+       ],

@@ -1,0 +1,55 @@
+From e09048aaf5cbc6c98fc03bdf89250e5c0e70f8c0 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 6 Jul 2012 13:49:03 +0200
+Subject: [PATCH] systemd: check, that --prefix= does not contain /run
+
+systemd will mount /run before dracut has a chance to copy over the
+original content.
+---
+ dracut.sh                           |    3 ++-
+ modules.d/98systemd/module-setup.sh |   10 +++++++---
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/dracut.sh b/dracut.sh
+index db2e33b..0b43f44 100755
+--- a/dracut.sh
++++ b/dracut.sh
+@@ -779,7 +779,8 @@ export initdir dracutbasedir dracutmodules drivers \
+     use_fstab fstab_lines libdirs fscks nofscks \
+     stdloglvl sysloglvl fileloglvl kmsgloglvl logfile \
+     debug host_fs_types host_devs sshkey add_fstab \
+-    DRACUT_VERSION udevdir systemdutildir systemdsystemunitdir
++    DRACUT_VERSION udevdir systemdutildir systemdsystemunitdir \
++    prefix
+ 
+ # Create some directory structure first
+ [[ $prefix ]] && mkdir -m 0755 -p "${initdir}${prefix}"
+diff --git a/modules.d/98systemd/module-setup.sh b/modules.d/98systemd/module-setup.sh
+index d20d18d..b2111a9 100755
+--- a/modules.d/98systemd/module-setup.sh
++++ b/modules.d/98systemd/module-setup.sh
+@@ -4,10 +4,9 @@
+ 
+ check() {
+     [[ $mount_needs ]] && return 1
+-    if [[ -x /lib/systemd/systemd ]] || [[ -x /usr/lib/systemd/systemd ]]; then
+-        return 255
++    if [[ -x $systemdutildir/systemd ]]; then
++       return 255
+     fi
+-    [[ $systemdutildir ]] && return 255
+ 
+     return 1
+ }
+@@ -17,6 +16,11 @@ depends() {
+ }
+ 
+ install() {
++    if strstr "$prefix" "/run/"; then
++        dfatal "systemd does not work a prefix, which contains \"/run\"!!"
++        exit 1
++    fi
++
+     dracut_install -o \
+         $systemdutildir/systemd \
+         $systemdutildir/systemd-cgroups-agent \

@@ -1,0 +1,53 @@
+diff --git a/lib/libschily_p.mk b/lib/libschily_p.mk
+index 8d9cec6..9bfc9b2 100644
+--- a/lib/libschily_p.mk
++++ b/lib/libschily_p.mk
+@@ -14,7 +14,7 @@ TARGETLIB=	schily
+ CPPOPTS +=	-Istdio
+ CPPOPTS +=	-DUSE_SCANSTACK	# Try to scan stack frames
+ CPPOPTS +=	-DPORT_ONLY	# Add missing funcs line snprintf for porting
+-COPTS +=	$(COPTGPROF)
++# COPTS +=	$(COPTGPROF)
+ include		Targets
+ LIBS=		
+ 
+diff --git a/libdeflt/libdeflt_p.mk b/libdeflt/libdeflt_p.mk
+index 477deb2..8542bbc 100644
+--- a/libdeflt/libdeflt_p.mk
++++ b/libdeflt/libdeflt_p.mk
+@@ -12,7 +12,7 @@ SUBINSDIR=	/profiled
+ INSDIR=		lib
+ TARGETLIB=	deflt
+ #CPPOPTS +=	-Ispecincl
+-COPTS +=	$(COPTGPROF)
++# COPTS +=	$(COPTGPROF)
+ include		Targets
+ LIBS=		
+ 
+diff --git a/libfind/libfind_p.mk b/libfind/libfind_p.mk
+index f4b2a56..f61e507 100644
+--- a/libfind/libfind_p.mk
++++ b/libfind/libfind_p.mk
+@@ -11,7 +11,7 @@ SUBINSDIR=	/profiled
+ #VPATH=		.:stdio:$(ARCHDIR)
+ INSDIR=		lib
+ TARGETLIB=	find
+-COPTS +=	$(COPTGPROF)
++#COPTS +=	$(COPTGPROF)
+ #CPPOPTS +=	-Istdio
+ #CPPOPTS +=	-DUSE_SCANSTACK
+ 
+diff --git a/librmt/librmt_p.mk b/librmt/librmt_p.mk
+index f16fd84..565b28a 100644
+--- a/librmt/librmt_p.mk
++++ b/librmt/librmt_p.mk
+@@ -14,7 +14,7 @@ TARGETLIB=	rmt
+ CPPOPTS +=	-DUSE_REMOTE
+ CPPOPTS +=	-DUSE_RCMD_RSH
+ CPPOPTS +=	-DUSE_LARGEFILES
+-COPTS +=	$(COPTGPROF)
++#COPTS +=	$(COPTGPROF)
+ include		Targets
+ LIBS=		
+ 
+

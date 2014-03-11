@@ -1,0 +1,54 @@
+From ca8d4e8933e6124c2a0cf0e37f0296b80976ab33 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 19 Sep 2011 12:21:51 +0200
+Subject: [PATCH] Do not use /run/udev/rules.d for udev rules
+
+for rules, which should not be called in the real root.
+
+Stale rules can cause this:
+https://bugzilla.redhat.com/show_bug.cgi?id=734096
+---
+ .../90dmsquash-live/dmsquash-live-genrules.sh      |    2 +-
+ modules.d/95resume/resume-genrules.sh              |    2 +-
+ modules.d/95rootfs-block/block-genrules.sh         |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/modules.d/90dmsquash-live/dmsquash-live-genrules.sh b/modules.d/90dmsquash-live/dmsquash-live-genrules.sh
+index d6d0aa3..aa0654b 100755
+--- a/modules.d/90dmsquash-live/dmsquash-live-genrules.sh
++++ b/modules.d/90dmsquash-live/dmsquash-live-genrules.sh
+@@ -8,7 +8,7 @@ case "$root" in
+             ${root#live:/dev/}
+         printf 'SYMLINK=="%s", RUN+="/sbin/initqueue --settled --onetime --unique /sbin/dmsquash-live-root $env{DEVNAME}"\n' \
+             ${root#live:/dev/}
+-    } >> $UDEVRULESD/99-live-squash.rules
++    } >> /etc/udev/rules.d/99-live-squash.rules
+     echo '[ -e /dev/root ]' > $hookdir/initqueue/finished/dmsquash.sh
+   ;;
+   live:*)
+diff --git a/modules.d/95resume/resume-genrules.sh b/modules.d/95resume/resume-genrules.sh
+index 06b9544..e1afc26 100755
+--- a/modules.d/95resume/resume-genrules.sh
++++ b/modules.d/95resume/resume-genrules.sh
+@@ -17,7 +17,7 @@ if [ -n "$resume" ]; then
+             ${resume#/dev/};
+         printf "SYMLINK==\"%s\", ACTION==\"add|change\", SYMLINK+=\"/dev/resume\"\n" \
+             ${resume#/dev/};
+-    } >> $UDEVRULESD/99-resume-link.rules
++    } >> /etc/udev/rules.d/99-resume-link.rules
+ 
+     {
+         if [ -x /usr/sbin/resume ]; then
+diff --git a/modules.d/95rootfs-block/block-genrules.sh b/modules.d/95rootfs-block/block-genrules.sh
+index 4a50aac..a2310a0 100755
+--- a/modules.d/95rootfs-block/block-genrules.sh
++++ b/modules.d/95rootfs-block/block-genrules.sh
+@@ -8,7 +8,7 @@ if [ "${root%%:*}" = "block" ]; then
+             ${root#block:/dev/}
+         printf 'SYMLINK=="%s", SYMLINK+="root"\n' \
+             ${root#block:/dev/}
+-    } >> $UDEVRULESD/99-root.rules
++    } >> /etc/udev/rules.d/99-root.rules
+ 
+     printf '[ -e "%s" ] && { ln -s "%s" /dev/root 2>/dev/null; rm "$job"; }\n' \
+         "${root#block:}" "${root#block:}" > $hookdir/initqueue/settled/blocksymlink.sh

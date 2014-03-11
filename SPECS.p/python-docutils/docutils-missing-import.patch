@@ -1,0 +1,12 @@
+--- docutils/frontend.py.org	2012-01-06 12:49:58.815655161 +0900
++++ docutils/frontend.py	2012-01-06 13:12:55.783605996 +0900
+@@ -38,7 +38,7 @@ 
+ import docutils
+ import docutils.utils
+ import docutils.nodes
+-from docutils.error_reporting import locale_encoding, ErrorOutput
++from docutils.error_reporting import locale_encoding, ErrorOutput, ErrorString
+ 
+ 
+ def store_multiple(option, opt, value, parser, *args, **kwargs):
+

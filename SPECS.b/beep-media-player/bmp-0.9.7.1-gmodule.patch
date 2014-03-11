@@ -1,0 +1,28 @@
+diff -ur bmp-0.9.7.1.orig/configure bmp-0.9.7.1/configure
+--- bmp-0.9.7.1.orig/configure	2012-11-02 02:43:56.000000000 -0400
++++ bmp-0.9.7.1/configure	2012-11-02 02:44:34.000000000 -0400
+@@ -25241,13 +25241,13 @@
+ 
+             echo "$as_me:$LINENO: checking GTK_CFLAGS" >&5
+ echo $ECHO_N "checking GTK_CFLAGS... $ECHO_C" >&6
+-            GTK_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.4.0 gtk+-2.0 >= 2.4.0 gthread-2.0 pango"`
++            GTK_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.4.0 gtk+-2.0 >= 2.4.0 gmodule-2.0 gthread-2.0 pango"`
+             echo "$as_me:$LINENO: result: $GTK_CFLAGS" >&5
+ echo "${ECHO_T}$GTK_CFLAGS" >&6
+ 
+             echo "$as_me:$LINENO: checking GTK_LIBS" >&5
+ echo $ECHO_N "checking GTK_LIBS... $ECHO_C" >&6
+-            GTK_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.4.0 gtk+-2.0 >= 2.4.0 gthread-2.0 pango"`
++            GTK_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.4.0 gtk+-2.0 >= 2.4.0 gmodule-2.0 gthread-2.0 pango"`
+             echo "$as_me:$LINENO: result: $GTK_LIBS" >&5
+ echo "${ECHO_T}$GTK_LIBS" >&6
+         else
+@@ -25255,7 +25255,7 @@
+             GTK_LIBS=""
+             ## If we have a custom action on failure, don't print errors, but
+             ## do set a variable so people can do so.
+-            GTK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= 2.4.0 gtk+-2.0 >= 2.4.0 gthread-2.0 pango"`
++            GTK_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "glib-2.0 >= 2.4.0 gtk+-2.0 >= 2.4.0 gmodule-2.0 gthread-2.0 pango"`
+ 
+         fi
+ 

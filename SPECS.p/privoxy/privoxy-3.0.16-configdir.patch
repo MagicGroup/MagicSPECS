@@ -1,0 +1,18 @@
+diff -up privoxy-3.0.16-stable/privoxy-generic.init.configdir privoxy-3.0.16-stable/privoxy-generic.init
+--- privoxy-3.0.16-stable/privoxy-generic.init.configdir	2010-03-25 14:41:09.000000000 +0100
++++ privoxy-3.0.16-stable/privoxy-generic.init	2010-03-25 14:42:47.000000000 +0100
+@@ -56,12 +56,12 @@
+ # logfile is writable by $P_USER (logfile is defined in config), and that 
+ # there is suitable write access for $P_PIDFILE.
+ 
+-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/xpg4/bin:/usr/bin:/sbin:/bin
++PATH=/usr/bin:/bin:/sbin:/usr/sbin
+ P_NAME=Privoxy
+ # Path to executable.
+ P_DAEMON=privoxy
+ # Full path to location of Privoxy config file. 
+-P_CONF_FILE=/usr/local/etc/privoxy/config
++P_CONF_FILE=/etc/privoxy/config
+ # Full path to PID file location. Location must be writable by 
+ # whoever runs this script and by Privoxy itself.
+ P_PIDFILE=/var/run/privoxy.pid

@@ -1,0 +1,39 @@
+diff -up rstart-1.0.2/Makefile.am.rstart-installation-location-fixes rstart-1.0.2/Makefile.am
+--- rstart-1.0.2/Makefile.am.rstart-installation-location-fixes	2005-12-06 17:48:18.000000000 -0500
++++ rstart-1.0.2/Makefile.am	2011-04-01 11:06:12.000000000 -0400
+@@ -21,12 +21,12 @@
+ 
+ # rstartd server
+ 
+-rstart_serverdir = $(libdir)/X11/rstart
++rstart_serverdir = $(libexecdir)
+ rstart_server_PROGRAMS = rstartd.real
+ 
+ rstartd_real_CFLAGS = $(RSTART_CFLAGS)			\
+ 		-DSERVERNAME=\"rstart\"			\
+-		-DDEFAULT_CONFIG=\"$(libdir)/X11/rstart/config\"
++		-DDEFAULT_CONFIG=\"$(datadir)/X11/rstart/config\"
+ 
+ rstartd_real_LDADD = $(RSTART_LIBS)
+ 
+@@ -50,9 +50,10 @@ CPP_SED_MAGIC = $(SED) -e '/^\#  *[0-9][
+ 
+ # config data
+ 
+-configdir = $(libdir)/X11/rstart
++configdir = $(sysconfdir)/X11/rstart
+ config_DATA = config
+ 
++# The -DLIBDIR=$(configdir) here just looks "wrong".. we'll see...
+ config: config.cpp
+ 	$(RAWCPP) $(RAWCPPFLAGS) -DPACKAGEname=rstart -DLIBDIR=$(configdir) \
+ 	-DENVPREFIX=RSTART < ${srcdir}/config.cpp | $(CPP_SED_MAGIC) > $@
+@@ -99,7 +100,7 @@ CLEANFILES = rstart rstartd config $(app
+ # FIXME: Someone who cares about rstart may want to look into sanitizing
+ # the stuff below.
+ 
+-DATA_DIR = $(libdir)/X11/rstart
++DATA_DIR = $(datadir)/X11/rstart
+ 
+ install-data-hook:
+ 	for name in `find ${srcdir}/commands -print | grep -v CVS` ; do	\

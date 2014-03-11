@@ -1,0 +1,73 @@
+http://sourceware.org/ml/gdb-patches/2011-08/msg00283.html
+Subject: [patch] TUI: Permit stepi on stripped code
+
+Hi,
+
+nick <cinolt> on #gdb@freenode complained one cannot stepi on stripped binary.
+
+echo -e '#include<unistd.h>\nint main(void){return alarm(0);}'|gcc -Wall -s -x c -;./gdbtui ./a.out -nx -ex 'layout asm' -ex 'b alarm' -ex r -ex fini
+will:
+	0x7ffff7ae25c0 <alarm>          mov    $0x25,%eax
+	-------------------------------------------------
+	(gdb) p/x $pc
+	$1 = 0x4004d2
+	(gdb) stepi
+	No function contains program counter for selected frame.
+	(gdb) p/x $pc
+	$2 = 0x4004d2
+
+That is the window still displays stale content, stepi does not work at all.
+
+#0  throw_verror (error=GENERIC_ERROR, fmt=0xe73d20 "No function contains program counter for selected frame.", ap=0x7fffdbd3b0a8) at exceptions.c:400
+#1  in error (string=0xe73d20 "No function contains program counter for selected frame.") at utils.c:780
+#2  in tui_show_frame_info (fi=0x3eca1e0) at ./tui/tui-stack.c:383
+#3  in tui_selected_frame_level_changed_hook (level=0) at ./tui/tui-hooks.c:218
+#4  in select_frame (fi=0x3eca1e0) at frame.c:1396
+#5  in restore_selected_frame (a_frame_id=..., frame_level=0) at thread.c:1049
+#6  in do_restore_current_thread_cleanup (arg=0x456dca0) at thread.c:1116
+#7  in do_my_cleanups (pmy_chain=0x1c865f0, old_chain=0x456de90) at utils.c:515
+#8  in do_cleanups (old_chain=0x456de90) at utils.c:497
+#9  in insert_breakpoint_locations () at breakpoint.c:2021
+#10 in insert_breakpoints () at breakpoint.c:1919
+#11 in proceed (addr=18446744073709551615, siggnal=TARGET_SIGNAL_DEFAULT, step=1) at infrun.c:2156
+#12 in step_once (skip_subroutines=0, single_inst=1, count=1, thread=-1) at infcmd.c:1068
+#13 in step_1 (skip_subroutines=0, single_inst=1, count_string=0x0) at infcmd.c:903
+#14 in stepi_command (count_string=0x0, from_tty=1) at infcmd.c:839
+
+With the fix stepi works and the window correctly displays:
+	0x4004d2        pop    %rbp                
+	-------------------------------------------------
+
+I haven't found any TUI testsuite.
+
+I will check it in (after regression testing(?)) in some time.
+
+
+Thanks,
+Jan
+
+
+gdb/
+2011-08-14  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	Fix TUI stepi on code without symbols.
+	* tui/tui-stack.c (tui_show_frame_info): Remove error, set LOW for
+	current PC instead.
+
+--- a/gdb/tui/tui-stack.c
++++ b/gdb/tui/tui-stack.c
+@@ -380,8 +380,11 @@ tui_show_frame_info (struct frame_info *fi)
+ 	    {
+ 	      if (find_pc_partial_function (get_frame_pc (fi), (char **) NULL,
+ 					    &low, (CORE_ADDR) 0) == 0)
+-		error (_("No function contains program "
+-			 "counter for selected frame."));
++		{
++		  /* There is no symbol available for current PC.  There is no
++		     safe way how to "disassemble backwards".  */
++		  low = get_frame_pc (fi);
++		}
+ 	      else
+ 		low = tui_get_low_disassembly_address (get_frame_arch (fi),
+ 						       low, get_frame_pc (fi));
+

@@ -1,0 +1,11 @@
+--- libgnomecups-0.1.14/libgnomecups/gnome-cups-printer.c.go-direct	2005-01-26 15:46:55.248363000 -0500
++++ libgnomecups-0.1.14/libgnomecups/gnome-cups-printer.c	2005-01-26 15:47:18.817770000 -0500
+@@ -287,7 +287,7 @@
+  * that will produce an infinite loop when presented with an invalid
+  * hostname.  This will also produce a hang if the remote printer is
+  * unavailable and we do a syncronous lookup. */
+-static gboolean go_directly_to_printer_when_possible = FALSE;
++static gboolean go_directly_to_printer_when_possible = TRUE;
+ 
+ static void
+ update_attributes (GnomeCupsPrinter *printer)

@@ -1,0 +1,16 @@
+Remove the .eh_frame section from the rombios.
+
+This is so that bochs will build under gcc 4.6.0.
+
+Signed-off-by: Chris Lalancette <clalance@redhat.com>
+
+diff -urp bochs-2.4.5.cvs.orig/bios/rombios32.ld bochs-2.4.5.cvs/bios/rombios32.ld
+--- bochs-2.4.5.cvs.orig/bios/rombios32.ld	2008-12-04 13:44:14.000000000 -0500
++++ bochs-2.4.5.cvs/bios/rombios32.ld	2011-02-14 13:53:54.811189023 -0500
+@@ -13,5 +13,6 @@ SECTIONS
+                      *(.stabstr)
+                      *(.comment)
+                      *(.note)
++                     *(.eh_frame)
+                   }
+ }

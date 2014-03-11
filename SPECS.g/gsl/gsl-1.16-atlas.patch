@@ -1,0 +1,12 @@
+diff -up gsl-1.16/Makefile.in.atlas gsl-1.16/Makefile.in
+--- gsl-1.16/Makefile.in.atlas	2013-10-01 21:22:11.799235274 -0600
++++ gsl-1.16/Makefile.in	2013-10-01 21:26:59.692672947 -0600
+@@ -145,7 +145,7 @@ am__v_lt_0 = --silent
+ am__v_lt_1 = 
+ libgsl_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+-	$(libgsl_la_LDFLAGS) $(LDFLAGS) -o $@
++	$(libgsl_la_LDFLAGS) $(LDFLAGS) -lsatlas -o $@
+ PROGRAMS = $(bin_PROGRAMS)
+ am_gsl_histogram_OBJECTS = gsl-histogram.$(OBJEXT)
+ gsl_histogram_OBJECTS = $(am_gsl_histogram_OBJECTS)

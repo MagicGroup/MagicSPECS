@@ -1,0 +1,94 @@
+diff -Nrbu irda-utils-0.9.18/man/irda.7 irda-utils-0.9.18-OK/man/irda.7
+--- irda-utils-0.9.18/man/irda.7	2006-07-11 10:16:06.000000000 +0400
++++ irda-utils-0.9.18-OK/man/irda.7	2011-07-15 20:31:58.000000000 +0400
+@@ -61,7 +61,7 @@
+ connection between two sockets on top of
+ .IR IrTTP ,
+ similar to TCP sockets. IrTTP guarantees that the data arrives in
+-order and manages flow contol, IrLAP retransmits lost packets.
++order and manages flow control, IrLAP retransmits lost packets.
+ .br
+ Stream sockets does not preserve record boundaries.
+ .TP
+@@ -70,7 +70,7 @@
+ connection between two sockets on top of
+ .IR IrTTP .
+ IrTTP guarantees that the data arrives in order and manages flow
+-contol, IrLAP retransmits lost packets.
++control, IrLAP retransmits lost packets.
+ .br
+ SeqPacket sockets preserve record boundaries. Large datagrams will be
+ fragmented as needed.
+@@ -79,8 +79,8 @@
+ SeqPacket sockets provides a reliable, datagram oriented, full duplex
+ connection between two sockets on top of
+ .IR IrLMP .
+-There is no guarantees that the data arrives in order and there is no
+-flow contol, however IrLAP retransmits lost packets.
++There is no guarantee that the data arrives in order and there is no
++flow control, however IrLAP retransmits lost packets.
+ .br
+ Datagram sockets preserve record boundaries. No fragmentation is
+ provided, datagrams larger than the IrDA link MTU are truncated or
+@@ -90,9 +90,9 @@
+ Ultra sockets provides a connectionless, unreliable datagram packet
+ service on top of
+ .IR IrLAP-Ultra .
+-Ultra datagrams are sent and receive only when no IrLAP connection is
++Ultra datagrams are sent and received only when no IrLAP connection is
+ established and otherwise discarded. They are always transmitted at
+-9600 bauds. Datagrams may be lost, reordered, and there is no flow
++9600 bauds. Datagrams may be lost or reordered, and there is no flow
+ control.
+ .br
+ Ultra sockets preserve record boundaries. No fragmentation is
+@@ -124,8 +124,8 @@
+ .I sir_lsap_sel
+ is usually not used.
+ .I sir_addr
+-is the address of the peer and optional (and that case the first peer
+-discoverd will be used).
++is the optional address of the peer (if no given the first peer
++discovered will be used).
+ .I sir_name
+ is the service name of the socket.
+ .\"
+diff -Nrbu irda-utils-0.9.18/man/irnet.4 irda-utils-0.9.18-OK/man/irnet.4
+--- irda-utils-0.9.18/man/irnet.4	2006-07-11 10:16:06.000000000 +0400
++++ irda-utils-0.9.18-OK/man/irnet.4	2011-07-15 20:33:14.000000000 +0400
+@@ -31,7 +31,7 @@
+ .I PPP over IrCOMM
+ is that it avoids the framing and serial emulation which are a
+ performance bottleneck. It also allows multipoint communications in a
+-sensible fashion. And finally, it can automatically handle incomming
++sensible fashion. And finally, it can automatically handle incoming
+ connections through
+ .B irnetd.
+ .PP
+@@ -84,7 +84,7 @@
+ .IR "control channel" ,
+ other use are unsupported.
+ .B IrNET
+-support multiple concurent connections (limited by the IrDA stack),
++support multiple concurrent connections (limited by the IrDA stack),
+ all those connections are multiplexed on a single
+ .B /dev/irnet
+ device (as opposed to IrCOMM which as one device per connection).
+@@ -164,7 +164,7 @@
+ .\" EXAMPLE part
+ .\"
+ .SH EXAMPLE
+-Start a IrNET server accepting any incomming connection:
++Start a IrNET server accepting any incoming connection:
+ .br
+ .B "	pppd /dev/irnet 9600 local noauth nolock passive"
+ .PP
+@@ -177,7 +177,7 @@
+ .br
+ .B "	pppd /dev/irnet 9600 local noauth nolock connect ""echo name MyIrDANode""
+ .PP
+-Start a IrNET server accepting incomming connection from peer with IrDA address 0x12345678 only on IrDA port 0x87654321:
++Start a IrNET server accepting incoming connection from peer with IrDA address 0x12345678 only on IrDA port 0x87654321:
+ .br
+ .B "	pppd /dev/irnet 9600 local noauth nolock passive connect ""echo daddr 0x12345678 , saddr 0x87654321"""
+ .\"

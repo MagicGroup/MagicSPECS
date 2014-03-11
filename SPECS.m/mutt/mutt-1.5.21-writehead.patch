@@ -1,0 +1,12 @@
+diff -up mutt-1.5.21/sendlib.c.writehead mutt-1.5.21/sendlib.c
+--- mutt-1.5.21/sendlib.c.writehead	2012-06-25 14:41:34.681483226 +0200
++++ mutt-1.5.21/sendlib.c	2012-06-25 14:41:44.485408610 +0200
+@@ -1799,7 +1799,7 @@ static int write_one_header (FILE *fp, i
+   else
+   {
+     t = strchr (start, ':');
+-    if (t > end)
++    if (t == NULL || t > end)
+     {
+       dprint (1, (debugfile, "mwoh: warning: header not in "
+ 		  "'key: value' format!\n"));

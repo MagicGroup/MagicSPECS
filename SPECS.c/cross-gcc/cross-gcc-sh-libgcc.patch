@@ -1,0 +1,40 @@
+Index: libgcc/config/sh/lib1funcs.S
+===================================================================
+--- libgcc/config/sh/lib1funcs.S	(revision 193625)
++++ libgcc/config/sh/lib1funcs.S	(working copy)
+@@ -3063,14 +3063,10 @@
+ 
+ #ifdef L_div_table
+ #if __SH5__
+-#if defined(__pic__) && defined(__SHMEDIA__)
++#if defined(__pic__) && defined(__SHMEDIA__) && __SH5__ != 32
+ 	.global	GLOBAL(sdivsi3)
+ 	FUNC(GLOBAL(sdivsi3))
+-#if __SH5__ == 32
+-	.section	.text..SHmedia32,"ax"
+-#else
+ 	.text
+-#endif
+ #if 0
+ /* ??? FIXME: Presumably due to a linker bug, exporting data symbols
+    in a text section does not work (at least for shared libraries):
+@@ -3133,7 +3129,7 @@
+    Min 2nd step defect: 0.000000e+00 at 0.000000e+00
+    Defect at 1: 1.238659e-07
+    Defect at -2: 1.061708e-07 */
+-#else /* ! __pic__ || ! __SHMEDIA__ */
++#else /* ! __pic__ || ! __SHMEDIA__ || __SH5__ == 32 */
+ 	.section	.rodata
+ #endif /* __pic__ */
+ #if defined(TEXT_DATA_BUG) && defined(__pic__) && defined(__SHMEDIA__)
+Index: libgcc/config/sh/t-sh64
+===================================================================
+--- libgcc/config/sh/t-sh64	(revision 193625)
++++ libgcc/config/sh/t-sh64	(working copy)
+@@ -2,5 +2,5 @@
+   _sdivsi3 _sdivsi3_i4 _udivsi3 _udivsi3_i4 _set_fpscr \
+   _shcompact_call_trampoline _shcompact_return_trampoline \
+   _shcompact_incoming_args _ic_invalidate _nested_trampoline \
+-  _push_pop_shmedia_regs \
++  _push_pop_shmedia_regs _udiv_qrnnd_16 \
+   _udivdi3 _divdi3 _umoddi3 _moddi3 _div_table

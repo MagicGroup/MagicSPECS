@@ -1,0 +1,15 @@
+diff -up gnuplot-4.4.1/man/gnuplot.1.pom gnuplot-4.4.1/man/gnuplot.1
+--- gnuplot-4.4.1/man/gnuplot.1.pom	2009-02-18 05:03:52.000000000 +0100
++++ gnuplot-4.4.1/man/gnuplot.1	2010-09-24 14:58:00.000000000 +0200
+@@ -236,8 +236,8 @@ gnuplot.  None of these are required.
+ .TP
+ .B GNUTERM
+ The name of the terminal type to be used.  This overrides any terminal
+-type sensed by gnuplot on start-up, but is itself overridden by the
+-.gnuplot (or equivalent) start-up file (see \fBFILES\fP and "help
++type sensed by gnuplot on start-up, but is itself overridden by the .gnuplot
++(or equivalent) start-up file (see \fBFILES\fP and "help
+ start-up") and, of course, by later explicit changes.
+ .TP
+ .B GNUHELP 
+diff -up gnuplot-4.4.1/man/.pom gnuplot-4.4.1/man/

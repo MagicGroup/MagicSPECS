@@ -1,0 +1,25 @@
+diff -up raptor2-2.0.3/docs/Makefile.am.raptor2_docs raptor2-2.0.3/docs/Makefile.am
+--- raptor2-2.0.3/docs/Makefile.am.raptor2_docs	2011-04-26 13:42:05.000000000 -0500
++++ raptor2-2.0.3/docs/Makefile.am	2011-07-23 22:40:25.820689480 -0500
+@@ -23,7 +23,7 @@
+ 
+ 
+ # The name of the module.
+-DOC_MODULE=raptor
++DOC_MODULE=raptor2
+ 
+ # The top-level SGML file.
+ DOC_MAIN_SGML_FILE=raptor-docs.xml
+diff -up raptor2-2.0.3/docs/Makefile.in.raptor2_docs raptor2-2.0.3/docs/Makefile.in
+--- raptor2-2.0.3/docs/Makefile.in.raptor2_docs	2011-05-12 12:35:25.000000000 -0500
++++ raptor2-2.0.3/docs/Makefile.in	2011-07-23 22:40:49.783389770 -0500
+@@ -264,7 +264,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ 
+ # The name of the module.
+-DOC_MODULE = raptor
++DOC_MODULE = raptor2
+ 
+ # The top-level SGML file.
+ DOC_MAIN_SGML_FILE = raptor-docs.xml
+ DOC_MAIN_SGML_FILE = raptor-docs.xml

@@ -1,0 +1,15 @@
+diff -Nuarp konversation-1.2.1/src/irc/server.cpp konversation-1.2.1.fallback_to_gb18030/src/irc/server.cpp
+--- konversation-1.2.1/src/irc/server.cpp	2009-11-12 13:24:48.000000000 +0800
++++ konversation-1.2.1.fallback_to_gb18030/src/irc/server.cpp	2009-12-29 20:06:13.000000000 +0800
+@@ -1066,9 +1066,9 @@ void Server::incoming()
+                 codec = Konversation::IRCCharsets::self()->codecForName(channelEncoding);
+ 
+             // if channel encoding is utf-8 and the string is definitely not utf-8
+-            // then try latin-1
++            // then try GB18030
+             if (codec->mibEnum() == 106)
+-                codec = QTextCodec::codecForMib( 4 /* iso-8859-1 */ );
++                codec = QTextCodec::codecForMib( 114 /* GB18030 */ );
+ 
+             m_inputBuffer << codec->toUnicode(first);
+         }

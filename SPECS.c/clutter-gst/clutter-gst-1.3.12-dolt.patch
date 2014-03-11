@@ -1,0 +1,12 @@
+diff -up clutter-gst-1.3.12/configure.dolt clutter-gst-1.3.12/configure
+--- clutter-gst-1.3.12/configure.dolt	2011-06-29 12:40:11.000000000 +0200
++++ clutter-gst-1.3.12/configure	2011-06-29 12:40:45.000000000 +0200
+@@ -11009,7 +11009,7 @@ if test x$GCC != xyes; then
+     dolt_supported=no
+ fi
+ case $host in
+-i?86-*-linux*|x86_64-*-linux*|powerpc-*-linux* \
++*-*-linux* \
+ |amd64-*-freebsd*|i?86-*-freebsd*|ia64-*-freebsd*)
+     pic_options='-fPIC'
+     ;;

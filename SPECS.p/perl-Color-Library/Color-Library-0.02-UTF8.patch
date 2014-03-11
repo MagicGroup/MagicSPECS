@@ -1,0 +1,482 @@
+--- Color-Library-0.02/lib/Color/Library/Dictionary/NBS_ISCC/H.pm.orig	2007-10-01 04:59:37.000000000 -0500
++++ Color-Library-0.02/lib/Color/Library/Dictionary/NBS_ISCC/H.pm	2008-01-28 15:21:37.000000000 -0600
+@@ -198,7 +198,7 @@
+ 
+ 	ethyl blue            ethylblue            #66aabc
+ 
+-	faïence blue          faenceblue           #239eba
++	faÃ¯ence blue          faenceblue           #239eba
+ 
+ 	fern green            ferngreen            #7e9f2e
+ 
+@@ -643,7 +643,7 @@
+ ['nbs-iscc-h:enamelblue.176','enamelblue','enamel blue',[0,161,194],'00a1c2',41410],
+ ['nbs-iscc-h:erythritered.258','erythritered','erythrite red',[168,81,110],'a8516e',11030894],
+ ['nbs-iscc-h:ethylblue.172','ethylblue','ethyl blue',[102,170,188],'66aabc',6728380],
+-['nbs-iscc-h:faenceblue.168','faenceblue','faïence blue ',[35,158,186],'239eba',2334394],
++['nbs-iscc-h:faenceblue.168','faenceblue','faÃ¯ence blue ',[35,158,186],'239eba',2334394],
+ ['nbs-iscc-h:ferngreen.117','ferngreen','fern green',[126,159,46],'7e9f2e',8298286],
+ ['nbs-iscc-h:firered.34','firered','fire red',[226,88,34],'e25822',14833698],
+ ['nbs-iscc-h:flaxblue.195','flaxblue','flax blue',[108,121,184],'6c79b8',7109048],
+--- Color-Library-0.02/lib/Color/Library/Dictionary/NBS_ISCC/M.pm.orig	2007-10-01 04:59:37.000000000 -0500
++++ Color-Library-0.02/lib/Color/Library/Dictionary/NBS_ISCC/M.pm	2008-01-28 22:10:54.000000000 -0600
+@@ -734,7 +734,7 @@
+ 
+ 	beige                                   beige                           #c2b280
+ 
+-	beige soirée                            beigesoire                      #c19a6b
++	beige soirÃ©e                            beigesoire                      #c19a6b
+ 
+ 	belladonna                              belladonna                      #563c5c
+ 
+@@ -840,11 +840,11 @@
+ 
+ 	bleu louise                             bleulouise                      #367588
+ 
+-	bleu passé                              bleupass                        #91a3b0
++	bleu passÃ©                              bleupass                        #91a3b0
+ 
+-	bleu passé                              bleupass                        #536878
++	bleu passÃ©                              bleupass                        #536878
+ 
+-	bleu passé                              bleupass                        #81878b
++	bleu passÃ©                              bleupass                        #81878b
+ 
+ 	blond                                   blond                           #c19a6b
+ 
+@@ -1302,19 +1302,19 @@
+ 
+ 	caeruleum                               caeruleum                       #00a1c2
+ 
+-	café-au-lait                            cafaulait                       #977f73
++	cafÃ©-au-lait                            cafaulait                       #977f73
+ 
+-	café-au-lait                            cafaulait                       #a67b5b
++	cafÃ©-au-lait                            cafaulait                       #a67b5b
+ 
+-	café-au-lait                            cafaulait                       #958070
++	cafÃ©-au-lait                            cafaulait                       #958070
+ 
+-	café crème                              cafcrme                         #a67b5b
++	cafÃ© crÃ¨me                              cafcrme                         #a67b5b
+ 
+-	café crème                              cafcrme                         #6f4e37
++	cafÃ© crÃ¨me                              cafcrme                         #6f4e37
+ 
+-	café crème                              cafcrme                         #826644
++	cafÃ© crÃ¨me                              cafcrme                         #826644
+ 
+-	café noir                               cafnoir                         #483c32
++	cafÃ© noir                               cafnoir                         #483c32
+ 
+ 	cairo                                   cairo                           #00416a
+ 
+@@ -1388,7 +1388,7 @@
+ 
+ 	campanula violet                        campanulaviolet                 #836479
+ 
+-	camérier                                camrier                         #563c5c
++	camÃ©rier                                camrier                         #563c5c
+ 
+ 	camwood                                 camwood                         #ab4e52
+ 
+@@ -1962,9 +1962,9 @@
+ 
+ 	clochette                               clochette                       #604e81
+ 
+-	cloisonné                               cloisonn                        #00a1c2
++	cloisonnÃ©                               cloisonn                        #00a1c2
+ 
+-	cloisonné                               cloisonn                        #30267a
++	cloisonnÃ©                               cloisonn                        #30267a
+ 
+ 	cloud                                   cloud                           #536878
+ 
+@@ -2458,11 +2458,11 @@
+ 
+ 	damson                                  damson                          #2f2140
+ 
+-	danaë                                   dana                            #ed872d
++	danaÃ«                                   dana                            #ed872d
+ 
+-	danaë                                   dana                            #d99058
++	danaÃ«                                   dana                            #d99058
+ 
+-	danaë                                   dana                            #536878
++	danaÃ«                                   dana                            #536878
+ 
+ 	dandelion                               dandelion                       #fada5e
+ 
+@@ -2516,7 +2516,7 @@
+ 
+ 	daytona                                 daytona                         #8e8279
+ 
+-	débutante pink                          dbutantepink                    #dea5a4
++	dÃ©butante pink                          dbutantepink                    #dea5a4
+ 
+ 	dead carnations                         deadcarnations                  #a8516e
+ 
+@@ -2996,7 +2996,7 @@
+ 
+ 	evergreen                               evergreen                       #355e3b
+ 
+-	evêque                                  evque                           #563c5c
++	evÃªque                                  evque                           #563c5c
+ 
+ 	faded rose                              fadedrose                       #905d5d
+ 
+@@ -3510,9 +3510,9 @@
+ 
+ 	gladiolus                               gladiolus                       #bc3f4a
+ 
+-	glaïeul                                 glaeul                          #ad8884
++	glaÃ¯eul                                 glaeul                          #ad8884
+ 
+-	glaïeul                                 glaeul                          #c48379
++	glaÃ¯eul                                 glaeul                          #c48379
+ 
+ 	glass green                             glassgreen                      #c9dc89
+ 
+@@ -4466,7 +4466,7 @@
+ 
+ 	lava                                    lava                            #222222
+ 
+-	la vallière                             lavallire                       #796878
++	la valliÃ¨re                             lavallire                       #796878
+ 
+ 	lavender                                lavender                        #aa98a9
+ 
+@@ -4570,7 +4570,7 @@
+ 
+ 	light chrome yellow                     lightchromeyellow               #d4af37
+ 
+-	light grège                             lightgrge                       #8a8776
++	light grÃ¨ge                             lightgrge                       #8a8776
+ 
+ 	light gunmetal                          lightgunmetal                   #555555
+ 
+@@ -4958,7 +4958,7 @@
+ 
+ 	marrone                                 marrone                         #635147
+ 
+-	marron glacé                            marronglac                      #6f4e37
++	marron glacÃ©                            marronglac                      #6f4e37
+ 
+ 	marsala                                 marsala                         #79443b
+ 
+@@ -5328,9 +5328,9 @@
+ 
+ 	moose                                   moose                           #363527
+ 
+-	mordoré                                 mordor                          #79443b
++	mordorÃ©                                 mordor                          #79443b
+ 
+-	mordoré                                 mordor                          #6f4e37
++	mordorÃ©                                 mordor                          #6f4e37
+ 
+ 	morea berries                           moreaberries                    #eaa221
+ 
+@@ -5428,9 +5428,9 @@
+ 
+ 	mousse                                  mousse                          #8a9a5b
+ 
+-	mésange                                 msange                          #8da399
++	mÃ©sange                                 msange                          #8da399
+ 
+-	métallique                              mtallique                       #57554c
++	mÃ©tallique                              mtallique                       #57554c
+ 
+ 	muffin                                  muffin                          #a67b5b
+ 
+@@ -6160,7 +6160,7 @@
+ 
+ 	pancy green                             pancygreen                      #355e3b
+ 
+-	pansée                                  panse                           #604e97
++	pansÃ©e                                  panse                           #604e97
+ 
+ 	pansy                                   pansy                           #604e97
+ 
+@@ -6848,9 +6848,9 @@
+ 
+ 	psyche                                  psyche                          #93c592
+ 
+-	pâté shell                              ptshell                         #fad6a5
++	pÃ¢tÃ© shell                              ptshell                         #fad6a5
+ 
+-	pâté shell                              ptshell                         #c19a6b
++	pÃ¢tÃ© shell                              ptshell                         #c19a6b
+ 
+ 	puce                                    puce                            #722f37
+ 
+@@ -7016,13 +7016,13 @@
+ 
+ 	raspberry                               raspberry                       #722f37
+ 
+-	raspberry glacé                         raspberryglac                   #ab4e52
++	raspberry glacÃ©                         raspberryglac                   #ab4e52
+ 
+-	raspberry glacé                         raspberryglac                   #905d5d
++	raspberry glacÃ©                         raspberryglac                   #905d5d
+ 
+-	raspberry glacé                         raspberryglac                   #a8516e
++	raspberry glacÃ©                         raspberryglac                   #a8516e
+ 
+-	raspberry glacé                         raspberryglac                   #915f6d
++	raspberry glacÃ©                         raspberryglac                   #915f6d
+ 
+ 	raspberry red                           raspberryred                    #ab4e52
+ 
+@@ -7044,9 +7044,9 @@
+ 
+ 	raw umber                               rawumber                        #6f4e37
+ 
+-	récamier                                rcamier                         #dea5a4
++	rÃ©camier                                rcamier                         #dea5a4
+ 
+-	récamier                                rcamier                         #f88379
++	rÃ©camier                                rcamier                         #f88379
+ 
+ 	realgar                                 realgar                         #eaa221
+ 
+@@ -7284,9 +7284,9 @@
+ 
+ 	rose de provence                        rosedeprovence                  #b3446c
+ 
+-	rose dorée                              rosedore                        #e4717a
++	rose dorÃ©e                              rosedore                        #e4717a
+ 
+-	rose dorée                              rosedore                        #ab4e52
++	rose dorÃ©e                              rosedore                        #ab4e52
+ 
+ 	rosedust                                rosedust                        #905d5d
+ 
+@@ -7346,7 +7346,7 @@
+ 
+ 	rose quartz                             rosequartz                      #aa98a9
+ 
+-	rose soirée                             rosesoire                       #e4717a
++	rose soirÃ©e                             rosesoire                       #e4717a
+ 
+ 	rosestone                               rosestone                       #977f73
+ 
+@@ -9567,7 +9567,7 @@
+ ['nbs-iscc-m:begoniarose.15','begoniarose','begonia rose',[171,78,82],'ab4e52',11226706],
+ ['nbs-iscc-m:beige.89','beige','beige',[243,229,171],'f3e5ab',15984043],
+ ['nbs-iscc-m:beige.90','beige','beige',[194,178,128],'c2b280',12759680],
+-['nbs-iscc-m:beigesoire.76','beigesoire','beige soirée',[193,154,107],'c19a6b',12687979],
++['nbs-iscc-m:beigesoire.76','beigesoire','beige soirÃ©e',[193,154,107],'c19a6b',12687979],
+ ['nbs-iscc-m:belladonna.224','belladonna','belladonna',[86,60,92],'563c5c',5651548],
+ ['nbs-iscc-m:belleek.73','belleek','belleek',[250,214,165],'fad6a5',16438949],
+ ['nbs-iscc-m:belleek.79','belleek','belleek',[174,155,130],'ae9b82',11443074],
+@@ -9620,9 +9620,9 @@
+ ['nbs-iscc-m:bleudorient.178','bleudorient','bleu d\'orient',[0,103,165],'0067a5',26533],
+ ['nbs-iscc-m:bleulouise.164','bleulouise','bleu louise',[49,120,115],'317873',3242099],
+ ['nbs-iscc-m:bleulouise.173','bleulouise','bleu louise',[54,117,136],'367588',3569032],
+-['nbs-iscc-m:bleupass.185','bleupass','bleu passé ',[145,163,176],'91a3b0',9544624],
+-['nbs-iscc-m:bleupass.186','bleupass','bleu passé ',[83,104,120],'536878',5466232],
+-['nbs-iscc-m:bleupass.191','bleupass','bleu passé ',[129,135,139],'81878b',8488843],
++['nbs-iscc-m:bleupass.185','bleupass','bleu passÃ© ',[145,163,176],'91a3b0',9544624],
++['nbs-iscc-m:bleupass.186','bleupass','bleu passÃ© ',[83,104,120],'536878',5466232],
++['nbs-iscc-m:bleupass.191','bleupass','bleu passÃ© ',[129,135,139],'81878b',8488843],
+ ['nbs-iscc-m:blond.76','blond','blond',[193,154,107],'c19a6b',12687979],
+ ['nbs-iscc-m:blond.91','blond','blond',[161,143,96],'a18f60',10588000],
+ ['nbs-iscc-m:blondine.80','blondine','blondine',[126,109,90],'7e6d5a',8285530],
+@@ -9851,13 +9851,13 @@
+ ['nbs-iscc-m:caenstone.73','caenstone','caen stone',[250,214,165],'fad6a5',16438949],
+ ['nbs-iscc-m:caeruleum.167','caeruleum','caeruleum',[0,133,161],'0085a1',34209],
+ ['nbs-iscc-m:caeruleum.176','caeruleum','caeruleum',[0,161,194],'00a1c2',41410],
+-['nbs-iscc-m:cafaulait.45','cafaulait','café-au-lait',[151,127,115],'977f73',9928563],
+-['nbs-iscc-m:cafaulait.57','cafaulait','café-au-lait',[166,123,91],'a67b5b',10910555],
+-['nbs-iscc-m:cafaulait.60','cafaulait','café-au-lait',[149,128,112],'958070',9797744],
+-['nbs-iscc-m:cafcrme.57','cafcrme','café crème',[166,123,91],'a67b5b',10910555],
+-['nbs-iscc-m:cafcrme.58','cafcrme','café crème',[111,78,55],'6f4e37',7294519],
+-['nbs-iscc-m:cafcrme.77','cafcrme','café crème',[130,102,68],'826644',8545860],
+-['nbs-iscc-m:cafnoir.81','cafnoir','café noir',[72,60,50],'483c32',4734002],
++['nbs-iscc-m:cafaulait.45','cafaulait','cafÃ©-au-lait',[151,127,115],'977f73',9928563],
++['nbs-iscc-m:cafaulait.57','cafaulait','cafÃ©-au-lait',[166,123,91],'a67b5b',10910555],
++['nbs-iscc-m:cafaulait.60','cafaulait','cafÃ©-au-lait',[149,128,112],'958070',9797744],
++['nbs-iscc-m:cafcrme.57','cafcrme','cafÃ© crÃ¨me',[166,123,91],'a67b5b',10910555],
++['nbs-iscc-m:cafcrme.58','cafcrme','cafÃ© crÃ¨me',[111,78,55],'6f4e37',7294519],
++['nbs-iscc-m:cafcrme.77','cafcrme','cafÃ© crÃ¨me',[130,102,68],'826644',8545860],
++['nbs-iscc-m:cafnoir.81','cafnoir','cafÃ© noir',[72,60,50],'483c32',4734002],
+ ['nbs-iscc-m:cairo.179','cairo','cairo',[0,65,106],'00416a',16746],
+ ['nbs-iscc-m:calabash.77','calabash','calabash',[130,102,68],'826644',8545860],
+ ['nbs-iscc-m:calabash.94','calabash','calabash',[150,113,23],'967117',9859351],
+@@ -9894,7 +9894,7 @@
+ ['nbs-iscc-m:campanulablue.206','campanulablue','campanula blue',[126,115,184],'7e73b8',8287160],
+ ['nbs-iscc-m:campanulapurple.245','campanulapurple','campanula purple',[131,100,121],'836479',8610937],
+ ['nbs-iscc-m:campanulaviolet.245','campanulaviolet','campanula violet',[131,100,121],'836479',8610937],
+-['nbs-iscc-m:camrier.224','camrier','camérier',[86,60,92],'563c5c',5651548],
++['nbs-iscc-m:camrier.224','camrier','camÃ©rier',[86,60,92],'563c5c',5651548],
+ ['nbs-iscc-m:camwood.15','camwood','camwood',[171,78,82],'ab4e52',11226706],
+ ['nbs-iscc-m:canard.165','canard','canard',[0,75,73],'004b49',19273],
+ ['nbs-iscc-m:canard.174','canard','canard',[0,73,88],'004958',18776],
+@@ -10181,8 +10181,8 @@
+ ['nbs-iscc-m:cleopatra.176','cleopatra','cleopatra',[0,161,194],'00a1c2',41410],
+ ['nbs-iscc-m:clochette.200','clochette','clochette',[78,81,128],'4e5180',5132672],
+ ['nbs-iscc-m:clochette.211','clochette','clochette',[96,78,129],'604e81',6311553],
+-['nbs-iscc-m:cloisonn.176','cloisonn','cloisonné',[0,161,194],'00a1c2',41410],
+-['nbs-iscc-m:cloisonn.194','cloisonn','cloisonné',[48,38,122],'30267a',3155578],
++['nbs-iscc-m:cloisonn.176','cloisonn','cloisonnÃ©',[0,161,194],'00a1c2',41410],
++['nbs-iscc-m:cloisonn.194','cloisonn','cloisonnÃ©',[48,38,122],'30267a',3155578],
+ ['nbs-iscc-m:cloud.186','cloud','cloud',[83,104,120],'536878',5466232],
+ ['nbs-iscc-m:cloudgrey.233','cloudgrey','cloud grey ',[139,133,137],'8b8589',9143689],
+ ['nbs-iscc-m:cloudgrey.265','cloudgrey','cloud grey ',[132,132,130],'848482',8684674],
+@@ -10429,9 +10429,9 @@
+ ['nbs-iscc-m:damonico.53','damonico','damonico',[217,144,88],'d99058',14258264],
+ ['nbs-iscc-m:damson.211','damson','damson',[96,78,129],'604e81',6311553],
+ ['nbs-iscc-m:damson.212','damson','damson',[47,33,64],'2f2140',3088704],
+-['nbs-iscc-m:dana.50','dana','danaë',[237,135,45],'ed872d',15566637],
+-['nbs-iscc-m:dana.53','dana','danaë',[217,144,88],'d99058',14258264],
+-['nbs-iscc-m:dana.186','dana','danaë',[83,104,120],'536878',5466232],
++['nbs-iscc-m:dana.50','dana','danaÃ«',[237,135,45],'ed872d',15566637],
++['nbs-iscc-m:dana.53','dana','danaÃ«',[217,144,88],'d99058',14258264],
++['nbs-iscc-m:dana.186','dana','danaÃ«',[83,104,120],'536878',5466232],
+ ['nbs-iscc-m:dandelion.83','dandelion','dandelion',[250,218,94],'fada5e',16439902],
+ ['nbs-iscc-m:dante.229','dante','dante',[80,64,77],'50404d',5259341],
+ ['nbs-iscc-m:dante.242','dante','dante',[93,57,84],'5d3954',6109524],
+@@ -10458,7 +10458,7 @@
+ ['nbs-iscc-m:daybreak.210','daybreak','daybreak',[140,130,182],'8c82b6',9208502],
+ ['nbs-iscc-m:daybreak.222','daybreak','daybreak',[182,149,192],'b695c0',11965888],
+ ['nbs-iscc-m:daytona.63','daytona','daytona',[142,130,121],'8e8279',9339513],
+-['nbs-iscc-m:dbutantepink.5','dbutantepink','débutante pink ',[222,165,164],'dea5a4',14591396],
++['nbs-iscc-m:dbutantepink.5','dbutantepink','dÃ©butante pink ',[222,165,164],'dea5a4',14591396],
+ ['nbs-iscc-m:deadcarnations.258','deadcarnations','dead carnations',[168,81,110],'a8516e',11030894],
+ ['nbs-iscc-m:deadleaf.51','deadleaf','dead leaf',[190,101,22],'be6516',12477718],
+ ['nbs-iscc-m:deadleaf.54','deadleaf','dead leaf',[174,105,56],'ae6938',11430200],
+@@ -10698,7 +10698,7 @@
+ ['nbs-iscc-m:eventide.214','eventide','eventide',[150,144,171],'9690ab',9867435],
+ ['nbs-iscc-m:everglade.267','everglade','everglade',[34,34,34],'222222',2236962],
+ ['nbs-iscc-m:evergreen.137','evergreen','evergreen',[53,94,59],'355e3b',3497531],
+-['nbs-iscc-m:evque.224','evque','evêque',[86,60,92],'563c5c',5651548],
++['nbs-iscc-m:evque.224','evque','evÃªque',[86,60,92],'563c5c',5651548],
+ ['nbs-iscc-m:fadedrose.19','fadedrose','faded rose',[144,93,93],'905d5d',9461085],
+ ['nbs-iscc-m:faience.169','faience','faience',[0,119,145],'007791',30609],
+ ['nbs-iscc-m:faience.173','faience','faience',[54,117,136],'367588',3569032],
+@@ -10955,8 +10955,8 @@
+ ['nbs-iscc-m:glacier.187','glacier','glacier',[54,69,79],'36454f',3556687],
+ ['nbs-iscc-m:glacierblue.186','glacierblue','glacier blue',[83,104,120],'536878',5466232],
+ ['nbs-iscc-m:gladiolus.12','gladiolus','gladiolus',[188,63,74],'bc3f4a',12336970],
+-['nbs-iscc-m:glaeul.18','glaeul','glaïeul',[173,136,132],'ad8884',11372676],
+-['nbs-iscc-m:glaeul.30','glaeul','glaïeul',[196,131,121],'c48379',12878713],
++['nbs-iscc-m:glaeul.18','glaeul','glaÃ¯eul',[173,136,132],'ad8884',11372676],
++['nbs-iscc-m:glaeul.30','glaeul','glaÃ¯eul',[196,131,121],'c48379',12878713],
+ ['nbs-iscc-m:glassgreen.119','glassgreen','glass green',[201,220,137],'c9dc89',13229193],
+ ['nbs-iscc-m:glassgrey.190','glassgrey','glass grey',[180,188,192],'b4bcc0',11844800],
+ ['nbs-iscc-m:glaucous.121','glaucous','glaucous',[218,223,183],'dadfb7',14344119],
+@@ -11433,7 +11433,7 @@
+ ['nbs-iscc-m:laurelpink.3','laurelpink','laurel pink',[228,113,122],'e4717a',14971258],
+ ['nbs-iscc-m:laurelpink.15','laurelpink','laurel pink',[171,78,82],'ab4e52',11226706],
+ ['nbs-iscc-m:lava.267','lava','lava',[34,34,34],'222222',2236962],
+-['nbs-iscc-m:lavallire.228','lavallire','la vallière ',[121,104,120],'796878',7956600],
++['nbs-iscc-m:lavallire.228','lavallire','la valliÃ¨re ',[121,104,120],'796878',7956600],
+ ['nbs-iscc-m:lavender.227','lavender','lavender',[170,152,169],'aa98a9',11180201],
+ ['nbs-iscc-m:lawngreen.120','lawngreen','lawn green',[138,154,91],'8a9a5b',9083483],
+ ['nbs-iscc-m:lead.234','lead','lead',[93,85,91],'5d555b',6116699],
+@@ -11485,7 +11485,7 @@
+ ['nbs-iscc-m:lightbrunswickgreen.137','lightbrunswickgreen','light brunswick green',[53,94,59],'355e3b',3497531],
+ ['nbs-iscc-m:lightchromegreen.137','lightchromegreen','light chrome green',[53,94,59],'355e3b',3497531],
+ ['nbs-iscc-m:lightchromeyellow.84','lightchromeyellow','light chrome yellow',[212,175,55],'d4af37',13938487],
+-['nbs-iscc-m:lightgrge.112','lightgrge','light grège',[138,135,118],'8a8776',9078646],
++['nbs-iscc-m:lightgrge.112','lightgrge','light grÃ¨ge',[138,135,118],'8a8776',9078646],
+ ['nbs-iscc-m:lightgunmetal.266','lightgunmetal','light gunmetal',[85,85,85],'555555',5592405],
+ ['nbs-iscc-m:lightred.37','lightred','light red',[203,109,81],'cb6d51',13331793],
+ ['nbs-iscc-m:lightstone.90','lightstone','light stone',[194,178,128],'c2b280',12759680],
+@@ -11679,7 +11679,7 @@
+ ['nbs-iscc-m:maroon.44','maroon','maroon',[62,29,30],'3e1d1e',4070686],
+ ['nbs-iscc-m:marron.61','marron','marron',[99,81,71],'635147',6508871],
+ ['nbs-iscc-m:marrone.61','marrone','marrone ',[99,81,71],'635147',6508871],
+-['nbs-iscc-m:marronglac.58','marronglac','marron glacé',[111,78,55],'6f4e37',7294519],
++['nbs-iscc-m:marronglac.58','marronglac','marron glacÃ©',[111,78,55],'6f4e37',7294519],
+ ['nbs-iscc-m:marsala.43','marsala','marsala',[121,68,59],'79443b',7947323],
+ ['nbs-iscc-m:marsbrown.58','marsbrown','mars brown',[111,78,55],'6f4e37',7294519],
+ ['nbs-iscc-m:marshrose.19','marshrose','marsh rose',[144,93,93],'905d5d',9461085],
+@@ -11864,8 +11864,8 @@
+ ['nbs-iscc-m:moonmist.93','moonmist','moonmist ',[191,184,165],'bfb8a5',12564645],
+ ['nbs-iscc-m:moorishred.50','moorishred','moorish red ',[237,135,45],'ed872d',15566637],
+ ['nbs-iscc-m:moose.111','moose','moose ',[54,53,39],'363527',3552551],
+-['nbs-iscc-m:mordor.43','mordor','mordoré ',[121,68,59],'79443b',7947323],
+-['nbs-iscc-m:mordor.58','mordor','mordoré ',[111,78,55],'6f4e37',7294519],
++['nbs-iscc-m:mordor.43','mordor','mordorÃ© ',[121,68,59],'79443b',7947323],
++['nbs-iscc-m:mordor.58','mordor','mordorÃ© ',[111,78,55],'6f4e37',7294519],
+ ['nbs-iscc-m:moreaberries.68','moreaberries','morea berries ',[234,162,33],'eaa221',15376929],
+ ['nbs-iscc-m:moreaberries.71','moreaberries','morea berries ',[227,168,87],'e3a857',14919767],
+ ['nbs-iscc-m:morello.235','morello','morello ',[36,33,36],'242124',2367780],
+@@ -11914,8 +11914,8 @@
+ ['nbs-iscc-m:mousegrey.64','mousegrey','mouse [grey] ',[91,80,79],'5b504f',5984335],
+ ['nbs-iscc-m:mousse.106','mousse','mousse ',[134,126,54],'867e36',8814134],
+ ['nbs-iscc-m:mousse.120','mousse','mousse ',[138,154,91],'8a9a5b',9083483],
+-['nbs-iscc-m:msange.149','msange','mésange ',[141,163,153],'8da399',9282457],
+-['nbs-iscc-m:mtallique.113','mtallique','métallique ',[87,85,76],'57554c',5723468],
++['nbs-iscc-m:msange.149','msange','mÃ©sange ',[141,163,153],'8da399',9282457],
++['nbs-iscc-m:mtallique.113','mtallique','mÃ©tallique ',[87,85,76],'57554c',5723468],
+ ['nbs-iscc-m:muffin.57','muffin','muffin ',[166,123,91],'a67b5b',10910555],
+ ['nbs-iscc-m:muffin.74','muffin','muffin ',[153,101,21],'996515',10052885],
+ ['nbs-iscc-m:mulberry.235','mulberry','mulberry ',[36,33,36],'242124',2367780],
+@@ -12280,7 +12280,7 @@
+ ['nbs-iscc-m:pampas.64','pampas','pampas',[91,80,79],'5b504f',5984335],
+ ['nbs-iscc-m:pan.151','pan','pan',[58,75,71],'3a4b47',3820359],
+ ['nbs-iscc-m:pancygreen.137','pancygreen','pancy green',[53,94,59],'355e3b',3497531],
+-['nbs-iscc-m:panse.207','panse','pansée',[96,78,151],'604e97',6311575],
++['nbs-iscc-m:panse.207','panse','pansÃ©e',[96,78,151],'604e97',6311575],
+ ['nbs-iscc-m:pansy.207','pansy','pansy',[96,78,151],'604e97',6311575],
+ ['nbs-iscc-m:pansymaroon.259','pansymaroon','pansy-maroon',[103,49,71],'673147',6762823],
+ ['nbs-iscc-m:pansypurple.259','pansypurple','pansy purple',[103,49,71],'673147',6762823],
+@@ -12624,8 +12624,8 @@
+ ['nbs-iscc-m:prussianred.40','prussianred','prussian red',[136,45,23],'882d17',8924439],
+ ['nbs-iscc-m:prussianred.43','prussianred','prussian red',[121,68,59],'79443b',7947323],
+ ['nbs-iscc-m:psyche.135','psyche','psyche',[147,197,146],'93c592',9684370],
+-['nbs-iscc-m:ptshell.73','ptshell','pâté shell',[250,214,165],'fad6a5',16438949],
+-['nbs-iscc-m:ptshell.76','ptshell','pâté shell',[193,154,107],'c19a6b',12687979],
++['nbs-iscc-m:ptshell.73','ptshell','pÃ¢tÃ© shell',[250,214,165],'fad6a5',16438949],
++['nbs-iscc-m:ptshell.76','ptshell','pÃ¢tÃ© shell',[193,154,107],'c19a6b',12687979],
+ ['nbs-iscc-m:puce.16','puce','puce',[114,47,55],'722f37',7483191],
+ ['nbs-iscc-m:pueblo.58','pueblo','pueblo',[111,78,55],'6f4e37',7294519],
+ ['nbs-iscc-m:puke.16','puke','puke',[114,47,55],'722f37',7483191],
+@@ -12708,10 +12708,10 @@
+ ['nbs-iscc-m:raphael.183','raphael','raphael',[0,48,78],'00304e',12366],
+ ['nbs-iscc-m:rapids.182','rapids','rapids',[67,107,149],'436b95',4418453],
+ ['nbs-iscc-m:raspberry.16','raspberry','raspberry',[114,47,55],'722f37',7483191],
+-['nbs-iscc-m:raspberryglac.15','raspberryglac','raspberry glacé',[171,78,82],'ab4e52',11226706],
+-['nbs-iscc-m:raspberryglac.19','raspberryglac','raspberry glacé',[144,93,93],'905d5d',9461085],
+-['nbs-iscc-m:raspberryglac.258','raspberryglac','raspberry glacé',[168,81,110],'a8516e',11030894],
+-['nbs-iscc-m:raspberryglac.262','raspberryglac','raspberry glacé',[145,95,109],'915f6d',9527149],
++['nbs-iscc-m:raspberryglac.15','raspberryglac','raspberry glacÃ©',[171,78,82],'ab4e52',11226706],
++['nbs-iscc-m:raspberryglac.19','raspberryglac','raspberry glacÃ©',[144,93,93],'905d5d',9461085],
++['nbs-iscc-m:raspberryglac.258','raspberryglac','raspberry glacÃ©',[168,81,110],'a8516e',11030894],
++['nbs-iscc-m:raspberryglac.262','raspberryglac','raspberry glacÃ©',[145,95,109],'915f6d',9527149],
+ ['nbs-iscc-m:raspberryred.15','raspberryred','raspberry red',[171,78,82],'ab4e52',11226706],
+ ['nbs-iscc-m:rat.113','rat','rat',[87,85,76],'57554c',5723468],
+ ['nbs-iscc-m:rattan.87','rattan','rattan',[201,174,93],'c9ae5d',13217373],
+@@ -12722,8 +12722,8 @@
+ ['nbs-iscc-m:rawumber.77','rawumber','raw umber',[130,102,68],'826644',8545860],
+ ['nbs-iscc-m:rawumber.78','rawumber','raw umber',[75,54,33],'4b3621',4929057],
+ ['nbs-iscc-m:rawumber.58','rawumber','raw umber',[111,78,55],'6f4e37',7294519],
+-['nbs-iscc-m:rcamier.5','rcamier','récamier',[222,165,164],'dea5a4',14591396],
+-['nbs-iscc-m:rcamier.26','rcamier','récamier',[248,131,121],'f88379',16286585],
++['nbs-iscc-m:rcamier.5','rcamier','rÃ©camier',[222,165,164],'dea5a4',14591396],
++['nbs-iscc-m:rcamier.26','rcamier','rÃ©camier',[248,131,121],'f88379',16286585],
+ ['nbs-iscc-m:realgar.68','realgar','realgar',[234,162,33],'eaa221',15376929],
+ ['nbs-iscc-m:realgar.71','realgar','realgar',[227,168,87],'e3a857',14919767],
+ ['nbs-iscc-m:redbanana.13','redbanana','red banana',[132,27,45],'841b2d',8657709],
+@@ -12842,8 +12842,8 @@
+ ['nbs-iscc-m:rosedawn.42','rosedawn','rose dawn',[168,124,109],'a87c6d',11041901],
+ ['nbs-iscc-m:rosedenymphe.89','rosedenymphe','rose de nymphe',[243,229,171],'f3e5ab',15984043],
+ ['nbs-iscc-m:rosedeprovence.255','rosedeprovence','rose de provence',[179,68,108],'b3446c',11748460],
+-['nbs-iscc-m:rosedore.3','rosedore','rose dorée',[228,113,122],'e4717a',14971258],
+-['nbs-iscc-m:rosedore.15','rosedore','rose dorée',[171,78,82],'ab4e52',11226706],
++['nbs-iscc-m:rosedore.3','rosedore','rose dorÃ©e',[228,113,122],'e4717a',14971258],
++['nbs-iscc-m:rosedore.15','rosedore','rose dorÃ©e',[171,78,82],'ab4e52',11226706],
+ ['nbs-iscc-m:rosedust.19','rosedust','rosedust',[144,93,93],'905d5d',9461085],
+ ['nbs-iscc-m:rosedust.46','rosedust','rosedust',[103,76,71],'674c47',6769735],
+ ['nbs-iscc-m:roseebony.47','roseebony','rose ebony ',[67,48,46],'43302e',4403246],
+@@ -12873,7 +12873,7 @@
+ ['nbs-iscc-m:rosepurple.222','rosepurple','rose-purple ',[182,149,192],'b695c0',11965888],
+ ['nbs-iscc-m:rosepurple.240','rosepurple','rose-purple ',[183,132,167],'b784a7',12027047],
+ ['nbs-iscc-m:rosequartz.227','rosequartz','rose quartz',[170,152,169],'aa98a9',11180201],
+-['nbs-iscc-m:rosesoire.3','rosesoire','rose soirée',[228,113,122],'e4717a',14971258],
++['nbs-iscc-m:rosesoire.3','rosesoire','rose soirÃ©e',[228,113,122],'e4717a',14971258],
+ ['nbs-iscc-m:rosestone.45','rosestone','rosestone',[151,127,115],'977f73',9928563],
+ ['nbs-iscc-m:roset.38','roset','roset',[158,71,50],'9e4732',10372914],
+ ['nbs-iscc-m:rosetan.33','rosetan','rosetan',[194,172,153],'c2ac99',12758169],

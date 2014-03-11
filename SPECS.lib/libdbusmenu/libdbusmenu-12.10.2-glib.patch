@@ -1,0 +1,24 @@
+diff -ur libdbusmenu-12.10.2.orig/tools/dbusmenu-dumper.c libdbusmenu-12.10.2/tools/dbusmenu-dumper.c
+--- libdbusmenu-12.10.2.orig/tools/dbusmenu-dumper.c	2013-02-19 00:14:59.638878846 +0000
++++ libdbusmenu-12.10.2/tools/dbusmenu-dumper.c	2013-02-19 00:15:15.028879224 +0000
+@@ -388,7 +388,7 @@
+ int
+ main (int argc, char ** argv)
+ {
+-	g_type_init();
++	//g_type_init();
+ 	GError * error = NULL;
+ 	GOptionContext * context;
+ 
+diff -ur libdbusmenu-12.10.2.orig/tools/testapp/main.c libdbusmenu-12.10.2/tools/testapp/main.c
+--- libdbusmenu-12.10.2.orig/tools/testapp/main.c	2013-02-19 00:14:59.638878846 +0000
++++ libdbusmenu-12.10.2/tools/testapp/main.c	2013-02-19 00:15:33.524879302 +0000
+@@ -135,7 +135,7 @@
+ 
+ int main (int argc, char ** argv)
+ {
+-	g_type_init();
++	//g_type_init();
+ 
+ 	if (argc != 2) {
+ 		g_warning(USAGE);

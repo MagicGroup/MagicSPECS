@@ -1,0 +1,208 @@
+From 1978a9ef5c3be7bbfc08565f0f99f5511edde5de Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Wed, 4 Jan 2012 14:57:56 +1000
+Subject: [PATCH] Untangle XF86DRI from the driver-specific DRI define
+
+XF86DRI is defined by xorg-server.h, so --disable-dri in the driver
+itself does exactly nothing other than not fill in the CFLAGS and thus stop
+the driver from compiling.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ configure.ac      |    4 ++--
+ src/tdfx.h        |   10 +++++++---
+ src/tdfx_accel.c  |    4 ++--
+ src/tdfx_driver.c |   22 +++++++++++-----------
+ src/tdfx_priv.c   |    2 +-
+ 5 files changed, 23 insertions(+), 19 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 33ed17c..9245b41 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -100,8 +100,8 @@ AC_MSG_RESULT([$DRI])
+ AM_CONDITIONAL(DRI, test x$DRI = xyes)
+ if test "$DRI" = yes; then
+         PKG_CHECK_MODULES(DRI, [libdrm >= 2.0 xf86driproto])
+-        AC_DEFINE(XF86DRI,1,[Enable DRI driver support])
+-        AC_DEFINE(XF86DRI_DEVEL,1,[Enable developmental DRI driver support])
++        AC_DEFINE(TDFXDRI,1,[Enable DRI driver support])
++        AC_DEFINE(TDFXDRI_DEVEL,1,[Enable developmental DRI driver support])
+ fi
+ 
+ if test "x$XSERVER_LIBPCIACCESS" = xyes; then
+diff --git a/src/tdfx.h b/src/tdfx.h
+index dbdf4c6..2e00fde 100644
+--- a/src/tdfx.h
++++ b/src/tdfx.h
+@@ -18,7 +18,11 @@
+ #include "xf86xv.h"
+ #include "tdfxdefs.h"
+ 
+-#ifdef XF86DRI
++#ifndef XF86DRI
++#undef TDFXDRI
++#endif
++
++#ifdef TDFXDRI
+ #include "xf86drm.h"
+ #include "sarea.h"
+ #define _XF86DRI_SERVER_
+@@ -78,7 +82,7 @@ extern void TDFXLostContext(ScreenPtr pScreen);
+ extern Bool TDFXSetupSLI(ScrnInfoPtr pScrn, Bool sliEnable, int aaSamples);
+ extern Bool TDFXDisableSLI(TDFXPtr pTDFX);
+ 
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+ extern void FillPrivateDRI(TDFXPtr pTDFX, TDFXDRIPtr pTDFXDRI);
+ #endif
+ 
+@@ -250,7 +254,7 @@ typedef struct _TDFXRec {
+   int scanlineWidth;
+   unsigned char *scanlineColorExpandBuffers[2];
+   PROPDATA
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   Bool directRenderingEnabled;
+   DRIInfoPtr pDRIInfo;
+   int drmSubFD;
+diff --git a/src/tdfx_accel.c b/src/tdfx_accel.c
+index c7aea8c..12472f3 100644
+--- a/src/tdfx_accel.c
++++ b/src/tdfx_accel.c
+@@ -89,7 +89,7 @@ TDFXFirstSync(ScrnInfoPtr pScrn) {
+   TDFXPtr pTDFX = TDFXPTR(pScrn);
+ 
+   if (!pTDFX->syncDone) {
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+     if (pTDFX->directRenderingEnabled) {
+       DRILock(screenInfo.screens[pScrn->scrnIndex], 0);
+       TDFXSwapContextFifo(screenInfo.screens[pScrn->scrnIndex]);
+@@ -107,7 +107,7 @@ TDFXCheckSync(ScrnInfoPtr pScrn) {
+   if (pTDFX->syncDone) {
+     pTDFX->sync(pScrn);
+     pTDFX->syncDone=FALSE;
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+     if (pTDFX->directRenderingEnabled) {
+       DRIUnlock(screenInfo.screens[pScrn->scrnIndex]);
+     }
+diff --git a/src/tdfx_driver.c b/src/tdfx_driver.c
+index 0b3d904..94cce04 100644
+--- a/src/tdfx_driver.c
++++ b/src/tdfx_driver.c
+@@ -99,7 +99,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #include "xf86xv.h"
+ #include <X11/extensions/Xv.h>
+ 
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+ #include "dri.h"
+ #endif
+ 
+@@ -1230,7 +1230,7 @@ TDFXPreInit(ScrnInfoPtr pScrn, int flags)
+   pTDFX->writeLong(pTDFX, MISCINIT0, pTDFX->ModeReg.miscinit0);
+ #endif
+ 
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   /* Load the dri module if requested. */
+   if (xf86ReturnOptValBool(pTDFX->Options, OPTION_DRI, FALSE)) {
+     xf86LoadSubModule(pScrn, "dri");
+@@ -1908,14 +1908,14 @@ TDFXModeInit(ScrnInfoPtr pScrn, DisplayModePtr mode)
+     mode->CrtcHSkew=hskew;
+   }    
+ 
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   if (pTDFX->directRenderingEnabled) {
+     DRILock(screenInfo.screens[pScrn->scrnIndex], 0);
+     TDFXSwapContextFifo(screenInfo.screens[pScrn->scrnIndex]);
+   }
+ #endif
+   DoRestore(pScrn, &hwp->ModeReg, &pTDFX->ModeReg, FALSE);
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   if (pTDFX->directRenderingEnabled) {
+     DRIUnlock(screenInfo.screens[pScrn->scrnIndex]);
+   }
+@@ -2201,7 +2201,7 @@ TDFXScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv) {
+   TDFXPtr pTDFX;
+   VisualPtr visual;
+   BoxRec MemBox;
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   MessageType driFrom = X_DEFAULT;
+ #endif
+   int scanlines;
+@@ -2308,7 +2308,7 @@ TDFXScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv) {
+ 
+   miSetPixmapDepths ();
+     
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   /*
+    * Setup DRI after visuals have been established, but before fbScreenInit
+    * is called.   fbScreenInit will eventually call into the drivers
+@@ -2417,7 +2417,7 @@ TDFXScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv) {
+    * in of TDFXCloseScreen() before the rest is unwrapped
+    */
+   
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   if (pTDFX->directRenderingEnabled) {
+ 	/* Now that mi, fb, drm and others have done their thing, 
+          * complete the DRI setup.
+@@ -2471,7 +2471,7 @@ static Bool
+ TDFXEnterVT(int scrnIndex, int flags) {
+   ScrnInfoPtr pScrn;
+   ScreenPtr pScreen;
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   TDFXPtr pTDFX;
+ #endif
+ 
+@@ -2479,7 +2479,7 @@ TDFXEnterVT(int scrnIndex, int flags) {
+   pScrn = xf86Screens[scrnIndex];
+   pScreen = screenInfo.screens[scrnIndex];
+   TDFXInitFifo(pScreen);
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   pTDFX = TDFXPTR(pScrn);
+   if (pTDFX->directRenderingEnabled) {
+     DRIUnlock(pScreen);
+@@ -2506,7 +2506,7 @@ TDFXLeaveVT(int scrnIndex, int flags) {
+   pTDFX = TDFXPTR(pScrn);
+   pTDFX->sync(pScrn);
+   TDFXShutdownFifo(pScreen);
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+   if (pTDFX->directRenderingEnabled) {
+     DRILock(pScreen, 0);
+   }
+@@ -2525,7 +2525,7 @@ TDFXCloseScreen(int scrnIndex, ScreenPtr pScreen)
+   hwp = VGAHWPTR(pScrn);
+   pTDFX = TDFXPTR(pScrn);
+ 
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+     if (pTDFX->directRenderingEnabled) {
+ 	TDFXDRICloseScreen(pScreen);
+ 	pTDFX->directRenderingEnabled=FALSE;
+diff --git a/src/tdfx_priv.c b/src/tdfx_priv.c
+index 77ce676..d5cb2d1 100644
+--- a/src/tdfx_priv.c
++++ b/src/tdfx_priv.c
+@@ -234,7 +234,7 @@ GetReadPtr(TDFXPtr pTDFX)
+   return read_ptr;
+ }
+ 
+-#ifdef XF86DRI
++#ifdef TDFXDRI
+ void TDFXSwapContextFifo(ScreenPtr pScreen)
+ {
+   ScrnInfoPtr pScrn;
+-- 
+1.7.7.4
+

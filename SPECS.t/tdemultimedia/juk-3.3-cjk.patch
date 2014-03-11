@@ -1,0 +1,45 @@
+--- kdemultimedia-3.3.0/juk/tag.cpp.orig	2004-08-06 03:25:27.000000000 +0800
++++ kdemultimedia-3.3.0/juk/tag.cpp	2004-08-12 20:07:56.287055368 +0800
+@@ -41,6 +41,8 @@
+ #include "mediafiles.h"
+ #include "stringshare.h"
+ 
++#define QStringToMyTString(s) TagLib::String(s.local8Bit().data(), TagLib::String::Latin1)
++
+ ////////////////////////////////////////////////////////////////////////////////
+ // public members
+ ////////////////////////////////////////////////////////////////////////////////
+@@ -115,11 +117,11 @@
+         file = new TagLib::Vorbis::File(QFile::encodeName(m_fileName).data());
+ 
+     if(file && file->isValid() && file->tag() && !file->readOnly()) {
+-        file->tag()->setTitle(QStringToTString(m_title));
+-        file->tag()->setArtist(QStringToTString(m_artist));
+-        file->tag()->setAlbum(QStringToTString(m_album));
+-        file->tag()->setGenre(QStringToTString(m_genre));
+-        file->tag()->setComment(QStringToTString(m_comment));
++        file->tag()->setTitle(QStringToMyTString(m_title));
++        file->tag()->setArtist(QStringToMyTString(m_artist));
++        file->tag()->setAlbum(QStringToMyTString(m_album));
++        file->tag()->setGenre(QStringToMyTString(m_genre));
++        file->tag()->setComment(QStringToMyTString(m_comment));
+         file->tag()->setTrack(m_track);
+         file->tag()->setYear(m_year);
+ #ifdef TAGLIB_1_2
+@@ -223,11 +225,11 @@
+ 
+ void Tag::setup(TagLib::File *file)
+ {
+-    m_title   = TQString(TStringToQString(file->tag()->title())).stripWhiteSpace();
+-    m_artist  = TQString(TStringToQString(file->tag()->artist()).stripWhiteSpace();
+-    m_album   = TQString(TStringToQString(file->tag()->album())).stripWhiteSpace();
+-    m_genre   = TQString(TStringToQString(file->tag()->genre())).stripWhiteSpace();
+-    m_comment = TQString(TStringToQString(file->tag()->comment())).stripWhiteSpace();
++    m_title   = TQString::fromLocal8Bit(TStringToQString(file->tag()->title()).latin1()).stripWhiteSpace();
++    m_artist  = TQString::fromLocal8Bit(TStringToQString(file->tag()->artist()).latin1()).stripWhiteSpace();
++    m_album   = TQString::fromLocal8Bit(TStringToQString(file->tag()->album()).latin1()).stripWhiteSpace();
++    m_genre   = TQString::fromLocal8Bit(TStringToQString(file->tag()->genre()).latin1()).stripWhiteSpace();
++    m_comment = TQString::fromLocal8Bit(TStringToQString(file->tag()->comment()).latin1()).stripWhiteSpace();
+ 
+     m_track = file->tag()->track();
+     m_year  = file->tag()->year();

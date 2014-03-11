@@ -1,0 +1,11 @@
+--- ktechlab-3.5.13.1/src/Makefile.am.ORI	2012-10-04 22:06:34.854692286 +0200
++++ ktechlab-3.5.13.1/src/Makefile.am	2012-10-04 22:06:44.350472919 +0200
+@@ -19,7 +19,7 @@
+ 	$(top_builddir)/src/mechanics/libmechanics.la $(top_builddir)/src/electronics/libelectronics.la \
+ 	$(top_builddir)/src/electronics/simulation/libelements.la $(top_builddir)/src/electronics/components/libcomponents.la \
+ 	$(top_builddir)/src/languages/liblanguages.la $(top_builddir)/src/drawparts/libdrawparts.la \
+-	$(top_builddir)/src/core/libcore.la -lkutils -lktexteditor $(LIB_KFILE) $(LIB_KDEPRINT) $(LIB_QT) $(LIB_GPSIM) -lgpsimgui
++	$(top_builddir)/src/core/libcore.la -lkutils -lktexteditor $(LIB_KFILE) $(LIB_KDEPRINT) $(LIB_QT) $(LIB_GPSIM) $(LIB_GPSIM)
+ 
+ # which sources should be compiled for ktechlab
+ ktechlab_SOURCES = ktechlab.cpp node.cpp connector.cpp itemlibrary.cpp \

@@ -1,0 +1,12 @@
+diff -up ./src/CMakeLists.txt.configure ./src/CMakeLists.txt
+--- ./src/CMakeLists.txt.configure	2010-01-09 14:24:27.862646238 +0000
++++ ./src/CMakeLists.txt	2010-01-09 14:26:54.987396354 +0000
+@@ -29,6 +29,6 @@ endif (QGV_BACKEND)
+ install(FILES ${qzion_HEADERS} DESTINATION include/)
+ 
+ if (NOT WIN32)
+-    configure_file(common/qzion.pc.cmake qzion.pc @ONLY)
+-    install(FILES ${CMAKE_BINARY_DIR}/qzion.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig/)
++    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/common/qzion.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/qzion.pc @ONLY)
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qzion.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig/)
+ endif (NOT WIN32)

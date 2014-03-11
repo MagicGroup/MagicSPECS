@@ -1,0 +1,22 @@
+diff -u -r scim-hangul-0.3.2.orig/src/scim_hangul_imengine.cpp scim-hangul-0.3.2/src/scim_hangul_imengine.cpp
+--- scim-hangul-0.3.2.orig/src/scim_hangul_imengine.cpp	2006-10-23 20:42:47.000000000 +0800
++++ scim-hangul-0.3.2/src/scim_hangul_imengine.cpp	2008-03-03 14:18:09.000000000 +0800
+@@ -33,6 +33,7 @@
+   #include <config.h>
+ #endif
+ 
++#include <string.h>
+ #include <scim.h>
+ #include "scim_hangul_imengine.h"
+ 
+diff -u -r scim-hangul-0.3.2.orig/src/scim_hangul_imengine_setup.cpp scim-hangul-0.3.2/src/scim_hangul_imengine_setup.cpp
+--- scim-hangul-0.3.2.orig/src/scim_hangul_imengine_setup.cpp	2006-10-23 20:42:47.000000000 +0800
++++ scim-hangul-0.3.2/src/scim_hangul_imengine_setup.cpp	2008-02-25 14:56:57.000000000 +0800
+@@ -34,6 +34,7 @@
+   #include <config.h>
+ #endif
+ 
++#include <cstring>
+ #include <scim.h>
+ #include <gtk/scimkeyselection.h>
+ 

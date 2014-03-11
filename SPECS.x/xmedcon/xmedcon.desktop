@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=xmedcon
+GenericName=XMedCon
+Comment=Medical image conversion utility and library
+Exec=xmedcon
+Icon=xmedcon
+Terminal=false
+Type=Application
+Categories=Graphics;

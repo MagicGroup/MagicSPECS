@@ -1,0 +1,14 @@
+diff -ur db-4.6.21/dist/Makefile.in db-4.6.21-db.h_include-patched/dist/Makefile.in
+--- db-4.6.21/dist/Makefile.in	2007-07-05 18:35:02.000000000 +0000
++++ db-4.6.21-db.h_include-patched/dist/Makefile.in	2008-09-05 08:59:36.000000000 +0000
+@@ -139,8 +139,8 @@
+ # local libraries, for example.  Do that by adding -I options to the DB185INC
+ # line, and -l options to the DB185LIB line.
+ ##################################################
+-DB185INC=	-c @CFLAGS@ -I$(srcdir) @CPPFLAGS@
+-DB185LIB=
++DB185INC=	-c @CFLAGS@ -I$(srcdir) -I$(srcdir)/db.1.85/PORT/linux/include @CPPFLAGS@
++DB185LIB=	${srcdir}/db.1.85/PORT/linux/libdb.a
+ 
+ ##################################################
+ # NOTHING BELOW THIS LINE SHOULD EVER NEED TO BE MODIFIED.

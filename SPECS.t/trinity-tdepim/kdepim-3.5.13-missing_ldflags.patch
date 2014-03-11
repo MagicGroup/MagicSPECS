@@ -1,0 +1,10 @@
+--- kdepim/kalarm/CMakeLists.txt.ORI	2012-08-09 19:49:53.033689156 +0200
++++ kdepim/kalarm/CMakeLists.txt	2012-08-09 19:50:00.301644331 +0200
+@@ -33,6 +33,7 @@
+   ${CMAKE_SOURCE_DIR}/certmanager/lib
+   ${TDE_INCLUDE_DIR}
+   ${TQT_INCLUDE_DIRS}
++  ${TDE_INCLUDE_DIR}/../arts
+ )
+ 
+ link_directories(

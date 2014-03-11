@@ -1,0 +1,65 @@
+--- MailTools-2.08/ChangeLog	2011-06-01 12:55:38.000000000 +0100
++++ MailTools-2.08/ChangeLog	2011-06-01 14:41:45.004502111 +0100
+@@ -33,7 +33,7 @@
+ 	- express more clearly that Authen::SASL needs to be installed
+ 	  manually if you need the functionality
+ 
+-	- support for smtps via Net::SMTP::SSL, by [Maciej Żenczykowski]
++	- support for smtps via Net::SMTP::SSL, by [Maciej Å»enczykowski]
+ 
+ version 2.05: Fri Dec 18 22:39:21 CET 2009
+ 
+@@ -61,7 +61,7 @@
+ 	- Mail::Field::_require_dir complained on 5.10 about a closed
+ 	  dirhandle.  rt.cpan.org#37114 [Manuel Hecht]
+ 
+-	- Bcc line removed before collecting addresses. [Jørgen Thomsen]
++	- Bcc line removed before collecting addresses. [JÃ¸rgen Thomsen]
+ 
+ 	Improvements:
+ 
+@@ -72,7 +72,7 @@
+ 
+ 	Fixes:
+ 
+-	- Netware needs to use smtp as well [Günter Knauf]
++	- Netware needs to use smtp as well [GÃ¼nter Knauf]
+ 
+ 	- Mail::Field::extract() fixed.  Reported by [Andrea Venturol]
+ 
+@@ -237,7 +237,7 @@
+ 
+ 	- Extended explanation that Mail::Address is limited.
+ 
+-	- Added examples/mail-mailer.pl, contributed by [Bruno Negrão]
++	- Added examples/mail-mailer.pl, contributed by [Bruno NegrÃ£o]
+ 
+ 	- use Mail::Mailer qw(mail) sets default mailer.  Doc update by
+ 	  [Slavan Rezic]
+@@ -288,7 +288,7 @@
+ 
+ 	- [Erik Van Roode] Mail::Mailer::test.pm -> Mail::Mailer::testfile.pm
+ 
+-	- [Jérôme Dion] corrected the folding of lines: folds start only
++	- [JÃ©rÃ´me Dion] corrected the folding of lines: folds start only
+ 	  with one blank according to rfc2822.
+ 
+ 	- Added a big warning against automatic sender email address
+@@ -414,7 +414,7 @@
+ 	  time ago, broke the parser.  As example
+ 	   "Mark Overmeer <mailtools@overmeer.net> (mailtools maintainer)"
+ 	  was parsed into two separate objects.... wrong.
+-          [Nicholas Oxhøj] reversed the patch.
++          [Nicholas OxhÃ¸j] reversed the patch.
+ 
+ version 1.47: Fri Jul  5 12:02:55 CEST 2002
+ 
+@@ -708,7 +708,7 @@
+ 	- check in $ENV{HOME} is defined
+ 	
+ 	Mail::Address
+-	- Fix capitalization problems with names like "Ließegang"
++	- Fix capitalization problems with names like "LieÃegang"
+ 
+ Change 290 on 1999/03/31 by <gbarr@pobox.com> (Graham Barr)
+ 

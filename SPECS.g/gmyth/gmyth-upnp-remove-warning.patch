@@ -1,0 +1,12 @@
+Index: src/gmyth_upnp.c
+===================================================================
+--- src/gmyth_upnp.c	(revision 956)
++++ src/gmyth_upnp.c	(working copy)
+@@ -429,7 +429,6 @@
+ 
+             if (strcmp (d_event->ServiceType, UPNP_SERVICE_FILTER) != 0)
+             {
+-                g_warning ("invalid device : %s", d_event->DeviceId);
+                 break;
+             }
+ 

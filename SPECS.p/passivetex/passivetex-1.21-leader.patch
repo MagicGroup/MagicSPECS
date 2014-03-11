@@ -1,0 +1,11 @@
+--- passivetex/fotex.xmt.leader	2002-10-16 16:09:27.000000000 +0100
++++ passivetex/fotex.xmt	2002-10-16 16:09:43.000000000 +0100
+@@ -656,7 +656,7 @@
+  \gdef\FOlanguage{none}
+  \gdef\FOlastlineendindent{\z@}
+  \gdef\FOleaderalignment{none}
+- \gdef\FOleaderlength{}
++ \gdef\FOleaderlength{\z@}
+  \gdef\FOleaderpattern{space}
+  \gdef\FOleaderpatternwidth{}
+  \gdef\FOletterspacing{normal}

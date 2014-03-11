@@ -1,0 +1,18 @@
+qt-bugs@ issue : none
+bugs.kde.org number : none
+applied: yes
+author: TT
+This patch fixes problems with missing minimum size when richtext
+labels are used.
+
+--- src/kernel/qlayout.cpp.sav	2006-03-17 14:33:44.000000000 +0100
++++ src/kernel/qlayout.cpp	2006-03-21 11:53:13.000000000 +0100
+@@ -275,7 +275,7 @@ void QGridLayoutData::recalcHFW( int w, 
+ 
+     hfw_width = w;
+     hfw_height = QMIN( QLAYOUTSIZE_MAX, h );
+-    hfw_minheight = QMIN( QLAYOUTSIZE_MAX, h );
++    hfw_minheight = QMIN( QLAYOUTSIZE_MAX, mh );
+ }
+ 
+ int QGridLayoutData::heightForWidth( int w, int margin, int spacing )

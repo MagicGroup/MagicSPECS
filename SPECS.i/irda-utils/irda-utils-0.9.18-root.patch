@@ -1,0 +1,15 @@
+--- irda-utils-0.9.18/etc/install-etc.root	2006-07-11 00:16:06.000000000 -0600
++++ irda-utils-0.9.18/etc/install-etc	2009-10-20 10:11:39.691877856 -0600
+@@ -1,10 +1,10 @@
+ #!/bin/sh
+ 
+ # Only install on SYSV for now
+-if [ -d /etc/sysconfig/ ]; then
++if [ -d $ROOT/etc/sysconfig/ ]; then
+     install -D irda.sysconfig $ROOT/etc/sysconfig/irda
+     install -D ifcfg-irlan0 $ROOT/etc/sysconfig/network-scripts/ifcfg-irlan0
+ fi
+-if [ -d /etc/rc.d/init.d ]; then
++if [ -d $ROOT/etc/rc.d/init.d ]; then
+     install -D irda.rc $ROOT/etc/rc.d/init.d/irda
+ fi

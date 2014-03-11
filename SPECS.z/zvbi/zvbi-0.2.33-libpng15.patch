@@ -1,0 +1,17 @@
+diff -up zvbi-0.2.33/src/exp-gfx.c~ zvbi-0.2.33/src/exp-gfx.c
+--- zvbi-0.2.33/src/exp-gfx.c~	2008-02-24 15:17:47.000000000 +0100
++++ zvbi-0.2.33/src/exp-gfx.c	2011-12-06 13:40:25.218139962 +0100
+@@ -1672,11 +1672,11 @@ write_png			(gfx_instance *		gfx,
+ 	char title[80];
+ 	unsigned int i;
+ 
+-	if (setjmp (png_ptr->jmpbuf))
++	if (png_jmpbuf (png_ptr))
+ 		return FALSE;
+ 
+ 	png_set_write_fn (png_ptr,
+-			  (voidp) gfx,
++			  gfx,
+ 			  write_data,
+ 			  flush_data);
+ 

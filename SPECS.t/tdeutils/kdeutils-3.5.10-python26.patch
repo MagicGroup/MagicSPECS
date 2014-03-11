@@ -1,0 +1,16 @@
+diff -ur kdeutils-3.5.10.orig/configure kdeutils-3.5.10/configure
+--- kdeutils-3.5.10.orig/configure	2009-03-22 09:59:52.000000000 +0800
++++ kdeutils-3.5.10/configure	2009-03-22 10:01:45.000000000 +0800
+@@ -38739,10 +38739,10 @@
+ 
+ 
+ 
+-if test -z ""2.5""; then
++if test -z ""2.6""; then
+   version="1.5"
+ else
+-  version=""2.5""
++  version=""2.6""
+ fi
+ 
+ { echo "$as_me:$LINENO: checking for Python$version" >&5

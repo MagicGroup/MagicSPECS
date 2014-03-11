@@ -1,0 +1,4 @@
+INCLUDEPATH *= $$QMAKE_INCDIR_QT/QtSolutions
+DEPENDPATH  *= $$QMAKE_INCDIR_QT/QtSolutions
+LIBS *= -lQtSolutions_SingleCoreApplication-2.6
+QT *= network

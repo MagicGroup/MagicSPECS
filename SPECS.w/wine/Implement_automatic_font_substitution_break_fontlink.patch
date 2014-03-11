@@ -1,0 +1,192 @@
+From bf55a01f1364a4eb88fdf027c75209449bd91894 Mon Sep 17 00:00:00 2001
+From: lqs <lqs@lqs-desktop.(none)>
+Date: Tue, 1 Jul 2008 22:45:52 +0800
+Subject: gdi32: Implement automatic font substitution
+
+---
+ dlls/gdi32/font.c     |    9 +-----
+ dlls/gdi32/freetype.c |   69 +++++++++++++++++--------------------------------
+ 2 files changed, 25 insertions(+), 53 deletions(-)
+
+diff --git a/dlls/gdi32/font.c b/dlls/gdi32/font.c
+index 91e41e7..281609b 100644
+--- a/dlls/gdi32/font.c
++++ b/dlls/gdi32/font.c
+@@ -1880,7 +1880,7 @@ BOOL WINAPI ExtTextOutW( HDC hdc, INT x, INT y, UINT flags,
+         }
+     }
+ 
+-    if(FontIsLinked(hdc) && !(flags & ETO_GLYPH_INDEX))
++    if(!(flags & ETO_GLYPH_INDEX))
+     {
+         HFONT orig_font = dc->hFont, cur_font;
+         UINT glyph;
+@@ -1948,13 +1948,6 @@ BOOL WINAPI ExtTextOutW( HDC hdc, INT x, INT y, UINT flags,
+     }
+     else
+     {
+-        if(!(flags & ETO_GLYPH_INDEX) && dc->gdiFont)
+-        {
+-            glyphs = HeapAlloc(GetProcessHeap(), 0, count * sizeof(WORD));
+-            GetGlyphIndicesW(hdc, reordered_str, count, glyphs, 0);
+-            flags |= ETO_GLYPH_INDEX;
+-        }
+-
+         if (PATH_IsPathOpen(dc->path))
+             ret = PATH_ExtTextOut(dc, x, y, (flags & ~ETO_OPAQUE), &rc,
+                                   glyphs ? glyphs : reordered_str, count, deltas);
+diff --git a/dlls/gdi32/freetype.c b/dlls/gdi32/freetype.c
+index 4fe468c..151dc00 100644
+--- a/dlls/gdi32/freetype.c
++++ b/dlls/gdi32/freetype.c
+@@ -184,13 +184,11 @@ MAKE_FUNCPTR(FT_Get_WinFNT_Header);
+ 
+ #ifdef SONAME_LIBFONTCONFIG
+ #include <fontconfig/fontconfig.h>
+-MAKE_FUNCPTR(FcConfigGetCurrent);
+-MAKE_FUNCPTR(FcFontList);
++MAKE_FUNCPTR(FcConfigSubstitute);
++MAKE_FUNCPTR(FcDefaultSubstitute);
++MAKE_FUNCPTR(FcFontSort);
+ MAKE_FUNCPTR(FcFontSetDestroy);
+ MAKE_FUNCPTR(FcInit);
+-MAKE_FUNCPTR(FcObjectSetAdd);
+-MAKE_FUNCPTR(FcObjectSetCreate);
+-MAKE_FUNCPTR(FcObjectSetDestroy);
+ MAKE_FUNCPTR(FcPatternCreate);
+ MAKE_FUNCPTR(FcPatternDestroy);
+ MAKE_FUNCPTR(FcPatternGetBool);
+@@ -463,9 +461,6 @@ static CRITICAL_SECTION freetype_cs = { &critsect_debug, -1, 0, 0, 0, 0 };
+ 
+ static const WCHAR font_mutex_nameW[] = {'_','_','W','I','N','E','_','F','O','N','T','_','M','U','T','E','X','_','_','\0'};
+ 
+-static const WCHAR szDefaultFallbackLink[] = {'M','i','c','r','o','s','o','f','t',' ','S','a','n','s',' ','S','e','r','i','f',0};
+-static BOOL use_default_fallback = FALSE;
+-
+ static BOOL get_glyph_index_linked(GdiFont *font, UINT c, GdiFont **linked_font, FT_UInt *glyph);
+ 
+ /****************************************
+@@ -1745,9 +1740,7 @@ static void load_fontconfig_fonts(void)
+ {
+ #ifdef SONAME_LIBFONTCONFIG
+     void *fc_handle = NULL;
+-    FcConfig *config;
+     FcPattern *pat;
+-    FcObjectSet *os;
+     FcFontSet *fontset;
+     int i, len;
+     char *file;
+@@ -1760,13 +1753,11 @@ static void load_fontconfig_fonts(void)
+ 	return;
+     }
+ #define LOAD_FUNCPTR(f) if((p##f = wine_dlsym(fc_handle, #f, NULL, 0)) == NULL){WARN("Can't find symbol %s\n", #f); goto sym_not_found;}
+-LOAD_FUNCPTR(FcConfigGetCurrent);
+-LOAD_FUNCPTR(FcFontList);
++LOAD_FUNCPTR(FcConfigSubstitute);
++LOAD_FUNCPTR(FcDefaultSubstitute);
++LOAD_FUNCPTR(FcFontSort);
+ LOAD_FUNCPTR(FcFontSetDestroy);
+ LOAD_FUNCPTR(FcInit);
+-LOAD_FUNCPTR(FcObjectSetAdd);
+-LOAD_FUNCPTR(FcObjectSetCreate);
+-LOAD_FUNCPTR(FcObjectSetDestroy);
+ LOAD_FUNCPTR(FcPatternCreate);
+ LOAD_FUNCPTR(FcPatternDestroy);
+ LOAD_FUNCPTR(FcPatternGetBool);
+@@ -1775,12 +1766,10 @@ LOAD_FUNCPTR(FcPatternGetString);
+ 
+     if(!pFcInit()) return;
+     
+-    config = pFcConfigGetCurrent();
+     pat = pFcPatternCreate();
+-    os = pFcObjectSetCreate();
+-    pFcObjectSetAdd(os, FC_FILE);
+-    pFcObjectSetAdd(os, FC_SCALABLE);
+-    fontset = pFcFontList(config, pat, os);
++    pFcConfigSubstitute(0, pat, FcMatchPattern);
++    pFcDefaultSubstitute(pat);
++    fontset = pFcFontSort(0, pat, FcFalse, 0, 0);
+     if(!fontset) return;
+     for(i = 0; i < fontset->nfont; i++) {
+         FcBool scalable;
+@@ -1806,7 +1795,6 @@ LOAD_FUNCPTR(FcPatternGetString);
+             AddFontFileToList(file, NULL, NULL,  ADDFONT_EXTERNAL_FONT);
+     }
+     pFcFontSetDestroy(fontset);
+-    pFcObjectSetDestroy(os);
+     pFcPatternDestroy(pat);
+  sym_not_found:
+ #endif
+@@ -2328,10 +2316,6 @@ static void update_font_info(void)
+                    (WCHAR *)&oem_cp, sizeof(oem_cp)/sizeof(WCHAR));
+     sprintf( cpbuf, "%u,%u", ansi_cp, oem_cp );
+ 
+-    /* Setup Default_Fallback usage for DBCS ANSI codepages */
+-    if (is_dbcs_ansi_cp(ansi_cp))
+-        use_default_fallback = TRUE;
+-
+     len = sizeof(buf);
+     if (RegQueryValueExA(hkey, "Codepages", 0, &type, (BYTE *)buf, &len) == ERROR_SUCCESS && type == REG_SZ)
+     {
+@@ -3122,6 +3106,8 @@ static BOOL create_child_font_list(GdiFont *font)
+     BOOL ret = FALSE;
+     SYSTEM_LINKS *font_link;
+     CHILD_FONT *font_link_entry, *new_child;
++    Family *family;
++    Face *face;
+ 
+     LIST_FOR_EACH_ENTRY(font_link, &system_links, SYSTEM_LINKS, entry)
+     {
+@@ -3140,29 +3126,19 @@ static BOOL create_child_font_list(GdiFont *font)
+             break;
+         }
+     }
++
+     /*
+-     * if not SYMBOL or OEM then we also get all the fonts for Microsoft
+-     * Sans Serif.  This is how asian windows get default fallbacks for fonts
++     * Append all fonts on child_list so that if a character is not available in the font,
++     * other fonts will be automatically used. This is how Windows does to get a CJK character
++     * when a latin font is specified.
+      */
+-    if (use_default_fallback && font->charset != SYMBOL_CHARSET &&
+-        font->charset != OEM_CHARSET &&
+-        strcmpW(font->name,szDefaultFallbackLink) != 0)
+-        LIST_FOR_EACH_ENTRY(font_link, &system_links, SYSTEM_LINKS, entry)
++    LIST_FOR_EACH_ENTRY(family, &font_list, Family, entry)
++        LIST_FOR_EACH_ENTRY(face, &family->faces, Face, entry)
+         {
+-            if(!strcmpW(font_link->font_name,szDefaultFallbackLink))
+-            {
+-                TRACE("found entry in default fallback list\n");
+-                LIST_FOR_EACH_ENTRY(font_link_entry, &font_link->links, CHILD_FONT, entry)
+-                {
+-                    new_child = HeapAlloc(GetProcessHeap(), 0, sizeof(*new_child));
+-                    new_child->face = font_link_entry->face;
+-                    new_child->font = NULL;
+-                    list_add_tail(&font->child_fonts, &new_child->entry);
+-                    TRACE("font %s %ld\n", debugstr_a(new_child->face->file), new_child->face->face_index);
+-                }
+-                ret = TRUE;
+-                break;
+-            }
++            new_child = HeapAlloc(GetProcessHeap(), 0, sizeof(*new_child));
++            new_child->face = face;
++            new_child->font = NULL;
++            list_add_tail(&font->child_fonts, &new_child->entry);
+         }
+ 
+     return ret;
+@@ -4194,6 +4170,9 @@ static FT_UInt get_glyph_index(const GdiFont *font, UINT glyph)
+ {
+     FT_UInt glyphId;
+ 
++    if (!font->ft_face->charmap)
++        return 0;
++
+     if(font->ft_face->charmap->encoding == FT_ENCODING_NONE) {
+         WCHAR wc = (WCHAR)glyph;
+         BOOL default_used;
+-- 
+1.5.4.3
+

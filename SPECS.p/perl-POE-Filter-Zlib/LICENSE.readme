@@ -1,0 +1,20 @@
+On Thu, Jul 13, 2006 at 11:01:47PM -0700, Chris Weyl wrote:
+> Hi Chris!
+>
+> I'm thinking about packaging POE::Filter::IRCD up for Fedora Extras,
+> however I can't find any information as to what license this module is
+> released under.  Is it under "the same terms as perl itself", namely
+> both the GPL and Artistic licenses?
+
+It is indeed under the same terms as perl.
+
+Unless clearly expressed all my modules on CPAN are under that licence.
+
+Many thanks,
+
+--
+Chris Williams
+aka BinGOs
+PGP ID 0x4658671F
+http://www.gumbynet.org.uk
+==========================

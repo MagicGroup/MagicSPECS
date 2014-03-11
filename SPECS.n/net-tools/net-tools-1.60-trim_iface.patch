@@ -1,0 +1,12 @@
+diff -up net-tools-1.60/lib/interface.c.trim-iface net-tools-1.60/lib/interface.c
+--- net-tools-1.60/lib/interface.c.trim-iface	2011-12-07 16:17:16.000000000 +0100
++++ net-tools-1.60/lib/interface.c	2011-12-07 16:17:37.137281523 +0100
+@@ -638,7 +638,7 @@ int do_if_print(struct interface *ife, v
+ 
+ void ife_print_short(struct interface *ptr)
+ {
+-    printf("%-5.5s ", ptr->name);
++    printf("%-5s ", ptr->name);
+     printf("%5d %-2d ", ptr->mtu, ptr->metric);
+     /* If needed, display the interface statistics. */
+     if (ptr->statistics_valid) {

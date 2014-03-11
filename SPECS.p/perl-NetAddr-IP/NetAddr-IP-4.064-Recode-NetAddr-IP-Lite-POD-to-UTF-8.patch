@@ -1,0 +1,43 @@
+From 74a488d6d53ea888eb81f099611e0cd0f81cbb06 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 9 Aug 2012 17:14:37 +0200
+Subject: [PATCH] Recode NetAddr::IP::Lite POD to UTF-8
+
+---
+ Lite/Lite.pm | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Lite/Lite.pm b/Lite/Lite.pm
+index b6d29b2..17c80f4 100644
+--- a/Lite/Lite.pm
++++ b/Lite/Lite.pm
+@@ -48,6 +48,8 @@ $Accept_Binary_IP = 0;
+ $Old_nth = 0;
+ *Zero = \&Zeros;
+ 
++=encoding utf8
++
+ =head1 NAME
+ 
+ NetAddr::IP::Lite - Manages IPv4 and IPv6 addresses and subnets
+@@ -1569,7 +1571,7 @@ sub import {
+ 
+ =head1 AUTHORS
+ 
+-Luis E. Muñoz E<lt>luismunoz@cpan.orgE<gt>,
++Luis E. MuÃ±oz E<lt>luismunoz@cpan.orgE<gt>,
+ Michael Robinton E<lt>michael@bizsystems.comE<gt>
+ 
+ =head1 WARRANTY
+@@ -1579,7 +1581,7 @@ so by using it you accept any and all the liability.
+ 
+ =head1 COPYRIGHT
+ 
+- This software is (c) Luis E. Muñoz, 1999 - 2005
++ This software is (c) Luis E. MuÃ±oz, 1999 - 2005
+  and (c) Michael Robinton, 2006 - 2012.
+ 
+ All rights reserved.
+-- 
+1.7.11.2
+

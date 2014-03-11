@@ -1,0 +1,18 @@
+diff -ur mac-3.99-u4-b5.orig/src/MACLib/APELink.cpp mac-3.99-u4-b5/src/MACLib/APELink.cpp
+--- mac-3.99-u4-b5.orig/src/MACLib/APELink.cpp	2009-05-19 08:09:31.000000000 +0800
++++ mac-3.99-u4-b5/src/MACLib/APELink.cpp	2009-05-19 08:09:51.000000000 +0800
+@@ -63,10 +63,10 @@
+     if (pData != NULL)
+     {
+         // parse out the information
+-        char * pHeader = strstr(pData, APE_LINK_HEADER);
+-        char * pImageFile = strstr(pData, APE_LINK_IMAGE_FILE_TAG);
+-        char * pStartBlock = strstr(pData, APE_LINK_START_BLOCK_TAG);
+-        char * pFinishBlock = strstr(pData, APE_LINK_FINISH_BLOCK_TAG);
++        char * pHeader = (char *)strstr(pData, APE_LINK_HEADER);
++        char * pImageFile = (char *)strstr(pData, APE_LINK_IMAGE_FILE_TAG);
++        char * pStartBlock = (char *)strstr(pData, APE_LINK_START_BLOCK_TAG);
++        char * pFinishBlock = (char *)strstr(pData, APE_LINK_FINISH_BLOCK_TAG);
+ 
+         if (pHeader && pImageFile && pStartBlock && pFinishBlock)
+         {

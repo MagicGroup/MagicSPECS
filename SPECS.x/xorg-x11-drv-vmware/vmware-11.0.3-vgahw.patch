@@ -1,0 +1,11 @@
+diff -up xf86-video-vmware-11.0.3/src/vmware.c.jx xf86-video-vmware-11.0.3/src/vmware.c
+--- xf86-video-vmware-11.0.3/src/vmware.c.jx	2012-03-12 10:45:59.000000000 -0400
++++ xf86-video-vmware-11.0.3/src/vmware.c	2012-03-12 10:50:01.600735012 -0400
+@@ -1142,6 +1142,7 @@ VMWAREModeInit(ScrnInfoPtr pScrn, Displa
+     vgaHWUnlock(hwp);
+     if (!vgaHWInit(pScrn, mode))
+         return FALSE;
++    vgaHWSetStdFuncs(VGAHWPTR(pScrn));
+     pScrn->vtSema = TRUE;
+ 
+     vmwareReg->svga_reg_enable = 1;

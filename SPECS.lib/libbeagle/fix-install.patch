@@ -1,0 +1,11 @@
+diff -up libbeagle-0.3.9/beagle/Makefile.am.fix-install libbeagle-0.3.9/beagle/Makefile.am
+--- libbeagle-0.3.9/beagle/Makefile.am.fix-install	2009-07-18 22:57:15.213524374 -0400
++++ libbeagle-0.3.9/beagle/Makefile.am	2009-07-18 22:57:21.241522121 -0400
+@@ -79,7 +79,6 @@ libbeagleinclude_HEADERS = 			\
+ 	beagle-query-part-date.h		\
+ 	beagle-query-part-human.h		\
+ 	beagle-query-part-or.h			\
+-	beagle-query-part-property.h		\
+ 	beagle-query-part-text.h		\
+ 	beagle-query-part-property.h		\
+ 	beagle-query-part-wildcard.h		\

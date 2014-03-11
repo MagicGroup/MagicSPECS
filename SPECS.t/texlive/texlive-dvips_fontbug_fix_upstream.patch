@@ -1,0 +1,896 @@
+---
+ build/source/texk/dvipsk/ChangeLog     |   36 +++++++++++++++++++
+ build/source/texk/dvipsk/Makefile.in   |    2 -
+ build/source/texk/dvipsk/afm2tfm.c     |    6 +--
+ build/source/texk/dvipsk/afm2tfm.rc    |   34 ------------------
+ build/source/texk/dvipsk/bbox.c        |    2 -
+ build/source/texk/dvipsk/config.h      |    2 -
+ build/source/texk/dvipsk/crop.lpro     |    2 -
+ build/source/texk/dvipsk/debug.h       |    2 -
+ build/source/texk/dvipsk/download.c    |   25 +++++++++----
+ build/source/texk/dvipsk/dpicheck.c    |    6 +--
+ build/source/texk/dvipsk/dvips.1       |   25 ++++++++-----
+ build/source/texk/dvipsk/dvips.c       |   61 +++++++++++++++++++++++++++------
+ build/source/texk/dvipsk/dvips.h       |   14 ++-----
+ build/source/texk/dvipsk/emspecial.c   |   15 ++++++--
+ build/source/texk/dvipsk/finclude.c    |   11 +++++
+ build/source/texk/dvipsk/finclude.lpro |    1 
+ build/source/texk/dvipsk/flib.c        |    2 -
+ build/source/texk/dvipsk/header.c      |    4 +-
+ build/source/texk/dvipsk/hps.c         |    4 +-
+ build/source/texk/dvipsk/hps.lpro      |    5 +-
+ build/source/texk/dvipsk/loadfont.c    |   11 +++++
+ build/source/texk/dvipsk/makefont.c    |    6 +--
+ build/source/texk/dvipsk/output.c      |   11 +++++
+ build/source/texk/dvipsk/papersiz.c    |    2 -
+ build/source/texk/dvipsk/paths.h       |    2 -
+ build/source/texk/dvipsk/psfonts.map   |    1 
+ build/source/texk/dvipsk/resident.c    |   24 +++++++++++-
+ build/source/texk/dvipsk/special.lpro  |    5 +-
+ build/source/texk/dvipsk/squeeze.c     |    5 --
+ build/source/texk/dvipsk/tex.lpro      |    2 +
+ build/source/texk/dvipsk/texc.script   |    2 -
+ build/source/texk/dvipsk/texps.lpro    |    2 -
+ 32 files changed, 220 insertions(+), 112 deletions(-)
+
+Index: texlive-bin-2007/build/source/texk/dvipsk/ChangeLog
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/ChangeLog	2007-05-07 01:17:36.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/ChangeLog	2007-05-07 01:38:37.000000000 +0200
+@@ -1,3 +1,39 @@
++2007-05-06  Karl Berry  <karl@tug.org>
++
++	* finclude.c, dvips.c: keep track of last-unused psname (Akira).
++	* dvips.c (DEFRES): move down.
++	* dvips.c (--help): just mention Tom R.
++
++2007-05-05  Karl Berry  <karl@tug.org>
++
++	* dvips.h (DOWNLOADEDPSSIZE): new constant.
++	* dvips.c (downloadedpsname): new global array.
++	* finclude.c: set it up as we download.
++	* download.c: use it to avoid downloading fonts as both header
++	and font.  (From Akira.)
++
++2007-05-04  Karl Berry  <karl@tug.org>
++
++	* dvips.h (BANNER): change to 5.96dev to distinguish from the release.
++
++	* header.c (add_name, add_header): cast result of
++	add_header_general to int and return it.  From Akira.
++
++2007-03-23  Karl Berry  <karl@tug.org>
++
++	* dvips.texi: document it.
++	* dvips.c, loadfont.c, resident.c: also report map files
++	and config files, if the envvar DVIPSDEBUG is set.  From Akira.
++
++2007-03-20  Karl Berry  <karl@tug.org>
++
++	* download.c, output.c, emspecial.c: report full pathnames,
++	to help debugging and for consistency with TeX.  From Akira.
++
++2007-03-19  Karl Berry  <karl@tug.org>
++
++	* config.ps (screen): add this, 8.25x11, for powerdot.  (From Akira.)
++
+ 2006-12-09  Karl Berry  <karl@tug.org>
+ 
+ 	* dvips.texi (Config file paper sizes): best match now.  (From Akira.)
+Index: texlive-bin-2007/build/source/texk/dvipsk/Makefile.in
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/Makefile.in	2007-05-07 01:38:11.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/Makefile.in	2007-05-07 01:38:37.000000000 +0200
+@@ -1,5 +1,5 @@
+ # Makefile for dvipsk -- kb@mail.tug.org. Public domain.
+-version = 5.96
++version = 5.96.1
+ 
+ # Add -DDEFRES=dpi to DEFS to change the default resolution from 600.
+ # Add -DSECURE if you will install dvips with special privileges.
+Index: texlive-bin-2007/build/source/texk/dvipsk/afm2tfm.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/afm2tfm.c	2007-05-07 01:17:54.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/afm2tfm.c	2007-05-07 01:38:37.000000000 +0200
+@@ -1489,15 +1489,15 @@
+ void version P1C(FILE *, f)
+ {
+   extern KPSEDLL char *kpathsea_version_string;
+-  fputs ("afm2tfm(k) (dvips(k) 5.96) 8.1\n", f);
++  fputs ("afm2tfm(k) (dvips(k) 5.96.1) 8.1\n", f);
+   fprintf (f, "%s\n", kpathsea_version_string);
+-  fputs ("Copyright (C) 2005 Radical Eye Software.\n\
++  fputs ("Copyright (C) 2007 Radical Eye Software.\n\
+ There is NO warranty.  You may redistribute this software\n\
+ under the terms of the GNU General Public License\n\
+ and the Dvips copyright.\n\
+ For more information about these matters, see the files\n\
+ named COPYING and afm2tfm.c.\n\
+-Primary author of afm2tfm: T. Rokicki; -k maintainer: K. Berry.\n", f);
++Original author of afm2tfm: T. Rokicki.\n", f);
+ }
+ 
+ #define USAGE "\
+Index: texlive-bin-2007/build/source/texk/dvipsk/afm2tfm.rc
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/afm2tfm.rc	2007-05-07 01:38:11.000000000 +0200
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,34 +0,0 @@
+-/* afm2tfm.rc: afm2tfm resources			-*- C++ -*-
+-
+-   Copyright (C) 1996-2003 Fabrice Popineau <fabrice.popineau@supelec.fr>
+-
+-   This file is free software; you can redistribute it and/or modify
+-   it under the terms of the GNU General Public License as published
+-   by the Free Software Foundation; either version 2, or (at your
+-   option) any later version.
+-
+-   This file is distributed in the hope that it will be useful, but
+-   WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this file; if not, write to the Free Software
+-   Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+-   USA. */
+-
+-#include <texlive-version.h>
+-
+-#define VER_FILEVERSION TEXLIVE_MAJOR_VERSION,TEXLIVE_MINOR_VERSION,TEXLIVE_BETA_NUMBER,TEXLIVE_ALPHA_NUMBER
+-#define VER_FILEVERSION_STR TEXLIVE_PRODUCTVERSION_STR " afm2tfm(k) (dvips(k) 5.94b) 8.1"
+-
+-#define VER_INTERNALNAME_STR "afm2tfm"
+-#define VER_ORIGINALFILENAME_STR "afm2tfm.exe"
+-
+-#define VER_LEGALCOPYRIGHT_STR "Copyright (C) 1990-2004 Radical Eye Software"
+-
+-#define VER_FILEDESCRIPTION_STR "Adobe Font Metric to TeX Font Metric file converter"
+-
+-#include <texlive.version>
+-
+-/* afm2tfm.rc ends here */
+Index: texlive-bin-2007/build/source/texk/dvipsk/bbox.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/bbox.c	2007-05-07 01:38:11.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/bbox.c	2007-05-07 01:38:37.000000000 +0200
+@@ -6,7 +6,7 @@
+  *   If you request an EPSF file and specify -a, you may end up
+  *   processing a single page four times!
+  */
+-#include "dvips.h"
++#include "dvips.h" /* The copyright notice in that file is included too! */
+ #include <math.h>
+ #include "protos.h"
+ 
+Index: texlive-bin-2007/build/source/texk/dvipsk/config.h
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/config.h	2007-05-07 01:38:11.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/config.h	2007-05-07 01:38:37.000000000 +0200
+@@ -1,5 +1,5 @@
+ /* config.h: master configuration file, included first by all compilable
+-   source files (not headers).  */
++   source files (not headers).  This file is public domain.  */
+ 
+ #ifndef CONFIG_H
+ #define CONFIG_H
+Index: texlive-bin-2007/build/source/texk/dvipsk/crop.lpro
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/crop.lpro	2007-05-07 01:38:11.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/crop.lpro	2007-05-07 01:38:37.000000000 +0200
+@@ -1,5 +1,5 @@
+ %!
+-%   This file is for crop marks.
++%   This file is for crop marks.  This file is public domain.
+ %
+ %   First, we translate and draw the marks.  You can change the way the
+ %   marks are drawn, but the quarter inch border around the page is fixed.
+Index: texlive-bin-2007/build/source/texk/dvipsk/debug.h
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/debug.h	2007-05-07 01:38:11.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/debug.h	2007-05-07 01:38:37.000000000 +0200
+@@ -1,5 +1,5 @@
+ /* 
+- * Here's some stuff for debugging dvips.
++ * Here's some stuff for debugging dvips.  See dvips.h for copyright.
+  */
+ 
+ #ifdef DEBUG
+Index: texlive-bin-2007/build/source/texk/dvipsk/download.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/download.c	2007-05-07 01:17:43.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/download.c	2007-05-07 01:38:37.000000000 +0200
+@@ -433,6 +433,9 @@
+  *   Download a PostScript font, using partial font downloading if
+  *   necessary.
+  */
++extern char *downloadedpsnames[];
++extern int unused_top_of_psnames;
++
+ void downpsfont P2C(charusetype *, p, charusetype *, all)
+ {
+ #ifdef DOWNLOAD_USING_PDFTEX
+@@ -444,6 +447,8 @@
+     register chardesctype *c ;
+     struct resfont *rf ;
+     int cc;
++    extern char *realnameoffile ;
++    int j;
+ 
+     curfnt = p->fd ;
+     rf = curfnt->resfont ;
+@@ -457,6 +462,10 @@
+        return ;
+     if (rf->sent == 2) /* sent as header, from a PS file */
+        return ;
++    for (j=0; downloadedpsnames[j] && j < unused_top_of_psnames; j++) {
++       if (strcmp (downloadedpsnames[j], rf->PSname) == 0)
++          return;
++    }
+     if (all->fd == 0)
+        error("! internal error in downpsfont") ;
+     if (!partialdownload) {
+@@ -514,14 +523,6 @@
+         }
+     }
+     if(GridCount!=0 || extraGlyphs) {
+-        if (!quiet) {
+-           if (strlen(rf->Fontfile) + prettycolumn > STDOUTSIZE) {
+-              fprintf(stderr, "\n") ;
+-              prettycolumn = 0 ;
+-           }
+-           (void)fprintf(stderr, "<%s>", rf->Fontfile);
+-	   prettycolumn += strlen(rf->Fontfile) + 2 ;
+-	}
+         newline() ;
+         if (! disablecomments)
+            (void)fprintf(bitfile, "%%%%BeginFont: %s\n",  rf->PSname);
+@@ -531,6 +532,14 @@
+         if(FontPart(bitfile, rf->Fontfile, rf->Vectfile) < 0)
+ #endif
+             exit(1);
++        if (!quiet) {
++           if (strlen(realnameoffile) + prettycolumn > STDOUTSIZE) {
++              fprintf(stderr, "\n") ;
++              prettycolumn = 0 ;
++           }
++           (void)fprintf(stderr, "<%s>", realnameoffile);
++	   prettycolumn += strlen(realnameoffile) + 2 ;
++	}
+         if (! disablecomments)
+            (void)fprintf(bitfile, "%%%%EndFont \n");
+    }
+Index: texlive-bin-2007/build/source/texk/dvipsk/dpicheck.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/dpicheck.c	2007-05-07 01:38:11.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/dpicheck.c	2007-05-07 01:38:37.000000000 +0200
+@@ -1,12 +1,10 @@
+ /*
+- *   This software is Copyright 1988 by Radical Eye Software.
+- */
+-/*
+  *   dpicheck of dvips.c.  Checks the dots per inch to make sure
+  *   it exists.  The fonts which exist are DPI at the appropriate
+  *   magnifications.
+  */
+-#include "dvips.h"
++#include "dvips.h" /* The copyright notice in that file is included too! */
++
+ extern int actualdpi ;
+ static integer existsizes[30] = { 0 , 99999999 } ;
+ static int checkdpi ;
+Index: texlive-bin-2007/build/source/texk/dvipsk/dvips.1
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/dvips.1	2007-05-07 01:18:03.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/dvips.1	2007-05-07 01:38:37.000000000 +0200
+@@ -360,16 +360,21 @@
+ .B -r
+ Stack pages in reverse order.  Normally, page 1 will be printed first.
+ .TP
+-.B -R
+-Run in secure mode. This means that ``backtick'' commands from a
+-.I \especial{}
+-or
+-.I \epsffile{}
+-macro in the (La)TeX source like
+-.I \especial{psfile="`zcat foo.ps.Z"}
+-or
+-.I \epsffile[72 72 540 720]{"`zcat screendump.ps.gz"}
+-are not executed.
++.B -R[0|1|2]
++Run securely.
++.BR -R2
++disables both shell command execution in
++.I \especial'{}
++(via backticks
++.BR `
++) and config files (via the
++.I E
++option), and opening of any absolute filenames.
++.BR -R1
++, the default, forbids shell escapes but allows absolute filenames.
++.BR -R0
++allows both.  The config file option is
++.I z
+ .TP
+ .B -s
+ Causes the entire global output to be enclosed in a save/restore pair.
+Index: texlive-bin-2007/build/source/texk/dvipsk/dvips.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/dvips.c	2007-05-07 01:18:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/dvips.c	2007-05-07 01:38:37.000000000 +0200
+@@ -1,10 +1,6 @@
+ /*
+  *   This is the main routine.
+  */
+-#ifndef DEFRES
+-#define DEFRES (600)
+-#endif
+-
+ #include "dvips.h" /* The copyright notice there is included too! */
+ #ifdef KPATHSEA
+ #include <kpathsea/c-pathch.h>
+@@ -44,12 +40,22 @@
+ #include descrip
+ #endif
+ #endif
++
++#ifndef DEFRES
++#define DEFRES (600)
++#endif
++
+ /*
+  *   First we define some globals.
+  */
+ #ifdef VMS
+     static char ofnme[252],infnme[252],pap[40],thh[20];
+ #endif
++
++/* PS fonts fully downloaded as headers */ 
++char *downloadedpsnames[DOWNLOADEDPSSIZE];  
++
++int unused_top_of_psnames ;   /* unused top number of downloadedpsnames[#] */
+ fontdesctype *fonthead ;      /* list of all fonts mentioned so far */
+ fontdesctype *curfnt ;        /* the currently selected font */
+ sectiontype *sections ;       /* sections to process document in */
+@@ -159,6 +165,7 @@
+ int quiet ;                   /* should we only print errors to stderr? */
+ int filter ;                  /* act as filter default output to stdout,
+                                                default input to stdin? */
++int dvips_debug_flag ;        /* output config and map files to stderr if 1 */
+ int prettycolumn ;            /* the column we are at when running pretty */
+ int gargc ;                   /* global argument count */
+ char **gargv ;                /* global argument vector */
+@@ -306,6 +313,16 @@
+    fputs (kpse_bug_address, f);
+ #endif
+ }
++
++void
++freememforpsnames(void)
++{
++   int i;
++
++   for (i = 0; i < unused_top_of_psnames && downloadedpsnames[i]; i++)
++      free (downloadedpsnames[i]);
++}
++
+ /*
+  *   This error routine prints an error message; if the first
+  *   character is !, it aborts the job.
+@@ -328,6 +345,7 @@
+    }
+    
+    if (*s=='!') {
++      freememforpsnames() ;
+       if (bitfile != NULL) {
+          cleanprinter() ;
+       }
+@@ -440,6 +458,8 @@
+    i = 10;
+    for (s="abcdef"; *s!=0; s++)
+       xdig[(int)*s] = i++;
++   for(i=0 ; i < DOWNLOADEDPSSIZE; i++)
++      downloadedpsnames[i] = NULL;
+    morestrings() ;
+    maxpages = 100000 ;
+    numcopies = 1 ;
+@@ -552,7 +572,7 @@
+ #ifdef MVSXA
+    int firstext = -1 ;
+ #endif
+-   register sectiontype *sects ;
++   sectiontype *sects ;
+ 
+ #ifdef KPATHSEA
+    kpse_set_program_name (argv[0], "dvips");
+@@ -607,15 +627,15 @@
+         exit (0);
+       } else if (strcmp (argv[1], "--version") == 0) {
+         extern KPSEDLL char *kpathsea_version_string;
+-        puts ("dvips(k) 5.96");
++        puts ("dvips(k) 5.96.1");
+         puts (kpathsea_version_string);
+-        puts ("Copyright (C) 2005 Radical Eye Software.\n\
++        puts ("Copyright (C) 2007 Radical Eye Software.\n\
+ There is NO warranty.  You may redistribute this software\n\
+ under the terms of the GNU General Public License\n\
+ and the Dvips copyright.\n\
+ For more information about these matters, see the files\n\
+ named COPYING and dvips.h.\n\
+-Primary author of Dvips: T. Rokicki; -k maintainer: T. Kacvinsky/ S. Rahtz.");
++Primary author of Dvips: T. Rokicki.");
+         exit (0);
+       }
+       if (argc == 2 && strncmp(argv[1], "-?", 2) == 0) {
+@@ -630,6 +650,20 @@
+    }
+ #endif
+ #endif
++   dvips_debug_flag = 0 ;
++   { /* for compilers incompatible with c99 */
++      char *s = (char *)getenv ("DVIPSDEBUG") ;
++      if (s) {
++         dvips_debug_flag = 1 ;
++         free (s) ;
++      } else {
++         s = (char *) getenv ("KPATHSEA_DEBUG") ;
++         if (s) {
++           dvips_debug_flag = 1 ;
++           free (s) ;
++         }
++      }
++   }
+    initialize() ;
+    checkenv(0) ;
+    getdefaults(CONFIGFILE) ;
+@@ -1116,8 +1150,14 @@
+    revpslists() ;
+    getpsinfo((char *)NULL) ;
+    revpslists() ;
+-   if (!quiet)
+-      (void)fprintf(stderr, "%s %s\n", banner, banner2) ;
++   if (dvips_debug_flag) {
++      if (!quiet)
++         (void)fprintf(stderr, "\n%s %s\n", banner, banner2) ;
++      prettycolumn = 0 ;
++   } else {
++      if (!quiet)
++         (void)fprintf(stderr, "%s %s\n", banner, banner2) ;
++   }
+    if (*iname) {
+       dvifile = fopen(iname, READBIN) ;
+ /*
+@@ -1367,6 +1407,7 @@
+ 	 }
+       }
+    }
++   freememforpsnames() ;
+    if (! sepfiles) {
+ #ifdef HPS
+       if (HPS_FLAG)
+Index: texlive-bin-2007/build/source/texk/dvipsk/dvips.h
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/dvips.h	2007-05-07 01:18:25.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/dvips.h	2007-05-07 01:38:37.000000000 +0200
+@@ -1,19 +1,14 @@
+ /*
+  *   This is dvips, a freely redistributable PostScript driver
+- *   for dvi files.  It is (C) Copyright 1986-2004 by Tomas Rokicki.
+- *   You may modify and use this program to your heart's content,
+- *   so long as you send modifications to Tomas Rokicki.  It can
+- *   be included in any distribution, commercial or otherwise, so
+- *   long as the banner string defined below is not modified (except
+- *   for the version number) and this banner is printed on program
+- *   invocation, or can be printed on program invocation with the -? option.
++ *   for dvi files.  It is (C) Copyright 1986-2007 by Tomas Rokicki.
++ *   You may modify and use this program to your heart's content.
+  */
+ 
+ /*   This file is the header for dvips's global data structures. */
+ 
+ #define CREATIONDATE
+ #define BANNER \
+-"This is dvips(k) 5.96 Copyright 2005 Radical Eye Software"
++"This is dvips(k) 5.96.1 Copyright 2007 Radical Eye Software"
+ #define BANNER2 "(www.radicaleye.com)"
+ #ifdef KPATHSEA
+ #include "config.h"
+@@ -58,13 +53,14 @@
+  *   of a string that can be handled in specials, so it should not be
+  *   set too small.
+  */
+-#define STRINGSIZE (200000)  /* maximum total chars in strings in program */
++#define STRINGSIZE (200000) /* maximum total chars in strings in program */
+ #define RASTERCHUNK (8192)  /* size of chunk of raster */
+ #define MINCHUNK (240)      /* minimum size char to get own raster */
+ #define STACKSIZE (350)     /* maximum stack size for dvi files */
+ #define MAXFRAME (10)       /* maximum depth of virtual font recursion */
+ #define MAXFONTHD (100)     /* number of unique names of included fonts */
+ #define STDOUTSIZE (75)     /* width of a standard output line */
++#define DOWNLOADEDPSSIZE (1000)  /* max number of downloaded fonts to check */
+ /*
+  *   Other constants, which define printer-dependent stuff.
+  */
+Index: texlive-bin-2007/build/source/texk/dvipsk/emspecial.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/emspecial.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/emspecial.c	2007-05-07 01:38:37.000000000 +0200
+@@ -659,14 +659,23 @@
+ void imagehead P5C(char *, filename, int, wide, int, high, 
+ 		   float, emwidth, float, emheight)
+ {
++	char *fullname = NULL, *name ;
+ 	if (!quiet) {
+-	    if (strlen(filename) + prettycolumn > STDOUTSIZE) {
++#ifdef KPATHSEA
++	    fullname = (char *)kpse_find_file (filename, pictpath, 0) ;
++#endif
++	    if (!fullname)
++		name = filename ;
++	    else
++		name = fullname ;
++	    if (strlen(name) + prettycolumn > STDOUTSIZE) {
+ 		fprintf(stderr,"\n");
+ 		prettycolumn = 0;
+ 	    }
+-	    (void)fprintf(stderr,"<%s",filename);
++	    (void)fprintf(stderr,"<%s",name);
+ 	    (void)fflush(stderr);
+-	    prettycolumn += 2+strlen(filename);
++	    prettycolumn += 2+strlen(name);
++	    if (fullname) free (fullname);
+ 	}
+ 	hvpos();
+ 	nlcmdout("@beginspecial @setspecial") ;
+Index: texlive-bin-2007/build/source/texk/dvipsk/finclude.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/finclude.c	2007-05-07 01:17:29.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/finclude.c	2007-05-07 01:38:37.000000000 +0200
+@@ -57,6 +57,9 @@
+ extern integer debug_flag;
+ #endif  /* DEBUG */
+ 
++extern char *downloadedpsnames[];
++extern int unused_top_of_psnames;
++
+ /*
+  * Create a font descriptor for a font included in a psfile.  There will be
+  * no fontmaptype node for the resulting font descriptor until this font is
+@@ -252,6 +255,10 @@
+   char *p,*pe;
+   struct resfont *re;
+   int i;
++  int j = 0;
++
++  while (downloadedpsnames[j] != NULL && j < DOWNLOADEDPSSIZE)
++    j++;
+ 
+   /* Turn all newlines, CRs, and tabs into spaces. */
+   p = str;
+@@ -312,6 +319,10 @@
+ 	    infont = 0 ;
+           }
+           re->sent = 2 ;
++          if (unused_top_of_psnames < DOWNLOADEDPSSIZE) {
++             downloadedpsnames[unused_top_of_psnames] = xstrdup (re->PSname);
++             unused_top_of_psnames++;
++          }
+         } else {
+           char eb[1000];
+           sprintf(eb,"Font %s used in file %s is not in the mapping file.",
+Index: texlive-bin-2007/build/source/texk/dvipsk/finclude.lpro
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/finclude.lpro	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/finclude.lpro	2007-05-07 01:38:37.000000000 +0200
+@@ -1,4 +1,5 @@
+ %!
++% finclude.lpro - public domain.
+ % Define tfm-name to be a dictionary of included fonts indexed by size:
+ % /tfm-name  scaled-size1 /font-select1 ... scsize_k /fselect_k  k  fstore  -
+ /fstore
+Index: texlive-bin-2007/build/source/texk/dvipsk/flib.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/flib.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/flib.c	2007-05-07 01:38:37.000000000 +0200
+@@ -4,7 +4,7 @@
+  *   Tomas Rokicki or Radical Eye Software; use at your own risk.
+  */
+ #ifdef FONTLIB
+-#include "dvips.h"
++#include "dvips.h" /* The copyright notice in that file is included too! */
+ #include "paths.h"
+ #include "protos.h"
+ extern int debug_flag ;
+Index: texlive-bin-2007/build/source/texk/dvipsk/header.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/header.c	2007-05-07 01:18:19.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/header.c	2007-05-07 01:38:37.000000000 +0200
+@@ -35,7 +35,7 @@
+ int
+ add_name P2C(char *, s, struct header_list **, what)
+ {
+-  add_name_general (s, what, NULL, NULL);
++  return (int) add_name_general (s, what, NULL, NULL);
+ }
+ 
+ /*
+@@ -122,7 +122,7 @@
+ int
+ add_header P1C(char *, s)
+ {
+-  add_header_general (s, NULL, NULL);
++  return (int) add_header_general (s, NULL, NULL);
+ }
+ 
+ int
+Index: texlive-bin-2007/build/source/texk/dvipsk/hps.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/hps.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/hps.c	2007-05-07 01:38:37.000000000 +0200
+@@ -1,8 +1,8 @@
+ /* This is the main file for hacking dvips to do HyperPostScript
+  * Written by Mark D. Doyle 11/94. It is (C) Copyright 1994 by Mark D. Doyle
+  * and the University of California. You may modify and use this program to
+- * your heart's content, so long as you send modifications to Mark Doyle and
+- * abide by the rest of the dvips copyrights. 
++ * your heart's content.  Mark Doyle requests that you send him
++ * any modifications.
+  */
+ #include "dvips.h"
+ #ifdef HPS
+Index: texlive-bin-2007/build/source/texk/dvipsk/hps.lpro
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/hps.lpro	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/hps.lpro	2007-05-07 01:38:37.000000000 +0200
+@@ -5,8 +5,9 @@
+ % Written by Tanmoy Bhattacharya and Mark D. Doyle 11/94. 
+ % It is (C) Copyright 1994 by Tanmoy Bhattacharya, Mark D. Doyle
+ % and the University of California. You may modify and use this program to
+-% your heart's content, so long as you send modifications to Tanmoy
+-% Bhattacharya and/or Mark Doyle.
++% your heart's content. Tanmoy Bhattacharya and Mark Doyle request that
++% you send either or both them any modifications.
++% 
+ % Version number info
+ %   1 0 Probably first release
+ %   1 1 Added external handler to let ghostview work
+Index: texlive-bin-2007/build/source/texk/dvipsk/loadfont.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/loadfont.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/loadfont.c	2007-05-07 01:38:37.000000000 +0200
+@@ -333,6 +333,9 @@
+    register chardesctype *cd = 0 ;
+    int maxcc = 0 ;
+    int munged = 0 ;
++   extern int prettycolumn ;
++   extern int quiet ;
++   extern char *realnameoffile ;
+ /*
+  *   We clear out some pointers:
+  */
+@@ -358,6 +361,14 @@
+       tfmload(curfnt) ;
+       return ;
+    }
++   if (!quiet) {
++      if (strlen(realnameoffile) + prettycolumn > STDOUTSIZE) {
++         fprintf(stderr, "\n") ;
++         prettycolumn = 0 ;
++      }
++      (void)fprintf(stderr, "<%s>", realnameoffile);
++      prettycolumn += strlen(realnameoffile) + 2 ;
++   }
+ #ifdef DEBUG
+    if (dd(D_FONTS))
+       (void)fprintf(stderr,"Loading pk font %s at %.1fpt\n",
+Index: texlive-bin-2007/build/source/texk/dvipsk/makefont.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/makefont.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/makefont.c	2007-05-07 01:38:37.000000000 +0200
+@@ -1,7 +1,5 @@
+-/*
+- *   This software is Copyright 1988 by Radical Eye Software.
+- */
+-#include "dvips.h"
++/* makefont.c */
++#include "dvips.h" /* The copyright notice in that file is included too! */
+ #include <math.h>
+ #include "protos.h"
+ extern int quiet ;
+Index: texlive-bin-2007/build/source/texk/dvipsk/output.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/output.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/output.c	2007-05-07 01:38:37.000000000 +0200
+@@ -113,6 +113,7 @@
+ void
+ copyfile_general P2C(char *, s, struct header_list *, cur_header)
+ {
++   extern char *realnameoffile ;
+    FILE *f = NULL ;
+    int c, prevc = '\n' ;
+    long len ;
+@@ -205,7 +206,11 @@
+       error(errbuf) ;
+    else {
+       if (! quiet) {
++#if defined(VMCMS) || defined (MVSXA)
+          if (strlen(s) + prettycolumn > STDOUTSIZE) {
++#else
++         if (strlen(realnameoffile) + prettycolumn > STDOUTSIZE) {
++#endif
+             fprintf(stderr, "\n") ;
+             prettycolumn = 0 ;
+          }
+@@ -215,11 +220,15 @@
+ #ifdef MVSXA
+          (void)fprintf(stderr, "<%s>", trunc_s) ;
+ #else
+-         (void)fprintf(stderr, "<%s>", s) ;
++         (void)fprintf(stderr, "<%s>", realnameoffile) ;
+ #endif
+ #endif
+          (void)fflush(stderr) ;
++#if defined(VMCMS) || defined (MVSXA)
+          prettycolumn += 2 + strlen(s) ;
++#else
++         prettycolumn += 2 + strlen(realnameoffile) ;
++#endif
+       }
+       if (linepos != 0)
+          (void)putc('\n', bitfile) ;
+Index: texlive-bin-2007/build/source/texk/dvipsk/papersiz.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/papersiz.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/papersiz.c	2007-05-07 01:38:37.000000000 +0200
+@@ -11,7 +11,7 @@
+  *      0 <= num < den <= 20000
+  *      0 <= whole
+  */
+-#include "dvips.h"
++#include "dvips.h" /* The copyright notice in that file is included too! */
+ #include "protos.h"
+ static long scale P4C(long, whole, long, num, long, den, long, sf)
+ {
+Index: texlive-bin-2007/build/source/texk/dvipsk/paths.h
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/paths.h	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/paths.h	2007-05-07 01:38:37.000000000 +0200
+@@ -1,4 +1,4 @@
+-/*
++/*   paths.h - public domain.
+  *   OUTPATH is where to send the output.  If you want a .ps file to
+  *   be created by default, set this to "".  If you want to automatically
+  *   invoke a pipe (as in lpr), make the first character an exclamation
+Index: texlive-bin-2007/build/source/texk/dvipsk/psfonts.map
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/psfonts.map	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/psfonts.map	2007-05-07 01:38:37.000000000 +0200
+@@ -1,4 +1,5 @@
+ % original psfonts.map -- match TFM filenames to PostScript FontNames.
++% This file is public domain.
+ % (If you change or delete `original' on the previous line, dvips won't
+ % install its psfonts.map over this file.)
+ % 
+Index: texlive-bin-2007/build/source/texk/dvipsk/resident.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/resident.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/resident.c	2007-05-07 01:38:37.000000000 +0200
+@@ -32,6 +32,8 @@
+  *   These are the external variables we use.
+  */
+ extern char *realnameoffile ;
++extern int prettycolumn ;
++extern int dvips_debug_flag ;
+ #ifdef DEBUG
+ extern integer debug_flag;
+ #endif  /* DEBUG */
+@@ -441,6 +443,14 @@
+ #else
+    if ((deffile=search(d,PSname,READ))!=NULL) {
+ #endif
++   if (dvips_debug_flag && !quiet) {
++      if (strlen(realnameoffile) + prettycolumn > STDOUTSIZE) {
++         fprintf(stderr, "\n") ;
++         prettycolumn = 0 ;
++      }
++      (void)fprintf(stderr, "{%s}", realnameoffile);
++      prettycolumn += strlen(realnameoffile) + 2 ;
++   }
+ #ifdef DEBUG
+      if (dd (D_CONFIG)) {
+        fprintf (stderr, "Reading dvips config file `%s':\n", realnameoffile);
+@@ -845,9 +855,9 @@
+ */
+ void getpsinfo P1C(char *, name)
+ {
+-    FILE *deffile ;
+-    register char *p ;
+-    char *specinfo, *downloadinfo ;
++   FILE *deffile ;
++   register char *p ;
++   char *specinfo, *downloadinfo ;
+    char downbuf[500] ;
+    char specbuf[500] ;
+    int slen ;
+@@ -855,6 +865,14 @@
+    if (name == 0)
+       name = psmapfile ;
+    if ((deffile=search(mappath, name, READ))!=NULL) {
++      if (dvips_debug_flag && !quiet) {
++         if (strlen(realnameoffile) + prettycolumn > STDOUTSIZE) {
++            fprintf(stderr, "\n") ;
++            prettycolumn = 0 ;
++         }
++         (void)fprintf(stderr, "{%s}", realnameoffile);
++         prettycolumn += strlen(realnameoffile) + 2 ;
++      }
+       while (fgets(was_inline, INLINE_SIZE, deffile)!=NULL) {
+          p = was_inline ;
+          if (*p > ' ' && *p != '*' && *p != '#' && *p != ';' && *p != '%') {
+Index: texlive-bin-2007/build/source/texk/dvipsk/special.lpro
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/special.lpro	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/special.lpro	2007-05-07 01:38:37.000000000 +0200
+@@ -1,6 +1,5 @@
+-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-%%     header for the \special command
+-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++% special.lpro - public domain.
++%     header for the \special command
+ %   The structure of the PostScript produced by dvips for \special is:
+ %         @beginspecial
+ %           - any number of @hsize, @hoffset, @hscale, etc., commands
+Index: texlive-bin-2007/build/source/texk/dvipsk/squeeze.c
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/squeeze.c	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/squeeze.c	2007-05-07 01:38:37.000000000 +0200
+@@ -1,7 +1,4 @@
+ /*
+- *   This software is Copyright 1988 by Radical Eye Software.
+- */
+-/*
+  *   This routine squeezes a PostScript file down to its
+  *   minimum.  We parse and then output it.
+  */
+@@ -14,7 +11,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include "dvips.h"
++#include "dvips.h" /* The copyright notice in that file is included too! */
+ #endif
+ #ifdef fopen
+ #undef fopen
+Index: texlive-bin-2007/build/source/texk/dvipsk/tex.lpro
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/tex.lpro	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/tex.lpro	2007-05-07 01:38:37.000000000 +0200
+@@ -1,3 +1,5 @@
++% tex.lpro - public domain.
++% 
+ % The following defines procedures assumed and used by program "dvips"
+ % and must be downloaded or sent as a header file for all TeX jobs.
+ % Originated by Neal Holtz, Carleton University, Ottawa, Canada
+Index: texlive-bin-2007/build/source/texk/dvipsk/texc.script
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/texc.script	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/texc.script	2007-05-07 01:38:37.000000000 +0200
+@@ -1,5 +1,5 @@
+ #! /bin/sh
+-# A shell script to convert tex.lpro to texc.lpro
++# A shell script to convert tex.lpro to texc.lpro.  Public domain.
+ #
+ # To use it, say
+ #       texc.script tex.lpro texc.lpro
+Index: texlive-bin-2007/build/source/texk/dvipsk/texps.lpro
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/dvipsk/texps.lpro	2007-05-07 01:38:12.000000000 +0200
++++ texlive-bin-2007/build/source/texk/dvipsk/texps.lpro	2007-05-07 01:38:37.000000000 +0200
+@@ -1,5 +1,5 @@
+ % Thanks for some changes to:
+-%+ This is TEXPS.LPRO as modified by Rob Hutchings 1992Apr02
++%+ This is TEXPS.LPRO as modified by Rob Hutchings 1992Apr02.  Public domain.
+ %+ My comments are marked as %+ 
+ % PostScript prolog for using resident fonts.
+ %+ Provision is made to change the encoding scheme in special instructions. 

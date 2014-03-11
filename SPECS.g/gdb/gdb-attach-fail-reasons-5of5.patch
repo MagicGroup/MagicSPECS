@@ -1,0 +1,244 @@
+http://sourceware.org/ml/gdb-patches/2012-03/msg00171.html
+Subject: [patch 3/3] attach-fail-reasons: SELinux deny_ptrace
+
+Hi,
+
+and here is the last bit for new SELinux 'deny_ptrace':
+	https://bugzilla.redhat.com/show_bug.cgi?id=786878
+
+As even PTRACE_TRACEME fails in such case it needs to install hook for even
+that event.
+
+
+Thanks,
+Jan
+
+
+gdb/
+2012-03-06  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	* common/linux-ptrace.c [HAVE_SELINUX_SELINUX_H]: include
+	selinux/selinux.h.
+	(linux_ptrace_attach_warnings): Call linux_ptrace_create_warnings.
+	(linux_ptrace_create_warnings): New.
+	* common/linux-ptrace.h (linux_ptrace_create_warnings): New declaration.
+	* config.in: Regenerate.
+	* configure: Regenerate.
+	* configure.ac: Check selinux/selinux.h and the selinux library.
+	* inf-ptrace.c (inf_ptrace_me): Check the ptrace result.
+	* linux-nat.c (linux_nat_create_inferior): New variable ex.  Wrap
+	to_create_inferior into TRY_CATCH, call linux_ptrace_create_warnings.
+
+gdb/gdbserver/
+	* config.in: Regenerate.
+	* configure: Regenerate.
+	* configure.ac: Check selinux/selinux.h and the selinux library.
+	* linux-low.c (linux_traceme): New function.
+	(linux_create_inferior, linux_tracefork_child): Call it instead of
+	direct ptrace.
+
+Index: gdb-7.5.0.20120926/gdb/common/linux-ptrace.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/common/linux-ptrace.c	2012-09-17 20:28:14.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/common/linux-ptrace.c	2012-09-26 19:13:53.508780239 +0200
+@@ -28,6 +28,10 @@
+ #include "buffer.h"
+ #include "gdb_assert.h"
+ 
++#ifdef HAVE_SELINUX_SELINUX_H
++# include <selinux/selinux.h>
++#endif /* HAVE_SELINUX_SELINUX_H */
++
+ /* Find all possible reasons we could fail to attach PID and append these
+    newline terminated reason strings to initialized BUFFER.  '\0' termination
+    of BUFFER must be done by the caller.  */
+@@ -47,6 +51,8 @@ linux_ptrace_attach_warnings (pid_t pid,
+     buffer_xml_printf (buffer, _("warning: process %d is a zombie "
+ 				 "- the process has already terminated\n"),
+ 		       (int) pid);
++
++  linux_ptrace_create_warnings (buffer);
+ }
+ 
+ #if defined __i386__ || defined __x86_64__
+@@ -242,3 +248,19 @@ linux_ptrace_init_warnings (void)
+ 
+   linux_ptrace_test_ret_to_nx ();
+ }
++
++/* Print all possible reasons we could fail to create a traced process.  */
++
++void
++linux_ptrace_create_warnings (struct buffer *buffer)
++{
++#ifdef HAVE_LIBSELINUX
++  /* -1 is returned for errors, 0 if it has no effect, 1 if PTRACE_ATTACH is
++     forbidden.  */
++  if (security_get_boolean_active ("deny_ptrace") == 1)
++    buffer_xml_printf (buffer,
++		       _("the SELinux boolean 'deny_ptrace' is enabled, "
++			 "you can disable this process attach protection by: "
++			 "(gdb) shell sudo setsebool deny_ptrace=0"));
++#endif /* HAVE_LIBSELINUX */
++}
+Index: gdb-7.5.0.20120926/gdb/common/linux-ptrace.h
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/common/linux-ptrace.h	2012-07-07 14:13:56.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/common/linux-ptrace.h	2012-09-26 19:13:28.358765406 +0200
+@@ -69,5 +69,6 @@ struct buffer;
+ 
+ extern void linux_ptrace_attach_warnings (pid_t pid, struct buffer *buffer);
+ extern void linux_ptrace_init_warnings (void);
++extern void linux_ptrace_create_warnings (struct buffer *buffer);
+ 
+ #endif /* COMMON_LINUX_PTRACE_H */
+Index: gdb-7.5.0.20120926/gdb/configure.ac
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/configure.ac	2012-09-26 19:13:24.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/configure.ac	2012-09-26 19:13:28.410765451 +0200
+@@ -2008,6 +2008,10 @@ then
+ 	      [Define if you support the personality syscall.])
+ fi
+ 
++dnl Check security_get_boolean_active availability.
++AC_CHECK_HEADERS(selinux/selinux.h)
++AC_CHECK_LIB(selinux, security_get_boolean_active)
++
+ dnl Handle optional features that can be enabled.
+ 
+ # Support for --with-sysroot is a copy of GDB_AC_WITH_DIR,
+Index: gdb-7.5.0.20120926/gdb/gdbserver/configure.ac
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/gdbserver/configure.ac	2012-04-19 21:34:51.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/gdbserver/configure.ac	2012-09-26 19:13:28.446765428 +0200
+@@ -438,6 +438,10 @@ if $want_ipa ; then
+    fi
+ fi
+ 
++dnl Check security_get_boolean_active availability.
++AC_CHECK_HEADERS(selinux/selinux.h)
++AC_CHECK_LIB(selinux, security_get_boolean_active)
++
+ AC_SUBST(GDBSERVER_DEPFILES)
+ AC_SUBST(GDBSERVER_LIBS)
+ AC_SUBST(USE_THREAD_DB)
+Index: gdb-7.5.0.20120926/gdb/gdbserver/linux-low.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/gdbserver/linux-low.c	2012-07-07 14:13:57.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/gdbserver/linux-low.c	2012-09-26 19:13:28.453765471 +0200
+@@ -601,6 +601,28 @@ add_lwp (ptid_t ptid)
+   return lwp;
+ }
+ 
++/* Execute PTRACE_TRACEME with error checking.  */
++
++static void
++linux_traceme (const char *program)
++{
++  int save_errno;
++  struct buffer buffer;
++
++  errno = 0;
++  if (ptrace (PTRACE_TRACEME, 0, NULL, NULL) == 0)
++    return;
++
++  save_errno = errno;
++  buffer_init (&buffer);
++  linux_ptrace_create_warnings (&buffer);
++  buffer_grow_str0 (&buffer, "");
++  fprintf (stderr, _("%sCannot trace created process %s: %s.\n"),
++	   buffer_finish (&buffer), program, strerror (save_errno));
++  fflush (stderr);
++  _exit (0177);
++}
++
+ /* Start an inferior process and returns its pid.
+    ALLARGS is a vector of program-name and args. */
+ 
+@@ -641,7 +663,7 @@ linux_create_inferior (char *program, ch
+ 
+   if (pid == 0)
+     {
+-      ptrace (PTRACE_TRACEME, 0, 0, 0);
++      linux_traceme (program);
+ 
+ #ifndef __ANDROID__ /* Bionic doesn't use SIGRTMIN the way glibc does.  */
+       signal (__SIGRTMIN + 1, SIG_DFL);
+@@ -4572,7 +4594,7 @@ linux_tracefork_grandchild (void *arg)
+ static int
+ linux_tracefork_child (void *arg)
+ {
+-  ptrace (PTRACE_TRACEME, 0, 0, 0);
++  linux_traceme ("PTRACE_O_TRACEFORK test");
+   kill (getpid (), SIGSTOP);
+ 
+ #if !(defined(__UCLIBC__) && defined(HAS_NOMMU))
+Index: gdb-7.5.0.20120926/gdb/inf-ptrace.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/inf-ptrace.c	2012-05-24 18:51:34.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/inf-ptrace.c	2012-09-26 19:13:28.458765461 +0200
+@@ -105,7 +105,15 @@ static void
+ inf_ptrace_me (void)
+ {
+   /* "Trace me, Dr. Memory!"  */
++  errno = 0;
+   ptrace (PT_TRACE_ME, 0, (PTRACE_TYPE_ARG3)0, 0);
++  if (errno != 0)
++    {
++      fprintf_unfiltered (gdb_stderr, _("Cannot create process: %s\n"),
++			  safe_strerror (errno));
++      gdb_flush (gdb_stderr);
++      _exit (0177);
++    }
+ }
+ 
+ /* Start a new inferior Unix child process.  EXEC_FILE is the file to
+Index: gdb-7.5.0.20120926/gdb/linux-nat.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/linux-nat.c	2012-09-26 19:13:22.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/linux-nat.c	2012-09-26 19:13:28.468765469 +0200
+@@ -1574,6 +1574,7 @@ linux_nat_create_inferior (struct target
+ #ifdef HAVE_PERSONALITY
+   int personality_orig = 0, personality_set = 0;
+ #endif /* HAVE_PERSONALITY */
++  volatile struct gdb_exception ex;
+ 
+   /* The fork_child mechanism is synchronous and calls target_wait, so
+      we have to mask the async mode.  */
+@@ -1598,7 +1599,10 @@ linux_nat_create_inferior (struct target
+   /* Make sure we report all signals during startup.  */
+   linux_nat_pass_signals (0, NULL);
+ 
+-  linux_ops->to_create_inferior (ops, exec_file, allargs, env, from_tty);
++  TRY_CATCH (ex, RETURN_MASK_ERROR)
++    {
++      linux_ops->to_create_inferior (ops, exec_file, allargs, env, from_tty);
++    }
+ 
+ #ifdef HAVE_PERSONALITY
+   if (personality_set)
+@@ -1610,6 +1614,24 @@ linux_nat_create_inferior (struct target
+ 		 safe_strerror (errno));
+     }
+ #endif /* HAVE_PERSONALITY */
++
++  if (ex.reason < 0)
++    {
++      struct buffer buffer;
++      char *message, *buffer_s;
++
++      message = xstrdup (ex.message);
++      make_cleanup (xfree, message);
++
++      buffer_init (&buffer);
++      linux_ptrace_create_warnings (&buffer);
++
++      buffer_grow_str0 (&buffer, "");
++      buffer_s = buffer_finish (&buffer);
++      make_cleanup (xfree, buffer_s);
++
++      throw_error (ex.error, "%s%s", buffer_s, message);
++    }
+ }
+ 
+ static void

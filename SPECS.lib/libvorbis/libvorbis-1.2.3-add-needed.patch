@@ -1,0 +1,27 @@
+diff -up libvorbis-1.2.3/examples/Makefile.in.jx libvorbis-1.2.3/examples/Makefile.in
+--- libvorbis-1.2.3/examples/Makefile.in.jx	2009-07-09 22:19:15.000000000 -0400
++++ libvorbis-1.2.3/examples/Makefile.in	2010-02-09 10:03:06.000000000 -0500
+@@ -231,9 +231,9 @@ EXTRA_DIST = frameview.pl
+ # uncomment to build static executables from the example code
+ #LDFLAGS = -all-static 
+ decoder_example_SOURCES = decoder_example.c
+-decoder_example_LDADD = $(top_builddir)/lib/libvorbis.la 
++decoder_example_LDADD = $(top_builddir)/lib/libvorbis.la -logg -lm
+ encoder_example_SOURCES = encoder_example.c
+-encoder_example_LDADD = $(top_builddir)/lib/libvorbisenc.la $(top_builddir)/lib/libvorbis.la 
++encoder_example_LDADD = $(top_builddir)/lib/libvorbisenc.la $(top_builddir)/lib/libvorbis.la -logg
+ chaining_example_SOURCES = chaining_example.c
+ chaining_example_LDADD = $(top_builddir)/lib/libvorbisfile.la $(top_builddir)/lib/libvorbis.la 
+ vorbisfile_example_SOURCES = vorbisfile_example.c
+diff -up libvorbis-1.2.3/test/Makefile.in.jx libvorbis-1.2.3/test/Makefile.in
+--- libvorbis-1.2.3/test/Makefile.in.jx	2009-07-09 22:19:15.000000000 -0400
++++ libvorbis-1.2.3/test/Makefile.in	2010-02-09 10:08:03.000000000 -0500
+@@ -204,7 +204,7 @@ top_srcdir = @top_srcdir@
+ AUTOMAKE_OPTIONS = foreign
+ INCLUDES = -I$(top_srcdir)/include @OGG_CFLAGS@
+ test_SOURCES = util.c util.h write_read.c write_read.h test.c
+-test_LDADD = ../lib/libvorbisenc.la ../lib/libvorbis.la @OGG_LIBS@
++test_LDADD = ../lib/libvorbisenc.la ../lib/libvorbis.la @OGG_LIBS@ -lm
+ all: all-am
+ 
+ .SUFFIXES:

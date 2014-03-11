@@ -1,0 +1,30 @@
+From 066e92f017df22c879c455494d2c1743ef7f3aca Mon Sep 17 00:00:00 2001
+From: Lukasz Dorau <lukasz.dorau@intel.com>
+Date: Fri, 16 Nov 2012 17:24:36 +0100
+Subject: [PATCH] Create.c: check if freesize is equal 0
+
+"freesize" can be equal 0, particularly after rounding to the chunk's size.
+Creating should be aborted in such case.
+
+Signed-off-by: Lukasz Dorau <lukasz.dorau@intel.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ Create.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Create.c b/Create.c
+index afcf1a5..436bd1d 100644
+--- a/Create.c
++++ b/Create.c
+@@ -407,6 +407,11 @@
+ 				do_default_chunk = 0;
+ 			}
+ 		}
++		if (!freesize) {
++			fprintf(stderr, Name ": no free space left on %s\n", dname);
++			fail = 1;
++			continue;
++		}
+ 
+ 		if (size && freesize < size) {
+ 			fprintf(stderr, Name ": %s is smaller than given size."

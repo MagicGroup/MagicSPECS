@@ -1,0 +1,4 @@
+#!/bin/bash
+pppoe-stop >/dev/null 2>&1 || :
+mxd --start
+

@@ -1,0 +1,21 @@
+From d1049f9b7cdbf66f11aa2af99735ddbbdc5863fe Mon Sep 17 00:00:00 2001
+From: Christoph Wickert <cwickert@fedoraproject.org>
+Date: Sun, 23 Oct 2011 23:13:34 +0200
+Subject: [PATCH 1/2] Add Thunar as default file manager to helpers.rc
+
+---
+ exo-helper/helpers/helpers.rc |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/exo-helper/helpers/helpers.rc b/exo-helper/helpers/helpers.rc
+index 74315c0..0c77f07 100644
+--- a/exo-helper/helpers/helpers.rc
++++ b/exo-helper/helpers/helpers.rc
+@@ -7,3 +7,4 @@
+ WebBrowser=firefox
+ MailReader=thunderbird
+ TerminalEmulator=Terminal
++FileManager=Thunar
+-- 
+1.7.6.4
+

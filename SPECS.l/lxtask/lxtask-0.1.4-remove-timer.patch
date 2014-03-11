@@ -1,0 +1,33 @@
+From be8168d30961cbcc6c52244f7c831698570d2b13 Mon Sep 17 00:00:00 2001
+From: dgod <dgod.osa@gmail.com>
+Date: Wed, 19 Oct 2011 21:05:40 +0800
+Subject: [PATCH] remove timer handler when lxtask is going to finish
+
+---
+ src/callbacks.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/src/callbacks.c b/src/callbacks.c
+index 4d65750..2f0cdff 100644
+--- a/src/callbacks.c
++++ b/src/callbacks.c
+@@ -26,6 +26,8 @@
+ 
+ #include "callbacks.h"
+ 
++extern guint rID;
++
+ void on_button3_toggled_event(GtkButton *button, GdkEventButton *event)
+ {
+     full_view = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+@@ -137,6 +139,7 @@ void on_show_cached_as_free_toggled (GtkMenuItem *menuitem, gint uid)
+ 
+ void on_quit(void)
+ {
++    g_source_remove(rID);
+     save_config();
+     free(config_file);
+ 
+-- 
+1.7.4.1
+

@@ -1,0 +1,113 @@
+diff -Nuarp kaffeine-1.0/CMakeLists.txt kaffeine-1.0.new/CMakeLists.txt
+--- kaffeine-1.0/CMakeLists.txt	2010-06-01 02:46:35.000000000 +0800
++++ kaffeine-1.0.new/CMakeLists.txt	2010-06-16 00:02:42.512250149 +0800
+@@ -3,6 +3,7 @@ project(kaffeine)
+ find_package(KDE4 REQUIRED)
+ find_package(X11 REQUIRED)
+ find_package(Xine REQUIRED)
++find_package(Taglib REQUIRED)
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${X11_INCLUDE_DIR} ${X11_Xscreensaver_INCLUDE_PATH} ${XINE_INCLUDE_DIR})
+ add_definitions(${KDE4_DEFINITIONS})
+ 
+diff -Nuarp kaffeine-1.0/src/backend-xine/xinemediawidget.cpp kaffeine-1.0.new/src/backend-xine/xinemediawidget.cpp
+--- kaffeine-1.0/src/backend-xine/xinemediawidget.cpp	2010-06-01 02:46:35.000000000 +0800
++++ kaffeine-1.0.new/src/backend-xine/xinemediawidget.cpp	2010-06-16 10:59:13.126817181 +0800
+@@ -22,8 +22,14 @@
+ #include "xinemediawidget_p.h"
+ 
+ #include <QResizeEvent>
++#include <QTextCodec>
+ #include <KDebug>
++#include <KEncodingProber>
+ #include <KMessageBox>
++#include <taglib/mpegfile.h>
++#include <taglib/fileref.h>
++#include <taglib/tstring.h>
++#include <taglib/id3v2tag.h>
+ #include <config-kaffeine.h>
+ #include <errno.h>
+ #include <unistd.h>
+@@ -619,39 +630,40 @@ void XineMediaWidget::updateMetadata(con
+ 		rawMetadata = metadata_;
+ 		metadata.clear();
+ 
+-		for (int i = 0; i < rawMetadata.size(); ++i) {
+-			int type = rawMetadata.at(i).unicode();
+-			++i;
+-			int end = i;
+-
+-			while ((end < rawMetadata.size()) && (rawMetadata.at(end) != '\0')) {
+-				++end;
+-			}
+-
+-			if (i == end) {
+-				continue;
++		TagLib::FileRef file(currentUrl.constData());
++		if (!file.isNull()) {
++			QString title  = TStringToQString(file.tag()->title()).trimmed();
++			QString artist = TStringToQString(file.tag()->artist()).trimmed();
++			QString album  = TStringToQString(file.tag()->album()).trimmed();
++			if (currentUrl.endsWith(".mp3")) {
++				/// detect encoding for mpeg id3v2
++				QString tmp = title + artist + album;
++				KEncodingProber prober(KEncodingProber::Universal);
++				KEncodingProber::ProberState result = prober.feed(tmp.toAscii());
++				if (result != KEncodingProber::NotMe) {
++					QByteArray encodingname = prober.encoding().toLower();
++					if ( prober.confidence() > 0.47
++						&& ( ( encodingname == "gb18030" )
++						|| ( encodingname == "big5" )
++						|| ( encodingname == "euc-kr" )
++						|| ( encodingname == "euc-jp" )
++						|| ( encodingname == "koi8-r" ) ) ) {
++						title = QTextCodec::codecForName(encodingname)->toUnicode(title.toAscii());
++						artist = QTextCodec::codecForName(encodingname)->toUnicode(artist.toAscii());
++						album = QTextCodec::codecForName(encodingname)->toUnicode(album.toAscii());
++					} else if ((prober.confidence() < 0.3 || encodingname != "utf-8")
++						&& QTextCodec::codecForLocale()->name().toLower() != "utf-8") {
++						title = QTextCodec::codecForLocale()->toUnicode(title.toAscii());
++						artist = QTextCodec::codecForLocale()->toUnicode(artist.toAscii());
++						album = QTextCodec::codecForLocale()->toUnicode(album.toAscii());
++					}
++				}
+ 			}
+ 
+-			QString content = rawMetadata.mid(i, end - i);
+-			i = end;
+-
+-			switch (type) {
+-			case XineMetadataTitle:
+-				metadata.insert(MediaWidget::Title, content);
+-				break;
+-			case XineMetadataArtist:
+-				metadata.insert(MediaWidget::Artist, content);
+-				break;
+-			case XineMetadataAlbum:
+-				metadata.insert(MediaWidget::Album, content);
+-				break;
+-			case XineMetadataTrackNumber:
+-				metadata.insert(MediaWidget::TrackNumber, content);
+-				break;
+-			default:
+-				kError() << "unknown metadata type" << type;
+-				break;
+-			}
++			metadata.insert(MediaWidget::Title, title);
++			metadata.insert(MediaWidget::Artist, artist);
++			metadata.insert(MediaWidget::Album, album);
++			metadata.insert(MediaWidget::TrackNumber, QString::number(file.tag()->track()));
+ 		}
+ 
+ 		dirtyFlags |= MetadataChanged;
+diff -Nuarp kaffeine-1.0/src/CMakeLists.txt kaffeine-1.0.new/src/CMakeLists.txt
+--- kaffeine-1.0/src/CMakeLists.txt	2010-06-01 02:46:35.000000000 +0800
++++ kaffeine-1.0.new/src/CMakeLists.txt	2010-06-16 10:52:07.146853040 +0800
+@@ -41,7 +41,7 @@ set(kaffeinedvbdebugmodule_SRCS
+ configure_file(config-kaffeine.h.cmake ${CMAKE_BINARY_DIR}/config-kaffeine.h)
+ 
+ kde4_add_executable(kaffeine ${kaffeine_SRCS} ${kaffeinedvb_SRCS})
+-target_link_libraries(kaffeine ${QT_QTSQL_LIBRARY} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${X11_Xscreensaver_LIB})
++target_link_libraries(kaffeine ${QT_QTSQL_LIBRARY} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${X11_Xscreensaver_LIB} ${TAGLIB_LIBRARIES})
+ install(TARGETS kaffeine ${INSTALL_TARGETS_DEFAULT_ARGS})
+ install(FILES scanfile.dvb DESTINATION ${DATA_INSTALL_DIR}/kaffeine)
+ install(FILES kaffeine.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

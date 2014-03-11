@@ -1,0 +1,62 @@
+diff -ur multiget/src/batch.cpp ../BUILD/multiget/src/batch.cpp
+--- multiget/src/batch.cpp	2007-01-13 19:09:02.000000000 +0800
++++ ../BUILD/multiget/src/batch.cpp	2009-05-18 11:13:44.000000000 +0800
+@@ -25,6 +25,8 @@
+ #include "batch.h"
+ #include "common.h"
+ #include <iostream>
++#include <cstdio>
++#include <cstdlib>
+ 
+ CBatch::CBatch( std::string str )
+ {
+diff -ur multiget/src/common.cpp ../BUILD/multiget/src/common.cpp
+--- multiget/src/common.cpp	2007-01-13 19:09:02.000000000 +0800
++++ ../BUILD/multiget/src/common.cpp	2009-05-18 11:14:03.000000000 +0800
+@@ -26,7 +26,7 @@
+ #include "speedctrl.h"
+ #include "mirroradmin.h"
+ 
+-
++#include <stdlib.h>
+ #include <pthread.h>
+ 
+ #ifdef WIN32
+diff -ur multiget/src/mgftpbase.h ../BUILD/multiget/src/mgftpbase.h
+--- multiget/src/mgftpbase.h	2007-01-13 19:09:04.000000000 +0800
++++ ../BUILD/multiget/src/mgftpbase.h	2009-05-18 11:18:37.000000000 +0800
+@@ -27,6 +27,8 @@
+ #include "common.h"
+ #include "mgftpsocket.h"
+ #include <string>
++#include <stdlib.h>
++#include <stdio.h>
+ 
+ /*
+ CMgSocket -> CMgProxySocket -> CMgHttpSocket -> CMgHttpBase-> CMgHttpInfo
+diff -ur multiget/src/mghttpbase.cpp ../BUILD/multiget/src/mghttpbase.cpp
+--- multiget/src/mghttpbase.cpp	2007-01-13 19:09:02.000000000 +0800
++++ ../BUILD/multiget/src/mghttpbase.cpp	2009-05-18 11:21:10.000000000 +0800
+@@ -48,6 +48,8 @@
+ 
+ #include "mghttpbase.h"
+ #include <iostream>
++#include <cstdio>
++#include <cstdlib>
+ 
+ using namespace std;
+ 
+diff -ur multiget/src/mgurlparser.cpp ../BUILD/multiget/src/mgurlparser.cpp
+--- multiget/src/mgurlparser.cpp	2009-05-18 11:23:32.000000000 +0800
++++ ../BUILD/multiget/src/mgurlparser.cpp	2009-05-18 11:21:59.000000000 +0800
+@@ -26,6 +26,10 @@
+ #include "mgurlparser.h"
+ #include "common.h"
+ #include <iostream>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++
+ extern std::string gDefFtpPass;
+ 
+ using namespace std;

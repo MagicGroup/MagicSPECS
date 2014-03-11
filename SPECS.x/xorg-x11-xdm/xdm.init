@@ -1,0 +1,117 @@
+#!/bin/sh
+#
+# xdm:       Starts the X Display Manager (gdm / kdm / xdm)
+#
+# Version:      @(#) /etc/rc.d/init.d/xdm 1.3
+#
+# chkconfig: 5 95 5
+# description: Starts and stops the X Display Manager at startup and shutdown.
+# can run one of several display managers; gdm, kdm, or xdm, in that order of
+# preferential treatment.
+#
+# config: /etc/X11/xdm/xdm-config
+# probe: true
+# hide: true
+
+export LANG=C
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# get preferred desktop:
+if [ -f /etc/sysconfig/desktop ]; then
+    if [ -n "`grep -i GNOME /etc/sysconfig/desktop`" ]; then
+	preferred=gdm; title="GNOME Display Manager"
+    elif [ -n "`grep -i KDE /etc/sysconfig/desktop`" ]; then
+	preferred=kdm; title="KDE Display Manager"
+    elif [ -n "`grep -i AnotherLevel /etc/sysconfig/desktop`" ]; then
+	preferred=xdm; title="X Display Manager"
+    fi
+fi
+
+# See how we were called.
+case "$1" in
+  start)
+    if [ x`pidofproc xfs` = "x" ]; then
+	failure $"Starting xdm: no xfs running, not starting"
+    else
+	if [ "x$preferred" != "x" ]; then 
+	    echo -n $"Starting $title: "
+	    daemon $preferred
+	elif which gdm >/dev/null; then
+	    echo -n $"Starting GNOME Display Manager: "
+	    daemon gdm
+	elif which kdm >/dev/null; then
+	    echo -n $"Starting KDE Display Manager: "
+	    daemon kdm
+	else
+	    echo -n $"Starting X Display Manager: "
+	    daemon xdm
+	 fi
+	touch /var/lock/subsys/xdm
+    fi
+    echo
+    ;;
+  stop)
+	if [ "x$preferred" != "x" ]; then
+	    echo -n $"Shutting down $title: "
+	    killproc $preferred
+	elif which gdm >/dev/null; then
+	    echo -n $"Shutting down GNOME Display Manager: "
+	    killproc gdm
+	elif which kdm >/dev/null; then
+	    echo -n $"Shutting down KDE Display Manager: "
+	    killproc kdm
+	else
+	    echo -n $"Shutting down X Display Manager: "
+	    killproc xdm
+	fi
+	rm -f /var/lock/subsys/xdm
+	echo
+	;;
+  status)
+	if [ "x$preferred" != "x" ]; then
+	    status $preferred
+	elif which gdm >/dev/null; then
+	    status gdm
+	elif which kdm >/dev/null; then
+	    status kdm
+	else
+	    status xdm
+	fi
+	;;
+  restart)
+	echo -n $"Restarting Display Manager: "
+	if [ "x$preferred" != "x" ]; then
+	    killproc $preferred -HUP
+	elif which gdm >/dev/null; then
+	    killproc gdm -HUP
+	elif which kdm >/dev/null; then
+	    killproc kdm -HUP
+	else
+	    killproc xdm -HUP
+	fi
+	echo
+	;;
+  probe)
+	if [ ! -f /var/lock/subsys/xdm ] ; then
+	  echo $"start"; exit 0
+	fi
+	/sbin/pidof gdm >/dev/null 2>&1; DEAD="$?"
+	if [ "$DEAD" = 1 ]; then 
+	    /sbin/pidof kdm >/dev/null 2>&1
+	    DEAD="$?"
+	fi
+	if [ "$DEAD" = 1 ]; then
+	    /sbin/pidof xdm >/dev/null 2>&1
+	    DEAD="$?"
+	fi
+	if [ $DEAD = 1 ] ; then
+	  echo $"restart"; exit 0
+	fi
+	;;
+  *)
+	echo $"*** Usage: xdm {start|stop|status|restart}"
+	exit 1
+esac
+
+exit 0

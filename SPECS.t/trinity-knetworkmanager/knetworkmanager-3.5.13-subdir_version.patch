@@ -1,0 +1,22 @@
+--- knetworkmanager9/CMakeLists.txt.ORI	2011-11-11 13:36:01.462536187 -0500
++++ knetworkmanager9/CMakeLists.txt	2011-11-11 13:36:10.762446937 -0500
+@@ -63,7 +63,7 @@
+ 
+ ##### source directories ########################
+ 
+-add_subdirectory( knetworkmanager-0.8 )
++add_subdirectory( knetworkmanager-0.9 )
+ 
+ 
+ ##### write configure files #####################
+--- knetworkmanager9/knetworkmanager-0.9/src/dbus/CMakeLists.txt.ORI	2011-11-11 13:39:32.866229477 -0500
++++ knetworkmanager9/knetworkmanager-0.9/src/dbus/CMakeLists.txt	2011-11-11 13:39:48.169042904 -0500
+@@ -18,7 +18,7 @@
+ 
+ ##### knm_dbus (static) #########################
+ 
+-set( INTROSPECTIONPATH "${CMAKE_SOURCE_DIR}/knetworkmanager-0.8/introspection" )
++set( INTROSPECTIONPATH "${CMAKE_SOURCE_DIR}/knetworkmanager-0.9/introspection" )
+ 
+ # options:
+ #  p - generate proxy files

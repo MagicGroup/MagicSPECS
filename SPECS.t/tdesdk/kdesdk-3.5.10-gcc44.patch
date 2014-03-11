@@ -1,0 +1,34 @@
+diff -ur kdesdk-3.5.10.orig/kbabel/common/libgettext/pofiles.h kdesdk-3.5.10/kbabel/common/libgettext/pofiles.h
+--- kdesdk-3.5.10.orig/kbabel/common/libgettext/pofiles.h	2009-05-18 23:22:08.000000000 +0800
++++ kdesdk-3.5.10/kbabel/common/libgettext/pofiles.h	2009-05-18 23:23:48.000000000 +0800
+@@ -36,6 +36,7 @@
+ #undef yyFlexLexer
+ #define yyFlexLexer GettextBaseFlexLexer
+ #include <FlexLexer.h>
++#include <cstdio>
+ 
+ class GettextFlexLexer: public GettextBaseFlexLexer {
+ public:
+diff -ur kdesdk-3.5.10.orig/kbabel/common/libgettext/tokens.h kdesdk-3.5.10/kbabel/common/libgettext/tokens.h
+--- kdesdk-3.5.10.orig/kbabel/common/libgettext/tokens.h	2009-05-18 23:22:08.000000000 +0800
++++ kdesdk-3.5.10/kbabel/common/libgettext/tokens.h	2009-05-18 23:38:42.000000000 +0800
+@@ -33,6 +33,8 @@
+ #ifndef POTOKENS_H
+ #define POTOKENS_H
+ 
++#include <cstdio>
++
+ #define T_EOF	256
+ #define	T_COMMENT	257
+ #define	T_STRING	258
+diff -ur kdesdk-3.5.10.orig/poxml/antlr/antlr/CharScanner.hpp kdesdk-3.5.10/poxml/antlr/antlr/CharScanner.hpp
+--- kdesdk-3.5.10.orig/poxml/antlr/antlr/CharScanner.hpp	2009-05-18 23:22:06.000000000 +0800
++++ kdesdk-3.5.10/poxml/antlr/antlr/CharScanner.hpp	2009-05-18 23:22:33.000000000 +0800
+@@ -42,6 +42,7 @@
+ #include "antlr/BitSet.hpp"
+ #include "antlr/LexerSharedInputState.hpp"
+ #include <map>
++#include <cstdio>
+ 
+ ANTLR_BEGIN_NAMESPACE(antlr)
+ 

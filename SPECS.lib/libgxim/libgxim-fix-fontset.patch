@@ -1,0 +1,86 @@
+2009-04-03  Akira TAGOH  <akira@tagoh.org>
+
+	* libgxim/gximmisc.c (g_xim_fontset_put_to_stream): get rid of
+	processing a padding.
+	(g_xim_fontset_get_from_stream): likewise.
+	(g_xim_attribute_put_to_stream): deal with a padding here.
+
+	* libgxim/gximattr.c (g_xim_attr_get_attribute_from_stream): deal with
+	a padding here.
+
+	* libgxim/gximprotocol.c (g_xim_protocol_read_vformat): Stop obtaining
+	a value from NESTEDLIST if a remaining size is less than minimal.
+
+Index: libgxim/gximprotocol.c
+===================================================================
+--- libgxim/gximprotocol.c	(リビジョン 204)
++++ libgxim/gximprotocol.c	(リビジョン 205)
+@@ -2704,7 +2704,8 @@
+ 				    conn = G_XIM_CONNECTION (proto);
+ 				    /* XXX: NESTEDLIST is only used for IC attributes? */
+ 				    list = g_xim_nested_list_new(G_XIM_ATTR (conn->default_icattr), size);
+-				    while (size > 0) {
++				    /* try to fetch a value until remaining size is more than minimum requirement */
++				    while (size > 3) {
+ 					    goffset cur_pos = g_seekable_tell(G_SEEKABLE (istream)), pos;
+ 					    gint16 attr_id;
+ 					    guint16 n;
+Index: libgxim/gximattr.c
+===================================================================
+--- libgxim/gximattr.c	(リビジョン 204)
++++ libgxim/gximattr.c	(リビジョン 205)
+@@ -975,9 +975,10 @@
+ 			    attr_id, name, g_xim_value_type_name(vtype));
+ 	g_free(name);
+ 	if (!g_xim_protocol_read_format(proto, stream, cancellable, error,
+-					2,
++					3,
+ 					G_XIM_TYPE_MARKER_N_BYTES_2, vtype,
+-					vtype, &value))
++					vtype, &value,
++					G_XIM_TYPE_AUTO_PADDING, 0))
+ 		return NULL;
+ 
+ 	new_attr = g_xim_attribute_new_with_value(attr_id, vtype, value);
+Index: libgxim/gximmisc.c
+===================================================================
+--- libgxim/gximmisc.c	(リビジョン 204)
++++ libgxim/gximmisc.c	(リビジョン 205)
+@@ -1370,9 +1370,8 @@
+ 	g_return_val_if_fail (G_IS_XIM_PROTOCOL (proto), 0);
+ 	g_return_val_if_fail (error != NULL, 0);
+ 
+-	return g_xim_protocol_send_format(proto, cancellable, error, 2,
+-					  G_XIM_TYPE_GSTRING, fontset,
+-					  G_XIM_TYPE_AUTO_PADDING, 2);
++	return g_xim_protocol_send_format(proto, cancellable, error, 1,
++					  G_XIM_TYPE_GSTRING, fontset);
+ }
+ 
+ gpointer
+@@ -1388,9 +1387,8 @@
+ 	g_return_val_if_fail (error != NULL, NULL);
+ 
+ 	if (!g_xim_protocol_read_format(proto, stream, cancellable, error,
+-					2,
+-					G_XIM_TYPE_GSTRING, &retval,
+-					G_XIM_TYPE_AUTO_PADDING, 2))
++					1,
++					G_XIM_TYPE_GSTRING, &retval))
+ 		return NULL;
+ 
+ 	return retval;
+@@ -2212,10 +2210,11 @@
+ 	g_return_val_if_fail (attr != NULL, 0);
+ 	g_return_val_if_fail (error != NULL, 0);
+ 
+-	return g_xim_protocol_send_format(proto, cancellable, error, 3,
++	return g_xim_protocol_send_format(proto, cancellable, error, 4,
+ 					  G_XIM_TYPE_WORD, attr->id,
+ 					  G_XIM_TYPE_MARKER_N_BYTES_2, attr->vtype,
+-					  attr->vtype, attr->v.pointer);
++					  attr->vtype, attr->v.pointer,
++					  G_XIM_TYPE_AUTO_PADDING, 0);
+ }
+ 
+ /* NESTEDLIST */

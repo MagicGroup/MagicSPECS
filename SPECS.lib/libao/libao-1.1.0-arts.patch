@@ -1,0 +1,12 @@
+diff -ur libao-1.1.0.orig/src/plugins/arts/ao_arts.c libao-1.1.0/src/plugins/arts/ao_arts.c
+--- libao-1.1.0.orig/src/plugins/arts/ao_arts.c	2012-01-04 06:48:13.000000000 -0500
++++ libao-1.1.0/src/plugins/arts/ao_arts.c	2012-01-04 06:48:38.000000000 -0500
+@@ -34,7 +34,7 @@
+ #include <pthread.h>
+ 
+ #include <glib.h>
+-#include <artsc.h>
++#include <artsc/artsc.h>
+ #include <ao/ao.h>
+ #include <ao/plugin.h>
+ 

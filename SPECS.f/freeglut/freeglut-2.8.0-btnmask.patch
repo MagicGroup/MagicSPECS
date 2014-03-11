@@ -1,0 +1,40 @@
+diff -up freeglut-2.8.0/src/freeglut_xinput.c.btnmask freeglut-2.8.0/src/freeglut_xinput.c
+--- freeglut-2.8.0/src/freeglut_xinput.c.btnmask	2012-08-27 15:55:07.841482330 +0200
++++ freeglut-2.8.0/src/freeglut_xinput.c	2012-08-27 15:57:12.423604612 +0200
+@@ -13,6 +13,9 @@
+ #include <X11/Xlib.h>
+ #include <X11/extensions/XInput2.h>
+ 
++/* convert the XInput button state mask to the regular X mouse event button mask */
++#define BUTTON_MASK(xistate)    ((xistate) << 8)
++
+ /* import function from freeglut_main.c */
+ int fghGetXModifiers( int state );
+ 
+@@ -188,7 +191,7 @@ void fgHandleExtensionEvents( XEvent* ba
+ 			std_ev.xcrossing.detail = evcross->detail;
+ 			std_ev.xcrossing.same_screen = evcross->same_screen;
+ 			std_ev.xcrossing.focus = evcross->focus;
+-			std_ev.xcrossing.state = *(unsigned int*)evcross->buttons.mask;
++			std_ev.xcrossing.state = BUTTON_MASK(*(unsigned int*)evcross->buttons.mask);
+ 
+ 			XPutBackEvent(fgDisplay.Display, &std_ev);
+ 			break;
+@@ -213,7 +216,7 @@ void fgHandleExtensionEvents( XEvent* ba
+ 			std_ev.xbutton.y = event->event_y;
+ 			std_ev.xbutton.x_root = event->root_x;
+ 			std_ev.xbutton.y_root = event->root_y;
+-			std_ev.xbutton.state = *(unsigned int*)event->buttons.mask;
++			std_ev.xbutton.state = BUTTON_MASK(*(unsigned int*)event->buttons.mask);
+ 			std_ev.xbutton.button = event->detail;
+ 
+ 			XPutBackEvent(fgDisplay.Display, &std_ev);
+@@ -245,7 +248,7 @@ void fgHandleExtensionEvents( XEvent* ba
+ 			std_ev.xmotion.y = event->event_y;
+ 			std_ev.xmotion.x_root = event->root_x;
+ 			std_ev.xmotion.y_root = event->root_y;
+-			std_ev.xmotion.state = *(unsigned int*)event->buttons.mask;
++			std_ev.xmotion.state = BUTTON_MASK(*(unsigned int*)event->buttons.mask);
+ 			std_ev.xmotion.is_hint = NotifyNormal;
+ 
+ 			XPutBackEvent(fgDisplay.Display, &std_ev);

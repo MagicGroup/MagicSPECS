@@ -1,0 +1,52 @@
+diff -ur kde-workspace-4.10.3.orig/kdm/backend/dm.c kde-workspace-4.10.3/kdm/backend/dm.c
+--- kde-workspace-4.10.3.orig/kdm/backend/dm.c	2013-05-31 05:17:10.000000000 +0000
++++ kde-workspace-4.10.3/kdm/backend/dm.c	2013-05-31 06:00:42.000000000 +0000
+@@ -39,6 +39,7 @@
+ #include "dm_error.h"
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <stdarg.h>
+@@ -629,6 +630,14 @@
+             exit(1);
+         debug("exec %\"[s\n", argv);
+         (void)execv(argv[0], argv);
++        /* Let's try again with a standard path */
++        argv[0] = (char *)realloc(argv[0], strlen("/usr/bin/X") + 1);
++        if (argv[0] != NULL) {
++            argv[0] = "/usr/bin/X";
++            debug( "exec %\"[s\n", argv );
++            (void)execv( argv[0], argv );
++            logError( "X server %\"s cannot be executed\n", argv[0] );
++        }
+         logError("X server %\"s cannot be executed\n", argv[0]);
+         exit(1);
+     case -1:
+diff -ur kde-workspace-4.10.3.orig/kdm/backend/server.c kde-workspace-4.10.3/kdm/backend/server.c
+--- kde-workspace-4.10.3.orig/kdm/backend/server.c	2013-05-31 05:17:10.000000000 +0000
++++ kde-workspace-4.10.3/kdm/backend/server.c	2013-05-31 06:02:08.000000000 +0000
+@@ -41,6 +41,7 @@
+ #include <X11/Xlib.h>
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <signal.h>
+ 
+ 
+@@ -97,6 +98,14 @@
+          */
+         (void)Signal(SIGUSR1, SIG_IGN);
+         (void)execv(argv[0], argv);
++        /* Let's try again with a standard path */
++        argv[0] = (char *)realloc(argv[0], strlen("/usr/bin/X") + 1);
++        if (argv[0] != NULL) {
++            argv[0] = "/usr/bin/X";
++            debug( "exec %\"[s\n", argv );
++            (void)execv( argv[0], argv );
++            logError( "X server %\"s cannot be executed\n", argv[0] );
++        }
+         logError("X server %\"s cannot be executed\n", argv[0]);
+         exit(47);
+     case -1:

@@ -1,0 +1,44 @@
+diff -up gcc-4.7.0/libgcc/unwind-generic.h.cross-libgcc-ia64 gcc-4.7.0/libgcc/unwind-generic.h
+--- gcc-4.7.0/libgcc/unwind-generic.h.cross-libgcc-ia64	2012-06-01 18:14:22.552450391 +0200
++++ gcc-4.7.0/libgcc/unwind-generic.h	2012-06-01 18:14:42.523121821 +0200
+@@ -211,7 +211,9 @@ _Unwind_SjLj_Resume_or_Rethrow (struct _
+    compatible with the standard ABI for IA-64, we inline these.  */
+ 
+ #ifdef __ia64__
++#ifndef inhibit_libc
+ #include <stdlib.h>
++#endif
+ 
+ static inline _Unwind_Ptr
+ _Unwind_GetDataRelBase (struct _Unwind_Context *_C)
+diff -up gcc-4.7.0/libgcc/config/m68k/linux-atomic.c.cross-libgcc-m68k gcc-4.7.0/libgcc/config/m68k/linux-atomic.c
+--- gcc-4.7.0/libgcc/config/m68k/linux-atomic.c.cross-libgcc-m68k	2012-06-01 18:08:54.998851298 +0200
++++ gcc-4.7.0/libgcc/config/m68k/linux-atomic.c	2012-06-01 18:09:16.871488040 +0200
+@@ -33,7 +33,9 @@ see the files COPYING3 and COPYING.RUNTI
+    using the kernel helper defined below.  There is no support for
+    64-bit operations yet.  */
+ 
++#ifndef inhibit_libc
+ #include <asm/unistd.h>
++#endif
+ #include <stdbool.h>
+ 
+ #ifndef __NR_atomic_cmpxchg_32
+diff -up gcc-4.7.2-20121114-aarch64/libgcc/config/alpha/linux-unwind.h.orig gcc-4.7.2-20121114-aarch64/libgcc/config/alpha/linux-unwind.h
+--- gcc-4.7.2-20121114-aarch64/libgcc/config/alpha/linux-unwind.h.orig	2012-11-15 18:26:48.888857287 +0100
++++ gcc-4.7.2-20121114-aarch64/libgcc/config/alpha/linux-unwind.h	2012-11-15 18:26:57.831715622 +0100
+@@ -25,6 +25,8 @@ see the files COPYING3 and COPYING.RUNTI
+ /* Do code reading to identify a signal frame, and set the frame
+    state data appropriately.  See unwind-dw2.c for the structs.  */
+ 
++#ifndef inhibit_libc
++
+ #include <signal.h>
+ #include <sys/ucontext.h>
+ 
+@@ -97,3 +99,5 @@ alpha_frob_update_context (struct _Unwin
+ 	  || pc[1] == 0x201f015f))	/* lda $0,NR_rt_sigreturn */
+     _Unwind_SetSignalFrame (context, 1);
+ }
++
++#endif

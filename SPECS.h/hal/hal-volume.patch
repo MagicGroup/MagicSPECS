@@ -1,0 +1,30 @@
+diff -ur hal-0.5.13/hald/linux/blockdev.c hal-0.5.13.new/hald/linux/blockdev.c
+--- hal-0.5.13/hald/linux/blockdev.c	2009-05-16 00:29:49.000000000 +0800
++++ hal-0.5.13.new/hald/linux/blockdev.c	2010-04-28 16:03:28.000000000 +0800
+@@ -77,8 +77,9 @@
+ 
+         /* If we had to fix more than 20% of the characters, give up */
+         if (fixes > 0 && g_utf8_strlen (newstr, -1) / fixes < 5) {
+-            g_free (newstr);
+-            newstr = g_strdup("");
++            //g_free (newstr);
++            //newstr = g_strdup("");
++            newstr = g_convert (str, -1, "UTF-8", "GBK", NULL, NULL, NULL);
+         }
+ 
+         return newstr;
+diff -ur hal-0.5.13/hald/linux/probing/probe-volume.c hal-0.5.13.new/hald/linux/probing/probe-volume.c
+--- hal-0.5.13/hald/linux/probing/probe-volume.c	2009-05-28 04:26:03.000000000 +0800
++++ hal-0.5.13.new/hald/linux/probing/probe-volume.c	2010-04-28 16:03:43.000000000 +0800
+@@ -69,8 +69,9 @@
+ 
+ 	/* If we had to fix more than 20% of the characters, give up */
+ 	if (fixes > 0 && g_utf8_strlen (newstr, -1) / fixes < 5) {
+-	    g_free (newstr);
+-	    newstr = g_strdup("");
++	    //g_free (newstr);
++	    //newstr = g_strdup("");
++	    newstr = g_convert (str, -1, "UTF-8", "GBK", NULL, NULL, NULL);
+ 	}
+ 
+ 	return newstr;

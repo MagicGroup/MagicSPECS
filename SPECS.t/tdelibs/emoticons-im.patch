@@ -1,0 +1,26 @@
+diff -u -r kdelibs-3.5.6.orig/pics/emoticons/emoticons.xml kdelibs-3.5.6/pics/emoticons/emoticons.xml
+--- kdelibs-3.5.6.orig/pics/emoticons/emoticons.xml	2007-01-26 12:48:39.000000000 +0800
++++ kdelibs-3.5.6/pics/emoticons/emoticons.xml	2007-03-28 21:32:59.000000000 +0800
+@@ -182,4 +182,22 @@
+ 	<string>;)</string>
+ </emoticon>
+ 
++<emoticon file="im">
++	<string>*red+u</string>
++	<string>*bgca</string>
++	<string>*naf</string>
++	<string>*mssoc</string>
++	<string>*9mil</string>
++	<string>*sierra</string>
++	<string>*help</string>
++	<string>*komen</string>
++	<string>*unicef</string>
++	<string>*wwf</string>
++	<string>*oxfam</string>
++	<string>*care</string>
++	<string>*hsus</string>
++	<string>*acs</string>
++	<string>*one</string>
++</emoticon>
++
+ </messaging-emoticon-map>

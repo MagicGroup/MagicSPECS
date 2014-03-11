@@ -1,0 +1,12 @@
+diff -up initscripts-9.39/systemd/system/fedora-wait-storage.service.old initscripts-9.39/systemd/system/fedora-wait-storage.service
+--- initscripts-9.39/systemd/system/fedora-wait-storage.service.old	2012-06-29 16:28:04.000000000 -0400
++++ initscripts-9.39/systemd/system/fedora-wait-storage.service	2012-07-09 14:47:30.288511989 -0400
+@@ -4,7 +4,7 @@ DefaultDependencies=no
+ Conflicts=shutdown.target
+ After=systemd-udev-settle.service
+ Before=local-fs.target shutdown.target
+-Wants=systemd-udev.service systemd-udev-settle.service
++Wants=systemd-udev-settle.service
+ 
+ [Service]
+ ExecStart=-/sbin/rmmod scsi_wait_scan

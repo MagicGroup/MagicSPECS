@@ -1,0 +1,99 @@
+2013-12-12  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/58956
+	PR middle-end/59470
+	* tree-ssa-ter.c (find_ssa_name): New helper function.
+	(find_replaceable_in_bb): For calls, only set same_root_var
+	if USE is used somewhere in gimple_call_lhs, for GIMPLE_ASM,
+	only set same_root_var if USE is used somewhere in output operand
+	trees.
+
+	* gcc.target/i386/pr59470.c: New test.
+
+--- gcc/tree-ssa-ter.c.jj	2013-12-10 08:52:13.000000000 +0100
++++ gcc/tree-ssa-ter.c	2013-12-12 10:43:26.177866960 +0100
+@@ -554,6 +554,20 @@ mark_replaceable (temp_expr_table_p tab,
+ }
+ 
+ 
++/* Helper function for find_replaceable_in_bb.  Called via walk_tree to
++   find a SSA_NAME DATA somewhere in *TP.  */
++
++static tree
++find_ssa_name (tree *tp, int *walk_subtrees, void *data)
++{
++  tree var = (tree) data;
++  if (*tp == var)
++    return var;
++  else if (IS_TYPE_OR_DECL_P (*tp))
++    *walk_subtrees = 0;
++  return NULL_TREE;
++}
++
+ /* This function processes basic block BB, and looks for variables which can
+    be replaced by their expressions.  Results are stored in the table TAB.  */
+ 
+@@ -618,7 +632,42 @@ find_replaceable_in_bb (temp_expr_table_
+ 		      && gimple_assign_single_p (def_stmt)
+ 		      && stmt_may_clobber_ref_p (stmt,
+ 						 gimple_assign_rhs1 (def_stmt)))
+-		    same_root_var = true;
++		    {
++		      if (is_gimple_call (stmt))
++			{
++			  /* For calls, it is not a problem if USE is among
++			     call's arguments or say OBJ_TYPE_REF argument,
++			     all those necessarily need to be evaluated before
++			     the call that may clobber the memory.  But if
++			     LHS of the call refers to USE, expansion might
++			     evaluate it after the call, prevent TER in that
++			     case.  */
++			  if (gimple_call_lhs (stmt)
++			      && TREE_CODE (gimple_call_lhs (stmt)) != SSA_NAME
++			      && walk_tree (gimple_call_lhs_ptr (stmt),
++					    find_ssa_name, use, NULL))
++			    same_root_var = true;
++			}
++		      else if (gimple_code (stmt) == GIMPLE_ASM)
++			{
++			  /* For inline asm, allow TER of loads into input
++			     arguments, but disallow TER for USEs that occur
++			     somewhere in outputs.  */
++			  unsigned int i;
++			  for (i = 0; i < gimple_asm_noutputs (stmt); i++)
++			    if (TREE_CODE (gimple_asm_output_op (stmt, i))
++				!= SSA_NAME
++				&& walk_tree (gimple_asm_output_op_ptr (stmt,
++									i),
++					      find_ssa_name, use, NULL))
++			      {
++				same_root_var = true;
++				break;
++			      }
++			}
++		      else
++			same_root_var = true;
++		    }
+ 		}
+ 
+ 	      /* Mark expression as replaceable unless stmt is volatile, or the
+--- gcc/testsuite/gcc.target/i386/pr59470.c.jj	2013-12-12 10:31:54.746517544 +0100
++++ gcc/testsuite/gcc.target/i386/pr59470.c	2013-12-12 10:32:42.045273313 +0100
+@@ -0,0 +1,17 @@
++/* PR middle-end/58956 */
++/* PR middle-end/59470 */
++/* { dg-do run } */
++/* { dg-options "-O2" } */
++
++int a, b, d[1024];
++
++int
++main ()
++{
++  int c = a;
++  asm ("{movl $6, (%2); movl $1, %0|mov dword ptr [%2], 6; mov %0, 1}"
++       : "=r" (d[c]) : "rm" (b), "r" (&a) : "memory");
++  if (d[0] != 1 || d[6] != 0)
++    __builtin_abort ();
++  return 0;
++}

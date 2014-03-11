@@ -1,0 +1,18 @@
+diff -ur kde-workspace-4.10.3.orig/plasma/desktop/applets/kickoff/core/favoritesmodel.cpp kde-workspace-4.10.3/plasma/desktop/applets/kickoff/core/favoritesmodel.cpp
+--- kde-workspace-4.10.3.orig/plasma/desktop/applets/kickoff/core/favoritesmodel.cpp	2013-05-31 05:17:22.000000000 +0000
++++ kde-workspace-4.10.3/plasma/desktop/applets/kickoff/core/favoritesmodel.cpp	2013-05-31 06:48:36.000000000 +0000
+@@ -105,12 +105,11 @@
+     static QList<QString> defaultFavorites()
+     {
+         QList<QString> applications;
+-        applications << "konqbrowser" << "KMail2" << "systemsettings" << "dolphin";
+-
++	applications << "KMail2" << "pidgin" << "kopete" << "systemsettings" << "amarok" << "kate" << "apper";
+         QList<QString> desktopFiles;
+ 
+         foreach (const QString& application, applications) {
+-            KService::Ptr service = KService::serviceByStorageId("kde4-" + application + ".desktop");
++            KService::Ptr service = KService::serviceByStorageId(application + ".desktop");
+             if (service) {
+                 desktopFiles << service->entryPath();
+             }

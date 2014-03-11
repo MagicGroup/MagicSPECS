@@ -1,0 +1,32 @@
+diff --git a/Source/WebKit2/GNUmakefile.am b/Source/WebKit2/GNUmakefile.am
+index 9a02bbd..c775990 100644
+--- a/Source/WebKit2/GNUmakefile.am
++++ b/Source/WebKit2/GNUmakefile.am
+@@ -572,6 +572,7 @@ Programs_WebKitPluginProcess_LDADD += \
+ 	$(PANGO_LIBS) \
+ 	$(PNG_LIBS) \
+ 	$(SHLWAPI_LIBS) \
++	$(SHM_LIBS) \
+ 	$(SQLITE3_LIBS) \
+ 	$(UNICODE_LIBS) \
+ 	$(XRENDER_LIBS) \
+diff --git a/configure.ac b/configure.ac
+index 4e1f0e8..1fa99f0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1118,6 +1118,15 @@ if test "$enable_webkit2" = "yes"; then
+    if test "$have_gtk_unix_printing" = "yes"; then
+        AC_DEFINE([HAVE_GTK_UNIX_PRINTING], [1], [Define if GTK+ UNIX Printing is available])
+    fi
++
++   # On some Linux/Unix platforms, shm_* may only be available if linking
++   # against librt
++   if test "$os_win32" = "no"; then
++       save_LIBS="$LIBS"
++       AC_SEARCH_LIBS([shm_open], [rt], [SHM_LIBS="-lrt"])
++       AC_SUBST(SHM_LIBS)
++       LIBS="$save_LIBS"
++   fi
+ fi
+ 
+ # Plugin Process

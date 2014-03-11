@@ -1,0 +1,54 @@
+diff -up chromium-14.0.835.186/build/linux/system.gyp.speex chromium-14.0.835.186/build/linux/system.gyp
+--- chromium-14.0.835.186/build/linux/system.gyp.speex	2011-09-27 09:30:14.000000000 -0400
++++ chromium-14.0.835.186/build/linux/system.gyp	2011-09-27 09:33:17.686017742 -0400
+@@ -423,6 +423,26 @@
+       }]]
+     },
+     {
++      'target_name': 'speex',
++      'type': 'settings',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags speex)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other speex)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l speex)',
++            ],
++          },
++      }]]
++    },
++    {
+       'target_name': 'gnome_keyring',
+       'type': 'settings',
+       'conditions': [
+diff -up chromium-14.0.835.186/content/browser/speech/audio_encoder.cc.speex chromium-14.0.835.186/content/browser/speech/audio_encoder.cc
+--- chromium-14.0.835.186/content/browser/speech/audio_encoder.cc.speex	2011-09-20 04:26:10.000000000 -0400
++++ chromium-14.0.835.186/content/browser/speech/audio_encoder.cc	2011-09-27 09:33:55.126921037 -0400
+@@ -10,7 +10,7 @@
+ #include "base/stl_util.h"
+ #include "base/string_number_conversions.h"
+ #include "third_party/flac/flac.h"
+-#include "third_party/speex/speex.h"
++#include <speex/speex.h>
+ 
+ using std::string;
+ 
+diff -up chromium-14.0.835.186/content/content_browser.gypi.speex chromium-14.0.835.186/content/content_browser.gypi
+--- chromium-14.0.835.186/content/content_browser.gypi.speex	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/content_browser.gypi	2011-09-27 09:30:15.397004069 -0400
+@@ -15,7 +15,7 @@
+         '../third_party/flac/flac.gyp:libflac',
+         # TODO(ericu): remove leveldb ref after crbug.com/6955013 is fixed.
+         '../third_party/leveldb/leveldb.gyp:leveldb',
+-        '../third_party/speex/speex.gyp:libspeex',
++        '../build/linux/system.gyp:speex',
+         '../third_party/WebKit/Source/WebKit/chromium/WebKit.gyp:webkit',
+         '../third_party/zlib/zlib.gyp:zlib',
+         '../ui/ui.gyp:ui',

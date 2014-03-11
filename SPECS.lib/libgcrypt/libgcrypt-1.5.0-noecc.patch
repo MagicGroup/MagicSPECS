@@ -1,0 +1,12 @@
+diff -up libgcrypt-1.5.0/tests/Makefile.noecc libgcrypt-1.5.0/tests/Makefile
+--- libgcrypt-1.5.0/tests/Makefile.in.noecc	2011-07-21 15:34:33.000000000 +0200
++++ libgcrypt-1.5.0/tests/Makefile.in	2011-07-21 15:39:35.000000000 +0200
+@@ -57,7 +57,7 @@ TESTS = version$(EXEEXT) t-mpi-bit$(EXEE
+ 	ac-data$(EXEEXT) basic$(EXEEXT) mpitests$(EXEEXT) \
+ 	tsexp$(EXEEXT) keygen$(EXEEXT) pubkey$(EXEEXT) hmac$(EXEEXT) \
+ 	keygrip$(EXEEXT) fips186-dsa$(EXEEXT) aeswrap$(EXEEXT) \
+-	curves$(EXEEXT) t-kdf$(EXEEXT) pkcs1v2$(EXEEXT) \
++	t-kdf$(EXEEXT) pkcs1v2$(EXEEXT) \
+ 	$(am__EXEEXT_1) benchmark$(EXEEXT)
+ 
+ # random.c uses fork() thus a test for W32 does not make any sense.

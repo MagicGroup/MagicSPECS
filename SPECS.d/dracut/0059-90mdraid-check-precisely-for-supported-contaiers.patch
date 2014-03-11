@@ -1,0 +1,46 @@
+From db9b9f396e8d923591725f648c0a35789286254b Mon Sep 17 00:00:00 2001
+From: Michal Soltys <soltys@ziu.info>
+Date: Thu, 22 Sep 2011 17:09:56 +0200
+Subject: [PATCH] 90mdraid: check precisely for supported contaiers
+
+ID_FS_TYPE can be much more than just ddf/imsm/linux raid member, so
+do the proper checks.
+
+This reverts certain changes from:
+cf5891424ef026eede69606a918dadf5560095fd
+
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+---
+ modules.d/90mdraid/65-md-incremental-imsm.rules |    5 ++++-
+ modules.d/90mdraid/module-setup.sh              |    2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/modules.d/90mdraid/65-md-incremental-imsm.rules b/modules.d/90mdraid/65-md-incremental-imsm.rules
+index 209b17b..ea3a889 100644
+--- a/modules.d/90mdraid/65-md-incremental-imsm.rules
++++ b/modules.d/90mdraid/65-md-incremental-imsm.rules
+@@ -7,7 +7,10 @@ SUBSYSTEM!="block", GOTO="md_end"
+ ENV{rd_NO_MD}=="?*", GOTO="md_end"
+ KERNEL=="md*", GOTO="md_end"
+ 
+-ENV{ID_FS_TYPE}!="*_raid_member", GOTO="md_end"
++ENV{ID_FS_TYPE}=="ddf_raid_member|isw_raid_member|linux_raid_member", GOTO="md_try"
++GOTO="md_end"
++
++LABEL="md_try"
+ ENV{ID_FS_TYPE}=="isw_raid_member", ENV{rd_NO_MDIMSM}=="?*", GOTO="md_end"
+ ENV{ID_FS_TYPE}=="ddf_raid_member", ENV{rd_NO_MDDDF}=="?*", GOTO="md_end"
+ 
+diff --git a/modules.d/90mdraid/module-setup.sh b/modules.d/90mdraid/module-setup.sh
+index 12e6739..d4a9870 100755
+--- a/modules.d/90mdraid/module-setup.sh
++++ b/modules.d/90mdraid/module-setup.sh
+@@ -20,7 +20,7 @@ check() {
+             check_block_and_slaves is_mdraid "$_rootdev" || return 1
+         else
+             # root is not on a block device, use the shotgun approach
+-            blkid | grep -q '"[^"]*_raid_member"' || return 1
++            blkid | egrep -q '(linux|isw|ddf)_raid' || return 1
+         fi
+     }
+ 

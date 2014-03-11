@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# chkconfig:	- 26 89
+
+### BEGIN INIT INFO
+# Required-Start: bluetooth
+# Default-Start: 
+# Short-Description: Bluetooth Dial-Up-Networking Daemon.
+# Description: Bluetooth Dial-Up-Networking Daemon. Provides PPP over RFCOMM
+# services.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+[ -f /etc/sysconfig/network ] && . /etc/sysconfig/network
+
+[ "${NETWORKING}" = "yes" ] || exit 0
+
+[ -r /etc/sysconfig/dund ] && . /etc/sysconfig/dund
+
+start() 
+{
+	[ -z "$DUNDARGS" ] && exit 6
+
+        echo -n $"Starting dund: "
+        daemon /usr/bin/dund $DUNDARGS
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && touch /var/lock/subsys/dund
+        return $RETVAL
+}
+
+stop() 
+{
+        echo -n $"Shutting down dund: "
+	/usr/bin/dund -K
+	killproc dund
+	RETVAL=$?
+
+	rm -f  /var/lock/subsys/dund
+        echo
+	return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+        ;;
+  stop)
+	stop
+        ;;
+  force-reload|restart|reload)
+	stop
+	start
+	;;
+  try-restart|condrestart)
+	[ -e /var/lock/subsys/dund ] && (stop; start)
+	;;
+  status)
+  	status dund
+	RETVAL=$?
+	;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart|reload|condrestart}"
+        exit 3
+esac
+
+exit $RETVAL

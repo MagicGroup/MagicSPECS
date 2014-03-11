@@ -1,0 +1,33 @@
+diff -up DirectFB-1.5.3/tests/Makefile.am.lm DirectFB-1.5.3/tests/Makefile.am
+--- DirectFB-1.5.3/tests/Makefile.am.lm	2011-08-23 23:43:18.208040936 +0200
++++ DirectFB-1.5.3/tests/Makefile.am	2011-08-23 23:46:11.940784728 +0200
+@@ -98,11 +98,11 @@ dfbtest_gl1_LDADD   = $(libdirectfb) $(l
+ 
+ dfbtest_gl2_SOURCES = dfbtest_gl2.c
+ dfbtest_gl2_CFLAGS  = $(GLES2_CFLAGS)
+-dfbtest_gl2_LDADD   = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS)
++dfbtest_gl2_LDADD   = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS) -lm
+ 
+ dfbtest_gl3_SOURCES = dfbtest_gl3.c
+ dfbtest_gl3_CFLAGS  = $(GLES2_CFLAGS)
+-dfbtest_gl3_LDADD   = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS)
++dfbtest_gl3_LDADD   = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS) -lm
+ 
+ dfbtest_mirror_SOURCES = dfbtest_mirror.c
+ dfbtest_mirror_LDADD   = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect)
+diff -up DirectFB-1.5.3/tests/Makefile.in.lm DirectFB-1.5.3/tests/Makefile.in
+--- DirectFB-1.5.3/tests/Makefile.in.lm	2011-08-07 10:17:49.000000000 +0200
++++ DirectFB-1.5.3/tests/Makefile.in	2011-08-23 23:46:54.616981247 +0200
+@@ -575,10 +575,10 @@ dfbtest_gl1_CFLAGS = $(GLES2_CFLAGS)
+ dfbtest_gl1_LDADD = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS)
+ dfbtest_gl2_SOURCES = dfbtest_gl2.c
+ dfbtest_gl2_CFLAGS = $(GLES2_CFLAGS)
+-dfbtest_gl2_LDADD = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS)
++dfbtest_gl2_LDADD = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS) -lm
+ dfbtest_gl3_SOURCES = dfbtest_gl3.c
+ dfbtest_gl3_CFLAGS = $(GLES2_CFLAGS)
+-dfbtest_gl3_LDADD = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS)
++dfbtest_gl3_LDADD = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect) $(GLES2_LIBS) -lm
+ dfbtest_mirror_SOURCES = dfbtest_mirror.c
+ dfbtest_mirror_LDADD = $(libdirectfb) $(libvoodoo) $(libfusion) $(libdirect)
+ dfbtest_reinit_SOURCES = dfbtest_reinit.c

@@ -1,0 +1,54 @@
+--- a/kdm/backend/dm.c
++++ b/kdm/backend/dm.c
+@@ -39,6 +39,7 @@
+ #include "dm_error.h"
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <stdarg.h>
+@@ -588,6 +589,16 @@
+                debug( "exec %\"[s\n", argv );
+                 (void)execv( argv[0], argv );
+                 logError( "X server %\"s cannot be executed\n", argv[0] );
++
++                /* Let's try again with a standard path */
++                argv[0] = (char *)realloc(argv[0], strlen("/usr/bin/X") + 1);
++                if (argv[0] != NULL) {
++                        argv[0] = "/usr/bin/X";
++                        debug( "exec %\"[s\n", argv );
++                        (void)execv( argv[0], argv );
++                        logError( "X server %\"s cannot be executed\n", argv[0] );
++                }
++
+                exit( 1 );
+         case -1:
+                 logError( "Forking X server for remote login failed: %m" );
+--- a/kdm/backend/server.c
++++ b/kdm/backend/server.c
+@@ -41,6 +41,7 @@
+ #include <X11/Xlib.h>
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <signal.h>
+ 
+ 
+@@ -92,6 +93,16 @@
+                 */
+                 (void)Signal( SIGUSR1, SIG_IGN );
+                 (void)execv( argv[0], argv );
++
++               /* Let's try again with a standard path */
++               argv[0] = (char *)realloc(argv[0], strlen("/usr/bin/X") + 1);
++               if (argv[0] != NULL) {
++                       argv[0] = "/usr/bin/X";
++                       debug( "exec %\"[s\n", argv );
++                       (void)execv( argv[0], argv );
++                       logError( "X server %\"s cannot be executed\n", argv[0] );
++               }
++
+                logError( "X server %\"s cannot be executed\n", argv[0] );
+                 exit( 47 );
+         case -1:

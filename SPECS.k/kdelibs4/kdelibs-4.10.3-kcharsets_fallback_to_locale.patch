@@ -1,0 +1,21 @@
+diff -ur kdelibs-4.10.3.orig/kdecore/localization/kcharsets.cpp kdelibs-4.10.3/kdecore/localization/kcharsets.cpp
+--- kdelibs-4.10.3.orig/kdecore/localization/kcharsets.cpp	2013-05-27 14:00:28.000000000 +0000
++++ kdelibs-4.10.3/kdecore/localization/kcharsets.cpp	2013-05-29 11:27:06.000000000 +0000
+@@ -695,7 +695,7 @@
+     if ( codec )
+         return codec;
+     else
+-        return QTextCodec::codecForName( "iso-8859-1" );
++	return QTextCodec::codecForLocale();
+ }
+ 
+ QTextCodec* KCharsets::codecForName(const QString &n, bool &ok) const
+@@ -714,7 +714,7 @@
+     else
+     {
+         ok = false;
+-        return QTextCodec::codecForName( "iso-8859-1" );
++	return QTextCodec::codecForLocale();
+     }
+ }
+ 

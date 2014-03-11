@@ -1,0 +1,38 @@
+--- xscreensaver-5.07/hacks/config/webcollage.xml.nonet	2008-08-04 04:23:41.000000000 +0900
++++ xscreensaver-5.07/hacks/config/webcollage.xml	2008-11-19 16:54:33.000000000 +0900
+@@ -28,8 +28,8 @@
+   <string id="filter"  _label="Per-image filter program" arg="-filter %"/>
+   <string id="filter2" _label="Overall filter program" arg="-filter2 %"/>
+   <file id="dictionary" _label="Dictionary file" arg="-dictionary %"/>
+-  <file id="dir" _label="Image directory" arg="-directory %"/>
+  -->
++  <file id="dir" _label="Image directory" arg="-directory %"/>
+ 
+   <_description>
+ This makes collages out of random images pulled off of the
+@@ -44,6 +44,11 @@
+ 
+ See also http://www.jwz.org/webcollage/
+ 
++NOTE:
++Webcollage on Fedora does not connect to internet by default
++and uses image files on your local disk. If you want webcollage to
++search for image files on net, use webcollage.original .
++
+ Written by Jamie Zawinski; 1999.
+   </_description>
+ </screensaver>
+--- xscreensaver-5.07/hacks/webcollage.man.nonet	2008-08-01 05:00:23.000000000 +0900
++++ xscreensaver-5.07/hacks/webcollage.man	2008-11-19 16:47:04.000000000 +0900
+@@ -173,6 +173,11 @@
+ .TP 8
+ .B \-fps
+ Display the current frame rate and CPU load.
++.SH NOTES FOR FEDORA USER
++Webcollage on Fedora uses '-directory' option by default, so it
++.B does not connect to internet 
++and uses image files on your local disk. If you want webcollage to
++search for image files on net, use webcollage.original .
+ .SH ENVIRONMENT
+ .PP
+ .TP 8

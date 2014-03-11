@@ -1,0 +1,12 @@
+Index: kdebase-runtime-4.4.2/l10n/us/entry.desktop
+===================================================================
+--- kdebase-runtime-4.4.2.orig/l10n/us/entry.desktop	2010-04-07 23:24:20.435839086 -0400
++++ kdebase-runtime-4.4.2/l10n/us/entry.desktop	2010-04-07 23:24:41.862840632 -0400
+@@ -100,6 +100,7 @@
+ NegativePrefixCurrencySymbol=true
+ PositiveMonetarySignPosition=1
+ NegativeMonetarySignPosition=1
++DateFormat=%A, %B %d, %Y
+ DateFormat[es]=%a %d %b %Y
+ DateFormat[eo]=%A, la %ea de %B %Y
+ DateFormatShort=%m/%d/%y

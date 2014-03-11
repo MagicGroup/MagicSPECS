@@ -1,0 +1,164 @@
+diff -ur gtksourceview-2.11.2.orig/configure.ac gtksourceview-2.11.2/configure.ac
+--- gtksourceview-2.11.2.orig/configure.ac	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/configure.ac	2012-01-17 04:53:06.000000000 -0500
+@@ -74,9 +74,9 @@
+ 
+ PKG_CHECK_EXISTS([gtk+-3.0 >= 2.90],
+ 		 [
+-		 	GTK_REQUIRED=gtk+-3.0
+-		 	GTK_REQUIRED_VERSION=2.90.0
+-			GTK_TYPELIB=Gtk-3.0
++		 	GTK_REQUIRED=gtk+-2.0
++		 	GTK_REQUIRED_VERSION=2.16.0
++			GTK_TYPELIB=Gtk-2.0
+ 		 ],[
+ 		 	GTK_REQUIRED=gtk+-2.0
+ 		 	GTK_REQUIRED_VERSION=2.16.0
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/gtksourceiter.c gtksourceview-2.11.2/gtksourceview/gtksourceiter.c
+--- gtksourceview-2.11.2.orig/gtksourceview/gtksourceiter.c	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/gtksourceiter.c	2012-01-17 05:08:18.000000000 -0500
+@@ -80,7 +80,7 @@
+ 	/* If string contains prefix, check that prefix is not followed
+ 	 * by a unicode mark symbol, e.g. that trailing 'a' in prefix
+ 	 * is not part of two-char a-with-hat symbol in string. */
+-	return type != G_UNICODE_COMBINING_MARK &&
++	return type != G_UNICODE_SPACING_MARK &&
+ 		type != G_UNICODE_ENCLOSING_MARK &&
+ 		type != G_UNICODE_NON_SPACING_MARK;
+ }
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/gtksourcelanguagemanager.c gtksourceview-2.11.2/gtksourceview/gtksourcelanguagemanager.c
+--- gtksourceview-2.11.2.orig/gtksourceview/gtksourcelanguagemanager.c	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/gtksourcelanguagemanager.c	2012-01-17 04:56:25.000000000 -0500
+@@ -274,7 +274,7 @@
+  * containg a list of language files directories.
+  * The array is owned by @lm and must not be modified.
+  */
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ gtk_source_language_manager_get_search_path (GtkSourceLanguageManager *lm)
+ {
+ 	g_return_val_if_fail (GTK_IS_SOURCE_LANGUAGE_MANAGER (lm), NULL);
+@@ -392,7 +392,7 @@
+  * available languages or %NULL if no language is available. The array
+  * is owned by @lm and must not be modified.
+  */
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ gtk_source_language_manager_get_language_ids (GtkSourceLanguageManager *lm)
+ {
+ 	g_return_val_if_fail (GTK_IS_SOURCE_LANGUAGE_MANAGER (lm), NULL);
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/gtksourcelanguagemanager.h gtksourceview-2.11.2/gtksourceview/gtksourcelanguagemanager.h
+--- gtksourceview-2.11.2.orig/gtksourceview/gtksourcelanguagemanager.h	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/gtksourcelanguagemanager.h	2012-01-17 04:56:25.000000000 -0500
+@@ -62,13 +62,13 @@
+ 
+ GtkSourceLanguageManager *gtk_source_language_manager_get_default		(void);
+ 
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ 			  gtk_source_language_manager_get_search_path		(GtkSourceLanguageManager *lm);
+ 
+ void			  gtk_source_language_manager_set_search_path		(GtkSourceLanguageManager *lm,
+ 										 gchar                   **dirs);
+ 
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ 			  gtk_source_language_manager_get_language_ids		(GtkSourceLanguageManager *lm);
+ 
+ GtkSourceLanguage	 *gtk_source_language_manager_get_language		(GtkSourceLanguageManager *lm,
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/gtksourcestylescheme.c gtksourceview-2.11.2/gtksourceview/gtksourcestylescheme.c
+--- gtksourceview-2.11.2.orig/gtksourceview/gtksourcestylescheme.c	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/gtksourcestylescheme.c	2012-01-17 04:56:25.000000000 -0500
+@@ -310,7 +310,7 @@
+  *
+  * Since: 2.0
+  */
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ gtk_source_style_scheme_get_authors (GtkSourceStyleScheme *scheme)
+ {
+ 	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME (scheme), NULL);
+@@ -318,7 +318,7 @@
+ 	if (scheme->priv->authors == NULL)
+ 		return NULL;
+ 
+-	return (G_CONST_RETURN gchar* G_CONST_RETURN *)scheme->priv->authors->pdata;
++	return (const gchar* const *)scheme->priv->authors->pdata;
+ }
+ 
+ /**
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/gtksourcestylescheme.h gtksourceview-2.11.2/gtksourceview/gtksourcestylescheme.h
+--- gtksourceview-2.11.2.orig/gtksourceview/gtksourcestylescheme.h	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/gtksourcestylescheme.h	2012-01-17 04:56:25.000000000 -0500
+@@ -61,7 +61,7 @@
+ const gchar             *gtk_source_style_scheme_get_name       (GtkSourceStyleScheme *scheme);
+ const gchar             *gtk_source_style_scheme_get_description(GtkSourceStyleScheme *scheme);
+ 
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ 			 gtk_source_style_scheme_get_authors	(GtkSourceStyleScheme *scheme);
+ 
+ const gchar             *gtk_source_style_scheme_get_filename	(GtkSourceStyleScheme *scheme);
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/gtksourcestyleschememanager.c gtksourceview-2.11.2/gtksourceview/gtksourcestyleschememanager.c
+--- gtksourceview-2.11.2.orig/gtksourceview/gtksourcestyleschememanager.c	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/gtksourcestyleschememanager.c	2012-01-17 04:56:25.000000000 -0500
+@@ -515,7 +515,7 @@
+  * of string containing the search path.
+  * The array is owned by the @manager and must not be modified.
+  */
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ gtk_source_style_scheme_manager_get_search_path (GtkSourceStyleSchemeManager *manager)
+ {
+ 	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME_MANAGER (manager), NULL);
+@@ -554,7 +554,7 @@
+  * of string containing the ids of the available style schemes or %NULL if no
+  * style scheme is available. The array is owned by the @manager and must not be modified.
+  */
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ gtk_source_style_scheme_manager_get_scheme_ids (GtkSourceStyleSchemeManager *manager)
+ {
+ 	g_return_val_if_fail (GTK_IS_SOURCE_STYLE_SCHEME_MANAGER (manager), NULL);
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/gtksourcestyleschememanager.h gtksourceview-2.11.2/gtksourceview/gtksourcestyleschememanager.h
+--- gtksourceview-2.11.2.orig/gtksourceview/gtksourcestyleschememanager.h	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/gtksourcestyleschememanager.h	2012-01-17 04:56:25.000000000 -0500
+@@ -73,12 +73,12 @@
+ void 			 gtk_source_style_scheme_manager_prepend_search_path   (GtkSourceStyleSchemeManager	*manager,
+ 						    				 const gchar			*path);
+ 
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ 			 gtk_source_style_scheme_manager_get_search_path	(GtkSourceStyleSchemeManager	*manager);
+ 
+ void			 gtk_source_style_scheme_manager_force_rescan		(GtkSourceStyleSchemeManager	*manager);
+ 
+-G_CONST_RETURN gchar* G_CONST_RETURN *
++const gchar* const *
+ 			 gtk_source_style_scheme_manager_get_scheme_ids		(GtkSourceStyleSchemeManager	*manager);
+ 
+ GtkSourceStyleScheme	*gtk_source_style_scheme_manager_get_scheme		(GtkSourceStyleSchemeManager	*manager,
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/Makefile.am gtksourceview-2.11.2/gtksourceview/Makefile.am
+--- gtksourceview-2.11.2.orig/gtksourceview/Makefile.am	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/Makefile.am	2012-01-17 05:18:20.000000000 -0500
+@@ -166,7 +166,7 @@
+ INTROSPECTION_SCANNER_ARGS = -I$(top_srcdir)
+ GtkSource_2_0_gir_NAMESPACE = GtkSource
+ GtkSource_2_0_gir_VERSION = 2.0
+-GtkSource_2_0_gir_LIBS = libgtksourceview-2.0.la
++GtkSource_2_0_gir_LIBS = libgtksourceview-2.0.la gio-2.0 gobject-2.0 gmodule-2.0 glib-2.0
+ GtkSource_2_0_gir_FILES = $(libgtksourceview_headers) $(libgtksourceview_c_files)
+ GtkSource_2_0_gir_INCLUDES = $(GTK_TYPELIB)
+ GtkSource_2_0_gir_PACKAGES = gtksourceview-2.0
+diff -ur gtksourceview-2.11.2.orig/gtksourceview/Makefile.in gtksourceview-2.11.2/gtksourceview/Makefile.in
+--- gtksourceview-2.11.2.orig/gtksourceview/Makefile.in	2012-01-17 04:32:01.000000000 -0500
++++ gtksourceview-2.11.2/gtksourceview/Makefile.in	2012-01-17 05:18:43.000000000 -0500
+@@ -462,7 +462,7 @@
+ @HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = -I$(top_srcdir)
+ @HAVE_INTROSPECTION_TRUE@GtkSource_2_0_gir_NAMESPACE = GtkSource
+ @HAVE_INTROSPECTION_TRUE@GtkSource_2_0_gir_VERSION = 2.0
+-@HAVE_INTROSPECTION_TRUE@GtkSource_2_0_gir_LIBS = libgtksourceview-2.0.la
++@HAVE_INTROSPECTION_TRUE@GtkSource_2_0_gir_LIBS = libgtksourceview-2.0.la gio-2.0 gobject-2.0 gmodule-2.0 glib-2.0
+ @HAVE_INTROSPECTION_TRUE@GtkSource_2_0_gir_FILES = $(libgtksourceview_headers) $(libgtksourceview_c_files)
+ @HAVE_INTROSPECTION_TRUE@GtkSource_2_0_gir_INCLUDES = $(GTK_TYPELIB)
+ @HAVE_INTROSPECTION_TRUE@GtkSource_2_0_gir_PACKAGES = gtksourceview-2.0

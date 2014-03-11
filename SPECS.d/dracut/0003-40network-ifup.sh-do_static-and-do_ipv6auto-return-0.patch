@@ -1,0 +1,38 @@
+From 50e350a6c5c549c4b11682df86d6773f4255d60d Mon Sep 17 00:00:00 2001
+From: WANG Chao <chaowang@redhat.com>
+Date: Thu, 18 Oct 2012 16:43:28 +0800
+Subject: [PATCH] 40network/ifup.sh: do_static() and do_ipv6auto return 0 if no
+ errors.
+
+Commit a0be1ed removes some lines from do_static() and do_ipv6auto().
+
+When $hostname is empty, do_static() and do_ipv6auto() will return 1
+and fails to run setup_net at the last of ifup.sh
+
+Signed-off-by: WANG Chao <chaowang@redhat.com>
+---
+ modules.d/40network/ifup.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/modules.d/40network/ifup.sh b/modules.d/40network/ifup.sh
+index 95289c9..db233de 100755
+--- a/modules.d/40network/ifup.sh
++++ b/modules.d/40network/ifup.sh
+@@ -88,6 +88,8 @@ do_ipv6auto() {
+     wait_for_if_up $netif
+ 
+     [ -n "$hostname" ] && echo "echo $hostname > /proc/sys/kernel/hostname" > /tmp/net.$netif.hostname
++
++    return 0
+ }
+ 
+ # Handle static ip configuration
+@@ -108,6 +110,8 @@ do_static() {
+ 
+     [ -n "$gw" ] && echo ip route add default via $gw dev $netif > /tmp/net.$netif.gw
+     [ -n "$hostname" ] && echo "echo $hostname > /proc/sys/kernel/hostname" > /tmp/net.$netif.hostname
++
++    return 0
+ }
+ 
+ # loopback is always handled the same way

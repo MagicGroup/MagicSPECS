@@ -1,0 +1,12 @@
+# default: off
+# description: A password generator
+service pwdgen
+{
+        disable         = yes
+        socket_type     = stream
+        wait            = no
+        user            = root
+        server          = /usr/sbin/apgd
+        server_args     = -M sncl -EO -a 0 -r /usr/share/dict/words -m 8 -x 8 -t
+        log_on_failure  += USERID
+}

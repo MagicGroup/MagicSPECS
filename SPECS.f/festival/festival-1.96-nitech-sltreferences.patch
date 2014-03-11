@@ -1,0 +1,135 @@
+diff -ur festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm	2007-03-15 14:18:02.000000000 -0400
++++ festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm	2007-03-15 14:20:37.000000000 -0400
+@@ -101,10 +101,10 @@
+   t
+ )
+ 
+-(set! nitech_us_slt_arctic_hts::hts_feats_list
++(set! nitech_us_awb_arctic_hts::hts_feats_list
+       (load (path-append hts_data_dir "feat.list") t))
+ 
+-(set! nitech_us_slt_arctic_hts::hts_engine_params
++(set! nitech_us_awb_arctic_hts::hts_engine_params
+       (list
+        (list "-dm1" (path-append hts_data_dir "mcep_dyn.win"))
+        (list "-dm2" (path-append hts_data_dir "mcep_acc.win"))
+@@ -160,8 +160,8 @@
+   (nitech_us_awb_arctic::select_f0model)
+ 
+   ;; Waveform synthesis model: hts
+-  (set! hts_engine_params nitech_us_slt_arctic_hts::hts_engine_params)
+-  (set! hts_feats_list nitech_us_slt_arctic_hts::hts_feats_list)
++  (set! hts_engine_params nitech_us_awb_arctic_hts::hts_engine_params)
++  (set! hts_feats_list nitech_us_awb_arctic_hts::hts_feats_list)
+   (Parameter.set 'Synth_Method 'HTS)
+ 
+   ;; This is where you can modify power (and sampling rate) if desired
+diff -ur festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm	2007-03-15 14:18:03.000000000 -0400
++++ festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm	2007-03-15 14:20:43.000000000 -0400
+@@ -101,10 +101,10 @@
+   t
+ )
+ 
+-(set! nitech_us_slt_arctic_hts::hts_feats_list
++(set! nitech_us_bdl_arctic_hts::hts_feats_list
+       (load (path-append hts_data_dir "feat.list") t))
+ 
+-(set! nitech_us_slt_arctic_hts::hts_engine_params
++(set! nitech_us_bdl_arctic_hts::hts_engine_params
+       (list
+        (list "-dm1" (path-append hts_data_dir "mcep_dyn.win"))
+        (list "-dm2" (path-append hts_data_dir "mcep_acc.win"))
+@@ -160,8 +160,8 @@
+   (nitech_us_bdl_arctic::select_f0model)
+ 
+   ;; Waveform synthesis model: hts
+-  (set! hts_engine_params nitech_us_slt_arctic_hts::hts_engine_params)
+-  (set! hts_feats_list nitech_us_slt_arctic_hts::hts_feats_list)
++  (set! hts_engine_params nitech_us_bdl_arctic_hts::hts_engine_params)
++  (set! hts_feats_list nitech_us_bdl_arctic_hts::hts_feats_list)
+   (Parameter.set 'Synth_Method 'HTS)
+ 
+   ;; This is where you can modify power (and sampling rate) if desired
+diff -ur festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm	2007-03-15 14:18:03.000000000 -0400
++++ festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm	2007-03-15 14:20:50.000000000 -0400
+@@ -101,10 +101,10 @@
+   t
+ )
+ 
+-(set! nitech_us_slt_arctic_hts::hts_feats_list
++(set! nitech_us_clb_arctic_hts::hts_feats_list
+       (load (path-append hts_data_dir "feat.list") t))
+ 
+-(set! nitech_us_slt_arctic_hts::hts_engine_params
++(set! nitech_us_clb_arctic_hts::hts_engine_params
+       (list
+        (list "-dm1" (path-append hts_data_dir "mcep_dyn.win"))
+        (list "-dm2" (path-append hts_data_dir "mcep_acc.win"))
+@@ -160,8 +160,8 @@
+   (nitech_us_clb_arctic::select_f0model)
+ 
+   ;; Waveform synthesis model: hts
+-  (set! hts_engine_params nitech_us_slt_arctic_hts::hts_engine_params)
+-  (set! hts_feats_list nitech_us_slt_arctic_hts::hts_feats_list)
++  (set! hts_engine_params nitech_us_clb_arctic_hts::hts_engine_params)
++  (set! hts_feats_list nitech_us_clb_arctic_hts::hts_feats_list)
+   (Parameter.set 'Synth_Method 'HTS)
+ 
+   ;; This is where you can modify power (and sampling rate) if desired
+diff -ur festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm	2007-03-15 14:18:03.000000000 -0400
++++ festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm	2007-03-15 14:20:55.000000000 -0400
+@@ -101,10 +101,10 @@
+   t
+ )
+ 
+-(set! nitech_us_slt_arctic_hts::hts_feats_list
++(set! nitech_us_jmk_arctic_hts::hts_feats_list
+       (load (path-append hts_data_dir "feat.list") t))
+ 
+-(set! nitech_us_slt_arctic_hts::hts_engine_params
++(set! nitech_us_jmk_arctic_hts::hts_engine_params
+       (list
+        (list "-dm1" (path-append hts_data_dir "mcep_dyn.win"))
+        (list "-dm2" (path-append hts_data_dir "mcep_acc.win"))
+@@ -160,8 +160,8 @@
+   (nitech_us_jmk_arctic::select_f0model)
+ 
+   ;; Waveform synthesis model: hts
+-  (set! hts_engine_params nitech_us_slt_arctic_hts::hts_engine_params)
+-  (set! hts_feats_list nitech_us_slt_arctic_hts::hts_feats_list)
++  (set! hts_engine_params nitech_us_jmk_arctic_hts::hts_engine_params)
++  (set! hts_feats_list nitech_us_jmk_arctic_hts::hts_feats_list)
+   (Parameter.set 'Synth_Method 'HTS)
+ 
+   ;; This is where you can modify power (and sampling rate) if desired
+diff -ur festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm	2007-03-15 14:18:03.000000000 -0400
++++ festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm	2007-03-15 14:21:01.000000000 -0400
+@@ -101,10 +101,10 @@
+   t
+ )
+ 
+-(set! nitech_us_slt_arctic_hts::hts_feats_list
++(set! nitech_us_rms_arctic_hts::hts_feats_list
+       (load (path-append hts_data_dir "feat.list") t))
+ 
+-(set! nitech_us_slt_arctic_hts::hts_engine_params
++(set! nitech_us_rms_arctic_hts::hts_engine_params
+       (list
+        (list "-dm1" (path-append hts_data_dir "mcep_dyn.win"))
+        (list "-dm2" (path-append hts_data_dir "mcep_acc.win"))
+@@ -160,8 +160,8 @@
+   (nitech_us_rms_arctic::select_f0model)
+ 
+   ;; Waveform synthesis model: hts
+-  (set! hts_engine_params nitech_us_slt_arctic_hts::hts_engine_params)
+-  (set! hts_feats_list nitech_us_slt_arctic_hts::hts_feats_list)
++  (set! hts_engine_params nitech_us_rms_arctic_hts::hts_engine_params)
++  (set! hts_feats_list nitech_us_rms_arctic_hts::hts_feats_list)
+   (Parameter.set 'Synth_Method 'HTS)
+ 
+   ;; This is where you can modify power (and sampling rate) if desired

@@ -1,0 +1,16 @@
+diff -up Config-General-2.50/t/run.t~ Config-General-2.50/t/run.t
+--- Config-General-2.50/t/run.t~	2010-12-01 12:43:00.000000000 +0200
++++ Config-General-2.50/t/run.t	2010-12-02 17:37:02.252787307 +0200
+@@ -14,8 +14,11 @@ use Test::More tests => 68;
+ # ahem, we deliver the test code with a local copy of
+ # the Tie::IxHash module so we can do tests on sorted
+ # hashes without dependency to Tie::IxHash.
+-use lib qw(t);
++# ahem, in this rpm we don't (we want to test with the system installed one)
++#use lib qw(t);
+ use Tie::IxHash;
++
++
+ my @WARNINGS_FOUND;
+ BEGIN {
+     $SIG{__WARN__} = sub { diag( "WARN: ", join( '', @_ ) ); push @WARNINGS_FOUND, @_ };

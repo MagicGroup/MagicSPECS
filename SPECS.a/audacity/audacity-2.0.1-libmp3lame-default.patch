@@ -1,0 +1,12 @@
+diff -Nur audacity-src-2.0.0/src/AudacityApp.cpp audacity-src-2.0.1/src/AudacityApp.cpp
+--- audacity-src-2.0.0/src/AudacityApp.cpp	2012-07-03 20:49:56.494204862 +1000
++++ audacity-src-2.0.1/src/AudacityApp.cpp	2012-07-03 20:46:51.994199900 +1000
+@@ -1172,6 +1172,8 @@
+       return false;
+    }
+ 
++   gPrefs->Write(wxT("/MP3/MP3LibPath"), wxT("__RPM_LIBDIR__/libmp3lame.so.0"));
++
+    // More initialization
+ #ifdef CLEANSPEECH
+    InitCleanSpeech();

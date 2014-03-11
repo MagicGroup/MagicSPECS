@@ -1,0 +1,19 @@
+diff -Nuarp apps.orig/nsplugins/viewer/scripting.h apps/nsplugins/viewer/scripting.h
+--- apps.orig/nsplugins/viewer/scripting.h	2010-05-02 16:52:07.000000000 +0800
++++ apps/nsplugins/viewer/scripting.h	2010-05-02 16:53:05.000000000 +0800
+@@ -20,6 +20,8 @@
+ 
+ */
+ 
++#ifndef SCRIPTING_H
++#define SCRIPTING_H
+ #include "nsplugin.h"
+ #include "sdk/npruntime.h"
+ #include <kparts/browserextension.h>
+@@ -93,5 +95,6 @@ private:
+ 
+ } // namespace kdeNsPluginViewer
+ 
++#endif // SCRIPTING_H
+ // kate: indent-width 4; replace-tabs on; tab-width 4; space-indent on;
+ 

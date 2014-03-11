@@ -1,0 +1,4 @@
+: ${ML_ROOT=/var/lib/mldonkey/chroot}
+: ${ML_USER=mldonkey}
+: ${ML_GROUP=mldonkey}
+: ${ML_HOME=/var/lib/mldonkey/home}

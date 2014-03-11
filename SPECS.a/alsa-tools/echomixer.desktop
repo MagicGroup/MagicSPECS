@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Echomixer
+GenericName=Control Echo Digital Audio sound cards
+Comment=Mixer and GUI control utility for Echo Digital Audio sound cards
+Exec=echomixer  
+Icon=echomixer
+Terminal=false
+Type=Application
+Categories=Application;AudioVideo;
+Version=0.9.4

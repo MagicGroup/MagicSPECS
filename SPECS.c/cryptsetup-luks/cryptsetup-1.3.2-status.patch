@@ -1,0 +1,56 @@
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,6 @@
++2011-06-08  Milan Broz  <mbroz@redhat.com>
++	* Fix return code for status command when device doesn't exists.
++
+ 2011-05-24  Milan Broz  <mbroz@redhat.com>
+ 	* Version 1.3.1.
+ 
+--- a/src/cryptsetup.c
++++ b/src/cryptsetup.c
+@@ -366,10 +366,11 @@ static int action_status(int arg __attribute__((unused)))
+ 	ci = crypt_status(NULL, action_argv[0]);
+ 	switch (ci) {
+ 	case CRYPT_INVALID:
+-		r = -ENODEV;
++		r = -EINVAL;
+ 		break;
+ 	case CRYPT_INACTIVE:
+ 		log_std("%s/%s is inactive.\n", crypt_get_dir(), action_argv[0]);
++		r = -ENODEV;
+ 		break;
+ 	case CRYPT_ACTIVE:
+ 	case CRYPT_BUSY:
+--- a/tests/compat-test
++++ b/tests/compat-test
+@@ -255,6 +255,7 @@ $CRYPTSETUP -q status  $DEV_NAME | grep "size:" | grep -q "100 sectors" || fail
+ $CRYPTSETUP -q resize  $DEV_NAME || fail
+ $CRYPTSETUP -q status  $DEV_NAME | grep "size:" | grep -q "19997 sectors" || fail
+ $CRYPTSETUP -q remove  $DEV_NAME || fail
++$CRYPTSETUP -q status  $DEV_NAME >/dev/null && fail
+ echo "key0" | $CRYPTSETUP create $DEV_NAME --hash sha1 $LOOPDEV || fail
+ $CRYPTSETUP -q remove  $DEV_NAME || fail
+ echo "key0" | $CRYPTSETUP -q create $DEV_NAME --hash sha1 $LOOPDEV || fail
+--- a/tests/mode-test
++++ b/tests/mode-test
+@@ -51,7 +51,7 @@ add_device() {
+ 
+ dmcrypt_check() # device outstring
+ {
+-	X=$(dmsetup table $1 2>/dev/null | cut -d' '  -f 4)
++	X=$(dmsetup table $1 2>/dev/null | sed 's/.*: //' | cut -d' '  -f 4)
+ 	if [ $X = $2 ] ; then
+ 		echo -n "[table OK]"
+ 	else
+--- a/tests/password-hash-test
++++ b/tests/password-hash-test
+@@ -63,7 +63,7 @@ crypt_key() # hash keysize pwd/file name outkey [limit]
+ 		fi
+ 	fi
+ 
+-	VKEY=$(dmsetup table $DEV2 --showkeys 2>/dev/null | cut -d' '  -f 5)
++	VKEY=$(dmsetup table $DEV2 --showkeys 2>/dev/null | sed 's/.*: //' | cut -d' '  -f 5)
+ 	if [ "$VKEY" != "$5" ] ; then
+ 		echo " [FAILED]"
+ 		echo "expected: $5"

@@ -1,0 +1,92 @@
+--- ./src/widgets/qtextedit.cpp.resetinputcontext	2012-08-04 14:53:34.000000000 +0200
++++ ./src/widgets/qtextedit.cpp	2012-09-29 11:36:19.410163805 +0200
+@@ -1904,9 +1904,6 @@
+ 
+ void QTextEdit::removeSelectedText( int selNum )
+ {
+-    if(selNum != 0)
+-        resetInputContext();
+-
+     QTextCursor c1 = doc->selectionStartCursor( selNum );
+     c1.restoreState();
+     QTextCursor c2 = doc->selectionEndCursor( selNum );
+@@ -3169,7 +3166,6 @@
+ 	return;
+     }
+ #endif
+-    resetInputContext();
+     QTextParagraph *p = doc->paragAt( para );
+     if ( !p )
+ 	return;
+@@ -3196,7 +3192,6 @@
+ 	return;
+     }
+ #endif
+-    resetInputContext();
+     for ( int i = 0; i < (int)doc->numSelections(); ++i )
+ 	doc->removeSelection( i );
+ 
+@@ -3238,7 +3233,6 @@
+     if ( d->optimMode )
+ 	return;
+ #endif
+-    resetInputContext();
+     QTextParagraph *p = doc->paragAt( para );
+     if ( !p )
+ 	return;
+@@ -3283,7 +3277,6 @@
+     if ( isReadOnly() || !doc->commands()->isUndoAvailable() || !undoEnabled )
+ 	return;
+ 
+-    resetInputContext();
+     for ( int i = 0; i < (int)doc->numSelections(); ++i )
+ 	doc->removeSelection( i );
+ 
+@@ -3334,7 +3327,6 @@
+     if ( isReadOnly() || !doc->commands()->isRedoAvailable() || !undoEnabled )
+ 	return;
+ 
+-    resetInputContext();
+     for ( int i = 0; i < (int)doc->numSelections(); ++i )
+ 	doc->removeSelection( i );
+ 
+@@ -3448,7 +3440,6 @@
+ {
+     if ( isReadOnly() )
+ 	return;
+-    resetInputContext();
+     normalCopy();
+     removeSelectedText();
+     updateMicroFocusHint();
+@@ -3936,7 +3927,6 @@
+ 	return;
+     }
+ #endif
+-    resetInputContext();
+     if ( !isModified() && isReadOnly() &&
+ 	 this->context() == context && this->text() == text )
+ 	return;
+@@ -4110,7 +4100,6 @@
+     if ( !p )
+ 	return;
+ 
+-    resetInputContext();
+     if ( index > p->length() - 1 )
+ 	index = p->length() - 1;
+ 
+@@ -4167,7 +4156,6 @@
+ 	return;
+     }
+ #endif
+-    resetInputContext();
+     if ( doc->hasSelection( selNum ) ) {
+ 	doc->removeSelection( selNum );
+ 	repaintChanged();
+@@ -5074,7 +5062,6 @@
+     }
+     if ( dc == doc )
+ 	return;
+-    resetInputContext();
+     doc = dc;
+     delete cursor;
+     cursor = new QTextCursor( doc );

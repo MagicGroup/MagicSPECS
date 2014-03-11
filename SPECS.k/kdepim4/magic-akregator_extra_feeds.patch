@@ -1,0 +1,42 @@
+--- akregator/src/akregator_part.cpp
++++ akregator/src/akregator_part.cpp
+@@ -344,6 +344,39 @@
+     look.setAttribute("xmlUrl","http://www.kde.org/kde-look-content.rdf");
+     mainFolder.appendChild(look);
+ 
++    QDomElement kdecn = doc.createElement( "outline" );
++    kdecn.setAttribute("text",i18n("KDE 中国"));
++    kdecn.setAttribute("xmlUrl","http://www.kdecn.org/dot/dot.rdf");
++    mainFolder.appendChild(kdecn);
++
++    QDomElement yunfan = doc.createElement( "outline" );
++    yunfan.setAttribute("text",i18n("云帆论坛"));
++    yunfan.setAttribute("xmlUrl","http://www.myswear.net/forum/rss.php?auth=VwQBUDFqUggKVwBUUVM");
++    mainFolder.appendChild(yunfan);
++
++    QDomElement magicFolder = doc.createElement( "outline" );
++    magicFolder.setAttribute("text","MagicLinux");
++    body.appendChild(magicFolder);
++
++    QDomElement mgc = doc.createElement( "outline" );
++    mgc.setAttribute("text",i18n("Magic Linux 官方主站"));
++    mgc.setAttribute("xmlUrl","http://www.magiclinux.org/node/feed");
++    magicFolder.appendChild(mgc);
++
++    QDomElement mgcbbs = doc.createElement( "outline" );
++    mgcbbs.setAttribute("text",i18n("Magic Linux 技术支持社区"));
++    mgcbbs.setAttribute("xmlUrl","http://www.linuxfans.org/bbs/rss.php?fid=17&auth=4g5BlDDKfjRV0%2BWQt3uBtMY0TAiX9Aih3ls");
++    magicFolder.appendChild(mgcbbs);
++
++    QDomElement opensourceFolder = doc.createElement( "outline" );
++    opensourceFolder.setAttribute("text",i18n("开源新闻"));
++    body.appendChild(opensourceFolder);
++
++    QDomElement ownlinux = doc.createElement( "outline" );
++    ownlinux.setAttribute("text",i18n("OwnLinux.cn"));
++    ownlinux.setAttribute("xmlUrl","http://www.ownlinux.cn/feed/");
++    opensourceFolder.appendChild(ownlinux);
++
+     return doc;
+ }
+ 

@@ -1,0 +1,19 @@
+diff -up bash-completion-1.3/completions/perl~ bash-completion-1.3/completions/perl
+--- bash-completion-1.3/completions/perl~	2011-01-21 11:36:11.000000000 +0200
++++ bash-completion-1.3/completions/perl	2011-02-07 21:24:10.050008940 +0200
+@@ -4,13 +4,13 @@ have perl &&
+ {
+ _perlmodules()
+ {
+-    COMPREPLY=( $( compgen -P "$prefix" -W "$( $1 ${BASH_SOURCE[0]%/*}/helpers/perl modules $cur )" -- "$cur" ) )
++    COMPREPLY=( $( compgen -P "$prefix" -W "$( $1 $(dirname $(readlink -f ${BASH_SOURCE[0]}))/helpers/perl modules $cur )" -- "$cur" ) )
+     __ltrim_colon_completions "$prefix$cur"
+ }
+ 
+ _perlfunctions()
+ {
+-    COMPREPLY=( $( compgen -P "$prefix" -W "$( ${BASH_SOURCE[0]%/*}/helpers/perl functions $cur )" -- "$cur" ) )
++    COMPREPLY=( $( compgen -P "$prefix" -W "$( $(dirname $(readlink -f ${BASH_SOURCE[0]}))/helpers/perl functions $cur )" -- "$cur" ) )
+ }
+ 
+ _perl()

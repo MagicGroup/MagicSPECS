@@ -1,0 +1,22 @@
+diff -Nur webkitgtk-1.10.2-orig/Source/WTF/wtf/Platform.h webkitgtk-1.10.2/Source/WTF/wtf/Platform.h
+--- webkitgtk-1.10.2-orig/Source/WTF/wtf/Platform.h	2013-09-19 22:59:08.000000000 +0000
++++ webkitgtk-1.10.2/Source/WTF/wtf/Platform.h	2013-09-19 23:02:25.000000000 +0000
+@@ -76,8 +76,7 @@
+ 
+ /* CPU(MIPS) - MIPS 32-bit */
+ /* Note: Only O32 ABI is tested, so we enable it for O32 ABI for now.  */
+-#if (defined(mips) || defined(__mips__) || defined(MIPS) || defined(_MIPS_)) \
+-    && defined(_ABIO32)
++#if (defined(mips) || defined(__mips__) || defined(MIPS) || defined(_MIPS_)) 
+ #define WTF_CPU_MIPS 1
+ #if defined(__MIPSEB__)
+ #define WTF_CPU_BIG_ENDIAN 1
+@@ -857,7 +856,7 @@
+     || CPU(ALPHA) \
+     || CPU(SPARC64) \
+     || CPU(S390X) \
+-    || CPU(PPC64)
++    || CPU(PPC64) || defined(__mips64)
+ #define WTF_USE_JSVALUE64 1
+ #else
+ #define WTF_USE_JSVALUE32_64 1

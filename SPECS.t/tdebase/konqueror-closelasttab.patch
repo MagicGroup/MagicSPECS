@@ -1,0 +1,27 @@
+--- kdebase-3.5.7-orig/konqueror/konq_mainwindow.cc
++++ kdebase-3.5.7/konqueror/konq_mainwindow.cc
+@@ -4132,7 +4132,9 @@ void KonqMainWindow::updateViewActions()
+     {
+         KonqFrameTabs* tabContainer = static_cast<KonqFrameTabs*>(docContainer);
+         bool state = (tabContainer->count()>1);
+-        m_paRemoveTab->setEnabled( state );
++        // can close last tab
++        //m_paRemoveTab->setEnabled( state );
++        m_paRemoveTab->setEnabled( true );
+ 	m_paRemoveOtherTabs->setEnabled( state );
+         m_paBreakOffTab->setEnabled( state );
+         m_paActivateNextTab->setEnabled( state );
+--- kdebase-3.5.7-orig/konqueror/konq_viewmgr.cc
++++ kdebase-3.5.7/konqueror/konq_viewmgr.cc
+@@ -559,8 +559,10 @@ void KonqViewManager::removeTab( KonqFrameBase* tab )
+     }
+   }
+ 
++  // can close last tab
+   if ( tabContainer->count() == 1 )
+-    return;
++    m_pMainWindow->slotAddTab();
++  //  return;
+ 
+   if (currentFrame->widget() == tabContainer->currentPage())
+     setActivePart( 0L, true );

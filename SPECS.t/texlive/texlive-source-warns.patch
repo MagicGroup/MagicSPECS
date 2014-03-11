@@ -1,0 +1,224 @@
+--- libs/teckit/source/Compiler.cpp
++++ libs/teckit/source/Compiler.cpp	2007-03-02 10:34:35.000000000 +0000
+@@ -1397,13 +1397,16 @@ Compiler::Compiler(const char* txt, UInt
+ 				if (dest != 0) {
+ 					int	result = compress2(dest + 8, &destLen, compiledTable, compiledSize, Z_BEST_COMPRESSION);
+ 					if (result == Z_OK) {
+-						destLen += 8;
+-						realloc(dest, destLen);
+-						WRITE(((FileHeader*)dest)->type, kMagicNumberCmp);
+-						WRITE(((FileHeader*)dest)->version, compiledSize);
+-						free(compiledTable);
+-						compiledTable = dest;
+-						compiledSize = destLen;
++						if (realloc(dest, destLen+8) != NULL) {
++							destLen += 8;
++							WRITE(((FileHeader*)dest)->type, kMagicNumberCmp);
++							WRITE(((FileHeader*)dest)->version, compiledSize);
++							free(compiledTable);
++							compiledTable = dest;
++							compiledSize = destLen;
++						}
++						else
++							free(dest);
+ 					}
+ 					else
+ 						free(dest);
+--- texk/kpathsea/xputenv.c
++++ texk/kpathsea/xputenv.c	2007-03-02 10:14:53.000000000 +0000
+@@ -95,7 +95,7 @@ xputenv(const char *var, const char *val
+     if (cur_loc == saved_count) {
+         /* No old string. */
+         saved_count++;
+-        saved_env = XRETALLOC(saved_env, saved_count, const char *);
++        XRETALLOC(saved_env, saved_count, const char *);
+     } else {
+         /* We owned the old string. */
+         free(saved_env[cur_loc]);
+--- texk/ps2pkm/token.c
++++ texk/ps2pkm/token.c	2007-01-10 09:26:00.000000000 +0100
+@@ -108,7 +108,7 @@ static DOUBLE P10(exponent)
+   if (exponent < 0) {
+     power = 0.1;
+     value = (exponent & 1 ? power : 1.0);
+-    exponent = -(++exponent >> 1); /* portable C for -(exponent/2) */
++    exponent = -((exponent+1) >> 1); /* portable C for -(exponent/2) */
+   }
+   else {
+     power = 10.0;
+--- texk/ps2pkm/type1.c
++++ texk/ps2pkm/type1.c	2007-01-10 17:09:30.000000000 +0100
+@@ -110,11 +110,11 @@ typedef struct xobject xobject;
+ static DOUBLE tmpx;  /* Store macro argument in tmpx to avoid re-evaluation */
+ static LONG tmpi;    /* Store converted value in tmpi to avoid re-evaluation */
+  
+-#define FABS(x) (((tmpx = (x)) < 0.0) ? -tmpx : tmpx)
++#define FABS(x) ({ tmpx = (x); (tmpx < 0.0) ? -tmpx : tmpx; })
+  
+-#define CEIL(x) (((tmpi = (LONG) (tmpx = (x))) < tmpx) ? ++tmpi : tmpi)
++#define CEIL(x) ({ tmpi = (LONG) (tmpx = (x)); (tmpi < tmpx) ? ++tmpi : tmpi; })
+  
+-#define FLOOR(x) (((tmpi = (LONG) (tmpx = (x))) > tmpx) ? --tmpi : tmpi)
++#define FLOOR(x) ({ tmpi = (LONG) (tmpx = (x)); (tmpi > tmpx) ? --tmpi : tmpi; })
+  
+ #define ROUND(x) FLOOR((x) + 0.5)
+  
+--- texk/web2c/mpware/mpto.c
++++ texk/web2c/mpware/mpto.c	2007-03-02 10:36:04.000000000 +0000
+@@ -24,11 +24,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+-
+-#ifdef WIN32
+ #include <string.h>
+-#endif
+-
+ 
+ /* MetaPost itself has a configurable max line length, but we can afford to
+    use smaller values than that */
+--- texk/web2c/pdftexdir/utils.c
++++ texk/web2c/pdftexdir/utils.c	2007-03-02 10:16:35.000000000 +0000
+@@ -1369,7 +1369,7 @@ int newcolorstack(integer s, integer lit
+         colstacks_size += STACK_INCREMENT;
+         /* If (MAX_COLORSTACKS mod STACK_INCREMENT = 0) then we don't
+            need to check the case that size overruns MAX_COLORSTACKS. */
+-        colstacks = xretalloc(colstacks, colstacks_size, colstack_type);
++        xretalloc(colstacks, colstacks_size, colstack_type);
+     }
+     /* claim new color stack */
+     colstack_num = colstacks_used++;
+--- texk/makeindexk/genind.h
++++ texk/makeindexk/genind.h	2007-03-15 15:28:43.000000000 +0000
+@@ -25,6 +25,20 @@
+  *
+  */
+ 
++#ifndef __has_idx_printf
++#define __has_idx_printf
++#include <stdarg.h>
++static __inline__ int idx_printf(FILE *stream, const char *format, ...)
++{
++    int ret;
++    va_list ap;
++    va_start(ap, format);
++    ret = vfprintf(stream, format, ap);
++    va_end(ap);
++    return ret;
++}
++#endif
++
+ #define IND_ERROR(F, D) { \
+     if (idx_dot) { \
+ 	fprintf(ilg_fp, "\n"); \
+@@ -33,7 +47,7 @@
+     fprintf(ilg_fp, \
+     "## Warning (input = %s, line = %d; output = %s, line = %d):\n   -- ", \
+ 	    curr->fn, curr->lc, ind_fn, ind_lc+1); \
+-    fprintf(ilg_fp, F, D); \
++    idx_printf(ilg_fp, F, D); \
+     ind_ec++; \
+ }
+ 
+--- texk/makeindexk/mkind.h
++++ texk/makeindexk/mkind.h	2007-03-15 15:29:28.000000000 +0000
+@@ -253,10 +253,24 @@
+ #define STREQ(A, B)  (strcmp(A, B) == 0)
+ #define STRNEQ(A, B) (strcmp(A, B) != 0)
+ 
++#ifndef __has_idx_printf
++#define __has_idx_printf
++#include <stdarg.h>
++static __inline__ int idx_printf(FILE *stream, const char *format, ...)
++{
++    int ret;
++    va_list ap;
++    va_start(ap, format);
++    ret = vfprintf(stream, format, ap);
++    va_end(ap);
++    return ret;
++}
++#endif
++
+ #define MESSAGE(F, S) { \
+     if (verbose) \
+-	fprintf(stderr, F, S); \
+-    fprintf(ilg_fp, F, S); \
++	idx_printf(stderr, F, S); \
++    idx_printf(ilg_fp, F, S); \
+ }
+ 
+ #if USE_KPATHSEA /* kpathsea defines a different FATAL */
+@@ -264,7 +278,7 @@
+ #endif
+ 
+ #define FATAL(F, S) { \
+-    fprintf(stderr, F, S); \
++    idx_printf(stderr, F, S); \
+     fprintf(stderr, USAGE, pgm_fn); \
+     EXIT(1); \
+ }
+--- texk/makeindexk/scanid.h
++++ texk/makeindexk/scanid.h	2007-03-15 15:27:12.000000000 +0000
+@@ -101,6 +101,20 @@
+     return (FALSE); \
+ }
+ 
++#ifndef __has_idx_printf
++#define __has_idx_printf
++#include <stdarg.h>
++static __inline__ int idx_printf(FILE *stream, const char *format, ...)
++{
++    int ret;
++    va_list ap;
++    va_start(ap, format);
++    ret = vfprintf(stream, format, ap);
++    va_end(ap);
++    return ret;
++}
++#endif
++
+ #define IDX_ERROR(F, D) { \
+     if (idx_dot) { \
+ 	fprintf(ilg_fp, "\n"); \
+@@ -108,7 +122,7 @@
+     } \
+     fprintf(ilg_fp, "!! Input index error (file = %s, line = %d):\n   -- ", \
+ 	    idx_fn, idx_lc); \
+-    fprintf(ilg_fp, F, D); \
++    idx_printf(ilg_fp, F, D); \
+     idx_ec++; \
+ }
+ 
+--- texk/makeindexk/scanst.h
++++ texk/makeindexk/scanst.h	2007-03-15 15:48:48.000000000 +0000
+@@ -145,6 +145,20 @@
+ 
+ #define INDENTLEN_DEF 16
+ 
++#ifndef __has_idx_printf
++#define __has_idx_printf
++#include <stdarg.h>
++static __inline__ int idx_printf(FILE *stream, const char *format, ...)
++{
++    int ret;
++    va_list ap;
++    va_start(ap, format);
++    ret = vfprintf(stream, format, ap);
++    va_end(ap);
++    return ret;
++}
++#endif
++
+ #define STY_ERROR(F, D) { \
+     if (idx_dot) { \
+ 	fprintf(ilg_fp, "\n"); \
+@@ -152,7 +166,7 @@
+     } \
+     fprintf(ilg_fp, "** Input style error (file = %s, line = %d):\n   -- ", \
+ 	    sty_fn, sty_lc); \
+-    fprintf(ilg_fp, F, D); \
++    idx_printf(ilg_fp, F, D); \
+     sty_ec++; \
+     put_dot = FALSE; \
+ }

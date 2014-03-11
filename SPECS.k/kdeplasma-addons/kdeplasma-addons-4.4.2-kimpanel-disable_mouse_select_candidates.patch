@@ -1,0 +1,52 @@
+diff -Nuarp kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlookuptablegraphics.cpp kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlookuptablegraphics.cpp
+--- kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlookuptablegraphics.cpp	2010-04-17 14:58:39.000000000 +0800
++++ kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlookuptablegraphics.cpp	2010-04-17 15:11:53.000000000 +0800
+@@ -110,9 +110,9 @@ KIMLookupTableGraphics::KIMLookupTableGr
+ 
+     setLayout(m_layout);
+ 
+-    m_tableEntryMapper = new QSignalMapper(this);
+-    connect(m_tableEntryMapper,SIGNAL(mapped(int)),
+-            this,SIGNAL(SelectCandidate(int)));
++//    m_tableEntryMapper = new QSignalMapper(this);
++//    connect(m_tableEntryMapper,SIGNAL(mapped(int)),
++//            this,SIGNAL(SelectCandidate(int)));
+ 
+     if (m_panel_agent) {
+         connect(m_panel_agent,
+@@ -173,9 +173,9 @@ void KIMLookupTableGraphics::updateLooku
+     while (m_lowerLayout->count() > 0) {
+         m_lowerLayout->removeAt(0);
+     }
+-    foreach (KIMLabelGraphics *item, m_tableEntryLabels) {
+-        m_tableEntryMapper->removeMappings(item);
+-    }
++//    foreach (KIMLabelGraphics *item, m_tableEntryLabels) {
++//        m_tableEntryMapper->removeMappings(item);
++//    }
+     qDeleteAll(m_tableEntryLabels);
+     m_tableEntryLabels.clear();
+     int row = 0;
+@@ -211,8 +211,8 @@ void KIMLookupTableGraphics::updateLooku
+             }
+             break;
+         }
+-        m_tableEntryMapper->setMapping(item,m_tableEntryLabels.size());
+-        connect(item,SIGNAL(clicked()),m_tableEntryMapper,SLOT(map()));
++//        m_tableEntryMapper->setMapping(item,m_tableEntryLabels.size());
++//        connect(item,SIGNAL(clicked()),m_tableEntryMapper,SLOT(map()));
+         m_tableEntryLabels << item;
+     }
+     for (int i =0; i<m_lowerLayout->columnCount()-1; i++) {
+diff -Nuarp kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlookuptablegraphics.h kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlookuptablegraphics.h
+--- kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlookuptablegraphics.h	2010-04-17 14:58:39.000000000 +0800
++++ kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlookuptablegraphics.h	2010-04-17 15:09:58.000000000 +0800
+@@ -95,7 +95,7 @@ private:
+     Plasma::IconWidget *m_pageDownIcon;
+     QList<KIMLabelGraphics *> m_tableEntryLabels;
+ 
+-    QSignalMapper *m_tableEntryMapper;
++    //QSignalMapper *m_tableEntryMapper;
+ 
+     int m_spacing;
+ 

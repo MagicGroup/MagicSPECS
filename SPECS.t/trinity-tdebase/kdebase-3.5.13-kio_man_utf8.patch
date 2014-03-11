@@ -1,0 +1,40 @@
+--- kdebase/kioslave/man/kio_man.cpp.ORI	2011-12-03 00:22:28.400423296 +0100
++++ kdebase/kioslave/man/kio_man.cpp	2011-12-03 00:25:59.127173102 +0100
+@@ -569,20 +569,24 @@
+         }
+         lastdir = filename.left(filename.findRev('/'));
+     
+-        myStdStream = TQString::null;
+-        KProcess proc;
+-        /* TODO: detect availability of 'man --recode' so that this can go
+-         * upstream */
+-        proc << "man" << "--recode" << "UTF-8" << filename;
+-
+-        TQApplication::connect(&proc, TQT_SIGNAL(receivedStdout (KProcess *, char *, int)),
+-                              this, TQT_SLOT(slotGetStdOutputUtf8(KProcess *, char *, int)));
+-        proc.start(KProcess::Block, KProcess::All);
+-
+-        const TQCString cstr=myStdStream.utf8();
+-        const int len = cstr.size()-1;
++        TQIODevice *fd= KFilterDev::deviceForFile(filename);
++    
++        if ( !fd || !fd->open(IO_ReadOnly))
++        {
++           delete fd;
++           return 0;
++        }
++        TQByteArray array(fd->readAll());
++        kdDebug(7107) << "read " << array.size() << endl;
++        fd->close();
++        delete fd;
++        
++        if (array.isEmpty())
++            return 0;
++    
++        const int len = array.size();
+         buf = new char[len + 4];
+-        tqmemmove(buf + 1, cstr.data(), len);
++        tqmemmove(buf + 1, array.data(), len);
+         buf[0]=buf[len]='\n'; // Start and end with a end of line
+         buf[len+1]=buf[len+2]='\0'; // Two NUL characters at end
+     }

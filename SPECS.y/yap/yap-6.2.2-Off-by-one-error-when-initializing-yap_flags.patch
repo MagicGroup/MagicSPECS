@@ -1,0 +1,41 @@
+From fa8f0f7b2d107770ae4d37bc77c902eafc59c86c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Mon, 7 Jan 2013 17:31:08 +0100
+Subject: [PATCH] Off-by-one error when initializing yap_flags
+
+The yap_flags_field of all_heap_codes structure is of type
+Int[LAST_FLAG], thus the loop should iterate from 0 to LAST_FLAG - 1.
+---
+ C/init.c     | 2 +-
+ C/stdpreds.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/C/init.c b/C/init.c
+index dda09cc..8f01864 100755
+--- a/C/init.c
++++ b/C/init.c
+@@ -1348,7 +1348,7 @@ Yap_InitWorkspace(UInt Heap, UInt Stack, UInt Trail, UInt Atts, UInt max_table_s
+   Yap_InitTime ();
+   /* InitAbsmi must be done before InitCodes */
+   /* This must be done before initialising predicates */
+-  for (i = 0; i <= LAST_FLAG; i++) {
++  for (i = 0; i < LAST_FLAG; i++) {
+     yap_flags[i] = 0;
+   }
+ #ifdef MPW
+diff --git a/C/stdpreds.c b/C/stdpreds.c
+index a4c0e86..8a4183f 100755
+--- a/C/stdpreds.c
++++ b/C/stdpreds.c
+@@ -3637,7 +3637,7 @@ p_access_yap_flags(void)
+     return(FALSE);		
+   }
+   flag = IntOfTerm(tflag);
+-  if (flag < 0 || flag > NUMBER_OF_YAP_FLAGS) {
++  if (flag < 0 || flag >= NUMBER_OF_YAP_FLAGS) {
+     return(FALSE);
+   }
+ #ifdef TABLING
+-- 
+1.7.11.7
+

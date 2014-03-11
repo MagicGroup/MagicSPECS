@@ -1,0 +1,5 @@
+#! /bin/sh
+
+u=$1
+shift
+exec /usr/sbin/useradd -u "$u" "$@"

@@ -1,0 +1,12 @@
+diff -Nur xvidcap-1.1.6/src/app_data.c xvidcap-1.1.6.new/src/app_data.c
+--- xvidcap-1.1.6/src/app_data.c	2007-05-13 06:24:23.000000000 +0800
++++ xvidcap-1.1.6.new/src/app_data.c	2007-08-03 09:49:28.000000000 +0800
+@@ -379,7 +379,7 @@
+     lapp->multi_frame.video_cmd =
+         _
+         ("xterm -e \"echo not needed for multi-frame capture; echo hit enter to dismiss; read\"");
+-    lapp->multi_frame.play_cmd = "mplayer \"${XVFILE}\" &";
++    lapp->multi_frame.play_cmd = "kaffeine \"${XVFILE}\" &";
+ #endif     // USE_FFMPEG
+     lapp->single_frame.play_cmd =
+         "animate -delay \"${XVTIME%,*}x1000\" \"${XVFILE}\" &";

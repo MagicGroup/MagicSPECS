@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+ServiceTypes=image/jpg,image/jpeg,image/png,image/gif,image/bmp,image/tif,image/tiff
+#ExcludeServiceTypes=
+Actions=Upload2Imageshack;
+X-KDE-Priority=TopLevel
+#X-KDE-Submenu=
+#X-KDE-Submenu[zh_CN]=
+
+[Desktop Action Upload2Imageshack]
+Name=Upload To Imageshack Image Library
+Name[zh_CN]=上传至 Imageshack 图片库
+Name[zh_TW]=上傳至 Imageshack 圖片庫
+Exec=imageshack-upurl %U
+Icon=looknfeel

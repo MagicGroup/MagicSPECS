@@ -1,0 +1,63 @@
+From ab55a117e20d0af861e78e1e0b492775f306280d Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 29 Aug 2011 19:12:12 +0200
+Subject: [PATCH] 99base/init: only poll cdroms, if the kernel does support
+ autopolling
+
+---
+ modules.d/99base/init |   34 +++++++++++++++-------------------
+ 1 files changed, 15 insertions(+), 19 deletions(-)
+
+diff --git a/modules.d/99base/init b/modules.d/99base/init
+index 90128c7..0328903 100755
+--- a/modules.d/99base/init
++++ b/modules.d/99base/init
+@@ -205,7 +205,8 @@ getarg 'rd.break=pre-trigger' 'rdbreak=pre-trigger' && emergency_shell -n pre-tr
+ source_hook pre-trigger
+ 
+ # then the rest
+-udevadm trigger --action=add $udevtriggeropts  >/dev/null 2>&1
++udevadm trigger --type=subsystems --action=add >/dev/null 2>&1
++udevadm trigger --type=devices --action=add >/dev/null 2>&1
+ 
+ getarg 'rd.break=initqueue' 'rdbreak=initqueue' && emergency_shell -n initqueue "Break before initqueue"
+ 
+@@ -246,25 +247,20 @@ while :; do
+     # no more udev jobs and queues empty.
+     sleep 0.5
+ 
+-    # dirty hack for some cdrom drives,
+-    # which report no medium for quiet
+-    # some time.
+-    for cdrom in /sys/block/sr*; do
+-        [ -e "$cdrom" ] || continue
+-        # skip, if cdrom medium was already found
+-        strstr "$(udevadm info --query=env --path=${cdrom##/sys})" \
+-            ID_CDROM_MEDIA && continue
+-
+-        if [ -e "$cdrom"/events_poll_msecs -a ! -e "/tmp/.poll_${cdrom##*/}" ]; then
+-            msecs=$(while read a; do echo $a;done < "$cdrom"/events_poll_msecs)
+-            if [ "$msecs" = "-1" ]; then
+-                echo 250 > "$cdrom"/events_poll_msecs
+-                > "/tmp/.poll_${cdrom##*/}"
+-            fi
+-        else
++    if [ ! -e /sys/module/block/parameters/uevent ]; then
++        # if the kernel does not support autopolling
++        # then we have to do a
++        # dirty hack for some cdrom drives,
++        # which report no medium for quiet
++        # some time.
++        for cdrom in /sys/block/sr*; do
++            [ -e "$cdrom" ] || continue
++            # skip, if cdrom medium was already found
++            strstr "$(udevadm info --query=env --path=${cdrom##/sys})" \
++                ID_CDROM_MEDIA && continue
+             echo change > "$cdrom/uevent"
+-        fi
+-    done
++        done
++    fi
+ 
+     if [ $main_loop -gt $(($RDRETRY/2)) ]; then
+ 	for job in $hookdir/initqueue/timeout/*.sh; do

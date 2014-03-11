@@ -1,0 +1,64 @@
+=== modified file 'smart/fetcher.py'
+--- smart/fetcher.py	2008-09-05 15:10:59 +0000
++++ smart/fetcher.py	2008-09-16 20:07:52 +0000
+@@ -280,6 +280,8 @@
+                 else:
+                     item.setSucceeded(uncomppath)
+             prog.show()
++            while iface.eventsPending():
++                iface.processEvents()
+             time.sleep(0.1)
+         for handler in handlers:
+             handler.stop()
+
+=== modified file 'smart/interface.py'
+--- smart/interface.py	2007-03-29 01:31:11 +0000
++++ smart/interface.py	2008-09-16 20:07:52 +0000
+@@ -53,6 +53,12 @@
+             result = _command.main(self._ctrl, opts)
+         return result
+ 
++    def eventsPending(self):
++        return False
++    
++    def processEvents(self):
++        pass
++
+     def showStatus(self, msg):
+         pass
+ 
+
+=== modified file 'smart/interfaces/gtk/interface.py'
+--- smart/interfaces/gtk/interface.py	2004-12-02 21:35:17 +0000
++++ smart/interfaces/gtk/interface.py	2008-09-16 20:07:52 +0000
+@@ -46,6 +46,12 @@
+         self.setCatchExceptions(False)
+         return result
+ 
++    def eventsPending(self):
++        return gtk.events_pending()
++    
++    def processEvents(self):
++        gtk.main_iteration()
++
+     def getProgress(self, obj, hassub=False):
+         if hassub:
+             self._progress.hide()
+
+=== modified file 'smart/interfaces/qt/interface.py'
+--- smart/interfaces/qt/interface.py	2008-09-16 16:58:53 +0000
++++ smart/interfaces/qt/interface.py	2008-09-16 20:07:52 +0000
+@@ -50,6 +50,12 @@
+         self.setCatchExceptions(False)
+         return result
+ 
++    def eventsPending(self):
++        return qt.QApplication.eventLoop().hasPendingEvents()
++    
++    def processEvents(self):
++        qt.QApplication.eventLoop().processEvents(qt.QEventLoop.AllEvents)
++
+     def getProgress(self, obj, hassub=False):
+         if hassub:
+             self._progress.hide()
+

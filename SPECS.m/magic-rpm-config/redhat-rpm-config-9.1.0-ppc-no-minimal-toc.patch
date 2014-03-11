@@ -1,0 +1,15 @@
+--- redhat-rpm-config-9.1.0-orig/rpmrc	2012-01-15 12:17:17.320694234 -0600
++++ redhat-rpm-config-9.1.0/rpmrc	2012-01-15 12:19:36.883275451 -0600
+@@ -27,9 +27,9 @@
+ optflags: ppc %{__global_cflags} -m32
+ optflags: ppciseries %{__global_cflags} -m32
+ optflags: ppcpseries %{__global_cflags} -m32
+-optflags: ppc64 %{__global_cflags} -m64 -mminimal-toc
+-optflags: ppc64iseries %{__global_cflags} -m64 -mminimal-toc
+-optflags: ppc64pseries %{__global_cflags} -m64 -mminimal-toc
++optflags: ppc64 %{__global_cflags} -m64
++optflags: ppc64iseries %{__global_cflags} -m64
++optflags: ppc64pseries %{__global_cflags} -m64
+ optflags: ppc8260 %{__global_cflags} -m32
+ optflags: ppc8560 %{__global_cflags} -m32
+ 

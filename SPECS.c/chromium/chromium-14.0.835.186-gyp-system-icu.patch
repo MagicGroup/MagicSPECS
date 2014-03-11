@@ -1,0 +1,618 @@
+diff -up chromium-14.0.835.186/base/base.gyp.system-icu chromium-14.0.835.186/base/base.gyp
+--- chromium-14.0.835.186/base/base.gyp.system-icu	2011-09-20 04:26:41.000000000 -0400
++++ chromium-14.0.835.186/base/base.gyp	2011-09-27 10:18:51.468004069 -0400
+@@ -15,8 +15,7 @@
+       'type': 'static_library',
+       'dependencies': [
+         'base',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+       ],
+       'conditions': [
+         ['toolkit_uses_gtk==1', {
+@@ -234,8 +233,7 @@
+         'third_party/dynamic_annotations/dynamic_annotations.gyp:dynamic_annotations',
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+       ],
+       'conditions': [
+         ['toolkit_uses_gtk==1', {
+diff -up chromium-14.0.835.186/build/all.gyp.system-icu chromium-14.0.835.186/build/all.gyp
+--- chromium-14.0.835.186/build/all.gyp.system-icu	2011-09-20 04:26:40.000000000 -0400
++++ chromium-14.0.835.186/build/all.gyp	2011-09-27 10:18:51.470004069 -0400
+@@ -34,7 +34,6 @@
+         '../third_party/codesighs/codesighs.gyp:*',
+         '../third_party/ffmpeg/ffmpeg.gyp:*',
+         '../third_party/iccjpeg/iccjpeg.gyp:*',
+-        '../third_party/icu/icu.gyp:*',
+         '../third_party/libpng/libpng.gyp:*',
+         '../third_party/libwebp/libwebp.gyp:*',
+         '../third_party/libxml/libxml.gyp:*',
+diff -up chromium-14.0.835.186/build/linux/system.gyp.system-icu chromium-14.0.835.186/build/linux/system.gyp
+--- chromium-14.0.835.186/build/linux/system.gyp.system-icu	2011-09-20 04:26:40.000000000 -0400
++++ chromium-14.0.835.186/build/linux/system.gyp	2011-09-27 10:18:51.483004069 -0400
+@@ -323,6 +323,26 @@
+       }]]
+     },
+     {
++      'target_name': 'icu',
++      'type': 'settings',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags icu)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other icu)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l icu)',
++            ],
++          },
++      }]]
++    },
++    {
+       'target_name': 'gnome_keyring',
+       'type': 'settings',
+       'conditions': [
+diff -up chromium-14.0.835.186/build/temp_gyp/googleurl.gyp.system-icu chromium-14.0.835.186/build/temp_gyp/googleurl.gyp
+--- chromium-14.0.835.186/build/temp_gyp/googleurl.gyp.system-icu	2011-09-20 04:26:40.000000000 -0400
++++ chromium-14.0.835.186/build/temp_gyp/googleurl.gyp	2011-09-27 10:18:51.490004069 -0400
+@@ -13,9 +13,7 @@
+       'type': '<(component)',
+       'dependencies': [
+         '../../base/base.gyp:base',
+-        '../../third_party/icu/icu.gyp:icudata',
+-        '../../third_party/icu/icu.gyp:icui18n',
+-        '../../third_party/icu/icu.gyp:icuuc',
++        '../../build/linux/system.gyp:icu',
+       ],
+       'sources': [
+         '../../googleurl/src/gurl.cc',
+@@ -72,7 +70,7 @@
+         '../../base/base.gyp:base_i18n',
+         '../../base/base.gyp:test_support_base',
+         '../../testing/gtest.gyp:gtest',
+-        '../../third_party/icu/icu.gyp:icuuc',
++        '../../build/linux/system.gyp:icu',
+       ],
+       'sources': [
+         '../../googleurl/src/gurl_unittest.cc',
+diff -up chromium-14.0.835.186/chrome/chrome_browser.gypi.system-icu chromium-14.0.835.186/chrome/chrome_browser.gypi
+--- chromium-14.0.835.186/chrome/chrome_browser.gypi.system-icu	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/chrome_browser.gypi	2011-09-27 10:18:51.511004069 -0400
+@@ -40,8 +40,7 @@
+         '../third_party/cld/cld.gyp:cld',
+         '../third_party/expat/expat.gyp:expat',
+         '../third_party/hunspell/hunspell.gyp:hunspell',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libjingle/libjingle.gyp:libjingle',
+         '../third_party/libphonenumber/libphonenumber.gyp:libphonenumber',
+         '../third_party/libphonenumber/libphonenumber.gyp:phonenumber_proto',
+diff -up chromium-14.0.835.186/chrome/chrome_common.gypi.system-icu chromium-14.0.835.186/chrome/chrome_common.gypi
+--- chromium-14.0.835.186/chrome/chrome_common.gypi.system-icu	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/chrome_common.gypi	2011-09-27 10:18:51.524004069 -0400
+@@ -119,8 +119,7 @@
+         '../printing/printing.gyp:printing',
+         '../skia/skia.gyp:skia',
+         '../third_party/bzip2/bzip2.gyp:bzip2',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libxml/libxml.gyp:libxml',
+         '../third_party/protobuf/protobuf.gyp:protobuf_lite',
+         '../third_party/sqlite/sqlite.gyp:sqlite',
+@@ -393,8 +392,7 @@
+         '../gpu/gpu.gyp:gpu_ipc',
+         '../net/net.gyp:net_resources',
+         '../net/net.gyp:net',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+       ],
+       'conditions': [
+         ['os_posix == 1 and OS != "mac"', {
+diff -up chromium-14.0.835.186/chrome/chrome.gyp.system-icu chromium-14.0.835.186/chrome/chrome.gyp
+--- chromium-14.0.835.186/chrome/chrome.gyp.system-icu	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/chrome.gyp	2011-09-27 10:18:51.544004070 -0400
+@@ -440,8 +440,7 @@
+         'theme_resources',
+         'theme_resources_standard',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+       ],
+       'include_dirs': [
+         '..',
+@@ -551,7 +550,7 @@
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../jingle/jingle.gyp:notifier',
+         '../net/net.gyp:net',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/sqlite/sqlite.gyp:sqlite',
+         'app/policy/cloud_policy_codegen.gyp:policy',
+         'browser/sync/protocol/sync_proto.gyp:sync_proto_cpp',
+diff -up chromium-14.0.835.186/chrome/chrome_renderer.gypi.system-icu chromium-14.0.835.186/chrome/chrome_renderer.gypi
+--- chromium-14.0.835.186/chrome/chrome_renderer.gypi.system-icu	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/chrome_renderer.gypi	2011-09-27 10:18:51.550004069 -0400
+@@ -20,8 +20,7 @@
+         '../skia/skia.gyp:skia',
+         '../third_party/cld/cld.gyp:cld',
+         '../third_party/hunspell/hunspell.gyp:hunspell',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/npapi/npapi.gyp:npapi',
+         '../third_party/WebKit/Source/WebKit/chromium/WebKit.gyp:webkit',
+         '../ui/gfx/surface/surface.gyp:surface',
+diff -up chromium-14.0.835.186/chrome/chrome_tests.gypi.system-icu chromium-14.0.835.186/chrome/chrome_tests.gypi
+--- chromium-14.0.835.186/chrome/chrome_tests.gypi.system-icu	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/chrome_tests.gypi	2011-09-27 10:18:51.568004069 -0400
+@@ -477,7 +477,7 @@
+         '../net/net.gyp:net_resources',
+         '../net/net.gyp:net_test_support',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libpng/libpng.gyp:libpng',
+         '../third_party/zlib/zlib.gyp:zlib',
+         '../testing/gmock.gyp:gmock',
+@@ -665,8 +665,7 @@
+         '../skia/skia.gyp:skia',
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libxml/libxml.gyp:libxml',
+         # run time dependencies
+         'default_plugin/default_plugin.gyp:default_plugin',
+@@ -843,8 +842,7 @@
+         '../net/net.gyp:net',
+         '../skia/skia.gyp:skia',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libxml/libxml.gyp:libxml',
+       ],
+       'include_dirs': [
+@@ -1099,8 +1097,7 @@
+         '../net/net.gyp:net',
+         '../skia/skia.gyp:skia',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libxml/libxml.gyp:libxml',
+       ],
+       'include_dirs': [
+@@ -1166,8 +1163,7 @@
+         '../net/net.gyp:net',
+         '../skia/skia.gyp:skia',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+       ],
+       'include_dirs': [
+         '..',
+@@ -1238,8 +1234,7 @@
+         '../skia/skia.gyp:skia',
+         '../third_party/bzip2/bzip2.gyp:bzip2',
+         '../third_party/cld/cld.gyp:cld',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libjingle/libjingle.gyp:libjingle',
+         '../third_party/libxml/libxml.gyp:libxml',
+         '../ui/gfx/gl/gl.gyp:gl',
+@@ -2377,8 +2372,7 @@
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+         '../third_party/cld/cld.gyp:cld',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../v8/tools/gyp/v8.gyp:v8',
+         '../webkit/webkit.gyp:test_shell_test_support',
+         # Runtime dependencies
+@@ -3475,8 +3469,7 @@
+         '../skia/skia.gyp:skia',
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/npapi/npapi.gyp:npapi',
+         '../third_party/WebKit/Source/WebKit/chromium/WebKit.gyp:webkit',
+       ],
+@@ -3747,8 +3740,7 @@
+         '../net/net.gyp:net_test_support',
+         '../skia/skia.gyp:skia',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         # Runtime dependencies
+         '../third_party/mesa/mesa.gyp:osmesa',
+       ],
+diff -up chromium-14.0.835.186/chrome/default_plugin/default_plugin.gyp.system-icu chromium-14.0.835.186/chrome/default_plugin/default_plugin.gyp
+--- chromium-14.0.835.186/chrome/default_plugin/default_plugin.gyp.system-icu	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/default_plugin/default_plugin.gyp	2011-09-27 10:18:51.587004070 -0400
+@@ -14,8 +14,7 @@
+         ':default_plugin_resources',
+         '<(DEPTH)/base/base.gyp:base',
+         '<(DEPTH)/net/net.gyp:net_resources',
+-        '<(DEPTH)/third_party/icu/icu.gyp:icui18n',
+-        '<(DEPTH)/third_party/icu/icu.gyp:icuuc',
++        '<(DEPTH)/build/linux/system.gyp:icu',
+         '<(DEPTH)/third_party/libxml/libxml.gyp:libxml',
+         '<(DEPTH)/third_party/npapi/npapi.gyp:npapi',
+         '<(DEPTH)/webkit/support/webkit_support.gyp:webkit_resources',
+diff -up chromium-14.0.835.186/chrome_frame/chrome_frame.gyp.system-icu chromium-14.0.835.186/chrome_frame/chrome_frame.gyp
+--- chromium-14.0.835.186/chrome_frame/chrome_frame.gyp.system-icu	2011-09-20 04:26:14.000000000 -0400
++++ chromium-14.0.835.186/chrome_frame/chrome_frame.gyp	2011-09-27 10:18:51.601004071 -0400
+@@ -381,8 +381,7 @@
+         '../net/net.gyp:net_test_support',
+         '../skia/skia.gyp:skia',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/ui.gyp:ui_resources',
+         'chrome_frame_ie',
+         'chrome_tab_idl',
+diff -up chromium-14.0.835.186/content/content_common.gypi.system-icu chromium-14.0.835.186/content/content_common.gypi
+--- chromium-14.0.835.186/content/content_common.gypi.system-icu	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/content_common.gypi	2011-09-27 10:18:51.607004068 -0400
+@@ -13,7 +13,7 @@
+         '../media/media.gyp:media',
+         '../net/net.gyp:net',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/npapi/npapi.gyp:npapi',
+         '../third_party/WebKit/Source/WebKit/chromium/WebKit.gyp:webkit',
+         '../ui/gfx/gl/gl.gyp:gl',
+diff -up chromium-14.0.835.186/content/content_renderer.gypi.system-icu chromium-14.0.835.186/content/content_renderer.gypi
+--- chromium-14.0.835.186/content/content_renderer.gypi.system-icu	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/content_renderer.gypi	2011-09-27 10:18:51.625004069 -0400
+@@ -14,8 +14,7 @@
+         '../ppapi/ppapi_internal.gyp:ppapi_proxy',
+         '../skia/skia.gyp:skia',
+         '../third_party/ffmpeg/ffmpeg.gyp:ffmpeg',
+-        '../third_party/icu/icu.gyp:icuuc',
+-        '../third_party/icu/icu.gyp:icui18n',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libjingle/libjingle.gyp:libjingle',
+         '../third_party/libjingle/libjingle.gyp:libjingle_p2p',
+         '../third_party/npapi/npapi.gyp:npapi',
+diff -up chromium-14.0.835.186/native_client/src/third_party/ppapi/ppapi_shared.gypi.system-icu chromium-14.0.835.186/native_client/src/third_party/ppapi/ppapi_shared.gypi
+--- chromium-14.0.835.186/native_client/src/third_party/ppapi/ppapi_shared.gypi.system-icu	2011-09-20 04:29:28.000000000 -0400
++++ chromium-14.0.835.186/native_client/src/third_party/ppapi/ppapi_shared.gypi	2011-09-27 10:18:51.634004070 -0400
+@@ -14,7 +14,7 @@
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../gpu/gpu.gyp:gles2_implementation',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/gfx/surface/surface.gyp:surface',
+       ],
+       'include_dirs': [
+diff -up chromium-14.0.835.186/net/net.gyp.system-icu chromium-14.0.835.186/net/net.gyp
+--- chromium-14.0.835.186/net/net.gyp.system-icu	2011-09-20 04:26:13.000000000 -0400
++++ chromium-14.0.835.186/net/net.gyp	2011-09-27 10:18:51.644004070 -0400
+@@ -17,8 +17,7 @@
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../crypto/crypto.gyp:crypto',
+         '../sdch/sdch.gyp:sdch',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/zlib/zlib.gyp:zlib',
+         'net_resources',
+         'ssl_false_start_blacklist_process#host',
+diff -up chromium-14.0.835.186/ppapi/ppapi_shared.gypi.system-icu chromium-14.0.835.186/ppapi/ppapi_shared.gypi
+--- chromium-14.0.835.186/ppapi/ppapi_shared.gypi.system-icu	2011-09-20 04:26:10.000000000 -0400
++++ chromium-14.0.835.186/ppapi/ppapi_shared.gypi	2011-09-27 10:19:24.785016138 -0400
+@@ -14,7 +14,7 @@
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../gpu/gpu.gyp:gles2_implementation',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/gfx/surface/surface.gyp:surface',
+       ],
+       'include_dirs': [
+diff -up chromium-14.0.835.186/printing/printing.gyp.system-icu chromium-14.0.835.186/printing/printing.gyp
+--- chromium-14.0.835.186/printing/printing.gyp.system-icu	2011-09-20 04:26:08.000000000 -0400
++++ chromium-14.0.835.186/printing/printing.gyp	2011-09-27 10:18:51.659004069 -0400
+@@ -16,8 +16,7 @@
+         '../base/third_party/dynamic_annotations/dynamic_annotations.gyp:dynamic_annotations',
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/ui.gyp:ui',  # Only required for Font support.
+       ],
+       'include_dirs': [
+diff -up chromium-14.0.835.186/skia/skia.gyp.system-icu chromium-14.0.835.186/skia/skia.gyp
+--- chromium-14.0.835.186/skia/skia.gyp.system-icu	2011-09-20 04:26:13.000000000 -0400
++++ chromium-14.0.835.186/skia/skia.gyp	2011-09-27 10:18:51.670004069 -0400
+@@ -769,7 +769,7 @@
+             '../build/linux/system.gyp:fontconfig',
+             '../build/linux/system.gyp:freetype2',
+             '../third_party/harfbuzz/harfbuzz.gyp:harfbuzz',
+-            '../third_party/icu/icu.gyp:icuuc',
++            '../build/linux/system.gyp:icu',
+           ],
+           'cflags': [
+             '-Wno-unused',
+diff -up chromium-14.0.835.186/third_party/cld/cld.gyp.system-icu chromium-14.0.835.186/third_party/cld/cld.gyp
+--- chromium-14.0.835.186/third_party/cld/cld.gyp.system-icu	2011-09-20 04:26:40.000000000 -0400
++++ chromium-14.0.835.186/third_party/cld/cld.gyp	2011-09-27 10:18:51.676004069 -0400
+@@ -8,7 +8,7 @@
+       'target_name': 'cld',
+       'type': 'static_library',
+       'dependencies': [
+-      	'../icu/icu.gyp:icuuc',
++        '../../build/linux/system.gyp:icu',
+       ],
+       'include_dirs': [
+         '.',
+diff -up chromium-14.0.835.186/third_party/harfbuzz-ng/harfbuzz.gyp.system-icu chromium-14.0.835.186/third_party/harfbuzz-ng/harfbuzz.gyp
+--- chromium-14.0.835.186/third_party/harfbuzz-ng/harfbuzz.gyp.system-icu	2011-09-20 04:26:35.000000000 -0400
++++ chromium-14.0.835.186/third_party/harfbuzz-ng/harfbuzz.gyp	2011-09-27 10:18:51.684004069 -0400
+@@ -60,7 +60,7 @@
+       },
+       'dependencies': [
+         '../../build/linux/system.gyp:freetype2',
+-        '../../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+       ],
+     },
+   ],
+diff -up chromium-14.0.835.186/third_party/hunspell/hunspell.gyp.system-icu chromium-14.0.835.186/third_party/hunspell/hunspell.gyp
+--- chromium-14.0.835.186/third_party/hunspell/hunspell.gyp.system-icu	2011-09-20 04:46:12.000000000 -0400
++++ chromium-14.0.835.186/third_party/hunspell/hunspell.gyp	2011-09-27 10:18:51.692004069 -0400
+@@ -10,7 +10,7 @@
+       'msvs_guid': 'D5E8DCB2-9C61-446F-8BEE-B18CA0E0936E',
+       'dependencies': [
+         '../../base/base.gyp:base',
+-        '../icu/icu.gyp:icuuc',
++        '../../build/linux/system.gyp:icu',
+       ],
+       'defines': [
+         'HUNSPELL_STATIC',
+diff -up chromium-14.0.835.186/third_party/libphonenumber/libphonenumber.gyp.system-icu chromium-14.0.835.186/third_party/libphonenumber/libphonenumber.gyp
+--- chromium-14.0.835.186/third_party/libphonenumber/libphonenumber.gyp.system-icu	2011-09-20 04:26:38.000000000 -0400
++++ chromium-14.0.835.186/third_party/libphonenumber/libphonenumber.gyp	2011-09-27 10:18:51.701004069 -0400
+@@ -23,8 +23,7 @@
+     'target_name': 'libphonenumber',
+     'type': 'static_library',
+     'dependencies': [
+-      '../icu/icu.gyp:icui18n',
+-      '../icu/icu.gyp:icuuc',
++      '../../build/linux/system.gyp:icu',
+       '../protobuf/protobuf.gyp:protobuf_lite',
+       '../../base/base.gyp:base',
+       '../../base/third_party/dynamic_annotations/dynamic_annotations.gyp:dynamic_annotations',
+@@ -111,8 +110,7 @@
+       'cpp/src/test_metadata.cc',
+     ],
+     'dependencies': [
+-      '../icu/icu.gyp:icui18n',
+-      '../icu/icu.gyp:icuuc',
++      '../../build/linux/system.gyp:icu',
+       '../protobuf/protobuf.gyp:protobuf_lite',
+       '../../base/base.gyp:base',
+       '../../base/base.gyp:test_support_base',
+diff -up chromium-14.0.835.186/third_party/libxml/libxml.gyp.system-icu chromium-14.0.835.186/third_party/libxml/libxml.gyp
+--- chromium-14.0.835.186/third_party/libxml/libxml.gyp.system-icu	2011-09-20 04:26:39.000000000 -0400
++++ chromium-14.0.835.186/third_party/libxml/libxml.gyp	2011-09-27 10:18:51.709004069 -0400
+@@ -162,11 +162,11 @@
+             'src/include',
+           ],
+           'dependencies': [
+-            '../icu/icu.gyp:icuuc',
++            '../../build/linux/system.gyp:icu',
+             '../zlib/zlib.gyp:zlib',
+           ],
+           'export_dependent_settings': [
+-            '../icu/icu.gyp:icuuc',
++            '../../build/linux/system.gyp:icu',
+           ],
+           'direct_dependent_settings': {
+             'defines': [
+diff -up chromium-14.0.835.186/third_party/sfntly/sfntly.gyp.system-icu chromium-14.0.835.186/third_party/sfntly/sfntly.gyp
+--- chromium-14.0.835.186/third_party/sfntly/sfntly.gyp.system-icu	2011-09-20 04:26:37.000000000 -0400
++++ chromium-14.0.835.186/third_party/sfntly/sfntly.gyp	2011-09-27 10:18:51.779004069 -0400
+@@ -82,7 +82,7 @@
+         'SFNTLY_NO_EXCEPTION',
+       ],
+       'dependencies' : [
+-        '../icu/icu.gyp:icuuc',
++        '../../build/linux/system.gyp:icu',
+       ],
+     },
+   ]
+diff -up chromium-14.0.835.186/third_party/sqlite/sqlite.gyp.system-icu chromium-14.0.835.186/third_party/sqlite/sqlite.gyp
+--- chromium-14.0.835.186/third_party/sqlite/sqlite.gyp.system-icu	2011-09-20 04:26:37.000000000 -0400
++++ chromium-14.0.835.186/third_party/sqlite/sqlite.gyp	2011-09-27 10:18:51.718004069 -0400
+@@ -96,8 +96,7 @@
+             'src/src',
+           ],
+           'dependencies': [
+-            '../icu/icu.gyp:icui18n',
+-            '../icu/icu.gyp:icuuc',
++            '../../build/linux/system.gyp:icu',
+           ],
+           'direct_dependent_settings': {
+             'include_dirs': [
+@@ -130,7 +129,7 @@
+           'target_name': 'sqlite_shell',
+           'type': 'executable',
+           'dependencies': [
+-            '../icu/icu.gyp:icuuc',
++            '../../build/linux/system.gyp:icu',
+             'sqlite',
+           ],
+           'sources': [
+diff -up chromium-14.0.835.186/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp.system-icu chromium-14.0.835.186/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp
+--- chromium-14.0.835.186/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp.system-icu	2011-09-20 04:31:09.000000000 -0400
++++ chromium-14.0.835.186/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp	2011-09-27 10:18:51.727004070 -0400
+@@ -106,8 +106,7 @@
+       'msvs_guid': 'AA8A5A85-592B-4357-BC60-E0E91E026AF6',
+       'dependencies': [
+         'wtf_config',
+-        '<(chromium_src_dir)/third_party/icu/icu.gyp:icui18n',
+-        '<(chromium_src_dir)/third_party/icu/icu.gyp:icuuc',
++        '<(chromium_src_dir)/build/linux/system.gyp:icu',
+       ],
+       'include_dirs': [
+         '../',
+@@ -166,8 +165,7 @@
+       },
+       'export_dependent_settings': [
+         'wtf_config',
+-        '<(chromium_src_dir)/third_party/icu/icu.gyp:icui18n',
+-        '<(chromium_src_dir)/third_party/icu/icu.gyp:icuuc',
++        '<(chromium_src_dir)/build/linux/system.gyp:icu',
+       ],
+       'msvs_disabled_warnings': [4127, 4355, 4510, 4512, 4610, 4706],
+       'conditions': [
+diff -up chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp.system-icu chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp
+--- chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp.system-icu	2011-09-20 04:31:24.000000000 -0400
++++ chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp	2011-09-27 10:18:51.739004069 -0400
+@@ -609,7 +609,7 @@
+                                 '<(chromium_src_dir)/build/temp_gyp/googleurl.gyp:googleurl',
+                                 '<(chromium_src_dir)/testing/gtest.gyp:gtest',
+                                 '<(chromium_src_dir)/testing/gmock.gyp:gmock',
+-                                '<(chromium_src_dir)/third_party/icu/icu.gyp:*',
++                                '<(chromium_src_dir)/build/linux/system.gyp:icu',
+                                 '<(chromium_src_dir)/third_party/libjpeg/libjpeg.gyp:libjpeg',
+                                 '<(chromium_src_dir)/third_party/libpng/libpng.gyp:libpng',
+                                 '<(chromium_src_dir)/third_party/libxml/libxml.gyp:libxml',
+@@ -963,7 +963,7 @@
+                 'copy_TestNetscapePlugIn',
+                 'webkit',
+                 '../../JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp:wtf_config',
+-                '<(chromium_src_dir)/third_party/icu/icu.gyp:icuuc',
++                '<(chromium_src_dir)/build/linux/system.gyp:icu',
+                 '<(chromium_src_dir)/third_party/mesa/mesa.gyp:osmesa',
+                 '<(chromium_src_dir)/v8/tools/gyp/v8.gyp:v8',
+                 '<(chromium_src_dir)/webkit/support/webkit_support.gyp:blob',
+diff -up chromium-14.0.835.186/ui/ui.gyp.system-icu chromium-14.0.835.186/ui/ui.gyp
+--- chromium-14.0.835.186/ui/ui.gyp.system-icu	2011-09-20 04:27:11.000000000 -0400
++++ chromium-14.0.835.186/ui/ui.gyp	2011-09-27 10:18:51.745004069 -0400
+@@ -39,8 +39,7 @@
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../net/net.gyp:net',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../third_party/libpng/libpng.gyp:libpng',
+         '../third_party/zlib/zlib.gyp:zlib',
+         'base/strings/ui_strings.gyp:ui_strings',
+@@ -53,8 +52,7 @@
+       # Export these dependencies since text_elider.h includes ICU headers.
+       'export_dependent_settings': [
+         '../net/net.gyp:net',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+       ],
+       'sources': [
+         'base/accessibility/accessibility_types.h',
+diff -up chromium-14.0.835.186/views/views.gyp.system-icu chromium-14.0.835.186/views/views.gyp
+--- chromium-14.0.835.186/views/views.gyp.system-icu	2011-09-20 04:26:40.000000000 -0400
++++ chromium-14.0.835.186/views/views.gyp	2011-09-27 10:18:51.754004069 -0400
+@@ -34,8 +34,7 @@
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../net/net.gyp:net',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/base/strings/ui_strings.gyp:ui_strings',
+         '../ui/gfx/compositor/compositor.gyp:compositor',
+         '../ui/ui.gyp:ui',
+@@ -432,8 +431,7 @@
+         '../skia/skia.gyp:skia',
+         '../testing/gmock.gyp:gmock',
+         '../testing/gtest.gyp:gtest',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/base/strings/ui_strings.gyp:ui_strings',
+         '../ui/ui.gyp:ui_resources',
+         'views',
+@@ -521,8 +519,7 @@
+       'dependencies': [
+         '../base/base.gyp:base',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/ui.gyp:ui',
+         '../ui/ui.gyp:gfx_resources',
+         '../ui/ui.gyp:ui_resources',
+@@ -611,8 +608,7 @@
+       'dependencies': [
+         '../base/base.gyp:base',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/ui.gyp:gfx_resources',
+         '../ui/ui.gyp:ui',
+         '../ui/ui.gyp:ui_resources',
+@@ -663,8 +659,7 @@
+       'dependencies': [
+         '../base/base.gyp:base',
+         '../skia/skia.gyp:skia',
+-        '../third_party/icu/icu.gyp:icui18n',
+-        '../third_party/icu/icu.gyp:icuuc',
++        '../build/linux/system.gyp:icu',
+         '../ui/ui.gyp:gfx_resources',
+         '../ui/ui.gyp:ui',
+         '../ui/ui.gyp:ui_resources',
+diff -up chromium-14.0.835.186/webkit/glue/webkit_glue.gypi.system-icu chromium-14.0.835.186/webkit/glue/webkit_glue.gypi
+--- chromium-14.0.835.186/webkit/glue/webkit_glue.gypi.system-icu	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/glue/webkit_glue.gypi	2011-09-27 10:18:51.762004069 -0400
+@@ -111,8 +111,7 @@
+         '<(DEPTH)/ppapi/ppapi_internal.gyp:ppapi_shared',
+         '<(DEPTH)/printing/printing.gyp:printing',
+         '<(DEPTH)/skia/skia.gyp:skia',
+-        '<(DEPTH)/third_party/icu/icu.gyp:icui18n',
+-        '<(DEPTH)/third_party/icu/icu.gyp:icuuc',
++        '<(DEPTH)/build/linux/system.gyp:icu',
+         '<(DEPTH)/third_party/npapi/npapi.gyp:npapi',
+         'webkit_resources',
+         'webkit_strings',
+diff -up chromium-14.0.835.186/webkit/tools/test_shell/test_shell.gypi.system-icu chromium-14.0.835.186/webkit/tools/test_shell/test_shell.gypi
+--- chromium-14.0.835.186/webkit/tools/test_shell/test_shell.gypi.system-icu	2011-09-20 04:26:08.000000000 -0400
++++ chromium-14.0.835.186/webkit/tools/test_shell/test_shell.gypi	2011-09-27 10:18:51.771004070 -0400
+@@ -572,7 +572,7 @@
+           },
+           'mac_bundle': 1,
+           'dependencies': [
+-            '<(DEPTH)/third_party/icu/icu.gyp:icuuc',
++            '<(DEPTH)/build/linux/system.gyp:icu',
+             'npapi_test_common',
+           ],
+           'sources': [

@@ -1,0 +1,29 @@
+---
+ build/source/texk/tetex/fmtutil |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+Index: texlive-bin-2007/build/source/texk/tetex/fmtutil
+===================================================================
+--- texlive-bin-2007.orig/build/source/texk/tetex/fmtutil	2007-04-13 14:04:31.000000000 +0200
++++ texlive-bin-2007/build/source/texk/tetex/fmtutil	2007-04-13 14:09:48.000000000 +0200
+@@ -696,9 +696,7 @@
+   if test -f $fmtfile; then
+     grep '^! ' $format.log >/dev/null 2>&1 &&
+       log_failure "\`$engine -ini $tcxflag $jobswitch $prgswitch $texargs' possibly failed."
+-    rm -f "$fulldestdir/$format.log"
+-    # We don't want user-interaction for the following "mv" commands:
+-    mv "$format.log" "$fulldestdir/$format.log" </dev/null
++    # We don't want user-interaction for the following "mv" command:
+     if mv "$fmtfile" "$fulldestdir/$fmtfile" </dev/null; then
+       verboseMsg "$progname: $fulldestdir/$fmtfile installed."
+       #
+@@ -710,6 +708,9 @@
+   else
+     log_failure "\`$engine -ini $tcxflag $jobswitch $prgswitch $texargs' failed"
+   fi
++  rm -f "$fulldestdir/$format.log"
++  # We don't want user-interaction for the following "mv" command:
++  mv "$format.log" "$fulldestdir/$format.log" </dev/null
+ }
+ 
+ ###############################################################################

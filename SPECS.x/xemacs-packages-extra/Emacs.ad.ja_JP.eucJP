@@ -1,0 +1,1380 @@
+! XEmacs 21.x 用デフォルトリソースファイル (日本語環境用)
+!
+!              MATSUBAYASHI 'Shaolin' Kohji (shaolin@rins.st.ryukoku.ac.jp)
+!              Yukihiro Nakai <ynakai@redhat.com>
+!                                   Time-stamp: <03/10/17 21:51:24 petersen>
+!
+!
+! This is the app-defaults file for XEmacs.
+!
+! This used to be identical to sample.Xdefaults, but the resources
+! below have been rewritten to be as general as possible to avoid
+! overriding user resources.  Other than the form rewriting, both
+! files should be kept in sync. 
+! 
+! The resources below are loaded into the XEmacs executable at compile-time:
+! changes to .../etc/Emacs.ad made after XEmacs has been built will have no
+! effect.
+! 
+! However, you may copy .../etc/Emacs.ad to /usr/lib/X11/app-defaults/Emacs
+! (or whatever the standard app-defaults directory is at your site) to cause
+! it to be consulted at run-time.  (Do this only for site-wide customizations:
+! personal customizations should be put into ~/.Xdefaults instead.)
+! Note that the file must be named Emacs, not XEmacs.
+! 
+! See the NEWS file (C-h n) or XEmacs manual (C-h i) for a description of
+! the various resources and the syntax for setting them.
+! 
+! Energize users: note that this is not the same app-defaults file that is
+! used with the Energize-specific version of XEmacs.
+
+
+! Colors and backgrounds.
+! ======================
+! The contrasts of these colors will cause them to map to the appropriate
+! one of "black" or "white" on monochrome systems.
+! 
+! The valid color names on your system can be found by looking in the file
+! `rgb.txt', usually found in /usr/lib/X11/ or /usr/openwin/lib/X11/.
+
+! ! Set the modeline colors.
+! Emacs.modeline*attributeForeground:	Black
+! Emacs.modeline*attributeBackground:	Gray75
+
+! ! Set the color of the text cursor.
+! Emacs.text-cursor*attributeBackground:	Red3
+
+! If you want to set the color of the mouse pointer, do this:
+! Emacs.pointer*attributeForeground:	Black
+! If you want to set the background of the mouse pointer, do this:
+! Emacs.pointer*attributeBackground:	White
+! Note that by default, the pointer foreground and background are the same
+! as the default face.
+
+! Set the menubar colors.  This overrides the default foreground and
+! background colors specified above.
+*menubar*Foreground:			Gray30
+*menubar*Background:			Gray80
+! This is for buttons in the menubar.  
+! Yellow would be better, but that would map to white on monochrome.
+*menubar*buttonForeground:		Blue
+*XlwMenu*highlightForeground:		Red
+*XlwMenu*titleForeground:		Maroon
+*XlwMenu*selectColor:			ForestGreen
+*XmToggleButton*selectColor:		ForestGreen
+
+! Specify the colors of popup menus.
+*popup*Foreground:			Black
+*popup*Background:			Gray80
+
+! Specify the colors of the various sub-widgets of the dialog boxes.
+*dialog*Foreground:			Black
+! #A5C0C1 is a shade of blue
+*dialog*Background:			#A5C0C1
+! The following three are for Motif dialog boxes ...
+*dialog*XmTextField*Background:		WhiteSmoke
+*dialog*XmText*Background:		WhiteSmoke
+*dialog*XmList*Background:		WhiteSmoke
+! While this one is for Athena dialog boxes.
+*dialog*Command*Background:		WhiteSmoke
+
+! Xlw Scrollbar colors
+*XlwScrollBar*Foreground:		Gray30
+*XlwScrollBar*Background:		Gray80
+*XmScrollBar*Foreground:		Gray30
+*XmScrollBar*Background:		Gray80
+
+!
+! The Lucid Scrollbar supports two added resources, SliderStyle is either
+! "plain" (default) or "dimple".  Dimple puts a small dimple in the middle
+! of the slider that depresses when the slider is clicked on.  ArrowPosition is
+! either "opposite" (default) or "same".  Opposite puts the arrows at opposite
+! of the scrollbar, same puts both arrows at the same end, like the Amiga.
+!
+Emacs*XlwScrollBar.SliderStyle:    dimple
+! Emacs*XlwScrollBar.ArrowPosition:  opposite
+
+!
+! If you want to turn off a toolbar, set its height or width to 0.
+! The correct size value is not really arbitrary.  We only control it
+! this way in order to avoid excess frame resizing when turning the
+! toolbars on and off.
+!
+! To change the heights and widths of the toolbars:
+!
+! Emacs.topToolBarHeight:		37
+! Emacs.bottomToolBarHeight:		0
+! Emacs.leftToolBarWidth:		0
+! Emacs.rightToolBarWidth:		0
+
+! *topToolBarShadowColor:		Gray90
+! *bottomToolBarShadowColor:		Gray40
+! *backgroundToolBarColor:		Gray80
+! *toolBarShadowThickness:		2
+
+
+! If you want to turn off vertical scrollbars, or change the default
+! pixel width of the vertical scrollbars, do it like this (0 width
+! means no vertical scrollbars):
+! 
+! Emacs.scrollBarWidth: 0
+! 
+! To change it for a particular frame, do this:
+! 
+! Emacs*FRAME-NAME.scrollBarWidth: 0
+
+
+! If you want to turn off horizontal scrollbars, or change the default
+! pixel height of the horizontal scrollbars, do it like this (0 height
+! means no horizontal scrollbars):
+! 
+! Emacs.scrollBarHeight: 0
+! 
+! To change it for a particular frame, do this:
+! 
+! Emacs*FRAME-NAME.scrollBarHeight: 0
+
+
+! To dynamically change the labels used for menubar buttons...
+! 
+! Emacs*XlwMenu.resourceLabels: True
+! Emacs*XlwMenu.newFrame.labelString: Open Another Window
+
+! To have the Motif scrollbars on the left instead of the right, do this:
+! 
+! Emacs*scrollBarPlacement: BOTTOM_LEFT
+!
+! To have the Athena scrollbars on the right, use `BOTTOM_RIGHT' instead
+
+! To have Motif scrollbars act more like Xt scrollbars...
+!
+! Emacs*XmScrollBar.translations: #override \n\
+!     <Btn1Down>:     PageDownOrRight(0)    \n\
+!     <Btn3Down>:     PageUpOrLeft(0)
+
+! Fonts.
+! ======
+! XEmacs requires the use of XLFD (X Logical Font Description) format font
+! names, which look like
+! 
+! 	*-courier-medium-r-*-*-*-120-*-*-*-*-*-*
+! 
+! if you use any of the other, less strict font name formats, some of which
+! look like
+! 		lucidasanstypewriter-12
+! and		fixed
+! and		9x13
+! 
+! then XEmacs won't be able to guess the names of the bold and italic versions.
+! All X fonts can be referred to via XLFD-style names, so you should use those
+! forms.  See the man pages for X(1), xlsfonts(1), and xfontsel(1).
+
+
+! The default font for the text area of XEmacs is chosen at run-time
+! by lisp code which tries a number of different possibilities in order
+! of preference.  If you wish to override it, use this:
+! 
+Emacs.default.attributeFont:  -misc-fixed-medium-r-*-*-14-*-*-*-*-*-*
+
+! If you choose a font which does not have an italic version, you can specify
+! some other font to use for it here:
+! 
+! Emacs.italic.attributeFont:  -*-courier-medium-o-*-*-*-120-*-*-*-*-iso8859-*
+!
+! And here is how you would set the background color of the `highlight' face,
+! but only on the screen named `debugger':
+! 
+! Emacs*debugger.highlight.attributeBackground:		PaleTurquoise
+! 
+! See the NEWS file (C-h n) for a more complete description of the resource
+! syntax of faces.
+
+
+! Font of the modeline, menubar and pop-up menus.
+! Note that the menubar resources do not use the `face' syntax, since they
+! are X toolkit widgets and thus outside the domain of XEmacs proper.
+! 
+*menubar*Font: 			-misc-fixed-medium-r-*-*-14-*-*-*-*-*-*
+*popup*Font:			-misc-fixed-medium-r-*-*-14-*-*-*-*-*-*
+
+! Font in the Motif dialog boxes.
+! (Motif uses `fontList' while most other things use `font' - if you don't
+! know why you probably don't want to.)
+! 
+*XmDialogShell*FontList:	-misc-fixed-medium-r-*-*-14-*-*-*-*-*-*
+*XmTextField*FontList:		-misc-fixed-medium-r-*-*-14-*-*-*-*-*-*
+*XmText*FontList:		-misc-fixed-medium-r-*-*-14-*-*-*-*-*-*
+*XmList*FontList:		-misc-fixed-medium-r-*-*-14-*-*-*-*-*-*
+
+! Font in the Athena dialog boxes.
+! I think 14-point looks nicer than 12-point.
+! Some people use 12-point anyway because you get more text, but
+! there's no purpose at all in doing this for dialog boxes.
+
+*Dialog*Font:			-*-helvetica-bold-r-*-*-*-140-*-*-*-*-iso8859-*
+
+! Dialog box translations.
+! =======================
+
+! This accelerator binds <return> in a dialog box to <activate> on button1
+*dialog*button1.accelerators:#override\
+<KeyPress>Return: ArmAndActivate()\n\
+<KeyPress>KP_Enter: ArmAndActivate()\n\
+Ctrl<KeyPress>m: ArmAndActivate()\n
+
+! Translations to make the TextField widget behave more like XEmacs
+*XmTextField*translations: #override\n\
+	!<Key>osfBackSpace:	delete-previous-character()\n\
+	!<Key>osfDelete:	delete-previous-character()\n\
+	!Ctrl<Key>h: 		delete-previous-character()\n\
+	!Ctrl<Key>d: 		delete-next-character()\n\
+	!Meta<Key>osfDelete:	delete-previous-word()\n\
+	!Meta<Key>osfBackSpace:	delete-previous-word()\n\
+	!Meta<Key>d:		delete-next-word()\n\
+	!Ctrl<Key>k:		delete-to-end-of-line()\n\
+	!Ctrl<Key>g:		process-cancel()\n\
+	!Ctrl<Key>b:		backward-character()\n\
+	!<Key>osfLeft:		backward-character()\n\
+	!Ctrl<Key>f:		forward-character()\n\
+	!<Key>osfRight:		forward-character()\n\
+	!Meta<Key>b:		backward-word()\n\
+	!Meta<Key>osfLeft:	backward-word()\n\
+	!Meta<Key>f:		forward-word()\n\
+	!Meta<Key>osfRight:	forward-word()\n\
+	!Ctrl<Key>e:		end-of-line()\n\
+	!Ctrl<Key>a:		beginning-of-line()\n\
+	!Ctrl<Key>w:		cut-clipboard()\n\
+	!Meta<Key>w:		copy-clipboard()\n\
+	<Btn2Up>:		copy-primary()\n
+
+! With the XEmacs typeahead it's better to not have space be bound to
+! ArmAndActivate() for buttons that appear in dialog boxes.  This is
+! not 100% Motif compliant but the benefits far outweight the
+! compliancy problem.  
+*dialog*XmPushButton*translations:#override\n\
+    <Btn1Down>:         Arm()\n\
+    <Btn1Down>,<Btn1Up>: Activate()\
+			Disarm()\n\
+    <Btn1Down>(2+):     MultiArm()\n\
+    <Btn1Up>(2+):       MultiActivate()\n\
+    <Btn1Up>:           Activate()\
+		        Disarm()\n\
+    <Key>osfSelect:  	ArmAndActivate()\n\
+    <Key>osfActivate:   ArmAndActivate()\n\
+    <Key>osfHelp:	Help()\n\
+    ~Shift ~Meta ~Alt <Key>Return:	ArmAndActivate()\n\
+    <EnterWindow>:      Enter()\n\
+    <LeaveWindow>:      Leave()\n
+
+! XIM input method style 
+! ======================= 
+
+! ximStyles is a (whitespace or comma-separated) list of XIMStyles in
+! order of user's preference.  
+! Choose a subset of the following styles or reorder to taste
+*ximStyles: XIMPreeditPosition|XIMStatusArea\
+            XIMPreeditPosition|XIMStatusNothing\
+            XIMPreeditPosition|XIMStatusNone\
+            XIMPreeditNothing|XIMStatusArea\
+            XIMPreeditNothing|XIMStatusNothing\
+            XIMPreeditNothing|XIMStatusNone\
+            XIMPreeditNone|XIMStatusArea\
+            XIMPreeditNone|XIMStatusNothing\
+            XIMPreeditNone|XIMStatusNone
+
+! XIM Preedit and Status foreground and background
+*EmacsFrame.ximForeground: black
+*EmacsFrame.ximBackground: white
+
+! XIM fontset (defaults to system fontset default)
+! *EmacsFrame.FontSet: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+!    Japanese localization resources for XEmacs.
+! @(#)Emacs	1.3 96/09/22
+!    Copyright (C) 1996 Sun Microsystems, Inc.
+!!
+! This file is part of XEmacs.
+! 
+! XEmacs is free software; you can redistribute it and/or modify it
+! under the terms of the GNU General Public License as published by the
+! Free Software Foundation; either version 2, or (at your option) any
+! later version.
+! XEmacs is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+! FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License
+! along with XEmacs; see the file COPYING.  If not, write to the
+! Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+! Boston, MA 02111-1307, USA.
+! Copyright (C) 1996 Sun Microsystems Inc.
+!
+! Japanese Resources to be placed in etc/app-defaults/ja/Emacs
+! for xemacs-mule.  It is same on another languages such like fr,
+! if you want to have French menu label, place it on
+! etc/app-defaults/fr/Emacs.
+
+! Pulldown menu internationalization.  The first line of the file
+! "*XlwMenu.resourceLabels: True" has to be there to make sure
+! all the labelString will be read and displayed by X.
+*XlwMenu.resourceLabels: True
+
+! CDE doesn't require this but OpenWindows does.
+! Note that this `gothic' font family is effective just for Japanese.
+! And fontList is just used under Motif menubar.
+*fontList: -misc-fixed-medium-r-normal--14-*:
+!! FontSet for menus when you use --with-xfs or --with-xim=xlib.
+*fontSet: -*-fixed-medium-r-normal--14-*
+
+! Starting below here are menu label string which can be translated to
+! different languages. 
+! Example: *XlwMenu.file.labelString: File  
+! Characters before the ":" sign, "Example: *XlwMenu.file.labelString"
+! can not be changed. They must stay exactly the way they are.
+! The only string to be translated is the string, "File".
+! Some resource names such as "file", "quit" have been used in several
+! places.  However, each of them only has to be translated once in this X
+! resource file.
+! Emacs*XlwMenu.file.labelString:	%_File
+Emacs*XlwMenu.file.labelString:		ファイル(%_F)
+! Emacs*XlwMenu.edit.labelString:	%_Edit
+Emacs*XlwMenu.edit.labelString:		編集(%_E)
+! Emacs*XlwMenu.view.labelString:	%_View
+Emacs*XlwMenu.view.labelString:		表示(%_V)
+! Emacs*XlwMenu.c_mds.labelString:	C%_mds
+Emacs*XlwMenu.c_mds.labelString:	コマンド(%_M)
+! Emacs*XlwMenu.tools.labelString:	%_Tools
+Emacs*XlwMenu.tools.labelString:	ツール(%_T)
+! Emacs*XlwMenu.options.labelString:	%_Options
+Emacs*XlwMenu.options.labelString:	オプション(%_O)
+! Emacs*XlwMenu.buffers.labelString:	%_Buffers
+Emacs*XlwMenu.buffers.labelString:	バッファ(%_B)
+! Emacs*XlwMenu.help.labelString:	%_Help
+Emacs*XlwMenu.help.labelString:		ヘルプ(%_H)
+! Emacs*XlwMenu.lisp.labelString:	%_Lisp
+Emacs*XlwMenu.lisp.labelString:		%_Lisp
+! Emacs*XlwMenu.open___.labelString:	%_Open...
+Emacs*XlwMenu.open___.labelString:	開く(%_O)...
+! Emacs*XlwMenu.openInOtherWindow___.labelString:	Open in Other %_Window...
+Emacs*XlwMenu.openInOtherWindow___.labelString:		別のウィンドウで開く(%_W)...
+! Emacs*XlwMenu.openInNewFrame___.labelString:	Open in New %_Frame...
+Emacs*XlwMenu.openInNewFrame___.labelString:	新しいフレームで開く(%_F)...
+! Emacs*XlwMenu.hexEditFile___.labelString:	%_Hex Edit File...
+Emacs*XlwMenu.hexEditFile___.labelString:	16進で編集する(%_H)...
+! Emacs*XlwMenu.insertFile___.labelString:	%_Insert File...
+Emacs*XlwMenu.insertFile___.labelString:	ファイルの挿入(%_I)...
+! Emacs*XlwMenu.viewFile___.labelString:	%_View File...
+Emacs*XlwMenu.viewFile___.labelString:		ファイルの表示(%_V)...
+! Emacs*XlwMenu.save.labelString:	%_Save
+Emacs*XlwMenu.save.labelString:		保存(%_S)
+! Emacs*XlwMenu.saveAs___.labelString:	Save %_As...
+Emacs*XlwMenu.saveAs___.labelString:	別名で保存(%_A)...
+! Emacs*XlwMenu.saveSo_meBuffers.labelString:	Save So%_me Buffers
+Emacs*XlwMenu.saveSo_meBuffers.labelString:	未保存バッファを保存(%_M)
+! Emacs*XlwMenu.print.labelString:	%_Print
+Emacs*XlwMenu.print.labelString:	印刷(%_P)
+! Emacs*XlwMenu.prett_yPrint.labelString:	Prett%_y-Print
+Emacs*XlwMenu.prett_yPrint.labelString:		清書印刷(%_Y)
+! Emacs*XlwMenu.revertBuffer.labelString:	%_Revert Buffer
+Emacs*XlwMenu.revertBuffer.labelString:		バッファ復元(%_R)
+! Emacs*XlwMenu.re_coverFile___.labelString:	Re%_cover File...
+Emacs*XlwMenu.re_coverFile___.labelString:	ファイル復元(%_C)...
+! Emacs*XlwMenu.recoverS_ession___.labelString:	Recover S%_ession...
+Emacs*XlwMenu.recoverS_ession___.labelString:	セッションの復元(%_S)...
+! Emacs*XlwMenu.e_xitXEmacs.labelString:	E%_xit XEmacs
+Emacs*XlwMenu.e_xitXEmacs.labelString:		XEmacsの終了(%_X)
+! Emacs*XlwMenu.undo.labelString:	%_Undo
+Emacs*XlwMenu.undo.labelString:		元に戻す(%_U)
+! Emacs*XlwMenu.cu_t.labelString:	Cu%_t
+Emacs*XlwMenu.cu_t.labelString:		切り取り(%_T)
+! Emacs*XlwMenu.copy.labelString:	%_Copy
+Emacs*XlwMenu.copy.labelString:		コピー(%_C)
+! Emacs*XlwMenu.paste.labelString:	%_Paste
+Emacs*XlwMenu.paste.labelString:	張り付け(%_P)
+! Emacs*XlwMenu.delete.labelString:	%_Delete
+Emacs*XlwMenu.delete.labelString:	削除(%_D)
+! Emacs*XlwMenu.selectAll.labelString:	Select %_All
+Emacs*XlwMenu.selectAll.labelString:	すべてを選択(%_A)
+! Emacs*XlwMenu.selectPa_ge.labelString:	Select Pa%_ge
+Emacs*XlwMenu.selectPa_ge.labelString:	ページを選択(%_G)
+! Emacs*XlwMenu.find___.labelString:	%_Find...
+Emacs*XlwMenu.find___.labelString:	検索(%_F)...
+! Emacs*XlwMenu.r_eplace___.labelString:	R%_eplace...
+Emacs*XlwMenu.r_eplace___.labelString:		置換(%_E)...
+! Emacs*XlwMenu.replaceRege_xp___.labelString:	Replace (Rege%_xp)...
+Emacs*XlwMenu.replaceRege_xp___.labelString:	置換 (正規表現)(%_X)...
+! Emacs*XlwMenu.listMatchingLines___.labelString:	%_List Matching Lines...
+Emacs*XlwMenu.listMatchingLines___.labelString:		一致した行の一覧(%_L)...
+! Emacs*XlwMenu.multilingualMule.labelString:	%_Multilingual ("Mule")
+Emacs*XlwMenu.multilingualMule.labelString:	多言語(%_M) ("Mule")
+! Emacs*XlwMenu.t_oggleInputMethod.labelString:	T%_oggle Input Method
+Emacs*XlwMenu.t_oggleInputMethod.labelString:	入力メソッド切り替え(%_O)
+! Emacs*XlwMenu.selectInputMethod.labelString:	Select %_Input Method
+Emacs*XlwMenu.selectInputMethod.labelString:	入力メソッドの選択(%_I)
+! Emacs*XlwMenu.d_escribeInputMethod.labelString:	D%_escribe Input Method
+Emacs*XlwMenu.d_escribeInputMethod.labelString:	入力メソッドの説明(%_E)
+! Emacs*XlwMenu.describeCurrentCodingSystems.labelString:	Describe Current %_Coding Systems
+Emacs*XlwMenu.describeCurrentCodingSystems.labelString:		現在のコーディングシステムの説明(%_C)
+! Emacs*XlwMenu.setCodingSystemOfBufferFile___.labelString:	Set Coding System of %_Buffer File...
+Emacs*XlwMenu.setCodingSystemOfBufferFile___.labelString:	バッファファイルのコーディングシステムのセット(%_B)...
+! Emacs*XlwMenu.setCodingSystemOfTerminal___.labelString:	Set Coding System of %_Terminal...
+Emacs*XlwMenu.setCodingSystemOfTerminal___.labelString:		ターミナルのコーディングシステムのセット(%_T)...
+! Emacs*XlwMenu.setCodingSystemOfKeyboard___.labelString:	Set Coding System of %_Keyboard...
+Emacs*XlwMenu.setCodingSystemOfKeyboard___.labelString:		キーボードのコーディングシステムのセット(%_K)...
+! Emacs*XlwMenu.setCodingSystemOfProcess___.labelString:	Set Coding System of %_Process...
+Emacs*XlwMenu.setCodingSystemOfProcess___.labelString:		プロセスのコーディングシステムのセット(%_P)...
+! Emacs*XlwMenu.showCha_racterTable.labelString:	Show Cha%_racter Table
+Emacs*XlwMenu.showCha_racterTable.labelString:		キャラクタテーブルの表示(%_R)
+! Emacs*XlwMenu.showDia_gnosisForMULE.labelString:	Show Dia%_gnosis for MULE
+Emacs*XlwMenu.showDia_gnosisForMULE.labelString:	MULEの診断を表示(%_G)
+! Emacs*XlwMenu.showHelloInManyLanguages.labelString:	Show "%_hello" in Many Languages
+Emacs*XlwMenu.showHelloInManyLanguages.labelString:	多言語で"Hello"を表示(%_H)
+! Emacs*XlwMenu.newFrame.labelString:	%_New Frame
+Emacs*XlwMenu.newFrame.labelString:			新規フレーム(%_N)
+! Emacs*XlwMenu.frameOnOtherDispla_y___.labelString:	Frame on Other Displa%_y...
+Emacs*XlwMenu.frameOnOtherDispla_y___.labelString:	他のディスプレイのフレーム(%_Y)...
+! Emacs*XlwMenu.deleteFrame.labelString:	%_Delete Frame
+Emacs*XlwMenu.deleteFrame.labelString:		フレームの削除(%_D)
+! Emacs*XlwMenu.splitWindow.labelString:	%_Split Window
+Emacs*XlwMenu.splitWindow.labelString:		ウィンドウの分割(%_S)
+! Emacs*XlwMenu.s_plitWindowSideBySide.labelString:	S%_plit Window (Side by Side)
+Emacs*XlwMenu.s_plitWindowSideBySide.labelString:	ウィンドウの分割(横)(%_P)
+! Emacs*XlwMenu.unSplitKeepThis.labelString:	%_Un-Split (Keep This)
+Emacs*XlwMenu.unSplitKeepThis.labelString:	分割の取り消し(%_U) (ここは保持)
+! Emacs*XlwMenu.unSplitKeepOthers.labelString:	Un-Split (Keep %_Others)
+Emacs*XlwMenu.unSplitKeepOthers.labelString:	分割の取り消し(%_O) (他を保持)
+! Emacs*XlwMenu.n_arrow.labelString:	N%_arrow
+Emacs*XlwMenu.n_arrow.labelString:	N%_arrow
+! Emacs*XlwMenu.showMessageLog.labelString:	Show Message %_Log
+Emacs*XlwMenu.showMessageLog.labelString:	メッセージログの表示(%_L)
+! Emacs*XlwMenu.gotoLine___.labelString:	%_Goto Line...
+Emacs*XlwMenu.gotoLine___.labelString:		行に移動(%_G)...
+! Emacs*XlwMenu.whatLine.labelString:	%_What Line
+Emacs*XlwMenu.whatLine.labelString:	行位置表示(%_W)
+! Emacs*XlwMenu.bookmarks.labelString:	%_Bookmarks
+Emacs*XlwMenu.bookmarks.labelString:	ブックマーク(%_B)
+! Emacs*XlwMenu.jumpToPreviousMark.labelString:	%_Jump to Previous Mark
+Emacs*XlwMenu.jumpToPreviousMark.labelString:	前のマークに移動(%_J)
+! Emacs*XlwMenu.narrowToRegion.labelString:	%_Narrow to Region
+Emacs*XlwMenu.narrowToRegion.labelString:	%_Narrow to Region
+! Emacs*XlwMenu.narrowToPage.labelString:	Narrow to %_Page
+Emacs*XlwMenu.narrowToPage.labelString:		Narrow to %_Page
+! Emacs*XlwMenu.narrowToDefun.labelString:	Narrow to %_Defun
+Emacs*XlwMenu.narrowToDefun.labelString:	Narrow to %_Defun
+! Emacs*XlwMenu.widen.labelString:	%_Widen
+Emacs*XlwMenu.widen.labelString:	%_Widen
+! Emacs*XlwMenu.jumpToBookmark.labelString:	%_Jump to Bookmark
+Emacs*XlwMenu.jumpToBookmark.labelString:	ブックマークに移動(%_J)
+! Emacs*XlwMenu.setBookmark.labelString:	Set %_Bookmark
+Emacs*XlwMenu.setBookmark.labelString:		ブックマークを設定(%_B)
+! Emacs*XlwMenu.insertContents.labelString:	Insert %_Contents
+Emacs*XlwMenu.insertContents.labelString:	コンテンツの挿入(%_C)
+! Emacs*XlwMenu.insertL_ocation.labelString:	Insert L%_ocation
+Emacs*XlwMenu.insertL_ocation.labelString:	位置の挿入(%_L)
+! Emacs*XlwMenu.renameBookmark.labelString:	%_Rename Bookmark
+Emacs*XlwMenu.renameBookmark.labelString:	ブックマークの名前変更(%_R)
+! Emacs*XlwMenu.deleteBookmark.labelString:	%_Delete Bookmark
+Emacs*XlwMenu.deleteBookmark.labelString:	ブックマークの削除(%_D)
+! Emacs*XlwMenu.editBookmarkList.labelString:	%_Edit Bookmark List
+Emacs*XlwMenu.editBookmarkList.labelString:	ブックマークリストの編集(%_E)
+! Emacs*XlwMenu.saveBookmarks.labelString:	%_Save Bookmarks
+Emacs*XlwMenu.saveBookmarks.labelString:	ブックマークを保存(%_S)
+! Emacs*XlwMenu.saveBookmarksAs___.labelString:	Save Bookmarks %_As...
+Emacs*XlwMenu.saveBookmarksAs___.labelString:	別名でブックマークを保存(%_A)...
+! Emacs*XlwMenu.loadABookmarkFile.labelString:	%_Load a Bookmark File
+Emacs*XlwMenu.loadABookmarkFile.labelString:	ブックマークファイルの読み込み(%_L)
+! Emacs*XlwMenu.repeatLastComplexCommand___.labelString:	Repeat %_Last Complex Command...
+Emacs*XlwMenu.repeatLastComplexCommand___.labelString:	最後の複合コマンドを繰り返す(%_L)
+! Emacs*XlwMenu.e_valuateLispExpression___.labelString:	E%_valuate Lisp Expression...
+Emacs*XlwMenu.e_valuateLispExpression___.labelString:	Lisp正規表現の評価 (%_V)
+! Emacs*XlwMenu.executeNamedCommand___.labelString:	Execute %_Named Command...
+Emacs*XlwMenu.executeNamedCommand___.labelString:	名前付きコマンドの実行(%_N)
+! Emacs*XlwMenu.startMacroRecording.labelString:	Start %_Macro Recording
+Emacs*XlwMenu.startMacroRecording.labelString:		マクロ記録の開始(%_M)
+! Emacs*XlwMenu.e_xecuteLastMacro.labelString:	E%_xecute Last Macro
+Emacs*XlwMenu.e_xecuteLastMacro.labelString:	最後のマクロを実行 (%_X)
+! Emacs*XlwMenu.otherMacro.labelString:	%_Other Macro
+Emacs*XlwMenu.otherMacro.labelString:	他のマクロを実行(%_O)
+! Emacs*XlwMenu.abbrev.labelString:	%_Abbrev
+Emacs*XlwMenu.abbrev.labelString:	略語(%_A)
+! Emacs*XlwMenu.register.labelString:	%_Register
+Emacs*XlwMenu.register.labelString:	登録(%_R)
+! Emacs*XlwMenu.r_ectangles.labelString:	R%_ectangles
+Emacs*XlwMenu.r_ectangles.labelString:		矩形(%_E)
+! Emacs*XlwMenu.sort.labelString:	%_Sort
+Emacs*XlwMenu.sort.labelString:		ソート(%_S)
+! Emacs*XlwMenu.changeCase.labelString:	%_Change Case
+Emacs*XlwMenu.changeCase.labelString:	大小文字の変換(%_C)
+! Emacs*XlwMenu.ce_nter.labelString:	Ce%_nter
+Emacs*XlwMenu.ce_nter.labelString:	センタリング(%_N)
+! Emacs*XlwMenu.indent.labelString:	%_Indent
+Emacs*XlwMenu.indent.labelString:	インデント(%_I)
+! Emacs*XlwMenu.s_pellCheck.labelString:	S%_pell-Check
+Emacs*XlwMenu.s_pellCheck.labelString:		スペルチェック(%_P)
+! Emacs*XlwMenu.footnotes.labelString:	%_Footnotes
+Emacs*XlwMenu.footnotes.labelString:	脚注(%_F)
+! Emacs*XlwMenu.d_ynamicAbbrevExpand.labelString:	D%_ynamic Abbrev Expand
+Emacs*XlwMenu.d_ynamicAbbrevExpand.labelString:		略語のダイナミック展開(%_Y)
+! Emacs*XlwMenu.dynamicAbbrevComplete.labelString:	Dynamic Abbrev %_Complete
+Emacs*XlwMenu.dynamicAbbrevComplete.labelString:	略語のダイナミック補完(%_C)
+! Emacs*XlwMenu.dynamicAbbrevCompleteInAllBuffers.labelString:	Dynamic Abbrev Complete in %_All Buffers
+Emacs*XlwMenu.dynamicAbbrevCompleteInAllBuffers.labelString:	全てのバッファで略語のダイナミック補完(%_A)
+! Emacs*XlwMenu.defineGlobalAbbrevFor.labelString:	%_Define Global Abbrev for 
+Emacs*XlwMenu.defineGlobalAbbrevFor.labelString:	グローバル略語の定義(%_D)
+! Emacs*XlwMenu.defineModeSpecificAbbrevFor.labelString:	Define %_Mode-Specific Abbrev for 
+Emacs*XlwMenu.defineModeSpecificAbbrevFor.labelString:		モードごとの略語の定義(%_M)
+! Emacs*XlwMenu.defineGlobalEx_pansionFor.labelString:	Define Global Ex%_pansion for 
+Emacs*XlwMenu.defineGlobalEx_pansionFor.labelString:	グローバル展開の定義(%_P)
+! Emacs*XlwMenu.defineModeSpecificExpa_nsionFor.labelString:	Define Mode-Specific Expa%_nsion for 
+Emacs*XlwMenu.defineModeSpecificExpa_nsionFor.labelString:	モードごとの展開の定義(%_N)
+! Emacs*XlwMenu.e_xpandAbbrev.labelString:	E%_xpand Abbrev
+Emacs*XlwMenu.e_xpandAbbrev.labelString:	略語の展開(%_X)
+! Emacs*XlwMenu.expandAbbrevsInRe_gion.labelString:	Expand Abbrevs in Re%_gion
+Emacs*XlwMenu.expandAbbrevsInRe_gion.labelString:	リージョン内の略語の展開(%_G)
+! Emacs*XlwMenu.unexpandLastAbbrev.labelString:	%_Unexpand Last Abbrev
+Emacs*XlwMenu.unexpandLastAbbrev.labelString:	最後の略語の展開を戻す(%_U)
+! Emacs*XlwMenu.killAllAbbrevs.labelString:	%_Kill All Abbrevs
+Emacs*XlwMenu.killAllAbbrevs.labelString:	すべての略語を削除(%_K)
+! Emacs*XlwMenu.insertAllAbbrevsIntoBuffer.labelString:	%_Insert All Abbrevs into Buffer
+Emacs*XlwMenu.insertAllAbbrevsIntoBuffer.labelString:	すべての略語をバッファに挿入(%_I)
+! Emacs*XlwMenu.listAbbrevs.labelString:	%_List Abbrevs
+Emacs*XlwMenu.listAbbrevs.labelString:		略語の一覧(%_L)
+! Emacs*XlwMenu.editAbbrevs.labelString:	%_Edit Abbrevs
+Emacs*XlwMenu.editAbbrevs.labelString:		略語の編集(%_L)
+! Emacs*XlwMenu.redefineAbbrevsFromBuffer.labelString:	%_Redefine Abbrevs from Buffer
+Emacs*XlwMenu.redefineAbbrevsFromBuffer.labelString:	バッファから略語を再定義(%_R)
+! Emacs*XlwMenu.saveAbbrevsAs___.labelString:	%_Save Abbrevs As...
+Emacs*XlwMenu.saveAbbrevsAs___.labelString:	別名で略語を保存(%_S)...
+! Emacs*XlwMenu.l_oadAbbrevs___.labelString:	L%_oad Abbrevs...
+Emacs*XlwMenu.l_oadAbbrevs___.labelString:	略語を読み込む(%_O)...
+! Emacs*XlwMenu.copyToRegister___.labelString:	%_Copy to Register...
+Emacs*XlwMenu.copyToRegister___.labelString:	レジスタにコピー(%_C)
+! Emacs*XlwMenu.pasteRegister___.labelString:	%_Paste Register...
+Emacs*XlwMenu.pasteRegister___.labelString:	レジスタに貼り付ける(%_P)
+! Emacs*XlwMenu.savePointToRegister.labelString:	%_Save Point to Register
+Emacs*XlwMenu.savePointToRegister.labelString:		ポイントをレジスタに保存(%_S)
+! Emacs*XlwMenu.jumpToRegister.labelString:	%_Jump to Register
+Emacs*XlwMenu.jumpToRegister.labelString:	レジスタに移動(%_J)
+! Emacs*XlwMenu.killRectangle.labelString:	%_Kill Rectangle
+Emacs*XlwMenu.killRectangle.labelString:	矩形を削除(%_K)
+! Emacs*XlwMenu.yankRectangle.labelString:	%_Yank Rectangle
+Emacs*XlwMenu.yankRectangle.labelString:	矩形をヤンク(%_Y)
+! Emacs*XlwMenu.rectangleToRegister.labelString:	Rectangle %_to Register
+Emacs*XlwMenu.rectangleToRegister.labelString:		矩形をレジスタにする(%_T)
+! Emacs*XlwMenu.rectangleFromRegister.labelString:	Rectangle %_from Register
+Emacs*XlwMenu.rectangleFromRegister.labelString:	レジスタから矩形にする(%_F)
+! Emacs*XlwMenu.clearRectangle.labelString:	%_Clear Rectangle
+Emacs*XlwMenu.clearRectangle.labelString:	矩形をクリア(%_C)
+! Emacs*XlwMenu.openRectangle.labelString:	%_Open Rectangle
+Emacs*XlwMenu.openRectangle.labelString:	矩形を開く(%_O)
+! Emacs*XlwMenu.prefixRectangle___.labelString:	%_Prefix Rectangle...
+Emacs*XlwMenu.prefixRectangle___.labelString:	矩形を前に置く(%_P)...
+! Emacs*XlwMenu.rectangleMousing.labelString:	Rectangle %_Mousing
+Emacs*XlwMenu.rectangleMousing.labelString:	マウスで矩形(%_M)
+! Emacs*XlwMenu.linesInRegion.labelString:	%_Lines in Region
+Emacs*XlwMenu.linesInRegion.labelString:	リージョン内の行数(%_L)
+! Emacs*XlwMenu.paragraphsInRegion.labelString:	%_Paragraphs in Region
+Emacs*XlwMenu.paragraphsInRegion.labelString:	リージョン内の段落数(%_P)
+! Emacs*XlwMenu.p_agesInRegion.labelString:	P%_ages in Region
+Emacs*XlwMenu.p_agesInRegion.labelString:	リージョン内のページ数(%_A)
+! Emacs*XlwMenu.columnsInRegion.labelString:	%_Columns in Region
+Emacs*XlwMenu.columnsInRegion.labelString:	リージョン内のカラム数(%_C)
+! Emacs*XlwMenu.regexp___.labelString:	%_Regexp...
+Emacs*XlwMenu.regexp___.labelString:	正規表現(%_R)...
+! Emacs*XlwMenu.upcaseRegion.labelString:	%_Upcase Region
+Emacs*XlwMenu.upcaseRegion.labelString:		リージョン内を大文字に(%_U)
+! Emacs*XlwMenu.downcaseRegion.labelString:	%_Downcase Region
+Emacs*XlwMenu.downcaseRegion.labelString:	リージョン内を小文字に(%_D)
+! Emacs*XlwMenu.capitalizeRegion.labelString:	%_Capitalize Region
+Emacs*XlwMenu.capitalizeRegion.labelString:	リージョン内をキャピタライズ(%_C)
+! Emacs*XlwMenu.titleCaseRegion.labelString:	%_Title-Case Region
+Emacs*XlwMenu.titleCaseRegion.labelString:	リージョンにタイトルを付ける(%_T)
+! Emacs*XlwMenu.line.labelString:	%_Line
+Emacs*XlwMenu.line.labelString:		行表示(%_L)
+! Emacs*XlwMenu.paragraph.labelString:	%_Paragraph
+Emacs*XlwMenu.paragraph.labelString:	段落(%_P)
+! Emacs*XlwMenu.region.labelString:	%_Region
+Emacs*XlwMenu.region.labelString:	リージョン(%_R)
+! Emacs*XlwMenu.asPreviousLine.labelString:	%_As Previous Line
+Emacs*XlwMenu.asPreviousLine.labelString:	前の行で(%_A)
+! Emacs*XlwMenu.toColumn___.labelString:	%_To Column...
+Emacs*XlwMenu.toColumn___.labelString:		カラムに移動(%_T)...
+! Emacs*XlwMenu.balancedExpression.labelString:	%_Balanced Expression
+Emacs*XlwMenu.balancedExpression.labelString:	バランス(%_B)
+! Emacs*XlwMenu.cExpression.labelString:	%_C Expression
+Emacs*XlwMenu.cExpression.labelString:		C式(%_C)
+! Emacs*XlwMenu.buffer.labelString:	%_Buffer
+Emacs*XlwMenu.buffer.labelString:	バッファ(%_B)
+! Emacs*XlwMenu.word.labelString:	%_Word
+Emacs*XlwMenu.word.labelString:		ワード(%_W)
+! Emacs*XlwMenu.completeWord.labelString:	%_Complete Word
+Emacs*XlwMenu.completeWord.labelString:		ワード補完(%_C)
+! Emacs*XlwMenu.addFootnote.labelString:	%_Add Footnote
+Emacs*XlwMenu.addFootnote.labelString:		脚注の追加(%_A)
+! Emacs*XlwMenu.deleteFootnote.labelString:	%_Delete Footnote
+Emacs*XlwMenu.deleteFootnote.labelString:	脚注の削除 (%_D)
+! Emacs*XlwMenu.gotoFootnote.labelString:	%_Goto Footnote
+Emacs*XlwMenu.gotoFootnote.labelString:		脚注に移動(%_G)
+! Emacs*XlwMenu.backToMessage.labelString:	%_Back to Message
+Emacs*XlwMenu.backToMessage.labelString:	メッセージに戻る(%_B)
+! Emacs*XlwMenu.renumberFootnotes.labelString:	%_Renumber Footnotes
+Emacs*XlwMenu.renumberFootnotes.labelString:	脚注の再番号(%_R)
+! Emacs*XlwMenu.setFootnoteStyle.labelString:	%_Set Footnote Style
+Emacs*XlwMenu.setFootnoteStyle.labelString:	脚注スタイルの設定(%_S)
+! Emacs*XlwMenu.cycleFootnoteStyle.labelString:	%_Cycle Footnote Style
+Emacs*XlwMenu.cycleFootnoteStyle.labelString:	脚注スタイルを繰り返す(%_C)
+! Emacs*XlwMenu.packages.labelString:	%_Packages
+Emacs*XlwMenu.packages.labelString:	パッケージ(%_P)
+! Emacs*XlwMenu.internet.labelString:	%_Internet
+Emacs*XlwMenu.internet.labelString:	インターネット(%_I)
+! Emacs*XlwMenu.grep.labelString:	%_Grep
+Emacs*XlwMenu.grep.labelString:		%_Grep
+! Emacs*XlwMenu.compile.labelString:	%_Compile
+Emacs*XlwMenu.compile.labelString:	コンパイル(%_C)
+! Emacs*XlwMenu.debug.labelString:	%_Debug
+Emacs*XlwMenu.debug.labelString:	デバッグ(%_D)
+! Emacs*XlwMenu.shell.labelString:	%_Shell
+Emacs*XlwMenu.shell.labelString:	シェル(%_S)
+! Emacs*XlwMenu.tags.labelString:	%_Tags
+Emacs*XlwMenu.tags.labelString:		タグ(%_T)
+! Emacs*XlwMenu.ca_lendar.labelString:	Ca%_lendar
+Emacs*XlwMenu.ca_lendar.labelString:	カレンダ(%_L)
+! Emacs*XlwMenu.ga_mes.labelString:	Ga%_mes
+Emacs*XlwMenu.ga_mes.labelString:	ゲーム(%_M)
+! Emacs*XlwMenu.vC.labelString:	%_VC
+Emacs*XlwMenu.vC.labelString:	%_VC
+! Emacs*XlwMenu.compare.labelString:	%_Compare
+Emacs*XlwMenu.compare.labelString:	比較(%_C)
+! Emacs*XlwMenu.merge.labelString:	%_Merge
+Emacs*XlwMenu.merge.labelString:	マージ(%_M)
+! Emacs*XlwMenu.applyPatch.labelString:	%_Apply Patch
+Emacs*XlwMenu.applyPatch.labelString:	パッチの適用(%_A)
+! Emacs*XlwMenu.ediffMiscellanea.labelString:	%_Ediff Miscellanea
+Emacs*XlwMenu.ediffMiscellanea.labelString:	%_Ediffその他
+! Emacs*XlwMenu.directorySearch.labelString:	%_Directory Search
+Emacs*XlwMenu.directorySearch.labelString:	辞書検索(%_D)
+! Emacs*XlwMenu.pCLCVS.labelString:	%_PCL CVS
+Emacs*XlwMenu.pCLCVS.labelString:	%_PCL CVS
+! Emacs*XlwMenu.addDownloadSite.labelString:	%_Add Download Site
+Emacs*XlwMenu.addDownloadSite.labelString:	ダウンロードサイトの追加(%_A)
+! Emacs*XlwMenu.updatePackageIndex.labelString:	%_Update Package Index
+Emacs*XlwMenu.updatePackageIndex.labelString:	パッケージインデクスの更新(%_U)
+! Emacs*XlwMenu.listAndInstall.labelString:	%_List and Install
+Emacs*XlwMenu.listAndInstall.labelString:	一覧表示とインストール(%_L)
+! Emacs*XlwMenu.u_pdateInstalledPackages.labelString:	U%_pdate Installed Packages
+Emacs*XlwMenu.u_pdateInstalledPackages.labelString:	インストール済パッケージの更新(%_P)
+! Emacs*XlwMenu.usingCustom.labelString:	Using %_Custom
+Emacs*XlwMenu.usingCustom.labelString:		カスタムの使用(%_C)
+! Emacs*XlwMenu.1PreReleases.labelString:	%_1 Pre-Releases
+Emacs*XlwMenu.1PreReleases.labelString:		%_1 プレリリース
+! Emacs*XlwMenu.2Xemacs_org.labelString:	%_2 xemacs.org
+Emacs*XlwMenu.2Xemacs_org.labelString:		%_2 xemacs.org
+! Emacs*XlwMenu.3Crc_caCanada.labelString:	%_3 crc.ca (Canada)
+Emacs*XlwMenu.3Crc_caCanada.labelString:	%_3 crc.ca (カナダ)
+! Emacs*XlwMenu.4Ualberta_caCanada.labelString:	%_4 ualberta.ca (Canada)
+Emacs*XlwMenu.4Ualberta_caCanada.labelString:	%_4 ualberta.ca (カナダ)
+! Emacs*XlwMenu.5Uiuc_eduUnitedStates.labelString:	%_5 uiuc.edu (United States)
+Emacs*XlwMenu.5Uiuc_eduUnitedStates.labelString:	%_5 uiuc.edu (合衆国)
+! Emacs*XlwMenu.6Unc_eduUnitedStates.labelString:	%_6 unc.edu (United States)
+Emacs*XlwMenu.6Unc_eduUnitedStates.labelString:		%_6 unc.edu (合衆国)
+! Emacs*XlwMenu.7Utk_eduUnitedStates.labelString:	%_7 utk.edu (United States)
+Emacs*XlwMenu.7Utk_eduUnitedStates.labelString:		%_7 utk.edu (合衆国)
+! Emacs*XlwMenu.8Unicamp_brBrazil.labelString:	%_8 unicamp.br (Brazil)
+Emacs*XlwMenu.8Unicamp_brBrazil.labelString:	%_8 unicamp.br (ブラジル)
+! Emacs*XlwMenu.9Tuwien_ac_atAustria.labelString:	%_9 tuwien.ac.at (Austria)
+Emacs*XlwMenu.9Tuwien_ac_atAustria.labelString:		tuwien.ac.at (オーストリア)
+! Emacs*XlwMenu.0Auc_dkDenmark.labelString:	%_0 auc.dk (Denmark)
+Emacs*XlwMenu.0Auc_dkDenmark.labelString:	%_0 auc.dk (デンマーク)
+! Emacs*XlwMenu.aDoc_ic_ac_ukEngland.labelString:	%_a doc.ic.ac.uk (England)
+Emacs*XlwMenu.aDoc_ic_ac_ukEngland.labelString:		%_a doc.ic.ac.uk (イギリス)
+! Emacs*XlwMenu.bFunet_fiFinland.labelString:	%_b funet.fi (Finland)
+Emacs*XlwMenu.bFunet_fiFinland.labelString:	%_b funet.fi (フィンランド)
+! Emacs*XlwMenu.cCenatls_cena_dgac_frFrance.labelString:	%_c cenatls.cena.dgac.fr (France)
+Emacs*XlwMenu.cCenatls_cena_dgac_frFrance.labelString:	%_c cenatls.cena.dgac.fr (フランス)
+! Emacs*XlwMenu.dPasteur_frFrance.labelString:	%_d pasteur.fr (France)
+Emacs*XlwMenu.dPasteur_frFrance.labelString:	%_d pasteur.fr (フランス)
+! Emacs*XlwMenu.eTuDarmstadt_deGermany.labelString:	%_e tu-darmstadt.de (Germany)
+Emacs*XlwMenu.eTuDarmstadt_deGermany.labelString:	%_e tu-darmstadt.de (ドイツ)
+! Emacs*XlwMenu.fKfki_huHungary.labelString:	%_f kfki.hu (Hungary)
+Emacs*XlwMenu.fKfki_huHungary.labelString:	%_f kfki.hu (ハンガリー)
+! Emacs*XlwMenu.gEunet_ieIreland.labelString:	%_g eunet.ie (Ireland)
+Emacs*XlwMenu.gEunet_ieIreland.labelString:	%_g eunet.ie (アイルランド)
+! Emacs*XlwMenu.hUniroma2_itItaly.labelString:	%_h uniroma2.it (Italy)
+Emacs*XlwMenu.hUniroma2_itItaly.labelString:	%_h uniroma2.it (イタリア)
+! Emacs*XlwMenu.iUio_noNorway.labelString:	%_i uio.no (Norway)
+Emacs*XlwMenu.iUio_noNorway.labelString:	%_i uio.no (ノルウェー)
+! Emacs*XlwMenu.jIcm_edu_plPoland.labelString:	%_j icm.edu.pl (Poland)
+Emacs*XlwMenu.jIcm_edu_plPoland.labelString:	%_j icm.edu.pl (ポーランド)
+! Emacs*XlwMenu.kSrcc_msu_suRussia.labelString:	%_k srcc.msu.su (Russia)
+Emacs*XlwMenu.kSrcc_msu_suRussia.labelString:	%_k srcc.msu.su (ロシア)
+! Emacs*XlwMenu.lSunet_seSweden.labelString:	%_l sunet.se (Sweden)
+Emacs*XlwMenu.lSunet_seSweden.labelString:	%_l sunet.se (スウェーデン)
+! Emacs*XlwMenu.mCnlabSwitch_chSwitzerland.labelString:	%_m cnlab-switch.ch (Switzerland)
+Emacs*XlwMenu.mCnlabSwitch_chSwitzerland.labelString:	%_m cnlab-switch.ch (スイス)
+! Emacs*XlwMenu.nAist_go_jpJapan.labelString:	%_n aist.go.jp (Japan)
+Emacs*XlwMenu.nAist_go_jpJapan.labelString:	%_n aist.go.jp (日本)
+! Emacs*XlwMenu.oAsahiNet_or_jpJapan.labelString:	%_o asahi-net.or.jp (Japan)
+Emacs*XlwMenu.oAsahiNet_or_jpJapan.labelString:	%_o asahi-net.or.jp (日本)
+! Emacs*XlwMenu.pDti_ad_jpJapan.labelString:	%_p dti.ad.jp (Japan)
+Emacs*XlwMenu.pDti_ad_jpJapan.labelString:	%_p dti.ad.jp (日本)
+! Emacs*XlwMenu.qJaist_ac_jpJapan.labelString:	%_q jaist.ac.jp (Japan)
+Emacs*XlwMenu.qJaist_ac_jpJapan.labelString:	%_q jaist.ac.jp (日本)
+! Emacs*XlwMenu.rNucba_ac_jpJapan.labelString:	%_r nucba.ac.jp (Japan)
+Emacs*XlwMenu.rNucba_ac_jpJapan.labelString:	%_r nucba.ac.jp (日本)
+! Emacs*XlwMenu.sSut_ac_jpJapan.labelString:	%_s sut.ac.jp (Japan)
+Emacs*XlwMenu.sSut_ac_jpJapan.labelString:	%_s sut.ac.jp (日本)
+! Emacs*XlwMenu.tTsukuba_ac_jpJapan.labelString:	%_t tsukuba.ac.jp (Japan)
+Emacs*XlwMenu.tTsukuba_ac_jpJapan.labelString:		%_t tsukuba.ac.jp (日本)
+! Emacs*XlwMenu.uKreonet_re_krKorea.labelString:	%_u kreonet.re.kr (Korea)
+Emacs*XlwMenu.uKreonet_re_krKorea.labelString:		%_u kreonet.re.kr (韓国)
+! Emacs*XlwMenu.vNctu_edu_twTaiwan.labelString:	%_v nctu.edu.tw (Taiwan)
+Emacs*XlwMenu.vNctu_edu_twTaiwan.labelString:		%_v nctu.edu.tw (台湾)
+! Emacs*XlwMenu.wSun_ac_zaSouthAfrica.labelString:	%_w sun.ac.za (South Africa)
+Emacs*XlwMenu.wSun_ac_zaSouthAfrica.labelString:	%_w sun.ac.za (南アフリカ)
+! Emacs*XlwMenu.xIsu_net_saSaudiArabia.labelString:	%_x isu.net.sa (Saudi Arabia)
+Emacs*XlwMenu.xIsu_net_saSaudiArabia.labelString:	%_x isu.net.sa (サウジアラビア)
+! Emacs*XlwMenu.yAarnet_edu_auAustralia.labelString:	%_y aarnet.edu.au (Australia)
+Emacs*XlwMenu.yAarnet_edu_auAustralia.labelString:	%_y aarnet.edu.au (オーストラリア)
+! Emacs*XlwMenu.pleaseLoadPackageIndex.labelString:	Please load Package Index
+Emacs*XlwMenu.pleaseLoadPackageIndex.labelString:	パッケージインデクスを読み込んでください
+! Emacs*XlwMenu.readMail1VM___.labelString:	Read Mail %_1 (VM)...
+Emacs*XlwMenu.readMail1VM___.labelString:	メールを読む(%_1)(VM)...
+! Emacs*XlwMenu.readMail2MH___.labelString:	Read Mail %_2 (MH)...
+Emacs*XlwMenu.readMail2MH___.labelString:	メールを読む(%_2)(MH)...
+! Emacs*XlwMenu.sendMail___.labelString:	Send %_Mail...
+Emacs*XlwMenu.sendMail___.labelString:		メールの送信(%_M)...
+! Emacs*XlwMenu.usenetNews.labelString:	Usenet %_News
+Emacs*XlwMenu.usenetNews.labelString:	Usenetニュース(%_N)
+! Emacs*XlwMenu.browseTheWeb.labelString:	Browse the %_Web
+Emacs*XlwMenu.browseTheWeb.labelString:		ウェブのブラウズ(%_W)
+! Emacs*XlwMenu.grep___.labelString:	%_Grep...
+Emacs*XlwMenu.grep___.labelString:	%_Grep...
+! Emacs*XlwMenu.killGrep.labelString:	%_Kill Grep
+Emacs*XlwMenu.killGrep.labelString:	Grepの終了(%_K)
+! Emacs*XlwMenu.grepAllFilesInCurrentDirectory___.labelString:	Grep %_All Files in Current Directory...
+Emacs*XlwMenu.grepAllFilesInCurrentDirectory___.labelString:	カレントディレクトリのすべてのファイルをgrep(%_A)
+! Emacs*XlwMenu.grepCAndCHeaderFilesInCurrentDirectory___.labelString:	Grep %_C and C Header Files in Current Directory...
+Emacs*XlwMenu.grepCAndCHeaderFilesInCurrentDirectory___.labelString:	カレントディレクトリのCとCヘッダのファイルをgrep(%_C)
+! Emacs*XlwMenu.grepCHea_derFilesInCurrentDirectory___.labelString:	Grep C Hea%_der Files in Current Directory...
+Emacs*XlwMenu.grepCHea_derFilesInCurrentDirectory___.labelString:	カレントディレクトリのCヘッダファイルをgrep(%_H)
+! Emacs*XlwMenu.grepELispFilesInCurrentDirectory___.labelString:	Grep %_E-Lisp Files in Current Directory...
+Emacs*XlwMenu.grepELispFilesInCurrentDirectory___.labelString:	カレントディレクトリのE-Lispファイルをgrep(%_E)
+! Emacs*XlwMenu.grepPerlFilesInCurrentDirectory___.labelString:	Grep %_Perl Files in Current Directory...
+Emacs*XlwMenu.grepPerlFilesInCurrentDirectory___.labelString:	カレントディレクトリのPerlファイルをgrep(%_P)
+! Emacs*XlwMenu.grepHTMLFilesInCurrentDirectory___.labelString:	Grep %_HTML Files in Current Directory...
+Emacs*XlwMenu.grepHTMLFilesInCurrentDirectory___.labelString:	カレントディレクトリのHTMLファイルをgrep(%_H)
+! Emacs*XlwMenu.nextMatch.labelString:	%_Next Match
+Emacs*XlwMenu.nextMatch.labelString:	次の一致へ(%_N)
+! Emacs*XlwMenu.pre_viousMatch.labelString:	Pre%_vious Match
+Emacs*XlwMenu.pre_viousMatch.labelString:	前の一致へ(%_V)
+! Emacs*XlwMenu.firstMatch.labelString:	%_First Match
+Emacs*XlwMenu.firstMatch.labelString:	最初の一致へ(%_F)
+! Emacs*XlwMenu.g_otoMatch.labelString:	G%_oto Match
+Emacs*XlwMenu.g_otoMatch.labelString:	一致へ移動(%_G)
+! Emacs*XlwMenu.setGrepCommand___.labelString:	%_Set Grep Command...
+Emacs*XlwMenu.setGrepCommand___.labelString:	grepコマンドの設定(%_S)...
+! Emacs*XlwMenu.compile___.labelString:	%_Compile...
+Emacs*XlwMenu.compile___.labelString:	コンパイル(%_C)
+! Emacs*XlwMenu.repeatCompilation.labelString:	%_Repeat Compilation
+Emacs*XlwMenu.repeatCompilation.labelString:	コンパイルの繰り返し(%_R)
+! Emacs*XlwMenu.killCompilation.labelString:	%_Kill Compilation
+Emacs*XlwMenu.killCompilation.labelString:	コンパイルの強制終了(%_K)
+! Emacs*XlwMenu.nextError.labelString:	%_Next Error
+Emacs*XlwMenu.nextError.labelString:	次のエラーへ(%_N)
+! Emacs*XlwMenu.pre_viousError.labelString:	Pre%_vious Error
+Emacs*XlwMenu.pre_viousError.labelString:	前のエラーへ(%_V)
+! Emacs*XlwMenu.firstError.labelString:	%_First Error
+Emacs*XlwMenu.firstError.labelString:	最初のエラーへ(%_F)
+! Emacs*XlwMenu.g_otoError.labelString:	G%_oto Error
+Emacs*XlwMenu.g_otoError.labelString:	エラーへ移動(%_O)
+! Emacs*XlwMenu.gDB___.labelString:	%_GDB...
+Emacs*XlwMenu.gDB___.labelString:	%_GDB...
+! Emacs*XlwMenu.dBX___.labelString:	%_DBX...
+Emacs*XlwMenu.dBX___.labelString:	%_DBX...
+! Emacs*XlwMenu.s_hellCommand___.labelString:	S%_hell Command...
+Emacs*XlwMenu.s_hellCommand___.labelString:	シェルコマンド(%_H)...
+! Emacs*XlwMenu.shellCommandOnRegion___.labelString:	Shell Command on %_Region...
+Emacs*XlwMenu.shellCommandOnRegion___.labelString:	リージョン内にシェルコマンド実行(%_R)
+! Emacs*XlwMenu.findTag___.labelString:	%_Find Tag...
+Emacs*XlwMenu.findTag___.labelString:	タグの検索(%_F)...
+! Emacs*XlwMenu.findOtherWindow___.labelString:	Find %_Other Window...
+Emacs*XlwMenu.findOtherWindow___.labelString:	他のウィンドウで検索(%_O)
+! Emacs*XlwMenu.nextTag___.labelString:	%_Next Tag...
+Emacs*XlwMenu.nextTag___.labelString:	次のタグへ(%_N)...
+! Emacs*XlwMenu.n_extOtherWindow___.labelString:	N%_ext Other Window...
+Emacs*XlwMenu.n_extOtherWindow___.labelString:	次のほかのウィンドウへ(%_E)...
+! Emacs*XlwMenu.nextFile.labelString:	Next %_File
+Emacs*XlwMenu.nextFile.labelString:	次のファイル(%_F)
+! Emacs*XlwMenu.tagsSearch___.labelString:	Tags %_Search...
+Emacs*XlwMenu.tagsSearch___.labelString:	タグ検索(%_S)...
+! Emacs*XlwMenu.tagsReplace___.labelString:	Tags %_Replace...
+Emacs*XlwMenu.tagsReplace___.labelString:	タグ置換(%_R)...
+! Emacs*XlwMenu.continueSearchReplace.labelString:	%_Continue Search/Replace
+Emacs*XlwMenu.continueSearchReplace.labelString:	検索/置換を続ける(%_C)
+! Emacs*XlwMenu.popStack.labelString:	%_Pop stack
+Emacs*XlwMenu.popStack.labelString:	スタックのpop(%_P)
+! Emacs*XlwMenu.apropos___.labelString:	%_Apropos...
+Emacs*XlwMenu.apropos___.labelString:	%_Apropos...
+! Emacs*XlwMenu.setTagsTableFile___.labelString:	%_Set Tags Table File...
+Emacs*XlwMenu.setTagsTableFile___.labelString:	タグテーブルファイルの設定(%_S)...
+! Emacs*XlwMenu.3MonthCalendar.labelString:	%_3-Month Calendar
+Emacs*XlwMenu.3MonthCalendar.labelString:	3ヵ月カレンダ(%_3)
+! Emacs*XlwMenu.diary.labelString:	%_Diary
+Emacs*XlwMenu.diary.labelString:	日記(%_D)
+! Emacs*XlwMenu.holidays.labelString:	%_Holidays
+Emacs*XlwMenu.holidays.labelString:	休日(%_H)
+! Emacs*XlwMenu.phasesOfTheMoon.labelString:	%_Phases of the Moon
+Emacs*XlwMenu.phasesOfTheMoon.labelString:	月相(%_P)
+! Emacs*XlwMenu.sunriseSunset.labelString:	%_Sunrise/Sunset
+Emacs*XlwMenu.sunriseSunset.labelString:	日の出/日の入(%_S)
+! Emacs*XlwMenu.mineGame.labelString:	%_Mine Game
+Emacs*XlwMenu.mineGame.labelString:	地雷ゲーム(%_M)
+! Emacs*XlwMenu.tetris.labelString:	%_Tetris
+Emacs*XlwMenu.tetris.labelString:	テトリス(%_T)
+! Emacs*XlwMenu.sokoban.labelString:	%_Sokoban
+Emacs*XlwMenu.sokoban.labelString:	倉庫番(%_S)
+! Emacs*XlwMenu.quoteFromZippy.labelString:	Quote from %_Zippy
+Emacs*XlwMenu.quoteFromZippy.labelString:	Zippyの格言(%_Z)
+! Emacs*XlwMenu.psychoanalyst.labelString:	%_Psychoanalyst
+Emacs*XlwMenu.psychoanalyst.labelString:	XEmacs精神分析(%_P)
+! Emacs*XlwMenu.ps_ychoanalyzeZippy.labelString:	Ps%_ychoanalyze Zippy!
+Emacs*XlwMenu.ps_ychoanalyzeZippy.labelString:	Zippyを精神分析!(%_Y)
+! Emacs*XlwMenu.randomFlames.labelString:	%_Random Flames
+Emacs*XlwMenu.randomFlames.labelString:		ランダム罵倒(%_R)
+! Emacs*XlwMenu.dunnetAdventure.labelString:	%_Dunnet (Adventure)
+Emacs*XlwMenu.dunnetAdventure.labelString:	Dunnet(アドベンチャー)(%_D)
+! Emacs*XlwMenu.towersOfHanoi.labelString:	Towers of %_Hanoi
+Emacs*XlwMenu.towersOfHanoi.labelString:	ハノイの塔(%_H)
+! Emacs*XlwMenu.gameOfLife.labelString:	Game of %_Life
+Emacs*XlwMenu.gameOfLife.labelString:	ライフゲーム(%_L)
+! Emacs*XlwMenu.m_ultiplicationPuzzle.labelString:	M%_ultiplication Puzzle
+Emacs*XlwMenu.m_ultiplicationPuzzle.labelString:	掛け算パズル(%_U)
+! Emacs*XlwMenu.loadVC.labelString:	%_Load VC
+Emacs*XlwMenu.loadVC.labelString:	VCの読み込み(%_L)
+! Emacs*XlwMenu.twoFiles___.labelString:	%_Two Files...
+Emacs*XlwMenu.twoFiles___.labelString:		2ファイル(%_T)...
+! Emacs*XlwMenu.twoBuffers___.labelString:	%_Two Buffers...
+Emacs*XlwMenu.twoBuffers___.labelString:	2バッファ(%_T)...
+! Emacs*XlwMenu.threeFiles___.labelString:	%_Three Files...
+Emacs*XlwMenu.threeFiles___.labelString:	3ファイル(%_T)...
+! Emacs*XlwMenu.threeBuffers___.labelString:	%_Three Buffers...
+Emacs*XlwMenu.threeBuffers___.labelString:	3バッファ(%_T)...
+! Emacs*XlwMenu.twoDirectories___.labelString:	%_Two Directories...
+Emacs*XlwMenu.twoDirectories___.labelString:	2ディレクトリ(%_T)...
+! Emacs*XlwMenu.threeDirectories___.labelString:	%_Three Directories...
+Emacs*XlwMenu.threeDirectories___.labelString:	3ディレクトリ(%_T)...
+! Emacs*XlwMenu.fileWithRevision___.labelString:	%_File with Revision...
+Emacs*XlwMenu.fileWithRevision___.labelString:	リビジョンつきファイル(%_F)...
+! Emacs*XlwMenu.directoryRevisions___.labelString:	%_Directory Revisions...
+Emacs*XlwMenu.directoryRevisions___.labelString:	ディレクトリリビジョン(%_D)...
+! Emacs*XlwMenu.windowsWordByWord___.labelString:	%_Windows Word-by-word...
+Emacs*XlwMenu.windowsWordByWord___.labelString:	ワードごとのウィンドウ(%_W)...
+! Emacs*XlwMenu.windowsLineByLine___.labelString:	%_Windows Line-by-line...
+Emacs*XlwMenu.windowsLineByLine___.labelString:	行ごとのウィンドウ(%_W)...
+! Emacs*XlwMenu.regionsWordByWord___.labelString:	%_Regions Word-by-word...
+Emacs*XlwMenu.regionsWordByWord___.labelString:	ワードごとのリージョン(%_R)...
+! Emacs*XlwMenu.regionsLineByLine___.labelString:	%_Regions Line-by-line...
+Emacs*XlwMenu.regionsLineByLine___.labelString:	行ごとのリージョン(%_R)...
+! Emacs*XlwMenu.files___.labelString:	%_Files...
+Emacs*XlwMenu.files___.labelString:	ファイル(%_F)...
+! Emacs*XlwMenu.filesWithAncestor___.labelString:	%_Files with Ancestor...
+Emacs*XlwMenu.filesWithAncestor___.labelString:	祖先つきのファイル(%_F)...
+! Emacs*XlwMenu.buffers___.labelString:	%_Buffers...
+Emacs*XlwMenu.buffers___.labelString:	バッファ(%_B)...
+! Emacs*XlwMenu.buffersWithAncestor___.labelString:	%_Buffers with Ancestor...
+Emacs*XlwMenu.buffersWithAncestor___.labelString:	祖先つきのバッファ(%_B)...
+! Emacs*XlwMenu.directories___.labelString:	%_Directories...
+Emacs*XlwMenu.directories___.labelString:	ディレクトリ(%_D)...
+! Emacs*XlwMenu.directoriesWithAncestor___.labelString:	%_Directories with Ancestor...
+Emacs*XlwMenu.directoriesWithAncestor___.labelString:	祖先つきのディレクトリ(%_D)
+! Emacs*XlwMenu.revisions___.labelString:	%_Revisions...
+Emacs*XlwMenu.revisions___.labelString:	リビジョン(%_R)...
+! Emacs*XlwMenu.revisionsWithAncestor___.labelString:	%_Revisions with Ancestor...
+Emacs*XlwMenu.revisionsWithAncestor___.labelString:	祖先つきのリビジョン(%_R)...
+! Emacs*XlwMenu.directoryRevisionsWithAncestor___.labelString:	%_Directory Revisions with Ancestor...
+Emacs*XlwMenu.directoryRevisionsWithAncestor___.labelString:	祖先つきのディレクトリリビジョン(%_D)...
+! Emacs*XlwMenu.toAFile___.labelString:	%_To a file...
+Emacs*XlwMenu.toAFile___.labelString:	ファイルにする(%_T)...
+! Emacs*XlwMenu.toABuffer___.labelString:	%_To a buffer...
+Emacs*XlwMenu.toABuffer___.labelString:	バッファにする(%_T)...
+! Emacs*XlwMenu.ediffManual___.labelString:	%_Ediff Manual...
+Emacs*XlwMenu.ediffManual___.labelString:	マニュアルのediff(%_E)...
+! Emacs*XlwMenu.customizeEdiff___.labelString:	%_Customize Ediff...
+Emacs*XlwMenu.customizeEdiff___.labelString:	ediffのカスタマイズ(%_C)...
+! Emacs*XlwMenu.listEdiffSessions___.labelString:	%_List Ediff Sessions...
+Emacs*XlwMenu.listEdiffSessions___.labelString:	ediffセッションの一覧(%_L)...
+! Emacs*XlwMenu.useSeparateFrameForEdiffControlBuffer___.labelString:	%_Use separate frame for Ediff control buffer...
+Emacs*XlwMenu.useSeparateFrameForEdiffControlBuffer___.labelString:	ediffコントロールバッファに別のフレームを使う(%_U)...
+! Emacs*XlwMenu.useAToolbarWithEdiffControlBuffer.labelString:	%_Use a toolbar with Ediff control buffer
+Emacs*XlwMenu.useAToolbarWithEdiffControlBuffer.labelString:	ediffコントロールバッファにツールバーを使う(%_U)
+! Emacs*XlwMenu.loadHotlistOfServers.labelString:	%_Load Hotlist of Servers
+Emacs*XlwMenu.loadHotlistOfServers.labelString:	サーバのホットリストを読み込む(%_L)
+! Emacs*XlwMenu.newServer.labelString:	%_New Server
+Emacs*XlwMenu.newServer.labelString:	新規サーバ(%_N)
+! Emacs*XlwMenu.queryWithForm.labelString:	%_Query with Form
+Emacs*XlwMenu.queryWithForm.labelString:	フォームをクエリー(%_Q)
+! Emacs*XlwMenu.expandInlineQuery.labelString:	%_Expand Inline Query
+Emacs*XlwMenu.expandInlineQuery.labelString:	インラインクエリーの展開(%_E)
+! Emacs*XlwMenu.getEmail.labelString:	%_Get Email
+Emacs*XlwMenu.getEmail.labelString:	電子メールの取得(%_G)
+! Emacs*XlwMenu.getPhone.labelString:	%_Get Phone
+Emacs*XlwMenu.getPhone.labelString:	電話番号の取得(%_G)
+! Emacs*XlwMenu.updateDirectory.labelString:	%_Update Directory
+Emacs*XlwMenu.updateDirectory.labelString:	ディレクトリの更新(%_U)
+! Emacs*XlwMenu.examineDirectory.labelString:	%_Examine Directory
+Emacs*XlwMenu.examineDirectory.labelString:	ディレクトリの検査(%_E)
+! Emacs*XlwMenu.statusDirectory.labelString:	%_Status Directory
+Emacs*XlwMenu.statusDirectory.labelString:	ステータスディレクトリ(%_S)
+! Emacs*XlwMenu.checkoutModule.labelString:	%_Checkout Module
+Emacs*XlwMenu.checkoutModule.labelString:	モジュールのチェックアウト(%_C)
+! Emacs*XlwMenu.advancedCustomize.labelString:	%_Advanced (Customize)
+Emacs*XlwMenu.advancedCustomize.labelString:	上級(カスタマイズ)(%_A)
+! Emacs*XlwMenu.editing.labelString:	%_Editing
+Emacs*XlwMenu.editing.labelString:	編集(%_E)
+! Emacs*XlwMenu.keyboardAndMouse.labelString:	%_Keyboard and Mouse
+Emacs*XlwMenu.keyboardAndMouse.labelString:	キーボードとマウス(%_K)
+! Emacs*XlwMenu.printing.labelString:	%_Printing
+Emacs*XlwMenu.printing.labelString:	印刷(%_P)
+! Emacs*XlwMenu.troubleshooting.labelString:	%_Troubleshooting
+Emacs*XlwMenu.troubleshooting.labelString:	トラブルシューティング(%_T)
+! Emacs*XlwMenu.display.labelString:	%_Display
+Emacs*XlwMenu.display.labelString:	ディスプレイ(%_D)
+! Emacs*XlwMenu.menubars.labelString:	%_Menubars
+Emacs*XlwMenu.menubars.labelString:	メニューバー(%_M)
+! Emacs*XlwMenu.s_yntaxHighlighting.labelString:	S%_yntax Highlighting
+Emacs*XlwMenu.s_yntaxHighlighting.labelString:	シンタックス強調(%_Y)
+! Emacs*XlwMenu.font.labelString:	%_Font
+Emacs*XlwMenu.font.labelString:		フォント(%_F)
+! Emacs*XlwMenu.fontSi_ze.labelString:	Font Si%_ze
+Emacs*XlwMenu.fontSi_ze.labelString:	フォントサイズ(%_Z)
+! Emacs*XlwMenu.editFa_ces___.labelString:	Edit Fa%_ces...
+Emacs*XlwMenu.editFa_ces___.labelString:	装飾の編集(%_C)...
+! Emacs*XlwMenu.editI_nitFile.labelString:	Edit I%_nit File
+Emacs*XlwMenu.editI_nitFile.labelString:	initファイルの編集(%_I)
+! Emacs*XlwMenu.saveOptionsToInitFile.labelString:	%_Save Options to Init File
+Emacs*XlwMenu.saveOptionsToInitFile.labelString:	オプションをinitファイルに保存(%_S)
+! Emacs*XlwMenu.thisBufferReadOnly.labelString:	This Buffer %_Read Only
+Emacs*XlwMenu.thisBufferReadOnly.labelString:	このバッファは書き込み禁止(%_R)
+! Emacs*XlwMenu.yankKillInteractWithClipboard.labelString:	%_Yank/Kill Interact With Clipboard
+Emacs*XlwMenu.yankKillInteractWithClipboard.labelString:	クリップボードでヤンク/Killの対話
+! Emacs*XlwMenu.overstrike.labelString:	%_Overstrike
+Emacs*XlwMenu.overstrike.labelString:	重ね打ち(%_O)
+! Emacs*XlwMenu.abbrevMode.labelString:	%_Abbrev Mode
+Emacs*XlwMenu.abbrevMode.labelString:	略語モード(%_A)
+! Emacs*XlwMenu.activeRe_gions.labelString:	Active Re%_gions
+Emacs*XlwMenu.activeRe_gions.labelString:	リージョンのアクティブ化(%_G)
+! Emacs*XlwMenu.caseSensitiveSearch.labelString:	%_Case Sensitive Search
+Emacs*XlwMenu.caseSensitiveSearch.labelString:	大文字/小文字を区別して検索(%_C)
+! Emacs*XlwMenu.caseMatchingReplace.labelString:	Case %_Matching Replace
+Emacs*XlwMenu.caseMatchingReplace.labelString:	大文字/小文字を区別して置換(%_M)
+! Emacs*XlwMenu.newlineAtEndOfFile___.labelString:	%_Newline at End of File...
+Emacs*XlwMenu.newlineAtEndOfFile___.labelString:	ファイルの最後に改行(%_N)
+! Emacs*XlwMenu.addNewlineWhenMovingPastEnd.labelString:	Add Newline When Moving Past %_End
+Emacs*XlwMenu.addNewlineWhenMovingPastEnd.labelString:	最後を通過したら改行を追加(_E)
+! Emacs*XlwMenu.donTRequire.labelString:	%_Don't Require
+Emacs*XlwMenu.donTRequire.labelString:	必要としない(%_D)
+! Emacs*XlwMenu.require.labelString:	%_Require
+Emacs*XlwMenu.require.labelString:	必要とする(%_R)
+! Emacs*XlwMenu.ask.labelString:	%_Ask
+Emacs*XlwMenu.ask.labelString:		質問する(%_A)
+! Emacs*XlwMenu.deleteKeyDeletesSelection.labelString:	%_Delete Key Deletes Selection
+Emacs*XlwMenu.deleteKeyDeletesSelection.labelString:	Deleteキーで選択範囲を削除(%_D)
+! Emacs*XlwMenu.killLineKillsWholeLineAtBeg.labelString:	`%_kill-line' Kills Whole Line at %_Beg
+Emacs*XlwMenu.killLineKillsWholeLineAtBeg.labelString:	'kill-line'で最初の行をすべて削除(%_B)
+! Emacs*XlwMenu.sizeForBlockMovementCommands___.labelString:	Size for %_Block-Movement Commands...
+Emacs*XlwMenu.sizeForBlockMovementCommands___.labelString:	ブロック移動コマンドのサイズ(%_B)
+! Emacs*XlwMenu.vIEmulation.labelString:	%_VI Emulation
+Emacs*XlwMenu.vIEmulation.labelString:	VIエミュレーション (%_V)
+! Emacs*XlwMenu.s_hiftedMotionKeysSelectRegion.labelString:	S%_hifted Motion Keys Select Region
+Emacs*XlwMenu.s_hiftedMotionKeysSelectRegion.labelString:	シフト移動でリージョンの選択(%_H)
+! Emacs*XlwMenu.afterShiftedMotionUnshiftedMotionKeysDeselect.labelString:	%_After Shifted Motion, Unshifted Motion Keys Deselect
+Emacs*XlwMenu.afterShiftedMotionUnshiftedMotionKeysDeselect.labelString:	シフト移動後にシフトなし移動で選択解除(%_A)
+! Emacs*XlwMenu.setKey___.labelString:	%_Set Key...
+Emacs*XlwMenu.setKey___.labelString:	キーの設定(%_S)...
+! Emacs*XlwMenu.unsetKey___.labelString:	%_Unset Key...
+Emacs*XlwMenu.unsetKey___.labelString:	キーの設定解除(%_U)...
+! Emacs*XlwMenu.mousePasteAtTextCursorNotClickedLocation.labelString:	%_Mouse Paste at Text Cursor (not Clicked Location)
+Emacs*XlwMenu.mousePasteAtTextCursorNotClickedLocation.labelString:	テキストカーソルにマウスで貼り付け(クリックした位置ではない)(%_M)
+! Emacs*XlwMenu.teachExtendedCommands.labelString:	%_Teach Extended Commands
+Emacs*XlwMenu.teachExtendedCommands.labelString:	拡張コマンドを教える(%_T)
+! Emacs*XlwMenu.setPrinterNameForGenericPrintSupport___.labelString:	Set Printer %_Name for Generic Print Support...
+Emacs*XlwMenu.setPrinterNameForGenericPrintSupport___.labelString:	一般的なプリンタサポートのためのプリンタ名の設定(%_N)
+! Emacs*XlwMenu.commandLineSwitchesForLprLp___.labelString:	Command-Line %_Switches for `lpr'/`lp'...
+Emacs*XlwMenu.commandLineSwitchesForLprLp___.labelString:	'lpr'/'lp'のコマンドラインスイッチ...
+! Emacs*XlwMenu.prettyPrintPaperSize.labelString:	%_Pretty-Print Paper Size
+Emacs*XlwMenu.prettyPrintPaperSize.labelString:	清書印刷の用紙サイズ(%_P)
+! Emacs*XlwMenu.colorPrinting.labelString:	%_Color Printing
+Emacs*XlwMenu.colorPrinting.labelString:	カラー印刷(%_C)
+! Emacs*XlwMenu.letter.labelString:	%_Letter
+Emacs*XlwMenu.letter.labelString:	レター(%_L)
+! Emacs*XlwMenu.lette_rSmall.labelString:	Lette%_r-Small
+Emacs*XlwMenu.lette_rSmall.labelString:	レター小(%_R)
+! Emacs*XlwMenu.le_gal.labelString:	Le%_gal
+Emacs*XlwMenu.le_gal.labelString:	リーガル(%_G)
+! Emacs*XlwMenu.statement.labelString:	%_Statement
+Emacs*XlwMenu.statement.labelString:	ステートメント(%_S)
+! Emacs*XlwMenu.executive.labelString:	%_Executive
+Emacs*XlwMenu.executive.labelString:	エグゼクティブ(%_E)
+! Emacs*XlwMenu.tabloid.labelString:	%_Tabloid
+Emacs*XlwMenu.tabloid.labelString:	タブロイド (%_T)
+! Emacs*XlwMenu.le_dger.labelString:	Le%_dger
+Emacs*XlwMenu.le_dger.labelString:	元帳(%_D)
+! Emacs*XlwMenu.a_3.labelString:	A%_3
+Emacs*XlwMenu.a_3.labelString:		A%_3
+! Emacs*XlwMenu.a4.labelString:	%_A4
+Emacs*XlwMenu.a4.labelString:	%_A4
+! Emacs*XlwMenu.a4s_mall.labelString:	A4s%_mall
+Emacs*XlwMenu.a4s_mall.labelString:	A4小(%_M)
+! Emacs*XlwMenu.b_4.labelString:	B%_4
+Emacs*XlwMenu.b_4.labelString:		B%_4
+! Emacs*XlwMenu.b5.labelString:	%_B5
+Emacs*XlwMenu.b5.labelString:	%_B5
+! Emacs*XlwMenu.composeMailWith.labelString:	%_Compose Mail With
+Emacs*XlwMenu.composeMailWith.labelString:	メールの作成ツール(%_C)
+! Emacs*XlwMenu.setMyEmailAddress___.labelString:	Set My %_Email Address...
+Emacs*XlwMenu.setMyEmailAddress___.labelString:	電子メールアドレスの設定(%_E)...
+! Emacs*XlwMenu.setMachineEmailName___.labelString:	Set %_Machine Email Name...
+Emacs*XlwMenu.setMachineEmailName___.labelString:	マシンの電子メール名の設定(%_M)
+! Emacs*XlwMenu.setSMTPServer___.labelString:	Set %_SMTP Server...
+Emacs*XlwMenu.setSMTPServer___.labelString:	SMTPサーバの設定(%_S)...
+! Emacs*XlwMenu.sMTPDebugInfo.labelString:	SMTP %_Debug Info
+Emacs*XlwMenu.sMTPDebugInfo.labelString:	SMTPデバッグ情報(%_D)...
+! Emacs*XlwMenu.openURLsWith.labelString:	%_Open URLs With
+Emacs*XlwMenu.openURLsWith.labelString:		URLを開くツール(%_O)
+! Emacs*XlwMenu.defaultEmacsMailer.labelString:	%_Default Emacs Mailer
+Emacs*XlwMenu.defaultEmacsMailer.labelString:	デフォルトEmacsメーラ(%_D)
+! Emacs*XlwMenu.mH.labelString:	%_MH
+Emacs*XlwMenu.mH.labelString:	%_MH
+! Emacs*XlwMenu.gNUS.labelString:	%_GNUS
+Emacs*XlwMenu.gNUS.labelString:	%_GNUS
+! Emacs*XlwMenu.emacsW3.labelString:	%_Emacs-W3
+Emacs*XlwMenu.emacsW3.labelString:	%_Emacs-W3
+! Emacs*XlwMenu.netscape.labelString:	%_Netscape
+Emacs*XlwMenu.netscape.labelString:	%_Netscape
+! Emacs*XlwMenu.mosaic.labelString:	%_Mosaic
+Emacs*XlwMenu.mosaic.labelString:	%_Mosaic
+! Emacs*XlwMenu.mosaicCCI.labelString:	Mosaic (%_CCI)
+Emacs*XlwMenu.mosaicCCI.labelString:	Mosaic (%_CCI)
+! Emacs*XlwMenu.iXIMosaic.labelString:	%_IXI Mosaic
+Emacs*XlwMenu.iXIMosaic.labelString:	%_IXI Mosaic
+! Emacs*XlwMenu.lynxXterm.labelString:	%_Lynx (xterm)
+Emacs*XlwMenu.lynxXterm.labelString:	%_Lynx (xterm)
+! Emacs*XlwMenu.l_ynxXemacs.labelString:	L%_ynx (xemacs)
+Emacs*XlwMenu.l_ynxXemacs.labelString:	L%_ynx (xemacs)
+! Emacs*XlwMenu.grail.labelString:	%_Grail
+Emacs*XlwMenu.grail.labelString:	%_Grail
+! Emacs*XlwMenu.kfm.labelString:	%_Kfm
+Emacs*XlwMenu.kfm.labelString:		%_Kfm
+! Emacs*XlwMenu.debugOnError.labelString:	%_Debug on Error
+Emacs*XlwMenu.debugOnError.labelString:	エラーでデバッグ(%_D)
+! Emacs*XlwMenu.debugOnQuit.labelString:	Debug on %_Quit
+Emacs*XlwMenu.debugOnQuit.labelString:	終了でデバッグ(%_Q)
+! Emacs*XlwMenu.debugOnS_ignal.labelString:	Debug on S%_ignal
+Emacs*XlwMenu.debugOnS_ignal.labelString:	シグナルでデバッグ(%_I)
+! Emacs*XlwMenu.stackTraceOnError.labelString:	%_Stack Trace on Error
+Emacs*XlwMenu.stackTraceOnError.labelString:	エラーでスタックトレース(%_S)
+! Emacs*XlwMenu.stackTraceOnSi_gnal.labelString:	Stack Trace on Si%_gnal
+Emacs*XlwMenu.stackTraceOnSi_gnal.labelString:	シグナルでスタックトレース(%_G)
+! Emacs*XlwMenu.scrollbars.labelString:	%_Scrollbars
+Emacs*XlwMenu.scrollbars.labelString:	スクロールバー(%_S)
+! Emacs*XlwMenu.wrapLongLines.labelString:	%_Wrap Long Lines
+Emacs*XlwMenu.wrapLongLines.labelString:	長い行を折り返す(%_W)
+! Emacs*XlwMenu.3DModeline.labelString:	%_3D Modeline
+Emacs*XlwMenu.3DModeline.labelString:	3Dモードライン(%_3)
+! Emacs*XlwMenu.modelineHorizontalScrolling.labelString:	Modeline %_Horizontal Scrolling
+Emacs*XlwMenu.modelineHorizontalScrolling.labelString:	水平スクロールのモードライン(%_H)
+! Emacs*XlwMenu.toolbarsVisible.labelString:	%_Toolbars Visible
+Emacs*XlwMenu.toolbarsVisible.labelString:	ツールバーの表示(%_T)
+! Emacs*XlwMenu.toolbarsCa_ptioned.labelString:	Toolbars Ca%_ptioned
+Emacs*XlwMenu.toolbarsCa_ptioned.labelString:	ツールバーにキャプション付加(%_P)
+! Emacs*XlwMenu.defaultToolba_rLocation.labelString:	Default Toolba%_r Location
+Emacs*XlwMenu.defaultToolba_rLocation.labelString:	デフォルトのツールバー位置(%_R)
+! Emacs*XlwMenu.b_uffersTabVisible.labelString:	B%_uffers Tab Visible
+Emacs*XlwMenu.b_uffersTabVisible.labelString:	バッファタブの表示(%_U)
+! Emacs*XlwMenu.defaultGutterLocation.labelString:	Default %_Gutter Location
+Emacs*XlwMenu.defaultGutterLocation.labelString:	デフォルトガーター位置(%_G)
+! Emacs*XlwMenu.blinkingCursor.labelString:	%_Blinking Cursor
+Emacs*XlwMenu.blinkingCursor.labelString:	カーソルの点滅(%_B)
+! Emacs*XlwMenu.bl_ockCursor.labelString:	Bl%_ock Cursor
+Emacs*XlwMenu.bl_ockCursor.labelString:	ブロックカーソル(%_O)
+! Emacs*XlwMenu.barCursor1Pixel.labelString:	Bar Cursor (%_1 Pixel)
+Emacs*XlwMenu.barCursor1Pixel.labelString:	バーカーソル(%_1ピクセル)
+! Emacs*XlwMenu.barCursor2Pixels.labelString:	Bar Cursor (%_2 Pixels)
+Emacs*XlwMenu.barCursor2Pixels.labelString:	バーカーソル(%_2ピクセル)
+! Emacs*XlwMenu.pa_renHighlighting.labelString:	Pa%_ren Highlighting
+Emacs*XlwMenu.pa_renHighlighting.labelString:	括弧の強調表示(%_R)
+! Emacs*XlwMenu.lineNumbers.labelString:	%_Line Numbers
+Emacs*XlwMenu.lineNumbers.labelString:		行番号(%_L)
+! Emacs*XlwMenu.columnNumbers.labelString:	%_Column Numbers
+Emacs*XlwMenu.columnNumbers.labelString:	カラム番号(%_C)
+! Emacs*XlwMenu.otherWindowLocation.labelString:	"Other %_Window" Location
+Emacs*XlwMenu.otherWindowLocation.labelString:	"他のウィンドウ"位置(%_W)
+! Emacs*XlwMenu.none.labelString:	%_None
+Emacs*XlwMenu.none.labelString:	なし(%_N)
+! Emacs*XlwMenu.asText.labelString:	As %_Text
+Emacs*XlwMenu.asText.labelString:	テキストとして(%_T)
+! Emacs*XlwMenu.asScrollbar.labelString:	As %_Scrollbar
+Emacs*XlwMenu.asScrollbar.labelString:	スクロールバーとして(%_S)
+! Emacs*XlwMenu.top.labelString:	%_Top
+Emacs*XlwMenu.top.labelString:	上(%_T)
+! Emacs*XlwMenu.bottom.labelString:	%_Bottom
+Emacs*XlwMenu.bottom.labelString:	下(%_B)
+! Emacs*XlwMenu.left.labelString:	%_Left
+Emacs*XlwMenu.left.labelString:		左(%_L)
+! Emacs*XlwMenu.right.labelString:	%_Right
+Emacs*XlwMenu.right.labelString:	右(%_R)
+! Emacs*XlwMenu.blinkingParen.labelString:	%_Blinking Paren
+Emacs*XlwMenu.blinkingParen.labelString:	括弧の点滅(%_B)
+! Emacs*XlwMenu.steadyParen.labelString:	%_Steady Paren
+Emacs*XlwMenu.steadyParen.labelString:		括弧を点滅しない(%_S)
+! Emacs*XlwMenu.expression.labelString:	%_Expression
+Emacs*XlwMenu.expression.labelString:	式(%_E)
+! Emacs*XlwMenu.alwaysInSameFrame.labelString:	%_Always in Same Frame
+Emacs*XlwMenu.alwaysInSameFrame.labelString:	常に同じフレーム内(%_A)
+! Emacs*XlwMenu.otherFrame2FramesMax.labelString:	Other Frame (%_2 Frames Max)
+Emacs*XlwMenu.otherFrame2FramesMax.labelString:	他のフレーム(最大%_2フレーム)
+! Emacs*XlwMenu.otherFrame3FramesMax.labelString:	Other Frame (%_3 Frames Max)
+Emacs*XlwMenu.otherFrame3FramesMax.labelString:	他のフレーム(最大%_3フレーム)
+! Emacs*XlwMenu.otherFrame4FramesMax.labelString:	Other Frame (%_4 Frames Max)
+Emacs*XlwMenu.otherFrame4FramesMax.labelString:	他のフレーム(最大%_4フレーム)
+! Emacs*XlwMenu.otherFrame5FramesMax.labelString:	Other Frame (%_5 Frames Max)
+Emacs*XlwMenu.otherFrame5FramesMax.labelString:	他のフレーム(最大(%_5フレーム)
+! Emacs*XlwMenu.alwaysCreateNewFrame.labelString:	Always Create %_New Frame
+Emacs*XlwMenu.alwaysCreateNewFrame.labelString:	常に新規フレームを作成
+! Emacs*XlwMenu.tempBuffersAlwaysInSameFrame.labelString:	%_Temp Buffers Always in Same Frame
+Emacs*XlwMenu.tempBuffersAlwaysInSameFrame.labelString:	一時バッファは常に同じフレームに(%_T)
+! Emacs*XlwMenu.tempBuffersLikeOtherBuffers.labelString:	Temp Buffers %_Like Other Buffers
+Emacs*XlwMenu.tempBuffersLikeOtherBuffers.labelString:	一時バッファを他のバッファと同じようにする(%_L)
+! Emacs*XlwMenu.makeCurrentFrameGnuservTarget.labelString:	%_Make Current Frame Gnuserv Target
+Emacs*XlwMenu.makeCurrentFrameGnuservTarget.labelString:	現在のフレームをGnuservの対象にする(%_M)
+! Emacs*XlwMenu.frameLocalFontMenu.labelString:	%_Frame-Local Font Menu
+Emacs*XlwMenu.frameLocalFontMenu.labelString:	フレームローカルのフォントメニュー(%_F)
+! Emacs*XlwMenu.altMetaSelectsMenuItems.labelString:	%_Alt/Meta Selects Menu Items
+Emacs*XlwMenu.altMetaSelectsMenuItems.labelString:	Alt/Metaでメニューアイテムの選択(%_A)
+! Emacs*XlwMenu.buffersMenuLength___.labelString:	Buffers Menu %_Length...
+Emacs*XlwMenu.buffersMenuLength___.labelString:		バッファメニューの長さ(%_L)...
+! Emacs*XlwMenu.multiOperationBuffersSubMenus.labelString:	%_Multi-Operation Buffers Sub-Menus
+Emacs*XlwMenu.multiOperationBuffersSubMenus.labelString:	マルチオペレーションバッファサブメニュー(%_M)
+! Emacs*XlwMenu.s_ubmenusForBufferGroups.labelString:	S%_ubmenus for Buffer Groups
+Emacs*XlwMenu.s_ubmenusForBufferGroups.labelString:	バッファグループのサブメニュー(%_U)
+! Emacs*XlwMenu.verboseBufferMenuEntries.labelString:	%_Verbose Buffer Menu Entries
+Emacs*XlwMenu.verboseBufferMenuEntries.labelString:	冗長バッファメニューエントリ(%_V)
+! Emacs*XlwMenu.buffersMenuSorting.labelString:	Buffers Menu %_Sorting
+Emacs*XlwMenu.buffersMenuSorting.labelString:	バッファメニューのソート(%_S)
+! Emacs*XlwMenu.ignoreScaledFonts.labelString:	%_Ignore Scaled Fonts
+Emacs*XlwMenu.ignoreScaledFonts.labelString:	可変フォントの無視(%_I)
+! Emacs*XlwMenu.inThisBuffer.labelString:	%_In This Buffer
+Emacs*XlwMenu.inThisBuffer.labelString:	このバッファ(%_I)
+! Emacs*XlwMenu.automatic.labelString:	%_Automatic
+Emacs*XlwMenu.automatic.labelString:	自動(%_A)
+! Emacs*XlwMenu.forceRehighlightInThisBuffer.labelString:	Force %_Rehighlight in this Buffer
+Emacs*XlwMenu.forceRehighlightInThisBuffer.labelString:	このバッファの強制再強調
+! Emacs*XlwMenu.fonts.labelString:	%_Fonts
+Emacs*XlwMenu.fonts.labelString:	フォント(%_F)
+! Emacs*XlwMenu.colors.labelString:	%_Colors
+Emacs*XlwMenu.colors.labelString:	カラー(%_C)
+! Emacs*XlwMenu.1Least.labelString:	%_1 Least
+Emacs*XlwMenu.1Least.labelString:	%_1 最小
+! Emacs*XlwMenu.2More.labelString:	%_2 More
+Emacs*XlwMenu.2More.labelString:	%_2 もうすこし
+! Emacs*XlwMenu.3EvenMore.labelString:	%_3 Even More
+Emacs*XlwMenu.3EvenMore.labelString:	%_3 もっと
+! Emacs*XlwMenu.4Most.labelString:	%_4 Most
+Emacs*XlwMenu.4Most.labelString:	%_4 最大
+! Emacs*XlwMenu.lazyLock.labelString:	Lazy %_Lock
+Emacs*XlwMenu.lazyLock.labelString:	レイジーロック(%_L)
+! Emacs*XlwMenu.lazyShot.labelString:	Lazy %_Shot
+Emacs*XlwMenu.lazyShot.labelString:	レイジーショット(%_S)
+! Emacs*XlwMenu.cac_hing.labelString:	Cac%_hing
+Emacs*XlwMenu.cac_hing.labelString:	キャッシング(%_H)
+! Emacs*XlwMenu.1Anagnostiko___Avantgarde.labelString:	%_1 Anagnostiko  ... Avantgarde
+Emacs*XlwMenu.1Anagnostiko___Avantgarde.labelString:	%_1 Anagnostiko  ... Avantgarde
+! Emacs*XlwMenu.2Bookman___Chimera.labelString:	%_2 Bookman      ... Chimera
+Emacs*XlwMenu.2Bookman___Chimera.labelString:	%_2 Bookman      ... Chimera
+! Emacs*XlwMenu.3Courier___Helvetica.labelString:	%_3 Courier      ... Helvetica
+Emacs*XlwMenu.3Courier___Helvetica.labelString:	%_3 Courier      ... Helvetica
+! Emacs*XlwMenu.4Kathimerini___LuxiSans.labelString:	%_4 Kathimerini  ... Luxi Sans
+Emacs*XlwMenu.4Kathimerini___LuxiSans.labelString:	%_4 Kathimerini  ... Luxi Sans
+! Emacs*XlwMenu.5LuxiSerif___Palatino.labelString:	%_5 Luxi Serif   ... Palatino
+Emacs*XlwMenu.5LuxiSerif___Palatino.labelString:	%_5 Luxi Serif   ... Palatino
+! Emacs*XlwMenu.6PalladioL___Zysong18030.labelString:	%_6 Palladio L   ... Zysong18030
+Emacs*XlwMenu.6PalladioL___Zysong18030.labelString:	%_6 Palladio L   ... Zysong18030
+! Emacs*XlwMenu.15.labelString:	%_1 5
+Emacs*XlwMenu.15.labelString:	%_1 5
+! Emacs*XlwMenu.26.labelString:	%_2 6
+Emacs*XlwMenu.26.labelString:	%_2 6
+! Emacs*XlwMenu.37.labelString:	%_3 7
+Emacs*XlwMenu.37.labelString:	%_3 7
+! Emacs*XlwMenu.48.labelString:	%_4 8
+Emacs*XlwMenu.48.labelString:	%_4 8
+! Emacs*XlwMenu.59.labelString:	%_5 9
+Emacs*XlwMenu.59.labelString:	%_5 9
+! Emacs*XlwMenu.610.labelString:	%_6 10
+Emacs*XlwMenu.610.labelString:	%_6 10
+! Emacs*XlwMenu.711.labelString:	%_7 11
+Emacs*XlwMenu.711.labelString:	%_7 11
+! Emacs*XlwMenu.812.labelString:	%_8 12
+Emacs*XlwMenu.812.labelString:	%_8 12
+! Emacs*XlwMenu.913.labelString:	%_9 13
+Emacs*XlwMenu.913.labelString:	%_9 13
+! Emacs*XlwMenu.014.labelString:	%_0 14
+Emacs*XlwMenu.014.labelString:	%_0 14
+! Emacs*XlwMenu.a15.labelString:	%_a 15
+Emacs*XlwMenu.a15.labelString:	%_a 15
+! Emacs*XlwMenu.b16.labelString:	%_b 16
+Emacs*XlwMenu.b16.labelString:	%_b 16
+! Emacs*XlwMenu.c17.labelString:	%_c 17
+Emacs*XlwMenu.c17.labelString:	%_c 17
+! Emacs*XlwMenu.d18.labelString:	%_d 18
+Emacs*XlwMenu.d18.labelString:	%_d 18
+! Emacs*XlwMenu.e19.labelString:	%_e 19
+Emacs*XlwMenu.e19.labelString:	%_e 19
+! Emacs*XlwMenu.f20.labelString:	%_f 20
+Emacs*XlwMenu.f20.labelString:	%_f 20
+! Emacs*XlwMenu.g23.labelString:	%_g 23
+Emacs*XlwMenu.g23.labelString:	%_g 23
+! Emacs*XlwMenu.h24.labelString:	%_h 24
+Emacs*XlwMenu.h24.labelString:	%_h 24
+! Emacs*XlwMenu.goToPreviousBuffer.labelString:	Go To %_Previous Buffer
+Emacs*XlwMenu.goToPreviousBuffer.labelString:	前のバッファに移動(%_P)
+! Emacs*XlwMenu.goToBuffer___.labelString:	Go To %_Buffer...
+Emacs*XlwMenu.goToBuffer___.labelString:	バッファに移動(%_B)...
+! Emacs*XlwMenu.listAllBuffers.labelString:	%_List All Buffers
+Emacs*XlwMenu.listAllBuffers.labelString:	すべてのバッファを一覧表示(%_L)
+! Emacs*XlwMenu.deleteBuffer.labelString:	%_Delete Buffer
+Emacs*XlwMenu.deleteBuffer.labelString:	バッファの削除(%_D)
+! Emacs*XlwMenu..labelString:	%_
+Emacs*XlwMenu..labelString:	%_
+! Emacs*XlwMenu.evaluateRegionOrDefun.labelString:	%_Evaluate Region or Defun
+Emacs*XlwMenu.evaluateRegionOrDefun.labelString:	リージョンやdefunを評価(%_E)
+! Emacs*XlwMenu.evaluateWholeBuffer.labelString:	Evaluate %_Whole Buffer
+Emacs*XlwMenu.evaluateWholeBuffer.labelString:		バッファ全体を評価(%_W)
+! Emacs*XlwMenu.evaluateLastSExpression.labelString:	Evaluate Last %_S-expression
+Emacs*XlwMenu.evaluateLastSExpression.labelString:	最後のS式を評価(%_S)
+! Emacs*XlwMenu.findFunction___.labelString:	Find %_Function...
+Emacs*XlwMenu.findFunction___.labelString:	関数を検索(%_F)...
+! Emacs*XlwMenu.findVariable___.labelString:	Find %_Variable...
+Emacs*XlwMenu.findVariable___.labelString:	変数を検索(%_V)...
+! Emacs*XlwMenu.helpOnFunction___.labelString:	%_Help on Function...
+Emacs*XlwMenu.helpOnFunction___.labelString:	関数でヘルプ表示(%_H)...
+! Emacs*XlwMenu.hel_pOnVariable___.labelString:	Hel%_p on Variable...
+Emacs*XlwMenu.hel_pOnVariable___.labelString:	変数でヘルプ表示(%_P)...
+! Emacs*XlwMenu.instrumentThisDefunForDebugging.labelString:	Instrument This Defun for %_Debugging
+Emacs*XlwMenu.instrumentThisDefunForDebugging.labelString:	このdefunをデバッグに使う(%_D)
+! Emacs*XlwMenu.traceFunction___.labelString:	%_Trace Function...
+Emacs*XlwMenu.traceFunction___.labelString:	関数のトレース(%_T)...
+! Emacs*XlwMenu.untraceAllFunctions.labelString:	%_Untrace All Functions
+Emacs*XlwMenu.untraceAllFunctions.labelString:	すべての関数のトレースをやめる(%_U)
+! Emacs*XlwMenu.commentOutRegion.labelString:	%_Comment Out Region
+Emacs*XlwMenu.commentOutRegion.labelString:	リージョンをコメントアウト(%_C)
+! Emacs*XlwMenu.indentRegionOrBalancedExpression.labelString:	%_Indent Region or Balanced Expression
+Emacs*XlwMenu.indentRegionOrBalancedExpression.labelString:	リージョンをインデント(%_I)
+! Emacs*XlwMenu.i_ndentDefun.labelString:	I%_ndent Defun
+Emacs*XlwMenu.i_ndentDefun.labelString:	defunをインデント(%_N)
+! Emacs*XlwMenu.lookForDebugOnErrorUnderOptionsTroubleshooting.labelString:	Look for debug-on-error under Options->Troubleshooting
+Emacs*XlwMenu.lookForDebugOnErrorUnderOptionsTroubleshooting.labelString:	[オプション]-[トラブルシューティング]の[エラーでデバッグ]を参照してください
+! Emacs*XlwMenu.aboutXEmacs___.labelString:	%_About XEmacs...
+Emacs*XlwMenu.aboutXEmacs___.labelString:	XEmacsについて(%_A)...
+! Emacs*XlwMenu.whatSNewInXEmacs.labelString:	What's %_New in XEmacs
+Emacs*XlwMenu.whatSNewInXEmacs.labelString:	XEmacsニュース(%_N)
+! Emacs*XlwMenu.obtainingXEmacs.labelString:	%_Obtaining XEmacs
+Emacs*XlwMenu.obtainingXEmacs.labelString:	XEmacsを取得するには(%_O)
+! Emacs*XlwMenu.infoOnlineDocs.labelString:	%_Info (Online Docs)
+Emacs*XlwMenu.infoOnlineDocs.labelString:	%_Info (オンラインdoc)
+! Emacs*XlwMenu.xEmacsFAQ.labelString:	XEmacs %_FAQ
+Emacs*XlwMenu.xEmacsFAQ.labelString:	XEmacs %_FAQ
+! Emacs*XlwMenu.tutorials.labelString:	%_Tutorials
+Emacs*XlwMenu.tutorials.labelString:	チュートリアル(%_T)
+! Emacs*XlwMenu.samples.labelString:	%_Samples
+Emacs*XlwMenu.samples.labelString:	サンプル(%_S)
+! Emacs*XlwMenu.commandsKeys.labelString:	%_Commands & Keys
+Emacs*XlwMenu.commandsKeys.labelString:	コマンドとキー(%_C)
+! Emacs*XlwMenu.recentMessages.labelString:	%_Recent Messages
+Emacs*XlwMenu.recentMessages.labelString:	最近のメッセージ(%_R)
+! Emacs*XlwMenu.misc.labelString:	%_Misc
+Emacs*XlwMenu.misc.labelString:	その他(%_M)
+! Emacs*XlwMenu.sendBugReport___.labelString:	Send %_Bug Report...
+Emacs*XlwMenu.sendBugReport___.labelString:	バグレポートの送信(%_B)...
+! Emacs*XlwMenu.infoContents.labelString:	%_Info Contents
+Emacs*XlwMenu.infoContents.labelString:	Infoコンテンツ(%_I)
+! Emacs*XlwMenu.lookupKeyBinding___.labelString:	Lookup %_Key Binding...
+Emacs*XlwMenu.lookupKeyBinding___.labelString:	キーバインディング照会(%_K)...
+! Emacs*XlwMenu.lookupCommand___.labelString:	Lookup %_Command...
+Emacs*XlwMenu.lookupCommand___.labelString:	コマンド照会(%_C)...
+! Emacs*XlwMenu.lookupFunction___.labelString:	Lookup %_Function...
+Emacs*XlwMenu.lookupFunction___.labelString:	関数照会(%_F)...
+! Emacs*XlwMenu.lookupTopic___.labelString:	Lookup %_Topic...
+Emacs*XlwMenu.lookupTopic___.labelString:	トピック照会(%_T)...
+! Emacs*XlwMenu.fAQLocal.labelString:	%_FAQ (local)
+Emacs*XlwMenu.fAQLocal.labelString:	%_FAQ (ローカル)
+! Emacs*XlwMenu.fAQViaWWW.labelString:	FAQ via %_WWW
+Emacs*XlwMenu.fAQViaWWW.labelString:	WWW上のFAQ(%_W)
+! Emacs*XlwMenu.homePage.labelString:	%_Home Page
+Emacs*XlwMenu.homePage.labelString:	ホームページ(%_H)
+! Emacs*XlwMenu.defaultJapanese.labelString:	%_Default (Japanese)
+Emacs*XlwMenu.defaultJapanese.labelString:	デフォルト(%_D) (日本語)
+! Emacs*XlwMenu.1ThaiXTIS.labelString:	%_1 Thai-XTIS
+Emacs*XlwMenu.1ThaiXTIS.labelString:	%_1 タイ語-XTIS
+! Emacs*XlwMenu.2Korean.labelString:	%_2 Korean
+Emacs*XlwMenu.2Korean.labelString:	%_2 韓国語
+! Emacs*XlwMenu.3Slovenian.labelString:	%_3 Slovenian
+Emacs*XlwMenu.3Slovenian.labelString:	%_3 スロベニア語
+! Emacs*XlwMenu.4German.labelString:	%_4 German
+Emacs*XlwMenu.4German.labelString:	%_4 ドイツ語
+! Emacs*XlwMenu.5Czech.labelString:	%_5 Czech
+Emacs*XlwMenu.5Czech.labelString:	%_5 チェコ語
+! Emacs*XlwMenu.6Romanian.labelString:	%_6 Romanian
+Emacs*XlwMenu.6Romanian.labelString:	%_6 ルーマニア語
+! Emacs*XlwMenu.7Polish.labelString:	%_7 Polish
+Emacs*XlwMenu.7Polish.labelString:	%_7 ポーランド語
+! Emacs*XlwMenu.8Croatian.labelString:	%_8 Croatian
+Emacs*XlwMenu.8Croatian.labelString:	%_8 クロアチア語
+! Emacs*XlwMenu.9Norwegian.labelString:	%_9 Norwegian
+Emacs*XlwMenu.9Norwegian.labelString:	%_9 ノルウェー語
+! Emacs*XlwMenu.0French.labelString:	%_0 French
+Emacs*XlwMenu.0French.labelString:	%_0 フランス語
+! Emacs*XlwMenu.aEnglish.labelString:	%_a English
+Emacs*XlwMenu.aEnglish.labelString:	%_a 英語
+! Emacs*XlwMenu.bCyrillicALT.labelString:	%_b Cyrillic-ALT
+Emacs*XlwMenu.bCyrillicALT.labelString:	%_b キリル文字-ALT
+! Emacs*XlwMenu.cCyrillicWin.labelString:	%_c Cyrillic-Win
+Emacs*XlwMenu.cCyrillicWin.labelString: %_c キリル文字-Win
+! Emacs*XlwMenu.dCyrillicKOI8.labelString:	%_d Cyrillic-KOI8
+Emacs*XlwMenu.dCyrillicKOI8.labelString: %_d キリル文字-KOI8
+! Emacs*XlwMenu.eCyrillicISO.labelString:	%_e Cyrillic-ISO
+Emacs*XlwMenu.eCyrillicISO.labelString: %_d キリル文字-ISO
+! Emacs*XlwMenu.sampleInit_el.labelString:	Sample %_init.el
+Emacs*XlwMenu.sampleInit_el.labelString:	サンプルinit.el(%_I)
+! Emacs*XlwMenu.sample__Xdefaults.labelString:	Sample .%_Xdefaults
+Emacs*XlwMenu.sample__Xdefaults.labelString:	サンプル.Xdefaults(%_X)
+! Emacs*XlwMenu.sampleEnriched.labelString:	Sample %_enriched
+Emacs*XlwMenu.sampleEnriched.labelString:	サンプルenriched(%_E)
+! Emacs*XlwMenu.mode.labelString:	%_Mode
+Emacs*XlwMenu.mode.labelString:	モード(%_M)
+! Emacs*XlwMenu.aproposDocs___.labelString:	Apropos %_Docs...
+Emacs*XlwMenu.aproposDocs___.labelString:	Aproposドキュメント(%_D)...
+! Emacs*XlwMenu.key___.labelString:	%_Key...
+Emacs*XlwMenu.key___.labelString:	キー(%_I)...
+! Emacs*XlwMenu.bindings.labelString:	%_Bindings
+Emacs*XlwMenu.bindings.labelString:	バインディング(%_B)
+! Emacs*XlwMenu.mouseBindings.labelString:	%_Mouse Bindings
+Emacs*XlwMenu.mouseBindings.labelString:	マウスバインディング(%_M)
+! Emacs*XlwMenu.recentKeys.labelString:	%_Recent Keys
+Emacs*XlwMenu.recentKeys.labelString:	最近のキー(%_R)
+! Emacs*XlwMenu.function___.labelString:	%_Function...
+Emacs*XlwMenu.function___.labelString:	関数(%_F)...
+! Emacs*XlwMenu.variable___.labelString:	%_Variable...
+Emacs*XlwMenu.variable___.labelString:	変数(%_V)...
+! Emacs*XlwMenu.locateCommand___.labelString:	%_Locate Command...
+Emacs*XlwMenu.locateCommand___.labelString:	コマンドのlocate(%_L)...
+! Emacs*XlwMenu.currentInstallationInfo.labelString:	%_Current Installation Info
+Emacs*XlwMenu.currentInstallationInfo.labelString:	現在のインストレーションInfo(%_C)
+! Emacs*XlwMenu.noWarranty.labelString:	%_No Warranty
+Emacs*XlwMenu.noWarranty.labelString:	無保証(%_N)
+! Emacs*XlwMenu.xEmacsLicense.labelString:	XEmacs %_License
+Emacs*XlwMenu.xEmacsLicense.labelString:	XEmacsライセンス(%_L)
+! Emacs*XlwMenu.findPackages.labelString:	Find %_Packages
+Emacs*XlwMenu.findPackages.labelString:	パッケージ検索(%_P)
+! Emacs*XlwMenu.viewSplashScreen.labelString:	View %_Splash Screen
+Emacs*XlwMenu.viewSplashScreen.labelString:	スプラッシュスクリーンの表示(%_S)
+! Emacs*XlwMenu.unixManual___.labelString:	%_Unix Manual...
+Emacs*XlwMenu.unixManual___.labelString:	Unixマニュアル(%_U)...

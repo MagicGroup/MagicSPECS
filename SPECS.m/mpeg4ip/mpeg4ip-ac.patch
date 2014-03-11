@@ -1,0 +1,10 @@
+--- mpeg4ip-1.5.0.1/lib/SDLAudio/configure.in.orig	2005-01-13 18:21:29.000000000 +0000
++++ mpeg4ip-1.5.0.1/lib/SDLAudio/configure.in	2006-12-13 09:36:00.879118000 +0000
+@@ -47,6 +47,7 @@
+ 
+ AC_LIBTOOL_WIN32_DLL
+ AM_PROG_LIBTOOL
++AM_PROG_AS
+ AC_PROG_MAKE_SET
+ AC_PROG_CC
+ AC_C_INLINE

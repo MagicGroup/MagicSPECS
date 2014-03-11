@@ -1,0 +1,16 @@
+#!/bin/bash
+url="http://ccal.chinesebay.com/ccal/index.html.html"
+new1="cifi-utils-"
+new2=".tar.bz2.asc"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && lftp -c "open ftp://ftp.samba.org/pub/linux-cifs/cifs-utils;ls -t" > index.html
+if [ -f index.html ];then
+	newver=`cat index.html | head -n 1| sed -e 's/^.*cifs-utils-//g' | sed -e 's/.tar.bz2.asc//g'`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

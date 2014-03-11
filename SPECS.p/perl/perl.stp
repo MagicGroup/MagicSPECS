@@ -1,0 +1,26 @@
+/*
+   This probe will fire when the perl script enters a subroutine.
+ */
+
+probe perl.sub.call = process("LIBRARY_PATH").mark("sub__entry")
+{
+
+  sub = user_string($arg1)
+  filename = user_string($arg2)
+  lineno = $arg3
+
+}
+
+/* 
+   This probe will fire when the return from a subroutine has been 
+   hit.  
+ */
+
+probe perl.sub.return = process("LIBRARY_PATH").mark("sub__return")
+{
+
+  sub = user_string($arg1)
+  filename = user_string($arg2)
+  lineno = $arg3
+
+}

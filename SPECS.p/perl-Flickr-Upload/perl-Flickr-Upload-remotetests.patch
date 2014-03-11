@@ -1,0 +1,18 @@
+diff -ru t/async.t t/async.t
+--- t/async.t	2008-06-18 22:33:37.000000000 +0200
++++ t/async.t	2009-08-12 13:49:12.000000000 +0200
+@@ -1,4 +1,4 @@
+-use Test::More qw(no_plan);
++use Test::More skip_all => 'Calling home';
+ BEGIN { use_ok('Flickr::Upload') };
+ 
+ my $api_key = '8dcf37880da64acfe8e30bb1091376b7';
+diff -ru t/failupload.t t/failupload.t
+--- t/failupload.t	2008-06-18 01:05:16.000000000 +0200
++++ t/failupload.t	2009-08-12 13:49:12.000000000 +0200
+@@ -1,4 +1,4 @@
+-use Test::More qw(no_plan);
++use Test::More skip_all => 'Calling home';
+ BEGIN { use_ok('Flickr::Upload') };
+ 
+ my $api_key = '8dcf37880da64acfe8e30bb1091376b7';

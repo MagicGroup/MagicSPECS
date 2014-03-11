@@ -1,0 +1,61 @@
+diff -up v8-3.4.14-20110721svn8716/src/SConscript.experimental v8-3.4.14-20110721svn8716/src/SConscript
+--- v8-3.4.14-20110721svn8716/src/SConscript.experimental	2011-07-21 11:02:27.000000000 -0400
++++ v8-3.4.14-20110721svn8716/src/SConscript	2011-07-21 13:13:52.678543506 -0400
+@@ -134,6 +134,14 @@ SOURCES = {
+     zone.cc
+     extensions/gc-extension.cc
+     extensions/externalize-string-extension.cc
++    extensions/experimental/break-iterator.cc
++    extensions/experimental/collator.cc
++    extensions/experimental/datetime-format.cc
++    extensions/experimental/i18n-extension.cc
++    extensions/experimental/i18n-locale.cc
++    extensions/experimental/i18n-utils.cc
++    extensions/experimental/language-matcher.cc
++    extensions/experimental/number-format.cc
+     """),
+   'arch:arm': Split("""
+     arm/builtins-arm.cc
+@@ -310,6 +318,10 @@ proxy.js
+ '''.split()
+ 
+ 
++I18N_LIBRARY_FILES = '''
++extensions/experimental/i18n.js
++'''.split()
++
+ def Abort(message):
+   print message
+   sys.exit(1)
+@@ -348,6 +360,13 @@ def ConfigureObjectFiles():
+     ['libraries.cc'], library_files, **BuildJS2CEnv('CORE'))
+   libraries_obj = context.ConfigureObject(env, libraries_src, CPPPATH=['.'])
+ 
++  # Combine the experimental I18N JavaScript library files into a C++ file
++  # and compile it.
++  i18n_library_files = [ s for s in I18N_LIBRARY_FILES ]
++  i18n_library_files.append('macros.py')
++  i18n_libraries_src = env.JS2C(['i18n-libraries.cc'], i18n_library_files, **BuildJS2CEnv('I18N'))
++  i18n_libraries_obj = context.ConfigureObject(env, i18n_libraries_src, CPPPATH=['.'])
++
+   # Combine the experimental JavaScript library files into a C++ file
+   # and compile it.
+   experimental_library_files = [ s for s in EXPERIMENTAL_LIBRARY_FILES ]
+@@ -373,7 +392,7 @@ def ConfigureObjectFiles():
+   mksnapshot_env = env.Copy()
+   mksnapshot_env.Replace(**context.flags['mksnapshot'])
+   mksnapshot_src = 'mksnapshot.cc'
+-  mksnapshot = mksnapshot_env.Program('mksnapshot', [mksnapshot_src, libraries_obj, experimental_libraries_obj,  non_snapshot_files, empty_snapshot_obj], PDB='mksnapshot.exe.pdb')
++  mksnapshot = mksnapshot_env.Program('mksnapshot', [mksnapshot_src, libraries_obj, i18n_libraries_obj, experimental_libraries_obj,  non_snapshot_files, empty_snapshot_obj], PDB='mksnapshot.exe.pdb')
+   if context.use_snapshot:
+     if context.build_snapshot:
+       snapshot_cc = env.Snapshot('snapshot.cc', mksnapshot, LOGFILE=File('snapshot.log').abspath)
+@@ -382,7 +401,7 @@ def ConfigureObjectFiles():
+     snapshot_obj = context.ConfigureObject(env, snapshot_cc, CPPPATH=['.'])
+   else:
+     snapshot_obj = empty_snapshot_obj
+-  library_objs = [non_snapshot_files, libraries_obj, experimental_libraries_obj, snapshot_obj]
++  library_objs = [non_snapshot_files, libraries_obj, i18n_libraries_obj, experimental_libraries_obj, snapshot_obj]
+   return (library_objs, d8_objs, [mksnapshot], preparser_objs)
+ 
+ 

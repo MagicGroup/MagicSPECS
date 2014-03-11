@@ -1,0 +1,123 @@
+--- libxml-1.8.17/debugXML.c	2000-06-28 19:33:46.000000000 +0100
++++ libxml-1.8.17/debugXML.c	2008-05-20 16:01:14.000000000 +0100
+@@ -16,9 +16,7 @@
+ #ifdef HAVE_STDLIB_H
+ #include <stdlib.h>
+ #endif
+-#ifdef HAVE_STRING_H
+ #include <string.h>
+-#endif
+ #include "xmlmemory.h"
+ #include "tree.h"
+ #include "parser.h"
+--- libxml-1.8.17/entities.c	2001-05-05 18:18:55.000000000 +0100
++++ libxml-1.8.17/entities.c	2008-05-20 15:34:09.000000000 +0100
+@@ -661,7 +661,7 @@
+ 		ptr = buf;
+ 		while (*ptr != 0) *out++ = *ptr++;
+ 	    } else if ((doc != NULL) && (doc->encoding != NULL) &&
+-		       (xmlStrEqual(doc->encoding, "UTF-8"))) {
++		       (xmlStrEqual(doc->encoding, (const xmlChar *) "UTF-8"))) {
+ 		/*
+ 		 * We assume we have UTF-8 input.
+ 		 */
+--- libxml-1.8.17/nanoftp.c	2000-07-10 11:16:39.000000000 +0100
++++ libxml-1.8.17/nanoftp.c	2008-05-20 16:16:59.000000000 +0100
+@@ -1222,7 +1222,7 @@
+     unsigned char ad[6], *adp, *portp;
+     unsigned int temp[6];
+     struct sockaddr_in dataAddr;
+-    size_t dataAddrLen;
++    socklen_t dataAddrLen;
+ 
+     ctxt->dataFd = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+     if (ctxt->dataFd < 0) {
+--- libxml-1.8.17/parser.c	2001-09-14 15:09:41.000000000 +0100
++++ libxml-1.8.17/parser.c	2008-05-20 16:29:40.000000000 +0100
+@@ -6523,7 +6523,6 @@
+     if (NXT(1) == '#') {
+ 	int i = 0;
+ 	xmlChar out[10];
+-	int hex = NXT(2);
+ 	int val = xmlParseCharRef(ctxt);
+ 	
+ 	/*
+@@ -10627,6 +10626,8 @@
+ 
+ xmlNodePtr
+ xmlParseBalancedChunkFile(xmlDocPtr doc, xmlNodePtr node) {
++	/* not implemented */
++	return (xmlNodePtr) NULL;
+ }
+ 
+ /**
+@@ -10713,7 +10714,7 @@
+     xmlDocPtr ret;
+     xmlParserCtxtPtr ctxt;
+     char *directory = NULL;
+-    xmlSAXHandlerPtr oldsax;
++    xmlSAXHandlerPtr oldsax = NULL;
+ 
+     ctxt = xmlCreateFileParserCtxt(filename);
+     if (ctxt == NULL) return(NULL);
+@@ -10941,7 +10942,7 @@
+                     const char *filename) {
+     int ret = 0;
+     xmlParserCtxtPtr ctxt;
+-    xmlSAXHandlerPtr oldsax;
++    xmlSAXHandlerPtr oldsax = NULL;
+     
+     ctxt = xmlCreateFileParserCtxt(filename);
+     if (ctxt == NULL) return -1;
+--- libxml-1.8.17/parser.h	2001-03-25 00:14:16.000000000 +0000
++++ libxml-1.8.17/parser.h	2008-05-20 15:55:29.000000000 +0100
+@@ -345,6 +345,8 @@
+ int		xmlStrncmp		(const xmlChar *str1,
+ 					 const xmlChar *str2,
+ 					 int len);
++int		xmlStrEqual		(const xmlChar *str1,
++					 const xmlChar *str2);
+ int		xmlStrlen		(const xmlChar *str);
+ xmlChar *	xmlStrcat		(xmlChar *cur,
+ 					 const xmlChar *add);
+@@ -355,6 +357,8 @@
+ /**
+  * Basic parsing Interfaces
+  */
++void		xmlInitParser		(void);
++void		xmlInitializePredefinedEntities(void);
+ xmlDocPtr	xmlParseDoc		(xmlChar *cur);
+ xmlDocPtr	xmlParseMemory		(char *buffer,
+ 					 int size);
+@@ -373,7 +377,20 @@
+ /**
+  * Less common routines and SAX interfaces
+  */
++int		xmlParseBalancedChunkMemory(xmlDocPtr doc,
++					 xmlSAXHandlerPtr sax,
++					 void *user_data,
++					 int depth,
++					 const xmlChar *string,
++					 xmlNodePtr *list);
+ int		xmlParseDocument	(xmlParserCtxtPtr ctxt);
++int		xmlParseExternalEntity	(xmlDocPtr doc,
++					 xmlSAXHandlerPtr sax,
++					 void *user_data,
++					 int depth,
++					 const xmlChar *URL,
++					 const xmlChar *ID,
++					 xmlNodePtr *list);
+ xmlDocPtr	xmlSAXParseDoc		(xmlSAXHandlerPtr sax,
+ 					 xmlChar *cur,
+ 					 int recovery);
+--- libxml-1.8.17/tree.c	2002-01-23 22:48:38.000000000 +0000
++++ libxml-1.8.17/tree.c	2008-05-20 16:07:04.000000000 +0100
+@@ -4422,7 +4422,7 @@
+     else
+ 	xmlBufferWriteChar(buf, "\"1.0\"");
+     if ((cur->encoding != NULL) &&
+-	(!xmlStrEqual(cur->encoding, "UTF-8"))) {
++	(!xmlStrEqual(cur->encoding, (const xmlChar *) "UTF-8"))) {
+         xmlBufferWriteChar(buf, " encoding=");
+ 	xmlBufferWriteQuotedString(buf, cur->encoding);
+     }

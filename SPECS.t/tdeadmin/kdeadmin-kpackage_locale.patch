@@ -1,0 +1,21 @@
+diff -ur kdeadmin-3.5.10.orig/kpackage/rpmInterface.cpp kdeadmin-3.5.10/kpackage/rpmInterface.cpp
+--- kdeadmin-3.5.10.orig/kpackage/rpmInterface.cpp	2009-04-17 16:27:22.000000000 +0800
++++ kdeadmin-3.5.10/kpackage/rpmInterface.cpp	2009-04-17 16:28:20.000000000 +0800
+@@ -526,7 +526,7 @@
+ 
+     for (QStringList::ConstIterator it = files.begin(); it != files.end(); ++it ) {
+       s += " ";
+-      s += *it;
++      s += (*it).local8Bit();
+     }
+ 
+     if (uninstallFlags>>3 & 1)
+@@ -578,7 +578,7 @@
+ 
+     for (QStringList::ConstIterator it = files.begin(); it != files.end(); ++it ) {
+       s += " ";
+-      s += *it;
++      s += (*it).local8Bit();
+     }
+ 
+     if (installFlags>>4 & 1)

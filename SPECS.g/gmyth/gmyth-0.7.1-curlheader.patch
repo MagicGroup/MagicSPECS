@@ -1,0 +1,11 @@
+diff -up gmyth-0.7.1/gmyth/gmyth_http.h.curlheader gmyth-0.7.1/gmyth/gmyth_http.h
+--- gmyth-0.7.1/gmyth/gmyth_http.h.curlheader	2011-07-11 18:36:54.856814495 +0200
++++ gmyth-0.7.1/gmyth/gmyth_http.h	2011-07-11 18:37:03.648814496 +0200
+@@ -42,7 +42,6 @@
+ #include "gmyth_recprofile.h"
+ 
+ #include <curl/curl.h>
+-#include <curl/types.h>
+ #include <curl/easy.h>
+ 
+ G_BEGIN_DECLS

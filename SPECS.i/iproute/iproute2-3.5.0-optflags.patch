@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index ea0f994..2cc8e6a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -36,7 +36,7 @@ HOSTCC = gcc
+ DEFINES += -D_GNU_SOURCE
+ CCOPTS = -O2
+ WFLAGS = -Wall -Wstrict-prototypes
+-CFLAGS = $(WFLAGS) $(CCOPTS) -I../include $(DEFINES)
++CFLAGS = $(WFLAGS) $(CCOPTS) -I../include $(DEFINES) $(RPM_OPT_FLAGS)
+ YACCFLAGS = -d -t -v
+ 
+ SUBDIRS=lib ip tc bridge misc netem genl man

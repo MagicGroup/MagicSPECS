@@ -1,0 +1,19 @@
+*** kdebase/kdesktop/krootwm.cc.ori	2011-07-20 14:14:25.822954866 +0200
+--- kdebase/kdesktop/krootwm.cc	2011-07-20 14:16:09.964002976 +0200
+***************
+*** 760,766 ****
+      KConfigGroupSaver gs(KGlobal::config(), "General");
+      TQString terminal = KGlobal::config()->readPathEntry("TerminalApplication", "konsole");
+  
+!     *p << terminal << "--workdir=" + KGlobalSettings::desktopPath() + "/";
+  
+      p->start(KProcess::DontCare);
+  
+--- 760,766 ----
+      KConfigGroupSaver gs(KGlobal::config(), "General");
+      TQString terminal = KGlobal::config()->readPathEntry("TerminalApplication", "konsole");
+  
+!     *p << terminal;
+  
+      p->start(KProcess::DontCare);
+  

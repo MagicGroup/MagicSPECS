@@ -1,0 +1,1092 @@
+diff -ur cdrtools-3.01.orig/libcdrdeflt/libcdrdeflt.mk cdrtools-3.01/libcdrdeflt/libcdrdeflt.mk
+--- cdrtools-3.01.orig/libcdrdeflt/libcdrdeflt.mk	2013-02-16 11:07:22.883914555 +0000
++++ cdrtools-3.01/libcdrdeflt/libcdrdeflt.mk	2013-02-16 11:25:04.713925437 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	cdrdeflt
+ CPPOPTS +=	-I.
+ 
+diff -ur cdrtools-3.01.orig/libcdrdeflt/libcdrdeflt_p.mk cdrtools-3.01/libcdrdeflt/libcdrdeflt_p.mk
+--- cdrtools-3.01.orig/libcdrdeflt/libcdrdeflt_p.mk	2013-02-16 11:07:22.883914555 +0000
++++ cdrtools-3.01/libcdrdeflt/libcdrdeflt_p.mk	2013-02-16 11:25:04.709925208 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	cdrdeflt
+ CPPOPTS +=	-I.
+ COPTS +=	$(COPTGPROF)
+diff -ur cdrtools-3.01.orig/libcdrdeflt/shlcdrdeflt.mk cdrtools-3.01/libcdrdeflt/shlcdrdeflt.mk
+--- cdrtools-3.01.orig/libcdrdeflt/shlcdrdeflt.mk	2013-02-16 11:07:22.883914555 +0000
++++ cdrtools-3.01/libcdrdeflt/shlcdrdeflt.mk	2013-02-16 11:25:04.716925598 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	cdrdeflt
+ CPPOPTS +=	-I.
+ 
+diff -ur cdrtools-3.01.orig/libdeflt/libdeflt.mk cdrtools-3.01/libdeflt/libdeflt.mk
+--- cdrtools-3.01.orig/libdeflt/libdeflt.mk	2013-02-16 11:07:22.883914555 +0000
++++ cdrtools-3.01/libdeflt/libdeflt.mk	2013-02-16 11:25:04.723925858 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	deflt
+ #CPPOPTS +=	-Ispecincl
+ include		Targets
+diff -ur cdrtools-3.01.orig/libdeflt/libdeflt_p.mk cdrtools-3.01/libdeflt/libdeflt_p.mk
+--- cdrtools-3.01.orig/libdeflt/libdeflt_p.mk	2013-02-16 11:07:22.883914555 +0000
++++ cdrtools-3.01/libdeflt/libdeflt_p.mk	2013-02-16 11:25:04.720925761 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	deflt
+ #CPPOPTS +=	-Ispecincl
+ COPTS +=	$(COPTGPROF)
+diff -ur cdrtools-3.01.orig/libdeflt/shldeflt.mk cdrtools-3.01/libdeflt/shldeflt.mk
+--- cdrtools-3.01.orig/libdeflt/shldeflt.mk	2013-02-16 11:07:22.883914555 +0000
++++ cdrtools-3.01/libdeflt/shldeflt.mk	2013-02-16 11:25:04.727925961 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	deflt
+ #CPPOPTS +=	-Ispecincl
+ include		Targets
+diff -ur cdrtools-3.01.orig/libedc/libedc_dec.mk cdrtools-3.01/libedc/libedc_dec.mk
+--- cdrtools-3.01.orig/libedc/libedc_dec.mk	2013-02-16 11:07:22.878914552 +0000
++++ cdrtools-3.01/libedc/libedc_dec.mk	2013-02-16 11:25:04.744926293 +0000
+@@ -5,7 +5,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	edc_ecc_dec
+ #
+ # Selectively increase the opimisation for libedc for better performance
+diff -ur cdrtools-3.01.orig/libedc/libedc_dec_p.mk cdrtools-3.01/libedc/libedc_dec_p.mk
+--- cdrtools-3.01.orig/libedc/libedc_dec_p.mk	2013-02-16 11:07:22.877914551 +0000
++++ cdrtools-3.01/libedc/libedc_dec_p.mk	2013-02-16 11:25:04.730926021 +0000
+@@ -7,7 +7,7 @@
+ 
+ SUBARCHDIR=	/profiled
+ SUBINSDIR=	/profiled
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	edc_ecc_dec
+ COPTS +=	$(COPTGPROF)
+ #
+diff -ur cdrtools-3.01.orig/libedc/libedc.mk cdrtools-3.01/libedc/libedc.mk
+--- cdrtools-3.01.orig/libedc/libedc.mk	2013-02-16 11:07:22.877914551 +0000
++++ cdrtools-3.01/libedc/libedc.mk	2013-02-16 11:25:04.737926199 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ #TARGETLIB=	oedc
+ TARGETLIB=	edc_ecc
+ CPPOPTS +=	-Iold
+diff -ur cdrtools-3.01.orig/libedc/libedc_p.mk cdrtools-3.01/libedc/libedc_p.mk
+--- cdrtools-3.01.orig/libedc/libedc_p.mk	2013-02-16 11:07:22.877914551 +0000
++++ cdrtools-3.01/libedc/libedc_p.mk	2013-02-16 11:25:04.734926141 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ #TARGETLIB=	oedc
+ TARGETLIB=	edc_ecc
+ CPPOPTS +=	-Iold
+diff -ur cdrtools-3.01.orig/libedc/shledc_dec.mk cdrtools-3.01/libedc/shledc_dec.mk
+--- cdrtools-3.01.orig/libedc/shledc_dec.mk	2013-02-16 11:07:22.878914552 +0000
++++ cdrtools-3.01/libedc/shledc_dec.mk	2013-02-16 11:25:04.740926244 +0000
+@@ -6,7 +6,7 @@
+ ###########################################################################
+ 
+ SUBARCHDIR=	/pic
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	edc_ecc_dec
+ #
+ # Selectively increase the opimisation for libedc for better performance
+diff -ur cdrtools-3.01.orig/libedc/shledc.mk cdrtools-3.01/libedc/shledc.mk
+--- cdrtools-3.01.orig/libedc/shledc.mk	2013-02-16 11:07:22.878914552 +0000
++++ cdrtools-3.01/libedc/shledc.mk	2013-02-16 11:25:04.751926293 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ #TARGETLIB=	oedc
+ TARGETLIB=	edc_ecc
+ CPPOPTS +=	-Iold
+diff -ur cdrtools-3.01.orig/libfile/libfile.mk cdrtools-3.01/libfile/libfile.mk
+--- cdrtools-3.01.orig/libfile/libfile.mk	2013-02-16 11:07:22.925914597 +0000
++++ cdrtools-3.01/libfile/libfile.mk	2013-02-16 11:25:04.761926307 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	file
+ #CPPOPTS +=	-DFOKUS
+ CPPOPTS +=	-DSCHILY_PRINT
+diff -ur cdrtools-3.01.orig/libfile/libfile_p.mk cdrtools-3.01/libfile/libfile_p.mk
+--- cdrtools-3.01.orig/libfile/libfile_p.mk	2013-02-16 11:07:22.925914597 +0000
++++ cdrtools-3.01/libfile/libfile_p.mk	2013-02-16 11:25:04.764926310 +0000
+@@ -9,7 +9,7 @@
+ 
+ SUBARCHDIR=	/profiled
+ SUBINSDIR=	/profiled
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	file
+ #CPPOPTS +=	-DFOKUS
+ CPPOPTS +=	-DSCHILY_PRINT
+diff -ur cdrtools-3.01.orig/libfile/shlfile.mk cdrtools-3.01/libfile/shlfile.mk
+--- cdrtools-3.01.orig/libfile/shlfile.mk	2013-02-16 11:07:22.924914596 +0000
++++ cdrtools-3.01/libfile/shlfile.mk	2013-02-16 11:25:04.757926303 +0000
+@@ -8,7 +8,7 @@
+ ###########################################################################
+ 
+ SUBARCHDIR=	/pic
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	file
+ #CPPOPTS +=	-DFOKUS
+ CPPOPTS +=	-DSCHILY_PRINT
+diff -ur cdrtools-3.01.orig/libfind/libfind.mk cdrtools-3.01/libfind/libfind.mk
+--- cdrtools-3.01.orig/libfind/libfind.mk	2013-02-16 11:07:22.846914444 +0000
++++ cdrtools-3.01/libfind/libfind.mk	2013-02-16 11:25:04.767926311 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	find
+ #CPPOPTS +=	-Istdio
+ #CPPOPTS +=	-DUSE_SCANSTACK
+diff -ur cdrtools-3.01.orig/libfind/libfind_p.mk cdrtools-3.01/libfind/libfind_p.mk
+--- cdrtools-3.01.orig/libfind/libfind_p.mk	2013-02-16 11:07:22.846914444 +0000
++++ cdrtools-3.01/libfind/libfind_p.mk	2013-02-16 11:25:04.771926317 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	find
+ COPTS +=	$(COPTGPROF)
+ #CPPOPTS +=	-Istdio
+diff -ur cdrtools-3.01.orig/libfind/shlfind.mk cdrtools-3.01/libfind/shlfind.mk
+--- cdrtools-3.01.orig/libfind/shlfind.mk	2013-02-16 11:07:22.846914444 +0000
++++ cdrtools-3.01/libfind/shlfind.mk	2013-02-16 11:25:04.774926320 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	find
+ #CPPOPTS +=	-Istdio
+ #CPPOPTS +=	-DUSE_SCANSTACK
+diff -ur cdrtools-3.01.orig/libhfs_iso/libhfs.mk cdrtools-3.01/libhfs_iso/libhfs.mk
+--- cdrtools-3.01.orig/libhfs_iso/libhfs.mk	2013-02-16 11:07:22.908914580 +0000
++++ cdrtools-3.01/libhfs_iso/libhfs.mk	2013-02-16 11:25:04.784926328 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	hfs
+ CPPOPTS +=	-DAPPLE_HYB
+ CFILES=		data.c block.c low.c file.c btree.c node.c record.c \
+diff -ur cdrtools-3.01.orig/libhfs_iso/libhfs_p.mk cdrtools-3.01/libhfs_iso/libhfs_p.mk
+--- cdrtools-3.01.orig/libhfs_iso/libhfs_p.mk	2013-02-16 11:07:22.908914580 +0000
++++ cdrtools-3.01/libhfs_iso/libhfs_p.mk	2013-02-16 11:25:04.781926327 +0000
+@@ -9,7 +9,7 @@
+ 
+ SUBARCHDIR=	/profiled
+ SUBINSDIR=	/profiled
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	hfs
+ CPPOPTS +=	-DAPPLE_HYB
+ COPTS +=	$(COPTGPROF)
+diff -ur cdrtools-3.01.orig/libhfs_iso/shlhfs.mk cdrtools-3.01/libhfs_iso/shlhfs.mk
+--- cdrtools-3.01.orig/libhfs_iso/shlhfs.mk	2013-02-16 11:07:22.908914580 +0000
++++ cdrtools-3.01/libhfs_iso/shlhfs.mk	2013-02-16 11:25:04.778926324 +0000
+@@ -8,7 +8,7 @@
+ ###########################################################################
+ 
+ SUBARCHDIR=	/pic
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	hfs
+ CPPOPTS +=	-DAPPLE_HYB
+ CFILES=		data.c block.c low.c file.c btree.c node.c record.c \
+diff -ur cdrtools-3.01.orig/libmdigest/mdigest.mk cdrtools-3.01/libmdigest/mdigest.mk
+--- cdrtools-3.01.orig/libmdigest/mdigest.mk	2013-02-16 11:07:22.859914530 +0000
++++ cdrtools-3.01/libmdigest/mdigest.mk	2013-02-16 11:25:04.794926339 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	mdigest
+ #CPPOPTS +=	-Ispecincl
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libmdigest/mdigest_p.mk cdrtools-3.01/libmdigest/mdigest_p.mk
+--- cdrtools-3.01.orig/libmdigest/mdigest_p.mk	2013-02-16 11:07:22.859914530 +0000
++++ cdrtools-3.01/libmdigest/mdigest_p.mk	2013-02-16 11:25:04.791926336 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	mdigest
+ #CPPOPTS +=	-Ispecincl
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libmdigest/shlmdigest.mk cdrtools-3.01/libmdigest/shlmdigest.mk
+--- cdrtools-3.01.orig/libmdigest/shlmdigest.mk	2013-02-16 11:07:22.859914530 +0000
++++ cdrtools-3.01/libmdigest/shlmdigest.mk	2013-02-16 11:25:04.788926333 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	mdigest
+ #CPPOPTS +=	-Ispecincl
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libparanoia/paranoia.mk cdrtools-3.01/libparanoia/paranoia.mk
+--- cdrtools-3.01.orig/libparanoia/paranoia.mk	2013-02-16 11:07:22.848914479 +0000
++++ cdrtools-3.01/libparanoia/paranoia.mk	2013-02-16 11:25:04.801926346 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	paranoia
+ #CPPOPTS +=	-Ispecincl
+ #CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libparanoia/paranoia_p.mk cdrtools-3.01/libparanoia/paranoia_p.mk
+--- cdrtools-3.01.orig/libparanoia/paranoia_p.mk	2013-02-16 11:07:22.849914496 +0000
++++ cdrtools-3.01/libparanoia/paranoia_p.mk	2013-02-16 11:25:04.811926356 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	paranoia
+ #CPPOPTS +=	-Ispecincl
+ #CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libparanoia/shlparanoia.mk cdrtools-3.01/libparanoia/shlparanoia.mk
+--- cdrtools-3.01.orig/libparanoia/shlparanoia.mk	2013-02-16 11:07:22.848914479 +0000
++++ cdrtools-3.01/libparanoia/shlparanoia.mk	2013-02-16 11:25:04.805926350 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	paranoia
+ #CPPOPTS +=	-Ispecincl
+ #CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/librscg/librscg.mk cdrtools-3.01/librscg/librscg.mk
+--- cdrtools-3.01.orig/librscg/librscg.mk	2013-02-16 11:07:22.909914581 +0000
++++ cdrtools-3.01/librscg/librscg.mk	2013-02-16 11:25:04.818926363 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	rscg
+ CPPOPTS +=	-I../libscg
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/librscg/librscg_p.mk cdrtools-3.01/librscg/librscg_p.mk
+--- cdrtools-3.01.orig/librscg/librscg_p.mk	2013-02-16 11:07:22.909914581 +0000
++++ cdrtools-3.01/librscg/librscg_p.mk	2013-02-16 11:25:04.815926360 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	rscg
+ CPPOPTS +=	-I../libscg
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/librscg/shlrscg.mk cdrtools-3.01/librscg/shlrscg.mk
+--- cdrtools-3.01.orig/librscg/shlrscg.mk	2013-02-16 11:07:22.909914581 +0000
++++ cdrtools-3.01/librscg/shlrscg.mk	2013-02-16 11:25:04.821926366 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	rscg
+ CPPOPTS +=	-I../libscg
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libscg/libscg.mk cdrtools-3.01/libscg/libscg.mk
+--- cdrtools-3.01.orig/libscg/libscg.mk	2013-02-16 11:07:22.875914547 +0000
++++ cdrtools-3.01/libscg/libscg.mk	2013-02-16 11:25:04.875926419 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	scg
+ CPPOPTS +=	-I.
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libscg/libscg_p.mk cdrtools-3.01/libscg/libscg_p.mk
+--- cdrtools-3.01.orig/libscg/libscg_p.mk	2013-02-16 11:07:22.873914544 +0000
++++ cdrtools-3.01/libscg/libscg_p.mk	2013-02-16 11:25:04.828926373 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	scg
+ CPPOPTS +=	-I.
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libscg/shlscg.mk cdrtools-3.01/libscg/shlscg.mk
+--- cdrtools-3.01.orig/libscg/shlscg.mk	2013-02-16 11:07:22.872914544 +0000
++++ cdrtools-3.01/libscg/shlscg.mk	2013-02-16 11:25:04.825926370 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	scg
+ CPPOPTS +=	-I.
+ CPPOPTS +=	-DUSE_PG
+diff -ur cdrtools-3.01.orig/libscgcmd/libscgcmd.mk cdrtools-3.01/libscgcmd/libscgcmd.mk
+--- cdrtools-3.01.orig/libscgcmd/libscgcmd.mk	2013-02-16 11:07:22.845914436 +0000
++++ cdrtools-3.01/libscgcmd/libscgcmd.mk	2013-02-16 11:25:04.885926429 +0000
+@@ -7,7 +7,7 @@
+ 
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	scgcmd
+ CPPOPTS +=	-I.
+ CPPOPTS +=	-I../libscg
+diff -ur cdrtools-3.01.orig/libscgcmd/libscgcmd_p.mk cdrtools-3.01/libscgcmd/libscgcmd_p.mk
+--- cdrtools-3.01.orig/libscgcmd/libscgcmd_p.mk	2013-02-16 11:07:22.844914420 +0000
++++ cdrtools-3.01/libscgcmd/libscgcmd_p.mk	2013-02-16 11:25:04.878926422 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	scgcmd
+ CPPOPTS +=	-I.
+ CPPOPTS +=	-I../libscg
+diff -ur cdrtools-3.01.orig/libscgcmd/shlscgcmd.mk cdrtools-3.01/libscgcmd/shlscgcmd.mk
+--- cdrtools-3.01.orig/libscgcmd/shlscgcmd.mk	2013-02-16 11:07:22.844914420 +0000
++++ cdrtools-3.01/libscgcmd/shlscgcmd.mk	2013-02-16 11:25:04.882926426 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ #.SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ #VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	scgcmd
+ CPPOPTS +=	-I.
+ CPPOPTS +=	-I../libscg
+diff -ur cdrtools-3.01.orig/libschily/libschily.mk cdrtools-3.01/libschily/libschily.mk
+--- cdrtools-3.01.orig/libschily/libschily.mk	2013-02-16 11:07:22.860914533 +0000
++++ cdrtools-3.01/libschily/libschily.mk	2013-02-16 11:25:04.888926432 +0000
+@@ -7,7 +7,7 @@
+ 
+ .SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	schily
+ CPPOPTS +=	-Istdio
+ CPPOPTS +=	-DUSE_SCANSTACK	# Try to scan stack frames
+diff -ur cdrtools-3.01.orig/libschily/libschily_p.mk cdrtools-3.01/libschily/libschily_p.mk
+--- cdrtools-3.01.orig/libschily/libschily_p.mk	2013-02-16 11:07:22.860914533 +0000
++++ cdrtools-3.01/libschily/libschily_p.mk	2013-02-16 11:25:04.892926436 +0000
+@@ -9,7 +9,7 @@
+ SUBINSDIR=	/profiled
+ .SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	schily
+ CPPOPTS +=	-Istdio
+ CPPOPTS +=	-DUSE_SCANSTACK	# Try to scan stack frames
+diff -ur cdrtools-3.01.orig/libschily/shlschily.mk cdrtools-3.01/libschily/shlschily.mk
+--- cdrtools-3.01.orig/libschily/shlschily.mk	2013-02-16 11:07:22.863914536 +0000
++++ cdrtools-3.01/libschily/shlschily.mk	2013-02-16 11:25:04.895926439 +0000
+@@ -8,7 +8,7 @@
+ SUBARCHDIR=	/pic
+ .SEARCHLIST:	. $(ARCHDIR) stdio $(ARCHDIR)
+ VPATH=		.:stdio:$(ARCHDIR)
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	schily
+ CPPOPTS +=	-Istdio
+ CPPOPTS +=	-DUSE_SCANSTACK	# Try to scan stack frames
+diff -ur cdrtools-3.01.orig/libsiconv/libsiconv.mk cdrtools-3.01/libsiconv/libsiconv.mk
+--- cdrtools-3.01.orig/libsiconv/libsiconv.mk	2013-02-16 11:07:22.843914402 +0000
++++ cdrtools-3.01/libsiconv/libsiconv.mk	2013-02-16 11:25:05.061926602 +0000
+@@ -5,7 +5,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	siconv
+ #CPPOPTS +=	-Istdio
+ CPPOPTS +=	-DSCHILY_PRINT
+diff -ur cdrtools-3.01.orig/libsiconv/libsiconv_p.mk cdrtools-3.01/libsiconv/libsiconv_p.mk
+--- cdrtools-3.01.orig/libsiconv/libsiconv_p.mk	2013-02-16 11:07:22.843914402 +0000
++++ cdrtools-3.01/libsiconv/libsiconv_p.mk	2013-02-16 11:25:05.068926609 +0000
+@@ -7,7 +7,7 @@
+ 
+ SUBARCHDIR=	/profiled
+ SUBINSDIR=	/profiled
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	siconv
+ #CPPOPTS +=	-Istdio
+ CPPOPTS +=	-DSCHILY_PRINT
+diff -ur cdrtools-3.01.orig/libsiconv/shlsiconv.mk cdrtools-3.01/libsiconv/shlsiconv.mk
+--- cdrtools-3.01.orig/libsiconv/shlsiconv.mk	2013-02-16 11:07:22.843914402 +0000
++++ cdrtools-3.01/libsiconv/shlsiconv.mk	2013-02-16 11:25:05.065926606 +0000
+@@ -6,7 +6,7 @@
+ ###########################################################################
+ 
+ SUBARCHDIR=	/pic
+-INSDIR=		lib
++INSDIR=		lib64
+ TARGETLIB=	siconv
+ #CPPOPTS +=	-Istdio
+ CPPOPTS +=	-DSCHILY_PRINT
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp10000.mk cdrtools-3.01/libsiconv/tables/cp10000.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp10000.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp10000.mk	2013-02-16 11:25:04.975926518 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp10000
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp10006.mk cdrtools-3.01/libsiconv/tables/cp10006.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp10006.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp10006.mk	2013-02-16 11:25:05.018926560 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp10006
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp10007.mk cdrtools-3.01/libsiconv/tables/cp10007.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp10007.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp10007.mk	2013-02-16 11:25:04.991926533 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp10007
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp10029.mk cdrtools-3.01/libsiconv/tables/cp10029.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp10029.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp10029.mk	2013-02-16 11:25:04.985926528 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp10029
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp10079.mk cdrtools-3.01/libsiconv/tables/cp10079.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp10079.mk	2013-02-16 11:07:22.838914265 +0000
++++ cdrtools-3.01/libsiconv/tables/cp10079.mk	2013-02-16 11:25:04.918926461 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp10079
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp10081.mk cdrtools-3.01/libsiconv/tables/cp10081.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp10081.mk	2013-02-16 11:07:22.839914298 +0000
++++ cdrtools-3.01/libsiconv/tables/cp10081.mk	2013-02-16 11:25:04.925926468 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp10081
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1250.mk cdrtools-3.01/libsiconv/tables/cp1250.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1250.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1250.mk	2013-02-16 11:25:05.045926587 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1250
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1251.mk cdrtools-3.01/libsiconv/tables/cp1251.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1251.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1251.mk	2013-02-16 11:25:05.005926547 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1251
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1252.mk cdrtools-3.01/libsiconv/tables/cp1252.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1252.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1252.mk	2013-02-16 11:25:05.035926577 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1252
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1253.mk cdrtools-3.01/libsiconv/tables/cp1253.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1253.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1253.mk	2013-02-16 11:25:05.021926563 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1253
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1254.mk cdrtools-3.01/libsiconv/tables/cp1254.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1254.mk	2013-02-16 11:07:22.838914265 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1254.mk	2013-02-16 11:25:04.902926446 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1254
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1255.mk cdrtools-3.01/libsiconv/tables/cp1255.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1255.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1255.mk	2013-02-16 11:25:05.008926550 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1255
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1256.mk cdrtools-3.01/libsiconv/tables/cp1256.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1256.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1256.mk	2013-02-16 11:25:04.981926524 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1256
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1257.mk cdrtools-3.01/libsiconv/tables/cp1257.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1257.mk	2013-02-16 11:07:22.839914298 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1257.mk	2013-02-16 11:25:04.932926475 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1257
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp1258.mk cdrtools-3.01/libsiconv/tables/cp1258.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp1258.mk	2013-02-16 11:07:22.839914298 +0000
++++ cdrtools-3.01/libsiconv/tables/cp1258.mk	2013-02-16 11:25:04.922926465 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp1258
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp437.mk cdrtools-3.01/libsiconv/tables/cp437.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp437.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp437.mk	2013-02-16 11:25:04.968926511 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp437
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp737.mk cdrtools-3.01/libsiconv/tables/cp737.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp737.mk	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/cp737.mk	2013-02-16 11:25:04.945926488 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp737
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp775.mk cdrtools-3.01/libsiconv/tables/cp775.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp775.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp775.mk	2013-02-16 11:25:05.041926583 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp775
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp850.mk cdrtools-3.01/libsiconv/tables/cp850.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp850.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp850.mk	2013-02-16 11:25:05.028926570 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp850
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp852.mk cdrtools-3.01/libsiconv/tables/cp852.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp852.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp852.mk	2013-02-16 11:25:04.961926504 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp852
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp855.mk cdrtools-3.01/libsiconv/tables/cp855.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp855.mk	2013-02-16 11:07:22.838914265 +0000
++++ cdrtools-3.01/libsiconv/tables/cp855.mk	2013-02-16 11:25:04.898926442 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp855
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp857.mk cdrtools-3.01/libsiconv/tables/cp857.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp857.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp857.mk	2013-02-16 11:25:04.971926514 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp857
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp860.mk cdrtools-3.01/libsiconv/tables/cp860.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp860.mk	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/cp860.mk	2013-02-16 11:25:04.958926501 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp860
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp861.mk cdrtools-3.01/libsiconv/tables/cp861.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp861.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp861.mk	2013-02-16 11:25:05.031926573 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp861
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp862.mk cdrtools-3.01/libsiconv/tables/cp862.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp862.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp862.mk	2013-02-16 11:25:05.038926580 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp862
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp863.mk cdrtools-3.01/libsiconv/tables/cp863.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp863.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp863.mk	2013-02-16 11:25:04.998926540 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp863
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp864.mk cdrtools-3.01/libsiconv/tables/cp864.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp864.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp864.mk	2013-02-16 11:25:05.015926557 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp864
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp865.mk cdrtools-3.01/libsiconv/tables/cp865.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp865.mk	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/cp865.mk	2013-02-16 11:25:04.942926485 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp865
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp866.mk cdrtools-3.01/libsiconv/tables/cp866.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp866.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/cp866.mk	2013-02-16 11:25:05.055926595 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp866
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp869.mk cdrtools-3.01/libsiconv/tables/cp869.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp869.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp869.mk	2013-02-16 11:25:04.965926508 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp869
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/cp874.mk cdrtools-3.01/libsiconv/tables/cp874.mk
+--- cdrtools-3.01.orig/libsiconv/tables/cp874.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/cp874.mk	2013-02-16 11:25:04.978926521 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		cp874
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-10.mk cdrtools-3.01/libsiconv/tables/iso8859-10.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-10.mk	2013-02-16 11:07:22.839914298 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-10.mk	2013-02-16 11:25:04.928926471 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-10
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-11.mk cdrtools-3.01/libsiconv/tables/iso8859-11.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-11.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-11.mk	2013-02-16 11:25:05.051926593 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-11
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-13.mk cdrtools-3.01/libsiconv/tables/iso8859-13.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-13.mk	2013-02-16 11:07:22.838914265 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-13.mk	2013-02-16 11:25:04.912926456 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-13
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-14.mk cdrtools-3.01/libsiconv/tables/iso8859-14.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-14.mk	2013-02-16 11:07:22.838914265 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-14.mk	2013-02-16 11:25:04.905926449 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-14
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-15.mk cdrtools-3.01/libsiconv/tables/iso8859-15.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-15.mk	2013-02-16 11:07:22.838914265 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-15.mk	2013-02-16 11:25:04.908926452 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-15
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-16.mk cdrtools-3.01/libsiconv/tables/iso8859-16.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-16.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-16.mk	2013-02-16 11:25:05.048926590 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-16
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-1.mk cdrtools-3.01/libsiconv/tables/iso8859-1.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-1.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-1.mk	2013-02-16 11:25:05.011926553 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-1
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-2.mk cdrtools-3.01/libsiconv/tables/iso8859-2.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-2.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-2.mk	2013-02-16 11:25:04.988926529 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-2
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-3.mk cdrtools-3.01/libsiconv/tables/iso8859-3.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-3.mk	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-3.mk	2013-02-16 11:25:04.952926495 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-3
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-4.mk cdrtools-3.01/libsiconv/tables/iso8859-4.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-4.mk	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-4.mk	2013-02-16 11:25:04.935926478 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-4
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-5.mk cdrtools-3.01/libsiconv/tables/iso8859-5.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-5.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-5.mk	2013-02-16 11:25:04.995926537 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-5
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-6.mk cdrtools-3.01/libsiconv/tables/iso8859-6.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-6.mk	2013-02-16 11:07:22.838914265 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-6.mk	2013-02-16 11:25:04.915926459 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-6
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-7.mk cdrtools-3.01/libsiconv/tables/iso8859-7.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-7.mk	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-7.mk	2013-02-16 11:25:04.938926481 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-7
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-8.mk cdrtools-3.01/libsiconv/tables/iso8859-8.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-8.mk	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-8.mk	2013-02-16 11:25:04.948926491 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-8
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/iso8859-9.mk cdrtools-3.01/libsiconv/tables/iso8859-9.mk
+--- cdrtools-3.01.orig/libsiconv/tables/iso8859-9.mk	2013-02-16 11:07:22.841914358 +0000
++++ cdrtools-3.01/libsiconv/tables/iso8859-9.mk	2013-02-16 11:25:05.001926543 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-9
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/koi8-r.mk cdrtools-3.01/libsiconv/tables/koi8-r.mk
+--- cdrtools-3.01.orig/libsiconv/tables/koi8-r.mk	2013-02-16 11:07:22.842914381 +0000
++++ cdrtools-3.01/libsiconv/tables/koi8-r.mk	2013-02-16 11:25:05.025926567 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		koi8-r
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/koi8-u.mk cdrtools-3.01/libsiconv/tables/koi8-u.mk
+--- cdrtools-3.01.orig/libsiconv/tables/koi8-u.mk	2013-02-16 11:07:22.843914402 +0000
++++ cdrtools-3.01/libsiconv/tables/koi8-u.mk	2013-02-16 11:25:05.058926599 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		koi8-u
+ #XMK_FILE=	Makefile.man
+ 
+diff -ur cdrtools-3.01.orig/libsiconv/tables/Makefile cdrtools-3.01/libsiconv/tables/Makefile
+--- cdrtools-3.01.orig/libsiconv/tables/Makefile	2013-02-16 11:07:22.840914328 +0000
++++ cdrtools-3.01/libsiconv/tables/Makefile	2013-02-16 11:25:04.955926498 +0000
+@@ -7,7 +7,7 @@
+ include		$(SRCROOT)/$(RULESDIR)/rules.top
+ ###########################################################################
+ 
+-INSDIR=		lib/siconv
++INSDIR=		lib64/siconv
+ TARGET=		iso8859-1
+ XMK_FILE=	\
+ 		cp10000.mk cp10006.mk cp10007.mk cp10029.mk cp10079.mk \

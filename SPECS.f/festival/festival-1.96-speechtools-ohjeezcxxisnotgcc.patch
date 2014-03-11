@@ -1,0 +1,13 @@
+--- festival/speech_tools/config/compilers/gcc_defaults.mak.orig	2007-03-13 16:28:39.000000000 -0400
++++ festival/speech_tools/config/compilers/gcc_defaults.mak	2007-03-13 16:28:59.000000000 -0400
+@@ -39,10 +39,7 @@
+  ###########################################################################
+ 
+ CC=gcc
+-CXX=gcc
+-ifeq ($(OSTYPE),Darwin)
+ CXX=g++
+-endif
+ 
+ COMPILER_DESC=FSF gcc
+ COMPILER_VERSION_COMMAND=$(CXX) -v 2>&1 | tail -1 | sed -e 's/^....//'

@@ -1,0 +1,12 @@
+diff -ur anticodeluxe.orig//wm/wm.pro anticodeluxe/wm/wm.pro
+--- anticodeluxe.orig//wm/wm.pro	2011-10-29 15:23:29.000000000 -0400
++++ anticodeluxe/wm/wm.pro	2011-10-29 15:23:43.000000000 -0400
+@@ -16,7 +16,7 @@
+ QMAKE_CLEAN += antico-deluxe
+ 
+ INCLUDEPATH += ../amelib /usr/include/ame/ 
+-LIBS += -L/usr/lib -L../amelib -lame
++LIBS += -L/usr/lib -L../amelib -lame -lX11
+ 			
+ HEADERS += defs.h \
+ 			aboutdlg.h \

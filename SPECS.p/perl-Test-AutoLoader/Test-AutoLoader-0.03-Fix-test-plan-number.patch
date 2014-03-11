@@ -1,0 +1,33 @@
+From f58959906ee7e8f704992c632d7af11b61c68668 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 26 Apr 2012 11:33:21 +0200
+Subject: [PATCH] Fix test plan number
+
+<https://rt.cpan.org/Public/Bug/Display.html?id=66399>
+---
+ t/00basic.t |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/t/00basic.t b/t/00basic.t
+index a6b2345..94f1a4f 100644
+--- a/t/00basic.t
++++ b/t/00basic.t
+@@ -7,7 +7,7 @@ BEGIN {
+     eval "use Test::Pod 0.95";
+     $NO_TEST_POD = $@;
+ }
+-use Test::More tests=>54;
++use Test::More tests=>64;
+ use POSIX;
+ use strict;
+ 
+@@ -71,5 +71,5 @@ foreach my $test (@tests) {
+ if ($CAN_CHMOD) {
+     chmod 0755, @unreadable or warn "Couldn't chmod @unreadable back: $!\n";
+ } else {
+-  SKIP:{skip "Couldn't set up unreadable directory for test",5}
++  SKIP:{skip "Couldn't set up unreadable directory for test",6}
+ }
+-- 
+1.7.7.6
+

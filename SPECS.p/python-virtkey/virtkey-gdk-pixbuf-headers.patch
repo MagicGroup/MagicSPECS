@@ -1,0 +1,42 @@
+Index: python-virtkey-0.50/setup.py
+===================================================================
+--- python-virtkey-0.50.orig/setup.py
++++ python-virtkey-0.50/setup.py
+@@ -1,10 +1,33 @@
+ #!/usr/bin/python
+ 
+ from distutils.core import setup, Extension
++import subprocess
++
++def pkgconfig(resource_name, resource_type):
++    pkgconfig = subprocess.Popen(['pkg-config', resource_name, '--%s' % resource_type], stdout=subprocess.PIPE)
++    return_val = []
++    for entry in pkgconfig.stdout.read().split():
++        if resource_type == 'cflags':
++            if entry.startswith('-I'):
++                return_val.append(entry[2:])
++        elif resource_type == 'libs':
++            if entry.startswith('-l'):
++                return_val.append(entry[2:])
++        else:
++            raise Exception('Unknown reaource_type')
++    return return_val
++
++include_dirs = pkgconfig('gdk-pixbuf-2.0', 'cflags')
++libraries = pkgconfig('gdk-pixbuf-2.0', 'libs')
++include_dirs.extend(pkgconfig('gtk+-2.0', 'cflags'))
++libraries.extend(pkgconfig('gtk+-2.0', 'libs'))
++
++libraries.extend(["X11","Xtst"])
++
+ setup(name="virtkey",
+       ext_modules=[Extension("virtkey", 
+-		["python-virtkey.c","ucs2keysym.c"],include_dirs=['/usr/include/gtk-2.0', '/usr/include/glib-2.0', '/usr/lib/glib-2.0/include', '/usr/include/pango-1.0', '/usr/lib/gtk-2.0/include', '/usr/include/cairo'],
+-		libraries=["X11","Xtst","glib-2.0","gdk-x11-2.0"]
+-		)],
+-	version="0.01"
++        ["python-virtkey.c","ucs2keysym.c"], include_dirs=include_dirs,
++        libraries=libraries
++        )],
++    version="0.01"
+       )

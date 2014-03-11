@@ -1,0 +1,20 @@
+diff -u -r kiso-0.8.3.orig/src/kiso.cpp kiso-0.8.3/src/kiso.cpp
+--- kiso-0.8.3.orig/src/kiso.cpp	2005-09-02 12:23:55.000000000 -0400
++++ kiso-0.8.3/src/kiso.cpp	2006-10-04 21:11:29.000000000 -0400
+@@ -3591,14 +3591,14 @@
+ 
+     int i_status; 
+     uint8_t buf[500] = { 0, };
+-    scsi_mmc_cdb_t cdb = {{0, }};
++    mmc_cdb_t cdb = {{0, }};
+ 
+     CDIO_MMC_SET_COMMAND(cdb.field, CDIO_MMC_GPCMD_GET_CONFIGURATION);
+     CDIO_MMC_SET_READ_LENGTH8(cdb.field, sizeof(buf));
+     cdb.field[1] = CDIO_MMC_GET_CONF_ALL_FEATURES;
+     cdb.field[3] = 0x0;
+ 
+-    i_status = scsi_mmc_run_cmd(p_cdio, 0, &cdb, SCSI_MMC_DATA_READ, sizeof(buf), &buf);
++    i_status = mmc_run_cmd(p_cdio, 0, &cdb, SCSI_MMC_DATA_READ, sizeof(buf), &buf);
+     if (i_status == 0) {
+       uint8_t *p;
+       uint32_t i_data;

@@ -1,0 +1,9 @@
+# jadefmtutil.cnf
+# Alan W. Irwin <irwin@beluga.phys.uvic.ca>
+#
+# configuration file for fmtutil; jade flavor.
+# invoke with 'fmtutil --cnffile <file> --all'
+#
+# format        engine  pattern-file    arguments
+jadetex         tex     language.dat    &latex jadetex.ini
+pdfjadetex      pdftex  language.dat    &pdflatex pdfjadetex.ini

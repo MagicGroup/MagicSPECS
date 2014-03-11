@@ -1,0 +1,35 @@
+From ab319f83cd02e1a75c4d546deaefb27da70b51e6 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Tue, 5 Jun 2012 14:54:13 +0200
+Subject: [PATCH 4/4] camera-device-monitor: Don't add NULL devices to the
+ camera list
+
+cheese_camera_device_monitor_set_up_device() will return NULL for non
+video devices (ie vbi & radio devices). Emitting the added signal with
+such a NULL device, causes it to get added to the camera list, which later
+on causes cheese to crash.
+
+This patch fixes this by not emitting the added signal for non camera devices.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ libcheese/cheese-camera-device-monitor.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libcheese/cheese-camera-device-monitor.c b/libcheese/cheese-camera-device-monitor.c
+index d8b5a10..aa723c7 100644
+--- a/libcheese/cheese-camera-device-monitor.c
++++ b/libcheese/cheese-camera-device-monitor.c
+@@ -214,7 +214,8 @@ cheese_camera_device_monitor_added (CheeseCameraDeviceMonitor *monitor,
+                                     GUdevDevice               *udevice)
+ {
+   CheeseCameraDevice *device = cheese_camera_device_monitor_set_up_device (udevice);
+-  g_signal_emit (monitor, monitor_signals[ADDED], 0, device);
++  if (device)
++    g_signal_emit (monitor, monitor_signals[ADDED], 0, device);
+ }
+ 
+ /*
+-- 
+1.7.10.2
+

@@ -1,0 +1,11 @@
+--- kdebase-workspace-4.1.96/ksysguard/gui/SensorDisplayLib/SensorDisplay.cc.orig	2009-01-17 10:25:55.000000000 +0800
++++ kdebase-workspace-4.1.96/ksysguard/gui/SensorDisplayLib/SensorDisplay.cc	2009-01-17 10:45:52.000000000 +0800
+@@ -349,7 +349,7 @@
+ void SensorDisplay::setTitle( const QString &title )
+ {
+   mTitle = title;
+-  mTranslatedTitle = i18n(title.toLatin1());
++  mTranslatedTitle = i18n(title.toUtf8());
+   emit titleChanged(mTitle);
+   emit translatedTitleChanged(mTranslatedTitle);
+ }

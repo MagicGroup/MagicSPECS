@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Exec=mlgui
+Icon=mldw-header3_03.xpm
+Terminal=false
+Name=MLdonkey
+Comment=A client for P2P networks
+Comment[zh_CN]=P2P 网络客户端

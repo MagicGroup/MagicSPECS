@@ -1,0 +1,22 @@
+diff -ur tdegames-git20111222.orig/kolf/game.cpp tdegames-git20111222/kolf/game.cpp
+--- tdegames-git20111222.orig/kolf/game.cpp	2011-12-23 06:52:17.000000000 -0500
++++ tdegames-git20111222/kolf/game.cpp	2011-12-23 06:52:41.000000000 -0500
+@@ -1,4 +1,4 @@
+-#include <arts/kmedia2.h>
++#include <kmedia2.h>
+ #include <arts/kplayobject.h>
+ #include <arts/kplayobjectfactory.h>
+ 
+diff -ur tdegames-git20111222.orig/kolf/kvolumecontrol.cpp tdegames-git20111222/kolf/kvolumecontrol.cpp
+--- tdegames-git20111222.orig/kolf/kvolumecontrol.cpp	2011-12-23 06:52:17.000000000 -0500
++++ tdegames-git20111222/kolf/kvolumecontrol.cpp	2011-12-23 06:52:31.000000000 -0500
+@@ -1,7 +1,7 @@
+ #include <kdebug.h>
+ 
+-#include <arts/soundserver.h>
+-#include <arts/flowsystem.h>
++#include <soundserver.h>
++#include <flowsystem.h>
+ 
+ #include "kvolumecontrol.h"
+ 

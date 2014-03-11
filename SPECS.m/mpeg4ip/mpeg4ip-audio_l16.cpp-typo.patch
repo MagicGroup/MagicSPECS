@@ -1,0 +1,11 @@
+--- mpeg4ip-1.6/server/mp4live/audio_l16.cpp.orig	2008-01-08 12:49:50.000000000 +0000
++++ mpeg4ip-1.6/server/mp4live/audio_l16.cpp	2008-01-08 12:50:05.000000000 +0000
+@@ -175,7 +175,7 @@
+   m_pFrameBuffer = (u_int16_t*)Malloc(m_frameBufferLength);
+   
+ #ifdef WORDS_BIGENDIAN
+-  memcpy(m_pFrameBuffer, pSameples, m_frameBufferLength);
++  memcpy(m_pFrameBuffer, pSamples, m_frameBufferLength);
+ #else
+   for (uint32_t ix = 0; ix < numSamplesPerChannel * m_audioDstChannels; ix++) {
+     m_pFrameBuffer[ix] = B2N_16(pSamples[ix]);

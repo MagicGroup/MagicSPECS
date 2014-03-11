@@ -1,0 +1,30 @@
+--- netkit-rsh-0.17/rshd/rshd.c.pam_env	2006-12-12 12:32:31.000000000 +0100
++++ netkit-rsh-0.17/rshd/rshd.c	2006-12-12 12:48:21.000000000 +0100
+@@ -375,6 +375,10 @@
+ 	const char *hostname;
+ 	u_short port;
+ 	int pv[2], pid, ifd;
++#ifdef USE_PAM
++        char** env;
++        int i;
++#endif
+ 
+ 	signal(SIGINT, SIG_DFL);
+ 	signal(SIGQUIT, SIG_DFL);
+@@ -522,6 +526,16 @@
+ 	shellname = strrchr(theshell, '/');
+ 	if (shellname) shellname++;
+ 	else shellname = theshell;
++#ifdef USE_PAM
++        env = pam_getenvlist(pamh);
++        if (NULL != env) {
++            for(i = 0; env[i]; i++) {
++                putenv(env[i]);
++                free(env[i]);
++            }
++            free(env);
++          }
++#endif
+ 
+ 	endpwent();
+ 	if (paranoid) {

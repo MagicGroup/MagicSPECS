@@ -1,0 +1,230 @@
+diff -Nru cce-0.51/include/defs.h cce-0.51-mod/include/defs.h
+--- cce-0.51/include/defs.h	2004-01-11 12:41:21.000000000 +0800
++++ cce-0.51-mod/include/defs.h	2007-11-05 00:00:51.000000000 +0800
+@@ -55,51 +55,62 @@
+ 
+ #define CCE_PATHNAME_MAX  255
+ 
+-static inline void bzero2(void *head, int n)
++static inline void bzero2(void *_head, int n)
+ {
+-	while (n-- > 0)
+-		*((unsigned char *)head)++ = (unsigned char)0x0;
++	register unsigned char *head = (unsigned char *)_head;
++	while (--n >= 0)
++		*(head++) = (unsigned char)0x0;
+ }
+ 
+-static inline void wzero(void *head, int n)
++static inline void wzero(void *_head, int n)
+ {
++	register unsigned short *head = (unsigned short *)_head;
+ 	n >>= 1;
+-	while (n-- > 0)
+-		*((unsigned short *)head)++ = (unsigned short)0x0;
++	while (--n >= 0)
++		*(head++) = (unsigned short)0x0;
+ 
+ }
+ 
+-static inline void lzero(void *head, int n)
++static inline void lzero(void *_head, int n)
+ {
++	register unsigned int *head = (unsigned int *)_head;
+ 	n >>= 2;
+-    while (n-- > 0)
+-        *((unsigned int *)head)++ = (unsigned int)0x0;
++    while (--n >= 0)
++        *(head++) = (unsigned int)0x0;
+ }
+ 
+-static inline void bmove(void *dst, void *src, int n)
++static inline void bmove(void *_dst, void *_src, int n)
+ {
+-	while(n-- > 0)
+-		*((unsigned char *)dst)++ = *((unsigned char *)src)++;
++	register unsigned char *dst = (unsigned char *)_dst;
++	register unsigned char *src = (unsigned char *)_src;
++	while(--n >= 0)
++		*(dst++) = *(src++);
+ }
+ 
+-static inline void brmove(void *dst, void *src, int n)
++static inline void brmove(void *_dst, void *_src, int n)
+ {
+-    while(n-- > 0)
+-        *--((unsigned char *)dst) = *--((unsigned char *)src);
++	register unsigned char *dst = (unsigned char *)_dst;
++	register unsigned char *src = (unsigned char *)_src;
++    while(--n >= 0)
++        *(--dst) = *(--src);
+ }
+ 
+-static inline void wmove(void *dst, void *src, int n)
++static inline void wmove(void *_dst, void *_src, int n)
+ {
++	register unsigned short *dst = (unsigned short *)_dst;
++	register unsigned short *src = (unsigned short *)_src;
+ 	n >>= 1;
+-    while(n-- > 0)
+-        *((unsigned short *)dst)++ = *((unsigned short *)src)++;
++    while(--n >= 0)
++        *(dst++) = *(src++);
+ }
+ 
+-static inline void lmove(void *dst, void *src, int n)
++static inline void lmove(void *_dst, void *_src, int n)
+ {
++	register unsigned int *dst = (unsigned int *)_dst;
++	register unsigned int *src = (unsigned int *)_src;
+ 	n >>= 2;
+-	while(n-- > 0)
+-		*((unsigned int *)dst)++ = *((unsigned int *)src)++;
++	while(--n > 0)
++		*(dst++) = *(src++);
+ }
+ 
+ static inline void SafeFree(void **p)
+Binary files cce-0.51/inputs/big5/big5.lx and cce-0.51-mod/inputs/big5/big5.lx differ
+diff -Nru cce-0.51/inputs/utils/cin2tab.h cce-0.51-mod/inputs/utils/cin2tab.h
+--- cce-0.51/inputs/utils/cin2tab.h	2003-11-06 19:23:12.000000000 +0800
++++ cce-0.51-mod/inputs/utils/cin2tab.h	2007-11-05 00:50:37.000000000 +0800
+@@ -69,7 +69,7 @@
+ 		char *tabfname, char *lxfname );
+ extern int GenerateAssociateFile(FILE *fr, int gen_lx, char *fname);
+ 
+-extern PinYin PYMap[26][];
++extern PinYin PYMap[26][MAX_PY_PER_LETTER];
+ extern u_short ZYToPYMap[];
+ 
+ #endif
+diff -Nru cce-0.51/src/child.c cce-0.51-mod/src/child.c
+--- cce-0.51/src/child.c	2004-01-19 01:07:31.000000000 +0800
++++ cce-0.51-mod/src/child.c	2007-11-05 01:00:17.000000000 +0800
+@@ -36,16 +36,16 @@
+ #include    <errno.h>
+ #include	<sys/types.h>
+ 
++#ifdef HAVE_SYS_WAIT_H
++#include    <sys/wait.h>
++#endif
++
+ #include	"getcap.h"
+ #include	"defs.h"
+ #include	"vc.h"
+ #include	"term.h"
+ #include 	"font.h"
+ 
+-#ifdef HAVE_SYS_WAIT_H
+-#include    <sys/wait.h>
+-#endif
+-
+ static char *startupStr, *execProg;
+ 
+ static char *execProgArgs[256];
+@@ -88,8 +88,8 @@
+ 		if (StartupPid != 0) 	/* I'm parent. */
+ 		{
+ 			waitpid(StartupPid, &stat, 0);
+-        	if(WIFEXITED(stat) == 0)
+-          		PerrorExit("StartupCmd");
++        	/* if(WIFEXITED(stat) == 0)
++          		PerrorExit("StartupCmd"); */
+       	} 
+ 	  	else /* I'm child */
+ 	  	{
+diff -Nru cce-0.51/src/display/sdl.c cce-0.51-mod/src/display/sdl.c
+--- cce-0.51/src/display/sdl.c	2003-12-30 02:58:28.000000000 +0800
++++ cce-0.51-mod/src/display/sdl.c	2007-11-05 00:06:00.000000000 +0800
+@@ -373,6 +373,8 @@
+ 	int i,j;
+ 	u_char bits;
+ 	Uint8 *dest, *line;
++	Uint16 *dest16;
++	Uint32 *dest32;
+ 	Uint32 pix;
+ 	
+ 	if (sdlMustLock) SDL_LOCKSURFACE(sdlScreen);  /* for direct surface access */
+@@ -392,7 +394,9 @@
+ 				*dest++ = (Uint8)(pix);
+ 				break;
+ 			case 2:
+-				*((Uint16 *)dest)++ = (Uint16)(pix); 
++				dest16 = (Uint16 *)dest;
++				*(dest16++) = (Uint16)(pix); 
++				dest = (Uint8 *)dest16;
+ 				break;
+ 			case 3:
+ 				*dest++ = (Uint8)(pix); pix >>= 8;
+@@ -400,7 +404,9 @@
+ 				*dest++ = (Uint8)(pix);
+ 				break;
+ 			case 4:
+-				*((Uint32 *)dest)++ = (Uint32)(pix);
++				dest32 = (Uint32 *)dest;
++				*(dest32++) = (Uint32)(pix); 
++				dest = (Uint8 *)dest32;
+ 				break;
+ 			}
+ 		}
+diff -Nru cce-0.51/src/term/term.c cce-0.51-mod/src/term/term.c
+--- cce-0.51/src/term/term.c	2004-01-19 04:22:51.000000000 +0800
++++ cce-0.51-mod/src/term/term.c	2007-11-05 00:19:21.000000000 +0800
+@@ -38,6 +38,10 @@
+ #include	<fcntl.h>
+ #include	<time.h>
+ 
++#ifdef HAVE_SYS_WAIT_H
++#include	<sys/wait.h>
++#endif
++
+ #include	"getcap.h"
+ #include	"defs.h"
+ #include	"errors.h"
+@@ -56,10 +60,6 @@
+ #include	<sys/ioctl.h>
+ #endif
+ 
+-#ifdef HAVE_SYS_WAIT_H
+-#include	<sys/wait.h>
+-#endif
+-
+ #ifdef HAVE_SYS_STAT_H
+ #include    <sys/stat.h>
+ #endif
+diff -Nru cce-0.51/src/term/vc.c cce-0.51-mod/src/term/vc.c
+--- cce-0.51/src/term/vc.c	2004-01-11 12:25:30.000000000 +0800
++++ cce-0.51-mod/src/term/vc.c	2007-11-05 00:22:59.000000000 +0800
+@@ -79,22 +79,22 @@
+ 
+ static char tmpFileName[CCE_PATHNAME_MAX];
+ 
+-static inline void    blatch(void *head, int n)
++static inline void    blatch(void *_head, int n)
+ {
+-	while (n-- > 0)
++	register unsigned char *head = (unsigned char *)_head;
++	while (--n >= 0)
+ 	{
+-		(*(unsigned char *)head) &= (unsigned char)0x7F;
+-		((unsigned char *)head)++;
++		(*head++) &= (unsigned char)0x7F;
+ 	}
+ }
+ 
+-static inline   void    llatch(void *head, int n)
++static inline   void    llatch(void *_head, int n)
+ {
++	register unsigned int *head = (unsigned int *)_head;
+ 	n >>= 2;  /* convert into 32 bits */
+-    while (n-- > 0)
++    while (--n >= 0)
+     {
+-        (*(unsigned int *)head) &= (unsigned long)0x7F7F7F7F;
+-        ((unsigned int *)head)++;
++        (*head++) &= (unsigned long)0x7F7F7F7F;
+     }
+ }
+ 
+
+ 	  	 

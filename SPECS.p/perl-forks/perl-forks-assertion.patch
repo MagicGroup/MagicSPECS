@@ -1,0 +1,32 @@
+diff -urN forks-0.33/lib/forks/signals.pm forks-0.33-patch/lib/forks/signals.pm
+--- forks-0.33/lib/forks/signals.pm	2009-03-27 19:13:59.000000000 +0200
++++ forks-0.33-patch/lib/forks/signals.pm	2009-08-19 11:31:00.000000000 +0300
+@@ -109,14 +109,20 @@
+ # Note: custom handler flags only currently applied to ifndef, as use with ifdef might
+ # unexpectedly overwrite user flags, if user is using POSIX::sigaction to set signals.
+ 
+-    if (defined $flags && ref($sig->{$k}) eq 'CODE') {
+-        untie %SIG;
+-        set_sig_handler($k, $sig->{$k}, {
+-            flags => $flags,
+-            safe  => $] < 5.008002 ? 0 : 1
+-        });
+-        tie %SIG, __PACKAGE__;
+-    }
++
++#
++# SOMEHOW THIS F*CK UPS openSUSE 10.3 -> 11.1 perl (Some memory stuff?).
++# I don't know why this work on Ubuntu or anyone else?
++# If removed everything seems to work as expected.
++#
++    #if (defined $flags && ref($sig->{$k}) eq 'CODE') {
++    #    untie %SIG;
++    #    set_sig_handler($k, $sig->{$k}, {
++    #        flags => $flags,
++    #        safe  => $] < 5.008002 ? 0 : 1
++    #    });
++    #    tie %SIG, __PACKAGE__;
++    #}
+     
+     return $s;
+ }

@@ -1,0 +1,11 @@
+--- uim-1.6.0.orig/configure.ac	2010-08-12 14:15:54.000000000 +0900
++++ uim-1.6.0/configure.ac	2010-08-12 14:25:02.000000000 +0900
+@@ -1800,7 +1800,7 @@ AC_SUBST(abs_top_builddir)
+ #
+ # --with-master-pkg=uim instructs that pkgdatadir for Scheme libraries.
+ # See also sigscheme/lib/Makefile.am
+-ac_configure_args="$ac_configure_args --with-master-pkg=uim --enable-conf=uim --disable-libsscm --disable-shell"
++ac_configure_args="$ac_configure_args --with-master-pkg=uim --enable-conf=uim --disable-libsscm --disable-shell --with-libgcroots=installed"
+ AC_CONFIG_SUBDIRS([sigscheme])
+ 
+ AC_CONFIG_FILES([Makefile

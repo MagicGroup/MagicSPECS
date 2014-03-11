@@ -1,0 +1,28 @@
+From 894334963a729b92a968e65b91f79e5556f65037 Mon Sep 17 00:00:00 2001
+From: Dawit Alemayehu <adawit@kde.org>
+Date: Thu, 6 Sep 2012 15:00:06 -0400
+Subject: [PATCH 2/7] Do not crash when QWebHitTestResult::frame() returns
+ NULL.
+
+BUG: 306102
+FIXED-IN: 1.3
+---
+ src/webview.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/webview.cpp b/src/webview.cpp
+index e0d2407..b6ba0e8 100644
+--- a/src/webview.cpp
++++ b/src/webview.cpp
+@@ -547,7 +547,7 @@ void WebView::partActionPopupMenu(KParts::BrowserExtension::ActionGroupMap& part
+                 partActions.append(action);
+             }
+         }
+-    } else if (m_result.frame()->parentFrame() && !m_result.isContentSelected() && m_result.linkUrl().isEmpty()) {
++    } else if (m_result.frame() && m_result.frame()->parentFrame() && !m_result.isContentSelected() && m_result.linkUrl().isEmpty()) {
+         KActionMenu * menu = new KActionMenu(i18nc("@title:menu HTML frame/iframe", "Frame"), this);
+ 
+         KAction* action = new KAction(KIcon("window-new"), i18n("Open in New &Window"), this);
+-- 
+1.7.12.1
+

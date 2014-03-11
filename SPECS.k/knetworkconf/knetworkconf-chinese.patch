@@ -1,0 +1,695 @@
+--- knetworkconf-0.6.1/po/Makefile.in.orig	2005-02-22 09:31:20.000000000 +0800
++++ knetworkconf-0.6.1/po/Makefile.in	2005-06-23 14:05:17.000000000 +0800
+@@ -262,8 +262,8 @@
+ ####### kdevelop will overwrite this part!!! (end)############
+ #>- POFILES = AUTO
+ #>+ 2
+-POFILES = hu.po no.po fr.po pt_BR.po es.po eu.po pl.po de.po
+-GMOFILES = hu.gmo no.gmo fr.gmo pt_BR.gmo es.gmo eu.gmo pl.gmo de.gmo
++POFILES = hu.po no.po fr.po pt_BR.po es.po eu.po pl.po de.po zh_CN.po
++GMOFILES = hu.gmo no.gmo fr.gmo pt_BR.gmo es.gmo eu.gmo pl.gmo de.gmo zh_CN.gmo
+ subdir = po
+ mkinstalldirs = $(SHELL) $(top_srcdir)/admin/mkinstalldirs
+ CONFIG_HEADER = $(top_builddir)/config.h
+@@ -421,7 +421,7 @@
+ 
+ 
+ #>+ 2
+-KDE_DIST=eu.gmo de.po fr.po eu.po pt_BR.po no.gmo de.gmo es.po es.gmo knetworkconf.pot pl.gmo no.po fr.gmo pt_BR.gmo hu.po pl.po hu.gmo 
++KDE_DIST=eu.gmo de.po fr.po eu.po pt_BR.po no.gmo de.gmo es.po es.gmo knetworkconf.pot pl.gmo no.po fr.gmo pt_BR.gmo hu.po pl.po hu.gmo zh_CN.po zh_CN.gmo 
+ 
+ #>+ 25
+ hu.gmo: hu.po
+@@ -448,14 +448,17 @@
+ de.gmo: de.po
+ 	rm -f de.gmo; $(GMSGFMT) -o de.gmo $(srcdir)/de.po
+ 	test ! -f de.gmo || touch de.gmo
++zh_CN.gmo: zh_CN.po
++	rm -f zh_CN.gmo; $(GMSGFMT) -o zh_CN.gmo $(srcdir)/zh_CN.po
++	test ! -f zh_CN.gmo || touch zh_CN.gmo
+ 
+ #>+ 3
+ clean-nls:
+-	-rm -f  hu.gmo no.gmo fr.gmo pt_BR.gmo es.gmo eu.gmo pl.gmo de.gmo
++	-rm -f  hu.gmo no.gmo fr.gmo pt_BR.gmo es.gmo eu.gmo pl.gmo de.gmo zh_CN.gmo
+ 
+ #>+ 10
+ install-nls:
+-	@for base in hu no fr pt_BR es eu pl de ; do \
++	@for base in hu no fr pt_BR es eu pl de zh_CN ; do \
+ 	  echo $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
+ 	  $(mkinstalldirs) $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES ; \
+ 	  if test -f $$base.gmo; then $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
+@@ -474,6 +477,7 @@
+ 	rm -f $(DESTDIR)$(kde_locale)/eu/LC_MESSAGES/$(PACKAGE).mo
+ 	rm -f $(DESTDIR)$(kde_locale)/pl/LC_MESSAGES/$(PACKAGE).mo
+ 	rm -f $(DESTDIR)$(kde_locale)/de/LC_MESSAGES/$(PACKAGE).mo
++	rm -f $(DESTDIR)$(kde_locale)/zh_CN/LC_MESSAGES/$(PACKAGE).mo
+ 
+ #>+ 2
+ all-nls: $(GMOFILES)
+--- knetworkconf-0.6.1/po/zh_CN.po.orig	1970-01-01 08:00:00.000000000 +0800
++++ knetworkconf-0.6.1/po/zh_CN.po	2005-06-23 13:45:29.000000000 +0800
+@@ -0,0 +1,642 @@
++# translation of zh_CN.po to Chinese
++# translation of knetworkconf.po to Chinese
++# This file is distributed under the same license as the PACKAGE package.
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
++# KanKer <kanker@163.com>, 2005.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: zh_CN\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2005-02-06 20:39-0500\n"
++"PO-Revision-Date: 2005-06-23 13:45+0800\n"
++"Last-Translator: KanKer <kanker@163.com>\n"
++"Language-Team: Chinese <zh@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.10.1\n"
++
++#: kadddevicedlg.cpp:242 knetworkconfdlg.cpp:552
++msgid "Configure Interface"
++msgstr "配置接口"
++
++#: kadddevicedlg.cpp:243
++msgid "TCP/IP Address"
++msgstr "TCP/IP 地址"
++
++#: kadddevicedlg.cpp:245
++msgid "Activate when the computer starts"
++msgstr "计算机启动时激活"
++
++#: kadddevicedlg.cpp:246
++msgid "This network device should start at boot time?"
++msgstr "该网络设备在系统启动时启用吗？"
++
++#: kadddevicedlg.cpp:247 knetworkconf.cpp:126 knetworkconf.cpp:292
++msgid "Manual"
++msgstr "手动"
++
++#: kadddevicedlg.cpp:248
++msgid "Automatic"
++msgstr "自动"
++
++#: kadddevicedlg.cpp:250
++msgid "dhcp"
++msgstr "dhcp"
++
++#: kadddevicedlg.cpp:251
++msgid "bootp"
++msgstr "bootp"
++
++#: kadddevicedlg.cpp:252
++msgid "The boot protocol this network device should use"
++msgstr "该网络设备要使用的启动协议"
++
++#: kadddevicedlg.cpp:254 kadddevicedlgextension.cpp:84
++#: kadddevicedlgextension.cpp:87 kadddevicedlgextension.cpp:89
++msgid "IP address of the network device"
++msgstr "该网络设备的 IP 地址"
++
++#: kadddevicedlg.cpp:255
++msgid "Netmask:"
++msgstr "子网掩码："
++
++#: kadddevicedlg.cpp:256 kadddnsserverdlg.cpp:173 kaddknownhostdlg.cpp:212
++#: knetworkconfdlg.cpp:558
++msgid "IP address:"
++msgstr "IP 地址："
++
++#: kadddevicedlg.cpp:258
++msgid "255.255.255.0"
++msgstr ""
++
++#: kadddevicedlg.cpp:259
++msgid "255.255.0.0"
++msgstr ""
++
++#: kadddevicedlg.cpp:260
++msgid "255.0.0.0"
++msgstr ""
++
++#: kadddevicedlg.cpp:261
++msgid "255.255.255.128"
++msgstr ""
++
++#: kadddevicedlg.cpp:262
++msgid "255.255.255.192"
++msgstr ""
++
++#: kadddevicedlg.cpp:263
++msgid "255.255.255.240"
++msgstr ""
++
++#: kadddevicedlg.cpp:264
++msgid "255.255.255.248"
++msgstr ""
++
++#: kadddevicedlg.cpp:265
++msgid "Netmask of the network device"
++msgstr "网络设备的子网掩码"
++
++#: kadddevicedlg.cpp:266
++msgid "&Advanced Settings..."
++msgstr "高级设置...(&A)"
++
++#: kadddevicedlg.cpp:267 kaddknownhostdlg.cpp:215 knetworkconfdlg.cpp:577
++#: knetworkconfdlg.cpp:589
++msgid "Alt+A"
++msgstr ""
++
++#: kadddevicedlg.cpp:268 kselectdistrodlg.cpp:179
++msgid "&OK"
++msgstr "确定(&O)"
++
++#: kadddevicedlg.cpp:269 kaddknownhostdlg.cpp:223
++msgid "Alt+O"
++msgstr ""
++
++#: kadddevicedlg.cpp:270
++msgid "Apply changes"
++msgstr "应用改变"
++
++#: kadddevicedlg.cpp:271 kadddnsserverdlg.cpp:177 kaddknownhostdlg.cpp:220
++#: kselectdistrodlg.cpp:181
++msgid "&Cancel"
++msgstr "取消(&C)"
++
++#: kadddevicedlg.cpp:272 kaddknownhostdlg.cpp:221
++msgid "Alt+C"
++msgstr ""
++
++#: kadddevicedlg.cpp:273
++msgid "CForget changes"
++msgstr "取消改变"
++
++#: kadddevicedlgextension.cpp:80
++msgid "Advanced Options"
++msgstr "高级选项"
++
++#: kadddevicedlgextension.cpp:81
++msgid "Advanced Device Information"
++msgstr "高级设备信息"
++
++#: kadddevicedlgextension.cpp:82
++msgid "Set advanced setting for the network device"
++msgstr "设置该网络设备的高级选项"
++
++#: kadddevicedlgextension.cpp:83
++msgid "Description:"
++msgstr "描述："
++
++#: kadddevicedlgextension.cpp:85
++msgid "Broadcast:"
++msgstr "广播："
++
++#: kadddevicedlg.ui.h:89 kadddevicedlg.ui.h:102 kadddnsserverdlg.ui.h:40
++#: kaddknownhostdlg.ui.h:25 kaddknownhostdlg.ui.h.ui.h:22
++msgid "The format of the specified IP address is not valid."
++msgstr "指定的 IP 地址格式无效。"
++
++#: kadddevicedlg.ui.h:89 kadddevicedlg.ui.h:102 kadddevicedlg.ui.h:122
++msgid "Invalid IP address "
++msgstr "无效的 IP 地址"
++
++#: kadddevicedlg.ui.h:122
++msgid "The format of the specified Netmask is not valid."
++msgstr "指定的子网掩码格式无效。"
++
++#: kadddevicedlg.ui.h:125
++msgid "The format of the specified Broadcast is not valid."
++msgstr "指定的广告地址格式无效。"
++
++#: kadddevicedlg.ui.h:125 kadddnsserverdlg.ui.h:40 kaddknownhostdlg.ui.h:25
++#: kaddknownhostdlg.ui.h.ui.h:22
++msgid "Invalid IP address"
++msgstr "无效的 IP 地址"
++
++#: kadddevicedlg.ui.h:165
++msgid "Basic Settings..."
++msgstr "基本设置..."
++
++#: kadddevicedlg.ui.h:170
++msgid "Advanced Settings..."
++msgstr "高级设置..."
++
++#: kadddnsserverdlg.cpp:172
++msgid "Add a new DNS Server"
++msgstr "添加一个新的 DNS 服务器"
++
++#: kadddnsserverdlg.cpp:174
++msgid "IP address of the new DNS server"
++msgstr "新 DNS 服务器的 IP 地址"
++
++#: kadddnsserverdlg.cpp:175 kaddknownhostdlg.cpp:214 knetworkconfdlg.cpp:576
++#: knetworkconfdlg.cpp:588
++msgid "&Add"
++msgstr "添加(&A)"
++
++#: kadddnsserverdlg.cpp:176
++msgid "Add the server to the list"
++msgstr "添加服务器到列表"
++
++#: kadddnsserverdlg.cpp:178
++msgid "Forget it"
++msgstr "取消"
++
++#: kaddknownhostdlg.cpp:211
++msgid "Add a New Static Host"
++msgstr "添加一个新的静态主机"
++
++#: kaddknownhostdlg.cpp:213 knetworkconfdlg.cpp:482 knetworkconfdlg.cpp:587
++msgid "Aliases"
++msgstr "别名"
++
++#: kaddknownhostdlg.cpp:216 knetworkconfdlg.cpp:579
++msgid "&Edit"
++msgstr "编辑(&E)"
++
++#: kaddknownhostdlg.cpp:217 knetworkconfdlg.cpp:580
++msgid "Alt+E"
++msgstr ""
++
++#: kaddknownhostdlg.cpp:218 knetworkconfdlg.cpp:582 knetworkconfdlg.cpp:594
++msgid "&Remove"
++msgstr "移除(&R)"
++
++#: kaddknownhostdlg.cpp:219 knetworkconfdlg.cpp:583 knetworkconfdlg.cpp:595
++msgid "Alt+R"
++msgstr ""
++
++#: kaddknownhostdlg.cpp:222 kaddknownhostdlg.ui.h:69 knetworkconf.cpp:199
++#: kreloadnetworkdlg.cpp:983
++msgid "&Ok"
++msgstr "确定(&O)"
++
++#: kaddknownhostdlg.ui.h:29
++msgid "You must add at least one alias for the specified IP address."
++msgstr "您对指定的 IP 地址必须添加至少一个别名。"
++
++#: kaddknownhostdlg.ui.h:29
++msgid "Insuficient aliases"
++msgstr "不合适的别名"
++
++#: kaddknownhostdlg.ui.h:63
++msgid "Edit Alias"
++msgstr "编辑别名"
++
++#: kaddknownhostdlg.ui.h:64 kaddknownhostdlg.ui.h:92
++msgid "Alias:"
++msgstr "别名："
++
++#: kaddknownhostdlg.ui.h:91
++msgid "Add a New Alias"
++msgstr "添加一个新的别名"
++
++#: kdetectdistrodlg.cpp:156
++msgid "Detecting your Current Platform..."
++msgstr "检测您当前的平台..."
++
++#: kdetectdistrodlg.cpp:157
++msgid "Please wait while detecting your current Platform..."
++msgstr "检测您当前使用的平台中，请稍候..."
++
++#: kinterfaceupdowndlg.cpp:222
++msgid "Changing Interface State"
++msgstr "改变接口状态"
++
++#: kinterfaceupdowndlg.cpp:223
++msgid "Bringing up interface <b>eth0</b>..."
++msgstr "启用网络接口 <b>eth0</b>..."
++
++#: knetworkconf.cpp:57
++msgid "Couldn't load Network Info."
++msgstr "不能加载网络信息。"
++
++#: knetworkconf.cpp:58
++msgid "Error reading Configuration File"
++msgstr "读取配置文件错误"
++
++#: knetworkconf.cpp:107 knetworkconf.cpp:666
++msgid "Enabled"
++msgstr "启用"
++
++#: knetworkconf.cpp:117 knetworkconf.cpp:680
++msgid "Disabled"
++msgstr "禁用"
++
++#: knetworkconf.cpp:147
++msgid ""
++"The new configuration hasn't been saved.\n"
++" Do you want to apply changes before quitting?"
++msgstr "新配置未保存。<br>您在退出时要保存修改过的设置吗？"
++
++#: knetworkconf.cpp:148
++msgid "New configuration not saved."
++msgstr "新配置未保存。"
++
++#: knetworkconf.cpp:195
++msgid "Edit Server"
++msgstr "编辑服务器"
++
++#: knetworkconf.cpp:219
++msgid "Configure Device %1"
++msgstr "配置设备 %1"
++
++#: knetworkconf.cpp:367
++msgid "Couldn't open file '/etc/sysconfig/entwork' for reading!"
++msgstr "不能读取'/etc/sysconfig/network' 文件"
++
++#: knetworkconf.cpp:368 knetworkconf.cpp:387
++msgid "There was an error loading the config files"
++msgstr "加载配置文件时发生一个错误"
++
++#: knetworkconf.cpp:386
++msgid "Couldn't open file '/etc/resolv.conf' for reading!"
++msgstr "不能读取'/etc/resolv.conf'文件"
++
++#: knetworkconf.cpp:517
++msgid "The default Gateway IP address is invalid."
++msgstr "默认网关的 IP 地址无效。"
++
++#: knetworkconf.cpp:517
++msgid " Invalid IP address"
++msgstr "无效的 IP 地址"
++
++#: knetworkconf.cpp:591
++msgid "Changing device state"
++msgstr "改变设备状态"
++
++#: knetworkconf.cpp:593
++msgid "Enabling interface %1"
++msgstr "启用网络接口 %1"
++
++#: knetworkconf.cpp:593 knetworkconf.cpp:595
++msgid "%2..."
++msgstr ""
++
++#: knetworkconf.cpp:595
++msgid "Disabling interface %1"
++msgstr "禁用网络接口 %1"
++
++#: knetworkconf.cpp:627
++msgid ""
++"couldn't launch backend to change network device state. You will have to do "
++"it manually. "
++msgstr "不能运行后台程序来改变网络设备状态，您只能手动改变了。"
++
++#: knetworkconf.cpp:628
++msgid "Error "
++msgstr "错误"
++
++#: knetworkconf.cpp:648
++msgid ""
++"There was an error changing the device's state. You will have to do it "
++"manually."
++msgstr "改变设备状态时发生一个错误，您只能手动改变了。"
++
++#: knetworkconf.cpp:649
++msgid "Couldn't change device state"
++msgstr "不能改变设备状态"
++
++#: knetworkconf.cpp:757
++msgid "Add a new Static Host"
++msgstr "添加一个新的静态主机"
++
++#: knetworkconf.cpp:790
++msgid "Edit Static Host"
++msgstr "编辑静态主机"
++
++#: knetworkconfdlg.cpp:332 knetworkconfdlg.cpp:546
++msgid "Interface"
++msgstr "接口"
++
++#: knetworkconfdlg.cpp:333 knetworkconfdlg.cpp:547
++msgid "IP Address"
++msgstr "IP 地址"
++
++#: knetworkconfdlg.cpp:334 knetworkconfdlg.cpp:548
++msgid "Protocol"
++msgstr "协议"
++
++#: knetworkconfdlg.cpp:335 knetworkconfdlg.cpp:549
++msgid "State"
++msgstr "状态"
++
++#: knetworkconfdlg.cpp:336 knetworkconfdlg.cpp:550
++msgid "Comment"
++msgstr "备注"
++
++#: knetworkconfdlg.cpp:481 knetworkconfdlg.cpp:586
++msgid "IP address"
++msgstr "IP 地址"
++
++#: knetworkconfdlg.cpp:541
++msgid "Network Settings"
++msgstr "网络设置"
++
++#: knetworkconfdlg.cpp:542
++msgid "Configure your TCP/IP settings"
++msgstr "配置您的 TCP/IP 设置"
++
++#: knetworkconfdlg.cpp:543
++msgid "Change TCP/IP settings"
++msgstr "改变 TCP/IP 设置"
++
++#: knetworkconfdlg.cpp:545
++msgid "Available Network Interfaces"
++msgstr "可用的网络接口"
++
++#: knetworkconfdlg.cpp:551
++msgid "List of configured network devices"
++msgstr "已配置的网络设备列表"
++
++#: knetworkconfdlg.cpp:553
++msgid "Change the settings of the selected device"
++msgstr "修改选择设备的设置"
++
++#: knetworkconfdlg.cpp:554
++msgid "Enable Interface"
++msgstr "启用接口"
++
++#: knetworkconfdlg.cpp:555
++msgid "Disable Interface"
++msgstr "禁用接口"
++
++#: knetworkconfdlg.cpp:556
++msgid "Network Interfaces"
++msgstr "网络接口"
++
++#: knetworkconfdlg.cpp:557
++msgid "Default Gateway"
++msgstr "默认网关"
++
++#: knetworkconfdlg.cpp:560
++msgid "Default Gateway IP address"
++msgstr "默认网关 IP 地址"
++
++#: knetworkconfdlg.cpp:561
++msgid "Device:"
++msgstr "设备："
++
++#: knetworkconfdlg.cpp:562
++msgid "Network device where to send packets"
++msgstr "发送包的网络设备"
++
++#: knetworkconfdlg.cpp:563
++msgid "Enable routing"
++msgstr "启用路由"
++
++#: knetworkconfdlg.cpp:564
++msgid "This machine should act as a router?"
++msgstr "该机器要作为路由器使用吗？"
++
++#: knetworkconfdlg.cpp:565
++msgid "Routes"
++msgstr "路由"
++
++#: knetworkconfdlg.cpp:568
++msgid "Domain name:"
++msgstr "域名："
++
++#: knetworkconfdlg.cpp:569
++msgid "Host name:"
++msgstr "主机名："
++
++#: knetworkconfdlg.cpp:570
++msgid "Domain Name Servers"
++msgstr "域名服务器"
++
++#: knetworkconfdlg.cpp:573
++msgid "Move up the selected server on the list (higher priority)"
++msgstr "向上移动列表中选中的服务器（更高的优先级）"
++
++#: knetworkconfdlg.cpp:575
++msgid "Move down the selected server on the list (less priority)"
++msgstr "向下移动列表中选中的服务器（较低的优先级）"
++
++#: knetworkconfdlg.cpp:585
++msgid "Static Hosts"
++msgstr "静态主机"
++
++#: knetworkconfdlg.cpp:591
++msgid "E&dit"
++msgstr "编辑(&D)"
++
++#: knetworkconfdlg.cpp:592
++msgid "Alt+D"
++msgstr ""
++
++#: knetworkconfdlg.cpp:597
++msgid "Domain Name System"
++msgstr "域名系统"
++
++#: knetworkconfigparser.cpp:41
++msgid ""
++"Couldn't find the network detection scripts. Something is wrong with your "
++"installation.\n"
++" Please check that  \n"
++"{KDE_PATH}/%1 \n"
++"file is present."
++msgstr ""
++"不能发现网络检测脚本，可能您的安装有问题，\n"
++"请检查\n"
++"{KDE_PATH}/%1 \n"
++"文件是否存在。"
++
++#: knetworkconfigparser.cpp:42
++msgid "Couldn't find network backend script"
++msgstr "不能发现网络后台脚本"
++
++#: knetworkconfigparser.cpp:66 knetworkconfigparser.cpp:97
++msgid ""
++"Couldn't execute network detection scripts. Something is wrong with your "
++"installation."
++msgstr "不能执行网络检测脚本，可能您的安装有问题。"
++
++#: knetworkconfigparser.cpp:67 knetworkconfigparser.cpp:98
++#: knetworkconfigparser.cpp:462 knetworkconfigparser.cpp:812
++msgid "Couldn't launch network backend script"
++msgstr "不能执行网络后台脚本"
++
++#: knetworkconfigparser.cpp:116 knetworkconfigparser.cpp:687
++msgid "Couldn't parse the XML file."
++msgstr "不能分析该 XML 文件。"
++
++#: knetworkconfigparser.cpp:117
++msgid "Error while listing network interfaces"
++msgstr "当列出网络接口时发生错误"
++
++#: knetworkconfigparser.cpp:195
++msgid "Could not open file"
++msgstr "不能打开文件"
++
++#: knetworkconfigparser.cpp:196
++msgid "Couldn't open file /proc/net/route!"
++msgstr "不能打开文件 /proc/net/route！"
++
++#: knetworkconfigparser.cpp:446 kreloadnetworkdlg.cpp:981
++msgid "Reloading the network"
++msgstr "重新加载网络"
++
++#: knetworkconfigparser.cpp:447
++msgid "%1Please wait while reloading the Network...%2"
++msgstr "%1 重新加载网络,请等待... %2"
++
++#: knetworkconfigparser.cpp:461
++msgid ""
++"Couldn't execute network saving scripts. Something is wrong with your "
++"installation."
++msgstr "不能执行网络保存脚本，可能您的安装有问题。"
++
++#: knetworkconfigparser.cpp:598
++msgid "Ethernet Network Device"
++msgstr "网卡设备"
++
++#: knetworkconfigparser.cpp:600
++msgid "Wireless Network Device"
++msgstr "无线网络设备"
++
++#: knetworkconfigparser.cpp:688 knetworkconfigparser.cpp:827
++msgid "Error"
++msgstr "错误"
++
++#: knetworkconfigparser.cpp:811
++msgid "Couldn't list supported platforms. Something is wrong with your installation."
++msgstr "不能列出支持的平台，您的安装可能有问题。"
++
++#: knetworkconfigparser.cpp:826
++msgid "Couldn't parse the XML file of supported platforms."
++msgstr "不能分析支持平台的 XML 文件"
++
++#: knetworkconfmodule.cpp:26
++msgid "KNetworkConf - A KDE Control Center module to configure TCP/IP settings."
++msgstr "KNetworkConf - 一个配置 TCP/IP 设置的 KDE 控制中心模块。"
++
++#: knetworkconfmodule.cpp:92
++msgid "KNetworkConf"
++msgstr ""
++
++#: knetworkconfmodule.cpp:95
++msgid "Lead Developer"
++msgstr "开发负责人"
++
++#: knetworkconfmodule.cpp:97
++msgid "Provided the Network backend in wich KNetworkConf relies on"
++msgstr "提供 KNetworkConf 依赖的网络后台"
++
++#: knetworkconfmodule.cpp:99
++msgid "Conectiva Linux Support"
++msgstr "Conectiva Linux 支持"
++
++#: knetworkconfmodule.cpp:101
++msgid "Documentation mantainer, and German translator"
++msgstr "文档编写及德语翻译"
++
++#: knetworkconfmodule.cpp:103
++msgid "Various bugfixes and features"
++msgstr "几个 bug 修复和特性实现"
++
++#: knetworkconfmodule.cpp:105
++msgid "Various bugfixes and Brazillian Portuguese translator"
++msgstr "几个 bug 修复及 Brazillian Portuguese 翻译"
++
++#: knetworkconfmodule.cpp:111
++msgid ""
++"%1Network configuration%2This module allows you to configure your TCP/IP "
++"settings.%3"
++msgstr "%1网络配置%2该模块允许您配置您的 TCP/IP 设置。%3"
++
++#: kreloadnetworkdlg.cpp:984
++msgid ""
++"Please wait while the network is reloaded so \n"
++"the changes can take effect."
++msgstr "正在重新加载网络以便应用新的设置，请稍候。"
++
++#: kselectdistrodlg.cpp:178
++msgid "Unsupported Platform"
++msgstr "未支持的平台"
++
++#: kselectdistrodlg.cpp:183
++msgid "Don't ask again"
++msgstr "不再询问"
++
++#: kselectdistrodlg.cpp:184
++msgid ""
++"<font size=\"+1\"><p align=\"center\"><b>Your platform is not supported at "
++"the moment.</b></p></font>"
++msgstr "<font size=\"+1\"><p align=\"center\"><b>您的平台尚未被支持。</b></p></font>"
++
++#: kselectdistrodlg.cpp:185
++msgid ""
++"You may choose one of the following supported platforms <b>IF</b> you are "
++"<b>SURE</b> your platform behaves the same as the choosen one. Please be "
++"sure, because your current network configuration could be damaged. "
++msgstr ""
++"您可以选择下列平台之一， <b>如果</b>您"
++"<b>确信</b>您的平台设置跟选择的一样，请确认，因为您当前的网络配置会被损坏。"
++
++#: main.cpp:31
++msgid "KNetworkConf - A KDE Application to configure TCP/IP settings."
++msgstr "KNetworkConf - 一个配置 TCP/IP 设置的 KDE 程序。"
++

@@ -1,0 +1,24 @@
+--- libcarddav-0.6.2/libcarddav.pc.in.ORI	2012-08-02 23:38:03.688776626 +0200
++++ libcarddav-0.6.2/libcarddav.pc.in	2012-08-02 23:38:09.055630966 +0200
+@@ -3,8 +3,8 @@
+ libdir=@libdir@
+ includedir=@includedir@
+ 
+-pkglibdir=${libdir}/@PACKAGE@
+-pkgincludedir=${includedir}/@PACKAGE@
++pkglibdir=${libdir}
++pkgincludedir=${includedir}
+ 
+ Name: libcarddav
+ Description: libcarddav is a client library for CardDAV
+--- libcarddav-0.6.2/src/Makefile.am.ORI	2012-08-02 23:39:20.990884825 +0200
++++ libcarddav-0.6.2/src/Makefile.am	2012-08-02 23:39:36.182559576 +0200
+@@ -35,7 +35,7 @@
+ 			lock-carddav-object.c \
+ 			lock-carddav-object.h
+ 
+-libcarddav_includedir=$(includedir)/libcarddav-@VERSION@
++libcarddav_includedir=$(includedir)
+ libcarddav_include_HEADERS = carddav.h
+ 
+ noinst_HEADERS = \

@@ -1,0 +1,172 @@
+diff -ur fcitx-read-only.orig/data/config fcitx-read-only/data/config
+--- fcitx-read-only.orig/data/config	2010-01-07 10:55:31.000000000 +0800
++++ fcitx-read-only/data/config	2010-01-07 10:57:55.000000000 +0800
+@@ -1,20 +1,20 @@
+ [程序]
+-显示字体(中)=AR PL ShanHeiSun Uni
++显示字体(中)=文泉驿正黑
+ 显示字体(英)=Courier New
+ 显示字体大小=12
+ 主窗口字体大小=9
+-字体区域=zh_CN.UTF-8
++字体区域=zh_CN.GB18030
+ 使用粗体=1
+-使用托盘图标=1
++使用托盘图标=0
+ 使用DBus接口=0
+ 
+ [输出]
+-数字后跟半角符号=1
++数字后跟半角符号=0
+ Enter键行为=2
+ 分号键行为=2
+ 大写字母输入英文=1
+ 转换英文中的标点=1
+-联想方式禁止翻页=1
++联想方式禁止翻页=0
+ 
+ [界面]
+ 候选词个数=5
+@@ -28,7 +28,7 @@
+ 输入条偏移量X=0
+ 输入条偏移量Y=12
+ 序号后加点=1
+-显示打字速度=1
++显示打字速度=0
+ 显示版本=1
+ 光标色=102 159 66
+ 主窗口背景色=255 255 255
+@@ -66,8 +66,8 @@
+ 反查拼音=CTRL_ALT_E
+ 全半角=SHIFT_SPACE
+ 中文标点=ALT_SPACE
+-上一页=-
+-下一页==
++上一页=,
++下一页=.
+ 第二三候选词选择键=SHIFT
+ 保存词库=CTRL_ALT_S
+ 记录模式=CTRL_ALT_J
+@@ -87,7 +87,7 @@
+ [拼音]
+ 使用全拼=0
+ 拼音自动组词=1
+-保存自动组词=0
++保存自动组词=1
+ 增加拼音常用字=CTRL_8
+ 删除拼音常用字=CTRL_7
+ 删除拼音用户词组=CTRL_DELETE
+@@ -96,7 +96,7 @@
+ # 重码调整方式说明：0-->不调整  1-->快速调整  2-->按频率调整
+ 拼音单字重码调整方式=2
+ 拼音词组重码调整方式=1
+-拼音常用词重码调整方式=0
++拼音常用词重码调整方式=1
+ 模糊an和ang=0
+ 模糊en和eng=0
+ 模糊ian和iang=0
+diff -ur fcitx-read-only.orig/data/tables.conf fcitx-read-only/data/tables.conf
+--- fcitx-read-only.orig/data/tables.conf	2010-01-07 10:55:31.000000000 +0800
++++ fcitx-read-only/data/tables.conf	2010-01-07 10:55:39.000000000 +0800
+@@ -2,7 +2,7 @@
+ [码表]
+ 名称=五笔字型
+ 码表=wbx.mb
+-调频=0
++调频=1
+ 拼音=1
+ 拼音键=z
+ 自动上屏=-1
+@@ -17,6 +17,7 @@
+ 精确匹配=0
+ 提示编码=0
+ 符号=zzzz
++符号文件=wbfh.mb
+ 
+ [码表]
+ 名称=五笔拼音
+@@ -35,7 +36,7 @@
+ [码表]
+ 名称=二笔
+ 码表=erbi.mb
+-调频=0
++调频=1
+ 拼音=1
+ 拼音键=[
+ 自动上屏=-1
+@@ -52,7 +53,7 @@
+ [码表]
+ 名称=仓颉
+ 码表=cj.mb
+-调频=0
++调频=1
+ 拼音=1
+ 拼音键=[
+ 自动上屏=-1
+@@ -67,8 +68,8 @@
+ 名称=晚风
+ 码表=wanfeng.mb
+ 中止键=,;/.
+-调频=0
+-拼音=0
++调频=1
++拼音=1
+ 自动上屏=-1
+ 空码自动上屏=1
+ 模糊=0
+@@ -80,8 +81,8 @@
+ 名称=冰蟾全息
+ 码表=qxm.mb
+ 调频=1
+-拼音=0
+-#拼音键=z
++拼音=1
++拼音键=z
+ 自动上屏=-1
+ 模糊=1
+ 模糊键=#
+@@ -91,7 +92,7 @@
+ 保存自动词组=1
+ 精确匹配=0
+ 提示编码=1
+-#符号=zzzz
++符号=zzzz
+ 
+ [码表]
+ 名称=自然码
+diff -ur fcitx-read-only.orig/src/ime.c fcitx-read-only/src/ime.c
+--- fcitx-read-only.orig/src/ime.c	2010-01-07 10:55:30.000000000 +0800
++++ fcitx-read-only/src/ime.c	2010-01-07 10:55:39.000000000 +0800
+@@ -77,7 +77,7 @@
+ 
+ Bool            bCorner = False;	//全半角切换
+ Bool            bChnPunc = True;	//中英文标点切换
+-Bool            bUseGBK = False;	//是否支持GBK
++Bool            bUseGBK = True;	//是否支持GBK
+ Bool            bIsDoInputOnly = False;	//表明是否只由输入法来处理键盘
+ Bool            bLastIsNumber = False;	//上一次输入是不是阿拉伯数字
+ char		cLastIsAutoConvert = 0;	//上一次输入是不是符合数字后自动转换的符号，如'.'/','，0表示不是这样的符号
+@@ -142,7 +142,7 @@
+ /* 计算打字速度 */
+ time_t          timeStart;
+ Bool            bStartRecordType;
+-Bool            bShowUserSpeed = True;
++Bool            bShowUserSpeed = False;
+ Bool            bShowVersion = True;
+ uint            iHZInputed = 0;
+ 
+diff -ur fcitx-read-only.orig/src/MainWindow.c fcitx-read-only/src/MainWindow.c
+--- fcitx-read-only.orig/src/MainWindow.c	2010-01-07 10:55:30.000000000 +0800
++++ fcitx-read-only/src/MainWindow.c	2010-01-07 10:55:39.000000000 +0800
+@@ -90,9 +90,9 @@
+ 
+ XImage         *pVK = NULL;
+ 
+-HIDE_MAINWINDOW hideMainWindow = HM_SHOW;
++HIDE_MAINWINDOW hideMainWindow = HM_AUTO;
+ 
+-Bool            bCompactMainWindow = False;
++Bool            bCompactMainWindow = True;
+ Bool            bShowVK = False;
+ Bool		bMainWindow_Hiden = False;
+ 

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Lian Lian Kan
+GenericName[zh_CN]=连连看
+Comment=Lian Lian Kan for linux
+Comment[zh_CN]=连连看 Linux 版
+Exec=llk_linux
+Icon=llk_linux.png
+Terminal=false
+Type=Application
+Categories=Application;Game;

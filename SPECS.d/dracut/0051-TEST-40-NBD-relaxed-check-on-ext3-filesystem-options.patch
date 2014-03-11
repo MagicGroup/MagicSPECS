@@ -1,0 +1,58 @@
+From 75e8f476e7bf33e2759b5a05b9d10f8befc4eedd Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 22 Sep 2011 12:56:31 +0200
+Subject: [PATCH] TEST-40-NBD: relaxed check on ext3 filesystem options
+
+onerror=continue does not seem to be displayed for new kernels
+---
+ test/TEST-40-NBD/client-init    |    1 +
+ test/TEST-40-NBD/create-root.sh |    1 +
+ test/TEST-40-NBD/test.sh        |    4 ++--
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/test/TEST-40-NBD/client-init b/test/TEST-40-NBD/client-init
+index 22dacd9..eb65b76 100755
+--- a/test/TEST-40-NBD/client-init
++++ b/test/TEST-40-NBD/client-init
+@@ -5,6 +5,7 @@ while read dev fs fstype opts rest; do
+     [ "$dev" = "rootfs" ] && continue
+     [ "$fs" != "/" ] && continue
+     echo "nbd-OK $fstype $opts" >/dev/sda
++    echo "nbd-OK $fstype $opts" 
+     break
+ done < /proc/mounts
+ export TERM=linux
+diff --git a/test/TEST-40-NBD/create-root.sh b/test/TEST-40-NBD/create-root.sh
+index bd866e4..4bef5f1 100755
+--- a/test/TEST-40-NBD/create-root.sh
++++ b/test/TEST-40-NBD/create-root.sh
+@@ -14,6 +14,7 @@ lvm vgcreate dracut /dev/mapper/dracut_crypt_test && \
+ lvm lvcreate -l 100%FREE -n root dracut && \
+ lvm vgchange -ay && \
+ mke2fs -j /dev/dracut/root && \
++/sbin/tune2fs -e continue /dev/dracut/root && \
+ mkdir -p /sysroot && \
+ mount /dev/dracut/root /sysroot && \
+ cp -a -t /sysroot /source/* && \
+diff --git a/test/TEST-40-NBD/test.sh b/test/TEST-40-NBD/test.sh
+index 675ffd4..c5603fd 100755
+--- a/test/TEST-40-NBD/test.sh
++++ b/test/TEST-40-NBD/test.sh
+@@ -40,7 +40,7 @@ client_test() {
+     local found opts nbdinfo
+ 
+     [[ $fstype ]] || fstype=ext3
+-    [[ $fsopt ]] || fsopt="errors=continue"
++    [[ $fsopt ]] || fsopt="ro"
+ 
+     echo "CLIENT TEST START: $test_name"
+ 
+@@ -198,7 +198,7 @@ make_encrypted_root() {
+     (
+ 	initdir=overlay
+ 	. $basedir/dracut-functions
+-	dracut_install mke2fs poweroff cp umount
++	dracut_install mke2fs poweroff cp umount tune2fs
+ 	inst_hook initqueue 01 ./create-root.sh
+ 	inst_simple ./99-idesymlinks.rules /etc/udev/rules.d/99-idesymlinks.rules
+     )

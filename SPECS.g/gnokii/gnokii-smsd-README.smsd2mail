@@ -1,0 +1,10 @@
+* Make the gnokii user a member of a group that has read and write access to
+  the SMS device.  For example on RHL-9 and later and ttyS0, add gnokii to the
+  uucp group.  See "ls -l /dev/ttyS*".
+
+* Copy smsd2mail.sh somewhere, eg. /usr/local/sbin, make sure it's executable
+  by the gnokii user.
+
+* Configure SMSD_OPTIONS in /etc/sysconfig/gnokii-smsd like:
+
+  SMSD_OPTS="-u /usr/local/sbin/smsd2mail.sh -m file"

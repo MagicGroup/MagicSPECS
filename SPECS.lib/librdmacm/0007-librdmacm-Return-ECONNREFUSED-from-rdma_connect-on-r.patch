@@ -1,0 +1,37 @@
+From 7a79fba60be15e562e688bce211715ebe35c69b1 Mon Sep 17 00:00:00 2001
+From: Sean Hefty <sean.hefty@intel.com>
+Date: Tue, 22 Nov 2011 17:17:04 -0800
+Subject: [PATCH 7/9] librdmacm: Return ECONNREFUSED from rdma_connect on
+ reject
+
+Make the errno return code from rdma_connect constistent with
+connect.  The underlying status value is available by reading
+the event data.
+
+Signed-off-by: Sean Hefty <sean.hefty@intel.com>
+---
+ src/cma.c |    8 ++++++--
+ 1 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/cma.c b/src/cma.c
+index e09ab99..4a0bde9 100755
+--- a/src/cma.c
++++ b/src/cma.c
+@@ -761,8 +761,12 @@ static int ucma_complete(struct cma_id_private *id_priv)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (id_priv->id.event->status)
+-		ret = ERR(id_priv->id.event->status);
++	if (id_priv->id.event->status) {
++		if (id_priv->id.event->event == RDMA_CM_EVENT_REJECTED)
++			ret = ERR(ECONNREFUSED);
++		else
++			ret = ERR(id_priv->id.event->status);
++	}
+ 	return ret;
+ }
+ 
+-- 
+1.7.6.4
+

@@ -1,0 +1,14 @@
+diff -ur module-init-tools-3.16/modprobe.c module-init-tools-3.16.new//modprobe.c
+--- module-init-tools-3.16/modprobe.c	2011-06-02 13:55:01.000000000 -0400
++++ module-init-tools-3.16.new//modprobe.c	2011-07-18 12:46:14.873397253 -0400
+@@ -1427,8 +1427,7 @@
+ 
+ 	/* default config */
+ 	parse_config_scan(conf, dump_only, removing, "/run/modprobe.d",
+-			  "/etc/modprobe.d", "/usr/local/lib/modprobe.d",
+-			  "/lib/modprobe.d", NULL);
++			  "/etc/modprobe.d", "/lib/modprobe.d", NULL);
+ }
+ 
+ /**
+Only in module-init-tools-3.16.new/: modprobe.c~

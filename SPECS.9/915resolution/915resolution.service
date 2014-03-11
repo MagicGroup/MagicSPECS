@@ -1,0 +1,12 @@
+[Unit]
+Description=Starts the 915resulution helper
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/sysconfig/915resolution
+PIDFile=/var/run/915resolution.pid
+ExecStartPre=/bin/rm -f /var/run/915resolution.pid
+ExecStart=/usr/sbin/915resolution $RESOLUTION --pidfile /var/run/915resolution.pid
+
+[Install]
+WantedBy=multi-user.target

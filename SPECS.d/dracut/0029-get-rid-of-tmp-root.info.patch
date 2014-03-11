@@ -1,0 +1,130 @@
+From 2c0317213ebe3a6cd0f0db5fb5b7a3da0d42cdda Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 2 Mar 2012 14:25:57 +0100
+Subject: [PATCH] get rid of /tmp/root.info
+
+---
+ modules.d/40network/ifup.sh                     |    2 --
+ modules.d/40network/netroot.sh                  |    2 --
+ modules.d/90dmsquash-live/apply-live-updates.sh |    2 --
+ modules.d/90dmsquash-live/dmsquash-live-root.sh |    2 --
+ modules.d/90livenet/livenetroot.sh              |    1 -
+ modules.d/95iscsi/iscsiroot.sh                  |    5 +----
+ modules.d/99base/init.sh                        |   11 ++---------
+ 7 files changed, 3 insertions(+), 22 deletions(-)
+
+diff --git a/modules.d/40network/ifup.sh b/modules.d/40network/ifup.sh
+index b55362c..ffae15c 100755
+--- a/modules.d/40network/ifup.sh
++++ b/modules.d/40network/ifup.sh
+@@ -45,8 +45,6 @@ fi
+ # bail immediately if the interface is already up
+ # or we don't need the network
+ [ -f "/tmp/net.$netif.up" ] && exit 0
+-[ -f "/tmp/root.info" ] || exit 0
+-. /tmp/root.info
+ 
+ # disable manual ifup while netroot is set for simplifying our logic
+ # in netroot case we prefer netroot to bringup $netif automaticlly
+diff --git a/modules.d/40network/netroot.sh b/modules.d/40network/netroot.sh
+index f44a97b..c5ee84c 100755
+--- a/modules.d/40network/netroot.sh
++++ b/modules.d/40network/netroot.sh
+@@ -15,8 +15,6 @@ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
+ # instead of real netroot; If It's called without $2, then there's
+ # no sense in doing something if no (net)root info is available
+ # or root is already there
+-[ -e /tmp/root.info ] || exit 1
+-. /tmp/root.info
+ if [ -z "$2" ]; then
+     [ -d $NEWROOT/proc ] && exit 0
+     [ -z "$netroot" ] && exit 1
+diff --git a/modules.d/90dmsquash-live/apply-live-updates.sh b/modules.d/90dmsquash-live/apply-live-updates.sh
+index 144e8b9..61da4bf 100755
+--- a/modules.d/90dmsquash-live/apply-live-updates.sh
++++ b/modules.d/90dmsquash-live/apply-live-updates.sh
+@@ -1,7 +1,5 @@
+ #!/bin/sh
+ 
+-. /tmp/root.info
+-
+ if [ -b /dev/mapper/live-rw ] && [ -d /updates ]; then
+     info "Applying updates to live image..."
+     # avoid overwriting symlinks (e.g. /lib -> /usr/lib) with directories
+diff --git a/modules.d/90dmsquash-live/dmsquash-live-root.sh b/modules.d/90dmsquash-live/dmsquash-live-root.sh
+index e3606cf..8a21e44 100755
+--- a/modules.d/90dmsquash-live/dmsquash-live-root.sh
++++ b/modules.d/90dmsquash-live/dmsquash-live-root.sh
+@@ -5,8 +5,6 @@
+ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
+ type det_fs >/dev/null 2>&1 || . /lib/fs-lib.sh
+ 
+-[ -f /tmp/root.info ] && . /tmp/root.info
+-
+ PATH=/usr/sbin:/usr/bin:/sbin:/bin
+ 
+ if getargbool 0 rd.live.debug -y rdlivedebug; then
+diff --git a/modules.d/90livenet/livenetroot.sh b/modules.d/90livenet/livenetroot.sh
+index bc62760..617be62 100755
+--- a/modules.d/90livenet/livenetroot.sh
++++ b/modules.d/90livenet/livenetroot.sh
+@@ -2,7 +2,6 @@
+ # livenetroot - fetch a live image from the network and run it
+ 
+ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
+-[ -f /tmp/root.info ] && . /tmp/root.info
+ 
+ . /lib/url-lib.sh
+ 
+diff --git a/modules.d/95iscsi/iscsiroot.sh b/modules.d/95iscsi/iscsiroot.sh
+index 7b8f63e..1bd6dd3 100755
+--- a/modules.d/95iscsi/iscsiroot.sh
++++ b/modules.d/95iscsi/iscsiroot.sh
+@@ -37,9 +37,6 @@ iroot=${iroot#iscsi:}
+ # figured out a way how to check whether this is built-in or not
+ modprobe crc32c 2>/dev/null
+ 
+-
+-[ -e /tmp/root.info ] && . /tmp/root.info
+-
+ [ -e /sys/module/bnx2i ] && iscsiuio
+ 
+ if getargbool 0 rd.iscsi.firmware -y iscsi_firmware ; then
+@@ -54,7 +51,7 @@ fi
+ 
+ unset iscsi_initiator iscsi_target_name iscsi_target_ip iscsi_target_port
+ unset iscsi_target_group iscsi_protocol iscsirw iscsi_lun
+-unset iscsi_username iscsi_password 
++unset iscsi_username iscsi_password
+ unset iscsi_in_username iscsi_in_password
+ 
+ # override conf settings by command line options
+diff --git a/modules.d/99base/init.sh b/modules.d/99base/init.sh
+index d197497..96fd5f2 100755
+--- a/modules.d/99base/init.sh
++++ b/modules.d/99base/init.sh
+@@ -131,15 +131,7 @@ source_hook cmdline
+ [ -z "$root" ] && die "No or empty root= argument"
+ [ -z "$rootok" ] && die "Don't know how to handle 'root=$root'"
+ 
+-# Network root scripts may need updated root= options,
+-# so deposit them where they can see them (udev purges the env)
+-{
+-    echo "root='$root'"
+-    echo "rflags='$rflags'"
+-    echo "fstype='$fstype'"
+-    echo "netroot='$netroot'"
+-    echo "NEWROOT='$NEWROOT'"
+-} > /tmp/root.info
++export root rflags fstype netroot NEWROOT
+ 
+ # pre-udev scripts run before udev starts, and are run only once.
+ getarg 'rd.break=pre-udev' 'rdbreak=pre-udev' && emergency_shell -n pre-udev "Break before pre-udev"
+@@ -314,6 +306,7 @@ else
+ fi
+ 
+ export RD_TIMESTAMP
++export -n root rflags fstype netroot NEWROOT
+ set +x # Turn off debugging for this section
+ # Clean up the environment
+ for i in $(export -p); do

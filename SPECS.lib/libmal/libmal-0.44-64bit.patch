@@ -1,0 +1,24 @@
+diff -ur libmal-0.44/configure libmal-0.44-64bit/configure
+--- libmal-0.44/configure	2007-01-17 00:19:11.000000000 +0100
++++ libmal-0.44-64bit/configure	2009-01-15 00:35:18.000000000 +0100
+@@ -19680,7 +19680,7 @@
+ PILOT_LIBS="-lpisock"
+ 
+ if test $pilotlibs = no ; then
+-    for pilot_libs in $pilot_prefix/lib /usr/lib /usr/local/lib/ \
++    for pilot_libs in $pilot_prefix/lib $libdir /usr/lib /usr/local/lib/ \
+         /usr/extra/pilot/lib ; do
+         if test -r "$pilot_libs/libpisock.so" ; then
+             pilotlibs=yes
+diff -ur libmal-0.44/configure.in libmal-0.44-64bit/configure.in
+--- libmal-0.44/configure.in	2007-01-07 19:04:48.000000000 +0100
++++ libmal-0.44-64bit/configure.in	2009-01-15 00:34:57.000000000 +0100
+@@ -59,7 +59,7 @@
+ PILOT_LIBS="-lpisock"
+ 
+ if test $pilotlibs = no ; then
+-    for pilot_libs in $pilot_prefix/lib /usr/lib /usr/local/lib/ \
++    for pilot_libs in $pilot_prefix/lib $libdir /usr/lib /usr/local/lib/ \
+         /usr/extra/pilot/lib ; do
+         if test -r "$pilot_libs/libpisock.so" ; then
+             pilotlibs=yes

@@ -1,0 +1,12 @@
+diff -ur bmp-0.9.7.1.orig/libbeep/util.h bmp-0.9.7.1/libbeep/util.h
+--- bmp-0.9.7.1.orig/libbeep/util.h	2009-11-26 23:06:42.000000000 +0800
++++ bmp-0.9.7.1/libbeep/util.h	2009-11-26 23:07:30.000000000 +0800
+@@ -22,7 +22,7 @@
+ 
+ GtkWidget *xmms_show_message(const gchar * title, const gchar * text,
+                              const gchar * button_text, gboolean modal,
+-                             GtkSignalFunc button_action,
++                             GCallback button_action,
+                              gpointer action_data);
+ gboolean xmms_check_realtime_priority(void);
+ void xmms_usleep(gint usec);

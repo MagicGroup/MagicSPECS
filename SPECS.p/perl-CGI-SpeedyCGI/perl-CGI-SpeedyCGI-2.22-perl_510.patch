@@ -1,0 +1,14 @@
+Patch by Niko Tyni <ntyni@debian.org> for perl-CGI-SpeedyCGI >= 2.22, which fixes a build failure
+with perl >= 5.10 by using Newx() instead of New().
+
+--- CGI-SpeedyCGI-2.22/src/speedy_backend_main.h		2003-10-07 06:03:48.000000000 +0200
++++ CGI-SpeedyCGI-2.22/src/speedy_backend_main.h.perl_510	2008-05-04 21:13:19.000000000 +0200
+@@ -38,7 +38,7 @@
+ 
+ #else
+ 
+-#define speedy_new(s,n,t)	New(123,s,n,t)
++#define speedy_new(s,n,t)	Newx(s,n,t)
+ #define speedy_renew		Renew
+ #define speedy_free		Safefree
+ 

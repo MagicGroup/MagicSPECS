@@ -1,0 +1,18 @@
+---
+ multipathd/main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -990,7 +990,8 @@ mpvec_garbage_collector (struct vectors
+ 		return;
+ 
+ 	vector_foreach_slot (vecs->mpvec, mpp, i) {
+-		if (mpp && mpp->alias && !dm_map_present(mpp->alias)) {
++		if (mpp && mpp->alias && !dm_map_present(mpp->alias) &&
++		    errno != ENOMEM) {
+ 			condlog(2, "%s: remove dead map", mpp->alias);
+ 			remove_map_and_stop_waiter(mpp, vecs, 1);
+ 			i--;

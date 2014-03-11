@@ -1,0 +1,65 @@
+Broadcom CrystalHD Linux Software Release 07032010 
+
+This is beta release of the Linux driver and application software with support for the BCM70012 and BCM70015
+
+This is a pure source release with no distribution binary packages
+
+FEATURES SUPPORTED - 
+
+Playback support for H.264 and other codecs using the default media players for Ubuntu and Meego. This includes support for GStreamer based applications.
+
+Support both BCM70012 and BCM70015
+
+FIXED ISSUES
+Kernel oops during driver load
+64-bit support
+Power management
+HW scaling
+
+KNOWN ISSUES
+
+Seeking hangs the player
+Playlist functionality does not work correctly
+VC-1 not functional
+
+BUILD and INSTALL instructions
+
+Required packages -
+
+Under Ubuntu the following additional packages are required, install them using "sudo apt-get <package-name>"
+
+build-essential
+g++
+automake
+autoconf
+libtool
+libgstreamer0.10-dev
+libgstreamer-plugins-base0.10-dev
+
+In order to build and install the driver - 
+
+In the driver/linux folder, run the following commands -
+
+autoconf
+./configure
+make
+sudo make install
+
+In order to build and install the library - 
+
+In the linux_lib/libcrystalhd folder, run the following commands - 
+
+make
+sudo make install
+
+In order to build and install the media player application library (gstreamer plugin) - 
+
+In the filters/gst/gst-plugin/, run the following commands -
+
+./autogen.sh
+make
+sudo make install
+
+Finally copy the firmware files from firmware/fwbin/70015 and firmware/fwbin/70012 directories to /lib/firmware
+
+If HW scaling is necessary - in libcrystalhd_if.cpp in line 1240 uncomment the Ctx->EnableScaling line

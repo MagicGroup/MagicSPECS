@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$2" = 'up' -o "$2" = 'down' ]; then
+	/usr/bin/systemctl reload named.service > /dev/null 2>&1 || true
+	/usr/bin/systemctl reload named-chroot.service > /dev/null 2>&1 || true
+	/usr/bin/systemctl reload named-sdb.service > /dev/null 2>&1 || true
+	/usr/bin/systemctl reload named-sdb-chroot.service > /dev/null 2>&1 || true
+fi

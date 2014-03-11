@@ -1,0 +1,20 @@
+--- DirectFB-1.5.3-orig/lib/direct/atomic.h     2013-05-30 01:36:49.000000000 -0400
++++ DirectFB-1.5.3/lib/direct/atomic.h  2013-05-30 01:48:48.000000000 -0400
+@@ -237,7 +237,7 @@
+ }
+
+ #define D_SYNC_ADD_AND_FETCH( ptr, value )                                           \
+-     (_D__atomic_add_return( (int) (value), (void*) (ptr) ))
++     (_D__atomic_add_return( (int) (value), (volatile int*) (ptr) ))
+
+ #endif
+
+@@ -308,7 +308,7 @@
+ }
+
+ #define D_SYNC_ADD_AND_FETCH( ptr, value )                                           \
+-     (_D__atomic_add_return( (int) (value), (void*) (ptr) ))
++     (_D__atomic_add_return( (int) (value), (volatile int*) (ptr) ))
+
+ #endif
+ 

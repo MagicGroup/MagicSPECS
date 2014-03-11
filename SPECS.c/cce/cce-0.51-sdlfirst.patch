@@ -1,0 +1,34 @@
+diff -Nuarp cce-0.51.orig/src/main.c cce-0.51/src/main.c
+--- cce-0.51.orig/src/main.c	2010-04-24 15:28:40.000000000 +0800
++++ cce-0.51/src/main.c	2010-04-24 15:58:39.000000000 +0800
+@@ -114,7 +114,7 @@ static void PrintUsage(void)
+ 	printf("  -ggi            Try to use GGI library first\n");
+ #endif
+ #ifdef SUPPORT_SDLLIB
+-	printf("  -sdl            Try to use SDL library first\n");
++	printf("  -nosdl            Try not to use SDL library first\n");
+ #endif
+ #ifdef SUPPORT_FREETYPE_FONT
+ 	printf("  -ttfont         Specify the TrueType Font filename\n");
+@@ -130,6 +130,9 @@ static void PrintUsage(void)
+ 
+ static void ProcessArgs(int argc, char *argv[])
+ {
++#ifdef SUPPORT_SDLLIB
++    UseSDLFirst = 1;
++#endif
+     int i = 0;
+ 
+     while (i < argc)
+@@ -186,9 +189,9 @@ static void ProcessArgs(int argc, char *
+ 		}
+ #endif
+ #ifdef SUPPORT_SDLLIB
+-		else if (!strcasecmp(arg, "sdl"))
++		else if (!strcasecmp(arg, "nosdl"))
+ 		{
+-			UseSDLFirst = 1;  /* Use SDL first even in console */
++			UseSDLFirst = 0;  /* not Use SDL first even in console */
+ 		}
+ #endif
+ #ifdef SUPPORT_FREETYPE_FONT

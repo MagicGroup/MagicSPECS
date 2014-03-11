@@ -1,0 +1,12 @@
+diff -up gnome-settings-daemon-3.2.1/plugins/media-keys/gsd-media-keys-manager.c.calculator gnome-settings-daemon-3.2.1/plugins/media-keys/gsd-media-keys-manager.c
+--- gnome-settings-daemon-3.2.1/plugins/media-keys/gsd-media-keys-manager.c.calculator	2011-10-24 18:37:57.154770995 -0400
++++ gnome-settings-daemon-3.2.1/plugins/media-keys/gsd-media-keys-manager.c	2011-10-24 18:38:12.044771972 -0400
+@@ -1496,7 +1496,7 @@ do_action (GsdMediaKeysManager *manager,
+                 do_media_action (manager, timestamp);
+                 break;
+         case CALCULATOR_KEY:
+-                do_execute_desktop (manager, "gcalctool.desktop", timestamp);
++                do_execute_desktop (manager, "gnome-gcalctool.desktop", timestamp);
+                 break;
+         case PLAY_KEY:
+                 return do_multimedia_player_action (manager, "Play");

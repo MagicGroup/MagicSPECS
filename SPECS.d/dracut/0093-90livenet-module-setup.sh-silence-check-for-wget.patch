@@ -1,0 +1,22 @@
+From 4f6eb791b481bd9cab0729010690ee9376742e2c Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 21 Oct 2011 09:35:38 +0200
+Subject: [PATCH] 90livenet/module-setup.sh: silence check for wget
+
+---
+ modules.d/90livenet/module-setup.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/90livenet/module-setup.sh b/modules.d/90livenet/module-setup.sh
+index 3ee7521..a6ee3e0 100755
+--- a/modules.d/90livenet/module-setup.sh
++++ b/modules.d/90livenet/module-setup.sh
+@@ -4,7 +4,7 @@
+ check() {
+     # a live, host-only image doesn't really make a lot of sense
+     [[ $hostonly ]] && return 1
+-    command -v wget || return 1
++    command -v wget >/dev/null || return 1
+     return 0
+ }
+ 

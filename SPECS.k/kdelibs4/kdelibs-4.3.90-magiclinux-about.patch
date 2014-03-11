@@ -1,0 +1,39 @@
+--- kdeui/dialogs/kaboutkdedialog_p.cpp.orig	2009-03-03 12:42:15.000000000 -0300
++++ kdeui/dialogs/kaboutkdedialog_p.cpp	2009-03-03 13:34:22.000000000 -0300
+@@ -119,12 +119,36 @@
+         "<a href=\"http://www.kde.org/support/\">http://www.kde.org/support/</a>."
+         "<br /><br />Thank you very much in advance for your support.</html>") + "<br /><br />"); // FIXME: ugly <br /> at the end...
+ 
++    QLabel *magic = new QLabel;
++    magic->setMargin(10);
++    magic->setAlignment(Qt::AlignTop);
++    magic->setWordWrap(true);
++    magic->setOpenExternalLinks(true);
++    magic->setTextInteractionFlags(Qt::TextBrowserInteraction);
++    magic->setText(i18n("<html>"
++        "Magic Linux 团队感谢您使用 Magic Linux 景祐，"
++        "我们预祝您使用愉快！<br />"
++        "Magic Linux 开发团队成员有：<br />"
++        "<strong>Magic Linux 首席开发者：</strong>"
++        "<a href=\"mailto:sejishikong@msn.com\">刘棣(sejishikong)</a><br />"
++        "<strong>Magic Linux KDE 主要贡献成员：</strong>"
++        "<a href=\"mailto:haulm_@hotmail.com\">陈廷健(haulm)</a>"
++        "<a href=\"mailto:shuizhuyuanluo@126.com\">倪辉(nihui)</a><br />"
++        "<strong>网站维护：</strong>"
++        "<a href=\"mailto:npcomet@hotmail.com\">丁学凡(npcomet)</a><br /><br />"
++        "我们十分感谢 Magic Linux 社区以及所有可爱的 Magic Linux 贡献者，"
++        "没有您的支持，我们根本无法完成 Magic Linux 的发布。"
++        "最后，特别感谢 KDE 团队和全新的 Qt 工具集，为我们带来漂亮一新的桌面体验。<br /><br />"
++        "获取更多详情，请访问 <a href=\"http://www.magiclinux.org/\">http://www.magiclinux.org/</a>。<br />"
++        "<br />感谢您一如既往的支持和帮助。</html>") + "<br />");
++
+     QTabWidget *tabWidget = new QTabWidget;
+     tabWidget->setUsesScrollButtons(false);
+     tabWidget->addTab(about, i18nc("About KDE","&About"));
+     tabWidget->addTab(report, i18n("&Report Bugs or Wishes"));
+     tabWidget->addTab(join, i18n("&Join KDE"));
+     tabWidget->addTab(support, i18n("&Support KDE"));
++    tabWidget->addTab(magic, "&Magic Linux");
+ 
+     QLabel *image = new QLabel;
+     image->setPixmap(KStandardDirs::locate("data", "kdeui/pics/aboutkde.png"));

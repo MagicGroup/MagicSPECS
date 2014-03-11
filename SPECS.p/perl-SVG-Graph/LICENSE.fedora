@@ -1,0 +1,60 @@
+From: "Allen Day" <allenday@ucla.edu>
+Subject: Re: License terms for perl-SVG-Graph?
+To: "Alex Lancaster" <alexl@users.sourceforge.net>
+Date: Sun, 1 Apr 2007 00:47:21 -0700
+Reply-To: allenday@ucla.edu                                                     
+
+Hi Alex,
+
+My oversight.  It's released under the Artistic License.
+
+-Allen
+
+On 3/26/07, Alex Lancaster <alexl@users.sourceforge.net> wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+>
+> Dear Allen and Chris,
+>
+> I am trying to package your Perl package SVG-Graph as part of the
+> Fedora Linux distribution (it is also required as a dependency for
+> bioperl), see: https://bugzilla.redhat.com/233848 for this discussion.
+> In order to distribute the package, however, we need to clarify the
+> license, currently the only mention is the following:
+>
+> COPYRIGHT AND LICENCE
+>
+> Copyright (C) 2002-2003 Allen Day <allenday@ucla.edu>,
+> Chris To <crsto@ucla.edu>
+>
+> However, that only states the copyright owners (yourselves), but
+> doesn't state the license distribution terms.  Could you clarify your
+> intentions with respect to the license?  Usually most CPAN Perl
+> modules are distributed under the same terms as Perl, that is can be
+> distributed under the terms of either "Artistic" or the GNU GPL
+> license.
+>
+> If so, could you please include state so *explicitly* in your package,
+> or otherwise indicate to me that the package can be distributed under
+> a suitable open source license, see:
+>
+> http://fedoraproject.org/wiki/Packaging/Guidelines#head-76294f12c6b481792eb00\
+1ba9763d95e2792e825
+>
+> for a list of acceptable licenses.
+>
+> Best regards,
+> Alex Lancaster
+> - --
+>   Alex Lancaster | Free Software Developer:  savannah.gnu.org, sourceforge.ne\
+t
+> -----BEGIN PGP SIGNATURE-----
+> Version: GnuPG v1.4.7 (GNU/Linux)
+> Comment: Processed by Mailcrypt 3.5.8 <http://mailcrypt.sourceforge.net/>
+>
+> iD8DBQFGB32T1rpDh3x1wasRAp3qAJ9OK//kA72huP58NDjrBT/IiPFgawCeMm8Y
+> Iyi9LWOTscHqo+02EuHf3b0=
+> =pWty
+> -----END PGP SIGNATURE-----
+>
+

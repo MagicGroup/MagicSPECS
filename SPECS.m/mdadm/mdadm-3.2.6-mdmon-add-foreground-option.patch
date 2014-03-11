@@ -1,0 +1,106 @@
+From 030419821fb77f9955f2017b4a6d3d8139d6db25 Mon Sep 17 00:00:00 2001
+From: NeilBrown <neilb@suse.de>
+Date: Tue, 5 Feb 2013 15:57:09 +1100
+Subject: [PATCH 4/4] mdmon: add --foreground option
+
+While not strictly necessary for systemd, it is cleaner to avoid
+forking when running from a management daemon.  So add a --foreground
+option to mdmon.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ mdmon.8                | 10 +++++++++-
+ mdmon.c                |  9 +++++++--
+ systemd/mdmon@.service |  2 +-
+ 3 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/mdmon.8 b/mdmon.8
+index 559dd90..a968cdb 100644
+--- a/mdmon.8
++++ b/mdmon.8
+@@ -5,7 +5,7 @@ mdmon \- monitor MD external metadata arrays
+ 
+ .SH SYNOPSIS
+ 
+-.BI mdmon " [--all] [--takeover] CONTAINER"
++.BI mdmon " [--all] [--takeover] [--foreground] CONTAINER"
+ 
+ .SH OVERVIEW
+ The 2.6.27 kernel brings the ability to support external metadata arrays.
+@@ -131,6 +131,14 @@ The
+ device to monitor.  It can be a full path like /dev/md/container, or a
+ simple md device name like md127.
+ .TP
++.B \-\-foreground
++Normally,
++.I mdmon
++will fork and continue in the background.  Adding this option will
++skip that step and run
++.I mdmon
++in the foreground.
++.TP
+ .B \-\-takeover
+ This instructs
+ .I mdmon
+diff --git a/mdmon.c b/mdmon.c
+index 8720aa5..007071b 100644
+--- a/mdmon.c
++++ b/mdmon.c
+@@ -288,11 +288,13 @@ int main(int argc, char *argv[])
+ 	int opt;
+ 	int all = 0;
+ 	int takeover = 0;
++	int dofork = 1;
+ 	static struct option options[] = {
+ 		{"all", 0, NULL, 'a'},
+ 		{"takeover", 0, NULL, 't'},
+ 		{"help", 0, NULL, 'h'},
+ 		{"offroot", 0, NULL, OffRootOpt},
++		{"foreground", 0, NULL, 'F'},
+ 		{NULL, 0, NULL, 0}
+ 	};
+ 
+@@ -301,7 +303,7 @@ int main(int argc, char *argv[])
+ 	 */
+ 	argv[0][0] = '@';
+ 
+-	while ((opt = getopt_long(argc, argv, "tha", options, NULL)) != -1) {
++	while ((opt = getopt_long(argc, argv, "thaF", options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'a':
+ 			container_name = argv[optind-1];
+@@ -310,6 +312,9 @@ int main(int argc, char *argv[])
+ 		case 't':
+ 			takeover = 1;
+ 			break;
++		case 'F':
++			dofork = 0;
++			break;
+ 		case OffRootOpt:
+ 			/* silently ignore old option */
+ 			break;
+@@ -381,7 +386,7 @@ int main(int argc, char *argv[])
+ 			container_name);
+ 		exit(1);
+ 	}
+-	return mdmon(devname, devnum, do_fork(), takeover);
++	return mdmon(devname, devnum, dofork && do_fork(), takeover);
+ }
+ 
+ static int mdmon(char *devname, int devnum, int must_fork, int takeover)
+diff --git a/systemd/mdmon@.service b/systemd/mdmon@.service
+index ddb475f..809f527 100644
+--- a/systemd/mdmon@.service
++++ b/systemd/mdmon@.service
+@@ -11,7 +11,7 @@ DefaultDependencies=no
+ Before=initrd-switch-root.target
+ 
+ [Service]
+-ExecStart=/sbin/mdmon %I
++ExecStart=/sbin/mdmon --foreground %I
+ StandardInput=null
+ StandardOutput=null
+ StandardError=null
+-- 
+1.7.11.7
+

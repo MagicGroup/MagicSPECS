@@ -1,0 +1,24 @@
+diff -up hdf5-1.8.8/hl/fortran/test/Makefile.am.tstlite hdf5-1.8.8/hl/fortran/test/Makefile.am
+--- hdf5-1.8.8/hl/fortran/test/Makefile.am.tstlite	2011-12-21 17:27:14.000000000 +0100
++++ hdf5-1.8.8/hl/fortran/test/Makefile.am	2011-12-21 17:27:29.000000000 +0100
+@@ -33,7 +33,7 @@ else
+ endif
+ 
+ # Our main target, the test programs
+-TEST_PROG=tstds tstlite tstimage tsttable
++TEST_PROG=tstds tstimage tsttable
+ check_PROGRAMS=$(TEST_PROG)
+ 
+ LDADD= $(LIBH5F_HL) $(LIBH5F) $(LIBH5_HL)  $(LIBHDF5)
+diff -up hdf5-1.8.8/hl/fortran/test/Makefile.in.tstlite hdf5-1.8.8/hl/fortran/test/Makefile.in
+--- hdf5-1.8.8/hl/fortran/test/Makefile.in.tstlite	2011-12-21 17:27:21.000000000 +0100
++++ hdf5-1.8.8/hl/fortran/test/Makefile.in	2011-12-21 17:27:37.000000000 +0100
+@@ -409,7 +409,7 @@ CHECK_CLEANFILES = *.chkexe *.chklog *.c
+ 	f1tab.h5 tstds.h5
+ 
+ # Our main target, the test programs
+-TEST_PROG = tstds tstlite tstimage tsttable
++TEST_PROG = tstds tstimage tsttable
+ LDADD = $(LIBH5F_HL) $(LIBH5F) $(LIBH5_HL)  $(LIBHDF5)
+ 
+ # Source files for the programs

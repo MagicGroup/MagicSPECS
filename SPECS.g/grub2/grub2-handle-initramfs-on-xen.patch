@@ -1,0 +1,16 @@
+From: Marko Ristola <marko.ristola@kolumbus.fi>
+Date: 2011-08-07 07:43:01 EDT 
+Subject: [PATCH] Xen also uses initramfs not initrd filename
+
+diff --git a/util/grub.d/20_linux_xen.in b/util/grub.d/20_linux_xen.in
+--- a/util/grub.d/20_linux_xen.in	2011-05-17 17:10:29 +0000
++++ b/util/grub.d/20_linux_xen.in	2011-09-14 19:02:23 +0000
+@@ -154,6 +154,7 @@
+ 	for i in "initrd.img-${version}" "initrd-${version}.img" \
+ 	    "initrd-${version}" "initrd.img-${alt_version}" \
+ 	    "initrd-${alt_version}.img" "initrd-${alt_version}" \
++	    "initramfs-${version}.img" "initramfs-${alt_version}" \
+ 	    "initramfs-genkernel-${version}" \
+ 	    "initramfs-genkernel-${alt_version}" ; do
+ 	    if test -e "${dirname}/${i}" ; then
+

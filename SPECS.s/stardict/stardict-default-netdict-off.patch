@@ -1,0 +1,26 @@
+diff -up stardict-3.0.2/src/conf.cpp~ stardict-3.0.2/src/conf.cpp
+--- stardict-3.0.2/src/conf.cpp~	2010-12-22 00:42:37.000000000 +0900
++++ stardict-3.0.2/src/conf.cpp	2011-06-17 09:52:45.000000000 +0900
+@@ -103,7 +103,7 @@ AppConf::AppConf() :
+ 	add_entry("/apps/stardict/preferences/dictionary/use_custom_font", false);
+ #endif
+ #endif
+-	add_entry("/apps/stardict/preferences/network/enable_netdict", true);
++	add_entry("/apps/stardict/preferences/network/enable_netdict", false);
+ 	// Default stardictd server.
+ 	add_entry("/apps/stardict/preferences/network/server", std::string(_("dict.stardict.org")));
+ 	add_entry("/apps/stardict/preferences/network/port", 2628);
+diff -up stardict-3.0.2/src/prefsdlg.cpp~ stardict-3.0.2/src/prefsdlg.cpp
+--- stardict-3.0.2/src/prefsdlg.cpp~	2011-01-07 03:59:38.000000000 +0900
++++ stardict-3.0.2/src/prefsdlg.cpp	2011-06-17 09:54:53.000000000 +0900
+@@ -1113,6 +1113,10 @@ void PrefsDlg::setup_network_netdict()
+     GtkWidget *hbox1 = gtk_hbox_new(FALSE, 6);
+     gtk_box_pack_start(GTK_BOX(hbox1),button,false,false,0);
+     gtk_box_pack_start(GTK_BOX(vbox1),hbox1,false,false,0);
++
++    label = gtk_label_new(_("Warning: Requests to remote StarDict server are sent over the network in plaintext form. Do not enable this if you are translating sensitive documents."));
++    gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
++    gtk_box_pack_start(GTK_BOX(vbox1),label,false,false,0);
+ }
+ 
+ #if defined(_WIN32) || defined(CONFIG_GNOME)

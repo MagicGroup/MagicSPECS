@@ -1,0 +1,14 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,9 +59,9 @@
+ 
+ macro_optional_find_package(PyKDE4)
+ set(PythonSupport_FOUND FALSE)
+-if(PYTHONLIBRARY_FOUND AND SIP_FOUND AND PYQT4_FOUND AND PYKDE4_FOUND)
++if(PYTHONLIBRARY_FOUND)
+   set(PythonSupport_FOUND TRUE)
+-endif(PYTHONLIBRARY_FOUND AND SIP_FOUND AND PYQT4_FOUND AND PYKDE4_FOUND)
++endif(PYTHONLIBRARY_FOUND)
+ 
+ macro_log_feature(PythonSupport_FOUND "Python" "KDE Python support" "http://techbase.kde.org/Development/Languages/Python" FALSE "" "Needed to build plasma scriptengine for Python")
+ #### End Python support ####

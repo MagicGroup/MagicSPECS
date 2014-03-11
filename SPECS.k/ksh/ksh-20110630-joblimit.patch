@@ -1,0 +1,19 @@
+diff -up ksh-20110630/src/cmd/ksh93/sh/jobs.c.pidlimit ksh-20110630/src/cmd/ksh93/sh/jobs.c
+--- ksh-20110630/src/cmd/ksh93/sh/jobs.c.pidlimit	2011-10-06 08:38:59.800632676 +0200
++++ ksh-20110630/src/cmd/ksh93/sh/jobs.c	2011-10-06 08:39:51.434808924 +0200
+@@ -1983,13 +1983,13 @@ void job_subrestore(void* ptr)
+ 	for(jp=bck.list; jp; jp=jp->next)
+ 		if (!jp->next)
+ 			end = jp;
+-
+ 	if(end)
+ 		end->next = bp->list;
+ 	else
+ 		bck.list = bp->list;
+ 	bck.count += bp->count;
+-
++ 	while(bck.count > shgd->lim.child_max)
++ 		job_chksave(0);
+ 	for(pw=job.pwlist; pw; pw=pwnext)
+ 	{
+ 		pwnext = pw->p_nxtjob;

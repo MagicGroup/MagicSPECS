@@ -1,0 +1,39 @@
+--- /home/fitzsim/sources/gle-3.1.0/examples/Makefile.examples	2001-07-20 14:32:11.000000000 -0700
++++ /home/fitzsim/sources/gle-3.1.0/examples/Makefile.examples	2009-12-03 09:18:06.000000000 -0800
+@@ -21,18 +21,14 @@ 
+ twistex_SOURCES = twistoid.c texture.c maintex.c
+ 
+ 
+-INCLUDES =     -I/usr/X11R6/include   -I${top_srcdir}   -I${top_srcdir}/src 
++INCLUDES =
+ 
+ 
+-LDADD = -lgle -lglut -lGLU -lGL -lXmu  -L/usr/X11R6/lib -lXi -lXext -lXmu -lXt -lX11  -L../src/.libs
++LDADD = -lgle -lglut -lGLU -lGL -lXmu -lXi -lXext -lXmu -lXt -lX11
+ 
+ CPPFLAGS = 
+ LDFLAGS = 
+ LIBS =  -lm
+-X_CFLAGS =  -I/usr/X11R6/include
+-X_LIBS = -lgle -lglut -lGLU -lGL -lXmu  -L/usr/X11R6/lib -lXi -lXext -lXmu -lXt -lX11
+-X_EXTRA_LIBS = 
+-X_PRE_LIBS =  -lSM -lICE
+ beam_OBJECTS =  beam.o mainsimple.o
+ beam_LDADD = $(LDADD)
+ beam_DEPENDENCIES = 
+@@ -205,14 +201,7 @@ 
+ 	$(LINK) $(twoid_LDFLAGS) $(twoid_OBJECTS) $(twoid_LDADD) $(LIBS)
+ 
+ %.o: %.c
+-	@echo '$(COMPILE) -c $<'; \
+-	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+-	tr ' ' '\012' < .deps/$(*F).pp \
+-	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+-	    >> .deps/$(*F).P; \
+-	rm .deps/$(*F).pp
+-
++	gcc -c -o $@ $<
+ 
+ clean:
+ 	rm -f *.o $(PROGRAMS)

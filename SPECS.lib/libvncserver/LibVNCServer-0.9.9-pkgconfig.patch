@@ -1,0 +1,26 @@
+diff -up LibVNCServer-0.9.9/libvncclient.pc.in.pkgconfig LibVNCServer-0.9.9/libvncclient.pc.in
+--- LibVNCServer-0.9.9/libvncclient.pc.in.pkgconfig	2012-05-04 09:19:00.000000000 -0500
++++ LibVNCServer-0.9.9/libvncclient.pc.in	2013-02-14 10:45:18.902001014 -0600
+@@ -7,6 +7,8 @@ Name: LibVNCClient
+ Description: A library for easy implementation of a VNC client.
+ Version: @VERSION@
+ Requires:
+-Libs: -L${libdir} -lvncclient @LIBS@ @WSOCKLIB@
++Requires.private: zlib
++Libs: -L${libdir} -lvncclient
++Libs.private: @LIBS@ @WSOCKLIB@
+ Cflags: -I${includedir}
+ 
+diff -up LibVNCServer-0.9.9/libvncserver.pc.in.pkgconfig LibVNCServer-0.9.9/libvncserver.pc.in
+--- LibVNCServer-0.9.9/libvncserver.pc.in.pkgconfig	2012-05-04 09:19:00.000000000 -0500
++++ LibVNCServer-0.9.9/libvncserver.pc.in	2013-02-14 10:44:49.727365748 -0600
+@@ -7,6 +7,8 @@ Name: LibVNCServer
+ Description: A library for easy implementation of a VNC server.
+ Version: @VERSION@
+ Requires:
+-Libs: -L${libdir} -lvncserver @LIBS@ @WSOCKLIB@
++Requires.private: zlib
++Libs: -L${libdir} -lvncserver
++Libs.private: @LIBS@ @WSOCKLIB@
+ Cflags: -I${includedir}
+ 

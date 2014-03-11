@@ -1,0 +1,7 @@
+appl/sample/sserver/sserver.M
+config-files/kdc.conf.M
+config-files/krb5.conf.M
+gen-manpages/kerberos.M
+kadmin/cli/kadmin.M
+slave/kpropd.M
+slave/kprop.M

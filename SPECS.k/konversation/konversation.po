@@ -1,0 +1,7043 @@
+# Chinese (China) translation for konversation
+# Copyright (c) (c) 2006 Canonical Ltd, and Rosetta Contributors 2006
+# This file is distributed under the same license as the konversation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: konversation\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2007-04-22 07:14+0200\n"
+"PO-Revision-Date: 2006-10-09 11:11+0000\n"
+"Last-Translator: Lie_Ex <lilith.ex@gmail.com>\n"
+"Language-Team: Chinese (China) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/channeloptionsdialog.cpp:37
+#, c-format
+msgid "Channel Settings for %1"
+msgstr "%1 的频道设置"
+
+#: src/channeloptionsdialog.cpp:146
+msgid "&Hide Advanced Modes <<"
+msgstr "隐藏高级模式(&H) <<"
+
+#: src/channeloptionsdialog.cpp:150
+msgid "&Show Advanced Modes >>"
+msgstr "显示高级模式(&S) >>"
+
+#. i18n: file ./src/quickbuttons_preferencesui.ui line 174
+#: rc.cpp:25 src/alias_preferences.cpp:173 src/autoreplace_preferences.cpp:313
+#: src/highlight_preferences.cpp:260 src/quickbuttons_preferences.cpp:212
+#: src/watchednicknames_preferences.cpp:285
+#, no-c-format
+msgid "New"
+msgstr "新建"
+
+#: src/channel.cpp:1360 src/dcctransferpanelitem.cpp:88
+msgid "unknown"
+msgstr "未知"
+
+#: src/dcctransferpanelitem.cpp:205
+msgid "Cannot remove file '%1'."
+msgstr "无法删除文件“%1”。"
+
+#: src/dcctransferpanelitem.cpp:205
+msgid "DCC Error"
+msgstr "DCC 错误"
+
+#: src/dcctransferpanelitem.cpp:263
+msgid "Available information for file %1:"
+msgstr "文件 %1 可用信息："
+
+#: src/dcctransferpanelitem.cpp:265 src/dcctransferpanelitem.cpp:271
+#: src/dcctransferpanelitem.cpp:278
+msgid "File Information"
+msgstr "文件信息"
+
+#: src/dcctransferpanelitem.cpp:278
+msgid "No detailed information for this file found."
+msgstr "未找到此文件的详细信息。"
+
+#: src/dcctransferpanelitem.cpp:296
+msgid "Send"
+msgstr "发送"
+
+#: src/dcctransferpanelitem.cpp:298 src/dcctransferrecv.cpp:80
+msgid "Receive"
+msgstr "接收"
+
+#: src/dcctransferpanelitem.cpp:344
+msgid "Queued"
+msgstr "已排队"
+
+#: src/dcctransferpanelitem.cpp:346
+msgid "Preparing"
+msgstr "正准备"
+
+#: src/dcctransferpanelitem.cpp:348
+msgid "Awaiting"
+msgstr ""
+
+#: src/dcctransferpanelitem.cpp:350 src/linkaddressbook/addressbook.cpp:108
+msgid "Connecting"
+msgstr "正连接"
+
+#: src/dcctransferpanelitem.cpp:352
+msgid "Receiving"
+msgstr "接收中"
+
+#: src/dcctransferpanelitem.cpp:354
+msgid "Sending"
+msgstr "发送中"
+
+#: src/dcctransferpanelitem.cpp:356
+msgid "Done"
+msgstr "完成"
+
+#: src/dcctransferpanelitem.cpp:358
+msgid "Failed"
+msgstr "已失败"
+
+#: src/dcctransferpanelitem.cpp:360
+msgid "Aborted"
+msgstr "已放弃"
+
+#: src/dcctransferpanelitem.cpp:400
+msgid "%1/sec"
+msgstr "%1/秒"
+
+#: src/ircview.cpp:1425 src/ircview.cpp:1505 src/nicklistview.cpp:47
+#: src/nicksonline.cpp:875 src/nicksonline.cpp:890 src/query.cpp:78
+msgid "&Whois"
+msgstr "Whois(&W)"
+
+#: src/ircview.cpp:1426 src/ircview.cpp:1506 src/nicklistview.cpp:48
+#: src/query.cpp:79
+msgid "&Version"
+msgstr "版本(&V)"
+
+#: src/ircview.cpp:1427 src/ircview.cpp:1507 src/nicklistview.cpp:49
+#: src/query.cpp:80
+msgid "&Ping"
+msgstr "Ping(&P)"
+
+#: src/ircview.cpp:1431 src/nicklistview.cpp:55
+msgid "Give Op"
+msgstr "给予操作权限"
+
+#: src/ircview.cpp:1432 src/nicklistview.cpp:56
+msgid "Take Op"
+msgstr "撤除操作权限"
+
+#: src/nicklistview.cpp:57
+msgid "Give HalfOp"
+msgstr "给予助理权限"
+
+#: src/nicklistview.cpp:58
+msgid "Take HalfOp"
+msgstr "撤除助理权限"
+
+#: src/ircview.cpp:1433 src/nicklistview.cpp:59
+msgid "Give Voice"
+msgstr "给予语音权限"
+
+#: src/ircview.cpp:1434 src/nicklistview.cpp:60
+msgid "Take Voice"
+msgstr "撤除语音权限"
+
+#: src/ircview.cpp:1435 src/nicklistview.cpp:61
+msgid "Modes"
+msgstr "模式"
+
+#: src/channel.cpp:1224 src/channel.cpp:1226 src/channel.cpp:1233
+#: src/channel.cpp:1239 src/channel.cpp:1255 src/channel.cpp:1257
+#: src/channel.cpp:1264 src/channel.cpp:1270 src/ircview.cpp:1437
+#: src/nicklistview.cpp:67
+msgid "Kick"
+msgstr "踢出"
+
+#: src/ircview.cpp:1438 src/nicklistview.cpp:68
+msgid "Kickban"
+msgstr "踢出并封禁"
+
+#: src/ircview.cpp:1439 src/nicklistview.cpp:69
+msgid "Ban Nickname"
+msgstr "封禁此昵称"
+
+#: src/ircview.cpp:1441 src/nicklistview.cpp:71
+msgid "Ban *!*@*.host"
+msgstr "封禁 *!*@*.host"
+
+#: src/ircview.cpp:1442 src/nicklistview.cpp:72
+msgid "Ban *!*@domain"
+msgstr "封禁 *!*@domain"
+
+#: src/ircview.cpp:1443 src/nicklistview.cpp:73
+msgid "Ban *!user@*.host"
+msgstr "封禁 *!user@*.host"
+
+#: src/ircview.cpp:1444 src/nicklistview.cpp:74
+msgid "Ban *!user@domain"
+msgstr "封禁 *!user@domain"
+
+#: src/ircview.cpp:1446 src/nicklistview.cpp:76
+msgid "Kickban *!*@*.host"
+msgstr "踢出并封禁 *!*@*.host"
+
+#: src/ircview.cpp:1447 src/nicklistview.cpp:77
+msgid "Kickban *!*@domain"
+msgstr "踢出并封禁 *!*@domain"
+
+#: src/ircview.cpp:1448 src/nicklistview.cpp:78
+msgid "Kickban *!user@*.host"
+msgstr "踢出并封禁 *!user@*.host"
+
+#: src/ircview.cpp:1449 src/nicklistview.cpp:79
+msgid "Kickban *!user@domain"
+msgstr "踢出并封禁 *!user@domain"
+
+#: src/ircview.cpp:1450 src/nicklistview.cpp:80
+msgid "Kick / Ban"
+msgstr "踢出/封禁"
+
+#: src/channel.cpp:558 src/ircview.cpp:1452 src/ircview.cpp:1510
+#: src/konvisettingsdialog.cpp:155 src/konvisettingsdialog.cpp:156
+#: src/nicklistview.cpp:83 src/outputfilter.cpp:1307 src/outputfilter.cpp:1379
+#: src/query.cpp:83 src/query.cpp:349 src/server.cpp:2992
+#: src/warnings_preferences.cpp:118
+msgid "Ignore"
+msgstr "忽略"
+
+#: src/channel.cpp:576 src/ircview.cpp:1453 src/ircview.cpp:1511
+#: src/nicklistview.cpp:84 src/query.cpp:84 src/query.cpp:370
+#: src/warnings_preferences.cpp:119
+msgid "Unignore"
+msgstr "取消忽略"
+
+#: src/nicklistview.cpp:89 src/nicksonline.cpp:876 src/nicksonline.cpp:891
+msgid "Open &Query"
+msgstr "打开对话(&Q)"
+
+#: src/nicklistview.cpp:91
+msgid "Open DCC &Chat"
+msgstr "打开 DCC 对话(&C)"
+
+#: src/ircview.cpp:1462 src/ircview.cpp:1518 src/nicklistview.cpp:96
+#: src/query.cpp:91
+msgid "Send &File..."
+msgstr "发送文件(&F)..."
+
+#: src/linkaddressbook/addressbook_base.cpp:505 src/nicklistview.cpp:99
+#: src/nicksonline.cpp:883
+msgid "&Send Email..."
+msgstr "发送邮件(&S)..."
+
+#: src/nicklistview.cpp:104
+msgid "Addressbook Associations"
+msgstr "地址簿关联"
+
+#: src/ircview.cpp:1466 src/ircview.cpp:1522 src/nicklistview.cpp:106
+#: src/query.cpp:95
+msgid "Add to Watched Nicks"
+msgstr "添加到监视昵称列表"
+
+#: src/nicklistview.cpp:143
+msgid ""
+"<qt>This shows all the people in the channel.  The nick for each person is "
+"shown."
+"<br>Usually an icon is shown showing the status of each person, but you do not "
+"seem to have any icon theme installed.  See the Konversation settings - <i>"
+"Configure Konversation</i> under the <i>Settings</i> "
+"menu.  Then view the page for <i>Themes</i> under <i>Appearence</i>.</qt>"
+msgstr ""
+"<qt>这里显示了当前频道里的所有人员，每个人的昵称都会被列出。"
+"<br>通常每个显示中的图标代表了各人的状态，但您似乎还未安装任何图标主题。请查看 Konversation 里的相应设置，它在<i>设置</i>菜单项的<i>"
+"配置 Konversation</i>里面，然后查阅<i>外观</i>中的<i>主题</i>配置页。</qt>"
+
+#: src/nicklistview.cpp:155
+msgid ""
+"<qt>This shows all the people in the channel.  The nick for each person is "
+"shown, with a picture showing their status."
+"<p>"
+"<table>"
+"<tr>"
+"<th><img src=\"admin\"></th>"
+"<td>This person has administrator privileges.</td></tr>"
+"<tr>"
+"<th><img src=\"owner\"></th>"
+"<td>This person is a channel owner.</td></tr>"
+"<tr>"
+"<th><img src=\"op\"></th>"
+"<td>This person is a channel operator.</td></tr>"
+"<tr>"
+"<th><img src=\"halfop\"></th>"
+"<td>This person is a channel half-operator.</td></tr>"
+"<tr>"
+"<th><img src=\"voice\"></th>"
+"<td>This person has voice, and can therefore talk in a moderated channel.</td>"
+"</tr>"
+"<tr>"
+"<th><img src=\"normal\"></th>"
+"<td>This person does not have any special privileges.</td></tr>"
+"<tr>"
+"<th><img src=\"normalaway\"></th>"
+"<td>This indicates that this person is currently away.</td></tr></table>"
+"<p>The meaning of admin, owner and halfop varies between different IRC servers."
+"<p>Hovering over any nick shows their current status, as well as any "
+"information in the addressbook for this person.  See the Konversation Handbook "
+"for more information.</qt>"
+msgstr ""
+"<qt>这里显示了当前频道里的所有人员，每个人的昵称都会被列出，辅以表示他们各自状态的图标。"
+"<p>"
+"<table>"
+"<tr>"
+"<th><img src=\"admin\"></th>"
+"<td>表示此人拥有管理员权限。</td></tr>"
+"<tr>"
+"<th><img src=\"owner\"></th>"
+"<td>表示此人是频道的所有者。</td></tr>"
+"<tr>"
+"<th><img src=\"op\"></th>"
+"<td>表示此人是频道的操作员。</td></tr>"
+"<tr>"
+"<th><img src=\"halfop\"></th>"
+"<td>表示此人是频道的操作助理。</td></tr>"
+"<tr>"
+"<th><img src=\"voice\"></th>"
+"<td>表示此人拥有语音权限，可以在相适的频道里谈话。</td></tr>"
+"<tr>"
+"<th><img src=\"normal\"></th>"
+"<td>表示此人没有任何特别权限。</td></tr>"
+"<tr>"
+"<th><img src=\"normalaway\"></th>"
+"<td>这意味着此人当前处于离开状态。</td></tr></table>"
+"<p>管理员、频道所有者、助理在不同 IRC 服务器上的含义可能会各不一样。"
+"<p>将鼠标悬停在昵称上将会显示相应人员的当前状态以及任何关联到地址簿里的信息，查看 Konversation 手册可以获得更多相关说明。</qt>"
+
+#: src/nicklistview.cpp:279
+msgid "Edit Contact..."
+msgstr "编辑联系人..."
+
+#: src/nicklistview.cpp:284
+msgid "Choose/Change Associations..."
+msgstr "选择/更改关联..."
+
+#: src/nicklistview.cpp:286
+msgid "Choose Contact..."
+msgstr "选择联系人..."
+
+#: src/nicklistview.cpp:288
+msgid "Change Association..."
+msgstr "更改关联..."
+
+#: src/nicklistview.cpp:291
+msgid "Create New Contact..."
+msgstr "创建新联系人..."
+
+#: src/nicklistview.cpp:294
+msgid "Delete Association"
+msgstr "删除关联"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 117
+#: rc.cpp:116 src/ignorelistviewitem.cpp:43 src/inputfilter.cpp:1754
+#: src/inputfilter.cpp:1758
+#, no-c-format
+msgid "Channel"
+msgstr "频道"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 141
+#: rc.cpp:125 src/ignorelistviewitem.cpp:44
+#, no-c-format
+msgid "Query"
+msgstr "对话"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 133
+#: rc.cpp:122 src/ignorelistviewitem.cpp:45 src/inputfilter.cpp:476
+#: src/inputfilter.cpp:538 src/inputfilter.cpp:722 src/inputfilter.cpp:1150
+#: src/outputfilter.cpp:635 src/outputfilter.cpp:1702
+#, no-c-format
+msgid "Notice"
+msgstr "通知"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 109
+#: rc.cpp:113 src/dccchat.cpp:246 src/ignorelistviewitem.cpp:46
+#: src/inputfilter.cpp:203 src/inputfilter.cpp:210 src/inputfilter.cpp:226
+#: src/inputfilter.cpp:233 src/inputfilter.cpp:364 src/inputfilter.cpp:372
+#: src/inputfilter.cpp:392 src/inputfilter.cpp:503 src/inputfilter.cpp:513
+#: src/outputfilter.cpp:751
+#, no-c-format
+msgid "CTCP"
+msgstr "CTCP"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 125
+#: rc.cpp:119 src/dccchat.cpp:139 src/dccchat.cpp:149 src/dccchat.cpp:161
+#: src/dccchat.cpp:200 src/dccchat.cpp:334 src/dccchat.cpp:339
+#: src/ignorelistviewitem.cpp:47 src/inputfilter.cpp:301
+#: src/inputfilter.cpp:316 src/inputfilter.cpp:331 src/inputfilter.cpp:347
+#: src/inputfilter.cpp:355 src/konvisettingsdialog.cpp:168
+#: src/konvisettingsdialog.cpp:169 src/server.cpp:1836 src/server.cpp:1861
+#: src/server.cpp:1926 src/server.cpp:1956 src/server.cpp:1982
+#: src/server.cpp:1985 src/server.cpp:1992 src/server.cpp:1995
+#: src/server.cpp:2005 src/server.cpp:2012
+#, no-c-format
+msgid "DCC"
+msgstr "DCC"
+
+#: src/ignorelistviewitem.cpp:48
+msgid "Exception"
+msgstr "异常"
+
+#: src/konvisettingsdialog.cpp:107 src/konvisettingsdialog.cpp:108
+#: src/konvisettingsdialog.cpp:174 src/konvisettingsdialog.cpp:175
+#: src/viewtree.cpp:69
+msgid "Tabs"
+msgstr "标签"
+
+#: src/nickinfo.cpp:103
+msgid "Today"
+msgstr "今天"
+
+#: src/nickinfo.cpp:104
+msgid "Yesterday"
+msgstr "昨天"
+
+#: src/nickinfo.cpp:356
+msgid " (identified)"
+msgstr " (已认证)"
+
+#. i18n: file ./src/linkaddressbook/linkaddressbookui_base.ui line 96
+#: rc.cpp:1129 src/linkaddressbook/linkaddressbookui.cpp:82
+#: src/nickinfo.cpp:362
+#, no-c-format
+msgid "Email"
+msgstr "电子邮件"
+
+#: src/nickinfo.cpp:391
+msgid "Hostmask:"
+msgstr "主机掩码："
+
+#: src/nickinfo.cpp:396
+msgid "Away Message:"
+msgstr "离开消息："
+
+#: src/nickinfo.cpp:400
+msgid "(unknown)"
+msgstr "(未知)"
+
+#: src/nickinfo.cpp:406
+msgid "Online Since:"
+msgstr "在线时间："
+
+#. i18n: file ./src/highlight_preferencesui.ui line 175
+#: rc.cpp:1083 src/autoreplace_preferences.cpp:49
+#: src/highlight_preferences.cpp:182
+#, no-c-format
+msgid "Click to run Regular Expression Editor (KRegExpEditor)"
+msgstr "点击此处运行正则表达式编辑器(KRegExpEditor)"
+
+#: src/autoreplace_preferences.cpp:54 src/highlight_preferences.cpp:186
+#, fuzzy
+msgid "The Regular Expression Editor (KRegExpEditor) is not installed"
+msgstr "点击此处运行正则表达式编辑器(KRegExpEditor)"
+
+#: src/autoreplace_preferences.cpp:58
+msgid "Outgoing"
+msgstr "发送"
+
+#: src/autoreplace_preferences.cpp:59
+msgid "Incoming"
+msgstr "接收"
+
+#: src/autoreplace_preferences.cpp:60
+msgid "Both"
+msgstr "二者兼有"
+
+#: src/joinchanneldialog.cpp:29
+#, c-format
+msgid "Join Channel on %1"
+msgstr "加入频道的时间为 %1"
+
+#: src/quickconnectdialog.cpp:28
+msgid "Quick Connect"
+msgstr "快速连接"
+
+#: src/quickconnectdialog.cpp:38
+msgid "&Server host:"
+msgstr "服务器主机(&S)："
+
+#: src/quickconnectdialog.cpp:39
+msgid "Enter the host of the network here."
+msgstr "在此输入网络上的主机。"
+
+#: src/quickconnectdialog.cpp:45 src/serverdialog.cpp:41
+msgid "&Port:"
+msgstr "端口(&P)："
+
+#: src/quickconnectdialog.cpp:46
+msgid "The port that the IRC server is using."
+msgstr "IRC 服务器所使用的端口。"
+
+#: src/quickconnectdialog.cpp:52
+msgid "&Nick:"
+msgstr "昵称(&N)："
+
+#: src/quickconnectdialog.cpp:53
+msgid "The nick you want to use."
+msgstr "您打算使用的昵称。"
+
+#: src/quickconnectdialog.cpp:59
+msgid "P&assword:"
+msgstr "密码(&A)："
+
+#: src/quickconnectdialog.cpp:60
+msgid ""
+"If the IRC server requires a password, enter it here (most servers do not "
+"require a password.)"
+msgstr "如果 IRC 服务器要求密码认证，请在此输入(大多数的服务器不需要密码)。"
+
+#: src/quickconnectdialog.cpp:67
+msgid "&Use SSL"
+msgstr "使用 SSL(&U)"
+
+#: src/quickconnectdialog.cpp:83 src/serverlistdialog.cpp:105
+msgid "C&onnect"
+msgstr "连接(&O)"
+
+#: src/quickconnectdialog.cpp:83 src/serverlistdialog.cpp:105
+msgid "Connect to the server"
+msgstr "连接到服务器"
+
+#: src/dccchat.cpp:139
+#, fuzzy, c-format
+msgid "Could not open a socket for listening: %1"
+msgstr "无法打开套接字"
+
+#: src/dccchat.cpp:149
+msgid "Offering DCC Chat connection to %1 on port %2..."
+msgstr "在端口 %2 提供到 %1 的 DCC 密聊连接..."
+
+#: src/dccchat.cpp:150
+msgid "DCC chat with %1 on port %2."
+msgstr "在端口 %2 上打开和 %1 的 DCC 聊天。"
+
+#: src/dccchat.cpp:162
+msgid ""
+"_: %1 = nickname, %2 = IP, %3 = port\n"
+"Establishing DCC Chat connection to %1 (%2:%3)..."
+msgstr "正在建立到 %1 (%2:%3) 的 DCC 聊天连接..."
+
+#: src/dccchat.cpp:164
+msgid ""
+"_: %1 = nickname, %2 = IP, %3 = port\n"
+"DCC chat with %1 on %2:%3."
+msgstr "在 %2:%3 上和 %1 DCC 聊天。"
+
+#: src/dccchat.cpp:200 src/dccchat.cpp:334
+#, c-format
+msgid "Established DCC Chat connection to %1."
+msgstr "正在建立到 %1 的 DCC 聊天连接。"
+
+#: src/dccchat.cpp:207
+#, c-format
+msgid "Connection broken, error code %1."
+msgstr "连接中断，错误代码 %1。"
+
+#: src/dccchat.cpp:246
+msgid "Received unknown CTCP-%1 request from %2"
+msgstr "从 %2 接收到未知的 CTCP-%1 请求"
+
+#: src/dccchat.cpp:318
+msgid "Could not accept the client."
+msgstr "无法接收客户端。"
+
+#: src/dccchat.cpp:407
+msgid "Default ( %1 )"
+msgstr "默认(%1)"
+
+#: src/serverlistdialog.cpp:103
+msgid "Server List"
+msgstr "服务器列表"
+
+#: src/serverlistdialog.cpp:105
+msgid "Click here to connect to the selected IRC network and channel."
+msgstr "点此连接到选择的 IRC 网络与频道。"
+
+#: src/serverlistdialog.cpp:110
+msgid ""
+"This shows the listof configured IRC networks. An IRC network is a collection "
+"of cooperating servers. You need only connect to one of the servers in the "
+"network to be connected to the entire IRC network. Once connected, Konversation "
+"will automatically join the channels shown. When Konversation is started for "
+"the first time, the Freenode network and the <i>#kde</i> "
+"channel are already entered for you."
+msgstr ""
+"这里显示的是已配置过的 IRC 网络列表，一个 IRC 网络是一组互相协作的服务器的集合。您只需连接到完整 IRC "
+"网络中的一个或若干个服务器，连接完成后，Konversation 将自动加入指定的频道。当 Konversaion 第一次启动时，Freenode 网络和 "
+"<i>#kde</i> 频道已被自动填充到列表。"
+
+#: src/serverlistdialog.cpp:114
+msgid "Network"
+msgstr "网络"
+
+#: src/serverlistdialog.cpp:115
+msgid "Identity"
+msgstr "身份"
+
+#: src/serverlistdialog.cpp:116
+msgid "Channels"
+msgstr "频道"
+
+#. i18n: file ./src/alias_preferencesui.ui line 128
+#: rc.cpp:188 rc.cpp:389 src/serverlistdialog.cpp:125
+#, no-c-format
+msgid "&New..."
+msgstr "新建(&N)..."
+
+#: src/serverlistdialog.cpp:126
+msgid ""
+"Click here to define a new Network, including the server to connect to, and the "
+"Channels to automatically join once connected."
+msgstr "点此可设定一个新的网络，其中包括要连接到的服务器，以及连接后会自动加入的频道。"
+
+#. i18n: file ./src/servergroupdialogui.ui line 88
+#: rc.cpp:146 src/ircinput.cpp:476 src/serverlistdialog.cpp:127
+#, no-c-format
+msgid "&Edit..."
+msgstr "编辑(&E)..."
+
+#: src/serverlistdialog.cpp:200
+msgid "New Network"
+msgstr "新建网络"
+
+#: src/serverlistdialog.cpp:224
+msgid "Edit Network"
+msgstr "编辑网络"
+
+#: src/serverlistdialog.cpp:283
+msgid ""
+"You cannot delete %1.\n"
+"\n"
+"The network %2 needs to have at least one server."
+msgstr ""
+"您不能删除 %1。\n"
+"\n"
+"%2 网络需要至少一个服务器。"
+
+#: src/serverlistdialog.cpp:288
+msgid ""
+"You cannot delete the selected servers.\n"
+"\n"
+"The network %1 needs to have at least one server."
+msgstr ""
+"您不能删除选中的服务器。\n"
+"\n"
+"%1 网络需要至少一个服务器。"
+
+#: src/serverlistdialog.cpp:303
+msgid "Do you really want to delete the selected entries?"
+msgstr "您真要删除选中的条目吗？"
+
+#: src/serverlistdialog.cpp:305
+msgid "Do you really want to delete %1?"
+msgstr "您真要删除 %1 吗？"
+
+#: src/logfilereader.cpp:50
+msgid "Show last:"
+msgstr "显示上一个："
+
+#: src/logfilereader.cpp:52
+msgid ""
+"Use this box to set the maximum size of the log file. This setting does not "
+"take effect until you restart Konversation. Each log file may have a separate "
+"setting."
+msgstr ""
+"使用此设置框可设定允许的日志文件最大尺寸。这些设定的更改在重新启动 Konversation 前不会生效，每一个日志文件可以有自己独立的设定。"
+
+#: src/logfilereader.cpp:54
+msgid " KB"
+msgstr " KB"
+
+#: src/logfilereader.cpp:57 src/logfilereader.cpp:113
+msgid "Clear Logfile"
+msgstr "清除日志文件"
+
+#: src/logfilereader.cpp:61
+msgid ""
+"The messages in the log file are displayed here. The oldest messages are at the "
+"top and the most recent are at the bottom."
+msgstr "日志文件中的信息会显示在这里，置于顶端的是最旧的信息，置于底端的则是最新的消息。"
+
+#: src/logfilereader.cpp:112
+msgid ""
+"Do you really want to permanently discard all log information of this file?"
+msgstr "您真要永久丢弃文件的所有日志信息吗？"
+
+#: src/logfilereader.cpp:125
+msgid ""
+"Note: By saving the logfile you will save all data in the file, not only the "
+"part you can see in this viewer."
+msgstr "注意：保存日志会保存文件的所有数据，不仅限于您在当前视图所见部分。"
+
+#: src/logfilereader.cpp:126
+msgid "Save Logfile"
+msgstr "保存日志文件"
+
+#: src/logfilereader.cpp:132
+msgid "Choose Destination Folder"
+msgstr "选择目标文件夹"
+
+#: src/identitydialog.cpp:41
+msgid "Identities"
+msgstr "身份"
+
+#: src/identitydialog.cpp:46
+msgid "&Identity:"
+msgstr "身份(&I)："
+
+#: src/identitydialog.cpp:66
+msgid "Duplicate"
+msgstr "复制"
+
+#: src/identitydialog.cpp:71
+msgid "Rename"
+msgstr "重命名"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 44
+#: rc.cpp:1138 src/identitydialog.cpp:81 src/konvisettingsdialog.cpp:113
+#: src/konvisettingsdialog.cpp:114
+#, no-c-format
+msgid "General"
+msgstr "常规"
+
+#: src/identitydialog.cpp:84
+msgid "&Real name:"
+msgstr "真实姓名(&R)："
+
+#: src/identitydialog.cpp:86
+msgid ""
+"Enter your real name here. IRC is not intended to keep you hidden from your "
+"friends or enemies. Keep this in mind if you are tempted to behave maliciously. "
+"A fake \"real name\" can be a good way to mask your gender from all the nerds "
+"out there, but the PC you use can always be traced so you will never be truly "
+"anonymous."
+msgstr ""
+"在此输入您的真实姓名。IRC "
+"不会刻意地维护您在朋友或仇敌前保持隐蔽，如果您有意要挑起或面对恶意的行为，请斟酌填写这个设定。如果您希望在各式各样的另类面前掩藏自己的真实，一个伪造的“真实姓名"
+"”是有效的应对手段，但他人仍然可以追踪您使用的 PC，因此您无法完全地将自己匿藏起来。"
+
+#. i18n: file ./src/channeloptionsui.ui line 53
+#: rc.cpp:824 src/identitydialog.cpp:89
+#, no-c-format
+msgid "Nickname"
+msgstr "昵称"
+
+#: src/identitydialog.cpp:94
+msgid ""
+"This is your list of nicknames. A nickname is the name that other users will "
+"know you by. You may use any name you desire. The first character must be a "
+"letter.\n"
+"\n"
+"Since nicknames must be unique across an entire IRC network, your desired name "
+"may be rejected by the server because someone else is already using that "
+"nickname. Enter alternate nicknames for yourself. If your first choice is "
+"rejected by the server, Konversation will try the alternate nicknames."
+msgstr ""
+"这里是您的昵称的列表。昵称是一种能让其它用户识别您的名字，您可在此使用任何您愿意的名字，不过首字符必须是一个字母。\n"
+"\n"
+"由于昵称在通行于一个完整 IRC "
+"网络中时必须是唯一的，所以您想用的名字可能会被服务器拒绝，这是因为有人正在使用相同的昵称。输入您的可选昵称，如果首选的昵称被服务器拒绝，Konversation"
+" 可以自动尝试使用备选的昵称。"
+
+#. i18n: file ./src/servergroupdialogui.ui line 218
+#: rc.cpp:167 src/identitydialog.cpp:95
+#, no-c-format
+msgid "Add..."
+msgstr "添加..."
+
+#: src/identitydialog.cpp:96
+msgid "Edit..."
+msgstr "编辑..."
+
+#: src/identitydialog.cpp:125
+msgid "Auto Identify"
+msgstr "自动认证"
+
+#: src/identitydialog.cpp:129
+msgid "Ser&vice:"
+msgstr "服务(&V)："
+
+#: src/identitydialog.cpp:130
+msgid ""
+"Service name can be <b><i>nickserv</i></b> or a network dependant name like  <b>"
+"<i>nickserv@services.dal.net</i></b>"
+msgstr ""
+"服务名可以是 <b><i>nickserv</i></b> 或类似<b><i>nickserv@services.dal.net</i></b> "
+"这样的网络依赖名。"
+
+#: src/identitydialog.cpp:134
+msgid "Pa&ssword:"
+msgstr "密码(&S)："
+
+#: src/identitydialog.cpp:153
+msgid ""
+"_: Tab name\n"
+"Away"
+msgstr "离开"
+
+#: src/identitydialog.cpp:156
+msgid "Insert remember &line when going away"
+msgstr "离开时插入助记行(&L)"
+
+#: src/identitydialog.cpp:157
+msgid ""
+"If you check this box, whenever you perform an <b>/away</b> "
+"command, a horizontal line will appear in the channel, marking the point where "
+"you went away. Other IRC users do not see this horizontal line."
+msgstr ""
+"如果您选中此项，每当您执行 <b>/away</b> 命令时，一条水平分隔线会自动显现在频道内，标记出您离开时的锚点。其它 IRC 用户并不会看到这条线。"
+
+#: src/identitydialog.cpp:159
+msgid "Away nickname:"
+msgstr "离开昵称："
+
+#: src/identitydialog.cpp:161
+msgid ""
+"Enter a nickname that indicates you are away. Whenever you perform an <b>"
+"/away msg</b> command in any channel joined with this Identity, Konversation "
+"will automatically change your nickname to the Away nickname. Other users will "
+"be able to tell you are away from your computer. Whenever you perform an <b>"
+"/away</b> command in any channel in which you are away, Konversation will "
+"automatically change your nickname back to the original. If you do not wish to "
+"automatically change your nickname when going away, leave blank."
+msgstr ""
+"输入一个象征您已经离开的昵称。每当您在任何一个以当前这个身份加入的频道内执行 <b>/away</b> 命令时，Konversation "
+"会自动将您的昵称改名为离开昵称，其它用户便可由此得悉您已经离开了电脑。而每当您在一个已经处于离开状态的频道内执行 <b>/away</b> "
+"命令时，Konversation 会自动将您的昵称更改回原始形态。如果您不希望在离开时自动更改昵称，请将此项留空。"
+
+#: src/identitydialog.cpp:164
+msgid "Messages"
+msgstr "消息"
+
+#: src/identitydialog.cpp:170
+msgid "Show a&way messages"
+msgstr "显示离开消息(&W)"
+
+#: src/identitydialog.cpp:171
+#, c-format
+msgid ""
+"If you check this box, Konversation will automatically send the Away message to "
+"all channels joined with this Identity. <b>%s</b> is replaced with <b>msg</b>"
+". Whenever you perform an <b>/away</b> command, the Return message will be "
+"displayed in all channels joined with this Identity."
+msgstr ""
+"如果您选中此项，Konversation 会在每当您切换到离开状态时自动发送一条离开消息到所有您以当前这个身份加入的频道，<b>%s</b> 会被 <b>"
+"msg</b> 所替代。而每当您再次执行 <b>/away</b> 命令时，一条返回消息也将被自动显示在所有您以当前身份加入的频道。"
+
+#: src/identitydialog.cpp:174
+msgid "Away &message:"
+msgstr "离开消息(&M)："
+
+#: src/identitydialog.cpp:178
+msgid "Re&turn message:"
+msgstr "返回消息(&T)："
+
+#: src/identitydialog.cpp:207
+msgid "Advanced"
+msgstr "高级"
+
+#: src/identitydialog.cpp:210
+msgid "&Pre-shell command:"
+msgstr "预执行命令(&P)："
+
+#: src/identitydialog.cpp:212
+msgid ""
+"Here you can enter a command to be executed before connection to server starts"
+"<br>If you have multiple servers in this identity this command will be executed "
+"for each server"
+msgstr "您可以在这里输入一条在连接服务器前预先要执行的命令。<br>如果您以当前身份对应了多个服务器，则此命令会为每个服务器分别执行。"
+
+#: src/identitydialog.cpp:215
+msgid "I&dent:"
+msgstr "身份(&D)："
+
+#: src/identitydialog.cpp:217
+msgid ""
+"When you connect, many servers query your computer for an IDENT response. If "
+"you computer is not running an IDENT server, this response is sent by "
+"Konversation. No spaces are allowed."
+msgstr ""
+"当您进行连接时，许多服务器会向您的电脑请求一个 IDENT 应答。如果您的电脑不是以 IDENT 服务器运行，此应答会由 Konversation "
+"代为发送。此处不允许留空。"
+
+#: src/identitydialog.cpp:221
+msgid "&Encoding:"
+msgstr "编码(&E)："
+
+#: src/identitydialog.cpp:223
+msgid ""
+"This setting affects how characters you type are encoded for sending to the "
+"server. It also affects how messages are displayed. When you first open "
+"Konversation, it automatically retrieves this setting from the operating "
+"system. If you seem to be having trouble seeing other user's messages "
+"correctly, try changing this setting."
+msgstr ""
+"此设定会影响您输入的内容会以哪种字符编码发送到服务器，它同时也决定消息以哪种编码被显示。每当您打开 Konversation "
+"时，它会自动根据当前系统环境取得相关设定。要是您在查看其它用户的消息文字时出现问题，可尝试更改此设定。"
+
+#: src/identitydialog.cpp:228
+msgid "&Part reason:"
+msgstr "离开原因(&P)："
+
+#: src/identitydialog.cpp:230
+msgid "Whenever you leave a channel, this message is sent to the channel."
+msgstr "当您退出频道时会被自动发送到频道内的消息。"
+
+#: src/identitydialog.cpp:233
+msgid "&Kick reason:"
+msgstr "踢出原因(&K)："
+
+#: src/identitydialog.cpp:235
+msgid ""
+"Whenever you are kicked from a channel (usually by an IRC operator), this "
+"message is sent to the channel."
+msgstr "当您从一个被频道踢出时(通常是 IRC 操作员的行为)，此消息会被发送到频道内。"
+
+#: src/identitydialog.cpp:273
+msgid "Change identity information"
+msgstr "更改身份信息"
+
+#: src/editnotifydialog.cpp:89 src/identitydialog.cpp:274
+#: src/servergroupdialog.cpp:102
+msgid "Discards all changes made"
+msgstr "丢弃所做的全部更改"
+
+#: src/identitydialog.cpp:285 src/identitydialog.cpp:432
+msgid "You must add at least one nick to the identity."
+msgstr "您必须在身份信息内添加至少一个昵称。"
+
+#: src/identitydialog.cpp:327
+msgid "Add Nickname"
+msgstr "添加昵称"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 212
+#: rc.cpp:371 src/identitydialog.cpp:327 src/identitydialog.cpp:339
+#, no-c-format
+msgid "Nickname:"
+msgstr "昵称："
+
+#: src/identitydialog.cpp:339
+msgid "Edit Nickname"
+msgstr "编辑昵称"
+
+#: src/identitydialog.cpp:446
+msgid "Add Identity"
+msgstr "添加身份"
+
+#: src/identitydialog.cpp:446 src/identitydialog.cpp:471
+#: src/identitydialog.cpp:535
+msgid "Identity name:"
+msgstr "身份名称："
+
+#: src/identitydialog.cpp:461 src/identitydialog.cpp:480
+#: src/identitydialog.cpp:549
+msgid "You need to give the identity a name."
+msgstr "您需要给身份起个名字。"
+
+#: src/identitydialog.cpp:471
+msgid "Rename Identity"
+msgstr "重命名身份"
+
+#: src/identitydialog.cpp:512
+msgid ""
+"This identity is in use, if you remove it the network settings using it will "
+"fall back to the default identity. Should it be deleted anyway?"
+msgstr "此身份正被使用中，如果您将其删除，使用它的网络将会回溯到默认身份的设定。确认无论如何都要删除吗？"
+
+#: src/identitydialog.cpp:517
+msgid "Are you sure you want to delete all information for this identity?"
+msgstr "您确定要删除这个身份的所有信息吗？"
+
+#: src/identitydialog.cpp:520
+msgid "Delete Identity"
+msgstr "删除身份"
+
+#: src/identitydialog.cpp:535
+msgid "Duplicate Identity"
+msgstr "复制身份"
+
+#: src/nicklistbehavior_preferences.cpp:63
+msgid "Normal Users"
+msgstr "普通用户"
+
+#: src/nicklistbehavior_preferences.cpp:64
+msgid "Voice (+v)"
+msgstr "语音用户 (+v)"
+
+#: src/nicklistbehavior_preferences.cpp:65
+msgid "Halfops (+h)"
+msgstr "助理员 (+h)"
+
+#: src/nicklistbehavior_preferences.cpp:66
+msgid "Operators (+o)"
+msgstr "操作员 (+o)"
+
+#: src/nicklistbehavior_preferences.cpp:67
+msgid "Channel Admins (+p)"
+msgstr "频道管理员 (+p)"
+
+#: src/nicklistbehavior_preferences.cpp:68
+msgid "Channel Owners (+q)"
+msgstr "频道所有者 (+q)"
+
+#: src/insertchardialog.cpp:23
+msgid "Insert Character"
+msgstr "插入字符"
+
+#: src/insertchardialog.cpp:27
+msgid "Insert a character"
+msgstr "插入一个字符"
+
+#: src/konvibookmarkhandler.cpp:67
+msgid "Konversation Bookmarks Editor"
+msgstr "Konversation 书签编辑器"
+
+#: src/dcccommon.cpp:92
+msgid "No vacant port"
+msgstr "没有空闲端口"
+
+#: src/dcccommon.cpp:104
+msgid "Could not open a socket"
+msgstr "无法打开套接字"
+
+#: src/konversationapplication.cpp:276 src/server.cpp:1402 src/server.cpp:3001
+#: src/server.cpp:3006
+msgid "DCOP"
+msgstr "DCOP"
+
+#: src/konversationapplication.cpp:284
+msgid "Please fill in your <b>Ident</b>.<br>"
+msgstr "请填写您的<b>身份</b>。<br>"
+
+#: src/konversationapplication.cpp:287
+msgid "Please fill in your <b>Real name</b>.<br>"
+msgstr "请填写您的<b>真实姓名</b>。<br>"
+
+#: src/konversationapplication.cpp:290
+msgid "Please provide at least one <b>Nickname</b>.<br>"
+msgstr "请提供至少一个<b>昵称</b>。<br>"
+
+#: src/konversationapplication.cpp:297
+msgid "<qt>Your identity \"%1\" is not set up correctly:<br>%2</qt>"
+msgstr "<qt>您的身份“%1”设置不正确：<br>%2</qt>"
+
+#: src/konversationapplication.cpp:299
+msgid "Identity Settings"
+msgstr "身份设置"
+
+#: src/konversationapplication.cpp:300
+msgid "Edit Identity..."
+msgstr "编辑身份..."
+
+#: src/konversationapplication.cpp:359
+msgid ""
+"You are already connected to %1. Do you want to disconnect from '%2' and "
+"connect to '%3' instead?"
+msgstr "您已经连接到了 %1。您想要断开和“%2”的连接并连接到“%3”吗？"
+
+#: src/konversationapplication.cpp:363
+#, c-format
+msgid "Already connected to %1"
+msgstr "已经连接到 %1"
+
+#: src/konversationapplication.cpp:364 src/statuspanel.cpp:279
+msgid "Disconnect"
+msgstr "断开"
+
+#: src/ircview.cpp:250 src/viewcontainer.cpp:564
+msgid "Find Text..."
+msgstr "查找文本..."
+
+#: src/ircview.cpp:397 src/topiclabel.cpp:344
+msgid "Copy URL to Clipboard"
+msgstr "将 URL 复制到剪贴板"
+
+#: src/ircview.cpp:398 src/topiclabel.cpp:345
+msgid "Add to Bookmarks"
+msgstr "添加到书签"
+
+#: src/ircview.cpp:399
+#, fuzzy
+msgid "Save Link As..."
+msgstr "保存列表(&V)..."
+
+#: src/ircview.cpp:409
+#, c-format
+msgid "Open a query with %1"
+msgstr "打开一个和 %1 的对话"
+
+#: src/ircview.cpp:426 src/topiclabel.cpp:366
+#, c-format
+msgid "Join the channel %1"
+msgstr "加入频道 %1"
+
+#: src/inputfilter.cpp:1120 src/inputfilter.cpp:1126 src/inputfilter.cpp:1132
+#: src/ircview.cpp:981
+msgid "MOTD"
+msgstr "MOTD"
+
+#: src/ircview.cpp:998 src/outputfilter.cpp:1080 src/server.cpp:2372
+#: src/server.cpp:2390
+msgid "Notify"
+msgstr "通知"
+
+#: src/channel.cpp:1119 src/channel.cpp:1131 src/ircview.cpp:1020
+#: src/server.cpp:2991
+msgid "Join"
+msgstr "加入"
+
+#: src/channel.cpp:1161 src/channel.cpp:1163 src/channel.cpp:1183
+#: src/channel.cpp:1185 src/ircview.cpp:1025
+msgid "Part"
+msgstr "离开"
+
+#: src/ircview.cpp:1459
+msgid "Open Query"
+msgstr "打开对话"
+
+#: src/ircview.cpp:1531 src/topiclabel.cpp:222
+msgid "&Join"
+msgstr "加入(&J)"
+
+#: src/ircview.cpp:1532 src/topiclabel.cpp:223
+msgid "Get &user list"
+msgstr "获取用户列表(&U)"
+
+#: src/ircview.cpp:1533 src/topiclabel.cpp:224
+msgid "Get &topic"
+msgstr "获取话题(&T)"
+
+#: src/ircview.cpp:1583
+msgid "No matches found for \"%1\"."
+msgstr "没有找到“%1”的匹配项。"
+
+#: src/ircview.cpp:1813
+#, fuzzy
+msgid "Save Link As"
+msgstr "保存列表(&S)..."
+
+#: src/konversationmainwindow.cpp:125
+msgid "&Server List..."
+msgstr "服务器列表(&S)..."
+
+#: src/konversationmainwindow.cpp:126
+msgid "Manage networks and servers"
+msgstr "管理网络和服务器"
+
+#: src/konversationmainwindow.cpp:127
+msgid "Quick &Connect..."
+msgstr "快速连接(&C)..."
+
+#: src/konversationmainwindow.cpp:128
+msgid "Type in the address of a new IRC server to connect to"
+msgstr "输入一个要连接到的新 IRC 服务器地址"
+
+#: src/konversationmainwindow.cpp:130
+msgid "&Reconnect"
+msgstr "重新连接(&R)"
+
+#: src/konversationmainwindow.cpp:132
+msgid "Reconnect to the current server."
+msgstr "重新连接当前服务器。"
+
+#: src/konversationmainwindow.cpp:134
+msgid "&Disconnect"
+msgstr "断开连接(&D)"
+
+#: src/konversationmainwindow.cpp:136
+msgid "Disconnect from the current server."
+msgstr "断开和当前服务器的连接。"
+
+#: src/konversationmainwindow.cpp:138
+msgid "&Identities..."
+msgstr "身份(&I)..."
+
+#: src/konversationmainwindow.cpp:139
+msgid "Manage your nick, away and other identity settings"
+msgstr "管理您的昵称，离开消息和其它身份设定"
+
+#: src/konversationmainwindow.cpp:141
+msgid "&Watched Nicks Online"
+msgstr "监视的在线昵称(&W)"
+
+#: src/konversationmainwindow.cpp:142
+msgid "&DCC Status"
+msgstr "DCC 状态(&D)"
+
+#: src/konversationmainwindow.cpp:143 src/konversationmainwindow.cpp:526
+#: src/viewcontainer.cpp:599
+msgid "&Open Logfile"
+msgstr "打开日志文件(&O)"
+
+#: src/konversationmainwindow.cpp:145
+msgid "Open the known history for this channel in a new tab"
+msgstr "在一个新标签中打开已有的频道历史记录"
+
+#: src/konversationmainwindow.cpp:147 src/viewcontainer.cpp:668
+msgid "&Channel Settings..."
+msgstr "频道设置(&C)..."
+
+#: src/konversationmainwindow.cpp:149
+msgid "Open the channel settings dialog for this tab"
+msgstr "打开此标签的频道设置对话框"
+
+#: src/konversationmainwindow.cpp:151 src/viewcontainer.cpp:590
+msgid "Channel &List"
+msgstr "频道列表(&L)"
+
+#: src/konversationmainwindow.cpp:153
+msgid "Show a list of all the known channels on this server"
+msgstr "显示此服务器上已知的频道列表"
+
+#: src/konversationmainwindow.cpp:155
+msgid "&URL Catcher"
+msgstr "URL 捕捉器(&U)"
+
+#: src/konversationmainwindow.cpp:156
+msgid "List all URLs that have been mentioned recently in a new tab"
+msgstr "在一个新标签中列出最近的对话中所有提及到的 URL。"
+
+#: src/konversationmainwindow.cpp:160
+msgid "New &Konsole"
+msgstr "新建 &Konsole"
+
+#: src/konversationmainwindow.cpp:161
+msgid "Open a terminal in a new tab"
+msgstr "在新标签中打开终端"
+
+#: src/konversationmainwindow.cpp:169
+msgid "&Next Tab"
+msgstr "下一个标签(&N)"
+
+#: src/konversationmainwindow.cpp:173
+msgid "&Previous Tab"
+msgstr "前一个标签(&P)"
+
+#: src/konversationmainwindow.cpp:177
+msgid "Close &Tab"
+msgstr "关闭标签(&T)"
+
+#: src/konversationmainwindow.cpp:179
+#, fuzzy
+msgid "Next Active Tab"
+msgstr "下一个标签(&N)"
+
+#: src/konversationmainwindow.cpp:185 src/viewcontainer.cpp:162
+msgid "Move Tab Up"
+msgstr "上移标签"
+
+#: src/konversationmainwindow.cpp:189 src/viewcontainer.cpp:170
+msgid "Move Tab Down"
+msgstr "下移标签"
+
+#: src/konversationmainwindow.cpp:199 src/konversationmainwindow.cpp:208
+#: src/viewcontainer.cpp:271
+msgid "Move Tab Right"
+msgstr "向右移动标签"
+
+#: src/konversationmainwindow.cpp:201 src/konversationmainwindow.cpp:206
+#: src/viewcontainer.cpp:263
+msgid "Move Tab Left"
+msgstr "向左移动标签"
+
+#: src/konversationmainwindow.cpp:218 src/konversationmainwindow.cpp:532
+msgid "Enable Notifications"
+msgstr "启用通知"
+
+#: src/konversationmainwindow.cpp:221
+msgid "Set Encoding"
+msgstr "设定编码"
+
+#: src/konversationmainwindow.cpp:234
+#, c-format
+msgid "Go to Tab %1"
+msgstr "到第 %1 个标签"
+
+#: src/konversationmainwindow.cpp:239
+msgid "&Clear Window"
+msgstr "清除窗口(&C)"
+
+#: src/konversationmainwindow.cpp:240
+msgid "Clear the contents of the current tab"
+msgstr "清除当前标签里的内容"
+
+#: src/konversationmainwindow.cpp:242
+msgid "Clear &All Windows"
+msgstr "清除所有窗口(&A)"
+
+#: src/konversationmainwindow.cpp:243
+msgid "Clear the contents of all open tabs"
+msgstr "清除所有已打开标签里的内容"
+
+#: src/konversationmainwindow.cpp:246 src/konversationmainwindow.cpp:533
+#: src/server.cpp:3057
+msgid "Set &Away Globally"
+msgstr "设定全局离开状态(&A)"
+
+#: src/konversationmainwindow.cpp:250
+msgid "&Join Channel..."
+msgstr "加入频道(&J)..."
+
+#: src/konversationmainwindow.cpp:261 src/konversationmainwindow.cpp:534
+msgid "&IRC Color..."
+msgstr "IRC 颜色(&I)..."
+
+#: src/konversationmainwindow.cpp:262
+msgid "Set the color of your current IRC message"
+msgstr "选择您当前 IRC 消息的颜色。"
+
+#: src/konversationmainwindow.cpp:264 src/konversationmainwindow.cpp:536
+msgid "&Remember Line"
+msgstr "助记行(&R)"
+
+#: src/konversationmainwindow.cpp:265
+msgid "Insert a horizontal line into the current tab that only you can see"
+msgstr "在当前标签里插入一条只有您能看见的水平线"
+
+#: src/konversationmainwindow.cpp:267 src/konversationmainwindow.cpp:535
+msgid "Special &Character..."
+msgstr "特殊字符(&C)..."
+
+#: src/konversationmainwindow.cpp:268
+msgid "Insert any character into your current IRC message"
+msgstr "在当前 IRC 消息里插入任何可能的字符"
+
+#: src/konversationmainwindow.cpp:271
+msgid "Close &All Open Queries"
+msgstr "关闭全部打开的对话(&A)"
+
+#: src/konversationmainwindow.cpp:274
+msgid "Hide Nicklist"
+msgstr "隐藏昵称列表"
+
+#: src/konversationmainwindow.cpp:332
+msgid "<qt>Are you sure you want to quit <b>Konversation</b>?</qt>"
+msgstr "<qt>您确定想要退出 <b>Konversation</b> 吗？</qt>"
+
+#: src/konversationmainwindow.cpp:333
+msgid "Confirm Quit"
+msgstr "确认退出"
+
+#: src/konversationmainwindow.cpp:360
+msgid ""
+"<p>Closing the main window will keep Konversation running in the system tray. "
+"Use <b>Quit</b> from the <b>Konversation</b> menu to quit the application.</p>"
+msgstr ""
+"<p>关闭程序的主窗口将使得 Konversation 依旧保持在系统托盘里运行。使用 <b>Konversation</b> 菜单中的<b>退出</b>"
+"选项可确保退出程序。</p>"
+
+#: src/konversationmainwindow.cpp:362
+msgid "Docking in System Tray"
+msgstr "在系统托盘中显示图标"
+
+#: src/konversationmainwindow.cpp:469
+msgid ""
+"<qt>This will hide the menu bar completely. You can show it again by typing "
+"%1.</qt>"
+msgstr "<qt>这将完全隐藏程序的菜单栏。您可以输入 %1 使其重新显示。</qt>"
+
+#: src/konversationmainwindow.cpp:518
+msgid "Toggle Notifications"
+msgstr "切换系统通知"
+
+#: src/konversationmainwindow.cpp:519
+msgid "Toggle Away Globally"
+msgstr "切换为全局离开"
+
+#: src/konversationmainwindow.cpp:520
+msgid "Insert &IRC Color..."
+msgstr "插入 IRC 颜色(&I)..."
+
+#: src/konversationmainwindow.cpp:521
+msgid "Insert Special &Character..."
+msgstr "插入特殊字符(&C)..."
+
+#: src/konversationmainwindow.cpp:522
+msgid "Insert &Remember Line"
+msgstr "插入助记行(&R)"
+
+#: src/konversationmainwindow.cpp:524
+msgid "&Channel List"
+msgstr "频道列表(&C)"
+
+#: src/outputfilter.cpp:357
+msgid "Raw"
+msgstr "Raw"
+
+#: src/outputfilter.cpp:404
+msgid "Usage: %1JOIN <channel> [password]"
+msgstr "用法：%1JOIN <频道> [密码]"
+
+#: src/outputfilter.cpp:428
+msgid "Usage: %1KICK <nick> [reason]"
+msgstr "用法：%1KICK <昵称> [原因]"
+
+#: src/outputfilter.cpp:446
+msgid "%1KICK only works from within channels."
+msgstr "%1KICK 只能在频道内起作用。"
+
+#: src/outputfilter.cpp:466
+msgid "%1PART without parameters only works from within a channel or a query."
+msgstr "%1PART 不带参数只在频道内起作用。"
+
+#: src/outputfilter.cpp:496
+msgid "%1PART without channel name only works from within a channel."
+msgstr "\"%1PART 不带频道名只在频道内起作用。"
+
+#: src/outputfilter.cpp:518
+msgid "%1TOPIC without parameters only works from within a channel."
+msgstr "%1TOPIC 不带参数只在频道内起作用。"
+
+#: src/outputfilter.cpp:560
+msgid "%1TOPIC without channel name only works from within a channel."
+msgstr "%1TOPIC 不带频道名只在频道内起作用。"
+
+#: src/konvdcop.cpp:64 src/outputfilter.cpp:573 src/server.cpp:818
+msgid "Gone away for now."
+msgstr "立即离开。"
+
+#: src/outputfilter.cpp:600
+msgid ""
+"%1NAMES with no target may disconnect you from the server. Specify '*' if you "
+"really want this."
+msgstr "%1NAMES 不加目标会断开您与服务器的连接，如果您真的要这样做请指定“*”为目标。"
+
+#: src/outputfilter.cpp:631
+msgid "Usage: %1NOTICE <recipient> <message>"
+msgstr "用法：%1NOTICE <接收人> <消息>"
+
+#: src/outputfilter.cpp:637
+msgid ""
+"_: %1 is the message, %2 the recipient nickname\n"
+"Sending notice \"%2\" to %1."
+msgstr "发送提示“%2”到 %1。"
+
+#: src/outputfilter.cpp:743 src/outputfilter.cpp:748
+msgid "Sending CTCP-%1 request to %2."
+msgstr "发送 CTCP-%1 请求到 %2"
+
+#: src/outputfilter.cpp:853
+msgid "File \"%1\" does not exist."
+msgstr "文件“%1”不存在。"
+
+#: src/outputfilter.cpp:858
+msgid "Usage: %1DCC [SEND nickname filename]"
+msgstr "用法：%1DCC [SEND 昵称 文件名]"
+
+#: src/outputfilter.cpp:870
+msgid "Usage: %1DCC [CHAT nickname]"
+msgstr "用法：%1DCC [CHAT 昵称]"
+
+#: src/outputfilter.cpp:875
+#, fuzzy
+msgid "Unrecognized command %1DCC %2. Possible commands are SEND, CHAT, CLOSE."
+msgstr "未知命令 DCC %1。可用的命令有 SEND、CHAT、CLOSE。"
+
+#: src/outputfilter.cpp:972
+#, fuzzy
+msgid "Usage: %1INVITE <nick> [channel]"
+msgstr "用法：INVITE <昵称> [频道]"
+
+#: src/outputfilter.cpp:987
+msgid "%1INVITE without channel name works only from within channels."
+msgstr "%1INVITE 不带参数只能在频道内起作用。"
+
+#: src/outputfilter.cpp:999
+msgid "%1 is not a channel."
+msgstr "%1 不是一个频道。"
+
+#: src/outputfilter.cpp:1013
+#, c-format
+msgid "Usage: %1EXEC <script> [parameter list]"
+msgstr "用法：%1EXEC <脚本> [参数列表]"
+
+#: src/outputfilter.cpp:1025
+msgid "Script name may not contain \"../\"!"
+msgstr "脚本名不能包含“../”！"
+
+#: src/outputfilter.cpp:1046
+msgid "Usage: %1RAW [OPEN | CLOSE]"
+msgstr "用法：%1RAW [OPEN | CLOSE]"
+
+#: src/outputfilter.cpp:1083
+msgid "Current notify list is empty."
+msgstr "当前通知列表为空。"
+
+#: src/outputfilter.cpp:1085
+#, c-format
+msgid "Current notify list: %1"
+msgstr "当前通知列表：%1"
+
+#: src/outputfilter.cpp:1107
+msgid "Enter user name and password for IRC operator privileges:"
+msgstr "输入有 IRC 操作员权限的用户名和密码："
+
+#: src/outputfilter.cpp:1109
+msgid "IRC Operator Password"
+msgstr "IRC 操作员密码"
+
+#: src/outputfilter.cpp:1166
+msgid "%1BAN without channel name works only from inside a channel."
+msgstr "%1BAN 不带频道名只能在频道内起作用。"
+
+#: src/outputfilter.cpp:1168
+msgid "%1KICKBAN without channel name works only from inside a channel."
+msgstr "不带频道名的 %1KICKBAN 指令只能在频道内使用。"
+
+#: src/outputfilter.cpp:1201
+msgid "Usage: %1BAN [-HOST | -DOMAIN] [channel] <user|mask>"
+msgstr "用法：%1BAN [-HOST | -DOMAIN] [频道] <用户|掩码>"
+
+#: src/outputfilter.cpp:1203
+msgid "Usage: %1KICKBAN [-HOST | -DOMAIN] [channel] <user|mask> [reason]"
+msgstr "用法：%1KICKBAN [-主机 | -域名] [频道名] <用户名|主机掩码> [封禁原因]"
+
+#: src/outputfilter.cpp:1243
+msgid "%1UNBAN without channel name works only from inside a channel."
+msgstr "%1UNBAN 不带频道名只能在频道内起作用。"
+
+#: src/outputfilter.cpp:1258
+msgid "Usage: %1UNBAN [channel] pattern"
+msgstr "用法：%1UNBAN [频道] 模式"
+
+#: src/outputfilter.cpp:1306
+msgid "Added %1 to your ignore list."
+msgstr "添加 %1 到您的忽略列表。"
+
+#: src/outputfilter.cpp:1317
+#, fuzzy
+msgid "Usage: %1IGNORE [ -ALL ] <user 1> <user 2> ... <user n>"
+msgstr "用法：IGNORE [ -ALL ] <用户 1> <用户 2> ... <用户 n>"
+
+#: src/outputfilter.cpp:1329
+msgid "Usage: %1UNIGNORE <user 1> <user 2> ... <user n>"
+msgstr "用法：%1UNIGNORE [ -ALL ] <用户 1> <用户 2> ... <用户 n>"
+
+#: src/outputfilter.cpp:1379
+msgid "Removed %1 from your ignore list."
+msgstr "已从忽略列表中移除 %1。"
+
+#: src/outputfilter.cpp:1385
+#, c-format
+msgid "No such ignore: %1"
+msgstr "没有此忽略对象：%1"
+
+#: src/outputfilter.cpp:1391
+#, c-format
+msgid "No such ignores: %1"
+msgstr "没有这些忽略对象：%1"
+
+#: src/outputfilter.cpp:1404
+msgid "Usage: %1QUOTE command list"
+msgstr "用法：%1QUOTE 命令列表"
+
+#: src/outputfilter.cpp:1420
+msgid "Usage: %1SAY text"
+msgstr "用法：%1SAY 文本"
+
+#: src/outputfilter.cpp:1452
+msgid "Usage"
+msgstr "用法"
+
+#: src/outputfilter.cpp:1461 src/server.cpp:117 src/server.cpp:406
+#: src/server.cpp:464 src/server.cpp:597 src/server.cpp:607 src/server.cpp:735
+#: src/server.cpp:754
+msgid "Info"
+msgstr "信息"
+
+#: src/outputfilter.cpp:1487
+msgid "Usage: %1AME text"
+msgstr "用法：%1AME 文本"
+
+#: src/outputfilter.cpp:1500
+msgid "Usage: %1AMSG text"
+msgstr "用法：%1AMSG 文本"
+
+#: src/outputfilter.cpp:1589
+msgid "Available preferences groups: "
+msgstr "可用的首选项组： "
+
+#: src/outputfilter.cpp:1614
+msgid "Available options in group %1:"
+msgstr "组 %1 的可用选项："
+
+#: src/outputfilter.cpp:1673
+msgid ""
+"Usage: %1PREFS <group> <option> <value> or %2PREFS LIST to list groups or "
+"%3PREFS group LIST to list options in group.  Quote parameters if they contain "
+"spaces."
+msgstr ""
+"用法：%1PREFS <组> <选项> <值> 或 %2PREFS LIST to 列表组 或 %3PREFS 组 LIST to "
+"组中的列表选项。如果这之中含有空格会被引用为参数。"
+
+#: src/outputfilter.cpp:1689
+msgid "Usage: %1OMSG text"
+msgstr "用法：%1OMSG 文本"
+
+#: src/outputfilter.cpp:1704
+#, fuzzy
+msgid "Sending notice \"%1\" to %2."
+msgstr "发送 CTCP-%1 请求到 %2"
+
+#: src/outputfilter.cpp:1708
+msgid "Usage: %1ONOTICE text"
+msgstr "用法：%1ONOTICE 文本"
+
+#: src/outputfilter.cpp:1727
+#, c-format
+msgid ""
+"Usage: %1setkey <nick> or <channel> <key> Sets the encryption key for nick or "
+"channel"
+msgstr "用法：%1setkey <昵称> 或 <频道名> <密钥> 用于设定特定昵称或频道的加密密钥。"
+
+#: src/outputfilter.cpp:1733
+msgid "The key for %1 is successfully set."
+msgstr "%1 的关键字已设置成功。"
+
+#: src/outputfilter.cpp:1745
+#, c-format
+msgid ""
+"Usage: %1delkey <nick> or <channel> Deletes the encryption key for nick or "
+"channel"
+msgstr "用法：%1delkey <昵称> 或 <频道名> <密钥> 用于删除特定昵称或频道的加密密钥。"
+
+#: src/outputfilter.cpp:1750
+msgid "The key for %1 is now deleted."
+msgstr "%1 的关键字已被删除。"
+
+#: src/outputfilter.cpp:1771
+msgid "Usage: %1DNS <nick>"
+msgstr "用法：%1DNS <昵称>"
+
+#: src/inputfilter.cpp:1241 src/outputfilter.cpp:1793
+#: src/outputfilter.cpp:1815
+msgid "DNS"
+msgstr "DNS"
+
+#: src/outputfilter.cpp:1794 src/outputfilter.cpp:1816
+msgid "Resolved %1 to: %2"
+msgstr "解析 %1 为：%2"
+
+#: src/outputfilter.cpp:1799 src/outputfilter.cpp:1821
+#, c-format
+msgid "Unable to resolve %1"
+msgstr "无法解析 %1"
+
+#: src/outputfilter.cpp:1802
+msgid "Reverse-resolving requires KDE version 3.5.1 or higher."
+msgstr "实现反向解析要求 KDE 3.5.1 或更高的版本。"
+
+#: src/outputfilter.cpp:1865
+#, fuzzy
+msgid "Usage: %1KILL <nick> [comment]"
+msgstr "用法：%1KICK <昵称> [原因]"
+
+#: src/ircinput.cpp:78
+#, fuzzy
+msgid ""
+"<qt>The input line is where you type messages to be sent the channel, query, or "
+"server.  A message sent to a channel is seen by everyone on the channel, "
+"whereas a message in a query is sent only to the person in the query with you."
+"<p>To automatically complete the nickname you began typing, press Tab. If you "
+"have not begun typing, the last successfully completed nickname will be used."
+"<p>You can also send special commands:"
+"<br>"
+"<table>"
+"<tr>"
+"<th>/me <i>action</i></th>"
+"<td>shows up as an action in the channel or query.  For example:  <em>"
+"/me sings a song</em> will show up in the channel as 'Nick sings a song'.</td>"
+"</tr>"
+"<tr>"
+"<th>/whois <i>nickname</i></th>"
+"<td>shows information about this person, including what channels they are "
+"in.</td></tr></table>"
+"<p>For more commands, see the Konversation Handbook."
+"<p>A message cannot contain multiple lines.</qt>"
+msgstr ""
+"<qt>这条输入行是供您键入要发送给频道、对话或服务器的消息的地方。发送给频道的消息可以被频道内的所有人读到，然而在对话中的消息只会被和您对话的人所读到。"
+"<p>您也可以发送一些特殊的命令："
+"<br>"
+"<table>"
+"<tr>"
+"<th>/me <i>动作</i></th>"
+"<td>在频道或对话中表露出某种动作。例：<em>/me 唱了首歌</em> 将会被显示为“昵称 唱了首歌”。</td></tr>"
+"<tr>"
+"<th>/whois <i>昵称</i></th>"
+"<td>显示此人的相关信息，包括他已加入的所有频道清单等。</td></tr></table>"
+"<p>查询更多的命令，请参看 Konversation 手册。"
+"<p>每条消息最长可有 512 个字母，并且不能包含多行。</qt>"
+
+#: src/ircinput.cpp:471
+msgid ""
+"<qt>You are attempting to paste a large portion of text (%1 bytes or %2 lines) "
+"into the chat. This can cause connection resets or flood kills. Do you really "
+"want to continue?</qt>"
+msgstr "<qt>您正试图粘贴一大段文本(%1 字节或 %2 行)进入聊天栏，这可能引起连接重置或过量信息发送中止，您真要继续吗？</qt>"
+
+#: src/ircinput.cpp:474
+msgid "Large Paste Warning"
+msgstr "巨量粘贴警告"
+
+#. i18n() will only work as soon as a kapplication object was made.
+#: src/main.cpp:35
+msgid "A user friendly IRC client"
+msgstr "一款用户友好 IRC 客户端"
+
+#: src/main.cpp:39
+msgid "Server to connect"
+msgstr "要连接的服务器"
+
+#: src/main.cpp:40
+msgid "Port to use"
+msgstr "要使用的端口"
+
+#: src/main.cpp:41
+msgid "Channel to join after connection"
+msgstr "连接后自动加入的频道"
+
+#: src/main.cpp:42
+msgid "Nickname to use"
+msgstr "要使用的昵称"
+
+#: src/main.cpp:43
+msgid "Password for connection"
+msgstr "连接密码"
+
+#: src/main.cpp:44
+msgid "Use SSL for connection"
+msgstr "使用 SSL 连接"
+
+#: src/main.cpp:51
+msgid "Konversation"
+msgstr "Konversation"
+
+#: src/main.cpp:55
+#, fuzzy
+msgid "(C) 2002-2007 by the Konversation team"
+msgstr "(C) 2002-2005 Konversation 团队"
+
+#: src/main.cpp:56
+msgid ""
+"Konversation is a client for the Internet Relay Chat (IRC) protocol.\n"
+"Meet friends on the net, make new acquaintances and lose yourself in\n"
+"talk about your favorite subject."
+msgstr ""
+"Konversation 是一个互联网中继聊天(Internet Relay Chat，IRC)协议的客户端。您可以使用在网上与老朋友相会，结识新朋友，\n"
+"并畅谈您所感兴趣的话题。"
+
+#: src/main.cpp:61
+msgid "Original Author, Project Founder"
+msgstr "原作者、项目创立人"
+
+#: src/main.cpp:62
+msgid "Maintainer"
+msgstr "维护者"
+
+#: src/main.cpp:63
+msgid "Maintainer, Release Manager, User interface, Protocol handling"
+msgstr "维护者、发布管理、用户界面、协议处理"
+
+#: src/main.cpp:64
+msgid "DCC, Encoding handling, OSD positioning"
+msgstr "DCC、编码处理、OSD 定位"
+
+#: src/main.cpp:65
+msgid "Protocol handling, Input line"
+msgstr "协议处理、输入行设计"
+
+#: src/main.cpp:66
+msgid "Blowfish, SSL support, KNetwork port, Colored nicks, Nicklist themes"
+msgstr "Blowfish、SSL 支持、KNetwork 移植、彩色昵称、昵称列表主题"
+
+#: src/main.cpp:67
+msgid "Refactoring, KAddressBook/Kontact integration"
+msgstr "代码重整、KAddressBook/Kontact 集成"
+
+#: src/main.cpp:69
+msgid "Website hosting"
+msgstr ""
+
+#: src/main.cpp:70
+msgid "Website maintenance"
+msgstr ""
+
+#: src/main.cpp:71
+msgid "Multiple modes extension, Close widget placement, OSD functionality"
+msgstr "复合模式扩展、Close 构件布置、OSD 功能实现"
+
+#: src/main.cpp:72
+msgid ""
+"Documentation, Watched nicks online improvements, Custom web browser extension"
+msgstr "文档、在线昵称监视改进、Web 浏览器自定义扩展"
+
+#: src/main.cpp:73
+msgid "Color configurator, Highlight dialog"
+msgstr "配色师、高亮对话框"
+
+#: src/main.cpp:74
+msgid "DCOP interface"
+msgstr "DCOP 界面"
+
+#: src/main.cpp:75
+msgid "Non-Latin1-Encodings"
+msgstr "非拉丁编码"
+
+#: src/main.cpp:76
+msgid "Konsole part view"
+msgstr "Konsole 组件视图"
+
+#: src/main.cpp:77
+msgid "Quick connect, Ported new OSD, other features and bugfixes"
+msgstr "快速连接、移植到新的 OSD、其它特性与 Bug 修正"
+
+#: src/main.cpp:78
+msgid "A Handful of fixes and code cleanup"
+msgstr "一堆修正与代码清理"
+
+#: src/main.cpp:79
+msgid "Drag&Drop improvements"
+msgstr "拖放操作改进"
+
+#: src/main.cpp:80
+msgid "Artwork"
+msgstr "艺术工作"
+
+#: src/main.cpp:81
+msgid "Firefox style searchbar"
+msgstr "Firefox 样式搜索栏"
+
+#: src/main.cpp:82
+msgid "Raw modes, Tab grouping per server, Ban list"
+msgstr "原始模式、按服务器分组标签、封禁列表"
+
+#: src/main.cpp:83
+msgid "System tray patch"
+msgstr "系统托盘补丁"
+
+#: src/main.cpp:84 src/main.cpp:90 src/main.cpp:93
+msgid "Bug fixes"
+msgstr "Bug 修正"
+
+#: src/main.cpp:85
+msgid "Extended user modes patch"
+msgstr "扩展用户模式补丁"
+
+#: src/main.cpp:86
+msgid "Close visible tab with shortcut patch"
+msgstr "快速关闭可见标签功能的补丁"
+
+#: src/main.cpp:87
+msgid "Cycle tabs with mouse scroll wheel"
+msgstr "使用鼠标滚轮循环标签"
+
+#: src/main.cpp:88
+msgid "Channel ownership mode patch"
+msgstr "频道所有者模式补丁"
+
+#: src/main.cpp:89
+msgid "Option to enable IRC color filtering"
+msgstr "提供允许 IRC 颜色过滤的选项"
+
+#: src/main.cpp:91
+msgid "Bug fixes, OSD work, clearing topics"
+msgstr "Bug 修正、OSD 工作、话题清理"
+
+#: src/main.cpp:92
+msgid "Sysinfo script"
+msgstr "系统信息脚本"
+
+#: src/inputfilter.cpp:204
+msgid "Received CTCP-PING request from %1 to channel %2, sending answer."
+msgstr "收到来自 %1 到频道 %2 的 CTCP-PING 请求，发送回答。"
+
+#: src/inputfilter.cpp:211 src/inputfilter.cpp:365 src/inputfilter.cpp:373
+msgid "Received CTCP-%1 request from %2, sending answer."
+msgstr "收到来自 %2 的 CTCP-%1 请求，发送回答。"
+
+#: src/inputfilter.cpp:227
+msgid "Received Version request from %1 to channel %2."
+msgstr "收到来自 %1 到频道 %2 的版本请求。"
+
+#: src/inputfilter.cpp:234
+#, c-format
+msgid "Received Version request from %1."
+msgstr "收到来自 %1 的版本请求。"
+
+#: src/inputfilter.cpp:302
+#, fuzzy, c-format
+msgid "Received invalid DCC SEND request from %1."
+msgstr "收到来自 %1 的版本请求。"
+
+#: src/inputfilter.cpp:317
+#, fuzzy, c-format
+msgid "Received invalid DCC ACCEPT request from %1."
+msgstr "收到来自 %1 的版本请求。"
+
+#: src/inputfilter.cpp:332
+#, fuzzy, c-format
+msgid "Received invalid DCC RESUME request from %1."
+msgstr "收到来自 %1 的版本请求。"
+
+#: src/inputfilter.cpp:348
+#, fuzzy, c-format
+msgid "Received invalid DCC CHAT request from %1."
+msgstr "收到来自 %1 的版本请求。"
+
+#: src/inputfilter.cpp:356
+msgid "Unknown DCC command %1 received from %2."
+msgstr "收到来自 %2 的未知 DCC 命令 %1。"
+
+#: src/inputfilter.cpp:388
+#, fuzzy
+msgid "Received unknown CTCP-%1 request from %2 to Channel %3."
+msgstr "收到来自 %2 到频道 %3 的未知 CTCP-%1 请求。"
+
+#: src/inputfilter.cpp:393
+#, fuzzy
+msgid "Received unknown CTCP-%1 request from %2."
+msgstr "从 %2 接收到未知的 CTCP-%1 请求"
+
+#: src/inputfilter.cpp:477
+msgid "-%1 to %2- %3"
+msgstr "-%1 到 %2- %3"
+
+#: src/inputfilter.cpp:504
+msgid "Received CTCP-PING reply from %1: %2 %3."
+msgstr "收到来自 %1 的 CTCP-PING 回应：%2 %3"
+
+#: src/inputfilter.cpp:514
+#, fuzzy
+msgid "Received CTCP-%1 reply from %2: %3."
+msgstr "收到来自 %2 的 CTCP-%1 回应：%3"
+
+#: src/inputfilter.cpp:538 src/inputfilter.cpp:722
+msgid "-%1- %2"
+msgstr "-%1- %2"
+
+#: src/inputfilter.cpp:664 src/inputfilter.cpp:1196
+msgid "Invite"
+msgstr "邀请"
+
+#: src/inputfilter.cpp:665
+#, fuzzy
+msgid "%1 invited you to channel %2."
+msgstr "%1 邀请您加入频道 %2"
+
+#: src/inputfilter.cpp:760 src/inputfilter.cpp:765
+msgid "Welcome"
+msgstr "欢迎"
+
+#: src/inputfilter.cpp:766
+msgid "Server %1 (Version %2), User modes: %3, Channel modes: %4"
+msgstr "服务器 %1(版本 %2)，用户模式：%3，频道模式：%4"
+
+#: src/inputfilter.cpp:778
+msgid "Support"
+msgstr "支持"
+
+#: src/inputfilter.cpp:837 src/inputfilter.cpp:893
+msgid "Channel modes: "
+msgstr "频道模式： "
+
+#: src/inputfilter.cpp:849
+msgid "topic protection"
+msgstr "话题保护"
+
+#: src/inputfilter.cpp:851
+msgid "no messages from outside"
+msgstr "没有外部消息"
+
+#: src/inputfilter.cpp:853
+msgid "secret"
+msgstr "机密"
+
+#: src/inputfilter.cpp:855
+msgid "invite only"
+msgstr "只接受受邀请的"
+
+#: src/inputfilter.cpp:857
+msgid "private"
+msgstr "私人"
+
+#: src/inputfilter.cpp:859
+msgid "moderated"
+msgstr "监管的"
+
+#: src/inputfilter.cpp:864
+msgid "password protected"
+msgstr "密码受保护"
+
+#: src/inputfilter.cpp:867
+msgid "anonymous"
+msgstr "匿名"
+
+#: src/inputfilter.cpp:869
+msgid "server reop"
+msgstr "服务器重新开放"
+
+#: src/inputfilter.cpp:871
+msgid "no colors allowed"
+msgstr "不允许颜色"
+
+#: src/inputfilter.cpp:876
+#, fuzzy, c-format
+msgid ""
+"_n: limited to %n user\n"
+"limited to %n users"
+msgstr ""
+"_n：limited to %n user\n"
+"限制为 %n 个用户"
+
+#. i18n: file ./src/nicklistbehavior_preferencesui.ui line 74
+#: rc.cpp:221 rc.cpp:890 src/channel.cpp:1818 src/channelnick.cpp:221
+#: src/inputfilter.cpp:888 src/inputfilter.cpp:892 src/inputfilter.cpp:1877
+#, no-c-format
+msgid "Mode"
+msgstr "模式"
+
+#: src/inputfilter.cpp:902
+msgid "Created"
+msgstr "已建立"
+
+#: src/inputfilter.cpp:903
+#, c-format
+msgid "This channel was created on %1."
+msgstr "频道已建立在 %1。"
+
+#: src/inputfilter.cpp:919 src/inputfilter.cpp:1026 src/inputfilter.cpp:1225
+#: src/inputfilter.cpp:1277 src/inputfilter.cpp:1412 src/inputfilter.cpp:1420
+#: src/inputfilter.cpp:1427 src/inputfilter.cpp:1434 src/inputfilter.cpp:1441
+#: src/inputfilter.cpp:1448 src/inputfilter.cpp:1471 src/inputfilter.cpp:1483
+#: src/inputfilter.cpp:1495 src/inputfilter.cpp:1508 src/inputfilter.cpp:1510
+#: src/inputfilter.cpp:1533 src/inputfilter.cpp:1546 src/inputfilter.cpp:1558
+#: src/inputfilter.cpp:1568 src/inputfilter.cpp:1587 src/inputfilter.cpp:1601
+msgid "Whois"
+msgstr "Whois"
+
+#: src/inputfilter.cpp:919
+msgid "%1 is logged in as %2."
+msgstr "%1 已经以 %2 登录"
+
+#: src/inputfilter.cpp:948 src/inputfilter.cpp:962
+msgid "Names"
+msgstr "姓名"
+
+#: src/inputfilter.cpp:962
+msgid "End of NAMES list."
+msgstr "姓名列表结束。"
+
+#: src/inputfilter.cpp:969
+msgid "TOPIC"
+msgstr "话题"
+
+#: src/inputfilter.cpp:969
+msgid "The channel %1 has no topic set."
+msgstr "频道 %1 尚未设定话题。"
+
+#. i18n: file ./src/channeloptionsui.ui line 75
+#: rc.cpp:830 src/channel.cpp:1354 src/channel.cpp:1372 src/channel.cpp:1376
+#: src/inputfilter.cpp:988 src/inputfilter.cpp:1002 src/inputfilter.cpp:1011
+#, no-c-format
+msgid "Topic"
+msgstr "话题"
+
+#: src/inputfilter.cpp:988
+msgid "The channel topic for %1 is: \"%2\""
+msgstr "频道 %1 的话题为：“%2”"
+
+#: src/inputfilter.cpp:1003
+msgid "The topic was set by %1 on %2."
+msgstr "由 %1 设定关于 %2 的话题。"
+
+#: src/inputfilter.cpp:1011
+msgid "The topic for %1 was set by %2 on %3."
+msgstr "由 %2 为 %1 设定关于 %3 的话题。"
+
+#: src/inputfilter.cpp:1026
+msgid "%1 is actually using the host %2."
+msgstr "%1 现在正使用主机 %2。"
+
+#: src/inputfilter.cpp:1036
+msgid "%1: No such nick/channel."
+msgstr "%1：没有这样的昵称/频道。"
+
+#: src/inputfilter.cpp:1040
+#, c-format
+msgid "No such nick: %1."
+msgstr "没有这样的昵称：%1。"
+
+#: src/inputfilter.cpp:1051
+msgid "%1: No such channel."
+msgstr "%1：没有这样的频道。"
+
+#: src/channel.cpp:1102 src/channel.cpp:1107 src/inputfilter.cpp:1061
+#: src/inputfilter.cpp:1079 src/inputfilter.cpp:1090 src/inputfilter.cpp:1105
+#: src/urlcatcher.cpp:48
+msgid "Nick"
+msgstr "昵称"
+
+#: src/inputfilter.cpp:1061
+msgid "Nickname already in use, try a different one."
+msgstr "昵称已经在使用，尝试另一个。"
+
+#: src/inputfilter.cpp:1079
+#, c-format
+msgid "Nickname already in use. Trying %1."
+msgstr "昵称已经在使用，尝试 %1。"
+
+#: src/inputfilter.cpp:1105
+#, c-format
+msgid "Erroneus nickname. Changing nick to %1."
+msgstr "有错误的昵称，改名为 %1。"
+
+#: src/inputfilter.cpp:1113
+#, c-format
+msgid "You are not on %1."
+msgstr "您不在 %1 上。"
+
+#: src/inputfilter.cpp:1120
+msgid "Message of the day:"
+msgstr "当日消息："
+
+#: src/inputfilter.cpp:1132
+msgid "End of message of the day"
+msgstr "当日消息结束"
+
+#: src/inputfilter.cpp:1150
+msgid "You are now an IRC operator on this server."
+msgstr "您现在是此服务器的 IRC 操作员。"
+
+#: src/channellistpanel.cpp:104 src/inputfilter.cpp:1158
+#: src/inputfilter.cpp:1165 src/inputfilter.cpp:1784
+msgid "Users"
+msgstr "用户"
+
+#: src/inputfilter.cpp:1158
+#, c-format
+msgid "Current users on the network: %1"
+msgstr "当前网络的用户：%1"
+
+#: src/inputfilter.cpp:1165
+msgid "Current users on %1: %2."
+msgstr "当前在 %1 的用户：%2。"
+
+#: src/inputfilter.cpp:1187 src/inputfilter.cpp:1694 src/inputfilter.cpp:1716
+#: src/inputfilter.cpp:1721 src/linkaddressbook/addressbook.cpp:110
+#: src/nicksonline.cpp:241
+msgid "Away"
+msgstr "离开"
+
+#: src/inputfilter.cpp:1187
+msgid "%1 is away: %2"
+msgstr "%1 离开了：%2"
+
+#: src/inputfilter.cpp:1197
+msgid "You invited %1 to channel %2."
+msgstr "您邀请 %1 加入频道 %2。"
+
+#: src/inputfilter.cpp:1216 src/inputfilter.cpp:1292
+msgid "%1@%2"
+msgstr "%1@%2"
+
+#: src/inputfilter.cpp:1226
+msgid "%1 is %2@%3 (%4)"
+msgstr "%1 来自 %2@%3 (%4)"
+
+#: src/inputfilter.cpp:1242
+msgid "Resolved %1 (%2) to address: %3"
+msgstr "解析 %1(%2)到地址：%3"
+
+#: src/inputfilter.cpp:1251
+msgid "Unable to resolve address for %1 (%2)"
+msgstr "无法解析 %1(%2)的地址"
+
+#: src/inputfilter.cpp:1277
+msgid "%1 is an identified user."
+msgstr "%1 是已认证用户。"
+
+#: src/inputfilter.cpp:1306 src/inputfilter.cpp:1327
+msgid "Who"
+msgstr "主机信息"
+
+#: src/inputfilter.cpp:1307
+msgid "%1 is %2@%3 (%4)%5"
+msgstr "%1 来自 %2@%3 (%4)%5"
+
+#: src/inputfilter.cpp:1311
+msgid " (Away)"
+msgstr " (离开)"
+
+#: src/inputfilter.cpp:1328
+#, fuzzy, c-format
+msgid "End of /WHO list for %1"
+msgstr "WHOIS 列表结束。"
+
+#: src/inputfilter.cpp:1413
+msgid "%1 is a user on channels: %2"
+msgstr "用户 %1 所在频道：%2"
+
+#: src/inputfilter.cpp:1421
+msgid "%1 has voice on channels:  %2"
+msgstr "%1 有在频道的语音权：%2"
+
+#: src/inputfilter.cpp:1428
+msgid "%1 is a halfop on channels: %2"
+msgstr "%1 是频道的助理员：%2"
+
+#: src/inputfilter.cpp:1435
+msgid "%1 is an operator on channels: %2"
+msgstr "%1 是频道的操作员：%2"
+
+#: src/inputfilter.cpp:1442
+msgid "%1 is owner of channels: %2"
+msgstr "%1 是频道的所有者：%2"
+
+#: src/inputfilter.cpp:1449
+msgid "%1 is admin on channels: %2"
+msgstr "%1 是频道的管理员：%2"
+
+#: src/inputfilter.cpp:1472
+msgid "%1 is online via %2 (%3)."
+msgstr "%1 是通过 %2(%3)在线。"
+
+#: src/inputfilter.cpp:1484
+msgid "%1 has identified for this nick."
+msgstr "%1 认证了该昵称的身份。"
+
+#: src/inputfilter.cpp:1496
+msgid "%1 is available for help."
+msgstr "%1 可获得帮助。"
+
+#: src/inputfilter.cpp:1508
+#, fuzzy
+msgid "%1 is an IRC Operator."
+msgstr " (IRC 操作员)"
+
+#: src/inputfilter.cpp:1528 src/konversationstatusbar.cpp:178
+#, c-format
+msgid ""
+"_n: 1 day\n"
+"%n days"
+msgstr "%n 天"
+
+#: src/inputfilter.cpp:1529 src/inputfilter.cpp:1543
+#: src/konversationstatusbar.cpp:179 src/konversationstatusbar.cpp:188
+#, c-format
+msgid ""
+"_n: 1 hour\n"
+"%n hours"
+msgstr "%n 小时"
+
+#: src/inputfilter.cpp:1530 src/inputfilter.cpp:1544 src/inputfilter.cpp:1556
+#: src/konversationstatusbar.cpp:180 src/konversationstatusbar.cpp:189
+#: src/konversationstatusbar.cpp:197
+#, c-format
+msgid ""
+"_n: 1 minute\n"
+"%n minutes"
+msgstr "%n 分钟"
+
+#: src/inputfilter.cpp:1531 src/inputfilter.cpp:1545 src/inputfilter.cpp:1557
+#: src/konversationstatusbar.cpp:181 src/konversationstatusbar.cpp:190
+#: src/konversationstatusbar.cpp:198
+#, c-format
+msgid ""
+"_n: 1 second\n"
+"%n seconds"
+msgstr "%n 秒"
+
+#: src/inputfilter.cpp:1535
+msgid ""
+"_: %1 = name of person, %2 = (x days), %3 = (x hours), %4 = (x minutes), %5 = "
+"(x seconds)\n"
+"%1 has been idle for %2, %3, %4, and %5."
+msgstr "%1 已空闲了 %2 %3 %4 %5。"
+
+#: src/inputfilter.cpp:1548
+msgid ""
+"_: %1 = name of person, %2 = (x hours), %3 = (x minutes), %4 = (x seconds)\n"
+"%1 has been idle for %2, %3, and %4."
+msgstr "%1 已空闲了 %2 %3 %4。"
+
+#: src/inputfilter.cpp:1560
+msgid ""
+"_: %1 = name of person, %2 = (x minutes), %3 = (x seconds)\n"
+"%1 has been idle for %2 and %3."
+msgstr "%1 已空闲了 %2 %3。"
+
+#: src/inputfilter.cpp:1569
+msgid ""
+"_n: %1 has been idle for 1 second.\n"
+"%1 has been idle for %n seconds."
+msgstr "%1 已空闲了 %n 秒。"
+
+#: src/inputfilter.cpp:1588
+msgid "%1 has been online since %2."
+msgstr "%1 自 %2 在线。"
+
+#: src/inputfilter.cpp:1601
+msgid "End of WHOIS list."
+msgstr "WHOIS 列表结束。"
+
+#: src/inputfilter.cpp:1638
+msgid "Userhost"
+msgstr "用户主机"
+
+#: src/inputfilter.cpp:1639
+msgid ""
+"_: %1 = nick, %2 = shows if nick is op, %3 = hostmask, %4 = shows away\n"
+"%1%2 is %3%4."
+msgstr "%1%2 现为 %3%4。"
+
+#: src/inputfilter.cpp:1641
+msgid " (IRC Operator)"
+msgstr " (IRC 操作员)"
+
+#: src/inputfilter.cpp:1643
+msgid " (away)"
+msgstr " (离开)"
+
+#: src/inputfilter.cpp:1658 src/inputfilter.cpp:1668 src/inputfilter.cpp:1682
+msgid "List"
+msgstr "列表"
+
+#: src/inputfilter.cpp:1658
+msgid "List of channels:"
+msgstr "频道列表："
+
+#: src/inputfilter.cpp:1667
+msgid ""
+"_n: %1 (%n user): %2\n"
+"%1 (%n users): %2"
+msgstr "%1(%n 个用户)：%2"
+
+#: src/inputfilter.cpp:1682
+msgid "End of channel list."
+msgstr "频道列表结束。"
+
+#: src/inputfilter.cpp:1694
+msgid "You are now marked as being away."
+msgstr "您已经标记为离开。"
+
+#: src/inputfilter.cpp:1716
+msgid "You are no longer marked as being away."
+msgstr "您不再标记为离开。"
+
+#: src/inputfilter.cpp:1721
+msgid "You are not marked as being away."
+msgstr "您不再标记为离开。"
+
+#: src/inputfilter.cpp:1735 src/inputfilter.cpp:1745
+#, c-format
+msgid "BanList:%1"
+msgstr "封禁列表：%1"
+
+#: src/inputfilter.cpp:1735
+msgid ""
+"_: BanList message: e.g. *!*@aol.com set by MrGrim on <date>\n"
+"%1 set by %2 on %3"
+msgstr "%1 由 %2 在 %3 被加入列表"
+
+#: src/inputfilter.cpp:1745
+msgid "End of Ban List."
+msgstr "封禁列表结束。"
+
+#: src/inputfilter.cpp:1773
+msgid "%1 is currently unavailable."
+msgstr "%1 目前不可用。"
+
+#: src/inputfilter.cpp:1789
+msgid "%1: Unknown command."
+msgstr "%1：未知命令。"
+
+#: src/inputfilter.cpp:1795
+msgid "Not registered."
+msgstr "尚未注册。"
+
+#: src/inputfilter.cpp:1801
+msgid "%1: This command requires more parameters."
+msgstr "%1：此命令要求更多参数。"
+
+#: src/inputfilter.cpp:1837
+msgid " sets mode: "
+msgstr " 设定模式： "
+
+#: src/config/preferences.cpp:57
+msgid "Default Identity"
+msgstr "默认身份"
+
+#: src/editnotifydialog.cpp:32
+msgid "Edit Watched Nickname"
+msgstr "编辑被监视的昵称"
+
+#: src/editnotifydialog.cpp:43
+msgid "&Network name:"
+msgstr "网络名称(&N)："
+
+#: src/editnotifydialog.cpp:45
+msgid "Pick the server network you will connect to here."
+msgstr "在此选取您想要连接到的服务器网络。"
+
+#: src/editnotifydialog.cpp:51
+msgid "N&ickname:"
+msgstr "昵称(&I)："
+
+#: src/editnotifydialog.cpp:53
+msgid ""
+"<qt>The nickname to watch for when connected to a server in the network.</qt>"
+msgstr "<qt>连接到服务器时要监视的昵称。</qt>"
+
+#: src/editnotifydialog.cpp:88
+msgid "Change notify information"
+msgstr "更改通知信息"
+
+#: src/sslsocket.cpp:91
+#, fuzzy
+msgid "Connection is secured with %1 bit SSL."
+msgstr "连接到服务器 %1 失败：%2。"
+
+#: src/sslsocket.cpp:122
+msgid ""
+"The functionality to connect to servers using encrypted SSL communications is "
+"not available to Konversation because OpenSSL support was not enabled at "
+"compile time.  You will need to get new version of KDE that has SSL support."
+msgstr ""
+"Konversation 无法以加密 SSL 通讯连接到服务器，因为它在编译时没有启用 OpenSSL 支持。您需要获取一个具有 SSL 支持的 KDE "
+"新版本。"
+
+#: src/sslsocket.cpp:165
+msgid ""
+"The SSL certificate returned from the server was not recognized.  Maybe this "
+"server does not support SSL on the given port?  If this server supports normal, "
+"non-SSL communications as well, then SSL will be on a different port."
+msgstr ""
+"无法识别服务器返回的 SSL 证书，也许这个服务器在给定的端口上不支持 SSL。如果此服务器同时也支持普通的非 SSL 通讯，也许使用 SSL "
+"的通讯端口是另外一个。"
+
+#: src/sslsocket.cpp:224 src/sslsocket.cpp:261
+msgid ""
+"The IP address of the host %1 does not match the one the certificate was issued "
+"to."
+msgstr "主机 %1 的 IP 地址与证书所颁发的地址不符。"
+
+#: src/sslsocket.cpp:229 src/sslsocket.cpp:266 src/sslsocket.cpp:277
+#: src/sslsocket.cpp:303
+msgid "Server Authentication"
+msgstr "服务器验证"
+
+#: src/sslsocket.cpp:230 src/sslsocket.cpp:267 src/sslsocket.cpp:278
+msgid "Details"
+msgstr "细节"
+
+#: src/sslsocket.cpp:273
+msgid "The server (%1) certificate failed the authenticity test."
+msgstr "服务器(%1)的证书无法通过验证测试。"
+
+#: src/sslsocket.cpp:300
+msgid ""
+"Would you like to accept this certificate forever without being prompted?"
+msgstr "您希望不收到提示就永远接受此证书吗？"
+
+#: src/sslsocket.cpp:304
+msgid "&Forever"
+msgstr "永远(&F)"
+
+#: src/sslsocket.cpp:305
+msgid "&Current Sessions Only"
+msgstr "仅当前会话(&C)"
+
+#: src/notificationhandler.cpp:97 src/notificationhandler.cpp:350
+msgid "[HighLight] (%1) <%2> %3"
+msgstr "[HighLigjt](%1)<%2> %3"
+
+#: src/notificationhandler.cpp:126
+#, fuzzy
+msgid "[Query] <%1> %2"
+msgstr "(对话)<%1> %2"
+
+#: src/notificationhandler.cpp:160 src/notificationhandler.cpp:167
+msgid "%1 joined %2"
+msgstr "%1 加入了 %2"
+
+#: src/notificationhandler.cpp:183 src/notificationhandler.cpp:190
+msgid "%1 parted %2"
+msgstr "%1 离开了 %2"
+
+#: src/notificationhandler.cpp:206
+msgid "%1 quit %2"
+msgstr "%1 退出了 %2"
+
+#: src/notificationhandler.cpp:221
+msgid "%1 changed nickname to %2"
+msgstr "%1 已将昵称改为 %2"
+
+#: src/notificationhandler.cpp:236
+msgid "%1 wants to send a file to you"
+msgstr "%1 要向您发送文件"
+
+#: src/notificationhandler.cpp:269
+msgid "%1 has started a conversation (query) with you."
+msgstr "%1 已向您打开了一个对话。"
+
+#: src/notificationhandler.cpp:285 src/server.cpp:2373
+msgid "%1 is online (%2)."
+msgstr "%1 在线(%2)。"
+
+#: src/notificationhandler.cpp:301 src/server.cpp:2390
+msgid "%1 went offline (%2)."
+msgstr "%1 离线(%2)。"
+
+#: src/notificationhandler.cpp:312
+msgid "You are kicked by %1 from %2"
+msgstr "您已经被 %1 从 %2 踢出。"
+
+#: src/notificationhandler.cpp:323
+msgid "%1 started a dcc chat with you"
+msgstr "%1 已对您开启了 DCC 密聊"
+
+#: src/notificationhandler.cpp:347
+msgid "[HighLight] (%1) *** %2"
+msgstr "[HighLight](%1)*** %2"
+
+#: src/notificationhandler.cpp:362
+#, c-format
+msgid "Failed to connect to %1"
+msgstr "无法连接到 %1"
+
+#: src/notificationhandler.cpp:377
+#, c-format
+msgid "You have joined %1."
+msgstr "您已经加入了 %1。"
+
+#: src/ircviewbox.cpp:95 src/ircviewbox.cpp:109 src/ircviewbox.cpp:135
+msgid "Phrase not found"
+msgstr "找不到词语"
+
+#: src/ircviewbox.cpp:115
+msgid "Wrapped search"
+msgstr "覆盖搜索"
+
+#: src/dcc_preferences.cpp:44
+msgid "Network Interface"
+msgstr "网络接口"
+
+#: src/dcc_preferences.cpp:45
+msgid "Reply From IRC Server"
+msgstr "来自 IRC 服务器的回应"
+
+#: src/dcc_preferences.cpp:46
+msgid "Specify Manually"
+msgstr "手动指定"
+
+#: src/irccolorchooser.cpp:27
+msgid "IRC Color Chooser"
+msgstr "IRC 颜色选择器"
+
+#: src/irccolorchooser.cpp:33
+msgid "None"
+msgstr "空"
+
+#: src/serverdialog.cpp:36
+msgid "&Server:"
+msgstr "服务器(&S)："
+
+#: src/serverdialog.cpp:38
+msgid ""
+"The name or IP number of the server. irchelp.org maintains a list of servers."
+msgstr "服务器的域名或 IP 位址，在 irchelp.org 上提供有一份服务器列表。"
+
+#: src/serverdialog.cpp:45
+msgid ""
+"Enter the port number required to connect to the server. For most servers, this "
+"should be <b>6667</b>."
+msgstr "输入连接到服务器的端口号，对大多数服务器来说应该是 <b>6667</b>。"
+
+#: src/channeldialog.cpp:37 src/serverdialog.cpp:48
+msgid "Pass&word:"
+msgstr "密码(&W)："
+
+#: src/serverdialog.cpp:53
+msgid "S&ecure connection (SSL)"
+msgstr "SSL 安全连接(&E)"
+
+#: src/serverdialog.cpp:54
+msgid ""
+"Check if you want to use Secure Socket Layer (SSL) protocol to communicate with "
+"the server. This protects the privacy of your communications between your "
+"computer and the IRC server. The server must support SSL protocol for this to "
+"work. In most cases, if the server does not support SSL, the connection will "
+"fail."
+msgstr ""
+"如果您要使用安全套接字层协议(SSL)与服务器通讯请选中此项，这可以防止您与服务器之间交互的隐私信息被监视，但要求对方服务器必须支持 SSL "
+"协议才能工作。在多数情况下，如果服务器不支持 SSL，使用 SSL 协议连接会导致失败发生。"
+
+#: src/serverdialog.cpp:94
+msgid "The server address is required."
+msgstr "要求填入服务器地址。"
+
+#: src/dcctransfersend.cpp:142
+msgid "The admin has restricted the right to send files"
+msgstr "管理员已限制了文件发送"
+
+#: src/dcctransfersend.cpp:172
+msgid "The url \"%1\" does not exist"
+msgstr "URL“%1”不存在。"
+
+#: src/dcctransfersend.cpp:180
+msgid "Could not retrieve \"%1\""
+msgstr "无法写入文件“%1”。"
+
+#: src/dcctransfersend.cpp:189
+msgid "Enter Filename"
+msgstr "输入文件名"
+
+#: src/dcctransfersend.cpp:189
+msgid ""
+"<qt>The file that you are sending to <i>%1</i> does not have a filename."
+"<br>Please enter a filename to be presented to the receiver, or cancel the dcc "
+"transfer</qt>"
+msgstr "<qt>您正在发送的文件 <i>%1</i> 没有文件名，<br>请给接收方输入一个标识用的文件名，或者中止 DCC 传输。</qt>"
+
+#: src/dcctransfersend.cpp:193
+msgid "No filename was given"
+msgstr "没有给定文件名"
+
+#: src/dcctransfersend.cpp:235
+msgid "Could not send a DCC SEND request to the partner via the IRC server."
+msgstr ""
+
+#: src/dcctransfersend.cpp:283
+msgid "Waiting remote user's acceptance"
+msgstr "正在等待远端用户接收"
+
+#: src/dcctransferrecv.cpp:545 src/dcctransfersend.cpp:331
+msgid "Could not accept the connection. (Socket Error)"
+msgstr "无法接收连接(Socket 错误)。"
+
+#: src/dcctransfersend.cpp:365
+#, c-format
+msgid "Could not open the file: %1"
+msgstr "无法打开文件：%1"
+
+#: src/dcctransferrecv.cpp:557 src/dcctransfersend.cpp:418
+#, c-format
+msgid "Socket error: %1"
+msgstr "Socket 出错：%1"
+
+#: src/dcctransferrecv.cpp:658 src/dcctransfersend.cpp:440
+msgid "Timed out"
+msgstr "超时"
+
+#: src/dcctransferrecv.cpp:585 src/dcctransfersend.cpp:445
+#, c-format
+msgid "Connection failure: %1"
+msgstr "连接失败：%1"
+
+#: src/dcctransferrecv.cpp:665 src/dcctransfersend.cpp:458
+msgid "Remote user disconnected"
+msgstr "远端用户已断开连接"
+
+#: src/dcctransfersend.cpp:469
+msgid "The operation was successful. Should never happen in an error dialog."
+msgstr "操作成功，应该不会再出现错误对话框。"
+
+#: src/dcctransfersend.cpp:472
+msgid "Could not read from file \"%1\"."
+msgstr "无法读取文件“%1”。"
+
+#: src/dcctransfersend.cpp:475
+msgid "Could not write to file \"%1\"."
+msgstr "无法写入文件“%1”。"
+
+#: src/dcctransfersend.cpp:478
+msgid "A fatal unrecoverable error occurred."
+msgstr "发生致命的不可恢复错误。"
+
+#: src/dcctransfersend.cpp:481
+msgid "Could not open file \"%1\"."
+msgstr "无法打开文件“%1”。"
+
+#: src/dcctransfersend.cpp:490
+msgid "The operation was unexpectedly aborted."
+msgstr "操作意外放弃。"
+
+#: src/dcctransfersend.cpp:493
+msgid "The operation timed out."
+msgstr "操作超时。"
+
+#: src/dcctransfersend.cpp:496
+msgid "An unspecified error happened on close."
+msgstr "关闭时发生预料外错误。"
+
+#: src/dcctransfersend.cpp:499
+#, c-format
+msgid "Unknown error. Code %1"
+msgstr "未知错误。代码 %1"
+
+#: src/dcctransferdetailedinfopanel.cpp:64
+#, fuzzy
+msgid "DCC Send"
+msgstr "发送"
+
+#: src/dcctransferdetailedinfopanel.cpp:64
+#, fuzzy
+msgid "DCC Receive"
+msgstr "接收"
+
+#: src/dcctransferdetailedinfopanel.cpp:66
+msgid " (Reverse DCC)"
+msgstr ""
+
+#: src/dcctransferdetailedinfopanel.cpp:82
+#: src/dcctransferdetailedinfopanel.cpp:86
+#, fuzzy
+msgid "Unknown server"
+msgstr "文件大小未知"
+
+#: src/dcctransferdetailedinfopanel.cpp:87
+#, fuzzy
+msgid "%1 on %2"
+msgstr "%1 加入了 %2"
+
+#: src/dcctransferdetailedinfopanel.cpp:91
+#, fuzzy
+msgid ", %1 (port %2)"
+msgstr "%1 离开了 %2"
+
+#: src/dcctransferdetailedinfopanel.cpp:98
+#, fuzzy
+msgid "%1 (port %2)"
+msgstr "%1 离开了 %2"
+
+#: src/dcctransferdetailedinfopanel.cpp:123
+#, c-format
+msgid "Yes, %1"
+msgstr ""
+
+#: src/dcctransferdetailedinfopanel.cpp:136
+#, fuzzy
+msgid "< 1sec"
+msgstr " 秒"
+
+#: src/konsolepanel.cpp:23 src/viewcontainer.cpp:1924
+#: src/viewcontainer.cpp:1925
+msgid "Konsole"
+msgstr "Konsole"
+
+#: src/konversationstatusbar.cpp:35 src/konversationstatusbar.cpp:76
+#: src/konversationstatusbar.cpp:144
+msgid "Ready."
+msgstr "就绪。"
+
+#: src/konversationstatusbar.cpp:45
+msgid ""
+"<qt>This shows the number of users in the channel, and the number of those that "
+"are operators (ops)."
+"<p>A channel operator is a user that has special privileges, such as the "
+"ability to kick and ban users, change the channel modes, make other users "
+"operators</qt>"
+msgstr ""
+"<qt>这里显示频道内的用户以及管理员(ops)数量。"
+"<p>频道管理员是拥有特殊权限的用户，具备诸如踢出并封禁用户、改变频道模式、赋予其它用户管理权限等能力。</qt>"
+
+#: src/konversationstatusbar.cpp:47 src/konversationstatusbar.cpp:149
+#: src/konversationstatusbar.cpp:163
+msgid "Lag: Unknown"
+msgstr "延迟：未知"
+
+#: src/konversationstatusbar.cpp:53
+msgid ""
+"All communication with the server is encrypted.  This makes it harder for "
+"someone to listen in on your communications."
+msgstr "所有和服务器间的通讯已被加密，这可以使他人难以监听到您对话里的内容。"
+
+#: src/konversationstatusbar.cpp:60
+msgid ""
+"<qt>The status bar shows various messages, including any problems connecting to "
+"the server.  On the far right the current delay to the server is shown.  The "
+"delay is the time it takes for messages from you to reach the server, and from "
+"the server back to you.</qt>"
+msgstr ""
+"<qt>此状态栏可显示多类消息，包括连接服务器时的错误提示，更多的则是显示到服务器的延迟。此延迟是您的消息从发出到到达服务器，以及服务器的反馈到达您的电脑的间隔"
+"时间。</qt>"
+
+#: src/konversationstatusbar.cpp:151
+msgid "Lag: %1 ms"
+msgstr "延迟：%1 毫秒"
+
+#: src/konversationstatusbar.cpp:153 src/konversationstatusbar.cpp:214
+msgid "Lag: %1 s"
+msgstr "延迟：%1 秒"
+
+#: src/konversationstatusbar.cpp:182
+msgid ""
+"_: %1 = name of server, %2 = (x days), %3 = (x hours), %4 = (x minutes), %5 = "
+"(x seconds)\n"
+"No answer from server %1 for more than %2, %3, %4, and %5."
+msgstr "服务器 %1 已有超过 %2 天、%3 小时、%4 分钟和 %5 秒没有回应。"
+
+#: src/konversationstatusbar.cpp:191
+msgid ""
+"_: %1 = name of server, %2 = (x hours), %3 = (x minutes), %4 = (x seconds)\n"
+"No answer from server %1 for more than %2, %3, and %4."
+msgstr "服务器 %1 已有超过 %2 小时、%3 分钟 和 %4 秒没有回应。"
+
+#: src/konversationstatusbar.cpp:199
+msgid ""
+"_: %1 = name of server, %2 = (x minutes), %3 = (x seconds)\n"
+"No answer from server %1 for more than %2 and %3."
+msgstr "服务器 %1 已有超过 %2 分钟和 %3 秒没有回应。"
+
+#: src/konversationstatusbar.cpp:205
+msgid ""
+"_n: No answer from server %1 for more than 1 second.\n"
+"No answer from server %1 for more than %n seconds."
+msgstr "服务器 %1 已有超过 %n 秒没有回应。"
+
+#: src/server.cpp:464
+msgid "Looking for server %1:%2..."
+msgstr "寻找服务器 %1:%2..."
+
+#: src/server.cpp:585
+msgid "Server %1 not found.  %2"
+msgstr "未找到服务器 %1。%2"
+
+#: src/server.cpp:597
+msgid "Server found, connecting..."
+msgstr "服务器找到，正在连接..."
+
+#: src/server.cpp:607
+msgid "Connected; logging in..."
+msgstr "连接已建立，正在登录..."
+
+#: src/server.cpp:676
+msgid "Connection to Server %1 lost: %2. Trying to reconnect."
+msgstr "连接到服务器 %1 失败：%2。正在重试。"
+
+#: src/server.cpp:689 src/server.cpp:743
+msgid "Connection to Server %1 failed: %2."
+msgstr "连接到服务器 %1 失败：%2。"
+
+#: src/server.cpp:724
+msgid "Trying server %1 instead."
+msgstr "正在尝试备选服务器 %1。"
+
+#: src/server.cpp:734
+msgid "Waiting for 2 minutes before another reconnection attempt..."
+msgstr "在重新尝试连接前等待 2 分钟..."
+
+#: src/server.cpp:754
+msgid "Disconnected from server."
+msgstr "已断开与服务器的连接。"
+
+#: src/server.cpp:777
+msgid ""
+"Could not connect to %1:%2 using SSL encryption.Maybe the server does not "
+"support SSL, or perhaps you have the wrong port? %3"
+msgstr "无法使用 SSL 加密连接到 %1:%2，也许此服务器不支持 SSL 或是您指定了错误的端口？%3"
+
+#: src/server.cpp:781
+msgid "SSL Connection Error"
+msgstr "SSL 连接出错"
+
+#: src/server.cpp:996
+msgid ""
+"No nicknames from the \"%1\" identity were accepted by the connection \"%2\".\n"
+"Please enter a new one or press Cancel to disconnect:"
+msgstr ""
+"身份“%1”所属的昵称不接受连接“%2”。\n"
+"请输入一个新的昵称或按“取消”中断连接："
+
+#: src/server.cpp:997
+msgid "Nickname error"
+msgstr "昵称错误"
+
+#: src/server.cpp:1059
+#, c-format
+msgid "There was an error reading the data from the server: %1"
+msgstr "从服务器读取数据时出错：%1"
+
+#: src/server.cpp:1768
+#, c-format
+msgid "Select File(s) to Send to %1"
+msgstr "选择要发送给 %1 的文件"
+
+#: src/server.cpp:1837
+msgid "%1 offers to send you \"%2\" (%3)..."
+msgstr "%1 向您提供了文件“%2”(%3) 的传输..."
+
+#: src/server.cpp:1840 src/server.cpp:1865 src/server.cpp:1932
+#: src/server.cpp:1962 src/server.cpp:2015
+msgid "unknown size"
+msgstr "文件大小未知"
+
+#: src/server.cpp:1862
+msgid "Asking %1 to accept upload of \"%2\" (%3)..."
+msgstr "正在询问 %1 是否接受“%2”(%3) 的上传..."
+
+#: src/server.cpp:1906
+#, fuzzy
+msgid ""
+"_: %1 = file name, %2 = nickname\n"
+"Received invalid passive DCC send acceptance message for \"%1\" from %2."
+msgstr "从 %2 接收到对文件“%1”的无效续传请求。"
+
+#: src/server.cpp:1928
+msgid ""
+"_: %1 = file name, %2 = nickname of sender, %3 = percentage of file size, %4 = "
+"file size\n"
+"Resuming download of \"%1\" from %2 starting at %3% of %4..."
+msgstr "正在续传来自 %2 的文件“%1”，接续于 %4 的 %3%..."
+
+#: src/server.cpp:1938
+#, fuzzy
+msgid ""
+"_: %1 = file name, %2 = nickname\n"
+"Received invalid resume acceptance message for \"%1\" from %2."
+msgstr "从 %2 接收到对文件“%1”的无效续传请求。"
+
+#: src/server.cpp:1958
+msgid ""
+"_: %1 = file name, %2 = nickname of recipient, %3 = percentage of file size, %4 "
+"= file size\n"
+"Resuming upload of \"%1\" to %2 starting at %3% of %4..."
+msgstr "正在续传发送给 %2 的文件“%1”，现已传送了 %4 的 %3%..."
+
+#: src/server.cpp:1973
+msgid ""
+"_: %1 = file name, %2 = nickname\n"
+"Received invalid resume request for \"%1\" from %2."
+msgstr "从 %2 接收到对文件“%1”的无效续传请求。"
+
+#: src/server.cpp:1983
+msgid ""
+"_: %1 = file name, %2 = nickname of sender\n"
+"Download of \"%1\" from %2 finished."
+msgstr "从 %2 处下载文件“%1”已完成。"
+
+#: src/server.cpp:1986
+msgid ""
+"_: %1 = file name, %2 = nickname of sender\n"
+"Download of \"%1\" from %2 failed. Reason: %3."
+msgstr "从 %2 处下载文件“%1”失败，原因：%3。"
+
+#: src/server.cpp:1993
+msgid ""
+"_: %1 = file name, %2 = nickname of recipient\n"
+"Upload of \"%1\" to %2 finished."
+msgstr "将文件“%1”上传至 %2 已完成。"
+
+#: src/server.cpp:1996
+msgid ""
+"_: %1 = file name, %2 = nickname of recipient\n"
+"Upload of \"%1\" to %2 failed. Reason: %3."
+msgstr "将文件“%1”上传至 %2 失败，原因：%3。"
+
+#: src/server.cpp:2006
+msgid ""
+"_: %1 = file name, %2 nickname of recipient\n"
+"Sending \"%1\" to %2..."
+msgstr "正在发送“%1”到 %2..."
+
+#: src/server.cpp:2013
+msgid ""
+"_: %1 = file name, %2 = file size, %3 = nickname of sender\n"
+"Downloading \"%1\" (%2) from %3..."
+msgstr "正在从 %3 处下载文件“%1”(%2)..."
+
+#: src/server.cpp:2988
+msgid ""
+"You were invited by %1 to join channel %2. Do you accept the invitation?"
+msgstr "%1 邀请您加入频道 %2，您要接受邀请吗？"
+
+#: src/server.cpp:2990
+msgid "Invitation"
+msgstr "邀请"
+
+#: src/server.cpp:3001
+msgid "Error: Could not find script \"%1\"."
+msgstr "错误：无法找到脚本“%1”。"
+
+#: src/server.cpp:3006
+msgid "Error: Could not execute script \"%1\". Check file permissions."
+msgstr "错误：无法执行脚本“%1”，请检查文件权限。"
+
+#: src/server.cpp:3033
+msgid "Set &Available Globally"
+msgstr "设定全局空闲状态(&A)"
+
+#: src/nicksonline.cpp:51 src/viewcontainer.cpp:2354
+msgid "Watched Nicks Online"
+msgstr "监视的在线昵称"
+
+#: src/nicksonline.cpp:60
+msgid "Network/Nickname/Channel"
+msgstr "服务器/昵称/频道"
+
+#: src/nicksonline.cpp:62
+msgid "Additional Information"
+msgstr "额外信息"
+
+#: src/nicksonline.cpp:70
+msgid ""
+"<p>These are all the nicknames on your Nickname Watch list, listed under the "
+"server network they are connected to.  The list also includes the nicknames in "
+"KAddressBook associated with the server network.</p>"
+"<p>The <b>Additional Information</b> column shows the information known for "
+"each nickname.</p>"
+"<p>The channels the nickname has joined are listed underneath each nickname.</p>"
+"<p>Nicknames appearing under <b>Offline</b> are not connected to any of the "
+"servers in the network.</p>"
+"<p>Right-click with the mouse on a nickname to perform additional functions.</p>"
+msgstr ""
+"<p>这些是在您的昵称监视列表里的所有昵称，它们会陈列在您连接到的服务器下面，这个列表同时也包含了此服务器中与 KAddressBook 有关联的昵称。</p>"
+"<p><b>额外信息</b>列显示的是每个昵称的其它已知信息。</p>"
+"<p>这些昵称所加入的频道会显示在昵称的下面。</p>"
+"<p>标以<b>离线</b>状态的昵称还没有连接到当前网络中的任何一个服务器。</p>"
+"<p>鼠标右击任一昵称，可以执行其它一些附加功能。</p>"
+
+#: src/nicksonline.cpp:88
+msgid "&Edit Watch List..."
+msgstr "编辑监视列表(&E)..."
+
+#: src/nicksonline.cpp:91
+msgid "Click to edit the list of nicknames that appear on this screen."
+msgstr "点此编辑要出现在屏幕上的昵称。"
+
+#: src/nicksonline.cpp:98
+msgid "Address book:"
+msgstr "地址簿："
+
+#: src/nicksonline.cpp:101
+msgid ""
+"When you select a nickname in the list above, the buttons here are used to "
+"associate the nickname with an entry in KAddressBook."
+msgstr "如果您选中了列表中任意一个昵称，这个按钮可用于将其与 KDE 地址簿的条目建立关联。"
+
+#: src/nicksonline.cpp:105 src/nicksonline.cpp:815 src/nicksonline.cpp:885
+msgid "Edit C&ontact..."
+msgstr "编辑联系人(&O)..."
+
+#: src/nicksonline.cpp:108
+msgid ""
+"Click to create, view, or edit the KAddressBook entry associated with the "
+"nickname selected above."
+msgstr "点此创建、浏览或编辑您选中的昵称所关联到的 KDE 地址簿条目。"
+
+#: src/nicksonline.cpp:112 src/nicksonline.cpp:817 src/nicksonline.cpp:887
+msgid "&Change Association..."
+msgstr "更改关联(&C)..."
+
+#: src/nicksonline.cpp:115
+msgid ""
+"Click to associate the nickname selected above with an entry in KAddressBook."
+msgstr "点此可将您选中的昵称与 KDE 地址簿建立关联。"
+
+#: src/nicksonline.cpp:118 src/nicksonline.cpp:888
+msgid "&Delete Association"
+msgstr "删除关联(&D)"
+
+#: src/nicksonline.cpp:121
+msgid ""
+"Click to remove the association between the nickname selected above and a "
+"KAddressBook entry."
+msgstr "点此可删除您选中的昵称与 KDE 地址簿条目间的关联。"
+
+#: src/nicksonline.cpp:251
+#, c-format
+msgid " online via %1"
+msgstr " 通过 %1 在线"
+
+#: src/nicksonline.cpp:256
+#, c-format
+msgid " since %1"
+msgstr " 自 %1 后在线"
+
+#: src/linkaddressbook/addressbook.cpp:106 src/nicksonline.cpp:294
+msgid "Offline"
+msgstr "离线"
+
+#: src/nicksonline.cpp:357
+msgid " Voice"
+msgstr " 语音用户"
+
+#: src/nicksonline.cpp:358
+msgid " HalfOp"
+msgstr " 助理员"
+
+#: src/nicksonline.cpp:359
+msgid " Operator"
+msgstr " 操作员"
+
+#: src/nicksonline.cpp:360
+msgid " Owner"
+msgstr " 所有者"
+
+#: src/nicksonline.cpp:361
+msgid " Admin"
+msgstr " 管理员"
+
+#: src/nicksonline.cpp:806 src/nicksonline.cpp:873
+msgid "Create New C&ontact..."
+msgstr "创建新联系人(&O)..."
+
+#: src/nicksonline.cpp:808 src/nicksonline.cpp:872
+msgid "&Choose Association..."
+msgstr "选择关联(&C)..."
+
+#: src/channellistpanel.cpp:122 src/nicksonline.cpp:878
+#: src/nicksonline.cpp:893
+msgid "&Join Channel"
+msgstr "加入频道(&J)"
+
+#: src/highlight_preferences.cpp:51
+msgid "Select Sound File"
+msgstr "选择声音文件"
+
+#: src/chatwindow.cpp:353
+msgid ""
+"\n"
+"*** Logfile started\n"
+"*** on %1\n"
+"\n"
+msgstr ""
+"\n"
+"*** 日志文件开始\n"
+"*** 在 %1\n"
+"\n"
+
+#: src/warnings_preferences.cpp:104
+msgid "Automatically join channel on invite"
+msgstr "接到邀请自动加入频道"
+
+#: src/warnings_preferences.cpp:105
+msgid "Notice that saving logfiles will save whole file"
+msgstr "通知保存日志文件会保存完整文件"
+
+#: src/warnings_preferences.cpp:106
+msgid "Ask before deleting logfile contents"
+msgstr "删除日志文件内容前询问"
+
+#: src/warnings_preferences.cpp:107
+msgid "Ask about closing queries after ignoring the nickname"
+msgstr "忽略昵称后询问是否关闭查询"
+
+#: src/warnings_preferences.cpp:108
+msgid "Ask before connecting to a different server in the network"
+msgstr "连接到网络上的不同服务器前先询问"
+
+#: src/warnings_preferences.cpp:109
+msgid "Close server tab"
+msgstr "关闭服务器标签"
+
+#: src/warnings_preferences.cpp:110
+msgid "Close channel tab"
+msgstr "关闭频道标签"
+
+#: src/warnings_preferences.cpp:111
+msgid "Close query tab"
+msgstr "关闭对话标签"
+
+#: src/warnings_preferences.cpp:112
+msgid "The channel list can only be opened from server-aware tabs"
+msgstr "频道列表只能从已知服务器标签打开"
+
+#: src/warnings_preferences.cpp:113
+msgid "Warning on deleting file received on DCC"
+msgstr "删除从 DCC 接收的文件时发出警告"
+
+#: src/warnings_preferences.cpp:114
+msgid "Warning on hiding the main window menu"
+msgstr "隐藏主窗口菜单时发出警告"
+
+#: src/warnings_preferences.cpp:115
+msgid "Warning on high traffic with channel list"
+msgstr "频道列表流量高时发出警告"
+
+#: src/warnings_preferences.cpp:116
+msgid "Warning on pasting large portions of text"
+msgstr "粘贴大量文本时发出警告"
+
+#: src/warnings_preferences.cpp:117
+msgid "Warning on quitting Konversation"
+msgstr "退出 Konversation 时警告"
+
+#: src/channellistpanel.cpp:46 src/viewcontainer.cpp:2294
+#: src/viewcontainer.cpp:2344
+msgid "Channel List"
+msgstr "频道列表"
+
+#: src/channellistpanel.cpp:62
+msgid "Filter Settings"
+msgstr "过滤器设置"
+
+#: src/channellistpanel.cpp:66
+msgid "M&inimum users:"
+msgstr "最小用户数(&I)："
+
+#: src/channellistpanel.cpp:67
+msgid "Ma&ximum users:"
+msgstr "最大用户数(&X)："
+
+#: src/channellistpanel.cpp:69
+msgid ""
+"You can limit the channel list to those channels with a minimum number of users "
+"here. Choosing 0 disables this criterion."
+msgstr "您可以在此根据频道列表限制频道里的最小用户数量，选择 0 会禁用此判定。"
+
+#: src/channellistpanel.cpp:71
+msgid ""
+"You can limit the channel list to those channels with a maximum number of users "
+"here. Choosing 0 disables this criterion."
+msgstr "您可以在此根据频道列表限制频道里的最大用户数量，选择 0 会禁用此判定。"
+
+#: src/channellistpanel.cpp:77
+msgid "Filter &pattern:"
+msgstr "过滤器模式(&P)："
+
+#: src/channellistpanel.cpp:78
+msgid "Filter target:"
+msgstr "过滤器目标："
+
+#: src/channellistpanel.cpp:81
+msgid "Enter a filter string here."
+msgstr "在此输入要过滤的网络主机"
+
+#: src/channellistpanel.cpp:89
+msgid "&Channel"
+msgstr "频道(&C)"
+
+#: src/channellistpanel.cpp:90
+msgid "&Topic"
+msgstr "话题(&T)"
+
+#: src/channellistpanel.cpp:91
+msgid "&Regular expression"
+msgstr "正则表达式(&R)"
+
+#: src/channellistpanel.cpp:92
+msgid "Appl&y Filter"
+msgstr "应用过滤器(&Y)"
+
+#: src/channellistpanel.cpp:93
+msgid ""
+"Click here to retrieve the list of channels from the server and apply the "
+"filter."
+msgstr "点此从服务器中获取频道列表并应用过滤器。"
+
+#: src/channellistpanel.cpp:102
+msgid ""
+"The filtered list of channels is displayed here. Notice that if you do not use "
+"regular expressions, Konversation lists any channel whose name contains the "
+"filter string you entered. The channel name does not have to start with the "
+"string you entered.\n"
+"\n"
+"Select a channel you want to join by clicking on it. Right click on the channel "
+"to get a list of all web addresses mentioned in the channel's topic."
+msgstr ""
+"这里显示的是过滤后的频道列表，请注意如果您不使用正则表达式，Konversation "
+"只会列出在名称里包含您所输入的过滤字符串的频道，这些频道的名称不一定以您输入的字符串为起始。\n"
+"\n"
+"您点击任一一个频道即可加入它，鼠标右击频道名可以获取频道话题中提及到的所有 Web 地址的列表。"
+
+#: src/channellistpanel.cpp:103
+msgid "Channel Name"
+msgstr "频道名称"
+
+#: src/channellistpanel.cpp:105
+msgid "Channel Topic"
+msgstr "频道话题"
+
+#: src/channellistpanel.cpp:120
+msgid "Re&fresh List"
+msgstr "刷新列表(&F)"
+
+#: src/channellistpanel.cpp:121
+msgid "&Save List..."
+msgstr "保存列表(&S)..."
+
+#: src/channellistpanel.cpp:123
+msgid "Click here to join the channel. A new tab is created for the channel."
+msgstr "点此可加入一个频道，程序会为它创建一个新标签。"
+
+#: src/channellistpanel.cpp:187
+msgid "Save Channel List"
+msgstr "保存频道列表"
+
+#: src/channellistpanel.cpp:220
+msgid ""
+"Konversation Channel List: %1 - %2\n"
+"\n"
+msgstr ""
+"Konversation 频道列表：%1 - %2\n"
+"\n"
+
+#: src/channellistpanel.cpp:478
+msgid "Channels: %1 (%2 shown)"
+msgstr "频道：%1(%2 已显示)"
+
+#: src/channellistpanel.cpp:479
+msgid "Non-unique users: %1 (%2 shown)"
+msgstr "非唯一用户：%1(%2 已显示)"
+
+#: src/channellistpanel.cpp:498
+msgid "Open URL"
+msgstr "打开 URL"
+
+#: src/channellistpanel.cpp:549
+msgid "<<No URL found>>"
+msgstr "<<没有找到 URL>>"
+
+#: src/channellistpanel.cpp:580
+#, c-format
+msgid "Channel List for %1"
+msgstr "%1 的频道列表"
+
+#: src/linkaddressbook/addressbook.cpp:112
+msgid "Online"
+msgstr "在线"
+
+#: src/linkaddressbook/addressbook.cpp:215
+#: src/linkaddressbook/addressbook.cpp:243
+#: src/linkaddressbook/addressbook.cpp:258
+msgid ""
+"Another KDE application tried to use Konversation for instant messaging, but "
+"did not specify any contact to send the message to.  This is probably a bug in "
+"the other application."
+msgstr ""
+"现在正有另一个 KDE 程序在试图使用 Konversation 进行即时通讯，但没有指定任何要发送消息的联系人对象，这可能是另一个程序的 bug。"
+
+#: src/linkaddressbook/addressbook.cpp:221
+msgid ""
+"Another KDE application tried to use Konversation for instant messaging, but "
+"Konversation could not find the specified contact in the KDE address book."
+msgstr ""
+"现在正有另一个 KDE 程序在试图使用 Konversation 进行即时通讯，但 Konversation 在 KDE 地址簿中找不到指定的联系人。"
+
+#: src/linkaddressbook/addressbook.cpp:229
+msgid ""
+"Another KDE application tried to use Konversation for instant messaging, but "
+"the requested user%1 is not online."
+msgstr "现在正有另一个 KDE 程序在试图使用 Konversation 进行即时通讯，但是被请求的用户 %1 现在不在线。"
+
+#: src/linkaddressbook/addressbook.cpp:275
+msgid ""
+"Another KDE application tried to use Konversation to send a file to a contact, "
+"but did not specify any contact to send the file to.  This is probably a bug in "
+"the other application."
+msgstr ""
+"现在正有另一个 KDE 程序在试图使用 Konversation 给联系人发送文件，但没有指定文件要发送给的联系人对象，这可能是另一个程序的 bug。"
+
+#: src/linkaddressbook/addressbook.cpp:281
+msgid ""
+"Another KDE application tried to use Konversation to send a file to a contact, "
+"but Konversation could not find the specified contact in the KDE address book."
+msgstr ""
+"现在正有另一个 KDE 程序在试图使用 Konversation 给联系人发送文件，但 Konversation 在 KDE 地址簿中找不到指定的联系人。"
+
+#: src/linkaddressbook/addressbook.cpp:289
+msgid ""
+"Another KDE application tried to use Konversation to send a file to a contact, "
+"but the requested user%1 is not currently online."
+msgstr "现在正有另一个 KDE 程序在试图使用 Konversation 给联系人发送文件，但是被请求的用户 %1 目前不在线。"
+
+#: src/linkaddressbook/addressbook.cpp:308
+msgid ""
+"Another KDE application tried to use Konversation to add a contact.  "
+"Konversation does support this."
+msgstr "现在正有另一个 KDE 程序在试图使用 Konversation 添加联系人，Konversation 尚不支持此操作。"
+
+#: src/linkaddressbook/addressbook_base.cpp:395
+msgid ""
+"Could not run your addressbook program (kaddressbook).  This is most likely "
+"because it is not installed.  Please install the 'kdepim' packages."
+msgstr "无法运行地址簿程序(kaddressbook)，最大的可能是它还未安装。请安装“kdepim”软件包。"
+
+#: src/linkaddressbook/addressbook_base.cpp:405
+#: src/linkaddressbook/addressbook_base.cpp:481
+msgid ""
+"The contact that you have selected does not have an email address associated "
+"with them. "
+msgstr "您选中的联系人还没有与它们关联的电子邮件地址。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:405
+#: src/linkaddressbook/addressbook_base.cpp:499
+msgid "Cannot Send Email"
+msgstr "无法发送邮件"
+
+#: src/linkaddressbook/addressbook_base.cpp:417
+msgid ""
+"Could not run your email program.  This is possibly because one is not "
+"installed.  To install the KDE email program (kmail) please install the "
+"'kdepim' packages."
+msgstr "无法运行电子邮件客户程序，很可能是一个都还没有安装。如果您要安装 KDE 的电子邮件客户程序 kmail，请安装“kdepim”软件包。"
+
+#: src/linkaddressbook/addressbook_base.cpp:461
+msgid ""
+"None of the contacts that you have selected were associated with an addressbook "
+"contacts. "
+msgstr "在您选中的联系人中还没有人与地址簿联系人建立关联。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:463
+msgid ""
+"The contact that you have selected is not associated with an addressbook "
+"contact. "
+msgstr "您选中的联系人还没有与地址簿联系人建立关联。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:468
+msgid ""
+"Some of the contacts (%1) that you have selected are not associated with "
+"addressbook contacts. "
+msgstr "您选中的某些联系人(%1)还未与地址簿联系人建立关联。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:470
+msgid ""
+"One of the contacts (%1) that you have selected is not associated with an "
+"addressbook contact. "
+msgstr "在您选中的联系人有一位(%1)还未与地址簿联系人建立关联。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:472
+msgid ""
+"You can right click on a contact, and choose to edit the Addressbook "
+"Associations to link them to a contact in your addressbook."
+msgstr "您可以用鼠标右击任一联系人，并根据地址簿中的条目编辑地址簿关联。"
+
+#: src/linkaddressbook/addressbook_base.cpp:479
+msgid ""
+"None of the contacts that you have selected have an email address associated "
+"with them. "
+msgstr "在您选中的联系人中还没有人拥有可供关联的电子邮件地址。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:486
+msgid ""
+"Some of the contacts (%1) that you have selected do not have an email address "
+"associated with them. "
+msgstr "您选中的某些联系人(%1)还没有拥有可供关联的电子邮件地址。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:488
+msgid ""
+"One of the contacts (%1) that you have selected does not have an email address "
+"associated with them. "
+msgstr "在您选中的联系人有一位(%1)还没有拥有可供关联的电子邮件地址。 "
+
+#: src/linkaddressbook/addressbook_base.cpp:490
+msgid ""
+"You can right click on a contact, and choose to edit the addressbook contact, "
+"adding an email for them."
+msgstr "您可以用鼠标右击任一联系人，然后编辑对应的地址簿联系人，为他们添加一个电子邮件地址。"
+
+#: src/linkaddressbook/addressbook_base.cpp:494
+msgid ""
+"Some of the contacts (%1) that you have selected are not associated with "
+"addressbook contacts, and some of the contacts (%2) do not have an email "
+"address associated with them.  "
+msgstr "您选中的某些联系人(%1)还未与地址簿联系人建立关联，同时还有某些联系人(%2)没有可供关联的电子邮件地址。  "
+
+#: src/linkaddressbook/addressbook_base.cpp:495
+msgid ""
+"You can right click on a contact, and choose to edit the Addressbook "
+"Associations to link them to a contact in your addressbook, and choose to edit "
+"the addressbook contact, adding an email for them."
+msgstr "您可以用鼠标右击任一联系人，并根据地址簿中的条目编辑地址簿关联，也可以在编辑地址簿联系人时为他们添加电子邮件地址。"
+
+#: src/linkaddressbook/addressbook_base.cpp:504
+msgid ""
+"\n"
+"Do you want to send an email anyway to the nicks that do have an email address?"
+msgstr ""
+"\n"
+"您真的要给那些还没有电子邮件地址的昵称发送邮件吗？"
+
+#: src/linkaddressbook/addressbook_base.cpp:505
+msgid "Send Email"
+msgstr "发送邮件"
+
+#: src/linkaddressbook/linkaddressbookui.cpp:51
+msgid "Link IRC Nick to Addressbook Contact"
+msgstr "将 IRC 昵称连接到地址簿联系人"
+
+#: src/linkaddressbook/linkaddressbookui.cpp:118
+msgid "Choose the person who '%1' is."
+msgstr "选择昵称为“%1”的联系人。"
+
+#: src/linkaddressbook/linkaddressbookui.cpp:120
+msgid "Currently '%1' is associated with a contact."
+msgstr "当前昵称为“%1”的用户已被关联到一个联系人。"
+
+#: src/linkaddressbook/linkaddressbookui.cpp:122
+msgid "Currently '%1' is associated with contact '%2'."
+msgstr "当前昵称为“%1”的用已被关联到联系人“%2”。"
+
+#: src/linkaddressbook/linkaddressbookui.cpp:124
+msgid ""
+"<qt><b>Warning:</b> '%1' is currently being listed as belonging to multiple "
+"contacts.  Please select the correct contact.</qt>"
+msgstr "<qt><b>警告：</b>根据现在的列出的情况，用户“%1”隶属于多个联系人。请从中选择正确的联系人。</qt>"
+
+#: src/linkaddressbook/linkaddressbookui.cpp:132
+msgid "New Address Book Entry"
+msgstr "新建地址簿条目"
+
+#: src/linkaddressbook/linkaddressbookui.cpp:133
+msgid "Name the new entry:"
+msgstr "命名新条目："
+
+#: src/urlcatcher.cpp:44 src/viewcontainer.cpp:1943
+msgid "URL Catcher"
+msgstr "URL 捕捉器"
+
+#: src/urlcatcher.cpp:49
+msgid "URL"
+msgstr "URL"
+
+#: src/urlcatcher.cpp:53
+msgid ""
+"List of Uniform Resource Locators mentioned in any of the Konversation windows "
+"during this session."
+msgstr "统一资源标识符列表会给出当前 Konversation 会话窗口中所有的 URL。"
+
+#: src/urlcatcher.cpp:63
+msgid "&Open URL"
+msgstr "打开 URL(&O)"
+
+#: src/urlcatcher.cpp:65
+msgid ""
+"<p>Select a <b>URL</b> above, then click this button to launch the application "
+"associated with the mimetype of the URL.</p>"
+"<p>In the <b>Settings</b>, under <b>Behavior</b> | <b>General</b>"
+", you can specify a custom web browser for web URLs.</p>"
+msgstr ""
+"<p>在上面选择一个 <b>URL</b>，点击它即可调用关联到 URL 这个MIME 类型的程序。</p>"
+"<p>在<b>设置</b>对话框里的<b>行为</b>><b>常规</b>选项卡中，您可以自行定义一个用于打开 Web 目标的网络浏览器。</p>"
+
+#: src/urlcatcher.cpp:70
+msgid "&Copy URL"
+msgstr "复制 URL(&C)"
+
+#: src/urlcatcher.cpp:72
+msgid ""
+"Select a <b>URL</b> above, then click this button to copy the URL to the "
+"clipboard."
+msgstr "在上面选择一个 <b>URL</b>，点击此按钮可将其复制到剪贴板。"
+
+#: src/urlcatcher.cpp:74
+msgid "&Delete URL"
+msgstr "删除 URL(&D)"
+
+#: src/urlcatcher.cpp:76
+msgid ""
+"Select a <b>URL</b> above, then click this button to delete the URL from the "
+"list."
+msgstr "在上面选择一个 <b>URL</b>，点击此按钮可将其从列表中删除。"
+
+#: src/urlcatcher.cpp:78
+msgid "Sa&ve List..."
+msgstr "保存列表(&V)..."
+
+#: src/urlcatcher.cpp:80
+msgid "Click to save the entire list to a file."
+msgstr "点此将 URL 条目列表保存到文件。"
+
+#: src/urlcatcher.cpp:82
+msgid "C&lear List"
+msgstr "清除列表(&L)"
+
+#: src/urlcatcher.cpp:84
+msgid "Click to erase the entire list."
+msgstr "点此擦除 URL 条目列表。"
+
+#: src/urlcatcher.cpp:211
+msgid "Save URL List"
+msgstr "保存 URL 列表"
+
+#: src/multilineedit.cpp:24
+msgid "Edit Multiline Paste"
+msgstr "编辑多行粘贴"
+
+#: src/multilineedit.cpp:26
+msgid "Add &Quotation Indicators"
+msgstr "添加引用标识(&Q)"
+
+#. i18n: file ./src/joinchannelui.ui line 33
+#: rc.cpp:1570 src/channeldialog.cpp:32
+#, no-c-format
+msgid "C&hannel:"
+msgstr "频道(&H)："
+
+#: src/channeldialog.cpp:73
+msgid "The channel name is required."
+msgstr "需要一个频道名。"
+
+#: src/rawlog.cpp:28 src/viewcontainer.cpp:2081
+msgid "Raw Log"
+msgstr "原始日志"
+
+#: src/viewcontainer.cpp:566
+msgid "Search for text in the current tab"
+msgstr "在当前标签中搜索文本"
+
+#: src/viewcontainer.cpp:584
+#, c-format
+msgid "Channel &List for %1"
+msgstr "%1 的频道列表(&L)"
+
+#: src/viewcontainer.cpp:604
+#, c-format
+msgid "&Open Logfile for %1"
+msgstr "打开 %1 的日志文件(&O)"
+
+#: src/viewcontainer.cpp:656
+msgid "&Channel Settings for %1..."
+msgstr "%1 的频道设置(&C)..."
+
+#: src/viewcontainer.cpp:1605
+msgid ""
+"_: Default encoding\n"
+"Default ( %1 )"
+msgstr "默认 (%1)"
+
+#: src/viewcontainer.cpp:1785
+msgid "You can only search in text fields."
+msgstr "您只能在文本栏搜索。"
+
+#: src/viewcontainer.cpp:1786
+msgid "Find Text Information"
+msgstr "查找文本信息"
+
+#: src/viewcontainer.cpp:1916
+#, c-format
+msgid "Logfile of %1"
+msgstr "%1 的日志文件"
+
+#: src/dcctransferpanel.cpp:47 src/viewcontainer.cpp:1987
+msgid "DCC Status"
+msgstr "DCC 状态"
+
+#: src/viewcontainer.cpp:2320
+msgid ""
+"Using this function may result in a lot of network traffic. If your connection "
+"is not fast enough, it is possible that your client will be disconnected by the "
+"server."
+msgstr "使用这项功能可能导致大量的网络流量。如果您的网络连接不够迅速，您的客户端连接有可能被服务器中断。"
+
+#: src/viewcontainer.cpp:2323
+msgid "Channel List Warning"
+msgstr "频道列表警告"
+
+#: src/viewcontainer.cpp:2340
+msgid ""
+"The channel list can only be opened from a query, channel or status window to "
+"find out, which server this list belongs to."
+msgstr "频道列表只能从查询，频道或状态窗口打开，以找出列表属于哪一个服务器。"
+
+#: src/servergroupdialog.cpp:56
+msgid ""
+"Enter the name of the Network here. You may create as many entries in the "
+"Server List screen with the same Network as you like."
+msgstr "在此输入网络名，您可以使用同一个网络名在服务器列表屏幕里创建尽可能多的您所喜爱的条目。"
+
+#: src/servergroupdialog.cpp:59
+msgid ""
+"Choose an existing Identity or click the Edit button to add a new Identity or "
+"edit an existing one. The Identity will identify you and determine your "
+"nickname when you connect to the network."
+msgstr "选择一个现存的身份，或点击编辑按钮添加一个新的身份，也可以编辑已有身份。身份是您的辨认标识并且决定了您连接到网络时使用的昵称。"
+
+#: src/servergroupdialog.cpp:70
+msgid ""
+"Optional. This command will be sent to the server after connecting. Example: <b>"
+"/msg NickServ IDENTIFY <i>konvirocks</i></b>. This example is for the freenode "
+"network, which requires users to register their nickname with a password and "
+"login when connecting. <i>konvirocks<i> is the password for the nickname given "
+"in Identity. You may enter more than one command by separating them with "
+"semicolons."
+msgstr ""
+"可选设定，您指定的命令会在连接到服务器后被自动提交。例：<b>/msg NickServ IDENTIFY <i>konvirocks</i></b>"
+"，此范例适用于 freenode 网络，它需要用户在登录后注册自己的昵称并设定一个密码，在这里 <i>konvirocks<i> "
+"就是绑定到身份昵称的密码。您可以在这里输入一个或更多命令，用分号将它们间隔开来。"
+
+#: src/servergroupdialog.cpp:73
+msgid ""
+"Check here if you want Konversation to automatically connect to this network "
+"whenever you open Konversation."
+msgstr "如果您想要 Konversation 每次启动时自动连接到这个网络，请选中此项。"
+
+#: src/servergroupdialog.cpp:75
+msgid ""
+"This is a list of IRC Servers in the network. When connecting to the network, "
+"Konversation will attempt to connect to the top server first. If this fails, it "
+"will attempt the second server. If this fails, it will attempt the third, and "
+"so on. At least one server must be specified. Click a server to highlight it."
+msgstr ""
+"这里是网络上的 IRC 服务器列表，当您连接到网络时，Konversation "
+"会自动尝试连接到位于列表顶端的服务器，如果连接失败再尝试第二个，若再次失败则尝试第三个，以下皆然。您需要在此至少指定一个服务器，点击任一服务器可高亮显示它。"
+
+#: src/servergroupdialog.cpp:88
+msgid ""
+"Optional. This is a list of the channels that will be automatically joined once "
+"Konversation has connected to a server. You may leave this blank if you wish to "
+"not automatically join any channels."
+msgstr "可选设定。这是当 Konversation 连接到服务器后会自动加入的频道列表，如果您不打算自动加入任何频道可将此项留空。"
+
+#: src/servergroupdialog.cpp:101
+msgid "Change network information"
+msgstr "改变网络信息"
+
+#: src/servergroupdialog.cpp:177
+msgid "Add Server"
+msgstr "添加服务器"
+
+#: src/servergroupdialog.cpp:194
+msgid "Edit Server"
+msgstr "编辑服务器"
+
+#: src/servergroupdialog.cpp:291
+msgid "Add Channel"
+msgstr "添加频道"
+
+#: src/servergroupdialog.cpp:308
+msgid "Edit Channel"
+msgstr "编辑频道"
+
+#: src/servergroupdialog.cpp:403
+msgid "The network name is required."
+msgstr "这里需要一个网络名。"
+
+#: src/servergroupdialog.cpp:407
+msgid "You need to add at least one server to the network."
+msgstr "您需要在此网络中添加至少一个服务器。"
+
+#: src/theme_preferences.cpp:169
+msgid "*.tar.gz *.tar.bz2 *.tar *.zip|Konversation Themes"
+msgstr "*.tar.gz *.tar.bz2 *.tar *.zip|Konversation 主题"
+
+#: src/theme_preferences.cpp:171
+msgid "Select Theme Package"
+msgstr "选择主题包"
+
+#: src/theme_preferences.cpp:184
+msgid "Failed to Download Theme"
+msgstr "下载主题失败"
+
+#: src/theme_preferences.cpp:199 src/theme_preferences.cpp:220
+msgid "Theme archive is invalid."
+msgstr "主题包无效"
+
+#: src/theme_preferences.cpp:200 src/theme_preferences.cpp:221
+msgid "Cannot Install Theme"
+msgstr "无法安装主题"
+
+#: src/theme_preferences.cpp:246
+msgid "Do you want to remove %1 ?"
+msgstr "您真的要删除 %1 吗？"
+
+#: src/theme_preferences.cpp:247
+msgid "Remove Theme"
+msgstr "删除主题"
+
+#: src/trayicon.cpp:41
+msgid "Konversation - IRC Client"
+msgstr "Konversation - IRC 客户端"
+
+#: src/dccrecipientdialog.cpp:27
+msgid "Select Recipient"
+msgstr "选择接收人"
+
+#: src/dccrecipientdialog.cpp:50
+msgid "Select nickname and close the window"
+msgstr "选择昵称并关闭窗口"
+
+#: src/dccrecipientdialog.cpp:51
+msgid "Close the window without changes"
+msgstr "不改变而关闭窗口"
+
+#: src/konvdcop.cpp:139
+msgid "getNickname: Server %1 is not found."
+msgstr "getNickname：找不到服务器 %1。"
+
+#: src/dcctransferrecv.cpp:177
+msgid "The admin has restricted the right to receive files"
+msgstr "管理员已限制您接收文件"
+
+#: src/dcctransferrecv.cpp:184
+msgid "Unsupported negotiation (filesize=0)"
+msgstr "不支持的对话(文件大小=0)"
+
+#: src/dcctransferrecv.cpp:263
+msgid "<b>Cannot create the folder.</b><br>Folder: %1<br>"
+msgstr "<b>无法创建文件夹。</b><br>文件夹：%1<br>"
+
+#: src/dcctransferrecv.cpp:276
+msgid "Could not create a KIO instance"
+msgstr "无法创建 KIO 实例"
+
+#: src/dcctransferrecv.cpp:345
+msgid "<b>The file is used by another transfer.</b><br>%1<br>"
+msgstr "<b>此文件正被另一个传输进程所使用。</b><br>%1<br>"
+
+#: src/dcctransferrecv.cpp:357
+msgid ""
+"<b>A partial file exists.</b>"
+"<br>%1"
+"<br>Size of the partial file: %2 bytes"
+"<br>"
+msgstr "<b>部分文件已存在。</b><br>%1<br>部分文件大小：%2 字节<br>"
+
+#: src/dcctransferrecv.cpp:385
+msgid "<b>The file already exists.</b><br>%1<br>"
+msgstr "<b>文件已存在。</b><br>%1<br>"
+
+#: src/dcctransferrecv.cpp:392
+msgid "<b>Could not open the file.<br>Error: %1</b><br>%2<br>"
+msgstr "<b>无法打开文件。<br>错误：%1</b><br>%2<br>"
+
+#: src/dcctransferrecv.cpp:433
+msgid ""
+"Could not send Reverse DCC SEND acknowledgement to the partner via the IRC "
+"server."
+msgstr ""
+
+#: src/dcctransferrecv.cpp:439
+#, fuzzy
+msgid "Waiting for connection"
+msgstr "连接密码"
+
+#: src/dcctransferrecv.cpp:455
+msgid "Waiting for remote host's acceptance"
+msgstr "正在等待远端主机接收"
+
+#: src/dcctransferrecv.cpp:466
+msgid ""
+"Could not send DCC RECV resume request to the partner via the IRC server."
+msgstr ""
+
+#: src/dcctransferrecv.cpp:485
+msgid "Unexpected response from remote host"
+msgstr "不可预料的远端主机应答"
+
+#: src/dcctransferrecv.cpp:620
+msgid "Transferring error"
+msgstr "传输时出错"
+
+#: src/dcctransferrecv.cpp:636
+#, c-format
+msgid "KIO error: %1"
+msgstr "KIO 出错：%1"
+
+#: src/query.cpp:65
+msgid ""
+"<qt>Some details of the person you are talking to in this query is shown in "
+"this bar.  The full name and hostmask is shown, along with any image or logo "
+"this person has associated with them in the KDE Addressbook."
+"<p>See the <i>Konversation Handbook</i> for information on associating a nick "
+"with a contact in the Addressbook, and for an explanation of what the hostmask "
+"is.</qt>"
+msgstr ""
+"<qt>与您正在对话的用户的部分细节信息会在此栏里显示，包括他的全名与主机掩码，还有他在地址簿里关联到的图片或徽标。"
+"<p>参看 <i>Konversation 手册</i> 可以获得将昵称关联到地址簿联系人的更多相关信息，您也可以从中读到对主机掩码的解释。</qt>"
+
+#: src/channel.cpp:224 src/query.cpp:101 src/statuspanel.cpp:55
+msgid "(away)"
+msgstr "(离开)"
+
+#: src/channel.cpp:555 src/query.cpp:348
+msgid "Do you want to ignore %1?"
+msgstr "您想要忽略 %1 吗？"
+
+#: src/query.cpp:354
+msgid "Do you want to close this query after ignoring this nickname?"
+msgstr "您要忽略昵称后关闭此对话吗？"
+
+#: src/query.cpp:355
+msgid "Close This Query"
+msgstr "关闭此对话"
+
+#: src/query.cpp:357
+msgid "Keep Open"
+msgstr "保持打开"
+
+#: src/channel.cpp:573 src/query.cpp:368
+msgid "Do you want to stop ignoring %1?"
+msgstr "您想要停止忽略 %1 吗？"
+
+#: src/channel.cpp:2483 src/query.cpp:548 src/statuspanel.cpp:350
+msgid "Identity Default ( %1 )"
+msgstr "默认身份(%1)"
+
+#: src/query.cpp:555
+msgid "Do you want to close your query with %1?"
+msgstr "您想要关闭对 %1 的查询吗？"
+
+#: src/query.cpp:556
+msgid "Close Query"
+msgstr "关闭对话"
+
+#: src/query.cpp:604
+msgid "Talking to yourself"
+msgstr "正在和自己对话"
+
+#: src/channel.cpp:1175 src/query.cpp:620
+msgid "%1 has left this server."
+msgstr "%1 已经离开了此服务器。"
+
+#: src/query.cpp:627
+msgid "%1 has left this server (%2)."
+msgstr "%1 离开了此服务器(%2)。"
+
+#: src/osd.cpp:321
+msgid "OSD Preview - drag to reposition"
+msgstr "OSD 预览 - 拖曳可重新定位"
+
+#: src/channelnick.cpp:212
+msgid "Operator"
+msgstr "操作员"
+
+#: src/channelnick.cpp:213
+msgid "Admin"
+msgstr "管理员"
+
+#: src/channelnick.cpp:214
+msgid "Owner"
+msgstr "所有者"
+
+#: src/channelnick.cpp:215
+msgid "Half-operator"
+msgstr "助理员"
+
+#: src/channelnick.cpp:216
+msgid "Has voice"
+msgstr "有语音权"
+
+#: src/konvisettingsdialog.cpp:53 src/konvisettingsdialog.cpp:73
+#: src/konvisettingsdialog.cpp:79 src/konvisettingsdialog.cpp:87
+#: src/konvisettingsdialog.cpp:93 src/konvisettingsdialog.cpp:99
+#: src/konvisettingsdialog.cpp:107
+msgid "Interface"
+msgstr "界面"
+
+#: src/konvisettingsdialog.cpp:57 src/konvisettingsdialog.cpp:61
+#: src/konvisettingsdialog.cpp:113 src/konvisettingsdialog.cpp:119
+#: src/konvisettingsdialog.cpp:125 src/konvisettingsdialog.cpp:131
+#: src/konvisettingsdialog.cpp:139 src/konvisettingsdialog.cpp:147
+#: src/konvisettingsdialog.cpp:155 src/konvisettingsdialog.cpp:163
+#: src/konvisettingsdialog.cpp:168
+msgid "Behavior"
+msgstr "行为"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 59
+#: rc.cpp:998 src/konvisettingsdialog.cpp:65 src/konvisettingsdialog.cpp:174
+#: src/konvisettingsdialog.cpp:180 src/konvisettingsdialog.cpp:188
+#: src/konvisettingsdialog.cpp:198 src/konvisettingsdialog.cpp:206
+#, no-c-format
+msgid "Notifications"
+msgstr "通知"
+
+#: src/konvisettingsdialog.cpp:73 src/konvisettingsdialog.cpp:74
+#: src/konvisettingsdialog.cpp:125 src/konvisettingsdialog.cpp:126
+msgid "Chat Window"
+msgstr "聊天窗口"
+
+#: src/konvisettingsdialog.cpp:79 src/konvisettingsdialog.cpp:80
+msgid "Nicklist Themes"
+msgstr "昵称列表主题"
+
+#: src/konvisettingsdialog.cpp:87 src/konvisettingsdialog.cpp:88
+msgid "Colors"
+msgstr "颜色"
+
+#: src/konvisettingsdialog.cpp:99 src/konvisettingsdialog.cpp:100
+msgid "Quick Buttons"
+msgstr "快捷按钮"
+
+#: src/konvisettingsdialog.cpp:119 src/konvisettingsdialog.cpp:120
+msgid "Connection"
+msgstr "连接"
+
+#: src/konvisettingsdialog.cpp:131 src/konvisettingsdialog.cpp:132
+msgid "Nickname List"
+msgstr "昵称列表"
+
+#: src/konvisettingsdialog.cpp:139 src/konvisettingsdialog.cpp:140
+msgid "Command Aliases"
+msgstr "命令别名"
+
+#: src/konvisettingsdialog.cpp:147 src/konvisettingsdialog.cpp:148
+msgid "Auto Replace"
+msgstr "自动替换"
+
+#: src/konvisettingsdialog.cpp:163 src/konvisettingsdialog.cpp:164
+msgid "Logging"
+msgstr "日志"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 270
+#: rc.cpp:1027 src/konvisettingsdialog.cpp:180 src/konvisettingsdialog.cpp:181
+#, no-c-format
+msgid "Highlight"
+msgstr "高亮"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 173
+#: rc.cpp:359 src/konvisettingsdialog.cpp:188 src/konvisettingsdialog.cpp:189
+#, no-c-format
+msgid "Watched Nicknames"
+msgstr "被监视的昵称"
+
+#: src/konvisettingsdialog.cpp:198 src/konvisettingsdialog.cpp:199
+msgid "On Screen Display"
+msgstr "屏幕显示"
+
+#: src/konvisettingsdialog.cpp:206 src/konvisettingsdialog.cpp:207
+msgid "Warning Dialogs"
+msgstr "警告对话"
+
+#: src/dccresumedialog.cpp:46
+msgid "DCC Receive Question"
+msgstr "DCC 接收询问"
+
+#: src/dccresumedialog.cpp:65
+msgid "&Resume"
+msgstr "续传(&R)"
+
+#: src/dccresumedialog.cpp:87
+msgid "O&riginal Filename"
+msgstr "原始文件名(&R)"
+
+#: src/dccresumedialog.cpp:88
+msgid "Suggest &New Filename"
+msgstr "建议的新文件名(&N)"
+
+#: src/dccresumedialog.cpp:133
+msgid "&Overwrite"
+msgstr "覆盖(&O)"
+
+#: src/dccresumedialog.cpp:139
+msgid "R&ename"
+msgstr "重命名(&E)"
+
+#: src/searchbar.cpp:70
+msgid "Find Forward"
+msgstr "查找上一个"
+
+#: src/searchbar.cpp:71
+msgid "Case Sensitive"
+msgstr "大小写敏感"
+
+#: src/searchbar.cpp:72
+msgid "Whole Words Only"
+msgstr "完整单词匹配"
+
+#: src/searchbar.cpp:73
+msgid "From Cursor"
+msgstr "从光标处开始"
+
+#: src/statuspanel.cpp:277
+msgid "Do you want to disconnect from '%1'?"
+msgstr "您真要断开与“%1”的连接吗？"
+
+#: src/statuspanel.cpp:278
+msgid "Disconnect From Server"
+msgstr "从服务器断开连接"
+
+#: src/dcctransferpanel.cpp:75
+msgid "Started at"
+msgstr "开始自"
+
+#: src/dcctransferpanel.cpp:76
+msgid "Status"
+msgstr "状态"
+
+#: src/dcctransferpanel.cpp:78
+msgid "Partner"
+msgstr "伙伴"
+
+#: src/dcctransferpanel.cpp:79
+msgid "Progress"
+msgstr "进度"
+
+#: src/dcctransferpanel.cpp:80
+msgid "Position"
+msgstr "位置"
+
+#: src/dcctransferpanel.cpp:81
+msgid "Remaining"
+msgstr "剩余"
+
+#: src/dcctransferpanel.cpp:82
+msgid "Speed"
+msgstr "速度"
+
+#: src/dcctransferpanel.cpp:83
+msgid "Sender Address"
+msgstr "发送者地址"
+
+#: src/dcctransferpanel.cpp:119
+msgid "Accept"
+msgstr "接受"
+
+#: src/dcctransferpanel.cpp:120
+msgid "Abort"
+msgstr "中止"
+
+#: src/dcctransferpanel.cpp:122
+msgid "Open File"
+msgstr "打开文件"
+
+#: src/dcctransferpanel.cpp:123
+msgid "Remove File"
+msgstr "删除文件"
+
+#: src/dcctransferpanel.cpp:124
+msgid "Transfer Details"
+msgstr "传输细节"
+
+#: src/dcctransferpanel.cpp:127
+msgid "Start receiving"
+msgstr "开始接收"
+
+#: src/dcctransferpanel.cpp:128
+msgid "Abort the transfer(s)"
+msgstr "中止传输"
+
+#: src/dcctransferpanel.cpp:129
+msgid "Remove from this panel"
+msgstr "从面板上删除"
+
+#: src/dcctransferpanel.cpp:130
+msgid "Run the file"
+msgstr "运行文件"
+
+#: src/dcctransferpanel.cpp:131
+msgid "Remove the received file(s)"
+msgstr "删除接收到的文件"
+
+#: src/dcctransferpanel.cpp:132
+msgid "View DCC transfer details"
+msgstr "查看 DCC 传输细节"
+
+#: src/dcctransferpanel.cpp:147
+msgid "&Select All Items"
+msgstr "选中全部项目(&S)"
+
+#: src/dcctransferpanel.cpp:148
+msgid "S&elect All Completed Items"
+msgstr "选中所有已完成的项目(&E)"
+
+#: src/dcctransferpanel.cpp:150
+msgid "&Accept"
+msgstr "接受(&A)"
+
+#: src/dcctransferpanel.cpp:151
+msgid "A&bort"
+msgstr "中止(&B)"
+
+#: src/dcctransferpanel.cpp:154
+#, fuzzy
+msgid "Resend"
+msgstr "续传(&R)"
+
+#: src/dcctransferpanel.cpp:155
+msgid "&Clear"
+msgstr "清除(&C)"
+
+#: src/dcctransferpanel.cpp:157
+msgid "&Open File"
+msgstr "打开文件(&O)"
+
+#: src/dcctransferpanel.cpp:158
+msgid "&Remove File"
+msgstr "删除文件(&R)"
+
+#: src/dcctransferpanel.cpp:159
+msgid "File &Information"
+msgstr "文件信息(&I)"
+
+#: src/dcctransferpanel.cpp:412
+#, c-format
+msgid ""
+"_n: Do you really want to remove the selected file?\n"
+"Do you really want to remove the selected %n files?"
+msgstr "您真的要删除选中的 %n 个文件吗？"
+
+#: src/dcctransferpanel.cpp:413
+msgid "Delete Confirmation"
+msgstr "删除确认"
+
+#: src/channel.cpp:121
+msgid "Edit Channel Settings"
+msgstr "编辑频道设定"
+
+#: src/channel.cpp:125
+msgid ""
+"<qt>Every channel on IRC has a topic associated with it.  This is simply a "
+"message that everybody can see."
+"<p>If you are an operator, or the channel mode <em>'T'</em> "
+"has not been set, then you can change the topic by clicking the Edit Channel "
+"Properties button to the left of the topic.  You can also view the history of "
+"topics there.</qt>"
+msgstr ""
+"<qt>在 IRC 上的每个频道都有相关的话题，这是一条每个人都能看到的简单消息。"
+"<p>如果您是一名操作员，或者 <em>“T”</em> "
+"频道模式未予设定，您就可以点击话题消息左边的编辑频道属性按钮修改话题，同时您也可以从中查看以往的话题历史。</qt>"
+
+#. i18n: file ./src/channeloptionsui.ui line 169
+#: rc.cpp:839 src/channel.cpp:145
+#, no-c-format
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>The <b>T</b>opic mode means that only the channel operator can change the "
+"topic for the channel.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>设定<b>T</b> 模式(Topic)意味着只有频道的操作员才可以改动频道的话题。</qt>"
+
+#. i18n: file ./src/channeloptionsui.ui line 180
+#: rc.cpp:845 src/channel.cpp:146
+#, no-c-format
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p><b>N</b>o messages from outside means that users that are not in the channel "
+"cannot send messages that everybody in the channel can see.  Almost all "
+"channels have this set to prevent nuisance messages.</qt>"
+msgstr ""
+"<qt>此选项可用于控制频道的<em>模式</em>，只有频道的操作员才有权更改。"
+"<p><b>禁止</b>来自外部的消息意味着此频道以外的用户不能向当前频道发送公开消息，几乎所有的频道都启用此模式以避免垃圾信息的干扰。</qt>"
+
+#. i18n: file ./src/channeloptionsui.ui line 191
+#: rc.cpp:851 src/channel.cpp:147
+#, no-c-format
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>A <b>S</b>ecret channel will not show up in the channel list, nor will any "
+"user be able to see that you are in the channel with the <em>WHOIS</em> "
+"command or anything similar.  Only the people that are in the same channel will "
+"know that you are in this channel, if this mode is set.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>如果设定了<b>S</b>模式(Secret)，此频道将不会在频道列表中显示，同时任何人都无法利用对他人使用<em>WHOIS</em>"
+"或其它类似命令来察觉此频道。只有和您位于同一机密频道的人才能知道您正在这个频道里。</qt>"
+
+#: src/channel.cpp:148
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>An <b>I</b>nvite only channel means that people can only join the channel if "
+"they are invited.  To invite someone, a channel operator needs to issue the "
+"command <em>/invite nick</em> from within the channel.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>设定了<b>I</b>模式(Invite "
+"only)的频道意味着他人若非被邀请否则无法进入此频道。如果需要邀请某人，频道操作员应在他所处于的频道内发送此命令 <em>/invite nick</em>"
+"。</qt>"
+
+#: src/channel.cpp:149
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>A <b>P</b>rivate channel is shown in a listing of all channels, but the "
+"topic is not shown.  A user's <em>WHOIS</e> may or may not show them as being "
+"in a private channel depending on the IRC server.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>设定为 <b>P</b> 模式(Private)的频道虽然会在全部频道的列表里显示，但话题将被隐藏。用户的 <em>WHOIS</e> "
+"命令能否显示出这些则取决于不同 IRC 服务器对私人频道的访问控制规划。</qt>"
+
+#. i18n: file ./src/channeloptionsui.ui line 213
+#: rc.cpp:863 src/channel.cpp:150
+#, no-c-format
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>A <b>M</b>oderated channel is one where only operators, half-operators and "
+"those with voice can talk.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>在设定了 <b>M</b> 模式(Moderated)的频道里只有操作员、助理以及拥有语音权限的用户才可以相互交谈。</qt>"
+
+#. i18n: file ./src/channeloptionsui.ui line 232
+#: rc.cpp:869 rc.cpp:881 src/channel.cpp:151
+#, no-c-format
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>A <b>P</b>rotected channel requires users to enter a password in order to "
+"join.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>具有 <b>P</b> 模式(Protected)设定的频道要求用户输入正确的密码才能够加入。</qt>"
+
+#. i18n: file ./src/channeloptionsui.ui line 246
+#: rc.cpp:872 rc.cpp:878 src/channel.cpp:152
+#, no-c-format
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>A channel that has a user <b>L</b>imit means that only that many users can "
+"be in the channel at any one time.  Some channels have a bot that sits in the "
+"channel and changes this automatically depending on how busy the channel "
+"is.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>一个频道若具有 <b>L</b> 模式(Limit)设定则意味着它在同一时刻所能容纳的用户数量是有规限的，有些频道会布置 bot "
+"常驻于内并根据频道的繁忙程度自动调整其数量。</qt>"
+
+#: src/channel.cpp:164
+msgid "Maximum users allowed in channel"
+msgstr "频道允许的最大用户数量"
+
+#: src/channel.cpp:165
+msgid ""
+"<qt>This is the channel user limit - the maximum number of users that can be in "
+"the channel at a time.  If you are an operator, you can set this.  The channel "
+"mode <b>T</b>opic (button to left) will automatically be set if set this.</qt>"
+msgstr ""
+"<qt>频道用户限额是同一时刻特定频道内最多可以容纳的用户数量，如果您是管理员，可以调节此数值。如果它被设定了，频道的 <b>T</b> "
+"模式(Topic)也会被自动选中。</qt>"
+
+#: src/channel.cpp:221
+msgid ""
+"<qt>This shows your current nick, and any alternatives you have set up.  If you "
+"select or type in a different nickname, then a request will be sent to the IRC "
+"server to change your nick.  If the server allows it, the new nickname will be "
+"selected.  If you type in a new nickname, you need to press 'Enter' at the end."
+"<p>You can add change the alternative nicknames from the <em>Identities</em> "
+"option in the <em>File</em> menu.</qt>"
+msgstr ""
+"<qt>这里显示的是您当前以及所有备选的昵称。如果您选择或输入了一个与现在的不同的昵称，会有一个改名请求被提交到 IRC "
+"服务器，如果服务器允许您改名，新的昵称就会被选中。当您在输入一个新的昵称时，需要在最后输入回车使其生效。"
+"<p>您可以通过<em>文件</em>菜单下的<em>身份</em>选项卡添加或修改备选昵称。</qt>"
+
+#: src/channel.cpp:557
+msgid "Do you want to ignore the selected users?"
+msgstr "您想要忽略已选中的用户吗？"
+
+#: src/channel.cpp:575
+msgid "Do you want to stop ignoring the selected users?"
+msgstr "您想要停止忽略已选中的用户吗？"
+
+#: src/channel.cpp:709
+msgid "Completion"
+msgstr "补齐"
+
+#: src/channel.cpp:709
+#, c-format
+msgid "Possible completions: %1."
+msgstr "可能的补齐：%1。"
+
+#: src/channel.cpp:1004
+msgid "Channel Password"
+msgstr "频道密码"
+
+#: src/channel.cpp:1017
+msgid "Nick Limit"
+msgstr "昵称限制"
+
+#: src/channel.cpp:1018
+msgid "Enter the new nick limit:"
+msgstr "输入新的昵称限制："
+
+#: src/channel.cpp:1102
+#, c-format
+msgid "You are now known as %1."
+msgstr "您现在的名字是 %1。"
+
+#: src/channel.cpp:1107
+msgid "%1 is now known as %2."
+msgstr "%1 现在的名字是 %2。"
+
+#: src/channel.cpp:1120
+msgid ""
+"_: %1 is the channel and %2 is our hostmask\n"
+"You have joined the channel %1 (%2)."
+msgstr "您已经加入了频道 %1 (%2)。"
+
+#: src/channel.cpp:1132
+msgid ""
+"_: %1 is the nick joining and %2 the hostmask of that nick\n"
+"%1 has joined this channel (%2)."
+msgstr "%1 已经加入此频道 (%2)。"
+
+#: src/channel.cpp:1154
+msgid "You have left this server."
+msgstr "您已经离开了此服务器。"
+
+#: src/channel.cpp:1156
+msgid ""
+"_: %1 adds the reason\n"
+"You have left this server (%1)."
+msgstr "您已经离开了此服务器 (%1)。"
+
+#: src/channel.cpp:1161
+#, c-format
+msgid "You have left channel %1."
+msgstr "您已经离开了频道 %1。"
+
+#: src/channel.cpp:1164
+msgid ""
+"_: %1 adds the channel and %2 the reason\n"
+"You have left channel %1 (%2)."
+msgstr "您已经离开了频道 %1 (%2)。"
+
+#: src/channel.cpp:1178
+msgid ""
+"_: %1 adds the nick and %2 the reason\n"
+"%1 has left this server (%2)."
+msgstr "%1 已经离开了此服务器 (%2)。"
+
+#: src/channel.cpp:1183
+msgid "%1 has left this channel."
+msgstr "%1 已经离开了此频道。"
+
+#: src/channel.cpp:1186
+msgid ""
+"_: %1 adds the nick and %2 the reason\n"
+"%1 has left this channel (%2)."
+msgstr "%1 已经离开了此频道 (%2)。"
+
+#: src/channel.cpp:1224
+#, c-format
+msgid "You have kicked yourself from channel %1."
+msgstr "您已经从频道 %1 被踢出。"
+
+#: src/channel.cpp:1227
+msgid ""
+"_: %1 adds the channel and %2 the reason\n"
+"You have kicked yourself from channel %1 (%2)."
+msgstr "您已经从频道 %1 被踢出 (%2)。"
+
+#: src/channel.cpp:1234
+msgid ""
+"_: %1 adds the channel, %2 adds the kicker\n"
+"You have been kicked from channel %1 by %2."
+msgstr "您已经被 %2 从频道 %1 中被踢出。"
+
+#: src/channel.cpp:1240
+msgid ""
+"_: %1 adds the channel, %2 the kicker and %3 the reason\n"
+"You have been kicked from channel %1 by %2 (%3)."
+msgstr "您已经被 %2 从频道 %1 中被踢出(%3)。"
+
+#: src/channel.cpp:1255
+msgid "You have kicked %1 from the channel."
+msgstr "您已经从频道中踢掉了 %1。"
+
+#: src/channel.cpp:1258
+msgid ""
+"_: %1 adds the kicked nick and %2 the reason\n"
+"You have kicked %1 from the channel (%2)."
+msgstr "您已经从频道中踢掉了 %1(%2)。"
+
+#: src/channel.cpp:1265
+msgid ""
+"_: %1 adds the kicked nick, %2 adds the kicker\n"
+"%1 has been kicked from the channel by %2."
+msgstr "%1 已经被 %2 踢出了此频道。"
+
+#: src/channel.cpp:1271
+msgid ""
+"_: %1 adds the kicked nick, %2 the kicker and %3 the reason\n"
+"%1 has been kicked from the channel by %2 (%3)."
+msgstr "%1 已经被 %2 踢出了此频道(%3)。"
+
+#: src/channel.cpp:1346
+#, fuzzy, c-format
+msgid ""
+"_n: %n nick\n"
+"%n nicks"
+msgstr ""
+"_n: %n nick\n"
+"%n 个昵称"
+
+#: src/channel.cpp:1347
+#, fuzzy, c-format
+msgid ""
+"_n:  (%n op)\n"
+" (%n ops)"
+msgstr ""
+"_n: (%n op)\n"
+" (%n 名操作员)"
+
+#: src/channel.cpp:1354
+msgid "The channel topic is \"%1\"."
+msgstr "频道话题是“%1”。"
+
+#: src/channel.cpp:1372
+msgid "You set the channel topic to \"%1\"."
+msgstr "您设置频道话题为“%1”。"
+
+#: src/channel.cpp:1376
+msgid "%1 sets the channel topic to \"%2\"."
+msgstr "%1 设置频道话题为“%2”。"
+
+#: src/channel.cpp:1434
+msgid "You give channel owner privileges to yourself."
+msgstr "您给予自己频道所有者权限。"
+
+#: src/channel.cpp:1436
+#, c-format
+msgid "You give channel owner privileges to %1."
+msgstr "您给予 %1 频道所有者权限。"
+
+#: src/channel.cpp:1441
+msgid "%1 gives channel owner privileges to you."
+msgstr "%1 给予您频道所有者权限。"
+
+#: src/channel.cpp:1443
+msgid "%1 gives channel owner privileges to %2."
+msgstr "%1 给予 %2 频道所有者权限。"
+
+#: src/channel.cpp:1451
+msgid "You take channel owner privileges from yourself."
+msgstr "您取消了自己的频道所有者权限。"
+
+#: src/channel.cpp:1453
+#, c-format
+msgid "You take channel owner privileges from %1."
+msgstr "您取消了 %1 的频道所有者权限。"
+
+#: src/channel.cpp:1458
+msgid "%1 takes channel owner privileges from you."
+msgstr "%1 取消了您的频道所有者权限。"
+
+#: src/channel.cpp:1460
+msgid "%1 takes channel owner privileges from %2."
+msgstr "%1 取消了 %2 的频道所有者权限。"
+
+#: src/channel.cpp:1477
+msgid "You give channel admin privileges to yourself."
+msgstr "您给予自己频道管理员权限。"
+
+#: src/channel.cpp:1479
+#, c-format
+msgid "You give channel admin privileges to %1."
+msgstr "您给予 %1 频道管理员权限。"
+
+#: src/channel.cpp:1484
+msgid "%1 gives channel admin privileges to you."
+msgstr "%1 给予您频道管理员权限。"
+
+#: src/channel.cpp:1486
+msgid "%1 gives channel admin privileges to %2."
+msgstr "%1 给予 %2 频道管理员权限。"
+
+#: src/channel.cpp:1494
+msgid "You take channel admin privileges from yourself."
+msgstr "您取消了自己的频道管理员权限。"
+
+#: src/channel.cpp:1496
+#, c-format
+msgid "You take channel admin privileges from %1."
+msgstr "您取消了 %1 的频道管理员权限。"
+
+#: src/channel.cpp:1501
+msgid "%1 takes channel admin privileges from you."
+msgstr "%1 取消了您的频道管理员权限。"
+
+#: src/channel.cpp:1503
+msgid "%1 takes channel admin privileges from %2."
+msgstr "%1 取消了 %2 的频道管理员权限。"
+
+#: src/channel.cpp:1520
+msgid "You give channel operator privileges to yourself."
+msgstr "您给予自己频道操作员权限。"
+
+#: src/channel.cpp:1522
+#, c-format
+msgid "You give channel operator privileges to %1."
+msgstr "您给予 %1 频道操作员权限。"
+
+#: src/channel.cpp:1527
+msgid "%1 gives channel operator privileges to you."
+msgstr "%1 给予您频道操作员权限。"
+
+#: src/channel.cpp:1529
+msgid "%1 gives channel operator privileges to %2."
+msgstr "%1 给予 %2 频道操作员权限。"
+
+#: src/channel.cpp:1537
+msgid "You take channel operator privileges from yourself."
+msgstr "您取消了自己的频道操作员权限。"
+
+#: src/channel.cpp:1539
+#, c-format
+msgid "You take channel operator privileges from %1."
+msgstr "您取消了 %1 的频道操作员权限。"
+
+#: src/channel.cpp:1544
+msgid "%1 takes channel operator privileges from you."
+msgstr "%1 取消了您的频道操作员权限。"
+
+#: src/channel.cpp:1546
+msgid "%1 takes channel operator privileges from %2."
+msgstr "%1 取消了 %2 的频道操作员权限。"
+
+#: src/channel.cpp:1563
+msgid "You give channel halfop privileges to yourself."
+msgstr "您给予自己频道助理员权限。"
+
+#: src/channel.cpp:1565
+#, c-format
+msgid "You give channel halfop privileges to %1."
+msgstr "您给予 %1 频道助理员权限。"
+
+#: src/channel.cpp:1570
+msgid "%1 gives channel halfop privileges to you."
+msgstr "%1 给予您频道助理管理员权限。"
+
+#: src/channel.cpp:1572
+msgid "%1 gives channel halfop privileges to %2."
+msgstr "%1 给予 %2 频道助理员权限。"
+
+#: src/channel.cpp:1580
+msgid "You take channel halfop privileges from yourself."
+msgstr "您取消了自己的频道助理员权限。"
+
+#: src/channel.cpp:1582
+#, c-format
+msgid "You take channel halfop privileges from %1."
+msgstr "您取消了 %1 的频道助理员权限。"
+
+#: src/channel.cpp:1587
+msgid "%1 takes channel halfop privileges from you."
+msgstr "%1 取消了您的频道助理员权限。"
+
+#: src/channel.cpp:1589
+msgid "%1 takes channel halfop privileges from %2."
+msgstr "%1 取消了 %2 的频道助理员权限。"
+
+#: src/channel.cpp:1607
+#, fuzzy
+msgid "You give yourself permission to talk."
+msgstr "您给予自己语音权限。"
+
+#: src/channel.cpp:1608
+#, fuzzy
+msgid "You give %1  permission to talk."
+msgstr "您给予 %1 语音权限。"
+
+#: src/channel.cpp:1612
+#, fuzzy
+msgid "%1 gives you permission to talk."
+msgstr "%1 给予您语音权限。"
+
+#: src/channel.cpp:1613
+#, fuzzy
+msgid "%1 gives %2 permission to talk."
+msgstr "%1 给予 %2 语音权限。"
+
+#: src/channel.cpp:1620
+msgid "You take the permission to talk from yourself."
+msgstr "您取消了自己的语音权限。"
+
+#: src/channel.cpp:1621
+#, c-format
+msgid "You take the permission to talk from %1."
+msgstr "您取消了 %1 的语音权限。"
+
+#: src/channel.cpp:1625
+msgid "%1 takes the permission to talk from you."
+msgstr "%1 取消了您的语音权限。"
+
+#: src/channel.cpp:1626
+msgid "%1 takes the permission to talk from %2."
+msgstr "%1 取消了 %2 的语音权限。"
+
+#: src/channel.cpp:1639
+msgid "You set the channel mode to 'no colors allowed'."
+msgstr "您设置频道模式为“不允许颜色”。"
+
+#: src/channel.cpp:1640
+msgid "%1 sets the channel mode to 'no colors allowed'."
+msgstr "%1 设置频道模式为“不允许颜色”。"
+
+#: src/channel.cpp:1644
+msgid "You set the channel mode to 'allow color codes'."
+msgstr "您设置频道模式为“允许颜色代码”。"
+
+#: src/channel.cpp:1645
+msgid "%1 sets the channel mode to 'allow color codes'."
+msgstr "%1 设置频道模式为“允许颜色代码”。"
+
+#: src/channel.cpp:1653
+msgid "You set the channel mode to 'invite only'."
+msgstr "您设置频道模式为“只接受受邀请的”。"
+
+#: src/channel.cpp:1654
+msgid "%1 sets the channel mode to 'invite only'."
+msgstr "%1 设置频道模式为“只接受受邀请的”。"
+
+#: src/channel.cpp:1658
+msgid "You remove the 'invite only' mode from the channel."
+msgstr "您取消了频道的“只接受受邀请的“模式。"
+
+#: src/channel.cpp:1659
+msgid "%1 removes the 'invite only' mode from the channel."
+msgstr "%1 取消了频道的“只接受受邀请的”模式。"
+
+#: src/channel.cpp:1667
+msgid "You set the channel mode to 'moderated'."
+msgstr "您设置频道模式为“监管的”。"
+
+#: src/channel.cpp:1668
+msgid "%1 sets the channel mode to 'moderated'."
+msgstr "%1 设置频道模式为“监管的”。"
+
+#: src/channel.cpp:1672
+msgid "You set the channel mode to 'unmoderated'."
+msgstr "您设置频道模式为“非监管的”。"
+
+#: src/channel.cpp:1673
+msgid "%1 sets the channel mode to 'unmoderated'."
+msgstr "%1 设置频道模式为“非监管的”。"
+
+#: src/channel.cpp:1681
+msgid "You set the channel mode to 'no messages from outside'."
+msgstr "您设置频道模式为“无外部消息”。"
+
+#: src/channel.cpp:1682
+msgid "%1 sets the channel mode to 'no messages from outside'."
+msgstr "%1 设置频道模式为“无外部消息”。"
+
+#: src/channel.cpp:1686
+msgid "You set the channel mode to 'allow messages from outside'."
+msgstr "您设置频道模式为“允许外部消息”。"
+
+#: src/channel.cpp:1687
+msgid "%1 sets the channel mode to 'allow messages from outside'."
+msgstr "%1 设置频道模式为“允许外部消息”。"
+
+#: src/channel.cpp:1695
+msgid "You set the channel mode to 'private'."
+msgstr "您设置频道模式为“私人”。"
+
+#: src/channel.cpp:1696
+msgid "%1 sets the channel mode to 'private'."
+msgstr "%1 设置频道模式为“私人”"
+
+#: src/channel.cpp:1700
+msgid "You set the channel mode to 'public'."
+msgstr "您设置频道模式为“公共”。"
+
+#: src/channel.cpp:1701
+msgid "%1 sets the channel mode to 'public'."
+msgstr "%1 设置频道模式为“公共”。"
+
+#: src/channel.cpp:1710
+msgid "You set the channel mode to 'secret'."
+msgstr "您设置频道模式为“机密”。"
+
+#: src/channel.cpp:1711
+msgid "%1 sets the channel mode to 'secret'."
+msgstr "%1 设置频道模式为“机密”。"
+
+#: src/channel.cpp:1715
+msgid "You set the channel mode to 'visible'."
+msgstr "您设置频道模式为“可见”。"
+
+#: src/channel.cpp:1716
+msgid "%1 sets the channel mode to 'visible'."
+msgstr "%1 设置频道模式为“可见”。"
+
+#: src/channel.cpp:1727
+msgid "You switch on 'topic protection'."
+msgstr "您启用了“话题保护”。"
+
+#: src/channel.cpp:1728
+msgid "%1 switches on 'topic protection'."
+msgstr "%1 关闭了“话题保护”。"
+
+#: src/channel.cpp:1732
+msgid "You switch off 'topic protection'."
+msgstr "您关闭了“话题保护”。"
+
+#: src/channel.cpp:1733
+msgid "%1 switches off 'topic protection'."
+msgstr "%1 关闭了“话题保护”。"
+
+#: src/channel.cpp:1743
+msgid "You set the channel limit to %1 nicks."
+msgstr "您对昵称为 %1 的用户设置了频道限制。"
+
+#: src/channel.cpp:1744
+msgid "%1 sets the channel limit to %2 nicks."
+msgstr "%1 您对昵称为 %2 的用户设置了频道限制。"
+
+#: src/channel.cpp:1748
+msgid "You remove the channel limit."
+msgstr "您取消了频道限制。"
+
+#: src/channel.cpp:1749
+msgid "%1 removes the channel limit."
+msgstr "%1 取消了频道限制。"
+
+#: src/channel.cpp:1759
+#, c-format
+msgid "You set a ban on %1."
+msgstr "您对 %1 设置了封禁。"
+
+#: src/channel.cpp:1760
+msgid "%1 sets a ban on %2."
+msgstr "%1 对 %2 设置了封禁。"
+
+#: src/channel.cpp:1764
+#, c-format
+msgid "You remove the ban on %1."
+msgstr "您取消了对 %1 的封禁。"
+
+#: src/channel.cpp:1765
+msgid "%1 removes the ban on %2."
+msgstr "%1 取消了对 %2 的封禁。"
+
+#: src/channel.cpp:1772
+#, c-format
+msgid "You set a ban exception on %1."
+msgstr "您对 %1 设置了封禁例外。"
+
+#: src/channel.cpp:1773
+msgid "%1 sets a ban exception on %2."
+msgstr "%1 对 %2 设置了封禁例外。"
+
+#: src/channel.cpp:1777
+#, c-format
+msgid "You remove the ban exception on %1."
+msgstr "您取消了对 %1 的封禁例外。"
+
+#: src/channel.cpp:1778
+msgid "%1 removes the ban exception on %2."
+msgstr "%1 取消了对 %2 的封禁例外。"
+
+#: src/channel.cpp:1785
+#, c-format
+msgid "You set invitation mask %1."
+msgstr "您设置了邀请掩码 %1。"
+
+#: src/channel.cpp:1786
+msgid "%1 sets invitation mask %2."
+msgstr "%1 设置了邀请掩码 %2。"
+
+#: src/channel.cpp:1790
+#, c-format
+msgid "You remove the invitation mask %1."
+msgstr "您取消了邀请掩码 %1。"
+
+#: src/channel.cpp:1791
+msgid "%1 removes the invitation mask %2."
+msgstr "%1 取消了邀请掩码 %2。"
+
+#: src/channel.cpp:1797
+#, c-format
+msgid "You set channel mode +%1"
+msgstr "您设置了频道模式 +%1。"
+
+#: src/channel.cpp:1798
+msgid "%1 sets channel mode +%2"
+msgstr "%1 设置了频道模式  +%2。"
+
+#: src/channel.cpp:1802
+#, c-format
+msgid "You set channel mode -%1"
+msgstr "您设置了频道模式 -%1。"
+
+#: src/channel.cpp:1803
+msgid "%1 sets channel mode -%2"
+msgstr "%1 设置了频道模式 -%2。"
+
+#: src/channel.cpp:2210
+msgid "You have to be an operator to change this."
+msgstr "您必须是操作员才能更改此项。"
+
+#: src/channel.cpp:2212
+#, c-format
+msgid "Topic can be changed by channel operator only.  %1"
+msgstr "只有频道操作员可以改变话题。%1"
+
+#: src/channel.cpp:2213
+#, c-format
+msgid "No messages to channel from clients on the outside.  %1"
+msgstr "不接受外部客户端到频道的消息。%1"
+
+#: src/channel.cpp:2214
+#, c-format
+msgid "Secret channel.  %1"
+msgstr "机密频道。%1"
+
+#: src/channel.cpp:2215
+#, c-format
+msgid "Invite only channel.  %1"
+msgstr "只接受受邀请用户的频道。%1"
+
+#: src/channel.cpp:2216
+#, c-format
+msgid "Private channel.  %1"
+msgstr "私人频道。%1"
+
+#: src/channel.cpp:2217
+#, c-format
+msgid "Moderated channel.  %1"
+msgstr "受监管频道。%1"
+
+#: src/channel.cpp:2218
+msgid "Protect channel with a password."
+msgstr "受密码保护频道。"
+
+#: src/channel.cpp:2219
+msgid "Set user limit to channel."
+msgstr "设置频道用户数限制。"
+
+#: src/channel.cpp:2357
+msgid "Do you want to leave %1?"
+msgstr "您想要离开 %1 吗？"
+
+#: src/channel.cpp:2358
+msgid "Leave Channel"
+msgstr "离开频道"
+
+#: src/channel.cpp:2359
+msgid "Leave"
+msgstr "离开"
+
+#: _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr "朱鸷勇,Lie_Ex"
+
+#: _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr "sp_xym@hotmail.com,lilith.ex@gmail.com"
+
+#. i18n: file ./src/quickbuttons_preferencesui.ui line 25
+#: rc.cpp:3
+#, no-c-format
+msgid "Button Name"
+msgstr "按钮名称"
+
+#. i18n: file ./src/quickbuttons_preferencesui.ui line 36
+#: rc.cpp:6
+#, no-c-format
+msgid "Button Action"
+msgstr "按钮动作"
+
+#. i18n: file ./src/quickbuttons_preferencesui.ui line 112
+#: rc.cpp:9
+#, no-c-format
+msgid "Button action:"
+msgstr "按钮动作："
+
+#. i18n: file ./src/quickbuttons_preferencesui.ui line 123
+#: rc.cpp:12
+#, no-c-format
+msgid "Button name:"
+msgstr "按钮名称"
+
+#. i18n: file ./src/quickbuttons_preferencesui.ui line 133
+#: rc.cpp:15
+#, no-c-format
+msgid "Available Placeholders"
+msgstr "可用的表义符"
+
+#. i18n: file ./src/quickbuttons_preferencesui.ui line 156
+#: rc.cpp:18
+#, no-c-format
+msgid ""
+"%c: Current channel\n"
+"%K: Server password\n"
+"%u: List of selected nicknames\n"
+"%s<term>%: term used to separate nicknames in %u\n"
+"%n: Send command directly to the server instead of your input line"
+msgstr ""
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 50
+#: rc.cpp:31
+#, no-c-format
+msgid "Status:"
+msgstr "状态："
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 68
+#: rc.cpp:34
+#, fuzzy, no-c-format
+msgid "Partner:"
+msgstr "伙伴"
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 76
+#: rc.cpp:37
+#, fuzzy, no-c-format
+msgid "Type:"
+msgstr "输入"
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 84
+#: rc.cpp:40
+#, fuzzy, no-c-format
+msgid "Filename:"
+msgstr "文件："
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 92
+#: rc.cpp:43
+#, no-c-format
+msgid "Self:"
+msgstr "本方："
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 115
+#: rc.cpp:46
+#, no-c-format
+msgid "Progress:"
+msgstr "进度："
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 123
+#: rc.cpp:49
+#, fuzzy, no-c-format
+msgid "Location:"
+msgstr "动作(&N)："
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 185
+#: rc.cpp:52
+#, fuzzy, no-c-format
+msgid "File Size:"
+msgstr "文件："
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 237
+#: rc.cpp:55
+#, no-c-format
+msgid "Average Speed:"
+msgstr ""
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 245
+#: rc.cpp:58
+#, fuzzy, no-c-format
+msgid "Resumed:"
+msgstr "续传(&R)"
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 275
+#: rc.cpp:61
+#, fuzzy, no-c-format
+msgid "Current Speed:"
+msgstr "目前使用的昵称"
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 283
+#: rc.cpp:64
+#, fuzzy, no-c-format
+msgid "Current Position:"
+msgstr "位置："
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 337
+#: rc.cpp:67
+#, no-c-format
+msgid "Estimated Time Left:"
+msgstr ""
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 345
+#: rc.cpp:70
+#, no-c-format
+msgid "Offered at:"
+msgstr ""
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 383
+#: rc.cpp:73
+#, no-c-format
+msgid "Finished at:"
+msgstr ""
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 391
+#: rc.cpp:76
+#, fuzzy, no-c-format
+msgid "Started at:"
+msgstr "开始自"
+
+#. i18n: file ./src/dcctransferdetailedinfopanelui.ui line 429
+#: rc.cpp:79
+#, fuzzy, no-c-format
+msgid "Transferring Time:"
+msgstr "传输时出错"
+
+#. i18n: file ./src/connectionbehavior_preferences.ui line 33
+#: rc.cpp:82
+#, no-c-format
+msgid "Enable Automatic Reconnect"
+msgstr "允许自动重连"
+
+#. i18n: file ./src/connectionbehavior_preferences.ui line 47
+#: rc.cpp:85
+#, no-c-format
+msgid "Reconnect timeout:"
+msgstr "重连超时："
+
+#. i18n: file ./src/connectionbehavior_preferences.ui line 75
+#: rc.cpp:88
+#, no-c-format
+msgid "Reconnection attempts:"
+msgstr "重连尝试："
+
+#. i18n: file ./src/connectionbehavior_preferences.ui line 95
+#: rc.cpp:92
+#, no-c-format
+msgid " s"
+msgstr " 秒"
+
+#. i18n: file ./src/connectionbehavior_preferences.ui line 147
+#: rc.cpp:95
+#, no-c-format
+msgid "Debug"
+msgstr "调试"
+
+#. i18n: file ./src/connectionbehavior_preferences.ui line 158
+#: rc.cpp:98
+#, no-c-format
+msgid "Show raw &log window when connecting"
+msgstr "连接时显示原始记录窗口(&L)"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 45
+#: rc.cpp:101
+#, no-c-format
+msgid "Pattern"
+msgstr "模式"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 56
+#: rc.cpp:104
+#, no-c-format
+msgid "Type"
+msgstr "输入"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 77
+#: rc.cpp:107
+#, no-c-format
+msgid "Pattern:"
+msgstr "模式："
+
+#. i18n: file ./src/ignore_preferencesui.ui line 98
+#: rc.cpp:110
+#, no-c-format
+msgid "Message Types"
+msgstr "消息输入"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 159
+#: rc.cpp:128 rc.cpp:1073
+#, no-c-format
+msgid "&New"
+msgstr "新建(&N)"
+
+#. i18n: file ./src/ignore_preferencesui.ui line 175
+#: rc.cpp:134
+#, no-c-format
+msgid "Remove &All"
+msgstr "全部删除(&A)"
+
+#. i18n: file ./src/servergroupdialogui.ui line 35
+#: rc.cpp:137
+#, fuzzy, no-c-format
+msgid "Network name:"
+msgstr "网络名称(&N)："
+
+#. i18n: file ./src/servergroupdialogui.ui line 56
+#: rc.cpp:140
+#, no-c-format
+msgid "Identity:"
+msgstr "身份："
+
+#. i18n: file ./src/servergroupdialogui.ui line 72
+#: rc.cpp:143
+#, no-c-format
+msgid "Commands:"
+msgstr "命令："
+
+#. i18n: file ./src/servergroupdialogui.ui line 101
+#: rc.cpp:149
+#, fuzzy, no-c-format
+msgid "Co&nnect on application start up"
+msgstr "应用程序启动时连接"
+
+#. i18n: file ./src/servergroupdialogui.ui line 109
+#: rc.cpp:152
+#, no-c-format
+msgid "Servers"
+msgstr "服务器"
+
+#. i18n: file ./src/servergroupdialogui.ui line 125
+#: rc.cpp:155
+#, fuzzy, no-c-format
+msgid "&Add..."
+msgstr "添加..."
+
+#. i18n: file ./src/servergroupdialogui.ui line 136
+#: rc.cpp:158
+#, fuzzy, no-c-format
+msgid "E&dit..."
+msgstr "编辑..."
+
+#. i18n: file ./src/servergroupdialogui.ui line 202
+#: rc.cpp:164
+#, no-c-format
+msgid "Auto Join Channels"
+msgstr "自动加入频道"
+
+#. i18n: file ./src/servergroupdialogui.ui line 229
+#: rc.cpp:170
+#, fuzzy, no-c-format
+msgid "Ed&it..."
+msgstr "编辑..."
+
+#. i18n: file ./src/alias_preferencesui.ui line 38
+#: rc.cpp:176
+#, no-c-format
+msgid "Alias:"
+msgstr "别名："
+
+#. i18n: file ./src/alias_preferencesui.ui line 49
+#: rc.cpp:179
+#, no-c-format
+msgid "Replacement:"
+msgstr "替换："
+
+#. i18n: file ./src/alias_preferencesui.ui line 73
+#: rc.cpp:182
+#, no-c-format
+msgid "Alias"
+msgstr "别名"
+
+#. i18n: file ./src/alias_preferencesui.ui line 84
+#: rc.cpp:185
+#, no-c-format
+msgid "Replacement"
+msgstr "替换"
+
+#. i18n: file ./src/searchbarbase.ui line 86
+#: rc.cpp:200
+#, no-c-format
+msgid "Find Ne&xt"
+msgstr "查找下一个(&X)"
+
+#. i18n: file ./src/searchbarbase.ui line 97
+#: rc.cpp:203
+#, no-c-format
+msgid "Find Previous"
+msgstr "查找上一个"
+
+#. i18n: file ./src/nicklistbehavior_preferencesui.ui line 33
+#: rc.cpp:209
+#, no-c-format
+msgid "&Command to be executed on double click:"
+msgstr "双击时执行的命令(&C)："
+
+#. i18n: file ./src/nicklistbehavior_preferencesui.ui line 44
+#: rc.cpp:212
+#, no-c-format
+msgid "Sort case &insensitive"
+msgstr "排序不区分大小写(&I)"
+
+#. i18n: file ./src/nicklistbehavior_preferencesui.ui line 52
+#: rc.cpp:215
+#, fuzzy, no-c-format
+msgid "Sort by &activity"
+msgstr "在对话动作上显示(&Q)"
+
+#. i18n: file ./src/nicklistbehavior_preferencesui.ui line 68
+#: rc.cpp:218
+#, no-c-format
+msgid "Sort b&y user status"
+msgstr "按用户状态排序(&Y)"
+
+#. i18n: file ./src/nicklistbehavior_preferencesui.ui line 85
+#: rc.cpp:224
+#, no-c-format
+msgid "Explanation"
+msgstr "注解"
+
+#. i18n: file ./src/nicklistbehavior_preferencesui.ui line 129
+#: rc.cpp:227
+#, no-c-format
+msgid "(Reorder nick sorting order by drag and drop)"
+msgstr "(使用拖放对昵称重新排序)"
+
+#. i18n: file ./src/theme_preferencesui.ui line 16
+#: rc.cpp:230
+#, no-c-format
+msgid "Theme_Config"
+msgstr "主题配置"
+
+#. i18n: file ./src/theme_preferencesui.ui line 43
+#: rc.cpp:233
+#, no-c-format
+msgid "I&nstall Theme..."
+msgstr "安装主题(&N)..."
+
+#. i18n: file ./src/theme_preferencesui.ui line 54
+#: rc.cpp:236
+#, no-c-format
+msgid "&Remove Theme"
+msgstr "删除主题(&R)"
+
+#. i18n: file ./src/theme_preferencesui.ui line 110
+#: rc.cpp:240
+#, no-c-format
+msgid "Icon for normal users"
+msgstr "普通用户图标"
+
+#. i18n: file ./src/theme_preferencesui.ui line 124
+#: rc.cpp:244
+#, no-c-format
+msgid "Icon for away users"
+msgstr "离开用户图标"
+
+#. i18n: file ./src/theme_preferencesui.ui line 138
+#: rc.cpp:248
+#, no-c-format
+msgid "Icon for users with voice"
+msgstr "语音用户图标"
+
+#. i18n: file ./src/theme_preferencesui.ui line 152
+#: rc.cpp:252
+#, fuzzy, no-c-format
+msgid "Icon for users with half-operator privileges"
+msgstr "助理员用户图标"
+
+#. i18n: file ./src/theme_preferencesui.ui line 166
+#: rc.cpp:256
+#, fuzzy, no-c-format
+msgid "Icon for users with operator privileges"
+msgstr "操作员用户图标"
+
+#. i18n: file ./src/theme_preferencesui.ui line 180
+#: rc.cpp:260
+#, no-c-format
+msgid "Icon for users with admin privileges"
+msgstr "管理员用户图标"
+
+#. i18n: file ./src/theme_preferencesui.ui line 194
+#: rc.cpp:264
+#, no-c-format
+msgid "Icon for users with owner privileges"
+msgstr "所有者用户图标"
+
+#. i18n: file ./src/theme_preferencesui.ui line 212
+#: rc.cpp:267
+#, no-c-format
+msgid "Preview:"
+msgstr "预览："
+
+#. i18n: file ./src/tabs_preferencesui.ui line 20
+#: rc.cpp:270
+#, no-c-format
+msgid "TabBar_Config"
+msgstr "标签栏配置"
+
+#. i18n: file ./src/tabs_preferencesui.ui line 34
+#: rc.cpp:273 rc.cpp:989
+#, no-c-format
+msgid "Look"
+msgstr "外观"
+
+#. i18n: file ./src/tabs_preferencesui.ui line 53
+#: rc.cpp:276
+#, no-c-format
+msgid "Placement:"
+msgstr "位置："
+
+#. i18n: file ./src/tabs_preferencesui.ui line 100
+#: rc.cpp:288
+#, no-c-format
+msgid "Show &close button on tabs"
+msgstr "在标签上显示关闭按钮(&C)"
+
+#. i18n: file ./src/tabs_preferencesui.ui line 108
+#: rc.cpp:291
+#, no-c-format
+msgid "Show a close button on the &right side of the tab bar"
+msgstr "在标签右侧显示一个关闭按钮(&R)"
+
+#. i18n: file ./src/tabs_preferencesui.ui line 116
+#: rc.cpp:294
+#, no-c-format
+msgid "Limit the &size of the tab labels to fit all on screen"
+msgstr "设定标签栏的大小为填充整个屏幕(&S)"
+
+#. i18n: file ./src/tabs_preferencesui.ui line 126
+#: rc.cpp:297
+#, no-c-format
+msgid "Focus"
+msgstr "强制"
+
+#. i18n: file ./src/tabs_preferencesui.ui line 137
+#: rc.cpp:300
+#, no-c-format
+msgid "&Focus new tabs"
+msgstr "强制使用新标签(&F)"
+
+#. i18n: file ./src/tabs_preferencesui.ui line 145
+#: rc.cpp:303
+#, no-c-format
+msgid "Focus new &queries"
+msgstr "强制使用新的查询(&Q)"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 38
+#: rc.cpp:306
+#, no-c-format
+msgid "Command e&xecuted when nickname is double clicked:"
+msgstr "双击昵称时执行的命令(&X)："
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 52
+#: rc.cpp:309
+#, no-c-format
+msgid ""
+"<qt>\n"
+"<p>When you double click a nickname in the <b>Nicks Online</b> window, this\n"
+"command is placed in the <b>Input Line</b> on the server window.</p>\n"
+"<p>The following symbols can be used in the command:</p>"
+"<ul>\n"
+"<li>%u: The nickname double clicked.</li>\n"
+"<li>%K: Server password.</li>\n"
+"<li>%n: Send command directly to the server instead of your input line.</li>\"\n"
+"</ul>\n"
+"</qt>"
+msgstr ""
+"<qt>\n"
+"<p>当您在<b>在线昵称</b>窗口里双击一个昵称时，这些\n"
+"命令会被存置在服务器窗口里的<b>输入行</b>上。</p>\n"
+"<p>在命令中可以使用如下这些符号：</p>"
+"<ul>\n"
+"<li>%u：指代被双击的昵称。</li>\n"
+"<li>%K：指代服务器密码。</li>\n"
+"<li>%n：直接将命令发送到服务器而不是存置到输入行上。</li>\n"
+"</ul>\n"
+"</qt>"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 79
+#: rc.cpp:320
+#, no-c-format
+msgid ""
+"<qt>\n"
+"<p>When you double click a nickname in the <b>Nicks Online</b> window, this\n"
+" command is placed in the <b>Input Line</b> on the server window.</p>\n"
+"<p>The following symbols can be used in the command:</p>"
+"<ul>\n"
+"<li>%u: The nickname double clicked.</li>\n"
+"<li>%K: Server password.</li>\n"
+"<li>%n: Send command directly to the server instead of your input line.</li>\n"
+"</ul>\n"
+"</qt>"
+msgstr ""
+"<qt>\n"
+"<p>当您在<b>在线昵称</b>窗口里双击一个昵称时，这些\n"
+"命令会被存置在服务器窗口里的<b>输入行</b>上。</p>\n"
+"<p>在命令中可以使用如下这些符号：</p>"
+"<ul>\n"
+"<li>%u：指代被双击的昵称。</li>\n"
+"<li>%K：指代服务器密码。</li>\n"
+"<li>%n：直接将命令发送到服务器而不是存置到输入行上。</li>\n"
+"</ul>\n"
+"</qt>"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 90
+#: rc.cpp:331
+#, fuzzy, no-c-format
+msgid "&Update interval:"
+msgstr "检查间隔："
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 96
+#: rc.cpp:334 rc.cpp:340
+#, no-c-format
+msgid ""
+"Konversation will check the status of the nicknames listed below at this "
+"interval."
+msgstr "Konversation 可以每相隔一段时间检查一次以下列出的昵称的状态。"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 124
+#: rc.cpp:337
+#, no-c-format
+msgid " seconds"
+msgstr " 秒"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 144
+#: rc.cpp:343
+#, fuzzy, no-c-format
+msgid "Show watched nicks online tab on &application startup"
+msgstr "在程序启动时打开被监视在线昵称的标签(&S)"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 147
+#: rc.cpp:346
+#, no-c-format
+msgid ""
+"<qt>When checked, the <b>Nicks Online</b> window will be automatically opened "
+"when starting Konversation.</qt>"
+msgstr "<qt>当此项被选中时，<b>在线昵称</b>窗口会在 Konversation 程序开启后自动打开。</qt>"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 155
+#: rc.cpp:349
+#, fuzzy, no-c-format
+msgid "Enable nic&kname watcher"
+msgstr "使用昵称监视器(&E)"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 162
+#: rc.cpp:352
+#, no-c-format
+msgid ""
+"<qt>\n"
+"<p>\n"
+"When the nickname watcher is turned on, you will be notified when the nicknames "
+"appearing in the <b>Watched Networks/Nicknames</b> list come online or go "
+"offline.</p>\n"
+"<p>You can also open the <b>Nicks Online</b> window to see the status of all "
+"the watched nicknames.</p>\n"
+"</qt>"
+msgstr ""
+"<qt>\n"
+"<p>\n"
+"如果昵称监视器被启用，每当那些使用在<b>被监视网络/昵称</b>列表里的昵称的人上线或离线时您将会获得通知。</p>\n"
+"<p>您也可以打开<b>在线昵称</b>窗口检阅所有被监视昵称的目前状态。</p>\n"
+"</qt>"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 187
+#: rc.cpp:362
+#, no-c-format
+msgid "Network:"
+msgstr "网络："
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 190
+#: rc.cpp:365 rc.cpp:368
+#, no-c-format
+msgid ""
+"The irc server network (such as 'freenode') that the selected user to watch is "
+"on."
+msgstr "被选中用户要监视的IRC 服务器网络(如“freenode”)已经上线。"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 215
+#: rc.cpp:374 rc.cpp:377
+#, no-c-format
+msgid "The nick (username) of the selected person to watch"
+msgstr "被选中用户要监视的昵称(用户名)"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 232
+#: rc.cpp:380
+#, no-c-format
+msgid "Watched Networks/Nicknames"
+msgstr "被监视网络/昵称"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 271
+#: rc.cpp:383
+#, fuzzy, no-c-format
+msgid ""
+"<qt>\n"
+"<p>\n"
+"When the nickname watcher is turned on, you will be notified when the nicknames "
+"appearing in the <b>Watched Networks/Nicknames</b> list come online or go "
+"offline.</p>\n"
+"<p>You can also open the <b>Nicks Online</b> window to see the status of all "
+"the watched nicknames.</p></qt>"
+msgstr ""
+"<qt>\n"
+"<p>\n"
+"如果昵称监视器被启用，每当那些使用在<b>被监视网络/昵称</b>列表里的昵称的人上线或离线时您将会获得通知。</p>\n"
+"<p>您也可以打开<b>在线昵称</b>窗口检阅所有被监视昵称的目前状态。</p>\n"
+"</qt>"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 301
+#: rc.cpp:392
+#, no-c-format
+msgid "Click to add a nickname to the list."
+msgstr "点此添加一个昵称到列表。"
+
+#. i18n: file ./src/watchednicknames_preferencesui.ui line 323
+#: rc.cpp:398
+#, no-c-format
+msgid "Click to remove the selected nickname from the list."
+msgstr "点此从列表中删除选中的昵称。"
+
+#. i18n: file ./src/log_preferences.ui line 31
+#: rc.cpp:401
+#, no-c-format
+msgid "&Enable Logging"
+msgstr "启用日志(&E)"
+
+#. i18n: file ./src/log_preferences.ui line 45
+#: rc.cpp:404
+#, no-c-format
+msgid "Enable &lower case logfile names"
+msgstr "使用小写日志文件名(&L)"
+
+#. i18n: file ./src/log_preferences.ui line 53
+#: rc.cpp:407
+#, no-c-format
+msgid "&Append hostname to logfile names"
+msgstr "为文件名添加发送者(&A)"
+
+#. i18n: file ./src/log_preferences.ui line 61
+#: rc.cpp:410
+#, no-c-format
+msgid "Logfile &path:"
+msgstr "日志文件路径(&P)："
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 33
+#: rc.cpp:413
+#, no-c-format
+msgid "Enable System Tray"
+msgstr "激活到系统托盘"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 50
+#: rc.cpp:416
+#, no-c-format
+msgid "&Use system tray for new message notification"
+msgstr "为新消息通知使用系统托盘(&U)"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 78
+#: rc.cpp:419
+#, no-c-format
+msgid "Only notify when a highlight is triggered or your current nick is used"
+msgstr "只有当高亮事件被触发或您当前的昵称被占用时才通知。"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 103
+#: rc.cpp:422
+#, no-c-format
+msgid "Blink the icon"
+msgstr ""
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 111
+#: rc.cpp:425 rc.cpp:580
+#, no-c-format
+msgid "Start with hidden mainwindow"
+msgstr ""
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 121
+#: rc.cpp:428
+#, no-c-format
+msgid "Nickname Completion"
+msgstr "昵称补齐"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 132
+#: rc.cpp:431
+#, no-c-format
+msgid "Completion &mode:"
+msgstr "补齐模式(&M)："
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 141
+#: rc.cpp:434
+#, no-c-format
+msgid "Cycle NickList"
+msgstr "循环昵称列表"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 146
+#: rc.cpp:437
+#, no-c-format
+msgid "Shell-Like"
+msgstr "仿 Shell 外观"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 151
+#: rc.cpp:440
+#, no-c-format
+msgid "Shell-Like with Completion Box"
+msgstr "带补齐方框的仿 Shell 外观"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 168
+#: rc.cpp:443
+#, no-c-format
+msgid "Suffi&x at start of line:"
+msgstr "行首(&X)："
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 184
+#: rc.cpp:446
+#, no-c-format
+msgid "&Elsewhere:"
+msgstr "别处(&E)："
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 195
+#: rc.cpp:449
+#, no-c-format
+msgid "Case sensitive"
+msgstr "区分大小写"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 208
+#: rc.cpp:453
+#, no-c-format
+msgid "Application Startup"
+msgstr "程序启动"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 219
+#: rc.cpp:456
+#, no-c-format
+msgid "&Show server list dialog"
+msgstr "显示服务器列表(&S)"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 240
+#: rc.cpp:462
+#, no-c-format
+msgid "Disable notifications while &away"
+msgstr "处于离开状态时禁用系统通知(&A)"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 248
+#: rc.cpp:465
+#, no-c-format
+msgid "Use custom &version reply:"
+msgstr "自定义版本回复(&V)："
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 259
+#: rc.cpp:468
+#, no-c-format
+msgid ""
+"<qt>Here you can set a custom reply for <b>CTCP <i>VERSION</i></b> "
+"requests.</qt>"
+msgstr "<qt>您可以在这里为 <b>CTCP<i> 版本</i></b>请求设置自定义回复。"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 283
+#: rc.cpp:471
+#, no-c-format
+msgid "Input box expands with text"
+msgstr "输入框长度随文本自动扩展"
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 299
+#: rc.cpp:474
+#, no-c-format
+msgid "Comman&d char:"
+msgstr "命令字符(&D)："
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 310
+#: rc.cpp:477
+#, no-c-format
+msgid "Use custom web &browser:"
+msgstr "使用自定义的浏览器(&B)："
+
+#. i18n: file ./src/generalbehavior_preferences.ui line 318
+#: rc.cpp:480
+#, no-c-format
+msgid "Automatically &join channel on invite"
+msgstr "接到邀请时自动加入频道(&J)"
+
+#. i18n: file ./src/config/konversation.kcfg line 21
+#: rc.cpp:485
+#, no-c-format
+msgid "Limit the size of the tab labels to fit all on screen"
+msgstr "限定标签最大长度为填满整个屏幕"
+
+#. i18n: file ./src/config/konversation.kcfg line 230
+#: rc.cpp:556
+#, no-c-format
+msgid "Hide the scrollbar"
+msgstr ""
+
+#. i18n: file ./src/config/konversation.kcfg line 236
+#: rc.cpp:559
+#, no-c-format
+msgid ""
+"Enable if you want all the IRC input lines to check your spelling as you type"
+msgstr "如果您想要对每行输入都自动执行拼写检查，请选中此项。"
+
+#. i18n: file ./src/config/konversation.kcfg line 245
+#: rc.cpp:562
+#, no-c-format
+msgid ""
+"Enabling this will cause the input box to grow vertically when it fills up."
+msgstr "启用此选项会使得在文本输入框内填写内容时，它的长度将自动垂直延伸。"
+
+#. i18n: file ./src/config/konversation.kcfg line 279
+#: rc.cpp:577
+#, fuzzy, no-c-format
+msgid "Hidden to system tray"
+msgstr "在系统托盘中显示图标"
+
+#. i18n: file ./src/config/konversation.kcfg line 337
+#: rc.cpp:603 rc.cpp:1195
+#, no-c-format
+msgid "&Show real names next to nicknames"
+msgstr "在昵称旁显示真实姓名(&S)"
+
+#. i18n: file ./src/config/konversation.kcfg line 535
+#: rc.cpp:681
+#, no-c-format
+msgid "Open Watched Nicks tab at application startup"
+msgstr "在程序启动时自动打开昵称监视列表"
+
+#. i18n: file ./src/config/konversation.kcfg line 811
+#: rc.cpp:778
+#, no-c-format
+msgid "Enable emoticons"
+msgstr "启用表情"
+
+#. i18n: file ./src/config/konversation.kcfg line 815
+#: rc.cpp:781
+#, no-c-format
+msgid "Emoticons theme"
+msgstr "表情主题"
+
+#. i18n: file ./src/channeloptionsui.ui line 37
+#: rc.cpp:821
+#, no-c-format
+msgid "Topi&c"
+msgstr "话题(&C)"
+
+#. i18n: file ./src/channeloptionsui.ui line 64
+#: rc.cpp:827
+#, no-c-format
+msgid "Date"
+msgstr "日期"
+
+#. i18n: file ./src/channeloptionsui.ui line 155
+#: rc.cpp:833
+#, no-c-format
+msgid "Mo&des"
+msgstr "模式(&D)"
+
+#. i18n: file ./src/channeloptionsui.ui line 166
+#: rc.cpp:836
+#, no-c-format
+msgid "&Topic can only be changed by channel operators"
+msgstr "话题只能由频道操作员修改(&T)"
+
+#. i18n: file ./src/channeloptionsui.ui line 177
+#: rc.cpp:842
+#, no-c-format
+msgid "&No messages from outside the channel"
+msgstr "不接受来自频道以外的消息(&N)"
+
+#. i18n: file ./src/channeloptionsui.ui line 188
+#: rc.cpp:848
+#, no-c-format
+msgid "&Secret channel, the channel is not listed in the channel list"
+msgstr "绝密频道，不会显示在频道列表中(&S)"
+
+#. i18n: file ./src/channeloptionsui.ui line 199
+#: rc.cpp:854
+#, no-c-format
+msgid "Only &invited are allowed to join the channel"
+msgstr "只有受邀请的用户才能加入此频道(&I)"
+
+#. i18n: file ./src/channeloptionsui.ui line 202
+#: rc.cpp:857
+#, no-c-format
+msgid ""
+"<qt>These control the <em>mode</em> of the channel.  Only an operator can "
+"change these."
+"<p>An <b>I</b>nvite only channel means that people can only join the channel if "
+"they are invited.  To invite someone, a channel operator needs to issue the "
+"command<em>/invite nick</em> from within the channel.</qt>"
+msgstr ""
+"<qt>在这里可以调控频道<em>模式</em>，只有操作员才能对它进行更动。"
+"<p>设定了<b>I</b>模式(Invite "
+"only)的频道意味着他人若非被邀请否则无法进入此频道。如果需要邀请某人，频道操作员应在他所处于的频道内发送此命令 <em>/invite nick</em>"
+"。</qt>"
+
+#. i18n: file ./src/channeloptionsui.ui line 210
+#: rc.cpp:860
+#, no-c-format
+msgid "&Moderated channel, only people with voice can write to the channel"
+msgstr "监管频道，只有具备语音权限的人才能在这里发言(&M)"
+
+#. i18n: file ./src/channeloptionsui.ui line 229
+#: rc.cpp:866
+#, no-c-format
+msgid "Channel &key:"
+msgstr "频道名称(&K)"
+
+#. i18n: file ./src/channeloptionsui.ui line 254
+#: rc.cpp:875
+#, no-c-format
+msgid "User &limit:"
+msgstr "用户限制(&L)"
+
+#. i18n: file ./src/channeloptionsui.ui line 303
+#: rc.cpp:884
+#, no-c-format
+msgid "Show &Advanced Modes >>"
+msgstr "显示高级模式(&A) >>"
+
+#. i18n: file ./src/channeloptionsui.ui line 306
+#: rc.cpp:887
+#, no-c-format
+msgid "Alt+A, Backspace, Tab, Backspace"
+msgstr "Alt+A、Backspace、Tab、Backspace"
+
+#. i18n: file ./src/channeloptionsui.ui line 345
+#: rc.cpp:893
+#, no-c-format
+msgid "Parameter"
+msgstr "参数"
+
+#. i18n: file ./src/channeloptionsui.ui line 400
+#: rc.cpp:896
+#, no-c-format
+msgid "&Ban List"
+msgstr "封禁列表(&B)"
+
+#. i18n: file ./src/channeloptionsui.ui line 419
+#: rc.cpp:899
+#, no-c-format
+msgid "&Remove Ban"
+msgstr "移除出封禁列表(&R)"
+
+#. i18n: file ./src/channeloptionsui.ui line 435
+#: rc.cpp:902
+#, no-c-format
+msgid "&Add Ban"
+msgstr "添加封禁列表(&A)"
+
+#. i18n: file ./src/channeloptionsui.ui line 441
+#: rc.cpp:905
+#, no-c-format
+msgid "Hostmask"
+msgstr "主机掩码"
+
+#. i18n: file ./src/channeloptionsui.ui line 452
+#: rc.cpp:908
+#, no-c-format
+msgid "Set By"
+msgstr "设定由"
+
+#. i18n: file ./src/channeloptionsui.ui line 463
+#: rc.cpp:911
+#, no-c-format
+msgid "Time Set"
+msgstr "时间设定"
+
+#. i18n: file ./src/channeloptionsui.ui line 511
+#: rc.cpp:915
+#, fuzzy, no-c-format
+msgid "Search:"
+msgstr "搜索(&E)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 20
+#: rc.cpp:918
+#, no-c-format
+msgid "DCC_Settings"
+msgstr "DCC 设定"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 34
+#: rc.cpp:921
+#, no-c-format
+msgid "Download &folder:"
+msgstr "下载文件夹(&F)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 61
+#: rc.cpp:924
+#, no-c-format
+msgid "&Add sender to file name"
+msgstr "为文件名添加发送者(&A)"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 69
+#: rc.cpp:927
+#, no-c-format
+msgid "Cr&eate folder for sender"
+msgstr "为发送者创建文件夹(&E)"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 77
+#: rc.cpp:930
+#, no-c-format
+msgid "Convert spaces in file names to underscores before sending"
+msgstr "在传送文件前将文件名中的空格转换为下划线"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 88
+#: rc.cpp:934
+#, no-c-format
+msgid "Automaticall&y accept download offer"
+msgstr "自动接受下载(&Y)"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 96
+#: rc.cpp:937
+#, no-c-format
+msgid "Au&tomatically resume download"
+msgstr "自动续传(&T)"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 104
+#: rc.cpp:940
+#, no-c-format
+msgid "Enable fast DCC send (Might &not work with all clients)"
+msgstr "启用快速 DCC 发送(不是所有客户端都能正常工作)(&N)"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 137
+#: rc.cpp:943
+#, no-c-format
+msgid "Fallback to an IPv&4 interface for DCC send:"
+msgstr "DCC 传输时使用 IPv4 网络接口(&4)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 140
+#: rc.cpp:946
+#, no-c-format
+msgid ""
+"If this option enabled dcc transfers for IPv6 connections will be done over "
+"IPv4 interface set here"
+msgstr "如果此选项被启用，为 IPv6 建立的 DCC 传输连接会改由 IPv4 界面来操作"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 148
+#: rc.cpp:949 rc.cpp:1207
+#, no-c-format
+msgid " sec"
+msgstr " 秒"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 179
+#: rc.cpp:952
+#, no-c-format
+msgid "DCC send t&imeout:"
+msgstr "DCC 发送超时(&I)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 190
+#: rc.cpp:955
+#, no-c-format
+msgid " bytes"
+msgstr " 字节"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 207
+#: rc.cpp:958
+#, no-c-format
+msgid "Buffer si&ze:"
+msgstr "缓冲区大小(&Z)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 235
+#: rc.cpp:961
+#, fuzzy, no-c-format
+msgid "Enable Passive DCC send"
+msgstr "允许指定 DCC 发送端口(&P)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 246
+#: rc.cpp:965
+#, no-c-format
+msgid "IP"
+msgstr "IP"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 262
+#: rc.cpp:968
+#, no-c-format
+msgid "&Method to get own IP:"
+msgstr "获取本机 IP 的方式(&M)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 273
+#: rc.cpp:971
+#, no-c-format
+msgid "O&wn IP:"
+msgstr "本机 IP(&W)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 291
+#: rc.cpp:974
+#, no-c-format
+msgid "Ports"
+msgstr "端口"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 302
+#: rc.cpp:977
+#, no-c-format
+msgid "Enable specific p&orts for DCC chat:"
+msgstr "允许指定 DCC 密聊端口(&O)："
+
+#. i18n: file ./src/dcc_preferencesui.ui line 344
+#: rc.cpp:980 rc.cpp:986
+#, no-c-format
+msgid "to"
+msgstr "到"
+
+#. i18n: file ./src/dcc_preferencesui.ui line 369
+#: rc.cpp:983
+#, fuzzy, no-c-format
+msgid "Enable specific &ports for DCC transfer server:"
+msgstr "允许指定 DCC 发送端口(&P)："
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 38
+#: rc.cpp:992
+#, no-c-format
+msgid "Use colored text"
+msgstr "使用多彩文本"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 49
+#: rc.cpp:995
+#, no-c-format
+msgid "Use colored LEDs"
+msgstr "使用多彩信号灯"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 70
+#: rc.cpp:1001
+#, no-c-format
+msgid "Application event"
+msgstr "应用程序事件"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 76
+#: rc.cpp:1004
+#, no-c-format
+msgid ""
+"Application events occur in Konsole tabs, the DCC Status tab and other "
+"application tabs not used directly for chatting."
+msgstr "应用程序事件会发生在 Konsole 标签里，DCC 状态标签和其它程序标签不能被直接地用于聊天。"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 109
+#: rc.cpp:1008
+#, no-c-format
+msgid "Message"
+msgstr "消息"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 169
+#: rc.cpp:1012
+#, fuzzy, no-c-format
+msgid "Private message"
+msgstr "服务器消息(&S)："
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 195
+#: rc.cpp:1016
+#, no-c-format
+msgid "Current nick used"
+msgstr "目前使用的昵称"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 256
+#: rc.cpp:1021
+#, no-c-format
+msgid "Channel event"
+msgstr "频道事件"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 262
+#: rc.cpp:1024
+#, no-c-format
+msgid "Channel events are mode changes or users joining/leaving a channel."
+msgstr "频道事件是指模式改变或用户加入/离开频道等状况。"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 322
+#: rc.cpp:1034
+#, no-c-format
+msgid "Give precedence to chat window highlight colors"
+msgstr "给予高亮色的聊天窗口较高优先级"
+
+#. i18n: file ./src/tabnotifications_preferences.ui line 325
+#: rc.cpp:1037
+#, no-c-format
+msgid ""
+"If you select this, the colors you chose in the Highlights preferences page "
+"will override the colors for \"Current nick used\" and \"Highlight\"."
+msgstr "如果您选中此项，您在高亮属性页中选择的颜色会覆盖“目前使用的昵称”和“高亮”所显示的色彩。"
+
+#. i18n: file ./src/fontappearance_preferences.ui line 33
+#: rc.cpp:1040
+#, no-c-format
+msgid "Enable fi&xed font for MOTD messages"
+msgstr "允许为 MOTD 消息使用等宽字体(&X)"
+
+#. i18n: file ./src/fontappearance_preferences.ui line 36
+#: rc.cpp:1043
+#, no-c-format
+msgid "Show MOTD (Message Of The Day) message in fixed font"
+msgstr "以等宽字体显示 MOTD(每日新闻)消息"
+
+#. i18n: file ./src/fontappearance_preferences.ui line 44
+#: rc.cpp:1046
+#, no-c-format
+msgid "Show sender nicknames &bold in the chat view"
+msgstr "在聊天视图中加粗显示发送方昵称(&B)"
+
+#. i18n: file ./src/fontappearance_preferences.ui line 72
+#: rc.cpp:1049
+#, no-c-format
+msgid "Chat text:"
+msgstr "聊天文本字体："
+
+#. i18n: file ./src/fontappearance_preferences.ui line 107
+#: rc.cpp:1052
+#, no-c-format
+msgid "Nickname list:"
+msgstr "昵称列表字体："
+
+#. i18n: file ./src/fontappearance_preferences.ui line 118
+#: rc.cpp:1055
+#, no-c-format
+msgid "Tab bar:"
+msgstr "标签栏："
+
+#. i18n: file ./src/highlight_preferencesui.ui line 27
+#: rc.cpp:1058
+#, no-c-format
+msgid "&Highlight List"
+msgstr "高亮列表(&H)"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 36
+#: rc.cpp:1061 rc.cpp:1281
+#, no-c-format
+msgid "RegEx"
+msgstr "匹配表达式"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 47
+#: rc.cpp:1064
+#, no-c-format
+msgid "Highlights"
+msgstr "高亮"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 58
+#: rc.cpp:1067
+#, no-c-format
+msgid "Sound"
+msgstr "声音"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 69
+#: rc.cpp:1070
+#, no-c-format
+msgid "Auto Text"
+msgstr "自动文本"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 169
+#: rc.cpp:1079 rc.cpp:1293
+#, no-c-format
+msgid "..."
+msgstr "..."
+
+#. i18n: file ./src/highlight_preferencesui.ui line 186
+#: rc.cpp:1086
+#, no-c-format
+msgid "&Pattern:"
+msgstr "模式(&P)："
+
+#. i18n: file ./src/highlight_preferencesui.ui line 216
+#: rc.cpp:1089
+#, fuzzy, no-c-format
+msgid "Color:"
+msgstr "颜色"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 238
+#: rc.cpp:1093
+#, no-c-format
+msgid "&Sound:"
+msgstr "声音(&S)："
+
+#. i18n: file ./src/highlight_preferencesui.ui line 260
+#: rc.cpp:1096
+#, no-c-format
+msgid "audio/x-wav audio/x-mp3 application/ogg audio/x-adpcm"
+msgstr "audio/x-wav audio/x-mp3 application/ogg audio/x-adpcm"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 282
+#: rc.cpp:1100
+#, no-c-format
+msgid "Test sound"
+msgstr ""
+
+#. i18n: file ./src/highlight_preferencesui.ui line 293
+#: rc.cpp:1103
+#, no-c-format
+msgid "&Auto text:"
+msgstr "自动文本颜色(&A)："
+
+#. i18n: file ./src/highlight_preferencesui.ui line 314
+#: rc.cpp:1106
+#, fuzzy, no-c-format
+msgid "Ena&ble sound for highlights"
+msgstr "为高亮列表项启用声音(&B)"
+
+#. i18n: file ./src/highlight_preferencesui.ui line 344
+#: rc.cpp:1111
+#, no-c-format
+msgid "Alwa&ys highlight own current nick:"
+msgstr "总是高亮显示当前昵称(&Y)："
+
+#. i18n: file ./src/highlight_preferencesui.ui line 352
+#: rc.cpp:1114
+#, no-c-format
+msgid "Always highlight own &lines:"
+msgstr "总是高亮显示自己的话(&L)："
+
+#. i18n: file ./src/linkaddressbook/linkaddressbookui_base.ui line 52
+#: rc.cpp:1117
+#, no-c-format
+msgid "Create New &Entry..."
+msgstr "创建新条目(&E)..."
+
+#. i18n: file ./src/linkaddressbook/linkaddressbookui_base.ui line 55
+#: rc.cpp:1120
+#, no-c-format
+msgid "Create a new entry in your address book"
+msgstr "在您的地址簿中创建一条新条目"
+
+#. i18n: file ./src/linkaddressbook/linkaddressbookui_base.ui line 74
+#: rc.cpp:1123
+#, no-c-format
+msgid "Photo"
+msgstr "照片"
+
+#. i18n: file ./src/linkaddressbook/linkaddressbookui_base.ui line 85
+#: rc.cpp:1126
+#, no-c-format
+msgid "Name"
+msgstr "姓名"
+
+#. i18n: file ./src/linkaddressbook/linkaddressbookui_base.ui line 123
+#: rc.cpp:1132
+#, no-c-format
+msgid "Select the contact you want to communicate with via Instant Messaging"
+msgstr "选项要通过即时消息与之通信的联系人"
+
+#. i18n: file ./src/linkaddressbook/linkaddressbookui_base.ui line 147
+#: rc.cpp:1135
+#, no-c-format
+msgid "S&earch:"
+msgstr "搜索(&E)："
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 55
+#: rc.cpp:1141
+#, no-c-format
+msgid "Enable s&ystem bell on incoming ASCII BEL"
+msgstr "收到ASCII响铃字符时发声(&Y)"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 58
+#: rc.cpp:1144
+#, no-c-format
+msgid ""
+"Sounds the system bell when you receive an ASCII BEL (0x07) control character"
+msgstr "当您收到一个 ASCII BEL(0x07)控制符时发出系统响铃"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 66
+#: rc.cpp:1147
+#, no-c-format
+msgid "Hide &Join/Part/Nick events"
+msgstr "隐藏加入/离开/昵称 事件(&J)"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 74
+#: rc.cpp:1150
+#, no-c-format
+msgid "Disable variable (e.g. %C, %B, %G...) e&xpansion"
+msgstr "禁用变量(如：%C、%B、%G...)展开(&X)"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 77
+#: rc.cpp:1153
+#, no-c-format
+msgid ""
+"Do not expand variables when sending text to the server. A variable starts with "
+"'%'; for example, %B will expand to the characters needed to make a text bold."
+msgstr "在将文本发送到服务器时不要展开变量，每一个变量都会以“%”符号开头。例：%B 会被展开为要加粗的文本。"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 85
+#: rc.cpp:1156
+#, no-c-format
+msgid "Insert a &remember line when chat window is hidden"
+msgstr "隐藏聊天窗口时插入助记行(&R)"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 88
+#: rc.cpp:1159
+#, no-c-format
+msgid ""
+"Inserts a remember line into the chat window when you switch to another chat "
+"window or minimize the application."
+msgstr "当您切换到其它聊天窗口或最小化程序时自动向当前聊天窗口内插入一条助记行。"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 96
+#: rc.cpp:1162
+#, no-c-format
+msgid "Show remember lines in all chat windows"
+msgstr "在所有聊天窗口内显示助记行"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 104
+#: rc.cpp:1165
+#, no-c-format
+msgid "&Redirect status messages to the server status window"
+msgstr "将状态信息重定向到专门的服务器状态窗口(&R)"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 112
+#: rc.cpp:1168
+#, no-c-format
+msgid "Scroll&back limit:"
+msgstr "卷轴限制(&B)："
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 118
+#: rc.cpp:1171 rc.cpp:1186
+#, no-c-format
+msgid "How many lines to keep in buffers, 0 = unlimited"
+msgstr "缓冲区内要保留的行数，0=无限制"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 143
+#: rc.cpp:1174
+#, no-c-format
+msgid "&Use raw modes for mode changes"
+msgstr "为模式改动使用原始模式(&U)"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 146
+#: rc.cpp:1177
+#, no-c-format
+msgid ""
+"Keep channel mode string as a combination of characters instead of translating "
+"them into human readable words. E.g. '*** Channel modes: no messages from "
+"outside' will become '*** Channel modes: n'"
+msgstr "将频道模式字串保留为一组字符的集合而不是转换成易读的句子。如：“*** 频道模式：不接受外部消息”会变成“*** 频道模式：n”。"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 154
+#: rc.cpp:1180
+#, no-c-format
+msgid " lines"
+msgstr " 行"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 157
+#: rc.cpp:1183
+#, no-c-format
+msgid "Unlimited"
+msgstr "无限制"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 190
+#: rc.cpp:1189
+#, no-c-format
+msgid "Enable Automatic User Information Look Up (/WHO)"
+msgstr "启用自动用户信息查询(/WHO)"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 241
+#: rc.cpp:1192
+#, no-c-format
+msgid "Max. number of users in a channel:"
+msgstr "频道内最大用户数量："
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 255
+#: rc.cpp:1198
+#, no-c-format
+msgid "Show the real name of a person next to his/her nick in nickname list."
+msgstr "在昵称旁边显示此人的真实姓名。"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 263
+#: rc.cpp:1201
+#, no-c-format
+msgid " nicks"
+msgstr " 昵称"
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 283
+#: rc.cpp:1204
+#, no-c-format
+msgid "Every "
+msgstr "每 "
+
+#. i18n: file ./src/chatwindowbehaviour_preferences.ui line 300
+#: rc.cpp:1210
+#, no-c-format
+msgid "Update interval:"
+msgstr "检查间隔："
+
+#. i18n: file ./src/osd_preferencesui.ui line 44
+#: rc.cpp:1213
+#, no-c-format
+msgid "&Enable On Screen Display"
+msgstr "启用屏幕显示(&E)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 55
+#: rc.cpp:1216
+#, no-c-format
+msgid "On &Screen Display"
+msgstr "在屏幕上显示(&S)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 69
+#: rc.cpp:1219
+#, no-c-format
+msgid "&Draw shadows"
+msgstr "绘制阴影(&D)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 83
+#: rc.cpp:1222
+#, no-c-format
+msgid "OSD font:"
+msgstr "OSD 字体："
+
+#. i18n: file ./src/osd_preferencesui.ui line 158
+#: rc.cpp:1225
+#, no-c-format
+msgid "Show &OSD Message"
+msgstr "显示 OSD 消息(&O)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 169
+#: rc.cpp:1228
+#, no-c-format
+msgid "&If own nick appears in channel message"
+msgstr "当自己的昵称出现在频道消息内(&I)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 177
+#: rc.cpp:1231
+#, no-c-format
+msgid "On an&y channel message"
+msgstr "在任何频道消息上显示(&Y)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 185
+#: rc.cpp:1234
+#, no-c-format
+msgid "On &query activity"
+msgstr "在对话动作上显示(&Q)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 193
+#: rc.cpp:1237
+#, no-c-format
+msgid "On &Join/Part events"
+msgstr "在加入/离开事件上显示(&J)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 206
+#: rc.cpp:1240
+#, no-c-format
+msgid "Enable Custom Colors"
+msgstr "启用自定义颜色"
+
+#. i18n: file ./src/osd_preferencesui.ui line 223
+#: rc.cpp:1243
+#, no-c-format
+msgid "Te&xt color:"
+msgstr "文本颜色(&X)："
+
+#. i18n: file ./src/osd_preferencesui.ui line 234
+#: rc.cpp:1246 rc.cpp:1554
+#, no-c-format
+msgid "&Background color:"
+msgstr "背景颜色(&B)："
+
+#. i18n: file ./src/osd_preferencesui.ui line 283
+#: rc.cpp:1251
+#, no-c-format
+msgid "O&ther Settings"
+msgstr "其它设置(&T)"
+
+#. i18n: file ./src/osd_preferencesui.ui line 294
+#: rc.cpp:1254
+#, no-c-format
+msgid "&Duration:"
+msgstr "活动持续(&D)："
+
+#. i18n: file ./src/osd_preferencesui.ui line 305
+#: rc.cpp:1257
+#, no-c-format
+msgid "S&creen:"
+msgstr "屏幕(&C)："
+
+#. i18n: file ./src/osd_preferencesui.ui line 316
+#: rc.cpp:1260
+#, no-c-format
+msgid " ms"
+msgstr " 毫秒"
+
+#. i18n: file ./src/konversationui.rc line 6
+#: rc.cpp:1263
+#, fuzzy, no-c-format
+msgid "&Connection"
+msgstr "连接"
+
+#. i18n: file ./src/konversationui.rc line 38
+#: rc.cpp:1272
+#, no-c-format
+msgid "&Window"
+msgstr "窗口(&W)"
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 36
+#: rc.cpp:1275
+#, fuzzy, no-c-format
+msgid "Ne&w"
+msgstr "新建"
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 44
+#: rc.cpp:1278
+#, fuzzy, no-c-format
+msgid "R&emove"
+msgstr "已删除"
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 80
+#: rc.cpp:1284
+#, no-c-format
+msgid "Replace In"
+msgstr "替换时机"
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 91
+#: rc.cpp:1287
+#, no-c-format
+msgid "Find"
+msgstr "查找"
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 102
+#: rc.cpp:1290
+#, no-c-format
+msgid "Replace With"
+msgstr "替换为"
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 184
+#: rc.cpp:1297
+#, no-c-format
+msgid "Replace in:"
+msgstr "替换时机："
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 235
+#: rc.cpp:1300
+#, no-c-format
+msgid "Find:"
+msgstr "查找："
+
+#. i18n: file ./src/autoreplace_preferencesui.ui line 254
+#: rc.cpp:1303
+#, no-c-format
+msgid "Replace with:"
+msgstr "替换为："
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 31
+#: rc.cpp:1306
+#, no-c-format
+msgid "Enable &Timestamps"
+msgstr "启用时间戳(&T)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 45
+#: rc.cpp:1309
+#, no-c-format
+msgid "Show &dates"
+msgstr "显示日期(&D)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 53
+#: rc.cpp:1312
+#, no-c-format
+msgid "&Format:"
+msgstr "格式(&F)："
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 62
+#: rc.cpp:1315
+#, no-c-format
+msgid "hh:mm"
+msgstr "hh:mm"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 67
+#: rc.cpp:1318
+#, no-c-format
+msgid "hh:mm:ss"
+msgstr "hh:mm:ss"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 72
+#: rc.cpp:1321
+#, no-c-format
+msgid "h:m ap"
+msgstr ""
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 106
+#: rc.cpp:1324
+#, no-c-format
+msgid "Show Backlog"
+msgstr "显示回溯日志"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 120
+#: rc.cpp:1327
+#, no-c-format
+msgid "&Lines: "
+msgstr "行数(&L)： "
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 161
+#: rc.cpp:1330
+#, no-c-format
+msgid "&Layout"
+msgstr "布局(&L)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 172
+#: rc.cpp:1333
+#, no-c-format
+msgid "&Show channel topic"
+msgstr "显示频道话题(&S)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 180
+#: rc.cpp:1336
+#, no-c-format
+msgid "Show channel &mode buttons"
+msgstr "显示频道模式按钮(&M)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 188
+#: rc.cpp:1339
+#, no-c-format
+msgid "Show channel &nick list and quick buttons"
+msgstr "显示频道内的昵称列表和快捷按钮(&N)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 196
+#: rc.cpp:1342
+#, no-c-format
+msgid "Show bo&x to change own nickname"
+msgstr "显示可供修改自己昵称的方框(&X)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 241
+#: rc.cpp:1345
+#, no-c-format
+msgid "Show hostmas&ks in nickname list"
+msgstr "在昵称列表中显示每人的主机掩码(&K)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 252
+#: rc.cpp:1348
+#, no-c-format
+msgid "Show &quick buttons"
+msgstr "显示快捷按钮(&Q)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 260
+#: rc.cpp:1351
+#, no-c-format
+msgid "Show scrollbar"
+msgstr ""
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 273
+#: rc.cpp:1355
+#, no-c-format
+msgid "Enable Back&ground Image"
+msgstr "启用背景图像(&G)"
+
+#. i18n: file ./src/chatwindowappearance_preferences.ui line 287
+#: rc.cpp:1358
+#, no-c-format
+msgid "P&ath:"
+msgstr "路径(&A)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 40
+#: rc.cpp:1361
+#, no-c-format
+msgid "Custom Colors"
+msgstr "自定义颜色"
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 51
+#: rc.cpp:1364
+#, no-c-format
+msgid "&Use custom colors for input box, nickname list and tab list"
+msgstr "对文字输入框、昵称列表和标签列表使用自定义的颜色(&U)"
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 309
+#: rc.cpp:1377
+#, no-c-format
+msgid "&Background:"
+msgstr "背景(&B)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 320
+#: rc.cpp:1380
+#, no-c-format
+msgid "&Server message:"
+msgstr "服务器消息(&S)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 331
+#: rc.cpp:1383
+#, no-c-format
+msgid "H&yperlink:"
+msgstr "超链接(&Y)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 342
+#: rc.cpp:1386
+#, no-c-format
+msgid "Channel &message:"
+msgstr "频道消息(&M)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 353
+#: rc.cpp:1389
+#, no-c-format
+msgid "Actio&n:"
+msgstr "动作(&N)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 364
+#: rc.cpp:1392
+#, no-c-format
+msgid "Bac&klog:"
+msgstr "回溯日志(&K)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 375
+#: rc.cpp:1395
+#, no-c-format
+msgid "Comman&d message:"
+msgstr "命令消息(&D)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 386
+#: rc.cpp:1398
+#, no-c-format
+msgid "&Query message:"
+msgstr "对话消息(&Q)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 397
+#: rc.cpp:1401
+#, no-c-format
+msgid "&Timestamp:"
+msgstr "时间戳(&T)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 408
+#: rc.cpp:1404
+#, no-c-format
+msgid "A&lternate background:"
+msgstr "可选背景(&L)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 424
+#: rc.cpp:1407
+#, no-c-format
+msgid "Colored Nicks"
+msgstr "彩色昵称"
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 446
+#: rc.cpp:1410 rc.cpp:1474
+#, no-c-format
+msgid "5:"
+msgstr "5："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 470
+#: rc.cpp:1414 rc.cpp:1477
+#, no-c-format
+msgid "4:"
+msgstr "4："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 494
+#: rc.cpp:1418 rc.cpp:1458
+#, no-c-format
+msgid "3:"
+msgstr "3："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 526
+#: rc.cpp:1423 rc.cpp:1455
+#, no-c-format
+msgid "2:"
+msgstr "2："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 618
+#: rc.cpp:1427 rc.cpp:1465
+#, no-c-format
+msgid "0:"
+msgstr "0："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 642
+#: rc.cpp:1431 rc.cpp:1452
+#, no-c-format
+msgid "1:"
+msgstr "1："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 708
+#: rc.cpp:1436 rc.cpp:1468
+#, no-c-format
+msgid "7:"
+msgstr "7："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 724
+#: rc.cpp:1439 rc.cpp:1471
+#, no-c-format
+msgid "6:"
+msgstr "6："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 740
+#: rc.cpp:1442
+#, no-c-format
+msgid "&Own nick color:"
+msgstr "自己昵称的颜色(&O)："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 783
+#: rc.cpp:1446
+#, no-c-format
+msgid "&Allow Colored Text in IRC Messages"
+msgstr "允许在 IRC 消息里使用彩色文本(&A)"
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 789
+#: rc.cpp:1449
+#, no-c-format
+msgid ""
+"By enabling this option, color codes added to IRC messages will be displayed in "
+"your chat window as colored text. You can add color codes to your messages, by "
+"selecting Insert -> IRC Color"
+msgstr ""
+"如果启用此选项，在 IRC 消息中加入的颜色代码会在聊天窗口中显示为彩色的文本。您可以在您的消息中添加颜色代码，只需在菜单中选择“插入 -> IRC 颜色”。"
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1104
+#: rc.cpp:1485
+#, no-c-format
+msgid "11:"
+msgstr "11："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1136
+#: rc.cpp:1491
+#, no-c-format
+msgid "9:"
+msgstr "9："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1144
+#: rc.cpp:1494
+#, no-c-format
+msgid "8:"
+msgstr "8："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1152
+#: rc.cpp:1497
+#, no-c-format
+msgid "10:"
+msgstr "10："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1236
+#: rc.cpp:1501
+#, no-c-format
+msgid "12:"
+msgstr "12："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1252
+#: rc.cpp:1505
+#, no-c-format
+msgid "15:"
+msgstr "15："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1276
+#: rc.cpp:1510
+#, no-c-format
+msgid "14:"
+msgstr "14："
+
+#. i18n: file ./src/colorsappearance_preferences.ui line 1284
+#: rc.cpp:1513
+#, no-c-format
+msgid "13:"
+msgstr "13："
+
+#. i18n: file ./src/irccolorchooserui.ui line 33
+#: rc.cpp:1516
+#, no-c-format
+msgid "Preview"
+msgstr "预览"
+
+#. i18n: file ./src/irccolorchooserui.ui line 39
+#: rc.cpp:1519
+#, no-c-format
+msgid "This is how your message will look with these colors"
+msgstr "这里是使用了自定义颜色的消息文字样板"
+
+#. i18n: file ./src/irccolorchooserui.ui line 44
+#: rc.cpp:1522
+#, no-c-format
+msgid ""
+"<qt>This is a preview of how your readers may see view your message if you "
+"select these colors."
+"<br>\n"
+"<b>Note: Not all clients support this, and some users may have chosen to ignore "
+"your color changes.</b>\n"
+"</qt>"
+msgstr ""
+"<qt>这里提供预览的是当您选择了这些颜色后，您的消息的读者会看到的文本的模样。"
+"<br>\n"
+"<b>注意：并非所有客户端都支持这种功能，而且用户还可以选择忽略您的颜色变动。</b>\n"
+"</qt>"
+
+#. i18n: file ./src/irccolorchooserui.ui line 60
+#: rc.cpp:1527 rc.cpp:1537
+#, no-c-format
+msgid "The chosen text color is added to the input line."
+msgstr "选中的文本颜色已被加入输入行。"
+
+#. i18n: file ./src/irccolorchooserui.ui line 64
+#: rc.cpp:1530 rc.cpp:1540
+#, no-c-format
+msgid ""
+"<qt>Here you choose what color you want you the text in the next message you "
+"send to be.  If you choose a color and click Ok, the chosen color is added to "
+"the Input Line.  Any text written after this will be in the chosen color, until "
+"you change the color again."
+"<br>\n"
+"<b>Note:  Not all users turn on the option to see this.</b></qt>"
+msgstr ""
+"<qt>这里是供您调配下面要发送的消息文本的颜色的地方。如果您选择了一个颜色并点击确定，选中的颜色会被自动加到输入行，任何在这之后写入的文本都会带有相应的颜色，"
+"直到您再次更改颜色设定。"
+"<br>\n"
+"<b>注意：并非所有用户都会打开可观览彩色文本的选项。</b></qt>"
+
+#. i18n: file ./src/irccolorchooserui.ui line 80
+#: rc.cpp:1534
+#, no-c-format
+msgid "&Foreground color:"
+msgstr "前景色(&F)："
+
+#. i18n: file ./src/irccolorchooserui.ui line 109
+#: rc.cpp:1544 rc.cpp:1557
+#, no-c-format
+msgid "The chosen text-background color is added to the input line."
+msgstr "选中的文本背景色已被加入输入行"
+
+#. i18n: file ./src/irccolorchooserui.ui line 116
+#: rc.cpp:1547 rc.cpp:1560
+#, no-c-format
+msgid ""
+"<qt>Here you choose what color you want you background for the text in the next "
+"message you send to be.\n"
+"If you choose a color and click Ok, the chosen color is added to the Input "
+"Line.\n"
+"Any text written after this will have the chosen color, until you change the "
+"color again."
+"<br>\n"
+"Choosing the default \"<i>None</i>\" will not change the background color of "
+"your message, so your readers will view your message with their normal "
+"background text color."
+"<br>\n"
+"<b>Note:  Not all clients support this, and not all users turn on the option to "
+"see this.</b></qt>"
+msgstr ""
+"<qt>这里是供您调配下面要发送的消息文本的颜色的地方。\n"
+"如果您选择了一个颜色并点击确定，选中的颜色会被自动加到输入行。\n"
+"任何在这之后写入的文本都会带有相应的颜色，直到您再次更改颜色设定。"
+"<br>\n"
+"选择默认的“<i>无</i>”不会改变您消息的背景色，因此读者看到的您的消息文本背景色会是普通的样式。"
+"<br>\n"
+"<b>注意：并非所有客户端都支持这种功能，同时也不是所有用户都会打开可观览彩色文本的选项。</b></qt>"
+
+#. i18n: file ./src/warnings_preferencesui.ui line 25
+#: rc.cpp:1567
+#, no-c-format
+msgid "Warning Dialogs to Show"
+msgstr "显示的警告对话框"
+
+#. i18n: file ./src/joinchannelui.ui line 63
+#: rc.cpp:1573
+#, no-c-format
+msgid "&Password:"
+msgstr "密码(&P)："
+
+#. i18n: file ./src/joinchannelui.ui line 82
+#: rc.cpp:1576
+#, no-c-format
+msgid "Server:"
+msgstr "服务器："
+
+#~ msgid "Offering"
+#~ msgstr "正提供"
+
+#~ msgid "There is no vacant port for DCC Chat."
+#~ msgstr "没有可供 DCC 聊天用的空闲端口。"
+
+#~ msgid "Update &interval:"
+#~ msgstr "检查间隔(&I)："
+
+#~ msgid ""
+#~ "<qt>\n"
+#~ "<p>\n"
+#~ "When the nickname watcher is turned on, you will be notified when the nicknames appearing in the <b>Watched Networks/Nicknames</b> list come online or go offline.</p>\n"
+#~ "<p>You can also open the <b>Nicks Online</b> window to see the status of all the watched nicknames.</p>\n"
+#~ ")\n"
+#~ "</qt>"
+#~ msgstr ""
+#~ "<qt>\n"
+#~ "<p>\n"
+#~ "如果昵称监视器被启用，每当那些使用在<b>被监视网络/昵称</b>列表里的昵称的人上线或离线时您将会获得通知。</p>\n"
+#~ "<p>您也可以打开<b>在线昵称</b>窗口检阅所有被监视昵称的目前状态。</p>\n"
+#~ "</qt>"
+
+#~ msgid "No DCC download running on port %1."
+#~ msgstr "没有 DCC 下载在端口 %1 运行。"
+
+#~ msgid "No DCC upload running on port %1."
+#~ msgstr "没有 DCC 上传在端口 %1 运行。"
+
+#~ msgid "Switch To"
+#~ msgstr "切换到"
+
+#~ msgid "%1 is a network admin."
+#~ msgstr "%1 是一个网络的管理员。"
+
+#~ msgid "Local Path:"
+#~ msgstr "本地路径："
+
+#~ msgid "Saved to:"
+#~ msgstr "保存到："
+
+#~ msgid "Open this file"
+#~ msgstr "打开此文件"
+
+#~ msgid "Delete this file"
+#~ msgstr "删除此文件"
+
+#~ msgid "Receiver:"
+#~ msgstr "接收者："
+
+#~ msgid "Sender:"
+#~ msgstr "发送者："
+
+#~ msgid "Accept this transfer"
+#~ msgstr "接受此传输"
+
+#~ msgid "Abort this transfer"
+#~ msgstr "中止此传输"
+
+#~ msgid "DCC %1: %2"
+#~ msgstr "DCC %1: %2"
+
+#~ msgid "Do you really want to remove the received file?"
+#~ msgstr "您真要删除接受到的文件吗？"
+
+#~ msgid "DCC Transfer &Details"
+#~ msgstr "DCC 传输细节(&D)"
+
+#~ msgid "&Channel:"
+#~ msgstr "频道(&C)："

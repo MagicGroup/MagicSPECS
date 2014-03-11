@@ -1,0 +1,52 @@
+From 89e796aef5ca1b35ca4ff6fce9231b4125e07037 Mon Sep 17 00:00:00 2001
+From: Dylan Noblesmith <nobled@dreamwidth.org>
+Date: Fri, 16 Mar 2012 18:38:49 +0000
+Subject: [PATCH] intel: fix null dereference processing HiZ buffer
+
+Or technically, a near-null dereference.
+
+https://bugs.freedesktop.org/show_bug.cgi?id=46303
+https://bugs.freedesktop.org/show_bug.cgi?id=46739
+
+NOTE: This is a candidate for the 8.0 branch.
+
+Reviewed-by: Chad Versace <chad.versace@linux.intel.com>
+(cherry picked from commit 8d9decb75f0df564abaf9888d9fc5c77de8059cd)
+---
+ src/mesa/drivers/dri/intel/intel_context.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/src/mesa/drivers/dri/intel/intel_context.c b/src/mesa/drivers/dri/intel/intel_context.c
+index d3c0d70..9cdd804 100644
+--- a/src/mesa/drivers/dri/intel/intel_context.c
++++ b/src/mesa/drivers/dri/intel/intel_context.c
+@@ -1225,6 +1225,10 @@ intel_process_dri2_buffer_with_separate_stencil(struct intel_context *intel,
+    if (!rb)
+       return;
+ 
++   /* Check if we failed to allocate the depth miptree earlier. */
++   if (buffer->attachment == __DRI_BUFFER_HIZ && rb->mt == NULL)
++     return;
++
+    /* If the renderbuffer's and DRIbuffer's regions match, then continue. */
+    if ((buffer->attachment != __DRI_BUFFER_HIZ &&
+ 	rb->mt &&
+@@ -1266,6 +1270,7 @@ intel_process_dri2_buffer_with_separate_stencil(struct intel_context *intel,
+     * due to failure to allocate new storage.
+     */
+    if (buffer->attachment == __DRI_BUFFER_HIZ) {
++      assert(rb->mt);
+       intel_miptree_release(&rb->mt->hiz_mt);
+    } else {
+       intel_miptree_release(&rb->mt);
+@@ -1291,6 +1296,7 @@ intel_process_dri2_buffer_with_separate_stencil(struct intel_context *intel,
+ 
+    /* Associate buffer with new storage. */
+    if (buffer->attachment == __DRI_BUFFER_HIZ) {
++      assert(rb->mt);
+       rb->mt->hiz_mt = mt;
+    } else {
+       rb->mt = mt;
+-- 
+1.7.7.6
+

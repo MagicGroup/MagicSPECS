@@ -1,0 +1,171 @@
+diff -up patch-2.6.1/Makefile.in.selinux patch-2.6.1/Makefile.in
+--- patch-2.6.1/Makefile.in.selinux	2011-02-08 11:29:34.590271489 +0000
++++ patch-2.6.1/Makefile.in	2011-02-08 11:29:34.602271607 +0000
+@@ -40,7 +40,7 @@ EXEEXT = @EXEEXT@
+ LDFLAGS = @LDFLAGS@
+ LIBOBJDIR = gl/lib/
+ LIBOBJS = @LIBOBJS@ ${LIBOBJDIR}full-write$U.o
+-LIBS = @LIBS@
++LIBS = @LIBS@ -lselinux
+ OBJEXT = @OBJEXT@
+ PACKAGE_NAME = @PACKAGE_NAME@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+diff -up patch-2.6.1/src/common.h.selinux patch-2.6.1/src/common.h
+--- patch-2.6.1/src/common.h.selinux	2009-12-30 12:56:30.000000000 +0000
++++ patch-2.6.1/src/common.h	2011-02-08 11:29:34.602271607 +0000
+@@ -32,6 +32,8 @@
+ #include <sys/types.h>
+ #include <time.h>
+ 
++#include <selinux/selinux.h>
++
+ #include <sys/stat.h>
+ #if ! defined S_ISDIR && defined S_IFDIR
+ # define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+@@ -118,6 +120,7 @@ XTERN char *outfile;
+ XTERN int inerrno;
+ XTERN int invc;
+ XTERN struct stat instat;
++XTERN security_context_t incontext;
+ XTERN bool dry_run;
+ XTERN bool posixly_correct;
+ 
+diff -up patch-2.6.1/src/inp.c.selinux patch-2.6.1/src/inp.c
+--- patch-2.6.1/src/inp.c.selinux	2011-02-08 11:29:34.576271352 +0000
++++ patch-2.6.1/src/inp.c	2011-02-08 11:29:34.604271627 +0000
+@@ -152,8 +152,18 @@ get_input_file (char const *filename, ch
+     char *diffbuf;
+     char *getbuf;
+ 
+-    if (inerrno == -1)
+-      inerrno = stat (filename, &instat) == 0 ? 0 : errno;
++    inerrno = stat (filename, &instat) == 0 ? 0 : errno;
++    if (inerrno == 0)
++      {
++        inerrno = getfilecon (inname, &incontext) == -1 ? errno : 0;
++        if (inerrno == ENODATA || inerrno == ENOTSUP)
++          {
++    	inerrno = 0;
++    	incontext = NULL;
++          }
++      }
++    else
++      incontext = NULL;
+ 
+     /* Perhaps look for RCS or SCCS versions.  */
+     if (patch_get
+@@ -197,7 +207,7 @@ get_input_file (char const *filename, ch
+ 	    }
+ 
+ 	    if (cs && version_get (filename, cs, ! inerrno, elsewhere, getbuf,
+-				   &instat))
++				   &instat, &incontext))
+ 	      inerrno = 0;
+ 
+ 	    free (getbuf);
+@@ -209,6 +219,7 @@ get_input_file (char const *filename, ch
+       {
+ 	instat.st_mode = S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH;
+ 	instat.st_size = 0;
++	incontext = NULL;
+       }
+     else if (! S_ISREG (instat.st_mode))
+       fatal ("File %s is not a regular file -- can't patch",
+diff -up patch-2.6.1/src/patch.c.selinux patch-2.6.1/src/patch.c
+--- patch-2.6.1/src/patch.c.selinux	2011-02-08 11:29:34.586271450 +0000
++++ patch-2.6.1/src/patch.c	2011-02-08 11:29:34.606271646 +0000
+@@ -421,6 +421,21 @@ main (int argc, char **argv)
+ 			      /* Fails if we are not in group instat.st_gid.  */
+ 			      chown (outname, -1, instat.st_gid);
+ 			    }
++
++			  if (! inerrno && incontext)
++			    {
++			      security_context_t outcontext;
++			      if (getfilecon (outname, &outcontext) != -1 &&
++				  outcontext &&
++				  strcmp(outcontext, incontext) && 
++				  setfilecon (outname, incontext) != 0)
++				{
++				  if (errno != ENOTSUP && errno != EPERM)
++				    pfatal ("Can't set security context "
++					    "on file %s", quotearg (outname));
++				}
++			    }
++
+ 			  /* FIXME: There may be other attributes to preserve.  */
+ 			}
+ 		    }
+diff -up patch-2.6.1/src/pch.c.selinux patch-2.6.1/src/pch.c
+--- patch-2.6.1/src/pch.c.selinux	2011-02-08 11:29:34.591271499 +0000
++++ patch-2.6.1/src/pch.c	2011-02-08 11:30:08.810621570 +0000
+@@ -307,7 +307,12 @@ there_is_another_patch (bool need_header
+ 	    inname[t - buf - 1] = 0;
+ 	    if (stat (inname, &instat) == 0)
+ 	      {
+-		inerrno = 0;
++		inerrno = getfilecon (inname, &incontext) == -1 ? errno : 0;
++		if (inerrno == ENODATA || inerrno == ENOTSUP)
++		  {
++		    inerrno = 0;
++		    incontext = NULL;
++		  }
+ 		invc = -1;
+ 	      }
+ 	    else
+@@ -681,7 +686,7 @@ intuit_diff_type (bool need_header)
+ 			  if (cs)
+ 			    {
+ 			      if (version_get (p_name[i], cs, false, readonly,
+-					       getbuf, &st[i]))
++					       getbuf, &st[i], NULL))
+ 				stat_errno[i] = 0;
+ 			      else
+ 				version_controlled[i] = 0;
+@@ -746,6 +751,7 @@ intuit_diff_type (bool need_header)
+ 	invc = version_controlled[i];
+ 	instat = st[i];
+ 	validate_target_name (inname);
++	getfilecon (inname, &incontext);
+       }
+ 
+     return retval;
+diff -up patch-2.6.1/src/util.c.selinux patch-2.6.1/src/util.c
+--- patch-2.6.1/src/util.c.selinux	2009-11-02 19:09:57.000000000 +0000
++++ patch-2.6.1/src/util.c	2011-02-08 11:29:34.613271715 +0000
+@@ -574,7 +574,8 @@ version_controller (char const *filename
+    Return true if successful.  */
+ bool
+ version_get (char const *filename, char const *cs, bool exists, bool readonly,
+-	     char const *getbuf, struct stat *filestat)
++	     char const *getbuf, struct stat *filestat,
++	     security_context_t *filecontext)
+ {
+   if (patch_get < 0)
+     {
+@@ -599,6 +600,13 @@ version_get (char const *filename, char 
+ 	fatal ("Can't get file %s from %s", quotearg (filename), cs);
+       if (stat (filename, filestat) != 0)
+ 	pfatal ("%s", quotearg (filename));
++      if (filecontext && getfilecon (filename, filecontext) == -1)
++	{
++	  if (errno == ENODATA || errno == ENOTSUP)
++	    *filecontext = NULL;
++	  else
++	    pfatal ("%s", quotearg (filename));
++	}
+     }
+ 
+   return 1;
+diff -up patch-2.6.1/src/util.h.selinux patch-2.6.1/src/util.h
+--- patch-2.6.1/src/util.h.selinux	2009-11-02 19:09:57.000000000 +0000
++++ patch-2.6.1/src/util.h	2011-02-08 11:29:34.614271726 +0000
+@@ -51,7 +51,7 @@ char *fetchname (char *, int, char **, t
+ char *savebuf (char const *, size_t);
+ char *savestr (char const *);
+ char const *version_controller (char const *, bool, struct stat const *, char **, char **);
+-bool version_get (char const *, char const *, bool, bool, char const *, struct stat *);
++bool version_get (char const *, char const *, bool, bool, char const *, struct stat *, security_context_t *);
+ int create_file (char const *, int, mode_t, bool);
+ int systemic (char const *);
+ char *format_linenum (char[LINENUM_LENGTH_BOUND + 1], LINENUM);

@@ -1,0 +1,29 @@
+From 4073e00839d0a30f8e0e3bb80ae96cac619a73d0 Mon Sep 17 00:00:00 2001
+From: Jonathan Matthew <jonathan@d14n.org>
+Date: Sat, 11 Jun 2011 09:03:57 +0000
+Subject: encoding-target: set names on audio and video profiles
+
+https://bugzilla.gnome.org/show_bug.cgi?id=652342
+---
+diff --git a/gst-libs/gst/pbutils/encoding-target.c b/gst-libs/gst/pbutils/encoding-target.c
+index 29e67d0..f3002b7 100644
+--- a/gst-libs/gst/pbutils/encoding-target.c
++++ b/gst-libs/gst/pbutils/encoding-target.c
+@@ -642,10 +642,14 @@ parse_encoding_profile (GKeyFile * in, gchar * parentprofilename,
+             *) sprof, variableframerate);
+     gst_encoding_video_profile_set_pass ((GstEncodingVideoProfile *) sprof,
+         pass);
++    gst_encoding_profile_set_name (sprof, pname);
++    gst_encoding_profile_set_description (sprof, description);
+   } else if (!g_strcmp0 (proftype, "audio")) {
+     sprof =
+         (GstEncodingProfile *) gst_encoding_audio_profile_new (formatcaps,
+         preset, restrictioncaps, presence);
++    gst_encoding_profile_set_name (sprof, pname);
++    gst_encoding_profile_set_description (sprof, description);
+   } else
+     GST_ERROR ("Unknown profile format '%s'", proftype);
+ 
+--
+cgit v0.9.0.2-2-gbebe
+

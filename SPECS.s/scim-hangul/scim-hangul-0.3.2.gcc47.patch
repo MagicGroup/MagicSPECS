@@ -1,0 +1,11 @@
+diff -urN scim-hangul-0.3.2.orig/src/scim_hangul_imengine.cpp scim-hangul-0.3.2/src/scim_hangul_imengine.cpp
+--- scim-hangul-0.3.2.orig/src/scim_hangul_imengine.cpp	2012-08-04 18:15:55.791206974 +0530
++++ scim-hangul-0.3.2/src/scim_hangul_imengine.cpp	2012-08-04 18:16:38.112291222 +0530
+@@ -34,6 +34,7 @@
+ #endif
+ 
+ #include <string.h>
++#include <unistd.h>
+ #include <scim.h>
+ #include "scim_hangul_imengine.h"
+ 

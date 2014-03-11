@@ -1,0 +1,23 @@
+*** isdn4k-utils-CVS-2010-05-01-patched/ipppd.org/main.c	1969-12-31 20:03:58.571929416 -0500
+--- isdn4k-utils-CVS-2010-05-01-patched/ipppd/main.c	2012-07-18 05:46:07.636040971 -0400
+***************
+*** 1301,1309 ****
+           * XXX We assume a va_list is either a pointer or an array, so
+           * what gets passed for a va_list is like a void * in some sense.
+           */
+          a = va_arg(args, void *);
+! #if defined(__alpha__) || defined(__sh__)       /* always do this? */
+  	n = fmtmsg(buf, buflen + 1, f, a);
+  #else
+  	n = vfmtmsg(buf, buflen + 1, f, a);
+  #endif
+--- 1301,1309 ----
+           * XXX We assume a va_list is either a pointer or an array, so
+           * what gets passed for a va_list is like a void * in some sense.
+           */
+          a = va_arg(args, void *);
+! #if defined(__alpha__) || defined(__sh__) || defined ( __arm__ )      /* always do this? */
+  	n = fmtmsg(buf, buflen + 1, f, a);
+  #else
+  	n = vfmtmsg(buf, buflen + 1, f, a);
+  #endif

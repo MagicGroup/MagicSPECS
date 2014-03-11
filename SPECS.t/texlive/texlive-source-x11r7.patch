@@ -1,0 +1,15 @@
+--- texk/xdvik/xdvi.h
++++ texk/xdvik/xdvi.h	2007-01-10 15:40:33.000000000 +0000
+@@ -190,6 +190,12 @@ typedef unsigned long xuint32;
+ # endif
+ #endif
+ 
++/* redefine X11 macros for our own usage, see below */
++#ifdef __STDC__
++# undef NeedFunctionPrototypes
++# undef NeedWidePrototypes
++#endif
++
+ /* for unused parameters */
+ #ifndef UNUSED
+ #define UNUSED(x) ((void)(x))

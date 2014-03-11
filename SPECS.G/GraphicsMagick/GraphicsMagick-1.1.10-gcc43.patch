@@ -1,0 +1,12 @@
+diff -up GraphicsMagick-1.1.14/Magick++/lib/Geometry.cpp.BAD GraphicsMagick-1.1.14/Magick++/lib/Geometry.cpp
+--- GraphicsMagick-1.1.14/Magick++/lib/Geometry.cpp.BAD	2008-09-11 11:43:45.000000000 -0400
++++ GraphicsMagick-1.1.14/Magick++/lib/Geometry.cpp	2008-09-11 11:43:52.000000000 -0400
+@@ -8,7 +8,7 @@
+ #define MAGICK_IMPLEMENTATION
+ 
+ #include "Magick++/Include.h"
+-#include <string>
++#include <cstring>
+ #include <ctype.h> // for isdigit
+ #include <strings.h> // for strcpy
+ 

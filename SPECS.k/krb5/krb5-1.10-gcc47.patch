@@ -1,0 +1,12 @@
+This file also triggers the maybe-uninitialized warning/error. RT#7080
+
+--- src/lib/krb5/krb/x-deltat.y
++++ src/lib/krb5/krb/x-deltat.y
+@@ -44,6 +44,7 @@
+ #ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wuninitialized"
++#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+ 
+ #include <ctype.h>

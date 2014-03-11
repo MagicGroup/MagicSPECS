@@ -1,0 +1,11 @@
+diff -ur ninja-1.5.8.1/include/irc.h ninja-1.5.8.1.new/include/irc.h
+--- ninja-1.5.8.1/include/irc.h	2002-02-19 08:17:51.000000000 +0100
++++ ninja-1.5.8.1.new/include/irc.h	2008-02-14 20:56:52.000000000 +0100
+@@ -121,6 +121,7 @@
+ #endif /* HAVE_SYS_FILE_H */
+ 
+ #ifdef HAVE_NETDB_H
++#define __USE_GNU
+ # include <netdb.h>
+ #endif /* HAVE_NETDB_H */
+ 

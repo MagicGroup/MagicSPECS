@@ -1,0 +1,27 @@
+#30806: Authen::Captcha is not Taint safe
+http://rt.cpan.org/Public/Bug/Display.html?id=30806
+
+From: Chris Dunlop <chris@onthe.net.au>
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=409731
+
+diff -urp Authen-Captcha-1.023.orig/Captcha.pm Authen-Captcha-1.023/Captcha.pm
+--- Authen-Captcha-1.023.orig/Captcha.pm	2003-12-18 05:44:34.000000000 +0100
++++ Authen-Captcha-1.023/Captcha.pm	2008-06-11 14:52:37.000000000 +0200
+@@ -232,7 +232,7 @@ sub check_code 
+ 	foreach my $line (@data) 
+ 	{
+ 		$line =~ s/\n//;
+-		my ($data_time,$data_code) = split(/::/,$line);
++		my ($data_time,$data_code) = $line =~ m/(^\d+)::([[:xdigit:]]{32})$/;
+ 		
+ 		my $png_file = File::Spec->catfile($self->output_folder(),$data_code . ".png");
+ 		if ($data_code eq $crypt)
+@@ -351,7 +351,7 @@ sub _save_code
+ 	foreach my $line (@data) 
+ 	{
+ 		$line =~ s/\n//;
+-		my ($data_time,$data_code) = split(/::/,$line);
++		my ($data_time,$data_code) = $line =~ m/(^\d+)::([[:xdigit:]]{32})$/;
+ 		if ( (($current_time - $data_time) > ($self->expire())) ||
+ 		     ($data_code  eq $md5) )
+ 		{	# remove expired captcha, or a dup

@@ -1,0 +1,36 @@
+From 7917ed515f29f54847e3bf57b6b61e7097ed78e7 Mon Sep 17 00:00:00 2001
+From: Avesh Agarwal <avagarwa@redhat.com>
+Date: Tue, 10 Dec 2013 14:38:08 -0500
+Subject: [PATCH 12/20] Fixed netmask issue when sending IP information to the
+ nm openswan plugin service.
+
+---
+ src/nm-openswan-service-helper.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/src/nm-openswan-service-helper.c b/src/nm-openswan-service-helper.c
+index 59d79f9..d521645 100644
+--- a/src/nm-openswan-service-helper.c
++++ b/src/nm-openswan-service-helper.c
+@@ -283,9 +283,8 @@ main (int argc, char *argv[])
+ 		g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_PTP, val);
+ 	else
+ 		helper_failed (connection, "IP4 PTP Address");
+-//#if 0
++
+ 	/* Netmask */
+-	//tmp = getenv ("INTERNAL_IP4_NETMASK");
+ 	tmp = nmask;
+ 	if (tmp && inet_pton (AF_INET, tmp, &temp_addr) > 0) {
+ 		GValue *value;
+@@ -296,7 +295,6 @@ main (int argc, char *argv[])
+ 
+ 		g_hash_table_insert (config, NM_VPN_PLUGIN_IP4_CONFIG_PREFIX, value);
+ 	}
+-//#endif
+ 
+ 	/* DNS */
+ 	val = addr_list_to_gvalue (getenv ("PLUTO_PEER_DNS_INFO"));
+-- 
+1.8.3.1
+

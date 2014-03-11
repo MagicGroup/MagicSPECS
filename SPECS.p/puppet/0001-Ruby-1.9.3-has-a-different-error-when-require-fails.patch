@@ -1,0 +1,31 @@
+From a71208ba651d96d2ac9792c5358f10231a140e10 Mon Sep 17 00:00:00 2001
+From: Daniel Pittman <daniel@puppetlabs.com>
+Date: Fri, 9 Mar 2012 14:43:02 -0800
+Subject: [PATCH/puppet] Ruby 1.9.3 has a different error when `require`
+ fails.
+
+The text of the error message when load fails has changed, resulting in the
+test failing.  This adapts that to catch the different versions, allowing this
+to pass in all cases.
+
+Signed-off-by: Daniel Pittman <daniel@puppetlabs.com>
+---
+ lib/puppet/provider/confine.rb |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/puppet/provider/confine.rb b/lib/puppet/provider/confine.rb
+index 6825def..b28d07d 100644
+--- a/lib/puppet/provider/confine.rb
++++ b/lib/puppet/provider/confine.rb
+@@ -25,7 +25,7 @@ class Puppet::Provider::Confine
+       begin
+         require "puppet/provider/confine/#{name}"
+       rescue LoadError => detail
+-        unless detail.to_s =~ /No such file/i
++        unless detail.to_s =~ /No such file|cannot load such file/i
+           warn "Could not load confine test '#{name}': #{detail}"
+         end
+         # Could not find file
+-- 
+1.7.6
+

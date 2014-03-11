@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BitStormLite
+GenericName=BT Download Tool
+GenericName[zh_CN]=BT 下载工具
+GenericName[zh_TW]=BT 下載工具
+Comment[zh_CN]=比特风暴轻量版：一个 Bittroent 客户端程序
+Comment[zh_TW]=比特風暴輕量版：一個 Bittroent 客戶端程式
+Exec=bitstormlite
+Icon=kget.png
+Terminal=false
+Type=Application
+Categories=Application;Network;
+MimeType=application/x-bittorrent

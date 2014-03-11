@@ -1,0 +1,43 @@
+From 3a02bd072ad5130d7457ea0bc3160a94c99027c1 Mon Sep 17 00:00:00 2001
+From: Bastiaan Jacques <bjacq@users.sourceforge.net>
+Date: Sat, 29 Sep 2012 17:37:54 -0400
+Subject: [PATCH 86/89] taskbar: segfault fix - ID: 3573069
+
+http://sourceforge.net/tracker/?func=detail&atid=894871&aid=3573069&group_id=180858
+
+prevent segfault, zero out callback
+
+This is my attempt to fix the segmentation fault with crashing function
+flash_window_timeout reported here:
+https://bugzilla.redhat.com/show_bug.cgi?id=587430
+
+In various places in taskbar.c there is logic depending the timeout
+callback pointer being 'active' when it is not zero. In one instance
+(the one being address with the attached patch) the callback is
+unregistered but not zeroed out.
+
+This patch appears to prevent the segfault and also prevent excessive
+flashing that Firefox exhibits in lxpanel.
+---
+ src/plugins/taskbar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/plugins/taskbar.c b/src/plugins/taskbar.c
+index baf6281..ed8d618 100644
+--- a/src/plugins/taskbar.c
++++ b/src/plugins/taskbar.c
+@@ -553,8 +553,10 @@ static void task_delete(TaskbarPlugin * tb, Task * tk, gboolean unlink)
+         tb->focused = NULL;
+ 
+     /* If there is an urgency timeout, remove it. */
+-    if (tk->flash_timeout != 0)
++    if (tk->flash_timeout != 0) {
+         g_source_remove(tk->flash_timeout);
++        tk->flash_timeout = 0;
++    }
+ 
+     /* Deallocate structures. */
+     icon_grid_remove(tb->icon_grid, tk->button);
+-- 
+1.7.11.7
+

@@ -1,0 +1,21 @@
+diff -up Cflow-1.053/Makefile.PL.orig Cflow-1.053/Makefile.PL
+--- Cflow-1.053/Makefile.PL.orig	2003-05-10 18:31:56.000000000 +0200
++++ Cflow-1.053/Makefile.PL	2011-06-17 17:45:51.000000000 +0200
+@@ -49,7 +49,7 @@ sub find_flow_tools {
+    }
+    if ("$libdir") {
+       print "Found flow-tools... using \"-DOSU $incdir $libdir -lft -lz\".\n";
+-      return { CCFLAGS => '-DOSU',
++      return { CCFLAGS => $Config{ccflags} . ' -DOSU',
+ 	       INC     => join(' ', $incdir),
+ 	       LIBS    => [ join(' ', $libdir, '-lnsl -lft -lz') ] }
+    }
+@@ -66,7 +66,7 @@ sub find_argus {
+    }
+    if ("$libdir") {
+       print "Found argus... using \"-DARGUS $incdir $dir/argus_common.a $dir/argus_parse.a\".\n";
+-      return { CCFLAGS => '-DARGUS',
++      return { CCFLAGS => $Config{ccflags} . ' -DARGUS',
+ 	       INC     => join(' ', $incdir),
+ 	       LIBS    => [ join(' ', $libdir, '-lnsl', '-lm') ],
+ 	       LDFROM  => "\$(OBJECT) $dir/argus_common.a $dir/argus_parse.a" }

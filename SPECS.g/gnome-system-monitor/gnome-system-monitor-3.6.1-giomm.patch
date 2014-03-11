@@ -1,0 +1,12 @@
+diff -ur gnome-system-monitor-3.6.1.orig/src/prettytable.h gnome-system-monitor-3.6.1/src/prettytable.h
+--- gnome-system-monitor-3.6.1.orig/src/prettytable.h	2012-12-24 12:02:30.000000000 +0000
++++ gnome-system-monitor-3.6.1/src/prettytable.h	2012-12-24 12:02:46.000000000 +0000
+@@ -4,7 +4,7 @@
+ #include <glib.h>
+ #include <gdk-pixbuf/gdk-pixbuf.h>
+ #include <glibmm/refptr.h>
+-#include <giomm/filemonitor.h>
++#include <giomm.h>
+ 
+ #include <gdkmm/pixbuf.h>
+ 

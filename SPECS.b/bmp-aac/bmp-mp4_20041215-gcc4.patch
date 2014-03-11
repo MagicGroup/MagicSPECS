@@ -1,0 +1,45 @@
+diff -ur bmp-mp4_20041215/include/mpeg4ip.h ../BUILD/bmp-mp4_20041215/include/mpeg4ip.h
+--- bmp-mp4_20041215/include/mpeg4ip.h	2004-12-16 00:23:03.000000000 +0800
++++ ../BUILD/bmp-mp4_20041215/include/mpeg4ip.h	2009-11-26 23:21:45.000000000 +0800
+@@ -210,7 +210,7 @@
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+-char *strcasestr(const char *haystack, const char *needle);
++//const char *strcasestr(const char *haystack, const char *needle);
+ #ifdef __cplusplus
+ }
+ #endif
+diff -ur bmp-mp4_20041215/libfaad2/common.h ../BUILD/bmp-mp4_20041215/libfaad2/common.h
+--- bmp-mp4_20041215/libfaad2/common.h	2004-12-16 00:17:51.000000000 +0800
++++ ../BUILD/bmp-mp4_20041215/libfaad2/common.h	2009-11-26 23:24:17.000000000 +0800
+@@ -304,7 +304,7 @@
+   #elif (defined(__i386__) && defined(__GNUC__))
+     #define HAS_LRINTF
+     // from http://www.stereopsis.com/FPU.html
+-    static INLINE int lrintf(float f)
++    /*static INLINE int lrintf(float f)
+     {
+         int i;
+         __asm__ __volatile__ (
+@@ -313,7 +313,7 @@
+             : "=m" (i)
+             : "m" (f));
+         return i;
+-    }
++    }*/
+   #endif
+
+
+diff -ur bmp-mp4_20041215/libmp4v2/rtphint.cpp ../BUILD/bmp-mp4_20041215/libmp4v2/rtphint.cpp
+--- bmp-mp4_20041215/libmp4v2/rtphint.cpp	2004-12-16 00:09:26.000000000 +0800
++++ ../BUILD/bmp-mp4_20041215/libmp4v2/rtphint.cpp	2009-11-26 23:23:42.000000000 +0800
+@@ -325,7 +325,7 @@
+ 	    *ppEncodingParams = NULL;
+ 		if (m_pRtpMapProperty) {
+ 			pRtpMap = m_pRtpMapProperty->GetValue();
+-			pSlash = strchr(pRtpMap, '/');
++			pSlash = (char *)strchr(pRtpMap, '/');
+ 
+ 			if (pSlash) {
+ 				length = pSlash - pRtpMap;

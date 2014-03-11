@@ -1,0 +1,66 @@
+diff -rupN libfreebob-1.0.11.old/src/libfreebobavc/avc_extended_plug_info.cpp libfreebob-1.0.11/src/libfreebobavc/avc_extended_plug_info.cpp
+--- libfreebob-1.0.11.old/src/libfreebobavc/avc_extended_plug_info.cpp	2007-10-15 14:15:08.000000000 -0400
++++ libfreebob-1.0.11/src/libfreebobavc/avc_extended_plug_info.cpp	2011-02-09 00:19:12.000000000 -0500
+@@ -120,7 +120,7 @@ ExtendedPlugInfoPlugNameSpecificData::de
+     return true;
+ }
+ 
+-ExtendedPlugInfoPlugNameSpecificData::ExtendedPlugInfoPlugNameSpecificData*
++typename ExtendedPlugInfoPlugNameSpecificData::ExtendedPlugInfoPlugNameSpecificData*
+ ExtendedPlugInfoPlugNameSpecificData::clone() const
+ {
+     return new ExtendedPlugInfoPlugNameSpecificData( *this );
+@@ -156,7 +156,7 @@ ExtendedPlugInfoPlugNumberOfChannelsSpec
+     return true;
+ }
+ 
+-ExtendedPlugInfoPlugNumberOfChannelsSpecificData::ExtendedPlugInfoPlugNumberOfChannelsSpecificData*
++typename ExtendedPlugInfoPlugNumberOfChannelsSpecificData::ExtendedPlugInfoPlugNumberOfChannelsSpecificData*
+ ExtendedPlugInfoPlugNumberOfChannelsSpecificData::clone() const
+ {
+     return new ExtendedPlugInfoPlugNumberOfChannelsSpecificData( *this );
+@@ -229,7 +229,7 @@ ExtendedPlugInfoPlugChannelPositionSpeci
+     return true;
+ }
+ 
+-ExtendedPlugInfoPlugChannelPositionSpecificData::ExtendedPlugInfoPlugChannelPositionSpecificData*
++typename ExtendedPlugInfoPlugChannelPositionSpecificData::ExtendedPlugInfoPlugChannelPositionSpecificData*
+ ExtendedPlugInfoPlugChannelPositionSpecificData::clone() const
+ {
+     return new ExtendedPlugInfoPlugChannelPositionSpecificData( *this );
+@@ -287,7 +287,7 @@ ExtendedPlugInfoPlugChannelNameSpecificD
+     return true;
+ }
+ 
+-ExtendedPlugInfoPlugChannelNameSpecificData::ExtendedPlugInfoPlugChannelNameSpecificData*
++typename ExtendedPlugInfoPlugChannelNameSpecificData::ExtendedPlugInfoPlugChannelNameSpecificData*
+ ExtendedPlugInfoPlugChannelNameSpecificData::clone() const
+ {
+     return new ExtendedPlugInfoPlugChannelNameSpecificData( *this );
+@@ -334,7 +334,7 @@ ExtendedPlugInfoPlugInputSpecificData::d
+     return m_plugAddress->deserialize( de );
+ }
+ 
+-ExtendedPlugInfoPlugInputSpecificData::ExtendedPlugInfoPlugInputSpecificData*
++typename ExtendedPlugInfoPlugInputSpecificData::ExtendedPlugInfoPlugInputSpecificData*
+ ExtendedPlugInfoPlugInputSpecificData::clone() const
+ {
+     return new ExtendedPlugInfoPlugInputSpecificData( *this );
+@@ -410,7 +410,7 @@ ExtendedPlugInfoPlugOutputSpecificData::
+     return true;
+ }
+ 
+-ExtendedPlugInfoPlugOutputSpecificData::ExtendedPlugInfoPlugOutputSpecificData*
++typename ExtendedPlugInfoPlugOutputSpecificData::ExtendedPlugInfoPlugOutputSpecificData*
+ ExtendedPlugInfoPlugOutputSpecificData::clone() const
+ {
+     return new ExtendedPlugInfoPlugOutputSpecificData( *this );
+@@ -472,7 +472,7 @@ ExtendedPlugInfoClusterInfoSpecificData:
+     return true;
+ }
+ 
+-ExtendedPlugInfoClusterInfoSpecificData::ExtendedPlugInfoClusterInfoSpecificData*
++typename ExtendedPlugInfoClusterInfoSpecificData::ExtendedPlugInfoClusterInfoSpecificData*
+ ExtendedPlugInfoClusterInfoSpecificData::clone() const
+ {
+     return new ExtendedPlugInfoClusterInfoSpecificData( *this );

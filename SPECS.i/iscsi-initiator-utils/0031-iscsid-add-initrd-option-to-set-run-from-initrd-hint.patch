@@ -1,0 +1,61 @@
+From b1799fe84ed94a19bba6bcd7284ce8b038be4ffe Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Mon, 10 Dec 2012 13:20:47 -0800
+Subject: iscsid: add --initrd option to set run from initrd hint for systemd
+
+See http://www.freedesktop.org/wiki/Software/systemd/RootStorageDaemons
+
+Signed-off-by: Chris Leech <cleech@redhat.com>
+---
+ usr/iscsid.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/usr/iscsid.c b/usr/iscsid.c
+index b4bb65b..7d71085 100644
+--- a/usr/iscsid.c
++++ b/usr/iscsid.c
+@@ -61,6 +61,7 @@ static pid_t log_pid;
+ static gid_t gid;
+ static int daemonize = 1;
+ static int mgmt_ipc_fd;
++static int initrd = 0;
+ 
+ static struct option const long_options[] = {
+ 	{"config", required_argument, NULL, 'c'},
+@@ -73,6 +74,7 @@ static struct option const long_options[] = {
+ 	{"pid", required_argument, NULL, 'p'},
+ 	{"help", no_argument, NULL, 'h'},
+ 	{"version", no_argument, NULL, 'v'},
++	{"initrd", no_argument, &initrd, 1},
+ 	{NULL, 0, NULL, 0},
+ };
+ 
+@@ -95,6 +97,7 @@ Open-iSCSI initiator daemon.\n\
+   -p, --pid=pidfile       use pid file (default " PID_FILE ").\n\
+   -h, --help              display this help and exit\n\
+   -v, --version           display version and exit\n\
++  --initrd                run from initrd\n\
+ ");
+ 	}
+ 	exit(status);
+@@ -383,12 +386,17 @@ int main(int argc, char *argv[])
+ 		case 'h':
+ 			usage(0);
+ 			break;
++		case 0:
++			break;
+ 		default:
+ 			usage(1);
+ 			break;
+ 		}
+ 	}
+ 
++	if (initrd)
++		argv[0][0] = '@';
++
+ 	/* initialize logger */
+ 	log_pid = log_init(program_name, DEFAULT_AREA_SIZE,
+ 		      daemonize ? log_do_log_daemon : log_do_log_std, NULL);
+-- 
+1.7.11.7
+

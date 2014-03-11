@@ -1,0 +1,39 @@
+From 097387c6c59ca410ae1f00427ba31d619a585215 Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@freedesktop.org>
+Date: Wed, 24 Oct 2012 17:54:08 +0200
+Subject: [PATCH] Update and fix the default properties for vp8enc
+
+The property names of the vp8enc element changed in GStreamer 1.0. See
+the following commits from gst-plugins-good for some of the
+corresponding changes:
+  - 392bd12a45b959b696365e5f25e315c2489fe025
+  - 9c0ff2f38174f2e4111859bd66956a77764cb515
+
+Also, vp8enc uses target-bitrate, not bitrate.
+---
+ gst/fsrtpconference/default-element-properties | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/gst/fsrtpconference/default-element-properties b/gst/fsrtpconference/default-element-properties
+index aad237d..fb8b62b 100644
+--- a/gst/fsrtpconference/default-element-properties
++++ b/gst/fsrtpconference/default-element-properties
+@@ -37,10 +37,11 @@ rtp-payload-size=1
+ bitrate=256
+ 
+ [vp8enc]
+-bitrate=256000
+-max-latency=1
+-speed=2
+-error-resilient=true
++target-bitrate=256000
++deadline=1
++cpu-used=4
++lag-in-frames=0
++error-resilient=1
+ 
+ [rtppcmupay]
+ ptime-multiple=20000000
+-- 
+1.7.12.1
+

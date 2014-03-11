@@ -1,0 +1,14 @@
+diff -up texlive-2007/texk/tetex/context/texmfstart.man.man-context texlive-2007/texk/tetex/context/texmfstart.man
+--- texlive-2007/texk/tetex/context/texmfstart.man.man-context	2007-01-19 04:53:28.000000000 +0100
++++ texlive-2007/texk/tetex/context/texmfstart.man	2008-01-22 12:15:12.000000000 +0100
+@@ -21,8 +21,8 @@ texmfstart \- run ConTeXt scripts, make 
+ \fB texmfstart\fP [ \fIoptions ...\fP ] [ \fIfilename\fP ] [ \fIarguments ...\fP ]
+ 
+ .SH "DESCRIPTION" 
+-ConTeXt is a typesetting system based on 
+-the .BR tex (1)
++ConTeXt is a typesetting system based on the
++.BR tex (1)
+ family of programs.
+ .B texmfstart
+ is a ConTeXt meta-script that can run subordinate

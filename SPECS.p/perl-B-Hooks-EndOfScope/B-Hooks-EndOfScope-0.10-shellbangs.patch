@@ -1,0 +1,18 @@
+Remove shellbangs from tests to placate rpmlint
+
+--- B-Hooks-EndOfScope/t/release-pod-coverage.t
++++ B-Hooks-EndOfScope/t/release-pod-coverage.t
+@@ -1,5 +1,3 @@
+-#!perl
+-
+ BEGIN {
+   unless ($ENV{RELEASE_TESTING}) {
+     require Test::More;
+--- B-Hooks-EndOfScope/t/release-pod-syntax.t
++++ B-Hooks-EndOfScope/t/release-pod-syntax.t
+@@ -1,5 +1,3 @@
+-#!perl
+-
+ BEGIN {
+   unless ($ENV{RELEASE_TESTING}) {
+     require Test::More;

@@ -1,0 +1,31 @@
+diff -ur mpeg4ip-1.6.1.orig/include/mpeg4ip.h mpeg4ip-1.6.1/include/mpeg4ip.h
+--- mpeg4ip-1.6.1.orig/include/mpeg4ip.h	2009-05-18 13:36:33.000000000 +0800
++++ mpeg4ip-1.6.1/include/mpeg4ip.h	2009-05-18 13:37:11.000000000 +0800
+@@ -120,13 +120,13 @@
+ #endif
+ #include <sys/param.h>
+ 
+-#ifdef __cplusplus
++/*#ifdef __cplusplus
+ extern "C" {
+ #endif
+ char *strcasestr(const char *haystack, const char *needle);
+ #ifdef __cplusplus
+ }
+-#endif
++#endif*/
+ 
+ #define OPEN_RDWR O_RDWR
+ #define OPEN_CREAT O_CREAT 
+diff -ur mpeg4ip-1.6.1.orig/player/src/media_utils.cpp mpeg4ip-1.6.1/player/src/media_utils.cpp
+--- mpeg4ip-1.6.1.orig/player/src/media_utils.cpp	2009-05-18 13:36:32.000000000 +0800
++++ mpeg4ip-1.6.1/player/src/media_utils.cpp	2009-05-18 13:50:02.000000000 +0800
+@@ -605,7 +605,7 @@
+ 				  int have_audio_driver,
+ 				  control_callback_vft_t *cc_vft)
+ {
+-  char *slash, *cm;
++  const char *slash;char *cm;
+   uint64_t prog;
+   session_desc_t *sdp;
+ 

@@ -1,0 +1,28 @@
+diff -Naru xosd-2.2.14.orig/src/bmp_plugin/bmp_osd.c xosd-2.2.14/src/bmp_plugin/bmp_osd.c
+--- xosd-2.2.14.orig/src/bmp_plugin/bmp_osd.c	2004-11-17 21:26:56.000000000 +0200
++++ xosd-2.2.14/src/bmp_plugin/bmp_osd.c	2005-03-17 23:42:25.000000000 +0200
+@@ -177,8 +177,8 @@
+   colour = NULL;
+   font = NULL;
+   timeout = 3;
+-  offset = 50;
+-  h_offset = 0;
++  offset = 60;
++  h_offset = 60;
+   shadow_offset = 1;
+   outline_offset = 0;
+   pos = XOSD_bottom;
+diff -Naru xosd-2.2.14.orig/src/xmms_plugin/xmms_osd.c xosd-2.2.14/src/xmms_plugin/xmms_osd.c
+--- xosd-2.2.14.orig/src/xmms_plugin/xmms_osd.c	2004-11-04 21:47:50.000000000 +0200
++++ xosd-2.2.14/src/xmms_plugin/xmms_osd.c	2005-03-17 23:42:11.000000000 +0200
+@@ -177,8 +177,8 @@
+   colour = NULL;
+   font = NULL;
+   timeout = 3;
+-  offset = 50;
+-  h_offset = 0;
++  offset = 60;
++  h_offset = 60;
+   shadow_offset = 1;
+   outline_offset = 0;
+   pos = XOSD_bottom;

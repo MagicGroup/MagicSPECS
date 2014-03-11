@@ -1,0 +1,54 @@
+diff -ur kdemultimedia-3.5.13.orig/arts/builder/Makefile.am kdemultimedia-3.5.13/arts/builder/Makefile.am
+--- kdemultimedia-3.5.13.orig/arts/builder/Makefile.am	2010-12-02 14:45:18.000000000 -0500
++++ kdemultimedia-3.5.13/arts/builder/Makefile.am	2010-12-02 18:14:24.000000000 -0500
+@@ -25,7 +25,7 @@
+ 
+ # the libraries to link against. Be aware of the order. First the libraries,
+ # that depend on the following ones.
+-artsbuilder_LDADD   = $(LIB_KFILE) -lqtmcop $(LIB_X11) $(LIBPTHREAD) $(top_builddir)/arts/runtime/libartsbuilder.la -lsoundserver_idl -lartskde
++artsbuilder_LDADD   = $(LIB_KFILE) -lqtmcop $(LIB_X11) $(LIBPTHREAD) $(top_builddir)/arts/runtime/libartsbuilder.la -lsoundserver_idl -lartskde -lartsflow_idl
+ 
+ rcdir = $(kde_datadir)/artsbuilder
+ rc_DATA = artsbuilderui.rc
+diff -ur kdemultimedia-3.5.13.orig/arts/midi/Makefile.am kdemultimedia-3.5.13/arts/midi/Makefile.am
+--- kdemultimedia-3.5.13.orig/arts/midi/Makefile.am	2010-12-02 14:45:18.000000000 -0500
++++ kdemultimedia-3.5.13/arts/midi/Makefile.am	2010-12-02 16:52:05.000000000 -0500
+@@ -15,7 +15,7 @@
+ 
+ midisynctest_SOURCES = midisynctest.cc
+ midisynctest_LDFLAGS = $(all_libraries) $(KDE_RPATH) $(LIBPTHREAD)
+-midisynctest_LDADD   = libartsmidi.la -lsoundserver_idl
++midisynctest_LDADD   = libartsmidi.la -lsoundserver_idl -lartsflow_idl
+ midisynctest_COMPILE_FIRST = artsmidi.h
+ 
+ libartsmidi_idl_la_SOURCES = artsmidi.cc
+diff -ur kdemultimedia-3.5.13.orig/arts/tools/Makefile.am kdemultimedia-3.5.13/arts/tools/Makefile.am
+--- kdemultimedia-3.5.13.orig/arts/tools/Makefile.am	2010-12-02 14:45:18.000000000 -0500
++++ kdemultimedia-3.5.13/arts/tools/Makefile.am	2010-12-02 21:12:35.000000000 -0500
+@@ -36,7 +36,7 @@
+ libartscontrolsupport_la_LDFLAGS = $(all_libraries) -version-info $(SOMAJOR):$(SOMINOR):$(SOSUBMINOR) -no-undefined
+ 
+ libartscontrolapplet_la_LIBADD = \
+-	-lartsflow -lartsflow_idl -lmcop -lqtmcop $(LIBDL) -lsoundserver_idl -lartskde \
++	-lartsflow -lartsflow_idl -lgsl -lmcop -lqtmcop $(LIBDL) -lsoundserver_idl -lartskde \
+ 	$(LIB_KDEUI) ./libartscontrolsupport.la
+ 
+ # Arnolds version with dynamic-linking for testing.
+@@ -49,7 +49,7 @@
+ #	$(LIB_KDEUI)
+ 
+ libartscontrolsupport_la_LIBADD = \
+-	-lartsflow -lartsflow_idl -lmcop -lqtmcop $(LIBDL) -lsoundserver_idl -lartskde \
++	-lartsflow -lartsflow_idl -lmcop -lqtmcop $(LIBDL) -lsoundserver_idl -lgsl -lartskde \
+ 	$(top_builddir)/arts/gui/common/libartsgui_idl.la \
+ 	$(top_builddir)/arts/gui/kde/libartsgui_kde.la \
+ 	$(top_builddir)/arts/modules/libartsmodules.la \
+@@ -60,7 +60,7 @@
+ artscontrol_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+ artscontrol_LDADD = libartscontrolsupport.la \
+ 	$(LIB_KDEUI) $(LIB_KSYCOCA) $(LIB_KFILE) \
+-	-lqtmcop -lartsflow_idl -lsoundserver_idl -lartskde
++	-lqtmcop -lartsflow_idl -lgsl -lsoundserver_idl -lartskde
+ 
+ xdg_apps_DATA = artscontrol.desktop
+ 

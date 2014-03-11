@@ -1,0 +1,12 @@
+diff -up Data-Peek-0.33/Makefile.PL.off Data-Peek-0.33/Makefile.PL
+--- Data-Peek-0.33/Makefile.PL.off	2011-02-16 09:32:37.000000000 +0100
++++ Data-Peek-0.33/Makefile.PL	2011-04-04 15:37:21.524212240 +0200
+@@ -31,7 +31,7 @@ my %wm = (
+ $ExtUtils::MakeMaker::VERSION > 6.30 and $wm{LICENSE} = "perl";
+ 
+ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
+-    if (prompt ("Do you want to install module DP as a shortcut for Data::Peek ?", "y") =~ m/[yY]/) {
++	{
+ 	local $/;
+ 	open my $pm, "<", "Peek.pm" or die "CAnnot read Peek.pm: $!\n";
+ 	my $vsn = do { <$pm> =~ m/^\$VERSION\s*=\s*"([0-9._]+)/m; $1 };

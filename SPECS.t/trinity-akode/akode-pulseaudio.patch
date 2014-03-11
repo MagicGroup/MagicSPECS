@@ -1,0 +1,438 @@
+diff -urN akode-2.0.1.orig/Makefile.in akode-2.0.1/Makefile.in
+--- akode-2.0.1.orig/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -169,9 +169,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/Makefile.in akode-2.0.1/akode/Makefile.in
+--- akode-2.0.1.orig/akode/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -158,9 +158,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/akodeplay/Makefile.in akode-2.0.1/akode/akodeplay/Makefile.in
+--- akode-2.0.1.orig/akode/akodeplay/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/akodeplay/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -170,9 +170,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/configure.in.in akode-2.0.1/akode/configure.in.in
+--- akode-2.0.2/akode/configure.in.in.pulseaudio	2007-02-06 22:47:43.000000000 +0100
++++ akode-2.0.2/akode/configure.in.in	2012-01-13 19:32:55.027887451 +0100
+@@ -270,24 +270,24 @@
+ AC_SUBST(JACK_LDFLAGS)
+ fi
+ 
+-AC_ARG_WITH(polypaudio,AC_HELP_STRING([--with-polypaudio],[Enable Polypaudio server support @<:@default=check@:>@]),[polypaudio_test="$withval"],[polypaudio_test="yes"])
++AC_ARG_WITH(pulseaudio,AC_HELP_STRING([--with-pulseaudio],[Enable PulseAudio server support @<:@default=check@:>@]),[pulseaudio_test="$withval"],[pulseaudio_test="yes"])
+ 
+-if test "x$polypaudio_test" = "xyes" ; then
+-AC_MSG_CHECKING(for Polypaudio 0.7 or later)
+-if $PKG_CONFIG --atleast-version 0.7 polyplib-simple >/dev/null 2>&1 ; then
+-  POLYP_CFLAGS="`$PKG_CONFIG --cflags polyplib-simple`"
+-  POLYP_LIBADD="`$PKG_CONFIG --libs-only-l polyplib-simple`"
+-  POLYP_LDFLAGS="`$PKG_CONFIG --libs-only-L polyplib-simple`"
+-  have_polyp=yes
++if test "x$pulseaudio_test" = "xyes" ; then
++AC_MSG_CHECKING(for PulseAudio 0.9.2 or later)
++if $PKG_CONFIG --atleast-version 0.9.2 libpulse-simple >/dev/null 2>&1 ; then
++  PULSE_CFLAGS="`$PKG_CONFIG --cflags libpulse-simple`"
++  PULSE_LIBADD="`$PKG_CONFIG --libs-only-l libpulse-simple`"
++  PULSE_LDFLAGS="`$PKG_CONFIG --libs-only-L libpulse-simple`"
++  have_pulse=yes
+   AC_MSG_RESULT(yes)
+-  AC_DEFINE(HAVE_LIBPOLYP, 1,
+-        [Define if you have polyplib (required if you want Polypaudio server support)])
++  AC_DEFINE(HAVE_LIBPULSE, 1,
++        [Define if you have libpulse (required if you want PulseAudio server support)])
+ else
+   AC_MSG_RESULT(not installed)
+ fi
+-AC_SUBST(POLYP_CFLAGS)
+-AC_SUBST(POLYP_LIBADD)
+-AC_SUBST(POLYP_LDFLAGS)
++AC_SUBST(PULSE_CFLAGS)
++AC_SUBST(PULSE_LIBADD)
++AC_SUBST(PULSE_LDFLAGS)
+ fi
+ 
+ AC_ARG_WITH(ffmpeg,AC_HELP_STRING([--with-ffmpeg],[Enable experimental FFMPEG decoder support @<:@default=check@:>@]),[ffmpeg_test="$withval"],[ffmpeg_test="yes"])
+@@ -482,7 +482,7 @@
+ AM_CONDITIONAL(include_oss_sink, test x$have_oss = xyes)
+ AM_CONDITIONAL(include_sun_sink, test x$have_sun = xyes)
+ AM_CONDITIONAL(include_jack_sink, test x$have_jack = xyes)
+-AM_CONDITIONAL(include_polyp_sink, test x$have_polyp = xyes)
++AM_CONDITIONAL(include_polyp_sink, test x$have_pulse = xyes)
+ AM_CONDITIONAL(include_ffmpeg_decoder, test x$have_ffmpeg = xyes)
+ 
+ AC_MSG_CHECKING(for compilable aKode)
+diff -urN akode-2.0.1.orig/akode/lib/Makefile.in akode-2.0.1/akode/lib/Makefile.in
+--- akode-2.0.1.orig/akode/lib/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/lib/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -194,9 +194,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/Makefile.in akode-2.0.1/akode/plugins/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -154,9 +154,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+@@ -251,11 +251,11 @@
+ @include_oss_sink_TRUE@AKODE_OSS_SINK = oss_sink
+ @include_sun_sink_TRUE@AKODE_SUN_SINK = sun_sink
+ @include_jack_sink_TRUE@AKODE_JACK_SINK = jack_sink
+-@include_polyp_sink_TRUE@AKODE_POLYP_SINK = polyp_sink
++@include_polyp_sink_TRUE@AKODE_PULSE_SINK = polyp_sink
+ SUBDIRS = $(AKODE_MPC_DECODER) $(AKODE_XIPH_DECODER) \
+          $(AKODE_MPEG_DECODER) $(AKODE_FFMPEG_DECODER) \
+          $(AKODE_ALSA_SINK) $(AKODE_OSS_SINK) $(AKODE_SUN_SINK) \
+-         $(AKODE_JACK_SINK) $(AKODE_POLYP_SINK) \
++         $(AKODE_JACK_SINK) $(AKODE_PULSE_SINK) \
+          $(AKODE_SRC_RESAMPLER)
+ 
+ #>- all: all-recursive
+diff -urN akode-2.0.1.orig/akode/plugins/alsa_sink/Makefile.in akode-2.0.1/akode/plugins/alsa_sink/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/alsa_sink/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/alsa_sink/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -177,9 +177,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/ffmpeg_decoder/Makefile.in akode-2.0.1/akode/plugins/ffmpeg_decoder/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/ffmpeg_decoder/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/ffmpeg_decoder/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -178,9 +178,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/jack_sink/Makefile.in akode-2.0.1/akode/plugins/jack_sink/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/jack_sink/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/jack_sink/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -177,9 +177,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/mpc_decoder/Makefile.in akode-2.0.1/akode/plugins/mpc_decoder/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/mpc_decoder/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/mpc_decoder/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -191,9 +191,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/mpc_decoder/mppdec/Makefile.in akode-2.0.1/akode/plugins/mpc_decoder/mppdec/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/mpc_decoder/mppdec/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/mpc_decoder/mppdec/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -169,9 +169,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/mpeg_decoder/Makefile.in akode-2.0.1/akode/plugins/mpeg_decoder/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/mpeg_decoder/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/mpeg_decoder/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -178,9 +178,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/oss_sink/Makefile.in akode-2.0.1/akode/plugins/oss_sink/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/oss_sink/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/oss_sink/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -177,9 +177,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/polyp_sink/Makefile.am akode-2.0.1/akode/plugins/polyp_sink/Makefile.am
+--- akode-2.0.1.orig/akode/plugins/polyp_sink/Makefile.am	2005-07-15 13:20:03.000000000 +0200
++++ akode-2.0.1/akode/plugins/polyp_sink/Makefile.am	2006-09-06 14:38:04.000000000 +0200
+@@ -1,7 +1,7 @@
+-INCLUDES = -I$(top_srcdir)/akode/lib -I$(top_builddir)/akode/lib $(POLYP_CFLAGS) $(all_includes)
++INCLUDES = -I$(top_srcdir)/akode/lib -I$(top_builddir)/akode/lib $(PULSE_CFLAGS) $(all_includes)
+ 
+ lib_LTLIBRARIES	= libakode_polyp_sink.la
+ 
+ libakode_polyp_sink_la_SOURCES = polyp_sink.cpp
+-libakode_polyp_sink_la_LDFLAGS = -module -avoid-version -no-undefined $(POLYP_LDFLAGS)
+-libakode_polyp_sink_la_LIBADD = ../../lib/libakode.la $(POLYP_LIBADD)
++libakode_polyp_sink_la_LDFLAGS = -module -avoid-version -no-undefined $(PULSE_LDFLAGS)
++libakode_polyp_sink_la_LIBADD = ../../lib/libakode.la $(PULSE_LIBADD)
+diff -urN akode-2.0.1.orig/akode/plugins/polyp_sink/Makefile.in akode-2.0.1/akode/plugins/polyp_sink/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/polyp_sink/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/polyp_sink/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -177,9 +177,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+@@ -265,13 +265,13 @@
+ target_vendor = @target_vendor@
+ unsermake_enable_pch_FALSE = @unsermake_enable_pch_FALSE@
+ unsermake_enable_pch_TRUE = @unsermake_enable_pch_TRUE@
+-INCLUDES = -I$(top_srcdir)/akode/lib -I$(top_builddir)/akode/lib $(POLYP_CFLAGS) $(all_includes)
++INCLUDES = -I$(top_srcdir)/akode/lib -I$(top_builddir)/akode/lib $(PULSE_CFLAGS) $(all_includes)
+ lib_LTLIBRARIES = libakode_polyp_sink.la
+ libakode_polyp_sink_la_SOURCES = polyp_sink.cpp
+-#>- libakode_polyp_sink_la_LDFLAGS = -module -avoid-version -no-undefined $(POLYP_LDFLAGS)
++#>- libakode_polyp_sink_la_LDFLAGS = -module -avoid-version -no-undefined $(PULSE_LDFLAGS)
+ #>+ 1
+-libakode_polyp_sink_la_LDFLAGS = -module -avoid-version -no-undefined $(KDE_NO_UNDEFINED) $(POLYP_LDFLAGS)
+-libakode_polyp_sink_la_LIBADD = ../../lib/libakode.la $(POLYP_LIBADD)
++libakode_polyp_sink_la_LDFLAGS = -module -avoid-version -no-undefined $(KDE_NO_UNDEFINED) $(PULSE_LDFLAGS)
++libakode_polyp_sink_la_LIBADD = ../../lib/libakode.la $(PULSE_LIBADD)
+ #>- all: all-am
+ #>+ 1
+ all: docs-am  all-am
+diff -urN akode-2.0.1.orig/akode/plugins/polyp_sink/polyp_sink.cpp akode-2.0.1/akode/plugins/polyp_sink/polyp_sink.cpp
+--- akode-2.0.1.orig/akode/plugins/polyp_sink/polyp_sink.cpp	2005-10-20 22:54:12.000000000 +0200
++++ akode-2.0.1/akode/plugins/polyp_sink/polyp_sink.cpp	2006-09-06 15:14:52.000000000 +0200
+@@ -25,7 +25,7 @@
+ #elif defined(HAVE_INTTYPES_H)
+ #include <inttypes.h>
+ #endif
+-#include <polyp/polyplib-simple.h>
++#include <pulse/simple.h>
+ 
+ #include "audioframe.h"
+ #include "audiobuffer.h"
+@@ -59,7 +59,7 @@
+ 
+ bool PolypSink::open() {
+     int error = 0;
+-    m_data->server = pa_simple_new(0, "akode-client", PA_STREAM_PLAYBACK, 0, "", &m_data->sample_spec, 0, 255, &error );
++    m_data->server = pa_simple_new(0, "akode-client", PA_STREAM_PLAYBACK, 0, "", &m_data->sample_spec, 0, 0, &error );
+     if (!m_data->server || error != 0) {
+         m_data->error = true;
+         close();
+diff -urN akode-2.0.1.orig/akode/plugins/src_resampler/Makefile.in akode-2.0.1/akode/plugins/src_resampler/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/src_resampler/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/src_resampler/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -178,9 +178,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/sun_sink/Makefile.in akode-2.0.1/akode/plugins/sun_sink/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/sun_sink/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/sun_sink/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -175,9 +175,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/akode/plugins/xiph_decoder/Makefile.in akode-2.0.1/akode/plugins/xiph_decoder/Makefile.in
+--- akode-2.0.1.orig/akode/plugins/xiph_decoder/Makefile.in	2006-07-23 00:17:11.000000000 +0200
++++ akode-2.0.1/akode/plugins/xiph_decoder/Makefile.in	2006-09-06 14:38:04.000000000 +0200
+@@ -185,9 +185,9 @@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
+-POLYP_CFLAGS = @POLYP_CFLAGS@
+-POLYP_LDFLAGS = @POLYP_LDFLAGS@
+-POLYP_LIBADD = @POLYP_LIBADD@
++PULSE_CFLAGS = @PULSE_CFLAGS@
++PULSE_LDFLAGS = @PULSE_LDFLAGS@
++PULSE_LIBADD = @PULSE_LIBADD@
+ RANLIB = @RANLIB@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+diff -urN akode-2.0.1.orig/config.h.in akode-2.0.1/config.h.in
+--- akode-2.0.1.orig/config.h.in	2006-07-23 00:17:04.000000000 +0200
++++ akode-2.0.1/config.h.in	2006-09-06 14:44:55.000000000 +0200
+@@ -43,9 +43,9 @@
+ /* Define if you have libOggFLAC (required for loading OggFLAC files) */
+ #undef HAVE_LIBOGGFLAC
+ 
+-/* Define if you have polyplib (required if you want Polypaudio server
++/* Define if you have libpulse (required if you want PulseAudio server
+    support) */
+-#undef HAVE_LIBPOLYP
++#undef HAVE_LIBPULSE
+ 
+ /* defined if you have libsamplerate library and header */
+ #undef HAVE_LIBSAMPLERATE
+diff -urN akode-2.0.1.orig/configure.in akode-2.0.1/configure.in
+--- akode-2.0.2/configure.in.pulseaudio	2007-04-06 15:23:11.000000000 +0200
++++ akode-2.0.2/configure.in	2012-01-13 19:39:23.676340535 +0100
+@@ -375,24 +375,24 @@
+ AC_SUBST(JACK_LDFLAGS)
+ fi
+ 
+-AC_ARG_WITH(polypaudio,AC_HELP_STRING([--with-polypaudio],[Enable Polypaudio server support @<:@default=check@:>@]),[polypaudio_test="$withval"],[polypaudio_test="yes"])
++AC_ARG_WITH(pulseaudio,AC_HELP_STRING([--with-pulseaudio],[Enable PulseAudio server support @<:@default=check@:>@]),[pulseaudio_test="$withval"],[pulseaudio_test="yes"])
+ 
+-if test "x$polypaudio_test" = "xyes" ; then
+-AC_MSG_CHECKING(for Polypaudio 0.7 or later)
+-if $PKG_CONFIG --atleast-version 0.7 polyplib-simple >/dev/null 2>&1 ; then
+-  POLYP_CFLAGS="`$PKG_CONFIG --cflags polyplib-simple`"
+-  POLYP_LIBADD="`$PKG_CONFIG --libs-only-l polyplib-simple`"
+-  POLYP_LDFLAGS="`$PKG_CONFIG --libs-only-L polyplib-simple`"
+-  have_polyp=yes
++if test "x$pulseaudio_test" = "xyes" ; then
++AC_MSG_CHECKING(for PulseAudio 0.9.2 or later)
++if $PKG_CONFIG --atleast-version 0.9.2 libpulse-simple >/dev/null 2>&1 ; then
++  PULSE_CFLAGS="`$PKG_CONFIG --cflags libpulse-simple`"
++  PULSE_LIBADD="`$PKG_CONFIG --libs-only-l libpulse-simple`"
++  PULSE_LDFLAGS="`$PKG_CONFIG --libs-only-L libpulse-simple`"
++  have_pulse=yes
+   AC_MSG_RESULT(yes)
+-  AC_DEFINE(HAVE_LIBPOLYP, 1,
+-        [Define if you have polyplib (required if you want Polypaudio server support)])
++  AC_DEFINE(HAVE_LIBPULSE, 1,
++        [Define if you have libpulse (required if you want PulseAudio server support)])
+ else
+   AC_MSG_RESULT(not installed)
+ fi
+-AC_SUBST(POLYP_CFLAGS)
+-AC_SUBST(POLYP_LIBADD)
+-AC_SUBST(POLYP_LDFLAGS)
++AC_SUBST(PULSE_CFLAGS)
++AC_SUBST(PULSE_LIBADD)
++AC_SUBST(PULSE_LDFLAGS)
+ fi
+ 
+ AC_ARG_WITH(ffmpeg,AC_HELP_STRING([--with-ffmpeg],[Enable experimental FFMPEG decoder support @<:@default=check@:>@]),[ffmpeg_test="$withval"],[ffmpeg_test="yes"])
+@@ -587,7 +587,7 @@
+ AM_CONDITIONAL(include_oss_sink, test x$have_oss = xyes)
+ AM_CONDITIONAL(include_sun_sink, test x$have_sun = xyes)
+ AM_CONDITIONAL(include_jack_sink, test x$have_jack = xyes)
+-AM_CONDITIONAL(include_polyp_sink, test x$have_polyp = xyes)
++AM_CONDITIONAL(include_polyp_sink, test x$have_pulse = xyes)
+ AM_CONDITIONAL(include_ffmpeg_decoder, test x$have_ffmpeg = xyes)
+ 
+ AC_MSG_CHECKING(for compilable aKode)

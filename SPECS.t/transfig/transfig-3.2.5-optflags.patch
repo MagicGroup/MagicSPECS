@@ -1,0 +1,13 @@
+diff --git a/Imakefile b/Imakefile
+index 5e44c8a..2f7fc4d 100755
+--- a/Imakefile
++++ b/Imakefile
+@@ -22,7 +22,7 @@ XCOMM to make transfig and fig2dev:
+ XCOMM type "xmkmf", "make Makefiles", "make" then "make install"
+ 
+ #define IHaveSubdirs
+-#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
++#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS) $(RPM_OPT_FLAGS)'
+ 
+ DEPLIBS =
+ SUBDIRS = fig2dev transfig

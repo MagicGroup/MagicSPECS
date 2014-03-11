@@ -1,0 +1,32 @@
+From 07a8f2b1e905d9133c057d2a2d83a2b7a5bb44ba Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 22 Dec 2010 10:59:06 +0100
+Subject: [PATCH] Do not install info dir index
+
+---
+ Makefile.in |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index c513d0c..cbdfcaf 100755
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -717,7 +717,6 @@ install_info:
+ 	  gzip --quiet --force $(DESTDIR)$(INFODIR)/yap.info*; \
+ 	  fi \
+ 	fi; \
+-	$(INSTALL_INFO) --quiet --section "Programming Languages" yap.info $(DESTDIR)$(INFODIR)/dir; \
+ 	cd $(srcdir)/LGPL/pillow/doc ; \
+ 	$(INSTALL_DATA) pillow_doc.info $(DESTDIR)$(INFODIR); \
+ 	if test -e $(DESTDIR)$(INFODIR)/emacs.bz2; then \
+@@ -727,7 +726,6 @@ install_info:
+ 	  gzip --quiet --force $(DESTDIR)$(INFODIR)/pillow_doc.info; \
+ 	  fi \
+ 	fi; \
+-	$(INSTALL_INFO) --quiet --section "Programming Languages" --entry="`cat pillow_doc.infoindex`" --info-dir=$(DESTDIR)$(INFODIR) pillow_doc.info
+ 
+ install_docs:
+ 	$(MAKE) pdf
+-- 
+1.7.3.4
+

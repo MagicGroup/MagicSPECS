@@ -1,0 +1,75 @@
+diff -Naur Log-Dispatch-2.29.orig/lib/Log/Dispatch/File.pm Log-Dispatch-2.29/lib/Log/Dispatch/File.pm
+--- Log-Dispatch-2.29.orig/lib/Log/Dispatch/File.pm	2011-03-18 21:53:17.000000000 +0100
++++ Log-Dispatch-2.29/lib/Log/Dispatch/File.pm	2012-02-06 09:58:23.738876317 +0100
+@@ -220,7 +220,7 @@
+ Whether or not the file should be closed after each write.  This
+ defaults to false.
+ 
+-If this is true, then the mode will aways be append, so that the file
++If this is true, then the mode will always be append, so that the file
+ is not re-written for each new message.
+ 
+ =item * autoflush ($)
+diff -Naur Log-Dispatch-2.29.orig/lib/Log/Dispatch/Syslog.pm Log-Dispatch-2.29/lib/Log/Dispatch/Syslog.pm
+--- Log-Dispatch-2.29.orig/lib/Log/Dispatch/Syslog.pm	2011-03-18 21:53:17.000000000 +0100
++++ Log-Dispatch-2.29/lib/Log/Dispatch/Syslog.pm	2012-02-06 10:04:50.158016803 +0100
+@@ -157,7 +157,7 @@
+ 
+ Specifies what type of program is doing the logging to the system log.
+ Valid options are 'auth', 'authpriv', 'cron', 'daemon', 'kern',
+-'local0' through 'local7', 'mail, 'news', 'syslog', 'user',
++'local0' through 'local7', 'mail', 'news', 'syslog', 'user',
+ 'uucp'.  Defaults to 'user'
+ 
+ =item * socket ($ or \@)
+diff -Naur Log-Dispatch-2.29.orig/t/release-pod-spell.t Log-Dispatch-2.29/t/release-pod-spell.t
+--- Log-Dispatch-2.29.orig/t/release-pod-spell.t	2011-03-18 21:53:17.000000000 +0100
++++ Log-Dispatch-2.29/t/release-pod-spell.t	2012-02-06 10:11:17.832390477 +0100
+@@ -27,9 +27,13 @@
+ all_pod_files_spelling_ok;
+ 
+ __DATA__
++''
++API
+ Cholet
++CPAN
+ Dumont
+ Goess
++Log4perl
+ Manfredi
+ Miyagawa
+ Pfeiffer
+@@ -43,18 +47,33 @@
+ UTF
+ apache
+ appenders
++'append'
+ auth
+ authpriv
+ autoflushed
+ classname
+ crit
++'daemon'
+ emerg
++'err'
+ filename
+ filename
+ ident
+ kern
++'local0'
++'local7'
++log4j
+ logopt
++'mail'
++'message'
++'news'
+ params
+ smtp
+ stderr
++subclass's
++subclasses
++'user'
+ uucp
++'warn'
++'warning'
++'write'

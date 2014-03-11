@@ -1,0 +1,334 @@
+From 4c4beaf628c9c5dd531605e40696ed31db0e97b8 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Wed, 4 Jan 2012 15:15:07 +1000
+Subject: [PATCH] Untangle XF86DRI from the driver-specific DRI define
+
+XF86DRI is defined by xorg-server.h, so --disable-dri in the driver
+itself does exactly nothing other than not fill in the CFLAGS
+and thus stop the driver from compiling.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ configure.ac     |    4 ++--
+ src/mga.h        |   10 +++++++---
+ src/mga_driver.c |   32 ++++++++++++++++----------------
+ src/mga_exa.c    |    8 ++++----
+ src/mga_macros.h |    4 ++--
+ src/mga_merge.c  |    2 +-
+ src/mga_storm.c  |    8 ++++----
+ 7 files changed, 36 insertions(+), 32 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 540c390..840ff3c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -100,8 +100,8 @@ AC_MSG_RESULT([$DRI])
+ AM_CONDITIONAL(DRI, test "x$DRI" = xyes)
+ if test "x$DRI" = xyes; then
+         PKG_CHECK_MODULES(DRI, [libdrm >= 2.0 xf86driproto])
+-        AC_DEFINE(XF86DRI,1,[Enable DRI driver support])
+-        AC_DEFINE(XF86DRI_DEVEL,1,[Enable developmental DRI driver support])
++        AC_DEFINE(MGADRI,1,[Enable DRI driver support])
++        AC_DEFINE(MGADRI_DEVEL,1,[Enable developmental DRI driver support])
+ fi
+ 
+ save_CFLAGS="$CFLAGS"
+diff --git a/src/mga.h b/src/mga.h
+index fced6aa..77406f1 100644
+--- a/src/mga.h
++++ b/src/mga.h
+@@ -28,7 +28,11 @@
+ #include "xf86DDC.h"
+ #include "xf86xv.h"
+ 
+-#ifdef XF86DRI
++#ifndef XF86DRI
++#undef MGADRI
++#endif
++
++#ifdef MGADRI
+ #include "xf86drm.h"
+ 
+ #define _XF86DRI_SERVER_
+@@ -589,7 +593,7 @@ typedef struct {
+     int			expandRemaining;
+     int			expandHeight;
+     int			expandY;
+-#ifdef XF86DRI
++#ifdef MGADRI
+     Bool 		directRenderingEnabled;
+     DRIInfoPtr 		pDRIInfo;
+     int 		drmFD;
+@@ -743,7 +747,7 @@ void MGAPointerMoved(int index, int x, int y);
+ void MGAInitVideo(ScreenPtr pScreen);
+ void MGAResetVideo(ScrnInfoPtr pScrn);
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+ 
+ #define MGA_FRONT	0x1
+ #define MGA_BACK	0x2
+diff --git a/src/mga_driver.c b/src/mga_driver.c
+index 00469e7..af005f1 100644
+--- a/src/mga_driver.c
++++ b/src/mga_driver.c
+@@ -101,7 +101,7 @@
+ #include "shadowfb.h"
+ #include "fbdevhw.h"
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+ #include "dri.h"
+ #endif
+ 
+@@ -1532,7 +1532,7 @@ MGAPreInit(ScrnInfoPtr pScrn, int flags)
+ 
+     pMga = MGAPTR(pScrn);
+     /* Set here until dri is enabled */
+-#ifdef XF86DRI
++#ifdef MGADRI
+     pMga->haveQuiescense = 1;
+ #endif
+     /* Get the entity, and make sure it is PCI. */
+@@ -1706,13 +1706,13 @@ MGAPreInit(ScrnInfoPtr pScrn, int flags)
+     }
+ 
+     if (pMga->DualHeadEnabled) {
+-#ifdef XF86DRI
++#ifdef MGADRI
+         pMga->GetQuiescence = MGAGetQuiescenceShared;
+ #endif
+     } else {                                              /* single-head mode */
+         pMga->SecondCrtc = FALSE;
+         pMga->HWCursor = TRUE;
+-#ifdef XF86DRI
++#ifdef MGADRI
+         pMga->GetQuiescence = MGAGetQuiescence;
+ #endif
+     }
+@@ -1942,7 +1942,7 @@ MGAPreInit(ScrnInfoPtr pScrn, int flags)
+     if (pScrn->depth == 8)
+ 	pScrn->rgbBits = 8;
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     from = X_DEFAULT;
+     pMga->agpMode = MGA_DEFAULT_AGP_MODE;
+ 
+@@ -2637,7 +2637,7 @@ MGAPreInit(ScrnInfoPtr pScrn, int flags)
+ 	}
+     }
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     /* Load the dri module if requested. */
+     if (xf86ReturnOptValBool(pMga->Options, OPTION_DRI, FALSE)) {
+        xf86LoadSubModule(pScrn, "dri");
+@@ -2878,7 +2878,7 @@ MGAModeInit(ScrnInfoPtr pScrn, DisplayModePtr mode)
+     vgaReg = &hwp->ModeReg;
+     mgaReg = &pMga->ModeReg;
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+    if (pMga->directRenderingEnabled) {
+        DRILock(screenInfo.screens[pScrn->scrnIndex], 0);
+    }
+@@ -2989,7 +2989,7 @@ MGAModeInit(ScrnInfoPtr pScrn, DisplayModePtr mode)
+ 	pMga->M1currentMode = (DisplayModePtr)mode->Private;
+     }
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+    if (pMga->directRenderingEnabled)
+      DRIUnlock(screenInfo.screens[pScrn->scrnIndex]);
+ #endif
+@@ -3138,7 +3138,7 @@ MGAScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv)
+     MGAEntPtr pMgaEnt = NULL;
+     int f;
+     CARD32 VRTemp, FBTemp;
+-#ifdef XF86DRI
++#ifdef MGADRI
+     MessageType driFrom = X_DEFAULT;
+ #endif
+     DPMSSetProcPtr mga_dpms_set_proc = NULL;
+@@ -3317,7 +3317,7 @@ MGAScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv)
+ 	FBStart = pMga->FbStart;
+     }
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+      /*
+       * Setup DRI after visuals have been established.
+       *
+@@ -3473,7 +3473,7 @@ MGAScreenInit(int scrnIndex, ScreenPtr pScreen, int argc, char **argv)
+ 
+     MGAInitVideo(pScreen);
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     if (pMga->directRenderingEnabled) {
+        /* Now that mi, drm and others have done their thing,
+ 	* complete the DRI setup.
+@@ -3625,7 +3625,7 @@ MGAEnterVT(int scrnIndex, int flags)
+ 
+     pMga = MGAPTR(pScrn);
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     if (pMga->directRenderingEnabled) {
+ 	if (pMga->irq) {
+ 	    /* Need to make sure interrupts are enabled */
+@@ -3651,7 +3651,7 @@ static Bool
+ MGAEnterVTFBDev(int scrnIndex, int flags)
+ {
+     ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
+-#ifdef XF86DRI
++#ifdef MGADRI
+     ScreenPtr pScreen;
+     MGAPtr pMga;
+ 
+@@ -3690,7 +3690,7 @@ MGALeaveVT(int scrnIndex, int flags)
+ {
+     ScrnInfoPtr pScrn = xf86Screens[scrnIndex];
+     vgaHWPtr hwp = VGAHWPTR(pScrn);
+-#ifdef XF86DRI
++#ifdef MGADRI
+     MGAPtr pMga = MGAPTR(pScrn);
+     ScreenPtr pScreen;
+ #endif
+@@ -3698,7 +3698,7 @@ MGALeaveVT(int scrnIndex, int flags)
+     MGARestore(pScrn);
+     vgaHWLock(hwp);
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     if (pMga->directRenderingEnabled) {
+         pScreen = screenInfo.screens[scrnIndex];
+         DRILock(pScreen, 0);
+@@ -3760,7 +3760,7 @@ MGACloseScreen(int scrnIndex, ScreenPtr pScreen)
+         pMga->FbMapSize = FBTemp;
+     }
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+    if (pMga->directRenderingEnabled) {
+        MGADRICloseScreen(pScreen);
+        pMga->directRenderingEnabled=FALSE;
+diff --git a/src/mga_exa.c b/src/mga_exa.c
+index e5eaa92..ced6452 100644
+--- a/src/mga_exa.c
++++ b/src/mga_exa.c
+@@ -41,7 +41,7 @@
+ #include "mga_macros.h"
+ 
+ #include "exa.h"
+-#ifdef XF86DRI
++#ifdef MGADRI
+ #include "mga_dri.h"
+ #endif
+ 
+@@ -763,7 +763,7 @@ mgaWaitMarker(ScreenPtr pScreen, int marker)
+     while (INREG (MGAREG_Status) & 0x10000);
+ }
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+ static void
+ init_dri(ScrnInfoPtr pScrn)
+ {
+@@ -837,7 +837,7 @@ init_dri(ScrnInfoPtr pScrn)
+                        MGA_BUFFER_ALIGN) & ~MGA_BUFFER_ALIGN;
+     dri->backPitch = widthBytes;
+ }
+-#endif /* XF86DRI */
++#endif /* MGADRI */
+ 
+ Bool
+ mgaExaInit(ScreenPtr pScreen)
+@@ -898,7 +898,7 @@ mgaExaInit(ScreenPtr pScreen)
+     pExa->UploadToScreen = mgaUploadToScreen;
+     pExa->DownloadFromScreen = mgaDownloadFromScreen;
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     if (pMga->directRenderingEnabled)
+         init_dri(pScrn);
+ #endif
+diff --git a/src/mga_macros.h b/src/mga_macros.h
+index 130651d..d3b0d0e 100644
+--- a/src/mga_macros.h
++++ b/src/mga_macros.h
+@@ -17,7 +17,7 @@
+ 
+ #define RGBEQUAL(c) (!((((c) >> 8) ^ (c)) & 0xffff))
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+ #define MGA_SYNC_XTAG                 0x275f4200
+ 
+ #define MGABUSYWAIT() do { \
+@@ -64,7 +64,7 @@ while(INREG(MGAREG_DWGSYNC) != MGA_SYNC_XTAG) ; \
+ 	WAITFIFO(1); \
+ 	OUTREG(MGAREG_CXBNDRY, 0xFFFF0000); }
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+ #define CHECK_DMA_QUIESCENT(pMGA, pScrn) {	\
+    if (!pMGA->haveQuiescense) {			\
+       pMGA->GetQuiescence( pScrn );		\
+diff --git a/src/mga_merge.c b/src/mga_merge.c
+index aec3443..f355f76 100644
+--- a/src/mga_merge.c
++++ b/src/mga_merge.c
+@@ -316,7 +316,7 @@ MGAPreInitMergedFB(ScrnInfoPtr pScrn1, int flags)
+     pMga->Chipset = pMga1->Chipset;
+     pMga->ChipRev = pMga1->ChipRev;
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     pMga->agpMode = pMga1->agpMode;
+ #endif
+ 
+diff --git a/src/mga_storm.c b/src/mga_storm.c
+index f0e6194..7ac3ae0 100644
+--- a/src/mga_storm.c
++++ b/src/mga_storm.c
+@@ -24,7 +24,7 @@
+ #include "miline.h"
+ #include "servermd.h"
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+ #include "GL/glxtokens.h"
+ #endif
+ 
+@@ -32,7 +32,7 @@
+ #include "mga_reg.h"
+ #include "mga_macros.h"
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+ #include "mga_dri.h"
+ #endif
+ 
+@@ -797,7 +797,7 @@ Bool mgaAccelInit( ScreenPtr pScreen )
+ 	break;
+     }
+ 
+-#ifdef XF86DRI
++#ifdef MGADRI
+     if ( pMga->directRenderingEnabled ) {
+        MGADRIServerPrivatePtr pMGADRIServer = pMga->DRIServerInfo;
+        BoxRec MemBox;
+@@ -899,7 +899,7 @@ Bool mgaAccelInit( ScreenPtr pScreen )
+ 		   pMGADRIServer->textureOffset );
+     }
+     else
+-#endif /* defined(XF86DRI) */
++#endif /* defined(MGADRI) */
+     {
+        AvailFBArea.x1 = 0;
+        AvailFBArea.x2 = pScrn->displayWidth;
+-- 
+1.7.7.4
+

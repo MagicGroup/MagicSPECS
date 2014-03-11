@@ -1,0 +1,119 @@
+--- garcon-0.2.0.orig/data/xfce/xfce-applications.menu	2012-04-28 22:06:19.000000000 +0200
++++ garcon-0.2.0/data/xfce/xfce-applications.menu	2012-05-06 00:11:11.168295978 +0200
+@@ -20,19 +20,25 @@
+         <Filename>exo-mail-reader.desktop</Filename>
+         <Filename>exo-web-browser.desktop</Filename>
+         <Separator/>
+-        <Menuname>Settings</Menuname>
++        <Menuname>Preferences</Menuname>
++        <Menuname>Administration</Menuname>
+         <Separator/>
+         <Merge type="all"/>
+         <Separator/>
+-        <Filename>xfce4-about.desktop</Filename>
+         <Filename>xfce4-session-logout.desktop</Filename>
+     </Layout>
+ 
+     <Menu>
+-        <Name>Settings</Name>
++        <Name>Preferences</Name>
+         <Directory>xfce-settings.directory</Directory>
+         <Include>
+-            <Category>Settings</Category>
++            <And>
++                <Category>Settings</Category>
++                <Not><Category>System</Category></Not>
++                <Not><Category>Screensaver</Category></Not>
++                <Not><Filename>fedora-im-chooser.desktop</Filename></Not>
++                <Not><Filename>gnome-default-applications.desktop</Filename></Not>
++            </And>
+         </Include>
+ 
+         <Layout>
+@@ -41,25 +47,30 @@
+             <Merge type="all"/>
+         </Layout>
+ 
+-        <Menu>
+-            <Name>Screensavers</Name>
+-            <Directory>xfce-screensavers.directory</Directory>
+-            <Include>
+-                <Category>Screensaver</Category>
+-            </Include>
+-        </Menu>
++    </Menu>
++
++    <Menu>
++        <Name>Administration</Name>
++        <Directory>SystemConfig.directory</Directory>
++        <Include>
++            <And>
++                <Category>Settings</Category>
++                <Category>System</Category>
++                <Not><Category>Screensaver</Category></Not>
++            </And>
++            <Filename>gpk-application.desktop</Filename>
++            <Filename>gpk-update-viewer.desktop</Filename>
++        </Include>
+     </Menu>
+ 
+     <Menu>
+         <Name>Accessories</Name>
+         <Directory>xfce-accessories.directory</Directory>
+         <Include>
+-            <Or>
+-                <Category>Accessibility</Category>
+-                <Category>Core</Category>
+-                <Category>Legacy</Category>
++            <And>
+                 <Category>Utility</Category>
+-            </Or>
++                <Not><Category>System</Category></Not>
++            </And>
+         </Include>
+         <Exclude>
+             <Or>
+@@ -80,10 +91,21 @@
+     </Menu>
+ 
+     <Menu>
++        <Name>Documentation</Name>
++        <Directory>Documentation.directory</Directory>
++        <Include>
++            <Category>Documentation</Category>
++        </Include>
++    </Menu>
++
++    <Menu>
+         <Name>Education</Name>
+         <Directory>xfce-education.directory</Directory>
+         <Include>
+-            <Category>Education</Category>
++            <Or>
++                <Category>Education</Category>
++                <Category>Science</Category>
++            </Or>
+         </Include>
+     </Menu>
+ 
+@@ -139,10 +161,16 @@
+         <Name>System</Name>
+         <Directory>xfce-system.directory</Directory>
+         <Include>
+-            <Or>
+-                <Category>Emulator</Category>
+-                <Category>System</Category>
+-            </Or>
++            <And>
++                <Or>
++                    <Category>Emulator</Category>
++                    <Category>System</Category>
++                </Or>
++                <Not><Category>Settings</Category></Not>
++                <Not><Category>Screensaver</Category></Not>
++                <Not><Filename>gpk-application.desktop</Filename></Not>
++                <Not><Filename>gpk-update-viewer.desktop</Filename></Not>
++            </And>
+         </Include>
+         <Exclude>
+             <Or>

@@ -1,0 +1,12 @@
+diff -ur kdelibs-4.6.95.orig//kio/kio/kprotocolmanager.cpp kdelibs-4.6.95/kio/kio/kprotocolmanager.cpp
+--- kdelibs-4.6.95.orig//kio/kio/kprotocolmanager.cpp	2011-07-20 16:24:21.000000000 -0400
++++ kdelibs-4.6.95/kio/kio/kprotocolmanager.cpp	2011-07-20 16:28:27.000000000 -0400
+@@ -640,7 +640,7 @@
+     d->useragent += QString::number(KDE::versionMinor());
+     d->useragent += QL1C('.');
+     d->useragent += QString::number(KDE::versionRelease());
+-    d->useragent += QL1S(" (like Gecko) Konqueror/");
++    d->useragent += QL1S(" (like Gecko) MagicLinux Konqueror/");
+     d->useragent += QString::number(KDE::versionMajor());
+     d->useragent += QL1C('.');
+     d->useragent += QString::number(KDE::versionMinor());

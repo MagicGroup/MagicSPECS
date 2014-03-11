@@ -1,0 +1,27 @@
+--- libdvdcss-1.2.9/src/libdvdcss.c.tmpdir	2004-08-13 17:40:18 +0400
++++ libdvdcss-1.2.9/src/libdvdcss.c	2006-05-08 22:39:36 +0400
+@@ -88,7 +88,7 @@
+  *     cache. The DVDCSS_CACHE directory is created if it does not exist,
+  *     and a subdirectory is created named after the DVD's title or
+  *     manufacturing date. If DVDCSS_CACHE is not set or is empty, \e libdvdcss
+- *     will use the default value which is "${HOME}/.dvdcss/" under Unix and
++ *     will use the default value which is "${TMPDIR}/dvdcss/" under Unix and
+  *     "C:\Documents and Settings\$USER\Application Data\dvdcss\" under Win32.
+  *     The special value "off" disables caching.
+  */
+@@ -296,13 +296,13 @@
+ 
+         if( psz_home == NULL )
+         {
+-            psz_home = getenv( "HOME" );
++            psz_home = getenv( "TMPDIR" );
+         }
+ 
+         /* Cache our keys in ${HOME}/.dvdcss/ */
+         if( psz_home )
+         {
+-            snprintf( psz_buffer, PATH_MAX, "%s/.dvdcss", psz_home );
++            snprintf( psz_buffer, PATH_MAX, "%s/dvdcss", psz_home );
+             psz_buffer[PATH_MAX-1] = '\0';
+             psz_cache = psz_buffer;
+         }

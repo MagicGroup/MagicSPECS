@@ -1,0 +1,73 @@
+diff -rud dvipdfm-0.13.2d/ebb.c dvipdfm-tl2007/ebb.c
+--- dvipdfm-0.13.2d/ebb.c	2001-06-28 20:55:26.000000000 +0100
++++ dvipdfm-tl2007/ebb.c	2008-04-12 14:44:38.000000000 +0100
+@@ -49,7 +49,7 @@
+   fprintf (stderr, "ebb comes with ABSOLUTELY NO WARRANTY.\n");
+   fprintf (stderr, "This is free software, and you are welcome to redistribute it\n");
+   fprintf (stderr, "under certain conditions.  Details are distributed with the software.\n");
+-  fprintf (stderr, "\nUsage: [-v] [-b] ebb [files]\n");
++  fprintf (stderr, "\nUsage: ebb [-v] [-b] [files]\n");
+   fprintf (stderr, "\t-b\t\tWrite .bb file in binary mode\n");
+   fprintf (stderr, "\t-v\t\tVerbose\n");
+   exit(1);
+
+diff -rud dvipdfm-0.13.2d/pdfdev.c dvipdfm-tl2007/pdfdev.c
+--- dvipdfm-0.13.2d/pdfdev.c	2007-03-03 01:46:06.000000000 +0000
++++ dvipdfm-tl2007/pdfdev.c	2008-04-12 14:44:38.000000000 +0100
+@@ -165,7 +165,7 @@
+ #define PK 2
+ #define TRUETYPE 3
+ 
+-#define DEFAULT_MAP_FILE "fonts.map"
++#define DEFAULT_MAP_FILE "dvipdfm.map"
+ 
+ static struct dev_font {
+   char short_name[7];	/* Needs to be big enough to hold name "Fxxx"
+
+diff -rud dvipdfm-0.13.2d/pngimage.c dvipdfm-tl2007/pngimage.c
+--- dvipdfm-0.13.2d/pngimage.c	2001-06-28 20:55:26.000000000 +0100
++++ dvipdfm-tl2007/pngimage.c	2008-04-12 14:44:38.000000000 +0100
+@@ -24,6 +24,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <kpathsea/config.h>
+ #include <kpathsea/c-ctype.h>
+ #include "system.h"
+ #include "config.h"
+
+diff -rud dvipdfm-0.13.2d/system.h dvipdfm-tl2007/system.h
+--- dvipdfm-0.13.2d/system.h	2001-06-28 20:55:26.000000000 +0100
++++ dvipdfm-tl2007/system.h	2008-04-12 14:44:38.000000000 +0100
+@@ -12,6 +12,7 @@
+ #  undef CMYK
+ #  undef SETLINEJOIN
+ #  undef SETMITERLIMIT
++#  undef SETLINECAP
+ #  pragma warning(disable : 4101 4018)
+ #else
+ #  define __cdecl
+
+diff -rud dvipdfm-0.13.2d/thumbnail.c dvipdfm-tl2007/thumbnail.c
+--- dvipdfm-0.13.2d/thumbnail.c	2001-06-28 20:55:27.000000000 +0100
++++ dvipdfm-tl2007/thumbnail.c	2008-04-12 14:44:38.000000000 +0100
+@@ -24,6 +24,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <kpathsea/config.h>
+ #include <kpathsea/c-ctype.h>
+ #include "system.h"
+ #include "config.h"
+@@ -42,8 +43,9 @@
+ {
+   /* Build path name for anticipated thumbnail image */
+   char *tmpdir, *tmpname;
+-  if (!(tmpdir = getenv ("TMP")) &&
+-      !(tmpdir = getenv ("TEMP"))) 
++  if (!(tmpdir = getenv ("TMPDIR")) &&
++      !(tmpdir = getenv ("TEMP")) &&
++      !(tmpdir = getenv ("TMP"))) 
+     tmpdir = TMP;
+   tmpname = NEW (strlen(tmpdir)+strlen(thumb_filename)+strlen(DIR_SEP_STRING)+1,
+ 		 char);

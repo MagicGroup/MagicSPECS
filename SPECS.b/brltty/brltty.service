@@ -1,0 +1,9 @@
+[Unit]
+Description=Braille display driver for Linux/Unix
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/brltty
+
+[Install]
+WantedBy=multi-user.target

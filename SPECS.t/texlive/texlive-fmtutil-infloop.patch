@@ -1,0 +1,19 @@
+diff -up texlive-2007/texk/tetex/fmtutil.infloop texlive-2007/texk/tetex/fmtutil
+--- texlive-2007/texk/tetex/fmtutil.infloop	2008-03-12 10:51:14.000000000 +0100
++++ texlive-2007/texk/tetex/fmtutil	2008-03-12 16:53:05.000000000 +0100
+@@ -680,6 +680,15 @@
+   esac
+ 
+   rm -f $fmtfile
++
++  # Check for infinite recursion before running the iniTeX:
++  case :$mktexfmt_loop: in
++  *:"$format":*)
++    abort "Infinite recursion detected, giving up!" ;;
++  esac
++  mktexfmt_loop=$mktexfmt_loop:$format
++  export mktexfmt_loop
++
+   verboseMsg "$progname: running \`$engine -ini  $tcxflag $jobswitch $prgswitch $texargs' ..."
+ 
+   # run in a subshell to get a local effect of TEXPOOL manipulation:

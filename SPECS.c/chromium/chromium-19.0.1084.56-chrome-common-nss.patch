@@ -1,0 +1,17 @@
+diff -up chromium-19.0.1084.56/chrome/chrome_common.gypi.nss chromium-19.0.1084.56/chrome/chrome_common.gypi
+--- chromium-19.0.1084.56/chrome/chrome_common.gypi.nss	2012-06-13 15:49:48.000000000 -0400
++++ chromium-19.0.1084.56/chrome/chrome_common.gypi	2012-06-13 15:50:30.833993247 -0400
+@@ -15,11 +15,13 @@
+       },
+       'include_dirs': [
+           '..',
++          '/usr/include/nspr4',
+           '<(SHARED_INTERMEDIATE_DIR)',  # Needed by chrome_content_client.cc.
+         ],
+       'direct_dependent_settings': {
+         'include_dirs': [
+           '..',
++          '/usr/include/nspr4',
+         ],
+       },
+       'dependencies': [

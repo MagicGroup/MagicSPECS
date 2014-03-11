@@ -1,0 +1,40 @@
+--- kickoff-i18n-1.0/admin/configure.in.min.ORI	2013-06-04 21:34:45.145197643 +0200
++++ kickoff-i18n-1.0/admin/configure.in.min	2013-06-04 21:34:54.004020422 +0200
+@@ -41,7 +41,7 @@
+ KDE_SET_PREFIX
+ 
+ dnl generate the config header
+-AM_CONFIG_HEADER(config.h) dnl at the distribution this done
++AC_CONFIG_HEADER(config.h) dnl at the distribution this done
+ 
+ dnl Checks for programs.
+ AC_CHECK_COMPILERS
+--- kickoff-i18n-1.0/admin/cvs.sh.automake	2007-01-15 10:06:45.000000000 +0100
++++ kickoff-i18n-1.0/admin/cvs.sh	2013-06-04 21:34:39.471311140 +0200
+@@ -68,7 +68,7 @@
+     echo "*** KDE requires automake $required_automake_version"
+     exit 1
+     ;;
+-  automake*1.6.* | automake*1.7* | automake*1.8* | automake*1.9* | automake*1.10*)
++  automake*1.6.* | automake*1.7* | automake*1.8* | automake*1.9* | automake*1.1[0-9]*)
+     echo "*** $AUTOMAKE_STRING found."
+     UNSERMAKE=no
+     ;;
+@@ -128,7 +128,7 @@
+ echo "*** Creating configure"
+ call_and_fix_autoconf
+ 
+-if egrep "^AM_CONFIG_HEADER" configure.in >/dev/null 2>&1; then
++if egrep "^A[CM]_CONFIG_HEADER" configure.in >/dev/null 2>&1; then
+   echo "*** Creating config.h template"
+   $AUTOHEADER || exit 1
+   touch config.h.in
+@@ -184,7 +184,7 @@
+   fi
+ fi
+ $ACLOCAL $ACLOCALFLAGS
+-if egrep "^AM_CONFIG_HEADER" configure.in >/dev/null 2>&1; then
++if egrep "^A[CM]_CONFIG_HEADER" configure.in >/dev/null 2>&1; then
+   echo "*** Creating config.h template"
+   $AUTOHEADER || exit 1
+   touch config.h.in

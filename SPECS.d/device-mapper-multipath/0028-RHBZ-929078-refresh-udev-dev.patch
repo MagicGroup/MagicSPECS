@@ -1,0 +1,55 @@
+---
+ libmultipath/discovery.c |    2 +-
+ multipathd/main.c        |   19 ++++++++++++++++++-
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/discovery.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/discovery.c
++++ multipath-tools-130222/libmultipath/discovery.c
+@@ -1034,7 +1034,7 @@ pathinfo (struct path *pp, vector hwtabl
+ 		}
+ 	}
+ 
+-	if (path_state == PATH_UP && (mask & DI_WWID) && !strlen(pp->wwid))
++	if ((mask & DI_WWID) && !strlen(pp->wwid))
+ 		get_uid(pp);
+ 	if (mask & DI_BLACKLIST && mask & DI_WWID) {
+ 		if (filter_wwid(conf->blist_wwid, conf->elist_wwid,
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -376,7 +376,7 @@ static int
+ uev_add_path (struct uevent *uev, struct vectors * vecs)
+ {
+ 	struct path *pp;
+-	int ret;
++	int ret, i;
+ 
+ 	condlog(2, "%s: add path (uevent)", uev->kernel);
+ 	if (strstr(uev->kernel, "..") != NULL) {
+@@ -393,6 +393,23 @@ uev_add_path (struct uevent *uev, struct
+ 			uev->kernel);
+ 		if (pp->mpp)
+ 			return 0;
++		if (!strlen(pp->wwid)) {
++			udev_device_unref(pp->udev);
++			pp->udev = udev_device_ref(uev->udev);
++			ret = pathinfo(pp, conf->hwtable,
++				       DI_ALL | DI_BLACKLIST);
++			if (ret == 2) {
++				i = find_slot(vecs->pathvec, (void *)pp);
++				if (i != -1)
++					vector_del_slot(vecs->pathvec, i);
++				free_path(pp);
++				return 0;
++			} else if (ret == 1) {
++				condlog(0, "%s: failed to reinitialize path",
++					uev->kernel);
++				return 1;
++			}
++		}
+ 	} else {
+ 		/*
+ 		 * get path vital state

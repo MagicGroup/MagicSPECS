@@ -1,0 +1,193 @@
+diff -ur amarok-2.0.96.orig/src/meta/file/File_p.h amarok-2.0.96/src/meta/file/File_p.h
+--- amarok-2.0.96.orig/src/meta/file/File_p.h	2009-05-15 17:53:34.000000000 +0800
++++ amarok-2.0.96/src/meta/file/File_p.h	2009-05-15 17:57:27.000000000 +0800
+@@ -195,6 +195,45 @@
+ 
+     if( TagLib::MPEG::File *file = dynamic_cast<TagLib::MPEG::File *>( fileRef.file() ) )
+     {
++        TagLib::String metaData = tag->title() + tag->artist() + tag->album() + tag->comment();
++        const char* buf = metaData.toCString();
++        size_t len = strlen( buf );
++        int res = 0;
++        chardet_t det = NULL;
++        char encoding[CHARDET_MAX_ENCODING_NAME];
++        chardet_create( &det );
++        res = chardet_handle_data( det, buf, len );
++        chardet_data_end( det );
++        res = chardet_get_charset( det, encoding, CHARDET_MAX_ENCODING_NAME );
++        chardet_destroy( det );
++
++        QString track_encoding = encoding;
++        if ( res == CHARDET_RESULT_OK )
++        {
++            //http://doc.trolltech.com/4.4/qtextcodec.html
++            //http://www.mozilla.org/projects/intl/chardet.html
++            if ( track_encoding == "x-euc-tw" ) track_encoding = ""; //no match
++            if ( track_encoding == "HZ-GB2312" ) track_encoding = ""; //no match
++            if ( track_encoding == "ISO-2022-CN" ) track_encoding = ""; //no match
++            if ( track_encoding == "ISO-2022-KR" ) track_encoding = ""; //no match
++            if ( track_encoding == "ISO-2022-JP" ) track_encoding = ""; //no match
++            if ( track_encoding == "x-mac-cyrillic" ) track_encoding = ""; //no match
++            if ( track_encoding == "IBM855" ) track_encoding =""; //no match
++            if ( track_encoding == "IBM866" ) track_encoding = "IBM 866";
++            if ( track_encoding == "TIS-620" ) track_encoding = ""; //ISO-8859-11, no match
++            if ( !track_encoding.isEmpty() )
++            {
++                //FIXME:about 10% tracks cannot be decoded well. It shows blank for now.
++                debug () << "Final Codec Name:" << track_encoding.toUtf8() <<endl;
++                QTextCodec *codec = QTextCodec::codecForName( track_encoding.toUtf8() );
++                QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
++                QTextCodec::setCodecForCStrings( utf8codec );
++                m_data.title = codec->toUnicode( m_data.title.toLatin1() );
++                m_data.artist = codec->toUnicode( m_data.artist.toLatin1() );
++                m_data.album = codec->toUnicode( m_data.album.toLatin1() );
++                m_data.comment = codec->toUnicode( m_data.comment.toLatin1() );
++            }
++        }
+         if( file->ID3v2Tag() )
+         {
+             const TagLib::ID3v2::FrameListMap flm = file->ID3v2Tag()->frameListMap();
+@@ -208,42 +247,7 @@
+                 m_data.artist = strip( flm[ "TPE2" ].front()->toString() );
+ 
+         }
+-        else if ( file->ID3v1Tag() && tag )
+-        {
+-            TagLib::String metaData = tag->title() + tag->artist() + tag->album() + tag->comment();
+-            const char* buf = metaData.toCString();
+-            size_t len = strlen( buf );
+-            KEncodingProber prober;
+-            KEncodingProber::ProberState result = prober.feed( buf, len );
+-            QString track_encoding( prober.encodingName() );
+-            if ( result != KEncodingProber::NotMe )
+-            {
+-                //http://doc.trolltech.com/4.4/qtextcodec.html
+-                //http://www.mozilla.org/projects/intl/chardet.html
+-                if ( track_encoding == "x-euc-tw" ) track_encoding = ""; //no match
+-                if ( track_encoding == "HZ-GB2312" ) track_encoding = ""; //no match
+-                if ( track_encoding == "ISO-2022-CN" ) track_encoding = ""; //no match
+-                if ( track_encoding == "ISO-2022-KR" ) track_encoding = ""; //no match
+-                if ( track_encoding == "ISO-2022-JP" ) track_encoding = ""; //no match
+-                if ( track_encoding == "x-mac-cyrillic" ) track_encoding = ""; //no match
+-                if ( track_encoding == "IBM855" ) track_encoding =""; //no match
+-                if ( track_encoding == "IBM866" ) track_encoding = "IBM 866";
+-                if ( track_encoding == "TIS-620" ) track_encoding = ""; //ISO-8859-11, no match
+-                if ( !track_encoding.isEmpty() )
+-                {
+-                    //FIXME:about 10% tracks cannot be decoded well. It shows blank for now.
+-                    debug () << "Final Codec Name:" << track_encoding.toUtf8() <<endl;
+-                    QTextCodec *codec = QTextCodec::codecForName( track_encoding.toUtf8() );
+-                    QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
+-                    QTextCodec::setCodecForCStrings( utf8codec );
+-                    m_data.title = codec->toUnicode( m_data.title.toLatin1() );
+-                    m_data.artist = codec->toUnicode( m_data.artist.toLatin1() );
+-                    m_data.album = codec->toUnicode( m_data.album.toLatin1() );
+-                    m_data.comment = codec->toUnicode( m_data.comment.toLatin1() );
+-                }
+-            }
+-        }
+-    }
++   }
+ 
+     else if( TagLib::Ogg::Vorbis::File *file = dynamic_cast< TagLib::Ogg::Vorbis::File *>( fileRef.file() ) )
+     {
+diff -ur amarok-2.0.96.orig/utilities/collectionscanner/CollectionScanner.cpp amarok-2.0.96/utilities/collectionscanner/CollectionScanner.cpp
+--- amarok-2.0.96.orig/utilities/collectionscanner/CollectionScanner.cpp	2009-05-15 17:53:35.000000000 +0800
++++ amarok-2.0.96/utilities/collectionscanner/CollectionScanner.cpp	2009-05-15 17:56:07.000000000 +0800
+@@ -693,6 +693,46 @@
+         if ( TagLib::MPEG::File *file = dynamic_cast<TagLib::MPEG::File *>( fileref.file() ) )
+         {
+             fileType = mp3;
++            TagLib::String metaData = tag->title() + tag->artist() + tag->album() + tag->comment();
++            const char* buf = metaData.toCString();
++            size_t len = strlen( buf );
++            int res = 0;
++            chardet_t det = NULL;
++            char encoding[CHARDET_MAX_ENCODING_NAME];
++            chardet_create( &det );
++            res = chardet_handle_data( det, buf, len );
++            chardet_data_end( det );
++            res = chardet_get_charset( det, encoding, CHARDET_MAX_ENCODING_NAME );
++            chardet_destroy( det );
++
++            QString track_encoding = encoding;
++
++            if ( res == CHARDET_RESULT_OK )
++            {
++            //http://doc.trolltech.com/4.4/qtextcodec.html
++            //http://www.mozilla.org/projects/intl/chardet.html
++                if ( track_encoding == "x-euc-tw" ) track_encoding = ""; //no match
++                if ( track_encoding == "HZ-GB2312" ) track_encoding = ""; //no match
++                if ( track_encoding == "ISO-2022-CN" ) track_encoding = ""; //no match
++                if ( track_encoding == "ISO-2022-KR" ) track_encoding = ""; //no match
++                if ( track_encoding == "ISO-2022-JP" ) track_encoding = ""; //no match
++                if ( track_encoding == "x-mac-cyrillic" ) track_encoding = ""; //no match
++                if ( track_encoding == "IBM855" ) track_encoding =""; //no match
++                if ( track_encoding == "IBM866" ) track_encoding = "IBM 866";
++                if ( track_encoding == "TIS-620" ) track_encoding = ""; //ISO-8859-11, no match
++                if ( !track_encoding.isEmpty() )
++                {
++                    //FIXME:about 10% tracks cannot be decoded well. It shows blank for now.
++                    //debug () << "Final Codec Name:" << track_encoding.toUtf8() <<endl;
++                    QTextCodec *codec = QTextCodec::codecForName( track_encoding.toUtf8() );
++                    QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
++                    QTextCodec::setCodecForCStrings( utf8codec );
++                    attributes["title"] = codec->toUnicode( strip( tag->title() ).toLatin1() );
++                    attributes["artist"] = codec->toUnicode( strip( tag->artist() ).toLatin1() );
++                    attributes["album"] = codec->toUnicode( strip( tag->album() ).toLatin1() );
++                    attributes["comment"] = codec->toUnicode( strip( tag->comment() ).toLatin1() );
++                }
++            }
+             if ( file->ID3v2Tag() )
+             {
+                 if ( !file->ID3v2Tag()->frameListMap()["TPOS"].isEmpty() )
+@@ -714,49 +754,6 @@
+ //                 if( images )
+ //                     loadImagesFromTag( *file->ID3v2Tag(), *images );
+             }
+-            else if ( file->ID3v1Tag() )
+-            {
+-                TagLib::String metaData = tag->title() + tag->artist() + tag->album() + tag->comment();
+-                const char* buf = metaData.toCString();
+-                size_t len = strlen( buf );
+-                int res = 0;
+-                chardet_t det = NULL;
+-                char encoding[CHARDET_MAX_ENCODING_NAME];
+-                chardet_create( &det );
+-                res = chardet_handle_data( det, buf, len );
+-                chardet_data_end( det );
+-                res = chardet_get_charset( det, encoding, CHARDET_MAX_ENCODING_NAME );
+-                chardet_destroy( det );
+-
+-                QString track_encoding = encoding;
+-
+-                if ( res == CHARDET_RESULT_OK )
+-                {
+-                //http://doc.trolltech.com/4.4/qtextcodec.html
+-                //http://www.mozilla.org/projects/intl/chardet.html
+-                    if ( track_encoding == "x-euc-tw" ) track_encoding = ""; //no match
+-                    if ( track_encoding == "HZ-GB2312" ) track_encoding = ""; //no match
+-                    if ( track_encoding == "ISO-2022-CN" ) track_encoding = ""; //no match
+-                    if ( track_encoding == "ISO-2022-KR" ) track_encoding = ""; //no match
+-                    if ( track_encoding == "ISO-2022-JP" ) track_encoding = ""; //no match
+-                    if ( track_encoding == "x-mac-cyrillic" ) track_encoding = ""; //no match
+-                    if ( track_encoding == "IBM855" ) track_encoding =""; //no match
+-                    if ( track_encoding == "IBM866" ) track_encoding = "IBM 866";
+-                    if ( track_encoding == "TIS-620" ) track_encoding = ""; //ISO-8859-11, no match
+-                    if ( !track_encoding.isEmpty() )
+-                    {
+-                    //FIXME:about 10% tracks cannot be decoded well. It shows blank for now.
+-                        //debug () << "Final Codec Name:" << track_encoding.toUtf8() <<endl;
+-                        QTextCodec *codec = QTextCodec::codecForName( track_encoding.toUtf8() );
+-                        QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
+-                        QTextCodec::setCodecForCStrings( utf8codec );
+-                        attributes["title"] = codec->toUnicode( strip( tag->title() ).toLatin1() );
+-                        attributes["artist"] = codec->toUnicode( strip( tag->artist() ).toLatin1() );
+-                        attributes["album"] = codec->toUnicode( strip( tag->album() ).toLatin1() );
+-                        attributes["comment"] = codec->toUnicode( strip( tag->comment() ).toLatin1() );
+-                    }
+-                }
+-            }
+             #undef strip
+         }
+         else if ( TagLib::Ogg::Vorbis::File *file = dynamic_cast<TagLib::Ogg::Vorbis::File *>( fileref.file() ) )

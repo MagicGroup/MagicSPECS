@@ -1,0 +1,14 @@
+--- Test-Manifest-1.23/Makefile.PL	2009-07-27 16:41:37.000000000 +0100
++++ Test-Manifest-1.23/Makefile.PL	2009-07-27 16:43:31.000000000 +0100
+@@ -20,7 +20,10 @@
+ 		'lib/Manifest.pm'  => '$(INST_LIBDIR)/Manifest.pm',
+ 		},
+ 	  
+-	'MAN3PODS' => {},
++	'MAN3PODS' =>
++		{
++		'lib/Manifest.pm' => '$(INST_MAN3DIR)/Test::Manifest.$(MAN3EXT)',
++		},
+ 		
+ 	clean => { FILES => 'Test-Manifest-* t/test_manifest' },
+ 	);

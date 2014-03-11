@@ -1,0 +1,41 @@
+--- mpeg4ip-1.5.0.1/common/video/iso-mpeg4/include/basic.hpp.orig	2005-05-04 19:55:58.000000000 +0000
++++ mpeg4ip-1.5.0.1/common/video/iso-mpeg4/include/basic.hpp	2006-12-13 10:15:12.283713250 +0000
+@@ -89,12 +89,9 @@
+ #define transpPixel CPixel(0,0,0,0)
+ #define opaquePixel CPixel(255,255,255,255)
+ 
+-#ifndef max
+-#define max(a,b) (((a) > (b)) ? (a) : (b))
+-#endif
+-#ifndef min
+-#define min(a, b)  (((a) < (b)) ? (a) : (b))
+-#endif
++static inline long min( long x, long y ) { return ( ( x < y ) ? x : y ); }
++static inline long max( long x, long y ) { return ( ( x > y ) ? x : y ); }
++
+ #define signOf(x) (((x) > 0) ? 1 : 0)
+ #define invSignOf(x) ((x) > 0 ? 0 : 1)					// see p.22/H.263
+ #define sign(x) ((x) > 0 ? 1 : -1)					// see p.22/H.263
+--- mpeg4ip-1.6/common/video/iso-mpeg4/src/type_basic.cpp.orig	2006-08-03 20:30:21.000000000 +0200
++++ mpeg4ip-1.6/common/video/iso-mpeg4/src/type_basic.cpp	2007-11-04 01:28:16.465905317 +0100
+@@ -317,7 +317,7 @@
+ 	iHalfY = m_vctTrueHalfPel.y - iMVY * 2;
+ }
+ 
+-Void CMotionVector::setToZero (Void)
++Void CMotionVector::setToZero ()
+ {
+ 	memset (this, 0, sizeof (*this));
+ }
+--- mpeg4ip-1.6.1/server/mp4live/video_util_resize.h.orig	2005-03-25 21:40:05.000000000 +0100
++++ mpeg4ip-1.6.1/server/mp4live/video_util_resize.h	2008-08-26 19:48:34.000000000 +0200
+@@ -90,7 +90,7 @@
+ 
+ void CopyYuv(const uint8_t *fY, const uint8_t *fU, const uint8_t *fV,
+ 	     uint32_t fyStride, uint32_t fuStride, uint32_t fvStride,
+-	     uint8_t *tY, uint8_t *tU, uint8_t *fV,
+-	     uint32_t tyStride, uint32_t tvStride, uint32_t tvStride,
++	     uint8_t *tY, uint8_t *tU, uint8_t *tV,
++	     uint32_t tyStride, uint32_t tuStride, uint32_t tvStride,
+ 	     uint32_t w, uint32_t h);
+ #endif

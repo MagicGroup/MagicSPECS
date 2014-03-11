@@ -1,0 +1,90 @@
+---
+ multipath.conf.annotated |   53 -----------------------------------------------
+ multipath.conf.synthetic |    3 --
+ 2 files changed, 56 deletions(-)
+
+Index: multipath-tools-120123/multipath.conf.annotated
+===================================================================
+--- multipath-tools-120123.orig/multipath.conf.annotated
++++ multipath-tools-120123/multipath.conf.annotated
+@@ -186,32 +186,6 @@
+ #	user_friendly_names no
+ #
+ #	#
+-#	# name    : mode
+-#	# scope   : multipath & multipathd
+-#	# desc    : The mode to use for the multipath device nodes, in octal.
+-#	# values  : 0000 - 0777
+-#	# default : determined by the process
+-#	mode 0644
+-#
+-#	#
+-#	# name    : uid
+-#	# scope   : multipath & multipathd
+-#	# desc    : The user id to use for the multipath device nodes. You
+-#	#           may use either the numeric or symbolic uid
+-#	# values  : <user_id>
+-#	# default : determined by the process
+-#	uid 0
+-#
+-#	#
+-#	# name    : gid
+-#	# scope   : multipath & multipathd
+-#	# desc    : The group id to user for the multipath device nodes. You
+-#	#           may use either the numeric or symbolic gid
+-#	# values  : <group_id>
+-#	# default : determined by the process
+-#	gid disk
+-#
+-#	#
+ #	# name    : checker_timeout
+ #	# scope   : multipath & multipathd
+ #	# desc    : The timeout to use for path checkers that issue scsi
+@@ -388,33 +362,6 @@
+ #		#
+ #		flush_on_last_del       yes
+ #
+-#		#
+-#		# name    : mode
+-#		# scope   : multipath & multipathd
+-#		# desc    : The mode to use for the multipath device nodes, in
+-#		#           octal.
+-#		# values  : 0000 - 0777
+-#		# default : determined by the process
+-#		mode 0644
+-#
+-#		#
+-#		# name    : uid
+-#		# scope   : multipath & multipathd
+-#		# desc    : The user id to use for the multipath device nodes.
+-#		#           You may use either the numeric or symbolic uid
+-#		# values  : <user_id>
+-#		# default : determined by the process
+-#		uid 0
+-#
+-#		#
+-#		# name    : gid
+-#		# scope   : multipath & multipathd
+-#		# desc    : The group id to user for the multipath device nodes.
+-#		#           You may use either the numeric or symbolic gid
+-#		# values  : <group_id>
+-#		# default : determined by the process
+-#		gid 0
+-#
+ #	}
+ #	multipath {
+ #		wwid	1DEC_____321816758474
+Index: multipath-tools-120123/multipath.conf.synthetic
+===================================================================
+--- multipath-tools-120123.orig/multipath.conf.synthetic
++++ multipath-tools-120123/multipath.conf.synthetic
+@@ -18,9 +18,6 @@
+ #	no_path_retry		fail
+ #	queue_without_daemon    no
+ #	user_friendly_names	no
+-#	mode			644
+-#	uid			0
+-#	gid			disk
+ #}
+ #blacklist {
+ #       wwid 26353900f02796769

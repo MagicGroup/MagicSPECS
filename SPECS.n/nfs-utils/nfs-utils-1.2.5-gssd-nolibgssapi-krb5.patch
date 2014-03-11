@@ -1,0 +1,26 @@
+commit 880e2efecb4469573a5c2e89aee4963f29288f88
+Author: Steve Dickson <steved@redhat.com>
+Date:   Thu Jan 26 14:56:13 2012 -0500
+
+    rpc.gssd: Links directly with libgssapi_krb5 which not needed.
+    
+    rpc.gssd and rpc.svcgssd both link with the libgssapi_krb5 and
+    libgssglue libraries which is not needed since libgssglue
+    will dynamically load the gssapi interface defined in the
+    /etc/gssapi_mech.conf. Most likely the libgssapi_krb5 library.
+    
+    Signed-off-by: Steve Dickson <steved@redhat.com>
+
+diff --git a/aclocal/kerberos5.m4 b/aclocal/kerberos5.m4
+index dfa5738..7574e2d 100644
+--- a/aclocal/kerberos5.m4
++++ b/aclocal/kerberos5.m4
+@@ -31,7 +31,7 @@ AC_DEFUN([AC_KERBEROS_V5],[
+     fi
+     if test "$K5CONFIG" != ""; then
+       KRBCFLAGS=`$K5CONFIG --cflags`
+-      KRBLIBS=`$K5CONFIG --libs gssapi`
++      KRBLIBS=`$K5CONFIG --libs`
+       K5VERS=`$K5CONFIG --version | head -n 1 | awk '{split($(4),v,"."); if (v@<:@"3"@:>@ == "") v@<:@"3"@:>@ = "0"; print v@<:@"1"@:>@v@<:@"2"@:>@v@<:@"3"@:>@ }'`
+       AC_DEFINE_UNQUOTED(KRB5_VERSION, $K5VERS, [Define this as the Kerberos version number])
+       if test -f $dir/include/gssapi/gssapi_krb5.h -a \

@@ -1,0 +1,12 @@
+diff -Nur kio/bookmarks/kbookmarkmanager.cc kio.use_gb18030_bookmark_xml/bookmarks/kbookmarkmanager.cc
+--- kio/bookmarks/kbookmarkmanager.cc	2008-06-19 17:14:20.000000000 +0800
++++ kio.use_gb18030_bookmark_xml/bookmarks/kbookmarkmanager.cc	2008-06-19 17:14:52.000000000 +0800
+@@ -181,7 +181,7 @@
+     return mgr;
+ }
+ 
+-#define PI_DATA "version=\"1.0\" encoding=\"UTF-8\""
++#define PI_DATA "version=\"1.0\" encoding=\"GB18030\""
+ 
+ static QDomElement createXbelTopLevelElement(QDomDocument & doc)
+ {

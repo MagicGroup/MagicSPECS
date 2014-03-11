@@ -1,0 +1,228 @@
+Index: kde4libs-4.4.2/kdecore/auth/backends/dbus/DBusHelperProxy.cpp
+===================================================================
+--- kde4libs-4.4.2.orig/kdecore/auth/backends/dbus/DBusHelperProxy.cpp	2010-04-14 10:01:43.241147300 -0400
++++ kde4libs-4.4.2/kdecore/auth/backends/dbus/DBusHelperProxy.cpp	2010-04-14 10:03:17.044132135 -0400
+@@ -1,6 +1,6 @@
+ /*
+ *   Copyright (C) 2008 Nicola Gigante <nicola.gigante@gmail.com>
+-*   Copyright (C) 2009 Dario Freddi <drf@kde.org>
++*   Copyright (C) 2009-2010 Dario Freddi <drf@kde.org>
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as published by
+@@ -213,18 +213,18 @@
+ void DBusHelperProxy::performActions(QByteArray blob, const QByteArray &callerID)
+ {
+     QDataStream stream(&blob, QIODevice::ReadOnly);
+-    QList<QPair<QString, QVariantMap> > actions;
++    QList< QPair< QString, QVariantMap > > actions;
+ 
+     stream >> actions;
+ 
+-    QList<QPair<QString, QVariantMap> >::const_iterator i = actions.constBegin();
++    QList< QPair< QString, QVariantMap > >::const_iterator i = actions.constBegin();
+     while (i != actions.constEnd()) {
+         QByteArray blob;
+         QDataStream stream(&blob, QIODevice::WriteOnly);
+ 
+         stream << i->second;
+ 
+-        emit remoteSignal(ActionPerformed, i->first, performAction(i->first, callerID, blob));
++        performAction(i->first, callerID, blob);
+ 
+         i++;
+     }
+@@ -244,10 +244,17 @@
+     QDataStream s(&arguments, QIODevice::ReadOnly);
+     s >> args;
+ 
+-    if (BackendsManager::authBackend()->isCallerAuthorized(action, callerID)) {
+-        QTimer *timer = responder->property("__KAuth_Helper_Shutdown_Timer").value<QTimer*>();
+-        timer->stop();
++    m_currentAction = action;
++    emit remoteSignal(ActionStarted, action, QByteArray());
++    QEventLoop e;
++    e.processEvents(QEventLoop::AllEvents);
++
++    ActionReply retVal;
++
++    QTimer *timer = responder->property("__KAuth_Helper_Shutdown_Timer").value<QTimer*>();
++    timer->stop();
+ 
++    if (BackendsManager::authBackend()->isCallerAuthorized(action, callerID)) {
+         QString slotname = action;
+         if (slotname.startsWith(m_name + '.')) {
+             slotname = slotname.right(slotname.length() - m_name.length() - 1);
+@@ -255,26 +262,25 @@
+ 
+         slotname.replace('.', '_');
+ 
+-        ActionReply retVal;
++        bool success = QMetaObject::invokeMethod(responder, slotname.toAscii(), Qt::DirectConnection,
++                                                 Q_RETURN_ARG(ActionReply, retVal), Q_ARG(QVariantMap, args));
+ 
+-        m_currentAction = action;
+-        emit remoteSignal(ActionStarted, action, QByteArray());
+-        bool success = QMetaObject::invokeMethod(responder, slotname.toAscii(), Qt::DirectConnection, Q_RETURN_ARG(ActionReply, retVal), Q_ARG(QVariantMap, args));
+-        emit remoteSignal(ActionPerformed, action, retVal.serialized());
+-        m_currentAction = "";
+-        m_stopRequest = false;
+-
+-        timer->start();
+-
+-        if (success) {
+-            return retVal.serialized();
+-        } else {
+-            return ActionReply::NoSuchActionReply.serialized();
++        if (!success) {
++            retVal = ActionReply::NoSuchActionReply;
+         }
+ 
+     } else {
+-        return ActionReply::AuthorizationDeniedReply.serialized();
++        retVal = ActionReply::AuthorizationDeniedReply;
+     }
++
++    timer->start();
++
++    emit remoteSignal(ActionPerformed, action, retVal.serialized());
++    e.processEvents(QEventLoop::AllEvents);
++    m_currentAction = "";
++    m_stopRequest = false;
++
++    return retVal.serialized();
+ }
+ 
+ void DBusHelperProxy::sendDebugMessage(int level, const char *msg)
+Index: kde4libs-4.4.2/kdecore/auth/backends/polkit-1/Polkit1Backend.cpp
+===================================================================
+--- kde4libs-4.4.2.orig/kdecore/auth/backends/polkit-1/Polkit1Backend.cpp	2010-04-14 10:02:23.457684890 -0400
++++ kde4libs-4.4.2/kdecore/auth/backends/polkit-1/Polkit1Backend.cpp	2010-04-14 10:03:33.280128452 -0400
+@@ -1,7 +1,7 @@
+ /*
+ *   Copyright (C) 2008 Nicola Gigante <nicola.gigante@gmail.com>
+-*   Copyright (C) 2009 Dario Freddi <drf@kde.org>
+ *   Copyright (C) 2009 Radek Novacek <rnovacek@redhat.com>
++*   Copyright (C) 2009-2010 Dario Freddi <drf@kde.org>
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as published by
+@@ -30,11 +30,38 @@
+ namespace KAuth
+ {
+ 
++PolkitResultEventLoop::PolkitResultEventLoop(QObject* parent)
++    : QEventLoop(parent)
++{
++
++}
++
++PolkitResultEventLoop::~PolkitResultEventLoop()
++{
++
++}
++
++void PolkitResultEventLoop::requestQuit(const PolkitQt1::Authority::Result& result)
++{
++    m_result = result;
++    quit();
++}
++
++PolkitQt1::Authority::Result PolkitResultEventLoop::result() const
++{
++    return m_result;
++}
++
+ Polkit1Backend::Polkit1Backend()
+ {
+     // Nothing to do here...
+ }
+ 
++Polkit1Backend::~Polkit1Backend()
++{
++
++}
++
+ Action::AuthStatus Polkit1Backend::authorizeAction(const QString &action)
+ {
+     Q_UNUSED(action)
+@@ -87,7 +114,13 @@
+     PolkitQt1::UnixProcessSubject subject(pid);
+     PolkitQt1::Authority *authority = PolkitQt1::Authority::instance();
+ 
+-    switch (authority->checkAuthorizationSync(action, &subject, PolkitQt1::Authority::AllowUserInteraction)) {
++    PolkitResultEventLoop e;
++    connect(authority, SIGNAL(checkAuthorizationFinished(PolkitQt1::Authority::Result)),
++            &e, SLOT(requestQuit(PolkitQt1::Authority::Result)));
++    authority->checkAuthorization(action, &subject, PolkitQt1::Authority::AllowUserInteraction);
++    e.exec();
++
++    switch (e.result()) {
+     case PolkitQt1::Authority::Yes:
+         return true;
+     default:
+Index: kde4libs-4.4.2/kdecore/auth/backends/polkit-1/Polkit1Backend.h
+===================================================================
+--- kde4libs-4.4.2.orig/kdecore/auth/backends/polkit-1/Polkit1Backend.h	2010-04-14 10:02:23.492129844 -0400
++++ kde4libs-4.4.2/kdecore/auth/backends/polkit-1/Polkit1Backend.h	2010-04-14 10:04:17.844131084 -0400
+@@ -1,7 +1,7 @@
+ /*
+ *   Copyright (C) 2008 Nicola Gigante <nicola.gigante@gmail.com>
+-*   Copyright (C) 2009 Dario Freddi <drf@kde.org>
+ *   Copyright (C) 2009 Radek Novacek <rnovacek@redhat.com>
++*   Copyright (C) 2009-2010 Dario Freddi <drf@kde.org>
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU Lesser General Public License as published by
+@@ -23,7 +23,11 @@
+ #define POLKIT1BACKEND_H
+ 
+ #include "AuthBackend.h"
++
+ #include <QHash>
++#include <QEventLoop>
++
++#include <PolkitQt1/Authority>
+ 
+ class QByteArray;
+ 
+@@ -37,15 +41,13 @@
+ 
+ public:
+     Polkit1Backend();
++    virtual ~Polkit1Backend();
+     virtual void setupAction(const QString&);
+     virtual Action::AuthStatus authorizeAction(const QString&);
+     virtual Action::AuthStatus actionStatus(const QString&);
+     virtual QByteArray callerID() const;
+     virtual bool isCallerAuthorized(const QString &action, QByteArray callerID);
+ 
+-Q_SIGNALS:
+-    void actionStatusChanged(const QString &action, Action::AuthStatus status);
+-
+ private Q_SLOTS:
+     void checkForResultChanged();
+ 
+@@ -53,6 +55,22 @@
+     QHash<QString, Action::AuthStatus> m_cachedResults;
+ };
+ 
++class PolkitResultEventLoop : public QEventLoop
++{
++    Q_OBJECT
++public:
++    PolkitResultEventLoop(QObject* parent = 0);
++    virtual ~PolkitResultEventLoop();
++
++    PolkitQt1::Authority::Result result() const;
++
++public Q_SLOTS:
++    void requestQuit(const PolkitQt1::Authority::Result &result);
++
++private:
++    PolkitQt1::Authority::Result m_result;
++};
++
+ } // namespace Auth
+ 
+ #endif

@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+sed -i "s/Version:.*/Version: $1/g" boost.spec
+ver=$(echo $1|sed -e 's/\./\_/g')
+sed -i "s/%define version_enc.*/%define version_enc $ver/g" boost.spec
+popd

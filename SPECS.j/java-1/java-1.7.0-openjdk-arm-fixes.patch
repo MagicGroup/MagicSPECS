@@ -1,0 +1,22 @@
+diff -up openjdk/jdk/make/jdk_generic_profile.sh.sav openjdk/jdk/make/jdk_generic_profile.sh
+--- openjdk/jdk/make/jdk_generic_profile.sh.sav	2012-02-14 16:12:48.000000000 -0500
++++ openjdk/jdk/make/jdk_generic_profile.sh	2012-03-07 17:31:26.154840740 -0500
+@@ -280,7 +280,7 @@ if [ "${ZERO_BUILD}" = true ] ; then
+ 
+   # ZERO_ENDIANNESS is the endianness of the processor
+   case "${ZERO_LIBARCH}" in
+-    i386|amd64|ia64)
++    i386|amd64|ia64|arm)
+       ZERO_ENDIANNESS=little
+       ;;
+     ppc*|s390*|sparc*|alpha)
+@@ -307,6 +307,9 @@ if [ "${ZERO_BUILD}" = true ] ; then
+     s390)
+       ZERO_ARCHFLAG="-m31"
+       ;;
++    arm)
++      ZERO_ARCHFLAG="-D_LITTLE_ENDIAN"
++      ;;
+     *)
+       ZERO_ARCHFLAG="-m${ARCH_DATA_MODEL}"
+   esac

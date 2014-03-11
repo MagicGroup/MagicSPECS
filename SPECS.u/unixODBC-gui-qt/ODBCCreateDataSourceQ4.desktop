@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ODBC Data Source Wizard
+Comment=ODBC Data Source Wizard Tool
+Exec=ODBCCreateDataSourceQ4
+Icon=ODBCCreateDataSourceQ4
+Type=Application
+Terminal=false
+Categories=Settings;

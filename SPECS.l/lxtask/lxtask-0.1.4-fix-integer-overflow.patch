@@ -1,0 +1,54 @@
+From 2dbcf129cd830bc3b50a2e040f862026eb1d9ab7 Mon Sep 17 00:00:00 2001
+From: dgod <dgod.osa@gmail.com>
+Date: Sun, 12 Feb 2012 17:32:14 +0800
+Subject: [PATCH] fix integer overflow in memory show
+
+---
+ src/interface.c              |    4 ++--
+ src/xfce-taskmanager-linux.c |    8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/interface.c b/src/interface.c
+index 52c6727..62e89ff 100644
+--- a/src/interface.c
++++ b/src/interface.c
+@@ -430,10 +430,10 @@ void fill_list_item(gint i, GtkTreeIter *iter)
+         gtk_tree_store_set(GTK_TREE_STORE(list_store), iter, COLUMN_STATE, task->state, -1);
+ 
+         /* size */
+-        gtk_tree_store_set(GTK_TREE_STORE(list_store), iter, COLUMN_MEM, size_to_string(buf, task->size * 1024), -1);
++        gtk_tree_store_set(GTK_TREE_STORE(list_store), iter, COLUMN_MEM, size_to_string(buf, ((guint64)task->size)*1024), -1);
+ 
+         /* rss */
+-        gtk_tree_store_set(GTK_TREE_STORE(list_store), iter, COLUMN_RSS, size_to_string(buf, task->rss*1024), -1);
++        gtk_tree_store_set(GTK_TREE_STORE(list_store), iter, COLUMN_RSS, size_to_string(buf, ((guint64)task->rss)*1024), -1);
+ 
+         gtk_tree_store_set(GTK_TREE_STORE(list_store), iter, COLUMN_UNAME, task->uname, -1);
+         sprintf(buf,"%0d%%", (guint)task->time_percentage);
+diff --git a/src/xfce-taskmanager-linux.c b/src/xfce-taskmanager-linux.c
+index 9941ebb..95f5022 100644
+--- a/src/xfce-taskmanager-linux.c
++++ b/src/xfce-taskmanager-linux.c
+@@ -37,15 +37,15 @@ void get_task_details(gint pid,struct task *task)
+ 
+ 	task->pid=-1;
+ 	task->checked=FALSE;
+-        task->size=0;
++	task->size=0;
+ 
+ 	sprintf(line,"/proc/%d/statm",pid);
+         fd=open(line,O_RDONLY);
+         if(fd==-1) return;
+         read(fd,line,256);
+-        sscanf(line,"%d %d",&task->size,&task->rss);
+-        close(fd);
+-        if(!task->size) return;
++	sscanf(line,"%d %d",&task->size,&task->rss);
++	close(fd);
++	if(!task->size) return;
+ 	task->size*=PAGE_SIZE;
+ 	task->rss*=PAGE_SIZE;
+ 
+-- 
+1.7.4.1
+

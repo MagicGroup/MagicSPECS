@@ -1,0 +1,1735 @@
+diff -ur wine-1.1.44.orig/dlls/appwiz.cpl/Makefile.in wine-1.1.44/dlls/appwiz.cpl/Makefile.in
+--- wine-1.1.44.orig/dlls/appwiz.cpl/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/appwiz.cpl/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -9,21 +9,9 @@
+ 	appwiz.c
+ 
+ RC_SRCS = \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+ 	Zh.rc \
+ 	appwiz.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/avifil32/Makefile.in wine-1.1.44/dlls/avifil32/Makefile.in
+--- wine-1.1.44.orig/dlls/avifil32/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/avifil32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -20,27 +20,9 @@
+ 	wavfile.c
+ 
+ RC_SRCS = \
+-	avifile_Cs.rc \
+-	avifile_Da.rc \
+-	avifile_De.rc \
+ 	avifile_En.rc \
+-	avifile_Es.rc \
+-	avifile_Fr.rc \
+-	avifile_Hu.rc \
+-	avifile_It.rc \
+ 	avifile_Ja.rc \
+ 	avifile_Ko.rc \
+-	avifile_Lt.rc \
+-	avifile_Nl.rc \
+-	avifile_No.rc \
+-	avifile_Pl.rc \
+-	avifile_Pt.rc \
+-	avifile_Ro.rc \
+-	avifile_Ru.rc \
+-	avifile_Si.rc \
+-	avifile_Sv.rc \
+-	avifile_Tr.rc \
+-	avifile_Uk.rc \
+ 	avifile_Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/browseui/Makefile.in wine-1.1.44/dlls/browseui/Makefile.in
+--- wine-1.1.44.orig/dlls/browseui/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/browseui/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -15,22 +15,9 @@
+ 	regsvr.c
+ 
+ RC_SRCS = \
+-	rsrc_De.rc \
+ 	rsrc_En.rc \
+-	rsrc_Es.rc \
+-	rsrc_Fr.rc \
+-	rsrc_It.rc \
+ 	rsrc_Ja.rc \
+ 	rsrc_Ko.rc \
+-	rsrc_Lt.rc \
+-	rsrc_Nl.rc \
+-	rsrc_No.rc \
+-	rsrc_Pl.rc \
+-	rsrc_Pt.rc \
+-	rsrc_Ro.rc \
+-	rsrc_Ru.rc \
+-	rsrc_Si.rc \
+-	rsrc_Sv.rc \
+ 	rsrc_Zh.rc \
+ 	version.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/comctl32/Makefile.in wine-1.1.44/dlls/comctl32/Makefile.in
+--- wine-1.1.44.orig/dlls/comctl32/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/comctl32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -47,31 +47,9 @@
+ 	updown.c
+ 
+ RC_SRCS = \
+-	comctl_Bg.rc \
+-	comctl_Cs.rc \
+-	comctl_De.rc \
+-	comctl_El.rc \
+ 	comctl_En.rc \
+-	comctl_Eo.rc \
+-	comctl_Es.rc \
+-	comctl_Fr.rc \
+-	comctl_Hu.rc \
+-	comctl_It.rc \
+ 	comctl_Ja.rc \
+ 	comctl_Ko.rc \
+-	comctl_Lt.rc \
+-	comctl_Nl.rc \
+-	comctl_No.rc \
+-	comctl_Pl.rc \
+-	comctl_Pt.rc \
+-	comctl_Ro.rc \
+-	comctl_Ru.rc \
+-	comctl_Si.rc \
+-	comctl_Sk.rc \
+-	comctl_Sv.rc \
+-	comctl_Th.rc \
+-	comctl_Tr.rc \
+-	comctl_Uk.rc \
+ 	comctl_Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/comdlg32/Makefile.in wine-1.1.44/dlls/comdlg32/Makefile.in
+--- wine-1.1.44.orig/dlls/comdlg32/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/comdlg32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -18,35 +18,9 @@
+ 	printdlg.c
+ 
+ RC_SRCS = \
+-	cdlg_Bg.rc \
+-	cdlg_Ca.rc \
+-	cdlg_Cs.rc \
+-	cdlg_Da.rc \
+-	cdlg_De.rc \
+-	cdlg_El.rc \
+ 	cdlg_En.rc \
+-	cdlg_Eo.rc \
+-	cdlg_Es.rc \
+-	cdlg_Fi.rc \
+-	cdlg_Fr.rc \
+-	cdlg_Hu.rc \
+-	cdlg_It.rc \
+ 	cdlg_Ja.rc \
+ 	cdlg_Ko.rc \
+-	cdlg_Lt.rc \
+-	cdlg_Nl.rc \
+-	cdlg_No.rc \
+-	cdlg_Pl.rc \
+-	cdlg_Pt.rc \
+-	cdlg_Ro.rc \
+-	cdlg_Ru.rc \
+-	cdlg_Si.rc \
+-	cdlg_Sk.rc \
+-	cdlg_Sv.rc \
+-	cdlg_Th.rc \
+-	cdlg_Tr.rc \
+-	cdlg_Uk.rc \
+-	cdlg_Wa.rc \
+ 	cdlg_Zh.rc \
+ 	cdlg_xx.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/credui/Makefile.in wine-1.1.44/dlls/credui/Makefile.in
+--- wine-1.1.44.orig/dlls/credui/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/credui/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -11,23 +11,8 @@
+ 
+ RC_SRCS = \
+ 	credui.rc \
+-	credui_Da.rc \
+-	credui_De.rc \
+ 	credui_En.rc \
+-	credui_Es.rc \
+-	credui_Fr.rc \
+-	credui_It.rc \
+ 	credui_Ko.rc \
+-	credui_Lt.rc \
+-	credui_Nl.rc \
+-	credui_No.rc \
+-	credui_Pl.rc \
+-	credui_Pt.rc \
+-	credui_Ro.rc \
+-	credui_Ru.rc \
+-	credui_Si.rc \
+-	credui_Sv.rc \
+-	credui_Uk.rc \
+ 	credui_Zh.rc
+ 
+ SVG_SRCS = \
+diff -ur wine-1.1.44.orig/dlls/crypt32/Makefile.in wine-1.1.44/dlls/crypt32/Makefile.in
+--- wine-1.1.44.orig/dlls/crypt32/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/crypt32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -35,17 +35,8 @@
+ 	str.c
+ 
+ RC_SRCS = \
+-	crypt32_De.rc \
+ 	crypt32_En.rc \
+-	crypt32_Fr.rc \
+ 	crypt32_Ko.rc \
+-	crypt32_Lt.rc \
+-	crypt32_Nl.rc \
+-	crypt32_No.rc \
+-	crypt32_Pt.rc \
+-	crypt32_Ro.rc \
+-	crypt32_Sv.rc \
+-	crypt32_Uk.rc \
+ 	version.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/cryptdlg/Makefile.in wine-1.1.44/dlls/cryptdlg/Makefile.in
+--- wine-1.1.44.orig/dlls/cryptdlg/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/cryptdlg/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -9,14 +9,7 @@
+ 	main.c
+ 
+ RC_SRCS = \
+-	cryptdlg_De.rc \
+ 	cryptdlg_En.rc \
+-	cryptdlg_Fr.rc \
+-	cryptdlg_Ko.rc \
+-	cryptdlg_Lt.rc \
+-	cryptdlg_Nl.rc \
+-	cryptdlg_Pt.rc \
+-	cryptdlg_Ro.rc \
+-	cryptdlg_Uk.rc
++	cryptdlg_Ko.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/cryptui/Makefile.in wine-1.1.44/dlls/cryptui/Makefile.in
+--- wine-1.1.44.orig/dlls/cryptui/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/cryptui/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,12 +12,7 @@
+ 
+ RC_SRCS = \
+ 	cryptui.rc \
+-	cryptui_De.rc \
+ 	cryptui_En.rc \
+-	cryptui_Fr.rc \
+-	cryptui_Ko.rc \
+-	cryptui_Lt.rc \
+-	cryptui_Nl.rc \
+-	cryptui_Pt.rc
++	cryptui_Ko.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/gphoto2.ds/Makefile.in wine-1.1.44/dlls/gphoto2.ds/Makefile.in
+--- wine-1.1.44.orig/dlls/gphoto2.ds/Makefile.in	2010-05-10 09:04:12.000000000 +0800
++++ wine-1.1.44/dlls/gphoto2.ds/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -14,20 +14,8 @@
+ 	ui.c
+ 
+ RC_SRCS = \
+-	gphoto2_Da.rc \
+-	gphoto2_De.rc \
+ 	gphoto2_En.rc \
+-	gphoto2_Es.rc \
+-	gphoto2_Fr.rc \
+ 	gphoto2_Ko.rc \
+-	gphoto2_Lt.rc \
+-	gphoto2_Nl.rc \
+-	gphoto2_No.rc \
+-	gphoto2_Pl.rc \
+-	gphoto2_Pt.rc \
+-	gphoto2_Ru.rc \
+-	gphoto2_Si.rc \
+-	gphoto2_Sv.rc \
+ 	gphoto2_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/hhctrl.ocx/Makefile.in wine-1.1.44/dlls/hhctrl.ocx/Makefile.in
+--- wine-1.1.44.orig/dlls/hhctrl.ocx/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/hhctrl.ocx/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -17,26 +17,8 @@
+ 	webbrowser.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+-	El.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+-	Uk.rc \
+ 	Zh.rc \
+ 	version.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/iccvid/Makefile.in wine-1.1.44/dlls/iccvid/Makefile.in
+--- wine-1.1.44.orig/dlls/iccvid/Makefile.in	2010-05-10 09:04:08.000000000 +0800
++++ wine-1.1.44/dlls/iccvid/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -9,23 +9,8 @@
+ 	iccvid.c
+ 
+ RC_SRCS = \
+-	iccvid_Da.rc \
+-	iccvid_De.rc \
+ 	iccvid_En.rc \
+-	iccvid_Es.rc \
+-	iccvid_Fr.rc \
+-	iccvid_Hu.rc \
+ 	iccvid_Ja.rc \
+-	iccvid_Ko.rc \
+-	iccvid_Lt.rc \
+-	iccvid_Nl.rc \
+-	iccvid_No.rc \
+-	iccvid_Pl.rc \
+-	iccvid_Pt.rc \
+-	iccvid_Ro.rc \
+-	iccvid_Ru.rc \
+-	iccvid_Si.rc \
+-	iccvid_Sv.rc \
+-	iccvid_Tr.rc
++	iccvid_Ko.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/jscript/Makefile.in wine-1.1.44/dlls/jscript/Makefile.in
+--- wine-1.1.44.orig/dlls/jscript/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/jscript/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -6,14 +6,8 @@
+ IMPORTS   = oleaut32 ole32 user32 advapi32 kernel32
+ 
+ RC_SRCS = \
+-	jscript_De.rc \
+ 	jscript_En.rc \
+-	jscript_Fr.rc \
+ 	jscript_Ko.rc \
+-	jscript_Lt.rc \
+-	jscript_Nl.rc \
+-	jscript_Pt.rc \
+-	jscript_Ru.rc \
+ 	rsrc.rc
+ 
+ C_SRCS = \
+diff -ur wine-1.1.44.orig/dlls/localspl/Makefile.in wine-1.1.44/dlls/localspl/Makefile.in
+--- wine-1.1.44.orig/dlls/localspl/Makefile.in	2010-05-10 09:04:11.000000000 +0800
++++ wine-1.1.44/dlls/localspl/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,21 +12,8 @@
+ 
+ RC_SRCS = \
+ 	localspl.rc \
+-	spl_Da.rc \
+-	spl_De.rc \
+ 	spl_En.rc \
+-	spl_Es.rc \
+-	spl_Fr.rc \
+ 	spl_Ko.rc \
+-	spl_Lt.rc \
+-	spl_Nl.rc \
+-	spl_No.rc \
+-	spl_Pl.rc \
+-	spl_Pt.rc \
+-	spl_Ro.rc \
+-	spl_Ru.rc \
+-	spl_Si.rc \
+-	spl_Sv.rc \
+ 	spl_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/localui/Makefile.in wine-1.1.44/dlls/localui/Makefile.in
+--- wine-1.1.44.orig/dlls/localui/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/localui/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -10,20 +10,8 @@
+ 
+ RC_SRCS = \
+ 	localui.rc \
+-	ui_Da.rc \
+-	ui_De.rc \
+ 	ui_En.rc \
+-	ui_Fr.rc \
+ 	ui_Ko.rc \
+-	ui_Lt.rc \
+-	ui_Nl.rc \
+-	ui_No.rc \
+-	ui_Pl.rc \
+-	ui_Pt.rc \
+-	ui_Ro.rc \
+-	ui_Ru.rc \
+-	ui_Si.rc \
+-	ui_Sv.rc \
+ 	ui_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/mapi32/Makefile.in wine-1.1.44/dlls/mapi32/Makefile.in
+--- wine-1.1.44.orig/dlls/mapi32/Makefile.in	2010-05-10 09:04:08.000000000 +0800
++++ wine-1.1.44/dlls/mapi32/Makefile.in	2010-05-10 09:11:00.000000000 +0800
+@@ -14,13 +14,7 @@
+ 	util.c
+ 
+ RC_SRCS = \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	Ru.rc \
+ 	version.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/mpr/Makefile.in wine-1.1.44/dlls/mpr/Makefile.in
+--- wine-1.1.44.orig/dlls/mpr/Makefile.in	2010-05-10 09:04:01.000000000 +0800
++++ wine-1.1.44/dlls/mpr/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -15,29 +15,9 @@
+ 	wnet.c
+ 
+ RC_SRCS = \
+-	mpr_Bg.rc \
+-	mpr_Cs.rc \
+-	mpr_Da.rc \
+-	mpr_De.rc \
+ 	mpr_En.rc \
+-	mpr_Eo.rc \
+-	mpr_Es.rc \
+-	mpr_Fr.rc \
+-	mpr_Hu.rc \
+-	mpr_It.rc \
+ 	mpr_Ja.rc \
+ 	mpr_Ko.rc \
+-	mpr_Lt.rc \
+-	mpr_Nl.rc \
+-	mpr_No.rc \
+-	mpr_Pl.rc \
+-	mpr_Pt.rc \
+-	mpr_Ro.rc \
+-	mpr_Ru.rc \
+-	mpr_Si.rc \
+-	mpr_Sv.rc \
+-	mpr_Tr.rc \
+-	mpr_Uk.rc \
+ 	mpr_Zh.rc \
+ 	version.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/msacm32/Makefile.in wine-1.1.44/dlls/msacm32/Makefile.in
+--- wine-1.1.44.orig/dlls/msacm32/Makefile.in	2010-05-10 09:04:08.000000000 +0800
++++ wine-1.1.44/dlls/msacm32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -16,27 +16,9 @@
+ 	stream.c
+ 
+ RC_SRCS = \
+-	msacm_Cs.rc \
+-	msacm_Da.rc \
+-	msacm_De.rc \
+ 	msacm_En.rc \
+-	msacm_Es.rc \
+-	msacm_Fr.rc \
+-	msacm_Hu.rc \
+-	msacm_It.rc \
+ 	msacm_Ja.rc \
+ 	msacm_Ko.rc \
+-	msacm_Lt.rc \
+-	msacm_Nl.rc \
+-	msacm_No.rc \
+-	msacm_Pl.rc \
+-	msacm_Pt.rc \
+-	msacm_Ro.rc \
+-	msacm_Ru.rc \
+-	msacm_Si.rc \
+-	msacm_Sv.rc \
+-	msacm_Tr.rc \
+-	msacm_Uk.rc \
+ 	msacm_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/mshtml/Makefile.in wine-1.1.44/dlls/mshtml/Makefile.in
+--- wine-1.1.44.orig/dlls/mshtml/Makefile.in	2010-05-10 09:04:08.000000000 +0800
++++ wine-1.1.44/dlls/mshtml/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -72,28 +72,9 @@
+ 	view.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+-	Uk.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/msi/Makefile.in wine-1.1.44/dlls/msi/Makefile.in
+--- wine-1.1.44.orig/dlls/msi/Makefile.in	2010-05-10 09:04:01.000000000 +0800
++++ wine-1.1.44/dlls/msi/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -61,28 +61,8 @@
+ 
+ RC_SRCS = \
+ 	msi.rc \
+-	msi_Bg.rc \
+-	msi_Da.rc \
+-	msi_De.rc \
+ 	msi_En.rc \
+-	msi_Eo.rc \
+-	msi_Es.rc \
+-	msi_Fi.rc \
+-	msi_Fr.rc \
+-	msi_Hu.rc \
+-	msi_It.rc \
+ 	msi_Ko.rc \
+-	msi_Lt.rc \
+-	msi_Nl.rc \
+-	msi_No.rc \
+-	msi_Pl.rc \
+-	msi_Pt.rc \
+-	msi_Ro.rc \
+-	msi_Ru.rc \
+-	msi_Si.rc \
+-	msi_Sv.rc \
+-	msi_Tr.rc \
+-	msi_Uk.rc \
+ 	msi_Zh.rc \
+ 	version.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/msrle32/Makefile.in wine-1.1.44/dlls/msrle32/Makefile.in
+--- wine-1.1.44.orig/dlls/msrle32/Makefile.in	2010-05-10 09:04:08.000000000 +0800
++++ wine-1.1.44/dlls/msrle32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -8,27 +8,8 @@
+ C_SRCS = msrle32.c
+ 
+ RC_SRCS = \
+-	msrle_Bg.rc \
+-	msrle_Cs.rc \
+-	msrle_Da.rc \
+-	msrle_De.rc \
+ 	msrle_En.rc \
+-	msrle_Es.rc \
+-	msrle_Fr.rc \
+-	msrle_Hu.rc \
+-	msrle_It.rc \
+ 	msrle_Ja.rc \
+-	msrle_Ko.rc \
+-	msrle_Lt.rc \
+-	msrle_Nl.rc \
+-	msrle_No.rc \
+-	msrle_Pl.rc \
+-	msrle_Pt.rc \
+-	msrle_Ro.rc \
+-	msrle_Ru.rc \
+-	msrle_Si.rc \
+-	msrle_Sv.rc \
+-	msrle_Tr.rc \
+-	msrle_Uk.rc
++	msrle_Ko.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/msvfw32/Makefile.in wine-1.1.44/dlls/msvfw32/Makefile.in
+--- wine-1.1.44.orig/dlls/msvfw32/Makefile.in	2010-05-10 09:04:08.000000000 +0800
++++ wine-1.1.44/dlls/msvfw32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,24 +12,8 @@
+ 	msvideo_main.c
+ 
+ RC_SRCS = \
+-	msvfw32_Da.rc \
+-	msvfw32_De.rc \
+ 	msvfw32_En.rc \
+-	msvfw32_Es.rc \
+-	msvfw32_Fr.rc \
+-	msvfw32_Hu.rc \
+-	msvfw32_It.rc \
+ 	msvfw32_Ko.rc \
+-	msvfw32_Lt.rc \
+-	msvfw32_Nl.rc \
+-	msvfw32_No.rc \
+-	msvfw32_Pl.rc \
+-	msvfw32_Pt.rc \
+-	msvfw32_Ru.rc \
+-	msvfw32_Si.rc \
+-	msvfw32_Sv.rc \
+-	msvfw32_Tr.rc \
+-	msvfw32_Uk.rc \
+ 	msvfw32_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/msvidc32/Makefile.in wine-1.1.44/dlls/msvidc32/Makefile.in
+--- wine-1.1.44.orig/dlls/msvidc32/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/msvidc32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -9,23 +9,8 @@
+ 	msvideo1.c
+ 
+ RC_SRCS = \
+-	msvidc32_Da.rc \
+-	msvidc32_De.rc \
+ 	msvidc32_En.rc \
+-	msvidc32_Fr.rc \
+-	msvidc32_Hu.rc \
+ 	msvidc32_Ja.rc \
+-	msvidc32_Ko.rc \
+-	msvidc32_Lt.rc \
+-	msvidc32_Nl.rc \
+-	msvidc32_No.rc \
+-	msvidc32_Pl.rc \
+-	msvidc32_Pt.rc \
+-	msvidc32_Ro.rc \
+-	msvidc32_Ru.rc \
+-	msvidc32_Si.rc \
+-	msvidc32_Sv.rc \
+-	msvidc32_Tr.rc \
+-	msvidc32_Uk.rc
++	msvidc32_Ko.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/oleacc/Makefile.in wine-1.1.44/dlls/oleacc/Makefile.in
+--- wine-1.1.44.orig/dlls/oleacc/Makefile.in	2010-05-10 09:04:11.000000000 +0800
++++ wine-1.1.44/dlls/oleacc/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -10,15 +10,7 @@
+ 	main.c
+ 
+ RC_SRCS = \
+-	oleacc_De.rc \
+ 	oleacc_En.rc \
+-	oleacc_Fr.rc \
+-	oleacc_Ko.rc \
+-	oleacc_Lt.rc \
+-	oleacc_Nl.rc \
+-	oleacc_No.rc \
+-	oleacc_Pl.rc \
+-	oleacc_Pt.rc \
+-	oleacc_Ro.rc
++	oleacc_Ko.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/oleaut32/Makefile.in wine-1.1.44/dlls/oleaut32/Makefile.in
+--- wine-1.1.44.orig/dlls/oleaut32/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/oleaut32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -30,30 +30,8 @@
+ 	vartype.c
+ 
+ RC_SRCS = \
+-	oleaut32_Bg.rc \
+-	oleaut32_Cz.rc \
+-	oleaut32_Da.rc \
+-	oleaut32_De.rc \
+-	oleaut32_El.rc \
+ 	oleaut32_En.rc \
+-	oleaut32_Eo.rc \
+-	oleaut32_Es.rc \
+-	oleaut32_Fr.rc \
+-	oleaut32_Hu.rc \
+-	oleaut32_It.rc \
+ 	oleaut32_Ko.rc \
+-	oleaut32_Lt.rc \
+-	oleaut32_Nl.rc \
+-	oleaut32_No.rc \
+-	oleaut32_Pl.rc \
+-	oleaut32_Pt.rc \
+-	oleaut32_Ro.rc \
+-	oleaut32_Ru.rc \
+-	oleaut32_Si.rc \
+-	oleaut32_Sv.rc \
+-	oleaut32_Th.rc \
+-	oleaut32_Tr.rc \
+-	oleaut32_Uk.rc \
+ 	oleaut32_Zh.rc \
+ 	version.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/oledlg/Makefile.in wine-1.1.44/dlls/oledlg/Makefile.in
+--- wine-1.1.44.orig/dlls/oledlg/Makefile.in	2010-05-10 09:04:11.000000000 +0800
++++ wine-1.1.44/dlls/oledlg/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,25 +12,9 @@
+ 	pastespl.c
+ 
+ RC_SRCS = \
+-	oledlg_Cs.rc \
+-	oledlg_Da.rc \
+-	oledlg_De.rc \
+ 	oledlg_En.rc \
+-	oledlg_Es.rc \
+-	oledlg_Fr.rc \
+-	oledlg_Hu.rc \
+-	oledlg_It.rc \
+ 	oledlg_Ja.rc \
+ 	oledlg_Ko.rc \
+-	oledlg_Lt.rc \
+-	oledlg_Nl.rc \
+-	oledlg_No.rc \
+-	oledlg_Pl.rc \
+-	oledlg_Pt.rc \
+-	oledlg_Ru.rc \
+-	oledlg_Si.rc \
+-	oledlg_Sv.rc \
+-	oledlg_Tr.rc \
+ 	oledlg_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/sane.ds/Makefile.in wine-1.1.44/dlls/sane.ds/Makefile.in
+--- wine-1.1.44.orig/dlls/sane.ds/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/sane.ds/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -15,23 +15,9 @@
+ 	ui.c
+ 
+ RC_SRCS = \
+-	sane_Da.rc \
+-	sane_De.rc \
+ 	sane_En.rc \
+-	sane_Es.rc \
+-	sane_Fi.rc \
+-	sane_Fr.rc \
+ 	sane_Ja.rc \
+ 	sane_Ko.rc \
+-	sane_Lt.rc \
+-	sane_Nl.rc \
+-	sane_No.rc \
+-	sane_Pl.rc \
+-	sane_Pt.rc \
+-	sane_Ro.rc \
+-	sane_Ru.rc \
+-	sane_Si.rc \
+-	sane_Sv.rc \
+ 	sane_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/serialui/Makefile.in wine-1.1.44/dlls/serialui/Makefile.in
+--- wine-1.1.44.orig/dlls/serialui/Makefile.in	2010-05-10 09:04:12.000000000 +0800
++++ wine-1.1.44/dlls/serialui/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -10,27 +10,9 @@
+ 	confdlg.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/setupapi/Makefile.in wine-1.1.44/dlls/setupapi/Makefile.in
+--- wine-1.1.44.orig/dlls/setupapi/Makefile.in	2010-05-10 09:04:12.000000000 +0800
++++ wine-1.1.44/dlls/setupapi/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -24,30 +24,9 @@
+ 	stubs.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sk.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/shdoclc/Makefile.in wine-1.1.44/dlls/shdoclc/Makefile.in
+--- wine-1.1.44.orig/dlls/shdoclc/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/shdoclc/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -6,25 +6,8 @@
+ IMPORTS   = kernel32
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+-	Uk.rc \
+ 	Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/shell32/Makefile.in wine-1.1.44/dlls/shell32/Makefile.in
+--- wine-1.1.44.orig/dlls/shell32/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/shell32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -57,33 +57,9 @@
+ 	xdg.c
+ 
+ RC_SRCS = \
+-	shell32_Bg.rc \
+-	shell32_Ca.rc \
+-	shell32_Cs.rc \
+-	shell32_Da.rc \
+-	shell32_De.rc \
+ 	shell32_En.rc \
+-	shell32_Eo.rc \
+-	shell32_Es.rc \
+-	shell32_Fi.rc \
+-	shell32_Fr.rc \
+-	shell32_Hu.rc \
+-	shell32_It.rc \
+ 	shell32_Ja.rc \
+ 	shell32_Ko.rc \
+-	shell32_Lt.rc \
+-	shell32_Nl.rc \
+-	shell32_No.rc \
+-	shell32_Pl.rc \
+-	shell32_Pt.rc \
+-	shell32_Ro.rc \
+-	shell32_Ru.rc \
+-	shell32_Si.rc \
+-	shell32_Sk.rc \
+-	shell32_Sv.rc \
+-	shell32_Tr.rc \
+-	shell32_Uk.rc \
+-	shell32_Wa.rc \
+ 	shell32_Zh.rc \
+ 	shres.rc \
+ 	version.rc
+diff -ur wine-1.1.44.orig/dlls/shlwapi/Makefile.in wine-1.1.44/dlls/shlwapi/Makefile.in
+--- wine-1.1.44.orig/dlls/shlwapi/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/shlwapi/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -25,29 +25,9 @@
+ 	wsprintf.c
+ 
+ RC_SRCS = \
+-	shlwapi_Da.rc \
+-	shlwapi_De.rc \
+ 	shlwapi_En.rc \
+-	shlwapi_Eo.rc \
+-	shlwapi_Es.rc \
+-	shlwapi_Fi.rc \
+-	shlwapi_Fr.rc \
+-	shlwapi_Hu.rc \
+-	shlwapi_It.rc \
+ 	shlwapi_Ja.rc \
+ 	shlwapi_Ko.rc \
+-	shlwapi_Lt.rc \
+-	shlwapi_Nl.rc \
+-	shlwapi_No.rc \
+-	shlwapi_Pl.rc \
+-	shlwapi_Pt.rc \
+-	shlwapi_Ro.rc \
+-	shlwapi_Ru.rc \
+-	shlwapi_Si.rc \
+-	shlwapi_Sk.rc \
+-	shlwapi_Sv.rc \
+-	shlwapi_Tr.rc \
+-	shlwapi_Uk.rc \
+ 	shlwapi_Zh.rc \
+ 	version.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/user32/Makefile.in wine-1.1.44/dlls/user32/Makefile.in
+--- wine-1.1.44.orig/dlls/user32/Makefile.in	2010-05-10 09:04:12.000000000 +0800
++++ wine-1.1.44/dlls/user32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -55,33 +55,9 @@
+ 	wsprintf.c
+ 
+ RC_SRCS = \
+-	resources/user32_Bg.rc \
+-	resources/user32_Ca.rc \
+-	resources/user32_Cs.rc \
+-	resources/user32_Da.rc \
+-	resources/user32_De.rc \
+ 	resources/user32_En.rc \
+-	resources/user32_Eo.rc \
+-	resources/user32_Es.rc \
+-	resources/user32_Fi.rc \
+-	resources/user32_Fr.rc \
+-	resources/user32_Hu.rc \
+-	resources/user32_It.rc \
+ 	resources/user32_Ja.rc \
+ 	resources/user32_Ko.rc \
+-	resources/user32_Lt.rc \
+-	resources/user32_Nl.rc \
+-	resources/user32_No.rc \
+-	resources/user32_Pl.rc \
+-	resources/user32_Pt.rc \
+-	resources/user32_Ro.rc \
+-	resources/user32_Ru.rc \
+-	resources/user32_Si.rc \
+-	resources/user32_Sk.rc \
+-	resources/user32_Sv.rc \
+-	resources/user32_Tr.rc \
+-	resources/user32_Uk.rc \
+-	resources/user32_Wa.rc \
+ 	resources/user32_Zh.rc \
+ 	resources/user32_bin.rc \
+ 	resources/version.rc
+diff -ur wine-1.1.44.orig/dlls/wineps.drv/Makefile.in wine-1.1.44/dlls/wineps.drv/Makefile.in
+--- wine-1.1.44.orig/dlls/wineps.drv/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/wineps.drv/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -68,28 +68,9 @@
+ 	type42.c
+ 
+ RC_SRCS= \
+-	wps_Bg.rc \
+-	wps_Cs.rc \
+-	wps_Da.rc \
+-	wps_De.rc \
+ 	wps_En.rc \
+-	wps_Es.rc \
+-	wps_Fr.rc \
+-	wps_Hu.rc \
+-	wps_It.rc \
+ 	wps_Ja.rc \
+ 	wps_Ko.rc \
+-	wps_Lt.rc \
+-	wps_Nl.rc \
+-	wps_No.rc \
+-	wps_Pl.rc \
+-	wps_Pt.rc \
+-	wps_Ro.rc \
+-	wps_Ru.rc \
+-	wps_Si.rc \
+-	wps_Sk.rc \
+-	wps_Sv.rc \
+-	wps_Tr.rc \
+ 	wps_Zh.rc
+ 
+ EXTRASUBDIRS = data
+diff -ur wine-1.1.44.orig/dlls/wininet/Makefile.in wine-1.1.44/dlls/wininet/Makefile.in
+--- wine-1.1.44.orig/dlls/wininet/Makefile.in	2010-05-10 09:04:12.000000000 +0800
++++ wine-1.1.44/dlls/wininet/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -23,30 +23,9 @@
+ 
+ RC_SRCS = \
+ 	version.rc \
+-	wininet_Bg.rc \
+-	wininet_Cs.rc \
+-	wininet_Da.rc \
+-	wininet_De.rc \
+ 	wininet_En.rc \
+-	wininet_Eo.rc \
+-	wininet_Es.rc \
+-	wininet_Fi.rc \
+-	wininet_Fr.rc \
+-	wininet_Hu.rc \
+-	wininet_It.rc \
+ 	wininet_Ja.rc \
+ 	wininet_Ko.rc \
+-	wininet_Lt.rc \
+-	wininet_Nl.rc \
+-	wininet_No.rc \
+-	wininet_Pl.rc \
+-	wininet_Pt.rc \
+-	wininet_Ro.rc \
+-	wininet_Ru.rc \
+-	wininet_Si.rc \
+-	wininet_Sv.rc \
+-	wininet_Tr.rc \
+-	wininet_Uk.rc \
+ 	wininet_Zh.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/winmm/Makefile.in wine-1.1.44/dlls/winmm/Makefile.in
+--- wine-1.1.44.orig/dlls/winmm/Makefile.in	2010-05-10 09:04:02.000000000 +0800
++++ wine-1.1.44/dlls/winmm/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -18,24 +18,9 @@
+ 	winmm.c
+ 
+ RC_SRCS = \
+-	winmm_Cs.rc \
+-	winmm_Da.rc \
+-	winmm_De.rc \
+ 	winmm_En.rc \
+-	winmm_Es.rc \
+-	winmm_Fr.rc \
+-	winmm_It.rc \
+ 	winmm_Ja.rc \
+ 	winmm_Ko.rc \
+-	winmm_Lt.rc \
+-	winmm_Nl.rc \
+-	winmm_No.rc \
+-	winmm_Pl.rc \
+-	winmm_Pt.rc \
+-	winmm_Ru.rc \
+-	winmm_Si.rc \
+-	winmm_Sk.rc \
+-	winmm_Tr.rc \
+ 	winmm_res.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/dlls/winspool.drv/Makefile.in wine-1.1.44/dlls/winspool.drv/Makefile.in
+--- wine-1.1.44.orig/dlls/winspool.drv/Makefile.in	2010-05-10 09:04:07.000000000 +0800
++++ wine-1.1.44/dlls/winspool.drv/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -13,26 +13,8 @@
+ 	wspool.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc \
+ 	winspool.rc
+ 
+diff -ur wine-1.1.44.orig/dlls/wldap32/Makefile.in wine-1.1.44/dlls/wldap32/Makefile.in
+--- wine-1.1.44.orig/dlls/wldap32/Makefile.in	2010-05-10 09:04:12.000000000 +0800
++++ wine-1.1.44/dlls/wldap32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -30,20 +30,7 @@
+ 	value.c
+ 
+ RC_SRCS = \
+-	wldap32_Da.rc \
+-	wldap32_De.rc \
+ 	wldap32_En.rc \
+-	wldap32_Es.rc \
+-	wldap32_Fr.rc \
+-	wldap32_Ko.rc \
+-	wldap32_Lt.rc \
+-	wldap32_Nl.rc \
+-	wldap32_No.rc \
+-	wldap32_Pl.rc \
+-	wldap32_Pt.rc \
+-	wldap32_Ru.rc \
+-	wldap32_Sv.rc \
+-	wldap32_Tr.rc \
+-	wldap32_Uk.rc
++	wldap32_Ko.rc
+ 
+ @MAKE_DLL_RULES@
+diff -ur wine-1.1.44.orig/programs/clock/Makefile.in wine-1.1.44/programs/clock/Makefile.in
+--- wine-1.1.44.orig/programs/clock/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/clock/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,31 +12,9 @@
+ 	winclock.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sk.rc \
+-	Sv.rc \
+-	Th.rc \
+-	Tr.rc \
+-	Wa.rc \
+ 	Zh.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/cmd/Makefile.in wine-1.1.44/programs/cmd/Makefile.in
+--- wine-1.1.44.orig/programs/cmd/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/cmd/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -14,23 +14,9 @@
+ 	wcmdmain.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Tr.rc \
+ 	wcmdrc.rc
+ 
+ SVG_SRCS = wcmd.svg
+diff -ur wine-1.1.44.orig/programs/cmdlgtst/Makefile.in wine-1.1.44/programs/cmdlgtst/Makefile.in
+--- wine-1.1.44.orig/programs/cmdlgtst/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/cmdlgtst/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -10,24 +10,9 @@
+ 	cmdlgtst.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	cmdlgr.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/net/Makefile.in wine-1.1.44/programs/net/Makefile.in
+--- wine-1.1.44.orig/programs/net/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/net/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -10,18 +10,7 @@
+ C_SRCS = net.c
+ 
+ RC_SRCS = \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Fr.rc \
+-	It.rc \
+-	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc
++	Ko.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/notepad/Makefile.in wine-1.1.44/programs/notepad/Makefile.in
+--- wine-1.1.44.orig/programs/notepad/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/notepad/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -14,31 +14,9 @@
+ 	main.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Th.rc \
+-	Tr.rc \
+-	Wa.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/programs/oleview/Makefile.in wine-1.1.44/programs/oleview/Makefile.in
+--- wine-1.1.44.orig/programs/oleview/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/oleview/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -16,19 +16,9 @@
+ 	typelib.c
+ 
+ RC_SRCS = \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Fr.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Sv.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/programs/progman/Makefile.in wine-1.1.44/programs/progman/Makefile.in
+--- wine-1.1.44.orig/programs/progman/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/progman/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -15,24 +15,8 @@
+ 	string.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc \
+ 	accel.rc
+ 
+diff -ur wine-1.1.44.orig/programs/reg/Makefile.in wine-1.1.44/programs/reg/Makefile.in
+--- wine-1.1.44.orig/programs/reg/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/reg/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -11,20 +11,8 @@
+ C_SRCS = reg.c
+ 
+ RC_SRCS = \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+-	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Uk.rc
++	Ko.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/regedit/Makefile.in wine-1.1.44/programs/regedit/Makefile.in
+--- wine-1.1.44.orig/programs/regedit/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/regedit/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -23,26 +23,9 @@
+ 	treeview.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/programs/start/Makefile.in wine-1.1.44/programs/start/Makefile.in
+--- wine-1.1.44.orig/programs/start/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/start/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -10,21 +10,8 @@
+ C_SRCS = start.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+-	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Tr.rc
++	Ko.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/taskmgr/Makefile.in wine-1.1.44/programs/taskmgr/Makefile.in
+--- wine-1.1.44.orig/programs/taskmgr/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/taskmgr/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -30,21 +30,8 @@
+ 	trayicon.c
+ 
+ RC_SRCS = \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Fr.rc \
+-	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc \
+ 	taskmgr.rc
+ 
+diff -ur wine-1.1.44.orig/programs/uninstaller/Makefile.in wine-1.1.44/programs/uninstaller/Makefile.in
+--- wine-1.1.44.orig/programs/uninstaller/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/uninstaller/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,29 +12,9 @@
+ 	main.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/view/Makefile.in wine-1.1.44/programs/view/Makefile.in
+--- wine-1.1.44.orig/programs/view/Makefile.in	2010-05-10 09:04:17.000000000 +0800
++++ wine-1.1.44/programs/view/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,26 +12,9 @@
+ 	winmain.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/wineboot/Makefile.in wine-1.1.44/programs/wineboot/Makefile.in
+--- wine-1.1.44.orig/programs/wineboot/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/wineboot/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -13,23 +13,9 @@
+ 	wineboot.c
+ 
+ RC_SRCS = \
+-	wineboot_Da.rc \
+-	wineboot_De.rc \
+ 	wineboot_En.rc \
+-	wineboot_Es.rc \
+-	wineboot_Fr.rc \
+-	wineboot_It.rc \
+ 	wineboot_Ja.rc \
+ 	wineboot_Ko.rc \
+-	wineboot_Lt.rc \
+-	wineboot_Nl.rc \
+-	wineboot_No.rc \
+-	wineboot_Pl.rc \
+-	wineboot_Pt.rc \
+-	wineboot_Ro.rc \
+-	wineboot_Ru.rc \
+-	wineboot_Si.rc \
+-	wineboot_Sv.rc \
+ 	wineboot_Zh.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/winecfg/Makefile.in wine-1.1.44/programs/winecfg/Makefile.in
+--- wine-1.1.44.orig/programs/winecfg/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/winecfg/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -19,28 +19,9 @@
+ 	x11drvdlg.c
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc \
+ 	winecfg.rc
+ 
+diff -ur wine-1.1.44.orig/programs/wineconsole/Makefile.in wine-1.1.44/programs/wineconsole/Makefile.in
+--- wine-1.1.44.orig/programs/wineconsole/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/wineconsole/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -16,24 +16,8 @@
+ 	wineconsole.c
+ 
+ RC_SRCS = \
+-	wineconsole_Cs.rc \
+-	wineconsole_De.rc \
+ 	wineconsole_En.rc \
+-	wineconsole_Eo.rc \
+-	wineconsole_Es.rc \
+-	wineconsole_Fr.rc \
+-	wineconsole_Hu.rc \
+-	wineconsole_It.rc \
+ 	wineconsole_Ko.rc \
+-	wineconsole_Lt.rc \
+-	wineconsole_Nl.rc \
+-	wineconsole_No.rc \
+-	wineconsole_Pl.rc \
+-	wineconsole_Pt.rc \
+-	wineconsole_Ru.rc \
+-	wineconsole_Si.rc \
+-	wineconsole_Sv.rc \
+-	wineconsole_Tr.rc \
+ 	wineconsole_Zh.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/winedbg/Makefile.in wine-1.1.44/programs/winedbg/Makefile.in
+--- wine-1.1.44.orig/programs/winedbg/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/winedbg/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -33,18 +33,8 @@
+ 	winedbg.c
+ 
+ RC_SRCS = \
+-	rsrc_De.rc \
+ 	rsrc_En.rc \
+-	rsrc_Es.rc \
+-	rsrc_Fr.rc \
+-	rsrc_It.rc \
+-	rsrc_Ko.rc \
+-	rsrc_Lt.rc \
+-	rsrc_Nl.rc \
+-	rsrc_No.rc \
+-	rsrc_Pt.rc \
+-	rsrc_Ru.rc \
+-	rsrc_Sv.rc
++	rsrc_Ko.rc
+ 
+ LEX_SRCS   = debug.l
+ BISON_SRCS = dbg.y
+diff -ur wine-1.1.44.orig/programs/winefile/Makefile.in wine-1.1.44/programs/winefile/Makefile.in
+--- wine-1.1.44.orig/programs/winefile/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/winefile/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,26 +12,9 @@
+ 	winefile.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+-	Uk.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/programs/winemine/Makefile.in wine-1.1.44/programs/winemine/Makefile.in
+--- wine-1.1.44.orig/programs/winemine/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/winemine/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -12,26 +12,9 @@
+ 	main.c
+ 
+ RC_SRCS = \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/programs/winhlp32/Makefile.in wine-1.1.44/programs/winhlp32/Makefile.in
+--- wine-1.1.44.orig/programs/winhlp32/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/winhlp32/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -19,32 +19,9 @@
+ EXTRARCFLAGS = -DWINELIB
+ 
+ RC_SRCS = \
+-	Bg.rc \
+-	Cs.rc \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Eo.rc \
+-	Es.rc \
+-	Fi.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Rm.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sk.rc \
+-	Sv.rc \
+-	Tr.rc \
+-	Wa.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/programs/wordpad/Makefile.in wine-1.1.44/programs/wordpad/Makefile.in
+--- wine-1.1.44.orig/programs/wordpad/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/wordpad/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -15,24 +15,9 @@
+ 	wordpad.c
+ 
+ RC_SRCS = \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Fr.rc \
+-	Hu.rc \
+-	It.rc \
+ 	Ja.rc \
+ 	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Tr.rc \
+-	Uk.rc \
+ 	Zh.rc \
+ 	rsrc.rc
+ 
+diff -ur wine-1.1.44.orig/programs/write/Makefile.in wine-1.1.44/programs/write/Makefile.in
+--- wine-1.1.44.orig/programs/write/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/write/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -10,21 +10,8 @@
+ C_SRCS = write.c
+ 
+ RC_SRCS = \
+-	De.rc \
+ 	En.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+-	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ro.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Sv.rc \
+-	Uk.rc
++	Ko.rc
+ 
+ @MAKE_PROG_RULES@
+diff -ur wine-1.1.44.orig/programs/xcopy/Makefile.in wine-1.1.44/programs/xcopy/Makefile.in
+--- wine-1.1.44.orig/programs/xcopy/Makefile.in	2010-05-10 09:04:18.000000000 +0800
++++ wine-1.1.44/programs/xcopy/Makefile.in	2010-05-10 09:10:15.000000000 +0800
+@@ -13,20 +13,8 @@
+ 	xcopy.c
+ 
+ RC_SRCS = \
+-	Da.rc \
+-	De.rc \
+ 	En.rc \
+-	Fr.rc \
+-	It.rc \
+ 	Ja.rc \
+-	Ko.rc \
+-	Lt.rc \
+-	Nl.rc \
+-	No.rc \
+-	Pl.rc \
+-	Pt.rc \
+-	Ru.rc \
+-	Si.rc \
+-	Uk.rc
++	Ko.rc
+ 
+ @MAKE_PROG_RULES@

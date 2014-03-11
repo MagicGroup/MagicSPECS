@@ -1,0 +1,49 @@
+diff -ur hal-0.5.13.orig/fdi/policy/10osvendor/20-storage-methods.fdi hal-0.5.13/fdi/policy/10osvendor/20-storage-methods.fdi
+--- hal-0.5.13.orig/fdi/policy/10osvendor/20-storage-methods.fdi	2009-08-14 10:39:57.000000000 +0800
++++ hal-0.5.13/fdi/policy/10osvendor/20-storage-methods.fdi	2009-08-14 10:41:17.000000000 +0800
+@@ -65,7 +65,7 @@
+ 	  <append key="volume.mount.valid_options" type="strlist">shortname=</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">codepage=</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">iocharset=</append>
+-	  <append key="volume.mount.valid_options" type="strlist">umask=</append>
++	  <append key="volume.mount.valid_options" type="strlist">umask=0</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">uid=</append>
+ 	</match>
+ 	<match key="/org/freedesktop/Hal/devices/computer:system.kernel.name" string="FreeBSD">
+@@ -175,11 +175,11 @@
+       <!-- allow these mount options for vfat -->
+       <match key="volume.fstype" string="vfat">
+ 	<match key="/org/freedesktop/Hal/devices/computer:system.kernel.name" string="Linux">
+-	  <append key="volume.mount.valid_options" type="strlist">utf8</append>
++	  <append key="volume.mount.valid_options" type="strlist">gbk</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">shortname=</append>
+-	  <append key="volume.mount.valid_options" type="strlist">codepage=</append>
+-	  <append key="volume.mount.valid_options" type="strlist">iocharset=</append>
+-	  <append key="volume.mount.valid_options" type="strlist">umask=</append>
++	  <append key="volume.mount.valid_options" type="strlist">codepage=936</append>
++	  <append key="volume.mount.valid_options" type="strlist">iocharset=cp936</append>
++	  <append key="volume.mount.valid_options" type="strlist">umask=0</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">dmask=</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">fmask=</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">uid=</append>
+@@ -218,6 +218,7 @@
+ 	  <append key="volume.mount.valid_options" type="strlist">uid=</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">gid=</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">umask=</append>
++	  <append key="volume.mount.valid_options" type="strlist">locale=zh_CN.GB18030</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">utf8</append>
+ 	</match>
+ 	<match key="/org/freedesktop/Hal/devices/computer:system.kernel.name" string="FreeBSD">
+@@ -272,10 +273,10 @@
+       <!-- iso9660 -->
+       <match key="volume.fstype" string="iso9660">
+ 	<match key="/org/freedesktop/Hal/devices/computer:system.kernel.name" string="Linux">
+-	  <append key="volume.mount.valid_options" type="strlist">utf8</append>
++	  <append key="volume.mount.valid_options" type="strlist">gbk</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">uid=</append>
+ 	  <append key="volume.mount.valid_options" type="strlist">mode=</append>
+-	  <append key="volume.mount.valid_options" type="strlist">iocharset=</append>
++	  <append key="volume.mount.valid_options" type="strlist">iocharset=cp936</append>
+ 	</match>
+ 	<match key="/org/freedesktop/Hal/devices/computer:system.kernel.name" string="FreeBSD">
+ 	  <append key="volume.mount.valid_options" type="strlist">extatt</append>

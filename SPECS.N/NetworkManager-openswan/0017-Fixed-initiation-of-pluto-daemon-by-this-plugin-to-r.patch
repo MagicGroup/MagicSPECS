@@ -1,0 +1,50 @@
+From 9dadb938c40e4d56fea6c6d55f3c9b90e776fb62 Mon Sep 17 00:00:00 2001
+From: Avesh Agarwal <avagarwa@redhat.com>
+Date: Tue, 10 Dec 2013 15:21:54 -0500
+Subject: [PATCH 17/20] Fixed initiation of pluto daemon by this plugin to
+ reflect the changes in libreaswan.
+
+---
+ src/nm-openswan-service.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/src/nm-openswan-service.c b/src/nm-openswan-service.c
+index b807bcc..f205c1d 100644
+--- a/src/nm-openswan-service.c
++++ b/src/nm-openswan-service.c
+@@ -49,7 +49,6 @@ G_DEFINE_TYPE (NMOPENSWANPlugin, nm_openswan_plugin, NM_TYPE_VPN_PLUGIN)
+ 
+ typedef struct {
+ 	GPid pid;
+-	GPid pid_auto;
+ } NMOPENSWANPluginPrivate;
+ 
+ #define NM_OPENSWAN_PLUGIN_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), NM_TYPE_OPENSWAN_PLUGIN, NMOPENSWANPluginPrivate))
+@@ -291,14 +290,20 @@ nm_openswan_start_openswan_binary (NMOPENSWANPlugin *plugin, GError **error)
+ 		return -1;
+ 	}
+ 
+-	openswan_argv = g_ptr_array_new ();
+-	g_ptr_array_add (openswan_argv, (gpointer) (*openswan_binary));
+-	g_ptr_array_add (openswan_argv, (gpointer) "setup");
++	/*openswan_argv = g_ptr_array_new ();
+ 	g_ptr_array_add (openswan_argv, (gpointer) "start");
+ 	g_ptr_array_add (openswan_argv, NULL);
+ 
++        g_ptr_array_free (openswan_argv, TRUE);*/
++	openswan_argv = g_ptr_array_new ();
++	g_ptr_array_add (openswan_argv, (gpointer) "/usr/libexec/ipsec/pluto");
++	g_ptr_array_add (openswan_argv, (gpointer) "--config");
++	g_ptr_array_add (openswan_argv, (gpointer) "/etc/ipsec.conf");
++	g_ptr_array_add (openswan_argv, (gpointer) "--nofork");
++	g_ptr_array_add (openswan_argv, NULL);
++
+ 	if (!g_spawn_async (NULL, (char **) openswan_argv->pdata, NULL,
+-							 0, NULL, NULL, &pid, error)) {
++							 G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, &pid, error)) {
+ 		g_ptr_array_free (openswan_argv, TRUE);
+ 		g_warning ("openswan ipsec failed to start.  error: '%s'", (*error)->message);
+ 		return -1;
+-- 
+1.8.3.1
+

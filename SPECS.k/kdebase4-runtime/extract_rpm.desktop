@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+Encoding=UTF-8
+Icon=application-x-rpm
+Actions=extract_rpm;
+ServiceTypes=KonqPopupMenu/Plugin,application/x-rpm
+X-KDE-Priority=TopLevel
+
+[Desktop Action extract_rpm]
+Icon=application-x-rpm
+Name=Extract rpm archive
+Name[zh_CN]=释放 rpm...
+Exec=mkdir -p %d/`echo %n | sed "s/.rpm$//"` && cd %d/`echo %n | sed "s/.rpm$//"` || exit; (rpm2cpio %d/%n | cpio -idu --quiet) && (rpm -qp --scripts %d/%n > `echo %n | sed "s/.rpm$//"`.scripts && rpm -qp --changelog %d/%n > `echo %n | sed "s/.rpm$//"`.changelog && rpm -qip %d/%n > `echo %n | sed "s/.rpm$//"`.info && rpm -qp --provides %d/%n > `echo %n | sed "s/.rpm$//"`.provides && rpm -qp --requires %d/%n > `echo %n | sed "s/.rpm$//"`.requires && rpm -qlp %d/%n > `echo %n | sed "s/.rpm$//"`.list)

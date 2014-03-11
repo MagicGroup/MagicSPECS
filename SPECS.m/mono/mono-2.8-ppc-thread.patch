@@ -1,0 +1,18 @@
+--- mono-2.8/mono/mini/main.c	2010-09-10 21:55:45.000000000 +0100
++++ mono-2.8/mono/mini/main-new.c	2010-09-15 13:26:40.582184193 +0100
+@@ -88,10 +88,14 @@
+ }
+ 
+ #else
+-
++#include <sched.h>
+ int
+ main (int argc, char* argv[])
+ {
++#ifdef __powerpc__
++  unsigned long mask = 1;
++  sched_setaffinity(0, sizeof(mask), &mask);
++#endif
+ 	mono_build_date = build_date;
+ 	
+ 	return mono_main_with_options (argc, argv);

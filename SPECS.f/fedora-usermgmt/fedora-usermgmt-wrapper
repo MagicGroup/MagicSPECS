@@ -1,0 +1,128 @@
+#! /bin/bash
+# --*- sh -*--
+
+# Copyright (C) 2003 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+
+PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+BASE_DIR=/etc/fedora/usermgmt
+
+ARGS=( "$0" "$@" )
+
+function invalidateCache {
+    local rc=0
+    {
+	# Enforce some nscd activity
+	id root || :
+	id nscd || :
+
+	# Clear the caches
+	/usr/sbin/nscd -i group  || rc=1
+	/usr/sbin/nscd -i passwd || rc=1
+
+	# Enforce some nscd activity
+	id root || :
+	id nscd || :
+    } &>/dev/null
+
+    return $rc
+}
+
+function panic {
+    echo "$*; aborting" >&2
+    logger -p auth.err -t "fedora-usermgmt[$$]" "$@"
+    logger -p auth.err -t "fedora-usermgmt[$$]" "cmd: [${ARGS[*]}]"
+    exit 1
+}
+
+# Usage: validateHint <result-var> <offset> <hint>
+function validateHint {
+    local tmp
+
+    let tmp="${3}"1
+    test $tmp -ne 0 || \
+	panic $"Hint '$3' is not a numeric value"
+
+    let tmp="$2"+"$3"
+    test $tmp -ge 0 || \
+	panic $"Hint '$3' evaluates to a negative value ($tmp)"
+
+    test $tmp -ge 100 || \
+	panic $"Hint '$2 + $3' evaluates to a static id; adjust $BASE_DIR/baseuid resp. $BASE_DIR/basegid"
+
+    eval $1=\$tmp
+}
+
+test -r "$BASE_DIR/baseuid" && BASE_UID=`cat "$BASE_DIR/baseuid"` || BASE_UID=300
+test -r "$BASE_DIR/basegid" && BASE_GID=`cat "$BASE_DIR/basegid"` || BASE_GID=$BASE_UID
+
+skin=$(basename $0)
+skin=${skin##fedora-}
+exec_name=
+
+for i in "$BASE_DIR/scripts/$skin" "$BASE_DIR/$skin"; do
+    test -x "$i" && { exec_name=$i; break; }
+done
+
+case $skin in
+    (useradd)
+	test "$1" != "--help" || {
+	    printf $"Usage: %s <UID> <useradd-args>+\n" "$(basename $0)"
+	    exit 0
+	}
+
+	test "$#" -ge 2 || \
+	    panic $"Missing argument; use '--help' for more information";
+
+	validateHint v "$BASE_UID" "$1"
+	shift
+	set -- "$v" "$@"
+	;;
+    (groupadd)
+	test "$1" != "--help" || {
+	    printf $"Usage: %s <GID> <groupadd-args>+\n" "$(basename $0)"
+	    exit 0
+	}
+
+	test "$#" -ge 2 || \
+	    panic $"Missing argument; use '--help' for more information";
+
+	validateHint v "$BASE_GID" "$1"
+	shift
+	set -- "$v" "$@"
+	;;
+    (*)  test "$exec_name" || exec_name=$skin;;
+esac
+
+log="$BASE_DIR/log"
+if test -e "$log"  -a -L "$log"; then
+    echo "`date` [$$]: '$exec_name' $*" >>"$BASE_DIR/log"
+    exec 1>>"$BASE_DIR/log"
+    exec 2>>"$BASE_DIR/log"
+fi
+
+test -n "$exec_name" || \
+    panic $"Wrapper could not be found"
+
+invalidateCache
+"$exec_name" "$@"
+rc=$?
+invalidateCache && sleep 1
+invalidateCache
+
+test $rc -eq 0 || echo "`date` [$$]: failed with '$rc'" >&2
+
+exit $rc

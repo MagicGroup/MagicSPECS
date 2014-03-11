@@ -1,0 +1,226 @@
+--- netkit-rsh-0.16/rlogind/auth.c.pamfix	Wed Oct 13 21:18:31 1999
++++ netkit-rsh-0.16/rlogind/auth.c	Wed Jan  5 12:52:49 2000
+@@ -47,6 +47,8 @@
+ #include <syslog.h>
+ #include <unistd.h>
+ #include <string.h>
++#include <pwd.h>
++#include <grp.h>
+ 
+ #include <sys/types.h>
+ #include <security/pam_appl.h>
+@@ -76,7 +78,11 @@
+     if (retval == PAM_SUCCESS) {
+ 	retval = pam_acct_mgmt(pamh, 0);
+     }
+-    if (retval == PAM_NEW_AUTHTOK_REQD) {
++    switch (retval) {
++    default:
++    case PAM_SUCCESS:
++	break;
++    case PAM_NEW_AUTHTOK_REQD:
+ 	retval = pam_chauthtok(pamh, PAM_CHANGE_EXPIRED_AUTHTOK);
+ 	if (retval == PAM_SUCCESS) {
+ 	    /* 
+@@ -92,16 +98,9 @@
+ 	     */
+ 	    retval = attempt_auth();
+ 	}
++	break;
+     }
+     return retval;
+-
+-#if 0    
+-    while (0); /* We have the while(0) here because it is either using
+-		    that and the breaks, or goto's */
+-    /* eww. -dah */
+-    /* well, replace it with goto's if you like! I won't tell! -mkj */
+-    /* How 'bout recursion? This better? :-)  -dah */
+-#endif
+ }
+ 
+ /*
+@@ -109,15 +108,11 @@
+  * or return 0 on authentication success. Dying is discouraged.
+  */
+ int auth_checkauth(const char *remoteuser, const char *host,
+-		   const char *localuser) 
++		   char *localuser, int localuserlen) 
+ {
+     static struct pam_conv conv = { sock_conv, NULL };
+-    const char *ln;
+-/*  int NMAX=8; heaven knows what this was used for */
+-    /* struct passwd *pwd; */
+     int retval;
+ 
+-/*    retval = pam_start("rlogin", lusername, &conv, &pamh); */
+     retval = pam_start("rlogin", localuser, &conv, &pamh);
+     if (retval != PAM_SUCCESS) {
+ 	syslog(LOG_ERR, "pam_start: %s\n", pam_strerror(pamh, retval));
+@@ -131,74 +126,39 @@
+ 	
+     network_confirm();
+     retval = attempt_auth();
+-    if (retval != PAM_SUCCESS) {
+-	syslog(LOG_ERR, "PAM authentication failed for in.rlogind");
+-	return -1;
+-    }
++    if (retval == PAM_SUCCESS) {
++	struct passwd *pwd;
++	char *ln;
+ 
+-    /*
+-     * I do not understand the purpose of this code. At present it 
+-     * won't (or at least shouldn't) compile, since localuser is
+-     * read-only and NMAX isn't defined.
+-     *
+-     * Is it perhaps the case that in the presence of a hosts_equiv
+-     * file to allow all users from the remote host, PAM returns
+-     * success even though there's no such user? In that case this 
+-     * code should probably be changed to the following:
+-     *
+-     *   const char *ln;
+-     *   pam_get_item(pamh, PAM_USER, &ln);
+-     *   if (!ln || !*ln) return -1;
+-     *
+-     * If it's really necessary to be able to change the localuser,
+-     * I suppose this can be managed.
+-     */
+-
+-    /* 
+-     * Changed to above suggestion as the previous code was fubared under 64bit
+-     * It used to be:
+-     *      pam_get_item(pamh, PAM_USER, &ln);
+-     *      if (ln && *ln) {
+-     *         (copy ln into localuser)
+-     *      }
+-     *      else return -1;
+-     *
+-     * THIS MAY NOT BE RIGHT.
+-     */
+-
+-    pam_get_item(pamh, PAM_USER, &ln);
+-    if (!ln || !*ln) {
+-	/*
+-	 * Authentication wasn't adequate for requirements.
+-	 * Fall through to login quietly; don't let the
+-	 * remote user tell if he's found a valid username 
+-	 * or not.
+-	 */
+-	return -1;
+-    }
++	pam_get_item(pamh, PAM_USER, &ln);
++	if (!(ln && *ln)) {
++	    /*
++	     * Authentication wasn't adequate for requirements.
++	     * Fall through to login quietly; don't let the
++	     * remote user tell if he's found a valid username 
++	     * or not.
++	     */
++	    return -1;
++	}
++	strncpy(localuser, ln, localuserlen-1);
++	localuser[localuserlen-1] = '\0';
+ 
+-    /*
+-     * And, as far as I can tell, this shouldn't be here at all.
+-     * /bin/login is supposed to handle this, isn't it? Certainly
+-     * the gids.
+-     */
+-#if 0
+-    pwd = getpwnam(lusername);
+-    /* what if pwd is null? */
+-    if (setgid(pwd->pw_gid) != 0) {
+-	fprintf(stderr, "cannot assume gid\n");
+-	return -1;
+-    }
+-    if (initgroups(lusername, pwd->pw_gid) != 0) {
+-	fprintf(stderr, "cannot initgroups\n");
+-	return -1;
++	pwd = getpwnam(localuser);
++	if (pwd == NULL || setgid(pwd->pw_gid) != 0) {
++	    syslog(LOG_ERR, "PAM cannot assume gid\n");
++	    return -1;
++	}
++	if (initgroups(localuser, pwd->pw_gid) != 0) {
++	    syslog(LOG_ERR, "PAM cannot initgroups\n");
++	    return -1;
++	}
++	retval = pam_setcred(pamh, PAM_ESTABLISH_CRED);
+     }
+-    retval = pam_setcred(pamh, PAM_CRED_ESTABLISH);
++
+     if (retval != PAM_SUCCESS) {
+-	syslog(LOG_ERR,"PAM authentication failed for in.rlogind");
++	syslog(LOG_ERR, "PAM authentication failed for in.rlogind");
+ 	return -1;
+     }
+-#endif
+ 
+     return 0;
+ }
+@@ -227,7 +187,7 @@
+  * or return 0 on authentication success. Dying is discouraged.
+  */
+ int auth_checkauth(const char *remoteuser, const char *host,
+-		   const char *localuser) 
++		   char *localuser, int localuserlen) 
+ {
+     struct passwd *pwd;
+     pwd = getpwnam(localuser);
+--- netkit-rsh-0.16/rlogind/rlogind.c.pamfix	Sat Oct  2 17:50:52 1999
++++ netkit-rsh-0.16/rlogind/rlogind.c	Wed Jan  5 12:49:49 2000
+@@ -334,6 +334,7 @@
+ static void child(const char *hname, const char *termtype,
+ 		  const char *localuser, int authenticated)
+ {
++    char *env[2];
+     char *termenv;
+ 
+     setup_term(0, termtype);
+@@ -343,12 +344,14 @@
+ 	strcpy(termenv, "TERM=");
+ 	strcat(termenv, termtype);
+     }
++    env[0] = termenv;
++    env[1] = NULL;
+ 
+     if (authenticated) {
+ 	auth_finish();
+ 	closeall();
+ 	execle(_PATH_LOGIN, "login", "-p",
+-	       "-h", hname, "-f", localuser, NULL, termenv, NULL);
++	       "-h", hname, "-f", localuser, NULL, env);
+     } 
+     else {
+ 	if (localuser[0] == '-') {
+@@ -358,7 +361,7 @@
+ 	auth_finish();
+ 	closeall();
+ 	execle(_PATH_LOGIN, "login", "-p",
+-	       "-h", hname, localuser, NULL, termenv, NULL);
++	       "-h", hname, localuser, NULL, env);
+     }
+     /* Can't exec login, croak */
+     fatal(STDERR_FILENO, _PATH_LOGIN, 1);
+@@ -399,7 +402,8 @@
+      * this will break anything or give away state secrets.
+      */
+     if (hostok) {
+-	if (auth_checkauth(rusername, hname, lusername) == 0) authenticated=1;
++	if (auth_checkauth(rusername, hname, lusername, sizeof(lusername)) == 0)
++	    authenticated=1;
+     }
+     network_confirm();
+ 
+--- netkit-rsh-0.16/rlogind/rlogind.h.pamfix	Fri Jun 13 06:02:46 1997
++++ netkit-rsh-0.16/rlogind/rlogind.h	Wed Jan  5 12:01:13 2000
+@@ -12,7 +12,7 @@
+ void auth_checkoptions(void);
+ void auth_finish(void);
+ int auth_checkauth(const char *remoteuser, const char *host,
+-		   const char *localuser);
++		   char *localuser, int localuserlen);
+ 
+ /* 
+  * Global flag variables 

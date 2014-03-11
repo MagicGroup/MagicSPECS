@@ -1,0 +1,12 @@
+diff -up chromium-6.0.425.0-20100603svn48849/chrome/browser/autofill/autofill_xml_parser.h.system-expat chromium-6.0.425.0-20100603svn48849/chrome/browser/autofill/autofill_xml_parser.h
+--- chromium-6.0.425.0-20100603svn48849/chrome/browser/autofill/autofill_xml_parser.h.system-expat	2010-06-03 14:30:56.000000000 -0400
++++ chromium-6.0.425.0-20100603svn48849/chrome/browser/autofill/autofill_xml_parser.h	2010-06-03 16:58:16.607188633 -0400
+@@ -10,7 +10,7 @@
+ #include "base/basictypes.h"
+ #include "chrome/browser/autofill/field_types.h"
+ #include "chrome/browser/autofill/form_structure.h"
+-#include "third_party/expat/files/lib/expat.h"
++#include <expat.h>
+ #include "third_party/libjingle/source/talk/xmllite/xmlparser.h"
+ 
+ // The base class that contains common functionality between

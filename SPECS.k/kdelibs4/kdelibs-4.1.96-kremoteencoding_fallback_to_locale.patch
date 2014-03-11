@@ -1,0 +1,16 @@
+--- kdelibs-4.1.96/kio/kio/kremoteencoding.cpp.orig	2009-01-17 11:28:43.000000000 +0800
++++ kdelibs-4.1.96/kio/kio/kremoteencoding.cpp	2009-01-17 11:37:39.000000000 +0800
+@@ -105,10 +105,9 @@
+     d->m_codec = QTextCodec::codecForName(name);
+ 
+   if (d->m_codec == 0)
+-    d->m_codec = QTextCodec::codecForMib( 106 ); // fallback to UTF-8
+-
+-  if (d->m_codec == 0)
+-    d->m_codec = QTextCodec::codecForMib(4 /* latin-1 */);
++    d->m_codec = QTextCodec::codecForLocale(); // fallback to locale
++    if ( QString::fromLatin1( d->m_codec->name() ).toLower() == "gb18030" )
++        d->m_codec = QTextCodec::codecForMib( 113 ); // fallbak GB18030 to GBK
+ 
+   Q_ASSERT(d->m_codec);
+ 

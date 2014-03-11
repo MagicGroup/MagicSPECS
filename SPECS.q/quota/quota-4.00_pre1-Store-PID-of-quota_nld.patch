@@ -1,0 +1,121 @@
+From d371c4769dac5d84fa2089299efd77b5341c5079 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 3 Feb 2011 17:57:09 +0100
+Subject: [PATCH] Store PID of quota_nld
+
+If quota_nld is run as daemon, daemon's PID will be stored into
+/var/run/${PROGNAME}.pid file and it will be deleted on receiving SIGTERM
+just before program termination.
+
+PID file is used by init scripts to find and kill forked daemon.
+---
+ quota_nld.c |   79 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 79 insertions(+), 0 deletions(-)
+
+diff --git a/quota_nld.c b/quota_nld.c
+index 538702d..600bdf1 100644
+--- a/quota_nld.c
++++ b/quota_nld.c
+@@ -25,6 +25,7 @@
+ #include <string.h>
+ #include <fcntl.h>
+ #include <limits.h>
++#include <signal.h>
+ 
+ #include <netlink/genl/genl.h>
+ #include <netlink/genl/ctrl.h>
+@@ -369,6 +370,83 @@ static void run(struct nl_handle *nhandle)
+ 	}
+ }
+ 
++/* Build file name (absolute path) to PID file of this daemon.
++ * The returned name is allocated on heap. */
++static char *build_pid_file_name(void)
++{
++	char *pid_name = NULL;
++	if (!progname) {
++		errstr(_("Undefined program name.\n"));
++		return NULL;
++	}
++	pid_name = malloc(9 + strlen(progname) + 4 + 1);
++	if (!pid_name) {
++		errstr(_("Not enough memory to build PID file name.\n"));
++		return NULL;
++	}
++	sprintf(pid_name, "/var/run/%s.pid", progname);
++	return pid_name;
++}
++
++/* Store daemon's PID to file */
++static int store_pid(void)
++{
++	FILE *pid_file;
++	char *pid_name;
++
++	pid_name = build_pid_file_name();
++	if (!pid_name) return -1;
++
++	pid_file = fopen(pid_name, "w");
++	if (!pid_file) {
++		errstr(_("Could not open PID file '%s': %s\n"),
++			pid_name, strerror(errno));
++		free(pid_name);
++		return -1;
++	}
++	if (0 > fprintf(pid_file, "%jd\n", (intmax_t)getpid())) {
++		errstr(_("Could not write daemon's PID into '%s'.\n"),
++		       	pid_name);
++		fclose(pid_file);
++		free(pid_name);
++		return -1;
++	}
++	if (fclose(pid_file)) {
++		errstr(_("Could not close PID file '%s'.\n"), pid_name);
++		free(pid_name);
++		return -1;
++	}
++
++	free(pid_name);
++	return 0;
++}
++
++/* Handler for SIGTERM to remove PID file */
++static void remove_pid(int signal)
++{
++	char *pid_name;
++
++	pid_name = build_pid_file_name();
++	if (pid_name) {
++		unlink(pid_name);
++		free(pid_name);
++	}
++	exit(EXIT_SUCCESS);
++}
++
++/* Store daemon's PID into file and register its removal on SIGTERM */
++static int use_pid_file(void)
++{
++	struct sigaction term_action;
++
++	term_action.sa_handler = remove_pid;
++	term_action.sa_flags = 0;
++	if (sigaction(SIGTERM, &term_action, NULL))
++		errstr(_("Could not register PID file removal on SIGTERM.\n"));
++	if (store_pid())
++		errstr(_("Could not store my PID %jd.\n"), (intmax_t )getpid());
++}
++
+ int main(int argc, char **argv)
+ {
+ 	struct nl_handle *nhandle;
+@@ -383,6 +461,7 @@ int main(int argc, char **argv)
+ 	if (!(flags & FL_NODAEMON)) {
+ 		use_syslog();
+ 		daemon(0, 0);
++		use_pid_file();
+ 	}
+ 	run(nhandle);
+ 	return 0;
+-- 
+1.7.4
+

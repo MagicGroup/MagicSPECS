@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# sensord:	Hardware sensors monitoring daemon
+#
+# chkconfig:	- 27 73
+# description:	Starts and stops hardware sensors monitoring daemon.
+# config:	/etc/sysconfig/sensord
+# author:	Filip Kalinski <filon@pld.org.pl>
+# adapted for fedora by Hans de Goede <j.w.r.degoede@hhs.nl>
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Get service config
+if [ -f /etc/sysconfig/sensord ]; then
+	. /etc/sysconfig/sensord
+fi
+
+prog="sensord"
+
+start() {
+        echo -n $"Starting $prog: "
+
+	if [ ! -f /var/lock/subsys/lm_sensors ]; then
+		echo -n "error lm_sensors service not started"
+		echo_failure
+		echo
+		exit 6
+	fi
+	
+	daemon sensord \
+		${INTERVAL:+-i $INTERVAL} \
+		${LOG_INTERVAL:+-l $LOG_INTERVAL} \
+		${RRD_LOGFILE:+-r $RRD_LOGFILE} \
+		${RRD_INTERVAL:+-t $RRD_INTERVAL} \
+		-f daemon
+
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sensord
+}
+
+stop() {
+        echo -n $"Stopping $prog: "
+
+	killproc sensord
+	
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/sensord
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  status)
+	status sensord
+	RETVAL=$?
+	sensors
+	;;
+  restart|force-reload)
+	stop
+	start
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL

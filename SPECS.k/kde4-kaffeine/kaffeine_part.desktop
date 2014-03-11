@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=kaffeine
+MimeType=application/x-kaffeine;
+Name=Kaffeine
+Comment=A player part based on xine.
+Comment[zh_CN]=一个基于 xine 的播放器插件.
+ServiceTypes=KParts/ReadOnlyPart,KMediaPart
+Type=Service
+X-KDE-Library=libkaffeinepart
+InitialPreference=9

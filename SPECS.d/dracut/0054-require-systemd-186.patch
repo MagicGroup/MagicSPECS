@@ -1,0 +1,126 @@
+From 6795dcc4fc388db89d95ae39098eee754c96ed18 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 9 Jul 2012 10:04:35 +0200
+Subject: [PATCH] require systemd >= 186
+
+---
+ dracut.spec                                    |    2 +-
+ modules.d/98systemd/dracut-initqueue.service   |    4 ++--
+ modules.d/98systemd/dracut-pre-pivot.sh        |    2 +-
+ modules.d/98systemd/dracut-pre-trigger.service |    6 +++---
+ modules.d/98systemd/dracut-pre-udev.service    |    2 +-
+ modules.d/98systemd/module-setup.sh            |    9 ---------
+ 6 files changed, 8 insertions(+), 17 deletions(-)
+
+diff --git a/dracut.spec b/dracut.spec
+index a6fec89..6be1c3d 100644
+--- a/dracut.spec
++++ b/dracut.spec
+@@ -84,7 +84,7 @@ Requires: file
+ Requires: udev > 166
+ %if 0%{?fedora} || 0%{?rhel} > 6
+ Requires: util-linux >= 2.21
+-Requires: systemd >= 44-15
++Requires: systemd >= 186
+ %else
+ Requires: util-linux-ng >= 2.21
+ %endif
+diff --git a/modules.d/98systemd/dracut-initqueue.service b/modules.d/98systemd/dracut-initqueue.service
+index 5168677..73bc1e1 100644
+--- a/modules.d/98systemd/dracut-initqueue.service
++++ b/modules.d/98systemd/dracut-initqueue.service
+@@ -10,8 +10,8 @@
+ [Unit]
+ Description=Dracut initqueue hook
+ DefaultDependencies=no
+-After=systemd-udev-trigger.service
+-Wants=systemd-udev-trigger.service
++After=systemd-udevd-trigger.service
++Wants=systemd-udevd-trigger.service
+ ConditionPathExists=/etc/initrd-release
+ 
+ [Service]
+diff --git a/modules.d/98systemd/dracut-pre-pivot.sh b/modules.d/98systemd/dracut-pre-pivot.sh
+index 29a8248..06642d0 100755
+--- a/modules.d/98systemd/dracut-pre-pivot.sh
++++ b/modules.d/98systemd/dracut-pre-pivot.sh
+@@ -36,7 +36,7 @@ echo "NEWROOT=\"$NEWROOT\"" >> /run/initramfs/switch-root.conf
+ 
+ udevadm control --stop-exec-queue
+ 
+-for i in systemd-udev.service udev.service; do
++for i in systemd-udevd.service; do
+     systemctl is-active $i >/dev/null 2>&1 && systemctl stop $i
+ done
+ 
+diff --git a/modules.d/98systemd/dracut-pre-trigger.service b/modules.d/98systemd/dracut-pre-trigger.service
+index b553187..450ed20 100644
+--- a/modules.d/98systemd/dracut-pre-trigger.service
++++ b/modules.d/98systemd/dracut-pre-trigger.service
+@@ -10,9 +10,9 @@
+ [Unit]
+ Description=Dracut pre-trigger hook
+ DefaultDependencies=no
+-Before=systemd-udev-trigger.service dracut-initqueue.service
+-After=dracut-pre-udev.service systemd-udev.service
+-Wants=dracut-pre-udev.service systemd-udev.service
++Before=systemd-udevd-trigger.service dracut-initqueue.service
++After=dracut-pre-udev.service systemd-udevd.service
++Wants=dracut-pre-udev.service systemd-udevd.service
+ ConditionPathExists=/etc/initrd-release
+ 
+ [Service]
+diff --git a/modules.d/98systemd/dracut-pre-udev.service b/modules.d/98systemd/dracut-pre-udev.service
+index 40c9055..a320498 100644
+--- a/modules.d/98systemd/dracut-pre-udev.service
++++ b/modules.d/98systemd/dracut-pre-udev.service
+@@ -10,7 +10,7 @@
+ [Unit]
+ Description=Dracut pre-udev hook
+ DefaultDependencies=no
+-Before=systemd-udev.service dracut-pre-trigger.service
++Before=systemd-udevd.service dracut-pre-trigger.service
+ After=dracut-cmdline.service
+ Wants=dracut-cmdline.service
+ ConditionPathExists=/etc/initrd-release
+diff --git a/modules.d/98systemd/module-setup.sh b/modules.d/98systemd/module-setup.sh
+index 60e1be2..543db7e 100755
+--- a/modules.d/98systemd/module-setup.sh
++++ b/modules.d/98systemd/module-setup.sh
+@@ -54,9 +54,7 @@ install() {
+         $systemdsystemunitdir/systemd-initctl.socket \
+         $systemdsystemunitdir/systemd-shutdownd.socket \
+         $systemdsystemunitdir/systemd-ask-password-console.path \
+-        $systemdsystemunitdir/systemd-udev-control.socket \
+         $systemdsystemunitdir/systemd-udevd-control.socket \
+-        $systemdsystemunitdir/systemd-udev-kernel.socket \
+         $systemdsystemunitdir/systemd-udevd-kernel.socket \
+         $systemdsystemunitdir/systemd-ask-password-plymouth.path \
+         $systemdsystemunitdir/systemd-journald.socket \
+@@ -68,11 +66,8 @@ install() {
+         $systemdsystemunitdir/reboot.service \
+         $systemdsystemunitdir/kexec.service \
+         $systemdsystemunitdir/fsck@.service \
+-        $systemdsystemunitdir/systemd-udev.service \
+         $systemdsystemunitdir/systemd-udevd.service \
+-        $systemdsystemunitdir/systemd-udev-trigger.service \
+         $systemdsystemunitdir/systemd-udevd-trigger.service \
+-        $systemdsystemunitdir/systemd-udev-settle.service \
+         $systemdsystemunitdir/systemd-udevd-settle.service \
+         $systemdsystemunitdir/systemd-ask-password-plymouth.service \
+         $systemdsystemunitdir/systemd-journald.service \
+@@ -83,14 +78,10 @@ install() {
+         $systemdsystemunitdir/sysinit.target.wants/systemd-journald.service \
+         $systemdsystemunitdir/sockets.target.wants/systemd-initctl.socket \
+         $systemdsystemunitdir/sockets.target.wants/systemd-shutdownd.socket \
+-        $systemdsystemunitdir/sockets.target.wants/systemd-udev-control.socket \
+         $systemdsystemunitdir/sockets.target.wants/systemd-udevd-control.socket \
+-        $systemdsystemunitdir/sockets.target.wants/systemd-udev-kernel.socket \
+         $systemdsystemunitdir/sockets.target.wants/systemd-udevd-kernel.socket \
+         $systemdsystemunitdir/sockets.target.wants/systemd-journald.socket \
+-        $systemdsystemunitdir/sysinit.target.wants/systemd-udev.service \
+         $systemdsystemunitdir/sysinit.target.wants/systemd-udevd.service \
+-        $systemdsystemunitdir/sysinit.target.wants/systemd-udev-trigger.service \
+         $systemdsystemunitdir/sysinit.target.wants/systemd-udevd-trigger.service \
+         $systemdsystemunitdir/ctrl-alt-del.target \
+         $systemdsystemunitdir/single.service \

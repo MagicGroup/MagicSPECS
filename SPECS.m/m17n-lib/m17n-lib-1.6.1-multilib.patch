@@ -1,0 +1,53 @@
+--- m17n-config.in.old	2007-11-22 12:28:52.000000000 +0530
++++ m17n-config.in	2010-07-01 14:35:00.000000000 +0530
+@@ -64,17 +64,25 @@ else
+   LIBNAME="$LIBNAME$LIBSHELL$LIBFLT$LIBGUI"
+ fi
+ 
++platform=`uname -m`
++
+ case $1 in
+ --version)
+   echo "@PACKAGE_VERSION@";;
+ 
+ --libs)
+-  if test "@libdir@" != "/usr/lib"; then
+-    echo "-L@libdir@ ${LIBNAME}"
+-  else
+-    echo "${LIBNAME}"
+-  fi;;
+-
++  case $platform in
++   "i686")
++     echo "${LIBNAME}"
++     ;;
++   "x86_64")
++    echo "-L/usr/lib64 ${LIBNAME}"
++    ;;
++   *)
++    echo "Unknown platform"
++    ;;
++  esac
++  
+ --cflags)
+   if test "@includedir@" != "/usr/include"; then
+     echo "-I@includedir@"
+@@ -82,7 +90,17 @@ case $1 in
+ 
+ --libtool)
+   for name in $LIBTOOLNAME; do
+-    echo -n "@libdir@/lib${name}.la "
++   case $platform in
++    "i686")
++      echo -n "/usr/lib/lib${name}.la "
++      ;;
++    "x86_64")
++      echo -n "/usr/lib64/lib${name}.la "
++      ;;
++    *)
++      echo "Unknown platform"
++      ;;
++   esac
+   done;
+   echo;;
+ *)

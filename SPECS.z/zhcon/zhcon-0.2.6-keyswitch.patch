@@ -1,0 +1,49 @@
+--- ./src/zhcon.cpp.keyswitch	2008-07-14 16:17:53.000000000 +1000
++++ ./src/zhcon.cpp	2008-07-14 16:20:16.000000000 +1000
+@@ -132,6 +132,10 @@
+     //the InitXXX sequence is important,do not change
+     //unless you know what you are doing
+     InitTty();
++
++    /* Set to K_XLATE (ascii) */
++    ioctl(0, KDSKBMODE, K_XLATE);
++
+     // set blank line height, must before init font
+     InitGraphDev(f);
+     GraphMode();
+--- ./src/inputmanager.cpp.keyswitch	2008-07-14 16:14:10.000000000 +1000
++++ ./src/inputmanager.cpp	2008-07-14 16:23:45.000000000 +1000
+@@ -101,9 +101,12 @@
+     
+     struct timeval tv;
+     int rcved, shift;
++    bool ctrlShiftPressed=false;
+ 
+     shift = GetShiftState();
+-    if (shift != 0) {
++    if (shift ==5){
++        /* Ctrl-Shift Pressed */
++        ctrlShiftPressed=true;
+         //printf("Shift stat %d\r\n", s);
+     }
+ 
+@@ -120,7 +123,7 @@
+     tv.tv_sec = 0;
+     tv.tv_usec = 100000;                  /* 0.1 sec */
+     rcved = select(FD_SETSIZE, &mFdSet, NULL, NULL, &tv);
+-    if (rcved <= 0)
++    if (rcved <= 0 && !ctrlShiftPressed)
+         return;
+ 
+ #ifdef HAVE_GPM_H
+@@ -154,7 +157,9 @@
+                 mOutputRead = 0;
+             }
+         }
+-    }
++     }else if (ctrlShiftPressed){
++         DoCtrlShift();
++     }
+ 
+    if (FD_ISSET(mTtyFd, &mFdSet)) {
+         mInputRead += read(mTtyFd, mInputBuf+mInputRead, BUFSIZE-mInputRead);

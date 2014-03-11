@@ -1,0 +1,22 @@
+From d20d307d697811f28fbd74111238c43740697226 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 9 Feb 2012 11:36:21 +0100
+Subject: [PATCH] lsinitrd: silence xz test
+
+---
+ lsinitrd |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lsinitrd b/lsinitrd
+index 1d953b7..11e5c7a 100755
+--- a/lsinitrd
++++ b/lsinitrd
+@@ -36,7 +36,7 @@ image="${1:-/boot/initramfs-$(uname -r).img}"
+ CAT=zcat
+ FILE_T=$(file "$image")
+ 
+-if echo "test"|xz|xz -dc --single-stream; then
++if echo "test"|xz|xz -dc --single-stream >/dev/null 2>&1; then
+     XZ_SINGLE_STREAM="--single-stream"
+ fi
+ 

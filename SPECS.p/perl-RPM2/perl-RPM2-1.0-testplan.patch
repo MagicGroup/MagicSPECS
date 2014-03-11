@@ -1,0 +1,13 @@
+diff --git a/test.pl b/test.pl
+index 116c48a..40426ed 100644
+--- a/test.pl
++++ b/test.pl
+@@ -11,7 +11,7 @@ use strict;
+ 
+ use Test;
+ use strict;
+-BEGIN { plan tests => 62 };
++BEGIN { plan tests => 60 };
+ use RPM2;
+ use POSIX;
+ ok(1); # If we made it this far, we're ok.

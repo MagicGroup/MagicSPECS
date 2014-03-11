@@ -1,0 +1,85 @@
+--- texlive-2007/texk/web2c/pdftexdir/ptexlib.h.orig	2007-06-21 20:07:37.746531903 -0400
++++ texlive-2007/texk/web2c/pdftexdir/ptexlib.h	2007-06-21 20:05:40.014606804 -0400
+@@ -38,7 +38,9 @@
+ /* avl */
+ #  include "avlstuff.h"
+ 
++#ifndef __linux__
+ #  include "openbsd-compat.h"
++#endif
+ 
+ /* pdftexlib type declarations */
+ typedef struct {
+--- texlive-2007/texk/web2c/pdftexdir/epdf.h.orig	2007-06-21 22:27:08.039209770 -0400
++++ texlive-2007/texk/web2c/pdftexdir/epdf.h	2007-06-21 22:27:32.643343920 -0400
+@@ -44,7 +44,9 @@
+ 
+ #include <web2c/pdftexdir/ptexmac.h>
+ 
++#ifndef __linux__
+ #include "openbsd-compat.h"
++#endif
+ 
+ /* #-define pdfbufsize      pdfbufmax */
+ 
+--- texlive-2007/texk/web2c/pdftexdir/depend.mk.pdftex	2006-12-26 18:37:34.000000000 -0500
++++ texlive-2007/texk/web2c/pdftexdir/depend.mk	2007-06-22 00:17:35.157351368 -0400
+@@ -7,15 +7,13 @@
+  ptexmac.h
+ utils.o: utils.c ptexlib.h ../pdftexd.h ../texmfmp.h ../cpascal.h \
+  ../config.h ../help.h ../texmfmem.h ../pdftexcoerce.h ptexmac.h \
+- ../../../libs/zlib/zlib.h ../../../libs/zlib/zconf.h \
+- ../../../libs/md5/md5.h pdftexextra.h \
+- ../../../libs/obsdcompat/openbsd-compat.h
++pdftexextra.h
+ vfpacket.o: vfpacket.c ptexlib.h ../pdftexd.h ../texmfmp.h \
+  ../cpascal.h ../config.h ../help.h ../texmfmem.h ../pdftexcoerce.h \
+  ptexmac.h
+ pkin.o: pkin.c ptexlib.h ../pdftexd.h ../texmfmp.h ../cpascal.h \
+  ../config.h ../help.h ../texmfmem.h ../pdftexcoerce.h ptexmac.h
+-writefont.o: writefont.c ../../../libs/xpdf/goo/gmem.h ptexlib.h \
++writefont.o: writefont.c ptexlib.h \
+  ../pdftexd.h ../texmfmp.h ../cpascal.h ../config.h ../help.h \
+  ../texmfmem.h ../pdftexcoerce.h ptexmac.h
+ writet1.o: writet1.c ptexlib.h ../pdftexd.h ../texmfmp.h ../cpascal.h \
+@@ -24,7 +22,7 @@
+  ../config.h ../help.h ../texmfmem.h ../pdftexcoerce.h ptexmac.h
+ writezip.o: writezip.c ptexlib.h ../pdftexd.h ../texmfmp.h \
+  ../cpascal.h ../config.h ../help.h ../texmfmem.h ../pdftexcoerce.h \
+- ptexmac.h ../../../libs/zlib/zlib.h ../../../libs/zlib/zconf.h
++ ptexmac.h
+ writeenc.o: writeenc.c ptexlib.h ../pdftexd.h ../texmfmp.h \
+  ../cpascal.h ../config.h ../help.h ../texmfmem.h ../pdftexcoerce.h \
+  ptexmac.h
+@@ -40,16 +38,7 @@
+ writeimg.o: writeimg.c ptexlib.h ../pdftexd.h ../texmfmp.h \
+  ../cpascal.h ../config.h ../help.h ../texmfmem.h ../pdftexcoerce.h \
+  ptexmac.h image.h
+-pdftoepdf.o: pdftoepdf.cc ../../../libs/xpdf/xpdf/Object.h \
+- ../../../libs/xpdf/goo/gmem.h ../../../libs/xpdf/xpdf/Array.h \
+- ../../../libs/xpdf/xpdf/Dict.h ../../../libs/xpdf/xpdf/Stream.h \
+- ../../../libs/xpdf/xpdf/XRef.h ../../../libs/xpdf/xpdf/Catalog.h \
+- ../../../libs/xpdf/xpdf/Page.h ../../../libs/xpdf/xpdf/GfxFont.h \
+- ../../../libs/xpdf/xpdf/Error.h epdf.h
++pdftoepdf.o: pdftoepdf.cc \
++ epdf.h
+ ttf2afm.o: ttf2afm.c writettf.h macnames.c
+-pdftosrc.o: pdftosrc.cc ../../../libs/xpdf/xpdf/Object.h \
+- ../../../libs/xpdf/xpdf/Array.h ../../../libs/xpdf/xpdf/Dict.h \
+- ../../../libs/xpdf/xpdf/Stream.h ../../../libs/xpdf/xpdf/XRef.h \
+- ../../../libs/xpdf/xpdf/Catalog.h ../../../libs/xpdf/xpdf/Page.h \
+- ../../../libs/xpdf/xpdf/PDFDoc.h ../../../libs/xpdf/xpdf/Link.h \
+- ../../../libs/xpdf/xpdf/Error.h ../../../libs/xpdf/xpdf/config.h
++pdftosrc.o: pdftosrc.cc
+--- texlive-2007/texk/web2c/pdftexdir/utils.c.orig	2007-06-22 00:33:15.216284121 -0400
++++ texlive-2007/texk/web2c/pdftexdir/utils.c	2007-06-22 00:33:32.948057443 -0400
+@@ -20,7 +20,9 @@
+ $Id: //depot/Build/source.development/TeX/texk/web2c/pdftexdir/utils.c#24 $
+ */
+ 
++#ifndef __linux__
+ #include "openbsd-compat.h"
++#endif
+ #ifdef HAVE_ASPRINTF            /* asprintf is not defined in openbsd-compat.h, but in stdio.h */
+ #  include <stdio.h>
+ #endif

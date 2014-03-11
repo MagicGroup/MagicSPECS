@@ -1,0 +1,48 @@
+From 8e728c0557aa8a6746a6abd573e560ed1bf83cee Mon Sep 17 00:00:00 2001
+From: Michael Catanzaro <mike.catanzaro@gmail.com>
+Date: Wed, 2 Jan 2013 13:17:18 -0600
+Subject: [PATCH] Respect engine args specified in engines.conf
+
+https://bugzilla.gnome.org/show_bug.cgi?id=691031
+---
+ glchess/src/chess-engine.vala | 4 +++-
+ glchess/src/glchess.vala  | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/glchess/src/chess-engine.vala b/glchess/src/chess-engine.vala
+index 0792f3b..3762889 100644
+--- a/glchess/src/chess-engine.vala
++++ b/glchess/src/chess-engine.vala
+@@ -1,6 +1,8 @@
+ public class ChessEngine : Object
+ {
+     public string binary;
++    public string args;
++
+     private Pid pid;
+     private int stdin_fd;
+     private int stderr_fd;
+@@ -30,7 +32,7 @@ public class ChessEngine : Object
+     
+     public bool start ()
+     {
+-        string[] argv = { binary, null };
++        string[] argv = { binary, args, null };
+         int stdout_fd;
+         try
+         {
+diff --git a/glchess/src/glchess.vala b/glchess/src/glchess.vala
+index 1e6f5ee..5e32e76 100644
+--- a/glchess/src/glchess.vala
++++ b/glchess/src/glchess.vala
+@@ -529,6 +529,7 @@ public class Application : Gtk.Application
+             return null;
+         }
+         engine.binary = profile.binary;
++        engine.args = profile.args;
+ 
+         return engine;
+     }
+-- 
+1.7.11.7
+

@@ -1,0 +1,44 @@
+From 1405b8e9c60d7e98ca099148cfcb6fef45dd2494 Mon Sep 17 00:00:00 2001
+From: Or Gerlitz <ogerlitz@mellanox.com>
+Date: Mon, 12 Dec 2011 11:23:59 -0800
+Subject: [PATCH 8/9] udaddy/ucmatose: allow easy setting of tos in hex
+
+Under IBoE, the 3 MSBits of the TOS map to the SL, hence letting
+the user to specify them in hex makes the interface friendlier.
+
+Signed-off-by: Or Gerlitz <ogerlitz@mellanox.com>
+Signed-off-by: Sean Hefty <sean.hefty@intel.com>
+---
+ examples/cmatose.c |    2 +-
+ examples/udaddy.c  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/examples/cmatose.c b/examples/cmatose.c
+index 82e0d7c..3f2ff03 100644
+--- a/examples/cmatose.c
++++ b/examples/cmatose.c
+@@ -702,7 +702,7 @@ int main(int argc, char **argv)
+ 			break;
+ 		case 't':
+ 			set_tos = 1;
+-			tos = (uint8_t) atoi(optarg);
++			tos = (uint8_t) strtoul(optarg, NULL, 0);
+ 			break;
+ 		case 'p':
+ 			port = atoi(optarg);
+diff --git a/examples/udaddy.c b/examples/udaddy.c
+index 637306a..a07f657 100644
+--- a/examples/udaddy.c
++++ b/examples/udaddy.c
+@@ -655,7 +655,7 @@ int main(int argc, char **argv)
+ 			break;
+ 		case 't':
+ 			set_tos = 1;
+-			tos = (uint8_t) atoi(optarg);
++			tos = (uint8_t) strtoul(optarg, NULL, 0);
+ 			break;
+ 		case 'p':
+ 			port_space = strtol(optarg, NULL, 0);
+-- 
+1.7.6.4
+

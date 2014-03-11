@@ -1,0 +1,40 @@
+diff -ur xvidcap-1.1.7.orig//configure xvidcap-1.1.7/configure
+--- xvidcap-1.1.7.orig//configure	2011-06-30 19:46:01.000000000 -0400
++++ xvidcap-1.1.7/configure	2011-06-30 20:23:53.000000000 -0400
+@@ -9978,7 +9978,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lXmu  $LIBS"
++LIBS="-lXmu -lX11 -lXext  $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -10038,7 +10038,7 @@
+ #define HAVE_LIBXMU 1
+ _ACEOF
+ 
+-  LIBS="-lXmu $LIBS"
++  LIBS="-lXmu -lX11 -lXext $LIBS"
+ 
+ else
+   unset ac_cv_lib_Xmu_XmuClientWindow; echo "Couldn't find libXmu in LD_LIBRARY_PATH, checking X11 paths"; { echo "$as_me:$LINENO: checking for XmuClientWindow in -lXmu" >&5
+@@ -10047,7 +10047,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lXmu -L${ac_x_libraries} $LIBS"
++LIBS="-lXmu -lX11 -lXext -L${ac_x_libraries} $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -10103,7 +10103,7 @@
+ { echo "$as_me:$LINENO: result: $ac_cv_lib_Xmu_XmuClientWindow" >&5
+ echo "${ECHO_T}$ac_cv_lib_Xmu_XmuClientWindow" >&6; }
+ if test $ac_cv_lib_Xmu_XmuClientWindow = yes; then
+-  LDFLAGS="${LDFLAGS} -L${ac_x_libraries} -Xlinker -R${ac_x_libraries}"; LIBS="${LIBS} -lXmu"
++  LDFLAGS="${LDFLAGS} -L${ac_x_libraries} -Xlinker -R${ac_x_libraries}"; LIBS="${LIBS} -lXmu -lX11 -lXext"
+ else
+   echo "libXmu required for drawing the frame around the area to capture" && exit 1
+ fi
+只在 xvidcap-1.1.7 存在：xvidcap-newx.patch

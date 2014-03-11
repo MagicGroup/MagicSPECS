@@ -1,0 +1,58 @@
+--- cheese-3.4.2.orig/libcheese/cheese-camera.c	2012-06-19 23:03:38.976989128 +0200
++++ cheese-3.4.2/libcheese/cheese-camera.c	2012-06-19 23:04:22.697442542 +0200
+@@ -32,6 +32,7 @@
+ #include <clutter-gst/clutter-gst.h>
+ #include <gst/gst.h>
+ #include <X11/Xlib.h>
++#include <unistd.h>
+ 
+ #include "cheese-camera.h"
+ #include "cheese-camera-device.h"
+@@ -444,6 +445,7 @@
+   CheeseCameraPrivate *priv = camera->priv;
+   GstElement          *video_enc;
+   GstElement          *mux;
++  int                 n_threads;
+ 
+   g_return_if_fail (error == NULL || *error == NULL);
+ 
+@@ -453,7 +455,17 @@
+     return;
+   }
+   g_object_set (priv->camerabin, "video-encoder", video_enc, NULL);
+-  g_object_set (G_OBJECT (video_enc), "speed", 2, NULL);
++
++  /* Since we do realtime encoding setup the encoder for speed without
++     sacrificing too much quality */
++  g_object_set (G_OBJECT (video_enc), "speed", 6, NULL);
++#ifdef _SC_NPROCESSORS_ONLN
++  n_threads = sysconf (_SC_NPROCESSORS_ONLN); /* includes hyper-threading */
++  n_threads = MIN (n_threads, 64);
++#else
++  n_threads = 3;
++#endif
++  g_object_set (G_OBJECT (video_enc), "threads", n_threads, NULL);
+ 
+   if ((mux = gst_element_factory_make ("webmmux", "webmmux")) == NULL)
+   {
+@@ -688,6 +702,7 @@
+ {
+   CheeseCameraPrivate *priv;
+   CheeseCameraDevice *device;
++  GObject *video_enc;
+   GstCaps *caps;
+ 
+   g_return_if_fail (CHEESE_IS_CAMERA (camera));
+@@ -710,6 +725,12 @@
+     g_signal_emit_by_name (priv->camerabin, "set-video-resolution-fps",
+                            priv->current_format->width,
+                            priv->current_format->height, 0, 1, 0);
++    if (priv->current_format->width >= 1280 &&
++        priv->current_format->height >= 720)
++    {
++      g_object_get (priv->camerabin, "video-encoder", &video_enc, NULL);
++      g_object_set (video_enc, "token-parts", 2, NULL);
++    }
+   }
+   gst_caps_unref (caps);
+ 

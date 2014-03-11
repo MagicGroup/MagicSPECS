@@ -1,0 +1,16 @@
+diff -up CSS-DOM-0.14/lib/CSS/DOM.pm~ CSS-DOM-0.14/lib/CSS/DOM.pm
+--- CSS-DOM-0.14/lib/CSS/DOM.pm~	2010-12-10 10:07:15.000000000 +0200
++++ CSS-DOM-0.14/lib/CSS/DOM.pm	2011-02-17 00:13:58.991872662 +0200
+@@ -4,10 +4,8 @@ use 5.008002;
+ 
+ $VERSION = '0.14';
+ 
+-use   # to keep CPANTS happy :-)
+-   strict;
+-use   # same here
+-   warnings;
++use strict;    # to keep CPANTS happy :-)
++use warnings;  # same here
+ 
+ use CSS::DOM::Exception
+ 	'SYNTAX_ERR' ,'HIERARCHY_REQUEST_ERR', 'INDEX_SIZE_ERR';

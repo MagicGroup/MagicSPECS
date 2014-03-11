@@ -1,0 +1,41 @@
+diff -Nuarp rekonq-0.4.0.orig/src/data/defaultbookmarks.xbel rekonq-0.4.0/src/data/defaultbookmarks.xbel
+--- rekonq-0.4.0.orig/src/data/defaultbookmarks.xbel	2010-03-12 18:42:17.000000000 +0800
++++ rekonq-0.4.0/src/data/defaultbookmarks.xbel	2010-04-13 22:25:03.000000000 +0800
+@@ -1,22 +1,25 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE xbel>
+ <xbel version="1.0">
+-    <bookmark href="http://qt.nokia.com/">
+-        <title>Qt sit</title>
++    <bookmark href="http://kde-look.org/">
++        <title>KDE 美化网站</title>
+     </bookmark>
+-    <bookmark href="http://webkit.org/">
+-        <title>WebKit.org</title>
++    <bookmark href="http://www.kde.org/">
++        <title>KDE 官方网站</title>
+     </bookmark>
+-    <bookmark href="http://rekonq.sourceforge.net/">
+-        <title>rekonq site</title>
++    <bookmark href="http://www.magiclinux.org/">
++        <title>Magic Linux 网站</title>
+     </bookmark>
+-    <bookmark href="http://labs.qt.nokia.com/">
+-        <title>Qt Labs</title>
++    <bookmark href="http://www.linuxfans.org/bbs/forum-17-1.html">
++        <title>Magic Linux 技术支持社区</title>
+     </bookmark>
+-    <bookmark href="http://kde-apps.org/">
+-        <title>KDE-Apps.org</title>
++    <bookmark href="http://forum.kde.org/viewforum.php?f=149">
++        <title>KDE 中国论坛</title>
+     </bookmark>
+-    <bookmark href="http://www.kde.org/">
+-        <title>KDE site</title>
++    <bookmark href="http://linuxtoy.org/">
++        <title>LinuxToy 资讯和好玩的东东</title>
++    </bookmark>
++    <bookmark href="http://webqq.qq.com/">
++        <title>腾讯 QQ 网页版</title>
+     </bookmark>
+ </xbel>

@@ -1,0 +1,18 @@
+--- mdadm-3.2.4/Makefile.map-dir	2012-05-10 12:29:09.687578525 +0200
++++ mdadm-3.2.4/Makefile	2012-05-10 12:28:05.514380800 +0200
+@@ -67,12 +67,12 @@
+ # Both MAP_DIR and MDMON_DIR should be somewhere that persists across the
+ # pivotroot from early boot to late boot.
+ # /run is best, but for distros that don't support that, /dev can work.
+-MAP_DIR=/run/mdadm
+-MAP_FILE = map
++MAP_DIR=/dev/md
++MAP_FILE = md-device-map
+ MAP_PATH = $(MAP_DIR)/$(MAP_FILE)
+ MDMON_DIR = $(MAP_DIR)
+ # place for autoreplace cookies
+-FAILED_SLOTS_DIR = /run/mdadm/failed-slots
++FAILED_SLOTS_DIR = $(MDMON_DIR)/failed-slots
+ DIRFLAGS = -DMAP_DIR=\"$(MAP_DIR)\" -DMAP_FILE=\"$(MAP_FILE)\"
+ DIRFLAGS += -DMDMON_DIR=\"$(MDMON_DIR)\"
+ DIRFLAGS += -DFAILED_SLOTS_DIR=\"$(FAILED_SLOTS_DIR)\"

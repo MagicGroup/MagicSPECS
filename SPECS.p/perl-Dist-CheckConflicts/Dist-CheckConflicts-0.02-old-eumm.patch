@@ -1,0 +1,30 @@
+--- Dist-CheckConflicts-0.02/Makefile.PL.orig	2011-01-02 14:20:32.000000000 +0000
++++ Dist-CheckConflicts-0.02/Makefile.PL	2011-01-04 14:50:52.788254795 +0000
+@@ -4,7 +4,7 @@
+ 
+ 
+ 
+-use ExtUtils::MakeMaker 6.31;
++use ExtUtils::MakeMaker;
+ 
+ 
+ 
+@@ -16,7 +16,7 @@
+     'Test::More' => '0.88'
+   },
+   'CONFIGURE_REQUIRES' => {
+-    'ExtUtils::MakeMaker' => '6.31'
++    'ExtUtils::MakeMaker' => '0'
+   },
+   'DISTNAME' => 'Dist-CheckConflicts',
+   'EXE_FILES' => [],
+@@ -49,6 +49,9 @@
+ delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+   unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+ 
++delete $WriteMakefileArgs{LICENSE}
++  unless eval { ExtUtils::MakeMaker->VERSION(6.31) };
++
+ WriteMakefile(%WriteMakefileArgs);
+ 
+ 

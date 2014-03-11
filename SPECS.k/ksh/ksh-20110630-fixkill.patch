@@ -1,0 +1,20 @@
+diff -up ksh-20110630/src/cmd/ksh93/sh/jobs.c.orig ksh-20110630/src/cmd/ksh93/sh/jobs.c
+--- ksh-20110630/src/cmd/ksh93/sh/jobs.c.orig	2011-08-12 11:50:39.059283656 +0200
++++ ksh-20110630/src/cmd/ksh93/sh/jobs.c	2011-08-12 11:52:02.237911639 +0200
+@@ -1103,7 +1103,7 @@ static struct process *job_bystring(regi
+ 
+ int job_kill(register struct process *pw,register int sig)
+ {
+-	Shell_t	*shp = pw->p_shp;
++	Shell_t	*shp;
+ 	register pid_t pid;
+ 	register int r;
+ 	const char *msg;
+@@ -1116,6 +1116,7 @@ int job_kill(register struct process *pw
+ 	errno = ECHILD;
+ 	if(pw==0)
+ 		goto error;
++	shp = pw->p_shp;
+ 	pid = pw->p_pid;
+ #if SHOPT_COSHELL
+ 	if(pw->p_cojob)

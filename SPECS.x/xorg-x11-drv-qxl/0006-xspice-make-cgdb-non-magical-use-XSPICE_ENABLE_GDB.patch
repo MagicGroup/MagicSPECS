@@ -1,0 +1,33 @@
+From 38cedb7ad42f11fe451507d82922d4e94cdcf15d Mon Sep 17 00:00:00 2001
+From: Alon Levy <alevy@redhat.com>
+Date: Mon, 1 Aug 2011 19:17:48 +0300
+Subject: [PATCH xf86-video-qxl 06/10] xspice: make --cgdb non magical, use
+ XSPICE_ENABLE_GDB
+
+---
+ scripts/xspice |    9 ++++++---
+ 1 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/xspice b/scripts/xspice
+index 3c6b49a..4ebd8e8 100755
+--- a/scripts/xspice
++++ b/scripts/xspice
+@@ -27,9 +27,12 @@ def which(x):
+             return candidate
+     return None
+ 
+-cgdb = which('cgdb') if os.path.exists(
+-    os.path.join(os.path.dirname(sys.modules[__name__].__file__),
+-                 'Makefile.am')) else None
++if 'XSPICE_ENABLE_GDB' in os.environ:
++    cgdb = which('cgdb')
++    if not cgdb:
++        cgdb = which('gdb')
++else:
++    cgdb = None
+ 
+ def add_boolean(flag, *args, **kw):
+     parser.add_argument(flag, action='store_const', const='1', default='0',
+-- 
+1.7.6.2
+

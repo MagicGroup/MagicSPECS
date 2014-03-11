@@ -1,0 +1,20 @@
+--- libxml-1.8.17/ChangeLog
++++ libxml-1.8.17/ChangeLog
+@@ -926,7 +926,7 @@
+ 	* example/Makefile.am, configure.in: added the makefile for the
+ 	  gjobread example
+ 
+-Sat Jul 10 14:19:11 CEST 1999 Tomasz K³oczko  <kloczek@pld.org.pl>
++Sat Jul 10 14:19:11 CEST 1999 Tomasz KÅ‚oczko  <kloczek@pld.org.pl>
+ 
+         * doc/Makefile.am:
+         - fix which allow "make install DESTDIR=</install/prefix>".
+@@ -1029,7 +1029,7 @@
+ 
+ 	* parser.c, parserInternals.h: moved the chars macro definitions
+ 	  to parserInternals.h
+-	* parser.c, error.c: applied patches from "Knut Åkesson"
++	* parser.c, error.c: applied patches from "Knut Ã…kesson"
+ 	  <ka@s2.chalmers.se> for clean compilation under MSVC 6 :-o
+ 
+ Tue Mar 23 11:10:15 CET 1999 Daniel Veillard <Daniel.Veillard@w3.org>

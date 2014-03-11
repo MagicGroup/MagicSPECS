@@ -1,0 +1,66 @@
+diff -ur BitStormLite-0.2p/src/bdict.h ../BUILD/BitStormLite-0.2p/src/bdict.h
+--- BitStormLite-0.2p/src/bdict.h	2007-05-17 21:05:06.000000000 +0800
++++ ../BUILD/BitStormLite-0.2p/src/bdict.h	2009-05-16 22:49:37.000000000 +0800
+@@ -29,6 +29,9 @@
+ #include <iostream>
+ #include <string>
+ #include <map>
++#include <cstdio>
++#include <cstring>
++#include <cstdlib>
+ #include "bobject.h"
+ 
+ class CBDict:public CBObject
+diff -ur BitStormLite-0.2p/src/binteger.h ../BUILD/BitStormLite-0.2p/src/binteger.h
+--- BitStormLite-0.2p/src/binteger.h	2007-05-17 21:05:16.000000000 +0800
++++ ../BUILD/BitStormLite-0.2p/src/binteger.h	2009-05-16 22:56:01.000000000 +0800
+@@ -29,6 +29,8 @@
+ #include <string.h>
+ #include <string>
+ #include <stdio.h>
++#include <stdlib.h>
++#include <sys/types.h>
+ #include "bobject.h"
+ 
+ class CBInteger:public CBObject
+diff -ur BitStormLite-0.2p/src/BitStorm.h ../BUILD/BitStormLite-0.2p/src/BitStorm.h
+--- BitStormLite-0.2p/src/BitStorm.h	2007-05-17 21:06:12.000000000 +0800
++++ ../BUILD/BitStormLite-0.2p/src/BitStorm.h	2009-05-16 22:53:42.000000000 +0800
+@@ -29,6 +29,7 @@
+  #include <string>
+  #include <list>
+  #include <map>
++ #include <sys/types.h>
+  //#include <ext/hash_map>
+  
+  class IBTTask;
+diff -ur BitStormLite-0.2p/src/Socket.cpp ../BUILD/BitStormLite-0.2p/src/Socket.cpp
+--- BitStormLite-0.2p/src/Socket.cpp	2007-05-17 21:12:20.000000000 +0800
++++ ../BUILD/BitStormLite-0.2p/src/Socket.cpp	2009-05-16 22:59:44.000000000 +0800
+@@ -29,6 +29,7 @@
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
++#include <string.h>
+ #include "Socket.h"
+ 
+ CSocket::CSocket()
+diff -ur BitStormLite-0.2p/src/utils.h ../BUILD/BitStormLite-0.2p/src/utils.h
+--- BitStormLite-0.2p/src/utils.h	2009-05-16 23:01:40.000000000 +0800
++++ ../BUILD/BitStormLite-0.2p/src/utils.h	2009-05-16 22:57:01.000000000 +0800
+@@ -33,6 +33,7 @@
+ #include <dirent.h>
+ #include <errno.h>
+ #include <time.h>
++#include <string.h>
+ #include <string>
+ #include <sstream>
+ #include <iomanip>
+@@ -42,6 +43,7 @@
+ #include <libintl.h>
+ #include <locale.h>
+ #include <glib.h>
++#include <stdlib.h>
+ #include "sha1.h"
+ 
+ #define _(string)			gettext(string)

@@ -1,0 +1,44 @@
+diff -up RPM2-1.0/lib/RPM2.xs.old RPM2-1.0/lib/RPM2.xs
+--- RPM2-1.0/lib/RPM2.xs.old	2011-04-01 16:16:49.000000000 +0200
++++ RPM2-1.0/lib/RPM2.xs	2012-04-26 11:29:25.849234177 +0200
+@@ -71,9 +71,6 @@ void * _null_callback(
+ 		break;
+ 
+ 	case RPMCALLBACK_INST_START:
+-		rpmcliHashesCurrent = 0;
+-		if (h == NULL || !(flags & INSTALL_LABEL))
+-			break;
+ 		break;
+ 
+ 	case RPMCALLBACK_TRANS_PROGRESS:
+@@ -81,30 +78,18 @@ void * _null_callback(
+ 		break;
+ 
+ 	case RPMCALLBACK_TRANS_START:
+-		rpmcliHashesCurrent = 0;
+-		rpmcliProgressTotal = 1;
+-		rpmcliProgressCurrent = 0;
+ 		break;
+ 
+ 	case RPMCALLBACK_TRANS_STOP:
+-		rpmcliProgressTotal = rpmcliPackagesTotal;
+-		rpmcliProgressCurrent = 0;
+ 		break;
+ 
+ 	case RPMCALLBACK_REPACKAGE_START:
+-		rpmcliHashesCurrent = 0;
+-		rpmcliProgressTotal = total;
+-		rpmcliProgressCurrent = 0;
+ 		break;
+ 
+ 	case RPMCALLBACK_REPACKAGE_PROGRESS:
+ 		break;
+ 
+ 	case RPMCALLBACK_REPACKAGE_STOP:
+-		rpmcliProgressTotal = total;
+-		rpmcliProgressCurrent = total;
+-		rpmcliProgressTotal = rpmcliPackagesTotal;
+-		rpmcliProgressCurrent = 0;
+ 		break;
+ 
+ 	case RPMCALLBACK_UNINST_PROGRESS:

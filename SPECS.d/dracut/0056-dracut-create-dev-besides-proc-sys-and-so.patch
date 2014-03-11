@@ -1,0 +1,24 @@
+From 7c14b3688c83b14c95bafb4989871ffac2092c42 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Amadeusz=20=C5=BBo=C5=82nowski?= <aidecoe@aidecoe.name>
+Date: Sun, 4 Sep 2011 16:38:35 +0200
+Subject: [PATCH] dracut: create /dev besides /proc, /sys and so
+
+How it worked without it?  The issue only manifests itself with
+initramfs integrated into kernel.
+---
+ dracut |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/dracut b/dracut
+index 0e930c7..c9329bd 100755
+--- a/dracut
++++ b/dracut
+@@ -510,7 +510,7 @@ if [[ $kernel_only != yes ]]; then
+         fi
+     done
+ 
+-    for d in proc sys sysroot root run run/lock run/initramfs; do
++    for d in dev proc sys sysroot root run run/lock run/initramfs; do
+         if [ -h "/$d" ]; then
+             inst "/$d"
+         else

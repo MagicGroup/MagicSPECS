@@ -1,0 +1,15 @@
+diff -up tsocks-1.8/tsocks.orig tsocks-1.8/tsocks
+--- tsocks-1.8/tsocks.orig	2010-01-06 15:10:23.151847455 -0500
++++ tsocks-1.8/tsocks	2010-01-06 15:13:27.436555813 -0500
+@@ -37,11 +37,6 @@
+ # This script is originally from the debian tsocks package by 
+ # Tamas Szerb <toma@rulez.org>
+ 
+-if [ $# = 0 ] ; then
+-   echo "$0: insufficient arguments"
+-   exit
+-fi
+-
+ case "$1" in
+ 	on)
+ 		if [ -z "$LD_PRELOAD" ]

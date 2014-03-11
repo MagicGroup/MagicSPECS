@@ -1,0 +1,27 @@
+diff -up graphviz-2.30.1/configure.ac.orig graphviz-2.30.1/configure.ac
+--- graphviz-2.30.1/configure.ac.orig	2013-02-14 14:27:39.000000000 +0100
++++ graphviz-2.30.1/configure.ac	2013-02-15 11:43:17.794608767 +0100
+@@ -710,7 +710,7 @@ else
+           GUILE_LIBS=
+ 	  # don't die if PKG_CHECK_MODULES not available - el4, el5
+           PKG_CHECK_MODULES([GUILE],
+-		[guile >= "$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR"],
++		[guile-2.0 >= "$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR"],
+ 		GUILE_INCLUDES="$GUILE_CFLAGS",
+           	[
+ 			PKG_CHECK_MODULES([GUILE],
+diff -up graphviz-2.30.1/configure.orig graphviz-2.30.1/configure
+--- graphviz-2.30.1/configure.orig	2013-02-15 11:44:09.552556536 +0100
++++ graphviz-2.30.1/configure	2013-02-14 14:30:22.000000000 +0100
+@@ -21028,9 +21028,9 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        GUILE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "guile >= "$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR"" 2>&1`
++	        GUILE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "guile-2.0 >= "$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR"" 2>&1`
+         else
+-	        GUILE_PKG_ERRORS=`$PKG_CONFIG --print-errors "guile >= "$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR"" 2>&1`
++	        GUILE_PKG_ERRORS=`$PKG_CONFIG --print-errors "guile-2.0 >= "$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR"" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GUILE_PKG_ERRORS" >&5

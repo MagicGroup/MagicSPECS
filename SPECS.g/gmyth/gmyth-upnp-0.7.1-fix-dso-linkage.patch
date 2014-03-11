@@ -1,0 +1,38 @@
+--- gmyth-upnp-0.7.1/tests/main.c.orig	2012-02-26 15:51:42.298376165 +0000
++++ gmyth-upnp-0.7.1/tests/main.c	2012-02-26 15:51:56.365363852 +0000
+@@ -55,7 +55,6 @@
+     GMainLoop *loop;
+ 
+     g_type_init ();
+-    g_thread_init (NULL);
+ 
+     o = gmyth_upnp_get_instance ();
+     g_signal_connect (o,
+--- gmyth-upnp-0.7.1/tests/Makefile.am.dso	2008-02-27 23:01:34.000000000 +0900
++++ gmyth-upnp-0.7.1/tests/Makefile.am	2011-03-25 00:55:39.000000000 +0900
+@@ -1,5 +1,6 @@
+ LDADD = \
+ 	$(GLIB_LIBS) \
++	$(GOBJECT_LIBS) \
+ 	$(LIBUPNP_LIBS) \
+ 	$(top_srcdir)/src/.libs/libgmythupnp.la
+ 
+--- gmyth-upnp-0.7.1/tests/Makefile.in.orig	2012-02-26 13:07:49.879885327 +0000
++++ gmyth-upnp-0.7.1/tests/Makefile.in	2012-02-26 13:09:45.636889860 +0000
+@@ -108,7 +108,7 @@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS@ -lgobject-2.0
+ LIBGMYTH_CFLAGS = @LIBGMYTH_CFLAGS@
+ LIBGMYTH_LIBS = @LIBGMYTH_LIBS@
+ LIBIPNP_LIBS = @LIBIPNP_LIBS@
+@@ -184,6 +184,7 @@
+ target_alias = @target_alias@
+ LDADD = \
+ 	$(GLIB_LIBS) \
++	$(GOBJECT_LIBS) \
+ 	$(LIBUPNP_LIBS) \
+ 	$(top_srcdir)/src/.libs/libgmythupnp.la
+ 

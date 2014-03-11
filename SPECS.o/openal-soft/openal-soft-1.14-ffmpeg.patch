@@ -1,0 +1,12 @@
+diff -ur openal-soft-1.14.orig/CMakeLists.txt openal-soft-1.14/CMakeLists.txt
+--- openal-soft-1.14.orig/CMakeLists.txt	2012-07-04 03:16:03.000000000 -0400
++++ openal-soft-1.14/CMakeLists.txt	2012-07-04 03:16:31.000000000 -0400
+@@ -663,7 +663,7 @@
+ 
+ IF(EXAMPLES)
+     # Might be able to use earlier versions, but these definitely work
+-    PKG_CHECK_MODULES(FFMPEG libavcodec>=52.123.0 libavformat>=52.111.0)
++    PKG_CHECK_MODULES(FFMPEG libavcodec>=52.123.0 libavformat>=52.111.0 libavutil>=51.35.0)
+ ENDIF()
+ 
+ IF(LIBTYPE STREQUAL "STATIC")

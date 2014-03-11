@@ -1,0 +1,12 @@
+diff -up texlive-2007/texk/tetex/fmtutil.ptex texlive-2007/texk/tetex/fmtutil
+--- texlive-2007/texk/tetex/fmtutil.ptex	2008-01-01 22:32:44.000000000 +0100
++++ texlive-2007/texk/tetex/fmtutil	2008-01-01 22:33:10.000000000 +0100
+@@ -674,6 +674,8 @@ run_initex()
+   case "$format" in
+     metafun) prgswitch=-progname=mpost;;
+     mptopdf|cont-??) prgswitch=-progname=context;;
++    platex*) prgswitch=-progname=platex;;
++    ptex*) prgswitch=-progname=ptex;;
+     *)       prgswitch=-progname=$format;;
+   esac
+ 

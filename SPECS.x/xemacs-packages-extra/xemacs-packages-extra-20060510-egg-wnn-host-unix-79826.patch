@@ -1,0 +1,46 @@
+--- xemacs-sumo-20060510/mule-packages/egg-its/egg-wnn.el~	2000-10-06 12:18:34.000000000 +0300
++++ xemacs-sumo-20060510/mule-packages/egg-its/egg-wnn.el	2006-09-03 02:22:54.000000000 +0300
+@@ -699,7 +699,7 @@
+   (let ((wnn-server-type 'jserver)) (close-wnn))
+   (setq jserver-list
+ 	(make-host-list
+-	 name (or jserver-list (list (or wnn-host-name (getenv "JSERVER") "localhost"))))))
++	 name (or jserver-list (list (or wnn-host-name (getenv "JSERVER") "unix"))))))
+ 
+ (fset 'set-jserver-host-name (symbol-function 'set-wnn-host-name))
+ 
+@@ -709,7 +709,7 @@
+   (let ((wnn-server-type 'cserver)) (close-wnn))
+   (setq cserver-list
+ 	(make-host-list
+-	 name (or cserver-list (list (or cwnn-host-name (getenv "CSERVER") "localhost"))))))
++	 name (or cserver-list (list (or cwnn-host-name (getenv "CSERVER") "unix"))))))
+ 
+ (fset 'set-cserver-host-name (symbol-function 'set-cwnn-host-name))
+ 
+@@ -719,7 +719,7 @@
+   (let ((wnn-server-type 'kserver)) (close-wnn))
+   (setq kserver-list
+ 	(make-host-list
+-	 name (or kserver-list (list (or kwnn-host-name (getenv "KSERVER") "localhost"))))))
++	 name (or kserver-list (list (or kwnn-host-name (getenv "KSERVER") "unix"))))))
+ 
+ (fset 'set-kserver-host-name (symbol-function 'set-kwnn-host-name))
+ 
+@@ -728,13 +728,13 @@
+       (let ((hostlist
+ 	     (cond ((eq wnn-server-type 'jserver)
+ 		    (or jserver-list
+-			(list (or wnn-host-name (getenv "JSERVER") "localhost"))))
++			(list (or wnn-host-name (getenv "JSERVER") "unix"))))
+ 		   ((eq wnn-server-type 'cserver)
+ 		    (or cserver-list
+-			(list (or cwnn-host-name (getenv "CSERVER") "localhost"))))
++			(list (or cwnn-host-name (getenv "CSERVER") "unix"))))
+ 		   ((eq wnn-server-type 'kserver)
+ 		    (or kserver-list
+-			(list (or kwnn-host-name (getenv "KSERVER") "localhost"))))))
++			(list (or kwnn-host-name (getenv "KSERVER") "unix"))))))
+ 	    (loginname (user-login-name)))
+ 	(catch 'succ
+ 	  (while hostlist

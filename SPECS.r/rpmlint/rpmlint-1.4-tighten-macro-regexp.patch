@@ -1,0 +1,12 @@
+diff -up rpmlint-1.4/AbstractCheck.py.tighten-regexp rpmlint-1.4/AbstractCheck.py
+--- rpmlint-1.4/AbstractCheck.py.tighten-regexp	2012-09-06 15:38:03.122662962 -0400
++++ rpmlint-1.4/AbstractCheck.py	2012-09-06 15:38:10.939663091 -0400
+@@ -16,7 +16,7 @@ from Filter import addDetails, printInfo
+ import Config
+ 
+ # Note: do not add any capturing parentheses here
+-macro_regex = re.compile('%+[{(]?\w+[)}]?')
++macro_regex = re.compile('%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
+ 
+ class _HeadRequest(urllib2.Request):
+     def get_method(self):

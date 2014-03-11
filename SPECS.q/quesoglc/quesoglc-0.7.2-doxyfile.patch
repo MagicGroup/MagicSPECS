@@ -1,0 +1,24 @@
+diff -up quesoglc-0.7.2/docs/Doxyfile~ quesoglc-0.7.2/docs/Doxyfile
+--- quesoglc-0.7.2/docs/Doxyfile~	2008-03-09 02:03:15.000000000 +0100
++++ quesoglc-0.7.2/docs/Doxyfile	2012-07-28 13:44:53.950508309 +0200
+@@ -41,7 +41,7 @@ PROJECT_NAME           = QuesoGLC
+ # This could be handy for archiving the generated documentation or 
+ # if some version control system is used.
+ 
+-PROJECT_NUMBER         = Version 0.7.1
++PROJECT_NUMBER         = Version 0.7.2
+ 
+ # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
+ # base path where the generated documentation will be put. 
+diff -up quesoglc-0.7.2/docs/qfooter.html~ quesoglc-0.7.2/docs/qfooter.html
+--- quesoglc-0.7.2/docs/qfooter.html~	2008-03-08 21:39:05.000000000 +0100
++++ quesoglc-0.7.2/docs/qfooter.html	2012-07-28 13:45:36.120981158 +0200
+@@ -4,7 +4,7 @@
+           <td align="center" class="main">
+ 	    <hr>
+             <small>
+-              <font color="#cccccc">Generated on $datetime for $projectname by <a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border=0></a> $doxygenversion written by Dimitri van Heesch &copy;&nbsp;1997-2005</font>
++              <font color="#cccccc">Generated for $projectname by <a href="http://www.doxygen.org/index.html"><img src="doxygen.png" alt="doxygen" align="middle" border=0></a> $doxygenversion written by Dimitri van Heesch &copy;&nbsp;1997-2005</font>
+             </small>
+           </td>
+         </tr>

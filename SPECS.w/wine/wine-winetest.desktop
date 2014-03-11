@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Wine Test
+Name[zh_CN]=Wine 测试
+Comment=Test
+Comment[zh_CN]=测试
+Exec=winetest
+Terminal=true
+Type=Application
+Icon=winetest
+Encoding=UTF-8
+Categories=X-Wine;

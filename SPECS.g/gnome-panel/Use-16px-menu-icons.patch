@@ -1,0 +1,25 @@
+From de049e9a8846270ed643b5c021ecd75fa259e00e Mon Sep 17 00:00:00 2001
+From: William Jon McCann <jmccann@redhat.com>
+Date: Mon, 4 Apr 2011 17:48:39 -0400
+Subject: [PATCH] Use 16px menu icons
+
+https://bugzilla.gnome.org/show_bug.cgi?id=646749
+---
+ gnome-panel/panel-stock-icons.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/gnome-panel/panel-stock-icons.h b/gnome-panel/panel-stock-icons.h
+index efac6d4..229d80a 100644
+--- a/gnome-panel/panel-stock-icons.h
++++ b/gnome-panel/panel-stock-icons.h
+@@ -31,7 +31,7 @@
+ G_BEGIN_DECLS
+ 
+ /* themeable size - "panel-menu" -- This is used for the icons in the menus */
+-#define PANEL_DEFAULT_MENU_ICON_SIZE 		24
++#define PANEL_DEFAULT_MENU_ICON_SIZE 		16
+ 
+ /* stock icons */
+ #define PANEL_STOCK_FORCE_QUIT          "gnome-panel-force-quit"
+-- 
+1.7.3.4

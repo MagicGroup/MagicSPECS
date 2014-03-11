@@ -1,0 +1,24 @@
+diff -up wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_pages.py.aui wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_pages.py
+--- wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_pages.py.aui	2011-04-13 22:28:07.000000000 +0200
++++ wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_pages.py	2011-04-26 08:40:13.000000000 +0200
+@@ -37,7 +37,7 @@ import ed_txt
+ import ed_mdlg
+ import ebmlib
+ import eclib
+-from extern import aui
++from wx.lib.agw import aui
+ import ed_book
+ 
+ #--------------------------------------------------------------------------#
+diff -up wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_shelf.py.aui wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_shelf.py
+--- wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_shelf.py.aui	2011-04-13 22:28:07.000000000 +0200
++++ wxPython-src-2.8.12.0/wxPython/wx/tools/Editra/src/ed_shelf.py	2011-04-26 08:40:26.000000000 +0200
+@@ -29,7 +29,7 @@ from profiler import Profile_Get
+ import ed_msg
+ import plugin
+ import iface
+-from extern import aui
++from wx.lib.agw import aui
+ import ed_book
+ 
+ #--------------------------------------------------------------------------#

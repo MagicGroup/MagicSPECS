@@ -1,0 +1,35 @@
+diff -ur gxine-0.5.905.orig/src/console_output.h gxine-0.5.905/src/console_output.h
+--- gxine-0.5.905.orig/src/console_output.h	2012-01-14 18:33:07.000000000 -0500
++++ gxine-0.5.905/src/console_output.h	2012-01-14 18:33:22.000000000 -0500
+@@ -21,7 +21,7 @@
+ #ifndef GXINE_CONSOLE_OUTPUT_H
+ #define GXINE_CONSOLE_OUTPUT_H
+ 
+-#include <glib/gmessages.h>
++#include <glib.h>
+ 
+ void console_output_init (void);
+ 
+diff -ur gxine-0.5.905.orig/src/engine.c gxine-0.5.905/src/engine.c
+--- gxine-0.5.905.orig/src/engine.c	2012-01-14 18:33:07.000000000 -0500
++++ gxine-0.5.905/src/engine.c	2012-01-14 18:33:35.000000000 -0500
+@@ -30,7 +30,7 @@
+ #include <errno.h>
+ #include <unistd.h>
+ 
+-#include <glib/gthread.h>
++#include <glib.h>
+ 
+ #include "engine.h"
+ #include "ui.h"
+diff -ur gxine-0.5.905.orig/src/main.c gxine-0.5.905/src/main.c
+--- gxine-0.5.905.orig/src/main.c	2012-01-14 18:33:07.000000000 -0500
++++ gxine-0.5.905/src/main.c	2012-01-14 18:33:46.000000000 -0500
+@@ -45,7 +45,6 @@
+ #include <gdk/gdkx.h>
+ #include <gdk/gdkkeysyms.h>
+ #include <glib.h>
+-#include <glib/gmessages.h>
+ 
+ #include "desktop_integration.h"
+ #include "engine.h"

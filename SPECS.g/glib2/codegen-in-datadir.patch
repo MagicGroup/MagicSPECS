@@ -1,0 +1,56 @@
+From 24af7308b1268f1b4a6cae74ce68ee283bcb2a62 Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Thu, 27 Sep 2012 20:11:27 -0400
+Subject: [PATCH] codegen: Install Python files in $(datadir)/glib-2.0, rather
+ than $(libdir)
+
+These files are actually architecture-indepdendent; using $(libdir)
+for them means that /usr/bin/gdbus-codegen varies between
+architectures, which is problematic for (mis)uses of multilib.
+
+See https://bugzilla.redhat.com/show_bug.cgi?id=718404
+
+https://bugzilla.gnome.org/show_bug.cgi?id=685012
+---
+ gio/gdbus-2.0/codegen/Makefile.am      | 4 ++--
+ gio/gdbus-2.0/codegen/gdbus-codegen.in | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gio/gdbus-2.0/codegen/Makefile.am b/gio/gdbus-2.0/codegen/Makefile.am
+index 39349ce..5111487 100644
+--- a/gio/gdbus-2.0/codegen/Makefile.am
++++ b/gio/gdbus-2.0/codegen/Makefile.am
+@@ -5,7 +5,7 @@ bin_SCRIPTS =
+ CLEANFILES =
+ EXTRA_DIST =
+ 
+-codegendir = $(libdir)/gdbus-2.0/codegen
++codegendir = $(datadir)/glib-2.0/codegen
+ codegen_PYTHON =						\
+ 	__init__.py						\
+ 	codegen.py						\
+@@ -24,7 +24,7 @@ CLEANFILES += gdbus-codegen
+ EXTRA_DIST += gdbus-codegen.in
+ 
+ gdbus-codegen: gdbus-codegen.in Makefile $(codegen_PYTHON)
+-	$(AM_V_GEN) sed -e 's,@libdir\@,$(libdir),' -e 's,@PYTHON\@,$(PYTHON),' $< > $@.tmp && mv $@.tmp $@
++	$(AM_V_GEN) sed -e 's,@datadir\@,$(datadir),' -e 's,@PYTHON\@,$(PYTHON),' $< > $@.tmp && mv $@.tmp $@
+ 	@chmod a+x $@
+ 
+ clean-local:
+diff --git a/gio/gdbus-2.0/codegen/gdbus-codegen.in b/gio/gdbus-2.0/codegen/gdbus-codegen.in
+index 217c755..253d151 100644
+--- a/gio/gdbus-2.0/codegen/gdbus-codegen.in
++++ b/gio/gdbus-2.0/codegen/gdbus-codegen.in
+@@ -33,7 +33,7 @@ elif os.name == 'nt':
+     # Makes gdbus-codegen 'relocatable' at runtime on Windows.
+     path = os.path.join(os.path.dirname(__file__), '..', 'lib', 'gdbus-2.0')
+ else:
+-    path = os.path.join('@libdir@', 'gdbus-2.0')
++    path = os.path.join('@datadir@', 'glib-2.0')
+ 
+ sys.path.insert(0, os.path.abspath(path))
+ from codegen import codegen_main
+-- 
+1.7.11.4
+

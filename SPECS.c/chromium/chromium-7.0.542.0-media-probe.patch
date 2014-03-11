@@ -1,0 +1,184 @@
+diff -up chromium-7.0.542.0/net/base/mime_util.cc.media-probe chromium-7.0.542.0/net/base/mime_util.cc
+--- chromium-7.0.542.0/net/base/mime_util.cc.media-probe	2010-10-04 05:40:38.000000000 -0400
++++ chromium-7.0.542.0/net/base/mime_util.cc	2010-10-04 15:02:09.324499172 -0400
+@@ -15,6 +15,15 @@
+ #include "base/string_util.h"
+ #include "base/utf_string_conversions.h"
+ 
++#include "base/path_service.h"
++
++#if ! defined(OS_MACOSX) && defined (OS_POSIX)
++#include <dlfcn.h>
++#define HAVE_DLFCN 1
++#else
++#define HAVE_DLFCN 0
++#endif
++
+ using std::string;
+ 
+ namespace net {
+@@ -199,45 +208,49 @@ static const char* const supported_image
+   "image/x-xbitmap"  // xbm
+ };
+ 
++struct format_info {
++  const char* name;
++  const char* symbol;
++  const bool  fallback;
++};
++
++#if defined(GOOGLE_CHROME_BUILD) || defined(USE_PROPRIETARY_CODECS)
++#define MPEG true
++#else
++#define MPEG false
++#endif
+ // A list of media types: http://en.wikipedia.org/wiki/Internet_media_type
+ // A comprehensive mime type list: http://plugindoc.mozdev.org/winmime.php
+-static const char* const supported_media_types[] = {
++static const format_info supported_media_types[] = {
+   // Ogg.
+-  "video/ogg",
+-  "audio/ogg",
+-  "application/ogg",
+-  "video/webm",
+-  "audio/webm",
+-  "audio/wav",
+-  "audio/x-wav",
+-
+-#if defined(GOOGLE_CHROME_BUILD) || defined(USE_PROPRIETARY_CODECS)
++  { "video/ogg",	"ogg_demuxer",      true },
++  { "audio/ogg",	"ogg_demuxer",      true },
++  { "application/ogg",  "ogg_demuxer",      true },
++  { "video/webm",	"matroska_demuxer", true },
++  { "audio/webm",	"matroska_demuxer", true },
++  { "audio/wav",        "wav_demuxer",      true },
++  { "audio/x-wav",      "wav_demuxer",      true },
+   // MPEG-4.
+-  "video/mp4",
+-  "video/x-m4v",
+-  "audio/mp4",
+-  "audio/x-m4a",
+-
++  { "video/mp4",	"mov_demuxer",      MPEG },
++  { "video/x-m4v",      "mov_demuxer",      MPEG },
++  { "audio/mp4",	"mov_demuxer",      MPEG },
++  { "audio/x-m4a",      "mov_demuxer",      MPEG },
+   // MP3.
+-  "audio/mp3",
+-  "audio/x-mp3",
+-  "audio/mpeg",
+-#endif
++  { "audio/mp3",	"mp3_demuxer",      MPEG },
++  { "audio/x-mp3",      "mp3_demuxer",      MPEG },
++  { "audio/mpeg",	"mp3_demuxer",      MPEG },
+ };
+ 
+ // List of supported codecs when passed in with <source type="...">.
+ //
+ // Refer to http://wiki.whatwg.org/wiki/Video_type_parameters#Browser_Support
+ // for more information.
+-static const char* const supported_media_codecs[] = {
+-#if defined(GOOGLE_CHROME_BUILD) || defined(USE_PROPRIETARY_CODECS)
+-  "avc1",
+-  "mp4a",
+-#endif
+-  "theora",
+-  "vorbis",
+-  "vp8",
+-  "1"  // PCM for WAV.
++static const format_info supported_media_codecs[] = {
++  { "avc1",   "aac_decoder",    MPEG },
++  { "mp4a",   "h264_decoder",   MPEG },
++  { "theora", "theora_decoder", true },
++  { "vorbis", "vorbis_decoder", true },
++  { "vp8",    "libvpx_decoder", true },
+ };
+ 
+ // Note: does not include javascript types list (see supported_javascript_types)
+@@ -312,7 +325,47 @@ static const MediaFormatStrict format_co
+   { "audio/wav", "1" }
+ };
+ 
+-void MimeUtil::InitializeMimeTypeMaps() {
++#if defined(OS_MACOSX)
++#define DSO_NAME(MODULE) ("lib" MODULE ".dylib")
++#elif defined(OS_POSIX)
++#define DSO_NAME(MODULE) ("lib" MODULE ".so")
++#else
++#define DSO_NAME(MODULE) (MODULE ".dll")
++#endif
++
++static void* GetHandle(const FilePath& module_dir, const char* library) {
++#if HAVE_DLFCN
++  FilePath path = module_dir.Append(library);
++  return dlopen(path.value().c_str(), RTLD_LAZY);
++#else
++  return NULL;
++#endif
++}
++
++static void DumpHandle(void* dlhandle) {
++#if HAVE_DLFCN
++  if (dlhandle)
++    dlclose(dlhandle);
++#endif
++}
++
++static bool ProbeFormat(void* dlhandle, const char* symbol, bool fallback) {
++#if HAVE_DLFCN
++  return dlhandle && dlsym(dlhandle, symbol);
++#else
++  return fallback;
++#endif
++}
++
++ void MimeUtil::InitializeMimeTypeMaps() {
++  FilePath module_path;
++#if defined(OS_MACOSX)
++  module_path = mac_util::MainAppBundlePath().Append("Libraries");
++#else
++  PathService::Get(base::DIR_MODULE, &module_path);
++#endif
++  void* h_ffmpegsumo = GetHandle(module_path, DSO_NAME("ffmpegsumo"));
++
+   for (size_t i = 0; i < arraysize(supported_image_types); ++i)
+     image_map_.insert(supported_image_types[i]);
+ 
+@@ -322,11 +375,15 @@ void MimeUtil::InitializeMimeTypeMaps() 
+   for (size_t i = 0; i < arraysize(supported_javascript_types); ++i)
+     non_image_map_.insert(supported_javascript_types[i]);
+   for (size_t i = 0; i < arraysize(supported_media_types); ++i)
+-    non_image_map_.insert(supported_media_types[i]);
++    if (ProbeFormat(h_ffmpegsumo, supported_media_types[i].symbol,
++                    supported_media_types[i].fallback))
++      non_image_map_.insert(supported_media_types[i].name);
+ 
+   // Initialize the supported media types.
+   for (size_t i = 0; i < arraysize(supported_media_types); ++i)
+-    media_map_.insert(supported_media_types[i]);
++    if (ProbeFormat(h_ffmpegsumo, supported_media_types[i].symbol,
++                    supported_media_types[i].fallback))
++      media_map_.insert(supported_media_types[i].name);
+ 
+   for (size_t i = 0; i < arraysize(supported_javascript_types); ++i)
+     javascript_map_.insert(supported_javascript_types[i]);
+@@ -335,7 +392,9 @@ void MimeUtil::InitializeMimeTypeMaps() 
+     view_source_map_.insert(view_source_types[i]);
+ 
+   for (size_t i = 0; i < arraysize(supported_media_codecs); ++i)
+-    codecs_map_.insert(supported_media_codecs[i]);
++    if (ProbeFormat(h_ffmpegsumo, supported_media_codecs[i].symbol,
++                    supported_media_codecs[i].fallback))
++      codecs_map_.insert(supported_media_codecs[i].name);
+ 
+   // Initialize the strict supported media types.
+   for (size_t i = 0; i < arraysize(format_codec_mappings); ++i) {
+@@ -349,6 +408,8 @@ void MimeUtil::InitializeMimeTypeMaps() 
+       codecs.insert(mime_type_codecs[j]);
+     strict_format_map_[format_codec_mappings[i].mime_type] = codecs;
+   }
++
++  DumpHandle(h_ffmpegsumo);
+ }
+ 
+ bool MimeUtil::IsSupportedImageMimeType(const char* mime_type) const {

@@ -1,0 +1,23 @@
+diff -up chromium-17.0.963.46/third_party/ffmpeg/ffmpeg.gyp.no-pkgconfig chromium-17.0.963.46/third_party/ffmpeg/ffmpeg.gyp
+--- chromium-17.0.963.46/third_party/ffmpeg/ffmpeg.gyp.no-pkgconfig	2012-01-27 03:03:59.000000000 -0500
++++ chromium-17.0.963.46/third_party/ffmpeg/ffmpeg.gyp	2012-02-13 15:45:09.320971590 -0500
+@@ -525,12 +525,14 @@
+ 
+             # Add pkg-config result to include path when use_system_ffmpeg != 0
+             ['use_system_ffmpeg != 0', {
+-              'cflags': [
+-                '<!@(pkg-config --cflags libavcodec libavformat libavutil)',
+-              ],
++              'include_dirs': [
++                'config',
++                '/usr/include/ffmpegsumo',
++               ],
+               'direct_dependent_settings': {
+-                'cflags': [
+-                  '<!@(pkg-config --cflags libavcodec libavformat libavutil)',
++                'include_dirs': [
++                  'config',
++                  '/usr/include/ffmpegsumo',
+                 ],
+               },
+             }, {  # else use_system_ffmpeg == 0, add local copy to include path

@@ -1,0 +1,18 @@
+--- kdebase-3.5.4/kde.pamd.redhat	2005-09-10 10:26:16.000000000 +0200
++++ kdebase-3.5.4/kde.pamd	2006-08-25 14:15:02.000000000 +0200
+@@ -1,7 +1,9 @@
+ #%PAM-1.0
+-auth       required	/lib/security/pam_pwdb.so shadow nullok
+-auth       required	/lib/security/pam_nologin.so
+-account    required	/lib/security/pam_pwdb.so
+-password   required	/lib/security/pam_cracklib.so
+-password   required	/lib/security/pam_pwdb.so shadow nullok use_authtok
+-session    required	/lib/security/pam_pwdb.so
++auth       include     system-auth
++account    required	pam_nologin.so
++account    include     system-auth
++password   include     system-auth
++session    include	system-auth
++session    required    pam_loginuid.so
++session    optional    pam_selinux.so
++session    optional	pam_console.so

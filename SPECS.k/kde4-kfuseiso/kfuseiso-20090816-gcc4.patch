@@ -1,0 +1,11 @@
+diff -ur kfuseiso-20090816.orig/iso_image_plugin.cpp kfuseiso-20090816/iso_image_plugin.cpp
+--- kfuseiso-20090816.orig/iso_image_plugin.cpp	2012-12-28 08:11:40.000000000 +0000
++++ kfuseiso-20090816/iso_image_plugin.cpp	2012-12-28 08:11:58.000000000 +0000
+@@ -22,6 +22,7 @@
+ 
+ #include <stdio.h>
+ #include <fcntl.h>
++#include <unistd.h>
+ 
+ #include <QDir>
+ 

@@ -1,0 +1,81 @@
+From 16457c869d3fac6a94e204f1edac1ad9fffae55a Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 20 Sep 2011 11:16:53 +0200
+Subject: [PATCH] mount securityfs in a seperate dracut module
+
+---
+ modules.d/96securityfs/module-setup.sh |   15 +++++++++++++++
+ modules.d/96securityfs/securityfs.sh   |   10 ++++++++++
+ modules.d/98integrity/module-setup.sh  |    2 +-
+ modules.d/99base/init                  |    6 ------
+ 4 files changed, 26 insertions(+), 7 deletions(-)
+ create mode 100755 modules.d/96securityfs/module-setup.sh
+ create mode 100755 modules.d/96securityfs/securityfs.sh
+
+diff --git a/modules.d/96securityfs/module-setup.sh b/modules.d/96securityfs/module-setup.sh
+new file mode 100755
+index 0000000..fbe3aa3
+--- /dev/null
++++ b/modules.d/96securityfs/module-setup.sh
+@@ -0,0 +1,15 @@
++#!/bin/bash
++# -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
++# ex: ts=8 sw=4 sts=4 et filetype=sh
++
++check() {
++    return 255
++}
++
++depends() {
++    return 0
++}
++
++install() {
++    inst_hook cmdline 60 "$moddir/securityfs.sh"
++}
+diff --git a/modules.d/96securityfs/securityfs.sh b/modules.d/96securityfs/securityfs.sh
+new file mode 100755
+index 0000000..03ee4dd
+--- /dev/null
++++ b/modules.d/96securityfs/securityfs.sh
+@@ -0,0 +1,10 @@
++#!/bin/sh
++# -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
++# ex: ts=8 sw=4 sts=4 et filetype=sh
++
++SECURITYFSDIR="/sys/kernel/security"
++export SECURITYFSDIR
++
++if ! ismounted "${SECURITYFSDIR}"; then
++   mount -t securityfs -o nosuid,noexec,nodev securityfs ${SECURITYFSDIR} >/dev/null 2>&1
++fi
+diff --git a/modules.d/98integrity/module-setup.sh b/modules.d/98integrity/module-setup.sh
+index cab9027..7d5771c 100755
+--- a/modules.d/98integrity/module-setup.sh
++++ b/modules.d/98integrity/module-setup.sh
+@@ -7,7 +7,7 @@ check() {
+ }
+ 
+ depends() {
+-    echo masterkey
++    echo masterkey securityfs
+     return 0
+ }
+ 
+diff --git a/modules.d/99base/init b/modules.d/99base/init
+index fa808ca..06d61a8 100755
+--- a/modules.d/99base/init
++++ b/modules.d/99base/init
+@@ -86,12 +86,6 @@ RD_DEBUG=""
+ [ ! -d /sys/kernel ] && \
+     mount -t sysfs -o nosuid,noexec,nodev sysfs /sys >/dev/null 2>&1
+ 
+-SECURITYFSDIR="/sys/kernel/security"
+-export SECURITYFSDIR
+-if ! ismounted "${SECURITYFSDIR}"; then
+-    mount -t securityfs -o nosuid,noexec,nodev securityfs ${SECURITYFSDIR} >/dev/null 2>&1
+-fi
+-
+ if [ -x /lib/systemd/systemd-timestamp ]; then
+     RD_TIMESTAMP=$(/lib/systemd/systemd-timestamp)
+ else

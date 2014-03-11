@@ -1,0 +1,22 @@
+diff -ur qt-x11-free-3.3.8d.orig/tools/qembed/qembed.pro qt-x11-free-3.3.8d/tools/qembed/qembed.pro
+--- qt-x11-free-3.3.8d.orig/tools/qembed/qembed.pro	2011-11-25 13:20:05.000000000 -0500
++++ qt-x11-free-3.3.8d/tools/qembed/qembed.pro	2011-11-25 14:09:10.000000000 -0500
+@@ -2,6 +2,6 @@
+ SOURCES = qembed.cpp
+ TARGET  = qembed
+ REQUIRES=full-config nocrosscompiler
+-
++DESTDIR = ../../bin
+ target.path = $$bins.path
+ INSTALLS += target
+diff -ur qt-x11-free-3.3.8d.orig/tools/tools.pro qt-x11-free-3.3.8d/tools/tools.pro
+--- qt-x11-free-3.3.8d.orig/tools/tools.pro	2011-11-25 13:20:05.000000000 -0500
++++ qt-x11-free-3.3.8d/tools/tools.pro	2011-11-25 14:08:48.000000000 -0500
+@@ -5,6 +5,7 @@
+     SUBDIRS		= assistant/lib \
+ 		      designer \
+ 		      assistant \
++		      qembed \
+ 		      linguist
+     unix:SUBDIRS	+= qtconfig \
+ 			mergetr \

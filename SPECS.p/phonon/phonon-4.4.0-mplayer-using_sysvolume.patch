@@ -1,0 +1,71 @@
+diff -Nuarp mplayer.orig/CMakeLists.txt mplayer/CMakeLists.txt
+--- mplayer.orig/CMakeLists.txt	2010-04-21 23:17:43.000000000 +0800
++++ mplayer/CMakeLists.txt	2010-04-21 23:21:19.000000000 +0800
+@@ -2,6 +2,8 @@ add_subdirectory(libmplayer)
+ 
+ project(phonon-mplayer)
+ 
++find_package(ALSA)
++
+ if (NEW_TITLE_CHAPTER_HANDLING)
+ 	add_definitions(-DNEW_TITLE_CHAPTER_HANDLING)
+ endif (NEW_TITLE_CHAPTER_HANDLING)
+@@ -37,6 +39,7 @@ set_target_properties(phonon_mplayer PRO
+ target_link_libraries(phonon_mplayer
+ 	${PHONON_LIBS}
+ 	libmplayer
++    ${ALSA_LIBRARY}
+ )
+ 
+ if(WIN32)
+diff -Nuarp mplayer.orig/libmplayer/MPlayerLoader.cpp mplayer/libmplayer/MPlayerLoader.cpp
+--- mplayer.orig/libmplayer/MPlayerLoader.cpp	2010-04-21 23:17:43.000000000 +0800
++++ mplayer/libmplayer/MPlayerLoader.cpp	2010-04-21 23:20:43.000000000 +0800
+@@ -23,6 +23,7 @@
+ #include "Config.h"
+ 
+ #include <QtCore/QtDebug>
++#include <alsa/asoundlib.h>
+ 
+ MediaSettings MPlayerLoader::settings;
+ 
+@@ -222,7 +223,38 @@ QStringList MPlayerLoader::readMediaSett
+ 		//See http://svn.mplayerhq.hu/mplayer/trunk/mplayer.c?revision=27872&view=markup
+ 		if (settings.volume >= 0) {
+ 			args << "-volume";
+-			args << QString::number(settings.volume);
++            int result = -1;
++            /// open mixer
++            snd_mixer_t* handle = NULL;
++            snd_mixer_open(&handle, 0);
++            if (handle) {
++                snd_mixer_attach(handle, "default");
++                snd_mixer_selem_register(handle, NULL, NULL);
++                snd_mixer_load(handle);
++                /// set mixer elem
++                snd_mixer_elem_t* elem = NULL;
++                snd_mixer_elem_t* var;
++                for ( var = snd_mixer_first_elem(handle); var; var = snd_mixer_elem_next(var)) {
++                    if (strcasecmp("PCM", snd_mixer_selem_get_name(var)) == 0) {
++                        elem = var;
++                        break;
++                    } else if (strcasecmp("Master", snd_mixer_selem_get_name(var)) == 0) {
++                        elem = var;
++                    }
++                }
++                if (elem) {
++                    snd_mixer_selem_set_playback_volume_range(elem, 0, 100);
++                    /// get volume
++                    long ll, lr;
++                    snd_mixer_handle_events(handle);
++                    snd_mixer_selem_get_playback_volume(elem, SND_MIXER_SCHN_FRONT_LEFT, &ll);
++                    snd_mixer_selem_get_playback_volume(elem, SND_MIXER_SCHN_FRONT_RIGHT, &lr);
++                    result = (ll + lr) >> 1;
++                }
++                snd_mixer_close(handle);
++            }
++            args << QString::number(result);
++			//args << QString::number(settings.volume);
+ 		}
+ 	}
+ 

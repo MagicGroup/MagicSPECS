@@ -1,0 +1,35 @@
+Subject: Hotplug support for KDE3 applications
+From: Lubos Lunak
+Feature: bnc#378338
+Patch-upstream: never
+Relates: kdelibs4/hotplug-kde3.diff, kdebase4-workspace/hotplug-kde3.diff
+
+--- soliduiserver/deviceserviceaction.cpp
++++ soliduiserver/deviceserviceaction.cpp
+@@ -114,6 +114,15 @@ int MacroExpander::expandEscapedMacro(co
+                        << " is not a StorageAccess device" << endl;
+         }
+         break;
++    case 'u': // URL
++    case 'U': // case insensitive
++        if (m_device.is<Solid::StorageAccess>()) {
++            ret << KUrl::fromPath( m_device.as<Solid::StorageAccess>()->filePath()).url();
++        } else {
++            kWarning() << "DeviceServiceAction::execute: " << m_device.udi()
++                       << " is not a StorageAccess device" << endl;
++        }
++        break;
+     case 'd': // Device node
+     case 'D': // case insensitive
+         if (m_device.is<Solid::Block>()) {
+--- soliduiserver/soliduiserver.cpp
++++ soliduiserver/soliduiserver.cpp
+@@ -76,6 +76,8 @@ void SolidUiServer::showActionsDialog(co
+ 
+     foreach (const QString &desktop, desktopFiles) {
+         QString filePath = KStandardDirs::locate("data", "solid/actions/"+desktop);
++        if (desktop.startsWith('/'))
++            filePath = desktop;
+ 
+         QList<KServiceAction> services
+             = KDesktopFileActions::userDefinedServices(filePath, true);

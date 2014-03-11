@@ -1,0 +1,25 @@
+diff -up ./mozilla/security/nss/lib/ssl/sslsock.c.cbcrandomivoff ./mozilla/security/nss/lib/ssl/sslsock.c
+--- ./mozilla/security/nss/lib/ssl/sslsock.c.cbcrandomivoff	2013-02-01 10:14:36.960458329 -0800
++++ ./mozilla/security/nss/lib/ssl/sslsock.c	2013-02-01 10:17:16.532265855 -0800
+@@ -153,7 +153,7 @@ static sslOptions ssl_defaults = {
+     3,          /* enableRenegotiation (default: transitional) */
+     PR_FALSE,   /* requireSafeNegotiation */
+     PR_FALSE,   /* enableFalseStart   */
+-    PR_TRUE     /* cbcRandomIV        */
++    PR_FALSE    /* cbcRandomIV        */ /* defaults to off for compatibility */
+ };
+ 
+ /*
+@@ -2837,9 +2837,9 @@ ssl_SetDefaultsFromEnvironment(void)
+ 	                PR_TRUE));
+ 	}
+ 	ev = getenv("NSS_SSL_CBC_RANDOM_IV");
+-	if (ev && ev[0] == '0') {
+-	    ssl_defaults.cbcRandomIV = PR_FALSE;
+-	    SSL_TRACE(("SSL: cbcRandomIV set to 0"));
++	if (ev && ev[0] == '1') {
++	    ssl_defaults.cbcRandomIV = PR_TRUE;
++	    SSL_TRACE(("SSL: cbcRandomIV set to 1"));
+ 	}
+     }
+ #endif /* NSS_HAVE_GETENV */

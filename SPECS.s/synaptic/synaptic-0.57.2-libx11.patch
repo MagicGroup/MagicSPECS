@@ -1,0 +1,24 @@
+diff -up synaptic-0.57.2/gtk/Makefile.am.dsolink synaptic-0.57.2/gtk/Makefile.am
+--- synaptic-0.57.2/gtk/Makefile.am.dsolink	2010-02-15 14:57:36.000000000 +0200
++++ synaptic-0.57.2/gtk/Makefile.am	2010-02-15 14:58:43.000000000 +0200
+@@ -16,7 +16,7 @@ synaptic_LDADD = \
+ 	${top_builddir}/common/libsynaptic.a\
+ 	-lapt-pkg @RPM_LIBS@ @DEB_LIBS@ \
+ 	@PACKAGE_LIBS@ @VTE_LIBS@ \
+-	-lpthread $(LIBTAGCOLL_LIBS) 
++	-lX11 -lpthread $(LIBTAGCOLL_LIBS) 
+ 
+ glade_DATA =                            \
+ 	window_about.glade  \
+diff -up synaptic-0.57.2/gtk/Makefile.in.dsolink synaptic-0.57.2/gtk/Makefile.in
+--- synaptic-0.57.2/gtk/Makefile.in.dsolink	2010-02-15 14:57:44.000000000 +0200
++++ synaptic-0.57.2/gtk/Makefile.in	2010-02-15 14:59:15.000000000 +0200
+@@ -190,7 +190,7 @@ synaptic_LDADD = \
+ 	${top_builddir}/common/libsynaptic.a\
+ 	-lapt-pkg @RPM_LIBS@ @DEB_LIBS@ \
+ 	@PACKAGE_LIBS@ @VTE_LIBS@ \
+-	-lpthread $(LIBTAGCOLL_LIBS) 
++	-lX11 -lpthread $(LIBTAGCOLL_LIBS) 
+ 
+ 
+ glade_DATA = \

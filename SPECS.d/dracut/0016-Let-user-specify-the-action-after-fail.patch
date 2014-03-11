@@ -1,0 +1,222 @@
+From 9d787df19674937e8c07bd295b5d282a63829209 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 29 Mar 2013 18:36:16 +0800
+Subject: [PATCH] Let user specify the action after fail
+
+Currently the default action is emergency_shell when failure happened
+during system boot. In kdump, this default may not be expected. E.g,
+if dump target is not rootfs, it does not matter if mount root failed.
+Adding an action which allow dracut always go ahead though failure
+happens is needed by kdump.
+
+So here add a function action_on_fail() and cmdline parameter
+action_on_fail=<shell | continue>. Use action_to_fail() to replace
+emergency_shell which was called after failure. By $(getarg action_on_fail=),
+decide to drop into shell, or to leave away the failure and go ahead.
+
+v3->v4:
+add handling of selinux policy loaded failure, and change code format to
+be consitent
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+
+[Edited by harald@redhat.com]
+---
+ dracut.cmdline.7.asc                      |  4 ++++
+ modules.d/95rootfs-block/mount-root.sh    |  2 +-
+ modules.d/98selinux/selinux-loadpolicy.sh |  6 ++----
+ modules.d/98systemd/dracut-initqueue.sh   |  2 +-
+ modules.d/98systemd/dracut-mount.sh       |  2 +-
+ modules.d/98usrmount/mount-usr.sh         |  4 ++--
+ modules.d/99base/dracut-lib.sh            | 22 ++++++++++++++++++++++
+ modules.d/99base/init.sh                  | 12 ++++++------
+ 8 files changed, 39 insertions(+), 15 deletions(-)
+
+diff --git a/dracut.cmdline.7.asc b/dracut.cmdline.7.asc
+index f1457d5..4626279 100644
+--- a/dracut.cmdline.7.asc
++++ b/dracut.cmdline.7.asc
+@@ -121,6 +121,10 @@ Misc
+    specify the controlling terminal for the console.
+    This is useful, if you have multiple "console=" arguments.
+ 
++**action_on_fail=**_{shell|continue}_::
++   Specify the action after failure. By default it's emergency_shell.
++   'continue' means: ignore the current failure and go ahead.
++
+ [[dracutkerneldebug]]
+ Debug
+ ~~~~~
+diff --git a/modules.d/95rootfs-block/mount-root.sh b/modules.d/95rootfs-block/mount-root.sh
+index c7626c3..6ed35c1 100755
+--- a/modules.d/95rootfs-block/mount-root.sh
++++ b/modules.d/95rootfs-block/mount-root.sh
+@@ -68,7 +68,7 @@ mount_root() {
+                 warn "*** Warning -- the system did not shut down cleanly. "
+                 warn "*** Dropping you to a shell; the system will continue"
+                 warn "*** when you leave the shell."
+-                emergency_shell
++                action_on_fail
+             fi
+             fsckoptions="$AUTOFSCK_OPT $fsckoptions"
+         fi
+diff --git a/modules.d/98selinux/selinux-loadpolicy.sh b/modules.d/98selinux/selinux-loadpolicy.sh
+index d6e24d6..7526265 100755
+--- a/modules.d/98selinux/selinux-loadpolicy.sh
++++ b/modules.d/98selinux/selinux-loadpolicy.sh
+@@ -52,16 +52,14 @@ rd_load_policy()
+         if [ $ret -eq 3 -o $permissive -eq 0 ]; then
+             warn "Machine in enforcing mode."
+             warn "Not continuing"
+-            emergency_shell -n selinux
+-            exit 1
++            action_on_fail -n selinux || exit 1
+         fi
+         return 0
+     elif [ $permissive -eq 0 -a "$SELINUX" != "disabled" ]; then
+         warn "Machine in enforcing mode and cannot execute load_policy."
+         warn "To disable selinux, add selinux=0 to the kernel command line."
+         warn "Not continuing"
+-        emergency_shell -n selinux
+-        exit 1
++        action_on_fail -n selinux || exit 1
+     fi
+ }
+ 
+diff --git a/modules.d/98systemd/dracut-initqueue.sh b/modules.d/98systemd/dracut-initqueue.sh
+index c6fab30..2c71bf4 100755
+--- a/modules.d/98systemd/dracut-initqueue.sh
++++ b/modules.d/98systemd/dracut-initqueue.sh
+@@ -62,7 +62,7 @@ while :; do
+     fi
+ 
+     main_loop=$(($main_loop+1))
+-    [ $main_loop -gt $RDRETRY ] && emergency_shell "Could not boot."
++    [ $main_loop -gt $RDRETRY ] && action_on_fail "Could not boot." && break
+ done
+ 
+ unset job
+diff --git a/modules.d/98systemd/dracut-mount.sh b/modules.d/98systemd/dracut-mount.sh
+index 5f3d9f0..ae01512 100755
+--- a/modules.d/98systemd/dracut-mount.sh
++++ b/modules.d/98systemd/dracut-mount.sh
+@@ -31,7 +31,7 @@ while :; do
+     done
+ 
+     i=$(($i+1))
+-    [ $i -gt 20 ] && emergency_shell "Can't mount root filesystem"
++    [ $i -gt 20 ] && action_on_fail "Can't mount root filesystem" && break
+ done
+ 
+ export -p > /dracut-state.sh
+diff --git a/modules.d/98usrmount/mount-usr.sh b/modules.d/98usrmount/mount-usr.sh
+index 5aaefbc..a4a66ae 100755
+--- a/modules.d/98usrmount/mount-usr.sh
++++ b/modules.d/98usrmount/mount-usr.sh
+@@ -42,7 +42,7 @@ fsck_usr()
+             warn "*** Warning -- the system did not shut down cleanly. "
+             warn "*** Dropping you to a shell; the system will continue"
+             warn "*** when you leave the shell."
+-            emergency_shell
++            action_on_fail
+         fi
+         _fsckoptions="$AUTOFSCK_OPT $_fsckoptions"
+     fi
+@@ -105,7 +105,7 @@ mount_usr()
+             warn "Mounting /usr to $NEWROOT/usr failed"
+             warn "*** Dropping you to a shell; the system will continue"
+             warn "*** when you leave the shell."
+-            emergency_shell
++            action_on_fail
+         fi
+     fi
+ }
+diff --git a/modules.d/99base/dracut-lib.sh b/modules.d/99base/dracut-lib.sh
+index f2b16d3..1defb6f 100755
+--- a/modules.d/99base/dracut-lib.sh
++++ b/modules.d/99base/dracut-lib.sh
+@@ -994,6 +994,28 @@ emergency_shell()
+     [ -e /run/initramfs/.die ] && exit 1
+ }
+ 
++action_on_fail()
++{
++    local _action=$(getarg action_on_fail=)
++    case "$_action" in
++        continue)
++            [ "$1" = "-n" ] && shift 2
++            [ "$1" = "--shutdown" ] && shift 2
++            warn "$*"
++            warn "Not dropping to emergency shell, because 'action_on_fail=continue' was set on the kernel command line."
++            return 0
++            ;;
++        shell)
++            emergency_shell $@
++            return 1
++            ;;
++        *)
++            emergency_shell $@
++            return 1
++            ;;
++    esac
++}
++
+ # Retain the values of these variables but ensure that they are unexported
+ # This is a POSIX-compliant equivalent of bash's "export -n"
+ export_n()
+diff --git a/modules.d/99base/init.sh b/modules.d/99base/init.sh
+index 410201a..880a2c0 100755
+--- a/modules.d/99base/init.sh
++++ b/modules.d/99base/init.sh
+@@ -79,7 +79,7 @@ if ! ismounted /run; then
+     rm -fr /newrun
+ fi
+ 
+-trap "emergency_shell Signal caught!" 0
++trap "action_on_fail Signal caught!" 0
+ 
+ [ -d /run/initramfs ] || mkdir -p -m 0755 /run/initramfs
+ [ -d /run/log ] || mkdir -p -m 0755 /run/log
+@@ -199,7 +199,7 @@ while :; do
+ 
+     main_loop=$(($main_loop+1))
+     [ $main_loop -gt $RDRETRY ] \
+-        && { flock -s 9 ; emergency_shell "Could not boot."; } 9>/.console_lock
++        && { flock -s 9 ; action_on_fail "Could not boot." && break; } 9>/.console_lock
+ done
+ unset job
+ unset queuetriggered
+@@ -234,7 +234,7 @@ while :; do
+ 
+     i=$(($i+1))
+     [ $i -gt 20 ] \
+-        && { flock -s 9 ; emergency_shell "Can't mount root filesystem"; } 9>/.console_lock
++        && { flock -s 9 ; action_on_fail "Can't mount root filesystem" && break; } 9>/.console_lock
+ done
+ 
+ {
+@@ -268,7 +268,7 @@ done
+ [ "$INIT" ] || {
+     echo "Cannot find init!"
+     echo "Please check to make sure you passed a valid root filesystem!"
+-    emergency_shell
++    action_on_fail
+ }
+ 
+ if [ $UDEVVERSION -lt 168 ]; then
+@@ -370,13 +370,13 @@ if [ -f /etc/capsdrop ]; then
+ 	warn "Command:"
+ 	warn capsh --drop=$CAPS_INIT_DROP -- -c exec switch_root "$NEWROOT" "$INIT" $initargs
+ 	warn "failed."
+-	emergency_shell
++	action_on_fail
+     }
+ else
+     unset RD_DEBUG
+     exec $SWITCH_ROOT "$NEWROOT" "$INIT" $initargs || {
+ 	warn "Something went very badly wrong in the initramfs.  Please "
+ 	warn "file a bug against dracut."
+-	emergency_shell
++	action_on_fail
+     }
+ fi

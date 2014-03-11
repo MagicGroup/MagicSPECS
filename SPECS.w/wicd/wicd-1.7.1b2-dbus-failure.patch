@@ -1,0 +1,49 @@
+diff -up wicd-1.7.1b2/cli/wicd-cli.py.orig wicd-1.7.1b2/cli/wicd-cli.py
+--- wicd-1.7.1b2/cli/wicd-cli.py.orig	2010-10-29 11:36:55.000000000 -0400
++++ wicd-1.7.1b2/cli/wicd-cli.py	2011-08-19 17:06:57.834035455 -0400
+@@ -43,6 +43,10 @@ except dbus.DBusException:
+ 	print 'Error: Could not connect to the daemon. Please make sure it is running.'
+ 	sys.exit(3)
+ 
++if daemon is None:
++	print 'Error connecting to wicd via D-Bus.  Please make sure the wicd service is running.'
++	sys.exit(3)
++
+ parser = optparse.OptionParser()
+ 
+ parser.add_option('--network', '-n', type='int', default=-1)
+diff -up wicd-1.7.1b2/curses/wicd-curses.py.orig wicd-1.7.1b2/curses/wicd-curses.py
+--- wicd-1.7.1b2/curses/wicd-curses.py.orig	2010-10-29 11:36:55.000000000 -0400
++++ wicd-1.7.1b2/curses/wicd-curses.py	2011-08-19 17:06:57.835034617 -0400
+@@ -1017,6 +1017,10 @@ def setup_dbus(force=True):
+     wireless = dbus_ifaces['wireless']
+     wired = dbus_ifaces['wired']
+ 
++    if daemon is None:
++        print 'Error connecting to wicd via D-Bus.  Please make sure the wicd service is running.'
++        sys.exit(3)
++
+     netentry_curses.dbus_init(dbus_ifaces)
+     return True
+ 
+diff -up wicd-1.7.1b2/gtk/gui.py.orig wicd-1.7.1b2/gtk/gui.py
+--- wicd-1.7.1b2/gtk/gui.py.orig	2010-10-29 11:36:55.000000000 -0400
++++ wicd-1.7.1b2/gtk/gui.py	2011-08-19 17:06:57.836054170 -0400
+@@ -145,6 +145,17 @@ class appGui(object):
+         """ Initializes everything needed for the GUI. """
+         setup_dbus()
+ 
++        if daemon is None:
++            errmsg = "Error connecting to wicd service via D-Bus." + \
++                     "Please ensure the wicd service is running."
++            d = gtk.MessageDialog(parent=None,
++                                  flags=gtk.DIALOG_MODAL,
++                                  type=gtk.MESSAGE_ERROR,
++                                  buttons=gtk.BUTTONS_OK,
++                                  message_format=errmsg)
++            d.run()
++            sys.exit(1)
++
+         self.tray = tray
+ 
+         gladefile = os.path.join(wpath.gtk, "wicd.ui")

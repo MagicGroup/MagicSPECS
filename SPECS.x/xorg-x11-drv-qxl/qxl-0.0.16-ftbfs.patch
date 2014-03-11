@@ -1,0 +1,52 @@
+diff -up xf86-video-qxl-0.0.16/src/qxl_driver.c.jx xf86-video-qxl-0.0.16/src/qxl_driver.c
+--- xf86-video-qxl-0.0.16/src/qxl_driver.c.jx	2012-01-04 17:25:15.000000000 -0500
++++ xf86-video-qxl-0.0.16/src/qxl_driver.c	2012-01-04 17:26:38.638750279 -0500
+@@ -46,6 +46,8 @@
+ #include "spiceqxl_spice_server.h"
+ #endif /* XSPICE */
+ 
++extern void compat_init_scrn(ScrnInfoPtr);
++
+ #if 0
+ #define CHECK_POINT() ErrorF ("%s: %d  (%s)\n", __FILE__, __LINE__, __FUNCTION__);
+ #endif
+diff -up xf86-video-qxl-0.0.16/src/qxl_ring.c.jx xf86-video-qxl-0.0.16/src/qxl_ring.c
+--- xf86-video-qxl-0.0.16/src/qxl_ring.c.jx	2011-07-23 05:47:48.000000000 -0400
++++ xf86-video-qxl-0.0.16/src/qxl_ring.c	2012-01-04 17:36:58.409017660 -0500
+@@ -26,6 +26,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <stdlib.h>
++#include <sched.h>
+ #include "qxl.h"
+ 
+ struct ring
+@@ -78,7 +79,7 @@ qxl_ring_push (struct qxl_ring *ring,
+ #ifdef XSPICE
+ 	/* in gtkperf, circles, this is a major bottleneck. Can't be that good in a vm either
+ 	 * Adding the yield reduces cpu usage, but doesn't improve throughput. */
+-	pthread_yield();
++	sched_yield();
+ #endif
+ 	mem_barrier();
+     }
+diff -up xf86-video-qxl-0.0.16/src/spiceqxl_io_port.c.jx xf86-video-qxl-0.0.16/src/spiceqxl_io_port.c
+--- xf86-video-qxl-0.0.16/src/spiceqxl_io_port.c.jx	2011-07-23 06:39:35.000000000 -0400
++++ xf86-video-qxl-0.0.16/src/spiceqxl_io_port.c	2012-01-04 17:32:21.339583082 -0500
+@@ -21,6 +21,7 @@
+  */
+ 
+ #include <pthread.h>
++#include <sched.h>
+ 
+ #include <spice.h>
+ 
+@@ -230,7 +231,7 @@ void ioport_write(qxl_screen_t *qxl, uin
+         if (!SPICE_RING_IS_EMPTY(&header->release_ring)) {
+             break;
+         }
+-        pthread_yield();
++        sched_yield();
+         if (!SPICE_RING_IS_EMPTY(&header->release_ring)) {
+             break;
+         }

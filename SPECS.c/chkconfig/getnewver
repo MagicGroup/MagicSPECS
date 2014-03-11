@@ -1,0 +1,12 @@
+#!/bin/bash
+pushd $(dirname $0) > /dev/null
+rm -f index.html && lftp -c "open http://mirrors.sohu.com/fedora/development/rawhide/source/SRPMS/c/;ls " > index.html
+if [ -f index.html ];then
+	newver=`cat index.html|grep chkconfig|sed -e 's/^.*chkconfig-//g'|sed -e 's/-.*$//g'`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

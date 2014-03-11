@@ -1,0 +1,77 @@
+diff -up physfs-2.0.2/archivers/lzma.c.system-lzmasdk physfs-2.0.2/archivers/lzma.c
+--- physfs-2.0.2/archivers/lzma.c.system-lzmasdk	2011-10-17 15:20:32.452804224 -0400
++++ physfs-2.0.2/archivers/lzma.c	2011-10-17 15:20:43.228664029 -0400
+@@ -18,9 +18,9 @@
+ #define __PHYSICSFS_INTERNAL__
+ #include "physfs_internal.h"
+ 
+-#include "lzma/C/7zCrc.h"
+-#include "lzma/C/Archive/7z/7zIn.h"
+-#include "lzma/C/Archive/7z/7zExtract.h"
++#include "C/7zCrc.h"
++#include "C/Archive/7z/7zIn.h"
++#include "C/Archive/7z/7zExtract.h"
+ 
+ 
+ /* 7z internal from 7zIn.c */
+diff -up physfs-2.0.2/CMakeLists.txt.system-lzmasdk physfs-2.0.2/CMakeLists.txt
+--- physfs-2.0.2/CMakeLists.txt.system-lzmasdk	2011-02-18 16:17:31.000000000 -0500
++++ physfs-2.0.2/CMakeLists.txt	2011-10-17 15:21:33.081016247 -0400
+@@ -11,6 +11,8 @@ SET(PHYSFS_VERSION 2.0.2)
+ # Increment this if/when we break backwards compatibility.
+ SET(PHYSFS_SOVERSION 1)
+ 
++SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
++
+ # I hate that they define "WIN32" ... we're about to move to Win64...I hope!
+ IF(WIN32 AND NOT WINDOWS)
+     SET(WINDOWS TRUE)
+@@ -216,7 +218,21 @@ OPTION(PHYSFS_ARCHIVE_7Z "Enable 7zip su
+ IF(PHYSFS_ARCHIVE_7Z)
+     ADD_DEFINITIONS(-DPHYSFS_SUPPORTS_7Z=1)
+     # !!! FIXME: rename to 7z.c?
+-    SET(PHYSFS_SRCS ${PHYSFS_SRCS} ${LZMA_SRCS})
++    FIND_PACKAGE(LZMASDK)
++
++    IF(LZMASDK_FOUND)
++        OPTION(PHYSFS_INTERNAL_LZMASDK "Link own lzma-sdk instead of system library" FALSE)
++    ELSE(HAVE_SYSTEM_LZMASDK)
++        SET(PHYSFS_INTERNAL_LZMASDK TRUE)
++    ENDIF(LZMASDK_FOUND)
++
++    IF(PHYSFS_INTERNAL_LZMASDK)
++        SET(PHYSFS_SRCS ${PHYSFS_SRCS} ${LZMA_SRCS})
++        INCLUDE_DIRECTORIES(lzma)
++    ELSE(PHYSFS_INTERNAL_LZMASDK)
++        SET(OPTIONAL_LIBRARY_LIBS ${OPTIONAL_LIBRARY_LIBS} ${LZMASDK_LIBRARY})
++        INCLUDE_DIRECTORIES(${LZMASDK_INCLUDE_DIR})
++    ENDIF(PHYSFS_INTERNAL_LZMASDK)
+ ENDIF(PHYSFS_ARCHIVE_7Z)
+ 
+ OPTION(PHYSFS_ARCHIVE_GRP "Enable Build Engine GRP support" TRUE)
+diff -up physfs-2.0.2/cmake/Modules/FindLZMASDK.cmake.system-lzmasdk physfs-2.0.2/cmake/Modules/FindLZMASDK.cmake
+--- physfs-2.0.2/cmake/Modules/FindLZMASDK.cmake.system-lzmasdk	2011-10-17 15:19:46.350404763 -0400
++++ physfs-2.0.2/cmake/Modules/FindLZMASDK.cmake	2011-10-17 15:19:46.349404776 -0400
+@@ -0,0 +1,22 @@
++# - Find lzma-sdk
++# Find the native LZMASDK includes and library.
++# Once done this will define
++#
++#  LZMASDK_INCLUDE_DIRS   - where to find C/Archive/7z/7zExtract.h, etc.
++#  LZMASDK_LIBRARIES      - List of libraries when using lzmasdk.
++#  LZMASDK_FOUND          - True if lzmasdk found.
++
++find_path(LZMASDK_INCLUDE_DIR NAMES C/Archive/7z/7zExtract.h PATH_SUFFIXES lzma457)
++find_library(LZMASDK_LIBRARY NAMES lzmasdk457)
++
++set(LZMASDK_LIBRARIES ${LZMASDK_LIBRARY} )
++set(LZMASDK_INCLUDE_DIRS ${LZMASDK_INCLUDE_DIR} )
++
++include(FindPackageHandleStandardArgs)
++# handle the QUIETLY and REQUIRED arguments and set LZMASDK_FOUND to TRUE
++# if all listed variables are TRUE
++find_package_handle_standard_args(LZMASDK  DEFAULT_MSG
++                                  LZMASDK_LIBRARY LZMASDK_INCLUDE_DIR)
++
++mark_as_advanced(LZMASDK_INCLUDE_DIR LZMASDK_LIBRARY )
++

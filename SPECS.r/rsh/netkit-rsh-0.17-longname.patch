@@ -1,0 +1,25 @@
+diff -up netkit-rsh-0.17/rexecd/rexecd.c.longname netkit-rsh-0.17/rexecd/rexecd.c
+--- netkit-rsh-0.17/rexecd/rexecd.c.longname	2008-03-27 16:12:22.000000000 +0100
++++ netkit-rsh-0.17/rexecd/rexecd.c	2008-03-27 16:41:46.000000000 +0100
+@@ -236,7 +236,7 @@ static void
+ doit(struct sockaddr_in *fromp)
+ {
+ 	char cmdbuf[ARG_MAX+1];
+-	char user[16], pass[16];
++	char user[17], pass[17];
+ 	struct passwd *pwd;
+ 	int s = -1;
+ 	u_short port;
+@@ -468,10 +468,10 @@ getstr(char *buf, int cnt, const char *e
+ 	do {
+ 		if (read(0, &c, 1) != 1)
+ 			exit(1);
+-		*buf++ = c;
+-		if (--cnt <= 0) {
++		if (--cnt < 0) {
+ 			fatal(err);
+ 		}
++		*buf++ = c;
+ 	} while (c != 0);
+ }
+ 

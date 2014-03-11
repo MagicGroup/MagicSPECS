@@ -1,0 +1,11 @@
+#!/bin/sh
+
+case "$1" in
+	thaw|resume)
+		{ /sbin/service 915resolution start ; } 2>/dev/null
+		;;
+	*)
+		;;
+esac
+
+exit $?

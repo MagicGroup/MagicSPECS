@@ -1,0 +1,233 @@
+From e61e386120bfa48801c70dc71a7a9441a6cdb243 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Nov 2011 12:12:42 +0100
+Subject: [PATCH 1/7] libedit - remove a duplicated switch statement
+
+---
+ src/el.c |   13 ++-----------
+ 1 files changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/src/el.c b/src/el.c
+index c74c76c..dae5720 100644
+--- a/src/el.c
++++ b/src/el.c
+@@ -427,17 +427,8 @@ FUN(el,get)(EditLine *el, int op, ...)
+ 			if ((argv[i] = va_arg(ap, char *)) == NULL)
+ 				break;
+ 
+-		switch (op) {
+-		case EL_GETTC:
+-			argv[0] = name;
+-			rv = terminal_gettc(el, i, argv);
+-			break;
+-
+-		default:
+-			rv = -1;
+-			EL_ABORT((el->el_errfile, "Bad op %d\n", op));
+-			break;
+-		}
++		argv[0] = name;
++		rv = terminal_gettc(el, i, argv);
+ 		break;
+ 	}
+ 
+-- 
+1.7.1
+
+
+From 57879c1ccb21e1365e290f1479d3cf5db350c565 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Nov 2011 12:30:35 +0100
+Subject: [PATCH 2/7] libedit - secure vi_histedit() against buffer overflow
+
+---
+ src/vi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/vi.c b/src/vi.c
+index 789c588..d18298b 100644
+--- a/src/vi.c
++++ b/src/vi.c
+@@ -1026,7 +1026,7 @@ vi_histedit(EditLine *el, Int c __attribute__((__unused__)))
+ 		close(fd);
+ 		return CC_ERROR;
+ 	}
+-	line = el_malloc(len * sizeof(*line));
++	line = el_malloc(len * sizeof(*line) + 1);
+ 	if (line == NULL) {
+ 		el_free(cp);
+ 		return CC_ERROR;
+-- 
+1.7.1
+
+
+From 931bcf9219ad18e87c8d8d040f2df47a844dc0be Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Nov 2011 12:29:08 +0100
+Subject: [PATCH 3/7] libedit - secure terminal_writec() against buffer underflow
+
+---
+ src/terminal.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/src/terminal.c b/src/terminal.c
+index 494400d..7954858 100644
+--- a/src/terminal.c
++++ b/src/terminal.c
+@@ -1261,6 +1261,9 @@ terminal_writec(EditLine *el, Int c)
+ {
+ 	Char visbuf[VISUAL_WIDTH_MAX +1];
+ 	ssize_t vcnt = ct_visual_char(visbuf, VISUAL_WIDTH_MAX, c);
++	if (vcnt < 0)
++		vcnt = 0;
++
+ 	visbuf[vcnt] = '\0';
+ 	terminal_overwrite(el, visbuf, (size_t)vcnt);
+ 	terminal__flush(el);
+-- 
+1.7.1
+
+
+From e01dabcaf4a62d6d5f24af7ccbfdb78006d14593 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Nov 2011 12:33:27 +0100
+Subject: [PATCH 4/7] libedit - avoid using uninitialized value in strnunvisx()
+
+---
+ src/unvis.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/unvis.c b/src/unvis.c
+index 801486f..0db94cc 100644
+--- a/src/unvis.c
++++ b/src/unvis.c
+@@ -480,7 +480,7 @@ int
+ strnunvisx(char *dst, size_t dlen, const char *src, int flag)
+ {
+ 	char c;
+-	char t, *start = dst;
++	char t = 0, *start = dst;
+ 	int state = 0;
+ 
+ 	_DIAGASSERT(src != NULL);
+-- 
+1.7.1
+
+
+From ed505618a3cea3d9119d64fccb6e163acfda0631 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Nov 2011 12:37:01 +0100
+Subject: [PATCH 5/7] libedit - avoid using uninitalized variable in complete()
+
+---
+ examples/wtc1.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/examples/wtc1.c b/examples/wtc1.c
+index cb49507..1d7ad45 100644
+--- a/examples/wtc1.c
++++ b/examples/wtc1.c
+@@ -61,7 +61,7 @@ complete(EditLine *el, int ch)
+ 	char *buf, *bptr;
+ 	const LineInfoW *lf = el_wline(el);
+ 	int len, mblen, i;
+-	unsigned char res;
++	unsigned char res = 0;
+ 	wchar_t dir[1024];
+ 
+ 	/* Find the last word */
+-- 
+1.7.1
+
+
+From 355066708a0e6a2aaebd93ddc8aa3f63165d00d8 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Nov 2011 12:36:00 +0100
+Subject: [PATCH 6/7] libedit - avoid reading uninitialized memory in terminal_alloc()
+
+---
+ src/terminal.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/src/terminal.c b/src/terminal.c
+index 7954858..4476788 100644
+--- a/src/terminal.c
++++ b/src/terminal.c
+@@ -330,6 +330,8 @@ terminal_alloc(EditLine *el, const struct termcapstr *t, const char *cap)
+ 	char **tlist = el->el_terminal.t_str;
+ 	char **tmp, **str = &tlist[t - tstr];
+ 
++	memset(termbuf, 0, sizeof termbuf);
++
+ 	if (cap == NULL || *cap == '\0') {
+ 		*str = NULL;
+ 		return;
+-- 
+1.7.1
+
+
+From a231cb96cfef425e1ce2eb4066aea69b8fc0fac1 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 18 Nov 2011 12:12:14 +0100
+Subject: [PATCH 7/7] libedit - FP suppressions for Coverity
+
+---
+ src/history.c  |    3 +++
+ src/map.c      |    1 +
+ src/read.c     |    1 +
+ src/readline.c |    1 +
+ 4 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/src/history.c b/src/history.c
+index a970bef..fd69391 100644
+--- a/src/history.c
++++ b/src/history.c
+@@ -692,6 +692,9 @@ history_set_fun(TYPE(History) *h, TYPE(History) *nh)
+ 	    nh->h_enter == NULL || nh->h_add == NULL || nh->h_clear == NULL ||
+ 	    nh->h_del == NULL || nh->h_ref == NULL) {
+ 		if (h->h_next != history_def_next) {
++			/* we are going to return -1 anyway, hence it is fine to ingore the
++			 * return value of history_def_init() */
++			/* coverity[check_return] */
+ 			history_def_init(&h->h_ref, &ev, 0);
+ 			h->h_first = history_def_first;
+ 			h->h_next = history_def_next;
+diff --git a/src/map.c b/src/map.c
+index db6aa10..b07e02c 100644
+--- a/src/map.c
++++ b/src/map.c
+@@ -1380,6 +1380,7 @@ map_bind(EditLine *el, int argc, const Char **argv)
+ 		}
+ 		break;
+ 
++	/* coverity[dead_error_begin] */
+ 	default:
+ 		EL_ABORT((el->el_errfile, "Bad XK_ type %d\n", ntype));
+ 		break;
+diff --git a/src/read.c b/src/read.c
+index a900195..8a5140c 100644
+--- a/src/read.c
++++ b/src/read.c
+@@ -170,6 +170,7 @@ read__fixio(int fd __attribute__((__unused__)), int e)
+ #endif /* FIONBIO */
+ 
+ #endif /* TRY_AGAIN */
++		/* coverity[dead_error_condition] */
+ 		return e ? 0 : -1;
+ 
+ 	case EINTR:
+diff --git a/src/readline.c b/src/readline.c
+index 0c27286..501bb04 100644
+--- a/src/readline.c
++++ b/src/readline.c
+@@ -891,6 +891,7 @@ history_expand(char *str, char **output)
+ 	*output = NULL;
+ 	if (str[0] == history_subst_char) {
+ 		/* ^foo^foo2^ is equivalent to !!:s^foo^foo2^ */
++		/* coverity[suspicious_sizeof] */
+ 		*output = el_malloc((strlen(str) + 4 + 1) * sizeof(*output));
+ 		if (*output == NULL)
+ 			return 0;
+-- 
+1.7.1
+

@@ -1,0 +1,12 @@
+diff -up xorg-x11-font-utils-7.2/mkfontscale-1.0.7/mkfontscale.c.all-encodings xorg-x11-font-utils-7.2/mkfontscale-1.0.7/mkfontscale.c
+--- mkfontscale-1.0.7/mkfontscale.c.all-encodings	2009-01-22 16:09:20.000000000 +0100
++++ mkfontscale-1.0.7/mkfontscale.c	2010-04-09 19:52:11.574373195 +0200
+@@ -317,7 +317,7 @@ getName(FT_Face face, int nid)
+     int i;
+ 
+     if(getNameHelper(face, nid, 
+-                     TT_PLATFORM_MICROSOFT, TT_MS_ID_UNICODE_CS, &name) ||
++                     TT_PLATFORM_MICROSOFT, -1, &name) ||
+        getNameHelper(face, nid, 
+                      TT_PLATFORM_APPLE_UNICODE, -1, &name)) {
+         string = malloc(name.string_len / 2 + 1);

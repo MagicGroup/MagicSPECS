@@ -1,0 +1,19 @@
+--- wdm-1.28/configs/wdmReconfig.in.reconf	2005-03-26 14:57:04.000000000 +0100
++++ wdm-1.28/configs/wdmReconfig.in	2006-11-29 18:14:42.000000000 +0100
+@@ -87,6 +87,7 @@
+ 		-e "s:@SHUTDOWN\@:@SHUTDOWN@:" \
+ 		-e "s:@LOGDIR\@:@LOGDIR@:" \
+ 		-e "s:@RUNDIR\@:@RUNDIR@:" \
++		-e "s:@GFXDIR\@:@GFXDIR@:" \
+ 		-e "s:@PIXMAPFILE\@:@PIXMAPFILE@:" \
+ 		-e "s:@PIXMAPCOMMENT\@:@PIXMAPCOMMENT@:" \
+ 		-e "s:@exec_prefix\@:@exec_prefix@:" \
+@@ -99,6 +100,8 @@
+ 	configfile=@DMDIR@/Xclients
+ 	rm -f $configfile
+ 	sed -e "s:@XRDB_PATH\@:@XRDB_PATH@:" \
++	    -e "s:@SHELL_LOGIN\@:@SHELL_LOGIN@:" \
++	    -e "s:@configure_input\@:configs/Xclients.  Generated from Xclients.in by wdmReconfig:" \
+ 	    -e "s'@WMAKER_PATH\@'$WMAKER_PATH'" \
+ 	    -e "s'@AFTERSTEP_PATH\@'$AFTERSTEP_PATH'" \
+ 	    -e "s'@BLACKBOX_PATH\@'$BLACKBOX_PATH'" \

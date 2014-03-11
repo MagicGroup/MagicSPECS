@@ -1,0 +1,10 @@
+diff -ur build.orig/Makefile build.fix-prefix/Makefile
+--- build.orig/Makefile	2006-10-15 16:02:38.000000000 +0200
++++ build.fix-prefix/Makefile	2010-05-11 18:08:06.982295262 +0200
+@@ -1,5 +1,5 @@
+ 
+-prefix 	= /usr/local
++prefix 	= /usr/
+ 
+ all:
+ 	$(MAKE) -C doc

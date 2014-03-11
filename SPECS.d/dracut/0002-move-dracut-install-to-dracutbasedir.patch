@@ -1,0 +1,408 @@
+From f4031e8a9a7734fbb94e7350a814a5446c5cef5c Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Sat, 30 Jun 2012 09:12:35 +0200
+Subject: [PATCH] move dracut-install to dracutbasedir
+
+We do not want to install dracut-install to /usr/bin until all
+interfaces are set to stone and the manpage is written. Until then the
+tool is dracut internal.
+---
+ Makefile            |   25 ++++++++---
+ dracut-functions.sh |  121 +++++++++++++++++++++++++++++----------------------
+ dracut.sh           |    4 +-
+ dracut.spec         |    9 +++-
+ install/Makefile    |   18 ++------
+ 5 files changed, 102 insertions(+), 75 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 5488f8e..1d5531d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -13,10 +13,25 @@ manpages = dracut.8 dracut.cmdline.7 dracut.conf.5 dracut-catimages.8
+ 
+ .PHONY: install clean archive rpm testimage test all check AUTHORS doc
+ 
+-all: syncheck dracut-version.sh install/dracut-install
++all: syncheck dracut-version.sh dracut-install
+ 
+-install/dracut-install:
+-	$(MAKE) -C install dracut-install
++DRACUT_INSTALL_SOURCE = \
++	install/dracut-install.c \
++	install/hashmap.c\
++	install/log.c \
++	install/util.c
++
++DRACUT_INSTALL_HEADER = \
++	install/hashmap.h \
++	install/log.h \
++	install/macro.h \
++	install/util.h
++
++dracut-install: $(DRACUT_INSTALL_SOURCE) $(DRACUT_INSTALL_HEADER)
++	gcc -std=gnu99 -O2 -g -Wall -o dracut-install $(DRACUT_INSTALL_SOURCE)
++
++indent:
++	indent -i8 -nut -br -linux -l120 install/dracut-install.c
+ 
+ doc: $(manpages) dracut.html
+ 
+@@ -74,7 +89,7 @@ install: doc dracut-version.sh
+ 		ln -s ../dracut-shutdown.service \
+ 		$(DESTDIR)$(systemdsystemunitdir)/shutdown.target.wants/dracut-shutdown.service; \
+ 	fi
+-	$(MAKE) -C install install
++	install $(strip) -m 0755 dracut-install $(DESTDIR)$(pkglibdir)/dracut-install
+ 
+ dracut-version.sh:
+ 	@echo "DRACUT_VERSION=$(VERSION)-$(GITVERSION)" > dracut-version.sh
+@@ -85,9 +100,9 @@ clean:
+ 	$(RM) */*/*~
+ 	$(RM) test-*.img
+ 	$(RM) dracut-*.rpm dracut-*.tar.bz2
++	$(RM) dracut-install
+ 	$(RM) $(manpages) dracut.html
+ 	$(MAKE) -C test clean
+-	$(MAKE) -C install clean
+ 
+ archive: dracut-$(VERSION)-$(GITVERSION).tar.bz2
+ 
+diff --git a/dracut-functions.sh b/dracut-functions.sh
+index 3fca456..5acf6f6 100755
+--- a/dracut-functions.sh
++++ b/dracut-functions.sh
+@@ -20,11 +20,30 @@
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ #
+ 
+-[[ -d "$initdir/.kernelmodseen" ]] || mkdir -p "$initdir/.kernelmodseen"
++
++if [[ $DRACUT_KERNEL_LAZY ]] && ! [[ $DRACUT_KERNEL_LAZY_HASHDIR ]]; then
++    if ! [[ -d "$initdir/.kernelmodseen" ]]; then
++        mkdir -p "$initdir/.kernelmodseen"
++    fi
++    DRACUT_KERNEL_LAZY_HASHDIR="$initdir/.kernelmodseen"
++fi
+ 
+ # Generic substring function.  If $2 is in $1, return 0.
+ strstr() { [[ $1 = *$2* ]]; }
+ 
++# find a binary.  If we were not passed the full path directly,
++# search in the usual places to find the binary.
++find_binary() {
++    if [[ -z ${1##/*} ]]; then
++        if [[ -x $1 ]] || { strstr "$1" ".so" && ldd $1 &>/dev/null; };  then
++            echo $1
++            return 0
++        fi
++    fi
++
++    type -P $1
++}
++
+ if ! [[ $dracutbasedir ]]; then
+     dracutbasedir=${BASH_SOURCE[0]%/*}
+     [[ $dracutbasedir = "dracut-functions" ]] && dracutbasedir="."
+@@ -32,6 +51,14 @@ if ! [[ $dracutbasedir ]]; then
+     dracutbasedir="$(readlink -f $dracutbasedir)"
+ fi
+ 
++if ! [[ $DRACUT_INSTALL ]]; then
++    DRACUT_INSTALL=$(find_binary dracut-install)
++fi
++
++if ! [[ $DRACUT_INSTALL ]] && [[ -x $dracutbasedir/dracut-install ]]; then
++    DRACUT_INSTALL=$dracutbasedir/dracut-install
++fi
++
+ # Detect lib paths
+ if ! [[ $libdirs ]] ; then
+     if strstr "$(ldd /bin/sh)" "/lib64/" &>/dev/null \
+@@ -391,56 +418,56 @@ check_vol_slaves() {
+     return 1
+ }
+ 
+-if [[ -x /usr/bin/dracut-install ]]; then
++if [[ $DRACUT_INSTALL ]]; then
+     [[ $DRACUT_RESOLVE_LAZY ]] || export DRACUT_RESOLVE_DEPS=1
+     inst_dir() {
+         [[ -e ${initdir}/"$1" ]] && return 0  # already there
+-        dracut-install ${initdir+-D "$initdir"} -d "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} -d "$@" || :
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} -d "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} -d "$@" || :
+     }
+ 
+     inst() {
+         [[ -e ${initdir}/"${2:-$1}" ]] && return 0  # already there
+-        #dinfo "dracut-install -l $@"
+-        dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l} ${DRACUT_FIPS_MODE+-H} "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l} ${DRACUT_FIPS_MODE+-H} "$@" || :
++        #dinfo "$DRACUT_INSTALL -l $@"
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l} ${DRACUT_FIPS_MODE+-H} "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l} ${DRACUT_FIPS_MODE+-H} "$@" || :
+     }
+ 
+     inst_simple() {
+         [[ -e ${initdir}/"${2:-$1}" ]] && return 0  # already there
+         [[ -e $1 ]] || return 1  # no source
+-        dracut-install ${initdir+-D "$initdir"} "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} "$@" || :
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} "$@" || :
+     }
+ 
+     inst_symlink() {
+         [[ -e ${initdir}/"${2:-$1}" ]] && return 0  # already there
+         [[ -L $1 ]] || return 1
+-        dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
+     }
+ 
+     dracut_install() {
+-        #dinfo "initdir=$initdir dracut-install -l $@"
+-        dracut-install ${initdir+-D "$initdir"} -a ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} -a ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
++        #dinfo "initdir=$initdir $DRACUT_INSTALL -l $@"
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} -a ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} -a ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
+     }
+ 
+     inst_library() {
+         [[ -e ${initdir}/"${2:-$1}" ]] && return 0  # already there
+         [[ -e $1 ]] || return 1  # no source
+-        dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
+     }
+ 
+     inst_binary() {
+-        dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
+     }
+ 
+     inst_script() {
+-        dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
+-        (($? != 0)) && derror dracut-install ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
++        $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@"
++        (($? != 0)) && derror $DRACUT_INSTALL ${initdir+-D "$initdir"} ${DRACUT_RESOLVE_DEPS+-l}  ${DRACUT_FIPS_MODE+-H} "$@" || :
+     }
+ 
+ else
+@@ -664,19 +691,6 @@ rev_lib_symlinks() {
+     echo "${links}"
+ }
+ 
+-# find a binary.  If we were not passed the full path directly,
+-# search in the usual places to find the binary.
+-find_binary() {
+-    if [[ -z ${1##/*} ]]; then
+-        if [[ -x $1 ]] || { strstr "$1" ".so" && ldd $1 &>/dev/null; };  then
+-            echo $1
+-            return 0
+-        fi
+-    fi
+-
+-    type -P $1
+-}
+-
+ # attempt to install any programs specified in a udev rule
+ inst_rule_programs() {
+     local _prog _bin
+@@ -1112,8 +1126,8 @@ install_kmod_with_fw() {
+     [[ -e "${initdir}/lib/modules/$kernel/${1##*/lib/modules/$kernel/}" ]] \
+         && return 0
+ 
+-    if [[ -e "$initdir/.kernelmodseen/${1##*/}" ]]; then
+-        read ret < "$initdir/.kernelmodseen/${1##*/}"
++    if [[ $DRACUT_KERNEL_LAZY_HASHDIR ]] && [[ -e "$DRACUT_KERNEL_LAZY_HASHDIR/${1##*/}" ]]; then
++        read ret < "$DRACUT_KERNEL_LAZY_HASHDIR/${1##*/}"
+         return $ret
+     fi
+ 
+@@ -1133,8 +1147,9 @@ install_kmod_with_fw() {
+ 
+     inst_simple "$1" "/lib/modules/$kernel/${1##*/lib/modules/$kernel/}"
+     ret=$?
+-    [ -d "$initdir/.kernelmodseen" ] && \
+-        echo $ret > "$initdir/.kernelmodseen/${1##*/}"
++    [[ $DRACUT_KERNEL_LAZY_HASHDIR ]] && \
++        [[ -d "$DRACUT_KERNEL_LAZY_HASHDIR" ]] && \
++        echo $ret > "$DRACUT_KERNEL_LAZY_HASHDIR/${1##*/}"
+     (($ret != 0)) && return $ret
+ 
+     local _modname=${1##*/} _fwdir _found _fw
+@@ -1181,38 +1196,38 @@ for_each_kmod_dep() {
+ dracut_kernel_post() {
+     local _moddirname=${srcmods%%/lib/modules/*}
+ 
+-    if [[ -f "$initdir/.kernelmodseen/lazylist" ]]; then
++    if [[ $DRACUT_KERNEL_LAZY_HASHDIR ]] && [[ -f "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist" ]]; then
+         xargs modprobe -a ${_moddirname+-d ${_moddirname}/} --ignore-install --show-depends \
+-            < "$initdir/.kernelmodseen/lazylist" 2>/dev/null \
++            < "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist" 2>/dev/null \
+             | sort -u \
+             | while read _cmd _modpath _options; do
+             [[ $_cmd = insmod ]] || continue
+             echo "$_modpath"
+-        done > "$initdir/.kernelmodseen/lazylist.dep"
++        done > "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist.dep"
+ 
+         (
+-            if [[ -x /usr/bin/dracut-install ]] && [[ -z $_moddirname ]]; then
+-                xargs dracut-install ${initdir+-D "$initdir"} -a < "$initdir/.kernelmodseen/lazylist.dep"
++            if [[ -x $DRACUT_INSTALL ]] && [[ -z $_moddirname ]]; then
++                xargs $DRACUT_INSTALL ${initdir+-D "$initdir"} -a < "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist.dep"
+             else
+                 while read _modpath; do
+                     local _destpath=$_modpath
+                     [[ $_moddirname ]] && _destpath=${_destpath##$_moddirname/}
+                     _destpath=${_destpath##*/lib/modules/$kernel/}
+                     inst_simple "$_modpath" "/lib/modules/$kernel/${_destpath}" || exit $?
+-                done < "$initdir/.kernelmodseen/lazylist.dep"
++                done < "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist.dep"
+             fi
+         ) &
+ 
+ 
+-        if [[ -x /usr/bin/dracut-install ]]; then
+-            xargs modinfo -k $kernel -F firmware < "$initdir/.kernelmodseen/lazylist.dep" \
++        if [[ -x $DRACUT_INSTALL ]]; then
++            xargs modinfo -k $kernel -F firmware < "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist.dep" \
+                 | while read line; do
+                 for _fwdir in $fw_dir; do
+                     echo $_fwdir/$line;
+                 done;
+-            done |xargs dracut-install ${initdir+-D "$initdir"} -a -o
++            done |xargs $DRACUT_INSTALL ${initdir+-D "$initdir"} -a -o
+         else
+-            for _fw in $(xargs modinfo -k $kernel -F firmware < "$initdir/.kernelmodseen/lazylist.dep"); do
++            for _fw in $(xargs modinfo -k $kernel -F firmware < "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist.dep"); do
+                 for _fwdir in $fw_dir; do
+                     if [[ -d $_fwdir && -f $_fwdir/$_fw ]]; then
+                         inst_simple "$_fwdir/$_fw" "/lib/firmware/$_fw"
+@@ -1243,7 +1258,7 @@ dracut_kernel_post() {
+         exit 1
+     fi
+ 
+-    rm -fr "$initdir/.kernelmodseen"
++    [[ $DRACUT_KERNEL_LAZY_HASHDIR ]] && rm -fr "$DRACUT_KERNEL_LAZY_HASHDIR"
+ }
+ 
+ find_kernel_modules_by_path () (
+@@ -1296,8 +1311,9 @@ instmods() {
+                 _mod=${_mod##*/}
+                 # if we are already installed, skip this module and go on
+                 # to the next one.
+-                if [[ -f "$initdir/.kernelmodseen/${_mod%.ko}.ko" ]]; then
+-                    read _ret <"$initdir/.kernelmodseen/${_mod%.ko}.ko"
++                if [[ $DRACUT_KERNEL_LAZY_HASHDIR ]] && \
++                    [[ -f "$DRACUT_KERNEL_LAZY_HASHDIR/${_mod%.ko}.ko" ]]; then
++                    read _ret <"$DRACUT_KERNEL_LAZY_HASHDIR/${_mod%.ko}.ko"
+                     return $_ret
+                 fi
+ 
+@@ -1312,7 +1328,7 @@ instmods() {
+                     && ! [[ "$add_drivers" =~ " ${_mod} " ]] \
+                     && return 0
+ 
+-                if [[ "$_check" = "yes" ]] || ! [[ $DRACUT_KERNEL_LAZY ]]; then
++                if [[ "$_check" = "yes" ]] || ! [[ $DRACUT_KERNEL_LAZY_HASHDIR ]]; then
+                     # We use '-d' option in modprobe only if modules prefix path
+                     # differs from default '/'.  This allows us to use Dracut with
+                     # old version of modprobe which doesn't have '-d' option.
+@@ -1325,7 +1341,8 @@ instmods() {
+                         --set-version $kernel ${_moddirname} $_mpargs
+                     ((_ret+=$?))
+                 else
+-                    echo $_mod >> "$initdir/.kernelmodseen/lazylist"
++                    [[ $DRACUT_KERNEL_LAZY_HASHDIR ]] && \
++                        echo $_mod >> "$DRACUT_KERNEL_LAZY_HASHDIR/lazylist"
+                 fi
+                 ;;
+         esac
+diff --git a/dracut.sh b/dracut.sh
+index 335f08b..1dc8cee 100755
+--- a/dracut.sh
++++ b/dracut.sh
+@@ -820,12 +820,12 @@ if [[ $kernel_only != yes ]]; then
+         cat $f >> "${initdir}/etc/fstab"
+     done
+ 
+-    if [[ $DRACUT_RESOLVE_LAZY ]] && [[ -x /usr/bin/dracut-install ]]; then
++    if [[ $DRACUT_RESOLVE_LAZY ]] && [[ $DRACUT_INSTALL ]]; then
+         dinfo "*** Resolving executable dependencies ***"
+         find "$initdir" -type f \
+             '(' -perm -0100 -or -perm -0010 -or -perm -0001 ')' \
+             -not -path '*.ko' -print0 \
+-        | xargs -0 dracut-install ${initdir+-D "$initdir"} -R ${DRACUT_FIPS_MODE+-H}
++        | xargs -0 $DRACUT_INSTALL ${initdir+-D "$initdir"} -R ${DRACUT_FIPS_MODE+-H}
+         dinfo "*** Resolving executable dependencies done***"
+     fi
+ 
+diff --git a/dracut.spec b/dracut.spec
+index 96dbc9c..06d8139 100644
+--- a/dracut.spec
++++ b/dracut.spec
+@@ -19,8 +19,13 @@ Group: System Environment/Base
+ %if 0%{?suse_version}
+ Group: System/Base
+ %endif
+-License: GPLv2+
++
++# The entire source code is GPLv2+
++# except install/* which is LGPLv2.1+
++License: GPLv2+ and LGPLv2.1+
++
+ URL: https://dracut.wiki.kernel.org/
++
+ # Source can be generated by
+ # http://git.kernel.org/?p=boot/dracut/dracut.git;a=snapshot;h=%{version};sf=tgz
+ Source0: http://www.kernel.org/pub/linux/utils/boot/dracut/dracut-%{version}.tar.bz2
+@@ -235,7 +240,6 @@ rm -rf $RPM_BUILD_ROOT
+ %if 0%{?fedora} > 12 || 0%{?rhel} >= 6 || 0%{?suse_version} > 9999
+ %{_bindir}/mkinitrd
+ %{_bindir}/lsinitrd
+-%{_bindir}/dracut-install
+ %endif
+ %dir %{dracutlibdir}
+ %dir %{dracutlibdir}/modules.d
+@@ -244,6 +248,7 @@ rm -rf $RPM_BUILD_ROOT
+ %{dracutlibdir}/dracut-version.sh
+ %{dracutlibdir}/dracut-logger.sh
+ %{dracutlibdir}/dracut-initramfs-restore
++%{dracutlibdir}/dracut-install
+ %config(noreplace) /etc/dracut.conf
+ %if 0%{?fedora} || 0%{?suse_version} || 0%{?rhel}
+ %config /etc/dracut.conf.d/01-dist.conf
+diff --git a/install/Makefile b/install/Makefile
+index 59532a8..5332f25 100644
+--- a/install/Makefile
++++ b/install/Makefile
+@@ -1,17 +1,7 @@
+-prefix ?= /usr
+-bindir ?= ${prefix}/bin
+-strip  ?= -s
+-
+-all: dracut-install
+-
+-dracut-install: dracut-install.c hashmap.c log.c util.c
+-	gcc -std=gnu99 -O2 -g -Wall -o dracut-install dracut-install.c hashmap.c log.c util.c
+-
+-install: dracut-install
+-	install $(strip) -m 0755 dracut-install $(DESTDIR)$(bindir)/dracut-install
++all:
++	$(MAKE) -C ..
+ 
+ clean:
+-	rm -f dracut-install *~
++	$(MAKE) -C .. clean
+ 
+-indent:
+-	indent -i8 -nut -br -linux -l120 dracut-install.c
++.PHONY: all clean

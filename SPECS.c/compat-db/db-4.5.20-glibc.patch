@@ -1,0 +1,366 @@
+--- compat-db-4.5.20/db-4.5.20/dbm/dbm.c.glibc	2006-08-24 16:56:12.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/dbm/dbm.c	2007-08-13 13:46:45.000000000 +0200
+@@ -231,7 +231,7 @@ __db_ndbm_open(file, oflags, mode)
+ 	if ((ret = dbp->set_pagesize(dbp, 4096)) != 0 ||
+ 	    (ret = dbp->set_h_ffactor(dbp, 40)) != 0 ||
+ 	    (ret = dbp->set_h_nelem(dbp, 1)) != 0 ||
+-	    (ret = dbp->open(dbp, NULL,
++	    (ret = (dbp->open)(dbp, NULL,
+ 	    path, NULL, DB_HASH, __db_oflags(oflags), mode)) != 0) {
+ 		__os_set_errno(ret);
+ 		return (NULL);
+--- compat-db-4.5.20/db-4.5.20/db_hotbackup/db_hotbackup.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_hotbackup/db_hotbackup.c	2007-08-13 14:14:31.000000000 +0200
+@@ -400,9 +400,9 @@ env_init(dbenvp, home, log_dir, data_dir
+ 		 * We try to attach to a pre-existing environment; if that
+ 		 * fails, we create a private environment and try again.
+ 		 */
+-		if ((ret = dbenv->open(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
++		if ((ret = (dbenv->open)(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
+ 		    (ret == DB_VERSION_MISMATCH ||
+-		    (ret = dbenv->open(dbenv, home, DB_CREATE |
++		    (ret = (dbenv->open)(dbenv, home, DB_CREATE |
+ 		    DB_INIT_LOG | DB_INIT_TXN | DB_PRIVATE | DB_USE_ENVIRON,
+ 		    0)) != 0)) {
+ 			dbenv->err(dbenv, ret, "DB_ENV->open: %s", home);
+@@ -421,7 +421,7 @@ env_init(dbenvp, home, log_dir, data_dir
+ 		 * Opening the backup copy of the database environment.  We
+ 		 * better be the only user, we're running recovery.
+ 		 */
+-		if ((ret = dbenv->open(dbenv, home, DB_CREATE |
++		if ((ret = (dbenv->open)(dbenv, home, DB_CREATE |
+ 		    DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_PRIVATE |
+ 		    DB_RECOVER_FATAL | DB_USE_ENVIRON, 0)) != 0) {
+ 			dbenv->err(dbenv, ret, "DB_ENV->open: %s", home);
+--- compat-db-4.5.20/db-4.5.20/db_checkpoint/db_checkpoint.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_checkpoint/db_checkpoint.c	2007-08-13 14:06:06.000000000 +0200
+@@ -142,9 +142,9 @@ main(argc, argv)
+ 	 * If attaching to a pre-existing environment fails, create a
+ 	 * private one and try again.
+ 	 */
+-	if ((ret = dbenv->open(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
++	if ((ret = (dbenv->open)(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
+ 	    (!once || ret == DB_VERSION_MISMATCH ||
+-	    (ret = dbenv->open(dbenv, home,
++	    (ret = (dbenv->open)(dbenv, home,
+ 	    DB_CREATE | DB_INIT_TXN | DB_PRIVATE | DB_USE_ENVIRON, 0)) != 0)) {
+ 		dbenv->err(dbenv, ret, "DB_ENV->open");
+ 		goto shutdown;
+--- compat-db-4.5.20/db-4.5.20/db_deadlock/db_deadlock.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_deadlock/db_deadlock.c	2007-08-13 13:54:44.000000000 +0200
+@@ -158,7 +158,7 @@ main(argc, argv)
+ 	}
+ 
+ 	/* An environment is required. */
+-	if ((ret = dbenv->open(dbenv, home, DB_USE_ENVIRON, 0)) != 0) {
++	if ((ret = (dbenv->open)(dbenv, home, DB_USE_ENVIRON, 0)) != 0) {
+ 		dbenv->err(dbenv, ret, "open");
+ 		goto shutdown;
+ 	}
+--- compat-db-4.5.20/db-4.5.20/rpc_server/cxx/db_server_cxxproc.cpp.glibc	2006-08-24 16:56:16.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/rpc_server/cxx/db_server_cxxproc.cpp	2007-08-13 13:46:45.000000000 +0200
+@@ -336,7 +336,7 @@ __env_open_proc(
+ 		replyp->envcl_id = new_ctp->ct_id;
+ 		ret = __env_close_int(dbenvcl_id, 0, 0);
+ 	} else {
+-		ret = dbenv->open(fullhome->home, newflags, mode);
++		ret = (dbenv->open)(fullhome->home, newflags, mode);
+ 		dbenv_ctp->ct_envdp.home = fullhome;
+ 		dbenv_ctp->ct_envdp.envflags = shareflags;
+ 	}
+@@ -1187,7 +1187,7 @@ __db_open_proc(
+ 		ret = __db_close_int(dbpcl_id, 0);
+ 		goto out;
+ 	}
+-	ret = dbp->open(txnp, name, subdb, (DBTYPE)type, flags, mode);
++	ret = (dbp->open)(txnp, name, subdb, (DBTYPE)type, flags, mode);
+ 	if (ret == 0) {
+ 		(void)dbp->get_type(&dbtype);
+ 		replyp->type = dbtype;
+--- compat-db-4.5.20/db-4.5.20/rpc_server/cxx/db_server_cxxutil.cpp.glibc	2006-08-24 16:56:16.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/rpc_server/cxx/db_server_cxxutil.cpp	2007-08-13 13:46:45.000000000 +0200
+@@ -731,7 +731,7 @@ env_recover(char *progname)
+ 			printf("Running recovery on %s\n", hp->home);
+ 		flags = DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL |
+ 		    DB_INIT_TXN | DB_USE_ENVIRON | DB_RECOVER;
+-		if ((ret = dbenv->open(hp->home, flags, 0)) != 0) {
++		if ((ret = (dbenv->open)(hp->home, flags, 0)) != 0) {
+ 			dbenv->err(ret, "DbEnv->open");
+ 			goto error;
+ 		}
+--- compat-db-4.5.20/db-4.5.20/rpc_server/c/db_server_util.c.glibc	2006-08-24 16:56:16.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/rpc_server/c/db_server_util.c	2007-08-13 13:47:09.000000000 +0200
+@@ -803,7 +803,7 @@ env_recover(progname)
+ 			printf("Running recovery on %s\n", hp->home);
+ 		flags = DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL |
+ 		    DB_INIT_TXN | DB_USE_ENVIRON | DB_RECOVER;
+-		if ((ret = dbenv->open(dbenv, hp->home, flags, 0)) != 0) {
++		if ((ret = (dbenv->open)(dbenv, hp->home, flags, 0)) != 0) {
+ 			dbenv->err(dbenv, ret, "DB_ENV->open");
+ 			goto error;
+ 		}
+--- compat-db-4.5.20/db-4.5.20/rpc_server/c/db_server_proc.c.glibc	2006-09-20 02:20:58.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/rpc_server/c/db_server_proc.c	2007-08-13 13:46:45.000000000 +0200
+@@ -394,7 +394,7 @@ __env_open_proc(dbenvcl_id, home, flags,
+ 		replyp->envcl_id = new_ctp->ct_id;
+ 		ret = __env_close_int(dbenvcl_id, 0, 0);
+ 	} else {
+-		ret = dbenv->open(dbenv, fullhome->home, newflags, mode);
++		ret = (dbenv->open)(dbenv, fullhome->home, newflags, mode);
+ 		dbenv_ctp->ct_envdp.home = fullhome;
+ 		dbenv_ctp->ct_envdp.envflags = shareflags;
+ 	}
+@@ -1392,7 +1392,7 @@ __db_open_proc(dbpcl_id, txnpcl_id, name
+ 		ret = __db_close_int(dbpcl_id, 0);
+ 		goto out;
+ 	}
+-	ret = dbp->open(dbp, txnp, name, subdb, (DBTYPE)type, flags, mode);
++	ret = (dbp->open)(dbp, txnp, name, subdb, (DBTYPE)type, flags, mode);
+ 	if (ret == 0) {
+ 		(void)dbp->get_type(dbp, &dbtype);
+ 		replyp->type = dbtype;
+--- compat-db-4.5.20/db-4.5.20/db_dump/db_dump.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_dump/db_dump.c	2007-08-13 13:55:16.000000000 +0200
+@@ -201,7 +201,7 @@ retry:	if ((ret = db_env_create(&dbenv, 
+ 		goto done;
+ 	}
+ 
+-	if ((ret = dbp->open(dbp, NULL,
++	if ((ret = (dbp->open)(dbp, NULL,
+ 	    argv[0], subname, DB_UNKNOWN, DB_RDONLY, 0)) != 0) {
+ 		dbp->err(dbp, ret, "open: %s", argv[0]);
+ 		goto err;
+@@ -302,7 +302,7 @@ db_init(dbenv, home, is_salvage, cache, 
+ 	 * before we create our own.
+ 	 */
+ 	*is_privatep = 0;
+-	if ((ret = dbenv->open(dbenv, home,
++	if ((ret = (dbenv->open)(dbenv, home,
+ 	    DB_USE_ENVIRON | (is_salvage ? DB_INIT_MPOOL : 0), 0)) == 0)
+ 		return (0);
+ 	if (ret == DB_VERSION_MISMATCH)
+@@ -320,7 +320,7 @@ db_init(dbenv, home, is_salvage, cache, 
+ 	 */
+ 	*is_privatep = 1;
+ 	if ((ret = dbenv->set_cachesize(dbenv, 0, cache, 1)) == 0 &&
+-	    (ret = dbenv->open(dbenv, home,
++	    (ret = (dbenv->open)(dbenv, home,
+ 	    DB_CREATE | DB_INIT_MPOOL | DB_PRIVATE | DB_USE_ENVIRON, 0)) == 0)
+ 		return (0);
+ 
+@@ -413,7 +413,7 @@ dump_sub(dbenv, parent_dbp, parent_name,
+ 			free(subdb);
+ 			return (1);
+ 		}
+-		if ((ret = dbp->open(dbp, NULL,
++		if ((ret = (dbp->open)(dbp, NULL,
+ 		    parent_name, subdb, DB_UNKNOWN, DB_RDONLY, 0)) != 0)
+ 			dbp->err(dbp, ret,
+ 			    "DB->open: %s:%s", parent_name, subdb);
+--- compat-db-4.5.20/db-4.5.20/db_upgrade/db_upgrade.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_upgrade/db_upgrade.c	2007-08-13 13:57:52.000000000 +0200
+@@ -120,9 +120,9 @@ main(argc, argv)
+ 	 * If attaching to a pre-existing environment fails, create a
+ 	 * private one and try again.
+ 	 */
+-	if ((ret = dbenv->open(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
++	if ((ret = (dbenv->open)(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
+ 	    (ret == DB_VERSION_MISMATCH ||
+-	    (ret = dbenv->open(dbenv, home,
++	    (ret = (dbenv->open)(dbenv, home,
+ 	    DB_CREATE | DB_INIT_MPOOL | DB_PRIVATE | DB_USE_ENVIRON,
+ 	    0)) != 0)) {
+ 		dbenv->err(dbenv, ret, "DB_ENV->open");
+--- compat-db-4.5.20/db-4.5.20/db_archive/db_archive.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_archive/db_archive.c	2007-08-13 13:54:13.000000000 +0200
+@@ -120,9 +120,9 @@ main(argc, argv)
+ 	 * If attaching to a pre-existing environment fails, create a
+ 	 * private one and try again.
+ 	 */
+-	if ((ret = dbenv->open(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
++	if ((ret = (dbenv->open)(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
+ 	    (ret == DB_VERSION_MISMATCH ||
+-	    (ret = dbenv->open(dbenv, home, DB_CREATE |
++	    (ret = (dbenv->open)(dbenv, home, DB_CREATE |
+ 	    DB_INIT_LOG | DB_PRIVATE | DB_USE_ENVIRON, 0)) != 0)) {
+ 		dbenv->err(dbenv, ret, "DB_ENV->open");
+ 		goto shutdown;
+--- compat-db-4.5.20/db-4.5.20/db_printlog/db_printlog.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_printlog/db_printlog.c	2007-08-13 13:56:43.000000000 +0200
+@@ -174,18 +174,18 @@ main(argc, argv)
+ 	 * with logging, because we don't want to log the opens.
+ 	 */
+ 	if (repflag) {
+-		if ((ret = dbenv->open(dbenv, home,
++		if ((ret = (dbenv->open)(dbenv, home,
+ 		    DB_INIT_MPOOL | DB_USE_ENVIRON, 0)) != 0 &&
+ 		    (ret == DB_VERSION_MISMATCH ||
+-		    (ret = dbenv->open(dbenv, home,
++		    (ret = (dbenv->open)(dbenv, home,
+ 		    DB_CREATE | DB_INIT_MPOOL | DB_PRIVATE | DB_USE_ENVIRON, 0))
+ 		    != 0)) {
+ 			dbenv->err(dbenv, ret, "DB_ENV->open");
+ 			goto shutdown;
+ 		}
+-	} else if ((ret = dbenv->open(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
++	} else if ((ret = (dbenv->open)(dbenv, home, DB_USE_ENVIRON, 0)) != 0 &&
+ 	    (ret == DB_VERSION_MISMATCH ||
+-	    (ret = dbenv->open(dbenv, home,
++	    (ret = (dbenv->open)(dbenv, home,
+ 	    DB_CREATE | DB_INIT_LOG | DB_PRIVATE | DB_USE_ENVIRON, 0)) != 0)) {
+ 		dbenv->err(dbenv, ret, "DB_ENV->open");
+ 		goto shutdown;
+@@ -541,7 +541,7 @@ open_rep_db(dbenv, dbpp, dbcp)
+ 
+ 	dbp = *dbpp;
+ 	if ((ret =
+-	    dbp->open(dbp, NULL, REPDBNAME, NULL, DB_BTREE, 0, 0)) != 0) {
++	    (dbp->open)(dbp, NULL, REPDBNAME, NULL, DB_BTREE, 0, 0)) != 0) {
+ 		dbenv->err(dbenv, ret, "DB->open");
+ 		goto err;
+ 	}
+--- compat-db-4.5.20/db-4.5.20/hsearch/hsearch.c.glibc	2006-08-24 16:56:13.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/hsearch/hsearch.c	2007-08-13 13:46:45.000000000 +0200
+@@ -76,7 +76,7 @@ __db_hcreate(nel)
+ 	if ((ret = dbp->set_pagesize(dbp, 512)) != 0 ||
+ 	    (ret = dbp->set_h_ffactor(dbp, 16)) != 0 ||
+ 	    (ret = dbp->set_h_nelem(dbp, (u_int32_t)nel)) != 0 ||
+-	    (ret = dbp->open(dbp, NULL,
++	    (ret = (dbp->open)(dbp, NULL,
+ 	    NULL, NULL, DB_HASH, DB_CREATE, __db_omode(OWNER_RW))) != 0)
+ 		__os_set_errno(ret);
+ 
+--- compat-db-4.5.20/db-4.5.20/db_recover/db_recover.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_recover/db_recover.c	2007-08-13 13:56:59.000000000 +0200
+@@ -132,7 +132,7 @@ main(argc, argv)
+ 	    DB_INIT_MPOOL | DB_INIT_TXN | DB_USE_ENVIRON);
+ 	LF_SET(fatal_recover ? DB_RECOVER_FATAL : DB_RECOVER);
+ 	LF_SET(retain_env ? DB_INIT_LOCK : DB_PRIVATE);
+-	if ((ret = dbenv->open(dbenv, home, flags, 0)) != 0) {
++	if ((ret = (dbenv->open)(dbenv, home, flags, 0)) != 0) {
+ 		dbenv->err(dbenv, ret, "DB_ENV->open");
+ 		goto shutdown;
+ 	}
+--- compat-db-4.5.20/db-4.5.20/db185/db185.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db185/db185.c	2007-08-13 13:46:45.000000000 +0200
+@@ -219,7 +219,7 @@ __db185_open(file, oflags, mode, type, o
+ 	dbp->api_internal = db185p;
+ 
+ 	/* Open the database. */
+-	if ((ret = dbp->open(dbp, NULL,
++	if ((ret = (dbp->open)(dbp, NULL,
+ 	    file, NULL, type, __db_oflags(oflags), mode)) != 0)
+ 		goto err;
+ 
+--- compat-db-4.5.20/db-4.5.20/db_stat/db_stat.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_stat/db_stat.c	2007-08-13 13:57:32.000000000 +0200
+@@ -284,9 +284,9 @@ retry:	if ((ret = db_env_create(&dbenv, 
+ 		 * hash databases for which we don't know the hash function).
+ 		 */
+ 		dbenv->set_errfile(dbenv, NULL);
+-		ret = dbp->open(dbp, NULL, db, subdb, DB_UNKNOWN, 0, 0);
++		ret = (dbp->open)(dbp, NULL, db, subdb, DB_UNKNOWN, 0, 0);
+ 		dbenv->set_errfile(dbenv, stderr);
+-		if (ret != 0 && (ret = dbp->open(
++		if (ret != 0 && (ret = (dbp->open)(
+ 		    dbp, NULL, db, subdb, DB_UNKNOWN, DB_RDONLY, 0)) != 0) {
+ 			dbenv->err(dbenv, ret, "DB->open: %s", db);
+ 			goto err;
+@@ -390,7 +390,7 @@ db_init(dbenv, home, ttype, cache, is_pr
+ 	 * error, I think.
+ 	 */
+ 	*is_private = 0;
+-	if ((ret = dbenv->open(dbenv, home, DB_USE_ENVIRON, 0)) == 0)
++	if ((ret = (dbenv->open)(dbenv, home, DB_USE_ENVIRON, 0)) == 0)
+ 		return (0);
+ 	if (ret == DB_VERSION_MISMATCH)
+ 		goto err;
+@@ -422,7 +422,7 @@ db_init(dbenv, home, ttype, cache, is_pr
+ 		oflags |= DB_INIT_LOG;
+ 	if (ttype == T_REP)
+ 		oflags |= DB_INIT_REP;
+-	if ((ret = dbenv->open(dbenv, home, oflags, 0)) == 0)
++	if ((ret = (dbenv->open)(dbenv, home, oflags, 0)) == 0)
+ 		return (0);
+ 
+ 	/* An environment is required. */
+--- compat-db-4.5.20/db-4.5.20/db_verify/db_verify.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_verify/db_verify.c	2007-08-13 13:58:14.000000000 +0200
+@@ -130,7 +130,7 @@ retry:	if ((ret = db_env_create(&dbenv, 
+ 	 */
+ 	private = 0;
+ 	if ((ret =
+-	    dbenv->open(dbenv, home, DB_INIT_MPOOL | DB_USE_ENVIRON, 0)) != 0) {
++	    (dbenv->open)(dbenv, home, DB_INIT_MPOOL | DB_USE_ENVIRON, 0)) != 0) {
+ 		if (ret != DB_VERSION_MISMATCH) {
+ 			if ((ret =
+ 			    dbenv->set_cachesize(dbenv, 0, cache, 1)) != 0) {
+@@ -138,7 +138,7 @@ retry:	if ((ret = db_env_create(&dbenv, 
+ 				goto shutdown;
+ 			}
+ 			private = 1;
+-			ret = dbenv->open(dbenv, home, DB_CREATE |
++			ret = (dbenv->open)(dbenv, home, DB_CREATE |
+ 			    DB_INIT_MPOOL | DB_PRIVATE | DB_USE_ENVIRON, 0);
+ 		}
+ 		if (ret != 0) {
+@@ -187,7 +187,7 @@ retry:	if ((ret = db_env_create(&dbenv, 
+ 				goto shutdown;
+ 			}
+ 
+-			ret = dbp1->open(dbp1,
++			ret = (dbp1->open)(dbp1,
+ 			    NULL, argv[0], NULL, DB_UNKNOWN, DB_RDONLY, 0);
+ 
+ 			/*
+--- compat-db-4.5.20/db-4.5.20/db_load/db_load.c.glibc	2006-09-07 23:31:57.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/db_load/db_load.c	2007-08-13 13:56:06.000000000 +0200
+@@ -395,7 +395,7 @@ retry_db:
+ #endif
+ 
+ 	/* Open the DB file. */
+-	if ((ret = dbp->open(dbp, NULL, name, subdb, dbtype,
++	if ((ret = (dbp->open)(dbp, NULL, name, subdb, dbtype,
+ 	    DB_CREATE | (TXN_ON(dbenv) ? DB_AUTO_COMMIT : 0),
+ 	    __db_omode("rw-rw-rw-"))) != 0) {
+ 		dbp->err(dbp, ret, "DB->open: %s", name);
+@@ -609,7 +609,7 @@ db_init(dbenv, home, cache, is_private)
+ 	/* We may be loading into a live environment.  Try and join. */
+ 	flags = DB_USE_ENVIRON |
+ 	    DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN;
+-	if ((ret = dbenv->open(dbenv, home, flags, 0)) == 0)
++	if ((ret = (dbenv->open)(dbenv, home, flags, 0)) == 0)
+ 		return (0);
+ 	if (ret == DB_VERSION_MISMATCH)
+ 		goto err;
+@@ -633,7 +633,7 @@ db_init(dbenv, home, cache, is_private)
+ 		dbenv->err(dbenv, ret, "set_cachesize");
+ 		return (1);
+ 	}
+-	if ((ret = dbenv->open(dbenv, home, flags, 0)) == 0)
++	if ((ret = (dbenv->open)(dbenv, home, flags, 0)) == 0)
+ 		return (0);
+ 
+ 	/* An environment is required. */
+--- compat-db-4.5.20/db-4.5.20/xa/xa_db.c.glibc	2006-08-24 16:56:21.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/xa/xa_db.c	2007-08-13 13:46:45.000000000 +0200
+@@ -132,7 +132,7 @@ __xa_open(dbp, txn, name, subdb, type, f
+ 	if ((ret =
+ 	    __xa_set_txn(dbp, &txn, LF_ISSET(DB_AUTO_COMMIT) ? 1 : 0)) != 0)
+ 		return (ret);
+-	if ((ret = xam->open(dbp, txn, name, subdb, type, flags, mode)) != 0)
++	if ((ret = (xam->open)(dbp, txn, name, subdb, type, flags, mode)) != 0)
+ 		return (ret);
+ 
+ 	/* Wrap any DB handle method that takes a TXN ID as an argument. */
+--- compat-db-4.5.20/db-4.5.20/xa/xa.c.glibc	2006-08-24 16:56:21.000000000 +0200
++++ compat-db-4.5.20/db-4.5.20/xa/xa.c	2007-08-13 13:46:45.000000000 +0200
+@@ -207,7 +207,7 @@ __db_xa_open(xa_info, rmid, arg_flags)
+ 	/* Open a new environment. */
+ 	if (db_env_create(&dbenv, 0) != 0)
+ 		return (XAER_RMERR);
+-	if (dbenv->open(dbenv, xa_info, XA_FLAGS, 0) != 0)
++	if ((dbenv->open)(dbenv, xa_info, XA_FLAGS, 0) != 0)
+ 		goto err;
+ 
+ 	/* Create the mapping. */

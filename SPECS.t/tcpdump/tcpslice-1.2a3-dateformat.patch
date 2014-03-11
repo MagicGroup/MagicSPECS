@@ -1,0 +1,14 @@
+diff -up tcpslice-1.2a3/tcpslice.c.orig tcpslice-1.2a3/tcpslice.c
+--- tcpslice-1.2a3/tcpslice.c.orig	2005-10-25 00:06:26.000000000 +0200
++++ tcpslice-1.2a3/tcpslice.c	2011-08-24 13:12:53.215962428 +0200
+@@ -404,7 +404,9 @@ fill_tm(char *time_string, int is_delta,
+ 
+ 		while (isdigit(*t_stop))
+ 			++t_stop;
+-		if (! t_stop)
++		
++        if (!(*t_stop))
++            /* we've reached end of string -> bad date format */
+ 			error("bad date format %s, problem starting at %s",
+ 			      time_string, t_start);
+ 

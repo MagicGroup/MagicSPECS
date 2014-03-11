@@ -1,0 +1,27 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+url="http://ftp.gnu.org/gnu/bash/bash-$1-patches/?C=M;O=D"
+ver=$(echo $1|sed -e 's/\.//g')
+new1="bash$ver-"
+new2=".sig"
+downcommand="wget -q"
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand $url -O index.html
+if [ -f index.html ];then
+        newverpatch=`grep "$new1.*$new2" index.html | head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	echo $newverpatch
+else
+        echo "不能正常取得新版本号"
+        exit 1
+fi
+rm -f index.html
+popd > /dev/null
+pushd $(dirname $0)
+sed -i "s/%define baseversion.*/%define baseversion $1/g" bash.spec
+if ! [ x"$newverpatch" = x"" ]; then
+	
+fi	
+popd

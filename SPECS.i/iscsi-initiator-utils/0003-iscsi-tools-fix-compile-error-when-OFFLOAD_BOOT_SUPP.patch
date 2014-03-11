@@ -1,0 +1,35 @@
+From d81fd4903cebb1d00aa48b0718d20e34b00dfde1 Mon Sep 17 00:00:00 2001
+From: Mike Christie <michaelc@cs.wisc.edu>
+Date: Wed, 26 Sep 2012 21:19:39 -0500
+Subject: iscsi tools: fix compile error when OFFLOAD_BOOT_SUPPORT defined
+
+Fix compile error when OFFLOAD_BOOT_SUPPORT is defined and fix
+warning when it is defined.
+---
+ usr/iface.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/usr/iface.c b/usr/iface.c
+index 4028e34..4f81a76 100644
+--- a/usr/iface.c
++++ b/usr/iface.c
+@@ -894,7 +894,6 @@ int iface_setup_from_boot_context(struct iface_rec *iface,
+ 				   struct boot_context *context)
+ {
+ 	struct iscsi_transport *t = NULL;
+-	char transport_name[ISCSI_TRANSPORT_NAME_MAXLEN];
+ 	uint32_t hostno;
+ 
+ 	if (strlen(context->initiatorname))
+@@ -910,6 +909,8 @@ int iface_setup_from_boot_context(struct iface_rec *iface,
+ 	} else if (strlen(context->iface)) {
+ /* this ifdef is only temp until distros and firmwares are updated */
+ #ifdef OFFLOAD_BOOT_SUPPORTED
++		char transport_name[ISCSI_TRANSPORT_NAME_MAXLEN];
++		int rc;
+ 
+ 		memset(transport_name, 0, ISCSI_TRANSPORT_NAME_MAXLEN);
+ 		/* make sure offload driver is loaded */
+-- 
+1.7.11.7
+

@@ -1,0 +1,39 @@
+diff -up proxymngr-1.0.2/configure.ac.lbx proxymngr-1.0.2/configure.ac
+--- proxymngr-1.0.2/configure.ac.lbx	2010-10-30 16:28:49.000000000 -0400
++++ proxymngr-1.0.2/configure.ac	2011-06-21 12:41:59.905867185 -0400
+@@ -39,11 +39,6 @@ AM_CONFIG_HEADER(xconfig.h)
+ 
+ AC_PROG_CPP
+ 
+-AC_PATH_PROG(LBXPROXY, lbxproxy)
+-if [[ -z $LBXPROXY ]] ; then
+-   AC_MSG_ERROR([lbxproxy is needed])
+-fi
+-
+ # Checks for pkg-config packages
+ PKG_CHECK_MODULES(PROXYMNGR, ice xt x11 xproxymngproto)
+ 
+diff -up proxymngr-1.0.2/Makefile.am.lbx proxymngr-1.0.2/Makefile.am
+--- proxymngr-1.0.2/Makefile.am.lbx	2010-10-30 16:24:56.000000000 -0400
++++ proxymngr-1.0.2/Makefile.am	2011-06-21 12:40:44.164612155 -0400
+@@ -47,7 +47,7 @@ configdir = $(CONFIG_DIR)
+ config_DATA = pmconfig
+ 
+ pmconfig: pmconfig.cpp
+-	$(SED) -e s/LBXPROXY/`echo @LBXPROXY@ | sed -e s/\\\\//\\\\\\\\\\\\//g`/ < $(srcdir)/pmconfig.cpp > $@
++	cp $(srcdir)/pmconfig.cpp $@
+ 
+ EXTRA_DIST = pmconfig.cpp
+ CLEANFILES = pmconfig
+diff -up proxymngr-1.0.2/pmconfig.cpp.lbx proxymngr-1.0.2/pmconfig.cpp
+--- proxymngr-1.0.2/pmconfig.cpp.lbx	2010-10-30 16:24:56.000000000 -0400
++++ proxymngr-1.0.2/pmconfig.cpp	2011-06-21 12:40:44.164612155 -0400
+@@ -5,7 +5,7 @@
+ !        or
+ !    <serviceName> unmanaged <proxyAddress>
+ !
+-lbx managed LBXPROXY
++!lbx managed LBXPROXY
+ !
+ ! substitute site-specific info
+ !xfwp unmanaged firewall:4444

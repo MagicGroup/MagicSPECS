@@ -1,0 +1,12 @@
+diff -urN okular-4.9.2.orig/generators/poppler/annots.cpp okular-4.9.2/generators/poppler/annots.cpp
+--- okular-4.9.2.orig/generators/poppler/annots.cpp	2012-10-08 14:14:06.000000000 -0400
++++ okular-4.9.2/generators/poppler/annots.cpp	2012-10-08 14:14:17.000000000 -0400
+@@ -21,7 +21,7 @@
+ #include "popplerembeddedfile.h"
+ #include "config-okular-poppler.h"
+ 
+-Q_DECLARE_METATYPE( Poppler::Annotation* )
++//Q_DECLARE_METATYPE( Poppler::Annotation* )
+ 
+ extern Okular::Sound* createSoundFromPopplerSound( const Poppler::SoundObject *popplerSound );
+ extern Okular::Movie* createMovieFromPopplerMovie( const Poppler::MovieObject *popplerMovie );

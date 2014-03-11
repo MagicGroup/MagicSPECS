@@ -1,0 +1,22 @@
+--- kdebase-3.5.2/kxkb/kcmlayout.cpp.orig	2006-03-17 18:17:41.000000000 +0800
++++ kdebase-3.5.2/kxkb/kcmlayout.cpp	2006-04-16 13:56:01.000000000 +0800
+@@ -739,7 +739,7 @@
+ 		return new KeyboardConfig(parent, "kcmlayout");
+ 	}
+ 	
+-	KDE_EXPORT void init_keyboard()
++	KDE_EXPORT void init_keyboard_layout()
+ 	{
+ 		KeyboardConfig::init_keyboard();
+ 		
+@@ -759,6 +759,10 @@
+ 			}
+ 		}
+ 	}
++	KDE_EXPORT void init_keyboard() 
++	{
++		init_keyboard_layout();
++	}
+ }
+ 
+ 

@@ -1,0 +1,141 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the KCometen3 package.
+# kde <athena_star {at} 163 {dot} com>, 2007.
+#
+
+msgid ""
+msgstr ""
+"Project-Id-Version: KCometen3 1.1\n"
+"Report-Msgid-Bugs-To: kde <athena_star {at} 163 {dot} com>\n"
+"POT-Creation-Date: 2007-07-06 03:42+0800\n"
+"PO-Revision-Date: 2007-07-06 11:23+0800\n"
+"Last-Translator: kde <athena_star {at} 163 {dot} com>\n"
+"Language-Team: zh_CN_simplified <zh_CN@i18n.org.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/kcometen3.cpp:40 ../src/kcometen3.moc.cpp:24
+#: ../src/kcometen3.moc.cpp:28 ../src/kcometen3.moc.cpp:34
+#: ../src/kcometen3.moc.cpp:42 ../src/kcometen3.moc.cpp:56
+#: ../src/kcometen3.moc.cpp:70
+msgid "KCometen3"
+msgstr "时空焰火3"
+
+#: ../src/kcometen3ui.cpp:188
+msgid "Screen Saver Config"
+msgstr "屏幕保护程序配置"
+
+#: ../src/kcometen3ui.cpp:189
+msgid "&OK"
+msgstr "确定(&O)"
+
+#: ../src/kcometen3ui.cpp:190
+msgid "C&ancel"
+msgstr "取消(&A)"
+
+#: ../src/kcometen3ui.cpp:193
+msgid "Color"
+msgstr "色彩"
+
+#: ../src/kcometen3ui.cpp:194
+msgid "Size Scale"
+msgstr "尺寸比例"
+
+#: ../src/kcometen3ui.cpp:195
+msgid "Camera Speed"
+msgstr "相机速度"
+
+#: ../src/kcometen3ui.cpp:196
+msgid "Free Camera"
+msgstr "自由相机"
+
+#: ../src/kcometen3ui.cpp:198
+msgid "Max FPS"
+msgstr "最大 FPS"
+
+#: ../src/kcometen3ui.cpp:199
+msgid "Comet Interval"
+msgstr "彗星间隔"
+
+#: ../src/kcometen3ui.cpp:200
+msgid "Time Scale"
+msgstr "时间比例"
+
+#: ../src/kcometen3ui.cpp:202
+msgid "Red"
+msgstr "红"
+
+#: ../src/kcometen3ui.cpp:203
+msgid "Blue"
+msgstr "蓝"
+
+#: ../src/kcometen3ui.cpp:204
+msgid "Green"
+msgstr "绿"
+
+#: ../src/kcometen3ui.cpp:205
+msgid "All Colors"
+msgstr "全部色彩"
+
+#: ../src/kcometen3ui.cpp:206
+msgid "Random Colors"
+msgstr "随机色彩"
+
+#: ../src/kcometen3ui.cpp:207
+msgid "Optio&ns"
+msgstr "选项(&N)"
+
+#: ../src/kcometen3ui.cpp:209
+msgid "Split Comet"
+msgstr "分裂彗星"
+
+#: ../src/kcometen3ui.cpp:211
+msgid "&Lightning"
+msgstr "闪电(&L)"
+
+#: ../src/kcometen3ui.cpp:213
+msgid "Rotate Comet"
+msgstr "旋转彗星"
+
+#: ../src/kcometen3ui.cpp:215
+msgid "Curve Comet"
+msgstr "弯曲彗星"
+
+#: ../src/kcometen3ui.cpp:217
+msgid "Slowmotion"
+msgstr "缓慢移动"
+
+#: ../src/kcometen3ui.cpp:219
+msgid "Camera Rotation"
+msgstr "相机旋转"
+
+#: ../src/kcometen3ui.cpp:221
+msgid "Effects"
+msgstr "效果"
+
+#: ../src/kcometen3ui.cpp:227
+msgid "Real Size"
+msgstr "实际尺寸"
+
+#: ../src/kcometen3ui.cpp:228
+msgid "Size"
+msgstr "尺寸"
+
+#: ../src/kcometen3ui.cpp:229
+msgid "Desktop"
+msgstr "桌面"
+
+#: ../src/kcometen3ui.cpp:230
+msgid "File"
+msgstr "文件"
+
+#: ../src/kcometen3ui.cpp:232
+msgid "Random File"
+msgstr "随机文件"
+
+#: ../src/kcometen3ui.cpp:233
+msgid "&Background"
+msgstr "背景(&B)"
+

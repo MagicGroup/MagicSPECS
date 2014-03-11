@@ -1,0 +1,13 @@
+Only in lloyd-yajl-fee1ebe.new/src: CMakeLists.txt~
+diff -rup lloyd-yajl-fee1ebe.orig/src/yajl.pc.cmake lloyd-yajl-fee1ebe.new/src/yajl.pc.cmake
+--- lloyd-yajl-fee1ebe.orig/src/yajl.pc.cmake	2011-12-20 00:23:22.000000000 +0000
++++ lloyd-yajl-fee1ebe.new/src/yajl.pc.cmake	2012-08-06 14:05:49.639854538 +0100
+@@ -1,6 +1,6 @@
+ prefix=${CMAKE_INSTALL_PREFIX}
+ libdir=${dollar}{prefix}/lib${LIB_SUFFIX}
+-includedir=${dollar}{prefix}/include/yajl
++includedir=${dollar}{prefix}/include
+ 
+ Name: Yet Another JSON Library
+ Description: A Portable JSON parsing and serialization library in ANSI C
+Only in lloyd-yajl-fee1ebe.new/src: yajl.pc.cmake~

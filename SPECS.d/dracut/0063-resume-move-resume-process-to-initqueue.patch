@@ -1,0 +1,63 @@
+From 450b5f336d1f433d333b78979388aa2477bc487e Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 9 Jul 2012 17:06:51 +0200
+Subject: [PATCH] resume: move resume process to initqueue
+
+---
+ modules.d/95resume/parse-resume.sh    |    2 ++
+ modules.d/95resume/resume-genrules.sh |   14 +++++++-------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/modules.d/95resume/parse-resume.sh b/modules.d/95resume/parse-resume.sh
+index 32680c3..b460a16 100755
+--- a/modules.d/95resume/parse-resume.sh
++++ b/modules.d/95resume/parse-resume.sh
+@@ -15,6 +15,8 @@ case "$resume" in
+         resume="/dev/disk/by-label/${resume#LABEL=}" ;;
+     UUID=*) \
+         resume="/dev/disk/by-uuid/${resume#UUID=}" ;;
++    PARTUUID=*) \
++        resume="/dev/disk/by-partuuid/${resume#PARTUUID=}" ;;
+ esac
+ 
+ if splash=$(getarg splash=); then
+diff --git a/modules.d/95resume/resume-genrules.sh b/modules.d/95resume/resume-genrules.sh
+index ee4eacb..34511d7 100755
+--- a/modules.d/95resume/resume-genrules.sh
++++ b/modules.d/95resume/resume-genrules.sh
+@@ -21,18 +21,18 @@ if [ -n "$resume" ]; then
+ 
+     {
+         if [ -x /usr/sbin/resume ]; then
+-            printf "KERNEL==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/usr/sbin/resume %s '%s'\"\n" \
++            printf "KERNEL==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/sbin/initqueue /usr/sbin/resume %s '%s'\"\n" \
+                 ${resume#/dev/} "$a_splash" "$resume";
+-            printf "SYMLINK==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/usr/sbin/resume %s '%s'\"\n" \
++            printf "SYMLINK==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/sbin/initqueue /usr/sbin/resume %s '%s'\"\n" \
+                 ${resume#/dev/} "$a_splash" "$resume";
+         fi
+-        printf "KERNEL==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/bin/sh -c 'echo %%M:%%m > /sys/power/resume'\"\n" \
++        printf "KERNEL==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/sbin/initqueue /bin/sh -c 'echo %%M:%%m > /sys/power/resume'\"\n" \
+             ${resume#/dev/};
+-        printf "SYMLINK==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/bin/sh -c 'echo %%M:%%m > /sys/power/resume'\"\n" \
++        printf "SYMLINK==\"%s\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/sbin/initqueue /bin/sh -c 'echo %%M:%%m > /sys/power/resume'\"\n" \
+             ${resume#/dev/};
+     } >> /etc/udev/rules.d/99-resume.rules
+ 
+-    printf '[ -e "%s" ] && { ln -s "%s" /dev/resume; rm "$job"; }\n' \
++    printf '[ -e "%s" ] && { ln -s "%s" /dev/resume; rm "$job"; udevadm settle; }\n' \
+         "$resume" "$resume" >> $hookdir/initqueue/settled/resume.sh
+ 
+     printf 'warn "Cancelling resume operation. Device not found."; cancel_wait_for_dev /dev/resume; rm "$job" "%s/initqueue/settled/resume.sh";' \
+@@ -43,9 +43,9 @@ if [ -n "$resume" ]; then
+ elif ! getarg noresume; then
+     {
+         if [ -x /usr/sbin/resume ]; then
+-            printf "SUBSYSTEM==\"block\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/usr/sbin/resume %s '\$tempnode'\"\n" "$a_splash"
++            printf "SUBSYSTEM==\"block\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\", RUN+=\"/sbin/initqueue /usr/sbin/resume %s '\$tempnode'\"\n" "$a_splash"
+         fi
+         echo "SUBSYSTEM==\"block\", ACTION==\"add|change\", ENV{ID_FS_TYPE}==\"suspend|swsuspend|swsupend\"," \
+-            " RUN+=\"/bin/sh -c 'echo %M:%m > /sys/power/resume'\"";
++            " RUN+=\"/sbin/initqueue /bin/sh -c 'echo %M:%m > /sys/power/resume'\"";
+     } >> /etc/udev/rules.d/99-resume.rules
+ fi

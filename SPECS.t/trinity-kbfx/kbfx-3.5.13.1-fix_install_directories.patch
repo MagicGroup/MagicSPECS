@@ -1,0 +1,12 @@
+--- kbfx-3.5.13.1/doc/CMakeLists.txt.dir	2012-07-05 19:59:27.000000000 +0200
++++ kbfx-3.5.13.1/doc/CMakeLists.txt	2012-10-03 22:55:59.145960716 +0200
+@@ -13,5 +13,8 @@
+ #	TODO
+ 	)
+ 
++#add_subdirectory( common )
++#add_subdirectory( en )
++
+ INSTALL(FILES ${DOCFILES}
+-    DESTINATION ${SHARE_INSTALL_PREFIX}/doc/kbfx)
++	DESTINATION ${DOC_INSTALL_DIR}/kbfx)

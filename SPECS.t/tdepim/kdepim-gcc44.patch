@@ -1,0 +1,12 @@
+diff -ur kdepim-3.5.10.orig/indexlib/memvector.tcc kdepim-3.5.10/indexlib/memvector.tcc
+--- kdepim-3.5.10.orig/indexlib/memvector.tcc	2009-05-20 18:17:33.000000000 +0800
++++ kdepim-3.5.10/indexlib/memvector.tcc	2009-05-20 18:20:53.000000000 +0800
+@@ -33,7 +33,7 @@
+ 	data_->resize( n_s * byte_io::byte_lenght<value_type>() + byte_io::byte_lenght<unsigned>() );
+ 	iterator p_end = end();
+ 	byte_io::write<unsigned>( data_->rw_base( 0 ), n_s );
+-	while ( operator !=<unsigned, unsigned>(p_end, end()) ) {
++	while ( operator !=(p_end, end()) ) {
+ 		*p_end = value_type();
+ 		++p_end;
+ 		

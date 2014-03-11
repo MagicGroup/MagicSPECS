@@ -1,0 +1,27 @@
+diff -up words-3.0/mwords/354984si.ngl.kzak words-3.0/mwords/354984si.ngl
+--- words-3.0/mwords/354984si.ngl.kzak	1996-06-06 05:30:48.000000000 +0200
++++ words-3.0/mwords/354984si.ngl	2009-01-12 11:56:54.000000000 +0100
+@@ -17787,7 +17787,6 @@ architecture
+ architecture's
+ architectures
+ architecturesque
+-architecure
+ architis
+ architraval
+ architrave
+@@ -110139,7 +110138,6 @@ flounderingly
+ flounders
+ flour
+ floured
+-flourescent
+ flouriness
+ flouring
+ flourish
+@@ -331241,7 +331239,6 @@ unneath
+ unneatly
+ unneatness
+ unnebulous
+-unneccessary
+ unnecessaries
+ unnecessarily
+ unnecessariness

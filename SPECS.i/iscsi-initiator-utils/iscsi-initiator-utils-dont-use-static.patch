@@ -1,0 +1,12 @@
+diff -aup open-iscsi-2.0-872-rc1-bnx2i/usr/Makefile open-iscsi-2.0-872-rc1-bnx2i.work/usr/Makefile
+--- open-iscsi-2.0-872-rc1-bnx2i/usr/Makefile	2010-06-18 18:04:51.000000000 -0500
++++ open-iscsi-2.0-872-rc1-bnx2i.work/usr/Makefile	2010-06-18 18:13:33.000000000 -0500
+@@ -60,7 +60,7 @@ iscsiadm: $(ISCSI_LIB_SRCS) $(DISCOVERY_
+ 
+ iscsistart: $(IPC_OBJ) $(ISCSI_LIB_SRCS) $(INITIATOR_SRCS) $(FW_BOOT_SRCS) \
+ 		iscsistart.o statics.o
+-	$(CC) $(CFLAGS) -static $^ -o $@
++	$(CC) $(CFLAGS) $^ -o $@
+ clean:
+ 	rm -f *.o $(PROGRAMS) .depend $(LIBSYS)
+ 

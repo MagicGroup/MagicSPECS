@@ -1,0 +1,12 @@
+diff -ur chmlib-0.40-orig/src/chm_lib.c chmlib-0.40/src/chm_lib.c
+--- chmlib-0.40-orig/src/chm_lib.c  2013-08-10 23:09:30.000000000 +0000
++++ chmlib-0.40/src/chm_lib.c	2013-08-10 23:10:13.000000000 +0000
+@@ -164,7 +164,7 @@
+ 
+ /* x86-64 */
+ /* Note that these may be appropriate for other 64-bit machines. */
+-#elif __x86_64__ || __ia64__
++#elif __x86_64__ || __ia64__ || __mips64
+ typedef unsigned char           UChar;
+ typedef short                   Int16;
+ typedef unsigned short          UInt16;

@@ -1,0 +1,213 @@
+--- mpeg4ip-1.3/lib/mp4av/Makefile.am.orig	2005-05-09 20:18:10.000000000 +0200
++++ mpeg4ip-1.3/lib/mp4av/Makefile.am	2005-05-22 12:45:37.068607424 +0200
+@@ -47,6 +47,10 @@
+ 	rfcisma.cpp \
+ 	rfch264.cpp
+ 
++libmp4av_la_LIBADD = $(top_builddir)/lib/mp4v2/libmp4v2.la
++
++$(top_builddir)/lib/mp4v2/libmp4v2.la:
++	$(MAKE) -C $(top_builddir)/lib/mp4v2 libmp4v2.la
+ 
+ EXTRA_DIST = libmp4av.dsp libmp4av_st.dsp 
+ 
+--- mpeg4ip-1.0/lib/msg_queue/Makefile.am.orig	2004-02-10 08:14:36.000000000 +0100
++++ mpeg4ip-1.0/lib/msg_queue/Makefile.am	2004-02-10 08:55:26.209395440 +0100
+@@ -3,6 +3,7 @@
+ libmsg_queue_la_SOURCES = \
+ 	msg_queue.cpp \
+ 	msg_queue.h
++libmsg_queue_la_LIBADD = @SDL_LIBS@
+ 
+ EXTRA_DIST = \
+ 	libmsg_queue60.dsp
+--- mpeg4ip-1.2/configure.in.orig	2004-12-03 23:40:25.000000000 +0100
++++ mpeg4ip-1.2/configure.in	2004-12-04 19:27:00.086541416 +0100
+@@ -338,7 +338,7 @@
+    AC_CHECK_LIB(vorbis, vorbis_bitrate_init, [have_vorbis=true], [have_vorbis=false])
+    if test x$have_vorbis = xtrue; then
+       LIBVORBIS_LIB="-lvorbis -lvorbisenc"
+-      AC_CHECK_HEADER([faad.h], [LIBVORBIS_LIB="$LIBVORBIS_LIB -lfaad"])
++dnl      AC_CHECK_HEADER([faad.h], [LIBVORBIS_LIB="$LIBVORBIS_LIB -lfaad"])  -- not used now
+    fi
+ fi
+ AC_SUBST(LIBVORBIS_LIB)
+--- mpeg4ip-1.1/lib/SDLAudio/src/Makefile.am.orig	2004-05-12 23:15:24.000000000 +0200
++++ mpeg4ip-1.1/lib/SDLAudio/src/Makefile.am	2004-10-23 18:06:27.610465888 +0200
+@@ -23,7 +23,7 @@
+ 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libmpeg4ipSDL_la_LIBADD =		\
+ 	@SDL_EXTRALIBS@		\
+-	@SYSTEM_LIBS@
++	@SYSTEM_LIBS@ -lSDL
+ libmpeg4ipSDL_la_DEPENDENCIES =	\
+ 	@SDL_EXTRALIBS@
+ 
+--- mpeg4ip-1.4.1/player/plugin/rtp/isma_audio/Makefile.am.orig	2005-09-08 19:58:24.000000000 +0200
++++ mpeg4ip-1.4.1/player/plugin/rtp/isma_audio/Makefile.am	2005-11-19 18:56:25.681346200 +0100
+@@ -15,13 +15,13 @@
+ isma_rtp_plugin_la_LIBADD = \
+ 	$(top_builddir)/lib/mp4av/libmp4av.la \
+ 	$(top_builddir)/player/lib/mp4util/libmp4util.la \
+-	-lm 
++	-lSDL -lm 
+ 
+ isma_enc_rtp_plugin_la_LIBADD = \
+         $(top_builddir)/lib/mp4av/libmp4av.la \
+         $(top_builddir)/player/lib/mp4util/libmp4util.la \
+         $(top_builddir)/lib/ismacryp/libismacryp.la @SRTPLIB@ \
+-        -lm
++        -lSDL -lm
+ 
+ INCLUDES = -I$(top_srcdir)/player/src \
+ 	   -I$(top_srcdir)/player/lib \
+--- mpeg4ip-1.1/player/src/codec/wav/Makefile.am.orig	2004-02-24 19:46:48.000000000 +0100
++++ mpeg4ip-1.1/player/src/codec/wav/Makefile.am	2004-10-23 18:21:11.522090896 +0200
+@@ -5,6 +5,7 @@
+ 	ourwav.h \
+ 	wav_file.cpp \
+ 	wav_file.h
++wav_plugin_la_LIBADD = -lSDL
+ 
+ libdir = @PLAYER_PLUGIN_DIR@
+ 
+--- mpeg4ip-1.4.1/player/lib/audio/celp/dec/Makefile.am.orig	2005-08-12 19:17:17.000000000 +0200
++++ mpeg4ip-1.4.1/player/lib/audio/celp/dec/Makefile.am	2005-11-19 18:57:45.808165072 +0100
+@@ -43,6 +43,8 @@
+ 	phi_priv.c \
+ 	phi_xits.c
+ 
++libmpeg4ip_celp_la_LIBADD = $(top_builddir)/player/lib/audio/celp/BS/libmpeg4ip_celpbs.la -lm
++
+ INCLUDES=-I$(srcdir)/../include
+ AM_CFLAGS = 
+ 
+--- mpeg4ip-1.3/player/lib/audio/faad/Makefile.am.orig	2005-05-04 22:01:36.000000000 +0200
++++ mpeg4ip-1.3/player/lib/audio/faad/Makefile.am	2005-05-22 12:48:37.708146040 +0200
+@@ -32,6 +32,7 @@
+ 	tns.h \
+ 	transfo.h\
+ 	util.h
++libmpeg4ip_faad_la_LIBADD = -lm
+ INCLUDES = -I$(top_srcdir)/include
+ AM_CFLAGS = -O2 -Werror -Wall -fexceptions -fno-strict-aliasing
+ 
+--- mpeg4ip-1.6/lib/srtp/Makefile.am.orig	2007-07-24 22:32:28.000000000 +0200
++++ mpeg4ip-1.6/lib/srtp/Makefile.am	2007-11-04 01:17:33.421260290 +0100
+@@ -9,15 +9,16 @@
+ 
+ libsrtpif_la_SOURCES = liblibsrtp.c \
+ 	liblibsrtp.h
++libsrtpif_la_LIBADD = @SRTPLIB@
+ 
+ #EXTRA_DIST = README README.html
+ 
+ check_PROGRAMS = test_srtp_client test_srtp_server
+ 
+ test_srtp_client_SOURCES = test_srtp_client.cpp
+-test_srtp_client_LDADD = ../rtp/libuclmmbase.la libsrtpif.la ../mp4v2/libmp4v2.la ../../../srtp/libsrtp.a
++test_srtp_client_LDADD = ../rtp/libuclmmbase.la libsrtpif.la ../mp4v2/libmp4v2.la
+ 
+ test_srtp_server_SOURCES = test_srtp_server.cpp
+-test_srtp_server_LDADD = ../rtp/libuclmmbase.la libsrtpif.la ../mp4v2/libmp4v2.la ../../../srtp/libsrtp.a
++test_srtp_server_LDADD = ../rtp/libuclmmbase.la libsrtpif.la ../mp4v2/libmp4v2.la
+ 
+ EXTRA_DIST=liblibstrp.vcproj
+--- mpeg4ip-1.5.0.1/lib/mpeg2ps/Makefile.am.orig	2005-09-28 20:38:27.000000000 +0000
++++ mpeg4ip-1.5.0.1/lib/mpeg2ps/Makefile.am	2006-12-13 10:18:40.852748000 +0000
+@@ -12,10 +12,10 @@
+ 
+ bin_PROGRAMS = mpeg_ps_info mpeg_ps_extract
+ prog_libadd = \
++	libmpeg2_program.la \
+ 	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
+ 	$(top_builddir)/lib/mp4av/libmp4av.la \
+-	$(top_builddir)/lib/mp4v2/libmp4v2.la \
+-	libmpeg2_program.la 
++	$(top_builddir)/lib/mp4v2/libmp4v2.la
+ 
+ mpeg_ps_info_SOURCES = ps_info.cpp
+ mpeg_ps_info_LDADD = $(prog_libadd)
+@@ -27,8 +27,7 @@
+ mpeg2ps_test_LDADD = libmpeg2_program.la \
+ 	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
+ 	$(top_builddir)/lib/mp4av/libmp4av.la \
+-	$(top_builddir)/lib/mp4v2/libmp4v2.la \
+-	libmpeg2_program.la 
++	$(top_builddir)/lib/mp4v2/libmp4v2.la
+ 
+ EXTRA_DIST=libmpeg2ps.dsp
+ 
+--- mpeg4ip-1.5.0.1/player/src/Makefile.am.orig	2006-12-13 11:11:12.927981500 +0000
++++ mpeg4ip-1.5.0.1/player/src/Makefile.am	2006-12-13 11:11:16.430448500 +0000
+@@ -196,13 +196,13 @@
+ 
+ mp4player_LDFLAGS = $(SDL_AUDIO_FLAGS)
+ mp4player_LDADD = \
+-	-lm $(SDL_AUDIO_LIB) \
+ 	libmp4player.la \
+ 	libmp4syncbase.la \
+ 	libmp4syncsdl.la \
+ 	libmp4sdlvideo.la \
+ 	libmp4syncbase.la \
+ 	libmp4playerutils.la \
++	-lm $(SDL_AUDIO_LIB) \
+ 	$(top_builddir)/lib/audio/libaudio.la \
+ 	$(top_builddir)/lib/ismacryp/libismacryp.la \
+ 	$(top_builddir)/lib/srtp/libsrtpif.la \
+--- mpeg4ip-1.5.0.1/lib/ismacryp/Makefile.am.orig	2006-05-11 17:47:06.000000000 +0000
++++ mpeg4ip-1.5.0.1/lib/ismacryp/Makefile.am	2006-12-13 11:26:09.546762500 +0000
+@@ -5,6 +5,7 @@
+ libismacryp_la_SOURCES = ismacryplib.c \
+ 	ismacryplib.h \
+ 	ismacryplib_priv.h
++libismacryp_la_LIBADD = @SRTPLIB@
+ 
+ AM_CFLAGS = -D_REENTRANT @BILLS_CWARNINGS@
+ 
+--- mpeg4ip-1.5.0.1/server/mp4creator/Makefile.am.orig	2005-09-08 17:58:24.000000000 +0000
++++ mpeg4ip-1.5.0.1/server/mp4creator/Makefile.am	2006-12-13 11:27:33.087983500 +0000
+@@ -30,7 +30,6 @@
+ 	$(top_builddir)/lib/mp4av/libmp4av.la \
+ 	$(top_builddir)/lib/avi/libavi.la \
+ 	$(top_builddir)/lib/gnu/libmpeg4ip_gnu.la \
+-	$(top_builddir)/lib/ismacryp/libismacryp.la \
+-	@SRTPLIB@ 
++	$(top_builddir)/lib/ismacryp/libismacryp.la
+ 
+ EXTRA_DIST = mp4creator60.dsp 
+--- mpeg4ip-1.5.0.1/server/mp4live/gui/Makefile.am.orig	2006-03-09 23:05:52.000000000 +0000
++++ mpeg4ip-1.5.0.1/server/mp4live/gui/Makefile.am	2006-12-13 11:59:40.356430250 +0000
+@@ -18,6 +18,8 @@
+ 	transmit_dialog.cpp \
+ 	video_dialog.cpp 
+ 
++libmp4livegui_la_LIBADD = @GTK_LIBS@
++
+ INCLUDES=@GLIB_CFLAGS@ @GTK_CFLAGS@ \
+ 	-I$(top_srcdir)/server/mp4live \
+ 	-I$(top_srcdir)/include \
+--- mpeg4ip-1.6/server/mp4live/Makefile.am.orig	2007-01-26 20:50:00.000000000 +0100
++++ mpeg4ip-1.6/server/mp4live/Makefile.am	2007-11-04 09:24:55.331661796 +0100
+@@ -156,10 +156,6 @@
+ 	-D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@ 
+ 
+ mp4live_LDADD = \
+-	@GTK_LIBS@ @GLIB_LIBS@ \
+-	@FAAC_LIB@ \
+-	@LAME_LIB@ \
+-	@TWOLAME_LIB@ \
+ 	./h261/libmp4live_h261.la \
+ 	$(GUIADD) \
+ 	libmp4live.la \
+@@ -174,6 +170,10 @@
+ 	$(top_builddir)/lib/utils/libutils.la \
+ 	$(top_builddir)/lib/srtp/libsrtpif.la \
+ 	$(top_builddir)/lib/ffmpeg/libmpeg4ip_ffmpeg.la \
++	@GTK_LIBS@ @GLIB_LIBS@ \
++	@FAAC_LIB@ \
++	@LAME_LIB@ \
++	@TWOLAME_LIB@ \
+ 	@SRTPLIB@ \
+ 	-lpthread \
+ 	@SDL_LIBS@ $(GUILIBS) @FFMPEG_LIB@ @LIBVORBIS_LIB@ $(XVID_LIB) \

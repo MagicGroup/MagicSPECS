@@ -1,0 +1,11 @@
+--- a/configure.py.ORI	2011-12-03 17:07:41.589390850 +0100
++++ b/configure.py	2011-12-03 17:14:35.226888035 +0100
+@@ -786,7 +786,7 @@
+     sipconfig.ParentMakefile(
+         configuration = pyqtcfg,
+         subdirs = subdirs,
+-        installs= [("pykdeconfig.py", opt_pykdemoddir), (srcPath("contrib/kdepyuic"), sipcfg.default_bin_dir)]
++        installs= [("pykdeconfig.py", opt_pykdemoddir), (srcPath("contrib/kdepyuic"), opt_kdebasedir + "/bin")]
+     ).generate()
+ 
+ 

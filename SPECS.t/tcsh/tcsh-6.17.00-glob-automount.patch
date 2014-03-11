@@ -1,0 +1,181 @@
+diff -up tcsh-6.17.00/sh.glob.c.glob-automount tcsh-6.17.00/sh.glob.c
+--- tcsh-6.17.00/sh.glob.c.glob-automount	2008-06-19 17:20:56.000000000 +0200
++++ tcsh-6.17.00/sh.glob.c	2009-11-04 13:58:09.000000000 +0100
+@@ -423,6 +423,14 @@ handleone(Char *str, Char **vl, int acti
+     return (str);
+ }
+ 
++static char **blkend(char **up)
++{
++
++    while (*up)
++        up++;
++    return (up);
++}
++
+ static Char **
+ libglob(Char **vl)
+ {
+@@ -430,6 +438,13 @@ libglob(Char **vl)
+     glob_t  globv;
+     char   *ptr;
+     int     nonomatch = adrof(STRnonomatch) != 0, magic = 0, match = 0;
++    char  **snowc = NULL;
++    char  **nowc;
++    char  **globres;
++    char  **sres;
++    char  **res;
++    int     size = GLOBSPACE;
++    int     cglob = 0, fglob = 0;
+ 
+     if (!vl || !vl[0])
+ 	return(vl);
+@@ -438,35 +453,126 @@ libglob(Char **vl)
+     globv.gl_pathv = 0;
+     globv.gl_pathc = 0;
+ 
++    sres = res = (Char **) xmalloc((size_t) (size * sizeof(Char *)));
++    *res = NULL;
++
+     if (nonomatch)
+ 	gflgs |= GLOB_NOCHECK;
+ 
+     do {
+-	ptr = short2qstr(*vl);
+-	switch (glob(ptr, gflgs, 0, &globv)) {
+-	case GLOB_ABEND:
+-	    globfree(&globv);
+-	    setname(ptr);
+-	    stderror(ERR_NAME | ERR_GLOB);
+-	    /* NOTREACHED */
+-	case GLOB_NOSPACE:
+-	    globfree(&globv);
+-	    stderror(ERR_NOMEM);
+-	    /* NOTREACHED */
+-	default:
+-	    break;
+-	}
+-	if (globv.gl_flags & GLOB_MAGCHAR) {
+-	    match |= (globv.gl_matchc != 0);
+-	    magic = 1;
++        ptr = short2qstr(*vl);
++        if (!any(ptr, '?') && !any(ptr, '*') && !any(ptr, '[') && !any(ptr, ']'))
++        {
++                ptr = short2str(*vl);
++                if (snowc == NULL)
++                        snowc = nowc = (Char **) xmalloc((size_t) ((blklen(vl) + 1) * sizeof(Char *)));
++                *nowc++ = SAVE(ptr);
++                *nowc = NULL;
++
++                continue;
++
++        }
++	else
++                cglob++;
++        switch (glob(ptr, gflgs, 0, &globv)) {
++        case GLOB_ABEND:
++            globfree(&globv);
++            setname(ptr);
++            stderror(ERR_NAME | ERR_GLOB);
++            /* NOTREACHED */
++        case GLOB_NOSPACE:
++            globfree(&globv);
++            stderror(ERR_NOMEM);
++            /* NOTREACHED */
++        default:
++            break;
++        }
++        if (globv.gl_flags & GLOB_MAGCHAR) {
++            match |= (globv.gl_matchc != 0);
++            magic = 1;
++        }
++
++        globres = (globv.gl_pathc == 0 || (magic && !match && !nonomatch)) ?
++                NULL : blk2short(globv.gl_pathv);
++
++        if (snowc != NULL)
++        {
++                while ((blklen(sres) + blklen(snowc)) >= size) {
++                        size += GLOBSPACE;
++                        sres = (Char **) xrealloc((ptr_t) sres, (size_t) (size * sizeof(Char *)));
++                }
++
++                if (blklen(sres) == 0)
++                {
++                        sres = blkcpy(sres, snowc);
++                        res = blkend(sres);
++                }
++                else
++                {
++                        res = blkend(sres);
++                        res = blkcpy(res, snowc);
++                }
++                xfree(snowc);
++                snowc = NULL;
++        }
++
++        if (globres != NULL)
++        {
++                while ((blklen(sres) + blklen(globres)) >= size) {
++                        size += GLOBSPACE;
++                        sres = (Char **) xrealloc((ptr_t) sres, (size_t) (size * sizeof(Char *)));
++                }
++
++                if (blklen(sres) == 0)
++                {
++                        sres = blkcpy(sres, globres);
++                        res = blkend(sres);
++                }
++                else
++                {
++                        res = blkend(sres);
++                        res = blkcpy(res, globres);
++                }
++                xfree(globres);
++                globres = NULL;
+ 	}
+-	gflgs |= GLOB_APPEND;
++        else
++                fglob++;
++
++        globfree(&globv);
+     }
+     while (*++vl);
+-    vl = (globv.gl_pathc == 0 || (magic && !match && !nonomatch)) ? 
+-	NULL : blk2short(globv.gl_pathv);
+-    globfree(&globv);
+-    return (vl);
++
++    if (snowc != NULL)
++    {
++        while ((blklen(sres) + blklen(snowc)) >= size) {
++                size += GLOBSPACE;
++                sres = (Char **) xrealloc((ptr_t) sres, (size_t) (size * sizeof(Char *)));
++        }
++
++        if (blklen(sres) == 0)
++        {
++                sres = blkcpy(sres, snowc);
++                res = blkend(sres);
++        }
++        else
++        {
++                res = blkend(sres);
++                res = blkcpy(res, snowc);
++        }
++        xfree(snowc);
++        snowc = NULL;
++    }
++
++    if ((cglob != 0) && (cglob == fglob))
++        return NULL;
++
++    if (blklen(sres) != 0)
++        vl = saveblk(sres);
++    else
++        vl = NULL;
++
++    return vl;
+ }
+ 
+ Char   *

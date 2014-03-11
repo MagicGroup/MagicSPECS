@@ -1,0 +1,98 @@
+diff -ur bmp-mac-0.1.1/src/fileinfo.cpp ../BUILD/bmp-mac-0.1.1/src/fileinfo.cpp
+--- bmp-mac-0.1.1/src/fileinfo.cpp	2005-04-15 16:56:44.000000000 +0800
++++ ../BUILD/bmp-mac-0.1.1/src/fileinfo.cpp	2009-11-26 23:02:23.000000000 +0800
+@@ -562,10 +562,10 @@
+ 
+     tag_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+     g_signal_connect(GTK_OBJECT(tag_window), "destroy",
+-		     GTK_SIGNAL_FUNC(cb_tag_window_destroy), NULL);
++		     G_CALLBACK(cb_tag_window_destroy), NULL);
+ 
+     g_signal_connect(GTK_OBJECT (tag_window), "delete_event",
+-		     GTK_SIGNAL_FUNC (cb_tag_window_delete), NULL);
++		     G_CALLBACK (cb_tag_window_delete), NULL);
+     gtk_container_set_border_width(GTK_CONTAINER(tag_window), 10);
+     gtk_window_set_modal(GTK_WINDOW(tag_window), TRUE);
+     gtk_widget_set_size_request(tag_window, 250, 300);
+@@ -594,11 +594,11 @@
+ 
+     button_ok = gtk_button_new_with_label("OK");
+     g_signal_connect(GTK_OBJECT(button_ok), "clicked",
+-		     GTK_SIGNAL_FUNC(cb_tag_window_ok),
++		     G_CALLBACK(cb_tag_window_ok),
+ 		     NULL);
+     button_cancel = gtk_button_new_with_label("Cancel");
+     g_signal_connect(GTK_OBJECT(button_cancel), "clicked",
+-		     GTK_SIGNAL_FUNC(cb_tag_window_cancel),
++		     G_CALLBACK(cb_tag_window_cancel),
+ 		     NULL);
+ 
+     gtk_box_pack_start(GTK_BOX(hbox), button_ok,
+@@ -648,10 +648,10 @@
+     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+ //	gtk_window_set_policy(GTK_WINDOW(window), FALSE, FALSE, FALSE);
+     g_signal_connect(GTK_OBJECT(window), "destroy",
+-		     GTK_SIGNAL_FUNC(cb_info_box_destroy), NULL);
++		     G_CALLBACK(cb_info_box_destroy), NULL);
+ 
+     g_signal_connect(GTK_OBJECT (window), "delete_event",
+-		     GTK_SIGNAL_FUNC (cb_info_box_delete), NULL);
++		     G_CALLBACK (cb_info_box_delete), NULL);
+ 
+     gtk_container_set_border_width(GTK_CONTAINER(window), 10);
+ 
+@@ -685,12 +685,12 @@
+ 		       TRUE, TRUE, 0);
+ 
+     g_signal_connect(GTK_OBJECT(update_button), "clicked",
+-		     GTK_SIGNAL_FUNC(cb_metadata_update_file),
++		     G_CALLBACK(cb_metadata_update_file),
+ 		     NULL);
+ 
+     close_button = gtk_button_new_with_label(_("Close"));
+     g_signal_connect(GTK_OBJECT(close_button), "clicked",
+-		     GTK_SIGNAL_FUNC(cb_info_box_close), 
++		     G_CALLBACK(cb_info_box_close), 
+ 		     NULL);
+     gtk_box_pack_end(GTK_BOX(bottom_hbox), close_button,
+ 		     TRUE, TRUE, 0);
+@@ -708,15 +708,15 @@
+ 
+     meta_add = gtk_button_new_with_label(_("Add"));
+     g_signal_connect(GTK_OBJECT(meta_add), "clicked",
+-		     GTK_SIGNAL_FUNC(cb_metadata_add),
++		     G_CALLBACK(cb_metadata_add),
+ 		     NULL);
+     meta_remove = gtk_button_new_with_label(_("Remove"));
+     g_signal_connect(GTK_OBJECT(meta_remove), "clicked",
+-		     GTK_SIGNAL_FUNC(cb_metadata_remove),
++		     G_CALLBACK(cb_metadata_remove),
+ 		     NULL);
+     meta_edit = gtk_button_new_with_label(_("Edit"));
+     g_signal_connect(GTK_OBJECT(meta_edit), "clicked",
+-		     GTK_SIGNAL_FUNC(cb_metadata_edit),
++		     G_CALLBACK(cb_metadata_edit),
+ 		     NULL);
+ 
+     gtk_box_pack_start(GTK_BOX(buttons_hbox), meta_add, TRUE, TRUE, 0);
+diff -ur bmp-mac-0.1.1/src/mac.cpp ../BUILD/bmp-mac-0.1.1/src/mac.cpp
+--- bmp-mac-0.1.1/src/mac.cpp	2005-04-15 17:00:01.000000000 +0800
++++ ../BUILD/bmp-mac-0.1.1/src/mac.cpp	2009-11-26 23:00:20.000000000 +0800
+@@ -45,7 +45,7 @@
+ 
+ static char *get_file_extname(const char *filename)
+ {
+-	char *ext = strrchr(filename, '.');
++	char *ext = (char *)strrchr(filename, '.');
+ 
+ 	if (ext != NULL)
+ 		++ext;
+@@ -290,7 +290,7 @@
+ 	_("OK"), FALSE, NULL, NULL);
+ 
+     g_signal_connect(GTK_OBJECT(aboutbox), "destroy",
+-		     GTK_SIGNAL_FUNC(gtk_widget_destroyed), &aboutbox);
++		     G_CALLBACK(gtk_widget_destroyed), &aboutbox);
+ }
+ 
+ void mac_configure()

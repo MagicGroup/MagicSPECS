@@ -1,0 +1,525 @@
+diff --git a/lib/puppet/file_serving/fileset.rb b/lib/puppet/file_serving/fileset.rb
+index f2ebf5a..96050b6 100644
+--- a/lib/puppet/file_serving/fileset.rb
++++ b/lib/puppet/file_serving/fileset.rb
+@@ -136,7 +136,7 @@ class Puppet::FileServing::Fileset
+     result = []
+     return result unless recurse?(depth)
+ 
+-    while dir_path = current_dirs.shift or ((depth += 1) and recurse?(depth) and current_dirs = next_dirs and next_dirs = [] and dir_path = current_dirs.shift)
++    while dir_path = current_dirs.shift
+       next unless stat = stat(dir_path)
+       next unless stat.directory?
+ 
+@@ -153,6 +153,14 @@ class Puppet::FileServing::Fileset
+         # And to our list of files/directories to iterate over.
+         next_dirs << File.join(dir_path, file_path)
+       end
++
++      # Move to the next recusion level
++      if current_dirs.empty?
++        depth += 1
++        break unless recurse?(depth)
++        current_dirs = next_dirs
++        next_dirs = []
++      end
+     end
+ 
+     result
+diff --git a/lib/puppet/indirector/facts/inventory_active_record.rb b/lib/puppet/indirector/facts/inventory_active_record.rb
+index 4add7f2..b6c703b 100644
+--- a/lib/puppet/indirector/facts/inventory_active_record.rb
++++ b/lib/puppet/indirector/facts/inventory_active_record.rb
+@@ -11,6 +11,7 @@ class Puppet::Node::Facts::InventoryActiveRecord < Puppet::Indirector::ActiveRec
+     and inventory are deprecated. See http://links.puppetlabs.com/activerecord-deprecation"
+ 
+   def initialize
++    raise Puppet::Error, "ActiveRecords-based inventory is unsupported with Ruby 2 and Rails 3.0" if RUBY_VERSION[0] == '2'
+     Puppet.deprecation_warning "ActiveRecord-based storeconfigs and inventory are deprecated. See http://links.puppetlabs.com/activerecord-deprecation"
+     super
+   end
+diff --git a/lib/puppet/transaction/event.rb b/lib/puppet/transaction/event.rb
+index 057554e..066ef20 100644
+--- a/lib/puppet/transaction/event.rb
++++ b/lib/puppet/transaction/event.rb
+@@ -29,15 +29,8 @@ class Puppet::Transaction::Event
+   end
+ 
+   def resource=(res)
+-    begin
+-      # In Ruby 1.8 looking up a symbol on a string gives nil; in 1.9 it will
+-      # raise a TypeError, which we then catch.  This should work on both
+-      # versions, for all that it is a bit naff. --daniel 2012-03-11
+-      if res.respond_to?(:[]) and level = res[:loglevel]
+-        @default_log_level = level
+-      end
+-    rescue TypeError => e
+-      raise unless e.to_s == "can't convert Symbol into Integer"
++    if res.respond_to?(:[]) and level = res[:loglevel]
++      @default_log_level = level
+     end
+     @resource = res.to_s
+   end
+diff --git a/lib/puppet/util/classgen.rb b/lib/puppet/util/classgen.rb
+index e03bf2a..db8cd40 100644
+--- a/lib/puppet/util/classgen.rb
++++ b/lib/puppet/util/classgen.rb
+@@ -148,10 +148,10 @@ module Puppet::Util::ClassGen
+   # @api private
+   #
+   def is_constant_defined?(const)
+-    if ::RUBY_VERSION =~ /1.9/
+-      const_defined?(const, false)
+-    else
++    if ::RUBY_VERSION =~ /^1.8/
+       const_defined?(const)
++    else
++      const_defined?(const, false)
+     end
+   end
+ 
+diff --git a/lib/puppet/util/rdoc/parser.rb b/lib/puppet/util/rdoc/parser.rb
+index 145706f..6b5ad74 100644
+--- a/lib/puppet/util/rdoc/parser.rb
++++ b/lib/puppet/util/rdoc/parser.rb
+@@ -8,18 +8,18 @@ require "rdoc/code_objects"
+ require "puppet/util/rdoc/code_objects"
+ require "rdoc/tokenstream"
+ 
+-if ::RUBY_VERSION =~ /1.9/
+-	require "rdoc/markup/preprocess"
+-	require "rdoc/parser"
+-else
++if ::RUBY_VERSION =~ /^1.8/
+ 	require "rdoc/markup/simple_markup/preprocess"
+ 	require "rdoc/parsers/parserfactory"
++else
++	require "rdoc/markup/preprocess"
++	require "rdoc/parser"
+ end
+ 
+ module RDoc
+ 
+ class Parser
+-  extend ParserFactory unless ::RUBY_VERSION =~ /1.9/
++  extend ParserFactory if ::RUBY_VERSION =~ /^1.8/
+ 
+   SITE = "__site__"
+ 
+diff --git a/spec/unit/forge/repository_spec.rb b/spec/unit/forge/repository_spec.rb
+index a0b585b..71fe38e 100644
+--- a/spec/unit/forge/repository_spec.rb
++++ b/spec/unit/forge/repository_spec.rb
+@@ -92,7 +92,7 @@ describe Puppet::Forge::Repository do
+         http.expects(:request).with() do |request|
+           puppet_version = /Puppet\/\d+\..*/
+           os_info = /\(.*\)/
+-          ruby_version = /Ruby\/\d+\.\d+\.\d+(-p\d+)? \(\d{4}-\d{2}-\d{2}; .*\)/
++          ruby_version = /Ruby\/\d+\.\d+\.\d+(-p-?\d+)? \(\d{4}-\d{2}-\d{2}; .*\)/
+ 
+           request["User-Agent"] =~ /^#{consumer_version} #{puppet_version} #{os_info} #{ruby_version}/
+         end
+diff --git a/spec/unit/indirector/facts/inventory_active_record_spec.rb b/spec/unit/indirector/facts/inventory_active_record_spec.rb
+index 641ded7..ef50583 100755
+--- a/spec/unit/indirector/facts/inventory_active_record_spec.rb
++++ b/spec/unit/indirector/facts/inventory_active_record_spec.rb
+@@ -23,149 +23,160 @@ describe "Puppet::Node::Facts::InventoryActiveRecord", :if => can_use_scratch_da
+     setup_scratch_database
+   end
+ 
+-  it "should issue a deprecation warning" do
+-    Puppet.expects(:deprecation_warning).with() { |msg| msg =~ /ActiveRecord-based storeconfigs and inventory are deprecated/ }
+-    terminus
+-  end
+-
+-  describe "#save" do
+-    let(:node) {
+-      Puppet::Rails::InventoryNode.new(:name => "foo", :timestamp => Time.now)
+-    }
+-
+-    let(:facts) {
+-      Puppet::Node::Facts.new("foo", "uptime_days" => "60", "kernel" => "Darwin")
+-    }
+-
+-    it "should retry on ActiveRecord error" do
+-      Puppet::Rails::InventoryNode.expects(:create).twice.raises(ActiveRecord::StatementInvalid).returns node
+-
+-      Puppet::Node::Facts.indirection.save(facts)
+-    end
+-
+-    it "should use an existing node if possible" do
+-      node.save
+-      Puppet::Node::Facts.indirection.save(facts)
+-
+-      Puppet::Rails::InventoryNode.count.should == 1
+-      Puppet::Rails::InventoryNode.first.should == node
+-    end
+-
+-    it "should create a new node if one can't be found" do
+-      # This test isn't valid if there are nodes to begin with
+-      Puppet::Rails::InventoryNode.count.should == 0
+-
+-      Puppet::Node::Facts.indirection.save(facts)
+-
+-      Puppet::Rails::InventoryNode.count.should == 1
+-      Puppet::Rails::InventoryNode.first.name.should == "foo"
+-    end
+-
+-    it "should save the facts" do
+-      Puppet::Node::Facts.indirection.save(facts)
+-
+-      Puppet::Rails::InventoryFact.all.map{|f| [f.name,f.value]}.should =~ [["uptime_days","60"],["kernel","Darwin"]]
+-    end
+-
+-    it "should remove the previous facts for an existing node" do
+-      facts = Puppet::Node::Facts.new("foo", "uptime_days" => "30", "kernel" => "Darwin")
+-      Puppet::Node::Facts.indirection.save(facts)
+-      bar_facts = Puppet::Node::Facts.new("bar", "uptime_days" => "35", "kernel" => "Linux")
+-      foo_facts = Puppet::Node::Facts.new("foo", "uptime_days" => "60", "is_virtual" => "false")
+-      Puppet::Node::Facts.indirection.save(bar_facts)
+-      Puppet::Node::Facts.indirection.save(foo_facts)
+-
+-      Puppet::Node::Facts.indirection.find("bar").should == bar_facts
+-      Puppet::Node::Facts.indirection.find("foo").should == foo_facts
+-      Puppet::Rails::InventoryFact.all.map{|f| [f.name,f.value]}.should_not include(["uptime_days", "30"], ["kernel", "Darwin"])
++  context "under Ruby 1.x", :if => RUBY_VERSION[0] == '1' do
++    describe "#initialize" do
++      it "should issue a deprecation warning" do
++        Puppet.expects(:deprecation_warning).with() { |msg| msg =~ /ActiveRecord-based storeconfigs and inventory are deprecated/ }
++        terminus
++      end
++    end
++
++    describe "#save" do
++      let(:node) {
++        Puppet::Rails::InventoryNode.new(:name => "foo", :timestamp => Time.now)
++      }
++
++      let(:facts) {
++        Puppet::Node::Facts.new("foo", "uptime_days" => "60", "kernel" => "Darwin")
++      }
++
++      it "should retry on ActiveRecord error" do
++        Puppet::Rails::InventoryNode.expects(:create).twice.raises(ActiveRecord::StatementInvalid).returns node
++
++        Puppet::Node::Facts.indirection.save(facts)
++      end
++
++      it "should use an existing node if possible" do
++        node.save
++        Puppet::Node::Facts.indirection.save(facts)
++
++        Puppet::Rails::InventoryNode.count.should == 1
++        Puppet::Rails::InventoryNode.first.should == node
++      end
++
++      it "should create a new node if one can't be found" do
++        # This test isn't valid if there are nodes to begin with
++        Puppet::Rails::InventoryNode.count.should == 0
++
++        Puppet::Node::Facts.indirection.save(facts)
++
++        Puppet::Rails::InventoryNode.count.should == 1
++        Puppet::Rails::InventoryNode.first.name.should == "foo"
++      end
++
++      it "should save the facts" do
++        Puppet::Node::Facts.indirection.save(facts)
++
++        Puppet::Rails::InventoryFact.all.map{|f| [f.name,f.value]}.should =~ [["uptime_days","60"],["kernel","Darwin"]]
++      end
++
++      it "should remove the previous facts for an existing node" do
++        facts = Puppet::Node::Facts.new("foo", "uptime_days" => "30", "kernel" => "Darwin")
++        Puppet::Node::Facts.indirection.save(facts)
++        bar_facts = Puppet::Node::Facts.new("bar", "uptime_days" => "35", "kernel" => "Linux")
++        foo_facts = Puppet::Node::Facts.new("foo", "uptime_days" => "60", "is_virtual" => "false")
++        Puppet::Node::Facts.indirection.save(bar_facts)
++        Puppet::Node::Facts.indirection.save(foo_facts)
++
++        Puppet::Node::Facts.indirection.find("bar").should == bar_facts
++        Puppet::Node::Facts.indirection.find("foo").should == foo_facts
++        Puppet::Rails::InventoryFact.all.map{|f| [f.name,f.value]}.should_not include(["uptime_days", "30"], ["kernel", "Darwin"])
++      end
++    end
++
++    describe "#find" do
++      before do
++        @foo_facts = Puppet::Node::Facts.new("foo", "uptime_days" => "60", "kernel" => "Darwin")
++        @bar_facts = Puppet::Node::Facts.new("bar", "uptime_days" => "30", "kernel" => "Linux")
++        Puppet::Node::Facts.indirection.save(@foo_facts)
++        Puppet::Node::Facts.indirection.save(@bar_facts)
++      end
++
++      it "should identify facts by node name" do
++        Puppet::Node::Facts.indirection.find("foo").should == @foo_facts
++      end
++
++      it "should return nil if no node instance can be found" do
++        Puppet::Node::Facts.indirection.find("non-existent node").should == nil
++      end
++    end
++
++    describe "#search" do
++      def search_request(conditions)
++        Puppet::Indirector::Request.new(:facts, :search, nil, nil, conditions)
++      end
++
++      before :each do
++        @now = Time.now
++        @foo = Puppet::Node::Facts.new("foo", "fact1" => "value1", "fact2" => "value2", "uptime_days" => "30")
++        @bar = Puppet::Node::Facts.new("bar", "fact1" => "value1", "uptime_days" => "60")
++        @baz = Puppet::Node::Facts.new("baz", "fact1" => "value2", "fact2" => "value1", "uptime_days" => "90")
++        @bat = Puppet::Node::Facts.new("bat")
++        @foo.timestamp = @now - 3600*1
++        @bar.timestamp = @now - 3600*3
++        @baz.timestamp = @now - 3600*5
++        @bat.timestamp = @now - 3600*7
++        [@foo, @bar, @baz, @bat].each {|facts| Puppet::Node::Facts.indirection.save(facts)}
++      end
++
++      it "should return node names that match 'equal' constraints" do
++        request = search_request('facts.fact1.eq' => 'value1',
++                                 'facts.fact2.eq' => 'value2')
++        terminus.search(request).should == ["foo"]
++      end
++
++      it "should return node names that match 'not equal' constraints" do
++        request = search_request('facts.fact1.ne' => 'value2')
++        terminus.search(request).should == ["bar","foo"]
++      end
++
++      it "should return node names that match strict inequality constraints" do
++        request = search_request('facts.uptime_days.gt' => '20',
++                                 'facts.uptime_days.lt' => '70')
++        terminus.search(request).should == ["bar","foo"]
++      end
++
++      it "should return node names that match non-strict inequality constraints" do
++        request = search_request('facts.uptime_days.ge' => '30',
++                                 'facts.uptime_days.le' => '60')
++        terminus.search(request).should == ["bar","foo"]
++      end
++
++      it "should return node names whose facts are within a given timeframe" do
++        request = search_request('meta.timestamp.ge' => @now - 3600*5,
++                                 'meta.timestamp.le' => @now - 3600*1)
++        terminus.search(request).should == ["bar","baz","foo"]
++      end
++
++      it "should return node names whose facts are from a specific time" do
++        request = search_request('meta.timestamp.eq' => @now - 3600*3)
++        terminus.search(request).should == ["bar"]
++      end
++
++      it "should return node names whose facts are not from a specific time" do
++        request = search_request('meta.timestamp.ne' => @now - 3600*1)
++        terminus.search(request).should == ["bar","bat","baz"]
++      end
++
++      it "should perform strict searches on nodes by timestamp" do
++        request = search_request('meta.timestamp.gt' => @now - 3600*5,
++                                 'meta.timestamp.lt' => @now - 3600*1)
++        terminus.search(request).should == ["bar"]
++      end
++
++      it "should search nodes based on both facts and timestamp values" do
++        request = search_request('facts.uptime_days.gt' => '45',
++                                 'meta.timestamp.lt'    => @now - 3600*4)
++        terminus.search(request).should == ["baz"]
++      end
+     end
+   end
+ 
+-  describe "#find" do
+-    before do
+-      @foo_facts = Puppet::Node::Facts.new("foo", "uptime_days" => "60", "kernel" => "Darwin")
+-      @bar_facts = Puppet::Node::Facts.new("bar", "uptime_days" => "30", "kernel" => "Linux")
+-      Puppet::Node::Facts.indirection.save(@foo_facts)
+-      Puppet::Node::Facts.indirection.save(@bar_facts)
+-    end
+-
+-    it "should identify facts by node name" do
+-      Puppet::Node::Facts.indirection.find("foo").should == @foo_facts
+-    end
+-
+-    it "should return nil if no node instance can be found" do
+-      Puppet::Node::Facts.indirection.find("non-existent node").should == nil
+-    end
+-  end
+-
+-  describe "#search" do
+-    def search_request(conditions)
+-      Puppet::Indirector::Request.new(:facts, :search, nil, nil, conditions)
+-    end
+-
+-    before :each do
+-      @now = Time.now
+-      @foo = Puppet::Node::Facts.new("foo", "fact1" => "value1", "fact2" => "value2", "uptime_days" => "30")
+-      @bar = Puppet::Node::Facts.new("bar", "fact1" => "value1", "uptime_days" => "60")
+-      @baz = Puppet::Node::Facts.new("baz", "fact1" => "value2", "fact2" => "value1", "uptime_days" => "90")
+-      @bat = Puppet::Node::Facts.new("bat")
+-      @foo.timestamp = @now - 3600*1
+-      @bar.timestamp = @now - 3600*3
+-      @baz.timestamp = @now - 3600*5
+-      @bat.timestamp = @now - 3600*7
+-      [@foo, @bar, @baz, @bat].each {|facts| Puppet::Node::Facts.indirection.save(facts)}
+-    end
+-
+-    it "should return node names that match 'equal' constraints" do
+-      request = search_request('facts.fact1.eq' => 'value1',
+-                               'facts.fact2.eq' => 'value2')
+-      terminus.search(request).should == ["foo"]
+-    end
+-
+-    it "should return node names that match 'not equal' constraints" do
+-      request = search_request('facts.fact1.ne' => 'value2')
+-      terminus.search(request).should == ["bar","foo"]
+-    end
+-
+-    it "should return node names that match strict inequality constraints" do
+-      request = search_request('facts.uptime_days.gt' => '20',
+-                               'facts.uptime_days.lt' => '70')
+-      terminus.search(request).should == ["bar","foo"]
+-    end
+-
+-    it "should return node names that match non-strict inequality constraints" do
+-      request = search_request('facts.uptime_days.ge' => '30',
+-                               'facts.uptime_days.le' => '60')
+-      terminus.search(request).should == ["bar","foo"]
+-    end
+-
+-    it "should return node names whose facts are within a given timeframe" do
+-      request = search_request('meta.timestamp.ge' => @now - 3600*5,
+-                               'meta.timestamp.le' => @now - 3600*1)
+-      terminus.search(request).should == ["bar","baz","foo"]
+-    end
+-
+-    it "should return node names whose facts are from a specific time" do
+-      request = search_request('meta.timestamp.eq' => @now - 3600*3)
+-      terminus.search(request).should == ["bar"]
+-    end
+-
+-    it "should return node names whose facts are not from a specific time" do
+-      request = search_request('meta.timestamp.ne' => @now - 3600*1)
+-      terminus.search(request).should == ["bar","bat","baz"]
+-    end
+-
+-    it "should perform strict searches on nodes by timestamp" do
+-      request = search_request('meta.timestamp.gt' => @now - 3600*5,
+-                               'meta.timestamp.lt' => @now - 3600*1)
+-      terminus.search(request).should == ["bar"]
+-    end
+-
+-    it "should search nodes based on both facts and timestamp values" do
+-      request = search_request('facts.uptime_days.gt' => '45',
+-                               'meta.timestamp.lt'    => @now - 3600*4)
+-      terminus.search(request).should == ["baz"]
++  context "under Ruby 2.x", :if => RUBY_VERSION[0] == '2' do
++    describe "#initialize" do
++      it "should raise error under Ruby 2" do
++        lambda { terminus }.should raise_error(Puppet::Error, /Ruby 2/)
++      end
+     end
+   end
+ end
+-
+diff --git a/spec/unit/provider/user/directoryservice_spec.rb b/spec/unit/provider/user/directoryservice_spec.rb
+index 7be6399..6534147 100755
+--- a/spec/unit/provider/user/directoryservice_spec.rb
++++ b/spec/unit/provider/user/directoryservice_spec.rb
+@@ -1,4 +1,5 @@
+ #! /usr/bin/env ruby -S rspec
++# encoding: ASCII-8BIT
+ require 'spec_helper'
+ require 'facter/util/plist'
+ 
+diff --git a/spec/unit/ssl/certificate_authority_spec.rb b/spec/unit/ssl/certificate_authority_spec.rb
+index 3315243..9d007a3 100755
+--- a/spec/unit/ssl/certificate_authority_spec.rb
++++ b/spec/unit/ssl/certificate_authority_spec.rb
+@@ -1,4 +1,5 @@
+ #! /usr/bin/env ruby
++# encoding: ASCII-8BIT
+ require 'spec_helper'
+ 
+ require 'puppet/ssl/certificate_authority'
+diff --git a/spec/unit/transaction/event_spec.rb b/spec/unit/transaction/event_spec.rb
+index 579540d..2a51936 100755
+--- a/spec/unit/transaction/event_spec.rb
++++ b/spec/unit/transaction/event_spec.rb
+@@ -3,10 +3,19 @@ require 'spec_helper'
+ 
+ require 'puppet/transaction/event'
+ 
++class TestResource
++  def to_s
++    "Foo[bar]"
++  end
++  def [](v)
++    nil
++  end
++end
++
+ describe Puppet::Transaction::Event do
+   include PuppetSpec::Files
+ 
+-  [:previous_value, :desired_value, :property, :resource, :name, :message, :file, :line, :tags, :audited].each do |attr|
++  [:previous_value, :desired_value, :property, :name, :message, :file, :line, :tags, :audited].each do |attr|
+     it "should support #{attr}" do
+       event = Puppet::Transaction::Event.new
+       event.send(attr.to_s + "=", "foo")
+@@ -14,12 +23,18 @@ describe Puppet::Transaction::Event do
+     end
+   end
+ 
++  it "should support resource" do
++    event = Puppet::Transaction::Event.new
++    event.resource = TestResource.new
++    event.resource.should == "Foo[bar]"
++  end
++
+   it "should always convert the property to a string" do
+     Puppet::Transaction::Event.new(:property => :foo).property.should == "foo"
+   end
+ 
+   it "should always convert the resource to a string" do
+-    Puppet::Transaction::Event.new(:resource => :foo).resource.should == "foo"
++    Puppet::Transaction::Event.new(:resource => TestResource.new).resource.should == "Foo[bar]"
+   end
+ 
+   it "should produce the message when converted to a string" do
+@@ -99,17 +114,17 @@ describe Puppet::Transaction::Event do
+ 
+     it "should use the source description as the source if one is set" do
+       Puppet::Util::Log.expects(:new).with { |args| args[:source] == "/my/param" }
+-      Puppet::Transaction::Event.new(:source_description => "/my/param", :resource => "Foo[bar]", :property => "foo").send_log
++      Puppet::Transaction::Event.new(:source_description => "/my/param", :resource => TestResource.new, :property => "foo").send_log
+     end
+ 
+     it "should use the property as the source if one is available and no source description is set" do
+       Puppet::Util::Log.expects(:new).with { |args| args[:source] == "foo" }
+-      Puppet::Transaction::Event.new(:resource => "Foo[bar]", :property => "foo").send_log
++      Puppet::Transaction::Event.new(:resource => TestResource.new, :property => "foo").send_log
+     end
+ 
+     it "should use the property as the source if one is available and no property or source description is set" do
+       Puppet::Util::Log.expects(:new).with { |args| args[:source] == "Foo[bar]" }
+-      Puppet::Transaction::Event.new(:resource => "Foo[bar]").send_log
++      Puppet::Transaction::Event.new(:resource => TestResource.new).send_log
+     end
+   end
+ 
+diff --git a/spec/unit/util/execution_spec.rb b/spec/unit/util/execution_spec.rb
+index 4390eba..1e7ac26 100755
+--- a/spec/unit/util/execution_spec.rb
++++ b/spec/unit/util/execution_spec.rb
+@@ -576,7 +576,7 @@ describe Puppet::Util::Execution do
+       it "should raise an error if a nil option is specified" do
+         expect {
+           Puppet::Util::Execution.execute('fail command', nil)
+-        }.to raise_error(TypeError, /can\'t convert nil into Hash/)
++        }.to raise_error(TypeError, /(can\'t convert|no implicit conversion of) nil into Hash/)
+       end
+     end
+   end

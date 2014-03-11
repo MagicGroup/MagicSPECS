@@ -1,0 +1,13 @@
+--- lxde-common-0.5.0/desktop.conf.orig	2009-12-12 00:07:25.000000000 +0100
++++ lxde-common-0.5.0/desktop.conf	2009-12-12 00:07:59.000000000 +0100
+@@ -2,8 +2,8 @@
+ window_manager=openbox-lxde
+ 
+ [GTK]
+-sNet/ThemeName=Clearlooks
+-sNet/IconThemeName=nuoveXT2
++sNet/ThemeName=Adwaita
++sNet/IconThemeName=Fedora
+ sGtk/FontName=Sans 10
+ iGtk/ToolbarStyle=3
+ iGtk/ButtonImages=1

@@ -1,0 +1,172 @@
+diff -up pptp-1.7.2/pptp.c.alias pptp-1.7.2/pptp.c
+--- pptp-1.7.2/pptp.c.alias	2011-12-06 22:24:06.617318769 +0000
++++ pptp-1.7.2/pptp.c	2011-12-06 22:36:25.761692858 +0000
+@@ -463,7 +463,10 @@ int open_callmgr(struct in_addr inetaddr
+         char **envp, int pty_fd, int gre_fd)
+ {
+     /* Try to open unix domain socket to call manager. */
+-    struct sockaddr_un where;
++    union {
++        struct sockaddr a;
++        struct sockaddr_un u;
++    } where;
+     const int NUM_TRIES = 3;
+     int i, fd;
+     pid_t pid;
+@@ -473,12 +476,12 @@ int open_callmgr(struct in_addr inetaddr
+         fatal("Could not create unix domain socket: %s", strerror(errno));
+     }
+     /* Make address */
+-    callmgr_name_unixsock(&where, inetaddr, localbind);
++    callmgr_name_unixsock(&where.u, inetaddr, localbind);
+     for (i = 0; i < NUM_TRIES; i++) {
+-        if (connect(fd, (struct sockaddr *) &where, sizeof(where)) < 0) {
++        if (connect(fd, &where.a, sizeof(where.u)) < 0) {
+             /* couldn't connect.  We'll have to launch this guy. */
+ 
+-            unlink (where.sun_path);	
++            unlink (where.u.sun_path);
+ 
+             /* fork and launch call manager process */
+             switch (pid = fork()) {
+diff -up pptp-1.7.2/pptp_callmgr.c.alias pptp-1.7.2/pptp_callmgr.c
+--- pptp-1.7.2/pptp_callmgr.c.alias	2011-12-06 22:24:06.617318769 +0000
++++ pptp-1.7.2/pptp_callmgr.c	2011-12-06 22:34:46.142647941 +0000
+@@ -196,14 +196,17 @@ int callmgr_main(int argc, char **argv,
+         /* Step 5b: Handle new connection to UNIX socket */
+         if (FD_ISSET(unix_sock, &read_set)) {
+             /* New call! */
+-            struct sockaddr_un from;
+-            socklen_t len = sizeof(from);
++            union {
++                struct sockaddr a;
++                struct sockaddr_un u;
++            } from;
++            socklen_t len = sizeof(from.u);
+             PPTP_CALL * call;
+             struct local_callinfo *lci;
+             int s;
+             /* Accept the socket */
+             FD_CLR (unix_sock, &read_set);
+-            if ((s = accept(unix_sock, (struct sockaddr *) &from, &len)) < 0) {
++            if ((s = accept(unix_sock, &from.a, &len)) < 0) {
+                 warn("Socket not accepted: %s", strerror(errno));
+                 goto skip_accept;
+             }
+@@ -313,11 +316,14 @@ cleanup:
+ /*** open_inetsock ************************************************************/
+ int open_inetsock(struct in_addr inetaddr)
+ {
+-    struct sockaddr_in dest, src;
++    union {
++        struct sockaddr a;
++        struct sockaddr_in i;
++    } dest, src;
+     int s;
+-    dest.sin_family = AF_INET;
+-    dest.sin_port   = htons(PPTP_PORT);
+-    dest.sin_addr   = inetaddr;
++    dest.i.sin_family = AF_INET;
++    dest.i.sin_port   = htons(PPTP_PORT);
++    dest.i.sin_addr   = inetaddr;
+     if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+         warn("socket: %s", strerror(errno));
+         return s;
+@@ -332,14 +338,14 @@ int open_inetsock(struct in_addr inetadd
+ #endif
+     if (localbind.s_addr != INADDR_NONE) {
+         bzero(&src, sizeof(src));
+-        src.sin_family = AF_INET;
+-        src.sin_addr   = localbind;
+-        if (bind(s, (struct sockaddr *) &src, sizeof(src)) != 0) {
++        src.i.sin_family = AF_INET;
++        src.i.sin_addr   = localbind;
++        if (bind(s, &src.a, sizeof(src.i)) != 0) {
+             warn("bind: %s", strerror(errno));
+             close(s); return -1;
+         }
+     }
+-    if (connect(s, (struct sockaddr *) &dest, sizeof(dest)) < 0) {
++    if (connect(s, &dest.a, sizeof(dest.i)) < 0) {
+         warn("connect: %s", strerror(errno));
+         close(s); return -1;
+     }
+@@ -349,7 +355,10 @@ int open_inetsock(struct in_addr inetadd
+ /*** open_unixsock ************************************************************/
+ int open_unixsock(struct in_addr inetaddr)
+ {
+-    struct sockaddr_un where;
++    union {
++        struct sockaddr a;
++        struct sockaddr_un u;
++    } where;
+     struct stat st;
+     char *dir;
+     int s;
+@@ -357,21 +366,21 @@ int open_unixsock(struct in_addr inetadd
+         warn("socket: %s", strerror(errno));
+         return s;
+     }
+-    callmgr_name_unixsock( &where, inetaddr, localbind);
+-    if (stat(where.sun_path, &st) >= 0) {
++    callmgr_name_unixsock( &where.u, inetaddr, localbind);
++    if (stat(where.u.sun_path, &st) >= 0) {
+         warn("Call manager for %s is already running.", inet_ntoa(inetaddr));
+         close(s); return -1;
+     }
+     /* Make sure path is valid. */
+-    dir = dirname(where.sun_path);
++    dir = dirname(where.u.sun_path);
+     if (!make_valid_path(dir, 0770))
+-        fatal("Could not make path to %s: %s", where.sun_path, strerror(errno));
++        fatal("Could not make path to %s: %s", where.u.sun_path, strerror(errno));
+     free(dir);
+-    if (bind(s, (struct sockaddr *) &where, sizeof(where)) < 0) {
++    if (bind(s, &where.a, sizeof(where.u)) < 0) {
+         warn("bind: %s", strerror(errno));
+         close(s); return -1;
+     }
+-    chmod(where.sun_path, 0777);
++    chmod(where.u.sun_path, 0777);
+     listen(s, 127);
+     return s;
+ }
+diff -up pptp-1.7.2/pptp_gre.c.alias pptp-1.7.2/pptp_gre.c
+--- pptp-1.7.2/pptp_gre.c.alias	2011-12-06 22:24:06.627318773 +0000
++++ pptp-1.7.2/pptp_gre.c	2011-12-06 22:24:06.629318775 +0000
+@@ -85,7 +85,10 @@ uint64_t time_now_usecs(void)
+ /*** Open IP protocol socket **************************************************/
+ int pptp_gre_bind(struct in_addr inetaddr)
+ {
+-    struct sockaddr_in src_addr, loc_addr;
++    union {
++        struct sockaddr a;
++        struct sockaddr_in i;
++    } loc_addr, src_addr;
+     int s = socket(AF_INET, SOCK_RAW, PPTP_PROTO);
+     if (s < 0) { warn("socket: %s", strerror(errno)); return -1; }
+ #ifdef SO_MARK
+@@ -98,16 +101,16 @@ int pptp_gre_bind(struct in_addr inetadd
+ #endif
+     if (localbind.s_addr != INADDR_NONE) {
+         bzero(&loc_addr, sizeof(loc_addr));
+-        loc_addr.sin_family = AF_INET;
+-        loc_addr.sin_addr   = localbind;
+-        if (bind(s, (struct sockaddr *) &loc_addr, sizeof(loc_addr)) != 0) {
++        loc_addr.i.sin_family = AF_INET;
++        loc_addr.i.sin_addr   = localbind;
++        if (bind(s, &loc_addr.a, sizeof(loc_addr.i)) != 0) {
+             warn("bind: %s", strerror(errno)); close(s); return -1;
+         }
+     }
+-    src_addr.sin_family = AF_INET;
+-    src_addr.sin_addr   = inetaddr;
+-    src_addr.sin_port   = 0;
+-    if (connect(s, (struct sockaddr *) &src_addr, sizeof(src_addr)) < 0) {
++    src_addr.i.sin_family = AF_INET;
++    src_addr.i.sin_addr   = inetaddr;
++    src_addr.i.sin_port   = 0;
++    if (connect(s, &src_addr.a, sizeof(src_addr.i)) < 0) {
+         warn("connect: %s", strerror(errno)); close(s); return -1;
+     }
+     my = test_redirections();

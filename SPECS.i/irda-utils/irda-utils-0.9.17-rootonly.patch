@@ -1,0 +1,14 @@
+--- irda-utils-0.9.17/irdadump/main.c.root	2006-06-01 12:53:34.000000000 +0200
++++ irda-utils-0.9.17/irdadump/main.c	2006-06-01 12:54:03.000000000 +0200
+@@ -72,6 +72,11 @@
+ 	char *readfilename = NULL;
+ 	int fd, c;
+ 
++    if(geteuid()) {
++        puts("You need to be root to run this utility.\n");
++        return 1;
++    }
++
+ 	while ((c = getopt(argc, argv, "bc:di:lpr:s:tvw:x?")) != -1) {
+ 		switch (c) {
+ 		case 'b': /* Dumb bytes */

@@ -1,0 +1,27 @@
+From 5f23159d86e94d599301581f25a6e13fe3a050b9 Mon Sep 17 00:00:00 2001
+From: Alon Levy <alevy@redhat.com>
+Date: Mon, 21 Oct 2013 11:57:43 +0300
+Subject: [PATCH 06/10] spiceqxl_spice_server: no need to call
+ spice_server_set_noauth twice
+
+---
+ src/spiceqxl_spice_server.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/spiceqxl_spice_server.c b/src/spiceqxl_spice_server.c
+index 63a3179..14ee752 100644
+--- a/src/spiceqxl_spice_server.c
++++ b/src/spiceqxl_spice_server.c
+@@ -254,9 +254,6 @@ void xspice_set_spice_server_options(OptionInfoPtr options)
+         exit(1);
+ #endif
+     }
+-    if (disable_ticketing) {
+-        spice_server_set_noauth(spice_server);
+-    }
+ 
+ #if SPICE_SERVER_VERSION >= 0x000801
+     /* we still don't actually support agent in xspice, but this
+-- 
+1.8.3.1
+

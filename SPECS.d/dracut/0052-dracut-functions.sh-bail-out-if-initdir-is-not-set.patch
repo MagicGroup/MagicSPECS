@@ -1,0 +1,25 @@
+From 593b315c700641496e89133918b97c1ad019c8ce Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 9 Jul 2012 10:02:04 +0200
+Subject: [PATCH] dracut-functions.sh: bail out, if $initdir is not set
+
+---
+ dracut-functions.sh |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/dracut-functions.sh b/dracut-functions.sh
+index d91e2a4..3f56316 100755
+--- a/dracut-functions.sh
++++ b/dracut-functions.sh
+@@ -96,6 +96,11 @@ if ! type dinfo >/dev/null 2>&1; then
+     dlog_init
+ fi
+ 
++if ! [[ $initdir ]]; then
++    dfatal "initdir not set"
++    exit 1
++fi
++
+ # export standard hookdirs
+ [[ $hookdirs ]] || {
+     hookdirs="cmdline pre-udev pre-trigger netroot "

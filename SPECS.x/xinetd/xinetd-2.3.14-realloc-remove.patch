@@ -1,0 +1,134 @@
+diff -rup xinetd-2.3.14/xinetd/defs.h xinetd-2.3.14-mod/xinetd/defs.h
+--- xinetd-2.3.14/xinetd/defs.h	2012-01-18 14:22:20.811100158 +0100
++++ xinetd-2.3.14-mod/xinetd/defs.h	2012-01-18 13:32:46.000000000 +0100
+@@ -114,11 +114,7 @@ union xsockaddr {
+  * constants for limiting ps.rws.fd_list 
+  */
+ 
+-#ifdef HAVE_POLL
+-#define INIT_POLLFDS                 4096
+-/* FIXME: not used */
+-#define MAX_POLLFDS                  16384
+-#endif
++#define MAX_FDS                      4096
+ 
+ /*
+  * When explicit values are given for enum's, that is because the structures 
+diff -rup xinetd-2.3.14/xinetd/init.c xinetd-2.3.14-mod/xinetd/init.c
+--- xinetd-2.3.14/xinetd/init.c	2012-01-18 14:22:20.779100171 +0100
++++ xinetd-2.3.14-mod/xinetd/init.c	2012-01-18 14:07:34.000000000 +0100
+@@ -151,7 +151,7 @@ static void set_fd_limit(void)
+    }
+ 
+    if ( rl.rlim_max == RLIM_INFINITY ) 
+-      rl.rlim_max = FD_SETSIZE;
++      rl.rlim_max = MAX_FDS;
+ 
+    ps.ros.max_descriptors = rl.rlim_max ;
+ #else      /* ! RLIMIT_NOFILE */
+@@ -283,12 +283,12 @@ static void init_rw_state( void )
+    ps.rws.descriptors_free = ps.ros.max_descriptors - DESCRIPTORS_RESERVED ;
+ 
+ #ifdef HAVE_POLL
+-   ps.rws.pfds_allocated = INIT_POLLFDS ;
++   ps.rws.pfds_allocated = ps.ros.max_descriptors ;
+    ps.rws.pfd_array = (struct pollfd *) 
+                       malloc( sizeof( struct pollfd ) * ps.rws.pfds_allocated ) ;
+    if ( ps.rws.pfd_array == NULL ) 
+    {
+-      out_of_memory(func);
++      out_of_memory(func) ;
+       exit( 1 ) ;
+    }
+    ps.rws.pfds_last = 0 ;
+diff -rup xinetd-2.3.14/xinetd/redirect.c xinetd-2.3.14-mod/xinetd/redirect.c
+--- xinetd-2.3.14/xinetd/redirect.c	2012-01-18 14:22:20.780100170 +0100
++++ xinetd-2.3.14-mod/xinetd/redirect.c	2012-01-18 12:22:08.000000000 +0100
+@@ -149,7 +149,7 @@ void redir_handler( struct server *serp
+ #ifdef HAVE_POLL
+ #define REDIR_DESCRIP_INDEX 0
+ #define REDIR_SERVER_INDEX 1
+-      pfd_array = (struct pollfd *)calloc(sizeof(struct pollfd),INIT_POLLFDS);
++      pfd_array = (struct pollfd *)calloc(sizeof(struct pollfd),MAX_FDS);
+       if (pfd_array == NULL)
+       {
+          msg( LOG_ERR, func, "Cannot allocate memory for file descriptors!\n");
+diff -rup xinetd-2.3.14/xinetd/service.c xinetd-2.3.14-mod/xinetd/service.c
+--- xinetd-2.3.14/xinetd/service.c	2012-01-18 14:22:20.812100157 +0100
++++ xinetd-2.3.14-mod/xinetd/service.c	2012-01-18 14:07:27.000000000 +0100
+@@ -114,10 +114,6 @@ struct service *svc_make_special( struct
+ 
+ void svc_free( struct service *sp )
+ {
+-#ifdef HAVE_POLL
+-   *SVC_POLLFD( sp ) = ps.rws.pfd_array[--ps.rws.pfds_last] ;
+-#endif /* HAVE_POLL */
+-
+    sc_free( SVC_CONF(sp) ) ;
+    CLEAR( *sp ) ;
+    FREE_SVC( sp ) ;
+@@ -332,20 +328,10 @@ status_e svc_activate( struct service *s
+    }
+ 
+ #ifdef HAVE_POLL
+-   if ( ps.rws.pfds_last >= ps.rws.pfds_allocated )
++   if ( ps.rws.descriptors_free <= 0 )
+    {
+-     int pos;
+-     ps.rws.pfds_allocated += INIT_POLLFDS;
+-     struct pollfd *tmp = (struct pollfd *)realloc( ps.rws.pfd_array,
+-       ps.rws.pfds_allocated*sizeof(struct pollfd));
+-     if ( tmp == NULL )
+-     {
+-       out_of_memory( func );
+-       return( FAILED );
+-     }
+-     ps.rws.pfd_array = tmp;
+-     memset(&ps.rws.pfd_array[ps.rws.pfds_last], 0, (ps.rws.pfds_allocated-
+-       ps.rws.pfds_last)*sizeof(struct pollfd));
++     msg(LOG_ERR, func, "Maximum number of services reached") ;
++     return( FAILED ) ;
+    }
+    if ( sp->svc_pfd_index >= 0 )
+    {
+diff -rup xinetd-2.3.14/xinetd/tcpint.c xinetd-2.3.14-mod/xinetd/tcpint.c
+--- xinetd-2.3.14/xinetd/tcpint.c	2012-01-18 14:22:20.782100169 +0100
++++ xinetd-2.3.14-mod/xinetd/tcpint.c	2012-01-18 13:30:22.000000000 +0100
+@@ -93,7 +93,7 @@ static void si_mux(void)
+ #ifdef HAVE_POLL
+    struct pollfd        *pfd_array;
+    int                   pfds_last = 0;
+-   int                   pfds_allocated = INIT_POLLFDS;
++   int                   pfds_allocated = MAX_FDS;
+ #else
+    fd_set                     socket_mask ;
+    int                        mask_max ;
+@@ -102,7 +102,7 @@ static void si_mux(void)
+    const char                *func = "si_mux" ;
+ 
+ #ifdef HAVE_POLL
+-   pfd_array = calloc(sizeof(struct pollfd),INIT_POLLFDS);
++   pfd_array = calloc(sizeof(struct pollfd),MAX_FDS);
+    pfd_array[ pfds_last ].fd = INT_REMOTE( ip ) ;
+    pfd_array[ pfds_last++ ].events = POLLIN | POLLOUT;
+ #else
+diff -rup xinetd-2.3.14/xinetd/udpint.c xinetd-2.3.14-mod/xinetd/udpint.c
+--- xinetd-2.3.14/xinetd/udpint.c	2012-01-18 14:22:20.783100169 +0100
++++ xinetd-2.3.14-mod/xinetd/udpint.c	2012-01-18 12:22:00.000000000 +0100
+@@ -103,14 +103,14 @@ static void di_mux(void)
+ #ifdef HAVE_POLL
+    struct pollfd        *pfd_array;
+    int                   pfds_last = 0;
+-   int                   pfds_allocated = INIT_POLLFDS;
++   int                   pfds_allocated = MAX_FDS;
+ #else
+    fd_set                     socket_mask ;
+    int                        mask_max ;
+ #endif
+ 
+ #ifdef HAVE_POLL
+-   pfd_array = (struct pollfd *)calloc(sizeof(struct pollfd),INIT_POLLFDS);
++   pfd_array = (struct pollfd *)calloc(sizeof(struct pollfd),MAX_FDS);
+    pfd_array[ pfds_last ].fd = INT_REMOTE( ip );
+    pfd_array[ pfds_last++ ].events = POLLIN | POLLOUT;
+ #else

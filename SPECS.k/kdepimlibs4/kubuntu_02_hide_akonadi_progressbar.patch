@@ -1,0 +1,13 @@
+--- a/akonadi/control.cpp
++++ b/akonadi/control.cpp
+@@ -127,8 +127,8 @@
+ 
+ bool Control::Private::exec()
+ {
+-  if ( mProgressIndicator )
+-    mProgressIndicator->show();
++//  if ( mProgressIndicator )
++//    mProgressIndicator->show();
+ 
+   kDebug() << "Starting Akonadi (using an event loop).";
+   mEventLoop = new QEventLoop( mParent );

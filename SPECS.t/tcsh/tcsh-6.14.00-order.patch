@@ -1,0 +1,14 @@
+diff -up tcsh-6.15.00/tcsh.man.order tcsh-6.15.00/tcsh.man
+--- tcsh-6.15.00/tcsh.man.order	2008-09-03 12:30:44.000000000 +0200
++++ tcsh-6.15.00/tcsh.man	2008-09-03 12:30:44.000000000 +0200
+@@ -1614,7 +1614,9 @@ They include
+ .PP
+ Here the precedence increases to the right, `==' `!=' `=~' and `!~', `<='
+ `>=' `<' and `>', `<<' and `>>', `+' and `\-', `*' `/' and `%' being, in
+-groups, at the same level.  The `==' `!=' `=~' and `!~' operators compare
++groups, at the same level.  When multiple operators which have same precedence 
++are used in one expression, calculation must be done from operator of right 
++side.  The `==' `!=' `=~' and `!~' operators compare
+ their arguments as strings; all others operate on numbers.  The operators
+ `=~' and `!~' are like `!=' and `==' except that the right hand side is a
+ glob-pattern (see \fBFilename substitution\fR) against which the left hand

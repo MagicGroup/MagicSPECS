@@ -1,0 +1,35 @@
+--- qt-x11-free-3.3.6/src/kernel/qscriptengine_x11.cpp.orig	2006-03-08 17:47:47.000000000 +0100
++++ qt-x11-free-3.3.6/src/kernel/qscriptengine_x11.cpp	2006-10-20 19:38:14.000000000 +0200
+@@ -171,7 +176,7 @@
+     Other, Other, Other, Other,
+     Other, Other, Other, Other,
+ 
+-    Other, Other, Other, Other,
++    Consonant, Consonant, Other, Other,			//Here both Consonant were Other before modification
+     Other, Other, Other, Other,
+     Other, Other, Other, Other,
+     Other, Other, Other, Other,
+@@ -596,7 +601,7 @@
+     None, None, None, None,
+     None, None, None, None,
+ 
+-    None, None, None, None,
++    Below, None, None, None,	//Below was none before modification
+     None, None, None, None,
+     None, None, None, None,
+     None, None, None, None,
+@@ -1235,9 +1240,13 @@
+     int script = item->script;
+     Q_ASSERT(script >= QFont::Devanagari && script <= QFont::Sinhala);
+     const unsigned short script_base = 0x0900 + 0x80*(script-QFont::Devanagari);
+-    const unsigned short ra = script_base + 0x30;
++    unsigned short ra = script_base + 0x30;		//it was const unsigned short ra before modification
+     const unsigned short halant = script_base + 0x4d;
+     const unsigned short nukta = script_base + 0x3c;
++	if(script ==14)		//assamese 		//modification starts from here 
++	{
++		ra  = script_base + 0x70;
++	}						//and ends here
+ 
+     int len = item->length;
+     IDEBUG(">>>>> indic shape: from=%d, len=%d invalid=%d", item->from, item->length, invalid);

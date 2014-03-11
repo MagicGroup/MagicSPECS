@@ -1,0 +1,11 @@
+--- trinity-kvirc-3.5.13.2/configure.in.ORI	2013-06-04 00:16:19.407990544 +0200
++++ trinity-kvirc-3.5.13.2/configure.in	2013-06-04 00:16:26.428844196 +0200
+@@ -20,7 +20,7 @@
+ AM_MAINTAINER_MODE
+ 
+ AC_PREFIX_DEFAULT(/usr/local)
+-AM_CONFIG_HEADER(src/config.h)
++AC_CONFIG_HEADER(src/config.h)
+ 
+ #------------------------------------------------------------------
+ # HERE starts your real configure script

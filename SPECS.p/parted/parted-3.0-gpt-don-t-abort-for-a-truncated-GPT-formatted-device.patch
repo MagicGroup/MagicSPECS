@@ -1,0 +1,145 @@
+From 1bb50f026e3e034dc7a93c89dea69b3710c6e9cd Mon Sep 17 00:00:00 2001
+From: Jim Meyering <meyering@redhat.com>
+Date: Fri, 24 Jun 2011 13:32:33 +0200
+Subject: [PATCH 1/4] gpt: don't abort for a truncated GPT-formatted device
+
+This fixes the problem two ways.  The first fix (via gpt_alloc)
+rejects any device that is too small, but it is insufficient.
+Choose a slightly larger truncated device with an otherwise intact
+primary GPT header and you can still trigger the failed assertion.
+To fix it in general, we make _header_is_valid detect the problem.
+* libparted/labels/gpt.c (gpt_alloc): Reject a device that is so
+small that there is no room for a single partition.
+(_header_is_valid): Validate LastUsableLBA here, as well, so that
+we now reject as invalid any GPT header that specifies a
+LastUsableLBA larger than the device size.
+Leave the assertion in _parse_header.
+* tests/t0203-gpt-tiny-device-abort.sh: Test for this.
+* tests/Makefile.am (TESTS): Add it.
+* NEWS: (Bug fixes): Mention it.
+Reported by Daniel Fandrich in
+http://thread.gmane.org/gmane.comp.gnu.parted.bugs/10466
+---
+ NEWS                                 |    2 +
+ libparted/labels/gpt.c               |   16 ++++++++++--
+ tests/Makefile.am                    |    1 +
+ tests/t0203-gpt-tiny-device-abort.sh |   44 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 60 insertions(+), 3 deletions(-)
+ create mode 100644 tests/t0203-gpt-tiny-device-abort.sh
+
+diff --git a/NEWS b/NEWS
+index 6b7c02a..24e28e6 100644
+--- a/NEWS
++++ b/NEWS
+@@ -4,6 +4,8 @@ GNU parted NEWS                                    -*- outline -*-
+ 
+ ** Bug fixes
+ 
++  libparted: no longer aborts when reading a truncated GPT-formatted device
++
+   Fix numerous small leaks in both the library and the UI.
+ 
+ ** Changes in behavior
+diff --git a/libparted/labels/gpt.c b/libparted/labels/gpt.c
+index e1c0a32..8c9816f 100644
+--- a/libparted/labels/gpt.c
++++ b/libparted/labels/gpt.c
+@@ -517,13 +517,19 @@ gpt_alloc (const PedDevice *dev)
+   disk = _ped_disk_alloc ((PedDevice *) dev, &gpt_disk_type);
+   if (!disk)
+     goto error;
+-  disk->disk_specific = gpt_disk_data = ped_malloc (sizeof (GPTDiskData));
+-  if (!disk->disk_specific)
+-    goto error_free_disk;
+ 
+   data_start = 2 + GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
+   data_end = dev->length - 2
+     - GPT_DEFAULT_PARTITION_ENTRY_ARRAY_SIZE / dev->sector_size;
++
++  /* If the device is too small to have room for data, reject it.  */
++  if (data_end <= data_start)
++    goto error_free_disk;
++
++  disk->disk_specific = gpt_disk_data = ped_malloc (sizeof (GPTDiskData));
++  if (!disk->disk_specific)
++    goto error_free_disk;
++
+   ped_geometry_init (&gpt_disk_data->data_area, dev, data_start,
+                      data_end - data_start + 1);
+   gpt_disk_data->entry_count = GPT_DEFAULT_PARTITION_ENTRIES;
+@@ -665,6 +671,10 @@ _header_is_valid (PedDisk const *disk, GuidPartitionTableHeader_t *gpt,
+   if (first_usable < 3)
+     return 0;
+ 
++  PedSector last_usable = PED_LE64_TO_CPU (gpt->LastUsableLBA);
++  if (disk->dev->length < last_usable)
++    return 0;
++
+   origcrc = gpt->HeaderCRC32;
+   gpt->HeaderCRC32 = 0;
+   if (pth_crc32 (dev, gpt, &crc) != 0)
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index b57142b..86402c0 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -11,6 +11,7 @@ TESTS = \
+   t0200-gpt.sh \
+   t0201-gpt.sh \
+   t0202-gpt-pmbr.sh \
++  t0203-gpt-tiny-device-abort.sh \
+   t0205-gpt-list-clobbers-pmbr.sh \
+   t0206-gpt-print-with-corrupt-primary-clobbers-pmbr.sh \
+   t0207-IEC-binary-notation.sh \
+diff --git a/tests/t0203-gpt-tiny-device-abort.sh b/tests/t0203-gpt-tiny-device-abort.sh
+new file mode 100644
+index 0000000..22c8b21
+--- /dev/null
++++ b/tests/t0203-gpt-tiny-device-abort.sh
+@@ -0,0 +1,44 @@
++#!/bin/sh
++# parted before 3.1 could abort for a pathologically small device with
++# a valid primary GPT header but no room for the backup header.
++
++# Copyright (C) 2009-2011 Free Software Foundation, Inc.
++
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 3 of the License, or
++# (at your option) any later version.
++
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++
++# You should have received a copy of the GNU General Public License
++# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++. "${srcdir=.}/init.sh"; path_prepend_ ../parted
++
++N=2M
++dev=loop-file
++# create a file large enough to hold a GPT partition table
++dd if=/dev/null of=$dev bs=1 seek=$N || framework_failure
++
++# create a GPT partition table
++parted -s $dev mklabel gpt > out 2>&1 || fail=1
++# expect no output
++compare out /dev/null || fail=1
++
++# truncate it to 34 sectors.
++for i in 33 34 35 67 68 69 101 102 103; do
++  dd if=$dev of=bad count=$i
++
++  # Print the partition table.  Before, this would evoke a failed assertion.
++  printf 'i\no\n' > in
++  parted ---pretend-input-tty bad u s p < in > out 2> err || fail=1
++  # don't bother comparing stdout
++  # expect no stderr
++  compare err /dev/null || fail=1
++done
++
++Exit $fail
+-- 
+1.7.6.4
+

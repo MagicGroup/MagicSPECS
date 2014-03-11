@@ -1,0 +1,221 @@
+--- dvipsk-p1.7a.patch.orig	2005-10-17 17:03:56.000000000 +0900
++++ dvipsk-p1.7a.patch	2007-08-16 14:51:19.000000000 +0900
+@@ -1236,37 +1236,30 @@
+      }
+  
+ diff -Nur dvipsk.orig/dvips.c dvipsk/dvips.c
+---- dvipsk.orig/dvips.c	Sun Jan 30 22:17:21 2005
+-+++ dvipsk/dvips.c	Thu Mar  3 11:11:55 2005
+-@@ -44,12 +44,18 @@
+- #include descrip
+- #endif
++--- dvipsk.orig/dvips.c	2007-08-16 14:39:44.000000000 +0900
+++++ dvipsk/dvips.c	2007-08-16 14:44:03.000000000 +0900
++@@ -45,6 +45,12 @@
++ #define DEFRES (600)
+  #endif
++ 
+ +#ifdef __APPLE__ /* for Mac OS X, T. Uchiyama */
+ +#include <sys/types.h>
+ +#include <sys/time.h>
+ +#include <sys/resource.h>
+ +#endif
+++
+  /*
+   *   First we define some globals.
+   */
+- #ifdef VMS
+-     static char ofnme[252],infnme[252],pap[40],thh[20];
+- #endif
++@@ -55,6 +61,7 @@
++ /* PS fonts fully downloaded as headers */ 
++ char *downloadedpsnames[DOWNLOADEDPSSIZE];  
++ 
+ +Boolean SJIS ;                /* KANJI code */
++ int unused_top_of_psnames ;   /* unused top number of downloadedpsnames[#] */
+  fontdesctype *fonthead ;      /* list of all fonts mentioned so far */
+  fontdesctype *curfnt ;        /* the currently selected font */
+- sectiontype *sections ;       /* sections to process document in */
+-@@ -64,7 +70,7 @@
+- Boolean cropmarks ;           /* add cropmarks? */
+- Boolean abspage = 0 ;         /* are page numbers absolute? */
+- Boolean tryepsf = 0 ;         /* should we try to make it espf? */
+--Boolean secure = 0 ;          /* make safe for suid */
+-+Boolean secure = 1 ;          /* make safe for suid */
+- int collatedcopies = 1 ;      /* how many collated copies? */
+- int sectioncopies = 1 ;       /* how many times to repeat each section? */
+- integer pagecopies = 1 ;          /* how many times to repeat each page? */
+-@@ -186,6 +192,7 @@
++@@ -194,6 +201,7 @@
+  char xdig[256];                 /* table for reading hexadecimal digits */
+  char banner[] = BANNER ;        /* our startup message */
+  char banner2[] = BANNER2 ;      /* our second startup message */
+@@ -1274,7 +1267,7 @@
+  Boolean noenv = 0 ;             /* ignore PRINTER envir variable? */
+  Boolean dopprescan = 0 ;        /* do we do a scan before the prescan? */
+  extern int dontmakefont ;
+-@@ -284,6 +291,7 @@
++@@ -292,6 +300,7 @@
+  #else
+  "                                   Z*  Compress bitmap fonts           ",
+  #endif
+@@ -1282,7 +1275,7 @@
+  /* "-   Interactive query of options", */
+  "    # = number   f = file   s = string  * = suffix, `0' to turn off    ",
+  "    c = comma-separated dimension pair (e.g., 3.2in,-32.1cm)           ",
+-@@ -294,16 +302,21 @@
++@@ -302,16 +311,21 @@
+  {
+     char **p;
+     FILE *f = status == 0 ? stdout : stderr;
+@@ -1302,30 +1295,31 @@
+ +*/
+ +   fputs ("Email bug reports to www-ptex@ascii.co.jp.\n", f);
+  }
+- /*
+-  *   This error routine prints an error message; if the first
+-@@ -440,6 +453,7 @@
+-    for (s="abcdef"; *s!=0; s++)
+-       xdig[(int)*s] = i++;
++ 
++ void
++@@ -461,6 +475,7 @@
++    for(i=0 ; i < DOWNLOADEDPSSIZE; i++)
++       downloadedpsnames[i] = NULL;
+     morestrings() ;
+ +   SJIS = 0;
+     maxpages = 100000 ;
+     numcopies = 1 ;
+     iname = fulliname = strings ;
+-@@ -552,6 +566,12 @@
+-    int firstext = -1 ;
++@@ -574,6 +589,13 @@
+  #endif
+-    register sectiontype *sects ;
++    sectiontype *sects ;
++ 
+ +#ifdef __APPLE__ /* for Mac OS X, T. Uchiyama */
+ +   struct rlimit rl;
+ +   getrlimit(RLIMIT_STACK, &rl);
+ +   rl.rlim_cur = 2048 * 1024;
+ +   setrlimit(RLIMIT_STACK, &rl);
+ +#endif
+- 
+++
+  #ifdef KPATHSEA
+     kpse_set_program_name (argv[0], "dvips");
+-@@ -618,12 +638,12 @@
++    kpse_set_program_enabled (kpse_pk_format, MAKE_TEX_PK_BY_DEFAULT, kpse_src_compile);
++@@ -639,12 +661,12 @@
+          exit (0);
+        }
+        if (argc == 2 && strncmp(argv[1], "-?", 2) == 0) {
+@@ -1340,8 +1334,8 @@
+           exit(0);
+        }
+     }
+-@@ -747,10 +767,13 @@
+-                secure = (*p != '0') ;
++@@ -790,10 +812,13 @@
++                   secure_option = 1 ; /* Never used */
+                 break ;
+  case 'S':
+ -               if (*p == 0 && argv[i+1])
+@@ -1358,7 +1352,7 @@
+                 break ;
+  case 'm' :
+                 if (STREQ (p, "ode") && argv[i+1]) {
+-@@ -892,7 +915,7 @@
++@@ -935,7 +960,7 @@
+                    paperfmt = p ;
+                 break ;
+  case 'v':
+@@ -1367,7 +1361,7 @@
+                  exit (0);
+                  break;
+  case 'x' : case 'y' :
+-@@ -1070,7 +1093,7 @@
++@@ -1113,7 +1138,7 @@
+        }
+        papsizes = (struct papsiz *)revlist((void *)papsizes) ;
+        if (queryoptions != 0) {            /* get new options */
+@@ -1376,38 +1370,40 @@
+           help(1) ;
+           queryargs();
+           if (qargc == 1)
+-@@ -1108,7 +1131,7 @@
+-    getpsinfo((char *)NULL) ;
++@@ -1152,11 +1177,11 @@
+     revpslists() ;
+-    if (!quiet)
+--      (void)fprintf(stderr, "%s %s\n", banner, banner2) ;
+-+      (void)fprintf(stderr, "%s\n%s\n", banner, banner2) ;
++    if (dvips_debug_flag) {
++       if (!quiet)
++-         (void)fprintf(stderr, "\n%s %s\n", banner, banner2) ;
+++         (void)fprintf(stderr, "\n%s\n%s\n", banner, banner2) ;
++       prettycolumn = 0 ;
++    } else {
++       if (!quiet)
++-         (void)fprintf(stderr, "%s %s\n", banner, banner2) ;
+++         (void)fprintf(stderr, "%s\n%s\n", banner, banner2) ;
++    }
+     if (*iname) {
+        dvifile = fopen(iname, READBIN) ;
+- /*
+ diff -Nur dvipsk.orig/dvips.h dvipsk/dvips.h
+---- dvipsk.orig/dvips.h	Sun Jan 30 22:17:15 2005
+-+++ dvipsk/dvips.h	Mon Oct 17 16:57:18 2005
+-@@ -10,10 +10,15 @@
+-  */
+- 
++--- dvipsk.orig/dvips.h	2007-08-16 14:39:44.000000000 +0900
+++++ dvipsk/dvips.h	2007-08-16 14:49:19.000000000 +0900
++@@ -7,9 +7,12 @@
+  /*   This file is the header for dvips's global data structures. */
+-+#define CREATIONDATE
+-+
+-+#define MAX_CODE 65536
+  
++ #define CREATIONDATE
+++#define MAX_CODE 65536
+  #define BANNER \
+--"This is dvips(k) 5.95a Copyright 2005 Radical Eye Software"
++-"This is dvips(k) 5.96.1 Copyright 2007 Radical Eye Software"
+ -#define BANNER2 "(www.radicaleye.com)"
+ +"This is dvips(k) p1.7a Copyright 2005 ASCII Corp.(www-ptex@ascii.co.jp)"
+ +#define BANNER2 \
+-+"based on dvips(k) 5.95a Copyright 2005 Radical Eye Software (www.radicaleye.com)"
+++"This is dvips(k) 5.96.1 Copyright 2007 Radical Eye Software (www.radicaleye.com)"
+ +#define WEBURL "(www.radicaleye.com)"
+  #ifdef KPATHSEA
+  #include "config.h"
+  #include "debug.h"
+-@@ -60,9 +65,9 @@
+- #define STRINGSIZE (200000)  /* maximum total chars in strings in program */
++@@ -56,9 +59,9 @@
++ #define STRINGSIZE (200000) /* maximum total chars in strings in program */
+  #define RASTERCHUNK (8192)  /* size of chunk of raster */
+  #define MINCHUNK (240)      /* minimum size char to get own raster */
+ -#define STACKSIZE (350)     /* maximum stack size for dvi files */
+@@ -1417,9 +1413,9 @@
+ +#define MAXFRAME (50)       /* maximum depth of virtual font recursion */
+ +#define MAXFONTHD (1024)     /* number of unique names of included fonts */
+  #define STDOUTSIZE (75)     /* width of a standard output line */
++ #define DOWNLOADEDPSSIZE (1000)  /* max number of downloaded fonts to check */
+  /*
+-  *   Other constants, which define printer-dependent stuff.
+-@@ -166,7 +171,7 @@
++@@ -163,7 +166,7 @@
+   *   psfile.  It can be 0, PREVPAGE, THISPAGE, or EXISTS.
+   */
+  typedef struct tfd {
+@@ -1428,7 +1424,7 @@
+     halfword dpi, loadeddpi ;
+     halfword alreadyscaled ;
+     halfword psname ;
+-@@ -181,6 +186,7 @@
++@@ -178,6 +181,7 @@
+     struct tfd *nextsize;
+     char *scalename;
+     chardesctype *chardesc ;

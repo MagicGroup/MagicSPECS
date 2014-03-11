@@ -1,0 +1,7 @@
+--- t/release-pod-spell.t
++++ t/release-pod-spell.t
+@@ -31,3 +31,4 @@
+ PayPal
+ Rolsky
+ api
++deprecations

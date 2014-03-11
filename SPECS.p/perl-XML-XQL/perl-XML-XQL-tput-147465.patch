@@ -1,0 +1,19 @@
+--- lib/XML/XQL.pm~	2003-01-16 23:54:58.000000000 +0200
++++ lib/XML/XQL.pm	2005-11-03 00:30:13.000000000 +0200
+@@ -507,7 +507,7 @@
+ {
+     # Let me know if I need to add other systems for which 'tput' is not 
+     # available.
+-    return undef unless defined $ENV{TERM};
++    return undef unless $ENV{TERM};
+     if ($^O =~ /Win|MacOS/)
+     {
+ 	return "";
+@@ -519,6 +519,7 @@
+ 	# tput is only available on Unix systems.
+ 	# Calling `tput ...` on Windows generates warning messages
+ 	# that can not be suppressed.
++	local $ENV{PATH} = "/usr/bin"; # taint-safety
+ 	return `tput $c`;
+     }
+ }

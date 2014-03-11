@@ -1,0 +1,25 @@
+--- javax/swing/tree/DefaultMutableTreeNode.java.orig	2008-04-03 11:05:46.000000000 -0400
++++ javax/swing/tree/DefaultMutableTreeNode.java	2008-04-03 11:06:03.000000000 -0400
+@@ -38,8 +38,6 @@
+ 
+ package javax.swing.tree;
+ 
+-import gnu.java.util.EmptyEnumeration;
+-
+ import java.io.IOException;
+ import java.io.ObjectInputStream;
+ import java.io.ObjectOutputStream;
+@@ -64,13 +62,6 @@
+   private static final long serialVersionUID = -4298474751201349152L;
+ 
+   /**
+-   * An empty enumeration, returned by {@link #children()} if a node has no
+-   * children.
+-   */
+-  public static final Enumeration<TreeNode> EMPTY_ENUMERATION =
+-    new EmptyEnumeration<TreeNode>();
+-
+-  /**
+    * The parent of this node (possibly <code>null</code>).
+    */
+   protected MutableTreeNode parent;

@@ -1,0 +1,12 @@
+diff -dur lxsession-0.4.1.orig/lxsession-logout/Makefile.in lxsession-0.4.1/lxsession-logout/Makefile.in
+--- lxsession-0.4.1.orig/lxsession-logout/Makefile.in	2009-12-10 19:40:21.000000000 +0100
++++ lxsession-0.4.1/lxsession-logout/Makefile.in	2010-02-17 11:04:36.000000000 +0100
+@@ -112,7 +112,7 @@
+ INTLTOOL_MERGE = @INTLTOOL_MERGE@
+ INTLTOOL_PERL = @INTLTOOL_PERL@
+ INTLTOOL_UPDATE = @INTLTOOL_UPDATE@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS@ -lXau -lX11
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LTLIBOBJS = @LTLIBOBJS@

@@ -1,0 +1,17 @@
+diff -up isdn4k-utils-CVS-2006-07-20/capi20/convert.c.orig isdn4k-utils-CVS-2006-07-20/capi20/convert.c
+--- isdn4k-utils-CVS-2006-07-20/capi20/convert.c.orig	2009-01-19 17:24:26.000000000 +0100
++++ isdn4k-utils-CVS-2006-07-20/capi20/convert.c	2009-01-19 17:25:42.000000000 +0100
+@@ -894,8 +894,12 @@ static char *p = 0;
+ static void bufprint(char *fmt,...)
+ {
+ 	va_list f;
++	size_t remain = (p >= buf && p < buf+sizeof(buf))
++				  ? buf+sizeof(buf)-p
++				  : 0;
++
+ 	va_start(f, fmt);
+-	vsprintf(p, fmt, f);
++	vsnprintf(p, remain, fmt, f);
+ 	va_end(f);
+ 	p += strlen(p);
+ }

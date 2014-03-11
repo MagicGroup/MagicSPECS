@@ -1,0 +1,11 @@
+diff -Nuarp apps/dolphin/src/panels/information/informationpanel.cpp apps/dolphin/src/panels/information/informationpanel.cpp
+--- apps/dolphin/src/panels/information/informationpanel.cpp	2010-08-14 15:45:25.000000000 +0800
++++ apps/dolphin/src/panels/information/informationpanel.cpp	2010-08-14 15:54:14.000000000 +0800
+@@ -326,6 +326,7 @@ void InformationPanel::init()
+     connect(m_content, SIGNAL(urlActivated(KUrl)), this, SIGNAL(urlActivated(KUrl)));
+     
+     QVBoxLayout* layout = new QVBoxLayout(this);
++    layout->setMargin(0);
+     layout->addWidget(m_content);
+ 
+     m_initialized = true;

@@ -1,0 +1,27 @@
+commit 952a58a5f0c50c461d079788c9102bf4a09357c3
+Author: Olivier Fourdan <ofourdan@redhat.com>
+Date:   Fri Feb 24 11:19:01 2012 +0100
+
+    Add Bamboo One definition
+
+diff --git a/data/bamboo-one.tablet b/data/bamboo-one.tablet
+new file mode 100644
+index 0000000..67f0114
+--- /dev/null
++++ b/data/bamboo-one.tablet
+@@ -0,0 +1,15 @@
++[Device]
++# Bamboo One (CTF-430/SO-B)
++Name=Bamboo One
++DeviceMatch=usb:056a:0069
++Width=5.0
++Height=3.6
++
++[Features]
++Reversible=true
++Stylus=true
++Touch=false
++Ring=false
++NumStrips=0
++Buttons=0
++BuiltIn=false

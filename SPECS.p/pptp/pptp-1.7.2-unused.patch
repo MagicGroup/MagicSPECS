@@ -1,0 +1,73 @@
+diff -up pptp-1.7.2/pptp_callmgr.c.unused pptp-1.7.2/pptp_callmgr.c
+--- pptp-1.7.2/pptp_callmgr.c.unused	2011-12-01 09:58:47.127960697 +0000
++++ pptp-1.7.2/pptp_callmgr.c	2011-12-01 09:58:47.149960723 +0000
+@@ -38,12 +38,12 @@ void close_unixsock(int fd, struct in_ad
+ 
+ sigjmp_buf callmgr_env;
+ 
+-void callmgr_sighandler(int sig) {
++void callmgr_sighandler(int sig __attribute__ ((unused))) {
+     /* TODO: according to signal(2), siglongjmp() is unsafe used here */
+     siglongjmp (callmgr_env, 1);
+ }
+ 
+-void callmgr_do_nothing(int sig) {
++void callmgr_do_nothing(int sig __attribute__ ((unused))) {
+     /* do nothing signal handler */
+ }
+ 
+@@ -104,7 +104,7 @@ void call_callback(PPTP_CONN *conn, PPTP
+  *****************************************************************************/
+ 
+ /*** Call Manager *************************************************************/
+-int callmgr_main(int argc, char **argv, char **envp)
++int callmgr_main(int argc, char **argv, char **envp __attribute__ ((unused)))
+ {
+     struct in_addr inetaddr;
+     int inet_sock, unix_sock;
+@@ -377,7 +377,7 @@ int open_unixsock(struct in_addr inetadd
+ }
+ 
+ /*** close_inetsock ***********************************************************/
+-void close_inetsock(int fd, struct in_addr inetaddr)
++void close_inetsock(int fd, struct in_addr inetaddr __attribute__ ((unused)))
+ {
+     close(fd);
+ }
+diff -up pptp-1.7.2/pptp.c.unused pptp-1.7.2/pptp.c
+--- pptp-1.7.2/pptp.c.unused	2011-12-01 09:58:47.143960715 +0000
++++ pptp-1.7.2/pptp.c	2011-12-01 10:01:40.171147875 +0000
+@@ -151,13 +151,13 @@ void do_nothing(int sig)
+ sigjmp_buf env;
+ 
+ /*** signal handler ***********************************************************/
+-void sighandler(int sig)
++void sighandler(int sig __attribute__ ((unused)))
+ {
+     siglongjmp(env, 1);
+ }
+ 
+ /*** report statistics signal handler (SIGUSR1) *******************************/
+-void sigstats(int sig)
++void sigstats(int sig __attribute__ ((unused)))
+ {
+     syslog(LOG_NOTICE, "GRE statistics:\n");
+ #define LOG(name,value) syslog(LOG_NOTICE, name "\n", stats .value)
+@@ -508,7 +508,7 @@ int open_callmgr(struct in_addr inetaddr
+ }
+ 
+ /*** call the call manager main ***********************************************/
+-void launch_callmgr(struct in_addr inetaddr, char *phonenr, int argc,
++void launch_callmgr(struct in_addr inetaddr, char *phonenr, int argc __attribute__ ((unused)),
+         char**argv,char**envp) 
+ {
+       char *my_argv[3] = { argv[0], inet_ntoa(inetaddr), phonenr };
+@@ -566,7 +566,7 @@ void launch_pppd(char *ttydev, int argc,
+ {
+     char *new_argv[argc + 4];/* XXX if not using GCC, hard code a limit here. */
+     char str_pppd[] = PPPD_BINARY;
+-    char str_direct[] = "-direct";
++    char str_direct[] __attribute__ ((unused)) = "-direct";
+     char str_38400[] = "38400";
+     int i = 0, j;
+     new_argv[i++] = str_pppd;

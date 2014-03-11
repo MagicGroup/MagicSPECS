@@ -1,0 +1,24 @@
+--- kdelibs-4.4.2/kdeui/kernel/kglobalsettings.cpp	2010-04-12 21:13:40.000000000 +0800
++++ kdelibs-4.4.2/kdeui/kernel/kglobalsettings.cpp	2010-04-12 21:15:52.000000000 +0800
+@@ -394,14 +394,14 @@ static const KFontData DefaultFontData[K
+     { GeneralId, "toolBarFont", DefaultMacFont, 11, -1, QFont::SansSerif },
+     { GeneralId, "menuFont",    DefaultMacFont, 13, -1, QFont::SansSerif },
+ #else
+-    { GeneralId, "font",        DefaultFont, 9, -1, QFont::SansSerif },
+-    { GeneralId, "fixed",       "Monospace", 9, -1, QFont::TypeWriter },
+-    { GeneralId, "toolBarFont", DefaultFont,  8, -1, QFont::SansSerif },
+-    { GeneralId, "menuFont",    DefaultFont, 9, -1, QFont::SansSerif },
++    { GeneralId, "font",        DefaultFont, 10, -1, QFont::SansSerif },
++    { GeneralId, "fixed",       "Monospace", 10, -1, QFont::TypeWriter },
++    { GeneralId, "toolBarFont", DefaultFont,  10, -1, QFont::SansSerif },
++    { GeneralId, "menuFont",    DefaultFont, 10, -1, QFont::SansSerif },
+ #endif
+-    { "WM",      "activeFont",           DefaultFont,  8, -1, QFont::SansSerif },
+-    { GeneralId, "taskbarFont",          DefaultFont, 9, -1, QFont::SansSerif },
+-    { GeneralId, "smallestReadableFont", DefaultFont,  8, -1, QFont::SansSerif }
++    { "WM",      "activeFont",           DefaultFont,  10, -1, QFont::SansSerif },
++    { GeneralId, "taskbarFont",          DefaultFont, 10, -1, QFont::SansSerif },
++    { GeneralId, "smallestReadableFont", DefaultFont,  9, -1, QFont::SansSerif }
+ };
+ 
+ QFont KGlobalSettingsData::font( FontTypes fontType )

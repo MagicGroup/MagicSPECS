@@ -1,0 +1,88 @@
+diff -up /dev/null words-3.0/mwords/70presid.nam
+--- /dev/null	2009-01-07 09:15:55.031018896 +0100
++++ words-3.0/mwords/70presid.nam	2009-01-12 12:22:46.000000000 +0100
+@@ -0,0 +1,70 @@
++Abraham
++Adams
++Andrew
++Arthur
++Barack
++Benjamin
++Bill
++Buchanan
++Buren
++Bush
++Calvin
++Carter
++Chester
++Cleveland
++Clinton
++Coolidge
++Dwight
++Eisenhower
++Fillmore
++Ford
++Franklin
++Garfield
++George
++Gerald
++Grant
++Grover
++Harding
++Harrison
++Harry
++Hayes
++Herbert
++Hoover
++Jackson
++James
++Jefferson
++Jimmy
++John
++Johnson
++Kennedy
++Lincoln
++Lyndon
++Madison
++Martin
++McKinley
++Millard
++Monroe
++Nixon
++Obama
++Pierce
++Polk
++Quincy
++Reagan
++Richard
++Ronald
++Roosevelt
++Rutherford
++Taft
++Taylor
++Theodore
++Thomas
++Truman
++Tyler
++Ulysses
++Van
++Warren
++Washington
++William
++Wilson
++Woodrow
++Zachary
+diff -up words-3.0/mwords/readme.txt.kzak words-3.0/mwords/readme.txt
+--- words-3.0/mwords/readme.txt.kzak	2009-01-12 12:28:41.000000000 +0100
++++ words-3.0/mwords/readme.txt	2009-01-12 12:28:24.000000000 +0100
+@@ -119,6 +119,10 @@ Version Bible ranked and counted by orde
+ The most frequently occurring 467 substrings occurring in a
+ best-selling novel by Amy Tan in 1990.
+ 
++70 names of presidents
++This file consists of the 70 names (first and last names) or American
++presidents (to 2009). Added by Karel Zak for Fedora Linux distribution.
++
+ USA Constitution
+ The Constitution of the United States, including the Bill of Rights
+ and all amendments current to 1993.

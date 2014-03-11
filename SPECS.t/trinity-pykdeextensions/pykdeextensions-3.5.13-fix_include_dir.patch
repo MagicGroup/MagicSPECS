@@ -1,0 +1,11 @@
+--- pykdeextensions/src/kdedistutils.py.ORI	2012-08-27 22:10:18.873738368 +0200
++++ pykdeextensions/src/kdedistutils.py	2012-08-27 22:10:50.234094262 +0200
+@@ -539,7 +539,7 @@
+                     canidatepaths.append(os.path.join(kdedir,"include"))
+                 canidatepaths.append(os.path.join(install.prefix,"include"))
+                 canidatepaths.append('/opt/trinity/include')
+-                canidatepaths.append('/opt/kde/include')
++                canidatepaths.append('/opt/trinity/include/kde')
+                 self.kde_inc_dir = FindFileInPaths('kapplication.h',canidatepaths)
+             if self.kde_inc_dir is None:
+                 raise SystemExit, "Failed to find the KDE header file directory."

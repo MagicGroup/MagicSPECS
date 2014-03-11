@@ -1,0 +1,28 @@
+diff -Nuarp synaptiks-0.4.0/applet/plasma-applet-synaptiks.desktop synaptiks-0.4.0.new/applet/plasma-applet-synaptiks.desktop
+--- synaptiks-0.4.0/applet/plasma-applet-synaptiks.desktop	2010-04-11 20:09:54.000000000 +0800
++++ synaptiks-0.4.0.new/applet/plasma-applet-synaptiks.desktop	2010-04-22 01:53:00.000000000 +0800
+@@ -17,6 +17,7 @@ Comment[pt_BR]=Mini-aplicativo de gerenc
+ Comment[sv]=Miniprogram för hantering av tryckplatta
+ Comment[uk]=Аплет керування сенсорним пристроєм
+ Comment[x-test]=xxTouchpad management appletxx
++Comment[zh_CN]=触摸板管理小程序
+ Icon=synaptiks
+ Type=Service
+ ServiceTypes=Plasma/Applet
+diff -Nuarp synaptiks-0.4.0/daemon/synaptiks.desktop synaptiks-0.4.0.new/daemon/synaptiks.desktop
+--- synaptiks-0.4.0/daemon/synaptiks.desktop	2010-04-11 20:09:53.000000000 +0800
++++ synaptiks-0.4.0.new/daemon/synaptiks.desktop	2010-04-22 01:52:32.000000000 +0800
+@@ -27,4 +27,5 @@ Comment[pt_BR]=Servidor de controle do t
+ Comment[sv]=Styrdemon för tryckplatta
+ Comment[uk]=Фонова служба керування сенсорним пристроєм
+ Comment[x-test]=xxTouchpad control daemonxx
++Comment[zh_CN]=触摸板控制守护进程
+ 
+diff -Nuarp synaptiks-0.4.0/kcmodule/synaptiks.desktop synaptiks-0.4.0.new/kcmodule/synaptiks.desktop
+--- synaptiks-0.4.0/kcmodule/synaptiks.desktop	2010-04-11 20:09:54.000000000 +0800
++++ synaptiks-0.4.0.new/kcmodule/synaptiks.desktop	2010-04-22 01:51:56.000000000 +0800
+@@ -30,3 +30,4 @@ Comment[pt_BR]=Configuração e gerencia
+ Comment[sv]=Inställning och hantering av tryckplatta
+ Comment[uk]=Параметри та керування сенсорним пристроєм
+ Comment[x-test]=xxTouchpad settings and managementxx
++Comment[zh_CN]=触摸板设置和管理

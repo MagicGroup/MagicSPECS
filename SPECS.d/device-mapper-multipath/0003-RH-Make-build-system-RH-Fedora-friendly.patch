@@ -1,0 +1,109 @@
+From f5e11246063b07d6dce6d37d3b74662475baa981 Mon Sep 17 00:00:00 2001
+From: Fabio M. Di Nitto <fdinitto@redhat.com>
+Date: Thu, 15 Oct 2009 04:39:27 +0200
+Subject: [PATCH 08/12] RH: Make build system RH/Fedora friendly
+
+Signed-off-by: Fabio M. Di Nitto <fdinitto@redhat.com>
+---
+:100644 100644 7ec25d5... 06fb625... M	Makefile.inc
+:100644 100644 21e4ad4... 06d79c0... M	kpartx/Makefile
+:100644 100644 32d9ef5... 25e1483... M	multipathd/Makefile
+ Makefile.inc             |    2 +-
+ kpartx/Makefile          |   10 +++++-----
+ libmpathpersist/Makefile |    7 ++-----
+ libmultipath/Makefile    |    2 ++
+ multipathd/Makefile      |    1 +
+ 5 files changed, 11 insertions(+), 11 deletions(-)
+
+Index: multipath-tools-130222/Makefile.inc
+===================================================================
+--- multipath-tools-130222.orig/Makefile.inc
++++ multipath-tools-130222/Makefile.inc
+@@ -29,7 +29,7 @@ multipathdir = $(TOPDIR)/libmultipath
+ mandir      = $(prefix)/usr/share/man/man8
+ man5dir     = $(prefix)/usr/share/man/man5
+ man3dir      = $(prefix)/usr/share/man/man3
+-rcdir	    = $(prefix)/etc/init.d
++rcdir	    = $(prefix)/etc/rc.d/init.d
+ syslibdir   = $(prefix)/$(LIB)
+ libdir	    = $(prefix)/$(LIB)/multipath
+ unitdir     = $(prefix)/lib/systemd/system
+Index: multipath-tools-130222/kpartx/Makefile
+===================================================================
+--- multipath-tools-130222.orig/kpartx/Makefile
++++ multipath-tools-130222/kpartx/Makefile
+@@ -26,17 +26,17 @@ $(EXEC): $(OBJS)
+ install: $(EXEC) $(EXEC).8
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(bindir)
+ 	$(INSTALL_PROGRAM) -m 755 $(EXEC) $(DESTDIR)$(bindir)
+-	$(INSTALL_PROGRAM) -d $(DESTDIR)$(libudevdir)
+-	$(INSTALL_PROGRAM) -m 755 kpartx_id $(DESTDIR)$(libudevdir)
+-	$(INSTALL_PROGRAM) -d $(DESTDIR)/etc/udev/rules.d
+-	$(INSTALL_PROGRAM) -m 644 kpartx.rules $(DESTDIR)/etc/udev/rules.d/
++#	$(INSTALL_PROGRAM) -d $(DESTDIR)$(libudevdir)
++#	$(INSTALL_PROGRAM) -m 755 kpartx_id $(DESTDIR)$(libudevdir)
++#	$(INSTALL_PROGRAM) -d $(DESTDIR)/etc/udev/rules.d
++#	$(INSTALL_PROGRAM) -m 644 kpartx.rules $(DESTDIR)/etc/udev/rules.d/
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(mandir)
+ 	$(INSTALL_PROGRAM) -m 644 $(EXEC).8.gz $(DESTDIR)$(mandir)
+ 
+ uninstall:
+ 	rm -f $(DESTDIR)$(bindir)/$(EXEC)
+ 	rm -f $(DESTDIR)$(mandir)/$(EXEC).8.gz
+-	rm -f $(DESTDIR)$(libudevdir)/kpartx_id
++#	rm -f $(DESTDIR)$(libudevdir)/kpartx_id
+ 
+ clean:
+ 	rm -f core *.o $(EXEC) *.gz
+Index: multipath-tools-130222/multipathd/Makefile
+===================================================================
+--- multipath-tools-130222.orig/multipathd/Makefile
++++ multipath-tools-130222/multipathd/Makefile
+@@ -35,6 +35,7 @@ install:
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(bindir)
+ 	$(INSTALL_PROGRAM) -m 755 $(EXEC) $(DESTDIR)$(bindir)
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(rcdir)
++	$(INSTALL_PROGRAM) -m 755 multipathd.init.redhat $(DESTDIR)$(rcdir)/$(EXEC)
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(unitdir)
+ 	$(INSTALL_PROGRAM) -m 644 $(EXEC).service $(DESTDIR)$(unitdir)
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(mandir)
+Index: multipath-tools-130222/libmultipath/Makefile
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/Makefile
++++ multipath-tools-130222/libmultipath/Makefile
+@@ -46,9 +46,11 @@ install:
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(syslibdir)
+ 	$(INSTALL_PROGRAM) -m 755 $(LIBS) $(DESTDIR)$(syslibdir)/$(LIBS)
+ 	$(INSTALL_PROGRAM) -m 755 -d $(DESTDIR)$(libdir)
++	ln -sf $(LIBS) $(DESTDIR)$(syslibdir)/$(DEVLIB)
+ 
+ uninstall:
+ 	rm -f $(DESTDIR)$(syslibdir)/$(LIBS)
++	rm -f $(DESTDIR)$(syslibdir)/$(DEVLIB)
+ 
+ clean:
+ 	rm -f core *.a *.o *.gz *.so *.so.*
+Index: multipath-tools-130222/libmpathpersist/Makefile
+===================================================================
+--- multipath-tools-130222.orig/libmpathpersist/Makefile
++++ multipath-tools-130222/libmpathpersist/Makefile
+@@ -28,17 +28,14 @@ $(LIBS):
+ install: $(LIBS)
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(syslibdir)
+ 	$(INSTALL_PROGRAM) -m 755 $(LIBS) $(DESTDIR)$(syslibdir)/$(LIBS)
+-	$(INSTALL_PROGRAM) -m 755 -d $(DESTDIR)$(syslibdir)
+ 	$(INSTALL_PROGRAM) -m 755 -d $(DESTDIR)$(man3dir)
+-	$(INSTALL_PROGRAM) -m 755 -d $(DESTDIR)/usr/include/
+-	$(INSTALL_PROGRAM) -m 755 -d $(DESTDIR)/usr/share/doc/mpathpersist/
+-	ln -sf $(DESTDIR)$(syslibdir)/$(LIBS) $(DESTDIR)$(syslibdir)/$(DEVLIB)
++	ln -sf $(LIBS) $(DESTDIR)$(syslibdir)/$(DEVLIB)
+ 	install -m 644 mpath_persistent_reserve_in.3.gz $(DESTDIR)$(man3dir)	
+ 	install -m 644 mpath_persistent_reserve_out.3.gz $(DESTDIR)$(man3dir)	
+-	install -m 644 mpath_persist.h $(DESTDIR)/usr/include/
+ 
+ uninstall:
+ 	rm -f $(DESTDIR)$(syslibdir)/$(LIBS)
++	rm -f $(DESTDIR)$(syslibdir)/$(DEVLIB)
+ 	rm $(DESTDIR)$(mandir)/mpath_persistent_reserve_in.3.gz	
+ 	rm $(DESTDIR)$(mandir)/mpath_persistent_reserve_out.3.gz	
+ 

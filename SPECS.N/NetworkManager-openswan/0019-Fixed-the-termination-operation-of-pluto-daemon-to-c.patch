@@ -1,0 +1,44 @@
+From 27c17d7d805ad87632872cf2ded5237fc59159dd Mon Sep 17 00:00:00 2001
+From: Avesh Agarwal <avagarwa@redhat.com>
+Date: Tue, 10 Dec 2013 15:25:35 -0500
+Subject: [PATCH 19/20] Fixed the termination operation of pluto daemon to
+ comply with libreswan changes.
+
+---
+ src/nm-openswan-service.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/src/nm-openswan-service.c b/src/nm-openswan-service.c
+index fffd020..af541bd 100644
+--- a/src/nm-openswan-service.c
++++ b/src/nm-openswan-service.c
+@@ -769,20 +769,21 @@ real_disconnect (NMVPNPlugin   *plugin,
+         }
+ 
+         openswan_argv = g_ptr_array_new ();
+-        g_ptr_array_add (openswan_argv, (gpointer) (*openswan_binary));
+-        g_ptr_array_add (openswan_argv, (gpointer) "setup");
+-        g_ptr_array_add (openswan_argv, (gpointer) "stop");
++		g_ptr_array_add (openswan_argv, (gpointer) "/usr/libexec/ipsec/whack");
++		g_ptr_array_add (openswan_argv, (gpointer) "--shutdown");
++        //g_ptr_array_add (openswan_argv, (gpointer) (*openswan_binary));
++        //g_ptr_array_add (openswan_argv, (gpointer) "setup");
++        //g_ptr_array_add (openswan_argv, (gpointer) "stop");
+         g_ptr_array_add (openswan_argv, NULL);
+ 
+         if (!g_spawn_async (NULL, (char **) openswan_argv->pdata, NULL,
+                                                          0, NULL, NULL, NULL, error)) {
+                 g_ptr_array_free (openswan_argv, TRUE);
+-                g_warning ("Openswan (pluto) failed to stop.  error: '%s'", (*error)->message);
++                g_printf ("ipsec (pluto) failed to stop.  error: '%s'\n", (*error)->message);
+                 return -1;
+         }
+         g_ptr_array_free (openswan_argv, TRUE);
+ 
+-
+ 	return TRUE;
+ }
+ 
+-- 
+1.8.3.1
+

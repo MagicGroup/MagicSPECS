@@ -1,0 +1,26 @@
+commit cc7a18807663313ef111d86a75844ded0416a889
+Author: Dana Jansens <danakj@orodu.net>
+Date:   Fri Aug 5 12:05:10 2011 -0400
+
+    Load the rc.xml config file given on --config-file the same as Openbox (use the whole path given).
+
+diff --git a/src/main.c b/src/main.c
+index 9035e8d..a576253 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -233,11 +233,10 @@ int main(int argc, char **argv)
+     }
+ 
+     xmlIndentTreeOutput = 1;
+-    if (!obt_xml_load_config_file(parse_i,
+-                                  "openbox",
+-                                  (obc_config_file ?
+-                                   obc_config_file : "rc.xml"),
+-                                  "openbox_config"))
++    if (!((obc_config_file &&
++           obt_xml_load_file(parse_i, obc_config_file, "openbox_config")) ||
++          obt_xml_load_config_file(parse_i, "openbox", "rc.xml",
++                                   "openbox_config")))
+     {
+         obconf_error(_("Failed to load an rc.xml. You have probably failed to install Openbox properly."), TRUE);
+         exit_with_error = TRUE;

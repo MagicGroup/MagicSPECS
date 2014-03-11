@@ -1,0 +1,23 @@
+From 5d68c80b1638636a2cbbdf0fddad0d402e0abcd7 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 11 Apr 2013 13:10:24 +0200
+Subject: [PATCH] systemd: include the systemd-random-seed-load.service
+
+The systemd cryptsetup-generator wants systemd-random-seed-load.service
+in case /dev/urandom is the device.
+---
+ modules.d/98systemd/module-setup.sh | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/modules.d/98systemd/module-setup.sh b/modules.d/98systemd/module-setup.sh
+index 450b42b..9183626 100755
+--- a/modules.d/98systemd/module-setup.sh
++++ b/modules.d/98systemd/module-setup.sh
+@@ -85,6 +85,7 @@ install() {
+         $systemdsystemunitdir/systemd-ask-password-plymouth.service \
+         $systemdsystemunitdir/systemd-journald.service \
+         $systemdsystemunitdir/systemd-vconsole-setup.service \
++        $systemdsystemunitdir/systemd-random-seed-load.service \
+         $systemdsystemunitdir/sysinit.target.wants/systemd-modules-load.service \
+         $systemdsystemunitdir/sysinit.target.wants/systemd-ask-password-console.path \
+         $systemdsystemunitdir/sysinit.target.wants/systemd-journald.service \

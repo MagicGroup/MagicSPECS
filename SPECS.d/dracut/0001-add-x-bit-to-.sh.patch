@@ -1,0 +1,28 @@
+From 4a049ce55681849e6338ee355ade3b7f92ca04d7 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 12 Aug 2011 16:29:28 +0200
+Subject: [PATCH] add x-bit to *.sh
+
+---
+ 0 files changed, 0 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 modules.d/90crypt/crypt-lib.sh
+ mode change 100644 => 100755 modules.d/90crypt/parse-keydev.sh
+ mode change 100644 => 100755 modules.d/90dm/dm-shutdown.sh
+ mode change 100644 => 100755 modules.d/90mdraid/md-shutdown.sh
+ mode change 100644 => 100755 modules.d/91crypt-gpg/crypt-gpg-lib.sh
+
+diff --git a/modules.d/90crypt/crypt-lib.sh b/modules.d/90crypt/crypt-lib.sh
+old mode 100644
+new mode 100755
+diff --git a/modules.d/90crypt/parse-keydev.sh b/modules.d/90crypt/parse-keydev.sh
+old mode 100644
+new mode 100755
+diff --git a/modules.d/90dm/dm-shutdown.sh b/modules.d/90dm/dm-shutdown.sh
+old mode 100644
+new mode 100755
+diff --git a/modules.d/90mdraid/md-shutdown.sh b/modules.d/90mdraid/md-shutdown.sh
+old mode 100644
+new mode 100755
+diff --git a/modules.d/91crypt-gpg/crypt-gpg-lib.sh b/modules.d/91crypt-gpg/crypt-gpg-lib.sh
+old mode 100644
+new mode 100755

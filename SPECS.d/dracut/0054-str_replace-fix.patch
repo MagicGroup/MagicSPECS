@@ -1,0 +1,33 @@
+From cb288154050ff5293bc9a0a72953cd2b93782abb Mon Sep 17 00:00:00 2001
+From: Michal Soltys <soltys@ziu.info>
+Date: Thu, 15 Sep 2011 08:45:57 +0200
+Subject: [PATCH] str_replace() fix
+
+Whitespace removal in:
+
+	out="${out}${chop# }$r"
+
+will damage certain strings, for example the following call:
+
+	str_replace ' aax aaxaa' x y
+
+would return 'aayaayaa' instead of ' aay aayaa'.
+
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+---
+ modules.d/99base/dracut-lib.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/99base/dracut-lib.sh b/modules.d/99base/dracut-lib.sh
+index 50b1ed2..62c3bf5 100755
+--- a/modules.d/99base/dracut-lib.sh
++++ b/modules.d/99base/dracut-lib.sh
+@@ -24,7 +24,7 @@ str_replace() {
+ 
+     while strstr "${in}" "$s"; do
+         chop="${in%%$s*}"
+-        out="${out}${chop# }$r"
++        out="${out}${chop}$r"
+         in="${in#*$s}"
+     done
+     echo "${out}${in}"

@@ -1,0 +1,12 @@
+diff -Nuarp rekonq-0.3.0.orig/src/tabbar.cpp rekonq-0.3.0/src/tabbar.cpp
+--- rekonq-0.3.0.orig/src/tabbar.cpp	2009-11-17 23:11:29.000000000 +0800
++++ rekonq-0.3.0/src/tabbar.cpp	2010-01-16 16:41:03.000000000 +0800
+@@ -173,7 +173,7 @@ void TabBar::showTabPreview(int tab)
+ 
+ void TabBar::mouseMoveEvent(QMouseEvent *event)
+ {
+-    if (ReKonfig::alwaysShowTabPreviews())
++    if (!event->buttons() && ReKonfig::alwaysShowTabPreviews())
+     {
+         //Find the tab under the mouse
+         int i = 0;

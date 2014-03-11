@@ -1,0 +1,213 @@
+diff -ur festival.orig/lib/email-mode.scm festival/lib/email-mode.scm
+--- festival.orig/lib/email-mode.scm	2001-04-04 07:55:20.000000000 -0400
++++ festival/lib/email-mode.scm	2007-03-13 12:14:01.000000000 -0400
+@@ -40,7 +40,7 @@
+ (define (email_init_func)
+  "(email_init_func)
+ Called on starting email text mode."
+- (voice_rab_diphone)
++ (voice_nitech_us_slt_arctic_hts)
+  (set! email_previous_t2w_func token_to_words)
+  (set! english_token_to_words email_token_to_words)
+  (set! token_to_words english_token_to_words)
+@@ -67,13 +67,13 @@
+    ((and (string-matches name ">")
+          (string-matches (item.feat token "whitespace") 
+ 			 "[ \t\n]*\n *"))
+-    (voice_don_diphone)
++    (voice_nitech_us_bdl_arctic_hts)
+     nil ;; return nothing to say
+    )
+    (t  ;; for all other cases
+      (if (string-matches (item.feat token "whitespace") 
+ 			 ".*\n[ \n]*")
+-	 (voice_rab_diphone))
++	 (voice_nitech_us_slt_arctic_hts))
+      (email_previous_t2w_func token name))))
+ 
+ (set! tts_text_modes
+diff -ur festival.orig/lib/festival.scm festival/lib/festival.scm
+--- festival.orig/lib/festival.scm	2005-10-21 08:34:01.000000000 -0400
++++ festival/lib/festival.scm	2007-03-13 12:15:13.000000000 -0400
+@@ -507,8 +507,11 @@
+                       double quotes
+   (tts FILENAME nil)  Say contexts of file, FILENAME should be 
+                       surrounded by double quotes
+-  (voice_rab_diphone) Select voice (Britsh Male)
+   (voice_ked_diphone) Select voice (American Male)
++  (voice_nitech_us_bdl_arctic_hts)
++                      Select voice (American Male)
++  (voice_nitech_us_slt_arctic_hts)
++                      Select voice (American Female)
+ ")
+ 
+ (define (festival_warranty)
+diff -ur festival.orig/lib/languages.scm festival/lib/languages.scm
+--- festival.orig/lib/languages.scm	2002-04-19 17:47:23.000000000 -0400
++++ festival/lib/languages.scm	2007-03-13 12:17:15.000000000 -0400
+@@ -58,11 +58,12 @@
+ 
+ (define (language_american_english)
+ "(language_american_english)
+-Set up language parameters for Aemerican English."
++Set up language parameters for American English."
+ 
+-  (if (symbol-bound? 'voice_kal_diphone)
+-      (set! female1 voice_kal_diphone))
+-  (set! male1 voice_ked_diphone)
++  (if (symbol-bound? 'voice_nitech_us_slt_arctic_hts)
++      (set! female1 voice_nitech_us_slt_arctic_hts))
++  (if (symbol-bound? 'voice_nitech_us_bdl_arctic_hts)
++      (set! male1 voice_nitech_us_bdl_arctic_hts))
+ 
+   (male1)
+   (Parameter.set 'Language 'americanenglish)
+@@ -98,11 +99,12 @@
+ 
+ (define (select_language language)
+   (cond
+-   ((or (equal? language 'britishenglish)
+-	(equal? language 'english))  ;; we all know its the *real* English
++   ((or (equal? language 'americanenglish)
++	(equal? language 'english))  ;; it may not be the *real* English
++    (language_american_english))     ;; but at least it's supported without
++                                     ;; non-free add-ons.
++   ((equal? language 'britishenglish)
+     (language_british_english))
+-   ((equal? language 'americanenglish)
+-    (language_american_english))
+    ((equal? language 'scotsgaelic)
+     (language_scots_gaelic))
+    ((equal? language 'welsh)
+@@ -113,8 +115,8 @@
+     (language_klingon))
+    (t
+     (print "Unsupported language, using English")
+-    (language_british_english))))
++    (language_american_english))))
+ 
+-(defvar language_default language_british_english)
++(defvar language_default language_american_english)
+ 
+ (provide 'languages)
+diff -ur festival.orig/lib/sable-mode.scm festival/lib/sable-mode.scm
+--- festival.orig/lib/sable-mode.scm	2006-07-07 17:24:55.000000000 -0400
++++ festival/lib/sable-mode.scm	2007-03-13 12:25:04.000000000 -0400
+@@ -222,35 +222,38 @@
+    (xxml_synth UTT)
+    (set! sable_speaker_stack (cons sable_current_speaker sable_speaker_stack))
+    (cond
+-    ((not equal? sable_current_language 'britishenglish)
++    ((not equal? sable_current_language 'americanenglish)
+      (print "SABLE: choosen unknown voice, current voice unchanged"))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male1)
+-     (set! sable_current_speaker 'voice_kal_diphone)
+-     (voice_kal_diphone))
++     (set! sable_current_speaker 'voice_nitech_us_bdl_arctic_hts)
++     (voice_nitech_us_bdl_arctic_hts))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male2)
+-     (set! sable_current_speaker 'voice_don_diphone)
+-     (voice_don_diphone))
++     (set! sable_current_speaker 'voice_nitech_us_rms_arctic_hts)
++     (voice_nitech_us_rms_arctic_hts))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male3)
+-     (set! sable_current_speaker 'voice_ked_diphone)
+-     (voice_ked_diphone))
++     (set! sable_current_speaker 'voice_nitech_us_awb_arctic_hts)
++     (voice_nitech_us_awb_arctic_hts))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male4)
+-     (set! sable_current_speaker 'voice_rab_diphone)
+-     (voice_rab_diphone))
++     (set! sable_current_speaker 'voice_nitech_us_jmk_arctic_hts)
++     (voice_nitech_us_jmk_arctic_hts))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male5)
+-     (set! sable_current_speaker 'voice_cmu_us_jmk_arctic_hts)
+-     (voice_cmu_us_jmk_arctic_hts))
++     (set! sable_current_speaker 'voice_kal_diphone)
++     (voice_kal_diphone))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male6)
+-     (set! sable_current_speaker 'voice_cmu_us_bdl_arctic_hts)
+-     (voice_cmu_us_bdl_arctic_hts))
++     (set! sable_current_speaker 'voice_ked_diphone)
++     (voice_ked_diphone))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male7)
+-     (set! sable_current_speaker 'voice_cmu_us_awb_arctic_hts)
+-     (voice_cmu_us_awb_arctic_hts))
++     (set! sable_current_speaker 'voice_kal_diphone)
++     (voice_kal_diphone))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'male8)
+-     (set! sable_current_speaker 'voice_rab_diphone)
++     (set! sable_current_speaker 'voice_ked_diphone)
+      (voice_ked_diphone))
+     ((equal? (car (xxml_attval "NAME" ATTLIST)) 'female1)
+-     (set! sable_current_speaker 'voice_cmu_us_slt_arctic_hts)
+-     (voice_us1_mbrola))
++     (set! sable_current_speaker 'voice_nitech_us_slt_arctic_hts)
++     (voice_nitech_us_slt_arctic_hts))
++    ((equal? (car (xxml_attval "NAME" ATTLIST)) 'female2)
++     (set! sable_current_speaker 'voice_nitech_us_clb_arctic_hts)
++     (voice_nitech_us_clb_arctic_hts))
+    (t
+       (set! sable_current_speaker (intern (string-append "voice_" (car (xxml_attval "NAME" ATTLIST)))))
+       (eval (list sable_current_speaker))))
+@@ -467,7 +470,7 @@
+   "(sable_init_func)
+ Initialisation for SABLE mode"
+   (sable_init_globals)
+-  (voice_kal_diphone)
++  (voice_nitech_us_slt_arctic_hts)
+   (set! sable_previous_elements xxml_elements)
+   (set! xxml_elements sable_elements)
+   (set! sable_previous_token_to_words english_token_to_words)
+diff -ur festival.orig/lib/soleml-mode.scm festival/lib/soleml-mode.scm
+--- festival.orig/lib/soleml-mode.scm	2001-04-04 07:55:20.000000000 -0400
++++ festival/lib/soleml-mode.scm	2007-03-13 12:25:48.000000000 -0400
+@@ -51,7 +51,7 @@
+ (define (voice_soleml)
+ "(soleml_voice)
+ Speaker specific initialisation for SOLE museum data."
+-  (voice_rab_diphone)
++  (voice_nitech_us_slt_arctic_hts)
+   ;; Utterances only come at end of file
+   (set! eou_tree '((0)))
+ )
+diff -ur festival.orig/lib/voices.scm festival/lib/voices.scm
+--- festival.orig/lib/voices.scm	2005-05-02 10:20:37.000000000 -0400
++++ festival/lib/voices.scm	2007-03-13 12:31:07.000000000 -0400
+@@ -322,25 +322,19 @@
+ A variable whose value is a function name that is called on start up to
+ the default voice. [see Site initialization]")
+ 
++; This list has been reordered for Fedora, since we want to have the option
++; to only install a smallish voice by default. And the slt voice is nice. 
+ (defvar default-voice-priority-list 
+-  '(kal_diphone
+-    cmu_us_bdl_arctic_hts
+-    cmu_us_jmk_arctic_hts
+-    cmu_us_slt_arctic_hts
+-    cmu_us_awb_arctic_hts
+-;    cstr_rpx_nina_multisyn       ; restricted license (lexicon)
+-;    cstr_rpx_jon_multisyn       ; restricted license (lexicon)
+-;    cstr_edi_awb_arctic_multisyn ; restricted license (lexicon)
+-;    cstr_us_awb_arctic_multisyn
++  '(nitech_us_slt_arctic_hts
++    nitech_us_awb_arctic_hts
++    nitech_us_bdl_arctic_hts
++    nitech_us_clb_arctic_hts
++    nitech_us_jmk_arctic_hts
++    nitech_us_rms_arctic_hts
++    kal_diphone
+     ked_diphone
+-    don_diphone
+-    rab_diphone
+-    en1_mbrola
+-    us1_mbrola
+-    us2_mbrola
+-    us3_mbrola
+-    gsw_diphone  ;; not publically distributed
+-    el_diphone
++    cstr_us_awb_arctic_multisyn
++    cstr_us_jmk_arctic_multisyn
+     )
+   "default-voice-priority-list
+    List of voice names. The first of them available becomes the default voice.")

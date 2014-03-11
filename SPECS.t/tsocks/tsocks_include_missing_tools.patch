@@ -1,0 +1,12 @@
+diff -up tsocks-1.8/Makefile.in.orig tsocks-1.8/Makefile.in
+--- tsocks-1.8/Makefile.in.orig	2011-05-13 09:46:56.688906007 -0400
++++ tsocks-1.8/Makefile.in	2011-05-13 09:47:11.937906005 -0400
+@@ -64,6 +64,8 @@ install: ${TARGETS} installscript instal
+ installscript:
+ 	${MKINSTALLDIRS} "${DESTDIR}${bindir}"
+ 	${INSTALL} ${SCRIPT} ${DESTDIR}${bindir}
++	${INSTALL} ${INSPECT} ${DESTDIR}${bindir}
++	${INSTALL} ${VALIDATECONF} ${DESTDIR}${bindir}
+ 
+ installlib:
+ 	${MKINSTALLDIRS} "${DESTDIR}${libdir}"

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=X-html2ps
+GenericName=html2ps frontend
+Comment=GUI frontend for html2ps
+Exec=xhtml2ps
+Terminal=false
+Type=Application
+Categories=Utility;

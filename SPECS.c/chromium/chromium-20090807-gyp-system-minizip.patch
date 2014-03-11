@@ -1,0 +1,21 @@
+diff -up chromium-20090807svn22807/third_party/zlib/zlib.gyp.system-minizip chromium-20090807svn22807/third_party/zlib/zlib.gyp
+--- chromium-20090807svn22807/third_party/zlib/zlib.gyp.system-minizip	2009-08-07 19:16:00.000000000 -0400
++++ chromium-20090807svn22807/third_party/zlib/zlib.gyp	2009-08-07 19:16:25.000000000 -0400
+@@ -83,16 +83,11 @@
+             'USE_SYSTEM_ZLIB',
+           ],
+           'sources': [
+-            'contrib/minizip/ioapi.c',
+-            'contrib/minizip/ioapi.h',
+-            'contrib/minizip/unzip.c',
+-            'contrib/minizip/unzip.h',
+-            'contrib/minizip/zip.c',
+-            'contrib/minizip/zip.h',
+           ],
+           'link_settings': {
+             'libraries': [
+               '-lz',
++              '-lminizip',
+             ],
+           },
+         },

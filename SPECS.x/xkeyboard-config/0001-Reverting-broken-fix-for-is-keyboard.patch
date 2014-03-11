@@ -1,0 +1,34 @@
+From cd657ccb4223f34feffd635c3299206f96a5e216 Mon Sep 17 00:00:00 2001
+From: "Sergey V. Udaltsov" <svu@gnome.org>
+Date: Fri, 1 Jun 2012 22:20:01 +0100
+Subject: [PATCH] Reverting broken fix for is keyboard
+
+https://bugs.freedesktop.org/show_bug.cgi?id=43173
+---
+ symbols/is |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/symbols/is b/symbols/is
+index f8e0ce1..e5f5d82 100644
+--- a/symbols/is
++++ b/symbols/is
+@@ -21,14 +21,14 @@ xkb_symbols "basic" {
+     key <AE12>	{ [     minus, underscore, dead_cedilla,  dead_ogonek ]	};
+ 
+     key <AD11>	{ [       eth,        ETH, dead_diaeresis, dead_abovering ] };
+-    key <AD12>	{ [apostrophe,   question,   dead_tilde,  dead_macron ]	};
++    key <AD12>	{ [apostrophe,   question,   asciitilde,  dead_macron ]	};
+ 
+     key <AC10>	{ [        ae,         AE,  asciicircum, dead_doubleacute ] };
+     key <AC11>	{ [dead_acute, dead_acute, dead_circumflex, dead_caron ] };
+     key <TLDE>	{ [dead_abovering,  dead_diaeresis,      notsign,      hyphen ]	};
+ 
+ //  <AC12> = <BKSL>
+-    key <BKSL>	{ [      plus,   asterisk,   dead_grave,   dead_breve ]	};
++    key <BKSL>	{ [      plus,   asterisk,   grave,   dead_breve ]	};
+ 
+ //  <AB00> = <LSGT>, is in file "pc": pc105
+     key <AB10>	{ [     thorn,      THORN, dead_belowdot, dead_abovedot ] };
+-- 
+1.7.10.2
+

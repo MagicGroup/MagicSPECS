@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Mwm
+Comment=Lesstif Motif window manager clone based on fvwm
+Exec=mwm
+Terminal=False
+TryExec=mwm
+
+[Window Manager]
+SessionManaged=true
+

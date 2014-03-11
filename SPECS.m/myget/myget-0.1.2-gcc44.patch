@@ -1,0 +1,11 @@
+diff -ur myget-0.1.2.orig/src/utils.cpp myget-0.1.2/src/utils.cpp
+--- myget-0.1.2.orig/src/utils.cpp	2009-05-18 09:09:25.000000000 +0800
++++ myget-0.1.2/src/utils.cpp	2009-05-18 09:10:09.000000000 +0800
+@@ -21,6 +21,7 @@
+ #include <termios.h>
+ #include <sys/ioctl.h>
+ #include <unistd.h>
++#include <stdio.h>
+ #include <sys/time.h>
+ #include <cassert>
+ #include <cstring>

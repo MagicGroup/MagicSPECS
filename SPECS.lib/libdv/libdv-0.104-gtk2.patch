@@ -1,0 +1,20 @@
+--- libdv-0.101/configure.ac~	2004-02-23 18:01:21.000000000 +0100
++++ libdv-0.101/configure.ac	2004-02-23 18:01:21.000000000 +0100
+@@ -152,7 +152,7 @@
+ dnl Checks for libraries.
+ 
+ if $use_gtk; then
+-	REQUIRES='glib >= 1.2.4 gtk+ >= 1.2.4'
++	REQUIRES='glib-2.0 >= 2.1.0 gtk+-x11-2.0 >= 2.1.0'
+ 	PKG_CHECK_MODULES(GTK,$REQUIRES)
+ else
+ 	dnl Libs above are required for the apps, but not for the lib itself.
+@@ -175,7 +175,7 @@
+ fi
+ 
+ if $use_gtk; then
+-	AM_PATH_GTK(1.2.4,
++	AM_PATH_GTK_2_0(2.1.0,
+ 	[
+ 		AC_DEFINE(HAVE_GTK)
+ 	])

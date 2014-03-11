@@ -1,0 +1,1974 @@
+diff --git a/bin/get-pick-list.sh b/bin/get-pick-list.sh
+index a141afe..d3ac511 100755
+--- a/bin/get-pick-list.sh
++++ b/bin/get-pick-list.sh
+@@ -8,7 +8,7 @@ git log --reverse --grep="cherry picked from commit" origin/master..HEAD |\
+ 	sed -e 's/^[[:space:]]*(cherry picked from commit[[:space:]]*//' -e 's/)//' > already_picked
+ 
+ # Grep for commits that were marked as a candidate for the stable tree.
+-git log --reverse --pretty=%H -i --grep='^[[:space:]]*NOTE: This is a candidate' HEAD..origin/master |\
++git log --reverse --pretty=%H -i --grep='^[[:space:]]*NOTE: .*[Cc]andidate' HEAD..origin/master |\
+ while read sha
+ do
+ 	# Check to see whether the patch is on the ignore list.
+diff --git a/common.py b/common.py
+index 6ff9608..1d618e6 100644
+--- a/common.py
++++ b/common.py
+@@ -100,4 +100,4 @@ def AddOptions(opts):
+ 	opts.Add(BoolOption('quiet', 'DEPRECATED: profile build', 'yes'))
+ 	opts.Add(BoolOption('texture_float', 'enable floating-point textures and renderbuffers', 'no'))
+ 	if host_platform == 'windows':
+-		opts.Add(EnumOption('MSVS_VERSION', 'MS Visual C++ version', None, allowed_values=('7.1', '8.0', '9.0')))
++		opts.Add(EnumOption('MSVC_VERSION', 'MS Visual C++ version', None, allowed_values=('7.1', '8.0', '9.0', '10.0', '11.0')))
+diff --git a/configure.ac b/configure.ac
+index 5701f8a..d75cf65 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1682,6 +1682,9 @@ if test "x$enable_gallium_llvm" = xyes; then
+         if $LLVM_CONFIG --components | grep -q '\<mcjit\>'; then
+             LLVM_COMPONENTS="${LLVM_COMPONENTS} mcjit"
+         fi
++        if $LLVM_CONFIG --components | grep -q '\<oprofilejit\>'; then
++            LLVM_COMPONENTS="${LLVM_COMPONENTS} oprofilejit"
++        fi
+ 
+         if test "x$enable_opencl" = xyes; then
+             LLVM_COMPONENTS="${LLVM_COMPONENTS} ipo linker instrumentation"
+diff --git a/docs/index.html b/docs/index.html
+index 5c92204..5d7229d 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -16,6 +16,23 @@
+ 
+ <h1>News</h1>
+ 
++<h2>February 22, 2013</h2>
++
++<p>
++<a href="relnotes-9.1.html">Mesa 9.1</a> is released.
++This is a new development release.
++See the release notes for more information about the release.
++</p>
++
++
++<h2>February 21, 2013</h2>
++
++<p>
++<a href="relnotes-9.0.3.html">Mesa 9.0.3</a> is released.
++This is a bug fix release.
++</p>
++
++
+ <h2>January 22, 2013</h2>
+ 
+ <p>
+diff --git a/docs/relnotes-9.1.html b/docs/relnotes-9.1.html
+index 24ba9f9..8232ab8 100644
+--- a/docs/relnotes-9.1.html
++++ b/docs/relnotes-9.1.html
+@@ -14,7 +14,7 @@
+ <iframe src="contents.html"></iframe>
+ <div class="content">
+ 
+-<h1>Mesa 9.1 Release Notes / date February 22, 2013</h1>
++<h1>Mesa 9.1 Release Notes / February 22, 2013</h1>
+ 
+ <p>
+ Mesa 9.1 is a new development release.
+@@ -33,7 +33,9 @@ because GL_ARB_compatibility is not supported.
+ 
+ <h2>MD5 checksums</h2>
+ <pre>
+-tbd
++86d40f3056f89949368764bf84aff55e  MesaLib-9.1.tar.gz
++d3891e02215422e120271d976ff1947e  MesaLib-9.1.tar.bz2
++01645f28f53351c23b0beb6c688911d8  MesaLib-9.1.zip
+ </pre>
+ 
+ 
+diff --git a/docs/relnotes.html b/docs/relnotes.html
+index e373091..2e11bc4 100644
+--- a/docs/relnotes.html
++++ b/docs/relnotes.html
+@@ -22,6 +22,7 @@ The release notes summarize what's new or changed in each Mesa release.
+ 
+ <ul>
+ <li><a href="relnotes-9.1.html">9.1 release notes</a>
++<li><a href="relnotes-9.0.3.html">9.0.3 release notes</a>
+ <li><a href="relnotes-9.0.2.html">9.0.2 release notes</a>
+ <li><a href="relnotes-9.0.1.html">9.0.1 release notes</a>
+ <li><a href="relnotes-9.0.html">9.0 release notes</a>
+diff --git a/include/pci_ids/i965_pci_ids.h b/include/pci_ids/i965_pci_ids.h
+index 09dca5b..1e388f8 100644
+--- a/include/pci_ids/i965_pci_ids.h
++++ b/include/pci_ids/i965_pci_ids.h
+@@ -53,12 +53,12 @@ CHIPSET(0x0A26, HASWELL_ULT_M_GT2_PLUS, hsw_gt2)
+ CHIPSET(0x0A0A, HASWELL_ULT_S_GT1, hsw_gt1)
+ CHIPSET(0x0A1A, HASWELL_ULT_S_GT2, hsw_gt2)
+ CHIPSET(0x0A2A, HASWELL_ULT_S_GT2_PLUS, hsw_gt2)
+-CHIPSET(0x0D12, HASWELL_CRW_GT1, hsw_gt1)
+-CHIPSET(0x0D22, HASWELL_CRW_GT2, hsw_gt2)
+-CHIPSET(0x0D32, HASWELL_CRW_GT2_PLUS, hsw_gt2)
+-CHIPSET(0x0D16, HASWELL_CRW_M_GT1, hsw_gt1)
+-CHIPSET(0x0D26, HASWELL_CRW_M_GT2, hsw_gt2)
+-CHIPSET(0x0D36, HASWELL_CRW_M_GT2_PLUS, hsw_gt2)
+-CHIPSET(0x0D1A, HASWELL_CRW_S_GT1, hsw_gt1)
+-CHIPSET(0x0D2A, HASWELL_CRW_S_GT2, hsw_gt2)
+-CHIPSET(0x0D3A, HASWELL_CRW_S_GT2_PLUS, hsw_gt2)
++CHIPSET(0x0D02, HASWELL_CRW_GT1, hsw_gt1)
++CHIPSET(0x0D12, HASWELL_CRW_GT2, hsw_gt2)
++CHIPSET(0x0D22, HASWELL_CRW_GT2_PLUS, hsw_gt2)
++CHIPSET(0x0D06, HASWELL_CRW_M_GT1, hsw_gt1)
++CHIPSET(0x0D16, HASWELL_CRW_M_GT2, hsw_gt2)
++CHIPSET(0x0D26, HASWELL_CRW_M_GT2_PLUS, hsw_gt2)
++CHIPSET(0x0D0A, HASWELL_CRW_S_GT1, hsw_gt1)
++CHIPSET(0x0D1A, HASWELL_CRW_S_GT2, hsw_gt2)
++CHIPSET(0x0D2A, HASWELL_CRW_S_GT2_PLUS, hsw_gt2)
+diff --git a/include/pci_ids/r600_pci_ids.h b/include/pci_ids/r600_pci_ids.h
+index 7ceb820..9c9bab2 100644
+--- a/include/pci_ids/r600_pci_ids.h
++++ b/include/pci_ids/r600_pci_ids.h
+@@ -298,6 +298,10 @@ CHIPSET(0x9907, ARUBA_9907, ARUBA)
+ CHIPSET(0x9908, ARUBA_9908, ARUBA)
+ CHIPSET(0x9909, ARUBA_9909, ARUBA)
+ CHIPSET(0x990A, ARUBA_990A, ARUBA)
++CHIPSET(0x990B, ARUBA_990B, ARUBA)
++CHIPSET(0x990C, ARUBA_990C, ARUBA)
++CHIPSET(0x990D, ARUBA_990D, ARUBA)
++CHIPSET(0x990E, ARUBA_990E, ARUBA)
+ CHIPSET(0x990F, ARUBA_990F, ARUBA)
+ CHIPSET(0x9910, ARUBA_9910, ARUBA)
+ CHIPSET(0x9913, ARUBA_9913, ARUBA)
+@@ -309,6 +313,13 @@ CHIPSET(0x9991, ARUBA_9991, ARUBA)
+ CHIPSET(0x9992, ARUBA_9992, ARUBA)
+ CHIPSET(0x9993, ARUBA_9993, ARUBA)
+ CHIPSET(0x9994, ARUBA_9994, ARUBA)
++CHIPSET(0x9995, ARUBA_9995, ARUBA)
++CHIPSET(0x9996, ARUBA_9996, ARUBA)
++CHIPSET(0x9997, ARUBA_9997, ARUBA)
++CHIPSET(0x9998, ARUBA_9998, ARUBA)
++CHIPSET(0x9999, ARUBA_9999, ARUBA)
++CHIPSET(0x999A, ARUBA_999A, ARUBA)
++CHIPSET(0x999B, ARUBA_999B, ARUBA)
+ CHIPSET(0x99A0, ARUBA_99A0, ARUBA)
+ CHIPSET(0x99A2, ARUBA_99A2, ARUBA)
+ CHIPSET(0x99A4, ARUBA_99A4, ARUBA)
+diff --git a/scons/gallium.py b/scons/gallium.py
+index 4b51b6e..b28be5d 100755
+--- a/scons/gallium.py
++++ b/scons/gallium.py
+@@ -289,6 +289,7 @@ def generate(env):
+                 '_CRT_SECURE_NO_DEPRECATE',
+                 '_SCL_SECURE_NO_WARNINGS',
+                 '_SCL_SECURE_NO_DEPRECATE',
++                '_ALLOW_KEYWORD_MACROS',
+             ]
+         if env['build'] in ('debug', 'checked'):
+             cppdefines += ['_DEBUG']
+@@ -401,6 +402,8 @@ def generate(env):
+               '/Oi', # enable intrinsic functions
+             ]
+         else:
++            if distutils.version.LooseVersion(env['MSVC_VERSION']) < distutils.version.LooseVersion('11.0'):
++                print 'scons: warning: Visual Studio versions prior to 2012 are known to produce incorrect code when optimizations are enabled ( https://bugs.freedesktop.org/show_bug.cgi?id=58718 )'
+             ccflags += [
+                 '/O2', # optimize for speed
+             ]
+diff --git a/scons/llvm.py b/scons/llvm.py
+index e1ed760..7f00c6c 100644
+--- a/scons/llvm.py
++++ b/scons/llvm.py
+@@ -92,7 +92,19 @@ def generate(env):
+             'HAVE_STDINT_H',
+         ])
+         env.Prepend(LIBPATH = [os.path.join(llvm_dir, 'lib')])
+-        if llvm_version >= distutils.version.LooseVersion('3.0'):
++        if llvm_version >= distutils.version.LooseVersion('3.2'):
++            # 3.2
++            env.Prepend(LIBS = [
++                'LLVMBitWriter', 'LLVMX86Disassembler', 'LLVMX86AsmParser',
++                'LLVMX86CodeGen', 'LLVMX86Desc', 'LLVMSelectionDAG',
++                'LLVMAsmPrinter', 'LLVMMCParser', 'LLVMX86AsmPrinter',
++                'LLVMX86Utils', 'LLVMX86Info', 'LLVMJIT',
++                'LLVMExecutionEngine', 'LLVMCodeGen', 'LLVMScalarOpts',
++                'LLVMInstCombine', 'LLVMTransformUtils', 'LLVMipa',
++                'LLVMAnalysis', 'LLVMTarget', 'LLVMMC', 'LLVMCore',
++                'LLVMSupport', 'LLVMRuntimeDyld', 'LLVMObject'
++            ])
++        elif llvm_version >= distutils.version.LooseVersion('3.0'):
+             # 3.0
+             env.Prepend(LIBS = [
+                 'LLVMBitWriter', 'LLVMX86Disassembler', 'LLVMX86AsmParser',
+diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
+index 351fbf4..e17d5be 100644
+--- a/src/egl/drivers/dri2/egl_dri2.c
++++ b/src/egl/drivers/dri2/egl_dri2.c
+@@ -195,7 +195,14 @@ dri2_add_config(_EGLDisplay *disp, const __DRIconfig *dri_config, int id,
+       for (i = 0; attr_list[i] != EGL_NONE; i += 2)
+          _eglSetConfigKey(&base, attr_list[i], attr_list[i+1]);
+ 
+-   if (depth > 0 && depth != base.BufferSize)
++   /* Allow a 24-bit RGB visual to match a 32-bit RGBA EGLConfig.  Otherwise
++    * it will only match a 32-bit RGBA visual.  On a composited window manager
++    * on X11, this will make all of the EGLConfigs with destination alpha get
++    * blended by the compositor.  This is probably not what the application
++    * wants... especially on drivers that only have 32-bit RGBA EGLConfigs!
++    */
++   if (depth > 0 && depth != base.BufferSize
++       && !(depth == 24 && base.BufferSize == 32))
+       return NULL;
+ 
+    if (rgba_masks && memcmp(rgba_masks, dri_masks, sizeof(dri_masks)))
+diff --git a/src/gallium/auxiliary/draw/draw_pipe_clip.c b/src/gallium/auxiliary/draw/draw_pipe_clip.c
+index 7b879c4..3110809 100644
+--- a/src/gallium/auxiliary/draw/draw_pipe_clip.c
++++ b/src/gallium/auxiliary/draw/draw_pipe_clip.c
+@@ -167,12 +167,17 @@ static void interp( const struct clip_stage *clip,
+    {
+       int k;
+       t_nopersp = t;
+-      for (k = 0; k < 2; k++)
++      /* find either in.x != out.x or in.y != out.y */
++      for (k = 0; k < 2; k++) {
+          if (in->clip[k] != out->clip[k]) {
+-            t_nopersp = (dst->clip[k] - out->clip[k]) /
+-               (in->clip[k] - out->clip[k]);
++            /* do divide by W, then compute linear interpolation factor */
++            float in_coord = in->clip[k] / in->clip[3];
++            float out_coord = out->clip[k] / out->clip[3];
++            float dst_coord = dst->clip[k] / dst->clip[3];
++            t_nopersp = (dst_coord - out_coord) / (in_coord - out_coord);
+             break;
+          }
++      }
+    }
+ 
+    /* Other attributes
+diff --git a/src/gallium/auxiliary/draw/draw_pipe_offset.c b/src/gallium/auxiliary/draw/draw_pipe_offset.c
+index 3da52b1..3578525 100644
+--- a/src/gallium/auxiliary/draw/draw_pipe_offset.c
++++ b/src/gallium/auxiliary/draw/draw_pipe_offset.c
+@@ -127,10 +127,44 @@ static void offset_first_tri( struct draw_stage *stage,
+ 			      struct prim_header *header )
+ {
+    struct offset_stage *offset = offset_stage(stage);
++   const struct pipe_rasterizer_state *rast = stage->draw->rasterizer;
++   unsigned fill_mode = rast->fill_front;
++   boolean do_offset;
++
++   if (rast->fill_back != rast->fill_front) {
++      /* Need to check for back-facing triangle */
++      boolean ccw = header->det < 0.0f;
++      if (ccw != rast->front_ccw)
++         fill_mode = rast->fill_back;
++   }
++
++   /* Now determine if we need to do offsetting for the point/line/fill mode */
++   switch (fill_mode) {
++   case PIPE_POLYGON_MODE_FILL:
++      do_offset = rast->offset_tri;
++      break;
++   case PIPE_POLYGON_MODE_LINE:
++      do_offset = rast->offset_line;
++      break;
++   case PIPE_POLYGON_MODE_POINT:
++      do_offset = rast->offset_point;
++      break;
++   default:
++      assert(!"invalid fill_mode in offset_first_tri()");
++      do_offset = rast->offset_tri;
++   }
++
++   if (do_offset) {
++      offset->scale = rast->offset_scale;
++      offset->clamp = rast->offset_clamp;
++      offset->units = (float) (rast->offset_units * stage->draw->mrd);
++   }
++   else {
++      offset->scale = 0.0f;
++      offset->clamp = 0.0f;
++      offset->units = 0.0f;
++   }
+ 
+-   offset->units = (float) (stage->draw->rasterizer->offset_units * stage->draw->mrd);
+-   offset->scale = stage->draw->rasterizer->offset_scale;
+-   offset->clamp = stage->draw->rasterizer->offset_clamp;
+ 
+    stage->tri = offset_tri;
+    stage->tri( stage, header );
+diff --git a/src/gallium/auxiliary/util/u_range.h b/src/gallium/auxiliary/util/u_range.h
+new file mode 100644
+index 0000000..4b1d0d1
+--- /dev/null
++++ b/src/gallium/auxiliary/util/u_range.h
+@@ -0,0 +1,89 @@
++/*
++ * Copyright 2013 Marek Olšák <maraeo@gmail.com>
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * on the rights to use, copy, modify, merge, publish, distribute, sub
++ * license, and/or sell copies of the Software, and to permit persons to whom
++ * the Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
++ * THE AUTHOR(S) AND/OR THEIR SUPPLIERS BE LIABLE FOR ANY CLAIM,
++ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
++ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
++ * USE OR OTHER DEALINGS IN THE SOFTWARE. */
++
++/**
++ * @file
++ * 1D integer range, capable of the union and intersection operations.
++ *
++ * It only maintains a single interval which is extended when the union is
++ * done. This implementation is partially thread-safe (readers are not
++ * protected by a lock).
++ *
++ * @author Marek Olšák
++ */
++
++#ifndef U_RANGE_H
++#define U_RANGE_H
++
++#include "os/os_thread.h"
++
++struct util_range {
++   unsigned start; /* inclusive */
++   unsigned end; /* exclusive */
++
++   /* for the range to be consistent with multiple contexts: */
++   pipe_mutex write_mutex;
++};
++
++
++static INLINE void
++util_range_set_empty(struct util_range *range)
++{
++   range->start = ~0;
++   range->end = 0;
++}
++
++/* This is like a union of two sets. */
++static INLINE void
++util_range_add(struct util_range *range, unsigned start, unsigned end)
++{
++   if (start < range->start || end > range->end) {
++      pipe_mutex_lock(range->write_mutex);
++      range->start = MIN2(start, range->start);
++      range->end = MAX2(end, range->end);
++      pipe_mutex_unlock(range->write_mutex);
++   }
++}
++
++static INLINE boolean
++util_ranges_intersect(struct util_range *range, unsigned start, unsigned end)
++{
++   return MAX2(start, range->start) < MIN2(end, range->end);
++}
++
++
++/* Init/deinit */
++
++static INLINE void
++util_range_init(struct util_range *range)
++{
++   pipe_mutex_init(range->write_mutex);
++   util_range_set_empty(range);
++}
++
++static INLINE void
++util_range_destroy(struct util_range *range)
++{
++   pipe_mutex_destroy(range->write_mutex);
++}
++
++#endif
+diff --git a/src/gallium/drivers/llvmpipe/lp_state_rasterizer.c b/src/gallium/drivers/llvmpipe/lp_state_rasterizer.c
+index 40ccaf6..ca8df71 100644
+--- a/src/gallium/drivers/llvmpipe/lp_state_rasterizer.c
++++ b/src/gallium/drivers/llvmpipe/lp_state_rasterizer.c
+@@ -46,6 +46,10 @@ clear_flags(struct pipe_rasterizer_state *rast)
+ {
+    rast->light_twoside = 0;
+    rast->offset_tri = 0;
++   rast->offset_line = 0;
++   rast->offset_point = 0;
++   rast->offset_units = 0.0f;
++   rast->offset_scale = 0.0f;
+ }
+ 
+ 
+@@ -74,6 +78,8 @@ llvmpipe_create_rasterizer_state(struct pipe_context *pipe,
+     */
+    need_pipeline = (rast->fill_front != PIPE_POLYGON_MODE_FILL ||
+ 		    rast->fill_back != PIPE_POLYGON_MODE_FILL ||
++                    rast->offset_point ||
++                    rast->offset_line ||
+ 		    rast->point_smooth ||
+ 		    rast->line_smooth ||
+ 		    rast->line_stipple_enable ||
+diff --git a/src/gallium/drivers/llvmpipe/lp_texture.c b/src/gallium/drivers/llvmpipe/lp_texture.c
+index 2e9c6bf..f17a04a 100644
+--- a/src/gallium/drivers/llvmpipe/lp_texture.c
++++ b/src/gallium/drivers/llvmpipe/lp_texture.c
+@@ -295,7 +295,9 @@ llvmpipe_resource_create(struct pipe_screen *_screen,
+    /* assert(lpr->base.bind); */
+ 
+    if (resource_is_texture(&lpr->base)) {
+-      if (lpr->base.bind & PIPE_BIND_DISPLAY_TARGET) {
++      if (lpr->base.bind & (PIPE_BIND_DISPLAY_TARGET |
++                            PIPE_BIND_SCANOUT |
++                            PIPE_BIND_SHARED)) {
+          /* displayable surface */
+          if (!llvmpipe_displaytarget_layout(screen, lpr))
+             goto fail;
+diff --git a/src/gallium/drivers/r600/evergreen_hw_context.c b/src/gallium/drivers/r600/evergreen_hw_context.c
+index bb47530..bb43353 100644
+--- a/src/gallium/drivers/r600/evergreen_hw_context.c
++++ b/src/gallium/drivers/r600/evergreen_hw_context.c
+@@ -283,4 +283,7 @@ void evergreen_dma_copy(struct r600_context *rctx,
+ 		src_offset += csize << shift;
+ 		size -= csize;
+ 	}
++
++	util_range_add(&rdst->valid_buffer_range, dst_offset,
++		       dst_offset + size);
+ }
+diff --git a/src/gallium/drivers/r600/evergreen_state.c b/src/gallium/drivers/r600/evergreen_state.c
+index 389ad3c..804c037 100644
+--- a/src/gallium/drivers/r600/evergreen_state.c
++++ b/src/gallium/drivers/r600/evergreen_state.c
+@@ -808,6 +808,7 @@ static void *evergreen_create_dsa_state(struct pipe_context *ctx,
+ 	dsa->valuemask[1] = state->stencil[1].valuemask;
+ 	dsa->writemask[0] = state->stencil[0].writemask;
+ 	dsa->writemask[1] = state->stencil[1].writemask;
++	dsa->zwritemask = state->depth.writemask;
+ 
+ 	db_depth_control = S_028800_Z_ENABLE(state->depth.enabled) |
+ 		S_028800_Z_WRITE_ENABLE(state->depth.writemask) |
+@@ -1321,6 +1322,10 @@ void evergreen_init_color_surface_rat(struct r600_context *rctx,
+ 	 * elements. */
+ 	surf->cb_color_dim = pipe_buffer->width0;
+ 
++	/* Set the buffer range the GPU will have access to: */
++	util_range_add(&r600_resource(pipe_buffer)->valid_buffer_range,
++		       0, pipe_buffer->width0);
++
+ 	surf->cb_color_cmask = surf->cb_color_base;
+ 	surf->cb_color_cmask_slice = 0;
+ 	surf->cb_color_fmask = surf->cb_color_base;
+@@ -1405,10 +1410,15 @@ void evergreen_init_color_surface(struct r600_context *rctx,
+ 			S_028C74_NON_DISP_TILING_ORDER(non_disp_tiling) |
+ 		        S_028C74_FMASK_BANK_HEIGHT(fmask_bankh);
+ 
+-	if (rctx->chip_class == CAYMAN && rtex->resource.b.b.nr_samples > 1) {
+-		unsigned log_samples = util_logbase2(rtex->resource.b.b.nr_samples);
+-		color_attrib |= S_028C74_NUM_SAMPLES(log_samples) |
+-				S_028C74_NUM_FRAGMENTS(log_samples);
++	if (rctx->chip_class == CAYMAN) {
++		color_attrib |=	S_028C74_FORCE_DST_ALPHA_1(desc->swizzle[3] ==
++							   UTIL_FORMAT_SWIZZLE_1);
++
++		if (rtex->resource.b.b.nr_samples > 1) {
++			unsigned log_samples = util_logbase2(rtex->resource.b.b.nr_samples);
++			color_attrib |= S_028C74_NUM_SAMPLES(log_samples) |
++					S_028C74_NUM_FRAGMENTS(log_samples);
++		}
+ 	}
+ 
+ 	ntype = V_028C70_NUMBER_UNORM;
+@@ -1647,6 +1657,11 @@ static void evergreen_set_framebuffer_state(struct pipe_context *ctx,
+ 	}
+ 	if (rctx->framebuffer.state.zsbuf) {
+ 		rctx->flags |= R600_CONTEXT_WAIT_3D_IDLE | R600_CONTEXT_FLUSH_AND_INV;
++
++		rtex = (struct r600_texture*)rctx->framebuffer.state.zsbuf->texture;
++		if (rtex->htile) {
++			rctx->flags |= R600_CONTEXT_FLUSH_AND_INV_DB_META;
++		}
+ 	}
+ 
+ 	util_copy_framebuffer_state(&rctx->framebuffer.state, state);
+@@ -2222,7 +2237,14 @@ static void evergreen_emit_db_misc_state(struct r600_context *rctx, struct r600_
+ 		}
+ 		db_render_override |= S_02800C_NOOP_CULL_DISABLE(1);
+ 	}
+-	if (rctx->db_state.rsurf && rctx->db_state.rsurf->htile_enabled) {
++	/* FIXME we should be able to use hyperz even if we are not writing to
++	 * zbuffer but somehow this trigger GPU lockup. See :
++	 *
++	 * https://bugs.freedesktop.org/show_bug.cgi?id=60848
++	 *
++	 * Disable hyperz for now if not writing to zbuffer.
++	 */
++	if (rctx->db_state.rsurf && rctx->db_state.rsurf->htile_enabled && rctx->zwritemask) {
+ 		/* FORCE_OFF means HiZ/HiS are determined by DB_SHADER_CONTROL */
+ 		db_render_override |= S_02800C_FORCE_HIZ_ENABLE(V_02800C_FORCE_OFF);
+ 		/* This is to fix a lockup when hyperz and alpha test are enabled at
+@@ -3654,6 +3676,17 @@ boolean evergreen_dma_blit(struct pipe_context *ctx,
+ 		return FALSE;
+ 	}
+ 
++	/* 128 bpp surfaces require non_disp_tiling for both
++	 * tiled and linear buffers on cayman.  However, async
++	 * DMA only supports it on the tiled side.  As such
++	 * the tile order is backwards after a L2T/T2L packet.
++	 */
++	if ((rctx->chip_class == CAYMAN) &&
++	    (src_mode != dst_mode) &&
++	    (util_format_get_blocksize(src->format) >= 16)) {
++		return FALSE;
++	}
++
+ 	if (src_mode == dst_mode) {
+ 		uint64_t dst_offset, src_offset;
+ 		/* simple dma blit would do NOTE code here assume :
+diff --git a/src/gallium/drivers/r600/r600.h b/src/gallium/drivers/r600/r600.h
+index 11dbb3b..0115293 100644
+--- a/src/gallium/drivers/r600/r600.h
++++ b/src/gallium/drivers/r600/r600.h
+@@ -28,6 +28,7 @@
+ 
+ #include "../../winsys/radeon/drm/radeon_winsys.h"
+ #include "util/u_double_list.h"
++#include "util/u_range.h"
+ #include "util/u_transfer.h"
+ 
+ #define R600_ERR(fmt, args...) \
+@@ -50,6 +51,16 @@ struct r600_resource {
+ 
+ 	/* Resource state. */
+ 	unsigned			domains;
++
++	/* The buffer range which is initialized (with a write transfer,
++	 * streamout, DMA, or as a random access target). The rest of
++	 * the buffer is considered invalid and can be mapped unsynchronized.
++	 *
++	 * This allows unsychronized mapping of a buffer range which hasn't
++	 * been used yet. It's for applications which forget to use
++	 * the unsynchronized map flag and expect the driver to figure it out.
++         */
++	struct util_range		valid_buffer_range;
+ };
+ 
+ #define R600_BLOCK_MAX_BO		32
+@@ -152,6 +163,7 @@ struct r600_so_target {
+ #define R600_CONTEXT_FLUSH_AND_INV		(1 << 4)
+ #define R600_CONTEXT_FLUSH_AND_INV_CB_META	(1 << 5)
+ #define R600_CONTEXT_PS_PARTIAL_FLUSH		(1 << 6)
++#define R600_CONTEXT_FLUSH_AND_INV_DB_META      (1 << 7)
+ 
+ struct r600_context;
+ struct r600_screen;
+diff --git a/src/gallium/drivers/r600/r600_asm.c b/src/gallium/drivers/r600/r600_asm.c
+index f25c6aa..bda425c 100644
+--- a/src/gallium/drivers/r600/r600_asm.c
++++ b/src/gallium/drivers/r600/r600_asm.c
+@@ -322,6 +322,7 @@ int r600_bytecode_add_output(struct r600_bytecode *bc, const struct r600_bytecod
+ 		output->swizzle_y == bc->cf_last->output.swizzle_y &&
+ 		output->swizzle_z == bc->cf_last->output.swizzle_z &&
+ 		output->swizzle_w == bc->cf_last->output.swizzle_w &&
++		output->comp_mask == bc->cf_last->output.comp_mask &&
+ 		(output->burst_count + bc->cf_last->output.burst_count) <= 16) {
+ 
+ 		if ((output->gpr + output->burst_count) == bc->cf_last->output.gpr &&
+@@ -873,12 +874,6 @@ static int check_and_set_bank_swizzle(struct r600_bytecode *bc,
+ 	bank_swizzle[4] = SQ_ALU_SCL_210;
+ 	while(bank_swizzle[4] <= SQ_ALU_SCL_221) {
+ 
+-		if (max_slots == 4) {
+-			for (i = 0; i < max_slots; i++) {
+-				if (bank_swizzle[i] == SQ_ALU_VEC_210)
+-				  return -1;
+-			}
+-		}
+ 		init_bank_swizzle(&bs);
+ 		if (scalar_only == false) {
+ 			for (i = 0; i < 4; i++) {
+@@ -910,8 +905,10 @@ static int check_and_set_bank_swizzle(struct r600_bytecode *bc,
+ 					bank_swizzle[i]++;
+ 					if (bank_swizzle[i] <= SQ_ALU_VEC_210)
+ 						break;
+-					else
++					else if (i < max_slots - 1)
+ 						bank_swizzle[i] = SQ_ALU_VEC_012;
++					else
++						return -1;
+ 				}
+ 			}
+ 		}
+diff --git a/src/gallium/drivers/r600/r600_buffer.c b/src/gallium/drivers/r600/r600_buffer.c
+index 6df0d91..bb85fc1 100644
+--- a/src/gallium/drivers/r600/r600_buffer.c
++++ b/src/gallium/drivers/r600/r600_buffer.c
+@@ -34,6 +34,7 @@ static void r600_buffer_destroy(struct pipe_screen *screen,
+ {
+ 	struct r600_resource *rbuffer = r600_resource(buf);
+ 
++	util_range_destroy(&rbuffer->valid_buffer_range);
+ 	pb_reference(&rbuffer->buf, NULL);
+ 	FREE(rbuffer);
+ }
+@@ -98,6 +99,14 @@ static void *r600_buffer_transfer_map(struct pipe_context *ctx,
+ 
+ 	assert(box->x + box->width <= resource->width0);
+ 
++	/* See if the buffer range being mapped has never been initialized,
++	 * in which case it can be mapped unsynchronized. */
++	if (!(usage & PIPE_TRANSFER_UNSYNCHRONIZED) &&
++	    usage & PIPE_TRANSFER_WRITE &&
++	    !util_ranges_intersect(&rbuffer->valid_buffer_range, box->x, box->x + box->width)) {
++		usage |= PIPE_TRANSFER_UNSYNCHRONIZED;
++	}
++
+ 	if (usage & PIPE_TRANSFER_DISCARD_WHOLE_RESOURCE &&
+ 	    !(usage & PIPE_TRANSFER_UNSYNCHRONIZED)) {
+ 		assert(usage & PIPE_TRANSFER_WRITE);
+@@ -178,6 +187,7 @@ static void r600_buffer_transfer_unmap(struct pipe_context *pipe,
+ {
+ 	struct r600_context *rctx = (struct r600_context*)pipe;
+ 	struct r600_transfer *rtransfer = (struct r600_transfer*)transfer;
++	struct r600_resource *rbuffer = r600_resource(transfer->resource);
+ 
+ 	if (rtransfer->staging) {
+ 		struct pipe_resource *dst, *src;
+@@ -189,7 +199,7 @@ static void r600_buffer_transfer_unmap(struct pipe_context *pipe,
+ 		doffset = transfer->box.x;
+ 		soffset = rtransfer->offset + transfer->box.x % R600_MAP_BUFFER_ALIGNMENT;
+ 		/* Copy the staging buffer into the original one. */
+-		if (rctx->rings.dma.cs && !(size % 4) && !(doffset % 4) && !(soffset)) {
++		if (rctx->rings.dma.cs && !(size % 4) && !(doffset % 4) && !(soffset % 4)) {
+ 			if (rctx->screen->chip_class >= EVERGREEN) {
+ 				evergreen_dma_copy(rctx, dst, src, doffset, soffset, size);
+ 			} else {
+@@ -203,6 +213,11 @@ static void r600_buffer_transfer_unmap(struct pipe_context *pipe,
+ 		}
+ 		pipe_resource_reference((struct pipe_resource**)&rtransfer->staging, NULL);
+ 	}
++
++	if (transfer->usage & PIPE_TRANSFER_WRITE) {
++		util_range_add(&rbuffer->valid_buffer_range, transfer->box.x,
++			       transfer->box.x + transfer->box.width);
++	}
+ 	util_slab_free(&rctx->pool_transfers, transfer);
+ }
+ 
+@@ -259,6 +274,7 @@ bool r600_init_resource(struct r600_screen *rscreen,
+ 
+ 	res->cs_buf = rscreen->ws->buffer_get_cs_handle(res->buf);
+ 	res->domains = domains;
++	util_range_set_empty(&res->valid_buffer_range);
+ 	return true;
+ }
+ 
+@@ -275,6 +291,7 @@ struct pipe_resource *r600_buffer_create(struct pipe_screen *screen,
+ 	pipe_reference_init(&rbuffer->b.b.reference, 1);
+ 	rbuffer->b.b.screen = screen;
+ 	rbuffer->b.vtbl = &r600_buffer_vtbl;
++	util_range_init(&rbuffer->valid_buffer_range);
+ 
+ 	if (!r600_init_resource(rscreen, rbuffer, templ->width0, alignment, TRUE, templ->usage)) {
+ 		FREE(rbuffer);
+diff --git a/src/gallium/drivers/r600/r600_hw_context.c b/src/gallium/drivers/r600/r600_hw_context.c
+index 9091ec0..322381a 100644
+--- a/src/gallium/drivers/r600/r600_hw_context.c
++++ b/src/gallium/drivers/r600/r600_hw_context.c
+@@ -648,6 +648,12 @@ void r600_flush_emit(struct r600_context *rctx)
+ 		cs->buf[cs->cdw++] = EVENT_TYPE(EVENT_TYPE_FLUSH_AND_INV_CB_META) | EVENT_INDEX(0);
+ 	}
+ 
++	if (rctx->chip_class >= R700 &&
++	    (rctx->flags & R600_CONTEXT_FLUSH_AND_INV_DB_META)) {
++		cs->buf[cs->cdw++] = PKT3(PKT3_EVENT_WRITE, 0, 0);
++		cs->buf[cs->cdw++] = EVENT_TYPE(EVENT_TYPE_FLUSH_AND_INV_DB_META) | EVENT_INDEX(0);
++	}
++
+ 	if (rctx->flags & R600_CONTEXT_FLUSH_AND_INV) {
+ 		cs->buf[cs->cdw++] = PKT3(PKT3_EVENT_WRITE, 0, 0);
+ 		cs->buf[cs->cdw++] = EVENT_TYPE(EVENT_TYPE_CACHE_FLUSH_AND_INV_EVENT) | EVENT_INDEX(0);
+@@ -742,6 +748,7 @@ void r600_context_flush(struct r600_context *ctx, unsigned flags)
+ 	 */
+ 	ctx->flags |= R600_CONTEXT_FLUSH_AND_INV |
+ 		      R600_CONTEXT_FLUSH_AND_INV_CB_META |
++		      R600_CONTEXT_FLUSH_AND_INV_DB_META |
+ 		      R600_CONTEXT_WAIT_3D_IDLE |
+ 		      R600_CONTEXT_WAIT_CP_DMA_IDLE;
+ 
+@@ -1119,6 +1126,7 @@ void r600_cp_dma_copy_buffer(struct r600_context *rctx,
+ 	rctx->flags |= R600_CONTEXT_INVAL_READ_CACHES |
+ 		       R600_CONTEXT_FLUSH_AND_INV |
+ 		       R600_CONTEXT_FLUSH_AND_INV_CB_META |
++		       R600_CONTEXT_FLUSH_AND_INV_DB_META |
+ 		       R600_CONTEXT_STREAMOUT_FLUSH |
+ 		       R600_CONTEXT_WAIT_3D_IDLE;
+ 
+@@ -1164,6 +1172,9 @@ void r600_cp_dma_copy_buffer(struct r600_context *rctx,
+ 
+ 	/* Invalidate the read caches. */
+ 	rctx->flags |= R600_CONTEXT_INVAL_READ_CACHES;
++
++	util_range_add(&r600_resource(dst)->valid_buffer_range, dst_offset,
++		       dst_offset + size);
+ }
+ 
+ void r600_need_dma_space(struct r600_context *ctx, unsigned num_dw)
+@@ -1210,4 +1221,7 @@ void r600_dma_copy(struct r600_context *rctx,
+ 		src_offset += csize << shift;
+ 		size -= csize;
+ 	}
++
++	util_range_add(&rdst->valid_buffer_range, dst_offset,
++		       dst_offset + size);
+ }
+diff --git a/src/gallium/drivers/r600/r600_hw_context_priv.h b/src/gallium/drivers/r600/r600_hw_context_priv.h
+index 692e6ec..3b50f68 100644
+--- a/src/gallium/drivers/r600/r600_hw_context_priv.h
++++ b/src/gallium/drivers/r600/r600_hw_context_priv.h
+@@ -29,7 +29,7 @@
+ #include "r600_pipe.h"
+ 
+ /* the number of CS dwords for flushing and drawing */
+-#define R600_MAX_FLUSH_CS_DWORDS	12
++#define R600_MAX_FLUSH_CS_DWORDS	16
+ #define R600_MAX_DRAW_CS_DWORDS		34
+ #define R600_TRACE_CS_DWORDS		7
+ 
+diff --git a/src/gallium/drivers/r600/r600_llvm.c b/src/gallium/drivers/r600/r600_llvm.c
+index fa66fcc..7a41688 100644
+--- a/src/gallium/drivers/r600/r600_llvm.c
++++ b/src/gallium/drivers/r600/r600_llvm.c
+@@ -38,8 +38,12 @@ static LLVMValueRef llvm_fetch_const(
+ 		LLVMValueRef index = LLVMBuildLoad(bld_base->base.gallivm->builder, bld->addr[reg->Indirect.Index][reg->Indirect.SwizzleX], "");
+ 		offset[1] = LLVMBuildAdd(bld_base->base.gallivm->builder, offset[1], index, "");
+ 	}
++	unsigned ConstantAddressSpace = CONSTANT_BUFFER_0_ADDR_SPACE ;
++	if (reg->Register.Dimension) {
++		ConstantAddressSpace += reg->Dimension.Index;
++	}
+ 	LLVMTypeRef const_ptr_type = LLVMPointerType(LLVMArrayType(LLVMVectorType(bld_base->base.elem_type, 4), 1024),
+-							CONSTANT_BUFFER_0_ADDR_SPACE);
++							ConstantAddressSpace);
+ 	LLVMValueRef const_ptr = LLVMBuildIntToPtr(bld_base->base.gallivm->builder, lp_build_const_int32(bld_base->base.gallivm, 0), const_ptr_type, "");
+ 	LLVMValueRef ptr = LLVMBuildGEP(bld_base->base.gallivm->builder, const_ptr, offset, 2, "");
+ 	LLVMValueRef cvecval = LLVMBuildLoad(bld_base->base.gallivm->builder, ptr, "");
+diff --git a/src/gallium/drivers/r600/r600_pipe.c b/src/gallium/drivers/r600/r600_pipe.c
+index a59578d..a7973a5 100644
+--- a/src/gallium/drivers/r600/r600_pipe.c
++++ b/src/gallium/drivers/r600/r600_pipe.c
+@@ -22,6 +22,7 @@
+  */
+ #include "r600_pipe.h"
+ #include "r600_public.h"
++#include "r600d.h"
+ 
+ #include <errno.h>
+ #include "pipe/p_shader_tokens.h"
+@@ -165,12 +166,23 @@ static void r600_flush_gfx_ring(void *ctx, unsigned flags)
+ static void r600_flush_dma_ring(void *ctx, unsigned flags)
+ {
+ 	struct r600_context *rctx = (struct r600_context *)ctx;
++	struct radeon_winsys_cs *cs = rctx->rings.dma.cs;
++	unsigned padding_dw, i;
+ 
+-	if (!rctx->rings.dma.cs->cdw) {
++	if (!cs->cdw) {
+ 		return;
+ 	}
++
++	/* Pad the DMA CS to a multiple of 8 dwords. */
++	padding_dw = 8 - cs->cdw % 8;
++	if (padding_dw < 8) {
++		for (i = 0; i < padding_dw; i++) {
++			cs->buf[cs->cdw++] = DMA_PACKET(DMA_PACKET_NOP, 0, 0, 0);
++		}
++	}
++
+ 	rctx->rings.dma.flushing = true;
+-	rctx->ws->cs_flush(rctx->rings.dma.cs, flags);
++	rctx->ws->cs_flush(cs, flags);
+ 	rctx->rings.dma.flushing = false;
+ }
+ 
+diff --git a/src/gallium/drivers/r600/r600_pipe.h b/src/gallium/drivers/r600/r600_pipe.h
+index ec59c92..1be4321 100644
+--- a/src/gallium/drivers/r600/r600_pipe.h
++++ b/src/gallium/drivers/r600/r600_pipe.h
+@@ -298,7 +298,8 @@ struct r600_dsa_state {
+ 	unsigned			alpha_ref;
+ 	ubyte				valuemask[2];
+ 	ubyte				writemask[2];
+-	unsigned                        sx_alpha_test_control;
++	unsigned			zwritemask;
++	unsigned			sx_alpha_test_control;
+ };
+ 
+ struct r600_pipe_shader;
+@@ -513,6 +514,7 @@ struct r600_context {
+ 	bool				alpha_to_one;
+ 	bool				force_blend_disable;
+ 	boolean				dual_src_blend;
++	unsigned			zwritemask;
+ 
+ 	/* Index buffer. */
+ 	struct pipe_index_buffer	index_buffer;
+diff --git a/src/gallium/drivers/r600/r600_state.c b/src/gallium/drivers/r600/r600_state.c
+index 3f165f7..70232fd 100644
+--- a/src/gallium/drivers/r600/r600_state.c
++++ b/src/gallium/drivers/r600/r600_state.c
+@@ -802,6 +802,7 @@ static void *r600_create_dsa_state(struct pipe_context *ctx,
+ 	dsa->valuemask[1] = state->stencil[1].valuemask;
+ 	dsa->writemask[0] = state->stencil[0].writemask;
+ 	dsa->writemask[1] = state->stencil[1].writemask;
++	dsa->zwritemask = state->depth.writemask;
+ 
+ 	db_depth_control = S_028800_Z_ENABLE(state->depth.enabled) |
+ 		S_028800_Z_WRITE_ENABLE(state->depth.writemask) |
+@@ -1515,6 +1516,11 @@ static void r600_set_framebuffer_state(struct pipe_context *ctx,
+ 	}
+ 	if (rctx->framebuffer.state.zsbuf) {
+ 		rctx->flags |= R600_CONTEXT_WAIT_3D_IDLE | R600_CONTEXT_FLUSH_AND_INV;
++
++		rtex = (struct r600_texture*)rctx->framebuffer.state.zsbuf->texture;
++		if (rctx->chip_class >= R700 && rtex->htile) {
++			rctx->flags |= R600_CONTEXT_FLUSH_AND_INV_DB_META;
++		}
+ 	}
+ 
+ 	/* Set the new state. */
+diff --git a/src/gallium/drivers/r600/r600_state_common.c b/src/gallium/drivers/r600/r600_state_common.c
+index 88bb62b..f0e9de3 100644
+--- a/src/gallium/drivers/r600/r600_state_common.c
++++ b/src/gallium/drivers/r600/r600_state_common.c
+@@ -284,6 +284,16 @@ static void r600_bind_dsa_state(struct pipe_context *ctx, void *state)
+ 	ref.valuemask[1] = dsa->valuemask[1];
+ 	ref.writemask[0] = dsa->writemask[0];
+ 	ref.writemask[1] = dsa->writemask[1];
++	if (rctx->zwritemask != dsa->zwritemask) {
++		rctx->zwritemask = dsa->zwritemask;
++		if (rctx->chip_class >= EVERGREEN) {
++			/* work around some issue when not writting to zbuffer
++			 * we are having lockup on evergreen so do not enable
++			 * hyperz when not writting zbuffer
++			 */
++			rctx->db_misc_state.atom.dirty = true;
++		}
++	}
+ 
+ 	r600_set_stencil_ref(ctx, &ref);
+ 
+@@ -972,6 +982,7 @@ r600_create_so_target(struct pipe_context *ctx,
+ {
+ 	struct r600_context *rctx = (struct r600_context *)ctx;
+ 	struct r600_so_target *t;
++	struct r600_resource *rbuffer = (struct r600_resource*)buffer;
+ 
+ 	t = CALLOC_STRUCT(r600_so_target);
+ 	if (!t) {
+@@ -991,6 +1002,9 @@ r600_create_so_target(struct pipe_context *ctx,
+ 	pipe_resource_reference(&t->b.buffer, buffer);
+ 	t->b.buffer_offset = buffer_offset;
+ 	t->b.buffer_size = buffer_size;
++
++	util_range_add(&rbuffer->valid_buffer_range, buffer_offset,
++		       buffer_offset + buffer_size);
+ 	return &t->b;
+ }
+ 
+diff --git a/src/gallium/drivers/r600/r600d.h b/src/gallium/drivers/r600/r600d.h
+index 621e7a1..81e5a6c 100644
+--- a/src/gallium/drivers/r600/r600d.h
++++ b/src/gallium/drivers/r600/r600d.h
+@@ -119,6 +119,7 @@
+ #define EVENT_TYPE_CACHE_FLUSH_AND_INV_EVENT   0x16
+ #define EVENT_TYPE_SO_VGTSTREAMOUT_FLUSH	0x1f
+ #define EVENT_TYPE_SAMPLE_STREAMOUTSTATS	0x20
++#define EVENT_TYPE_FLUSH_AND_INV_DB_META       0x2c /* supported on r700+ */
+ #define EVENT_TYPE_FLUSH_AND_INV_CB_META	46 /* supported on r700+ */
+ #define		EVENT_TYPE(x)                           ((x) << 0)
+ #define		EVENT_INDEX(x)                          ((x) << 8)
+diff --git a/src/gallium/drivers/radeon/radeon_setup_tgsi_llvm.c b/src/gallium/drivers/radeon/radeon_setup_tgsi_llvm.c
+index 0f90991..8902ae4 100644
+--- a/src/gallium/drivers/radeon/radeon_setup_tgsi_llvm.c
++++ b/src/gallium/drivers/radeon/radeon_setup_tgsi_llvm.c
+@@ -766,6 +766,22 @@ static void emit_icmp(
+ 	emit_data->output[emit_data->chan] = v;
+ }
+ 
++static void emit_ucmp(
++		const struct lp_build_tgsi_action * action,
++		struct lp_build_tgsi_context * bld_base,
++		struct lp_build_emit_data * emit_data)
++{
++	unsigned pred;
++	LLVMBuilderRef builder = bld_base->base.gallivm->builder;
++	LLVMContextRef context = bld_base->base.gallivm->context;
++
++
++	LLVMValueRef v = LLVMBuildFCmp(builder, LLVMRealUGE,
++			emit_data->args[0], lp_build_const_float(bld_base->base.gallivm, 0.), "");
++
++	emit_data->output[emit_data->chan] = LLVMBuildSelect(builder, v, emit_data->args[2], emit_data->args[1], "");
++}
++
+ static void emit_cmp(
+ 		const struct lp_build_tgsi_action *action,
+ 		struct lp_build_tgsi_context * bld_base,
+@@ -1241,6 +1257,7 @@ void radeon_llvm_context_init(struct radeon_llvm_context * ctx)
+ 	bld_base->op_actions[TGSI_OPCODE_USNE].emit = emit_icmp;
+ 	bld_base->op_actions[TGSI_OPCODE_U2F].emit = emit_u2f;
+ 	bld_base->op_actions[TGSI_OPCODE_XOR].emit = emit_xor;
++	bld_base->op_actions[TGSI_OPCODE_UCMP].emit = emit_ucmp;
+ 
+ 	bld_base->rsq_action.emit = build_tgsi_intrinsic_nomem;
+ 	bld_base->rsq_action.intr_name = "llvm.AMDGPU.rsq";
+diff --git a/src/gallium/drivers/radeonsi/radeonsi_shader.c b/src/gallium/drivers/radeonsi/radeonsi_shader.c
+index 2545634..7922928 100644
+--- a/src/gallium/drivers/radeonsi/radeonsi_shader.c
++++ b/src/gallium/drivers/radeonsi/radeonsi_shader.c
+@@ -309,14 +309,8 @@ static void declare_input_fs(
+ 	/* XXX: Handle all possible interpolation modes */
+ 	switch (decl->Interp.Interpolate) {
+ 	case TGSI_INTERPOLATE_COLOR:
+-		/* XXX: Flat shading hangs the GPU */
+-		if (si_shader_ctx->rctx->queued.named.rasterizer &&
+-		    si_shader_ctx->rctx->queued.named.rasterizer->flatshade) {
+-#if 0
++		if (si_shader_ctx->key.flatshade) {
+ 			intr_name = "llvm.SI.fs.interp.constant";
+-#else
+-			intr_name = "llvm.SI.fs.interp.linear.center";
+-#endif
+ 		} else {
+ 			if (decl->Interp.Centroid)
+ 				intr_name = "llvm.SI.fs.interp.persp.centroid";
+@@ -325,11 +319,8 @@ static void declare_input_fs(
+ 		}
+ 		break;
+ 	case TGSI_INTERPOLATE_CONSTANT:
+-		/* XXX: Flat shading hangs the GPU */
+-#if 0
+ 		intr_name = "llvm.SI.fs.interp.constant";
+ 		break;
+-#endif
+ 	case TGSI_INTERPOLATE_LINEAR:
+ 		if (decl->Interp.Centroid)
+ 			intr_name = "llvm.SI.fs.interp.linear.centroid";
+diff --git a/src/gallium/drivers/radeonsi/radeonsi_shader.h b/src/gallium/drivers/radeonsi/radeonsi_shader.h
+index 07b2f9f..f54f67c 100644
+--- a/src/gallium/drivers/radeonsi/radeonsi_shader.h
++++ b/src/gallium/drivers/radeonsi/radeonsi_shader.h
+@@ -82,6 +82,7 @@ struct si_shader_key {
+ 	unsigned		nr_cbufs:4;
+ 	unsigned		color_two_side:1;
+ 	unsigned		alpha_func:3;
++	unsigned		flatshade:1;
+ 	float			alpha_ref;
+ };
+ 
+diff --git a/src/gallium/drivers/radeonsi/si_state.c b/src/gallium/drivers/radeonsi/si_state.c
+index a6b1983..39817fb 100644
+--- a/src/gallium/drivers/radeonsi/si_state.c
++++ b/src/gallium/drivers/radeonsi/si_state.c
+@@ -421,8 +421,7 @@ static void *si_create_rs_state(struct pipe_context *ctx,
+ 	rs->offset_units = state->offset_units;
+ 	rs->offset_scale = state->offset_scale * 12.0f;
+ 
+-	/* XXX: Flat shading hangs the GPU */
+-	tmp = S_0286D4_FLAT_SHADE_ENA(0);
++	tmp = S_0286D4_FLAT_SHADE_ENA(1);
+ 	if (state->sprite_coord_enable) {
+ 		tmp |= S_0286D4_PNT_SPRITE_ENA(1) |
+ 			S_0286D4_PNT_SPRITE_OVRD_X(V_0286D4_SPI_PNT_SPRITE_SEL_S) |
+@@ -1859,7 +1858,7 @@ static INLINE struct si_shader_key si_shader_selector_key(struct pipe_context *c
+ 		key.export_16bpc = rctx->export_16bpc;
+ 		if (rctx->queued.named.rasterizer) {
+ 			key.color_two_side = rctx->queued.named.rasterizer->two_side;
+-			/*key.flatshade = rctx->queued.named.rasterizer->flatshade;*/
++			key.flatshade = rctx->queued.named.rasterizer->flatshade;
+ 		}
+ 		if (rctx->queued.named.dsa) {
+ 			key.alpha_func = rctx->queued.named.dsa->alpha_func;
+diff --git a/src/gallium/drivers/radeonsi/si_state_draw.c b/src/gallium/drivers/radeonsi/si_state_draw.c
+index 3704410..8c35625 100644
+--- a/src/gallium/drivers/radeonsi/si_state_draw.c
++++ b/src/gallium/drivers/radeonsi/si_state_draw.c
+@@ -128,11 +128,6 @@ static void si_pipe_shader_ps(struct pipe_context *ctx, struct si_pipe_shader *s
+ 			continue;
+ 		}
+ 
+-		/* XXX: Flat shading hangs the GPU */
+-		if (shader->shader.input[i].interpolate == TGSI_INTERPOLATE_CONSTANT ||
+-		    (shader->shader.input[i].interpolate == TGSI_INTERPOLATE_COLOR &&
+-		     rctx->queued.named.rasterizer->flatshade))
+-			have_linear = TRUE;
+ 		if (shader->shader.input[i].interpolate == TGSI_INTERPOLATE_LINEAR)
+ 			have_linear = TRUE;
+ 		if (shader->shader.input[i].interpolate == TGSI_INTERPOLATE_PERSPECTIVE)
+@@ -327,15 +322,12 @@ static void si_update_spi_map(struct r600_context *rctx)
+ bcolor:
+ 		tmp = 0;
+ 
+-#if 0
+-		/* XXX: Flat shading hangs the GPU */
+ 		if (name == TGSI_SEMANTIC_POSITION ||
+ 		    ps->input[i].interpolate == TGSI_INTERPOLATE_CONSTANT ||
+ 		    (ps->input[i].interpolate == TGSI_INTERPOLATE_COLOR &&
+-		     rctx->rasterizer && rctx->rasterizer->flatshade)) {
++		     rctx->ps_shader->current->key.flatshade)) {
+ 			tmp |= S_028644_FLAT_SHADE(1);
+ 		}
+-#endif
+ 
+ 		if (name == TGSI_SEMANTIC_GENERIC &&
+ 		    rctx->sprite_coord_enable & (1 << ps->input[i].sid)) {
+@@ -453,8 +445,14 @@ static void si_vertex_buffer_update(struct r600_context *rctx)
+ 		si_pm4_sh_data_add(pm4, va & 0xFFFFFFFF);
+ 		si_pm4_sh_data_add(pm4, (S_008F04_BASE_ADDRESS_HI(va >> 32) |
+ 					 S_008F04_STRIDE(vb->stride)));
+-		si_pm4_sh_data_add(pm4, (vb->buffer->width0 - vb->buffer_offset) /
+-					 MAX2(vb->stride, 1));
++		if (vb->stride)
++			/* Round up by rounding down and adding 1 */
++			si_pm4_sh_data_add(pm4,
++					   (vb->buffer->width0 - offset -
++					    util_format_get_blocksize(ve->src_format)) /
++					   vb->stride + 1);
++		else
++			si_pm4_sh_data_add(pm4, vb->buffer->width0 - offset);
+ 		si_pm4_sh_data_add(pm4, rctx->vertex_elements->rsrc_word3[i]);
+ 
+ 		if (!bound[ve->vertex_buffer_index]) {
+diff --git a/src/gallium/state_trackers/glx/xlib/xm_api.c b/src/gallium/state_trackers/glx/xlib/xm_api.c
+index 607584f..021175c 100644
+--- a/src/gallium/state_trackers/glx/xlib/xm_api.c
++++ b/src/gallium/state_trackers/glx/xlib/xm_api.c
+@@ -438,7 +438,6 @@ create_xmesa_buffer(Drawable d, BufferType type,
+ {
+    XMesaDisplay xmdpy = xmesa_init_display(vis->display);
+    XMesaBuffer b;
+-   uint width, height;
+ 
+    ASSERT(type == WINDOW || type == PIXMAP || type == PBUFFER);
+ 
+@@ -457,7 +456,7 @@ create_xmesa_buffer(Drawable d, BufferType type,
+    b->type = type;
+    b->cmap = cmap;
+ 
+-   get_drawable_size(vis->display, d, &width, &height);
++   get_drawable_size(vis->display, d, &b->width, &b->height);
+ 
+    /*
+     * Create framebuffer, but we'll plug in our own renderbuffers below.
+diff --git a/src/gallium/targets/dri-vmwgfx/Makefile.am b/src/gallium/targets/dri-vmwgfx/Makefile.am
+index 06ebf88..ca7df65 100644
+--- a/src/gallium/targets/dri-vmwgfx/Makefile.am
++++ b/src/gallium/targets/dri-vmwgfx/Makefile.am
+@@ -58,17 +58,13 @@ vmwgfx_dri_la_LIBADD = \
+ 	$(top_builddir)/src/gallium/drivers/svga/libsvga.la \
+ 	$(GALLIUM_DRI_LIB_DEPS)
+ 
+-if HAVE_MESA_LLVM
+ vmwgfx_dri_la_LINK = $(CXXLINK) $(vmwgfx_dri_la_LDFLAGS)
+ # Mention a dummy pure C++ file to trigger generation of the $(LINK) variable
+ nodist_EXTRA_vmwgfx_dri_la_SOURCES = dummy-cpp.cpp
+ 
++if HAVE_MESA_LLVM
+ vmwgfx_dri_la_LDFLAGS += $(LLVM_LDFLAGS)
+ vmwgfx_dri_la_LIBADD += $(LLVM_LIBS)
+-else
+-vmwgfx_dri_la_LINK = $(LINK) $(vmwgfx_dri_la_LDFLAGS)
+-# Mention a dummy pure C file to trigger generation of the $(LINK) variable
+-nodist_EXTRA_vmwgfx_dri_la_SOURCES = dummy-c.c
+ endif
+ 
+ # Provide compatibility with scripts for the old Mesa build system for
+diff --git a/src/gallium/targets/vdpau-softpipe/Makefile.am b/src/gallium/targets/vdpau-softpipe/Makefile.am
+index 3372b5c..7bde2f8 100644
+--- a/src/gallium/targets/vdpau-softpipe/Makefile.am
++++ b/src/gallium/targets/vdpau-softpipe/Makefile.am
+@@ -35,7 +35,7 @@ vdpaudir = $(VDPAU_LIB_INSTALL_DIR)
+ vdpau_LTLIBRARIES = libvdpau_softpipe.la
+ 
+ libvdpau_softpipe_la_SOURCES = \
+-	$(top_srcdir)/src/gallium/auxiliary/vl/vl_winsys_dri.c
++	$(top_srcdir)/src/gallium/auxiliary/vl/vl_winsys_xsp.c
+ 
+ libvdpau_softpipe_la_LDFLAGS = \
+ 	-module \
+diff --git a/src/gallium/winsys/radeon/drm/radeon_drm_bo.c b/src/gallium/winsys/radeon/drm/radeon_drm_bo.c
+index 2d41c26..f4ac526 100644
+--- a/src/gallium/winsys/radeon/drm/radeon_drm_bo.c
++++ b/src/gallium/winsys/radeon/drm/radeon_drm_bo.c
+@@ -957,16 +957,16 @@ static boolean radeon_winsys_bo_get_handle(struct pb_buffer *buffer,
+ 
+             bo->flinked = TRUE;
+             bo->flink = flink.name;
++
++            pipe_mutex_lock(bo->mgr->bo_handles_mutex);
++            util_hash_table_set(bo->mgr->bo_handles, (void*)(uintptr_t)bo->flink, bo);
++            pipe_mutex_unlock(bo->mgr->bo_handles_mutex);
+         }
+         whandle->handle = bo->flink;
+     } else if (whandle->type == DRM_API_HANDLE_TYPE_KMS) {
+         whandle->handle = bo->handle;
+     }
+ 
+-    pipe_mutex_lock(bo->mgr->bo_handles_mutex);
+-    util_hash_table_set(bo->mgr->bo_handles, (void*)(uintptr_t)whandle->handle, bo);
+-    pipe_mutex_unlock(bo->mgr->bo_handles_mutex);
+-
+     whandle->stride = stride;
+     return TRUE;
+ }
+diff --git a/src/gbm/backends/dri/gbm_dri.c b/src/gbm/backends/dri/gbm_dri.c
+index 519929e..a3a0530 100644
+--- a/src/gbm/backends/dri/gbm_dri.c
++++ b/src/gbm/backends/dri/gbm_dri.c
+@@ -481,6 +481,7 @@ create_dumb(struct gbm_device *gbm,
+    bo->base.base.width = width;
+    bo->base.base.height = height;
+    bo->base.base.stride = create_arg.pitch;
++   bo->base.base.format = format;
+    bo->base.base.handle.u32 = create_arg.handle;
+    bo->handle = create_arg.handle;
+    bo->size = create_arg.size;
+@@ -529,6 +530,7 @@ gbm_dri_bo_create(struct gbm_device *gbm,
+    bo->base.base.gbm = gbm;
+    bo->base.base.width = width;
+    bo->base.base.height = height;
++   bo->base.base.format = format;
+ 
+    switch (format) {
+    case GBM_FORMAT_RGB565:
+diff --git a/src/mesa/drivers/common/meta.c b/src/mesa/drivers/common/meta.c
+index 4e32b50..29a209e 100644
+--- a/src/mesa/drivers/common/meta.c
++++ b/src/mesa/drivers/common/meta.c
+@@ -1910,6 +1910,14 @@ _mesa_meta_BlitFramebuffer(struct gl_context *ctx,
+       GLuint *tmp = malloc(srcW * srcH * sizeof(GLuint));
+ 
+       if (tmp) {
++
++         newTex = alloc_texture(depthTex, srcW, srcH, GL_DEPTH_COMPONENT);
++         _mesa_ReadPixels(srcX, srcY, srcW, srcH, GL_DEPTH_COMPONENT,
++                          GL_UNSIGNED_INT, tmp);
++         setup_drawpix_texture(ctx, depthTex, newTex, GL_DEPTH_COMPONENT,
++                               srcW, srcH, GL_DEPTH_COMPONENT,
++                               GL_UNSIGNED_INT, tmp);
++
+          /* texcoords (after texture allocation!) */
+          {
+             verts[0].s = 0.0F;
+@@ -1928,15 +1936,6 @@ _mesa_meta_BlitFramebuffer(struct gl_context *ctx,
+          if (!blit->DepthFP)
+             init_blit_depth_pixels(ctx);
+ 
+-         /* maybe change tex format here */
+-         newTex = alloc_texture(depthTex, srcW, srcH, GL_DEPTH_COMPONENT);
+-
+-         _mesa_ReadPixels(srcX, srcY, srcW, srcH,
+-                          GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, tmp);
+-
+-         setup_drawpix_texture(ctx, depthTex, newTex, GL_DEPTH_COMPONENT, srcW, srcH,
+-                               GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, tmp);
+-
+          _mesa_BindProgramARB(GL_FRAGMENT_PROGRAM_ARB, blit->DepthFP);
+          _mesa_set_enable(ctx, GL_FRAGMENT_PROGRAM_ARB, GL_TRUE);
+          _mesa_ColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+diff --git a/src/mesa/drivers/dri/i965/Makefile.am b/src/mesa/drivers/dri/i965/Makefile.am
+index dc140df..77670ef 100644
+--- a/src/mesa/drivers/dri/i965/Makefile.am
++++ b/src/mesa/drivers/dri/i965/Makefile.am
+@@ -62,6 +62,7 @@ TEST_LIBS = \
+ 	../common/libdri_test_stubs.la
+ 
+ i965_dri_la_SOURCES =
++nodist_EXTRA_i965_dri_la_SOURCES = dummy2.cpp
+ i965_dri_la_LIBADD = $(COMMON_LIBS)
+ i965_dri_la_LDFLAGS = -module -avoid-version -shared
+ 
+diff --git a/src/mesa/drivers/dri/i965/brw_fs.cpp b/src/mesa/drivers/dri/i965/brw_fs.cpp
+index 8dab431..f80219e 100644
+--- a/src/mesa/drivers/dri/i965/brw_fs.cpp
++++ b/src/mesa/drivers/dri/i965/brw_fs.cpp
+@@ -258,6 +258,26 @@ fs_visitor::VARYING_PULL_CONSTANT_LOAD(fs_reg dst, fs_reg surf_index,
+    return instructions;
+ }
+ 
++/**
++ * A helper for MOV generation for fixing up broken hardware SEND dependency
++ * handling.
++ */
++fs_inst *
++fs_visitor::DEP_RESOLVE_MOV(int grf)
++{
++   fs_inst *inst = MOV(brw_null_reg(), fs_reg(GRF, grf, BRW_REGISTER_TYPE_F));
++
++   inst->ir = NULL;
++   inst->annotation = "send dependency resolve";
++
++   /* The caller always wants uncompressed to emit the minimal extra
++    * dependencies, and to avoid having to deal with aligning its regs to 2.
++    */
++   inst->force_uncompressed = true;
++
++   return inst;
++}
++
+ bool
+ fs_inst::equals(fs_inst *inst)
+ {
+@@ -1690,8 +1710,6 @@ fs_visitor::setup_pull_constants()
+                                  dst, index, offset);
+ 	 pull->ir = inst->ir;
+ 	 pull->annotation = inst->annotation;
+-	 pull->base_mrf = 14;
+-	 pull->mlen = 1;
+ 
+ 	 inst->insert_before(pull);
+ 
+@@ -1911,6 +1929,7 @@ fs_visitor::register_coalesce()
+ 
+       bool has_source_modifiers = (inst->src[0].abs ||
+                                    inst->src[0].negate ||
++                                   inst->src[0].smear != -1 ||
+                                    inst->src[0].file == UNIFORM);
+ 
+       /* Found a move of a GRF to a GRF.  Let's see if we can coalesce
+@@ -2228,6 +2247,265 @@ fs_visitor::remove_duplicate_mrf_writes()
+    return progress;
+ }
+ 
++static void
++clear_deps_for_inst_src(fs_inst *inst, int dispatch_width, bool *deps,
++                        int first_grf, int grf_len)
++{
++   bool inst_16wide = (dispatch_width > 8 &&
++                       !inst->force_uncompressed &&
++                       !inst->force_sechalf);
++
++   /* Clear the flag for registers that actually got read (as expected). */
++   for (int i = 0; i < 3; i++) {
++      int grf;
++      if (inst->src[i].file == GRF) {
++         grf = inst->src[i].reg;
++      } else if (inst->src[i].file == FIXED_HW_REG &&
++                 inst->src[i].fixed_hw_reg.file == BRW_GENERAL_REGISTER_FILE) {
++         grf = inst->src[i].fixed_hw_reg.nr;
++      } else {
++         continue;
++      }
++
++      if (grf >= first_grf &&
++          grf < first_grf + grf_len) {
++         deps[grf - first_grf] = false;
++         if (inst_16wide)
++            deps[grf - first_grf + 1] = false;
++      }
++   }
++}
++
++/**
++ * Implements this workaround for the original 965:
++ *
++ *     "[DevBW, DevCL] Implementation Restrictions: As the hardware does not
++ *      check for post destination dependencies on this instruction, software
++ *      must ensure that there is no destination hazard for the case of ‘write
++ *      followed by a posted write’ shown in the following example.
++ *
++ *      1. mov r3 0
++ *      2. send r3.xy <rest of send instruction>
++ *      3. mov r2 r3
++ *
++ *      Due to no post-destination dependency check on the ‘send’, the above
++ *      code sequence could have two instructions (1 and 2) in flight at the
++ *      same time that both consider ‘r3’ as the target of their final writes.
++ */
++void
++fs_visitor::insert_gen4_pre_send_dependency_workarounds(fs_inst *inst)
++{
++   int write_len = inst->regs_written() * dispatch_width / 8;
++   int first_write_grf = inst->dst.reg;
++   bool needs_dep[BRW_MAX_MRF];
++   assert(write_len < (int)sizeof(needs_dep) - 1);
++
++   memset(needs_dep, false, sizeof(needs_dep));
++   memset(needs_dep, true, write_len);
++
++   clear_deps_for_inst_src(inst, dispatch_width,
++                           needs_dep, first_write_grf, write_len);
++
++   /* Walk backwards looking for writes to registers we're writing which
++    * aren't read since being written.  If we hit the start of the program,
++    * we assume that there are no outstanding dependencies on entry to the
++    * program.
++    */
++   for (fs_inst *scan_inst = (fs_inst *)inst->prev;
++        scan_inst != NULL;
++        scan_inst = (fs_inst *)scan_inst->prev) {
++
++      /* If we hit control flow, assume that there *are* outstanding
++       * dependencies, and force their cleanup before our instruction.
++       */
++      if (scan_inst->is_control_flow()) {
++         for (int i = 0; i < write_len; i++) {
++            if (needs_dep[i]) {
++               inst->insert_before(DEP_RESOLVE_MOV(first_write_grf + i));
++            }
++         }
++      }
++
++      bool scan_inst_16wide = (dispatch_width > 8 &&
++                               !scan_inst->force_uncompressed &&
++                               !scan_inst->force_sechalf);
++
++      /* We insert our reads as late as possible on the assumption that any
++       * instruction but a MOV that might have left us an outstanding
++       * dependency has more latency than a MOV.
++       */
++      if (scan_inst->dst.file == GRF &&
++          scan_inst->dst.reg >= first_write_grf &&
++          scan_inst->dst.reg < first_write_grf + write_len &&
++          needs_dep[scan_inst->dst.reg - first_write_grf]) {
++         inst->insert_before(DEP_RESOLVE_MOV(scan_inst->dst.reg));
++         needs_dep[scan_inst->dst.reg - first_write_grf] = false;
++         if (scan_inst_16wide)
++            needs_dep[scan_inst->dst.reg - first_write_grf + 1] = false;
++      }
++
++      /* Clear the flag for registers that actually got read (as expected). */
++      clear_deps_for_inst_src(scan_inst, dispatch_width,
++                              needs_dep, first_write_grf, write_len);
++
++      /* Continue the loop only if we haven't resolved all the dependencies */
++      int i;
++      for (i = 0; i < write_len; i++) {
++         if (needs_dep[i])
++            break;
++      }
++      if (i == write_len)
++         return;
++   }
++}
++
++/**
++ * Implements this workaround for the original 965:
++ *
++ *     "[DevBW, DevCL] Errata: A destination register from a send can not be
++ *      used as a destination register until after it has been sourced by an
++ *      instruction with a different destination register.
++ */
++void
++fs_visitor::insert_gen4_post_send_dependency_workarounds(fs_inst *inst)
++{
++   int write_len = inst->regs_written() * dispatch_width / 8;
++   int first_write_grf = inst->dst.reg;
++   bool needs_dep[BRW_MAX_MRF];
++   assert(write_len < (int)sizeof(needs_dep) - 1);
++
++   memset(needs_dep, false, sizeof(needs_dep));
++   memset(needs_dep, true, write_len);
++   /* Walk forwards looking for writes to registers we're writing which aren't
++    * read before being written.
++    */
++   for (fs_inst *scan_inst = (fs_inst *)inst->next;
++        !scan_inst->is_tail_sentinel();
++        scan_inst = (fs_inst *)scan_inst->next) {
++      /* If we hit control flow, force resolve all remaining dependencies. */
++      if (scan_inst->is_control_flow()) {
++         for (int i = 0; i < write_len; i++) {
++            if (needs_dep[i])
++               scan_inst->insert_before(DEP_RESOLVE_MOV(first_write_grf + i));
++         }
++      }
++
++      /* Clear the flag for registers that actually got read (as expected). */
++      clear_deps_for_inst_src(scan_inst, dispatch_width,
++                              needs_dep, first_write_grf, write_len);
++
++      /* We insert our reads as late as possible since they're reading the
++       * result of a SEND, which has massive latency.
++       */
++      if (scan_inst->dst.file == GRF &&
++          scan_inst->dst.reg >= first_write_grf &&
++          scan_inst->dst.reg < first_write_grf + write_len &&
++          needs_dep[scan_inst->dst.reg - first_write_grf]) {
++         scan_inst->insert_before(DEP_RESOLVE_MOV(scan_inst->dst.reg));
++         needs_dep[scan_inst->dst.reg - first_write_grf] = false;
++      }
++
++      /* Continue the loop only if we haven't resolved all the dependencies */
++      int i;
++      for (i = 0; i < write_len; i++) {
++         if (needs_dep[i])
++            break;
++      }
++      if (i == write_len)
++         return;
++   }
++
++   /* If we hit the end of the program, resolve all remaining dependencies out
++    * of paranoia.
++    */
++   fs_inst *last_inst = (fs_inst *)this->instructions.get_tail();
++   assert(last_inst->eot);
++   for (int i = 0; i < write_len; i++) {
++      if (needs_dep[i])
++         last_inst->insert_before(DEP_RESOLVE_MOV(first_write_grf + i));
++   }
++}
++
++void
++fs_visitor::insert_gen4_send_dependency_workarounds()
++{
++   if (intel->gen != 4 || intel->is_g4x)
++      return;
++
++   /* Note that we're done with register allocation, so GRF fs_regs always
++    * have a .reg_offset of 0.
++    */
++
++   foreach_list_safe(node, &this->instructions) {
++      fs_inst *inst = (fs_inst *)node;
++
++      if (inst->mlen != 0 && inst->dst.file == GRF) {
++         insert_gen4_pre_send_dependency_workarounds(inst);
++         insert_gen4_post_send_dependency_workarounds(inst);
++      }
++   }
++}
++
++/**
++ * Turns the generic expression-style uniform pull constant load instruction
++ * into a hardware-specific series of instructions for loading a pull
++ * constant.
++ *
++ * The expression style allows the CSE pass before this to optimize out
++ * repeated loads from the same offset, and gives the pre-register-allocation
++ * scheduling full flexibility, while the conversion to native instructions
++ * allows the post-register-allocation scheduler the best information
++ * possible.
++ */
++void
++fs_visitor::lower_uniform_pull_constant_loads()
++{
++   foreach_list(node, &this->instructions) {
++      fs_inst *inst = (fs_inst *)node;
++
++      if (inst->opcode != FS_OPCODE_UNIFORM_PULL_CONSTANT_LOAD)
++         continue;
++
++      if (intel->gen >= 7) {
++         fs_reg const_offset_reg = inst->src[1];
++         assert(const_offset_reg.file == IMM &&
++                const_offset_reg.type == BRW_REGISTER_TYPE_UD);
++         const_offset_reg.imm.u /= 16;
++         fs_reg payload = fs_reg(this, glsl_type::uint_type);
++         struct brw_reg g0 = retype(brw_vec8_grf(0, 0),
++                                    BRW_REGISTER_TYPE_UD);
++
++         fs_inst *setup1 = MOV(payload, fs_reg(g0));
++         setup1->force_writemask_all = true;
++         /* We don't need the second half of this vgrf to be filled with g1
++          * in the 16-wide case, but if we use force_uncompressed then live
++          * variable analysis won't consider this a def!
++          */
++
++         fs_inst *setup2 = new(mem_ctx) fs_inst(FS_OPCODE_SET_GLOBAL_OFFSET,
++                                                payload, payload,
++                                                const_offset_reg);
++
++         setup1->ir = inst->ir;
++         setup1->annotation = inst->annotation;
++         inst->insert_before(setup1);
++         setup2->ir = inst->ir;
++         setup2->annotation = inst->annotation;
++         inst->insert_before(setup2);
++         inst->opcode = FS_OPCODE_UNIFORM_PULL_CONSTANT_LOAD_GEN7;
++         inst->src[1] = payload;
++      } else {
++         /* Before register allocation, we didn't tell the scheduler about the
++          * MRF we use.  We know it's safe to use this MRF because nothing
++          * else does except for register spill/unspill, which generates and
++          * uses its MRF within a single IR instruction.
++          */
++         inst->base_mrf = 14;
++         inst->mlen = 1;
++      }
++   }
++}
++
+ void
+ fs_visitor::dump_instruction(fs_inst *inst)
+ {
+@@ -2500,6 +2778,8 @@ fs_visitor::run()
+ 
+       schedule_instructions(false);
+ 
++      lower_uniform_pull_constant_loads();
++
+       assign_curb_setup();
+       assign_urb_setup();
+ 
+@@ -2522,6 +2802,12 @@ fs_visitor::run()
+    assert(force_uncompressed_stack == 0);
+    assert(force_sechalf_stack == 0);
+ 
++   /* This must come after all optimization and register allocation, since
++    * it inserts dead code that happens to have side effects, and it does
++    * so based on the actual physical registers in use.
++    */
++   insert_gen4_send_dependency_workarounds();
++
+    if (failed)
+       return false;
+ 
+diff --git a/src/mesa/drivers/dri/i965/brw_fs.h b/src/mesa/drivers/dri/i965/brw_fs.h
+index 88fecb9..d1bb111 100644
+--- a/src/mesa/drivers/dri/i965/brw_fs.h
++++ b/src/mesa/drivers/dri/i965/brw_fs.h
+@@ -285,6 +285,7 @@ public:
+    fs_inst *IF(fs_reg src0, fs_reg src1, uint32_t condition);
+    fs_inst *CMP(fs_reg dst, fs_reg src0, fs_reg src1,
+                 uint32_t condition);
++   fs_inst *DEP_RESOLVE_MOV(int grf);
+ 
+    int type_size(const struct glsl_type *type);
+    fs_inst *get_instruction_generating_reg(fs_inst *start,
+@@ -329,7 +330,11 @@ public:
+    bool remove_duplicate_mrf_writes();
+    bool virtual_grf_interferes(int a, int b);
+    void schedule_instructions(bool post_reg_alloc);
++   void insert_gen4_send_dependency_workarounds();
++   void insert_gen4_pre_send_dependency_workarounds(fs_inst *inst);
++   void insert_gen4_post_send_dependency_workarounds(fs_inst *inst);
+    void fail(const char *msg, ...);
++   void lower_uniform_pull_constant_loads();
+ 
+    void push_force_uncompressed();
+    void pop_force_uncompressed();
+diff --git a/src/mesa/drivers/dri/i965/brw_fs_copy_propagation.cpp b/src/mesa/drivers/dri/i965/brw_fs_copy_propagation.cpp
+index c4ec1d9..194ed07 100644
+--- a/src/mesa/drivers/dri/i965/brw_fs_copy_propagation.cpp
++++ b/src/mesa/drivers/dri/i965/brw_fs_copy_propagation.cpp
+@@ -223,7 +223,8 @@ fs_visitor::try_copy_propagate(fs_inst *inst, int arg, acp_entry *entry)
+    inst->src[arg].file = entry->src.file;
+    inst->src[arg].reg = entry->src.reg;
+    inst->src[arg].reg_offset = entry->src.reg_offset;
+-   inst->src[arg].smear = entry->src.smear;
++   if (entry->src.smear != -1)
++      inst->src[arg].smear = entry->src.smear;
+ 
+    if (!inst->src[arg].abs) {
+       inst->src[arg].abs = entry->src.abs;
+diff --git a/src/mesa/drivers/dri/i965/brw_fs_cse.cpp b/src/mesa/drivers/dri/i965/brw_fs_cse.cpp
+index 70c143a..a13ca36 100644
+--- a/src/mesa/drivers/dri/i965/brw_fs_cse.cpp
++++ b/src/mesa/drivers/dri/i965/brw_fs_cse.cpp
+@@ -105,7 +105,8 @@ fs_visitor::opt_cse_local(bblock_t *block, exec_list *aeb)
+ 	    /* Match current instruction's expression against those in AEB. */
+ 	    if (inst->opcode == entry->generator->opcode &&
+ 		inst->saturate == entry->generator->saturate &&
+-		operands_match(entry->generator->src, inst->src)) {
++                inst->dst.type == entry->generator->dst.type &&
++                operands_match(entry->generator->src, inst->src)) {
+ 
+ 	       found = true;
+ 	       progress = true;
+diff --git a/src/mesa/drivers/dri/i965/brw_fs_emit.cpp b/src/mesa/drivers/dri/i965/brw_fs_emit.cpp
+index 45072da..365a2ec 100644
+--- a/src/mesa/drivers/dri/i965/brw_fs_emit.cpp
++++ b/src/mesa/drivers/dri/i965/brw_fs_emit.cpp
+@@ -604,29 +604,8 @@ fs_generator::generate_unspill(fs_inst *inst, struct brw_reg dst)
+ {
+    assert(inst->mlen != 0);
+ 
+-   /* Clear any post destination dependencies that would be ignored by
+-    * the block read.  See the B-Spec for pre-gen5 send instruction.
+-    *
+-    * This could use a better solution, since texture sampling and
+-    * math reads could potentially run into it as well -- anywhere
+-    * that we have a SEND with a destination that is a register that
+-    * was written but not read within the last N instructions (what's
+-    * N?  unsure).  This is rare because of dead code elimination, but
+-    * not impossible.
+-    */
+-   if (intel->gen == 4 && !intel->is_g4x)
+-      brw_MOV(p, brw_null_reg(), dst);
+-
+    brw_oword_block_read_scratch(p, dst, brw_message_reg(inst->base_mrf), 1,
+ 				inst->offset);
+-
+-   if (intel->gen == 4 && !intel->is_g4x) {
+-      /* gen4 errata: destination from a send can't be used as a
+-       * destination until it's been read.  Just read it so we don't
+-       * have to worry.
+-       */
+-      brw_MOV(p, brw_null_reg(), dst);
+-   }
+ }
+ 
+ void
+@@ -637,19 +616,6 @@ fs_generator::generate_uniform_pull_constant_load(fs_inst *inst,
+ {
+    assert(inst->mlen != 0);
+ 
+-   /* Clear any post destination dependencies that would be ignored by
+-    * the block read.  See the B-Spec for pre-gen5 send instruction.
+-    *
+-    * This could use a better solution, since texture sampling and
+-    * math reads could potentially run into it as well -- anywhere
+-    * that we have a SEND with a destination that is a register that
+-    * was written but not read within the last N instructions (what's
+-    * N?  unsure).  This is rare because of dead code elimination, but
+-    * not impossible.
+-    */
+-   if (intel->gen == 4 && !intel->is_g4x)
+-      brw_MOV(p, brw_null_reg(), dst);
+-
+    assert(index.file == BRW_IMMEDIATE_VALUE &&
+ 	  index.type == BRW_REGISTER_TYPE_UD);
+    uint32_t surf_index = index.dw1.ud;
+@@ -660,14 +626,6 @@ fs_generator::generate_uniform_pull_constant_load(fs_inst *inst,
+ 
+    brw_oword_block_read(p, dst, brw_message_reg(inst->base_mrf),
+ 			read_offset, surf_index);
+-
+-   if (intel->gen == 4 && !intel->is_g4x) {
+-      /* gen4 errata: destination from a send can't be used as a
+-       * destination until it's been read.  Just read it so we don't
+-       * have to worry.
+-       */
+-      brw_MOV(p, brw_null_reg(), dst);
+-   }
+ }
+ 
+ void
+diff --git a/src/mesa/drivers/dri/i965/brw_fs_visitor.cpp b/src/mesa/drivers/dri/i965/brw_fs_visitor.cpp
+index d4f6fc9..573921c 100644
+--- a/src/mesa/drivers/dri/i965/brw_fs_visitor.cpp
++++ b/src/mesa/drivers/dri/i965/brw_fs_visitor.cpp
+@@ -597,31 +597,9 @@ fs_visitor::visit(ir_expression *ir)
+          fs_reg packed_consts = fs_reg(this, glsl_type::float_type);
+          packed_consts.type = result.type;
+ 
+-         if (intel->gen >= 7) {
+-            fs_reg const_offset_reg = fs_reg(const_offset->value.u[0] / 16);
+-            fs_reg payload = fs_reg(this, glsl_type::uint_type);
+-            struct brw_reg g0 = retype(brw_vec8_grf(0, 0),
+-                                       BRW_REGISTER_TYPE_UD);
+-            fs_inst *setup = emit(MOV(payload, fs_reg(g0)));
+-            setup->force_writemask_all = true;
+-            /* We don't need the second half of this vgrf to be filled with g1
+-             * in the 16-wide case, but if we use force_uncompressed then live
+-             * variable analysis won't consider this a def!
+-             */
+-
+-            emit(FS_OPCODE_SET_GLOBAL_OFFSET, payload,
+-                 payload, const_offset_reg);
+-            emit(FS_OPCODE_UNIFORM_PULL_CONSTANT_LOAD_GEN7, packed_consts,
+-                 surf_index, payload);
+-         } else {
+-            fs_reg const_offset_reg = fs_reg(const_offset->value.u[0]);
+-            fs_inst *pull = emit(fs_inst(FS_OPCODE_UNIFORM_PULL_CONSTANT_LOAD,
+-                                         packed_consts,
+-                                         surf_index,
+-                                         const_offset_reg));
+-            pull->base_mrf = 14;
+-            pull->mlen = 1;
+-         }
++         fs_reg const_offset_reg = fs_reg(const_offset->value.u[0] & ~15);
++         emit(fs_inst(FS_OPCODE_UNIFORM_PULL_CONSTANT_LOAD,
++                      packed_consts, surf_index, const_offset_reg));
+ 
+          packed_consts.smear = const_offset->value.u[0] % 16 / 4;
+          for (int i = 0; i < ir->type->vector_elements; i++) {
+diff --git a/src/mesa/drivers/dri/i965/brw_vs_constval.c b/src/mesa/drivers/dri/i965/brw_vs_constval.c
+index 3d53843..48635c5 100644
+--- a/src/mesa/drivers/dri/i965/brw_vs_constval.c
++++ b/src/mesa/drivers/dri/i965/brw_vs_constval.c
+@@ -238,6 +238,23 @@ static void calc_wm_input_sizes( struct brw_context *brw )
+ 
+    calc_sizes(&t);
+ 
++   /* _NEW_POINT
++    *
++    * If the SF will be replacing the vertex output with a reference to
++    * gl_PointCoord, then tell the fragment shader that the value actually
++    * does vary.
++    */
++   if (ctx->Point.PointSprite) {
++      for (int i = 0; i < 8; i++) {
++         if (ctx->Point.CoordReplace[i]) {
++            t.size_masks[4-1] |= FRAG_BIT_TEX(i);
++            t.size_masks[3-1] |= FRAG_BIT_TEX(i);
++            t.size_masks[2-1] |= FRAG_BIT_TEX(i);
++            t.size_masks[1-1] |= FRAG_BIT_TEX(i);
++         }
++      }
++   }
++
+    if (memcmp(brw->wm.input_size_masks, t.size_masks, sizeof(t.size_masks)) != 0) {
+       memcpy(brw->wm.input_size_masks, t.size_masks, sizeof(t.size_masks));
+       brw->state.dirty.brw |= BRW_NEW_WM_INPUT_DIMENSIONS;
+@@ -246,7 +263,7 @@ static void calc_wm_input_sizes( struct brw_context *brw )
+ 
+ const struct brw_tracked_state brw_wm_input_sizes = {
+    .dirty = {
+-      .mesa  = _NEW_LIGHT | _NEW_PROGRAM,
++      .mesa  = _NEW_LIGHT | _NEW_PROGRAM | _NEW_POINT,
+       .brw   = BRW_NEW_VERTEX_PROGRAM | BRW_NEW_INPUT_DIMENSIONS,
+       .cache = 0
+    },
+diff --git a/src/mesa/drivers/dri/intel/intel_chipset.h b/src/mesa/drivers/dri/intel/intel_chipset.h
+index 9c00ba8..885f6c2 100644
+--- a/src/mesa/drivers/dri/intel/intel_chipset.h
++++ b/src/mesa/drivers/dri/intel/intel_chipset.h
+@@ -114,15 +114,15 @@
+ #define PCI_CHIP_HASWELL_ULT_S_GT1      0x0A0A /* Server */
+ #define PCI_CHIP_HASWELL_ULT_S_GT2      0x0A1A
+ #define PCI_CHIP_HASWELL_ULT_S_GT2_PLUS 0x0A2A
+-#define PCI_CHIP_HASWELL_CRW_GT1        0x0D12 /* Desktop */
+-#define PCI_CHIP_HASWELL_CRW_GT2        0x0D22
+-#define PCI_CHIP_HASWELL_CRW_GT2_PLUS   0x0D32
+-#define PCI_CHIP_HASWELL_CRW_M_GT1      0x0D16 /* Mobile */
+-#define PCI_CHIP_HASWELL_CRW_M_GT2      0x0D26
+-#define PCI_CHIP_HASWELL_CRW_M_GT2_PLUS 0x0D36
+-#define PCI_CHIP_HASWELL_CRW_S_GT1      0x0D1A /* Server */
+-#define PCI_CHIP_HASWELL_CRW_S_GT2      0x0D2A
+-#define PCI_CHIP_HASWELL_CRW_S_GT2_PLUS 0x0D3A
++#define PCI_CHIP_HASWELL_CRW_GT1        0x0D02 /* Desktop */
++#define PCI_CHIP_HASWELL_CRW_GT2        0x0D12
++#define PCI_CHIP_HASWELL_CRW_GT2_PLUS   0x0D22
++#define PCI_CHIP_HASWELL_CRW_M_GT1      0x0D06 /* Mobile */
++#define PCI_CHIP_HASWELL_CRW_M_GT2      0x0D16
++#define PCI_CHIP_HASWELL_CRW_M_GT2_PLUS 0x0D26
++#define PCI_CHIP_HASWELL_CRW_S_GT1      0x0D0A /* Server */
++#define PCI_CHIP_HASWELL_CRW_S_GT2      0x0D1A
++#define PCI_CHIP_HASWELL_CRW_S_GT2_PLUS 0x0D2A
+ 
+ #define IS_MOBILE(devid)	(devid == PCI_CHIP_I855_GM || \
+ 				 devid == PCI_CHIP_I915_GM || \
+diff --git a/src/mesa/main/attrib.c b/src/mesa/main/attrib.c
+index a951283..6d91534 100644
+--- a/src/mesa/main/attrib.c
++++ b/src/mesa/main/attrib.c
+@@ -130,6 +130,9 @@ struct gl_enable_attrib
+    GLboolean VertexProgramPointSize;
+    GLboolean VertexProgramTwoSide;
+ 
++   /* GL_ARB_fragment_program */
++   GLboolean FragmentProgram;
++
+    /* GL_ARB_point_sprite / GL_NV_point_sprite */
+    GLboolean PointSprite;
+    GLboolean FragmentShaderATI;
+@@ -316,6 +319,10 @@ _mesa_PushAttrib(GLbitfield mask)
+       attr->VertexProgram = ctx->VertexProgram.Enabled;
+       attr->VertexProgramPointSize = ctx->VertexProgram.PointSizeEnabled;
+       attr->VertexProgramTwoSide = ctx->VertexProgram.TwoSideEnabled;
++
++      /* GL_ARB_fragment_program */
++      attr->FragmentProgram = ctx->FragmentProgram.Enabled;
++
+       save_attrib_data(&head, GL_ENABLE_BIT, attr);
+ 
+       /* GL_ARB_framebuffer_sRGB / GL_EXT_framebuffer_sRGB */
+@@ -607,6 +614,11 @@ pop_enable_group(struct gl_context *ctx, const struct gl_enable_attrib *enable)
+                    enable->VertexProgramTwoSide,
+                    GL_VERTEX_PROGRAM_TWO_SIDE_ARB);
+ 
++   /* GL_ARB_fragment_program */
++   TEST_AND_UPDATE(ctx->FragmentProgram.Enabled,
++                   enable->FragmentProgram,
++                   GL_FRAGMENT_PROGRAM_ARB);
++
+    /* GL_ARB_framebuffer_sRGB / GL_EXT_framebuffer_sRGB */
+    TEST_AND_UPDATE(ctx->Color.sRGBEnabled, enable->sRGBEnabled,
+                    GL_FRAMEBUFFER_SRGB);
+diff --git a/src/mesa/main/context.c b/src/mesa/main/context.c
+index 5e9e539..df57b76 100644
+--- a/src/mesa/main/context.c
++++ b/src/mesa/main/context.c
+@@ -1072,7 +1072,6 @@ _mesa_initialize_context(struct gl_context *ctx,
+    case API_OPENGLES2:
+       ctx->FragmentProgram._MaintainTexEnvProgram = GL_TRUE;
+       ctx->VertexProgram._MaintainTnlProgram = GL_TRUE;
+-      ctx->Point.PointSprite = GL_TRUE;  /* always on for ES 2.x */
+       break;
+    }
+ 
+diff --git a/src/mesa/main/glformats.c b/src/mesa/main/glformats.c
+index 8728540..c1e1658 100644
+--- a/src/mesa/main/glformats.c
++++ b/src/mesa/main/glformats.c
+@@ -917,7 +917,7 @@ _mesa_is_compressed_format(struct gl_context *ctx, GLenum format)
+    case GL_COMPRESSED_SIGNED_RG11_EAC:
+    case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2:
+    case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2:
+-      return _mesa_is_gles3(ctx);
++      return _mesa_is_gles3(ctx) || ctx->Extensions.ARB_ES3_compatibility;
+    case GL_PALETTE4_RGB8_OES:
+    case GL_PALETTE4_RGBA8_OES:
+    case GL_PALETTE4_R5_G6_B5_OES:
+diff --git a/src/mesa/main/points.c b/src/mesa/main/points.c
+index 1778640..c925d4c 100644
+--- a/src/mesa/main/points.c
++++ b/src/mesa/main/points.c
+@@ -253,7 +253,8 @@ _mesa_init_point(struct gl_context *ctx)
+     * In a core context, the state will default to true, and the setters and
+     * getters are disabled.
+     */
+-   ctx->Point.PointSprite = (ctx->API == API_OPENGL_CORE);
++   ctx->Point.PointSprite = (ctx->API == API_OPENGL_CORE ||
++                             ctx->API == API_OPENGLES2);
+ 
+    ctx->Point.SpriteRMode = GL_ZERO; /* GL_NV_point_sprite (only!) */
+    ctx->Point.SpriteOrigin = GL_UPPER_LEFT; /* GL_ARB_point_sprite */
+diff --git a/src/mesa/main/teximage.c b/src/mesa/main/teximage.c
+index d1723b8..1b9525b 100644
+--- a/src/mesa/main/teximage.c
++++ b/src/mesa/main/teximage.c
+@@ -520,7 +520,7 @@ _mesa_base_tex_format( struct gl_context *ctx, GLint internalFormat )
+       }
+    }
+ 
+-   if (_mesa_is_gles3(ctx)) {
++   if (_mesa_is_gles3(ctx) || ctx->Extensions.ARB_ES3_compatibility) {
+       switch (internalFormat) {
+       case GL_COMPRESSED_RGB8_ETC2:
+       case GL_COMPRESSED_SRGB8_ETC2:
+@@ -3187,6 +3187,12 @@ _mesa_EGLImageTargetTexture2DOES (GLenum target, GLeglImageOES image)
+       return;
+    }
+ 
++   if (!image) {
++      _mesa_error(ctx, GL_INVALID_OPERATION,
++		  "glEGLImageTargetTexture2D(image=%p)", image);
++      return;
++   }
++
+    if (ctx->NewState & _NEW_PIXEL)
+       _mesa_update_state(ctx);
+ 
+diff --git a/src/mesa/main/texparam.c b/src/mesa/main/texparam.c
+index 52ede13..6f18ec6 100644
+--- a/src/mesa/main/texparam.c
++++ b/src/mesa/main/texparam.c
+@@ -1432,6 +1432,12 @@ _mesa_GetTexParameterfv( GLenum target, GLenum pname, GLfloat *params )
+          *params = (GLfloat) obj->Immutable;
+          break;
+ 
++      case GL_REQUIRED_TEXTURE_IMAGE_UNITS_OES:
++         if (!_mesa_is_gles(ctx) || !ctx->Extensions.OES_EGL_image_external)
++            goto invalid_pname;
++         *params = obj->RequiredTextureImageUnits;
++         break;
++
+       case GL_TEXTURE_SRGB_DECODE_EXT:
+          if (!ctx->Extensions.EXT_texture_sRGB_decode)
+             goto invalid_pname;
+diff --git a/src/mesa/state_tracker/st_atom_rasterizer.c b/src/mesa/state_tracker/st_atom_rasterizer.c
+index f20df9e..7fdfa72 100644
+--- a/src/mesa/state_tracker/st_atom_rasterizer.c
++++ b/src/mesa/state_tracker/st_atom_rasterizer.c
+@@ -135,16 +135,12 @@ static void update_raster_state( struct st_context *st )
+ 
+    /* _NEW_POLYGON 
+     */
+-   if (ctx->Polygon.OffsetUnits != 0.0 ||
+-       ctx->Polygon.OffsetFactor != 0.0) {
+-      raster->offset_point = ctx->Polygon.OffsetPoint;
+-      raster->offset_line = ctx->Polygon.OffsetLine;
+-      raster->offset_tri = ctx->Polygon.OffsetFill;
+-   }
+-
+    if (ctx->Polygon.OffsetPoint ||
+        ctx->Polygon.OffsetLine ||
+        ctx->Polygon.OffsetFill) {
++      raster->offset_point = ctx->Polygon.OffsetPoint;
++      raster->offset_line = ctx->Polygon.OffsetLine;
++      raster->offset_tri = ctx->Polygon.OffsetFill;
+       raster->offset_units = ctx->Polygon.OffsetUnits;
+       raster->offset_scale = ctx->Polygon.OffsetFactor;
+    }
+diff --git a/src/mesa/state_tracker/st_cb_bitmap.c b/src/mesa/state_tracker/st_cb_bitmap.c
+index 63dbdb2..36fffe9 100644
+--- a/src/mesa/state_tracker/st_cb_bitmap.c
++++ b/src/mesa/state_tracker/st_cb_bitmap.c
+@@ -675,11 +675,12 @@ st_flush_bitmap_cache(struct st_context *st)
+  * \return  GL_TRUE for success, GL_FALSE if bitmap is too large, etc.
+  */
+ static GLboolean
+-accum_bitmap(struct st_context *st,
++accum_bitmap(struct gl_context *ctx,
+              GLint x, GLint y, GLsizei width, GLsizei height,
+              const struct gl_pixelstore_attrib *unpack,
+              const GLubyte *bitmap )
+ {
++   struct st_context *st = ctx->st;
+    struct bitmap_cache *cache = st->bitmap.cache;
+    int px = -999, py = -999;
+    const GLfloat z = st->ctx->Current.RasterPos[2];
+@@ -729,9 +730,17 @@ accum_bitmap(struct st_context *st,
+    /* create the transfer if needed */
+    create_cache_trans(st);
+ 
++   /* PBO source... */
++   bitmap = _mesa_map_pbo_source(ctx, unpack, bitmap);
++   if (!bitmap) {
++      return FALSE;
++   }
++
+    unpack_bitmap(st, px, py, width, height, unpack, bitmap,
+                  cache->buffer, BITMAP_CACHE_WIDTH);
+ 
++   _mesa_unmap_pbo_source(ctx, unpack);
++
+    return GL_TRUE; /* accumulated */
+ }
+ 
+@@ -764,7 +773,7 @@ st_Bitmap(struct gl_context *ctx, GLint x, GLint y,
+                                                           semantic_indexes);
+    }
+ 
+-   if (UseBitmapCache && accum_bitmap(st, x, y, width, height, unpack, bitmap))
++   if (UseBitmapCache && accum_bitmap(ctx, x, y, width, height, unpack, bitmap))
+       return;
+ 
+    pt = make_bitmap_texture(ctx, width, height, unpack, bitmap);
+diff --git a/src/mesa/state_tracker/st_draw.c b/src/mesa/state_tracker/st_draw.c
+index de62264..bff8d9b 100644
+--- a/src/mesa/state_tracker/st_draw.c
++++ b/src/mesa/state_tracker/st_draw.c
+@@ -283,7 +283,7 @@ st_draw_vbo(struct gl_context *ctx,
+          /* don't trim, restarts might be inside index list */
+          cso_draw_vbo(st->cso_context, &info);
+       }
+-      else if (u_trim_pipe_prim(info.mode, &info.count))
++      else if (u_trim_pipe_prim(prims[i].mode, &info.count))
+          cso_draw_vbo(st->cso_context, &info);
+    }
+ 
+diff --git a/src/mesa/state_tracker/st_program.c b/src/mesa/state_tracker/st_program.c
+index a9111b5..f56f7cb 100644
+--- a/src/mesa/state_tracker/st_program.c
++++ b/src/mesa/state_tracker/st_program.c
+@@ -1142,7 +1142,7 @@ st_print_shaders(struct gl_context *ctx)
+ static void
+ destroy_program_variants(struct st_context *st, struct gl_program *program)
+ {
+-   if (!program)
++   if (!program || program == &_mesa_DummyProgram)
+       return;
+ 
+    switch (program->Target) {

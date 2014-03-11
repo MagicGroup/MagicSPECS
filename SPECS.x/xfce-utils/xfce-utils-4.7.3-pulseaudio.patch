@@ -1,0 +1,14 @@
+--- xfce-utils-4.7.3.orig/scripts/xinitrc.in	2010-12-05 15:39:24.000000000 +0100
++++ xfce-utils-4.7.3/scripts/xinitrc.in	2010-12-05 17:06:41.275733920 +0100
+@@ -9,6 +9,11 @@
+ 	fi
+ fi
+ 
++# Fedora 8 and later use pulseaudio, start it for sound. 
++if test x"`which pulseaudio 2>/dev/null`" != x""; then
++	pulseaudio -D &
++fi
++
+ # set $XDG_MENU_PREFIX to "xfce-" so that "xfce-applications.menu" is picked
+ # over "applications.menu" in all Xfce applications.
+ if test "x$XDG_MENU_PREFIX" = "x"; then

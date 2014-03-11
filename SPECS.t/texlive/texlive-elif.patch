@@ -1,0 +1,12 @@
+diff -up texlive-2007/libs/icu-xetex/layoutex/ParagraphLayout.cpp.elif texlive-2007/libs/icu-xetex/layoutex/ParagraphLayout.cpp
+--- texlive-2007/libs/icu-xetex/layoutex/ParagraphLayout.cpp.elif	2006-07-25 14:37:43.000000000 +0200
++++ texlive-2007/libs/icu-xetex/layoutex/ParagraphLayout.cpp	2009-02-26 10:28:40.000000000 +0100
+@@ -745,7 +745,7 @@ le_int32 ParagraphLayout::getLanguageCod
+ 
+     return nullLanguageCode;
+ }
+-#elif
++#else
+ 
+ // TODO - dummy implementation for right now...
+ le_int32 ParagraphLayout::getLanguageCode(const Locale *locale)

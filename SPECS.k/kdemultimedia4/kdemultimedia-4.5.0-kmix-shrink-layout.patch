@@ -1,0 +1,83 @@
+diff -Nuarp kdemultimedia-4.5.0.orig/kmix/kmixerwidget.cpp kdemultimedia-4.5.0/kmix/kmixerwidget.cpp
+--- kdemultimedia-4.5.0.orig/kmix/kmixerwidget.cpp	2010-04-07 23:19:06.000000000 +0800
++++ kdemultimedia-4.5.0/kmix/kmixerwidget.cpp	2010-08-20 19:27:58.216326938 +0800
+@@ -100,6 +100,7 @@ void KMixerWidget::createLayout(ViewBase
+ 
+    // create main layout
+    m_topLayout = new QVBoxLayout( this );
++   m_topLayout->setMargin( 0 );
+    m_topLayout->setSpacing( 3 );
+    m_topLayout->setObjectName( "m_topLayout" );
+ 
+diff -Nuarp kdemultimedia-4.5.0.orig/kmix/mdwslider.cpp kdemultimedia-4.5.0/kmix/mdwslider.cpp
+--- kdemultimedia-4.5.0.orig/kmix/mdwslider.cpp	2010-04-07 23:19:06.000000000 +0800
++++ kdemultimedia-4.5.0/kmix/mdwslider.cpp	2010-08-20 20:05:21.966102392 +0800
+@@ -260,6 +260,8 @@ void MDWSlider::createWidgets( bool show
+ 	if ( _orientation == Qt::Vertical )
+ 	{
+ 		QVBoxLayout *controlLayout = new QVBoxLayout(this);
++		controlLayout->setContentsMargins(0,11,0,11);
++		controlLayout->setSpacing(0);
+ 		controlLayout->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+ 		setLayout(controlLayout);
+ 
+@@ -283,7 +285,7 @@ void MDWSlider::createWidgets( bool show
+ //			m_label->setMinimumWidth(80);
+ //		if (m_label->sizeHint().width()>max && m_label->sizeHint().width()>80)
+ //			m_label->setMinimumWidth(max);
+-		m_label->setMinimumWidth(qMax(80,max));
++		m_label->setMinimumWidth(qMax(60,max));
+ 		m_label->setMinimumHeight(m_label->heightForWidth(m_label->minimumWidth()));
+ 		m_label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+ 		m_label->setAlignment(Qt::AlignHCenter);
+@@ -367,6 +369,8 @@ void MDWSlider::createWidgets( bool show
+ 	else
+ 	{
+ 		QVBoxLayout *_layout = new QVBoxLayout( this );
++		_layout->setContentsMargins(11,0,11,0);
++		_layout->setSpacing(0);
+ 
+ 		QHBoxLayout *row1 = new QHBoxLayout();
+ 		_layout->addItem( row1 );
+diff -Nuarp kdemultimedia-4.5.0.orig/kmix/viewdockareapopup.cpp kdemultimedia-4.5.0/kmix/viewdockareapopup.cpp
+--- kdemultimedia-4.5.0.orig/kmix/viewdockareapopup.cpp	2010-04-07 23:19:06.000000000 +0800
++++ kdemultimedia-4.5.0/kmix/viewdockareapopup.cpp	2010-08-20 20:22:15.336000958 +0800
+@@ -125,15 +125,15 @@ QWidget* ViewDockAreaPopup::add(MixDevic
+       this,         // parent
+       0             // Is "NULL", so that there is no RMB-popup
+    );
+-   _layoutMDW->addItem( new QSpacerItem( 5, 20 ), 0, 2 );
+-   _layoutMDW->addItem( new QSpacerItem( 5, 20 ), 0, 0 );
+-   _layoutMDW->addWidget( mdw, 0, 1 );
++//    _layoutMDW->addItem( new QSpacerItem( 5, 20 ), 0, 2 );
++//    _layoutMDW->addItem( new QSpacerItem( 5, 20 ), 0, 0 );
++   _layoutMDW->addWidget( mdw, 0, 0 );
+ 
+    // Add button to show main panel
+    _showPanelBox = new QPushButton( i18n("Mixer"), this );
+    _showPanelBox->setObjectName("MixerPanel");
+    connect ( _showPanelBox, SIGNAL( clicked() ), SLOT( showPanelSlot() ) );
+-   _layoutMDW->addWidget( _showPanelBox, 1, 0, 1, 3 );
++   _layoutMDW->addWidget( _showPanelBox, 1, 0, 1, 1 );
+ 
+    return mdw;
+ }
+diff -Nuarp kdemultimedia-4.5.0.orig/kmix/viewsliders.cpp kdemultimedia-4.5.0/kmix/viewsliders.cpp
+--- kdemultimedia-4.5.0.orig/kmix/viewsliders.cpp	2010-04-07 23:19:06.000000000 +0800
++++ kdemultimedia-4.5.0/kmix/viewsliders.cpp	2010-08-20 19:47:12.899544710 +0800
+@@ -47,6 +47,7 @@ ViewSliders::ViewSliders(QWidget* parent
+ {
+    if ( _vflags & ViewBase::Vertical ) {
+       _layoutMDW = new QVBoxLayout(this);
++      _layoutMDW->setMargin(0);
+       _layoutMDW->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+       _layoutSliders = new QVBoxLayout();
+       _layoutSliders->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+@@ -55,6 +56,7 @@ ViewSliders::ViewSliders(QWidget* parent
+    else
+    {
+       _layoutMDW = new QHBoxLayout(this);
++      _layoutMDW->setMargin(0);
+       _layoutMDW->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+       _layoutSliders = new QHBoxLayout();
+       _layoutSliders->setAlignment(Qt::AlignHCenter|Qt::AlignTop);

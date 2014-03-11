@@ -1,0 +1,1395 @@
+diff -N -r -u kickoff-i18n-1.0/po/kickoff/Makefile.in kickoff-i18n-1.0.uz.new/po/kickoff/Makefile.in
+--- kickoff-i18n-1.0/po/kickoff/Makefile.in	2007-05-24 16:10:44.000000000 +0200
++++ kickoff-i18n-1.0.uz.new/po/kickoff/Makefile.in	2007-07-22 13:59:40.000000000 +0200
+@@ -300,8 +300,8 @@
+ xdg_menudir = @xdg_menudir@
+ #>- POFILES = AUTO
+ #>+ 2
+-POFILES = zh_CN.po zh_TW.po af.po bg.po ar.po ca.po bn.po bs.po da.po de.po cs.po cy.po el.po es.po fi.po et.po fr.po gl.po he.po hi.po gu.po id.po hr.po hu.po ja.po it.po ka.po km.po ko.po lo.po lt.po mk.po nb.po mr.po nl.po pa.po pl.po pt.po ro.po ru.po sk.po sl.po ta.po sr.po sv.po tr.po uk.po vi.po wa.po xh.po zu.po en_GB.po en_US.po pt_BR.po
+-GMOFILES = zh_CN.gmo zh_TW.gmo af.gmo bg.gmo ar.gmo ca.gmo bn.gmo bs.gmo da.gmo de.gmo cs.gmo cy.gmo el.gmo es.gmo fi.gmo et.gmo fr.gmo gl.gmo he.gmo hi.gmo gu.gmo id.gmo hr.gmo hu.gmo ja.gmo it.gmo ka.gmo km.gmo ko.gmo lo.gmo lt.gmo mk.gmo nb.gmo mr.gmo nl.gmo pa.gmo pl.gmo pt.gmo ro.gmo ru.gmo sk.gmo sl.gmo ta.gmo sr.gmo sv.gmo tr.gmo uk.gmo vi.gmo wa.gmo xh.gmo zu.gmo en_GB.gmo en_US.gmo pt_BR.gmo
++POFILES = zh_CN.po zh_TW.po af.po bg.po ar.po ca.po bn.po bs.po da.po de.po cs.po cy.po el.po es.po fi.po et.po fr.po gl.po he.po hi.po gu.po id.po hr.po hu.po ja.po it.po ka.po km.po ko.po lo.po lt.po mk.po nb.po mr.po nl.po pa.po pl.po pt.po ro.po ru.po sk.po sl.po ta.po sr.po sv.po tr.po uk.po vi.po wa.po xh.po zu.po en_GB.po en_US.po pt_BR.po uz.po
++GMOFILES = zh_CN.gmo zh_TW.gmo af.gmo bg.gmo ar.gmo ca.gmo bn.gmo bs.gmo da.gmo de.gmo cs.gmo cy.gmo el.gmo es.gmo fi.gmo et.gmo fr.gmo gl.gmo he.gmo hi.gmo gu.gmo id.gmo hr.gmo hu.gmo ja.gmo it.gmo ka.gmo km.gmo ko.gmo lo.gmo lt.gmo mk.gmo nb.gmo mr.gmo nl.gmo pa.gmo pl.gmo pt.gmo ro.gmo ru.gmo sk.gmo sl.gmo ta.gmo sr.gmo sv.gmo tr.gmo uk.gmo vi.gmo wa.gmo xh.gmo zu.gmo en_GB.gmo en_US.gmo pt_BR.gmo uz.gmo
+ #>- all: all-am
+ #>+ 1
+ all: all-nls docs-am  all-am
+@@ -494,9 +494,9 @@
+ .NOEXPORT:
+ 
+ #>+ 2
+-KDE_DIST=mk.po bs.po zh_CN.po sr.po nl.po id.po pt.po hr.po ru.po da.po fi.po ko.po uk.po gl.po bn.po ar.po de.po et.po af.po ta.po nb.po ca.po fr.po el.po cs.po tr.po he.po zh_TW.po en_US.po ro.po Makefile.in zu.po wa.po bg.po pt_BR.po ja.po sv.po hu.po pl.po cy.po lt.po es.po ka.po km.po mr.po lo.po hi.po en_GB.po xh.po vi.po sk.po it.po Makefile.am gu.po sl.po pa.po 
++KDE_DIST=mk.po bs.po zh_CN.po sr.po nl.po id.po pt.po uz.po hr.po ru.po da.po fi.po ko.po uk.po gl.po bn.po ar.po de.po et.po af.po ta.po nb.po ca.po fr.po el.po cs.po tr.po he.po zh_TW.po en_US.po ro.po Makefile.in zu.po wa.po bg.po pt_BR.po ja.po sv.po hu.po pl.po cy.po lt.po es.po ka.po km.po mr.po lo.po hi.po en_GB.po xh.po vi.po sk.po it.po Makefile.am gu.po sl.po pa.po 
+ 
+-#>+ 163
++#>+ 166
+ zh_CN.gmo: zh_CN.po
+ 	rm -f zh_CN.gmo; $(GMSGFMT) -o zh_CN.gmo $(srcdir)/zh_CN.po
+ 	test ! -f zh_CN.gmo || touch zh_CN.gmo
+@@ -659,14 +659,17 @@
+ pt_BR.gmo: pt_BR.po
+ 	rm -f pt_BR.gmo; $(GMSGFMT) -o pt_BR.gmo $(srcdir)/pt_BR.po
+ 	test ! -f pt_BR.gmo || touch pt_BR.gmo
++uz.gmo: uz.po
++	rm -f uz.gmo; $(GMSGFMT) -o uz.gmo $(srcdir)/uz.po
++	test ! -f uz.gmo || touch uz.gmo
+ 
+ #>+ 3
+ clean-nls:
+-	-rm -f  zh_CN.gmo zh_TW.gmo af.gmo bg.gmo ar.gmo ca.gmo bn.gmo bs.gmo da.gmo de.gmo cs.gmo cy.gmo el.gmo es.gmo fi.gmo et.gmo fr.gmo gl.gmo he.gmo hi.gmo gu.gmo id.gmo hr.gmo hu.gmo ja.gmo it.gmo ka.gmo km.gmo ko.gmo lo.gmo lt.gmo mk.gmo nb.gmo mr.gmo nl.gmo pa.gmo pl.gmo pt.gmo ro.gmo ru.gmo sk.gmo sl.gmo ta.gmo sr.gmo sv.gmo tr.gmo uk.gmo vi.gmo wa.gmo xh.gmo zu.gmo en_GB.gmo en_US.gmo pt_BR.gmo
++	-rm -f  zh_CN.gmo zh_TW.gmo af.gmo bg.gmo ar.gmo ca.gmo bn.gmo bs.gmo da.gmo de.gmo cs.gmo cy.gmo el.gmo es.gmo fi.gmo et.gmo fr.gmo gl.gmo he.gmo hi.gmo gu.gmo id.gmo hr.gmo hu.gmo ja.gmo it.gmo ka.gmo km.gmo ko.gmo lo.gmo lt.gmo mk.gmo nb.gmo mr.gmo nl.gmo pa.gmo pl.gmo pt.gmo ro.gmo ru.gmo sk.gmo sl.gmo ta.gmo sr.gmo sv.gmo tr.gmo uk.gmo vi.gmo wa.gmo xh.gmo zu.gmo en_GB.gmo en_US.gmo pt_BR.gmo uz.gmo
+ 
+ #>+ 10
+ install-nls:
+-	@for base in zh_CN zh_TW af bg ar ca bn bs da de cs cy el es fi et fr gl he hi gu id hr hu ja it ka km ko lo lt mk nb mr nl pa pl pt ro ru sk sl ta sr sv tr uk vi wa xh zu en_GB en_US pt_BR ; do \
++	@for base in zh_CN zh_TW af bg ar ca bn bs da de cs cy el es fi et fr gl he hi gu id hr hu ja it ka km ko lo lt mk nb mr nl pa pl pt ro ru sk sl ta sr sv tr uk vi wa xh zu en_GB en_US pt_BR uz ; do \
+ 	  echo $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
+ 	  $(mkinstalldirs) $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES ; \
+ 	  if test -f $$base.gmo; then $(INSTALL_DATA) $$base.gmo $(DESTDIR)$(kde_locale)/$$base/LC_MESSAGES/$(PACKAGE).mo ;\
+@@ -675,7 +678,7 @@
+ 	done
+ 
+ 
+-#>+ 56
++#>+ 57
+ uninstall-nls:
+ 	rm -f $(DESTDIR)$(kde_locale)/zh_CN/LC_MESSAGES/$(PACKAGE).mo
+ 	rm -f $(DESTDIR)$(kde_locale)/zh_TW/LC_MESSAGES/$(PACKAGE).mo
+@@ -731,6 +734,7 @@
+ 	rm -f $(DESTDIR)$(kde_locale)/en_GB/LC_MESSAGES/$(PACKAGE).mo
+ 	rm -f $(DESTDIR)$(kde_locale)/en_US/LC_MESSAGES/$(PACKAGE).mo
+ 	rm -f $(DESTDIR)$(kde_locale)/pt_BR/LC_MESSAGES/$(PACKAGE).mo
++	rm -f $(DESTDIR)$(kde_locale)/uz/LC_MESSAGES/$(PACKAGE).mo
+ 
+ #>+ 2
+ all-nls: $(GMOFILES)
+diff -N -r -u kickoff-i18n-1.0/po/kickoff/uz.po kickoff-i18n-1.0.uz.new/po/kickoff/uz.po
+--- kickoff-i18n-1.0/po/kickoff/uz.po	1970-01-01 01:00:00.000000000 +0100
++++ kickoff-i18n-1.0.uz.new/po/kickoff/uz.po	2007-07-22 13:59:23.000000000 +0200
+@@ -0,0 +1,1328 @@
++# translation of kickoff-uz.po to Uzbek
++#
++# Mashrab Kuvatov <kmashrab@uni-bremen.de>, 2007.
++msgid ""
++msgstr ""
++"Project-Id-Version: kickoff-uz\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2006-10-27 12:08+0200\n"
++"PO-Revision-Date: 2007-07-22 13:41+0200\n"
++"Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
++"Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.11.4\n"
++
++#: china.cpp:2
++msgid "Country or region:"
++msgstr "Давлат:"
++
++#: china.cpp:3 china.cpp:13
++msgid "Here you can choose your country or region. The settings for languages, numbers etc. will automatically switch to the corresponding values."
++msgstr ""
++"Бу ерда давлатингизни танлашингиз мумкин. Тил, сон, ва ҳоказо мосламалар "
++"автоматик равишда тегишли қийматларни қабул қилади."
++
++#: china.cpp:5
++msgid ""
++"<h1>Country/Region & Language</h1>\n"
++"<p>From here you can configure language, numeric, and time \n"
++"settings for your particular region. In most cases it will be \n"
++"sufficient to choose the country you live in. For instance KDE \n"
++"will automatically choose \"German\" as language if you choose \n"
++"\"Germany\" from the list. It will also change the time format \n"
++"to use 24 hours and and use comma as decimal separator.</p>\n"
++msgstr ""
++"<h1>Давлат ва тил</h1>\n"
++"<p>Бу ерда, сизнинг жойингизга таълуқ бўлган тил, сон, ва вақт \n"
++"мосламаларини мослашингиз мумкин. Кўпчилик ҳолатларда, сиз \n"
++"яшаётган давлатингизни танласангиз етади. Масалан, рўйхатдан \n"
++"Германияни танласангиз KDE тил сифатида Олмон тилини танлайди.\n"
++"Бундан ташқари, у 24 соатлик вақт кўринишни ва ўнликни ажратиш \n"
++"учун вергулни танлайди.</p>\n"
++
++#: china.cpp:12
++msgid "This is where you live. KDE will use the defaults for this country or region."
++msgstr "Бу ер сизнинг яшаш жойингиз. Бу давлат учун KDE андоза маълумотни қўллайди."
++
++#: dirfilter.cpp:1 kdeaddons3.spec.cpp:3
++msgid "Filter This Folder"
++msgstr ""
++
++#: dirfilter.cpp:2 kdeaddons3.spec.cpp:7 kdebase3.spec.cpp:252
++msgid "Search Index"
++msgstr "Мукаммал қидириш"
++
++#: dirfilter.cpp:3 kdeaddons3.spec.cpp:10
++msgid "Enter here a text which shall be searched on the whole system in the Beagle index."
++msgstr ""
++
++#: kaffeine.spec.cpp:2
++msgid ""
++"This version of Xine (used by Kaffeine) has only a reduced\n"
++"set of supported codecs. It is not able to play DVDs.\n"
++"Read http://portal.suse.com/sdb/en/2003/09/xine_dvd.html for further details."
++msgstr ""
++
++#: kaffeine.spec.cpp:5
++msgid "No WIN32 codecs found in /usr/lib/win32. You're not able to play Windows Media 9 files, newer Real Media files and some less common formats."
++msgstr ""
++
++#: kaffeine.spec.cpp:8
++msgid "libdvdcss not found. You're not able to play encrypted (most commercial) DVD's."
++msgstr ""
++
++#: kaffeine.spec.cpp:11
++msgid "The xine-lib shipped by SuSE \"may lack certain features because of legal requirements (potential patent violation)\"."
++msgstr ""
++
++#: kconfigeditor.spec.cpp:2
++msgid "Parsing configuration files..."
++msgstr ""
++
++#: kconfigeditor.spec.cpp:5
++msgid "Application ready"
++msgstr ""
++
++#: kdeaddons3.spec.cpp:13 searchbar.cpp:1
++msgid "Use Google Suggest"
++msgstr ""
++
++#: kdeaddons3.spec.cpp:16 searchbar.cpp:2
++msgid "For Google Only"
++msgstr ""
++
++#: kdeaddons3.spec.cpp:19 searchbar.cpp:3
++msgid "For All Searches"
++msgstr ""
++
++#: kdeaddons3.spec.cpp:22 searchbar.cpp:4
++msgid "Never"
++msgstr "Ҳеч қачон"
++
++#: kdebase3.spec.cpp:2
++msgid "XFree theme %1 - incomplete for KDE"
++msgstr ""
++
++#: kdebase3.spec.cpp:5
++msgid "Please enter the Administrator (root) password to continue."
++msgstr "Давом этиш учун администратор (root) учун махфий сўзни киритинг."
++
++#: kdebase3.spec.cpp:8
++msgid "Please enter password for \"%1\" to continue."
++msgstr "Давом этиш учун \"%1\" учун махфий сўзни киритинг."
++
++#: kdebase3.spec.cpp:14
++msgid "&Suspend Computer"
++msgstr "Компьютерни &хотирага ўчириш"
++
++#: kdebase3.spec.cpp:19
++msgid "Suspend to Disk"
++msgstr "Компьютерни дискка ўчириш"
++
++#: kdebase3.spec.cpp:24
++msgid "Suspend to RAM"
++msgstr "Компьютерни хотирага ўчириш"
++
++#: kdebase3.spec.cpp:29
++msgid "Standby"
++msgstr "Компьютерни хотирага ўчириш"
++
++#: kdebase3.spec.cpp:33
++msgid "Suspend Computer"
++msgstr "Компьютерни хотирага ўчириш"
++
++#: kdebase3.spec.cpp:36
++msgid "&Language"
++msgstr "&Тил"
++
++#: kdebase3.spec.cpp:39
++msgid "&System"
++msgstr "&Тизим"
++
++#: kdebase3.spec.cpp:42
++msgid "&Administration"
++msgstr "&Бошқарув"
++
++#: kdebase3.spec.cpp:45
++msgid "&Disconnect"
++msgstr "&Узиш"
++
++#: kdebase3.spec.cpp:51
++msgid "Power O&ff"
++msgstr "Ўч&ириш"
++
++#: kdebase3.spec.cpp:54
++msgid "S&uspend"
++msgstr "&Хотирага ўчириш"
++
++#: kdebase3.spec.cpp:57
++msgid "&Reboot"
++msgstr "Ўчири&б-ёқиш"
++
++#: kdebase3.spec.cpp:60
++msgid "Caps Lock is enabled."
++msgstr "Caps Lock тугмаси босилган."
++
++#: kdebase3.spec.cpp:63
++#, c-format
++msgid "User %s will log in in %d seconds"
++msgstr "Фойдаланувчи %s %d сониядан сўнг тизимга киради"
++
++#: kdebase3.spec.cpp:66
++msgid "&Username:"
++msgstr "Ф&ойдаланувчи:"
++
++#: kdebase3.spec.cpp:69
++msgid "&Password:"
++msgstr "&Махфий сўз:"
++
++#: kdebase3.spec.cpp:72
++msgid "&Domain:"
++msgstr "До&мен:"
++
++#: kdebase3.spec.cpp:75
++msgid "&Top"
++msgstr "Юқ&ори"
++
++#: kdebase3.spec.cpp:78
++msgid "<p>This link references a home page or the top of some hierarchy.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:81
++msgid "<p>This link references the immediate parent of the current document.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:84
++msgid "&First"
++msgstr "&Биринчи"
++
++#: kdebase3.spec.cpp:87
++msgid "<p>This link type tells search engines which document is considered by the author to be the starting point of the collection.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:93
++msgid "<p>This link references the previous document in an ordered series of documents.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:96
++msgid "&Next"
++msgstr "&Кейинги"
++
++#: kdebase3.spec.cpp:99
++msgid "<p>This link references the next document in an ordered series of documents.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:102
++msgid "&Last"
++msgstr "&Охирги"
++
++#: kdebase3.spec.cpp:105
++msgid "<p>This link references the end of a sequence of documents.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:108
++msgid "<p>This link references the search.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:111
++msgid "Document"
++msgstr "Ҳужжат"
++
++#: kdebase3.spec.cpp:114
++msgid "<p>This menu contains the links referring the document information.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:117
++msgid "<p>This link references the table of contents.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:120
++msgid "Chapters"
++msgstr "Боблар"
++
++#: kdebase3.spec.cpp:123
++msgid "<p>This menu references the chapters of the document.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:126
++msgid "Sections"
++msgstr "Бўлимлар"
++
++#: kdebase3.spec.cpp:129
++msgid "<p>This menu references the sections of the document.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:132
++msgid "Subsections"
++msgstr "Туб бўлимлар"
++
++#: kdebase3.spec.cpp:135
++msgid "<p>This menu references the subsections of the document.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:138
++msgid "Appendix"
++msgstr ""
++
++#: kdebase3.spec.cpp:141
++msgid "<p>This link references the appendix.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:144
++msgid "&Glossary"
++msgstr ""
++
++#: kdebase3.spec.cpp:147
++msgid "<p>This link references the glossary.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:150
++msgid "&Index"
++msgstr "&Индекс"
++
++#: kdebase3.spec.cpp:153
++msgid "<p>This link references the index.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:156
++msgid "<p>This menu contains other important links.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:159
++msgid "<p>This link references the help.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:162
++msgid "&Authors"
++msgstr "&Муаллифлар"
++
++#: kdebase3.spec.cpp:165
++msgid "<p>This link references the author.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:168
++msgid "Copy&right"
++msgstr "Муа&ллифлик ҳуқуқи"
++
++#: kdebase3.spec.cpp:171
++msgid "<p>This link references the copyright.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:174
++msgid "<p>This menu references the bookmarks.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:177
++msgid "Other Versions"
++msgstr "Бошқа версиялар"
++
++#: kdebase3.spec.cpp:180
++msgid "<p>This link references the alternate versions of this document.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:183
++msgid "<p>Miscellaneous links.</p>"
++msgstr ""
++
++#: kdebase3.spec.cpp:190
++#, c-format
++msgid "Folder: %1"
++msgstr "Жилд: %1"
++
++#: kdebase3.spec.cpp:193
++msgid "No subject"
++msgstr "Мавзусиз"
++
++#: kdebase3.spec.cpp:196
++msgid "(Attachment) "
++msgstr "(Илова) "
++
++#: kdebase3.spec.cpp:200
++#, c-format
++msgid "From %1"
++msgstr ""
++
++#: kdebase3.spec.cpp:203
++#, c-format
++msgid "By %1"
++msgstr "%1 ижросида"
++
++#: kdebase3.spec.cpp:206
++#, c-format
++msgid "From Album %1"
++msgstr "%1 албомидан"
++
++#: kdebase3.spec.cpp:209
++#, c-format
++msgid "Title: %1"
++msgstr ""
++
++#: kdebase3.spec.cpp:215
++#, c-format
++msgid "Conversation With %1"
++msgstr "%1 билан суҳбат"
++
++#: kdebase3.spec.cpp:218
++msgid "Unknown Person"
++msgstr "Номаълум шахс"
++
++#: kdebase3.spec.cpp:221
++#, c-format
++msgid "Date: %1"
++msgstr "Сана: %1"
++
++#: kdebase3.spec.cpp:224
++msgid "Switch to Kickoff Menu Style"
++msgstr "Янги менюдан фойдаланиш"
++
++#: kdebase3.spec.cpp:227
++msgid "Switch to KDE Menu Style"
++msgstr "Андоза менюдан фойдаланиш"
++
++#: kdebase3.spec.cpp:231
++msgid "New Applications"
++msgstr "Янги дастурлар"
++
++#: kdebase3.spec.cpp:234
++#, c-format
++msgid "Host: %1"
++msgstr "Компьютер: %1"
++
++#: kdebase3.spec.cpp:237
++msgid "Directory: /)"
++msgstr "Директория: /)"
++
++#: kdebase3.spec.cpp:240
++msgid "Directory: "
++msgstr "Директория: "
++
++#: kdebase3.spec.cpp:243
++msgid "Press '/' to search..."
++msgstr "Қидириш учун '/'ни босинг..."
++
++#: kdebase3.spec.cpp:246
++msgid "User&nbsp;<b>%1</b>&nbsp;on&nbsp;<b>%2</b>"
++msgstr "Фойдаланувчи&nbsp;<b>%1</b>&nbsp;компьютер&nbsp;<b>%2</b>"
++
++#: kdebase3.spec.cpp:249
++msgid "Search Internet"
++msgstr "Интернетда қидириш"
++
++#: kdebase3.spec.cpp:255
++msgid "Applications, Contacts and Documents"
++msgstr "Дастурлар, алоқалар ва ҳужжатлар"
++
++#: kdebase3.spec.cpp:258
++msgid "Recently used applications and documents"
++msgstr "Яқинда фойдаланилган дастур ва ҳужжатлар"
++
++#: kdebase3.spec.cpp:261
++msgid "Most commonly used applications and documents"
++msgstr "Энг кўп фойдаланадиган дастур ва ҳужжатлар"
++
++#: kdebase3.spec.cpp:264
++msgid "List of installed applications"
++msgstr "Ўрнатилган дастурларнинг рўйхати"
++
++#: kdebase3.spec.cpp:267
++msgid "Information and configuration of your system, access to personal files, network resources and connected disk drives"
++msgstr "Тизим ҳақида маълумот, шахсий файллар, тармоқдаги нарсалар ва уланган дискларга қисқа йўл"
++
++#: kdebase3.spec.cpp:270
++msgid "<qt>Logout, switch user, switch off or reset, suspend of the system"
++msgstr "<qt>Тизимдан чиқиш, фойдаланувчини ўзгартириш, компьютерни ўчириш ёки ўчириб-ёқиш"
++
++#: kdebase3.spec.cpp:273
++msgid "Search for personal files and applications"
++msgstr "Шахсий файл ва дастурларни қидириш"
++
++#: kdebase3.spec.cpp:276
++msgid "Start '%1'"
++msgstr ""
++
++#: kdebase3.spec.cpp:279
++msgid "Start '%1' (current)"
++msgstr ""
++
++#: kdebase3.spec.cpp:282
++msgid "Restart and boot directly into '%1'"
++msgstr "Ўчириш ва '%1' ОТни ишга тушириш"
++
++#: kdebase3.spec.cpp:285
++msgid "Start a parallel session"
++msgstr "Параллел сеансни бошлаш"
++
++#: kdebase3.spec.cpp:288
++msgid "Lock screen and start a parallel session"
++msgstr "Экранни қулфлаш ва параллел сеансни бошлаш"
++
++#: kdebase3.spec.cpp:291
++msgid "Switch to Session of User '%1'"
++msgstr "Фойдаланувчи '%1' сеансига ўтиш"
++
++#: kdebase3.spec.cpp:294
++#, c-format
++msgid "Session: %1"
++msgstr "Сеанс: %1"
++
++#: kdebase3.spec.cpp:298
++msgid "Logout"
++msgstr "Чиқиш"
++
++#: kdebase3.spec.cpp:301
++msgid "End session"
++msgstr "Сеансни тугатиш"
++
++#: kdebase3.spec.cpp:304
++msgid "Lock"
++msgstr "Қулфлаш"
++
++#: kdebase3.spec.cpp:307
++msgid "Lock screen"
++msgstr "Экранни қулфлаш"
++
++#: kdebase3.spec.cpp:310
++msgid "Save current Session for next login"
++msgstr "Жорий сеансни сақлаш"
++
++#: kdebase3.spec.cpp:313
++msgid "Manage parallel sessions"
++msgstr "Параллел сеансларни бошқариш"
++
++#: kdebase3.spec.cpp:316
++msgid "Shutdown Computer"
++msgstr "Компьютерни ўчириш"
++
++#: kdebase3.spec.cpp:319
++msgid "Turn off computer"
++msgstr "Компьютерни тўлиқ ўчириш"
++
++#: kdebase3.spec.cpp:324
++msgid "Pause without logging out"
++msgstr ""
++
++#: kdebase3.spec.cpp:327
++msgid "Restart and boot this system"
++msgstr "Компьютерни ўчириб уни қайтадан ёқиш"
++
++#: kdebase3.spec.cpp:330
++msgid "Start Operating System"
++msgstr "Операцион тизимни ишга тушириш"
++
++#: kdebase3.spec.cpp:333
++msgid "Restart and boot another operating system"
++msgstr "Компьютерни ўчириш ва бошқа операцион тизимни ишга тушириш"
++
++#: kdebase3.spec.cpp:338
++msgid "Applications"
++msgstr "Дастурлар"
++
++#: kdebase3.spec.cpp:341
++msgid "System Settings"
++msgstr "Тизим мосламалари"
++
++#: kdebase3.spec.cpp:344
++msgid "YaST2"
++msgstr "YaST2"
++
++#: kdebase3.spec.cpp:347
++msgid "System Information"
++msgstr "Тизим ҳақида маълумот"
++
++#: kdebase3.spec.cpp:350
++msgid "System Folders"
++msgstr "Тизим жилдлари"
++
++#: kdebase3.spec.cpp:353
++msgid "Home Folder"
++msgstr "Уй жилди"
++
++#: kdebase3.spec.cpp:356
++msgid "My Documents"
++msgstr "Ҳужжатлар"
++
++#: kdebase3.spec.cpp:359
++msgid "Network Folders"
++msgstr "Тармоқ жилдлари"
++
++#: kdebase3.spec.cpp:362
++msgid "Documents"
++msgstr "Ҳужжатлар"
++
++#: kdebase3.spec.cpp:366
++#, c-format
++msgid "Send Email to %1"
++msgstr "Хат жўнатиш: %1"
++
++#: kdebase3.spec.cpp:369
++#, c-format
++msgid "Open Addressbook at %1"
++msgstr ""
++
++#: kdebase3.spec.cpp:372
++msgid "- Add ext:type to specify a file extension."
++msgstr ""
++
++#: kdebase3.spec.cpp:375
++msgid "- When searching for a phrase, add quotes."
++msgstr ""
++
++#: kdebase3.spec.cpp:378
++msgid "- To exclude search terms, use the minus symbol in front."
++msgstr ""
++
++#: kdebase3.spec.cpp:381
++msgid "- To search for optional terms, use OR."
++msgstr ""
++
++#: kdebase3.spec.cpp:384
++msgid "- You can use upper and lower case."
++msgstr ""
++
++#: kdebase3.spec.cpp:387
++msgid "Search Quick Tips"
++msgstr "Қидириш маслаҳатлари"
++
++#: kdebase3.spec.cpp:390
++msgid "%1 = %2"
++msgstr ""
++
++#: kdebase3.spec.cpp:393
++#, c-format
++msgid "Open Local File: %1"
++msgstr ""
++
++#: kdebase3.spec.cpp:396
++#, c-format
++msgid "Open Local Dir: %1"
++msgstr ""
++
++#: kdebase3.spec.cpp:399
++#, c-format
++msgid "Open Remote Location: %1"
++msgstr ""
++
++#: kdebase3.spec.cpp:402
++msgid "Run '%1'"
++msgstr "'%1'ни ишга тушириш"
++
++#: kdebase3.spec.cpp:406
++msgid "No matches found"
++msgstr "Мос келадиган ҳеч нарса топилмади"
++
++#: kdebase3.spec.cpp:409
++msgid "top %1 of %2"
++msgstr "жами %2-дан, %1-та натижа"
++
++#: kdebase3.spec.cpp:412
++msgid "%1 (top %2 of %3)"
++msgstr "%1 (жами %3-дан, %2-та натижа)"
++
++#: kdebase3.spec.cpp:415
++msgid "Do you really want to end the session?"
++msgstr "Ростдан жорий сеансни тугатишни истайсизми?"
++
++#: kdebase3.spec.cpp:418
++msgid "Logout Confirmation"
++msgstr "Чиқишни тасдиқлаш"
++
++#: kdebase3.spec.cpp:421
++msgid "Do you really want to turn off the computer?"
++msgstr "Ростдан компьютерни ўчиришни истайсизми?"
++
++#: kdebase3.spec.cpp:424
++msgid "Shutdown Confirmation"
++msgstr "Ўчиришни тасдиқлаш"
++
++#: kdebase3.spec.cpp:427
++msgid "Shutdown"
++msgstr "Ўчириш"
++
++#: kdebase3.spec.cpp:430
++msgid "Do you really want to reset the computer and boot (another operating system)?"
++msgstr "Ростдан компьютерни ўчириб бошқа ОТни ишга туширишни истайсизми?"
++
++#: kdebase3.spec.cpp:433
++msgid "Restart Confirmation"
++msgstr "Ўчириб-ёқишни тасдиқлаш"
++
++#: kdebase3.spec.cpp:436
++msgid "Restart"
++msgstr "Ўчириб-ёқиш"
++
++#: kdebase3.spec.cpp:439
++msgid "Do you really want to pause the computer without logging out?"
++msgstr ""
++
++#: kdebase3.spec.cpp:442
++msgid "Suspend Confirmation"
++msgstr ""
++
++#: kdebase3.spec.cpp:445
++msgid "Do you really want to reset the computer and boot Microsoft Windows"
++msgstr "Ростдан компьютерни ўчириб Microsoft Windows ОТни ишга туширишни истайсизми?"
++
++#: kdebase3.spec.cpp:448
++msgid "Start Windows Confirmation"
++msgstr "Windows ОТни ишга туширишни тасдиқлаш"
++
++#: kdebase3.spec.cpp:451
++msgid "Start Windows"
++msgstr "Windows ОТни ишга тушириш"
++
++#: kdebase3.spec.cpp:454
++msgid "Could not start Tomboy."
++msgstr "Tomboy дастурини ишга тушириб бўлмади."
++
++#: kdebase3.spec.cpp:457
++msgid "Remove From Favorites"
++msgstr "Севимлидан олиб ташлаш"
++
++#: kdebase3.spec.cpp:460
++msgid "Add to Favorites"
++msgstr "Севимлига қўшиш"
++
++#: kdebase3.spec.cpp:463
++msgid "Clear Recently Used Applications"
++msgstr "Яқинда ишлатилган дастурларни тозалаш"
++
++#: kdebase3.spec.cpp:466
++msgid "Clear Recently Used Documents"
++msgstr "Яқинда ишлатилган ҳужжатларни тозалаш"
++
++#: kdebase3.spec.cpp:469
++msgid "Media"
++msgstr "Сақлаш ускуналар"
++
++#: kdebase3.spec.cpp:472
++msgid "(%1 available)"
++msgstr "(%1 бўш жой)"
++
++#: kdebase3.spec.cpp:476
++#, c-format
++msgid "Directory: %1"
++msgstr "Директория: %1"
++
++#: kdebase3.spec.cpp:479
++msgid "Notes"
++msgstr "Ёзма хотиралар"
++
++#: kdebase3.spec.cpp:482
++msgid "Emails"
++msgstr "Хатлар"
++
++#: kdebase3.spec.cpp:488
++msgid "Music"
++msgstr "Мусиқа"
++
++#: kdebase3.spec.cpp:491
++msgid "Browsing History"
++msgstr "Интернет тарихи"
++
++#: kdebase3.spec.cpp:494
++msgid "Chat Logs"
++msgstr ""
++
++#: kdebase3.spec.cpp:497
++msgid "Feeds"
++msgstr "Янгиликлар тасмалари"
++
++#: kdebase3.spec.cpp:500
++msgid "Pictures"
++msgstr "Расмлар"
++
++#: kdebase3.spec.cpp:503
++msgid "Videos"
++msgstr "Видеолар"
++
++#: kdebase3.spec.cpp:506
++msgid "Documentation"
++msgstr "Қўлланмалар"
++
++#: kdebase3.spec.cpp:509
++msgid "Others"
++msgstr "Бошқалар"
++
++#: kdebase3.spec.cpp:512
++msgid "You are running low on disk space on your home partition (currently %1% free), would you like to run Konqueror to free some disk space and fix the problem?"
++msgstr "Уй директориянгиз жойлашган дискнинг қисмидаги бўш жой жуда кам (%1% бўш). Кўпроқ бўш жой ажратиш учун Konqueror дастурини ишга тушириб муаммони ечишни истайсизми?"
++
++#: kdebase3.spec.cpp:515
++msgid "Low Disk Space"
++msgstr "Дискдаги бўш жой жуда кам"
++
++#: kdebase3.spec.cpp:518
++msgid "Start Konqueror"
++msgstr "Konqueror'ни ишга тушириш"
++
++#: kdebase3.spec.cpp:521
++msgid "Wor&k Offline"
++msgstr ""
++
++#: kdebase3.spec.cpp:524
++msgid "<qt><h3>End Current Session</h3><p>Log out of the current session to login with a different user</p></qt>"
++msgstr "<qt><h3>Жорий сеансни тугатиш</h3><p>Тизимга бошқа фойдаланувчи сифатида кириш учун жорий сеансдан чиқиш</p></qt>"
++
++#: kdebase3.spec.cpp:527
++msgid "<qt><h3>Turn Off Computer</h3><p>Log out of the current session and turn off the computer</p></qt>"
++msgstr "<qt><h3>Компьютерни ўчириш</h3><p>Жорий сеансдан чиқиш ва компьютерни ўчириш</p></qt>"
++
++#: kdebase3.spec.cpp:530
++msgid "<qt><h3>Restart Computer</h3><p>Log out of the current session and restart the computer</p><p>Hold the mouse button or the space bar for a short while to get a list of options what to boot</p></qt>"
++msgstr "<qt><h3>Компьютерни ўчириб-ёқиш</h3><p>Жорий сеансдан чиқиш ва компьютерни ўчириб-ёқиш</p><p>Ишга тушадиган ОТни танлаш учун тугмани сичқонча билан бир оз босиб туринг</p></qt>"
++
++#: kdebase3.spec.cpp:533
++msgid "<qt><h3>Restart Computer</h3><p>Log out of the current session and restart the computer</p></qt>"
++msgstr "<qt><h3>Компьютерни ўчириб-ёқиш</h3><p>Жорий сеансдан чиқиш ва компьютерни ўчириб-ёқиш</p></qt>"
++
++#: kdebase3.spec.cpp:537
++msgid "Suspend failed"
++msgstr ""
++
++#: kdebase3.spec.cpp:540
++msgid "Would you like to turn off your computer?"
++msgstr "Компьютерни ўчиришни истайсизми?"
++
++#: kdebase3.spec.cpp:543
++msgid ""
++"This computer will turn off automatically\n"
++"after %1 seconds."
++msgstr ""
++"Компьютер %1 сониядан\n"
++"сўнг ўзидан-ўзи ўчади."
++
++#: kdebase3.spec.cpp:546
++msgid "Would you like to reboot your computer?"
++msgstr "Компьютерни ўчириб-ёқишни истайсизми?"
++
++#: kdebase3.spec.cpp:549
++msgid "Would you like to reboot to \"%1\"?"
++msgstr "Компьютерни ўчириб \"%1\" ОТни ишга туширишни истайсизми?"
++
++#: kdebase3.spec.cpp:552
++msgid ""
++"This computer will reboot automatically\n"
++"after %1 seconds."
++msgstr ""
++"Компьютер %1 сониядан\n"
++"сўнг ўзидан-ўзи ўчиб-ёнади."
++
++#: kdebase3.spec.cpp:555
++msgid "Would you like to end your current session?"
++msgstr "Жорий сеансни тугатишни истайсизми?"
++
++#: kdebase3.spec.cpp:558
++msgid ""
++"This session will end\n"
++"after %1 seconds automatically."
++msgstr ""
++"Жорий сеанс %1 сониядан\n"
++"сўнг ўзидан-ўзи тугайди."
++
++#: kdebase3.spec.cpp:561
++msgid "Unable to start ksplashx."
++msgstr "ksplashx дастурни ишга тушириб бўлмади."
++
++#: kdebase3.spec.cpp:564 xinerama.cpp:1
++msgid "S&eparate screen focus"
++msgstr ""
++
++#: kdebase3.spec.cpp:567 xinerama.cpp:2
++msgid "When this option is enabled, focus operations are limited only to the active Xinerama screen"
++msgstr ""
++
++#: kdebase3.spec.cpp:570 xinerama.cpp:3
++msgid "Active &mouse screen"
++msgstr ""
++
++#: kdebase3.spec.cpp:573 xinerama.cpp:4
++msgid "When this option is enabled, active Xinerama screen (where for example new windows appear) is the screen with the mouse pointer. When disabled, the active Xinerama screen is the screen with the focused window. This option is by default disabled for Click to focus and enabled for other focus policies."
++msgstr ""
++
++#: kdebase3.spec.cpp:576 xinerama.cpp:8
++msgid "Window to Screen 0"
++msgstr "Ойнани 0-экранга"
++
++#: kdebase3.spec.cpp:579 xinerama.cpp:9
++msgid "Window to Screen 1"
++msgstr "Ойнани 1-экранга"
++
++#: kdebase3.spec.cpp:582 xinerama.cpp:10
++msgid "Window to Screen 2"
++msgstr "Ойнани 2-экранга"
++
++#: kdebase3.spec.cpp:585 xinerama.cpp:11
++msgid "Window to Screen 3"
++msgstr "Ойнани 3-экранга"
++
++#: kdebase3.spec.cpp:588 xinerama.cpp:12
++msgid "Window to Screen 4"
++msgstr "Ойнани 4-экранга"
++
++#: kdebase3.spec.cpp:591 xinerama.cpp:13
++msgid "Window to Screen 5"
++msgstr "Ойнани 5-экранга"
++
++#: kdebase3.spec.cpp:594 xinerama.cpp:14
++msgid "Window to Screen 6"
++msgstr "Ойнани 6-экранга"
++
++#: kdebase3.spec.cpp:597 xinerama.cpp:15
++msgid "Window to Screen 7"
++msgstr "Ойнани 7-экранга"
++
++#: kdebase3.spec.cpp:600 xinerama.cpp:16
++msgid "Window to Next Screen"
++msgstr "Ойнани кейинги экранга"
++
++#: kdebase3.spec.cpp:603 xinerama.cpp:17
++msgid "Switch to Screen 0"
++msgstr "0-экранга ўтиш"
++
++#: kdebase3.spec.cpp:606 xinerama.cpp:18
++msgid "Switch to Screen 1"
++msgstr "1-экранга ўтиш"
++
++#: kdebase3.spec.cpp:609 xinerama.cpp:19
++msgid "Switch to Screen 2"
++msgstr "2-экранга ўтиш"
++
++#: kdebase3.spec.cpp:612 xinerama.cpp:20
++msgid "Switch to Screen 3"
++msgstr "3-экранга ўтиш"
++
++#: kdebase3.spec.cpp:615 xinerama.cpp:21
++msgid "Switch to Screen 4"
++msgstr "4-экранга ўтиш"
++
++#: kdebase3.spec.cpp:618 xinerama.cpp:22
++msgid "Switch to Screen 5"
++msgstr "5-экранга ўтиш"
++
++#: kdebase3.spec.cpp:621 xinerama.cpp:23
++msgid "Switch to Screen 6"
++msgstr "6-экранга ўтиш"
++
++#: kdebase3.spec.cpp:624 xinerama.cpp:24
++msgid "Switch to Screen 7"
++msgstr "7-экранга ўтиш"
++
++#: kdebase3.spec.cpp:627 xinerama.cpp:25
++msgid "Switch to Next Screen"
++msgstr "Кейинги экранга ўтиш"
++
++#: kdebase3.spec.cpp:630
++msgid "Alt+I"
++msgstr ""
++
++#: kdebase3.spec.cpp:633
++msgid "Alt+F"
++msgstr ""
++
++#: kdebase3.spec.cpp:636
++msgid "Alt+P"
++msgstr ""
++
++#: kdebase3.spec.cpp:639
++msgid "Alt+M"
++msgstr ""
++
++#: kdebase3.spec.cpp:642
++msgid "Preferred Window Manager:"
++msgstr ""
++
++#: kdebase3.spec.cpp:645
++msgid "KMenu"
++msgstr ""
++
++#: kdebase3.spec.cpp:648
++msgid "MShadow"
++msgstr "MShadow"
++
++#: kdebase3.spec.cpp:651
++msgid "MShape"
++msgstr "MShape"
++
++#: kdebase3.spec.cpp:654
++msgid "Search:"
++msgstr "Қидириш:"
++
++#: kdebase3.spec.cpp:657
++msgid "<p align=\"center\"> <u>F</u>avorites</p>"
++msgstr "<p align=\"center\"> <u>С</u>евимли</p>"
++
++#: kdebase3.spec.cpp:660
++msgid "<p align=\"center\"><u>H</u>istory</p>"
++msgstr "<p align=\"center\"><u>Т</u>арих</p>"
++
++#: kdebase3.spec.cpp:663
++msgid "<p align=\"center\"> <u>C</u>omputer</p>"
++msgstr "<p align=\"center\"> <u>К</u>омпьютер</p>"
++
++#: kdebase3.spec.cpp:666
++msgid "<p align=\"center\"><u>A</u>pplications</p>"
++msgstr "<p align=\"center\"><u>Д</u>астурлар</p>"
++
++#: kdebase3.spec.cpp:669
++msgid "<p align=\"center\"><u>L</u>eave</p>"
++msgstr "<p align=\"center\"><u>Ч</u>иқиш</p>"
++
++#: kdebase3.spec.cpp:672
++msgid "User&nbsp;<b>user</b>&nbsp;on&nbsp;<b>host</b>"
++msgstr ""
++
++#: kdebase3.spec.cpp:681
++msgid "Would you like to shutdown your computer?"
++msgstr "Компьютерни ўчиришни истайсизми?"
++
++#: kdebase3.spec.cpp:684
++msgid ""
++"If you do not act, your computer will shutdown\n"
++"after X automatically."
++msgstr ""
++
++#: kdebase3.spec.cpp:687
++msgid "Confirm"
++msgstr "Тасдиқлаш"
++
++#: kdebluetooth.spec.cpp:2
++msgid "Could not write all link key files. Your complete changes cannot be saved."
++msgstr ""
++
++#: kdebluetooth.spec.cpp:5
++msgid "No Bluetooth device found, disabling interface."
++msgstr ""
++
++#: kdebluetooth.spec.cpp:8
++msgid "Here you have to specify the correct start/stop commands for BlueZ's <i>hcid</i> and the directory of the BlueZ's <i>link_key</i> files for the distribution you are using."
++msgstr ""
++
++#: kdebluetooth.spec.cpp:11
++msgid "Link key directory:"
++msgstr ""
++
++#: kdelibs3.spec.cpp:2
++msgid "Conversion to KDEMM"
++msgstr ""
++
++#: kdelibs3.spec.cpp:5 kfile-beagle.cpp:2
++msgid "search term"
++msgstr ""
++
++#: kdelibs3.spec.cpp:8 kfile-beagle.cpp:1
++msgid "Desktop Search"
++msgstr ""
++
++#: kdelibs3.spec.cpp:11
++msgid ""
++"Could not access %1.\n"
++"Offline mode active."
++msgstr ""
++
++#: kdepim3.spec.cpp:2
++msgid "<qt><p>KMail does not support attaching files bigger than 30 MB.</p>"
++msgstr ""
++
++#: mediamanager.cpp:1
++msgid "Access time updates"
++msgstr ""
++
++#: mediamanager.cpp:2
++msgid "All Data"
++msgstr "Ҳамма маълумот"
++
++#: mediamanager.cpp:3
++msgid "All I/O to the file system should be done synchronously."
++msgstr ""
++
++#: mediamanager.cpp:4
++msgid "Device is already mounted."
++msgstr "Ускуна аллақачон уланган."
++
++#: mediamanager.cpp:5
++msgid "Device is Busy:"
++msgstr "Ускуна банд:"
++
++#: mediamanager.cpp:6
++msgid "Feature only available with HAL"
++msgstr "Бу имконият фақат HAL билан ишлайди"
++
++#: mediamanager.cpp:7
++#, c-format
++msgid "Filesystem: %1"
++msgstr "Файл тизими: %1"
++
++#: mediamanager.cpp:8
++msgid "Filesystem: iso9660"
++msgstr "Файл тизими: ISO9660"
++
++#: mediamanager.cpp:9
++msgid "Filesystem Specific Mount Options"
++msgstr "Файл тизимига оид улаш мосламалари"
++
++#: mediamanager.cpp:10
++msgid "Flushed IO"
++msgstr ""
++
++#: mediamanager.cpp:11
++msgid "Generic Mount Options"
++msgstr "Умумий улаш мосламалари"
++
++#: mediamanager.cpp:12
++msgid "Internal Error"
++msgstr "Ички хато"
++
++#: mediamanager.cpp:13
++msgid "Invalid filesystem type"
++msgstr "Файл тизимининг тури нотўғри"
++
++#: mediamanager.cpp:14
++msgid "Journaling:"
++msgstr ""
++
++#: mediamanager.cpp:15
++msgid "Lower"
++msgstr ""
++
++#: mediamanager.cpp:16
++msgid "Mixed"
++msgstr ""
++
++#: mediamanager.cpp:17
++msgid "Mount as user"
++msgstr "Фойдаланувчи сифатида улаш"
++
++#: mediamanager.cpp:18
++msgid "Mount automatically"
++msgstr "Авто-улаш"
++
++#: mediamanager.cpp:19
++msgid "&Mounting"
++msgstr "&Улаш"
++
++#: mediamanager.cpp:20
++msgid "Mount label:"
++msgstr "Улаш ёрлиғи:"
++
++#: mediamanager.cpp:21
++msgid "Mountpoint:"
++msgstr "Улаш нуқтаси:"
++
++#: mediamanager.cpp:22
++msgid "Mountpoint has to be below /media"
++msgstr "Улаш директория /media директориясида бўлиши керак"
++
++#: mediamanager.cpp:23
++msgid "Mount the file system read-only."
++msgstr "Файл тизимини фақат ўқишга улаш."
++
++#: mediamanager.cpp:24
++msgid "Mount this file system as user."
++msgstr ""
++
++#: mediamanager.cpp:25
++msgid "Mount this file system automatically."
++msgstr "Ушбу файл тизимни автоматик равишда улаш."
++
++#: mediamanager.cpp:26
++#, c-format
++msgid "No such medium: %1"
++msgstr ""
++
++#: mediamanager.cpp:27
++msgid "Ordered"
++msgstr ""
++
++#: mediamanager.cpp:28
++msgid "Permissions denied"
++msgstr "Рухсат йўқ"
++
++#: mediamanager.cpp:29
++msgid "PropertiesPageGUI"
++msgstr ""
++
++#: mediamanager.cpp:30
++msgid "Quiet"
++msgstr ""
++
++#: mediamanager.cpp:31
++msgid "Read only"
++msgstr "Фақат ўқишга"
++
++#: mediamanager.cpp:32
++msgid "Saving the changes failed"
++msgstr "Ўзгаришларни сақлаш муваффақиятсиз тугади"
++
++#: mediamanager.cpp:33
++msgid "Short names:"
++msgstr "Қисқа номлар:"
++
++#: mediamanager.cpp:34
++msgid "Synchronous"
++msgstr ""
++
++#: mediamanager.cpp:35
++msgid "The option 'flush' is not allowed"
++msgstr ""
++
++#: mediamanager.cpp:36
++msgid "Under what label this file system shall be mounted."
++msgstr ""
++
++#: mediamanager.cpp:37
++msgid "Update inode access time for each access."
++msgstr ""
++
++#: mediamanager.cpp:38
++msgid "UTF-8 charset"
++msgstr "UTF-8 кодлаш усули"
++
++#: mediamanager.cpp:39
++msgid "Windows 95"
++msgstr "Windows 95"
++
++#: mediamanager.cpp:40
++msgid "Windows NT"
++msgstr "Windows NT"
++
++#: mediamanager.cpp:41
++msgid "Write Back"
++msgstr ""
++
++#: mediamanager.cpp:42
++msgid "Attempts to chown or chmod files do not return errors, although they fail. Use with caution!"
++msgstr ""
++
++#: mediamanager.cpp:43
++msgid "Under what directory this file system shall be mounted. Please note that there is no guarantee that the system will respect your wish. For one the directory has to be below /media - and it does not yet have to exist."
++msgstr ""
++
++#: mediamanager.cpp:46
++msgid "Always flush all data to the hot plug devices immediately and don't cache it."
++msgstr ""
++
++#: mediamanager.cpp:47
++msgid "UTF8 is the filesystem safe 8-bit encoding of Unicode that is used by the console. It can be be enabled for the filesystem with this option."
++msgstr ""
++
++#: mediamanager.cpp:49
++msgid ""
++"<h2>Specifies  the journalling mode for file data. Metadata is always journaled. </h2>\n"
++"           \n"
++"<h3><b>All Data</b></h3>\n"
++"           All  data  is  committed into the journal prior to being written into the main file system. This is the slowest variant with the highest data security.\n"
++"\n"
++"<h3><b>Ordered</b></h3>\n"
++"           All data is forced directly out to the main  file system prior to its metadata being committed to the journal.\n"
++"\n"
++"<h3><b>Write Back</b></h3>\n"
++"           Data ordering is not preserved - data may be written into the main file system after its metadata has been committed to the journal.  This is rumoured to  be the  highest-throughput option.  It guarantees internal file system integrity,  however it can allow old data to appear in files after  a  crash  and  journal recovery."
++msgstr ""
++
++#: mediamanager.cpp:67
++msgid ""
++"<h2>Defines  the  behaviour  for  creation and display of filenames which fit into 8.3 characters. If a long name for a file exists, it will always be preferred display.</h2>\n"
++"\n"
++"<h3><b>Lower</b></h3>\n"
++"Force the short name to lower case upon display; store a long name when the short name is not all upper case.\n"
++"\n"
++"<h3><b>Windows 95</b></h3>\n"
++"Force the short name to upper case upon display; store a long name when the short name is not all upper case.\n"
++"\n"
++"<h3><b>Windows NT</b></h3>\n"
++"Display the shortname as is; store a long name when the short name is not all lower case or all upper case.\n"
++"\n"
++"<h3><b>Mixed</b></h3>\n"
++"Display the short name as is; store a long name when the short name is not all upper case."
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:2 qt3-extensions.spec.cpp:2 qt3-static.spec.cpp:2
++#: qt3.spec.cpp:2
++msgid "Select Input &Method"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:5 qt3-extensions.spec.cpp:5 qt3-static.spec.cpp:5
++#: qt3.spec.cpp:5
++msgid "Multiple Input Method Switcher"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:8 qt3-extensions.spec.cpp:8 qt3-static.spec.cpp:8
++#: qt3.spec.cpp:8
++msgid "Multiple input method switcher that uses the context menu of the text widgets"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:11 qt3-extensions.spec.cpp:11 qt3-static.spec.cpp:11
++#: qt3.spec.cpp:11
++msgid "Dummy Input Method Switcher"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:14 qt3-extensions.spec.cpp:14 qt3-static.spec.cpp:14
++#: qt3.spec.cpp:14
++msgid "Dummy input method switcher that uses the context menu of the text widgets"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:17 qt3-extensions.spec.cpp:17 qt3-static.spec.cpp:17
++#: qt3.spec.cpp:17
++msgid "Simple Composing Input Method"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:20 qt3-extensions.spec.cpp:20 qt3-static.spec.cpp:20
++#: qt3.spec.cpp:20
++msgid "Simple composing input method"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:23 qt3-extensions.spec.cpp:23 qt3-static.spec.cpp:23
++#: qt3.spec.cpp:23
++msgid "XIM"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:26 qt3-extensions.spec.cpp:26 qt3-static.spec.cpp:26
++#: qt3.spec.cpp:26
++msgid "XIM input method"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:29 qt3-extensions.spec.cpp:29 qt3-static.spec.cpp:29
++#: qt3.spec.cpp:29
++msgid "Unknown Input Method"
++msgstr ""
++
++#: qt3-devel-doc.spec.cpp:32 qt3-extensions.spec.cpp:32 qt3-static.spec.cpp:32
++#: qt3.spec.cpp:32
++msgid "Default Input Method:"
++msgstr ""
++
++#~ msgid "System"
++#~ msgstr "System"
++
++#~ msgid "Advanced"
++#~ msgstr "Advanced"
++
++#, fuzzy
++#~ msgid "Please enter your password."
++#~ msgstr "Program to Profile"
++
++#, fuzzy
++#~ msgid "Animations"
++#~ msgstr "No confirmation"
++
++#~ msgid "Status"
++#~ msgstr "Status"
++
++#, fuzzy
++#~ msgid "Unable to eject media."
++#~ msgstr "Unable to determine target"
++
++#, fuzzy
++#~ msgid "Obsolete"
++#~ msgstr "Obsoletes"
++
++#, fuzzy
++#~ msgid "C&hange..."
++#~ msgstr "Changes: "
++
++#, fuzzy
++#~ msgid "Authorization Dialog"
++#~ msgstr "Authorization failed"
++

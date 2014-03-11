@@ -1,0 +1,21 @@
+--- amarok-1.90/src/meta/file/File_p.h	2008-08-20 07:15:08.000000000 +0800
++++ amarok-1.90/src/meta/file/File_p.h	2008-09-12 21:52:48.000000000 +0800
+@@ -20,6 +20,7 @@
+ #ifndef AMAROK_META_FILE_P_H
+ #define AMAROK_META_FILE_P_H
+ 
++#include "Amarok.h"
+ #include "charset-detector/include/chardet.h"
+ #include "Debug.h"
+ #include "Meta.h"
+@@ -140,7 +141,9 @@
+             chardet_destroy( det );
+ 
+             QString track_encoding = encoding;
+-            if ( res == CHARDET_RESULT_OK )
++            //  make sure that the tags in flac medias are decoded in utf8 charset.
++            //  This should avoid the unexpected question marks in these tags.
++            if ( res == CHARDET_RESULT_OK && Amarok::extension( url.fileName() ) != "flac" )
+             {
+                //http://doc.trolltech.com/4.4/qtextcodec.html
+                //http://www.mozilla.org/projects/intl/chardet.html

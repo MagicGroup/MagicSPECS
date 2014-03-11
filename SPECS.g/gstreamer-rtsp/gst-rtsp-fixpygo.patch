@@ -1,0 +1,15 @@
+--- gst-rtsp-0.10.8/configure.ac.orig	2011-08-16 22:00:21.782945720 +0100
++++ gst-rtsp-0.10.8/configure.ac	2011-08-16 22:01:52.042981831 +0100
+@@ -111,11 +111,11 @@
+ 
+ AM_CHECK_PYTHON_HEADERS([HAVE_PYTHON_HEADERS=yes],[HAVE_PYTHON_HEADERS=no])
+ 
++AC_SUBST(PYGOBJECT_REQ, 2.11.2)
+ dnl check for pygobject (optional, used in the bindings)
+ PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= $PYGOBJECT_REQ,
+   [HAVE_PYGOBJECT="yes"], [HAVE_PYGOBJECT="no"])
+ AC_SUBST(PYGOBJECT_CFLAGS)
+-AC_SUBST(PYGOBJECT_REQ, 2.11.2)
+ 
+ dnl check for gst-python
+ PKG_CHECK_MODULES(PYGST, gst-python-0.10,

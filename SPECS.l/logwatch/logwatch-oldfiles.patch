@@ -1,0 +1,66 @@
+--- logwatch-20110113/logwatch.8.orig	2010-05-01 04:32:20.000000000 +0200
++++ logwatch-20110113/logwatch.8	2011-01-13 11:49:28.631589520 +0100
+@@ -31,7 +31,7 @@
+ .I report format
+ .B ] [--encode
+ .I encoding to use
+-.B ] [--numeric] [--version] [--help|--usage]
++.B ] [--numeric] [--no-oldfiles-log] [--version] [--help|--usage]
+ .SH DESCRIPTION
+ .B Logwatch
+ is a customizable, pluggable log-monitoring system.  It will go
+@@ -104,6 +104,9 @@
+ then only logs from this hostname will be processed (where appropriate).
+ .IP "\fB--numeric\fR"
+ Inhibits additional name lookups, displaying IP addresses numerically.
++.IP "\fB--no-oldfiles-log\fR"
++Suppress the logwatch log, which informs about the
++old files in logwatch tmpdir.
+ .IP "\fB--usage\fR"
+ Displays usage information
+ .IP "\fB--help\fR"
+--- logwatch-20110113/scripts/logwatch.pl.orig	2011-01-13 11:40:57.083697486 +0100
++++ logwatch-20110113/scripts/logwatch.pl	2011-01-13 11:48:07.477874059 +0100
+@@ -187,6 +187,7 @@ my @TempLogFileList = ();
+ my @TempServiceList = ();
+ my $Help = 0;
+ my $ShowVersion = 0;
++my $NoOldfilesLog = 0;
+ my ($tmp_mailto, $tmp_savefile);
+ 
+ &GetOptions ("d|detail=s"   => \$Config{'detail'},
+@@ -209,6 +210,7 @@ my ($tmp_mailto, $tmp_savefile);
+              "hostformat=s" => \$Config{'hostformat'},
+              "hostlimit=s"  => \$Config{'hostlimit'},
+              "html_wrap=s"  => \$Config{'html_wrap'},
++             "no-oldfiles-log" => \$NoOldfilesLog,
+              "subject=s"    => \$Config{'subject'}
+            ) or &Usage();
+ 
+@@ -632,7 +634,7 @@ if ($Config{'debug'} > 7) {
+ opendir(TMPDIR, $Config{'tmpdir'}) or die "$Config{'tmpdir'} $!";
+ my @old_dirs = grep { /^logwatch\.\w{8}$/ && -d "$Config{'tmpdir'}/$_" }
+    readdir(TMPDIR);
+-if (@old_dirs) {
++if ((@old_dirs) && ($NoOldfilesLog==0)) {
+    print "You have old files in your logwatch tmpdir ($Config{'tmpdir'}):\n\t";
+    print join("\n\t", @old_dirs);
+    print "\nThe directories listed above were most likely created by a\n";
+@@ -1077,7 +1079,7 @@ sub ReadConfigFile {
+ sub Usage () {
+    # Show usage for this program
+    print "\nUsage: $0 [--detail <level>] [--logfile <name>] [--output <output_type>]\n" .
+-      "   [--format <format_type>] [--encode <enconding>] [--numeric]\n" .
++      "   [--format <format_type>] [--encode <enconding>] [--numeric] [--no-oldfiles-log]\n" .
+       "   [--mailto <addr>] [--archives] [--range <range>] [--debug <level>]\n" .
+       "   [--filename <filename>] [--help|--usage] [--version] [--service <name>]\n" .
+       "   [--hostformat <host_format type>] [--hostlimit <host1,host2>] [--html_wrap <num_characters>]\n\n";
+@@ -1088,6 +1090,8 @@ sub Usage () {
+    print "--output <output type>: Report Output - stdout [default], mail, file.\n"; #8.0
+    print "--format <formatting>: Report Format - text [default], html.\n"; #8.0
+    print "--encode <encoding>: Enconding to use - none [default], base64.\n"; #8.0
++   print "--no-oldfiles-log: Suppress the logwatch log, which informs about the\n"; 
++   print "                   old files in logwatch tmpdir.\n"; 
+    print "--mailto <addr>: Mail report to <addr>.\n";
+    print "--archives: Use archived log files too.\n";
+    print "--filename <filename>: Used to specify they filename to save to. --filename <filename> [Forces output to file].\n";

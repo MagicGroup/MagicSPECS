@@ -1,0 +1,23 @@
+diff -ur libtunepimp-0.5.3.orig/plugins/mp4/mp4.cpp libtunepimp-0.5.3/plugins/mp4/mp4.cpp
+--- libtunepimp-0.5.3.orig/plugins/mp4/mp4.cpp	2012-12-30 11:15:34.000000000 +0000
++++ libtunepimp-0.5.3/plugins/mp4/mp4.cpp	2012-12-30 11:16:03.000000000 +0000
+@@ -231,8 +231,7 @@
+   
+   strcpy(mdata->fileFormat, fileName + strlen(fileName) - 3); 
+   
+-  if (!MP4Close(mp4file))
+-    return 0;
++  MP4Close(mp4file);
+   
+   return 1;
+ }
+@@ -315,8 +314,7 @@
+   sprintf(temp, "%d", mdata->nonAlbum);  
+   MP4SetMetadataFreeForm(mp4file, "MusicBrainz Non-Album", (u_int8_t *)temp, strlen(temp) + 1);
+   
+-  if (!MP4Close(mp4file))
+-    return 0;
++  MP4Close(mp4file);
+ 
+ #ifndef WIN32
+   if (!MP4Optimize(utf8ToEncoding(fileName, encoding).c_str()))

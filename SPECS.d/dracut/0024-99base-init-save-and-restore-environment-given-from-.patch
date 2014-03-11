@@ -1,0 +1,32 @@
+From ed42e64cfc2c3d36436ef0d0634332219dcce1a2 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 30 Aug 2011 16:22:46 +0200
+Subject: [PATCH] 99base/init: save and restore environment given from the
+ kernel
+
+---
+ modules.d/99base/init |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/modules.d/99base/init b/modules.d/99base/init
+index 0328903..21b9468 100755
+--- a/modules.d/99base/init
++++ b/modules.d/99base/init
+@@ -8,6 +8,8 @@
+ # Harald Hoyer <harald@redhat.com>
+ # Jeremy Katz <katzj@redhat.com>
+ 
++export -p > /tmp/export.orig
++
+ wait_for_loginit()
+ {
+     set +x
+@@ -391,6 +393,8 @@ for i in $(export -p); do
+             unset "$i";;
+     esac
+ done
++. /tmp/export.orig
++rm -f /tmp/export.orig
+ 
+ initargs=""
+ read CLINE </proc/cmdline

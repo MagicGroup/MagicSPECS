@@ -1,0 +1,32 @@
+diff -urN redhat-lsb-3.1/init-functions redhat-lsb-3.1.mod/init-functions
+--- redhat-lsb-3.1/init-functions	2006-12-06 12:24:29.000000000 +1000
++++ redhat-lsb-3.1.mod/init-functions	2007-06-26 15:41:35.000000000 +1000
+@@ -1,6 +1,10 @@
+ #!/bin/sh
+ 
+ # LSB initscript functions, as defined in the LSB Spec 1.1.0
++#
++# Lawrence Lim <llim@redhat.com> - Tue, 26 June 2007
++# Updated to the latest LSB 3.1 spec
++# http://refspecs.freestandards.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-generic_lines.txt
+ 
+ start_daemon () {
+ 	/etc/redhat-lsb/lsb_start_daemon "$@"
+@@ -10,7 +14,7 @@
+ 	/etc/redhat-lsb/lsb_killproc "$@"
+ }
+ 
+-pidofprof () {
++pidofproc () {
+ 	/etc/redhat-lsb/lsb_pidofproc "$@"
+ }
+ 
+@@ -22,7 +26,7 @@
+ 	/etc/redhat-lsb/lsb_log_message failure "$@"
+ }
+ 
+-log_warning_message () {
++log_warning_msg () {
+ 	/etc/redhat-lsb/lsb_log_message warning "$@"
+ }
+ 

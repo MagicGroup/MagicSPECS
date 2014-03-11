@@ -1,0 +1,168 @@
+diff -up ./mozilla/security/nss/cmd/certcgi/ca_form.html.870864 ./mozilla/security/nss/cmd/certcgi/ca_form.html
+--- ./mozilla/security/nss/cmd/certcgi/ca_form.html.870864	2012-03-20 07:46:53.000000000 -0700
++++ ./mozilla/security/nss/cmd/certcgi/ca_form.html	2012-11-19 21:32:32.568415831 -0800
+@@ -167,6 +167,7 @@
+     <input type="checkbox" name="extKeyUsage-timeStamp"> Timestamp</P>
+     <input type="checkbox" name="extKeyUsage-ocspResponder"> OCSP Responder</P>
+     <input type="checkbox" name="extKeyUsage-NS-govtApproved"> Step-up</P>
++    <input type="checkbox" name="extKeyUsage-msCodeSign"> Microsoft Code Signing</P>
+     </tr>
+     <tr>
+     <td>
+diff -up ./mozilla/security/nss/cmd/certcgi/certcgi.c.870864 ./mozilla/security/nss/cmd/certcgi/certcgi.c
+--- ./mozilla/security/nss/cmd/certcgi/certcgi.c.870864	2012-04-29 05:52:04.000000000 -0700
++++ ./mozilla/security/nss/cmd/certcgi/certcgi.c	2012-11-19 21:32:32.569415846 -0800
+@@ -21,6 +21,7 @@
+ #include "pk11pqg.h"
+ #include "certxutl.h"
+ #include "nss.h"
++#include "secutil.h"
+ 
+ 
+ /* #define TEST           1 */
+@@ -33,6 +34,8 @@
+ 
+ static char *progName;
+ 
++extern SECOidTag szOID_KP_CTL_USAGE_SIGNING;
++
+ typedef struct PairStr Pair;
+ 
+ struct PairStr {
+@@ -819,6 +822,10 @@ AddExtKeyUsage(void *extHandle, Pair *da
+     if( SECSuccess != rv ) goto loser;
+   }
+ 
++  if( find_field_bool(data, "extKeyUsage-msCodeSign", PR_TRUE) ) {
++    SECU_RegisterDynamicOids();
++  }
++
+   if( find_field_bool(data, "extKeyUsage-clientAuth", PR_TRUE) ) {
+     rv = AddOidToSequence(os, SEC_OID_EXT_KEY_USAGE_CLIENT_AUTH);
+     if( SECSuccess != rv ) goto loser;
+diff -up ./mozilla/security/nss/cmd/certcgi/stnd_ext_form.html.870864 ./mozilla/security/nss/cmd/certcgi/stnd_ext_form.html
+--- ./mozilla/security/nss/cmd/certcgi/stnd_ext_form.html.870864	2012-03-20 07:46:53.000000000 -0700
++++ ./mozilla/security/nss/cmd/certcgi/stnd_ext_form.html	2012-11-19 21:32:32.570415861 -0800
+@@ -34,6 +34,7 @@
+     <input type="checkbox" name="extKeyUsage-timeStamp"> Timestamp</P>
+     <input type="checkbox" name="extKeyUsage-ocspResponder"> OCSP Responder</P>
+     <input type="checkbox" name="extKeyUsage-NS-govtApproved"> Step-up</P>
++    <input type="checkbox" name="extKeyUsage-msCodeSign"> Microsoft Code Signing</P>
+     </tr>
+     <tr>
+     <td>
+diff -up ./mozilla/security/nss/cmd/certutil/certext.c.870864 ./mozilla/security/nss/cmd/certutil/certext.c
+--- ./mozilla/security/nss/cmd/certutil/certext.c.870864	2012-03-20 07:46:54.000000000 -0700
++++ ./mozilla/security/nss/cmd/certutil/certext.c	2012-11-19 21:32:32.571415876 -0800
+@@ -18,6 +18,9 @@
+ #endif
+ 
+ #include "secutil.h"
++/* #include "secoidt.h" */ /* For when we update nss */
++
++extern SECOidTag szOID_KP_CTL_USAGE_SIGNING;
+ 
+ #if defined(XP_UNIX)
+ #include <unistd.h>
+@@ -483,6 +486,7 @@ extKeyUsageKeyWordArray[] = { "serverAut
+                               "timeStamp",
+                               "ocspResponder",
+                               "stepUp",
++                              "msCodeSigning",
+                               NULL};
+ 
+ static SECStatus 
+@@ -554,6 +558,9 @@ AddExtKeyUsage (void *extHandle, const c
+         case 6:
+             rv = AddOidToSequence(os, SEC_OID_NS_KEY_USAGE_GOVT_APPROVED);
+             break;
++        case 7:
++            rv = AddOidToSequence(os, szOID_KP_CTL_USAGE_SIGNING);
++            break;
+         default:
+             goto endloop;
+         }
+diff -up ./mozilla/security/nss/cmd/certutil/certutil.c.870864 ./mozilla/security/nss/cmd/certutil/certutil.c
+--- ./mozilla/security/nss/cmd/certutil/certutil.c.870864	2012-03-20 07:46:54.000000000 -0700
++++ ./mozilla/security/nss/cmd/certutil/certutil.c	2012-11-19 21:32:32.573415906 -0800
+@@ -46,6 +46,8 @@
+ 
+ char *progName;
+ 
++extern SECOidTag szOID_KP_CTL_USAGE_SIGNING;
++
+ static CERTCertificateRequest *
+ GetCertRequest(PRFileDesc *inFile, PRBool ascii)
+ {
+@@ -1145,6 +1147,7 @@ static void luC(enum usage_level ul, con
+               "%-20s \"emailProtection\", \"timeStamp\",\"ocspResponder\",\n"
+               "%-20s \"stepUp\", \"critical\"\n",
+         "   -6 | --extKeyUsage keyword,keyword,...", "", "", "", "");
++              "%-20s \"stepUp\", \"msCodeSign\", \"critical\"\n",
+     FPS "%-20s Create an email subject alt name extension\n",
+         "   -7 emailAddrs");
+     FPS "%-20s Create an dns subject alt name extension\n",
+diff -up ./mozilla/security/nss/cmd/lib/moreoids.c.870864 ./mozilla/security/nss/cmd/lib/moreoids.c
+--- ./mozilla/security/nss/cmd/lib/moreoids.c.870864	2012-03-20 07:46:59.000000000 -0700
++++ ./mozilla/security/nss/cmd/lib/moreoids.c	2012-11-19 21:36:23.782925556 -0800
+@@ -41,6 +41,18 @@ OIDT  mKPSCL[]	= { MICROSOFT, 20, 2, 2 }
+ OIDT  mNTPN []	= { MICROSOFT, 20, 2, 3 }; /* NT Principal Name        */
+ OIDT  mCASRV[]	= { MICROSOFT, 21, 1    }; /* CertServ CA version      */
+ 
++#define _TO_ITEM(x) {siDEROID, (unsigned char *)(x), sizeof(x) }
++
++SECOidTag szOID_KP_CTL_USAGE_SIGNING = SEC_OID_UNKNOWN;
++/* { 1.3.6.1.4.1.311 } */
++static const unsigned char msExtendedKeyUsageCodeSigning[] =
++        { 0x2b, 0x6, 0x1, 0x4, 0x1, 0x82, 0x37, 0xa, 3, 1  };
++
++static const SECOidData microsoftAuthenticodeSigning_Entry =
++        { _TO_ITEM(msExtendedKeyUsageCodeSigning), SEC_OID_UNKNOWN,
++        "Microsoft Authenticode Signing", CKM_INVALID_MECHANISM,
++        INVALID_CERT_EXTENSION };
++
+ /* AOL OIDs     (1 3 6 1 4 1 1066 ... )   */
+ #define AOL 0x2B, 0x06, 0x01, 0x04, 0x01, 0x88, 0x2A
+ 
+@@ -127,6 +139,18 @@ static const SECOidData oids[] = {
+ 
+ static const unsigned int numOids = (sizeof oids) / (sizeof oids[0]);
+ 
++/* register the oid if we haven't already */
++void
++SECU_cert_fetchOID(SECOidTag *data, const SECOidData *src)
++{
++    if (*data == SEC_OID_UNKNOWN) {
++        /* AddEntry does the right thing if someone else has already
++         * added the oid. (that is return that oid tag) */
++        *data = SECOID_AddEntry(src);
++    }
++}
++
++
+ SECStatus
+ SECU_RegisterDynamicOids(void)
+ {
+@@ -144,5 +168,10 @@ SECU_RegisterDynamicOids(void)
+ #endif
+ 	}
+     }
++
++    /* Fetch and register the oid on behalf of the tools. */
++    SECU_cert_fetchOID(&szOID_KP_CTL_USAGE_SIGNING,
++	&microsoftAuthenticodeSigning_Entry);
++
+     return rv;
+ }
+diff -up ./mozilla/security/nss/cmd/lib/secutil.h.870864 ./mozilla/security/nss/cmd/lib/secutil.h
+--- ./mozilla/security/nss/cmd/lib/secutil.h.870864	2012-09-27 10:13:33.000000000 -0700
++++ ./mozilla/security/nss/cmd/lib/secutil.h	2012-11-19 21:32:32.575415936 -0800
+@@ -293,6 +293,8 @@ extern SECStatus DER_PrettyPrint(FILE *o
+ 
+ extern char *SECU_SECModDBName(void);
+ 
++extern void SECU_cert_fetchOID(SECOidTag *data, const SECOidData *src);
++
+ extern SECStatus SECU_RegisterDynamicOids(void);
+ 
+ /* Identifies hash algorithm tag by its string representation. */

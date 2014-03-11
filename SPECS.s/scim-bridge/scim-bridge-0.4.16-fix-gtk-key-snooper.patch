@@ -1,0 +1,11 @@
+--- scim-bridge-client-imcontext-gtk.c.bak	2010-01-22 14:00:00.000000000 +0800
++++ scim-bridge-client-imcontext-gtk.c	2010-01-22 14:44:03.000000000 +0800
+@@ -877,7 +877,7 @@
+         scim_bridge_client_open_messenger ();
+     }
+ 
+-    if (is_key_snooper_enabled ()) {
++    if (!key_snooper_used && is_key_snooper_enabled ()) {
+         key_snooper_id = gtk_key_snooper_install ((GtkKeySnoopFunc) &key_snooper, NULL);
+         key_snooper_used = TRUE;
+     }

@@ -1,0 +1,16 @@
+diff -up cups-1.5.2/scheduler/subscriptions.c.str4014 cups-1.5.2/scheduler/subscriptions.c
+--- cups-1.5.2/scheduler/subscriptions.c.str4014	2012-02-15 13:17:24.065004731 +0000
++++ cups-1.5.2/scheduler/subscriptions.c	2012-02-15 13:17:34.021009331 +0000
+@@ -146,7 +146,11 @@ cupsdAddEvent(
+       temp->time  = time(NULL);
+       temp->attrs = ippNew();
+       temp->job   = job;
+-      temp->dest  = dest;
++
++      if (dest)
++        temp->dest = dest;
++      else if (job)
++        temp->dest = dest = cupsdFindPrinter(job->dest);
+ 
+      /*
+       * Add common event notification attributes...

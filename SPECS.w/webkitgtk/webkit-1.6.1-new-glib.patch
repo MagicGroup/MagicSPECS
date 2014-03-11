@@ -1,0 +1,12 @@
+diff -up webkit-1.6.1/Source/JavaScriptCore/wtf/gobject/GTypedefs.h.jx webkit-1.6.1/Source/JavaScriptCore/wtf/gobject/GTypedefs.h
+--- webkit-1.6.1/Source/JavaScriptCore/wtf/gobject/GTypedefs.h.jx	2011-09-26 16:54:57.000000000 -0400
++++ webkit-1.6.1/Source/JavaScriptCore/wtf/gobject/GTypedefs.h	2011-12-05 20:39:25.098997211 -0500
+@@ -52,7 +52,7 @@ typedef struct _GFile GFile;
+ typedef struct _GHashTable GHashTable;
+ typedef struct _GInputStream GInputStream;
+ typedef struct _GList GList;
+-typedef struct _GMutex GMutex;
++typedef union _GMutex GMutex;
+ typedef struct _GPatternSpec GPatternSpec;
+ typedef struct _GPollableOutputStream GPollableOutputStream;
+ typedef struct _GSocketClient GSocketClient;

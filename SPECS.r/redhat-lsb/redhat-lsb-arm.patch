@@ -1,0 +1,45 @@
+--- redhat-lsb-3.2.orig/redhat_lsb_trigger.c	2008-04-16 13:50:14.000000000 -0400
++++ redhat-lsb-3.2/redhat_lsb_trigger.c	2009-02-03 04:39:06.000000000 -0500
+@@ -223,6 +223,42 @@ register void *__thread_self __asm ("g7"
+ # define ASMFMT_1 , "0" (gpr2)
+ # define ASMFMT_2 , "0" (gpr2), "d" (gpr3)
+ # define ASMFMT_3 , "0" (gpr2), "d" (gpr3), "d" (gpr4)
++#elif defined __arm__
++# if defined (__ARM_EABI__)
++#undef INTERNAL_SYSCALL_DECL
++#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
++#undef INTERNAL_SYSCALL_RAW
++#define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
++  ({								\
++       register int _a1 asm ("r0"), _nr asm ("r7");		\
++       LOAD_ARGS_##nr (args)					\
++       _nr = name;						\
++       asm volatile ("swi	0x0	@ syscall " #name	\
++		     : "=r" (_a1)				\
++		     : "r" (_nr) ASM_ARGS_##nr			\
++		     : "memory");				\
++       _a1; })
++
++#undef INTERNAL_SYSCALL
++#define INTERNAL_SYSCALL(name, err, nr, args...)		\
++	INTERNAL_SYSCALL_RAW(SYS_ify(name), err, nr, args)
++
++#define LOAD_ARGS_0()
++#define ASM_ARGS_0
++#define LOAD_ARGS_1(a1)				\
++  int _a1tmp = (int) (a1);			\
++  LOAD_ARGS_0 ()				\
++  _a1 = _a1tmp;
++#define ASM_ARGS_1	ASM_ARGS_0, "r" (_a1)
++#define LOAD_ARGS_2(a1, a2)			\
++  int _a2tmp = (int) (a2);			\
++  LOAD_ARGS_1 (a1)				\
++  register int _a2 asm ("a2") = _a2tmp;
++#define ASM_ARGS_2	ASM_ARGS_1, "r" (_a2)
++#undef SYS_ify
++#define SWI_BASE  (0x900000)
++#define SYS_ify(syscall_name)	(__NR_##syscall_name)
++#endif
+ #elif defined __sparc__
+ # ifndef __arch64__
+ #  define __INTERNAL_SYSCALL_STRING					\

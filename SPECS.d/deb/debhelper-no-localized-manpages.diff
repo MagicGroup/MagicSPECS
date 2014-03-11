@@ -1,0 +1,42 @@
+diff -ur debhelper.orig//Makefile debhelper/Makefile
+--- debhelper.orig//Makefile	2011-10-27 14:23:08.000000000 -0400
++++ debhelper/Makefile	2011-10-27 14:24:22.000000000 -0400
+@@ -40,27 +40,9 @@
+ 
+ POD2MAN=pod2man --utf8 -c Debhelper -r "$(VERSION)"
+ 
+-# l10n to be built is determined from .po files
+-LANGS=$(notdir $(basename $(wildcard man/po4a/po/*.po)))
+-
+ build: version debhelper.7
+ 	find . -maxdepth 1 -type f -perm +100 -name "dh*" \
+ 		-exec $(POD2MAN) {} {}.1 \;
+-	po4a --previous -L UTF-8 man/po4a/po4a.cfg 
+-	set -e; \
+-	for lang in $(LANGS); do \
+-		dir=man/$$lang; \
+-		for file in $$dir/dh*.pod; do \
+-			prog=`basename $$file | sed 's/.pod//'`; \
+-			$(POD2MAN) $$file $$prog.$$lang.1; \
+-		done; \
+-		if [ -e $$dir/debhelper.pod ]; then \
+-			cat $$dir/debhelper.pod | \
+-				$(MAKEMANLIST) `find $$dir -type f -maxdepth 1 -name "dh_*.pod" | sort` | \
+-				$(POD2MAN) --name="debhelper" --section=7 > debhelper.$$lang.7; \
+-		fi; \
+-	done
+-
+ version:
+ 	printf "package Debian::Debhelper::Dh_Version;\n\$$version='$(VERSION)';\n1" > \
+ 		Debian/Debhelper/Dh_Version.pm
+@@ -72,10 +54,6 @@
+ 
+ clean:
+ 	rm -f *.1 *.7 Debian/Debhelper/Dh_Version.pm
+-	po4a --previous --rm-translations --rm-backups man/po4a/po4a.cfg
+-	for lang in $(LANGS); do \
+-		if [ -e man/$$lang ]; then rmdir man/$$lang; fi; \
+-	done;
+ 
+ install:
+ 	install -d $(DESTDIR)/usr/bin \

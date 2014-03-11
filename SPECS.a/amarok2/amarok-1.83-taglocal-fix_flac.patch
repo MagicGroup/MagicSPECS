@@ -1,0 +1,93 @@
+diff -Nur amarok-1.83/src/meta/file/File_p.h amarok-1.83.fixtaglocal/src/meta/file/File_p.h
+--- amarok-1.83/src/meta/file/File_p.h	2008-07-10 21:16:56.000000000 +0800
++++ amarok-1.83.fixtaglocal/src/meta/file/File_p.h	2008-07-10 21:10:49.000000000 +0800
+@@ -22,6 +22,8 @@
+ #include "Debug.h"
+ #include "Meta.h"
+ #include "MetaUtility.h"
++#include "Amarok.h"
++#include "dialogs/CollectionSetup.h"
+ 
+ #include <QFile>
+ #include <QObject>
+@@ -110,7 +110,18 @@
+ 
+ void Track::Private::readMetaData()
+ {
++    const QString ext = Amarok::extension( Meta::Field::URL ).lower();
++    if( ext == "flac" )
++    {
+     #define strip( x ) TStringToQString( x ).trimmed()
++    }
++    else
++    {
++    // patched by nihui, Jun. 13rd, 2008
++    // modified definition of the same function in taglib tstring.h:48:1
++    #define TStringToCJKQString( x ) QString::fromLocal8Bit(QString::fromUtf8(x.toCString(true)).latin1())
++    #define strip( x ) TStringToCJKQString( x ).trimmed()
++    }
+     if( tag )
+     {
+         m_data.title = strip( tag->title() );
+diff -Nur amarok-1.83/src/meta/MetaUtility.cpp amarok-1.83.fixtaglocal/src/meta/MetaUtility.cpp
+--- amarok-1.83/src/meta/MetaUtility.cpp	2008-07-10 21:16:43.000000000 +0800
++++ amarok-1.83.fixtaglocal/src/meta/MetaUtility.cpp	2008-07-10 21:14:22.000000000 +0800
+@@ -22,6 +22,8 @@
+ 
+ #include "Debug.h"
+ #include "Meta.h"
++#include "Amarok.h"
++#include "dialogs/CollectionSetup.h"
+ #include "meta/Capability.h"
+ #include "meta/EditCapability.h"
+ 
+@@ -170,33 +170,44 @@
+         return;
+     DEBUG_LINE_INFO
+     TagLib::Tag *tag = file.tag();
++    const QString ext = Amarok::extension( Meta::Field::URL ).lower();
++    if( ext == "flac" )
++    {
++    #define CJKQStringToTString( x ) QStringToTString( x )
++    }
++    else
++    {
++    // patched by nihui, Jun. 13rd, 2008
++    // modified definition of the same function in taglib tstring.h
++    #define CJKQStringToTString( x ) TagLib::String(x.local8Bit().data())
++    }
+     if( changes.contains( Meta::Field::TITLE ) )
+     {
+-        const TagLib::String title = QStringToTString( changes.value( Meta::Field::TITLE ).toString() );
++        const TagLib::String title = CJKQStringToTString( changes.value( Meta::Field::TITLE ).toString() );
+         tag->setTitle( title );
+     }
+ 
+     if( changes.contains( Meta::Field::ALBUM ) )
+     {
+-        const TagLib::String album = QStringToTString( changes.value( Meta::Field::ALBUM ).toString() );
++        const TagLib::String album = CJKQStringToTString( changes.value( Meta::Field::ALBUM ).toString() );
+         tag->setAlbum( album );
+     }
+ 
+     if( changes.contains( Meta::Field::ARTIST ) )
+     {
+-        const TagLib::String artist = QStringToTString( changes.value( Meta::Field::ARTIST ).toString() );
++        const TagLib::String artist = CJKQStringToTString( changes.value( Meta::Field::ARTIST ).toString() );
+         tag->setArtist( artist );
+     }
+ 
+     if( changes.contains( Meta::Field::COMMENT ) )
+     {
+-        const TagLib::String comment = QStringToTString( changes.value( Meta::Field::COMMENT ).toString() );
++        const TagLib::String comment = CJKQStringToTString( changes.value( Meta::Field::COMMENT ).toString() );
+         tag->setComment( comment );
+     }
+ 
+     if( changes.contains( Meta::Field::GENRE ) )
+     {
+-        const TagLib::String genre = QStringToTString( changes.value( Meta::Field::GENRE ).toString() );
++        const TagLib::String genre = CJKQStringToTString( changes.value( Meta::Field::GENRE ).toString() );
+         tag->setGenre( genre );
+     }
+     if( changes.contains( Meta::Field::YEAR ) )

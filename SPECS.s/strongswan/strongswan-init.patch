@@ -1,0 +1,235 @@
+diff -urNp strongswan-5.1.1-patched/configure.ac strongswan-5.1.1-current/configure.ac
+--- strongswan-5.1.1-patched/configure.ac	2013-11-01 13:12:05.964927156 -0400
++++ strongswan-5.1.1-current/configure.ac	2013-11-01 13:12:24.357926499 -0400
+@@ -1330,6 +1330,8 @@ AC_CONFIG_FILES([
+ 	man/Makefile
+ 	init/Makefile
+ 	init/systemd/Makefile
++	init/sysvinit/Makefile
++	init/sysvinit/strongswan
+ 	src/Makefile
+ 	src/include/Makefile
+ 	src/libstrongswan/Makefile
+diff -urNp strongswan-5.1.1-patched/init/Makefile.am strongswan-5.1.1-current/init/Makefile.am
+--- strongswan-5.1.1-patched/init/Makefile.am	2013-11-01 13:12:05.966927156 -0400
++++ strongswan-5.1.1-current/init/Makefile.am	2013-11-01 13:12:24.357926499 -0400
+@@ -1,5 +1,5 @@
+ 
+-SUBDIRS =
++SUBDIRS = sysvinit
+ 
+ if HAVE_SYSTEMD
+   SUBDIRS += systemd
+diff -urNp strongswan-5.1.1-patched/init/sysvinit/Makefile.am strongswan-5.1.1-current/init/sysvinit/Makefile.am
+--- strongswan-5.1.1-patched/init/sysvinit/Makefile.am	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.1-current/init/sysvinit/Makefile.am	2013-11-01 13:12:24.358926499 -0400
+@@ -0,0 +1 @@
++noinst_DATA = strongswan
+diff -urNp strongswan-5.1.1-patched/init/sysvinit/strongswan strongswan-5.1.1-current/init/sysvinit/strongswan
+--- strongswan-5.1.1-patched/init/sysvinit/strongswan	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.1-current/init/sysvinit/strongswan	2013-11-01 13:12:24.358926499 -0400
+@@ -0,0 +1,100 @@
++#!/bin/sh
++#
++# strongswan   An implementation of key management system for IPsec
++#
++# chkconfig:   - 48 52
++# description: Starts or stops the Strongswan daemon.
++
++### BEGIN INIT INFO
++# Provides: ipsec
++# Required-Start: $network $remote_fs $syslog $named
++# Required-Stop: $syslog $remote_fs
++# Default-Start:
++# Default-Stop: 0 1 6
++# Short-Description: Start Strongswan daemons at boot time
++### END INIT INFO
++
++# Source function library.
++. /etc/rc.d/init.d/functions
++
++exec="@SBINDIR@/@IPSEC_SCRIPT@"
++prog="strongswan"
++status_prog="starter"
++config="/etc/strongswan/strongswan.conf"
++
++lockfile=/var/lock/subsys/$prog
++
++start() {
++    [ -x $exec ] || exit 5
++    [ -f $config ] || exit 6
++    echo -n $"Starting $prog: "
++    daemon $exec start
++    retval=$?
++    echo
++    [ $retval -eq 0 ] && touch $lockfile
++    return $retval
++}
++
++stop() {
++    echo -n $"Stopping $prog: "
++    $exec stop
++    retval=$?
++    echo
++    [ $retval -eq 0 ] && rm -f $lockfile
++    return $retval
++}
++
++restart() {
++    stop
++    start
++}
++
++reload() {
++    restart
++}
++
++force_reload() {
++    restart
++}
++
++_status() {
++    # run checks to determine if the service is running or use generic status
++    status $status_prog
++}
++
++_status_q() {
++    _status >/dev/null 2>&1
++}
++
++
++case "$1" in
++    start)
++        _status_q && exit 0
++        $1
++        ;;
++    stop)
++        _status_q || exit 0
++        $1
++        ;;
++    restart)
++        $1
++        ;;
++    reload)
++        _status_q || exit 7
++        $1
++        ;;
++    force-reload)
++        force_reload
++        ;;
++    status)
++        _status
++        ;;
++    condrestart|try-restart)
++        _status_q || exit 0
++        restart
++        ;;
++    *)
++        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
++        exit 2
++esac
++exit $?
+diff -urNp strongswan-5.1.1-patched/init/sysvinit/strongswan.in strongswan-5.1.1-current/init/sysvinit/strongswan.in
+--- strongswan-5.1.1-patched/init/sysvinit/strongswan.in	1969-12-31 19:00:00.000000000 -0500
++++ strongswan-5.1.1-current/init/sysvinit/strongswan.in	2013-11-01 13:12:24.359926499 -0400
+@@ -0,0 +1,100 @@
++#!/bin/sh
++#
++# strongswan   An implementation of key management system for IPsec
++#
++# chkconfig:   - 48 52
++# description: Starts or stops the Strongswan daemon.
++
++### BEGIN INIT INFO
++# Provides: ipsec
++# Required-Start: $network $remote_fs $syslog $named
++# Required-Stop: $syslog $remote_fs
++# Default-Start:
++# Default-Stop: 0 1 6
++# Short-Description: Start Strongswan daemons at boot time
++### END INIT INFO
++
++# Source function library.
++. /etc/rc.d/init.d/functions
++
++exec="@sbindir@/@ipsec_script@"
++prog="strongswan"
++status_prog="starter"
++config="/etc/strongswan/strongswan.conf"
++
++lockfile=/var/lock/subsys/$prog
++
++start() {
++    [ -x $exec ] || exit 5
++    [ -f $config ] || exit 6
++    echo -n $"Starting $prog: "
++    daemon $exec start
++    retval=$?
++    echo
++    [ $retval -eq 0 ] && touch $lockfile
++    return $retval
++}
++
++stop() {
++    echo -n $"Stopping $prog: "
++    $exec stop
++    retval=$?
++    echo
++    [ $retval -eq 0 ] && rm -f $lockfile
++    return $retval
++}
++
++restart() {
++    stop
++    start
++}
++
++reload() {
++    restart
++}
++
++force_reload() {
++    restart
++}
++
++_status() {
++    # run checks to determine if the service is running or use generic status
++    status $status_prog
++}
++
++_status_q() {
++    _status >/dev/null 2>&1
++}
++
++
++case "$1" in
++    start)
++        _status_q && exit 0
++        $1
++        ;;
++    stop)
++        _status_q || exit 0
++        $1
++        ;;
++    restart)
++        $1
++        ;;
++    reload)
++        _status_q || exit 7
++        $1
++        ;;
++    force-reload)
++        force_reload
++        ;;
++    status)
++        _status
++        ;;
++    condrestart|try-restart)
++        _status_q || exit 0
++        restart
++        ;;
++    *)
++        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
++        exit 2
++esac
++exit $?

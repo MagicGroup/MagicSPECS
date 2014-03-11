@@ -1,0 +1,11 @@
+--- kdemultimedia-3.5.7-patched/xine_artsplugin/Makefile.am.pthread	2006-07-22 03:10:54.000000000 -0500
++++ kdemultimedia-3.5.7-patched/xine_artsplugin/Makefile.am	2007-06-28 06:50:53.000000000 -0500
+@@ -8,7 +8,7 @@
+ 			  xinePlayObject_impl.cpp \
+ 			  audio_fifo_out.c
+ libarts_xine_la_LDFLAGS = $(all_libraries) -module -no-undefined -pthread
+-libarts_xine_la_LIBADD = $(XINE_LIBS) $(LIB_X11) $(LIB_XEXT) \
++libarts_xine_la_LIBADD = $(XINE_LIBS) $(LIBPTHREAD) $(LIB_X11) $(LIB_XEXT) \
+ 			 -lkmedia2_idl -lsoundserver_idl -lartsflow
+ 
+ libarts_xine_la_METASOURCES = AUTO

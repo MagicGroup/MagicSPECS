@@ -1,0 +1,36 @@
+Index: bfd/doc/chew.c
+===================================================================
+RCS file: /cvs/src/src/bfd/doc/chew.c,v
+retrieving revision 1.25
+diff -p -u -r1.25 chew.c
+--- bfd/doc/chew.c	27 Feb 2012 07:03:00 -0000	1.25
++++ bfd/doc/chew.c	26 Mar 2013 12:20:18 -0000
+@@ -476,8 +476,8 @@ remove_noncomments (src, dst)
+ static void
+ print_stack_level ()
+ {
+-  fprintf (stderr, "current string stack depth = %ld, ", tos - stack);
+-  fprintf (stderr, "current integer stack depth = %ld\n", isp - istack);
++  fprintf (stderr, "current string stack depth = %ld, ", (long) (tos - stack));
++  fprintf (stderr, "current integer stack depth = %ld\n", (long) (isp - istack));
+   pc++;
+ }
+ 
+@@ -1429,7 +1429,7 @@ print ()
+   else if (*isp == 2)
+     write_buffer (tos, stderr);
+   else
+-    fprintf (stderr, "print: illegal print destination `%ld'\n", *isp);
++    fprintf (stderr, "print: illegal print destination `%ld'\n", (long) *isp);
+   isp--;
+   tos--;
+   icheck_range ();
+@@ -1564,7 +1564,7 @@ main (ac, av)
+   if (tos != stack)
+     {
+       fprintf (stderr, "finishing with current stack level %ld\n",
+-	       tos - stack);
++	       (long) (tos - stack));
+       return 1;
+     }
+   return 0;

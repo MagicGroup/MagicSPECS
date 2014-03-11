@@ -1,0 +1,9 @@
+--- src/post/Makefile.am.orig  2012-06-21 09:47:14.910671806 +0200
++++ src/post/Makefile.am	2012-06-21 09:47:21.119671933 +0200
+@@ -1,4 +1,4 @@
+ include $(top_srcdir)/misc/Makefile.quiet
+ include $(top_srcdir)/misc/Makefile.common
+ 
+-SUBDIRS = planar goom visualizations mosaico deinterlace audio
++SUBDIRS = planar goom visualizations mosaico audio
+

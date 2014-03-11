@@ -1,0 +1,69 @@
+diff -Nuarp dict.orig/dict.cpp dict/dict.cpp
+--- dict.orig/dict.cpp	2009-12-22 14:19:38.000000000 +0800
++++ dict/dict.cpp	2009-12-22 14:03:13.000000000 +0800
+@@ -145,7 +145,7 @@ QGraphicsWidget *DictApplet::graphicsWid
+     connect(m_wordEdit, SIGNAL(editingFinished()), this, SLOT(define()));
+     connect(m_wordEdit->nativeWidget(), SIGNAL(textChanged(QString)), this, SLOT(autoDefine(QString)));
+ 
+-    dataEngine(m_dataEngine)->connectSource("list-dictionaries", this);
++//     dataEngine(m_dataEngine)->connectSource("list-dictionaries", this);
+ 
+     //connect(m_defEdit, SIGNAL(linkActivated(const QString&)), this, SLOT(linkDefine(const QString&)));
+ 
+@@ -187,35 +187,7 @@ void DictApplet::linkDefine(const QStrin
+ 
+ void DictApplet::dataUpdated(const QString& source, const Plasma::DataEngine::Data &data)
+ {
+-    if (source=="list-dictionaries")
+-    {
+-        QStringList newDicts=data["dictionaries"].toStringList();
+-        bool changed=false;
+-        for (QStringList::const_iterator i = newDicts.constBegin(); i != newDicts.constEnd(); ++i)
+-        {
+-            if (!m_dicts.contains(*i))
+-            {
+-                m_dicts<<*i;
+-                m_activeDicts[*i]=true;
+-                changed=true;
+-            }
+-        }
+-        QStringList::iterator it = m_dicts.begin();
+-        while (it != m_dicts.end())
+-        {
+-            if (!newDicts.contains(*it))
+-            {
+-                it=m_dicts.erase(it);
+-                changed=true;
+-            }
+-            else
+-                ++it;
+-        }
+-        if (changed)
+-            configAccepted();
+-
+-    }
+-//     Q_UNUSED(source);
++    Q_UNUSED(source);
+     /*if (m_flash) {
+         m_flash->kill();
+     }*/
+@@ -239,19 +211,6 @@ void DictApplet::define()
+     QString newSource = m_wordEdit->text();
+     QStringList dictsList;
+ 
+-    for (QStringList::const_iterator i = m_dicts.constBegin(); i != m_dicts.constEnd(); ++i) {
+-        if (m_activeDicts.contains(*i) && m_activeDicts.value(*i)) {
+-            dictsList << *i;
+-        }
+-    }
+-
+-    if (!newSource.isEmpty() && !dictsList.isEmpty()) {
+-        newSource.prepend(dictsList.join(",")+':');
+-    }
+-
+-    if (newSource == m_source) {
+-        return;
+-    }
+ 
+     dataEngine(m_dataEngine)->disconnectSource(m_source, this);
+ 

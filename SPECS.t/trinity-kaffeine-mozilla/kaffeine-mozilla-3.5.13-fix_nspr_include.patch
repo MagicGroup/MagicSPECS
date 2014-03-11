@@ -1,0 +1,22 @@
+--- kaffeine-mozilla/src/jni_md.h.ORI	2012-04-26 20:44:15.080210122 +0200
++++ kaffeine-mozilla/src/jni_md.h	2012-04-26 20:44:28.006895031 +0200
+@@ -40,7 +40,7 @@
+ #ifndef JNI_MD_H
+ #define JNI_MD_H
+ 
+-#include <nspr/prtypes.h> /* needed for _declspec */
++#include <nspr4/prtypes.h> /* needed for _declspec */
+ 
+ /*******************************************************************************
+  * WHAT'S UP WITH THIS FILE?
+--- kaffeine-mozilla/src/jri_md.h.ORI	2012-04-26 20:44:20.528077329 +0200
++++ kaffeine-mozilla/src/jri_md.h	2012-04-26 20:44:36.239694357 +0200
+@@ -43,7 +43,7 @@
+ #define JRI_MD_H
+ 
+ #include <assert.h>
+-#include <nspr/prtypes.h> /* Needed for HAS_LONG_LONG ifdefs */
++#include <nspr4/prtypes.h> /* Needed for HAS_LONG_LONG ifdefs */
+ 
+ #ifdef __cplusplus
+ extern "C" {

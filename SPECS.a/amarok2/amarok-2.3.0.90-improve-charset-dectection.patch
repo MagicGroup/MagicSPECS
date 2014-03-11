@@ -1,0 +1,169 @@
+diff -Nuarp amarok-2.2.2.orig/src/core-impl/meta/file/File_p.h amarok-2.2.2/src/core-impl/meta/file/File_p.h
+--- amarok-2.2.2.orig/src/core-impl/meta/file/File_p.h	2010-01-31 11:26:48.000000000 +0800
++++ amarok-2.2.2/src/core-impl/meta/file/File_p.h	2010-01-31 11:56:49.000000000 +0800
+@@ -239,33 +239,42 @@ void Track::Private::readMetaData()
+             size_t len = strlen( buf );
+             KEncodingProber prober;
+             KEncodingProber::ProberState result = prober.feed( buf, len );
+-            QString track_encoding( prober.encoding() );
+             if ( result != KEncodingProber::NotMe )
+             {
+                 /*  for further information please refer to:
+                     http://doc.trolltech.com/4.4/qtextcodec.html
+                     http://www.mozilla.org/projects/intl/chardet.html
+                 */
+-                if ( ( track_encoding.toUtf8() == "gb18030" ) || ( track_encoding.toUtf8() == "big5" )
+-                    || ( track_encoding.toUtf8() == "euc-kr" ) || ( track_encoding.toUtf8() == "euc-jp" )
+-                    || ( track_encoding.toUtf8() == "koi8-r" ) )
++                QByteArray encodingname = prober.encoding().toLower();
++                if ( prober.confidence() > 0.47
++                    && ( ( encodingname == "gb18030" ) || ( encodingname == "big5" )
++                    || ( encodingname == "euc-kr" ) || ( encodingname == "euc-jp" )
++                    || ( encodingname == "koi8-r" ) ) )
+                 {
+-                    debug () << "Final Codec Name:" << track_encoding.toUtf8();
+-                    QTextCodec *codec = QTextCodec::codecForName( track_encoding.toUtf8() );
+-                    QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
+-                    QTextCodec::setCodecForCStrings( utf8codec );
++                    debug () << "Final Codec Name:" << encodingname;
++                    QTextCodec *codec = QTextCodec::codecForName( encodingname );
+                     if ( codec != 0 )
+                     {
+-                        m_data.title = codec->toUnicode( m_data.title.toLatin1() );
+-                        m_data.artist = codec->toUnicode( m_data.artist.toLatin1() );
+-                        m_data.album = codec->toUnicode( m_data.album.toLatin1() );
+-                        m_data.comment = codec->toUnicode( m_data.comment.toLatin1() );
++                        m_data.title = codec->toUnicode( m_data.title.toAscii() );
++                        m_data.artist = codec->toUnicode( m_data.artist.toAscii() );
++                        m_data.album = codec->toUnicode( m_data.album.toAscii() );
++                        m_data.comment = codec->toUnicode( m_data.comment.toAscii() );
+                         debug() << "track Info Decoded!";
+                     }
+                 }
++                else if ((prober.confidence() < 0.3 || encodingname != "utf-8")
++                    && QTextCodec::codecForLocale()->name().toLower() != "utf-8")
++                {
++                    QTextCodec *codec = QTextCodec::codecForLocale();
++                    m_data.title = codec->toUnicode( m_data.title.toAscii() );
++                    m_data.artist = codec->toUnicode( m_data.artist.toAscii() );
++                    m_data.album = codec->toUnicode( m_data.album.toAscii() );
++                    m_data.comment = codec->toUnicode( m_data.comment.toAscii() );
++                    debug() << "encoding decoded as system encoding";
++                }
+                 else
+                 {
+-                    debug() << "possible encoding: " << track_encoding.toUtf8();
++                    debug() << "possible encoding: " << encodingname;
+                     debug() << "encoding decoded as UTF-8";
+                 }
+             }
+diff -Nuarp amarok-2.2.2.orig/utilities/collectionscanner/CMakeLists.txt amarok-2.2.2/utilities/collectionscanner/CMakeLists.txt
+--- amarok-2.2.2.orig/utilities/collectionscanner/CMakeLists.txt	2010-01-31 11:26:49.000000000 +0800
++++ amarok-2.2.2/utilities/collectionscanner/CMakeLists.txt	2010-01-31 11:43:58.000000000 +0800
+@@ -1,9 +1,9 @@
++find_package( KDE4 REQUIRED )
++include(KDE4Defaults)
++include(MacroLibrary)
+ 
+ include_directories( ../
+                      ${CMAKE_SOURCE_DIR}
+-                     charset-detector/include
+-                     charset-detector/src
+-                     charset-detector/src/tables
+                      ${QT_INCLUDES}
+                      ${TAGLIB_INCLUDES}
+                      ${TAGLIB-EXTRAS_INCLUDES}
+@@ -65,12 +65,13 @@ set(amarokcollectionscanner_SRCS
+     ../../shared/MetaReplayGain.cpp
+ )
+ 
+-add_executable(amarokcollectionscanner ${amarokcollectionscanner_SRCS} ${libchardet_SRCS} ${taglib_filetype_resolver_SRCS})
++add_executable(amarokcollectionscanner ${amarokcollectionscanner_SRCS} ${taglib_filetype_resolver_SRCS})
+ 
+ target_link_libraries(amarokcollectionscanner 
+                       ${QT_QTCORE_LIBRARY}
+                       ${QT_QTXML_LIBRARY}
+                       ${QT_QTDBUS_LIBRARY}
++                      ${KDE4_KDECORE_LIBS}
+                       ${TAGLIB_LIBRARIES}
+                       ${TAGLIB-EXTRAS_LIBRARIES}
+                       )
+diff -Nuarp amarok-2.2.2.orig/utilities/collectionscanner/CollectionScanner.cpp amarok-2.2.2/utilities/collectionscanner/CollectionScanner.cpp
+--- amarok-2.2.2.orig/utilities/collectionscanner/CollectionScanner.cpp	2010-01-31 11:26:49.000000000 +0800
++++ amarok-2.2.2/utilities/collectionscanner/CollectionScanner.cpp	2010-01-31 11:44:10.000000000 +0800
+@@ -24,7 +24,6 @@
+ #include "CollectionScanner.h"
+ 
+ #include "AFTUtility.h"
+-#include "charset-detector/include/chardet.h"
+ #include "MetaReplayGain.h"
+ #include "shared/Version.h"  // for AMAROK_VERSION
+ 
+@@ -43,6 +42,8 @@
+ #include <QTime>
+ #include <QTimer>
+ 
++#include <KEncodingProber>
++
+ //Taglib:
+ #include <apetag.h>
+ #include <fileref.h>
+@@ -633,30 +634,21 @@ CollectionScanner::readTags( const QStri
+                 TagLib::String metaData = tag->title() + tag->artist() + tag->album() + tag->comment();
+                 const char* buf = metaData.toCString();
+                 size_t len = strlen( buf );
+-                int res = 0;
+-                chardet_t det = NULL;
+-                char encoding[CHARDET_MAX_ENCODING_NAME];
+-                chardet_create( &det );
+-                res = chardet_handle_data( det, buf, len );
+-                chardet_data_end( det );
+-                res = chardet_get_charset( det, encoding, CHARDET_MAX_ENCODING_NAME );
+-                chardet_destroy( det );
+-
+-                QString track_encoding = encoding;
+-
+-                if ( res == CHARDET_RESULT_OK )
++                KEncodingProber prober;
++                KEncodingProber::ProberState result = prober.feed( buf, len );
++                if ( result != KEncodingProber::NotMe )
+                 {
+                     /*  for further information please refer to:
+-                     http://doc.trolltech.com/4.4/qtextcodec.html
+-                     http://www.mozilla.org/projects/intl/chardet.html
+-                     */
+-                    if ( ( track_encoding.toUtf8() == "gb18030" ) || ( track_encoding.toUtf8() == "big5" )
+-                        || ( track_encoding.toUtf8() == "euc-kr" ) || ( track_encoding.toUtf8() == "euc-jp" )
+-                        || ( track_encoding.toUtf8() == "koi8-r" ) )
++                    http://doc.trolltech.com/4.4/qtextcodec.html
++                    http://www.mozilla.org/projects/intl/chardet.html
++                    */
++                    QByteArray encodingname = prober.encoding().toLower();
++                    if ( prober.confidence() > 0.47
++                        && ( ( encodingname == "gb18030" ) || ( encodingname == "big5" )
++                        || ( encodingname == "euc-kr" ) || ( encodingname == "euc-jp" )
++                        || ( encodingname == "koi8-r" ) ) )
+                     {
+-                        QTextCodec *codec = QTextCodec::codecForName( track_encoding.toUtf8() );
+-                        QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
+-                        QTextCodec::setCodecForCStrings( utf8codec );
++                        QTextCodec *codec = QTextCodec::codecForName( encodingname );
+                         if ( codec != 0 )
+                         {
+                             attributes["title"] = codec->toUnicode( strip( tag->title() ).toLatin1() );
+@@ -665,6 +657,15 @@ CollectionScanner::readTags( const QStri
+                             attributes["comment"] = codec->toUnicode( strip( tag->comment() ).toLatin1() );
+                         }
+                     }
++                    else if ((prober.confidence() < 0.3 || encodingname != "utf-8")
++                        && QTextCodec::codecForLocale()->name().toLower() != "utf-8")
++                    {
++                        QTextCodec *codec = QTextCodec::codecForLocale();
++                        attributes["title"] = codec->toUnicode( strip( tag->title() ).toLatin1() );
++                        attributes["artist"] = codec->toUnicode( strip( tag->artist() ).toLatin1() );
++                        attributes["album"] = codec->toUnicode( strip( tag->album() ).toLatin1() );
++                        attributes["comment"] = codec->toUnicode( strip( tag->comment() ).toLatin1() );
++                    }
+                 }
+             }
+             #undef strip

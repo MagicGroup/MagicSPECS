@@ -1,0 +1,1817 @@
+Subject: Backported patches from poppler-0.20.3 - poppler-0.20.5
+
+This patch includes these commits:
+   pdfseparate: Return 0 on success
+   autoconf: Do not assume the shell is bash compatible
+   Fix conversion to ps when having multiple strips
+   Make sure xScale and yScale are always initialized
+   Splash: Blend mode enhancements for CMYK
+   PSOutputDev: Fix Bitmaps in level2sep or level3sep
+   Fix segfault when scaleImage returns NULL
+   If NULL, NULL fails as password try EMPTY, EMPTY before failing
+   Return NULL EmbFile if the FileSpec is not ok
+   Accept FileSpec as Dict too and not only as Ref
+   Only complain when the malloc really failed
+   Fix crash in 589.pdf.SIGSEGV.8b1.929
+   Fix memory leak
+   Fix memory leak
+   Fix crash in 1028.pdf.SIGSEGV.ae6.33
+   Fix crash in 1162.pdf.SIGSEGV.28e.182
+   Add unlikelys to the ifs
+   Fix memory leak
+   Fix wrong memory access in 68.pdf.asan.7.1030
+   Add unlikely
+   Fix crash in 1255.pdf.SIGSEGV.56f.285
+   Fix invalid memory access in 1106.pdf.asan.30.120.patch
+   Fix invalid memory access in solves 1066.pdf.asan.38.75
+   Check for NaN in TextPage::addChar
+   Do not use isnan as it is C99
+   Fix parsing of numbers
+   Forgot to add the new test to autotools
+   Don't close the stream if it's not a stream
+   Fix crash in 158.pdf.asan.d.451
+   More fixes against broken files
+   Add some unlikelys
+   Less crashes in broken files
+   Add unlikelys
+   Fix more crashes in broken files
+   More crash fixes for broken documents
+   Initilize rootNum
+   Fix crash when parsing some unknown colorspaces
+   Do not render invalid outlines
+   glib: chain up finalize to the parent class
+---
+
+diff --git a/configure.ac b/configure.ac
+index 0facfdb..3626028 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -752,7 +752,7 @@ case "$enable_compile_warnings" in
+ 		-fno-common $CXXFLAGS" ;;
+ esac
+ 
+-case $($PKG_CONFIG --version) in
++case `$PKG_CONFIG --version` in
+   0.?|0.1[0-7])
+     PC_REQUIRES_PRIVATE="";
+     PC_REQUIRES="poppler = $VERSION";;
+diff --git a/glib/poppler-document.cc b/glib/poppler-document.cc
+index 24badd9..74d7635 100644
+--- a/glib/poppler-document.cc
++++ b/glib/poppler-document.cc
+@@ -356,6 +356,8 @@ poppler_document_finalize (GObject *object)
+   poppler_document_layers_free (document);
+   delete document->output_dev;
+   delete document->doc;
++
++  G_OBJECT_CLASS (poppler_document_parent_class)->finalize (object);
+ }
+ 
+ /**
+@@ -1957,6 +1959,8 @@ poppler_font_info_finalize (GObject *object)
+ 
+         delete font_info->scanner;
+         g_object_unref (font_info->document);
++
++        G_OBJECT_CLASS (poppler_font_info_parent_class)->finalize (object);
+ }
+ 
+ /**
+@@ -2458,6 +2462,8 @@ poppler_ps_file_finalize (GObject *object)
+         delete ps_file->out;
+         g_object_unref (ps_file->document);
+         g_free (ps_file->filename);
++
++        G_OBJECT_CLASS (poppler_ps_file_parent_class)->finalize (object);
+ }
+ 
+ /**
+diff --git a/glib/poppler-page.cc b/glib/poppler-page.cc
+index 156e2d7..2e0e44e 100644
+--- a/glib/poppler-page.cc
++++ b/glib/poppler-page.cc
+@@ -79,6 +79,8 @@ poppler_page_finalize (GObject *object)
+   if (page->text != NULL) 
+     page->text->decRefCnt();
+   /* page->page is owned by the document */
++
++  G_OBJECT_CLASS (poppler_page_parent_class)->finalize (object);
+ }
+ 
+ /**
+diff --git a/poppler/Annot.cc b/poppler/Annot.cc
+index 24ef57d..aa8b9a8 100644
+--- a/poppler/Annot.cc
++++ b/poppler/Annot.cc
+@@ -15,7 +15,7 @@
+ //
+ // Copyright (C) 2006 Scott Turner <scotty1024@mac.com>
+ // Copyright (C) 2007, 2008 Julien Rebetez <julienr@svn.gnome.org>
+-// Copyright (C) 2007-2011 Albert Astals Cid <aacid@kde.org>
++// Copyright (C) 2007-2012 Albert Astals Cid <aacid@kde.org>
+ // Copyright (C) 2007-2011 Carlos Garcia Campos <carlosgc@gnome.org>
+ // Copyright (C) 2007, 2008 Iñigo Martínez <inigomartinez@gmail.com>
+ // Copyright (C) 2007 Jeff Muizelaar <jeff@infidigm.net>
+@@ -25,6 +25,7 @@
+ // Copyright (C) 2009 Ilya Gorenbein <igorenbein@finjan.com>
+ // Copyright (C) 2011 José Aliste <jaliste@src.gnome.org>
+ // Copyright (C) 2012 Fabio D'Urso <fabiodurso@hotmail.it>
++// Copyright (C) 2012 Thomas Freitag <Thomas.Freitag@alfa.de>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -4500,6 +4501,14 @@ void AnnotWidget::drawListBox(FormFieldChoice *fieldChoice,
+     wMax = 0;
+     for (i = 0; i < fieldChoice->getNumChoices(); ++i) {
+       j = 0;
++      if (fieldChoice->getChoice(i) == NULL) {
++        error(errSyntaxError, -1, "Invalid annotation listbox");
++        if (daToks) {
++          deleteGooList(daToks, GooString);
++        }
++        delete convertedText;
++        return;
++      }
+       layoutText(fieldChoice->getChoice(i), convertedText, &j, font, &w, 0.0, NULL, gFalse);
+       if (w > wMax) {
+         wMax = w;
+diff --git a/poppler/Catalog.cc b/poppler/Catalog.cc
+index 664c421..0f42356 100644
+--- a/poppler/Catalog.cc
++++ b/poppler/Catalog.cc
+@@ -14,7 +14,7 @@
+ // under GPL version 2 or later
+ //
+ // Copyright (C) 2005 Kristian Høgsberg <krh@redhat.com>
+-// Copyright (C) 2005-2011 Albert Astals Cid <aacid@kde.org>
++// Copyright (C) 2005-2012 Albert Astals Cid <aacid@kde.org>
+ // Copyright (C) 2005 Jeff Muizelaar <jrmuizel@nit.ca>
+ // Copyright (C) 2005 Jonathan Blandford <jrb@redhat.com>
+ // Copyright (C) 2005 Marco Pesenti Gritti <mpg@redhat.com>
+@@ -462,6 +462,8 @@ FileSpec *Catalog::embeddedFile(int i)
+       Object fsDict;
+       embeddedFile = new FileSpec(obj.fetch(xref, &fsDict));
+       fsDict.free();
++    } else if (obj.isDict()) {
++      embeddedFile = new FileSpec(&obj);
+     } else {
+       Object null;
+       embeddedFile = new FileSpec(&null);
+diff --git a/poppler/DCTStream.cc b/poppler/DCTStream.cc
+index 90a1377..6302c8b 100644
+--- a/poppler/DCTStream.cc
++++ b/poppler/DCTStream.cc
+@@ -5,11 +5,12 @@
+ // This file is licensed under the GPLv2 or later
+ //
+ // Copyright 2005 Jeff Muizelaar <jeff@infidigm.net>
+-// Copyright 2005-2010 Albert Astals Cid <aacid@kde.org>
++// Copyright 2005-2010, 2012 Albert Astals Cid <aacid@kde.org>
+ // Copyright 2009 Ryszard Trojnacki <rysiek@menel.com>
+ // Copyright 2010 Carlos Garcia Campos <carlosgc@gnome.org>
+ // Copyright 2011 Daiki Ueno <ueno@unixuser.org>
+ // Copyright 2011 Tomas Hoger <thoger@redhat.com>
++// Copyright 2012 Thomas Freitag <Thomas.Freitag@alfa.de>
+ //
+ //========================================================================
+ 
+@@ -222,6 +223,9 @@ int DCTStream::getChars(int nChars, Guchar *buffer) {
+ }
+ 
+ int DCTStream::lookChar() {
++  if (unlikely(current == NULL)) {
++    return EOF;
++  }
+   return *current;
+ }
+ 
+diff --git a/poppler/FileSpec.cc b/poppler/FileSpec.cc
+index 1360608..1adcf5b 100644
+--- a/poppler/FileSpec.cc
++++ b/poppler/FileSpec.cc
+@@ -7,6 +7,7 @@
+ //
+ // Copyright (C) 2008-2009 Carlos Garcia Campos <carlosgc@gnome.org>
+ // Copyright (C) 2009 Kovid Goyal <kovid@kovidgoyal.net>
++// Copyright (C) 2012 Albert Astals Cid <aacid@kde.org>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -151,6 +152,9 @@ FileSpec::~FileSpec()
+ 
+ EmbFile *FileSpec::getEmbeddedFile()
+ {
++  if(!ok)
++    return NULL;
++
+   if (embFile)
+     return embFile;
+ 
+diff --git a/poppler/Form.cc b/poppler/Form.cc
+index 99d7bbb..7d32ae0 100644
+--- a/poppler/Form.cc
++++ b/poppler/Form.cc
+@@ -521,8 +521,8 @@ FormField::FormField(PDFDoc *docA, Object *aobj, const Ref& aref, FormField *par
+     obj1.free();
+     if (dict->lookup("Subtype", &obj1)->isName("Widget"))
+       _createWidget(&obj, ref);
+-    obj1.free();
+   }
++  obj1.free();
+ 
+   //flags
+   if (Form::fieldLookup(dict, "Ff", &obj1)->isInt()) {
+diff --git a/poppler/Function.cc b/poppler/Function.cc
+index 25e8f74..2c3aa8a 100644
+--- a/poppler/Function.cc
++++ b/poppler/Function.cc
+@@ -17,6 +17,7 @@
+ // Copyright (C) 2006 Jeff Muizelaar <jeff@infidigm.net>
+ // Copyright (C) 2010 Christian Feuers�nger <cfeuersaenger@googlemail.com>
+ // Copyright (C) 2011 Andrea Canciani <ranma42@gmail.com>
++// Copyright (C) 2012 Thomas Freitag <Thomas.Freitag@alfa.de>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -1010,6 +1011,10 @@ public:
+       return;
+     }
+     --sp;
++    if (sp + i + 1 >= psStackSize) {
++      error(errSyntaxError, -1, "Stack underflow in PostScript function");
++      return;
++    }
+     stack[sp] = stack[sp + 1 + i];
+   }
+   void pop()
+diff --git a/poppler/Gfx.cc b/poppler/Gfx.cc
+index d7684d6..4e663b4 100644
+--- a/poppler/Gfx.cc
++++ b/poppler/Gfx.cc
+@@ -1671,6 +1671,10 @@ void Gfx::opSetStrokeColorN(Object args[], int numArgs) {
+       state->setStrokeColor(&color);
+       out->updateStrokeColor(state);
+     }
++    if (unlikely(numArgs <= 0)) {
++      error(errSyntaxError, getPos(), "Incorrect number of arguments in 'SCN' command");
++      return;
++    }
+     if (args[numArgs-1].isName() &&
+ 	(pattern = res->lookupPattern(args[numArgs-1].getName(), this))) {
+       state->setStrokePattern(pattern);
+@@ -4356,6 +4360,7 @@ void Gfx::doImage(Object *ref, Stream *str, GBool inlineImg) {
+       dict->lookup("D", &obj1);
+     }
+     if (bits == 0) {
++      delete colorSpace;
+       goto err2;
+     }
+     colorMap = new GfxImageColorMap(bits, &obj1, colorSpace);
+diff --git a/poppler/GfxState.cc b/poppler/GfxState.cc
+index 252e88d..b8cb007 100644
+--- a/poppler/GfxState.cc
++++ b/poppler/GfxState.cc
+@@ -312,7 +312,7 @@ GfxColorSpace *GfxColorSpace::parse(Object *csObj, Gfx *gfx, int recursion) {
+     } else if (obj1.isName("DeviceCMYK")) {
+       cs = new GfxDeviceCMYKColorSpace();
+     } else {
+-      error(errSyntaxWarning, -1, "Bad color space '{0:s}'", csObj->getName());
++      error(errSyntaxWarning, -1, "Bad color space dict'");
+     }
+     obj1.free();
+   } else {
+@@ -2173,10 +2173,16 @@ GfxColorSpace *GfxSeparationColorSpace::parse(Array *arr, Gfx *gfx, int recursio
+   if (!(funcA = Function::parse(&obj1))) {
+     goto err4;
+   }
++  if (funcA->getInputSize() != 1) {
++    error(errSyntaxWarning, -1, "Bad SeparationColorSpace function");
++    goto err5;
++  }
+   obj1.free();
+   cs = new GfxSeparationColorSpace(nameA, altA, funcA);
+   return cs;
+ 
++ err5:
++  delete funcA;
+  err4:
+   delete altA;
+  err3:
+@@ -3096,6 +3102,10 @@ void GfxUnivariateShading::getColor(double t, GfxColor *color) {
+       out[i] = 0;
+     }
+     for (i = 0; i < nFuncs; ++i) {
++      if (funcs[i]->getInputSize() != 1) {
++        error(errSyntaxWarning, -1, "Invalid shading function (input != 1)");
++        break;
++      }
+       funcs[i]->transform(&t, &out[i]);
+     }
+   }
+@@ -3267,7 +3277,7 @@ GfxAxialShading *GfxAxialShading::parse(Dict *dict, Gfx *gfx) {
+   dict->lookup("Function", &obj1);
+   if (obj1.isArray()) {
+     nFuncsA = obj1.arrayGetLength();
+-    if (nFuncsA > gfxColorMaxComps) {
++    if (nFuncsA > gfxColorMaxComps || nFuncsA == 0) {
+       error(errSyntaxWarning, -1, "Invalid Function array in shading dictionary");
+       goto err1;
+     }
+@@ -3292,9 +3302,19 @@ GfxAxialShading *GfxAxialShading::parse(Dict *dict, Gfx *gfx) {
+   extend0A = extend1A = gFalse;
+   if (dict->lookup("Extend", &obj1)->isArray() &&
+       obj1.arrayGetLength() == 2) {
+-    extend0A = obj1.arrayGet(0, &obj2)->getBool();
++    obj1.arrayGet(0, &obj2);
++    if (obj2.isBool()) {
++      extend0A = obj2.getBool();
++    } else {
++      error(errSyntaxWarning, -1, "Invalid axial shading extend (0)");
++    }
+     obj2.free();
+-    extend1A = obj1.arrayGet(1, &obj2)->getBool();
++    obj1.arrayGet(1, &obj2);
++    if (obj2.isBool()) {
++      extend1A = obj2.getBool();
++    } else {
++      error(errSyntaxWarning, -1, "Invalid axial shading extend (1)");
++    }
+     obj2.free();
+   }
+   obj1.free();
+diff --git a/poppler/JBIG2Stream.cc b/poppler/JBIG2Stream.cc
+index 7ddcc81..afba8c6 100644
+--- a/poppler/JBIG2Stream.cc
++++ b/poppler/JBIG2Stream.cc
+@@ -18,6 +18,8 @@
+ // Copyright (C) 2006-2010, 2012 Albert Astals Cid <aacid@kde.org>
+ // Copyright (C) 2009 David Benjamin <davidben@mit.edu>
+ // Copyright (C) 2011 Edward Jiang <ejiang@google.com>
++// Copyright (C) 2012 William Bader <williambader@hotmail.com>
++// Copyright (C) 2012 Thomas Freitag <Thomas.Freitag@alfa.de>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -584,6 +586,9 @@ int JBIG2MMRDecoder::getBlackCode() {
+       } else {
+ 	code = buf >> (bufLen - 12);
+       }
++      if (unlikely((code & 0xff) < 64)) {
++        break;
++      }
+       p = &blackTab2[(code & 0xff) - 64];
+     } else {
+       if (bufLen <= 6) {
+@@ -712,13 +717,22 @@ JBIG2Bitmap::JBIG2Bitmap(Guint segNumA, int wA, int hA):
+     return;
+   }
+   // need to allocate one extra guard byte for use in combine()
+-  data = (Guchar *)gmalloc(h * line + 1);
+-  data[h * line] = 0;
++  data = (Guchar *)gmalloc_checkoverflow(h * line + 1);
++  if (data != NULL) {
++    data[h * line] = 0;
++  }
+ }
+ 
+ JBIG2Bitmap::JBIG2Bitmap(Guint segNumA, JBIG2Bitmap *bitmap):
+   JBIG2Segment(segNumA)
+ {
++  if (unlikely(bitmap == NULL)) {
++    error(errSyntaxError, -1, "NULL bitmap in JBIG2Bitmap");
++    w = h = line = 0;
++    data = NULL;
++    return;
++  }
++
+   w = bitmap->w;
+   h = bitmap->h;
+   line = bitmap->line;
+@@ -1091,8 +1105,8 @@ public:
+   virtual ~JBIG2PatternDict();
+   virtual JBIG2SegmentType getType() { return jbig2SegPatternDict; }
+   Guint getSize() { return size; }
+-  void setBitmap(Guint idx, JBIG2Bitmap *bitmap) { bitmaps[idx] = bitmap; }
+-  JBIG2Bitmap *getBitmap(Guint idx) { return bitmaps[idx]; }
++  void setBitmap(Guint idx, JBIG2Bitmap *bitmap) { if (likely(idx < size)) bitmaps[idx] = bitmap; }
++  JBIG2Bitmap *getBitmap(Guint idx) { return (idx < size) ? bitmaps[idx] : NULL; }
+ 
+ private:
+ 
+@@ -1103,8 +1117,13 @@ private:
+ JBIG2PatternDict::JBIG2PatternDict(Guint segNumA, Guint sizeA):
+   JBIG2Segment(segNumA)
+ {
+-  size = sizeA;
+-  bitmaps = (JBIG2Bitmap **)gmallocn(size, sizeof(JBIG2Bitmap *));
++  bitmaps = (JBIG2Bitmap **)gmallocn_checkoverflow(sizeA, sizeof(JBIG2Bitmap *));
++  if (bitmaps) {
++    size = sizeA;
++  } else {
++    size = 0;
++    error(errSyntaxError, -1, "JBIG2PatternDict: can't allocate bitmaps");
++  }
+ }
+ 
+ JBIG2PatternDict::~JBIG2PatternDict() {
+@@ -1636,7 +1655,7 @@ GBool JBIG2Stream::readSymbolDictSeg(Guint segNum, Guint length,
+   // get the input symbol bitmaps
+   bitmaps = (JBIG2Bitmap **)gmallocn_checkoverflow(numInputSyms + numNewSyms,
+ 				     sizeof(JBIG2Bitmap *));
+-  if (!bitmaps) {
++  if (!bitmaps && (numInputSyms + numNewSyms > 0)) {
+     error(errSyntaxError, curStr->getPos(), "Too many input symbols in JBIG2 symbol dictionary");
+     delete codeTables;
+     goto eofError;
+@@ -1747,6 +1766,10 @@ GBool JBIG2Stream::readSymbolDictSeg(Guint segNum, Guint length,
+       goto syntaxError;
+     }
+     symHeight += dh;
++    if (unlikely(symHeight > 0x40000000)) {
++      error(errSyntaxError, curStr->getPos(), "Bad height value in JBIG2 symbol dictionary");
++      goto syntaxError;
++    }
+     symWidth = 0;
+     totalWidth = 0;
+     j = i;
+@@ -1814,6 +1837,10 @@ GBool JBIG2Stream::readSymbolDictSeg(Guint segNum, Guint length,
+ 	    goto syntaxError;
+ 	  }
+ 	  refBitmap = bitmaps[symID];
++	  if (unlikely(refBitmap == NULL)) {
++	    error(errSyntaxError, curStr->getPos(), "Invalid ref bitmap for symbol ID {0:d} in JBIG2 symbol dictionary", symID);
++	    goto syntaxError;
++	  }
+ 	  bitmaps[numInputSyms + i] =
+ 	      readGenericRefinementRegion(symWidth, symHeight,
+ 					  sdrTemplate, gFalse,
+@@ -1849,6 +1876,10 @@ GBool JBIG2Stream::readSymbolDictSeg(Guint segNum, Guint length,
+ 	collBitmap = new JBIG2Bitmap(0, totalWidth, symHeight);
+ 	bmSize = symHeight * ((totalWidth + 7) >> 3);
+ 	p = collBitmap->getDataPtr();
++	if (unlikely(p == NULL)) {
++	  delete collBitmap;
++	  goto syntaxError;
++	}
+ 	for (k = 0; k < (Guint)bmSize; ++k) {
+ 	  if ((c = curStr->getChar()) == EOF) {
+ 	    break;
+@@ -2198,6 +2229,7 @@ void JBIG2Stream::readTextRegionSeg(Guint segNum, GBool imm,
+ 	  symCodeTab[i++].prefixLen = 0;
+ 	}
+       } else if (j > 0x100) {
++	if (unlikely(i == 0)) ++i;
+ 	for (j -= 0x100; j && i < numSyms; --j) {
+ 	  symCodeTab[i].prefixLen = symCodeTab[i-1].prefixLen;
+ 	  ++i;
+@@ -2365,6 +2397,11 @@ JBIG2Bitmap *JBIG2Stream::readTextRegion(GBool huff, GBool refine,
+ 
+       if (symID >= (Guint)numSyms) {
+ 	error(errSyntaxError, curStr->getPos(), "Invalid symbol number in JBIG2 text region");
++	if (unlikely(numInstances - inst > 0x800)) {
++	  // don't loop too often with damaged JBIg2 streams
++	  delete bitmap;
++	  return NULL;
++	}
+       } else {
+ 
+ 	// get the symbol bitmap
+@@ -2416,8 +2453,24 @@ JBIG2Bitmap *JBIG2Stream::readTextRegion(GBool huff, GBool refine,
+ 	  //~ something is wrong here - refCorner shouldn't degenerate into
+ 	  //~   two cases
+ 	  bw = symbolBitmap->getWidth() - 1;
++	  if (unlikely(symbolBitmap->getHeight() == 0)) {
++	    error(errSyntaxError, curStr->getPos(), "Invalid symbol bitmap height");
++	    if (ri) {
++	      delete symbolBitmap;
++	    }
++	    delete bitmap;
++	    return NULL;
++	  }
+ 	  bh = symbolBitmap->getHeight() - 1;
+ 	  if (transposed) {
++	    if (unlikely(s > 2 * bitmap->getHeight())) {
++	      error(errSyntaxError, curStr->getPos(), "Invalid JBIG2 combine");
++	      if (ri) {
++	        delete symbolBitmap;
++	      }
++	      delete bitmap;
++	      return NULL;
++	    }
+ 	    switch (refCorner) {
+ 	    case 0: // bottom left
+ 	      bitmap->combine(symbolBitmap, tt, s, combOp);
+@@ -2436,15 +2489,47 @@ JBIG2Bitmap *JBIG2Stream::readTextRegion(GBool huff, GBool refine,
+ 	  } else {
+ 	    switch (refCorner) {
+ 	    case 0: // bottom left
++	      if (unlikely(tt - (int) bh > 2 * bitmap->getHeight())) {
++		error(errSyntaxError, curStr->getPos(), "Invalid JBIG2 combine");
++		if (ri) {
++		  delete symbolBitmap;
++		}
++		delete bitmap;
++		return NULL;
++	      }
+ 	      bitmap->combine(symbolBitmap, s, tt - bh, combOp);
+ 	      break;
+ 	    case 1: // top left
++	      if (unlikely(tt > 2 * bitmap->getHeight())) {
++		error(errSyntaxError, curStr->getPos(), "Invalid JBIG2 combine");
++		if (ri) {
++		  delete symbolBitmap;
++		}
++		delete bitmap;
++		return NULL;
++	      }
+ 	      bitmap->combine(symbolBitmap, s, tt, combOp);
+ 	      break;
+ 	    case 2: // bottom right
++	      if (unlikely(tt - (int) bh > 2 * bitmap->getHeight())) {
++		error(errSyntaxError, curStr->getPos(), "Invalid JBIG2 combine");
++		if (ri) {
++		  delete symbolBitmap;
++		}
++		delete bitmap;
++		return NULL;
++	      }
+ 	      bitmap->combine(symbolBitmap, s, tt - bh, combOp);
+ 	      break;
+ 	    case 3: // top right
++	      if (unlikely(tt > 2 * bitmap->getHeight())) {
++		error(errSyntaxError, curStr->getPos(), "Invalid JBIG2 combine");
++		if (ri) {
++		  delete symbolBitmap;
++		}
++		delete bitmap;
++		return NULL;
++	      }
+ 	      bitmap->combine(symbolBitmap, s, tt, combOp);
+ 	      break;
+ 	    }
+@@ -2520,7 +2605,7 @@ void JBIG2Stream::readPatternDictSeg(Guint segNum, Guint length) {
+ 
+   // split up the bitmap
+   x = 0;
+-  for (i = 0; i <= grayMax; ++i) {
++  for (i = 0; i <= grayMax && i < patternDict->getSize(); ++i) {
+     patternDict->setBitmap(i, bitmap->getSlice(x, 0, patternW, patternH));
+     x += patternW;
+   }
+@@ -2671,6 +2756,10 @@ void JBIG2Stream::readHalftoneRegionSeg(Guint segNum, GBool imm,
+     for (n = 0; n < gridW; ++n) {
+       if (!(enableSkip && skipBitmap->getPixel(n, m))) {
+ 	patternBitmap = patternDict->getBitmap(grayImg[i]);
++	if (unlikely(patternBitmap == NULL)) {
++	  error(errSyntaxError, curStr->getPos(), "Bad pattern bitmap");
++	  return;
++	}
+ 	bitmap->combine(patternBitmap, xx >> 8, yy >> 8, combOp);
+       }
+       xx += stepX;
+@@ -3127,7 +3216,7 @@ JBIG2Bitmap *JBIG2Stream::readGenericBitmap(GBool mmr, int w, int h,
+ 	    atx[2] >= -8 && atx[2] <= 8 &&
+ 	    atx[3] >= -8 && atx[3] <= 8) {
+ 	  // set up the adaptive context
+-	  if (y + aty[0] >= 0) {
++	  if (y + aty[0] >= 0 && y + aty[0] < bitmap->getHeight()) {
+ 	    atP0 = bitmap->getDataPtr() + (y + aty[0]) * bitmap->getLineSize();
+ 	    atBuf0 = *atP0++ << 8;
+ 	  } else {
+@@ -3135,7 +3224,7 @@ JBIG2Bitmap *JBIG2Stream::readGenericBitmap(GBool mmr, int w, int h,
+ 	    atBuf0 = 0;
+ 	  }
+ 	  atShift0 = 15 - atx[0];
+-	  if (y + aty[1] >= 0) {
++	  if (y + aty[1] >= 0 && y + aty[1] < bitmap->getHeight()) {
+ 	    atP1 = bitmap->getDataPtr() + (y + aty[1]) * bitmap->getLineSize();
+ 	    atBuf1 = *atP1++ << 8;
+ 	  } else {
+@@ -3143,7 +3232,7 @@ JBIG2Bitmap *JBIG2Stream::readGenericBitmap(GBool mmr, int w, int h,
+ 	    atBuf1 = 0;
+ 	  }
+ 	  atShift1 = 15 - atx[1];
+-	  if (y + aty[2] >= 0) {
++	  if (y + aty[2] >= 0 && y + aty[2] < bitmap->getHeight()) {
+ 	    atP2 = bitmap->getDataPtr() + (y + aty[2]) * bitmap->getLineSize();
+ 	    atBuf2 = *atP2++ << 8;
+ 	  } else {
+@@ -3151,7 +3240,7 @@ JBIG2Bitmap *JBIG2Stream::readGenericBitmap(GBool mmr, int w, int h,
+ 	    atBuf2 = 0;
+ 	  }
+ 	  atShift2 = 15 - atx[2];
+-	  if (y + aty[3] >= 0) {
++	  if (y + aty[3] >= 0 && y + aty[3] < bitmap->getHeight()) {
+ 	    atP3 = bitmap->getDataPtr() + (y + aty[3]) * bitmap->getLineSize();
+ 	    atBuf3 = *atP3++ << 8;
+ 	  } else {
+@@ -3670,7 +3759,7 @@ void JBIG2Stream::readGenericRefinementRegionSeg(Guint segNum, GBool imm,
+ 				       refBitmap, 0, 0, atx, aty);
+ 
+   // combine the region bitmap into the page bitmap
+-  if (imm) {
++  if (imm && bitmap) {
+     pageBitmap->combine(bitmap, x, y, extCombOp);
+     delete bitmap;
+ 
+diff --git a/poppler/JPXStream.cc b/poppler/JPXStream.cc
+index 2cf616d..f1becc9 100644
+--- a/poppler/JPXStream.cc
++++ b/poppler/JPXStream.cc
+@@ -14,6 +14,7 @@
+ // under GPL version 2 or later
+ //
+ // Copyright (C) 2008, 2012 Albert Astals Cid <aacid@kde.org>
++// Copyright (C) 2012 Thomas Freitag <Thomas.Freitag@alfa.de>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -257,6 +258,10 @@ JPXStream::JPXStream(Stream *strA):
+   bitBufLen = 0;
+   bitBufSkip = gFalse;
+   byteCount = 0;
++
++  curX = curY = 0;
++  curComp = 0;
++  readBufLen = 0;
+ }
+ 
+ JPXStream::~JPXStream() {
+@@ -410,6 +415,10 @@ void JPXStream::fillReadBuf() {
+     tileIdx = ((curY - img.yTileOffset) / img.yTileSize) * img.nXTiles
+               + (curX - img.xTileOffset) / img.xTileSize;
+ #if 1 //~ ignore the palette, assume the PDF ColorSpace object is valid
++    if (img.tiles == NULL || tileIdx >= img.nXTiles * img.nYTiles || img.tiles[tileIdx].tileComps == NULL) {
++      error(errSyntaxError, getPos(), "Unexpected tileIdx in fillReadBuf in JPX stream");
++      return;
++    } 
+     tileComp = &img.tiles[tileIdx].tileComps[curComp];
+ #else
+     tileComp = &img.tiles[tileIdx].tileComps[havePalette ? 0 : curComp];
+@@ -420,6 +429,10 @@ void JPXStream::fillReadBuf() {
+       error(errSyntaxError, getPos(), "Unexpected ty in fillReadBuf in JPX stream");
+       return;
+     }
++    if (unlikely(tx >= (tileComp->x1 - tileComp->x0))) {
++      error(errSyntaxError, getPos(), "Unexpected tx in fillReadBuf in JPX stream");
++      return;
++    }
+     pix = (int)tileComp->data[ty * (tileComp->x1 - tileComp->x0) + tx];
+     pixBits = tileComp->prec;
+ #if 1 //~ ignore the palette, assume the PDF ColorSpace object is valid
+@@ -535,7 +548,10 @@ void JPXStream::getImageParams(int *bitsPerComponent,
+       } else {
+ 	cover(4);
+ 	for (i = 0; i < dataLen; ++i) {
+-	  bufStr->getChar();
++	  if (unlikely(bufStr->getChar() == EOF)) {
++	    error(errSyntaxError, getPos(), "Unexpected EOF in getImageParams in JPX stream");
++	    break;
++	  }
+ 	}
+       }
+     }
+@@ -592,6 +608,13 @@ GBool JPXStream::readBoxes() {
+ 
+   haveImgHdr = gFalse;
+ 
++  // initialize in case there is a parse error
++  img.xSize = img.ySize = 0;
++  img.xOffset = img.yOffset = 0;
++  img.xTileSize = img.yTileSize = 0;
++  img.xTileOffset = img.yTileOffset = 0;
++  img.nComps = 0;
++
+   // check for a naked JPEG 2000 codestream (without the JP2/JPX
+   // wrapper) -- this appears to be a violation of the PDF spec, but
+   // Acrobat allows it
+@@ -895,7 +918,7 @@ GBool JPXStream::readCodestream(Guint len) {
+   JPXTileComp *tileComp;
+   int segType;
+   GBool haveSIZ, haveCOD, haveQCD, haveSOT;
+-  Guint precinctSize, style;
++  Guint precinctSize, style, nDecompLevels;
+   Guint segLen, capabilities, comp, i, j, r;
+ 
+   //----- main header
+@@ -998,11 +1021,15 @@ GBool JPXStream::readCodestream(Guint len) {
+ 	      "JPX COD marker segment before SIZ segment");
+ 	return gFalse;
+       }
++      if (img.tiles == NULL || img.nXTiles * img.nYTiles == 0 || img.tiles[0].tileComps == NULL) {
++	error(errSyntaxError, getPos(), "Error in JPX COD marker segment");
++	return gFalse;
++      } 
+       if (!readUByte(&img.tiles[0].tileComps[0].style) ||
+ 	  !readUByte(&img.tiles[0].progOrder) ||
+ 	  !readUWord(&img.tiles[0].nLayers) ||
+ 	  !readUByte(&img.tiles[0].multiComp) ||
+-	  !readUByte(&img.tiles[0].tileComps[0].nDecompLevels) ||
++	  !readUByte(&nDecompLevels) ||
+ 	  !readUByte(&img.tiles[0].tileComps[0].codeBlockW) ||
+ 	  !readUByte(&img.tiles[0].tileComps[0].codeBlockH) ||
+ 	  !readUByte(&img.tiles[0].tileComps[0].codeBlockStyle) ||
+@@ -1010,12 +1037,13 @@ GBool JPXStream::readCodestream(Guint len) {
+ 	error(errSyntaxError, getPos(), "Error in JPX COD marker segment");
+ 	return gFalse;
+       }
+-      if (img.tiles[0].tileComps[0].nDecompLevels > 32 ||
++      if (nDecompLevels > 32 ||
+ 	  img.tiles[0].tileComps[0].codeBlockW > 8 ||
+ 	  img.tiles[0].tileComps[0].codeBlockH > 8) {
+ 	error(errSyntaxError, getPos(), "Error in JPX COD marker segment");
+ 	return gFalse;
+       }
++      img.tiles[0].tileComps[0].nDecompLevels = nDecompLevels;
+       img.tiles[0].tileComps[0].codeBlockW += 2;
+       img.tiles[0].tileComps[0].codeBlockH += 2;
+       for (i = 0; i < img.nXTiles * img.nYTiles; ++i) {
+@@ -1040,9 +1068,13 @@ GBool JPXStream::readCodestream(Guint len) {
+ 	        img.tiles[0].tileComps[0].transform;
+ 	  }
+ 	  img.tiles[i].tileComps[comp].resLevels =
+-	      (JPXResLevel *)gmallocn(
++	      (JPXResLevel *)gmallocn_checkoverflow(
+ 		     (img.tiles[i].tileComps[comp].nDecompLevels + 1),
+ 		     sizeof(JPXResLevel));
++	  if (img.tiles[i].tileComps[comp].resLevels == NULL) {
++	    error(errSyntaxError, getPos(), "Error in JPX COD marker segment");
++	    return gFalse;
++	  }
+ 	  for (r = 0; r <= img.tiles[i].tileComps[comp].nDecompLevels; ++r) {
+ 	    img.tiles[i].tileComps[comp].resLevels[r].precincts = NULL;
+ 	  }
+@@ -1089,7 +1121,7 @@ GBool JPXStream::readCodestream(Guint len) {
+ 	  (img.nComps <= 256 && !readUByte(&comp)) ||
+ 	  comp >= img.nComps ||
+ 	  !readUByte(&style) ||
+-	  !readUByte(&img.tiles[0].tileComps[comp].nDecompLevels) ||
++	  !readUByte(&nDecompLevels) ||
+ 	  !readUByte(&img.tiles[0].tileComps[comp].codeBlockW) ||
+ 	  !readUByte(&img.tiles[0].tileComps[comp].codeBlockH) ||
+ 	  !readUByte(&img.tiles[0].tileComps[comp].codeBlockStyle) ||
+@@ -1097,12 +1129,13 @@ GBool JPXStream::readCodestream(Guint len) {
+ 	error(errSyntaxError, getPos(), "Error in JPX COC marker segment");
+ 	return gFalse;
+       }
+-      if (img.tiles[0].tileComps[comp].nDecompLevels > 32 ||
++      if (nDecompLevels > 32 ||
+ 	  img.tiles[0].tileComps[comp].codeBlockW > 8 ||
+ 	  img.tiles[0].tileComps[comp].codeBlockH > 8) {
+ 	error(errSyntaxError, getPos(), "Error in JPX COC marker segment");
+ 	return gFalse;
+       }
++      img.tiles[0].tileComps[comp].nDecompLevels = nDecompLevels;
+       img.tiles[0].tileComps[comp].style =
+ 	  (img.tiles[0].tileComps[comp].style & ~1) | (style & 1);
+       img.tiles[0].tileComps[comp].codeBlockW += 2;
+@@ -1494,7 +1527,7 @@ GBool JPXStream::readTilePart() {
+   GBool haveSOD;
+   Guint tileIdx, tilePartLen, tilePartIdx, nTileParts;
+   GBool tilePartToEOC;
+-  Guint precinctSize, style;
++  Guint precinctSize, style, nDecompLevels;
+   Guint n, nSBs, nx, ny, sbx0, sby0, comp, segLen;
+   Guint i, j, k, cbX, cbY, r, pre, sb, cbi, cbj;
+   int segType, level;
+@@ -1508,8 +1541,8 @@ GBool JPXStream::readTilePart() {
+     return gFalse;
+   }
+ 
+-  if ((tilePartIdx > 0 && !img.tiles[tileIdx].init) ||
+-      tileIdx >= img.nXTiles * img.nYTiles) {
++  if (tileIdx >= img.nXTiles * img.nYTiles ||
++      (tilePartIdx > 0 && !img.tiles[tileIdx].init)) {
+     error(errSyntaxError, getPos(), "Weird tile index in JPX stream");
+     return gFalse;
+   }
+@@ -1531,7 +1564,7 @@ GBool JPXStream::readTilePart() {
+ 	  !readUByte(&img.tiles[tileIdx].progOrder) ||
+ 	  !readUWord(&img.tiles[tileIdx].nLayers) ||
+ 	  !readUByte(&img.tiles[tileIdx].multiComp) ||
+-	  !readUByte(&img.tiles[tileIdx].tileComps[0].nDecompLevels) ||
++	  !readUByte(&nDecompLevels) ||
+ 	  !readUByte(&img.tiles[tileIdx].tileComps[0].codeBlockW) ||
+ 	  !readUByte(&img.tiles[tileIdx].tileComps[0].codeBlockH) ||
+ 	  !readUByte(&img.tiles[tileIdx].tileComps[0].codeBlockStyle) ||
+@@ -1539,12 +1572,13 @@ GBool JPXStream::readTilePart() {
+ 	error(errSyntaxError, getPos(), "Error in JPX COD marker segment");
+ 	return gFalse;
+       }
+-      if (img.tiles[tileIdx].tileComps[0].nDecompLevels > 32 ||
++      if (nDecompLevels > 32 ||
+ 	  img.tiles[tileIdx].tileComps[0].codeBlockW > 8 ||
+ 	  img.tiles[tileIdx].tileComps[0].codeBlockH > 8) {
+ 	error(errSyntaxError, getPos(), "Error in JPX COD marker segment");
+ 	return gFalse;
+       }
++      img.tiles[tileIdx].tileComps[0].nDecompLevels = nDecompLevels;
+       img.tiles[tileIdx].tileComps[0].codeBlockW += 2;
+       img.tiles[tileIdx].tileComps[0].codeBlockH += 2;
+       for (comp = 0; comp < img.nComps; ++comp) {
+@@ -1605,7 +1639,7 @@ GBool JPXStream::readTilePart() {
+ 	  (img.nComps <= 256 && !readUByte(&comp)) ||
+ 	  comp >= img.nComps ||
+ 	  !readUByte(&style) ||
+-	  !readUByte(&img.tiles[tileIdx].tileComps[comp].nDecompLevels) ||
++	  !readUByte(&nDecompLevels) ||
+ 	  !readUByte(&img.tiles[tileIdx].tileComps[comp].codeBlockW) ||
+ 	  !readUByte(&img.tiles[tileIdx].tileComps[comp].codeBlockH) ||
+ 	  !readUByte(&img.tiles[tileIdx].tileComps[comp].codeBlockStyle) ||
+@@ -1613,12 +1647,13 @@ GBool JPXStream::readTilePart() {
+ 	error(errSyntaxError, getPos(), "Error in JPX COC marker segment");
+ 	return gFalse;
+       }
+-      if (img.tiles[tileIdx].tileComps[comp].nDecompLevels > 32 ||
++      if (nDecompLevels > 32 ||
+ 	  img.tiles[tileIdx].tileComps[comp].codeBlockW > 8 ||
+ 	  img.tiles[tileIdx].tileComps[comp].codeBlockH > 8) {
+ 	error(errSyntaxError, getPos(), "Error in JPX COD marker segment");
+ 	return gFalse;
+       }
++      img.tiles[tileIdx].tileComps[comp].nDecompLevels = nDecompLevels;
+       img.tiles[tileIdx].tileComps[comp].style =
+ 	  (img.tiles[tileIdx].tileComps[comp].style & ~1) | (style & 1);
+       img.tiles[tileIdx].tileComps[comp].codeBlockW += 2;
+@@ -2350,6 +2385,12 @@ GBool JPXStream::readTilePartData(Guint tileIdx,
+ 	    tile->res = 0;
+ 	  }
+ 	}
++	tileComp = &tile->tileComps[tile->comp];
++	if (tile->res >= tileComp->nDecompLevels + 1) {
++	  if (++tile->comp == img.nComps) {
++	    return gTrue;
++	  }
++	}
+       }
+       break;
+     case 3: // precinct, component, resolution level, layer
+@@ -2840,7 +2881,13 @@ void JPXStream::inverseTransformLevel(JPXTileComp *tileComp,
+     // i-quant parameters
+     if (qStyle == 0) {
+       cover(100);
+-      eps = (tileComp->quantSteps[3*r - 2 + sb] >> 3) & 0x1f;
++      const Guint stepIndex = 3*r - 2 + sb;
++      if (unlikely(stepIndex >= tileComp->nQuantSteps)) {
++	error(errSyntaxError, getPos(),
++	      "Wrong index for quantSteps in inverseTransformLevel in JPX stream");
++	break;
++      }
++      eps = (tileComp->quantSteps[stepIndex] >> 3) & 0x1f;
+       shift = guard + eps - 1;
+       mu = 0; // make gcc happy
+     } else {
+@@ -2958,6 +3005,16 @@ void JPXStream::inverseTransformLevel(JPXTileComp *tileComp,
+ 	*bufPtr = dataPtr[x];
+       }
+     }
++    if (tileComp->x1 - tileComp->x0 > tileComp->y1 - tileComp->y0) {
++      x = tileComp->x1 - tileComp->x0 + 5;
++    } else {
++      x = tileComp->y1 - tileComp->y0 + 5;
++    }
++    if (offset + nx2 > x || nx2 == 0) {
++      error(errSyntaxError, getPos(),
++	"Invalid call of inverseTransform1D in inverseTransformLevel in JPX stream");
++      return;
++    }
+     inverseTransform1D(tileComp, tileComp->buf, offset, nx2);
+     for (x = 0, bufPtr = tileComp->buf + offset; x < nx2; ++x, ++bufPtr) {
+       dataPtr[x] = *bufPtr;
+@@ -2998,6 +3055,16 @@ void JPXStream::inverseTransformLevel(JPXTileComp *tileComp,
+ 	*bufPtr = dataPtr[y * tileComp->w];
+       }
+     }
++    if (tileComp->x1 - tileComp->x0 > tileComp->y1 - tileComp->y0) {
++      y = tileComp->x1 - tileComp->x0 + 5;
++    } else {
++      y = tileComp->y1 - tileComp->y0 + 5;
++    }
++    if (offset + ny2 > y || ny2 == 0) {
++      error(errSyntaxError, getPos(),
++	"Invalid call of inverseTransform1D in inverseTransformLevel in JPX stream");
++      return;
++    }
+     inverseTransform1D(tileComp, tileComp->buf, offset, ny2);
+     for (y = 0, bufPtr = tileComp->buf + offset; y < ny2; ++y, ++bufPtr) {
+       dataPtr[y * tileComp->w] = *bufPtr;
+diff --git a/poppler/Lexer.cc b/poppler/Lexer.cc
+index d12e2e8..01b730b 100644
+--- a/poppler/Lexer.cc
++++ b/poppler/Lexer.cc
+@@ -13,7 +13,7 @@
+ // All changes made under the Poppler project to this file are licensed
+ // under GPL version 2 or later
+ //
+-// Copyright (C) 2006-2010 Albert Astals Cid <aacid@kde.org>
++// Copyright (C) 2006-2010, 2012 Albert Astals Cid <aacid@kde.org>
+ // Copyright (C) 2006 Krzysztof Kowalczyk <kkowalczyk@gmail.com>
+ // Copyright (C) 2010 Carlos Garcia Campos <carlosgc@gnome.org>
+ // Copyright (C) 2012 Adrian Johnson <ajohnson@redneon.com>
+@@ -237,7 +237,17 @@ Object *Lexer::getObj(Object *obj, int objNum) {
+       if (overflownUnsignedInteger) {
+         obj->initReal(xf);
+       } else {
+-        obj->initUint(xui);
++        if (neg) {
++          if (xui-1 == INT_MAX) {
++            obj->initInt(INT_MIN);
++          } else {
++            xf = xui;
++            xf = -xf;
++            obj->initReal(xf);
++          }
++        } else {
++          obj->initUint(xui);
++        }
+       }
+     } else {
+       obj->initInt(xi);
+diff --git a/poppler/PSOutputDev.cc b/poppler/PSOutputDev.cc
+index 5df506f..052bc74 100644
+--- a/poppler/PSOutputDev.cc
++++ b/poppler/PSOutputDev.cc
+@@ -27,6 +27,7 @@
+ // Copyright (C) 2009 Kovid Goyal <kovid@kovidgoyal.net>
+ // Copyright (C) 2009-2011 Adrian Johnson <ajohnson@redneon.com>
+ // Copyright (C) 2012 Fabio D'Urso <fabiodurso@hotmail.it>
++// Copyright (C) 2012 Lu Wang <coolwanglu@gmail.com>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -2151,7 +2152,8 @@ void PSOutputDev::setupEmbeddedType1Font(Ref *id, GooString *psName) {
+   writePS("%%EndResource\n");
+ 
+  err1:
+-  strObj.streamClose();
++  if (strObj.isStream())
++    strObj.streamClose();
+   strObj.free();
+ }
+ 
+@@ -3049,7 +3051,7 @@ GBool PSOutputDev::checkPageSlice(Page *page, double /*hDPI*/, double /*vDPI*/,
+   double m0, m1, m2, m3, m4, m5;
+   int nStripes, stripeH, stripeY;
+   int c, w, h, x, y, comp, i;
+-  int numComps;
++  int numComps, initialNumComps;
+ #endif
+   char hexBuf[32*2 + 2];	// 32 values X 2 chars/value + line ending + null
+   Guchar digit;
+@@ -3132,6 +3134,7 @@ GBool PSOutputDev::checkPageSlice(Page *page, double /*hDPI*/, double /*vDPI*/,
+   stripeH = (sliceH + nStripes - 1) / nStripes;
+ 
+   // render the stripes
++  initialNumComps = numComps;
+   for (stripeY = sliceY; stripeY < sliceH; stripeY += stripeH) {
+ 
+     // rasterize a stripe
+@@ -3151,6 +3154,7 @@ GBool PSOutputDev::checkPageSlice(Page *page, double /*hDPI*/, double /*vDPI*/,
+ 
+     // draw the rasterized image
+     bitmap = splashOut->getBitmap();
++    numComps = initialNumComps;
+     w = bitmap->getWidth();
+     h = bitmap->getHeight();
+     writePS("gsave\n");
+@@ -3519,6 +3523,7 @@ void PSOutputDev::startPage(int pageNum, GfxState *state) {
+     saveState(NULL);
+   }
+ 
++  xScale = yScale = 1;
+   switch (mode) {
+ 
+   case psModePSOrigPageSizes:
+@@ -3629,8 +3634,6 @@ void PSOutputDev::startPage(int pageNum, GfxState *state) {
+       } else {
+ 	yScale = xScale;
+       }
+-    } else {
+-      xScale = yScale = 1;
+     }
+     // deal with odd bounding boxes or clipping
+     if (clipLLX0 < clipURX0 && clipLLY0 < clipURY0) {
+@@ -3692,7 +3695,6 @@ void PSOutputDev::startPage(int pageNum, GfxState *state) {
+     if (tx != 0 || ty != 0) {
+       writePSFmt("{0:.6g} {1:.6g} translate\n", tx, ty);
+     }
+-    xScale = yScale = 1;
+     break;
+ 
+   case psModeForm:
+@@ -3700,7 +3702,6 @@ void PSOutputDev::startPage(int pageNum, GfxState *state) {
+     writePS("begin xpdf begin\n");
+     writePS("pdfStartPage\n");
+     tx = ty = 0;
+-    xScale = yScale = 1;
+     rotate = 0;
+     break;
+   }
+@@ -5840,7 +5841,7 @@ void PSOutputDev::doImageL2(Object *ref, GfxImageColorMap *colorMap,
+     }
+ #endif
+     if ((level == psLevel2Sep || level == psLevel3Sep) && colorMap &&
+-	colorMap->getColorSpace()->getMode() == csSeparation) {
++	colorMap->getColorSpace()->getMode() == csSeparation && colorMap->getBits() == 8) {
+       color.c[0] = gfxColorComp1;
+       sepCS = (GfxSeparationColorSpace *)colorMap->getColorSpace();
+       sepCS->getCMYK(&color, &cmyk);
+@@ -6199,7 +6200,7 @@ void PSOutputDev::doImageL3(Object *ref, GfxImageColorMap *colorMap,
+   } else {
+ 
+     if ((level == psLevel2Sep || level == psLevel3Sep) && colorMap &&
+-	colorMap->getColorSpace()->getMode() == csSeparation) {
++	colorMap->getColorSpace()->getMode() == csSeparation && colorMap->getBits() == 8) {
+       color.c[0] = gfxColorComp1;
+       sepCS = (GfxSeparationColorSpace *)colorMap->getColorSpace();
+       sepCS->getCMYK(&color, &cmyk);
+diff --git a/poppler/SecurityHandler.cc b/poppler/SecurityHandler.cc
+index 00c4ae1..a48449a 100644
+--- a/poppler/SecurityHandler.cc
++++ b/poppler/SecurityHandler.cc
+@@ -105,7 +105,12 @@ GBool SecurityHandler::checkEncryption(GooString *ownerPassword,
+     }
+   }
+   if (!ok) {
+-    error(errCommandLine, -1, "Incorrect password");
++    if (!ownerPassword && !userPassword) {
++      GooString dummy;
++      return checkEncryption(&dummy, &dummy);
++    } else {
++      error(errCommandLine, -1, "Incorrect password");
++    }
+   }
+   return ok;
+ }
+diff --git a/poppler/SplashOutputDev.cc b/poppler/SplashOutputDev.cc
+index be35c25..7e19a40 100644
+--- a/poppler/SplashOutputDev.cc
++++ b/poppler/SplashOutputDev.cc
+@@ -661,11 +661,6 @@ static void splashOutBlendSoftLight(SplashColorPtr src, SplashColorPtr dest,
+     SplashColor rgbSrc;
+     SplashColor rgbDest;
+     SplashColor rgbBlend;
+-    for (i = 0; i < 4; i++) {
+-      // convert back to subtractive (s. Splash.cc)
+-      src[i] = 0xff - src[i];
+-      dest[i] = 0xff - dest[i];
+-    }
+     cmykToRGB(src, rgbSrc);
+     cmykToRGB(dest, rgbDest);
+     for (i = 0; i < 3; ++i) {
+@@ -681,10 +676,6 @@ static void splashOutBlendSoftLight(SplashColorPtr src, SplashColorPtr dest,
+       }
+     }
+     rgbToCMYK(rgbBlend, blend);
+-    for (i = 0; i < 4; i++) {
+-      // convert back to additive (s. Splash.cc)
+-      blend[i] = 0xff - blend[i];
+-    }
+   } else
+ #endif
+   {
+@@ -848,6 +839,8 @@ static void splashOutBlendHue(SplashColorPtr src, SplashColorPtr dest,
+   Guchar r0, g0, b0;
+ #ifdef SPLASH_CMYK
+   Guchar r1, g1, b1;
++  int i;
++  SplashColor src2, dest2;
+ #endif
+ 
+   switch (cm) {
+@@ -866,15 +859,24 @@ static void splashOutBlendHue(SplashColorPtr src, SplashColorPtr dest,
+     break;
+ #if SPLASH_CMYK
+   case splashModeCMYK8:
++    for (i = 0; i < 4; i++) {
++      // convert to additive
++      src2[i] = 0xff - src[i];
++      dest2[i] = 0xff - dest[i];
++    }
+     // NB: inputs have already been converted to additive mode
+-    setSat(src[0], src[1], src[2], getSat(dest[0], dest[1], dest[2]),
++    setSat(src2[0], src2[1], src2[2], getSat(dest2[0], dest2[1], dest2[2]),
+ 	   &r0, &g0, &b0);
+-    setLum(r0, g0, b0, getLum(dest[0], dest[1], dest[2]),
++    setLum(r0, g0, b0, getLum(dest2[0], dest2[1], dest2[2]),
+ 	   &r1, &g1, &b1);
+     blend[0] = r1;
+     blend[1] = g1;
+     blend[2] = b1;
+-    blend[3] = dest[3];
++    blend[3] = dest2[3];
++    for (i = 0; i < 4; i++) {
++      // convert back to subtractive
++      blend[i] = 0xff - blend[i];
++    }
+     break;
+ #endif
+   }
+@@ -886,6 +888,8 @@ static void splashOutBlendSaturation(SplashColorPtr src, SplashColorPtr dest,
+   Guchar r0, g0, b0;
+ #ifdef SPLASH_CMYK
+   Guchar r1, g1, b1;
++  int i;
++  SplashColor src2, dest2;
+ #endif
+ 
+   switch (cm) {
+@@ -904,15 +908,23 @@ static void splashOutBlendSaturation(SplashColorPtr src, SplashColorPtr dest,
+     break;
+ #if SPLASH_CMYK
+   case splashModeCMYK8:
+-    // NB: inputs have already been converted to additive mode
+-    setSat(dest[0], dest[1], dest[2], getSat(src[0], src[1], src[2]),
++    for (i = 0; i < 4; i++) {
++      // convert to additive
++      src2[i] = 0xff - src[i];
++      dest2[i] = 0xff - dest[i];
++    }
++    setSat(dest2[0], dest2[1], dest2[2], getSat(src2[0], src2[1], src2[2]),
+ 	   &r0, &g0, &b0);
+-    setLum(r0, g0, b0, getLum(dest[0], dest[1], dest[2]),
++    setLum(r0, g0, b0, getLum(dest2[0], dest2[1], dest2[2]),
+ 	   &r1, &g1, &b1);
+     blend[0] = r1;
+     blend[1] = g1;
+     blend[2] = b1;
+-    blend[3] = dest[3];
++    blend[3] = dest2[3];
++    for (i = 0; i < 4; i++) {
++      // convert back to subtractive
++      blend[i] = 0xff - blend[i];
++    }
+     break;
+ #endif
+   }
+@@ -922,6 +934,8 @@ static void splashOutBlendColor(SplashColorPtr src, SplashColorPtr dest,
+ 				SplashColorPtr blend, SplashColorMode cm) {
+ #if SPLASH_CMYK
+   Guchar r, g, b;
++  int i;
++  SplashColor src2, dest2;
+ #endif
+ 
+   switch (cm) {
+@@ -938,13 +952,21 @@ static void splashOutBlendColor(SplashColorPtr src, SplashColorPtr dest,
+     break;
+ #if SPLASH_CMYK
+   case splashModeCMYK8:
+-    // NB: inputs have already been converted to additive mode
+-    setLum(src[0], src[1], src[2], getLum(dest[0], dest[1], dest[2]),
++    for (i = 0; i < 4; i++) {
++      // convert to additive
++      src2[i] = 0xff - src[i];
++      dest2[i] = 0xff - dest[i];
++    }
++    setLum(src2[0], src2[1], src2[2], getLum(dest2[0], dest2[1], dest2[2]),
+ 	   &r, &g, &b);
+     blend[0] = r;
+     blend[1] = g;
+     blend[2] = b;
+-    blend[3] = dest[3];
++    blend[3] = dest2[3];
++    for (i = 0; i < 4; i++) {
++      // convert back to subtractive
++      blend[i] = 0xff - blend[i];
++    }
+     break;
+ #endif
+   }
+@@ -955,6 +977,8 @@ static void splashOutBlendLuminosity(SplashColorPtr src, SplashColorPtr dest,
+ 				     SplashColorMode cm) {
+ #if SPLASH_CMYK
+   Guchar r, g, b;
++  int i;
++  SplashColor src2, dest2;
+ #endif
+ 
+   switch (cm) {
+@@ -971,13 +995,21 @@ static void splashOutBlendLuminosity(SplashColorPtr src, SplashColorPtr dest,
+     break;
+ #if SPLASH_CMYK
+   case splashModeCMYK8:
+-    // NB: inputs have already been converted to additive mode
+-    setLum(dest[0], dest[1], dest[2], getLum(src[0], src[1], src[2]),
++    for (i = 0; i < 4; i++) {
++      // convert to additive
++      src2[i] = 0xff - src[i];
++      dest2[i] = 0xff - dest[i];
++    }
++    setLum(dest2[0], dest2[1], dest2[2], getLum(src2[0], src2[1], src2[2]),
+ 	   &r, &g, &b);
+     blend[0] = r;
+     blend[1] = g;
+     blend[2] = b;
+-    blend[3] = src[3];
++    blend[3] = src2[3];
++    for (i = 0; i < 4; i++) {
++      // convert back to subtractive
++      blend[i] = 0xff - blend[i];
++    }
+     break;
+ #endif
+   }
+@@ -2250,6 +2282,14 @@ GBool SplashOutputDev::beginType3Char(GfxState *state, double x, double y,
+ 
+       // create new entry in the font cache
+       if (nT3Fonts == splashOutT3FontCacheSize) {
++	t3gs = t3GlyphStack;
++	while (t3gs != NULL) {
++	  if (t3gs->cache == t3FontCache[nT3Fonts - 1]) {
++	    error(errSyntaxWarning, -1, "t3FontCache reaches limit but font still on stack in SplashOutputDev::beginType3Char");
++	    return gTrue;
++	  }
++	  t3gs = t3gs->next;
++	}
+ 	delete t3FontCache[nT3Fonts - 1];
+ 	--nT3Fonts;
+       }
+diff --git a/poppler/Stream.cc b/poppler/Stream.cc
+index 4ce6c00..f287406 100644
+--- a/poppler/Stream.cc
++++ b/poppler/Stream.cc
+@@ -1707,7 +1707,7 @@ int CCITTFaxStream::lookChar() {
+ 
+     // 2-D encoding
+     if (nextLine2D) {
+-      for (i = 0; codingLine[i] < columns; ++i) {
++      for (i = 0; i < columns && codingLine[i] < columns; ++i) {
+ 	refLine[i] = codingLine[i];
+       }
+       refLine[i++] = columns;
+@@ -1723,7 +1723,7 @@ int CCITTFaxStream::lookChar() {
+       //   codingLine[a0i = 0] = refLine[b1i = 0] = 0 is possible
+       // exception at right edge:
+       //   refLine[b1i] = refLine[b1i+1] = columns is possible
+-      while (codingLine[a0i] < columns) {
++      while (codingLine[a0i] < columns && !err) {
+ 	code1 = getTwoDimCode();
+ 	switch (code1) {
+ 	case twoDimPass:
+@@ -1757,49 +1757,109 @@ int CCITTFaxStream::lookChar() {
+ 	  }
+ 	  while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	    b1i += 2;
++	    if (unlikely(b1i > columns + 1)) {
++	      error(errSyntaxError, getPos(),
++		"Bad 2D code {0:04x} in CCITTFax stream", code1);
++	      err = gTrue;
++	      break;
++	    }
+ 	  }
+ 	  break;
+ 	case twoDimVertR3:
++	  if (unlikely(b1i > columns + 1)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	    err = gTrue;
++	    break;
++	  }
+ 	  addPixels(refLine[b1i] + 3, blackPixels);
+ 	  blackPixels ^= 1;
+ 	  if (codingLine[a0i] < columns) {
+ 	    ++b1i;
+ 	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	      b1i += 2;
++	      if (unlikely(b1i > columns + 1)) {
++		error(errSyntaxError, getPos(),
++		  "Bad 2D code {0:04x} in CCITTFax stream", code1);
++		err = gTrue;
++		break;
++	      }
+ 	    }
+ 	  }
+ 	  break;
+ 	case twoDimVertR2:
++	  if (unlikely(b1i > columns + 1)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	    err = gTrue;
++	    break;
++	  }
+ 	  addPixels(refLine[b1i] + 2, blackPixels);
+ 	  blackPixels ^= 1;
+ 	  if (codingLine[a0i] < columns) {
+ 	    ++b1i;
+ 	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	      b1i += 2;
++	      if (unlikely(b1i > columns + 1)) {
++		error(errSyntaxError, getPos(),
++		  "Bad 2D code {0:04x} in CCITTFax stream", code1);
++		err = gTrue;
++		break;
++	      }
+ 	    }
+ 	  }
+ 	  break;
+ 	case twoDimVertR1:
++	  if (unlikely(b1i > columns + 1)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	    err = gTrue;
++	    break;
++	  }
+ 	  addPixels(refLine[b1i] + 1, blackPixels);
+ 	  blackPixels ^= 1;
+ 	  if (codingLine[a0i] < columns) {
+ 	    ++b1i;
+ 	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	      b1i += 2;
++	      if (unlikely(b1i > columns + 1)) {
++		error(errSyntaxError, getPos(),
++		  "Bad 2D code {0:04x} in CCITTFax stream", code1);
++		err = gTrue;
++		break;
++	      }
+ 	    }
+ 	  }
+ 	  break;
+ 	case twoDimVert0:
++	  if (unlikely(b1i > columns + 1)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	    err = gTrue;
++	    break;
++	  }
+ 	  addPixels(refLine[b1i], blackPixels);
+ 	  blackPixels ^= 1;
+ 	  if (codingLine[a0i] < columns) {
+ 	    ++b1i;
+ 	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	      b1i += 2;
++	      if (unlikely(b1i > columns + 1)) {
++		error(errSyntaxError, getPos(),
++		  "Bad 2D code {0:04x} in CCITTFax stream", code1);
++		err = gTrue;
++		break;
++	      }
+ 	    }
+ 	  }
+ 	  break;
+ 	case twoDimVertL3:
++	  if (unlikely(b1i > columns + 1)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	    err = gTrue;
++	    break;
++	  }
+ 	  addPixelsNeg(refLine[b1i] - 3, blackPixels);
+ 	  blackPixels ^= 1;
+ 	  if (codingLine[a0i] < columns) {
+@@ -1810,10 +1870,22 @@ int CCITTFaxStream::lookChar() {
+ 	    }
+ 	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	      b1i += 2;
++	      if (unlikely(b1i > columns + 1)) {
++		error(errSyntaxError, getPos(),
++		  "Bad 2D code {0:04x} in CCITTFax stream", code1);
++		err = gTrue;
++		break;
++	      }
+ 	    }
+ 	  }
+ 	  break;
+ 	case twoDimVertL2:
++	  if (unlikely(b1i > columns + 1)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	    err = gTrue;
++	    break;
++	  }
+ 	  addPixelsNeg(refLine[b1i] - 2, blackPixels);
+ 	  blackPixels ^= 1;
+ 	  if (codingLine[a0i] < columns) {
+@@ -1824,10 +1896,22 @@ int CCITTFaxStream::lookChar() {
+ 	    }
+ 	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	      b1i += 2;
++	      if (unlikely(b1i > columns + 1)) {
++	        error(errSyntaxError, getPos(),
++		  "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	        err = gTrue;
++	        break;
++	      }
+ 	    }
+ 	  }
+ 	  break;
+ 	case twoDimVertL1:
++	  if (unlikely(b1i > columns + 1)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad 2D code {0:04x} in CCITTFax stream", code1);
++	    err = gTrue;
++	    break;
++	  }
+ 	  addPixelsNeg(refLine[b1i] - 1, blackPixels);
+ 	  blackPixels ^= 1;
+ 	  if (codingLine[a0i] < columns) {
+@@ -1838,6 +1922,12 @@ int CCITTFaxStream::lookChar() {
+ 	    }
+ 	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
+ 	      b1i += 2;
++	      if (unlikely(b1i > columns + 1)) {
++		error(errSyntaxError, getPos(),
++		  "Bad 2D code {0:04x} in CCITTFax stream", code1);
++		err = gTrue;
++		break;
++	      }
+ 	    }
+ 	  }
+ 	  break;
+@@ -2021,6 +2111,12 @@ int CCITTFaxStream::lookChar() {
+ 	outputBits = 0;
+ 	if (codingLine[a0i] < columns) {
+ 	  ++a0i;
++	  if (unlikely(a0i > columns)) {
++	    error(errSyntaxError, getPos(),
++	      "Bad bits {0:04x} in CCITTFax stream", bits);
++	      err = gTrue;
++	      break;
++	  }
+ 	  outputBits = codingLine[a0i] - codingLine[a0i - 1];
+ 	} else if (bits > 0) {
+ 	  buf <<= bits;
+diff --git a/poppler/TextOutputDev.cc b/poppler/TextOutputDev.cc
+index e8d993b..a9c9d70 100644
+--- a/poppler/TextOutputDev.cc
++++ b/poppler/TextOutputDev.cc
+@@ -20,7 +20,7 @@
+ // Copyright (C) 2006 Jeff Muizelaar <jeff@infidigm.net>
+ // Copyright (C) 2007, 2008 Adrian Johnson <ajohnson@redneon.com>
+ // Copyright (C) 2008 Koji Otani <sho@bbr.jp>
+-// Copyright (C) 2008, 2010, 2011 Albert Astals Cid <aacid@kde.org>
++// Copyright (C) 2008, 2010-2012 Albert Astals Cid <aacid@kde.org>
+ // Copyright (C) 2008 Pino Toscano <pino@kde.org>
+ // Copyright (C) 2008, 2010 Hib Eris <hib@hiberis.nl>
+ // Copyright (C) 2009 Ross Moore <ross@maths.mq.edu.au>
+@@ -29,6 +29,7 @@
+ // Copyright (C) 2010 Suzuki Toshiya <mpsuzuki@hiroshima-u.ac.jp>
+ // Copyright (C) 2011 Sam Liao <phyomh@gmail.com>
+ // Copyright (C) 2012 Horst Prote <prote@fmi.uni-stuttgart.de>
++// Copyright (C) 2012 Jason Crain <jason@aquaticape.us>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -2299,7 +2300,9 @@ void TextPage::addChar(GfxState *state, double x, double y,
+   state->transform(x, y, &x1, &y1);
+   if (x1 + w1 < 0 || x1 > pageWidth ||
+       y1 + h1 < 0 || y1 > pageHeight ||
+-      w1 > pageWidth || h1 > pageHeight) {
++      w1 > pageWidth || h1 > pageHeight ||
++      x1 != x1 || y1 != y1 || // IEEE way of checking for isnan
++      w1 != w1 || h1 != h1) {
+     charPos += nBytes;
+     return;
+   }
+diff --git a/poppler/XRef.cc b/poppler/XRef.cc
+index 3564807..8865e17 100644
+--- a/poppler/XRef.cc
++++ b/poppler/XRef.cc
+@@ -267,6 +267,7 @@ void XRef::init() {
+   objStrs = new PopplerCache(5);
+   mainXRefEntriesOffset = 0;
+   xRefStream = gFalse;
++  rootNum = -1;
+ }
+ 
+ XRef::XRef() {
+@@ -719,6 +720,10 @@ GBool XRef::readXRefStreamSection(Stream *xrefStr, int *w, int first, int n) {
+       error(errSyntaxError, -1, "Invalid 'size' inside xref table");
+       return gFalse;
+     }
++    if (first + n > size) {
++      error(errSyntaxError, -1, "Invalid 'first' or 'n' inside xref table");
++      return gFalse;
++    }
+   }
+   for (i = first; i < first + n; ++i) {
+     if (w[0] == 0) {
+@@ -1085,6 +1090,8 @@ Object *XRef::fetch(int num, int gen, Object *obj, int recursion) {
+ 	objStr = NULL;
+ 	goto err;
+       } else {
++	// XRef could be reconstructed in constructor of ObjectStream:
++	e = getEntry(num);
+ 	ObjectStreamKey *newkey = new ObjectStreamKey(e->offset);
+ 	ObjectStreamItem *newitem = new ObjectStreamItem(objStr);
+ 	objStrs->put(newkey, newitem);
+diff --git a/qt4/tests/CMakeLists.txt b/qt4/tests/CMakeLists.txt
+index 028c1e1..9eaaa02 100644
+--- a/qt4/tests/CMakeLists.txt
++++ b/qt4/tests/CMakeLists.txt
+@@ -56,6 +56,7 @@ qt4_add_qtest(check_password check_password.cpp)
+ qt4_add_qtest(check_permissions check_permissions.cpp)
+ qt4_add_qtest(check_search check_search.cpp)
+ qt4_add_qtest(check_actualtext check_actualtext.cpp)
++qt4_add_qtest(check_lexer check_lexer.cpp)
+ if (NOT WIN32)
+   qt4_add_qtest(check_strings check_strings.cpp)
+ endif (NOT WIN32)
+diff --git a/qt4/tests/Makefile.am b/qt4/tests/Makefile.am
+index be8ea35..6286d8c 100644
+--- a/qt4/tests/Makefile.am
++++ b/qt4/tests/Makefile.am
+@@ -79,7 +79,8 @@ TESTS = \
+ 	check_password    	\
+ 	check_pagelayout	\
+ 	check_search		\
+-	check_strings
++	check_strings		\
++	check_lexer
+ 
+ check_PROGRAMS = $(TESTS)
+ 
+@@ -135,5 +136,9 @@ check_strings_SOURCES = check_strings.cpp
+ check_strings.$(OBJEXT): check_strings.moc
+ check_strings_LDADD = $(LDADDS) $(POPPLER_QT4_TEST_LIBS)
+ 
++check_lexer_SOURCES = check_lexer.cpp
++check_lexer.$(OBJEXT): check_lexer.moc
++check_lexer_LDADD = $(LDADDS) $(POPPLER_QT4_TEST_LIBS)
++
+ endif
+ 
+diff --git a/qt4/tests/check_lexer.cpp b/qt4/tests/check_lexer.cpp
+new file mode 100644
+index 0000000..904be14
+--- /dev/null
++++ b/qt4/tests/check_lexer.cpp
+@@ -0,0 +1,118 @@
++#include <QtTest/QtTest>
++
++#include "Object.h"
++#include "Lexer.h"
++
++class TestLexer : public QObject
++{
++    Q_OBJECT
++private slots:
++    void testNumbers();
++};
++
++void TestLexer::testNumbers()
++{
++    char *data = "0 1 -1 2147483647 -2147483647 2147483648 -2147483648 4294967297 -2147483649 0.1 1.1 -1.1 2147483647.1 -2147483647.1 2147483648.1 -2147483648.1 4294967297.1 -2147483649.1";
++    Object dummy;
++    MemStream *stream = new MemStream(data, 0, strlen(data), &dummy);
++    Lexer *lexer = new Lexer(NULL, stream);
++    QVERIFY( lexer );
++    
++    Object obj;
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objInt);
++    QCOMPARE(obj.getInt(), 0);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objInt);
++    QCOMPARE(obj.getInt(), 1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objInt);
++    QCOMPARE(obj.getInt(), -1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objInt);
++    QCOMPARE(obj.getInt(), 2147483647);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objInt);
++    QCOMPARE(obj.getInt(), -2147483647);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objUint);
++    QCOMPARE(obj.getUint(), (unsigned int)2147483648);
++    obj.free();
++      
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objInt);
++    QCOMPARE(obj.getInt(), (int)-2147483648);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), (double)4294967297);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), (double)-2147483649);
++    obj.free();
++
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), 0.1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), 1.1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), -1.1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), 2147483647.1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), -2147483647.1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), 2147483648.1);
++    obj.free();
++      
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), -2147483648.1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), 4294967297.1);
++    obj.free();
++    
++    lexer->getObj(&obj);
++    QCOMPARE(obj.getType(), objReal);
++    QCOMPARE(obj.getReal(), -2147483649.1);
++    obj.free();
++
++    delete lexer;
++}
++
++QTEST_MAIN(TestLexer)
++#include "check_lexer.moc"
++
+diff --git a/splash/Splash.cc b/splash/Splash.cc
+index 0e07c70..62d8f8d 100644
+--- a/splash/Splash.cc
++++ b/splash/Splash.cc
+@@ -16,6 +16,7 @@
+ // Copyright (C) 2010-2012 Thomas Freitag <Thomas.Freitag@alfa.de>
+ // Copyright (C) 2010 Christian Feuers�nger <cfeuersaenger@googlemail.com>
+ // Copyright (C) 2011, 2012 William Bader <williambader@hotmail.com>
++// Copyright (C) 2012 Markus Trippelsdorf <markus@trippelsdorf.de>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -337,9 +338,6 @@ void Splash::pipeRun(SplashPipe *pipe) {
+   SplashColorPtr cSrc;
+   Guchar cResult0, cResult1, cResult2, cResult3;
+   int t;
+-#if SPLASH_CMYK
+-  SplashColor cSrc2, cDest2;
+-#endif
+ 
+   //----- source color
+ 
+@@ -521,25 +519,6 @@ void Splash::pipeRun(SplashPipe *pipe) {
+     //----- blend function
+ 
+     if (state->blendFunc) {
+-#if SPLASH_CMYK
+-      if (bitmap->mode == splashModeCMYK8) {
+-	// convert colors to additive
+-	cSrc2[0] = 0xff - cSrc[0];
+-	cSrc2[1] = 0xff - cSrc[1];
+-	cSrc2[2] = 0xff - cSrc[2];
+-	cSrc2[3] = 0xff - cSrc[3];
+-	cDest2[0] = 0xff - cDest[0];
+-	cDest2[1] = 0xff - cDest[1];
+-	cDest2[2] = 0xff - cDest[2];
+-	cDest2[3] = 0xff - cDest[3];
+-	(*state->blendFunc)(cSrc2, cDest2, cBlend, bitmap->mode);
+-	// convert result back to subtractive
+-	cBlend[0] = 0xff - cBlend[0];
+-	cBlend[1] = 0xff - cBlend[1];
+-	cBlend[2] = 0xff - cBlend[2];
+-	cBlend[3] = 0xff - cBlend[3];
+-      } else
+-#endif
+       (*state->blendFunc)(cSrc, cDest, cBlend, bitmap->mode);
+     }
+ 
+@@ -3456,6 +3435,9 @@ SplashError Splash::drawImage(SplashImageSource src, void *srcData,
+       }
+       scaledImg = scaleImage(src, srcData, srcMode, nComps, srcAlpha, w, h,
+ 			     scaledWidth, scaledHeight);
++      if (scaledImg == NULL) {
++        return splashErrBadArg;
++      }
+       blitImage(scaledImg, srcAlpha, x0, y0, clipRes);
+       delete scaledImg;
+     }
+@@ -3491,6 +3473,9 @@ SplashError Splash::drawImage(SplashImageSource src, void *srcData,
+       }
+       scaledImg = scaleImage(src, srcData, srcMode, nComps, srcAlpha, w, h,
+ 			     scaledWidth, scaledHeight);
++      if (scaledImg == NULL) {
++        return splashErrBadArg;
++      }
+       vertFlipImage(scaledImg, scaledWidth, scaledHeight, nComps);
+       blitImage(scaledImg, srcAlpha, x0, y0, clipRes);
+       delete scaledImg;
+diff --git a/splash/SplashClip.cc b/splash/SplashClip.cc
+index 41b73c8..fb18831 100644
+--- a/splash/SplashClip.cc
++++ b/splash/SplashClip.cc
+@@ -384,4 +384,27 @@ void SplashClip::clipAALine(SplashBitmap *aaBuf, int *x0, int *x1, int y) {
+   for (i = 0; i < length; ++i) {
+     scanners[i]->clipAALine(aaBuf, x0, x1, y);
+   }
++  if (*x0 > *x1) {
++    *x0 = *x1;
++  }
++  if (*x0 < 0) {
++    *x0 = 0;
++  }
++  if ((*x0>>1) >= aaBuf->getRowSize()) {
++    xx0 = *x0;
++    *x0 = (aaBuf->getRowSize() - 1) << 1;
++    if (xx0 & 1) {
++      *x0 = *x0 + 1;
++    }
++  }
++  if (*x1 < *x0) {
++    *x1 = *x0;
++  }
++  if ((*x1>>1) >= aaBuf->getRowSize()) {
++    xx0 = *x1;
++    *x1 = (aaBuf->getRowSize() - 1) << 1;
++    if (xx0 & 1) {
++      *x1 = *x1 + 1;
++    }
++  }
+ }
+diff --git a/splash/SplashFTFont.cc b/splash/SplashFTFont.cc
+index f18b58b..e57425e 100644
+--- a/splash/SplashFTFont.cc
++++ b/splash/SplashFTFont.cc
+@@ -16,6 +16,7 @@
+ // Copyright (C) 2009 Petr Gajdos <pgajdos@novell.com>
+ // Copyright (C) 2010 Suzuki Toshiya <mpsuzuki@hiroshima-u.ac.jp>
+ // Copyright (C) 2011 Andreas Hartmetz <ahartmetz@gmail.com>
++// Copyright (C) 2012 Thomas Freitag <Thomas.Freitag@alfa.de>
+ //
+ // To see a description of the changes please see the Changelog file that
+ // came with your tarball or type make ChangeLog if you are building from git
+@@ -428,6 +429,9 @@ SplashPath *SplashFTFont::getGlyphPath(int c) {
+   if (FT_Get_Glyph(slot, &glyph)) {
+     return NULL;
+   }
++  if (FT_Outline_Check(&((FT_OutlineGlyph)glyph)->outline)) {
++    return NULL;
++  }
+   path.path = new SplashPath();
+   path.textScale = textScale;
+   path.needClose = gFalse;
+diff --git a/splash/SplashXPathScanner.cc b/splash/SplashXPathScanner.cc
+index c9fe5e5..738cef7 100644
+--- a/splash/SplashXPathScanner.cc
++++ b/splash/SplashXPathScanner.cc
+@@ -441,6 +441,9 @@ void SplashXPathScanner::renderAALine(SplashBitmap *aaBuf,
+       }
+     }
+   }
++  if (xxMin > xxMax) {
++    xxMin = xxMax;
++  }
+   *x0 = xxMin / splashAASize;
+   *x1 = (xxMax - 1) / splashAASize;
+ }
+diff --git a/utils/pdfseparate.cc b/utils/pdfseparate.cc
+index 9fbbc3a..25fac5a 100644
+--- a/utils/pdfseparate.cc
++++ b/utils/pdfseparate.cc
+@@ -5,6 +5,7 @@
+ // This file is licensed under the GPLv2 or later
+ //
+ // Copyright (C) 2011, 2012 Thomas Freitag <Thomas.Freitag@alfa.de>
++// Copyright (C) 2012 Albert Astals Cid <aacid@kde.org>
+ //
+ //========================================================================
+ #include "config.h"
+@@ -109,7 +110,10 @@ main (int argc, char *argv[])
+       goto err0;
+     }
+   globalParams = new GlobalParams();
+-  extractPages (argv[1], argv[2]);
++  ok = extractPages (argv[1], argv[2]);
++  if (ok) {
++    exitCode = 0;
++  }
+   delete globalParams;
+ 
+ err0:

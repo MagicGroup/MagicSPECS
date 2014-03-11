@@ -1,0 +1,53 @@
+diff -up chromium-14.0.827.10/chrome/chrome_browser.gypi.sharedlibsfixes chromium-14.0.827.10/chrome/chrome_browser.gypi
+--- chromium-14.0.827.10/chrome/chrome_browser.gypi.sharedlibsfixes	2011-07-21 16:11:51.387533960 -0400
++++ chromium-14.0.827.10/chrome/chrome_browser.gypi	2011-07-21 16:13:47.207412244 -0400
+@@ -28,6 +28,7 @@
+         'theme_resources_large',
+         'theme_resources_standard',
+         'userfeedback_proto',
++        '../native_client/src/trusted/desc/desc.gyp:nrd_xfer',
+         '../build/temp_gyp/googleurl.gyp:googleurl',
+         '../content/content.gyp:content_browser',
+         '../crypto/crypto.gyp:crypto',
+@@ -45,6 +46,8 @@
+         '../third_party/libphonenumber/libphonenumber.gyp:phonenumber_proto',
+         '../third_party/libxml/libxml.gyp:libxml',
+         '../third_party/npapi/npapi.gyp:npapi',
++        '../third_party/WebKit/Source/WebCore/WebCore.gyp/WebCore.gyp:webcore',
++        '../third_party/WebKit/Source/WebKit/chromium/WebKit.gyp:webkit',
+         '../ui/base/strings/ui_strings.gyp:ui_strings',
+         '../ui/gfx/surface/surface.gyp:surface',
+         '../ui/ui.gyp:ui_resources',
+@@ -3649,6 +3652,11 @@
+         '<(grit_out_dir)/grit/theme_resources_standard_map.cc',
+       ],
+       'conditions': [
++        ['disable_nacl!=1', {
++          'dependencies': [
++            '../native_client/src/trusted/plugin/plugin.gyp:ppGoogleNaClPluginChrome',
++          ],
++        }],
+         ['javascript_engine=="v8"', {
+           'defines': [
+             'CHROME_V8',
+@@ -3835,6 +3843,8 @@
+             'libraries': [
+               # For dlsym() in 'browser/zygote_main_linux.cc'
+               '-ldl',
++              '<!@(pkg-config --libs-only-l icu)',
++              '-Lout/Release/lib.target/ -lwtf',
+             ],
+           },
+           'sources!': [
+diff -up chromium-14.0.827.10/chrome/chrome_common.gypi.sharedlibsfixes chromium-14.0.827.10/chrome/chrome_common.gypi
+--- chromium-14.0.827.10/chrome/chrome_common.gypi.sharedlibsfixes	2011-07-21 16:11:51.387533960 -0400
++++ chromium-14.0.827.10/chrome/chrome_common.gypi	2011-07-21 16:11:51.455290673 -0400
+@@ -269,6 +269,8 @@
+               '-lXrender',
+               '-lXss',
+               '-lXext',
++              '-Lout/Release/lib.target/ -lskia', 
++              '-Lout/Release/lib.target/ -lipc',
+             ],
+           },
+         },],

@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# chkconfig: - 75 35
+# description: The clamd server running for <SERVICE>
+
+CLAMD_SERVICE=<SERVICE>
+. /usr/share/clamav/clamd-wrapper

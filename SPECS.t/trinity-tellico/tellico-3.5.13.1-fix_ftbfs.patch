@@ -1,0 +1,11 @@
+--- tellico-3.5.13.1/src/Makefile.am.ORI	2012-10-04 23:24:30.130403046 +0200
++++ tellico-3.5.13.1/src/Makefile.am	2012-10-04 23:25:46.806848842 +0200
+@@ -33,7 +33,7 @@
+ 	./commands/libcommands.a -lexslt $(LIB_KFILE) $(LIB_KHTML) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) \
+ 	$(LIBSOCKET) $(LIBXSLT_LIBS) $(TAGLIB_LIBS) $(KCDDB_LIBS) $(YAZ_LIBS) $(LIB_KIO) \
+ 	$(LIB_KABC) $(KCAL_LIBS) $(LDADD_LIBBTPARSE) $(LIB_KNEWSTUFF) $(EXEMPI_LIBS) \
+-	$(POPPLER_LIBS) $(LDADD_LIBBARCODE)
++	$(POPPLER_LIBS) $(LDADD_LIBBARCODE) -lxml2
+ 
+ EXTRA_DIST = tellicoui.rc tellicorc \
+ borrowerdialog.cpp          entryiconview.h\

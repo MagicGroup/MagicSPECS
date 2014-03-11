@@ -1,0 +1,23 @@
+Empathy is a client built on the Telepathy messaging framework. However, 
+without a proper backend (connection manager) installed, it is essentially
+useless.
+
+XMPP, as a standardized and unencumbered protocol, is supported by default
+through the telepathy-gabble (Jabber and GoogleTalk) and telepathy-salut (link-local)
+connection managers.
+
+MSN support is now handled by telepathy-gabble. Refer to:
+http://blogs.gnome.org/xclaesse/2011/11/03/msn-in-empathy-with-xmpp/
+
+Support for AIM/ICQ, Gadu-Gadu, Groupwise, QQ, and Yahoo! are all provided
+by telepathy-haze (installed by default with Empathy).
+
+However, more are available in Fedora which implement other protocols available
+for Empathy. They are as follows, listed by their package name:
+
+* telepathy-idle: IRC
+* telepathy-rakia: SIP (Session Initiation Protocol)
+
+If you wish to us any of these protocols with Empathy, you will need to
+install the appropriate package for the connection manager and configure
+the account through Empathy's "Accounts" dialog.

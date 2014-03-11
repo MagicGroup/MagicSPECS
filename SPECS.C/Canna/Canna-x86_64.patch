@@ -1,0 +1,12 @@
+diff -ruN Canna37.orig/Canna.conf Canna37/Canna.conf
+--- Canna37.orig/Canna.conf	2003-12-24 13:20:19.000000000 +0900
++++ Canna37/Canna.conf	2003-12-24 13:20:48.000000000 +0900
+@@ -112,7 +112,7 @@
+ # define DefCannaPrefix /usr
+ # ifdef ObsoleteInstallDir
+ #  define DefErrDir /usr/spool/canna
+-#  define DefLibCannaDir /usr/lib
++#  define DefLibCannaDir /usr/lib64
+ # else
+ #  define DefErrDir /var/log/canna
+ #  define DefLibCannaDir $(cannaExecPrefix)/lib

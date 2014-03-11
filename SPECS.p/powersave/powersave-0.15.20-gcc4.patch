@@ -1,0 +1,103 @@
+diff -ur powersave-0.15.20.orig/daemon/acpi.cpp powersave-0.15.20/daemon/acpi.cpp
+--- powersave-0.15.20.orig/daemon/acpi.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/daemon/acpi.cpp	2013-01-08 03:52:39.000000000 +0000
+@@ -25,11 +25,16 @@
+ #include <sys/time.h>
+ #include <sys/socket.h>
+ #include <sys/un.h>
++#include <sys/types.h>
++#include <sys/stat.h>
+ #include <fcntl.h>
+ #include <liblazy.h>
+ 
+ #include <sstream>
+ #include <errno.h>
++#include <cstdio>
++#include <cstdlib>
++#include <unistd.h>
+ 
+ #include "acpi.h"
+ #include "stringutil.h"
+diff -ur powersave-0.15.20.orig/daemon/apm.cpp powersave-0.15.20/daemon/apm.cpp
+--- powersave-0.15.20.orig/daemon/apm.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/daemon/apm.cpp	2013-01-08 03:52:39.000000000 +0000
+@@ -22,10 +22,13 @@
+  *                                                                         *
+  ***************************************************************************/
+ 
++#include <unistd.h>
+ #include <stdlib.h>
+ #include <linux/types.h>
+ #include <linux/apm_bios.h>
+ #include <sys/ioctl.h>
++#include <sys/types.h>
++#include <sys/stat.h>
+ 
+ #include "globals.h"
+ #include "apm.h"
+diff -ur powersave-0.15.20.orig/daemon/cpu.cpp powersave-0.15.20/daemon/cpu.cpp
+--- powersave-0.15.20.orig/daemon/cpu.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/daemon/cpu.cpp	2013-01-08 03:52:39.000000000 +0000
+@@ -1,6 +1,7 @@
+ #include "cpu.h"
+ #include "powerlib.h"
+ 
++#include <unistd.h>
+ #include <sstream>
+ #include <errno.h>
+ #include <stdarg.h>
+diff -ur powersave-0.15.20.orig/daemon/event.cpp powersave-0.15.20/daemon/event.cpp
+--- powersave-0.15.20.orig/daemon/event.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/daemon/event.cpp	2013-01-08 03:52:39.000000000 +0000
+@@ -22,6 +22,7 @@
+  *                                                                         *
+  ***************************************************************************/
+ 
++#include <unistd.h>
+ #include <algorithm>
+ #include <sys/wait.h>
+ #include <sys/time.h>
+diff -ur powersave-0.15.20.orig/daemon/main_loop.cpp powersave-0.15.20/daemon/main_loop.cpp
+--- powersave-0.15.20.orig/daemon/main_loop.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/daemon/main_loop.cpp	2013-01-08 03:52:39.000000000 +0000
+@@ -27,6 +27,7 @@
+ #include <errno.h>
+ #include <string.h>
+ #include <stdlib.h>
++#include <unistd.h>
+ 
+ #include "main_loop.h"
+ #include "powerlib.h"
+diff -ur powersave-0.15.20.orig/daemon/pm_interface.cpp powersave-0.15.20/daemon/pm_interface.cpp
+--- powersave-0.15.20.orig/daemon/pm_interface.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/daemon/pm_interface.cpp	2013-01-08 03:52:39.000000000 +0000
+@@ -29,6 +29,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <stdlib.h>
++#include <unistd.h>
+ 
+ #include "event_management.h"
+ #include "main_loop.h"
+diff -ur powersave-0.15.20.orig/daemon/powersaved.cpp powersave-0.15.20/daemon/powersaved.cpp
+--- powersave-0.15.20.orig/daemon/powersaved.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/daemon/powersaved.cpp	2013-01-08 03:52:39.000000000 +0000
+@@ -30,6 +30,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <stdlib.h>
++#include <unistd.h>
+ 
+ #include "config_pm.h"
+ #include "acpi.h"
+diff -ur powersave-0.15.20.orig/user_binary/powersave.cpp powersave-0.15.20/user_binary/powersave.cpp
+--- powersave-0.15.20.orig/user_binary/powersave.cpp	2013-01-08 03:52:19.000000000 +0000
++++ powersave-0.15.20/user_binary/powersave.cpp	2013-01-08 03:52:50.000000000 +0000
+@@ -29,6 +29,7 @@
+ #include <errno.h>
+ #include <liblazy.h>
+ #include <limits.h>
++#include <unistd.h>
+ 
+ #include "powerlib.h"
+ #include "config.h"

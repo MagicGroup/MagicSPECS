@@ -1,0 +1,27 @@
+diff -up wicd-1.7.1b2/curses/wicd-curses.py.orig wicd-1.7.1b2/curses/wicd-curses.py
+--- wicd-1.7.1b2/curses/wicd-curses.py.orig	2010-10-29 11:36:55.000000000 -0400
++++ wicd-1.7.1b2/curses/wicd-curses.py	2011-08-19 17:07:55.523159764 -0400
+@@ -1030,7 +1030,7 @@ if __name__ == '__main__':
+         parser = OptionParser(version="wicd-curses-%s (using wicd %s)" % (CURSES_REV,daemon.Hello()), prog="wicd-curses")
+     except Exception, e:
+         if "DBus.Error.AccessDenied" in e.get_dbus_name():
+-            print language['access_denied_wc'].replace('$A','\033[1;34m'+wpath.wicd_group+'\033[0m')
++            print language['access_denied_wc']
+             sys.exit(1)
+         else:
+             raise
+diff -up wicd-1.7.1b2/wicd/translations.py.orig wicd-1.7.1b2/wicd/translations.py
+--- wicd-1.7.1b2/wicd/translations.py.orig	2010-10-29 11:36:55.000000000 -0400
++++ wicd-1.7.1b2/wicd/translations.py	2011-08-19 17:07:55.524160039 -0400
+@@ -214,9 +214,9 @@ language['connection_established'] = _('
+ language['disconnected'] = _('''Disconnected''')
+ language['establishing_connection'] = _('''Establishing connection...''')
+ language['association_failed'] = _('''Connection failed: Could not contact the wireless access point.''')
+-language['access_denied'] = _('''Unable to contact the Wicd daemon due to an access denied error from DBus. Please check that your user is in the $A group.''')
++language['access_denied'] = _('''Unable to contact the Wicd daemon due to an access denied error from DBus. Please check your D-Bus policy configuration.''')
+ language['disconnecting_active'] = _('''Disconnecting active connections...''')
+-language['access_denied_wc'] = _('''ERROR: wicd-curses was denied access to the wicd daemon: please check that your user is in the "$A" group.''')
++language['access_denied_wc'] = _('''ERROR: wicd-curses was denied access to the wicd daemon: please check your D-Bus policy configuration.''')
+ language['post_disconnect_script'] = _('''Run post-disconnect script''')
+ language['resume_script'] = _('''Resume script''')
+ language['suspend_script'] = _('''Suspend script''')

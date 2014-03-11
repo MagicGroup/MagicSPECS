@@ -1,0 +1,46 @@
+--- dvb-apps-d4e8bf5658ce/Make.rules.orig	2011-11-12 13:59:36.506702158 +0000
++++ dvb-apps-d4e8bf5658ce/Make.rules	2011-11-12 14:01:44.436698401 +0000
+@@ -1,6 +1,6 @@
+ # build rules for linuxtv.org dvb-apps
+ 
+-CFLAGS ?= -g -Wall -W -Wshadow -Wpointer-arith -Wstrict-prototypes
++CFLAGS ?= $(RPM_OPT_FLAGS) -Wall -W -Wshadow -Wpointer-arith -Wstrict-prototypes
+ 
+ ifneq ($(lib_name),)
+ 
+--- dvb-apps-d4e8bf5658ce/Makefile.orig	2011-11-12 14:05:43.341719482 +0000
++++ dvb-apps-d4e8bf5658ce/Makefile	2011-11-12 14:05:56.433725987 +0000
+@@ -4,7 +4,6 @@
+ 
+ all clean install:
+ 	$(MAKE) -C lib $@
+-	$(MAKE) -C test $@
+ 	$(MAKE) -C util $@
+ 
+ update:
+--- dvb-apps-d4e8bf5658ce/util/scan/Makefile.orig	2011-11-12 14:19:17.393759015 +0000
++++ dvb-apps-d4e8bf5658ce/util/scan/Makefile	2011-11-12 14:19:50.260773076 +0000
+@@ -5,10 +5,10 @@
+            dump-vdr.o          \
+            dump-zap.o          \
+            lnb.o               \
+-           scan.o              \
++           scandvb.o           \
+            section.o
+ 
+-binaries = scan
++binaries = scandvb
+ 
+ inst_bin = $(binaries)
+ 
+--- dvb-apps-bec11f78be51/util/zap/Makefile.orig	2012-01-03 14:09:42.108471379 +0000
++++ dvb-apps-bec11f78be51/util/zap/Makefile	2012-01-03 14:09:56.947510198 +0000
+@@ -3,7 +3,7 @@
+ objects  = zap_ca.o  \
+            zap_dvb.o
+ 
+-binaries = zap
++binaries = dvbzap
+ 
+ inst_bin = $(binaries)
+ 

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Qt3 Designer
+GenericName=Interface Designer
+Comment=Design GUIs for Qt3 applications
+Exec=designer
+Icon=designer3
+MimeType=application/x-designer;
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Application;Development;

@@ -1,0 +1,11 @@
+diff -up xf86-video-qxl-0.0.16/src/qxl_driver.c.jx xf86-video-qxl-0.0.16/src/qxl_driver.c
+--- xf86-video-qxl-0.0.16/src/qxl_driver.c.jx	2011-11-16 19:35:29.000000000 -0500
++++ xf86-video-qxl-0.0.16/src/qxl_driver.c	2011-11-16 19:36:17.536999898 -0500
+@@ -1459,6 +1459,7 @@ qxl_pre_init(ScrnInfoPtr pScrn, int flag
+     /* VGA hardware initialisation */
+     if (!vgaHWGetHWRec(pScrn))
+         return FALSE;
++    vgaHWSetStdFuncs(VGAHWPTR(pScrn));
+ #endif
+ 
+     /* hate */

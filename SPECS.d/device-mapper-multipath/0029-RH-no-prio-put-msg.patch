@@ -1,0 +1,20 @@
+---
+ libmultipath/prio.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+Index: multipath-tools-130222/libmultipath/prio.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/prio.c
++++ multipath-tools-130222/libmultipath/prio.c
+@@ -162,7 +162,10 @@ void prio_put (struct prio * dst)
+ 	if (!dst)
+ 		return;
+ 
+-	src = prio_lookup(dst->name);
++	if (!strlen(dst->name))
++		src = NULL;
++	else
++		src = prio_lookup(dst->name);
+ 	memset(dst, 0x0, sizeof(struct prio));
+ 	free_prio(src);
+ }

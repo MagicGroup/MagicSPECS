@@ -1,0 +1,43 @@
+diff -up redhat-lsb-3.1/lsb_start_daemon.orig redhat-lsb-3.1/lsb_start_daemon
+--- redhat-lsb-3.1/lsb_start_daemon.orig	2009-05-15 11:20:17.000000000 -0400
++++ redhat-lsb-3.1/lsb_start_daemon	2009-05-15 11:33:03.000000000 -0400
+@@ -4,6 +4,9 @@
+ 
+ nice=
+ force=
++pidfile=
++user=
++check=
+ RETVAL=
+ while [ "$1" != "${1##[-+]}" ]; do
+ 	case $1 in
+@@ -15,7 +18,28 @@ while [ "$1" != "${1##[-+]}" ]; do
+ 	     	nice=$2
+ 		shift 2
+ 		;;
++	     -p)
++		pidfile="--pidfile $2"
++		shift 2
++		;;
++	     -u)
++	        user="--user $2"
++		shift 2
++		;;
++	     -c)
++	        check="--check $2"
++		shift 2
++		;;
++	      *)     
++ 		echo "Unknown Option $1"
++ 		echo "Options are:"
++ 		echo "-f" 
++		echo "-p {pidfile}"
++		echo "-n [+/-nicelevel]"
++		echo "-u {user}"
++		echo "-c {base}"
++	        exit 1;;	
+ 	esac
+ done
+-LSB=LSB-1.1 daemon ${force:-} ${nice:-} $*
++LSB=LSB-1.1 daemon ${force:-} ${nice:-} ${pidfile:-} ${user:-} ${check:-} $*
+ exit $?

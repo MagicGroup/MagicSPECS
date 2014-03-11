@@ -1,0 +1,12 @@
+diff -ur kdegraphics-3.5.8.orig/kghostview/kghostview.desktop kdegraphics-3.5.8/kghostview/kghostview.desktop
+--- kdegraphics-3.5.8.orig/kghostview/kghostview.desktop	2007-10-08 17:48:41.000000000 +0800
++++ kdegraphics-3.5.8/kghostview/kghostview.desktop	2007-10-19 17:03:59.000000000 +0800
+@@ -12,7 +12,7 @@
+ Name[tr]=GhostView
+ Name[ven]=Mbonalelo ya tshipuku tsha K
+ Name[xh]=Imboniselo yeKGhost
+-MimeType=application/pdf;application/postscript;image/x-eps;application/x-gzpostscript;application/illustrator;
++MimeType=application/postscript;image/x-eps;application/x-gzpostscript;application/illustrator;
+ InitialPreference=6
+ Exec=kghostview %u -caption "%c" %i %m
+ Icon=kghostview

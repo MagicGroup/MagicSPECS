@@ -1,0 +1,62 @@
+diff -up chromium-12.0.718.0/chrome/browser/gpu_process_host_ui_shim.cc.NULL chromium-12.0.718.0/chrome/browser/gpu_process_host_ui_shim.cc
+--- chromium-12.0.718.0/chrome/browser/gpu_process_host_ui_shim.cc.NULL	2011-04-01 16:24:21.309748933 -0400
++++ chromium-12.0.718.0/chrome/browser/gpu_process_host_ui_shim.cc	2011-04-01 16:25:17.626750084 -0400
+@@ -161,7 +161,7 @@ RenderWidgetHostView* GpuProcessHostUISh
+ 
+ GpuProcessHostUIShim::GpuProcessHostUIShim(int host_id)
+     : host_id_(host_id),
+-      gpu_process_(NULL),
++      gpu_process_(0),
+       gpu_render_thread_(NULL),
+       ui_thread_sender_(NULL) {
+   g_hosts_by_id.AddWithID(this, host_id_);
+@@ -355,7 +355,7 @@ void GpuProcessHostUIShim::SendOutstandi
+     channel_requests_.pop();
+     EstablishChannelError(callback.release(),
+                           IPC::ChannelHandle(),
+-                          NULL,
++                          0,
+                           GPUInfo());
+   }
+ 
+@@ -386,7 +386,7 @@ void GpuProcessHostUIShim::EstablishGpuC
+   // If GPU features are already blacklisted, no need to establish the channel.
+   if (!gpu_data_manager_->GpuAccessAllowed()) {
+     EstablishChannelError(
+-        wrapped_callback.release(), IPC::ChannelHandle(), NULL, GPUInfo());
++        wrapped_callback.release(), IPC::ChannelHandle(), 0, GPUInfo());
+     return;
+   }
+ 
+@@ -394,7 +394,7 @@ void GpuProcessHostUIShim::EstablishGpuC
+     channel_requests_.push(wrapped_callback);
+   } else {
+     EstablishChannelError(
+-        wrapped_callback.release(), IPC::ChannelHandle(), NULL, GPUInfo());
++        wrapped_callback.release(), IPC::ChannelHandle(), 0, GPUInfo());
+   }
+ }
+ 
+@@ -552,7 +552,7 @@ void GpuProcessHostUIShim::OnChannelEsta
+     Send(new GpuMsg_CloseChannel(channel_handle));
+     EstablishChannelError(callback.release(),
+                           IPC::ChannelHandle(),
+-                          NULL,
++                          0,
+                           GPUInfo());
+     AddCustomLogMessage(logging::LOG_WARNING, "WARNING",
+         "Hardware acceleration is unavailable.");
+diff -up chromium-12.0.718.0/content/gpu/gpu_channel.cc.NULL chromium-12.0.718.0/content/gpu/gpu_channel.cc
+--- chromium-12.0.718.0/content/gpu/gpu_channel.cc.NULL	2011-03-30 04:57:16.000000000 -0400
++++ chromium-12.0.718.0/content/gpu/gpu_channel.cc	2011-04-01 15:30:32.981750001 -0400
+@@ -26,8 +26,8 @@ GpuChannel::GpuChannel(GpuRenderThread* 
+                        int renderer_id)
+     : gpu_render_thread_(gpu_render_thread),
+       renderer_id_(renderer_id),
+-      renderer_process_(NULL),
+-      renderer_pid_(NULL),
++      renderer_process_(0),
++      renderer_pid_(0),
+       watchdog_thread_(gpu_watchdog_thread) {
+   DCHECK(gpu_render_thread);
+   DCHECK(renderer_id);

@@ -1,0 +1,33 @@
+--- qt-x11-free-3.3.6/src/kernel/qfontdatabase_x11.cpp.orig	2006-04-15 14:31:21.000000000 +0800
++++ qt-x11-free-3.3.6/src/kernel/qfontdatabase_x11.cpp	2006-04-16 11:30:36.000000000 +0800
+@@ -1045,6 +1045,30 @@
+ 	enc->pitch = ( spacing_value >= XFT_CHARCELL ? 'c' :
+ 		       ( spacing_value >= XFT_MONO ? 'm' : 'p' ) );
+ 
++       // Add by Firefly (firefly@firefly.idv.tw)
++       if (weight_value <= XFT_WEIGHT_MEDIUM) {
++           QtFontStyle *fakeStyle;
++	   QtFontSize *fake_size;
++           styleKey.weight = getXftWeight(XFT_WEIGHT_BOLD);
++           fakeStyle = foundry->style(styleKey);
++           if ( !fakeStyle ) {
++               fakeStyle = foundry->style(styleKey, TRUE);
++	       if (scalable) {
++                  fakeStyle->smoothScalable = TRUE;
++                  fake_size = fakeStyle->pixelSize(SMOOTH_SCALABLE, TRUE);
++	       }
++#ifdef QT_XFT2
++	       else {
++	          double fakepixel_size = 0;
++	          XftPatternGetDouble (font, FC_PIXEL_SIZE, 0, &fakepixel_size);
++	          fake_size = fakeStyle->pixelSize( (int)fakepixel_size, TRUE );
++               }
++#endif
++               QtFontEncoding *fake_enc = fake_size->encodingID(-1,0,0,0,0,TRUE);
++               fake_enc->pitch = enc->pitch;
++           }
++       }
++
+         checkXftMatrix( family );
+ 
+     return true;

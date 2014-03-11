@@ -1,0 +1,25 @@
+From 2c0b5281f558276a6bd31d7acd104196139dbc16 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 30 Aug 2011 14:43:57 +0200
+Subject: [PATCH] 90crypt/parse-crypt.sh: also accept the beginning of the
+ LUKS UUID
+
+2e0c003435bbc0751cdf7466c0faebe7bfc7445b introduced a too strict test
+for LUKS UUIDs
+---
+ modules.d/90crypt/parse-crypt.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/90crypt/parse-crypt.sh b/modules.d/90crypt/parse-crypt.sh
+index 1e78aa9..2ab3a9f 100755
+--- a/modules.d/90crypt/parse-crypt.sh
++++ b/modules.d/90crypt/parse-crypt.sh
+@@ -38,7 +38,7 @@ else
+             } > $hookdir/initqueue/finished/90-crypt.sh
+             uuid=$luksid
+             while [ "$uuid" != "${uuid#*-}" ]; do uuid=${uuid%%-*}${uuid#*-}; done
+-            printf -- '[ "x${UUIDS#*:%s:}" != "x$UUIDS" ] || exit 1\n' $uuid >> $hookdir/initqueue/finished/90-crypt.sh
++            printf -- '[ "x${UUIDS#*:%s*:}" != "x$UUIDS" ] || exit 1\n' $uuid >> $hookdir/initqueue/finished/90-crypt.sh
+ 
+             {
+                 printf -- '[ -e /dev/disk/by-uuid/*%s* ] || ' $luksid

@@ -1,0 +1,92 @@
+--- tcsh-6.17.00-orig/sh.func.c	2009-06-25 23:15:37.000000000 +0200
++++ tcsh-6.17.00/sh.func.c	2011-01-17 12:19:47.477051757 +0100
+@@ -520,12 +520,13 @@ doforeach(Char **v, struct command *c)
+ 
+     USE(c);
+     v++;
+-    sp = cp = strip(*v);
+-    if (!letter(*sp))
++    cp = sp = strip(*v);
++    if (!letter(*cp))
+ 	stderror(ERR_NAME | ERR_VARBEGIN);
+-    while (*cp && alnum(*cp))
++    do {
+ 	cp++;
+-    if (*cp)
++    } while (alnum(*cp));
++    if (*cp != '\0')
+ 	stderror(ERR_NAME | ERR_VARALNUM);
+     cp = *v++;
+     if (v[0][0] != '(' || v[blklen(v) - 1][0] != ')')
+@@ -1376,13 +1364,16 @@ dosetenv(Char **v, struct command *c)
+     }
+ 
+     vp = *v++;
+-
+     lp = vp;
+- 
+-    for (; *lp != '\0' ; lp++) {
+-	if (*lp == '=')
+-	    stderror(ERR_NAME | ERR_SYNTAX);
+-    }
++
++    if (!letter(*lp))
++	stderror(ERR_NAME | ERR_VARBEGIN);
++    do {
++	lp++;
++    } while (alnum(*lp));
++    if (*lp != '\0')
++	stderror(ERR_NAME | ERR_VARALNUM);
++
+     if ((lp = *v++) == 0)
+ 	lp = STRNULL;
+ 
+--- tcsh-6.17.00-orig/sh.set.c	2007-09-28 23:02:03.000000000 +0200
++++ tcsh-6.17.00/sh.set.c	2011-01-17 15:02:42.785021782 +0100
+@@ -222,7 +222,7 @@ void
+ doset(Char **v, struct command *c)
+ {
+     Char *p;
+-    Char   *vp, op;
++    Char   *vp;
+     Char  **vecp;
+     int    hadsub;
+     int     subscr;
+@@ -262,27 +262,26 @@ doset(Char **v, struct command *c)
+     do {
+ 	hadsub = 0;
+ 	vp = p;
+-	if (letter(*p))
+-	    for (; alnum(*p); p++)
+-		continue;
+-	if (vp == p || !letter(*vp))
++	if (!letter(*p))
+ 	    stderror(ERR_NAME | ERR_VARBEGIN);
++	do {
++	    p++;
++	} while (alnum(*p));
+ 	if (*p == '[') {
+ 	    hadsub++;
+ 	    p = getinx(p, &subscr);
+ 	}
+-	if ((op = *p) != 0) {
+-	    *p++ = 0;
+-	    if (*p == 0 && *v && **v == '(')
++	if (*p != '\0' && *p != '=')
++	    stderror(ERR_NAME | ERR_VARALNUM);
++	if (*p == '=') {
++	    *p++ = '\0';
++	    if (*p == '\0' && *v != NULL && **v == '(')
+ 		p = *v++;
+ 	}
+ 	else if (*v && eq(*v, STRequal)) {
+-	    op = '=', v++;
+-	    if (*v)
++	    if (*++v != NULL)
+ 		p = *v++;
+ 	}
+-	if (op && op != '=')
+-	    stderror(ERR_NAME | ERR_SYNTAX);
+ 	if (eq(p, STRLparen)) {
+ 	    Char **e = v;
+ 

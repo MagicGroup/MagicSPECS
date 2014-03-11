@@ -1,0 +1,95 @@
+diff -up nss/cmd/manifest.mn.utilonly nss/cmd/manifest.mn
+--- nss/cmd/manifest.mn.utilonly	2013-05-29 15:34:19.634715650 -0700
++++ nss/cmd/manifest.mn	2013-05-29 15:35:25.460227028 -0700
+@@ -8,55 +8,7 @@ DEPTH	= ..
+ 
+ REQUIRES = nss nspr libdbm
+ 
+-DIRS = lib  \
+- addbuiltin \
+- atob  \
+- $(BLTEST_SRCDIR) \
+- btoa  \
+- certcgi \
+- certutil  \
+- checkcert  \
+- chktest  \
+- crlutil  \
+- crmftest \
+- dbtest \
+- derdump  \
+- digest  \
+- httpserv  \
+- $(FIPSTEST_SRCDIR)  \
+- $(LOWHASHTEST_SRCDIR)  \
+- listsuites \
+- makepqg  \
+- multinit \
+- ocspclnt  \
+- ocspresp \
+- oidcalc  \
+- p7content  \
+- p7env  \
+- p7sign  \
+- p7verify  \
+- pk12util \
+- pk11gcmtest \
+- pk11mode \
+- pk1sign  \
+- pkix-errcodes \
+- pp  \
+- pwdecrypt \
+- rsaperf \
+- sdrtest \
+- selfserv  \
+- signtool \
+- signver \
+- $(SHLIBSIGN_SRCDIR) \
+- smimetools  \
+- ssltap  \
+- strsclnt \
+- symkeyutil \
+- tests \
+- tstclnt  \
+- vfychain \
+- vfyserv \
+- modutil \
++DIRS =  \
+  $(NULL)
+ 
+ TEMPORARILY_DONT_BUILD = \
+diff -up nss/lib/Makefile.utilonly nss/lib/Makefile
+--- nss/lib/Makefile.utilonly	2013-05-29 15:36:49.223876575 -0700
++++ nss/lib/Makefile	2013-05-29 15:39:52.052290168 -0700
+@@ -46,6 +46,10 @@ ifndef NSS_DISABLE_DBM
+ DBM_SRCDIR = dbm  # Add the dbm directory to DIRS.
+ endif
+ 
++ifeq ($(NSS_BUILD_NSSUTIL_ONLY),1)
++SYSINIT_SRCDIR=
++endif
++
+ #######################################################################
+ # (5) Execute "global" rules. (OPTIONAL)                              #
+ #######################################################################
+diff -up nss/lib/manifest.mn.utilonly nss/lib/manifest.mn
+--- nss/lib/manifest.mn.utilonly	2013-05-29 15:40:21.073514078 -0700
++++ nss/lib/manifest.mn	2013-05-29 15:41:24.308001547 -0700
+@@ -18,17 +18,6 @@ DEPTH      = ..
+ #  crmf jar (not dll's)
+ DIRS = \
+ 	$(UTIL_SRCDIR) \
+-	$(FREEBL_SRCDIR) \
+-	$(SQLITE_SRCDIR) \
+-	$(DBM_SRCDIR) \
+-	$(SOFTOKEN_SRCDIR) \
+-	base dev pki \
+-	libpkix \
+-	certdb certhigh pk11wrap cryptohi nss \
+-	$(ZLIB_SRCDIR) ssl \
+-	pkcs12 pkcs7 smime \
+-	crmf jar \
+-	ckfw $(SYSINIT_SRCDIR) \
+ 	$(NULL)
+ 
+ #  fortcrypt  is no longer built

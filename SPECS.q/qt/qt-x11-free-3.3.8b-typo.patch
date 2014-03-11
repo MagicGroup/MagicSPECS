@@ -1,0 +1,11 @@
+--- qt-x11-free-3.3.8b/mkspecs/macx-mwerks/mwerkstmpl.xml.orig	2010-06-30 01:00:36.000000000 +0200
++++ qt-x11-free-3.3.8b/mkspecs/macx-mwerks/mwerkstmpl.xml	2010-06-30 01:00:56.000000000 +0200
+@@ -817,7 +817,7 @@
+                 <PATHFORMAT>MacOS</PATHFORMAT>
+             </FILEREF>
+         </GROUP>
+-        <GROUP><Name>QtGenerated</NAME>
++        <GROUP><NAME>QtGenerated</NAME>
+ $$CODEWARRIOR_QPREPROCESS_GROUP
+ $$CODEWARRIOR_QPREPROCESSOUT_GROUP
+         </GROUP>

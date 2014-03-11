@@ -1,0 +1,30 @@
+commit 1b91f7b0f67fba11ea8bbcdddef844656434c53c
+Author: Jeffrey Bastian <jbastian@redhat.com>
+Date:   Tue Aug 17 13:45:20 2010 -0500
+
+    Let RPC services bind to a port
+
+diff --git a/xinetd/service.c b/xinetd/service.c
+index 9f21f93..5d26885 100644
+--- a/xinetd/service.c
++++ b/xinetd/service.c
+@@ -165,6 +165,7 @@ static status_e activate_rpc( struct service *sp )
+    socklen_t              sin_len = sizeof(tsin);
+    unsigned long          vers ;
+    struct service_config *scp = SVC_CONF( sp ) ;
++   uint16_t               service_port = SC_PORT( scp ) ;
+    struct rpc_data       *rdp = SC_RPCDATA( scp ) ;
+    char                  *sid = SC_ID( scp ) ;
+    unsigned               registered_versions = 0 ;
+@@ -181,9 +182,11 @@ static status_e activate_rpc( struct service *sp )
+    }
+    if( SC_IPV4( scp ) ) {
+       tsin.sa_in.sin_family = AF_INET ;
++      tsin.sa_in.sin_port = htons( service_port ) ;
+       sin_len = sizeof(struct sockaddr_in);
+    } else if( SC_IPV6( scp ) ) {
+       tsin.sa_in6.sin6_family = AF_INET6 ;
++      tsin.sa_in6.sin6_port = htons( service_port );
+       sin_len = sizeof(struct sockaddr_in6);
+    }
+ 

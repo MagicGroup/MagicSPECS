@@ -1,0 +1,2 @@
+ACTION=="add", SUBSYSTEM=="usb", SYSFS{idVendor}=="4102", SYSFS{idProduct}=="100[135789]", RUN+="/sbin/libifp-hotplug"
+ACTION=="add", SUBSYSTEM=="usb", SYSFS{idVendor}=="4102", SYSFS{idProduct}=="101[01]", RUN+="/sbin/libifp-hotplug"

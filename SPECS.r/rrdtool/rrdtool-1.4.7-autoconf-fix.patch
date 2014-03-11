@@ -1,0 +1,28 @@
+diff --git a/configure.ac b/configure.ac
+--- ./configure.ac.o	2012-01-24 11:08:48.000000000 +0100
++++ ./configure.ac	2013-03-26 20:34:06.722121427 +0100
+@@ -782,7 +782,7 @@
+           done
+         fi
+ 
+-        LUA_RRD_LIBDIR="$langpref/lib/lua/$lua_vdot"
++        LUA_RRD_LIBDIR="$libdir/lua/$lua_vdot"
+         # if lua 5.0 can't find compat-5.1, force installation of
+         # compat-5.1.lua together with RRDtool.
+         if test "$lua_vdot" = "5.0" -a "$LUA_HAVE_COMPAT51" != "HAVE_COMPAT51"; then
+diff --git a/bindings/tcl/Makefile.am b/bindings/tcl/Makefile.am
+index c0e8b0f..265191d 100644
+--- a/bindings/tcl/Makefile.am
++++ b/bindings/tcl/Makefile.am
+@@ -27,8 +27,9 @@ tclpkgdir = @TCL_PACKAGE_DIR@
+ tclpkg_DATA = pkgIndex.tcl
+ tclpkg_SCRIPTS = ifOctets.tcl
+ else
+-pkglib_DATA = pkgIndex.tcl
+-pkglib_SCRIPTS = ifOctets.tcl
++pkgindexdir = $(pkglibdir)
++pkgindex_DATA = pkgIndex.tcl
++pkgindex_SCRIPTS = ifOctets.tcl
+ endif
+ 
+ # Automake doen't like `tclrrd$(VERSION)$(TCL_SHLIB_SUFFIX)' as

@@ -1,0 +1,34 @@
+From a92311074b487608bfd632ae3b443067d237b6f8 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 10 Jul 2012 10:53:28 +0200
+Subject: [PATCH] install/dracut-install.c: redirect stderr to stdout and skip
+ loader
+
+skip if ldd was run on the loader
+---
+ install/dracut-install.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/install/dracut-install.c b/install/dracut-install.c
+index 1d5748d..ee6950a 100644
+--- a/install/dracut-install.c
++++ b/install/dracut-install.c
+@@ -268,7 +268,7 @@ static int resolve_deps(const char *src)
+         }
+ 
+         /* run ldd */
+-        asprintf(&cmd, "ldd %s", src);
++        asprintf(&cmd, "ldd %s 2>&1", src);
+         fptr = popen(cmd, "r");
+ 
+         while (!feof(fptr)) {
+@@ -282,6 +282,9 @@ static int resolve_deps(const char *src)
+                 if (strstr(buf, "not a dynamic executable"))
+                         break;
+ 
++                if (strstr(buf, "loader cannot load itself"))
++                        break;
++
+                 p = strstr(buf, "/");
+                 if (p) {
+                         int r;

@@ -1,0 +1,165 @@
+From aae1fcdea2c9e3c55db44ad768e4155312d3f029 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Tue, 21 Jan 2014 14:22:50 +0100
+Subject: [PATCH] attr: refer to ENODATA instead of ENOATTR in man pages
+
+The ENOATTR alias is only provided if <attr/xattr.h> is included, not
+with the more standard <sys/xattr.h> header file.  ENODATA is correct
+in both cases.
+
+Reported by: Florian Weimer
+Bug: https://bugzilla.redhat.com/1055933
+---
+ man/man2/getxattr.2    |    2 +-
+ man/man2/removexattr.2 |    2 +-
+ man/man2/setxattr.2    |    2 +-
+ man/man3/attr_get.3    |    4 ++--
+ man/man3/attr_list.3   |    2 +-
+ man/man3/attr_multi.3  |    2 +-
+ man/man3/attr_remove.3 |    4 ++--
+ man/man3/attr_set.3    |    6 +++---
+ 8 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/man/man2/getxattr.2 b/man/man2/getxattr.2
+index 405ad89..a093476 100644
+--- a/man/man2/getxattr.2
++++ b/man/man2/getxattr.2
+@@ -108,7 +108,7 @@ is set appropriately.
+ If the named attribute does not exist, or the process has no access to
+ this attribute,
+ .I errno
+-is set to ENOATTR.
++is set to ENODATA.
+ .PP
+ If the
+ .I size
+diff --git a/man/man2/removexattr.2 b/man/man2/removexattr.2
+index 2c7d934..d865e48 100644
+--- a/man/man2/removexattr.2
++++ b/man/man2/removexattr.2
+@@ -84,7 +84,7 @@ is set appropriately.
+ .PP
+ If the named attribute does not exist,
+ .I errno
+-is set to ENOATTR.
++is set to ENODATA.
+ .PP
+ If extended attributes are not supported by the filesystem, or are disabled,
+ .I errno
+diff --git a/man/man2/setxattr.2 b/man/man2/setxattr.2
+index b20dc9f..081cf93 100644
+--- a/man/man2/setxattr.2
++++ b/man/man2/setxattr.2
+@@ -112,7 +112,7 @@ If XATTR_CREATE is specified, and the attribute exists already,
+ is set to EEXIST.
+ If XATTR_REPLACE is specified, and the attribute does not exist,
+ .I errno
+-is set to ENOATTR.
++is set to ENODATA.
+ .PP
+ If there is insufficient space remaining to store the extended attribute,
+ .I errno
+diff --git a/man/man3/attr_get.3 b/man/man3/attr_get.3
+index 7908340..0b3c15b 100644
+--- a/man/man3/attr_get.3
++++ b/man/man3/attr_get.3
+@@ -89,7 +89,7 @@ The default is to follow symbolic links.
+ will fail if one or more of the following are true:
+ .TP 17
+ .SM
+-\%[ENOATTR]
++\%[ENODATA]
+ The attribute name given is not associated with the indicated
+ filesystem object.
+ .TP
+@@ -155,7 +155,7 @@ or a pathname component is longer than
+ will fail if:
+ .TP 15
+ .SM
+-\%[ENOATTR]
++\%[ENODATA]
+ The attribute name given is not associated with the indicated
+ filesystem object.
+ .TP
+diff --git a/man/man3/attr_list.3 b/man/man3/attr_list.3
+index 978cfff..d9aedce 100644
+--- a/man/man3/attr_list.3
++++ b/man/man3/attr_list.3
+@@ -240,7 +240,7 @@ or a pathname component is longer than
+ .RI { MAXNAMELEN }.
+ .TP
+ .SM
+-\%[ENOATTR]
++\%[ENODATA]
+ .I attribute\^
+ does not exist for this file.
+ .PP
+diff --git a/man/man3/attr_multi.3 b/man/man3/attr_multi.3
+index db0381c..131d5ad 100644
+--- a/man/man3/attr_multi.3
++++ b/man/man3/attr_multi.3
+@@ -165,7 +165,7 @@ field to EEXIST if the named attribute already exists.
+ If the \f4ATTR_REPLACE\fP flag is set,
+ the sub-operation will set the
+ .I am_error
+-field to ENOATTR if the named attribute does not already exist.
++field to ENODATA if the named attribute does not already exist.
+ If neither of those two flags are set and the attribute does not exist,
+ then the attribute will be created with the given value.
+ If neither of those two flags are set and the attribute already exists,
+diff --git a/man/man3/attr_remove.3 b/man/man3/attr_remove.3
+index 6fd6a3d..1313f3f 100644
+--- a/man/man3/attr_remove.3
++++ b/man/man3/attr_remove.3
+@@ -77,7 +77,7 @@ The default is to follow symbolic links.
+ will fail if one or more of the following are true:
+ .TP 17
+ .SM
+-\%[ENOATTR]
++\%[ENODATA]
+ The attribute name given is not associated with the indicated
+ filesystem object.
+ .TP
+@@ -136,7 +136,7 @@ or a pathname component is longer than
+ will fail if:
+ .TP 15
+ .SM
+-\%[ENOATTR]
++\%[ENODATA]
+ The attribute name given is not associated with the indicated
+ filesystem object.
+ .TP
+diff --git a/man/man3/attr_set.3 b/man/man3/attr_set.3
+index 9f49c48..f124cfa 100644
+--- a/man/man3/attr_set.3
++++ b/man/man3/attr_set.3
+@@ -97,7 +97,7 @@ are set in the same call.
+ .TP
+ .SM
+ \%ATTR_REPLACE
+-Return an error (ENOATTR) if an attribute of the given name
++Return an error (ENODATA) if an attribute of the given name
+ does not already exist on the indicated filesystem object,
+ otherwise replace the existing attribute\'s value with the given value.
+ This flag is used to implement a pure replacement operation,
+@@ -111,7 +111,7 @@ are set in the same call.
+ will fail if one or more of the following are true:
+ .TP 17
+ .SM
+-\%[ENOATTR]
++\%[ENODATA]
+ The attribute name given is not associated with the indicated
+ filesystem object and the ATTR_REPLACE flag bit was set.
+ .TP
+@@ -184,7 +184,7 @@ or a pathname component is longer than
+ will fail if:
+ .TP 15
+ .SM
+-\%[ENOATTR]
++\%[ENODATA]
+ The attribute name given is not associated with the indicated
+ filesystem object and the ATTR_REPLACE flag bit was set.
+ .TP
+-- 
+1.7.1
+

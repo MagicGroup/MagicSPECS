@@ -1,0 +1,1002 @@
+http://sourceware.org/ml/gdb-cvs/2012-08/msg00133.html
+
+### src/gdb/ChangeLog	2012/08/17 03:06:10	1.14599
+### src/gdb/ChangeLog	2012/08/17 17:36:56	1.14600
+## -1,3 +1,48 @@
++2012-08-17  Keith Seitz  <keiths@redhat.com>
++
++	PR c++/13356
++	* gdbtypes.c (strict_type_checking): New variable.
++	(show_strict_type_checking): New function.
++	(rank_one_type): Return NS_POINTER_INTEGER_CONVERSION_BADNESS
++	if strict type checking is disabled.
++	(_initialize_gdbtypes): Add "check type" subcommand.
++	* gdbtypes.h (NS_INTEGER_POINTER_CONVERSION_BADNESS): New struct.
++
++2012-08-17  Keith Seitz  <keiths@redhat.com>
++
++	* language.h (type_mode): Remove.
++	(type_check): Remove.
++	(struct language_defn): Remove la_type_check.
++	(STRICT_TYPE): Remove unused macro.
++	(type_error): Remove.
++	* language.c (set_type_range_case): Renamed to ...
++	(set_range_case): ... this.  Update all callers.
++	Remove type_mode/type_check.
++	(type_mode): Remove.
++	(type_check): Remove.
++	(show_type_command): Remove.
++	(set_type_command): Remove.
++	(language_info): Remove type checking output.
++	(type_error): Remove unused function.
++	(range_error): Update comment.
++	(unknown_language_defn): Remove la_type_check.
++	(auto_language_defn): Likewise.
++	(local_language_defn): Likewise.
++	(_initialize_language): Remove "check type" subcommand.
++	* ada-lang.c (ada_language_defn): Remove la_type_check.
++	* c-lang.c (c_language_defn): Likewise.
++	(cplus_language_defn): Likewise.
++	(asm_language_defn): Likewise.
++	(minimal_language_defn): Likewise.
++	* d-lang.c (d_language_defn): Likewise.
++	* f-lang.c (f_language_defn): Likewise.
++	* go-lang.c (go_language_defn): Likewise.
++	* jv-lang.c (java_language_defn): Likewise.
++	* m2-lang.c (m2_language_defn): Likewise.
++	* objc-lang.c (objc_language_defn): Likewise.
++	* opencl-lang.c (opencl_language_defn): Likewise.
++	* p-lang.c (pascal_language_defn): Likewise.
++
+ 2012-08-16  Mike Frysinger  <vapier@gentoo.org>
+ 
+ 	* infcmd.c (_initialize_infcmd): Remove trailing ) in next help text.
+Index: gdb-7.5.0.20120926/gdb/gdbtypes.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/gdbtypes.c	2012-09-27 22:14:21.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/gdbtypes.c	2012-09-27 22:15:05.807706105 +0200
+@@ -62,6 +62,7 @@ const struct rank BASE_CONVERSION_BADNES
+ const struct rank REFERENCE_CONVERSION_BADNESS = {2,0};
+ const struct rank NULL_POINTER_CONVERSION_BADNESS = {2,0};
+ const struct rank NS_POINTER_CONVERSION_BADNESS = {10,0};
++const struct rank NS_INTEGER_POINTER_CONVERSION_BADNESS = {3,0};
+ 
+ /* Floatformat pairs.  */
+ const struct floatformat *floatformats_ieee_half[BFD_ENDIAN_UNKNOWN] = {
+@@ -134,6 +135,19 @@ show_overload_debug (struct ui_file *fil
+ 		    value);
+ }
+ 
++/* A flag to enable strict type checking.  */
++
++static int strict_type_checking = 1;
++
++/* A function to show the status of strict type checking.  */
++
++static void
++show_strict_type_checking (struct ui_file *file, int from_tty,
++			   struct cmd_list_element *c, const char *value)
++{
++  fprintf_filtered (file, _("Strict type checking is %s.\n"), value);
++}
++
+ struct extra
+   {
+     char str[128];
+@@ -2649,12 +2663,20 @@ rank_one_type (struct type *parm, struct
+ 	case TYPE_CODE_FUNC:
+ 	  return rank_one_type (TYPE_TARGET_TYPE (parm), arg, NULL);
+ 	case TYPE_CODE_INT:
+-	  if (value != NULL && TYPE_CODE (value_type (value)) == TYPE_CODE_INT
+-	      && value_as_long (value) == 0)
++	  if (value != NULL && TYPE_CODE (value_type (value)) == TYPE_CODE_INT)
+ 	    {
+-	      /* Null pointer conversion: allow it to be cast to a pointer.
+-		 [4.10.1 of C++ standard draft n3290]  */
+-	      return NULL_POINTER_CONVERSION_BADNESS;
++	      if (value_as_long (value) == 0)
++		{
++		  /* Null pointer conversion: allow it to be cast to a pointer.
++		     [4.10.1 of C++ standard draft n3290]  */
++		  return NULL_POINTER_CONVERSION_BADNESS;
++		}
++	      else
++		{
++		  /* If type checking is disabled, allow the conversion.  */
++		  if (!strict_type_checking)
++		    return NS_INTEGER_POINTER_CONVERSION_BADNESS;
++		}
+ 	    }
+ 	  /* fall through  */
+ 	case TYPE_CODE_ENUM:
+@@ -4637,4 +4659,13 @@ _initialize_gdbtypes (void)
+ 			   NULL, NULL,
+ 			   show_opaque_type_resolution,
+ 			   &setlist, &showlist);
++
++  /* Add an option to permit non-strict type checking.  */
++  add_setshow_boolean_cmd ("type", class_support,
++			   &strict_type_checking,
++			   _("Set strict type checking."),
++			   _("Show strict type checking."),
++			   NULL, NULL,
++			   show_strict_type_checking,
++			   &setchecklist, &showchecklist);
+ }
+Index: gdb-7.5.0.20120926/gdb/gdbtypes.h
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/gdbtypes.h	2012-09-27 22:14:23.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/gdbtypes.h	2012-09-27 22:14:40.690695059 +0200
+@@ -1745,6 +1745,9 @@ extern const struct rank NULL_POINTER_CO
+ /* Converting a pointer to an int is usually OK.  */
+ extern const struct rank NS_POINTER_CONVERSION_BADNESS;
+ 
++/* Badness of converting a (non-zero) integer constant
++   to a pointer.  */
++extern const struct rank NS_INTEGER_POINTER_CONVERSION_BADNESS;
+ 
+ extern struct rank sum_ranks (struct rank a, struct rank b);
+ extern int compare_ranks (struct rank a, struct rank b);
+Index: gdb-7.5.0.20120926/gdb/language.h
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/language.h	2012-06-13 17:47:14.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/language.h	2012-09-27 22:14:40.834695121 +0200
+@@ -55,27 +55,6 @@ extern enum range_check
+   }
+ range_check;
+ 
+-/* type_mode ==
+-   type_mode_auto:   type_check set automatically to default of language.
+-   type_mode_manual: type_check set manually by user.  */
+-
+-extern enum type_mode
+-  {
+-    type_mode_auto, type_mode_manual
+-  }
+-type_mode;
+-
+-/* type_check ==
+-   type_check_on:    Types are checked in GDB expressions, producing errors.
+-   type_check_warn:  Types are checked, producing warnings.
+-   type_check_off:   Types are not checked in GDB expressions.  */
+-
+-extern enum type_check
+-  {
+-    type_check_off, type_check_warn, type_check_on
+-  }
+-type_check;
+-
+ /* case_mode ==
+    case_mode_auto:   case_sensitivity set upon selection of scope.
+    case_mode_manual: case_sensitivity set only by user.  */
+@@ -162,10 +141,6 @@ struct language_defn
+ 
+     enum range_check la_range_check;
+ 
+-    /* Default type checking.  */
+-
+-    enum type_check la_type_check;
+-
+     /* Default case sensitivity.  */
+     enum case_sensitivity la_case_sensitivity;
+ 
+@@ -422,9 +397,6 @@ struct type *language_lookup_primitive_t
+ /* These macros define the behaviour of the expression 
+    evaluator.  */
+ 
+-/* Should we strictly type check expressions?  */
+-#define STRICT_TYPE (type_check != type_check_off)
+-
+ /* Should we range check values against the domain of their type?  */
+ #define RANGE_CHECK (range_check != range_check_off)
+ 
+@@ -496,8 +468,6 @@ extern void binop_type_check (struct val
+ 
+ /* Error messages */
+ 
+-extern void type_error (const char *, ...) ATTRIBUTE_PRINTF (1, 2);
+-
+ extern void range_error (const char *, ...) ATTRIBUTE_PRINTF (1, 2);
+ 
+ /* Data:  Does this value represent "truth" to the current language?  */
+Index: gdb-7.5.0.20120926/gdb/language.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/language.c	2012-03-02 20:29:01.000000000 +0100
++++ gdb-7.5.0.20120926/gdb/language.c	2012-09-27 22:14:40.922695162 +0200
+@@ -55,7 +55,7 @@ static void show_check (char *, int);
+ 
+ static void set_check (char *, int);
+ 
+-static void set_type_range_case (void);
++static void set_range_case (void);
+ 
+ static void unk_lang_emit_char (int c, struct type *type,
+ 				struct ui_file *stream, int quoter);
+@@ -81,8 +81,6 @@ extern const struct language_defn unknow
+ 
+ enum range_mode range_mode = range_mode_auto;
+ enum range_check range_check = range_check_off;
+-enum type_mode type_mode = type_mode_auto;
+-enum type_check type_check = type_check_off;
+ enum case_mode case_mode = case_mode_auto;
+ enum case_sensitivity case_sensitivity = case_sensitive_on;
+ 
+@@ -174,7 +172,7 @@ set_language_command (char *ignore, int
+ 	      /* Enter manual mode.  Set the specified language.  */
+ 	      language_mode = language_mode_manual;
+ 	      current_language = languages[i];
+-	      set_type_range_case ();
++	      set_range_case ();
+ 	      expected_language = current_language;
+ 	      return;
+ 	    }
+@@ -186,79 +184,6 @@ set_language_command (char *ignore, int
+ 		  language);
+ }
+ 
+-/* Show command.  Display a warning if the type setting does
+-   not match the current language.  */
+-static void
+-show_type_command (struct ui_file *file, int from_tty,
+-		   struct cmd_list_element *c, const char *value)
+-{
+-  if (type_mode == type_mode_auto)
+-    {
+-      char *tmp = NULL;
+-
+-      switch (type_check)
+-	{
+-	case type_check_on:
+-	  tmp = "on";
+-	  break;
+-	case type_check_off:
+-	  tmp = "off";
+-	  break;
+-	case type_check_warn:
+-	  tmp = "warn";
+-	  break;
+-	default:
+-	  internal_error (__FILE__, __LINE__,
+-			  "Unrecognized type check setting.");
+-	}
+-
+-      fprintf_filtered (gdb_stdout,
+-			_("Type checking is \"auto; currently %s\".\n"),
+-			tmp);
+-    }
+-  else
+-    fprintf_filtered (gdb_stdout, _("Type checking is \"%s\".\n"),
+-		      value);
+-
+-   if (type_check != current_language->la_type_check)
+-    warning (_("the current type check setting"
+-	       " does not match the language.\n"));
+-}
+-
+-/* Set command.  Change the setting for type checking.  */
+-static void
+-set_type_command (char *ignore, int from_tty, struct cmd_list_element *c)
+-{
+-  if (strcmp (type, "on") == 0)
+-    {
+-      type_check = type_check_on;
+-      type_mode = type_mode_manual;
+-    }
+-  else if (strcmp (type, "warn") == 0)
+-    {
+-      type_check = type_check_warn;
+-      type_mode = type_mode_manual;
+-    }
+-  else if (strcmp (type, "off") == 0)
+-    {
+-      type_check = type_check_off;
+-      type_mode = type_mode_manual;
+-    }
+-  else if (strcmp (type, "auto") == 0)
+-    {
+-      type_mode = type_mode_auto;
+-      set_type_range_case ();
+-      return;
+-    }
+-  else
+-    internal_error (__FILE__, __LINE__,
+-		    _("Unrecognized type check setting: \"%s\""), type);
+-
+-  if (type_check != current_language->la_type_check)
+-    warning (_("the current type check setting"
+-	       " does not match the language.\n"));
+-}
+-
+ /* Show command.  Display a warning if the range setting does
+    not match the current language.  */
+ static void
+@@ -320,7 +245,7 @@ set_range_command (char *ignore, int fro
+   else if (strcmp (range, "auto") == 0)
+     {
+       range_mode = range_mode_auto;
+-      set_type_range_case ();
++      set_range_case ();
+       return;
+     }
+   else
+@@ -389,7 +314,7 @@ set_case_command (char *ignore, int from
+    else if (strcmp (case_sensitive, "auto") == 0)
+      {
+        case_mode = case_mode_auto;
+-       set_type_range_case ();
++       set_range_case ();
+        return;
+      }
+    else
+@@ -409,14 +334,11 @@ set_case_command (char *ignore, int from
+    If SHOW is non-zero, then print out the current language,
+    type and range checking status.  */
+ static void
+-set_type_range_case (void)
++set_range_case (void)
+ {
+   if (range_mode == range_mode_auto)
+     range_check = current_language->la_range_check;
+ 
+-  if (type_mode == type_mode_auto)
+-    type_check = current_language->la_type_check;
+-
+   if (case_mode == case_mode_auto)
+     case_sensitivity = current_language->la_case_sensitivity;
+ }
+@@ -437,7 +359,7 @@ set_language (enum language lang)
+       if (languages[i]->la_language == lang)
+ 	{
+ 	  current_language = languages[i];
+-	  set_type_range_case ();
++	  set_range_case ();
+ 	  break;
+ 	}
+     }
+@@ -461,8 +383,6 @@ language_info (int quietly)
+ 
+   if (!quietly)
+     {
+-      printf_unfiltered (_("Type checking:     %s\n"), type);
+-      show_type_command (NULL, 1, NULL, NULL);
+       printf_unfiltered (_("Range checking:    %s\n"), range);
+       show_range_command (NULL, 1, NULL, NULL);
+       printf_unfiltered (_("Case sensitivity:  %s\n"), case_sensitive);
+@@ -500,38 +420,11 @@ value_true (struct value *val)
+    error messages that occur during type- and range-
+    checking.  */
+ 
+-/* These are called when a language fails a type- or range-check.  The
++/* This is called when a language fails a range-check.  The
+    first argument should be a printf()-style format string, and the
+-   rest of the arguments should be its arguments.  If
+-   [type|range]_check is [type|range]_check_on, an error is printed;
+-   if [type|range]_check_warn, a warning; otherwise just the
+-   message.  */
+-
+-void
+-type_error (const char *string,...)
+-{
+-  va_list args;
+-
+-  va_start (args, string);
+-  switch (type_check)
+-    {
+-    case type_check_warn:
+-      vwarning (string, args);
+-      break;
+-    case type_check_on:
+-      verror (string, args);
+-      break;
+-    case type_check_off:
+-      /* FIXME: cagney/2002-01-30: Should this function print anything
+-         when type error is off?  */
+-      vfprintf_filtered (gdb_stderr, string, args);
+-      fprintf_filtered (gdb_stderr, "\n");
+-      break;
+-    default:
+-      internal_error (__FILE__, __LINE__, _("bad switch"));
+-    }
+-  va_end (args);
+-}
++   rest of the arguments should be its arguments.  If range_check is
++   range_check_on, an error is printed;  if range_check_warn, a warning;
++   otherwise just the message.  */
+ 
+ void
+ range_error (const char *string,...)
+@@ -902,7 +795,6 @@ const struct language_defn unknown_langu
+   "unknown",
+   language_unknown,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_no,
+@@ -946,7 +838,6 @@ const struct language_defn auto_language
+   "auto",
+   language_auto,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_no,
+@@ -988,7 +879,6 @@ const struct language_defn local_languag
+   "local",
+   language_auto,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_no,
+@@ -1135,13 +1025,6 @@ _initialize_language (void)
+   add_alias_cmd ("c", "check", no_class, 1, &showlist);
+   add_alias_cmd ("ch", "check", no_class, 1, &showlist);
+ 
+-  add_setshow_enum_cmd ("type", class_support, type_or_range_names, &type,
+-			_("Set type checking.  (on/warn/off/auto)"),
+-			_("Show type checking.  (on/warn/off/auto)"),
+-			NULL, set_type_command,
+-			show_type_command,
+-			&setchecklist, &showchecklist);
+-
+   add_setshow_enum_cmd ("range", class_support, type_or_range_names,
+ 			&range,
+ 			_("Set range checking.  (on/warn/off/auto)"),
+Index: gdb-7.5.0.20120926/gdb/ada-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/ada-lang.c	2012-09-27 22:14:17.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/ada-lang.c	2012-09-27 22:14:41.112695245 +0200
+@@ -12503,7 +12503,6 @@ const struct language_defn ada_language_
+   "ada",                        /* Language name */
+   language_ada,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,            /* Yes, Ada is case-insensitive, but
+                                    that's not quite what this means.  */
+   array_row_major,
+Index: gdb-7.5.0.20120926/gdb/c-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/c-lang.c	2012-07-06 07:46:04.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/c-lang.c	2012-09-27 22:14:41.141695257 +0200
+@@ -831,7 +831,6 @@ const struct language_defn c_language_de
+   "c",				/* Language name */
+   language_c,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_c,
+@@ -955,7 +954,6 @@ const struct language_defn cplus_languag
+   "c++",			/* Language name */
+   language_cplus,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_c,
+@@ -997,7 +995,6 @@ const struct language_defn asm_language_
+   "asm",			/* Language name */
+   language_asm,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_c,
+@@ -1044,7 +1041,6 @@ const struct language_defn minimal_langu
+   "minimal",			/* Language name */
+   language_minimal,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_c,
+Index: gdb-7.5.0.20120926/gdb/d-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/d-lang.c	2012-03-15 15:06:20.000000000 +0100
++++ gdb-7.5.0.20120926/gdb/d-lang.c	2012-09-27 22:14:41.143695257 +0200
+@@ -240,7 +240,6 @@ static const struct language_defn d_lang
+   "d",
+   language_d,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_c,
+Index: gdb-7.5.0.20120926/gdb/f-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/f-lang.c	2012-09-27 22:14:23.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/f-lang.c	2012-09-27 22:14:41.151695260 +0200
+@@ -260,7 +260,6 @@ const struct language_defn f_language_de
+   "fortran",
+   language_fortran,
+   range_check_on,
+-  type_check_on,
+   case_sensitive_off,
+   array_column_major,
+   macro_expansion_no,
+Index: gdb-7.5.0.20120926/gdb/go-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/go-lang.c	2012-04-25 16:07:20.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/go-lang.c	2012-09-27 22:14:41.152695261 +0200
+@@ -562,7 +562,6 @@ static const struct language_defn go_lan
+   "go",
+   language_go,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_no,
+Index: gdb-7.5.0.20120926/gdb/jv-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/jv-lang.c	2012-09-27 22:14:23.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/jv-lang.c	2012-09-27 22:14:41.154695263 +0200
+@@ -1169,7 +1169,6 @@ const struct language_defn java_language
+   "java",			/* Language name */
+   language_java,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_no,
+Index: gdb-7.5.0.20120926/gdb/m2-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/m2-lang.c	2012-03-02 20:29:01.000000000 +0100
++++ gdb-7.5.0.20120926/gdb/m2-lang.c	2012-09-27 22:14:41.161695266 +0200
+@@ -370,7 +370,6 @@ const struct language_defn m2_language_d
+   "modula-2",
+   language_m2,
+   range_check_on,
+-  type_check_on,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_no,
+Index: gdb-7.5.0.20120926/gdb/objc-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/objc-lang.c	2012-03-02 20:29:01.000000000 +0100
++++ gdb-7.5.0.20120926/gdb/objc-lang.c	2012-09-27 22:14:41.163695268 +0200
+@@ -509,7 +509,6 @@ const struct language_defn objc_language
+   "objective-c",		/* Language name */
+   language_objc,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_c,
+Index: gdb-7.5.0.20120926/gdb/opencl-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/opencl-lang.c	2012-03-02 20:29:01.000000000 +0100
++++ gdb-7.5.0.20120926/gdb/opencl-lang.c	2012-09-27 22:14:41.165695268 +0200
+@@ -993,7 +993,6 @@ const struct language_defn opencl_langua
+   "opencl",			/* Language name */
+   language_opencl,
+   range_check_off,
+-  type_check_off,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_c,
+Index: gdb-7.5.0.20120926/gdb/p-lang.c
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/p-lang.c	2012-03-02 20:29:01.000000000 +0100
++++ gdb-7.5.0.20120926/gdb/p-lang.c	2012-09-27 22:14:41.170695270 +0200
+@@ -429,7 +429,6 @@ const struct language_defn pascal_langua
+   "pascal",			/* Language name */
+   language_pascal,
+   range_check_on,
+-  type_check_on,
+   case_sensitive_on,
+   array_row_major,
+   macro_expansion_no,
+Index: gdb-7.5.0.20120926/gdb/doc/gdb.texinfo
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/doc/gdb.texinfo	2012-09-27 22:14:23.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/doc/gdb.texinfo	2012-09-27 22:14:41.188695279 +0200
+@@ -12648,29 +12648,18 @@ List all the filename extensions and the
+ @node Checks
+ @section Type and Range Checking
+ 
+-@quotation
+-@emph{Warning:} In this release, the @value{GDBN} commands for type and range
+-checking are included, but they do not yet have any effect.  This
+-section documents the intended facilities.
+-@end quotation
+-@c FIXME remove warning when type/range code added
+-
+ Some languages are designed to guard you against making seemingly common
+ errors through a series of compile- and run-time checks.  These include
+-checking the type of arguments to functions and operators, and making
++checking the type of arguments to functions and operators and making
+ sure mathematical overflows are caught at run time.  Checks such as
+ these help to ensure a program's correctness once it has been compiled
+-by eliminating type mismatches, and providing active checks for range
++by eliminating type mismatches and providing active checks for range
+ errors when your program is running.
+ 
+-@value{GDBN} can check for conditions like the above if you wish.
+-Although @value{GDBN} does not check the statements in your program,
+-it can check expressions entered directly into @value{GDBN} for
+-evaluation via the @code{print} command, for example.  As with the
+-working language, @value{GDBN} can also decide whether or not to check
+-automatically based on your program's source language.
+-@xref{Supported Languages, ,Supported Languages}, for the default
+-settings of supported languages.
++By default @value{GDBN} checks for these errors according to the
++rules of the current source language.  Although @value{GDBN} does not check
++the statements in your program, it can check expressions entered directly
++into @value{GDBN} for evaluation via the @code{print} command, for example.
+ 
+ @menu
+ * Type Checking::               An overview of type checking
+@@ -12682,69 +12671,51 @@ settings of supported languages.
+ @node Type Checking
+ @subsection An Overview of Type Checking
+ 
+-Some languages, such as Modula-2, are strongly typed, meaning that the
++Some languages, such as C and C@t{++}, are strongly typed, meaning that the
+ arguments to operators and functions have to be of the correct type,
+ otherwise an error occurs.  These checks prevent type mismatch
+ errors from ever causing any run-time problems.  For example,
+ 
+ @smallexample
+-1 + 2 @result{} 3
++int klass::my_method(char *b) @{ return  b ? 1 : 2; @}
++
++(@value{GDBP}) print obj.my_method (0)
++$1 = 2
+ @exdent but
+-@error{} 1 + 2.3
++(@value{GDBP}) print obj.my_method (0x1234)
++Cannot resolve method klass::my_method to any overloaded instance
+ @end smallexample
+ 
+-The second example fails because the @code{CARDINAL} 1 is not
+-type-compatible with the @code{REAL} 2.3.
++The second example fails because in C@t{++} the integer constant
++@samp{0x1234} is not type-compatible with the pointer parameter type.
+ 
+-For the expressions you use in @value{GDBN} commands, you can tell the
+-@value{GDBN} type checker to skip checking;
++For the expressions you use in @value{GDBN} commands, you can tell
++@value{GDBN} to not enforce strict type checking or
+ to treat any mismatches as errors and abandon the expression;
+-or to only issue warnings when type mismatches occur,
+-but evaluate the expression anyway.  When you choose the last of
+-these, @value{GDBN} evaluates expressions like the second example above, but
+-also issues a warning.
++When type checking is disabled, @value{GDBN} successfully evaluates
++expressions like the second example above.
+ 
+-Even if you turn type checking off, there may be other reasons
++Even if type checking is off, there may be other reasons
+ related to type that prevent @value{GDBN} from evaluating an expression.
+ For instance, @value{GDBN} does not know how to add an @code{int} and
+ a @code{struct foo}.  These particular type errors have nothing to do
+-with the language in use, and usually arise from expressions, such as
+-the one described above, which make little sense to evaluate anyway.
+-
+-Each language defines to what degree it is strict about type.  For
+-instance, both Modula-2 and C require the arguments to arithmetical
+-operators to be numbers.  In C, enumerated types and pointers can be
+-represented as numbers, so that they are valid arguments to mathematical
+-operators.  @xref{Supported Languages, ,Supported Languages}, for further
+-details on specific languages.
++with the language in use and usually arise from expressions which make
++little sense to evaluate anyway.
+ 
+-@value{GDBN} provides some additional commands for controlling the type checker:
++@value{GDBN} provides some additional commands for controlling type checking:
+ 
+ @kindex set check type
+ @kindex show check type
+ @table @code
+-@item set check type auto
+-Set type checking on or off based on the current working language.
+-@xref{Supported Languages, ,Supported Languages}, for the default settings for
+-each language.
+-
+ @item set check type on
+ @itemx set check type off
+-Set type checking on or off, overriding the default setting for the
+-current working language.  Issue a warning if the setting does not
+-match the language default.  If any type mismatches occur in
++Set strict type checking on or off.  If any type mismatches occur in
+ evaluating an expression while type checking is on, @value{GDBN} prints a
+ message and aborts evaluation of the expression.
+ 
+-@item set check type warn
+-Cause the type checker to issue warnings, but to always attempt to
+-evaluate the expression.  Evaluating the expression may still
+-be impossible for other reasons.  For example, @value{GDBN} cannot add
+-numbers and structures.
+-
+-@item show type
+-Show the current setting of the type checker, and whether or not @value{GDBN}
+-is setting it automatically.
++@item show check type
++Show the current setting of type checking and whether @value{GDBN}
++is enforcing strict type checking rules.
+ @end table
+ 
+ @cindex range checking
+@@ -13195,8 +13166,8 @@ specification.
+ 
+ @cindex C and C@t{++} defaults
+ 
+-If you allow @value{GDBN} to set type and range checking automatically, they
+-both default to @code{off} whenever the working language changes to
++If you allow @value{GDBN} to set range checking automatically, it
++defaults to @code{off} whenever the working language changes to
+ C or C@t{++}.  This happens regardless of whether you or @value{GDBN}
+ selects the working language.
+ 
+@@ -13207,37 +13178,15 @@ these files, it sets the working languag
+ @xref{Automatically, ,Having @value{GDBN} Infer the Source Language},
+ for further details.
+ 
+-@c Type checking is (a) primarily motivated by Modula-2, and (b)
+-@c unimplemented.  If (b) changes, it might make sense to let this node
+-@c appear even if Mod-2 does not, but meanwhile ignore it. roland 16jul93.
+-
+ @node C Checks
+ @subsubsection C and C@t{++} Type and Range Checks
+ 
+ @cindex C and C@t{++} checks
+ 
+-By default, when @value{GDBN} parses C or C@t{++} expressions, type checking
+-is not used.  However, if you turn type checking on, @value{GDBN}
+-considers two variables type equivalent if:
+-
+-@itemize @bullet
+-@item
+-The two variables are structured and have the same structure, union, or
+-enumerated tag.
+-
+-@item
+-The two variables have the same type name, or types that have been
+-declared equivalent through @code{typedef}.
+-
+-@ignore
+-@c leaving this out because neither J Gilmore nor R Pesch understand it.
+-@c FIXME--beers?
+-@item
+-The two @code{struct}, @code{union}, or @code{enum} variables are
+-declared in the same declaration.  (Note: this may not be true for all C
+-compilers.)
+-@end ignore
+-@end itemize
++By default, when @value{GDBN} parses C or C@t{++} expressions, strict type
++checking is used.  However, if you turn type checking off, @value{GDBN}
++will allow certain non-standard conversions, such as promoting integer
++constants to pointers.
+ 
+ Range checking, if turned on, is done on mathematical operations.  Array
+ indices are not checked, since they are often used to index a pointer
+Index: gdb-7.5.0.20120926/gdb/testsuite/gdb.base/default.exp
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/testsuite/gdb.base/default.exp	2012-04-27 22:52:06.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/testsuite/gdb.base/default.exp	2012-09-27 22:14:41.312695333 +0200
+@@ -495,12 +495,13 @@ gdb_test "section" "Must specify section
+ gdb_test "set annotate" "Argument required .integer to set it to.*" "set annotate"
+ #test set args
+ gdb_test_no_output "set args" "set args"
+-#test set check "c" abbreviation
+-gdb_test "set c" "\"set check\" must be followed by the name of a check subcommand.(\[^\r\n\]*\[\r\n\])+List of set check subcommands:(\[^\r\n\]*\[\r\n\])+set check range -- Set range checking(\[^\r\n\]*\[\r\n\])+set check type -- Set type checking(\[^\r\n\]*\[\r\n\])+Type \"help set check\" followed by set check subcommand name for full documentation.(\[^\r\n\]*\[\r\n\])+Command name abbreviations are allowed if unambiguous." "set check \"c\" abbreviation"
+-#test set check "ch" abbreviation
+-gdb_test "set ch" "\"set check\" must be followed by the name of a check subcommand.(\[^\r\n\]*\[\r\n\])+List of set check subcommands:(\[^\r\n\]*\[\r\n\])+set check range -- Set range checking(\[^\r\n\]*\[\r\n\])+set check type -- Set type checking(\[^\r\n\]*\[\r\n\])+Type \"help set check\" followed by set check subcommand name for full documentation.(\[^\r\n\]*\[\r\n\])+Command name abbreviations are allowed if unambiguous." "set check \"ch\" abbreviation"
+-#test set check
+-gdb_test "set check" "\"set check\" must be followed by the name of a check subcommand.(\[^\r\n\]*\[\r\n\])+List of set check subcommands:(\[^\r\n\]*\[\r\n\])+set check range -- Set range checking(\[^\r\n\]*\[\r\n\])+set check type -- Set type checking(\[^\r\n\]*\[\r\n\])+Type \"help set check\" followed by set check subcommand name for full documentation.(\[^\r\n\]*\[\r\n\])+Command name abbreviations are allowed if unambiguous." "set check"
++
++# Test set check abbreviations
++foreach x {"c" "ch" "check"} {
++    gdb_test "set $x" "\"set check\" must be followed by the name of a check subcommand.(\[^\r\n\]*\[\r\n\])+List of set check subcommands:(\[^\r\n\]*\[\r\n\])+set check range -- Set range checking(\[^\r\n\]*\[\r\n\])+set check type -- Set strict type checking(\[^\r\n\]*\[\r\n\])+Type \"help set check\" followed by set check subcommand name for full documentation.(\[^\r\n\]*\[\r\n\])+Command name abbreviations are allowed if unambiguous." \
++	"set check \"$x\" abbreviation"
++}
++
+ #test set check range
+ gdb_test "set check range" ".*" "set check range"
+ #test set check type
+@@ -577,16 +578,17 @@ gdb_test "shell echo Hi dad!" "Hi dad!"
+ gdb_test "show annotate" "Annotation_level is 0." 	 "show annotate"
+ #test show args
+ gdb_test "show args" "Argument list to give program being debugged when it is started is \"\"." "show args"
+-#test show check "c" abbreviation
+-gdb_test "show c" "range:  *Range checking is \"auto; currently off\".(\[^\r\n\]*\[\r\n\])+type:  *Type checking is \"auto; currently off\".*" "show check \"c\" abbreviation"
+-#test show check "ch" abbreviation
+-gdb_test "show ch" "range: *Range checking is \"auto; currently off\".(\[^\r\n\]*\[\r\n\])+type:  *Type checking is \"auto; currently off\"." "show check \"ch\" abbreviation"
+-#test show check
+-gdb_test "show check" "range:  *Range checking is \"auto; currently off\".(\[^\r\n\]*\[\r\n\])+type:  *Type checking is \"auto; currently off\"." "show check"
++
++# test show check abbreviations
++foreach x {"c" "ch" "check"} {
++    gdb_test "show $x" "range:  *Range checking is \"auto; currently off\".(\[^\r\n\]*\[\r\n\])+type:  *Strict type checking is on\..*" \
++	"show check \"$x\" abbreviation"
++}
++
+ #test show check range
+ gdb_test "show check range" "Range checking is \"auto; currently off\"." "show check range"
+ #test show check type
+-gdb_test "show check type" "Type checking is \"auto; currently off\"." "show check type"
++gdb_test "show check type" "Strict type checking is on\." "show check type"
+ #test show commands
+ gdb_test "show commands" ".*" "show commands"
+ #test show complaints
+Index: gdb-7.5.0.20120926/gdb/testsuite/gdb.base/help.exp
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/testsuite/gdb.base/help.exp	2012-07-02 19:53:19.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/testsuite/gdb.base/help.exp	2012-09-27 22:14:41.315695333 +0200
+@@ -376,22 +376,26 @@ gdb_test "help section" "Change the base
+ gdb_test "help set annotate" "Set annotation_level\.\[\r\n\]+0 == normal;     1 == fullname \\(for use when running under emacs\\)\[\r\n\]+2 == output annotated suitably for use by programs that control GDB\." "help set annotate"
+ # test help set args
+ gdb_test "help set args" "Set argument list to give program being debugged when it is started\.\[\r\n\]+Follow this command with any number of args, to be passed to the program\."
+-# test help set check "c" abbreviation
+-test_prefix_command_help {"set c" "set check"} {
+-    "Set the status of the type/range checker\.\[\r\n\]+"
+-} "help set check \"c\" abbreviation"
+-# test help set check "ch" abbreviation
+-test_prefix_command_help {"set ch" "set check"} {
+-    "Set the status of the type/range checker\.\[\r\n\]+"
+-} "help set check \"ch\" abbreviation"
+-# test help set check
++
++# Test help set check abbreviations
++foreach x {"c" "ch"} {
++    test_prefix_command_help [list "set $x" "set check"] {
++	"Set the status of the type/range checker\.\[\r\n\]+"
++    } "help set check \"$x\" abbreviation"
++}
++
++# Test help set check
+ test_prefix_command_help {"set check"} {
+     "Set the status of the type/range checker\.\[\r\n\]+"
+ }
++
+ # test help set check range
+ gdb_test "help set check range" "Set range checking\.  \\(on/warn/off/auto\\)" "help set check range"
+-# test help set check type
+-gdb_test "help set check type" "Set type checking\.  \\(on/warn/off/auto\\)." "help set check type"
++
++# Test help set check type
++gdb_test "help set check type" "Set strict type checking\." \
++    "help set check type"
++
+ # test help set complaints
+ gdb_test "help set complaints" "Set max number of complaints about incorrect symbols\." "help set complaints"
+ # test help set confirm
+@@ -487,18 +491,25 @@ gdb_test "help shell" "Execute the rest
+ gdb_test "help show annotate" "Show annotation_level\.\[\r\n\]+0 == normal;     1 == fullname \\(for use when running under emacs\\)\[\r\n\]+2 == output annotated suitably for use by programs that control GDB\." "help show annotate"
+ # test help show args
+ gdb_test "help show args" "Show argument list to give program being debugged when it is started\.\[\r\n\]+Follow this command with any number of args, to be passed to the program\."
+-# test help show check "c" abbreviation
+-test_prefix_command_help {"show c" "show check"} {
+-    "Show the status of the type/range checker\.\[\r\n\]+"
+-} "help show check \"c\" abbreviation"
++
++# Test help show check abbreviations
++foreach x {"c" "check"} {
++    test_prefix_command_help [list "show $x" "show check"] {
++	"Show the status of the type/range checker\.\[\r\n\]+"
++    } "help show check \"$x\" abbreviation"
++}
++
+ # test help show check
+ test_prefix_command_help {"show check"} {
+     "Show the status of the type/range checker\.\[\r\n\]+"
+ }
+ # test help show check range
+ gdb_test "help show check range" "Show range checking\.  \\(on/warn/off/auto\\)" "help show check range"
++
+ # test help show check type
+-gdb_test "help show check type" "Show type checking\.  \\(on/warn/off/auto\\)" "help show check type"
++gdb_test "help show check type" "Show strict type checking\." \
++    "help show check type"
++
+ # test help show commands
+ gdb_test "help show commands" "Show the history of commands you typed\.\[\r\n\]+You can supply a command number to start with, or a `\[+\]' to start after\[\r\n\]+the previous command number shown\." "help show commands"
+ # test help show complaints
+Index: gdb-7.5.0.20120926/gdb/testsuite/gdb.base/setshow.exp
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/testsuite/gdb.base/setshow.exp	2012-03-13 22:02:40.000000000 +0100
++++ gdb-7.5.0.20120926/gdb/testsuite/gdb.base/setshow.exp	2012-09-27 22:14:41.320695336 +0200
+@@ -110,19 +110,22 @@ gdb_test "show check range" "Range check
+ #test set check range auto
+ gdb_test_no_output "set check range auto" "set check range auto" 
+ #test show check range auto
+-gdb_test "show check range" "Range checking is \"auto; currently .*" "show check range (auto)" 
+-#test set check type on
+-gdb_test "set check type on" ".*" "set check type on" 
+-#test show check type on
+-gdb_test "show check type" "Type checking is \"on\"..*" "show check type (on)" 
+-#test set check type off with trailing space
+-gdb_test_no_output "set check type off " "set check type off" 
+-#test show check type off
+-gdb_test "show check type" "Type checking is \"off\"..*" "show check type (off)" 
+-#test set check type auto
+-gdb_test_no_output "set check type auto" "set check type auto" 
+-#test show check type
+-gdb_test "show check type" "Type checking is \"auto; currently .*" "show check type (auto)" 
++gdb_test "show check range" "Range checking is \"auto; currently .*" "show check range (auto)"
++
++# Test set check type on
++gdb_test "set check type on" ".*" "set check type on"
++
++# Test show check type on
++gdb_test "show check type" "Strict type checking is on\..*" \
++    "show check type (on)"
++
++# Test set check type off with trailing space
++gdb_test_no_output "set check type off " "set check type off"
++
++# Test show check type off
++gdb_test "show check type" "Strict type checking is off\..*" \
++    "show check type (off)"
++
+ #test set complaints 100
+ gdb_test_no_output "set complaints 100" "set complaints 100" 
+ #test show complaints 100
+Index: gdb-7.5.0.20120926/gdb/testsuite/gdb.cp/converts.exp
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/testsuite/gdb.cp/converts.exp	2012-07-10 17:18:18.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/testsuite/gdb.cp/converts.exp	2012-09-27 22:14:41.321695337 +0200
+@@ -70,9 +70,37 @@ gdb_test_multiple "p foo3_1 (0, 0)" $t {
+     pass $t
+   }
+ }
++
+ gdb_test "p foo3_1 (0, 1)" \
+     "Cannot resolve function foo3_1 to any overloaded instance"
+ gdb_test "p foo3_1 (0, (const char**) 1)" " = 31"
+ gdb_test "p foo3_2 (0, 0)" "= 32"
+ gdb_test "p foo3_2 (0, (char const**) 0)" " = 320"
+ 
++# Test for strict type checking
++set error_str "Cannot resolve function %s to any overloaded instance"
++gdb_test "show check type" "Strict type checking is on\."
++gdb_test "p foo1_type_check (123)" [format $error_str "foo1_type_check"]
++gdb_test "p foo2_type_check (0, 1)" [format $error_str "foo2_type_check"]
++gdb_test "p foo2_type_check (1, 0)" [format $error_str "foo2_type_check"]
++gdb_test "p foo2_type_check (1, 1)" [format $error_str "foo2_type_check"]
++gdb_test "p foo3_type_check (0, 0, 1)" [format $error_str "foo3_type_check"]
++gdb_test "p foo3_type_check (0, 1, 0)" [format $error_str "foo3_type_check"]
++gdb_test "p foo3_type_check (1, 0, 0)" [format $error_str "foo3_type_check"]
++gdb_test "p foo3_type_check (0, 1, 1)" [format $error_str "foo3_type_check"]
++gdb_test "p foo3_type_check (1, 1, 0)" [format $error_str "foo3_type_check"]
++gdb_test "p foo3_type_check (1, 1, 1)" [format $error_str "foo3_type_check"]
++
++gdb_test_no_output "set check type off"
++gdb_test "show check type" "Strict type checking is off\."
++gdb_test "p foo1_type_check (123)" " = 1000"
++gdb_test "p foo2_type_check (0, 1)" " = 1001"
++gdb_test "p foo2_type_check (1, 0)" " = 1001"
++gdb_test "p foo2_type_check (1, 1)" " = 1001"
++gdb_test "p foo3_type_check (0, 0, 1)" " = 1002"
++gdb_test "p foo3_type_check (0, 1, 0)" " = 1002"
++gdb_test "p foo3_type_check (1, 0, 0)" " = 1002"
++gdb_test "p foo3_type_check (0, 1, 1)" " = 1002"
++gdb_test "p foo3_type_check (1, 1, 0)" " = 1002"
++gdb_test "p foo3_type_check (1, 1, 1)" " = 1002"
++gdb_test "p foo3_2 (1,1)" " = 32"
+Index: gdb-7.5.0.20120926/gdb/testsuite/gdb.cp/converts.cc
+===================================================================
+--- gdb-7.5.0.20120926.orig/gdb/testsuite/gdb.cp/converts.cc	2011-10-14 22:22:50.000000000 +0200
++++ gdb-7.5.0.20120926/gdb/testsuite/gdb.cp/converts.cc	2012-09-27 22:14:41.322695337 +0200
+@@ -27,6 +27,10 @@ int foo3_1 (int a, const char **b) { ret
+ int foo3_2 (int a, int b) { return 32; }
+ int foo3_2 (int a, const char **b) { return 320; }
+ 
++int foo1_type_check (char *a) { return 1000; }
++int foo2_type_check (char *a, char *b) { return 1001; }
++int foo3_type_check (char *a, char *b, char *c) { return 1002; }
++
+ int main()
+ {
+ 
+@@ -62,5 +66,9 @@ int main()
+   foo3_2 (0, static_cast<char const**> (0));
+   foo3_2 (0, 0);
+ 
++  foo1_type_check (a);
++  foo2_type_check (a, a);
++  foo3_type_check (a, a, a);
++
+   return 0;          // end of main
+ }

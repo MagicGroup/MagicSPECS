@@ -1,0 +1,33 @@
+--- kpowersave-0.5.6/src/kpowersave.desktop.orig	2006-02-07 03:15:08.000000000 +0800
++++ kpowersave-0.5.6/src/kpowersave.desktop	2006-02-07 13:29:21.000000000 +0800
+@@ -4,28 +4,12 @@
+ Name[xx]=xxkpowersavexx
+ Name[de]=KPowersave
+ GenericName=Battery Monitor
++GenericName[zh_CN]=电池监视器
+ Exec=kpowersave --force-acpi-check
+ Icon=kpowersave
+ Type=Application
+ Comment=Battery monitor and general power management
+-Comment[ca]=Una simple aplicació KDE
+-Comment[da]=Et simpelt KDE program
+-Comment[de]=Eine einfache KDE-Anwendung
+-Comment[el]=Μια απλή εφαρμογή του KDE
+-Comment[es]=Una aplicación de KDE sencilla
+-Comment[et]=Lihtne KDE rakendus
+-Comment[fr]=Une application simple pour KDE.
+-Comment[hu]=Egyszerű KDE-alkalmazás
+-Comment[it]=Una semplice applicazione KDE
+-Comment[nl]=Een eenvoudige KDE-toepassing
+-Comment[pt]=Uma aplicação KDE simples
+-Comment[pt_BR]=Um simples Aplicativo do KDE
+-Comment[ru]=Простое приложение KDE
+-Comment[sl]=Preprost program za KDE
+-Comment[sr]=Једноставан KDE програм
+-Comment[sv]=Ett enkelt KDE-program
+-Comment[xx]=xxA simple KDE Applicationxx
+-Comment[zh_CN]=一个简单的KDE应用程序
++Comment[zh_CN]=电池监视和通用电源管理程序
+ X-KDE-autostart-after=panel
+ X-KDE-StartupNotify=false
+ X-KDE-UniqueApplet=true

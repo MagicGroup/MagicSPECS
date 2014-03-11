@@ -1,0 +1,11 @@
+--- kpilot-3.5.13.1/kpilot/pilotDaemon.cc.ORI	2012-10-04 23:08:13.463030563 +0200
++++ kpilot-3.5.13.1/kpilot/pilotDaemon.cc	2012-10-04 23:08:28.131738300 +0200
+@@ -313,7 +313,7 @@
+ #ifdef DEBUG
+ 	DEBUGKPILOT << fname
+ 		<< ": The daemon is ready with status "
+-		<< statusString() << " (" << (int) fDaemontqStatus << ")" << endl;
++		<< statusString() << " (" << (int) fDaemonStatus << ")" << endl;
+ #endif
+ }
+ 

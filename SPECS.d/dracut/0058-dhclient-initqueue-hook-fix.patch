@@ -1,0 +1,33 @@
+From a17fc9902e3ccd154765cbc8a1b7cc285072ad75 Mon Sep 17 00:00:00 2001
+From: Dave Young <dyoung@redhat.com>
+Date: Mon, 9 Jul 2012 14:56:35 +0800
+Subject: [PATCH] dhclient initqueue hook fix
+
+dhclient initqueue hook fix
+
+setup_net is scheduled in initqueue, sometimes it does not get chance to run
+So the default route will not be set properly
+
+Add a check in initqueue/finished to resolve this issue.
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ modules.d/40network/dhclient-script.sh |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/modules.d/40network/dhclient-script.sh b/modules.d/40network/dhclient-script.sh
+index 470444e..1500fe5 100755
+--- a/modules.d/40network/dhclient-script.sh
++++ b/modules.d/40network/dhclient-script.sh
+@@ -88,9 +88,11 @@ case $reason in
+             echo "setup_net $netif"
+             echo "source_hook initqueue/online $netif"
+             [ -e /tmp/net.$netif.manualup ] || echo "/sbin/netroot $netif"
++            echo "> /tmp/setup_net_$netif.ok"
+             echo "rm -f $hookdir/initqueue/setup_net_$netif.sh"
+         } > $hookdir/initqueue/setup_net_$netif.sh
+ 
++        echo "[ -f /tmp/setup_net_$netif.ok ]" > $hookdir/initqueue/finished/dhclient-$netif.sh
+         >/tmp/net.$netif.up
+         ;;
+     *) echo "dhcp: $reason";;

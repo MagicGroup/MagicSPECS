@@ -1,0 +1,27 @@
+--- kcmautostart.ORI/src/autostart.cpp	2012-05-10 11:36:44.887288951 +0200
++++ kcmautostart.P/src/autostart.cpp	2012-05-10 11:37:16.701639283 +0200
+@@ -88,10 +88,10 @@
+       path = kgs->autostartPath()+"/";
+       break;
+     case Shutdown:
+-      path = ksd->localtdedir()+"shutdown/";
++      path = ksd->localkdedir()+"shutdown/";
+       break;
+     case ENV:
+-      path = ksd->localtdedir()+"env/";
++      path = ksd->localkdedir()+"env/";
+       break;
+   }
+   KIO::file_move(fileName, KURL( path + fileName.fileName() ));
+@@ -190,9 +190,9 @@
+     if (x==0)
+       path = kgs->autostartPath();
+     else if (x==1)
+-      path = ksd->localtdedir() + "/shutdown";
++      path = ksd->localkdedir() + "/shutdown";
+     else if (x==2)
+-      path = ksd->localtdedir() + "/env";
++      path = ksd->localkdedir() + "/env";
+ 
+     if (! KStandardDirs::exists(path))
+       KStandardDirs::makeDir(path);

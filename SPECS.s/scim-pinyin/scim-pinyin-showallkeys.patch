@@ -1,0 +1,31 @@
+--- scim-pinyin-0.5.91/src/scim_pinyin_imengine.cpp.allkeys-back	2006-02-13 16:03:12.000000000 +0800
++++ scim-pinyin-0.5.91/src/scim_pinyin_imengine.cpp	2006-02-13 16:04:53.000000000 +0800
+@@ -153,7 +153,7 @@
+       m_auto_combine_phrase (false),
+       m_auto_fill_preedit (false),
+       m_always_show_lookup (false),
+-      m_show_all_keys (false),
++      m_show_all_keys (true),
+       m_user_data_binary (true),
+       m_valid (false),
+       m_shuang_pin (false),
+@@ -269,7 +269,7 @@
+                             true);
+         m_show_all_keys =
+             m_config->read (String (SCIM_CONFIG_IMENGINE_PINYIN_SHOW_ALL_KEYS),
+-                            false);
++                            true);
+         m_user_data_binary =
+             m_config->read (String (SCIM_CONFIG_IMENGINE_PINYIN_USER_DATA_BINARY),
+                             true);
+--- scim-pinyin-0.5.91/src/scim_pinyin_imengine_setup.cpp.allkeys-back	2006-02-13 16:03:42.000000000 +0800
++++ scim-pinyin-0.5.91/src/scim_pinyin_imengine_setup.cpp	2006-02-13 16:04:06.000000000 +0800
+@@ -107,7 +107,7 @@
+ static bool   __config_auto_fill_preedit      = true;
+ static bool   __config_match_longer_phrase    = false;
+ static bool   __config_always_show_lookup     = true;
+-static bool   __config_show_all_keys          = false;
++static bool   __config_show_all_keys          = true;
+ static bool   __config_dynamic_adjust         = true;
+ 
+ static int    __config_max_user_phrase_length = 8;

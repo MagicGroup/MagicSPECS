@@ -1,0 +1,11 @@
+--- debhelper/Makefile.orig	2014-02-10 15:28:46.026223272 +0000
++++ debhelper/Makefile	2014-02-10 17:24:44.795637157 +0000
+@@ -40,7 +40,7 @@ PERLLIBDIR=$(shell perl -MConfig -e 'pri
+ 
+ PREFIX=/usr
+ 
+-POD2MAN=pod2man --utf8 -c Debhelper -r "$(VERSION)"
++POD2MAN=pod2man -c Debhelper -r "$(VERSION)"
+ 
+ ifneq ($(USE_NLS),no)
+ # l10n to be built is determined from .po files

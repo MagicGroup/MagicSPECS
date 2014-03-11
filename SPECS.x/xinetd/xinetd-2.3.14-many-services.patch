@@ -1,0 +1,27 @@
+--- xinetd-2.3.14-dist/xinetd/defs.h	2012-01-16 12:20:54.739041678 +0100
++++ xinetd-2.3.14/xinetd/defs.h	2012-01-17 08:06:56.800762230 +0100
+@@ -115,8 +115,9 @@ union xsockaddr {
+  */
+ 
+ #ifdef HAVE_POLL
+-#define INIT_POLLFDS                 1024
+-#define MAX_POLLFDS                  8192
++#define INIT_POLLFDS                 4096
++/* FIXME: not used */
++#define MAX_POLLFDS                  16384
+ #endif
+ 
+ /*
+--- xinetd-2.3.14-dist/xinetd/service.c	2012-01-16 12:20:54.741041678 +0100
++++ xinetd-2.3.14/xinetd/service.c	2012-01-17 08:07:28.872746991 +0100
+@@ -343,9 +343,9 @@ status_e svc_activate( struct service *s
+        out_of_memory( func );
+        return( FAILED );
+      }
++     ps.rws.pfd_array = tmp;
+      memset(&ps.rws.pfd_array[ps.rws.pfds_last], 0, (ps.rws.pfds_allocated-
+        ps.rws.pfds_last)*sizeof(struct pollfd));
+-     ps.rws.pfd_array = tmp;
+    }
+    if ( sp->svc_pfd_index >= 0 )
+    {

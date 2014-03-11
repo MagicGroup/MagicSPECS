@@ -1,0 +1,14 @@
+diff -up silc-toolkit-1.1.7/lib/Makefile.am.libs silc-toolkit-1.1.7/lib/Makefile.am
+--- silc-toolkit-1.1.7/lib/Makefile.am.libs	2008-03-20 02:43:33.000000000 -0400
++++ silc-toolkit-1.1.7/lib/Makefile.am	2008-06-04 14:18:53.000000000 -0400
+@@ -48,8 +48,8 @@ SILC_LINK_LIBS=$(LIBS)
+ SILCCLIENT_LINK_LIBS=$(LIBS) -lsilc
+ SILCSERVER_LIBS=$(LIBS) -lsilc
+ else
+-SILC_LINK_LIBS=
+-SILCCLIENT_LINK_LIBS=
++SILC_LINK_LIBS=$(LIBIDN_LIBS) $(LIBS)
++SILCCLIENT_LINK_LIBS=$(top_builddir)/lib/libsilc.la
+ SILCSERVER_LIBS=
+ endif
+ 

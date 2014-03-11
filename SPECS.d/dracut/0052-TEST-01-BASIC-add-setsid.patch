@@ -1,0 +1,39 @@
+From d8eb522e8062751f53def079ac1bab8f1c05a401 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 14 Mar 2012 16:32:19 +0100
+Subject: [PATCH] TEST-01-BASIC: add setsid
+
+---
+ test/TEST-01-BASIC/test-init.sh |    5 ++++-
+ test/TEST-01-BASIC/test.sh      |    2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/test/TEST-01-BASIC/test-init.sh b/test/TEST-01-BASIC/test-init.sh
+index fd03aa5..f8d6693 100755
+--- a/test/TEST-01-BASIC/test-init.sh
++++ b/test/TEST-01-BASIC/test-init.sh
+@@ -11,7 +11,10 @@ export PS1='initramfs-test:\w\$ '
+ [ -f /etc/fstab ] || ln -sfn /proc/mounts /etc/fstab
+ stty sane
+ echo "made it to the rootfs!"
+-strstr "$CMDLINE" "rd.shell" && sh -i
++if strstr "$CMDLINE" "rd.shell"; then
++	strstr "$(setsid --help)" "control" && CTTY="-c"
++	setsid $CTTY sh -i
++fi
+ echo "Powering down."
+ mount -n -o remount,ro /
+ poweroff -f
+diff --git a/test/TEST-01-BASIC/test.sh b/test/TEST-01-BASIC/test.sh
+index ca7a1fe..6187144 100755
+--- a/test/TEST-01-BASIC/test.sh
++++ b/test/TEST-01-BASIC/test.sh
+@@ -29,7 +29,7 @@ test_setup() {
+ 	. $basedir/dracut-functions.sh
+ 	dracut_install sh df free ls shutdown poweroff stty cat ps ln ip route \
+ 	    mount dmesg ifconfig dhclient mkdir cp ping dhclient \
+-	    umount strace less
++	    umount strace less setsid
+ 	for _terminfodir in /lib/terminfo /etc/terminfo /usr/share/terminfo; do
+             [ -f ${_terminfodir}/l/linux ] && break
+ 	done

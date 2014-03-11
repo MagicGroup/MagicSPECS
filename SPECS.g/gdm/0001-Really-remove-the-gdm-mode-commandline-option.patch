@@ -1,0 +1,24 @@
+From b6499b7130e5c762daf571e49187169c8d0e5e43 Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Sat, 9 Jun 2012 12:24:45 -0400
+Subject: [PATCH] Really remove the --gdm-mode commandline option
+
+Command 38b2df058c9d0237a6398675ca6401cf2b043015 was incomplete.
+---
+ data/gdm-shell.session.in |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/gdm-shell.session.in b/data/gdm-shell.session.in
+index 496cc10..172f5e0 100644
+--- a/data/gdm-shell.session.in
++++ b/data/gdm-shell.session.in
+@@ -1,5 +1,5 @@
+ [GNOME Session]
+ Name=Display Manager
+ RequiredComponents=gnome-shell;gnome-settings-daemon;
+-IsRunnableHelper=bash -c 'gnome-shell --help | grep -q gdm-mode && @libexecdir@/gnome-session-check-accelerated'
++IsRunnableHelper=bash -c 'gnome-shell --help | grep -q gdm && @libexecdir@/gnome-session-check-accelerated'
+ FallbackSession=gdm-fallback
+-- 
+1.7.10.2
+

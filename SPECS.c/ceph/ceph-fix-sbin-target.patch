@@ -1,0 +1,31 @@
+From 69baa8948f2d922554e815c572d8339a4a197306 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ken.dreyer@inktank.com>
+Date: Tue, 7 Jan 2014 21:51:14 -0700
+Subject: [PATCH] Fedora only: fix sbin path
+
+On Fedora, /sbin is a symbolic link to /usr/sbin. Install all the sbin
+binaries into the /usr/sbin location.
+
+Signed-off-by: Ken Dreyer <ken.dreyer@inktank.com>
+---
+ src/Makefile-env.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Makefile-env.am b/src/Makefile-env.am
+index 9bc6ee7..d02f034 100644
+--- a/src/Makefile-env.am
++++ b/src/Makefile-env.am
+@@ -26,8 +26,8 @@ bin_DEBUGPROGRAMS =
+ # like sbin_SCRIPTS but can be used to install to e.g. /usr/sbin
+ ceph_sbindir = $(sbindir)
+ 
+-# certain things go straight into /sbin, though!
+-su_sbindir = /sbin
++# On Fedora these things also go into /usr/sbin
++su_sbindir = $(sbindir)
+ 
+ # C/C++ tests to build will be appended to this
+ check_PROGRAMS =
+-- 
+1.8.3.1
+

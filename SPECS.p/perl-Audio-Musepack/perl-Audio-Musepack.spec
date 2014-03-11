@@ -1,0 +1,56 @@
+%define perl_vendorlib %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)
+%define perl_vendorarch %(eval "`%{__perl} -V:installvendorarch`"; echo $installvendorarch)
+
+%define pkg_name Audio-Musepack
+
+Summary: An OOP interface to Musepack file information and APE tag fields
+Name: perl-Audio-Musepack
+Version: 1.0.1
+Release: 2%{?dist}
+Group: Development/Libraries
+Group(zh_CN): 开发/库
+License: Artistic
+URL: http://search.cpan.org/dist/%{pkg_name}/
+Source0: http://www.cpan.org/authors/id/D/DA/DANIEL/%{pkg_name}-%{version}.tar.gz
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: perl(ExtUtils::MakeMaker)
+BuildRequires: perl(MP3::Info) >= 1.20
+
+%description
+This module returns a hash containing basic information about a Musepack
+file, as well as tag information contained in the Musepack file's APE tags.
+See Audio::APETags for more information about the tags.
+
+
+%prep
+%setup -q -n %{pkg_name}-%{version}
+
+%build
+%{__perl} Makefile.PL INSTALLDIRS="vendor" PREFIX="%{buildroot}%{_prefix}"
+%{__make} %{?_smp_mflags}
+
+# check 过程需要额外依赖 perl(Test:Pod)
+#%{__make} test
+
+%install
+%{__rm} -rf %{buildroot}
+
+%makeinstall
+%{__rm} -rf %{buildroot}%{perl_archlib} %{buildroot}%{perl_vendorarch}
+
+%clean
+%{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
+
+%files
+%defattr(-,root,root,-)
+%doc Changes README
+%doc %{_mandir}/man3/*.3pm*
+%{perl_vendorlib}
+
+%changelog
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.0.1-2
+- 为 Magic 3.0 重建
+
+* Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.7-0.1mgc
+- Initial package

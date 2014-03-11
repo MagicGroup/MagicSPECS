@@ -1,0 +1,25 @@
+diff -up chromium-11.0.679.0/third_party/WebKit/Source/WebCore/bindings/v8/V8DOMWindowShell.cpp.experimental chromium-11.0.679.0/third_party/WebKit/Source/WebCore/bindings/v8/V8DOMWindowShell.cpp
+--- chromium-11.0.679.0/third_party/WebKit/Source/WebCore/bindings/v8/V8DOMWindowShell.cpp.experimental	2011-02-23 10:34:02.994280549 -0500
++++ chromium-11.0.679.0/third_party/WebKit/Source/WebCore/bindings/v8/V8DOMWindowShell.cpp	2011-02-23 10:34:13.065275351 -0500
+@@ -65,7 +65,7 @@
+ #include <v8.h>
+ 
+ #if ENABLE(JAVASCRIPT_I18N_API)
+-#include <v8/src/extensions/experimental/i18n-extension.h>
++#include <v8/extensions/experimental/i18n-extension.h>
+ #endif
+ 
+ #include <wtf/Assertions.h>
+diff -up chromium-11.0.679.0/third_party/WebKit/Source/WebCore/WebCore.gyp/WebCore.gyp.experimental chromium-11.0.679.0/third_party/WebKit/Source/WebCore/WebCore.gyp/WebCore.gyp
+--- chromium-11.0.679.0/third_party/WebKit/Source/WebCore/WebCore.gyp/WebCore.gyp.experimental	2011-02-22 19:59:36.873892465 -0500
++++ chromium-11.0.679.0/third_party/WebKit/Source/WebCore/WebCore.gyp/WebCore.gyp	2011-02-22 19:59:40.324890442 -0500
+@@ -1482,7 +1482,8 @@
+         }],
+         ['javascript_engine=="v8"', {
+           'dependencies': [
+-            '<(chromium_src_dir)/v8/src/extensions/experimental/experimental.gyp:i18n_api',
++            '<(chromium_src_dir)/v8/tools/gyp/v8.gyp:v8',
++            '<(chromium_src_dir)/build/linux/system.gyp:icu',
+           ],
+         }],
+       ],

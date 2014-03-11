@@ -1,0 +1,123 @@
+From f1e9f613d9eea3105e906c114266d283ac898d44 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 6 Jul 2012 12:28:17 +0200
+Subject: [PATCH] systemd: exit with sane state
+
+---
+ modules.d/98systemd/dracut-cmdline.sh     |    6 ++++--
+ modules.d/98systemd/dracut-initqueue.sh   |    6 ++++--
+ modules.d/98systemd/dracut-pre-pivot.sh   |    6 ++++--
+ modules.d/98systemd/dracut-pre-trigger.sh |    6 ++++--
+ modules.d/98systemd/dracut-pre-udev.sh    |    6 ++++--
+ 5 files changed, 20 insertions(+), 10 deletions(-)
+
+diff --git a/modules.d/98systemd/dracut-cmdline.sh b/modules.d/98systemd/dracut-cmdline.sh
+index e1a75ea..6a44815 100755
+--- a/modules.d/98systemd/dracut-cmdline.sh
++++ b/modules.d/98systemd/dracut-cmdline.sh
+@@ -8,9 +8,10 @@ NEWROOT="/sysroot"
+ [ -d /run/lock ] || mkdir -p -m 0755 /run/lock
+ 
+ if [ -f /dracut-state.sh ]; then
+-    . /dracut-state.sh || :
++    . /dracut-state.sh 2>/dev/null
+ fi
+-. /lib/dracut-lib.sh
++type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
++
+ source_conf /etc/conf.d
+ 
+ # run scriptlets to parse the command line
+@@ -23,3 +24,4 @@ source_hook cmdline
+ export root rflags fstype netroot NEWROOT
+ 
+ export -p > /dracut-state.sh
++exit 0
+diff --git a/modules.d/98systemd/dracut-initqueue.sh b/modules.d/98systemd/dracut-initqueue.sh
+index 03f1c9b..bc63582 100755
+--- a/modules.d/98systemd/dracut-initqueue.sh
++++ b/modules.d/98systemd/dracut-initqueue.sh
+@@ -3,9 +3,10 @@
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+ if [ -f /dracut-state.sh ]; then
+-    . /dracut-state.sh || :
++    . /dracut-state.sh 2>/dev/null
+ fi
+-. /lib/dracut-lib.sh
++type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
++
+ source_conf /etc/conf.d
+ 
+ getarg 'rd.break=initqueue' 'rdbreak=initqueue' && emergency_shell -n initqueue "Break before initqueue"
+@@ -106,3 +107,4 @@ done
+ export -p > /dracut-state.sh
+ 
+ systemctl isolate initrd-switch-root.target
++exit 0
+diff --git a/modules.d/98systemd/dracut-pre-pivot.sh b/modules.d/98systemd/dracut-pre-pivot.sh
+index 89d7e6d..29a8248 100755
+--- a/modules.d/98systemd/dracut-pre-pivot.sh
++++ b/modules.d/98systemd/dracut-pre-pivot.sh
+@@ -3,9 +3,10 @@
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+ if [ -f /dracut-state.sh ]; then
+-    . /dracut-state.sh || :
++    . /dracut-state.sh 2>/dev/null
+ fi
+-. /lib/dracut-lib.sh
++type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
++
+ source_conf /etc/conf.d
+ 
+ # pre pivot scripts are sourced just before we doing cleanup and switch over
+@@ -49,3 +50,4 @@ getarg rd.break rdbreak && emergency_shell -n switch_root "Break before switch_r
+ cp -avr /lib/systemd/system/dracut*.service /run/systemd/system/
+ 
+ export -p > /dracut-state.sh
++exit 0
+diff --git a/modules.d/98systemd/dracut-pre-trigger.sh b/modules.d/98systemd/dracut-pre-trigger.sh
+index 9521eaa..52ecfaf 100755
+--- a/modules.d/98systemd/dracut-pre-trigger.sh
++++ b/modules.d/98systemd/dracut-pre-trigger.sh
+@@ -3,9 +3,10 @@
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+ if [ -f /dracut-state.sh ]; then
+-    . /dracut-state.sh || :
++    . /dracut-state.sh 2>/dev/null
+ fi
+-. /lib/dracut-lib.sh
++type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
++
+ source_conf /etc/conf.d
+ 
+ getargbool 0 rd.udev.info -y rdudevinfo && udevadm control --log-priority=info
+@@ -17,3 +18,4 @@ source_hook pre-trigger
+ udevadm control --reload >/dev/null 2>&1 || :
+ 
+ export -p > /dracut-state.sh
++exit 0
+diff --git a/modules.d/98systemd/dracut-pre-udev.sh b/modules.d/98systemd/dracut-pre-udev.sh
+index 3b5ac37..2566ab9 100755
+--- a/modules.d/98systemd/dracut-pre-udev.sh
++++ b/modules.d/98systemd/dracut-pre-udev.sh
+@@ -3,9 +3,10 @@
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+ if [ -f /dracut-state.sh ]; then
+-    . /dracut-state.sh || :
++    . /dracut-state.sh 2>/dev/null
+ fi
+-. /lib/dracut-lib.sh
++type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
++
+ source_conf /etc/conf.d
+ 
+ # pre pivot scripts are sourced just before we doing cleanup and switch over
+@@ -14,3 +15,4 @@ getarg 'rd.break=pre-udev' 'rdbreak=pre-udev' && emergency_shell -n pre-udev "Br
+ source_hook pre-udev
+ 
+ export -p > /dracut-state.sh
++exit 0

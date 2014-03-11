@@ -1,0 +1,105 @@
+diff -up chromium-23.0.1271.95/build/linux/system.gyp.system-libvpx chromium-23.0.1271.95/build/linux/system.gyp
+--- chromium-23.0.1271.95/build/linux/system.gyp.system-libvpx	2012-12-12 17:10:04.967351779 -0500
++++ chromium-23.0.1271.95/build/linux/system.gyp	2012-12-12 17:10:04.989351793 -0500
+@@ -426,6 +426,27 @@
+       ],
+     },
+     {
++      'target_name': 'libvpx',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(pkg-config --cflags vpx)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other vpx)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l vpx)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
+       'target_name': 'gnome_keyring',
+       'type': 'none',
+       'conditions': [
+diff -up chromium-23.0.1271.95/content/content_tests.gypi.system-libvpx chromium-23.0.1271.95/content/content_tests.gypi
+--- chromium-23.0.1271.95/content/content_tests.gypi.system-libvpx	2012-11-27 21:01:27.000000000 -0500
++++ chromium-23.0.1271.95/content/content_tests.gypi	2012-12-12 17:10:04.990351794 -0500
+@@ -218,7 +218,7 @@
+         }],
+         ['OS!="android" and OS!="ios"', {
+           'dependencies': [
+-            '../third_party/libvpx/libvpx.gyp:libvpx',
++            '../build/linux/system.gyp:libvpx',
+           ],
+         }],
+       ],
+@@ -580,7 +580,7 @@
+         }],
+         ['OS != "android" and OS != "ios"', {
+           'dependencies': [
+-            '../third_party/libvpx/libvpx.gyp:libvpx',
++            '../build/linux/system.gyp:libvpx',
+           ],
+         }],
+         ['OS == "android" and gtest_target_type == "shared_library"', {
+diff -up chromium-23.0.1271.95/remoting/codec/video_decoder_vp8.cc.system-libvpx chromium-23.0.1271.95/remoting/codec/video_decoder_vp8.cc
+--- chromium-23.0.1271.95/remoting/codec/video_decoder_vp8.cc.system-libvpx	2012-11-27 21:01:14.000000000 -0500
++++ chromium-23.0.1271.95/remoting/codec/video_decoder_vp8.cc	2012-12-12 17:10:04.990351794 -0500
+@@ -13,7 +13,9 @@
+ 
+ extern "C" {
+ #define VPX_CODEC_DISABLE_COMPAT 1
+-#include "third_party/libvpx/libvpx.h"
++#include <vpx/vpx_codec.h>
++#include <vpx/vpx_decoder.h>
++#include <vpx/vp8dx.h>
+ }
+ 
+ namespace remoting {
+diff -up chromium-23.0.1271.95/remoting/codec/video_encoder_vp8.cc.system-libvpx chromium-23.0.1271.95/remoting/codec/video_encoder_vp8.cc
+--- chromium-23.0.1271.95/remoting/codec/video_encoder_vp8.cc.system-libvpx	2012-11-27 21:01:14.000000000 -0500
++++ chromium-23.0.1271.95/remoting/codec/video_encoder_vp8.cc	2012-12-12 17:10:04.991351795 -0500
+@@ -13,7 +13,9 @@
+ 
+ extern "C" {
+ #define VPX_CODEC_DISABLE_COMPAT 1
+-#include "third_party/libvpx/libvpx.h"
++#include <vpx/vpx_codec.h>
++#include <vpx/vpx_encoder.h>
++#include <vpx/vp8cx.h>
+ }
+ 
+ namespace {
+diff -up chromium-23.0.1271.95/remoting/remoting.gyp.system-libvpx chromium-23.0.1271.95/remoting/remoting.gyp
+--- chromium-23.0.1271.95/remoting/remoting.gyp.system-libvpx	2012-12-12 17:10:04.000000000 -0500
++++ chromium-23.0.1271.95/remoting/remoting.gyp	2012-12-12 17:10:42.951352827 -0500
+@@ -1172,7 +1172,7 @@
+         '../ui/ui.gyp:ui',
+         '../net/net.gyp:net',
+         '../skia/skia.gyp:skia',
+-        '../third_party/libvpx/libvpx.gyp:libvpx',
++        '../build/linux/system.gyp:libvpx',
+         '../third_party/protobuf/protobuf.gyp:protobuf_lite',
+         '../build/linux/system.gyp:speex',
+         '../third_party/zlib/zlib.gyp:zlib',
+diff -up chromium-23.0.1271.95/third_party/ffmpeg/ffmpeg.gyp.system-libvpx chromium-23.0.1271.95/third_party/ffmpeg/ffmpeg.gyp
+--- chromium-23.0.1271.95/third_party/ffmpeg/ffmpeg.gyp.system-libvpx	2012-12-12 17:10:04.940351756 -0500
++++ chromium-23.0.1271.95/third_party/ffmpeg/ffmpeg.gyp	2012-12-12 17:10:04.996351800 -0500
+@@ -485,6 +485,9 @@
+             '<(output_root)',
+             '../..',  # The chromium 'src' directory.
+           ],
++          'dependencies': [
++            '../../build/linux/system.gyp:libvpx',
++          ],
+           'direct_dependent_settings': {
+             'defines': [
+               '__STDC_CONSTANT_MACROS',  # FFmpeg uses INT64_C.

@@ -1,0 +1,24 @@
+diff -Naur kdepim-4.2.3-orig/korganizer/korgac/alarmdockwindow.cpp kdepim-4.2.3/korganizer/korgac/alarmdockwindow.cpp
+--- kdepim-4.2.3-orig/korganizer/korgac/alarmdockwindow.cpp	2009-05-10 21:34:18.602487851 +0300
++++ kdepim-4.2.3/korganizer/korgac/alarmdockwindow.cpp	2009-05-10 21:35:19.718359144 +0300
+@@ -53,7 +53,7 @@
+   // Read the autostart status from the config file
+   KConfigGroup config( KGlobal::config(), "General" );
+   bool autostartSet = config.hasKey( "Autostart" );
+-  bool autostart = config.readEntry( "Autostart", true );
++  bool autostart = config.readEntry( "Autostart", false );
+   bool alarmsEnabled = config.readEntry( "Enabled", true );
+ 
+   mName = i18nc( "@title:window", "KOrganizer Reminder Daemon" );
+diff -Naur kdepim-4.2.3-orig/korganizer/korgac/korgac.desktop kdepim-4.2.3/korganizer/korgac/korgac.desktop
+--- kdepim-4.2.3-orig/korganizer/korgac/korgac.desktop	2009-05-10 21:34:18.602487851 +0300
++++ kdepim-4.2.3/korganizer/korgac/korgac.desktop	2009-05-10 21:35:41.414356945 +0300
+@@ -99,7 +99,7 @@
+ GenericName[zh_TW]=KOrganizr 提醒守護程式客戶端
+ Terminal=false
+ X-KDE-autostart-after=panel
+-X-KDE-autostart-condition=korgacrc:General:Autostart:true
++X-KDE-autostart-condition=korgacrc:General:Autostart:false
+ #do not uncomment the following line, else autostart fails
+ #NoDisplay=true
+ OnlyShowIn=KDE;

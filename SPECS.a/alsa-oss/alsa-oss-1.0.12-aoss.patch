@@ -1,0 +1,58 @@
+diff -urN alsa-oss-1.0.12/alsa/aoss.1 alsa-oss-1.0.12-patched/alsa/aoss.1
+--- alsa-oss-1.0.12/alsa/aoss.1	2006-08-22 13:43:53.000000000 -0500
++++ alsa-oss-1.0.12-patched/alsa/aoss.1	2007-02-08 09:34:47.000000000 -0600
+@@ -3,7 +3,7 @@
+ aoss \- Wrapper script to facilitate use of the ALSA OSS compatibility
+ library.
+ .SH SYNOPSIS
+-\fBaoss\fP \fIosscommand\fP [arguments]
++\fBaoss\fP [-32] \fIosscommand\fP [arguments]
+ 
+ .SH DESCRIPTION
+ \fBaoss\fP is a simple wrapper script which facilitates the use of the
+@@ -38,6 +38,8 @@
+ 
+ .SS Arguments
+ .TP
++\f-32\fP
++Use 32-bit alsa-oss library (on 64-bit systems)
+ \fIosscommand\fP
+ A command that uses the OSS API
+ .TP
+diff -urN alsa-oss-1.0.12/alsa/aoss.in alsa-oss-1.0.12-patched/alsa/aoss.in
+--- alsa-oss-1.0.12/alsa/aoss.in	2006-08-22 13:43:53.000000000 -0500
++++ alsa-oss-1.0.12-patched/alsa/aoss.in	2007-02-08 09:47:20.000000000 -0600
+@@ -2,12 +2,29 @@
+ 
+ # A simple script to facilitate the use of the OSS compatibility library.
+ # Usage:
+-#	aoss <command> <command options and arguments>
++#	aoss [-32] <command> <command options and arguments>
++
++if [ -f @prefix@/lib64/libaoss.so.0 ]
++then
++  AOSS_LIBDIR=@prefix@/lib64
++else
++  AOSS_LIBDIR=@prefix@/lib
++fi
++
++if [ "$1" = "-32" ]
++then
++  if [ -f @prefix@/lib/libaoss.so.0 ]
++  then
++    AOSS_LIBDIR=@prefix@/lib
++    shift
++  else
++    echo "$0 -32 called, but 32-bit alsa-oss-libs not found! Exiting..."
++    exit 2
++  fi
++fi
+ 
+ if [ -d /proc/asound ]; then
+-  prefix=@prefix@
+-  exec_prefix=@exec_prefix@
+-  LD_PRELOAD=${exec_prefix}/\$LIB/libaoss.so${LD_PRELOAD:+:$LD_PRELOAD} exec "$@"
++  LD_PRELOAD=${AOSS_LIBDIR}/libaoss.so.0${LD_PRELOAD:+:$LD_PRELOAD} exec "$@"
+ else
+   exec "$@"
+ fi

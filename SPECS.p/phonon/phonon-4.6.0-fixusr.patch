@@ -1,0 +1,12 @@
+diff -ur phonon-4.6.0.orig/PhononConfig.cmake.in phonon-4.6.0/PhononConfig.cmake.in
+--- phonon-4.6.0.orig/PhononConfig.cmake.in	2012-10-30 01:19:35.000000000 -0400
++++ phonon-4.6.0/PhononConfig.cmake.in	2012-10-30 01:21:37.000000000 -0400
+@@ -4,7 +4,7 @@
+ set(PHONON_VERSION "@PHONON_LIB_MAJOR_VERSION@.@PHONON_LIB_MINOR_VERSION@.@PHONON_LIB_PATCH_VERSION@")
+ 
+ get_filename_component(currentDir ${CMAKE_CURRENT_LIST_FILE} PATH) # get the directory where I myself am
+-get_filename_component(rootDir ${currentDir}/@relInstallDir@ ABSOLUTE) # get the chosen install prefix
++get_filename_component(rootDir ${currentDir}/@relInstallDir@usr/ ABSOLUTE) # get the chosen install prefix
+ 
+ set(PHONON_PULSESUPPORT @PHONON_PULSESUPPORT@)
+ set(PHONON_FOUND_EXPERIMENTAL @PHONON_BUILD_EXPERIMENTAL@)

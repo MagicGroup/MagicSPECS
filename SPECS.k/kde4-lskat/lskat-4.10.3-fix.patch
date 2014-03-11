@@ -1,0 +1,12 @@
+diff -ur lskat-4.10.3.orig/src/fromlibkdegames/carddeckinfo.cpp lskat-4.10.3/src/fromlibkdegames/carddeckinfo.cpp
+--- lskat-4.10.3.orig/src/fromlibkdegames/carddeckinfo.cpp	2013-06-03 18:59:35.000000000 +0000
++++ lskat-4.10.3/src/fromlibkdegames/carddeckinfo.cpp	2013-06-03 18:59:57.000000000 +0000
+@@ -110,7 +110,7 @@
+                  << " comment: " << cn.comment
+                  << " path: " << cn.path
+                  << " back: " << cn.back
+-                 << " preview: " << cn.preview
++                 //<< " preview: " << cn.preview
+                  << " svgfile: " << cn.svgfile
+                  << " isDefault: " << cn.isDefault;
+ }

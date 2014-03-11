@@ -1,0 +1,42 @@
+diff -Nuarp knotify/notifybysound.cpp knotify/notifybysound.cpp
+--- knotify/notifybysound.cpp	2010-08-14 15:08:26.000000000 +0800
++++ knotify/notifybysound.cpp	2010-08-14 15:15:35.000000000 +0800
+@@ -169,20 +169,10 @@ void NotifyBySound::loadConfig()
+ 	KConfigGroup cg(kc, "Sounds");
+ 
+ 	d->playerMode = Private::UsePhonon;
+-	if(cg.readEntry( "Use external player", false ))
++	if(cg.readEntry( "Use external player", true ))
+ 	{
+ 		d->playerMode = Private::ExternalPlayer;
+-		d->externalPlayer = cg.readPathEntry("External player", QString());
+-		// try to locate a suitable player if none is configured
+-		if ( d->externalPlayer.isEmpty() ) {
+-			QStringList players;
+-			players << "wavplay" << "aplay" << "auplay" << "artsplay" << "akodeplay";
+-			QStringList::const_iterator it = players.constBegin();
+-			while ( d->externalPlayer.isEmpty() && it != players.constEnd() ) {
+-				d->externalPlayer = KStandardDirs::findExe( *it );
+-				++it;
+-			}
+-		}
++		d->externalPlayer = cg.readPathEntry("External player", QString("play"));// use sox player --- nihui
+ 	}
+ 	else if(cg.readEntry( "No sound" , false ))
+ 	{
+diff -Nuarp kcontrol/knotify/knotify.cpp kcontrol/knotify/knotify.cpp
+--- kcontrol/knotify/knotify.cpp	2010-08-14 15:11:00.000000000 +0800
++++ kcontrol/knotify/knotify.cpp	2010-08-14 15:14:13.000000000 +0800
+@@ -234,9 +234,9 @@ void PlayerSettingsDialog::load()
+ {
+     KConfig _config( "knotifyrc", KConfig::NoGlobals  );
+     KConfigGroup config(&_config, "Sounds" );
+-    bool useExternal = config.readEntry( "Use external player", false );
++    bool useExternal = config.readEntry( "Use external player", true );
+     m_ui->cbExternal->setChecked( useExternal );
+-    m_ui->reqExternal->setUrl( config.readPathEntry( "External player", QString() ) );
++    m_ui->reqExternal->setUrl( config.readPathEntry( "External player", QString("play") ) );// use sox player --- nihui
+     m_ui->volumeSlider->setValue( config.readEntry( "Volume", 100 ) );
+ 
+     if ( !m_ui->cbExternal->isChecked() )
+

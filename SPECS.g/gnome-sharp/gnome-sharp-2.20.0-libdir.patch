@@ -1,0 +1,71 @@
+diff -up gnome-sharp-2.20.0/gconf/GConf/gconf-sharp-2.0.pc.in.libdir gnome-sharp-2.20.0/gconf/GConf/gconf-sharp-2.0.pc.in
+--- gnome-sharp-2.20.0/gconf/GConf/gconf-sharp-2.0.pc.in.libdir	2008-07-03 15:07:22.000000000 +0200
++++ gnome-sharp-2.20.0/gconf/GConf/gconf-sharp-2.0.pc.in	2008-07-04 17:58:55.000000000 +0200
+@@ -1,6 +1,6 @@
+ prefix=${pcfiledir}/../..
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ 
+ 
+ Name: GConf#
+diff -up gnome-sharp-2.20.0/gconf/tools/Makefile.am.libdir gnome-sharp-2.20.0/gconf/tools/Makefile.am
+--- gnome-sharp-2.20.0/gconf/tools/Makefile.am.libdir	2008-07-03 16:16:08.000000000 +0200
++++ gnome-sharp-2.20.0/gconf/tools/Makefile.am	2008-07-03 16:16:20.000000000 +0200
+@@ -1,4 +1,4 @@
+-assemblydir = $(prefix)/lib/gtk-sharp-2.0
++assemblydir = ${libdir}/gtk-sharp-2.0
+ assembly_DATA = gconfsharp-schemagen.exe
+ bin_SCRIPTS = gconfsharp2-schemagen
+ CLEANFILES = gconfsharp-schemagen.exe
+diff -up gnome-sharp-2.20.0/gconf/tools/gconfsharp2-schemagen.in.libdir gnome-sharp-2.20.0/gconf/tools/gconfsharp2-schemagen.in
+--- gnome-sharp-2.20.0/gconf/tools/gconfsharp2-schemagen.in.libdir	2008-07-03 15:56:24.000000000 +0200
++++ gnome-sharp-2.20.0/gconf/tools/gconfsharp2-schemagen.in	2008-07-03 15:56:14.000000000 +0200
+@@ -1,2 +1,2 @@
+ #!/bin/sh
+-@RUNTIME@ @prefix@/lib/gtk-sharp-2.0/gconfsharp-schemagen.exe "$@"
++@RUNTIME@ ${libdir}/gtk-sharp-2.0/gconfsharp-schemagen.exe "$@"
+diff -up gnome-sharp-2.20.0/gconf/GConf.PropertyEditors/gconf-sharp-peditors-2.0.pc.in.libdir gnome-sharp-2.20.0/gconf/GConf.PropertyEditors/gconf-sharp-peditors-2.0.pc.in
+--- gnome-sharp-2.20.0/gconf/GConf.PropertyEditors/gconf-sharp-peditors-2.0.pc.in.libdir	2008-07-04 17:56:21.000000000 +0200
++++ gnome-sharp-2.20.0/gconf/GConf.PropertyEditors/gconf-sharp-peditors-2.0.pc.in	2008-07-04 17:56:37.000000000 +0200
+@@ -1,6 +1,6 @@
+ prefix=${pcfiledir}/../..
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ 
+ 
+ Name: GConf.PropertyEditors#
+diff -up gnome-sharp-2.20.0/art/art-sharp-2.0.pc.in.libdir gnome-sharp-2.20.0/art/art-sharp-2.0.pc.in
+--- gnome-sharp-2.20.0/art/art-sharp-2.0.pc.in.libdir	2008-07-03 15:11:16.000000000 +0200
++++ gnome-sharp-2.20.0/art/art-sharp-2.0.pc.in	2008-07-04 17:59:33.000000000 +0200
+@@ -1,6 +1,6 @@
+ prefix=${pcfiledir}/../..
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ gapidir=${prefix}/share/gapi-2.0
+ 
+ 
+diff -up gnome-sharp-2.20.0/gnomevfs/gnome-vfs-sharp-2.0.pc.in.libdir gnome-sharp-2.20.0/gnomevfs/gnome-vfs-sharp-2.0.pc.in
+--- gnome-sharp-2.20.0/gnomevfs/gnome-vfs-sharp-2.0.pc.in.libdir	2008-07-03 15:10:48.000000000 +0200
++++ gnome-sharp-2.20.0/gnomevfs/gnome-vfs-sharp-2.0.pc.in	2008-07-04 17:59:18.000000000 +0200
+@@ -1,6 +1,6 @@
+ prefix=${pcfiledir}/../..
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ gapidir=${prefix}/share/gapi-2.0
+ 
+ 
+diff -up gnome-sharp-2.20.0/gnome/gnome-sharp-2.0.pc.in.libdir gnome-sharp-2.20.0/gnome/gnome-sharp-2.0.pc.in
+--- gnome-sharp-2.20.0/gnome/gnome-sharp-2.0.pc.in.libdir	2008-07-03 15:10:01.000000000 +0200
++++ gnome-sharp-2.20.0/gnome/gnome-sharp-2.0.pc.in	2008-07-04 17:57:56.000000000 +0200
+@@ -1,6 +1,6 @@
+ prefix=${pcfiledir}/../..
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ gapidir=${prefix}/share/gapi-2.0
+ 
+ 

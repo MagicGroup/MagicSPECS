@@ -1,0 +1,333 @@
+commit fc6184bef3a4491eaf2f303d4f6a94e416335758
+Author: Martin Gräßlin <ubuntu@martin-graesslin.com>
+Date:   Fri Jan 16 17:21:22 2009 +0100
+
+    Icons only mode for tasks plasmoid
+
+Index: plasma/applets/tasks/abstracttaskitem.cpp
+===================================================================
+--- plasma/applets/tasks/abstracttaskitem.cpp.orig
++++ plasma/applets/tasks/abstracttaskitem.cpp
+@@ -90,7 +90,7 @@ QSize AbstractTaskItem::basicPreferredSi
+ {
+     QFontMetrics fm(KGlobalSettings::taskbarFont());
+     QSize mSize = fm.size(0, "M");
+-    const int iconsize = KIconLoader::SizeSmall;
++    int iconsize = KIconLoader::SizeSmall;
+ 
+     //the 4 should be the default spacing between layout items, is there a way to fetch it without hardcoding?
+     // in small panels, we'll reduce the spacing a bit so it's easier to cramp the text in and still get two rows
+@@ -98,8 +98,15 @@ QSize AbstractTaskItem::basicPreferredSi
+     }
+ 
+     //kDebug() << (QObject*)this;
+-    return QSize(mSize.width()*12 + m_applet->itemLeftMargin() + m_applet->itemRightMargin() + KIconLoader::SizeSmall,
++    if (m_applet->iconsOnly()) {
++        iconsize = KIconLoader::SizeMedium;
++        int size = qMin((int)m_applet->itemLeftMargin() + (int)m_applet->itemRightMargin() + iconsize,
++                            qMax(mSize.height(), iconsize) + topMargin + bottomMargin);
++        return QSize(size, size);
++    } else {
++        return QSize(mSize.width()*12 + m_applet->itemLeftMargin() + m_applet->itemRightMargin() + KIconLoader::SizeSmall,
+             qMax(mSize.height(), iconsize) + topMargin + bottomMargin);
++    }
+ }
+ 
+ void AbstractTaskItem::setPreferredOffscreenSize()
+@@ -458,17 +465,18 @@ void AbstractTaskItem::drawTask(QPainter
+     }
+ 
+     painter->setPen(QPen(textColor(), 1.0));
++    if (!m_applet->iconsOnly()) {
++        QRect rect = textRect(bounds).toRect();
++        if (rect.height() > 20) {
++            rect.adjust(2, 2, -2, -2); // Create a text margin
++        }
++        QTextLayout layout;
++        layout.setFont(KGlobalSettings::taskbarFont());
++        layout.setTextOption(textOption());
+ 
+-    QRect rect = textRect(bounds).toRect();
+-    if (rect.height() > 20) {
+-        rect.adjust(2, 2, -2, -2); // Create a text margin
+-    }
+-    QTextLayout layout;
+-    layout.setFont(KGlobalSettings::taskbarFont());
+-    layout.setTextOption(textOption());
+-
+-    layoutText(layout, m_text, rect.size());
+-    drawTextLayout(painter, layout, rect);
++        layoutText(layout, m_text, rect.size());
++        drawTextLayout(painter, layout, rect);
++    }
+ 
+     TaskGroupItem *groupItem = qobject_cast<TaskGroupItem *>(this);
+     if (groupItem) {
+@@ -725,7 +733,9 @@ QRectF AbstractTaskItem::iconRect(const 
+     QRectF bounds(b);
+     const int right = bounds.right();
+     //leave enough space for the text. useful in vertical panel
+-    bounds.setWidth(qMax(bounds.width() / 3, qMin(minimumSize().height(), bounds.width())));
++    if (!m_applet->iconsOnly()) {
++        bounds.setWidth(qMax(bounds.width() / 3, qMin(minimumSize().height(), bounds.width())));
++    }
+ 
+     //restore right position if the layout is RTL
+     if (QApplication::layoutDirection() == Qt::RightToLeft) {
+@@ -733,8 +743,12 @@ QRectF AbstractTaskItem::iconRect(const 
+     } else if (iconSize.width() > KIconLoader::SizeMedium && iconSize.width() < KIconLoader::SizeLarge) {
+         iconSize = QSize(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
+     }
++    Qt::Alignment align = Qt::AlignLeft;
++    if (m_applet->iconsOnly()) {
++        align = Qt::AlignCenter;
++    }
+ 
+-    return QStyle::alignedRect(QApplication::layoutDirection(), Qt::AlignLeft | Qt::AlignVCenter,
++    return QStyle::alignedRect(QApplication::layoutDirection(), align | Qt::AlignVCenter,
+                                iconSize, bounds.toRect());
+ }
+ 
+Index: plasma/applets/tasks/tasks.cpp
+===================================================================
+--- plasma/applets/tasks/tasks.cpp.orig
++++ plasma/applets/tasks/tasks.cpp
+@@ -123,6 +123,7 @@ void Tasks::init()
+     m_groupManager->setShowOnlyMinimized(cg.readEntry("showOnlyMinimized", false));
+     m_groupManager->setOnlyGroupWhenFull(cg.readEntry("groupWhenFull", true));
+     m_showTooltip = cg.readEntry("showTooltip", true);
++    m_iconsOnly = cg.readEntry("iconsOnly", false);
+ 
+     m_groupManager->setGroupingStrategy( static_cast<TaskManager::GroupManager::TaskGroupingStrategy>(cg.readEntry("groupingStrategy", static_cast<int>(TaskManager::GroupManager::ProgramGrouping))));
+ 
+@@ -253,6 +254,7 @@ void Tasks::createConfigurationInterface
+      parent->addPage(widget, i18n("General"), icon());
+ 
+     m_ui.showTooltip->setChecked(m_showTooltip);
++    m_ui.iconsOnly->setChecked(m_iconsOnly);
+     m_ui.showOnlyCurrentDesktop->setChecked(m_groupManager->showOnlyCurrentDesktop());
+     m_ui.showOnlyCurrentScreen->setChecked(m_groupManager->showOnlyCurrentScreen());
+     m_ui.showOnlyMinimized->setChecked(m_groupManager->showOnlyMinimized());
+@@ -380,6 +382,13 @@ void Tasks::configAccepted()
+         changed = true;
+     }
+ 
++    if (m_iconsOnly != (m_ui.iconsOnly->checkState() == Qt::Checked)) {
++        m_iconsOnly = !m_iconsOnly;
++        KConfigGroup cg = config();
++        cg.writeEntry("iconsOnly", m_iconsOnly);
++        changed = true;
++    }
++
+     if (changed) {
+         emit settingsChanged();
+         emit configNeedsSaving();
+@@ -392,6 +401,10 @@ bool Tasks::showTooltip() const
+     return m_showTooltip;
+ }
+ 
++bool Tasks::iconsOnly() const
++{
++    return m_iconsOnly;
++}
+ 
+ 
+ void Tasks::themeRefresh()
+Index: plasma/applets/tasks/tasks.h
+===================================================================
+--- plasma/applets/tasks/tasks.h.orig
++++ plasma/applets/tasks/tasks.h
+@@ -101,6 +101,7 @@ public:
+         Qt::KeyboardModifiers groupModifierKey() const;
+ 
+         bool showToolTip() const;
++        bool iconsOnly() const;
+ 
+         void needsVisualFocus();
+ 
+@@ -132,6 +133,7 @@ private slots:
+ 
+ private:
+         bool m_showTooltip;
++        bool m_iconsOnly;
+         Plasma::LayoutAnimator *m_animator;
+         QGraphicsLinearLayout *layout;
+ 
+Index: plasma/applets/tasks/tasksConfig.ui
+===================================================================
+--- plasma/applets/tasks/tasksConfig.ui.orig
++++ plasma/applets/tasks/tasksConfig.ui
+@@ -6,7 +6,7 @@
+     <x>0</x>
+     <y>0</y>
+     <width>507</width>
+-    <height>391</height>
++    <height>411</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout" >
+@@ -54,7 +54,7 @@
+      </property>
+     </widget>
+    </item>
+-   <item row="3" column="1" >
++   <item row="4" column="1" >
+     <spacer name="verticalSpacer_6" >
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+@@ -70,7 +70,7 @@
+      </property>
+     </spacer>
+    </item>
+-   <item row="4" column="1" >
++   <item row="5" column="1" >
+     <widget class="QLabel" name="label_3" >
+      <property name="text" >
+       <string>Maximum rows:</string>
+@@ -80,7 +80,7 @@
+      </property>
+     </widget>
+    </item>
+-   <item row="4" column="2" >
++   <item row="5" column="2" >
+     <layout class="QHBoxLayout" name="horizontalLayout" >
+      <item>
+       <widget class="QSpinBox" name="maxRows" >
+@@ -107,7 +107,7 @@
+      </item>
+     </layout>
+    </item>
+-   <item row="5" column="1" >
++   <item row="6" column="1" >
+     <spacer name="verticalSpacer_2" >
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+@@ -123,7 +123,7 @@
+      </property>
+     </spacer>
+    </item>
+-   <item row="6" column="0" colspan="3" >
++   <item row="7" column="0" colspan="3" >
+     <widget class="QLabel" name="label_6" >
+      <property name="font" >
+       <font>
+@@ -136,7 +136,7 @@
+      </property>
+     </widget>
+    </item>
+-   <item row="7" column="1" >
++   <item row="8" column="1" >
+     <widget class="QLabel" name="label" >
+      <property name="text" >
+       <string>Grouping:</string>
+@@ -146,7 +146,7 @@
+      </property>
+     </widget>
+    </item>
+-   <item row="7" column="2" >
++   <item row="8" column="2" >
+     <layout class="QHBoxLayout" name="horizontalLayout_2" >
+      <item>
+       <widget class="QComboBox" name="groupingStrategy" >
+@@ -173,7 +173,7 @@
+      </item>
+     </layout>
+    </item>
+-   <item row="8" column="2" >
++   <item row="9" column="2" >
+     <layout class="QHBoxLayout" name="horizontalLayout_4" >
+      <item>
+       <spacer name="horizontalSpacer" >
+@@ -206,7 +206,7 @@
+      </item>
+     </layout>
+    </item>
+-   <item row="9" column="1" >
++   <item row="10" column="1" >
+     <widget class="QLabel" name="label_2" >
+      <property name="text" >
+       <string>Sorting:</string>
+@@ -216,7 +216,7 @@
+      </property>
+     </widget>
+    </item>
+-   <item row="9" column="2" >
++   <item row="10" column="2" >
+     <layout class="QHBoxLayout" name="horizontalLayout_3" >
+      <item>
+       <widget class="QComboBox" name="sortingStrategy" >
+@@ -243,7 +243,7 @@
+      </item>
+     </layout>
+    </item>
+-   <item row="10" column="0" >
++   <item row="11" column="0" >
+     <widget class="QLabel" name="label_4" >
+      <property name="font" >
+       <font>
+@@ -256,7 +256,7 @@
+      </property>
+     </widget>
+    </item>
+-   <item row="10" column="1" >
++   <item row="11" column="1" >
+     <spacer name="verticalSpacer_4" >
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+@@ -272,28 +272,28 @@
+      </property>
+     </spacer>
+    </item>
+-   <item row="11" column="1" colspan="2" >
++   <item row="12" column="1" colspan="2" >
+     <widget class="QCheckBox" name="showOnlyCurrentDesktop" >
+      <property name="text" >
+       <string>Only show tasks from the current desktop</string>
+      </property>
+     </widget>
+    </item>
+-   <item row="12" column="1" colspan="2" >
++   <item row="13" column="1" colspan="2" >
+     <widget class="QCheckBox" name="showOnlyCurrentScreen" >
+      <property name="text" >
+       <string>Only show tasks from the current screen</string>
+      </property>
+     </widget>
+    </item>
+-   <item row="13" column="1" colspan="2" >
++   <item row="14" column="1" colspan="2" >
+     <widget class="QCheckBox" name="showOnlyMinimized" >
+      <property name="text" >
+       <string>Only show tasks that are minimized</string>
+      </property>
+     </widget>
+    </item>
+-   <item row="14" column="1" >
++   <item row="15" column="1" >
+     <spacer name="verticalSpacer" >
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+@@ -306,6 +306,23 @@
+      </property>
+     </spacer>
+    </item>
++   <item row="3" column="2" >
++    <widget class="QCheckBox" name="iconsOnly" >
++     <property name="text" >
++      <string/>
++     </property>
++    </widget>
++   </item>
++   <item row="3" column="1" >
++    <widget class="QLabel" name="label_9" >
++     <property name="text" >
++      <string>只显示图标：</string>
++     </property>
++     <property name="alignment" >
++      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
++     </property>
++    </widget>
++   </item>
+   </layout>
+  </widget>
+  <resources/>

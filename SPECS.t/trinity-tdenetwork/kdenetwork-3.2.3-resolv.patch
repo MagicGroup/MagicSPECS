@@ -1,0 +1,26 @@
+--- kdenetwork-3.2.3/kppp/connect.cpp.orig	2004-07-01 16:03:52.861908057 +0200
++++ kdenetwork-3.2.3/kppp/connect.cpp	2004-07-01 16:33:35.943692521 +0200
+@@ -1399,9 +1399,13 @@
+ 
+ void addpeerdns() {
+   int fd, fd2;
++  QString p = "/var/run/ppp/resolv.conf";
++
++  if (!QFile::exists(p))
++      p = "/etc/ppp/resolv.conf";
+ 
+   if((fd = Requester::rq->openResolv(O_WRONLY|O_APPEND)) >= 0) {
+-    if((fd2 = open("/etc/ppp/resolv.conf", O_RDONLY)) >= 0) {
++    if((fd2 = open(p.latin1(), O_RDONLY)) >= 0) {
+       char c;
+       int i = 0;
+       while(i++ < 100 && read(fd2, &c, 1) == 1) {
+@@ -1412,7 +1416,7 @@
+       }
+       close(fd2);
+     } else
+-      fprintf(stderr, "failed to read from /etc/ppp/resolv.conf\n");
++      fprintf(stderr, "failed to read from %s\n", p.latin1());
+     close(fd);
+   }
+   add_domain(gpppdata.domain());

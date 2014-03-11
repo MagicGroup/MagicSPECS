@@ -1,0 +1,13 @@
+--- linux-3.9.0-200.fc18.x86_64/kernel/module.c~	2013-05-06 15:01:57.589631369 -0400
++++ linux-3.9.0-200.fc18.x86_64/kernel/module.c	2013-05-06 15:02:30.635583966 -0400
+@@ -2873,6 +2873,10 @@ static int check_module_license_and_vers
+ 	if (strcmp(mod->name, "ndiswrapper") == 0)
+ 		add_taint(TAINT_PROPRIETARY_MODULE, LOCKDEP_NOW_UNRELIABLE);
+ 
++	/* vbox is garbage. */
++	if (strcmp(mod->name, "vboxdrv") == 0)
++		add_taint(TAINT_CRAP, LOCKDEP_NOW_UNRELIABLE);
++
+ 	/* driverloader was caught wrongly pretending to be under GPL */
+ 	if (strcmp(mod->name, "driverloader") == 0)
+ 		add_taint_module(mod, TAINT_PROPRIETARY_MODULE,

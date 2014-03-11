@@ -1,0 +1,47 @@
+From c0979baa4cd7f16643e20ad0737511b6b9a09f95 Mon Sep 17 00:00:00 2001
+From: Dave Airlie <airlied@redhat.com>
+Date: Tue, 21 Jan 2014 13:51:35 -0500
+Subject: [PATCH 2/2] add mga_g200_a workaround
+
+---
+ src/driver.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/driver.c b/src/driver.c
+index c617960..24050d4 100644
+--- a/src/driver.c
++++ b/src/driver.c
+@@ -581,7 +581,7 @@ PreInit(ScrnInfoPtr pScrn, int flags)
+     int ret;
+     int bppflags;
+     int defaultdepth, defaultbpp;
+-
++    Bool is_mga_g200_a = FALSE;
+     if (pScrn->numEntities != 1)
+ 	return FALSE;
+ 
+@@ -625,6 +625,12 @@ PreInit(ScrnInfoPtr pScrn, int flags)
+     if (pEnt->location.type == BUS_PLATFORM) {
+         char *path = xf86_get_platform_device_attrib(pEnt->location.id.plat, ODEV_ATTRIB_PATH);
+         ms->fd = open_hw(path);
++
++        if (pEnt->location.id.plat->pdev) {
++            if (pEnt->location.id.plat->pdev->vendor_id == 0x102b &&
++                pEnt->location.id.plat->pdev->device_id == 0x522)
++                is_mga_g200_a = TRUE;
++        }
+     }
+     else 
+ #endif
+@@ -664,7 +670,7 @@ PreInit(ScrnInfoPtr pScrn, int flags)
+ #endif
+ #endif
+     drmmode_get_default_bpp(pScrn, &ms->drmmode, &defaultdepth, &defaultbpp);
+-    if (defaultdepth == 24 && defaultbpp == 24) {
++    if (defaultdepth == 24 && (defaultbpp == 24 || is_mga_g200_a)) {
+ 	ms->drmmode.force_24_32 = TRUE;
+ 	xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+ 		   "Using 24bpp hw front buffer with 32bpp shadow\n");
+-- 
+1.8.3.1
+

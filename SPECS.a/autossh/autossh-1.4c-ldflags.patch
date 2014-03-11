@@ -1,0 +1,12 @@
+diff -up autossh-1.4c/Makefile.in~ autossh-1.4c/Makefile.in
+--- autossh-1.4c/Makefile.in~	2011-10-12 23:30:40.000000000 +0300
++++ autossh-1.4c/Makefile.in	2011-10-30 21:57:35.554395846 +0200
+@@ -31,7 +31,7 @@ all:		$(TARGET)
+ 
+ 
+ $(TARGET):	$(OFILES)
+-		$(CC) $(CPPFLAGS) -o $(TARGET) $(OFILES) $(LIBS)
++		$(CC) $(CPPFLAGS) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LIBS)
+ 
+ clean:
+ 		- /bin/rm -f *.o *.a *.core *~

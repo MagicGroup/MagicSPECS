@@ -1,0 +1,11 @@
+diff -up graphviz-2.30.1/lib/gvc/libgvc.pc.in.cgraph graphviz-2.30.1/lib/gvc/libgvc.pc.in
+--- graphviz-2.30.1/lib/gvc/libgvc.pc.in.cgraph	2013-04-23 16:13:09.034471849 -0400
++++ graphviz-2.30.1/lib/gvc/libgvc.pc.in	2013-04-23 16:13:12.209471736 -0400
+@@ -7,6 +7,6 @@ plugins=@GVPLUGIN_VERSION@
+ Name: libgvc
+ Description: The GraphVizContext library 
+ Version: @VERSION@
+-Libs: -L${libdir} -lgvc -lgraph -lcdt
++Libs: -L${libdir} -lgvc -lcgraph -lcdt
+ Cflags: -I${includedir}
+ 

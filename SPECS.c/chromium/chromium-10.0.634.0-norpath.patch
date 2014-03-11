@@ -1,0 +1,13 @@
+diff -up chromium-10.0.634.0/build/common.gypi.norpath chromium-10.0.634.0/build/common.gypi
+diff -up chromium-10.0.634.0/native_client/build/common.gypi.norpath chromium-10.0.634.0/native_client/build/common.gypi
+--- chromium-10.0.634.0/native_client/build/common.gypi.norpath	2011-01-11 04:02:10.000000000 -0500
++++ chromium-10.0.634.0/native_client/build/common.gypi	2011-01-11 14:28:21.616920732 -0500
+@@ -511,7 +511,7 @@
+           # -rpath is only used when building with shared libraries.
+           'conditions': [
+             [ 'library=="shared_library"', {
+-              'RPATH': '$LIB_DIR',
++              # 'RPATH': '$LIB_DIR',
+             }],
+           ],
+         },

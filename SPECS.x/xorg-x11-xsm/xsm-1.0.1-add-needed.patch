@@ -1,0 +1,12 @@
+diff -up xsm-1.0.1/configure.ac.jx xsm-1.0.1/configure.ac
+--- xsm-1.0.1/configure.ac.jx	2005-12-20 21:29:54.000000000 -0500
++++ xsm-1.0.1/configure.ac	2010-02-09 17:15:09.000000000 -0500
+@@ -63,7 +63,7 @@ AC_CHECK_FUNC([putenv], [],
+    AC_DEFINE(NOPUTENV,1,[Define to 1 if you DO NOT have the `putenv' function.]))
+ 
+ # Checks for pkg-config packages
+-XAW_CHECK_XPRINT_SUPPORT(XSM)
++PKG_CHECK_MODULES(XSM, xaw7 sm)
+ 
+ AC_SUBST(XSM_CFLAGS)
+ AC_SUBST(XSM_LIBS)

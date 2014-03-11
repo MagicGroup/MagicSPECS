@@ -1,0 +1,84 @@
+diff -ur acetoneiso_2.3.orig/acetoneiso/sources/burn_iso_2_cd.cpp acetoneiso_2.3/acetoneiso/sources/burn_iso_2_cd.cpp
+--- acetoneiso_2.3.orig/acetoneiso/sources/burn_iso_2_cd.cpp	2012-12-11 05:26:49.000000000 +0000
++++ acetoneiso_2.3/acetoneiso/sources/burn_iso_2_cd.cpp	2012-12-11 05:47:34.000000000 +0000
+@@ -18,8 +18,8 @@
+ #include <QCoreApplication>
+ #include <QByteArray>
+ #include <QUrl>
+-#include <Phonon/MediaObject>
+-#include <Phonon/AudioOutput>
++#include <phonon/MediaObject>
++#include <phonon/AudioOutput>
+ #include <QProcess>
+ #include <QDBusConnection>
+ #include <QDBusInterface>
+diff -ur acetoneiso_2.3.orig/acetoneiso/sources/burn_iso_2_cd.h acetoneiso_2.3/acetoneiso/sources/burn_iso_2_cd.h
+--- acetoneiso_2.3.orig/acetoneiso/sources/burn_iso_2_cd.h	2012-12-11 05:26:49.000000000 +0000
++++ acetoneiso_2.3/acetoneiso/sources/burn_iso_2_cd.h	2012-12-11 05:47:43.000000000 +0000
+@@ -20,8 +20,8 @@
+ #define BURN_ISO2CD_H
+ #include <QFile>
+ #include <QUrl>
+-#include <Phonon/MediaObject>
+-#include <Phonon/AudioOutput>
++#include <phonon/MediaObject>
++#include <phonon/AudioOutput>
+ #include <QProcess>
+ #include <QByteArray>
+ #include <QDialog>
+diff -ur acetoneiso_2.3.orig/acetoneiso/sources/burn_iso_2_dvd.cpp acetoneiso_2.3/acetoneiso/sources/burn_iso_2_dvd.cpp
+--- acetoneiso_2.3.orig/acetoneiso/sources/burn_iso_2_dvd.cpp	2012-12-11 05:26:49.000000000 +0000
++++ acetoneiso_2.3/acetoneiso/sources/burn_iso_2_dvd.cpp	2012-12-11 05:47:00.000000000 +0000
+@@ -24,8 +24,8 @@
+ #include <fcntl.h>
+ #include <iostream>
+ #include <QDebug>
+-#include <Phonon/MediaObject>
+-#include <Phonon/AudioOutput>
++#include <phonon/MediaObject>
++#include <phonon/AudioOutput>
+ #include "burn_iso_2_dvd.h"
+ 
+ 
+diff -ur acetoneiso_2.3.orig/acetoneiso/sources/erase_cd.cpp acetoneiso_2.3/acetoneiso/sources/erase_cd.cpp
+--- acetoneiso_2.3.orig/acetoneiso/sources/erase_cd.cpp	2012-12-11 05:26:49.000000000 +0000
++++ acetoneiso_2.3/acetoneiso/sources/erase_cd.cpp	2012-12-11 05:47:21.000000000 +0000
+@@ -16,8 +16,8 @@
+ #include <QtGui>
+ #include <QCoreApplication>
+ #include <QByteArray>
+-#include <Phonon/MediaObject>
+-#include <Phonon/AudioOutput>
++#include <phonon/MediaObject>
++#include <phonon/AudioOutput>
+ #include <QProcess>
+ #include <QDBusConnection>
+ #include <QDBusInterface>
+diff -ur acetoneiso_2.3.orig/acetoneiso/sources/erase_cd.h acetoneiso_2.3/acetoneiso/sources/erase_cd.h
+--- acetoneiso_2.3.orig/acetoneiso/sources/erase_cd.h	2012-12-11 05:26:49.000000000 +0000
++++ acetoneiso_2.3/acetoneiso/sources/erase_cd.h	2012-12-11 05:47:13.000000000 +0000
+@@ -18,8 +18,8 @@
+ #ifndef ERASE_CD_H
+ #define ERASE_CD_H
+ #include <QFile>
+-#include <Phonon/MediaObject>
+-#include <Phonon/AudioOutput>
++#include <phonon/MediaObject>
++#include <phonon/AudioOutput>
+ #include <QProcess>
+ #include <QByteArray>
+ #include <QDialog>
+diff -ur acetoneiso_2.3.orig/acetoneiso/sources/erase_dvd.cpp acetoneiso_2.3/acetoneiso/sources/erase_dvd.cpp
+--- acetoneiso_2.3.orig/acetoneiso/sources/erase_dvd.cpp	2012-12-11 05:26:49.000000000 +0000
++++ acetoneiso_2.3/acetoneiso/sources/erase_dvd.cpp	2012-12-11 05:47:55.000000000 +0000
+@@ -24,8 +24,8 @@
+ #include <fcntl.h>
+ #include <iostream>
+ #include <QDebug>
+-#include <Phonon/MediaObject>
+-#include <Phonon/AudioOutput>
++#include <phonon/MediaObject>
++#include <phonon/AudioOutput>
+ #include "erase_dvd.h"
+ 
+ /*

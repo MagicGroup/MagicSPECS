@@ -1,0 +1,39 @@
+diff -up unixODBC-gui-qt-2.3.0/configure.in.so-version-bump unixODBC-gui-qt-2.3.0/configure.in
+--- unixODBC-gui-qt-2.3.0/configure.in.so-version-bump	2010-02-24 20:33:29.000000000 +0100
++++ unixODBC-gui-qt-2.3.0/configure.in	2011-12-09 13:47:03.598677232 +0100
+@@ -447,8 +447,8 @@ AC_FUNC_ALLOCA
+ AC_FUNC_VPRINTF
+ AC_CHECK_FUNCS( putenv socket strdup strstr setenv setlocale strchr )
+ 
+-dnl LIB_VERSION="1:0:1"
++LIB_VERSION="2:0:0"
+-dnl AC_SUBST(LIB_VERSION)
++AC_SUBST(LIB_VERSION)
+ 
+ dnl We use the following version format to make some qmake friendly code happy...
+ CFLAGS="$CFLAGS -DV_MAJOUR=1 -DV_MINOR=0 -DV_RELEASE=1"
+diff -up unixODBC-gui-qt-2.3.0/gtrtstQ4/Makefile.am.so-version-bump unixODBC-gui-qt-2.3.0/gtrtstQ4/Makefile.am
+--- unixODBC-gui-qt-2.3.0/gtrtstQ4/Makefile.am.so-version-bump	2011-12-09 13:49:45.601666155 +0100
++++ unixODBC-gui-qt-2.3.0/gtrtstQ4/Makefile.am	2011-12-09 13:49:55.390665547 +0100
+@@ -2,7 +2,7 @@ lib_LTLIBRARIES = libgtrtstQ4.la
+ 
+ libgtrtstQ4_la_LDFLAGS = \
+ 		-no-undefined \
+-		-version-info 2:1:1 \
++		-version-info $(LIB_VERSION) \
+ 		-export-dynamic \
+ 		-export-symbols @srcdir@/gtrtstQ4.exp \
+ 		-module
+diff -up unixODBC-gui-qt-2.3.0/odbcinstQ4/Makefile.am.so-version-bump unixODBC-gui-qt-2.3.0/odbcinstQ4/Makefile.am
+--- unixODBC-gui-qt-2.3.0/odbcinstQ4/Makefile.am.so-version-bump	2011-12-09 13:48:48.241670075 +0100
++++ unixODBC-gui-qt-2.3.0/odbcinstQ4/Makefile.am	2011-12-09 13:48:59.920669283 +0100
+@@ -2,7 +2,8 @@ lib_LTLIBRARIES = libodbcinstQ4.la
+ 
+ libodbcinstQ4_la_LDFLAGS = \
+ 		-no-undefined \
+-		-version-info 2:1:1 \
++		-version-info $(LIB_VERSION) \
++               -avoid-version \
+ 		-export-dynamic \
+ 		-export-symbols @srcdir@/odbcinstQ4.exp \
+ 		-module

@@ -1,0 +1,31 @@
+diff -up system-config-printer-1.3.8/ppdcache.py.ppdcache-enoent system-config-printer-1.3.8/ppdcache.py
+--- system-config-printer-1.3.8/ppdcache.py.ppdcache-enoent	2011-10-26 13:14:20.000000000 +0100
++++ system-config-printer-1.3.8/ppdcache.py	2012-02-03 15:40:36.215015934 +0000
+@@ -123,14 +123,20 @@ class PPDCache:
+                 # Store an open file object, then remove the actual
+                 # file.  This way we don't leave temporary files
+                 # around.
+-                self._cache[name] = file (filename)
+-                debugprint ("%s: caching %s (fd %d) "
+-                            "(%s) - %s" % (self, filename,
+-                                           self._cache[name].fileno (),
+-                                           modtime, status))
+-                os.unlink (filename)
+-                self._modtimes[name] = modtime
++                try:
++                    self._cache[name] = file (filename)
++                    debugprint ("%s: caching %s (fd %d) "
++                                "(%s) - %s" % (self, filename,
++                                               self._cache[name].fileno (),
++                                               modtime, status))
++                    os.unlink (filename)
++                    self._modtimes[name] = modtime
++                except IOError:
++                    # File disappeared?
++                    debugprint ("%s: file %s disappeared? Unable to cache it"
++                                % (self, filename))
+ 
++            # Now fetch it from our own cache.
+             self.fetch_ppd (name, callback, check_uptodate=False)
+         else:
+             self._schedule_callback (callback, name,

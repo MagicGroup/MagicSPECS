@@ -1,0 +1,13 @@
+Index: trunk/Xlib/protocol/display.py
+===================================================================
+--- trunk.orig/Xlib/protocol/display.py	2008-03-18 16:08:27.000000000 -0400
++++ trunk/Xlib/protocol/display.py	2009-11-05 06:06:15.000000000 -0500
+@@ -533,7 +533,7 @@
+                 # We're the recieving thread, parse the data
+                 if recieving:
+                     try:
+-                        bytes_recv = self.socket.recv(2048)
++                        bytes_recv = self.socket.recv(4096)
+                     except socket.error, err:
+                         self.close_internal('server: %s' % err[1])
+                         raise self.socket_error

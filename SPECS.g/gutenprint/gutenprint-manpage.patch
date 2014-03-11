@@ -1,0 +1,27 @@
+diff -up gutenprint-5.2.9/man/escputil.1.in.manpage gutenprint-5.2.9/man/escputil.1.in
+--- gutenprint-5.2.9/man/escputil.1.in.manpage	2013-06-27 15:02:09.997386927 +0100
++++ gutenprint-5.2.9/man/escputil.1.in	2013-06-27 15:08:16.236046768 +0100
+@@ -20,6 +20,7 @@ escputil \- maintain Epson Stylus inkjet
+ .SH SYNOPSIS
+ .B escputil
+ [ \fI\-P\fP \fIprinter\fP | \fI\-r\fP \fIdevice\fP ] [ \fI\-m\fP \fImodel\fP ] [
++\fI\-S\fP ] [ \fI\-C\fP ] [ \fI\-p\fP ] [
+ \fI\-u\fP ] [ \fI\-c\fP | \fI\-n\fP | \fI\-a\fP | \fI\-i\fP | \fI\-d\fP |
+ \fI\-o\fP | \fI\-s\fP | \fI\-l\fP | \fI\-M\fP | \fI\-h\fP ] [ \fI\-q\fP ]
+ .SH DESCRIPTION
+@@ -46,6 +47,15 @@ Specify the precise printer model for he
+ .B \-u, \-\-new
+ The printer is a new printer (Stylus Color 740 or newer).
+ .TP
++.B \-S, \-\-short\-name
++Print the short name of the printer with \-\-identify.
++.TP
++.B \-C, \-\-choices
++Specify the number of pattern choices for alignment.
++.TP
++.B \-p, \-\-patterns
++Specify the number of sets of patterns for alignment.
++.TP
+ .B \-c, \-\-clean\-head
+ Clean the print head.  This can also be performed from the printer
+ front panel.

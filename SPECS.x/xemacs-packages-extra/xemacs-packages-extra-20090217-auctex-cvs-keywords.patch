@@ -1,0 +1,54 @@
+diff -up xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/latex/preview.dtx~ xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/latex/preview.dtx
+--- xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/latex/preview.dtx~	2008-09-10 00:47:21.000000000 +0300
++++ xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/latex/preview.dtx	2009-02-26 19:12:22.000000000 +0200
+@@ -437,12 +437,12 @@
+ \NeedsTeXFormat{LaTeX2e} \def\reserved@a #1#2$#3:
+ #4${\xdef#1{\reserved@c #2#4 $}} \def\reserved@c #1 #2${#1}
+ \begingroup \catcode`\_=12
+-\reserved@a\pr@version $Name: sumo-2009-02-17 $ \ifx\pr@version\@empty
+-\reserved@a\pr@version CVS-$Revision: 1.1.2.1 $ \endgroup \else
++\reserved@a\pr@version $Name: release_11_84 $ \ifx\pr@version\@empty
++\reserved@a\pr@version CVS-$Revision: 1.122 $ \endgroup \else
+   \def\next release_{} \lccode`\_=`.
+   \edef\next{\lowercase{\endgroup
+     \def\noexpand\pr@version{\expandafter\next\pr@version}}} \next \fi
+-\reserved@a\next $Date: 2008/09/09 21:47:21 $
++\reserved@a\next $Date: 2006/08/25 10:34:36 $
+ \edef\next{\noexpand\ProvidesPackage{preview}%
+   [\next\space \pr@version\space (AUCTeX/preview-latex)]}
+ \next
+diff -up xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/preview.el~ xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/preview.el
+--- xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/preview.el~	2008-09-10 00:45:58.000000000 +0300
++++ xemacs-packages-extra-20090217/xemacs-packages/auctex/preview/preview.el	2009-02-26 19:14:50.000000000 +0200
+@@ -3511,8 +3511,8 @@ internal parameters, STR may be a log to
+ 	     (preview-reraise-error process)))))
+ 
+ (defconst preview-version (eval-when-compile
+-  (let ((name "$Name: sumo-2009-02-17 $")
+-	(rev "$Revision: 1.1.2.1 $"))
++  (let ((name "$Name: release_11_84 $")
++	(rev "$Revision: 1.279 $"))
+     (or (when (string-match "\\`[$]Name: *release_\\([^ ]+\\) *[$]\\'" name)
+ 	  (setq name (match-string 1 name))
+ 	  (while (string-match "_" name)
+@@ -3526,7 +3526,7 @@ If not a regular release, CVS revision o
+ 
+ (defconst preview-release-date
+   (eval-when-compile
+-    (let ((date "$Date: 2008/09/09 21:45:58 $"))
++    (let ((date "$Date: 2006/10/24 16:02:21 $"))
+       (string-match
+        "\\`[$]Date: *\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)"
+        date)
+diff -up xemacs-packages-extra-20090217/xemacs-packages/auctex/style/prosper.el~ xemacs-packages-extra-20090217/xemacs-packages/auctex/style/prosper.el
+--- xemacs-packages-extra-20090217/xemacs-packages/auctex/style/prosper.el~	2008-09-10 00:55:11.000000000 +0300
++++ xemacs-packages-extra-20090217/xemacs-packages/auctex/style/prosper.el	2009-02-26 19:16:38.000000000 +0200
+@@ -62,7 +62,7 @@
+ 
+ 
+ (defconst LaTeX-prosper-version
+-  "$Id: prosper.el,v 1.1.2.1 2008/09/09 21:55:11 matsl Exp $"
++  "$Id: prosper.el,v 1.3 2004/05/10 09:04:14 angeli Exp $"
+   "prosper.el version.")
+ 
+ (defconst LaTeX-prosper-transition-styles '("Split"

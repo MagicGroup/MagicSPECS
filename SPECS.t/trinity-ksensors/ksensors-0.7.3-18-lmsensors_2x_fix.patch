@@ -1,0 +1,14 @@
+--- ksensors-0.7.3/src/lmsensor.cpp.ORI	2011-12-22 06:57:39.285341486 -0500
++++ ksensors-0.7.3/src/lmsensor.cpp	2011-12-22 06:58:33.596092430 -0500
+@@ -43,7 +43,11 @@
+  char *label = NULL;
+  QString uniqueSensorName;
+ 
++#if SENSORS_API_VERSION < 0x400 /* libsensor 3 code */
++ uniqueSensorName.sprintf("%s_%d_%d.%s", chip_name->prefix, chip_name->bus, chip_name->addr, main_name);
++#else
+  uniqueSensorName.sprintf("%s_%d_%d.%s", chip_name->prefix, chip_name->bus.nr, chip_name->addr, main_name);
++#endif
+  setName(uniqueSensorName.latin1());
+  
+ #if SENSORS_API_VERSION < 0x400 /* libsensor 3 code */

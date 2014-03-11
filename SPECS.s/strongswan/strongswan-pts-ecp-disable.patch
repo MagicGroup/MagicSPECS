@@ -1,0 +1,20 @@
+diff -urNp strongswan-5.1.1-patched/src/libpts/pts/pts_dh_group.c strongswan-5.1.1-current/src/libpts/pts/pts_dh_group.c
+--- strongswan-5.1.1-patched/src/libpts/pts/pts_dh_group.c	2013-11-01 13:12:05.985927156 -0400
++++ strongswan-5.1.1-current/src/libpts/pts/pts_dh_group.c	2013-11-01 13:15:12.192920500 -0400
+@@ -74,6 +74,16 @@ bool pts_dh_group_probe(pts_dh_group_t *
+ 	{
+ 		DBG1(DBG_PTS, format2, "mandatory", diffie_hellman_group_names,
+ 											ECP_256_BIT);
++		/* Openssl in Fedora does not allow ECP_256 and ECP_384, so lets not die
++ 		 * here. As far as, there is one dh group available, lets continue. It makes
++ 		 * it non-compliant to TCG's PTS standard, but there is no choice right now.
++ 		 * see redhat bz # 319901.	
++ 		 */ 
++		if(*dh_groups != PTS_DH_GROUP_NONE) 
++		{
++			return TRUE;		
++		}
++
+ 	}
+ 	return FALSE;
+ }

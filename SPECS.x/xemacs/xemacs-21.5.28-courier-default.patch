@@ -1,0 +1,11 @@
+--- ./src/faces.c.orig	2012-08-02 12:38:29.000000000 -0600
++++ ./src/faces.c	2012-08-06 20:29:33.659097709 -0600
+@@ -2484,7 +2484,7 @@ complex_vars_of_faces (void)
+       Fcons
+       (Fcons
+        (list1 (device_symbol),
+-	build_ascstring ("-*-lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*")),
++	build_ascstring ("-*-courier-medium-r-*-*-*-120-*-*-*-*-*-*")),
+        inst_list);
+ 
+ #endif /* !HAVE_XFT */

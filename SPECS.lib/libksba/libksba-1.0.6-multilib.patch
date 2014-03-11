@@ -1,0 +1,12 @@
+diff -up libksba-1.0.6/src/ksba-config.in.multilib libksba-1.0.6/src/ksba-config.in
+--- libksba-1.0.6/src/ksba-config.in.multilib	2006-08-31 03:05:24.000000000 -0500
++++ libksba-1.0.6/src/ksba-config.in	2009-12-17 07:17:28.312946199 -0600
+@@ -116,7 +116,7 @@ fi
+ 
+ if test "$echo_libs" = "yes"; then
+     libdirs=""
+-    if test "@libdir@" != "/usr/lib" ; then
++    if test "@libdir@" != "/usr/lib" -a "@libdir@" != "/usr/lib32" -a "@libdir@" != "/usr/lib64" ; then
+       libdirs="-L@libdir@"
+     fi
+     tmp=""

@@ -1,0 +1,307 @@
+From 3e1d48fd1279b46a837ed3835f6e686ac9120c4d Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 11 Jul 2012 09:33:32 +0200
+Subject: [PATCH] test: add support for: make V=1 TESTS="01 20 40" check
+
+$ sudo make V=1 clean check
+now runs the testsuite in verbose mode
+
+$ sudo make TESTS="01 20 40" clean check
+now only runs the 01, 20 and 40 tests.
+---
+ test/Makefile                      |    5 +++--
+ test/TEST-01-BASIC/Makefile        |    6 +++---
+ test/TEST-02-SYSTEMD/Makefile      |    6 +++---
+ test/TEST-03-USR-MOUNT/Makefile    |    6 +++---
+ test/TEST-10-RAID/Makefile         |    6 +++---
+ test/TEST-11-LVM/Makefile          |    6 +++---
+ test/TEST-12-RAID-DEG/Makefile     |    6 +++---
+ test/TEST-13-ENC-RAID-LVM/Makefile |    6 +++---
+ test/TEST-15-BTRFSRAID/Makefile    |    6 +++---
+ test/TEST-16-DMSQUASH/Makefile     |    6 +++---
+ test/TEST-20-NFS/Makefile          |    6 +++---
+ test/TEST-30-ISCSI/Makefile        |    6 +++---
+ test/TEST-40-NBD/Makefile          |    6 +++---
+ test/TEST-50-MULTINIC/Makefile     |    6 +++---
+ test/TEST-99-RPM/Makefile          |    6 +++---
+ test/test-functions                |   13 +++++++++++++
+ 16 files changed, 58 insertions(+), 44 deletions(-)
+
+diff --git a/test/Makefile b/test/Makefile
+index 38bfecc..f4881b5 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -4,14 +4,15 @@ check:
+ 	@for i in TEST-[0-9]*; do \
+ 		[ -d $$i ] || continue ; \
+ 		[ -f $$i/Makefile ] || continue ; \
+-		make -C $$i all ; \
++		if [ -n "$$TESTS" ]; then t=$${i##TEST-}; t=$${t%-*}; [ "$${TESTS#*$$t*}" != "$$TESTS" ] || continue; fi; \
++		$(MAKE) -C $$i all ; \
+ 	done
+ 
+ clean:
+ 	@for i in TEST-[0-9]*; do \
+ 		[ -d $$i ] || continue ; \
+ 		[ -f $$i/Makefile ] || continue ; \
+-		make -C $$i clean ; \
++		$(MAKE) -C $$i clean ; \
+ 	done
+ 
+ all:
+diff --git a/test/TEST-01-BASIC/Makefile b/test/TEST-01-BASIC/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-01-BASIC/Makefile
++++ b/test/TEST-01-BASIC/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-02-SYSTEMD/Makefile b/test/TEST-02-SYSTEMD/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-02-SYSTEMD/Makefile
++++ b/test/TEST-02-SYSTEMD/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-03-USR-MOUNT/Makefile b/test/TEST-03-USR-MOUNT/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-03-USR-MOUNT/Makefile
++++ b/test/TEST-03-USR-MOUNT/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-10-RAID/Makefile b/test/TEST-10-RAID/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-10-RAID/Makefile
++++ b/test/TEST-10-RAID/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-11-LVM/Makefile b/test/TEST-11-LVM/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-11-LVM/Makefile
++++ b/test/TEST-11-LVM/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-12-RAID-DEG/Makefile b/test/TEST-12-RAID-DEG/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-12-RAID-DEG/Makefile
++++ b/test/TEST-12-RAID-DEG/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-13-ENC-RAID-LVM/Makefile b/test/TEST-13-ENC-RAID-LVM/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-13-ENC-RAID-LVM/Makefile
++++ b/test/TEST-13-ENC-RAID-LVM/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-15-BTRFSRAID/Makefile b/test/TEST-15-BTRFSRAID/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-15-BTRFSRAID/Makefile
++++ b/test/TEST-15-BTRFSRAID/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-16-DMSQUASH/Makefile b/test/TEST-16-DMSQUASH/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-16-DMSQUASH/Makefile
++++ b/test/TEST-16-DMSQUASH/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-20-NFS/Makefile b/test/TEST-20-NFS/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-20-NFS/Makefile
++++ b/test/TEST-20-NFS/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-30-ISCSI/Makefile b/test/TEST-30-ISCSI/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-30-ISCSI/Makefile
++++ b/test/TEST-30-ISCSI/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-40-NBD/Makefile b/test/TEST-40-NBD/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-40-NBD/Makefile
++++ b/test/TEST-40-NBD/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-50-MULTINIC/Makefile b/test/TEST-50-MULTINIC/Makefile
+index bc0ddb6..3cc8993 100644
+--- a/test/TEST-50-MULTINIC/Makefile
++++ b/test/TEST-50-MULTINIC/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. all
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. all
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/TEST-99-RPM/Makefile b/test/TEST-99-RPM/Makefile
+index 5513c52..3cc8993 100644
+--- a/test/TEST-99-RPM/Makefile
++++ b/test/TEST-99-RPM/Makefile
+@@ -1,8 +1,8 @@
+ all:
+-	@make -s --no-print-directory -C ../.. clean all rpm
+-	@basedir=../.. testdir=../ ./test.sh --all
++	$(MAKE) -s --no-print-directory -C ../.. all
++	V=$(V) basedir=../.. testdir=../ ./test.sh --all
+ setup:
+-	@make --no-print-directory -C ../.. clean rpm
++	@$(MAKE) --no-print-directory -C ../.. all
+ 	@basedir=../.. testdir=../ ./test.sh --setup
+ clean:
+ 	@basedir=../.. testdir=../ ./test.sh --clean
+diff --git a/test/test-functions b/test/test-functions
+index 10d78ed..968551f 100644
+--- a/test/test-functions
++++ b/test/test-functions
+@@ -37,6 +37,7 @@ while (($# > 0)); do
+                 echo "[SKIPPED]"
+ 		exit 0;
+             fi
++            if [ "$V" != "1" ]; then
+ 	    (
+ 		test_setup && test_run
+ 		ret=$?
+@@ -45,7 +46,19 @@ while (($# > 0)); do
+ 		rm -f .testdir
+ 		exit $ret
+ 	    ) </dev/null >test.log 2>&1
++            else
++            set -o pipefail
++            (
++		test_setup && test_run
++		ret=$?
++		test_cleanup
++		rm -fr "$TESTDIR"
++		rm -f .testdir
++		exit $ret
++	    ) </dev/null 2>&1 | tee test.log
++            fi
+ 	    ret=$?
++            set +o pipefail
+ 	    if [ $ret -eq 0 ]; then
+                rm test.log
+ 	       echo "[OK]"

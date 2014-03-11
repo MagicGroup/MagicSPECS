@@ -1,0 +1,39 @@
+--- kdelibs-4.1.96/kdecore/localization/kcharsets.cpp.orig	2009-01-17 10:55:39.000000000 +0800
++++ kdelibs-4.1.96/kdecore/localization/kcharsets.cpp	2009-01-17 10:57:29.000000000 +0800
+@@ -720,27 +720,34 @@
+ 
+ QTextCodec* KCharsets::codecForName(const QString &n) const
+ {
++    if ( n == "gb2312" || n == "gbk" )
++        return QTextCodec::codecForName( "gb18030" );
+     const QByteArray name( n.toLatin1() );
+     QTextCodec* codec = codecForNameOrNull( name );
+     if ( codec )
+         return codec;
+     else
+-        return QTextCodec::codecForName( "iso-8859-1" );
++        return QTextCodec::codecForLocale();
+ }
+ 
+ QTextCodec* KCharsets::codecForName(const QString &n, bool &ok) const
+ {
++    if ( n == "gb2312" || n == "gbk" )
++    {
++        ok = true;
++        return QTextCodec::codecForName( "gb18030" );
++    }
+     const QByteArray name( n.toLatin1() );
+     QTextCodec* codec = codecForNameOrNull( name );
+     if ( codec )
+     {
+         ok = true;
+         return codec;
+     }
+     else
+     {
+         ok = false;
+-        return QTextCodec::codecForName( "iso-8859-1" );
++        return QTextCodec::codecForLocale();
+     }
+ }
+ 

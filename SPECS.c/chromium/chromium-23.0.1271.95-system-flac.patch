@@ -1,0 +1,55 @@
+diff -up chromium-23.0.1271.95/build/linux/system.gyp.system-flac chromium-23.0.1271.95/build/linux/system.gyp
+--- chromium-23.0.1271.95/build/linux/system.gyp.system-flac	2012-12-12 16:17:44.611721833 -0500
++++ chromium-23.0.1271.95/build/linux/system.gyp	2012-12-12 16:17:44.622721844 -0500
+@@ -447,6 +447,27 @@
+       ],
+     },
+     {
++      'target_name': 'flac',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              # '<!@(pkg-config --cflags flac)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(pkg-config --libs-only-L --libs-only-other flac)',
++            ],
++            'libraries': [
++              '<!@(pkg-config --libs-only-l flac)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
+       'target_name': 'gnome_keyring',
+       'type': 'none',
+       'conditions': [
+diff -up chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc.system-flac chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc
+--- chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc.system-flac	2012-12-12 16:17:44.581721804 -0500
++++ chromium-23.0.1271.95/content/browser/speech/audio_encoder.cc	2012-12-12 16:17:44.622721844 -0500
+@@ -10,7 +10,7 @@
+ #include "base/stl_util.h"
+ #include "base/string_number_conversions.h"
+ #include "content/browser/speech/audio_buffer.h"
+-#include "third_party/flac/flac.h"
++#include <FLAC/stream_encoder.h>
+ #include <speex/speex.h>
+ 
+ using std::string;
+diff -up chromium-23.0.1271.95/content/content_browser.gypi.system-flac chromium-23.0.1271.95/content/content_browser.gypi
+--- chromium-23.0.1271.95/content/content_browser.gypi.system-flac	2012-12-12 16:17:44.000000000 -0500
++++ chromium-23.0.1271.95/content/content_browser.gypi	2012-12-12 16:19:48.654723600 -0500
+@@ -964,7 +964,7 @@
+       ],
+     }, { # OS!="android"
+       'dependencies': [
+-        '../third_party/flac/flac.gyp:libflac',
++        '../build/linux/system.gyp:flac',
+         '../build/linux/system.gyp:speex',
+       ],
+     }],

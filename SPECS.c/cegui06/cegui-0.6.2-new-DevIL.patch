@@ -1,0 +1,21 @@
+diff -up CEGUI-0.6.2/ImageCodecModules/DevILImageCodec/CEGUIDevILImageCodec.cpp~ CEGUI-0.6.2/ImageCodecModules/DevILImageCodec/CEGUIDevILImageCodec.cpp
+--- CEGUI-0.6.2/ImageCodecModules/DevILImageCodec/CEGUIDevILImageCodec.cpp~	2008-06-14 20:17:47.000000000 +0200
++++ CEGUI-0.6.2/ImageCodecModules/DevILImageCodec/CEGUIDevILImageCodec.cpp	2009-02-21 10:55:01.000000000 +0100
+@@ -58,7 +58,7 @@ Texture* DevILImageCodec::load(const Raw
+     ilGenImages(1, &imgName);
+     ilBindImage(imgName);
+ 
+-    if (ilLoadL(IL_TYPE_UNKNOWN, (ILvoid*)data.getDataPtr(), data.getSize()) != IL_FALSE)
++    if (ilLoadL(IL_TYPE_UNKNOWN, (void*)data.getDataPtr(), data.getSize()) != IL_FALSE)
+     {
+         // get details about size of loaded image
+         ILinfo imgInfo;
+@@ -85,7 +85,7 @@ Texture* DevILImageCodec::load(const Raw
+             cefmt = Texture::PF_RGB;
+             break;
+         };
+-        ilCopyPixels(0, 0, 0, width, height, 1, ilfmt, IL_UNSIGNED_BYTE, (ILvoid*)tmpBuff);
++        ilCopyPixels(0, 0, 0, width, height, 1, ilfmt, IL_UNSIGNED_BYTE, (void*)tmpBuff);
+ 
+         // delete DevIL image
+         ilDeleteImages(1, &imgName);

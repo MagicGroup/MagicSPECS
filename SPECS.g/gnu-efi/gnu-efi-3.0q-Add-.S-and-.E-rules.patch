@@ -1,0 +1,25 @@
+From bb12d86aceb7d9ea6748f45a17f719a8e18c81c8 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Tue, 9 Aug 2011 12:30:49 -0400
+Subject: [PATCH 7/7] Add %.S and %.E rules to make debugging easier.
+
+---
+ Make.rules |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Make.rules b/Make.rules
+index eab12d7..65fb612 100644
+--- a/Make.rules
++++ b/Make.rules
+@@ -44,3 +44,8 @@
+ %.o: %.c
+ 	$(CC) $(INCDIR) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+ 
++%.S: %.c
++	$(CC) $(INCDIR) $(CFLAGS) $(CPPFLAGS) -S $< -o $@
++
++%.E: %.c
++	$(CC) $(INCDIR) $(CFLAGS) $(CPPFLAGS) -E $< -o $@
+-- 
+1.7.10.4
+

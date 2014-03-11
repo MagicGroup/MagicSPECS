@@ -1,0 +1,26 @@
+diff -Naur xmms-1.2.11/xmms/Makefile.am xmms-1.2.11-new/xmms/Makefile.am
+--- xmms-1.2.11/xmms/Makefile.am	2003-12-07 00:06:42.000000000 -0200
++++ xmms-1.2.11-new/xmms/Makefile.am	2010-05-26 10:35:38.000000000 -0300
+@@ -6,7 +6,8 @@
+ 
+ xmms_LDFLAGS = -export-dynamic
+ xmms_LDADD = @GTK_LIBS@ @PTHREAD_LIBS@ @SM_LIBS@ @VM_LIBS@ \
+-@POSIX_LIBS@ $(top_builddir)/libxmms/libxmms.la @LTLIBINTL@
++@POSIX_LIBS@ $(top_builddir)/libxmms/libxmms.la @LTLIBINTL@ \
++-ldl
+ 
+ INCLUDES = @GTK_CFLAGS@ @XMMS_DEFINES@ @ARCH_DEFINES@ \
+ -I$(top_builddir)/intl -I$(top_srcdir)
+diff -Naur xmms-1.2.11/xmms/Makefile.in xmms-1.2.11-new/xmms/Makefile.in
+--- xmms-1.2.11/xmms/Makefile.in	2007-11-16 19:54:44.000000000 -0200
++++ xmms-1.2.11-new/xmms/Makefile.in	2010-05-26 10:36:21.000000000 -0300
+@@ -307,7 +307,8 @@
+ xmmsincludedir = $(includedir)/xmms
+ xmms_LDFLAGS = -export-dynamic
+ xmms_LDADD = @GTK_LIBS@ @PTHREAD_LIBS@ @SM_LIBS@ @VM_LIBS@ \
+-@POSIX_LIBS@ $(top_builddir)/libxmms/libxmms.la @LTLIBINTL@
++@POSIX_LIBS@ $(top_builddir)/libxmms/libxmms.la @LTLIBINTL@ \
++-ldl
+ 
+ INCLUDES = @GTK_CFLAGS@ @XMMS_DEFINES@ @ARCH_DEFINES@ \
+ -I$(top_builddir)/intl -I$(top_srcdir)

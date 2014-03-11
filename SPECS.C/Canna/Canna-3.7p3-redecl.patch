@@ -1,0 +1,11 @@
+--- Canna37p3/lib/canna/lisp.c.redecl	2004-11-24 00:08:05.429789120 +0100
++++ Canna37p3/lib/canna/lisp.c	2004-11-24 00:08:30.246016480 +0100
+@@ -1355,8 +1355,6 @@
+ static int
+ tyi()
+ {
+-  char *gets(), *fgets();
+-
+   if (untyibuf) {
+     int ret = untyibuf[--untyip];
+     if (untyip == 0) {

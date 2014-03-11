@@ -1,0 +1,21 @@
+diff -up lapack-3.4.1/INSTALL/make.inc.gfortran.shared lapack-3.4.1/INSTALL/make.inc.gfortran
+--- lapack-3.4.1/INSTALL/make.inc.gfortran.shared	2012-09-06 21:55:01.659280432 -0600
++++ lapack-3.4.1/INSTALL/make.inc.gfortran	2012-09-06 22:04:04.936732440 -0600
+@@ -73,3 +73,4 @@ BLASLIB      = ../../librefblas.a
+ LAPACKLIB    = liblapack.a
+ TMGLIB       = libtmglib.a
+ LAPACKELIB   = liblapacke.a
++SHLIB_LAPACKE = liblapacke.so
+diff -up lapack-3.4.1/lapacke/Makefile.shared lapack-3.4.1/lapacke/Makefile
+--- lapack-3.4.1/lapacke/Makefile.shared	2012-04-12 17:05:47.000000000 -0600
++++ lapack-3.4.1/lapacke/Makefile	2012-09-06 21:55:01.851271802 -0600
+@@ -49,6 +49,9 @@ lapacke:
+ 	cd src && $(MAKE)
+ 	cd utils && $(MAKE)
+ 
++shlib: lapacke
++	$(CC) $(CFLAGS) -shared -Wl,-soname,$(SHLIB_LAPACKE).@SHORTVER@ -o $(SHLIB_LAPACKE).@LONGVER@ src/*.o utils/*.o $(LIBS) -lgfortran -lc
++
+ lapacke_example:
+ 	cd example && $(MAKE)
+ 	

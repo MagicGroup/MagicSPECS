@@ -1,0 +1,22 @@
+[Desktop Entry]
+Categories=Qt;KDE;Application;AudioVideo;Player;
+Comment=Version 0.8.1
+Comment[de]=Version 0.8.1
+Comment[sv]=Version 0.8.1
+DocPath=kaffeine/index.html
+Encoding=UTF-8
+Exec=kaffeine %U
+GenericName=Media Player
+GenericName[de]=Multimedia-Wiedergabe
+GenericName[sv]=Mediaspelare
+GenericName[fi]=Mediasoitin
+GenericName[he]=נגן מדיה
+GenericName[nb]=Mediespiller
+GenericName[zh_CN]=媒体播放器
+Icon=kaffeine
+MimeType=application/x-ogg;audio/basic;audio/vnd.rn-realaudio;audio/x-aiff;audio/x-mp3;audio/x-mpeg;audio/x-mpegurl;audio/x-ms-wma;audio/x-ogg;audio/x-pn-realaudio;audio/x-pn-realaudio-plugin;audio/x-scpls;audio/x-wav;audio/x-flac;video/x-matroska;audio/x-matroska;video/mpeg;video/msvideo;video/quicktime;video/vnd.rn-realvideo;video/x-avi;video/x-fli;video/x-flic;video/x-ms-asf;video/x-ms-wmv;video/x-msvideo;application/x-mplayer2;application/smil;application/x-kaffeine;audio/x-musepack;application/vnd.rn-realmedia;
+Name=Kaffeine
+Name[de]=Kaffeine
+Name[sv]=Kaffeine
+Terminal=false
+Type=Application

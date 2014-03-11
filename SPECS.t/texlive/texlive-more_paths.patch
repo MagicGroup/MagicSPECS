@@ -1,0 +1,34 @@
+diff -up texlive/texk/make/makevars.mk.more_paths texlive/texk/make/makevars.mk
+--- texlive/texk/make/makevars.mk.more_paths	2007-08-19 07:38:56.000000000 +0200
++++ texlive/texk/make/makevars.mk	2007-08-19 07:45:26.000000000 +0200
+@@ -5,6 +5,8 @@ makevars = prefix=$(prefix) exec_prefix=
+   bindir=$(bindir) scriptdir=$(scriptdir) libdir=$(libdir) \
+   datadir=$(datadir) infodir=$(infodir) includedir=$(includedir) \
+   mandir=$(mandir) manext=$(manext) man1dir=$(man1dir) \
++  sysconfdir=$(sysconfdir) localstatedir=$(localstatedir) \
++  libexecdir=$(libexecdir) \
+   texmf=$(texmf) web2cdir=$(web2cdir) vartexfonts=$(vartexfonts)\
+   texinputdir=$(texinputdir) mfinputdir=$(mfinputdir) mpinputdir=$(mpinputdir)\
+   fontdir=$(fontdir) fmtdir=$(fmtdir) basedir=$(basedir) memdir=$(memdir) \
+diff -up texlive/texk/make/paths.mk.more_paths texlive/texk/make/paths.mk
+--- texlive/texk/make/paths.mk.more_paths	2007-08-19 07:39:12.000000000 +0200
++++ texlive/texk/make/paths.mk	2007-08-19 08:54:35.000000000 +0200
+@@ -35,6 +35,18 @@ manext = 1
+ mandir = @mandir@
+ man1dir = $(mandir)/man$(manext)
+ 
++# modifiable single-machine data.
++
++localstatedir = @localstatedir@
++
++# read-only single-machine data (configuration).
++
++sysconfdir = @sysconfdir@
++
++# executables that other programs run.
++
++libexecdir = @libexecdir@
++
+ # TeX system-specific directories. Not all of the following are relevant
+ # for all programs, but it seems cleaner to collect everything in one place.
+ 

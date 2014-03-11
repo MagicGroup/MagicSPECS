@@ -1,0 +1,12 @@
+diff -up dvipdfm/pdfobj.c.pdfobj-fix dvipdfm/pdfobj.c
+--- dvipdfm/pdfobj.c.pdfobj-fix	2001-06-28 20:55:26.000000000 +0100
++++ dvipdfm/pdfobj.c	2008-06-28 23:36:16.000000000 +0100
+@@ -620,7 +620,7 @@ void pdf_set_string (pdf_obj *object, un
+ int pdf_check_name(const char *name)
+ {
+   static char *valid_chars =
+-    "!\"$&'*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\^_`abcdefghijklmnopqrstuvwxyz|~";
++    "!\"$&'*#+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\^_`abcdefghijklmnopqrstuvwxyz|~";
+   if (strspn (name, valid_chars) == strlen (name))
+     return 1;
+   else

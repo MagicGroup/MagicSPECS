@@ -1,0 +1,43 @@
+diff -up chromium-20.0.1132.47/build/linux/system.gyp.system-srtp chromium-20.0.1132.47/build/linux/system.gyp
+--- chromium-20.0.1132.47/build/linux/system.gyp.system-srtp	2012-07-07 21:20:26.000000000 -0400
++++ chromium-20.0.1132.47/build/linux/system.gyp	2012-07-07 21:20:56.171006169 -0400
+@@ -651,6 +651,27 @@
+       ],
+     },
+     {
++      'target_name': 'libsrtp',
++      'type': 'none',
++      'conditions': [
++        ['_toolset=="target"', {
++          'direct_dependent_settings': {
++            'cflags': [
++              '<!@(<(pkg-config) --cflags libsrtp)',
++            ],
++          },
++          'link_settings': {
++            'ldflags': [
++              '<!@(<(pkg-config) --libs-only-L --libs-only-other libsrtp)',
++            ],
++            'libraries': [
++              '<!@(<(pkg-config) --libs-only-l libsrtp)',
++            ],
++          },
++        }],
++      ],
++    },
++    {
+       'target_name': 'udev',
+       'type': 'none',
+       'conditions': [
+diff -up chromium-20.0.1132.47/third_party/libjingle/libjingle.gyp.system-srtp chromium-20.0.1132.47/third_party/libjingle/libjingle.gyp
+--- chromium-20.0.1132.47/third_party/libjingle/libjingle.gyp.system-srtp	2012-06-28 09:01:45.000000000 -0400
++++ chromium-20.0.1132.47/third_party/libjingle/libjingle.gyp	2012-07-07 21:20:26.564006176 -0400
+@@ -617,7 +617,7 @@
+         ['OS!="android"', {
+           'dependencies': [
+             # We won't build with WebRTC on Android.
+-            '<(DEPTH)/third_party/libsrtp/libsrtp.gyp:libsrtp',
++            '../../build/linux/system.gyp:libsrtp',
+             '<(DEPTH)/third_party/webrtc/modules/modules.gyp:video_capture_module',
+             '<(DEPTH)/third_party/webrtc/modules/modules.gyp:video_render_module',
+             '<(DEPTH)/third_party/webrtc/video_engine/video_engine.gyp:video_engine_core',

@@ -1,0 +1,16 @@
+---
+ multipathd/main.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -1363,6 +1363,7 @@ configure (struct vectors * vecs, int st
+ 
+ 	sync_maps_state(mpvec);
+ 	vector_foreach_slot(mpvec, mpp, i){
++		remember_wwid(mpp->wwid);
+ 		update_map_pr(mpp);
+ 	}
+ 

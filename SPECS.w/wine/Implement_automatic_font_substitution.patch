@@ -1,0 +1,129 @@
+From ada045f7ba4b38e767722aadde0077b9bc21a996 Mon Sep 17 00:00:00 2001
+From: Liu Qishuai <lqs.buaa@gmail.com>
+Date: Thu, 3 Jul 2008 00:19:22 +0800
+Subject: gdi32: Implement automatic font substitution.
+
+---
+ dlls/gdi32/freetype.c |   45 +++++++++++++++++++++++++++------------------
+ 1 files changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/dlls/gdi32/freetype.c b/dlls/gdi32/freetype.c
+index 4fe468c..06687c8 100644
+--- a/dlls/gdi32/freetype.c
++++ b/dlls/gdi32/freetype.c
+@@ -184,13 +184,11 @@ MAKE_FUNCPTR(FT_Get_WinFNT_Header);
+ 
+ #ifdef SONAME_LIBFONTCONFIG
+ #include <fontconfig/fontconfig.h>
+-MAKE_FUNCPTR(FcConfigGetCurrent);
+-MAKE_FUNCPTR(FcFontList);
++MAKE_FUNCPTR(FcConfigSubstitute);
++MAKE_FUNCPTR(FcDefaultSubstitute);
++MAKE_FUNCPTR(FcFontSort);
+ MAKE_FUNCPTR(FcFontSetDestroy);
+ MAKE_FUNCPTR(FcInit);
+-MAKE_FUNCPTR(FcObjectSetAdd);
+-MAKE_FUNCPTR(FcObjectSetCreate);
+-MAKE_FUNCPTR(FcObjectSetDestroy);
+ MAKE_FUNCPTR(FcPatternCreate);
+ MAKE_FUNCPTR(FcPatternDestroy);
+ MAKE_FUNCPTR(FcPatternGetBool);
+@@ -1745,9 +1743,7 @@ static void load_fontconfig_fonts(void)
+ {
+ #ifdef SONAME_LIBFONTCONFIG
+     void *fc_handle = NULL;
+-    FcConfig *config;
+     FcPattern *pat;
+-    FcObjectSet *os;
+     FcFontSet *fontset;
+     int i, len;
+     char *file;
+@@ -1760,13 +1756,11 @@ static void load_fontconfig_fonts(void)
+ 	return;
+     }
+ #define LOAD_FUNCPTR(f) if((p##f = wine_dlsym(fc_handle, #f, NULL, 0)) == NULL){WARN("Can't find symbol %s\n", #f); goto sym_not_found;}
+-LOAD_FUNCPTR(FcConfigGetCurrent);
+-LOAD_FUNCPTR(FcFontList);
++LOAD_FUNCPTR(FcConfigSubstitute);
++LOAD_FUNCPTR(FcDefaultSubstitute);
++LOAD_FUNCPTR(FcFontSort);
+ LOAD_FUNCPTR(FcFontSetDestroy);
+ LOAD_FUNCPTR(FcInit);
+-LOAD_FUNCPTR(FcObjectSetAdd);
+-LOAD_FUNCPTR(FcObjectSetCreate);
+-LOAD_FUNCPTR(FcObjectSetDestroy);
+ LOAD_FUNCPTR(FcPatternCreate);
+ LOAD_FUNCPTR(FcPatternDestroy);
+ LOAD_FUNCPTR(FcPatternGetBool);
+@@ -1775,12 +1769,10 @@ LOAD_FUNCPTR(FcPatternGetString);
+ 
+     if(!pFcInit()) return;
+     
+-    config = pFcConfigGetCurrent();
+     pat = pFcPatternCreate();
+-    os = pFcObjectSetCreate();
+-    pFcObjectSetAdd(os, FC_FILE);
+-    pFcObjectSetAdd(os, FC_SCALABLE);
+-    fontset = pFcFontList(config, pat, os);
++    pFcConfigSubstitute(0, pat, FcMatchPattern);
++    pFcDefaultSubstitute(pat);
++    fontset = pFcFontSort(0, pat, FcFalse, 0, 0);
+     if(!fontset) return;
+     for(i = 0; i < fontset->nfont; i++) {
+         FcBool scalable;
+@@ -1806,7 +1798,6 @@ LOAD_FUNCPTR(FcPatternGetString);
+             AddFontFileToList(file, NULL, NULL,  ADDFONT_EXTERNAL_FONT);
+     }
+     pFcFontSetDestroy(fontset);
+-    pFcObjectSetDestroy(os);
+     pFcPatternDestroy(pat);
+  sym_not_found:
+ #endif
+@@ -3122,6 +3113,8 @@ static BOOL create_child_font_list(GdiFont *font)
+     BOOL ret = FALSE;
+     SYSTEM_LINKS *font_link;
+     CHILD_FONT *font_link_entry, *new_child;
++    Family *family;
++    Face *face;
+ 
+     LIST_FOR_EACH_ENTRY(font_link, &system_links, SYSTEM_LINKS, entry)
+     {
+@@ -3147,6 +3140,7 @@ static BOOL create_child_font_list(GdiFont *font)
+     if (use_default_fallback && font->charset != SYMBOL_CHARSET &&
+         font->charset != OEM_CHARSET &&
+         strcmpW(font->name,szDefaultFallbackLink) != 0)
++    {
+         LIST_FOR_EACH_ENTRY(font_link, &system_links, SYSTEM_LINKS, entry)
+         {
+             if(!strcmpW(font_link->font_name,szDefaultFallbackLink))
+@@ -3165,6 +3159,18 @@ static BOOL create_child_font_list(GdiFont *font)
+             }
+         }
+ 
++        /* Append other fonts as well */
++        LIST_FOR_EACH_ENTRY(family, &font_list, Family, entry)
++            LIST_FOR_EACH_ENTRY(face, &family->faces, Face, entry)
++            {
++                new_child = HeapAlloc(GetProcessHeap(), 0, sizeof(*new_child));
++                new_child->face = face;
++                new_child->font = NULL;
++                list_add_tail(&font->child_fonts, &new_child->entry);
++            }
++
++    }
++
+     return ret;
+ }
+ 
+@@ -4194,6 +4200,9 @@ static FT_UInt get_glyph_index(const GdiFont *font, UINT glyph)
+ {
+     FT_UInt glyphId;
+ 
++    if (!font->ft_face->charmap)
++        return 0;
++
+     if(font->ft_face->charmap->encoding == FT_ENCODING_NONE) {
+         WCHAR wc = (WCHAR)glyph;
+         BOOL default_used;
+-- 
+1.5.4.3

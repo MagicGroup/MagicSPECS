@@ -1,0 +1,139 @@
+diff -Naur amarok-2.0/src/amarok.kcfg amarok-2.0.redecode_option/src/amarok.kcfg
+--- amarok-2.0/src/amarok.kcfg	2008-12-05 18:01:46.000000000 +0800
++++ amarok-2.0.redecode_option/src/amarok.kcfg	2009-01-01 11:03:16.000000000 +0800
+@@ -198,6 +198,14 @@
+         <label>Filename of the external web browser to be invoked by Amarok.</label>
+         <default>xdg-open</default>
+     </entry>
++    <entry key="Redecode" type="Bool">
++        <label>Using decode character set.</label>
++        <default>false</default>
++    </entry>
++    <entry key="CharsetEdit" type="String">
++        <label>Decode character set.</label>
++        <default>UTF-8</default>
++    </entry>
+     <entry key="Collection Browser View Mode" type="Int">
+         <label>Whether the collection view is in the flat or tree view mode</label>
+         <default>0</default>
+diff -Naur amarok-2.0/src/collectionscanner/CMakeLists.txt amarok-2.0.redecode_option/src/collectionscanner/CMakeLists.txt
+--- amarok-2.0/src/collectionscanner/CMakeLists.txt	2008-12-05 18:01:22.000000000 +0800
++++ amarok-2.0.redecode_option/src/collectionscanner/CMakeLists.txt	2009-01-01 12:07:19.000000000 +0800
+@@ -4,7 +4,9 @@
+                      ../charset-detector/include
+                      ../charset-detector/src
+                      ../charset-detector/src/tables
+-                    ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
++                    ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}
++                    ${CMAKE_CURRENT_BINARY_DIR} #for amarokconfig.h
++)
+ 
+ add_definitions(${TAGLIB_CFLAGS})
+ 
+diff -Naur amarok-2.0/src/collectionscanner/CollectionScanner.cpp amarok-2.0.redecode_option/src/collectionscanner/CollectionScanner.cpp
+--- amarok-2.0/src/collectionscanner/CollectionScanner.cpp	2008-12-05 18:01:22.000000000 +0800
++++ amarok-2.0.redecode_option/src/collectionscanner/CollectionScanner.cpp	2009-01-01 11:21:52.000000000 +0800
+@@ -23,6 +23,7 @@
+ #include "CollectionScanner.h"
+ 
+ #include "Amarok.h"
++#include "amarokconfig.h"
+ #include "charset-detector/include/chardet.h"
+ 
+ #include <cerrno>
+@@ -529,6 +530,18 @@
+             }
+             else if ( file->ID3v1Tag() )
+             {
++                if ( AmarokConfig::Redecode() && AmarokConfig::CharsetEdit() )
++                {
++                    QTextCodec *codec = QTextCodec::codecForName( AmarokConfig::CharsetEdit() );
++                    QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
++                    QTextCodec::setCodecForCStrings( utf8codec );
++                    m_data.title = codec->toUnicode( m_data.title.toLatin1() );
++                    m_data.artist = codec->toUnicode( m_data.artist.toLatin1() );
++                    m_data.album = codec->toUnicode( m_data.album.toLatin1() );
++                    m_data.comment = codec->toUnicode( m_data.comment.toLatin1() );
++                }
++                else
++                {
+                 TagLib::String metaData = tag->title() + tag->artist() + tag->album() + tag->comment();
+                 const char* buf = metaData.toCString();
+                 size_t len = strlen( buf );
+@@ -569,6 +582,7 @@
+                         attributes["comment"] = codec->toUnicode( strip( tag->comment() ).toLatin1() );
+                     }
+                 }
++                }
+             }
+             #undef strip
+         }
+diff -Naur amarok-2.0/src/configdialog/dialogs/GeneralConfig.ui amarok-2.0.redecode_option/src/configdialog/dialogs/GeneralConfig.ui
+--- amarok-2.0/src/configdialog/dialogs/GeneralConfig.ui	2008-12-05 18:01:43.000000000 +0800
++++ amarok-2.0.redecode_option/src/configdialog/dialogs/GeneralConfig.ui	2009-01-01 10:44:05.000000000 +0800
+@@ -5,8 +5,8 @@
+    <rect>
+     <x>0</x>
+     <y>0</y>
+-    <width>376</width>
+-    <height>291</height>
++    <width>393</width>
++    <height>302</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" >
+@@ -72,6 +72,16 @@
+         </property>
+        </widget>
+       </item>
++      <item row="8" column="0" >
++       <widget class="QCheckBox" name="kcfg_Redecode" >
++        <property name="text" >
++         <string>Decode character set:</string>
++        </property>
++       </widget>
++      </item>
++      <item row="8" column="1" >
++       <widget class="QLineEdit" name="kcfg_CharsetEdit" />
++      </item>
+      </layout>
+     </widget>
+    </item>
+diff -Naur amarok-2.0/src/meta/file/File_p.h amarok-2.0.redecode_option/src/meta/file/File_p.h
+--- amarok-2.0/src/meta/file/File_p.h	2008-12-05 18:01:29.000000000 +0800
++++ amarok-2.0.redecode_option/src/meta/file/File_p.h	2009-01-01 11:21:09.000000000 +0800
+@@ -22,6 +22,7 @@
+ #define AMAROK_META_FILE_P_H
+ 
+ #include "charset-detector/include/chardet.h"
++#include "amarokconfig.h"
+ #include "Debug.h"
+ #include "Meta.h"
+ #include "MetaUtility.h"
+@@ -184,6 +185,18 @@
+         }
+         else if ( file->ID3v1Tag() )
+         {
++            if ( AmarokConfig::Redecode() && AmarokConfig::CharsetEdit() )
++            {
++                QTextCodec *codec = QTextCodec::codecForName( AmarokConfig::CharsetEdit() );
++                QTextCodec* utf8codec = QTextCodec::codecForName( "UTF-8" );
++                QTextCodec::setCodecForCStrings( utf8codec );
++                m_data.title = codec->toUnicode( m_data.title.toLatin1() );
++                m_data.artist = codec->toUnicode( m_data.artist.toLatin1() );
++                m_data.album = codec->toUnicode( m_data.album.toLatin1() );
++                m_data.comment = codec->toUnicode( m_data.comment.toLatin1() );
++            }
++            else
++            {
+             TagLib::String metaData = tag->title() + tag->artist() + tag->album() + tag->comment();
+             const char* buf = metaData.toCString();
+             size_t len = strlen( buf );
+@@ -223,6 +236,7 @@
+                     m_data.comment = codec->toUnicode( m_data.comment.toLatin1() );
+                 }
+             }
++            }
+         }
+     }
+ 

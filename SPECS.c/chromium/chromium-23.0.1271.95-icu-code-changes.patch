@@ -1,0 +1,24 @@
+diff -up chromium-23.0.1271.95/chrome/browser/chromeos/settings/system_settings_provider.h.icu chromium-23.0.1271.95/chrome/browser/chromeos/settings/system_settings_provider.h
+--- chromium-23.0.1271.95/chrome/browser/chromeos/settings/system_settings_provider.h.icu	2012-12-12 16:02:39.772507532 -0500
++++ chromium-23.0.1271.95/chrome/browser/chromeos/settings/system_settings_provider.h	2012-12-12 16:02:48.941507778 -0500
+@@ -11,7 +11,7 @@
+ #include "base/memory/scoped_ptr.h"
+ #include "chrome/browser/chromeos/settings/cros_settings_provider.h"
+ #include "chrome/browser/chromeos/system/timezone_settings.h"
+-#include "third_party/icu/public/i18n/unicode/timezone.h"
++#include <unicode/timezone.h>
+ 
+ namespace base {
+ class Value;
+diff -up chromium-23.0.1271.95/printing/backend/print_backend.cc.icu chromium-23.0.1271.95/printing/backend/print_backend.cc
+--- chromium-23.0.1271.95/printing/backend/print_backend.cc.icu	2012-12-12 16:03:02.246511106 -0500
++++ chromium-23.0.1271.95/printing/backend/print_backend.cc	2012-12-12 16:03:12.861511370 -0500
+@@ -6,7 +6,7 @@
+ 
+ #include <algorithm>
+ 
+-#include "third_party/icu/public/common/unicode/uchar.h"
++#include <unicode/uchar.h>
+ #include "ui/base/text/text_elider.h"
+ 
+ namespace {

@@ -1,0 +1,551 @@
+commit 9295f5952a5d1a8ae8c461adef7e36caee01c676
+Author: Jürg Billeter <j@bitron.ch>
+Date:   Sun Nov 27 15:10:21 2011 +0100
+
+    Remove g_thread_init calls
+    
+    Calling g_thread_init with GLib 2.31 requires explicit dependency on
+    gthread-2.0. However, g_type_init initializes threads since GLib 2.24,
+    so it is no longer needed.
+
+diff --git a/configure.ac b/configure.ac
+index f67f91e..9c234ba 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -246,7 +246,6 @@ PKG_CHECK_MODULES(LIBTRACKER_EXTRACT, [$LIBTRACKER_EXTRACT_REQUIRED])
+ # Check requirements for libtracker-fts
+ LIBTRACKER_FTS_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                          gio-unix-2.0 >= $GLIB_REQUIRED
+-                         gthread-2.0  >= $GLIB_REQUIRED
+                          sqlite3      >= $SQLITE_REQUIRED"
+ 
+ PKG_CHECK_MODULES(LIBTRACKER_FTS, [$LIBTRACKER_FTS_REQUIRED])
+@@ -267,7 +266,6 @@ PKG_CHECK_MODULES(LIBTRACKER_SPARQL, [$LIBTRACKER_SPARQL_REQUIRED])
+ # Check requirements for tracker-control
+ TRACKER_CONTROL_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                           gio-unix-2.0 >= $GLIB_REQUIRED
+-                          gthread-2.0  >= $GLIB_REQUIRED
+                           uuid"
+ 
+ PKG_CHECK_MODULES(TRACKER_CONTROL, [$TRACKER_CONTROL_REQUIRED])
+@@ -275,7 +273,6 @@ PKG_CHECK_MODULES(TRACKER_CONTROL, [$TRACKER_CONTROL_REQUIRED])
+ # Check requirements for tracker-explorer
+ TRACKER_EXPLORER_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                            gio-unix-2.0 >= $GLIB_REQUIRED
+-                           gthread-2.0  >= $GLIB_REQUIRED
+                            gmodule-2.0  >= $GLIB_REQUIRED
+                            gtk+-3.0     >= $GTK_REQUIRED
+ 			   gee-1.0      >= $GEE_REQUIRED"
+@@ -294,7 +291,6 @@ PKG_CHECK_MODULES(TRACKER_RESDUMP, [$TRACKER_RESDUMP_REQUIRED],
+ # Check requirements for tracker-store
+ TRACKER_STORE_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                         gio-unix-2.0 >= $GLIB_REQUIRED
+-                        gthread-2.0  >= $GLIB_REQUIRED
+                         gmodule-2.0  >= $GLIB_REQUIRED
+                         sqlite3      >= $SQLITE_REQUIRED"
+ 
+@@ -305,7 +301,6 @@ TRACKER_STORE_LIBS="$TRACKER_STORE_LIBS -lz -lm"
+ # Check requirements for tracker-extract
+ TRACKER_EXTRACT_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                           gio-unix-2.0 >= $GLIB_REQUIRED
+-                          gthread-2.0  >= $GLIB_REQUIRED
+                           gmodule-2.0  >= $GLIB_REQUIRED"
+ 
+ PKG_CHECK_MODULES(TRACKER_EXTRACT, [$TRACKER_EXTRACT_REQUIRED])
+@@ -318,7 +313,6 @@ PKG_CHECK_MODULES(TRACKER_EXTRACT_MODULES, [$TRACKER_EXTRACT_MODULES_REQUIRED])
+ # Check requirements for tracker-writeback
+ TRACKER_WRITEBACK_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                             gio-unix-2.0 >= $GLIB_REQUIRED
+-                            gthread-2.0  >= $GLIB_REQUIRED
+                             gmodule-2.0  >= $GLIB_REQUIRED"
+ 
+ PKG_CHECK_MODULES(TRACKER_WRITEBACK, [$TRACKER_WRITEBACK_REQUIRED])
+@@ -326,7 +320,6 @@ PKG_CHECK_MODULES(TRACKER_WRITEBACK, [$TRACKER_WRITEBACK_REQUIRED])
+ # Check requirements for tracker-miner-fs
+ TRACKER_MINER_FS_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                            gio-unix-2.0 >= $GLIB_REQUIRED
+-                           gthread-2.0  >= $GLIB_REQUIRED
+                            gmodule-2.0  >= $GLIB_REQUIRED"
+ 
+ PKG_CHECK_MODULES(TRACKER_MINER_FS, [$TRACKER_MINER_FS_REQUIRED])
+@@ -429,15 +422,13 @@ TRACKER_MINER_FLICKR_LIBS="$TRACKER_MINER_FLICKR_LIBS -lz -lm"
+ 
+ # Check requirements for tracker-utils
+ TRACKER_UTILS_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+-                        gio-unix-2.0 >= $GLIB_REQUIRED
+-                        gthread-2.0  >= $GLIB_REQUIRED"
++                        gio-unix-2.0 >= $GLIB_REQUIRED"
+ 
+ PKG_CHECK_MODULES(TRACKER_UTILS, [$TRACKER_UTILS_REQUIRED])
+ 
+ # Check requirements for tracker-needle
+ TRACKER_NEEDLE_REQUIRED="glib-2.0     >= $GLIB_REQUIRED
+                          gio-unix-2.0 >= $GLIB_REQUIRED
+-                         gthread-2.0  >= $GLIB_REQUIRED
+                          gmodule-2.0  >= $GLIB_REQUIRED
+                          gtk+-3.0     >= $GTK_REQUIRED"
+ 
+@@ -448,7 +439,6 @@ PKG_CHECK_MODULES(TRACKER_NEEDLE, [$TRACKER_NEEDLE_REQUIRED],
+ # Check requirements for tracker-preferences
+ TRACKER_PREFERENCES_REQUIRED="glib-2.0       >= $GLIB_REQUIRED
+                               gio-unix-2.0   >= $GLIB_REQUIRED
+-                              gthread-2.0    >= $GLIB_REQUIRED
+                               gmodule-2.0    >= $GLIB_REQUIRED
+                               gtk+-3.0       >= $GTK_REQUIRED"
+ 
+@@ -459,7 +449,6 @@ PKG_CHECK_MODULES(TRACKER_PREFERENCES, [$TRACKER_PREFERENCES_REQUIRED],
+ # Check requirements for tracker-search-bar
+ TRACKER_SEARCH_BAR_REQUIRED="glib-2.0       >= $GLIB_REQUIRED
+                              gio-unix-2.0   >= $GLIB_REQUIRED
+-                             gthread-2.0    >= $GLIB_REQUIRED
+                              gmodule-2.0    >= $GLIB_REQUIRED
+                              gtk+-3.0       >= $GTK_REQUIRED
+                              gdk-pixbuf-2.0 >= $GDKPIXBUF_REQUIRED
+diff --git a/examples/libtracker-miner/tracker-main.c b/examples/libtracker-miner/tracker-main.c
+index 5f24a68..9bebd5f 100644
+--- a/examples/libtracker-miner/tracker-main.c
++++ b/examples/libtracker-miner/tracker-main.c
+@@ -195,10 +195,6 @@ main (int argc, char *argv[])
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	main_loop = g_main_loop_new (NULL, FALSE);
+ 
+ 	miner = tracker_miner_test_new ("test");
+diff --git a/src/miners/fs/tracker-main.c b/src/miners/fs/tracker-main.c
+index 151c275..1873a77 100644
+--- a/src/miners/fs/tracker-main.c
++++ b/src/miners/fs/tracker-main.c
+@@ -696,10 +696,6 @@ main (gint argc, gchar *argv[])
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	setlocale (LC_ALL, "");
+ 
+ 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+diff --git a/src/miners/rss/tracker-main.c b/src/miners/rss/tracker-main.c
+index b3b2501..e79d15f 100644
+--- a/src/miners/rss/tracker-main.c
++++ b/src/miners/rss/tracker-main.c
+@@ -61,7 +61,6 @@ main (int argc, char **argv)
+ 	const gchar *error_message;
+ 
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 
+ 	setlocale (LC_ALL, "");
+ 
+diff --git a/src/tracker-control/tracker-control.c b/src/tracker-control/tracker-control.c
+index 9591eaf..48dfe8a 100644
+--- a/src/tracker-control/tracker-control.c
++++ b/src/tracker-control/tracker-control.c
+@@ -68,10 +68,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	/* Translators: this messagge will apper immediately after the  */
+ 	/* usage string - Usage: COMMAND [OPTION]... <THIS_MESSAGE>     */
+ 	context = g_option_context_new (_(" - Manage Tracker processes and data"));
+diff --git a/src/tracker-utils/tracker-import.c b/src/tracker-utils/tracker-import.c
+index 918e051..6ad8213 100644
+--- a/src/tracker-utils/tracker-import.c
++++ b/src/tracker-utils/tracker-import.c
+@@ -104,10 +104,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	connection = tracker_sparql_connection_get (NULL, &error);
+ 
+ 	if (!connection) {
+diff --git a/src/tracker-utils/tracker-info.c b/src/tracker-utils/tracker-info.c
+index d06eff6..dceb73d 100644
+--- a/src/tracker-utils/tracker-info.c
++++ b/src/tracker-utils/tracker-info.c
+@@ -349,10 +349,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	connection = tracker_sparql_connection_get (NULL, &error);
+ 
+ 	if (!connection) {
+diff --git a/src/tracker-utils/tracker-search.c b/src/tracker-utils/tracker-search.c
+index 7f2e1c1..9c33d15 100644
+--- a/src/tracker-utils/tracker-search.c
++++ b/src/tracker-utils/tracker-search.c
+@@ -1465,10 +1465,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 
+ #if HAVE_TRACKER_FTS
+ 	/* Only check stopwords if FTS is enabled */
+diff --git a/src/tracker-utils/tracker-sparql.c b/src/tracker-utils/tracker-sparql.c
+index a12b123..317468d 100644
+--- a/src/tracker-utils/tracker-sparql.c
++++ b/src/tracker-utils/tracker-sparql.c
+@@ -280,10 +280,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	connection = tracker_sparql_connection_get (NULL, &error);
+ 
+ 	if (!connection) {
+diff --git a/src/tracker-utils/tracker-stats.c b/src/tracker-utils/tracker-stats.c
+index 64d33de..8748e5c 100644
+--- a/src/tracker-utils/tracker-stats.c
++++ b/src/tracker-utils/tracker-stats.c
+@@ -81,10 +81,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	connection = tracker_sparql_connection_get (NULL, &error);
+ 
+ 	if (!connection) {
+diff --git a/src/tracker-utils/tracker-tag.c b/src/tracker-utils/tracker-tag.c
+index b3a9a8c..d900d58 100644
+--- a/src/tracker-utils/tracker-tag.c
++++ b/src/tracker-utils/tracker-tag.c
+@@ -933,10 +933,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	connection = tracker_sparql_connection_get (NULL, &error);
+ 
+ 	if (!connection) {
+diff --git a/src/tracker-writeback/tracker-main.c b/src/tracker-writeback/tracker-main.c
+index f55c4c7..dc703ae 100644
+--- a/src/tracker-writeback/tracker-main.c
++++ b/src/tracker-writeback/tracker-main.c
+@@ -85,8 +85,6 @@ main (int   argc,
+ 	gchar *log_filename;
+ 	guint shutdown_timeout;
+ 
+-	g_thread_init (NULL);
+-
+ 	g_type_init ();
+ 
+ 	/* Set up locale */
+diff --git a/tests/gvdb/gvdb-test.c b/tests/gvdb/gvdb-test.c
+index a960f2a..2d4730d 100644
+--- a/tests/gvdb/gvdb-test.c
++++ b/tests/gvdb/gvdb-test.c
+@@ -234,7 +234,6 @@ gint
+ main (gint argc, gchar **argv) 
+ {
+         g_type_init ();
+-        g_thread_init (NULL);
+ 
+         g_test_init (&argc, &argv, NULL);
+ 
+diff --git a/tests/libtracker-common/tracker-dbus-test.c b/tests/libtracker-common/tracker-dbus-test.c
+index 71e211e..197a4b2 100644
+--- a/tests/libtracker-common/tracker-dbus-test.c
++++ b/tests/libtracker-common/tracker-dbus-test.c
+@@ -289,7 +289,6 @@ main (int argc, char **argv) {
+ 	gint result;
+ 
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ /*
+diff --git a/tests/libtracker-data/tracker-backup-test.c b/tests/libtracker-data/tracker-backup-test.c
+index 3eca76e..e4cd3bc 100644
+--- a/tests/libtracker-data/tracker-backup-test.c
++++ b/tests/libtracker-data/tracker-backup-test.c
+@@ -219,10 +219,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	current_dir = g_get_current_dir ();
+diff --git a/tests/libtracker-data/tracker-db-journal.c b/tests/libtracker-data/tracker-db-journal.c
+index 7594e4c..1f765a2 100644
+--- a/tests/libtracker-data/tracker-db-journal.c
++++ b/tests/libtracker-data/tracker-db-journal.c
+@@ -366,7 +366,6 @@ main (int argc, char **argv)
+ 	int result;
+ 
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ #ifndef DISABLE_JOURNAL
+diff --git a/tests/libtracker-data/tracker-ontology-change-test.c b/tests/libtracker-data/tracker-ontology-change-test.c
+index 376d42b..f90979c 100644
+--- a/tests/libtracker-data/tracker-ontology-change-test.c
++++ b/tests/libtracker-data/tracker-ontology-change-test.c
+@@ -314,10 +314,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	data_dir = g_build_filename (g_get_current_dir (), "test-cache", NULL);
+diff --git a/tests/libtracker-data/tracker-ontology-test.c b/tests/libtracker-data/tracker-ontology-test.c
+index 1f1eddf..062d5e8 100644
+--- a/tests/libtracker-data/tracker-ontology-test.c
++++ b/tests/libtracker-data/tracker-ontology-test.c
+@@ -278,10 +278,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	data_dir = g_build_filename (g_get_current_dir (), "test-cache", NULL);
+diff --git a/tests/libtracker-data/tracker-sparql-blank-test.c b/tests/libtracker-data/tracker-sparql-blank-test.c
+index 541e377..fdb8b45 100644
+--- a/tests/libtracker-data/tracker-sparql-blank-test.c
++++ b/tests/libtracker-data/tracker-sparql-blank-test.c
+@@ -127,10 +127,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	current_dir = g_get_current_dir ();
+diff --git a/tests/libtracker-data/tracker-sparql-test.c b/tests/libtracker-data/tracker-sparql-test.c
+index 0f4db98..9fc1f48 100644
+--- a/tests/libtracker-data/tracker-sparql-test.c
++++ b/tests/libtracker-data/tracker-sparql-test.c
+@@ -326,10 +326,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	setlocale (LC_COLLATE, "en_US.utf8");
+diff --git a/tests/libtracker-extract/tracker-test-xmp.c b/tests/libtracker-extract/tracker-test-xmp.c
+index a682a16..be1f212 100644
+--- a/tests/libtracker-extract/tracker-test-xmp.c
++++ b/tests/libtracker-extract/tracker-test-xmp.c
+@@ -598,7 +598,6 @@ main (int    argc,
+ 	gint result;
+ 
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	g_test_message ("Testing XMP");
+diff --git a/tests/libtracker-fts/tracker-fts-test.c b/tests/libtracker-fts/tracker-fts-test.c
+index cb1dc5b..150200e 100644
+--- a/tests/libtracker-fts/tracker-fts-test.c
++++ b/tests/libtracker-fts/tracker-fts-test.c
+@@ -183,10 +183,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+-
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	current_dir = g_get_current_dir ();
+diff --git a/tests/libtracker-fts/tracker-parser-test.c b/tests/libtracker-fts/tracker-parser-test.c
+index 032cba2..a7a3001 100644
+--- a/tests/libtracker-fts/tracker-parser-test.c
++++ b/tests/libtracker-fts/tracker-parser-test.c
+@@ -349,9 +349,6 @@ main (int argc, char **argv)
+ 	gint i;
+ 
+ 	g_type_init ();
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	/* We want the tests to properly find the stopwords dictionaries, so we
+diff --git a/tests/libtracker-fts/tracker-parser.c b/tests/libtracker-fts/tracker-parser.c
+index 23527c5..9877a4f 100644
+--- a/tests/libtracker-fts/tracker-parser.c
++++ b/tests/libtracker-fts/tracker-parser.c
+@@ -221,9 +221,6 @@ int
+ main (int argc, char **argv)
+ {
+ 	g_type_init ();
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+ 
+ 	/* Setup locale */
+ 	setlocale (LC_ALL, "");
+diff --git a/tests/libtracker-miner/tracker-crawler-test.c b/tests/libtracker-miner/tracker-crawler-test.c
+index 8a95421..59dc866 100644
+--- a/tests/libtracker-miner/tracker-crawler-test.c
++++ b/tests/libtracker-miner/tracker-crawler-test.c
+@@ -320,7 +320,6 @@ main (int    argc,
+       char **argv)
+ {
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	g_test_message ("Testing filesystem crawler");
+diff --git a/tests/libtracker-miner/tracker-miner-manager-test.c b/tests/libtracker-miner/tracker-miner-manager-test.c
+index 517c201..e9f0278 100644
+--- a/tests/libtracker-miner/tracker-miner-manager-test.c
++++ b/tests/libtracker-miner/tracker-miner-manager-test.c
+@@ -138,7 +138,6 @@ main (int    argc,
+         gint result;
+ 
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+         
+ 	g_test_message ("Testing miner manager");
+diff --git a/tests/libtracker-miner/tracker-monitor-test.c b/tests/libtracker-miner/tracker-monitor-test.c
+index c3ff7f2..0a07a94 100644
+--- a/tests/libtracker-miner/tracker-monitor-test.c
++++ b/tests/libtracker-miner/tracker-monitor-test.c
+@@ -1874,7 +1874,6 @@ gint
+ main (gint    argc,
+       gchar **argv)
+ {
+-	g_thread_init (NULL);
+ 	g_type_init ();
+ 	g_test_init (&argc, &argv, NULL);
+ 
+diff --git a/tests/libtracker-miner/tracker-password-provider-test.c b/tests/libtracker-miner/tracker-password-provider-test.c
+index 3c58b26..e365964 100644
+--- a/tests/libtracker-miner/tracker-password-provider-test.c
++++ b/tests/libtracker-miner/tracker-password-provider-test.c
+@@ -106,7 +106,6 @@ main (int argc, char **argv)
+ 
+ 	g_type_init ();
+ 
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	/* Set test environment up */
+diff --git a/tests/libtracker-miner/tracker-priority-queue-test.c b/tests/libtracker-miner/tracker-priority-queue-test.c
+index c57211c..859d7bf 100644
+--- a/tests/libtracker-miner/tracker-priority-queue-test.c
++++ b/tests/libtracker-miner/tracker-priority-queue-test.c
+@@ -226,7 +226,6 @@ main (int    argc,
+       char **argv)
+ {
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	g_test_add_func ("/libtracker-miner/tracker-priority-queue/emptiness",
+diff --git a/tests/libtracker-miner/tracker-task-pool-test.c b/tests/libtracker-miner/tracker-task-pool-test.c
+index 578c144..3db8af8 100644
+--- a/tests/libtracker-miner/tracker-task-pool-test.c
++++ b/tests/libtracker-miner/tracker-task-pool-test.c
+@@ -161,7 +161,6 @@ gint
+ main (gint argc, gchar **argv)
+ {
+         g_type_init ();
+-        g_thread_init (NULL);
+         g_test_init (&argc, &argv, NULL);
+ 
+         g_test_add_func ("/libtracker-miner/tracker-task-pool/limit_set",
+diff --git a/tests/libtracker-miner/tracker-thumbnailer-test.c b/tests/libtracker-miner/tracker-thumbnailer-test.c
+index 0abd808..96e1888 100644
+--- a/tests/libtracker-miner/tracker-thumbnailer-test.c
++++ b/tests/libtracker-miner/tracker-thumbnailer-test.c
+@@ -133,7 +133,6 @@ main (int    argc,
+       char **argv)
+ {
+ 	g_type_init ();
+-	g_thread_init (NULL);
+ 	g_test_init (&argc, &argv, NULL);
+ 
+ 	g_test_message ("Testing thumbnailer");
+diff --git a/tests/libtracker-sparql/tracker-test.c b/tests/libtracker-sparql/tracker-test.c
+index 9b88a14..fd330fd 100644
+--- a/tests/libtracker-sparql/tracker-test.c
++++ b/tests/libtracker-sparql/tracker-test.c
+@@ -357,7 +357,6 @@ main (gint argc, gchar **argv)
+ {
+ 	int result;
+ 
+-	g_thread_init (NULL);
+ 	g_type_init ();
+ 	g_test_init (&argc, &argv, NULL);
+ 
+diff --git a/utils/mtp/mtp-dummy.c b/utils/mtp/mtp-dummy.c
+index c03c689..686faf4 100644
+--- a/utils/mtp/mtp-dummy.c
++++ b/utils/mtp/mtp-dummy.c
+@@ -530,7 +530,6 @@ check_duplicates (void)
+ int main (int argc, char **argv)
+ {
+ 	/* Initialize stuff */
+-	g_thread_init (NULL);
+ 	g_type_init ();
+ 
+ 	/* Initialize locale support! */
+diff --git a/utils/tracker-sql/tracker-sql.c b/utils/tracker-sql/tracker-sql.c
+index 43eb6d4..f29cfff 100644
+--- a/utils/tracker-sql/tracker-sql.c
++++ b/utils/tracker-sql/tracker-sql.c
+@@ -92,9 +92,6 @@ main (int argc, char **argv)
+ 	g_option_context_free (context);
+ 
+ 	g_type_init ();
+-	if (!g_thread_supported ()) {
+-		g_thread_init (NULL);
+-	}
+ 
+ 	if (file) {
+ 		gchar *path_in_utf8;

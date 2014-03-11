@@ -1,0 +1,145 @@
+#!/bin/bash
+#
+# amuled startup script      This shell script takes care of starting and stopping amuled
+# credits by marco spallacci 01/03/2011
+#
+# chkconfig: 345 89 11
+# description: amuled startup script
+#
+### BEGIN INIT INFO
+# Provides: amuled
+# Required-Start: $network
+# Required-Stop: $network
+# Default-Start:
+# Default-Stop:
+# Description: Release implementation
+# Short-Description: start and stop amuled
+### END INIT INFO
+#
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+
+NAME=amuled
+CMD_USER="amuled"
+CONF_DIR="/var/lib/amuled/.aMule"
+DAEMON="/usr/bin/amuled"
+DAEMON_ARGS="-c $CONF_DIR -f > /dev/null"
+PIDFILE=/var/run/$NAME.pid
+
+# Get the amule config (use this for environment specific settings)
+SERVICE_CFG="/etc/sysconfig/${NAME}"
+if [ -r "$SERVICE_CFG" ]; then
+  . ${SERVICE_CFG}
+fi
+
+
+checkconfig() {
+
+	if [ ! -f "$CONF_DIR/amule.conf" ];then
+		echo "file $CONF_DIR/amule.conf does not exists "
+	fi
+
+	if [ ! -f "$CONF_DIR/remote.conf" ];then
+		echo "file $CONF_DIR/remote.conf does not exists "
+	fi
+
+	AMULED_VAR1=`grep ^ECPassword= ${CONF_DIR}/amule.conf 2> /dev/null | cut -f 2 -d "="`
+	AMULED_VAR2=`grep ^AcceptExternalConnections=0$ ${CONF_DIR}/amule.conf 2> /dev/null | cut -f 2 -d "="`
+	AMULEWEB_VAR1=`grep ^Password= ${CONF_DIR}/remote.conf 2> /dev/null | cut -f 2 -d "="`
+	AMULEWEB_VAR2=`grep ^AdminPassword= ${CONF_DIR}/remote.conf 2> /dev/null | cut -f 2 -d "="`
+	AMULEWEB_VAR3=`grep ^Password= ${CONF_DIR}/amule.conf 2> /dev/null | cut -f 2 -d "="`
+	AMULEWEB_VAR4=`grep ^Enabled=0$ ${CONF_DIR}/amule.conf 2> /dev/null | cut -f 2 -d "="`
+
+	if [ "$AMULED_VAR1" == "" ];then
+		echo "ExternalConnections password is not set in amule.conf (ECPassword)"
+		RETVAL=1
+	fi
+
+	if [ "$AMULED_VAR2" == "0" ];then
+        	echo "AcceptExternalConnections is not enabled in amule.conf (AcceptExternalConnections)"
+		RETVAL=1
+	fi
+
+	if [ "$AMULEWEB_VAR1" == "" ];then
+        	echo "Amuleweb password is not set in remote.conf (Password)"
+		RETVAL=1
+	fi
+
+	if [ "$AMULEWEB_VAR2" == "" ];then
+        	echo "Amuleweb admin password is not set in remote.conf (AdminPassword)"
+		RETVAL=1
+	fi
+
+	if [ "$AMULEWEB_VAR3" == "" ];then
+        	echo "Amuleweb password is not set in amule.conf (Password)"
+		RETVAL=1
+	fi
+
+	if [ "$AMULEWEB_VAR4" == "0" ];then
+        	echo "Amuleweb is not set enabled in amule.conf (Enabled)"
+		RETVAL=1
+	fi
+}
+
+start() {
+
+    # Check if the server is already running.
+    status -p $PIDFILE $NAME > /dev/null
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ]; then
+      echo "$NAME is already running."
+      exit 1
+    fi
+
+    daemon --check "$DAEMON" --user "$CMD_USER" --pidfile "$PIDFILE" "$DAEMON" "$DAEMON_ARGS"
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ]; then
+      /sbin/pidof -x $DAEMON > $PIDFILE
+      echo "$NAME is running (`cat $PIDFILE`)"
+    fi
+}
+
+stop(){
+
+    if [ -f "$PIDFILE" ]; then
+      echo -n "Stopping $NAME: "
+      killproc $NAME
+      RETVAL=$?
+      [ $RETVAL -eq 0 ] && rm -f $PIDFILE
+      echo
+    else
+      echo "no PID file exists"
+      RETVAL=1
+    fi
+}
+
+
+
+case "$1" in
+  start)
+        start
+    ;;
+  stop)
+	stop
+    ;;
+  status)
+	status -p $PIDFILE $NAME
+    ;;
+  checkconfig)
+        checkconfig
+    ;;
+  restart|reload)
+        stop
+        start
+        ;;
+  *)
+    echo "Usage: $0 { start | stop | status | restart | reload | checkconfig }"
+    ;;
+esac
+
+exit $RETVAL

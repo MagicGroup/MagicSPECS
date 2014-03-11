@@ -1,0 +1,283 @@
+#! /bin/bash
+#
+# chkconfig: 2345 9 91
+# description: start and stop ISDN services
+#
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+# Check that we're a privileged user
+[ `id -u` = 0 ] || exit 4
+
+[ -x /sbin/isdnctrl ] || exit 5
+
+# source function library
+. /etc/init.d/functions
+
+test -f /etc/sysconfig/isdncard || exit 6
+. /etc/sysconfig/isdncard
+
+if [ -z "$MODULE" -o -z "$RESOURCES" ]; then
+    exit 6
+fi        
+
+# disable debug as default
+IBOD=no
+RETVAL=0
+sync_devices=0
+raw_devices=0
+PCMCIA=no
+COMPRESSION=7
+
+# check PCMCIA
+if [ "$RESOURCES" = "NONE" ] ; then
+    PCMCIA=yes
+fi
+
+function isapnp()
+{
+    [ -f /proc/isapnp ] || return
+    [ -f /proc/bus/isapnp/devices ] || return
+
+    found=0
+
+    eval $RESOURCES >/dev/null 2>&1
+    if [ -z "$VENDOR_ID" -o -z "$DEVICE_ID" ] ; then
+        case "$type" in
+            12) VENDOR_ID="ASU1690" # ASUS COM ISDNLink ISA PnP
+                DEVICE_ID="ASU1690"
+                ;;
+            14) VENDOR_ID="TAG2610" # Teles 16.3c PnP
+                DEVICE_ID="TAG2610"
+                ;;
+            7)  VENDOR_ID="ELS0133" # Elsa Quickstep 1000 PnP
+                DEVICE_ID="ELS0133"
+                ;;
+            *)  return
+                ;;
+        esac
+    fi
+
+    # get isapnp infos
+    id_list="$(cat /proc/bus/isapnp/devices 2>/dev/null | while read dummy id dummy ; do echo $id ; done)"
+    for i in $id_list ; do
+        _vendor_id="$(echo $i | cut -b1-7)"
+        _device_id="$(echo $i | cut -b8-)"
+        if [ "$VENDOR_ID" = "$_vendor_id" -a "$DEVICE_ID" = "$_device_id" ] ; then
+            found=1
+            break
+        fi
+    done
+
+    [ "$found" = "1" ] || return
+
+    card="card 0 $VENDOR_ID"
+    dev="dev 0 $DEVICE_ID"
+    [ -n "$io" ] && port0="port 0 $io"
+    [ -n "$io1" ] && port1="port 1 $io1"
+    [ -n "$io2" ] && port2="port 2 $io2"
+    [ -n "$irq" ] && irq="irq 0 $irq"
+    [ -n "$mem" ] && memory="memory 0 $mem"
+
+    case "$1" in
+        activate) activate_isapnp ;;
+        deactivate) deactivate_isapnp ;;
+        *) return
+    esac
+}
+
+function activate_isapnp()
+{
+    [ ! -f /var/lock/subsys/isapnp_isdn ] || return
+
+    str=''
+    for i in "$card" "$dev" "$port0" "$port1" "$port2" "$memory" "$irq" ; do
+        [ -n "$i" ] || continue
+        str="$str$i\n"
+    done
+
+    [ -n "$str" ] || return
+
+    echo -e "${str}activate" >/proc/isapnp
+    touch /var/lock/subsys/isapnp_isdn
+}
+
+function deactivate_isapnp()
+{
+    echo -e "$card\n$dev\ndeactivate" >/proc/isapnp
+    rm -f /var/lock/subsys/isapnp_isdn
+}
+
+function load_modules()
+{
+    isdn_path="/lib/modules/$(uname -r)/kernel/drivers/isdn"
+    if [ -f $isdn_path/isdn_lzscomp.o -o -f $isdn_path/isdn_lzscomp.ko ] ; then
+        modprobe isdn_lzscomp comp=$COMPRESSION debug=0 > /dev/null 2>&1
+    fi
+
+    [ "$PCMCIA" = "no" ] || return
+
+    modprobe $MODULE $RESOURCES > /dev/null 2>&1
+    isdnctrl list all >/dev/null 2>&1
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ] ; then
+        action $"Loading ISDN modules" /bin/true
+        touch /var/lock/subsys/isdn
+    else
+        action $"Loading ISDN modules" /bin/false
+        modprobe -r $MODULE > /dev/null 2>&1
+    fi
+}
+
+function remove_modules()
+{
+    modprobe -r isdn_lzscomp >/dev/null 2>&1
+
+    # Unload hisax modules
+    [ "$PCMCIA" = "no" ] || return
+
+    if lsmod | grep "^$MODULE" >/dev/null 2>&1 ; then
+        action $"Unloading ISDN modules" modprobe -r $MODULE
+        rm -f /var/lock/subsys/isdn
+    fi
+}
+
+function load_firmware()
+{
+    # loading firmware
+    if [ -n "$FIRMWARE" ] ; then
+        $FIRMWARE >/dev/null 2>&1
+        RETVAL=$?
+        if [ $RETVAL -eq 0 ]; then
+            action $"Loading Firmware" /bin/true
+        else
+            action $"Loading Firmware" /bin/false
+        fi
+    fi
+}
+
+function start_isdnlog()
+{
+    # don't start isdnlog, if the ISDN card requires the firmware
+    [ -z "$FIRMWARE" ] || return
+    prog="isdnlog"
+    if [ "$MODULE" = "hisax" ] ; then
+        driverid="HiSax"
+    elif [ "$MODULE" = "hisax_fcpcipnp" ] ; then
+        driverid="fcpcipnp0"
+    else
+        return
+    fi
+        
+    if ! hisaxctrl $driverid 1 0x3ff >/dev/null 2>&1 ; then
+        return
+    fi
+    if [ -f /etc/isdn/isdnlog.option ] ; then
+        daemon /sbin/isdnlog /dev/isdnctrl0 -D -f /etc/isdn/isdnlog.option
+    else
+        daemon /sbin/isdnlog /dev/isdnctrl0 -x0x3fff -M -w2 -S -D -s -O+/var/log/isdnctrl
+    fi
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ] ; then
+        action  $"Starting $prog" /bin/true
+        touch /var/lock/subsys/isdnlog
+    else
+        action  $"Starting $prog" /bin/false
+    fi
+}
+
+function stop_isdnlog()
+{
+    prog="isdnlog"
+    echo -n $"Shutting down $prog"
+    killproc isdnlog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && /bin/rm -f /var/lock/subsys/isdnlog
+}
+
+function makedev()
+{
+    if [ -x /sbin/MAKEDEV ] ; then
+        if ! /bin/ls /dev/isdn* /dev/ippp* >/dev/null 2>&1 ; then
+            /sbin/MAKEDEV isdn ippp capi
+        fi
+    fi
+}
+
+function start()
+{
+    # workaround for kernel/udev (ISDN part)
+    makedev
+
+    # activate ISA PnP
+    isapnp activate
+
+    # load modules
+    load_modules
+ 
+    # load firmware and setup isdn device driver
+    load_firmware
+
+    # start isdn logging
+    start_isdnlog
+}
+
+function stop()
+{
+    stop_isdnlog
+    remove_modules
+    isapnp deactivate
+}
+
+function restart()
+{
+    stop
+    start
+}
+
+function status()
+{
+    ifcfg_prefix="/etc/sysconfig/network-scripts/ifcfg-"
+    interfaces="$(cat /proc/net/dev 2>/dev/null | egrep "(ippp*|isdn*)" | cut -f1 -d:)"
+    if [ -z "$interfaces" ]; then
+        echo $"$0: Link is down"
+        return
+    fi
+    for i in $interfaces ;do
+        if [ -f $ifcfg_prefix$i ]; then
+            . $ifcfg_prefix$i
+            echo $"$NAME is attached to $DEVICE"
+        fi
+    done
+}
+
+function condrestart()
+{
+    if [ -f /var/lock/subsys/isdn ] ; then
+        restart
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    condrestart)
+       condrestart
+       ;;
+    status)
+       status
+       ;;
+    *)
+       echo $"Usage: $0 {start|stop|restart|status|condrestart}"
+       RETVAL=3
+esac
+
+exit $RETVAL

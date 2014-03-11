@@ -1,0 +1,25 @@
+From dd13fe588258e267748331f948ec933ba2ea6069 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 2 Jan 2013 11:11:21 +0100
+Subject: [PATCH] kernel-modules: create /etc/modprobe.d if it does not yet
+ exist
+
+https://bugzilla.redhat.com/show_bug.cgi?id=873220
+---
+ modules.d/90kernel-modules/parse-kernel.sh | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/modules.d/90kernel-modules/parse-kernel.sh b/modules.d/90kernel-modules/parse-kernel.sh
+index 485528b..c05cf67 100755
+--- a/modules.d/90kernel-modules/parse-kernel.sh
++++ b/modules.d/90kernel-modules/parse-kernel.sh
+@@ -11,6 +11,9 @@ for i in $(getargs rd.driver.pre -d rdloaddriver=); do
+     )
+ done
+ 
++
++[ -d /etc/modprobe.d ] || mkdir -p /etc/modprobe.d
++
+ for i in $(getargs rd.driver.blacklist -d rdblacklist=); do
+     (
+         IFS=,

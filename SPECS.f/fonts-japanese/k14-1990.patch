@@ -1,0 +1,103 @@
+*** k14.bdf	Tue Jun  8 17:40:53 1993
+--- k14-1990.bdf	Fri Jul  9 12:07:09 1993
+***************
+*** 2,9 ****
+  COMMENT 
+  COMMENT Donated by H. Kagotani <kagotani@cs.titech.ac.jp>; public domain
+  COMMENT font from Japan
+  COMMENT 
+! FONT -Misc-Fixed-Medium-R-Normal--14-130-75-75-C-140-JISX0208.1983-0
+  SIZE 14 75 75
+  FONTBOUNDINGBOX 14 14 0 -2
+  STARTPROPERTIES 19
+--- 2,11 ----
+  COMMENT 
+  COMMENT Donated by H. Kagotani <kagotani@cs.titech.ac.jp>; public domain
+  COMMENT font from Japan
++ COMMENT Modified by TAKADA Toshihiro <takada@seraph.ntt.jp>
++ COMMENT 	changed to JIS X 0208-1990
+  COMMENT 
+! FONT -Misc-Fixed-Medium-R-Normal--14-130-75-75-C-140-JISX0208.1990-0
+  SIZE 14 75 75
+  FONTBOUNDINGBOX 14 14 0 -2
+  STARTPROPERTIES 19
+***************
+*** 20,33 ****
+  RESOLUTION_Y 75
+  SPACING "C"
+  AVERAGE_WIDTH 140
+! CHARSET_REGISTRY "JISX0208.1983"
+  CHARSET_ENCODING "0"
+  DEFAULT_CHAR 8481
+  FONT_DESCENT 2
+  FONT_ASCENT 12
+  COPYRIGHT "Public domain font.  Share and enjoy."
+  ENDPROPERTIES
+! CHARS 6877
+  STARTCHAR 2121
+  ENCODING 8481
+  SWIDTH 960 0
+--- 22,35 ----
+  RESOLUTION_Y 75
+  SPACING "C"
+  AVERAGE_WIDTH 140
+! CHARSET_REGISTRY "JISX0208.1990"
+  CHARSET_ENCODING "0"
+  DEFAULT_CHAR 8481
+  FONT_DESCENT 2
+  FONT_ASCENT 12
+  COPYRIGHT "Public domain font.  Share and enjoy."
+  ENDPROPERTIES
+! CHARS 6879
+  STARTCHAR 2121
+  ENCODING 8481
+  SWIDTH 960 0
+***************
+*** 144445,144448 ****
+--- 144447,144492 ----
+  03F8
+  0208
+  ENDCHAR
++ STARTCHAR 7425
++ ENCODING 29733
++ SWIDTH 960 0
++ DWIDTH 14 0
++ BBX 14 14 0 -2
++ BITMAP
++ 0040
++ 07FC
++ 2000
++ 13F8
++ 12E8
++ 02A8
++ 02E8
++ 13F8
++ 11F0
++ 2040
++ 27FC
++ 4150
++ 4248
++ 0448
++ ENDCHAR
++ STARTCHAR 7426
++ ENCODING 29734
++ SWIDTH 960 0
++ DWIDTH 14 0
++ BBX 14 14 0 -2
++ BITMAP
++ 0000
++ 3F78
++ 2248
++ 2F48
++ 2978
++ 2948
++ 2F40
++ 2244
++ 3F44
++ 203C
++ 0000
++ 2488
++ 2244
++ 4244
++ ENDCHAR
+  ENDFONT

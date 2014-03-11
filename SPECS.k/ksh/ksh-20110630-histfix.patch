@@ -1,0 +1,21 @@
+diff -up ksh-20110630/src/cmd/ksh93/edit/edit.c.histfix ksh-20110630/src/cmd/ksh93/edit/edit.c
+--- ksh-20110630/src/cmd/ksh93/edit/edit.c.histfix	2011-03-03 16:20:03.000000000 +0100
++++ ksh-20110630/src/cmd/ksh93/edit/edit.c	2011-12-07 15:55:50.576089698 +0100
+@@ -1655,7 +1655,7 @@ int ed_histgen(Edit_t *ep,const char *pa
+ 	History_t	*hp;
+ 	off_t		offset;
+ 	int 		ac=0,l,m,n,index1,index2;
+-	char		*cp, **argv, **av, **ar;
++	char		*cp, **argv=NULL, **av, **ar;
+ 	if(!(hp=ep->sh->gd->hist_ptr))
+ 		return(0);
+ 	if(*pattern=='#')
+@@ -1734,7 +1734,7 @@ int ed_histgen(Edit_t *ep,const char *pa
+ 		mplast->next = 0;
+ 	}
+ 	ep->hlist = (Histmatch_t**)argv;
+-	ep->hfirst = ep->hlist[0];
++	ep->hfirst = ep->hlist ? ep->hlist[0] : NULL;
+ 	return(ep->hmax=ac);
+ }
+ 

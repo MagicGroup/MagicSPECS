@@ -1,0 +1,758 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Ni Hui <shuizhuyuanluo@126.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: Alessandros1pt@yahoo.com.br\n"
+"POT-Creation-Date: 2010-04-20 20:36+0800\n"
+"PO-Revision-Date: 2010-04-20 20:51+0800\n"
+"Last-Translator: Ni Hui <shuizhuyuanluo@126.com>\n"
+"Language-Team: Chinese Simplified <kde-china@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. i18n: file: ui/advancedConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, advancedConfiguration)
+#. i18n: file: ui/advancedConfiguration.ui:188
+#. i18n: ectx: attribute (title), widget (QWidget, Advanced)
+#. i18n: file: ui/advancedConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, advancedConfiguration)
+#. i18n: file: ui/advancedConfiguration.ui:188
+#. i18n: ectx: attribute (title), widget (QWidget, Advanced)
+#: po/rc.cpp:3 po/rc.cpp:28 rc.cpp:3 rc.cpp:28
+msgid "Advanced"
+msgstr "高级"
+
+#. i18n: file: ui/advancedConfiguration.ui:33
+#. i18n: ectx: attribute (title), widget (QWidget, Main)
+#. i18n: file: ui/mainConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, mainConfiguration)
+#. i18n: file: ui/advancedConfiguration.ui:33
+#. i18n: ectx: attribute (title), widget (QWidget, Main)
+#. i18n: file: ui/mainConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, mainConfiguration)
+#: po/rc.cpp:6 po/rc.cpp:189 src/daisyDialogs.cpp:41 rc.cpp:6 rc.cpp:189
+msgid "Main"
+msgstr ""
+
+#. i18n: file: ui/advancedConfiguration.ui:41
+#. i18n: ectx: property (availableLabel), widget (KActionSelector, kactionselector_plugs)
+#: po/rc.cpp:9 rc.cpp:9
+msgid "&Available plugins:"
+msgstr "可用插件(&A)："
+
+#. i18n: file: ui/advancedConfiguration.ui:44
+#. i18n: ectx: property (selectedLabel), widget (KActionSelector, kactionselector_plugs)
+#: po/rc.cpp:12 rc.cpp:12
+msgid "&Selected plugins:"
+msgstr "已选插件(&S)："
+
+#. i18n: file: ui/advancedConfiguration.ui:75
+#. i18n: ectx: property (text), widget (QLabel, label_launchers)
+#: po/rc.cpp:15 rc.cpp:15
+msgid "Total launchers:"
+msgstr "总共启动器："
+
+#. i18n: file: ui/advancedConfiguration.ui:116
+#. i18n: ectx: property (text), widget (QCheckBox, checkBox_rep)
+#: po/rc.cpp:18 rc.cpp:18
+msgid ""
+"Show taskbar representations only for applications\n"
+"that are not represented by a launcher"
+msgstr ""
+
+#. i18n: file: ui/advancedConfiguration.ui:123
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: po/rc.cpp:22 rc.cpp:22
+msgid "Drawers size:"
+msgstr ""
+
+#. i18n: file: ui/advancedConfiguration.ui:157
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: po/rc.cpp:25 rc.cpp:25
+msgid "Drawers rotation factor:"
+msgstr ""
+
+#. i18n: file: ui/advancedConfiguration.ui:197
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: po/rc.cpp:31 rc.cpp:31
+msgid ""
+"Middle mouse button\n"
+"click on launcher:"
+msgstr ""
+"用鼠标中键\n"
+"点击启动器："
+
+#. i18n: file: ui/advancedConfiguration.ui:211
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_middleClick)
+#: po/rc.cpp:35 rc.cpp:35
+msgid "Shades task"
+msgstr ""
+
+#. i18n: file: ui/advancedConfiguration.ui:216
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_middleClick)
+#: po/rc.cpp:38 rc.cpp:38
+msgid "Starts new application instance"
+msgstr "启动新应用程序实例"
+
+#. i18n: file: ui/advancedConfiguration.ui:243
+#. i18n: ectx: property (text), widget (QCheckBox, checkBoxCloseTasks)
+#: po/rc.cpp:41 rc.cpp:41
+msgid ""
+"Show close button on mouse over for \n"
+" taskbar representations"
+msgstr ""
+
+#. i18n: file: ui/appearanceConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearanceConfiguration)
+#. i18n: file: ui/arrangementConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, arrangementConfiguration)
+#. i18n: file: ui/appearanceConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, appearanceConfiguration)
+#. i18n: file: ui/arrangementConfiguration.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, arrangementConfiguration)
+#: po/rc.cpp:45 po/rc.cpp:75 src/daisyDialogs.cpp:57 rc.cpp:45 rc.cpp:75
+msgid "Appearance"
+msgstr "外观"
+
+#. i18n: file: ui/appearanceConfiguration.ui:24
+#. i18n: ectx: property (text), widget (QCheckBox, checkBoxIcoEffects)
+#: po/rc.cpp:48 rc.cpp:48
+msgid "Enable mouseover effects"
+msgstr "启用鼠标悬停特效"
+
+#. i18n: file: ui/appearanceConfiguration.ui:45
+#. i18n: ectx: property (text), widget (QCheckBox, checkBoxClickEffects)
+#: po/rc.cpp:51 rc.cpp:51
+msgid "Enable on-click effects"
+msgstr "启用点击特效"
+
+#. i18n: file: ui/appearanceConfiguration.ui:74
+#. i18n: ectx: property (text), widget (QCheckBox, checkBoxTips_launchers)
+#: po/rc.cpp:54 rc.cpp:54
+msgid "Show tooltips on launchers"
+msgstr "启动器上显示工具提示"
+
+#. i18n: file: ui/appearanceConfiguration.ui:86
+#. i18n: ectx: property (text), widget (QCheckBox, checkBoxTips_inactive_launchers)
+#: po/rc.cpp:57 rc.cpp:57
+msgid "Show tooltips on inactive launchers"
+msgstr "非活动启动器上显示工具提示"
+
+#. i18n: file: ui/appearanceConfiguration.ui:93
+#. i18n: ectx: property (text), widget (QCheckBox, checkBoxTips)
+#: po/rc.cpp:60 rc.cpp:60
+msgid "Show tooltips on plugins"
+msgstr "插件上显示工具提示"
+
+#. i18n: file: ui/appearanceConfiguration.ui:100
+#. i18n: ectx: property (text), widget (QCheckBox, checkBox_indicons)
+#: po/rc.cpp:63 rc.cpp:63
+msgid "Show application activity indicators"
+msgstr "显示应用程序活动性指示"
+
+#. i18n: file: ui/appearanceConfiguration.ui:107
+#. i18n: ectx: property (text), widget (QCheckBox, checkBoxIcoMirror)
+#: po/rc.cpp:66 rc.cpp:66
+msgid "Enable mirror effects"
+msgstr "启用镜像特效"
+
+#. i18n: file: ui/appearanceConfiguration.ui:135
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: po/rc.cpp:69 rc.cpp:69
+msgid "Background:"
+msgstr "背景："
+
+#. i18n: file: ui/appearanceConfiguration.ui:149
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: po/rc.cpp:72 rc.cpp:72
+msgid "Background opacity:"
+msgstr "背景透明度："
+
+#. i18n: file: ui/arrangementConfiguration.ui:20
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_pos)
+#: po/rc.cpp:78 rc.cpp:78
+msgid "Position"
+msgstr "位置"
+
+#. i18n: file: ui/arrangementConfiguration.ui:61
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_topLeft)
+#: po/rc.cpp:81 rc.cpp:81
+msgid "top left"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:92
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_topCenter)
+#: po/rc.cpp:84 rc.cpp:84
+msgid "top center"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:123
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_topRight)
+#: po/rc.cpp:87 rc.cpp:87
+msgid "top right"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:158
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_leftTop)
+#: po/rc.cpp:90 rc.cpp:90
+msgid "left top"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:189
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_leftCenter)
+#: po/rc.cpp:93 rc.cpp:93
+msgid "left center"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:220
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_leftButtom)
+#: po/rc.cpp:96 rc.cpp:96
+msgid "left bottom"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:255
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_rightTop)
+#: po/rc.cpp:99 rc.cpp:99
+msgid "right top"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:286
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_rightCenter)
+#: po/rc.cpp:102 rc.cpp:102
+msgid "right center"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:317
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_rightButtom)
+#: po/rc.cpp:105 rc.cpp:105
+msgid "right bottom"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:352
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_buttomLeft)
+#: po/rc.cpp:108 rc.cpp:108
+msgid "bottom left"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:383
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_buttomCenter)
+#: po/rc.cpp:111 rc.cpp:111
+msgid "bottom center"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:414
+#. i18n: ectx: property (toolTip), widget (QPushButton, pushButton_buttomRight)
+#: po/rc.cpp:114 rc.cpp:114
+msgid "bottom right"
+msgstr ""
+
+#. i18n: file: ui/arrangementConfiguration.ui:460
+#. i18n: ectx: property (text), widget (QCheckBox, checkBox_floating)
+#: po/rc.cpp:117 rc.cpp:117
+msgid "Floating"
+msgstr "浮动"
+
+#. i18n: file: ui/arrangementConfiguration.ui:467
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: po/rc.cpp:120 rc.cpp:120
+msgid "Size"
+msgstr "大小"
+
+#. i18n: file: ui/arrangementConfiguration.ui:505
+#. i18n: ectx: property (suffix), widget (QSpinBox, spinBox_icosize)
+#: po/rc.cpp:123 rc.cpp:123
+msgid "pixels"
+msgstr "像素"
+
+#. i18n: file: ui/arrangementConfiguration.ui:524
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: po/rc.cpp:126 rc.cpp:126
+msgid "Spacing"
+msgstr "间距"
+
+#. i18n: file: ui/hidingConfiguration.ui:13
+#. i18n: ectx: property (windowTitle), widget (QWidget, hidingConfiguration)
+#: po/rc.cpp:129 src/daisyDialogs.cpp:49 rc.cpp:129
+msgid "Hiding"
+msgstr "隐藏"
+
+#. i18n: file: ui/hidingConfiguration.ui:19
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: po/rc.cpp:132 rc.cpp:132
+msgid "Hide Mode"
+msgstr "隐藏模式"
+
+#. i18n: file: ui/hidingConfiguration.ui:27
+#. i18n: ectx: property (text), widget (QRadioButton, button_allwaysShow)
+#: po/rc.cpp:135 rc.cpp:135
+msgid "Hide only when a dock-hiding button is clicked"
+msgstr "仅当点击停靠隐藏按钮时隐藏"
+
+#. i18n: file: ui/hidingConfiguration.ui:34
+#. i18n: ectx: property (text), widget (QRadioButton, button_autoHide)
+#: po/rc.cpp:138 rc.cpp:138
+msgid "Hide automatically"
+msgstr "自动隐藏"
+
+#. i18n: file: ui/hidingConfiguration.ui:56
+#. i18n: ectx: property (suffix), widget (QSpinBox, spinBox_secHide)
+#: po/rc.cpp:141 rc.cpp:141
+msgid "secs"
+msgstr "秒"
+
+#. i18n: file: ui/hidingConfiguration.ui:63
+#. i18n: ectx: property (text), widget (QLabel, label_secHide)
+#: po/rc.cpp:144 rc.cpp:144
+msgid "after the cursor leaves the dock"
+msgstr ""
+
+#. i18n: file: ui/hidingConfiguration.ui:72
+#. i18n: ectx: property (text), widget (QRadioButton, button_allowCover)
+#: po/rc.cpp:147 rc.cpp:147
+msgid "Allow other windows to cover the dock"
+msgstr "允许其它窗口覆盖停靠"
+
+#. i18n: file: ui/hidingConfiguration.ui:94
+#. i18n: ectx: property (text), widget (QCheckBox, button_showOnDesk)
+#: po/rc.cpp:150 rc.cpp:150
+msgid "Show dock when switching desktops"
+msgstr "切换桌面时显示停靠"
+
+#. i18n: file: ui/launcherConfiguration.ui:13
+#. i18n: ectx: property (windowTitle), widget (QWidget, launcherConfiguration)
+#: po/rc.cpp:153 src/daisyDialogs.cpp:906 rc.cpp:153
+msgid "Edit launcher"
+msgstr "编辑启动器"
+
+#. i18n: file: ui/launcherConfiguration.ui:30
+#. i18n: ectx: property (toolTip), widget (KIconButton, pushButton_ico)
+#: po/rc.cpp:156 rc.cpp:156
+msgid "Click to set icon"
+msgstr "点击设定图标"
+
+#. i18n: file: ui/launcherConfiguration.ui:42
+#. i18n: ectx: property (text), widget (QLabel, label_name)
+#. i18n: file: ui/launcherConfiguration.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: file: ui/launcherConfiguration.ui:42
+#. i18n: ectx: property (text), widget (QLabel, label_name)
+#. i18n: file: ui/launcherConfiguration.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: po/rc.cpp:159 po/rc.cpp:183 rc.cpp:159 rc.cpp:183
+msgid "Name:"
+msgstr "名称："
+
+#. i18n: file: ui/launcherConfiguration.ui:60
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: po/rc.cpp:162 rc.cpp:162
+msgid "Alias:"
+msgstr "别名："
+
+#. i18n: file: ui/launcherConfiguration.ui:73
+#. i18n: ectx: property (toolTip), widget (QLineEdit, lineEdit_alias)
+#: po/rc.cpp:165 rc.cpp:165
+msgid ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\">Example:</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"weight:600;\">Command</span>: <span style=\" font-style:italic;\">kfmclient "
+"openURL</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"weight:600;\">Alias</span>: <span style=\" font-style:italic;\">konqueror</"
+"span></p></body></html>"
+msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\">例如：</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"weight:600;\">命令</span>：<span style=\" font-style:italic;\">kfmclient "
+"openURL</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"weight:600;\">别名</span>：<span style=\" font-style:italic;\">konqueror</"
+"span></p></body></html>"
+
+#. i18n: file: ui/launcherConfiguration.ui:84
+#. i18n: ectx: property (text), widget (QLabel, label_command)
+#. i18n: file: ui/launcherConfiguration.ui:153
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: ui/launcherConfiguration.ui:84
+#. i18n: ectx: property (text), widget (QLabel, label_command)
+#. i18n: file: ui/launcherConfiguration.ui:153
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: po/rc.cpp:174 po/rc.cpp:186 rc.cpp:174 rc.cpp:186
+msgid "Command:"
+msgstr "命令："
+
+#. i18n: file: ui/launcherConfiguration.ui:114
+#. i18n: ectx: property (toolTip), widget (KIconButton, pushButton_action_ico)
+#: po/rc.cpp:177 rc.cpp:177
+msgid "Click to set action icon"
+msgstr "点击设定动作图标"
+
+#. i18n: file: ui/launcherConfiguration.ui:130
+#. i18n: ectx: property (text), widget (QCheckBox, checkBox_action_launcher)
+#: po/rc.cpp:180 rc.cpp:180
+msgid "Enable action launcher"
+msgstr "启用动作启动器"
+
+#. i18n: file: ui/mainConfiguration.ui:30
+#. i18n: ectx: property (text), widget (QLabel, label_role)
+#: po/rc.cpp:192 rc.cpp:192
+msgid "Role:"
+msgstr ""
+
+#. i18n: file: ui/mainConfiguration.ui:38
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_role)
+#: po/rc.cpp:195 src/daisy.cpp:937 src/daisy.cpp:956 rc.cpp:195
+msgid "Circular dock"
+msgstr "环形停靠"
+
+#. i18n: file: ui/mainConfiguration.ui:43
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_role)
+#: po/rc.cpp:198 src/daisy.cpp:176 src/daisy.cpp:935 rc.cpp:198
+msgid "Media controller"
+msgstr "媒体控制器"
+
+#. i18n: file: ui/mainConfiguration.ui:48
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_role)
+#: po/rc.cpp:201 src/daisy.cpp:179 rc.cpp:201
+msgid "Linear dock"
+msgstr "线性停靠"
+
+#. i18n: file: ui/mainConfiguration.ui:91
+#. i18n: ectx: property (text), widget (QLabel, label_media)
+#: po/rc.cpp:204 rc.cpp:204
+msgid "Media source:"
+msgstr "媒体来源："
+
+#. i18n: file: ui/mainConfiguration.ui:111
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_player)
+#: po/rc.cpp:207 rc.cpp:207
+msgid "Amarok 1.x"
+msgstr "Amarok 1.x"
+
+#. i18n: file: ui/mainConfiguration.ui:116
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_player)
+#: po/rc.cpp:210 rc.cpp:210
+msgid "Amarok 2.x"
+msgstr "Amarok 2.x"
+
+#. i18n: file: ui/mainConfiguration.ui:121
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_player)
+#: po/rc.cpp:213 rc.cpp:213
+msgid "juK"
+msgstr "juK"
+
+#. i18n: file: ui/mainConfiguration.ui:126
+#. i18n: ectx: property (text), item, widget (QComboBox, comboBox_player)
+#: po/rc.cpp:216 rc.cpp:216
+msgid "XMMS"
+msgstr "XMMS"
+
+#. i18n: file: ui/mainConfiguration.ui:138
+#. i18n: ectx: property (text), widget (QCheckBox, checkBox_drop)
+#: po/rc.cpp:219 rc.cpp:219
+msgid "Allow drag and drop of objects"
+msgstr "允许拖放对象"
+
+#: po/rc.cpp:220 rc.cpp:220
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Ni Hui"
+
+#: po/rc.cpp:221 rc.cpp:221
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "shuizhuyuanluo@126.com"
+
+#: src/daisyConfig.cpp:110
+msgid "Do you really want to remove this launcher from dock?"
+msgstr "您真的想要从停靠中删除此启动器吗？"
+
+#: src/daisyConfig.cpp:112
+msgid "&Remove launcher"
+msgstr "删除启动器(&R)"
+
+#: src/daisyConfig.cpp:113 src/daisyConfig.cpp:295 src/daisy.cpp:1588
+#: src/daisyPlug_trash.cpp:133
+msgid "&Cancel"
+msgstr "取消(&C)"
+
+#: src/daisyConfig.cpp:292
+msgid "Do you really want to remove this trash plugin?"
+msgstr "您真的想要删除此回收站插件吗？"
+
+#: src/daisyConfig.cpp:294
+msgid "&Remove trash plugin"
+msgstr "删除回收站插件(&R)"
+
+#: src/daisyConfig.cpp:459
+msgid "applications"
+msgstr "应用程序"
+
+#: src/daisyConfig.cpp:460
+msgid "personal files"
+msgstr "个人文件"
+
+#: src/daisyConfig.cpp:461
+msgid "konsole"
+msgstr "konsole"
+
+#: src/daisyConfig.cpp:462
+msgid "opera"
+msgstr "opera"
+
+#: src/daisyConfig.cpp:463
+msgid "kmail"
+msgstr "kmail"
+
+#: src/daisyConfig.cpp:464
+msgid "amarok"
+msgstr "amarok"
+
+#: src/daisyConfig.cpp:465
+msgid "kate"
+msgstr "kate"
+
+#: src/daisyConfig.cpp:466
+msgid "systemsettings"
+msgstr "系统设置"
+
+#: src/daisyConfig.cpp:481 src/daisyConfig.cpp:482 src/daisyConfig.cpp:484
+msgid "bookmarks"
+msgstr "书签"
+
+#: src/daisyConfig.cpp:483
+msgid "system"
+msgstr "系统"
+
+#: src/daisyConfig.cpp:485
+msgid "mail"
+msgstr "邮件"
+
+#: src/daisyConfig.cpp:486
+msgid "pause"
+msgstr "暂停"
+
+#: src/daisyConfig.cpp:487
+msgid "okular"
+msgstr "okular"
+
+#: src/daisyConfig.cpp:488
+msgid "settings"
+msgstr "设置"
+
+#: src/daisyConfig.cpp:586 src/daisyConfig.cpp:587 src/daisyDialogs.cpp:270
+#: src/daisyDialogs.cpp:472 src/daisyDialogs.cpp:485
+#: src/daisyPlug_trash.cpp:52 src/daisyPlug_trash.cpp:71
+msgid "Trash"
+msgstr "回收站"
+
+#: src/daisy.cpp:182 src/daisy.cpp:948 src/daisy.cpp:968
+msgid "Lock Daisy"
+msgstr "锁定 Daisy"
+
+#: src/daisy.cpp:185
+msgid "Remove this Daisy"
+msgstr "删除此 Daisy"
+
+#: src/daisy.cpp:188
+msgid "Open"
+msgstr "打开"
+
+#: src/daisy.cpp:191
+msgid "Empty Trashcan"
+msgstr "清空回收站"
+
+#: src/daisy.cpp:194
+msgid "Restore items"
+msgstr "恢复项目"
+
+#: src/daisy.cpp:197
+msgid "Edit launcher..."
+msgstr "编辑启动器..."
+
+#: src/daisy.cpp:200
+msgid "Remove launcher"
+msgstr "删除启动器"
+
+#: src/daisy.cpp:203
+msgid "Remove trash plugin"
+msgstr "删除回收站插件"
+
+#: src/daisy.cpp:206
+msgid "New instance"
+msgstr "新建实例"
+
+#: src/daisy.cpp:209
+msgid "Close"
+msgstr "关闭"
+
+#: src/daisy.cpp:942 src/daisy.cpp:963
+msgid "Unlock Daisy"
+msgstr "解锁 Daisy"
+
+#: src/daisy.cpp:1585
+msgid "Do you really want to remove this Daisy?"
+msgstr "您真的想要删除 Daisy 吗？"
+
+#: src/daisy.cpp:1587
+msgid "&Remove this Daisy"
+msgstr "删除此 Daisy(&R)"
+
+#: src/daisy.cpp:1595
+msgid "Unlock Plasma Workspace Widgets first"
+msgstr "先解锁 Plasma 工作空间部件"
+
+#: src/daisy.cpp:1595
+msgid "Widgets locked"
+msgstr "部件已锁定"
+
+#: src/daisyDialogs.cpp:45
+msgid "Arrangement"
+msgstr "布局"
+
+#: src/daisyDialogs.cpp:53
+msgid "Launchers"
+msgstr "启动器"
+
+#: src/daisyDialogs.cpp:271 src/daisyDialogs.cpp:475 src/daisyDialogs.cpp:488
+msgid "Task manager"
+msgstr "任务管理器"
+
+#: src/daisyDialogs.cpp:296 src/daisyDialogs.cpp:334 src/daisyDialogs.cpp:339
+msgid "default"
+msgstr "默认"
+
+#: src/daisyDialogs.cpp:297
+msgid "translucent"
+msgstr "半透明"
+
+#: src/daisyDialogs.cpp:298
+msgid "opaque"
+msgstr "不透明"
+
+#: src/daisyDialogs.cpp:299
+msgid "alternative"
+msgstr "自设"
+
+#: src/daisyDialogs.cpp:300
+msgid "cavalino-red"
+msgstr ""
+
+#: src/daisyDialogs.cpp:301
+msgid "mach"
+msgstr ""
+
+#: src/daisyDialogs.cpp:302
+msgid "mach-2"
+msgstr ""
+
+#: src/daisyDialogs.cpp:303
+msgid "shiny-black"
+msgstr ""
+
+#: src/daisyDialogs.cpp:304
+msgid "vidro"
+msgstr ""
+
+#: src/daisyDialogs.cpp:305
+msgid "blueish"
+msgstr ""
+
+#: src/daisyDialogs.cpp:306
+msgid "reddish"
+msgstr ""
+
+#: src/daisyDialogs.cpp:307
+msgid "rubber-black"
+msgstr ""
+
+#: src/daisyDialogs.cpp:308
+msgid "kiwi"
+msgstr ""
+
+#: src/daisyDialogs.cpp:335
+msgid "simple"
+msgstr ""
+
+#: src/daisyDialogs.cpp:336
+msgid "fruity"
+msgstr ""
+
+#: src/daisyDialogs.cpp:337
+msgid "framed"
+msgstr ""
+
+#: src/daisyDialogs.cpp:342
+msgid "Application icon"
+msgstr "应用程序图标"
+
+#: src/daisyDialogs.cpp:343
+msgid "Text only"
+msgstr "仅文本"
+
+#: src/daisyDialogs.cpp:344
+msgid "Window thumbnail"
+msgstr "窗口缩略图"
+
+#: src/daisyPlug_trash.cpp:53
+msgid "items"
+msgstr "项"
+
+#: src/daisyPlug_trash.cpp:54
+msgid "One item"
+msgstr "一项"
+
+#: src/daisyPlug_trash.cpp:72
+msgid "Empty"
+msgstr "空"
+
+#: src/daisyPlug_trash.cpp:114 src/daisyPlug_trash.cpp:165
+msgid "trash"
+msgstr "回收站"
+
+#: src/daisyPlug_trash.cpp:130
+msgid "Do you really want to empty the trash? All items will be deleted."
+msgstr "您真的要清空回收站吗？里面所有的内容都将被删除。"
+
+#: src/daisyPlug_trash.cpp:132
+msgid "&Empty Trash"
+msgstr "清空回收站(&E)"
+
+#: src/daisyTasks.cpp:244 src/daisyTasks.cpp:421 src/daisyTasks.cpp:504
+msgid "On "
+msgstr "于 "
+
+#: src/daisyTasks.cpp:245 src/daisyTasks.cpp:422 src/daisyTasks.cpp:505
+msgid "On all desktops"
+msgstr "于全部桌面"
+
+#: src/daisyTasks.cpp:251 src/daisyTasks.cpp:428
+msgid " instances"
+msgstr " 个实例"
+
+

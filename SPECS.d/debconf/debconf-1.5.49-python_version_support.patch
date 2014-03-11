@@ -1,0 +1,26 @@
+diff -up ./Makefile.old ./Makefile
+--- ./Makefile.old	2013-04-03 04:54:30.830945272 +0300
++++ ./Makefile	2013-04-03 05:04:43.305687227 +0300
+@@ -35,8 +35,7 @@ install-i18n:
+ 	$(MAKE) -C po install
+ 
+ # This would probably be easier if we used setup.py ...
+-PYTHON2_SUPPORTED := $(shell pyversions -s)
+-PYTHON_SITEDIR = $(prefix)/usr/lib/$(1)/$(if $(filter 2.0 2.1 2.2 2.3 2.4 2.5,$(patsubst python%,%,$(1))),site-packages,dist-packages)
++PYTHON_SITEDIR = $(shell python -c "from distutils.sysconfig import get_python_lib; import sys; sys.stdout.write(get_python_lib())")
+ 
+ # Install all else.
+ install-rest:
+@@ -56,10 +55,8 @@ install-rest:
+ 	# Install modules.
+ 	find Debconf -type f -name '*.pm' |grep -v CVS | \
+ 		xargs -i install -m 0644 {} $(prefix)/usr/share/perl5/{}
+-	set -e; for dir in $(foreach python,$(PYTHON2_SUPPORTED),$(call PYTHON_SITEDIR,$(python))); do \
+-		install -d $$dir; \
+-		install -m 0644 debconf.py $$dir/; \
+-	done
++	install -d $(prefix)$(PYTHON_SITEDIR)
++	install -m 0644 debconf.py $(prefix)$(PYTHON_SITEDIR)
+ 	install -d $(prefix)/usr/lib/python3/dist-packages
+ 	install -m 0644 debconf.py $(prefix)/usr/lib/python3/dist-packages/
+ 	# Special case for back-compatability.

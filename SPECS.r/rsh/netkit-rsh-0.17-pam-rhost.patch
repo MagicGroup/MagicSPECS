@@ -1,0 +1,13 @@
+--- netkit-rsh-0.17/rexecd/rexecd.c.pam-rhost	2005-11-28 15:24:14.000000000 +0100
++++ netkit-rsh-0.17/rexecd/rexecd.c	2005-11-28 15:27:08.000000000 +0100
+@@ -312,7 +312,9 @@
+        PAM_password = pass;
+        pam_error = pam_start("rexec", PAM_username, &PAM_conversation,&pamh);
+        PAM_BAIL;
+-       (void) pam_set_item (pamh, PAM_TTY, "rexec");   /* we don't have a tty yet! */
++       pam_set_item (pamh, PAM_RUSER, user);
++       pam_set_item (pamh, PAM_RHOST, remote);	       
++       pam_set_item (pamh, PAM_TTY, "rexec");   /* we don't have a tty yet! */
+        pam_error = pam_authenticate(pamh, 0);
+        PAM_BAIL;
+        pam_error = pam_acct_mgmt(pamh, 0);

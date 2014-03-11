@@ -1,0 +1,52 @@
+diff -up xinetd-2.3.14-dist/xinetd/service.c xinetd-2.3.14/xinetd/service.c
+--- xinetd-2.3.14-dist/xinetd/service.c	2012-01-11 11:50:43.438650900 +0100
++++ xinetd-2.3.14/xinetd/service.c	2012-01-16 08:18:09.462620084 +0100
+@@ -88,6 +88,7 @@ struct service *svc_new( struct service_
+    CLEAR( *sp ) ;
+ 
+    SVC_CONF(sp) = scp ;
++   sp->svc_pfd_index = -1;
+    return( sp ) ;
+ }
+ 
+@@ -346,7 +347,16 @@ status_e svc_activate( struct service *s
+        ps.rws.pfds_last)*sizeof(struct pollfd));
+      ps.rws.pfd_array = tmp;
+    }
+-   SVC_POLLFD( sp ) = &ps.rws.pfd_array[ps.rws.pfds_last++] ;
++   if ( sp->svc_pfd_index >= 0 )
++   {
++     SVC_POLLFD( sp ) = &ps.rws.pfd_array[sp->svc_pfd_index] ;
++   }
++   else
++   {
++     sp->svc_pfd_index = ps.rws.pfds_last ;
++     SVC_POLLFD( sp ) = &ps.rws.pfd_array[ps.rws.pfds_last++] ;
++   }
++
+ #endif /* HAVE_POLL */
+ 
+    if( SC_IPV4( scp ) ) {
+@@ -433,6 +443,11 @@ status_e svc_activate( struct service *s
+ static void deactivate( const struct service *sp )
+ {
+    (void) Sclose( SVC_FD( sp ) ) ;
++#ifdef HAVE_POLL
++   SVC_FD( sp ) = 0;
++#else      
++   FD_CLR( SVC_FD( sp ), &ps.rws.socket_mask ) ;
++#endif
+ 
+ #ifdef HAVE_MDNS
+    xinetd_mdns_deregister(SVC_CONF(sp));
+diff -up xinetd-2.3.14-dist/xinetd/service.h xinetd-2.3.14/xinetd/service.h
+--- xinetd-2.3.14-dist/xinetd/service.h	2012-01-11 11:50:43.418650925 +0100
++++ xinetd-2.3.14/xinetd/service.h	2012-01-16 08:02:59.667553008 +0100
+@@ -47,6 +47,7 @@ struct service
+ {
+    state_e                svc_state ;
+    int                    svc_ref_count ;   /* # of pters to this struct */
++   int                    svc_pfd_index;    /* index of pfd in pfd_array */
+    struct service_config *svc_conf ;    /* service configuration */
+ 
+ #ifdef HAVE_POLL

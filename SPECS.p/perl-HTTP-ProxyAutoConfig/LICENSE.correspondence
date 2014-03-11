@@ -1,0 +1,24 @@
+Hello Petr,
+
+My intent was (a).  Looks like I put the wrong link in the README.
+
+Sorry,
+Craig MacKenna
+
+On Jan 25, 2012, at 1:55 AM, Petr Šabata wrote:
+
+> Hello Craig,
+> 
+> I'm packaging HTTP-ProxyAutoConfig Perl module for Fedora Linux
+> and I'm unsure what license I should use.  CPAN says it's "The
+> Perl 5 License (Artistic 1 & GPL 1)".  The package README file
+> confirms it but links to GPL 2 instead.
+> 
+> Could you please clarify which one is correct?
+> 
+> (a) "GPL+ or Artistic" aka Perl 5 license
+> (b) "GPL2+ or Artistic"
+> 
+> Thank you in advance,
+> -Petr
+

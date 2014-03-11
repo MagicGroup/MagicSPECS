@@ -1,0 +1,53 @@
+From 9fc3f0452023c42c235c3312ad311243e7f900a2 Mon Sep 17 00:00:00 2001
+From: Michal Soltys <soltys@ziu.info>
+Date: Thu, 22 Sep 2011 17:16:39 +0200
+Subject: [PATCH] 90mdraid: adjust /dev/md loops
+
+Include '_' to also handle old partitionable arrays (pre-2.6.28).
+
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+---
+ modules.d/90mdraid/65-md-incremental-imsm.rules |    2 +-
+ modules.d/90mdraid/mdraid-cleanup.sh            |    2 +-
+ modules.d/90mdraid/mdraid_start.sh              |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/modules.d/90mdraid/65-md-incremental-imsm.rules b/modules.d/90mdraid/65-md-incremental-imsm.rules
+index ea3a889..2a80700 100644
+--- a/modules.d/90mdraid/65-md-incremental-imsm.rules
++++ b/modules.d/90mdraid/65-md-incremental-imsm.rules
+@@ -15,7 +15,7 @@ ENV{ID_FS_TYPE}=="isw_raid_member", ENV{rd_NO_MDIMSM}=="?*", GOTO="md_end"
+ ENV{ID_FS_TYPE}=="ddf_raid_member", ENV{rd_NO_MDDDF}=="?*", GOTO="md_end"
+ 
+ # already done ?
+-PROGRAM="/bin/sh -c 'for i in $sys/$devpath/holders/md[0-9]*; do [ -e $$i ] && exit 0; done; exit 1;' ", \
++PROGRAM="/bin/sh -c 'for i in $sys/$devpath/holders/md[0-9_]*; do [ -e $$i ] && exit 0; done; exit 1;' ", \
+     GOTO="md_end"
+ 
+ # for native arrays - array's uuid has to be specified
+diff --git a/modules.d/90mdraid/mdraid-cleanup.sh b/modules.d/90mdraid/mdraid-cleanup.sh
+index 8fc54e2..3ffa2d3 100755
+--- a/modules.d/90mdraid/mdraid-cleanup.sh
++++ b/modules.d/90mdraid/mdraid-cleanup.sh
+@@ -5,7 +5,7 @@
+ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
+ 
+ containers=""
+-for md in /dev/md[0-9]*; do
++for md in /dev/md[0-9_]*; do
+     [ -b "$md" ] || continue
+     udevinfo="$(udevadm info --query=env --name=$md)"
+     strstr "$udevinfo" "DEVTYPE=partition" && continue
+diff --git a/modules.d/90mdraid/mdraid_start.sh b/modules.d/90mdraid/mdraid_start.sh
+index be5a3ce..f79f16e 100755
+--- a/modules.d/90mdraid/mdraid_start.sh
++++ b/modules.d/90mdraid/mdraid_start.sh
+@@ -8,7 +8,7 @@ _md_force_run() {
+     local _path_s
+     local _path_d
+     # try to force-run anything not running yet
+-    for md in /dev/md[0-9]*; do
++    for md in /dev/md[0-9_]*; do
+         [ -b "$md" ] || continue
+         _udevinfo="$(udevadm info --query=env --name="$md")"
+         strstr "$_udevinfo" "MD_LEVEL=container" && continue

@@ -1,0 +1,32 @@
+From 13d08e79090421fbf67fd727aada487ea23ecc2d Mon Sep 17 00:00:00 2001
+From: Eddie Wai <eddie.wai@broadcom.com>
+Date: Thu, 27 Sep 2012 13:57:12 -0700
+Subject: ISCSID: Passing more net params from ibft to iface
+
+Added the passing of the vlan_id, subnet_mask, and gateway attributes
+from the ibft context to the iface struct for the connection request.
+
+Signed-off-by: Eddie Wai <eddie.wai@broadcom.com>
+---
+ usr/iface.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/usr/iface.c b/usr/iface.c
+index 4f81a76..c86892e 100644
+--- a/usr/iface.c
++++ b/usr/iface.c
+@@ -962,6 +962,11 @@ int iface_setup_from_boot_context(struct iface_rec *iface,
+ 		sizeof(iface->hwaddress));
+ 	strlcpy(iface->ipaddress, context->ipaddr,
+ 		sizeof(iface->ipaddress));
++	iface->vlan_id = atoi(context->vlan);
++	strlcpy(iface->subnet_mask, context->mask,
++		sizeof(iface->subnet_mask));
++	strlcpy(iface->gateway, context->gateway,
++		sizeof(iface->gateway));
+ 	log_debug(1, "iface " iface_fmt "\n", iface_str(iface));
+ 	return 1;
+ }
+-- 
+1.7.11.7
+

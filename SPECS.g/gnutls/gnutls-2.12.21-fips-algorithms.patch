@@ -1,0 +1,209 @@
+diff -up gnutls-2.12.21/lib/gcrypt/init.c.fips gnutls-2.12.21/lib/gcrypt/init.c
+--- gnutls-2.12.21/lib/gcrypt/init.c.fips	2012-01-06 20:06:23.000000000 +0100
++++ gnutls-2.12.21/lib/gcrypt/init.c	2012-11-09 19:57:54.651624659 +0100
+@@ -43,6 +43,8 @@ static struct gcry_thread_cbs gct = {
+   .recvmsg = NULL,
+ };
+ 
++int gnutls_gcrypt_fips;
++
+ int
+ gnutls_crypto_init (void)
+ {
+@@ -72,6 +74,8 @@ gnutls_crypto_init (void)
+           return GNUTLS_E_INCOMPATIBLE_GCRYPT_LIBRARY;
+         }
+ 
++      gnutls_gcrypt_fips = gcry_fips_mode_active();
++
+       /* for gcrypt in order to be able to allocate memory */
+       gcry_control (GCRYCTL_DISABLE_SECMEM, NULL, 0);
+ 
+diff -up gnutls-2.12.21/lib/gnutls_algorithms.c.fips gnutls-2.12.21/lib/gnutls_algorithms.c
+--- gnutls-2.12.21/lib/gnutls_algorithms.c.fips	2012-01-06 20:06:23.000000000 +0100
++++ gnutls-2.12.21/lib/gnutls_algorithms.c	2012-11-28 14:19:34.507948036 +0100
+@@ -44,11 +44,11 @@ typedef struct
+ } gnutls_sec_params_entry;
+ 
+ static const gnutls_sec_params_entry sec_params[] = {
+-  {"Weak", GNUTLS_SEC_PARAM_WEAK, 64, 816, 1024, 128, 128},
+-  {"Low", GNUTLS_SEC_PARAM_LOW, 80, 1248, 2048, 160, 160},
+-  {"Normal", GNUTLS_SEC_PARAM_NORMAL, 112, 2432, 3072, 224, 224},
+-  {"High", GNUTLS_SEC_PARAM_HIGH, 128, 3248, 3072, 256, 256},
+-  {"Ultra", GNUTLS_SEC_PARAM_ULTRA, 256, 15424, 3072, 512, 512},
++  {"Weak", GNUTLS_SEC_PARAM_WEAK, 64, 1024, 1024, 128, 128},
++  {"Low", GNUTLS_SEC_PARAM_LOW, 80, 1280, 2048, 160, 160},
++  {"Normal", GNUTLS_SEC_PARAM_NORMAL, 112, 2560, 3072, 224, 224},
++  {"High", GNUTLS_SEC_PARAM_HIGH, 128, 3328, 3072, 256, 256},
++  {"Ultra", GNUTLS_SEC_PARAM_ULTRA, 256, 15616, 3072, 512, 512},
+   {NULL, 0, 0, 0, 0, 0}
+ };
+ 
+diff -up gnutls-2.12.21/lib/gnutls_priority.c.fips gnutls-2.12.21/lib/gnutls_priority.c
+--- gnutls-2.12.21/lib/gnutls_priority.c.fips	2012-11-08 17:11:11.000000000 +0100
++++ gnutls-2.12.21/lib/gnutls_priority.c	2012-11-09 19:57:54.651624659 +0100
+@@ -30,6 +30,7 @@
+ #include "gnutls_algorithms.h"
+ #include "gnutls_errors.h"
+ #include <gnutls_num.h>
++#include <gcrypt.h>
+ 
+ static void
+ break_comma_list (char *etag,
+@@ -223,6 +224,13 @@ static const int protocol_priority[] = {
+   0
+ };
+ 
++static const int protocol_priority_fips[] = {
++  GNUTLS_TLS1_2,
++  GNUTLS_TLS1_1,
++  GNUTLS_TLS1_0,
++  0
++};
++
+ static const int kx_priority_performance[] = {
+   GNUTLS_KX_RSA,
+   GNUTLS_KX_DHE_RSA,
+@@ -269,6 +277,13 @@ static const int cipher_priority_perform
+   0
+ };
+ 
++static const int cipher_priority_performance_fips[] = {
++  GNUTLS_CIPHER_AES_128_CBC,
++  GNUTLS_CIPHER_3DES_CBC,
++  GNUTLS_CIPHER_AES_256_CBC,
++  0
++};
++
+ static const int cipher_priority_normal[] = {
+   GNUTLS_CIPHER_AES_128_CBC,
+ #ifdef	ENABLE_CAMELLIA
+@@ -284,6 +299,13 @@ static const int cipher_priority_normal[
+   0
+ };
+ 
++static const int cipher_priority_normal_fips[] = {
++  GNUTLS_CIPHER_AES_128_CBC,
++  GNUTLS_CIPHER_AES_256_CBC,
++  GNUTLS_CIPHER_3DES_CBC,
++  0
++};
++
+ static const int cipher_priority_secure128[] = {
+   GNUTLS_CIPHER_AES_128_CBC,
+ #ifdef	ENABLE_CAMELLIA
+@@ -295,6 +317,11 @@ static const int cipher_priority_secure1
+   0
+ };
+ 
++static const int cipher_priority_secure128_fips[] = {
++  GNUTLS_CIPHER_AES_128_CBC,
++  GNUTLS_CIPHER_3DES_CBC,
++  0
++};
+ 
+ static const int cipher_priority_secure256[] = {
+   GNUTLS_CIPHER_AES_256_CBC,
+@@ -311,6 +338,13 @@ static const int cipher_priority_secure2
+   0
+ };
+ 
++static const int cipher_priority_secure256_fips[] = {
++  GNUTLS_CIPHER_AES_256_CBC,
++  GNUTLS_CIPHER_AES_128_CBC,
++  GNUTLS_CIPHER_3DES_CBC,
++  0
++};
++
+ /* The same as cipher_priority_security_normal + arcfour-40. */
+ static const int cipher_priority_export[] = {
+   GNUTLS_CIPHER_AES_128_CBC,
+@@ -362,6 +396,12 @@ static const int mac_priority_normal[] =
+   0
+ };
+ 
++static const int mac_priority_normal_fips[] = {
++  GNUTLS_MAC_SHA1,
++  GNUTLS_MAC_SHA256,
++  0
++};
++
+ 
+ static const int mac_priority_secure[] = {
+   GNUTLS_MAC_SHA256,
+@@ -462,6 +502,8 @@ gnutls_priority_set (gnutls_session_t se
+ 
+ #define MAX_ELEMENTS 48
+ 
++extern int gnutls_gcrypt_fips;
++
+ /**
+  * gnutls_priority_init:
+  * @priority_cache: is a #gnutls_prioritity_t structure.
+@@ -561,7 +603,7 @@ gnutls_priority_init (gnutls_priority_t
+    */
+   if (strcasecmp (broken_list[0], "NONE") != 0)
+     {
+-      _set_priority (&(*priority_cache)->protocol, protocol_priority);
++      _set_priority (&(*priority_cache)->protocol, gnutls_gcrypt_fips?protocol_priority_fips:protocol_priority);
+       _set_priority (&(*priority_cache)->compression, comp_priority);
+       _set_priority (&(*priority_cache)->cert_type, cert_type_priority_default);
+       _set_priority (&(*priority_cache)->sign_algo, sign_priority_default);
+@@ -577,17 +619,17 @@ gnutls_priority_init (gnutls_priority_t
+       if (strcasecmp (broken_list[i], "PERFORMANCE") == 0)
+         {
+           _set_priority (&(*priority_cache)->cipher,
+-                         cipher_priority_performance);
++                         gnutls_gcrypt_fips?cipher_priority_performance_fips:cipher_priority_performance);
+           _set_priority (&(*priority_cache)->kx, kx_priority_performance);
+-          _set_priority (&(*priority_cache)->mac, mac_priority_normal);
++          _set_priority (&(*priority_cache)->mac, gnutls_gcrypt_fips?mac_priority_normal_fips:mac_priority_normal);
+           _set_priority (&(*priority_cache)->sign_algo,
+                          sign_priority_default);
+         }
+       else if (strcasecmp (broken_list[i], "NORMAL") == 0)
+         {
+-          _set_priority (&(*priority_cache)->cipher, cipher_priority_normal);
++          _set_priority (&(*priority_cache)->cipher, gnutls_gcrypt_fips?cipher_priority_normal_fips:cipher_priority_normal);
+           _set_priority (&(*priority_cache)->kx, kx_priority_secure);
+-          _set_priority (&(*priority_cache)->mac, mac_priority_normal);
++          _set_priority (&(*priority_cache)->mac, gnutls_gcrypt_fips?mac_priority_normal_fips:mac_priority_normal);
+           _set_priority (&(*priority_cache)->sign_algo,
+                          sign_priority_default);
+         }
+@@ -595,7 +637,7 @@ gnutls_priority_init (gnutls_priority_t
+                || strcasecmp (broken_list[i], "SECURE") == 0)
+         {
+           _set_priority (&(*priority_cache)->cipher,
+-                         cipher_priority_secure256);
++                         gnutls_gcrypt_fips?cipher_priority_secure256_fips:cipher_priority_secure256);
+           _set_priority (&(*priority_cache)->kx, kx_priority_secure);
+           _set_priority (&(*priority_cache)->mac, mac_priority_secure);
+           _set_priority (&(*priority_cache)->sign_algo,
+@@ -604,7 +646,7 @@ gnutls_priority_init (gnutls_priority_t
+       else if (strcasecmp (broken_list[i], "SECURE128") == 0)
+         {
+           _set_priority (&(*priority_cache)->cipher,
+-                         cipher_priority_secure128);
++                         gnutls_gcrypt_fips?cipher_priority_secure128_fips:cipher_priority_secure128);
+           _set_priority (&(*priority_cache)->kx, kx_priority_secure);
+           _set_priority (&(*priority_cache)->mac, mac_priority_secure);
+           _set_priority (&(*priority_cache)->sign_algo,
+@@ -646,7 +688,7 @@ gnutls_priority_init (gnutls_priority_t
+               if (strncasecmp (&broken_list[i][1], "VERS-TLS-ALL", 12) == 0)
+                 {
+                   bulk_fn (&(*priority_cache)->protocol,
+-                                 protocol_priority);
++                                 gnutls_gcrypt_fips?protocol_priority_fips:protocol_priority);
+                 }
+               else
+                 {
+@@ -718,7 +760,7 @@ gnutls_priority_init (gnutls_priority_t
+           else if (strncasecmp (&broken_list[i][1], "CIPHER-ALL", 7) == 0)
+             {
+                   bulk_fn (&(*priority_cache)->cipher,
+-                                cipher_priority_normal);
++                                gnutls_gcrypt_fips?cipher_priority_normal_fips:cipher_priority_normal);
+             }
+           else
+             goto error;

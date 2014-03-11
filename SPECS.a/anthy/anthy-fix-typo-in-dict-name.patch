@@ -1,0 +1,24 @@
+diff -pruN anthy-9100h.orig/alt-cannadic/g_fname.t anthy-9100h/alt-cannadic/g_fname.t
+--- anthy-9100h.orig/alt-cannadic/g_fname.t	2009-02-08 01:28:12.000000000 +0900
++++ anthy-9100h/alt-cannadic/g_fname.t	2010-05-10 19:10:04.000000000 +0900
+@@ -82,7 +82,7 @@ ã‚ã¨ã†ã‹ã„ #JN*50 #_3é˜¿è—¤_2æµ·
+ ã‚ã¨ã†ã ãŸã‹ã— #JN*100 #_4é˜¿åˆ€ç”°_3é«˜
+ ã‚ãªã‚„ã¾ã“ã™ã‘ #JN*10 #_4ç©´å±±_3å°ä»‹
+ ã‚ã³ã‚‹ã‚†ã† #JN*100 #_3ã‚ã³ã‚‹_2å„ª
+-ã‚ã¹ã“ã†ã¼ã† #JN*10 #_2é˜¿éƒ¨_4å…¬æˆ¿
++ã‚ã¹ã“ã†ã¼ã† #JN*10 #_2å®‰éƒ¨_4å…¬æˆ¿
+ ã‚ã¹ã—ã‚“ãžã† #JN*100 #_2å®‰å€_4æ™‹ä¸‰
+ ã‚ã¹ã›ã„ã‚ã„ #JN*50 #_2å®‰å€_4æ™´æ˜Ž
+ ã‚ã¹ãªã¤ã¿ #JN*150 #_2å®‰å€_3ãªã¤ã¿
+diff -pruN anthy-9100h.orig/mkworddic/name.t anthy-9100h/mkworddic/name.t
+--- anthy-9100h.orig/mkworddic/name.t	2009-02-07 21:12:35.000000000 +0900
++++ anthy-9100h/mkworddic/name.t	2010-05-10 19:10:37.000000000 +0900
+@@ -43,7 +43,7 @@
+ ¤¢¤È¤¦¤À¤¿¤«¤· #JN #_4°¤ÅáÅÄ_3¹â
+ ¤¢¤Ê¤ó #JN ¥¢¥Ê¥ó
+ ¤¢¤Ó¤ë¤æ¤¦ #JN #_3¤¢¤Ó¤ë_2Í¥
+-¤¢¤Ù¤³¤¦¤Ü¤¦ #JN #_2°¤Éô_4¸øË¼
++¤¢¤Ù¤³¤¦¤Ü¤¦ #JN #_2°ÂÉô_4¸øË¼
+ ¤¢¤Ù¤·¤å¤·¤ç¤¦ #JN #_2°ÂÇÜ_5¼óÁê
+ ¤¢¤Ù¤·¤ó¤¾¤¦ #JN #_2°ÂÇÜ_4¿¸»°
+ ¤¢¤Ù¤½¤¦¤ê #JN #_2°ÂÇÜ_3ÁíÍý

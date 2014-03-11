@@ -1,0 +1,15 @@
+2010-01-27  Stepan Kasal  <skasal@redhat.com>
+
+	* Random.xs: fix PACLAGE_NAME
+
+--- Crypt-OpenSSL-Random-0.04/Random.xs.name	2006-01-06 15:49:32.000000000 +0100
++++ Crypt-OpenSSL-Random-0.04/Random.xs	2010-01-27 17:49:01.000000000 +0100
+@@ -4,7 +4,7 @@
+ 
+ #include <openssl/rand.h>
+ 
+-#define PACKAGE_NAME "Crypt::OpenSSL::RSA"
++#define PACKAGE_NAME "Crypt::OpenSSL::Random"
+ 
+ MODULE = Crypt::OpenSSL::Random		PACKAGE = Crypt::OpenSSL::Random
+ void

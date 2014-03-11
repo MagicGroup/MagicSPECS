@@ -1,0 +1,11 @@
+diff -up busybox-1.19.4/include/libbb.h.961542 busybox-1.19.4/include/libbb.h
+--- busybox-1.19.4/include/libbb.h.961542	2013-05-15 01:39:06.567005544 +0200
++++ busybox-1.19.4/include/libbb.h	2013-05-15 01:38:48.655004573 +0200
+@@ -35,6 +35,7 @@
+ #include <sys/poll.h>
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
++#include <sys/resource.h>
+ #include <sys/socket.h>
+ #include <sys/stat.h>
+ #include <sys/time.h>

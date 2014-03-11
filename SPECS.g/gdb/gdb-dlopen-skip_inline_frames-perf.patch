@@ -1,0 +1,90 @@
+diff --git a/gdb/infrun.c b/gdb/infrun.c
+index 91e0fc2..1d7c808 100644
+--- a/gdb/infrun.c
++++ b/gdb/infrun.c
+@@ -3111,6 +3111,56 @@ fill_in_stop_func (struct gdbarch *gdbarch,
+     }
+ }
+ 
++/* Argument for at_solib_event_breakpoint_helper.  */
++
++struct solib_event_breakpoint_helper_arg
++{
++  CORE_ADDR prev_pc;
++  int shlib_bp_count;
++  int other_bp_count;
++};
++
++/* Helper for at_solib_event_breakpoint.  */
++
++static int
++at_solib_event_breakpoint_helper (struct breakpoint *b, void *argp)
++{
++  struct solib_event_breakpoint_helper_arg *arg
++    = (struct solib_event_breakpoint_helper_arg *) argp; 
++  struct bp_location *loc;
++
++  for (loc = b->loc; loc; loc = loc->next)
++    {
++      if (loc->pspace == current_program_space
++	  && (loc->address == stop_pc || loc->address == arg->prev_pc))
++	{
++	  if (b->type == bp_shlib_event)
++	    arg->shlib_bp_count++;
++	  else
++	    {
++	      arg->other_bp_count++;
++	      return 1; /* quick exit */
++	    }
++	}
++    }
++
++  return 0; /* carry on looking */
++}
++
++/* Nonzero if the location stopoed at is the shlib event breakpoint.  */
++
++static int
++at_solib_event_breakpoint (struct execution_control_state *ecs)
++{
++  struct solib_event_breakpoint_helper_arg arg;
++  arg.prev_pc = ecs->event_thread->prev_pc;
++  arg.shlib_bp_count = arg.other_bp_count = 0;
++
++  iterate_over_breakpoints (at_solib_event_breakpoint_helper, &arg);
++
++  return arg.shlib_bp_count && !arg.other_bp_count;
++}
++
+ /* Given an execution control state that has been freshly filled in
+    by an event from the inferior, figure out what it means and take
+    appropriate action.  */
+@@ -3964,11 +4014,23 @@ handle_inferior_event (struct execution_control_state *ecs)
+   ecs->random_signal = 0;
+   stopped_by_random_signal = 0;
+ 
+-  /* Hide inlined functions starting here, unless we just performed stepi or
+-     nexti.  After stepi and nexti, always show the innermost frame (not any
+-     inline function call sites).  */
+-  if (ecs->event_thread->control.step_range_end != 1)
+-    skip_inline_frames (ecs->ptid);
++  /* If we have stopped at the solib event breakpoint and
++     stop_on_solib_events is not set then we can avoid calling
++     anything that calls find_pc_section.  This saves a lot
++     of time when the inferior loads a lot of shared libraries,
++     because otherwise the section map gets regenerated every
++     time we stop.  */
++  if (stop_on_solib_events
++      || ecs->event_thread->suspend.stop_signal != TARGET_SIGNAL_TRAP
++      || stop_after_trap
++      || !at_solib_event_breakpoint (ecs))
++    {
++      /* Hide inlined functions starting here, unless we just
++	 performed stepi or nexti.  After stepi and nexti, always show
++	 the innermost frame (not any inline function call sites).  */
++      if (ecs->event_thread->control.step_range_end != 1)
++	skip_inline_frames (ecs->ptid);
++    }
+ 
+   if (ecs->event_thread->suspend.stop_signal == TARGET_SIGNAL_TRAP
+       && ecs->event_thread->control.trap_expected

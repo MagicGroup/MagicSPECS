@@ -1,0 +1,35 @@
+# Author: Damyan Ivanov <dmn@debian.org>
+# Description: make do_verify() croak on error in the same way
+#              verify() already does
+#              Document that verify()/do_verify() croak on errors
+# Debian-Bug: http://bugs.debian.org/511519
+--- a/DSA.xs
++++ b/DSA.xs
+@@ -139,6 +139,8 @@ do_verify(dsa, dgst, sig)
+     CODE:
+         dgst_pv = SvPV(dgst, dgst_len);
+         RETVAL = DSA_do_verify(dgst_pv, dgst_len, sig, dsa);
++        if (RETVAL == -1)
++          croak("Error in DSA_do_verify: %s",ERR_error_string(ERR_get_error(), NULL));
+     OUTPUT:
+         RETVAL
+ 
+--- a/lib/Crypt/OpenSSL/DSA.pm
++++ b/lib/Crypt/OpenSSL/DSA.pm
+@@ -124,10 +124,14 @@ Verifies that the $sig signature for $me
+ 
+ $dsa is the signer's public key.
+ 
++Note it croaks if the underlying library call returns error (-1).
++
+ =item $valid = $dsa->do_verify( $message, $sig_obj );
+ 
+ Similar to C<verify>, but uses a L<Crypt::OpenSSL::DSA::Signature> object.
+ 
++Note it croaks if the underlying library call returns error (-1).
++
+ =item $dsa->write_params( $filename );
+ 
+ Writes the parameters into a PEM file.
+
+ 	  	 

@@ -1,0 +1,12 @@
+diff -ur kdenetwork-4.3.3.orig/kget/extensions/konqueror/kget_plug_in.cpp kdenetwork-4.3.3/kget/extensions/konqueror/kget_plug_in.cpp
+--- kdenetwork-4.3.3.orig/kget/extensions/konqueror/kget_plug_in.cpp	2009-11-13 11:38:36.000000000 +0800
++++ kdenetwork-4.3.3/kget/extensions/konqueror/kget_plug_in.cpp	2009-11-13 11:42:09.000000000 +0800
+@@ -36,7 +36,7 @@
+ #ifdef HAVE_WEBVIEW
+ #include <webview.h>
+ #else
+-#include <webkitview.h>
++#include <kwebview.h>
+ #endif
+ #include <QWebFrame>
+ #endif

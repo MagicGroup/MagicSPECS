@@ -1,0 +1,23 @@
+commit 5f3598a700e8e028f9140682262869ca319597ee
+Author: Panu Matilainen <pmatilai@redhat.com>
+Date:   Fri Sep 6 16:31:25 2013 +0300
+
+    Fix segfault executing a -p <lua> scriptlet without a body (RhBug:1004062)
+    
+    - There are any number of places where this could be fixed, but
+      to keep the behavior similar to eg /bin/sh scriptlet without a body,
+      just turn a non-existent script into an empty string.
+
+diff --git a/rpmio/rpmlua.c b/rpmio/rpmlua.c
+index 0576318..921cc37 100644
+--- a/rpmio/rpmlua.c
++++ b/rpmio/rpmlua.c
+@@ -526,6 +526,8 @@ int rpmluaRunScript(rpmlua _lua, const char *script, const char *name)
+     int ret = 0;
+     if (name == NULL)
+ 	name = "<lua>";
++    if (script == NULL)
++	script = "";
+     if (luaL_loadbuffer(L, script, strlen(script), name) != 0) {
+ 	rpmlog(RPMLOG_ERR, _("invalid syntax in lua script: %s\n"),
+ 		 lua_tostring(L, -1));

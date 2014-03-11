@@ -1,0 +1,62 @@
+From 07bf3074ccdd9debe844fe1bae0244799d01fe58 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 2 Jan 2013 14:46:14 -0800
+Subject: iscsiuio: iscsid IPC newroot command
+
+---
+ include/uip_mgmt_ipc.h | 4 ++++
+ src/unix/iscsid_ipc.c  | 9 +++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/include/uip_mgmt_ipc.h b/include/uip_mgmt_ipc.h
+index 7054df5..db87b2b 100644
+--- a/include/uip_mgmt_ipc.h
++++ b/include/uip_mgmt_ipc.h
+@@ -26,6 +26,7 @@
+ typedef enum iscsid_uip_cmd {
+ 	ISCSID_UIP_IPC_UNKNOWN                  = 0,
+ 	ISCSID_UIP_IPC_GET_IFACE                = 1,
++	ISCSID_UIP_NEWROOT			= 2,
+ 
+ 	__ISCSID_UIP_IPC_MAX_COMMAND
+ } iscsid_uip_cmd_e;
+@@ -45,6 +46,9 @@ typedef struct iscsid_uip_broadcast {
+ 		struct ipc_broadcast_iface_rec {
+ 			struct iface_rec rec;
+ 		} iface_rec;
++		struct ipc_broadcast_newroot {
++			char path[PATH_MAX + 1];
++		} newroot;
+ 	} u;
+ } iscsid_uip_broadcast_t;
+ 
+diff --git a/src/unix/iscsid_ipc.c b/src/unix/iscsid_ipc.c
+index 1c28822..dcbeb4c 100644
+--- a/src/unix/iscsid_ipc.c
++++ b/src/unix/iscsid_ipc.c
+@@ -801,6 +801,7 @@ int process_iscsid_broadcast(int s2)
+ 	size_t size;
+ 	iscsid_uip_cmd_e cmd;
+ 	uint32_t payload_len;
++	char *newroot;
+ 
+ 	fd = fdopen(s2, "r+");
+ 	if (fd == NULL) {
+@@ -857,6 +858,14 @@ int process_iscsid_broadcast(int s2)
+ 		}
+ 
+ 		break;
++	case ISCSID_UIP_NEWROOT:
++		rsp.command = cmd;
++		newroot = data->u.newroot.path;
++		if (chdir(newroot) || chroot(".") || chdir("/"))
++			rsp.err = ISCSID_UIP_MGMT_IPC_ERR;
++		else
++			rsp.err = ISCSID_UIP_MGMT_IPC_OK;
++		break;
+ 	default:
+ 		LOG_WARN(PFX "Unknown iscsid broadcast command: %x",
+ 			 data->header.command);
+-- 
+1.7.11.7
+

@@ -1,0 +1,20 @@
+--- lib-src/Makefile.in.in.orig	2011-08-05 12:04:52.445736351 -0600
++++ lib-src/Makefile.in.in	2011-08-05 13:02:14.244239350 -0600
+@@ -191,7 +191,7 @@
+ ## when #include'ing generated files.
+ cppflags = -I. -I../src -I$(srcdir) -I$(top_srcdir)/src $(CPPFLAGS)
+ cflags   = $(CFLAGS) $(cppflags) $(c_switch_general)
+-ldflags  = $(LDFLAGS) $(ld_switch_general) $(ld_libs_general)
++ldflags  = $(LDFLAGS) $(ld_switch_general)
+ 
+ ## This is the default compilation command.
+ ## But we should never rely on it, because some make version
+@@ -382,7 +382,7 @@
+ #endif /* not DUMP_IN_EXEC */
+ 
+ cflags_gnuserv  = $(CFLAGS) $(cppflags) $(c_switch_all)
+-ldflags_gnuserv = $(LDFLAGS) $(ld_switch_all) @libs_xauth@ $(ld_libs_general)
++ldflags_gnuserv = $(LDFLAGS) $(ld_switch_all) -lXau
+ gnuslib.o: ${srcdir}/gnuslib.c ${srcdir}/gnuserv.h ../src/config.h
+ 	$(CC) -c $(cflags_gnuserv) ${srcdir}/gnuslib.c
+ gnuclient: ${srcdir}/gnuclient.c gnuslib.o ${srcdir}/gnuserv.h

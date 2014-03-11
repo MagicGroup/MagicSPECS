@@ -1,0 +1,12 @@
+diff -up Graph-Easy-0.70/lib/Graph/Easy/Parser/Graphviz.pm.orig Graph-Easy-0.70/lib/Graph/Easy/Parser/Graphviz.pm
+--- Graph-Easy-0.70/lib/Graph/Easy/Parser/Graphviz.pm.orig	2010-11-05 10:44:18.000000000 +0100
++++ Graph-Easy-0.70/lib/Graph/Easy/Parser/Graphviz.pm	2011-04-24 09:33:54.000000000 +0200
+@@ -831,7 +831,7 @@ sub _build_match_stack
+       return $self->parse_error(6) if @{$self->{scope_stack}} > 0; 
+       $self->{_graphviz_graph_name} = 'unnamed'; 
+       $self->_new_scope(1);
+-      $self->{_graph}->set_attribute('type','undirected') if lc($2) ne 'di';
++      $self->{_graph}->set_attribute('type','undirected') if lc($2||'') ne 'di';
+       1;
+       } );
+ 

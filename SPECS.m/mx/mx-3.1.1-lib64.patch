@@ -1,0 +1,11 @@
+--- egenix-mx-base-3.1.1/mxSetup.py	2008-08-04 13:24:56.000000000 +0100
++++ egenix-mx-base-3.1.1/mxSetup-new.py	2008-09-15 09:27:04.000000000 +0100
+@@ -2376,7 +2376,7 @@
+ 
+         if self.install_dir is None:
+             installobj = self.distribution.get_command_obj('install')
+-            self.install_dir = installobj.install_data
++            self.install_dir = installobj.install_platlib
+         if _debug:
+             print 'Installing data files to %s' % self.install_dir
+         self.set_undefined_options('install',

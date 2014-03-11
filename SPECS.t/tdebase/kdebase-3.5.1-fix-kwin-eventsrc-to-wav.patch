@@ -1,0 +1,183 @@
+diff -Nur kdebase-3.5.1/twin/eventsrc kdebase-3.5.1n/twin/eventsrc
+--- kdebase-3.5.1/twin/eventsrc	2006-01-20 01:01:07.000000000 +0800
++++ kdebase-3.5.1n/twin/eventsrc	2006-03-03 20:57:43.000000000 +0800
+@@ -212,7 +212,7 @@
+ Comment[wa]=Li prumî forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 1
+ Comment[zh_TW]=虛擬桌面一被選取
+-default_sound=KDE_Desktop_1.ogg
++default_sound=KDE_Desktop_1.wav
+ default_presentation=0
+ 
+ [desktop2]
+@@ -351,7 +351,7 @@
+ Comment[wa]=Li deujhinme forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 2
+ Comment[zh_TW]=虛擬桌面二被選取
+-default_sound=KDE_Desktop_2.ogg
++default_sound=KDE_Desktop_2.wav
+ default_presentation=0
+ 
+ [desktop3]
+@@ -490,7 +490,7 @@
+ Comment[wa]=Li troejhinme forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 3
+ Comment[zh_TW]=虛擬桌面三被選取
+-default_sound=KDE_Desktop_3.ogg
++default_sound=KDE_Desktop_3.wav
+ default_presentation=0
+ 
+ [desktop4]
+@@ -629,7 +629,7 @@
+ Comment[wa]=Li cwatrinme forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 4
+ Comment[zh_TW]=虛擬桌面四被選取
+-default_sound=KDE_Desktop_4.ogg
++default_sound=KDE_Desktop_4.wav
+ default_presentation=0
+ 
+ [desktop5]
+@@ -768,7 +768,7 @@
+ Comment[wa]=Li cénkinme forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 5
+ Comment[zh_TW]=虛擬桌面五被選取
+-default_sound=KDE_Desktop_5.ogg
++default_sound=KDE_Desktop_5.wav
+ default_presentation=0
+ 
+ [desktop6]
+@@ -907,7 +907,7 @@
+ Comment[wa]=Li shijhinme forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 6
+ Comment[zh_TW]=虛擬桌面六被選取
+-default_sound=KDE_Desktop_6.ogg
++default_sound=KDE_Desktop_6.wav
+ default_presentation=0
+ 
+ [desktop7]
+@@ -1046,7 +1046,7 @@
+ Comment[wa]=Li setinme forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 7
+ Comment[zh_TW]=虛擬桌面七被選取
+-default_sound=KDE_Desktop_7.ogg
++default_sound=KDE_Desktop_7.wav
+ default_presentation=0
+ 
+ [desktop8]
+@@ -1185,7 +1185,7 @@
+ Comment[wa]=Li ûtinme forveyou scribanne a stî tchoezi
+ Comment[zh_CN]=选择了虚拟桌面 8
+ Comment[zh_TW]=虛擬桌面八被選取
+-default_sound=KDE_Desktop_8.ogg
++default_sound=KDE_Desktop_8.wav
+ default_presentation=0
+ 
+ [desktop9]
+@@ -2672,7 +2672,7 @@
+ Comment[wa]=Novea purnea
+ Comment[zh_CN]=新建窗口
+ Comment[zh_TW]=新建視窗
+-default_sound=KDE_Window_Open.ogg
++default_sound=KDE_Window_Open.wav
+ default_presentation=0
+ 
+ [delete]
+@@ -2950,7 +2950,7 @@
+ Comment[wa]=On purnea est cloyou
+ Comment[zh_CN]=窗口关闭
+ Comment[zh_TW]=關閉一個視窗
+-default_sound=KDE_Window_Close.ogg
++default_sound=KDE_Window_Close.wav
+ default_presentation=0
+ 
+ [shadeup]
+@@ -3081,7 +3081,7 @@
+ Comment[wa]=On purnea a stî erôlé
+ Comment[zh_CN]=窗口被卷起
+ Comment[zh_TW]=視窗已收起
+-default_sound=KDE_Window_Shade_Up.ogg
++default_sound=KDE_Window_Shade_Up.wav
+ default_presentation=0
+ 
+ [shadedown]
+@@ -3212,7 +3212,7 @@
+ Comment[wa]=On purnea a stî disrôlé
+ Comment[zh_CN]=窗口被展开
+ Comment[zh_TW]=視窗已展開
+-default_sound=KDE_Window_Shade_Down.ogg
++default_sound=KDE_Window_Shade_Down.wav
+ default_presentation=0
+ 
+ [minimize]
+@@ -3341,7 +3341,7 @@
+ Comment[wa]=On purnea a stî metou å pus ptit
+ Comment[zh_CN]=窗口被最小化
+ Comment[zh_TW]=視窗被最小化
+-default_sound=KDE_Window_Iconify.ogg
++default_sound=KDE_Window_Iconify.wav
+ default_presentation=0
+ 
+ [unminimize]
+@@ -3463,7 +3463,7 @@
+ Comment[uz]=Ойна тикланган
+ Comment[zh_CN]=窗口被恢复
+ Comment[zh_TW]=視窗恢復大小
+-default_sound=KDE_Window_DeIconify.ogg
++default_sound=KDE_Window_DeIconify.wav
+ default_presentation=0
+ 
+ [maximize]
+@@ -3601,7 +3601,7 @@
+ Comment[wa]=On purnea a stî metou å pus grand
+ Comment[zh_CN]=窗口被最大化
+ Comment[zh_TW]=視窗被最大化
+-default_sound=KDE_Window_UnHide.ogg
++default_sound=KDE_Window_UnHide.wav
+ default_presentation=0
+ 
+ [unmaximize]
+@@ -3733,7 +3733,7 @@
+ Comment[uk]=Вікно втрачає максимізацію
+ Comment[zh_CN]=窗口不再最大化
+ Comment[zh_TW]=視窗取消最大化
+-default_sound=KDE_Window_Hide.ogg
++default_sound=KDE_Window_Hide.wav
+ default_presentation=0
+ 
+ [on_all_desktops]
+@@ -3855,7 +3855,7 @@
+ Comment[wa]=On purnea a stî håyné so tos les scribannes
+ Comment[zh_CN]=窗口出现在全部桌面上
+ Comment[zh_TW]=視窗可在所有桌面被看到
+-default_sound=KDE_Window_Sticky.ogg
++default_sound=KDE_Window_Sticky.wav
+ default_presentation=0
+ 
+ [not_on_all_desktops]
+@@ -3977,7 +3977,7 @@
+ Comment[zh_CN]=窗口不再出现在全部桌面上
+ Comment[zh_TW]=視窗在所有桌面不再可被看到
+ default_presentation=1
+-default_sound=KDE_Window_UnSticky.ogg
++default_sound=KDE_Window_UnSticky.wav
+ 
+ [transnew]
+ Name=New Dialog
+@@ -4109,7 +4109,7 @@
+ Comment[uz]=Мулоқат ойнаси пайдо бўлди
+ Comment[zh_CN]=出现了临时窗口(对话框)
+ Comment[zh_TW]=暫態視窗(對話)出現
+-default_sound=KDE_Dialog_Appear.ogg
++default_sound=KDE_Dialog_Appear.wav
+ default_presentation=0
+ 
+ [transdelete]
+@@ -4242,7 +4242,7 @@
+ Comment[uz]=Мулоқат ойнаси ёпилди
+ Comment[zh_CN]=删除了临时窗口(对话框)
+ Comment[zh_TW]=暫態視窗(對話)移除
+-default_sound=KDE_Dialog_Disappear.ogg
++default_sound=KDE_Dialog_Disappear.wav
+ default_presentation=0
+ 
+ [movestart]

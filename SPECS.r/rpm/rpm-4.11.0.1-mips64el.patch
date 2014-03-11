@@ -1,0 +1,67 @@
+diff -Nur rpm-4.9.90.git11519-orig/installplatform rpm-4.9.90.git11519/installplatform
+--- rpm-4.9.90.git11519-orig/installplatform  2012-07-26 18:57:35.000000000 -0400
++++ rpm-4.9.90.git11519/installplatform	2012-07-26 19:28:53.000000000 -0400
+@@ -101,6 +101,12 @@
+ 	CANONARCH=alpha
+ 	CANONCOLOR=0
+ 	;;
++    mips64el*)
++	ISANAME=mips
++        ISABITS=64
++        CANONARCH=mips64el
++        CANONCOLOR=3
++        ;;
+     noarch)
+ 	CANONARCH=noarch
+ 	CANONCOLOR=0
+diff -Nur rpm-4.9.90.git11519-orig/lib/rpmrc.c rpm-4.9.90.git11519/lib/rpmrc.c
+--- rpm-4.9.90.git11519-orig/lib/rpmrc.c	2012-07-26 18:57:34.000000000 -0400
++++ rpm-4.9.90.git11519/lib/rpmrc.c	2012-07-26 19:18:08.000000000 -0400
+@@ -1036,7 +1036,11 @@
+ 
+ #	if defined(__MIPSEL__) || defined(__MIPSEL) || defined(_MIPSEL)
+ 	    /* little endian */
+-	    strcpy(un.machine, "mipsel");
++#	    if defined(__mips64) 
++	        strcpy(un.machine, "mips64el");
++#	    else
++	        strcpy(un.machine, "mipsel");
++#	    endif
+ #	elif defined(__MIPSEB__) || defined(__MIPSEB) || defined(_MIPSEB)
+ 	   /* big endian */
+ 		strcpy(un.machine, "mips");
+diff -Nur rpm-4.9.90.git11519-orig/rpmrc.in rpm-4.9.90.git11519/rpmrc.in
+--- rpm-4.9.90.git11519-orig/rpmrc.in	2012-07-26 18:57:35.000000000 -0400
++++ rpm-4.9.90.git11519/rpmrc.in	2012-07-26 19:08:52.000000000 -0400
+@@ -57,6 +57,7 @@
+ 
+ optflags: mips -O2 -g
+ optflags: mipsel -O2 -g
++optflags: mips64el -O2 -g -mabi=64
+ 
+ optflags: armv3l -O2 -g -march=armv3
+ optflags: armv4b -O2 -g -march=armv4
+@@ -134,6 +135,7 @@
+ arch_canon:     ia64:	ia64	9
+ 
+ arch_canon:	mipsel:	mipsel	11
++arch_canon:     mips64el: mips64el  11
+ 
+ arch_canon:	armv3l: armv3l	12
+ arch_canon:     armv4b:	armv4b 	12
+@@ -326,6 +328,7 @@
+ arch_compat: sparc: noarch
+ 
+ arch_compat: mips: noarch
++arch_compat: mips64el: mipsel
+ arch_compat: mipsel: noarch
+ 
+ arch_compat: hppa2.0: hppa1.2
+@@ -438,6 +441,7 @@
+ buildarch_compat: ppc64iseries: ppc64
+ 
+ buildarch_compat: mips: noarch
++buildarch_compat: mips64el: noarch
+ buildarch_compat: mipsel: noarch
+ 
+ buildarch_compat: armv4b: noarch

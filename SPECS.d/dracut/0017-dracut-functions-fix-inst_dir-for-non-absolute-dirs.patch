@@ -1,0 +1,22 @@
+From 8cf621ffd98984f44e2861969d9ed58be7233d4e Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 23 Aug 2011 12:50:03 +0200
+Subject: [PATCH] dracut-functions: fix inst_dir() for non-absolute dirs
+
+---
+ dracut-functions |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/dracut-functions b/dracut-functions
+index 43a6843..a3340e4 100755
+--- a/dracut-functions
++++ b/dracut-functions
+@@ -279,7 +279,7 @@ inst_dir() {
+     [[ -e ${initdir}$_dir ]] && return 0
+ 
+     _part=${_dir%/*}
+-    while ! [[ -e "${initdir}${_part}" ]]; do
++    while [[ "$_part" != "${_part%/*}" ]] && ! [[ -e "${initdir}${_part}" ]]; do
+         _dir="$_part $_dir"
+         _part=${_part%/*}
+     done

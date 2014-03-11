@@ -1,0 +1,41 @@
+--- curl/CHANGES
++++ curl/CHANGES
+@@ -1388,7 +1388,7 @@ Daniel Stenberg (12 Dec 2011)
+   linking with a static openssl requires a set of more libs to be linked
+   on Windows.
+   
+-  Thanks also to Steve Holme and Martin Storsjö for additional feedback.
++  Thanks also to Steve Holme and Martin StorsjÃ¶ for additional feedback.
+   
+   Bug: http://curl.haxx.se/mail/lib-2011-12/0063.html
+   Reported by: Ward Willats
+@@ -2648,7 +2648,7 @@ Daniel Stenberg (25 Sep 2011)
+   damaging.
+   
+   Bug: http://curl.haxx.se/bug/view.cgi?id=3413181
+-  Reported by: Taneli Vähäkangas
++  Reported by: Taneli VÃ¤hÃ¤kangas
+ 
+ Yang Tse (24 Sep 2011)
+ - curl tool: fix a compiler warning
+@@ -5168,9 +5168,9 @@ Daniel Stenberg (12 Apr 2011)
+ - OpenSSL: no-sslv2 aware
+   
+   Allow openSSL without SSL2 to be used. This fix is inspired by the fix
+-  provided by Cristian Rodríguez.
++  provided by Cristian RodrÃ­guez.
+   
+-  Reported by: Cristian Rodríguez
++  Reported by: Cristian RodrÃ­guez
+ 
+ - curl_easy_setopt.3: CURLOPT_RESOLVE typo version
+   
+--- curl/README
++++ curl/README
+@@ -45,5 +45,5 @@ GIT
+ NOTICE
+ 
+   Curl contains pieces of source code that is Copyright (c) 1998, 1999
+-  Kungliga Tekniska Högskolan. This notice is included here to comply with the
++  Kungliga Tekniska HÃ¶gskolan. This notice is included here to comply with the
+   distribution terms.

@@ -1,0 +1,85 @@
+--- a/packages/jpl/configure
++++ b/packages/jpl/configure
+@@ -4267,21 +4267,6 @@ fi
+ 
+ 
+ 
+-if test "x$JAVALIBS" = "x"; then
+-  case "$PLARCH" in
+-     *darwin*)
+-	  JAVALIBS="-Wl,-framework,JavaVM"
+-	  ;;
+-     *powerpc-linux*)
+-	  JAVALIBS="-ljava -ljvm"
+-	  ;;
+-     *)
+-	  JAVALIBS="-ljava -lverify -ljvm"
+-	  ;;
+-  esac
+-fi
+-
+-
+ # Make sure we can run config.sub.
+ $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
+   as_fn_error $? "cannot run $SHELL $ac_aux_dir/config.sub" "$LINENO" 5
+@@ -5203,15 +5188,25 @@ case "$host_cpu" in
+ 		_JNI_LIBDIRS="lib/amd64"
+ 		_JNI_LIBSUBDIRS="server"
+ 		;;
++        alpha*)
++                _JNI_LIBDIRS="lib/alpha"
++                _JNI_LIBSUBDIRS="server"
++                ;;
+ 	powerpc)
+-		case "$host_os" in
+-		linux*)
+-			_JNI_LIBDIRS="lib/ppc bin"
+-			_JNI_LIBSUBDIRS="server classic"
+-			;;
+-		*)
+-			_JNI_LIBDIRS=""
+-		esac
++                _JNI_LIBDIRS="lib/ppc"
++                _JNI_LIBSUBDIRS="server"
++		;;
++	powerpc64)
++                _JNI_LIBDIRS="lib/ppc64"
++                _JNI_LIBSUBDIRS="server"
++		;;
++	s390)
++                _JNI_LIBDIRS="lib/s390"
++                _JNI_LIBSUBDIRS="server"
++		;;
++	s390x)
++                _JNI_LIBDIRS="lib/s390x"
++                _JNI_LIBSUBDIRS="server"
+ 		;;
+ 	*)
+ 		# Fallback option should work on all architectures except
+@@ -5220,6 +5215,26 @@ case "$host_cpu" in
+ 		_JNI_LIBSUBDIRS="server"
+ esac
+ 
++# Set JAVALIBS differently if we're using GCJ
++if test "x$JAVALIBS" = "x"; then
++    if (echo $_JTOPDIR | grep gcj > /dev/null); then
++        JAVALIBS="-ljvm"
++    else
++        case "$PLARCH" in
++            *darwin*)
++            JAVALIBS="-Wl,-framework,JavaVM"
++            ;;
++            *powerpc-linux*)
++            JAVALIBS="-ljava -ljvm"
++            ;;
++            *)
++            JAVALIBS="-ljava -lverify -ljvm"
++            ;;
++        esac
++    fi
++fi
++
++
+ for d in $_JNI_LIBDIRS; do
+ 	for subd in $_JNI_LIBSUBDIRS; do
+ 		echo "Trying $_JTOPDIR/jre/$d/$subd"

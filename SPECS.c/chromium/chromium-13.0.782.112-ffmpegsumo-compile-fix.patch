@@ -1,0 +1,12 @@
+diff -up chromium-13.0.782.112/third_party/WebKit/Source/WebCore/platform/audio/ffmpeg/FFTFrameFFMPEG.cpp.ffmpegsumo chromium-13.0.782.112/third_party/WebKit/Source/WebCore/platform/audio/ffmpeg/FFTFrameFFMPEG.cpp
+--- chromium-13.0.782.112/third_party/WebKit/Source/WebCore/platform/audio/ffmpeg/FFTFrameFFMPEG.cpp.ffmpegsumo	2011-08-12 10:48:47.443014325 -0400
++++ chromium-13.0.782.112/third_party/WebKit/Source/WebCore/platform/audio/ffmpeg/FFTFrameFFMPEG.cpp	2011-08-12 10:49:11.911998479 -0400
+@@ -37,7 +37,7 @@
+ #include "VectorMath.h"
+ 
+ extern "C" {
+-    #include <libavcodec/avfft.h>
++    #include <ffmpegsumo/libavcodec/avfft.h>
+ }
+ 
+ #include <wtf/MathExtras.h>

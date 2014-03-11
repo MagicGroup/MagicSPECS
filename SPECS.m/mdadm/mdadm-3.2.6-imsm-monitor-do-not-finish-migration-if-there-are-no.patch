@@ -1,0 +1,49 @@
+From 79b68f1b48b0967da999945e310aef628c9bca4c Mon Sep 17 00:00:00 2001
+From: Przemyslaw Czarnowski <przemyslaw.hawrylewicz.czarnowski@intel.com>
+Date: Thu, 18 Apr 2013 10:51:37 +0200
+Subject: [PATCH] imsm: monitor: do not finish migration if there are no failed
+ disks
+
+Transition from "degraded" to "recovery" made in OROM is slightly different
+than the same transision in mdadm. Missing disk is not removed from list of
+raid devices, but just from map. Therefore mdadm should not end migration
+basing on existence of list of missing disks but should rely on count of
+failed disks.
+
+Signed-off-by: Przemyslaw Czarnowski <przemyslaw.hawrylewicz.czarnowski@intel.com>
+Tested-by: Pawel Baldysiak <pawel.baldysiak@intel.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ super-intel.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/super-intel.c b/super-intel.c
+index 24016b7..3f15b0f 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -6886,6 +6886,12 @@ static void handle_missing(struct intel_super *super, struct imsm_dev *dev)
+ 	if (!super->missing)
+ 		return;
+ 
++	/* When orom adds replacement for missing disk it does
++	 * not remove entry of missing disk, but just updates map with
++	 * new added disk. So it is not enough just to test if there is
++	 * any missing disk, we have to look if there are any failed disks
++	 * in map to stop migration */
++
+ 	dprintf("imsm: mark missing\n");
+ 	/* end process for initialization and rebuild only
+ 	 */
+@@ -6896,7 +6902,8 @@ static void handle_missing(struct intel_super *super, struct imsm_dev *dev)
+ 		failed = imsm_count_failed(super, dev, MAP_0);
+ 		map_state = imsm_check_degraded(super, dev, failed, MAP_0);
+ 
+-		end_migration(dev, super, map_state);
++		if (failed)
++			end_migration(dev, super, map_state);
+ 	}
+ 	for (dl = super->missing; dl; dl = dl->next)
+ 		mark_missing(dev, &dl->disk, dl->index);
+-- 
+1.8.1.4
+

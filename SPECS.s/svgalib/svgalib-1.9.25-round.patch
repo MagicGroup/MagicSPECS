@@ -1,0 +1,16 @@
+diff -ur svgalib-1.9.25/utils/gtf/gtfcalc.c svgalib-1.9.25.orig/utils/gtf/gtfcalc.c
+--- svgalib-1.9.25/utils/gtf/gtfcalc.c	2005-07-11 03:33:16.000000000 +0800
++++ svgalib-1.9.25.orig/utils/gtf/gtfcalc.c	2009-06-18 17:42:42.000000000 +0800
+@@ -64,10 +64,10 @@
+ 
+ /*-------------------------- Implementation -------------------------------*/
+ 
+-static double round(double v)
++/*static double round(double v)
+ {
+ 	return floor(v + 0.5);
+-}
++}*/
+ 
+ static void GetInternalConstants(GTF_constants *c)
+ /****************************************************************************

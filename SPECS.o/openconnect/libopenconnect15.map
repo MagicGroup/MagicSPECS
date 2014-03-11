@@ -1,0 +1,51 @@
+OPENCONNECT_1.0 {
+ global: 
+	openconnect_clear_cookie;
+	openconnect_get_cert_sha1;
+	openconnect_get_cookie;
+	openconnect_get_hostname;
+	openconnect_get_peer_cert;
+	openconnect_get_port;
+	openconnect_get_urlpath;
+	openconnect_get_version;
+	openconnect_init_openssl;
+	openconnect_obtain_cookie;
+	openconnect_parse_url;
+	openconnect_passphrase_from_fsid;
+	openconnect_reset_ssl;
+	openconnect_set_cafile;
+	openconnect_set_client_cert;
+	openconnect_set_hostname;
+	openconnect_set_http_proxy;
+	openconnect_setup_csd;
+	openconnect_set_urlpath;
+	openconnect_set_xmlsha1;
+	openconnect_vpninfo_new;
+ local:
+	*;
+};
+OPENCONNECT_1.1 {
+ global:
+	openconnect_vpninfo_free;
+} OPENCONNECT_1.0;
+
+OPENCONNECT_1.2 {
+ global:
+	openconnect_vpninfo_new_with_cbdata;
+} OPENCONNECT_1.1;
+
+OPENCONNECT_1.3 {
+ global:
+	openconnect_set_cert_expiry_warning;
+} OPENCONNECT_1.2;
+
+OPENCONNECT_1.4 {
+ global:
+	openconnect_set_cancel_fd;
+} OPENCONNECT_1.3;
+
+OPENCONNECT_1.5 {
+ global:
+	openconnect_get_cert_details;
+	openconnect_get_cert_DER;
+} OPENCONNECT_1.4;

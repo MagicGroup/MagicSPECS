@@ -1,0 +1,4 @@
+USER=root
+PROGRAM=/usr/sbin/wireshark
+SESSION=true
+FALLBACK=true

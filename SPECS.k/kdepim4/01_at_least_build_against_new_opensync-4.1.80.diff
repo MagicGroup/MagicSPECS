@@ -1,0 +1,39 @@
+--- a/cmake/modules/FindOpenSync.cmake
++++ b/cmake/modules/FindOpenSync.cmake
+@@ -17,7 +17,7 @@ else (OPENSYNC_INCLUDE_DIRS AND OPENSYNC
+   IF (NOT WIN32)
+     # use pkg-config to get the directories and then use these values
+     # in the FIND_PATH() and FIND_LIBRARY() calls
+-    PKG_CHECK_MODULES(OPENSYNC opensync-1.0>=0.33)
++    PKG_CHECK_MODULES(OPENSYNC libopensync>=0.37)
+   ENDIF(NOT WIN32)
+ 
+   include(FindPackageHandleStandardArgs)
+--- a/kitchensync/libqopensync/member.cpp
++++ b/kitchensync/libqopensync/member.cpp
+@@ -94,21 +94,21 @@ void Member::setConfiguration( const QBy
+ {
+   Q_ASSERT( mMember );
+ 
+-  osync_member_set_config( mMember, configurationData.data() );
++//  osync_member_set_config( mMember, configurationData.data() );
+ }
+ 
+ Result Member::configuration( QByteArray &configurationData, bool useDefault ) const
+ {
+   Q_ASSERT( mMember );
+ 
+-  const char *data;
++  const char *data = 0;
+   int size;
+ 
+   OSyncError *error = 0;
+   if ( useDefault ) {
+-    data = osync_member_get_config_or_default( mMember, &error );
++//    data = osync_member_get_config_or_default( mMember, &error );
+   } else {
+-    data = osync_member_get_config( mMember, &error );
++//    data = osync_member_get_config( mMember, &error );
+   }
+ 
+   if ( !data ) {

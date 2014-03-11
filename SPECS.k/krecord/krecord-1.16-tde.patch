@@ -1,0 +1,21 @@
+diff -ur krecord-1.16.orig/GNUmakefile krecord-1.16/GNUmakefile
+--- krecord-1.16.orig/GNUmakefile	2012-01-01 18:39:16.000000000 -0500
++++ krecord-1.16/GNUmakefile	2012-01-01 18:39:27.000000000 -0500
+@@ -47,6 +47,8 @@
+ LDFLAGS	+= -L$(KDEDIR)/$(LIB)
+ endif
+ 
++CFLAGS 	+= -I/usr/include/tqt
++
+ # version
+ CFLAGS  += -DKRECORD_VERSION='"$(VERSION)"'
+ CFLAGS  += -fno-strict-aliasing		# fft code needs this
+@@ -90,7 +92,7 @@
+             oss.moc sunaudio.moc
+ 
+ CXXFLAGS := $(CFLAGS)
+-LDLIBS	 += -lkdeui -lkdecore $(QTLIB) -lXext -lXmu -lX11
++LDLIBS	 += -ltdeui -ltdecore $(QTLIB) -lXext -lXmu -lX11 -lstdc++ -lm
+ 
+ # locales
+ PO       := $(wildcard po/*.po)

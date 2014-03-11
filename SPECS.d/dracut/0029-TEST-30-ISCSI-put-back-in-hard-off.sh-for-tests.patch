@@ -1,0 +1,22 @@
+From 38bbec3731b8e7b6b130debb4eed43bbdab75dea Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 3 Jul 2012 18:22:29 +0200
+Subject: [PATCH] TEST-30-ISCSI: put back in hard-off.sh for tests
+
+---
+ test/TEST-30-ISCSI/test.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/TEST-30-ISCSI/test.sh b/test/TEST-30-ISCSI/test.sh
+index cf4b6ec..5ebd9ac 100755
+--- a/test/TEST-30-ISCSI/test.sh
++++ b/test/TEST-30-ISCSI/test.sh
+@@ -155,7 +155,7 @@ test_setup() {
+         initdir=$TESTDIR/overlay
+         . $basedir/dracut-functions.sh
+         dracut_install poweroff shutdown
+-#        inst_hook emergency 000 ./hard-off.sh
++        inst_hook emergency 000 ./hard-off.sh
+         inst_simple ./99-idesymlinks.rules /etc/udev/rules.d/99-idesymlinks.rules
+     )
+     sudo $basedir/dracut.sh -l -i $TESTDIR/overlay / \

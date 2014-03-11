@@ -1,0 +1,11 @@
+--- kdevelop/kdevdesigner/designer/listeditor.ui.h.ORI	2011-10-30 13:30:56.655489268 +0100
++++ kdevelop/kdevdesigner/designer/listeditor.ui.h	2011-10-30 13:31:00.782489292 +0100
+@@ -30,7 +30,7 @@
+ {
+     TQListViewItem *i = new TQListViewItem( listview, listview->lastItem() );
+     i->setRenameEnabled( 0, TRUE );
+-    tqApp->processEvents();
++    qApp->processEvents();
+     i->startRename( 0 );
+ }
+ 

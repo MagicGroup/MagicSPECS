@@ -1,0 +1,35 @@
+From f7bccf3724834ca42b2521f0367291219314a09a Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 3 Jul 2012 18:23:27 +0200
+Subject: [PATCH] lsinitrd.sh: print usage for -?, -h
+
+---
+ lsinitrd.sh |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/lsinitrd.sh b/lsinitrd.sh
+index e6767dc..f27f755 100755
+--- a/lsinitrd.sh
++++ b/lsinitrd.sh
+@@ -19,13 +19,19 @@
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ #
+ 
+-[[ $# -le 2 ]] || { echo "Usage: $(basename $0) [-s] [<initramfs file> [<filename>]]" ; exit 1 ; }
++usage()
++{
++    echo "Usage: $(basename $0) [-s] [<initramfs file> [<filename>]]"
++}
++
++[[ $# -le 2 ]] || { usage ; exit 1 ; }
+ 
+ sorted=0
+ while getopts "s" opt; do
+     case $opt in
+         s)  sorted=1;;
+-        \?) exit 1;;
++        h)  usage; exit 0;;
++        \?) usage; exit 1;;
+     esac
+ done
+ shift $((OPTIND-1))

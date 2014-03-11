@@ -1,0 +1,21 @@
+ - make Session::Generate::ModUsertrack work with MP2.
+
+--- Apache-Session-1.89/lib/Apache/Session/Generate/ModUsertrack.pm	2001-10-11 10:43:32.000000000 -0700
++++ Apache-Session-1.89/lib/Apache/Session/Generate/ModUsertrack.pm.mp2	2005-09-07 16:01:11.798128185 -0700
+@@ -15,8 +15,14 @@
+ 
+     if (!exists $cookies{$name} && MOD_PERL) {
+ 	# no cookies, try to steal from notes
+-	require Apache;
+-	my $r = Apache->request;
++	my $r;
++	if ( $ENV{MOD_PERL_API_VERION} == 2 ) {
++	    require Apache2::RequestUtil;
++	    $r = Apache2::RequestUtil->request;
++	} else {
++	    require Apache;
++	    $r = Apache->request;
++	}
+ 	%cookies = CGI::Cookie->parse($r->notes('cookie'));
+     }
+ 

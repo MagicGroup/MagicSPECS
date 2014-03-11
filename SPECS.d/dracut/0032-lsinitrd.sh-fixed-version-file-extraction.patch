@@ -1,0 +1,22 @@
+From a85ee030ab6b3b29833b10be6b83c89e8fc0c455 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 3 Jul 2012 18:24:21 +0200
+Subject: [PATCH] lsinitrd.sh: fixed version file extraction
+
+---
+ lsinitrd.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lsinitrd.sh b/lsinitrd.sh
+index fc4b8b0..a844932 100755
+--- a/lsinitrd.sh
++++ b/lsinitrd.sh
+@@ -65,7 +65,7 @@ fi
+ 
+ echo "$image: $(du -h $image | while read a b; do echo $a;done)"
+ echo "========================================================================"
+-$CAT "$image" | cpio --extract --verbose --quiet --to-stdout 'lib/dracut/dracut-*' 2>/dev/null
++$CAT "$image" | cpio --extract --verbose --quiet --to-stdout '*lib/dracut/dracut-*' 2>/dev/null
+ echo "========================================================================"
+ if [ "$sorted" -eq 1 ]; then
+     $CAT "$image" | cpio --extract --verbose --quiet --list | sort -n -k5

@@ -1,0 +1,93 @@
+*** ../binutils-2.24.orig/bfd/elfnn-aarch64.c	2013-12-17 11:16:28.723807381 +0000
+--- bfd/elfnn-aarch64.c	2013-12-17 11:18:13.517804067 +0000
+*************** _aarch64_elf_section_data;
+*** 1679,1686 ****
+  #define elf_aarch64_section_data(sec) \
+    ((_aarch64_elf_section_data *) elf_section_data (sec))
+  
+! /* The size of the thread control block.  */
+! #define TCB_SIZE	16
+  
+  struct elf_aarch64_local_symbol
+  {
+--- 1679,1686 ----
+  #define elf_aarch64_section_data(sec) \
+    ((_aarch64_elf_section_data *) elf_section_data (sec))
+  
+! /* The size of the thread control block which is defined to be two pointers.  */
+! #define TCB_SIZE	(ARCH_SIZE/8)*2
+  
+  struct elf_aarch64_local_symbol
+  {
+*************** elfNN_aarch64_final_link_relocate (reloc
+*** 3589,3595 ****
+  
+  	      if (globals->root.splt != NULL)
+  		{
+! 		  plt_index = h->plt.offset / globals->plt_entry_size - 1;
+  		  off = (plt_index + 3) * GOT_ENTRY_SIZE;
+  		  base_got = globals->root.sgotplt;
+  		}
+--- 3589,3596 ----
+  
+  	      if (globals->root.splt != NULL)
+  		{
+! 		  plt_index = ((h->plt.offset - globals->plt_header_size) /
+! 			       globals->plt_entry_size);
+  		  off = (plt_index + 3) * GOT_ENTRY_SIZE;
+  		  base_got = globals->root.sgotplt;
+  		}
+*************** elfNN_aarch64_finish_dynamic_symbol (bfd
+*** 6823,6829 ****
+  		       + htab->root.sgot->output_offset
+  		       + (h->got.offset & ~(bfd_vma) 1));
+  
+!       if (info->shared && SYMBOL_REFERENCES_LOCAL (info, h))
+  	{
+  	  if (!h->def_regular)
+  	    return FALSE;
+--- 6824,6857 ----
+  		       + htab->root.sgot->output_offset
+  		       + (h->got.offset & ~(bfd_vma) 1));
+  
+!       if (h->def_regular
+! 	  && h->type == STT_GNU_IFUNC)
+! 	{
+! 	  if (info->shared)
+! 	    {
+! 	      /* Generate R_AARCH64_GLOB_DAT.  */
+! 	      goto do_glob_dat;
+! 	    }
+! 	  else
+! 	    {
+! 	      asection *plt;
+! 
+! 	      if (!h->pointer_equality_needed)
+! 		abort ();
+! 
+! 	      /* For non-shared object, we can't use .got.plt, which
+! 		 contains the real function address if we need pointer
+! 		 equality.  We load the GOT entry with the PLT entry.  */
+! 	      plt = htab->root.splt ? htab->root.splt : htab->root.iplt;
+! 	      bfd_put_NN (output_bfd, (plt->output_section->vma
+! 				       + plt->output_offset
+! 				       + h->plt.offset),
+! 			  htab->root.sgot->contents
+! 			  + (h->got.offset & ~(bfd_vma) 1));
+! 	      return TRUE;
+! 	    }
+! 	}
+!       else if (info->shared && SYMBOL_REFERENCES_LOCAL (info, h))
+  	{
+  	  if (!h->def_regular)
+  	    return FALSE;
+*************** elfNN_aarch64_finish_dynamic_symbol (bfd
+*** 6836,6841 ****
+--- 6864,6870 ----
+  	}
+        else
+  	{
++ do_glob_dat:
+  	  BFD_ASSERT ((h->got.offset & 1) == 0);
+  	  bfd_put_NN (output_bfd, (bfd_vma) 0,
+  		      htab->root.sgot->contents + h->got.offset);

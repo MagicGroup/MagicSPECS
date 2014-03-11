@@ -1,0 +1,117 @@
+From 7209df9e912c73318dcb380838bc1dbe24a43a4b Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Sat, 30 Jun 2012 11:29:30 +0200
+Subject: [PATCH] do not umount root, remount it. do not mount ro if not
+ specified
+
+also mount /usr readonly if "ro" is specified on the command line
+if /usr is a btrfs subvolume of root, use the same mount options
+---
+ modules.d/95rootfs-block/mount-root.sh |   20 +++++++++-----------
+ modules.d/98usrmount/mount-usr.sh      |    9 +++++++++
+ modules.d/99base/parse-root-opts.sh    |    6 ++++--
+ 3 files changed, 22 insertions(+), 13 deletions(-)
+
+diff --git a/modules.d/95rootfs-block/mount-root.sh b/modules.d/95rootfs-block/mount-root.sh
+index 19f59fa..932571a 100755
+--- a/modules.d/95rootfs-block/mount-root.sh
++++ b/modules.d/95rootfs-block/mount-root.sh
+@@ -15,7 +15,6 @@ filter_rootopts() {
+     local v
+     while [ $# -gt 0 ]; do
+         case $1 in
+-            rw|ro);;
+             defaults);;
+             *)
+                 v="$v,${1}";;
+@@ -82,7 +81,7 @@ mount_root() {
+         # the root filesystem,
+         # remount it with the proper options
+         rootopts="defaults"
+-        while read dev mp fs opts rest; do
++        while read dev mp fs opts dump fsck; do
+             # skip comments
+             [ "${dev%%#*}" != "$dev" ] && continue
+ 
+@@ -90,6 +89,7 @@ mount_root() {
+                 # sanity - determine/fix fstype
+                 rootfs=$(det_fs "${root#block:}" "$fs")
+                 rootopts=$opts
++                rootfsck=$fsck
+                 break
+             fi
+         done < "$NEWROOT/etc/fstab"
+@@ -99,28 +99,26 @@ mount_root() {
+ 
+     # we want rootflags (rflags) to take precedence so prepend rootopts to
+     # them; rflags is guaranteed to not be empty
+-    rflags="${rootopts:+"${rootopts},"}${rflags}"
++    rflags="${rootopts:+${rootopts},}${rflags}"
+ 
+     # backslashes are treated as escape character in fstab
+     # esc_root=$(echo ${root#block:} | sed 's,\\,\\\\,g')
+     # printf '%s %s %s %s 1 1 \n' "$esc_root" "$NEWROOT" "$rootfs" "$rflags" >/etc/fstab
+ 
+     ran_fsck=0
+-    if [ -z "$fastboot" -a "$READONLY" != "yes" ] && \
+-            ! strstr "${rflags},${rootopts}" _netdev && \
++    if [ "$rootfsck" != "0" -a -z "$fastboot" -a "$READONLY" != "yes" ] && \
++            ! strstr "${rflags}" _netdev && \
+             ! getargbool 0 rd.skipfsck; then
+-        umount "$NEWROOT"
+         fsck_single "${root#block:}" "$rootfs" "$rflags" "$fsckoptions"
+         _ret=$?
+         [ $_ret -ne 255 ] && echo $_ret >/run/initramfs/root-fsck
+         ran_fsck=1
+     fi
+ 
+-    if [ -n "$rootopts" -o "$ran_fsck" = "1" ]; then
+-        info "Remounting ${root#block:} with -o ${rflags}"
+-        umount "$NEWROOT" &>/dev/null
+-        mount -t "$rootfs" -o "$rflags" "${root#block:}" "$NEWROOT" 2>&1 | vinfo
+-    fi
++    echo "${root#block:} $NEWROOT $rootfs ${rflags:-defaults} 0 $rootfsck" >> /etc/fstab
++
++    info "Remounting ${root#block:} with -o ${rflags}"
++    mount -o remount "$NEWROOT" 2>&1 | vinfo
+ 
+     [ -f "$NEWROOT"/forcefsck ] && rm -f "$NEWROOT"/forcefsck 2>/dev/null
+     [ -f "$NEWROOT"/.autofsck ] && rm -f "$NEWROOT"/.autofsck 2>/dev/null
+diff --git a/modules.d/98usrmount/mount-usr.sh b/modules.d/98usrmount/mount-usr.sh
+index 5798777..5cf4eb8 100755
+--- a/modules.d/98usrmount/mount-usr.sh
++++ b/modules.d/98usrmount/mount-usr.sh
+@@ -52,6 +52,15 @@ mount_usr()
+                     _dev="/dev/disk/by-uuid/${_dev#UUID=}"
+                     ;;
+             esac
++            if strstr "$_opts" "subvol=" && \
++                [ "${root#block:}" -ef $_dev ]
++                [ -n "$rflags" ]; then
++                # for btrfs subvolumes we have to mount /usr with the same rflags
++                _opts="${_opts:+${_opts},}${rflags}"
++            elif getarg ro; then
++                # if "ro" is specified, we want /usr to be readonly, too
++                _opts="${_opts:+${_opts},}ro"
++            fi
+             echo "$_dev ${NEWROOT}${_mp} $_fs ${_opts} $_freq $_passno"
+             _usr_found="1"
+             break
+diff --git a/modules.d/99base/parse-root-opts.sh b/modules.d/99base/parse-root-opts.sh
+index 2f427aa..44dcc09 100755
+--- a/modules.d/99base/parse-root-opts.sh
++++ b/modules.d/99base/parse-root-opts.sh
+@@ -5,9 +5,11 @@
+ root=$(getarg root=)
+ 
+ if rflags="$(getarg rootflags=)"; then
+-    getarg rw && rflags="${rflags},rw" || rflags="${rflags},ro"
++    getarg rw && rflags="${rflags},rw"
++    getarg ro && rflags="${rflags},ro"
+ else
+-    getarg rw && rflags=rw || rflags=ro
++    getarg rw && rflags=rw
++    getarg ro && rflags=ro
+ fi
+ 
+ fstype="$(getarg rootfstype=)"

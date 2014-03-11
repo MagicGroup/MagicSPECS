@@ -1,0 +1,120 @@
+diff -Naur kdenetwork-4.1.85.orig/cmake/modules/FindLibNXCL.cmake kdenetwork-4.1.85/cmake/modules/FindLibNXCL.cmake
+--- kdenetwork-4.1.85.orig/cmake/modules/FindLibNXCL.cmake	2008-12-13 13:07:06.000000000 +0800
++++ kdenetwork-4.1.85/cmake/modules/FindLibNXCL.cmake	2008-12-13 13:08:08.000000000 +0800
+@@ -19,20 +19,20 @@
+    SET(CMAKE_REQUIRED_LIBRARIES "${LIBNXCL_LIBRARIES}" "${CMAKE_REQUIRED_LIBRARIES}")
+    SET(CMAKE_REQUIRED_INCLUDES "${LIBNXCL_INCLUDE_DIR}" "${CMAKE_REQUIRED_INCLUDES}")
+    CHECK_STRUCT_MEMBER(nxcl::NXClientLib "getNXSSHProcess()" nxcl/nxclientlib.h LIBNXCL_NXSSHPROCESS_FOUND)
+-   CHECK_STRUCT_MEMBER(nxcl::NXClientLib "getXID()" nxcl/nxclientlib.h LIBNXCL_XID_FOUND)
++#   CHECK_STRUCT_MEMBER(nxcl::NXClientLib "getXID()" nxcl/nxclientlib.h LIBNXCL_XID_FOUND)
+ ENDIF (LIBNXCL_INCLUDE_DIR AND LIBNXCL_LIBRARIES)
+ 
+-IF (LIBNXCL_NXSSHPROCESS_FOUND AND LIBNXCL_XID_FOUND)
++IF (LIBNXCL_NXSSHPROCESS_FOUND)
+   SET(LIBNXCL_FOUND TRUE)
+   IF (NOT LIBNXCL_FIND_QUIETLY)
+     MESSAGE(STATUS "Found LibNXCL: ${LIBNXCL_LIBRARIES}")
+   ENDIF (NOT LIBNXCL_FIND_QUIETLY)
+-ELSE (LIBNXCL_NXSSHPROCESS_FOUND AND LIBNXCL_XID_FOUND)
++ELSE (LIBNXCL_NXSSHPROCESS_FOUND)
+   SET(LIBNXCL_FOUND FALSE)
+   IF (LIBNXCL_FIND_REQUIRED)
+     MESSAGE(FATAL_ERROR "Could NOT find acceptable version of LibNXCL (version 1.0).")
+   ENDIF (LIBNXCL_FIND_REQUIRED)
+-ENDIF (LIBNXCL_NXSSHPROCESS_FOUND AND LIBNXCL_XID_FOUND)
++ENDIF (LIBNXCL_NXSSHPROCESS_FOUND)
+ 
+ MARK_AS_ADVANCED(LIBNXCL_INCLUDE_DIR LIBNXCL_LIBRARIES)
+ 
+diff -Naur kdenetwork-4.1.85.orig/krdc/nx/nxclientthread.cpp kdenetwork-4.1.85/krdc/nx/nxclientthread.cpp
+--- kdenetwork-4.1.85.orig/krdc/nx/nxclientthread.cpp	2008-12-13 13:07:06.000000000 +0800
++++ kdenetwork-4.1.85/krdc/nx/nxclientthread.cpp	2008-12-13 13:08:14.000000000 +0800
+@@ -36,7 +36,6 @@
+         m_host(std::string()),
+         m_port(0),
+         m_privateKey(std::string()),
+-        m_xid(0),
+         m_stopped(false)
+ {
+     m_client.setSessionData(&m_data);
+@@ -181,12 +181,12 @@
+             p->probeProcess();
+         }
+ 
+-        if (!this->m_xid) {
++        /*if (!this->m_xid) {
+             this->m_xid = m_client.getXID();
+ 
+             if (this->m_xid)
+                 emit hasXid(this->m_xid);
+-        }
++        }*/
+ 
+         usleep(1000);
+     }
+diff -Naur kdenetwork-4.1.85.orig/krdc/nx/nxclientthread.h kdenetwork-4.1.85/krdc/nx/nxclientthread.h
+--- kdenetwork-4.1.85.orig/krdc/nx/nxclientthread.h	2008-12-13 13:07:06.000000000 +0800
++++ kdenetwork-4.1.85/krdc/nx/nxclientthread.h	2008-12-13 13:10:32.000000000 +0800
+@@ -66,13 +66,14 @@
+ protected:
+     void run();
+ 
+-signals:
++
++/*signals:*/
+     /**
+      * Emitted when the X Window ID of the main NX
+      * window is received.
+      * @param xid the X Window ID of the main NX window
+      */
+-    void hasXid(int xid);
++/*    void hasXid(int xid);*/
+ 
+ private:
+     nxcl::NXClientLib m_client;
+@@ -81,7 +82,7 @@
+     std::string m_host;
+     int m_port;
+     std::string m_privateKey;
+-    int m_xid;
++/*    int m_xid;*/
+ 
+     bool m_stopped;
+     QMutex m_mutex;
+diff -Naur kdenetwork-4.1.85.orig/krdc/nx/nxview.cpp kdenetwork-4.1.85/krdc/nx/nxview.cpp
+--- kdenetwork-4.1.85.orig/krdc/nx/nxview.cpp	2008-12-13 13:07:06.000000000 +0800
++++ kdenetwork-4.1.85/krdc/nx/nxview.cpp	2008-12-13 13:12:42.000000000 +0800
+@@ -53,7 +53,7 @@
+ 
+     m_clientThread.setCallbacks(&m_callbacks);
+ 
+-    connect(&m_clientThread, SIGNAL(hasXid(int)), this, SLOT(hasXid(int)));
++/*    connect(&m_clientThread, SIGNAL(hasXid(int)), this, SLOT(hasXid(int)));*/
+     connect(&m_callbacks, SIGNAL(progress(int, QString)), this, SLOT(handleProgress(int, QString)));
+     connect(&m_callbacks, SIGNAL(suspendedSessions(QList<nxcl::NXResumeData>)), this, SLOT(handleSuspendedSessions(QList<nxcl::NXResumeData>)));
+     connect(&m_callbacks, SIGNAL(noSessions()), this, SLOT(handleNoSessions()));
+@@ -195,10 +195,12 @@
+         m_container->releaseKeyboard();
+ }
+ 
++/*
+ void NxView::hasXid(int xid)
+ {
+     m_container->embedClient(xid);
+ }
++*/
+ 
+ void NxView::handleProgress(int id, QString msg)
+ {
+diff -Naur kdenetwork-4.1.85.orig/krdc/nx/nxview.h kdenetwork-4.1.85/krdc/nx/nxview.h
+--- kdenetwork-4.1.85.orig/krdc/nx/nxview.h	2008-12-13 13:07:06.000000000 +0800
++++ kdenetwork-4.1.85/krdc/nx/nxview.h	2008-12-13 13:13:10.000000000 +0800
+@@ -59,7 +59,7 @@
+ 
+ public slots:
+     void switchFullscreen(bool on);
+-    void hasXid(int xid);
++/*    void hasXid(int xid);*/
+     void handleProgress(int id, QString msg);
+     void handleSuspendedSessions(QList<nxcl::NXResumeData> sessions);
+     void handleNoSessions();

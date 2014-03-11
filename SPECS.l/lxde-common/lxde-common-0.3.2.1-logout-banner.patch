@@ -1,0 +1,6 @@
+--- lxde-common-0.3.2.1.orig/lxde-logout.in	2008-04-20 10:26:19.000000000 +0200
++++ lxde-common-0.3.2.1/lxde-logout.in	2008-11-30 17:08:25.000000000 +0100
+@@ -1,2 +1,2 @@
+ #!/bin/sh
+-lxsession-logout --banner "@prefix@/share/lxde/images/logout-banner.png" --side=top
++lxsession-logout --banner "@prefix@/share/pixmaps/fedora-logo-small.png" --side=top

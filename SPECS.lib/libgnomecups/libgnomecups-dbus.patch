@@ -1,0 +1,237 @@
+diff -up libgnomecups-0.2.3/libgnomecups/Makefile.am.dbus libgnomecups-0.2.3/libgnomecups/Makefile.am
+--- libgnomecups-0.2.3/libgnomecups/Makefile.am.dbus	2007-01-01 19:18:51.000000000 -0500
++++ libgnomecups-0.2.3/libgnomecups/Makefile.am	2008-01-29 11:11:37.000000000 -0500
+@@ -2,6 +2,7 @@ INCLUDES = 						\
+ 	-I$(top_srcdir) 				\
+ 	-I$(top_builddir) 				\
+ 	$(WARN_CFLAGS)                                  \
++	$(DBUS_CFLAGS)                                  \
+ 	$(CUPS_CFLAGS)                                  \
+ 	$(LIBGNOMECUPS_CFLAGS)                          \
+ 	-DDATADIR=\""$(datadir)"\"
+@@ -9,6 +10,7 @@ INCLUDES = 						\
+ lib_LTLIBRARIES=libgnomecups-1.0.la
+ libgnomecups_1_0_la_LIBADD = \
+ 	$(LIBGNOMECUPS_LIBS) \
++	$(DBUS_LIBS)	     \
+ 	$(CUPS_LIBS) 
+ libgnomecups_1_0_la_LDFLAGS = $(LT_VERSION_INFO)
+ 
+diff -up libgnomecups-0.2.3/libgnomecups/gnome-cups-printer.c.dbus libgnomecups-0.2.3/libgnomecups/gnome-cups-printer.c
+--- libgnomecups-0.2.3/libgnomecups/gnome-cups-printer.c.dbus	2007-01-01 19:18:51.000000000 -0500
++++ libgnomecups-0.2.3/libgnomecups/gnome-cups-printer.c	2008-01-29 11:10:31.000000000 -0500
+@@ -25,6 +25,10 @@
+ 
+ #include "gnome-cups-printer.h"
+ 
++#ifdef WITH_DBUS
++#include <dbus/dbus.h>
++#include <dbus/dbus-glib-lowlevel.h>
++#endif
+ #include <cups/cups.h>
+ #include <time.h>
+ #include <stdlib.h>
+@@ -99,6 +103,7 @@ enum {
+ };
+ 
+ static void update_printers (void);
++static gboolean init_dbus (void);
+ static void set_timeout (void);
+ 
+ static GList *printer_names = NULL;
+@@ -622,7 +627,8 @@ remove_from_printers (gpointer user_data
+ 	char *printer_name = user_data;
+ 
+ 	g_hash_table_remove (printers, printer_name);
+-	set_timeout ();
++	if (!init_dbus ())
++		set_timeout ();
+ }
+ 
+ static void
+@@ -782,6 +788,96 @@ update_printers_timeout (void)
+ 	return TRUE;
+ }
+ 
++#ifdef WITH_DBUS
++static DBusHandlerResult
++handle_system_dbus_message (DBusConnection     *connection,
++			    DBusMessage        *message,
++			    void               *user_data)
++{
++	DBusError error;
++	gboolean is_addition;
++	char *printer_name;
++
++	if (dbus_message_is_signal (message,
++				    "com.redhat.PrinterSpooler",
++				    "PrinterAdded")) {
++		is_addition = TRUE;
++	} else if (dbus_message_is_signal (message,
++				    "com.redhat.PrinterSpooler",
++				    "PrinterRemoved")) {
++		is_addition = FALSE;
++	} else {
++		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
++	}
++
++	dbus_error_init (&error);
++	if (!dbus_message_get_args (message, &error,
++				    DBUS_TYPE_STRING, &printer_name,
++				    DBUS_TYPE_INVALID)) {
++		g_message ("Couldn't parse arguments for DBus message");
++		dbus_error_free (&error);
++		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
++	}
++
++	if (is_addition) {
++		printer_names = g_list_append (printer_names,
++					       g_strdup (printer_name));
++		printer_added (printer_name);
++	} else {
++		GList *link = g_list_find_custom (printer_names,
++						  printer_name,
++						  (GCompareFunc) strcmp);
++		if (link) {
++			printer_names = g_list_remove_link (printer_names,
++							    link);
++			g_free (link->data);
++		}
++		printer_removed (printer_name);
++	}
++	
++	
++	return DBUS_HANDLER_RESULT_HANDLED;
++}
++#endif
++
++static gboolean
++init_dbus (void)
++{
++#ifdef WITH_DBUS
++	static DBusConnection *dbus_connection = NULL;
++	DBusConnection *connection;
++	DBusError error;
++
++	if (dbus_connection &&
++	    dbus_connection_get_is_connected (dbus_connection))
++		return TRUE;
++
++	if (dbus_connection &&
++	    !dbus_connection_get_is_connected (dbus_connection)) {
++		dbus_connection_unref (dbus_connection);
++		dbus_connection = NULL;
++	}
++  
++	dbus_error_init (&error);
++	connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
++	if (connection == NULL || dbus_error_is_set (&error)) {
++		g_warning ("Couldn't connect to system bus");
++		dbus_error_free (&error);
++		return FALSE;
++	}
++
++	dbus_bus_add_match (connection,
++			    "type='signal',"
++			    "interface='com.redhat.PrinterSpooler'",
++			    NULL);
++	dbus_connection_add_filter (connection, handle_system_dbus_message,
++				    NULL, NULL);
++	dbus_connection_setup_with_g_main (connection, NULL);
++	dbus_connection = connection;
++#endif
++	return TRUE;
++}
++
+ static void
+ set_timeout (void)
+ {
+@@ -816,7 +912,8 @@ gnome_cups_printer_new_printer_notify_ad
+ 	
+ 	add_notifies = g_list_append (add_notifies, notify);
+ 
+-	set_timeout ();
++	if (!init_dbus ())
++		set_timeout ();
+ 
+ 	return notify->id;
+ }
+@@ -859,7 +956,8 @@ gnome_cups_printer_new_printer_notify_re
+ 		}
+ 	}
+ 
+-	set_timeout ();
++	if (!init_dbus ())
++		set_timeout ();
+ }
+ 
+ guint
+@@ -879,7 +977,8 @@ gnome_cups_printer_printer_removed_notif
+ 	
+ 	removed_notifies = g_list_append (removed_notifies, notify);
+ 
+-	set_timeout ();
++	if (!init_dbus ())
++		set_timeout ();
+ 
+ 	return notify->id;
+ }
+@@ -898,7 +997,8 @@ gnome_cups_printer_printer_removed_notif
+ 		}
+ 	}
+ 
+-	set_timeout ();
++	if (!init_dbus ())
++		set_timeout ();
+ }
+ 
+ GnomeCupsPrinter *
+@@ -953,7 +1053,8 @@ gnome_cups_printer_get (const char *prin
+ 	key = g_strdup (printer_name);
+ 	g_hash_table_insert (printers, key, printer);
+ 	g_object_weak_ref (G_OBJECT (printer), remove_from_printers, key);
+-	set_timeout ();
++	if (!init_dbus ())
++		set_timeout ();
+ 	
+ 	if (default_printer && !strcmp (printer_name, default_printer)) {
+ 		printer->details->is_default = TRUE;
+@@ -1157,7 +1258,7 @@ gnome_cups_printer_get_ppd (GnomeCupsPri
+ 
+ 	gnome_cups_request_file (host, ppdpath, fd, &error);
+ 	if (error != NULL) {
+-		g_warning ("Couldn't retrieve PPD for %s: %s",
++		g_message ("Couldn't retrieve PPD for %s: %s",
+ 			   printer->details->printer_name,
+ 			   error->message);
+ 		g_error_free (error);
+diff -up libgnomecups-0.2.3/configure.in.dbus libgnomecups-0.2.3/configure.in
+--- libgnomecups-0.2.3/configure.in.dbus	2008-01-29 11:10:31.000000000 -0500
++++ libgnomecups-0.2.3/configure.in	2008-01-29 11:10:31.000000000 -0500
+@@ -25,6 +25,26 @@ if test "$CUPS_CONFIG" = "no"; then
+   AC_MSG_ERROR([Please install cups development packages])
+ fi
+ 
++AC_ARG_WITH(dbus, [--with-dbus	Use DBus], ac_dbus=$withval, ac_dbus=auto)
++if test x"$ac_dbus" != xno; then
++  PKG_CHECK_MODULES(DBUS, dbus-glib-1, have_dbus=yes, have_dbus=no)
++else
++  have_dbus=no
++fi 
++if test x"$have_dbus" = xno; then
++   if test x"$ac_dbus" = xyes; then
++      AC_MSG_ERROR([DBus explicitly requested but not found on system])
++   fi
++   ac_dbus=no
++else
++   if test x"$ac_dbus" != xno; then
++     AC_DEFINE(WITH_DBUS, 1, [Define if you have DBus])
++     DBUS_CFLAGS="-DDBUS_API_SUBJECT_TO_CHANGE $DBUS_CFLAGS"
++     AC_SUBST(DBUS_CFLAGS)
++     AC_SUBST(DBUS_LIBS)
++   fi
++fi
++
+ CUPS_CFLAGS=`cups-config --cflags | sed 's/-O[0-9]*//' | sed 's/-m[^\t]*//g'`
+ CUPS_LIBS=`cups-config --libs`
+ 

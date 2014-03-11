@@ -1,0 +1,116 @@
+diff -Nuarp kdegames-4.3.4/bovo/ai/gabor/ai_impl.cpp kdegames-4.3.4.fix_enablefinal/bovo/ai/gabor/ai_impl.cpp
+--- kdegames-4.3.4/bovo/ai/gabor/ai_impl.cpp	2009-04-06 04:00:07.000000000 +0800
++++ kdegames-4.3.4.fix_enablefinal/bovo/ai/gabor/ai_impl.cpp	2009-12-28 20:27:02.000000000 +0800
+@@ -131,7 +131,7 @@ Field AiImpl::think() {
+ 						}
+ 						if (act->alpha >= act->beta || act->alpha >= WinTreshold) {
+ 							act->evaluated = true;
+-							currentHashData.entry_type = lower_bound;
++							currentHashData.entry_type = ENTRYTYPE::lower_bound;
+ 							currentHashData.value = act->alpha;
+ 						}
+ 					}
+@@ -147,7 +147,7 @@ Field AiImpl::think() {
+ 						}
+ 						if (act->alpha >= act->beta || act->beta <= -WinTreshold) {
+ 							act->evaluated = true;
+-							currentHashData.entry_type = upper_bound;
++							currentHashData.entry_type = ENTRYTYPE::upper_bound;
+ 							currentHashData.value = act->beta;
+ 						}
+ 					}
+@@ -162,11 +162,11 @@ Field AiImpl::think() {
+ 				act->evaluated = true;
+ 				if (act->signum > 0) {
+ 					// MAX
+-					currentHashData.entry_type = act->is_exact ? exact : upper_bound;
++					currentHashData.entry_type = act->is_exact ? ENTRYTYPE::exact : ENTRYTYPE::upper_bound;
+ 					currentHashData.value = act->alpha;
+ 				} else {
+ 					// MIN
+-					currentHashData.entry_type = act->is_exact ? exact : lower_bound;
++					currentHashData.entry_type = act->is_exact ? ENTRYTYPE::exact : ENTRYTYPE::lower_bound;
+ 					currentHashData.value = act->beta;
+ 				}
+ 			}
+@@ -197,19 +197,19 @@ Field AiImpl::think() {
+ 					if (storedHashData->remaining_depth >= depth_limit - act->depth && currentHashData.checksum == storedHashData->checksum) {
+ 						if (act->signum > 0) {
+ 							// MAX
+-							if (storedHashData->entry_type == exact)
++							if (storedHashData->entry_type == ENTRYTYPE::exact)
+ 								act->alpha = act->beta = storedHashData->value;
+-							if (storedHashData->entry_type == lower_bound && act->alpha < storedHashData->value)
++							if (storedHashData->entry_type == ENTRYTYPE::lower_bound && act->alpha < storedHashData->value)
+ 								act->alpha = storedHashData->value;
+-							if (storedHashData->entry_type == upper_bound && act->beta > storedHashData->value)
++							if (storedHashData->entry_type == ENTRYTYPE::upper_bound && act->beta > storedHashData->value)
+ 								act->beta = storedHashData->value;
+ 						} else {
+ 							// MIN
+-							if (storedHashData->entry_type == exact)
++							if (storedHashData->entry_type == ENTRYTYPE::exact)
+ 								act->alpha = act->beta = storedHashData->value;
+-							if (storedHashData->entry_type == upper_bound && act->beta > storedHashData->value)
++							if (storedHashData->entry_type == ENTRYTYPE::upper_bound && act->beta > storedHashData->value)
+ 								act->beta = storedHashData->value;
+-							if (storedHashData->entry_type == lower_bound && act->alpha < storedHashData->value)
++							if (storedHashData->entry_type == ENTRYTYPE::lower_bound && act->alpha < storedHashData->value)
+ 								act->alpha = storedHashData->value;
+ 						}
+ 						if (act->alpha >= act->beta) {
+diff -Nuarp kdegames-4.3.4/bovo/ai/gabor/node.h kdegames-4.3.4.fix_enablefinal/bovo/ai/gabor/node.h
+--- kdegames-4.3.4/bovo/ai/gabor/node.h	2009-03-27 22:45:58.000000000 +0800
++++ kdegames-4.3.4.fix_enablefinal/bovo/ai/gabor/node.h	2009-12-28 20:25:21.000000000 +0800
+@@ -35,7 +35,9 @@ typedef unsigned long long hash_T;
+ 
+ // hash table entry type
+ typedef index_T entry_type_T;
++namespace ENTRYTYPE {
+ enum { exact = 1, lower_bound = 2, upper_bound = 3 };
++}
+ 
+ #pragma pack(push, 1)
+ // a hash table entry
+diff -Nuarp kdegames-4.3.4/bovo/ai/gabor/standing.cpp kdegames-4.3.4.fix_enablefinal/bovo/ai/gabor/standing.cpp
+--- kdegames-4.3.4/bovo/ai/gabor/standing.cpp	2009-04-06 04:00:07.000000000 +0800
++++ kdegames-4.3.4.fix_enablefinal/bovo/ai/gabor/standing.cpp	2009-12-28 20:24:45.000000000 +0800
+@@ -27,7 +27,7 @@
+ 
+ #include "standing.h"
+ 
+-typedef QString string;
++//typedef QString string;
+ 
+ // these are used by refresh() and getSuggestions()
+ const static PatternCount suggestValues = { {0, 8, 8, 6, 5, 3}, {0, 7, 7, 4, 2, 1} };
+@@ -40,14 +40,14 @@ const static index_T suggestValueCount =
+ // '-' : free cell, where the enemy can block the position
+ // '.' : free cell, but nobody should place here
+ // '?' : everything but player's mark, ie. wall, enemy or empty
+-const static string level0[] = {"00000"};
+-const static string level1[] = {".0000+"};
+-const static string level2[] = {"@0000+", "+0000@", "00+00", "?000+0?", "?0+000?"};
+-const static string level3[] = {".-000+.", "-+000-@", "@-000+-", "?-00+0-", "@0-00+0.", "-0+00-?", ".0+00-0@", ".0-00+0."};
+-const static string level4[] = {"@000++", "++000@", "@0+00+0@", "@0+00+?", "?+00+0@", "@00+0+", "+0+00@", "@+000+@", "@00++0", "0++00@", "?.00++0?", "?0++00.?", "?.00++00.?", "?0+0+0?"};
+-const static string level5[] = {"?++00++?", "@-00++.", ".++00-@", ".+0+0+.", "@-0+0+.", ".+0+0-@", "@0-0++0-0@", "@0-0++0-?", "?-0++0-0@", "?-0++0-?"};
++const static QString level0[] = {"00000"};
++const static QString level1[] = {".0000+"};
++const static QString level2[] = {"@0000+", "+0000@", "00+00", "?000+0?", "?0+000?"};
++const static QString level3[] = {".-000+.", "-+000-@", "@-000+-", "?-00+0-", "@0-00+0.", "-0+00-?", ".0+00-0@", ".0-00+0."};
++const static QString level4[] = {"@000++", "++000@", "@0+00+0@", "@0+00+?", "?+00+0@", "@00+0+", "+0+00@", "@+000+@", "@00++0", "0++00@", "?.00++0?", "?0++00.?", "?.00++00.?", "?0+0+0?"};
++const static QString level5[] = {"?++00++?", "@-00++.", ".++00-@", ".+0+0+.", "@-0+0+.", ".+0+0-@", "@0-0++0-0@", "@0-0++0-?", "?-0++0-0@", "?-0++0-?"};
+ const static index_T patternTotals[heurLevels] = {1, 1, 5, 8, 14, 10};
+-const static string* patterns[heurLevels] = {level0, level1, level2, level3, level4, level5};
++const static QString* patterns[heurLevels] = {level0, level1, level2, level3, level4, level5};
+ 
+ static bool refresh_inited = false;
+ const static index_T max_pattern_length = 10;
+diff -Nuarp kdegames-4.3.4/ksirk/ksirk/iris/src/CMakeLists.txt kdegames-4.3.4.fix_enablefinal/ksirk/ksirk/iris/src/CMakeLists.txt
+--- kdegames-4.3.4/ksirk/ksirk/iris/src/CMakeLists.txt	2009-01-16 23:07:30.000000000 +0800
++++ kdegames-4.3.4.fix_enablefinal/ksirk/ksirk/iris/src/CMakeLists.txt	2009-12-28 20:30:09.000000000 +0800
+@@ -1,3 +1,4 @@
++kde4_no_enable_final(ksirk-libiris)
+ # FIND_PACKAGE(QCA2 REQUIRED)
+ FIND_PACKAGE(ZLIB REQUIRED)
+ 

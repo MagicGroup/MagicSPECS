@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Actions=MultigetDownload;
+ServiceTypes=all/allfiles
+ExcludeServiceTypes=kdedevice/*
+
+[Desktop Action MultigetDownload]
+Exec=multiget url="%U"
+Icon=/usr/share/pixmaps/mg_32.xpm
+Name=Download with multiget
+Name[zh_CN]=用 multiget 下载
+Name[zh_TW]=用 multiget 下載

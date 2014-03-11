@@ -1,0 +1,14 @@
+--- zhcon-0.2.6/tools/Makefile.am.flags	2006-04-25 01:38:46.000000000 +0900
++++ zhcon-0.2.6/tools/Makefile.am	2007-02-16 01:54:04.000000000 +0900
+@@ -9,11 +9,6 @@
+ #getbpsf_LDADD = -L/usr/X11R6/lib -lX11
+ #getbpsf_CPPFLAGS = -I/usr/X11R6/include
+ 
+-LDFLAGS=
+-CXXFLAGS=
+-CCFLAGS=
+-LIBS=
+-
+ EXTRA_DIST = README getbpsf.txt gpm-1.19.6-pty.diff\
+              gpm-1.19.6-patched.tar.gz
+ 

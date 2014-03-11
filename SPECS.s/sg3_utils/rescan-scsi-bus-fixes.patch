@@ -1,0 +1,41 @@
+From 64d876bf70c392390ac83a986b14f889c2a03741 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Hor=C3=A1k?= <dan@danny.cz>
+Date: Fri, 14 Sep 2012 15:19:08 +0200
+Subject: [PATCH] fix for sg3_utils >= 1.32
+
+sg_inq in sg3_utils 1.32 comes with version 1.01 while rescan-scsi-bus expects 0.xy
+and thus throws an error about non-integer expression
+
+[dan@eagle ~]$ LANG=en_US.UTF-8 rescan-scsi-bus.sh
++ test @ = @--help -o @ = @-h -o @ = '@-?'
++ test '!' -d /sys/class/scsi_host/ -a '!' -d /proc/scsi/
++ modprobe sg
++ test -x /usr/bin/sg_inq
+++ sg_inq -V
+++ cut -d ' ' -f 3
++ sg_version=1.03
++ sg_version=1.03
++ '[' -z 1.03 -o 1.03 -lt 70 ']'
+/usr/bin/rescan-scsi-bus.sh: line 532: [: 1.03: integer expression expected
++ sg_len_arg=--len=36
++ unsetcolor
+---
+ rescan-scsi-bus.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/rescan-scsi-bus.sh b/rescan-scsi-bus.sh
+index 09744bb..e3b80d0 100644
+--- a/rescan-scsi-bus.sh
++++ b/rescan-scsi-bus.sh
+@@ -623,7 +623,7 @@ modprobe sg >/dev/null 2>&1
+ 
+ if test -x /usr/bin/sg_inq; then
+     sg_version=$(sg_inq -V 2>&1 | cut -d " " -f 3)
+-    sg_version=${sg_version##0.}
++    sg_version=${sg_version/./}
+     #echo "\"$sg_version\""
+     if [ -z "$sg_version" -o "$sg_version" -lt 70 ] ; then
+         sg_len_arg="-36"
+-- 
+1.7.7.6
+

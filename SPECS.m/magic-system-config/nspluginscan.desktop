@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Nspluginscan
+GenericName=Nsplugin Scan
+GenericName[zh_CN]=É¨Ãèä¯ÀÀÆ÷²å¼ş
+Comment=Nspluginf Scan
+Comment[zh_CN]=É¨Ãèä¯ÀÀÆ÷²å¼ş
+Exec=nspluginscan.sh
+Type=Application
+Terminal=false
+Categories=Qt;KDE;Network;

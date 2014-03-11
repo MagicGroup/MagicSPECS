@@ -1,0 +1,6 @@
+#!/bin/sh
+
+logger -t spice "starting spicec --controller $@..."
+env | logger -t spice
+exec spicec --controller "$@" 2>&1 | logger -t spice
+logger -t spice "spicec execution failed"

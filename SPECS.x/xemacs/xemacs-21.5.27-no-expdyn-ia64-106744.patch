@@ -1,0 +1,28 @@
+--- ./aclocal.m4.orig	2012-08-02 12:38:27.000000000 -0600
++++ ./aclocal.m4	2012-08-06 20:28:23.842705270 -0600
+@@ -533,7 +533,10 @@ if test "$xe_gnu_ld" = yes -a "$ld_shlib
+     ;;
+ 
+   *)  
+-    ld_dynamic_link_flags="${wl}-export-dynamic"
++    dnl avoid -export-dynamic on ia64
++    if test "$xehost_cpu" != "ia64"; then
++      ld_dynamic_link_flags="${wl}-export-dynamic"
++    fi
+     ;;
+   esac
+ fi
+--- ./configure.orig	2012-08-02 12:39:01.000000000 -0600
++++ ./configure	2012-08-06 20:28:23.841705350 -0600
+@@ -14670,7 +14670,10 @@ if test "$xe_gnu_ld" = yes -a "$ld_shlib
+     ;;
+ 
+   *)
+-    ld_dynamic_link_flags="${wl}-export-dynamic"
++    dnl avoid -export-dynamic on ia64
++    if test "$xehost_cpu" != "ia64"; then
++      ld_dynamic_link_flags="${wl}-export-dynamic"
++    fi
+     ;;
+   esac
+ fi

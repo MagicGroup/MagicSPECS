@@ -1,0 +1,86 @@
+--- ./amarok/src/engine/gst10/Makefile.in.gst10	2006-02-21 23:58:21.000000000 +0100
++++ ./amarok/src/engine/gst10/Makefile.in	2006-02-22 00:00:18.000000000 +0100
+@@ -64,7 +64,7 @@
+ am__DEPENDENCIES_1 =
+ libamarok_gst10engine_plugin_la_DEPENDENCIES =  \
+ 	$(top_builddir)/amarok/src/engine/libengine.la \
+-	$(top_builddir)/amarok/src/engine/gst/config/libgstconfig.la \
++	$(top_builddir)/amarok/src/engine/gst10/config/libgstconfig.la \
+ 	$(top_builddir)/amarok/src/plugin/libplugin.la \
+ 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+ am_libamarok_gst10engine_plugin_la_OBJECTS = gstconfigdialog.lo \
+@@ -482,7 +482,7 @@
+ 
+ INCLUDES = \
+     -I$(top_srcdir)/amarok/src/engine \
+-    -I$(top_srcdir)/amarok/src/engine/gst/config \
++    -I$(top_srcdir)/amarok/src/engine/gst10/config \
+     -I$(top_srcdir)/amarok/src/plugin \
+     -I$(top_srcdir)/amarok/src \
+     $(CFLAGS_GST10) \
+@@ -490,7 +490,7 @@
+ 
+ libamarok_gst10engine_plugin_la_LIBADD = \
+     $(top_builddir)/amarok/src/engine/libengine.la \
+-    $(top_builddir)/amarok/src/engine/gst/config/libgstconfig.la \
++    $(top_builddir)/amarok/src/engine/gst10/config/libgstconfig.la \
+     $(top_builddir)/amarok/src/plugin/libplugin.la \
+     $(LIB_KFILE) \
+     $(LIB_KDECORE)
+--- ./configure.gst10	2006-02-12 18:50:17.000000000 +0100
++++ ./configure	2006-02-21 23:41:47.000000000 +0100
+@@ -33551,10 +33551,12 @@
+ ### gst/audio/audio.h, which is in gstreamer-plugins (at least for me)
+ amarok_save_cppflags="$CPPFLAGS"
+ CPPFLAGS="$CPPFLAGS $CFLAGS_GST10"
+-if test "${ac_cv_header_gst_audio_audio_h+set}" = set; then
++# Don't use cache
++if test "${ac_cv_header_gst_audio_audio_h+set}XXX" = set; then
+   echo "$as_me:$LINENO: checking for gst/audio/audio.h" >&5
+ echo $ECHO_N "checking for gst/audio/audio.h... $ECHO_C" >&6
+-if test "${ac_cv_header_gst_audio_audio_h+set}" = set; then
++# Don't use cache
++if test "${ac_cv_header_gst_audio_audio_h+set}XXX" = set; then
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ fi
+ echo "$as_me:$LINENO: result: $ac_cv_header_gst_audio_audio_h" >&5
+@@ -33678,7 +33680,8 @@
+ esac
+ echo "$as_me:$LINENO: checking for gst/audio/audio.h" >&5
+ echo $ECHO_N "checking for gst/audio/audio.h... $ECHO_C" >&6
+-if test "${ac_cv_header_gst_audio_audio_h+set}" = set; then
++# Don't use cache
++if test "${ac_cv_header_gst_audio_audio_h+set}XXX" = set; then
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_cv_header_gst_audio_audio_h=$ac_header_preproc
+@@ -41326,7 +41329,7 @@
+ 
+ fi
+ 
+-if test x$have_gst = xno; then
++if test x$have_gst = xno -a x$have_gst10 = xno; then
+     echo " =========================="
+     echo " ===  amaroK - WARNING  ========================================================"
+     echo " =========================="
+@@ -41447,6 +41450,10 @@
+         echo " =   - GStreamer-engine"
+     fi
+ 
++    if test x$have_gst10 != xyes; then
++        echo " =   - GStreamer-engine 0.10"
++    fi
++
+     if test x$build_xine != xyes; then
+         echo " =   - xine-engine"
+     fi
+@@ -41520,6 +41527,9 @@
+         echo " =   + GStreamer-engine"
+     fi
+ 
++    if test x$have_gst10 = xyes; then
++        echo " =   + GStreamer-engine 0.10"
++    fi
+     if test x$build_xine = xyes; then
+         echo " =   + xine-engine"
+     fi

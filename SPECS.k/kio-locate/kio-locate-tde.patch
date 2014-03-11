@@ -1,0 +1,36 @@
+diff -ur kio-locate-0.4.5.orig/admin/kde.py kio-locate-0.4.5/admin/kde.py
+--- kio-locate-0.4.5.orig/admin/kde.py	2011-12-30 06:04:24.000000000 -0500
++++ kio-locate-0.4.5/admin/kde.py	2011-12-30 06:05:04.000000000 -0500
+@@ -98,13 +98,13 @@
+ 	else: env['KDEDIR'] = os.popen(kde_config+' -prefix').read().strip()
+ 
+ 	print "Checking for kde version          : ",
+-	kde_version = os.popen(kde_config+" --version|grep KDE").read().strip().split()[1]
+-	if int(kde_version[0]) != 3 or int(kde_version[2]) < 2:
+-		p('RED', kde_version)
+-		p('RED',"Your kde version can be too old")
+-		p('RED',"Please make sure kde is at least 3.2")
+-	else:
+-		p('GREEN',kde_version)
++	kde_version = os.popen(kde_config+" --version|grep TDE").read().strip().split()[1]
++	##if int(kde_version[0]) != 3 or int(kde_version[2]) < 2:
++	##	p('RED', kde_version)
++	##	p('RED',"Your kde version can be too old")
++	##	p('RED',"Please make sure kde is at least 3.2")
++	##else:
++	p('GREEN',kde_version)
+ 
+ 	## Detect the qt library
+ 	print "Checking for the qt library       : ",
+diff -ur kio-locate-0.4.5.orig/src/SConscript kio-locate-0.4.5/src/SConscript
+--- kio-locate-0.4.5.orig/src/SConscript	2011-12-30 06:04:24.000000000 -0500
++++ kio-locate-0.4.5/src/SConscript	2011-12-30 06:09:57.000000000 -0500
+@@ -28,7 +28,7 @@
+     pattern.cpp
+ """
+ obj.libs='qt-mt kio'
+-obj.linkflags='-module -avoid-version' # add more link flags
++obj.linkflags='-module' # add more link flags
+ obj.execute()
+ 
+ # Install the protocol files

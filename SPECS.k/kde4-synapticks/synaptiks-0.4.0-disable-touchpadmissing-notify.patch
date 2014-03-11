@@ -1,0 +1,18 @@
+--- synaptiks-0.4.0/daemon/synaptiksdaemon.cpp.orig	2010-04-11 20:09:53.000000000 +0800
++++ synaptiks-0.4.0/daemon/synaptiksdaemon.cpp	2010-04-22 21:32:33.000000000 +0800
+@@ -118,6 +118,7 @@ SynaptiksDaemon::SynaptiksDaemon(QObject
+         QDBusConnection::ExportScriptableContents);
+ 
+     if (!touchpad) {
++        /*
+         if (!Touchpad::isSupported()) {
+             this->notifyError(
+                 i18nc("@info daemon error notification",
+@@ -129,6 +130,7 @@ SynaptiksDaemon::SynaptiksDaemon(QObject
+                       "<warning>No configurable touchpad was "
+                       "found.</warning>"));
+         }
++        */
+     } else {
+         // create the touchpad manager
+         d->touchpadManager = new TouchpadManager(touchpad, monitor, this);

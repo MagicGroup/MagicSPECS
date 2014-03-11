@@ -1,0 +1,296 @@
+From 1313008370f2e179dea102ba1520cf72d9012765 Mon Sep 17 00:00:00 2001
+From: Ben Skeggs <bskeggs@redhat.com>
+Date: Fri, 11 May 2012 01:31:36 +1000
+Subject: [PATCH] vieux/nvfx lowmem hacks
+
+---
+ src/gallium/drivers/nvfx/nvfx_fragprog.c       |   23 ++++++++++----------
+ src/gallium/drivers/nvfx/nvfx_screen.c         |    4 ++++
+ src/gallium/drivers/nvfx/nvfx_screen.h         |    2 ++
+ src/gallium/drivers/nvfx/nvfx_surface.c        |    9 +++++++-
+ src/gallium/drivers/nvfx/nvfx_vbo.c            |    5 +++++
+ src/gallium/drivers/nvfx/nvfx_vertprog.c       |    4 +++-
+ src/mesa/drivers/dri/nouveau/nouveau_context.c |    5 +++++
+ src/mesa/drivers/dri/nouveau/nouveau_context.h |    4 ++++
+ src/mesa/drivers/dri/nouveau/nouveau_driver.c  |    3 +++
+ src/mesa/drivers/dri/nouveau/nouveau_vbo_t.c   |    3 +++
+ src/mesa/drivers/dri/nouveau/nv04_surface.c    |   27 +++++++++++++++++++++---
+ 11 Dateien geändert, 72 Zeilen hinzugefügt(+), 17 Zeilen entfernt(-)
+
+diff --git a/src/gallium/drivers/nvfx/nvfx_fragprog.c b/src/gallium/drivers/nvfx/nvfx_fragprog.c
+index 0babcbb..f5b7a0e 100644
+--- a/src/gallium/drivers/nvfx/nvfx_fragprog.c
++++ b/src/gallium/drivers/nvfx/nvfx_fragprog.c
+@@ -224,7 +224,6 @@ nvfx_fp_emit(struct nvfx_fpc *fpc, struct nvfx_insn insn)
+ 	if(insn.unit >= 0)
+ 	{
+ 		hw[0] |= (insn.unit << NVFX_FP_OP_TEX_UNIT_SHIFT);
+-		fp->samplers |= (1 << insn.unit);
+ 	}
+ 
+ 	emit_dst(fpc, insn.dst);
+@@ -1355,17 +1354,17 @@ update_slots:
+ 
+ 			fp->slot_to_fp_input[fp->num_slots] = sprite_real_input;
+ 
+-			if(nvfx->is_nv4x)
+-			{
+-				fp->or = 0;
+-				for(i = 0; i <= fp->num_slots; ++i) {
+-					unsigned fp_input = fp->slot_to_fp_input[i];
+-					if(fp_input == NVFX_FP_OP_INPUT_SRC_TC(8))
+-						fp->or |= (1 << 12);
+-					else if(fp_input == NVFX_FP_OP_INPUT_SRC_TC(9))
+-						fp->or |= (1 << 13);
+-					else if(fp_input >= NVFX_FP_OP_INPUT_SRC_TC(0) && fp_input <= NVFX_FP_OP_INPUT_SRC_TC(7))
+-						fp->or |= (1 << (fp_input - NVFX_FP_OP_INPUT_SRC_TC0 + 14));
++			fp->or = 0;
++			fp->samplers = 0;
++			for(i = 0; i <= fp->num_slots; ++i) {
++				unsigned fp_input = fp->slot_to_fp_input[i];
++				if(fp_input == NVFX_FP_OP_INPUT_SRC_TC(8))
++					fp->or |= (1 << 12);
++				else if(fp_input == NVFX_FP_OP_INPUT_SRC_TC(9))
++					fp->or |= (1 << 13);
++				else if(fp_input >= NVFX_FP_OP_INPUT_SRC_TC(0) && fp_input <= NVFX_FP_OP_INPUT_SRC_TC(7)) {
++					fp->or |= (1 << (fp_input - NVFX_FP_OP_INPUT_SRC_TC0 + 14));
++					fp->samplers |= 1 << (fp_input - NVFX_FP_OP_INPUT_SRC_TC(0));
+ 				}
+ 			}
+ 
+diff --git a/src/gallium/drivers/nvfx/nvfx_screen.c b/src/gallium/drivers/nvfx/nvfx_screen.c
+index b4a1b3a..e6dc596 100644
+--- a/src/gallium/drivers/nvfx/nvfx_screen.c
++++ b/src/gallium/drivers/nvfx/nvfx_screen.c
+@@ -533,6 +533,10 @@ nvfx_screen_create(struct nouveau_device *dev)
+ 	screen->advertise_blend_equation_separate = !!screen->is_nv4x;
+ 	screen->use_nv4x = screen->is_nv4x;
+ 
++	screen->hack = TRUE;
++	if (debug_get_bool_option("NVFX_UNHACK", FALSE))
++		screen->hack = FALSE;
++
+ 	if(screen->is_nv4x) {
+ 		if(debug_get_bool_option("NVFX_SIMULATE_NV30", FALSE))
+ 			screen->use_nv4x = 0;
+diff --git a/src/gallium/drivers/nvfx/nvfx_screen.h b/src/gallium/drivers/nvfx/nvfx_screen.h
+index 35c9d91..55ed439 100644
+--- a/src/gallium/drivers/nvfx/nvfx_screen.h
++++ b/src/gallium/drivers/nvfx/nvfx_screen.h
+@@ -14,6 +14,8 @@ struct nvfx_screen {
+ 
+ 	struct nvfx_context *cur_ctx;
+ 
++	boolean hack;
++
+ 	unsigned is_nv4x; /* either 0 or ~0 */
+ 	unsigned use_nv4x; /* either 0 or ~0 */
+ 	boolean force_swtnl;
+diff --git a/src/gallium/drivers/nvfx/nvfx_surface.c b/src/gallium/drivers/nvfx/nvfx_surface.c
+index cac3fca..3937869 100644
+--- a/src/gallium/drivers/nvfx/nvfx_surface.c
++++ b/src/gallium/drivers/nvfx/nvfx_surface.c
+@@ -273,8 +273,12 @@ nvfx_resource_copy_region(struct pipe_context *pipe,
+ 	small = (w * h <= copy_threshold);
+ 	if((!dst_to_gpu || !src_on_gpu) && small)
+ 		ret = -1; /* use the CPU */
+-	else
++	else {
+ 		ret = nv04_region_copy_2d(ctx, &dst, &src, w, h, dst_to_gpu, src_on_gpu);
++		if (nvfx_screen(pipe->screen)->hack)
++			FIRE_RING(nvfx_screen(pipe->screen)->base.channel);
++	}
++
+ 	if(!ret)
+ 	{}
+ 	else if(ret > 0
+@@ -335,6 +339,9 @@ nvfx_surface_fill(struct pipe_context* pipe, struct pipe_surface *dsts,
+ 	h = util_format_get_nblocksy(dsts->format, h);
+ 
+ 	ret = nv04_region_fill_2d(ctx, &dst, w, h, value);
++	if (nvfx_screen(pipe->screen)->hack)
++		FIRE_RING(nvfx_screen(pipe->screen)->base.channel);
++
+ 	if(ret > 0 && dsts->texture->bind & PIPE_BIND_RENDER_TARGET)
+ 		return 1;
+ 	else if(ret)
+diff --git a/src/gallium/drivers/nvfx/nvfx_vbo.c b/src/gallium/drivers/nvfx/nvfx_vbo.c
+index b72379d..5860b54 100644
+--- a/src/gallium/drivers/nvfx/nvfx_vbo.c
++++ b/src/gallium/drivers/nvfx/nvfx_vbo.c
+@@ -237,6 +237,11 @@ void nvfx_draw_vbo(struct pipe_context *pipe, const struct pipe_draw_info *info)
+ 		}
+ 	}
+ 
++	if (nvfx->screen->hack) {
++		struct nouveau_channel *chan = nvfx->screen->base.channel;
++		FIRE_RING(chan);
++	}
++
+ 	if (nvfx->screen->force_swtnl || !nvfx_state_validate(nvfx))
+ 		nvfx_draw_vbo_swtnl(pipe, info);
+ 	else
+diff --git a/src/gallium/drivers/nvfx/nvfx_vertprog.c b/src/gallium/drivers/nvfx/nvfx_vertprog.c
+index a11941f..e19a288 100644
+--- a/src/gallium/drivers/nvfx/nvfx_vertprog.c
++++ b/src/gallium/drivers/nvfx/nvfx_vertprog.c
+@@ -288,6 +288,8 @@ nvfx_vp_emit(struct nvfx_vpc *vpc, struct nvfx_insn insn)
+ 
+ 	hw = vpc->vpi->data;
+ 
++	if (insn.cc_test != NVFX_COND_TR)
++		hw[0] |= NVFX_VP(INST_COND_TEST_ENABLE);
+ 	hw[0] |= (insn.cc_test << NVFX_VP(INST_COND_SHIFT));
+ 	hw[0] |= ((insn.cc_swz[0] << NVFX_VP(INST_COND_SWZ_X_SHIFT)) |
+ 		  (insn.cc_swz[1] << NVFX_VP(INST_COND_SWZ_Y_SHIFT)) |
+@@ -649,7 +651,7 @@ nvfx_vertprog_parse_instruction(struct nvfx_context* nvfx, struct nvfx_vpc *vpc,
+ 		nvfx_vp_emit(vpc, arith(sat, VEC, SNE, dst, mask, src[0], src[1], none));
+ 		break;
+ 	case TGSI_OPCODE_SSG:
+-		nvfx_vp_emit(vpc, arith(sat, VEC, SSG, dst, mask, src[0], src[1], none));
++		nvfx_vp_emit(vpc, arith(sat, VEC, SSG, dst, mask, src[0], none, none));
+ 		break;
+ 	case TGSI_OPCODE_STR:
+ 		nvfx_vp_emit(vpc, arith(sat, VEC, STR, dst, mask, src[0], src[1], none));
+diff --git a/src/mesa/drivers/dri/nouveau/nouveau_context.c b/src/mesa/drivers/dri/nouveau/nouveau_context.c
+index 5838b4e..db5d9ea 100644
+--- a/src/mesa/drivers/dri/nouveau/nouveau_context.c
++++ b/src/mesa/drivers/dri/nouveau/nouveau_context.c
+@@ -112,6 +112,11 @@ nouveau_context_init(struct gl_context *ctx, struct nouveau_screen *screen,
+ 	nctx->screen = screen;
+ 	nctx->fallback = HWTNL;
+ 
++	if (getenv("NOUVEAU_UNHACK"))
++		nctx->hack = GL_FALSE;
++	else
++		nctx->hack = GL_TRUE;
++
+ 	/* Initialize the function pointers. */
+ 	_mesa_init_driver_functions(&functions);
+ 	nouveau_driver_functions_init(&functions);
+diff --git a/src/mesa/drivers/dri/nouveau/nouveau_context.h b/src/mesa/drivers/dri/nouveau/nouveau_context.h
+index d44c02a..9d06da9 100644
+--- a/src/mesa/drivers/dri/nouveau/nouveau_context.h
++++ b/src/mesa/drivers/dri/nouveau/nouveau_context.h
+@@ -76,6 +76,8 @@ struct nouveau_context {
+ 		GLboolean clear_blocked;
+ 		int clear_seq;
+ 	} hierz;
++
++	GLboolean hack;
+ };
+ 
+ #define to_nouveau_context(ctx)	((struct nouveau_context *)(ctx))
+@@ -90,6 +92,8 @@ struct nouveau_context {
+ 	(to_nouveau_context(ctx)->hw.eng3d)
+ #define context_drv(ctx) \
+ 	(to_nouveau_context(ctx)->screen->driver)
++#define context_hack(ctx) \
++	(to_nouveau_context(ctx)->hack)
+ #define context_dirty(ctx, s) \
+ 	BITSET_SET(to_nouveau_context(ctx)->dirty, NOUVEAU_STATE_##s)
+ #define context_dirty_i(ctx, s, i) \
+diff --git a/src/mesa/drivers/dri/nouveau/nouveau_driver.c b/src/mesa/drivers/dri/nouveau/nouveau_driver.c
+index dab6807..6031314 100644
+--- a/src/mesa/drivers/dri/nouveau/nouveau_driver.c
++++ b/src/mesa/drivers/dri/nouveau/nouveau_driver.c
+@@ -138,6 +138,9 @@ nouveau_clear(struct gl_context *ctx, GLbitfield buffers)
+ 
+ 	if (buffers)
+ 		_mesa_meta_Clear(ctx, buffers);
++
++	if (context_hack(ctx))
++		FIRE_RING(context_chan(ctx));
+ }
+ 
+ void
+diff --git a/src/mesa/drivers/dri/nouveau/nouveau_vbo_t.c b/src/mesa/drivers/dri/nouveau/nouveau_vbo_t.c
+index de04d18..2337a73 100644
+--- a/src/mesa/drivers/dri/nouveau/nouveau_vbo_t.c
++++ b/src/mesa/drivers/dri/nouveau/nouveau_vbo_t.c
+@@ -456,6 +456,9 @@ TAG(vbo_render_prims)(struct gl_context *ctx,
+ 			     max_index);
+ 
+ 	vbo_deinit_arrays(ctx, ib, arrays);
++
++	if (context_hack(ctx))
++		FIRE_RING(context_chan(ctx));
+ }
+ 
+ /* VBO rendering entry points. */
+diff --git a/src/mesa/drivers/dri/nouveau/nv04_surface.c b/src/mesa/drivers/dri/nouveau/nv04_surface.c
+index 4a3000c..2383711 100644
+--- a/src/mesa/drivers/dri/nouveau/nv04_surface.c
++++ b/src/mesa/drivers/dri/nouveau/nv04_surface.c
+@@ -209,6 +209,13 @@ nv04_surface_copy_swizzle(struct gl_context *ctx,
+ 	unsigned sub_h = h > max_h ? max_h : h;
+ 	unsigned x, y;
+ 
++	if (context_hack(ctx)) {
++		void *flush_notify = chan->flush_notify;
++		chan->flush_notify = NULL;
++		FIRE_RING(chan);
++		chan->flush_notify = flush_notify;
++	}
++
+         /* Swizzled surfaces must be POT  */
+ 	assert(_mesa_is_pow_two(dst->width) &&
+ 	       _mesa_is_pow_two(dst->height));
+@@ -263,7 +270,7 @@ nv04_surface_copy_swizzle(struct gl_context *ctx,
+ 
+ 	nouveau_bo_context_reset(bctx);
+ 
+-	if (context_chipset(ctx) < 0x10)
++	if (context_hack(ctx) || context_chipset(ctx) < 0x10)
+ 		FIRE_RING(chan);
+ }
+ 
+@@ -282,6 +289,13 @@ nv04_surface_copy_m2mf(struct gl_context *ctx,
+ 	unsigned dst_offset = dst->offset + dy * dst->pitch + dx * dst->cpp;
+ 	unsigned src_offset = src->offset + sy * src->pitch + sx * src->cpp;
+ 
++	if (context_hack(ctx)) {
++		void *flush_notify = chan->flush_notify;
++		chan->flush_notify = NULL;
++		FIRE_RING(chan);
++		chan->flush_notify = flush_notify;
++	}
++
+ 	nouveau_bo_marko(bctx, m2mf, NV04_M2MF_DMA_BUFFER_IN,
+ 			 src->bo, bo_flags | NOUVEAU_BO_RD);
+ 	nouveau_bo_marko(bctx, m2mf, NV04_M2MF_DMA_BUFFER_OUT,
+@@ -311,7 +325,7 @@ nv04_surface_copy_m2mf(struct gl_context *ctx,
+ 
+ 	nouveau_bo_context_reset(bctx);
+ 
+-	if (context_chipset(ctx) < 0x10)
++	if (context_hack(ctx) || context_chipset(ctx) < 0x10)
+ 		FIRE_RING(chan);
+ }
+ 
+@@ -429,6 +443,13 @@ nv04_surface_fill(struct gl_context *ctx,
+ 	struct nouveau_grobj *rect = hw->rect;
+ 	unsigned bo_flags = NOUVEAU_BO_VRAM | NOUVEAU_BO_GART;
+ 
++	if (context_hack(ctx)) {
++		void *flush_notify = chan->flush_notify;
++		chan->flush_notify = NULL;
++		FIRE_RING(chan);
++		chan->flush_notify = flush_notify;
++	}
++
+ 	MARK_RING (chan, 19, 4);
+ 
+ 	BEGIN_RING(chan, surf2d, NV04_CONTEXT_SURFACES_2D_DMA_IMAGE_SOURCE, 2);
+@@ -454,7 +475,7 @@ nv04_surface_fill(struct gl_context *ctx,
+ 	OUT_RING  (chan, (dx << 16) | dy);
+ 	OUT_RING  (chan, ( w << 16) |  h);
+ 
+-	if (context_chipset(ctx) < 0x10)
++	if (context_hack(ctx) || context_chipset(ctx) < 0x10)
+ 		FIRE_RING(chan);
+ }
+ 
+-- 
+1.7.10.1
+

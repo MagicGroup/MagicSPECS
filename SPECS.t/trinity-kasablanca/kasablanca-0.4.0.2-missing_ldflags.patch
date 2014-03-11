@@ -1,0 +1,11 @@
+--- kasablanca-0.4.0.2/src/Makefile.am.ORI	2012-08-07 15:52:01.549962016 +0200
++++ kasablanca-0.4.0.2/src/Makefile.am	2012-08-07 15:52:11.265930503 +0200
+@@ -22,7 +22,7 @@
+ # the application source, library search path, and link libraries
+ kasablanca_SOURCES = main.cpp kasablanca.cpp bookmarkdialog.cpp customconnectdialog.cpp fileexistsdialog.cpp kbitem.cpp Q_bookmarkdialog.ui Q_fileexistsdialog.ui Q_mainwindow.ui eventhandler.cpp ftpthread.cpp ftplib.cpp ftpsession.cpp kbfileinfo.cpp kbdirinfo.cpp kbdir.cpp kbfile.cpp kbtransferitem.cpp kbtransferdir.cpp kbtransferfile.cpp kbconfig.kcfgc Q_colorspreferencesdialog.ui Q_generalpreferencesdialog.ui kbtaskview.cpp Q_userinterfacepreferencesdialog.ui kbbookmarkitem.cpp kbsiteinfo.cpp Q_customconnectdialog.ui Q_importdialog.ui importdialog.cpp kbstatustip.cpp
+ kasablanca_LDFLAGS = $(KDE_RPATH) $(all_libraries)
+-kasablanca_LDADD = -lssl $(LIB_KDEUI)
++kasablanca_LDADD = -lssl $(LIB_KDEUI) -lcrypto $(LIB_KDECORE) -lDCOP $(LIB_QT)
+ 
+ # this is where the desktop file will go 
+ shelldesktopdir = $(kde_appsdir)/Utilities

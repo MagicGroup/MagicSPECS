@@ -1,0 +1,20 @@
+diff -up autotrace-0.31.1/autotrace-config.in.orig autotrace-0.31.1/autotrace-config.in
+--- autotrace-0.31.1/autotrace-config.in.orig	2002-11-08 19:18:31.000000000 +0100
++++ autotrace-0.31.1/autotrace-config.in	2013-07-19 10:05:14.516133368 +0200
+@@ -4,6 +4,7 @@ af_libs=
+ af_cflags=
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
++libdir=`pkg-config --variable=libdir autotrace`
+ 
+ 
+ ##
+@@ -205,7 +206,7 @@ fi
+ #dummy because this should always be selected
+ 
+ af_cflags="$af_cflags -I@includedir@"
+-af_libs="-L@libdir@ -lautotrace @LIBPNG_LDFLAGS@ @MAGICK_LDFLAGS@ @LIBSWF_LDFLAGS@ @LIBPSTOEDIT_LIBS@ $af_libs"
++af_libs="-L$libdir -lautotrace @LIBPNG_LDFLAGS@ @MAGICK_LDFLAGS@ @LIBSWF_LDFLAGS@ @LIBPSTOEDIT_LIBS@ $af_libs"
+ 
+ 
+ 

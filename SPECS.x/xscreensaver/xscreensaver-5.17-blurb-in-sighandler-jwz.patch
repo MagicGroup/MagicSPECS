@@ -1,0 +1,81 @@
+cvs diff: Diffing .
+Index: subprocs.c
+===================================================================
+RCS file: /cvsroot/xscreensaver/driver/subprocs.c,v
+retrieving revision 1.84
+diff -u -r1.84 subprocs.c
+--- subprocs.c	26 Jun 2010 11:46:23 -0000	1.84
++++ subprocs.c	28 Jun 2012 18:25:20 -0000
+@@ -484,6 +484,7 @@
+ sigchld_handler (int sig)
+ {
+   saver_info *si = global_si_kludge;	/* I hate C so much... */
++  in_signal_handler_p++;
+ 
+   if (si->prefs.debug_p)
+     {
+@@ -510,6 +511,7 @@
+     }
+ 
+   init_sigchld();
++  in_signal_handler_p--;
+ }
+ #endif /* SIGCHLD */
+ 
+Index: xscreensaver.c
+===================================================================
+RCS file: /cvsroot/xscreensaver/driver/xscreensaver.c,v
+retrieving revision 1.158
+diff -u -r1.158 xscreensaver.c
+--- xscreensaver.c	7 Jun 2012 01:36:17 -0000	1.158
++++ xscreensaver.c	28 Jun 2012 18:30:58 -0000
+@@ -299,14 +299,28 @@
+ }
+ 
+ 
++Bool in_signal_handler_p = 0;	/* I hate C so much... */
++
+ char *
+ timestring (void)
+ {
+-  time_t now = time ((time_t *) 0);
+-  char *str = (char *) ctime (&now);
+-  char *nl = (char *) strchr (str, '\n');
+-  if (nl) *nl = 0; /* take off that dang newline */
+-  return str;
++  if (in_signal_handler_p)
++    {
++      /* Turns out that ctime() and even localtime_r() call malloc() on Linux!
++         So we can't call them from inside SIGCHLD.  WTF.
++       */
++      static char buf[30];
++      strcpy (buf, "... ... ..   signal ....");
++      return buf;
++    }
++  else
++    {
++      time_t now = time ((time_t *) 0);
++      char *str = (char *) ctime (&now);
++      char *nl = (char *) strchr (str, '\n');
++      if (nl) *nl = 0; /* take off that dang newline */
++      return str;
++    }
+ }
+ 
+ static Bool blurb_timestamp_p = True;   /* kludge */
+Index: xscreensaver.h
+===================================================================
+RCS file: /cvsroot/xscreensaver/driver/xscreensaver.h,v
+retrieving revision 1.87
+diff -u -r1.87 xscreensaver.h
+--- xscreensaver.h	10 Jan 2011 02:03:50 -0000	1.87
++++ xscreensaver.h	28 Jun 2012 18:22:46 -0000
+@@ -189,6 +189,7 @@
+ extern int saver_ehandler (Display *dpy, XErrorEvent *error);
+ extern int BadWindow_ehandler (Display *dpy, XErrorEvent *error);
+ extern Bool window_exists_p (Display *dpy, Window window);
++extern Bool in_signal_handler_p;
+ extern char *timestring (void);
+ extern Bool display_is_on_console_p (saver_info *si);
+ extern Visual *get_best_gl_visual (saver_info *si, Screen *screen);
+Exit 1

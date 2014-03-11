@@ -1,0 +1,55 @@
+diff -ur cln-1.2.2/src/base/string/input/cl_st_get1.cc ../BUILD/cln-1.2.2/src/base/string/input/cl_st_get1.cc
+--- cln-1.2.2/src/base/string/input/cl_st_get1.cc	2000-12-15 00:53:06.000000000 +0800
++++ ../BUILD/cln-1.2.2/src/base/string/input/cl_st_get1.cc	2009-05-18 14:35:52.000000000 +0800
+@@ -6,6 +6,7 @@
+ // Specification.
+ #include "cln/string.h"
+ 
++#include <cstdio>
+ 
+ // Implementation.
+ 
+diff -ur cln-1.2.2/src/base/string/input/cl_st_get2.cc ../BUILD/cln-1.2.2/src/base/string/input/cl_st_get2.cc
+--- cln-1.2.2/src/base/string/input/cl_st_get2.cc	2000-12-15 00:53:06.000000000 +0800
++++ ../BUILD/cln-1.2.2/src/base/string/input/cl_st_get2.cc	2009-05-18 14:36:27.000000000 +0800
+@@ -6,6 +6,7 @@
+ // Specification.
+ #include "cln/string.h"
+ 
++#include <cstdio>
+ 
+ // Implementation.
+ 
+diff -ur cln-1.2.2/src/base/string/input/cl_st_getline1.cc ../BUILD/cln-1.2.2/src/base/string/input/cl_st_getline1.cc
+--- cln-1.2.2/src/base/string/input/cl_st_getline1.cc	2000-12-15 00:53:06.000000000 +0800
++++ ../BUILD/cln-1.2.2/src/base/string/input/cl_st_getline1.cc	2009-05-18 14:39:59.000000000 +0800
+@@ -6,6 +6,7 @@
+ // Specification.
+ #include "cln/string.h"
+ 
++#include <cstdio>
+ 
+ // Implementation.
+ 
+diff -ur cln-1.2.2/src/base/string/input/cl_st_getline2.cc ../BUILD/cln-1.2.2/src/base/string/input/cl_st_getline2.cc
+--- cln-1.2.2/src/base/string/input/cl_st_getline2.cc	2000-12-15 00:53:06.000000000 +0800
++++ ../BUILD/cln-1.2.2/src/base/string/input/cl_st_getline2.cc	2009-05-18 14:40:13.000000000 +0800
+@@ -6,6 +6,7 @@
+ // Specification.
+ #include "cln/string.h"
+ 
++#include <cstdio>
+ 
+ // Implementation.
+ 
+diff -ur cln-1.2.2/src/base/string/input/cl_st_gettoken.cc ../BUILD/cln-1.2.2/src/base/string/input/cl_st_gettoken.cc
+--- cln-1.2.2/src/base/string/input/cl_st_gettoken.cc	2004-06-24 05:11:21.000000000 +0800
++++ ../BUILD/cln-1.2.2/src/base/string/input/cl_st_gettoken.cc	2009-05-18 14:40:31.000000000 +0800
+@@ -12,6 +12,7 @@
+ #include "cln/io.h"
+ #include "cl_spushstring.h"
+ #include <cctype>
++#include <cstdio>
+ 
+ namespace cln {
+ 

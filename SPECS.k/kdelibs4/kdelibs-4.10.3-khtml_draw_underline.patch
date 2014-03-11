@@ -1,0 +1,28 @@
+diff -ur kdelibs-4.10.3.orig/khtml/rendering/font.cpp kdelibs-4.10.3/khtml/rendering/font.cpp
+--- kdelibs-4.10.3.orig/khtml/rendering/font.cpp	2013-05-27 14:00:30.000000000 +0000
++++ kdelibs-4.10.3/khtml/rendering/font.cpp	2013-05-29 11:31:49.000000000 +0000
+@@ -704,8 +704,8 @@
+     const int thickness = cfi->height > 20 ? cfi->fm.lineWidth() : 1;
+     const QBrush brush = pt->pen().color();
+     if (deco & UNDERLINE) {
+-        int underlineOffset = ( cfi->height + baseline ) / 2;
+-        if (underlineOffset <= baseline) underlineOffset = baseline+1;
++        int underlineOffset = ( cfi->height + baseline ) / 2 + 1;
++        if (underlineOffset <= baseline) underlineOffset = baseline+2;
+ 
+         pt->fillRect(_tx, _ty + underlineOffset, width + 1, thickness, brush );
+     }
+diff -ur kdelibs-4.10.3.orig/khtml/rendering/render_line.cpp kdelibs-4.10.3/khtml/rendering/render_line.cpp
+--- kdelibs-4.10.3.orig/khtml/rendering/render_line.cpp	2013-05-27 14:00:30.000000000 +0000
++++ kdelibs-4.10.3/khtml/rendering/render_line.cpp	2013-05-29 11:31:28.000000000 +0000
+@@ -1005,8 +1005,8 @@
+             pI.p->setFont(styleToUse->font());
+ 
+         if (deco & UNDERLINE && !paintedChildren) {
+-            int underlineOffset = ( fm.height() + m_baseline ) / 2;
+-            if (underlineOffset <= m_baseline) underlineOffset = m_baseline+1;
++            int underlineOffset = ( fm.height() + m_baseline ) / 2 + 1;
++            if (underlineOffset <= m_baseline) underlineOffset = m_baseline+2;
+ 
+             pI.p->fillRect(_tx, _ty + underlineOffset, w, thickness, underline );
+         }

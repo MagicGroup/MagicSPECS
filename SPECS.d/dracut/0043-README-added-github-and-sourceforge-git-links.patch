@@ -1,0 +1,31 @@
+From 803be5aa50b4ad7c76b83a2df23a47ae4744aabf Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 14 Mar 2012 11:48:48 +0100
+Subject: [PATCH] README: added github and sourceforge git links
+
+---
+ README |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/README b/README
+index 6edc2c0..f9198bf 100644
+--- a/README
++++ b/README
+@@ -62,9 +62,17 @@ Git:
+ 	http://git.kernel.org/pub/scm/boot/dracut/dracut.git
+ 	https://git.kernel.org/pub/scm/boot/dracut/dracut.git
+ 
++	git://github.com/haraldh/dracut.git
++
++	git://dracut.git.sourceforge.net/gitroot/dracut/dracut
++
+ Git Web:
+ 	http://git.kernel.org/?p=boot/dracut/dracut.git
+ 
++	https://haraldh@github.com/haraldh/dracut.git
++
++	http://dracut.git.sourceforge.net/git/gitweb.cgi?p=dracut/dracut
++
+ Git Web RSS Feed:
+ 	http://git.kernel.org/?p=boot/dracut/dracut.git;a=rss
+ 

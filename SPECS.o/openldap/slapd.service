@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenLDAP Server Daemon
+After=syslog.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/openldap/slapd.pid
+Environment="SLAPD_URLS=ldap:/// ldapi:///" "SLAPD_OPTIONS="
+EnvironmentFile=/etc/sysconfig/slapd
+ExecStartPre=/usr/libexec/openldap/check-config.sh
+ExecStart=/usr/sbin/slapd -u ldap -h ${SLAPD_URLS} $SLAPD_OPTIONS
+
+[Install]
+WantedBy=multi-user.target

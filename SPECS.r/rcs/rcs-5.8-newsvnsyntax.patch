@@ -1,0 +1,42 @@
+diff -up rcs-5.8/src/ident.c.newsvnsyntax rcs-5.8/src/ident.c
+--- rcs-5.8/src/ident.c.newsvnsyntax	2011-01-07 13:27:18.000000000 +0100
++++ rcs-5.8/src/ident.c	2011-09-08 10:53:34.064837699 +0200
+@@ -41,14 +41,20 @@ match (register FILE *fp)
+   char line[BUFSIZ];
+   register int c;
+   register char *tp;
++  int COLON_C = 0;
++  int MAX_COLON = 1;
+ 
+   tp = line;
+-  while ((c = getc (fp)) != VDELIM)
++  while ((c = getc (fp)) && (COLON_C < MAX_COLON))
+     {
+       if (c == EOF && feof (fp) | ferror (fp))
+         return c;
+       switch (ctab[c])
+         {
++        case COLON:
++          *tp++ = c;
++          COLON_C++;
++          break;
+         case LETTER:
+         case Letter:
+           *tp++ = c;
+@@ -62,7 +68,15 @@ match (register FILE *fp)
+     }
+   if (tp == line)
+     return c;
+-  *tp++ = c;
++  if (c == ' ')
++    {
++      ungetc(c,fp);
++    }
++  else
++    {
++      *tp++ = c;
++    }
++
+   if ((c = getc (fp)) != ' ')
+     return c ? c : '\n';
+   *tp++ = c;

@@ -1,0 +1,82 @@
+---
+ libmultipath/log_pthread.c |    3 +++
+ multipathd/main.c          |   12 +++++-------
+ 2 files changed, 8 insertions(+), 7 deletions(-)
+
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -1473,7 +1473,9 @@ sighup (int sig)
+ 	if (running_state != DAEMON_RUNNING)
+ 		return;
+ 
++	lock(gvecs->lock);
+ 	reconfigure(gvecs);
++	unlock(gvecs->lock);
+ 
+ #ifdef _DEBUG_
+ 	dbg_free_final(NULL);
+@@ -1487,16 +1489,9 @@ sigend (int sig)
+ }
+ 
+ static void
+-sigusr1 (int sig)
+-{
+-	condlog(3, "SIGUSR1 received");
+-}
+-
+-static void
+ signal_init(void)
+ {
+ 	signal_set(SIGHUP, sighup);
+-	signal_set(SIGUSR1, sigusr1);
+ 	signal_set(SIGINT, sigend);
+ 	signal_set(SIGTERM, sigend);
+ 	signal(SIGPIPE, SIG_IGN);
+@@ -1652,6 +1647,7 @@ child (void * param)
+ 	 */
+ 	running_state = DAEMON_CONFIGURE;
+ 
++	block_signal(SIGHUP, &set);
+ 	lock(vecs->lock);
+ 	if (configure(vecs, 1)) {
+ 		unlock(vecs->lock);
+@@ -1659,6 +1655,7 @@ child (void * param)
+ 		exit(1);
+ 	}
+ 	unlock(vecs->lock);
++	pthread_sigmask(SIG_SETMASK, &set, NULL);
+ 
+ 	/*
+ 	 * start threads
+@@ -1691,6 +1688,7 @@ child (void * param)
+ 	 */
+ 	running_state = DAEMON_SHUTDOWN;
+ 	pthread_sigmask(SIG_UNBLOCK, &set, NULL);
++	block_signal(SIGUSR1, NULL);
+ 	block_signal(SIGHUP, NULL);
+ 	lock(vecs->lock);
+ 	if (conf->queue_without_daemon == QUE_NO_DAEMON_OFF)
+Index: multipath-tools-130222/libmultipath/log_pthread.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/log_pthread.c
++++ multipath-tools-130222/libmultipath/log_pthread.c
+@@ -55,14 +55,17 @@ void log_safe (int prio, const char * fm
+ 
+ void log_thread_flush (void)
+ {
++	sigset_t old;
+ 	int empty;
+ 
+ 	do {
++		block_signal(SIGUSR1, &old);
+ 		pthread_mutex_lock(&logq_lock);
+ 		empty = log_dequeue(la->buff);
+ 		pthread_mutex_unlock(&logq_lock);
+ 		if (!empty)
+ 			log_syslog(la->buff);
++		pthread_sigmask(SIG_SETMASK, &old, NULL);
+ 	} while (empty == 0);
+ }
+ 

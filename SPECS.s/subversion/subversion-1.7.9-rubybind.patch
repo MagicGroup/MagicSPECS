@@ -1,0 +1,24 @@
+
+Try a little harder to avoid svnserve() bind failures.
+
+--- subversion-1.7.9/subversion/bindings/swig/ruby/test/util.rb.rubybind
++++ subversion-1.7.9/subversion/bindings/swig/ruby/test/util.rb
+@@ -41,7 +41,8 @@ module SvnTestUtil
+     @full_repos_path = File.expand_path(@repos_path)
+     @repos_uri = "file://#{@full_repos_path.sub(/^\/?/, '/')}"
+     @svnserve_host = "127.0.0.1"
+-    @svnserve_ports = (64152..64282).collect{|x| x.to_s}
++    sport = (50000 + rand(100) * 100)
++    @svnserve_ports = (sport..sport + 99).collect{|x| x.to_s}
+     @wc_base_dir = File.join(Dir.tmpdir, "wc-tmp")
+     @wc_path = File.join(@wc_base_dir, "wc")
+     @full_wc_path = File.expand_path(@wc_path)
+@@ -249,6 +250,8 @@ realm = #{@realm}
+                "--listen-port", port,
+                "-d", "--foreground")
+         }
++        # wait a while for svnserve to attempt a bind() and possibly fail
++        sleep(1)
+         pid, status = Process.waitpid2(@svnserve_pid, Process::WNOHANG)
+         if status and status.exited?
+           if $DEBUG

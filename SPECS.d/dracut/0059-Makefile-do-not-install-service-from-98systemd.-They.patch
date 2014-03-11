@@ -1,0 +1,49 @@
+From 2023d8eb5b1a92cb830059384f4935a42505eaaa Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 9 Jul 2012 12:41:56 +0200
+Subject: [PATCH] Makefile: do not install service from 98systemd. They are
+ copied to /run
+
+---
+ Makefile    |   11 +----------
+ dracut.spec |    5 ++---
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 07741d0..e20ba06 100644
+--- a/Makefile
++++ b/Makefile
+@@ -83,16 +83,7 @@ install: doc dracut-version.sh
+ 	ln -s dracut.cmdline.7 $(DESTDIR)$(mandir)/man7/dracut.kernel.7
+ 	if [ -n "$(systemdsystemunitdir)" ]; then \
+ 		mkdir -p $(DESTDIR)$(systemdsystemunitdir); \
+-		for i in \
+-			modules.d/98systemd/dracut-initqueue.service \
+-			modules.d/98systemd/dracut-pre-pivot.service \
+-			modules.d/98systemd/dracut-pre-trigger.service \
+-			modules.d/98systemd/dracut-pre-udev.service \
+-			modules.d/98systemd/initrd-switch-root.service \
+-			modules.d/98systemd/initrd-switch-root.target \
+-			dracut-shutdown.service; do \
+-				install -m 0644 $$i $(DESTDIR)$(systemdsystemunitdir); \
+-		done; \
++		install -m 0644 dracut-shutdown.service $(DESTDIR)$(systemdsystemunitdir); \
+ 		mkdir -p $(DESTDIR)$(systemdsystemunitdir)/shutdown.target.wants; \
+ 		ln -s ../dracut-shutdown.service \
+ 		$(DESTDIR)$(systemdsystemunitdir)/shutdown.target.wants/dracut-shutdown.service; \
+diff --git a/dracut.spec b/dracut.spec
+index 6be1c3d..c17860d 100644
+--- a/dracut.spec
++++ b/dracut.spec
+@@ -312,9 +312,8 @@ rm -rf $RPM_BUILD_ROOT
+ %attr(0644,root,root) %ghost %config(missingok,noreplace) %{_localstatedir}/log/dracut.log
+ %dir %{_sharedstatedir}/initramfs
+ %if %{defined _unitdir}
+-%{_unitdir}/*.service
+-%{_unitdir}/*.target
+-%{_unitdir}/*/*.service
++%{_unitdir}/dracut-shutdown.service
++%{_unitdir}/shutdown.target.wants/dracut-shutdown.service
+ %endif
+ 
+ %files network

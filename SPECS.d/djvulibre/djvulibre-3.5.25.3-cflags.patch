@@ -1,0 +1,51 @@
+diff -up djvulibre-3.5.25/configure~ djvulibre-3.5.25/configure
+--- djvulibre-3.5.25/configure~	2012-05-08 05:56:53.000000000 +0300
++++ djvulibre-3.5.25/configure	2012-10-10 00:01:36.000000000 +0300
+@@ -14733,6 +14733,7 @@ fi
+ 
+    OPTS=
+ 
++if false; then
+    saved_CXXFLAGS="$CXXFLAGS"
+    saved_CFLAGS="$CFLAGS"
+    CXXFLAGS=
+@@ -14750,6 +14751,7 @@ fi
+        *) CFLAGS="$CFLAGS $opt" ;;
+      esac
+    done
++fi
+    if test x$ac_debug = xno ; then
+      OPTS=-DNDEBUG
+ 
+@@ -14770,6 +14772,7 @@ $as_echo "no" >&6; }
+  fi
+ 
+ 
++if false; then
+  opt="-O3"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking if $CXX accepts $opt" >&5
+ $as_echo_n "checking if $CXX accepts $opt... " >&6; }
+@@ -14801,6 +14804,7 @@ $as_echo "no" >&6; }
+  fi
+ 
+  fi
++fi
+ 
+ 
+  opt="-Wno-non-virtual-dtor"
+@@ -14819,6 +14823,7 @@ $as_echo "no" >&6; }
+ 
+  fi
+ 
++if false; then
+      cpu=`uname -m 2>/dev/null`
+      test -z "$cpu" && cpu=${host_cpu}
+      case "${host_cpu}" in
+@@ -14860,6 +14865,7 @@ $as_echo "no" >&6; }
+ 
+            ;;
+       esac
++fi
+    else
+ 
+  opt="-Wall"

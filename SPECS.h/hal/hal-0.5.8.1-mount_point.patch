@@ -1,0 +1,14 @@
+--- hal-0.5.8.1/tools/hal-storage-mount.c.orig	2006-09-20 04:23:25.000000000 +0800
++++ hal-0.5.8.1/tools/hal-storage-mount.c	2006-10-20 16:48:48.000000000 +0800
+@@ -629,9 +629,9 @@
+ 		while (TRUE) {
+ 			g_free (mount_dir);
+ 			if (i == 0)
+-				mount_dir = g_strdup_printf ("/media/%s", mount_point);
++				mount_dir = g_strdup_printf ("/media/%s", device+5);
+ 			else
+-				mount_dir = g_strdup_printf ("/media/%s-%d", mount_point, i);
++				mount_dir = g_strdup_printf ("/media/%s-%d",device+5, i);
+ 			
+ #ifdef DEBUG
+ 			printf ("trying dir %s\n", mount_dir);

@@ -1,0 +1,21 @@
+--- automake-1.7.9/lib/texinfo.tex.rh1	2005-03-01 13:23:28.228672792 +0100
++++ automake-1.7.9/lib/texinfo.tex	2005-03-01 13:45:36.260781224 +0100
+@@ -1065,6 +1065,9 @@
+ \newif\ifpdfmakepagedest
+ 
+ \ifx\pdfoutput\undefined
++  \pdfoutput = 0
++\fi
++\ifnum\pdfoutput < 1
+   \pdffalse
+   \let\pdfmkdest = \gobble
+   \let\pdfurl = \gobble
+@@ -1254,7 +1257,7 @@
+     \startlink attr{/Border [0 0 0]} goto name{\pdfmkpgn{#1}}
+     \linkcolor #1\endlink}
+   \def\done{\edef\st{\global\noexpand\toksA={\the\toksB}}\st}
+-\fi % \ifx\pdfoutput
++\fi % \ifnum\pdfoutput
+ 
+ 
+ \message{fonts,}

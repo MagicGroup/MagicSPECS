@@ -1,0 +1,21 @@
+diff -urN korundum-4.9.2.orig/src/krubypluginfactory.cpp korundum-4.9.2/src/krubypluginfactory.cpp
+--- korundum-4.9.2.orig/src/krubypluginfactory.cpp	2012-10-10 05:42:35.000000000 -0400
++++ korundum-4.9.2/src/krubypluginfactory.cpp	2012-10-10 05:42:47.000000000 -0400
+@@ -165,7 +165,7 @@
+ #if RUBY_VERSION >= 0x10900
+     VALUE gem = rb_define_module("Gem");
+     rb_const_set(gem, rb_intern("Enable"), Qtrue);
+-    Init_prelude(); 
++    //Init_prelude(); 
+ #endif
+ 
+     ruby_incpush(QFile::encodeName(program.path()));
+@@ -342,7 +342,7 @@
+ #if RUBY_VERSION >= 0x10900
+     VALUE gem = rb_define_module("Gem");
+     rb_const_set(gem, rb_intern("Enable"), Qtrue);
+-    Init_prelude();                                             
++    //Init_prelude();                                             
+ #endif
+ 
+     ruby_incpush(QFile::encodeName(program.path()));

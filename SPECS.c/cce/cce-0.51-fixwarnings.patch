@@ -1,0 +1,22 @@
+diff -Nuarp cce-0.51.orig/include/defs.h cce-0.51/include/defs.h
+--- cce-0.51.orig/include/defs.h	2010-04-24 15:28:40.000000000 +0800
++++ cce-0.51/include/defs.h	2010-04-24 15:30:09.000000000 +0800
+@@ -36,6 +36,7 @@
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+ #endif
++#include <stdlib.h>
+ 
+ #include "osdep.h"
+ 
+diff -Nuarp cce-0.51.orig/src/term/vt.c cce-0.51/src/term/vt.c
+--- cce-0.51.orig/src/term/vt.c	2010-04-24 15:28:40.000000000 +0800
++++ cce-0.51/src/term/vt.c	2010-04-24 15:31:14.000000000 +0800
+@@ -35,6 +35,7 @@
+    The below code doesn't handle all of the ANSI required ESC stuff
+  */
+ #include	<stdio.h>
++#include	<stdlib.h>
+ #include	<unistd.h>
+ #include	<string.h>
+ #include	<sys/types.h>

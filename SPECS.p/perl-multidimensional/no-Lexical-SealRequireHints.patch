@@ -1,0 +1,11 @@
+diff -up multidimensional-0.010/lib/multidimensional.pm.orig multidimensional-0.010/lib/multidimensional.pm
+--- multidimensional-0.010/lib/multidimensional.pm.orig	2012-01-27 05:34:41.000000000 -0700
++++ multidimensional-0.010/lib/multidimensional.pm	2012-04-09 10:34:54.000000000 -0600
+@@ -8,7 +8,6 @@ package multidimensional;
+ use strict;
+ use warnings;
+ 
+-use Lexical::SealRequireHints 0.005;
+ use B::Hooks::OP::Check 0.19;
+ use XSLoader;
+ 

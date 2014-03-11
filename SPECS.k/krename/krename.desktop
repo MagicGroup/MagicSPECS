@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Exec=krename -caption "%c" %i %m  
+Icon=krename.png
+MiniIcon=krename.png
+DocPath=krename/index.html
+Comment=A batch renamer
+Comment[de]=Ein Batch Umbenenner
+Comment[zh_CN]=KDE 下的批量文件名修改工具
+Terminal=0
+Name=Krename
+GenericName[zh_CN]=批量重命名工具
+Categories=Qt;KDE;Utility;

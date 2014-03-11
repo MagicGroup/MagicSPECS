@@ -1,0 +1,11 @@
+--- x11perf-1.5.3/Makefile.am.x11perf-datadir-cleanups	2005-11-23 13:03:27.000000000 -0500
++++ x11perf-1.5.3/Makefile.am	2005-11-23 13:03:57.000000000 -0500
+@@ -23,7 +23,7 @@
+ 
+ bin_SCRIPTS = x11perfcomp
+ 
+-LIBPATH = $(libdir)/X11/x11perfcomp
++LIBPATH = $(datadir)/X11/x11perfcomp
+ 
+ x11perfcompdir = $(LIBPATH)
+ dist_x11perfcomp_SCRIPTS = fillblnk perfboth perfratio Xmark

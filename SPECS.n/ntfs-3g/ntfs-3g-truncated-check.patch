@@ -1,0 +1,28 @@
+--- src/lowntfs-3g.c.ref	2013-04-04 09:47:16.000000000 +0200
++++ src/lowntfs-3g.c	2013-05-05 15:08:39.000000000 +0200
+@@ -620,9 +620,9 @@
+ 			 * Check whether it's Interix symbolic link, block or
+ 			 * character device.
+ 			 */
+-			if ((size_t)na->data_size <= sizeof(INTX_FILE_TYPES)
++			if ((u64)na->data_size <= sizeof(INTX_FILE_TYPES)
+ 					+ sizeof(ntfschar) * PATH_MAX
+-				&& (size_t)na->data_size >
++				&& (u64)na->data_size >
+ 					sizeof(INTX_FILE_TYPES)) {
+ 				INTX_FILE *intx_file;
+ 
+--- src/ntfs-3g.c.ref	2013-04-04 09:47:16.000000000 +0200
++++ src/ntfs-3g.c	2013-05-05 15:09:13.000000000 +0200
+@@ -792,9 +792,9 @@
+ 			 * Check whether it's Interix symbolic link, block or
+ 			 * character device.
+ 			 */
+-			if ((size_t)na->data_size <= sizeof(INTX_FILE_TYPES)
++			if ((u64)na->data_size <= sizeof(INTX_FILE_TYPES)
+ 					+ sizeof(ntfschar) * PATH_MAX
+-				&& (size_t)na->data_size >
++				&& (u64)na->data_size >
+ 					sizeof(INTX_FILE_TYPES)
+ 				&& !stream_name_len) {
+ 				

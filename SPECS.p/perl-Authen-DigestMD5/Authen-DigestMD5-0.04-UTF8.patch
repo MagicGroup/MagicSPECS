@@ -1,0 +1,27 @@
+--- Authen-DigestMD5/DigestMD5.pm.not-utf8
++++ Authen-DigestMD5/DigestMD5.pm
+@@ -314,11 +314,11 @@
+ 
+ =head1 AUTHOR
+ 
+-Salvador Fandiño, E<lt>sfandino@yahoo.comE<gt>
++Salvador FandiÃ±o, E<lt>sfandino@yahoo.comE<gt>
+ 
+ =head1 COPYRIGHT AND LICENSE
+ 
+-Copyright 2003 by Salvador Fandiño.
++Copyright 2003 by Salvador FandiÃ±o.
+ 
+ Portions of this module have been copied from the L<Authen::SASL>
+ package by Graham Barr.
+--- Authen-DigestMD5/README.not-utf8
++++ Authen-DigestMD5/README
+@@ -20,7 +20,7 @@
+ 
+ COPYRIGHT AND LICENCE
+ 
+-Copyright 2003 by Salvador Fandiño.
++Copyright 2003 by Salvador FandiÃ±o.
+ 
+ Portions of this module have been copied from the Authen::SASL
+ package by Graham Barr.

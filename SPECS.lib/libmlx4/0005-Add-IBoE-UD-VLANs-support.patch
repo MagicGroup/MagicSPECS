@@ -1,0 +1,82 @@
+From 3e73678e88d2ea414a9f4ae187f6412593bd0a1f Mon Sep 17 00:00:00 2001
+From: Or Gerlitz <ogerlitz@mellanox.com>
+Date: Tue, 19 Jul 2011 09:34:15 +0000
+Subject: [PATCH 5/7] Add IBoE UD/VLANs support
+
+Add VLAN support for the UD address handle creation flow, where the
+VLAN id is taken from the destination GID and the VLAN priority from
+the IB SL specified by the application.
+
+Signed-off-by: Or Gerlitz <ogerlitz@mellanox.com>
+---
+ src/mlx4.h  |    1 +
+ src/qp.c    |    1 +
+ src/verbs.c |    9 +++++++--
+ src/wqe.h   |    2 +-
+ 4 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/src/mlx4.h b/src/mlx4.h
+index b277b06..0ad838d 100644
+--- a/src/mlx4.h
++++ b/src/mlx4.h
+@@ -241,6 +241,7 @@ struct mlx4_av {
+ struct mlx4_ah {
+ 	struct ibv_ah			ibv_ah;
+ 	struct mlx4_av			av;
++	uint16_t			vlan;
+ 	uint8_t				mac[6];
+ };
+ 
+diff --git a/src/qp.c b/src/qp.c
+index 4d79e38..40a6689 100644
+--- a/src/qp.c
++++ b/src/qp.c
+@@ -144,6 +144,7 @@ static void set_datagram_seg(struct mlx4_wqe_datagram_seg *dseg,
+ 	memcpy(dseg->av, &to_mah(wr->wr.ud.ah)->av, sizeof (struct mlx4_av));
+ 	dseg->dqpn = htonl(wr->wr.ud.remote_qpn);
+ 	dseg->qkey = htonl(wr->wr.ud.remote_qkey);
++	dseg->vlan = htons(to_mah(wr->wr.ud.ah)->vlan);
+ 	memcpy(dseg->mac, to_mah(wr->wr.ud.ah)->mac, 6);
+ }
+ 
+diff --git a/src/verbs.c b/src/verbs.c
+index 389801c..199d107 100644
+--- a/src/verbs.c
++++ b/src/verbs.c
+@@ -633,13 +633,18 @@ static uint16_t get_vlan_id(union ibv_gid *gid)
+ 
+ static int mlx4_resolve_grh_to_l2(struct mlx4_ah *ah, struct ibv_ah_attr *attr)
+ {
+-	if (get_vlan_id(&attr->grh.dgid) != 0xffff)
+-		return 1;
++	uint16_t vid;
+ 
+ 	if (link_local_gid(&attr->grh.dgid)) {
+ 		memcpy(ah->mac, &attr->grh.dgid.raw[8], 3);
+ 		memcpy(ah->mac + 3, &attr->grh.dgid.raw[13], 3);
+ 		ah->mac[0] ^= 2;
++
++		vid = get_vlan_id(&attr->grh.dgid);
++		if (vid != 0xffff) {
++			ah->av.port_pd |= htonl(1 << 29);
++			ah->vlan = vid | ((attr->sl & 7) << 13);
++		}
+ 		return 0;
+ 	} else
+ 		return 1;
+diff --git a/src/wqe.h b/src/wqe.h
+index 043f0da..bbd22ba 100644
+--- a/src/wqe.h
++++ b/src/wqe.h
+@@ -78,7 +78,7 @@ struct mlx4_wqe_datagram_seg {
+ 	uint32_t		av[8];
+ 	uint32_t		dqpn;
+ 	uint32_t		qkey;
+-	uint16_t		reserved;
++	uint16_t		vlan;
+ 	uint8_t			mac[6];
+ };
+ 
+-- 
+1.7.6.4
+

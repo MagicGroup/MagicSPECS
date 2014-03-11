@@ -1,0 +1,39 @@
+--- kdocker/kdocker.pro.paths	2005-04-04 22:14:58.000000000 -0500
++++ kdocker/kdocker.pro	2006-05-10 12:29:45.000000000 -0500
+@@ -1,10 +1,10 @@
+ TEMPLATE = app
+ DEPENDPATH += i18n src
+ INCLUDEPATH += . src  /usr/include/X11 /usr/include/X11R6
+-LIBPATH += /usr/X11/lib /usr/X11R6/lib
++#LIBPATH += /usr/X11/lib /usr/X11R6/lib
+ LIBS = -lX11 -lXpm -lXmu
+ TARGET = kdocker
+-INSTALL_PATH = /usr/local/share/kdocker
++INSTALL_PATH = $(DESTDIR)/usr/share/kdocker
+ DOCS_PATH = $$INSTALL_PATH/docs
+ 
+ # Defines
+@@ -24,10 +24,10 @@
+ docs.path = $$DOCS_PATH
+ docs.files = README
+ 
+-desktop.path = /usr/share/applications
++desktop.path = $(DESTDIR)/usr/share/applications
+ desktop.files = kdocker.desktop
+ 
+-target.path = /usr/local/bin
++target.path = $(DESTDIR)/usr/bin
+ 
+ INSTALLS += target icons docs translations desktop
+ 
+--- kdocker/kdocker.desktop.paths	2004-11-22 10:11:49.000000000 -0600
++++ kdocker/kdocker.desktop	2006-05-10 12:29:14.000000000 -0500
+@@ -4,7 +4,7 @@
+ Comment=Docks any application into system tray
+ Exec=kdocker
+ TryExec=kdocker
+-Icon=/usr/local/share/kdocker/icons/kdocker.png
++Icon=/usr/share/kdocker/icons/kdocker.png
+ Terminal=false
+ Type=Application
+ Categories=Application;Utility;

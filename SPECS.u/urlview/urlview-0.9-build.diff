@@ -1,0 +1,60 @@
+diff -u urlview-0.9.old/enter.c urlview-0.9/enter.c
+--- urlview-0.9.old/enter.c	Tue Jul  4 12:14:30 2000
++++ urlview-0.9/enter.c	Tue Jul  4 14:48:40 2000
+@@ -141,7 +141,9 @@
+   int pass = (flags == M_PASS);
+   int first = 1;
+   int j;
++#ifndef URLVIEW
+   char tempbuf[_POSIX_PATH_MAX] = "";
++#endif
+ 
+   FOREVER
+   {
+diff -u urlview-0.9.old/urlview.c urlview-0.9/urlview.c
+--- urlview-0.9.old/urlview.c	Tue Jul  4 12:14:30 2000
++++ urlview-0.9/urlview.c	Tue Jul  4 14:45:50 2000
+@@ -46,6 +46,8 @@
+ #include <rx/rxposix.h>
+ #endif
+ 
++#define ISSPACE(c) isspace((unsigned char)c)
++
+ #define DEFAULT_REGEXP "(((https?|ftp|gopher)://|(mailto|file|news):)[^' \t<>\"]+|(www|web|w3)\\.[-a-z0-9.]+)[^' \t.,;<>\"\\):]"
+ #define DEFAULT_COMMAND "url_handler.sh %s"
+ #define SYSTEM_INITFILE "/etc/urlview.conf"
+@@ -64,6 +66,8 @@
+ extern int mutt_enter_string (unsigned char *buf, size_t buflen, int y, int x,
+ 		int flags);
+ 
++extern char *quote (char *d, size_t l, const char *f);
++
+ void search_forward (char *search, int urlcount, char **url, int *redraw, int *current, int *top)
+ {
+   regex_t rx;
+@@ -198,10 +202,10 @@
+     {
+       if (buf[0] == '#' || buf[0] == '\n')
+ 	continue;
+-      if (strncmp ("REGEXP", buf, 6) == 0 && isspace (buf[6]))
++      if (strncmp ("REGEXP", buf, 6) == 0 && ISSPACE (buf[6]))
+       {
+ 	pc = buf + 6;
+-	while (isspace (*pc))
++	while (ISSPACE (*pc))
+ 	  pc++;
+ 	wc = regexp;
+ 	while (*pc && *pc != '\n')
+@@ -235,10 +239,10 @@
+ 	}
+ 	*wc = 0;
+       }
+-      else if (strncmp ("COMMAND", buf, 7) == 0 && isspace (buf[7]))
++      else if (strncmp ("COMMAND", buf, 7) == 0 && ISSPACE (buf[7]))
+       {
+ 	pc = buf + 7;
+-	while (isspace (*pc))
++	while (ISSPACE (*pc))
+ 	  pc++;
+ 	pc[ strlen (pc) - 1 ] = 0; /* kill the trailing newline */
+ 	strncpy (command, pc, sizeof (command) - 1);

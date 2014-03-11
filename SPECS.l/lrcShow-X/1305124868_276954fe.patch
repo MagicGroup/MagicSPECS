@@ -1,0 +1,22 @@
+Index: mainGui.py
+===================================================================
+--- mainGui.py	(版本 295)
++++ mainGui.py	(工作副本)
+@@ -849,7 +849,7 @@
+ 				os.remove(os.path.expanduser('~/.lrcShow-X/lrcShow-X.lock'))
+ 			except:
+ 				pass
+-			sys.exit()
++			self.quitWidnow()
+ 	
+ 	def checkTime(self):
+ 		#print self.playerStatus
+@@ -861,7 +861,7 @@
+ 				os.remove(os.path.expanduser('~/.lrcShow-X/lrcShow-X.lock'))
+ 			except:
+ 				pass
+-			sys.exit()
++			self.quitWidnow()
+ 		if(self.playerStatus == 'playing'):
+ 			try:
+ 				title = title.encode(self.locale)

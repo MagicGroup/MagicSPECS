@@ -1,0 +1,41 @@
+--- kmymoney/kmymoney2/widgets/Makefile.am.ORI	2012-08-05 18:38:59.001977368 +0200
++++ kmymoney/kmymoney2/widgets/Makefile.am	2012-08-05 18:39:47.007986865 +0200
+@@ -68,19 +68,19 @@
+ # Hence the quick hack to include the required objects from the
+ # libkmm_mymoney.so directly into libkmymoney.so
+ libkmymoney_la_CXXFLAGS = -U_CHECK_MEMORY -DKMM_DESIGNER
+-libkmymoney_la_LDFLAGS = `ls ../mymoney/*.lo` $(KDE_LDFLAGS) $(QT_LDFLAGS) $(X_LDFLAGS) -rpath $(DESTDIR)$(qt_libraries)/../plugins/designer $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT)
++libkmymoney_la_LDFLAGS = `ls ../mymoney/*.lo` $(KDE_LDFLAGS) $(QT_LDFLAGS) $(X_LDFLAGS) -rpath $(DESTDIR)${QTPLUGINS}/designer $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT)
+ 
+ if INSTALL_QTDESIGNER_SUPPORT
+ install-exec-local: libkmymoney.la
+-	$(mkinstalldirs) $(DESTDIR)$(qt_libraries)/../plugins/designer
+-	$(INSTALL_PROGRAM) .libs/libkmymoney.so $(DESTDIR)$(qt_libraries)/../plugins/designer
++	$(mkinstalldirs) $(DESTDIR)${QTPLUGINS}/designer
++	$(INSTALL_PROGRAM) .libs/libkmymoney.so $(DESTDIR)${QTPLUGINS}/designer
+ 	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/$(PICS_DIR)
+ 	for file in $(WIDGET_PNGS); do \
+ 	  $(INSTALL_DATA) $(abs_srcdir)/$$file $(DESTDIR)$(kde_datadir)/$(PICS_DIR); \
+ 	done
+ 
+ uninstall-local:
+-	-rm $(DESTDIR)$(qt_libraries)/../plugins/designer/libkmymoney.so
++	-rm $(DESTDIR)${QTPLUGINS}/designer/libkmymoney.so
+ 	for file in $(WIDGET_PNGS); do \
+ 	  rm -rf $(DESTDIR)$(kde_datadir)/$(PICS_DIR)/$$file; \
+ 	done
+--- kmymoney/admin/acinclude.m4.ORI	2012-08-05 19:47:47.819789267 +0200
++++ kmymoney/admin/acinclude.m4.in	2012-08-05 19:48:35.842776216 +0200
+@@ -6724,7 +6724,11 @@
+       QTDIR=`dirname $MOC`
+       QTDIR=${QTDIR%/bin}
+     fi
+-    LIBSQLITE3=${QTDIR}/plugins/sqldrivers/libsqlite3${qtlib}.so
++    if test x$QTPLUGINS = x; then
++      LIBSQLITE3=${QTDIR}/plugins/sqldrivers/libsqlite3${qtlib}.so
++    else
++      LIBSQLITE3=${QTPLUGINS}/sqldrivers/libsqlite3${qtlib}.so
++    fi
+ 
+     # do the checks
+     if test $enable_sqlite3 = auto; then

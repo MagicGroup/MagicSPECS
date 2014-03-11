@@ -1,0 +1,63 @@
+From 1594d0bf9cf19b45fdb5574e141e0cae163546f5 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Sat, 30 Jun 2012 12:15:04 +0200
+Subject: [PATCH] fs-lib/fs-lib.sh: skip fsck for xfs and btrfs. remount is
+ enough
+
+---
+ modules.d/99fs-lib/fs-lib.sh |   28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
+
+diff --git a/modules.d/99fs-lib/fs-lib.sh b/modules.d/99fs-lib/fs-lib.sh
+index d1b7a9d..b274935 100755
+--- a/modules.d/99fs-lib/fs-lib.sh
++++ b/modules.d/99fs-lib/fs-lib.sh
+@@ -32,15 +32,17 @@ fsck_tail() {
+ # note: this function sets _drv of the caller
+ fsck_able() {
+     case "$1" in
+-        xfs) {
+-                type xfs_db &&
+-                type xfs_repair &&
+-                type xfs_check &&
+-                type mount &&
+-                type umount
+-            } >/dev/null 2>&1 &&
+-            _drv="_drv=none fsck_drv_xfs" &&
+-            return 0
++        xfs)
++            # {
++            #     type xfs_db &&
++            #     type xfs_repair &&
++            #     type xfs_check &&
++            #     type mount &&
++            #     type umount
++            # } >/dev/null 2>&1 &&
++            # _drv="_drv=none fsck_drv_xfs" &&
++            # return 0
++            return 1
+             ;;
+         ext?)
+             type e2fsck >/dev/null 2>&1 &&
+@@ -58,9 +60,10 @@ fsck_able() {
+             return 0
+             ;;
+         btrfs)
+-            type btrfsck >/dev/null 2>&1 &&
+-            _drv="_drv=none fsck_drv_btrfs" &&
+-            return 0
++            # type btrfsck >/dev/null 2>&1 &&
++            # _drv="_drv=none fsck_drv_btrfs" &&
++            # return 0
++            return 1
+             ;;
+         nfs*)
+             # nfs can be a nop, returning success
+@@ -89,7 +92,6 @@ fsck_drv_btrfs() {
+     return 0
+ }
+ 
+-
+ # common code for checkers that follow usual subset of options and return codes
+ fsck_drv_com() {
+     local _ret

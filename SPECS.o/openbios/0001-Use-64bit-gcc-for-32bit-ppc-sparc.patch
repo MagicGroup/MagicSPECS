@@ -1,0 +1,38 @@
+From edd8b56b3181853ebba727e4ab3a09f86092bb9b Mon Sep 17 00:00:00 2001
+From: Cole Robinson <crobinso@redhat.com>
+Date: Mon, 17 Sep 2012 17:07:19 -0400
+Subject: [PATCH] Use 64bit gcc for 32bit ppc + sparc
+
+Fedora only packages the 64 bit cross compilers, so it's our only
+option. Not intended for upstream.
+
+Signed-off-by: Cole Robinson <crobinso@redhat.com>
+---
+ config/scripts/switch-arch | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/config/scripts/switch-arch b/config/scripts/switch-arch
+index a9c911b..c1d1dbb 100755
+--- a/config/scripts/switch-arch
++++ b/config/scripts/switch-arch
+@@ -230,7 +230,7 @@ for ARCH in $arch_list; do
+         ;;
+ 
+         ppc)
+-        select_prefix powerpc
++        select_prefix powerpc64
+         if [ "$unix" = "no" ]; then
+             CFLAGS="-m32 -msoft-float -fno-builtin-bcopy -fno-builtin-log2"
+             AS_FLAGS="-m32"
+@@ -248,7 +248,7 @@ for ARCH in $arch_list; do
+         ;;
+ 
+         sparc32)
+-        select_prefix sparc
++        select_prefix sparc64
+         CFLAGS="-Wa,-xarch=v8 -Wa,-32 -m32 -mcpu=supersparc -fno-builtin"
+         AS_FLAGS="-Wa,-xarch=v8 -Wa,-32"
+         ;;
+-- 
+1.7.11.2
+

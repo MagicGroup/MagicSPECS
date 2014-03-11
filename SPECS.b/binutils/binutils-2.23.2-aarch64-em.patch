@@ -1,0 +1,47 @@
+*** ../binutils-2.23.2.orig/ld/emultempl/aarch64elf.em	2013-06-05 09:46:17.499278813 +0100
+--- ld/emultempl/aarch64elf.em	2013-06-05 09:54:36.981292659 +0100
+*************** gld${EMULATION_NAME}_after_allocation (v
+*** 264,270 ****
+  }
+  
+  static void
+! gld${EMULATION_NAME}_finish (void)
+  {
+    if (! link_info.relocatable)
+      {
+--- 264,270 ----
+  }
+  
+  static void
+! gld${EMULATION_NAME}_local_finish (void)
+  {
+    if (! link_info.relocatable)
+      {
+*************** gld${EMULATION_NAME}_finish (void)
+*** 276,282 ****
+  	}
+      }
+  
+!   finish_default ();
+  }
+  
+  /* This is a convenient point to tell BFD about target specific flags.
+--- 276,282 ----
+  	}
+      }
+  
+!   gld${EMULATION_NAME}_finish ();
+  }
+  
+  /* This is a convenient point to tell BFD about target specific flags.
+*************** LDEMUL_CREATE_OUTPUT_SECTION_STATEMENTS=
+*** 413,416 ****
+  LDEMUL_BEFORE_PARSE=gld"${EMULATION_NAME}"_before_parse
+  
+  # Call the extra arm-elf function
+! LDEMUL_FINISH=gld${EMULATION_NAME}_finish
+--- 413,416 ----
+  LDEMUL_BEFORE_PARSE=gld"${EMULATION_NAME}"_before_parse
+  
+  # Call the extra arm-elf function
+! LDEMUL_FINISH=gld${EMULATION_NAME}_local_finish

@@ -1,0 +1,1067 @@
+! XEmacs 21.x 의 파일 (한글)
+!
+!	Xiaolin Park <xlpark@kankou.cs.uec.ac.jp>
+!			Time-stamp: <03/10/17 21:15:10 petersen>
+!
+! This is the app-defaults file for XEmacs.
+!
+! This used to be identical to sample.Xdefaults, but the resources
+! below have been rewritten to be as general as possible to avoid
+! overriding user resources.  Other than the form rewriting, both
+! files should be kept in sync. 
+! 
+! The resources below are loaded into the XEmacs executable at compile-time:
+! changes to .../etc/Emacs.ad made after XEmacs has been built will have no
+! effect.
+! 
+! However, you may copy .../etc/Emacs.ad to /usr/lib/X11/app-defaults/Emacs
+! (or whatever the standard app-defaults directory is at your site) to cause
+! it to be consulted at run-time.  (Do this only for site-wide customizations:
+! personal customizations should be put into ~/.Xdefaults instead.)
+! Note that the file must be named Emacs, not XEmacs.
+! 
+! See the NEWS file (C-h n) or XEmacs manual (C-h i) for a description of
+! the various resources and the syntax for setting them.
+! 
+! Energize users: note that this is not the same app-defaults file that is
+! used with the Energize-specific version of XEmacs.
+
+
+! Colors and backgrounds.
+! ======================
+! The contrasts of these colors will cause them to map to the appropriate
+! one of "black" or "white" on monochrome systems.
+! 
+! The valid color names on your system can be found by looking in the file
+! `rgb.txt', usually found in /usr/lib/X11/ or /usr/openwin/lib/X11/.
+
+! ! Set the modeline colors.
+! Emacs.modeline*attributeForeground:	Black
+! Emacs.modeline*attributeBackground:	Gray75
+
+! ! Set the color of the text cursor.
+! Emacs.text-cursor*attributeBackground:	Red3
+
+! If you want to set the color of the mouse pointer, do this:
+! Emacs.pointer*attributeForeground:	Black
+! If you want to set the background of the mouse pointer, do this:
+! Emacs.pointer*attributeBackground:	White
+! Note that by default, the pointer foreground and background are the same
+! as the default face.
+
+! Set the menubar colors.  This overrides the default foreground and
+! background colors specified above.
+*menubar*Foreground:			Gray30
+*menubar*Background:			Gray80
+! This is for buttons in the menubar.  
+! Yellow would be better, but that would map to white on monochrome.
+*menubar*buttonForeground:		Blue
+*XlwMenu*highlightForeground:		Red
+*XlwMenu*titleForeground:		Maroon
+*XlwMenu*selectColor:			ForestGreen
+*XmToggleButton*selectColor:		ForestGreen
+
+! Specify the colors of popup menus.
+*popup*Foreground:			Black
+*popup*Background:			Gray80
+
+! Specify the colors of the various sub-widgets of the dialog boxes.
+*dialog*Foreground:			Black
+! #A5C0C1 is a shade of blue
+*dialog*Background:			#A5C0C1
+! The following three are for Motif dialog boxes ...
+*dialog*XmTextField*Background:		WhiteSmoke
+*dialog*XmText*Background:		WhiteSmoke
+*dialog*XmList*Background:		WhiteSmoke
+! While this one is for Athena dialog boxes.
+*dialog*Command*Background:		WhiteSmoke
+
+! Xlw Scrollbar colors
+*XlwScrollBar*Foreground:		Gray30
+*XlwScrollBar*Background:		Gray80
+*XmScrollBar*Foreground:		Gray30
+*XmScrollBar*Background:		Gray80
+
+!
+! The Lucid Scrollbar supports two added resources, SliderStyle is either
+! "plain" (default) or "dimple".  Dimple puts a small dimple in the middle
+! of the slider that depresses when the slider is clicked on.  ArrowPosition is
+! either "opposite" (default) or "same".  Opposite puts the arrows at opposite
+! of the scrollbar, same puts both arrows at the same end, like the Amiga.
+!
+Emacs*XlwScrollBar.SliderStyle:    dimple
+! Emacs*XlwScrollBar.ArrowPosition:  opposite
+
+!
+! If you want to turn off a toolbar, set its height or width to 0.
+! The correct size value is not really arbitrary.  We only control it
+! this way in order to avoid excess frame resizing when turning the
+! toolbars on and off.
+!
+! To change the heights and widths of the toolbars:
+!
+! Emacs.topToolBarHeight:		37
+! Emacs.bottomToolBarHeight:		0
+! Emacs.leftToolBarWidth:		0
+! Emacs.rightToolBarWidth:		0
+
+! *topToolBarShadowColor:		Gray90
+! *bottomToolBarShadowColor:		Gray40
+! *backgroundToolBarColor:		Gray80
+! *toolBarShadowThickness:		2
+
+
+! If you want to turn off vertical scrollbars, or change the default
+! pixel width of the vertical scrollbars, do it like this (0 width
+! means no vertical scrollbars):
+! 
+! Emacs.scrollBarWidth: 0
+! 
+! To change it for a particular frame, do this:
+! 
+! Emacs*FRAME-NAME.scrollBarWidth: 0
+
+
+! If you want to turn off horizontal scrollbars, or change the default
+! pixel height of the horizontal scrollbars, do it like this (0 height
+! means no horizontal scrollbars):
+! 
+! Emacs.scrollBarHeight: 0
+! 
+! To change it for a particular frame, do this:
+! 
+! Emacs*FRAME-NAME.scrollBarHeight: 0
+
+
+! To dynamically change the labels used for menubar buttons...
+! 
+! Emacs*XlwMenu.resourceLabels: True
+! Emacs*XlwMenu.newFrame.labelString: Open Another Window
+
+! To have the Motif scrollbars on the left instead of the right, do this:
+! 
+! Emacs*scrollBarPlacement: BOTTOM_LEFT
+!
+! To have the Athena scrollbars on the right, use `BOTTOM_RIGHT' instead
+
+! To have Motif scrollbars act more like Xt scrollbars...
+!
+! Emacs*XmScrollBar.translations: #override \n\
+!     <Btn1Down>:     PageDownOrRight(0)    \n\
+!     <Btn3Down>:     PageUpOrLeft(0)
+
+! Fonts.
+! ======
+! XEmacs requires the use of XLFD (X Logical Font Description) format font
+! names, which look like
+! 
+! 	*-courier-medium-r-*-*-*-120-*-*-*-*-*-*
+! 
+! if you use any of the other, less strict font name formats, some of which
+! look like
+! 		lucidasanstypewriter-12
+! and		fixed
+! and		9x13
+! 
+! then XEmacs won't be able to guess the names of the bold and italic versions.
+! All X fonts can be referred to via XLFD-style names, so you should use those
+! forms.  See the man pages for X(1), xlsfonts(1), and xfontsel(1).
+
+
+! The default font for the text area of XEmacs is chosen at run-time
+! by lisp code which tries a number of different possibilities in order
+! of preference.  If you wish to override it, use this:
+! 
+Emacs.default.attributeFont:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+
+! If you choose a font which does not have an italic version, you can specify
+! some other font to use for it here:
+! 
+! Emacs.italic.attributeFont:  -*-courier-medium-o-*-*-*-120-*-*-*-*-iso8859-*
+!
+! And here is how you would set the background color of the `highlight' face,
+! but only on the screen named `debugger':
+! 
+! Emacs*debugger.highlight.attributeBackground:		PaleTurquoise
+! 
+! See the NEWS file (C-h n) for a more complete description of the resource
+! syntax of faces.
+
+
+! Font of the modeline, menubar and pop-up menus.
+! Note that the menubar resources do not use the `face' syntax, since they
+! are X toolkit widgets and thus outside the domain of XEmacs proper.
+! 
+! *menubar*Font:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+*popup*Font:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+
+! Font in the Motif dialog boxes.
+! (Motif uses `fontList' while most other things use `font' - if you don't
+! know why you probably don't want to.)
+! 
+*XmDialogShell*FontList:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+*XmTextField*FontList:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+*XmText*FontList:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+*XmList*FontList:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+
+! Font in the Athena dialog boxes.
+! I think 14-point looks nicer than 12-point.
+! Some people use 12-point anyway because you get more text, but
+! there's no purpose at all in doing this for dialog boxes.
+
+*Dialog*Font:-daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*,*
+
+! Dialog box translations.
+! =======================
+
+! This accelerator binds <return> in a dialog box to <activate> on button1
+*dialog*button1.accelerators:#override\
+<KeyPress>Return: ArmAndActivate()\n\
+<KeyPress>KP_Enter: ArmAndActivate()\n\
+Ctrl<KeyPress>m: ArmAndActivate()\n
+
+! Translations to make the TextField widget behave more like XEmacs
+*XmTextField*translations: #override\n\
+	!<Key>osfBackSpace:	delete-previous-character()\n\
+	!<Key>osfDelete:	delete-previous-character()\n\
+	!Ctrl<Key>h: 		delete-previous-character()\n\
+	!Ctrl<Key>d: 		delete-next-character()\n\
+	!Meta<Key>osfDelete:	delete-previous-word()\n\
+	!Meta<Key>osfBackSpace:	delete-previous-word()\n\
+	!Meta<Key>d:		delete-next-word()\n\
+	!Ctrl<Key>k:		delete-to-end-of-line()\n\
+	!Ctrl<Key>g:		process-cancel()\n\
+	!Ctrl<Key>b:		backward-character()\n\
+	!<Key>osfLeft:		backward-character()\n\
+	!Ctrl<Key>f:		forward-character()\n\
+	!<Key>osfRight:		forward-character()\n\
+	!Meta<Key>b:		backward-word()\n\
+	!Meta<Key>osfLeft:	backward-word()\n\
+	!Meta<Key>f:		forward-word()\n\
+	!Meta<Key>osfRight:	forward-word()\n\
+	!Ctrl<Key>e:		end-of-line()\n\
+	!Ctrl<Key>a:		beginning-of-line()\n\
+	!Ctrl<Key>w:		cut-clipboard()\n\
+	!Meta<Key>w:		copy-clipboard()\n\
+	<Btn2Up>:		copy-primary()\n
+
+! With the XEmacs typeahead it's better to not have space be bound to
+! ArmAndActivate() for buttons that appear in dialog boxes.  This is
+! not 100% Motif compliant but the benefits far outweight the
+! compliancy problem.  
+*dialog*XmPushButton*translations:#override\n\
+    <Btn1Down>:         Arm()\n\
+    <Btn1Down>,<Btn1Up>: Activate()\
+			Disarm()\n\
+    <Btn1Down>(2+):     MultiArm()\n\
+    <Btn1Up>(2+):       MultiActivate()\n\
+    <Btn1Up>:           Activate()\
+		        Disarm()\n\
+    <Key>osfSelect:  	ArmAndActivate()\n\
+    <Key>osfActivate:   ArmAndActivate()\n\
+    <Key>osfHelp:	Help()\n\
+    ~Shift ~Meta ~Alt <Key>Return:	ArmAndActivate()\n\
+    <EnterWindow>:      Enter()\n\
+    <LeaveWindow>:      Leave()\n
+
+! XIM input method style 
+! ======================= 
+
+! ximStyles is a (whitespace or comma-separated) list of XIMStyles in
+! order of user's preference.  
+! Choose a subset of the following styles or reorder to taste
+*ximStyles: XIMPreeditPosition|XIMStatusArea\
+            XIMPreeditPosition|XIMStatusNothing\
+            XIMPreeditPosition|XIMStatusNone\
+            XIMPreeditNothing|XIMStatusArea\
+            XIMPreeditNothing|XIMStatusNothing\
+            XIMPreeditNothing|XIMStatusNone\
+            XIMPreeditNone|XIMStatusArea\
+            XIMPreeditNone|XIMStatusNothing\
+            XIMPreeditNone|XIMStatusNone
+
+! XIM Preedit and Status foreground and background
+*EmacsFrame.ximForeground: black
+*EmacsFrame.ximBackground: white
+
+! XIM fontset (defaults to system fontset default)
+! *EmacsFrame.FontSet: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+!    Japanese localization resources for XEmacs.
+! @(#)Emacs	1.3 96/09/22
+!    Copyright (C) 1996 Sun Microsystems, Inc.
+!!
+! This file is part of XEmacs.
+! 
+! XEmacs is free software; you can redistribute it and/or modify it
+! under the terms of the GNU General Public License as published by the
+! Free Software Foundation; either version 2, or (at your option) any
+! later version.
+! XEmacs is distributed in the hope that it will be useful, but WITHOUT
+! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+! FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+! for more details.
+! You should have received a copy of the GNU General Public License
+! along with XEmacs; see the file COPYING.  If not, write to the
+! Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+! Boston, MA 02111-1307, USA.
+! Copyright (C) 1996 Sun Microsystems Inc.
+!
+! Japanese Resources to be placed in etc/app-defaults/ja/Emacs
+! for xemacs-mule.  It is same on another languages such like fr,
+! if you want to have French menu label, place it on
+! etc/app-defaults/fr/Emacs.
+
+! Pulldown menu internationalization.  The first line of the file
+! "*XlwMenu.resourceLabels: True" has to be there to make sure
+! all the labelString will be read and displayed by X.
+*XlwMenu.resourceLabels: True
+
+! CDE doesn't require this but OpenWindows does.
+! Note that this `gothic' font family is effective just for Japanese.
+! And fontList is just used under Motif menubar.
+!*fontList: -misc-fixed-medium-r-normal--16-*-*-*-*-*-*-*:
+*fontList: -*-gothic-medium-r-normal--16-*-*-*-*-*-*-*:
+!! FontSet for menus when you use --with-xfs or --with-xim=xlib.
+*fontSet: -daewoo-gothic-medium-r-normal--16-*-*-*-*-*-*-*
+
+! Starting below here are menu label string which can be translated to
+! different languages. 
+! Example: *XlwMenu.file.labelString: File  
+! Characters before the ":" sign, "Example: *XlwMenu.file.labelString"
+! can not be changed. They must stay exactly the way they are.
+! The only string to be translated is the string, "File".
+! Some resource names such as "file", "quit" have been used in several
+! places.  However, each of them only has to be translated once in this X
+! resource file.
+! *XlwMenu.readMailVM___.labelString:	Read Mail (VM)...
+*XlwMenu.readMailVM___.labelString:	이메일 읽기 (VM)...
+! *XlwMenu.readMailMH___.labelString:	Read Mail (MH)...
+*XlwMenu.readMailMH___.labelString:	이메일 읽기 (MH)...
+! *XlwMenu.sendMail___.labelString:	Send mail...
+*XlwMenu.sendMail___.labelString:	이메일 보내기
+! *XlwMenu.usenetNews.labelString:	Usenet News
+*XlwMenu.usenetNews.labelString:	냇도 뉴스
+! *XlwMenu.browseTheWeb.labelString:	Browse the Web
+*XlwMenu.browseTheWeb.labelString:	웨브를 보기
+! *XlwMenu.gopher.labelString:	Gopher
+*XlwMenu.gopher.labelString:	Gopher
+! *XlwMenu.hyperbole___.labelString:	Hyperbole...
+*XlwMenu.hyperbole___.labelString:	Hyperbole...
+! *XlwMenu.spellCheckBuffer.labelString:	Spell-Check Buffer
+*XlwMenu.spellCheckBuffer.labelString:	완충기의 철자검사
+! *XlwMenu.toggleVIEmulation.labelString:	Toggle VI emulation
+*XlwMenu.toggleVIEmulation.labelString: 	VI 모방을 바꾸기
+! *XlwMenu.calendar.labelString:	Calendar
+*XlwMenu.calendar.labelString:		달력
+! *XlwMenu.games.labelString:	Games
+*XlwMenu.games.labelString:	계임
+! *XlwMenu.3MonthCalendar.labelString:	3-Month Calendar
+*XlwMenu.3MonthCalendar.labelString:	석달 달력
+! *XlwMenu.diary.labelString:	Diary
+*XlwMenu.diary.labelString:	일기
+! *XlwMenu.holidays.labelString:	Holidays
+*XlwMenu.holidays.labelString:		명절
+! *XlwMenu.phasesOfTheMoon.labelString:	Phases of the Moon
+*XlwMenu.phasesOfTheMoon.labelString:	월령
+! *XlwMenu.sunriseSunset.labelString:	Sunrise/Sunset
+*XlwMenu.sunriseSunset.labelString:	해가뜨다/해가지다
+! *XlwMenu.mineGame.labelString:	Mine Game 
+*XlwMenu.mineGame.labelString:		Mine 계임
+! *XlwMenu.tetris.labelString:	Tetris
+*XlwMenu.tetris.labelString:	테도리스
+! *XlwMenu.quoteFromZippy.labelString:	Quote from Zippy
+*XlwMenu.quoteFromZippy.labelString:	Zippy 의 각언
+! *XlwMenu.psychoanalyst.labelString:	Psychoanalyst
+*XlwMenu.psychoanalyst.labelString:	정신분석
+! *XlwMenu.psychoanalyzeZippy.labelString:	Psychoanalyze Zippy!
+*XlwMenu.psychoanalyzeZippy.labelString:	Zippy 를 정신분석
+! *XlwMenu.randomFlames.labelString:	Random Flames
+*XlwMenu.randomFlames.labelString:	비방중상
+! *XlwMenu.dunnetAdventure.labelString:	Dunnet (Adventure)
+*XlwMenu.dunnetAdventure.labelString:	Dunnet (모험)
+! *XlwMenu.towersOfHanoi.labelString:	Towers of Hanoi
+*XlwMenu.towersOfHanoi.labelString:	Hanoi 의 탑
+! *XlwMenu.gameOfLife.labelString:	Game of Life
+*XlwMenu.gameOfLife.labelString:	생명계임
+! *XlwMenu.multiplicationPuzzle.labelString:	Multiplication Puzzle
+*XlwMenu.multiplicationPuzzle.labelString:	승산 지력유희
+! *XlwMenu.listAllBuffers.labelString:	List All Buffers
+*XlwMenu.listAllBuffers.labelString:	모든 완충기 표시
+! *XlwMenu..labelString:	
+! *XlwMenu..labelString:
+! *XlwMenu.emacs.labelString:	Emacs
+! *XlwMenu.emacs.labelString:
+! *XlwMenu.group___.labelString:	Group...
+! *XlwMenu.group___.labelString:	그룹...
+! *XlwMenu.variable___.labelString:	Variable...
+! *XlwMenu.variable___.labelString:	변수...
+! *XlwMenu.face___.labelString:	Face...
+! *XlwMenu.face___.labelString:	면...
+! *XlwMenu.saved___.labelString:	Saved...
+! *XlwMenu.saved___.labelString:	저장되여 있는...
+! *XlwMenu.set___.labelString:	Set...
+! *XlwMenu.set___.labelString:	설치...
+! *XlwMenu.apropos___.labelString:	Apropos...
+! *XlwMenu.apropos___.labelString:	알맞는 검사...
+! *XlwMenu.browse___.labelString:	Browse...
+! *XlwMenu.browse___.labelString:	부라우즈...
+! *XlwMenu.emacs___.labelString:	Emacs...
+! *XlwMenu.emacs___.labelString:
+! *XlwMenu.editing.labelString:	Editing
+*XlwMenu.editing.labelString:	편집
+! *XlwMenu.external.labelString:	External
+*XlwMenu.external.labelString:		외부
+! *XlwMenu.programming.labelString:	Programming
+*XlwMenu.programming.labelString:	프로그램밍그
+! *XlwMenu.applications.labelString:	Applications
+*XlwMenu.applications.labelString:	응용
+! *XlwMenu.development.labelString:	Development
+*XlwMenu.development.labelString:	개발
+! *XlwMenu.environment.labelString:	Environment
+*XlwMenu.environment.labelString:	환경
+! *XlwMenu.data.labelString:	Data
+*XlwMenu.data.labelString:	데이터
+! *XlwMenu.files.labelString:	Files
+*XlwMenu.files.labelString:	파일
+! *XlwMenu.wp.labelString:	Wp
+*XlwMenu.wp.labelString:	문서처리
+! *XlwMenu.faces.labelString:	Faces
+*XlwMenu.faces.labelString:	면
+! *XlwMenu.hypermedia.labelString:	Hypermedia
+*XlwMenu.hypermedia.labelString:	초메체
+! *XlwMenu.help.labelString:	Help
+! *XlwMenu.help.labelString:	도움말
+! *XlwMenu.local.labelString:	Local
+*XlwMenu.local.labelString:	구역
+! *XlwMenu.undo.labelString:	Undo
+*XlwMenu.undo.labelString:	실행 취소
+! *XlwMenu.cut.labelString:	Cut
+*XlwMenu.cut.labelString:	자르기
+! *XlwMenu.copy.labelString:	Copy
+*XlwMenu.copy.labelString:	복사
+! *XlwMenu.paste.labelString:	Paste
+*XlwMenu.paste.labelString:	붙이기
+! *XlwMenu.clear.labelString:	Clear
+*XlwMenu.clear.labelString:	지우기
+! *XlwMenu.search___.labelString:	Search...
+*XlwMenu.search___.labelString:		찾기...
+! *XlwMenu.searchBackward___.labelString:	Search Backward...
+*XlwMenu.searchBackward___.labelString:		거꾸로 찾기
+! *XlwMenu.replace___.labelString:	Replace...
+*XlwMenu.replace___.labelString:	바꾸기
+! *XlwMenu.searchRegexp___.labelString:	Search (Regexp)...
+*XlwMenu.searchRegexp___.labelString:	찾기 (Regexp)...
+! *XlwMenu.searchBackwardRegexp___.labelString:	Search Backward (Regexp)...
+*XlwMenu.searchBackwardRegexp___.labelString:	거꾸로 찾기 (Regexp)...
+! *XlwMenu.replaceRegexp___.labelString:	Replace (Regexp)...
+*XlwMenu.replaceRegexp___.labelString:		바꾸기 (Regexp)...
+! *XlwMenu.gotoLine___.labelString:	Goto Line...
+*XlwMenu.gotoLine___.labelString:	지정된 행으로 이동	
+! *XlwMenu.whatLine.labelString:	What Line
+*XlwMenu.whatLine.labelString:		현재행
+! *XlwMenu.bookmarks.labelString:	Bookmarks
+*XlwMenu.bookmarks.labelString:		책갈피
+! *XlwMenu.startMacroRecording.labelString:	Start Macro Recording
+*XlwMenu.startMacroRecording.labelString:	매크로 기록 시작
+! *XlwMenu.endMacroRecording.labelString:	End Macro Recording
+*XlwMenu.endMacroRecording.labelString:		매크로 기록 끝냄
+! *XlwMenu.executeLastMacro.labelString:	Execute Last Macro
+*XlwMenu.executeLastMacro.labelString:		최신 매크로 실행
+! *XlwMenu.showMessageLog.labelString:	Show Message Log
+*XlwMenu.showMessageLog.labelString:	메세지 로그 표시
+! *XlwMenu.jumpToBookmark.labelString:	Jump to Bookmark
+*XlwMenu.jumpToBookmark.labelString:	책갈피의 이동
+! *XlwMenu.setBookmark.labelString:	Set bookmark
+*XlwMenu.setBookmark.labelString:	책갈피 설치
+! *XlwMenu.insertContents.labelString:	Insert contents
+*XlwMenu.insertContents.labelString:	내용을 끼워넣기
+! *XlwMenu.insertLocation.labelString:	Insert location
+*XlwMenu.insertLocation.labelString:	위치를 끼워넣기
+! *XlwMenu.renameBookmark.labelString:	Rename bookmark
+*XlwMenu.renameBookmark.labelString:	책갈피 이름 고치기
+! *XlwMenu.deleteBookmark.labelString:	Delete Bookmark
+*XlwMenu.deleteBookmark.labelString:	책갈피 지우기
+! *XlwMenu.editBookmarkList.labelString:	Edit Bookmark List
+*XlwMenu.editBookmarkList.labelString:		책갈피 리스트편집
+! *XlwMenu.saveBookmarks.labelString:	Save bookmarks
+*XlwMenu.saveBookmarks.labelString:	책갈피 저장
+! *XlwMenu.saveBookmarksAs___.labelString:	Save bookmarks as...
+*XlwMenu.saveBookmarksAs___.labelString:	책갈피를 다른 이름으로 저장
+! *XlwMenu.loadABookmarkFile.labelString:	Load a bookmark file
+*XlwMenu.loadABookmarkFile.labelString:		책갈피 파일 불러들이기
+! *XlwMenu.open___.labelString:	Open...
+*XlwMenu.open___.labelString:	열기...
+! *XlwMenu.openInOtherWindow___.labelString:	Open in Other Window...
+*XlwMenu.openInOtherWindow___.labelString:	다른 윈도에서 열기
+! *XlwMenu.openInNewFrame___.labelString:	Open in New Frame...
+*XlwMenu.openInNewFrame___.labelString:		새 프레임에서 열기
+! *XlwMenu.insertFile___.labelString:	Insert File...
+*XlwMenu.insertFile___.labelString:	파일 끼워넣기...
+! *XlwMenu.viewFile___.labelString:	View File...
+*XlwMenu.viewFile___.labelString:	파일 보기...
+! *XlwMenu.save.labelString:	Save
+*XlwMenu.save.labelString:	저장
+! *XlwMenu.saveAs___.labelString:	Save As...
+*XlwMenu.saveAs___.labelString:		다른 이름으로 저장
+! *XlwMenu.saveSomeBuffers.labelString:	Save Some Buffers
+*XlwMenu.saveSomeBuffers.labelString:	미저장 완충기를 저장
+! *XlwMenu.printBuffer.labelString:	Print Buffer
+*XlwMenu.printBuffer.labelString:	완충기 인쇄
+! *XlwMenu.prettyPrintBuffer.labelString:	Pretty-Print Buffer
+*XlwMenu.prettyPrintBuffer.labelString:		완충기를 전부인쇄
+! *XlwMenu.newFrame.labelString:	New Frame
+*XlwMenu.newFrame.labelString:		새 프레임
+! *XlwMenu.frameOnOtherDisplay___.labelString:	Frame on Other Display...
+*XlwMenu.frameOnOtherDisplay___.labelString: 다른 디스플레이에서 프레임...
+! *XlwMenu.deleteFrame.labelString:	Delete Frame
+*XlwMenu.deleteFrame.labelString:	프레임 지우기
+! *XlwMenu.splitWindow.labelString:	Split Window
+*XlwMenu.splitWindow.labelString:	윈도우 분가
+! *XlwMenu.unSplitKeepThis.labelString:	Un-Split (Keep This)
+*XlwMenu.unSplitKeepThis.labelString:	분가해소 (이것을 보존)
+! *XlwMenu.unSplitKeepOthers.labelString:	Un-Split (Keep Others)
+*XlwMenu.unSplitKeepOthers.labelString:		분가해소 (다른것을 보존)
+! *XlwMenu.revertBuffer.labelString:	Revert Buffer
+*XlwMenu.revertBuffer.labelString:	완충기 복원
+! *XlwMenu.deleteBuffer.labelString:	Delete Buffer
+*XlwMenu.deleteBuffer.labelString:	완충기 지우기
+! *XlwMenu.exitXEmacs.labelString:	Exit XEmacs
+*XlwMenu.exitXEmacs.labelString:	XEmacs 종료
+! *XlwMenu.aboutXEmacs___.labelString:	About XEmacs...
+*XlwMenu.aboutXEmacs___.labelString:	XEmacs 에 대하여
+! *XlwMenu.basics.labelString:	Basics
+*XlwMenu.basics.labelString:	기본
+! *XlwMenu.xEmacsFAQ.labelString:	XEmacs FAQ
+*XlwMenu.xEmacsFAQ.labelString:	XEmacs FAQ
+! *XlwMenu.samples.labelString:	Samples
+*XlwMenu.samples.labelString:	산플
+! *XlwMenu.lookupInInfo.labelString:	Lookup in Info
+*XlwMenu.lookupInInfo.labelString:	Info에서 찾기
+! *XlwMenu.manuals.labelString:	Manuals
+*XlwMenu.manuals.labelString:	안내서
+! *XlwMenu.commandsKeys.labelString:	Commands & Keys
+*XlwMenu.commandsKeys.labelString:	명령 & 키
+! *XlwMenu.recentMessages.labelString:	Recent Messages
+*XlwMenu.recentMessages.labelString:	최신 메세지
+! *XlwMenu.misc.labelString:	Misc
+*XlwMenu.misc.labelString:	가지가지의
+! *XlwMenu.submitBugReport.labelString:	Submit Bug Report
+*XlwMenu.submitBugReport.labelString:	ㅤBug Report 제출
+! *XlwMenu.tutorial.labelString:	Tutorial
+*XlwMenu.tutorial.labelString:	지도서
+! *XlwMenu.news.labelString:	News
+*XlwMenu.news.labelString:	뉴스
+! *XlwMenu.packages.labelString:	Packages
+*XlwMenu.packages.labelString:		패키지
+! *XlwMenu.splash.labelString:	Splash
+*XlwMenu.splash.labelString:	Splash
+! *XlwMenu.fAQLocal.labelString:	FAQ (local)
+*XlwMenu.fAQLocal.labelString:	FAQ (local)
+! *XlwMenu.fAQViaWWW.labelString:	FAQ via WWW
+*XlwMenu.fAQViaWWW.labelString:		FAQ (WWW 경유)
+! *XlwMenu.homePage.labelString:	Home Page
+*XlwMenu.homePage.labelString:		Home Page
+! *XlwMenu.sample.labelString:	Sample
+*XlwMenu.sample.labelString:	산플
+! *XlwMenu.keyBinding___.labelString:	Key Binding...
+*XlwMenu.keyBinding___.labelString: 키묶음...
+! *XlwMenu.command___.labelString:	Command...
+*XlwMenu.command___.labelString:	명령...
+! *XlwMenu.function___.labelString:	Function...
+*XlwMenu.function___.labelString:	함수...
+! *XlwMenu.topic___.labelString:	Topic...
+*XlwMenu.topic___.labelString:		제목...
+! *XlwMenu.info.labelString:	Info
+*XlwMenu.info.labelString:	Info
+! *XlwMenu.unixManual___.labelString:	Unix Manual...
+*XlwMenu.unixManual___.labelString:	Unix Manual...
+! *XlwMenu.mode.labelString:	Mode
+*XlwMenu.mode.labelString:	모식
+! *XlwMenu.apropos___.labelString:	Apropos...
+! *XlwMenu.apropos___.labelString:	알맞는 검사...
+! *XlwMenu.aproposDocs___.labelString:	Apropos Docs...
+*XlwMenu.aproposDocs___.labelString:	서류에서 알맞는 검사...
+! *XlwMenu.key___.labelString:	Key...
+*XlwMenu.key___.labelString:	키...
+! *XlwMenu.bindings.labelString:	Bindings
+*XlwMenu.bindings.labelString:		묶기
+! *XlwMenu.mouseBindings.labelString:	Mouse Bindings
+*XlwMenu.mouseBindings.labelString:	Mouse 묶음
+! *XlwMenu.recentKeys.labelString:	Recent Keys
+*XlwMenu.recentKeys.labelString:	최신키
+! *XlwMenu.variable___.labelString:	Variable...
+! *XlwMenu.variable___.labelString:
+! *XlwMenu.locateCommand___.labelString:	Locate Command...
+*XlwMenu.locateCommand___.labelString:	명령을 찾기...
+! *XlwMenu.noWarranty.labelString:	No Warranty
+*XlwMenu.noWarranty.labelString:	무보증
+! *XlwMenu.xEmacsLicense.labelString:	XEmacs License
+*XlwMenu.xEmacsLicense.labelString:	XEmacs 허가증
+! *XlwMenu.theLatestVersion.labelString:	The Latest Version
+*XlwMenu.theLatestVersion.labelString:	최신 역서
+! *XlwMenu.evaluateLastSExpression.labelString:	Evaluate Last S-expression
+*XlwMenu.evaluateLastSExpression.labelString:	최신 S식을 평가
+! *XlwMenu.evaluateEntireBuffer.labelString:	Evaluate Entire Buffer
+*XlwMenu.evaluateEntireBuffer.labelString:	완충기전체를 평가
+! *XlwMenu.evaluateRegion.labelString:	Evaluate Region
+*XlwMenu.evaluateRegion.labelString:	지역 평가
+! *XlwMenu.evaluateThisDefun.labelString:	Evaluate This Defun
+*XlwMenu.evaluateThisDefun.labelString:	본 Defun를 평가
+! *XlwMenu.debugThisDefun.labelString:	Debug This Defun
+*XlwMenu.debugThisDefun.labelString:	본 Defun를 디버그
+! *XlwMenu.traceAFunction.labelString:	Trace a Function
+*XlwMenu.traceAFunction.labelString:	함수를 추적
+! *XlwMenu.untraceAllFunctions.labelString:	Untrace All Functions
+*XlwMenu.untraceAllFunctions.labelString:	모든 함수를 무추적
+! *XlwMenu.commentOutRegion.labelString:	Comment Out Region
+*XlwMenu.commentOutRegion.labelString:	지역해설을 지우다
+! *XlwMenu.indentRegion.labelString:	Indent Region
+*XlwMenu.indentRegion.labelString:	지역 인덴트
+! *XlwMenu.indentLine.labelString:	Indent Line
+*XlwMenu.indentLine.labelString:	행 인덴트
+! *XlwMenu.debugOnError.labelString:	Debug On Error
+! *XlwMenu.debugOnError.labelString:	틀렸을 때 디버그
+! *XlwMenu.debugOnQuit.labelString:	Debug On Quit
+! *XlwMenu.debugOnQuit.labelString:	종료할때 디버그
+! *XlwMenu.debugOnSignal.labelString:	Debug on Signal
+*XlwMenu.debugOnSignal.labelString: 신호를 디버그
+! *XlwMenu.describeLanguageSupport.labelString:	Describe language support
+*XlwMenu.describeLanguageSupport.labelString:	언어 사포트를 설명
+! *XlwMenu.setLanguageEnvironment.labelString:	Set language environment
+*XlwMenu.setLanguageEnvironment.labelString:	언어환경을 설정
+! *XlwMenu.toggleInputMethod.labelString:	Toggle input method
+*XlwMenu.toggleInputMethod.labelString:		입력방법을 바꾸기
+! *XlwMenu.selectInputMethod.labelString:	Select input method
+*XlwMenu.selectInputMethod.labelString:	입력방법 선택
+! *XlwMenu.describeInputMethod.labelString:	Describe input method
+*XlwMenu.describeInputMethod.labelString:입력방법 설명
+! *XlwMenu.describeCurrentCodingSystems.labelString:	Describe current coding systems
+*XlwMenu.describeCurrentCodingSystems.labelString:	현재 코드 시스템을 설명
+! *XlwMenu.setCodingSystemOfBufferFile.labelString:	Set coding system of buffer file
+*XlwMenu.setCodingSystemOfBufferFile.labelString:	완충기 파일 코드 시스템 설정
+! *XlwMenu.setCodingSystemOfTerminal.labelString:	Set coding system of terminal
+*XlwMenu.setCodingSystemOfTerminal.labelString:		단말의 코드 시스템 설정
+! *XlwMenu.setCodingSystemOfKeyboard.labelString:	Set coding system of keyboard
+*XlwMenu.setCodingSystemOfKeyboard.labelString:	키보드 코드 시스템 설정
+! *XlwMenu.setCodingSystemOfProcess.labelString:	Set coding system of process
+*XlwMenu.setCodingSystemOfProcess.labelString:	프로세스 코드 시스템 설정
+! *XlwMenu.showCharacterTable.labelString:	Show character table
+*XlwMenu.showCharacterTable.labelString:	문자표의 표시
+! *XlwMenu.showDiagnosisForMULE.labelString:	Show diagnosis for MULE
+*XlwMenu.showDiagnosisForMULE.labelString:	MULE의 진단표시
+! *XlwMenu.showManyLanguages.labelString:	Show many languages
+*XlwMenu.showManyLanguages.labelString:	많은 언어표시
+! *XlwMenu.chineseGB.labelString:	Chinese-GB
+*XlwMenu.chineseGB.labelString:		중국어-GB
+! *XlwMenu.chineseBIG5.labelString:	Chinese-BIG5
+*XlwMenu.chineseBIG5.labelString:	중국어-BIG5
+! *XlwMenu.cyrillicISO.labelString:	Cyrillic-ISO
+*XlwMenu.cyrillicISO.labelString:	키릴-ISO
+! *XlwMenu.cyrillicKOI8.labelString:	Cyrillic-KOI8
+*XlwMenu.cyrillicKOI8.labelString:	키릴-KOI8
+! *XlwMenu.cyrillicALT.labelString:	Cyrillic-ALT
+*XlwMenu.cyrillicALT.labelString:	키릴-ALT
+! *XlwMenu.cyrillic.labelString:	Cyrillic
+*XlwMenu.cyrillic.labelString:	키릴
+! ! *XlwMenu.english.labelString:	English
+*XlwMenu.english.labelString:		영어
+! *XlwMenu.aSCII.labelString:	ASCII
+! *XlwMenu.aSCII.labelString:
+! *XlwMenu.latin1.labelString:	Latin-1
+*XlwMenu.latin1.labelString:	라틴-1
+! *XlwMenu.german.labelString:	German
+*XlwMenu.german.labelString:	독일어
+! *XlwMenu.french.labelString:	French
+*XlwMenu.french.labelString:	프랑스어
+! *XlwMenu.norwegian.labelString:	Norwegian
+*XlwMenu.norwegian.labelString:		노르웨이어
+! *XlwMenu.latin2.labelString:	Latin-2
+*XlwMenu.latin2.labelString:	라틴-2
+! *XlwMenu.croatian.labelString:	Croatian
+*XlwMenu.croatian.labelString:		구로씨아어
+! *XlwMenu.polish.labelString:	Polish
+*XlwMenu.polish.labelString:	폴란드어
+! *XlwMenu.latin3.labelString:	Latin-3
+*XlwMenu.latin3.labelString:	라틴-3
+! *XlwMenu.latin4.labelString:	Latin-4
+*XlwMenu.latin4.labelString:	라틴-4
+! *XlwMenu.latin5.labelString:	Latin-5
+*XlwMenu.latin5.labelString:	라틴-5
+! *XlwMenu.greek.labelString:	Greek
+*XlwMenu.greek.labelString:	그리스어
+! *XlwMenu.hebrew.labelString:	Hebrew
+*XlwMenu.hebrew.labelString:	이스라엘어
+! *XlwMenu.japanese.labelString:	Japanese
+*XlwMenu.japanese.labelString:		일본어
+! *XlwMenu.korean.labelString:	Korean
+*XlwMenu.korean.labelString:	한글
+! *XlwMenu.iPA.labelString:	IPA
+! *XlwMenu.iPA.labelString:
+! *XlwMenu.customize.labelString:	Customize
+*XlwMenu.customize.labelString:	카스트마이즈
+! *XlwMenu.readOnly.labelString:	Read Only
+*XlwMenu.readOnly.labelString:	오직 읽기만 하기
+! *XlwMenu.editingOptions.labelString:	Editing Options
+*XlwMenu.editingOptions.labelString:	편집 선택항목
+! *XlwMenu.generalOptions.labelString:	General Options
+*XlwMenu.generalOptions.labelString:	일반 선택항목
+! *XlwMenu.printingOptions.labelString:	Printing Options
+*XlwMenu.printingOptions.labelString:	인쇄 선택항목
+! *XlwMenu.otherWindowLocation.labelString:	"Other Window" Location
+*XlwMenu.otherWindowLocation.labelString:	다른 윈도스 표시위치
+! *XlwMenu.syntaxHighlighting.labelString:	Syntax Highlighting
+*XlwMenu.syntaxHighlighting.labelString:	어법을 강조
+! *XlwMenu.parenHighlighting.labelString:	Paren Highlighting
+*XlwMenu.parenHighlighting.labelString:	괄호를 강조
+! *XlwMenu.frameAppearance.labelString:	Frame Appearance
+*XlwMenu.frameAppearance.labelString:	프레임 외관
+! *XlwMenu.menubarAppearance.labelString:	Menubar Appearance
+*XlwMenu.menubarAppearance.labelString: 메뉴바 외관
+! *XlwMenu.toolbarAppearance.labelString:	Toolbar Appearance
+*XlwMenu.toolbarAppearance.labelString:	공구바 외관
+! *XlwMenu.mouse.labelString:	Mouse
+*XlwMenu.mouse.labelString:	Mouse
+! *XlwMenu.openURLsWith.labelString:	Open URLs With
+*XlwMenu.openURLsWith.labelString:	URLs 열기
+! *XlwMenu.browseFaces___.labelString:	Browse Faces...
+*XlwMenu.browseFaces___.labelString: ㅤ면 보기
+! *XlwMenu.font.labelString:	Font
+*XlwMenu.font.labelString:	글자체
+! *XlwMenu.size.labelString:	Size
+*XlwMenu.size.labelString:	크기
+! *XlwMenu.weight.labelString:	Weight
+*XlwMenu.weight.labelString:	류형
+! *XlwMenu.saveOptions.labelString:	Save Options
+*XlwMenu.saveOptions.labelString: 저장 Options
+! *XlwMenu.emacs.labelString:	Emacs
+! *XlwMenu.emacs.labelString:
+! *XlwMenu.group___.labelString:	Group...
+*XlwMenu.group___.labelString:	그룹...
+! *XlwMenu.variable___.labelString:	Variable...
+*XlwMenu.variable___.labelString:	변수...
+! *XlwMenu.face___.labelString:	Face...
+*XlwMenu.face___.labelString:	면...
+! *XlwMenu.saved___.labelString:	Saved...
+*XlwMenu.saved___.labelString:		저장되여 있는...
+! *XlwMenu.set___.labelString:	Set...
+*XlwMenu.set___.labelString:	설정...
+! *XlwMenu.apropos___.labelString:	Apropos...
+*XlwMenu.apropos___.labelString:	알맞는 검사...
+! *XlwMenu.browse___.labelString:	Browse...
+*XlwMenu.browse___.labelString:		부라우즈...
+!! *XlwMenu.overstrike.labelString:	Overstrike
+*XlwMenu.overstrike.labelString:	지우면서 삽입
+! *XlwMenu.caseSensitiveSearch.labelString:	Case Sensitive Search
+*XlwMenu.caseSensitiveSearch.labelString:	대 소문자를 구별하면서 찾기
+! *XlwMenu.caseMatchingReplace.labelString:	Case Matching Replace
+*XlwMenu.caseMatchingReplace.labelString:	대 소문자를 구별하면서 바꾸기
+! *XlwMenu.autoDeleteSelection.labelString:	Auto Delete Selection
+*XlwMenu.autoDeleteSelection.labelString:	자동적으로 지우기선택
+! *XlwMenu.activeRegions.labelString:	Active Regions
+*XlwMenu.activeRegions.labelString:	지역을 능동하게 하다
+! *XlwMenu.mousePasteAtTextCursor.labelString:	Mouse Paste At Text Cursor
+*XlwMenu.mousePasteAtTextCursor.labelString: 텍스트 커서 위치에서 Mouse 붙이기
+! *XlwMenu.requireNewlineAtEnd.labelString:	Require Newline At End
+*XlwMenu.requireNewlineAtEnd.labelString:	끝날때 새로운행이 필요
+! *XlwMenu.addNewlineWhenMovingPastEnd.labelString:	Add Newline When Moving Past End
+*XlwMenu.addNewlineWhenMovingPastEnd.labelString: 마지막 행으로 갈때 새로운행이 필요
+! *XlwMenu.teachExtendedCommands.labelString:	Teach Extended Commands
+*XlwMenu.teachExtendedCommands.labelString:	확장명령 표시
+! *XlwMenu.debugOnError.labelString:	Debug On Error
+*XlwMenu.debugOnError.labelString:	틀렸을때 디버그
+! *XlwMenu.debugOnQuit.labelString:	Debug On Quit
+*XlwMenu.debugOnQuit.labelString:	종료할때 디버그
+! *XlwMenu.commandLineSwitchesForLprLp___.labelString:	Command-Line Switches for `lpr'/`lp'...
+*XlwMenu.commandLineSwitchesForLprLp___.labelString:	`lpr'/`lp' 명령행으로 바꾸기
+! *XlwMenu.prettyPrintPaperSize.labelString:	Pretty-Print Paper Size
+*XlwMenu.prettyPrintPaperSize.labelString:	전체를 인쇄할때의 종이크기
+! *XlwMenu.colorPrinting.labelString:	Color Printing
+*XlwMenu.colorPrinting.labelString:	채색 인쇄
+! *XlwMenu.letter.labelString:	Letter
+! *XlwMenu.letter.labelString:
+! *XlwMenu.letterSmall.labelString:	Letter-small
+! *XlwMenu.letterSmall.labelString:
+! *XlwMenu.legal.labelString:	Legal
+! *XlwMenu.legal.labelString:
+! *XlwMenu.statement.labelString:	Statement
+! *XlwMenu.statement.labelString:
+! *XlwMenu.executive.labelString:	Executive
+! *XlwMenu.executive.labelString:
+! *XlwMenu.tabloid.labelString:	Tabloid
+! *XlwMenu.tabloid.labelString:
+! *XlwMenu.ledger.labelString:	Ledger
+! *XlwMenu.ledger.labelString:
+! *XlwMenu.a3.labelString:	A3
+! *XlwMenu.a3.labelString:
+! *XlwMenu.a4.labelString:	A4
+! *XlwMenu.a4.labelString:
+! *XlwMenu.a4small.labelString:	A4small
+! *XlwMenu.a4small.labelString:
+! *XlwMenu.b4.labelString:	B4
+! *XlwMenu.b4.labelString:
+! *XlwMenu.b5.labelString:	B5
+! *XlwMenu.b5.labelString:
+! *XlwMenu.alwaysInSameFrame.labelString:	Always in Same Frame
+*XlwMenu.alwaysInSameFrame.labelString:		항상 같은 브래므
+! *XlwMenu.otherFrame2FramesMax.labelString:	Other Frame (2 Frames Max)
+*XlwMenu.otherFrame2FramesMax.labelString:	기타 프레임 (최대 2 프레임)
+! *XlwMenu.otherFrame3FramesMax.labelString:	Other Frame (3 Frames Max)
+*XlwMenu.otherFrame3FramesMax.labelString:	기타 프레임 (최대 3 프레임)
+! *XlwMenu.otherFrame4FramesMax.labelString:	Other Frame (4 Frames Max)
+*XlwMenu.otherFrame4FramesMax.labelString:	기타 프레임 (최대 4 프레임)
+! *XlwMenu.otherFrame5FramesMax.labelString:	Other Frame (5 Frames Max)
+*XlwMenu.otherFrame5FramesMax.labelString:	기타 프레임 (최대 5 프레임)
+! *XlwMenu.alwaysCreateNewFrame.labelString:	Always Create New Frame
+*XlwMenu.alwaysCreateNewFrame.labelString:늘 새 프레임을 작성
+! *XlwMenu.tempBuffersAlwaysInSameFrame.labelString:	Temp Buffers Always in Same Frame
+*XlwMenu.tempBuffersAlwaysInSameFrame.labelString: 임시 완충기를 언제나 기타 완충기처럼
+! *XlwMenu.tempBuffersLikeOtherBuffers.labelString:	Temp Buffers Like Other Buffers
+*XlwMenu.tempBuffersLikeOtherBuffers.labelString: 임시 완충기를 기타 완충기와 같게
+! *XlwMenu.makeCurrentFrameGnuservTarget.labelString:	Make current frame gnuserv target
+*XlwMenu.makeCurrentFrameGnuservTarget.labelString:본 프레임을 gnuserv 의 목표로
+! *XlwMenu.inThisBuffer.labelString:	In This Buffer
+*XlwMenu.inThisBuffer.labelString:	본 완충기에서
+! *XlwMenu.automatic.labelString:	Automatic
+*XlwMenu.automatic.labelString:		자동
+! *XlwMenu.fonts.labelString:	Fonts
+*XlwMenu.fonts.labelString:	글자체
+! *XlwMenu.colors.labelString:	Colors
+*XlwMenu.colors.labelString:	색
+! *XlwMenu.least.labelString:	Least
+*XlwMenu.least.labelString:	최저
+! *XlwMenu.more.labelString:	More
+*XlwMenu.more.labelString:	좀 더
+! *XlwMenu.evenMore.labelString:	Even More
+*XlwMenu.evenMore.labelString:보다 많다
+! *XlwMenu.most.labelString:	Most
+*XlwMenu.most.labelString:	최대
+! *XlwMenu.lazy.labelString:	Lazy
+*XlwMenu.lazy.labelString:	늦어지다
+! *XlwMenu.caching.labelString:	Caching
+*XlwMenu.caching.labelString: Caching
+! *XlwMenu.none.labelString:	None
+*XlwMenu.none.labelString:	없다
+! *XlwMenu.blinkingParen.labelString:	Blinking Paren
+*XlwMenu.blinkingParen.labelString:	명멸괄호
+! *XlwMenu.steadyParen.labelString:	Steady Paren
+*XlwMenu.steadyParen.labelString:	괄호를 강조
+! *XlwMenu.expression.labelString:	Expression
+*XlwMenu.expression.labelString:	식을 강조
+! *XlwMenu.scrollbars.labelString:	Scrollbars
+*XlwMenu.scrollbars.labelString:	스크로르바
+! *XlwMenu.3DModeline.labelString:	3D Modeline
+*XlwMenu.3DModeline.labelString:	립체적인 모식행
+! *XlwMenu.truncateLines.labelString:	Truncate Lines
+*XlwMenu.truncateLines.labelString:	행의 꼬리를 지우기
+! *XlwMenu.barCursor.labelString:	Bar Cursor
+*XlwMenu.barCursor.labelString:		바 커서
+! *XlwMenu.blinkingCursor.labelString:	Blinking Cursor
+*XlwMenu.blinkingCursor.labelString:	명멸하는 커서
+! *XlwMenu.frameLocalFontMenu.labelString:	Frame-Local Font Menu
+*XlwMenu.frameLocalFontMenu.labelString: 프레임구역 글자체메뉴
+! *XlwMenu.buffersMenuLength___.labelString:	Buffers Menu Length...
+*XlwMenu.buffersMenuLength___.labelString:	완충기메뉴 길이
+! *XlwMenu.multiOperationBuffersSubMenus.labelString:	Multi-Operation Buffers Sub-Menus
+*XlwMenu.multiOperationBuffersSubMenus.labelString:	다조작완충기 사부메뉴
+! *XlwMenu.buffersMenuSorting.labelString:	Buffers Menu Sorting
+*XlwMenu.buffersMenuSorting.labelString:	완충기메뉴 배렬
+! *XlwMenu.submenusForBufferGroups.labelString:	Submenus for Buffer Groups
+*XlwMenu.submenusForBufferGroups.labelString: 완충기 구르프 사부메뉴
+! *XlwMenu.ignoreScaledFonts.labelString:	Ignore Scaled Fonts
+*XlwMenu.ignoreScaledFonts.labelString:	비율 글자체를 무시
+! *XlwMenu.mostRecentlyUsed.labelString:	Most Recently Used
+*XlwMenu.mostRecentlyUsed.labelString:		최신 사용순서
+! *XlwMenu.alphabetically.labelString:	Alphabetically
+*XlwMenu.alphabetically.labelString:	알파벳의
+! *XlwMenu.byMajorModeThenAlphabetically.labelString:	By Major Mode, Then Alphabetically
+*XlwMenu.byMajorModeThenAlphabetically.labelString: 주요모식으로부터 알파벳의
+! *XlwMenu.visible.labelString:	Visible
+*XlwMenu.visible.labelString:	시화
+! *XlwMenu.captioned.labelString:	Captioned
+*XlwMenu.captioned.labelString:	제목 달기
+! *XlwMenu.defaultLocation.labelString:	Default Location
+*XlwMenu.defaultLocation.labelString: Default 위치
+! *XlwMenu.top.labelString:	Top
+*XlwMenu.top.labelString:	위
+! *XlwMenu.bottom.labelString:	Bottom
+*XlwMenu.bottom.labelString:	밑
+! *XlwMenu.left.labelString:	Left
+*XlwMenu.left.labelString:	왼쪽
+! *XlwMenu.right.labelString:	Right
+*XlwMenu.right.labelString:	오른쪽
+! *XlwMenu.avoidText.labelString:	Avoid-Text
+*XlwMenu.avoidText.labelString:		문자를 피하기
+! *XlwMenu.strokesMode.labelString:	strokes-mode
+*XlwMenu.strokesMode.labelString:	strokes-모식
+! *XlwMenu.emacsW3.labelString:	Emacs-W3
+! *XlwMenu.emacsW3.labelString:
+! *XlwMenu.netscape.labelString:	Netscape
+! *XlwMenu.netscape.labelString:
+! *XlwMenu.mosaic.labelString:	Mosaic
+! *XlwMenu.mosaic.labelString:
+! *XlwMenu.mosaicCCI.labelString:	Mosaic (CCI)
+! *XlwMenu.mosaicCCI.labelString:
+! *XlwMenu.iXIMosaic.labelString:	IXI Mosaic
+! *XlwMenu.iXIMosaic.labelString:
+! *XlwMenu.lynxXterm.labelString:	Lynx (xterm)
+! *XlwMenu.lynxXterm.labelString:
+! *XlwMenu.lynxXemacs.labelString:	Lynx (xemacs)
+! *XlwMenu.lynxXemacs.labelString:
+! *XlwMenu.grail.labelString:	Grail
+! *XlwMenu.grail.labelString:
+! *XlwMenu.charter.labelString:	Charter
+! *XlwMenu.charter.labelString:
+! *XlwMenu.clean.labelString:	Clean
+! *XlwMenu.clean.labelString:
+! *XlwMenu.courier.labelString:	Courier
+! *XlwMenu.courier.labelString:
+! *XlwMenu.fixed.labelString:	Fixed
+! *XlwMenu.fixed.labelString:
+! *XlwMenu.helvetica.labelString:	Helvetica
+! *XlwMenu.helvetica.labelString:
+! *XlwMenu.lucida.labelString:	Lucida
+! *XlwMenu.lucida.labelString:
+! *XlwMenu.lucidabright.labelString:	Lucidabright
+! *XlwMenu.lucidabright.labelString:
+! *XlwMenu.lucidatypewriter.labelString:	Lucidatypewriter
+! *XlwMenu.lucidatypewriter.labelString:
+! *XlwMenu.newCenturySchoolbook.labelString:	New Century Schoolbook
+! *XlwMenu.newCenturySchoolbook.labelString:
+! *XlwMenu.terminal.labelString:	Terminal
+! *XlwMenu.terminal.labelString:
+! *XlwMenu.times.labelString:	Times
+! *XlwMenu.times.labelString:
+! *XlwMenu.utopia.labelString:	Utopia
+! *XlwMenu.utopia.labelString:
+! *XlwMenu.5.labelString:	5
+! *XlwMenu.5.labelString:
+! *XlwMenu.6.labelString:	6
+! *XlwMenu.6.labelString:
+! *XlwMenu.7.labelString:	7
+! *XlwMenu.7.labelString:
+! *XlwMenu.8.labelString:	8
+! *XlwMenu.8.labelString:
+! *XlwMenu.9.labelString:	9
+! *XlwMenu.9.labelString:
+! *XlwMenu.10.labelString:	10
+! *XlwMenu.10.labelString:
+! *XlwMenu.11.labelString:	11
+! *XlwMenu.11.labelString:
+! *XlwMenu.12.labelString:	12
+! *XlwMenu.12.labelString:
+! *XlwMenu.13.labelString:	13
+! *XlwMenu.13.labelString:
+! *XlwMenu.14.labelString:	14
+! *XlwMenu.14.labelString:
+! *XlwMenu.15.labelString:	15
+! *XlwMenu.15.labelString:
+! *XlwMenu.16.labelString:	16
+! *XlwMenu.16.labelString:
+! *XlwMenu.17.labelString:	17
+! *XlwMenu.17.labelString:
+! *XlwMenu.18.labelString:	18
+! *XlwMenu.18.labelString:
+! *XlwMenu.19.labelString:	19
+! *XlwMenu.19.labelString:
+! *XlwMenu.20.labelString:	20
+! *XlwMenu.20.labelString:
+! *XlwMenu.23.labelString:	23
+! *XlwMenu.23.labelString:
+! *XlwMenu.24.labelString:	24
+! *XlwMenu.24.labelString:
+! *XlwMenu.black.labelString:	Black
+! *XlwMenu.black.labelString:
+! *XlwMenu.bold.labelString:	Bold
+! *XlwMenu.bold.labelString:
+! *XlwMenu.demibold.labelString:	Demibold
+! *XlwMenu.demibold.labelString:
+! *XlwMenu.medium.labelString:	Medium
+! *XlwMenu.medium.labelString:
+! *XlwMenu.regular.labelString:	Regular
+! *XlwMenu.regular.labelString:
+! *XlwMenu.grep___.labelString:	Grep...
+! *XlwMenu.grep___.labelString:
+! *XlwMenu.compile___.labelString:	Compile...
+*XlwMenu.compile___.labelString:	컴파일...
+! *XlwMenu.shell.labelString:	Shell
+*XlwMenu.shell.labelString:	세르
+! *XlwMenu.shellCommand___.labelString:	Shell Command...
+*XlwMenu.shellCommand___.labelString:	세르 명령...
+! *XlwMenu.shellCommandOnRegion___.labelString:	Shell Command on Region...
+*XlwMenu.shellCommandOnRegion___.labelString:	구역에서 세르명령을 사용...
+! *XlwMenu.debugGDB___.labelString:	Debug (GDB)...
+*XlwMenu.debugGDB___.labelString:	디버그 (GDB)...
+! *XlwMenu.debugDBX___.labelString:	Debug (DBX)...
+*XlwMenu.debugDBX___.labelString:	디버그 (DBX)...
+! *XlwMenu.oOBrowser___.labelString:	OO-Browser...
+*XlwMenu.oOBrowser___.labelString:	OO-브라자...
+! *XlwMenu.tags.labelString:	Tags
+*XlwMenu.tags.labelString:	타그
+! *XlwMenu.vC.labelString:	VC
+! *XlwMenu.vC.labelString:
+! *XlwMenu.findTag___.labelString:	Find Tag...
+*XlwMenu.findTag___.labelString:	타그를 찾기...
+! *XlwMenu.findOtherWindow___.labelString:	Find Other Window...
+*XlwMenu.findOtherWindow___.labelString:	이외의 윈도우에서 찾기...
+! *XlwMenu.nextTag___.labelString:	Next Tag...
+*XlwMenu.nextTag___.labelString:	다음의 타그...
+! *XlwMenu.nextOtherWindow___.labelString:	Next Other Window...
+*XlwMenu.nextOtherWindow___.labelString:	이외의 윈도우에서 다음의 타그에로...
+! *XlwMenu.nextFile.labelString:	Next File
+*XlwMenu.nextFile.labelString:		다음의 파일
+! *XlwMenu.tagsSearch___.labelString:	Tags Search...
+*XlwMenu.tagsSearch___.labelString:	타그 찾기...
+! *XlwMenu.tagsReplace___.labelString:	Tags Replace...
+*XlwMenu.tagsReplace___.labelString:	타그 바꾸기...
+! *XlwMenu.continueSearchReplace.labelString:	Continue Search/Replace
+*XlwMenu.continueSearchReplace.labelString:	찾기/바꾸기 계속
+! *XlwMenu.popStack.labelString:	Pop stack
+*XlwMenu.popStack.labelString:		스다크를 포프
+! *XlwMenu.apropos___.labelString:	Apropos...
+! *XlwMenu.apropos___.labelString:	적절하게 찾기...
+! *XlwMenu.setTagsTableFile___.labelString:	Set Tags Table File...
+*XlwMenu.setTagsTableFile___.labelString:	타그표 파일를 설정...
+! *XlwMenu.registerFile.labelString:	Register File
+*XlwMenu.registerFile.labelString:	파일 등록
+! *XlwMenu.revertToLastRevision.labelString:	Revert to Last Revision
+*XlwMenu.revertToLastRevision.labelString:	최후의 수정본으로 복귀
+! *XlwMenu.cancelLastCheckin.labelString:	Cancel Last Checkin
+*XlwMenu.cancelLastCheckin.labelString:		최후의 Checkin 을 지우기
+! *XlwMenu.renameFile.labelString:	Rename File
+*XlwMenu.renameFile.labelString:	파일를 이름 바꾸기
+! *XlwMenu.diffAgainstLastVersion.labelString:	Diff Against Last Version
+*XlwMenu.diffAgainstLastVersion.labelString:	최종발행의 diff
+! *XlwMenu.diffBetweenRevisions___.labelString:	Diff Between Revisions...
+*XlwMenu.diffBetweenRevisions___.labelString:	수정본 사이에서의 diff...
+! *XlwMenu.visitOtherVersion___.labelString:	Visit Other Version...
+*XlwMenu.visitOtherVersion___.labelString:	다른  발행에로...
+! *XlwMenu.showEditHistory.labelString:	Show Edit History
+*XlwMenu.showEditHistory.labelString:	편집역사를 표시
+! *XlwMenu.listLockedFilesAnyUser.labelString:	List Locked Files Any User
+*XlwMenu.listLockedFilesAnyUser.labelString:	잠겨진 파일의 표시
+! *XlwMenu.createSnapshot.labelString:	Create Snapshot
+*XlwMenu.createSnapshot.labelString:	스냅사진 만들기
+! *XlwMenu.retrieveSnapshot.labelString:	Retrieve Snapshot
+*XlwMenu.retrieveSnapshot.labelString:	스냅사진 되찾기
+! *XlwMenu.cVSUpdateDirectory.labelString:	CVS Update Directory
+*XlwMenu.cVSUpdateDirectory.labelString:	CVS 갱신 목록
+! *XlwMenu.file.labelString:	File
+*XlwMenu.file.labelString:	파일
+! *XlwMenu.edit.labelString:	Edit
+*XlwMenu.edit.labelString:	편집
+! *XlwMenu.mule.labelString:	Mule
+! *XlwMenu.mule.labelString:
+! *XlwMenu.apps.labelString:	Apps
+*XlwMenu.apps.labelString:	응용
+! *XlwMenu.options.labelString:	Options
+*XlwMenu.options.labelString:	선택
+! *XlwMenu.buffers.labelString:	Buffers
+*XlwMenu.buffers.labelString:	완충기
+! *XlwMenu.tools.labelString:	Tools
+*XlwMenu.tools.labelString:	도구
+! *XlwMenu.lispInteraction.labelString:	Lisp-Interaction
+*XlwMenu.lispInteraction.labelString:	Lisp-대회
+! *XlwMenu.load_emacs.labelString:	Load .emacs
+*XlwMenu.load_emacs.labelString:	.emacs 를 불러들이기
+! *XlwMenu.help.labelString:	Help
+*XlwMenu.help.labelString:	도움말

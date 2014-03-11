@@ -1,0 +1,12 @@
+diff -ur vlc-1.1.13.orig/modules/video_filter/opencv_example.c vlc-1.1.13/modules/video_filter/opencv_example.c
+--- vlc-1.1.13.orig/modules/video_filter/opencv_example.c	2012-01-26 15:09:25.000000000 -0500
++++ vlc-1.1.13/modules/video_filter/opencv_example.c	2012-01-26 15:10:13.000000000 -0500
+@@ -191,7 +191,7 @@
+         CvSeq *faces = cvHaarDetectObjects( p_img[0], p_sys->p_cascade,
+                                             p_sys->p_storage, 1.15, 5,
+                                             CV_HAAR_DO_CANNY_PRUNING,
+-                                            cvSize(20, 20) );
++                                            cvSize(20, 20),cvSize(20,20) );
+         //create the video_filter_region_info_t struct
+         if (faces && (faces->total > 0))
+         {

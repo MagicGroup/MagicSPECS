@@ -1,0 +1,6 @@
+License: http://www.intel.com/technology/iapc/acpi/license2.htm 
+Some documentation can be found here: http://www.intel.com/technology/iapc/acpi/downloads.htm
+You can download it directly with:
+wget http://www.intel.com/technology/iapc/acpi/downloads/ACPICA-ProgRef.pdf \
+http://www.intel.com/technology/iapc/acpi/downloads/AslCompiler.pdf \
+http://download.intel.com/technology/IAPC/acpi/downloads/30222305.pdf

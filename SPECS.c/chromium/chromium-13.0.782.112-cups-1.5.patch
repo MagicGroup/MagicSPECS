@@ -1,0 +1,11 @@
+diff -up chromium-13.0.782.112/chrome/browser/ui/webui/print_preview_handler.cc.cups15 chromium-13.0.782.112/chrome/browser/ui/webui/print_preview_handler.cc
+--- chromium-13.0.782.112/chrome/browser/ui/webui/print_preview_handler.cc.cups15	2011-08-11 11:45:51.079991807 -0400
++++ chromium-13.0.782.112/chrome/browser/ui/webui/print_preview_handler.cc	2011-08-11 11:45:59.058000523 -0400
+@@ -37,6 +37,7 @@
+ 
+ #if defined(USE_CUPS)
+ #include <cups/cups.h>
++#include <cups/ppd.h>
+ 
+ #include "base/file_util.h"
+ #endif

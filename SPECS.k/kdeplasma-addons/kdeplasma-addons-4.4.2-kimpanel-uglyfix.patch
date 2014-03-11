@@ -1,0 +1,25 @@
+diff -Nuarp kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlabelgraphics.cpp kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlabelgraphics.cpp
+--- kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimlabelgraphics.cpp	2010-04-17 14:58:39.000000000 +0800
++++ kdeplasma-addons-4.4.2/applets/kimpanel/src/kimlabelgraphics.cpp	2010-04-17 15:03:19.000000000 +0800
+@@ -120,6 +120,8 @@ void KIMLabelGraphics::generatePixmap()
+         //kDebug() << m_pixmap.size();
+     }
+ 
++    update();
++
+     if (m_pixmap.size() != old_size) {
+         updateGeometry();
+     }
+diff -Nuarp kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimpanelapplet.cpp kdeplasma-addons-4.4.2/applets/kimpanel/src/kimpanelapplet.cpp
+--- kdeplasma-addons-4.4.2.orig/applets/kimpanel/src/kimpanelapplet.cpp	2010-04-17 14:58:39.000000000 +0800
++++ kdeplasma-addons-4.4.2/applets/kimpanel/src/kimpanelapplet.cpp	2010-04-17 15:04:19.000000000 +0800
+@@ -121,6 +121,9 @@ void KIMPanelApplet::init()
+     themeUpdated();
+ 
+     m_panel_agent->created();
++
++    toggleCollapse(true);
++    toggleCollapse(false);
+ }
+ 
+ void KIMPanelApplet::constraintsEvent(Plasma::Constraints constraints)

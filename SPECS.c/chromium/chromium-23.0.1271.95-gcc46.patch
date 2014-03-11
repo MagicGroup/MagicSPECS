@@ -1,0 +1,34 @@
+diff -up chromium-23.0.1271.95/gpu/command_buffer/common/gles2_cmd_format.h.gcc46 chromium-23.0.1271.95/gpu/command_buffer/common/gles2_cmd_format.h
+--- chromium-23.0.1271.95/gpu/command_buffer/common/gles2_cmd_format.h.gcc46	2012-11-27 21:01:17.000000000 -0500
++++ chromium-23.0.1271.95/gpu/command_buffer/common/gles2_cmd_format.h	2012-12-12 16:21:42.591762525 -0500
+@@ -11,6 +11,7 @@
+ #include <KHR/khrplatform.h>
+ 
+ #include <string.h>
++#include <cstddef>
+ 
+ #include "../common/types.h"
+ #include "../common/bitfield_helpers.h"
+diff -up chromium-23.0.1271.95/net/spdy/spdy_http_stream.cc.gcc46 chromium-23.0.1271.95/net/spdy/spdy_http_stream.cc
+--- chromium-23.0.1271.95/net/spdy/spdy_http_stream.cc.gcc46	2012-11-27 21:01:30.000000000 -0500
++++ chromium-23.0.1271.95/net/spdy/spdy_http_stream.cc	2012-12-12 16:22:14.089763571 -0500
+@@ -21,6 +21,7 @@
+ #include "net/base/net_util.h"
+ #include "net/http/http_request_headers.h"
+ #include "net/http/http_request_info.h"
++#include "net/http/http_response_headers.h"
+ #include "net/http/http_response_info.h"
+ #include "net/http/http_util.h"
+ #include "net/spdy/spdy_header_block.h"
+diff -up chromium-23.0.1271.95/third_party/tcmalloc/chromium/src/symbolize.h.gcc46 chromium-23.0.1271.95/third_party/tcmalloc/chromium/src/symbolize.h
+--- chromium-23.0.1271.95/third_party/tcmalloc/chromium/src/symbolize.h.gcc46	2012-11-27 21:01:35.000000000 -0500
++++ chromium-23.0.1271.95/third_party/tcmalloc/chromium/src/symbolize.h	2012-12-12 16:21:42.593762527 -0500
+@@ -50,7 +50,7 @@ using std::map;
+ class SymbolTable {
+  public:
+   SymbolTable()
+-    : symbol_buffer_(NULL) {}
++    : symbol_buffer_(0) {}
+   ~SymbolTable() {
+     delete[] symbol_buffer_;
+   }

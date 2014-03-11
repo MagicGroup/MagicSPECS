@@ -1,0 +1,19 @@
+--- Falcon-0.9.6.6/CMakeLists.txt.honor-cmake-dir	2010-08-01 00:21:56.000000000 +0200
++++ Falcon-0.9.6.6/CMakeLists.txt	2010-11-06 02:23:36.998586661 +0100
+@@ -150,10 +150,12 @@
+    endif()
+ endif()
+ 
+-if(WIN32)
+-  set(FALCON_CMAKE_DIR cmake)
+-else()
+-  set(FALCON_CMAKE_DIR ${FALCON_SHARE_DIR}/cmake)
++if (NOT FALCON_CMAKE_DIR)
++   if(WIN32)
++      set(FALCON_CMAKE_DIR cmake)
++   else()
++      set(FALCON_CMAKE_DIR ${FALCON_SHARE_DIR}/cmake)
++   endif()
+ endif()
+ 
+ set(FALCON_APP_DIR ${FALCON_MOD_DIR}/apps)

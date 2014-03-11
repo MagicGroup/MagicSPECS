@@ -1,0 +1,28 @@
+diff -ruN fonts-ja-8.0.orig/vine-fonttools-0.1/mkalias.pl fonts-ja-8.0/vine-fonttools-0.1/mkalias.pl
+--- fonts-ja-8.0.orig/vine-fonttools-0.1/mkalias.pl	2004-06-22 20:56:42.203463923 +0900
++++ fonts-ja-8.0/vine-fonttools-0.1/mkalias.pl	2004-06-22 20:57:12.356476700 +0900
+@@ -54,14 +54,22 @@
+     for ($j=0; $j < $defcnt; $j++) {
+ 	$file[$j] = $ARGV[$i+2+$j];
+ 	if ( $file[$j] ne "-" ){
+-	    die "invalid file $file[$j]\n" if ( ! $realxlfd{$file[$j]} );
++	    if ( $file[$j] !~ /WEIGHT/ ) {
++		die "invalid file $file[$j]\n" if ( ! $realxlfd{$file[$j]} );
++	    }
+ 	}
+     }
+ 
+     foreach $m ("", "b", "i", "bi") {
+ 	for ($j=0; $j < $defcnt; $j++) {
+ 	    $file[$j] = $ARGV[$i+2+$j];
+-	    if ( $file[$j] ne "-" ) {
++	    if ( $file[$j] =~ /WEIGHT/ ) {
++		$f = $file[$j];
++		$f =~ s/WEIGHT/$m/;
++		die "invalid file $f\n" if ( ! $realxlfd{$f} );
++		modify($afndry[$j], $afmly[$j], $charset,
++		       $pixel, $realxlfd{$f});
++	    } elsif ( $file[$j] ne "-" ) {
+ 		modify($afndry[$j], $afmly[$j], $charset, 
+ 		       $pixel, $realxlfd{$file[$j].$m});
+ 	    }

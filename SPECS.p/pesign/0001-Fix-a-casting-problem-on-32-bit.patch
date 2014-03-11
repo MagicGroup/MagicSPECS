@@ -1,0 +1,28 @@
+From 9eb2814858270af2d7ecfbfa5ca131e7be2f9f53 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Mon, 3 Dec 2012 08:47:22 -0500
+Subject: [PATCH] Fix a casting problem on 32-bit.
+
+Not that we really care about i686, but...
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/wincert.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/wincert.c b/src/wincert.c
+index 5caaa6e..4197a87 100644
+--- a/src/wincert.c
++++ b/src/wincert.c
+@@ -141,7 +141,7 @@ done:
+ 
+ 		tmpcert = (win_certificate *)((uint8_t *)certs + n);
+ 
+-		if ((uint64_t)tmpcert > (uint64_t)map + map_size)
++		if ((intptr_t)tmpcert >	(intptr_t)map + map_size)
+ 			return -1;
+ 
+ 		/* length _includes_ the size of the structure. */
+-- 
+1.8.0
+

@@ -1,0 +1,9 @@
+--- TeX/texk/tetex/epstopdf.perl	2006-05-24 18:09:36.000000000 -0700
++++ TeX/texk/tetex/epstopdf	2006-05-24 18:11:06.000000000 -0700
+@@ -1,5 +1,4 @@
+-eval '(exit $?0)' && eval 'exec perl -S $0 ${1+"$@"}' && eval 'exec perl -S $0 $argv:q'
+-  if 0;
++#!/usr/bin/env perl
+ use strict;
+ 
+ # Change by Thomas Esser, Sept. 1998: The above lines allows us to find

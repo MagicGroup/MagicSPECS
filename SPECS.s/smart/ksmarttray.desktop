@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=KSmartTray
+Comment=Keep up to date with package updates
+Exec=ksmarttray
+Type=Application
+Terminal=false
+Categories=System;KDE;Monitor;TrayIcon;Applet;
+OnlyShowIn=GNOME;KDE;XFCE;
+Icon=ksmarttray

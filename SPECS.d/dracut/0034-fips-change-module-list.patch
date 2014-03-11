@@ -1,0 +1,22 @@
+From 0251fcd4003501f5a6a50fa31d640f4bf307c3de Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 5 Jul 2012 10:11:27 +0200
+Subject: [PATCH] fips: change module list
+
+---
+ modules.d/01fips/module-setup.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules.d/01fips/module-setup.sh b/modules.d/01fips/module-setup.sh
+index 3a35c9b..dbf51e3 100755
+--- a/modules.d/01fips/module-setup.sh
++++ b/modules.d/01fips/module-setup.sh
+@@ -13,7 +13,7 @@ depends() {
+ installkernel() {
+     local _fipsmodules _mod
+     _fipsmodules="aead aes_generic xts aes-x86_64 ansi_cprng cbc ccm chainiv ctr"
+-    _fipsmodules+=" des deflate ecb eseqiv hmac seqiv sha256 sha512"
++    _fipsmodules+=" des deflate ecb eseqiv hmac seqiv sha256_generic sha512"
+     _fipsmodules+=" cryptomgr crypto_null tcrypt dm-mod dm-crypt"
+ 
+     mkdir -m 0755 -p "${initdir}/etc/modprobe.d"

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=lrcShow-X
+GenericName[zh_CN]=动态歌词显示
+Comment[zh_CN]=歌词显示和编辑器
+Comment=lrc player and editor
+Exec=lrcShow-X
+Icon=lrcShow-X
+Terminal=0
+Type=Application
+Categories=Application;Multimedia;AudioVideo;

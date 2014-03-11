@@ -1,0 +1,10 @@
+--- Tie-IxHash-1.22/Makefile.PL	2010-02-19 22:53:29.000000000 +0000
++++ Tie-IxHash-1.22/Makefile.PL	2010-03-03 15:32:17.269325632 +0000
+@@ -9,6 +9,7 @@
+       repository => 'git://github.com/chorny/Tie-IxHash.git',
+     },
+   },
++  PL_FILES => {},
+   #SKIP => [qw(static dynamic)],
+   #'linkext' => {LINKTYPE => '' },
+   #'dist' => {COMPRESS=>'gzip -9f', SUFFIX => 'gz'},

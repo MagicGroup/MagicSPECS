@@ -1,0 +1,33 @@
+diff -Nur kdebase-3.1.95/kicker/applets/clock/clockapplet.kcfg kdebase-3.1.95new/kicker/applets/clock/clockapplet.kcfg
+--- kdebase-3.1.95/kicker/applets/clock/clockapplet.kcfg	2004-01-11 18:38:19.000000000 -0500
++++ kdebase-3.1.95new/kicker/applets/clock/clockapplet.kcfg	2004-02-02 19:04:48.239460544 -0500
+@@ -40,7 +40,7 @@
+     </entry>
+     <entry name="PlainShowDate" type="Bool" key="Show_Date">
+       <label>Show date.</label>
+-      <default>true</default>
++      <default>false</default>
+     </entry>
+     <entry name="PlainShowFrame" type="Bool" key="Show_Frame">
+       <label>Show frame.</label>
+@@ -135,7 +135,7 @@
+   <group name="Fuzzy">
+     <entry name="FuzzyShowDate" type="Bool" key="Show_Date">
+       <label>Show date.</label>
+-      <default>true</default>
++      <default>false</default>
+     </entry>
+     <entry name="FuzzyShowFrame" type="Bool" key="Show_Frame">
+       <label>Show frame.</label>
+diff -Nur kdebase-3.1.95/kicker/applets/clock/settings.ui kdebase-3.1.95new/kicker/applets/clock/settings.ui
+--- kdebase-3.1.95/kicker/applets/clock/settings.ui	2003-11-13 18:36:37.000000000 -0500
++++ kdebase-3.1.95new/kicker/applets/clock/settings.ui	2004-02-02 19:05:15.634295896 -0500
+@@ -151,7 +151,7 @@
+                                                 <string>Dat&amp;e</string>
+                                             </property>
+                                             <property name="checked">
+-                                                <bool>true</bool>
++                                                <bool>false</bool>
+                                             </property>
+                                         </widget>
+                                         <widget class="QCheckBox">

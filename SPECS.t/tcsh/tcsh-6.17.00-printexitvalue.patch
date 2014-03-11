@@ -1,0 +1,82 @@
+diff -up tcsh-6.17.00/sh.glob.c_old tcsh-6.17.00/sh.glob.c
+--- tcsh-6.17.00/sh.glob.c_old	2009-12-15 12:38:48.000000000 +0100
++++ tcsh-6.17.00/sh.glob.c	2009-12-15 12:40:52.000000000 +0100
+@@ -882,6 +882,10 @@ backeval(struct blk_buf *bb, struct Strb
+ 	    alias(&paraml);
+ 	    t = syntax(paraml.next, &paraml, 0);
+ 	    cleanup_push(t, syntax_cleanup);
++	    /* The F_BACKQ flag must set so the job output is correct if
++	     * printexitvalue is set.  If it's not set, the job output
++	     * will have "Exit N" appended where N is the exit status. */
++	    t->t_dflg = F_BACKQ;
+ 	    if (seterr)
+ 		stderror(ERR_OLD);
+ #ifdef SIGTSTP
+diff -up tcsh-6.17.00/sh.sem.c_old tcsh-6.17.00/sh.sem.c
+--- tcsh-6.17.00/sh.sem.c_old	2009-12-15 12:41:03.000000000 +0100
++++ tcsh-6.17.00/sh.sem.c	2009-12-15 12:57:49.000000000 +0100
+@@ -664,31 +664,31 @@ execute(struct command *t, volatile int 
+ #endif /* !CLOSE_ON_EXEC */
+ 	didfds = 0;
+ 	wanttty = -1;
+-	t->t_dspr->t_dflg |= t->t_dflg & F_NOINTERRUPT;
++	t->t_dspr->t_dflg |= t->t_dflg & (F_NOINTERRUPT | F_BACKQ);
+ 	execute(t->t_dspr, wanttty, NULL, NULL, do_glob);
+ 	exitstat();
+ 
+     case NODE_PIPE:
+ #ifdef BACKPIPE
+ 	t->t_dcdr->t_dflg |= F_PIPEIN | (t->t_dflg &
+-			(F_PIPEOUT | F_AMPERSAND | F_NOFORK | F_NOINTERRUPT));
++			(F_PIPEOUT | F_AMPERSAND | F_NOFORK | F_NOINTERRUPT | F_BACKQ));
+ 	execute(t->t_dcdr, wanttty, pv, pipeout, do_glob);
+ 	t->t_dcar->t_dflg |= F_PIPEOUT |
+-	    (t->t_dflg & (F_PIPEIN | F_AMPERSAND | F_STDERR | F_NOINTERRUPT));
++	    (t->t_dflg & (F_PIPEIN | F_AMPERSAND | F_STDERR | F_NOINTERRUPT | F_BACKQ));
+ 	execute(t->t_dcar, wanttty, pipein, pv, do_glob);
+ #else /* !BACKPIPE */
+ 	t->t_dcar->t_dflg |= F_PIPEOUT |
+-	    (t->t_dflg & (F_PIPEIN | F_AMPERSAND | F_STDERR | F_NOINTERRUPT));
++	    (t->t_dflg & (F_PIPEIN | F_AMPERSAND | F_STDERR | F_NOINTERRUPT | F_BACKQ));
+ 	execute(t->t_dcar, wanttty, pipein, pv, do_glob);
+ 	t->t_dcdr->t_dflg |= F_PIPEIN | (t->t_dflg &
+-			(F_PIPEOUT | F_AMPERSAND | F_NOFORK | F_NOINTERRUPT));
++			(F_PIPEOUT | F_AMPERSAND | F_NOFORK | F_NOINTERRUPT | F_BACKQ));
+ 	execute(t->t_dcdr, wanttty, pv, pipeout, do_glob);
+ #endif /* BACKPIPE */
+ 	break;
+ 
+     case NODE_LIST:
+ 	if (t->t_dcar) {
+-	    t->t_dcar->t_dflg |= t->t_dflg & F_NOINTERRUPT;
++	    t->t_dcar->t_dflg |= t->t_dflg & (F_NOINTERRUPT | F_BACKQ);
+ 	    execute(t->t_dcar, wanttty, NULL, NULL, do_glob);
+ 	    /*
+ 	     * In strange case of A&B make a new job after A
+@@ -699,7 +699,7 @@ execute(struct command *t, volatile int 
+ 	}
+ 	if (t->t_dcdr) {
+ 	    t->t_dcdr->t_dflg |= t->t_dflg &
+-		(F_NOFORK | F_NOINTERRUPT);
++		(F_NOFORK | F_NOINTERRUPT | F_BACKQ);
+ 	    execute(t->t_dcdr, wanttty, NULL, NULL, do_glob);
+ 	}
+ 	break;
+@@ -707,7 +707,7 @@ execute(struct command *t, volatile int 
+     case NODE_OR:
+     case NODE_AND:
+ 	if (t->t_dcar) {
+-	    t->t_dcar->t_dflg |= t->t_dflg & F_NOINTERRUPT;
++	    t->t_dcar->t_dflg |= t->t_dflg & (F_NOINTERRUPT | F_BACKQ);
+ 	    execute(t->t_dcar, wanttty, NULL, NULL, do_glob);
+ 	    if ((getn(varval(STRstatus)) == 0) !=
+ 		(t->t_dtyp == NODE_AND)) {
+@@ -716,7 +716,7 @@ execute(struct command *t, volatile int 
+ 	}
+ 	if (t->t_dcdr) {
+ 	    t->t_dcdr->t_dflg |= t->t_dflg &
+-		(F_NOFORK | F_NOINTERRUPT);
++		(F_NOFORK | F_NOINTERRUPT | F_BACKQ);
+ 	    execute(t->t_dcdr, wanttty, NULL, NULL, do_glob);
+ 	}
+ 	break;

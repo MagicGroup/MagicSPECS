@@ -1,0 +1,44 @@
+--- gambas-1.0.6/configure.in.BAD	2005-06-02 16:16:29.000000000 -0500
++++ gambas-1.0.6/configure.in	2005-06-02 16:16:56.000000000 -0500
+@@ -354,26 +354,26 @@
+ 
+ fi
+ 
+-if test "$gambas_debug" = "yes"; then
+-  CFLAGS="$CFLAGS -g"
+-  CXXFLAGS="$CXXFLAGS -g"
+-fi
++# if test "$gambas_debug" = "yes"; then
++#  CFLAGS="$CFLAGS -g"
++#  CXXFLAGS="$CXXFLAGS -g"
++#fi
+ 
+ # gambas_flag="-O2 -fstrength-reduce -frerun-loop-opt -fexpensive-optimizations -fschedule-insns2 -funroll-loops"
+ # gambas_flags="$gambas_flags -fno-strict-aliasing -falign-loops=2 -falign-jumps=2"
+ # gambas_flags="$gambas_flags -falign-functions=2 -ffast-math"
+ 
+-if test "$gambas_prof" = "no"; then
+-  gambas_flags="$gambas_flags -fomit-frame-pointer"
+-fi
+-
+-if test "x$gambas_optimization" = "xyes"; then
+-  CFLAGS="$CFLAGS -Os"
+-  CXXFLAGS="$CXXFLAGS -Os -fno-omit-frame-pointer"
+-else
+-  CFLAGS="$CFLAGS -O0"
+-  CXXFLAGS="$CXXFLAGS -O0"
+-fi
++# if test "$gambas_prof" = "no"; then
++#  gambas_flags="$gambas_flags -fomit-frame-pointer"
++# fi
++
++# if test "x$gambas_optimization" = "xyes"; then
++#   CFLAGS="$CFLAGS -Os"
++#   CXXFLAGS="$CXXFLAGS -Os -fno-omit-frame-pointer"
++# else
++#   CFLAGS="$CFLAGS -O0"
++#   CXXFLAGS="$CXXFLAGS -O0"
++# fi
+ 
+ 
+ dnl ---- Create makefiles

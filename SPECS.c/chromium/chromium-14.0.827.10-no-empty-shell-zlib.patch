@@ -1,0 +1,70 @@
+diff -up chromium-14.0.827.10/third_party/zlib/zlib.gyp.empty-shell chromium-14.0.827.10/third_party/zlib/zlib.gyp
+--- chromium-14.0.827.10/third_party/zlib/zlib.gyp.empty-shell	2011-07-21 16:26:48.000000000 -0400
++++ chromium-14.0.827.10/third_party/zlib/zlib.gyp	2011-07-21 16:29:43.623416451 -0400
+@@ -15,11 +15,27 @@
+       }],
+     ],
+   },
+-  'conditions': [
+-    ['use_system_zlib==0', {
+-      'targets': [
+-        {
+-          'target_name': 'zlib',
++  'targets': [
++    {
++      'target_name': 'zlib',
++      'conditions': [
++        ['use_system_zlib==1', {
++          'type': 'settings',
++          'direct_dependent_settings': {
++            'defines': [
++              'USE_SYSTEM_ZLIB',
++            ],
++          },
++          'defines': [
++            'USE_SYSTEM_ZLIB',
++          ],
++          'link_settings': {
++            'libraries': [
++              '-lz',
++              '-lminizip',
++            ],
++          },
++        }, { # else ! use_system_zlib
+           'type': 'static_library',
+           'sources': [
+             'contrib/minizip/ioapi.c',
+@@ -72,31 +88,8 @@
+               ],
+             }],
+           ],
+-        },
+-      ],
+-    }, {
+-      'targets': [
+-        {
+-          'target_name': 'zlib',
+-          'type': 'static_library',
+-          'direct_dependent_settings': {
+-            'defines': [
+-              'USE_SYSTEM_ZLIB',
+-            ],
+-          },
+-          'defines': [
+-            'USE_SYSTEM_ZLIB',
+-          ],
+-          'sources': [
+-          ],
+-          'link_settings': {
+-            'libraries': [
+-              '-lz',
+-              '-lminizip',
+-            ],
+-          },
+-        },
++        }],
+       ],
+-    }],
++    },
+   ],
+ }

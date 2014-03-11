@@ -1,0 +1,18 @@
+--- pykdeextensions-3.5.13.1/src/kdedistutils.py.extramodule	2012-09-08 17:33:05.000000000 +0000
++++ pykdeextensions-3.5.13.1/src/kdedistutils.py	2012-10-02 19:19:40.185384207 +0000
+@@ -712,6 +712,7 @@
+             
+             # Build the 'stub' code.
+             cppcode = self.cpptemplate % {"moduledir": self.data_dir,
++                                            "extramodule": os.getenv("EXTRA_MODULE_DIR"),
+                                             "modulename": modulename,
+                                             "factoryfunction": factoryfunction,
+                                             "python_version": python_version}
+@@ -854,6 +855,7 @@
+ #include <sip.h>
+ 
+ #define MODULE_DIR "%(moduledir)s"
++#define EXTRA_MODULE_DIR "%(extramodule)s"
+ #define MODULE_NAME "%(modulename)s"
+ #define FACTORY "%(factoryfunction)s"
+ #define CPP_FACTORY %(factoryfunction)s

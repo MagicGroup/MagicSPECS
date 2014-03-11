@@ -1,0 +1,150 @@
+diff -up pptp-1.7.2/pptp_ctrl.c.sign-compare pptp-1.7.2/pptp_ctrl.c
+--- pptp-1.7.2/pptp_ctrl.c.sign-compare	2011-11-30 16:33:00.877964659 +0000
++++ pptp-1.7.2/pptp_ctrl.c	2011-11-30 18:49:17.603973525 +0000
+@@ -193,7 +193,7 @@ int ctrlp_disp(PPTP_CONN * conn, void *
+ void pptp_set_link(PPTP_CONN * conn, int peer_call_id);
+ 
+ /*** log error information in control packets *********************************/
+-static void ctrlp_error( int result, int error, int cause,
++static void ctrlp_error( int result, u_int8_t error, int cause,
+         const char *result_text[], int max_result)
+ {
+     if( cause >= 0)
+@@ -238,7 +238,7 @@ static const char *ctrl_msg_types[] = {
+ #define MAX_CTRLMSG_TYPE 15
+          
+ /*** report a sent packet ****************************************************/
+-static void ctrlp_rep( void * buffer, int size, int isbuff)
++static void ctrlp_rep( void * buffer, size_t size, int isbuff)
+ {
+     struct pptp_header *packet = buffer;
+     unsigned int type;
+@@ -532,7 +532,7 @@ int pptp_write_some(PPTP_CONN * conn) {
+ 	    return -1;
+         }
+     }
+-    assert(retval <= conn->write_size);
++    assert((size_t)retval <= conn->write_size);
+     conn->write_size -= retval;
+     memmove(conn->write_buffer, conn->write_buffer + retval, conn->write_size);
+     ctrlp_rep(conn->write_buffer, retval, 0);
+diff -up pptp-1.7.2/pptp_gre.c.sign-compare pptp-1.7.2/pptp_gre.c
+--- pptp-1.7.2/pptp_gre.c.sign-compare	2011-11-30 16:33:00.899964648 +0000
++++ pptp-1.7.2/pptp_gre.c	2011-11-30 16:33:00.911964643 +0000
+@@ -200,8 +200,7 @@ void pptp_gre_copy(u_int16_t call_id, u_
+ int decaps_hdlc(int fd, int (*cb)(int cl, void *pack, unsigned int len), int cl)
+ {
+     unsigned char buffer[PACKET_MAX];
+-    unsigned int start = 0;
+-    int end;
++    ssize_t start = 0, end;
+     int status;
+     static unsigned int len = 0, escape = 0;
+     static unsigned char copy[PACKET_MAX];
+@@ -210,7 +209,7 @@ int decaps_hdlc(int fd, int (*cb)(int cl
+     /*  this is the only blocking read we will allow */
+     if ((end = read (fd, buffer, sizeof(buffer))) <= 0) {
+         int saved_errno = errno;
+-        warn("short read (%d): %s", end, strerror(saved_errno));
++        warn("short read (%zd): %s", end, strerror(saved_errno));
+ 	switch (saved_errno) {
+ 	  case EMSGSIZE: {
+ 	    socklen_t optval, optlen = sizeof(optval);
+@@ -499,7 +498,7 @@ int encaps_gre (int fd, void *pack, unsi
+                 if (errno == ENOBUFS)
+                     rc = 0;         /* Simply ignore it */
+                 stats.tx_failed++;
+-            } else if (rc < sizeof(u.header) - sizeof(u.header.seq)) {
++            } else if ((size_t)rc < sizeof(u.header) - sizeof(u.header.seq)) {
+                 stats.tx_short++;
+             } else {
+                 stats.tx_acks++;
+@@ -533,7 +532,7 @@ int encaps_gre (int fd, void *pack, unsi
+         if (errno == ENOBUFS)
+             rc = 0;         /* Simply ignore it */
+         stats.tx_failed++;
+-    } else if (rc < header_len + len) {
++    } else if ((size_t)rc < header_len + len) {
+         stats.tx_short++;
+     } else {
+         stats.tx_sent++;
+diff -up pptp-1.7.2/pqueue.c.sign-compare pptp-1.7.2/pqueue.c
+--- pptp-1.7.2/pqueue.c.sign-compare	2008-05-14 07:33:55.000000000 +0100
++++ pptp-1.7.2/pqueue.c	2011-11-30 16:41:39.598648652 +0000
+@@ -17,7 +17,7 @@
+ 
+ #define MIN_CAPACITY 128 /* min allocated buffer for a packet */
+ 
+-static int pqueue_alloc (int seq, unsigned char *packet, int packlen, pqueue_t **new);
++static int pqueue_alloc (u_int32_t seq, unsigned char *packet, int packlen, pqueue_t **new);
+ 
+ int packet_timeout_usecs = DEFAULT_PACKET_TIMEOUT * 1000000;
+ 
+@@ -29,7 +29,7 @@ static pqueue_t *pq_freelist_head = NULL
+ 
+ 
+ 
+-static int pqueue_alloc(int seq, unsigned char *packet, int packlen, pqueue_t **new) {
++static int pqueue_alloc(u_int32_t seq, unsigned char *packet, int packlen, pqueue_t **new) {
+ 
+   pqueue_t *newent;
+ 
+@@ -125,7 +125,7 @@ static int pqueue_alloc(int seq, unsigne
+ 
+ 
+ 
+-int pqueue_add (int seq, unsigned char *packet, int packlen) {
++int pqueue_add (u_int32_t seq, unsigned char *packet, int packlen) {
+   pqueue_t *newent, *point;
+ 
+   /* get a new entry */
+diff -up pptp-1.7.2/pqueue.h.sign-compare pptp-1.7.2/pqueue.h
+--- pptp-1.7.2/pqueue.h.sign-compare	2008-05-14 07:33:55.000000000 +0100
++++ pptp-1.7.2/pqueue.h	2011-11-30 18:42:16.733706666 +0000
+@@ -15,14 +15,14 @@ extern int packet_timeout_usecs;
+ typedef struct pqueue {
+   struct pqueue *next;
+   struct pqueue *prev;
+-  int seq;
++  u_int32_t seq;
+   struct timeval expires;
+   unsigned char *packet;
+   int packlen;
+   int capacity;
+ } pqueue_t;
+ 
+-int       pqueue_add  (int seq, unsigned char *packet, int packlen);
++int       pqueue_add  (u_int32_t seq, unsigned char *packet, int packlen);
+ int       pqueue_del  (pqueue_t *point);
+ pqueue_t *pqueue_head ();
+ int       pqueue_expiry_time (pqueue_t *entry);
+diff -up pptp-1.7.2/test.c.sign-compare pptp-1.7.2/test.c
+--- pptp-1.7.2/test.c.sign-compare	2008-05-14 07:33:55.000000000 +0100
++++ pptp-1.7.2/test.c	2011-11-30 18:45:44.553853995 +0000
+@@ -52,7 +52,7 @@ static ssize_t write_reordered_swap(int
+       test_ordering_phase = 0;
+       /* send the new packet first */
+       stat = write(fd, buf, count);
+-      if (stat != count) return stat;
++      if ((size_t)stat != count) return stat;
+       /* then send the old packet next */
+       stat = write(fd, pocket_buf, pocket_count);
+       free(pocket_buf);
+@@ -96,7 +96,7 @@ static ssize_t write_reordered_retransmi
+     test_ordering_phase = 0;
+     /* send the new packet first */
+     stat = write(fd, buf, count);
+-    if (stat != count) return stat;
++    if ((size_t)stat != count) return stat;
+     /* send the buffered packets in normal order */
+     for (n=0; n<test_length; n++) {
+       stat = write(fd, pocket_buf[n], pocket_count[n]);
+@@ -142,7 +142,7 @@ static ssize_t write_reordered_reverse(i
+     test_ordering_phase = 0;
+     /* send the new packet first */
+     stat = write(fd, buf, count);
+-    if (stat != count) return stat;
++    if ((size_t)stat != count) return stat;
+     /* send the buffered packets in reverse order */
+     for (n=test_length-1; n>0; n--) {
+       stat = write(fd, pocket_buf[n], pocket_count[n]);

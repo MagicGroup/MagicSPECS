@@ -1,0 +1,17 @@
+---
+ libmultipath/structs_vec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: multipath-tools-130222/libmultipath/structs_vec.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/structs_vec.c
++++ multipath-tools-130222/libmultipath/structs_vec.c
+@@ -106,7 +106,7 @@ orphan_paths (vector pathvec, struct mul
+ static void
+ set_multipath_wwid (struct multipath * mpp)
+ {
+-	if (mpp->wwid)
++	if (strlen(mpp->wwid))
+ 		return;
+ 
+ 	dm_get_uuid(mpp->alias, mpp->wwid);

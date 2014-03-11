@@ -1,0 +1,24 @@
+From 6d82a0470e7e340eb0353ecc3c524ded2e286e18 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 19 Sep 2011 12:20:55 +0200
+Subject: [PATCH] 99base/init: remove /dev/root helper symlink
+
+Any tool relying on /dev/root has to be fixed.
+---
+ modules.d/99base/init |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/modules.d/99base/init b/modules.d/99base/init
+index fe7694a..4f59818 100755
+--- a/modules.d/99base/init
++++ b/modules.d/99base/init
+@@ -434,6 +434,9 @@ fi
+ 
+ wait_for_loginit
+ 
++# remove helper symlink
++[ -h /dev/root ] && rm -f /dev/root
++
+ getarg rd.break rdbreak && emergency_shell -n switch_root "Break before switch_root"
+ info "Switching root"
+ 

@@ -1,0 +1,11 @@
+--- configure.bak	2011-02-19 00:55:16.000000000 +0530
++++ configure	2011-04-07 10:43:26.442012820 +0530
+@@ -4676,7 +4676,7 @@
+  LIBS="-Wl,/System/Library/Frameworks/CoreServices.framework/CoreServices $LIBS"
+ 
+  ;;
+-powerpc-*-*linux*)
++powerpc*-*-*linux*)
+  $as_echo "#define _Keyboard 3" >>confdefs.h
+ 
+  ;;

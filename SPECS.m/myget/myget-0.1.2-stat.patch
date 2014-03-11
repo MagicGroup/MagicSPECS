@@ -1,0 +1,12 @@
+diff -ur myget-0.1.2.orig/src/downloader.cpp myget-0.1.2/src/downloader.cpp
+--- myget-0.1.2.orig/src/downloader.cpp	2012-01-18 10:42:34.000000000 -0500
++++ myget-0.1.2/src/downloader.cpp	2012-01-18 10:42:53.000000000 -0500
+@@ -19,6 +19,8 @@
+ 
+ #include <signal.h>
+ #include <errno.h>
++#include <sys/types.h>    // For stat()
++#include <sys/stat.h>     // For stat()
+ 
+ #include "downloader.h"
+ #include "macro.h"

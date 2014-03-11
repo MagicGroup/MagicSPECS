@@ -1,0 +1,284 @@
+diff --git a/doc/en/Makefile.am b/doc/en/Makefile.am
+index b70fbe8..0eaee82 100644
+--- a/doc/en/Makefile.am
++++ b/doc/en/Makefile.am
+@@ -2,9 +2,9 @@
+ #
+ #   Copyright (C) 2005, 2008 Rocky Bernstein <rocky@gnu.org>
+ #
+-#   This program is free software: you can redistribute it and/or modify
++#   This program is free software; you can redistribute it and/or modify
+ #   it under the terms of the GNU General Public License as published by
+-#   the Free Software Foundation, either version 3 of the License, or
++#   the Free Software Foundation; either version 2 of the License, or
+ #   (at your option) any later version.
+ #
+ #   This program is distributed in the hope that it will be useful,
+@@ -12,8 +12,9 @@
+ #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ #   GNU General Public License for more details.
+ #
+-#   You should have received a copy of the GNU General Public License
+-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++#   You should have received a copy of the GNU General Public License along
++#   with this program; if not, write to the Free Software Foundation, Inc.,
++#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ manfiles = cd-paranoia.1 
+ man_MANS = $(manfiles)
+diff --git a/doc/ja/Makefile.am b/doc/ja/Makefile.am
+index bf4f717..8652b93 100644
+--- a/doc/ja/Makefile.am
++++ b/doc/ja/Makefile.am
+@@ -2,9 +2,9 @@
+ #
+ #   Copyright (C) 2005, 2008 Rocky Bernstein <rocky@gnu.org>
+ #
+-#   This program is free software: you can redistribute it and/or modify
++#   This program is free software; you can redistribute it and/or modify
+ #   it under the terms of the GNU General Public License as published by
+-#   the Free Software Foundation, either version 3 of the License, or
++#   the Free Software Foundation; either version 2 of the License, or
+ #   (at your option) any later version.
+ #
+ #   This program is distributed in the hope that it will be useful,
+@@ -12,8 +12,9 @@
+ #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ #   GNU General Public License for more details.
+ #
+-#   You should have received a copy of the GNU General Public License
+-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++#   You should have received a copy of the GNU General Public License along
++#   with this program; if not, write to the Free Software Foundation, Inc.,
++#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ mansubdir=/jp/man1
+ manfiles = cd-paranoia.1
+diff --git a/example/C++/Makefile.am b/example/C++/Makefile.am
+index 957828f..f77fdb0 100644
+--- a/example/C++/Makefile.am
++++ b/example/C++/Makefile.am
+@@ -1,8 +1,8 @@
+ #   Copyright (C) 2005, 2006, 2008, 2009 Rocky Bernstein <rocky@gnu.org>
+ #
+-#   This program is free software: you can redistribute it and/or modify
++#   This program is free software; you can redistribute it and/or modify
+ #   it under the terms of the GNU General Public License as published by
+-#   the Free Software Foundation, either version 3 of the License, or
++#   the Free Software Foundation; either version 2 of the License, or
+ #   (at your option) any later version.
+ #
+ #   This program is distributed in the hope that it will be useful,
+@@ -10,8 +10,9 @@
+ #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ #   GNU General Public License for more details.
+ #
+-#   You should have received a copy of the GNU General Public License
+-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++#   You should have received a copy of the GNU General Public License along
++#   with this program; if not, write to the Free Software Foundation, Inc.,
++#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ ##########################################################
+ # Sample C++ programs using libcdio (without OO wrapper)
+diff --git a/example/C++/paranoia.cpp b/example/C++/paranoia.cpp
+index 17d93d4..29102f1 100644
+--- a/example/C++/paranoia.cpp
++++ b/example/C++/paranoia.cpp
+@@ -1,9 +1,9 @@
+ /*
+   Copyright (C) 2005, 2008, 2009 Rocky Bernstein <rocky@gnu.org>
+-  
+-  This program is free software: you can redistribute it and/or modify
++
++  This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+-  the Free Software Foundation, either version 3 of the License, or
++  the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+ 
+   This program is distributed in the hope that it will be useful,
+@@ -11,8 +11,9 @@
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+-  You should have received a copy of the GNU General Public License
+-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++  You should have received a copy of the GNU General Public License along
++  with this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+ 
+ /* Simple program to show using libcdio's version of the CD-DA paranoia. 
+diff --git a/example/paranoia.c b/example/paranoia.c
+index dd17b41..7a82cfa 100644
+--- a/example/paranoia.c
++++ b/example/paranoia.c
+@@ -2,9 +2,9 @@
+   Copyright (C) 2005, 2006, 2008, 2009, 2010, 2011, 2012
+    Rocky Bernstein <rocky@gnu.org>
+ 
+-  This program is free software: you can redistribute it and/or modify
++  This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+-  the Free Software Foundation, either version 3 of the License, or
++  the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+ 
+   This program is distributed in the hope that it will be useful,
+@@ -12,8 +12,9 @@
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+-  You should have received a copy of the GNU General Public License
+-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++  You should have received a copy of the GNU General Public License along
++  with this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+ 
+ /* Simple program to show using libcdio's version of the CD-DA paranoia. 
+diff --git a/example/paranoia2.c b/example/paranoia2.c
+index e0a14a4..7474813 100644
+--- a/example/paranoia2.c
++++ b/example/paranoia2.c
+@@ -1,9 +1,9 @@
+ /*
+   Copyright (C) 2005, 2006, 2008, 2009 Rocky Bernstein <rocky@gnu.org>
+ 
+-  This program is free software: you can redistribute it and/or modify
++  This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+-  the Free Software Foundation, either version 3 of the License, or
++  the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+ 
+   This program is distributed in the hope that it will be useful,
+@@ -11,8 +11,9 @@
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+-  You should have received a copy of the GNU General Public License
+-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++  You should have received a copy of the GNU General Public License along
++  with this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+ 
+ /* Simple program to show using libcdio's version of the CD-DA
+diff --git a/lib/paranoia/Makefile.am b/lib/paranoia/Makefile.am
+index 4007b52..c538bf4 100644
+--- a/lib/paranoia/Makefile.am
++++ b/lib/paranoia/Makefile.am
+@@ -1,8 +1,8 @@
+ #   Copyright (C) 2004, 2006, 2008, 2011 Rocky Bernstein <rocky@gnu.org>
+ #
+-#   This program is free software: you can redistribute it and/or modify
++#   This program is free software; you can redistribute it and/or modify
+ #   it under the terms of the GNU General Public License as published by
+-#   the Free Software Foundation, either version 3 of the License, or
++#   the Free Software Foundation; either version 2 of the License, or
+ #   (at your option) any later version.
+ #
+ #   This program is distributed in the hope that it will be useful,
+@@ -10,8 +10,9 @@
+ #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ #   GNU General Public License for more details.
+ #
+-#   You should have received a copy of the GNU General Public License
+-#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++#   You should have received a copy of the GNU General Public License along
++#   with this program; if not, write to the Free Software Foundation, Inc.,
++#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ ########################################################
+ # Things to make the libcdio_paranoia library
+diff --git a/lib/paranoia/isort.h b/lib/paranoia/isort.h
+index 8479f84..a1eace5 100644
+--- a/lib/paranoia/isort.h
++++ b/lib/paranoia/isort.h
+@@ -3,10 +3,10 @@
+ 
+   Copyright (C) 2004, 2005, 2008 Rocky Bernstein <rocky@gnu.org>
+   Copyright (C) 1998 Monty xiphmont@mit.edu
+-  
+-  This program is free software: you can redistribute it and/or modify
++
++  This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+-  the Free Software Foundation, either version 3 of the License, or
++  the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+ 
+   This program is distributed in the hope that it will be useful,
+@@ -14,8 +14,9 @@
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+-  You should have received a copy of the GNU General Public License
+-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++  You should have received a copy of the GNU General Public License along
++  with this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+ 
+ #ifndef _ISORT_H_
+diff --git a/src/pod2c.pl b/src/pod2c.pl
+index a37d2a2..f1dc254 100755
+--- a/src/pod2c.pl
++++ b/src/pod2c.pl
+@@ -18,9 +18,9 @@
+ print "/*
+   Copyright (C) 1999, 2005, 2007, 2008 Rocky Bernstein
+    
+-  This program is free software: you can redistribute it and/or modify
++  This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+-  the Free Software Foundation, either version 3 of the License, or
++  the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+ 
+   This program is distributed in the hope that it will be useful,
+@@ -28,8 +28,9 @@
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+-  You should have received a copy of the GNU General Public License
+-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++  You should have received a copy of the GNU General Public License along
++  with this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+ static const char ${name}_help[] =\n";
+ while(<STDIN>) {
+diff --git a/test/testparanoia.c b/test/testparanoia.c
+index 54e1980..9b1545f 100644
+--- a/test/testparanoia.c
++++ b/test/testparanoia.c
+@@ -1,9 +1,9 @@
+ /*
+   Copyright (C) 2005, 2006, 2008, 2011 Rocky Bernstein <rocky@gnu.org>
+ 
+-  This program is free software: you can redistribute it and/or modify
++  This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+-  the Free Software Foundation, either version 3 of the License, or
++  the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+ 
+   This program is distributed in the hope that it will be useful,
+@@ -11,8 +11,9 @@
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+-  You should have received a copy of the GNU General Public License
+-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++  You should have received a copy of the GNU General Public License along
++  with this program; if not, write to the Free Software Foundation, Inc.,
++  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+ 
+ /* Simple program to show using libcdio's version of cdparanoia. */
+-- 
+1.7.10
+

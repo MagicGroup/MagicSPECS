@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+#	/etc/rc.d/init.d/915resolution
+#
+# Starts the 915resulution helper
+#
+# chkconfig: - 65 35
+# description: 915resolution tool
+# processname: 915resolution
+# Source function library.
+. /etc/init.d/functions
+
+test -x /usr/sbin/915resolution || exit 0
+
+RETVAL=0
+prog="915resolution"
+
+start() {
+        if [ -r /etc/sysconfig/915resolution ]; then
+                . /etc/sysconfig/915resolution
+        fi
+        if [ -n "$RESOLUTION" ]; then
+                echo -n $"Starting $prog: "
+	        /usr/sbin/915resolution $RESOLUTION >/dev/null 2>&1
+	        RETVAL=$?
+	        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/915resolution
+	        echo
+        fi
+}
+
+stop() {
+	rm -f /var/lock/subsys/915resolution
+}
+
+#
+#	See how we were called.
+#
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  reload|restart)
+	stop
+	start
+	RETVAL=$?
+	;;
+  condrestart)
+	if [ -f /var/lock/subsys/915resolution ]; then
+	    stop
+	    start
+	fi
+	;;
+  status)
+	[ -f /var/lock/subsys/915resolution ]
+	RETVAL=$?
+	;;
+  *)
+	echo $"Usage: $0 {condrestart|start|stop|restart|reload|status}"
+	exit 1
+esac
+
+exit $RETVAL

@@ -1,0 +1,12 @@
+diff -up xf86-video-qxl-0.1.1/src/qxl_uxa.c.dma xf86-video-qxl-0.1.1/src/qxl_uxa.c
+--- xf86-video-qxl-0.1.1/src/qxl_uxa.c.dma	2013-11-08 13:37:49.898702515 +1000
++++ xf86-video-qxl-0.1.1/src/qxl_uxa.c	2013-11-08 13:38:10.185702515 +1000
+@@ -422,6 +422,8 @@ qxl_create_pixmap (ScreenPtr screen, int
+     ErrorF ("Create pixmap: %d %d @ %d (usage: %d)\n", w, h, depth, usage);
+ #endif
+ 
++    if (qxl->kms_enabled)
++	goto fallback;
+     if (uxa_swapped_out (screen))
+ 	goto fallback;
+ 

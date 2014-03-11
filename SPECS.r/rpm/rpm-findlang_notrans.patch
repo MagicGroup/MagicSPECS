@@ -1,0 +1,11 @@
+diff -ur rpm-4.11.0.1.orig/scripts/find-lang.sh rpm-4.11.0.1/scripts/find-lang.sh
+--- rpm-4.11.0.1.orig/scripts/find-lang.sh	2013-03-25 04:30:47.000000000 +0000
++++ rpm-4.11.0.1/scripts/find-lang.sh	2013-03-25 04:31:16.000000000 +0000
+@@ -195,6 +195,6 @@
+ 
+ if ! grep -q / $MO_NAME; then
+ 	echo "No translations found for ${NAME} in ${TOP_DIR}"
+-	exit 1
++	touch $MO_NAME
+ fi
+ exit 0

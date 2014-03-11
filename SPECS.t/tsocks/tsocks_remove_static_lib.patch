@@ -1,0 +1,12 @@
+diff -up tsocks-1.8/Makefile.in.orig tsocks-1.8/Makefile.in
+--- tsocks-1.8/Makefile.in.orig	2009-12-05 10:49:44.033729745 -0500
++++ tsocks-1.8/Makefile.in	2009-12-05 10:49:54.429979972 -0500
+@@ -47,7 +47,7 @@ ${INSPECT}: ${INSPECT}.c ${COMMON}.o
+ 	${SHCC} ${CFLAGS} ${INCLUDES} -o ${INSPECT} ${INSPECT}.c ${COMMON}.o ${LIBS} 
+ 
+ ${SAVE}: ${SAVE}.c
+-	${SHCC} ${CFLAGS} ${INCLUDES} -static -o ${SAVE} ${SAVE}.c
++	${SHCC} ${CFLAGS} ${INCLUDES} -o ${SAVE} ${SAVE}.c
+ 
+ ${SHLIB}: ${OBJS} ${COMMON}.o ${PARSER}.o
+ 	${SHCC} ${CFLAGS} ${INCLUDES} -nostdlib -shared -o ${SHLIB} ${OBJS} ${COMMON}.o ${PARSER}.o ${DYNLIB_FLAGS} ${SPECIALLIBS} ${LIBS}

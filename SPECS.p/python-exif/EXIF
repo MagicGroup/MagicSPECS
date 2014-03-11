@@ -1,0 +1,7 @@
+#! /bin/bash
+#
+
+PY_DIR=$(python -c "from distutils.sysconfig import get_python_lib as py_dir; print py_dir()")
+
+python $PY_DIR/EXIF.py "$@"
+

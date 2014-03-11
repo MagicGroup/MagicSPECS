@@ -1,0 +1,48 @@
+diff -up chromium-23.0.1271.95/native_client/build/untrusted.gypi.stillmorenaclfixes chromium-23.0.1271.95/native_client/build/untrusted.gypi
+--- chromium-23.0.1271.95/native_client/build/untrusted.gypi.stillmorenaclfixes	2012-12-19 00:25:20.649923597 -0500
++++ chromium-23.0.1271.95/native_client/build/untrusted.gypi	2012-12-19 00:26:04.862924572 -0500
+@@ -264,7 +264,7 @@
+                    '--lib-dirs=>(lib_dirs_newlib32)',
+                    '--compile_flags=-m32 ^(compile_flags) >(_compile_flags)',
+                    '--defines=^(defines) >(_defines)',
+-                   '--link_flags=-m32 -B<(SHARED_INTERMEDIATE_DIR)/tc_newlib/lib32 ^(link_flags) >(_link_flags)',
++                   '--link_flags=-m32 -L/usr/x86_64-nacl/lib/32/ -B<(SHARED_INTERMEDIATE_DIR)/tc_newlib/lib32 ^(link_flags) >(_link_flags)',
+                    '--source-list=^|(<(source_list_newlib32) ^(_sources) ^(sources))',
+                  ],
+                },
+@@ -304,7 +304,7 @@
+                    '--lib-dirs=>(lib_dirs_newlib32)',
+                    '--compile_flags=-m32 ^(compile_flags) >(_compile_flags)',
+                    '--defines=^(defines) >(_defines)',
+-                   '--link_flags=-m32 -B<(SHARED_INTERMEDIATE_DIR)/tc_newlib/lib32 ^(link_flags) >(_link_flags)',
++                   '--link_flags=-m32 -L/usr/x86_64-nacl/lib/32/ -B<(SHARED_INTERMEDIATE_DIR)/tc_newlib/lib32 ^(link_flags) >(_link_flags)',
+                    '--source-list=^|(<(source_list_newlib32) ^(_sources) ^(sources))',
+                  ],
+                },
+@@ -476,7 +476,7 @@
+                    '--lib-dirs=>(lib_dirs_glibc32) ',
+                    '--compile_flags=-m32 ^(compile_flags) >(_compile_flags)',
+                    '--defines=^(defines) >(_defines)',
+-                   '--link_flags=-m32 -B<(SHARED_INTERMEDIATE_DIR)/tc_glibc/lib32 ^(link_flags) >(_link_flags)',
++                   '--link_flags=-m32 -L/usr/x86_64-nacl/lib/32/ -B<(SHARED_INTERMEDIATE_DIR)/tc_glibc/lib32 ^(link_flags) >(_link_flags)',
+                    '--source-list=^|(<(source_list_glibc32) ^(_sources) ^(sources))',
+                  ],
+                },
+@@ -556,7 +556,7 @@
+                    '--lib-dirs=>(lib_dirs_glibc32)',
+                    '--compile_flags=-m32 ^(compile_flags) >(_compile_flags)',
+                    '--defines=^(defines) >(_defines)',
+-                   '--link_flags=-m32 -B<(SHARED_INTERMEDIATE_DIR)/tc_glibc/lib32 ^(link_flags) >(_link_flags)',
++                   '--link_flags=-m32 -L/usr/x86_64-nacl/lib/32/ -B<(SHARED_INTERMEDIATE_DIR)/tc_glibc/lib32 ^(link_flags) >(_link_flags)',
+                    '--source-list=^|(<(source_list_glibc32) ^(_sources) ^(sources))',
+                  ],
+                },
+@@ -636,7 +636,7 @@
+                    '--lib-dirs=>(lib_dirs_glibc32)',
+                    '--compile_flags=-m32 -fPIC ^(compile_flags) >(_compile_flags)',
+                    '--defines=^(defines) >(_defines)',
+-                   '--link_flags=-m32 -B<(SHARED_INTERMEDIATE_DIR)/tc_glibc/lib32 ^(link_flags) >(_link_flags)',
++                   '--link_flags=-m32 -L/usr/x86_64-nacl/lib/32/ -B<(SHARED_INTERMEDIATE_DIR)/tc_glibc/lib32 ^(link_flags) >(_link_flags)',
+                    '--source-list=^|(<(source_list_glibc32) ^(_sources) ^(sources))',
+                  ],
+                },

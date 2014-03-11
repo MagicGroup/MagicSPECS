@@ -1,0 +1,30 @@
+From 4e28e25feaf611a4366fef88fec885657bfd76bc Mon Sep 17 00:00:00 2001
+From: Richard Hughes <richard@hughsie.com>
+Date: Thu, 29 Mar 2012 15:56:48 +0100
+Subject: [PATCH] Do not enable PrivateNetwork=yes as it breaks hotplugging
+ devices
+
+We think that udev's AF_NETLINK messages are being filtered when network
+namespacing is on.
+---
+ data/colord.service.in |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/data/colord.service.in b/data/colord.service.in
+index 8a4b43d..8301b40 100644
+--- a/data/colord.service.in
++++ b/data/colord.service.in
+@@ -6,7 +6,9 @@ Type=dbus
+ BusName=org.freedesktop.ColorManager
+ ExecStart=@servicedir@/colord
+ User=@daemon_user@
+-PrivateNetwork=yes
++# We think that udev's AF_NETLINK messages are being filtered when
++# network namespacing is on.
++# PrivateNetwork=yes
+ PrivateTmp=yes
+ 
+ [Install]
+-- 
+1.7.9.3
+

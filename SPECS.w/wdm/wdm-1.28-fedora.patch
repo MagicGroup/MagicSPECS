@@ -1,0 +1,36 @@
+--- wdm-1.28/configs/wdm-config.in.fedora	2005-03-26 14:57:04.000000000 +0100
++++ wdm-1.28/configs/wdm-config.in	2006-10-20 11:50:48.000000000 +0200
+@@ -2,8 +2,8 @@
+ !
+ ! wdm configuration file input (sed in Makefile)
+ !
+-DisplayManager.errorLogFile:    @LOGDIR@/xdm-errors.log
+-DisplayManager.pidFile:         @RUNDIR@/xdm-pid
++DisplayManager.errorLogFile:    @LOGDIR@/wdm-errors.log
++DisplayManager.pidFile:         @RUNDIR@/wdm.pid
+ DisplayManager.keyFile:         @DMDIR@/xdm-keys
+ DisplayManager.servers:         @DMDIR@/Xservers
+ DisplayManager.accessFile:      @DMDIR@/Xaccess
+@@ -25,11 +25,12 @@
+ ! display screen background--if not set or set to none, then the
+ !                            background is not set by wdm.
+ ! DisplayManager*wdmBg:         none
+-DisplayManager*wdmBg:           solid:RoyalBlue
++! DisplayManager*wdmBg:           solid:RoyalBlue
+ ! DisplayManager*wdmBg:         dgradient:RoyalBlue,FireBrick,Black
+ ! DisplayManager*wdmBg:         hgradient:RoyalBlue,FireBrick,Black
+ ! DisplayManager*wdmBg:         vgradient:RoyalBlue,FireBrick,Black
+ ! DisplayManager*wdmBg:         pixmap:@GFXDIR@/Stars.jpg
++DisplayManager*wdmBg:         pixmap:@GFXDIR@/../../backgrounds/images/default.jpg
+ !
+ ! optional pixmap for logo
+ @PIXMAPCOMMENT@DisplayManager*wdmLogo:  @GFXDIR@/@PIXMAPFILE@
+@@ -65,7 +66,7 @@
+ ! DisplayManager*wdmHalt:       @SHUTDOWN@ -t3 -h now
+ !
+ ! true/false to require valid username/passwd to reboot,halt, or exit
+-DisplayManager*wdmVerify:       true
++DisplayManager*wdmVerify:       false
+ ! true/false to require root as valid username/passwd to reboot,halt, or exit
+ DisplayManager*wdmRoot:         false
+ ! true=enable, false=disable shake and rollup animations

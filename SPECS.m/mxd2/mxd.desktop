@@ -1,0 +1,21 @@
+[Desktop Entry]
+Categories=Application;Network;
+Comment[zh_CN]=MXD 拔号器
+Comment=MXD 拔号器
+Exec=/opt/mxd/mxd
+GenericName[zh_CN]=MXD 拔号器
+GenericName=MXD 拔号器
+Icon=network-wired
+MimeType=
+Name[zh_CN]=mxd
+Name=mxd
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-DCOP-ServiceType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

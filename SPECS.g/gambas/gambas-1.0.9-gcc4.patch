@@ -1,0 +1,266 @@
+diff -up gambas-1.0.19/src/lib/net/curl/CCurl.c.gcc gambas-1.0.19/src/lib/net/curl/CCurl.c
+--- gambas-1.0.19/src/lib/net/curl/CCurl.c.gcc	2004-11-20 14:01:22.000000000 -0500
++++ gambas-1.0.19/src/lib/net/curl/CCurl.c	2008-10-01 10:23:37.000000000 -0400
+@@ -170,20 +170,20 @@ void CCURL_Manage_ErrCode(void *_object,
+ 	if (THIS_FILE)
+ 	{
+ 		fclose(THIS_FILE);
+-		THIS_FILE=NULL;
++		THIS_FILE_NOCAST=NULL;
+ 	}
+ 		
+ 	switch ( ErrCode )
+ 	{
+ 		case CURLE_OK:
+ 			curl_multi_remove_handle(CCURL_multicurl,THIS_CURL);
+-			THIS_STATUS=0;
++			THIS_STATUS_NOCAST=NULL;
+ 			GB.Ref(THIS);
+ 			GB.Post(CCURL_raise_finished,(long)THIS);
+ 			break;
+         	default:
+ 			curl_multi_remove_handle(CCURL_multicurl,THIS_CURL);
+-			THIS_STATUS=-1*(1000+ErrCode);
++			THIS_STATUS_NOCAST=(int)(-1*(1000+ErrCode));
+ 			GB.Ref(THIS);
+ 			GB.Post(CCURL_raise_error,(long)THIS);
+ 			break;
+@@ -200,16 +200,16 @@ void CCURL_stop(void *_object)
+ 	if (THIS_FILE)
+ 	{
+ 		fclose(THIS_FILE);
+-		THIS_FILE=NULL;
++		THIS_FILE_NOCAST=NULL;
+ 	}
+ 	
+ 	if (THIS_CURL)
+ 	{
+ 		curl_multi_remove_handle(CCURL_multicurl,THIS_CURL);
+ 		curl_easy_cleanup(THIS_CURL);
+-		THIS_CURL=NULL;
++		THIS_CURL_NOCAST=NULL;
+ 	}
+-	THIS_STATUS=0;
++	THIS_STATUS_NOCAST=0;
+ }
+ 
+ void CCURL_init_post(void)
+@@ -362,7 +362,7 @@ BEGIN_PROPERTY ( CCURL_URL )
+ 	GB.Alloc((void**)&tmp,(strlen(GB.ToZeroString(PROP(GB_STRING)))+1)*sizeof(char));
+ 	strcpy(tmp,GB.ToZeroString(PROP(GB_STRING)));
+ 	Adv_correct_url(&tmp,THIS_PROTOCOL);
+-	THIS_URL=tmp;
++	THIS_URL_NOCAST=tmp;
+ 
+ END_PROPERTY
+ 
+@@ -380,9 +380,9 @@ END_METHOD
+ BEGIN_METHOD_VOID(CCURL_new)
+ 
+ 	THIS->stream.desc=NULL;
+-	THIS_CURL=NULL;
+-	THIS_URL=NULL;
+-	THIS_FILE=NULL;
++	THIS_CURL_NOCAST=NULL;
++	THIS_URL_NOCAST=NULL;
++	THIS_FILE_NOCAST=NULL;
+ 	GB.StoreVariant(NULL, (void *)&THIS->tag);
+ 	Adv_user_NEW  (&THIS->user);
+ 	GB.New ((void**)&THIS->proxy,GB.FindClass(".Proxy"),NULL,NULL);
+diff -up gambas-1.0.19/src/lib/net/curl/CCurl.h.gcc gambas-1.0.19/src/lib/net/curl/CCurl.h
+--- gambas-1.0.19/src/lib/net/curl/CCurl.h.gcc	2005-07-15 07:55:04.000000000 -0400
++++ gambas-1.0.19/src/lib/net/curl/CCurl.h	2008-10-01 10:26:57.000000000 -0400
+@@ -45,6 +45,12 @@ extern GB_STREAM_DESC CurlStream;
+ #define THIS_FILE       ((((CCURL *)_object)->stream._free[3]))
+ #define THIS_PROTOCOL   ((((CCURL *)_object)->stream._free[4]))
+ 
++#define THIS_STATUS_NOCAST	(((CCURL *)_object)->stream._free[0])
++#define THIS_CURL_NOCAST	(((CCURL *)_object)->stream._free[1])
++#define THIS_URL_NOCAST		(((CCURL *)_object)->stream._free[2])
++#define THIS_FILE_NOCAST	(((CCURL *)_object)->stream._free[3])
++#define THIS_PROTOCOL_NOCAST	(((CCURL *)_object)->stream._free[4])
++
+ #endif
+ 
+ typedef  struct
+diff -up gambas-1.0.19/src/lib/net/curl/CFtpClient.c.gcc gambas-1.0.19/src/lib/net/curl/CFtpClient.c
+--- gambas-1.0.19/src/lib/net/curl/CFtpClient.c.gcc	2004-08-29 17:01:36.000000000 -0400
++++ gambas-1.0.19/src/lib/net/curl/CFtpClient.c	2008-10-01 10:23:37.000000000 -0400
+@@ -57,7 +57,7 @@ int ftp_read_curl (void *buffer, size_t 
+ {
+ /* BM */
+         FILE *file = THIS_FILE;
+-	THIS_STATUS=4;
++	THIS_STATUS_NOCAST=4;
+ 	
+ 	if (!feof(file))
+ 		nmemb=fread(buffer,size,nmemb,file);
+@@ -70,7 +70,7 @@ int ftp_read_curl (void *buffer, size_t 
+ int ftp_write_curl(void *buffer, size_t size, size_t nmemb, void *_object)
+ {
+ 
+-	THIS_STATUS=4;
++	THIS_STATUS_NOCAST=4;
+ 
+ 	if (THIS_FILE)
+ 	{
+@@ -111,12 +111,12 @@ void ftp_initialize_curl_handle(void *_o
+ 		{
+ 			CCURL_stop(_object);
+ 			ftp_reset(_object);
+-			THIS_CURL=curl_easy_init();
++			THIS_CURL_NOCAST=curl_easy_init();
+ 		}
+ 	}
+ 	else
+ 	{
+-		THIS_CURL=curl_easy_init();
++		THIS_CURL_NOCAST=curl_easy_init();
+ 	}
+ 
+ 	curl_easy_setopt(THIS_CURL, CURLOPT_VERBOSE,1);
+@@ -127,7 +127,7 @@ void ftp_initialize_curl_handle(void *_o
+ 	curl_easy_setopt(THIS_CURL, CURLOPT_URL,THIS_URL);
+ 
+ 	ftp_reset(THIS);
+-	THIS_STATUS=6;
++	THIS_STATUS_NOCAST=6;
+ 	THIS->stream.desc=&CurlStream;
+ }
+ 
+@@ -177,7 +177,7 @@ BEGIN_METHOD(CFTPCLIENT_Get,GB_STRING Ta
+ 			GB.Error("Still active");
+ 			return;
+ 		}
+-		THIS_FILE=fopen(STRING(TargetHost),"w");
++		THIS_FILE_NOCAST=fopen(STRING(TargetHost),"w");
+ 		if (!THIS_FILE)
+ 		{
+ 			GB.Error("Unable to open file for writing");
+@@ -209,7 +209,7 @@ BEGIN_METHOD(CFTPCLIENT_Put,GB_STRING So
+ 		return;
+ 	}
+ 	
+-	THIS_FILE=fopen(STRING(SourceFile),"r");
++	THIS_FILE_NOCAST=fopen(STRING(SourceFile),"r");
+ 	if (!THIS_FILE)
+ 	{
+ 		GB.Error("Unable to open file for reading");
+@@ -234,12 +234,12 @@ BEGIN_METHOD_VOID(CFTPCLIENT_new)
+ 	char *tmp=NULL;	
+ 	
+ 	GB.Alloc((void**)&tmp,sizeof(char)*(1+strlen("ftp://127.0.0.1:21")));
+-	THIS_URL=tmp;
++	THIS_URL_NOCAST=tmp;
+ 	strcpy(tmp,"ftp://127.0.0.1:21");
+ 	tmp=NULL;
+ 	GB.Alloc((void**)&tmp,7);
+ 	strcpy(tmp,"ftp://");
+-	THIS_PROTOCOL=tmp;
++	THIS_PROTOCOL_NOCAST=tmp;
+ 	Adv_user_SETAUTH (&THIS->user,CURLAUTH_BASIC);
+ 
+ 
+diff -up gambas-1.0.19/src/lib/net/curl/CFtpClient.h.gcc gambas-1.0.19/src/lib/net/curl/CFtpClient.h
+--- gambas-1.0.19/src/lib/net/curl/CFtpClient.h.gcc	2005-07-15 07:57:18.000000000 -0400
++++ gambas-1.0.19/src/lib/net/curl/CFtpClient.h	2008-10-01 10:25:38.000000000 -0400
+@@ -45,6 +45,12 @@ extern GB_STREAM_DESC FtpStream;
+ #define THIS_FILE       ((((CFTPCLIENT *)_object)->stream._free[3]))
+ #define THIS_PROTOCOL   ((((CFTPCLIENT *)_object)->stream._free[4]))
+ 
++#define THIS_STATUS_NOCAST	(((CFTPCLIENT *)_object)->stream._free[0])
++#define THIS_CURL_NOCAST	(((CFTPCLIENT *)_object)->stream._free[1])
++#define THIS_URL_NOCAST		(((CFTPCLIENT *)_object)->stream._free[2])
++#define THIS_FILE_NOCAST	(((CFTPCLIENT *)_object)->stream._free[3])
++#define THIS_PROTOCOL_NOCAST	(((CFTPCLIENT *)_object)->stream._free[4])
++
+ #endif
+ 
+ typedef  struct
+diff -up gambas-1.0.19/src/lib/net/curl/CHttpClient.c.gcc gambas-1.0.19/src/lib/net/curl/CHttpClient.c
+--- gambas-1.0.19/src/lib/net/curl/CHttpClient.c.gcc	2004-06-27 08:14:20.000000000 -0400
++++ gambas-1.0.19/src/lib/net/curl/CHttpClient.c	2008-10-01 10:23:37.000000000 -0400
+@@ -133,7 +133,7 @@ int http_header_curl(void *buffer, size_
+ 
+ 	if (THIS_STATUS==6)
+ 	{
+-		THIS_STATUS=4;
++		THIS_STATUS_NOCAST=4;
+ 		GB.Ref(THIS);
+ 		GB.Post(CCURL_raise_connect,(long)THIS);
+ 	}
+@@ -335,14 +335,14 @@ BEGIN_METHOD_VOID(CHTTPCLIENT_new)
+ 	
+ 	GB.Alloc((void**)&tmp,sizeof(char)*(1+strlen("http://127.0.0.1:80")));
+ 	strcpy(tmp,"http://127.0.0.1:80");
+-	THIS_URL=tmp;
++	THIS_URL_NOCAST=tmp;
+ 	GB.NewString(&THIS->sUserAgent,"Gambas Http/1.0",0);
+ 	
+ 	
+ 	tmp=NULL;
+ 	GB.Alloc((void**)&tmp,8);
+ 	strcpy(tmp,"http://");
+-	THIS_PROTOCOL=tmp;
++	THIS_PROTOCOL_NOCAST=tmp;
+ 
+ END_METHOD
+ 
+@@ -378,12 +378,12 @@ void http_initialize_curl_handle(void *_
+ 		{
+ 			CCURL_stop(_object);
+ 			http_reset(_object);
+-			THIS_CURL=curl_easy_init();
++			THIS_CURL_NOCAST=curl_easy_init();
+ 		}
+ 	}
+ 	else
+ 	{
+-		THIS_CURL=curl_easy_init();
++		THIS_CURL_NOCAST=curl_easy_init();
+ 		
+ 	}
+ 	
+@@ -410,7 +410,7 @@ void http_initialize_curl_handle(void *_
+ 		THIS->ReturnString=NULL;
+ 	}
+ 	http_reset(_object);
+-	THIS_STATUS=6;
++	THIS_STATUS_NOCAST=6;
+ 	THIS->stream.desc=&CurlStream;
+ }
+ 
+@@ -437,7 +437,7 @@ BEGIN_METHOD(CHTTPCLIENT_Get,GB_STRING T
+ 			GB.Error("Still active");
+ 			return;
+ 		}
+-		THIS_FILE=fopen(STRING(TargetHost),"w");
++		THIS_FILE_NOCAST=fopen(STRING(TargetHost),"w");
+ 		if (!THIS_FILE)
+ 		{
+ 			GB.Error("Unable to open file for writing");
+@@ -500,7 +500,7 @@ BEGIN_METHOD(CHTTPCLIENT_Post,GB_STRING 
+ 			GB.Error("Still active");
+ 			return;
+ 		}
+-		THIS_FILE=fopen(STRING(TargetHost),"w");
++		THIS_FILE_NOCAST=fopen(STRING(TargetHost),"w");
+ 		if (!THIS_FILE)
+ 		{
+ 			GB.Error("Unable to open file for writing");
+diff -up gambas-1.0.19/src/lib/net/curl/CHttpClient.h.gcc gambas-1.0.19/src/lib/net/curl/CHttpClient.h
+--- gambas-1.0.19/src/lib/net/curl/CHttpClient.h.gcc	2005-07-15 07:56:39.000000000 -0400
++++ gambas-1.0.19/src/lib/net/curl/CHttpClient.h	2008-10-01 10:27:41.000000000 -0400
+@@ -45,6 +45,12 @@ extern GB_STREAM_DESC HttpStream;
+ #define THIS_FILE       ((((CHTTPCLIENT *)_object)->stream._free[3]))
+ #define THIS_PROTOCOL   ((((CHTTPCLIENT *)_object)->stream._free[4]))
+ 
++#define THIS_STATUS_NOCAST	(((CHTTPCLIENT *)_object)->stream._free[0])
++#define THIS_CURL_NOCAST	(((CHTTPCLIENT *)_object)->stream._free[1])
++#define THIS_URL_NOCAST		(((CHTTPCLIENT *)_object)->stream._free[2])
++#define THIS_FILE_NOCAST	(((CHTTPCLIENT *)_object)->stream._free[3])
++#define THIS_PROTOCOL_NOCAST	(((CHTTPCLIENT *)_object)->stream._free[4])
++
+ #endif
+ 
+ typedef  struct

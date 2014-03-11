@@ -1,0 +1,91 @@
+diff --git a/t/vala-headers.sh b/t/vala-headers.sh
+index 48dbf81..50e8e2b 100755
+--- a/t/vala-headers.sh
++++ b/t/vala-headers.sh
+@@ -16,6 +16,8 @@
+ 
+ # Test to make sure compiling Vala code really works with recursive make.
+ 
++exit 77
++
+ required="pkg-config valac gcc GNUmake"
+ . ./defs || exit 1
+ 
+diff --git a/t/vala-libs.sh b/t/vala-libs.sh
+index f6a7ba9..84c4c86 100755
+--- a/t/vala-libs.sh
++++ b/t/vala-libs.sh
+@@ -17,6 +17,8 @@
+ # Building libraries (libtool and static) from Vala sources.
+ # And use of vapi files to call C code from Vala.
+ 
++exit 77
++
+ required="valac cc pkg-config libtoolize GNUmake"
+ . ./defs || exit 1
+ 
+diff --git a/t/vala-mix.sh b/t/vala-mix.sh
+index 2580bd0..11c5061 100755
+--- a/t/vala-mix.sh
++++ b/t/vala-mix.sh
+@@ -16,6 +16,8 @@
+ 
+ # Vala sources and C sources in the same program.  Functional test.
+ 
++exit 77
++
+ required='valac cc GNUmake'
+ . ./defs || exit 1
+ 
+diff --git a/t/vala-mix2.sh b/t/vala-mix2.sh
+index e1dbb5d..344dd7e 100755
+--- a/t/vala-mix2.sh
++++ b/t/vala-mix2.sh
+@@ -17,6 +17,8 @@
+ # Vala sources, C and C++ sources and C and C++ headers in the same
+ # program.  Functional test.  See automake bug#10894.
+ 
++exit 77
++
+ required='valac cc c++ GNUmake'
+ . ./defs || exit 1
+ 
+diff --git a/t/vala-parallel.sh b/t/vala-parallel.sh
+index d03080d..68bd752 100755
+--- a/t/vala-parallel.sh
++++ b/t/vala-parallel.sh
+@@ -16,6 +16,8 @@
+ 
+ # Vala support with parallel make.
+ 
++exit 77
++
+ required='valac cc GNUmake'
+ . ./defs || exit 1
+ 
+diff --git a/t/vala-vapi.sh b/t/vala-vapi.sh
+index 1862b71..25ed253 100755
+--- a/t/vala-vapi.sh
++++ b/t/vala-vapi.sh
+@@ -16,6 +16,8 @@
+ 
+ # Test and that vapi files are correctly handled by Vala support.
+ 
++exit 77
++
+ required='valac cc GNUmake'
+ . ./defs || exit 1
+ 
+diff --git a/t/vala-vpath.sh b/t/vala-vpath.sh
+index 9874f68..b5af378 100755
+--- a/t/vala-vpath.sh
++++ b/t/vala-vpath.sh
+@@ -17,6 +17,8 @@
+ # Test to make sure vala support handles from-scratch VPATH builds.
+ # See automake bug#8753.
+ 
++exit 77
++
+ required="cc valac GNUmake"
+ . ./defs || exit 1
+ 

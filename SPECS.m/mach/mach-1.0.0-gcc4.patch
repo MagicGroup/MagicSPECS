@@ -1,0 +1,16 @@
+diff -ur mach-1.0.0.orig/src/mach-helper.c mach-1.0.0/src/mach-helper.c
+--- mach-1.0.0.orig/src/mach-helper.c	2012-12-31 09:10:45.000000000 +0000
++++ mach-1.0.0/src/mach-helper.c	2012-12-31 09:11:47.000000000 +0000
+@@ -167,7 +167,11 @@
+   struct stat buf;
+ 
+   /* elevate privileges */
+-  setreuid (geteuid (), geteuid ());
++  if (setreuid (geteuid (), geteuid ())) {
++         fprintf(stderr, "ERROR Failed to set-IDs to MACH: %s\n",
++                 strerror (errno));
++         exit(EXIT_FAILURE);
++  }
+   //printf ("DEBUG: First argument: %s\n", *argv);
+   //printf ("DEBUG: Executing %s\n", filename);
+   /* FIXME: for a debug option */

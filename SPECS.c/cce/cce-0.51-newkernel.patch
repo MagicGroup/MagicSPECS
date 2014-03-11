@@ -1,0 +1,18 @@
+diff -u -r cce-0.51.orig/src/display/lrmi.c cce-0.51/src/display/lrmi.c
+--- cce-0.51.orig/src/display/lrmi.c	2009-02-02 15:23:20.000000000 +0800
++++ cce-0.51/src/display/lrmi.c	2009-02-02 15:23:42.000000000 +0800
+@@ -40,6 +40,14 @@
+ #if (defined(__linux__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__FreeBSD__)) && \
+ 	defined(__i386__)
+ 
++#if defined(__linux__) && !defined(TF_MASK)
++	#define TF_MASK X86_EFLAGS_TF
++	#define IF_MASK X86_EFLAGS_IF
++	#define VIF_MASK X86_EFLAGS_VIF
++	#define IOPL_MASK X86_EFLAGS_IOPL
++#endif
++
++
+ #include <stdio.h>
+ #include <string.h>
+ 

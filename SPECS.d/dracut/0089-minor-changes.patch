@@ -1,0 +1,38 @@
+From 5259da1043323e5bc74a8f1c3db18d112c312b03 Mon Sep 17 00:00:00 2001
+From: Michal Soltys <soltys@ziu.info>
+Date: Tue, 18 Oct 2011 20:33:19 +0200
+Subject: [PATCH] minor changes
+
+- in 10i18n - do stty -iutf8 on non-utf8 consoles, for consistency with
+  iutf8 on utf8 ones
+- vim modeline in xml file
+
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+---
+ dracut.kernel.7.xml           |    1 +
+ modules.d/10i18n/console_init |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/dracut.kernel.7.xml b/dracut.kernel.7.xml
+index 2ba0570..7cd7b81 100644
+--- a/dracut.kernel.7.xml
++++ b/dracut.kernel.7.xml
+@@ -1,5 +1,6 @@
+ <?xml version='1.0' encoding='UTF-8'?>
+ <!-- This document was created with Syntext Serna Free. --><!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
++<!-- vim: set ts=8 sts=2 sw=2 et: -->
+ <refentry id="dracutkernel7">
+   <refentryinfo>
+     <title>dracut.kernel</title>
+diff --git a/modules.d/10i18n/console_init b/modules.d/10i18n/console_init
+index 110cb0a..b46046b 100755
+--- a/modules.d/10i18n/console_init
++++ b/modules.d/10i18n/console_init
+@@ -22,6 +22,7 @@ set_terminal() {
+         stty -F ${dev} iutf8
+     else
+         printf '\033%%@' >&7
++        stty -F ${dev} -iutf8
+     fi
+ }
+ 

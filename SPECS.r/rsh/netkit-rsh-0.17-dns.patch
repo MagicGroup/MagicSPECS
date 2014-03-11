@@ -1,0 +1,60 @@
+diff -up netkit-rsh-0.17/rshd/rshd.c.dns netkit-rsh-0.17/rshd/rshd.c
+--- netkit-rsh-0.17/rshd/rshd.c.dns	2007-09-27 11:05:26.000000000 +0200
++++ netkit-rsh-0.17/rshd/rshd.c	2007-09-27 11:16:54.000000000 +0200
+@@ -294,6 +294,7 @@ static const char *findhostname(struct s
+ 	char remote_hostname[NI_MAXHOST];
+ 	struct addrinfo hints;
+ 	struct addrinfo *res0, *res;
++	int err;
+ 
+ 	if (! inet_ntop(fromp->sa_family,
+ 		(( fromp->sa_family == AF_INET6 )
+@@ -305,12 +306,16 @@ static const char *findhostname(struct s
+ 	    exit(1);
+ 	}
+ 
+-	if (getnameinfo(fromp, fromlen, remote_hostname, NI_MAXHOST,
+-		NULL, 0, 0)) {
+-	    syslog(LOG_NOTICE|LOG_AUTH,
+-	    	"Failed to retrieve the hostname information for %s",
+-	    	remote_address);
+-	    exit(1);
++	err = getnameinfo(fromp, fromlen, remote_hostname, NI_MAXHOST,
++		NULL, 0, 0);
++	if (err && (err == EAI_AGAIN) && !check_all)
++		err = getnameinfo (fromp, fromlen, remote_hostname, NI_MAXHOST,
++				   NULL, 0, NI_NUMERICHOST);
++	if (err) {
++		syslog(LOG_NOTICE|LOG_AUTH,
++		       "Failed to retrieve the hostname information for %s",
++		       remote_address);
++		exit(1);
+ 	}
+ 
+ 	errno = ENOMEM; /* malloc (thus strdup) may not set it */
+@@ -586,6 +591,11 @@ static void network_init(int fd,
+ 	error = getnameinfo((struct sockaddr *)fromp, *fromlenp,
+ 		hostname, sizeof(hostname), portname, sizeof(portname),
+ 		NI_NUMERICSERV);
++	if (error && (error == EAI_AGAIN) && !check_all)
++		error = getnameinfo ((struct sockaddr *)fromp, *fromlenp,
++				     hostname, sizeof(hostname), portname,
++				     sizeof(portname),
++				     NI_NUMERICSERV|NI_NUMERICHOST);
+ 	if (error) {
+ 	    syslog(LOG_NOTICE|LOG_AUTH,
+ 	    	"Failed to retrieve address and port of the connection: %s",
+diff -up netkit-rsh-0.17/rlogind/network.c.dns netkit-rsh-0.17/rlogind/network.c
+--- netkit-rsh-0.17/rlogind/network.c.dns	2007-09-27 11:17:07.000000000 +0200
++++ netkit-rsh-0.17/rlogind/network.c	2007-09-27 11:20:29.000000000 +0200
+@@ -127,6 +127,10 @@ find_hostname(struct sockaddr *fromp, so
+ 	error = getnameinfo(fromp, fromlen,
+ 		hname_buf, sizeof(hname_buf), portname, NI_MAXSERV,
+ 		NI_NUMERICSERV);
++	if ((error == EAI_AGAIN) && !check_all)
++		error = getnameinfo(fromp, fromlen,
++				    hname_buf, sizeof(hname_buf), portname, NI_MAXSERV,
++				    NI_NUMERICSERV|NI_NUMERICHOST);
+ 	assert(error == 0);
+ 
+ 	if (check_all || local_domain(hname_buf)) {

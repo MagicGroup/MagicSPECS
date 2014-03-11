@@ -1,0 +1,11 @@
+diff -up re2/libre2.symbols.global-fix re2/libre2.symbols
+--- re2/libre2.symbols.global-fix	2012-10-21 09:15:03.000000000 -0400
++++ re2/libre2.symbols	2013-06-02 07:47:08.836737325 -0400
+@@ -10,6 +10,7 @@
+ 		_ZlsRSoRKN3re211StringPieceE;
+ 		# re2::FilteredRE2*
+ 		_ZN3re211FilteredRE2*;
++		_ZNK3re211FilteredRE210AllMatches*;
+ 	local:
+ 		*;
+ };

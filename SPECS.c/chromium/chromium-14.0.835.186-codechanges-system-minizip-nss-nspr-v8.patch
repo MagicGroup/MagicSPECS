@@ -1,0 +1,546 @@
+diff -up chromium-14.0.835.186/base/pr_time_unittest.cc.system-code chromium-14.0.835.186/base/pr_time_unittest.cc
+--- chromium-14.0.835.186/base/pr_time_unittest.cc.system-code	2011-09-20 04:26:41.000000000 -0400
++++ chromium-14.0.835.186/base/pr_time_unittest.cc	2011-09-26 15:53:29.824004013 -0400
+@@ -4,7 +4,7 @@
+ 
+ #include <time.h>
+ 
+-#include "base/third_party/nspr/prtime.h"
++#include <prtime.h>
+ #include "base/time.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+ 
+diff -up chromium-14.0.835.186/base/time.cc.system-code chromium-14.0.835.186/base/time.cc
+--- chromium-14.0.835.186/base/time.cc.system-code	2011-09-20 04:26:41.000000000 -0400
++++ chromium-14.0.835.186/base/time.cc	2011-09-26 15:53:29.824004013 -0400
+@@ -4,7 +4,7 @@
+ 
+ #include "base/time.h"
+ #include "base/sys_string_conversions.h"
+-#include "base/third_party/nspr/prtime.h"
++#include <prtime.h>
+ 
+ #include "base/logging.h"
+ 
+diff -up chromium-14.0.835.186/chrome/browser/browser_about_handler.cc.system-code chromium-14.0.835.186/chrome/browser/browser_about_handler.cc
+--- chromium-14.0.835.186/chrome/browser/browser_about_handler.cc.system-code	2011-09-20 04:27:06.000000000 -0400
++++ chromium-14.0.835.186/chrome/browser/browser_about_handler.cc	2011-09-26 15:53:29.901003367 -0400
+@@ -63,7 +63,7 @@
+ #include "webkit/plugins/npapi/webplugininfo.h"
+ 
+ #ifdef CHROME_V8
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #endif
+ 
+ #if defined(OS_WIN)
+diff -up chromium-14.0.835.186/chrome/browser/memory_purger.cc.system-code chromium-14.0.835.186/chrome/browser/memory_purger.cc
+--- chromium-14.0.835.186/chrome/browser/memory_purger.cc.system-code	2011-09-20 04:27:06.000000000 -0400
++++ chromium-14.0.835.186/chrome/browser/memory_purger.cc	2011-09-26 15:53:29.979004412 -0400
+@@ -23,7 +23,7 @@
+ #include "net/url_request/url_request_context.h"
+ #include "net/url_request/url_request_context_getter.h"
+ #include "third_party/tcmalloc/chromium/src/google/malloc_extension.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ // PurgeMemoryHelper -----------------------------------------------------------
+ 
+diff -up chromium-14.0.835.186/chrome/browser/metrics/metrics_log.cc.system-code chromium-14.0.835.186/chrome/browser/metrics/metrics_log.cc
+--- chromium-14.0.835.186/chrome/browser/metrics/metrics_log.cc.system-code	2011-09-20 04:27:02.000000000 -0400
++++ chromium-14.0.835.186/chrome/browser/metrics/metrics_log.cc	2011-09-26 15:53:30.029004166 -0400
+@@ -13,7 +13,7 @@
+ #include "base/perftimer.h"
+ #include "base/string_util.h"
+ #include "base/sys_info.h"
+-#include "base/third_party/nspr/prtime.h"
++#include <prtime.h>
+ #include "base/time.h"
+ #include "base/utf_string_conversions.h"
+ #include "chrome/browser/autocomplete/autocomplete.h"
+diff -up chromium-14.0.835.186/chrome/browser/task_manager/task_manager_resource_providers.cc.system-code chromium-14.0.835.186/chrome/browser/task_manager/task_manager_resource_providers.cc
+--- chromium-14.0.835.186/chrome/browser/task_manager/task_manager_resource_providers.cc.system-code	2011-09-20 04:27:02.000000000 -0400
++++ chromium-14.0.835.186/chrome/browser/task_manager/task_manager_resource_providers.cc	2011-09-26 15:53:30.081004180 -0400
+@@ -46,7 +46,7 @@
+ #include "third_party/sqlite/sqlite3.h"
+ #include "ui/base/l10n/l10n_util.h"
+ #include "ui/base/resource/resource_bundle.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ #if defined(OS_MACOSX)
+ #include "skia/ext/skia_utils_mac.h"
+diff -up chromium-14.0.835.186/chrome/browser/ui/webui/options/chromeos/about_page_handler.cc.system-code chromium-14.0.835.186/chrome/browser/ui/webui/options/chromeos/about_page_handler.cc
+--- chromium-14.0.835.186/chrome/browser/ui/webui/options/chromeos/about_page_handler.cc.system-code	2011-09-26 17:23:07.998994146 -0400
++++ chromium-14.0.835.186/chrome/browser/ui/webui/options/chromeos/about_page_handler.cc	2011-09-26 17:23:19.053950414 -0400
+@@ -28,7 +28,7 @@
+ #include "webkit/glue/webkit_glue.h"
+ 
+ #if defined(CHROME_V8)
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #endif
+ 
+ #include "chrome/browser/chromeos/cros/cros_library.h"
+diff -up chromium-14.0.835.186/chrome/common/metrics_helpers.cc.system-code chromium-14.0.835.186/chrome/common/metrics_helpers.cc
+--- chromium-14.0.835.186/chrome/common/metrics_helpers.cc.system-code	2011-09-20 04:27:08.000000000 -0400
++++ chromium-14.0.835.186/chrome/common/metrics_helpers.cc	2011-09-26 17:21:30.197918767 -0400
+@@ -17,7 +17,7 @@
+ #include "base/perftimer.h"
+ #include "base/string_number_conversions.h"
+ #include "base/sys_info.h"
+-#include "base/third_party/nspr/prtime.h"
++#include <prtime.h>
+ #include "base/time.h"
+ #include "base/utf_string_conversions.h"
+ #include "chrome/common/logging_chrome.h"
+diff -up chromium-14.0.835.186/chrome/common/zip.cc.system-code chromium-14.0.835.186/chrome/common/zip.cc
+--- chromium-14.0.835.186/chrome/common/zip.cc.system-code	2011-09-20 04:27:08.000000000 -0400
++++ chromium-14.0.835.186/chrome/common/zip.cc	2011-09-26 17:21:30.225927965 -0400
+@@ -10,8 +10,8 @@
+ #include "base/string_util.h"
+ #include "base/utf_string_conversions.h"
+ #include "net/base/file_stream.h"
+-#include "third_party/zlib/contrib/minizip/unzip.h"
+-#include "third_party/zlib/contrib/minizip/zip.h"
++#include <minizip/unzip.h>
++#include <minizip/zip.h>
+ #if defined(OS_WIN)
+ #include "third_party/zlib/contrib/minizip/iowin32.h"
+ #endif
+diff -up chromium-14.0.835.186/chrome/renderer/automation/dom_automation_v8_extension.h.system-code chromium-14.0.835.186/chrome/renderer/automation/dom_automation_v8_extension.h
+--- chromium-14.0.835.186/chrome/renderer/automation/dom_automation_v8_extension.h.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/automation/dom_automation_v8_extension.h	2011-09-26 17:21:30.232930035 -0400
+@@ -6,7 +6,7 @@
+ #define CHROME_RENDERER_AUTOMATION_DOM_AUTOMATION_V8_EXTENSION_H_
+ #pragma once
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ class DomAutomationV8Extension {
+  public:
+diff -up chromium-14.0.835.186/chrome/renderer/chrome_render_process_observer.cc.system-code chromium-14.0.835.186/chrome/renderer/chrome_render_process_observer.cc
+--- chromium-14.0.835.186/chrome/renderer/chrome_render_process_observer.cc.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/chrome_render_process_observer.cc	2011-09-26 17:21:30.242932891 -0400
+@@ -39,7 +39,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebRuntimeFeatures.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebView.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ #if defined(OS_WIN)
+ #include "base/win/iat_patch_function.h"
+diff -up chromium-14.0.835.186/chrome/renderer/chrome_render_view_observer.cc.system-code chromium-14.0.835.186/chrome/renderer/chrome_render_view_observer.cc
+--- chromium-14.0.835.186/chrome/renderer/chrome_render_view_observer.cc.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/chrome_render_view_observer.cc	2011-09-26 17:21:30.251935365 -0400
+@@ -45,7 +45,7 @@
+ #include "webkit/glue/image_decoder.h"
+ #include "webkit/glue/image_resource_fetcher.h"
+ #include "webkit/glue/webkit_glue.h"
+-#include "v8/include/v8-testing.h"
++#include <v8-testing.h>
+ 
+ using WebKit::WebCString;
+ using WebKit::WebDataSource;
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.cc.system-code chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.cc
+--- chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.cc.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.cc	2011-09-26 17:21:30.258937233 -0400
+@@ -14,7 +14,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebDocument.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebView.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebFrame;
+ using WebKit::WebView;
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.h.system-code chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.h
+--- chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.h.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/bindings_utils.h	2011-09-26 17:21:30.276944725 -0400
+@@ -10,7 +10,7 @@
+ #include "base/memory/singleton.h"
+ #include "base/string_piece.h"
+ #include "ui/base/resource/resource_bundle.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ #include <list>
+ #include <string>
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/chrome_app_bindings.cc.system-code chromium-14.0.835.186/chrome/renderer/extensions/chrome_app_bindings.cc
+--- chromium-14.0.835.186/chrome/renderer/extensions/chrome_app_bindings.cc.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/chrome_app_bindings.cc	2011-09-26 17:21:30.299954867 -0400
+@@ -19,7 +19,7 @@
+ #include "content/renderer/v8_value_converter.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebDocument.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebFrame;
+ 
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/event_bindings.h.system-code chromium-14.0.835.186/chrome/renderer/extensions/event_bindings.h
+--- chromium-14.0.835.186/chrome/renderer/extensions/event_bindings.h.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/event_bindings.h	2011-09-26 17:21:30.306957541 -0400
+@@ -8,7 +8,7 @@
+ 
+ #include <string>
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ class ExtensionDispatcher;
+ class GURL;
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/extension_dispatcher.cc.system-code chromium-14.0.835.186/chrome/renderer/extensions/extension_dispatcher.cc
+--- chromium-14.0.835.186/chrome/renderer/extensions/extension_dispatcher.cc.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/extension_dispatcher.cc	2011-09-26 17:21:30.316961111 -0400
+@@ -23,7 +23,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebSecurityPolicy.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebString.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebURLRequest.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace {
+ static const double kInitialExtensionIdleHandlerDelayS = 5.0 /* seconds */;
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/extension_process_bindings.h.system-code chromium-14.0.835.186/chrome/renderer/extensions/extension_process_bindings.h
+--- chromium-14.0.835.186/chrome/renderer/extensions/extension_process_bindings.h.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/extension_process_bindings.h	2011-09-26 17:21:30.324963764 -0400
+@@ -12,7 +12,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ class ExtensionDispatcher;
+ class GURL;
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/js_only_v8_extensions.h.system-code chromium-14.0.835.186/chrome/renderer/extensions/js_only_v8_extensions.h
+--- chromium-14.0.835.186/chrome/renderer/extensions/js_only_v8_extensions.h.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/js_only_v8_extensions.h	2011-09-26 17:21:30.333966546 -0400
+@@ -6,7 +6,7 @@
+ #define CHROME_RENDERER_EXTENSIONS_JS_ONLY_V8_EXTENSIONS_H_
+ #pragma once
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ // This file contains various V8 Extensions that are JavaScript only, and
+ // don't have any C++ native functions.
+diff -up chromium-14.0.835.186/chrome/renderer/extensions/renderer_extension_bindings.h.system-code chromium-14.0.835.186/chrome/renderer/extensions/renderer_extension_bindings.h
+--- chromium-14.0.835.186/chrome/renderer/extensions/renderer_extension_bindings.h.system-code	2011-09-20 04:27:09.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/extensions/renderer_extension_bindings.h	2011-09-26 17:21:30.341968858 -0400
+@@ -6,7 +6,7 @@
+ #define CHROME_RENDERER_EXTENSIONS_RENDERER_EXTENSION_BINDINGS_H_
+ #pragma once
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ #include <string>
+ 
+diff -up chromium-14.0.835.186/chrome/renderer/external_extension.cc.system-code chromium-14.0.835.186/chrome/renderer/external_extension.cc
+--- chromium-14.0.835.186/chrome/renderer/external_extension.cc.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/external_extension.cc	2011-09-26 17:21:30.350971288 -0400
+@@ -12,7 +12,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebDocument.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebView.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebFrame;
+ using WebKit::WebView;
+diff -up chromium-14.0.835.186/chrome/renderer/loadtimes_extension_bindings.cc.system-code chromium-14.0.835.186/chrome/renderer/loadtimes_extension_bindings.cc
+--- chromium-14.0.835.186/chrome/renderer/loadtimes_extension_bindings.cc.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/loadtimes_extension_bindings.cc	2011-09-26 17:21:30.358973305 -0400
+@@ -9,7 +9,7 @@
+ #include "base/time.h"
+ #include "content/renderer/navigation_state.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebDataSource;
+ using WebKit::WebFrame;
+diff -up chromium-14.0.835.186/chrome/renderer/searchbox_extension.cc.system-code chromium-14.0.835.186/chrome/renderer/searchbox_extension.cc
+--- chromium-14.0.835.186/chrome/renderer/searchbox_extension.cc.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/searchbox_extension.cc	2011-09-26 17:21:30.367975429 -0400
+@@ -15,7 +15,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebScriptSource.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebString.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebFrame;
+ using WebKit::WebScriptSource;
+diff -up chromium-14.0.835.186/chrome/renderer/search_extension.cc.system-code chromium-14.0.835.186/chrome/renderer/search_extension.cc
+--- chromium-14.0.835.186/chrome/renderer/search_extension.cc.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/search_extension.cc	2011-09-26 17:21:30.375977196 -0400
+@@ -11,7 +11,7 @@
+ #include "chrome/renderer/searchbox.h"
+ #include "content/renderer/render_view.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebFrame.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebFrame;
+ using WebKit::WebView;
+diff -up chromium-14.0.835.186/chrome/renderer/translate_helper.cc.system-code chromium-14.0.835.186/chrome/renderer/translate_helper.cc
+--- chromium-14.0.835.186/chrome/renderer/translate_helper.cc.system-code	2011-09-20 04:27:10.000000000 -0400
++++ chromium-14.0.835.186/chrome/renderer/translate_helper.cc	2011-09-26 17:21:30.384979048 -0400
+@@ -18,7 +18,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebScriptSource.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebView.h"
+ #include "third_party/cld/encodings/compact_lang_det/win/cld_unicodetext.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #include "webkit/glue/dom_operations.h"
+ 
+ using WebKit::WebDocument;
+diff -up chromium-14.0.835.186/chrome/test/v8_unit_test.h.system-code chromium-14.0.835.186/chrome/test/v8_unit_test.h
+--- chromium-14.0.835.186/chrome/test/v8_unit_test.h.system-code	2011-09-20 04:26:54.000000000 -0400
++++ chromium-14.0.835.186/chrome/test/v8_unit_test.h	2011-09-26 17:21:30.391980402 -0400
+@@ -9,7 +9,7 @@
+ #include <string>
+ 
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace base {
+ class StringPiece;
+diff -up chromium-14.0.835.186/content/renderer/render_thread.cc.system-code chromium-14.0.835.186/content/renderer/render_thread.cc
+--- chromium-14.0.835.186/content/renderer/render_thread.cc.system-code	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/renderer/render_thread.cc	2011-09-26 17:21:30.401982201 -0400
+@@ -64,7 +64,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebStorageEventDispatcher.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebString.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebView.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #include "webkit/extensions/v8/benchmarking_extension.h"
+ #include "webkit/extensions/v8/playback_extension.h"
+ #include "webkit/glue/webkit_glue.h"
+diff -up chromium-14.0.835.186/content/renderer/render_view.cc.system-code chromium-14.0.835.186/content/renderer/render_view.cc
+--- chromium-14.0.835.186/content/renderer/render_view.cc.system-code	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/renderer/render_view.cc	2011-09-26 17:21:30.423985722 -0400
+@@ -123,7 +123,7 @@
+ #include "ui/gfx/native_widget_types.h"
+ #include "ui/gfx/point.h"
+ #include "ui/gfx/rect.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #include "webkit/appcache/web_application_cache_host_impl.h"
+ #include "webkit/glue/alt_error_page_resource_fetcher.h"
+ #include "webkit/glue/context_menu.h"
+diff -up chromium-14.0.835.186/content/renderer/v8_value_converter_browsertest.cc.system-code chromium-14.0.835.186/content/renderer/v8_value_converter_browsertest.cc
+--- chromium-14.0.835.186/content/renderer/v8_value_converter_browsertest.cc.system-code	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/renderer/v8_value_converter_browsertest.cc	2011-09-26 17:21:30.444988945 -0400
+@@ -8,7 +8,7 @@
+ #include "base/values.h"
+ #include "content/renderer/v8_value_converter.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ class V8ValueConverterTest : public testing::Test {
+  protected:
+diff -up chromium-14.0.835.186/content/renderer/v8_value_converter.cc.system-code chromium-14.0.835.186/content/renderer/v8_value_converter.cc
+--- chromium-14.0.835.186/content/renderer/v8_value_converter.cc.system-code	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/renderer/v8_value_converter.cc	2011-09-26 17:21:30.451990549 -0400
+@@ -9,7 +9,7 @@
+ #include "base/logging.h"
+ #include "base/memory/scoped_ptr.h"
+ #include "base/values.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ V8ValueConverter::V8ValueConverter()
+     : allow_undefined_(false),
+diff -up chromium-14.0.835.186/content/renderer/v8_value_converter.h.system-code chromium-14.0.835.186/content/renderer/v8_value_converter.h
+--- chromium-14.0.835.186/content/renderer/v8_value_converter.h.system-code	2011-09-20 04:26:11.000000000 -0400
++++ chromium-14.0.835.186/content/renderer/v8_value_converter.h	2011-09-26 17:21:30.459992171 -0400
+@@ -5,7 +5,7 @@
+ #ifndef CHROME_RENDERER_V8_VALUE_CONVERTER_H_
+ #define CHROME_RENDERER_V8_VALUE_CONVERTER_H_
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace base {
+ class DictionaryValue;
+diff -up chromium-14.0.835.186/net/proxy/proxy_resolver_v8.cc.system-code chromium-14.0.835.186/net/proxy/proxy_resolver_v8.cc
+--- chromium-14.0.835.186/net/proxy/proxy_resolver_v8.cc.system-code	2011-09-20 04:26:12.000000000 -0400
++++ chromium-14.0.835.186/net/proxy/proxy_resolver_v8.cc	2011-09-26 17:21:30.483996162 -0400
+@@ -23,7 +23,7 @@
+ #include "net/proxy/proxy_resolver_js_bindings.h"
+ #include "net/proxy/proxy_resolver_request_context.h"
+ #include "net/proxy/proxy_resolver_script.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ // Notes on the javascript environment:
+ //
+diff -up chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/src/WebTestingSupport.cpp.system-code chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/src/WebTestingSupport.cpp
+--- chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/src/WebTestingSupport.cpp.system-code	2011-09-20 04:31:21.000000000 -0400
++++ chromium-14.0.835.186/third_party/WebKit/Source/WebKit/chromium/src/WebTestingSupport.cpp	2011-09-26 17:21:30.501998222 -0400
+@@ -28,7 +28,7 @@
+ 
+ #include "WebCoreTestSupport.h"
+ #include "WebFrame.h"
+-#include <v8/include/v8.h>
++#include <v8.h>
+ 
+ namespace WebKit {
+ 
+diff -up chromium-14.0.835.186/third_party/WebKit/Tools/DumpRenderTree/chromium/DumpRenderTree.cpp.system-code chromium-14.0.835.186/third_party/WebKit/Tools/DumpRenderTree/chromium/DumpRenderTree.cpp
+--- chromium-14.0.835.186/third_party/WebKit/Tools/DumpRenderTree/chromium/DumpRenderTree.cpp.system-code	2011-09-20 04:45:56.000000000 -0400
++++ chromium-14.0.835.186/third_party/WebKit/Tools/DumpRenderTree/chromium/DumpRenderTree.cpp	2011-09-26 17:21:30.529000574 -0400
+@@ -32,8 +32,8 @@
+ 
+ #include "TestShell.h"
+ #include "webkit/support/webkit_support.h"
+-#include <v8/include/v8-testing.h>
+-#include <v8/include/v8.h>
++#include <v8-testing.h>
++#include <v8.h>
+ #include <wtf/Vector.h>
+ 
+ using namespace std;
+diff -up chromium-14.0.835.186/webkit/extensions/v8/benchmarking_extension.h.system-code chromium-14.0.835.186/webkit/extensions/v8/benchmarking_extension.h
+--- chromium-14.0.835.186/webkit/extensions/v8/benchmarking_extension.h.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/extensions/v8/benchmarking_extension.h	2011-09-26 17:21:30.572004030 -0400
+@@ -9,7 +9,7 @@
+ #ifndef WEBKIT_EXTENSIONS_V8_BENCHMARKING_EXTENSION_H_
+ #define WEBKIT_EXTENSIONS_V8_BENCHMARKING_EXTENSION_H_
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace extensions_v8 {
+ 
+diff -up chromium-14.0.835.186/webkit/extensions/v8/gc_extension.h.system-code chromium-14.0.835.186/webkit/extensions/v8/gc_extension.h
+--- chromium-14.0.835.186/webkit/extensions/v8/gc_extension.h.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/extensions/v8/gc_extension.h	2011-09-26 17:21:30.587004003 -0400
+@@ -8,7 +8,7 @@
+ #ifndef WEBKIT_EXTENSIONS_V8_GC_EXTENSION_H_
+ #define WEBKIT_EXTENSIONS_V8_GC_EXTENSION_H_
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace extensions_v8 {
+ 
+diff -up chromium-14.0.835.186/webkit/extensions/v8/heap_profiler_extension.h.system-code chromium-14.0.835.186/webkit/extensions/v8/heap_profiler_extension.h
+--- chromium-14.0.835.186/webkit/extensions/v8/heap_profiler_extension.h.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/extensions/v8/heap_profiler_extension.h	2011-09-26 17:21:30.595004025 -0400
+@@ -9,7 +9,7 @@
+ #ifndef WEBKIT_EXTENSIONS_V8_HEAP_PROFILER_EXTENSION_H_
+ #define WEBKIT_EXTENSIONS_V8_HEAP_PROFILER_EXTENSION_H_
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace extensions_v8 {
+ 
+diff -up chromium-14.0.835.186/webkit/extensions/v8/playback_extension.h.system-code chromium-14.0.835.186/webkit/extensions/v8/playback_extension.h
+--- chromium-14.0.835.186/webkit/extensions/v8/playback_extension.h.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/extensions/v8/playback_extension.h	2011-09-26 17:21:30.603004024 -0400
+@@ -5,7 +5,7 @@
+ #ifndef WEBKIT_EXTENSIONS_V8_PLAYBACK_EXTENSION_H_
+ #define WEBKIT_EXTENSIONS_V8_PLAYBACK_EXTENSION_H_
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace extensions_v8 {
+ 
+diff -up chromium-14.0.835.186/webkit/extensions/v8/profiler_extension.h.system-code chromium-14.0.835.186/webkit/extensions/v8/profiler_extension.h
+--- chromium-14.0.835.186/webkit/extensions/v8/profiler_extension.h.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/extensions/v8/profiler_extension.h	2011-09-26 17:21:30.612004024 -0400
+@@ -9,7 +9,7 @@
+ #ifndef WEBKIT_EXTENSIONS_V8_PROFILER_EXTENSION_H_
+ #define WEBKIT_EXTENSIONS_V8_PROFILER_EXTENSION_H_
+ 
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ namespace extensions_v8 {
+ 
+diff -up chromium-14.0.835.186/webkit/glue/webkitclient_impl.cc.system-code chromium-14.0.835.186/webkit/glue/webkitclient_impl.cc
+--- chromium-14.0.835.186/webkit/glue/webkitclient_impl.cc.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/glue/webkitclient_impl.cc	2011-09-26 17:21:30.636004018 -0400
+@@ -44,7 +44,7 @@
+ #include "webkit/glue/weburlloader_impl.h"
+ 
+ #if defined(OS_LINUX)
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #endif
+ 
+ using WebKit::WebAudioBus;
+diff -up chromium-14.0.835.186/webkit/glue/webkit_glue.cc.system-code chromium-14.0.835.186/webkit/glue/webkit_glue.cc
+--- chromium-14.0.835.186/webkit/glue/webkit_glue.cc.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/glue/webkit_glue.cc	2011-09-26 17:21:30.665004024 -0400
+@@ -46,7 +46,7 @@
+ #endif
+ #include "webkit/glue/glue_serialize.h"
+ #include "webkit/glue/user_agent.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebCanvas;
+ using WebKit::WebData;
+diff -up chromium-14.0.835.186/webkit/plugins/ppapi/var.cc.system-code chromium-14.0.835.186/webkit/plugins/ppapi/var.cc
+--- chromium-14.0.835.186/webkit/plugins/ppapi/var.cc.system-code	2011-09-20 04:26:07.000000000 -0400
++++ chromium-14.0.835.186/webkit/plugins/ppapi/var.cc	2011-09-26 17:21:30.697004032 -0400
+@@ -19,7 +19,7 @@
+ #include "webkit/plugins/ppapi/plugin_object.h"
+ #include "webkit/plugins/ppapi/ppapi_plugin_instance.h"
+ #include "webkit/plugins/ppapi/resource_tracker.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ 
+ using WebKit::WebBindings;
+ 
+diff -up chromium-14.0.835.186/webkit/support/test_webkit_client.cc.system-code chromium-14.0.835.186/webkit/support/test_webkit_client.cc
+--- chromium-14.0.835.186/webkit/support/test_webkit_client.cc.system-code	2011-09-20 04:26:08.000000000 -0400
++++ chromium-14.0.835.186/webkit/support/test_webkit_client.cc	2011-09-26 17:21:30.723004012 -0400
+@@ -32,7 +32,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebStorageNamespace.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebString.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebURL.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #include "webkit/appcache/web_application_cache_host_impl.h"
+ #include "webkit/database/vfs_backend.h"
+ #include "webkit/extensions/v8/gc_extension.h"
+diff -up chromium-14.0.835.186/webkit/tools/test_shell/listener_leak_test.cc.system-code chromium-14.0.835.186/webkit/tools/test_shell/listener_leak_test.cc
+--- chromium-14.0.835.186/webkit/tools/test_shell/listener_leak_test.cc.system-code	2011-09-20 04:26:08.000000000 -0400
++++ chromium-14.0.835.186/webkit/tools/test_shell/listener_leak_test.cc	2011-09-26 17:21:30.746004025 -0400
+@@ -8,8 +8,8 @@
+ #include "base/string_number_conversions.h"
+ #include "base/string_util.h"
+ #include "testing/gtest/include/gtest/gtest.h"
+-#include "v8/include/v8.h"
+-#include "v8/include/v8-profiler.h"
++#include <v8.h>
++#include <v8-profiler.h>
+ #include "webkit/glue/webkit_glue.h"
+ #include "webkit/tools/test_shell/test_shell.h"
+ #include "webkit/tools/test_shell/test_shell_test.h"
+diff -up chromium-14.0.835.186/webkit/tools/test_shell/test_shell_webkit_init.cc.system-code chromium-14.0.835.186/webkit/tools/test_shell/test_shell_webkit_init.cc
+--- chromium-14.0.835.186/webkit/tools/test_shell/test_shell_webkit_init.cc.system-code	2011-09-20 04:26:08.000000000 -0400
++++ chromium-14.0.835.186/webkit/tools/test_shell/test_shell_webkit_init.cc	2011-09-26 17:21:30.764004026 -0400
+@@ -14,7 +14,7 @@
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebScriptController.h"
+ #include "third_party/WebKit/Source/WebKit/chromium/public/WebSecurityPolicy.h"
+ #include "ui/gfx/gl/gl_bindings_skia_in_process.h"
+-#include "v8/include/v8.h"
++#include <v8.h>
+ #include "webkit/tools/test_shell/test_shell.h"
+ 
+ #if defined(OS_WIN)

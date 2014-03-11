@@ -1,0 +1,10 @@
+--- plasma-applet-daisy.desktop.orig	2009-12-21 04:37:41.000000000 +0800
++++ plasma-applet-daisy.desktop	2010-04-20 20:54:03.000000000 +0800
+@@ -7,6 +7,7 @@ Comment[en_US]=An icon launcher for Plas
+ Comment[fr]=Barre d'icônes (dock) pour accéder rapidement aux applications, inspirée par Nature.
+ Comment[it]=An icon launcher for Plasma, inspired by Nature.
+ Comment[pt]=Um lançador de ícons para o Plasma, inspirado pela Natureza.
++Comment[zh_CN]=Plasma 图标启动器，受 Nature 启发。
+ 
+ 
+ Name=Daisy

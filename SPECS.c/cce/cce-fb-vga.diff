@@ -1,0 +1,22 @@
+--- cce-0.51.orig/src/display/vgaop.c
++++ cce-0.51/src/display/vgaop.c
+@@ -232,7 +233,7 @@
+ 
+ #endif 
+ 
+-	if (gramMem == (char *)MAP_FAILED)
++	if (gramMem == (unsigned char *)MAP_FAILED)
+     {
+ 		Perror("mmap graphics memory failed");
+ 		return FAILURE;--- cce-0.51.orig/include/fb.h
+--- cce-0.51.orig/include/fb.h
++++ cce-0.51/include/fb.h
+@@ -46,7 +46,7 @@
+ #if defined(linux)
+ 
+ #define DEFAULT_FB  		"/dev/fb"
+-#define DEFAULT_FB_DEVFS	"/dev/fb/0"
++#define DEFAULT_FB_DEVFS	"/dev/fb0"
+ 
+ #elif defined(__FreeBSD__)
+ extern int fbwidth, fbheight, fbdepth;

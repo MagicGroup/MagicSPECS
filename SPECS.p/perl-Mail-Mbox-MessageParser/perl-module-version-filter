@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+use lib $lib;
+
+# Extract module name from perl(Module::Name) = blah
+if (/^perl\((.*)\).*$/) {
+	my $module = $1;
+
+	# Require the module so we can get at its version number
+	eval "require $module";
+
+	# Grok the module's version
+	my $modver = eval "\$${module}::VERSION";
+
+	# Rewrite the output with the right version number
+	print "perl($module) = $modver\n";
+} else {
+	# Not a perl module reference, pass through unchanged
+	print;
+}

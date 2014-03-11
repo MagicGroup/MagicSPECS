@@ -1,0 +1,11 @@
+diff -ur libindi-0.9/drivers/focuser/robofocus.cpp libindi-0.9.new/drivers/focuser/robofocus.cpp
+--- libindi-0.9/drivers/focuser/robofocus.cpp	2012-01-13 19:40:06.000000000 +0100
++++ libindi-0.9.new/drivers/focuser/robofocus.cpp	2012-01-24 23:34:02.814667216 +0100
+@@ -25,6 +25,7 @@
+ #include <termios.h>
+ #include <string.h>
+ #include <sys/time.h>
++#include <unistd.h>
+ 
+ #define RF_MAX_CMD   9
+ #define RF_TIMEOUT   15

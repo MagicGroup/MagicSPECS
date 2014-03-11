@@ -1,0 +1,25 @@
+Index: scim-bridge-0.4.16/agent/scim-bridge-agent-signal-listener.cpp
+===================================================================
+--- scim-bridge-0.4.16.orig/agent/scim-bridge-agent-signal-listener.cpp
++++ scim-bridge-0.4.16/agent/scim-bridge-agent-signal-listener.cpp
+@@ -22,6 +22,7 @@
+ #include <signal.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <unistd.h>
+ 
+ #include <sys/socket.h>
+ #include <sys/types.h>
+Index: scim-bridge-0.4.16/agent/utils/scim-bridge-agent-panel-client.cpp
+===================================================================
+--- scim-bridge-0.4.16.orig/agent/utils/scim-bridge-agent-panel-client.cpp
++++ scim-bridge-0.4.16/agent/utils/scim-bridge-agent-panel-client.cpp
+@@ -25,6 +25,8 @@
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ 
++#include <unistd.h>
++
+ #define Uses_SCIM_CONFIG_PATH
+ 
+ #include <scim.h>

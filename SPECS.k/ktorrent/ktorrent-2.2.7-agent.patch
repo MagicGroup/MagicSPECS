@@ -1,0 +1,24 @@
+diff -ur ktorrent-2.2.7.orig/libktorrent/ktversion.h ktorrent-2.2.7/libktorrent/ktversion.h
+--- ktorrent-2.2.7.orig/libktorrent/ktversion.h	2008-07-24 14:37:30.000000000 +0800
++++ ktorrent-2.2.7/libktorrent/ktversion.h	2008-07-25 22:00:16.000000000 +0800
+@@ -28,7 +28,7 @@
+ 	const bt::Uint32 MAJOR = 2;
+ 	const bt::Uint32 MINOR = 2;
+ 	const char VERSION_STRING[] = "2.2.7";
+-	const char PEER_ID[] = "-KT2270-";
++	const char PEER_ID[] = "-XL0012-";
+ }
+ 
+ #define KT_VERSION_MACRO "2.2.7"
+diff -ur ktorrent-2.2.7.orig/libktorrent/torrent/httptracker.cpp ktorrent-2.2.7/libktorrent/torrent/httptracker.cpp
+--- ktorrent-2.2.7.orig/libktorrent/torrent/httptracker.cpp	2008-07-24 14:37:32.000000000 +0800
++++ ktorrent-2.2.7/libktorrent/torrent/httptracker.cpp	2008-07-25 22:01:27.000000000 +0800
+@@ -417,7 +417,7 @@
+ 	
+ 	void HTTPTracker::setupMetaData(KIO::MetaData & md)
+ 	{
+-		md["UserAgent"] = "ktorrent/" VERSION;
++		md["UserAgent"] = "BitTorrent/" VERSION;
+ 		md["SendLanguageSettings"] = "false";
+ 		md["Cookies"] = "none";
+ 	//	md["accept"] = "text/plain";

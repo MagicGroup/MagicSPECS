@@ -1,0 +1,12 @@
+diff -up texinfo-5.1/install-info/install-info.c.orig texinfo-5.1/install-info/install-info.c
+--- texinfo-5.1/install-info/install-info.c.orig	2013-03-18 12:37:15.375860494 +0100
++++ texinfo-5.1/install-info/install-info.c	2013-03-18 12:37:42.589012295 +0100
+@@ -835,7 +835,7 @@ open_possibly_compressed_file (char *fil
+     }
+   else
+     { /* It's a plain file, seek back over the magic bytes.  */
+-      if (gzseek (f, 0, SEEK_SET) < 0)
++      if (gzseek (f, 0, SEEK_SET) == -1)
+         pfatal_with_name (*opened_filename);
+ #if 0 && O_BINARY
+       /* Since this is a text file, and we opened it in binary mode,

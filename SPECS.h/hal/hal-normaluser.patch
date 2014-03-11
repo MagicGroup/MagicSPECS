@@ -1,0 +1,17 @@
+diff -u -r hal-git20070607.orig/hal.conf.in hal-git20070607/hal.conf.in
+--- hal-git20070607.orig/hal.conf.in	2008-06-01 16:43:00.000000000 +0800
++++ hal-git20070607/hal.conf.in	2008-06-01 16:43:44.000000000 +0800
+@@ -63,5 +63,13 @@
+     <allow send_interface="org.freedesktop.Hal.Device.Volume.Crypto"/>
+   </policy>
+ 
++  <policy group="plugdev">
++    <allow send_interface="org.freedesktop.Hal.Device.SystemPowerManagement"/>
++    <allow send_interface="org.freedesktop.Hal.Device.VideoAdapterPM"/>
++    <allow send_interface="org.freedesktop.Hal.Device.LaptopPanel"/>
++    <allow send_interface="org.freedesktop.Hal.Device.Volume"/>
++    <allow send_interface="org.freedesktop.Hal.Device.Volume.Crypto"/>
++  </policy>
++
+ </busconfig>
+ 

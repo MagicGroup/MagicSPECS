@@ -1,0 +1,9 @@
+diff -ur krusader-2.4.0-beta3.orig/doc/CMakeLists.txt krusader-2.4.0-beta3/doc/CMakeLists.txt
+--- krusader-2.4.0-beta3.orig/doc/CMakeLists.txt	2012-12-28 15:05:36.000000000 +0000
++++ krusader-2.4.0-beta3/doc/CMakeLists.txt	2012-12-28 15:05:50.000000000 +0000
+@@ -1,5 +1 @@
+-add_subdirectory(pt_BR)
+-add_subdirectory(pt)
+-add_subdirectory(uk)
+ add_subdirectory(en_US)
+-add_subdirectory(sv)

@@ -1,0 +1,11 @@
+--- ctdb-1.0.71/config/ctdb.init.orig	2009-02-06 19:52:08.591170458 +0100
++++ ctdb-1.0.71/config/ctdb.init	2009-02-06 19:53:32.137882847 +0100
+@@ -14,7 +14,7 @@
+ # Required-Start:      $network
+ # Required-Stop:       $network
+ # Default-Stop:
+-# Default-Start:       3 5
++# Default-Start:
+ # Short-Description:   start and stop ctdb service
+ # Description:         initscript for the ctdb service
+ ### END INIT INFO

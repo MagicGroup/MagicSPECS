@@ -1,0 +1,12 @@
+--- apps/konsole/data/profiles/Shell.profile	2009-06-03 19:54:12.000000000 +0800
++++ apps/konsole/data/profiles/Shell.profile	2009-07-28 17:35:02.000000000 +0800
+@@ -138,7 +138,9 @@
+ RemoteTabTitleFormat=%h : %u
+ 
+ [Appearance]
++AntiAliasFonts=false
+ ColorScheme=Linux
++Font=Bitstream Vera Sans Mono,9,-1,5,50,0,0,0,0,0
+ 
+ [Scrolling]
+ ScrollMode=FixedLineCount

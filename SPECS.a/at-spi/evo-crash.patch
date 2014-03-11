@@ -1,0 +1,38 @@
+diff -up at-spi-1.25.2/atk-bridge/bridge.c.evo-crash at-spi-1.25.2/atk-bridge/bridge.c
+--- at-spi-1.25.2/atk-bridge/bridge.c.evo-crash	2008-11-24 01:39:41.000000000 -0500
++++ at-spi-1.25.2/atk-bridge/bridge.c	2008-12-02 10:34:11.000000000 -0500
+@@ -1153,20 +1153,23 @@ spi_atk_bridge_signal_listener (GSignalI
+       spi_atk_bridge_init_rect (&any, ATK_OBJECT (gobject), atk_rect);
+     }
+   else if ((signal_query.signal_id == atk_signal_children_changed) && gobject)
+-    {
++    {      
+       gpointer child;
+ 
+-      detail1 = g_value_get_uint (param_values + 1);
+-      child = g_value_get_pointer (param_values + 2);
+-      if (ATK_IS_OBJECT (child))
+-        {
+-          ao = ATK_OBJECT (child);
+-          g_object_ref (ao);
+-        }
+-      else if ((detail != NULL) && (strcmp (detail, "add") == 0))
++      if (detail != NULL)
+         {
+-          ao = atk_object_ref_accessible_child (ATK_OBJECT (gobject), 
+-                                                detail1);
++          detail1 = g_value_get_uint (param_values + 1);
++          child = g_value_get_pointer (param_values + 2);
++          if (ATK_IS_OBJECT (child))
++            {
++              ao = ATK_OBJECT (child);
++              g_object_ref (ao);
++            }
++          else if ((detail != NULL) && (strcmp (detail, "add") == 0))
++            {
++              ao = atk_object_ref_accessible_child (ATK_OBJECT (gobject), 
++                                                    detail1);
++            }
+         }
+       if (ao)
+         {

@@ -1,0 +1,64 @@
+--- qt-x11-free-3.3.6/src/kernel/qscriptengine_x11.cpp.bak	2006-10-13 13:21:37.000000000 +0800
++++ qt-x11-free-3.3.6/src/kernel/qscriptengine_x11.cpp	2006-10-13 13:42:11.000000000 +0800
+@@ -280,7 +280,7 @@
+     Consonant, Consonant, Consonant, Consonant,
+ 
+     Consonant, Invalid, Consonant, Consonant,
+-    Invalid, Invalid, Consonant, Consonant,
++    Invalid, Consonant, Consonant, Consonant,
+     Consonant, Consonant, Unknown, Unknown,
+     Nukta, Other, Matra, Matra,
+ 
+@@ -299,7 +299,7 @@
+     Other, Other, Other, Other,
+     Other, Other, Other, Other,
+ 
+-    Other, Other, Other, Other,
++    Other, Consonant, Other, Other,
+     Other, Other, Other, Other,
+     Other, Other, Other, Other,
+     Other, Other, Other, Other,
+@@ -695,18 +695,18 @@
+     None, None, None, None,
+ 
+     None, None, None, None,
+-    None, None, None, None,
+-    None, None, None, None,
+-    None, None, None, None,
++    None, Below, Below, Below,
++    Below, Below, Below, Below,
++    Below, Below, None, Below,
+ 
+-    None, None, None, None,
+-    Below, None, None, None,
+-    Below, None, None, None,
++    Below, Below, Below, Below,
++    Below, Below, Below, Below,
++    Below, None, Below, Below,
+     Below, Below, Below, Post,
+ 
+     Below, None, Below, Below,
+-    None, None, None, None,
+-    None, None, None, None,
++    None, Below, Below, Below,
++    Below, Below, None, None,
+     None, None, Post, Above,
+ 
+     Post, Below, Below, Below,
+@@ -717,14 +717,14 @@
+     None, None, None, None,
+     None, None, Above, Post,
+     None, None, None, None,
+-    None, None, None, None,
++    None, None, None, Post,
+ 
+     None, None, None, None,
+     None, None, None, None,
+     None, None, None, None,
+     None, None, None, None,
+ 
+-    None, None, None, None,
++    None, Below, None, None,
+     None, None, None, None,
+     None, None, None, None,
+     None, None, None, None,

@@ -1,0 +1,1197 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Ni Hui <shuizhuyuanluo@126.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2010-04-19 04:54+0200\n"
+"PO-Revision-Date: 2010-04-22 01:24+0800\n"
+"Last-Translator: Ni Hui <shuizhuyuanluo@126.com>\n"
+"Language-Team: 简体中文 <kde-china@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 1.0\n"
+
+#: daemon/qxdevice.cpp:62
+#, kde-format
+msgctxt "device error"
+msgid "%1: %2"
+msgstr "%1：%2"
+
+#: daemon/qxdevice.cpp:78
+#, kde-format
+msgctxt "device error with property name"
+msgid "%1: %2: %3"
+msgstr "%1：%2：%3"
+
+#: daemon/qxdevice.cpp:86
+msgctxt "device error message"
+msgid "no such property"
+msgstr "无此属性"
+
+#: daemon/qxdevice.cpp:256
+msgctxt "device error message"
+msgid "invalid device"
+msgstr "无效的设备"
+
+#: daemon/qxdevice.cpp:305 daemon/qxdevice.cpp:390
+msgctxt "device error message"
+msgid "unknown property type"
+msgstr "未知属性类型"
+
+#: daemon/qxdevice.cpp:347
+msgctxt "device error message"
+msgid "could not query property"
+msgstr "无法查询属性"
+
+#: daemon/qxdevice.cpp:351
+#, kde-format
+msgid "unexpected property type %1"
+msgstr "未预料到的属性类型 %1"
+
+#: daemon/qxdevice.cpp:356
+#, kde-format
+msgctxt "device error message"
+msgid "unexpected property format %1"
+msgstr "未预料到的属性格式 %1"
+
+#: daemon/synaptiksdaemon.cpp:61
+msgctxt "@info daemon notification message detail"
+msgid "User stopped typing"
+msgstr "用户停止输入"
+
+#: daemon/synaptiksdaemon.cpp:63
+msgctxt "@info daemon notification message detail"
+msgid "User started typing"
+msgstr "用户开始输入"
+
+#: daemon/synaptiksdaemon.cpp:66
+#, kde-format
+msgctxt "@info daemon notification message detail"
+msgid "<resource>%1</resource> unplugged"
+msgstr "已弹出 <resource>%1</resource>"
+
+#: daemon/synaptiksdaemon.cpp:69
+#, kde-format
+msgctxt "@info daemon notification message detail"
+msgid "<resource>%1</resource> plugged"
+msgstr "已插入 <resource>%1</resource>"
+
+#: daemon/synaptiksdaemon.cpp:73
+#, kde-format
+msgctxt "@info daemon notification message"
+msgid "Touchpad switched on.<nl/>%1"
+msgstr "触摸板已开启。<nl/>%1"
+
+#: daemon/synaptiksdaemon.cpp:75
+#, kde-format
+msgctxt "@info daemon notification message"
+msgid "Touchpad switched off.<nl />%1"
+msgstr "触摸板已关闭。<nl />%1"
+
+#: daemon/synaptiksdaemon.cpp:97 kcmodule/synaptikskcm.cpp:55
+msgid "synaptiks"
+msgstr "synaptiks"
+
+#: daemon/synaptiksdaemon.cpp:98
+msgid "A touchpad control daemon"
+msgstr "触摸板控制守护进程"
+
+#: daemon/synaptiksdaemon.cpp:100 kcmodule/synaptikskcm.cpp:57
+msgid "Copyright © 2009, 2010 Sebastian Wiesner"
+msgstr "Copyright © 2009、2010 Sebastian Wiesner"
+
+#: daemon/synaptiksdaemon.cpp:103 kcmodule/synaptikskcm.cpp:65 rc.cpp:104
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Ni Hui"
+
+#: daemon/synaptiksdaemon.cpp:104 kcmodule/synaptikskcm.cpp:66 rc.cpp:105
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "shuizhuyuanluo@126.com"
+
+#: daemon/synaptiksdaemon.cpp:105 kcmodule/synaptikskcm.cpp:59
+msgid "Sebastian Wiesner"
+msgstr "Sebastian Wiesner"
+
+#: daemon/synaptiksdaemon.cpp:105 kcmodule/synaptikskcm.cpp:59
+msgid "Programmer"
+msgstr "编码者"
+
+#: daemon/synaptiksdaemon.cpp:124
+msgctxt "@info daemon error notification"
+msgid "<warning>The system does not support touchpad configuration.</warning>"
+msgstr "<warning>系统不支持触摸板配置。</warning>"
+
+#: daemon/synaptiksdaemon.cpp:129
+msgctxt "@info daemon notification error"
+msgid "<warning>No configurable touchpad was found.</warning>"
+msgstr "<warning>未找到可配置的触摸板。</warning>"
+
+#: daemon/synaptiksdaemon.cpp:163
+msgctxt "@action:button hidden action"
+msgid "Touchpad on"
+msgstr "启用触摸板"
+
+#: daemon/synaptiksdaemon.cpp:167
+msgctxt "touchpadOn shortcut"
+msgid "Ctrl+Alt+T"
+msgstr "Ctrl+Alt+T"
+
+#: daemon/synaptiksdaemon.cpp:370
+msgctxt "@info connectivity error"
+msgid ""
+"<warning>Touchpad configuration is not supported on this system.</"
+"warning>The <application>synaptics</application> driver is either not loaded "
+"or too old.  Refer to the documentation for information about the required "
+"driver version."
+msgstr ""
+"<warning>本系统不支持触摸板配置。</"
+"warning>可能 <application>synaptics</application> 驱动未装入或太旧。 "
+"请参考文档获取有关所需驱动版本的信息。"
+
+#: daemon/synaptiksdaemon.cpp:379
+msgctxt "@info connectivity error"
+msgid ""
+"<warning>No configurable touchpad was found on your system.</warning>If your "
+"system has a physical touchpad, please make sure, that it is handled by the "
+"<application>synaptics</application> driver."
+msgstr ""
+"<warning>您的系统中未发现可配置的触摸板。</warning>如果系统中确实有物理触摸板， "
+"请确保它已正常地由 <application>synaptics</application> 驱动。"
+
+#: daemon/synaptiksdaemon.cpp:411
+msgctxt "@title daemon error notification"
+msgid "Touchpad error"
+msgstr "触摸板错误"
+
+#: daemon/qxdevice.h:337 daemon/qxdevice.h:381
+#, kde-format
+msgctxt "device error message"
+msgid "no item at index %1"
+msgstr "索引 %1 处没有项目"
+
+#: daemon/touchpadadaptor.cpp:131
+#, kde-format
+msgctxt "touchpad dbus error"
+msgid "The argument must be in [%1; %2]"
+msgstr "参数格式必须是 [%1; %2]"
+
+#: daemon/touchpadadaptor.cpp:223
+#, kde-format
+msgctxt "touchpad dbus error"
+msgid "The argument must have at least one element"
+msgid_plural "The argument must have at least %1 elements"
+msgstr[0] "参数必须有至少 %1 个元素"
+
+#: daemon/touchpadadaptor.cpp:238
+#, kde-format
+msgid "The argument must have at least one element"
+msgid_plural "The argument must have at least %1 elements"
+msgstr[0] "参数必须有至少 %1 个元素"
+
+#: kcmodule/synaptikskcm.cpp:56
+msgid "synaptiks – touchpad management"
+msgstr "synaptiks – 触摸板管理"
+
+#: kcmodule/synaptikskcm.cpp:61
+msgid "Valentyn Pavliuchenko"
+msgstr "Valentyn Pavliuchenko"
+
+#: kcmodule/synaptikskcm.cpp:62
+msgid "Debian packaging, russian translation, bug reporting and testing"
+msgstr "Debian 打包，俄语翻译，错误报告和测试"
+
+#: kcmodule/synaptikskcm.cpp:70
+msgctxt "@info:tooltip synaptiks kcmodule"
+msgid ""
+"<title><application>synaptiks</application> configuration</title><para>This "
+"module lets you configure the <application>synaptiks</application> daemon, "
+"which in turn manages and configures your touchpad.</para>"
+msgstr ""
+"<title><application>synaptiks</application> 配置</title><para>本 "
+"模块让您配置 <application>synaptiks</application> 守护进程，它主管并 "
+"配置您的触摸板。</para>"
+
+#: kcmodule/synaptikskcm.cpp:85 applet/synaptiksapplet.cpp:127
+msgctxt "@info connectivity error"
+msgid ""
+"<warning>The <application>synaptiks</application> daemon is not running.</"
+"warning>"
+msgstr "<warning><application>synaptiks</application> 守护进程未运行。</warning>"
+
+#: kcmodule/synaptikskcm.cpp:128
+msgctxt "@title:window"
+msgid "Touchpad configuration"
+msgstr "触摸板配置"
+
+#: kcmodule/synaptikswidgets.cpp:63
+msgctxt "@info touchpad information error"
+msgid "<warning>No touchpad found.</warning>"
+msgstr "<warning>未发现触摸板。</warning>"
+
+#: kcmodule/synaptikswidgets.cpp:78
+#, kde-format
+msgctxt "@info touchpad name"
+msgid "<title><resource>%1</resource></title>"
+msgstr "<title><resource>%1</resource></title>"
+
+#: kcmodule/mousebuttoncombobox.cpp:40
+msgctxt "@item:inlistbox mouse button triggered by tapping"
+msgid "Disabled"
+msgstr "已禁用"
+
+#: kcmodule/mousebuttoncombobox.cpp:42
+msgctxt "@item:inlistbox mouse button triggered by tapping"
+msgid "Left mouse button"
+msgstr "鼠标左键"
+
+#: kcmodule/mousebuttoncombobox.cpp:44
+msgctxt "@item:inlistbox mouse button triggered by tapping"
+msgid "Middle mouse button"
+msgstr "鼠标中键"
+
+#: kcmodule/mousebuttoncombobox.cpp:46
+msgctxt "@item:inlistbox mouse button triggered by tapping"
+msgid "Right mouse button"
+msgstr "鼠标右键"
+
+#: applet/synaptiksapplet.cpp:168
+msgctxt "@info:tooltip applet main text"
+msgid "Touchpad on"
+msgstr "启用触摸板"
+
+#: applet/synaptiksapplet.cpp:169
+msgctxt "@info:tooltip applet applet main text"
+msgid "Touchpad off"
+msgstr "关闭触摸板"
+
+#: applet/synaptiksapplet.cpp:172
+msgctxt "@info:tooltip applet sub text"
+msgid "Keyboard inactive"
+msgstr "键盘未激活"
+
+#: applet/synaptiksapplet.cpp:173
+msgctxt "@info:tooltip applet sub text"
+msgid "Keyboard active"
+msgstr "键盘已激活"
+
+#: applet/synaptiksapplet.cpp:178
+#, kde-format
+msgctxt "@info:tooltip applet sub text"
+msgid "<resource>%1</resource> unplugged"
+msgstr "已弹出 <resource>%1</resource>"
+
+#: applet/synaptiksapplet.cpp:180
+#, kde-format
+msgctxt "@info:tooltip applet sub text"
+msgid "<resource>%1</resource> plugged"
+msgstr "已插入 <resource>%1</resource>"
+
+#: applet/synaptiksapplet.cpp:203
+msgctxt "@title:window applet touchpad configuration"
+msgid "Touchpad configuration"
+msgstr "触摸板配置"
+
+#: applet/synaptiksapplet.cpp:213
+msgctxt "@info:tooltip applet main text"
+msgid "Touchpad error"
+msgstr "触摸板错误"
+
+#. i18n: file: synaptiks.kcfg:7
+#. i18n: ectx: label, entry (SwitchOffIfMouseIsPlugged), group (Automatic Touchpad control)
+#: rc.cpp:3 rc.cpp:396
+msgid ""
+"Automatically switch off touchpad if a mouse is plugged\n"
+"in"
+msgstr "插入鼠标时自动关闭触摸板"
+
+#. i18n: file: synaptiks.kcfg:11
+#. i18n: ectx: label, entry (IgnoredMouseDevices), group (Automatic Touchpad control)
+#: rc.cpp:7 rc.cpp:400
+msgid "A list of mouse devices to be ignored"
+msgstr "要忽略的鼠标设备列表"
+
+#. i18n: file: synaptiks.kcfg:14
+#. i18n: ectx: whatsthis, entry (IgnoredMouseDevices), group (Automatic Touchpad control)
+#: rc.cpp:10 rc.cpp:403
+msgid ""
+"Mouse devices contained in this list are ignored. No\n"
+"notification will be issued, if such a device is plugged and the touchpad\n"
+"will not be switched off automatically."
+msgstr ""
+"此列表中的鼠标设备将被忽略。\n"
+"如果插入这种设备，则不弹出通知\n"
+"并且也不会自动关闭触摸板。"
+
+#. i18n: file: synaptiks.kcfg:18
+#. i18n: ectx: label, entry (SwitchOffOnKeyboardActivity), group (Automatic Touchpad control)
+#: rc.cpp:15 rc.cpp:408
+msgid ""
+"Automatically switch off touchpad, if the user starts\n"
+"typing"
+msgstr "用户开始输入时自动关闭触摸板"
+
+#. i18n: file: synaptiks.kcfg:22
+#. i18n: ectx: label, entry (KeysToIgnore), group (Automatic Touchpad control)
+#: rc.cpp:19 rc.cpp:412
+msgid "Ignore these keys when monitoring the keyboard"
+msgstr "监视键盘时忽略这些按键"
+
+#. i18n: file: synaptiks.kcfg:33
+#. i18n: ectx: label, entry (IdleTime), group (Automatic Touchpad control)
+#: rc.cpp:22 rc.cpp:415
+msgid ""
+"Time in seconds to wait before switching on the touchpad, if\n"
+"typing stopped.  Fractions of seconds are supported up to millisecond\n"
+"precision."
+msgstr ""
+
+#. i18n: file: synaptiks.kcfg:42
+#. i18n: ectx: label, entry (TouchpadStateAtStartup), group (General)
+#: rc.cpp:27 rc.cpp:420
+msgid ""
+"The initial state of the touchpad at daemon startup.  Change\n"
+"this to forcibly enable or disable the touchpad."
+msgstr ""
+"守护进程启动时触摸板的初始状态。\n"
+"更改此设定可强制启用或禁用触摸板。"
+
+#. i18n: file: synaptiks.kcfg:52
+#. i18n: ectx: label, entry (CircularTouchpad), group (General)
+#: rc.cpp:31 rc.cpp:424
+msgid ""
+"If true, the driver considers the touchpad as circular\n"
+"touchpad.  Enable this, if the touchpad is circular."
+msgstr ""
+"如果选中，驱动将认为触摸板是环形。\n"
+"如果是环形触摸板，那么启用它。"
+
+#. i18n: file: synaptiks.kcfg:58
+#. i18n: ectx: label, entry (MinimumSpeed), group (Motion)
+#: rc.cpp:35 rc.cpp:428
+msgid "Minimum cursor motion speed"
+msgstr "最小光标移动速度"
+
+#. i18n: file: synaptiks.kcfg:64
+#. i18n: ectx: label, entry (MaximumSpeed), group (Motion)
+#: rc.cpp:38 rc.cpp:431
+msgid "Maximum cursor motion speed"
+msgstr "最大光标移动速度"
+
+#. i18n: file: synaptiks.kcfg:71
+#. i18n: ectx: label, entry (AccelerationFactor), group (Motion)
+#: rc.cpp:41 rc.cpp:434
+msgid ""
+"Acceleration factor between MinimumSpeed and\n"
+"MaximumSpeed"
+msgstr "最小速度和最大速度间的加速系数"
+
+#. i18n: file: synaptiks.kcfg:78
+#. i18n: ectx: label, entry (EdgeMotionAlways), group (Motion)
+#: rc.cpp:45 rc.cpp:438
+msgid ""
+"Enable edge motion for all movements, not only for\n"
+"drags"
+msgstr "为所有移动启用边缘移动，而非仅仅是拖拽"
+
+#. i18n: file: synaptiks.kcfg:84
+#. i18n: ectx: label, entry (CircularScrolling), group (Scrolling)
+#: rc.cpp:49 rc.cpp:442
+msgid "Enable or disable circular scrolling"
+msgstr "启用或禁用环形滚动"
+
+#. i18n: file: synaptiks.kcfg:88
+#. i18n: ectx: label, entry (CircularScrollingTrigger), group (Scrolling)
+#: rc.cpp:52 rc.cpp:445
+msgid "These touchpad areas trigger circular scrolling"
+msgstr "这些触摸板区域会触发环形滚动"
+
+#. i18n: file: synaptiks.kcfg:105
+#. i18n: ectx: label, entry (CircularScrollingDistance), group (Scrolling)
+#: rc.cpp:55 rc.cpp:448
+msgid ""
+"The move angle of the finger (in degrees) to generate a scroll\n"
+"event in circular scrolling mode.  The greater the angle, the slower\n"
+"circular scrolling gets."
+msgstr ""
+"在环形滚动模式下，生成滚动事件所需的手指的移动角度。\n"
+"角度越大，环形滚动越慢。"
+
+#. i18n: file: synaptiks.kcfg:111
+#. i18n: ectx: label, entry (HorizontalTwoFingerScrolling), group (Scrolling)
+#: rc.cpp:60 rc.cpp:453
+msgid "Enable horizontal scrolling with two fingers"
+msgstr "启用两点水平滚动"
+
+#. i18n: file: synaptiks.kcfg:115
+#. i18n: ectx: label, entry (VerticalTwoFingerScrolling), group (Scrolling)
+#: rc.cpp:63 rc.cpp:456
+msgid "Enable vertical scrolling with two fingers"
+msgstr "启用两点垂直滚动"
+
+#. i18n: file: synaptiks.kcfg:119
+#. i18n: ectx: label, entry (HorizontalEdgeScrolling), group (Scrolling)
+#: rc.cpp:66 rc.cpp:459
+msgid "Enable horizontal scrolling at the bottom edge"
+msgstr "启用底部边缘的水平滚动"
+
+#. i18n: file: synaptiks.kcfg:123
+#. i18n: ectx: label, entry (VerticalEdgeScrolling), group (Scrolling)
+#: rc.cpp:69 rc.cpp:462
+msgid "Enable vertical scrolling at the right edge"
+msgstr "启用右侧边缘的垂直滚动"
+
+#. i18n: file: synaptiks.kcfg:127
+#. i18n: ectx: label, entry (Coasting), group (Scrolling)
+#: rc.cpp:72 rc.cpp:465
+msgid "Continue edge scrolling automatically."
+msgstr "自动延续边缘滚动。"
+
+#. i18n: file: synaptiks.kcfg:132
+#. i18n: ectx: label, entry (CornerCoasting), group (Scrolling)
+#: rc.cpp:75 rc.cpp:468
+msgid ""
+"Continue edge scrolling while the finger stays in an edge\n"
+"corner.  Coasting must be enabled."
+msgstr ""
+"手指停在边角时自动延续边缘滚动。\n"
+"必须启用边缘延续。"
+
+#. i18n: file: synaptiks.kcfg:136
+#. i18n: ectx: label, entry (CoastingSpeed), group (Scrolling)
+#: rc.cpp:79 rc.cpp:472
+msgid "Set threshold speed for conventional coasting."
+msgstr "设定传统边缘延续的阀值速度。"
+
+#. i18n: file: synaptiks.kcfg:142
+#. i18n: ectx: label, entry (HorizontalScrollingDistance), group (Scrolling)
+#: rc.cpp:82 rc.cpp:475
+msgid ""
+"The move distance of the finger to generate a horizontal\n"
+"scrolling event."
+msgstr "生成水平滚动事件的手指移动距离。"
+
+#. i18n: file: synaptiks.kcfg:147
+#. i18n: ectx: label, entry (VerticalScrollingDistance), group (Scrolling)
+#: rc.cpp:86 rc.cpp:479
+msgid ""
+"The move distance of the finger to generate a vertical\n"
+"scrolling event."
+msgstr "生成垂直滚动事件的手指移动距离。"
+
+#. i18n: file: synaptiks.kcfg:187
+#. i18n: ectx: label, entry (FastTaps), group (Tapping)
+#: rc.cpp:90 rc.cpp:483
+msgid "Enable fast tapping"
+msgstr "启用快速轻拍"
+
+#. i18n: file: synaptiks.kcfg:193
+#. i18n: ectx: label, entry (TapAndDragGesture), group (Tapping)
+#: rc.cpp:93 rc.cpp:486
+msgid ""
+"Enable the tap-and-drag gesture, which enables dragging by\n"
+"tapping the touchpad and immediately moving finger on the\n"
+"touchpad."
+msgstr ""
+"启用轻拍拖拽手势，可轻拍触摸板并立即移动触摸板上的\n"
+"手指触摸点来启用拖拽。"
+
+#. i18n: file: synaptiks.kcfg:199
+#. i18n: ectx: label, entry (LockedDrags), group (Tapping)
+#: rc.cpp:98 rc.cpp:491
+msgid ""
+"If true, a tap-and-drag gesture will remain active, if the\n"
+"finger is released, until the touchpad is touched again or the timeout\n"
+"expires."
+msgstr ""
+"如果启用，则轻拍拖拽手势将处于激活状态，如果\n"
+"手指抬起，直到再次触碰触摸板或超时。"
+
+#. i18n: file: synaptiks.kcfg:203
+#. i18n: ectx: label, entry (LockedDragsTimeout), group (Tapping)
+#: rc.cpp:103 rc.cpp:496
+msgid "The timeout of a locked drag to expire in seconds."
+msgstr "已锁定拖拽的超时秒数。"
+
+#. i18n: file: kcmodule/ui/notificationspage.ui:15
+#. i18n: ectx: property (windowTitle), widget (QWidget, NotificationsPage)
+#: rc.cpp:108
+msgctxt "@title:window"
+msgid "Notifications"
+msgstr "通知"
+
+#. i18n: file: kcmodule/ui/notificationspage.ui:21
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:111
+msgctxt "@label"
+msgid "Configure notifications for"
+msgstr "配置通知"
+
+#. i18n: file: kcmodule/ui/notificationspage.ui:32
+#. i18n: ectx: attribute (title), widget (QWidget, keyboardPage)
+#: rc.cpp:114
+msgctxt "@title:tab notification reason"
+msgid "Keyboard activity"
+msgstr "键盘活动性"
+
+#. i18n: file: kcmodule/ui/notificationspage.ui:42
+#. i18n: ectx: attribute (title), widget (QWidget, mousePage)
+#: rc.cpp:117
+msgctxt "@title:tab notification reason"
+msgid "Mouse devices"
+msgstr "鼠标设备"
+
+#. i18n: file: kcmodule/ui/notificationspage.ui:52
+#. i18n: ectx: attribute (title), widget (QWidget, everythingPage)
+#: rc.cpp:120
+msgctxt "@title:tab notification reason"
+msgid "Everything else"
+msgstr "任何其它事件"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:15
+#. i18n: ectx: property (windowTitle), widget (QWidget, ScrollingPage)
+#: rc.cpp:123
+msgctxt "@title:window scrolling settings"
+msgid "Scrolling"
+msgstr "滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:23
+#. i18n: ectx: property (title), widget (QGroupBox, horizontalScrollingGroup)
+#: rc.cpp:126
+msgctxt "@title:group"
+msgid "Horizontal scrolling"
+msgstr "水平滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:29
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HorizontalTwoFingerScrolling)
+#: rc.cpp:129
+msgctxt "@option:check"
+msgid "Horizontal scrolling with two fingers"
+msgstr "两点水平滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:36
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HorizontalEdgeScrolling)
+#: rc.cpp:132
+msgctxt "@option:check"
+msgid "Horizontal scrolling at bottom edge"
+msgstr "底部边缘的水平滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:43
+#. i18n: ectx: property (label), widget (KIntNumInput, kcfg_HorizontalScrollingDistance)
+#. i18n: file: kcmodule/ui/scrollingpage.ui:85
+#. i18n: ectx: property (label), widget (KIntNumInput, kcfg_VerticalScrollingDistance)
+#: rc.cpp:135 rc.cpp:147
+msgctxt "@label:slider"
+msgid "Move distance to scroll a single line"
+msgstr "移动距离以滚动单行"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:65
+#. i18n: ectx: property (title), widget (QGroupBox, verticalScrollingGroup)
+#: rc.cpp:138
+msgctxt "@title:group"
+msgid "Vertical scrolling"
+msgstr "垂直滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:71
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_VerticalTwoFingerScrolling)
+#: rc.cpp:141
+msgctxt "@option:check"
+msgid "Vertical scrolling with two fingers"
+msgstr "两点垂直滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:78
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_VerticalEdgeScrolling)
+#: rc.cpp:144
+msgctxt "@option:check"
+msgid "Vertical scrolling at right edge"
+msgstr "右侧边缘的垂直滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:109
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_Coasting)
+#: rc.cpp:150
+msgctxt "@option:check"
+msgid "Continue edge scrolling automatically"
+msgstr "自动延续边缘滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:118
+#. i18n: ectx: property (text), widget (QRadioButton, conventionalCoasting)
+#: rc.cpp:153
+msgctxt "@option:radio"
+msgid "Continue edge scrolling, if the finger is lifted while scrolling"
+msgstr "滚动时抬起手指时自动延续边缘滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:128
+#. i18n: ectx: property (label), widget (KDoubleNumInput, kcfg_CoastingSpeed)
+#: rc.cpp:156
+msgctxt "@label:spinbox"
+msgid "Scrolling speed threshold to continue scrolling"
+msgstr "延续滚动的滚动速度阀值"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:144
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_CornerCoasting)
+#: rc.cpp:159
+msgctxt "@option:radio"
+msgid "Continue edge scrolling, while the finger stays in an edge corner"
+msgstr "手指停在边角时自动延续边缘滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:154
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_CircularScrolling)
+#: rc.cpp:162
+msgctxt "@option:check"
+msgid "Horizontal circular scrolling"
+msgstr "水平环形滚动"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:165
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:165
+msgctxt "@label:listbox"
+msgid "Area, which triggers circular scrolling"
+msgstr "触发环形滚动的区域"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:176
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:168
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Any edge"
+msgstr "任何边缘"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:181
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:171
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Top edge"
+msgstr "顶部边缘"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:186
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:174
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Top right corner"
+msgstr "右上角"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:191
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:177
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Right edge"
+msgstr "右侧边缘"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:196
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:180
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Bottom right corner"
+msgstr "右下角"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:201
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:183
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Bottom edge"
+msgstr "底部边缘"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:206
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:186
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Bottom left corner"
+msgstr "左下角"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:211
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:189
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Left edge"
+msgstr "左侧边缘"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:216
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_CircularScrollingTrigger)
+#: rc.cpp:192
+msgctxt "@item:inlistbox circular scrolling trigger area"
+msgid "Top left corner"
+msgstr "左上角"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:226
+#. i18n: ectx: property (toolTip), widget (KDoubleNumInput, kcfg_CircularScrollingDistance)
+#: rc.cpp:195
+msgctxt "@info:tooltip"
+msgid ""
+"Move the finger by this angle on the touchpad to scroll a single line.  The "
+"higher the angle, the slower circular scrolling becomes"
+msgstr "在触摸板上按此角度移动手指将滚动一行。角度越大，环形滚动越慢"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:229
+#. i18n: ectx: property (whatsThis), widget (KDoubleNumInput, kcfg_CircularScrollingDistance)
+#: rc.cpp:198
+msgctxt "@info:whatsthis"
+msgid ""
+"Move the finger by this angle on the touchpad to scroll a single line.  The "
+"higher the angle, the slower circular scrolling becomes"
+msgstr "在触摸板上按此角度移动手指将滚动一行。角度越大，环形滚动越慢"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:232
+#. i18n: ectx: property (label), widget (KDoubleNumInput, kcfg_CircularScrollingDistance)
+#: rc.cpp:201
+msgctxt "@label:spinbox"
+msgid "Angle by which to move the finger to scroll a single line"
+msgstr "滚动单行时手指移动的角度"
+
+#. i18n: file: kcmodule/ui/scrollingpage.ui:238
+#. i18n: ectx: property (suffix), widget (KDoubleNumInput, kcfg_CircularScrollingDistance)
+#: rc.cpp:204
+msgctxt "@label:spinbox"
+msgid " °"
+msgstr " °"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, GeneralPage)
+#: rc.cpp:207
+msgctxt "@title:window general touchpad settings"
+msgid "General"
+msgstr "常规"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:22
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:210
+msgctxt "@label:listbox"
+msgid "Touchpad state at startup"
+msgstr "启动时的触摸板状态"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:30
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_TouchpadStateAtStartup)
+#: rc.cpp:213
+msgctxt "@item:inlistbox"
+msgid "Leave unchanged"
+msgstr "保持不变"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:35
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_TouchpadStateAtStartup)
+#: rc.cpp:216
+msgctxt "@item:inlistbox"
+msgid "Switch on"
+msgstr "开启"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:40
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_TouchpadStateAtStartup)
+#: rc.cpp:219
+msgctxt "@item:inlistbox"
+msgid "Switch off"
+msgstr "关闭"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:50
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: rc.cpp:222
+msgctxt "@title:group"
+msgid "Hardware properties"
+msgstr "硬件属性"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:56
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: rc.cpp:225
+msgctxt "@info"
+msgid "Please enable this setting, if your touchpad is circular."
+msgstr "如果你的触摸板是环形的，请启用此设置。"
+
+#. i18n: file: kcmodule/ui/generalpage.ui:66
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_CircularTouchpad)
+#: rc.cpp:228
+msgctxt "@option:check"
+msgid "The touchpad is circular"
+msgstr "触摸板为环形"
+
+#. i18n: file: kcmodule/ui/touchpadinformationpage.ui:15
+#. i18n: ectx: property (windowTitle), widget (QWidget, TouchpadInformationPage)
+#: rc.cpp:231
+msgctxt "@title:window"
+msgid "Touchpad information"
+msgstr "触摸板信息"
+
+#. i18n: file: kcmodule/ui/touchpadinformationpage.ui:38
+#. i18n: ectx: property (text), widget (QLabel, errorLabel)
+#: rc.cpp:234
+msgctxt "@info touchpad error"
+msgid ""
+"<warning>The touchpad driver did not report information correctly.</warning>"
+msgstr "<warning>触摸板驱动未正确报告信息。</warning>"
+
+#. i18n: file: kcmodule/ui/touchpadinformationpage.ui:50
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:237
+msgctxt "@label:spinbox"
+msgid "How many fingers are detected by this touchpad?"
+msgstr "此触摸板可探测到多少手指触摸点？"
+
+#. i18n: file: kcmodule/ui/touchpadinformationpage.ui:72
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: rc.cpp:240
+msgctxt "@title:group touchpad information mouse button support"
+msgid "Buttons"
+msgstr "按钮"
+
+#. i18n: file: kcmodule/ui/touchpadinformationpage.ui:80
+#. i18n: ectx: property (text), widget (QLabel, leftLabel)
+#: rc.cpp:243
+msgctxt "@label touchpad information mouse button"
+msgid "Left button"
+msgstr "左键"
+
+#. i18n: file: kcmodule/ui/touchpadinformationpage.ui:90
+#. i18n: ectx: property (text), widget (QLabel, middleLabel)
+#: rc.cpp:246
+msgctxt "@label touchpad information mouse button"
+msgid "Middle button"
+msgstr "中键"
+
+#. i18n: file: kcmodule/ui/touchpadinformationpage.ui:100
+#. i18n: ectx: property (text), widget (QLabel, rightLabel)
+#: rc.cpp:249
+msgctxt "@label touchpad information mouse button"
+msgid "Right button"
+msgstr "右键"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:15
+#. i18n: ectx: property (windowTitle), widget (QWidget, AutoTouchpadControlPage)
+#: rc.cpp:252
+msgctxt "@title:window"
+msgid "Automatic touchpad control"
+msgstr "自动触摸板控制"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:21
+#. i18n: ectx: property (whatsThis), widget (QGroupBox, kcfg_SwitchOffIfMouseIsPlugged)
+#: rc.cpp:255
+msgctxt "@info:whatsthis"
+msgid ""
+"Automatically switch off touchpad, if a mouse is plugged in. If the mouse is "
+"unplugged, the touchpad is switched on again."
+msgstr "插入鼠标时自动关闭触摸板。如果鼠标未插入，触摸板将再次开启。"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:24
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_SwitchOffIfMouseIsPlugged)
+#: rc.cpp:258
+msgctxt "@option:check"
+msgid "Automatically switch off touchpad, if a mouse is plugged"
+msgstr "插入鼠标时自动关闭触摸板"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:33
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:261
+msgctxt "@label"
+msgid "Ignore the following mouse devices"
+msgstr "忽略以下鼠标设备"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:43
+#. i18n: ectx: property (whatsThis), widget (synaptiks::MouseDevicesView, kcfg_IgnoredMouseDevices)
+#: rc.cpp:264
+msgctxt "@info:whatsthis"
+msgid ""
+"All checked mouse devices are ignored. If such a mouse is plugged, the "
+"touchpad will remain on."
+msgstr "所有选中的鼠标设备将被忽略。如果插入这种鼠标，触摸板将仍然开启。"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:53
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_SwitchOffOnKeyboardActivity)
+#: rc.cpp:267
+msgctxt "@option:check"
+msgid "Automatically switch off touchpad on keyboard activity"
+msgstr "键盘活动时自动关闭触摸板"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:64
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: rc.cpp:270
+msgctxt "@label:listbox"
+msgid "Ignore these keys"
+msgstr "忽略这些按键"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:80
+#. i18n: ectx: property (toolTip), widget (KComboBox, kcfg_KeysToIgnore)
+#: rc.cpp:273
+msgctxt "@info:tooltip"
+msgid ""
+"<para>These keys will be ignored when monitoring the keyboard:</para>\n"
+"<para>\n"
+"<list>\n"
+"<item><interface>No keys</interface>:  No keys are ignored.  Every key "
+"causes the touchpad to be switched off.</item>\n"
+"<item><interface>Modifier keys</interface>: Modifier keys (e.g. Shift, Ctrl) "
+"are ignored.  Every other key causes the touchpad to be switched off, even "
+"when pressed in combination with a modifier key (e.g. Ctrl+S).</item>\n"
+"<item><interface>Modifier combinations</interface>: Modifier keys and normal "
+"keys in combination with modifier keys are ignored.  Every other key causes "
+"the touchpad to be switched off. Note, that even Shift-combinations for "
+"uppercase letters are ignored with this setting.</item>\n"
+"</list>"
+msgstr ""
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:89
+#. i18n: ectx: property (whatsThis), widget (KComboBox, kcfg_KeysToIgnore)
+#: rc.cpp:282
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>These keys will be ignored when monitoring the keyboard:</para>\n"
+"<para>\n"
+"<list>\n"
+"<item><interface>No keys</interface>:  No keys are ignored.  Every key "
+"causes the touchpad to be switched off.</item>\n"
+"<item><interface>Modifier keys</interface>: Modifier keys (e.g. Shift, Ctrl) "
+"are ignored.  Every other key causes the touchpad to be switched off, even "
+"when pressed in combination with a modifier key (e.g. Ctrl+S).</item>\n"
+"<item><interface>Modifier combinations</interface>: Modifier keys and normal "
+"keys in combination with modifier keys are ignored.  Every other key causes "
+"the touchpad to be switched off. Note, that even Shift-combinations for "
+"uppercase letters are ignored with this setting.</item>\n"
+"</list>"
+msgstr ""
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:96
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_KeysToIgnore)
+#: rc.cpp:291
+msgctxt "@item:inlistbox automatic touchpad control"
+msgid "No keys"
+msgstr "无按键"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:101
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_KeysToIgnore)
+#: rc.cpp:294
+msgctxt "@item:inlistbox automatic touchpad control"
+msgid "Modifier keys"
+msgstr "修饰键"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:106
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_KeysToIgnore)
+#: rc.cpp:297
+msgctxt "@item:inlistbox automatic touchpad control"
+msgid "Modifier combinations"
+msgstr "修饰键组合"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:116
+#. i18n: ectx: property (label), widget (KDoubleNumInput, kcfg_IdleTime)
+#: rc.cpp:300
+msgctxt "@label:spinbox"
+msgid "Time to wait before switching the keyboard on again"
+msgstr "重新切换键盘前的等待时间"
+
+#. i18n: file: kcmodule/ui/autotouchpadcontrolpage.ui:122
+#. i18n: ectx: property (suffix), widget (KDoubleNumInput, kcfg_IdleTime)
+#: rc.cpp:303
+msgctxt "@label:spinbox"
+msgid " s"
+msgstr " 秒"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, TappingPage)
+#: rc.cpp:306
+msgctxt "@title:window tapping settings"
+msgid "Tapping"
+msgstr "轻拍"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:20
+#. i18n: ectx: property (title), widget (QGroupBox, generalSettingsGroup)
+#: rc.cpp:309
+msgctxt "@title:group"
+msgid "General tapping settings"
+msgstr "常规轻拍设置"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:26
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_FastTaps)
+#: rc.cpp:312
+msgctxt "@option:check"
+msgid "Make single taps faster and double taps slower (fast taps)"
+msgstr "使单次轻拍更快而双次轻拍更慢(快速轻拍)"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:36
+#. i18n: ectx: property (title), widget (QGroupBox, tappingButtonGroup)
+#: rc.cpp:315
+msgctxt "@title:group"
+msgid "Mouse clicks triggered by tapping"
+msgstr "轻拍触发鼠标点击"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:49
+#. i18n: ectx: property (text), widget (QLabel, topLeftLabel)
+#: rc.cpp:318
+msgctxt "@label:listbox"
+msgid "Top left corner"
+msgstr "左上角"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:76
+#. i18n: ectx: property (text), widget (QLabel, topRightLabel)
+#: rc.cpp:321
+msgctxt "@label:listbox"
+msgid "Top right corner"
+msgstr "右上角"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:104
+#. i18n: ectx: property (text), widget (QLabel, oneFingerLabel)
+#: rc.cpp:324
+msgctxt "@label:listbox"
+msgid "Tapping with one finger"
+msgstr "单指轻拍"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:111
+#. i18n: ectx: property (text), widget (QLabel, twoFingerLabel)
+#: rc.cpp:327
+msgctxt "@label:listbox"
+msgid "Tapping with two fingers"
+msgstr "双指轻拍"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:118
+#. i18n: ectx: property (text), widget (QLabel, threeFingerLabel)
+#: rc.cpp:330
+msgctxt "@label:listbox"
+msgid "Tapping with three fingers"
+msgstr "三指轻拍"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:155
+#. i18n: ectx: property (text), widget (QLabel, bottomLeftLabel)
+#: rc.cpp:333
+msgctxt "@label:listbox"
+msgid "Bottom left corner"
+msgstr "左下角"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:182
+#. i18n: ectx: property (text), widget (QLabel, bottomRightLabel)
+#: rc.cpp:336
+msgctxt "@label:listbox"
+msgid "Bottom right corner"
+msgstr "右下角"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:199
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_TapAndDragGesture)
+#: rc.cpp:339
+msgctxt "@option:check"
+msgid ""
+"Drag items by tapping the touchpad and then immediately touching it again"
+msgstr "轻拍触摸板并立即再次触摸来拖拽项目"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:208
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_LockedDrags)
+#: rc.cpp:342
+msgctxt "@option:check"
+msgid ""
+"Continue dragging when releasing the finger until the touchpad is touched "
+"again"
+msgstr "抬起手指时延续拖拽直到在此触碰到触摸板"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:218
+#. i18n: ectx: property (label), widget (KDoubleNumInput, kcfg_LockedDragsTimeout)
+#: rc.cpp:345
+msgctxt "@label:spinbox"
+msgid "Timeout to automatically stop dragging"
+msgstr "自动停止拖拽超时"
+
+#. i18n: file: kcmodule/ui/tappingpage.ui:227
+#. i18n: ectx: property (suffix), widget (KDoubleNumInput, kcfg_LockedDragsTimeout)
+#: rc.cpp:348
+msgctxt "@label:spinbox seconds"
+msgid " s"
+msgstr " 秒"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, MotionPage)
+#: rc.cpp:351
+msgctxt "@title:window cursor motion settings"
+msgid "Cursor motion"
+msgstr "光标移动"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:20
+#. i18n: ectx: property (title), widget (QGroupBox, speedGroup)
+#: rc.cpp:354
+msgctxt "@title:group"
+msgid "Cursor motion speed"
+msgstr "光标移动速度"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:26
+#. i18n: ectx: property (label), widget (KDoubleNumInput, kcfg_MinimumSpeed)
+#: rc.cpp:357
+msgctxt "@label:slider"
+msgid "Minimum speed"
+msgstr "最小速度"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:42
+#. i18n: ectx: property (label), widget (KDoubleNumInput, kcfg_MaximumSpeed)
+#: rc.cpp:360
+msgctxt "@label:slider"
+msgid "Maximum speed"
+msgstr "最大速度"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:58
+#. i18n: ectx: property (toolTip), widget (KDoubleNumInput, kcfg_AccelerationFactor)
+#: rc.cpp:363
+msgctxt "@info:tooltip"
+msgid ""
+"The acceleration factor defines the acceleration between minimum and maximum "
+"speed"
+msgstr "加速系数定义了最小和最大速度间的加速过程"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:61
+#. i18n: ectx: property (whatsThis), widget (KDoubleNumInput, kcfg_AccelerationFactor)
+#: rc.cpp:366
+msgctxt "@info:whatsthis"
+msgid ""
+"The acceleration factor defines the acceleration between minimum and maximum "
+"speed.  If minimum and maximum speed are equal, acceleration is not used."
+msgstr "加速系数定义了最小和最大速度间的加速过程。如果最小和最大速度相等，则不使用加速。"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:64
+#. i18n: ectx: property (label), widget (KDoubleNumInput, kcfg_AccelerationFactor)
+#: rc.cpp:369
+msgctxt "@label:slider"
+msgid "Acceleration factor"
+msgstr "加速系数"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:86
+#. i18n: ectx: property (title), widget (QGroupBox, edgeMotionGroup)
+#: rc.cpp:372
+msgctxt "@title:group"
+msgid "Continue cursor motion when hitting the touchpad edge"
+msgstr "触碰触摸板边缘时延续光标移动"
+
+#. i18n: file: kcmodule/ui/motionpage.ui:92
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EdgeMotionAlways)
+#: rc.cpp:375
+msgctxt "@option:radio"
+msgid "For all movements, not only dragging"
+msgstr "针对所有移动，而非仅仅是拖拽"
+
+#. i18n: file: applet/userinterfacepage.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, UserInterfacePage)
+#: rc.cpp:378
+msgid "User interface"
+msgstr "用户界面"
+
+#. i18n: file: applet/userinterfacepage.ui:20
+#. i18n: ectx: property (text), widget (QLabel, doubleClickActionLabel)
+#: rc.cpp:381
+msgid "Double click action"
+msgstr "双击动作"
+
+#. i18n: file: applet/userinterfacepage.ui:28
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_DoubleClickAction)
+#: rc.cpp:384
+msgid "No action"
+msgstr "无动作"
+
+#. i18n: file: applet/userinterfacepage.ui:33
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_DoubleClickAction)
+#: rc.cpp:387
+msgid "Open touchpad configuration"
+msgstr "打开触摸板配置"
+
+#. i18n: file: applet/userinterfacepage.ui:38
+#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_DoubleClickAction)
+#: rc.cpp:390
+msgid "Switch touchpad on or off"
+msgstr "开启或关闭触摸板"
+
+#. i18n: file: applet/plasma-applet-synaptiks.kcfg:6
+#. i18n: ectx: label, entry (DoubleClickAction), group (UserInterface)
+#: rc.cpp:393
+msgid "What to do when double-clicking the applet"
+msgstr "双击小程序时的行为"
+
+

@@ -1,0 +1,11 @@
+--- kdewebdev-3.5.4/kxsldbg/Makefile.am.orig	2006-08-25 17:24:17.000000000 +0200
++++ kdewebdev-3.5.4/kxsldbg/Makefile.am	2006-08-25 17:25:10.000000000 +0200
+@@ -56,6 +56,8 @@
+ shellrcdir   = $(kde_datadir)/kxsldbg
+ shellrc_DATA = kxsldbg_shell.rc
+ 
++KDE_ICON = kxsldbg
++
+ messages: rc.cpp
+ 	LIST=`find . -name \*.ui -o -name \*.rc`; \
+ 	$(EXTRACTRC) $$LIST >> rc.cpp ;\

@@ -1,0 +1,19 @@
+diff -ruN Canna36p3.orig/lib/canna/romaji.c Canna36p3/lib/canna/romaji.c
+--- Canna36p3.orig/lib/canna/romaji.c	2003-03-25 18:41:14.000000000 +0900
++++ Canna36p3/lib/canna/romaji.c	2003-03-26 17:11:58.000000000 +0900
+@@ -438,7 +438,6 @@
+ 	}
+       }
+       
+-#if 0 /* currently CANNASHAREDDIR is not defined */
+       if (retval == (struct RkRxDic *)NULL) { /* added for Debian by ISHIKAWA Mutsumi <ishikawa@linux.or.jp> */
+         extern jrUserInfoStruct *uinfo;
+ 	
+@@ -463,7 +462,6 @@
+ 	  }
+ 	}
+       }
+-#endif
+       
+       if (retval == (struct RkRxDic *)NULL) { /* 全部オープンできない */
+ 	sprintf(rdic, 

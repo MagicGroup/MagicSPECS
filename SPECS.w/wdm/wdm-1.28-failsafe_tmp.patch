@@ -1,0 +1,53 @@
+--- wdm-1.28/configs/Xsession.in.failsafe_tmp	2005-03-26 14:57:04.000000000 +0100
++++ wdm-1.28/configs/Xsession.in	2006-11-29 10:21:25.000000000 +0100
+@@ -16,22 +16,30 @@
+ 1)
+         case $1 in
+         failsafe)
+-                exec @FAILSAFE@ -geometry 80x24-0-0
++                exec @FAILSAFE_PATH@ -geometry 80x24-0-0
+                 ;;
+         esac
+         echo $1 >$HOME/.wm_style
+ esac
+ 
+ # redirect errors to a file in user's home directory if we can
+-for errfile in "$HOME/.xsession-errors" "${TMPDIR-/tmp}/xses-$USER" "/tmp/xses-$USER"
+-do
+-        if ( cp /dev/null "$errfile" 2> /dev/null )
+-        then
+-                chmod 600 "$errfile"
+-                exec > "$errfile" 2>&1
+-                break
+-        fi
+-done
++errfile="$HOME/.xsession-errors"
++if ( umask 077 && cp /dev/null "$errfile" 2> /dev/null )
++then
++	exec > "$errfile" 2>&1
++else
++
++	mktemp=/bin/mktemp
++ 	for errfile in "${TMPDIR-/tmp}/xses-$USER" "/tmp/xses-$USER"
++	do
++		if ef="$( umask 077 && $mktemp "$errfile.XXXXXX" 2> /dev/null)"
++		then
++			exec > "$ef" 2>&1
++			mv "$ef" "$errfile" 2> /dev/null
++ 			break
++ 		fi
++	done
++fi
+ 
+ # clean up after xbanner
+ # (RedHat code: need freetemp executed IF xbanner is run by Xsetup_0)
+--- wdm-1.28/configs/Xclients.in.failsafe_tmp	2006-11-29 10:23:02.000000000 +0100
++++ wdm-1.28/configs/Xclients.in	2006-11-29 10:24:04.000000000 +0100
+@@ -36,7 +36,6 @@
+ 
+ # these files are left sitting around by TheNextLevel.
+ rm -f $HOME/Xrootenv.0
+-rm -f /tmp/fvwmrc* 2>/dev/null
+ 
+ # check for and set x-resources
+ if [ -f $HOME/.Xresources ] ; then

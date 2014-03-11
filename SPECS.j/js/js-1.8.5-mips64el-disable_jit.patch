@@ -1,0 +1,24 @@
+diff -ur js-1.8.5-orig/js/src/jsvalue.h js-1.8.5/js/src/jsvalue.h
+--- js-1.8.5-orig/js/src/jsvalue.h  2013-05-31 12:08:18.000000000 -0400
++++ js-1.8.5/js/src/jsvalue.h	2013-05-31 13:11:42.000000000 -0400
+@@ -727,7 +727,7 @@
+         return data.asPtr;
+     }
+ 
+-    const jsuword *payloadWord() const {
++    const uint64 *payloadWord() const {
+ #if JS_BITS_PER_WORD == 32
+         return &data.s.payload.word;
+ #elif JS_BITS_PER_WORD == 64
+diff -ur js-1.8.5-orig/js/src/Makefile.in js-1.8.5/js/src/Makefile.in
+--- js-1.8.5-orig/js/src/Makefile.in	2013-05-31 12:08:18.000000000 -0400
++++ js-1.8.5/js/src/Makefile.in	2013-05-31 13:11:39.000000000 -0400
+@@ -968,7 +968,7 @@
+ # Needed to "configure" it correctly.  Unfortunately these
+ # flags wind up being applied to all code in js/src, not just
+ # the code in js/src/assembler.
+-CXXFLAGS += -DUSE_SYSTEM_MALLOC=1 -DENABLE_ASSEMBLER=1 -DENABLE_JIT=1
++CXXFLAGS += -DUSE_SYSTEM_MALLOC=1
+ 
+ INCLUDES +=	-I$(srcdir)/assembler -I$(srcdir)/yarr
+ 

@@ -1,0 +1,150 @@
+--- ./doc/Makefile.am.path-define	2006-05-03 03:57:18.000000000 +1000
++++ ./doc/Makefile.am	2008-07-15 10:48:01.000000000 +1000
+@@ -3,8 +3,8 @@
+ EXTRA_DIST = zhcon.1.in poem.big5 poem.gb poem.gb.utf8 bpsf.txt manual.tex manual.dvi manual.ps README.html default.css html.tar.gz
+ 
+ install-data-local:
+-	$(mkinstalldirs) $(mandir)/man1/
+-	$(INSTALL_DATA) $(top_builddir)/doc/zhcon.1 $(mandir)/man1/zhcon.1
++	$(mkinstalldirs) $(DESTDIR)$(mandir)/man1/
++	$(INSTALL_DATA) $(top_builddir)/doc/zhcon.1 $(DESTDIR)$(mandir)/man1/zhcon.1
+ 
+ uninstall-local:
+-	-rm -f $(mandir)/man1/zhcon.1
++	-rm -f $(DESTDIR)$(mandir)/man1/zhcon.1
+--- ./configure.in.path-define	2006-07-06 04:20:09.000000000 +1000
++++ ./configure.in	2008-07-15 10:48:01.000000000 +1000
+@@ -175,6 +175,16 @@
+ AC_CHECK_LIB(gpm,main,,usegpm="no")
+ 
+ dnl-----------------------------------------------------------------------
++dnl Fedora specific fix
++dnl-----------------------------------------------------------------------
++CFLAGS="$CFLAGS -DDATADIR=\\\"$datadir\\\" -DSYSCONFDIR=\\\"$sysconfdir\\\""
++CXXFLAGS="$CXXFLAGS -DDATADIR=\\\"$datadir\\\" -DSYSCONFDIR=\\\"$sysconfdir\\\""
++
++eval DATADIR=${datadir}
++eval DATADIR=$DATADIR
++AC_SUBST(DATADIR)
++
++dnl-----------------------------------------------------------------------
+ dnl Checks for libggi
+ dnl-----------------------------------------------------------------------
+ useggi="yes"
+@@ -208,7 +218,7 @@
+     libggi support:            ${useggi}
+     unicon support:            ${useunicon}
+     zhcon binary dir:          `eval "echo \`eval \"echo ${bindir}\"\`"`
+-    zhcon files dir:           `eval "echo \`eval \"echo ${libdir}/${PACKAGE}\"\`"`
++    zhcon files dir:           `eval "echo \`eval \"echo ${datadir}/${PACKAGE}\"\`"`
+ 
+ Config complete, now type make to build zhcon.
+ Good Luck!
+--- ./font/Makefile.am.path-define	2006-04-25 02:39:04.000000000 +1000
++++ ./font/Makefile.am	2008-07-15 10:48:01.000000000 +1000
+@@ -1,8 +1,8 @@
+ EXTRA_DIST = *.bpsf
+ 
+ install-data-local:
+-	$(mkinstalldirs) $(libdir)/zhcon/font/
+-	$(INSTALL_DATA) $(srcdir)/*.bpsf $(libdir)/zhcon/font/
++	$(mkinstalldirs) $(DESTDIR)$(datadir)/zhcon/font/
++	$(INSTALL_DATA) $(srcdir)/*.bpsf $(DESTDIR)$(datadir)/zhcon/font/
+ 
+ uninstall-local:
+-	-rm -f $(libdir)/zhcon/font/*.bpsf
++	-rm -f $(DESTDIR)$(datadir)/zhcon/font/*.bpsf
+--- ./input/Makefile.am.path-define	2006-04-25 02:38:44.000000000 +1000
++++ ./input/Makefile.am	2008-07-15 10:48:01.000000000 +1000
+@@ -1,8 +1,8 @@
+ EXTRA_DIST = *.mb
+ 
+ install-data-local:
+-	$(mkinstalldirs) $(libdir)/zhcon/input/
+-	$(INSTALL_DATA) $(srcdir)/*.mb $(libdir)/zhcon/input/
++	$(mkinstalldirs) $(DESTDIR)$(datadir)/zhcon/input/
++	$(INSTALL_DATA) $(srcdir)/*.mb $(DESTDIR)$(datadir)/zhcon/input/
+ 
+ uninstall-local:
+-	-rm -f $(libdir)/zhcon/input/*.mb
++	-rm -f $(DESTDIR)$(datadir)/zhcon/input/*.mb
+--- ./src/zhcon.conf.path-define	2008-07-15 11:15:09.000000000 +1000
++++ ./src/zhcon.conf	2008-07-15 11:16:36.000000000 +1000
+@@ -2,10 +2,10 @@
+ #it can be named as ~/.zhconrc or /etc/zhcon.conf
+ #you can edit it manually
+ 
+-zhconpath = /usr/lib/zhcon/
++zhconpath = /usr/share/zhcon/
+ 
+ #unicon(3.x) path
+-uniconpath = /usr/lib/unicon/
++uniconpath = /usr/share/unicon/
+ 
+ #defaultencode: default encoding can be :gb2312,gbk,big5,jis,ksc
+ defaultencode = gb2312
+--- ./src/zhcon.cpp.path-define	2008-07-15 10:48:01.000000000 +1000
++++ ./src/zhcon.cpp	2008-07-15 10:49:15.000000000 +1000
+@@ -123,7 +124,7 @@
+     string cfgfile = getenv("HOME");
+     cfgfile += "/.zhconrc";
+     if (access(cfgfile.c_str(), R_OK) != 0)
+-        cfgfile = "/etc/zhcon.conf";
++        cfgfile = SYSCONFDIR "/zhcon.conf";
+ 
+     //for debug,a pause enable us to attach zhcon's pid in gdb
+     //char c;cin>>c;
+@@ -621,7 +628,7 @@
+     if (getenv("LC_ALL"))
+         mOldLocale = getenv("LC_ALL");
+ 
+-    string prefix = PREFIX"/lib/zhcon/";
++    string prefix = DATADIR "/zhcon/";
+     mASCIIFont = prefix + f.GetOption(string("ascfont"), string(ASCIIFONT));
+     mGB2312Font = prefix + f.GetOption(string("gbfont"), string(GB2312FONT));
+     mGBKFont = prefix + f.GetOption(string("gbkfont"), string(GBKFONT));
+@@ -752,10 +759,10 @@
+     InputManager::SetTty(mConFd, ttyno, mTtyFd);
+     
+     string s;
+-    s = f.GetOption(string("zhconpath"), string(PREFIX"/lib/zhcon/"));
++    s = f.GetOption(string("zhconpath"), string(DATADIR "/zhcon/"));
+     NativeInputServer::SetDataPath(s);
+ #ifdef HAVE_UNICON_LIB
+-    s = f.GetOption(string("uniconpath"), string("/usr/lib/unicon/"));
++    s = f.GetOption(string("uniconpath"), string(DATADIR "/unicon/"));
+     UniconInputServer::SetDataPath(s);
+ #endif
+     string sOverSpot, sNativeBar;
+--- ./src/nativeinputserver.cpp.path-define	2006-04-25 02:38:27.000000000 +1000
++++ ./src/nativeinputserver.cpp	2008-07-15 10:48:01.000000000 +1000
+@@ -30,7 +30,7 @@
+ #include "nativeinputserver.h"
+ #include "keymap.h"
+ 
+-string NativeInputServer::mDataPath = PREFIX"/lib/zhcon/";
++string NativeInputServer::mDataPath = DATADIR"/zhcon/";
+ 
+ NativeInputServer::Symbol NativeInputServer::mFullSymbolTable[] = {
+     {'.', "¡£"}
+--- ./src/Makefile.am.path-define	2006-05-03 03:12:41.000000000 +1000
++++ ./src/Makefile.am	2008-07-15 10:48:01.000000000 +1000
+@@ -8,14 +8,14 @@
+ SUBDIRS = display
+ 
+ install-exec-local:
+-	chmod 4755 $(bindir)/zhcon
++	chmod 4755 $(DESTDIR)$(bindir)/zhcon
+ 
+ install-data-local:
+-	$(mkinstalldirs) $(prefix)/etc
+-	$(INSTALL_DATA) $(srcdir)/zhcon.conf $(prefix)/etc/zhcon.conf
++	$(mkinstalldirs) $(DESTDIR)$(sysconfdir)
++	$(INSTALL_DATA) $(srcdir)/zhcon.conf $(DESTDIR)$(sysconfdir)/zhcon.conf
+ 
+ uninstall-local:
+-	-rm -f $(prefix)/etc/zhcon.conf
++	-rm -f $(DESTDIR)$(sysconfdir)/zhcon.conf
+ 
+ # set the include path found by configure
+ INCLUDES= $(all_includes)

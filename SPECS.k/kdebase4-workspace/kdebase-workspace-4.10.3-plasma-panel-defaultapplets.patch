@@ -1,0 +1,20 @@
+diff -ur kde-workspace-4.10.3.orig/plasma/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js kde-workspace-4.10.3/plasma/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js
+--- kde-workspace-4.10.3.orig/plasma/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js	2013-05-31 05:17:22.000000000 +0000
++++ kde-workspace-4.10.3/plasma/desktop/shell/data/layouts/org.kde.plasma-desktop.defaultPanel/contents/layout.js	2013-05-31 06:24:44.000000000 +0000
+@@ -6,6 +6,16 @@
+ 
+ panel.height = screenGeometry(panel.screen).height > 1024 ? 35 : 27
+ panel.addWidget("launcher")
++panel.addWidget("showdesktop")
++var icon1 = panel.addWidget("icon")
++icon1.writeConfig("Url","/usr/share/applications/kde4/dolphin.desktop")
++icon1.reloadConfig()
++var icon2 = panel.addWidget("icon")
++icon2.writeConfig("Url","/usr/share/applications/chromium-browser.desktop")
++icon2.reloadConfig()
++var icon3 = panel.addWidget("icon")
++icon3.writeConfig("Url","/usr/share/applications/kde4/konsole.desktop")
++icon3.reloadConfig()
+ panel.addWidget("org.kde.showActivityManager")
+ pager = panel.addWidget("pager")
+ pager.writeConfig("hideWhenSingleDesktop", "true")

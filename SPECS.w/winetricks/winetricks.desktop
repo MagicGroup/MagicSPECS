@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Winetricks
+GenericName=Winetricks
+GenericName[zh_CN]=Winetricks
+Comment=Wine runtime library install tool
+Comment[zh_CN]=Wine 运行库安装工具
+Terminal=false
+Exec=winetricks
+Icon=wine
+Type=Application
+Categories=Application;X-Wine;

@@ -1,0 +1,23 @@
+diff -Nur kdebase-3.2.0/kcontrol/kio/kcookiespolicies.cpp kdebase-3.2.0new/kcontrol/kio/kcookiespolicies.cpp
+--- kdebase-3.2.0/kcontrol/kio/kcookiespolicies.cpp	2003-05-16 06:35:10.000000000 +0800
++++ kdebase-3.2.0new/kcontrol/kio/kcookiespolicies.cpp	2003-08-05 23:57:31.000000000 +0800
+@@ -354,7 +354,7 @@
+   cookiesEnabled( enableCookies );
+ 
+   KCookieAdvice::Value advice = KCookieAdvice::strToAdvice (cfg.readEntry(
+-                                               "CookieGlobalAdvice", "Ask"));
++                                               "CookieGlobalAdvice", "Accept"));
+   switch (advice)
+   {
+     case KCookieAdvice::Accept:
+@@ -482,8 +482,8 @@
+ void KCookiesPolicies::defaults()
+ {
+   dlg->cbEnableCookies->setChecked( true );
+-  dlg->rbPolicyAsk->setChecked( true );
+-  dlg->rbPolicyAccept->setChecked( false );
++  dlg->rbPolicyAsk->setChecked( false );
++  dlg->rbPolicyAccept->setChecked( true );
+   dlg->rbPolicyReject->setChecked( false );
+   dlg->cbRejectCrossDomainCookies->setChecked( true );
+   dlg->cbAutoAcceptSessionCookies->setChecked( true );

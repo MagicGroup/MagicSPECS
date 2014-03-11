@@ -1,0 +1,13 @@
+--- fortune-mod-1.99.1/Makefile	2004-03-05 05:29:56.000000000 -0800
++++ fortune-mod-1.99.1/Makefile.cflags	2005-03-13 08:34:26.910944536 -0800
+@@ -65,8 +65,8 @@
+ RECODELIBS=-lrecode
+ 
+ DEFINES=-DFORTDIR="\"$(COOKIEDIR)\"" -DOFFDIR="\"$(OCOOKIEDIR)\"" -DLOCFORTDIR="\"$(LOCALDIR)\"" -DLOCOFFDIR="\"$(LOCALODIR)\""
+-CFLAGS=-O2 $(DEFINES) -Wall -fomit-frame-pointer -pipe -fsigned-char
+-LDFLAGS=-s
++CFLAGS=$(RPM_OPT_FLAGS) $(DEFINES)
++LDFLAGS=
+ 
+ # The above flags are used by default; the debug flags are used when make
+ # is called with a debug target, such as 'make debug'

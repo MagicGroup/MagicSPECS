@@ -1,0 +1,121 @@
+diff -ruN -xCVS wine-20050725/dlls/gdi/freetype.c marcus-wine-20050725/dlls/gdi/freetype.c
+--- wine-20050725/dlls/gdi/freetype.c	2005-07-22 17:40:16.000000000 +0200
++++ marcus-wine-20050725/dlls/gdi/freetype.c	2005-07-06 18:02:06.000000000 +0200
+@@ -420,9 +420,17 @@
+ #endif
+     int i, bitmap_num;
+ 
++    /* ethiopian font which says it is regular, but it isn't. */
++    if (strstr(file,"GohaTibebZemen.ttf"))
++   	return FALSE;
++    /* koffice-wordprocessing brings esstix* which appear as symbol/greek fonts */
++    if (strstr(file,"esstix"))
++        return FALSE;
++
+     do {
+         char *family_name = fake_family;
+ 
++
+         TRACE("Loading font file %s index %ld\n", debugstr_a(file), face_index);
+ 	if((err = pFT_New_Face(library, file, face_index, &ft_face)) != 0) {
+ 	    WARN("Unable to load font file %s err = %x\n", debugstr_a(file), err);
+@@ -811,7 +819,8 @@
+ 
+     dir = opendir(dirname);
+     if(!dir) {
+-        ERR("Can't open directory %s\n", debugstr_a(dirname));
++    	/* might just be a long list of possible directories, so not ERR */
++        WARN("Can't open directory %s\n", debugstr_a(dirname));
+ 	return FALSE;
+     }
+     while((dent = readdir(dir)) != NULL) {
+diff -ruN -xCVS wine-20050725/libs/wine/mmap.c marcus-wine-20050725/libs/wine/mmap.c
+--- wine-20050725/libs/wine/mmap.c	2005-06-22 14:08:59.000000000 +0200
++++ marcus-wine-20050725/libs/wine/mmap.c	2005-06-22 14:08:20.000000000 +0200
+@@ -298,6 +298,7 @@
+         }
+     }
+ 
++#if 0
+     if (stack_ptr >= user_space_limit)
+     {
+         char *base = stack_ptr - ((unsigned int)stack_ptr & granularity_mask) - (granularity_mask + 1);
+@@ -311,6 +312,7 @@
+             reserve_area( base, 0 );
+     }
+     else reserve_area( user_space_limit, 0 );
++#endif
+ #endif /* __i386__ */
+ 
+     /* reserve the DOS area if not already done */
+diff -ruN -xCVS wine-20050725/programs/Makefile.in marcus-wine-20050725/programs/Makefile.in
+--- wine-20050725/programs/Makefile.in	2005-07-22 17:41:26.000000000 +0200
++++ marcus-wine-20050725/programs/Makefile.in	2005-07-20 13:14:17.000000000 +0200
+@@ -77,6 +77,7 @@
+ 	progman \
+ 	regedit \
+ 	regsvr32 \
++	rundll32 \
+ 	uninstaller \
+ 	wcmd \
+ 	wineboot \
+@@ -85,8 +86,10 @@
+ 	wineconsole \
+ 	winedbg \
+ 	winefile \
++	winemenubuilder \
+ 	winemine \
+ 	winepath \
++	winevdm \
+ 	winhelp
+ 
+ # Symlinks to apps that we want to run from inside the source tree
+diff -ruN -xCVS wine-20050725/server/registry.c marcus-wine-20050725/server/registry.c
+--- wine-20050725/server/registry.c	2005-07-22 17:41:33.000000000 +0200
++++ marcus-wine-20050725/server/registry.c	2005-07-20 13:14:18.000000000 +0200
+@@ -1590,7 +1590,7 @@
+     for (;;)
+     {
+         sprintf( p, "reg%lx%04x.tmp", (long) getpid(), count++ );
+-        if ((fd = open( tmp, O_CREAT | O_EXCL | O_WRONLY, 0666 )) != -1) break;
++        if ((fd = open( tmp, O_CREAT | O_EXCL | O_WRONLY, 0600 )) != -1) break;
+         if (errno != EEXIST) goto done;
+         close( fd );
+     }
+diff -ruN -xCVS wine-20050725/tools/wineprefixcreate.in marcus-wine-20050725/tools/wineprefixcreate.in
+--- wine-20050725/tools/wineprefixcreate.in	2005-05-25 08:33:47.000000000 +0200
++++ marcus-wine-20050725/tools/wineprefixcreate.in	2005-07-22 18:23:49.000000000 +0200
+@@ -122,6 +122,33 @@
+     [ -d "$WINEPREFIX/drive_c" ] || mkdir "$WINEPREFIX/drive_c"
+     ln -s "../drive_c" "$WINEPREFIX/dosdevices/c:"
+     ln -s "/" "$WINEPREFIX/dosdevices/z:"
++    ln -s "/tmp" "$WINEPREFIX/dosdevices/x:"
++    if [ -d "$HOME" ]; then
++	ln -s "$HOME" "$WINEPREFIX/dosdevices/y:"
++	if [ ! -f "$HOME/.windows-label" ]; then
++		echo "HOME" > "$HOME/.windows-label"
++	fi
++    fi
++    # autodetect CD-ROMS on SUSE.
++    drive=D
++    for i in /media/* ; do
++	   bn=`basename $i`
++	   if [ "$i" = "/media/floppy" ]; then
++		ln -s /media/floppy "$WINEPREFIX/dosdevices/a:"
++		ln -s /dev/fd0 "$WINEPREFIX/dosdevices/a::"
++	   fi
++	   if echo $bn| grep -E -v "^(sd|usb-storage|floppy)" >/dev/null; then
++		ln -s /media/$bn "$WINEPREFIX/dosdevices/"`echo $drive|tr "[A-Z]" "[a-z]"`:
++		ln -s /dev/$bn "$WINEPREFIX/dosdevices/"`echo $drive|tr "[A-Z]" "[a-z]"`::
++		drive=`echo $drive|tr "D-L" "E-M"`
++	   fi
++    done
++    ln -s /dev/ttyS0 "$WINEPREFIX/dosdevices/com1"
++    ln -s /dev/ttyS1 "$WINEPREFIX/dosdevices/com2"
++    ln -s /dev/ttyS2 "$WINEPREFIX/dosdevices/com3"
++    ln -s /dev/ttyS3 "$WINEPREFIX/dosdevices/com4"
++    ln -s /dev/lp0   "$WINEPREFIX/dosdevices/lpt1"
++    cp /etc/wine/user.reg  "$WINEPREFIX/user.reg"
+ fi
+ 
+ CROOT="$WINEPREFIX/dosdevices/c:"

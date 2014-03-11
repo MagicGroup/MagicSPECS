@@ -1,0 +1,24 @@
+diff -up lxmusic-0.3.0/data/lxmusic.ui.glade.BAD lxmusic-0.3.0/data/lxmusic.ui.glade
+--- lxmusic-0.3.0/data/lxmusic.ui.glade.BAD	2009-08-11 16:20:39.915240510 -0400
++++ lxmusic-0.3.0/data/lxmusic.ui.glade	2009-08-11 16:21:02.868240450 -0400
+@@ -180,12 +180,6 @@
+           </object>
+         </child>
+         <child>
+-          <object class="GtkAction" id="tools_mi">
+-            <property name="name">tools_mi</property>
+-            <property name="label" translatable="yes">_Tools</property>
+-          </object>
+-        </child>
+-        <child>
+           <object class="GtkAction" id="help_mi">
+             <property name="name">help_mi</property>
+             <property name="label" translatable="yes">_Help</property>
+@@ -230,7 +224,6 @@
+         <menu action="view_mi">
+           <menuitem action="show_pl"/>
+         </menu>
+-        <menuitem action="tools_mi"/>
+         <menu action="help_mi">
+           <menuitem action="about_mi"/>
+         </menu>

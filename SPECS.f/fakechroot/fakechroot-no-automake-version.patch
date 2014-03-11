@@ -1,0 +1,25 @@
+diff -ur fakechroot-2.9/autogen.sh fakechroot-2.9-no-automake-version/autogen.sh
+--- fakechroot-2.9/autogen.sh	2009-03-19 14:43:19.000000000 +0000
++++ fakechroot-2.9-no-automake-version/autogen.sh	2009-06-12 10:03:49.897687490 +0100
+@@ -5,18 +5,16 @@
+ set -e
+ 
+ autogen () {
+-    automake_version=1.10
+-
+     rm -f Makefile Makefile.in aclocal.m4 
+     rm -f config.guess config.h config.h.in config.log
+     rm -f config.status config.sub configure
+     rm -f depcomp install-sh libtool ltmain.sh missing stamp-h1
+     rm -rf autom4te.cache
+ 
+-    aclocal-${automake_version} "$@"
++    aclocal "$@"
+     autoheader
+     libtoolize --force --copy
+-    automake-${automake_version} --add-missing --copy
++    automake --add-missing --copy
+     autoconf
+ 
+     rm -rf autom4te.cache
+Only in fakechroot-2.9-no-automake-version: autogen.sh~

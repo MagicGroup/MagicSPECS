@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# chkconfig:	- 27 88
+
+### BEGIN INIT INFO
+# Required-Start: bluetooth
+# Default-Start: 
+# Short-Description: Bluetooth RFCOMM setup.
+# Description: Bluetooth RFCOMM setup. Sets up serial devices
+# over Bluetooth.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+[ -f /etc/sysconfig/network ] && . /etc/sysconfig/network
+
+[ "${NETWORKING}" = "yes" ] || exit 0
+
+start() 
+{
+        echo -n $"Starting rfcomm: "
+        rfcomm bind all
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && touch /var/lock/subsys/rfcomm
+        return $RETVAL
+}
+
+stop() 
+{
+        echo -n $"Shutting down rfcomm: "
+	rfcomm release all
+	RETVAL=$?
+
+	rm -f  /var/lock/subsys/rfcomm
+        echo
+	return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+        ;;
+  stop)
+	stop
+        ;;
+  force-reload|restart|reload)
+	stop
+	start
+	;;
+  try-restart|condrestart)
+	[ -e /var/lock/subsys/rfcomm ] && (stop; start)
+	;;
+  status)
+        RETVAL=1
+  	[ -e /var/lock/subsys/rfcomm ] && RETVAL=0
+	;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart|reload|condrestart}"
+        exit 3
+esac
+
+exit $RETVAL

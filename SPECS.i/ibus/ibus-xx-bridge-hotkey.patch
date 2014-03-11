@@ -1,0 +1,2294 @@
+From 18ad10e6dd89a0327fa29535f03fa51b953e7635 Mon Sep 17 00:00:00 2001
+From: fujiwarat <takao.fujiwara1@gmail.com>
+Date: Mon, 28 Nov 2011 12:23:06 +0900
+Subject: [PATCH] Add a bridge hotkey which use prev-next engines instead
+ of on-off.
+
+---
+ bus/Makefile.am                 |   20 +-
+ bus/ibusimpl.c                  |  598 +++++++++++++++++++++++++++++++++++----
+ bus/inputcontext.c              |   81 ++++++
+ bus/inputcontext.h              |   22 ++
+ bus/registry.c                  |   61 ++++
+ bus/registry.h                  |   10 +
+ configure.ac                    |   31 ++
+ data/Makefile.am                |    6 +-
+ data/ibus.schemas.in            |  298 -------------------
+ data/ibus.schemas.in.in         |  311 ++++++++++++++++++++
+ ibus/_config.py.in              |    6 +
+ ibus/inputcontext.py            |   17 +-
+ ibus/interface/iinputcontext.py |    7 +-
+ ibus/xkbxml.py.in               |    4 +
+ setup/enginecombobox.py         |    3 +
+ setup/enginetreeview.py         |    8 +-
+ setup/main.py                   |   45 +++
+ setup/setup.ui                  |   64 ++++-
+ src/Makefile.am                 |   18 +-
+ src/ibushotkey.c                |   11 +
+ src/ibushotkey.h                |   11 +
+ src/ibusinputcontext.c          |   27 ++
+ src/ibusinputcontext.h          |   12 +
+ src/ibusutil.c                  |   12 +
+ src/ibusutil.h                  |   14 +
+ ui/gtk/panel.py                 |  335 ++++++++++++++++++++--
+ xkb/Makefile.am                 |    2 +
+ xkb/ibus-engine-xkb-main.c      |   16 +
+ xkb/xkbxml.c                    |   10 +-
+ 29 files changed, 1653 insertions(+), 407 deletions(-)
+ delete mode 100644 data/ibus.schemas.in
+ create mode 100644 data/ibus.schemas.in.in
+
+diff --git a/bus/Makefile.am b/bus/Makefile.am
+index 074b456..0efaa1b 100644
+--- a/bus/Makefile.am
++++ b/bus/Makefile.am
+@@ -29,15 +29,17 @@ INCLUDES =                \
+ 	-I$(top_builddir)/src \
+ 	$(NULL)
+ 
+-AM_CFLAGS =                        \
+-	@GLIB2_CFLAGS@                 \
+-	@GIO2_CFLAGS@                  \
+-	@GTHREAD2_CFLAGS@              \
+-	-DG_LOG_DOMAIN=\"IBUS\"        \
+-	-DPKGDATADIR=\"$(pkgdatadir)\" \
+-	-DLIBEXECDIR=\"$(libexecdir)\" \
+-	-DBINDIR=\"@bindir@\"          \
+-	$(INCLUDES)                    \
++AM_CFLAGS =                                                            \
++	@GLIB2_CFLAGS@                                                 \
++	@GIO2_CFLAGS@                                                  \
++	@GTHREAD2_CFLAGS@                                              \
++	-DG_LOG_DOMAIN=\"IBUS\"                                        \
++	-DPKGDATADIR=\"$(pkgdatadir)\"                                 \
++	-DLIBEXECDIR=\"$(libexecdir)\"                                 \
++	-DBINDIR=\"@bindir@\"                                          \
++	-DUSE_BRIDGE_HOTKEY=$(USE_BRIDGE_HOTKEY)                       \
++	-DDEFAULT_BRIDGE_ENGINE_NAME=\"$(DEFAULT_BRIDGE_ENGINE_NAME)\" \
++	$(INCLUDES)                                                    \
+ 	$(NULL)
+ AM_LDADD =                  \
+ 	@GOBJECT2_LIBS@         \
+diff --git a/bus/ibusimpl.c b/bus/ibusimpl.c
+index 059d660..67761fb 100644
+--- a/bus/ibusimpl.c
++++ b/bus/ibusimpl.c
+@@ -20,12 +20,17 @@
+  * Boston, MA 02111-1307, USA.
+  */
+ 
++#ifdef HAVE_CONFIG_H
++#include <config.h>
++#endif
++
+ #include <unistd.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <signal.h>
+ #include <locale.h>
+ #include <strings.h>
++#include <string.h>
+ #include "types.h"
+ #include "ibusimpl.h"
+ #include "dbusimpl.h"
+@@ -79,6 +84,11 @@ struct _BusIBusImpl {
+     /* engine-specific hotkeys */
+     IBusHotkeyProfile *engines_hotkey_profile;
+     GHashTable      *hotkey_to_engines_map;
++
++#if USE_BRIDGE_HOTKEY
++    IBusEngineDesc *prev_hotkey_engine;
++    guint           xkb_group_length;
++#endif
+ };
+ 
+ struct _BusIBusImplClass {
+@@ -99,6 +109,8 @@ enum {
+ static guint            _signals[LAST_SIGNAL] = { 0 };
+ */
+ 
++static gchar           *_bridge_trigger_keys = NULL;
++
+ /* functions prototype */
+ static void      bus_ibus_impl_destroy           (BusIBusImpl        *ibus);
+ static void      bus_ibus_impl_service_method_call
+@@ -285,6 +297,112 @@ _panel_destroy_cb (BusPanelProxy *panel,
+     g_object_unref (panel);
+ }
+ 
++/**
++ * _foreach_remove_engine_hotkey:
++ *
++ * Remove the engine-specific hot key of the engine, and update ibus->engines_hotkey_profile.
++ */
++gboolean
++_foreach_remove_engine_hotkey (gpointer        key,
++                               gpointer        value,
++                               gpointer        data)
++{
++    GQuark event = GPOINTER_TO_UINT (value);
++    struct _impl_and_desc {
++        BusIBusImpl    *ibus;
++        IBusEngineDesc *desc;
++    } *id = (struct _impl_and_desc *) data;
++    BusIBusImpl *ibus = id->ibus;
++    IBusEngineDesc *desc = id->desc;
++    GList *engine_list;
++
++    g_assert (ibus != NULL);
++    g_assert (desc != NULL);
++
++    if (event == 0) {
++        return FALSE;
++    }
++
++    engine_list = g_hash_table_lookup (ibus->hotkey_to_engines_map,
++                                       GUINT_TO_POINTER (event));
++
++    /* As we will rebuild the engines hotkey map whenever an engine was
++     * added or removed, we don't need to hold a reference of the engine
++     * here. */
++    if (engine_list && g_list_find (engine_list, desc) != NULL) {
++        engine_list = g_list_remove (engine_list, desc);
++    }
++
++    /* We need to steal the value before adding it back, otherwise it will
++     * be destroyed. */
++    g_hash_table_steal (ibus->hotkey_to_engines_map, GUINT_TO_POINTER (event));
++
++    if (engine_list != NULL) {
++        g_hash_table_insert (ibus->hotkey_to_engines_map,
++                             GUINT_TO_POINTER (event), engine_list);
++    }
++
++    return FALSE;
++}
++
++/**
++ * _add_engine_hotkey_with_hotkeys:
++ *
++ * Check the engine-specific hot key of the engine, and update ibus->engines_hotkey_profile.
++ */
++static void
++_add_engine_hotkey_with_hotkeys (IBusEngineDesc *engine,
++                                 BusIBusImpl    *ibus,
++                                 const gchar    *hotkeys)
++{
++    gchar **hotkey_list;
++    gchar **p;
++    gchar *hotkey;
++    GList *engine_list;
++
++    GQuark event;
++    guint keyval;
++    guint modifiers;
++
++    g_assert (engine != NULL);
++    g_assert (hotkeys && *hotkeys);
++
++    hotkey_list = g_strsplit_set (hotkeys, ";,", 0);
++
++    for (p = hotkey_list; p && *p; ++p) {
++        hotkey = g_strstrip (*p);
++        if (!*hotkey || !ibus_key_event_from_string (hotkey, &keyval, &modifiers)) {
++            continue;
++        }
++
++        /* If the hotkey already exists, we won't need to add it again. */
++        event = ibus_hotkey_profile_lookup_hotkey (ibus->engines_hotkey_profile,
++                                                   keyval, modifiers);
++        if (event == 0) {
++            event = g_quark_from_string (hotkey);
++            ibus_hotkey_profile_add_hotkey (ibus->engines_hotkey_profile,
++                                            keyval, modifiers, event);
++        }
++
++        engine_list = g_hash_table_lookup (ibus->hotkey_to_engines_map,
++                                           GUINT_TO_POINTER (event));
++
++        /* As we will rebuild the engines hotkey map whenever an engine was
++         * added or removed, we don't need to hold a reference of the engine
++         * here. */
++        engine_list = g_list_append (engine_list, engine);
++
++        /* We need to steal the value before adding it back, otherwise it will
++         * be destroyed. */
++        g_hash_table_steal (ibus->hotkey_to_engines_map, GUINT_TO_POINTER (event));
++
++        g_hash_table_insert (ibus->hotkey_to_engines_map,
++                             GUINT_TO_POINTER (event), engine_list);
++    }
++
++    g_strfreev (hotkey_list);
++}
++
+ static void
+ _config_set_value_done (GObject      *object,
+                         GAsyncResult *res,
+@@ -572,6 +690,67 @@ bus_ibus_impl_set_hotkey (BusIBusImpl *i
+ 
+ }
+ 
++#if USE_BRIDGE_HOTKEY
++static gboolean
++use_bridge_hotkey (BusIBusImpl *ibus)
++{
++    GVariant *variant = NULL;
++    gboolean _use_bridge_hotkey = TRUE;
++
++    g_assert (ibus != NULL);
++
++    if (!ibus->config) {
++        return TRUE;
++    }
++
++    variant = ibus_config_get_value (ibus->config,
++                                     "general/hotkey",
++                                     "use_bridge_hotkey");
++
++    if (variant != NULL) {
++        g_variant_get (variant, "b", &_use_bridge_hotkey);
++        g_variant_unref (variant);
++    }
++
++    return _use_bridge_hotkey;
++}
++
++static void
++bus_ibus_impl_set_bridge_trigger_keys (BusIBusImpl *ibus,
++                                       GQuark       hotkey,
++                                       GVariant    *value)
++{
++    g_assert (BUS_IS_IBUS_IMPL (ibus));
++
++    ibus_hotkey_profile_remove_hotkey_by_event (ibus->hotkey_profile, hotkey);
++
++    if (value == NULL) {
++        return;
++    }
++
++    GVariantIter iter;
++    g_variant_iter_init (&iter, value);
++    const gchar *str = NULL;
++
++    g_free (_bridge_trigger_keys);
++    _bridge_trigger_keys = NULL;
++
++    while (g_variant_iter_loop (&iter,"&s", &str)) {
++       if (str != NULL) {
++           gchar *tmp =NULL;
++
++           if (_bridge_trigger_keys) {
++               tmp = g_strdup_printf ("%s,%s", _bridge_trigger_keys, str);
++           } else {
++               tmp = g_strdup (str);
++           }
++           g_free (_bridge_trigger_keys);
++           _bridge_trigger_keys = tmp;
++       }
++    }
++}
++#endif
++
+ /**
+  * bus_ibus_impl_set_trigger:
+  *
+@@ -583,7 +762,15 @@ bus_ibus_impl_set_trigger (BusIBusImpl *
+ {
+     GQuark hotkey = g_quark_from_static_string ("trigger");
+     if (value != NULL) {
++#if USE_BRIDGE_HOTKEY
++        if (use_bridge_hotkey (ibus)) {
++            bus_ibus_impl_set_bridge_trigger_keys (ibus, hotkey, value);
++        } else {
++            bus_ibus_impl_set_hotkey (ibus, hotkey, value);
++        }
++#else
+         bus_ibus_impl_set_hotkey (ibus, hotkey, value);
++#endif
+     }
+ #ifndef OS_CHROMEOS
+     else {
+@@ -649,6 +836,72 @@ bus_ibus_impl_set_previous_engine (BusIB
+     bus_ibus_impl_set_hotkey (ibus, hotkey, value);
+ }
+ 
++#if USE_BRIDGE_HOTKEY
++static gint
++_engine_desc_name_cmp (IBusEngineDesc *desc1,
++                       IBusEngineDesc *desc2)
++{
++    return g_strcmp0 (ibus_engine_desc_get_name (desc1),
++                      ibus_engine_desc_get_name (desc2));
++}
++
++static void
++_set_register_engines (BusIBusImpl *ibus,
++                       GVariant    *value)
++{
++    GList *engine_list = NULL;
++
++    g_assert (BUS_IS_IBUS_IMPL (ibus));
++
++    engine_list = ibus->register_engine_list;
++    if (value != NULL && g_variant_classify (value) == G_VARIANT_CLASS_ARRAY) {
++        GVariantIter iter;
++        g_variant_iter_init (&iter, value);
++        const gchar *engine_name = NULL;
++        while (g_variant_iter_loop (&iter, "&s", &engine_name)) {
++            IBusEngineDesc *engine = bus_registry_find_engine_by_name (ibus->registry, engine_name);
++            if (engine == NULL || g_list_find (engine_list, engine) != NULL)
++                continue;
++            engine_list = g_list_append (engine_list, g_object_ref (engine));
++        }
++    } else if (value != NULL) {
++        g_variant_unref (value);
++    }
++
++    ibus->register_engine_list = engine_list;
++
++    if (engine_list) {
++        BusComponent *component = bus_component_from_engine_desc ((IBusEngineDesc *) engine_list->data);
++        if (component && !bus_component_is_running (component)) {
++            bus_component_start (component, g_verbose);
++        }
++    }
++}
++
++static void
++_set_default_keyboard_layout_engines (BusIBusImpl *ibus)
++{
++    GList *engines = NULL;
++    GList *list;
++    GVariantBuilder builder;
++
++    g_assert (BUS_IS_IBUS_IMPL (ibus));
++
++    engines = bus_registry_get_engines_by_name_prefix (ibus->registry,
++                                                       DEFAULT_BRIDGE_ENGINE_NAME);
++    /* sort engines by rank */
++    engines = g_list_sort (engines, (GCompareFunc) _engine_desc_name_cmp);
++
++    g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
++    for (list = engines; list != NULL; list = list->next) {
++        IBusEngineDesc *desc = (IBusEngineDesc *)list->data;
++        g_variant_builder_add (&builder, "s", ibus_engine_desc_get_name (desc));
++    }
++    _set_register_engines (ibus, g_variant_builder_end (&builder));
++    g_list_free (engines);
++}
++#endif
++
+ /**
+  * bus_ibus_impl_set_preload_engines:
+  *
+@@ -668,6 +921,9 @@ bus_ibus_impl_set_preload_engines (BusIB
+             _set_preload_engines (ibus, value);
+         }
+     }
++#if USE_BRIDGE_HOTKEY
++    _set_default_keyboard_layout_engines (ibus);
++#endif
+ #else
+     _set_preload_engines (ibus, value);
+ #endif
+@@ -1216,6 +1472,53 @@ _find_engine_desc_by_name (BusIBusImpl *
+     return NULL;
+ }
+ 
++#if USE_BRIDGE_HOTKEY
++const gchar *
++_get_engine_desc_hotkeys_with_system (IBusEngineDesc *desc)
++{
++    const gchar *hotkeys = NULL;
++
++    /* If the user customized the trigger key, the trigger key is used for
++     * any IBus engines. */
++    if (_bridge_trigger_keys != NULL &&
++        *_bridge_trigger_keys != '\0' &&
++        g_strcmp0 (_bridge_trigger_keys, "Control+space") != 0) {
++
++        hotkeys = (const gchar *) _bridge_trigger_keys;
++    } else if (desc) {
++        hotkeys = ibus_engine_desc_get_hotkeys (desc);
++    }
++
++    /* If engine hotkeys are not defined in the compose xml file,
++     * IBus trigger keys are used. */
++    if (!hotkeys || !*hotkeys) {
++            hotkeys = (const gchar *) _bridge_trigger_keys;
++    }
++
++    return hotkeys;
++}
++
++void
++_update_hotkeys_by_prev_engine_desc (BusIBusImpl    *ibus,
++                                     IBusEngineDesc *next_desc,
++                                     IBusEngineDesc *prev_desc)
++{
++    struct _impl_and_desc {
++        BusIBusImpl    *ibus;
++        IBusEngineDesc *desc;
++    } id = {ibus, next_desc};
++    const gchar *hotkeys = NULL;
++
++    hotkeys = _get_engine_desc_hotkeys_with_system (prev_desc);
++    if (hotkeys && *hotkeys) {
++        ibus_hotkey_profile_foreach_hotkey (ibus->engines_hotkey_profile,
++                                            _foreach_remove_engine_hotkey,
++                                            &id);
++        _add_engine_hotkey_with_hotkeys (next_desc, ibus, hotkeys);
++    }
++}
++#endif
++
+ /**
+  * _context_request_engine_cb:
+  *
+@@ -1226,7 +1529,53 @@ _context_request_engine_cb (BusInputCont
+                             const gchar     *engine_name,
+                             BusIBusImpl     *ibus)
+ {
+-    return bus_ibus_impl_get_engine_desc (ibus, engine_name);
++    IBusEngineDesc *desc = bus_ibus_impl_get_engine_desc (ibus, engine_name);
++
++#if USE_BRIDGE_HOTKEY
++    IBusEngineDesc *current_desc = NULL;
++
++    if (!use_bridge_hotkey (ibus)) {
++        return desc;
++    }
++
++    if (context) {
++        BusEngineProxy *engine = bus_input_context_get_engine (context);
++        if (engine != NULL) {
++            current_desc = bus_engine_proxy_get_desc (engine);
++        }
++    }
++
++    if (((current_desc == NULL && desc != NULL) ||
++         (current_desc != NULL && desc != NULL &&
++          g_strcmp0 (ibus_engine_desc_get_name (current_desc),
++                     ibus_engine_desc_get_name (desc)) != 0)) &&
++        g_ascii_strncasecmp (ibus_engine_desc_get_name (desc),
++                             DEFAULT_BRIDGE_ENGINE_NAME,
++                             strlen (DEFAULT_BRIDGE_ENGINE_NAME)) == 0) {
++        _update_hotkeys_by_prev_engine_desc (ibus, desc, current_desc);
++    }
++
++    if (current_desc && desc &&
++        g_strcmp0 (ibus_engine_desc_get_name (current_desc),
++                   ibus_engine_desc_get_name (desc)) != 0) {
++        if (context) {
++            bus_input_context_set_prev_hotkey_engine (context, current_desc);
++        } else {
++            ibus->prev_hotkey_engine = current_desc;
++        }
++
++        /* If the previous engine is not included in engine_list and
++         * the current engine is the defualt bridge engine,
++         * the current engine is also not included in engine_list.
++         * So the engine is added here. */
++        if (g_ascii_strncasecmp (ibus_engine_desc_get_name (current_desc),
++                                 DEFAULT_BRIDGE_ENGINE_NAME,
++                                 strlen (DEFAULT_BRIDGE_ENGINE_NAME)) == 0) {
++            _update_hotkeys_by_prev_engine_desc (ibus, current_desc, desc);
++        }
++    }
++#endif
++    return desc;
+ }
+ 
+ /**
+@@ -1265,8 +1614,13 @@ bus_ibus_impl_get_engine_desc (BusIBusIm
+         if (!desc) {
+             if (ibus->register_engine_list) {
+                 desc = (IBusEngineDesc *) ibus->register_engine_list->data;
++#if USE_BRIDGE_HOTKEY
++                if (engine_name == NULL) {
++                    desc = NULL;
++                }
++#endif
+             }
+-            else if (ibus->engine_list) {
++            if (!desc && ibus->engine_list) {
+                 desc = (IBusEngineDesc *) ibus->engine_list->data;
+             }
+         }
+@@ -1311,9 +1665,20 @@ bus_ibus_impl_context_request_rotate_eng
+     desc = bus_engine_proxy_get_desc (engine);
+ 
+     p = g_list_find (ibus->register_engine_list, desc);
++#if USE_BRIDGE_HOTKEY
++    if (!use_bridge_hotkey (ibus)) {
++        p = NULL;
++    }
++#endif
+     if (p != NULL) {
+         if (is_next) {
+             p = p->next;
++#if USE_BRIDGE_HOTKEY
++            if (p && g_list_length (ibus->register_engine_list) -
++                    g_list_length (p) >= ibus->xkb_group_length) {
++                p = NULL;
++            }
++#endif
+         } else {
+             p = p->prev;
+         }
+@@ -1343,11 +1708,25 @@ bus_ibus_impl_context_request_rotate_eng
+     if (p == NULL && g_list_find (ibus->engine_list, desc) != NULL) {
+         if (is_next) {
+             p = ibus->register_engine_list;
++#if USE_BRIDGE_HOTKEY
++            if (!use_bridge_hotkey (ibus)) {
++                p = NULL;
++            }
++#endif
+             if (p == NULL) {
+                 p = ibus->engine_list;
+             }
+         } else {
+             p = g_list_last (ibus->register_engine_list);
++#if USE_BRIDGE_HOTKEY
++            if (!use_bridge_hotkey (ibus)) {
++                p = NULL;
++            }
++            else if (ibus->xkb_group_length > 0) {
++                p = g_list_nth (ibus->register_engine_list,
++                                ibus->xkb_group_length - 1);
++            }
++#endif
+             if (p == NULL) {
+                 p = g_list_last (ibus->engine_list);
+             }
+@@ -1358,14 +1737,31 @@ bus_ibus_impl_context_request_rotate_eng
+         next_desc = (IBusEngineDesc*) p->data;
+     }
+     else {
++#if USE_BRIDGE_HOTKEY
++        if (use_bridge_hotkey (ibus) && ibus->register_engine_list) {
++            next_desc = (IBusEngineDesc *) ibus->register_engine_list->data;
++        }
++#else
+         if (ibus->register_engine_list) {
+             next_desc = (IBusEngineDesc *) ibus->register_engine_list->data;
+         }
++#endif
+         else if (ibus->engine_list) {
+             next_desc = (IBusEngineDesc *) ibus->engine_list->data;
+         }
+     }
+ 
++#if USE_BRIDGE_HOTKEY
++    if (use_bridge_hotkey (ibus) && desc != next_desc) {
++        bus_input_context_set_prev_hotkey_engine (context, desc);
++        if (desc != NULL &&
++            g_ascii_strncasecmp (ibus_engine_desc_get_name (desc),
++                                 DEFAULT_BRIDGE_ENGINE_NAME,
++                                 strlen (DEFAULT_BRIDGE_ENGINE_NAME)) == 0) {
++            _update_hotkeys_by_prev_engine_desc (ibus, desc, next_desc);
++        }
++    }
++#endif
+     bus_ibus_impl_set_context_engine_from_desc (ibus, context, next_desc);
+ }
+ 
+@@ -1387,7 +1783,9 @@ bus_ibus_impl_context_request_previous_e
+         if (!ibus->global_previous_engine_name) {
+             ibus->global_previous_engine_name = bus_ibus_impl_load_global_previous_engine_name_from_config (ibus);
+         }
++#if 0
+         engine_name = ibus->global_previous_engine_name;
++#endif
+         if (engine_name != NULL) {
+             /* If the previous engine is removed from the engine list or the
+                current engine and the previous engine are the same one, force
+@@ -1448,6 +1846,9 @@ bus_ibus_impl_set_focused_context (BusIB
+ 
+     BusEngineProxy *engine = NULL;
+     gboolean is_enabled = FALSE;
++#if USE_BRIDGE_HOTKEY
++    IBusEngineDesc *desc = NULL;
++#endif
+ 
+     if (ibus->focused_context) {
+         if (ibus->use_global_engine) {
+@@ -1455,6 +1856,9 @@ bus_ibus_impl_set_focused_context (BusIB
+             engine = bus_input_context_get_engine (ibus->focused_context);
+             if (engine) {
+                 is_enabled = bus_input_context_is_enabled (ibus->focused_context);
++#if USE_BRIDGE_HOTKEY
++                desc = bus_input_context_get_prev_hotkey_engine (ibus->focused_context);
++#endif
+                 g_object_ref (engine);
+                 bus_input_context_set_engine (ibus->focused_context, NULL);
+             }
+@@ -1479,6 +1883,9 @@ bus_ibus_impl_set_focused_context (BusIB
+             if (is_enabled) {
+                 bus_input_context_enable (context);
+             }
++#if USE_BRIDGE_HOTKEY
++            bus_input_context_set_prev_hotkey_engine (ibus->focused_context, desc);
++#endif
+             g_object_unref (engine);
+         }
+ 
+@@ -1708,6 +2115,25 @@ _context_disabled_cb (BusInputContext   
+ }
+ 
+ /**
++ * _context_set_xkb_engines_cb:
++ *
++ * A callback function to be called when the "set-xkb-engines" signal is sent to the context.
++ */
++static void
++_context_set_xkb_engines_cb (BusInputContext    *context,
++                             GList              *list,
++                             BusIBusImpl        *ibus)
++{
++    if (list == NULL) {
++        return;
++    }
++
++#if USE_BRIDGE_HOTKEY
++    ibus->xkb_group_length = g_list_length (list);
++#endif
++}
++
++/**
+  * bus_ibus_impl_create_input_context:
+  * @client: A name of a client. e.g. "gtk-im"
+  * @returns: A BusInputContext object.
+@@ -1735,6 +2161,7 @@ bus_ibus_impl_create_input_context (BusI
+         { "destroy",        G_CALLBACK (_context_destroy_cb) },
+         { "enabled",        G_CALLBACK (_context_enabled_cb) },
+         { "disabled",       G_CALLBACK (_context_disabled_cb) },
++        { "set-xkb-engines", G_CALLBACK (_context_set_xkb_engines_cb) },
+     };
+ 
+     gint i;
+@@ -2312,6 +2739,9 @@ bus_ibus_impl_filter_keyboard_shortcuts 
+ 
+     GQuark event;
+     GList *engine_list;
++#if USE_BRIDGE_HOTKEY
++    IBusEngineDesc *prev_hotkey_engine = NULL;
++#endif
+ 
+     if (trigger == 0) {
+         trigger = g_quark_from_static_string ("trigger");
+@@ -2377,6 +2807,12 @@ bus_ibus_impl_filter_keyboard_shortcuts 
+         return FALSE;
+     }
+ 
++#if USE_BRIDGE_HOTKEY
++    if (!use_bridge_hotkey (ibus)) {
++        return FALSE;
++    }
++#endif
++
+     /* Then try engines hotkeys. */
+     event = ibus_hotkey_profile_filter_key_event (ibus->engines_hotkey_profile,
+                                                   keyval,
+@@ -2398,6 +2834,24 @@ bus_ibus_impl_filter_keyboard_shortcuts 
+ 
+         g_assert (new_engine_desc);
+ 
++#if USE_BRIDGE_HOTKEY
++        if (context) {
++            prev_hotkey_engine = bus_input_context_get_prev_hotkey_engine (context);
++            if (prev_hotkey_engine == NULL && ibus->prev_hotkey_engine) {
++                prev_hotkey_engine = ibus->prev_hotkey_engine;
++                bus_input_context_set_prev_hotkey_engine (context,
++                                                          prev_hotkey_engine);
++            }
++        }
++
++        /* If the previous engine is not included in engine_list,
++         * this enables a new engine instead of toggling the engines
++         * so should not enable the previous engine. */
++        if (prev_hotkey_engine &&
++            g_list_find (engine_list, prev_hotkey_engine) != NULL) {
++            new_engine_desc = prev_hotkey_engine;
++        }
++#else
+         /* Find out what engine we should switch to. If the current engine has
+          * the same hotkey, then we should switch to the next engine with the
+          * same hotkey in the list. Otherwise, we just switch to the first
+@@ -2409,8 +2863,43 @@ bus_ibus_impl_filter_keyboard_shortcuts 
+                 break;
+             }
+         }
++#endif
++
++#if USE_BRIDGE_HOTKEY
++        if (context == NULL) {
++            return FALSE;
++        }
++
++        /* This means RequestEngine signal might be done but SetEngine signal
++         * has not been done yet by ibus status icon. */
++        if (current_engine_desc == NULL &&
++            !bus_input_context_inited_engine (context)) {
++            return FALSE;
++        }
+ 
+         if (current_engine_desc != new_engine_desc) {
++            if (current_engine_desc) {
++                if (context) {
++                    bus_input_context_set_prev_hotkey_engine (context,
++                                                              current_engine_desc);
++                }
++            }
++
++            /* If the current engine is the defualt bridge engine,
++             * the current engine is not included in engine_list.
++             * E.g. prev is Ctrl+space and Zenaku and current is Ctrl+space.
++             * So the engine is added here. */
++            if (current_engine_desc != NULL &&
++                g_ascii_strncasecmp (ibus_engine_desc_get_name (current_engine_desc),
++                                     DEFAULT_BRIDGE_ENGINE_NAME,
++                                     strlen (DEFAULT_BRIDGE_ENGINE_NAME)) == 0) {
++                _update_hotkeys_by_prev_engine_desc (ibus,
++                                                     current_engine_desc,
++                                                     new_engine_desc);
++            }
++#else
++        if (current_engine_desc != new_engine_desc) {
++#endif
+             bus_ibus_impl_set_context_engine_from_desc (ibus, context, new_engine_desc);
+         }
+ 
+@@ -2514,59 +3003,54 @@ static void
+ _add_engine_hotkey (IBusEngineDesc *engine, BusIBusImpl *ibus)
+ {
+     const gchar *hotkeys;
+-    gchar **hotkey_list;
+-    gchar **p;
+-    gchar *hotkey;
+-    GList *engine_list;
+-
+-    GQuark event;
+-    guint keyval;
+-    guint modifiers;
+ 
+     if (!engine) {
+         return;
+     }
+ 
+-    hotkeys = ibus_engine_desc_get_hotkeys (engine);
+-
+-    if (!hotkeys || !*hotkeys) {
++#if USE_BRIDGE_HOTKEY
++    if (!use_bridge_hotkey (ibus)) {
+         return;
+     }
+ 
+-    hotkey_list = g_strsplit_set (hotkeys, ";,", 0);
+-
+-    for (p = hotkey_list; p && *p; ++p) {
+-        hotkey = g_strstrip (*p);
+-        if (!*hotkey || !ibus_key_event_from_string (hotkey, &keyval, &modifiers)) {
+-            continue;
+-        }
+-
+-        /* If the hotkey already exists, we won't need to add it again. */
+-        event = ibus_hotkey_profile_lookup_hotkey (ibus->engines_hotkey_profile,
+-                                                   keyval, modifiers);
+-        if (event == 0) {
+-            event = g_quark_from_string (hotkey);
+-            ibus_hotkey_profile_add_hotkey (ibus->engines_hotkey_profile,
+-                                            keyval, modifiers, event);
+-        }
++    /* Do not register hotkeys for the default keymap engines
++     * but register hotkeys for only input-method engines
++     * in 'RegisterComponent' dbus method.
++     * The hotkeys for an activated keymap engine will be registered
++     * in 'SetEngine' dbus method. */
++    if (g_ascii_strncasecmp (ibus_engine_desc_get_name (engine),
++                             DEFAULT_BRIDGE_ENGINE_NAME,
++                             strlen (DEFAULT_BRIDGE_ENGINE_NAME)) == 0) {
++        return;
++    }
+ 
+-        engine_list = g_hash_table_lookup (ibus->hotkey_to_engines_map,
+-                                           GUINT_TO_POINTER (event));
++    /* If the user customized the trigger key, the trigger key is used for
++     * any IBus engines. */
++    if (_bridge_trigger_keys != NULL &&
++        *_bridge_trigger_keys != '\0' &&
++        g_strcmp0 (_bridge_trigger_keys, "Control+space") != 0) {
+ 
+-        /* As we will rebuild the engines hotkey map whenever an engine was
+-         * added or removed, we don't need to hold a reference of the engine
+-         * here. */
+-        engine_list = g_list_append (engine_list, engine);
++        hotkeys = (const gchar *) _bridge_trigger_keys;
++    } else {
++        hotkeys = ibus_engine_desc_get_hotkeys (engine);
++    }
++#else
++    hotkeys = ibus_engine_desc_get_hotkeys (engine);
++#endif
+ 
+-        /* We need to steal the value before adding it back, otherwise it will
+-         * be destroyed. */
+-        g_hash_table_steal (ibus->hotkey_to_engines_map, GUINT_TO_POINTER (event));
++#if USE_BRIDGE_HOTKEY
++    /* If engine hotkeys are not defined in the compose xml file, IBus trigger
++     * keys are used. */
++    if (!hotkeys || !*hotkeys) {
++        hotkeys = (const gchar *) _bridge_trigger_keys;
++    }
++#endif
+ 
+-        g_hash_table_insert (ibus->hotkey_to_engines_map,
+-                             GUINT_TO_POINTER (event), engine_list);
++    if (!hotkeys || !*hotkeys) {
++        return;
+     }
+ 
+-    g_strfreev (hotkey_list);
++    _add_engine_hotkey_with_hotkeys (engine, ibus, hotkeys);
+ }
+ 
+ /**
+diff --git a/bus/inputcontext.c b/bus/inputcontext.c
+index 3c81688..58ab8f4 100644
+--- a/bus/inputcontext.c
++++ b/bus/inputcontext.c
+@@ -90,6 +90,12 @@ struct _BusInputContext {
+ 
+     /* incompleted set engine by desc request */
+     SetEngineByDescData *data;
++
++    /* if init engine */
++    gboolean inited_engine;
++
++    /* previous hotkey engine for bridge hotkey mode */
++    IBusEngineDesc *prev_hotkey_engine;
+ };
+ 
+ struct _BusInputContextClass {
+@@ -122,6 +128,7 @@ enum {
+     DISABLED,
+     ENGINE_CHANGED,
+     REQUEST_ENGINE,
++    SET_XKB_ENGINES,
+     LAST_SIGNAL,
+ };
+ 
+@@ -265,6 +272,9 @@ static const gchar introspection_xml[] =
+     "    <method name='GetEngine'>"
+     "      <arg direction='out' type='v' name='desc' />"
+     "    </method>"
++    "    <method name='SetXKBEngines'>"
++    "      <arg direction='in' type='av' name='engines' />"
++    "    </method>"
+     "    <method name='SetSurroundingText'>"
+     "      <arg direction='in' type='v' name='text' />"
+     "      <arg direction='in' type='u' name='cursor_pos' />"
+@@ -586,6 +596,17 @@ bus_input_context_class_init (BusInputContextClass *class)
+             1,
+             G_TYPE_STRING);
+ 
++    context_signals[SET_XKB_ENGINES] =
++        g_signal_new (I_("set-xkb-engines"),
++            G_TYPE_FROM_CLASS (class),
++            G_SIGNAL_RUN_LAST,
++            0,
++            NULL, NULL,
++            bus_marshal_VOID__OBJECT,
++            G_TYPE_NONE,
++            1,
++            G_TYPE_POINTER);
++
+     text_empty = ibus_text_new_from_string ("");
+     g_object_ref_sink (text_empty);
+     lookup_table_empty = ibus_lookup_table_new (9 /* page size */, 0, FALSE, FALSE);
+@@ -648,6 +669,11 @@ bus_input_context_destroy (BusInputContext *context)
+         context->client = NULL;
+     }
+ 
++    if (context->prev_hotkey_engine) {
++        g_object_unref (context->prev_hotkey_engine);
++        context->prev_hotkey_engine = NULL;
++    }
++
+     IBUS_OBJECT_CLASS (bus_input_context_parent_class)->destroy (IBUS_OBJECT (context));
+ }
+ 
+@@ -1048,6 +1074,32 @@ _ic_get_engine (BusInputContext       *context,
+ }
+ 
+ /**
++ * _ic_set_xkb_engines:
++ *
++ * Implement the "SetXKBEngines" method call of the org.freedesktop.IBus.InputContext interface.
++ */
++static void
++_ic_set_xkb_engines (BusInputContext       *context,
++                     GVariant              *parameters,
++                     GDBusMethodInvocation *invocation)
++{
++    GVariantIter *iter = NULL;
++    GVariant *var;
++    GList *list = NULL;
++
++    g_variant_get_child (parameters, 0, "av", &iter);
++    while (g_variant_iter_loop (iter, "v", &var)) {
++        list = g_list_append (list, ibus_serializable_deserialize (var));
++    }
++    g_variant_iter_free (iter);
++
++    g_signal_emit (context,
++                   context_signals[SET_XKB_ENGINES], 0,
++                   list);
++    return;
++}
++
++/**
+  * bus_input_context_service_method_call:
+  *
+  * Handle a D-Bus method call whose destination and interface name are both "org.freedesktop.IBus.InputContext"
+@@ -1126,6 +1178,7 @@ bus_input_context_service_method_call (IBusService            *service,
+         { "IsEnabled",         _ic_is_enabled },
+         { "SetEngine",         _ic_set_engine },
+         { "GetEngine",         _ic_get_engine },
++        { "SetXKBEngines",     _ic_set_xkb_engines },
+         { "SetSurroundingText", _ic_set_surrounding_text},
+     };
+ 
+@@ -2218,6 +2271,7 @@ bus_input_context_set_engine (BusInputContext *context,
+     }
+     else {
+         gint i;
++        context->inited_engine = TRUE;
+         context->engine = engine;
+         g_object_ref (context->engine);
+ 
+@@ -2542,3 +2596,30 @@ bus_input_context_get_client (BusInputContext *context)
+     g_assert (BUS_IS_INPUT_CONTEXT (context));
+     return context->client;
+ }
++
++gboolean
++bus_input_context_inited_engine (BusInputContext *context)
++{
++    g_assert (BUS_IS_INPUT_CONTEXT (context));
++    return context->inited_engine;
++}
++
++IBusEngineDesc *
++bus_input_context_get_prev_hotkey_engine (BusInputContext *context)
++{
++    g_assert (BUS_IS_INPUT_CONTEXT (context));
++    return context->prev_hotkey_engine;
++}
++
++void
++bus_input_context_set_prev_hotkey_engine (BusInputContext *context,
++                                          IBusEngineDesc  *desc)
++{
++    g_assert (BUS_IS_INPUT_CONTEXT (context));
++    g_assert (desc == NULL || IBUS_IS_ENGINE_DESC (desc));
++
++    if (context->prev_hotkey_engine) {
++        g_object_unref (context->prev_hotkey_engine);
++    }
++    context->prev_hotkey_engine = desc ? g_object_ref (desc) : NULL;
++}
+diff --git a/bus/inputcontext.h b/bus/inputcontext.h
+index bc4e096..c79e033 100644
+--- a/bus/inputcontext.h
++++ b/bus/inputcontext.h
+@@ -213,5 +213,27 @@ void                 bus_input_context_set_capabilities (BusInputContext    *con
+  */
+ const gchar         *bus_input_context_get_client       (BusInputContext    *context);
+ 
++/**
++ * bus_input_context_inited_engine:
++ * @returns: context->inited_engine.
++ */
++gboolean             bus_input_context_inited_engine
++                                                        (BusInputContext *context);
++
++/**
++ * bus_input_context_get_prev_hotkey_engine:
++ * @returns: context->prev_hotkey_engine.
++ */
++IBusEngineDesc      *bus_input_context_get_prev_hotkey_engine
++                                                        (BusInputContext *context);
++
++/**
++ * bus_input_context_set_prev_hotkey_engine:
++ * @desc: Assign the desc to context->prev_hotkey_engine.
++ */
++void                 bus_input_context_set_prev_hotkey_engine
++                                                        (BusInputContext *context,
++                                                         IBusEngineDesc  *desc);
++
+ G_END_DECLS
+ #endif
+diff --git a/bus/registry.c b/bus/registry.c
+index 7b74781..28e2abf 100644
+--- a/bus/registry.c
++++ b/bus/registry.c
+@@ -19,6 +19,11 @@
+  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+  * Boston, MA 02111-1307, USA.
+  */
++
++#ifdef HAVE_CONFIG_H
++#include <config.h>
++#endif
++
+ #include "registry.h"
+ #include <glib/gstdio.h>
+ #include <gio/gio.h>
+@@ -101,6 +106,9 @@ bus_registry_init (BusRegistry *registry)
+     registry->observed_paths = NULL;
+     registry->components = NULL;
+     registry->engine_table = g_hash_table_new (g_str_hash, g_str_equal);
++#if USE_BRIDGE_HOTKEY
++    gboolean has_default_engine = FALSE;
++#endif
+ 
+ #ifdef G_THREADS_ENABLED
+     /* If glib supports thread, we'll create a thread to monitor changes in IME
+@@ -145,12 +153,40 @@ bus_registry_init (BusRegistry *registry)
+         GList *p1;
+         for (p1 = engines; p1 != NULL; p1 = p1->next) {
+             IBusEngineDesc *desc = (IBusEngineDesc *) p1->data;
++#if USE_BRIDGE_HOTKEY
++            if (g_ascii_strncasecmp (ibus_engine_desc_get_name (desc),
++                                     DEFAULT_BRIDGE_ENGINE_NAME,
++                                     strlen (DEFAULT_BRIDGE_ENGINE_NAME)) == 0) {
++                has_default_engine = TRUE;
++            }
++#endif
+             g_hash_table_insert (registry->engine_table,
+                                  (gpointer) ibus_engine_desc_get_name (desc),
+                                  desc);
+         }
+         g_list_free (engines);
+     }
++
++#if USE_BRIDGE_HOTKEY
++    if (has_default_engine == FALSE) {
++        bus_registry_remove_all (registry);
++        bus_registry_load (registry);
++        bus_registry_save_cache (registry);
++
++        for (p = registry->components; p != NULL; p = p->next) {
++            BusComponent *comp = (BusComponent *) p->data;
++            GList *engines = bus_component_get_engines (comp);
++            GList *p1;
++            for (p1 = engines; p1 != NULL; p1 = p1->next) {
++                IBusEngineDesc *desc = (IBusEngineDesc *) p1->data;
++                g_hash_table_insert (registry->engine_table,
++                                     (gpointer) ibus_engine_desc_get_name (desc),
++                                     desc);
++            }
++            g_list_free (engines);
++        }
++    }
++#endif
+ }
+ 
+ static void
+@@ -516,6 +552,31 @@ bus_registry_get_engines_by_language (BusRegistry *registry,
+     return engines;
+ }
+ 
++GList *
++bus_registry_get_engines_by_name_prefix (BusRegistry *registry,
++                                         const gchar *name_prefix)
++{
++    GList *p1, *p2;
++    GList *engines = NULL;
++
++    g_assert (BUS_IS_REGISTRY (registry));
++    g_assert (name_prefix);
++
++    p1 = bus_registry_get_engines (registry);
++
++    for (p2 = p1; p2 != NULL; p2 = p2->next) {
++        IBusEngineDesc *desc = (IBusEngineDesc *) p2->data;
++        if (g_ascii_strncasecmp (ibus_engine_desc_get_name (desc),
++                                 name_prefix,
++                                 strlen (name_prefix)) == 0) {
++            engines = g_list_append (engines, desc);
++        }
++    }
++
++    g_list_free (p1);
++    return engines;
++}
++
+ IBusEngineDesc *
+ bus_registry_find_engine_by_name (BusRegistry *registry,
+                                   const gchar *name)
+diff --git a/bus/registry.h b/bus/registry.h
+index cdabec0..721187c 100644
+--- a/bus/registry.h
++++ b/bus/registry.h
+@@ -73,6 +73,16 @@ GList           *bus_registry_get_engines_by_language
+                                                  const gchar    *language);
+ 
+ /**
++ * bus_registry_get_engines_by_name_prefix:
++ * @name_prefix: a prefix in the name of IBusEngineDesc. 
++ * @returns: a list of IBusEngineDesc objects which has the name prefix.
++ *           The caller has to call g_list_free for the returned list.
++ */
++GList           *bus_registry_get_engines_by_name_prefix
++                                                (BusRegistry    *registry,
++                                                 const gchar    *name_prefix);
++
++/**
+  * bus_registry_stop_all_components:
+  *
+  * Terminate all component processes.
+diff --git a/configure.ac b/configure.ac
+index 227e28e..788fbef 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -483,6 +483,34 @@ else
+     enable_surrounding_text="no (disabled, use --enable-surrounding-text to enable)"
+ fi
+ 
++# Option for bridge hotkey
++AC_ARG_ENABLE(bridge-hotkey,
++    AS_HELP_STRING([--enable-bridge-hotkey],
++        [Enable bridge hotkey instead of ON/OFF hotkey]),
++    [enable_bridge_hotkey=$enableval],
++    [enable_bridge_hotkey=no]
++)
++
++if test x"$enable_bridge_hotkey" = x"yes"; then
++    USE_BRIDGE_HOTKEY=1
++    TRIGGER_HOTKEYS="Control+space"
++else
++    USE_BRIDGE_HOTKEY=0
++    TRIGGER_HOTKEYS="Control+space,Zenkaku_Hankaku,Alt+Kanji,Alt+grave,Hangul,Alt+Release+Alt_R"
++    enable_bridge_hotkey="no (disabled, use --enable-bridge-hotkey to enable)"
++fi
++AC_SUBST(USE_BRIDGE_HOTKEY)
++AC_SUBST(TRIGGER_HOTKEYS)
++
++# Define default bridge engine name
++AC_ARG_WITH(bridge-engine,
++    AS_HELP_STRING([--with-bridge-engine[=bridge_engine_name]],
++        [Set bridge engine name in IM bridge hotkey. (default: xkb:layout:default:)]),
++    [DEFAULT_BRIDGE_ENGINE_NAME=$with_bridge_engine],
++    [DEFAULT_BRIDGE_ENGINE_NAME="xkb:layout:default:"]
++)
++AC_SUBST(DEFAULT_BRIDGE_ENGINE_NAME)
++
+ # Check iso-codes.
+ PKG_CHECK_MODULES(ISOCODES, [
+     iso-codes
+@@ -509,6 +537,7 @@ bus/Makefile
+ util/Makefile
+ util/IMdkit/Makefile
+ data/Makefile
++data/ibus.schemas.in
+ data/icons/Makefile
+ data/keymaps/Makefile
+ data/dconf/Makefile
+@@ -561,5 +590,7 @@ Build options:
+   No snooper regexes        "$NO_SNOOPER_APPS"
+   Panel icon                "$IBUS_ICON_KEYBOARD"
+   Enable surrounding-text   $enable_surrounding_text
++  Enable bridge hotkey      $enable_bridge_hotkey
++  Default bridge engine     $DEFAULT_BRIDGE_ENGINE_NAME
+ ])
+ 
+diff --git a/data/Makefile.am b/data/Makefile.am
+index 99be41c..824da76 100644
+--- a/data/Makefile.am
++++ b/data/Makefile.am
+@@ -30,7 +30,8 @@ SUBDIRS += dconf
+ endif
+ 
+ schemasdir = $(GCONF_SCHEMA_FILE_DIR)
+-schemas_in_files = ibus.schemas.in
++schemas_in_in_files = ibus.schemas.in.in
++schemas_in_files = $(schemas_in_in_files:.schemas.in.in=.schemas.in)
+ schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
+ @INTLTOOL_SCHEMAS_RULE@
+ 
+@@ -45,11 +46,12 @@ if GCONF_SCHEMAS_INSTALL
+ endif
+ 
+ EXTRA_DIST = \
+-	$(schemas_in_files) \
++	$(schemas_in_in_files) \
+ 	$(NULL)
+ 
+ DISTCLEANFILES = \
+ 	$(schemas_DATA) \
++	$(schemas_in_files) \
+ 	$(NULL)
+ 
+ -include $(top_srcdir)/git.mk
+diff --git a/data/ibus.schemas.in b/data/ibus.schemas.in.in
+index 8979515..2a2b459
+--- a/data/ibus.schemas.in
++++ b/data/ibus.schemas.in.in
+@@ -31,7 +31,7 @@
+       <owner>ibus</owner>
+       <type>list</type>
+       <list_type>string</list_type>
+-      <default>[Control+space,Zenkaku_Hankaku,Alt+Kanji,Alt+grave,Hangul,Alt+Release+Alt_R]</default>
++      <default>[@TRIGGER_HOTKEYS@]</default>
+       <locale name="C">
+         <short>Trigger shortcut keys</short>
+ 	    <long>The shortcut keys for turning input method on or off</long>
+@@ -103,6 +103,19 @@
+       </locale>
+     </schema>
+     <schema>
++      <key>/schemas/desktop/ibus/general/hotkey/use_bridge_hotkey</key>
++      <applyto>/desktop/ibus/general/hotkey/use_bridge_hotkey</applyto>
++      <owner>ibus</owner>
++      <type>bool</type>
++      <default>true</default>
++      <locale name="C">
++        <short>Use bridge hotkey</short>
++	    <long>Use trigger keys to toggle the prev and next IM engines
++                  if true. Use trigger keys to toggle an enable and 
++                  disabled IM engine if false.</long>
++      </locale>
++    </schema>
++    <schema>
+       <key>/schemas/desktop/ibus/panel/show</key>
+       <applyto>/desktop/ibus/panel/show</applyto>
+       <owner>ibus</owner>
+diff --git a/ibus/_config.py.in b/ibus/_config.py.in
+index a830136..4c3c980 100644
+--- a/ibus/_config.py.in
++++ b/ibus/_config.py.in
+@@ -25,6 +25,8 @@ __all__ = (
+     "get_copyright",
+     "get_license",
+     "get_ICON_KEYBOARD",
++    "use_bridge_hotkey",
++    "DEFAULT_BRIDGE_ENGINE_NAME",
+     "ISOCODES_PREFIX",
+     "_"
+ )
+@@ -55,4 +57,8 @@ def get_ICON_KEYBOARD():
+         return fallback_icon
+     return icon
+ 
++def use_bridge_hotkey():
++    return True if @USE_BRIDGE_HOTKEY@ == 1 else False
++
++DEFAULT_BRIDGE_ENGINE_NAME='@DEFAULT_BRIDGE_ENGINE_NAME@'
+ ISOCODES_PREFIX='@ISOCODES_PREFIX@'
+diff --git a/ibus/inputcontext.py b/ibus/inputcontext.py
+index 64a6ba2..b471e20 100644
+--- a/ibus/inputcontext.py
++++ b/ibus/inputcontext.py
+@@ -28,6 +28,7 @@ import sys
+ import gobject
+ import dbus
+ import dbus.lowlevel
++import _config
+ import object
+ import common
+ import serializable
+@@ -283,8 +284,22 @@ class InputContext(object.Object):
+         except:
+             return None
+ 
++    def __handle_ic_reply(self):
++        pass
++
++    def __handle_ic_error(self, e):
++        print self.__gtype_name__, str(e)
++
+     def set_engine(self, engine):
+-        return self.__context.SetEngine(engine.name)
++        return self.__context.SetEngine(engine.name,
++                                        reply_handler=self.__handle_ic_reply,
++                                        error_handler=self.__handle_ic_error)
++
++    def set_xkb_engines(self, engines):
++        engines = map(lambda e: serializable.serialize_object(e), engines)
++        return self.__context.SetXKBEngines(engines,
++                                            reply_handler=self.__handle_ic_reply,
++                                            error_handler=self.__handle_ic_error)
+ 
+     def introspect(self):
+         return self.__context.Introspect()
+diff --git a/ibus/interface/iinputcontext.py b/ibus/interface/iinputcontext.py
+index 06ce519..3b655dc 100644
+--- a/ibus/interface/iinputcontext.py
++++ b/ibus/interface/iinputcontext.py
+@@ -76,8 +76,11 @@ class IInputContext(dbus.service.Object):
+     @method(out_signature="v")
+     def GetEngine(self): pass
+ 
+-    @method(in_signature="s")
+-    def SetEngine(self, engine_name): pass
++    @async_method(in_signature="s")
++    def SetEngine(self, engine_name, reply_cb, error_cb): pass
++
++    @async_method(in_signature="av")
++    def SetXKBEngines(self, engines, reply_cb, error_cb): pass
+ 
+     @method()
+     def Destroy(self): pass
+diff --git a/ibus/xkbxml.py.in b/ibus/xkbxml.py.in
+index 9407c13..bf61810 100644
+--- a/ibus/xkbxml.py.in
++++ b/ibus/xkbxml.py.in
+@@ -33,6 +33,8 @@ import enginedesc
+ from xml.sax.saxutils import XMLFilterBase, XMLGenerator
+ from xml.sax._exceptions import SAXParseException
+ from cStringIO import StringIO
++from _config import DEFAULT_BRIDGE_ENGINE_NAME
++from _config import get_ICON_KEYBOARD
+ 
+ try:
+     from glib import get_user_config_dir
+@@ -315,6 +317,8 @@ class XKBConfigRegistry():
+             engine_layout = layout
+ 
+         icon = 'ibus-engine'
++        if name.startswith(DEFAULT_BRIDGE_ENGINE_NAME):
++            icon = get_ICON_KEYBOARD()
+ 
+         engine = enginedesc.EngineDesc(name, longname, desc, lang,
+                                        'LGPL2.1',
+diff --git a/setup/enginecombobox.py b/setup/enginecombobox.py
+index 7383177..d35757d 100644
+--- a/setup/enginecombobox.py
++++ b/setup/enginecombobox.py
+@@ -64,6 +64,9 @@ class EngineComboBox(gtk.ComboBox):
+         self.__model.set(iter1, 0, 0)
+         lang = {}
+         for e in engines:
++            if ibus.use_bridge_hotkey() and \
++               e.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                continue
+             l = ibus.get_language_name(e.language)
+             if l not in lang:
+                 lang[l] = []
+diff --git a/setup/enginetreeview.py b/setup/enginetreeview.py
+index f620361..664dc99 100644
+--- a/setup/enginetreeview.py
++++ b/setup/enginetreeview.py
+@@ -172,8 +172,12 @@ class EngineTreeView(gtk.TreeView):
+         for e in engines:
+             if e in self.__engines:
+                 continue
+-            iter = self.__model.append(None)
+-            self.__model.set(iter, 0, e)
++            if ibus.use_bridge_hotkey() and \
++               e.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                pass
++            else:
++                iter = self.__model.append(None)
++                self.__model.set(iter, 0, e)
+             self.__engines.add(e)
+         self.__emit_changed()
+ 
+diff --git a/setup/main.py b/setup/main.py
+index 7f4a040..a773944 100644
+--- a/setup/main.py
++++ b/setup/main.py
+@@ -213,6 +213,22 @@ class Setup(object):
+             self.__config.get_value("general", "use_global_engine", False))
+         self.__checkbutton_use_global_engine.connect("toggled", self.__checkbutton_use_global_engine_toggled_cb)
+ 
++        # hotkey settings
++        if ibus.use_bridge_hotkey():
++            self.__set_bridge_hotkey_labels()
++            self.__checkbutton_use_on_off_hotkey = \
++                self.__builder.get_object("checkbutton_use_on_off_hotkey")
++            self.__checkbutton_use_on_off_hotkey.set_active(
++                not self.__config.get_value("general/hotkey",
++                                            "use_bridge_hotkey",
++                                            True))
++            self.__checkbutton_use_on_off_hotkey.connect("toggled",
++                self.__checkbutton_use_on_off_hotkey_cb)
++        else:
++            checkbutton = self.__builder.get_object("checkbutton_use_on_off_hotkey")
++            checkbutton.hide()
++            checkbutton.set_no_show_all(True)
++
+         # init engine page
+         preload_engine_mode = self.__config.get_value("general",
+                                                       "preload_engine_mode",
+@@ -519,6 +535,35 @@ class Setup(object):
+         value = self.__checkbutton_use_global_engine.get_active()
+         self.__config.set_value("general", "use_global_engine", value)
+ 
++    def __checkbutton_use_on_off_hotkey_cb(self, button):
++        value = self.__checkbutton_use_on_off_hotkey.get_active()
++        self.__config.set_value("general/hotkey", "use_bridge_hotkey",
++                                not value)
++        self.__set_bridge_hotkey_labels()
++
++    def __set_bridge_hotkey_labels(self):
++        label = self.__builder.get_object("label_trigger_hotkey")
++        label_enable = self.__builder.get_object("label_enable")
++        hbox_enable = self.__builder.get_object("hbox_enable")
++        label_disable = self.__builder.get_object("label_disable")
++        hbox_disable = self.__builder.get_object("hbox_disable")
++        if self.__config.get_value("general/hotkey", "use_bridge_hotkey", True):
++            label.set_label(_("Toggle input methods:"))
++            label.set_tooltip_text(_("The shortcut keys to toggle "
++                                     "the previous and next input methods"))
++            label_enable.hide()
++            hbox_enable.hide()
++            label_disable.hide()
++            hbox_disable.hide()
++        else:
++            label.set_label(_("Enable or disable:"))
++            label.set_tooltip_text(_("The shortcut keys for turning "
++                                     "input method on or off"))
++            label_enable.show()
++            hbox_enable.show()
++            label_disable.show()
++            hbox_disable.show()
++
+     def __config_value_changed_cb(self, bus, section, name, value):
+         if section == 'general' and name == 'preload_engines':
+             engines = self.__get_engine_descs_from_names(value)
+diff --git a/setup/setup.ui b/setup/setup.ui
+index f1e6d0b..671b84c 100644
+--- a/setup/setup.ui
++++ b/setup/setup.ui
+@@ -100,6 +100,7 @@
+                                 <property name="n_columns">2</property>
+                                 <property name="column_spacing">12</property>
+                                 <property name="row_spacing">6</property>
++                                <property name="no_show_all">True</property>
+                                 <child>
+                                   <object class="GtkLabel" id="label8">
+                                     <property name="visible">True</property>
+@@ -232,7 +233,7 @@
+                                   </packing>
+                                 </child>
+                                 <child>
+-                                  <object class="GtkLabel" id="label7">
++                                  <object class="GtkLabel" id="label_trigger_hotkey">
+                                     <property name="visible">True</property>
+                                     <property name="tooltip_text" translatable="yes">The shortcut keys for turning input method on or off</property>
+                                     <property name="xalign">0</property>
+@@ -244,7 +245,7 @@
+                                   </packing>
+                                 </child>
+                                 <child>
+-                                  <object class="GtkLabel" id="label18">
++                                  <object class="GtkLabel" id="label_enable">
+                                     <property name="visible">True</property>
+                                     <property name="xalign">0</property>
+                                     <property name="label" translatable="yes">Enable:</property>
+@@ -257,7 +258,7 @@
+                                   </packing>
+                                 </child>
+                                 <child>
+-                                  <object class="GtkHBox" id="hbox2">
++                                  <object class="GtkHBox" id="hbox_enable">
+                                     <property name="visible">True</property>
+                                     <property name="spacing">6</property>
+                                     <child>
+@@ -292,7 +293,7 @@
+                                   </packing>
+                                 </child>
+                                 <child>
+-                                  <object class="GtkLabel" id="label19">
++                                  <object class="GtkLabel" id="label_disable">
+                                     <property name="visible">True</property>
+                                     <property name="xalign">0</property>
+                                     <property name="label" translatable="yes">Disable:</property>
+@@ -305,7 +306,7 @@
+                                   </packing>
+                                 </child>
+                                 <child>
+-                                  <object class="GtkHBox" id="hbox3">
++                                  <object class="GtkHBox" id="hbox_disable">
+                                     <property name="visible">True</property>
+                                     <property name="spacing">6</property>
+                                     <child>
+@@ -962,6 +963,59 @@ You may use up/down buttons to change it.&lt;/i&gt;&lt;/small&gt;</property>
+                         <property name="position">1</property>
+                       </packing>
+                     </child>
++                    <child>
++                      <object class="GtkFrame" id="frame6">
++                        <property name="visible">True</property>
++                        <property name="label_xalign">0</property>
++                        <property name="shadow_type">none</property>
++                        <child>
++                          <object class="GtkAlignment" id="alignment14">
++                            <property name="visible">True</property>
++                            <property name="left_padding">12</property>
++                            <child>
++                              <object class="GtkAlignment" id="alignment15">
++                                <property name="visible">True</property>
++                                <property name="top_padding">6</property>
++                                <property name="left_padding">12</property>
++                                <child>
++                                  <object class="GtkVBox" id="vbox10">
++                                    <property name="visible">True</property>
++                                    <property name="orientation">vertical</property>
++                                    <property name="spacing">6</property>
++                                    <child>
++                                      <object class="GtkCheckButton" id="checkbutton_use_on_off_hotkey">
++                                        <property name="label" translatable="yes">Use toggle shortcut keys to enable or disable an input method</property>
++                                        <property name="visible">True</property>
++                                        <property name="can_focus">True</property>
++                                        <property name="receives_default">False</property>
++                                        <property name="draw_indicator">True</property>
++                                      </object>
++                                      <packing>
++                                        <property name="expand">False</property>
++                                        <property name="fill">False</property>
++                                        <property name="position">0</property>
++                                      </packing>
++                                    </child>
++                                  </object>
++                                </child>
++                              </object>
++                            </child>
++                          </object>
++                        </child>
++                        <child type="label">
++                          <object class="GtkLabel" id="label50">
++                            <property name="visible">True</property>
++                            <property name="label" translatable="yes">&lt;b&gt;Hot keys setting&lt;/b&gt;</property>
++                            <property name="use_markup">True</property>
++                          </object>
++                        </child>
++                      </object>
++                      <packing>
++                        <property name="expand">False</property>
++                        <property name="fill">False</property>
++                        <property name="position">2</property>
++                      </packing>
++                    </child>
+                   </object>
+                 </child>
+               </object>
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 6454522..319df3c 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -38,14 +38,16 @@ INTROSPECTION_GIRS =
+ CLEANFILES =
+ 
+ # C preprocessor flags
+-AM_CPPFLAGS =                                   \
+-    -DG_LOG_DOMAIN=\"IBUS\"                     \
+-    @GLIB2_CFLAGS@                              \
+-    @GOBJECT2_CFLAGS@                           \
+-    @GIO2_CFLAGS@                               \
+-    -DIBUS_DATA_DIR=\"$(pkgdatadir)\"           \
+-    -DIBUS_COMPILATION                          \
+-    -DISOCODES_PREFIX=\"$(ISOCODES_PREFIX)\"    \
++AM_CPPFLAGS =                                                           \
++    -DG_LOG_DOMAIN=\"IBUS\"                                             \
++    @GLIB2_CFLAGS@                                                      \
++    @GOBJECT2_CFLAGS@                                                   \
++    @GIO2_CFLAGS@                                                       \
++    -DIBUS_DATA_DIR=\"$(pkgdatadir)\"                                   \
++    -DIBUS_COMPILATION                                                  \
++    -DISOCODES_PREFIX=\"$(ISOCODES_PREFIX)\"                            \
++    -DUSE_BRIDGE_HOTKEY=$(USE_BRIDGE_HOTKEY)                            \
++    -DDEFAULT_BRIDGE_ENGINE_NAME=\"$(DEFAULT_BRIDGE_ENGINE_NAME)\"      \
+     $(NULL)
+ 
+ # ibus library
+diff --git a/src/ibushotkey.c b/src/ibushotkey.c
+index 32f8338..bef7dfc 100644
+--- a/src/ibushotkey.c
++++ b/src/ibushotkey.c
+@@ -562,3 +562,14 @@ ibus_hotkey_profile_lookup_hotkey (IBusHotkeyProfile *profile,
+ 
+     return (GQuark) GPOINTER_TO_UINT (g_tree_lookup (priv->hotkeys, &hotkey));
+ }
++
++void
++ibus_hotkey_profile_foreach_hotkey (IBusHotkeyProfile *profile,
++                                    GTraverseFunc      func,
++                                    gpointer           user_data)
++{
++    IBusHotkeyProfilePrivate *priv;
++    priv = IBUS_HOTKEY_PROFILE_GET_PRIVATE (profile);
++
++    g_tree_foreach (priv->hotkeys, func, user_data);
++}
+diff --git a/src/ibushotkey.h b/src/ibushotkey.h
+index 9a341f6..92ec6af 100644
+--- a/src/ibushotkey.h
++++ b/src/ibushotkey.h
+@@ -179,5 +179,16 @@ GQuark           ibus_hotkey_profile_lookup_hotkey
+                                                  guint               keyval,
+                                                  guint               modifiers);
+ 
++/**
++ * ibus_hotkey_profile_foreach_hotkey:
++ * @profile: An IBusHotkeyProfile.
++ * @func: (scope call): A GTraverseFunc for g_tree_traverse.
++ * @user_data: A gpointer for g_tree_traverse.
++ */
++void             ibus_hotkey_profile_foreach_hotkey
++                                                (IBusHotkeyProfile  *profile,
++                                                 GTraverseFunc       func,
++                                                 gpointer            user_data);
++
+ G_END_DECLS
+ #endif
+diff --git a/src/ibusinputcontext.c b/src/ibusinputcontext.c
+index 54e30ae..c37a71d 100644
+--- a/src/ibusinputcontext.c
++++ b/src/ibusinputcontext.c
+@@ -1219,6 +1219,33 @@ ibus_input_context_set_engine (IBusInputContext *context,
+                        );
+ }
+ 
++void
++ibus_input_context_set_xkb_engines (IBusInputContext *context,
++                                    GList            *list)
++{
++    GVariantBuilder builder;
++    GList *p;
++
++    g_assert (IBUS_IS_INPUT_CONTEXT (context));
++    g_assert (list);
++
++    g_variant_builder_init (&builder, G_VARIANT_TYPE ("av"));
++    for (p = list; p; p = p->next) {
++        g_variant_builder_add (&builder, "v",
++                               ibus_serializable_serialize ((IBusSerializable *) p->data));
++    }
++
++    g_dbus_proxy_call ((GDBusProxy *) context,
++                       "SetXKBEngines",                     /* method_name */
++                       g_variant_new ("(av)", &builder),    /* parameters */
++                       G_DBUS_CALL_FLAGS_NONE,              /* flags */
++                       -1,                                  /* timeout */
++                       NULL,                                /* cancellable */
++                       NULL,                                /* callback */
++                       NULL                                 /* user_data */
++                       );
++}
++
+ #define DEFINE_FUNC(name, Name)                                         \
+     void                                                                \
+     ibus_input_context_##name (IBusInputContext *context)               \
+diff --git a/src/ibusinputcontext.h b/src/ibusinputcontext.h
+index be3c502..40b902e 100644
+--- a/src/ibusinputcontext.h
++++ b/src/ibusinputcontext.h
+@@ -495,6 +495,18 @@ void         ibus_input_context_set_engine  (IBusInputContext   *context,
+                                              const gchar        *name);
+ 
+ /**
++ * ibus_input_context_set_xkb_engines:
++ * @context: An IBusInputContext.
++ * @list: (transfer container) (element-type IBusEngineDesc):
++ *     A list of the engines.
++ *
++ * Set XKB group layouts from the desktop session.
++ */
++void         ibus_input_context_set_xkb_engines
++                                            (IBusInputContext *context,
++                                             GList            *list);
++
++/**
+  * ibus_input_context_set_surrounding_text:
+  * @context: An #IBusInputContext.
+  * @text: An #IBusText surrounding the current cursor on the application.
+diff --git a/src/ibusutil.c b/src/ibusutil.c
+index ddb6b9e..46dab1a 100644
+--- a/src/ibusutil.c
++++ b/src/ibusutil.c
+@@ -145,3 +145,15 @@ ibus_get_language_name(const gchar *_locale) {
+     }
+     return retval;
+ }
++
++gboolean
++ibus_use_bridge_hotkey (void)
++{
++    return (USE_BRIDGE_HOTKEY == 1) ? TRUE : FALSE;
++}
++
++const gchar *
++ibus_get_default_bridge_engine_name (void)
++{
++    return DEFAULT_BRIDGE_ENGINE_NAME;
++}
+diff --git a/src/ibusutil.h b/src/ibusutil.h
+index 7cf1995..a19d16e 100644
+--- a/src/ibusutil.h
++++ b/src/ibusutil.h
+@@ -43,4 +43,18 @@
+  */
+ const gchar *    ibus_get_language_name         (const gchar    *_locale);
+ 
++/**
++ * ibus_bus_use_bridge_hotkey:
++ * @bus: An #IBusBus.
++ * @returns: %TRUE if @bus use bridge hotkey, %FALSE otherwise.
++ */
++gboolean         ibus_use_bridge_hotkey (void);
++
++/**
++ * ibus_bus_get_default_bridge_engine_name:
++ * @bus: An #IBusBus.
++ * @returns: A default bridge engine name.
++ */
++const gchar *    ibus_get_default_bridge_engine_name (void);
++
+ #endif
+diff --git a/ui/gtk/panel.py b/ui/gtk/panel.py
+index 8804634..549393a 100644
+--- a/ui/gtk/panel.py
++++ b/ui/gtk/panel.py
+@@ -67,6 +67,7 @@ class Panel(ibus.PanelBase):
+         self.__data_dir = path.join(self.__prefix, "share", "ibus")
+         # self.__icons_dir = path.join(self.__data_dir, "icons")
+         self.__setup_cmd = path.join(self.__prefix, "bin", "ibus-setup")
++        self.__show = 0
+ 
+         # connect bus signal
+         self.__config.connect("value-changed", self.__config_value_changed_cb)
+@@ -133,6 +134,14 @@ class Panel(ibus.PanelBase):
+         # self.__bus.request_name(ibus.panel.IBUS_SERVICE_PANEL, 0)
+ 
+         # init xkb
++        self.__default_layout = 'default'
++        self.__default_model = 'default'
++        self.__default_option = 'default'
++        self.__disabled_engines = []
++        self.__disabled_engines_id = -1
++        self.__disabled_engines_prev_id = -1
++        self.__disabled_engines_swapped = 0
++
+         self.__xkblayout = ibus.XKBLayout(self.__config)
+         use_xkb = self.__config.get_value("general", "use_system_keyboard_layout", False)
+         if not use_xkb:
+@@ -142,11 +151,18 @@ class Panel(ibus.PanelBase):
+             value = 'default'
+         if value != 'default':
+             self.__xkblayout.set_default_layout(value)
++            if value.find('(') >= 0:
++                self.__default_layout = value.split('(')[0]
++                self.__default_model = value.split('(')[1].split(')')[0]
++            else:
++                self.__default_layout = value
++                self.__default_model = None
+         value = str(self.__config.get_value("general", "system_keyboard_option", ''))
+         if value == '':
+             value = 'default'
+         if value != 'default':
+             self.__xkblayout.set_default_option(value)
++            self.__default_option = value
+ 
+     def set_cursor_location(self, x, y, w, h):
+         self.__candidate_panel.set_cursor_location(x, y, w, h)
+@@ -233,12 +249,119 @@ class Panel(ibus.PanelBase):
+     def __set_im_name(self, name):
+         self.__language_bar.set_im_name(name)
+ 
++    def __use_bridge_hotkey(self):
++        if not ibus.use_bridge_hotkey():
++            return False
++        if self.__config == None:
++            return True
++        return self.__config.get_value("general/hotkey", "use_bridge_hotkey",
++                                       True)
++
++    def __registry_get_lang_from_layout(self, layout, model=None):
++        langs = None
++        lang = 'en'
++        registry = ibus.XKBConfigRegistry()
++        get_layout_lang = registry.get_layout_lang()
++        if model == '':
++            model = None
++        if model != None:
++            label = "%s(%s)" % (layout, model)
++            if label in get_layout_lang:
++                langs = get_layout_lang[label]
++        if langs == None:
++            label = layout
++            if label in get_layout_lang:
++                langs = get_layout_lang[label]
++        if langs != None:
++            lang = str(langs[0])
++        return lang
++
++    def __set_default_layout_engine(self, use_bridge_hotkey):
++        default_layout = self.__default_layout
++        default_model = self.__default_model
++        if default_layout == 'default':
++            default_layout = self.__xkblayout.get_default_layout()[0]
++            default_model = self.__xkblayout.get_default_layout()[1]
++        if default_model == 'default':
++            default_model = self.__xkblayout.get_default_layout()[1]
++        layouts = default_layout.split(',')
++        models = None
++        if default_model != None and default_model != '':
++            models = default_model.split(',')
++        if len(self.__disabled_engines) == 0:
++            for i, layout in enumerate(layouts):
++                registry = ibus.XKBConfigRegistry()
++                model = None
++                if models != None and i < len(models):
++                    model = models[i]
++                lang = self.__registry_get_lang_from_layout(layout, model)
++                model = None
++                if i == 0:
++                    layout = default_layout
++                    model = default_model
++                elif models != None and i < len(models):
++                    model = models[i]
++                if model == '':
++                    model = None
++                model_desc = _("Default Layout")
++                if i == 0:
++                    l = 0
++                    # layout 'in' and model 'eng' is English layout.
++                    if models != None and model != 'eng':
++                        for j in range(0, len(models)):
++                            l = l + len(models[j])
++                    if l != 0:
++                        model_desc = model_desc + " (" + model + ")"
++                elif model != None:
++                    model_desc = model_desc + " (" + model + ")"
++                name = ibus.DEFAULT_BRIDGE_ENGINE_NAME + "#" + str(i)
++                engine = registry.engine_desc_new(lang,
++                                                  layout,
++                                                  _("Default Layout"),
++                                                  model,
++                                                  model_desc,
++                                                  name)
++                self.__disabled_engines.append(engine)
++            self.__disabled_engines_id = self.__xkblayout.get_group()
++            if use_bridge_hotkey and len(self.__disabled_engines) > 0:
++                self.__focus_ic.set_xkb_engines(self.__disabled_engines)
++        if not use_bridge_hotkey:
++            return
++        if len(self.__disabled_engines) > 0:
++            if self.__focus_ic == None:
++                return
++            engine = self.__focus_ic.get_engine()
++            if engine == None:
++                if self.__disabled_engines_id < 0:
++                    self.__disabled_engines_id = 0
++                self.__focus_ic.focus_in()
++                self.__focus_ic.set_engine(self.__disabled_engines[self.__disabled_engines_id])
++            elif engine != None and \
++                 not self.__focus_ic.is_enabled():
++                self.__focus_ic.focus_in()
++                self.__focus_ic.enable()
++
+     def focus_in(self, ic):
+         self.reset()
+         self.__focus_ic = ibus.InputContext(self.__bus, ic)
+         enabled = self.__focus_ic.is_enabled()
+-        self.__language_bar.set_enabled(enabled)
+ 
++        use_bridge_hotkey = self.__use_bridge_hotkey()
++        self.__set_default_layout_engine(use_bridge_hotkey)
++        if use_bridge_hotkey:
++            if self.__show != 1:
++                self.__language_bar.set_enabled(enabled)
++            elif enabled:
++                engine = self.__focus_ic.get_engine()
++                if engine != None and \
++                   not engine.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                    self.__language_bar.set_enabled(enabled)
++                else:
++                    self.__language_bar.set_enabled(False)
++            else:
++                self.__language_bar.set_enabled(False)
++        else:
++            self.__language_bar.set_enabled(enabled)
+         if not enabled:
+             self.__set_im_icon(ICON_KEYBOARD)
+             self.__set_im_name(None)
+@@ -247,10 +370,13 @@ class Panel(ibus.PanelBase):
+         else:
+             engine = self.__focus_ic.get_engine()
+             if engine:
+-                self.__set_im_icon(engine.icon)
++                if engine.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                    self.__set_im_icon(ICON_KEYBOARD)
++                else:
++                    self.__set_im_icon(engine.icon)
+                 self.__set_im_name(engine.longname)
+                 if self.__bus.get_use_sys_layout():
+-                    self.__xkblayout.set_layout(self.__engine_get_layout_wrapper(engine))
++                    self.__xkblayout.set_layout(self.__engine_get_layout_wrapper(engine, False))
+             else:
+                 self.__set_im_icon(ICON_KEYBOARD)
+                 self.__set_im_name(None)
+@@ -273,7 +399,21 @@ class Panel(ibus.PanelBase):
+             return
+ 
+         enabled = self.__focus_ic.is_enabled()
+-        self.__language_bar.set_enabled(enabled)
++
++        if self.__use_bridge_hotkey():
++            if self.__show != 1:
++                self.__language_bar.set_enabled(enabled)
++            elif enabled:
++                engine = self.__focus_ic.get_engine()
++                if engine != None and \
++                   not engine.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                    self.__language_bar.set_enabled(enabled)
++                else:
++                    self.__language_bar.set_enabled(False)
++            else:
++                self.__language_bar.set_enabled(False)
++        else:
++            self.__language_bar.set_enabled(enabled)
+ 
+         if enabled == False:
+             self.reset()
+@@ -284,10 +424,13 @@ class Panel(ibus.PanelBase):
+         else:
+             engine = self.__focus_ic.get_engine()
+             if engine:
+-                self.__set_im_icon(engine.icon)
++                if engine.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                    self.__set_im_icon(ICON_KEYBOARD)
++                else:
++                    self.__set_im_icon(engine.icon)
+                 self.__set_im_name(engine.longname)
+                 if self.__bus.get_use_sys_layout():
+-                    self.__xkblayout.set_layout(self.__engine_get_layout_wrapper(engine))
++                    self.__xkblayout.set_layout(self.__engine_get_layout_wrapper(engine, True))
+             else:
+                 self.__set_im_icon(ICON_KEYBOARD)
+                 self.__set_im_name(None)
+@@ -315,6 +458,7 @@ class Panel(ibus.PanelBase):
+ 
+     def __config_load_show(self):
+         show = self.__config.get_value("panel", "show", 0)
++        self.__show = show
+         self.__language_bar.set_show(show)
+ 
+     def __config_load_position(self):
+@@ -443,6 +587,21 @@ class Panel(ibus.PanelBase):
+     #     menu.set_take_focus(False)
+     #     return menu
+ 
++    def __add_engine_in_menu(self, menu, engine, is_bold, size):
++        language = engine.language
++        lang = ibus.get_language_name(language)
++        item = gtk.ImageMenuItem("%s - %s" % (lang, engine.longname))
++        if is_bold:
++            for widget in item.get_children():
++                if isinstance(widget, gtk.Label):
++                    widget.set_markup("<b>%s</b>" % widget.get_text())
++        if engine.icon:
++            item.set_image(_icon.IconWidget(engine.icon, size[0]))
++        else:
++            item.set_image(_icon.IconWidget(ICON_ENGINE, size[0]))
++        item.connect("activate", self.__im_menu_item_activate_cb, engine)
++        menu.add(item)
++
+     def __create_im_menu(self):
+         engines = self.__bus.list_active_engines()
+         current_engine = \
+@@ -453,25 +612,39 @@ class Panel(ibus.PanelBase):
+         size = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
+         menu = gtk.Menu()
+         for i, engine in enumerate(engines):
+-            lang = ibus.get_language_name(engine.language)
+-            item = gtk.ImageMenuItem("%s - %s" % (lang, engine.longname))
+-            if current_engine and current_engine.name == engine.name:
+-                for widget in item.get_children():
+-                    if isinstance(widget, gtk.Label):
+-                        widget.set_markup("<b>%s</b>" % widget.get_text())
+-            if engine.icon:
+-                item.set_image(_icon.IconWidget(engine.icon, size[0]))
+-            else:
+-                item.set_image(_icon.IconWidget(ICON_ENGINE, size[0]))
+-            item.connect("activate", self.__im_menu_item_activate_cb, engine)
+-            menu.add(item)
++            if engine.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                if not self.__use_bridge_hotkey():
++                    continue
++                if len(self.__disabled_engines) == 0:
++                    continue
++                engine.disabled_engines_id = -1
++                for j, kb_engine in enumerate(self.__disabled_engines):
++                    if engine.name == kb_engine.name:
++                        engine.disabled_engines_id = j
++                        break
++                if engine.disabled_engines_id == -1:
++                    continue
++                kb_engine = self.__disabled_engines[engine.disabled_engines_id]
++                kb_engine.is_bridge = True
++                kb_engine.disabled_engines_id = engine.disabled_engines_id
++                is_bold = True if (current_engine != None and \
++                        current_engine.name == kb_engine.name) else False
++                self.__add_engine_in_menu(menu, kb_engine,
++                                          is_bold,
++                                          size)
++                continue
++            engine.is_bridge = False
++            is_bold = True if (current_engine != None and \
++                    current_engine.name == engine.name) else False
++            self.__add_engine_in_menu(menu, engine, is_bold, size)
+ 
+         item = gtk.ImageMenuItem(_("Turn off input method"))
+         item.set_image(_icon.IconWidget("gtk-close", size[0]))
+         item.connect("activate", self.__im_menu_item_activate_cb, None)
+         if self.__focus_ic == None or not self.__focus_ic.is_enabled():
+             item.set_sensitive(False)
+-        menu.add(item)
++        if not self.__use_bridge_hotkey():
++            menu.add(item)
+ 
+         menu.show_all()
+         menu.set_take_focus(False)
+@@ -523,8 +696,25 @@ class Panel(ibus.PanelBase):
+         if not self.__focus_ic:
+             return
+         if engine:
+-            self.__focus_ic.set_engine(engine)
++            if self.__use_bridge_hotkey() and engine.is_bridge:
++                engines = self.__bus.list_active_engines()
++                current_engine = \
++                    (self.__focus_ic != None and self.__focus_ic.get_engine()) or \
++                    (engines and engines[0]) or \
++                    None
++                if current_engine and \
++                   current_engine.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
++                    self.__disabled_engines_prev_id = self.__disabled_engines_id
++                    self.__disabled_engines_swapped = 2
++                else:
++                    self.__disabled_engines_prev_id = -1
++                self.__disabled_engines_id = engine.disabled_engines_id
++                self.__focus_ic.set_engine(self.__disabled_engines[self.__disabled_engines_id])
++            else:
++                self.__disabled_engines_prev_id = -1
++                self.__focus_ic.set_engine(engine)
+         else:
++            self.__disabled_engines_prev_id = -1
+             self.__focus_ic.disable()
+ 
+     def __sys_menu_item_activate_cb(self, item, command):
+@@ -573,12 +763,113 @@ class Panel(ibus.PanelBase):
+         self.__setup_pid = pid
+         glib.child_watch_add(self.__setup_pid, self.__child_watch_cb)
+ 
+-    def __engine_get_layout_wrapper(self, engine):
++    def __get_model_from_layout(self, layout):
++        left_bracket = layout.find('(')
++        right_bracket = layout.find(')')
++        if left_bracket >= 0 and right_bracket > left_bracket:
++            return (layout[:left_bracket] + layout[right_bracket + 1:], \
++                    layout[left_bracket + 1:right_bracket])
++        return (layout, "default")
++
++    def __get_option_from_layout(self, layout):
++        left_bracket = layout.find('[')
++        right_bracket = layout.find(']')
++        if left_bracket >= 0 and right_bracket > left_bracket:
++            return (layout[:left_bracket] + layout[right_bracket + 1:], \
++                    layout[left_bracket + 1:right_bracket])
++        return (layout, "default")
++
++    def __merge_models_and_options(self, cur_layout, engine_layout):
++        orig_layout = cur_layout
++        engine_model = "default"
++        engine_option = "default"
++        (engine_layout, engine_model) = \
++            self.__get_model_from_layout(engine_layout)
++        (engine_layout, engine_option) = \
++            self.__get_option_from_layout(engine_layout)
++        if (engine_model == None or engine_model == "default") and \
++           (engine_option == None or engine_option == "default"):
++            return cur_layout
++        cur_model = "default"
++        cur_option = "default"
++        (cur_layout, cur_model) = \
++            self.__get_model_from_layout(cur_layout)
++        (cur_layout, cur_option) = \
++            self.__get_option_from_layout(cur_layout)
++        # Currently implemented options only.
++        # Merging layouts and models are a little complicated.
++        # e.g. ja,ru + ja(kana) == ja,ru,ja(,,kana)
++        if engine_option != None and engine_option != "default":
++            if cur_option == None or cur_option == "default":
++                cur_option = engine_option
++            elif cur_option != None and cur_option != "default":
++                cur_option = "%s,%s" % (cur_option, engine_option)
++            if cur_model != None and cur_model != "default":
++                cur_layout = "%s(%s)" % (cur_layout, cur_model)
++            if cur_option != None and cur_option != "default":
++                cur_layout = "%s[%s]" % (cur_layout, cur_option)
++            return cur_layout
++        return orig_layout
++
++    def __engine_get_layout_wrapper(self, engine, changed_state):
+         # This code is for the back compatibility.
+         # Should we remove the codes after all IM engines are changed
+         # to "default" layout?
+-        if engine.name != None and engine.name.startswith("xkb:layout:"):
++        if engine.name != None and engine.name.startswith("xkb:layout:") and \
++           not self.__use_bridge_hotkey():
++            return engine.layout
++        elif engine.name != None and \
++             engine.name.startswith("xkb:layout:") and \
++             self.__use_bridge_hotkey() and \
++             not engine.name.startswith(ibus.DEFAULT_BRIDGE_ENGINE_NAME):
+             return engine.layout
++        elif self.__use_bridge_hotkey() and \
++           self.__disabled_engines_id >= 0 and \
++           len(self.__disabled_engines) > 0 and \
++           self.__disabled_engines_id < len(self.__disabled_engines):
++            if changed_state and self.__disabled_engines_prev_id != -1:
++                # stateChanged is always called triple because we change
++                # the engine. So the first two calls are ignored here.
++                # Since this._disabledEnginesPrevID needs to be reseted
++                # to -1 and and stateChanged is called multiple times.
++                # engine.layout is not used.
++                #
++                # When stateChanged is called by Control + Space,
++                # this._disabledEnginesID and this._disabledEnginesPrevID
++                # are toggled because this._disabledEnginesID is the
++                # current XKB group id and this._disabledEnginesPrevID
++                # is the next XKB group id.
++                #
++                # When stateChanged is called by ibus activate menu,
++                # this._disabledEnginesID is the XKB group id.
++                #
++                # FIXME: If this._activeEngine is used, focusIn event is
++                # called by either choosing ibus menu item or switching
++                # input contexts.
++                # So there is a bug: After XKB group is switched by
++                # ibus menu, if the input contexts are switched, 
++                # the next toggled input method has next XKB group keymap
++                # instead of the current XKB group keymap.
++                # focusIn event don't know either choosing ibus menu or
++                # switching input contexts are happened.
++                if self.__disabled_engines_swapped < 2:
++                    x = self.__disabled_engines_prev_id
++                    self.__disabled_engines_prev_id = self.__disabled_engines_id
++                    self.__disabled_engines_id = x
++                    self.__disabled_engines_swapped = \
++                            1 if self.__disabled_engines_swapped == 0 else 0
++                else:
++                    self.__disabled_engines_swapped = \
++                            self.__disabled_engines_swapped + 1 \
++                            if self.__disabled_engines_swapped < 4 else 0
++            retval = self.__disabled_engines[self.__disabled_engines_id].layout
++            # engine is an input-method or a keymap and if engine is
++            # a keymap, the layout is not 'default'.
++            # if engine is an input-method, the layout is merged with the
++            # current XKB keymap here.
++            if engine.layout != None and engine.layout.startswith("default"):
++                return self.__merge_models_and_options(retval, engine.layout)
++            return retval
+         elif engine.layout != None and engine.layout.startswith("default"):
+             return engine.layout
+         else:
+diff --git a/xkb/Makefile.am b/xkb/Makefile.am
+index ad9cdd9..c4d5afb 100644
+--- a/xkb/Makefile.am
++++ b/xkb/Makefile.am
+@@ -28,6 +28,8 @@ INCLUDES = \
+         -I$(top_srcdir)/src \
+ 	-DIBUS_LOCALEDIR=\"$(datadir)/locale\" \
+ 	-DLIBEXECDIR=\""$(libexecdir)"\" \
++	-DUSE_BRIDGE_HOTKEY=$(USE_BRIDGE_HOTKEY) \
++	-DDEFAULT_BRIDGE_ENGINE_NAME=\"$(DEFAULT_BRIDGE_ENGINE_NAME)\" \
+         $(NULL)
+ 
+ noinst_PROGRAMS = $(TESTS)
+diff --git a/xkb/ibus-engine-xkb-main.c b/xkb/ibus-engine-xkb-main.c
+index 0fb0f0c..4787bf2 100644
+--- a/xkb/ibus-engine-xkb-main.c
++++ b/xkb/ibus-engine-xkb-main.c
+@@ -290,6 +290,9 @@ print_component ()
+     const gchar *desc;
+     gchar *output;
+     GString *str;
++#if USE_BRIDGE_HOTKEY
++    int i;
++#endif
+ 
+ #ifdef XKBLAYOUTCONFIG_FILE
+     layout_config = ibus_xkb_layout_config_new (XKBLAYOUTCONFIG_FILE);
+@@ -302,6 +305,19 @@ print_component ()
+     layout_desc = (GHashTable *) ibus_xkb_config_registry_get_layout_desc (config_registry);
+     variant_desc = (GHashTable *) ibus_xkb_config_registry_get_variant_desc (config_registry);
+     component = ibus_xkb_component_new ();
++#if USE_BRIDGE_HOTKEY
++    for (i = 0; i < 4; i++) {
++        gchar *name = g_strdup_printf ("%s#%d", DEFAULT_BRIDGE_ENGINE_NAME, i);
++        engine = ibus_xkb_engine_desc_new ("eng",
++                                           "us",
++                                           _("Default Layout"),
++                                           NULL,
++                                           NULL,
++                                           name);
++        g_free (name);
++        ibus_component_add_engine (component, engine);
++    }
++#endif
+     for (keys = g_hash_table_get_keys (layout_list); keys; keys = keys->next) {
+         if (keys->data == NULL) {
+             continue;
+diff --git a/xkb/xkbxml.c b/xkb/xkbxml.c
+index d59a929..86bcf8f 100644
+--- a/xkb/xkbxml.c
++++ b/xkb/xkbxml.c
+@@ -25,6 +25,7 @@
+ #endif
+ 
+ #include <glib.h>
++#include <string.h>
+ 
+ #include "xkbxml.h"
+ #include "ibus.h"
+@@ -275,6 +276,7 @@ ibus_xkb_engine_desc_new (const gchar *l
+     gchar *desc = NULL;
+     gchar *engine_layout = NULL;
+     const gchar *name_prefix = "xkb:layout:";
++    const gchar *icon = "ibus-engine";
+ 
+     g_return_val_if_fail (lang != NULL && layout != NULL, NULL);
+ 
+@@ -304,6 +306,12 @@ ibus_xkb_engine_desc_new (const gchar *l
+         desc = g_strdup_printf ("XKB %s keyboard layout", layout);
+         engine_layout = g_strdup (layout);
+     }
++#if USE_BRIDGE_HOTKEY
++    if (g_ascii_strncasecmp (name, DEFAULT_BRIDGE_ENGINE_NAME,
++                             strlen (DEFAULT_BRIDGE_ENGINE_NAME)) == 0) {
++        icon = "input-keyboard-symbolic";
++    }
++#endif
+ 
+     engine = ibus_engine_desc_new (name,
+                                    longname,
+@@ -311,7 +319,7 @@ ibus_xkb_engine_desc_new (const gchar *l
+                                    lang,
+                                    "LGPL2.1",
+                                    "Takao Fujiwara <takao.fujiwara1@gmail.com>",
+-                                   "ibus-engine",
++                                   icon,
+                                    engine_layout);
+ 
+     g_free (name);
+-- 
+1.7.5.4
+

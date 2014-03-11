@@ -1,0 +1,46 @@
+--- kdemultimedia-3.4.0/kfile-plugins/mp3/kfile_mp3.cpp.orig	2005-02-03 17:48:25.000000000 -0500
++++ kdemultimedia-3.4.0/kfile-plugins/mp3/kfile_mp3.cpp	2005-03-21 07:54:56.000000000 -0500
+@@ -39,6 +39,7 @@
+ #include <mpegfile.h>
+ #include <id3v1genres.h>
+ 
++#define MyQStringToTString(s) TagLib::String(s.local8Bit().data(), TagLib::String::Latin1)
+ typedef KGenericFactory<KMp3Plugin> Mp3Factory;
+ 
+ K_EXPORT_COMPONENT_FACTORY(kfile_mp3, Mp3Factory( "kfile_mp3" ))
+@@ -153,21 +154,21 @@
+         TQString date  = file.tag()->year() > 0 ? TQString::number(file.tag()->year()) : TQString::null;
+         TQString track = file.tag()->track() > 0 ? TQString::number(file.tag()->track()) : TQString::null;
+ 
+-        TQString title = TQString(TStringToQString(file.tag()->title())).stripWhiteSpace();
++        TQString title = TQString::fromLocal8Bit(TStringToQString( file.tag()->title() ).latin1()).stripWhiteSpace();
+         if (!title.isEmpty())
+             appendItem(id3group, "Title", title);
+-        TQString artist = TQString(TStringToQString(file.tag()->artist())).stripWhiteSpace();
++        TQString artist = TQString::fromLocal8Bit(TStringToQString( file.tag()->artist() ).latin1()).stripWhiteSpace();
+         if (!artist.isEmpty())
+             appendItem(id3group, "Artist", artist);
+-        TQString album = TQString(TStringToQString(file.tag()->album())).stripWhiteSpace();
++        TQString album = TQString::fromLocal8Bit(TStringToQString( file.tag()->album() ).latin1()).stripWhiteSpace();
+         if (!album.isEmpty())
+             appendItem(id3group, "Album", album);
+         appendItem(id3group, "Date",        date);
+-        TQString comment = TQString(TStringToQString(file.tag()->comment())).stripWhiteSpace();
++        TQString comment = TQString::fromLocal8Bit(TStringToQString( file.tag()->comment() ).latin1()).stripWhiteSpace();
+         if (!comment.isEmpty())
+             appendItem(id3group, "Comment", comment);
+         appendItem(id3group, "Tracknumber", track);
+-        TQString genre = TQString(TStringToQString(file.tag()->genre())).stripWhiteSpace();
++        TQString genre = TQString::fromLocal8Bit(TStringToQString( file.tag()->genre() ).latin1()).stripWhiteSpace();
+         if (!genre.isEmpty())
+             appendItem(id3group, "Genre", genre);
+     }
+@@ -221,7 +222,7 @@
+     Translator(const KFileMetaInfo &info) : m_info(info) {}
+     TagLib::String operator[](const char *key) const
+     {
+-        return QStringToTString(m_info["id3"][key].value().toString());
++        return MyQStringToTString(m_info["id3"][key].value().toString());
+     }
+     int toInt(const char *key) const
+     {

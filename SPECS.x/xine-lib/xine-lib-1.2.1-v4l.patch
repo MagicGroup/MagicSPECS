@@ -1,0 +1,36 @@
+diff -ur xine-lib-1.2.1.orig/include/configure.h.in xine-lib-1.2.1/include/configure.h.in
+--- xine-lib-1.2.1.orig/include/configure.h.in	2012-03-29 14:06:44.000000000 -0400
++++ xine-lib-1.2.1/include/configure.h.in	2012-03-29 14:27:07.000000000 -0400
+@@ -270,7 +270,7 @@
+ /* Define to 1 if you have the <linux/videodev2.h> header file. */
+ #undef HAVE_LINUX_VIDEODEV2_H
+ 
+-/* Define to 1 if you have the <linux/videodev.h> header file. */
++/* Define to 1 if you have the <libv4l1-videodev.h> header file. */
+ #undef HAVE_LINUX_VIDEODEV_H
+ 
+ /* Define this if the 'lrintf' function is declared in math.h */
+diff -ur xine-lib-1.2.1.orig/m4/input.m4 xine-lib-1.2.1/m4/input.m4
+--- xine-lib-1.2.1.orig/m4/input.m4	2012-03-29 14:06:40.000000000 -0400
++++ xine-lib-1.2.1/m4/input.m4	2012-03-29 14:25:43.000000000 -0400
+@@ -93,7 +93,7 @@
+     XINE_ARG_ENABLE([v4l], [Enable Video4Linux support])
+     if test x"$enable_v4l" != x"no"; then
+         have_v4l=yes
+-        AC_CHECK_HEADERS([linux/videodev.h], , [have_v4l=no])
++        AC_CHECK_HEADERS([libv4l1-videodev.h], , [have_v4l=no])
+         AC_CHECK_HEADERS([asm/types.h])
+         if test x"$hard_enable_v4l" = x"yes" && test x"$have_v4l" != x"yes"; then
+             AC_MSG_ERROR([Video4Linux support requested, but prerequisite headers not found.])
+diff -ur xine-lib-1.2.1.orig/src/input/input_v4l.c xine-lib-1.2.1/src/input/input_v4l.c
+--- xine-lib-1.2.1.orig/src/input/input_v4l.c	2012-03-29 14:06:42.000000000 -0400
++++ xine-lib-1.2.1/src/input/input_v4l.c	2012-03-29 14:26:02.000000000 -0400
+@@ -47,7 +47,7 @@
+ */
+ #define _LINUX_TIME_H
+ 
+-#include <linux/videodev.h>
++#include <libv4l1-videodev.h>
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
+ #include <errno.h>

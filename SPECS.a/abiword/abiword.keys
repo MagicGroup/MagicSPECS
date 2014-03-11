@@ -1,0 +1,7 @@
+application/x-abiword
+	open=abiword %f
+	view=abiword %f
+
+application/x-abicollab
+	open=abiword %f
+	view=abiword %f

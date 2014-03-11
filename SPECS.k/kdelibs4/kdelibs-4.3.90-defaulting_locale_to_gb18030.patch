@@ -1,0 +1,13 @@
+--- kdelibs/kdecore/localization/klocale.cpp.orig	2009-05-29 14:13:03.000000000 +0800
++++ kdelibs/kdecore/localization/klocale.cpp	2009-05-29 14:16:46.000000000 +0800
+@@ -2258,8 +2258,8 @@
+ #endif
+ 
+     if (!codecForEncoding) {
+-        kWarning() << "Cannot resolve system encoding, defaulting to ISO 8859-1.";
+-        const int mibDefault = 4; // ISO 8859-1
++        kWarning() << "Cannot resolve system encoding, defaulting to GB18030.";
++        const int mibDefault = 114; // GB18030
+         setEncoding(mibDefault);
+     }
+ 

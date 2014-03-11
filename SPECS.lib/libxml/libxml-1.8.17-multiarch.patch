@@ -1,0 +1,11 @@
+--- libxml-1.8.17/xml-config.in	2007-10-25 13:39:44.000000000 +0100
++++ libxml-1.8.17/xml-config.in	2007-10-25 13:40:31.000000000 +0100
+@@ -3,7 +3,7 @@
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+ includedir=@includedir@
+-libdir=@libdir@
++libdir=`pkg-config --variable=libdir libxml`
+ 
+ usage()
+ {

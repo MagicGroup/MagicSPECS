@@ -1,0 +1,13 @@
+Firmware for ALSA
+-----------------
+This package has been put together by Tim Jackson (rpm@timj.co.uk) from an
+original fedora.us spec file.
+
+Since the packager does not have access to most of the hardware for which
+firmware is provided in this package, reports of success or otherwise are
+welcome, as is any help with the package.
+
+Not all firmware which is included in the upstream alsa-firmware release is
+necessarily included in this Fedora package, notably the "turtlebeach" firmware.
+If there is something missing from this package and you need it, please contact
+the packager.

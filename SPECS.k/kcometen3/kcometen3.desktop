@@ -1,0 +1,32 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kcometen3.kss
+Icon=kscreensaver
+Type=Application
+Actions=Setup;InWindow;Root
+X-KDE-Category=OpenGL Screen Savers
+X-KDE-Type=OpenGL
+Name=KCometen3
+Name[zh_CN]=璀璨彗星 3
+Name[zh_TW]=璀璨彗星 3
+
+[Desktop Action Setup]
+Exec=kcometen3.kss -setup
+Name=Setup...
+Name[zh_CN]=设置...
+Name[zh_TW]=設定...
+Icon=kscreensaver
+
+[Desktop Action InWindow]
+Exec=kcometen3.kss -window-id %w
+Name=Display in Specified Window
+Name[zh_CN]=在指定的窗口内显示
+Name[zh_TW]=在指定的窗口內顯示
+NoDisplay=true
+
+[Desktop Action Root]
+Exec=kcometen3.kss -root
+Name=Display in Root Window
+Name[zh_CN]=在根窗口内显示
+Name[zh_TW]=在根窗口內顯示
+NoDisplay=true

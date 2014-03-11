@@ -1,0 +1,12 @@
+diff -up libassuan-1.0.5/src/libassuan-config.in.multilib libassuan-1.0.5/src/libassuan-config.in
+--- libassuan-1.0.5/src/libassuan-config.in.multilib	2006-10-09 05:41:47.000000000 -0500
++++ libassuan-1.0.5/src/libassuan-config.in	2009-12-17 07:11:30.688919319 -0600
+@@ -132,7 +132,7 @@ if test "$echo_cflags" = "yes"; then
+ fi
+ 
+ if test "$echo_libs" = "yes"; then
+-    if test "@libdir@" != "/usr/lib" ; then
++    if test "@libdir@" != "/usr/lib" -a "@libdir@" != "/usr/lib32" -a "@libdir@" != "/usr/lib64" ; then
+       libdirs="-L@libdir@"
+       for i in $lib $extralibs ; do
+ 	if test "$i" = "-L@libdir@" ; then

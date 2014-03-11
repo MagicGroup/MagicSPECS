@@ -1,0 +1,1227 @@
+diff -ur festival/speech_tools.old/grammar/ngram/EST_Ngrammar.cc festival/speech_tools/grammar/ngram/EST_Ngrammar.cc
+--- festival/speech_tools.old/grammar/ngram/EST_Ngrammar.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/grammar/ngram/EST_Ngrammar.cc	2006-12-11 17:36:10.000000000 -0500
+@@ -306,7 +306,7 @@
+     // not right - just print out, then recurse through children
+     // change to use 'backoff_traverse'
+     
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+     for (k=p_pdf.item_start();
+@@ -373,7 +373,7 @@
+ {
+ 
+     // recursively delete this state and all its children
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+     for (k=p_pdf.item_start();
+@@ -456,7 +456,8 @@
+ 
+ void EST_BackoffNgrammarState::frequency_of_frequencies(EST_DVector &ff)
+ {
+-    int k,max=ff.n();
++    int max=ff.n();
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+     for (k=p_pdf.item_start();
+@@ -1585,7 +1586,7 @@
+     // remove any branches with zero frequency count
+     
+     // find children of this state with zero freq and zap them
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+     for (k=start_state->pdf_const().item_start();
+@@ -2324,7 +2325,8 @@
+ 	backoff_representation->print_freqs(os,p_order);
+     else
+     {
+-	int i,j,k;
++	int i,j;
++        EST_Litem *k;
+ 	EST_IVector window(p_order-1);
+ 	
+ 	for (i=0; i < p_num_states; i++)
+@@ -2665,7 +2667,7 @@
+     function(start_state,params);
+     
+     // and recurse down the tree
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+     for (k=start_state->pdf_const().item_start();
+@@ -2696,7 +2698,7 @@
+     {
+ 	// and recurse down the tree if we haven't
+ 	// reached the level yet
+-	int k;
++	EST_Litem *k;
+ 	double freq;
+ 	EST_String name;
+ 	
+diff -ur festival/speech_tools.old/grammar/ngram/EST_PST.cc festival/speech_tools/grammar/ngram/EST_PST.cc
+--- festival/speech_tools.old/grammar/ngram/EST_PST.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/grammar/ngram/EST_PST.cc	2006-12-11 17:36:10.000000000 -0500
+@@ -71,7 +71,8 @@
+ 	// Base -- print from pd 
+ 	EST_String s;
+ 	double freq;
+-	for (int i = pd.item_start(); 
++        EST_Litem *i;
++	for (i = pd.item_start(); 
+ 	     !pd.item_end(i); 
+ 	     i=pd.item_next(i))
+ 	{
+@@ -98,7 +99,7 @@
+ 	EST_String s;
+ 	double prob;
+ 	os << get_path() << " :";
+-	for (int i = pd.item_start(); !pd.item_end(i) ; i=pd.item_next(i))
++	for (EST_Litem *i = pd.item_start(); !pd.item_end(i) ; i=pd.item_next(i))
+ 	{
+ 	    pd.item_prob(i,s,prob);
+ 	    os << " " << s << " " << prob;
+diff -ur festival/speech_tools.old/grammar/ngram/freqsmooth.cc festival/speech_tools/grammar/ngram/freqsmooth.cc
+--- festival/speech_tools.old/grammar/ngram/freqsmooth.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/grammar/ngram/freqsmooth.cc	2006-12-11 17:36:10.000000000 -0500
+@@ -74,7 +74,8 @@
+ 				 EST_Ngrammar &ngram)
+ {
+     // Build all the backoff grammars back to uni-grams
+-    int i,j,k,l;
++    int i,j,l;
++    EST_Litem *k;
+ 
+     for (i=0; i < ngram.order()-1; i++)
+ 	backoff_ngrams[i].init(i+1,EST_Ngrammar::dense,
+@@ -110,7 +111,8 @@
+ {
+     // For all ngrams which are too infrequent, adjust their
+     // frequencies based on their backoff probabilities
+-    int i,j;
++    int i;
++    EST_Litem *j;
+     double occurs;
+     double backoff_prob;
+ 
+diff -ur festival/speech_tools.old/grammar/ngram/ngrammar_aux.cc festival/speech_tools/grammar/ngram/ngrammar_aux.cc
+--- festival/speech_tools.old/grammar/ngram/ngrammar_aux.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/grammar/ngram/ngrammar_aux.cc	2006-12-11 17:36:10.000000000 -0500
+@@ -117,7 +117,7 @@
+ 
+ void make_f_of_f(EST_BackoffNgrammarState *s,void *params)
+ {
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+ 
+@@ -138,7 +138,7 @@
+ 
+ void get_max_f(EST_BackoffNgrammarState *s,void *params)
+ {
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+ 
+@@ -158,7 +158,7 @@
+ 
+ void map_f_of_f(EST_BackoffNgrammarState *s,void *params)
+ {
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+ 
+@@ -184,7 +184,7 @@
+ 
+ void zero_small_f(EST_BackoffNgrammarState *s,void *params)
+ {
+-    int k;
++    EST_Litem *k;
+     double freq;
+     EST_String name;
+ 
+@@ -204,7 +204,8 @@
+ 
+ void frequency_of_frequencies(EST_DVector &ff, EST_Ngrammar &n,int this_order)
+ {
+-  int i,k,size;
++  int i,size;
++  EST_Litem *k;
+   double max=0.0;
+ 
+   // if ff has zero size, do complete frequency of frequencies
+@@ -302,8 +303,8 @@
+ 
+ void map_frequencies(EST_Ngrammar &n, const EST_DVector &map, const int this_order)
+ {
+-  int i,k;
+-
++    int i;
++    EST_Litem *k;
+ 
+   switch(n.representation())
+     {
+diff -ur festival/speech_tools.old/grammar/ngram/ngrammar_io.cc festival/speech_tools/grammar/ngram/ngrammar_io.cc
+--- festival/speech_tools.old/grammar/ngram/ngrammar_io.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/grammar/ngram/ngrammar_io.cc	2006-12-11 17:36:10.000000000 -0500
+@@ -281,7 +281,8 @@
+ load_ngram_cstr_bin(const EST_String filename, EST_Ngrammar &n)
+ {
+     EST_TokenStream ts;
+-    int i,j,k,order;
++    int i,j,order;
++    EST_Litem *k;
+     int num_entries;
+     double approx_num_samples = 0.0;
+     long freq_data_start, freq_data_end;
+@@ -407,7 +408,7 @@
+ save_ngram_htk_ascii_sub(const EST_String &word, ostream *ost, 
+ 			 EST_Ngrammar &n, double floor)
+ {
+-    int k;
++    EST_Litem *k;
+     EST_String name;
+     double freq;
+     EST_StrVector this_ngram(2); // assumes bigram
+@@ -734,7 +735,8 @@
+     // awb's format
+     (void)trace;
+     ostream *ost;
+-    int i,k;
++    int i;
++    EST_Litem *k;
+     
+     if (filename == "-")
+ 	ost = &cout;
+@@ -831,7 +833,8 @@
+     if (n.representation() == EST_Ngrammar::sparse)
+ 	return misc_write_error;
+     
+-    int i,k;
++    int i;
++    EST_Litem *k;
+     FILE *ofd;
+     double lfreq = -1;
+     double count = -1;
+diff -ur festival/speech_tools.old/grammar/wfst/wfst_train.cc festival/speech_tools/grammar/wfst/wfst_train.cc
+--- festival/speech_tools.old/grammar/wfst/wfst_train.cc	2005-07-26 18:37:36.000000000 -0400
++++ festival/speech_tools/grammar/wfst/wfst_train.cc	2006-12-11 17:36:10.000000000 -0500
+@@ -315,7 +315,8 @@
+     LISP *ssplits;
+     gc_protect(&splits);
+     EST_String sname;
+-    int b,best_b,i;
++    int b,best_b;
++    EST_Litem *i;
+     int num_pdfs;
+     double best_score, score, sfreq;
+ 
+@@ -390,7 +391,7 @@
+     // Find score of (a+b) vs (all-(a+b))
+     EST_DiscreteProbDistribution ab(a);
+     EST_DiscreteProbDistribution all_but_ab(all);
+-    int i;
++    EST_Litem *i;
+     EST_String sname;
+     double sfreq, score;
+     for (i=b.item_start(); !b.item_end(i);
+@@ -522,7 +523,7 @@
+     EST_DiscreteProbDistribution pdf_split(&wfst.in_symbols());
+     EST_DiscreteProbDistribution pdf_remain(&wfst.in_symbols());
+     int in, tostate, id;
+-    int i;
++    EST_Litem *i;
+     double sfreq;
+     EST_String sname;
+ 
+diff -ur festival/speech_tools.old/include/EST_simplestats.h festival/speech_tools/include/EST_simplestats.h
+--- festival/speech_tools.old/include/EST_simplestats.h	2004-04-30 12:56:49.000000000 -0400
++++ festival/speech_tools/include/EST_simplestats.h	2006-12-11 17:36:10.000000000 -0500
+@@ -47,6 +47,8 @@
+ #include "EST_TKVL.h"
+ #include "EST_types.h"
+ 
++typedef size_t int_iter; 
++
+ /** A class for managing mapping string names to integers and back again,
+     mainly used for representing alphabets in n-grams and grammars etc.
+ 
+@@ -249,7 +251,8 @@
+     /// Add this observation, may specify number of occurrences
+     void cumulate(const EST_String &s,double count=1);
+     /// Add this observation, i must be with in EST\_Discrete range
+-    void cumulate(const int i,double count=1);
++    void cumulate(EST_Litem *i,double count=1);
++    void cumulate(int i,double count=1);
+     /// Return the most probable member of the distribution
+     const EST_String &most_probable(double *prob = NULL) const;
+     /** Return the entropy of the distribution
+@@ -265,17 +268,18 @@
+     /// 
+     double frequency(const int i) const; 
+     /// Used for iterating through members of the distribution
+-    int item_start() const;
++    EST_Litem *item_start() const;
+     /// Used for iterating through members of the distribution
+-    int item_next(int idx) const;
++    EST_Litem *item_next(EST_Litem *idx) const;
+     /// Used for iterating through members of the distribution
+-    int item_end(int idx) const;
++    int item_end(EST_Litem *idx) const;
++
+     /// During iteration returns name given index 
+-    const EST_String &item_name(int idx) const;
++    const EST_String &item_name(EST_Litem *idx) const;
+     /// During iteration returns name and frequency given index  
+-    void item_freq(int idx,EST_String &s,double &freq) const;
++    void item_freq(EST_Litem *idx,EST_String &s,double &freq) const;
+     /// During iteration returns name and probability given index
+-    void item_prob(int idx,EST_String &s,double &prob) const;
++    void item_prob(EST_Litem *idx,EST_String &s,double &prob) const;
+ 
+     /// Returns discrete vocabulary of distribution
+     inline const EST_Discrete *const get_discrete() const { return discrete; };
+@@ -288,11 +292,13 @@
+         accordingly.  This is used when smoothing frequencies.
+     */
+     void set_frequency(int i,double c); 
++    void set_frequency(EST_Litem *i,double c); 
+     
+     /// Sets the frequency of named item, without modifying {\tt num\_samples}.
+     void override_frequency(const EST_String &s,double c);
+     /// Sets the frequency of named item, without modifying {\tt num\_samples}.
+     void override_frequency(int i,double c); 
++    void override_frequency(EST_Litem *i,double c); 
+     
+     /** Sets the number of samples.  Care should be taken on setting this
+         as it will affect how probabilities are calculated.
+diff -ur festival/speech_tools.old/include/EST_Track.h festival/speech_tools/include/EST_Track.h
+--- festival/speech_tools.old/include/EST_Track.h	2004-05-29 14:34:40.000000000 -0400
++++ festival/speech_tools/include/EST_Track.h	2007-02-13 00:12:53.000000000 -0500
+@@ -61,6 +61,7 @@
+   tff_htk,
+   tff_htk_fbank,
+   tff_htk_mfcc,
++  tff_htk_mfcc_e,
+   tff_htk_user,
+   tff_htk_discrete,
+   tff_xmg,
+diff -ur festival/speech_tools.old/include/EST_TSimpleVector.h festival/speech_tools/include/EST_TSimpleVector.h
+--- festival/speech_tools.old/include/EST_TSimpleVector.h	2006-07-06 08:57:24.000000000 -0400
++++ festival/speech_tools/include/EST_TSimpleVector.h	2006-09-27 09:19:35.000000000 -0400
+@@ -60,6 +60,9 @@
+     EST_TSimpleVector(const EST_TSimpleVector<T> &v);
+     /// "size" constructor
+     EST_TSimpleVector(int n): EST_TVector<T>(n) {}; 
++    /// memory constructor
++    EST_TSimpleVector(int n, T* memory, int offset=0, 
++		      int free_when_destroyed=0): EST_TVector<T>(n,memory) {}; 
+ 
+     /// resize vector
+     void resize(int n, int set=1); 
+diff -ur festival/speech_tools.old/include/EST_Wagon.h festival/speech_tools/include/EST_Wagon.h
+--- festival/speech_tools.old/include/EST_Wagon.h	2006-08-11 18:39:02.000000000 -0400
++++ festival/speech_tools/include/EST_Wagon.h	2006-12-02 11:44:48.000000000 -0500
+@@ -239,8 +239,7 @@
+ extern EST_FMatrix wgn_DistMatrix;
+ extern EST_Track wgn_VertexTrack;
+ extern EST_Track wgn_UnitTrack;
+-extern int wgn_VertexTrack_start;
+-extern int wgn_VertexTrack_end;
++extern EST_Track wgn_VertexFeats;
+ 
+ void wgn_load_datadescription(EST_String fname,LISP ignores);
+ void wgn_load_dataset(WDataSet &ds,EST_String fname);
+diff -ur festival/speech_tools.old/lib/siod/siod.scm festival/speech_tools/lib/siod/siod.scm
+--- festival/speech_tools.old/lib/siod/siod.scm	2003-03-31 09:28:24.000000000 -0500
++++ festival/speech_tools/lib/siod/siod.scm	2006-12-11 17:36:10.000000000 -0500
+@@ -209,7 +209,13 @@
+ (defun append2 (a b)
+   (if (null a)
+       b
+-    (cons (car a) (append2 (cdr a) b))))
++      (begin
++        (let ((x (reverse a))
++              (y b))
++          (while x
++            (set! y (cons (car x) y))
++            (set! x (cdr x)))
++          y))))
+ 
+ (defun rplacd (a b)
+ "(replacd A B)
+diff -ur festival/speech_tools.old/main/wagon_main.cc festival/speech_tools/main/wagon_main.cc
+--- festival/speech_tools.old/main/wagon_main.cc	2006-09-10 17:33:18.000000000 -0400
++++ festival/speech_tools/main/wagon_main.cc	2006-12-02 14:46:44.000000000 -0500
+@@ -2,7 +2,7 @@
+ /*                                                                       */
+ /*                Centre for Speech Technology Research                  */
+ /*                     University of Edinburgh, UK                       */
+-/*                     Copyright (c) 1996-2005                           */
++/*                     Copyright (c) 1996-2006                           */
+ /*                        All Rights Reserved.                           */
+ /*                                                                       */
+ /*  Permission is hereby granted, free of charge, to use and distribute  */
+@@ -39,6 +39,8 @@
+ /*                                                                       */
+ /*  Added decision list support, Feb 1997                                */
+ /*                                                                       */
++/*  Added vector support for Clustergen 2005/2006                        */
++/*                                                                       */
+ /*=======================================================================*/
+ #include <cstdlib>
+ #include <iostream>
+@@ -111,6 +113,54 @@
+     return 0;
+ }
+ 
++static int set_Vertex_Feats(EST_Track &wgn_VertexFeats,
++                            EST_String &wagon_track_features)
++{
++    int i,s=0,e;
++    EST_TokenStream ts;
++
++    for (i=0; i<wgn_VertexFeats.num_channels(); i++)
++        wgn_VertexFeats.a(0,i) = 0.0;
++
++    ts.open_string(wagon_track_features);
++    ts.set_WhiteSpaceChars(",- ");
++    ts.set_PunctuationSymbols("");
++    ts.set_PrePunctuationSymbols("");
++    ts.set_SingleCharSymbols("");
++
++    while (!ts.eof())
++    {
++        EST_Token &token = ts.get();
++        const EST_String ws = (const char *)token.whitespace();
++        if (token == "all")
++        {
++            for (i=0; i<wgn_VertexFeats.num_channels(); i++)
++                wgn_VertexFeats.a(0,i) = 1.0;
++            break;
++        } else if ((ws == ",") || (ws == ""))
++        {
++            s = atoi(token.string());
++            wgn_VertexFeats.a(0,s) = 1.0;
++        } else if (ws == "-")
++        {
++            if (token == "")
++                e = wgn_VertexFeats.num_channels()-1;
++            else
++                e = atoi(token.string());
++            for (i=s; i<=e && i<wgn_VertexFeats.num_channels(); i++)
++                wgn_VertexFeats.a(0,i) = 1.0;
++        } else
++        {
++            printf("wagon: track_feats invalid: %s at position %d\n",
++                   (const char *)wagon_track_features,
++                   ts.filepos());
++            exit(-1);
++        }
++    }
++
++    return 0;
++}
++
+ static int wagon_main(int argc, char **argv)
+ {
+     // Top level function sets up data and creates a tree
+@@ -119,6 +169,8 @@
+     EST_String wgn_oname;
+     ostream *wgn_coutput = 0;
+     float stepwise_limit = 0;
++    int feats_start=0, feats_end=0;
++    int i;
+ 
+     parse_command_line
+ 	(argc, argv,
+@@ -142,6 +194,9 @@
+          "                  start channel vertex indices\n"+
+ 	 "-track_end <int>\n"+
+          "                  end (inclusive) channel for vertex indices\n"+
++	 "-track_feats <string>\n"+
++         "                  Track features to use, comma separated list\n"+
++         "                  with feature numbers and/or ranges, 0 start\n"+
+ 	 "-unittrack <ifile>\n"+
+          "                  track for unit start and length in vertex track\n"+
+ 	 "-quiet            No questions printed during building\n"+
+@@ -256,36 +311,53 @@
+     else if (al.present("-track"))
+     {
+         wgn_VertexTrack.load(al.val("-track"));
+-        wgn_VertexTrack_start = 0;
+-        wgn_VertexTrack_end = wgn_VertexTrack.num_channels()-1;
++        wgn_VertexFeats.resize(1,wgn_VertexTrack.num_channels());
++        for (i=0; i<wgn_VertexFeats.num_channels(); i++)
++            wgn_VertexFeats.a(0,i) = 1.0;
+     }
+ 
+     if (al.present("-track_start"))
+     {
+-        wgn_VertexTrack_start = al.ival("-track_start");
+-        if ((wgn_VertexTrack_start < 0) ||
+-            (wgn_VertexTrack_start > wgn_VertexTrack.num_channels()))
++        feats_start = al.ival("-track_start");
++        if ((feats_start < 0) ||
++            (feats_start > wgn_VertexTrack.num_channels()))
+         {
+             printf("wagon: track_start invalid: %d out of %d channels\n",
+-                   wgn_VertexTrack_start,
++                   feats_start,
+                    wgn_VertexTrack.num_channels());
+             exit(-1);
+         }
++        for (i=0; i<feats_start; i++)
++            wgn_VertexFeats.a(0,i) = 0.0; /* don't do feats up to start */
++            
+     }
+ 
+     if (al.present("-track_end"))
+     {
+-        wgn_VertexTrack_end = al.ival("-track_end");
+-        if ((wgn_VertexTrack_end < wgn_VertexTrack_start) ||
+-            (wgn_VertexTrack_end > wgn_VertexTrack.num_channels()))
++        feats_end = al.ival("-track_end");
++        if ((feats_end < feats_start) ||
++            (feats_end > wgn_VertexTrack.num_channels()))
+         {
+             printf("wagon: track_end invalid: %d between start %d out of %d channels\n",
+-                   wgn_VertexTrack_end,
+-                   wgn_VertexTrack_start,
++                   feats_end,
++                   feats_start,
+                    wgn_VertexTrack.num_channels());
+             exit(-1);
+         }
++        for (i=feats_end+1; i<wgn_VertexTrack.num_channels(); i++)
++            wgn_VertexFeats.a(0,i) = 0.0; /* don't do feats after end */
+     }
++    if (al.present("-track_feats"))
++    {   /* overrides start and end numbers */
++        EST_String wagon_track_features = al.val("-track_feats");
++        set_Vertex_Feats(wgn_VertexFeats,wagon_track_features);
++    }
++
++    //    printf("Track feats\n");
++    //    for (i=0; i<wgn_VertexTrack.num_channels(); i++)
++    //        if (wgn_VertexFeats.a(0,i) > 0.0)
++    //            printf("%d ",i);
++    //    printf("\n");
+ 
+     if (al.present("-unittrack"))
+     {   /* contains two features, a start and length.  start indexes */
+diff -ur festival/speech_tools.old/siod/slib_str.cc festival/speech_tools/siod/slib_str.cc
+--- festival/speech_tools.old/siod/slib_str.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/siod/slib_str.cc	2006-09-27 11:54:29.000000000 -0400
+@@ -268,7 +268,7 @@
+ LISP l_matches(LISP atom, LISP regex)
+ {
+     // t if printname of atom matches regex, nil otherwise
+-    EST_String pname = get_c_string(atom);
++    const EST_String pname = get_c_string(atom);
+ 
+     if (pname.matches(make_regex(get_c_string(regex))) == TRUE)
+ 	return truth;
+diff -ur festival/speech_tools.old/speech_class/EST_TrackFile.cc festival/speech_tools/speech_class/EST_TrackFile.cc
+--- festival/speech_tools.old/speech_class/EST_TrackFile.cc	2006-09-10 16:32:14.000000000 -0400
++++ festival/speech_tools/speech_class/EST_TrackFile.cc	2007-02-13 00:12:53.000000000 -0500
+@@ -522,7 +522,6 @@
+ // 	}
+ 
+ 	if( ascii ){
+-
+ 	  for (j = 0; j < num_channels; ++j){
+ 	    tr.a(i, j) = ts.get().Float(ok);
+ 	    if (!ok)
+@@ -1254,6 +1253,11 @@
+     return save_htk_as(filename, tmp, HTK_MFCC);
+ }
+ 
++EST_write_status EST_TrackFile::save_htk_mfcc_e(const EST_String filename, EST_Track tmp)
++{
++    return save_htk_as(filename, tmp, HTK_MFCC | HTK_ENERGY);
++}
++
+ EST_write_status EST_TrackFile::save_htk_user(const EST_String filename, EST_Track tmp)
+ {
+     return save_htk_as(filename, tmp, HTK_USER);
+@@ -2097,14 +2101,14 @@
+ 
+ EST_String EST_TrackFile::options_supported(void)
+ {
+-    EST_String s("Available track file formats:\n");
++    EST_String s("AvailablE track file formats:\n");
+     
+     for(int n=0; n< EST_TrackFile::map.n() ; n++)
+     {
+ 	const char *nm = EST_TrackFile::map.name(EST_TrackFile::map.token(n));
+ 	const char *d = EST_TrackFile::map.info(EST_TrackFile::map.token(n)).description;
+ 	
+-	s += EST_String::cat("        ", nm, EST_String(" ")*(12-strlen(nm)), d, "\n");
++	s += EST_String::cat("        ", nm, EST_String(" ")*(13-strlen(nm)), d, "\n");
+     }
+     return s;
+ }
+@@ -2137,6 +2141,9 @@
+ {tff_htk_mfcc,	{ "htk_mfcc" }, 
+ {FALSE, EST_TrackFile::load_htk, EST_TrackFile::save_htk_mfcc,
+  "htk file (as MFCC)"}},
++{tff_htk_mfcc_e,	{ "htk_mfcc_e" }, 
++{FALSE, EST_TrackFile::load_htk, EST_TrackFile::save_htk_mfcc_e,
++ "htk file (as MFCC_E)"}},
+ {tff_htk_user,	{ "htk_user" }, 
+ {FALSE, EST_TrackFile::load_htk, EST_TrackFile::save_htk_user,
+  "htk file (as USER)"}},
+diff -ur festival/speech_tools.old/speech_class/EST_TrackFile.h festival/speech_tools/speech_class/EST_TrackFile.h
+--- festival/speech_tools.old/speech_class/EST_TrackFile.h	2004-05-29 14:34:42.000000000 -0400
++++ festival/speech_tools/speech_class/EST_TrackFile.h	2007-02-13 00:12:53.000000000 -0500
+@@ -111,6 +111,8 @@
+   static EST_write_status save_htk_fbank(SaveTrackFileArgs);
+   static EST_read_status load_htk_fbank(LoadTrackFileArgs);
+ 
++  static EST_write_status save_htk_mfcc_e(SaveTrackFileArgs);
++
+   static EST_write_status save_htk_mfcc(SaveTrackFileArgs);
+   static EST_read_status load_htk_mfcc(LoadTrackFileArgs);
+ 
+diff -ur festival/speech_tools.old/speech_class/EST_wave_io.cc festival/speech_tools/speech_class/EST_wave_io.cc
+--- festival/speech_tools.old/speech_class/EST_wave_io.cc	2006-01-12 10:37:51.000000000 -0500
++++ festival/speech_tools/speech_class/EST_wave_io.cc	2007-02-13 00:12:53.000000000 -0500
+@@ -173,7 +173,7 @@
+ 
+     current_pos = ts.tell();
+     if (ts.fread(header,NIST_HDR_SIZE,1) != 1)
+-	return misc_read_error;
++	return wrong_format;
+ 
+     if (strncmp(header,NIST_SIG,sizeof(NIST_SIG)) != 0)
+ 	return wrong_format;
+diff -ur festival/speech_tools.old/stats/EST_DProbDist.cc festival/speech_tools/stats/EST_DProbDist.cc
+--- festival/speech_tools.old/stats/EST_DProbDist.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/stats/EST_DProbDist.cc	2006-12-11 17:36:12.000000000 -0500
+@@ -46,6 +46,39 @@
+ #include "EST_TKVL.h"
+ #include "EST_simplestats.h"
+ 
++/* We share ints and pointers for two types of probability distributions */
++/* The know discrete sets can be indexed by ints which is *much* faster  */
++/* the indices pass around a pointers but the lower part contain ints in */
++/* the discrete case                                                     */
++/* On 64bit architectures this is a issue so we need have some macros    */
++/* to help us here.                                                      */
++
++const int est_64to32(void *c)
++{   /* this returns the bottom end of the pointer as an unsigned int */
++    /* I believe this is a safe way to do it, we check the bits in the */
++    /* 64 bit int and multiply them out in the 32 bit one              */
++    /* there might be better ways, but I think you'd need to think about */
++    /* byte order then                                                 */
++    long long l;
++    int d;
++    int i,x;
++
++    l = (long long)c;
++
++    for (i=0,d=0,x=1; i<24; i++)
++    {
++        if (l & 1)
++            d += x;
++        l = l >> 1;
++        x += x;
++    }
++
++    return d;
++}
++/* #define tprob_int(X) ((sizeof(void *) != 8) ? est_64to32(X) : (int)X) */
++#define tprob_int(X) (est_64to32(X))
++
++
+ EST_DiscreteProbDistribution::EST_DiscreteProbDistribution(const EST_Discrete *d,
+ 		 const double n_samples, const EST_DVector &counts)
+ {
+@@ -109,7 +142,13 @@
+ 	icounts.a_no_check(i) = 0;
+ }
+ 
+-void EST_DiscreteProbDistribution::cumulate(const int i,double count)
++void EST_DiscreteProbDistribution::cumulate(EST_Litem *i,double count)
++{
++    icounts[tprob_int(i)] += count;
++    num_samples += count;
++}
++
++void EST_DiscreteProbDistribution::cumulate(int i,double count)
+ {
+     icounts[i] += count;
+     num_samples += count;
+@@ -257,6 +296,21 @@
+ 
+ }
+ 
++void EST_DiscreteProbDistribution::set_frequency(EST_Litem *i,double c)
++{
++    if (type == tprob_discrete)
++    {
++	num_samples -= icounts[tprob_int(i)];
++	num_samples += c;
++	icounts[tprob_int(i)] = c;
++    }
++    else
++    {
++	cerr << "ProbDistribution: can't access string type pd with int\n";
++    }
++
++}
++
+ 
+ void EST_DiscreteProbDistribution::override_frequency(const EST_String &s,double c)
+ {
+@@ -274,6 +328,14 @@
+ 	cerr << "ProbDistribution: can't access string type pd with int\n";
+ }
+ 
++void EST_DiscreteProbDistribution::override_frequency(EST_Litem *i,double c)
++{
++    if (type == tprob_discrete)
++	icounts[tprob_int(i)] = c;
++    else
++	cerr << "ProbDistribution: can't access string type pd with int\n";
++}
++
+ double EST_DiscreteProbDistribution::entropy() const
+ {
+     // Returns the entropy of the current distribution
+@@ -305,70 +367,70 @@
+ }
+ 
+ //  For iterating through members of a probability distribution
+-int EST_DiscreteProbDistribution::item_start(void) const
++EST_Litem *EST_DiscreteProbDistribution::item_start(void) const
+ {
+     if (type == tprob_discrete)
+-	return 0;
++	return NULL;
+     else
+-	return (int)scounts.list.head();
++	return scounts.list.head();
+ }
+ 
+-int EST_DiscreteProbDistribution::item_end(int idx) const
++int EST_DiscreteProbDistribution::item_end(EST_Litem *idx) const
+ {
+     if (type == tprob_discrete)
+-	return (idx >= icounts.length());
++	return (tprob_int(idx) >= icounts.length());
+     else
+-	return ((EST_Litem *)idx == 0);
++	return (idx == 0);
+ }
+ 
+-int EST_DiscreteProbDistribution::item_next(int idx) const
++EST_Litem *EST_DiscreteProbDistribution::item_next(EST_Litem *idx) const
+ {
+     if (type == tprob_discrete)
+-	return ++idx;
++	return (EST_Litem *)(((unsigned char *)idx)+1);
+     else
+-	return (int)next((EST_Litem *)idx);
++	return next(idx);
+ }
+ 
+-const EST_String &EST_DiscreteProbDistribution::item_name(int idx) const
++const EST_String &EST_DiscreteProbDistribution::item_name(EST_Litem *idx) const
+ {
+     if (type == tprob_discrete)
+-	return discrete->name(idx);
++	return discrete->name(tprob_int(idx));
+     else
+-	return scounts.list((EST_Litem *)idx).k;
++	return scounts.list(idx).k;
+ }
+ 
+-void EST_DiscreteProbDistribution::item_freq(int idx,EST_String &s,double &freq) const
++void EST_DiscreteProbDistribution::item_freq(EST_Litem *idx,EST_String &s,double &freq) const
+ {
+     if (type == tprob_discrete)
+     {
+-	s = discrete->name(idx);
+-	freq = icounts(idx);
++	s = discrete->name(tprob_int(idx));
++	freq = icounts(tprob_int(idx));
+     }
+     else
+     {
+-	s = scounts.list((EST_Litem *)idx).k;
+-	freq = scounts.list((EST_Litem *)idx).v;
++	s = scounts.list(idx).k;
++	freq = scounts.list(idx).v;
+     }
+ }
+ 
+-void EST_DiscreteProbDistribution::item_prob(int idx,EST_String &s,double &prob) const
++void EST_DiscreteProbDistribution::item_prob(EST_Litem *idx,EST_String &s,double &prob) const
+ {
+     if (type == tprob_discrete)
+     {
+-	prob = probability(idx);
+-	s = discrete->name(idx);
++	prob = probability(tprob_int(idx));
++	s = discrete->name(tprob_int(idx));
+     }
+     else
+     {
+-	s = scounts.list((EST_Litem *)idx).k;
+-	prob = (double)scounts.list((EST_Litem *)idx).v/num_samples;
++	s = scounts.list(idx).k;
++	prob = (double)scounts.list(idx).v/num_samples;
+     }
+ }
+ 
+ ostream & operator<<(ostream &s, const EST_DiscreteProbDistribution &pd)
+ {
+     // Output best with probabilities
+-    int i;
++    EST_Litem *i;
+     double prob;
+     double sum=0;
+     EST_String name;
+diff -ur festival/speech_tools.old/stats/EST_viterbi.cc festival/speech_tools/stats/EST_viterbi.cc
+--- festival/speech_tools.old/stats/EST_viterbi.cc	2006-07-07 17:26:11.000000000 -0400
++++ festival/speech_tools/stats/EST_viterbi.cc	2006-09-27 09:19:35.000000000 -0400
+@@ -165,7 +165,7 @@
+ 	return (a < b);
+ }
+ 
+-static void init_dynamic_states(EST_VTPoint *p, EST_VTCandidate *cands)
++static int init_dynamic_states(EST_VTPoint *p, EST_VTCandidate *cands)
+ {
+     // In a special (hmm maybe not so special), the number of "states"
+     // is the number of candidates
+@@ -175,6 +175,8 @@
+     for (i=0, c=cands; c != 0; c=c->next,i++)
+ 	c->pos = i;
+     init_paths_array(p,i);
++    
++    return i;
+ }
+ 
+ void EST_Viterbi_Decoder::set_pruning_parameters(float beam, float
+diff -ur festival/speech_tools.old/stats/wagon/wagon_aux.cc festival/speech_tools/stats/wagon/wagon_aux.cc
+--- festival/speech_tools.old/stats/wagon/wagon_aux.cc	2006-08-20 13:02:39.000000000 -0400
++++ festival/speech_tools/stats/wagon/wagon_aux.cc	2006-12-12 10:45:19.000000000 -0500
+@@ -422,16 +422,19 @@
+ 
+ #if 1
+     /* simple distance */
+-    for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
++    for (j=0; j<wgn_VertexFeats.num_channels(); j++)
+     {
+-        b.reset();
+-        for (pp=members.head(); pp != 0; pp=next(pp))
++        if (wgn_VertexFeats.a(0,j) > 0.0)
+         {
+-            i = members.item(pp);
+-            b += wgn_VertexTrack.a(i,j);
++            b.reset();
++            for (pp=members.head(); pp != 0; pp=next(pp))
++            {
++                i = members.item(pp);
++                b += wgn_VertexTrack.a(i,j);
++            }
++            a += b.stddev();
++            count = b.samples();
+         }
+-        a += b.stddev();
+-        count = b.samples();
+     }
+ #endif
+ 
+@@ -440,26 +443,37 @@
+     /* worse in listening experiments */
+     EST_SuffStats **cs;
+     int mmm;
+-    cs = new EST_SuffStats *[wgn_VertexTrack_end+1];
+-    for (j=0; j<=wgn_VertexTrack_end; j++)
+-        cs[j] = new EST_SuffStats[wgn_VertexTrack_end+1];
++    cs = new EST_SuffStats *[wgn_VertexTrack.num_channels()+1];
++    for (j=0; j<=wgn_VertexTrack.num_channels(); j++)
++        cs[j] = new EST_SuffStats[wgn_VertexTrack.num_channels()+1];
+     /* Find means for diagonal */
+-    for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
++    for (j=0; j<wgn_VertexFeats.num_channels(); j++)
+     {
+-        for (pp=members.head(); pp != 0; pp=next(pp))
+-            cs[j][j] += wgn_VertexTrack.a(members.item(pp),j);
+-    }
+-    for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-        for (i=j+1; i<wgn_VertexTrack_end; i++)
++        if (wgn_VertexFeats.a(0,j) > 0.0)
++        {
+             for (pp=members.head(); pp != 0; pp=next(pp))
++                cs[j][j] += wgn_VertexTrack.a(members.item(pp),j);
++        }
++    }
++    for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++    {
++        for (i=j+1; i<wgn_VertexFeats.num_channels(); i++)
++            if (wgn_VertexFeats.a(0,j) > 0.0)
+             {
+-                mmm = members.item(pp);
+-                cs[i][j] += (wgn_VertexTrack.a(mmm,i)-cs[j][j].mean())*
+-                    (wgn_VertexTrack.a(mmm,j)-cs[j][j].mean());
+-            }
+-    for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-        for (i=j+1; i<wgn_VertexTrack_end; i++)
+-            a += cs[i][j].stddev();
++                for (pp=members.head(); pp != 0; pp=next(pp))
++                {
++                    mmm = members.item(pp);
++                    cs[i][j] += (wgn_VertexTrack.a(mmm,i)-cs[j][j].mean())*
++                        (wgn_VertexTrack.a(mmm,j)-cs[j][j].mean());
++                }
++            }
++    }
++    for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++    {
++        for (i=j+1; i<wgn_VertexFeats.num_channels(); i++)
++            if (wgn_VertexFeats.a(0,j) > 0.0)
++                a += cs[i][j].stddev();
++    }
+     count = cs[0][0].samples();
+ #endif
+ 
+@@ -476,11 +490,12 @@
+         for (qq=next(pp); qq != 0; qq=next(qq))
+         {
+             y = members.item(qq);
+-            for (q=0.0,j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-            {
+-                d = wgn_VertexTrack(x,j)-wgn_VertexTrack(y,j);
+-                q += d*d;
+-            }
++            for (q=0.0,j=0; j<wgn_VertexFeats.num_channels(); j++)
++                if (wgn_VertexFeats.a(0,j) > 0.0)
++                {
++                    d = wgn_VertexTrack(x,j)-wgn_VertexTrack(y,j);
++                    q += d*d;
++                }
+             a += sqrt(q);
+         }
+ 
+@@ -562,7 +577,7 @@
+ 
+         /* a list of SuffStats on for each point in the trajectory */
+         trajectory = new EST_SuffStats *[l];
+-        width = wgn_VertexTrack_end+1;
++        width = wgn_VertexTrack.num_channels()+1;
+         for (j=0; j<l; j++)
+             trajectory[j] = new EST_SuffStats[width];
+ 
+@@ -574,16 +589,22 @@
+             for (ti=0,n=0.0; ti<l; ti++,n+=m)
+             {
+                 ni = (int)n;  // hmm floor or nint ??
+-                for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-                    trajectory[ti][j] += wgn_VertexTrack.a(s+ni,j);
++                for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                {
++                    if (wgn_VertexFeats.a(0,j) > 0.0)
++                        trajectory[ti][j] += wgn_VertexTrack.a(s+ni,j);
++                }
+             }
+         }
+ 
+         /* find sum of sum of stddev for all coefs of all traj points */
+         stdss.reset();
+         for (ti=0; ti<l; ti++)
+-            for (j=wgn_VertexTrack_start+1; j<=wgn_VertexTrack_end; j++)
+-                stdss += trajectory[ti][j].stddev();
++            for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++            {
++                if (wgn_VertexFeats.a(0,j) > 0.0)
++                    stdss += trajectory[ti][j].stddev();
++            }
+ 
+         // This is sum of all stddev * samples
+         score = stdss.mean() * members.length();
+@@ -597,7 +618,7 @@
+         /* a list of SuffStats on for each point in the trajectory */
+         trajectory = new EST_SuffStats *[l];
+         for (j=0; j<l; j++)
+-            trajectory[j] = new EST_SuffStats[wgn_VertexTrack_end+1];
++            trajectory[j] = new EST_SuffStats[wgn_VertexTrack.num_channels()+1];
+ 
+         for (pp=members.head(); pp != 0; pp=next(pp))
+         {   /* for each unit */
+@@ -617,22 +638,26 @@
+             for (ti=0,n=0.0; s1l > 0 && ti<l1; ti++,n+=m1)
+             {
+                 ni = s + (((int)n < s1l) ? (int)n : s1l - 1);
+-                for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-                    trajectory[ti][j] += wgn_VertexTrack.a(ni,j);
++                for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                    if (wgn_VertexFeats.a(0,j) > 0.0)
++                        trajectory[ti][j] += wgn_VertexTrack.a(ni,j);
+             }
+             ti = l1; /* do it explicitly in case s1l < 1 */
+-            for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-                trajectory[ti][j] += -1;
++            for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                if (wgn_VertexFeats.a(0,j) > 0.0)
++                    trajectory[ti][j] += -1;
+             /* Second half */
+             s += s1l+1;
+             for (ti++,n=0.0; s2l > 0 && ti<l-1; ti++,n+=m2)
+             {
+                 ni = s + (((int)n < s2l) ? (int)n : s2l - 1);
+-                for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-                    trajectory[ti][j] += wgn_VertexTrack.a(ni,j);
+-            }
+-            for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-                trajectory[ti][j] += -2;
++                for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                    if (wgn_VertexFeats.a(0,j) > 0.0)
++                        trajectory[ti][j] += wgn_VertexTrack.a(ni,j);
++            }
++            for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                if (wgn_VertexFeats.a(0,j) > 0.0)
++                    trajectory[ti][j] += -2;
+         }
+ 
+         /* find sum of sum of stddev for all coefs of all traj points */
+@@ -640,12 +665,14 @@
+         stdss.reset();
+         m = 1.0/(float)l1;
+         for (w=0.0,ti=0; ti<l1; ti++,w+=m)
+-            for (j=wgn_VertexTrack_start+1; j<=wgn_VertexTrack_end; j++)
++            for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                if (wgn_VertexFeats.a(0,j) > 0.0)
+                 stdss += trajectory[ti][j].stddev() * w;
+         m = 1.0/(float)l2;
+         for (w=1.0,ti++; ti<l-1; ti++,w-=m)
+-            for (j=wgn_VertexTrack_start+1; j<=wgn_VertexTrack_end; j++)
+-                stdss += trajectory[ti][j].stddev() * w;
++            for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                if (wgn_VertexFeats.a(0,j) > 0.0)
++                    stdss += trajectory[ti][j].stddev() * w;
+     
+         // This is sum of all stddev * samples
+         score = stdss.mean() * members.length();
+@@ -824,25 +851,27 @@
+             int bestp = 0;
+             EST_SuffStats *cs;
+ 
+-            cs = new EST_SuffStats [wgn_VertexTrack_end+1];
++            cs = new EST_SuffStats [wgn_VertexTrack.num_channels()+1];
+             
+-            for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-            {
+-                cs[j].reset();
+-                for (p=imp.members.head(); p != 0; p=next(p))
++            for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++                if (wgn_VertexFeats.a(0,j) > 0.0)
+                 {
+-                    cs[j] += wgn_VertexTrack.a(imp.members.item(p),j);
++                    cs[j].reset();
++                    for (p=imp.members.head(); p != 0; p=next(p))
++                    {
++                        cs[j] += wgn_VertexTrack.a(imp.members.item(p),j);
++                    }
+                 }
+-            }
+ 
+             for (p=imp.members.head(); p != 0; p=next(p))
+             {
+-                for (x=0,j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-                {
+-                    d = (wgn_VertexTrack.a(imp.members.item(p),j)-cs[j].mean())
+-                        /* / b.stddev() */ ;
+-                    x += d*d;
+-                }
++                for (x=0.0,j=0; j<wgn_VertexFeats.num_channels(); j++)
++                    if (wgn_VertexFeats.a(0,j) > 0.0)
++                    {
++                        d = (wgn_VertexTrack.a(imp.members.item(p),j)-cs[j].mean())
++                        /* / cs[j].stddev() */ ;
++                        x += d*d;
++                    }
+                 if (x < best)
+                 {
+                     bestp = imp.members.item(p);
+@@ -853,7 +882,12 @@
+             {
+                 s << "( ";
+                 s << wgn_VertexTrack.a(bestp,j);
+-                s << " 0 "; // fake stddev
++                //                s << " 0 "; // fake stddev
++                s << " ";
++                if (finite(cs[j].stddev()))
++                    s << cs[j].stddev();
++                else
++                    s << "0";
+                 s << " ) ";
+                 if (j+1<wgn_VertexTrack.num_channels())
+                     s << " ";
+@@ -900,7 +934,7 @@
+     }
+     else if (imp.t == wnim_class)
+     {
+-	int i;
++	EST_Litem *i;
+ 	EST_String name;
+ 	double prob;
+ 
+diff -ur festival/speech_tools.old/stats/wagon/wagon.cc festival/speech_tools/stats/wagon/wagon.cc
+--- festival/speech_tools.old/stats/wagon/wagon.cc	2006-08-11 18:35:19.000000000 -0400
++++ festival/speech_tools/stats/wagon/wagon.cc	2006-12-02 13:13:43.000000000 -0500
+@@ -58,8 +58,7 @@
+ WDataSet wgn_test_dataset;
+ EST_FMatrix wgn_DistMatrix;
+ EST_Track wgn_VertexTrack;
+-int wgn_VertexTrack_start=0;
+-int wgn_VertexTrack_end=24;
++EST_Track wgn_VertexFeats;
+ EST_Track wgn_UnitTrack;
+ 
+ int wgn_min_cluster_size = 50;
+@@ -349,34 +348,35 @@
+     {
+ 	leaf = tree.predict_node((*dataset(p)));
+ 	pos = dataset(p)->get_int_val(wgn_predictee);
+-        for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-        {
+-            b.reset();
+-            for (pp=leaf->get_impurity().members.head(); pp != 0; pp=next(pp))
++        for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++            if (wgn_VertexFeats.a(0,j) > 0.0)
+             {
+-                i = leaf->get_impurity().members.item(pp);
+-                b += wgn_VertexTrack.a(i,j);
++                b.reset();
++                for (pp=leaf->get_impurity().members.head(); pp != 0; pp=next(pp))
++                {
++                    i = leaf->get_impurity().members.item(pp);
++                    b += wgn_VertexTrack.a(i,j);
++                }
++                predict = b.mean();
++                actual = wgn_VertexTrack.a(pos,j);
++                if (wgn_count_field == -1)
++                    count = 1.0;
++                else
++                    count = dataset(p)->get_flt_val(wgn_count_field);
++                x.cumulate(predict,count);
++                y.cumulate(actual,count);
++                /* Normalized the error by the standard deviation */
++                if (b.stddev() == 0)
++                    error = predict-actual;
++                else
++                    error = (predict-actual)/b.stddev();
++                error = predict-actual; /* awb_debug */
++                se.cumulate((error*error),count);
++                e.cumulate(fabs(error),count);
++                xx.cumulate(predict*predict,count);
++                yy.cumulate(actual*actual,count);
++                xy.cumulate(predict*actual,count);
+             }
+-            predict = b.mean();
+-            actual = wgn_VertexTrack.a(pos,j);
+-            if (wgn_count_field == -1)
+-                count = 1.0;
+-            else
+-                count = dataset(p)->get_flt_val(wgn_count_field);
+-            x.cumulate(predict,count);
+-            y.cumulate(actual,count);
+-            /* Normalized the error by the standard deviation */
+-            if (b.stddev() == 0)
+-                error = predict-actual;
+-            else
+-                error = (predict-actual)/b.stddev();
+-            error = predict-actual; /* awb_debug */
+-            se.cumulate((error*error),count);
+-            e.cumulate(fabs(error),count);
+-            xx.cumulate(predict*predict,count);
+-            yy.cumulate(actual*actual,count);
+-            xy.cumulate(predict*actual,count);
+-        }
+     }
+ 
+     // Pearson's product moment correlation coefficient
+@@ -437,34 +437,35 @@
+     {
+ 	leaf = tree.predict_node((*dataset(p)));
+ 	pos = dataset(p)->get_int_val(wgn_predictee);
+-        for (j=wgn_VertexTrack_start; j<=wgn_VertexTrack_end; j++)
+-        {
+-            b.reset();
+-            for (pp=leaf->get_impurity().members.head(); pp != 0; pp=next(pp))
++        for (j=0; j<wgn_VertexFeats.num_channels(); j++)
++            if (wgn_VertexFeats.a(0,j) > 0.0)
+             {
+-                i = leaf->get_impurity().members.item(pp);
+-                b += wgn_VertexTrack.a(i,j);
++                b.reset();
++                for (pp=leaf->get_impurity().members.head(); pp != 0; pp=next(pp))
++                {
++                    i = leaf->get_impurity().members.item(pp);
++                    b += wgn_VertexTrack.a(i,j);
++                }
++                predict = b.mean();
++                actual = wgn_VertexTrack.a(pos,j);
++                if (wgn_count_field == -1)
++                    count = 1.0;
++                else
++                    count = dataset(p)->get_flt_val(wgn_count_field);
++                x.cumulate(predict,count);
++                y.cumulate(actual,count);
++                /* Normalized the error by the standard deviation */
++                if (b.stddev() == 0)
++                    error = predict-actual;
++                else
++                    error = (predict-actual)/b.stddev();
++                error = predict-actual; /* awb_debug */
++                se.cumulate((error*error),count);
++                e.cumulate(fabs(error),count);
++                xx.cumulate(predict*predict,count);
++                yy.cumulate(actual*actual,count);
++                xy.cumulate(predict*actual,count);
+             }
+-            predict = b.mean();
+-            actual = wgn_VertexTrack.a(pos,j);
+-            if (wgn_count_field == -1)
+-                count = 1.0;
+-            else
+-                count = dataset(p)->get_flt_val(wgn_count_field);
+-            x.cumulate(predict,count);
+-            y.cumulate(actual,count);
+-            /* Normalized the error by the standard deviation */
+-            if (b.stddev() == 0)
+-                error = predict-actual;
+-            else
+-                error = (predict-actual)/b.stddev();
+-            error = predict-actual; /* awb_debug */
+-            se.cumulate((error*error),count);
+-            e.cumulate(fabs(error),count);
+-            xx.cumulate(predict*predict,count);
+-            yy.cumulate(actual*actual,count);
+-            xy.cumulate(predict*actual,count);
+-        }
+     }
+ 
+     // Pearson's product moment correlation coefficient
+diff -ur festival/speech_tools.old/.time-stamp festival/speech_tools/.time-stamp
+--- festival/speech_tools.old/.time-stamp	2006-09-27 10:59:11.000000000 -0400
++++ festival/speech_tools/.time-stamp	2007-03-14 11:18:07.000000000 -0400
+@@ -1,2 +1,2 @@
+ speech_tools 1.2.96
+-Wed Sep 27 10:59:11 EDT 2006
++Wed Mar 14 11:18:07 EDT 2007

@@ -1,0 +1,44 @@
+diff -up fltk-1.3.x-r9671/FL/Fl_Window.H.cursor-abi fltk-1.3.x-r9671/FL/Fl_Window.H
+--- fltk-1.3.x-r9671/FL/Fl_Window.H.cursor-abi	2012-12-04 12:39:42.419066193 +0100
++++ fltk-1.3.x-r9671/FL/Fl_Window.H	2012-12-04 12:40:45.791122889 +0100
+@@ -467,15 +467,13 @@ public:
+ 
+     The type Fl_Cursor is an enumeration defined in <FL/Enumerations.H>.
+ 
++    The Fl_Color parameters are here only for backward compatibility.
++
+     \see cursor(const Fl_RGB_Image*, int, int), default_cursor()
+   */
+-  void cursor(Fl_Cursor);
++  void cursor(Fl_Cursor c, Fl_Color=FL_BLACK, Fl_Color=FL_WHITE);
+   void cursor(const Fl_RGB_Image*, int, int);
+-  void default_cursor(Fl_Cursor);
+-
+-  /* for legacy compatibility */
+-  void cursor(Fl_Cursor c, Fl_Color, Fl_Color=FL_WHITE) { cursor(c); };
+-  void default_cursor(Fl_Cursor c, Fl_Color, Fl_Color=FL_WHITE) { default_cursor(c); };
++  void default_cursor(Fl_Cursor c, Fl_Color=FL_BLACK, Fl_Color=FL_WHITE);
+ 
+   static void default_callback(Fl_Window*, void* v);
+   
+diff -up fltk-1.3.x-r9671/src/fl_cursor.cxx.cursor-abi fltk-1.3.x-r9671/src/fl_cursor.cxx
+--- fltk-1.3.x-r9671/src/fl_cursor.cxx.cursor-abi	2012-12-04 12:40:55.714131967 +0100
++++ fltk-1.3.x-r9671/src/fl_cursor.cxx	2012-12-04 12:41:25.804159597 +0100
+@@ -55,7 +55,7 @@ void fl_cursor(Fl_Cursor c, Fl_Color fg,
+ 
+     \see cursor(const Fl_RGB_Image*, int, int), default_cursor()
+ */
+-void Fl_Window::default_cursor(Fl_Cursor c) {
++void Fl_Window::default_cursor(Fl_Cursor c, Fl_Color, Fl_Color) {
+   cursor_default = c;
+   cursor(c);
+ }
+@@ -108,7 +108,7 @@ void fallback_cursor(Fl_Window *w, Fl_Cu
+ }
+ 
+ 
+-void Fl_Window::cursor(Fl_Cursor c) {
++void Fl_Window::cursor(Fl_Cursor c, Fl_Color, Fl_Color) {
+   int ret;
+ 
+   // the cursor must be set for the top level window, not for subwindows

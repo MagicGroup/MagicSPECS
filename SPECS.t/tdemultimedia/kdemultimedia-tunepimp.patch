@@ -1,0 +1,36 @@
+diff -ur kdemultimedia-3.5.10.orig/configure.in kdemultimedia-3.5.10/configure.in
+--- kdemultimedia-3.5.10.orig/configure.in	2009-03-20 07:28:33.000000000 +0800
++++ kdemultimedia-3.5.10/configure.in	2009-03-20 07:30:42.000000000 +0800
+@@ -776,7 +776,7 @@
+ have_musicbrainz=no
+ 
+ if test "x$with_musicbrainz" != xno; then
+-  	KDE_CHECK_HEADER(tunepimp/tp_c.h, have_musicbrainz=yes)
++  	KDE_CHECK_HEADER(tunepimp-0.5/tp_c.h, have_musicbrainz=yes)
+ 
+   	if test "x$with_musicbrainz" != xcheck && test "x$have_musicbrainz" != xyes; then
+     		AC_MSG_ERROR([--with-musicbrainz was given, but test for MusicBrainz failed])
+diff -ur kdemultimedia-3.5.10.orig/juk/configure.in.in kdemultimedia-3.5.10/juk/configure.in.in
+--- kdemultimedia-3.5.10.orig/juk/configure.in.in	2009-03-20 07:28:33.000000000 +0800
++++ kdemultimedia-3.5.10/juk/configure.in.in	2009-03-20 07:31:10.000000000 +0800
+@@ -10,7 +10,7 @@
+ have_musicbrainz=no
+ 
+ if test "x$with_musicbrainz" != xno; then
+-  	KDE_CHECK_HEADER(tunepimp/tp_c.h, have_musicbrainz=yes)
++  	KDE_CHECK_HEADER(tunepimp-0.5/tp_c.h, have_musicbrainz=yes)
+ 
+   	if test "x$with_musicbrainz" != xcheck && test "x$have_musicbrainz" != xyes; then
+     		AC_MSG_ERROR([--with-musicbrainz was given, but test for MusicBrainz failed])
+diff -ur kdemultimedia-3.5.10.orig/juk/ktrm.cpp kdemultimedia-3.5.10/juk/ktrm.cpp
+--- kdemultimedia-3.5.10.orig/juk/ktrm.cpp	2009-03-20 07:28:32.000000000 +0800
++++ kdemultimedia-3.5.10/juk/ktrm.cpp	2009-03-20 07:30:58.000000000 +0800
+@@ -35,7 +35,7 @@
+ #include <qobject.h>
+ #include <qfile.h>
+ 
+-#include <tunepimp/tp_c.h>
++#include <tunepimp-0.5/tp_c.h>
+ #include <fixx11h.h>
+ 
+ class KTRMLookup;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Taskmgr
+Comment=Task Manager
+Comment[zh_CN]=任务管理器
+Exec=wine taskmgr
+Terminal=false
+Type=Application
+Icon=taskmgr
+Encoding=UTF-8
+Categories=X-Wine;

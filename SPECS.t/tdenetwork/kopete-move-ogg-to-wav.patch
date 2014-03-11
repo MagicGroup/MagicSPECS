@@ -1,0 +1,73 @@
+diff -u -r kdenetwork-3.5.6.orig/kopete/kopete/eventsrc kdenetwork-3.5.6/kopete/kopete/eventsrc
+--- kdenetwork-3.5.6.orig/kopete/kopete/eventsrc	2007-03-28 14:42:18.000000000 +0800
++++ kdenetwork-3.5.6/kopete/kopete/eventsrc	2007-03-28 14:44:38.000000000 +0800
+@@ -147,7 +147,7 @@
+ Comment[zh_CN]=收到了消息
+ Comment[zh_HK]=收到新訊息
+ Comment[zh_TW]=已收到新訊息
+-default_sound=Kopete_Received.ogg
++default_sound=Kopete_Received.wav
+ default_presentation=64
+ 
+ [kopete_outgoing]
+@@ -253,7 +253,7 @@
+ Comment[zh_CN]=送出了消息
+ Comment[zh_HK]=訊息已發出
+ Comment[zh_TW]=已送出訊息
+-default_sound=Kopete_Sent.ogg
++default_sound=Kopete_Sent.wav
+ default_presentation=0
+ 
+ 
+@@ -349,7 +349,7 @@
+ Comment[zh_CN]=联系人上线
+ Comment[zh_HK]=有個聯絡人已上線
+ Comment[zh_TW]=聯絡人已上線
+-default_sound=Kopete_User_is_Online.ogg
++default_sound=Kopete_User_is_Online.wav
+ default_presentation=16
+ 
+ [kopete_contact_offline]
+@@ -446,7 +446,7 @@
+ Comment[zh_CN]=联系人离线
+ Comment[zh_HK]=有個聯絡人已離線
+ Comment[zh_TW]=聯絡人已離線
+-default_sound=Kopete_Event.ogg
++default_sound=Kopete_Event.wav
+ default_presentation=0
+ 
+ 
+@@ -550,7 +550,7 @@
+ Comment[zh_CN]=联系人更改了他的在线状态
+ Comment[zh_HK]=有個聯絡人的上線狀態改變了
+ Comment[zh_TW]=聯絡人的上線狀態已改變
+-default_sound=Kopete_Event.ogg
++default_sound=Kopete_Event.wav
+ default_presentation=0
+ 
+ [kopete_contact_highlight]
+@@ -654,7 +654,7 @@
+ Comment[zh_CN]=收到了突出显示的消息
+ Comment[zh_HK]=收到一個加強顯示的訊息
+ Comment[zh_TW]=接收到一個高亮度訊息
+-default_sound=Kopete_Received.ogg
++default_sound=Kopete_Received.wav
+ default_presentation=65
+ 
+ 
+@@ -1737,5 +1737,5 @@
+ Comment[zh_CN]=联系人向您发送了闪屏振动。
+ Comment[zh_HK]=有聯絡人傳了響聲或提示給您。
+ Comment[zh_TW]=聯絡人對您送出呼叫/來電震動
+-default_sound=Kopete_Received.ogg
++default_sound=Kopete_Received.wav
+ default_presentation=17
+diff -u -r kdenetwork-3.5.6.orig/kopete/sounds/Makefile.am kdenetwork-3.5.6/kopete/sounds/Makefile.am
+--- kdenetwork-3.5.6.orig/kopete/sounds/Makefile.am	2007-03-28 14:42:18.000000000 +0800
++++ kdenetwork-3.5.6/kopete/sounds/Makefile.am	2007-03-28 14:43:03.000000000 +0800
+@@ -1,4 +1,4 @@
+-kde_sound_DATA = Kopete_Event.ogg Kopete_Received.ogg Kopete_Sent.ogg Kopete_User_is_Online.ogg
++kde_sound_DATA = Kopete_Event.wav Kopete_Received.wav Kopete_Sent.wav Kopete_User_is_Online.wav
+ 
+ EXTRA_DIST = $(kde_sound_DATA)
+ 

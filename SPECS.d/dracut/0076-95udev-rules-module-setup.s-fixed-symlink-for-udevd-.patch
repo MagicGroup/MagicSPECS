@@ -1,0 +1,25 @@
+From 450f5d66944e4a4ae005c75a818c3cccd28836f3 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 10 Oct 2011 20:17:16 +0200
+Subject: [PATCH] 95udev-rules/module-setup.s: fixed symlink for udevd to
+ initdir
+
+---
+ modules.d/95udev-rules/module-setup.sh |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/modules.d/95udev-rules/module-setup.sh b/modules.d/95udev-rules/module-setup.sh
+index eddf2b0..915c1fc 100755
+--- a/modules.d/95udev-rules/module-setup.sh
++++ b/modules.d/95udev-rules/module-setup.sh
+@@ -63,8 +63,8 @@ install() {
+         [ -e /usr/lib/udev/$_i ] && dracut_install /usr/lib/udev/$_i
+     done
+ 
+-    [ -x /lib/udev/udevd ] && ln -s ../lib/udev/udevd /sbin/udevd
+-    [ -x /usr/lib/udev/udevd ] && ln -s ../usr/lib/udev/udevd /sbin/udevd
++    [ -x /lib/udev/udevd ] && ln -s ../lib/udev/udevd "$initdir/sbin/udevd"
++    [ -x /usr/lib/udev/udevd ] && ln -s ../usr/lib/udev/udevd "$initdir/sbin/udevd"
+ 
+     [ -f /etc/arch-release ] && \
+         inst "$moddir/load-modules.sh" /lib/udev/load-modules.sh

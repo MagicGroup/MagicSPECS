@@ -1,0 +1,31 @@
+From fad7e1e6ec57cc9a2b5719e4ef4f09514505b894 Mon Sep 17 00:00:00 2001
+From: Nick Schermer <nick@xfce.org>
+Date: Sun, 23 Oct 2011 16:20:37 +0000
+Subject: Directorymenu: Don't pass working dir as argument (bug #8018).
+
+---
+diff --git a/plugins/directorymenu/directorymenu.c b/plugins/directorymenu/directorymenu.c
+index ace2a19..b41043e 100644
+--- a/plugins/directorymenu/directorymenu.c
++++ b/plugins/directorymenu/directorymenu.c
+@@ -630,7 +630,7 @@ directory_menu_plugin_menu_open (GtkWidget   *mi,
+   gchar       **binaries = NULL;
+   guint         i;
+   gboolean      result = FALSE;
+-  gchar        *argv[3];
++  gchar        *argv[2];
+ 
+   /* try to work around the exo code and get the direct command */
+   rc = xfce_rc_config_open (XFCE_RESOURCE_CONFIG, "xfce4/helpers.rc", TRUE);
+@@ -673,8 +673,7 @@ directory_menu_plugin_menu_open (GtkWidget   *mi,
+             continue;
+ 
+           argv[0] = filename;
+-          argv[1] = working_dir;
+-          argv[2] = NULL;
++          argv[1] = NULL;
+ 
+           /* try to spawn the program, if this fails we try exo for
+            * a decent error message */
+--
+cgit 

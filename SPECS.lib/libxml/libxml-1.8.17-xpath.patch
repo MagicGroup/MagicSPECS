@@ -1,0 +1,74 @@
+--- libxml-1.8.17/xpath.c.orig	2011-06-18 16:26:57.430229932 +0100
++++ libxml-1.8.17/xpath.c	2011-06-18 19:27:03.295989406 +0100
+@@ -425,6 +425,8 @@
+ 	    return;
+ 	}
+ 	cur->nodeTab = temp;
++	memset(cur->nodeTab + cur->nodeNr, 0,
++	       cur->nodeMax * (size_t) sizeof(xmlNodePtr));
+         cur->nodeMax *= 2;
+     }
+     cur->nodeTab[cur->nodeNr++] = val;
+@@ -642,7 +644,7 @@
+ 
+     ret = (xmlXPathObjectPtr) xmlMalloc(sizeof(xmlXPathObject));
+     if (ret == NULL) {
+-        fprintf(xmlXPathDebug, "xmlXPathNewFloat: out of memory\n");
++        fprintf(xmlXPathDebug, "xmlXPathNewBoolean: out of memory\n");
+ 	return(NULL);
+     }
+     memset(ret, 0 , (size_t) sizeof(xmlXPathObject));
+@@ -665,7 +667,7 @@
+ 
+     ret = (xmlXPathObjectPtr) xmlMalloc(sizeof(xmlXPathObject));
+     if (ret == NULL) {
+-        fprintf(xmlXPathDebug, "xmlXPathNewFloat: out of memory\n");
++        fprintf(xmlXPathDebug, "xmlXPathNewString: out of memory\n");
+ 	return(NULL);
+     }
+     memset(ret, 0 , (size_t) sizeof(xmlXPathObject));
+@@ -688,7 +690,7 @@
+ 
+     ret = (xmlXPathObjectPtr) xmlMalloc(sizeof(xmlXPathObject));
+     if (ret == NULL) {
+-        fprintf(xmlXPathDebug, "xmlXPathNewFloat: out of memory\n");
++        fprintf(xmlXPathDebug, "xmlXPathNewCString: out of memory\n");
+ 	return(NULL);
+     }
+     memset(ret, 0 , (size_t) sizeof(xmlXPathObject));
+@@ -712,7 +714,7 @@
+ 
+     ret = (xmlXPathObjectPtr) xmlMalloc(sizeof(xmlXPathObject));
+     if (ret == NULL) {
+-        fprintf(xmlXPathDebug, "xmlXPathNewFloat: out of memory\n");
++        fprintf(xmlXPathDebug, "xmlXPathNewNodeSet: out of memory\n");
+ 	return(NULL);
+     }
+     memset(ret, 0 , (size_t) sizeof(xmlXPathObject));
+@@ -736,7 +738,7 @@
+ 
+     ret = (xmlXPathObjectPtr) xmlMalloc(sizeof(xmlXPathObject));
+     if (ret == NULL) {
+-        fprintf(xmlXPathDebug, "xmlXPathNewFloat: out of memory\n");
++        fprintf(xmlXPathDebug, "xmlXPathNewNodeSetList: out of memory\n");
+ 	return(NULL);
+     }
+     memset(ret, 0 , (size_t) sizeof(xmlXPathObject));
+@@ -1537,6 +1539,8 @@
+         return(ctxt->context->node->childs);
+     }
+ 
++    if (cur == (xmlNodePtr) ctxt->context->doc)
++        return(ctxt->context->doc->root);
+     if (cur->childs != NULL) return(cur->childs);
+     if (cur->next != NULL) return(cur->next);
+     
+@@ -4483,7 +4487,7 @@
+  *
+  * Evaluate the XPath Location Path in the given context.
+  *
+- * Returns the xmlXPathObjectPtr resulting from the eveluation or NULL.
++ * Returns the xmlXPathObjectPtr resulting from the evaluation or NULL.
+  *         the caller has to free the object.
+  */
+ xmlXPathObjectPtr

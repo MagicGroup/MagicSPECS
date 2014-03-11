@@ -1,0 +1,11 @@
+diff -up tre-0.7.6/tests/agrep/run-tests.sh.tests tre-0.7.6/tests/agrep/run-tests.sh
+--- tre-0.7.6/tests/agrep/run-tests.sh.tests	2009-03-11 10:44:44.000000000 +0100
++++ tre-0.7.6/tests/agrep/run-tests.sh	2009-08-22 20:20:15.885084058 +0200
+@@ -2,6 +2,7 @@
+ 
+ set -e
+ 
++export LD_LIBRARY_PATH=$top_builddir/lib/.libs
+ agrep="$top_builddir/src/agrep"
+ 
+ echo "$builddir $top_builddir $srcdir"

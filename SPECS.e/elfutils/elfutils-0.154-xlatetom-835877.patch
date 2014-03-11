@@ -1,0 +1,48 @@
+commit bc0f7450cb0fd5717f532bce1b39f45312cc2fd9
+Author: Petr Machata <pmachata@redhat.com>
+Date:   Tue Jul 17 16:29:18 2012 +0200
+
+    elf*_xlatetom: do not check ELF_T_NHDR has integer number of records
+    
+    See this bug report for more details:
+      https://bugzilla.redhat.com/show_bug.cgi?id=835877
+    
+    Signed-off-by: Petr Machata <pmachata@redhat.com>
+
+diff --git a/libelf/ChangeLog b/libelf/ChangeLog
+index 89dd35f..0a6bcba 100644
+--- a/libelf/ChangeLog
++++ b/libelf/ChangeLog
+@@ -1,3 +1,8 @@
++2012-07-17  Petr Machata  <pmachata@redhat.com>
++
++	* elf32_xlatetom.c (elfw2(LIBELFBITS, xlatetom)): Do not check for
++	integer number of records in case of ELF_T_NHDR.
++
+ 2012-04-02  Mark Wielaard  <mjw@redhat.com>
+ 
+ 	* elf32_offscn.c: Do not match SHT_NOBITS sections at OFFSET unless
+diff --git a/libelf/elf32_xlatetom.c b/libelf/elf32_xlatetom.c
+index 8fdf09d..368df07 100644
+--- a/libelf/elf32_xlatetom.c
++++ b/libelf/elf32_xlatetom.c
+@@ -1,5 +1,5 @@
+ /* Convert from file to memory representation.
+-   Copyright (C) 1998, 1999, 2000, 2002 Red Hat, Inc.
++   Copyright (C) 1998, 1999, 2000, 2002, 2012 Red Hat, Inc.
+    This file is part of elfutils.
+    Written by Ulrich Drepper <drepper@redhat.com>, 1998.
+ 
+@@ -59,7 +59,11 @@ elfw2(LIBELFBITS, xlatetom) (dest, src, encode)
+ #endif
+ 
+ 
+-  if (src->d_size % recsize != 0)
++  /* We shouldn't require integer number of records when processing
++     notes.  Payload bytes follow the header immediately, it's not an
++     array of records as is the case otherwise.  */
++  if (src->d_type != ELF_T_NHDR
++      && src->d_size % recsize != 0)
+     {
+       __libelf_seterrno (ELF_E_INVALID_DATA);
+       return NULL;

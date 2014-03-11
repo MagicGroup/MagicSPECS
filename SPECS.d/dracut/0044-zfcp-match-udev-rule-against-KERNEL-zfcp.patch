@@ -1,0 +1,19 @@
+From 9584c6ae903fe6918f4a6b3ad0a5a295c1dbdc18 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 30 Apr 2013 18:55:12 +0200
+Subject: [PATCH] zfcp: match udev rule against KERNEL=="zfcp"
+
+zfcp_cfdc will go away in the future
+
+	tt
+---
+ modules.d/95zfcp/56-zfcp.rules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules.d/95zfcp/56-zfcp.rules b/modules.d/95zfcp/56-zfcp.rules
+index 5e846a4..5558f8b 100644
+--- a/modules.d/95zfcp/56-zfcp.rules
++++ b/modules.d/95zfcp/56-zfcp.rules
+@@ -1 +1 @@
+-KERNEL=="zfcp_cfdc", RUN+="/sbin/zfcpconf.sh"
++KERNEL=="zfcp", RUN+="/sbin/zfcpconf.sh"

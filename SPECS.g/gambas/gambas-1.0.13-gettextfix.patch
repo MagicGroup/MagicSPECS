@@ -1,0 +1,22 @@
+--- gambas-1.0.13/configure.BAD	2005-11-17 18:50:33.000000000 -0600
++++ gambas-1.0.13/configure	2005-11-17 18:50:40.000000000 -0600
+@@ -22634,7 +22634,7 @@
+ 
+ gb_val=""
+ gb_save=`pwd`
+-gb_file_list="gettextlib.$SHLIBEXT"
++gb_file_list="libgettextlib.$SHLIBEXT"
+ 
+ for gb_main_dir in /usr/local /usr; do
+   if test -d $gb_main_dir; then
+--- gambas-1.0.13/configure.in.BAD	2005-11-18 10:03:15.000000000 -0600
++++ gambas-1.0.13/configure.in	2005-11-18 10:03:24.000000000 -0600
+@@ -138,7 +138,7 @@
+   GETTEXT,
+   [external gettext library],
+   [],
+-  [GB_FIND(gettextlib.$SHLIBEXT, /usr/local /usr, lib)],
++  [GB_FIND(libgettextlib.$SHLIBEXT, /usr/local /usr, lib)],
+   [-lgettextlib])
+ 
+ dnl ---- Checks for components

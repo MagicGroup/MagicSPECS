@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# chkconfig:	- 26 89
+
+### BEGIN INIT INFO
+# Required-Start: bluetooth
+# Default-Start:
+# Short-Description: Bluetooth Personal Area Networking Daemon.
+# Description: Bluetooth Personal Area Networking Daemon. Provides network
+# services over Bluetooth.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+[ -f /etc/sysconfig/network ] && . /etc/sysconfig/network
+
+[ "${NETWORKING}" = "yes" ] || exit 0
+
+[ -r /etc/sysconfig/pand ] && . /etc/sysconfig/pand
+
+start() 
+{
+	[ -z "$PANDARGS" ] && exit 6
+        [ -x /etc/bluetooth/pan/system-up ] && /etc/bluetooth/pan/system-up
+
+        echo -n $"Starting pand: "
+        daemon /usr/bin/pand $PANDARGS
+	RETVAL=$?
+        echo
+	[ $RETVAL = 0 ] && touch /var/lock/subsys/pand
+	return $RETVAL
+}
+
+stop() 
+{
+        echo -n $"Shutting down pand: "
+	/usr/bin/pand -K
+	killproc pand
+	RETVAL=$?
+        [ -x /etc/bluetooth/pan/system-down ] && /etc/bluetooth/pan/system-down
+	rm -f  /var/lock/subsys/pand
+        echo
+	return $RETVAL
+}
+
+[ -f /usr/bin/pand ] || exit 0
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+        ;;
+  stop)
+	stop
+        ;;
+  force-reload|restart|reload)
+	stop
+	start
+	;;
+  try-restart|condrestart)
+	[ -e /var/lock/subsys/pand ] && (stop; start)
+	;;
+  status)
+  	status pand
+	RETVAL=$?
+	;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart|reload|condrestart}"
+        exit 3
+esac
+
+exit $RETVAL

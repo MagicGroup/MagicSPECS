@@ -1,0 +1,56 @@
+From d96c3254e8bbe56763617f45f1148d81b10f4745 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 6 Jul 2012 14:22:10 +0200
+Subject: [PATCH] dracut.spec,dracut.conf.d/fedora.conf.example: no dash
+
+hard remove dash from supported modules
+
+we do not want to have anything to do with dash bugs
+---
+ dracut.conf.d/fedora.conf.example |    7 +++----
+ dracut.spec                       |    4 +++-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/dracut.conf.d/fedora.conf.example b/dracut.conf.d/fedora.conf.example
+index 25b5cfa..ee53844 100644
+--- a/dracut.conf.d/fedora.conf.example
++++ b/dracut.conf.d/fedora.conf.example
+@@ -2,13 +2,12 @@
+ 
+ # i18n
+ i18n_vars="/etc/sysconfig/keyboard:KEYTABLE-KEYMAP /etc/sysconfig/i18n:SYSFONT-FONT,FONTACM-FONT_MAP,FONT_UNIMAP"
+-omit_dracutmodules+=" dash "
+ omit_drivers+=" .*/fs/ocfs/.* "
+-add_dracutmodules+=" systemd "
+ stdloglvl=3
+-realinitpath="/usr/lib/systemd/systemd"
+ install_items+=" vi /etc/virc ps grep cat rm "
+-prefix="/"
++readonly prefix="/"
+ systemdutildir=/usr/lib/systemd
+ systemdsystemunitdir=/usr/lib/systemd/system
+ udevdir=/usr/lib/udev
++add_dracutmodules+=" systemd "
++realinitpath="/usr/lib/systemd/systemd"
+diff --git a/dracut.spec b/dracut.spec
+index b258121..a6fec89 100644
+--- a/dracut.spec
++++ b/dracut.spec
+@@ -190,6 +190,9 @@ rm -fr $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/01fips
+ rm -fr $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/02fips-aesni
+ %endif
+ 
++# we do not support dash in the initramfs
++rm -fr $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/00dash
++
+ # remove gentoo specific modules
+ rm -fr $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/50gensplash
+ 
+@@ -261,7 +264,6 @@ rm -rf $RPM_BUILD_ROOT
+ %{_mandir}/man5/dracut.conf.5*
+ %{_mandir}/man1/lsinitrd.1*
+ %{dracutlibdir}/modules.d/00bootchart
+-%{dracutlibdir}/modules.d/00dash
+ %{dracutlibdir}/modules.d/04watchdog
+ %{dracutlibdir}/modules.d/05busybox
+ %{dracutlibdir}/modules.d/10i18n

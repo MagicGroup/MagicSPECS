@@ -1,0 +1,11 @@
+diff -ur kvpnc-0.9.6a-kde4/src/kvpnc.cpp kvpnc-0.9.6a-kde4.new/src/kvpnc.cpp
+--- kvpnc-0.9.6a-kde4/src/kvpnc.cpp	2010-03-08 10:26:33.000000000 +0000
++++ kvpnc-0.9.6a-kde4.new/src/kvpnc.cpp	2012-12-28 18:09:38.000000000 +0000
+@@ -75,6 +75,7 @@
+ #include <cstdlib>
+ #include <ctime>
+ #include <iomanip>
++#include <unistd.h>
+ 
+ #include "ui_mainviewbase4.h"
+ #include "ciscocertificateenrollment.h"

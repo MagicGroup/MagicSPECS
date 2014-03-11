@@ -1,0 +1,10 @@
+--- powersave-0.11.6/scripts/rcpowersaved.redhat.orig	2006-01-24 01:44:43.000000000 +0800
++++ powersave-0.11.6/scripts/rcpowersaved.redhat	2006-02-07 12:48:14.000000000 +0800
+@@ -1,4 +1,7 @@
+ #!/bin/bash
++# chkconfig: 345 99 01
++# description: Powersave Daemon
++# processname: powersaved
+ ###########################################################################
+ #                                                                         #
+ #                         Powersave Daemon                                #

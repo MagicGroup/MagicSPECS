@@ -1,0 +1,12 @@
+diff -ur libfli1-1.7/CMakeLists.txt libfli1-1.7.new/CMakeLists.txt
+--- libfli1-1.7/CMakeLists.txt	2008-10-22 15:10:38.000000000 +0200
++++ libfli1-1.7.new/CMakeLists.txt	2009-01-28 13:45:43.000000000 +0100
+@@ -18,7 +18,7 @@
+ #add an install target here
+ INSTALL(FILES libfli.h DESTINATION include)
+ 
+-INSTALL(TARGETS fli LIBRARY DESTINATION lib${LIB_POSTFIX})
++INSTALL(TARGETS fli LIBRARY DESTINATION lib${LIB_SUFFIX})
+ 
+ 
+ 

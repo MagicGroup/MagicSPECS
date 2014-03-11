@@ -1,0 +1,219 @@
+--- kdepim/akregator/src/CMakeLists.txt.ORI	2012-08-02 23:49:19.725396251 +0200
++++ kdepim/akregator/src/CMakeLists.txt	2012-08-02 23:49:26.428291587 +0200
+@@ -39,7 +39,7 @@
+ install( FILES
+     plugin.h articleinterceptor.h akregator_export.h storage.h
+     feedstorage.h storagefactory.h storagefactoryregistry.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/akregator )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/akregator )
+ 
+ 
+ ##### other data ################################
+--- kdepim/libksieve/ksieve/CMakeLists.txt.ORI	2012-08-02 22:02:44.380776017 +0000
++++ kdepim/libksieve/ksieve/CMakeLists.txt	2012-08-02 22:03:27.102148170 +0000
+@@ -11,4 +11,4 @@
+ 
+ install( FILES
+     error.h lexer.h parser.h scriptbuilder.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/ksieve )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/ksieve )
+--- kdepim/libemailfunctions/CMakeLists.txt.ORI	2012-08-02 22:02:44.381775953 +0000
++++ kdepim/libemailfunctions/CMakeLists.txt	2012-08-02 22:03:27.103148111 +0000
+@@ -25,7 +25,7 @@
+ ##### header files ################################
+ 
+ if( BUILD_LIBKDEPIM )
+-  install( FILES idmapper.h DESTINATION ${INCLUDE_INSTALL_DIR}/kde/libemailfunctions )
++  install( FILES idmapper.h DESTINATION ${INCLUDE_INSTALL_DIR}/libemailfunctions )
+ endif()
+ 
+ 
+--- kdepim/libkdenetwork/qgpgme/CMakeLists.txt.ORI	2012-08-02 22:02:44.381775953 +0000
++++ kdepim/libkdenetwork/qgpgme/CMakeLists.txt	2012-08-02 22:03:27.104148051 +0000
+@@ -27,7 +27,7 @@
+ 
+ install( FILES
+     eventloopinteractor.h dataprovider.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/qgpgme )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme )
+ 
+ 
+ ##### qgpgme (shared) ###########################
+--- kdepim/libkdenetwork/gpgmepp/CMakeLists.txt.ORI	2012-08-02 22:02:44.382775890 +0000
++++ kdepim/libkdenetwork/gpgmepp/CMakeLists.txt	2012-08-02 22:03:27.105147991 +0000
+@@ -35,7 +35,7 @@
+     keygenerationresult.h importresult.h decryptionresult.h
+     verificationresult.h signingresult.h encryptionresult.h
+     engineinfo.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/gpgme++ )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/gpgme++ )
+ 
+ 
+ ##### gpgme++ (shared) ##########################
+--- kdepim/kontact/interfaces/CMakeLists.txt.ORI	2012-08-02 22:02:44.383775827 +0000
++++ kdepim/kontact/interfaces/CMakeLists.txt	2012-08-02 22:03:27.106147931 +0000
+@@ -26,7 +26,7 @@
+ 
+ install( FILES
+     core.h plugin.h summary.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/kontact )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/kontact )
+ 
+ 
+ ##### other data ################################
+--- kdepim/libkcal/CMakeLists.txt.ORI	2012-08-02 22:02:44.384775764 +0000
++++ kdepim/libkcal/CMakeLists.txt	2012-08-02 22:03:27.107147871 +0000
+@@ -49,7 +49,7 @@
+     resourcelocaldirconfig.h resourcelocaldir.h resourcelocal.h
+     scheduler.h libkcal_export.h todo.h vcaldrag.h vcalformat.h
+     attachmenthandler.h ${CMAKE_CURRENT_BINARY_DIR}/htmlexportsettings.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/libkcal )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/libkcal )
+ 
+ 
+ ##### other data ################################
+--- kdepim/kresources/egroupware/CMakeLists.txt.ORI	2012-08-02 22:02:44.385775701 +0000
++++ kdepim/kresources/egroupware/CMakeLists.txt	2012-08-02 22:03:27.108147811 +0000
+@@ -28,7 +28,7 @@
+ 
+ install( FILES
+     kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/kabc )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/kabc )
+ 
+ 
+ ##### other data ################################
+--- kdepim/indexlib/CMakeLists.txt.ORI	2012-08-02 22:02:44.386775637 +0000
++++ kdepim/indexlib/CMakeLists.txt	2012-08-02 22:03:27.109147752 +0000
+@@ -26,7 +26,7 @@
+ 
+ install( FILES
+     create.h index.h lockfile.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/index )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/index )
+ 
+ 
+ ##### other data ################################
+--- kdepim/kaddressbook/interfaces/CMakeLists.txt.ORI	2012-08-02 22:02:44.386775637 +0000
++++ kdepim/kaddressbook/interfaces/CMakeLists.txt	2012-08-02 22:03:27.110147693 +0000
+@@ -28,7 +28,7 @@
+ install( FILES
+     configurewidget.h contacteditorwidget.h core.h
+     extensionwidget.h xxport.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/kaddressbook )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/kaddressbook )
+ 
+ 
+ ##### other data ################################
+--- kdepim/mimelib/mimelib/CMakeLists.txt.ORI	2012-08-02 22:02:44.387775573 +0000
++++ kdepim/mimelib/mimelib/CMakeLists.txt	2012-08-02 22:03:27.111147634 +0000
+@@ -16,4 +16,4 @@
+     mboxlist.h mechansm.h mediatyp.h message.h mimepp.h
+     msgcmp.h msgid.h nntp.h param.h pop.h protocol.h
+     string.h text.h token.h utility.h uuencode.h binhex.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/mimelib )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/mimelib )
+--- kdepim/certmanager/lib/kleo/CMakeLists.txt.ORI	2012-08-02 22:02:44.388775510 +0000
++++ kdepim/certmanager/lib/kleo/CMakeLists.txt	2012-08-02 22:03:27.112147575 +0000
+@@ -34,7 +34,7 @@
+     verifyopaquejob.h decryptverifyjob.h signencryptjob.h
+     refreshkeysjob.h multideletejob.h hierarchicalkeylistjob.h
+     keyfilter.h keyfiltermanager.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/kleo )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/kleo )
+ 
+ 
+ ##### kleopatra_core (static) ###################
+--- kdepim/korganizer/interfaces/calendar/CMakeLists.txt.ORI	2012-08-02 22:02:44.390775383 +0000
++++ kdepim/korganizer/interfaces/calendar/CMakeLists.txt	2012-08-02 22:03:27.114147455 +0000
+@@ -11,7 +11,7 @@
+ 
+ install( FILES
+     plugin.h calendardecoration.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/calendar )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/calendar )
+ 
+ install( FILES
+     calendarplugin.desktop calendardecoration.desktop
+--- kdepim/korganizer/interfaces/korganizer/CMakeLists.txt.ORI	2012-08-02 22:02:44.391775319 +0000
++++ kdepim/korganizer/interfaces/korganizer/CMakeLists.txt	2012-08-02 22:03:27.114147455 +0000
+@@ -11,7 +11,7 @@
+ 
+ install( FILES
+     part.h baseview.h calendarviewbase.h mainwindow.h corehelper.h printplugin.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/korganizer )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/korganizer )
+ 
+ install( FILES
+     korganizerpart.desktop korgprintplugin.desktop
+--- kdepim/kmail/interfaces/CMakeLists.txt.ORI	2012-08-02 22:02:44.392775255 +0000
++++ kdepim/kmail/interfaces/CMakeLists.txt	2012-08-02 22:03:27.116147335 +0000
+@@ -12,4 +12,4 @@
+ install( FILES
+     observer.h observable.h htmlwriter.h bodypart.h
+     bodypartformatter.h bodyparturlhandler.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/kmail/interfaces )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/kmail/interfaces )
+--- kdepim/kgantt/kgantt/CMakeLists.txt.ORI	2012-08-02 22:02:44.393775192 +0000
++++ kdepim/kgantt/kgantt/CMakeLists.txt	2012-08-02 22:03:27.117147275 +0000
+@@ -26,7 +26,7 @@
+ install( FILES
+     KGantt.h KGanttItem.h KGanttRelation.h xQGanttBarView.h xQGanttBarViewPort.h
+     xQGanttListView.h xQGanttListViewPort.h KGanttBarConfig.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/kgantt )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/kgantt )
+ 
+ 
+ ##### kgantt (shared) ###########################
+--- kdepim/libkpimexchange/core/CMakeLists.txt.ORI	2012-08-02 22:02:44.394775129 +0000
++++ kdepim/libkpimexchange/core/CMakeLists.txt	2012-08-02 22:03:27.118147215 +0000
+@@ -30,7 +30,7 @@
+ 
+ install( FILES
+     exchangeclient.h exchangeaccount.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/kdepim )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/kdepim )
+ 
+ 
+ ##### kpimexchange (shared) #####################
+--- kdepim/ktnef/ktnef/CMakeLists.txt.ORI	2012-08-02 22:02:44.395775066 +0000
++++ kdepim/ktnef/ktnef/CMakeLists.txt	2012-08-02 22:03:27.119147156 +0000
+@@ -13,4 +13,4 @@
+     ktnefparser.h ktnefattach.h ktnefproperty.h
+     ktnefpropertyset.h ktnefmessage.h ktnefwriter.h
+     ktnefdefs.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde/ktnef )
++  DESTINATION ${INCLUDE_INSTALL_DIR}/ktnef )
+--- ./knotes/CMakeLists.txt.ORI	2012-08-02 22:07:47.777059775 +0000
++++ ./knotes/CMakeLists.txt	2012-08-02 22:08:42.414825054 +0000
+@@ -34,7 +34,7 @@
+ 
+ ##### headers ###################################
+ 
+-install( FILES KNotesIface.h KNotesAppIface.h DESTINATION ${INCLUDE_INSTALL_DIR}/kde )
++install( FILES KNotesIface.h KNotesAppIface.h DESTINATION ${INCLUDE_INSTALL_DIR} )
+ 
+ 
+ ##### other data ################################
+--- ./kmail/CMakeLists.txt.ORI	2012-08-02 22:07:47.777059775 +0000
++++ ./kmail/CMakeLists.txt	2012-08-02 22:08:42.415825014 +0000
+@@ -65,7 +65,7 @@
+ 
+ install( FILES
+     kmailIface.h kmailpartIface.h kmailicalIface.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde )
++  DESTINATION ${INCLUDE_INSTALL_DIR} )
+ 
+ 
+ ##### other data ################################
+--- ./libkdepim/CMakeLists.txt.ORI	2012-08-02 22:07:47.778059734 +0000
++++ ./libkdepim/CMakeLists.txt	2012-08-02 22:08:42.416824973 +0000
+@@ -40,7 +40,7 @@
+ 
+ install( FILES
+     kdepimmacros.h kpimprefs.h
+-  DESTINATION ${INCLUDE_INSTALL_DIR}/kde )
++  DESTINATION ${INCLUDE_INSTALL_DIR} )
+ 
+ 
+ ##### other data ################################

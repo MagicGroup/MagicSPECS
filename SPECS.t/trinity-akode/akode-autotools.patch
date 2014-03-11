@@ -1,0 +1,21 @@
+--- akode-2.0.2/admin/cvs.sh.ORI	2012-01-13 20:29:38.576590872 +0100
++++ akode-2.0.2/admin/cvs.sh	2012-01-13 20:30:45.972837972 +0100
+@@ -68,7 +68,7 @@
+     echo "*** KDE requires automake $required_automake_version"
+     exit 1
+     ;;
+-  automake*1.6.* | automake*1.7* | automake*1.8* | automake*1.9* | automake*1.10*)
++  automake*1.6.* | automake*1.7* | automake*1.8* | automake*1.9* | automake*1.1[012]*)
+     echo "*** $AUTOMAKE_STRING found."
+     UNSERMAKE=no
+     ;;
+--- akode-2.0.2/akode/lib/Makefile.am.ORI	2012-01-16 19:17:09.849211160 +0100
++++ akode-2.0.2/akode/lib/Makefile.am	2012-01-16 19:17:24.496410002 +0100
+@@ -12,6 +12,7 @@
+                       player.cpp magic.cpp
+ 
+ AM_CPPFLAGS = -DAKODE_SEARCHDIR=\"$(libdir)\"
++AM_CXXFLAGS = -fPIC
+ 
+ libakode_la_LDFLAGS = -no-undefined -version-info 2:0:0 $(all_libraries)
+ libakode_la_LIBADD =  $(LIBPTHREAD) $(AKODE_LIBDL) $(LIBSEM)

@@ -1,0 +1,12 @@
+diff -ur qca-tls-1.0.orig/qca-tls.cpp qca-tls-1.0/qca-tls.cpp
+--- qca-tls-1.0.orig/qca-tls.cpp	2012-01-28 21:19:05.000000000 -0500
++++ qca-tls-1.0/qca-tls.cpp	2012-01-28 21:19:27.000000000 -0500
+@@ -945,7 +945,7 @@
+ 	RSAKeyContext *key;
+ 
+ 	SSL *ssl;
+-	SSL_METHOD *method;
++	const SSL_METHOD *method;
+ 	SSL_CTX *context;
+ 	BIO *rbio, *wbio;
+ 	CertContext cc;

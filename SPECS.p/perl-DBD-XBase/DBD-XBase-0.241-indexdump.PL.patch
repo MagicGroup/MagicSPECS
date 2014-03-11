@@ -1,0 +1,12 @@
+diff -ruN DBD-XBase-0.241-orig/bin/indexdump.PL DBD-XBase-0.241/bin/indexdump.PL
+--- DBD-XBase-0.241-orig/bin/indexdump.PL	2001-01-22 19:46:19.000000000 +0000
++++ DBD-XBase-0.241/bin/indexdump.PL	2005-12-16 11:15:55.000000000 +0000
+@@ -14,8 +14,6 @@
+ 
+ print OUT <<'EOBODY';
+ 
+-#!/usr/bin/perl -w 
+-
+ use strict;
+ use XBase::Index;
+ use Getopt::Long;

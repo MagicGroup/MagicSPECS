@@ -1,0 +1,91 @@
+commit 51dab9e418741ac7065cd5a6ec9b57285e90227c
+https://bugzilla.redhat.com/show_bug.cgi?id=738482
+
+--- a/gdb/printcmd.c
++++ b/gdb/printcmd.c
+@@ -1981,6 +1981,10 @@ print_variable_and_value (const char *name, struct symbol *var,
+       struct value_print_options opts;
+ 
+       val = read_var_value (var, frame);
++
++      make_cleanup_restore_selected_frame ();
++      select_frame (frame);
++
+       get_user_print_options (&opts);
+       common_val_print (val, stream, indent, &opts, current_language);
+     }
+--- /dev/null
++++ b/gdb/testsuite/gdb.base/vla-frame.c
+@@ -0,0 +1,31 @@
++/* This testcase is part of GDB, the GNU debugger.
++
++   Copyright 2011 Free Software Foundation, Inc.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
++
++#include <string.h>
++
++int
++main (int argc, char **argv)
++{
++  char s[2 + argc];
++  void (*f) (char *) = 0;
++
++  memset (s, 0, sizeof (s));
++  s[0] = 'X';
++
++  f (s);
++  return 0;
++}
+--- /dev/null
++++ b/gdb/testsuite/gdb.base/vla-frame.exp
+@@ -0,0 +1,38 @@
++# Copyright 2011 Free Software Foundation, Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++set testfile vla-frame
++set executable ${testfile}
++
++if { [prepare_for_testing ${testfile}.exp ${executable}] } {
++    return -1
++}
++
++if ![runto_main] {
++    return -1
++}
++
++set test "continue"
++gdb_test_multiple $test $test {
++    -re "Continuing\\.\r\n\r\nProgram received signal SIGSEGV, Segmentation fault\\.\r\n0x0+ in \\?\\? \\(\\)\r\n$gdb_prompt $" {
++	pass $test
++    }
++    -re "\r\n$gdb_prompt $" {
++	untested ${testfile}.exp
++	return
++    }
++}
++
++gdb_test "bt full" "\r\n +s = \"X\\\\000\"\r\n.*"

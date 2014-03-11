@@ -1,0 +1,31 @@
+From b70116b907aa8545f0275589a52275235083bb40 Mon Sep 17 00:00:00 2001
+From: Zack Rusin <zackr@vmware.com>
+Date: Thu, 15 Mar 2012 15:37:26 +0000
+Subject: Fix a memory corruption due to a redundant free.
+
+We use the empty rect purely as a placeholder and never
+initialize it with its own memory so lets not try to free
+it.
+Spotted by Dave Airlie.
+
+Signed-off-by: Zack Rusin <zackr@vmware.com>
+Reviewed-by: Jakob Bornecrantz <jakob@vmware.com>
+---
+diff --git a/vmwgfx/vmwgfx_saa.c b/vmwgfx/vmwgfx_saa.c
+index 0a6b98f..469598a 100644
+--- a/vmwgfx/vmwgfx_saa.c
++++ b/vmwgfx/vmwgfx_saa.c
+@@ -1151,11 +1151,9 @@ vmwgfx_composite_prepare(struct saa_driver *driver, CARD8 op,
+     if (xa_composite_prepare(vsaa->xa_ctx, xa_comp))
+ 	goto out_err;
+ 
+-    REGION_UNINIT(pScreen, &empty);
+     return TRUE;
+ 
+   out_err:
+-    REGION_UNINIT(pScreen, &empty);
+     return FALSE;
+ }
+ 
+--
+cgit v0.9.0.2-2-gbebe

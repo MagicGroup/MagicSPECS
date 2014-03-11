@@ -1,0 +1,22 @@
+--- src/audacity.desktop.in.orig	2012-08-21 18:48:21.000000000 +1000
++++ src/audacity.desktop.in	2012-08-21 22:34:31.376045927 +1000
+@@ -5,16 +5,16 @@
+ GenericName=Sound Editor
+ GenericName[de]=Audio-Editor
+ GenericName[ru]=Редактор звуковых файлов
+-Comment=Record and edit audio files
++Comment=Record and edit audio files with multitrack capability
+ Comment[de]=Audio-Dateien aufnehmen und bearbeiten
+ Comment[ru]=Запись и редактирование звуковых файлов
+ 
+ Icon=@AUDACITY_NAME@
+ 
+ Type=Application
+-Categories=AudioVideo;Audio;AudioVideoEditing;
++Categories=AudioVideo;Audio;GTK;GNOME;Sequencer;X-Jack;AudioVideoEditing;
+ 
+ Exec=@AUDACITY_NAME@ %F
+ StartupNotify=false
+ Terminal=false
+-MimeType=application/x-audacity-project;@MIMETYPES@
++MimeType=application/x-audacity-project;@MIMETYPES@audio/x-aifc;audio/x-mp3;audio/midi;

@@ -1,0 +1,113 @@
+From yum-devel-bounces@lists.baseurl.org Thu Mar 15 04:54:11 2012
+Return-Path: yum-devel-bounces@lists.baseurl.org
+Received: from zmta01.collab.prod.int.phx2.redhat.com (LHLO
+ zmta01.collab.prod.int.phx2.redhat.com) (10.5.5.31) by
+ zmail17.collab.prod.int.phx2.redhat.com with LMTP; Thu, 15 Mar 2012
+ 04:54:11 -0400 (EDT)
+Received: from localhost (localhost.localdomain [127.0.0.1]) by
+ zmta01.collab.prod.int.phx2.redhat.com (Postfix) with ESMTP id 2504011402A;
+ Thu, 15 Mar 2012 04:54:11 -0400 (EDT)
+X-Quarantine-ID: <I+79tTMZeO4w>
+Received: from zmta01.collab.prod.int.phx2.redhat.com ([127.0.0.1]) by
+ localhost (zmta01.collab.prod.int.phx2.redhat.com [127.0.0.1])
+ (amavisd-new, port 10024) with ESMTP id I+79tTMZeO4w; Thu, 15 Mar 2012
+ 04:54:11 -0400 (EDT)
+Received: from int-mx02.intmail.prod.int.phx2.redhat.com
+ (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12]) by
+ zmta01.collab.prod.int.phx2.redhat.com (Postfix) with ESMTP id E8D74114011;
+ Thu, 15 Mar 2012 04:54:10 -0400 (EDT)
+Received: from mx1.redhat.com (ext-mx11.extmail.prod.ext.phx2.redhat.com
+ [10.5.110.16]) by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8)
+ with ESMTP id q2F8sAi8004183; Thu, 15 Mar 2012 04:54:10 -0400
+Received: from hemlock.osuosl.org (hemlock.osuosl.org [140.211.166.133]) by
+ mx1.redhat.com (8.14.4/8.14.4) with ESMTP id q2F8s8Nd023630; Thu, 15 Mar
+ 2012 04:54:08 -0400
+Received: from localhost (localhost [127.0.0.1]) by hemlock.osuosl.org
+ (Postfix) with ESMTP id AB1CCA0378; Thu, 15 Mar 2012 08:54:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at osuosl.org
+Received: from hemlock.osuosl.org ([127.0.0.1]) by localhost (.osuosl.org
+ [127.0.0.1]) (amavisd-new, port 10024) with ESMTP id JtdO5JgtXfRu; Thu, 15
+ Mar 2012 08:54:07 +0000 (UTC)
+Received: from ash.osuosl.org (ash.osuosl.org [140.211.166.34]) by
+ hemlock.osuosl.org (Postfix) with ESMTP id C4A10A036E; Thu, 15 Mar 2012
+ 08:54:07 +0000 (UTC)
+X-Original-To: yum-devel@lists.baseurl.org
+Delivered-To: yum-devel@osuosl.org
+Received: from whitealder.osuosl.org (whitealder.osuosl.org
+ [140.211.166.138]) by ash.osuosl.org (Postfix) with ESMTP id 3DBAC8F75B for
+ <yum-devel@lists.baseurl.org>; Thu, 15 Mar 2012 08:54:06 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1]) by whitealder.osuosl.org
+ (Postfix) with ESMTP id 0C5028FEF1 for <yum-devel@lists.baseurl.org>; Thu,
+ 15 Mar 2012 08:54:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at osuosl.org
+Received: from whitealder.osuosl.org ([127.0.0.1]) by localhost
+ (.osuosl.org [127.0.0.1]) (amavisd-new, port 10024) with ESMTP id
+ FvpW+oEPmqRK for <yum-devel@lists.baseurl.org>; Thu, 15 Mar 2012 08:54:04
+ +0000 (UTC)
+X-Greylist: domain auto-whitelisted by SQLgrey-1.7.6
+Received: from mx1.redhat.com (mx1.redhat.com [209.132.183.28]) by
+ whitealder.osuosl.org (Postfix) with ESMTP id 7D0108FBF1 for
+ <yum-devel@lists.baseurl.org>; Thu, 15 Mar 2012 08:54:04 +0000 (UTC)
+Received: from int-mx01.intmail.prod.int.phx2.redhat.com
+ (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11]) by mx1.redhat.com
+ (8.14.4/8.14.4) with ESMTP id q2F8s3XU023619 (version=TLSv1/SSLv3
+ cipher=DHE-RSA-AES256-SHA bits=256 verify=OK) for
+ <yum-devel@lists.baseurl.org>; Thu, 15 Mar 2012 04:54:03 -0400
+Received: from koblih.brq.redhat.com (koblih.brq.redhat.com [10.34.24.78])
+ by int-mx01.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP id
+ q2F8s2qX018211 for <yum-devel@lists.baseurl.org>; Thu, 15 Mar 2012 04:54:03
+ -0400
+From: =?UTF-8?q?Zden=C4=9Bk=20Pavlas?= <zpavlas@redhat.com>
+To: yum-devel@lists.baseurl.org
+Date: Thu, 15 Mar 2012 09:53:45 +0100
+Message-Id: <1331801625-9070-1-git-send-email-zpavlas@redhat.com>
+X-Scanned-By: MIMEDefang 2.67 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.68 on 10.5.110.16
+X-Scanned-By: MIMEDefang 2.67 on 10.5.11.11
+Subject: [Yum-devel] [PATCH] No "Only update available" msg when there is
+ not. BZ 803346
+X-BeenThere: yum-devel@lists.baseurl.org
+X-Mailman-Version: 2.1.14
+Precedence: list
+Reply-To: yum development <yum-devel@lists.baseurl.org>
+List-Id: yum development <yum-devel.lists.baseurl.org>
+List-Unsubscribe: <http://lists.baseurl.org/mailman/options/yum-devel>,
+ <mailto:yum-devel-request@lists.baseurl.org?subject=unsubscribe>
+List-Archive: <http://lists.baseurl.org/pipermail/yum-devel>
+List-Post: <mailto:yum-devel@lists.baseurl.org>
+List-Help: <mailto:yum-devel-request@lists.baseurl.org?subject=help>
+List-Subscribe: <http://lists.baseurl.org/mailman/listinfo/yum-devel>,
+ <mailto:yum-devel-request@lists.baseurl.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Errors-To: yum-devel-bounces@lists.baseurl.org
+Sender: yum-devel-bounces@lists.baseurl.org
+X-RedHat-Spam-Score: -2.3  (RCVD_IN_DNSWL_MED)
+X-Evolution-Source: imap://jantill%40redhat.com@mail.corp.redhat.com/
+Content-Transfer-Encoding: 8bit
+
+---
+ yum/__init__.py |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/yum/__init__.py b/yum/__init__.py
+index 3680356..6f7a69c 100644
+--- a/yum/__init__.py
++++ b/yum/__init__.py
+@@ -5075,6 +5075,8 @@ class YumBase(depsolve.Depsolve):
+                 continue
+ 
+             if pkg.verGE(lipkg):
++                if pkg.verEQ(lipkg):
++                    continue
+                 if na not in warned_nas:
+                     msg = _('Only Upgrade available on package: %s') % pkg
+                     self.logger.critical(msg)
+-- 
+1.7.4.4
+
+_______________________________________________
+Yum-devel mailing list
+Yum-devel@lists.baseurl.org
+http://lists.baseurl.org/mailman/listinfo/yum-devel
+

@@ -1,0 +1,45 @@
+diff -rcb kde-i18n-fr-3.5.10.ORI/messages/kdebase/kdesu.po kde-i18n-fr-3.5.10/messages/kdebase/kdesu.po
+*** kde-i18n-fr-3.5.10.ORI/messages/kdebase/kdesu.po	2010-12-19 01:32:05.649657741 +0100
+--- kde-i18n-fr-3.5.10/messages/kdebase/kdesu.po	2010-12-19 01:33:50.416539931 +0100
+***************
+*** 132,151 ****
+  #: sudlg.cpp:36
+  msgid ""
+  "The action you requested needs root privileges. Please enter root's password "
+! "below or click Ignore to continue with your current privileges."
+  msgstr ""
+  "L'action requise nécessite les droits du superutilisateur. Veuillez saisir "
+! "ci-dessous le mot de passe du superutilisateur ou cliquez sur « Ignorer » pour "
+! "continuer avec vos droits actuels."
+  
+  #: sudlg.cpp:40
+  msgid ""
+  "The action you requested needs additional privileges. Please enter the password "
+! "for \"%1\" below or click Ignore to continue with your current privileges."
+  msgstr ""
+  "L'action requise nécessite des droits supplémentaires. Veuillez saisir "
+! "ci-dessous le mot de passe de « %1 » ou cliquez sur « Ignorer » pour continuer "
+! "avec vos droits actuels."
+  
+  #: sudlg.cpp:48
+  msgid "&Ignore"
+--- 132,149 ----
+  #: sudlg.cpp:36
+  msgid ""
+  "The action you requested needs root privileges. Please enter root's password "
+! "below."
+  msgstr ""
+  "L'action requise nécessite les droits du superutilisateur. Veuillez saisir "
+! "ci-dessous le mot de passe du superutilisateur."
+  
+  #: sudlg.cpp:40
+  msgid ""
+  "The action you requested needs additional privileges. Please enter the password "
+! "for \"%1\" below."
+  msgstr ""
+  "L'action requise nécessite des droits supplémentaires. Veuillez saisir "
+! "ci-dessous le mot de passe de « %1 »."
+  
+  #: sudlg.cpp:48
+  msgid "&Ignore"
+Seulement dans kde-i18n-fr-3.5.10/messages/kdebase: kdesu.po~

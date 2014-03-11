@@ -1,0 +1,88 @@
+diff -u -r kaffeine-0.8.6.orig/kaffeine/src/pref.cpp kaffeine-0.8.6/kaffeine/src/pref.cpp
+--- kaffeine-0.8.6.orig/kaffeine/src/pref.cpp	2008-01-22 18:58:18.000000000 +0800
++++ kaffeine-0.8.6/kaffeine/src/pref.cpp	2008-01-22 19:06:03.000000000 +0800
+@@ -42,6 +42,9 @@
+ #include <qlineedit.h>
+ 
+ #include <qtextcodec.h>
++#include <kprocess.h>
++#include <kstandarddirs.h>
++#include <qdir.h>
+ 
+ #include <kcharsets.h>
+ 
+@@ -148,6 +151,13 @@
+ 	grid->addWidget(clearLabel, 0, 1);
+ 	vb->addWidget( gb );
+ 
++       gb = new QGroupBox( "", misc );
++       grid = new QGridLayout( gb, 1, 1, 20, 6 );
++       m_usePlugin = new QCheckBox(i18n("Use Plugin in konqueror instead of kaffeine_part to play media streaming"), gb);
++//    connect(m_usePlugin, SIGNAL(toggled(bool)), this, SLOT(slotUsePluginToggled(bool)));
++      grid->addWidget(m_usePlugin, 0, 0);
++      vb->addWidget( gb );
++
+ 	vb->addItem( new QSpacerItem( 20, 20, QSizePolicy::Ignored, QSizePolicy::Ignored ) );
+ 
+ 	delete icon;
+@@ -174,6 +184,9 @@
+ 	m_useAlternateEncoding->setChecked(m_useEncoding);
+ 	m_alternateEncoding->setEnabled(m_useEncoding);
+ 	m_pauseVideo->setChecked(pauseVideo);
++	QString homePath= QDir::homeDirPath();
++        if (QFileInfo(homePath+"/.kde/share/services/kaffeine_part.desktop").exists())
++              m_usePlugin->setChecked(true);
+ }
+ 
+ void KaffeinePreferences::setDvbClient( bool enabled, const QString &address, int port, int info, const QString &tspath )
+@@ -193,6 +206,7 @@
+ 	emit signalSetOSDTimeout(m_osdTimeout->value());
+ 	emit signalPauseVideo(m_pauseVideo->isChecked());
+ 	emit signalDvbClient(m_dcEnabled->isChecked(), m_dcAddress->text().stripWhiteSpace(), m_dcPort->value(), m_dcInfo->value(), m_shiftDirLe->text() );
++	slotUsePluginToggled(m_usePlugin->isChecked());
+ }
+ 
+ void KaffeinePreferences::slotOkPressed()
+@@ -217,3 +231,21 @@
+ {
+ 	m_osdTimeout->setEnabled(on);
+ }
++
++void KaffeinePreferences::slotUsePluginToggled(bool on)
++{
++  KProcess *proc = new KProcess;
++  QString homePath= QDir::homeDirPath();
++  if (on){
++      QString kpartPath = locate("appdata", "kaffeine_part.desktop");
++      if (!kpartPath)
++              return;
++      *proc << "cp"<<"-f"<<kpartPath<<homePath+"/.kde/share/services/";
++      proc->start();
++  }else{
++      *proc << "rm" <<"-rf" <<homePath+"/.kde/share/services/kaffeine_part.desktop";
++      proc->start();
++  }
++  *proc << "kbuildsycoca";
++  proc->start();
++}
+Only in kaffeine-0.8.6/kaffeine/src: pref.cpp.orig
+Only in kaffeine-0.8.6/kaffeine/src: pref.cpp.rej
+diff -u -r kaffeine-0.8.6.orig/kaffeine/src/pref.h kaffeine-0.8.6/kaffeine/src/pref.h
+--- kaffeine-0.8.6.orig/kaffeine/src/pref.h	2008-01-22 18:58:18.000000000 +0800
++++ kaffeine-0.8.6/kaffeine/src/pref.h	2008-01-22 18:58:43.000000000 +0800
+@@ -60,6 +60,7 @@
+   void slotUseAlternateEncodingToggled(bool);
+   void slotEmbedInTrayToggled(bool);
+   void setShiftDir();
++ void slotUsePluginToggled(bool);
+ 
+ private:
+   QCheckBox* m_systemTray;
+@@ -73,6 +74,7 @@
+   QSpinBox* m_dcInfo;
+   QLineEdit *m_shiftDirLe;
+   QToolButton *m_shiftDirBtn;
++  QCheckBox* m_usePlugin;
+ };
+ 
+ #endif /* PREF_H */

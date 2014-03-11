@@ -1,0 +1,58 @@
+--- netkit-rsh-0.17/rlogind/sockconv.c.linefeed	1999-10-02 23:50:52.000000000 +0200
++++ netkit-rsh-0.17/rlogind/sockconv.c	2006-07-17 14:30:50.000000000 +0200
+@@ -86,6 +86,35 @@
+   return (text);
+ }
+ 
++/* conver \n to \r\n and also terminate string by \r\n */
++static void my_fputs(char *str, FILE *out)
++{
++	char *p = str, *last = str;
++
++	while(p && *p) { 
++		if ((p=strchr(p, '\n')) && (p==str || *(p-1)!='\r')) {
++			/* convert \n to \n\r  */
++			fwrite((const void *) last, 1, p-last, out);
++			fputs("\r\n", out);
++			p++;
++			last = p;
++		}
++		else if (p && *(p+1))
++			/* \r\n already in strimg, continue... */
++			p++;
++		else {
++			/* write the rest of string */
++			int len = strlen(str);
++
++			fwrite((const void *) last, 1, len-(last-str), out);
++			if (*(str+(len-1)) != '\n')
++				fputs("\r\n", out);	/* terminate output */
++			break;
++		}
++	}
++}
++
++
+ static void drop_reply(struct pam_response *reply, int replies)
+ {
+   int i;
+@@ -126,16 +155,15 @@
+       }
+       break;
+     case PAM_ERROR_MSG:
+-      fprintf(stderr,"%s\n",msgm[replies]->msg);
++      my_fputs(msgm[replies]->msg, stderr);
+       string = NULL;
+-      
+       break;
+     case PAM_TEXT_INFO:
+-      fprintf(stderr,"%s\n",msgm[replies]->msg);
++      my_fputs(msgm[replies]->msg, stderr);
+       string = NULL;
+       break;
+     default:
+-      fprintf(stderr, "erroneous conversation (%d)\n"
++      fprintf(stderr, "erroneous conversation (%d)\r\n"
+ 	      ,msgm[replies]->msg_style);
+       drop_reply(reply,replies);
+       return (PAM_CONV_ERR);

@@ -1,0 +1,20 @@
+--- fbset-2.1/etc/fb.modes.ATI.fixmode	Fri Feb 23 11:20:29 2001
++++ fbset-2.1/etc/fb.modes.ATI	Fri Feb 23 11:20:38 2001
+@@ -430,7 +430,7 @@
+ #	1024x768, 72 Hz, Non-Interlaced (75.00 MHz dotclock)
+ #	
+ #				Horizontal	Vertical
+-#	Resolution		10224		768
++#	Resolution		1024		768
+ #	Scan Frequency		58.230 kHz	72.245 Hz
+ #	Sync Width		1.813 us	0.103 ms
+ #				17 chars	6 lines
+@@ -447,7 +447,7 @@
+ 
+ mode "1024x768-72"
+     # D: 75.00 MHz, H: 58.230 kHz, V: 72.245 Hz
+-    geometry 10224 768 10224 768 8
++    geometry 1024 768 1024 768 8
+     timings 13334 104 24 29 3 136 6
+ endmode
+  

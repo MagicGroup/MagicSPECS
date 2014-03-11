@@ -1,0 +1,25 @@
+diff -Nur kmldonkey-0.10.1/kmldonkey/libkmldonkey/shareinfo.cpp kmldonkey-0.10.1/kmldonkey/libkmldonkey/shareinfo.cpp
+--- kmldonkey-0.10.1/kmldonkey/libkmldonkey/shareinfo.cpp	2005-07-27 00:40:35.000000000 +0800
++++ kmldonkey-0.10.1/kmldonkey/libkmldonkey/shareinfo.cpp	2007-08-12 10:02:15.000000000 +0800
+@@ -26,6 +26,7 @@
+ 
+ #include <qfile.h>
+ #include <qregexp.h>
++#include <qtextcodec.h>
+ 
+ ShareInfo::ShareInfo(DonkeyMessage* msg, int proto)
+ {
+@@ -33,7 +34,12 @@
+     network = msg->readInt32();
+     QByteArray ba = msg->readByteArray();
+     ba.resize(ba.size() + 1); ba[ba.size()-1] = 0;
+-    name = QFile::decodeName( QCString( ba.data(), ba.size() ) ); // the file is locally encoded
++
++    //QString filenameshared = QFile::decodeName( QCString( ba.data(), ba.size() ) );
++    QTextCodec* codec = QTextCodec::codecForName("utf8");
++    //QString filenameshared_utf8 = codec->toUnicode( QCString( ba.data(), ba.size() ) );
++    name = codec->toUnicode( QCString( ba.data(), ba.size() ) );
++    //name = codec->fromUnicode( filenameshared_utf8 ); // the file is locally encoded
+     size = msg->readInt64();
+     uploaded = msg->readInt64();
+     requests = msg->readInt32();

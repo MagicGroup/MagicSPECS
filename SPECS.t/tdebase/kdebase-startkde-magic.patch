@@ -1,0 +1,70 @@
+diff -ur kdebase-3.5.13.orig/starttde kdebase-3.5.13/startkde
+--- kdebase-3.5.13.orig/starttde	2010-11-29 01:53:25.000000000 -0500
++++ kdebase-3.5.13/starttde	2010-11-29 02:23:55.000000000 -0500
+@@ -16,12 +16,25 @@
+ 	exit 1
+ fi
+ 
++# kill user's all kicker
++if [ -z "$(ps ux|grep 'tdesktop '|grep -v grep)" ];then
++      pkill -9 -u $USER kicker
++fi
++ 
++#fix read Xresources bugs.
++sysresources=/etc/X11/Xresources
++
++# merge in defaults
++if [ -f "$sysresources" ]; then
++    xrdb -merge "$sysresources"
++fi
++
+ # Set the background color.
+ # The standard X background is nasty, causing moire effects and exploding
+ # people's heads. We use colours from the standard KDE palette for those with
+ # palettised displays.
+ if test -z "$XDM_MANAGED" || echo "$XDM_MANAGED" | grep ",auto" > /dev/null; then
+-  xsetroot -solid "#618DCC" # sky blue
++  xsetroot -solid "#15416B" # sky blue
+ fi
+ 
+ # Unset this for Darwin since it will screw up KDE's dynamic-loading
+@@ -468,23 +481,23 @@
+ echo '[starttde] Starting Trinity...'  1>&2
+ 
+ # Run KPersonalizer before the session if this is the first login.
+-if test "$kpersonalizerrc_general_firstlogin" = "true"; then
+-  if [ ! -x $TDEDIR/bin/kpersonalizer ]; then
+-    echo "[starttde] kpersonalizer not found! Please install it in order to properly configure your user profile." 1>&2
+-  else
+-    # start only dcopserver, don't start whole tdeinit (takes too long)
+-    echo "[starttde] Running kpersonalizer..." 1>&2
+-    dcopserver
+-    twin --lock &
+-    kpersonalizer --before-session
++#if test "$kpersonalizerrc_general_firstlogin" = "true"; then
++#  if [ ! -x $TDEDIR/bin/kpersonalizer ]; then
++#    echo "[starttde] kpersonalizer not found! Please install it in order to properly configure your user profile." 1>&2
++#  else
++#    # start only dcopserver, don't start whole tdeinit (takes too long)
++#    echo "[starttde] Running kpersonalizer..." 1>&2
++#    dcopserver
++#    twin --lock &
++#    kpersonalizer --before-session
+     # handle kpersonalizer restarts (language change)
+-    while test $? -eq 1; do
+-        kpersonalizer --r --before-session
+-    done
+-    dcopquit twin
+-    dcopserver_shutdown --wait
+-  fi
+-fi
++#    while test $? -eq 1; do
++#        kpersonalizer --r --before-session
++#    done
++#    dcopquit twin
++#    dcopserver_shutdown --wait
++#  fi
++#fi
+ 
+ # Remove moodin cache if we have a new wallpaper installed, jriddell. Distro-specific.
+ if [ -d $tdehome/share/apps/ksplash/cache/Moodin/kubuntu ]; then

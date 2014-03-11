@@ -1,0 +1,11 @@
+--- trinity-python-trinity-3.5.13.2/configure.py.ORI	2013-01-20 14:28:38.844683333 +0100
++++ trinity-python-trinity-3.5.13.2/configure.py	2013-01-20 14:29:05.179062079 +0100
+@@ -410,7 +410,7 @@
+ 
+     if not opt_kdeincdir:
+         incSearchPaths = [os.path.join (opt_kdebasedir, "include")]
+-        incSearchPaths.append (os.path.join (opt_kdebasedir, "include", "kde")) # Red Hat
++        incSearchPaths.append (os.path.join (opt_kdebasedir, "include", "tde")) # Red Hat
+         opt_kdeincdir = search ("kapplication.h", incSearchPaths)
+ 
+ def check_kde_installation():

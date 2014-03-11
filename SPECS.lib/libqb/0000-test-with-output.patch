@@ -1,0 +1,25 @@
+From 2f400ae9a252543a09bb42b45aa6ac90a898ede7 Mon Sep 17 00:00:00 2001
+From: Angus Salkeld <asalkeld@redhat.com>
+Date: Fri, 3 Feb 2012 09:20:28 +1000
+Subject: [PATCH] rhel brew
+
+Signed-off-by: Angus Salkeld <asalkeld@redhat.com>
+---
+ configure.ac      |    2 +-
+ tests/Makefile.am |   22 ++++++++++++----------
+ 2 files changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index fd158aa..e2efcc8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -8,7 +8,7 @@ AC_INIT([libqb],
+ 	[quarterback-devel@fedorahosted.org])
+ AC_CONFIG_SRCDIR([lib/ringbuffer.c])
+ AC_CONFIG_HEADERS([include/config.h include/qb/qbconfig.h])
+-AM_INIT_AUTOMAKE([-Wno-portability dist-xz color-tests parallel-tests])
++AM_INIT_AUTOMAKE([-Wno-portability dist-xz])
+ dnl automake >= 1.11 offers --enable-silent-rules for suppressing the output from
+ dnl normal compilation.  When a failure occurs, it will then display the full 
+ dnl command line
+

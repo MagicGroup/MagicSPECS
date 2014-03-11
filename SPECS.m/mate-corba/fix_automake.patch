@@ -1,0 +1,42 @@
+diff -uNrp b/distro/archlinux/PKGBUILD a/distro/archlinux/PKGBUILD
+--- b/distro/archlinux/PKGBUILD	1969-12-31 16:00:00.000000000 -0800
++++ a/distro/archlinux/PKGBUILD	2013-03-20 02:05:47.408731191 -0700
+@@ -0,0 +1,26 @@
++pkgname=mate-corba
++pkgver=1.1.0
++pkgrel=1
++pkgdesc="Thin/fast CORBA ORB"
++arch=('i686' 'x86_64')
++license=('LGPL' 'GPL')
++depends=('libidl2>=0.8.11')
++makedepends=('pkgconfig')
++options=('!emptydirs' '!libtool')
++groups=('mate')
++url="http://matsusoft.com.ar/projects/mate/"
++source=()
++sha256sums=()
++
++build() {
++	cd "${srcdir}/../../../"
++    ./autogen.sh \
++        --prefix=/usr \
++        --disable-static || return 1
++    make || return 1
++}
++
++package() {
++	cd "${srcdir}/../../../"
++    make DESTDIR="${pkgdir}" install || return 1
++}
+diff -uNrp b/test/everything/Makefile.am a/test/everything/Makefile.am
+--- b/test/everything/Makefile.am	2013-03-19 14:05:18.000000000 -0700
++++ a/test/everything/Makefile.am	2013-03-20 02:05:56.282084280 -0700
+@@ -78,7 +78,7 @@ include $(top_srcdir)/Makefile.shared
+ BUILT_SOURCES = ${EVERYTHING_BUILT} everything-imodule.c
+ CLEANFILES = ${BUILT_SOURCES} iorfile
+ 
+-TESTS = $(srcdir)/test.sh
++TESTS = test.sh
+ 
+ EXTRA_DIST = $(IDL_FILES) test.sh $(included_src)
+ 

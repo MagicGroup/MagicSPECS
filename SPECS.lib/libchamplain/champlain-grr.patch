@@ -1,0 +1,24 @@
+diff -up libchamplain-0.12.1/champlain-gtk/Makefile.am.grr libchamplain-0.12.1/champlain-gtk/Makefile.am
+--- libchamplain-0.12.1/champlain-gtk/Makefile.am.grr	2012-02-28 09:45:19.484067486 -0500
++++ libchamplain-0.12.1/champlain-gtk/Makefile.am	2012-02-28 09:46:54.180068907 -0500
+@@ -77,7 +77,7 @@ GtkChamplain-@CHAMPLAIN_API_VERSION@.gir
+ GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_NAMESPACE = GtkChamplain
+ GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_VERSION = @CHAMPLAIN_API_VERSION@
+ GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_LIBS = libchamplain-gtk-@CHAMPLAIN_API_VERSION@.la
+-GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_PACKAGES = gobject-2.0 gtk+-3.0
++GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_PACKAGES = gobject-2.0 gtk+-3.0 pangocairo
+ GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_FILES = $(introspection_sources)
+ GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_INCLUDES = Clutter-1.0 Gtk-3.0
+ GtkChamplain_@CHAMPLAIN_API_VERSION_NORM@_gir_EXPORT_PACKAGES = champlain-gtk-@CHAMPLAIN_API_VERSION@
+diff -up libchamplain-0.12.1/champlain/Makefile.am.grr libchamplain-0.12.1/champlain/Makefile.am
+--- libchamplain-0.12.1/champlain/Makefile.am.grr	2012-02-28 08:49:02.657016816 -0500
++++ libchamplain-0.12.1/champlain/Makefile.am	2012-02-28 09:08:01.679033908 -0500
+@@ -175,7 +175,7 @@ Champlain-@CHAMPLAIN_API_VERSION@.gir: l
+ Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_NAMESPACE = Champlain
+ Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_VERSION = @CHAMPLAIN_API_VERSION@
+ Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_LIBS = libchamplain-@CHAMPLAIN_API_VERSION@.la
+-Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_PACKAGES = gobject-2.0
++Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_PACKAGES = gobject-2.0 cogl-pango-1.0
+ Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_FILES = $(introspection_sources)
+ Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_INCLUDES = Clutter-1.0 $(memphis_gir_include)
+ Champlain_@CHAMPLAIN_API_VERSION_NORM@_gir_EXPORT_PACKAGES = champlain-@CHAMPLAIN_API_VERSION@ $(memphis_package)

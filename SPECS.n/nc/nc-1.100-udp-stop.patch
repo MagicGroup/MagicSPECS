@@ -1,0 +1,12 @@
+--- nc/netcat.c	2011-03-08 11:11:50.298563001 +0100
++++ nc/netcat.c.new	2011-03-08 11:19:52.940562684 +0100
+@@ -683,6 +683,9 @@
+ 			pfd[0].fd = -1;
+ 			pfd[0].events = 0;
+ 		}
++		else if (pfd[0].revents & POLLERR)
++			if (write(nfd, "", 1) == -1)
++				warn("Write error");
+ 
+ 		if (!dflag) {
+ 			if (pfd[1].revents & POLLIN) {

@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+# gnokii-smsd  Starts and stops the Gnokii SMS daemon
+#
+# chkconfig:   - 95 05
+#
+# processname: gnokii-smsd
+# description: Gnokii SMS daemon receives and sends SMS messages.
+# config:      /etc/gnokiirc
+# config:      /etc/sysconfig/gnokii-smsd
+
+exec=/usr/bin/gnokii-smsd
+prog=$(basename $exec)
+
+# Make sure relevant files exist
+[ -x $exec -a -e /etc/sysconfig/gnokii-smsd ] || exit 0
+
+# Source SMSD configuration.
+. /etc/sysconfig/gnokii-smsd
+
+[ -n "$SMSD_OPTS" ] || exit 0
+[ -z "$SMSD_LOG"  ] || SMSD_OPTS="$SMSD_OPTS --logfile \"$SMSD_LOG\""
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+lockfile=/var/lock/subsys/$prog
+
+start() {
+    # Ensure that we have a writable log file.
+    if [ -n "$SMSD_LOG" ]; then
+        [ -e "$SMSD_LOG" ] || > "$SMSD_LOG"
+        chmod 0640 "$SMSD_LOG"
+        chown gnokii:gnokii "$SMSD_LOG"
+    fi
+    echo -n $"Starting Gnokii SMS daemon ($prog): "
+    daemon --user gnokii $exec $SMSD_OPTS \&
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    echo -n $"Stopping Gnokii SMS daemon ($prog): "
+    killproc $prog
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+# See how we were called.
+case "$1" in
+  start|stop|restart)
+    $1
+    ;;
+  reload|force-reload)
+    restart
+    ;;
+  condrestart|try-restart)
+    [ ! -f $lockfile ] || restart
+    ;;
+  status)
+    status $prog
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|status|restart|try-restart|reload|force-reload}"
+    exit 2
+esac

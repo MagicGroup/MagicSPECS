@@ -1,0 +1,11 @@
+--- kdelibs-4.5.0/kate/utils/kateconfig.cpp	2010-08-28 09:40:02.000000000 +0800
++++ kdelibs-4.5.0/kate/utils/kateconfig.cpp	2010-08-28 09:42:06.688099615 +0800
+@@ -129,7 +129,7 @@ const QString &KateGlobalConfig::fallbac
+ QTextCodec *KateGlobalConfig::fallbackCodec () const
+ {
+   if (m_fallbackEncoding.isEmpty())
+-      return QTextCodec::codecForName("ISO 8859-15");
++      return QTextCodec::codecForName("UTF-8");
+
+   return KGlobal::charsets()->codecForName (m_fallbackEncoding);
+ }

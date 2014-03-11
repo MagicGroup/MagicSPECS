@@ -1,0 +1,13 @@
+diff --git a/src/LYMain.c b/src/LYMain.c
+index b3a00cc..126a30f 100644
+--- a/src/LYMain.c
++++ b/src/LYMain.c
+@@ -57,7 +57,7 @@
+ #include <io.h>
+ #endif
+ 
+-#if defined(LOCALE) && !defined(HAVE_LIBINTL_H)
++#if defined(LOCALE)
+ #undef gettext			/* Solaris locale.h prototypes gettext() */
+ #include <locale.h>
+ #ifndef HAVE_GETTEXT

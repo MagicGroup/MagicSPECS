@@ -1,0 +1,56 @@
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/Makefile.am mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/Makefile.am
+--- mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/Makefile.am	2012-12-29 12:47:40.000000000 +0000
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/Makefile.am	2012-12-29 12:55:10.000000000 +0000
+@@ -30,8 +30,8 @@
+ 	-I$(top_srcdir)/lib/sdp \
+ 	@FFMPEG_INC@
+ 
+-AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
++AM_CFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+-AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
++AM_CXXFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
+ EXTRA_DIST = 
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/Makefile.in mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/Makefile.in
+--- mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/Makefile.in	2012-12-29 12:47:40.000000000 +0000
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/Makefile.in	2012-12-29 12:55:26.000000000 +0000
+@@ -289,8 +289,8 @@
+ 	-I$(top_srcdir)/lib/sdp \
+ 	@FFMPEG_INC@
+ 
+-AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+-AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
++AM_CFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
++AM_CXXFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ EXTRA_DIST = 
+ all: all-am
+ 
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/Makefile.am mpeg4ip-1.6.1/player/plugin/video/ffmpeg/Makefile.am
+--- mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/Makefile.am	2012-12-29 12:47:40.000000000 +0000
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/Makefile.am	2012-12-29 12:48:33.000000000 +0000
+@@ -33,8 +33,8 @@
+ 	-I$(top_srcdir)/lib/sdp \
+ 	@FFMPEG_INC@
+ 
+-AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
++AM_CFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+ 
+-AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
++AM_CXXFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ 
+ EXTRA_DIST = 
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/Makefile.in mpeg4ip-1.6.1/player/plugin/video/ffmpeg/Makefile.in
+--- mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/Makefile.in	2012-12-29 12:47:40.000000000 +0000
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/Makefile.in	2012-12-29 12:48:51.000000000 +0000
+@@ -299,8 +299,8 @@
+ 	-I$(top_srcdir)/lib/sdp \
+ 	@FFMPEG_INC@
+ 
+-AM_CFLAGS = -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
+-AM_CXXFLAGS = -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
++AM_CFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -fexceptions @BILLS_CWARNINGS@
++AM_CXXFLAGS = -D__STDC_CONSTANT_MACROS -D_REENTRANT -DNOCONTROLS -fexceptions @BILLS_CPPWARNINGS@
+ EXTRA_DIST = 
+ all: all-am
+ 

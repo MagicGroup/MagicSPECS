@@ -1,0 +1,12 @@
+diff -up man-pages-3.35/man1p/awk.1p.tmp man-pages-3.35/man1p/awk.1p
+--- man-pages-3.35/man1p/awk.1p.tmp	2008-06-05 11:22:12.000000000 +0200
++++ man-pages-3.35/man1p/awk.1p	2011-11-11 17:56:08.350534255 +0100
+@@ -2197,7 +2197,7 @@ necessary to use parentheses to enforce 
+ .LP
+ The \fIawk\fP program specified in the command line is most easily
+ specified within single-quotes (for example,
+-'\fIprogram\fP') for applications using \fIsh\fP, because \fIawk\fP
++\fI'program'\fP) for applications using \fIsh\fP, because \fIawk\fP
+ programs commonly contain
+ characters that are special to the shell, including double-quotes.
+ In the cases where an \fIawk\fP program contains single-quote

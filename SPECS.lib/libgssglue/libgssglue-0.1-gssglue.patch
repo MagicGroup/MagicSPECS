@@ -1,0 +1,13 @@
+diff -up libgssglue-0.1/doc/gssapi_mech.conf.orig libgssglue-0.1/doc/gssapi_mech.conf
+--- libgssglue-0.1/doc/gssapi_mech.conf.orig	2005-11-22 10:16:31.000000000 -0500
++++ libgssglue-0.1/doc/gssapi_mech.conf	2007-09-11 14:47:07.000000000 -0400
+@@ -15,7 +15,7 @@
+ # library                               initialization function
+ # ================================	==========================
+ # The MIT K5 gssapi library, use special function for initialization.
+-/usr/lib/libgssapi_krb5.so		mechglue_internal_krb5_init
++libgssapi_krb5.so.2		mechglue_internal_krb5_init
+ #
+ # The SPKM3 gssapi library function.  Use the function spkm3_gss_initialize.
+-# /usr/local/gss_mechs/spkm/spkm3/libgssapi_spkm3.so    spkm3_gss_initialize
++# libgssapi_spkm3.so    spkm3_gss_initialize

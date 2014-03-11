@@ -1,0 +1,11 @@
+--- ./plugins/node.d.linux/acpi.in.orig	2012-08-14 10:19:40.000000000 -0500
++++ ./plugins/node.d.linux/acpi.in	2012-08-14 11:21:35.558280164 -0500
+@@ -47,7 +47,7 @@
+ =cut
+ 
+ 
+-ATZ="$(echo /proc/acpi/thermal_zone/*/temperature)"
++ATZ="[ -e /proc/acpi/thermal_zone/*/temperature ] && echo /proc/acpi/thermal_zone/*/temperature || echo /sys/class/thermal/thermal_zone*/trip*temp | cut -c1-2"
+ 
+ do_ () { # Fetch
+     echo "$ATZ" | tr ' ' '\n' | awk -F'[ /\t]*' '{

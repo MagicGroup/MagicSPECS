@@ -1,0 +1,28 @@
+diff -ur ../libtpcimgio.orig/ecat7h.c ./ecat7h.c
+--- ../libtpcimgio.orig/ecat7h.c	2010-03-24 17:22:33.000000000 +0530
++++ ./ecat7h.c	2011-06-17 20:06:07.377310881 +0530
+@@ -14,11 +14,13 @@
+ #include <math.h>
+ #include <ctype.h>
+ #include <string.h>
++#include <strings.h>
+ #include <unistd.h>
+ #include <time.h>
+ /*****************************************************************************/
+ #include <swap.h>
+ #include "include/ecat7.h"
++#include "include/substitutions.h"
+ /*****************************************************************************/
+ 
+ /*****************************************************************************/
+diff -ur ../libtpcimgio.orig/imgunit.c ./imgunit.c
+--- ../libtpcimgio.orig/imgunit.c	2011-02-04 19:41:22.000000000 +0530
++++ ./imgunit.c	2011-06-17 20:11:55.997142878 +0530
+@@ -48,6 +48,7 @@
+ #include <math.h>
+ #include <time.h>
+ #include <string.h>
++#include <strings.h>
+ #include <ctype.h>
+ #include <float.h>
+ /*****************************************************************************/

@@ -1,0 +1,30 @@
+diff -up bash-completion-1.3/bash_completion.sh.in~ bash-completion-1.3/bash_completion.sh.in
+--- bash-completion-1.3/bash_completion.sh.in~	2011-01-21 11:36:11.000000000 +0200
++++ bash-completion-1.3/bash_completion.sh.in	2011-09-05 00:08:06.654679539 +0300
+@@ -4,6 +4,8 @@
+ # Check for recent enough version of bash.
+ bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
+ if [ $bmajor -gt 3 ] || [ $bmajor -eq 3 -a $bminor -ge 2 ]; then
++    [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/bash_completion" ] && \
++        . "${XDG_CONFIG_HOME:-$HOME/.config}/bash_completion"
+     if shopt -q progcomp && [ -r @sysconfdir@/bash_completion ]; then
+         # Source completion code.
+         . @sysconfdir@/bash_completion
+diff -up bash-completion-1.3/README~ bash-completion-1.3/README
+--- bash-completion-1.3/README~	2011-01-21 11:36:11.000000000 +0200
++++ bash-completion-1.3/README	2011-09-05 00:07:50.822210890 +0300
+@@ -30,6 +30,14 @@ mechanism, i.e. does not automatically s
+ can source the $sysconfdir/profile.d/bash_completion.sh script in
+ /etc/bashrc or ~/.bashrc.
+ 
++The profile.d script provides a configuration file hook that can be
++used to prevent loading bash_completion on per user basis when it's
++installed system wide.  To do this, turn off programmable completion
++with "shopt -u progcomp" in $XDG_CONFIG_HOME/bash_completion
++(~/.config/bash_completion if $XDG_CONFIG_HOME is not set), and turn
++it back on for example in ~/.bashrc if you want to use programmable
++completion for other purposes.
++
+ If you're using MacOS X, /etc/bashrc is apparently not sourced at all.
+ In that case, you should put the bash_completion file in /sw/etc and add
+ the following code to ~/.bash_profile:

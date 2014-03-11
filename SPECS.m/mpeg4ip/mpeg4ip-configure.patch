@@ -1,0 +1,20 @@
+--- mpeg4ip-1.6/configure.in.orig	2007-11-04 09:32:41.958253000 +0100
++++ mpeg4ip-1.6/configure.in	2007-11-04 09:49:16.946954505 +0100
+@@ -8,7 +8,7 @@
+    AC_MSG_ERROR([Please run bootstrap first])
+    exit -1
+ fi
+-rm -f config.h >&/dev/null
++rm -f config.h 2>/dev/null
+ touch config.h
+ dnl Detect the canonical host and target build environment
+ AC_CANONICAL_HOST
+@@ -769,7 +769,7 @@
+ 
+    if test x$USENASM = xtrue; then
+ 	AC_MSG_CHECKING(nasm version...)
+-	BILLSNASM_arg=`nasm -r | tr '.' ' '`
++	BILLSNASM_arg=`nasm -v | tr '.' ' '`
+         BILLSNASM_ret=`util/testnasm.sh $BILLSNASM_arg`
+ 	if test x$BILLSNASM_ret = x"yes"; then
+ 	   USENASM=true

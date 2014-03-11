@@ -1,0 +1,11 @@
+diff -up chromium-12.0.742.91/ppapi/cpp/paint_aggregator.h.sizet chromium-12.0.742.91/ppapi/cpp/paint_aggregator.h
+--- chromium-12.0.742.91/ppapi/cpp/paint_aggregator.h.sizet	2011-06-11 11:55:03.015637427 -0400
++++ chromium-12.0.742.91/ppapi/cpp/paint_aggregator.h	2011-06-11 11:55:28.432636595 -0400
+@@ -5,6 +5,7 @@
+ #ifndef PPAPI_CPP_PAINT_AGGREGATOR_H_
+ #define PPAPI_CPP_PAINT_AGGREGATOR_H_
+ 
++#include <cstdlib>
+ #include <vector>
+ 
+ #include "ppapi/cpp/point.h"

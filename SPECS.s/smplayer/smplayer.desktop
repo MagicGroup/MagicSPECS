@@ -1,0 +1,14 @@
+[Desktop Entry]
+Categories=Qt;KDE;AudioVideo;Video;Player;
+Comment=A great MPlayer front-end
+Comment[zh_CN]=一个 KDE 下出色的 MPlayer 前端
+Comment[zh_TW]=一個 KDE 下出色的 MPlayer 前端
+Encoding=UTF-8
+Exec=smplayer %f
+GenericName=Media Player
+GenericName[zh_CN]=媒体播放器
+GenericName[zh_TW]=媒體播放器
+Icon=smplayer
+MimeType=audio/ac3;audio/mp4;audio/mpeg;audio/vnd.rn-realaudio;audio/vorbis;audio/x-adpcm;audio/x-matroska;audio/x-mp2;audio/x-mp3;audio/x-ms-wma;audio/x-vorbis;audio/x-wav;video/avi;video/mp4;video/mpeg;video/quicktime;video/vnd.rn-realvideo;video/x-matroska;video/x-ms-asf;video/x-msvideo;video/x-ms-wmv;video/x-ogm;video/x-theora
+Name=SMPlayer
+Type=Application

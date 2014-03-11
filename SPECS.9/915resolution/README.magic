@@ -1,0 +1,12 @@
+一些在 Magic Linux 使用的简单介绍。
+
+重要提示：这个程序需要在启动的时候被调用，以在视频 BIOS 内存中安装正确的值。
+运行 915resolution 需要 root 权限。
+
+注意优先模式已经调整（不过仍然工作），感谢现在的启动脚本框架。:)
+
+1.  阅读这个目录中的 README.txt，找到合适你硬件的二进制调用。
+2.  编辑 /etc/sysconfig/915resolution。修改 "RESOLUTION" 来传递给 915resolution
+    适合你硬件的模式串。
+3.  享受宽屏 :)
+

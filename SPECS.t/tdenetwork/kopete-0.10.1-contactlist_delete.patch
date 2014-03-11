@@ -1,0 +1,93 @@
+diff -Nur kdenetwork-3.5.0/kopete/libkopete/kopeteaccountmanager.cpp kdenetwork-3.5.0new/kopete/libkopete/kopeteaccountmanager.cpp
+--- kdenetwork-3.5.0/kopete/libkopete/kopeteaccountmanager.cpp	2005-09-10 16:20:28.000000000 +0800
++++ kdenetwork-3.5.0new/kopete/libkopete/kopeteaccountmanager.cpp	2005-12-28 17:39:18.000000000 +0800
+@@ -290,10 +290,9 @@
+ 	if(!account->removeAccount())
+ 		return;
+ 
+-	Protocol *protocol = account->protocol();
+-
+ 
+ 	KConfigGroup *configgroup = account->configGroup();
++	Protocol *protocol = account->protocol();
+ 
+ 	// Clean up the account list
+ 	d->accounts.remove( account );
+@@ -313,6 +312,7 @@
+ 		PluginManager::self()->setPluginEnabled( protocolName, false );
+ 		PluginManager::self()->unloadPlugin( protocolName );
+ 	}
++	Kopete::ContactList::self()->clearUpMetaContacts();
+ }
+ 
+ void AccountManager::save()
+diff -Nur kdenetwork-3.5.0/kopete/libkopete/kopetecontactlist.cpp kdenetwork-3.5.0new/kopete/libkopete/kopetecontactlist.cpp
+--- kdenetwork-3.5.0/kopete/libkopete/kopetecontactlist.cpp	2005-09-10 16:20:28.000000000 +0800
++++ kdenetwork-3.5.0new/kopete/libkopete/kopetecontactlist.cpp	2005-12-28 17:40:08.000000000 +0800
+@@ -78,6 +78,36 @@
+ 	return s_self;
+ }
+ 
++void ContactList::showDebug()
++{
++   int count = d->contacts.count();
++   printf("there are %d metaContacts in the list.\n", count);
++   int index;
++   for(index = 0 ; index < count ; index++)
++   {
++       int i = (d->contacts.at(index))->contacts().count();
++       printf(" meta %d: %d contacts\n", index, i);
++   }
++
++}
++
++void ContactList::clearUpMetaContacts()
++{
++
++   int count = d->contacts.count();
++   int index;
++   for(index = 0 ; index < count ; index++)
++   {
++       int i = (d->contacts.at(index))->contacts().count();
++       if(i == 0)
++       {
++           removeMetaContact(d->contacts.at(index));
++           count --;
++           index --;
++       }
++   }
++}
++
+ ContactList::ContactList()
+ 	: TQObject( kapp, "KopeteContactList" )
+ {
+diff -Nur kdenetwork-3.5.0/kopete/libkopete/kopetecontactlist.h kdenetwork-3.5.0new/kopete/libkopete/kopetecontactlist.h
+--- kdenetwork-3.5.0/kopete/libkopete/kopetecontactlist.h	2005-09-10 16:20:28.000000000 +0800
++++ kdenetwork-3.5.0new/kopete/libkopete/kopetecontactlist.h	2005-12-28 17:41:05.000000000 +0800
+@@ -368,6 +368,17 @@
+ 	 * Open a chat to a contact, and optionally set some initial text
+ 	 */
+ 	void messageContact( const TQString &displayName, const TQString &messageText = TQString() );
++   /**
++    * Printf Debug infomation about MetaContactList to tty
++    * added by jianshi
++    */
++   void showDebug();
++
++   /**
++    * Clear non essential MetaContact from the contact list
++    * added by jianshi
++    */
++   void clearUpMetaContacts();
+ 
+ public slots:
+ 	/**
+@@ -385,7 +396,7 @@
+ 	 * Return a XML representation of the contact list
+ 	 */
+ 	const TQDomDocument toXML();
+-
++private:
+ 	/**
+ 	 * Load the contact list from XML file
+ 	 */

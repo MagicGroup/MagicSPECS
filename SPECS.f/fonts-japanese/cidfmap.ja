@@ -1,0 +1,12 @@
+/Sazanami-Gothic	<< /FileType /TrueType /Path (/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf) /CSI [(Japan1) 6] >> ;
+/Sazanami-Gothic-Regular	/Sazanami-Gothic ;
+/Sazanami-Gothic-JaH	<< /FileType /TrueType /Path (/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf) /CSI [(Japan2) 0] >> ;
+/Sazanami-Gothic-Regular-JaH	/Sazanami-Gothic-JaH ;
+/Sazanami-Mincho	<< /FileType /TrueType /Path (/usr/share/fonts/japanese/TrueType/sazanami-mincho.ttf) /CSI [(Japan1) 6] >> ;
+/Sazanami-Mincho-Regular	/Sazanami-Mincho ;
+/Sazanami-Mincho-JaH	<< /FileType /TrueType /Path (/usr/share/fonts/japanese/TrueType/sazanami-mincho.ttf) /CSI [(Japan2) 0] >> ;
+/Sazanami-Mincho-Regular-JaH	/Sazanami-Mincho-JaH ;
+/Ryumin-Light		/Sazanami-Mincho ;
+/GothicBBB-Medium	/Sazanami-Gothic ;
+/Adobe-Japan1		/Sazanami-Gothic ;
+/Adobe-Japan2		/Sazanami-Gothic-JaH ;

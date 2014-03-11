@@ -1,0 +1,11 @@
+diff -ur linux-atm-2.5.0.orig/src/led/main.c linux-atm-2.5.0/src/led/main.c
+--- linux-atm-2.5.0.orig/src/led/main.c	2009-03-11 16:31:11.000000000 +0800
++++ linux-atm-2.5.0/src/led/main.c	2009-03-11 16:31:30.000000000 +0800
+@@ -41,6 +41,7 @@
+ #include <getopt.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#include <limits.h>
+ 
+ #include <atm.h>
+ #include <atmd.h>

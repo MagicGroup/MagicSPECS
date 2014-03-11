@@ -1,0 +1,14 @@
+diff -up isdn4k-utils-CVS-2009-10-20-patched/isdnlog/configure.in.orig isdn4k-utils-CVS-2009-10-20-patched/isdnlog/configure.in
+--- isdn4k-utils-CVS-2009-10-20-patched/isdnlog/configure.in.orig	2010-05-03 14:50:46.000000000 +0200
++++ isdn4k-utils-CVS-2009-10-20-patched/isdnlog/configure.in	2010-05-03 14:58:15.000000000 +0200
+@@ -140,8 +140,8 @@ if test -e tools/cdb/i4l_cdb.c  ; then
+     AC_MSG_RESULT(Using 'cdb' as database)
+ else
+ AC_CHECK_LIB(gdbm, gdbm_open, DBMLIB=-lgdbm; AC_DEFINE(HAVE_LIBGDBM, 1, [Use libgdbm]),
+-	AC_CHECK_LIB(dbm, dbm_open, DBMLIB=-ldbm; AC_DEFINE(HAVE_LIBDBM, 1, [Use libdbm]),
+-		AC_CHECK_LIB(db, dbm_open, DBMLIB=-ldb; AC_DEFINE(HAVE_LIBDB, 1, [use libdb]))))
++	[AC_CHECK_LIB(dbm, dbm_open, DBMLIB=-ldbm; AC_DEFINE(HAVE_LIBDBM, 1, [Use libdbm]),
++		[AC_CHECK_LIB(db, dbm_open, DBMLIB=-ldb; AC_DEFINE(HAVE_LIBDB, 1, [use libdb]))])])
+ fi
+ AC_DEFINE_UNQUOTED(RDBEXT,"$RDBEXT",[rdb extension])
+ 

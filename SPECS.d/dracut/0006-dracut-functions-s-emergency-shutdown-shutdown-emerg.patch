@@ -1,0 +1,22 @@
+From d670e21998f8b13c6b266e29bcc80db55d19f8c8 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 17 Aug 2011 17:40:59 +0200
+Subject: [PATCH] dracut-functions: s/emergency-shutdown/shutdown-emergency/g
+
+---
+ dracut-functions |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/dracut-functions b/dracut-functions
+index 936d3c3..241d89a 100755
+--- a/dracut-functions
++++ b/dracut-functions
+@@ -518,7 +518,7 @@ inst() {
+ 
+ [[ $hookdirs ]] || {
+     hookdirs="cmdline pre-udev pre-trigger netroot initqueue pre-mount"
+-    hookdirs+=" pre-pivot mount emergency emergency-shutdown shutdown"
++    hookdirs+=" pre-pivot mount emergency shutdown-emergency shutdown"
+     export hookdirs
+ }
+ 

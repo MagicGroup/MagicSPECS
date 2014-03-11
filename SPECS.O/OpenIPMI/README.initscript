@@ -1,0 +1,2 @@
+Please note that the /etc/init.d/ipmi init script is not LSB compliant and
+uses non-standard exit codes. See the init script for detailed description.

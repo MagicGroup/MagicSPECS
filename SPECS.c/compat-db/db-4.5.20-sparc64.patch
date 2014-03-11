@@ -1,0 +1,18 @@
+--- db-4.5.20/dist/configure.ac.BAD	2006-07-13 17:59:04.000000000 -0400
++++ db-4.5.20/dist/configure.ac	2006-07-13 17:59:32.000000000 -0400
+@@ -291,11 +291,11 @@
+ INSTALLER="\$(LIBTOOL) --mode=install cp -p"
+ 
+ MAKEFILE_CC="\$(LIBTOOL) --mode=compile ${MAKEFILE_CC}"
+-MAKEFILE_SOLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CCLINK} -avoid-version"
+-MAKEFILE_CCLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CCLINK}"
++MAKEFILE_SOLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CCLINK} ${CFLAGS} -avoid-version"
++MAKEFILE_CCLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CCLINK} ${CFLAGS}"
+ MAKEFILE_CXX="\$(LIBTOOL) --mode=compile ${MAKEFILE_CXX}"
+-MAKEFILE_XSOLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CXXLINK} -avoid-version"
+-MAKEFILE_CXXLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CXXLINK}"
++MAKEFILE_XSOLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CXXLINK} ${CFLAGS} -avoid-version"
++MAKEFILE_CXXLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CXXLINK} ${CFLAGS}"
+ 
+ LIBTOOL="\$(SHELL) ./libtool"
+ 

@@ -1,0 +1,30 @@
+--- logwatch-svn50.dist/scripts/services/dovecot	2011-02-23 09:20:30.000000000 +1100
++++ logwatch-svn50/scripts/services/dovecot	2011-04-26 14:07:53.000000000 +1000
+@@ -121,7 +121,7 @@
+          # We don't care about these
+      } elsif ( $ThisLine =~ /Killed with signal /) {
+          $End++;
+-     } elsif ( $ThisLine =~ /Dovecot (v\d[^ ]* |)starting up$/) {
++     } elsif ( $ThisLine =~ /Dovecot (v\d[^ ]* |)starting up( \(.*\))?$/) {
+          $Restarts++;
+          $End = 0;
+      } elsif ( ($User, $Host) = ( $ThisLine =~ /^pop3-login: Login: (.*?) \[(.*)\]/ ) ) {
+@@ -147,15 +147,15 @@
+       }
+ 
+ # 'lda' for dovecot 2.0, 'deliver' for earlier versions
+-    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag (?:lda|deliver)\((.*)\): msgid=.*: saved mail to (\S+)/ ) ) {
++    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag (?:lda|deliver)\((.*)\): msgid=.*: saved mail to (.*)/ ) ) {
+       $Deliver{$User}{$Mailbox}++;
+ 
+ # For Sieve-based delivery
+-    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag (?:lda|deliver)\((.*)\): sieve: msgid=.*: stored mail into mailbox '(\S+)'/ ) ) {
++    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag (?:lda|deliver)\((.*)\): sieve: msgid=.*: stored mail into mailbox '(.*)'/ ) ) {
+       $Deliver{$User}{$Mailbox}++;
+ 
+ # LMTP-based delivery
+-    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag lmtp\(\d+, (.*)\): [^:]+: msgid=.*: saved mail to (\S+)/ ) ) {
++    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag lmtp\(\d+, (.*)\): [^:]+: msgid=.*: saved mail to (.*)/ ) ) {
+     # dovecot: [ID 583609 mail.info] lmtp(12782, cloyce@headgear.org): jBt1EfjCMk3uMQAAm9eMBA: msgid=<4D32DB1F.3080707@c-dot.co.uk>: saved mail to INBOX
+       $Deliver{$User}{$Mailbox}++;
+ 

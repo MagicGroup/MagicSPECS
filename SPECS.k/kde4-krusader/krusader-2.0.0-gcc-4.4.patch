@@ -1,0 +1,10 @@
+--- krusader-2.0.0/krusader/VFS/kiojobwrapper.cpp.orig	2009-04-11 21:40:15.000000000 +0200
++++ krusader-2.0.0/krusader/VFS/kiojobwrapper.cpp	2009-04-20 00:54:02.000000000 +0200
+@@ -37,6 +37,7 @@
+ #include <kio/jobuidelegate.h>
+ #include <kio/job.h>
+ #include <qapplication.h>
++#include <cstdio>
+ #include <iostream>
+ #include <klocale.h>
+ #include "virtualcopyjob.h"

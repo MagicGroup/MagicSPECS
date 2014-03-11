@@ -1,0 +1,1136 @@
+diff -Nur ninja-1.5.8.1.old/Makefile.in ninja-1.5.8.1/Makefile.in
+--- ninja-1.5.8.1.old/Makefile.in	2002-02-13 06:28:14.000000000 -0200
++++ ninja-1.5.8.1/Makefile.in	2001-10-23 05:49:36.000000000 -0200
+@@ -228,7 +228,7 @@
+ 	find $(HELP_DIR) -type f -print | xargs chmod a+r
+ 
+ installman:
+-#	cd $(topdir)/doc; for i in ninja.1; do $(INSTALL_DATA) $$i $(mandir); done
++	cd $(topdir)/doc; for i in ninja.1; do $(INSTALL_DATA) $$i $(mandir); done
+ 
+ # not sure about installing this one yet.
+ #	$(INSTALL_DATA) $(topdir)/doc/query-pr.1 $(mandir)
+diff -Nur ninja-1.5.8.1.old/doc/commands.txt ninja-1.5.8.1/doc/commands.txt
+--- ninja-1.5.8.1.old/doc/commands.txt	1969-12-31 21:00:00.000000000 -0300
++++ ninja-1.5.8.1/doc/commands.txt	1997-02-03 05:35:10.000000000 -0200
+@@ -0,0 +1,323 @@
++command		params				desc
++-------		------				----
++ABOUT		none				shows author/compile info
++ADDC		<nick> <channel> [<flags>]	adds a channel to
++						<nick>'s userlist entry,
++						and optionally sets
++						channel flags
++ADDF		<nick> [<modes>] [<password>]	registers <nick> on the 
++						userlist, optionally sets
++						modes and/or password
++ADDH		<nick> <hostmask>		adds <hostmask> to
++						<nick>'s userlist entry
++						hostmask list
++ADDS		<server>[:<port>]		adds a server to the
++						server list
++ADDSHIT		<hostmask> <channel> <level>	adds <hostmask> to the
++						shit list on <channel>
++ADMIN		none				shows the current server's
++						administration information     
++ALIAS		various				used in ircII scripting
++						mostly
++ASSIGN		[[<variable>] [<value>]]	shows value(s), or sets
++						variable to value
++AWAY		[<away message>]		sets you away when the
++						away message is specified,
++						or sets you back without
++B, BAN		<nick/mask> [<channel>]		adds <nick/mask> to the
++						current channel or 
++						<channel>'s ban list
++BEEP		none				just beeps, used in ircII
++						scripting
++BIND		[[<key>] [<function>]]		shows bind information for
++						all keys, or <key>, or 
++						sets the function bound to
++						<key>
++BK		[<channel>] <nick> [<reason>]	bans and kicks <nick> from
++						the current channel, or 
++						<channel>.  if <reason> is
++						specified, the kicked will
++						see it
++BYE, QUIT,	[<quit message>]		exits irc.  if <quit
++EXIT, SIGNOFF					message> is specified,
++						members of your current
++						channel will see it as you
++						disconnect from the server
++CD		[<directory>]			shows current working
++						directory or change it to
++						<directory>
++CHANNEL, JOIN	[<channel(s)>]			shows the current
++						channel(s) or joins
++						<channel>
++CHATTR		<nick> +/-<flags>		changes <nick>'s friend
++						list user flags
++CHFLAG		<nick> <channel> +/-<flags>	changes <nick>'s friend
++						list flags for <channel>
++CHHOST		<new host name>			changes your source host
++						name to <new host name>
++CHKEY		[<channel>] <new key>		changes the current
++						channel or <channel>'s key
++						to <new key>
++CHNAME		<user>[@<host>] [<realname>]	changes your user name to
++						<user>.  optionally
++						changes your source host
++						name and/or realname
++CHPASS		[-]<nick> [<password>]		changes or removes 
++						<nick>'s friend list
++						password
++CKEY		[<channel> [<key>]]		lists ckey list, remove
++						<channel> from the list,
++						or add/change <channel>'s
++						ckey to <key>
++CLEAR		[-<all> [-<unhold>]		clears the current window,
++						all windows, and
++						optionally unhold
++						window(s)
++CONNECT		<server>			OPER command to connect
++						the current server with
++						<server>     
++CS, SC, SCAN	[<channel>]			scans the current channel
++						or <channel> for a list of
++						the current users and op 
++						status
++CTCC		[<command>] [<arguments>]	<unknown>
++CTCP, REQUEST	<nick> [<request>]		sends <nick> <request> via
++						client to client protocol.
++						the default is a version
++						request.
++CYCLE		[<channel>]			re-joins the current
++						channel or <channel>
++DATE, TIME	none				shows the current server's
++						current data and time     
++DCC		[<raw/chat/send/get/raw_listen>] [<arguments>]
++						used to establish
++						connections via the
++					 	direct client 
++						communication protocol 
++DEOP		none				OPER command for removing
++						their operator status     
++DESCRIBE	<target> <action description>	sends <target> a private
++						/me saying <action
++						description>
++DIE		none				OPER command for killing
++						the server
++DISCONNECT	[<server> [<reason>]		disconnects from the
++						current server or <server>.
++						if <reason> is specified,
++						it will be used as the
++						signoff message
++DOP		[#/&<channel>] <nick(s)>
++						de-ops all specified
++						<nick>s on the current
++						channel or #/&<channel>
++DVOICE		[#/&<channel>] <nick(s)>
++						takes voice away from all
++						specified <nick>s on the
++						current channel or
++						#/&<channel>
++ECHO		<text>				displays text      
++ENCRYPT		[<nick>|<channel> [<key>]]	see /help encrypt
++EVAL, SENDLINE	<command>			evalutes ircII <command>
++EXEC		[<options> [<command>]]		executes unix <command>
++FE, FOR,	<expression> <command(s)>	for each ircII script
++   FOREACH					command
++FEC		<unknown>			<unknown>
++FLUSH		none				flushes server and
++						client output
++GREP		[<channel>] -<mask1> ... -<maskn>
++						greps <channel> or the
++						current channel for text
++						matching any of the
++						specified masks
++HASH		none				OPER command for loading
++						the server config file
++HELP		[<command> [<subcommand>]]	lists help topics, shows
++						help for <command> or
++						shows help for <command>'s
++						<subcommand>
++HISTORY		[<number>]			shows the input history or
++						the <number> most recent
++HOOK		<handle>			see /help hook     
++HOST, USERHOST	[<nick>]			shows your user@host or
++I, INVITE	<nick> [<channel>]		invites <nick> to the
++						current channel or
++						<channel>
++IF		<expr> { <then> } { <else> }	see /help if, used in
++						ircII scripting
++IGNORE		[-]<nick/userhost mask> [<level>]
++						adds or removes
++						<nick/userhost mask> from
++						the ignore list.  see
++						/help ignore
++INFO		none				shows information about
++						ircII
++INPUT		<unknown>			see /help input     
++ISON		<nick(s)>			shows you the online
++						status of <nick(s)>
++K, KICK, NK	[<channel>] <nick> [<reason>]	kicks <nick> off of the
++						current channel or
++						<channel>.  if <reason> is
++						specified, it is shown to
++						the <nick>
++KILL		<nick> [<reason>]		OPER command to kill users
++						off of irc     
++L, LEAVE, PART	[<channel>]			leaves the current channel
++						or <channel>
++LASTLOG		<number>			see /help lastlog
++LIMIT		<limit/-> [<channel>]		changes or removes the
++						current channel or
++						<channel>'s limit
++LINKS		[<server mask>]			shows the server link
++						list.  if <server mask>
++						is specified, only
++						servers matching it will
++						be shown
++LIST		[<channel mask>]		lists all channels or
++						channels matching
++						<channel mask>
++LISTF		none				shows the friends list
++LISTS		none				shows the shit list
++LOAD		<file>				loads an ircII script
++LUSERS		[<server>]			shows the current server
++						or <servers> current user
++						statistics
++M, MSG, XTRA	<nick(s)> <message>		sends <message> to 
++						<nick(s)> privately
++ME		<action>			shows the current channel
++						that you're doing <action>
++MLIST		none				lists a menu
++MLOAD		none				loads a menu
++MODE		<*/channel> <+/-modes> <argument(s)>
++						changes channel modes on
++						<channel>
++MOTD		none				shows the current server's
++						message of the day
++N, NOTICE	<nick> <notice>			sends <nick> <notice>
++						privately
++NAMES		[<channel>]			shows current channel or
++						<channel>'s users' names
++NDCC		<offer/plist/list/remove>	ninja automatic dcc
++NICK		[<new nick>]			shows what your current
++						nick or changes your nick
++						to <new nick>
++NOTE		<unknown>			see /help note
++NOTIFY		[-]<nick(s)>			add or remove <nick(s)>
++						from the notify list
++ON		<event> <mask> <action>		for ircII scripting, see
++						/help on
++OP		[#/&<channel>] <nick(s)>	gives <nick(s)> channel
++						operator status on the
++						current channel or
++						<channel>
++OPER		[<nickname> [<password>]]	OPER command to gain OPER
++						status
++ORIGNICK	[on <nick>/off]			shows original nick
++						status, sets original
++						nickname to <nick>, or
++						turns orignial nick off
++PARSEKEY	<unknown>			see /help parsekey
++PING		<nick/channel>			sends time sync test to 
++						<nick/channel>
++QUERY		<nick/channel/%process>		starts a conversation with
++						<nick/channel/%process>
++QUEUE		<unknown>			<unknown>
++QUOTE		<text>				sends <text> directly to
++						the current server 
++RBIND		<function>			shows the keys bound to
++						<function>
++REDIRECT	<nick/channel/%process> <command>
++						redirects the output of
++						<command> to
++						<nick/channel/%process>
++REHASH		<none>				OPER command to re-load
++						the server's
++						configuration file
++RELM		[-l] [<number>] [<nick/channel>]
++						shows the incoming message
++						history or relays
++						<number> to the current
++						channel or <nick/channel>
++RELSM		[-l] [<number>] [<nick/channel>]
++						shows the outgoing message
++						history or relays <number>
++						to the current channel or
++						<nick/channel>
++REMC		<nick> <channel>		removes <channel> from
++						your friend <nick>'s user
++						list entry
++REMF		<nick>				removes <nick> from your
++						friend's list
++REMH		<nick> <hostmask>		removes <hostmask> from
++						<nick>'s friend list host
++						mask list
++REMS		<server> <port>			removes <server> <port>
++						from the server list
++REMSHIT		<hostmask>			removes <hostmask> from
++						the shit list
++RESTART		<unknown>			OPER command for
++						restarting the server
++SAVE		none				saves the current user,
++						notify, server, ckey,
++						grep and shit lists
++SAY, SEND	<message>			sends <message> to the
++						current channel
++SERVER		<server> [<port>]		changes the current server
++						to <server> on <port>
++SET		[-]<variable> or <variable> [<value>]
++						set or unsets <variable>
++						to <value>
++SLEEP		<seconds>			stops for <seconds>
++SQUIT		<server>			OPER command for
++						disconnecting the server
++						from its uplink
++STACK		<unknown>			see /help stack
++STATS		<unknown>			see /help status
++SUMMON		<unknown>			disabled on most servers,
++						see /help summon
++T, TOPIC	<channel> [<new topic>]		shows <channel>'s topic or
++						changes it to <new topic>
++TIMER		<seconds> <command>		evaluates <command> after
++						<seconds>, see /help timer
++TRACE		<unknown>			see /help trace
++TYPE		<unknown>			see /help type
++UNBAN		<nick/mask> [<channel>]		removes all bans matching
++						<nick>'s user@host or
++						<mask> from the current
++						channel or <channel>
++USER		[<channel>]			shows the nick, status,
++						and user@host for each of
++						the users on the current
++						channel or <channel>
++USERS		<unknown>			disabled on most servers,
++						see /help users     
++VERSION		[<server>]			shows the current client
++						and server versions or
++						<server>'s version
++VOICE		[#/&<channel>] <nick(s)>	gives voice to all
++						specified <nick>s on the
++						current channel or on
++						<channel>
++W, WHO		[<channel>] [-<options> <arguments>]
++						shows the nick, status,
++						user@host, real name, and
++						hop count of users on the
++						current channel or 
++						<channel>
++WAIT		<unknown>			see /help wait
++WALL		<unknown>			see /help wall
++WALLOPS		<unknown>			see /help wallops
++WHICH		<unknown>			for ircII scripting, see 
++						/help which
++WHILE		<unknown>			for ircII scripting, see 
++						/help while
++WHOIS, WI	[<nick>]			shows your or <nick>'s
++						connectivity information
++WHOISF, WIF	<friend's nick>			shows user list entry for
++						<friend's nick>
++WHOWAS, WW	<nick>				shows last used
++						information for <nick>
++WII		<nick>				shows verbose connectivity
++						information for <nick>
++WINDOW		<command> <argument(s)>		see /help window
++XECHO		<unknown>			see /help xecho
++XTYPE		<unknown>			see /help xtype
+diff -Nur ninja-1.5.8.1.old/doc/ninja.1 ninja-1.5.8.1/doc/ninja.1
+--- ninja-1.5.8.1.old/doc/ninja.1	1969-12-31 21:00:00.000000000 -0300
++++ ninja-1.5.8.1/doc/ninja.1	1997-02-04 03:00:38.000000000 -0200
+@@ -0,0 +1,330 @@
++
++
++
++NINJA (1L)                                           NINJA (1L)
++
++
++_N_A_M_E
++
++       ninja - Ninja IRC Client
++
++_S_Y_N_O_P_S_I_S
++
++       This manual page documents the _N_i_n_j_a IRC client written by
++       SenorPato and Kraig. Loosely based on IrcII version 2.8,
++       the majority of the well known commands will not be
++       included. The options refer to those that are entered from
++       the Ninja IRC prompt.
++
++_S_T_A_N_D_A_R_D _C_O_M_M_A_N_D_S
++
++       _A_B_O_U_T
++           Shows author / compile information
++
++       _A_D_D_C _<_n_i_c_k_> _<_c_h_a_n_n_e_l_> _[_<_f_l_a_g_s_>_]
++           Adds a channel to <nick>'s userlist entry and
++           optionally sets channel flags.
++
++       _A_D_D_F _<_n_i_c_k_> _[_<_m_o_d_e_s_>_] _[_<_p_a_s_s_w_o_r_d_>_]
++            Registers <nick> on the userlist, optionally
++            sets modes and/or password.
++
++       _A_D_D_H _<_n_i_c_k_> _<_h_o_s_t_m_a_s_k_>
++            Adds <hostmask> to <nick>'s userlist entry
++            hostmask list.
++
++       _A_D_D_S _<_s_e_r_v_e_r_>_[_:_<_p_o_r_t_>_]
++            Adds <server> to the server list.
++
++       _A_D_D_S_H_I_T _<_h_o_s_t_m_a_s_k_> _<_c_h_a_n_n_e_l_> _<_l_e_v_e_l_>
++            Adds <hostmask> to shit list on <channel>
++
++       _A_D_M_I_N
++            Shows administration information for the
++            current server.
++
++       _A_L_I_A_S
++            Used by IrcII scripting.
++
++       _A_S_S_I_G_N _[_[_<_v_a_r_i_a_b_l_e_>_] _[_<_v_a_l_u_e_>_]_]
++            Shows value(s) or sets <variable> to <value>
++
++       _A_W_A_Y _[_<_a_w_a_y _m_e_s_s_a_g_e_>_]
++            Sets you away with <away message>
++
++       _B_, _B_A_N _<_n_i_c_k_/_m_a_s_k_> _[_<_c_h_a_n_n_e_l_>_]
++            Adds <nick/mask> to the current channel or
++            <channel>'s ban list.
++
++       _B_E_E_P
++            Beeps, used in ircII scripting.
++
++       _B_I_N_D _[_[_<_k_e_y_>_] _[_<_f_u_n_c_t_i_o_n_>_]_]
++            Shows bind information for all keys, or <key>,
++            or sets the function bound to <key>.
++
++       _B_K _[_<_c_h_a_n_n_e_l_>_] _<_n_i_c_k_> _[_<_r_e_a_s_o_n_>_]
++            Bans and kicks <nick> from the current channel,
++            or <channel>.  If <reason> is specified, the
++            kicked will see it.
++
++       _B_Y_E_, _Q_U_I_T_, _E_X_I_T_, _S_I_G_N_O_F_F _[_<_q_u_i_t _m_e_s_s_a_g_e_>_]
++             Exits irc. If <quit message> is specified,
++             members of your current channel will see it
++             as you disconnect from the server
++
++       _C_D _[_<_d_i_r_e_c_t_o_r_y_>_]
++             Shows current working directory or change it
++             to <directory>.
++
++       _C_H_A_N_N_E_L_, _J_O_I_N _[_<_c_h_a_n_n_e_l_(_s_)_>_]
++             Shows current channel(s) or joins <channel>.
++
++       _C_H_A_T_T_R _<_n_i_c_k_> _+_/_-_<_f_l_a_g_s_>
++             Changes <nick>'s friend list user flags.
++
++       _C_H_F_L_A_G _<_n_i_c_k_> _<_c_h_a_n_n_e_l_> _+_/_-_<_f_l_a_g_s_>
++             Changes <nick>'s friend list flags for
++             <channel>.
++
++       _C_H_H_O_S_T _<_n_e_w _h_o_s_t _n_a_m_e_>
++             Changes your source host name to
++             <new host name>.
++
++       _C_H_K_E_Y _[_<_c_h_a_n_n_e_l_>_] _<_n_e_w _k_e_y_>
++             Changes the current channel or <channel>'s
++             key to <new key>.
++
++       _C_H_N_A_M_E _<_u_s_e_r_>_[_@_<_h_o_s_t_>_] _[_<_r_e_a_l_n_a_m_e_>_]
++             Changes your user name to <user>.
++             Optionally changes your source hostname and/or
++             realname.
++
++       _C_H_P_A_S_S _[_-_]_<_n_i_c_k_> _[_<_p_a_s_s_w_o_r_d_>_]
++             Changes or removes <nick>'s friend list
++             password.
++
++       _C_K_E_Y _[_<_c_h_a_n_n_e_l_> _[_<_k_e_y_>_]_]
++             Lists ckey list, remove <channel> from the list,
++             or add/change <channel>'s ckey to <key>
++
++       _C_L_E_A_R _[_-_<_a_l_l_> _[_-_<_u_n_h_o_l_d_>_]
++             Clears the current window, all windows, and
++             optionally unhold window(s).
++
++       _C_O_N_N_E_C_T _<_s_e_r_v_e_r_>
++             OPER command to connect the current server to
++             <server>.
++
++        _C_S_, _S_C_, _S_C_A_N _[_<_c_h_a_n_n_e_l_>_]
++             Scans the current channel or <channel> for a
++             list of the current users and op status.
++
++        _C_T_C_C _[_<_c_o_m_m_a_n_d_>_] _[_<_a_r_g_u_m_e_n_t_s_>_]
++             Unknown
++
++        _C_T_C_P_, _R_E_Q_U_E_S_T _<_n_i_c_k_> _[_<_r_e_q_u_e_s_t_>_]
++             Sends <nick> <request> via client to client
++             protocol. The default is a version request.
++
++             _s_e_d - contains simple_encrypted _data.
++
++             _v_e_r_s_i_o_n - shows client type, version and
++                       environment.
++
++             _c_l_i_e_n_t_i_n_f_o - gives information about available
++                          CTCP commands.
++
++             _u_s_e_r_i_n_f_o - returns user settable information.
++
++             _e_r_r_m_s_g - returns error messages.
++
++             _f_i_n_g_e_r - shows real name, login name and
++                      idle time of user.
++
++
++        _C_Y_C_L_E _[_<_c_h_a_n_n_e_l_>_]
++              Re-joins the current channel or <channel>
++
++        _D_A_T_E_, _T_I_M_E
++              Shows the current server's current data and
++              time.
++
++        _D_C_C _[_<_r_a_w_/_c_h_a_t_/_s_e_n_d_/_g_e_t_/_r_a_w___l_i_s_t_e_n_>_] _[_<_a_r_g_u_m_e_n_t_s_>_]
++              Used to establish connections via the direct
++              client communication protocol.
++
++        _D_E_O_P
++              OPER command for removing their operator status.
++
++        _D_E_S_C_R_I_B_E _<_t_a_r_g_e_t_> _<_a_c_t_i_o_n _d_e_s_c_r_i_p_t_i_o_n_>
++              Sends <target> a private /me saying
++              <action description>.
++
++        _D_I_E
++              OPER command for killing the server
++
++        _D_I_S_C_O_N_N_E_C_T _[_<_s_e_r_v_e_r_> _[_<_r_e_a_s_o_n_>_]
++              Disconnects from the current server or
++              <server>. If <reason> is specified, it will be
++              used as the signoff message.
++
++        _D_O_P _[_#_/_&_<_c_h_a_n_n_e_l_>_] _<_n_i_c_k_(_s_)_>
++              Deops all specified <nick>s on the current
++              channel or #/&<channel>.
++
++        _D_V_O_I_C_E _[_#_/_&_<_c_h_a_n_n_e_l_>_] _<_n_i_c_k_(_s_)_>
++              Takes voice away from all specified <nick>s
++              on the current channel or #/&<channel>
++
++        _E_C_H_O _<_t_e_x_t_>
++              Displays text.
++
++        _E_N_C_R_Y_P_T _[_<_n_i_c_k_>_|_<_c_h_a_n_n_e_l_> _[_<_k_e_y_>_]_]
++              See /help encrypt.
++
++        _E_V_A_L_, _S_E_N_D_L_I_N_E _<_c_o_m_m_a_n_d_>
++              Evalutes ircII <command>
++
++        _E_X_E_C _[_<_o_p_t_i_o_n_s_> _[_<_c_o_m_m_a_n_d_>_]_]
++              Executes unix <command>
++
++        _F_E_, _F_O_R_, _F_O_R_E_A_C_H _<_e_x_p_r_e_s_s_i_o_n_> _<_c_o_m_m_a_n_d_(_s_)_>
++              For each ircII script command.
++
++        _F_E_C _<_u_n_k_n_o_w_n_>
++              <unknown>
++
++        _F_L_U_S_H
++              Flushes server and client output.
++
++        _G_R_E_P _[_<_c_h_a_n_n_e_l_>_] _-_<_m_a_s_k_1_> _._._. _-_<_m_a_s_k_n_>
++              Greps <channel> or the current channel for
++              text matching any of the specified masks.
++
++        _H_A_S_H
++              OPER command for loading the server config
++              file.
++
++        _H_E_L_P _[_<_c_o_m_m_a_n_d_> _[_<_s_u_b_c_o_m_m_a_n_d_>_]_]
++              Lists help topics, shows help for <command>
++              or shows help for <command>'s <subcommand>.
++
++        _H_I_S_T_O_R_Y _[_<_n_u_m_b_e_r_>_]
++              Shows the input history or the <number> most
++              recent.
++
++        _H_O_O_K _<_h_a_n_d_l_e_>
++              See /help hook
++
++        _H_O_S_T_, _U_S_E_R_H_O_S_T _[_<_n_i_c_k_>_]
++              Shows your user@host.
++
++        _I_, _I_N_V_I_T_E _<_n_i_c_k_> _[_<_c_h_a_n_n_e_l_>_]
++              Invites <nick> to the current channel or
++              <channel>.
++
++        _I_F _<_e_x_p_r_> _{ _<_t_h_e_n_> _} _{ _<_e_l_s_e_> _}
++               See /help if, used in ircII scripting.
++
++        _I_G_N_O_R_E _[_-_]_<_n_i_c_k_/_u_s_e_r_h_o_s_t _m_a_s_k_> _[_<_l_e_v_e_l_>_]
++               Adds or removes <nick/userhost mask> from
++               the ignore list. See /help ignore.
++
++        _I_N_F_O
++               Shows information about ircII.
++
++        _I_N_P_U_T _<_u_n_k_n_o_w_n_>
++               See /help input
++
++        _I_S_O_N _<_n_i_c_k_(_s_)_>
++               Shows you the online status of <nick(s)>.
++
++        _K_, _K_I_C_K_, _N_K     _[_<_c_h_a_n_n_e_l_>_] _<_n_i_c_k_> _[_<_r_e_a_s_o_n_>_]
++               Kicks <nick> off of the current channel or
++               <channel>.  If <reason> is specified, it is
++               shown to the <nick>.
++
++        _K_I_L_L _<_n_i_c_k_> _[_<_r_e_a_s_o_n_>_]
++               OPER command to kill users off of irc.
++
++        _L_, _L_E_A_V_E_, _P_A_R_T _[_<_c_h_a_n_n_e_l_>_]
++               Leaves the current channel or <channel>.
++
++        _L_A_S_T_L_O_G         _<_n_u_m_b_e_r_>
++               See /help lastlog
++
++        _L_I_M_I_T _<_l_i_m_i_t_/_-_> _[_<_c_h_a_n_n_e_l_>_]
++               Changes or removes the current channel or
++               <channel>'s limit.
++
++        _L_I_N_K_S _[_<_s_e_r_v_e_r _m_a_s_k_>_]
++               Shows the server link list. If <server mask>
++               is specified, only servers matching it will
++               be shown.
++
++        _L_I_S_T            _[_<_c_h_a_n_n_e_l _m_a_s_k_>_]
++               Lists all channels or channels matching
++               <channel mask>.
++
++        _L_I_S_T_F
++               Shows the friends list.
++
++        _L_I_S_T_S
++               Shows the shit list. (A list of people you
++               don't like.)
++
++        _L_O_A_D _<_f_i_l_e_>
++               Loads an ircII script.
++
++        _L_U_S_E_R_S _[_<_s_e_r_v_e_r_>_]
++               Shows the current server or <servers>
++               current user statistics.
++
++        _M_, _M_S_G_, _X_T_R_A _<_n_i_c_k_(_s_)_> _<_m_e_s_s_a_g_e_>
++               Sends <message> to <nick(s)> privately.
++
++        _M_E _<_a_c_t_i_o_n_>
++               Shows the current channel that you're
++               doing <action>.
++
++        _M_L_I_S_T
++               Lists a menu.
++
++        _M_L_O_A_D
++               Loads a menu.
++
++        _M_O_D_E _<_*_/_c_h_a_n_n_e_l_> _<_+_/_-_m_o_d_e_s_> _<_a_r_g_u_m_e_n_t_(_s_)_>
++               Changes channel modes on <channel>.
++
++        _M_O_T_D
++               Shows the current server's message of the
++               day.
++
++        _N_, _N_O_T_I_C_E _<_n_i_c_k_> _<_n_o_t_i_c_e_>
++               Sends <nick> <notice> privately.
++
++        _N_A_M_E_S _[_<_c_h_a_n_n_e_l_>_]
++               Shows current channel or <channel>'s users'
++               names.
++
++        _N_D_C_C _<_o_f_f_e_r_/_p_l_i_s_t_/_l_i_s_t_/_r_e_m_o_v_e_>
++               Ninja automatic dcc (see ninja-dcc manual page.)
++
++        _N_I_C_K _[_<_n_e_w _n_i_c_k_>_]
++               Shows your current nick or changes it.
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
+diff -Nur ninja-1.5.8.1.old/doc/ninja.help ninja-1.5.8.1/doc/ninja.help
+--- ninja-1.5.8.1.old/doc/ninja.help	1969-12-31 21:00:00.000000000 -0300
++++ ninja-1.5.8.1/doc/ninja.help	1997-02-03 05:35:10.000000000 -0200
+@@ -0,0 +1,459 @@
++:INDEX
++ !            ABORT        ABOUT        ADDC
++ ADDF         ADDH
++ ADDS         ADDSHIT      ADDSHITCHAN  ADMIN        ALIAS        ASSIGN
++ AWAY         BACK
++ BAN          BEEP         BIND         BK           BYE          CHANNEL 
++ CHATTR       CHFLAG       CHHOST       CHKEY        CHNAME       CHPASS
++ CKEY         CLEAR        COMMENT      CONNECT      CTCP
++ CYCLE        DATE         DCC          DEOP         DESCRIBE     DIE
++ DIGRAPH      DISCONNECT   DOP          DVOICE       ECHO         ENCRYPT 
++ EXEC         EXIT         FBK          FK           FLUSH        GREP
++ HISTORY      HOST         I            IGNORE       INVITE       JOIN  
++ K            KB           KICK         L            LASTLOG      LEAVE
++ LIMIT        LINKS        LIST         LISTF        LISTS        LK
++ LOAD         LUSERS       M            MASS         MDOP         MDVOICE
++ ME           MODE         MOTD         MOP          MVOICE       N
++ NAMES        NDCC         NICK         NK           NOTICE       NOTIFY
++ OJ           OP           ORIGNICK     PARSEKEY     PART         PING
++ QUERY
++ QUEUE        QUIT         QUOTE        REDIRECT     RELM         RELSM
++ REMC         REMF         REMH         REMS         REMSHIT      REMSHITCHAN 
++ REQUEST      SAVE         SAY          SCAN         SEND         SENDLINE
++ SERVER       SET          SLEEP        STATS        T            TIME
++ TOPIC        TRACE        TYPE         UNBAN        UPTIME       USER
++ USERHOST     USERS        VERSION      VOICE        W            WHICH
++ WHO 
++ WHOIS        WHOISF       WHOWAS       WI           WIF          WII
++ WINDOW       WW           XTRA
++:![<history number>/<history match>]
++  The ! command is used to recall previous commands in your command
++  history for re-execution.  The ! command is unique in that when it
++  is used, it leaves the matching history entry in the input line for
++  re-editing.  You can specify a history entry either by its number
++  in the history list, or by a match with a given wildcard expression.
++  For example:
++    /!10
++  will put entry 10 in the history list into the input line.  
++  The following:
++    /!/MSG 
++  will search the history list for a line beginning with /MSG and
++  put it in the input line (an * is implied at the end of /MSG).  When
++  using ! with a wildcard expression, subsequent uses of
++  the ! command continue their search in the history list from where 
++  they left off.  This is reset to the end of the list when a command
++  is executed that adds an entry to the history list. Also, if a
++  wildcard expression is used once, subseqent uses of ! with no
++  expression will use the previous wild card expression.  For example,
++  the following:
++    /!/MSG
++    /!
++  The first call returns the first match of /MSG in the history list, 
++  and the second returns the next match, and so on.  This is useful 
++  in the following key binding:
++    /BIND ^R PARSE_COMMAND /!$"Search: "
++  With this, you can hit ^R and you will be prompted for a search
++  string in the history list.  If you want to then repeat the search
++  you simply have to hit ^R and hit return, since it will use
++  the previous search by default.
++  
++  Lastly, ! may be used in command aliases as well.  When it is
++  embedded in an alias it simply executes the matching history entry
++  without first putting it in the input line for re-editing.
++
++see also help on:
++    history
++:ABORT
++  This command causes ircII to dump core.
++:ABOUT
++   Shows you Ninja IRC's author and compilation information.
++:ADDC <friend> <channel> [<flags>]
++  This command adds access to channel |08<|07channel|08>|07 to the registered user
++  |08<|friend|08>|07, optionally sets flags and/or password.
++  Note: Special channel '|0F*|07' can be used to specify all channels client is
++  connected to.
++
++  Valid flags are|08:
++    +|0Fa |08- |07User will be AutoOp'd on |08<|07channel|08>|07.
++    +|0Fc |08- |07CTCP CHOPS access, returns channel operators and channel
++               key if set.
++    +|0Fi |08- |07CTCP INVITE access, allows user to request invites to channel
++               via CTCP.
++    +|0Fj |08- |07AutoJoin on invitation.
++    +|0Fn |08- |07Notify invite, user will be invited to channel upon notify
++               of signon, requires user be in your notify list.
++    +|0Fo |08- |07CTCP OP access, user will be allowed to receive channel
++               operator status via CTCP from you.
++    +|0Fp |08- |07User will be protected from Bans/Kicks/Deops on channel.
++    +|0Fu |08- |07CTCP UNBAN access, user is allowed to request removal of
++               bans matching his hostmask via CTCP.
++    +|0Fv |08- |07User will be AutoVoice'd upon joining channel.
++    +|0Fk |08- |07User will be allowed CTCP KEY access on |08<|07channel|08>|07.
++               This allows the user to see the channels current key.
++
++see also help on:
++   chflag
++   wif
++:ADDF <nick> [<flags>] [<password>]
++  This command registers |08<|07nick|08>|07 on the userlist, optionally sets
++  flags and/or password.
++
++  Valid flags are|08:
++    +|0Fd |08- |07AutoGet DCC file sends from the user.
++    +|0Ff |08- |07Flood protection exemption for the user.
++    +|0Fn |08- |07Access to secure NDCC file offerings.
++
++see also help on:
++   chattr
++   addc
++   wif
++   listf
++:ADDH <friend> <hostmask/nick>
++   This command adds specified hostmask to registered user |08<|07friend|08>|07,
++   or if not in *!*@* format, retrieves the nickname's hostname information
++   from the irc server.
++
++see also help on:
++   addf
++   wif
++   addc
++:ADDS <server>[:<port>:<password>:<nick>]
++   Adds a server to the server list.  If not specified, <port> defaults to
++   6667. 
++
++see also help on:
++    rems
++    server
++:ADDSHIT <hostmask> <channel> <level> [<reason>]
++   Adds <hostmask> to the shit list on <channel>.
++   levels are as follows:
++     1)   Kicks any user matching the hostmask off of the channel as
++             soon as they join.
++     2)   Bans the user and does the same as level 1.
++     3)   Adds hostmask to the permanent ban list.
++
++see also help on:
++   lists
++   remshit
++   addshitchan
++:ADDSHITCHAN <hostmask> <channel> <level> [<reason>]
++   This command appends a <channel> with <level> and an optional <reason> to
++   anyone matching <hostmask>'s shit list entry.
++
++see also help on:
++   addshit
++   remshit
++:ADMIN [<server>|<nickname>]
++  Displays the administrative details about the given server. If
++  no server is specified, the server you are connected to is
++  used. If a nickname is supplied then it gives the administrative 
++  information for that person's current server.
++:ALIAS [[-]<alias> [<commands>]]
++ (snatched from ircII-2.8.2 help)
++  Creates a command alias for <commands>. Commands do not need to be
++  prefixed with a command character, in fact they shouldn't!
++  If you want an alias to type something to the channel or query
++  use SEND or SAY. You can use ';' to put multiple commands in a row.
++
++  Special character sequences, usually ircII variables, are prefixed
++  with '$'.  There are certain $ sequences built in to IRCII for getting
++  such information as your nickname and current channel, plus you can
++  expand your own variables and system variables using the $ format.
++  You can also expand functions, substituting their return values.
++  See ASSIGN for more on this.
++
++  Here are some simple alias examples:
++    ALIAS HELLO MSG $0 Hello, $0! $1-
++  This alias can be used by typing:
++    HELLO BigCheese How are you?
++  This would act as though you had typed:
++    MSG BigCheese Hello, BigCheese! How are you?
++  ALIAS with just the <alias> argument shows the current alias
++  for that word.  ALIAS with no argument shows all current
++  for that word.  ALIAS with no argument shows all current
++  aliases. To remove an alias, use ALIAS -<alias>.
++
++  To use more than one command in an alias, separate them by ';'.
++
++  When using ALIAS in a script it is frequently useful to surround
++  the contents of your alias with { }s when you want to put more than
++  one commands in an alias. E.g:
++    ALIAS loadcommon {
++      LOAD netsplit
++      LOAD troy
++    }
++  is the same as
++    ALIAS loadcommon LOAD netsplit;LOAD troy
++  but lacks the ; and it much easier to read in a script or the .ircrc file.
++
++  For more specific information about the $ uses and more examples,
++  see the specific help files listed below.
++
++see also help on:
++  ircII_scripting
++  assign
++:ASSIGN [[-]<user-variable> [<whatever>]]
++ (snatched from ircII-2.8.2 help)
++  Assign lets you create user variables which are automatically
++  expanded by ircII in aliases using the $variable-name format.
++  For example, if you had defined:
++    /assign me The Big Cheese
++  Then, in an alias, $me would expand to "The Big Cheese".  These
++  are straight textual substitutions.  You can use these kind
++  of variables as counters and indexes into lists as well.  For
++  example:
++    /assign index 0
++    /assign index ${index+1}
++  The first line sets "index" to 0, the seconds increments index by 1.
++  Note that the second will always be expanded if used in another
++  alias (where $ are normally expanded).  If you want it to be
++  expanded if typed at the input line, you must first set
++  INPUT_ALIASES to ON.
++
++  Note: In the above example, the mathematical expression must be
++  enclosed by {}'s  otherwise the + would be treated as an alias
++  delimiter and the addition not performed. (See @ as well)
++
++  Suppose now you wanted to use index to get a single word in a list, 
++  you could do:
++    /ALIAS WORD echo $($index)
++  Then doing:
++    /WORD This is a test
++  would display the index'th word in the list.  
++  The $($index) format does the following: it parses the text
++  between the () as a sub-alias.  The "$index" is thus evaluated
++  and returns it's value.  This value is then replaced for the () 
++  expression and evaluated.  So, if you had:
++    /assign index 1
++  Then, the following would be evaluated:
++    $index becomes 1 which given
++    $(1) which becomes simply $1
++  Thus the $1 argument is used.  
++  This functionality can be nested. This the following:
++    /assign A Hey You!
++    /assign B A
++    /assign C B
++    /ALIAS NESTING echo $($($C))
++  will cause NESTING to display "Hey You!"
++
++  The following format are also legal:
++    $#name	evaluates to the number of words in name
++    $@name	evaluates to the number of characters in name
++  You can use these with the mathematical expressions as well, 
++  for example:
++    /assign foo Testing One Two
++    /echo $#foo $@foo
++    /assign junk ${#foo + @foo}
++  The echo line will display 3 15 and the variable junk have the 
++  value 18.
++
++  Additionally, values assigned to FUNCTION_RETURN are taken to be
++  the return value of a function.
++
++IMPORTANT NOTE:
++  There is a special version of this command called @
++  for use in aliases and scripts.  It is well suited to mathematical
++  operations.  Its use over assign is highly recommended.
++
++see also help on:
++    @
++    alias
++    if
++    set INPUT_ALIASES
++    alias functions
++:AWAY [<flags>] [<away message>]
++  Marks you as "away".  Whenever someone sends you a msg or a
++  does a whois on you, they automatically see whatever message
++  you set.  While you are away, all messages you receive will be
++  timestamped and you will optionally get beeped (see help on
++  set BEEP_WHEN_AWAY) for each message.
++
++flags:
++  -one  Send away message to only the server in the current window.
++  -all  (default) send away message to all servers you may be on.
++
++see also help on:
++   back
++   set BEEP_WHEN_AWAY
++   set SHOW_AWAY_ONCE
++:BACK [<reason>]
++  The back command Marks you as being here. Some IRC activity is logged
++  while your are away.  You will be asked if you want to read and or delete
++  the saved messages when you unmark yourself away.
++
++see also help on:
++   away
++:BAN <nick>/<mask> [<channel>]
++   Bans the specified nick!user@host mask if a mask is specified.
++   For example,
++      /ban *!*agle_1@*.wood.com
++   would ban *!*eagle_1@*.wood.com.
++     -or-
++   Bans <nick>'s nick!user@host mask.
++   For example,
++      /ban Bob
++   where Bob is Bob!robertl@af.mil, would ban *!*robertl@*f.mil.
++
++   The channel where the ban takes place defaults to the current channel.
++
++see also help on:
++    unban
++:BEEP
++  This command makes the terminal beep.
++:BIND <key> <function> [<string>]
++  Binds a keystroke sequence to an IRC function.  The QUOTE_CHARACTER
++  key (by default ^Q) may be used to override any key binding and
++  have IRC insert the actual value of the key in the input line.
++
++Example:
++     /bind ^I transpose_characters
++see also help on:
++   parsekey   
++:BK [<channel>] <nick> [<reason>]
++   Bans and kicks <nick> from the current channel, or <channel>.
++   If <reason> is specified, it will be the last thing that the person getting
++   kicked will see.
++   You can also call this command by using /kb
++
++see also help on:
++    kick
++    ban
++:BYE [<reason>]
++   This command is exactly the same as the QUIT command.
++
++see also help on:
++   quit
++:CD [<path>]
++  If a <path> is specified, this changes ircIIs working directory. 
++  This is the default directory for EXEC's and other things
++  (such as logs) that don't have absolute paths specified.
++  /cd with no arguments shows you the current directory.
++
++see also help on:
++    which
++:channel [-INVITE|<channel_list> [<key>]]
++   This command is identical to the /join command.
++:chattr <friend> +/-<flags>
++   This is used to change the specified <friend>'s user flags.
++
++see also help on:
++   addf
++:chflag <friend> <channel> +/-<flags>
++   This command is used to change <friend>'s friends list flags on <channel>
++
++see also help on:
++   addc
++:chhost <host>
++   /chhost changes your source address via virtual hosting.
++
++see also help on:
++   chname
++:chkey [<channel>] -|<new key>
++   /chkey changes the <channel> or current channel key to <new key> if it
++   is specified.  If - is specified, the key is removed.
++   examples:
++     /chkey boobs
++   changes the current channel's key to "boobs"
++     /chkey -
++   clears the current channel's key
++     /chkey #ninja w3rd
++   changes the "#ninja" key to "w3rd"
++
++see also help on:
++   limit
++   mode
++:chname <user>[@<host>] [<real name>]
++   /chname changes your irc username to <user>.  It supports the hacked
++   ident daemon as well.  If <host> is specified, your source host is
++   changed to that via virtual hosting.  If <real name> is specified,
++   that is changed to what is there as well.
++
++see also help on:
++   chhost
++   set REALNAME
++   set HACKED_IDENTD
++:chpass <[-]<friend> [<password>]
++   If the '-' is prepended to the friend's nick, their password is cleared.
++   Otherwise, you must specify the friend's new password.
++
++see also help on:
++   addf
++:ckey [<channel> <key>]
++   If no arguments are specified, then CKEY lists the current ckeys.
++   Otherwise, you must specify a corresponding channel and key pair to add to
++   the list.  You must save your configuration if you want this to remain the
++   same next session.
++:CLEAR [-all] [-unhold]
++   Clears the current window.
++   If the -all flag is used, clears all visible windows.
++   If the -unhold flag is used, unholds a window.
++:COMMENT [<anything>]
++   This is a comment, it does nothing.
++   Useful in .ircrc files.
++
++   COMMENT, :, and # are identical in operation.
++:CONNECT <serverX> [[<port>] <serverY>]
++   Tells <serverY> to attempt to connect to <serverX> on port <port>
++   with <port> defaulting to the default port for that server
++   (probably 6667) and <serverY> defaulting to the local server
++
++   /connect is a server operator command.
++
++see also help on:
++   squit
++   trace
++:CTCP <nick> [<type>] [<arguments>]
++   Using this command allows for client to client protocol level communication.
++   Try using "clientinfo" as the type with no arguments to see a list of valid
++   types.  Type arguments are mostly optional.  If only <nick> is specified,
++   a VERSION query is sent to that nickname.
++:CYCLE [<channel>]
++   Leaves and then re-joins <channel>, or if unspecified, the current channel.
++
++see also help on:
++   join
++   leave
++:DATE [<server>|<nick>]
++   Shows the current time of day and date.  If a server is specified,
++   the time of day and date are reported from that server.
++   If a nickname is specified it shows you the above information
++   for that person's current server.
++
++   /date and /time are identical.
++:DCC [<command> <arguments>]
++   The following are valid the commands and argument usage with brief
++   descriptions.
++
++      chat <nickname>
++         Used to either request or accept a dcc chat.
++      close <#> or <type> <nick> [<filename>]
++         Used to close a dcc by number or nickname.
++      get <#> or <nick> [<filename1 .. filenameN>]
++      list
++         Used to list the current dcc connections and stats.
++      raw
++      rename <nick> <filename>
++      resume <nick> <filename>
++      send <nick1,nick2,nick3,..> <filemask> .. <filemask>
++      summon <user>[@<host>]
++      talk <user>[@<host>]
++      tmsg
++:DEOP
++  Removes your IRC operator status.
++see also help on:
++    oper
++    mode
++:NOTIFY [-]<nick>[!user@host] .. [-]<nick>[!user@host]
++  The notify command will allow you to add nicks to your notify list,
++  by specifying a user@host mask, you can save yourself from signon messages
++  for people that are not your friends. A - will remove the nick from your
++  notify list.:REMC <nick> <channel>
++  This command removes access to channel |08<|07channel|08>|07 from the
++  registered user |08<|07nick|08>|07.
++:REMF <nick>
++  This command removes a registered users |08<|07nick|08>|07 access to your
++  userlist.
++:REMH <nick> <hostmask>
++  This command removes |08<|07hostmask|08>|07 from the registered user
++  |08<|07nick|08>|07.
++

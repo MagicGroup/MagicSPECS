@@ -1,0 +1,47 @@
+diff -ur live.orig/config.linux live/config.linux
+--- live.orig/config.linux	2013-01-07 04:20:40.000000000 +0000
++++ live/config.linux	2013-01-07 04:20:49.000000000 +0000
+@@ -1,4 +1,4 @@
+-COMPILE_OPTS =		$(INCLUDES) -I. -O2 -DSOCKLEN_T=socklen_t -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
++COMPILE_OPTS =		$(INCLUDES) -I. $(CFLAGS) -DBSD=1 -DSOCKLEN_T=socklen_t -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
+ C =			c
+ C_COMPILER =		cc
+ C_FLAGS =		$(COMPILE_OPTS) $(CPPFLAGS) $(CFLAGS)
+@@ -9,9 +9,9 @@
+ LINK =			c++ -o
+ LINK_OPTS =		-L. $(LDFLAGS)
+ CONSOLE_LINK_OPTS =	$(LINK_OPTS)
+-LIBRARY_LINK =		ar cr 
+-LIBRARY_LINK_OPTS =	
+-LIB_SUFFIX =			a
++LIBRARY_LINK =		$(CC) -o
++LIBRARY_LINK_OPTS =	$(LINK_OPTS) -shared -Wl,-soname,$@.$(SO_VERSION) $(LIBADDS)
++LIB_SUFFIX =		so
+ LIBS_FOR_CONSOLE_APPLICATION =
+ LIBS_FOR_GUI_APPLICATION =
+ EXE =
+只在 live 存在：config.linux.static
+diff -ur live.orig/Makefile.tail live/Makefile.tail
+--- live.orig/Makefile.tail	2013-01-07 04:20:40.000000000 +0000
++++ live/Makefile.tail	2013-01-07 04:22:07.000000000 +0000
+@@ -12,13 +12,13 @@
+ PROXY_SERVER_DIR = proxyServer
+ 
+ all:
+-	cd $(LIVEMEDIA_DIR) ; $(MAKE)
+-	cd $(GROUPSOCK_DIR) ; $(MAKE)
+-	cd $(USAGE_ENVIRONMENT_DIR) ; $(MAKE)
+-	cd $(BASIC_USAGE_ENVIRONMENT_DIR) ; $(MAKE)
+-	cd $(TESTPROGS_DIR) ; $(MAKE)
+-	cd $(MEDIA_SERVER_DIR) ; $(MAKE)
+-	cd $(PROXY_SERVER_DIR) ; $(MAKE)
++	cd $(LIVEMEDIA_DIR) ; CFLAGS="$(CFLAGS)" $(MAKE)
++	cd $(GROUPSOCK_DIR) ; CFLAGS="$(CFLAGS)" $(MAKE)
++	cd $(USAGE_ENVIRONMENT_DIR) ; CFLAGS="$(CFLAGS)" $(MAKE)
++	cd $(BASIC_USAGE_ENVIRONMENT_DIR) ; CFLAGS="$(CFLAGS)" $(MAKE)
++	cd $(TESTPROGS_DIR) ; CFLAGS="$(CFLAGS)" $(MAKE)
++	cd $(MEDIA_SERVER_DIR) ; CFLAGS="$(CFLAGS)" $(MAKE)
++	cd $(PROXY_SERVER_DIR) ; CFLAGS="$(CFLAGS)" $(MAKE)
+ 
+ install:
+ 	cd $(LIVEMEDIA_DIR) ; $(MAKE) install

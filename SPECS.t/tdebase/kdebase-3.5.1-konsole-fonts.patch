@@ -1,0 +1,8 @@
+--- kdebase-3.5.1/konsole/Makefile.am.orig	2006-02-21 19:52:27.000000000 +0100
++++ kdebase-3.5.1/konsole/Makefile.am	2006-02-21 19:52:32.000000000 +0100
+@@ -1,4 +1,4 @@
+-SUBDIRS = konsole other doc fonts
++SUBDIRS = konsole other doc
+ 
+ xdg_apps_DATA = konsole.desktop konsolesu.desktop
+ 

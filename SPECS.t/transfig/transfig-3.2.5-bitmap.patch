@@ -1,0 +1,13 @@
+diff --git a/fig2dev/Imakefile b/fig2dev/Imakefile
+index 2f76e0b..7e07c39 100755
+--- a/fig2dev/Imakefile
++++ b/fig2dev/Imakefile
+@@ -229,7 +229,7 @@ install::
+ 	else (set -x; $(MKDIRHIER) $(DESTDIR)$(XFIGLIBDIR)/bitmaps ); fi ; \
+ 	echo Copying bitmap files for tk to $(DESTDIR)$(XFIGLIBDIR)/bitmaps ; \
+ 	for f in * ; do \
+-	      $(INSTALL) -c $$f $(DESTDIR)$(XFIGLIBDIR)/bitmaps ; \
++	      $(INSTALL) -c $(INSTDATFLAGS) $$f $(DESTDIR)$(XFIGLIBDIR)/bitmaps ; \
+ 	done) ; 
+ 
+ install.all::

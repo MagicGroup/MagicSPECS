@@ -1,0 +1,280 @@
+From 792b189317068202aba16d1fc2371d605a6c715c Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 9 Jul 2012 20:46:20 +0200
+Subject: [PATCH] systemd service cleanup
+
+---
+ modules.d/95rootfs-block/block-genrules.sh     |   28 ++++++++++++------------
+ modules.d/98systemd/dracut-cmdline.service     |    4 +---
+ modules.d/98systemd/dracut-initqueue.service   |    4 +---
+ modules.d/98systemd/dracut-initqueue.sh        |    1 -
+ modules.d/98systemd/dracut-pre-pivot.service   |    7 +++---
+ modules.d/98systemd/dracut-pre-pivot.sh        |   11 ----------
+ modules.d/98systemd/dracut-pre-trigger.service |    4 +---
+ modules.d/98systemd/dracut-pre-udev.service    |    4 +---
+ modules.d/98systemd/initrd-switch-root.service |    6 ++++-
+ modules.d/98systemd/initrd-switch-root.target  |    2 +-
+ modules.d/98systemd/module-setup.sh            |   10 ++++++---
+ modules.d/98systemd/service-to-run.sh          |    6 +++++
+ modules.d/98systemd/udevadm-cleanup-db.service |   20 +++++++++++++++++
+ 13 files changed, 60 insertions(+), 47 deletions(-)
+ create mode 100755 modules.d/98systemd/service-to-run.sh
+ create mode 100644 modules.d/98systemd/udevadm-cleanup-db.service
+
+diff --git a/modules.d/95rootfs-block/block-genrules.sh b/modules.d/95rootfs-block/block-genrules.sh
+index fe6e331..7f894ee 100755
+--- a/modules.d/95rootfs-block/block-genrules.sh
++++ b/modules.d/95rootfs-block/block-genrules.sh
+@@ -13,22 +13,22 @@ if [ "${root%%:*}" = "block" ]; then
+     printf '[ -e "%s" ] && { ln -s "%s" /dev/root 2>/dev/null; rm "$job"; }\n' \
+         "${root#block:}" "${root#block:}" > $hookdir/initqueue/settled/blocksymlink.sh
+ 
+-    if [ -d /lib/systemd/system/ ]; then
+-        echo "${root#block:} $NEWROOT ${fstype:-auto} ${rflags:-defaults} 1 1" >> /etc/fstab
+-        {
+-           echo '[Unit]'
+-           echo 'Description=New Root File System'
+-           echo 'DefaultDependencies=no'
+-           echo 'Before=switch-root.service'
+-           echo '[Mount]'
+-           echo "What=${root#block:}"
+-           echo "Where=$NEWROOT"
++    # if [ -d /lib/systemd/system/ ]; then
++    #     echo "${root#block:} $NEWROOT ${fstype:-auto} ${rflags:-defaults} 1 1" >> /etc/fstab
++    #     {
++    #        echo '[Unit]'
++    #        echo 'Description=New Root File System'
++    #        echo 'DefaultDependencies=no'
++    #        echo 'Before=initrd-switch-root.service'
++    #        echo '[Mount]'
++    #        echo "What=${root#block:}"
++    #        echo "Where=$NEWROOT"
+ 
+-       } >/lib/systemd/system/${NEWROOT#/}.mount
++    #    } >/lib/systemd/system/${NEWROOT#/}.mount
+ 
+-       mkdir -p /lib/systemd/system/switch-root.target.wants
+-       ln -s ../${NEWROOT#/}.mount /lib/systemd/system/switch-root.target.wants/${NEWROOT#/}.mount
+-    fi
++    #    mkdir -p /lib/systemd/system/initrd-switch-root.target.requires
++    #    ln -s ../${NEWROOT#/}.mount /lib/systemd/system/initrd-switch-root.target.requires/${NEWROOT#/}.mount
++    # fi
+ 
+     wait_for_dev "${root#block:}"
+ fi
+diff --git a/modules.d/98systemd/dracut-cmdline.service b/modules.d/98systemd/dracut-cmdline.service
+index 13671e4..1ed50a9 100644
+--- a/modules.d/98systemd/dracut-cmdline.service
++++ b/modules.d/98systemd/dracut-cmdline.service
+@@ -16,10 +16,8 @@ Wants=systemd-journald.socket
+ ConditionPathExists=/etc/initrd-release
+ 
+ [Service]
+-Environment=HOME=/
+-WorkingDirectory=/
+-ExecStart=-/bin/dracut-cmdline
+ Type=oneshot
++ExecStart=-/bin/dracut-cmdline
+ StandardInput=null
+ StandardOutput=syslog
+ StandardError=syslog+console
+diff --git a/modules.d/98systemd/dracut-initqueue.service b/modules.d/98systemd/dracut-initqueue.service
+index 5168677..e611e93 100644
+--- a/modules.d/98systemd/dracut-initqueue.service
++++ b/modules.d/98systemd/dracut-initqueue.service
+@@ -15,10 +15,8 @@ Wants=systemd-udev-trigger.service
+ ConditionPathExists=/etc/initrd-release
+ 
+ [Service]
+-Environment=HOME=/
+-WorkingDirectory=/
++Type=oneshot
+ ExecStart=-/bin/dracut-initqueue
+-Type=simple
+ StandardInput=null
+ StandardOutput=syslog
+ StandardError=syslog+console
+diff --git a/modules.d/98systemd/dracut-initqueue.sh b/modules.d/98systemd/dracut-initqueue.sh
+index bc63582..cfdb12d 100755
+--- a/modules.d/98systemd/dracut-initqueue.sh
++++ b/modules.d/98systemd/dracut-initqueue.sh
+@@ -106,5 +106,4 @@ done
+ 
+ export -p > /dracut-state.sh
+ 
+-systemctl isolate initrd-switch-root.target
+ exit 0
+diff --git a/modules.d/98systemd/dracut-pre-pivot.service b/modules.d/98systemd/dracut-pre-pivot.service
+index 27cb7de..61257cf 100644
+--- a/modules.d/98systemd/dracut-pre-pivot.service
++++ b/modules.d/98systemd/dracut-pre-pivot.service
+@@ -10,14 +10,13 @@
+ [Unit]
+ Description=Dracut pre-pivot and cleanup hook
+ DefaultDependencies=no
+-Before=initrd-switch-root.service
++After=dracut-initqueue.service
+ ConditionPathExists=/etc/initrd-release
+ 
+ [Service]
+-Environment=HOME=/
+-WorkingDirectory=/
+-ExecStart=-/bin/dracut-pre-pivot
+ Type=oneshot
++ExecStart=-/bin/dracut-pre-pivot
++ExecStopPost=-/usr/bin/systemctl isolate initrd-switch-root.target
+ StandardInput=null
+ StandardOutput=syslog
+ StandardError=syslog+console
+diff --git a/modules.d/98systemd/dracut-pre-pivot.sh b/modules.d/98systemd/dracut-pre-pivot.sh
+index 06642d0..31dded5 100755
+--- a/modules.d/98systemd/dracut-pre-pivot.sh
++++ b/modules.d/98systemd/dracut-pre-pivot.sh
+@@ -34,20 +34,9 @@ done
+ 
+ echo "NEWROOT=\"$NEWROOT\"" >> /run/initramfs/switch-root.conf
+ 
+-udevadm control --stop-exec-queue
+-
+-for i in systemd-udevd.service; do
+-    systemctl is-active $i >/dev/null 2>&1 && systemctl stop $i
+-done
+-
+-udevadm info --cleanup-db
+-
+ # remove helper symlink
+ [ -h /dev/root ] && rm -f /dev/root
+ 
+ getarg rd.break rdbreak && emergency_shell -n switch_root "Break before switch_root"
+ 
+-cp -avr /lib/systemd/system/dracut*.service /run/systemd/system/
+-
+-export -p > /dracut-state.sh
+ exit 0
+diff --git a/modules.d/98systemd/dracut-pre-trigger.service b/modules.d/98systemd/dracut-pre-trigger.service
+index 86c7c5e..b2dcf68 100644
+--- a/modules.d/98systemd/dracut-pre-trigger.service
++++ b/modules.d/98systemd/dracut-pre-trigger.service
+@@ -16,10 +16,8 @@ Wants=dracut-pre-udev.service systemd-udevd.service
+ ConditionPathExists=/etc/initrd-release
+ 
+ [Service]
+-Environment=HOME=/
+-WorkingDirectory=/
+-ExecStart=-/bin/dracut-pre-trigger
+ Type=oneshot
++ExecStart=-/bin/dracut-pre-trigger
+ StandardInput=null
+ StandardOutput=syslog
+ StandardError=syslog+console
+diff --git a/modules.d/98systemd/dracut-pre-udev.service b/modules.d/98systemd/dracut-pre-udev.service
+index a320498..cc14f88 100644
+--- a/modules.d/98systemd/dracut-pre-udev.service
++++ b/modules.d/98systemd/dracut-pre-udev.service
+@@ -16,10 +16,8 @@ Wants=dracut-cmdline.service
+ ConditionPathExists=/etc/initrd-release
+ 
+ [Service]
+-Environment=HOME=/
+-WorkingDirectory=/
+-ExecStart=-/bin/dracut-pre-udev
+ Type=oneshot
++ExecStart=-/bin/dracut-pre-udev
+ StandardInput=null
+ StandardOutput=syslog
+ StandardError=syslog+console
+diff --git a/modules.d/98systemd/initrd-switch-root.service b/modules.d/98systemd/initrd-switch-root.service
+index b00292f..84fc11e 100644
+--- a/modules.d/98systemd/initrd-switch-root.service
++++ b/modules.d/98systemd/initrd-switch-root.service
+@@ -9,9 +9,13 @@
+ Description=Switch Root
+ DefaultDependencies=no
+ ConditionPathExists=/etc/initrd-release
++OnFailure=emergency.service
+ 
+ [Service]
+ Type=oneshot
+ EnvironmentFile=/run/initramfs/switch-root.conf
+ ExecStart=/usr/bin/systemctl --force switch-root ${NEWROOT} ${NEWINIT}
+-ExecStopPost=-/usr/bin/systemctl isolate default.target
++ExecStopPost=-/usr/bin/systemctl restart systemd-journald.service
++StandardInput=null
++StandardOutput=null
++StandardError=null
+diff --git a/modules.d/98systemd/initrd-switch-root.target b/modules.d/98systemd/initrd-switch-root.target
+index 5f39711..feb7162 100644
+--- a/modules.d/98systemd/initrd-switch-root.target
++++ b/modules.d/98systemd/initrd-switch-root.target
+@@ -13,4 +13,4 @@ DefaultDependencies=no
+ Requires=initrd-switch-root.service
+ Before=initrd-switch-root.service
+ AllowIsolate=yes
+-
++Wants=systemd-journald.service
+diff --git a/modules.d/98systemd/module-setup.sh b/modules.d/98systemd/module-setup.sh
+index 0387ec4..f9bb799 100755
+--- a/modules.d/98systemd/module-setup.sh
++++ b/modules.d/98systemd/module-setup.sh
+@@ -63,7 +63,7 @@ install() {
+         $systemdsystemunitdir/systemd-ask-password-console.service \
+         $systemdsystemunitdir/halt.service \
+         $systemdsystemunitdir/poweroff.service \
+-        $systemdsystemunitdir/reboot.service \
++        $systemdsystemunitdir/systemd-reboot.service \
+         $systemdsystemunitdir/kexec.service \
+         $systemdsystemunitdir/fsck@.service \
+         $systemdsystemunitdir/systemd-udevd.service \
+@@ -142,8 +142,12 @@ install() {
+ 
+     inst_script "$moddir/dracut-pre-pivot.sh" /bin/dracut-pre-pivot
+     inst_simple "$moddir/dracut-pre-pivot.service" ${systemdsystemunitdir}/dracut-pre-pivot.service
+-    mkdir -p "${initdir}${systemdsystemunitdir}/initrd-switch-root.target.wants"
+-    ln -fs ../dracut-pre-pivot.service "${initdir}${systemdsystemunitdir}/initrd-switch-root.target.wants/dracut-pre-pivot.service"
++    ln -fs ../dracut-pre-pivot.service "${initdir}${systemdsystemunitdir}/basic.target.wants/dracut-pre-pivot.service"
+ 
++    inst_simple "$moddir/udevadm-cleanup-db.service" ${systemdsystemunitdir}/udevadm-cleanup-db.service
++    mkdir -p "${initdir}${systemdsystemunitdir}/initrd-switch-root.target.requires"
++    ln -fs ../udevadm-cleanup-db.service "${initdir}${systemdsystemunitdir}/initrd-switch-root.target.requires/udevadm-cleanup-db.service"
++
++    inst_script "$moddir/service-to-run.sh" $systemdutildir/system-generators/service-to-run
+ }
+ 
+diff --git a/modules.d/98systemd/service-to-run.sh b/modules.d/98systemd/service-to-run.sh
+new file mode 100755
+index 0000000..3e46ba4
+--- /dev/null
++++ b/modules.d/98systemd/service-to-run.sh
+@@ -0,0 +1,6 @@
++#!/bin/sh
++
++cp -a /lib/systemd/system/dracut*.service /run/systemd/system/
++cp -a /lib/systemd/system/initrd-* /run/systemd/system/
++cp -a /lib/systemd/system/udevadm*.service /run/systemd/system/
++
+diff --git a/modules.d/98systemd/udevadm-cleanup-db.service b/modules.d/98systemd/udevadm-cleanup-db.service
+new file mode 100644
+index 0000000..368a0dd
+--- /dev/null
++++ b/modules.d/98systemd/udevadm-cleanup-db.service
+@@ -0,0 +1,20 @@
++#  This file is part of systemd.
++#
++#  systemd is free software; you can redistribute it and/or modify it
++#  under the terms of the GNU Lesser General Public License as published by
++#  the Free Software Foundation; either version 2.1 of the License, or
++#  (at your option) any later version.
++
++[Unit]
++Description=Cleanup udevd DB
++DefaultDependencies=no
++ConditionPathExists=/etc/initrd-release
++Conflicts=systemd-udevd.service systemd-udevd-control.socket systemd-udevd-kernel.socket
++Before=initrd-switch-root.service
++
++[Service]
++Type=oneshot
++ExecStart=-/usr/bin/udevadm info --cleanup-db
++StandardInput=null
++StandardOutput=null
++StandardError=null

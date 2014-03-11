@@ -1,0 +1,96 @@
+--- ptex-src-3.1.10/jbibtex.ch.orig	2006-05-29 11:27:25.000000000 +0900
++++ ptex-src-3.1.10/jbibtex.ch	2007-03-02 19:00:49.000000000 +0900
+@@ -1504,7 +1504,7 @@
+     end; {Else it was a flag; |getopt| has already done the assignment.}
+   until getopt_return_val = -1;
+   if (version_switch) then
+-    print_version_and_exit (banner, 'Oren Patashnik', nil);
++    print_version_and_exit (banner, 'Oren Patashnik', nil, nil);
+ 
+   {Now |optind| is the index of first non-option on the command line.
+    We must have one remaining argument.}
+--- ptex-src-3.1.10/pdvitype.ch.orig	2005-03-07 15:30:44.000000000 +0900
++++ ptex-src-3.1.10/pdvitype.ch	2007-03-02 19:00:11.000000000 +0900
+@@ -1021,7 +1021,7 @@
+       usage_help (PDVITYPE_HELP, nil);
+ 
+     end else if argument_is ('version') then begin
+-      print_version_and_exit (banner, nil, 'D.E. Knuth');
++      print_version_and_exit (banner, nil, 'D.E. Knuth', nil);
+     
+     end else if argument_is ('output-level') then begin
+       out_mode := atou (optarg);
+--- ptex-src-3.1.10/pltotf.ch.orig	2006-07-18 17:03:33.000000000 +0900
++++ ptex-src-3.1.10/pltotf.ch	2007-03-02 18:59:39.000000000 +0900
+@@ -427,7 +427,7 @@
+ @z
+ @x
+     end else if argument_is ('version') then begin
+-      print_version_and_exit (banner, nil, 'D.E. Knuth');
++      print_version_and_exit (banner, nil, 'D.E. Knuth', nil);
+ 
+     end; {Else it was a flag; |getopt| has already done the assignment.}
+   until getopt_return_val = -1;
+@@ -441,7 +441,7 @@
+     end; {Else it was a flag; |getopt| has already done the assignment.}
+   until getopt_return_val = -1;
+   if (version_switch) then
+-    print_version_and_exit (banner, nil, 'D.E. Knuth');
++    print_version_and_exit (banner, nil, 'D.E. Knuth', nil);
+ @z
+ 
+ @x
+--- ptex-src-3.1.10/ptexextra.c.orig	2006-05-29 11:27:25.000000000 +0900
++++ ptex-src-3.1.10/ptexextra.c	2007-03-02 14:48:05.000000000 +0900
+@@ -953,7 +953,7 @@
+     } /* Else it was a flag; getopt has already done the assignment.  */
+   }
+   if (version_switch) {
+-    printversionandexit (BANNER, COPYRIGHT_HOLDER, AUTHOR);
++    printversionandexit (BANNER, COPYRIGHT_HOLDER, AUTHOR, nil);
+   }
+ }
+ 
+@@ -1718,7 +1718,7 @@
+ }
+ 
+ strnumber
+-getjobname()
++getjobname(strnumber curname)
+ {
+     strnumber ret = curname;
+     if (job_name != NULL)
+--- ptex-src-3.1.10/tftopl.ch.orig	2006-07-18 17:03:33.000000000 +0900
++++ ptex-src-3.1.10/tftopl.ch	2007-03-02 18:58:41.000000000 +0900
+@@ -374,7 +374,7 @@
+ @z
+ @x
+     end else if argument_is ('version') then begin
+-      print_version_and_exit (banner, nil, 'D.E. Knuth');
++      print_version_and_exit (banner, nil, 'D.E. Knuth', nil);
+ @y
+     end else if argument_is ('version') then begin
+       version_switch := true;
+@@ -389,7 +389,7 @@
+     end; {Else it was a flag; |getopt| has already done the assignment.}
+   until getopt_return_val = -1;
+   if (version_switch) then
+-    print_version_and_exit (banner, nil, 'D.E. Knuth');
++    print_version_and_exit (banner, nil, 'D.E. Knuth', nil);
+ @z
+ 
+ @x
+--- ptex-src-3.1.10/version.c.orig	2006-05-29 11:27:25.000000000 +0900
++++ ptex-src-3.1.10/version.c	2007-03-02 15:38:03.000000000 +0900
+@@ -3,8 +3,9 @@
+ 
+ /*** lib/printversion.c:  Output for the option --version. ***/
+ void
+-printversionandexit P3C(const_string, banner,
+-                        const_string, copyright_holder,  const_string, author)
++printversionandexit P4C(const_string,  banner,
++                        const_string, copyright_holder,  const_string, author,
++                        char*, extra_info)
+ {
+   extern string versionstring;  /* from web2c/lib/version.c */
+   extern string based_prog_name;

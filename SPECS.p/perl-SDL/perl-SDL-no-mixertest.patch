@@ -1,0 +1,22 @@
+diff -up SDL_Perl-v2.2.6/t/mixerpm.t~ SDL_Perl-v2.2.6/t/mixerpm.t
+--- SDL_Perl-v2.2.6/t/mixerpm.t~	2009-11-07 21:47:35.000000000 +0100
++++ SDL_Perl-v2.2.6/t/mixerpm.t	2011-02-22 09:40:21.988394662 +0100
+@@ -57,7 +57,7 @@ if( check_fail_mixer() )
+ 
+ 
+ if ( SDL::Config->has('SDL_mixer') ) {
+-	plan ( tests => 3 );
++	plan ( tests => 2 );
+ }			
+ else {
+ 	plan ( skip_all => 'SDL_mixer support not compiled' );
+@@ -101,9 +101,3 @@ can_ok ('SDL::Mixer', qw/
+ 	playing
+ 	playing_music
+ 	/);
+-
+-
+-# these are exported by default, so main:: should know them:
+-my $mixer = SDL::Mixer->new();
+-isa_ok($mixer, 'SDL::Mixer', 'Checking if mixer can be build');
+-

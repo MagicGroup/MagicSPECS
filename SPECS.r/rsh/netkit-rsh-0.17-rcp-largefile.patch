@@ -1,0 +1,11 @@
+--- netkit-rsh-0.17/rcp/rcp.c.largefile	2005-11-24 10:38:12.000000000 +0100
++++ netkit-rsh-0.17/rcp/rcp.c	2005-11-24 10:40:28.000000000 +0100
+@@ -482,7 +482,7 @@
+ 			}
+ 		}
+ 		(void)snprintf(buf, sizeof(buf),
+-		    "C%04o %lld %s\n", stb.st_mode&07777, (long long)(stb.st_size), last);
++		    "C%04o %llu %s\n", stb.st_mode&07777, (unsigned long long)(stb.st_size), last);
+ 		(void)write(rem, buf, (int)strlen(buf));
+ 		if (response() < 0) {
+ 			(void)close(f);

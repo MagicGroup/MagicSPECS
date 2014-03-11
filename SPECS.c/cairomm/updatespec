@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+cver=$( rpm -q --qf "%{version}\n" cairo|head -n 1)
+sed -i "s/%define cairover.*/%define cairover $cver/g" cairomm.spec
+sed -i "s/Version:.*/Version:\t$1/g" cairomm.spec
+popd

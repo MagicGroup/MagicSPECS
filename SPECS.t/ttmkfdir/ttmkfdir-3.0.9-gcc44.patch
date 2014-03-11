@@ -1,0 +1,14 @@
+diff -ur ttmkfdir-3.0.9/directory.cpp ../BUILD/ttmkfdir-3.0.9/directory.cpp
+--- ttmkfdir-3.0.9/directory.cpp	2002-12-09 16:29:11.000000000 +0800
++++ ../BUILD/ttmkfdir-3.0.9/directory.cpp	2009-05-19 12:40:43.000000000 +0800
+@@ -2,6 +2,9 @@
+ #include <dirent.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
+ 
+ #include "directory.h"
+ 
+

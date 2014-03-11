@@ -1,0 +1,180 @@
+diff -Nur amarok-1.4-beta1/amarok/src/contextbrowser.cpp amarok-1.4-beta1locale/amarok/src/contextbrowser.cpp
+--- amarok-1.4-beta1/amarok/src/contextbrowser.cpp	2006-02-13 01:49:38.000000000 +0800
++++ amarok-1.4-beta1locale/amarok/src/contextbrowser.cpp	2006-03-04 17:16:01.000000000 +0800
+@@ -581,7 +581,10 @@
+     QFile exportedDocument( Amarok::saveLocation() + "contextbrowser.html" );
+     exportedDocument.open(IO_WriteOnly);
+     QTextStream stream( &exportedDocument );
+-    stream.setEncoding( QTextStream::UnicodeUTF8 );
++	if(getenv("AMAROK_ORIG")=="1")
++    	stream.setEncoding( QTextStream::UnicodeUTF8 );
++	else	
++    	stream.setEncoding( QTextStream::Locale );
+     stream << m_HTMLSource // the pure html data..
+         .replace("<html>",QString("<html><head><style type=\"text/css\">%1</style></head>").arg( HTMLView::loadStyleSheet() ) ); // and the stylesheet code
+     exportedDocument.close();
+diff -Nur amarok-1.4-beta1/amarok/src/metabundle.cpp amarok-1.4-beta1locale/amarok/src/metabundle.cpp
+--- amarok-1.4-beta1/amarok/src/metabundle.cpp	2006-02-13 01:49:38.000000000 +0800
++++ amarok-1.4-beta1locale/amarok/src/metabundle.cpp	2006-03-04 17:16:01.000000000 +0800
+@@ -283,11 +283,22 @@
+ 
+         {
+             #define strip( x ) TStringToQString( x ).stripWhiteSpace()
+-            setTitle( strip( tag->title() ) );
+-            setArtist( strip( tag->artist() ) );
+-            setAlbum( strip( tag->album() ) );
+-            setComment( strip( tag->comment() ) );
+-            setGenre( strip( tag->genre() ) );
++			if(getenv("AMAROK_ORIG")=="1")
++			{
++				setTitle( strip( tag->title() ) );
++	            setArtist( strip( tag->artist() ) );
++    	        setAlbum( strip( tag->album() ) );
++        	    setComment( strip( tag->comment() ) );
++            	setGenre( strip( tag->genre() ) );
++			}
++			else
++			{
++            setTitle( QString::fromLocal8Bit(strip( tag->title()).latin1()) );
++            setArtist( QString::fromLocal8Bit(strip( tag->artist() ).latin1()) );
++            setAlbum( QString::fromLocal8Bit(strip( tag->album() ).latin1()) );
++            setComment( QString::fromLocal8Bit(strip( tag->comment() ).latin1()) );
++            setGenre( QString::fromLocal8Bit(strip( tag->genre() ).latin1()) );
++			}
+             setYear( tag->year() );
+             setTrack( tag->track() );
+             #undef strip
+diff -Nur amarok-1.4-beta1/amarok/src/playlist.cpp amarok-1.4-beta1locale/amarok/src/playlist.cpp
+--- amarok-1.4-beta1/amarok/src/playlist.cpp	2006-02-13 01:49:38.000000000 +0800
++++ amarok-1.4-beta1locale/amarok/src/playlist.cpp	2006-03-04 17:16:01.000000000 +0800
+@@ -4513,10 +4513,16 @@
+     switch ( m_tagType )
+     {
+         case PlaylistItem::Title:
+-            mb.setTitle( m_newTagString );
++			if(getenv("AMAROK_ORIG")=="1")
++				mb.setTitle( m_newTagString );
++			else
++            	mb.setTitle( QString::fromLocal8Bit(m_newTagString.latin1()) );
+             break;
+         case PlaylistItem::Artist:
+-            mb.setArtist( m_newTagString );
++			if(getenv("AMAROK_ORIG")=="1")
++				mb.setArtist( m_newTagString );
++			else
++            	mb.setArtist( QString::fromLocal8Bit(m_newTagString.latin1()) );
+             break;
+         case PlaylistItem::Composer:
+             if ( !mb.hasExtendedMetaInformation() )
+@@ -4529,7 +4535,10 @@
+             mb.setDiscNumber( m_newTagString.toInt() );
+             break;
+         case PlaylistItem::Album:
+-            mb.setAlbum( m_newTagString );
++			if(getenv("AMAROK_ORIG")=="1")
++			mb.setAlbum( m_newTagString );
++			else
++            mb.setAlbum( QString::fromLocal8Bit(m_newTagString.latin1()) );
+             break;
+         case PlaylistItem::Year:
+             mb.setYear( m_newTagString.toInt() );
+@@ -4538,10 +4547,16 @@
+             //FIXME how does this work for vorbis files?
+             //Are we likely to overwrite some other comments?
+             //Vorbis can have multiple comment fields..
+-            mb.setComment( m_newTagString );
++			if(getenv("AMAROK_ORIG")=="1")
++			mb.setComment( m_newTagString );
++			else	
++            mb.setComment( QString::fromLocal8Bit(m_newTagString.latin1()) );
+             break;
+         case PlaylistItem::Genre:
+-            mb.setGenre( m_newTagString );
++			if(getenv("AMAROK_ORIG")=="1")
++			mb.setGenre( m_newTagString );
++			else
++            mb.setGenre( QString::fromLocal8Bit(m_newTagString.latin1()) );
+             break;
+         case PlaylistItem::Track:
+             mb.setTrack( m_newTagString.toInt() );
+diff -Nur amarok-1.4-beta1/amarok/src/tagdialog.cpp amarok-1.4-beta1locale/amarok/src/tagdialog.cpp
+--- amarok-1.4-beta1/amarok/src/tagdialog.cpp	2006-02-13 01:49:38.000000000 +0800
++++ amarok-1.4-beta1locale/amarok/src/tagdialog.cpp	2006-03-04 17:16:30.000000000 +0800
+@@ -19,6 +19,21 @@
+ #include "trackpickerdialog.h"
+ 
+ #include <taglib/tfile.h> //TagLib::File::isWritable
++#include <taglib/fileref.h>
++#include <taglib/id3v1genres.h> //used to load genre list
++#include <taglib/mpegfile.h>
++#include <taglib/tag.h>
++#include <taglib/tstring.h>
++#include <taglib/id3v2tag.h>
++#include <taglib/id3v1tag.h>
++#include <taglib/xiphcomment.h>
++#include <taglib/mpegfile.h>
++#include <taglib/oggfile.h>
++#include <taglib/vorbisfile.h>
++#include <taglib/flacfile.h>
++#include <taglib/textidentificationframe.h>
++#include <taglib/xiphcomment.h>
++#include <taglib/tbytevector.h>
+ 
+ #include <qdom.h>
+ #include <qfile.h>
+@@ -1041,6 +1056,9 @@
+ bool
+ TagDialog::writeTag( MetaBundle &mb, bool updateCB )
+ {
++#define QStringToCJKTString(s) TagLib::String(s.local8Bit().data(), TagLib::String::Latin1)
++	if(getenv("AMAROK_ORIG")=="1")
++	{
+     QCString path = QFile::encodeName( mb.url().path() );
+     if ( !TagLib::File::isWritable( path ) ) {
+         Amarok::StatusBar::instance()->longMessage( i18n(
+@@ -1061,5 +1079,45 @@
+     QApplication::restoreOverrideCursor();
+ 
+     return result;
++	}
++	else
++	{
++	 //Set default codec to UTF-8 (see bugs 111246 and 111232)
++    TagLib::ID3v2::FrameFactory::instance()->setDefaultTextEncoding(TagLib::String::UTF8);
++
++    QCString path = QFile::encodeName( mb.url().path() );
++    if ( !TagLib::File::isWritable( path ) ) {
++        Amarok::StatusBar::instance()->longMessage( i18n(
++           "TagLib claims %1 file is not writable." ).arg( path ), KDE::StatusBar::Error );
++
++        return false;
++    }
++
++    TagLib::FileRef f( path, false );
++
++    if ( !f.isNull() )
++    {
++        //visual feedback
++        QApplication::setOverrideCursor( KCursor::waitCursor() );
++        TagLib::Tag * t = f.tag();
++        t->setTitle( QStringToCJKTString( mb.title() ) );
++        t->setArtist( QStringToCJKTString( mb.artist().string() ) );
++        t->setAlbum( QStringToCJKTString( mb.album().string() ) );
++        t->setTrack( mb.track() );
++        t->setYear( mb.year());
++        t->setComment( QStringToCJKTString( mb.comment().string() ) );
++        t->setGenre( QStringToCJKTString( mb.genre().string() ) );
++        bool result = f.save();
++        if( result )
++            //update the collection db
++            CollectionDB::instance()->updateTags( mb.url().path(), mb, updateCB );
++
++        QApplication::restoreOverrideCursor();
++
++        return result;
++    }
++    else return false;
++	}
++
+ }
+ 

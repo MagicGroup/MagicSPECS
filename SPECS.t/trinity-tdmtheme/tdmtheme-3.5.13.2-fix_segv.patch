@@ -1,0 +1,35 @@
+--- trinity-tdmtheme-3.5.13.2/src/kdmtheme.cpp.ORI	2013-06-13 08:36:49.449599069 +0200
++++ trinity-tdmtheme-3.5.13.2/src/kdmtheme.cpp	2013-06-13 08:44:01.014366366 +0200
+@@ -268,16 +268,22 @@
+ 
+ void KDMThemeWidget::updateInfoView( ThemeData *theme )
+ {
+-	info->setText(
+-		((theme->copyright.length() > 0) ?
+-			i18n("<qt><strong>Copyright:</strong> %1<br/></qt>",
+-				theme->copyright) : "") +
+-		((theme->description.length() > 0) ?
+-			i18n("<qt><strong>Description:</strong> %1</qt>",
+-				theme->description) : "") );
+-	preview->setPixmap( theme->path + '/' + theme->screenShot );
+-	preview->setText( theme->screenShot.isEmpty() ?
+-		"Screenshot not available" : TQString() );
++	if(theme) {
++		info->setText(
++			((theme->copyright.length() > 0) ?
++				i18n("<qt><strong>Copyright:</strong> %1<br/></qt>",
++					theme->copyright) : "") +
++			((theme->description.length() > 0) ?
++				i18n("<qt><strong>Description:</strong> %1</qt>",
++					theme->description) : "") );
++		preview->setPixmap( theme->path + '/' + theme->screenShot );
++		preview->setText( theme->screenShot.isEmpty() ?
++			i18n("Screenshot not available") : TQString() );
++	} else {
++		info->setText(i18n("No theme selected."));
++		preview->setPixmap(NULL);
++		preview->setText(i18n("Screenshot not available"));
++	}
+ }
+ 
+ void KDMThemeWidget::installNewTheme()

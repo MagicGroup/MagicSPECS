@@ -1,0 +1,27 @@
+--- a/xinetd/signals.c	2009-05-07 05:56:52.000000000 -0400
++++ b/xinetd/signals.c.new	2009-05-07 05:56:44.000000000 -0400
+@@ -389,9 +390,11 @@
+          break ;
+       
+       default:
+-         msg( LOG_NOTICE, func, "Unexpected signal %s", sig_name( sig ) ) ;
+-         if ( debug.on && sig == SIGINT )
+-            exit( 1 ) ;
++         /* Let my_handler() queue this signal for later logging.
++            Calling msg() and thus syslog() directly here can hang up
++            the process, trying to acquire an already acquired lock,
++            because another syslog() could have been the interrupted code. */
++         my_handler(sig);
+    }
+ }
+ 
+@@ -495,6 +497,9 @@
+          default:
+             msg(LOG_ERR, func, "unexpected signal: %s in signal pipe", 
+                sig_name(sig));
++
++            if ( debug.on && sig == SIGINT )
++               exit( 1 ) ;
+       }
+    }
+ }

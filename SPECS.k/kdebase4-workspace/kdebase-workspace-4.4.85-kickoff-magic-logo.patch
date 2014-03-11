@@ -1,0 +1,57 @@
+diff -Nuarp plasma/desktop/applets/kickoff/applet/applet.cpp plasma/desktop/applets/kickoff/applet/applet.cpp
+--- plasma/desktop/applets/kickoff/applet/applet.cpp  2009-12-05 15:46:04.000000000 +0800
++++ plasma/desktop/applets/kickoff/applet/applet.cpp   2009-12-05 15:46:22.000000000 +0800
+@@ -187,7 +187,7 @@ void LauncherApplet::toolTipAboutToShow(
+ void LauncherApplet::configChanged()
+ {
+     KConfigGroup cg = config();
+-    setPopupIcon(cg.readEntry("icon", "start-here-kde"));
++    setPopupIcon(cg.readEntry("icon", "start-here-magic"));
+     constraintsEvent(Plasma::ImmutableConstraint);
+ }
+ 
+@@ -202,7 +202,7 @@ void LauncherApplet::configAccepted()
+     d->createLauncher();
+ 
+     KConfigGroup cg = config();
+-    const QString oldIcon = cg.readEntry("icon", "start-here-kde");
++    const QString oldIcon = cg.readEntry("icon", "start-here-magic");
+     if (!iconname.isEmpty() && iconname != oldIcon) {
+         cg.writeEntry("icon", iconname);
+ 
+diff -Nuarp plasma/desktop/applets/kickoff/applet/plasma-applet-launcher.desktop plasma/desktop/applets/kickoff/applet/plasma-applet-launcher.desktop
+--- plasma/desktop/applets/kickoff/applet/plasma-applet-launcher.desktop  2009-12-05 15:46:04.000000000 +0800
++++ plasma/desktop/applets/kickoff/applet/plasma-applet-launcher.desktop   2009-12-05 15:47:31.000000000 +0800
+@@ -148,7 +148,7 @@ Comment[wa]=Enondeu po lancî des progra
+ Comment[x-test]=xxLauncher to start applicationsxx
+ Comment[zh_CN]=应用程序的启动器
+ Comment[zh_TW]=應用程式啟動器
+-Icon=start-here-kde
++Icon=start-here-magic
+ Type=Service
+ X-KDE-ServiceTypes=Plasma/Applet
+
+diff -Nuarp plasma/desktop/applets/kickoff/simpleapplet/plasma-applet-simplelauncher.desktop plasma/desktop/applets/kickoff/simpleapplet/plasma-applet-simplelauncher.desktop
+--- plasma/desktop/applets/kickoff/simpleapplet/plasma-applet-simplelauncher.desktop  2009-12-05 15:47:44.000000000 +0800
++++ plasma/desktop/applets/kickoff/simpleapplet/plasma-applet-simplelauncher.desktop   2009-12-05 15:49:06.000000000 +0800
+@@ -136,7 +136,7 @@ Comment[wa]=Enondeu d' programe båzé s
+ Comment[x-test]=xxTraditional menu based application launcherxx
+ Comment[zh_CN]=基于应用程序启动器的传统菜单
+ Comment[zh_TW]=傳統選單式的應用程式啟動器
+-Icon=start-here-kde
++Icon=start-here-magic
+ Type=Service
+ X-KDE-ServiceTypes=Plasma/Applet
+ X-KDE-Library=plasma_applet_simplelauncher
+diff -Nuarp plasma/desktop/applets/kickoff/simpleapplet/simpleapplet.cpp plasma/desktop/applets/kickoff/simpleapplet/simpleapplet.cpp
+--- plasma/desktop/applets/kickoff/simpleapplet/simpleapplet.cpp  2009-12-05 15:47:44.000000000 +0800
++++ plasma/desktop/applets/kickoff/simpleapplet/simpleapplet.cpp   2009-12-05 15:49:53.000000000 +0800
+@@ -284,7 +284,7 @@
+                 d->viewtypes << "RunCommand";
+             }
+             d->viewtypes << "Leave";
+-            d->iconname = "start-here-kde";
++            d->iconname = "start-here-magic";
+         }
+     }
+     d->formattype = NameDescription;

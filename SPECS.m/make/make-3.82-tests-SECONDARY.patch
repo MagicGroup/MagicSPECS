@@ -1,0 +1,30 @@
+From 3057357c0a5c2507eef2b61eef9ebfb569b30230 Mon Sep 17 00:00:00 2001
+From: Paul Smith <psmith@gnu.org>
+Date: Sat, 10 Dec 2011 17:13:14 +0000
+Subject: [PATCH] Add prerequisites to ensure ordering of results.
+
+---
+ tests/scripts/targets/SECONDARY |    5 +++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/tests/scripts/targets/SECONDARY b/tests/scripts/targets/SECONDARY
+index c954ee9..26515d8 100644
+--- a/tests/scripts/targets/SECONDARY
++++ b/tests/scripts/targets/SECONDARY
+@@ -129,10 +129,11 @@ touch(qw(1.a 2.a));
+ run_make_test('
+ %.c : %.b ; cp $< $@
+ %.b : %.a ; cp $< $@
+-all : 1.c 2.c', '-rR -j',
++all : 1.c 2.c
++2.a: 1.c', '-rR -j',
+ 'cp 1.a 1.b
+-cp 2.a 2.b
+ cp 1.b 1.c
++cp 2.a 2.b
+ cp 2.b 2.c
+ rm 1.b 2.b');
+ 
+-- 
+1.7.6.5
+

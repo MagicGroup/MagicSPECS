@@ -1,0 +1,28 @@
+From 85774a1cd6f94e1d23ad0403bc912d4671503434 Mon Sep 17 00:00:00 2001
+From: Avesh Agarwal <avagarwa@redhat.com>
+Date: Tue, 10 Dec 2013 14:05:06 -0500
+Subject: [PATCH 09/20] Fixed an issue where writing configuration on stdin
+ should not end with \n as it gives error. It used to work previously, but not
+ with latest NetworkManager versions.
+
+---
+ src/nm-openswan-service.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/nm-openswan-service.c b/src/nm-openswan-service.c
+index ec0553c..f9bea3d 100644
+--- a/src/nm-openswan-service.c
++++ b/src/nm-openswan-service.c
+@@ -577,7 +577,8 @@ nm_openswan_config_write (gint openswan_fd, NMSettingVPN *s_vpn,
+ 
+         write_config_option (fdtmp1, " nm_configured=yes\n");
+         //write_config_option (fdtmp1, " leftupdown=%s\n", NM_OSW_UPDOWN_PATH);
+-        write_config_option (fdtmp1, " auto=add\n");
++        //write_config_option (fdtmp1, " auto=add\n");
++        write_config_option (fdtmp1, " auto=add");
+         //write_config_option (fdtmp1, " #connectionname=%s\n", nm_setting_vpn_get_data_item (s_vpn, NM_SETTING_VPN_SETTING_NAME));
+         //write_config_option (fdtmp1, " #connectionname=%s\n", nm_setting_vpn_get_data_item (s_vpn, NM_SETTING_NAME));
+ 	}
+-- 
+1.8.3.1
+

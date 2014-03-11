@@ -1,0 +1,33 @@
+diff -ur bangarang-git20130108.orig/src/platform/infofetchers/lastfminfofetcher.cpp bangarang-git20130108/src/platform/infofetchers/lastfminfofetcher.cpp
+--- bangarang-git20130108.orig/src/platform/infofetchers/lastfminfofetcher.cpp	2013-01-08 12:28:42.000000000 +0000
++++ bangarang-git20130108/src/platform/infofetchers/lastfminfofetcher.cpp	2013-01-08 12:29:47.000000000 +0000
+@@ -20,6 +20,7 @@
+ #include "../downloader.h"
+ #include "../mediaitemmodel.h"
+ #include "../utilities/utilities.h"
++#include <unistd.h>
+ 
+ #include <KDebug>
+ #include <KGlobal>
+diff -ur bangarang-git20130108.orig/src/platform/infofetchers/tmdbinfofetcher.cpp bangarang-git20130108/src/platform/infofetchers/tmdbinfofetcher.cpp
+--- bangarang-git20130108.orig/src/platform/infofetchers/tmdbinfofetcher.cpp	2013-01-08 12:28:42.000000000 +0000
++++ bangarang-git20130108/src/platform/infofetchers/tmdbinfofetcher.cpp	2013-01-08 12:29:11.000000000 +0000
+@@ -20,6 +20,7 @@
+ #include "../downloader.h"
+ #include "../mediaitemmodel.h"
+ #include "../utilities/utilities.h"
++#include <unistd.h>
+ 
+ #include <KDebug>
+ #include <KIcon>
+diff -ur bangarang-git20130108.orig/src/platform/infofetchers/tvdbinfofetcher.cpp bangarang-git20130108/src/platform/infofetchers/tvdbinfofetcher.cpp
+--- bangarang-git20130108.orig/src/platform/infofetchers/tvdbinfofetcher.cpp	2013-01-08 12:28:42.000000000 +0000
++++ bangarang-git20130108/src/platform/infofetchers/tvdbinfofetcher.cpp	2013-01-08 12:29:27.000000000 +0000
+@@ -20,6 +20,7 @@
+ #include "../downloader.h"
+ #include "../mediaitemmodel.h"
+ #include "../utilities/utilities.h"
++#include <unistd.h>
+ 
+ #include <KDebug>
+ #include <KIcon>

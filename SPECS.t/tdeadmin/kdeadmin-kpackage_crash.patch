@@ -1,0 +1,11 @@
+--- kdeadmin-3.4.3/kpackage/rpmInterface.cpp.orig	2005-10-05 21:11:26.000000000 +0800
++++ kdeadmin-3.4.3/kpackage/rpmInterface.cpp	2006-02-28 12:27:33.000000000 +0800
+@@ -495,7 +495,7 @@
+   }
+ 
+   if (getuid() == 0) {
+-    return  doUninst(uninstallFlags,files, test);
++    return  doUninstP(uninstallFlags,files, test);
+   } else {
+     return  doUninstP(uninstallFlags,files, test);
+   }

@@ -1,0 +1,6 @@
+# BIND named process options
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# OPTIONS="whatever"     --  These additional options will be passed to named
+#                            at startup. Don't add -t here, enable proper
+#                            -chroot.service unit file.  

@@ -1,0 +1,12 @@
+diff -up netpbm-10.47.04/converter/other/giftopnm.c.message netpbm-10.47.04/converter/other/giftopnm.c
+--- netpbm-10.47.04/converter/other/giftopnm.c.message	2009-10-21 13:39:06.000000000 +0200
++++ netpbm-10.47.04/converter/other/giftopnm.c	2009-10-21 14:34:42.000000000 +0200
+@@ -1676,7 +1676,7 @@ convertImages(FILE * const ifP, 
+                          imageSeq, imageSeq > 1 ? "s" : "");
+         } else {
+             if (verbose)
+-                pm_message("Reading Image Sequence %d", imageSeq);
++                pm_message("Reading Image Sequence %d", imageSeq+1);
+             convertImage(ifP, !allImages && (imageSeq != requestedImageSeq), 
+                          imageout_file, alphafile, gifScreen, gif89,
+                          tolerateBadInput);

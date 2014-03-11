@@ -1,0 +1,38 @@
+From 4e15c57a438ee900f6ce601810a59a316b039fa1 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Fri, 21 Oct 2011 15:36:26 +0000
+Subject: lib: Require quvi 0.4.0
+
+And adapt API usage.
+
+Original patch by Marien Zwart in:
+https://bugs.gentoo.org/show_bug.cgi?id=386651
+
+https://bugzilla.gnome.org/show_bug.cgi?id=661451
+---
+diff --git a/plparse/totem-pl-parser-videosite.c b/plparse/totem-pl-parser-videosite.c
+index 9706d5a..b1645d6 100644
+--- a/plparse/totem-pl-parser-videosite.c
++++ b/plparse/totem-pl-parser-videosite.c
+@@ -75,7 +75,7 @@ totem_pl_parser_add_videosite (TotemPlParser *parser,
+ #ifdef HAVE_QUVI
+ 	QUVIcode rc;
+ 	quvi_t handle;
+-	quvi_video_t v;
++	quvi_media_t v;
+ 	char *uri;
+ 	/* properties */
+ 	const char *video_uri;
+@@ -104,8 +104,8 @@ totem_pl_parser_add_videosite (TotemPlParser *parser,
+ 		return TOTEM_PL_PARSER_RESULT_ERROR;
+ 	}
+ 
+-	getprop (QUVIPROP_VIDEOURL, video_uri);
+-	if (quvi_getprop (v, QUVIPROP_VIDEOFILELENGTH, &length) == QUVI_OK)
++	getprop (QUVIPROP_MEDIAURL, video_uri);
++	if (quvi_getprop (v, QUVIPROP_MEDIACONTENTLENGTH, &length) == QUVI_OK)
+ 		length_str = g_strdup_printf ("%f", length);
+ 	else
+ 		length_str = NULL;
+--
+cgit v0.9.0.2

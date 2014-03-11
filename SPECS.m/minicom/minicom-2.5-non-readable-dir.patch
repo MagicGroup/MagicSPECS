@@ -1,0 +1,18 @@
+diff --git a/src/file.c b/src/file.c
+index ba3a1ee..fa60950 100644
+--- a/src/file.c
++++ b/src/file.c
+@@ -331,7 +331,12 @@ static int new_filedir(GETSDIR_ENTRY *o_dirdat, int flushit)
+     return -1;
+   } 
+ 
+-  rval = chdir(work_dir);
++  /* chdir success doesn't guarantee that directory is readable */
++  if(access(work_dir, R_OK) == 0)
++    rval = chdir(work_dir);
++  else
++    rval = -1;
++
+   if (rval == 0) {
+     /* was able to change to new working directory */
+     free(prev_dir);

@@ -1,0 +1,11 @@
+--- CMakeLists.txt	2008-11-13 00:37:57.000000000 +0800
++++ CMakeLists.txt.no_kicthensync	2008-11-30 13:43:32.000000000 +0800
+@@ -236,7 +236,7 @@
+        set(KITCHENSYNC_SUPPORTED TRUE)
+        add_definitions(-DKITCHENSYNC_SUPPORTED)
+        message(STATUS "KitchenSync support enabled.")
+-       macro_optional_add_subdirectory(kitchensync)
++#       macro_optional_add_subdirectory(kitchensync)
+      else(OPENSYNC_FOUND AND GLIB2_FOUND)
+        set(KITCHENSYNC_SUPPORTED FALSE)
+        if(NOT OPENSYNC_FOUND)

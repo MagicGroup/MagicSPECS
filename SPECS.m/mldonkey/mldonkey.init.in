@@ -1,0 +1,192 @@
+#!/bin/bash
+#
+# Startup script for mldonkey
+#
+# chkconfig: - 86 14
+# description: mldonkey.
+# processname: mlnet
+# pidfile: /var/run/mlnet.pid
+# config: 
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+if [ -f /etc/sysconfig/mldonkey ]; then
+        . /etc/sysconfig/mldonkey
+fi
+
+# Defaults, override them in /etc/sysconfig/mldonkey
+: ${ML_ROOT=/var/lib/mldonkey/chroot}
+: ${ML_USER=mldonkey}
+: ${ML_GROUP=mldonkey}
+: ${ML_HOME=/var/lib/mldonkey/home}
+export MLDONKEY_DIR=$ML_HOME
+
+copy_files_aux() {
+  for file in "$@"; do
+    mkdir -m 755 -p $ML_ROOT`dirname $file`
+    # -R needed for /dev/log (???)
+    /bin/cp -pR $file $ML_ROOT$file > /dev/null 2>&1
+    if test -L "$file"; then
+      /bin/cp -pRL `readlink -f $file` $ML_ROOT`readlink -f $file` > /dev/null 2>&1
+    fi
+  done
+}
+
+setup_chroot() {
+  copy_files_aux /etc/localtime /dev/null /dev/log /dev/urandom \
+    /etc/resolv.conf /etc/hosts \
+    /@lib@/libnss_files.so.* /@lib@/libnss_dns.so.* \
+    /usr/@lib@/mldonkey/mlnet @_x_libraries@/libX11.so.* /bin/sh \
+    /@lib@/ld-* \
+    /usr/share/file/* \
+    /bin/su /usr/bin/sudo
+
+#  copy_files_aux `find $ML_ROOT -xdev -type f -print0 \
+#  | xargs -0 file \
+#  | grep -Ev ':.*(Bourne shell|text|data|empty|statically linked)' \
+#  | awk -F: '{print $1}' | xargs ldd | grep '=>' | awk '{print $3}'`
+
+  copy_files_aux `find $ML_ROOT -xdev -type f -print0 \
+  | xargs -0 file | grep -E ':.*ELF' \
+  | awk -F: '{print $1}' | xargs ldd | grep '=> */' | awk '{print $3}'`
+
+  echo @_x_libraries@ > $ML_ROOT/etc/ld.so.conf
+  ldconfig -r $ML_ROOT
+  #
+  mkdir -p $ML_ROOT/etc
+  echo "root    ALL=(ALL)       ALL" > $ML_ROOT/etc/sudoers
+  echo "root:*:0:0:root:/:/bin/bash" > $ML_ROOT/etc/passwd
+  echo "$ML_USER:*:`id -u mldonkey`:`id -g mldonkey`:mldonkey User:$ML_HOME:/noshell" >> $ML_ROOT/etc/passwd
+  echo "$ML_USER:!!:::::::" > $ML_ROOT/etc/shadow
+  echo "$ML_GROUP:x:$ML_GID:" > $ML_ROOT/etc/group
+  echo "$ML_GROUP:!::" > $ML_ROOT/etc/gshadow
+  cat > $ML_ROOT/etc/nsswitch.conf <<EOF
+passwd: files
+shadow: files
+group: files
+hosts: files dns
+EOF
+  mkdir -p $ML_ROOT/tmp
+  chown -Rh mldonkey:mldonkey $ML_ROOT/
+  chown -Rh root:root $ML_ROOT/etc/sudoers
+  chmod 0440 $ML_ROOT/etc/sudoers
+}
+
+test_mount () {
+  mount | grep "$ML_HOME on $ML_ROOT$ML_HOME type none (rw,bind)" > /dev/null
+}
+
+start_mldonkey() {
+  cd $ML_ROOT$ML_HOME
+#  nice -n 19 /usr/bin/compartment \
+#     --chroot $ML_ROOT \
+#     --user $ML_USER --group $ML_GROUP \
+#     --fork /bin/sh -c "cd $ML_HOME && MLDONKEY_DIR=$ML_HOME && export MLDONKEY_DIR && exec /usr/@lib@/mldonkey/mlnet >> /mldonkey.log 2>&1 < /dev/null" &
+#  chroot $ML_ROOT su - mldonkey /bin/sh -c "cd $ML_HOME && MLDONKEY_DIR=$ML_HOME && export MLDONKEY_DIR && exec /usr/@lib@/mldonkey/mlnet" >> /var/log/mldonkey.log 2>&1 < /dev/null &
+#  chroot $ML_ROOT /bin/sh -c "cd $ML_HOME && MLDONKEY_DIR=$ML_HOME && export MLDONKEY_DIR && exec /usr/@lib@/mldonkey/mlnet -run_as_user mldonkey" >> /var/log/mldonkey.log 2>&1 < /dev/null &
+  chroot $ML_ROOT /usr/bin/sudo -u mldonkey /bin/sh -c "cd $ML_HOME && MLDONKEY_DIR=$ML_HOME && export MLDONKEY_DIR && exec /usr/@lib@/mldonkey/mlnet" >> /var/log/mldonkey.log 2>&1 < /dev/null &
+}
+
+stop_mldonkey() {
+  if echo kill | nc 127.0.0.1 4000 > /dev/null; then
+    killproc /usr/@lib@/mldonkey/mlnet || /bin/true
+  else
+    killproc /usr/@lib@/mldonkey/mlnet
+  fi
+}
+
+start() {
+  echo -n $"Starting mldonkey: "
+  pid=`pidofproc /usr/@lib@/mldonkey/mlnet`
+  if [ -n "$pid" ]; then
+    echo -n "mldonkey ($pid) is already running!"
+    failure $"mldonkey ($pid) is already running!"
+    echo
+    return 1
+  fi
+
+  mkdir -p $ML_HOME
+  chown mldonkey:mldonkey $ML_HOME
+
+  setup_chroot
+
+  # do the mounts
+  if test_mount; then
+    :
+  else
+    mkdir -p $ML_ROOT$ML_HOME
+    mount -o bind $ML_HOME $ML_ROOT$ML_HOME || echo "Mount failed" || failure "Mount failed" || exit 1
+  fi
+
+  start_mldonkey
+
+  RETVAL=$?
+  sleep 1
+  if [ $RETVAL = 0 ]; then
+#    pid=`pidofproc /usr/@lib@/mldonkey/mlnet`
+    pid=`pidof -o $$ -o $PPID -o %PPID -x $ML_ROOT/usr/@lib@/mldonkey/mlnet`
+    if [ -n "$pid" ]; then
+      touch /var/lock/subsys/mldonkey
+      echo $pid > /var/run/mlnet.pid
+      success $"mldonkey startup"
+      echo
+      return 0
+    fi
+    RETVAL=1
+  fi
+  failure $"mldonkey startup"
+  echo
+  return $RETVAL
+}
+
+stop() {
+  echo -n $"Stopping mldonkey: "
+
+  stop_mldonkey
+
+  RETVAL=$?
+  # undo the mounts
+  if test_mount; then
+    umount $ML_ROOT$ML_HOME || echo "Umount failed" || failure "Umount failed" || exit 1
+  fi
+  
+  if [ $RETVAL = 0 ]; then
+    rm -f /var/lock/subsys/mldonkey
+    rm -f /var/run/mlnet.pid
+    success $"mldonkey shutdown"
+  else
+    failure $"mldonkey shutdown"
+  fi
+  echo
+  return $RETVAL
+}
+
+reload() {
+  stop_mldonkey && start_mldonkey
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  reload)
+	reload
+	;;
+  status)
+        status mlnet
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|status|restart|reload}"
+	exit 1
+esac
+
+exit $RETVAL

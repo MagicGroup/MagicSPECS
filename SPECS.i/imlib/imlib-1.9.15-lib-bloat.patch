@@ -1,0 +1,235 @@
+--- imlib-1.9.15/configure.in	2008-08-29 16:05:28.000000000 +0100
++++ imlib-1.9.15/configure.in	2008-08-29 16:06:57.000000000 +0100
+@@ -204,16 +204,12 @@
+ 
+ 
+ AC_CHECK_HEADER(gif_lib.h,
+-  [AC_CHECK_LIB(ungif, DGifOpenFileName,
+-    [GIFLIBS="-lungif"
+-     SUPPORT_LIBS="$SUPPORT_LIBS -lungif"; AC_DEFINE(HAVE_LIBGIF, 1, [ ])],
+     [AC_CHECK_LIB(gif, DGifOpenFileName,
+       [GIFLIBS="-lgif"
+       SUPPORT_LIBS="$SUPPORT_LIBS -lgif"
+        AC_DEFINE(HAVE_LIBGIF, 1, [ ])],
+       [AC_MSG_ERROR(*** GIF library file not found ***)], 
+       $GX_LIBS)],
+-    $GX_LIBS)],
+   [AC_MSG_ERROR(*** GIF header not found ***)])
+ 
+ AC_CHECK_LIB(png, png_read_info,
+@@ -237,9 +233,9 @@
+ fi
+ 
+ if test "$png_ok" = yes; then
+-	PNGLIBS="-lpng -lz"
++	PNGLIBS="-lpng"
+ 	AC_SUBST(HAVE_LIBPNG)
+-	SUPPORT_LIBS="$SUPPORT_LIBS -lpng -lz"; AC_DEFINE(HAVE_LIBPNG, 1, [ ])
++	SUPPORT_LIBS="$SUPPORT_LIBS -lpng"; AC_DEFINE(HAVE_LIBPNG, 1, [ ])
+ fi
+ 
+ SUPPORT_LIBS="$SUPPORT_LIBS -lm"
+--- imlib-1.9.15/Imlib/Makefile.am	2004-09-21 01:22:59.000000000 +0100
++++ imlib-1.9.15/Imlib/Makefile.am	2008-08-29 16:06:57.000000000 +0100
+@@ -32,8 +32,7 @@
+ 
+ libImlib_la_LDFLAGS    = -version-info 10:15:9
+ #libImlib_la_LDDADD     = $(SUPPORT_LIBS)
+-libImlib_la_LIBADD     = $(SUPPORT_LIBS) $(X_PRE_LIBS) \
+-			 $(X_LIBS) $(X_EXTRA_LIBS)
++libImlib_la_LIBADD     = $(SUPPORT_LIBS) $(X_LIBS) $(X_EXTRA_LIBS)
+ 
+ DEFS =  -DSYSTEM_IMRC=\"$(sysconfdir)/imrc\" \
+ 	-DSYSCONFDIR=\"$(sysconfdir)\"
+--- imlib-1.9.15/gdk_imlib/Makefile.am	2008-08-29 16:05:28.000000000 +0100
++++ imlib-1.9.15/gdk_imlib/Makefile.am	2008-08-29 16:06:57.000000000 +0100
+@@ -20,11 +20,11 @@
+ 
+ libimlib_tiff_la_SOURCES = io-tiff.c
+ libimlib_tiff_la_LDFLAGS = $(common_ldflags)
+-libimlib_tiff_la_LIBADD  = $(TIFFLIBS) libgdk_imlib.la
++libimlib_tiff_la_LIBADD  = $(TIFFLIBS)
+ 
+ libimlib_ps_la_SOURCES = io-ps.c
+ libimlib_ps_la_LDFLAGS = $(common_ldflags)
+-libimlib_ps_la_LIBADD = libgdk_imlib.la
++libimlib_ps_la_LIBADD =
+ 
+ libimlib_bmp_la_SOURCES = io-bmp.c
+ libimlib_bmp_la_LDFLAGS = $(common_ldflags)
+@@ -32,7 +32,7 @@
+ 
+ libimlib_xpm_la_SOURCES = io-xpm.c
+ libimlib_xpm_la_LDFLAGS = $(common_ldflags)
+-libimlib_xpm_la_LIBADD = libgdk_imlib.la
++libimlib_xpm_la_LIBADD = -lgdk_imlib -lX11
+ 
+ libimlib_ppm_la_SOURCES = io-ppm.c
+ libimlib_ppm_la_LDFLAGS = $(common_ldflags)
+--- imlib-1.9.15/configure	2010-05-14 11:30:53.000000000 +0100
++++ imlib-1.9.15/configure	2010-05-14 11:32:35.000000000 +0100
+@@ -23570,78 +23570,6 @@
+ 
+ fi
+ if test $ac_cv_header_gif_lib_h = yes; then
+-  echo "$as_me:$LINENO: checking for DGifOpenFileName in -lungif" >&5
+-echo $ECHO_N "checking for DGifOpenFileName in -lungif... $ECHO_C" >&6
+-if test "${ac_cv_lib_ungif_DGifOpenFileName+set}" = set; then
+-  echo $ECHO_N "(cached) $ECHO_C" >&6
+-else
+-  ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lungif $GX_LIBS $LIBS"
+-cat >conftest.$ac_ext <<_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h >>conftest.$ac_ext
+-cat >>conftest.$ac_ext <<_ACEOF
+-/* end confdefs.h.  */
+-
+-/* Override any gcc2 internal prototype to avoid an error.  */
+-#ifdef __cplusplus
+-extern "C"
+-#endif
+-/* We use char because int might match the return type of a gcc2
+-   builtin and then its argument prototype would still apply.  */
+-char DGifOpenFileName ();
+-int
+-main ()
+-{
+-DGifOpenFileName ();
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-rm -f conftest.$ac_objext conftest$ac_exeext
+-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+-  (eval $ac_link) 2>conftest.er1
+-  ac_status=$?
+-  grep -v '^ *+' conftest.er1 >conftest.err
+-  rm -f conftest.er1
+-  cat conftest.err >&5
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"
+-			 || test ! -s conftest.err'
+-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-  (eval $ac_try) 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); }; } &&
+-	 { ac_try='test -s conftest$ac_exeext'
+-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-  (eval $ac_try) 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); }; }; then
+-  ac_cv_lib_ungif_DGifOpenFileName=yes
+-else
+-  echo "$as_me: failed program was:" >&5
+-sed 's/^/| /' conftest.$ac_ext >&5
+-
+-ac_cv_lib_ungif_DGifOpenFileName=no
+-fi
+-rm -f conftest.err conftest.$ac_objext \
+-      conftest$ac_exeext conftest.$ac_ext
+-LIBS=$ac_check_lib_save_LIBS
+-fi
+-echo "$as_me:$LINENO: result: $ac_cv_lib_ungif_DGifOpenFileName" >&5
+-echo "${ECHO_T}$ac_cv_lib_ungif_DGifOpenFileName" >&6
+-if test $ac_cv_lib_ungif_DGifOpenFileName = yes; then
+-  GIFLIBS="-lungif"
+-     SUPPORT_LIBS="$SUPPORT_LIBS -lungif";
+-cat >>confdefs.h <<\_ACEOF
+-#define HAVE_LIBGIF 1
+-_ACEOF
+-
+-else
+   echo "$as_me:$LINENO: checking for DGifOpenFileName in -lgif" >&5
+ echo $ECHO_N "checking for DGifOpenFileName in -lgif... $ECHO_C" >&6
+ if test "${ac_cv_lib_gif_DGifOpenFileName+set}" = set; then
+@@ -23720,8 +23648,6 @@
+    { (exit 1); exit 1; }; }
+ fi
+ 
+-fi
+-
+ else
+   { { echo "$as_me:$LINENO: error: *** GIF header not found ***" >&5
+ echo "$as_me: error: *** GIF header not found ***" >&2;}
+@@ -24008,9 +23934,9 @@
+ fi
+ 
+ if test "$png_ok" = yes; then
+-	PNGLIBS="-lpng -lz"
++	PNGLIBS="-lpng"
+ 
+-	SUPPORT_LIBS="$SUPPORT_LIBS -lpng -lz";
++	SUPPORT_LIBS="$SUPPORT_LIBS -lpng";
+ cat >>confdefs.h <<\_ACEOF
+ #define HAVE_LIBPNG 1
+ _ACEOF
+--- imlib-1.9.15/gdk_imlib/Makefile.in	2010-05-14 11:30:53.000000000 +0100
++++ imlib-1.9.15/gdk_imlib/Makefile.in	2010-05-14 11:32:38.000000000 +0100
+@@ -90,17 +90,17 @@
+ libimlib_ppm_la_OBJECTS = $(am_libimlib_ppm_la_OBJECTS)
+ @DYNAMIC_MODULES_WORK_TRUE@am_libimlib_ppm_la_rpath = -rpath \
+ @DYNAMIC_MODULES_WORK_TRUE@	$(moduledir)
+-libimlib_ps_la_DEPENDENCIES = libgdk_imlib.la
++libimlib_ps_la_DEPENDENCIES =
+ am_libimlib_ps_la_OBJECTS = io-ps.lo
+ libimlib_ps_la_OBJECTS = $(am_libimlib_ps_la_OBJECTS)
+ @DYNAMIC_MODULES_WORK_TRUE@am_libimlib_ps_la_rpath = -rpath \
+ @DYNAMIC_MODULES_WORK_TRUE@	$(moduledir)
+-libimlib_tiff_la_DEPENDENCIES = $(am__DEPENDENCIES_1) libgdk_imlib.la
++libimlib_tiff_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+ am_libimlib_tiff_la_OBJECTS = io-tiff.lo
+ libimlib_tiff_la_OBJECTS = $(am_libimlib_tiff_la_OBJECTS)
+ @DYNAMIC_MODULES_WORK_TRUE@@HAVE_TIFF_TRUE@am_libimlib_tiff_la_rpath =  \
+ @DYNAMIC_MODULES_WORK_TRUE@@HAVE_TIFF_TRUE@	-rpath $(moduledir)
+-libimlib_xpm_la_DEPENDENCIES = libgdk_imlib.la
++libimlib_xpm_la_DEPENDENCIES =
+ am_libimlib_xpm_la_OBJECTS = io-xpm.lo
+ libimlib_xpm_la_OBJECTS = $(am_libimlib_xpm_la_OBJECTS)
+ @DYNAMIC_MODULES_WORK_TRUE@am_libimlib_xpm_la_rpath = -rpath \
+@@ -282,16 +282,16 @@
+ libimlib_png_la_LIBADD = $(PNGLIBS) libgdk_imlib.la
+ libimlib_tiff_la_SOURCES = io-tiff.c
+ libimlib_tiff_la_LDFLAGS = $(common_ldflags)
+-libimlib_tiff_la_LIBADD = $(TIFFLIBS) libgdk_imlib.la
++libimlib_tiff_la_LIBADD = $(TIFFLIBS)
+ libimlib_ps_la_SOURCES = io-ps.c
+ libimlib_ps_la_LDFLAGS = $(common_ldflags)
+-libimlib_ps_la_LIBADD = libgdk_imlib.la
++libimlib_ps_la_LIBADD = 
+ libimlib_bmp_la_SOURCES = io-bmp.c
+ libimlib_bmp_la_LDFLAGS = $(common_ldflags)
+ libimlib_bmp_la_LIBADD = libgdk_imlib.la
+ libimlib_xpm_la_SOURCES = io-xpm.c
+ libimlib_xpm_la_LDFLAGS = $(common_ldflags)
+-libimlib_xpm_la_LIBADD = libgdk_imlib.la
++libimlib_xpm_la_LIBADD = -lgdk_imlib -lX11
+ libimlib_ppm_la_SOURCES = io-ppm.c
+ libimlib_ppm_la_LDFLAGS = $(common_ldflags)
+ libimlib_ppm_la_LIBADD = libgdk_imlib.la
+--- imlib-1.9.15/Imlib/Makefile.in	2010-05-14 11:30:53.000000000 +0100
++++ imlib-1.9.15/Imlib/Makefile.in	2010-05-14 11:32:38.000000000 +0100
+@@ -76,7 +76,7 @@
+ LTLIBRARIES = $(lib_LTLIBRARIES)
+ am__DEPENDENCIES_1 =
+ libImlib_la_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
++	$(am__DEPENDENCIES_1)
+ am_libImlib_la_OBJECTS = cache.lo colors.lo load.lo misc.lo rend.lo \
+ 	utils.lo save.lo snprintf.lo
+ libImlib_la_OBJECTS = $(am_libImlib_la_OBJECTS)
+@@ -247,9 +247,7 @@
+ 
+ libImlib_la_LDFLAGS = -version-info 10:15:9
+ #libImlib_la_LDDADD     = $(SUPPORT_LIBS)
+-libImlib_la_LIBADD = $(SUPPORT_LIBS) $(X_PRE_LIBS) \
+-			 $(X_LIBS) $(X_EXTRA_LIBS)
+-
++libImlib_la_LIBADD = $(SUPPORT_LIBS) $(X_LIBS) $(X_EXTRA_LIBS)
+ INCLUDES = -I. -I$(srcdir) -I.. -I$(srcdir)/.. $(X_CFLAGS)
+ t_load_LDADD = libImlib.la
+ all: all-am

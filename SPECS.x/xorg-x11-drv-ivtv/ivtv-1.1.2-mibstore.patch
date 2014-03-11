@@ -1,0 +1,19 @@
+diff -up xf86-video-ivtv-1.1.2/src/ivtv.c.jx xf86-video-ivtv-1.1.2/src/ivtv.c
+--- xf86-video-ivtv-1.1.2/src/ivtv.c.jx	2013-01-10 10:29:19.000000000 -0500
++++ xf86-video-ivtv-1.1.2/src/ivtv.c	2013-01-10 10:29:35.528614977 -0500
+@@ -40,7 +40,6 @@ in this Software without prior written a
+ #include "xf86_OSproc.h"
+ 
+ #include "mipointer.h"
+-#include "mibstore.h"
+ #include "micmap.h"
+ #include "colormapst.h"
+ #include "xf86cmap.h"
+@@ -695,7 +694,6 @@ IVTVDevScreenInit(SCREEN_INIT_ARGS_DECL)
+ 	    "Rotation might be broken in 24 bpp\n");
+ 
+     xf86SetBlackWhitePixels(pScreen);
+-    miInitializeBackingStore(pScreen);
+     xf86SetBackingStore(pScreen);
+ 
+     /* software cursor */

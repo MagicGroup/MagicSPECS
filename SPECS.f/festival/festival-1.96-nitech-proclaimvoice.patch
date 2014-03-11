@@ -1,0 +1,102 @@
+diff -ur festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm	2007-03-08 04:26:04.000000000 -0500
++++ festival/lib/voices/us/nitech_us_awb_arctic_hts/festvox/nitech_us_awb_arctic_hts.scm	2007-03-14 23:39:40.000000000 -0400
+@@ -176,5 +176,13 @@
+   (set! current-voice 'nitech_us_awb_arctic_hts)
+ )
+ 
++(proclaim_voice
++ 'nitech_us_awb_arctic_hts
++ '((language english)
++   (gender male)
++   (dialect american)
++   (description
++    "Scottish-accent US English male speaker AWB.")))
++
+ (provide 'nitech_us_awb_arctic_hts)
+ 
+diff -ur festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm	2007-03-08 04:26:34.000000000 -0500
++++ festival/lib/voices/us/nitech_us_bdl_arctic_hts/festvox/nitech_us_bdl_arctic_hts.scm	2007-03-14 23:40:06.000000000 -0400
+@@ -176,5 +176,13 @@
+   (set! current-voice 'nitech_us_bdl_arctic_hts)
+ )
+ 
++(proclaim_voice
++ 'nitech_us_bdl_arctic_hts
++ '((language english)
++   (gender male)
++   (dialect american)
++   (description
++    "US English male speaker BDL.")))
++
+ (provide 'nitech_us_bdl_arctic_hts)
+ 
+diff -ur festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm	2007-03-08 04:27:07.000000000 -0500
++++ festival/lib/voices/us/nitech_us_clb_arctic_hts/festvox/nitech_us_clb_arctic_hts.scm	2007-03-14 23:41:36.000000000 -0400
+@@ -176,5 +176,13 @@
+   (set! current-voice 'nitech_us_clb_arctic_hts)
+ )
+ 
++(proclaim_voice
++ 'nitech_us_clb_arctic_hts
++ '((language english)
++   (gender female)
++   (dialect american)
++   (description
++    "US English female speaker CLB.")))
++
+ (provide 'nitech_us_clb_arctic_hts)
+ 
+diff -ur festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm	2007-03-08 04:27:43.000000000 -0500
++++ festival/lib/voices/us/nitech_us_jmk_arctic_hts/festvox/nitech_us_jmk_arctic_hts.scm	2007-03-14 23:42:14.000000000 -0400
+@@ -176,5 +176,13 @@
+   (set! current-voice 'nitech_us_jmk_arctic_hts)
+ )
+ 
++(proclaim_voice
++ 'nitech_us_jmk_arctic_hts
++ '((language english)
++   (gender male)
++   (dialect american)
++   (description
++    "Canadian-accent US English male speaker JMK.")))
++
+ (provide 'nitech_us_jmk_arctic_hts)
+ 
+diff -ur festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm	2007-03-08 04:28:15.000000000 -0500
++++ festival/lib/voices/us/nitech_us_rms_arctic_hts/festvox/nitech_us_rms_arctic_hts.scm	2007-03-14 23:42:46.000000000 -0400
+@@ -176,5 +176,13 @@
+   (set! current-voice 'nitech_us_rms_arctic_hts)
+ )
+ 
++(proclaim_voice
++ 'nitech_us_rms_arctic_hts
++ '((language english)
++   (gender male)
++   (dialect american)
++   (description
++    "US English male speaker RMS. Not that RMS.")))
++
+ (provide 'nitech_us_rms_arctic_hts)
+ 
+diff -ur festival/lib/voices/us/nitech_us_slt_arctic_hts/festvox/nitech_us_slt_arctic_hts.scm festival/lib/voices/us/nitech_us_slt_arctic_hts/festvox/nitech_us_slt_arctic_hts.scm
+--- festival/lib/voices/us/nitech_us_slt_arctic_hts/festvox/nitech_us_slt_arctic_hts.scm	2007-03-08 04:28:41.000000000 -0500
++++ festival/lib/voices/us/nitech_us_slt_arctic_hts/festvox/nitech_us_slt_arctic_hts.scm	2007-03-14 23:43:03.000000000 -0400
+@@ -176,5 +176,13 @@
+   (set! current-voice 'nitech_us_slt_arctic_hts)
+ )
+ 
++(proclaim_voice
++ 'nitech_us_slt_arctic_hts
++ '((language english)
++   (gender female)
++   (dialect american)
++   (description
++    "US English female speaker SLT.")))
++
+ (provide 'nitech_us_slt_arctic_hts)
+ 

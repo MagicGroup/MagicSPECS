@@ -1,0 +1,148 @@
+---
+ Makefile.inc                       |    9 +++++----
+ kpartx/Makefile                    |    2 +-
+ libmpathpersist/Makefile           |    4 ++--
+ libmultipath/Makefile              |    1 +
+ libmultipath/checkers/Makefile     |    2 +-
+ libmultipath/prioritizers/Makefile |    2 +-
+ multipath/Makefile                 |    2 +-
+ multipathd/Makefile                |    5 +++--
+ 8 files changed, 15 insertions(+), 12 deletions(-)
+
+Index: multipath-tools-130222/Makefile.inc
+===================================================================
+--- multipath-tools-130222.orig/Makefile.inc
++++ multipath-tools-130222/Makefile.inc
+@@ -23,15 +23,15 @@ endif
+ 
+ prefix      = 
+ exec_prefix = $(prefix)
+-bindir      = $(exec_prefix)/sbin
++bindir      = $(exec_prefix)/usr/sbin
+ libudevdir  = ${prefix}/lib/udev
+ multipathdir = $(TOPDIR)/libmultipath
+ mandir      = $(prefix)/usr/share/man/man8
+ man5dir     = $(prefix)/usr/share/man/man5
+ man3dir      = $(prefix)/usr/share/man/man3
+ rcdir	    = $(prefix)/etc/rc.d/init.d
+-syslibdir   = $(prefix)/$(LIB)
+-libdir	    = $(prefix)/$(LIB)/multipath
++syslibdir   = $(prefix)/usr/$(LIB)
++libdir	    = $(prefix)/usr/$(LIB)/multipath
+ unitdir     = $(prefix)/lib/systemd/system
+ mpathpersistdir = $(TOPDIR)/libmpathpersist
+ 
+@@ -42,8 +42,9 @@ ifndef RPM_OPT_FLAGS
+ 	RPM_OPT_FLAGS = -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4
+ endif
+ 
++LDFLAGS     += -Wl,-z,relro
+ OPTFLAGS     = $(RPM_OPT_FLAGS) -Wunused -Wstrict-prototypes
+-CFLAGS	     = $(OPTFLAGS) -fPIC -DLIB_STRING=\"${LIB}\"
++CFLAGS	     = $(OPTFLAGS) -DLIB_STRING=\"${LIB}\"
+ SHARED_FLAGS = -shared
+ 
+ %.o:	%.c
+Index: multipath-tools-130222/multipathd/Makefile
+===================================================================
+--- multipath-tools-130222.orig/multipathd/Makefile
++++ multipath-tools-130222/multipathd/Makefile
+@@ -5,9 +5,10 @@ include ../Makefile.inc
+ #
+ # basic flags setting
+ #
+-CFLAGS += -I$(multipathdir) -I$(mpathpersistdir)
++CFLAGS += -fPIE -DPIE -I$(multipathdir) -I$(mpathpersistdir)
+ LDFLAGS += -lpthread -ldevmapper -lreadline -ludev -ldl \
+-	   -L$(multipathdir) -lmultipath -L$(mpathpersistdir) -lmpathpersist
++	   -L$(multipathdir) -lmultipath -L$(mpathpersistdir) -lmpathpersist \
++	   -Wl,-z,now -pie
+ 
+ #
+ # debuging stuff
+Index: multipath-tools-130222/kpartx/Makefile
+===================================================================
+--- multipath-tools-130222.orig/kpartx/Makefile
++++ multipath-tools-130222/kpartx/Makefile
+@@ -4,7 +4,7 @@
+ #
+ include ../Makefile.inc
+ 
+-CFLAGS += -I. -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
++CFLAGS += -fPIC -I. -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+ 
+ LIBDM_API_COOKIE = $(shell grep -Ecs '^[a-z]*[[:space:]]+dm_task_set_cookie' /usr/include/libdevmapper.h)
+ 
+Index: multipath-tools-130222/libmpathpersist/Makefile
+===================================================================
+--- multipath-tools-130222.orig/libmpathpersist/Makefile
++++ multipath-tools-130222/libmpathpersist/Makefile
+@@ -10,7 +10,7 @@ DEVLIB = libmpathpersist.so
+ LIBS = $(DEVLIB).$(SONAME)
+ 
+ 
+-CFLAGS += -I$(multipathdir) -I$(mpathpersistdir) 
++CFLAGS += -fPIC -I$(multipathdir) -I$(mpathpersistdir)
+ LIBDEPS +=  -lpthread -ldevmapper -ldl -L$(multipathdir) -lmultipath
+ 
+ OBJS = mpath_persist.o mpath_updatepr.o mpath_pr_ioctl.o 
+@@ -19,7 +19,7 @@ all: $(LIBS)
+ 
+ 
+ $(LIBS): 
+-	$(CC) -Wall -fPIC -c $(CFLAGS) *.c 
++	$(CC) -Wall -c $(CFLAGS) *.c
+ 	$(CC)  -shared $(LIBDEPS) -Wl,-soname=$@ $(CFLAGS) -o $@ $(OBJS)
+ 	ln -s $(LIBS) $(DEVLIB)
+ 	$(GZIP) mpath_persistent_reserve_in.3 > mpath_persistent_reserve_in.3.gz	
+Index: multipath-tools-130222/libmultipath/Makefile
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/Makefile
++++ multipath-tools-130222/libmultipath/Makefile
+@@ -8,6 +8,7 @@ SONAME=0
+ DEVLIB = libmultipath.so
+ LIBS = $(DEVLIB).$(SONAME)
+ LIBDEPS = -lpthread -ldl -ldevmapper -ludev
++CFLAGS += -fPIC
+ 
+ OBJS = memory.o parser.o vector.o devmapper.o \
+        hwtable.o blacklist.o util.o dmparser.o config.o \
+Index: multipath-tools-130222/libmultipath/checkers/Makefile
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/checkers/Makefile
++++ multipath-tools-130222/libmultipath/checkers/Makefile
+@@ -14,7 +14,7 @@ LIBS= \
+ 	libcheckhp_sw.so \
+ 	libcheckrdac.so
+ 
+-CFLAGS += -I..
++CFLAGS += -fPIC -I..
+ 
+ all: $(LIBS)
+ 
+Index: multipath-tools-130222/libmultipath/prioritizers/Makefile
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/prioritizers/Makefile
++++ multipath-tools-130222/libmultipath/prioritizers/Makefile
+@@ -17,7 +17,7 @@ LIBS = \
+ 	libprioweightedpath.so \
+ 	libprioiet.so
+ 
+-CFLAGS += -I..
++CFLAGS += -fPIC -I..
+ 
+ all: $(LIBS)
+ 
+Index: multipath-tools-130222/multipath/Makefile
+===================================================================
+--- multipath-tools-130222.orig/multipath/Makefile
++++ multipath-tools-130222/multipath/Makefile
+@@ -6,7 +6,7 @@ include ../Makefile.inc
+ 
+ OBJS = main.o
+ 
+-CFLAGS += -I$(multipathdir)
++CFLAGS += -fPIC -I$(multipathdir)
+ LDFLAGS += -lpthread -ldevmapper -ldl -L$(multipathdir) -lmultipath
+ 
+ EXEC = multipath

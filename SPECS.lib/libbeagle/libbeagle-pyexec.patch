@@ -1,0 +1,11 @@
+diff -up libbeagle-0.3.9/wrappers/python/Makefile.am.pyexec libbeagle-0.3.9/wrappers/python/Makefile.am
+--- libbeagle-0.3.9/wrappers/python/Makefile.am.pyexec	2009-02-04 12:28:16.000000000 -0500
++++ libbeagle-0.3.9/wrappers/python/Makefile.am	2009-02-04 12:28:34.000000000 -0500
+@@ -1,6 +1,6 @@
+ INCLUDES = $(PYTHON_INCLUDES) $(PYBEAGLE_CFLAGS) -I$(top_srcdir)
+ 
+-beagledir = $(pythondir)/beagle
++beagledir = $(pyexecdir)/beagle
+ beagle_LTLIBRARIES = beagle.la
+ beagle_la_LDFLAGS = -module -avoid-version -export-symbols-regex initbeagle
+ beagle_la_LIBADD = $(BEAGLE_LIBS) $(top_builddir)/beagle/libbeagle.la

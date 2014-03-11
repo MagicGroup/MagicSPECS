@@ -1,0 +1,11 @@
+--- latex2html-2002-2-1/pstoimg.pin.grayimg	2005-05-04 11:20:46.000000000 +0200
++++ latex2html-2002-2-1/pstoimg.pin	2005-06-21 14:54:30.899550448 +0200
+@@ -1021,7 +1021,7 @@ sub ps2pnm {
+       }
+     my $had_nonwhite;
+     if($opt{white}) {
+-      $had_nonwhite = ($ps =~ s/(\n\d+ \d+ bop gsave) \d*\.\d+ (TeXcolorgray clippath fill grestore)/$1 1 $2/s);
++      $had_nonwhite = ($ps =~ s/(\d+ \d+ bop gsave) \d*\.\d+ (TeXcolorgray clippath fill grestore)/$1 1 $2/s);
+       }
+     $ps_changed = $had_papersize || $had_nonwhite;
+     if($ps_changed) {

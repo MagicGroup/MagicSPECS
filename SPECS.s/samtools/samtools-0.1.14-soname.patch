@@ -1,0 +1,12 @@
+diff -up samtools-0.1.14/Makefile.soname samtools-0.1.14/Makefile
+--- samtools-0.1.14/Makefile.soname	2011-03-23 10:15:00.000000000 +0100
++++ samtools-0.1.14/Makefile	2011-03-23 10:15:26.000000000 +0100
+@@ -78,7 +78,7 @@ libbam.1.dylib-local:$(LOBJS)
+ 		libtool -dynamic $(LOBJS) -o libbam.1.dylib -lc -lz
+ 
+ libbam.so.1-local:$(LOBJS)
+-		$(CC) -shared -Wl,-soname,libbam.so -o libbam.so.1 $(LOBJS) -lc -lz
++		$(CC) -shared -Wl,-soname,libbam.so.1 -o libbam.so.1 $(LOBJS) -lc -lz
+ 
+ dylib:
+ 		@$(MAKE) cleanlocal; \

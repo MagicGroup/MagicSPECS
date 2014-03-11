@@ -1,0 +1,85 @@
+--- libmal-0.31/libmal.c.pi12	2003-03-23 11:00:26.000000000 -0600
++++ libmal-0.31/libmal.c	2005-06-14 10:51:54.000000000 -0500
+@@ -508,8 +508,13 @@
+     uint8 buffer[BUFFERSIZE];
+     AGBufferReader * r = NULL;
+ 
++#if (PILOT_LINK_MAJOR >= 12)
++    rc = dlp_ReadRecordByIndex(sd, userConfigDBHandle, 0, (void *)buffer,
++                               &id, &attr, &cat);
++#else
+     rc = dlp_ReadRecordByIndex(sd, userConfigDBHandle, 0, (void *)buffer,
+                                &id, &bufferSize, &attr, &cat);
++#endif
+ 
+     if (rc < 0) {
+ #ifdef _DEBUG
+@@ -541,8 +546,13 @@
+     uint8 buffer[BUFFERSIZE];
+     AGBufferReader * r = NULL;
+ 
++#if (PILOT_LINK_MAJOR >= 12)
++    rc = dlp_ReadRecordByIndex(sd, userConfigDBHandle, 0, (void *)buffer,
++                               &id, &attr, &cat);
++#else
+     rc = dlp_ReadRecordByIndex(sd, userConfigDBHandle, 0, (void *)buffer,
+                                &id, &bufferSize, &attr, &cat);
++#endif
+ 
+     if (rc < 0) {
+ #ifdef _DEBUG
+@@ -596,9 +606,13 @@
+             AGUserConfigWriteData(deviceUserConfig, (AGWriter*)w);
+         }
+ 
+-        result = dlp_ReadRecordByIndex(sd, userConfigDBHandle, 0, (void *)buffer
+-                                       ,
+-                                       &id, &bufferSize, &attr, &cat);
++#if (PILOT_LINK_MAJOR >= 12)
++        result = dlp_ReadRecordByIndex(sd, userConfigDBHandle, 0, (void *)buffer,
++                               &id, &attr, &cat);
++#else
++        result = dlp_ReadRecordByIndex(sd, userConfigDBHandle, 0, (void *)buffer,
++                               &id, &bufferSize, &attr, &cat);
++#endif
+ 
+         if (result < 0)
+             id = 0;
+@@ -881,13 +895,25 @@
+     int idx   = pInfo->pilot_RecIndex++;
+ 
+     result = (modonly) ?
++#if (PILOT_LINK_MAJOR >= 12)
++        dlp_ReadNextModifiedRec (sd, pInfo->pilot_rHandle, pInfo->pilot_buffer,
++                                 &pInfo->id, &idx,
++                                 &att, &cat)
++#else
+         dlp_ReadNextModifiedRec (sd, pInfo->pilot_rHandle, pInfo->pilot_buffer,
+                                  &pInfo->id, &idx,
+                                  &size, &att, &cat)
++#endif
+         :
++#if (PILOT_LINK_MAJOR >= 12)
++        dlp_ReadRecordByIndex(sd, pInfo->pilot_rHandle, idx,
++                              pInfo->pilot_buffer, &pInfo->id,
++                              &att, &cat);
++#else
+         dlp_ReadRecordByIndex(sd, pInfo->pilot_rHandle, idx,
+                               pInfo->pilot_buffer, &pInfo->id,
+                               &size, &att, &cat);
++#endif
+     
+     if (result < 0) {
+         closeDatabase(pInfo);
+@@ -1208,7 +1234,11 @@
+     
+     strcpy(addr.pi_device, device);
+     
++#if (PILOT_LINK_MAJOR >= 12)
++    ret = pi_bind(sd, (struct sockaddr*)&addr);
++#else
+     ret = pi_bind(sd, (struct sockaddr*)&addr, sizeof(addr));
++#endif
+     if(ret == -1) {
+         /*fprintf(stderr, "Unable to bind to port '%s'.\n", device);*/
+         (*printerror) ("Unable to bind to port '%s'.\n", device);

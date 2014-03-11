@@ -1,0 +1,12 @@
+diff -u -r kiso-0.8.3.orig/src/main.cpp kiso-0.8.3/src/main.cpp
+--- kiso-0.8.3.orig/src/main.cpp	2005-08-26 19:48:02.000000000 +0800
++++ kiso-0.8.3/src/main.cpp	2006-11-15 19:56:59.000000000 +0800
+@@ -176,7 +176,7 @@
+   if (!KUniqueApplication::start())
+   exit(0);
+   
+-if (testmount->exitStatus()!=1){
++if (testmount->normalExit()){
+   Mainform *kiso = new Mainform(0,0,0,arg1);
+   Kiso.setMainWidget(kiso);
+   kiso->show();     

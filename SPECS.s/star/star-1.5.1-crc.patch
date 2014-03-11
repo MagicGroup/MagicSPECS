@@ -1,0 +1,31 @@
+diff --git a/star/cpiohdr.c b/star/cpiohdr.c
+index 9c7a774..2785661 100644
+--- a/star/cpiohdr.c
++++ b/star/cpiohdr.c
+@@ -536,7 +536,9 @@ cpio_checkswab(ptb)
+ }
+ 
+ /*
+- * This simple sum is used for the SYSvr4 file content CRC
++ * This simple sum is used for the SYSvr4 file content checksum.  This is
++ * implemented like Sum32 algorithm.
++ *
+  * Use Int32_t to implement the same behavior as the AT&T cpio command.
+  */
+ LOCAL Int32_t
+diff --git a/star/star.1 b/star/star.1
+index 95b202c..a931a6f 100644
+--- a/star/star.1
++++ b/star/star.1
+@@ -913,9 +913,9 @@ archive format because of its limited portability.
+ .B crc
+ This format is similar to the
+ .B asc
+-cpio format but in addition uses a simple byte based checksum called
++cpio format but in addition uses a simple byte based checksum called here as
+ .BR CRC .
+-Try to avoid the
++This algorithm is simple Sum32 -- not a polynomial CRC.  Try to avoid the
+ .B crc
+ archive format because of its limited portability.
+ 

@@ -1,0 +1,12 @@
+diff -r -u dirmngr-1.1.0.orig/src/certcache.c dirmngr-1.1.0/src/certcache.c
+--- dirmngr-1.1.0.orig/src/certcache.c	2010-03-12 13:11:27.000000000 +0100
++++ dirmngr-1.1.0/src/certcache.c	2010-11-29 19:03:11.200685392 +0100
+@@ -1146,7 +1146,7 @@
+       for (i=0; i < 256; i++)
+         for (ci=cert_cache[i]; ci; ci = ci->next)
+           if (ci->cert && ci->subject_dn
+-              && !strcmp (ci->subject_dn, subject_dn))
++              && (!subject_dn || !strcmp (ci->subject_dn, subject_dn)))
+             for (cr=ctrl->ocsp_certs; cr; cr = cr->next)
+               if (!memcmp (ci->fpr, cr->fpr, 20))
+                 {

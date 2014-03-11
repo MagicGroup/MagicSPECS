@@ -1,0 +1,38 @@
+diff -up lesstif-0.95.2/scripts/motif-config.in.motif-config lesstif-0.95.2/scripts/motif-config.in
+--- lesstif-0.95.2/scripts/motif-config.in.motif-config	2005-01-14 20:36:00.000000000 +0100
++++ lesstif-0.95.2/scripts/motif-config.in	2009-07-28 11:39:51.000000000 +0200
+@@ -80,10 +80,10 @@ if test "$echo_exec_prefix" = "yes"; the
+ fi
+ 
+ if test "$echo_cflags" = "yes"; then
+-      echo "-I$L/include $XC"
++      echo "-I$includedir $XC"
+ fi
+ 
+ if test "$echo_libs" = "yes"; then
+-      echo "-L$L/lib -L/usr/X11R6/lib -lXm -lXt $my_glib_libs $XR -lXext -lX11"
++      echo "-lXm -lXt ${X_PRE_LIBS} -lX11 ${X_EXTRA_LIBS} `freetype-config --libs`"
+ fi      
+ 
+--- lesstif-0.95.2/scripts/motif-config.in~	2011-02-09 12:34:08.000000000 -0600
++++ lesstif-0.95.2/scripts/motif-config.in	2011-02-09 12:41:58.650558995 -0600
+@@ -2,14 +2,14 @@
+ #
+ # $Header: /cvsroot/lesstif/lesstif/scripts/motif-config.in,v 1.2 2005/01/14 19:36:00 dannybackx Exp $
+ #
+-L="@prefix@"
+ XC="@X_CFLAGS@"
+-XL="@X_LIBS@"
+-XR="@XRENDER_LIBS@"
++X_PRE_LIBS="@X_PRE_LIBS@"
++X_EXTRA_LIBS="@X_EXTRA_LIBS@"
+ V="@PACKAGE_NAME@ @PACKAGE_VERSION@"
+ 
+-prefix=$L
+-exec_prefix=$L
++prefix="@prefix@"
++exec_prefix="@exec_prefix@"
++includedir="@includedir@"
+ exec_prefix_set=no
+ 
+ usage()

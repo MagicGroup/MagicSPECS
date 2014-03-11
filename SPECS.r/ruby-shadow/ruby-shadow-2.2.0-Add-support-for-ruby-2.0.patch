@@ -1,0 +1,29 @@
+From fa317a925f6880d62ce5157792d9901be33ea57f Mon Sep 17 00:00:00 2001
+From: Adam Palmblad <adam.palmblad@teampages.com>
+Date: Mon, 25 Feb 2013 12:49:39 -0800
+Subject: [PATCH] Add support for ruby 2.0.
+
+---
+ extconf.rb          | 6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
+
+diff --git a/extconf.rb b/extconf.rb
+index 9453b27..7dcbba7 100644
+--- a/extconf.rb
++++ b/extconf.rb
+@@ -7,7 +7,11 @@
+ require 'mkmf'
+ 
+ $CFLAGS = "#{$CFLAGS}"
+-$CFLAGS += RUBY_VERSION =~ /1\.9/ ? ' -DRUBY19' : ''
++$CFLAGS += case RUBY_VERSION
++          when /^1\.9/; ' -DRUBY19'
++          when /^2\./; ' -DRUBY19'
++          else; ''
++          end
+ 
+ #$LDFLAGS = "-lshadow"
+ 
+-- 
+1.8.1.5
+

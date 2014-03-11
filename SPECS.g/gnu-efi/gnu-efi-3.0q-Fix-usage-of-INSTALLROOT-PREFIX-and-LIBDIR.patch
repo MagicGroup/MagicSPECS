@@ -1,0 +1,66 @@
+From 3f40a425e763edfde77a9a6e05ed09b0676d8fa9 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@cutlet.install.bos.redhat.com>
+Date: Fri, 3 Oct 2008 14:40:56 -0400
+Subject: [PATCH 1/7] Fix usage of INSTALLROOT, PREFIX, and LIBDIR.
+
+I screwed it up last time.
+---
+ Make.defaults |    6 +++---
+ inc/Makefile  |   16 ++++++++--------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/Make.defaults b/Make.defaults
+index bf162c5..6278fa7 100644
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -38,8 +38,9 @@
+ # Where to install the package. GNU-EFI will create and access
+ # lib and include under the root
+ #
+-INSTALLROOT=/usr/local
+-LIBDIR=lib
++INSTALLROOT:= /
++PREFIX := /usr/local
++LIBDIR := ${PREFIX}/lib
+ 
+ TOPDIR    := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
+ 
+@@ -73,7 +74,6 @@ endif
+ 
+ ifeq ($(ARCH), x86_64)
+   CFLAGS += -mno-red-zone
+-  LIBDIR = lib
+   ifeq ($(HOSTARCH), ia32)
+     ARCH3264 = -m64
+   endif
+diff --git a/inc/Makefile b/inc/Makefile
+index 9683be5..71fded5 100644
+--- a/inc/Makefile
++++ b/inc/Makefile
+@@ -13,15 +13,15 @@ all:
+ clean:
+ 
+ install:
+-	mkdir -p $(INSTALLROOT)/include/efi
+-	mkdir -p $(INSTALLROOT)/include/efi/protocol
+-	mkdir -p $(INSTALLROOT)/include/efi/$(ARCH)
+-	$(INSTALL) -m 644 *.h $(INSTALLROOT)/include/efi
+-	$(INSTALL) -m 644 protocol/*.h $(INSTALLROOT)/include/efi/protocol
+-	$(INSTALL) -m 644 $(ARCH)/*.h $(INSTALLROOT)/include/efi/$(ARCH)
++	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi
++	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi/protocol
++	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi/$(ARCH)
++	$(INSTALL) -m 644 *.h $(INSTALLROOT)$(PREFIX)/include/efi
++	$(INSTALL) -m 644 protocol/*.h $(INSTALLROOT)$(PREFIX)/include/efi/protocol
++	$(INSTALL) -m 644 $(ARCH)/*.h $(INSTALLROOT)$(PREFIX)/include/efi/$(ARCH)
+ ifeq ($(ARCH),ia64)
+-	mkdir -p $(INSTALLROOT)/include/efi/protocol/ia64
+-	$(INSTALL) -m 644 protocol/ia64/*.h $(INSTALLROOT)/include/efi/protocol/ia64
++	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi/protocol/ia64
++	$(INSTALL) -m 644 protocol/ia64/*.h $(INSTALLROOT)$(PREFIX)/include/efi/protocol/ia64
+ endif
+ 
+ include $(SRCDIR)/../Make.rules
+-- 
+1.7.10.4
+

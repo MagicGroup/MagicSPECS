@@ -1,0 +1,12 @@
+--- xemacs-packages-extra-20121228/xemacs-packages/ede/ede.el~	2012-01-25 09:29:15.000000000 -0700
++++ xemacs-packages-extra-20121228/xemacs-packages/ede/ede.el	2013-01-08 14:19:35.186169078 -0700
+@@ -113,8 +113,7 @@ Any other value disables searching for E
+   :type '(choice (const :tag "Any directory" t)
+ 		 (repeat :tag "List of directories" (directory))
+ 		 (function :tag "Predicate"))
+-  :version "23.4"
+-  :risky t)
++  :version "23.4")
+ 
+ (defun ede-directory-safe-p (dir)
+   "Return non-nil if DIR is a safe directory to load projects from.

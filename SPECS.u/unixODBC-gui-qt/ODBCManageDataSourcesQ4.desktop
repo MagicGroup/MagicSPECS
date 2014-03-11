@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ODBC Data Source Administrator
+Comment=ODBC Data Source Administration Tool
+Exec=ODBCManageDataSourcesQ4
+Icon=ODBCManageDataSourcesQ4
+Type=Application
+Terminal=false
+Categories=Settings;

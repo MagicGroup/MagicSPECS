@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+sed -i "s/Version:.*/Version:\t$1/g" cheese.spec
+majorver=$(echo $1|cut -d"." -f1).$(echo $1|cut -d"." -f2)
+sed -i "s/%define majorver.*/%define majorver $majorver/g" cheese.spec
+popd

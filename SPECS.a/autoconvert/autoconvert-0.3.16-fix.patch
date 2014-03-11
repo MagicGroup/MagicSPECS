@@ -1,0 +1,12 @@
+diff -ur autoconvert-0.3.16.orig/hzconvert/Makefile autoconvert-0.3.16/hzconvert/Makefile
+--- autoconvert-0.3.16.orig/hzconvert/Makefile	2014-03-02 22:12:31.262010347 +0000
++++ autoconvert-0.3.16/hzconvert/Makefile	2014-03-02 22:15:00.872006513 +0000
+@@ -12,7 +12,7 @@
+ 
+ libhzconvert: $(OBJS)
+ 	ar rs  ../lib/libhz.a $(OBJS)
+-	gcc -fPIC -shared -Wl,-soname,$(SHARED_LIB_MAJOR) -o ../lib/$(SHARED_LIB_MINOR)  $(OBJS) -ldl
++	gcc -fPIC -shared -Wl,-soname,$(SHARED_LIB_MAJOR) -o ../lib/$(SHARED_LIB_MINOR)  $(OBJS) -ldl -L../lib
+ 	rm -f ../lib/$(SHARED_LIB_MAJOR)
+ 	rm -f ../lib/$(SHARED_LIB)
+ 	cd ../lib;ln -s $(SHARED_LIB_MINOR) $(SHARED_LIB_MAJOR)

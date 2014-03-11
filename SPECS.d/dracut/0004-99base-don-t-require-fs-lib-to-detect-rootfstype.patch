@@ -1,0 +1,25 @@
+From e42b6f9e1504290f54be0074eb51a025c812e84f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Amadeusz=20=C5=BBo=C5=82nowski?= <aidecoe@aidecoe.name>
+Date: Fri, 29 Jun 2012 13:58:19 +0200
+Subject: [PATCH] 99base: don't require fs-lib to detect rootfstype
+
+If fs-lib is not included, no rootfs autodetection is performed.
+---
+ modules.d/99base/mount-hook.sh |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/modules.d/99base/mount-hook.sh b/modules.d/99base/mount-hook.sh
+index dcf1415..db07866 100755
+--- a/modules.d/99base/mount-hook.sh
++++ b/modules.d/99base/mount-hook.sh
+@@ -4,7 +4,9 @@
+ 
+ PATH=/usr/sbin:/usr/bin:/sbin:/bin
+ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
+-type det_fs >/dev/null 2>&1 || . /lib/fs-lib.sh
++type det_fs >/dev/null 2>&1 || [ -f /lib/fs-lib.sh ] && . /lib/fs-lib.sh
++# If fs-lib is not included use following det_fs replacement.
++type det_fs >/dev/null 2>&1 || det_fs() { echo "${2:-auto}"; }
+ 
+ mountpoint="$1"
+ ismounted "$mountpoint" && exit 0

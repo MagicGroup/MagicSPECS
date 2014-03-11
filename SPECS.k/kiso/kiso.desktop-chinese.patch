@@ -1,0 +1,23 @@
+--- kiso-0.8.2/src/kiso.desktop.orig	2005-07-03 03:19:22.000000000 +0800
++++ kiso-0.8.2/src/kiso.desktop	2005-07-28 22:18:06.000000000 +0800
+@@ -1,6 +1,7 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-Name=Kiso
++Name=Kiso (ISO tool)
++Name[zh_CN]=Kiso (ISO 工具)
+ Exec=kiso
+ Actions=openimage;
+ ServiceTypes=application/x-iso,application/x-nrg
+@@ -9,9 +10,11 @@
+ Type=Application
+ Comment=An application to modify ISO-Images.
+ Comment[de]=Anwendung zum bearbeiten von ISO-Images.
++Comment[zh_CN]=一个修改 ISO 映像的程序.
+ 
+ [Desktop Action openimage]
+ Name=Open image...
+ Name[de]=Image öffnen...
++Name[zh_CN]=打开映像...
+ Icon=kiso.png
+ Exec=kiso %F

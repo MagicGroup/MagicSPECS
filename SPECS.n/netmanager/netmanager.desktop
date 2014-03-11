@@ -1,0 +1,21 @@
+[Desktop Entry]
+Categories=Application;Network;
+Comment[zh_CN]=MagicLinux本地网络配置工具
+Comment=MagicLinux本地网络配置工具
+Encoding=UTF-8
+Exec=/usr/bin/netmanager
+GenericName[zh_CN]=本地网络配置工具
+GenericName=本地网络配置工具
+Icon=networkmanager
+MimeType=
+Name[zh_CN]=netmanager
+Name=netmanager
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

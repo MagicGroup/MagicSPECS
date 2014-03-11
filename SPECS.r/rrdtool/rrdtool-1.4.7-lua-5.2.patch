@@ -1,0 +1,29 @@
+diff -up rrdtool-1.4.7/bindings/lua/rrdlua.c.lua-52 rrdtool-1.4.7/bindings/lua/rrdlua.c
+--- rrdtool-1.4.7/bindings/lua/rrdlua.c.lua-52	2013-05-15 11:38:28.152336459 -0400
++++ rrdtool-1.4.7/bindings/lua/rrdlua.c	2013-05-15 11:38:48.291336762 -0400
+@@ -342,7 +342,7 @@ set_info (lua_State * L)
+ 
+ /**********************************************************/
+ 
+-static const struct luaL_reg rrd[] = {
++static const struct luaL_Reg rrd[] = {
+   {"create", lua_rrd_create},
+   {"dump", lua_rrd_dump},
+   {"fetch", lua_rrd_fetch},
+diff -up rrdtool-1.4.7/configure.ac.lua-52 rrdtool-1.4.7/configure.ac
+--- rrdtool-1.4.7/configure.ac.lua-52	2013-05-15 11:35:49.074334072 -0400
++++ rrdtool-1.4.7/configure.ac	2013-05-15 11:35:49.077334073 -0400
+@@ -744,7 +744,12 @@ LUA_EOF
+       LIBS=
+       lua_havelib=no
+       LUA_HAVE_COMPAT51=DONT_HAVE_COMPAT51
+-      AC_SEARCH_LIBS(lua_call, lua$lua_vdot lua$lua_vndot lua,
++      if test "$lua_vndot" = "52"; then
++        CALL_FUNC=lua_callk
++      else
++        CALL_FUNC=lua_call
++      fi
++      AC_SEARCH_LIBS($CALL_FUNC, lua$lua_vdot lua$lua_vndot lua,
+         [AC_SEARCH_LIBS(luaL_register, lua$lua_vdot lua$lua_vndot lua,
+           [lua_havelib=LUA$lua_vndot],
+           [AC_SEARCH_LIBS(luaL_module, lualib$lua_vndot lualib$lua_vdot lualib,

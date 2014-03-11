@@ -1,0 +1,12 @@
+diff -up synaptic-0.57.2/gtk/rgaboutpanel.cc.gcc45 synaptic-0.57.2/gtk/rgaboutpanel.cc
+--- synaptic-0.57.2/gtk/rgaboutpanel.cc.gcc45	2010-12-09 09:55:11.000000000 +0200
++++ synaptic-0.57.2/gtk/rgaboutpanel.cc	2010-12-09 09:55:19.000000000 +0200
+@@ -59,7 +59,7 @@ void RGAboutPanel::creditsClicked(GtkWid
+    RGAboutPanel *me = (RGAboutPanel *) data;
+ 
+    if (me->credits == NULL) {
+-      me->credits = new RGCreditsPanel::RGCreditsPanel(me);
++      me->credits = new RGCreditsPanel(me);
+    }
+    me->credits->setTitle(_("Credits"));
+ 

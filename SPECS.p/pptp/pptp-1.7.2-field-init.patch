@@ -1,0 +1,11 @@
+--- pptp-1.7.2/orckit_quirks.c.field	2008-05-14 07:33:55.000000000 +0100
++++ pptp-1.7.2/orckit_quirks.c	2011-12-01 09:31:04.762035792 +0000
+@@ -62,7 +62,7 @@ int
+ orckit_atur3_start_ctrl_conn_hook(struct pptp_start_ctrl_conn* packet)
+ {
+     struct pptp_start_ctrl_conn fixed_packet = {
+-	{0}, /* we'll set the header later */
++	{0, 0, 0, 0, 0}, /* we'll set the header later */
+ 	hton16(PPTP_VERSION), 0, 0,
+ 	hton32(PPTP_FRAME_ASYNC), hton32(PPTP_BEARER_ANALOG),
+ 	hton16(0) /* max channels */,

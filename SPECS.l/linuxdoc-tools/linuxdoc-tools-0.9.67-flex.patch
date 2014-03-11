@@ -1,0 +1,47 @@
+diff -ur linuxdoc-tools-0.9.67.orig/doc/Makedoc.sh linuxdoc-tools-0.9.67/doc/Makedoc.sh
+--- linuxdoc-tools-0.9.67.orig/doc/Makedoc.sh	2012-12-26 18:05:03.000000000 +0000
++++ linuxdoc-tools-0.9.67/doc/Makedoc.sh	2012-12-26 18:27:18.000000000 +0000
+@@ -46,19 +46,19 @@
+ 	$TMPDIR/sgml2txt -b 1 ./guide
+ fi
+ 
+-if [ -n "`which latex`" ]; then
+-	ln -s $TMPDIR/linuxdoc $TMPDIR/sgml2latex
+-	echo "- Building latex docs" >&2
+-	$TMPDIR/sgml2latex --pass="\usepackage{times}" -o dvi ./guide
+-fi
++#if [ -n "`which latex`" ]; then
++#	ln -s $TMPDIR/linuxdoc $TMPDIR/sgml2latex
++#	echo "- Building latex docs" >&2
++#	$TMPDIR/sgml2latex --pass="\usepackage{times}" -o dvi ./guide
++#fi
+ 
+-if [ -n "`which dvips`" ]; then
+-	echo "   + dvips" >&2
+-	dvips -t letter -o ./guide.ps ./guide.dvi
+-	if [ -n "`which gzip`" -a -f ./guide.ps ]; then
+-		gzip -fN ./guide.ps
+-	fi
+-fi
++#if [ -n "`which dvips`" ]; then
++#	echo "   + dvips" >&2
++#	dvips -t letter -o ./guide.ps ./guide.dvi
++#	if [ -n "`which gzip`" -a -f ./guide.ps ]; then
++#		gzip -fN ./guide.ps
++#	fi
++#fi
+ 
+ 
+ echo "- Building info docs" >&2
+diff -ur linuxdoc-tools-0.9.67.orig/rtf-fix/rtf2rtf.l linuxdoc-tools-0.9.67/rtf-fix/rtf2rtf.l
+--- linuxdoc-tools-0.9.67.orig/rtf-fix/rtf2rtf.l	2012-12-26 18:05:03.000000000 +0000
++++ linuxdoc-tools-0.9.67/rtf-fix/rtf2rtf.l	2012-12-26 18:12:29.000000000 +0000
+@@ -72,7 +72,7 @@
+ int skipnewline = 0;
+ 
+ extern char *yytext;
+-extern int yyleng;
++extern yy_size_t yyleng;
+ 
+ #define CHAPTER 1
+ #define SECTION 2

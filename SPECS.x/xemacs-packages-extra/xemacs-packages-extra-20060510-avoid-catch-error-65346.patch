@@ -1,0 +1,19 @@
+--- xemacs-sumo-20060510/xemacs-packages/edit-utils/avoid.el~	2002-04-11 02:35:37.000000000 +0300
++++ xemacs-sumo-20060510/xemacs-packages/edit-utils/avoid.el	2006-09-03 02:27:54.000000000 +0300
+@@ -173,13 +173,15 @@
+ (defun mouse-avoidance-too-close-p (mouse)
+   ;;  Return t if mouse pointer and point cursor are too close.
+   ;; Acceptable distance is defined by mouse-avoidance-threshold.
++ (condition-case nil
+   (let ((point (mouse-avoidance-point-position)))
+     (and (eq (car mouse) (car point))
+ 	 (car (cdr mouse))
+ 	 (< (abs (- (car (cdr mouse)) (car (cdr point))))
+ 	    mouse-avoidance-threshold)
+ 	 (< (abs (- (cdr (cdr mouse)) (cdr (cdr point))))
+-	    mouse-avoidance-threshold))))
++	    mouse-avoidance-threshold)))
++  (error nil)))
+ 
+ (defun mouse-avoidance-banish-destination ()
+   "The position to which mouse-avoidance-mode `banish' moves the mouse.

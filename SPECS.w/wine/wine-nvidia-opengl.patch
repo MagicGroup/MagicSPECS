@@ -1,0 +1,45 @@
+Index: wine/dlls/d3d8/d3dcore_gl.h
+===================================================================
+RCS file: /home/wine/wine/dlls/d3d8/d3dcore_gl.h,v
+retrieving revision 1.18
+diff -u -r1.18 d3dcore_gl.h
+--- wine/dlls/d3d8/d3dcore_gl.h	28 May 2004 03:39:42 -0000	1.18
++++ wine/dlls/d3d8/d3dcore_gl.h	3 Oct 2005 00:00:00 -0000
+@@ -27,6 +27,7 @@
+ #endif
+ 
+ #define XMD_H /* This is to prevent the Xmd.h inclusion bug :-/ */
++#define GL_GLEXT_PROTOTYPES
+ #include <GL/gl.h>
+ #include <GL/glx.h>
+ #ifdef HAVE_GL_GLEXT_H
+Index: wine/dlls/ddraw/gl_private.h
+===================================================================
+RCS file: /home/wine/wine/dlls/ddraw/gl_private.h,v
+retrieving revision 1.9
+diff -u -r1.9 gl_private.h
+--- wine/dlls/ddraw/gl_private.h	12 Jun 2005 10:43:11 -0000	1.9
++++ wine/dlls/ddraw/gl_private.h	3 Oct 2005 00:00:00 -0000
+@@ -29,6 +29,7 @@
+ #undef WINAPI
+ 
+ #define XMD_H /* This is to prevent the Xmd.h inclusion bug :-/ */
++#define GL_GLEXT_PROTOTYPES
+ #include <GL/gl.h>
+ #include <GL/glx.h>
+ #ifdef HAVE_GL_GLEXT_H
+Index: wine/dlls/x11drv/opengl.c
+===================================================================
+RCS file: /home/wine/wine/dlls/x11drv/opengl.c,v
+retrieving revision 1.16
+diff -u -r1.16 opengl.c
+--- wine/dlls/x11drv/opengl.c	28 Sep 2005 18:11:17 -0000	1.16
++++ wine/dlls/x11drv/opengl.c	3 Oct 2005 00:00:00 -0000
+@@ -36,6 +36,7 @@
+ #undef CALLBACK
+ #undef WINAPI
+ 
++#define GL_GLEXT_PROTOTYPES
+ #ifdef HAVE_GL_GL_H
+ # include <GL/gl.h>
+ #endif

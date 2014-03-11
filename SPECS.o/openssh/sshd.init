@@ -1,0 +1,184 @@
+#!/bin/bash
+#
+# sshd		Start up the OpenSSH server daemon
+#
+# chkconfig: 2345 55 25
+# description: SSH is a protocol for secure remote shell access. \
+#              This service starts up the OpenSSH server daemon.
+#
+# processname: sshd
+# config: /etc/ssh/ssh_host_key
+# config: /etc/ssh/ssh_host_key.pub
+# config: /etc/ssh/ssh_random_seed
+# config: /etc/ssh/sshd_config
+# pidfile: /var/run/sshd.pid
+
+### BEGIN INIT INFO
+# Provides: sshd
+# Required-Start: $local_fs $network $syslog
+# Required-Stop: $local_fs $syslog
+# Should-Start: $syslog
+# Should-Stop: $network $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start up the OpenSSH server daemon
+# Description:       SSH is a protocol for secure remote shell access.
+#		     This service starts up the OpenSSH server daemon.
+### END INIT INFO
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# pull in sysconfig settings
+[ -f /etc/sysconfig/sshd ] && . /etc/sysconfig/sshd
+
+RETVAL=0
+prog="sshd"
+lockfile=/var/lock/subsys/$prog
+
+# Some functions to make the below more readable
+SSHD=/usr/sbin/sshd
+XPID_FILE=/var/run/sshd.pid
+PID_FILE=/var/run/sshd-s.pid
+
+runlevel=$(set -- $(runlevel); eval "echo \$$#" )
+
+do_restart_sanity_check()
+{
+	$SSHD -t
+	RETVAL=$?
+	if [ $RETVAL -ne  0 ]; then
+		failure $"Configuration file or keys are invalid"
+		echo
+	fi
+}
+
+start()
+{
+	[ -x $SSHD ] || exit 5
+	[ -f /etc/ssh/sshd_config ] || exit 6
+	# Create keys if necessary
+	/usr/sbin/sshd-keygen
+
+	echo -n $"Starting $prog: "
+	$SSHD $OPTIONS && success || failure
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch $lockfile
+	[ $RETVAL -eq 0 ] && cp -f $XPID_FILE $PID_FILE
+	echo
+	return $RETVAL
+}
+
+stop()
+{
+
+	echo -n $"Stopping $prog: "
+	if [ ! -f "$PID_FILE" ]; then
+		# not running; per LSB standards this is "ok"
+		action $"Stopping $prog: " /bin/true
+		return 0
+	fi
+	PID=`cat "$PID_FILE"`
+	if [ -n "$PID" ]; then
+		/bin/kill "$PID" >/dev/null 2>&1
+		RETVAL=$?
+		if [ $RETVAL -eq 0 ]; then
+			RETVAL=1
+			action $"Stopping $prog: " /bin/false
+		else
+			action $"Stopping $prog: " /bin/true
+		fi
+	else
+		 # failed to read pidfile
+		action $"Stopping $prog: " /bin/false
+		RETVAL=4
+	fi
+	# if we are in halt or reboot runlevel kill all running sessions
+	# so the TCP connections are closed cleanly
+	if [ "x$runlevel" = x0 -o "x$runlevel" = x6 ] ; then
+	    trap '' TERM
+	    killall $prog 2>/dev/null
+	    trap TERM
+	fi
+	[ $RETVAL -eq 0 ] && rm -f $lockfile
+	rm -f "$PID_FILE"
+        return $RETVAL
+}
+
+reload()
+{
+	echo -n $"Reloading $prog: "
+	if [ -n "`pidfileofproc $SSHD`" ] ; then
+	    killproc $SSHD -HUP
+	else
+	    failure $"Reloading $prog"
+	fi
+	RETVAL=$?
+	echo
+}
+
+restart() {
+	stop
+	start
+}
+
+force_reload() {
+	restart
+}
+
+rh_status() {
+	status -p $PID_FILE openssh-daemon
+}
+
+rh_status_q() {
+	rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+	start)
+		rh_status_q && exit 0
+		start
+		;;
+	stop)
+		if ! rh_status_q; then
+			rm -f $lockfile
+			exit 0
+		fi
+		stop
+		;;
+	restart)
+		restart
+		;;
+	reload)
+		rh_status_q || exit 7
+		reload
+		;;
+	force-reload)
+		force_reload
+		;;
+	condrestart|try-restart)
+		rh_status_q || exit 0
+		if [ -f $lockfile ] ; then
+			do_restart_sanity_check
+			if [ $RETVAL -eq 0 ] ; then
+				stop
+				# avoid race
+				sleep 3
+				start
+			else
+				RETVAL=6
+			fi
+		fi
+		;;
+	status)
+		rh_status
+		RETVAL=$?
+		if [ $RETVAL -eq 3 -a -f $lockfile ] ; then
+			RETVAL=2
+		fi
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|restart|reload|force-reload|condrestart|try-restart|status}"
+		RETVAL=2
+esac
+exit $RETVAL

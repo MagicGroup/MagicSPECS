@@ -1,0 +1,12 @@
+diff -ur cfitsio/Makefile.in cfitsio.new/Makefile.in
+--- cfitsio/Makefile.in	2011-10-29 16:54:43.077132582 +0200
++++ cfitsio.new/Makefile.in	2011-10-29 16:55:38.648098260 +0200
+@@ -90,7 +90,7 @@
+ shared: libcfitsio${SHLIB_SUFFIX}
+ 
+ libcfitsio${SHLIB_SUFFIX}: ${OBJECTS}
+-		${SHLIB_LD} ${LDFLAGS} -o $@ ${OBJECTS}
++		${SHLIB_LD} ${LDFLAGS} ${LIBS} -lm -o $@ ${OBJECTS}
+ 
+ install:	libcfitsio.a $(INSTALL_DIRS)
+ 		@if [ -f libcfitsio.a ]; then \

@@ -1,0 +1,12 @@
+diff -Nrup a/nptl/sysdeps/pthread/pthread.h b/nptl/sysdeps/pthread/pthread.h
+--- a/nptl/sysdeps/pthread/pthread.h	2012-06-30 13:12:34.000000000 -0600
++++ b/nptl/sysdeps/pthread/pthread.h	2012-09-14 06:37:42.165093926 -0600
+@@ -731,7 +731,7 @@ extern void __pthread_unwind_next (__pth
+ 
+ /* Function used in the macros.  */
+ struct __jmp_buf_tag;
+-extern int __sigsetjmp (struct __jmp_buf_tag *__env, int __savemask) __THROW;
++extern int __sigsetjmp (struct __jmp_buf_tag *__env, int __savemask) __THROWNL;
+ 
+ 
+ /* Mutex handling.  */

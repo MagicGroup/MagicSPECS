@@ -1,0 +1,12 @@
+diff -Nur amarok-1.4-beta1/amarok/src/tagguesserconfigdialog.ui amarok-1.4-beta1new/amarok/src/tagguesserconfigdialog.ui
+--- amarok-1.4-beta1/amarok/src/tagguesserconfigdialog.ui	2006-02-12 12:49:38.000000000 -0500
++++ amarok-1.4-beta1new/amarok/src/tagguesserconfigdialog.ui	2006-02-28 21:35:19.055129320 -0500
+@@ -3,7 +3,7 @@
+ <author>Frerich Raabe &lt;raabe@kde.org&gt;</author>
+ <widget class="KDialog">
+     <property name="name">
+-        <cstring>Form1</cstring>
++        <cstring>Form2</cstring>
+     </property>
+     <property name="geometry">
+         <rect>

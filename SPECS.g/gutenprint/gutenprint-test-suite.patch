@@ -1,0 +1,12 @@
+diff -up gutenprint-5.2.9/src/cups/test-ppds.test-suite gutenprint-5.2.9/src/cups/test-ppds
+--- gutenprint-5.2.9/src/cups/test-ppds.test-suite	2013-07-16 16:38:26.625593051 +0100
++++ gutenprint-5.2.9/src/cups/test-ppds	2013-07-16 16:38:47.377893363 +0100
+@@ -8,7 +8,7 @@ make EXTRA_GENPPD_OPTS=-b ppd-clean ppd-
+ # Also, a number of our media sizes aren't named correctly, but we'll
+ # accept those issues rather than cluttering the namespace further and/or
+ # changing tag names.
+-cupstestppdopts='-I profiles -W sizes'
++cupstestppdopts='-I profiles -W sizes -I filters'
+ 
+ ppd_count=`find ppd \( -name '*.ppd.gz' -o -name '*.ppd' \) -print | wc -l`
+ 

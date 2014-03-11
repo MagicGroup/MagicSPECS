@@ -1,0 +1,17 @@
+--- setup.py~	2007-11-17 18:13:24.000000000 +0100
++++ setup.py	2008-03-11 00:12:00.000000000 +0100
+@@ -78,10 +78,10 @@
+     ],
+     keywords=['python.templating.engines'],
+     packages=['jinja', 'jinja.translators'],
+-    data_files=[
+-        ('docs/html', list(list_files('docs/html'))),
+-        ('docs/txt', list(list_files('docs/src')))
+-    ],
++    #data_files=[
++    #    ('docs/html', list(list_files('docs/html'))),
++    #    ('docs/txt', list(list_files('docs/src')))
++    #],
+     entry_points='''
+     [python.templating.engines]
+     jinja = jinja.plugin:BuffetPlugin

@@ -1,0 +1,24 @@
+diff -up kdebase-runtime-4.1.96/kurifilter-plugins/ikws/searchproviders/taobao.desktop kdebase-runtime-4.1.96/kurifilter-plugins/ikws/searchproviders/taobao.desktop
+--- kdebase-runtime-4.0.80/kurifilter-plugins/ikws/searchproviders/taobao.desktop	2009-01-13 17:42:25.000000000 +0800
++++ kdebase-runtime-4.0.80/kurifilter-plugins/ikws/searchproviders/taobao.desktop	2009-01-13 17:42:25.000000000 +0800
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Charset=gb18030
++Hidden=false
++Keys=taobao
++Name=淘宝购物
++Query[zh_CN]=http://search1.taobao.com/browse/search_auction.htm?q=\\{@}
++ServiceTypes=SearchProvider
++Type=Service
+diff -up kdebase-runtime-4.1.96/kurifilter-plugins/ikws/searchproviders/baidu.desktop kdebase-runtime-4.1.96/kurifilter-plugins/ikws/searchproviders/baidu.desktop
+--- kdebase-runtime-4.0.80/kurifilter-plugins/ikws/searchproviders/baidu.desktop	2009-01-13 17:42:25.000000000 +0800
++++ kdebase-runtime-4.0.80/kurifilter-plugins/ikws/searchproviders/baidu.desktop	2009-01-13 17:42:25.000000000 +0800
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Charset=gb18030
++Hidden=false
++Keys=baidu
++Name=百度
++Query[zh_CN]=http://www.baidu.com/baidu?word=\\{@}
++ServiceTypes=SearchProvider
++Type=Service

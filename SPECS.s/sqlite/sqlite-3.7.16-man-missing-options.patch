@@ -1,0 +1,59 @@
+diff -up sqlite-src-3071602/sqlite3.1.broken sqlite-src-3071602/sqlite3.1
+--- sqlite-src-3071602/sqlite3.1.broken	2013-05-16 14:30:05.985387506 +0200
++++ sqlite-src-3071602/sqlite3.1	2013-05-16 14:43:37.434861289 +0200
+@@ -147,7 +147,7 @@ sqlite>
+ .B sqlite3
+ has the following options:
+ .TP
+-.BI \-init\ file
++.BI \-init\  file
+ Read and execute commands from
+ .I file
+ , which can contain a mix of SQL statements and meta-commands.
+@@ -158,11 +158,28 @@ Print commands before execution.
+ .B \-[no]header
+ Turn headers on or off.
+ .TP
++.B \-bail
++Stop after hitting an error.
++.TP
++.B \-interactive
++Force interactive I/O.
++.TP
++.B \-batch
++Force batch I/O.
++.TP
+ .B \-column
+ Query results will be displayed in a table like form, using
+ whitespace characters to separate the columns and align the
+ output.
+ .TP
++.BI \-cmd\  command
++Run
++.I command
++before reading stdin.
++.TP
++.B \-csv
++Set output mode to CSV (comma separated values).
++.TP
+ .B \-html
+ Query results will be output as simple HTML tables.
+ .TP
+@@ -182,9 +199,17 @@ Set output field separator.  Default is
+ Set string used to represent NULL values.  Default is ''
+ (empty string).
+ .TP
++.B \-stats
++Print memory stats before each finalize.
++.TP
+ .B \-version
+ Show SQLite version.
+ .TP
++.BI \-vfs\  name
++Use
++.I name
++as the default VFS.
++.TP
+ .B \-help
+ Show help on options and exit.
+ 

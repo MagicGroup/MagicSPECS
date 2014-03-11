@@ -1,0 +1,13 @@
+diff -urb ceph-0.51/configure.ac ceph-0.51b/configure.ac
+--- ceph-0.51/configure.ac	2012-08-26 01:58:14.000000000 +0300
++++ ceph-0.51b/configure.ac	2012-09-24 09:19:20.791969694 +0300
+@@ -17,6 +17,9 @@
+ AC_CANONICAL_HOST
+ AC_CANONICAL_TARGET
+ 
++# fix automake problems in 1.12
++m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
++
+ # Automake
+ AM_INIT_AUTOMAKE
+ AM_PROG_CC_C_O

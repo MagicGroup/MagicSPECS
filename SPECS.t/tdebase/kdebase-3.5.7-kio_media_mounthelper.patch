@@ -1,0 +1,16 @@
+--- kdebase-3.5.7/kioslave/media/mediamanager/halbackend.cpp.orig	2007-08-30 14:45:33.000000000 +0200
++++ kdebase-3.5.7/kioslave/media/mediamanager/halbackend.cpp	2007-08-30 15:03:16.000000000 +0200
+@@ -990,8 +990,11 @@
+ 
+ QString HALBackend::listUsingProcesses(const Medium* medium)
+ {
+-    QString proclist, fullmsg;
+-    QString cmdline = QString("/usr/bin/env fuser -vm %1 2>&1").arg(KProcess::quote(medium->mountPoint()));
++    QString proclist, fullmsg, cmdline;
++    if(QFile::exists("/sbin/fuser"))
++       cmdline = QString("/sbin/fuser -vm %1 2>&1").arg(KProcess::quote(medium->mountPoint()));
++    else
++       cmdline = QString("/usr/bin/env fuser -vm %1 2>&1").arg(KProcess::quote(medium->mountPoint()));
+     FILE *fuser = popen(cmdline.latin1(), "r");
+ 
+     uint counter = 0;

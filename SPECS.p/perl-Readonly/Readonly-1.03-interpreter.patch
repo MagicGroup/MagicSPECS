@@ -1,0 +1,88 @@
+--- t/array.t
++++ t/array.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Readonly array tests
+ 
+--- t/deepa.t
++++ t/deepa.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Test Array vs Array1 functionality
+ 
+--- t/deeph.t
++++ t/deeph.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Test Hash vs Hash1 functionality
+ 
+--- t/deeps.t
++++ t/deeps.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Test Scalar vs Scalar1 functionality
+ 
+--- t/docs.t
++++ t/docs.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Examples from the docs -- make sure they work!
+ 
+--- t/export.t
++++ t/export.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Readonly hash tests
+ 
+--- t/hash.t
++++ t/hash.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Readonly hash tests
+ 
+--- t/readonly.t
++++ t/readonly.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Test the Readonly function
+ 
+--- t/reassign.t
++++ t/reassign.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Readonly reassignment-prevention tests
+ 
+--- t/scalar.t
++++ t/scalar.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Readonly scalar tests
+ 
+--- t/tie.t
++++ t/tie.t
+@@ -1,4 +1,4 @@
+-#!perl -I..
++#!/usr/bin/perl -I..
+ 
+ # Test the Readonly function
+ 

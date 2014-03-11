@@ -1,0 +1,11 @@
+--- sendmail-8.14.4/sendmail/conf.c		2009-12-18 18:25:12.000000000 +0100
++++ sendmail-8.14.4/sendmail/conf.c.switchfile	2010-01-03 23:08:27.000000000 +0100
+@@ -972,7 +972,7 @@
+ 				if (p != NULL)
+ 					*p = '\0';
+ #ifndef SM_NSSWITCH_DELIMS
+-# define SM_NSSWITCH_DELIMS	" \t"
++# define SM_NSSWITCH_DELIMS	" \t:"
+ #endif /* SM_NSSWITCH_DELIMS */
+ 				p = strpbrk(buf, SM_NSSWITCH_DELIMS);
+ 				if (p != NULL)

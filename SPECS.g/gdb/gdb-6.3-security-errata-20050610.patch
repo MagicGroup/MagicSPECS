@@ -1,0 +1,243 @@
+http://sourceware.org/ml/gdb-patches/2005-05/threads.html#00637
+Proposed upstream but never committed upstream.
+
+2005-06-09  Jeff Johnston  <jjohnstn@redhat.com>
+
+        * gdb.base/gdbinit.exp: New testcase.
+        * gdb.base/gdbinit.sample: Sample .gdbinit for gdbinit.exp.
+
+2005-06-08  Daniel Jacobowitz  <dan@codesourcery.com>
+            Jeff Johnston  <jjohnstn@redhat.com>
+
+        * Makefile.in (cli-cmds.o): Update.
+        * configure.in: Add check for getuid.
+        * configure: Regenerated.
+        * config.in: Ditto.
+        * main.c (captured_main): Pass -1 to source_command when loading
+        gdbinit files.
+        * cli/cli-cmds.c: Include "gdb_stat.h" and <fcntl.h>.
+        (source_command): Update documentation.  Check permissions if
+        FROM_TTY is -1.
+
+Index: gdb-7.3.50.20110722/gdb/cli/cli-cmds.c
+===================================================================
+--- gdb-7.3.50.20110722.orig/gdb/cli/cli-cmds.c	2011-06-07 19:26:46.000000000 +0200
++++ gdb-7.3.50.20110722/gdb/cli/cli-cmds.c	2011-07-22 19:14:25.000000000 +0200
+@@ -39,6 +39,7 @@
+ #include "source.h"
+ #include "disasm.h"
+ #include "tracepoint.h"
++#include "gdb_stat.h"
+ 
+ #include "ui-out.h"
+ 
+@@ -489,7 +490,7 @@ show_script_ext_mode (struct ui_file *fi
+ 
+ int
+ find_and_open_script (const char *script_file, int search_path,
+-		      FILE **streamp, char **full_pathp)
++		      FILE **streamp, char **full_pathp, int from_tty)
+ {
+   char *file;
+   int fd;
+@@ -515,6 +516,32 @@ find_and_open_script (const char *script
+       return 0;
+     }
+ 
++#ifdef HAVE_GETUID
++  if (from_tty == -1)
++    {
++      struct stat statbuf;
++
++      if (fstat (fd, &statbuf) < 0)
++	{
++	  int save_errno = errno;
++
++	  close (fd);
++	  do_cleanups (old_cleanups);
++	  errno = save_errno;
++	  return 0;
++	}
++      if (statbuf.st_uid != getuid () || (statbuf.st_mode & S_IWOTH))
++	{
++	  /* FILE gets freed by do_cleanups (old_cleanups).  */
++	  warning (_("not using untrusted file \"%s\""), file);
++	  close (fd);
++	  do_cleanups (old_cleanups);
++	  errno = EPERM;
++	  return 0;
++	}
++    }
++#endif
++
+   do_cleanups (old_cleanups);
+ 
+   *streamp = fdopen (fd, FOPEN_RT);
+@@ -574,13 +601,14 @@ source_script_with_search (const char *f
+   if (file == NULL || *file == 0)
+     error (_("source command requires file name of file to source."));
+ 
+-  if (!find_and_open_script (file, search_path, &stream, &full_path))
++  if (!find_and_open_script (file, search_path, &stream, &full_path,
++			     from_tty))
+     {
+       /* The script wasn't found, or was otherwise inaccessible.  
+          If the source command was invoked interactively, throw an
+ 	 error.  Otherwise (e.g. if it was invoked by a script),
+ 	 silently ignore the error.  */
+-      if (from_tty)
++      if (from_tty > 0)
+ 	perror_with_name (file);
+       else
+ 	return;
+Index: gdb-7.3.50.20110722/gdb/testsuite/gdb.base/gdbinit.exp
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.3.50.20110722/gdb/testsuite/gdb.base/gdbinit.exp	2011-07-22 19:14:25.000000000 +0200
+@@ -0,0 +1,91 @@
++#   Copyright 2005
++#   Free Software Foundation, Inc.
++
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++# 
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++# 
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++
++# Please email any bugs, comments, and/or additions to this file to:
++# bug-gdb@prep.ai.mit.edu
++
++# This file was written by Jeff Johnston <jjohnstn@redhat.com>.
++
++# are we on a target board
++if [is_remote target] {
++    return
++}
++
++
++global verbose
++global GDB
++global GDBFLAGS
++global gdb_prompt
++global timeout
++global gdb_spawn_id;
++
++gdb_stop_suppressing_tests;
++
++verbose "Spawning $GDB -nw"
++
++if [info exists gdb_spawn_id] {
++    return 0;
++}
++
++if ![is_remote host] {
++   if { [which $GDB] == 0 } then {
++        perror "$GDB does not exist."
++        exit 1
++    }
++}
++
++set env(HOME) [pwd]
++remote_exec build "rm .gdbinit"
++remote_exec build "cp ${srcdir}/${subdir}/gdbinit.sample .gdbinit"
++remote_exec build "chmod 646 .gdbinit"
++
++set res [remote_spawn host "$GDB -nw [host_info gdb_opts]"];
++if { $res < 0 || $res == "" } {
++    perror "Spawning $GDB failed."
++    return 1;
++}
++gdb_expect 360 {
++    -re "warning: not using untrusted file.*\.gdbinit.*\[\r\n\]$gdb_prompt $" {
++        pass "untrusted .gdbinit caught."
++    }
++    -re "$gdb_prompt $"     {
++        fail "untrusted .gdbinit caught."
++    }
++    timeout {
++        fail "(timeout) untrusted .gdbinit caught."
++    }
++}
++
++remote_exec build "chmod 644 .gdbinit"
++set res [remote_spawn host "$GDB -nw [host_info gdb_opts]"];
++if { $res < 0 || $res == "" } {
++    perror "Spawning $GDB failed."
++    return 1;
++}
++gdb_expect 360 {
++    -re "warning: not using untrusted file.*\.gdbinit.*\[\r\n\]$gdb_prompt $" {
++        fail "trusted .gdbinit allowed."
++    }
++    -re "in gdbinit.*$gdb_prompt $"     {
++        pass "trusted .gdbinit allowed."
++    }
++    timeout {
++        fail "(timeout) trusted .gdbinit allowed."
++    }
++}
++
++remote_exec build "rm .gdbinit"
+Index: gdb-7.3.50.20110722/gdb/testsuite/gdb.base/gdbinit.sample
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.3.50.20110722/gdb/testsuite/gdb.base/gdbinit.sample	2011-07-22 19:14:25.000000000 +0200
+@@ -0,0 +1 @@
++echo "\nin gdbinit"
+Index: gdb-7.3.50.20110722/gdb/main.c
+===================================================================
+--- gdb-7.3.50.20110722.orig/gdb/main.c	2011-07-22 19:08:19.000000000 +0200
++++ gdb-7.3.50.20110722/gdb/main.c	2011-07-22 19:14:25.000000000 +0200
+@@ -849,7 +849,7 @@ captured_main (void *data)
+      debugging or what directory you are in.  */
+ 
+   if (home_gdbinit && !inhibit_gdbinit)
+-    catch_command_errors (source_script, home_gdbinit, 0, RETURN_MASK_ALL);
++    catch_command_errors (source_script, home_gdbinit, -1, RETURN_MASK_ALL);
+ 
+   /* Now perform all the actions indicated by the arguments.  */
+   if (cdarg != NULL)
+@@ -928,7 +928,7 @@ captured_main (void *data)
+   /* Read the .gdbinit file in the current directory, *if* it isn't
+      the same as the $HOME/.gdbinit file (it should exist, also).  */
+   if (local_gdbinit && !inhibit_gdbinit)
+-    catch_command_errors (source_script, local_gdbinit, 0, RETURN_MASK_ALL);
++    catch_command_errors (source_script, local_gdbinit, -1, RETURN_MASK_ALL);
+ 
+   /* Now that all .gdbinit's have been read and all -d options have been
+      processed, we can read any scripts mentioned in SYMARG.
+Index: gdb-7.3.50.20110722/gdb/python/py-auto-load.c
+===================================================================
+--- gdb-7.3.50.20110722.orig/gdb/python/py-auto-load.c	2011-05-16 18:33:57.000000000 +0200
++++ gdb-7.3.50.20110722/gdb/python/py-auto-load.c	2011-07-22 19:14:54.000000000 +0200
+@@ -284,7 +284,7 @@ source_section_scripts (struct objfile *
+ 	}
+ 
+       opened = find_and_open_script (file, 1 /*search_path*/,
+-				     &stream, &full_path);
++				     &stream, &full_path, 1 /* from_tty */);
+ 
+       /* If one script isn't found it's not uncommon for more to not be
+ 	 found either.  We don't want to print an error message for each
+Index: gdb-7.3.50.20110722/gdb/cli/cli-cmds.h
+===================================================================
+--- gdb-7.3.50.20110722.orig/gdb/cli/cli-cmds.h	2011-01-01 16:33:20.000000000 +0100
++++ gdb-7.3.50.20110722/gdb/cli/cli-cmds.h	2011-07-22 19:14:25.000000000 +0200
+@@ -127,7 +127,8 @@ extern void source_script (char *, int);
+ /* Exported to objfiles.c.  */
+ 
+ extern int find_and_open_script (const char *file, int search_path,
+-				 FILE **streamp, char **full_path);
++				 FILE **streamp, char **full_path,
++				 int from_tty);
+ 
+ /* Command tracing state.  */
+ 

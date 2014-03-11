@@ -1,0 +1,11 @@
+--- applets/CMakeLists.txt	2008-11-19 18:18:53.000000000 +0800
++++ applets/CMakeLists.txt.no_lancelot	2008-11-29 20:14:29.000000000 +0800
+@@ -38,7 +38,7 @@
+ endif(QT_QTWEBKIT_FOUND)
+ 
+ if(NOT WIN32)
+-  add_subdirectory(lancelot)
++#  add_subdirectory(lancelot)
+   add_subdirectory(incomingmsg)
+   add_subdirectory(leavenote)
+   add_subdirectory(showdesktop)

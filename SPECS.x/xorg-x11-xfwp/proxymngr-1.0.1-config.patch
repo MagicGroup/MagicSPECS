@@ -1,0 +1,20 @@
+diff -up proxymngr-1.0.2/Makefile.am.jx proxymngr-1.0.2/Makefile.am
+--- proxymngr-1.0.2/Makefile.am.jx	2011-06-21 12:42:19.000000000 -0400
++++ proxymngr-1.0.2/Makefile.am	2011-06-21 12:43:18.167130547 -0400
+@@ -21,14 +21,14 @@
+ 
+ bin_PROGRAMS = proxymngr
+ 
+-CONFIG_DIR = $(libdir)/X11/proxymngr
++CONFIG_DIR = $(sysconfdir)/X11/proxymngr
+ 
+ AM_CFLAGS =						\
+ 	$(CWARNFLAGS)					\
+ 	$(PROXYMNGR_CFLAGS)				\
+ 	-DXVENDORNAME=\"The\ X\.Org\ Foundation\"	\
+ 	-DXORG_RELEASE=\"Release\ $(VERSION)\"		\
+-	-DCONFIG_FILE=\"$(CONFIG_DIR)/proxymngr/pmconfig\"
++	-DCONFIG_FILE=\"$(CONFIG_DIR)/pmconfig\"
+ 
+ proxymngr_LDADD = $(PROXYMNGR_LIBS)
+ 

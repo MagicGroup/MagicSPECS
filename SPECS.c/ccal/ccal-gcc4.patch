@@ -1,0 +1,11 @@
+diff -ur ccal-2.5.2.orig/htmlmonth.h ccal-2.5.2/htmlmonth.h
+--- ccal-2.5.2.orig/htmlmonth.h	2011-06-08 07:53:22.000000000 -0400
++++ ccal-2.5.2/htmlmonth.h	2011-06-08 07:53:42.000000000 -0400
+@@ -19,6 +19,7 @@
+ #ifndef HTMLMONTH_H
+ #define HTMLMONTH_H
+ 
++#include <cstdio>
+ /* Input:
+    bIsSim: true--set simplified characters, false--set traditional characters
+ */

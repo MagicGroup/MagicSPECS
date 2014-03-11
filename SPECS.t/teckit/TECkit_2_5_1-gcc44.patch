@@ -1,0 +1,11 @@
+diff -ur TECkit_2_5_1.orig/source/Compiler.cpp TECkit_2_5_1/source/Compiler.cpp
+--- TECkit_2_5_1.orig/source/Compiler.cpp	2009-05-19 12:37:51.000000000 +0800
++++ TECkit_2_5_1/source/Compiler.cpp	2009-05-19 12:38:16.000000000 +0800
+@@ -33,6 +33,7 @@
+ #include <iomanip>
+ #include <algorithm>
+ #include <cstring>
++#include <cstdio>
+ 
+ #include "zlib.h"
+ 

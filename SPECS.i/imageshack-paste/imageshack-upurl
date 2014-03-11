@@ -1,0 +1,7 @@
+#!/bin/sh
+# secondary
+
+#URL=$(perl /usr/share/imageshack-paste/imageshack)
+#URL=$(perl xxx.pl)
+URL=`imageshack $1`
+kdialog --msgbox "回传的图片地址：\n$URL"

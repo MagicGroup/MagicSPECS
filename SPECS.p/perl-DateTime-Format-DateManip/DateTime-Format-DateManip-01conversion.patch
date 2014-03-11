@@ -1,0 +1,21 @@
+diff -up DateTime-Format-DateManip-0.04/t/01conversions.t.old DateTime-Format-DateManip-0.04/t/01conversions.t
+--- DateTime-Format-DateManip-0.04/t/01conversions.t.old	2010-05-13 12:23:46.229941045 +0200
++++ DateTime-Format-DateManip-0.04/t/01conversions.t	2010-05-13 12:24:59.874945126 +0200
+@@ -10,7 +10,7 @@ use Date::Manip;
+ my $dfdm = "DateTime::Format::DateManip";
+ 
+ ## Set the timezone for Date::Manip and DateTime
+-my $dm_tz = "EST";
++my $dm_tz = "US/Eastern";
+ my $dt_tz = "US/Eastern";
+ 
+ # Setup Date::Manip manually so we can force the TZ to beat a config
+@@ -21,7 +21,7 @@ Date_Init("TZ=$dm_tz");
+ my @dm_to_dt_tests = 
+     (["March 23, 2003" =>
+       DateTime->new(year => 2003, month => 3, day => 23, time_zone => $dt_tz) ],
+-     ["March 23, 2003 12:00 EST" =>
++     ["March 23, 2003 12:00 US/Eastern" =>
+       DateTime->new(year => 2003, month => 3, day => 23,
+ 		    hour => 12,   time_zone => $dt_tz) ],
+      );

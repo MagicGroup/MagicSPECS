@@ -1,0 +1,38 @@
+From 55359255a7c01153b702ee201fd7f13a6d7fd22b Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Sun, 12 Dec 2010 00:48:41 +0100
+Subject: [PATCH] DBI::dr::connect can clobber the arguments
+
+Make a copy.
+---
+ lib/Apache/DBI/Cache.pm |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/lib/Apache/DBI/Cache.pm b/lib/Apache/DBI/Cache.pm
+index cfc52a1..dad0f15 100644
+--- a/lib/Apache/DBI/Cache.pm
++++ b/lib/Apache/DBI/Cache.pm
+@@ -313,9 +313,9 @@ sub connect {
+       ($ctx, $nocache)=splice @l, 4, 2;
+       @args[0..2]=@l[0..2];
+       %{$args[3]}=%{$l[3]};
+-      return $drh->connect(@args) if( $nocache );
++      return $drh->connect(@args[0..2], {%{$args[3]}}) if( $nocache );
+     } else {
+-      return $drh->connect(@args);
++      return $drh->connect(@args[0..2], {%{$args[3]}});
+     }
+   }
+   my $dsn="dbi:$drh->{Name}:$args[0]";
+@@ -389,7 +389,7 @@ sub connect {
+     }
+   }
+ 
+-  my $dbh=$drh->connect(@args);
++  my $dbh=$drh->connect(@args[0..2], {%{$args[3]}});
+ 
+   if( defined $dbh ) {
+     my $privattr={%{$args[3]}};
+-- 
+1.7.3.3
+

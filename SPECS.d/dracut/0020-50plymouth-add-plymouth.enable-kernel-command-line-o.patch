@@ -1,0 +1,46 @@
+From a3381af1dedf5325197dba00fb24ca36376f4c23 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 29 Aug 2011 18:30:26 +0200
+Subject: [PATCH] 50plymouth: add plymouth.enable kernel command line option
+
+---
+ dracut.kernel.7.xml                         |    8 +++++++-
+ modules.d/50plymouth/plymouth-pretrigger.sh |    2 +-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/dracut.kernel.7.xml b/dracut.kernel.7.xml
+index 894b640..b6e59e6 100644
+--- a/dracut.kernel.7.xml
++++ b/dracut.kernel.7.xml
+@@ -696,11 +696,17 @@ rd.znet=ctc,0.0.0600,0.0.0601,0.0.0602,protocol=bar</programlisting></para>
+       <title>Plymouth Boot Splash</title>
+       <variablelist>
+         <varlistentry>
+-          <term><envar>rd.plymouth</envar>=0</term>
++          <term><envar>plymouth.enable</envar>=0</term>
+           <listitem>
+             <para>disable the plymouth bootsplash.</para>
+           </listitem>
+         </varlistentry>
++        <varlistentry>
++          <term><envar>rd.plymouth</envar>=0</term>
++          <listitem>
++            <para>disable the plymouth bootsplash only for the initramfs.</para>
++          </listitem>
++        </varlistentry>
+       </variablelist>
+     </refsect2>
+    <refsect2>
+diff --git a/modules.d/50plymouth/plymouth-pretrigger.sh b/modules.d/50plymouth/plymouth-pretrigger.sh
+index 25ed06f..534948e 100755
+--- a/modules.d/50plymouth/plymouth-pretrigger.sh
++++ b/modules.d/50plymouth/plymouth-pretrigger.sh
+@@ -2,7 +2,7 @@
+ # -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+-if getargbool 1 rd.plymouth -n rd_NO_PLYMOUTH; then
++if getargbool 1 plymouth.enable && getargbool 1 rd.plymouth -n rd_NO_PLYMOUTH; then
+     [ -c /dev/null ] || mknod -m 0666 /dev/null c 1 3
+     # first trigger graphics subsystem
+     udevadm trigger --action=add --attr-match=class=0x030000 >/dev/null 2>&1

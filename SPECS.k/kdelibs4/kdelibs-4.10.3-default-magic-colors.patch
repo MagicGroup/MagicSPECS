@@ -1,0 +1,61 @@
+diff -ur kdelibs-4.10.3.orig/kdeui/colors/kcolorscheme.cpp kdelibs-4.10.3/kdeui/colors/kcolorscheme.cpp
+--- kdelibs-4.10.3.orig/kdeui/colors/kcolorscheme.cpp	2013-05-27 14:00:29.000000000 +0000
++++ kdelibs-4.10.3/kdeui/colors/kcolorscheme.cpp	2013-05-29 12:15:20.000000000 +0000
+@@ -179,7 +179,7 @@
+ 
+ 
+ SetDefaultColors defaultWindowColors = {
+-    { 214, 210, 208 }, // Background
++    { 252, 253, 254 }, // Background
+     { 218, 217, 216 }, // Alternate
+     {  34,  31,  30 }, // Normal
+     { 137, 136, 135 }, // Inactive
+@@ -193,7 +193,7 @@
+ 
+ 
+ SetDefaultColors defaultButtonColors = {
+-    { 223, 220, 217 }, // Background
++    { 222, 230, 235 }, // Background
+     { 224, 223, 222 }, // Alternate
+     {  34,  31,  30 }, // Normal
+     { 137, 136, 135 }, // Inactive
+@@ -221,7 +221,7 @@
+ 
+ 
+ SetDefaultColors defaultTooltipColors = {
+-    {  24,  21,  19 }, // Background
++    { 165, 193, 228 }, // Background
+     { 196, 224, 255 }, // Alternate
+     { 231, 253, 255 }, // Normal
+     { 137, 136, 135 }, // Inactive
+只在 kdelibs-4.10.3/kdeui/colors 存在：.kcolorscheme.cpp.rej.swp
+diff -ur kdelibs-4.10.3.orig/kdeui/kernel/kglobalsettings.cpp kdelibs-4.10.3/kdeui/kernel/kglobalsettings.cpp
+--- kdelibs-4.10.3.orig/kdeui/kernel/kglobalsettings.cpp	2013-05-27 14:00:29.000000000 +0000
++++ kdelibs-4.10.3/kdeui/kernel/kglobalsettings.cpp	2013-05-29 12:13:36.000000000 +0000
+@@ -320,7 +320,7 @@
+     return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTION));
+ #else
+     KConfigGroup g( KGlobal::config(), "WM" );
+-    return g.readEntry( "inactiveBackground", QColor(224,223,222) );
++    return g.readEntry( "inactiveBackground", QColor(165,193,228) );
+ #endif
+ }
+ 
+@@ -331,7 +331,7 @@
+     return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTIONTEXT));
+ #else
+     KConfigGroup g( KGlobal::config(), "WM" );
+-    return g.readEntry( "inactiveForeground", QColor(75,71,67) );
++    return g.readEntry( "inactiveForeground", QColor(59,52,52) );
+ #endif
+ }
+ 
+@@ -342,7 +342,7 @@
+     return qt_colorref2qrgb(GetSysColor(COLOR_ACTIVECAPTION));
+ #else
+     KConfigGroup g( KGlobal::config(), "WM" );
+-    return g.readEntry( "activeBackground", QColor(48,174,232));
++    return g.readEntry( "activeBackground", QColor(0,69,138));
+ #endif
+ }
+ 

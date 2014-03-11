@@ -1,0 +1,106 @@
+diff -ur gambas-1.0.19.org/configure gambas-1.0.19/configure
+--- gambas-1.0.19.org/configure	2011-11-27 17:21:48.000000000 -0500
++++ gambas-1.0.19/configure	2011-11-27 18:40:18.000000000 -0500
+@@ -23389,13 +23389,19 @@
+     for gb_dir in $gb_cv_header_qt; do
+       if test "$gb_dir" != "/usr/include"; then
+         if test "$gb_dir" != "/usr/include/"; then
+-          QT_INC="$QT_INC -I$gb_dir"
++          QT_INC="$QT_INC -I$gb_dir -I/usr/include/tqt"
++	else
++	  QT_INC="$QT_INC -I/usr/include/tqt"
+         fi
++      else
++	QT_INC="$QT_INC -I/usr/include/tqt"
+       fi
+     done
+ 
+     if test "x$THREAD_INC" != "x"; then
+-      QT_INC="$QT_INC $THREAD_INC"
++      QT_INC="$QT_INC $THREAD_INC -I/usr/include/tqt"
++    else
++      QT_INC="$QT_INC -I/usr/include/tqt"
+     fi
+ 
+     if test "$gb_cv_header_qt" = no; then
+@@ -25263,7 +25269,7 @@
+ 
+ gb_val=""
+ gb_save=`pwd`
+-gb_file_list="libkdecore.$SHLIBEXT"
++gb_file_list="libtdecore.$SHLIBEXT"
+ 
+ for gb_main_dir in `kde-config --prefix 2> /dev/null`; do
+   if test -d $gb_main_dir; then
+@@ -25344,7 +25350,7 @@
+       fi
+     done
+ 
+-    KDE_LIB="$KDE_LIB -lkdecore -lkdeui -lDCOP -lkio"
++    KDE_LIB="$KDE_LIB -ltdecore -ltdeui -lDCOP -lkio"
+ 
+   fi
+ 
+diff -ur gambas-1.0.19.org/configure.in gambas-1.0.19/configure.in
+--- gambas-1.0.19.org/configure.in	2011-11-27 17:21:48.000000000 -0500
++++ gambas-1.0.19/configure.in	2011-11-27 17:26:39.000000000 -0500
+@@ -186,8 +186,8 @@
+     KDE,
+     [KDE 3.x component],
+     [GB_FIND(kapplication.h, `kde-config --prefix 2> /dev/null`, include)],
+-    [GB_FIND(libkdecore.$SHLIBEXT, `kde-config --prefix 2> /dev/null`, lib)],
+-    [-lkdecore -lkdeui -lDCOP -lkio])
++    [GB_FIND(libtdecore.$SHLIBEXT, `kde-config --prefix 2> /dev/null`, lib)],
++    [-ltdecore -ltdeui -lDCOP -lkio])
+ 
+ fi
+ 
+diff -ur gambas-1.0.19.org/src/comp/gbi.c gambas-1.0.19/src/comp/gbi.c
+--- gambas-1.0.19.org/src/comp/gbi.c	2011-11-27 17:21:46.000000000 -0500
++++ gambas-1.0.19/src/comp/gbi.c	2011-11-27 17:24:47.000000000 -0500
+@@ -600,7 +600,7 @@
+     if (strncasecmp(argv[optind], "gb.qt", 5) == 0)
+       preload(argv, "libqt-mt.so.3");
+     else if (strncasecmp(argv[optind], "gb.qt.kde", 9) == 0)
+-      preload(argv, "libkdecore.so.4");
++      preload(argv, "libtdecore.so.4");
+ 
+     sprintf(_buffer, LIB_PATTERN, _lib_path, argv[optind]);
+ 
+@@ -614,7 +614,7 @@
+     preload(argv,
+       "libqt-mt.so.3 "
+       #if HAVE_KDE_COMPONENT
+-      "libkdecore.so.4 "
++      "libtdecore.so.4 "
+       #endif
+       );
+ 
+diff -ur gambas-1.0.19.org/src/exec/gbx_library.c gambas-1.0.19/src/exec/gbx_library.c
+--- gambas-1.0.19.org/src/exec/gbx_library.c	2011-11-27 17:21:46.000000000 -0500
++++ gambas-1.0.19/src/exec/gbx_library.c	2011-11-27 17:27:11.000000000 -0500
+@@ -293,8 +293,8 @@
+       else if (strcasecmp(p, "gb.qt.kde") == 0)
+       {
+         /*add_preload(&env, libdir, p);*/
+-        add_preload(&env, "libkdecore.so.4");
+-        add_preload(&env, "libkdeui.so.4");
++        add_preload(&env, "libtdecore.so.4");
++        add_preload(&env, "libtdeui.so.4");
+         add_preload(&env, "libDCOP.so.4");
+         add_preload(&env, "libkio.so.4");
+         /*fprintf(stderr, "Warning: preloading KDE libraries\n");*/
+diff -ur gambas-1.0.19.org/src/lib/net/doc/configure.in gambas-1.0.19/src/lib/net/doc/configure.in
+--- gambas-1.0.19.org/src/lib/net/doc/configure.in	2011-11-27 17:21:46.000000000 -0500
++++ gambas-1.0.19/src/lib/net/doc/configure.in	2011-11-27 17:26:52.000000000 -0500
+@@ -152,8 +152,8 @@
+     KDE,
+     [KDE 3.x component],
+     [GB_FIND(kapplication.h, `kde-config --prefix 2> /dev/null`, include)],
+-    [GB_FIND(libkdecore.$SHLIBEXT, `kde-config --prefix 2> /dev/null`, lib)],
+-    [-lkdecore -lkdeui -lDCOP -lkio])
++    [GB_FIND(libtdecore.$SHLIBEXT, `kde-config --prefix 2> /dev/null`, lib)],
++    [-ltdecore -ltdeui -lDCOP -lkio])
+ 
+ fi
+ 

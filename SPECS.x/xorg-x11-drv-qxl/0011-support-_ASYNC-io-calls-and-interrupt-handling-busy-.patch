@@ -1,0 +1,157 @@
+From 30b4b72cdbdf9f0e92a8d1c4e01779f60f15a741 Mon Sep 17 00:00:00 2001
+From: Gerd Hoffmann <kraxel@redhat.com>
+Date: Thu, 6 Oct 2011 17:06:10 +0200
+Subject: [PATCH 1/5] support _ASYNC io calls and interrupt handling (busy
+ wait)
+
+rebased with Xspice changes.
+
+Signed-off-by: Alon Levy <alevy@redhat.com>
+---
+ src/qxl.h         |    8 ++++++
+ src/qxl_driver.c  |   66 +++++++++++++++++++++++++++++++++++++++++++++++++---
+ src/qxl_surface.c |    4 +-
+ 3 files changed, 72 insertions(+), 6 deletions(-)
+
+diff --git a/src/qxl.h b/src/qxl.h
+index 23ed2dc..62c3086 100644
+--- a/src/qxl.h
++++ b/src/qxl.h
+@@ -410,6 +410,14 @@ void *            qxl_allocnf          (qxl_screen_t           *qxl,
+ 					unsigned long           size);
+ int		   qxl_garbage_collect (qxl_screen_t *qxl);
+ 
++/*
++ * I/O port commands
++ */
++void qxl_update_area(qxl_screen_t *qxl);
++void qxl_memslot_add(qxl_screen_t *qxl, uint8_t id);
++void qxl_create_primary(qxl_screen_t *qxl);
++void qxl_notify_oom(qxl_screen_t *qxl);
++
+ #ifdef XSPICE
+ /* device to spice-server, now xspice to spice-server */
+ void ioport_write(qxl_screen_t *qxl, uint32_t io_port, uint32_t val);
+diff --git a/src/qxl_driver.c b/src/qxl_driver.c
+index 428735a..ada0943 100644
+--- a/src/qxl_driver.c
++++ b/src/qxl_driver.c
+@@ -102,6 +102,64 @@ const OptionInfoRec DefaultOptions[] = {
+     { -1, NULL, OPTV_NONE, {0}, FALSE }
+ };
+ 
++static void qxl_wait_for_io_command(qxl_screen_t *qxl)
++{
++    struct QXLRam *ram_header = (void *)(
++        (unsigned long)qxl->ram + qxl->rom->ram_header_offset);
++
++    while (!(ram_header->int_pending & QXL_INTERRUPT_IO_CMD)) {
++        usleep(1);
++    }
++    ram_header->int_pending &= ~QXL_INTERRUPT_IO_CMD;
++}
++
++void qxl_update_area(qxl_screen_t *qxl)
++{
++#ifndef XSPICE
++    if (qxl->pci->revision >= 3) {
++        ioport_write(qxl, QXL_IO_UPDATE_AREA_ASYNC, 0);
++        qxl_wait_for_io_command(qxl);
++    } else {
++        ioport_write(qxl, QXL_IO_UPDATE_AREA, 0);
++    }
++#else
++    ioport_write(qxl, QXL_IO_UPDATE_AREA, 0);
++#endif
++}
++
++void qxl_memslot_add(qxl_screen_t *qxl, uint8_t id)
++{
++#ifndef XSPICE
++    if (qxl->pci->revision >= 3) {
++        ioport_write(qxl, QXL_IO_MEMSLOT_ADD_ASYNC, id);
++        qxl_wait_for_io_command(qxl);
++    } else {
++        ioport_write(qxl, QXL_IO_MEMSLOT_ADD, id);
++    }
++#else
++    ioport_write(qxl, QXL_IO_MEMSLOT_ADD, id);
++#endif
++}
++
++void qxl_create_primary(qxl_screen_t *qxl)
++{
++#ifndef XSPICE
++    if (qxl->pci->revision >= 3) {
++        ioport_write(qxl, QXL_IO_CREATE_PRIMARY_ASYNC, 0);
++        qxl_wait_for_io_command(qxl);
++    } else {
++        ioport_write(qxl, QXL_IO_CREATE_PRIMARY, 0);
++    }
++#else
++    ioport_write(qxl, QXL_IO_CREATE_PRIMARY, 0);
++#endif
++}
++
++void qxl_notify_oom(qxl_screen_t *qxl)
++{
++    ioport_write(qxl, QXL_IO_NOTIFY_OOM, 0);
++}
++
+ int
+ qxl_garbage_collect (qxl_screen_t *qxl)
+ {
+@@ -190,8 +248,8 @@ qxl_usleep (int useconds)
+ int
+ qxl_handle_oom (qxl_screen_t *qxl)
+ {
+-    ioport_write(qxl, QXL_IO_NOTIFY_OOM, 0);
+-    
++    qxl_notify_oom(qxl);
++
+ #if 0
+     ErrorF (".");
+     qxl_usleep (10000);
+@@ -228,7 +286,7 @@ qxl_allocnf (qxl_screen_t *qxl, unsigned long size)
+ 	ram_header->update_area.right = qxl->virtual_x;
+ 	ram_header->update_surface = 0;		/* Only primary for now */
+ 	
+-	ioport_write(qxl, QXL_IO_UPDATE_AREA, 0);
++        qxl_update_area(qxl);
+ 	
+ #if 0
+  	ErrorF ("eliminated memory (%d)\n", nth_oom++);
+@@ -471,7 +529,7 @@ setup_slot(qxl_screen_t *qxl, uint8_t slot_index_offset,
+     ram_header->mem_slot.mem_start = slot->start_phys_addr;
+     ram_header->mem_slot.mem_end = slot->end_phys_addr;
+ 
+-    ioport_write(qxl, QXL_IO_MEMSLOT_ADD, slot_index);
++    qxl_memslot_add(qxl, slot_index);
+ 
+     slot->generation = qxl->rom->slot_generation;
+     
+diff --git a/src/qxl_surface.c b/src/qxl_surface.c
+index 047b35a..5a26ba6 100644
+--- a/src/qxl_surface.c
++++ b/src/qxl_surface.c
+@@ -378,7 +378,7 @@ qxl_surface_cache_create_primary (surface_cache_t	*cache,
+     create->type = QXL_SURF_TYPE_PRIMARY;
+     create->mem = physical_address (cache->qxl, cache->qxl->ram, cache->qxl->main_mem_slot);
+ 
+-    ioport_write(qxl, QXL_IO_CREATE_PRIMARY, 0);
++    qxl_create_primary(qxl);
+ 
+     dev_addr = (uint8_t *)qxl->ram + mode->stride * (mode->y_res - 1);
+ 
+@@ -920,7 +920,7 @@ download_box (qxl_surface_t *surface, int x1, int y1, int x2, int y2)
+     ErrorF ("Issuing update command for %d\n", surface->id);
+ #endif
+ 
+-    ioport_write(surface->cache->qxl, QXL_IO_UPDATE_AREA, 0);
++    qxl_update_area(surface->cache->qxl);
+ 
+     pixman_image_composite (PIXMAN_OP_SRC,
+      			    surface->dev_image,
+-- 
+1.7.7.5
+

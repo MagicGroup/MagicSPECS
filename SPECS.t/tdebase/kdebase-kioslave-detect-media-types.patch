@@ -1,0 +1,55 @@
+--- kioslave/media/mediamanager/halbackend.cpp.hal_cd_check	2007-01-15 19:31:32.000000000 +0800
++++ kioslave/media/mediamanager/halbackend.cpp	2007-02-11 14:12:18.000000000 +0800
+@@ -211,7 +211,10 @@
+         /* We only list volume that have a filesystem or volume that have an audio track*/
+         if ( libhal_device_get_property_QString(m_halContext, udi, "volume.fsusage") != "filesystem" &&
+              !libhal_device_get_property_bool(m_halContext, udi, "volume.disc.has_audio", NULL) &&
+-             !libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_blank", NULL) )
++             !libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_blank", NULL) &&
++             !libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_vcd", NULL) &&
++             !libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_svcd", NULL) &&
++             !libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_videodvd", NULL))
+             return;
+ 
+         /* Query drive udi */
+@@ -488,19 +491,27 @@
+         medium->setIconName(QString::null);
+ 
+         /* check if the disc id a vcd or a video dvd */
+-        DiscType type = LinuxCDPolling::identifyDiscType(libhal_volume_get_device_file(halVolume));
+-        switch (type)
+-        {
+-        case DiscType::VCD:
+-            mimeType = "media/vcd";
+-            break;
+-        case DiscType::SVCD:
+-            mimeType = "media/svcd";
+-            break;
+-        case DiscType::DVD:
+-            mimeType = "media/dvdvideo";
+-            break;
+-        }
++        if (libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_vcd", NULL))
++          mimeType = "media/vcd";
++        else if (libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_svcd", NULL))
++          mimeType = "media/svcd";
++        else if (libhal_device_get_property_bool(m_halContext, udi, "volume.disc.is_videodvd", NULL))
++          mimeType = "media/dvdvideo";
++        else{
++          DiscType type = LinuxCDPolling::identifyDiscType(libhal_volume_get_device_file(halVolume));
++          switch (type)
++          {
++          case DiscType::VCD:
++              mimeType = "media/vcd";
++              break;
++          case DiscType::SVCD:
++              mimeType = "media/svcd";
++              break;
++          case DiscType::DVD:
++              mimeType = "media/dvdvideo";
++              break;
++          }
++	}
+     }
+     else
+     {

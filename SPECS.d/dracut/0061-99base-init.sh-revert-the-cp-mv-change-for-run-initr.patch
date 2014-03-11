@@ -1,0 +1,23 @@
+From 56bf6156d6022b30f5354467f552496e8b87a71b Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 22 Mar 2012 17:05:20 +0100
+Subject: [PATCH] 99base/init.sh: revert the "cp" "mv" change for
+ /run/initramfs
+
+---
+ modules.d/99base/init.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules.d/99base/init.sh b/modules.d/99base/init.sh
+index 84c13e0..2f87a20 100755
+--- a/modules.d/99base/init.sh
++++ b/modules.d/99base/init.sh
+@@ -68,7 +68,7 @@ fi
+ if ! ismounted /run; then
+     mkdir -m 0755 /newrun
+     mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /newrun >/dev/null 
+-    mv /run/* /newrun >/dev/null 2>&1
++    cp -a /run/* /newrun >/dev/null 2>&1
+     mount --move /newrun /run
+     rm -fr /newrun
+ fi

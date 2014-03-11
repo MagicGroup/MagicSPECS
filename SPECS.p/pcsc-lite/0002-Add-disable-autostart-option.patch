@@ -1,0 +1,94 @@
+From c7f825b2c4a5c7d4ac8abe5690737c2c8fffbfcc Mon Sep 17 00:00:00 2001
+From: Kalev Lember <kalev@smartlink.ee>
+Date: Fri, 24 Jun 2011 00:46:13 +0300
+Subject: [PATCH 2/3] Add --disable-autostart option
+
+This option disables pcscd autostarting code in the libpcsclite library.
+
+With systemd socket activation in place, pcscd can be started
+automatically by systemd when a request arrives on the IPC socket. That
+makes starting the service as a fork from user library unnecessary.
+---
+ PCSC/configure.in        |   11 +++++++++++
+ PCSC/src/winscard_clnt.c |    6 ++++++
+ 2 files changed, 17 insertions(+), 0 deletions(-)
+
+diff --git a/PCSC/configure.in b/PCSC/configure.in
+index 831ee88..97e3360 100644
+--- a/PCSC/configure.in
++++ b/PCSC/configure.in
+@@ -274,6 +274,16 @@ if test x$use_libusb = xyes; then
+   PCSCLITE_FEATURES="${PCSCLITE_FEATURES} libusb"
+ fi
+ 
++# --disable-autostart
++AC_ARG_ENABLE(autostart,
++  AC_HELP_STRING([--disable-autostart], [disable pcscd automatic startup]),
++  [ use_autostart="${enableval}" ], [ use_autostart="yes" ] )
++
++if test x$use_autostart != xno; then
++  AC_DEFINE(ENABLE_AUTOSTART, 1, [Enable pcscd automatic startup])
++  PCSCLITE_FEATURES="${PCSCLITE_FEATURES} autostart"
++fi
++
+ # --enable-embedded
+ AC_ARG_ENABLE(embedded,
+   AC_HELP_STRING([--enable-embedded], [limit RAM and CPU ressources by disabling features (log)]),
+@@ -381,6 +391,7 @@ ATR parsing messages: ${debugatr}
+ ipcdir:               ${ipcdir}
+ use serial:           ${use_serial}
+ use usb:              ${use_usb}
++use autostart:        ${use_autostart}
+ 
+ PCSCLITE_FEATURES:    ${PCSCLITE_FEATURES}
+ 
+diff --git a/PCSC/src/winscard_clnt.c b/PCSC/src/winscard_clnt.c
+index 92c8481..982be01 100644
+--- a/PCSC/src/winscard_clnt.c
++++ b/PCSC/src/winscard_clnt.c
+@@ -444,8 +444,10 @@ LONG SCardEstablishContext(DWORD dwScope, LPCVOID pvReserved1,
+ 	LPCVOID pvReserved2, LPSCARDCONTEXT phContext)
+ {
+ 	LONG rv;
++#ifdef ENABLE_AUTOSTART
+ 	int daemon_launched = FALSE;
+ 	int retries = 0;
++#endif
+ 
+ 	API_TRACE_IN("%ld, %p, %p", dwScope, pvReserved1, pvReserved2)
+ 	PROFILE_START
+@@ -457,6 +459,7 @@ again:
+ 		/* we reconnected to a daemon or we got called from a forked child */
+ 		rv = SCardCheckDaemonAvailability();
+ 
++#ifdef ENABLE_AUTOSTART
+ 	if (SCARD_E_NO_SERVICE == rv)
+ 	{
+ launch:
+@@ -517,6 +520,7 @@ launch:
+ 			goto again;
+ 		}
+ 	}
++#endif
+ 
+ 	if (rv != SCARD_S_SUCCESS)
+ 		goto end;
+@@ -526,6 +530,7 @@ launch:
+ 		pvReserved2, phContext);
+ 	(void)SCardUnlockThread();
+ 
++#ifdef ENABLE_AUTOSTART
+ 	/* SCardEstablishContextTH may fail if the previous pcscd crashed
+ 	 * without cleaning /var/run/pcscd/pcscd.comm */
+ 	if (SCARD_E_NO_SERVICE == rv)
+@@ -534,6 +539,7 @@ launch:
+ 		if (retries <= 1)
+ 			goto launch;
+ 	}
++#endif
+ 
+ end:
+ 	PROFILE_END(rv)
+-- 
+1.7.5.4
+

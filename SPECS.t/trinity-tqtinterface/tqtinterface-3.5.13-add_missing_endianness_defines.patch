@@ -1,0 +1,14 @@
+--- tqtinterface/qtinterface/tqt.h.cmake.orig	2011-10-09 02:40:38.000000000 -0400
++++ tqtinterface/qtinterface/tqt.h.cmake	2012-05-01 15:10:09.220681454 -0400
+@@ -74,6 +74,11 @@
+ #define TQS_OK				QS_OK
+ #define TQTSFUNC			QTSFUNC
+ #define TQ_TYPENAME			Q_TYPENAME
++
++#define TQ_BYTE_ORDER                   Q_BYTE_ORDER
++#define TQ_LITTLE_ENDIAN                Q_LITTLE_ENDIAN
++#define TQ_BIG_ENDIAN                   Q_BIG_ENDIAN
++
+ #define TQT_CHECK_INVALID_MAP_ELEMENT	QT_CHECK_INVALID_MAP_ELEMENT
+ 
+ #define TQT_VERSION			QT_VERSION

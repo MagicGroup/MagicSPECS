@@ -1,0 +1,24 @@
+--- libcaldav-0.6.5/libcaldav.pc.in.ORI	2012-08-02 23:25:37.149283733 +0200
++++ libcaldav-0.6.5/libcaldav.pc.in	2012-08-02 23:25:45.356339277 +0200
+@@ -3,8 +3,8 @@
+ libdir=@libdir@
+ includedir=@includedir@
+ 
+-pkglibdir=${libdir}/@PACKAGE@
+-pkgincludedir=${includedir}/@PACKAGE@
++pkglibdir=${libdir}
++pkgincludedir=${includedir}
+ 
+ Name: libcaldav
+ Description: libcaldav is a client library for CalDAV
+--- libcaldav-0.6.5/src/Makefile.am.ORI	2012-08-02 23:33:27.804972833 +0200
++++ libcaldav-0.6.5/src/Makefile.am	2012-08-02 23:33:35.460457142 +0200
+@@ -37,7 +37,7 @@
+ 			get-freebusy-report.c \
+ 			get-freebusy-report.h
+ 
+-libcaldav_includedir=$(includedir)/libcaldav-@VERSION@
++libcaldav_includedir=$(includedir)
+ libcaldav_include_HEADERS = caldav.h
+ 
+ noinst_HEADERS = \

@@ -1,0 +1,13 @@
+diff -up tcsh-6.15.00/tw.parse.c.unprintable tcsh-6.15.00/tw.parse.c
+--- tcsh-6.15.00/tw.parse.c.unprintable	2007-03-01 22:21:42.000000000 +0100
++++ tcsh-6.15.00/tw.parse.c	2008-08-29 12:28:56.000000000 +0200
+@@ -2119,7 +2119,8 @@ print_by_column(Char *dir, Char *items[]
+ 	     (Strchr(val, 'x') != NULL);
+ 
+     for (i = 0; i < count; i++)	{ /* find widest string */
+-	maxwidth = max(maxwidth, (unsigned int) NLSStringWidth(items[i]));
++        if (NLSStringWidth(items[i]) != -1)
++	    maxwidth = max(maxwidth, (unsigned int) NLSStringWidth(items[i]));
+     }
+ 
+     maxwidth += no_file_suffix ? 1 : 2;	/* for the file tag and space */

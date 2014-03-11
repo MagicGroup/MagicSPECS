@@ -1,0 +1,15 @@
+--- kdelibs-4.3.1/kde3support/kdecore/k3procio.cpp.orig	2009-09-11 16:20:51.000000000 +0800
++++ kdelibs-4.3.1/kde3support/kdecore/k3procio.cpp	2009-09-11 16:24:44.000000000 +0800
+@@ -50,9 +50,10 @@
+   : d( new KProcIOPrivate( _codec ) )
+ {
+     if ( !d->codec ) {
+-        d->codec = QTextCodec::codecForName( "ISO 8859-1" );
++        // default to locale, iso-8859-1 is unsuitable for cjk characters, patched by nihui, Sep.11st, 2009
++        d->codec = QTextCodec::codecForLocale();
+         if ( !d->codec ) {
+-            kError( 174 ) << "Can't create ISO 8859-1 codec!" << endl;
++            kError( 174 ) << "Can't create locale codec!" << endl;
+         }
+     }
+ }

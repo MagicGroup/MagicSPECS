@@ -1,0 +1,11 @@
+diff -up IPC-Shareable-0.60/t/38ipchv.t.BAD IPC-Shareable-0.60/t/38ipchv.t
+--- IPC-Shareable-0.60/t/38ipchv.t.BAD	2008-02-04 10:52:10.000000000 -0500
++++ IPC-Shareable-0.60/t/38ipchv.t	2008-02-04 10:52:25.000000000 -0500
+@@ -70,6 +70,7 @@ if ($pid == 0) {
+     });
+     %hv = ();
+     kill ALRM => $pid;
++    sleep 1; # Allow time for child to process the signal before next ALRM comes in
+     
+     for (qw(eenie meenie minie moe)) {
+ 	$ipch->shlock();

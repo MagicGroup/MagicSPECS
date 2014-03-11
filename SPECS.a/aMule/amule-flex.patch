@@ -1,0 +1,21 @@
+diff -ur aMule-2.3.1.orig/src/Scanner.l aMule-2.3.1/src/Scanner.l
+--- aMule-2.3.1.orig/src/Scanner.l	2013-03-26 06:36:49.000000000 +0000
++++ aMule-2.3.1/src/Scanner.l	2013-03-26 06:53:34.000000000 +0000
+@@ -25,7 +25,7 @@
+ #define	YY_INPUT			ReadLexBuff
+ #define	YY_FATAL_ERROR		FatalLexError
+ 
+-static void ReadLexBuff(char* pcBuff, int& riResult, size_t uMaxSize);
++static void ReadLexBuff(char* pcBuff, size_t riResult, size_t uMaxSize);
+ static void FatalLexError(yyconst char msg[]);
+ 
+ static char* _pszLexBuff;
+@@ -159,7 +159,7 @@
+ 
+ %%
+ 
+-static void ReadLexBuff(char* pcBuff, int& riResult, size_t uMaxSize)
++static void ReadLexBuff(char* pcBuff, size_t riResult, size_t uMaxSize)
+ {
+ 	wxASSERT( _pszLexBuff != NULL );
+ 	

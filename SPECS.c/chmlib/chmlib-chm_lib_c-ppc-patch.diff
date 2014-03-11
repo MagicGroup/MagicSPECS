@@ -1,0 +1,11 @@
+--- src/chm_lib.c	2005-10-26 16:17:50.000000000 +0400
++++ src/chm_lib.c	2006-01-09 17:12:12.000000000 +0300
+@@ -160,7 +160,7 @@
+ /* Sparc        */
+ /* MIPS         */
+ /* PPC          */
+-#elif __i386__ || __sun || __sgi || __ppc__
++#elif __i386__ || __sun || __sgi || __ppc__ || __powerpc__
+ typedef unsigned char           UChar;
+ typedef short                   Int16;
+ typedef unsigned short          UInt16;

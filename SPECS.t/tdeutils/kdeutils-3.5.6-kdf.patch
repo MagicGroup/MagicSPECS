@@ -1,0 +1,25 @@
+diff -u -r kdeutils-3.5.6.new/kdf/kwikdisk.cpp kdeutils-3.5.6/kdf/kwikdisk.cpp
+--- kdeutils-3.5.6.new/kdf/kwikdisk.cpp	2007-03-13 10:51:39.000000000 +0800
++++ kdeutils-3.5.6/kdf/kwikdisk.cpp	2007-03-13 10:55:49.000000000 +0800
+@@ -34,6 +34,7 @@
+ #include <tqpen.h>
+ #include <tqbitmap.h>
+ #include <tqpainter.h>
++#include <tqprocess.h>
+ 
+ #include <kmainwindow.h>
+ #include <klocale.h>
+@@ -307,7 +308,12 @@
+ {
+    kdDebug() << k_funcinfo << endl;
+ 
+-   KRun::runCommand("kdf");
++   //KRun::runCommand("kdf");
++   TQProcess *kdfrun = new TQProcess(this);
++   kdfrun->clearArguments();
++   kdfrun->addArgument("LANG=zh_CN.GB18030");
++   kdfrun->addArgument("kdf");
++   kdfrun->start();
+ }
+ 
+ void KwikDisk::invokeHelp()

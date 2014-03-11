@@ -1,0 +1,66 @@
+From abbb76fe930763ca48878f3c8098633b10e6f579 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 20 Mar 2012 13:30:42 +0100
+Subject: [PATCH] Do not mount --bind /run anymore
+
+switch_root in util-linux 2.21 does mount --move /run also
+---
+ dracut.spec              |    6 +++---
+ modules.d/99base/init.sh |   16 +++-------------
+ 2 files changed, 6 insertions(+), 16 deletions(-)
+
+diff --git a/dracut.spec b/dracut.spec
+index be7ba8a..d197173 100644
+--- a/dracut.spec
++++ b/dracut.spec
+@@ -76,11 +76,11 @@ Requires: hardlink
+ Requires: gzip
+ Requires: module-init-tools >= 3.7-9
+ Requires: sed
+-Requires: udev
++Requires: udev > 166
+ %if 0%{?fedora} || 0%{?rhel} > 6
+-Requires: util-linux >= 2.20
++Requires: util-linux >= 2.21
+ %else
+-Requires: util-linux-ng >= 2.17.2
++Requires: util-linux-ng >= 2.21
+ %endif
+ 
+ %if 0%{?fedora} || 0%{?rhel} > 6
+diff --git a/modules.d/99base/init.sh b/modules.d/99base/init.sh
+index 5d51c9d..fa712a7 100755
+--- a/modules.d/99base/init.sh
++++ b/modules.d/99base/init.sh
+@@ -68,7 +68,7 @@ fi
+ if ! ismounted /run; then
+     mkdir -m 0755 /newrun
+     mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /newrun >/dev/null 
+-    cp -a /run/* /newrun
++    mv /run/* /newrun >/dev/null 2>&1
+     mount --move /newrun /run
+     rm -fr /newrun
+ fi
+@@ -312,20 +312,10 @@ else
+ fi
+ [ "$RD_DEBUG" = "yes" ] && set -x
+ 
+-if [ -d "$NEWROOT"/run ]; then
+-    NEWRUN="${NEWROOT}/run"
+-    mount --bind /run "$NEWRUN"
+-    NEWINITRAMFSROOT="$NEWRUN/initramfs"
+-
+-    if [ "$NEWINITRAMFSROOT/lib" -ef "/lib" ]; then
+-        for d in bin etc lib lib64 sbin tmp usr var; do
+-            [ -h /$d ] && ln -fsn $NEWINITRAMFSROOT/$d /$d
+-        done
+-    fi
+-else
++if ! [ -d "$NEWROOT"/run ]; then
+     NEWRUN=/dev/.initramfs
+     mkdir -m 0755 "$NEWRUN"
+-    mount --bind /run/initramfs "$NEWRUN"
++    mount --rbind /run/initramfs "$NEWRUN"
+ fi
+ 
+ wait_for_loginit

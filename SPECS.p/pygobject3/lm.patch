@@ -1,0 +1,15 @@
+diff -up pygobject-3.0.0/configure.ac.lm pygobject-3.0.0/configure.ac
+--- pygobject-3.0.0/configure.ac.lm	2011-09-28 08:30:20.922562047 -0400
++++ pygobject-3.0.0/configure.ac	2011-09-28 08:30:26.406607623 -0400
+@@ -154,6 +154,11 @@ AM_PATH_GLIB_2_0(glib_required_version,,
+ if test -n "$export_dynamic"; then
+   GLIB_LIBS=`echo $GLIB_LIBS | sed -e "s/$export_dynamic//"`
+ fi
++
++AC_CHECK_LIBM
++AC_SUBST(LIBM)
++GLIB_LIBS="$GLIB_LIBS $LIBM"
++
+ PYTHON_BASENAME=`basename $PYTHON`
+ AC_SUBST([PYTHON_BASENAME])
+ 

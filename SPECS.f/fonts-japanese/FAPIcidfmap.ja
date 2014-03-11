@@ -1,0 +1,32 @@
+%!
+% The map is a set of records like this :
+%
+%  /CIDfont_name options_dict ;
+%
+% where options_dict is a dictionary with the following entries :
+%
+% Key         Type      Description
+% Path        string    Absolute path to font file, or relative path to font file from
+%                       the GS_EXTFONTPATH value.
+% CIDFontType integer   PostScript type for this CID font. Only 0 is currently allowed.
+%                       Note that this is unrelated to the real type of the font file -
+%                       the bridge will perform format conversion.
+% FAPI        name      Name of the renderer to be used with the font. /AgfaUFST and
+%                       /FreeType is now allowed -- depends on which options Ghostscript
+%                       was built with.
+% SubfontId   integer   (optional) Index of the font in font collection, such as FCO or TTC.
+%                       It is being ignored if /Path doesn't specify a collection.
+% CSI         array     Must have strongly 2 elements.
+%                       The first element of the array specifies Ordering of CIDSystemInfo.
+%                       The second element specifies Supplement of CIDSystemInfo.
+%
+% Use regular Postscript syntax.
+%
+/Sazanami-Mincho	<< /Path (/usr/share/fonts/japanese/TrueType/sazanami-mincho.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan1) 6] >> ;
+/Sazanami-Gothic	<< /Path (/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan1) 6] >> ;
+/Kochi-Mincho		<< /Path (/usr/share/fonts/japanese/TrueType/kochi-mincho-subst.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan1) 6] >> ;
+/Kochi-Gothic		<< /Path (/usr/share/fonts/japanese/TrueType/kochi-gothic-subst.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan1) 6] >> ;
+/Adobe-Japan1		<< /Path (/usr/share/fonts/japanese/TrueType/sazanami-mincho.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan1) 6] >> ;
+/Adobe-Japan2		<< /Path (/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan2) 0] >> ;
+/Ryumin-Light		<< /Path (/usr/share/fonts/japanese/TrueType/sazanami-mincho.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan1) 6] >> ;
+/GothicBBB-Medium	<< /Path (/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf) /CIDFontType 0 /FAPI /FreeType /CSI [(Japan1) 6] >> ;

@@ -1,0 +1,82 @@
+From 7e1c5c8074e5d83cfda5b66140c177954b836118 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 6 Jan 2011 17:59:27 +0100
+Subject: [PATCH] Make RPC block factor dynamic
+
+Former static factor (RPC_DQBLK_SIZE_BITS) had problem to carry values
+bigger than hard-coded limit (2^(32 + RPC_DQBLK_SIZE_BITS) - 1).
+
+This patch makes the factor dynamic. It selects best value to prevent
+overflow (XDR has 32b variables, some file system support 64b quotas)
+and to achieve highest possible precision.
+
+The client site uses the factor carried via RPC correctly.
+
+There is similar problem with setquota. This patch does not address it,
+however it can be easily resused and fixed.
+---
+ rquota_server.c |   34 +++++++++++++++++++++++++++++-----
+ 1 files changed, 29 insertions(+), 5 deletions(-)
+
+diff --git a/rquota_server.c b/rquota_server.c
+index 0e83689..cff6191 100644
+--- a/rquota_server.c
++++ b/rquota_server.c
+@@ -91,17 +91,42 @@ static inline void servnet2utildqblk(struct util_dqblk *u, sq_dqblk * n)
+ 		u->dqb_itime = 0;
+ }
+ 
++/* XDR transports 32b variables exactly. Find smallest needed shift to fit
++ * 64b variable into into 32 bits and to preserve precision as high as
++ * possible. */
++static int find_block_shift(qsize_t hard, qsize_t soft, qsize_t cur)
++{
++	int shift;
++	qsize_t value;
++    
++	value = (hard > soft) ? hard : soft;
++	for (shift = QUOTABLOCK_BITS; value; shift++) value >>= 1;
++
++	cur >>= shift;
++	for (; cur; shift++) cur >>= 1;
++
++	shift -= 32;
++	if (shift < 0) shift = 0;
++
++	return shift;
++}
++
+ static inline void servutil2netdqblk(struct rquota *n, struct util_dqblk *u)
+ {
+ 	time_t now;
++	int shift;
+ 
+-	time(&now);
+-	n->rq_bhardlimit = (u->dqb_bhardlimit << QUOTABLOCK_BITS) >> RPC_DQBLK_SIZE_BITS;
+-	n->rq_bsoftlimit = (u->dqb_bsoftlimit << QUOTABLOCK_BITS) >> RPC_DQBLK_SIZE_BITS;
++	shift = find_block_shift(u->dqb_bhardlimit, u->dqb_bsoftlimit,
++		u->dqb_curspace);
++	n->rq_bsize = 1 << shift;
++	n->rq_bhardlimit = (u->dqb_bhardlimit << QUOTABLOCK_BITS) >> shift;
++	n->rq_bsoftlimit = (u->dqb_bsoftlimit << QUOTABLOCK_BITS) >> shift;
+ 	n->rq_fhardlimit = u->dqb_ihardlimit;
+ 	n->rq_fsoftlimit = u->dqb_isoftlimit;
+-	n->rq_curblocks = (u->dqb_curspace + RPC_DQBLK_SIZE - 1) >> RPC_DQBLK_SIZE_BITS;
++	n->rq_curblocks = (u->dqb_curspace + n->rq_bsize - 1) >> shift;
+ 	n->rq_curfiles = u->dqb_curinodes;
++
++	time(&now);
+ 	if (u->dqb_btime)
+ 		n->rq_btimeleft = u->dqb_btime - now;
+ 	else
+@@ -258,7 +283,6 @@ getquota_rslt *getquotainfo(int lflags, caddr_t * argp, struct svc_req * rqstp)
+ 	}
+ 
+ 	result.status = Q_NOQUOTA;
+-	result.getquota_rslt_u.gqr_rquota.rq_bsize = RPC_DQBLK_SIZE;
+ 
+ 	if (init_mounts_scan(1, &pathp, MS_QUIET | MS_NO_MNTPOINT | MS_NFS_ALL | ((flags & FL_AUTOFS) ? 0 : MS_NO_AUTOFS)) < 0)
+ 		goto out;
+-- 
+1.7.3.4
+

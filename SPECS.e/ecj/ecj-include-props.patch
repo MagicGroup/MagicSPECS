@@ -1,0 +1,10 @@
+--- a/build.xml	2012-10-09 13:56:47.695928242 -0400
++++ b/build.xml	2012-10-09 13:57:06.822893233 -0400
+@@ -46,6 +46,7 @@
+ 				<include name="**/*.rsc"/>
+ 				<include name="META-INF/**"/>
+ 				<include name="**/*.properties"/>
++				<include name="**/*.props"/>
+ 				<exclude name="META-INF/eclipse.inf"/>
+ 			</fileset>
+ 		</zip>

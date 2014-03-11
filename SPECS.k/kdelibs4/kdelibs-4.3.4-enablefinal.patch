@@ -1,0 +1,12 @@
+diff -Nuarp kdelibs-4.3.4/plasma/widgets/pushbutton.cpp kdelibs-4.3.4.fix_enablefinal/plasma/widgets/pushbutton.cpp
+--- kdelibs-4.3.4/plasma/widgets/pushbutton.cpp	2009-10-30 20:26:07.000000000 +0800
++++ kdelibs-4.3.4.fix_enablefinal/plasma/widgets/pushbutton.cpp	2009-12-27 21:50:16.000000000 +0800
+@@ -364,7 +364,7 @@ void PushButton::paint(QPainter *painter
+         if (nativeWidget()->text().isEmpty()) {
+             pixmapRect = nativeWidget()->style()->alignedRect(option->direction, Qt::AlignCenter, iconPix.size(), rect.toRect());
+         } else {
+-            pixmapRect = nativeWidget()->style()->alignedRect(option->direction, Qt::AlignLeft|Qt::AlignVCenter, iconPix.size(), rect.toRect());
++            pixmapRect = nativeWidget()->style()->alignedRect(option->direction, (Qt::Alignment)(Qt::AlignLeft|Qt::AlignVCenter), iconPix.size(), rect.toRect());
+         }
+         painter->drawPixmap(pixmapRect.topLeft(), iconPix);
+ 

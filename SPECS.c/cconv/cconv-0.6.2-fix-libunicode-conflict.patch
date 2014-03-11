@@ -1,0 +1,97 @@
+diff -urN cconv-0.6.2.orig//cconv.c cconv-0.6.2/cconv.c
+--- cconv-0.6.2.orig//cconv.c	2011-11-04 13:59:36.000000000 -0400
++++ cconv-0.6.2/cconv.c	2011-11-04 14:00:13.000000000 -0400
+@@ -19,7 +19,7 @@
+ 
+ #include "cconv.h"
+ #include "cconv_table.h"
+-#include "unicode.h"
++#include "cconv_unicode.h"
+ 
+ #ifdef HAVE_CONFIG_H
+ 	#include "config.h"
+diff -urN cconv-0.6.2.orig//cconv_unicode.h cconv-0.6.2/cconv_unicode.h
+--- cconv-0.6.2.orig//cconv_unicode.h	1969-12-31 19:00:00.000000000 -0500
++++ cconv-0.6.2/cconv_unicode.h	2010-01-03 00:27:38.000000000 -0500
+@@ -0,0 +1,22 @@
++/*
++ * Copyright (C) 2008, 2009
++ * Free Software Foundation, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * \author Yang Jianyu <xiaoyjy@hotmail.com>
++ */
++
++#ifndef _CCONV_UNICODE_H_
++#define _CCONV_UNICODE_H_
++
++extern int utf8_char_width (const unsigned char* w);
++
++extern int utf8_char_encode(const unsigned char* w, int* c);
++extern int utf8_char_decode(int unicode, unsigned char* utf);
++
++#endif
++
+diff -urN cconv-0.6.2.orig//Makefile.am cconv-0.6.2/Makefile.am
+--- cconv-0.6.2.orig//Makefile.am	2011-11-04 13:59:36.000000000 -0400
++++ cconv-0.6.2/Makefile.am	2011-11-04 14:00:36.000000000 -0400
+@@ -14,4 +14,4 @@
+ libcconv_la_SOURCES = cconv.c unicode.c
+ libcconv_la_CFLAGS  = -Wall @ICONV_INCLUDES@ @OS_TYPE@
+ 
+-include_HEADERS = cconv.h unicode.h
++include_HEADERS = cconv.h cconv_unicode.h
+diff -urN cconv-0.6.2.orig//Makefile.in cconv-0.6.2/Makefile.in
+--- cconv-0.6.2.orig//Makefile.in	2011-11-04 13:59:36.000000000 -0400
++++ cconv-0.6.2/Makefile.in	2011-11-04 14:00:45.000000000 -0400
+@@ -211,7 +211,7 @@
+ lib_LTLIBRARIES = libcconv.la
+ libcconv_la_SOURCES = cconv.c unicode.c
+ libcconv_la_CFLAGS = -Wall @ICONV_INCLUDES@ @OS_TYPE@
+-include_HEADERS = cconv.h unicode.h
++include_HEADERS = cconv.h cconv_unicode.h
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-am
+ 
+diff -urN cconv-0.6.2.orig//unicode.c cconv-0.6.2/unicode.c
+--- cconv-0.6.2.orig//unicode.c	2011-11-04 13:59:36.000000000 -0400
++++ cconv-0.6.2/unicode.c	2011-11-04 14:00:58.000000000 -0400
+@@ -10,7 +10,7 @@
+  * \author Yang Jianyu <xiaoyjy@hotmail.com>
+  */
+ 
+-#include "unicode.h"
++#include "cconv_unicode.h"
+ 
+ int utf8_char_width(const unsigned char* w)
+ {
+diff -urN cconv-0.6.2.orig//unicode.h cconv-0.6.2/unicode.h
+--- cconv-0.6.2.orig//unicode.h	2011-11-04 13:59:36.000000000 -0400
++++ cconv-0.6.2/unicode.h	1969-12-31 19:00:00.000000000 -0500
+@@ -1,22 +0,0 @@
+-/*
+- * Copyright (C) 2008, 2009
+- * Free Software Foundation, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2, or (at your option)
+- * any later version.
+- *
+- * \author Yang Jianyu <xiaoyjy@hotmail.com>
+- */
+-
+-#ifndef _CCONV_UNICODE_H_
+-#define _CCONV_UNICODE_H_
+-
+-extern int utf8_char_width (const unsigned char* w);
+-
+-extern int utf8_char_encode(const unsigned char* w, int* c);
+-extern int utf8_char_decode(int unicode, unsigned char* utf);
+-
+-#endif
+-

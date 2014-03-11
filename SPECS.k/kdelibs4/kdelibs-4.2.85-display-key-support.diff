@@ -1,0 +1,24 @@
+Subject: Add support for the XF86_Display key (Fn+F7)
+From: Lubos Lunak
+Fate: #4147
+Patch-upstream: no (maybe todo)
+Relates: libqt4/display-key-support.diff, kdebase4/randr12.diff
+
+--- kdeui/util/kkeyserver_x11.cpp.sav	2007-10-30 11:11:39.000000000 +0100
++++ kdeui/util/kkeyserver_x11.cpp	2008-09-12 14:33:03.000000000 +0200
+@@ -245,6 +245,7 @@ static const TransKey g_rgQtToSymX[] =
+ #define XF86XK_LaunchD      0x1008FF4D
+ #define XF86XK_LaunchE      0x1008FF4E
+ #define XF86XK_LaunchF      0x1008FF4F
++#define XF86XK_Display		0x1008FF59   /* Output switch key           */
+ // end of XF86keysyms.h
+         ,
+ { Qt::Key_Standby,    XF86XK_Standby },
+@@ -282,6 +283,7 @@ static const TransKey g_rgQtToSymX[] =
+     { Qt::Key_LaunchD,    XF86XK_LaunchB },
+     { Qt::Key_LaunchE,    XF86XK_LaunchC },
+     { Qt::Key_LaunchF,    XF86XK_LaunchD },
++    { Qt::Key_Display,    XF86XK_Display },
+ };
+ 
+ //---------------------------------------------------------------------

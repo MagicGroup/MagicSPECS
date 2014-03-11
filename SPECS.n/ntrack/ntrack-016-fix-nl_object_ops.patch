@@ -1,0 +1,11 @@
+--- ntrack-016/modules/ntrack-libnl.c.orig	2013-12-25 12:18:58.089391854 +0000
++++ ntrack-016/modules/ntrack-libnl.c	2013-12-25 12:19:45.694884978 +0000
+@@ -530,7 +530,7 @@
+ 		op_default_route_disappeared ((struct _ntrack_monitor_arch*) self, nl_info);
+ 	} else if (nl_info->topmost_route && topmost_route) {
+ 		int diff_bits;
+-		if ((diff_bits = (route_obj_ops.oo_id_attrs | ROUTE_ATTR_OIF
++		if ((diff_bits = (nl_object_get_id_attrs(&route_obj_ops) | ROUTE_ATTR_OIF
+ 		                  | ROUTE_ATTR_GATEWAY) &
+ 		                  nl_object_diff (OBJ_CAST (nl_info->topmost_route),
+ 		                                  OBJ_CAST (topmost_route)))) {

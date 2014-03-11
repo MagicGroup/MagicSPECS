@@ -1,0 +1,27 @@
+From fdd136923c77b71080f2ccb2c0fe0a5234e73c1c Mon Sep 17 00:00:00 2001
+From: Avesh Agarwal <avagarwa@redhat.com>
+Date: Tue, 10 Dec 2013 14:47:14 -0500
+Subject: [PATCH 14/20] Fixed an issue where nm-openswan service is searching
+ for ipsec binary in both /sbin and /usr/sbin leading to same operation twice,
+ as /sbin is just symlink to /usr/sbin, so removed /sbin from the search
+ paths.
+
+---
+ src/nm-openswan-service.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/nm-openswan-service.c b/src/nm-openswan-service.c
+index d59c58f..7f1a9c9 100644
+--- a/src/nm-openswan-service.c
++++ b/src/nm-openswan-service.c
+@@ -57,7 +57,6 @@ typedef struct {
+ static const char *openswan_binary_paths[] =
+ {
+ 	"/usr/sbin/ipsec",
+-	"/sbin/ipsec",
+ 	"/usr/local/sbin/ipsec",
+ 	NULL
+ };
+-- 
+1.8.3.1
+

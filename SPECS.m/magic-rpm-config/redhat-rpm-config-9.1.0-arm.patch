@@ -1,0 +1,28 @@
+diff -urNp redhat-rpm-config-9.1.0_orig/rpmrc redhat-rpm-config-9.1.0/rpmrc
+--- redhat-rpm-config-9.1.0_orig/rpmrc	2010-02-02 04:24:04.000000000 -0500
++++ redhat-rpm-config-9.1.0/rpmrc	2011-07-02 04:29:11.921575635 -0400
+@@ -46,10 +46,12 @@ optflags: armv3l %{__global_cflags} -fsi
+ optflags: armv4b %{__global_cflags} -fsigned-char -march=armv4
+ optflags: armv4l %{__global_cflags} -fsigned-char -march=armv4
+ optflags: armv4tl %{__global_cflags} -march=armv4t
+-optflags: armv5tel %{__global_cflags} -march=armv5te
+-optflags: armv5tejl %{__global_cflags} -march=armv5te
+-optflags: armv6l %{__global_cflags} -march=armv6
+-optflags: armv7l %{__global_cflags} -march=armv7
++optflags: armv5tel %{__global_cflags} -march=armv5te -mfloat-abi=soft
++optflags: armv5tejl %{__global_cflags} -march=armv5te -mfloat-abi=soft
++optflags: armv6l %{__global_cflags} -march=armv6 -mfloat-abi=soft
++optflags: armv7l %{__global_cflags} -march=armv7-a -mfloat-abi=soft
++optflags: armv7hl %{__global_cflags} -march=armv7-a -mfpu=vfpv3-d16  -mfloat-abi=hard
++optflags: armv7hnl %{__global_cflags} -march=armv7-a -mfpu=neon  -mfloat-abi=hard
+ 
+ optflags: atarist %{__global_cflags}
+ optflags: atariste %{__global_cflags}
+@@ -76,5 +78,7 @@ buildarchtranslate: sparcv9v: sparcv9
+ 
+ buildarchtranslate: armv5tejl: armv5tel
+ buildarchtranslate: armv6l: armv5tel
+ buildarchtranslate: armv7l: armv5tel
++buildarchtranslate: armv7hl: armv7hl
++buildarchtranslate: armv7hnl: armv7hl
+ 

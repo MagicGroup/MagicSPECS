@@ -1,0 +1,17 @@
+#!/bin/sh
+#强制删除所有以某些字母开头的 rpm 包，不检查依赖关系，请谨慎使用
+#使用方法： rpmdel 包名的开头几个字母
+#如 rpmdel kde 将删除所有以 kde 开头的包
+if [ $# -eq 0 ];then
+	echo 'Dangerous!!! Usage: rpmdel <begin letters of package name>'
+else
+	if test $# = 1; then
+		for i in `rpm -qa|grep ^$1`
+		do
+			echo "removing  $i"
+			rpm -e --nodeps $i
+			echo "    done"
+		done
+	fi
+fi
+

@@ -1,0 +1,31 @@
+--- t/test.t.orig	2007-04-29 14:21:59.437035109 -0700
++++ t/test.t	2007-04-29 14:35:42.247571286 -0700
+@@ -7,6 +7,7 @@
+ #########################
+ 
+ use Test::More;
++use Test::Exception;
+ use vars qw($have_file_temp $have_digest @methods @digest_methods);
+ 
+ BEGIN {
+@@ -122,6 +123,7 @@
+ 
+   {
+     package File::Modified::Signature::Complicated;
++    use base 'File::Modified::Signature';
+ 
+     sub signature {
+       my ($self) = @_;
+@@ -130,9 +132,10 @@
+     };
+   };
+ 
+-  my $d = File::Modified->new(method => 'Complex',files => ['does_not_need_to_exist']);
++  my $d = File::Modified->new(method => 'Complicated',files => ['does_not_need_to_exist']);
+ 
+-  ok(! $d->changed);
++  lives_and {$d->changed, 0} "don't die on complex comparisons"; 
++  #lives_ok {$d->changed} "don't die on complex comparisons"; 
+ };
+ 
+ SKIP: {

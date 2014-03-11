@@ -1,0 +1,28 @@
+diff -pruN imsettings-1.2.8.orig/data/xinput.sh.in.in imsettings-1.2.8/data/xinput.sh.in.in
+--- imsettings-1.2.8.orig/data/xinput.sh.in.in	2012-02-10 11:25:18.000000000 +0900
++++ imsettings-1.2.8/data/xinput.sh.in.in	2012-02-10 12:38:44.000000000 +0900
+@@ -266,8 +266,22 @@ if [ -r "$USER_XINPUTRC" -a "x$IMSETTING
+ 	SHORT_DESC="User Specific"
+     fi
+ elif [ -r "$SYS_XINPUTRC" ]; then
+-    source "$SYS_XINPUTRC"
+-    READ_XINPUTRC=$SYS_XINPUTRC
++    # FIXME: This hardcoded list has to be gone in the future.
++    _language_list="as bn gu hi ja kn ko mai ml mr ne or pa si ta te th ur vi zh"
++    _sourced_xinputrc=0
++    for i in $_language_list; do
++        if echo $tmplang | grep -q -E "^$i"; then
++            source "$SYS_XINPUTRC"
++            READ_XINPUTRC=$SYS_XINPUTRC
++            _sourced_xinputrc=1
++            break
++        fi
++    done
++    if [ $_sourced_xinputrc -eq 0 ]; then
++        # Read none.conf to set up properly for locales not listed the above.
++        source @XINPUT_PATH@/none.conf
++        READ_XINPUTRC=@XINPUT_PATH@/none.conf
++    fi
+ fi
+ 
+ [ -z "$IMSETTINGS_INTEGRATE_DESKTOP" ] && IMSETTINGS_INTEGRATE_DESKTOP=yes

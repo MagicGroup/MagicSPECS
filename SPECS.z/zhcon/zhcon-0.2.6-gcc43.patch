@@ -1,0 +1,317 @@
+diff -up ./src/basefont.cpp.gcc43 ./src/basefont.cpp
+--- ./src/basefont.cpp.gcc43	2006-04-25 02:38:27.000000000 +1000
++++ ./src/basefont.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -24,6 +24,7 @@
+ #include <sys/stat.h>
+ #include <stdexcept>
+ #include <cassert>
++#include <string.h>
+ #include "global.h"
+ #include "debug.h"
+ #include "hzdecoder.h"
+diff -up ./src/big5decoder.cpp.gcc43 ./src/big5decoder.cpp
+--- ./src/big5decoder.cpp.gcc43	2006-04-25 02:38:25.000000000 +1000
++++ ./src/big5decoder.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -27,7 +27,8 @@ bool BIG5Decoder::IsCode1(char c) {
+ }
+ 
+ bool BIG5Decoder::IsCode2(char c) {
+-    return c >= 40 && c <= 0xff;
++//    return c >= 40 && c <= 0xff;
++    return c>=40;
+ }
+ 
+ unsigned int BIG5Decoder::Index(char c1, char c2) {
+diff -up ./src/display/fblinear16.cpp.gcc43 ./src/display/fblinear16.cpp
+--- ./src/display/fblinear16.cpp.gcc43	2006-04-25 02:38:24.000000000 +1000
++++ ./src/display/fblinear16.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -86,7 +86,8 @@ void FBLinear16::RevRect(int x1,int y1,i
+     for(; height--; dest += mNextLine) {
+         dest32 = (__u32*)dest;
+         for (cnt = width/2; cnt--;) {
+-            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32++);
++            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32);
++            dest32++;
+         }
+         if (width & 1) {
+            dest16 = (__u16*)dest32;
+diff -up ./src/display/fblinear24.cpp.gcc43 ./src/display/fblinear24.cpp
+--- ./src/display/fblinear24.cpp.gcc43	2006-04-25 02:38:23.000000000 +1000
++++ ./src/display/fblinear24.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -136,19 +136,25 @@ void FBLinear24::RevRect(int x1,int y1,i
+     for(; height--; dest += mNextLine) {
+         dest32 = (__u32*)dest;
+         for (cnt = width/4; cnt--;) {
+-            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32++);
+-            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32++);
+-            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32++);
++            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32);
++            dest32++;
++            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32);
++            dest32++;
++            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32);
++            dest32++;
+         }
+         if (width & 2) {
+-            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32++);
++            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32);
++            dest32++;
+             dest16 = (__u16*)dest32;
+-            fb_writew(fb_readw(dest16) ^ 0xffff, dest16++);
++            fb_writew(fb_readw(dest16) ^ 0xffff, dest16);
++            dest16++;
+             dest32 = (__u32*)dest16;
+         }
+         if (width & 1) {
+             dest16 = (__u16*)dest32;
+-            fb_writew(fb_readw(dest16) ^ 0xffff, dest16++);
++            fb_writew(fb_readw(dest16) ^ 0xffff, dest16);
++            dest16++;
+             dest8 = (__u8*)dest16;
+             fb_writeb(fb_readb(dest8) ^ 0xff, dest8);
+         }
+diff -up ./src/display/fblinear32.cpp.gcc43 ./src/display/fblinear32.cpp
+--- ./src/display/fblinear32.cpp.gcc43	2006-04-25 02:38:23.000000000 +1000
++++ ./src/display/fblinear32.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -74,7 +74,8 @@ void FBLinear32::RevRect(int x1,int y1,i
+     for(; height--; dest += mNextLine) {
+         dest32 = (__u32*)dest;
+         for (cnt = width; cnt--;) {
+-            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32++);
++            fb_writel(fb_readl(dest32) ^ 0xffffffff, dest32);
++            dest32++;
+         }
+     }
+ }
+diff -up ./src/display/fblinear4.cpp.gcc43 ./src/display/fblinear4.cpp
+--- ./src/display/fblinear4.cpp.gcc43	2006-04-25 02:38:23.000000000 +1000
++++ ./src/display/fblinear4.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -19,6 +19,7 @@
+ 
+ #include <assert.h>
+ #include <endian.h>
++#include <string.h>
+ #include "global.h"
+ #include "fblinear4.h"
+ 
+diff -up ./src/display/fblinear8.cpp.gcc43 ./src/display/fblinear8.cpp
+--- ./src/display/fblinear8.cpp.gcc43	2006-04-25 02:38:23.000000000 +1000
++++ ./src/display/fblinear8.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -19,6 +19,7 @@
+ 
+ #include <assert.h>
+ #include <endian.h>
++#include <string.h>
+ #include "global.h"
+ #include "fblinear8.h"
+ 
+@@ -63,11 +64,13 @@ void FBLinear8::RevRect(int x1,int y1,in
+     for(; height--; dest += mNextLine) {
+         dest32 = (__u32*)dest;
+         for (cnt = width/4; cnt--;) {
+-            fb_writel(fb_readl(dest32) ^ 0x0f0f0f0f, dest32++);
++            fb_writel(fb_readl(dest32) ^ 0x0f0f0f0f, dest32);
++            dest32++;
+         }
+         if (width & 2) {
+             dest16 = (__u16*)dest32;
+-            fb_writew(fb_readw(dest16) ^ 0x0f0f, dest16++);
++            fb_writew(fb_readw(dest16) ^ 0x0f0f, dest16);
++            dest16++;
+             dest32 = (__u32*)dest16;
+         }
+         if (width & 1) {
+diff -up ./src/display/fbvgaplanes.cpp.gcc43 ./src/display/fbvgaplanes.cpp
+--- ./src/display/fbvgaplanes.cpp.gcc43	2006-04-25 02:38:23.000000000 +1000
++++ ./src/display/fbvgaplanes.cpp	2008-07-15 12:53:18.000000000 +1000
+@@ -22,6 +22,7 @@
+ #ifdef USING_VGA
+ #include <assert.h>
+ #include <unistd.h>
++#include <string.h>
+ #include "debug.h"
+ #include "fbvgaplanes.h"
+ 
+diff -up ./src/encfilter.c.gcc43 ./src/encfilter.c
+--- ./src/encfilter.c.gcc43	2006-04-29 05:09:33.000000000 +1000
++++ ./src/encfilter.c	2008-07-15 12:31:16.000000000 +1000
+@@ -37,6 +37,7 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <assert.h>
++#include <string.h>
+ 
+ #include "encfilter.h"
+ 
+@@ -46,7 +47,9 @@
+ #error ICONV_CONST not defined
+ #endif /* ICONV_CONST */
+ 
+-#define BUFSIZ 8192
++#ifndef BUFSIZ
++#    define BUFSIZ 8192
++#endif
+ int UseEncodingFilter;  /* use filter such as UTF-8 */
+ char EncodingFilterBuff[BUFSIZ];   /* global buffer used by ConsoleHandler() and TextCopy() */
+ size_t EncodingFilterLen; 
+diff -up ./src/gbkdecoder.cpp.gcc43 ./src/gbkdecoder.cpp
+--- ./src/gbkdecoder.cpp.gcc43	2006-04-25 02:38:27.000000000 +1000
++++ ./src/gbkdecoder.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -27,13 +27,15 @@ bool GBKDecoder::IsCode1(char c) {
+ }
+ 
+ bool GBKDecoder::IsCode2(char c) {
+-    return c >= 0x40 && c <= 0xff;
++//    return c >= 0x40 && c <= 0xff;
++    return c>=0x40;
+ }
+ 
+ unsigned int GBKDecoder::Index(char c1, char c2) {
+     int n;
+     n = (c1 - 0x81) * 192;
+-    if (c2 <= 0xff && c2 >= 0x40)
++    //     if (c2 <= 0xff && c2 >= 0x40)
++    if (c2 >= 0x40)
+         n += (c2 - 0x40);
+     return n;
+ }
+diff -up ./src/graphdev.cpp.gcc43 ./src/graphdev.cpp
+--- ./src/graphdev.cpp.gcc43	2006-04-25 02:38:26.000000000 +1000
++++ ./src/graphdev.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -20,12 +20,14 @@
+ #include <config.h>
+ #endif
+ 
++#include <stdlib.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
+ #include <assert.h>
+ #include <iostream>
++#include <string.h>
+ #include "debug.h"
+ 
+ #include "display/fbdev.h"
+diff -up ./src/iconv_string.c.gcc43 ./src/iconv_string.c
+--- ./src/iconv_string.c.gcc43	2006-04-25 02:38:27.000000000 +1000
++++ ./src/iconv_string.c	2008-07-15 12:31:16.000000000 +1000
+@@ -69,7 +69,7 @@ int iconv_string (const char* tocode, co
+   {
+     size_t count = 0;
+     char tmpbuf[tmpbufsize];
+-    const char* inptr = start;
++    char* inptr = (char *) start;
+     size_t insize = end-start;
+     while (insize > 0) {
+       char* outptr = tmpbuf;
+@@ -121,7 +121,7 @@ int iconv_string (const char* tocode, co
+   iconv(cd,NULL,NULL,NULL,NULL); /* return to the initial state */
+   /* Do the conversion for real. */
+   {
+-    const char* inptr = start;
++    char* inptr = (char *) start;
+     size_t insize = end-start;
+     char* outptr = result;
+     size_t outsize = length;
+diff -up src/inputmanager.h.gcc43 src/inputmanager.h
+--- src/inputmanager.h.gcc43	2008-11-21 17:18:50.000000000 +1000
++++ src/inputmanager.h	2008-11-21 17:20:28.000000000 +1000
+@@ -27,6 +27,7 @@ using namespace std;
+ #include <cassert>
+ #include <vector>
+ #include <sys/types.h>
++#include <sys/select.h>
+ 
+ #include "mouse.h"
+ #if defined(__FreeBSD__)
+diff -up ./src/inputmanager.cpp.gcc43 ./src/inputmanager.cpp
+--- ./src/inputmanager.cpp.gcc43	2006-05-03 03:18:39.000000000 +1000
++++ ./src/inputmanager.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -24,6 +24,7 @@ using namespace std;
+ #include <unistd.h>
+ #include <sys/time.h>
+ #include <string>
++#include <stdlib.h>
+ 
+ #include "global.h"
+ #include "debug.h"
+--- ./src/nativeinputserver.h.gcc43	2006-04-25 02:38:26.000000000 +1000
++++ ./src/nativeinputserver.h	2008-07-15 12:31:16.000000000 +1000
+@@ -62,7 +62,7 @@ class NativeInputServer : public InputSe
+         bool mAutoSelectUnique;
+         static struct Symbol {
+             char mKey;
+-            char *mpSymbol;
++            const char *mpSymbol;
+         }
+         mFullSymbolTable[];
+         static char mFullCharTable[];
+--- ./src/window.cpp.gcc43	2006-04-25 02:38:25.000000000 +1000
++++ ./src/window.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -20,6 +20,8 @@
+ #include <algorithm>
+ #include <sys/time.h>
+ #include <algorithm>
++#include <stdlib.h>
++#include <string.h>
+ #include "global.h"
+ #include "debug.h"
+ #include "window.h"
+--- ./src/winime.cpp.gcc43	2008-07-15 12:31:15.000000000 +1000
++++ ./src/winime.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -47,7 +47,7 @@ mCandilistBufLen(0)
+         throw (runtime_error("can not get gbfont size!"));
+ 
+     mBufSize = st.st_size;
+-    mpBuf = (char *) mmap(0, mBufSize, PROT_READ, MAP_SHARED, mFd, 0);
++    mpBuf = (char *) mmap(NULL, mBufSize, PROT_READ, MAP_SHARED, mFd, 0);
+     if (mpBuf == MAP_FAILED)
+         throw (runtime_error("mmap failed!"));
+ 
+@@ -163,7 +163,8 @@ int WinIme::MatchWord(char *p, int len, 
+ 		        	count--;
+                     break;
+ 		        }
+-                AddCandilist(t,(unsigned int&)buflen);
++                unsigned int buflength=buflen;
++                AddCandilist(t,(unsigned int&)buflength);
+             } //search next word
+             else {
+                 if (len == 1)   //special for first char
+--- ./src/zhcon.cpp.gcc43	2008-07-15 12:31:15.000000000 +1000
++++ ./src/zhcon.cpp	2008-07-15 12:31:16.000000000 +1000
+@@ -23,6 +23,7 @@
+ #include <unistd.h>
+ #include <cstdlib>
+ #include <cstdio>
++#include <string.h>
+ #include <sys/ioctl.h>
+ 
+ #if defined(linux)
+@@ -452,9 +457,11 @@ void Zhcon::InitTty() {
+         return;
+     }
+     char *pCap = mCapBuf;
+-    mpCapClearScr = tgetstr("cl", &pCap);
+-    mpCapCursorOff = tgetstr("vi", &pCap);
+-    mpCapCursorOn  = tgetstr("ve",  &pCap);
++    char ids[][3]={"cl","vi","ve"};
++
++    mpCapClearScr = tgetstr(ids[0], &pCap);
++    mpCapCursorOff = tgetstr(ids[1], &pCap);
++    mpCapCursorOn  = tgetstr(ids[2],  &pCap);
+ 
+     if (mpCapClearScr) write(mConFd, mpCapClearScr, strlen(mpCapClearScr));
+     if (mpCapCursorOff) write(mConFd, mpCapCursorOff, strlen(mpCapCursorOff));
+
+--- src/display/vgadev.cpp.gcc43	2008-07-15 14:10:33.000000000 +1000
++++ src/display/vgadev.cpp	2008-07-15 14:10:57.000000000 +1000
+@@ -33,6 +33,7 @@
+ #include <sys/mman.h>
+ #include <sys/io.h>
+ #include <cassert>
++#include <string.h>
+ #include "debug.h"
+ #include "vgadev.h"
+ #include "lrmi.h"

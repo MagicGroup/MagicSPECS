@@ -1,0 +1,22 @@
+diff -ru munin-2.0.7.orig/master/lib/Munin/Master/GraphOld.pm munin-2.0.7/master/lib/Munin/Master/GraphOld.pm
+--- munin-2.0.7.orig/master/lib/Munin/Master/GraphOld.pm	2012-10-02 17:46:50.000000000 -0500
++++ munin-2.0.7/master/lib/Munin/Master/GraphOld.pm	2012-10-19 20:12:24.600441211 -0500
+@@ -842,6 +842,7 @@
+ 
+         # This block does the real work.  Since we're forking exit
+         # afterwards.
++        $running=0;
+ 
+         &$work;
+ 
+diff -ru munin-2.0.7.orig/master/lib/Munin/Master/HTMLOld.pm munin-2.0.7/master/lib/Munin/Master/HTMLOld.pm
+--- munin-2.0.7.orig/master/lib/Munin/Master/HTMLOld.pm	2012-10-02 17:46:50.000000000 -0500
++++ munin-2.0.7/master/lib/Munin/Master/HTMLOld.pm	2012-10-19 20:12:52.032172902 -0500
+@@ -784,6 +784,7 @@
+ 
+         # This block does the real work.  Since we're forking exit
+         # afterwards.
++        $running=0;
+ 
+         &$work;
+ 

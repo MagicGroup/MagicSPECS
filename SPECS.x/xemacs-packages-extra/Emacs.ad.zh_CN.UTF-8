@@ -1,0 +1,1072 @@
+! XEmacs 21.x 用缺省资源文件(用于中文环境gb2312)
+! 
+!              Donald Park 'Piao Xiaolin' <xlpark@kankou.cs.uec.ac.jp>
+!                                   Time-stamp: <03/10/17 21:30:00 petersen>
+!
+! This is the app-defaults file for XEmacs.
+!
+! This used to be identical to sample.Xdefaults, but the resources
+! below have been rewritten to be as general as possible to avoid
+! overriding user resources.  Other than the form rewriting, both
+! files should be kept in sync. 
+! 
+! The resources below are loaded into the XEmacs executable at compile-time:
+! changes to .../etc/Emacs.ad made after XEmacs has been built will have no
+! effect.
+! 
+! However, you may copy .../etc/Emacs.ad to /usr/lib/X11/app-defaults/Emacs
+! (or whatever the standard app-defaults directory is at your site) to cause
+! it to be consulted at run-time.  (Do this only for site-wide customizations:
+! personal customizations should be put into ~/.Xdefaults instead.)
+! Note that the file must be named Emacs, not XEmacs.
+! 
+! See the NEWS file (C-h n) or XEmacs manual (C-h i) for a description of
+! the various resources and the syntax for setting them.
+! 
+! Energize users: note that this is not the same app-defaults file that is
+! used with the Energize-specific version of XEmacs.
+
+
+! Colors and backgrounds.
+! ======================
+! The contrasts of these colors will cause them to map to the appropriate
+! one of "black" or "white" on monochrome systems.
+! 
+! The valid color names on your system can be found by looking in the file
+! `rgb.txt', usually found in /usr/lib/X11/ or /usr/openwin/lib/X11/.
+
+! Set the modeline colors.
+Emacs.modeline*attributeForeground:	Black
+Emacs.modeline*attributeBackground:	Gray75
+
+! Set the color of the text cursor.
+Emacs.text-cursor*attributeBackground:	Red3
+
+! If you want to set the color of the mouse pointer, do this:
+! Emacs.pointer*attributeForeground:	Black
+! If you want to set the background of the mouse pointer, do this:
+! Emacs.pointer*attributeBackground:	White
+! Note that by default, the pointer foreground and background are the same
+! as the default face.
+
+! Set the menubar colors.  This overrides the default foreground and
+! background colors specified above.
+*menubar*Foreground:			Gray30
+*menubar*Background:			Gray80
+! This is for buttons in the menubar.  
+! Yellow would be better, but that would map to white on monochrome.
+*menubar*buttonForeground:		Blue
+*XlwMenu*highlightForeground:		Red
+*XlwMenu*titleForeground:		Maroon
+*XlwMenu*selectColor:			ForestGreen
+*XmToggleButton*selectColor:		ForestGreen
+
+! Specify the colors of popup menus.
+*popup*Foreground:			Black
+*popup*Background:			Gray80
+
+! Specify the colors of the various sub-widgets of the dialog boxes.
+*dialog*Foreground:			Black
+! #A5C0C1 is a shade of blue
+*dialog*Background:			#A5C0C1
+! The following three are for Motif dialog boxes ...
+*dialog*XmTextField*Background:		WhiteSmoke
+*dialog*XmText*Background:		WhiteSmoke
+*dialog*XmList*Background:		WhiteSmoke
+! While this one is for Athena dialog boxes.
+*dialog*Command*Background:		WhiteSmoke
+
+! Xlw Scrollbar colors
+*XlwScrollBar*Foreground:		Gray30
+*XlwScrollBar*Background:		Gray80
+*XmScrollBar*Foreground:		Gray30
+*XmScrollBar*Background:		Gray80
+
+!
+! The Lucid Scrollbar supports two added resources, SliderStyle is either
+! "plain" (default) or "dimple".  Dimple puts a small dimple in the middle
+! of the slider that depresses when the slider is clicked on.  ArrowPosition is
+! either "opposite" (default) or "same".  Opposite puts the arrows at opposite
+! of the scrollbar, same puts both arrows at the same end, like the Amiga.
+!
+Emacs*XlwScrollBar.SliderStyle:    dimple
+Emacs*XlwScrollBar.ArrowPosition:  opposite
+
+
+!
+! If you want to turn off a toolbar, set its height or width to 0.
+! The correct size value is not really arbitrary.  We only control it
+! this way in order to avoid excess frame resizing when turning the
+! toolbars on and off.
+!
+! To change the heights and widths of the toolbars:
+!
+! Emacs.topToolBarHeight:		37
+! Emacs.bottomToolBarHeight:		0
+! Emacs.leftToolBarWidth:		0
+! Emacs.rightToolBarWidth:		0
+
+*topToolBarShadowColor:			Gray90
+*bottomToolBarShadowColor:		Gray40
+*backgroundToolBarColor:		Gray80
+*toolBarShadowThickness:		2
+
+
+! If you want to turn off vertical scrollbars, or change the default
+! pixel width of the vertical scrollbars, do it like this (0 width
+! means no vertical scrollbars):
+! 
+! Emacs.scrollBarWidth: 0
+! 
+! To change it for a particular frame, do this:
+! 
+! Emacs*FRAME-NAME.scrollBarWidth: 0
+
+
+! If you want to turn off horizontal scrollbars, or change the default
+! pixel height of the horizontal scrollbars, do it like this (0 height
+! means no horizontal scrollbars):
+! 
+! Emacs.scrollBarHeight: 0
+! 
+! To change it for a particular frame, do this:
+! 
+! Emacs*FRAME-NAME.scrollBarHeight: 0
+
+
+! To dynamically change the labels used for menubar buttons...
+! 
+! Emacs*XlwMenu.resourceLabels: True
+! Emacs*XlwMenu.newFrame.labelString: Open Another Window
+
+! To have the Motif scrollbars on the left instead of the right, do this:
+! 
+! Emacs*scrollBarPlacement: BOTTOM_LEFT
+!
+! To have the Athena scrollbars on the right, use `BOTTOM_RIGHT' instead
+
+! To have Motif scrollbars act more like Xt scrollbars...
+!
+! Emacs*XmScrollBar.translations: #override \n\
+!     <Btn1Down>:     PageDownOrRight(0)    \n\
+!     <Btn3Down>:     PageUpOrLeft(0)
+
+! Fonts.
+! ======
+! XEmacs requires the use of XLFD (X Logical Font Description) format font
+! names, which look like
+! 
+! 	*-courier-medium-r-*-*-*-120-*-*-*-*-*-*
+! 
+! if you use any of the other, less strict font name formats, some of which
+! look like
+! 		lucidasanstypewriter-12
+! and		fixed
+! and		9x13
+! 
+! then XEmacs won't be able to guess the names of the bold and italic versions.
+! All X fonts can be referred to via XLFD-style names, so you should use those
+! forms.  See the man pages for X(1), xlsfonts(1), and xfontsel(1).
+
+
+! The default font for the text area of XEmacs is chosen at run-time
+! by lisp code which tries a number of different possibilities in order
+! of preference.  If you wish to override it, use this:
+! 
+Emacs.default.attributeFont:  -isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*,*
+
+! If you choose a font which does not have an italic version, you can specify
+! some other font to use for it here:
+! 
+! Emacs.italic.attributeFont:  -*-courier-medium-o-*-*-*-120-*-*-*-*-iso8859-*
+!
+! And here is how you would set the background color of the `highlight' face,
+! but only on the screen named `debugger':
+! 
+! Emacs*debugger.highlight.attributeBackground:		PaleTurquoise
+! 
+! See the NEWS file (C-h n) for a more complete description of the resource
+! syntax of faces.
+
+
+! Font of the modeline, menubar and pop-up menus.
+! Note that the menubar resources do not use the `face' syntax, since they
+! are X toolkit widgets and thus outside the domain of XEmacs proper.
+! 
+*menubar*Font: 		-isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*
+*popup*Font:		-isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*
+
+! Font in the Motif dialog boxes.
+! (Motif uses `fontList' while most other things use `font' - if you don't
+! know why you probably don't want to.)
+! 
+*XmDialogShell*FontList:-isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*,*
+*XmTextField*FontList:-isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*,*
+*XmText*FontList:-isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*,*
+*XmList*FontList:-isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*,*
+
+! Font in the Athena dialog boxes.
+! I think 14-point looks nicer than 12-point.
+! Some people use 12-point anyway because you get more text, but
+! there's no purpose at all in doing this for dialog boxes.
+
+*Dialog*Font:			-*-helvetica-bold-r-*-*-*-140-*-*-*-*-iso8859-*
+
+! Dialog box translations.
+! =======================
+
+! This accelerator binds <return> in a dialog box to <activate> on button1
+*dialog*button1.accelerators:#override\
+<KeyPress>Return: ArmAndActivate()\n\
+<KeyPress>KP_Enter: ArmAndActivate()\n\
+Ctrl<KeyPress>m: ArmAndActivate()\n
+
+! Translations to make the TextField widget behave more like XEmacs
+*XmTextField*translations: #override\n\
+	!<Key>osfBackSpace:	delete-previous-character()\n\
+	!<Key>osfDelete:	delete-previous-character()\n\
+	!Ctrl<Key>h: 		delete-previous-character()\n\
+	!Ctrl<Key>d: 		delete-next-character()\n\
+	!Meta<Key>osfDelete:	delete-previous-word()\n\
+	!Meta<Key>osfBackSpace:	delete-previous-word()\n\
+	!Meta<Key>d:		delete-next-word()\n\
+	!Ctrl<Key>k:		delete-to-end-of-line()\n\
+	!Ctrl<Key>g:		process-cancel()\n\
+	!Ctrl<Key>b:		backward-character()\n\
+	!<Key>osfLeft:		backward-character()\n\
+	!Ctrl<Key>f:		forward-character()\n\
+	!<Key>osfRight:		forward-character()\n\
+	!Meta<Key>b:		backward-word()\n\
+	!Meta<Key>osfLeft:	backward-word()\n\
+	!Meta<Key>f:		forward-word()\n\
+	!Meta<Key>osfRight:	forward-word()\n\
+	!Ctrl<Key>e:		end-of-line()\n\
+	!Ctrl<Key>a:		beginning-of-line()\n\
+	!Ctrl<Key>w:		cut-clipboard()\n\
+	!Meta<Key>w:		copy-clipboard()\n\
+	<Btn2Up>:		copy-primary()\n
+
+! With the XEmacs typeahead it's better to not have space be bound to
+! ArmAndActivate() for buttons that appear in dialog boxes.  This is
+! not 100% Motif compliant but the benefits far outweight the
+! compliancy problem.  
+*dialog*XmPushButton*translations:#override\n\
+    <Btn1Down>:         Arm()\n\
+    <Btn1Down>,<Btn1Up>: Activate()\
+			Disarm()\n\
+    <Btn1Down>(2+):     MultiArm()\n\
+    <Btn1Up>(2+):       MultiActivate()\n\
+    <Btn1Up>:           Activate()\
+		        Disarm()\n\
+    <Key>osfSelect:  	ArmAndActivate()\n\
+    <Key>osfActivate:   ArmAndActivate()\n\
+    <Key>osfHelp:	Help()\n\
+    ~Shift ~Meta ~Alt <Key>Return:	ArmAndActivate()\n\
+    <EnterWindow>:      Enter()\n\
+    <LeaveWindow>:      Leave()\n
+
+! XIM input method style 
+! ======================= 
+
+! ximStyles is a (whitespace or comma-separated) list of XIMStyles in
+! order of user's preference.  
+! Choose a subset of the following styles or reorder to taste
+*ximStyles: XIMPreeditPosition|XIMStatusArea\
+            XIMPreeditPosition|XIMStatusNothing\
+            XIMPreeditPosition|XIMStatusNone\
+            XIMPreeditNothing|XIMStatusArea\
+            XIMPreeditNothing|XIMStatusNothing\
+            XIMPreeditNothing|XIMStatusNone\
+            XIMPreeditNone|XIMStatusArea\
+            XIMPreeditNone|XIMStatusNothing\
+            XIMPreeditNone|XIMStatusNone
+
+! XIM Preedit and Status foreground and background
+*EmacsFrame.ximForeground: black
+*EmacsFrame.ximBackground: white
+
+! ! XIM fontset (defaults to system fontset default)
+! ! *EmacsFrame.FontSet: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+! !    Japanese localization resources for XEmacs.
+! ! @(#)Emacs	1.3 96/09/22
+! !    Copyright (C) 1996 Sun Microsystems, Inc.
+! !!
+! ! This file is part of XEmacs.
+! ! 
+! ! XEmacs is free software; you can redistribute it and/or modify it
+! ! under the terms of the GNU General Public License as published by the
+! ! Free Software Foundation; either version 2, or (at your option) any
+! ! later version.
+! ! XEmacs is distributed in the hope that it will be useful, but WITHOUT
+! ! ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+! ! FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+! ! for more details.
+! ! You should have received a copy of the GNU General Public License
+! ! along with XEmacs; see the file COPYING.  If not, write to the
+! ! Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+! ! Boston, MA 02111-1307, USA.
+! ! Copyright (C) 1996 Sun Microsystems Inc.
+! !
+! ! Japanese Resources to be placed in etc/app-defaults/ja/Emacs
+! ! for xemacs-mule.  It is same on another languages such like fr,
+! ! if you want to have French menu label, place it on
+! ! etc/app-defaults/fr/Emacs.
+! 
+! ! Pulldown menu internationalization.  The first line of the file
+! ! "*XlwMenu.resourceLabels: True" has to be there to make sure
+! ! all the labelString will be read and displayed by X.
+! *XlwMenu.resourceLabels: True
+! 
+! ! CDE doesn't require this but OpenWindows does.
+! ! Note that this `gothic' font family is effective just for Japanese.
+! ! And fontList is just used under Motif menubar.
+! *fontList: -*-gothic-medium-r-normal--14-120-75-75-c-*-*-*:
+! !! FontSet for menus when you use --with-xfs or --with-xim=xlib.
+! *fontSet: -isas-fangsong ti-medium-r-normal--16-*-*-*-*-*-*,*
+! 
+! ! Starting below here are menu label string which can be translated to
+! ! different languages. 
+! ! Example: *XlwMenu.file.labelString: File  
+! ! Characters before the ":" sign, "Example: *XlwMenu.file.labelString"
+! ! can not be changed. They must stay exactly the way they are.
+! ! The only string to be translated is the string, "File".
+! ! Some resource names such as "file", "quit" have been used in several
+! ! places.  However, each of them only has to be translated once in this X
+! ! resource file.
+! ! *XlwMenu.readMailVM___.labelString:	Read Mail (VM)...
+! *XlwMenu.readMailVM___.labelString:	读电子邮件 (VM)...
+! ! *XlwMenu.readMailMH___.labelString:	Read Mail (MH)...
+! *XlwMenu.readMailMH___.labelString:	读电子邮件 (MH)...
+! ! *XlwMenu.sendMail___.labelString:	Send mail...
+! *XlwMenu.sendMail___.labelString:	发电子邮件...
+! ! *XlwMenu.usenetNews.labelString:	Usenet News
+! *XlwMenu.usenetNews.labelString:	网络新闻
+! ! *XlwMenu.browseTheWeb.labelString:	Browse the Web
+! *XlwMenu.browseTheWeb.labelString:	浏览网页
+! ! *XlwMenu.gopher.labelString:	Gopher
+! *XlwMenu.gopher.labelString:	Gopher
+! ! *XlwMenu.hyperbole___.labelString:	Hyperbole...
+! *XlwMenu.hyperbole___.labelString:	超级树干...
+! ! *XlwMenu.spellCheckBuffer.labelString:	Spell-Check Buffer
+! *XlwMenu.spellCheckBuffer.labelString:	拼写检查缓冲区
+! ! *XlwMenu.toggleVIEmulation.labelString:	Toggle VI emulation
+! *XlwMenu.toggleVIEmulation.labelString:	切换到 VI 模拟编辑器
+! ! *XlwMenu.calendar.labelString:	Calendar
+! *XlwMenu.calendar.labelString:	日历
+! ! *XlwMenu.games.labelString:	Games
+! *XlwMenu.games.labelString:	游戏
+! ! *XlwMenu.3MonthCalendar.labelString:	3-Month Calendar
+! *XlwMenu.3MonthCalendar.labelString:	3个月日历
+! ! *XlwMenu.diary.labelString:	Diary
+! *XlwMenu.diary.labelString:	日记
+! ! *XlwMenu.holidays.labelString:	Holidays
+! *XlwMenu.holidays.labelString:	节假日
+! ! *XlwMenu.phasesOfTheMoon.labelString:	Phases of the Moon
+! *XlwMenu.phasesOfTheMoon.labelString:	月龄
+! ! *XlwMenu.sunriseSunset.labelString:	Sunrise/Sunset
+! *XlwMenu.sunriseSunset.labelString:	日出/日落
+! ! *XlwMenu.mineGame.labelString:	Mine Game
+! *XlwMenu.mineGame.labelString:	挖地雷游戏
+! ! *XlwMenu.tetris.labelString:	Tetris
+! *XlwMenu.tetris.labelString:	俄罗斯方块	
+! ! *XlwMenu.quoteFromZippy.labelString:	Quote from Zippy
+! *XlwMenu.quoteFromZippy.labelString:	Zippy 格言集
+! ! *XlwMenu.psychoanalyst.labelString:	Psychoanalyst
+! *XlwMenu.psychoanalyst.labelString:	精神医生
+! ! *XlwMenu.psychoanalyzeZippy.labelString:	Psychoanalyze Zippy!
+! *XlwMenu.psychoanalyzeZippy.labelString:	精神分析 Zippy!
+! ! *XlwMenu.randomFlames.labelString:	Random Flames
+! *XlwMenu.randomFlames.labelString:	诽谤中伤
+! ! *XlwMenu.dunnetAdventure.labelString:	Dunnet (Adventure)
+! *XlwMenu.dunnetAdventure.labelString:	Dunnet (冒险)
+! ! *XlwMenu.towersOfHanoi.labelString:	Towers of Hanoi
+! *XlwMenu.towersOfHanoi.labelString:	Hanoi 塔
+! ! *XlwMenu.gameOfLife.labelString:	Game of Life
+! *XlwMenu.gameOfLife.labelString:	生命游戏
+! ! *XlwMenu.multiplicationPuzzle.labelString:	Multiplication Puzzle
+! *XlwMenu.multiplicationPuzzle.labelString:	乘算智力游戏
+! ! *XlwMenu.listAllBuffers.labelString:	List All Buffers
+! *XlwMenu.listAllBuffers.labelString:	列出全部缓冲区
+! ! *XlwMenu..labelString:	
+! ! *XlwMenu..labelString:
+! ! *XlwMenu.emacs.labelString:	Emacs
+! ! *XlwMenu.emacs.labelString:
+! ! *XlwMenu.group___.labelString:	Group...
+! ! *XlwMenu.group___.labelString:	组...
+! ! *XlwMenu.variable___.labelString:	Variable...
+! ! *XlwMenu.variable___.labelString:	变量...
+! ! *XlwMenu.face___.labelString:	Face...
+! ! *XlwMenu.face___.labelString:	面...
+! ! *XlwMenu.saved___.labelString:	Saved...
+! ! *XlwMenu.saved___.labelString:	保存...
+! ! *XlwMenu.set___.labelString:	Set...
+! ! *XlwMenu.set___.labelString:	设置...
+! ! *XlwMenu.apropos___.labelString:	Apropos...
+! ! *XlwMenu.apropos___.labelString:	适性检索...
+! ! *XlwMenu.browse___.labelString:	Browse...
+! ! *XlwMenu.browse___.labelString:	浏览...
+! ! *XlwMenu.emacs___.labelString:	Emacs...
+! ! *XlwMenu.emacs___.labelString:
+! ! *XlwMenu.editing.labelString:	Editing
+! *XlwMenu.editing.labelString:	编辑
+! ! *XlwMenu.external.labelString:	External
+! *XlwMenu.external.labelString:	外部
+! ! *XlwMenu.programming.labelString:	Programming
+! *XlwMenu.programming.labelString:	编程
+! ! *XlwMenu.applications.labelString:	Applications
+! *XlwMenu.applications.labelString:	应用
+! ! *XlwMenu.development.labelString:	Development
+! *XlwMenu.development.labelString:	开发
+! ! *XlwMenu.environment.labelString:	Environment
+! *XlwMenu.environment.labelString:	环境
+! ! *XlwMenu.data.labelString:	Data
+! *XlwMenu.data.labelString:	数据
+! ! *XlwMenu.files.labelString:	Files
+! *XlwMenu.files.labelString:	文件
+! ! *XlwMenu.wp.labelString:	Wp
+! *XlwMenu.wp.labelString:	文书处理
+! ! *XlwMenu.faces.labelString:	Faces
+! *XlwMenu.faces.labelString:	面
+! ! *XlwMenu.hypermedia.labelString:	Hypermedia
+! *XlwMenu.hypermedia.labelString:	超媒体
+! ! *XlwMenu.help.labelString:	Help
+! ! *XlwMenu.help.labelString:	帮助
+! ! *XlwMenu.local.labelString:	Local
+! *XlwMenu.local.labelString:	局域
+! ! *XlwMenu.undo.labelString:	Undo
+! *XlwMenu.undo.labelString:	回复
+! ! *XlwMenu.cut.labelString:	Cut
+! *XlwMenu.cut.labelString:	剪切
+! ! *XlwMenu.copy.labelString:	Copy
+! *XlwMenu.copy.labelString:	拷贝
+! ! *XlwMenu.paste.labelString:	Paste
+! *XlwMenu.paste.labelString:	贴付
+! ! *XlwMenu.clear.labelString:	Clear
+! *XlwMenu.clear.labelString:	清除
+! ! *XlwMenu.search___.labelString:	Search...
+! *XlwMenu.search___.labelString:	检索...
+! ! *XlwMenu.searchBackward___.labelString:	Search Backward...
+! *XlwMenu.searchBackward___.labelString:	反方向检索
+! ! *XlwMenu.replace___.labelString:	Replace...
+! *XlwMenu.replace___.labelString:	置换...
+! ! *XlwMenu.searchRegexp___.labelString:	Search (Regexp)...
+! *XlwMenu.searchRegexp___.labelString:	检索 (正规) ...
+! ! *XlwMenu.searchBackwardRegexp___.labelString:	Search Backward (Regexp)...
+! *XlwMenu.searchBackwardRegexp___.labelString:	反方向检索 (正规) ...
+! ! *XlwMenu.replaceRegexp___.labelString:	Replace (Regexp)...
+! *XlwMenu.replaceRegexp___.labelString:	置换 (正规) ...
+! ! *XlwMenu.gotoLine___.labelString:	Goto Line...
+! *XlwMenu.gotoLine___.labelString:	跳到指定行...
+! ! *XlwMenu.whatLine.labelString:	What Line
+! *XlwMenu.whatLine.labelString:	现在行位置
+! ! *XlwMenu.bookmarks.labelString:	Bookmarks
+! *XlwMenu.bookmarks.labelString:	书签
+! ! *XlwMenu.startMacroRecording.labelString:	Start Macro Recording
+! *XlwMenu.startMacroRecording.labelString:	开始宏记录
+! ! *XlwMenu.endMacroRecording.labelString:	End Macro Recording
+! *XlwMenu.endMacroRecording.labelString:	结束宏记录
+! ! *XlwMenu.executeLastMacro.labelString:	Execute Last Macro
+! *XlwMenu.executeLastMacro.labelString:	执行最后一个宏
+! ! *XlwMenu.showMessageLog.labelString:	Show Message Log
+! *XlwMenu.showMessageLog.labelString:	显示记录信息
+! ! *XlwMenu.jumpToBookmark.labelString:	Jump to Bookmark
+! *XlwMenu.jumpToBookmark.labelString:	跳到书签
+! ! *XlwMenu.setBookmark.labelString:	Set bookmark
+! *XlwMenu.setBookmark.labelString:	设置书签
+! ! *XlwMenu.insertContents.labelString:	Insert contents
+! *XlwMenu.insertContents.labelString:	插入内容
+! ! *XlwMenu.insertLocation.labelString:	Insert location
+! *XlwMenu.insertLocation.labelString:	插入位置
+! ! *XlwMenu.renameBookmark.labelString:	Rename bookmark
+! *XlwMenu.renameBookmark.labelString:	改名书签
+! ! *XlwMenu.deleteBookmark.labelString:	Delete Bookmark
+! *XlwMenu.deleteBookmark.labelString:	删除书签
+! ! *XlwMenu.editBookmarkList.labelString:	Edit Bookmark List
+! *XlwMenu.editBookmarkList.labelString:	编辑书签列表
+! ! *XlwMenu.saveBookmarks.labelString:	Save bookmarks
+! *XlwMenu.saveBookmarks.labelString:	保存书签
+! ! *XlwMenu.saveBookmarksAs___.labelString:	Save bookmarks as...
+! *XlwMenu.saveBookmarksAs___.labelString:	保存书签名为...
+! ! *XlwMenu.loadABookmarkFile.labelString:	Load a bookmark file
+! *XlwMenu.loadABookmarkFile.labelString:	装入书签文件
+! ! *XlwMenu.open___.labelString:	Open...
+! *XlwMenu.open___.labelString:	打开...
+! ! *XlwMenu.openInOtherWindow___.labelString:	Open in Other Window...
+! *XlwMenu.openInOtherWindow___.labelString:	在其他窗口中打开...
+! ! *XlwMenu.openInNewFrame___.labelString:	Open in New Frame...
+! *XlwMenu.openInNewFrame___.labelString:	在新帧中打开...
+! ! *XlwMenu.insertFile___.labelString:	Insert File...
+! *XlwMenu.insertFile___.labelString:	插入文件...
+! ! *XlwMenu.viewFile___.labelString:	View File...
+! *XlwMenu.viewFile___.labelString:	查看文件...
+! ! *XlwMenu.save.labelString:	Save
+! *XlwMenu.save.labelString:	存盘
+! ! *XlwMenu.saveAs___.labelString:	Save As...
+! *XlwMenu.saveAs___.labelString:	保存为...
+! ! *XlwMenu.saveSomeBuffers.labelString:	Save Some Buffers
+! *XlwMenu.saveSomeBuffers.labelString:	保存缓冲区
+! ! *XlwMenu.printBuffer.labelString:	Print Buffer
+! *XlwMenu.printBuffer.labelString:	打印缓冲区
+! ! *XlwMenu.prettyPrintBuffer.labelString:	Pretty-Print Buffer
+! *XlwMenu.prettyPrintBuffer.labelString:	清印缓冲区
+! ! *XlwMenu.newFrame.labelString:	New Frame
+! *XlwMenu.newFrame.labelString:	新帧
+! ! *XlwMenu.frameOnOtherDisplay___.labelString:	Frame on Other Display...
+! *XlwMenu.frameOnOtherDisplay___.labelString:	在其他屏幕中的帧...
+! ! *XlwMenu.deleteFrame.labelString:	Delete Frame
+! *XlwMenu.deleteFrame.labelString:	删除帧
+! ! *XlwMenu.splitWindow.labelString:	Split Window
+! *XlwMenu.splitWindow.labelString:	分割视窗
+! ! *XlwMenu.unSplitKeepThis.labelString:	Un-Split (Keep This)
+! *XlwMenu.unSplitKeepThis.labelString:	放大此窗口
+! ! *XlwMenu.unSplitKeepOthers.labelString:	Un-Split (Keep Others)
+! *XlwMenu.unSplitKeepOthers.labelString:	缩小此窗口
+! ! *XlwMenu.revertBuffer.labelString:	Revert Buffer
+! *XlwMenu.revertBuffer.labelString:	复原缓冲区
+! ! *XlwMenu.deleteBuffer.labelString:	Delete Buffer
+! *XlwMenu.deleteBuffer.labelString:	删除缓冲区
+! ! *XlwMenu.exitXEmacs.labelString:	Exit XEmacs
+! *XlwMenu.exitXEmacs.labelString:	退出 XEmacs
+! ! *XlwMenu.aboutXEmacs___.labelString:	About XEmacs...
+! *XlwMenu.aboutXEmacs___.labelString:	关于 XEmacs...
+! ! *XlwMenu.basics.labelString:	Basics
+! *XlwMenu.basics.labelString:	基本
+! ! *XlwMenu.xEmacsFAQ.labelString:	XEmacs FAQ
+! *XlwMenu.xEmacsFAQ.labelString:	XEmacs 常见问题与回答集
+! ! *XlwMenu.samples.labelString:	Samples
+! *XlwMenu.samples.labelString:	例子
+! ! *XlwMenu.lookupInInfo.labelString:	Lookup in Info
+! *XlwMenu.lookupInInfo.labelString:	在 Info 中查询
+! ! *XlwMenu.manuals.labelString:	Manuals
+! *XlwMenu.manuals.labelString:	手册
+! ! *XlwMenu.commandsKeys.labelString:	Commands & Keys
+! *XlwMenu.commandsKeys.labelString:	命令及键
+! ! *XlwMenu.recentMessages.labelString:	Recent Messages
+! *XlwMenu.recentMessages.labelString:	最近的信息
+! ! *XlwMenu.misc.labelString:	Misc
+! *XlwMenu.misc.labelString:	杂项
+! ! *XlwMenu.submitBugReport.labelString:	Submit Bug Report
+! *XlwMenu.submitBugReport.labelString:	发 Bug 报告
+! ! *XlwMenu.tutorial.labelString:	Tutorial
+! *XlwMenu.tutorial.labelString:	教程
+! ! *XlwMenu.news.labelString:	News
+! *XlwMenu.news.labelString:	新闻
+! ! *XlwMenu.packages.labelString:	Packages
+! *XlwMenu.packages.labelString:	包
+! ! *XlwMenu.splash.labelString:	Splash
+! *XlwMenu.splash.labelString:	Splash
+! ! *XlwMenu.fAQLocal.labelString:	FAQ (local)
+! *XlwMenu.fAQLocal.labelString:	常见问题与回答集 (本地)
+! ! *XlwMenu.fAQViaWWW.labelString:	FAQ via WWW
+! *XlwMenu.fAQViaWWW.labelString:	常见问题与回答集 (经由WWW)
+! ! *XlwMenu.homePage.labelString:	Home Page
+! *XlwMenu.homePage.labelString:	主页
+! ! *XlwMenu.sample.labelString:	Sample
+! *XlwMenu.sample.labelString:	例子
+! ! *XlwMenu.keyBinding___.labelString:	Key Binding...
+! *XlwMenu.keyBinding___.labelString:	捆绑热键...
+! ! *XlwMenu.command___.labelString:	Command...
+! *XlwMenu.command___.labelString:	命令...
+! ! *XlwMenu.function___.labelString:	Function...
+! *XlwMenu.function___.labelString:	函数...
+! ! *XlwMenu.topic___.labelString:	Topic...
+! *XlwMenu.topic___.labelString:	话题...
+! ! *XlwMenu.info.labelString:	Info
+! *XlwMenu.info.labelString:	Info
+! ! *XlwMenu.unixManual___.labelString:	Unix Manual...
+! *XlwMenu.unixManual___.labelString:	Unix 手册...
+! ! *XlwMenu.mode.labelString:	Mode
+! *XlwMenu.mode.labelString:	模式
+! ! *XlwMenu.apropos___.labelString:	Apropos...
+! ! *XlwMenu.apropos___.labelString:	适性检索...
+! ! *XlwMenu.aproposDocs___.labelString:	Apropos Docs...
+! *XlwMenu.aproposDocs___.labelString:	在文档中适性检索...
+! ! *XlwMenu.key___.labelString:	Key...
+! *XlwMenu.key___.labelString:	键...
+! ! *XlwMenu.bindings.labelString:	Bindings
+! *XlwMenu.bindings.labelString:	捆绑
+! ! *XlwMenu.mouseBindings.labelString:	Mouse Bindings
+! *XlwMenu.mouseBindings.labelString:	捆绑鼠标
+! ! *XlwMenu.recentKeys.labelString:	Recent Keys
+! *XlwMenu.recentKeys.labelString:	最近热键
+! ! *XlwMenu.variable___.labelString:	Variable...
+! ! *XlwMenu.variable___.labelString:	变量...
+! ! *XlwMenu.locateCommand___.labelString:	Locate Command...
+! *XlwMenu.locateCommand___.labelString:	差找命令...
+! ! *XlwMenu.noWarranty.labelString:	No Warranty
+! *XlwMenu.noWarranty.labelString:	没有保证
+! ! *XlwMenu.xEmacsLicense.labelString:	XEmacs License
+! *XlwMenu.xEmacsLicense.labelString:	XEmacs 许可证
+! ! *XlwMenu.theLatestVersion.labelString:	The Latest Version
+! *XlwMenu.theLatestVersion.labelString:	最新版本
+! ! *XlwMenu.evaluateLastSExpression.labelString:	Evaluate Last S-expression
+! *XlwMenu.evaluateLastSExpression.labelString:	评估最新的 S 表达式
+! ! *XlwMenu.evaluateEntireBuffer.labelString:	Evaluate Entire Buffer
+! *XlwMenu.evaluateEntireBuffer.labelString:	评估全体缓冲区
+! ! *XlwMenu.evaluateRegion.labelString:	Evaluate Region
+! *XlwMenu.evaluateRegion.labelString:	评估区域
+! ! *XlwMenu.evaluateThisDefun.labelString:	Evaluate This Defun
+! *XlwMenu.evaluateThisDefun.labelString:	评估这个 Defun
+! ! *XlwMenu.debugThisDefun.labelString:	Debug This Defun
+! *XlwMenu.debugThisDefun.labelString:	测试这个 Defun
+! ! *XlwMenu.traceAFunction.labelString:	Trace a Function
+! *XlwMenu.traceAFunction.labelString:	跟踪一个函数
+! ! *XlwMenu.untraceAllFunctions.labelString:	Untrace All Functions
+! *XlwMenu.untraceAllFunctions.labelString:	不跟踪全部函数
+! ! *XlwMenu.commentOutRegion.labelString:	Comment Out Region
+! *XlwMenu.commentOutRegion.labelString:	注释区域
+! ! *XlwMenu.indentRegion.labelString:	Indent Region
+! *XlwMenu.indentRegion.labelString:	缩排区域
+! ! *XlwMenu.indentLine.labelString:	Indent Line
+! *XlwMenu.indentLine.labelString:	缩排一行
+! ! *XlwMenu.debugOnError.labelString:	Debug On Error
+! ! *XlwMenu.debugOnError.labelString:	出现错误时排错
+! ! *XlwMenu.debugOnQuit.labelString:	Debug On Quit
+! ! *XlwMenu.debugOnQuit.labelString:	退出时排错
+! ! *XlwMenu.debugOnSignal.labelString:	Debug on Signal
+! *XlwMenu.debugOnSignal.labelString:	信号排错
+! ! *XlwMenu.describeLanguageSupport.labelString:	Describe language support
+! *XlwMenu.describeLanguageSupport.labelString:	说明语言支持
+! ! *XlwMenu.setLanguageEnvironment.labelString:	Set language environment
+! *XlwMenu.setLanguageEnvironment.labelString:	设置语言环境
+! ! *XlwMenu.toggleInputMethod.labelString:	Toggle input method
+! *XlwMenu.toggleInputMethod.labelString:	切换输入法
+! ! *XlwMenu.selectInputMethod.labelString:	Select input method
+! *XlwMenu.selectInputMethod.labelString:	选择输入法
+! ! *XlwMenu.describeInputMethod.labelString:	Describe input method
+! *XlwMenu.describeInputMethod.labelString:	说明输入法
+! ! *XlwMenu.describeCurrentCodingSystems.labelString:	Describe current coding systems
+! *XlwMenu.describeCurrentCodingSystems.labelString:	描述当前代码系统
+! ! *XlwMenu.setCodingSystemOfBufferFile.labelString:	Set coding system of buffer file
+! *XlwMenu.setCodingSystemOfBufferFile.labelString:	设置缓冲区文件的代码系统
+! ! *XlwMenu.setCodingSystemOfTerminal.labelString:	Set coding system of terminal
+! *XlwMenu.setCodingSystemOfTerminal.labelString:	设置终端的代码系统
+! ! *XlwMenu.setCodingSystemOfKeyboard.labelString:	Set coding system of keyboard
+! *XlwMenu.setCodingSystemOfKeyboard.labelString:	设置键盘的代码系统
+! ! *XlwMenu.setCodingSystemOfProcess.labelString:	Set coding system of process
+! *XlwMenu.setCodingSystemOfProcess.labelString:	设置进程的代码系统
+! ! *XlwMenu.showCharacterTable.labelString:	Show character table
+! *XlwMenu.showCharacterTable.labelString:	显示字符表
+! ! *XlwMenu.showDiagnosisForMULE.labelString:	Show diagnosis for MULE
+! *XlwMenu.showDiagnosisForMULE.labelString:	显示 MULE 的诊断信息
+! ! *XlwMenu.showManyLanguages.labelString:	Show many languages
+! *XlwMenu.showManyLanguages.labelString:	显示多语言
+! ! *XlwMenu.chineseGB.labelString:	Chinese-GB
+! *XlwMenu.chineseGB.labelString:	中文 GB 码
+! ! *XlwMenu.chineseBIG5.labelString:	Chinese-BIG5
+! *XlwMenu.chineseBIG5.labelString:	中文 BIG5 码
+! ! *XlwMenu.cyrillicISO.labelString:	Cyrillic-ISO
+! !*XlwMenu.cyrillicISO.labelString:
+! ! *XlwMenu.cyrillicKOI8.labelString:	Cyrillic-KOI8
+! !*XlwMenu.cyrillicKOI8.labelString:
+! ! *XlwMenu.cyrillicALT.labelString:	Cyrillic-ALT
+! !*XlwMenu.cyrillicALT.labelString:
+! ! *XlwMenu.cyrillic.labelString:	Cyrillic
+! !*XlwMenu.cyrillic.labelString:
+! ! ! *XlwMenu.english.labelString:	English
+! *XlwMenu.english.labelString:	英文
+! ! *XlwMenu.aSCII.labelString:	ASCII
+! ! *XlwMenu.aSCII.labelString:
+! ! *XlwMenu.latin1.labelString:	Latin-1
+! *XlwMenu.latin1.labelString:	拉丁语-1
+! ! *XlwMenu.german.labelString:	German
+! *XlwMenu.german.labelString:	德语
+! ! *XlwMenu.french.labelString:	French
+! *XlwMenu.french.labelString:	法语
+! ! *XlwMenu.norwegian.labelString:	Norwegian
+! *XlwMenu.norwegian.labelString:	挪威语
+! ! *XlwMenu.latin2.labelString:	Latin-2
+! *XlwMenu.latin2.labelString:	拉丁语-2
+! ! *XlwMenu.croatian.labelString:	Croatian
+! *XlwMenu.croatian.labelString:	克罗地亚语
+! ! *XlwMenu.polish.labelString:	Polish
+! *XlwMenu.polish.labelString:	波兰语
+! ! *XlwMenu.latin3.labelString:	Latin-3
+! *XlwMenu.latin3.labelString:	拉丁语-3
+! ! *XlwMenu.latin4.labelString:	Latin-4
+! *XlwMenu.latin4.labelString:	拉丁语-4
+! ! *XlwMenu.latin5.labelString:	Latin-5
+! *XlwMenu.latin5.labelString:	拉丁语-5
+! ! *XlwMenu.greek.labelString:	Greek
+! *XlwMenu.greek.labelString:	希腊语
+! ! *XlwMenu.hebrew.labelString:	Hebrew
+! *XlwMenu.hebrew.labelString:	Hebrew
+! ! *XlwMenu.japanese.labelString:	Japanese
+! *XlwMenu.japanese.labelString:	日语
+! ! *XlwMenu.korean.labelString:	Korean
+! *XlwMenu.korean.labelString:	朝鲜语
+! ! *XlwMenu.iPA.labelString:	IPA
+! ! *XlwMenu.iPA.labelString:
+! ! *XlwMenu.customize.labelString:	Customize
+! *XlwMenu.customize.labelString:	配置
+! ! *XlwMenu.readOnly.labelString:	Read Only
+! *XlwMenu.readOnly.labelString:	只读
+! ! *XlwMenu.editingOptions.labelString:	Editing Options
+! *XlwMenu.editingOptions.labelString:	编辑选项
+! ! *XlwMenu.generalOptions.labelString:	General Options
+! *XlwMenu.generalOptions.labelString:	一般选项
+! ! *XlwMenu.printingOptions.labelString:	Printing Options
+! *XlwMenu.printingOptions.labelString:	打印选项
+! ! *XlwMenu.otherWindowLocation.labelString:	"Other Window" Location
+! *XlwMenu.otherWindowLocation.labelString:	"其他视窗"位置
+! ! *XlwMenu.syntaxHighlighting.labelString:	Syntax Highlighting
+! *XlwMenu.syntaxHighlighting.labelString:	句法强调表示
+! ! *XlwMenu.parenHighlighting.labelString:	Paren Highlighting
+! *XlwMenu.parenHighlighting.labelString:	括号强调表示
+! ! *XlwMenu.frameAppearance.labelString:	Frame Appearance
+! *XlwMenu.frameAppearance.labelString:	桢外观
+! ! *XlwMenu.menubarAppearance.labelString:	Menubar Appearance
+! *XlwMenu.menubarAppearance.labelString:	菜单条外观
+! ! *XlwMenu.toolbarAppearance.labelString:	Toolbar Appearance
+! *XlwMenu.toolbarAppearance.labelString:	工具条外观
+! ! *XlwMenu.mouse.labelString:	Mouse
+! *XlwMenu.mouse.labelString:	鼠标
+! ! *XlwMenu.openURLsWith.labelString:	Open URLs With
+! *XlwMenu.openURLsWith.labelString:	浏览器种类
+! ! *XlwMenu.browseFaces___.labelString:	Browse Faces...
+! *XlwMenu.browseFaces___.labelString:	浏览面...
+! ! *XlwMenu.font.labelString:	Font
+! *XlwMenu.font.labelString:	字形
+! ! *XlwMenu.size.labelString:	Size
+! *XlwMenu.size.labelString:	大小
+! ! *XlwMenu.weight.labelString:	Weight
+! *XlwMenu.weight.labelString:	字体
+! 
+! 
+! ! *XlwMenu.saveOptions.labelString:	Save Options
+! *XlwMenu.saveOptions.labelString:	保存选项
+! !
+! ! described by menu-customize?
+! ! *XlwMenu.emacs.labelString:	Emacs
+! ! *XlwMenu.emacs.labelString:
+! ! *XlwMenu.group___.labelString:	Group...
+! *XlwMenu.group___.labelString:	组...
+! ! *XlwMenu.variable___.labelString:	Variable...
+! *XlwMenu.variable___.labelString:	变量...
+! ! *XlwMenu.face___.labelString:	Face...
+! *XlwMenu.face___.labelString:	面...
+! ! *XlwMenu.saved___.labelString:	Saved...
+! *XlwMenu.saved___.labelString:	保存...
+! ! *XlwMenu.set___.labelString:	Set...
+! *XlwMenu.set___.labelString:	设置...
+! ! *XlwMenu.apropos___.labelString:	Apropos...
+! *XlwMenu.apropos___.labelString:	适性检索...
+! !
+! ! *XlwMenu.browse___.labelString:	Browse...
+! *XlwMenu.browse___.labelString:	浏览...
+! !! *XlwMenu.overstrike.labelString:	Overstrike
+! *XlwMenu.overstrike.labelString:	覆盖
+! ! *XlwMenu.caseSensitiveSearch.labelString:	Case Sensitive Search
+! *XlwMenu.caseSensitiveSearch.labelString:	大小写区分检索
+! ! *XlwMenu.caseMatchingReplace.labelString:	Case Matching Replace
+! *XlwMenu.caseMatchingReplace.labelString:	大小写区分置换
+! ! *XlwMenu.autoDeleteSelection.labelString:	Auto Delete Selection
+! *XlwMenu.autoDeleteSelection.labelString:	选则自动删除
+! ! *XlwMenu.activeRegions.labelString:	Active Regions
+! *XlwMenu.activeRegions.labelString:	激活区域
+! ! *XlwMenu.mousePasteAtTextCursor.labelString:	Mouse Paste At Text Cursor
+! *XlwMenu.mousePasteAtTextCursor.labelString:	在文本光标位置鼠标贴付
+! ! *XlwMenu.requireNewlineAtEnd.labelString:	Require Newline At End
+! *XlwMenu.requireNewlineAtEnd.labelString:	在缓冲区末尾需要新行
+! ! *XlwMenu.addNewlineWhenMovingPastEnd.labelString:	Add Newline When Moving Past End
+! *XlwMenu.addNewlineWhenMovingPastEnd.labelString:	在最后一行追加时需要新行
+! ! *XlwMenu.teachExtendedCommands.labelString:	Teach Extended Commands
+! *XlwMenu.teachExtendedCommands.labelString:	扩张命令表示
+! ! *XlwMenu.debugOnError.labelString:	Debug On Error
+! *XlwMenu.debugOnError.labelString:	在出错时排错
+! ! *XlwMenu.debugOnQuit.labelString:	Debug On Quit
+! *XlwMenu.debugOnQuit.labelString:	在退出时排错
+! ! *XlwMenu.commandLineSwitchesForLprLp___.labelString:	Command-Line Switches for `lpr'/`lp'...
+! *XlwMenu.commandLineSwitchesForLprLp___.labelString:	切换到 lpr/lp 命令行
+! ! *XlwMenu.prettyPrintPaperSize.labelString:	Pretty-Print Paper Size
+! *XlwMenu.prettyPrintPaperSize.labelString:	清印纸张大小
+! ! *XlwMenu.colorPrinting.labelString:	Color Printing
+! *XlwMenu.colorPrinting.labelString:	彩色打印
+! ! *XlwMenu.letter.labelString:	Letter
+! ! *XlwMenu.letter.labelString:
+! ! *XlwMenu.letterSmall.labelString:	Letter-small
+! ! *XlwMenu.letterSmall.labelString:
+! ! *XlwMenu.legal.labelString:	Legal
+! ! *XlwMenu.legal.labelString:
+! ! *XlwMenu.statement.labelString:	Statement
+! ! *XlwMenu.statement.labelString:
+! ! *XlwMenu.executive.labelString:	Executive
+! ! *XlwMenu.executive.labelString:
+! ! *XlwMenu.tabloid.labelString:	Tabloid
+! ! *XlwMenu.tabloid.labelString:
+! ! *XlwMenu.ledger.labelString:	Ledger
+! ! *XlwMenu.ledger.labelString:
+! ! *XlwMenu.a3.labelString:	A3
+! ! *XlwMenu.a3.labelString:
+! ! *XlwMenu.a4.labelString:	A4
+! ! *XlwMenu.a4.labelString:
+! ! *XlwMenu.a4small.labelString:	A4small
+! ! *XlwMenu.a4small.labelString:
+! ! *XlwMenu.b4.labelString:	B4
+! ! *XlwMenu.b4.labelString:
+! ! *XlwMenu.b5.labelString:	B5
+! ! *XlwMenu.b5.labelString:
+! ! *XlwMenu.alwaysInSameFrame.labelString:	Always in Same Frame
+! *XlwMenu.alwaysInSameFrame.labelString:	总是在同一桢
+! ! *XlwMenu.otherFrame2FramesMax.labelString:	Other Frame (2 Frames Max)
+! *XlwMenu.otherFrame2FramesMax.labelString:	其他桢 (最大2桢)
+! ! *XlwMenu.otherFrame3FramesMax.labelString:	Other Frame (3 Frames Max)
+! *XlwMenu.otherFrame3FramesMax.labelString:	其他桢 (最大3桢)
+! ! *XlwMenu.otherFrame4FramesMax.labelString:	Other Frame (4 Frames Max)
+! *XlwMenu.otherFrame4FramesMax.labelString:	其他桢 (最大4桢)
+! ! *XlwMenu.otherFrame5FramesMax.labelString:	Other Frame (5 Frames Max)
+! *XlwMenu.otherFrame5FramesMax.labelString:	其他桢 (最大5桢)
+! ! *XlwMenu.alwaysCreateNewFrame.labelString:	Always Create New Frame
+! *XlwMenu.alwaysCreateNewFrame.labelString:	总是创建新桢
+! ! *XlwMenu.tempBuffersAlwaysInSameFrame.labelString:	Temp Buffers Always in Same Frame
+! *XlwMenu.tempBuffersAlwaysInSameFrame.labelString:	临时缓冲区总是在同一桢
+! ! *XlwMenu.tempBuffersLikeOtherBuffers.labelString:	Temp Buffers Like Other Buffers
+! *XlwMenu.tempBuffersLikeOtherBuffers.labelString: 临时缓冲区象其他缓冲区一样
+! ! *XlwMenu.makeCurrentFrameGnuservTarget.labelString:	Make current frame gnuserv target
+! *XlwMenu.makeCurrentFrameGnuservTarget.labelString:用现在的桢作为 gnuserv 的目标
+! ! *XlwMenu.inThisBuffer.labelString:	In This Buffer
+! *XlwMenu.inThisBuffer.labelString:	在这个缓冲区中
+! ! *XlwMenu.automatic.labelString:	Automatic
+! *XlwMenu.automatic.labelString:	自动
+! ! *XlwMenu.fonts.labelString:	Fonts
+! *XlwMenu.fonts.labelString:	字形
+! ! *XlwMenu.colors.labelString:	Colors
+! *XlwMenu.colors.labelString:    彩色
+! ! *XlwMenu.least.labelString:	Least
+! *XlwMenu.least.labelString:	最低
+! ! *XlwMenu.more.labelString:	More
+! *XlwMenu.more.labelString:	多
+! ! *XlwMenu.evenMore.labelString:	Even More
+! *XlwMenu.evenMore.labelString:	更多
+! ! *XlwMenu.most.labelString:	Most
+! *XlwMenu.most.labelString:	最多
+! ! *XlwMenu.lazy.labelString:	Lazy
+! *XlwMenu.lazy.labelString:	简易
+! ! *XlwMenu.caching.labelString:	Caching
+! *XlwMenu.caching.labelString:	高级缓冲
+! ! *XlwMenu.none.labelString:	None
+! *XlwMenu.none.labelString:	无
+! ! *XlwMenu.blinkingParen.labelString:	Blinking Paren
+! *XlwMenu.blinkingParen.labelString:	点灭括号
+! ! *XlwMenu.steadyParen.labelString:	Steady Paren
+! *XlwMenu.steadyParen.labelString:	强调括号
+! ! *XlwMenu.expression.labelString:	Expression
+! *XlwMenu.expression.labelString:	强调表达式
+! ! *XlwMenu.scrollbars.labelString:	Scrollbars
+! *XlwMenu.scrollbars.labelString:	滚动条
+! ! *XlwMenu.3DModeline.labelString:	3D Modeline
+! *XlwMenu.3DModeline.labelString:	3 维模式行
+! ! *XlwMenu.truncateLines.labelString:	Truncate Lines
+! *XlwMenu.truncateLines.labelString:	缩短行
+! ! *XlwMenu.barCursor.labelString:	Bar Cursor
+! *XlwMenu.barCursor.labelString:	棒状光标
+! ! *XlwMenu.blinkingCursor.labelString:	Blinking Cursor
+! *XlwMenu.blinkingCursor.labelString:	点灭光标
+! ! *XlwMenu.frameLocalFontMenu.labelString:	Frame-Local Font Menu
+! *XlwMenu.frameLocalFontMenu.labelString:	桢本地字形菜单
+! ! *XlwMenu.buffersMenuLength___.labelString:	Buffers Menu Length...
+! *XlwMenu.buffersMenuLength___.labelString:	缓冲区菜单长度...
+! ! *XlwMenu.multiOperationBuffersSubMenus.labelString:	Multi-Operation Buffers Sub-Menus
+! *XlwMenu.multiOperationBuffersSubMenus.labelString:	多操作缓冲区子菜单
+! ! *XlwMenu.buffersMenuSorting.labelString:	Buffers Menu Sorting
+! *XlwMenu.buffersMenuSorting.labelString:	排序缓冲区菜单
+! ! *XlwMenu.submenusForBufferGroups.labelString:	Submenus for Buffer Groups
+! *XlwMenu.submenusForBufferGroups.labelString:	每一个缓冲区组的子菜单
+! ! *XlwMenu.ignoreScaledFonts.labelString:	Ignore Scaled Fonts
+! *XlwMenu.ignoreScaledFonts.labelString:	忽视比例字体
+! ! *XlwMenu.mostRecentlyUsed.labelString:	Most Recently Used
+! *XlwMenu.mostRecentlyUsed.labelString:	最新的使用顺序
+! ! *XlwMenu.alphabetically.labelString:	Alphabetically
+! *XlwMenu.alphabetically.labelString:	字母顺序
+! ! *XlwMenu.byMajorModeThenAlphabetically.labelString:	By Major Mode, Then Alphabetically
+! *XlwMenu.byMajorModeThenAlphabetically.labelString:	先主模式, 后字母顺序
+! ! *XlwMenu.visible.labelString:	Visible
+! *XlwMenu.visible.labelString:	可视
+! ! *XlwMenu.captioned.labelString:	Captioned
+! *XlwMenu.captioned.labelString:	带标题
+! ! *XlwMenu.defaultLocation.labelString:	Default Location
+! *XlwMenu.defaultLocation.labelString:	缺省位置
+! ! *XlwMenu.top.labelString:	Top
+! *XlwMenu.top.labelString:	上
+! ! *XlwMenu.bottom.labelString:	Bottom
+! *XlwMenu.bottom.labelString:	下
+! ! *XlwMenu.left.labelString:	Left
+! *XlwMenu.left.labelString:	左
+! ! *XlwMenu.right.labelString:	Right
+! *XlwMenu.right.labelString:	右
+! ! *XlwMenu.avoidText.labelString:	Avoid-Text
+! *XlwMenu.avoidText.labelString:	避免文本
+! ! *XlwMenu.strokesMode.labelString:	strokes-mode
+! *XlwMenu.strokesMode.labelString:	strokes 模式
+! ! *XlwMenu.emacsW3.labelString:	Emacs-W3
+! ! *XlwMenu.emacsW3.labelString:
+! ! *XlwMenu.netscape.labelString:	Netscape
+! ! *XlwMenu.netscape.labelString:
+! ! *XlwMenu.mosaic.labelString:	Mosaic
+! ! *XlwMenu.mosaic.labelString:
+! ! *XlwMenu.mosaicCCI.labelString:	Mosaic (CCI)
+! ! *XlwMenu.mosaicCCI.labelString:
+! ! *XlwMenu.iXIMosaic.labelString:	IXI Mosaic
+! ! *XlwMenu.iXIMosaic.labelString:
+! ! *XlwMenu.lynxXterm.labelString:	Lynx (xterm)
+! ! *XlwMenu.lynxXterm.labelString:
+! ! *XlwMenu.lynxXemacs.labelString:	Lynx (xemacs)
+! ! *XlwMenu.lynxXemacs.labelString:
+! ! *XlwMenu.grail.labelString:	Grail
+! ! *XlwMenu.grail.labelString:
+! ! *XlwMenu.charter.labelString:	Charter
+! ! *XlwMenu.charter.labelString:
+! ! *XlwMenu.clean.labelString:	Clean
+! ! *XlwMenu.clean.labelString:
+! ! *XlwMenu.courier.labelString:	Courier
+! ! *XlwMenu.courier.labelString:
+! ! *XlwMenu.fixed.labelString:	Fixed
+! ! *XlwMenu.fixed.labelString:
+! ! *XlwMenu.helvetica.labelString:	Helvetica
+! ! *XlwMenu.helvetica.labelString:
+! ! *XlwMenu.lucida.labelString:	Lucida
+! ! *XlwMenu.lucida.labelString:
+! ! *XlwMenu.lucidabright.labelString:	Lucidabright
+! ! *XlwMenu.lucidabright.labelString:
+! ! *XlwMenu.lucidatypewriter.labelString:	Lucidatypewriter
+! ! *XlwMenu.lucidatypewriter.labelString:
+! ! *XlwMenu.newCenturySchoolbook.labelString:	New Century Schoolbook
+! ! *XlwMenu.newCenturySchoolbook.labelString:
+! ! *XlwMenu.terminal.labelString:	Terminal
+! ! *XlwMenu.terminal.labelString:
+! ! *XlwMenu.times.labelString:	Times
+! ! *XlwMenu.times.labelString:
+! ! *XlwMenu.utopia.labelString:	Utopia
+! ! *XlwMenu.utopia.labelString:
+! ! *XlwMenu.5.labelString:	5
+! ! *XlwMenu.5.labelString:
+! ! *XlwMenu.6.labelString:	6
+! ! *XlwMenu.6.labelString:
+! ! *XlwMenu.7.labelString:	7
+! ! *XlwMenu.7.labelString:
+! ! *XlwMenu.8.labelString:	8
+! ! *XlwMenu.8.labelString:
+! ! *XlwMenu.9.labelString:	9
+! ! *XlwMenu.9.labelString:
+! ! *XlwMenu.10.labelString:	10
+! ! *XlwMenu.10.labelString:
+! ! *XlwMenu.11.labelString:	11
+! ! *XlwMenu.11.labelString:
+! ! *XlwMenu.12.labelString:	12
+! ! *XlwMenu.12.labelString:
+! ! *XlwMenu.13.labelString:	13
+! ! *XlwMenu.13.labelString:
+! ! *XlwMenu.14.labelString:	14
+! ! *XlwMenu.14.labelString:
+! ! *XlwMenu.15.labelString:	15
+! ! *XlwMenu.15.labelString:
+! ! *XlwMenu.16.labelString:	16
+! ! *XlwMenu.16.labelString:
+! ! *XlwMenu.17.labelString:	17
+! ! *XlwMenu.17.labelString:
+! ! *XlwMenu.18.labelString:	18
+! ! *XlwMenu.18.labelString:
+! ! *XlwMenu.19.labelString:	19
+! ! *XlwMenu.19.labelString:
+! ! *XlwMenu.20.labelString:	20
+! ! *XlwMenu.20.labelString:
+! ! *XlwMenu.23.labelString:	23
+! ! *XlwMenu.23.labelString:
+! ! *XlwMenu.24.labelString:	24
+! ! *XlwMenu.24.labelString:
+! ! *XlwMenu.black.labelString:	Black
+! ! *XlwMenu.black.labelString:
+! ! *XlwMenu.bold.labelString:	Bold
+! ! *XlwMenu.bold.labelString:
+! ! *XlwMenu.demibold.labelString:	Demibold
+! ! *XlwMenu.demibold.labelString:
+! ! *XlwMenu.medium.labelString:	Medium
+! ! *XlwMenu.medium.labelString:
+! ! *XlwMenu.regular.labelString:	Regular
+! ! *XlwMenu.regular.labelString:
+! ! *XlwMenu.grep___.labelString:	Grep...
+! ! *XlwMenu.grep___.labelString:
+! ! *XlwMenu.compile___.labelString:	Compile...
+! *XlwMenu.compile___.labelString:	编译...
+! ! *XlwMenu.shell.labelString:	Shell
+! *XlwMenu.shell.labelString:	壳
+! ! *XlwMenu.shellCommand___.labelString:	Shell Command...
+! *XlwMenu.shellCommand___.labelString:	壳命令...
+! ! *XlwMenu.shellCommandOnRegion___.labelString:	Shell Command on Region...
+! *XlwMenu.shellCommandOnRegion___.labelString:	在区域内执行壳命令...
+! ! *XlwMenu.debugGDB___.labelString:	Debug (GDB)...
+! *XlwMenu.debugGDB___.labelString:	排错 (GDB)...
+! ! *XlwMenu.debugDBX___.labelString:	Debug (DBX)...
+! *XlwMenu.debugDBX___.labelString:	排错 (DBX)...
+! ! *XlwMenu.oOBrowser___.labelString:	OO-Browser...
+! *XlwMenu.oOBrowser___.labelString:	OO-浏览器...
+! ! *XlwMenu.tags.labelString:	Tags
+! *XlwMenu.tags.labelString:	标志
+! ! *XlwMenu.vC.labelString:	VC
+! ! *XlwMenu.vC.labelString:	VC
+! ! *XlwMenu.findTag___.labelString:	Find Tag...
+! *XlwMenu.findTag___.labelString:	查找标志...
+! ! *XlwMenu.findOtherWindow___.labelString:	Find Other Window...
+! *XlwMenu.findOtherWindow___.labelString:	查找下一个窗口...
+! ! *XlwMenu.nextTag___.labelString:	Next Tag...
+! *XlwMenu.nextTag___.labelString:	下一个标志...
+! ! *XlwMenu.nextOtherWindow___.labelString:	Next Other Window...
+! *XlwMenu.nextOtherWindow___.labelString:	下一个其他窗口...
+! ! *XlwMenu.nextFile.labelString:	Next File
+! *XlwMenu.nextFile.labelString:	下一个文件
+! ! *XlwMenu.tagsSearch___.labelString:	Tags Search...
+! *XlwMenu.tagsSearch___.labelString:	标志检索...
+! ! *XlwMenu.tagsReplace___.labelString:	Tags Replace...
+! *XlwMenu.tagsReplace___.labelString:	标志置换...
+! ! *XlwMenu.continueSearchReplace.labelString:	Continue Search/Replace
+! *XlwMenu.continueSearchReplace.labelString:	继续检索/置换
+! ! *XlwMenu.popStack.labelString:	Pop stack
+! *XlwMenu.popStack.labelString:	弹出栈
+! ! *XlwMenu.apropos___.labelString:	Apropos...
+! ! *XlwMenu.apropos___.labelString:	适性检索...
+! ! *XlwMenu.setTagsTableFile___.labelString:	Set Tags Table File...
+! *XlwMenu.setTagsTableFile___.labelString:	设置标志表文件...
+! ! *XlwMenu.registerFile.labelString:	Register File
+! *XlwMenu.registerFile.labelString:	注册文件
+! ! *XlwMenu.revertToLastRevision.labelString:	Revert to Last Revision
+! *XlwMenu.revertToLastRevision.labelString:	修复到上一次版本
+! ! *XlwMenu.cancelLastCheckin.labelString:	Cancel Last Checkin
+! *XlwMenu.cancelLastCheckin.labelString:	取消上一次 Checkin
+! ! *XlwMenu.renameFile.labelString:	Rename File
+! *XlwMenu.renameFile.labelString:	该文件名
+! ! *XlwMenu.diffAgainstLastVersion.labelString:	Diff Against Last Version
+! *XlwMenu.diffAgainstLastVersion.labelString:	与上一个版本间的区别
+! ! *XlwMenu.diffBetweenRevisions___.labelString:	Diff Between Revisions...
+! *XlwMenu.diffBetweenRevisions___.labelString:	两个不同版本间的区别...
+! ! *XlwMenu.visitOtherVersion___.labelString:	Visit Other Version...
+! *XlwMenu.visitOtherVersion___.labelString:	访问其他版本...
+! ! *XlwMenu.showEditHistory.labelString:	Show Edit History
+! *XlwMenu.showEditHistory.labelString:	显示编辑履历
+! ! *XlwMenu.listLockedFilesAnyUser.labelString:	List Locked Files Any User
+! *XlwMenu.listLockedFilesAnyUser.labelString:	被锁注文件列表
+! ! *XlwMenu.createSnapshot.labelString:	Create Snapshot
+! *XlwMenu.createSnapshot.labelString:	创建快照
+! ! *XlwMenu.retrieveSnapshot.labelString:	Retrieve Snapshot
+! *XlwMenu.retrieveSnapshot.labelString:	抽取快照
+! ! *XlwMenu.cVSUpdateDirectory.labelString:	CVS Update Directory
+! *XlwMenu.cVSUpdateDirectory.labelString:	CVS 更新目录
+! ! *XlwMenu.file.labelString:	File
+! *XlwMenu.file.labelString:	文件
+! ! *XlwMenu.edit.labelString:	Edit
+! *XlwMenu.edit.labelString:	编辑
+! ! *XlwMenu.mule.labelString:	Mule
+! ! *XlwMenu.mule.labelString:
+! ! *XlwMenu.apps.labelString:	Apps
+! *XlwMenu.apps.labelString:	应用
+! ! *XlwMenu.options.labelString:	Options
+! *XlwMenu.options.labelString:	可选项
+! ! *XlwMenu.buffers.labelString:	Buffers
+! *XlwMenu.buffers.labelString:   缓冲区
+! ! *XlwMenu.tools.labelString:	Tools
+! *XlwMenu.tools.labelString:	工具
+! ! *XlwMenu.lispInteraction.labelString:	Lisp-Interaction
+! *XlwMenu.lispInteraction.labelString:	对话式Lisp
+! ! *XlwMenu.load_emacs.labelString:	Load .emacs
+! *XlwMenu.load_emacs.labelString:	装入 .emacs
+! ! *XlwMenu.help.labelString:	Help
+! *XlwMenu.help.labelString:	帮助

@@ -1,0 +1,12 @@
+From: Jiang Tao <jiangtao9999@163.com>
+
+
+diff -Nur dracut-017.orig/modules.d/50gensplash/gensplash-newroot.sh dracut-017/modules.d/50gensplash/gensplash-newroot.sh
+--- dracut-017.orig/modules.d/50gensplash/gensplash-newroot.sh	2012-06-15 09:09:21.854575984 -0400
++++ dracut-017/modules.d/50gensplash/gensplash-newroot.sh	2012-06-15 09:09:36.631837152 -0400
+@@ -4,4 +4,4 @@
+ 
+ CDROOT=0
+ . /lib/gensplash-lib.sh
+-splash set_msg 'Switching to new root'
++/sbin/fbcondecor_helper 2 'repaint'

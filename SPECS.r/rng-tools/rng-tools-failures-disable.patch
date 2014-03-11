@@ -1,0 +1,113 @@
+commit 62838c656e342608ab7aa4e58c567987e4342a55
+Author: Jeff Garzik <jeff@garzik.org>
+Date:   Tue Aug 17 15:59:01 2010 -0400
+
+    Disable entropy source, if facing continued failures.
+    
+    If all entropy sources are disabled, exit.
+    
+    Signed-off-by: Jeff Garzik <jgarzik@redhat.com>
+
+diff --git a/rngd.c b/rngd.c
+index 6ebef64..6a7f120 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -111,16 +111,12 @@ static struct rng rng_default = {
+ 	.rng_name	= "/dev/hw_random",
+ 	.rng_fd		= -1,
+ 	.xread		= xread,
+-	.fipsctx	= NULL,
+-	.next		= NULL,
+ };
+ 
+ static struct rng rng_tpm = {
+ 	.rng_name	= "/dev/tpm0",
+ 	.rng_fd		= -1,
+ 	.xread		= xread_tpm,
+-	.fipsctx	= NULL,
+-	.next		= NULL,
+ };
+ 
+ struct rng *rng_list;
+@@ -207,18 +203,46 @@ static void do_loop(int random_step, double poll_timeout)
+ {
+ 	unsigned char buf[FIPS_RNG_BUFFER_SIZE];
+ 	int retval;
++	int no_work = 0;
+ 
+-	for (;;) {
++	while (no_work < 100) {
+ 		struct rng *iter;
++		bool work_done;
++
++		work_done = false;
+ 		for (iter = rng_list; iter; iter = iter->next)
+ 		{
++			int rc;
++
++			if (iter->disabled)
++				continue;	/* failed, no work */
++
+ 			retval = iter->xread(buf, sizeof buf, iter);
+-			if (retval == 0)
+-				update_kernel_random(random_step,
+-						     poll_timeout, buf,
+-						     iter->fipsctx);
++			if (retval)
++				continue;	/* failed, no work */
++
++			work_done = true;
++
++			rc = update_kernel_random(random_step,
++					     poll_timeout, buf,
++					     iter->fipsctx);
++			if (rc == 0)
++				continue;	/* succeeded, work done */
++
++			iter->failures++;
++			if (iter->failures == MAX_RNG_FAILURES) {
++				message(LOG_DAEMON|LOG_ERR,
++					"too many FIPS failures, disabling entropy source\n");
++				iter->disabled = true;
++			}
+ 		}
++
++		if (!work_done)
++			no_work++;
+ 	}
++
++	message(LOG_DAEMON|LOG_ERR,
++		"No entropy sources working, exiting rngd\n");
+ }
+ 
+ int main(int argc, char **argv)
+diff --git a/rngd.h b/rngd.h
+index 6e7e83f..bcc6f59 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -27,11 +27,16 @@
+ 
+ #include <unistd.h>
+ #include <stdint.h>
++#include <stdbool.h>
+ #include <stdio.h>
+ #include <syslog.h>
+ 
+ #include "fips.h"
+ 
++enum {
++	MAX_RNG_FAILURES		= 25,
++};
++
+ /* Command line arguments and processing */
+ struct arguments {
+ 	char *random_name;
+@@ -49,6 +54,8 @@ extern struct arguments *arguments;
+ struct rng {
+ 	char *rng_name;
+ 	int rng_fd;
++	bool disabled;
++	int failures;
+ 
+ 	int (*xread) (void *buf, size_t size, struct rng *ent_src);
+ 	fips_ctx_t *fipsctx;

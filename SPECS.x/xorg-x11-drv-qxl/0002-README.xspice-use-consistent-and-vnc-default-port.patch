@@ -1,0 +1,36 @@
+From c65af64529a7abd99bd175e1e49fb98f289fb55a Mon Sep 17 00:00:00 2001
+From: Alon Levy <alevy@redhat.com>
+Date: Sat, 23 Jul 2011 20:08:35 +0300
+Subject: [PATCH xf86-video-qxl 02/10] README.xspice: use consistent and vnc
+ default port
+
+---
+ README.xspice |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/README.xspice b/README.xspice
+index 6efd351..0b43553 100644
+--- a/README.xspice
++++ b/README.xspice
+@@ -101,14 +101,14 @@ cp -R /usr/share/X11/xkb $TEST/share/X11
+ $XORG is either your own built $TEST/bin/Xorg or just the default Xorg
+ 
+ Run server with:
+-export XSPICE_PORT=6000
++export XSPICE_PORT=5900
+ $XORG -noreset -config spiceqxl.xorg.conf :3.0
+ 
+ Or equivalently:
+-./xspice --port 6000 :3.0
++./xspice --port 5900 :3.0
+ 
+ Run X clients as usual by setting DISPLAY=:3.0
+-Run spice client with port 5912 (hardcoded currently):
+ 
+-spicec -h localhost -p 5912
++Run a spice client:
++spicec -h localhost -p 5900
+ 
+-- 
+1.7.6.2
+

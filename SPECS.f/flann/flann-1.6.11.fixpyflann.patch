@@ -1,0 +1,18 @@
+diff -up ./src/python/CMakeLists.txt.fixpyflann ./src/python/CMakeLists.txt
+--- ./src/python/CMakeLists.txt.fixpyflann	2011-12-18 22:16:26.403844146 -0500
++++ ./src/python/CMakeLists.txt	2011-12-19 19:01:18.214736835 -0500
+@@ -5,8 +5,8 @@ install( FILES ${CMAKE_CURRENT_BINARY_DI
+ 
+ 
+ # python instalation
+-if (PYTHON_EXECUTABLE)
+-    install(CODE "execute_process(
+-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/setup.py install
+-        WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\")")
+-endif()
++#if (PYTHON_EXECUTABLE)
++#    install(CODE "execute_process(
++#        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/setup.py install
++#        WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\")")
++#endif()
+diff -up ./src/python/setup.py.tpl.fixpyflann ./src/python/setup.py.tpl

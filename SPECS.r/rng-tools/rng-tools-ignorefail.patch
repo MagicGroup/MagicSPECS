@@ -1,0 +1,89 @@
+diff -up rng-tools-3/rngd.8.in.ignorefail rng-tools-3/rngd.8.in
+--- rng-tools-3/rngd.8.in.ignorefail	2012-01-12 15:14:06.181307658 +0100
++++ rng-tools-3/rngd.8.in	2012-01-12 15:14:06.237306958 +0100
+@@ -9,6 +9,7 @@ rngd \- Check and feed random data from
+ .B rngd
+ [\fB\-b\fR, \fB\-\-background\fR]
+ [\fB\-f\fR, \fB\-\-foreground\fR]
++[\fB\-i\fR, \fB\-\-ignorefail\fR]
+ [\fB\-o\fR, \fB\-\-random-device=\fIfile\fR]
+ [\fB\-r\fR, \fB\-\-rng-device=\fIfile\fR]
+ [\fB\-s\fR, \fB\-\-random-step=\fInnn\fR]
+@@ -45,6 +46,9 @@ Become a daemon (default)
+ \fB\-f\fR, \fB\-\-foreground\fR
+ Do not fork and become a daemon
+ .TP
++\fB\-i\fR, \fB\-\-ignorefail\fR
++Ignore repeated fips failures
++.TP
+ \fB\-o\fI file\fR, \fB\-\-random-device=\fIfile\fR
+ Kernel device used for random number output
+ (default: /dev/random)
+diff -up rng-tools-3/rngd.c.ignorefail rng-tools-3/rngd.c
+--- rng-tools-3/rngd.c.ignorefail	2012-01-12 15:14:06.194307494 +0100
++++ rng-tools-3/rngd.c	2012-01-12 15:15:36.204182216 +0100
+@@ -58,6 +58,7 @@
+ 
+ /* Background/daemon mode */
+ int am_daemon;				/* Nonzero if we went daemon */
++int ignorefail;				/*Nonzero if we ignore MAX_RNG_FAILURES */
+ 
+ /* Command line arguments and processing */
+ const char *argp_program_version =
+@@ -75,6 +76,8 @@ static char doc[] =
+ static struct argp_option options[] = {
+ 	{ "foreground",	'f', 0, 0, "Do not fork and become a daemon" },
+ 
++	{ "ignorefail", 'i', 0, 0, "Ignore repeated fips failures" },
++
+ 	{ "background", 'b', 0, 0, "Become a daemon (default)" },
+ 
+ 	{ "random-device", 'o', "file", 0,
+@@ -103,6 +106,7 @@ static struct arguments default_argument
+ 	.random_step	= 64,
+ 	.fill_watermark	= 2048,
+ 	.daemon		= 1,
++	.ignorefail		= 0,
+ 	.enable_tpm	= 1,
+ };
+ struct arguments *arguments = &default_arguments;
+@@ -148,6 +152,9 @@ static error_t parse_opt (int key, char
+ 	case 'b':
+ 		arguments->daemon = 1;
+ 		break;
++	case 'i':
++		arguments->ignorefail = 1;
++		break;
+ 	case 's':
+ 		if (sscanf(arg, "%i", &arguments->random_step) == 0)
+ 			argp_usage(state);
+@@ -230,7 +237,7 @@ static void do_loop(int random_step, dou
+ 				continue;	/* succeeded, work done */
+ 
+ 			iter->failures++;
+-			if (iter->failures == MAX_RNG_FAILURES) {
++			if (iter->failures == MAX_RNG_FAILURES && (!ignorefail)) {
+ 				message(LOG_DAEMON|LOG_ERR,
+ 					"too many FIPS failures, disabling entropy source\n");
+ 				iter->disabled = true;
+@@ -281,6 +288,9 @@ int main(int argc, char **argv)
+ 		openlog("rngd", 0, LOG_DAEMON);
+ 	}
+ 
++	if (arguments->ignorefail)
++			ignorefail = 1;
++
+ 	do_loop(arguments->random_step,
+ 		arguments->poll_timeout ? : -1.0);
+ 
+diff -up rng-tools-3/rngd.h.ignorefail rng-tools-3/rngd.h
+--- rng-tools-3/rngd.h.ignorefail	2012-01-12 15:14:06.195307482 +0100
++++ rng-tools-3/rngd.h	2012-01-12 15:14:06.237306958 +0100
+@@ -46,6 +46,7 @@ struct arguments {
+ 	double poll_timeout;
+ 
+ 	int daemon;
++	int ignorefail;
+ 	int enable_tpm;
+ };
+ extern struct arguments *arguments;

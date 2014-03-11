@@ -1,0 +1,11 @@
+diff -Nur midori-0.5.0.orig/data/midori-private.desktop.in midori-5876dbfd1138b37ca2b61c8f711fcbbd4ea34e09/data/midori-private.desktop.in
+--- midori-0.5.0.orig/data/midori-private.desktop.in	2013-04-02 17:06:40.000000000 -0600
++++ midori-0.5.0/data/midori-private.desktop.in	2013-04-03 20:50:18.635993661 -0600
+@@ -9,7 +9,6 @@
+ Icon=midori
+ Terminal=false
+ StartupNotify=true
+-NotShowIn=Pantheon;
+ X-Osso-Type=application/x-executable
+ X-Osso-Service=midori
+ 

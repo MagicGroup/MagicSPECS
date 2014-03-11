@@ -1,0 +1,13 @@
+diff -up Tk-CursorControl-0.4/Makefile.PL.orig Tk-CursorControl-0.4/Makefile.PL
+--- Tk-CursorControl-0.4/Makefile.PL.orig	2002-12-13 08:59:56.000000000 -0700
++++ Tk-CursorControl-0.4/Makefile.PL	2012-02-20 17:34:07.643863361 -0700
+@@ -14,9 +14,6 @@ WriteMakefile(
+ 		'CursorControl.pm'	=> '$(INST_LIB)/Tk/CursorControl.pm',
+ 		'trans_cur.xbm'	=> '$(INST_LIB)/Tk/trans_cur.xbm',
+ 		'trans_cur.mask'	=> '$(INST_LIB)/Tk/trans_cur.mask',
+-		'demos/cursor.pl'	=> ($] >= 5.005
+-					? '$(INST_ARCHLIB)'
+-					: '$(INST_LIB)') . '/Tk/demos/widtrib/cursor.pl',
+ 			},
+ 	
+ 	'PREREQ_PM'	=> {

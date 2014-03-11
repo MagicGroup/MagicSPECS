@@ -1,0 +1,23 @@
+--- fortune-mod-1.99.1/Makefile	2004-03-05 05:29:56.000000000 -0800
++++ fortune-mod-1.99.1/Makefile.nooff	2005-03-13 09:08:19.087006816 -0800
+@@ -29,7 +29,7 @@
+ FORTMANDIR=$(prefix)/usr/share/man/man6
+ FORTMANEXT=6
+ # Do we want to install the offensive files? (0 no, 1 yes)
+-OFFENSIVE=1
++OFFENSIVE=0
+ # Do we want to install files with html tags? (0 no, 1 yes)
+ # (Note: These files are not yet available)
+ WEB=0
+@@ -156,10 +156,7 @@
+ 	@echo -n "Building fortune/fortune.man ... "
+ 	@cat fortune/fortune-man.part1 >fortune/fortune.man
+ 	@echo ".I $(COOKIEDIR)" >>fortune/fortune.man
+-	@echo "Directory for innoffensive fortunes." >>fortune/fortune.man
+-	@echo ".TP" >>fortune/fortune.man
+-	@echo ".I $(OCOOKIEDIR)" >>fortune/fortune.man
+-	@echo "Directory for offensive fortunes." >>fortune/fortune.man
++	@echo "Directory for fortunes." >>fortune/fortune.man
+ 	@cat fortune/fortune-man.part2 >>fortune/fortune.man
+ 	@echo done.
+ 

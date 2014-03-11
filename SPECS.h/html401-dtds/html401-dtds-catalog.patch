@@ -1,0 +1,49 @@
+diff -up html401-dtds/HTML4.cat.orig html401-dtds/HTML4.cat
+--- html401-dtds/HTML4.cat.orig	1999-12-25 01:26:00.000000000 +0200
++++ html401-dtds/HTML4.cat	2011-12-02 00:34:21.235252388 +0200
+@@ -6,3 +6,45 @@ PUBLIC "-//W3C//DTD HTML 4.01 Frameset//
+ PUBLIC "-//W3C//ENTITIES Latin1//EN//HTML" HTMLlat1.ent
+ PUBLIC "-//W3C//ENTITIES Special//EN//HTML" HTMLspecial.ent
+ PUBLIC "-//W3C//ENTITIES Symbols//EN//HTML" HTMLsymbol.ent
++
++-- Fedora modification: added SYSTEMs --
++
++SYSTEM "http://www.w3.org/TR/html4/strict.dtd" "strict.dtd"
++SYSTEM "http://www.w3.org/TR/html4/loose.dtd" "loose.dtd"
++SYSTEM "http://www.w3.org/TR/html4/frameset.dtd" "frameset.dtd"
++SYSTEM "http://www.w3.org/TR/html4/HTMLlat1.ent" "HTMLlat1.ent"
++SYSTEM "http://www.w3.org/TR/html4/HTMLsymbol.ent" "HTMLsymbol.ent"
++SYSTEM "http://www.w3.org/TR/html4/HTMLspecial.ent" "HTMLspecial.ent"
++SYSTEM "http://www.w3.org/TR/html401/strict.dtd" "strict.dtd"
++SYSTEM "http://www.w3.org/TR/html401/loose.dtd" "loose.dtd"
++SYSTEM "http://www.w3.org/TR/html401/frameset.dtd" "frameset.dtd"
++SYSTEM "http://www.w3.org/TR/html401/HTMLlat1.ent" "HTMLlat1.ent"
++SYSTEM "http://www.w3.org/TR/html401/HTMLsymbol.ent" "HTMLsymbol.ent"
++SYSTEM "http://www.w3.org/TR/html401/HTMLspecial.ent" "HTMLspecial.ent"
++SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd" "strict.dtd"
++SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd" "loose.dtd"
++SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/frameset.dtd" "frameset.dtd"
++SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/HTMLlat1.ent" "HTMLlat1.ent"
++SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/HTMLsymbol.ent" "HTMLsymbol.ent"
++SYSTEM "http://www.w3.org/TR/1999/REC-html401-19991224/HTMLspecial.ent" "HTMLspecial.ent"
++
++-- Fedora modification: added DTDDECLs --
++
++DTDDECL "-//W3C//DTD HTML 4.01//EN" "HTML4.decl"
++DTDDECL "-//W3C//DTD HTML 4.01 Transitional//EN" "HTML4.decl"
++DTDDECL "-//W3C//DTD HTML 4.01 Frameset//EN" "HTML4.decl"
++DTDDECL "-//W3C//ENTITIES Latin1//EN//HTML" "HTML4.decl"
++DTDDECL "-//W3C//ENTITIES Special//EN//HTML" "HTML4.decl"
++DTDDECL "-//W3C//ENTITIES Symbols//EN//HTML" "HTML4.decl"
++
++-- Fedora modification: added additional public id "aliases" defined in
++   ISO-HTML Annex B, http://purl.org/NET/ISO+IEC.15445/Users-Guide.html#DTD --
++   
++PUBLIC "-//W3C//ENTITIES Latin alphabet No. 1//EN//HTML" "HTMLlat1.ent"
++PUBLIC "-//W3C//ENTITIES Full Latin 1//EN//HTML" "HTMLlat1.ent"
++PUBLIC "-//W3C//ENTITIES Latin 1//EN//HTML" "HTMLlat1.ent"
++PUBLIC "-//W3C//ENTITIES Symbolic//EN//HTML" "HTMLsymbol.ent"
++DTDDECL "-//W3C//ENTITIES Latin alphabet No. 1//EN//HTML" "HTML4.decl"
++DTDDECL "-//W3C//ENTITIES Full Latin 1//EN//HTML" "HTML4.decl"
++DTDDECL "-//W3C//ENTITIES Latin 1//EN//HTML" "HTML4.decl"
++DTDDECL "-//W3C//ENTITIES Symbolic//EN//HTML" "HTML4.decl"

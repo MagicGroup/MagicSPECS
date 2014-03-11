@@ -1,0 +1,39 @@
+diff -up chromium-20.0.1132.47/third_party/zlib/zlib.gyp.system-minizip chromium-20.0.1132.47/third_party/zlib/zlib.gyp
+--- chromium-20.0.1132.47/third_party/zlib/zlib.gyp.system-minizip	2012-06-28 09:01:34.000000000 -0400
++++ chromium-20.0.1132.47/third_party/zlib/zlib.gyp	2012-07-06 14:51:56.863989370 -0400
+@@ -22,14 +22,8 @@
+       'conditions': [
+         ['use_system_zlib==0', {
+           'sources': [
+-            'contrib/minizip/ioapi.c',
+-            'contrib/minizip/ioapi.h',
+             'contrib/minizip/iowin32.c',
+             'contrib/minizip/iowin32.h',
+-            'contrib/minizip/unzip.c',
+-            'contrib/minizip/unzip.h',
+-            'contrib/minizip/zip.c',
+-            'contrib/minizip/zip.h',
+             'adler32.c',
+             'compress.c',
+             'crc32.c',
+@@ -82,12 +76,6 @@
+             'USE_SYSTEM_ZLIB',
+           ],
+           'sources': [
+-            'contrib/minizip/ioapi.c',
+-            'contrib/minizip/ioapi.h',
+-            'contrib/minizip/unzip.c',
+-            'contrib/minizip/unzip.h',
+-            'contrib/minizip/zip.c',
+-            'contrib/minizip/zip.h',
+           ],
+           'conditions': [
+             ['OS=="android"', {
+@@ -97,6 +85,7 @@
+           'link_settings': {
+             'libraries': [
+               '-lz',
++              '-lminizip',
+             ],
+           },
+         }],

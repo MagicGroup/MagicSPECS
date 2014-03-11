@@ -1,0 +1,12 @@
+diff -ur kdelibs-4.6.95.orig//kdecore/services/kservice.cpp kdelibs-4.6.95/kdecore/services/kservice.cpp
+--- kdelibs-4.6.95.orig//kdecore/services/kservice.cpp	2011-07-20 16:24:22.000000000 -0400
++++ kdelibs-4.6.95/kdecore/services/kservice.cpp	2011-07-20 18:23:44.000000000 -0400
+@@ -102,6 +102,8 @@
+           m_bValid = false;
+           return;*/
+         m_strType = QString::fromLatin1("Application");
++        if( entryPath.contains( QString::fromLatin1("/konqueror/servicemenus") ))
++            m_strType = QString::fromLatin1("Service"); // workaround for bnc#378338, KDE3 entries there miss Type=
+     } else if (m_strType != QLatin1String("Application") && m_strType != QLatin1String("Service")) {
+         kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath
+                        << " has Type=" << m_strType

@@ -1,0 +1,13 @@
+diff -up Jemplate-0.261/Makefile.PL.old Jemplate-0.261/Makefile.PL
+--- Jemplate-0.261/Makefile.PL.old	2010-04-27 07:39:50.000000000 +0200
++++ Jemplate-0.261/Makefile.PL	2010-08-06 10:22:19.000000000 +0200
+@@ -23,7 +23,7 @@ if (-e 'inc/.author') {
+     `perldoc -tF $all_from > README` if ! -e 'README' || (stat $all_from)[9] > (stat 'README')[9];
+ }
+ 
+-requires        'Template' => '2.19';
++requires        'Template' => '2.22';
+ requires        'File::Find::Rule' => '0.30';
+ 
+ use_test_base;
+diff -up Jemplate-0.261/t/quoted.t.old Jemplate-0.261/t/quoted.t

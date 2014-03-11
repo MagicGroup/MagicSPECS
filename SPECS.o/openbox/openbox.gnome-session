@@ -1,0 +1,5 @@
+[GNOME Session]
+RequiredComponents=gnome-panel;gnome-settings-daemon;
+RequiredProviders=windowmanager;notifications;
+DefaultProvider-windowmanager=openbox
+DefaultProvider-notifications=notification-daemon

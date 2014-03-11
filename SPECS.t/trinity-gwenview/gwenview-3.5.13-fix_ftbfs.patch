@@ -1,0 +1,19 @@
+commit 1ca2f7392842e9ffd76fbc5aefc51213eb9ce262
+Author: Timothy Pearson <kb9vqf@pearsoncomputing.net>
+Date:   1325190949 -0600
+
+    Fix FTBFS
+
+diff --git a/src/gvcore/imageviewconfig.kcfg b/src/gvcore/imageviewconfig.kcfg
+index d93051a..e5c1e04 100644
+--- a/src/gvcore/imageviewconfig.kcfg
++++ b/src/gvcore/imageviewconfig.kcfg
+@@ -2,7 +2,7 @@
+ <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+ <kcfg> 
+   <include>tqapplication.h</include>
+-  <include>palette.h</include>
++  <include>tqpalette.h</include>
+   <kcfgfile name="gwenviewrc"/> 
+   <group name="pixmap widget">
+     <entry name="smoothAlgorithm" key="smooth scale" type="Enum"> 

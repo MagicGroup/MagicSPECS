@@ -1,0 +1,11 @@
+--- HTML-CalendarMonthSimple-1.24/CalendarMonthSimple.pm.orig	2004-11-21 00:31:04.000000000 +0100
++++ HTML-CalendarMonthSimple-1.24/CalendarMonthSimple.pm	2004-11-21 00:31:55.000000000 +0100
+@@ -269,7 +269,7 @@
+          }
+ 
+          # Get the cell's coloration and CSS class
+-         if ($self->year == $todayyear && $self->month == $todaymonth && $thisday == $todaydate)
++         if ($self->year == $todayyear && $self->month == $todaymonth && defined $thisday && $thisday == $todaydate)
+                                               { $thisbgcolor = $self->datecolor($thisday) || $todaycolor;
+                                                 $thisbordercolor = $self->datebordercolor($thisday) || $todaybordercolor;
+                                                 $thiscontentcolor = $self->datecontentcolor($thisday) || $todaycontentcolor;

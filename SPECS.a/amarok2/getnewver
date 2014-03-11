@@ -1,0 +1,16 @@
+#!/bin/bash
+url="http://download.kde.org/stable/amarok/"
+new1="><td valign="top">&nbsp;<\/td><td><a href=\""
+new2="a>"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand $url -O index.html
+if [ -f index.html ];then
+	newver=`cat index.html| grep "<td><a href="".*a>" |tail -n 1 |sed -e 's/^.*.href=//g' | sed -e 's/\/.*$//g' |sed -e 's/"//g'`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

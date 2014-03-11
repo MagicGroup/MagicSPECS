@@ -1,0 +1,66 @@
+Index: docutils/readers/__init__.py
+===================================================================
+--- docutils/readers/__init__.py.orig
++++ docutils/readers/__init__.py
+@@ -106,5 +106,8 @@ def get_reader_class(reader_name):
+     reader_name = reader_name.lower()
+     if reader_name in _reader_aliases:
+         reader_name = _reader_aliases[reader_name]
+-    module = __import__(reader_name, globals(), locals(), level=1)
++    try:
++        module = __import__(reader_name, globals(), locals(), level=0)
++    except ImportError:
++        module = __import__(reader_name, globals(), locals(), level=1)
+     return module.Reader
+Index: docutils/parsers/__init__.py
+===================================================================
+--- docutils/parsers/__init__.py.orig
++++ docutils/parsers/__init__.py
+@@ -46,5 +46,8 @@ def get_parser_class(parser_name):
+     parser_name = parser_name.lower()
+     if parser_name in _parser_aliases:
+         parser_name = _parser_aliases[parser_name]
+-    module = __import__(parser_name, globals(), locals(), level=1)
++    try:
++        module = __import__(parser_name, globals(), locals(), level=0)
++    except ImportError:
++        module = __import__(parser_name, globals(), locals(), level=1)
+     return module.Parser
+Index: docutils/languages/__init__.py
+===================================================================
+--- docutils/languages/__init__.py.orig
++++ docutils/languages/__init__.py
+@@ -30,9 +30,12 @@ def get_language(language_code, reporter
+         if tag in _languages:
+             return _languages[tag]
+         try:
+-            module = __import__(tag, globals(), locals(), level=1)
++            module = __import__(tag, globals(), locals(), level=0)
+         except ImportError:
+-            continue
++            try:
++                module = __import__(tag, globals(), locals(), level=1)
++            except ImportError:
++                continue
+         _languages[tag] = module
+         return module
+     if reporter is not None:
+Index: docutils/parsers/rst/languages/__init__.py
+===================================================================
+--- docutils/parsers/rst/languages/__init__.py.orig
++++ docutils/parsers/rst/languages/__init__.py
+@@ -25,9 +25,12 @@ def get_language(language_code):
+         if tag in _languages:
+             return _languages[tag]
+         try:
+-            module = __import__(tag, globals(), locals(), level=1)
++            module = __import__(tag, globals(), locals(), level=0)
+         except ImportError:
+-            continue
++            try:
++                module = __import__(tag, globals(), locals(), level=1)
++            except ImportError:
++                continue
+         _languages[tag] = module
+         return module
+     return None

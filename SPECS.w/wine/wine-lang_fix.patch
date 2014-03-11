@@ -1,0 +1,14 @@
+diff -u -r wine-0.9.10.orig/loader/glibc.c wine-0.9.10/loader/glibc.c
+--- wine-0.9.10.orig/loader/glibc.c	2006-03-15 22:50:46.000000000 +0800
++++ wine-0.9.10/loader/glibc.c	2006-03-18 20:19:01.000000000 +0800
+@@ -92,6 +92,10 @@
+ 
+     wine_init_argv0_path( new_argv0 );
+ 
++    const char *lang = getenv("LANG");
++
++    if (strcmp(lang,"zh_CN.GB18030")||strcmp(lang,"zh_CN.GBK"))
++       setenv("LANG","zh_CN.GB2312",1);
+     if (loader)
+     {
+         /* update WINELOADER with the new name */

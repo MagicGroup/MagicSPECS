@@ -1,0 +1,43 @@
+diff -ruN mplus_bitmap_fonts-2.2.1.orig/install_mplus_fonts mplus_bitmap_fonts-2.2.1/install_mplus_fonts
+--- mplus_bitmap_fonts-2.2.1.orig/install_mplus_fonts	2004-06-12 20:36:49.000000000 +0900
++++ mplus_bitmap_fonts-2.2.1/install_mplus_fonts	2004-06-17 22:01:12.000000000 +0900
+@@ -52,7 +52,8 @@
+ do
+ 	b=`basename $f .bdf`
+ 	echo "create: $b.pcf.gz"
+-	bdftopcf $f | gzip > $PREFIX/$b.pcf.gz
++	cp -a $f $PREFIX/
++#	bdftopcf $f | gzip > $PREFIX/$b.pcf.gz
+ done
+ echo "create: fonts.alias for M+ BITMAP FONTS E"
+ cat fonts.alias > $PREFIX/fonts.alias
+@@ -69,14 +70,16 @@
+ 		cp ../$b.bdf ./
+ 		patch $b.bdf $b.diff
+ 		mv $b.bdf $b-euro.bdf
+-		bdftopcf $b-euro.bdf | gzip > $PREFIX/$b-euro.pcf.gz
++		cp -a $b-euro.bdf $PREFIX/
++#		bdftopcf $b-euro.bdf | gzip > $PREFIX/$b-euro.pcf.gz
+ 	done
+ 
+ 	echo "create: mplus_h12rw-euro.pcf.gz"
+ 	awk '/^SWIDTH/{$2 += 80} /^DWIDTH/{$2 += 1} {print}' \
+ 	mplus_h12r-euro.bdf | sed 's/hlv/hlvw/' > mplus_h12rw-euro.bdf
+-	bdftopcf mplus_h12rw-euro.bdf \
+-	| gzip > $PREFIX/mplus_h12rw-euro.pcf.gz
++	cp -a mplus_h12rw-euro.bdf $PREFIX/
++#	bdftopcf mplus_h12rw-euro.bdf \
++#	| gzip > $PREFIX/mplus_h12rw-euro.pcf.gz
+ 
+ #	rm $b-euro.bdf
+ 	echo "create: fonts.alias for M+ BITMAP FONTS EURO"
+@@ -141,7 +144,8 @@
+ 	do
+ 		b=`basename $f .bdf`
+ 		echo "create: $b.pcf.gz"
+-		bdftopcf $f | gzip > $PREFIX/$b.pcf.gz
++		cp -a $f $PREFIX/
++#		bdftopcf $f | gzip > $PREFIX/$b.pcf.gz
+ 	done
+ 
+ #	rm mplus_j1*b.bdf

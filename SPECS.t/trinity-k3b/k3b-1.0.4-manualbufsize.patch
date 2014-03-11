@@ -1,0 +1,21 @@
+diff -up k3b-1.0.4/libk3b/core/k3bglobalsettings.cpp.manualbufsize k3b-1.0.4/libk3b/core/k3bglobalsettings.cpp
+--- k3b-1.0.4/libk3b/core/k3bglobalsettings.cpp.manualbufsize	2007-11-02 10:55:39.000000000 +0100
++++ k3b-1.0.4/libk3b/core/k3bglobalsettings.cpp	2008-04-22 14:15:06.000000000 +0200
+@@ -22,7 +22,7 @@ K3bGlobalSettings::K3bGlobalSettings()
+   : m_eject(true),
+     m_burnfree(true),
+     m_overburn(false),
+-    m_useManualBufferSize(false),
++    m_useManualBufferSize(true),
+     m_bufferSize(4),
+     m_force(false)
+ {
+@@ -37,7 +37,7 @@ void K3bGlobalSettings::readSettings( KC
+   m_eject = !c->readBoolEntry( "No cd eject", false );
+   m_burnfree = c->readBoolEntry( "burnfree", true );
+   m_overburn = c->readBoolEntry( "Allow overburning", false );
+-  m_useManualBufferSize = c->readBoolEntry( "Manual buffer size", false );
++  m_useManualBufferSize = c->readBoolEntry( "Manual buffer size", true );
+   m_bufferSize = c->readNumEntry( "Fifo buffer", 4 );
+   m_force = c->readBoolEntry( "Force unsafe operations", false );
+ 

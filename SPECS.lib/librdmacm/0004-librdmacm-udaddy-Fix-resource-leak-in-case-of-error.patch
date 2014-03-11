@@ -1,0 +1,27 @@
+From 934d3e3c98d07c3d872f7eeb1d935c9708474838 Mon Sep 17 00:00:00 2001
+From: Dotan Barak <dotanb@dev.mellanox.co.il>
+Date: Wed, 26 Oct 2011 07:19:25 -0700
+Subject: [PATCH 4/9] librdmacm/udaddy: Fix resource leak in case of error
+
+Signed-off-by: Dotan Barak <dotanb@dev.mellanox.co.il>
+Signed-off-by: Sean Hefty <sean.hefty@intel.com>
+---
+ examples/udaddy.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/examples/udaddy.c b/examples/udaddy.c
+index 637306a..1534df5 100644
+--- a/examples/udaddy.c
++++ b/examples/udaddy.c
+@@ -547,7 +547,7 @@ static int run_server(void)
+ 	ret = rdma_bind_addr(listen_id, test.src_addr);
+ 	if (ret) {
+ 		perror("udaddy: bind address failed");
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	ret = rdma_listen(listen_id, 0);
+-- 
+1.7.6.4
+

@@ -1,0 +1,43 @@
+--- a/source/irc.c.old	2012-03-28 09:46:57.558502133 +0200
++++ b/source/irc.c	2012-03-28 09:46:10.512440313 +0200
+@@ -257,7 +257,7 @@
+    extern FILE *awayfile;
+    
+    if (!reason)
+-     reason = DEFAULT_SIGNOFF_REASON;
++     malloc_strcpy(&reason, UP(DEFAULT_SIGNOFF_REASON));
+    
+    /* if we're away, close the away log */
+    if (awayfile)
+@@ -305,7 +305,7 @@
+ 	     /* build From[User,Host,UserHost] */
+ 	     dma_strcpy(&FromUser, server_list[i].username ? server_list[i].username : username);
+ 	     dma_strcpy(&FromHost, server_list[i].hostname ? server_list[i].hostname : hostname);
+-	     snprintf(tbuf, sizeof(tbuf)-1, "%s@%s", FromUser, FromHost);
++	     snprintf((char *)tbuf, sizeof(tbuf)-1, "%s@%s", FromUser, FromHost);
+ 	     tbuf[sizeof(tbuf)-1] = '\0';
+ 	     dma_strcpy(&FromUserHost, tbuf);
+ 	     from = server_list[i].nickname;
+@@ -340,7 +340,7 @@
+ {
+    
+    if (!reason)
+-     reason = DEFAULT_SIGNOFF_REASON;
++     malloc_strcpy(&reason, UP(DEFAULT_SIGNOFF_REASON));
+    
+ #ifdef SHOW_OWN_SIGNOFF
+    /* this is a little hack to show yourself signing off */
+@@ -600,11 +600,11 @@
+ 	*realname = '\0';
+ 	ac = 1;
+ 	malloc_strcpy(&args_str, argv[0]);
+-	malloc_strcat(&args_str, " ");
++	malloc_strcat(&args_str, UP(" "));
+ 	while ((arg = argv[ac++]) != (u_char *) NULL)
+ 	{
+ 		malloc_strcat(&args_str, argv[ac-1]);
+-		malloc_strcat(&args_str, " ");
++		malloc_strcat(&args_str, UP(" "));
+ 		if ((*arg == '-') != '\0')
+ 		{
+ 			++arg;

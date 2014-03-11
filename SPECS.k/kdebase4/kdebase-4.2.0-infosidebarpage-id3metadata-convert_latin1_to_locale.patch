@@ -1,0 +1,13 @@
+--- kdebase-4.2.0/aps/dolphin/src/infosidebarpage.cpp.orig	2009-01-22 11:01:45.000000000 +0800
++++ kdebase-4.2.0/apps/dolphin/src/infosidebarpage.cpp	2009-01-22 11:16:57.000000000 +0800
+@@ -402,7 +402,9 @@
+                         const KFileMetaInfoItem& metaInfoItem = it.value();
+                         const QVariant& value = metaInfoItem.value();
+                         if (value.isValid() && convertMetaInfo(metaInfoItem.name(), labelText)) {
+-                            m_metaTextLabel->add(labelText, value.toString());
++                            // convert from latin1 presentation to locale presentation for other metadata.
++                            // this is an ugly fix for only mp3 id3v1 metadata. TODO: fix it in strigi id3 analyzer. ----- added by nihui
++                            m_metaTextLabel->add(labelText, QString::fromUtf8((QTextCodec::codecForName("ISO-8859-1")->toUnicode(value.toString().toLatin1())).toLocal8Bit().data()));
+                         }
+                         ++it;
+                     }

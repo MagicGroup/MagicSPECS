@@ -1,0 +1,15 @@
+Subject: Use the KDE configuration tool for Compiz instead of the Gtk one
+From: Lubos Lunak
+Patch-upstream: no (maybe later)
+Relates: kdebase4-runtime/wm-switch-systemsettings.diff
+
+--- kcontrol/componentchooser/windowmanagers/compiz.desktop.sav	2008-09-03 16:58:44.000000000 +0200
++++ kcontrol/componentchooser/windowmanagers/compiz.desktop	2008-09-12 10:52:13.000000000 +0200
+@@ -9,5 +9,6 @@ Name[sr]=Компиз
+ Name[x-test]=xxCompizxx
+ Exec=compiz ccp
+ TryExec=compiz
+-X-KDE-WindowManagerConfigure=simple-ccsm
+ X-KDE-WindowManagerRestartArgument=--replace
++X-KDE-WindowManagerConfigure=simple-ccsm-kde
++X-KDE-WindowManagerConfigureParentArgument=--parent

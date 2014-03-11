@@ -1,0 +1,10 @@
+--- wv-1.2.4/wv-1.0.pc.in.pkgconfig	2005-04-18 17:14:48.000000000 -0400
++++ wv-1.2.4/wv-1.0.pc.in	2008-03-30 17:42:15.000000000 -0400
+@@ -1,6 +1,6 @@
+ prefix=@prefix@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: wvWare

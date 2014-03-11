@@ -1,0 +1,16 @@
+diff -up xf86-video-intel-2.17.0/src/legacy/i810/Makefile.am.jx xf86-video-intel-2.17.0/src/legacy/i810/Makefile.am
+--- xf86-video-intel-2.17.0/src/legacy/i810/Makefile.am.jx	2011-11-07 15:14:43.000000000 -0500
++++ xf86-video-intel-2.17.0/src/legacy/i810/Makefile.am	2011-11-18 13:21:56.946525915 -0500
+@@ -25,10 +25,10 @@ liblegacy_i810_la_SOURCES +=\
+          i810_dri.c \
+          i810_dri.h \
+ 	 $(NULL)
+-endif
+-
+ if XVMC
+ liblegacy_i810_la_SOURCES += \
+ 	i810_hwmc.c \
+ 	$(NULL)
+ endif
++endif
++

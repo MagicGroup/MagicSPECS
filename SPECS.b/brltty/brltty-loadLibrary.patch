@@ -1,0 +1,21 @@
+diff --git a/Bindings/Java/Native.java b/Bindings/Java/Native.java
+index 8a3b003..c404bf2 100644
+--- a/Bindings/Java/Native.java
++++ b/Bindings/Java/Native.java
+@@ -21,7 +21,15 @@ package org.a11y.BrlAPI;
+ 
+ public class Native {
+   static {
+-    System.loadLibrary("brlapi_java");
++    try {
++         System.load( "/usr/lib64/brltty/libbrlapi_java.so" );
++    } catch( UnsatisfiedLinkError e ) {
++         try {
++             System.load( "/usr/lib/brltty/libbrlapi_java.so" );
++         } catch( UnsatisfiedLinkError f ) {
++             throw new UnsatisfiedLinkError("brlapi_java library load failed");
++         }
++     }
+   }
+ 
+   protected long handle;

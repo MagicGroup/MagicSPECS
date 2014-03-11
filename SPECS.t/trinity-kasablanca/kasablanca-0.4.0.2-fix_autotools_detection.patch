@@ -1,0 +1,111 @@
+--- kasablanca-0.4.0.2/admin/cvs.sh.ORI	2011-12-04 15:24:44.405943353 +0100
++++ kasablanca-0.4.0.2/admin/cvs.sh	2011-12-04 15:33:50.829581434 +0100
+@@ -30,7 +30,7 @@
+ required_autoconf_version="2.53 or newer"
+ AUTOCONF_VERSION=`$AUTOCONF --version | head -n 1`
+ case $AUTOCONF_VERSION in
+-  Autoconf*2.5* | autoconf*2.5* ) : ;;
++  Autoconf*2.5* | autoconf*2.5* | [Aa]utoconf*2.6* ) : ;;
+   "" )
+     echo "*** AUTOCONF NOT FOUND!."
+     echo "*** KDE requires autoconf $required_autoconf_version"
+@@ -45,7 +45,7 @@
+  
+ AUTOHEADER_VERSION=`$AUTOHEADER --version | head -n 1`
+ case $AUTOHEADER_VERSION in
+-  Autoconf*2.5* | autoheader*2.5* ) : ;;
++  Autoconf*2.5* | autoheader*2.5* | *Autoconf*2.6* ) : ;;
+   "" )
+     echo "*** AUTOHEADER NOT FOUND!."
+     echo "*** KDE requires autoheader $required_autoconf_version"
+@@ -66,7 +66,7 @@
+     echo "*** KDE requires automake $required_automake_version"
+     exit 1
+     ;;
+-  automake*1.6.* | automake*1.7* | automake*1.8* ) : ;;
++  automake*1.6.* | automake*1.7* | automake*1.8* | automake*1.9* | automake*1.10* | automake*1.1[012]* ) : ;;
+   "" )
+     echo "*** AUTOMAKE NOT FOUND!."
+     echo "*** KDE requires automake $required_automake_version"
+--- kasablanca-0.4.0.2/admin/acinclude.m4.in.ORI	2011-12-04 15:37:05.013464315 +0100
++++ kasablanca-0.4.0.2/admin/acinclude.m4.in	2011-12-04 15:40:40.722904947 +0100
+@@ -468,14 +468,14 @@
+     if test "$kde_qtver" = "2"; then
+       kde_moduledir='\${libdir}/kde2'
+     else
+-      kde_moduledir='\${libdir}/kde3'
++      kde_moduledir='\${libdir}/trinity'
+     fi
+   fi
+   if test -z "$kde_styledir"; then
+-    kde_styledir='\${libdir}/kde3/plugins/styles'
++    kde_styledir='\${libdir}/trinity/plugins/styles'
+   fi
+   if test -z "$kde_widgetdir"; then
+-    kde_widgetdir='\${libdir}/kde3/plugins/designer'
++    kde_widgetdir='\${libdir}/trinity/plugins/designer'
+   fi
+   if test -z "$xdg_appsdir"; then
+     xdg_appsdir='\${datadir}/applications/kde'
+@@ -542,7 +542,7 @@
+     )
+     AM_CONDITIONAL(include_ARTS, test "$build_arts" != "no")
+ 
+-        kde_default_bindirs="/usr/bin /usr/local/bin /opt/local/bin /usr/X11R6/bin /opt/kde/bin /opt/kde3/bin /usr/kde/bin /usr/local/kde/bin"
++        kde_default_bindirs="/usr/bin /usr/local/bin /opt/local/bin /usr/X11R6/bin /opt/kde/bin /opt/trinity/bin /usr/kde/bin /usr/local/kde/bin"
+         test -n "$KDEDIR" && kde_default_bindirs="$KDEDIR/bin $kde_default_bindirs"
+         if test -n "$KDEDIRS"; then
+            kde_save_IFS=$IFS
+@@ -578,7 +578,7 @@
+         KDE_FIND_PATH(xmllint, XMLLINT, [${prefix}/bin ${exec_prefix}/bin /usr/local/bin /opt/local/bin], [XMLLINT=""])
+ 
+         if test -n "$MEINPROC" && test ! "$MEINPROC" = "compiled"; then  
+- 	    kde_sharedirs="/usr/share/kde /usr/local/share /usr/share /opt/kde3/share /opt/kde/share $prefix/share"
++ 	    kde_sharedirs="/usr/share/kde /usr/local/share /usr/share /opt/trinity/share /opt/kde/share $prefix/share"
+             test -n "$KDEDIR" && kde_sharedirs="$KDEDIR/share $kde_sharedirs"
+             AC_FIND_FILE(apps/ksgmltools2/customization/kde-chunk.xsl, $kde_sharedirs, KDE_XSL_STYLESHEET)
+ 	    if test "$KDE_XSL_STYLESHEET" = "NO"; then
+@@ -1738,7 +1738,7 @@
+ 
+ if test -z "$1"; then
+ 
+-kde_incdirs="/usr/lib/kde/include /usr/local/kde/include /usr/local/include /usr/kde/include /usr/include/kde /usr/include /opt/kde3/include /opt/kde/include $x_includes $qt_includes"
++kde_incdirs="/usr/lib/kde/include /usr/local/kde/include /usr/local/include /usr/kde/include /usr/include/kde /usr/include /opt/trinity/include /opt/kde/include $x_includes $qt_includes"
+ test -n "$KDEDIR" && kde_incdirs="$KDEDIR/include $KDEDIR/include/kde $KDEDIR $kde_incdirs"
+ kde_incdirs="$ac_kde_includes $kde_incdirs"
+ AC_FIND_FILE($kde_check_header, $kde_incdirs, kde_incdir)
+@@ -1750,7 +1750,7 @@
+ So, check this please and use another prefix!])
+ fi
+ 
+-kde_libdirs="/usr/lib/kde/lib${kdelibsuff} /usr/local/kde/lib${kdelibsuff} /usr/kde/lib${kdelibsuff} /usr/lib${kdelibsuff}/kde /usr/lib${kdelibsuff}/kde3 /usr/lib${kdelibsuff} /usr/X11R6/lib${kdelibsuff} /usr/local/lib${kdelibsuff} /opt/kde3/lib${kdelibsuff} /opt/kde/lib${kdelibsuff} /usr/X11R6/kde/lib${kdelibsuff}"
++kde_libdirs="/usr/lib/kde/lib${kdelibsuff} /usr/local/kde/lib${kdelibsuff} /usr/kde/lib${kdelibsuff} /usr/lib${kdelibsuff}/kde /usr/lib${kdelibsuff}/trinity /usr/lib${kdelibsuff} /usr/X11R6/lib${kdelibsuff} /usr/local/lib${kdelibsuff} /opt/trinity/lib${kdelibsuff} /opt/kde/lib${kdelibsuff} /usr/X11R6/kde/lib${kdelibsuff}"
+ test -n "$KDEDIR" && kde_libdirs="$KDEDIR/lib${kdelibsuff} $KDEDIR $kde_libdirs"
+ kde_libdirs="$ac_kde_libraries $libdir $kde_libdirs"
+ AC_FIND_FILE($kde_check_lib, $kde_libdirs, kde_libdir)
+@@ -1758,7 +1758,7 @@
+ 
+ kde_widgetdir=NO
+ dnl this might be somewhere else
+-AC_FIND_FILE("kde3/plugins/designer/kdewidgets.la", $kde_libdirs, kde_widgetdir)
++AC_FIND_FILE("trinity/plugins/designer/kdewidgets.la", $kde_libdirs, kde_widgetdir)
+ 
+ if test -n "$ac_kde_libraries" && test ! -r "$ac_kde_libraries/$kde_check_lib"; then
+ AC_MSG_ERROR([
+@@ -1766,14 +1766,14 @@
+ So, check this please and use another prefix!])
+ fi
+ 
+-if test -n "$kde_widgetdir" && test ! -r "$kde_widgetdir/kde3/plugins/designer/kdewidgets.la"; then
++if test -n "$kde_widgetdir" && test ! -r "$kde_widgetdir/trinity/plugins/designer/kdewidgets.la"; then
+ AC_MSG_ERROR([
+ I can't find the designer plugins. These are required and should have been installed
+ by kdelibs])
+ fi
+ 
+ if test -n "$kde_widgetdir"; then
+-    kde_widgetdir="$kde_widgetdir/kde3/plugins/designer"
++    kde_widgetdir="$kde_widgetdir/trinity/plugins/designer"
+ fi
+ 
+ 

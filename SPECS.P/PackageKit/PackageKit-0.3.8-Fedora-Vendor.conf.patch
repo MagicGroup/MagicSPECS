@@ -1,0 +1,60 @@
+diff --git a/etc/Vendor.conf b/etc/Vendor.conf
+index 69f7337..6c6f772 100644
+--- a/etc/Vendor.conf
++++ b/etc/Vendor.conf
+@@ -12,7 +12,7 @@
+ # If the value is set to 'none' then no link is shown.
+ #
+ # default=http://www.packagekit.org/pk-package-not-found.html
+-DefaultUrl=http://www.packagekit.org/pk-package-not-found.html
++DefaultUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Package
+ 
+ # The URL which is shown to the user when a codec could not be found.
+ # It should explain why certain codecs cannot be used, and perhaps show
+@@ -21,7 +21,7 @@ DefaultUrl=http://www.packagekit.org/pk-package-not-found.html
+ # If the value is set to 'none' then the value of DefaultUrl is used.
+ #
+ # default=none
+-CodecUrl=none
++CodecUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Codec
+ 
+ # The URL which is shown to the user when hardware drivers could not be found.
+ # It should explain why some hardware is not supported, and links to futher
+@@ -30,7 +30,7 @@ CodecUrl=none
+ # If the value is set to 'none' then the value of DefaultUrl is used.
+ #
+ # default=none
+-HardwareUrl=none
++HardwareUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Driver
+ 
+ # The URL which is shown to the user when fonts could not be found.
+ # Alternatives should probably be suggested where possible.
+@@ -38,7 +38,7 @@ HardwareUrl=none
+ # If the value is set to 'none' then the value of DefaultUrl is used.
+ #
+ # default=none
+-FontUrl=none
++FontUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_Font
+ 
+ # The URL which is shown to the user when programs handing a mime tpye could not
+ # be found. It should probably explain how to use wine if the program is a
+@@ -47,16 +47,16 @@ FontUrl=none
+ # If the value is set to 'none' then the value of DefaultUrl is used.
+ #
+ # default=none
+-MimeUrl=none
++MimeUrl=https://fedoraproject.org/wiki/PackageKit_Items_Not_Found#Missing_MIME_Support
+ 
+ [Groups]
+ 
+ # The vendor name shown for the 'vendor' group
+ #
+ # default=My Vendor
+-VendorName=My Vendor
++VendorName=Fedora
+ 
+ # The vendor icon name shown for the 'vendor' group
+ #
+ # default=emblem-favorite
+-VendorIcon=emblem-favorite
++VendorIcon=fedora-logo-small

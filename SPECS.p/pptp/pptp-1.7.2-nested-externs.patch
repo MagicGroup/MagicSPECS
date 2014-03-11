@@ -1,0 +1,23 @@
+diff -up pptp-1.7.2/pptp_gre.c.nested pptp-1.7.2/pptp_gre.c
+--- pptp-1.7.2/pptp_gre.c.nested	2011-12-06 16:45:34.605691678 +0000
++++ pptp-1.7.2/pptp_gre.c	2011-12-06 19:07:14.169449813 +0000
+@@ -23,6 +23,10 @@
+ #include "pqueue.h"
+ #include "test.h"
+ 
++/* globals from pptp.c */
++extern struct in_addr localbind;
++extern int rtmark;
++
+ #define PACKET_MAX 8196
+ /* test for a 32 bit counter overflow */
+ #define WRAPPED( curseq, lastseq) \
+@@ -82,8 +86,6 @@ uint64_t time_now_usecs(void)
+ int pptp_gre_bind(struct in_addr inetaddr)
+ {
+     struct sockaddr_in src_addr, loc_addr;
+-    extern struct in_addr localbind;
+-    extern int rtmark;
+     int s = socket(AF_INET, SOCK_RAW, PPTP_PROTO);
+     if (s < 0) { warn("socket: %s", strerror(errno)); return -1; }
+ #ifdef SO_MARK

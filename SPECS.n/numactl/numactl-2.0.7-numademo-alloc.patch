@@ -1,0 +1,15 @@
+diff -up numactl-2.0.7/numademo.c.orig numactl-2.0.7/numademo.c
+--- numactl-2.0.7/numademo.c.orig	2012-02-15 11:47:10.617212257 +0100
++++ numactl-2.0.7/numademo.c	2012-02-15 11:47:38.570214219 +0100
+@@ -156,6 +156,11 @@ void memtest(char *name, unsigned char *
+ 	int i;
+ 	char title[128], result[128];
+ 
++	if (!mem) {
++		fprintf(stderr,"Failed to allocate %lu bytes of memory. Test \"%s\" exits.\n", msize, name);
++		return;
++	}
++
+ #ifdef HAVE_STREAM_LIB
+ 	if (thistest == STREAM) {
+ 		do_stream(name, mem);

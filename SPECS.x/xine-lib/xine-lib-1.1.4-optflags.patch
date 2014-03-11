@@ -1,0 +1,11 @@
+--- xine-lib-1.1.4/m4/optimizations.m4~	2006-06-17 18:20:56.000000000 +0300
++++ xine-lib-1.1.4/m4/optimizations.m4	2007-01-30 23:03:27.000000000 +0200
+@@ -107,7 +107,7 @@
+ 
+             DEBUG_CFLAGS="-O $DEBUG_CFLAGS"
+ 
+-            if test x"$sarchopt" != "xno"; then
++            if false ; then
+               archopt_val=
+ 
+               case "$host_or_hostalias" in

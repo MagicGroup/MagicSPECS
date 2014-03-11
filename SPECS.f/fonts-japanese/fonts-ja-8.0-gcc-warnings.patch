@@ -1,0 +1,12 @@
+diff -ruN fonts-ja-8.0.orig/vine-fonttools-0.1/mkitalic.c fonts-ja-8.0/vine-fonttools-0.1/mkitalic.c
+--- fonts-ja-8.0.orig/vine-fonttools-0.1/mkitalic.c	2000-12-23 03:59:33.000000000 +0900
++++ fonts-ja-8.0/vine-fonttools-0.1/mkitalic.c	2004-02-23 18:48:53.000000000 +0900
+@@ -316,7 +316,7 @@
+ {
+ 
+   char* tmp,tmp2,tok;
+-  char hexcbuf[3];
++  char hexcbuf[4];
+   int height,width,newwidth,newbw;
+   int ox, oy, newox, newoy;
+   int count, shift, oldshift, x, i, j, k;

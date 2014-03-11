@@ -1,0 +1,60 @@
+diff -Nuarp kdeui.orig/colors/kcolorscheme.cpp kdeui/colors/kcolorscheme.cpp
+--- kdeui.orig/colors/kcolorscheme.cpp	2010-06-18 19:51:57.000000000 +0800
++++ kdeui/colors/kcolorscheme.cpp	2010-06-18 19:55:30.000000000 +0800
+@@ -177,7 +177,7 @@ SetDefaultColors defaultViewColors = {
+ 
+ 
+ SetDefaultColors defaultWindowColors = {
+-    { 213, 209, 207 }, // Background
++    { 252, 253, 254 }, // Background
+     { 218, 217, 216 }, // Alternate
+     {  27,  25,  24 }, // Normal
+     { 137, 136, 135 }, // Inactive
+@@ -191,7 +191,7 @@ SetDefaultColors defaultWindowColors = {
+ 
+ 
+ SetDefaultColors defaultButtonColors = {
+-    { 207, 204, 201 }, // Background
++    { 222, 230, 235 }, // Background
+     { 224, 223, 222 }, // Alternate
+     {  27,  25,  24 }, // Normal
+     { 137, 136, 135 }, // Inactive
+@@ -219,7 +219,7 @@ SetDefaultColors defaultSelectionColors 
+ 
+ 
+ SetDefaultColors defaultTooltipColors = {
+-    { 190, 223, 255 }, // Background
++    { 165, 193, 228 }, // Background
+     { 196, 224, 255 }, // Alternate
+     {  37,  35,  33 }, // Normal
+     { 137, 136, 135 }, // Inactive
+diff -Nuarp kdeui.orig/kernel/kglobalsettings.cpp kdeui/kernel/kglobalsettings.cpp
+--- kdeui.orig/kernel/kglobalsettings.cpp	2010-06-18 19:51:57.000000000 +0800
++++ kdeui/kernel/kglobalsettings.cpp	2010-06-18 19:57:26.000000000 +0800
+@@ -305,7 +305,7 @@ QColor KGlobalSettings::inactiveTitleCol
+     return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTION));
+ #else
+     KConfigGroup g( KGlobal::config(), "WM" );
+-    return g.readEntry( "inactiveBackground", QColor(224,223,222) );
++    return g.readEntry( "inactiveBackground", QColor(165,193,228) );
+ #endif
+ }
+ 
+@@ -316,7 +316,7 @@ QColor KGlobalSettings::inactiveTextColo
+     return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTIONTEXT));
+ #else
+     KConfigGroup g( KGlobal::config(), "WM" );
+-    return g.readEntry( "inactiveForeground", QColor(75,71,67) );
++    return g.readEntry( "inactiveForeground", QColor(59,52,52) );
+ #endif
+ }
+ 
+@@ -327,7 +327,7 @@ QColor KGlobalSettings::activeTitleColor
+     return qt_colorref2qrgb(GetSysColor(COLOR_ACTIVECAPTION));
+ #else
+     KConfigGroup g( KGlobal::config(), "WM" );
+-    return g.readEntry( "activeBackground", QColor(48,174,232));
++    return g.readEntry( "activeBackground", QColor(0,69,138));
+ #endif
+ }
+ 

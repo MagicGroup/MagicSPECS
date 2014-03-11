@@ -1,0 +1,92 @@
+--- kcontrol/randr/legacyrandrscreen.h	2008/05/14 08:29:01	1.1
++++ kcontrol/randr/legacyrandrscreen.h	2008/05/14 08:31:05
+@@ -29,6 +29,7 @@
+ #include "randr.h"
+ 
+ class KTimerDialog;
++class KProcess;
+ 
+ class LegacyRandRScreen : public QObject
+ {
+@@ -131,6 +132,9 @@
+ 	void load(KConfig& config);
+ 	void save(KConfig& config) const;
+ 
++private slots:
++	void gotAvailablePointers(KProcess*, char *buffer, int len);
++
+ private:
+ 	XRRScreenConfiguration*	m_config;
+ 
+@@ -152,6 +156,8 @@
+ 	int m_proposedSize;
+ 	int m_proposedRefreshRate;
+ 
++	QStringList m_wacomPointers;
++
+ 	KTimerDialog* m_shownDialog;
+ 
+ };
+--- kcontrol/randr/legacyrandrscreen.cpp	2008/05/14 08:29:06	1.1
++++ kcontrol/randr/legacyrandrscreen.cpp	2008/05/14 08:45:10
+@@ -31,6 +31,8 @@
+ #include <kiconloader.h>
+ #include <QtGui/QLabel>
+ #include <QDesktopWidget>
++#include <kprocess.h>
++#include <kstandarddirs.h>
+ 
+ #include <QX11Info>
+ #include "legacyrandrscreen.h"
+@@ -104,12 +106,51 @@
+ 		m_currentSize = m_proposedSize;
+ 		m_currentRotation = m_proposedRotation;
+ 		m_currentRefreshRate = m_proposedRefreshRate;
++
++		// search wacom utility and set orientation for available wacom pointers
++		QString xsetwacom = KStandardDirs::findExe("xsetwacom");
++		if (!xsetwacom.isEmpty()) {
++			m_wacomPointers.clear();
++			KProcess *proc = new KProcess;
++			connect(proc, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(gotAvailablePointers(KProcess *, char *, int)));
++                        *proc << "xsetwacom" << "list";
++			proc->start();
++			for ( QStringList::Iterator it = m_wacomPointers.begin(); it != m_wacomPointers.end(); ++it ) {
++				KProcess *set = new KProcess;
++				*set << "xsetwacom" << "set" << (*it) << "Rotate";
++				switch (m_currentRotation) {
++					case RR_Rotate_90:
++						*set << "CW";
++						break;
++					case RR_Rotate_180:
++						*set << "HALF";
++						break;
++					case RR_Rotate_270:
++						*set << "CCW";
++						break;
++					default:
++						*set << "NONE";
++			        }
++				set->start();
++			}
++		}
++
+ 		return true;
+ 	}
+ 
+ 	return false;
+ }
+ 
++void LegacyRandRScreen::gotAvailablePointers(KProcess*, char *buffer, int len)
++{
++    QString myBuf = QString::fromLatin1(buffer, len);
++    QStringList lines = myBuf.split('\n');
++    for ( QStringList::Iterator it = lines.begin(); it != lines.end(); it++) {
++	QStringList split = (*it).split(' ');
++	m_wacomPointers+=split.first();
++    }
++}
++
+ bool LegacyRandRScreen::applyProposedAndConfirm()
+ {
+ 	if (proposedChanged()) {

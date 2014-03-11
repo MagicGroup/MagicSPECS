@@ -1,0 +1,14 @@
+--- startkde.cmake	2008-06-18 20:41:40.000000000 +0800
++++ startkde.cmake.variable_export	2008-06-19 08:57:01.000000000 +0800
+@@ -2,7 +2,10 @@
+ #
+ #  DEFAULT KDE STARTUP SCRIPT ( @KDE_VERSION_STRING@ )
+ #
+-
++export LD_LIBRARY_PATH=/opt/kde4/lib
++export KDEDIRS=/opt/kde4
++export PATH=/opt/kde4/bin/:$PATH
++export PATH=/usr/lib/qt4/bin/:$PATH
+ if test "x$1" = x--failsafe; then
+     KDE_FAILSAFE=1 # General failsafe flag
+     KWIN_COMPOSE=N # Disable KWin's compositing

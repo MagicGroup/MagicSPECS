@@ -1,0 +1,40 @@
+Fix some unknown symbols.  (This patch was originally for 2.2.11,
+do we still need it?)
+
+
+diff -Naur unixODBC-2.2.14.orig/DriverManager/DriverManager.exp unixODBC-2.2.14/DriverManager/DriverManager.exp
+--- unixODBC-2.2.14.orig/DriverManager/DriverManager.exp	2008-05-22 05:10:54.000000000 -0400
++++ unixODBC-2.2.14/DriverManager/DriverManager.exp	2009-02-15 18:44:46.000000000 -0500
+@@ -153,6 +153,8 @@
+ SQLTablesA
+ SQLTransact
+ ODBCSharedTraceFlag
++dm_log_write
++__post_internal_error
+ uodbc_open_stats
+ uodbc_close_stats
+ uodbc_get_stats
+diff -Naur unixODBC-2.2.14.orig/cur/Makefile.am unixODBC-2.2.14/cur/Makefile.am
+--- unixODBC-2.2.14.orig/cur/Makefile.am	2008-06-17 06:18:39.000000000 -0400
++++ unixODBC-2.2.14/cur/Makefile.am	2009-02-15 18:44:46.000000000 -0500
+@@ -10,7 +10,7 @@
+ libodbccr_la_LDFLAGS = \
+ 	-no-undefined \
+ 	-version-info @LIB_VERSION@ \
+-	-export-symbols @srcdir@/cur.exp -export-dynamic 
++	-export-symbols @srcdir@/cur.exp -export-dynamic ../DriverManager/libodbc.la
+ 
+ libodbccr_la_SOURCES = \
+     SQLAllocHandle.c \
+diff -Naur unixODBC-2.2.14.orig/cur/Makefile.in unixODBC-2.2.14/cur/Makefile.in
+--- unixODBC-2.2.14.orig/cur/Makefile.in	2008-11-19 11:11:15.000000000 -0500
++++ unixODBC-2.2.14/cur/Makefile.in	2009-02-15 18:44:46.000000000 -0500
+@@ -272,7 +272,7 @@
+ libodbccr_la_LDFLAGS = \
+ 	-no-undefined \
+ 	-version-info @LIB_VERSION@ \
+-	-export-symbols @srcdir@/cur.exp -export-dynamic 
++	-export-symbols @srcdir@/cur.exp -export-dynamic ../DriverManager/libodbc.la
+ 
+ libodbccr_la_SOURCES = \
+     SQLAllocHandle.c \

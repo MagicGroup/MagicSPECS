@@ -1,0 +1,14 @@
+diff -Naru a/configure b/configure
+--- a/configure	2012-09-20 19:28:08.756010406 +0530
++++ b/configure	2012-09-20 19:28:29.753010909 +0530
+@@ -5427,10 +5427,6 @@
+     ;;
+   esac
+   ;;
+-*)
+-  # fallback: assume linklib IS sharedlib
+-  lt_cv_sharedlib_from_linklib_cmd="$ECHO"
+-  ;;
+ esac
+ 
+ fi

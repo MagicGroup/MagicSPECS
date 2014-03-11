@@ -1,0 +1,36 @@
+diff -up Imaging-1.1.7/Sane/demo_numarray.py.shebang Imaging-1.1.7/Sane/demo_numarray.py
+--- Imaging-1.1.7/Sane/demo_numarray.py.shebang	2009-11-01 01:44:12.000000000 +0100
++++ Imaging-1.1.7/Sane/demo_numarray.py	2010-05-27 12:43:49.000000000 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ #
+ # Shows how to scan a 16 bit grayscale image into a numarray object
+diff -up Imaging-1.1.7/Sane/demo_pil.py.shebang Imaging-1.1.7/Sane/demo_pil.py
+--- Imaging-1.1.7/Sane/demo_pil.py.shebang	2009-11-01 01:44:12.000000000 +0100
++++ Imaging-1.1.7/Sane/demo_pil.py	2010-05-27 12:43:49.000000000 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ 
+ #
+ # Shows how to scan a color image into a PIL rgb-image
+diff -up Imaging-1.1.7/Scripts/pildriver.py.shebang Imaging-1.1.7/Scripts/pildriver.py
+--- Imaging-1.1.7/Scripts/pildriver.py.shebang	2009-11-01 23:08:46.000000000 +0100
++++ Imaging-1.1.7/Scripts/pildriver.py	2010-05-27 12:43:49.000000000 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ """PILdriver, an image-processing calculator using PIL.
+ 
+ An instance of class PILDriver is essentially a software stack machine
+diff -up Imaging-1.1.7/setup.py.shebang Imaging-1.1.7/setup.py
+--- Imaging-1.1.7/setup.py.shebang	2010-05-27 12:43:49.000000000 +0200
++++ Imaging-1.1.7/setup.py	2010-05-27 12:44:27.000000000 +0200
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python
+ #
+ # Setup script for PIL 1.1.5 and later
+ #

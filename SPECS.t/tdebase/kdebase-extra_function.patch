@@ -1,0 +1,230 @@
+diff -ur tdebase-git20111213.orig/kcontrol/input/kmousedlg.ui tdebase-git20111213/kcontrol/input/kmousedlg.ui
+--- tdebase-git20111213.orig/kcontrol/input/kmousedlg.ui	2011-12-14 07:09:53.000000000 -0500
++++ tdebase-git20111213/kcontrol/input/kmousedlg.ui	2011-12-14 07:58:13.000000000 -0500
+@@ -1,4 +1,4 @@
+-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
++<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+ <class>KMouseDlg</class>
+ <widget class="TQWidget">
+     <property name="name">
+@@ -8,15 +8,18 @@
+         <rect>
+             <x>0</x>
+             <y>0</y>
+-            <width>568</width>
++            <width>566</width>
+             <height>434</height>
+         </rect>
+     </property>
+-    <vbox>
++    <property name="caption">
++        <string>KMouseDlg</string>
++    </property>
++    <grid>
+         <property name="name">
+             <cstring>unnamed</cstring>
+         </property>
+-        <widget class="TQButtonGroup">
++        <widget class="TQButtonGroup" row="0" column="0" rowspan="1" colspan="2">
+             <property name="name">
+                 <cstring>handedBox</cstring>
+             </property>
+@@ -124,7 +127,7 @@
+                 </widget>
+             </grid>
+         </widget>
+-        <widget class="TQCheckBox">
++        <widget class="TQCheckBox" row="1" column="0" rowspan="1" colspan="2">
+             <property name="name">
+                 <cstring>cbScrollPolarity</cstring>
+             </property>
+@@ -135,7 +138,7 @@
+                 <string>Change the direction of scrolling for the mouse wheel or the 4th and 5th mouse buttons.</string>
+             </property>
+         </widget>
+-        <widget class="TQGroupBox">
++        <widget class="TQGroupBox" row="2" column="0" rowspan="1" colspan="2">
+             <property name="name">
+                 <cstring>GroupBox1</cstring>
+             </property>
+@@ -321,7 +324,35 @@
+                 </widget>
+             </grid>
+         </widget>
+-        <spacer>
++        <spacer row="3" column="0">
++            <property name="name">
++                <cstring>spacer7</cstring>
++            </property>
++            <property name="orientation">
++                <enum>Horizontal</enum>
++            </property>
++            <property name="sizeType">
++                <enum>Expanding</enum>
++           </property>
++            <property name="sizeHint">
++                <size>
++                    <width>360</width>
++                    <height>30</height>
++                </size>
++            </property>
++        </spacer>
++        <widget class="TQPushButton" row="3" column="1">
++            <property name="name">
++                <cstring>setupBt</cstring>
++            </property>
++            <property name="text">
++                <string>&amp;Advanced Setup</string>
++            </property>
++            <property name="accel">
++                <string>Alt+A</string>
++            </property>
++        </widget>
++        <spacer row="4" column="1">
+             <property name="name">
+                 <cstring>Spacer7</cstring>
+             </property>
+@@ -338,7 +369,7 @@
+                 </size>
+             </property>
+         </spacer>
+-    </vbox>
++    </grid>
+ </widget>
+ <connections>
+     <connection>
+@@ -359,6 +390,12 @@
+         <receiver>slAutoSelect</receiver>
+         <slot>setEnabled(bool)</slot>
+     </connection>
++    <connection>
++        <sender>setupBt</sender>
++        <signal>clicked()</signal>
++        <receiver>KMouseDlg</receiver>
++        <slot>setupBt_Clicked()</slot>
++    </connection>
+ </connections>
+ <tabstops>
+     <tabstop>rightHanded</tabstop>
+@@ -373,6 +410,9 @@
+ <includes>
+     <include location="global" impldecl="in implementation">kdialog.h</include>
+ </includes>
++<slots>
++    <slot>setupBt_Clicked()</slot>
++</slots>
+ <layoutdefaults spacing="6" margin="11"/>
+ <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+ </UI>
+diff -ur tdebase-git20111213.orig/kcontrol/input/mouse.cpp tdebase-git20111213/kcontrol/input/mouse.cpp
+--- tdebase-git20111213.orig/kcontrol/input/mouse.cpp	2011-12-14 07:09:53.000000000 -0500
++++ tdebase-git20111213/kcontrol/input/mouse.cpp	2011-12-14 07:55:12.000000000 -0500
+@@ -62,6 +62,7 @@
+ #include <kstandarddirs.h>
+ #include <kdebug.h>
+ #include <kaboutdata.h>
++#include <kprocess.h>
+ 
+ #include <config.h>
+ 
+@@ -173,6 +174,10 @@
+     connect(tab1->cbScrollPolarity, TQT_SIGNAL(clicked()), this, TQT_SLOT(changed()));
+     connect(tab1->cbScrollPolarity, TQT_SIGNAL(clicked()), this, TQT_SLOT(slotScrollPolarityChanged()));
+ 
++    // setupBt
++    tab1->setupBt-> setCaption(i18n("&Advanced Setup"));
++    connect(tab1->setupBt, TQT_SIGNAL(clicked()), this, TQT_SLOT(setupBt_Clicked()));
++
+     // Cursor theme tab
+     themetab = new ThemePage(this);
+     connect(themetab, TQT_SIGNAL(changed(bool)), TQT_SLOT(changed()));
+@@ -835,4 +840,13 @@
+   settings->m_handedNeedsApply = true;
+ }
+ 
++
++void MouseConfig::setupBt_Clicked()
++{
++   KProcess *proc = new KProcess;
++
++   *proc << "system-config-mouse";
++    proc->start();
++}
++
+ #include "mouse.moc"
+diff -ur tdebase-git20111213.orig/kcontrol/input/mouse.h tdebase-git20111213/kcontrol/input/mouse.h
+--- tdebase-git20111213.orig/kcontrol/input/mouse.h	2011-12-14 07:09:53.000000000 -0500
++++ tdebase-git20111213/kcontrol/input/mouse.h	2011-12-14 07:55:12.000000000 -0500
+@@ -111,6 +111,7 @@
+   void slotThreshChanged(int value);
+   void slotDragStartDistChanged(int value);
+   void slotWheelScrollLinesChanged(int value);
++  void setupBt_Clicked();
+ 
+ private:
+ 
+diff -ur tdebase-git20111213.orig/kcontrol/randr/krandrmodule.cpp tdebase-git20111213/kcontrol/randr/krandrmodule.cpp
+--- tdebase-git20111213.orig/kcontrol/randr/krandrmodule.cpp	2011-12-14 07:09:53.000000000 -0500
++++ tdebase-git20111213/kcontrol/randr/krandrmodule.cpp	2011-12-14 07:55:12.000000000 -0500
+@@ -35,6 +35,7 @@
+ #include <kgenericfactory.h>
+ #include <kglobal.h>
+ #include <klocale.h>
++#include <kprocess.h>
+ 
+ #include "krandrmodule.h"
+ #include "krandrmodule.moc"
+@@ -138,6 +139,15 @@
+ 	TQWhatsThis::add(m_syncTrayApp, i18n("If this option is enabled, options set by the system tray applet will be saved and loaded when KDE starts instead of being temporary."));
+ 	connect(m_syncTrayApp, TQT_SIGNAL(clicked()), TQT_SLOT(setChanged()));
+ 
++        topLayout->addStretch(2);
++        TQHBox* setupBox = new TQHBox(this);
++        topLayout->addWidget(setupBox);
++        setupBox->layout()->addItem(new TQSpacerItem(100, 1, TQSizePolicy::Expanding));
++        m_setupBt = new TQPushButton( i18n("Advanced &Setup"), setupBox );
++        m_setupBt->setMinimumHeight(50) ;
++        TQWhatsThis::add(m_setupBt, i18n("Configure videocard and display."));
++        connect(m_setupBt, TQT_SIGNAL(clicked()), TQT_SLOT(setupBt_Clicked()));
++
+ 	topLayout->addStretch(1);
+ 
+ 	// just set the "apply settings on startup" box
+@@ -363,3 +373,10 @@
+ 	m_refreshRates->blockSignals(false);
+ }
+ 
++
++void KRandRModule::setupBt_Clicked()
++{
++   KProcess *proc = new KProcess;
++   *proc << "system-config-display";
++   proc->start();
++}
+diff -ur tdebase-git20111213.orig/kcontrol/randr/krandrmodule.h tdebase-git20111213/kcontrol/randr/krandrmodule.h
+--- tdebase-git20111213.orig/kcontrol/randr/krandrmodule.h	2011-12-14 07:09:53.000000000 -0500
++++ tdebase-git20111213/kcontrol/randr/krandrmodule.h	2011-12-14 07:55:12.000000000 -0500
+@@ -20,6 +20,7 @@
+ #define KRANDRMODULE_H
+ 
+ #include <libkrandr/libkrandr.h>
++#include <qpushbutton.h>
+ 
+ class TQButtonGroup;
+ class KComboBox;
+@@ -45,6 +46,7 @@
+ 	void slotSizeChanged(int index);
+ 	void slotRefreshChanged(int index);
+ 	void setChanged();
++	void setupBt_Clicked();
+ 
+ protected:
+ 	void apply();
+@@ -59,6 +61,7 @@
+ 	KComboBox*		m_refreshRates;
+ 	TQCheckBox*		m_applyOnStartup;
+ 	TQCheckBox*		m_syncTrayApp;
++	TQPushButton*            m_setupBt;
+ 	bool			m_oldApply;
+ 	bool			m_oldSyncTrayApp;
+ 

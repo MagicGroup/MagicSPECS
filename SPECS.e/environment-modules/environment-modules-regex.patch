@@ -1,0 +1,34 @@
+diff -ur modules-3.2.9.orig/cmdXResource.c modules-3.2.9/cmdXResource.c
+--- modules-3.2.9.orig/cmdXResource.c	2010-11-11 19:23:18.000000000 +0100
++++ modules-3.2.9/cmdXResource.c	2012-08-24 13:49:48.717499074 +0200
+@@ -446,7 +446,6 @@
+      **  is a constant regexp!
+      **/
+ 
+-    if( !res_exp)
+ 	res_exp  = Tcl_RegExpCompile(interp,
+ 		 "^[ \t]*([^ \t]*)[ \t]*:[ \t]*(.*)[ \t]*$");
+ 
+diff -ur modules-3.2.9.orig/utility.c modules-3.2.9/utility.c
+--- modules-3.2.9.orig/utility.c	2011-11-28 22:27:13.000000000 +0100
++++ modules-3.2.9/utility.c	2012-08-24 13:50:13.455735765 +0200
+@@ -3061,16 +3061,13 @@
+ 	tstr = (const char *) TCL_RESULT(interp);
+ 
+ 	/* compile regular expression the first time through */
+-	if (!exit__expPtr)
+-		exit__expPtr = Tcl_RegExpCompile(interp, "^EXIT ([0-9]*)");
++    exit__expPtr = Tcl_RegExpCompile(interp, "^EXIT ([0-9]*)");
+ 
+ 	/*  result = "invoked \"break\" outside of a loop" */
+-	if (!break_expPtr)
+-		break_expPtr = Tcl_RegExpCompile(interp, ".*\"break\".*");
++	break_expPtr = Tcl_RegExpCompile(interp, ".*\"break\".*");
+ 
+ 	/*  result = "invoked \"continue\" outside of a loop" */
+-	if (!continue_expPtr)
+-		continue_expPtr = Tcl_RegExpCompile(interp, ".*\"continue\".*");
++	continue_expPtr = Tcl_RegExpCompile(interp, ".*\"continue\".*");
+ 
+ 	/* intercept any "EXIT N" first */
+ 	if(tstr && *tstr && 0 < Tcl_RegExpExec(interp, exit__expPtr,

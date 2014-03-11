@@ -1,0 +1,12 @@
+--- kdebase-3.5.2/klipper/klipper-trinity1.sh.me	2006-05-24 15:36:19.000000000 +0200
++++ kdebase-3.5.2/klipper/klipper-trinity1.sh	2006-05-24 15:36:29.000000000 +0200
+@@ -2,7 +2,5 @@
+ filename=`tde-config --localprefix`share/autostart/klipper.desktop
+ if grep 'Hidden=true' "$filename" > /dev/null 2> /dev/null; then
+   echo AutoStart=false
+-else
+-  echo AutoStart=true
+ fi
+-rm -f "$filename"
+\ No newline at end of file
++rm -f "$filename"

@@ -1,0 +1,13 @@
+[Unit]
+Description=Software RAID Monitor Takeover
+Before=sysinit.target shutdown.target
+Conflicts=shutdown.target
+DefaultDependencies=no
+
+[Service]
+Type=forking
+RemainAfterExit=yes
+ExecStart=/sbin/mdmon --takeover --all
+
+[Install]
+WantedBy=sysinit.target

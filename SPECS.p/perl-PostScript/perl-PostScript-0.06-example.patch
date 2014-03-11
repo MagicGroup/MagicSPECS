@@ -1,0 +1,8 @@
+--- example.pl.orig	2007-03-29 05:47:07.000000000 -0700
++++ example.pl	2007-03-29 05:49:28.000000000 -0700
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/perl -w
++#!/usr/bin/perl -w
+ 
+ use strict;
+ use PostScript::TextBlock;

@@ -1,0 +1,52 @@
+--- BitStormLite-0.2a/src/NewTaskWindow.h.autoencoding	2005-12-09 15:35:43.000000000 +0000
++++ BitStormLite-0.2a/src/NewTaskWindow.h	2005-12-10 16:24:14.000000000 +0000
+@@ -30,6 +30,7 @@
+ 	std::string getUserInputDestPath(const char* fileName);
+ 	void updateSelectedSize();
+ 	void updateEncoding();
++	int get_gtk_combo_box_index();
+ 	
+ 	static void toggle_event(GtkCellRendererToggle*cell_renderer, gchar *path, gpointer user_data);
+ 	static void select_dir_event(GtkWidget* widget, gpointer data);
+--- BitStormLite-0.2a/src/NewTaskWindow.cpp.autoencoding	2005-12-09 15:54:56.000000000 +0000
++++ BitStormLite-0.2a/src/NewTaskWindow.cpp	2005-12-11 03:49:24.000000000 +0000
+@@ -18,6 +18,8 @@
+ 	NULL
+ };
+ 
++const int NUM_ENCODINGS=4;
++
+ enum
+ {
+ 	ID_COLUMN,
+@@ -154,7 +156,7 @@
+ 		gtk_combo_box_insert_text(GTK_COMBO_BOX(_encodingComboBox), 0, encodings[i]);		
+ 		i++;
+ 	}
+-	gtk_combo_box_set_active (GTK_COMBO_BOX(_encodingComboBox), 0);
++	gtk_combo_box_set_active (GTK_COMBO_BOX(_encodingComboBox), get_gtk_combo_box_index());/*set GTK_COMBO_BOX's index as locale*/
+ 	
+ 	g_signal_connect(G_OBJECT(_encodingComboBox), "changed", G_CALLBACK(encoding_changed), this);
+ 			
+@@ -347,3 +349,21 @@
+ 	}		
+ }
+ 
++int CNewTaskWindow::get_gtk_combo_box_index()
++{
++	char *env;
++	env=getenv("LANG");
++	if (env!=NULL){
++		env=strchr(env,46);/*search '.' in LANG*/
++		if (env!=NULL){
++			env=env+1;
++			int i = 0;
++			while(encodings[i] != NULL){
++				if (strcmp(env,encodings[i])==0)
++					return NUM_ENCODINGS-i;
++				i++;
++			}
++		}
++	}
++	return 0;
++}

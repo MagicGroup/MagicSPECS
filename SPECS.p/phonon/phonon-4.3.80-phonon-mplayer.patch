@@ -1,0 +1,11 @@
+diff -Nuarp phonon-4.3.80/CMakeLists.txt phonon-4.3.80.phonon-mplayer/CMakeLists.txt
+--- phonon-4.3.80/CMakeLists.txt	2010-01-03 10:50:25.000000000 +0800
++++ phonon-4.3.80.phonon-mplayer/CMakeLists.txt	2010-01-03 10:57:36.000000000 +0800
+@@ -268,6 +268,7 @@ if (Q_WS_X11)
+    add_subdirectory(gstreamer)
+    add_subdirectory(xine)
+ endif (Q_WS_X11)
++add_subdirectory(mplayer)
+ 
+ if(NOT WIN32) # pkgconfig file
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/phonon.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/phonon.pc @ONLY)

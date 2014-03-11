@@ -1,0 +1,23 @@
+--- src/mediawidget.cpp.orig	2009-08-24 15:20:26.000000000 +0800
++++ src/mediawidget.cpp	2009-08-24 15:21:52.000000000 +0800
+@@ -899,14 +899,14 @@
+ 	QString caption;
+ 
+ 	if (playing) {
+-		// FIXME include artist?
+-		QStringList strings = mediaObject->metaData(Phonon::TitleMetaData);
++		// FIXME include artist?// disable extract metedata from phonon ATM --- nihui
++		//QStringList strings = mediaObject->metaData(Phonon::TitleMetaData);
+ 
+-		if (!strings.isEmpty() && !strings.at(0).isEmpty()) {
+-			caption = strings.at(0);
+-		} else {
++		//if (!strings.isEmpty() && !strings.at(0).isEmpty()) {
++		//	caption = strings.at(0);
++		//} else {
+ 			caption = KUrl(mediaObject->currentSource().url()).fileName();
+-		}
++		//}
+ 	}
+ 
+ 	if (!caption.isEmpty()) {

@@ -1,0 +1,81 @@
+From e1619ee151b20549dc5c6112a5715df58db7b108 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 6 Jul 2012 14:06:05 +0200
+Subject: [PATCH] fixed bash/sh requirements
+
+---
+ modules.d/90btrfs/btrfs_finished.sh     |    2 +-
+ modules.d/90btrfs/btrfs_timeout.sh      |    2 +-
+ modules.d/90livenet/fetch-liveupdate.sh |    2 +-
+ modules.d/90livenet/livenetroot.sh      |    2 +-
+ modules.d/90livenet/module-setup.sh     |    2 +-
+ modules.d/99img-lib/module-setup.sh     |    3 +--
+ 6 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/modules.d/90btrfs/btrfs_finished.sh b/modules.d/90btrfs/btrfs_finished.sh
+index 7e87dec..5e7691a 100755
+--- a/modules.d/90btrfs/btrfs_finished.sh
++++ b/modules.d/90btrfs/btrfs_finished.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ # -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+diff --git a/modules.d/90btrfs/btrfs_timeout.sh b/modules.d/90btrfs/btrfs_timeout.sh
+index 84f7997..cd64443 100755
+--- a/modules.d/90btrfs/btrfs_timeout.sh
++++ b/modules.d/90btrfs/btrfs_timeout.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ # -*- mode: shell-script; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+diff --git a/modules.d/90livenet/fetch-liveupdate.sh b/modules.d/90livenet/fetch-liveupdate.sh
+index 88aa2b1..024feaa 100755
+--- a/modules.d/90livenet/fetch-liveupdate.sh
++++ b/modules.d/90livenet/fetch-liveupdate.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # fetch-liveupdate - fetch an update image for dmsquash-live media.
+ # this gets called by the "initqueue/online" hook for each network interface
+ # that comes online.
+diff --git a/modules.d/90livenet/livenetroot.sh b/modules.d/90livenet/livenetroot.sh
+index 617be62..1bbee55 100755
+--- a/modules.d/90livenet/livenetroot.sh
++++ b/modules.d/90livenet/livenetroot.sh
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ # livenetroot - fetch a live image from the network and run it
+ 
+ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
+diff --git a/modules.d/90livenet/module-setup.sh b/modules.d/90livenet/module-setup.sh
+index 265f29e..4249655 100755
+--- a/modules.d/90livenet/module-setup.sh
++++ b/modules.d/90livenet/module-setup.sh
+@@ -6,7 +6,7 @@ check() {
+ }
+ 
+ depends() {
+-    echo network url-lib dmsquash-live
++    echo network url-lib dmsquash-live img-lib
+     return 0
+ }
+ 
+diff --git a/modules.d/99img-lib/module-setup.sh b/modules.d/99img-lib/module-setup.sh
+index 9ff5d7c..ebd0436 100755
+--- a/modules.d/99img-lib/module-setup.sh
++++ b/modules.d/99img-lib/module-setup.sh
+@@ -13,8 +13,7 @@ depends() {
+ }
+ 
+ install() {
+-    # NOTE/TODO: we require bash, but I don't know how to specify that..
+-    dracut_install tar gzip dd
++    dracut_install tar gzip dd bash
+     # TODO: make this conditional on a cmdline flag / config option
+     dracut_install -o cpio xz bzip2
+     inst_simple "$moddir/img-lib.sh" "/lib/img-lib.sh"

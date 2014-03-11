@@ -1,0 +1,64 @@
+diff -up scim-tables-0.5.7/src/scim_table_imengine.h.4-bz232860 scim-tables-0.5.7/src/scim_table_imengine.h
+--- scim-tables-0.5.7/src/scim_table_imengine.h.4-bz232860	2005-10-26 17:53:53.000000000 +1000
++++ scim-tables-0.5.7/src/scim_table_imengine.h	2008-03-14 23:59:47.000000000 +1000
+@@ -140,6 +140,10 @@ class TableInstance : public IMEngineIns
+ 
+     WideString              m_last_committed;
+ 
++    bool                    m_last_auto_select;
++    uint32                  m_last_auto_select_offset;
++    WideString                  m_last_auto_select_string;
++
+ public:
+     TableInstance (TableFactory *factory,
+                          const String& encoding,
+diff -up scim-tables-0.5.7/src/scim_table_imengine.cpp.4-bz232860 scim-tables-0.5.7/src/scim_table_imengine.cpp
+--- scim-tables-0.5.7/src/scim_table_imengine.cpp.4-bz232860	2008-03-14 23:59:47.000000000 +1000
++++ scim-tables-0.5.7/src/scim_table_imengine.cpp	2008-03-15 00:05:09.000000000 +1000
+@@ -1452,7 +1452,7 @@ TableInstance::post_process (char key)
+ bool
+ TableInstance::delete_phrase ()
+ {
+-    if (m_lookup_table.number_of_candidates ()) {
++    if (m_lookup_table.number_of_candidates () && m_last_auto_select == false) {
+         int pos       = m_lookup_table.get_cursor_pos ();
+         uint32 offset = m_lookup_table_indexes [pos];
+ 
+@@ -1461,6 +1461,26 @@ TableInstance::delete_phrase ()
+             refresh_lookup_table ();
+         }
+         return true;
++    } else if (m_last_auto_select == true) {
++        if (m_factory->m_table.delete_phrase (m_last_auto_select_offset)) {
++            AttributeList attributes;
++            WideString prompt;
++            
++            prompt = utf8_mbstowcs (_("Custom phrase removed: ")) + m_last_auto_select_string;
++            attributes.push_back (Attribute (0, prompt.length (), SCIM_ATTR_FOREGROUND, SCIM_RGB_COLOR(255, 32, 32)));
++
++            m_last_auto_select = false;
++            m_last_auto_select_offset = 0;
++            m_last_auto_select_string = WideString();
++
++            if (prompt.length ()) {
++                update_aux_string (prompt, attributes);
++                show_aux_string ();
++            } else {
++                hide_aux_string ();
++            }
++        }
++        return true;
+     }
+     return false;
+ }
+@@ -1474,6 +1494,10 @@ TableInstance::lookup_to_converted (int 
+     uint32 offset  = m_lookup_table_indexes [index];
+     WideString str = m_factory->m_table.get_phrase (offset);
+ 
++    m_last_auto_select = true;
++    m_last_auto_select_offset = offset;
++    m_last_auto_select_string = str;
++
+     m_converted_strings.push_back (str);
+     m_converted_indexes.push_back (offset);
+ 

@@ -1,0 +1,33 @@
+--- sgpio/Makefile.orig	2008-10-29 09:55:50.000000000 +0100
++++ sgpio/Makefile	2008-10-29 09:59:00.000000000 +0100
+@@ -23,12 +23,15 @@
+ 
+ 
+ MANDIR ?= /usr/local/man
++SBIN_DIR = /sbin
++INSTALL =/usr/bin/install -c
+ ALL = sgpio
++CFLAGS = -g -Wall
+ 
+ all: $(ALL)
+ 
+ sgpio.o: sgpio.c
+-	gcc -g -Wall -c sgpio.c
++	gcc $(CFLAGS) -c sgpio.c
+ 
+ sgpio: sgpio.o
+ 	gcc -g sgpio.o -o sgpio
+@@ -38,10 +41,10 @@ clean:
+ 
+ install: $(ALL)
+ 	for i in $(ALL); do \
+-		install $$i /sbin/$$i; \
++	    $(INSTALL) -D $$i $(SBIN_DIR)/$$i; \
+ 	done
+-	install -d $(MANDIR)/man1
+-	install -m 0644 *.1 $(MANDIR)/man1
++	$(INSTALL) -d $(MANDIR)/man1
++	$(INSTALL) -m 0644 *.1 $(MANDIR)/man1
+ 
+ uninstall:
+ 	for i in $(ALL); do \

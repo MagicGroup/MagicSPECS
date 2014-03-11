@@ -1,0 +1,70 @@
+The license file include with the Chromium BSU 0.9.14 sources tarbal, is
+the original Artistic license, which is not acceptable for Fedora. I've
+requested upstream to relicense Chromium under the clarified artistic license
+and they have agreed, see below for the permission notice.
+
+They have already updated the license text in their source repository (git)
+and the clarified artistic text will be the standard license for the next
+release.
+
+Delft, 17 may 2009,
+
+Hans de Goede
+
+
+Subject:
+Re: chromium license
+From:
+"Mark B. Allan" <mallanmba@yahoo.com>
+Date:
+Mon, 27 Apr 2009 21:10:11 -0700 (PDT)
+To:
+Hans de Goede <hdegoede@redhat.com>, Paul Wise <pabs3@bonedaddy.net>
+
+Hi Hans - 
+
+I am willing to relicense Chromium BSU to the Artistic Clarified license. Is there anything that needs to be done apart from changing the verbage in the COPYING file?
+
+Cheers
+-Mark
+
+
+--- On Mon, 4/27/09, Paul Wise <pabs3@bonedaddy.net> wrote:
+
+> > From: Paul Wise <pabs3@bonedaddy.net>
+> > Subject: Re: chromium license
+> > To: "Hans de Goede" <hdegoede@redhat.com>
+> > Cc: "Mark B. Allan" <mallanmba@yahoo.com>
+> > Date: Monday, April 27, 2009, 7:27 AM
+> > On Mon, 2009-04-27 at 16:07 +0200, Hans de Goede wrote:
+> > 
+>> > > I would very much like to package chromium for Fedora,
+> > but there is one
+>> > > small problem remaining, the main license for chromium
+> > as included in
+>> > > the tarbal is the *original* artistic license,
+> > unfortunately that has been
+>> > > deemed as a bad (troublesome) license by Fedora's
+> > legal counsil
+>> > > (lawyers != fun). So I wonder if you would be willing
+> > to replace the
+>> > > license with the clarified version of the artistic
+> > license (relicense
+>> > > is a big word here, if you do a side by side
+> > comparison the differences
+>> > > are very minimal).
+>> > > 
+>> > > You can find the clarified version of the artistic
+> > license here:
+>> > >
+> > https://fedoraproject.org/wiki/Licensing/ArtisticClarified
+> > 
+> > I'd be happy to re-license the parts of the code I
+> > wrote to pretty-much
+> > any license, especially if that were the GNU GPLv3.
+> > 
+> > -- 
+> > bye,
+> > pabs
+> > 
+> > http://bonedaddy.net/pabs3/

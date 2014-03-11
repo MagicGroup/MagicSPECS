@@ -1,0 +1,58 @@
+diff -ur clementine-0.3/CMakeLists.txt clementine-0.3.orig/CMakeLists.txt
+--- clementine-0.3/CMakeLists.txt	2010-06-10 12:42:44.000000000 +0800
++++ clementine-0.3.orig/CMakeLists.txt	2010-06-02 17:50:40.000000000 +0800
+@@ -105,7 +105,12 @@
+ find_program(GETTEXT_XGETTEXT_EXECUTABLE xgettext)
+ 
+ # Subdirectories
++add_subdirectory(3rdparty/qtsingleapplication)
+ add_subdirectory(src)
++if (NOT APPLE)
++  add_subdirectory(3rdparty/qxt)
++endif (NOT APPLE)
++add_subdirectory(3rdparty/universalchardet)
+ add_subdirectory(tests)
+ add_subdirectory(dist)
+ 
+diff -ur clementine-0.3/src/CMakeLists.txt clementine-0.3.orig/src/CMakeLists.txt
+--- clementine-0.3/src/CMakeLists.txt	2010-06-10 13:26:59.000000000 +0800
++++ clementine-0.3.orig/src/CMakeLists.txt	2010-06-02 17:50:40.000000000 +0800
+@@ -349,21 +349,19 @@
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+-include_directories("/usr/lib/qt4/include/QtSolutions/")
+-include_directories("/usr/lib/qt4/include/QxtGui/")
+-include_directories("/usr/lib/qt4/include/QxtCore/")
+-
++include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/qtsingleapplication")
++include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/qxt")
++include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/gmock/gtest/include")
+ 
+ set(EXECUTABLE_OUTPUT_PATH ..)
+-add_library(clementine_lib STATIC
++add_library(clementine_lib
+    ${CLEMENTINE-SOURCES}
+    ${CLEMENTINE-SOURCES-MOC}
+    ${CLEMENTINE-SOURCES-UI}
+    ${CLEMENTINE-SOURCES-RESOURCE}
+ )
+ target_link_libraries(clementine_lib
+-    QtSolutions_SingleApplication-2.6
+-    QxtCore QxtGui
++    qtsingleapplication
+     lastfm
+     ${GOBJECT_LIBRARIES}
+     ${GLIB_LIBRARIES}
+@@ -382,9 +380,9 @@
+   include_directories(${GROWL}/Headers)
+   include_directories(${SPARKLE}/Headers)
+ else (APPLE)
+-  target_link_libraries(clementine_lib)
++  target_link_libraries(clementine_lib qxt)
+ endif (APPLE)
+-add_dependencies(clementine_lib QtSolutions_SingleApplication-2.6 QxtCore QxtGui)
++add_dependencies(clementine_lib qtsingleapplication)
+ 
+ # Link against the qsqlite plugin on windows
+ if(WIN32 OR APPLE)

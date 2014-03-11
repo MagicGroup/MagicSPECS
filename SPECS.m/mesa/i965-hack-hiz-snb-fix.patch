@@ -1,0 +1,63 @@
+diff -up Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.c.marcheu Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.c
+--- Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.c.marcheu	2013-02-20 10:26:22.000000000 +1000
++++ Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.c	2013-03-19 10:44:12.761921622 +1000
+@@ -329,6 +329,7 @@ brwCreateContext(int api,
+ 	 brw->urb.max_gs_entries = 256;
+       }
+       brw->urb.gen6_gs_previously_active = false;
++      brw->urb.prims_since_last_flush = 0;
+    } else if (intel->gen == 5) {
+       brw->urb.size = 1024;
+       brw->max_vs_threads = 72;
+diff -up Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.h.marcheu Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.h
+--- Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.h.marcheu	2013-02-23 11:45:52.000000000 +1000
++++ Mesa-9.1/src/mesa/drivers/dri/i965/brw_context.h	2013-03-19 10:44:12.762921630 +1000
+@@ -864,6 +864,7 @@ struct brw_context
+        * URB space for the GS.
+        */
+       bool gen6_gs_previously_active;
++      int prims_since_last_flush;
+    } urb;
+ 
+    
+diff -up Mesa-9.1/src/mesa/drivers/dri/i965/brw_draw.c.marcheu Mesa-9.1/src/mesa/drivers/dri/i965/brw_draw.c
+--- Mesa-9.1/src/mesa/drivers/dri/i965/brw_draw.c.marcheu	2013-02-20 10:26:22.000000000 +1000
++++ Mesa-9.1/src/mesa/drivers/dri/i965/brw_draw.c	2013-03-19 10:44:12.763921639 +1000
+@@ -294,10 +294,14 @@ static void brw_merge_inputs( struct brw
+  * Resolve the depth buffer's HiZ buffer and resolve the depth buffer of each
+  * enabled depth texture.
+  *
++ * We don't resolve the depth buffer's HiZ if no primitives have been drawn
++ * since the last flush. This avoids a case where we lockup the GPU on boot
++ * when this is the first thing we do.
++ *
+  * (In the future, this will also perform MSAA resolves).
+  */
+ static void
+-brw_predraw_resolve_buffers(struct brw_context *brw)
++brw_predraw_resolve_buffers(struct brw_context *brw, int nr_prims)
+ {
+    struct gl_context *ctx = &brw->intel.ctx;
+    struct intel_context *intel = &brw->intel;
+@@ -306,9 +310,11 @@ brw_predraw_resolve_buffers(struct brw_c
+ 
+    /* Resolve the depth buffer's HiZ buffer. */
+    depth_irb = intel_get_renderbuffer(ctx->DrawBuffer, BUFFER_DEPTH);
+-   if (depth_irb)
++   if (depth_irb && brw->urb.prims_since_last_flush > 0 )
+       intel_renderbuffer_resolve_hiz(intel, depth_irb);
+ 
++   brw->urb.prims_since_last_flush = nr_prims;
++
+    /* Resolve depth buffer of each enabled depth texture. */
+    for (int i = 0; i < BRW_MAX_TEX_UNIT; i++) {
+       if (!ctx->Texture.Unit[i]._ReallyEnabled)
+@@ -445,7 +451,7 @@ static bool brw_try_draw_prims( struct g
+     * and finalizing textures but before setting up any hardware state for
+     * this draw call.
+     */
+-   brw_predraw_resolve_buffers(brw);
++   brw_predraw_resolve_buffers(brw, nr_prims);
+ 
+    /* Bind all inputs, derive varying and size information:
+     */

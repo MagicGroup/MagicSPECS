@@ -1,0 +1,22 @@
+diff -pruN uim-1.5.7.orig/emacs/uim.el uim-1.5.7/emacs/uim.el
+--- uim-1.5.7.orig/emacs/uim.el	2009-11-22 20:43:02.000000000 +0900
++++ uim-1.5.7/emacs/uim.el	2010-03-15 19:36:35.000000000 +0900
+@@ -552,11 +552,13 @@
+ (defun uim-update-imlist (imlist)
+   (setq uim-im-alist 
+ 	(mapcar '(lambda (x) 
+-		   (let ((im (nth 0 x))
+-			 (lang-uim (nth 2 x)))
+-		     (cons im
+-			   (or (assoc lang-uim uim-lang-code-alist)
+-			       (assoc "Other" uim-lang-code-alist)))))
++		   (let* ((im (nth 0 x))
++			  (lang-uim (nth 2 x))
++			  (entry (or (assoc lang-uim uim-lang-code-alist)
++				     (assoc "Other" uim-lang-code-alist))))
++		     (cons im (if (string-match ".*utf8" im)
++				  (list (car entry) (cadr entry) 'utf-8 "UTF-8")
++				entry))))
+ 		imlist))
+   )
+ 

@@ -1,0 +1,40 @@
+diff -u -r kdewebdev-3.5.5.orig/klinkstatus/src/ui/tablelinkstatus.cpp kdewebdev-3.5.5/klinkstatus/src/ui/tablelinkstatus.cpp
+--- kdewebdev-3.5.5.orig/klinkstatus/src/ui/tablelinkstatus.cpp	2006-10-22 07:12:38.000000000 -0400
++++ kdewebdev-3.5.5/klinkstatus/src/ui/tablelinkstatus.cpp	2006-10-22 07:15:02.000000000 -0400
+@@ -736,7 +736,7 @@
+ {
+     TQString label(linkStatus()->label());
+     if(!label.isNull())
+-        TQTableItem::setText(label.simplifyWhiteSpace());
++        TQTableItem::setText(TQString::fromLocal8Bit(label.simplifyWhiteSpace()));
+ }
+ 
+ void TableItemNome::setPixmap()
+diff -u -r kdewebdev-3.5.5.orig/klinkstatus/src/ui/tabwidgetsession.cpp kdewebdev-3.5.5/klinkstatus/src/ui/tabwidgetsession.cpp
+--- kdewebdev-3.5.5.orig/klinkstatus/src/ui/tabwidgetsession.cpp	2006-10-22 07:12:38.000000000 -0400
++++ kdewebdev-3.5.5/klinkstatus/src/ui/tabwidgetsession.cpp	2006-10-22 07:19:30.000000000 -0400
+@@ -186,7 +186,7 @@
+         label = KStringHandler::lsqueeze(label, 30);        
+     }
+     
+-    changeTab(page, KCharsets::resolveEntities(label));
++    changeTab(page, KCharsets::resolveEntities(TQString::fromLocal8Bit(label)));
+     setTabIconSet(page, TQIconSet(KMimeType::pixmapForURL(url)));
+ }
+ 
+diff -u -r kdewebdev-3.5.5.orig/klinkstatus/src/ui/treeview.cpp kdewebdev-3.5.5/klinkstatus/src/ui/treeview.cpp
+--- kdewebdev-3.5.5.orig/klinkstatus/src/ui/treeview.cpp	2006-10-22 07:12:38.000000000 -0400
++++ kdewebdev-3.5.5/klinkstatus/src/ui/treeview.cpp	2006-10-22 07:27:29.000000000 -0400
+@@ -565,7 +565,11 @@
+     {
+         TQString label(linkStatus()->label());
+         if(!label.isNull())
+-            return label.simplifyWhiteSpace();
++	// patched by KanKer
++               if (Url::convertToLocal(linkStatus())=="./")
++                       return label.simplifyWhiteSpace();
++               else
++                        return TQString::fromLocal8Bit(label.simplifyWhiteSpace());
+     }
+         
+     return TQString();

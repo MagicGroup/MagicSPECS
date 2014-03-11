@@ -1,0 +1,18 @@
+diff -up numactl-2.0.7/numademo.c.orig numactl-2.0.7/numademo.c
+--- numactl-2.0.7/numademo.c.orig	2012-02-15 12:35:33.450409388 +0100
++++ numactl-2.0.7/numademo.c	2012-02-15 12:37:20.094416633 +0100
+@@ -522,7 +522,13 @@ int main(int ac, char **av)
+ #ifdef HAVE_STREAM_LIB
+ 		test(STREAM);
+ #endif
+-		test(PTRCHASE);
++		if (msize >= sizeof(union node)) {
++			test(PTRCHASE);
++		} else {
++			fprintf(stderr, "You must set msize at least %lu bytes for ptrchase test.\n",
++				sizeof(union node));
++			exit(1);
++		}
+ 	} else {
+ 		int k;
+ 		for (k = 2; k < ac; k++) {

@@ -1,0 +1,52 @@
+From jwboyer@linux.vnet.ibm.com Tue Jun 28 09:42:53 2011
+Date: Tue, 28 Jun 2011 09:42:53 -0400
+From: Josh Boyer <jwboyer@linux.vnet.ibm.com>
+To: jdl@jdl.com, david@gibson.dropbear.id.au
+Cc: linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] dtc: Remove unused variable in flat_read_mem_reserve
+Message-ID: <20110628134253.GD10237@zod.rchland.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Status: RO
+Content-Length: 1865
+Lines: 68
+
+The *p variable is declared and used to save inb->ptr, however p is
+later never used.  This has been the case since commit 6c0f3676 and can
+lead to build failures with -Werror=unused-but-set-variable:
+
+	flattree.c: In function 'flat_read_mem_reserve':
+	flattree.c:700:14: error: variable 'p' set but not used [-Werror=unused-but-set-variable]
+	cc1: all warnings being treated as errors
+	make: *** [flattree.o] Error 1
+
+Remove the variable.
+
+Signed-off-by: Josh Boyer <jwboyer@linux.vnet.ibm.com>
+
+---
+
+diff --git a/flattree.c b/flattree.c
+index ead0332..28d0b23 100644
+--- a/flattree.c
++++ b/flattree.c
+@@ -697,7 +697,6 @@ static struct reserve_info *flat_read_mem_reserve(struct inbuf *inb)
+ {
+ 	struct reserve_info *reservelist = NULL;
+ 	struct reserve_info *new;
+-	const char *p;
+ 	struct fdt_reserve_entry re;
+ 
+ 	/*
+@@ -706,7 +705,6 @@ static struct reserve_info *flat_read_mem_reserve(struct inbuf *inb)
+ 	 *
+ 	 * First pass, count entries.
+ 	 */
+-	p = inb->ptr;
+ 	while (1) {
+ 		flat_read_chunk(inb, &re, sizeof(re));
+ 		re.address  = fdt64_to_cpu(re.address);
+
+

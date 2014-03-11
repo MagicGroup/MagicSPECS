@@ -1,0 +1,10 @@
+diff -Nuarp kdebase-runtime-4.3.4/plasma/scriptengines/javascript/CMakeLists.txt kdebase-runtime-4.3.4.fix_enablefinal/plasma/scriptengines/javascript/CMakeLists.txt
+--- kdebase-runtime-4.3.4/plasma/scriptengines/javascript/CMakeLists.txt	2009-05-15 01:26:20.000000000 +0800
++++ kdebase-runtime-4.3.4.fix_enablefinal/plasma/scriptengines/javascript/CMakeLists.txt	2009-12-27 22:56:56.000000000 +0800
+@@ -1,5 +1,6 @@
+ # APPLET
+ 
++kde4_no_enable_final(javascript)
+ set(simple_javascript_engine_SRCS
+     simplejavascriptapplet.cpp
+     appletinterface.cpp

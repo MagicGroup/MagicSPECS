@@ -1,0 +1,32 @@
+From 194af7649ea958e6609289e8d210e66b168d57cf Mon Sep 17 00:00:00 2001
+From: Peter Lemenkov <lemenkov@gmail.com>
+Date: Sun, 9 Jan 2011 16:10:20 +0300
+Subject: [PATCH] Fixed default values in pkgconfig file
+
+Signed-off-by: Peter Lemenkov <lemenkov@gmail.com>
+---
+ wavpack.pc.in |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/wavpack.pc.in b/wavpack.pc.in
+index fe6b231..58e74ac 100644
+--- a/wavpack.pc.in
++++ b/wavpack.pc.in
+@@ -1,5 +1,5 @@
+ prefix=@prefix@
+-libdir=${prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: wavpack
+@@ -7,5 +7,5 @@ Description: wavpack library
+ Version: @PACKAGE_VERSION@
+ Requires:
+ Conflicts:
+-Libs: -L${libdir} -lwavpack @LIBM@ @ICONV@
+-Cflags: -I${includedir}
++Libs: -lwavpack @LIBM@ @ICONV@
++Cflags:
+-- 
+1.7.2.3
+

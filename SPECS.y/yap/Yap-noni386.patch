@@ -1,0 +1,11 @@
+--- Yap-4.5.5/H/absmi.h.noni386	2005-06-18 15:52:24.000000000 +0200
++++ Yap-4.5.5/H/absmi.h	2005-06-18 15:52:34.000000000 +0200
+@@ -282,7 +282,7 @@
+ 
+ #define CACHE_A1()	(SREG = (CELL *)ARG1)
+ 
+-#define CACHED_A1()	((CELL)SREG)
++#define CACHED_A1()	SREG
+ 
+ #endif /* S_IN_MEM */
+ 

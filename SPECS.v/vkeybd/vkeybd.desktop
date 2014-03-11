@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Vkeybd
+Comment=Virtual MIDI keyboard
+Icon=vkeybd.png
+Exec=vkeybd
+Terminal=false
+StartupWMClass=vkeybd.tcl
+Type=Application
+Categories=Application;AudioVideo;Midi;
+Encoding=UTF-8

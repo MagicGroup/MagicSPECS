@@ -1,0 +1,14 @@
+diff -Naur scim-pinyin-0.5.91/src/scim_pinyin.cpp scim-pinyin/src/scim_pinyin.cpp
+--- scim-pinyin-0.5.91/src/scim_pinyin.cpp      2007-12-11 10:42:07.000000000 +0800
++++ scim-pinyin/src/scim_pinyin.cpp     2007-12-12 13:23:28.000000000 +0800
+@@ -370,7 +370,7 @@
+     { SCIM_PINYIN_Ong, SCIM_PINYIN_Iong      },         // S
+     { SCIM_PINYIN_Ue,  SCIM_PINYIN_ZeroFinal },         // T
+     { SCIM_PINYIN_U,   SCIM_PINYIN_ZeroFinal },         // U
+-    { SCIM_PINYIN_V,   SCIM_PINYIN_Ui        },         // V
++    { SCIM_PINYIN_Ui,  SCIM_PINYIN_Ue        },         // V
+     { SCIM_PINYIN_Ia,  SCIM_PINYIN_Ua        },         // W
+     { SCIM_PINYIN_Ie,  SCIM_PINYIN_ZeroFinal },         // X
+     { SCIM_PINYIN_Uai, SCIM_PINYIN_V         },         // Y
+
+-- 

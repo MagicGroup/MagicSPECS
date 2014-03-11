@@ -1,0 +1,189 @@
+From 0e14946a2032040899d792cf8eefd5db341074c8 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 3 Jul 2012 14:18:55 +0200
+Subject: [PATCH] add lsinitrd and mkinitrd man pages
+
+---
+ Makefile       |   14 ++++++++++---
+ dracut.spec    |    2 ++
+ lsinitrd.1.asc |   43 +++++++++++++++++++++++++++++++++++++
+ mkinitrd.8.asc |   64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 120 insertions(+), 3 deletions(-)
+ create mode 100644 lsinitrd.1.asc
+ create mode 100644 mkinitrd.8.asc
+
+diff --git a/Makefile b/Makefile
+index 1d5531d..78cf85d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -9,7 +9,12 @@ sysconfdir ?= ${prefix}/etc
+ bindir ?= ${prefix}/bin
+ mandir ?= ${prefix}/share/man
+ 
+-manpages = dracut.8 dracut.cmdline.7 dracut.conf.5 dracut-catimages.8
++manpages = dracut.8 \
++	   dracut.cmdline.7 \
++	   dracut.conf.5 \
++	   dracut-catimages.8 \
++	   lsinitrd.1 \
++	   mkinitrd.8
+ 
+ .PHONY: install clean archive rpm testimage test all check AUTHORS doc
+ 
+@@ -55,7 +60,7 @@ install: doc dracut-version.sh
+ 	mkdir -p $(DESTDIR)$(bindir)
+ 	mkdir -p $(DESTDIR)$(sysconfdir)
+ 	mkdir -p $(DESTDIR)$(pkglibdir)/modules.d
+-	mkdir -p $(DESTDIR)$(mandir)/man5 $(DESTDIR)$(mandir)/man7 $(DESTDIR)$(mandir)/man8
++	mkdir -p $(DESTDIR)$(mandir)/man1 $(DESTDIR)$(mandir)/man5 $(DESTDIR)$(mandir)/man7 $(DESTDIR)$(mandir)/man8
+ 	install -m 0755 dracut.sh $(DESTDIR)$(bindir)/dracut
+ 	install -m 0755 dracut-catimages.sh $(DESTDIR)$(bindir)/dracut-catimages
+ 	install -m 0755 mkinitrd-dracut.sh $(DESTDIR)$(bindir)/mkinitrd
+@@ -68,8 +73,11 @@ install: doc dracut-version.sh
+ 	install -m 0755 dracut-logger.sh $(DESTDIR)$(pkglibdir)/dracut-logger.sh
+ 	install -m 0755 dracut-initramfs-restore.sh $(DESTDIR)$(pkglibdir)/dracut-initramfs-restore
+ 	cp -arx modules.d $(DESTDIR)$(pkglibdir)
++	install -m 0644 lsinitrd.1 $(DESTDIR)$(mandir)/man1/lsinitrd.1
++	install -m 0644 mkdinitrd.8 $(DESTDIR)$(mandir)/man8/mkinitrd.8
+ 	install -m 0644 dracut.8 $(DESTDIR)$(mandir)/man8/dracut.8
+-	install -m 0644 dracut-catimages.8 $(DESTDIR)$(mandir)/man8/dracut-catimages.8
++	install -m 0644 dracut-catimages.8 \
++                        $(DESTDIR)$(mandir)/man8/dracut-catimages.8
+ 	install -m 0644 dracut.conf.5 $(DESTDIR)$(mandir)/man5/dracut.conf.5
+ 	install -m 0644 dracut.cmdline.7 $(DESTDIR)$(mandir)/man7/dracut.cmdline.7
+ 	ln -s dracut.cmdline.7 $(DESTDIR)$(mandir)/man7/dracut.kernel.7
+diff --git a/dracut.spec b/dracut.spec
+index 06d8139..b258121 100644
+--- a/dracut.spec
++++ b/dracut.spec
+@@ -255,9 +255,11 @@ rm -rf $RPM_BUILD_ROOT
+ %endif
+ %dir /etc/dracut.conf.d
+ %{_mandir}/man8/dracut.8*
++%{_mandir}/man8/mkinitrd.8*
+ %{_mandir}/man7/dracut.kernel.7*
+ %{_mandir}/man7/dracut.cmdline.7*
+ %{_mandir}/man5/dracut.conf.5*
++%{_mandir}/man1/lsinitrd.1*
+ %{dracutlibdir}/modules.d/00bootchart
+ %{dracutlibdir}/modules.d/00dash
+ %{dracutlibdir}/modules.d/04watchdog
+diff --git a/lsinitrd.1.asc b/lsinitrd.1.asc
+new file mode 100644
+index 0000000..5b0c62e
+--- /dev/null
++++ b/lsinitrd.1.asc
+@@ -0,0 +1,43 @@
++LSINITRD(1)
++=========
++:doctype: manpage
++:man source:   dracut
++:man manual:   dracut
++
++NAME
++----
++lsinitrd - tool to show the contents of an initramfs image
++
++SYNOPSIS
++--------
++*lsinit* ['OPTION...'] [<image>]
++
++DESCRIPTION
++-----------
++lsinitrd shows the contents of an initramfs image. if <image> is omitted, then
++lsinitrd uses the default image /boot/initramfs-<kernel version>.img.
++
++OPTIONS
++-------
++**-h, --help**::
++    print a help message and exit.
++
++**-s, --size**::
++    sort the contents of the initramfs by size.
++
++AVAILABILITY
++------------
++The lsinitrd command is part of the dracut package and is available from
++link:$$https://dracut.wiki.kernel.org$$[https://dracut.wiki.kernel.org]
++
++AUTHORS
++-------
++Harald Hoyer
++
++Amerigo Wang
++
++Nikoli
++
++SEE ALSO
++--------
++*dracut*(8)
+diff --git a/mkinitrd.8.asc b/mkinitrd.8.asc
+new file mode 100644
+index 0000000..2792915
+--- /dev/null
++++ b/mkinitrd.8.asc
+@@ -0,0 +1,64 @@
++MKINITRD(8)
++=========
++:doctype: manpage
++:man source:   dracut
++:man manual:   dracut
++
++NAME
++----
++mkinitrd - is a compat wrapper, which calls dracut to generate an initramfs
++
++SYNOPSIS
++--------
++*mkinitrd* ['OPTION...'] [<initrd-image>]  <kernel-version>
++
++DESCRIPTION
++-----------
++mkinitrd creates an initramfs image <initrd-image> for the kernel with
++version <kernel-version> by calling "dracut".
++
++If a more fine grained control over the resulting image is needed,
++"dracut" should be called directly.
++
++OPTIONS
++-------
++**--version**::
++    print info about the version
++
++**-v, --verbose**::
++    increase verbosity level
++
++**-f, --force**::
++    overwrite existing initramfs file.
++
++**--image-version*::
++    append the kernel version to the target image
++    <initrd-image>-<kernel-version>.
++
++**--with=<module>**::
++     add the kernel module <module> to the initramfs.
++
++**--preload=<module>**::
++     preload the kernel module <module> in the initramfs before any other kernel
++     modules are loaded. This can be used to ensure a certain device naming, which
++     should in theory be avoided and the use of symbolic links in /dev is
++     encouraged.
++
++**--nocompress**::
++     do not compress the resulting image.
++
++**--help**::
++    print a help message and exit.
++
++AVAILABILITY
++------------
++The mkinitrd command is part of the dracut package and is available from
++link:$$https://dracut.wiki.kernel.org$$[https://dracut.wiki.kernel.org]
++
++AUTHORS
++-------
++Harald Hoyer
++
++SEE ALSO
++--------
++*dracut*(8)

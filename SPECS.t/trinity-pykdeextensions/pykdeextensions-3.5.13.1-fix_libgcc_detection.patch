@@ -1,0 +1,62 @@
+--- pykdeextensions-3.5.13.1/setup.py.libgcc	2012-09-08 11:59:03.000000000 +0200
++++ pykdeextensions-3.5.13.1/setup.py	2012-10-06 12:52:03.768762713 +0200
+@@ -126,7 +126,7 @@
+                 
+             # Find the C library (libgcc, libgcc_s or some other variation).
+             if self.clib is None:
+-                canidatepaths = ["/usr/"+kdedistutils.get_libdir_name(), "/usr/local/"+kdedistutils.get_libdir_name() ]
++                canidatepaths = ["/usr/"+kdedistutils.get_libdir_name(), "/usr/local/"+kdedistutils.get_libdir_name(), "/usr/lib" ]
+                 self.clib = kdedistutils.FindFileInPaths("libgcc*.so",canidatepaths)
+                 if self.clib!=None:
+                     self.clib = glob.glob(os.path.join(self.clib,'libgcc*.so'))[0]
+--- pykdeextensions-3.5.13.1/src/kdedistutils.py.libgcc	2012-10-06 13:29:31.920413352 +0200
++++ pykdeextensions-3.5.13.1/src/kdedistutils.py	2012-10-06 13:31:23.440538658 +0200
+@@ -564,6 +564,9 @@
+             # Qt inc dir
+             if self.qt_inc_dir is None:
+                 canidatepaths = []
++                qtinc = os.getenv("QTINC")
++                if qtinc != None:
++                    canidatepaths.append(qtinc)
+                 qtdir = os.getenv("QTDIR")
+                 if qtdir != None:
+                     canidatepaths.append(os.path.join(qtdir,"include"))
+@@ -585,6 +588,9 @@
+             # Qt lib dir
+             if self.qt_lib_dir is None:
+                 canidatepaths = []
++                qtlib = os.getenv("QTLIB")
++                if qtlib != None:
++                    canidatepaths.append(qtlib)
+                 qtdir = os.getenv("QTDIR")
+                 if qtdir != None:
+                     canidatepaths.append(os.path.join(qtdir,get_libdir_name()))
+@@ -634,7 +640,7 @@
+                 
+             # Find the C library (libgcc, libgcc_s or some other variation).
+             if self.clib is None:
+-                canidatepaths = ["/usr/"+get_libdir_name(), "/usr/local/"+get_libdir_name() ]
++                canidatepaths = ["/usr/"+get_libdir_name(), "/usr/local/"+get_libdir_name(), "/usr/lib" ]
+                 self.clib = FindFileInPaths("libgcc*.so",canidatepaths)
+                 if self.clib!=None:
+                     self.clib = glob.glob(os.path.join(self.clib,'libgcc*.so'))[0]
+@@ -1481,6 +1487,9 @@
+             # Qt inc dir
+             if self.qt_inc_dir is None:
+                 canidatepaths = []
++                qtinc = os.getenv("QTINC")
++                if qtinc != None:
++                    canidatepaths.append(qtinc)
+                 qtdir = os.getenv("QTDIR")
+                 if qtdir != None:
+                     canidatepaths.append(os.path.join(qtdir,"include"))
+@@ -1501,6 +1510,9 @@
+             # Qt lib dir
+             if self.qt_lib_dir is None:
+                 canidatepaths = []
++                qtlib = os.getenv("QTLIB")
++                if qtlib != None:
++                    canidatepaths.append(qtlib)
+                 qtdir = os.getenv("QTDIR")
+                 if qtdir != None:
+                     canidatepaths.append(os.path.join(qtdir,get_libdir_name()))

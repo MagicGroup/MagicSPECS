@@ -1,0 +1,48 @@
+From 176a3f264f6a8eb08ca5ec9dc300198f591ac1b7 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Sat, 9 Jun 2012 00:06:20 +0200
+Subject: [PATCH] cheese-thumb-view: Don't add 0 sized files to the thumb view
+
+Sometimes, ie when cheese crashes when starting to record, something which
+we need to fix, 0 bytes large files are created under ~/Videos/Webcam.
+
+totem-video-thumbnailer does not like these, getting stuck for approx a minute
+on them, I've filed a bug for this here:
+https://bugzilla.gnome.org/show_bug.cgi?id=677734
+
+But even with this bug fixed, trying to add 0 byte sized files to the
+thumb view makes no sense, and in the mean time it also neatly works
+around this totem-video-thumbnailer bug.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ src/thumbview/cheese-thumb-view.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/thumbview/cheese-thumb-view.c b/src/thumbview/cheese-thumb-view.c
+index 5c06ff3..49bc31a 100644
+--- a/src/thumbview/cheese-thumb-view.c
++++ b/src/thumbview/cheese-thumb-view.c
+@@ -197,9 +197,19 @@ cheese_thumb_view_append_item (CheeseThumbView *thumb_view, GFile *file)
+   char         *filename, *basename, *col_filename;
+   GError       *error = NULL;
+   gboolean      skip  = FALSE;
++  GFileInfo    *info;
++  goffset       size;
+ 
+   CheeseThumbViewIdleData *data;
+ 
++  info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SIZE, 0, NULL,
++                            NULL);
++  size = g_file_info_get_size(info);
++  g_object_unref (info);
++
++  if (size == 0)
++    return;
++
+   filename = g_file_get_path (file);
+ 
+   if (!(g_str_has_suffix (filename, CHEESE_PHOTO_NAME_SUFFIX))
+-- 
+1.7.10.2
+

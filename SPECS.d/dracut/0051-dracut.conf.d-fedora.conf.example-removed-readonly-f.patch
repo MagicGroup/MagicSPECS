@@ -1,0 +1,23 @@
+From 56ed92922e6a229668fa02becd1419909cdbf29d Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 9 Jul 2012 08:21:00 +0200
+Subject: [PATCH] dracut.conf.d/fedora.conf.example: removed readonly from
+ prefix
+
+---
+ dracut.conf.d/fedora.conf.example |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dracut.conf.d/fedora.conf.example b/dracut.conf.d/fedora.conf.example
+index ee53844..4cb1890 100644
+--- a/dracut.conf.d/fedora.conf.example
++++ b/dracut.conf.d/fedora.conf.example
+@@ -5,7 +5,7 @@ i18n_vars="/etc/sysconfig/keyboard:KEYTABLE-KEYMAP /etc/sysconfig/i18n:SYSFONT-F
+ omit_drivers+=" .*/fs/ocfs/.* "
+ stdloglvl=3
+ install_items+=" vi /etc/virc ps grep cat rm "
+-readonly prefix="/"
++prefix="/"
+ systemdutildir=/usr/lib/systemd
+ systemdsystemunitdir=/usr/lib/systemd/system
+ udevdir=/usr/lib/udev

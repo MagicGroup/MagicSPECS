@@ -1,0 +1,18 @@
+Index: gmyth/gmyth_socket.c
+===================================================================
+--- gmyth/gmyth_socket.c	(revision 956)
++++ gmyth/gmyth_socket.c	(working copy)
+@@ -573,11 +573,12 @@
+         /*
+          * init socket descriptor 
+          */
+-
++#if 0
+         g_debug ("FAMILY: %d, TYPE: %d, PROTOCOL: %d", 
+                  addr_info0->ai_family,
+                  addr_info0->ai_socktype,
+                  addr_info0->ai_protocol);
++#endif
+         gmyth_socket->sd =
+             socket(addr_info0->ai_family, addr_info0->ai_socktype,
+                    addr_info0->ai_protocol);

@@ -1,0 +1,21 @@
+diff -up ./openjdk-boot/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java.sav ./openjdk-boot/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java
+--- ./openjdk-boot/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java.sav	2011-07-07 14:54:22.914782453 -0400
++++ ./openjdk-boot/jdk/make/tools/src/build/tools/generatecharacter/GenerateCharacter.java	2011-07-07 14:54:27.466695108 -0400
+@@ -691,9 +691,6 @@ OUTER:  for (int i = 0; i < n; i += m) {
+         throws FileNotFoundException, IOException {
+         BufferedReader in = new BufferedReader(new FileReader(theTemplateFileName));
+         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(theOutputFileName)));
+-        out.println(commentStart +
+-            " This file was generated AUTOMATICALLY from a template file " +
+-            new java.util.Date() + commentEnd);
+         int marklen = commandMarker.length();
+         LOOP: while(true) {
+             try {
+@@ -927,7 +924,6 @@ OUTER:  for (int i = 0; i < n; i += m) {
+         // liu : Add a comment showing the source of this table
+         result.append(commentStart + " The following tables and code generated using:" +
+                   commentEnd + "\n  ");
+-        result.append(commentStart + ' ' + commandLineDescription + commentEnd + "\n  ");
+ 
+                 if (plane == 0 && bLatin1 == false) {
+             genCaseMapTableDeclaration(result);

@@ -1,0 +1,17 @@
+Index: nepomuk/kioslaves/search/searchfolder.cpp
+===================================================================
+--- runtime/nepomuk/kioslaves/search/searchfolder.cpp	(revision 1096538)
++++ runtime/nepomuk/kioslaves/search/searchfolder.cpp	(working copy)
+@@ -211,10 +211,11 @@ KIO::UDSEntry Nepomuk::SearchFolder::statResult( const Query::Result& result )
+             // needed since the nepomuk:/ KIO slave does not do stating of files in its own
+             // subdirs (tags and filesystems), and neither do we with real subdirs
+             if ( uds.isDir() )
+-                uds.insert( KIO::UDSEntry::UDS_URL, fileUrl.url() );
++                uds.insert( KIO::UDSEntry::UDS_TARGET_URL, fileUrl.url() );
+ 
+             if ( fileUrl.isLocalFile() ) {
+                 uds.insert( KIO::UDSEntry::UDS_LOCAL_PATH, fileUrl.toLocalFile() );
++				uds.insert( KIO::UDSEntry::UDS_TARGET_URL, fileUrl.url() );
+             }
+         }
+ 

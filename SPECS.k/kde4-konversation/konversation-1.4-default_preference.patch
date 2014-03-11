@@ -1,0 +1,111 @@
+diff -urN konversation-1.4.orig/src/application.cpp konversation-1.4/src/application.cpp
+--- konversation-1.4.orig/src/application.cpp	2011-12-20 21:09:03.000000000 -0500
++++ konversation-1.4/src/application.cpp	2011-12-20 21:09:17.000000000 -0500
+@@ -466,7 +466,7 @@
+             serverGroup->setSortIndex(index);
+             serverGroup->setIdentityId(Preferences::identityByName(cgServerGroup.readEntry("Identity"))->id());
+             serverGroup->setConnectCommands(cgServerGroup.readEntry("ConnectCommands"));
+-            serverGroup->setAutoConnectEnabled(cgServerGroup.readEntry("AutoConnect", false));
++            serverGroup->setAutoConnectEnabled(cgServerGroup.readEntry("AutoConnect", true));
+             serverGroup->setNotificationsEnabled(cgServerGroup.readEntry("EnableNotifications", true));
+             serverGroup->setExpanded(cgServerGroup.readEntry("Expanded", false));
+ 
+diff -urN konversation-1.4.orig/src/config/generalbehavior_configui.ui konversation-1.4/src/config/generalbehavior_configui.ui
+--- konversation-1.4.orig/src/config/generalbehavior_configui.ui	2011-12-20 21:09:03.000000000 -0500
++++ konversation-1.4/src/config/generalbehavior_configui.ui	2011-12-20 21:10:22.000000000 -0500
+@@ -29,7 +29,7 @@
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+-      <bool>false</bool>
++      <bool>true</bool>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+diff -urN konversation-1.4.orig/src/config/konversation.kcfg konversation-1.4/src/config/konversation.kcfg
+--- konversation-1.4.orig/src/config/konversation.kcfg	2011-12-20 21:09:03.000000000 -0500
++++ konversation-1.4/src/config/konversation.kcfg	2011-12-20 21:09:17.000000000 -0500
+@@ -252,7 +252,7 @@
+       <whatsthis></whatsthis>
+     </entry>
+     <entry key="ShowTrayIcon" type="Bool">
+-      <default>false</default>
++      <default>true</default>
+       <label></label>
+       <whatsthis></whatsthis>
+     </entry>
+diff -urN konversation-1.4.orig/src/config/preferences.cpp konversation-1.4/src/config/preferences.cpp
+--- konversation-1.4.orig/src/config/preferences.cpp	2011-12-20 21:09:03.000000000 -0500
++++ konversation-1.4/src/config/preferences.cpp	2011-12-20 21:09:17.000000000 -0500
+@@ -63,13 +63,38 @@
+     Konversation::ServerGroupSettingsPtr serverGroup(new Konversation::ServerGroupSettings);
+     serverGroup->setName("Freenode");
+     Konversation::ServerSettings server;
+-    server.setHost("chat.freenode.net");
+-    server.setPort(8001);
++    server.setHost("irc.freenode.net");
++    server.setPort(7000);
++    server.setSSLEnabled(true);
+     serverGroup->addServer(server);
+     serverGroup->setIdentityId(mIdentity->id());
+     Konversation::ChannelSettings channel;
+-    channel.setName("#konversation");
++    channel.setName("#kde-cn");
+     serverGroup->addChannel(channel);
++    Konversation::ChannelSettings channel2;
++    channel2.setName("#magiclinux");
++    serverGroup->addChannel(channel2);
++    Konversation::ChannelSettings channel3;
++    channel3.setName("#ubuntu-cn");
++    serverGroup->addChannel(channel3);
++    Konversation::ChannelSettings channel4;
++    channel4.setName("#ubuntu-cn-translators");
++    serverGroup->addChannel(channel4);
++    Konversation::ChannelSettings channel5;
++    channel5.setName("#xfce-cn");
++    serverGroup->addChannel(channel5);
++    Konversation::ChannelSettings channel6;
++    channel6.setName("#gentoo-cn");
++    serverGroup->addChannel(channel6);
++    Konversation::ChannelSettings channel7;
++    channel7.setName("#archlinux-cn");
++    serverGroup->addChannel(channel7);
++    Konversation::ChannelSettings channel8;
++    channel8.setName("#fedora-zh");
++    serverGroup->addChannel(channel8);
++    Konversation::ChannelSettings channel9;
++    channel9.setName("#ppmm");
++    serverGroup->addChannel(channel9);
+     serverGroup->setExpanded(false);
+     mServerGroupHash.insert(0, serverGroup);
+     mQuickButtonList = defaultQuickButtonList();
+diff -urN konversation-1.4.orig/src/irc/servergroupsettings.cpp konversation-1.4/src/irc/servergroupsettings.cpp
+--- konversation-1.4.orig/src/irc/servergroupsettings.cpp	2011-12-20 21:09:03.000000000 -0500
++++ konversation-1.4/src/irc/servergroupsettings.cpp	2011-12-20 21:09:17.000000000 -0500
+@@ -25,7 +25,7 @@
+         m_id = s_availableId;
+         s_availableId++;
+         m_sortIndex = m_id;
+-        m_autoConnect = false;
++        m_autoConnect = true;
+         m_identityId = 0;
+         m_enableNotifications = true;
+         m_expanded = false;
+@@ -45,7 +45,7 @@
+         }
+ 
+         m_sortIndex = m_id;
+-        m_autoConnect = false;
++        m_autoConnect = true;
+         m_identityId = 0;
+         m_enableNotifications = true;
+         m_expanded = false;
+@@ -80,7 +80,7 @@
+         m_id = s_availableId;
+         s_availableId++;
+         m_sortIndex = m_id;
+-        m_autoConnect = false;
++        m_autoConnect = true;
+         m_identityId = 0;
+         m_enableNotifications = true;
+         m_expanded = false;

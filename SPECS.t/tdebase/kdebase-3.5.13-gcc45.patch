@@ -1,0 +1,52 @@
+diff -ur kdebase-3.5.13.orig/kcontrol/iccconfig/iccconfig.cpp kdebase-3.5.13/kcontrol/iccconfig/iccconfig.cpp
+--- kdebase-3.5.13.orig/kcontrol/iccconfig/iccconfig.cpp	2010-12-01 14:32:33.000000000 -0500
++++ kdebase-3.5.13/kcontrol/iccconfig/iccconfig.cpp	2010-12-01 14:33:27.000000000 -0500
+@@ -286,7 +286,7 @@
+   base->deleteProfileButton->setFixedWidth(90);
+ 
+   XRROutputInfo *output_info;
+-  KRandrSimpleAPI *randrsimple = new KRandrSimpleAPI::KRandrSimpleAPI();
++  KRandrSimpleAPI *randrsimple = new KRandrSimpleAPI();
+ 
+   config->setReadDefaults( useDefaults );
+ 
+@@ -356,7 +356,7 @@
+ {
+ 	int i;
+ 	int j;
+-	KRandrSimpleAPI *randrsimple = new KRandrSimpleAPI::KRandrSimpleAPI();
++	KRandrSimpleAPI *randrsimple = new KRandrSimpleAPI();
+ 
+ 	// Write system configuration
+ 	systemconfig->setGroup(NULL);
+@@ -408,4 +408,4 @@
+      " for a more lifelike and vibrant image.");
+ }
+ 
+-#include "iccconfig.moc"
+\ No newline at end of file
++#include "iccconfig.moc"
+diff -ur kdebase-3.5.13.orig/kcontrol/randr/krandrbindings.cpp kdebase-3.5.13/kcontrol/randr/krandrbindings.cpp
+--- kdebase-3.5.13.orig/kcontrol/randr/krandrbindings.cpp	2010-12-01 14:32:32.000000000 -0500
++++ kdebase-3.5.13/kcontrol/randr/krandrbindings.cpp	2010-12-01 14:33:51.000000000 -0500
+@@ -28,7 +28,7 @@
+ 
+ 	keys->insert( "Program:krandrtray", i18n("Display Control") );
+ 
+-	DEF( I18N_NOOP("Switch Displays"), KShortcut::KShortcut(TQString("XF86Display")), KShortcut::KShortcut(TQString("XF86Display")), slotCycleDisplays() );
++	DEF( I18N_NOOP("Switch Displays"), KShortcut(TQString("XF86Display")), KShortcut(TQString("XF86Display")), slotCycleDisplays() );
+ 
+ #undef DEF
+ #undef WIN
+diff -ur kdebase-3.5.13.orig/ksmserver/shutdowndlg.cpp kdebase-3.5.13/ksmserver/shutdowndlg.cpp
+--- kdebase-3.5.13.orig/ksmserver/shutdowndlg.cpp	2010-12-01 14:32:31.000000000 -0500
++++ kdebase-3.5.13/ksmserver/shutdowndlg.cpp	2010-12-01 14:34:17.000000000 -0500
+@@ -80,7 +80,7 @@
+ {
+     DCOPRef("kicker", "KMenu").call("hideMenu");	// Make sure the K Menu is completely removed from the screen before taking a snapshot...
+     m_grayImage = TQPixmap::grabWindow(qt_xrootwin(), 0, 0, TQApplication::desktop()->width(), TQApplication::desktop()->height()).convertToImage();
+-    m_unfadedImage = TQImage::TQImage();
++    m_unfadedImage = TQImage();
+     resize(0, 0);
+     setShown(true);
+     TQTimer::singleShot( 500, this, TQT_SLOT( slotPaintEffect() ) );

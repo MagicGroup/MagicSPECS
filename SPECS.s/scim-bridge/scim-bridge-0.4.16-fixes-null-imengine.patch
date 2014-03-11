@@ -1,0 +1,13 @@
+Index: scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.cpp
+===================================================================
+--- scim-bridge-0.4.16.orig/agent/scim-bridge-agent-imcontext.cpp
++++ scim-bridge-0.4.16/agent/scim-bridge-agent-imcontext.cpp
+@@ -662,6 +662,8 @@ void ScimBridgeAgentIMContextImpl::focus
+ 
+ void ScimBridgeAgentIMContextImpl::focus_out ()
+ {
++    if (!imengine_shared && imengine == NULL) alloc_imengine ();
++
+     ScimBridgeAgentIMContext *focused_imcontext = static_cast<ScimBridgeAgentIMContext*> (get_imengine ()->get_frontend_data ());
+ 
+ 	if ( !focused )

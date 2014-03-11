@@ -1,0 +1,3139 @@
+# Translation of Kaffeine to Chinese Simplified
+# This file is distributed under the same license as the Kaffeine package.
+# Copyright (C) 2003 Jrgen Kofler <juergen.kofler@chello.at>
+# Qianzheng <billqian@sohu.com>, 2004.
+# KanKer <kanker@163.com>, 2004.
+# qianzheng <billqian@sohu.com>, 2004, 2005.
+# kde <athena_star {at} 163 {dot} com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kaffeine 0.8.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-09 08:49+0100\n"
+"PO-Revision-Date: 2007-11-04 10:16+0800\n"
+"Last-Translator: kde <athena_star {at} 163 {dot} com>\n"
+"Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: input/dvb/kevents.cpp:63
+msgid "EPG"
+msgstr "电子节目指南"
+
+#: input/dvb/kevents.cpp:68 input/dvb/kevents.cpp:94
+msgid "Refresh"
+msgstr "刷新"
+
+#: input/dvb/kevents.cpp:70 input/dvb/kevents.cpp:95
+msgid "Scheduled"
+msgstr "已预定"
+
+#: input/dvb/kevents.cpp:72 input/dvb/kevents.cpp:96
+msgid "Current/Next"
+msgstr "当前/下一个"
+
+#: input/dvb/kevents.cpp:79 input/dvb/krecord.cpp:46
+msgid "Channel"
+msgstr "频道"
+
+#: input/dvb/kevents.cpp:80 input/dvb/krecord.cpp:47
+msgid "Begin"
+msgstr "开始"
+
+#: input/disc/disc.cpp:153 input/dvb/kevents.cpp:81 input/dvb/krecord.cpp:48
+msgid "Duration"
+msgstr "时长"
+
+#: input/audiobrowser/playlist.cpp:354 input/disc/disc.cpp:152
+#: input/dvb/kevents.cpp:82
+msgid "Title"
+msgstr "标题"
+
+#: input/dvb/kevents.cpp:140
+msgid "View All Programs"
+msgstr "查看全部节目"
+
+#: input/dvb/kevents.cpp:142
+msgid "Add to Timers"
+msgstr "添加到定时器"
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 105
+#: input/dvb/ktimereditor.cpp:35 rc.cpp:225
+#, no-c-format
+msgid "Name:"
+msgstr "名称："
+
+#: input/dvb/ktimereditor.cpp:39
+msgid "Channel:"
+msgstr "频道："
+
+#: input/dvb/ktimereditor.cpp:43
+msgid "Begin:"
+msgstr "开始："
+
+#: input/dvb/ktimereditor.cpp:47
+msgid "Duration:"
+msgstr "时长："
+
+#: input/dvb/ktimereditor.cpp:51
+msgid "End:"
+msgstr "结束："
+
+#: input/dvb/ktimereditor.cpp:55
+msgid "Record as:"
+msgstr "录制为："
+
+#. i18n: file ./input/dvb/crontimerui.ui line 79
+#: input/dvb/ktimereditor.cpp:120 input/dvb/ktimereditor.cpp:181 rc.cpp:49
+#, no-c-format
+msgid "None"
+msgstr "无"
+
+#. i18n: file ./input/dvb/crontimerui.ui line 90
+#: input/dvb/ktimereditor.cpp:121 input/dvb/ktimereditor.cpp:182 rc.cpp:52
+#, no-c-format
+msgid "Daily"
+msgstr "每天"
+
+#. i18n: file ./input/dvb/crontimerui.ui line 101
+#: input/dvb/ktimereditor.cpp:122 input/dvb/ktimereditor.cpp:183 rc.cpp:55
+#, no-c-format
+msgid "Weekly"
+msgstr "每周"
+
+#. i18n: file ./input/dvb/crontimerui.ui line 112
+#: input/dvb/ktimereditor.cpp:123 input/dvb/ktimereditor.cpp:184 rc.cpp:58
+#, no-c-format
+msgid "Monthly"
+msgstr "每月"
+
+#. i18n: file ./input/dvb/crontimerui.ui line 123
+#: input/dvb/ktimereditor.cpp:124 input/dvb/ktimereditor.cpp:185 rc.cpp:61
+#, no-c-format
+msgid "Custom"
+msgstr "自定义"
+
+#: input/dvb/ktimereditor.cpp:130
+msgid "Repeat..."
+msgstr "重复..."
+
+#: input/dvb/ktimereditor.cpp:132
+msgid "Timer Editor"
+msgstr "定时器编辑器"
+
+#: input/dvb/channeleditor.cpp:108 input/dvb/ktimereditor.cpp:194
+msgid "You must give it a name!"
+msgstr "您必须给出一个名称！"
+
+#: input/dvb/ktimereditor.cpp:215
+msgid "Duration must be at least 1 minute!"
+msgstr "时长至少为 1 分钟！"
+
+#: input/dvb/ktimereditor.cpp:236
+msgid "Name must not contain any of the following characters: > < \\ / : \" |"
+msgstr "名称不能包含下列字符：> < \\ / : \" |"
+
+#: input/dvb/channeleditor.cpp:62
+msgid "Initial Transponder Settings"
+msgstr "初始传发器设置"
+
+#: input/dvb/channeleditor.cpp:115
+msgid "This name is not unique."
+msgstr "此名称不唯一。"
+
+#: input/dvb/channeleditor.cpp:126
+msgid "Missing audio pid(s)!"
+msgstr "没有音频包标识符！"
+
+#: input/dvb/audioeditor.cpp:158 input/dvb/subeditor.cpp:161
+msgid "Pid must be non zero!"
+msgstr "包标识符必须为非零！"
+
+#: input/dvb/crontimer.cpp:100
+msgid "You have to choose some days."
+msgstr "您必须选择哪一天。"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 16
+#: input/dvb/dvbpanel.cpp:133 input/dvb/scandialog.cpp:78 rc.cpp:146
+#: rc.cpp:149
+#, no-c-format
+msgid "Channels"
+msgstr "频道"
+
+#: input/dvb/dvbpanel.cpp:136 input/dvb/krecord.cpp:97
+msgid "Timers"
+msgstr "定时器"
+
+#: input/dvb/dvbpanel.cpp:139
+msgid "Electronic Program Guide"
+msgstr "电子节目指南"
+
+#: input/dvb/dvbpanel.cpp:142
+msgid "OSD"
+msgstr "OSD"
+
+#: input/dvb/dvbpanel.cpp:145
+msgid "DVB settings"
+msgstr "DVB 设置"
+
+#: input/dvb/dvbpanel.cpp:163
+msgid "Number"
+msgstr "编号"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 60
+#: input/dvb/dvbpanel.cpp:164 input/dvb/krecord.cpp:45 rc.cpp:155 rc.cpp:210
+#, no-c-format
+msgid "Name"
+msgstr "名称"
+
+#: input/dvb/dvbpanel.cpp:176
+msgid "Audio Channels"
+msgstr "音频声道"
+
+#: input/dvb/dvbpanel.cpp:181 input/dvb/dvbpanel.cpp:336
+msgid "Instant Record"
+msgstr "立即录制"
+
+#: input/dvb/dvbpanel.cpp:184
+msgid "Broadcast"
+msgstr "广播"
+
+#: input/dvb/dvbpanel.cpp:194
+msgid "Time shifting"
+msgstr "时光平移"
+
+#: input/dvb/dvbconfig.cpp:620 input/dvb/dvbpanel.cpp:202
+#: player-parts/xine-part/kxinewidget.cpp:2006
+msgid "Recording"
+msgstr "录制中"
+
+#: input/dvb/dvbconfig.cpp:693 input/dvb/dvbpanel.cpp:210
+msgid "Broadcasting"
+msgstr "广播"
+
+#: input/dvb/dvbpanel.cpp:271
+msgid "Select icon..."
+msgstr "选择图标..."
+
+#: input/dvb/dvbpanel.cpp:278
+msgid "Choose channel icon"
+msgstr "选择频道图标"
+
+#: input/dvb/dvbpanel.cpp:306 kaffeine.cpp:198
+msgid "Digital TV"
+msgstr "数字电视"
+
+#: input/dvb/dvbpanel.cpp:317
+msgid "Live digital TV only works with the xine engine."
+msgstr "直播数字电视只适用于 xine 引擎。"
+
+#: input/dvb/dvbpanel.cpp:331
+msgid "OSD Next Channel"
+msgstr "OSD 下一个频道"
+
+#: input/dvb/dvbpanel.cpp:332
+msgid "OSD Previous Channel"
+msgstr "OSD 上一个频道"
+
+#: input/dvb/dvbpanel.cpp:333
+msgid "OSD Zap"
+msgstr "OSD 闪烁"
+
+#: input/dvb/dvbpanel.cpp:334
+msgid "OSD Next Event"
+msgstr "OSD 下个事件"
+
+#: input/dvb/dvbpanel.cpp:335
+msgid "OSD Previous Event"
+msgstr "OSD 上个事件"
+
+#: input/dvb/dvbpanel.cpp:337
+msgid "Show OSD"
+msgstr "显示 OSD"
+
+#: input/dvb/dvbpanel.cpp:338
+msgid "EPG..."
+msgstr "电子节目指南..."
+
+#: input/dvb/dvbpanel.cpp:339
+msgid "Timers..."
+msgstr "定时器..."
+
+#: input/dvb/dvbpanel.cpp:340
+msgid "Broadcasting..."
+msgstr "广播..."
+
+#: input/dvb/dvbpanel.cpp:341
+msgid "Channels..."
+msgstr "频道..."
+
+#: input/dvb/dvbpanel.cpp:342
+msgid "Configure DVB..."
+msgstr "配置 DVB ..."
+
+#: input/dvb/dvbconfig.cpp:341 input/dvb/dvbpanel.cpp:399
+#: input/dvb/dvbpanel.cpp:424 input/dvb/dvbpanel.cpp:472
+#: input/dvb/dvbpanel.cpp:868
+msgid "All"
+msgstr "全部"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 302
+#: input/dvb/dvbconfig.cpp:343 input/dvb/dvbpanel.cpp:401
+#: input/dvb/dvbpanel.cpp:424 input/dvb/dvbpanel.cpp:873 rc.cpp:192
+#, no-c-format
+msgid "TV"
+msgstr "电视"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 286
+#: input/dvb/dvbconfig.cpp:345 input/dvb/dvbpanel.cpp:403
+#: input/dvb/dvbpanel.cpp:424 input/dvb/dvbpanel.cpp:871 rc.cpp:189
+#, no-c-format
+msgid "Radio"
+msgstr "广播"
+
+#: input/dvb/dvbpanel.cpp:420
+msgid "New Category..."
+msgstr "新建类别..."
+
+#: input/dvb/dvbpanel.cpp:423
+msgid "Change Icon..."
+msgstr "更改图标..."
+
+#: input/dvb/dvbpanel.cpp:425
+msgid "Delete Category..."
+msgstr "删除类别..."
+
+#: input/dvb/dvbpanel.cpp:430
+msgid "New Category"
+msgstr "新建类别"
+
+#: input/dvb/dvbpanel.cpp:430
+msgid "Enter a name for this category:"
+msgstr "输入此类别的名称："
+
+#: input/dvb/dvbpanel.cpp:449
+msgid "Do you really want to delete this category?"
+msgstr "您真的要删除此类别吗？"
+
+#: input/dvb/dvbpanel.cpp:944 input/dvb/dvbpanel.cpp:1502
+msgid ""
+"<qt>Can't get DVB data from http://hftom.free.fr/kaxtv/dvbdata.tar.gz!<br>\t"
+"\t\tCheck your internet connection, and say Yes to try again.<br>\t\t\tOr "
+"say No to cancel.<br>\t\t\tIf you already have this archive, copy it to ~/."
+"kde/share/apps/kaffeine/dvbdata.tar.gz and say Yes.<br><br>Should I try "
+"again?</qt>"
+msgstr ""
+"<qt>不能从 http://hftom.free.fr/kaxtv/dvbdata.tar.gz 得到 DVB 数据！<br>\t\t"
+"\t请检查您的网络连接，然后按“是”再试一次。<br>\t\t\t或按“否”取消。<br>\t\t\t"
+"如果您已有这个档案，将它复制到 ~/.kde/share/apps/kaffeine/dvbdata.tar.gz 并"
+"按“是”<br><br>要再试一次吗？</qt>"
+
+#: input/dvb/dvbpanel.cpp:1131
+msgid "Broadcasting failed."
+msgstr "广播失败。"
+
+#: input/dvb/dvbpanel.cpp:1135
+msgid "Can't start broadcasting."
+msgstr "无法开始广播。"
+
+#: input/dvb/dvbpanel.cpp:1287
+msgid "Timer successfully created and started."
+msgstr "定时器成功创建并已启动。"
+
+#: input/dvb/dvbpanel.cpp:1427
+msgid "You may want to define some channel first!"
+msgstr "您应先定义一些频道！"
+
+#: input/dvb/dvbpanel.cpp:1491
+msgid "Timer successfully created."
+msgstr "定时器创建成功。"
+
+#: input/dvb/dvbpanel.cpp:1887
+msgid "Still recording."
+msgstr "仍在录制。"
+
+#: input/dvb/dvbpanel.cpp:1890
+msgid "Still broadcasting."
+msgstr "仍在广播。"
+
+#: input/dvb/dvbpanel.cpp:1893
+msgid "Can't tune dvb!"
+msgstr "不能调制 dvb！"
+
+#: input/dvb/dvbpanel.cpp:1896
+msgid "Can't set pid(s)"
+msgstr "不能设置包标识符"
+
+#: input/dvb/dvbpanel.cpp:1899
+msgid "No CAM free"
+msgstr "没有空闲的摄像设备"
+
+#: input/dvb/dvbpanel.cpp:2493
+msgid "Kaffeine is still recording. Do you really want to quit?"
+msgstr "Kaffeine 仍在录制。您真的要退出吗？"
+
+#: input/dvb/dvbpanel.cpp:2498
+msgid "Kaffeine has queued timers. Do you really want to quit?"
+msgstr "Kaffeine 还有排队的定时器。您真的要退出吗？"
+
+#: input/dvb/scandialog.cpp:84
+msgid "Signal:"
+msgstr "信号："
+
+#: input/dvb/scandialog.cpp:88
+msgid "SNR:"
+msgstr "信噪比："
+
+#: input/dvb/scandialog.cpp:92
+msgid "Lock:"
+msgstr "锁："
+
+#: input/dvb/scandialog.cpp:236
+msgid "Edit..."
+msgstr "编辑..."
+
+#: input/dvb/scandialog.cpp:342
+msgid "Do you really want to delete all channels?"
+msgstr "您真的要删除所有频道吗？"
+
+#: input/dvb/scandialog.cpp:810 input/dvb/scandialog.cpp:856
+msgid "START scan"
+msgstr "开始扫描"
+
+#: input/dvb/scandialog.cpp:837
+msgid "STOP scan"
+msgstr "停止扫描"
+
+#: input/dvb/scandialog.cpp:843
+msgid "Stopping..."
+msgstr "正在停止..."
+
+#: input/dvb/scandialog.cpp:939
+msgid "Found: %1 TV - %2 radio"
+msgstr "找到：%1 TV - %2 radio"
+
+#: input/dvb/sender.cpp:57 input/dvb/sender.cpp:69
+msgid "Can't open DVB info socket."
+msgstr "无法打开 DVB 信息套接字。"
+
+#: input/dvb/krecord.cpp:40
+msgid "Timers list:"
+msgstr "定时器列表："
+
+#: input/dvb/krecord.cpp:61 input/dvb/krecord.cpp:88
+msgid "New"
+msgstr "新建"
+
+#: input/dvb/krecord.cpp:91
+msgid "Stop/Delete"
+msgstr "停止/删除"
+
+#: input/dvb/krecord.cpp:232
+msgid ""
+"This timer is repeated. Do you want to skip the current job or delete the "
+"timer?"
+msgstr "定时器是重复的。您是想要跳过当前任务还是删除定时器？"
+
+#: input/dvb/krecord.cpp:232
+msgid "Skip Current"
+msgstr "跳过当前"
+
+#: input/dvb/krecord.cpp:234
+msgid "Delete the selected timer?"
+msgstr "删除所选定时器？"
+
+#: input/dvb/dvbconfig.cpp:247
+msgid "Downloading... "
+msgstr "正在下载..."
+
+#: input/dvb/dvbconfig.cpp:247
+msgid "Copying data files..."
+msgstr "正在复制数据文件..."
+
+#: input/dvb/dvbconfig.cpp:478
+msgid "DVB Settings"
+msgstr "DVB 设置"
+
+#: input/dvb/dvbconfig.cpp:497
+msgid "DVB Device"
+msgstr "DVB 设备"
+
+#: input/dvb/dvbconfig.cpp:497
+msgid "Device Settings"
+msgstr "设备设置"
+
+#: input/dvb/dvbconfig.cpp:504
+msgid "<qt><b>Name:</b></qt>"
+msgstr "<qt><b>名称：<b></qt>"
+
+#: input/dvb/dvbconfig.cpp:510
+msgid "<qt><b>Type:</b></qt>"
+msgstr "<qt><b>类型：</b></qt>"
+
+#: input/dvb/dvbconfig.cpp:514
+msgid "Cable"
+msgstr "有线"
+
+#: input/dvb/dvbconfig.cpp:515
+msgid "Terrestrial"
+msgstr "地面"
+
+#: input/dvb/dvbconfig.cpp:516
+msgid "Satellite"
+msgstr "卫星"
+
+# 高级电视系统委员会（Advanced Television Systems Committee, ATSC）
+#: input/dvb/dvbconfig.cpp:517
+msgid "Atsc"
+msgstr "ATSC"
+
+#: input/disc/cddb.cpp:334 input/disc/disc.cpp:512 input/disc/disc.cpp:513
+#: input/dvb/dvbconfig.cpp:518
+msgid "Unknown"
+msgstr "未知"
+
+#: input/dvb/dvbconfig.cpp:524
+msgid "Number of LNBs:"
+msgstr "LNB 号："
+
+#: input/dvb/dvbconfig.cpp:531
+msgid "1st sat:"
+msgstr "第一路："
+
+#: input/dvb/dvbconfig.cpp:539 input/dvb/dvbconfig.cpp:553
+#: input/dvb/dvbconfig.cpp:567
+msgid "LNB Settings..."
+msgstr "LNB 设置..."
+
+#: input/dvb/dvbconfig.cpp:545
+msgid "2nd sat:"
+msgstr "第二路："
+
+#: input/dvb/dvbconfig.cpp:559
+msgid "3rd sat:"
+msgstr "第三路："
+
+#: input/dvb/dvbconfig.cpp:573
+msgid "4th sat:"
+msgstr "第四路："
+
+#: input/dvb/dvbconfig.cpp:581
+msgid "LNB settings..."
+msgstr "LNB 设置..."
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 57
+#: input/dvb/dvbconfig.cpp:590 rc.cpp:222
+#, no-c-format
+msgid "Source:"
+msgstr "源："
+
+#: input/dvb/dvbconfig.cpp:601
+msgid ""
+"<qt>This device seems to support the <b><i>autoscan</i></b> feature. You can "
+"choose <b>AUTO</b> in Source list to let Kaffeine search for a range of "
+"frequencies.<br>If <b><i>autoscan</i></b> fails to find your channels, "
+"choose a real Source in list.</qt>"
+msgstr ""
+"<qt>该设备似乎支持<b><i>自动扫描</i></b>功能。您可以从源列表里选择<b>自动扫描"
+"</b>让 Kaffeine 在一定频率范围内搜索。<br>如果<b><i>自动扫描</i></b>无法找到"
+"您需要的频道，请从列表里选择一个真实的源。</qt>"
+
+#: input/dvb/dvbconfig.cpp:609
+msgid ""
+"<qt><i>If you can't find your network/location in the list, you'll have to "
+"create one. Look in $HOME/.kde/share/apps/kaffeine/dvb-x/ and take an "
+"existing file as start point. Fill in with the values for your network/"
+"location and give it a sensible name (follow the naming convention). If you "
+"think your new file could be usefull for others, send it to kaffeine-user(AT)"
+"lists.sf.net.</i></qt>"
+msgstr ""
+"<qt><i>如果您无法在这个列表里找到您的网络/位置，您将不得不创建它。"
+"查看 $HOME/.kde/share/apps/kaffeine/dvb-x/ ($HOME 表示您的家目录)"
+"并且以一个现有文件作为起点。填入您的网络/位置并给出一个大小写敏感的名字(附带命名规则)。"
+"如果您认为您的新文件可能对别人有用，请将它发送至 kaffeine-user(AT)lists.sf.net.</i></qt>"
+
+#: input/dvb/dvbconfig.cpp:620
+msgid "DVB Recording Options"
+msgstr "DVB 录制选项"
+
+#: input/dvb/dvbconfig.cpp:626
+msgid "Records directory:"
+msgstr "录制目录："
+
+#: input/dvb/dvbconfig.cpp:635 pref.cpp:116
+msgid "Time shifting directory:"
+msgstr "时光平移目录："
+
+#: input/dvb/dvbconfig.cpp:644
+msgid "Begin margin:"
+msgstr "起始空白："
+
+#: input/dvb/dvbconfig.cpp:649 input/dvb/dvbconfig.cpp:658
+#: input/dvb/dvbconfig.cpp:667
+msgid "(minutes)"
+msgstr "(分)"
+
+#: input/dvb/dvbconfig.cpp:653
+msgid "End margin:"
+msgstr "结束空白："
+
+#: input/dvb/dvbconfig.cpp:662
+msgid "Instant record duration:"
+msgstr "立即录制时长："
+
+#: input/dvb/dvbconfig.cpp:671
+msgid "Preferred format:"
+msgstr "首选格式："
+
+#: input/dvb/dvbconfig.cpp:693
+msgid "DVB Broadcasting"
+msgstr "DVB 广播"
+
+#: input/dvb/dvbconfig.cpp:699 pref.cpp:103
+msgid "Broadcast address:"
+msgstr "广播地址："
+
+#: input/dvb/dvbconfig.cpp:703 pref.cpp:107
+msgid "Broadcast port:"
+msgstr "广播端口："
+
+#: input/dvb/dvbconfig.cpp:707 pref.cpp:111
+msgid "Info port:"
+msgstr "信息端口："
+
+#: input/dvb/dvbconfig.cpp:719 pref.cpp:130
+msgid "Misc"
+msgstr "杂项"
+
+#: input/dvb/dvbconfig.cpp:725
+msgid "Default charset (restart needed):"
+msgstr "默认字符集(需要重新启动)："
+
+#: input/dvb/dvbconfig.cpp:736
+msgid "Update scan data:"
+msgstr "更新扫描数据："
+
+#: input/dvb/dvbconfig.cpp:739
+msgid "Download"
+msgstr "下载"
+
+#: input/dvb/dvbconfig.cpp:742
+msgid ""
+"Dump epg's events to \n"
+"~/kaffeine_dvb_events.tx:"
+msgstr ""
+"转储电子节目指南事件到 \n"
+"~/kaffeine_dvb_events.tx"
+
+#: input/dvb/dvbconfig.cpp:745
+msgid "Dump"
+msgstr "转储"
+
+#: input/dvb/dvbconfig.cpp:752
+msgid "DVB plugins"
+msgstr "DVB 插件"
+
+#: input/dvb/dvbconfig.cpp:806
+msgid ""
+"<qt>Can't get DVB data from http://hftom.free.fr/kaxtv/dvbdata.tar.gz!<br>\t"
+"\t\tCheck your internet connection, and say Yes to try again.<br>\t\t\tOr "
+"say No to cancel.<br> Should I try again?</qt>"
+msgstr ""
+"<qt>不能从 http://hftom.free.fr/kaxtv/dvbdata.tar.gz 得到 DVB 数据！<br>\t\t"
+"\t请检查您的网络连接，然后按“是”再试一次。<br>\t\t\t或按“否”取消。<br>要再试"
+"一次吗？</qt>"
+
+#: input/dvb/dvbconfig.cpp:877
+msgid "Invalid records directory."
+msgstr "非法的录制目录。"
+
+#: input/dvb/dvbconfig.cpp:882
+msgid "Invalid time shifting directory."
+msgstr "非法的时光平移目录。"
+
+#: input/dvb/dvbconfig.cpp:887
+msgid "Broadcast and Info ports must be different."
+msgstr "广播和信息端口必须不同。"
+
+#: input/dvb/dvbconfig.cpp:892
+msgid "Invalid broadcast address."
+msgstr "非法的广播地址。"
+
+# 低噪声降频器(LNB, Low Noise Block)
+#: input/dvb/dvbconfig.cpp:957
+msgid "LNB Settings"
+msgstr "低噪声降频器(LNB)设置"
+
+#: input/dvb/dvbconfig.cpp:967
+msgid "Universal LNB"
+msgstr "通用 LNB"
+
+#: input/dvb/dvbconfig.cpp:970
+msgid "C-Band LNB"
+msgstr "C-波段 LNB"
+
+#: input/dvb/dvbconfig.cpp:973
+msgid "C-Band Multipoint LNB"
+msgstr "C-波段多点 LNB"
+
+# LO=local oscillator, 本机振荡器
+#: input/dvb/dvbconfig.cpp:980
+msgid "Dual LO"
+msgstr "双本机振荡器"
+
+#: input/dvb/dvbconfig.cpp:981
+msgid "Single LO"
+msgstr "单本机振荡器"
+
+#: input/dvb/dvbconfig.cpp:982
+msgid "H/V LO"
+msgstr "水平/垂直本机振荡器"
+
+#: input/dvb/dvbconfig.cpp:984
+msgid "Dual LO switch frequency:"
+msgstr "双本机振荡器切换频率："
+
+#: input/dvb/dvbconfig.cpp:984 input/dvb/dvbconfig.cpp:988
+#: input/dvb/dvbconfig.cpp:992 input/dvb/dvbconfig.cpp:996
+#: input/dvb/dvbconfig.cpp:1000 input/dvb/dvbconfig.cpp:1004
+msgid " (MHz)"
+msgstr " (MHz)"
+
+#: input/dvb/dvbconfig.cpp:988
+msgid "Lo-band frequency:"
+msgstr "低波段频率："
+
+#: input/dvb/dvbconfig.cpp:992
+msgid "Hi-band frequency:"
+msgstr "高波段频率："
+
+#: input/dvb/dvbconfig.cpp:996
+msgid "Single LO frequency:"
+msgstr "单本机振荡器频率："
+
+# pol.=polarization, 偏振，极化
+#: input/dvb/dvbconfig.cpp:1000
+msgid "Vertical pol. LO frequency:"
+msgstr "垂直偏振本机振荡器频率："
+
+#: input/dvb/dvbconfig.cpp:1004
+msgid "Horizontal pol. LO frequency:"
+msgstr "水平偏振本机振荡器频率："
+
+#: input/dvb/broadcasteditor.cpp:39
+msgid "Reset"
+msgstr "重置/复位"
+
+#: input/dvb/ts2rtp.cpp:113
+msgid "Can't open DVB broadcast socket."
+msgstr "无法打开 DVB 广播套接字。"
+
+#: input/dvb/ts2rtp.cpp:125
+msgid "Can't init DVB broadcast socket."
+msgstr "无法初始化 DVB 广播套接字。"
+
+#: input/disc/paranoia.cpp:266
+msgid "No audio encoders could be found."
+msgstr "未找到音频编码器。"
+
+#: input/disc/paranoia.cpp:310 input/disc/paranoia.cpp:317
+msgid "Loading of encoder '%1' failed."
+msgstr "载入编码器“%1”失败。"
+
+#: input/disc/paranoia.cpp:346
+msgid "Unable to create folder: "
+msgstr "无法创建文件夹："
+
+#: input/disc/paranoia.cpp:559
+msgid "MB"
+msgstr "MB"
+
+#: input/disc/paranoia.cpp:560
+msgid "KB"
+msgstr "KB"
+
+#: input/disc/paranoia.cpp:561
+msgid "Bytes"
+msgstr "字节"
+
+#: input/disc/disc.cpp:51 input/disc/disc.cpp:439 kaffeine.cpp:188
+msgid "Audio CD"
+msgstr "音频 CD"
+
+#: input/disc/disc.cpp:108 input/disc/disc.cpp:112
+msgid "Play CD"
+msgstr "播放 CD"
+
+#: input/disc/disc.cpp:114 input/disc/disc.cpp:118
+msgid "Rip CD"
+msgstr "提取 CD"
+
+#: input/disc/disc.cpp:132
+msgid "Artist:"
+msgstr "艺人："
+
+#: input/disc/disc.cpp:140
+msgid "Album:"
+msgstr "专辑："
+
+#: input/audiobrowser/playlist.cpp:357 input/audiobrowser/urllistview.cpp:68
+#: input/audiobrowser/urllistview.cpp:193 input/disc/disc.cpp:151
+#: input/disc/disc.cpp:515 input/disc/disc.cpp:518
+#: player-parts/gstreamer-part/gstreamer_part.cpp:442
+#: player-parts/gstreamer-part/gstreamer_part.cpp:673
+#: player-parts/xine-part/xine_part.cpp:1170
+msgid "Track"
+msgstr "轨道"
+
+#: input/disc/disc.cpp:165
+msgid "Select the tracks you want to rip and click the <b>Encode</b> button."
+msgstr "选择您想要提取的音轨，然后单击<b>编码</b>按钮。"
+
+#: input/disc/disc.cpp:169
+msgid "Encode..."
+msgstr "编码..."
+
+#: input/disc/disc.cpp:209
+msgid "Audio CD encoding"
+msgstr "音频 CD 编码"
+
+#: input/disc/disc.cpp:212
+msgid "Play Audio CD"
+msgstr "播放 CD"
+
+#: input/disc/disc.cpp:215
+msgid "Play DVD"
+msgstr "播放 DVD"
+
+#: input/disc/disc.cpp:218
+msgid "Play VCD"
+msgstr "播放 VCD"
+
+#: input/disc/disc.cpp:286
+msgid "Open &DVD"
+msgstr "打开 DVD(&D)"
+
+#: input/disc/disc.cpp:287
+msgid "Open &VCD"
+msgstr "打开 VCD(&V)"
+
+#: input/disc/disc.cpp:288
+msgid "Open &Audio-CD"
+msgstr "打开 Audio-CD(&A)"
+
+#: input/disc/disc.cpp:340
+msgid "You must select the tracks to rip."
+msgstr "您必须选择要抓取的音轨。"
+
+#: input/disc/disc.cpp:439
+msgid "Several Audio CD found. Choose one:"
+msgstr "找到了多张音频 CD。请选择："
+
+#: input/disc/disc.cpp:539
+msgid "No audio CD found."
+msgstr "未找到音频 CD。"
+
+#: input/disc/disc.cpp:576
+msgid "DVD Video"
+msgstr "DVD 视频"
+
+#: input/disc/disc.cpp:576
+msgid "Several DVD Video found. Choose one:"
+msgstr "找到了多张 DVD 视频。请选择："
+
+#: input/disc/disc.cpp:632
+msgid "VCD-SVCD"
+msgstr "VCD-SVCD"
+
+#: input/disc/disc.cpp:632
+msgid "Several (S)VCD found. Choose one:"
+msgstr "找到了多张 (S)VCD。请选择："
+
+#: input/disc/cddb.cpp:330
+msgid "No Title"
+msgstr "无标题"
+
+#: input/disc/cddb.cpp:342
+#, c-format
+msgid "Track %1"
+msgstr "音轨 %1"
+
+#: input/disc/cddb.cpp:427
+msgid "Searching local cddb entry ..."
+msgstr "正在搜索本地 CDDB 项..."
+
+#: input/disc/cddb.cpp:452
+msgid "Searching remote cddb entry ..."
+msgstr "正在搜索远程 CDDB 项..."
+
+#: input/disc/cddb.cpp:476
+msgid "Found exact match cddb entry ..."
+msgstr "找到了精确匹配的 CDDB 项..."
+
+#: input/disc/cddb.cpp:534
+msgid "Found close cddb entry ..."
+msgstr "找到了接近的 cddb 项..."
+
+#: input/disc/cddb.cpp:557
+msgid "CDDB Matches"
+msgstr "CDDB 匹配"
+
+#: input/disc/cddb.cpp:557
+msgid "Several close CDDB entries found. Choose one:"
+msgstr "找到了多个接近的 CDDB 项。请选择："
+
+#: input/disc/plugins/mp3lame/klameenc.cpp:92
+msgid "KaffeineMp3Lame"
+msgstr "KaffeineMp3Lame"
+
+#: input/disc/plugins/mp3lame/klameenc.cpp:93
+msgid "A Lame mp3 encoder plugin for Kaffeine."
+msgstr "Kaffeine 的 Lame MP3 编码插件。"
+
+#: input/disc/plugins/oggvorbis/koggenc.cpp:72
+msgid "KaffeineOggVorbis"
+msgstr "KaffeineOggVorbis"
+
+#: input/disc/plugins/oggvorbis/koggenc.cpp:73
+msgid "A Ogg Vorbis encoder plugin for Kaffeine."
+msgstr "Kaffeine 的 Ogg Vorbis 编码器插件。"
+
+#: input/dvbclient/cddump.cpp:191 input/dvbclient/cddump.cpp:202
+#: input/dvbclient/cddump.cpp:209 input/dvbclient/cdlisten.cpp:69
+#: input/dvbclient/cdlisten.cpp:80 input/dvbclient/cdwidget.cpp:85 pref.cpp:93
+msgid "DVB Client"
+msgstr "DVB 客户"
+
+#: input/dvbclient/cdlisten.cpp:69
+msgid "Can't open info socket."
+msgstr "无法打开信息套接字。"
+
+#: input/dvbclient/cdlisten.cpp:80
+msgid "Can't bind info socket!!!"
+msgstr "无法绑定信息套接字。"
+
+#: input/dvbclient/cddump.cpp:191
+msgid "Can't open socket."
+msgstr "无法打开套接字。"
+
+#: input/dvbclient/cddump.cpp:202
+msgid "Can't set socket option!!!"
+msgstr "无法设定套接字选项。"
+
+#: input/dvbclient/cddump.cpp:209
+msgid "Can't bind socket!!!"
+msgstr "无法绑定套接字。"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:61
+msgid "All Sizes"
+msgstr "全部大小"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:62
+msgid "Very Small"
+msgstr "非常小"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:63
+msgid "Small"
+msgstr "小"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:64
+msgid "Medium"
+msgstr "中"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:65
+msgid "Large"
+msgstr "大"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:66
+msgid "Very Large"
+msgstr "非常大"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:73
+msgid "New Search"
+msgstr "新建搜索"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:123
+msgid "The cover you have selected is unavailable. Please select another."
+msgstr "您所选择的封面不可用。请另外选择一个。"
+
+#: input/audiobrowser/googlefetcherdialog.cpp:124
+msgid "Cover Unavailable"
+msgstr "封面不可用"
+
+#: input/audiobrowser/googlefetcher.cpp:263
+msgid "Cover Downloader"
+msgstr "封面下载器"
+
+#: input/audiobrowser/googlefetcher.cpp:265
+msgid "No matching images found, please enter new search terms:"
+msgstr "没有找到匹配的图像，请输入新的搜索条件："
+
+#: input/audiobrowser/googlefetcher.cpp:266
+msgid "Enter new search terms:"
+msgstr "输入新的搜索条件："
+
+#: input/audiobrowser/urllistview.cpp:44
+#: player-parts/dummy-part/dummy_part.cpp:121
+#: player-parts/gstreamer-part/gstreamer_part.cpp:821
+#: player-parts/xine-part/xine_part.cpp:1279
+msgid "Play"
+msgstr "播放"
+
+#: input/audiobrowser/urllistview.cpp:45
+msgid "Play Next/Add to Queue"
+msgstr "播放下一曲/添加到队列"
+
+#: input/audiobrowser/urllistview.cpp:51
+msgid "Select &All"
+msgstr "全选(&A)"
+
+#: input/audiobrowser/urllistview.cpp:52
+msgid "Create Playlist From Selected"
+msgstr "从选择的文件创建播放列表"
+
+#: input/audiobrowser/urllistview.cpp:54
+msgid "Add Sub&title..."
+msgstr "添加字幕(&T)..."
+
+#: input/audiobrowser/urllistview.cpp:56
+msgid "&Edit Title"
+msgstr "编辑标题(&E)"
+
+#: input/audiobrowser/urllistview.cpp:57
+msgid "&Info"
+msgstr "信息(&I)"
+
+#: input/audiobrowser/playlist.cpp:358 input/audiobrowser/urllistview.cpp:61
+#: input/audiobrowser/urllistview.cpp:196
+#: player-parts/gstreamer-part/gstreamer_part.cpp:683
+#: player-parts/xine-part/xine_part.cpp:1176
+msgid "Length"
+msgstr "长度"
+
+#: input/audiobrowser/urllistview.cpp:190
+msgid "URL"
+msgstr "URL"
+
+#: input/audiobrowser/playlist.cpp:355 input/audiobrowser/urllistview.cpp:191
+#: player-parts/gstreamer-part/gstreamer_part.cpp:669
+#: player-parts/xine-part/xine_part.cpp:1166
+msgid "Artist"
+msgstr "艺人"
+
+#: input/audiobrowser/playlist.cpp:356 input/audiobrowser/urllistview.cpp:192
+#: player-parts/gstreamer-part/gstreamer_part.cpp:671
+#: player-parts/xine-part/xine_part.cpp:1168
+msgid "Album"
+msgstr "专辑"
+
+#: input/audiobrowser/urllistview.cpp:194
+#: player-parts/gstreamer-part/gstreamer_part.cpp:675
+#: player-parts/xine-part/xine_part.cpp:1172
+msgid "Year"
+msgstr "年份"
+
+#: input/audiobrowser/urllistview.cpp:195
+#: player-parts/gstreamer-part/gstreamer_part.cpp:677
+#: player-parts/xine-part/xine_part.cpp:1174
+msgid "Genre"
+msgstr "流派"
+
+#: input/audiobrowser/urllistview.cpp:199
+msgid "Subtitles"
+msgstr "字幕"
+
+#: input/audiobrowser/urllistview.cpp:205
+msgid "in use"
+msgstr "使用中"
+
+#: input/audiobrowser/playlist.cpp:1281 input/audiobrowser/urllistview.cpp:292
+msgid ""
+"*.smi *.srt *.sub *.txt *.ssa *.asc|Subtitle Files\n"
+"*.*|All Files"
+msgstr ""
+"*.smi *.srt *.sub *.txt *.ssa *.asc|字幕文件\n"
+"*.*|所有文件"
+
+#: input/audiobrowser/playlist.cpp:1281 input/audiobrowser/urllistview.cpp:293
+msgid "Select Subtitle File"
+msgstr "选择字幕文件"
+
+#: input/audiobrowser/playlist.cpp:263
+msgid "Choose a Cover..."
+msgstr "选择封面..."
+
+#: input/audiobrowser/playlist.cpp:264
+msgid "Gallery..."
+msgstr "影集..."
+
+#: input/audiobrowser/playlist.cpp:390 input/audiobrowser/playlist.cpp:2055
+msgid "Filter"
+msgstr "过滤器"
+
+#: input/audiobrowser/playlist.cpp:398
+msgid "Playlist:"
+msgstr "播放列表："
+
+#: input/audiobrowser/playlist.cpp:406
+msgid ""
+"Select the active playlist. To change playlist name edit it and confirm with "
+"'Return'."
+msgstr "选择活动播放列表。要改变播放列表的名字请编辑它并用“回车”确认。"
+
+#: input/audiobrowser/playlist.cpp:458
+msgid "Play Playlist"
+msgstr "播放播放列表"
+
+#: input/audiobrowser/playlist.cpp:486
+msgid "&Repeat"
+msgstr "重复(&R)"
+
+#: input/audiobrowser/playlist.cpp:487
+msgid "Loop playlist"
+msgstr "循环播放列表"
+
+#: input/audiobrowser/playlist.cpp:488
+msgid "Sh&uffle"
+msgstr "乱序(&U)"
+
+#: input/audiobrowser/playlist.cpp:489
+msgid "Play items in random order"
+msgstr "随机播放"
+
+#: input/audiobrowser/playlist.cpp:490
+msgid "Autodownload covers"
+msgstr "自动下载封面"
+
+#: input/audiobrowser/playlist.cpp:491
+msgid "Automatic dowloading of covers"
+msgstr "自动下载封面"
+
+#: input/audiobrowser/playlist.cpp:492
+msgid "&Clear Current Playlist"
+msgstr "清空当前播放列表(&C)"
+
+#: input/audiobrowser/playlist.cpp:493
+msgid "Ne&w Playlist"
+msgstr "新建播放列表(&W)"
+
+#: input/audiobrowser/playlist.cpp:494
+msgid "&Import Playlist..."
+msgstr "导入播放列表(&I)..."
+
+#: input/audiobrowser/playlist.cpp:495
+msgid "&Save Current Playlist As..."
+msgstr "当前播放列表另存为(&S)..."
+
+#: input/audiobrowser/playlist.cpp:496
+msgid "Re&move Current Playlist"
+msgstr "删除当前播放列表(&M)"
+
+#: input/audiobrowser/playlist.cpp:527 input/audiobrowser/playlist.cpp:539
+#: kaffeine.cpp:218
+msgid "Kaffeine Playlists"
+msgstr "Kaffeine 播放列表"
+
+#: input/audiobrowser/playlist.cpp:527 input/audiobrowser/playlist.cpp:542
+#: kaffeine.cpp:219
+msgid "All Files"
+msgstr "所有文件"
+
+#: input/audiobrowser/playlist.cpp:527
+msgid "Open Playlist"
+msgstr "打开播放列表"
+
+#: input/audiobrowser/playlist.cpp:540 kaffeine.cpp:216
+msgid "M3U Playlists"
+msgstr "M3U 播放列表"
+
+#: input/audiobrowser/playlist.cpp:541 kaffeine.cpp:217
+msgid "PLS Playlists"
+msgstr "PLS 播放列表"
+
+#: input/audiobrowser/playlist.cpp:542
+msgid "Save Playlist"
+msgstr "保存播放列表"
+
+#: input/audiobrowser/playlist.cpp:602 input/audiobrowser/playlist.cpp:1767
+#: inputmanager.cpp:209 kaffeine.cpp:183
+msgid "Playlist"
+msgstr "播放列表"
+
+#: input/audiobrowser/playlist.cpp:605 input/audiobrowser/playlist.cpp:644
+#: kaffeine.cpp:1540
+msgid "NEW"
+msgstr "新建"
+
+#: input/audiobrowser/playlist.cpp:1004
+msgid "Importing media resources..."
+msgstr "正在导入媒体资源..."
+
+#: input/audiobrowser/playlist.cpp:1270 input/audiobrowser/playlist.cpp:1277
+#: input/audiobrowser/playlist.cpp:1295
+msgid "(no subtitles)"
+msgstr "(无字幕)"
+
+#: input/audiobrowser/playlist.cpp:1271 input/audiobrowser/playlist.cpp:1277
+#: input/audiobrowser/playlist.cpp:1279 input/audiobrowser/playlist.cpp:1296
+msgid "Other subtitle..."
+msgstr "其它字幕..."
+
+#: input/audiobrowser/playlist.cpp:1588
+msgid "Gallery"
+msgstr "影集"
+
+#: input/audiobrowser/playlist.cpp:1751
+msgid "Queue: %1 Entries, Playtime: %2"
+msgstr "队列：%1 个曲目，播放时间：%2"
+
+#: input/audiobrowser/playlist.cpp:1758
+msgid "Entries: %1, Playtime: %2"
+msgstr "曲目：%1，播放时间：%2"
+
+#: input/audiobrowser/playlist.cpp:1863
+msgid "Remove '%1' from list and from disk?"
+msgstr "从列表和磁盘上删除“%1”吗？"
+
+#: input/audiobrowser/playlist.cpp:1888
+msgid "Playlist Name Already Exists"
+msgstr "播放列表名称已经存在"
+
+#: input/audiobrowser/playlist.cpp:1889
+msgid "Enter different playlist name:"
+msgstr "输入不同的播放列表名称："
+
+#: input/audiobrowser/playlist.cpp:2294
+#: player-parts/xine-part/xine_part.cpp:1330
+msgid "Select Subtitle"
+msgstr "选择字幕"
+
+#: input/audiobrowser/playlist.cpp:2298
+msgid "Media file:"
+msgstr "媒体文件："
+
+#: input/audiobrowser/playlist.cpp:2315
+msgid "Select Movie"
+msgstr "选择影片"
+
+#: input/audiobrowser/playlist.cpp:2319
+msgid "Subtitle file:"
+msgstr "字幕文件："
+
+#: systemtray.cpp:60
+msgid "Play / Pause"
+msgstr "播放/暂停"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:824
+#: player-parts/xine-part/xine_part.cpp:1281 systemtray.cpp:61
+msgid "&Next"
+msgstr "下一首(&N)"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:837
+#: player-parts/xine-part/xine_part.cpp:1307 systemtray.cpp:64
+msgid "&Mute"
+msgstr "静音(&M)"
+
+#: main.cpp:72 player-parts/xine-part/xine_part.cpp:1215 systemtray.cpp:79
+msgid "Kaffeine Player"
+msgstr "Kaffeine 播放器"
+
+#: startwindow.cpp:85
+msgid "[Kaffeine Player]"
+msgstr "[Kaffeine 播放器]"
+
+#: _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr "钱 峥,张日东,刘松鹤"
+
+#: _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr "billqian@sohu.com,kanker@163.com,athena_star@163.com"
+
+#: main.cpp:73
+msgid ""
+"A media player for KDE 3. Can use multiple backends for playback, default "
+"(and recommended) is xine."
+msgstr ""
+"一个 KDE 下的媒体播放器，可使用多种后端来回放，默认(也是推荐后端)是 xine。"
+
+#: main.cpp:74
+msgid "(c) 2003-2005, The Kaffeine Authors"
+msgstr "(c) 2003-2007, Kaffeine 作者"
+
+#: main.cpp:77
+msgid "Current maintainer"
+msgstr "目前维护者"
+
+#: main.cpp:78
+msgid "Original author"
+msgstr "原作者"
+
+#: main.cpp:82
+msgid "CICAM support."
+msgstr "CICAM 支持。"
+
+#: main.cpp:83
+msgid "Various valuable patches."
+msgstr "各种有价值的补丁。"
+
+#: main.cpp:84
+msgid "DVB OSD browsing patch."
+msgstr "DVB OSD 浏览补丁。"
+
+#: main.cpp:85
+msgid "DVB categories patches."
+msgstr "DVB 类别补丁。"
+
+#: main.cpp:86
+msgid "Logo for Kaffeine 0.8 and other artwork."
+msgstr "Kaffeine 0.8 的标志和其它美工。"
+
+#: main.cpp:87
+msgid "Logo animation for Kaffeine 0.5"
+msgstr "Kaffeine 0.5 动画图标"
+
+#: main.cpp:88
+msgid "Alternate encoding for meta tags. Many patches."
+msgstr "为 Meta 标签使用替代编码。许多补丁。"
+
+#: main.cpp:89
+msgid "xine post plugin handling. Many patches."
+msgstr "xine 后期插件处理。许多补丁。"
+
+#: main.cpp:90
+msgid "Subtitle file import."
+msgstr "字幕文件导入。"
+
+#: main.cpp:91
+msgid "M3U import. Testing."
+msgstr "M3U 导入。测试中。"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 16
+#: rc.cpp:3
+#, no-c-format
+msgid "Subtitle PIDs Editor"
+msgstr "字幕包标识符编辑器"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 84
+#: rc.cpp:9
+#, no-c-format
+msgid "Subtitle PIDs"
+msgstr "字幕包标识符"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 93
+#: rc.cpp:12 rc.cpp:94 rc.cpp:133 rc.cpp:141
+#, no-c-format
+msgid "New Item"
+msgstr "新建项目"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 131
+#: rc.cpp:15 rc.cpp:97
+#, no-c-format
+msgid "Move Up"
+msgstr "上移"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 139
+#: rc.cpp:18 rc.cpp:100
+#, no-c-format
+msgid "Move Down"
+msgstr "下移"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 209
+#: rc.cpp:24 rc.cpp:106
+#, no-c-format
+msgid "<< Update Selected"
+msgstr "<< 更新所选"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 217
+#: rc.cpp:27 rc.cpp:109
+#, no-c-format
+msgid "<< New"
+msgstr "<< 新建"
+
+#. i18n: file ./input/dvb/subeditorui.ui line 246
+#: rc.cpp:33 rc.cpp:115
+#, no-c-format
+msgid "Pid:"
+msgstr "包标识符："
+
+#. i18n: file ./input/dvb/subeditorui.ui line 254
+#: rc.cpp:36
+#, no-c-format
+msgid "Page:"
+msgstr "页面："
+
+#. i18n: file ./input/dvb/subeditorui.ui line 262
+#: rc.cpp:39
+#, no-c-format
+msgid "Sub page:"
+msgstr "次页面："
+
+#. i18n: file ./input/dvb/subeditorui.ui line 270
+#: rc.cpp:42 rc.cpp:118
+#, no-c-format
+msgid "Lang:"
+msgstr "语言："
+
+#. i18n: file ./input/dvb/crontimerui.ui line 16
+#: rc.cpp:45
+#, no-c-format
+msgid "Repeated Timer"
+msgstr "重复计时器"
+
+#. i18n: file ./input/dvb/audioeditorui.ui line 16
+#: rc.cpp:88
+#, no-c-format
+msgid "Audio PIDs editor"
+msgstr "音频包标识符编辑器"
+
+#. i18n: file ./input/dvb/audioeditorui.ui line 43
+#: rc.cpp:91
+#, no-c-format
+msgid "Audio PIDs"
+msgstr "音频包标识符"
+
+#. i18n: file ./input/dvb/audioeditorui.ui line 221
+#: rc.cpp:121
+#, no-c-format
+msgid "AC3"
+msgstr "AC3"
+
+#. i18n: file ./input/dvb/broadcasteditorui.ui line 16
+#: rc.cpp:127
+#, no-c-format
+msgid "Broadcasting Editor"
+msgstr "广播编辑器"
+
+#. i18n: file ./input/dvb/broadcasteditorui.ui line 75
+#: rc.cpp:130
+#, no-c-format
+msgid "Available channels:"
+msgstr "可用的频道："
+
+#. i18n: file ./input/dvb/broadcasteditorui.ui line 181
+#: rc.cpp:138
+#, no-c-format
+msgid "Broadcasting list:"
+msgstr "广播列表："
+
+#. i18n: file ./input/dvb/scandialogui.ui line 54
+#: rc.cpp:152
+#, no-c-format
+msgid "(Right click to edit/delete)"
+msgstr "(右键单击可编辑/删除)"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 81
+#: rc.cpp:158
+#, no-c-format
+msgid "New..."
+msgstr "新建..."
+
+#. i18n: file ./input/dvb/scandialogui.ui line 124
+#: rc.cpp:164
+#, no-c-format
+msgid "Search On"
+msgstr "搜索"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 140
+#: rc.cpp:167
+#, no-c-format
+msgid "Offset (KHz)"
+msgstr "偏移(KHz)"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 151
+#: rc.cpp:170
+#, no-c-format
+msgid "0"
+msgstr "0"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 162
+#: rc.cpp:173
+#, no-c-format
+msgid "+167"
+msgstr "+167"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 170
+#: rc.cpp:176
+#, no-c-format
+msgid "-167"
+msgstr "-167"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 190
+#: rc.cpp:179
+#, no-c-format
+msgid "Start Scan"
+msgstr "开始搜索"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 251
+#: rc.cpp:183
+#, no-c-format
+msgid "Filters"
+msgstr "过滤器"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 270
+#: rc.cpp:186
+#, no-c-format
+msgid "Free to air"
+msgstr "自由放送(即免费的频道)"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 318
+#: rc.cpp:195
+#, no-c-format
+msgid "Provider:"
+msgstr "提供者："
+
+#. i18n: file ./input/dvb/scandialogui.ui line 349
+#: rc.cpp:198
+#, no-c-format
+msgid "<< Add Selected"
+msgstr "<< 添加所选"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 365
+#: rc.cpp:201
+#, no-c-format
+msgid "<< Add Filtered"
+msgstr "<< 添加已筛选的"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 377
+#: instwizard.cpp:180 rc.cpp:204
+#, no-c-format
+msgid "Found"
+msgstr "发现的"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 386
+#: rc.cpp:207
+#, no-c-format
+msgid "SNR"
+msgstr "SNR"
+
+#. i18n: file ./input/dvb/scandialogui.ui line 458
+#: rc.cpp:213
+#, no-c-format
+msgid "Done"
+msgstr "完成"
+
+#. i18n: file ./input/dvb/kaffeinedvb.rc line 4
+#: player-parts/gstreamer-part/gstreamer_part.cpp:841
+#: player-parts/xine-part/xine_part.cpp:1316 rc.cpp:216
+#, no-c-format
+msgid "&DVB"
+msgstr "DVB(&D)"
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 16
+#: rc.cpp:219
+#, no-c-format
+msgid "Channel Editor"
+msgstr "频道编辑器"
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 126
+#: rc.cpp:228
+#, no-c-format
+msgid "Nr:"
+msgstr "Nr："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 163
+#: rc.cpp:232
+#, no-c-format
+msgid "Polarity"
+msgstr "极化"
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 200
+#: rc.cpp:241
+#, no-c-format
+msgid "Frequency:"
+msgstr "频率："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 216
+#: rc.cpp:244
+#, no-c-format
+msgid "Symbol rate:"
+msgstr "符号率："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 246
+#: rc.cpp:247
+#, no-c-format
+msgid "Scrambled"
+msgstr "扰动"
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 283
+#: rc.cpp:251
+#, no-c-format
+msgid "Teletext PID:"
+msgstr "图文电视包标识符："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 313
+#: rc.cpp:254
+#, no-c-format
+msgid "Service ID:"
+msgstr "服务标识："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 337
+#: rc.cpp:257
+#, no-c-format
+msgid "Video PID:"
+msgstr "视频包标识符："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 375
+#: rc.cpp:260
+#, no-c-format
+msgid "Transport stream ID:"
+msgstr "传送流标识："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 385
+#: rc.cpp:263
+#, no-c-format
+msgid "Subtitle PIDs..."
+msgstr "字幕包标识符..."
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 396
+#: rc.cpp:266
+#, no-c-format
+msgid "Audio PIDs..."
+msgstr "音频包标识符..."
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 432
+#: rc.cpp:270
+#, no-c-format
+msgid "Bandwidth:"
+msgstr "带宽："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 448
+#: rc.cpp:273
+#, no-c-format
+msgid "FEC high:"
+msgstr "误码率上限"
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 464
+#: rc.cpp:276
+#, no-c-format
+msgid "Transmission:"
+msgstr "传输："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 495
+#: rc.cpp:279
+#, no-c-format
+msgid "FEC low:"
+msgstr "误码率下限"
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 516
+#: rc.cpp:282
+#, no-c-format
+msgid "Guard interval:"
+msgstr "保护间隔："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 537
+#: rc.cpp:285
+#, no-c-format
+msgid "Hierarchy:"
+msgstr "层次："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 553
+#: rc.cpp:288
+#, no-c-format
+msgid "Modulation:"
+msgstr "调制："
+
+#. i18n: file ./input/dvb/channeleditorui.ui line 579
+#: rc.cpp:291
+#, no-c-format
+msgid "Inversion:"
+msgstr "倒置："
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 16
+#: rc.cpp:300
+#, no-c-format
+msgid "Encoding Preferences"
+msgstr "编码首选项"
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 38
+#: rc.cpp:303
+#, no-c-format
+msgid "Encoder:"
+msgstr "编码器："
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 56
+#: rc.cpp:306
+#, no-c-format
+msgid "Base directory:"
+msgstr "基础目录："
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 73
+#: rc.cpp:309
+#, no-c-format
+msgid "..."
+msgstr "..."
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 99
+#: rc.cpp:312
+#, no-c-format
+msgid "Paranoia:"
+msgstr "Paranoia："
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 116
+#: rc.cpp:315
+#, no-c-format
+msgid "Disable all checking"
+msgstr "禁止全部检查"
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 124
+#: rc.cpp:318
+#, no-c-format
+msgid "Normal mode"
+msgstr "普通模式"
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 132
+#: rc.cpp:321
+#, no-c-format
+msgid "Paranoia mode"
+msgstr "Paranoia 模式"
+
+#. i18n: file ./input/disc/paranoiasettings.ui line 153
+#: rc.cpp:325
+#, no-c-format
+msgid "Normalize"
+msgstr "正规化"
+
+#. i18n: file ./input/disc/kaffeinedisc.rc line 12
+#: rc.cpp:336
+#, no-c-format
+msgid "CD Toolbar"
+msgstr "CD 工具栏"
+
+#. i18n: file ./input/disc/plugins/mp3lame/lameconfig.ui line 16
+#: rc.cpp:339
+#, no-c-format
+msgid "Lame mp3 options"
+msgstr "Lame MP3 选项"
+
+#. i18n: file ./input/disc/plugins/mp3lame/lameconfig.ui line 49
+#: rc.cpp:343
+#, no-c-format
+msgid "VBR"
+msgstr "VBR"
+
+#. i18n: file ./input/disc/plugins/mp3lame/lameconfig.ui line 73
+#: rc.cpp:346
+#, no-c-format
+msgid "Bitrate:"
+msgstr "比特率："
+
+#. i18n: file ./input/disc/plugins/mp3lame/lameconfig.ui line 94
+#: rc.cpp:349
+#, no-c-format
+msgid "Kb/s"
+msgstr "Kb/s"
+
+#. i18n: file ./input/disc/plugins/oggvorbis/oggconfig.ui line 16
+#: rc.cpp:360
+#, no-c-format
+msgid "Ogg Vorbis Options"
+msgstr "Ogg Vorbis 选项"
+
+#. i18n: file ./input/disc/plugins/oggvorbis/oggconfig.ui line 86
+#: rc.cpp:364
+#, no-c-format
+msgid "Quality :"
+msgstr "质量："
+
+#. i18n: file ./input/audiobrowser/kaffeineplaylist.rc line 4
+#: rc.cpp:375
+#, no-c-format
+msgid "Play&list"
+msgstr "播放列表(&L)"
+
+#. i18n: file ./kaffeineui.rc line 12
+#: rc.cpp:381
+#, no-c-format
+msgid "Quit Options"
+msgstr "退出选项"
+
+#. i18n: file ./kaffeineui.rc line 19
+#: rc.cpp:384 rc.cpp:402 rc.cpp:450 rc.cpp:468
+#, no-c-format
+msgid "&Player"
+msgstr "播放器(&P)"
+
+#. i18n: file ./kaffeineui.rc line 26
+#: rc.cpp:390
+#, no-c-format
+msgid "Enable Auto &Resize"
+msgstr "开启自动缩放(&R)"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 5
+#: rc.cpp:399
+#, no-c-format
+msgid "&Network Broadcasting"
+msgstr "网络广播(&N)"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 24
+#: rc.cpp:405 rc.cpp:411 rc.cpp:441
+#, no-c-format
+msgid "&Navigation"
+msgstr "导航(&N)"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 33
+#: rc.cpp:408 rc.cpp:444
+#, no-c-format
+msgid "&DVD"
+msgstr "&DVD"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 41
+#: rc.cpp:414 rc.cpp:447
+#, no-c-format
+msgid "&DVD Menus"
+msgstr "DVD 菜单(&D)"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 56
+#: player-parts/xine-part/xine_part.cpp:1337 rc.cpp:417
+#, no-c-format
+msgid "&Audio"
+msgstr "音频(&A)"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 64
+#: rc.cpp:420
+#, no-c-format
+msgid "&Video"
+msgstr "视频(&V)"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 66
+#: rc.cpp:423 rc.cpp:453 rc.cpp:465
+#, no-c-format
+msgid "&Aspect Ratio"
+msgstr "纵横比(&A)"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 96
+#: rc.cpp:429
+#, no-c-format
+msgid "Screenshot Toolbar"
+msgstr "抓图工具栏"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 99
+#: rc.cpp:432 rc.cpp:456
+#, no-c-format
+msgid "Controls Toolbar"
+msgstr "控制工具栏"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 108
+#: rc.cpp:435 rc.cpp:459
+#, no-c-format
+msgid "Volume Toolbar"
+msgstr "音量工具栏"
+
+#. i18n: file ./player-parts/xine-part/xine_part.rc line 112
+#: rc.cpp:438 rc.cpp:462
+#, no-c-format
+msgid "Position Toolbar"
+msgstr "位置工具栏"
+
+#: pref.cpp:46
+msgid "Kaffeine Setup"
+msgstr "Kaffeine 设置"
+
+#: pref.cpp:57
+msgid "Behavior"
+msgstr "行为"
+
+#: pref.cpp:62
+msgid "Pause video when window is minimized"
+msgstr "当窗口最小化时暂停视频"
+
+#: pref.cpp:75
+msgid "Embed in system tray"
+msgstr "嵌入到系统托盘"
+
+#: pref.cpp:81
+msgid " sec"
+msgstr " 秒"
+
+#: player-parts/xine-part/kxinewidget.cpp:376
+#: player-parts/xine-part/xine_part.cpp:702 pref.cpp:82
+msgid "off"
+msgstr "关闭"
+
+#: pref.cpp:84
+msgid "Duration of title announcement in system tray"
+msgstr "在系统托盘中显示标题的时长"
+
+#: pref.cpp:96
+msgid "Enable DVB client"
+msgstr "启用 DVB 选项"
+
+#: pref.cpp:130
+msgid "Miscellaneous Options"
+msgstr "杂项选项"
+
+#: pref.cpp:135
+msgid "Use alternate (non-Unicode) encoding for Meta tags"
+msgstr "为 Meta 标签使用替代编码 (非 Unicode)"
+
+#: pref.cpp:155
+msgid ""
+"Choose alternate encoding name for Meta tags\n"
+"(in order to convert to Unicode)"
+msgstr ""
+"为 Meta 标签选择一个替代编码名称\n"
+"(以便转换为 Unicode)"
+
+#: pref.cpp:167
+msgid "Clear recent files list"
+msgstr "清除最近的文件列表"
+
+#: kaffeine.cpp:98
+msgid "Start playing immediately"
+msgstr "立即开始播放"
+
+#: kaffeine.cpp:100
+msgid "Start in fullscreen mode"
+msgstr "以全屏模式启动"
+
+#: kaffeine.cpp:102
+msgid "Set audio driver"
+msgstr "设置音频驱动程序"
+
+#: kaffeine.cpp:104
+msgid "Set video driver"
+msgstr "设置视频驱动程序"
+
+#: kaffeine.cpp:106
+msgid "Set Audio-CD/VCD/DVD device path."
+msgstr "设置 Audio-CD/VCD/DVD 设备路径。"
+
+#: kaffeine.cpp:107
+msgid "Output xine debug messages"
+msgstr "输出 xine 调试信息"
+
+#: kaffeine.cpp:109
+msgid "Run installation wizard"
+msgstr "运行安装向导"
+
+#: kaffeine.cpp:110
+msgid ""
+"File(s) to play. Can be a local file, a URL, a directory or 'DVD', 'VCD', "
+"'AudioCD'."
+msgstr "要播放的文件。可以是一个本地文件、URL、目录或 “DVD”、“VCD”、“CD”。"
+
+#: kaffeine.cpp:175
+msgid "Start"
+msgstr "开始"
+
+#: kaffeine.cpp:179
+msgid "Player Window"
+msgstr "播放器窗口"
+
+#: kaffeine.cpp:205
+msgid "Supported Media Formats"
+msgstr "支持的媒体格式"
+
+#: kaffeine.cpp:206
+msgid "MPEG Audio Files"
+msgstr "MPEG 音频文件"
+
+#: kaffeine.cpp:207
+msgid "MPEG Video Files"
+msgstr "MPEG 视频文件"
+
+#: kaffeine.cpp:208
+msgid "Ogg Vorbis Files"
+msgstr "Ogg Vorbis 文件"
+
+#: kaffeine.cpp:209
+msgid "AVI Files"
+msgstr "AVI 文件"
+
+#: kaffeine.cpp:210
+msgid "Quicktime Files"
+msgstr "Quicktime 文件"
+
+#: kaffeine.cpp:211
+msgid "Real Media Files"
+msgstr "Real 媒体文件"
+
+#: kaffeine.cpp:212
+msgid "Matroska Files"
+msgstr "Matroska 文件"
+
+#: kaffeine.cpp:213
+msgid "FLAC Files"
+msgstr "FLAC 文件"
+
+#: kaffeine.cpp:214
+msgid "Windows Media Files"
+msgstr "Windows 媒体文件"
+
+#: kaffeine.cpp:215
+msgid "WAV Files"
+msgstr "WAV 文件"
+
+#: kaffeine.cpp:351 kaffeine.cpp:374 kaffeine.cpp:442 kaffeine.cpp:485
+msgid "Loading of player part '%1' failed."
+msgstr "载入播放器组件“%1”失败。"
+
+#: kaffeine.cpp:351
+msgid "%1 not found in search path."
+msgstr "未在搜索路径中找到 %1。"
+
+#: kaffeine.cpp:698
+msgid "Open &URL..."
+msgstr "打开 URL(&U)..."
+
+#: kaffeine.cpp:699
+msgid "Open D&irectory..."
+msgstr "打开目录(&I)..."
+
+#: kaffeine.cpp:701
+msgid "Quit && Shutoff Monitor After This Track"
+msgstr "退出并在这首曲目结束之后关闭显示器"
+
+#: kaffeine.cpp:702
+msgid "Quit After This Track"
+msgstr "这首曲目结束后退出"
+
+#: kaffeine.cpp:703
+msgid "Quit After Playlist"
+msgstr "播放列表遍历后退出"
+
+#: kaffeine.cpp:708
+msgid "&Minimal Mode"
+msgstr "迷你模式(&M)"
+
+#: kaffeine.cpp:709
+msgid "Toggle &Playlist/Player"
+msgstr "切换播放列表/播放器(&P)"
+
+#: kaffeine.cpp:710
+msgid "Keep &Original Aspect"
+msgstr "保持原始纵横比(&O)"
+
+#: kaffeine.cpp:712
+msgid "Original Size"
+msgstr "原始大小"
+
+#: kaffeine.cpp:713
+msgid "Double Size"
+msgstr "双倍大小"
+
+#: kaffeine.cpp:714
+msgid "Triple Size"
+msgstr "三倍大小"
+
+#: kaffeine.cpp:716
+msgid "&Player Engine"
+msgstr "播放器引擎(&P)"
+
+#: kaffeine.cpp:850 kaffeine.cpp:966
+msgid "DVB client"
+msgstr "DVB 客户"
+
+#: kaffeine.cpp:997 kaffeine.cpp:999
+msgid "Player"
+msgstr "播放器"
+
+#: kaffeine.cpp:1000
+msgid "Main Window"
+msgstr "主窗口"
+
+#: kaffeine.cpp:1061
+msgid "DPMS Xserver extension was not found."
+msgstr "没有找到 DPMS X 服务器扩展。"
+
+#: kaffeine.cpp:1068
+msgid ""
+"This will quit Kaffeine and shut off the monitor's power after the file/"
+"playlist has finished. Option \"dpms\" must be in  your X config file for "
+"the monitor to power off."
+msgstr ""
+"退出 Kaffeine 并在文件/播放列表结束之后关闭显示器的电源。为了关闭显示器的电"
+"源，在您的 X 配置文件中必须启用“dpms”选项。"
+
+#: kaffeine.cpp:1139
+msgid "Open File(s)"
+msgstr "打开文件"
+
+#: kaffeine.cpp:1448
+msgid "Open URL"
+msgstr "打开 URL"
+
+#: kaffeine.cpp:1448
+msgid "Enter a URL:"
+msgstr "输入 URL："
+
+#: kaffeine.cpp:1466
+msgid "Open Folder"
+msgstr "打开文件夹"
+
+#: kaffeine.cpp:1489
+msgid "No %1 in drive, or wrong path to device."
+msgstr "驱动器中没有 %1，或设备路径错误。"
+
+#: kaffeine.cpp:1490
+msgid "Please select correct drive:"
+msgstr "请选择正确的驱动器："
+
+#: instwizard.cpp:52
+msgid "Kaffeine %1 Installation Wizard"
+msgstr "Kaffeine %1 安装向导"
+
+#: instwizard.cpp:58
+msgid "Installation Check"
+msgstr "安装检查"
+
+#: instwizard.cpp:69
+msgid "Kaffeine-Xine"
+msgstr "Kaffeine-Xine"
+
+#: instwizard.cpp:72 instwizard.cpp:80 instwizard.cpp:113 instwizard.cpp:143
+#: instwizard.cpp:153 instwizard.cpp:165 instwizard.cpp:186
+msgid "Ok."
+msgstr "确定。"
+
+#: instwizard.cpp:74
+msgid "Part not found. Please check your installation!"
+msgstr "组件未找到，请检查您的安装！"
+
+#: instwizard.cpp:78
+msgid "Found version"
+msgstr "发现的版本"
+
+#: instwizard.cpp:82
+#, c-format
+msgid "Kaffeine requires KDE >= %1."
+msgstr "Kaffeine 要求 KDE >= %1。"
+
+#: instwizard.cpp:109
+msgid "WIN32 Codecs"
+msgstr "WIN32 编解码器"
+
+#: instwizard.cpp:115
+msgid ""
+"No WIN32 codecs found in /usr/lib/win32. You're not able to play Windows "
+"Media 9 files, newer Real Media files and some less common formats. Download "
+"the codecs here:"
+msgstr ""
+"在 /usr/lib/win32 中未发现 WIN32 编解码器，您不能播放 Windows Media 9 文件、"
+"新的 Real 媒体文件和一些不太常用的格式。从这里下载编解码器："
+
+#: instwizard.cpp:140
+msgid ""
+"libdvdcss not found. You're not able to play encrypted (most commercial) "
+"DVD's. You can get the library here (but using it may violate copyright "
+"regulations of your country!):"
+msgstr ""
+"libdvdcss 未发现。您不能播放加密 (大多数为商业的) DVD，您可以从这里下载库(但"
+"使用它可能违犯贵国的版权法！)："
+
+#: instwizard.cpp:146
+msgid "DVD Drive"
+msgstr "DVD 驱动器"
+
+#: instwizard.cpp:155
+msgid "DMA mode off! For smooth DVD playback run as root:"
+msgstr "DMA 模式关闭！要平滑的播放 DVD 请以 root 权限运行："
+
+#: instwizard.cpp:157
+msgid "Can't check DMA mode. Permission denied or no such device:"
+msgstr "不能检查 DMA 模式。权限拒绝或无此设备："
+
+#: instwizard.cpp:162
+msgid "DVB-Device"
+msgstr "DVB 设备"
+
+#: instwizard.cpp:169
+msgid "No DVB-Devices found. The DVB related functions will be hidden."
+msgstr "未找到 DVB 设备。DVB 相关的功能将被隐藏。"
+
+#: instwizard.cpp:174
+msgid "Distribution"
+msgstr "发行"
+
+#: instwizard.cpp:181
+msgid ""
+"The xine-lib shipped by SuSE \"may lack certain features because of legal "
+"requirements (potential patent violation)\". You should use the packages "
+"from here:"
+msgstr ""
+"随 SuSE 发布的 xine-lib“因为合法性的要求 (潜在违反专利) 可能缺少某些特性”。您"
+"应该使用下面的软件包："
+
+#: instwizard.cpp:189
+msgid "RESULT"
+msgstr "结果"
+
+#: instwizard.cpp:193
+msgid "Found some problems, but nevertheless Kaffeine may work."
+msgstr "发现一些问题，但 Kaffeine 仍能工作。"
+
+#: instwizard.cpp:197
+msgid "All ok!"
+msgstr "全部正常！"
+
+#: instwizard.cpp:208
+msgid "Use Kaffeine as helper application for mms:// (Microsoft Media) streams"
+msgstr "使用 Kaffeine 播放 mms:// (Microsoft 媒体)流"
+
+#: instwizard.cpp:212
+msgid ""
+"Use Kaffeine as helper application for rtsp:// (Real Media and others) "
+"streams"
+msgstr "使用 Kaffeine 播放 rtsp:// (Real 媒体及其它) 流"
+
+#: instwizard.cpp:216
+msgid "Create a Kaffeine icon on desktop"
+msgstr "在桌面上创建一个 Kaffeine 图标"
+
+#: instwizard.cpp:220
+msgid "Installation Options"
+msgstr "安装选项"
+
+#: player-parts/xine-part/deinterlacequality.cpp:37
+msgid "Deinterlace Quality"
+msgstr "反交错质量"
+
+#: player-parts/xine-part/deinterlacequality.cpp:58
+msgid ""
+"<b>Very low cpu usage, worst quality.</b><br>Half of vertical resolution is "
+"lost. For some systems (with PCI video cards) this might decrease the cpu "
+"usage when compared to plain video playback (no deinterlacing)."
+msgstr ""
+"<b>极低的 cpu 占用率，最差质量。</b><br>丢失一半垂直分辨率。对于某些系统 (带"
+"有 PCI 视频卡)，和正常视频回放比较 (无反交错)，这会降低 cpu 占用率。"
+
+#: player-parts/xine-part/deinterlacequality.cpp:61
+msgid ""
+"<b>Low cpu usage, poor quality.</b><br>Image is blurred vertically so "
+"interlacing effects are removed."
+msgstr "<b>低 cpu 占用率，较差质量。</b><br>垂直模糊图像，因此移除反交错效果。"
+
+#: player-parts/xine-part/deinterlacequality.cpp:64
+msgid ""
+"<b>Medium cpu usage, medium quality.</b><br>Image is analysed and areas "
+"showing interlacing artifacts are fixed (interpolated)."
+msgstr ""
+"<b>中等 cpu 占用率，中等质量。</b><br>分析图像并区域显示人工交错被修正 (插"
+"值)。"
+
+#: player-parts/xine-part/deinterlacequality.cpp:67
+msgid ""
+"<b>High cpu usage, good quality.</b><br>Conversion of dvd image format "
+"improves quality and fixes chroma upsampling bug."
+msgstr ""
+"<b>高 cpu 占用率，较好质量。</b><br>DVD 图像格式的转换以提高质量并修正彩色噪"
+"点。"
+
+#: player-parts/xine-part/deinterlacequality.cpp:70
+msgid ""
+"<b>Very high cpu usage, great quality.</b><br>Besides using smart "
+"deinterlacing algorithms it will also double the frame rate (30->60fps) to "
+"match the field rate of TVs. Detects and reverts 3-2 pulldown. *"
+msgstr ""
+"<b>极高 cpu 占用率，极好质量。</b><br>除了使用智能反交错算法，还将加倍帧速率 "
+"(30->60 帧/秒) 以符合电视机的场速率。检测并恢复 3-2 帧间距。*"
+
+#: player-parts/xine-part/deinterlacequality.cpp:73
+msgid ""
+"<b>Very very high cpu usage, great quality with (experimental) improvements."
+"</b><br>Enables judder correction (play films at their original 24 fps "
+"speed) and vertical color smoothing (fixes small color stripes seen in some "
+"dvds). *"
+msgstr ""
+"<b>非常非常高 cpu 占用率，完美质量增强 (试验性的)。</b><br>打开位移修正 (使用"
+"原始的 24 帧/秒 速率播放电影) 并柔化垂直色彩 (修正某些 DVD 中的彩色小条纹)。*"
+
+#: player-parts/xine-part/deinterlacequality.cpp:76
+msgid "User defined"
+msgstr "用户定义"
+
+#: player-parts/xine-part/deinterlacequality.cpp:80
+msgid "Configure tvtime Deinterlace Plugin..."
+msgstr "配置 tvtime 反交错插件..."
+
+#: player-parts/xine-part/deinterlacequality.cpp:85
+msgid ""
+"* <i>May require a patched 2.4 kernel (like RedHat one) or 2.6 kernel.</i>"
+msgstr "* <i>可能需要一个修正的 2.4 内核 (如 RedHat) 或 2.6 内核。</i>"
+
+#: player-parts/xine-part/deinterlacequality.h:41
+msgid "Configure tvtime Deinterlace Plugin"
+msgstr "配置 tvtime 反交错插件"
+
+#: player-parts/xine-part/filterdialog.cpp:38
+msgid "Effect Plugins"
+msgstr "效果插件"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:687
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:47
+#: player-parts/xine-part/filterdialog.cpp:44
+#: player-parts/xine-part/xine_part.cpp:1181
+msgid "Audio"
+msgstr "音频"
+
+#: player-parts/xine-part/filterdialog.cpp:44
+msgid "Audio Filters"
+msgstr "音频过滤器"
+
+#: player-parts/xine-part/filterdialog.cpp:50
+msgid "Enable audio filters"
+msgstr "开启音频过滤器"
+
+#: player-parts/xine-part/filterdialog.cpp:59
+#: player-parts/xine-part/filterdialog.cpp:92
+msgid "Add Filter"
+msgstr "添加过滤器"
+
+#: player-parts/xine-part/filterdialog.cpp:61
+#: player-parts/xine-part/filterdialog.cpp:94
+msgid "Remove All Filters"
+msgstr "删除所有过滤器"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:691
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:60
+#: player-parts/xine-part/filterdialog.cpp:77
+#: player-parts/xine-part/xine_part.cpp:1184
+msgid "Video"
+msgstr "视频"
+
+#: player-parts/xine-part/filterdialog.cpp:77
+msgid "Video Filters"
+msgstr "视频过滤器"
+
+#: player-parts/xine-part/filterdialog.cpp:83
+msgid "Enable video filters"
+msgstr "开启视频过滤器"
+
+#: player-parts/xine-part/xineconfig.cpp:233
+msgid "xine Engine Parameters"
+msgstr "Xine 引擎参数"
+
+#: player-parts/xine-part/xineconfig.cpp:274
+msgid "%1 Options"
+msgstr "%1 选项"
+
+#: player-parts/xine-part/xineconfig.cpp:281
+msgid "Beginner Options"
+msgstr "新手选项"
+
+#: player-parts/xine-part/xineconfig.cpp:285
+msgid "Expert Options"
+msgstr "专家选项"
+
+#: player-parts/xine-part/xine_part.cpp:184
+msgid "XinePart"
+msgstr "Xine 组件"
+
+#: player-parts/xine-part/xine_part.cpp:185
+msgid "A xine based player part for Kaffeine."
+msgstr "一个基于 xine 的 kaffeine 播放器组件。"
+
+#: player-parts/xine-part/xine_part.cpp:253
+msgid ""
+"SMIL (Synchronized Multimedia Integration Language) support is rudimentary!\n"
+"XinePart can now try to playback contained video sources without any layout. "
+"Proceed?"
+msgstr ""
+"SMIL (同步多媒体集成语言) 的支持尚不成熟！\n"
+"XinePart 现在可以尝试播放无编排的视频原件。继续吗？"
+
+#: player-parts/xine-part/xine_part.cpp:608
+msgid "Save Stream As"
+msgstr "流另存为"
+
+#: player-parts/xine-part/xine_part.cpp:634
+#: player-parts/xine-part/xine_part.cpp:635
+#: player-parts/xine-part/xine_part.cpp:1329
+msgid "Subtitle"
+msgstr "字幕"
+
+#: player-parts/xine-part/xine_part.cpp:641
+#: player-parts/xine-part/xine_part.cpp:642
+msgid "Audiochannel"
+msgstr "声道"
+
+#: player-parts/xine-part/xine_part.cpp:782
+msgid "%1 of %2"
+msgstr "%2 的 %1"
+
+#: player-parts/xine-part/xine_part.cpp:792
+msgid ""
+"*.png|PNG-File\n"
+"*.bmp|BMP-File\n"
+"*.xbm|XBM-File"
+msgstr ""
+"*.png|PNG-文件\n"
+"*.bmp|BMP-文件\n"
+"*.xbm|XBM-文件"
+
+#: player-parts/xine-part/xine_part.cpp:795
+msgid "Save Screenshot As"
+msgstr "保存抓图"
+
+#: player-parts/xine-part/xine_part.cpp:879
+msgid "Broadcasting port:"
+msgstr "广播端口："
+
+#: player-parts/xine-part/xine_part.cpp:901
+msgid "Configure Receive Broadcast Stream"
+msgstr "配置接收广播流"
+
+#: player-parts/xine-part/xine_part.cpp:903
+msgid "Sender address:"
+msgstr "发送者地址："
+
+#: player-parts/xine-part/xine_part.cpp:905
+msgid "Port:"
+msgstr "端口："
+
+#: player-parts/xine-part/xine_part.cpp:928
+msgid "Jump to position:"
+msgstr "跳到位置："
+
+#: player-parts/xine-part/xine_part.cpp:995
+msgid "xine Error"
+msgstr "xine 错误"
+
+#: player-parts/xine-part/xine_part.cpp:1008
+msgid "xine Message"
+msgstr "xine 消息"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:88
+#: player-parts/xine-part/kxinewidget.cpp:1253
+#: player-parts/xine-part/xine_part.cpp:1014
+msgid "Ready"
+msgstr "就绪"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:569
+#: player-parts/xine-part/kxinewidget.cpp:1384
+#: player-parts/xine-part/kxinewidget.cpp:2008
+#: player-parts/xine-part/kxinewidget.cpp:2853
+#: player-parts/xine-part/xine_part.cpp:1014
+msgid "Playing"
+msgstr "播放中"
+
+#: player-parts/xine-part/xine_part.cpp:1179
+msgid "Mime"
+msgstr "MIME"
+
+#: player-parts/xine-part/xine_part.cpp:1189
+msgid "Subtitle File"
+msgstr "字幕文件"
+
+#: player-parts/xine-part/xine_part.cpp:1191
+msgid "Save Stream as"
+msgstr "流另存为"
+
+#: player-parts/xine-part/xine_part.cpp:1194
+msgid "Track info"
+msgstr "轨道信息"
+
+#: player-parts/xine-part/xine_part.cpp:1226
+msgid "Copy URL to Clipboard"
+msgstr "复制 URL 到剪贴板"
+
+#: player-parts/xine-part/xine_part.cpp:1228
+msgid "Play in Kaffeine Externally"
+msgstr "在外部 Kaffeine 中播放"
+
+#: player-parts/xine-part/xine_part.cpp:1269
+msgid "&Send Broadcast Stream..."
+msgstr "发送广播流(&S)..."
+
+#: player-parts/xine-part/xine_part.cpp:1270
+msgid "&Receive Broadcast Stream..."
+msgstr "接收广播流(&R)..."
+
+#: player-parts/xine-part/xine_part.cpp:1271
+msgid "&Save Screenshot..."
+msgstr "保存抓图(&S)..."
+
+#: player-parts/xine-part/xine_part.cpp:1272
+msgid "Save Stream..."
+msgstr "流另存为..."
+
+#: player-parts/xine-part/xine_part.cpp:1273
+msgid ""
+"Saves current stream to harddisc. This feature was disabled for some formats "
+"(e.g. Real Media) to prevent potential legal problems."
+msgstr ""
+"保存当前流到硬盘。为消除一些潜在的法律纠纷该功能对一些格式是禁用的 (如 Real "
+"媒体)。"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:820
+#: player-parts/xine-part/xine_part.cpp:1277
+msgid "Toggle Minimal Mode"
+msgstr "切换迷你模式"
+
+#: player-parts/dummy-part/dummy_part.cpp:122
+#: player-parts/gstreamer-part/gstreamer_part.cpp:556
+#: player-parts/gstreamer-part/gstreamer_part.cpp:822
+#: player-parts/xine-part/kxinewidget.cpp:2843
+#: player-parts/xine-part/xine_part.cpp:1280
+msgid "Pause"
+msgstr "暂停"
+
+#: player-parts/xine-part/xine_part.cpp:1285
+msgid "&Fast Forward"
+msgstr "快进(&F)"
+
+#: player-parts/xine-part/xine_part.cpp:1286
+msgid "Slow &Motion"
+msgstr "慢进(&M)"
+
+#: player-parts/xine-part/xine_part.cpp:1288
+msgid "Skip Forward (20s)"
+msgstr "快进二十秒"
+
+#: player-parts/xine-part/xine_part.cpp:1289
+msgid "Skip Backward (20s)"
+msgstr "快退二十秒"
+
+#: player-parts/xine-part/xine_part.cpp:1290
+msgid "Skip Forward (1m)"
+msgstr "快进一分钟"
+
+#: player-parts/xine-part/xine_part.cpp:1291
+msgid "Skip Backward (1m)"
+msgstr "快退一分钟"
+
+#: player-parts/xine-part/xine_part.cpp:1292
+msgid "Skip Forward (10m)"
+msgstr "快进十分钟"
+
+#: player-parts/xine-part/xine_part.cpp:1293
+msgid "Skip Backward (10m)"
+msgstr "快退十分钟"
+
+#: player-parts/xine-part/xine_part.cpp:1294
+msgid "Jump to Position..."
+msgstr "跳到位置..."
+
+#: player-parts/xine-part/xine_part.cpp:1296
+msgid "DVD Menu Left"
+msgstr "DVD 菜单 左"
+
+#: player-parts/xine-part/xine_part.cpp:1297
+msgid "DVD Menu Right"
+msgstr "DVD 菜单 右"
+
+#: player-parts/xine-part/xine_part.cpp:1298
+msgid "DVD Menu Up"
+msgstr "DVD 菜单 上"
+
+#: player-parts/xine-part/xine_part.cpp:1299
+msgid "DVD Menu Down"
+msgstr "DVD 菜单 下"
+
+#: player-parts/xine-part/xine_part.cpp:1300
+msgid "DVD Menu Select"
+msgstr "DVD 菜单 选择"
+
+#: player-parts/xine-part/xine_part.cpp:1302
+msgid "Audio Channel"
+msgstr "声道"
+
+#: player-parts/xine-part/xine_part.cpp:1303
+msgid "Select audio channel"
+msgstr "选择声道"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:831
+#: player-parts/xine-part/xine_part.cpp:1305
+msgid "Audio &Visualization"
+msgstr "可视化音频(&V)"
+
+#: player-parts/xine-part/xine_part.cpp:1308
+msgid "Volume Up"
+msgstr "音量增大"
+
+#: player-parts/xine-part/xine_part.cpp:1309
+msgid "Volume Down"
+msgstr "音量减小"
+
+#: player-parts/xine-part/xine_part.cpp:1311
+msgid "&Deinterlace"
+msgstr "反交错(&D)"
+
+#: player-parts/xine-part/xine_part.cpp:1312
+msgid "Activate this for interlaced streams, some DVD's for example."
+msgstr "为交错流激活此项，如某些 DVD。"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:838
+#: player-parts/xine-part/xine_part.cpp:1313
+msgid "&Auto"
+msgstr "自动(&A)"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:839
+#: player-parts/xine-part/xine_part.cpp:1314
+msgid "&4:3"
+msgstr "4:3(&4)"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:840
+#: player-parts/xine-part/xine_part.cpp:1315
+msgid "A&namorphic"
+msgstr "变形(&N)"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:842
+#: player-parts/xine-part/xine_part.cpp:1317
+msgid "&Square"
+msgstr "正方形(&S)"
+
+#: player-parts/xine-part/xine_part.cpp:1321
+msgid "Zoom In Horizontal"
+msgstr "水平放大"
+
+#: player-parts/xine-part/xine_part.cpp:1322
+msgid "Zoom Out Horizontal"
+msgstr "水平缩小"
+
+#: player-parts/xine-part/xine_part.cpp:1323
+msgid "Zoom In Vertical"
+msgstr "垂直放大"
+
+#: player-parts/xine-part/xine_part.cpp:1324
+msgid "Zoom Out Vertical"
+msgstr "垂直缩小"
+
+#: player-parts/xine-part/xine_part.cpp:1325
+msgid "Deinterlace &Quality"
+msgstr "反交错质量(&Q)"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:843
+#: player-parts/xine-part/xine_part.cpp:1326
+msgid "&Video Settings"
+msgstr "视频设置(&V)"
+
+#: player-parts/xine-part/xine_part.cpp:1327
+msgid "&Equalizer"
+msgstr "均衡器(&E)"
+
+#: player-parts/xine-part/xine_part.cpp:1333
+msgid "&Menu Toggle"
+msgstr "菜单切换(&M)"
+
+#: player-parts/xine-part/xine_part.cpp:1334
+msgid "&Title"
+msgstr "标题(&T)"
+
+#: player-parts/xine-part/xine_part.cpp:1335
+msgid "&Root"
+msgstr "根(&R)"
+
+#: player-parts/xine-part/xine_part.cpp:1336
+msgid "&Subpicture"
+msgstr "子画面(&S)"
+
+#: player-parts/xine-part/xine_part.cpp:1338
+msgid "An&gle"
+msgstr "角度(&G)"
+
+#: player-parts/xine-part/xine_part.cpp:1339
+msgid "&Part"
+msgstr "局部(&P)"
+
+#: player-parts/xine-part/xine_part.cpp:1341
+msgid "Titles"
+msgstr "标题"
+
+#: player-parts/xine-part/xine_part.cpp:1343
+msgid "Chapters"
+msgstr "章节"
+
+#: player-parts/xine-part/xine_part.cpp:1345
+msgid "Angles"
+msgstr "角度"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:844
+#: player-parts/xine-part/xine_part.cpp:1348
+msgid "Track &Info"
+msgstr "轨道信息(&I)"
+
+#: player-parts/xine-part/xine_part.cpp:1349
+msgid "Effect &Plugins..."
+msgstr "效果插件(&P)..."
+
+#: player-parts/xine-part/xine_part.cpp:1352
+msgid "&xine Engine Parameters"
+msgstr "Xine 引擎参数(&X)"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:506
+#: player-parts/gstreamer-part/gstreamer_part.cpp:847
+#: player-parts/gstreamer-part/gstreamer_part.cpp:854
+#: player-parts/xine-part/kxinewidget.cpp:2517
+#: player-parts/xine-part/xine_part.cpp:1356
+#: player-parts/xine-part/xine_part.cpp:1363
+msgid "Volume"
+msgstr "音量"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:828
+#: player-parts/xine-part/kxinewidget.cpp:3055
+#: player-parts/xine-part/kxinewidget.cpp:3079
+#: player-parts/xine-part/xine_part.cpp:1367
+#: player-parts/xine-part/xine_part.cpp:1376
+msgid "Position"
+msgstr "位置"
+
+#: player-parts/xine-part/xine_part.cpp:1380
+msgid ""
+"Short click: Toggle Timer Forward/Backward\n"
+"Long click: Toggle Timer OSD"
+msgstr ""
+"短单击：切换计时器 向前/向后\n"
+"长单击：切换计时器 OSD"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:829
+#: player-parts/xine-part/xine_part.cpp:1385
+msgid "Playtime"
+msgstr "播放时间"
+
+#: player-parts/xine-part/xine_part.cpp:1543
+msgid "Looking for CDDB entries..."
+msgstr "正在查找 CDDB 曲目..."
+
+#: player-parts/xine-part/xine_part.cpp:1551
+#, c-format
+msgid "AudioCD Track %1"
+msgstr "CD 音轨 %1"
+
+#: player-parts/xine-part/xine_part.cpp:1626
+#, c-format
+msgid "VCD Track %1"
+msgstr "VCD 轨道 %1"
+
+#: player-parts/gstreamer-part/videosettings.cpp:33
+#: player-parts/xine-part/videosettings.cpp:34
+msgid "Video Settings"
+msgstr "视频设置"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:525
+#: player-parts/gstreamer-part/videosettings.cpp:41
+#: player-parts/xine-part/kxinewidget.cpp:3343
+#: player-parts/xine-part/videosettings.cpp:49
+msgid "Hue"
+msgstr "色调"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:519
+#: player-parts/gstreamer-part/videosettings.cpp:51
+#: player-parts/xine-part/kxinewidget.cpp:3349
+#: player-parts/xine-part/videosettings.cpp:59
+msgid "Saturation"
+msgstr "饱和度"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:531
+#: player-parts/gstreamer-part/videosettings.cpp:61
+#: player-parts/xine-part/kxinewidget.cpp:3355
+#: player-parts/xine-part/videosettings.cpp:69
+msgid "Contrast"
+msgstr "对比度"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:537
+#: player-parts/gstreamer-part/videosettings.cpp:71
+#: player-parts/xine-part/kxinewidget.cpp:3361
+#: player-parts/xine-part/videosettings.cpp:79
+msgid "Brightness"
+msgstr "亮度"
+
+#: player-parts/xine-part/kxinewidget.cpp:3367
+#: player-parts/xine-part/videosettings.cpp:89
+msgid "Audio/Video Offset"
+msgstr "音频/视频偏移量"
+
+#: player-parts/xine-part/kxinewidget.cpp:3373
+#: player-parts/xine-part/videosettings.cpp:99
+msgid "Subtitle Offset"
+msgstr "字幕偏移量"
+
+#: player-parts/xine-part/kxinewidget.cpp:374
+msgid "auto"
+msgstr "自动"
+
+#: player-parts/xine-part/kxinewidget.cpp:541
+msgid "General Warning: \n"
+msgstr "常规警告：\n"
+
+#: player-parts/xine-part/kxinewidget.cpp:546
+msgid "No Informations available."
+msgstr "没有可用信息。"
+
+#: player-parts/xine-part/kxinewidget.cpp:552
+msgid "Security Warning: \n"
+msgstr "安全警告：\n"
+
+#: player-parts/xine-part/kxinewidget.cpp:561
+msgid ""
+"The host you're trying to connect is unknown.\n"
+"Check the validity of the specified hostname. "
+msgstr ""
+"您要连接的主机未知。\n"
+"请检查指定主机名的合法性。"
+
+#: player-parts/xine-part/kxinewidget.cpp:568
+msgid "The device name you specified seems invalid. "
+msgstr "您指定的设备名不合法。"
+
+#: player-parts/xine-part/kxinewidget.cpp:575
+msgid ""
+"The network looks unreachable.\n"
+"Check your network setup and the server name. "
+msgstr ""
+"网络不可用。\n"
+"请检查您的网络设置和服务器名。"
+
+#: player-parts/xine-part/kxinewidget.cpp:582
+msgid "Audio output unavailable. Device is busy. "
+msgstr "音频输出不可用。设备忙。"
+
+#: player-parts/xine-part/kxinewidget.cpp:589
+msgid ""
+"The connection was refused.\n"
+"Check the host name. "
+msgstr ""
+"连接被拒绝。\n"
+"请检查主机名。"
+
+#: player-parts/xine-part/kxinewidget.cpp:596
+msgid "The specified file or url was not found. Please check it. "
+msgstr "没有找到指定的文件或 url。请检查。"
+
+#: player-parts/xine-part/kxinewidget.cpp:603
+msgid "Permission to this source was denied. "
+msgstr "此数据源的许可被拒绝。"
+
+#: player-parts/xine-part/kxinewidget.cpp:610
+msgid ""
+"The source can't be read.\n"
+"Maybe you don't have enough rights for this, or source doesn't contain data "
+"(e.g: no disc in drive). "
+msgstr ""
+"无法读取数据源。\n"
+"也许您没有足够的权限，或数据源没有数据。(如：驱动器中没有光盘)。"
+
+#: player-parts/xine-part/kxinewidget.cpp:617
+msgid "A problem occur while loading a library or a decoder: "
+msgstr "读取库或解码器时发生问题："
+
+#: player-parts/xine-part/kxinewidget.cpp:624
+msgid "The source seems encrypted, and can't be read. "
+msgstr "数据源似乎是加密的，无法读取。"
+
+#: player-parts/xine-part/kxinewidget.cpp:626
+msgid ""
+"\n"
+"Your DVD is probably crypted. According to your country laws, you can or "
+"can't use libdvdcss to be able to read this disc. "
+msgstr ""
+"\n"
+"您的 DVD 很可能是加密的。根据贵国法律，您可以或不可以使用 libdvdcss 来读取这"
+"张光盘。"
+
+#: player-parts/xine-part/kxinewidget.cpp:633
+msgid "Unknown error: \n"
+msgstr "未知错误：\n"
+
+#: player-parts/xine-part/kxinewidget.cpp:829
+msgid "Error: Can't init new Video Driver %1 - using %2!"
+msgstr "错误：不能初始化新的视频驱动 %1 - 使用 %2！"
+
+#: player-parts/xine-part/kxinewidget.cpp:839
+#, c-format
+msgid "Using Video Driver: %1"
+msgstr "使用视频驱动：%1"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:866
+#: player-parts/xine-part/kxinewidget.cpp:915
+msgid "Error: Can't init new Audio Driver %1 - using %2!"
+msgstr "错误：不能初始化新的音频驱动 %1 - 使用 %2！"
+
+#: player-parts/xine-part/kxinewidget.cpp:923
+#, c-format
+msgid "Using Audio Driver: %1"
+msgstr "使用音频驱动：%1"
+
+#: player-parts/xine-part/kxinewidget.cpp:1032
+msgid "Init xine..."
+msgstr "初始化 xine..."
+
+#: player-parts/xine-part/kxinewidget.cpp:1073
+msgid "Can't init xine Engine!"
+msgstr "无法初始化 Xine 引擎！"
+
+#: player-parts/xine-part/kxinewidget.cpp:1109
+msgid "Audiodriver to use (default: auto)"
+msgstr "使用的音频驱动 (默认：自动)"
+
+#: player-parts/xine-part/kxinewidget.cpp:1135
+msgid "Videodriver to use (default: auto)"
+msgstr "使用的视频驱动 (默认：自动)"
+
+#: player-parts/xine-part/kxinewidget.cpp:1146
+msgid "Use software audio mixer"
+msgstr "使用软件音频混音器"
+
+#: player-parts/xine-part/kxinewidget.cpp:1150
+msgid "Show OSD Messages"
+msgstr "显示 OSD 信息"
+
+#: player-parts/xine-part/kxinewidget.cpp:1163
+msgid "Size of OSD text"
+msgstr "OSD 文本大小"
+
+#: player-parts/xine-part/kxinewidget.cpp:1167
+msgid "Font for OSD Messages"
+msgstr "OSD 消息字体"
+
+#: player-parts/xine-part/kxinewidget.cpp:1187
+msgid "Can't init Video Driver '%1' - trying 'auto'..."
+msgstr "不能初始化视频驱动“%1” - 尝试“自动”..."
+
+#: player-parts/xine-part/kxinewidget.cpp:1196
+msgid "All Video Drivers failed to initialize!"
+msgstr "所有视频设备初始化失败！"
+
+#: player-parts/xine-part/kxinewidget.cpp:1207
+msgid "Can't init Audio Driver '%1' - trying 'auto'..."
+msgstr "不能初始化音频驱动“%1” - 尝试“自动”..."
+
+#: player-parts/xine-part/kxinewidget.cpp:1214
+msgid "All Audio Drivers failed to initialize!"
+msgstr "所有音频设备初始化失败！"
+
+#: player-parts/xine-part/kxinewidget.cpp:1223
+msgid "Can't create a new xine Stream!"
+msgstr "无法创建一个新的 xine 流！"
+
+#: player-parts/xine-part/kxinewidget.cpp:1757
+msgid "DVB: opening..."
+msgstr "DVB：正在打开..."
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:290
+#: player-parts/xine-part/kxinewidget.cpp:1811
+msgid "Opening..."
+msgstr "正在打开..."
+
+#: player-parts/xine-part/kxinewidget.cpp:2047
+msgid "Audio Codec"
+msgstr "音频编解码器"
+
+#: player-parts/xine-part/kxinewidget.cpp:2049
+msgid "Video Codec"
+msgstr "视频编解码器"
+
+#: player-parts/xine-part/kxinewidget.cpp:2059
+msgid "No plugin found to handle this resource"
+msgstr "没有找到插件来处理这个资源"
+
+#: player-parts/xine-part/kxinewidget.cpp:2064
+msgid "Resource seems to be broken"
+msgstr "资源似乎损坏"
+
+#: player-parts/xine-part/kxinewidget.cpp:2069
+msgid "Requested resource does not exist"
+msgstr "请求的资源不存在"
+
+#: player-parts/xine-part/kxinewidget.cpp:2074
+msgid "Resource can not be opened"
+msgstr "资源无法被打开"
+
+#: player-parts/xine-part/kxinewidget.cpp:2079
+msgid "Generic error"
+msgstr "常规错误"
+
+#: player-parts/xine-part/kxinewidget.cpp:2553
+msgid "Mute Off"
+msgstr "静音关"
+
+#: player-parts/xine-part/kxinewidget.cpp:2558
+msgid "Mute On"
+msgstr "静音开"
+
+#: player-parts/xine-part/kxinewidget.cpp:2864
+#: player-parts/xine-part/kxinewidget.cpp:2888
+#: player-parts/xine-part/kxinewidget.cpp:2919
+#, c-format
+msgid "Fast Forward %1"
+msgstr "快进 %1"
+
+#: player-parts/xine-part/kxinewidget.cpp:2881
+#: player-parts/xine-part/kxinewidget.cpp:2902
+#: player-parts/xine-part/kxinewidget.cpp:2926
+#, c-format
+msgid "Slow Motion %1"
+msgstr "慢进 %1"
+
+#: player-parts/xine-part/kxinewidget.cpp:3154
+msgid "Deinterlace: on"
+msgstr "反交错：开"
+
+#: player-parts/xine-part/kxinewidget.cpp:3155
+msgid "Deinterlace: off"
+msgstr "反交错：关"
+
+#: player-parts/xine-part/kxinewidget.cpp:3178
+#: player-parts/xine-part/kxinewidget.cpp:3184
+#: player-parts/xine-part/kxinewidget.cpp:3190
+#: player-parts/xine-part/kxinewidget.cpp:3196
+#: player-parts/xine-part/kxinewidget.cpp:3202
+msgid "Aspect Ratio"
+msgstr "纵横比"
+
+#: player-parts/xine-part/kxinewidget.cpp:3178
+msgid "Auto"
+msgstr "自动"
+
+#: player-parts/xine-part/kxinewidget.cpp:3184
+msgid "4:3"
+msgstr "4:3"
+
+#: player-parts/xine-part/kxinewidget.cpp:3190
+msgid "16:9"
+msgstr "16:9"
+
+#: player-parts/xine-part/kxinewidget.cpp:3196
+msgid "1:1"
+msgstr "1:1"
+
+#: player-parts/xine-part/kxinewidget.cpp:3202
+msgid "2.11:1"
+msgstr "2.11:1"
+
+#: player-parts/xine-part/kxinewidget.cpp:3211
+#: player-parts/xine-part/kxinewidget.cpp:3221
+msgid "Zoom X"
+msgstr "横向放大"
+
+#: player-parts/xine-part/kxinewidget.cpp:3231
+#: player-parts/xine-part/kxinewidget.cpp:3241
+msgid "Zoom Y"
+msgstr "纵向放大"
+
+#: player-parts/xine-part/kxinewidget.cpp:3367
+#: player-parts/xine-part/kxinewidget.cpp:3373
+msgid "msec"
+msgstr "毫秒"
+
+#: player-parts/xine-part/equalizer.cpp:31
+msgid "Equalizer Settings"
+msgstr "均衡器设置"
+
+#: player-parts/xine-part/equalizer.cpp:43
+msgid "Volume gain"
+msgstr "音量增益"
+
+#: player-parts/xine-part/equalizer.cpp:44
+msgid "Volume Gain for Equalizer - If the sound becomes noisy disable this"
+msgstr "均衡器的音量增益 － 如果声音有噪音请关闭。"
+
+#: player-parts/xine-part/postfilter.cpp:158
+msgid "Delete Filter"
+msgstr "删除过滤器"
+
+#: player-parts/gstreamer-part/timer.cpp:107
+#, c-format
+msgid "Seeking to %s"
+msgstr "正搜索到 %s"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:74
+msgid "GStreamer initializing failed!"
+msgstr "GStreamer 初始化失败！"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:149
+msgid "GStreamerPart"
+msgstr "GStreamerPart"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:545
+#: player-parts/gstreamer-part/gstreamer_part.cpp:547
+msgid "Mute"
+msgstr "静音"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:679
+msgid "Comment"
+msgstr "注释"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:855
+msgid "&GStreamer Engine Parameters"
+msgstr "GStreamer 引擎参数(&G)"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:883
+#: player-parts/gstreamer-part/gstreamer_part.cpp:922
+msgid "GStreamer could not be initialized!"
+msgstr "无法初始化 GStreamer"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:891
+msgid ""
+"Missing GStreamer-registry! Did you forget to run <b>gst-register</b> (as "
+"root) after installation?"
+msgstr ""
+"缺少 GStreamer 注册表！您在安装后是否没有以 root 身份运行 <b>gst-register</"
+"b>？"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:931
+msgid "Can't init Audio Driver '%1' - trying another one..."
+msgstr "不能初始化音频驱动“%1” - 尝试另一个..."
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:942
+msgid "No useable audio-driver found!"
+msgstr "未找到可用的音频驱动程序！"
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:954
+msgid "Can't init Video Driver '%1' - trying another one..."
+msgstr "不能初始化视频驱动“%1” - 尝试另一个..."
+
+#: player-parts/gstreamer-part/gstreamer_part.cpp:962
+msgid "No useable video-driver found!"
+msgstr "未找到可用的视频驱动程序"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:36
+msgid "GStreamer Engine Parameters"
+msgstr "GStreamer 引擎参数"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:47
+msgid "Audio Options"
+msgstr "音频选项"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:54
+msgid "Prefered audio driver"
+msgstr "首选音频驱动程序"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:60
+msgid "Video Options"
+msgstr "视频选项"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:67
+msgid "Prefered video driver"
+msgstr "首选视频驱动程序"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:71
+msgid "* Restart required!"
+msgstr "* 需要重新启动!"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:74
+msgid "Media"
+msgstr "媒体"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:74
+msgid "Media Options"
+msgstr "媒体选项"
+
+#: player-parts/gstreamer-part/gstreamerconfig.cpp:80
+msgid "CD, VCD, DVD drive"
+msgstr "CD、VCD、DVD 驱动器"
+
+#: player-parts/dummy-part/dummy_part.cpp:75
+msgid "DummyPart"
+msgstr "空组件"
+
+#~ msgid "&Subtitles"
+#~ msgstr "字幕(&S)"
+
+#~ msgid "&Delay Subtitle"
+#~ msgstr "延迟字幕(&D)"
+
+#~ msgid "&Advance Subtitle"
+#~ msgstr "提前字幕(&A)"
+
+#~ msgid "Don't switch to player window"
+#~ msgstr "不要切换至播放器窗口"
+
+#~ msgid "Don't switch automatically to player window"
+#~ msgstr "不要自动切换至播放器窗口"

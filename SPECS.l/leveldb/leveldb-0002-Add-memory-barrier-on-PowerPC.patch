@@ -1,0 +1,28 @@
+From 766a980c083ab05809620f81985a96f99eb62a13 Mon Sep 17 00:00:00 2001
+From: Peter Lemenkov <lemenkov@gmail.com>
+Date: Sat, 19 May 2012 11:33:43 +0400
+Subject: [PATCH 2/3] Add memory barrier on PowerPC
+
+Signed-off-by: Peter Lemenkov <lemenkov@gmail.com>
+---
+ port/atomic_pointer.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/port/atomic_pointer.h b/port/atomic_pointer.h
+index e17bf43..f1ae174 100644
+--- a/port/atomic_pointer.h
++++ b/port/atomic_pointer.h
+@@ -50,8 +50,8 @@ namespace port {
+ // http://msdn.microsoft.com/en-us/library/ms684208(v=vs.85).aspx
+ #define LEVELDB_HAVE_MEMORY_BARRIER
+ 
+-// Gcc on x86
+-#elif defined(ARCH_CPU_X86_FAMILY) && defined(__GNUC__)
++// GCC on x86, PPC, PPC64, MIPS, MIPS64, s390, S390x, ARM
++#elif defined(__GNUC__)
+ inline void MemoryBarrier() {
+   // See http://gcc.gnu.org/ml/gcc/2003-04/msg01180.html for a discussion on
+   // this idiom. Also see http://en.wikipedia.org/wiki/Memory_ordering.
+-- 
+1.7.12.1
+

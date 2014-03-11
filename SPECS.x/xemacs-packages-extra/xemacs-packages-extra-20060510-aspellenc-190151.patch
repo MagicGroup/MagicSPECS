@@ -1,0 +1,15 @@
+--- xemacs-sumo-20060510/xemacs-packages/ispell/ispell.el~	2005-10-15 22:11:33.000000000 +0300
++++ xemacs-sumo-20060510/xemacs-packages/ispell/ispell.el	2006-09-03 02:10:30.000000000 +0300
+@@ -2249,6 +2249,12 @@
+ 			    (expand-file-name ispell-personal-dictionary)))))
+     (setq args (append args ispell-extra-args))
+ 
++    ;; Fix encoding with aspell >= 0.60 (and blindly assume it's >= 0.60
++    ;; if it looks like aspell :P)
++    (when (string-match "^aspell" (file-name-nondirectory ispell-program-name))
++      (add-to-list
++       'args (concat "--encoding=" (symbol-name (ispell-get-coding-system)))))
++
+     (if ispell-async-processp
+ 	(let ((process-connection-type ispell-use-ptys-p))
+ 	  (apply 'start-process

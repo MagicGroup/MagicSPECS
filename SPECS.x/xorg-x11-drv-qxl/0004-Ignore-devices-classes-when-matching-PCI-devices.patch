@@ -1,0 +1,36 @@
+From 4a040532492b212e05f5375994adcfdd171e0410 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B8ren=20Sandmann=20Pedersen?= <ssp@redhat.com>
+Date: Tue, 26 Jul 2011 13:44:30 -0400
+Subject: [PATCH xf86-video-qxl 04/10] Ignore devices classes when matching
+ PCI devices
+
+A device_class of 0x00030000 means we will only match VGA compatible
+controllers, but when multiple devices are added to the VM, the
+additional ones will have subclass 0x8000 ("Display controller").
+
+We need to be able to drive those too.
+---
+ src/qxl_driver.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/qxl_driver.c b/src/qxl_driver.c
+index 2e5a9d6..f3768f7 100644
+--- a/src/qxl_driver.c
++++ b/src/qxl_driver.c
+@@ -1489,11 +1489,11 @@ enum qxl_class
+ static const struct pci_id_match qxl_device_match[] = {
+     {
+ 	PCI_VENDOR_RED_HAT, PCI_CHIP_QXL_0100, PCI_MATCH_ANY, PCI_MATCH_ANY,
+-	0x00030000, 0x00ffffff, CHIP_QXL_1
++	0x00000000, 0x00000000, CHIP_QXL_1
+     },
+     {
+ 	PCI_VENDOR_RED_HAT, PCI_CHIP_QXL_01FF, PCI_MATCH_ANY, PCI_MATCH_ANY,
+-	0x00030000, 0x00ffffff, CHIP_QXL_1
++	0x00000000, 0x00000000, CHIP_QXL_1
+     },
+ 
+     { 0 },
+-- 
+1.7.6.2
+

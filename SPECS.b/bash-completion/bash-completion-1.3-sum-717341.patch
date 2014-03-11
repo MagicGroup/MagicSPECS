@@ -1,0 +1,25 @@
+From e7b3abf689e9608aa60e6a4504df136022987633 Mon Sep 17 00:00:00 2001
+From: =?utf8?q?Ville=20Skytt=C3=A4?= <ville.skytta@iki.fi>
+Date: Wed, 29 Jun 2011 00:22:54 +0300
+Subject: [PATCH] sum: New (generic long option) completion (RedHat: #717341).
+
+---
+ bash_completion |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/bash_completion b/bash_completion
+index e5577e3..eae72eb 100644
+--- a/bash_completion
++++ b/bash_completion
+@@ -1696,7 +1696,7 @@ for i in a2ps awk bash bc bison cat colordiff cp csplit \
+     curl cut date df diff dir du enscript env expand fmt fold gperf gprof \
+     grep grub head indent irb ld ldd less ln ls m4 md5sum mkdir mkfifo mknod \
+     mv netstat nl nm objcopy objdump od paste patch pr ptx readelf rm rmdir \
+-    sed seq sha{,1,224,256,384,512}sum shar sort split strip tac tail tee \
++    sed seq sha{,1,224,256,384,512}sum shar sort split strip sum tac tail tee \
+     texindex touch tr uname unexpand uniq units vdir wc wget who; do
+     have $i && complete -F _longopt -o default $i
+ done
+-- 
+1.7.2.5
+

@@ -1,0 +1,36 @@
+diff -up chromium-14.0.827.10/third_party/WebKit/Source/WebCore/platform/ScrollAnimatorNone.cpp.switch-fix chromium-14.0.827.10/third_party/WebKit/Source/WebCore/platform/ScrollAnimatorNone.cpp
+--- chromium-14.0.827.10/third_party/WebKit/Source/WebCore/platform/ScrollAnimatorNone.cpp.switch-fix	2011-07-21 06:00:56.000000000 -0400
++++ chromium-14.0.827.10/third_party/WebKit/Source/WebCore/platform/ScrollAnimatorNone.cpp	2011-07-25 15:16:38.618017711 -0400
+@@ -95,6 +95,9 @@ double ScrollAnimatorNone::PerAxisData::
+         }
+         t -= 2.625 / 2.75;
+         return 7.5625 * t * t + .984375;
++     default:
++        /* We shouldn't be here. */
++        return t * t;
+     }
+ }
+ 
+@@ -123,6 +126,9 @@ double ScrollAnimatorNone::PerAxisData::
+         return t * t * t * 4;
+     case Bounce:
+         return t;
++    default:
++        /* We shouldn't be here. */
++        return t;
+     }
+ }
+ 
+diff -up chromium-14.0.827.10/third_party/WebKit/Source/WebKit/chromium/tests/ScrollAnimatorNoneTest.cpp.BAD chromium-14.0.827.10/third_party/WebKit/Source/WebKit/chromium/tests/ScrollAnimatorNoneTest.cpp
+--- chromium-14.0.827.10/third_party/WebKit/Source/WebKit/chromium/tests/ScrollAnimatorNoneTest.cpp.BAD	2011-07-26 10:21:30.720005944 -0400
++++ chromium-14.0.827.10/third_party/WebKit/Source/WebKit/chromium/tests/ScrollAnimatorNoneTest.cpp	2011-07-26 10:23:08.238015593 -0400
+@@ -272,6 +272,9 @@ double ScrollAnimatorNoneTest::curveInte
+         bounceArea = t1 * (t1 * (2.52083 * t1 - 0.34375) + 1);
+         area += bounceArea;
+         return area;
++    default:
++        /* We should never be here. */
++        return t * t * t / 3;
+     }
+ }
+ 

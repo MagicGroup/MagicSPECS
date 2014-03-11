@@ -1,0 +1,103 @@
+diff -up python-dateutil-1.5/dateutil/zoneinfo/__init__.py\~ python-dateutil-1.5/dateutil/zoneinfo/__init__.py
+--- python-dateutil-1.5/dateutil/zoneinfo/__init__.py~	2005-12-22 19:13:50.000000000 +0100
++++ python-dateutil-1.5/dateutil/zoneinfo/__init__.py	2011-08-17 15:24:29.019214748 +0200
+@@ -15,6 +15,7 @@ __all__ = ["setcachesize", "gettz", "reb
+ 
+ CACHE = []
+ CACHESIZE = 10
++USE_SYSTEM_ZONEINFO = True # XXX configure at build time
+ 
+ class tzfile(tzfile):
+     def __reduce__(self):
+@@ -29,7 +30,8 @@ def getzoneinfofile():
+             return os.path.join(os.path.dirname(__file__), entry)
+     return None
+ 
+-ZONEINFOFILE = getzoneinfofile()
++ZONEINFOFILE = getzoneinfofile() if USE_SYSTEM_ZONEINFO else None
++ZONEINFODIR = (os.getenv("TZDIR") or "/usr/share/zoneinfo").rstrip(os.sep)
+ 
+ del getzoneinfofile
+ 
+@@ -39,22 +40,37 @@ def setcachesize(size):
+     del CACHE[size:]
+ 
+ def gettz(name):
+-    tzinfo = None
+-    if ZONEINFOFILE:
+-        for cachedname, tzinfo in CACHE:
+-            if cachedname == name:
+-                break
++    for cachedname, tzinfo in CACHE:
++        if cachedname == name:
++            return tzinfo
++
++    name_parts = name.lstrip('/').split('/')
++    for part in name_parts:
++        if part == os.path.pardir or os.path.sep in part:
++            raise ValueError('Bad path segment: %r' % part)
++    filename = os.path.join(ZONEINFODIR, *name_parts)
++    try:
++        zonefile = open(filename, "rb")
++    except:
++        tzinfo = None
++    else:
++        tzinfo = tzfile(zonefile)
++        zonefile.close()
++
++    if tzinfo is None and ZONEINFOFILE:
++        tf = TarFile.open(ZONEINFOFILE)
++        try:
++            zonefile = tf.extractfile(name)
++        except KeyError:
++            tzinfo = None
+         else:
+-            tf = TarFile.open(ZONEINFOFILE)
+-            try:
+-                zonefile = tf.extractfile(name)
+-            except KeyError:
+-                tzinfo = None
+-            else:
+-                tzinfo = tzfile(zonefile)
+-            tf.close()
+-            CACHE.insert(0, (name, tzinfo))
+-            del CACHE[CACHESIZE:]
++            tzinfo = tzfile(zonefile)
++        tf.close()
++
++    if tzinfo is not None:
++        CACHE.insert(0, (name, tzinfo))
++        del CACHE[CACHESIZE:]
++
+     return tzinfo
+ 
+ def rebuild(filename, tag=None, format="gz"):
+diff -up python-dateutil-1.5/setup.py\~ python-dateutil-1.5/setup.py
+--- python-dateutil-1.5/setup.py~	2010-01-11 10:43:22.000000000 +0100
++++ python-dateutil-1.5/setup.py	2011-08-17 15:38:13.206304651 +0200
+@@ -15,6 +15,16 @@ TOPDIR = os.path.dirname(__file__) or ".
+ VERSION = re.search('__version__ = "([^"]+)"',
+                     open(TOPDIR + "/dateutil/__init__.py").read()).group(1)
+ 
++# XXX We would like to bind this to something like
++# --system-zoneinfo=/path/to/zoneinfo.  Any way of doing this short of
++# overriding build and install commands?
++if False:
++    extra_options = dict(
++        package_data={"": ["*.tar.gz"]},
++        )
++else:
++    extra_options = {}
++
+ 
+ setup(name="python-dateutil",
+       version = VERSION,
+@@ -29,7 +39,7 @@ The dateutil module provides powerful ex
+ datetime module, available in Python 2.3+.
+ """,
+       packages = ["dateutil", "dateutil.zoneinfo"],
+-      package_data={"": ["*.tar.gz"]},
+       include_package_data=True,
+       zip_safe=False,
++      **extra_options
+       )

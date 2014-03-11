@@ -1,0 +1,21 @@
+From 9268366cad0ab1b6340d50404af56760ebe660aa Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 16 Apr 2013 13:41:19 +0200
+Subject: [PATCH] Makefile: remove dracut-version.sh on clean
+
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Makefile b/Makefile
+index e0baef2..2b130d9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -149,6 +149,7 @@ clean:
+ 	$(RM) $(manpages:%=%.xml) dracut.xml
+ 	$(RM) test-*.img
+ 	$(RM) dracut-*.rpm dracut-*.tar.bz2
++	$(RM) dracut-version.sh
+ 	$(RM) dracut-install install/dracut-install $(DRACUT_INSTALL_OBJECTS)
+ 	$(RM) $(manpages) dracut.html
+ 	$(MAKE) -C test clean

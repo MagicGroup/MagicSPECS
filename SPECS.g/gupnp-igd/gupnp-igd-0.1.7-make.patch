@@ -1,0 +1,22 @@
+diff -up gupnp-igd-0.1.7/gtk-doc.make gupnp-igd-0.1.7/gtk-doc
+diff -up gupnp-igd-0.1.7/python/Makefile.am.make gupnp-igd-0.1.7/python/Makefile.am
+--- gupnp-igd-0.1.7/python/Makefile.am.make	2010-12-23 14:28:49.000000000 +0100
++++ gupnp-igd-0.1.7/python/Makefile.am	2010-12-23 14:28:59.000000000 +0100
+@@ -1,5 +1,4 @@
+ PYDEFS=`pkg-config --variable=defsdir pygobject-2.0`
+-[ -z "$PYDEFS" && PYDEFS=`pkg-config --variable=defsdir pygtk-2.0`]
+ 
+ AM_CPPFLAGS =						\
+ 	-I.						\
+diff -up gupnp-igd-0.1.7/python/Makefile.in.make gupnp-igd-0.1.7/python/Makefile.in
+--- gupnp-igd-0.1.7/python/Makefile.in.make	2010-12-23 14:28:56.000000000 +0100
++++ gupnp-igd-0.1.7/python/Makefile.in	2010-12-23 14:29:21.000000000 +0100
+@@ -640,8 +640,6 @@ uninstall-am: uninstall-pygupnpigdLTLIBR
+ 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+ 	uninstall-pygupnpigdLTLIBRARIES uninstall-pygupnpigdPYTHON
+ 
+-[ -z "$PYDEFS" && PYDEFS=`pkg-config --variable=defsdir pygtk-2.0`]
+-
+ pygupnp-igd.c: $(srcdir)/pygupnp-igd.override $(srcdir)/pygupnp-igd.defs
+ 	$(PYCODEGEN)						\
+ 		--prefix igd					\

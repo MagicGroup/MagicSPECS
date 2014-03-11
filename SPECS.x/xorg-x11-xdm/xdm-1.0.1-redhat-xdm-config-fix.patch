@@ -1,0 +1,11 @@
+--- config/xdm-config.cpp.redhat-fix-xdm-config	2006-01-09 11:41:26.000000000 -0500
++++ config/xdm-config.cpp	2006-01-09 11:42:30.000000000 -0500
+@@ -18,7 +18,7 @@
+ DisplayManager.servers:		XDMCONFIGDIR/Xservers
+ DisplayManager.accessFile:	XDMCONFIGDIR/Xaccess
+ DisplayManager*resources:	XDMCONFIGDIR/Xresources
+-DisplayManager.willing:		SU nobody -c XDMSCRIPTDIR/Xwilling
++DisplayManager.willing:		SU nobody -s /bin/bash XDMSCRIPTDIR/Xwilling
+ ! All displays should use authorization, but we cannot be sure
+ ! X terminals may not be configured that way, so they will require
+ ! individual resource settings.

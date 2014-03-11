@@ -1,0 +1,135 @@
+--- Makefile~	2006-04-25 07:00:14.000000000 -0400
++++ Makefile	2006-04-25 07:00:36.000000000 -0400
+@@ -30,7 +30,7 @@
+ USE_AWE = 1
+ USE_MIDI = 1
+ USE_ALSA = 1
+-USE_LADCCA = 0
++USE_LASH = 0
+ 
+ #
+ # Tcl/Tk library -- depends on your distribution
+@@ -68,14 +68,14 @@
+ endif
+ 
+ #
+-# LADCCA stuff
++# LASH stuff
+ #
+-ifeq (1,$(USE_LADCCA))
+-LADCCACFLAGS = $(shell pkg-config --cflags ladcca-1.0) \
+-	       $(shell pkg-config --exists ladcca-1.0 && echo "-DHAVE_LADCCA" )
+-LADCCALIBS   = $(shell pkg-config --libs ladcca-1.0)
+-DEVICES += $(LADCCACFLAGS)
+-EXTRALIB += $(LADCCALIBS)
++ifeq (1,$(USE_LASH))
++LASHCFLAGS = $(shell pkg-config --cflags lash-1.0) \
++	       $(shell pkg-config --exists lash-1.0 && echo "-DHAVE_LASH" )
++LASHLIBS   = $(shell pkg-config --libs lash-1.0)
++DEVICES += $(LASHCFLAGS)
++EXTRALIB += $(LASHLIBS)
+ endif
+ 
+ #----------------------------------------------------------------
+@@ -87,7 +87,7 @@
+ CFLAGS = -Wall -O -DVKB_TCLFILE=\"$(VKB_TCLFILE)\" \
+ 	-DVKBLIB_DIR=\"$(VKBLIB_DIR)\"\
+ 	-DVERSION_STR=\"$(VERSION)\"\
+-	$(DEVICES) $(XINC) $(TCLINC) $(TKINC) $(LADCCACFLAGS)
++	$(DEVICES) $(XINC) $(TCLINC) $(TKINC) $(LASHCFLAGS)
+ 
+ TARGETS = vkeybd sftovkb
+ 
+--- oper_alsa.c~	2006-04-25 06:59:53.000000000 -0400
++++ oper_alsa.c	2006-04-25 07:00:36.000000000 -0400
+@@ -79,7 +79,7 @@
+ 	{"addr", "subscriber", "--addr client:port or 'subscriber' : ALSA sequencer destination"},
+ 	{"name", DEFAULT_NAME, "--name string : use the specified string as client/port names"},
+ #ifdef HAVE_LADCCA	
+-	{"ladcca", "no", "--ladcca <yes|no> : support LADCCA (default = no)"},
++	{"lash", "no", "--lash <yes|no> : support LASH (default = no)"},
+ #endif
+ 	{NULL},
+ };
+@@ -100,7 +100,7 @@
+ static int seq_client, seq_port;
+ static int chan_no;
+ 
+-#ifdef HAVE_LADCCA	
++#ifdef HAVE_LASH	
+ static cca_client_t * cca_client = NULL;
+ #endif
+ 
+@@ -156,9 +156,9 @@
+ 	/* get my client id */
+ 	my_client = snd_seq_client_id(seq_handle);
+ 	
+-	/* tell the ladcca server our client id */
+-#ifdef HAVE_LADCCA
+-	if ((var = Tcl_GetVar2(ip, "optvar", "ladcca", TCL_GLOBAL_ONLY)) != NULL) {
++	/* tell the lash server our client id */
++#ifdef HAVE_LASH
++	if ((var = Tcl_GetVar2(ip, "optvar", "lash", TCL_GLOBAL_ONLY)) != NULL) {
+ 		if (*var == 'y' || *var == 'Y' || *var == '1') {
+ 			cca_client = cca_init (cca_args,
+ 					       "vkeybd",
+@@ -174,7 +174,7 @@
+ 			}
+ 		}
+ 	}
+-#endif /* HAVE_LADCCA */
++#endif /* HAVE_LASH */
+  
+ 	/* set client info */
+ 	if ((var = Tcl_GetVar2(ip, "optvar", "name", TCL_GLOBAL_ONLY)) != NULL)
+@@ -203,7 +203,7 @@
+ 	if (seq_client != SND_SEQ_ADDRESS_SUBSCRIBERS) {
+ 		/* subscribe to MIDI port */
+ 		if (
+-#ifdef HAVE_LADCCA
++#ifdef HAVE_LASH
+ 		    !cca_enabled (cca_client) &&
+ #endif
+ 		    snd_seq_connect_to(seq_handle, my_port, seq_client, seq_port) < 0) {
+--- README~	2006-04-25 06:59:57.000000000 -0400
++++ README	2006-04-25 07:00:36.000000000 -0400
+@@ -105,7 +105,7 @@
+ 	tk707 check the client/port name whether it is a valid MIDI
+ 	device port.  This options makes vkeybd possible to "fake"
+ 	as a real MIDI device.
+-  --ladcca bool
++  --lash bool
+ 	Specify the support of LADCCA.  Give yes or no as the
+ 	argument.  The default value is no.
+ 
+--- vkb.c~	2006-04-25 07:00:21.000000000 -0400
++++ vkb.c	2006-04-25 07:00:37.000000000 -0400
+@@ -65,7 +65,7 @@
+ static vkb_oper_t *oper;
+ 
+ #ifdef HAVE_LADCCA	
+-cca_args_t * cca_args = NULL;
++lash_args_t * lash_args = NULL;
+ #endif
+  
+ /*
+@@ -78,7 +78,7 @@
+ 	int c, nargc;
+ 
+ #ifdef HAVE_LADCCA	
+-	cca_args = cca_extract_args(&argc, &argv);
++	lash_args = lash_extract_args(&argc, &argv);
+ #endif /* HAVE_LADCCA */
+ 
+ 	nargc = argc + 1;
+--- vkb.h~	2006-04-25 07:00:29.000000000 -0400
++++ vkb.h	2006-04-25 07:00:37.000000000 -0400
+@@ -24,7 +24,7 @@
+ #include <tcl.h>
+ 
+ #ifdef HAVE_LADCCA
+-#include <ladcca/ladcca.h>
++#include <lash/lash.h>
+ #endif
+ 
+ #ifndef VKB_TCLFILE

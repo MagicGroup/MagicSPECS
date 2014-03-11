@@ -1,0 +1,10 @@
+--- libqalculate/Number.cc	2007-05-18 04:03:22.000000000 -0400
++++ libqalculate/Number.cc.new	2008-02-10 22:56:51.000000000 -0500
+@@ -15,6 +15,7 @@
+ #include "Calculator.h"
+ 
+ #include <sstream>
++#include <limits.h>
+ #include "util.h"
+ 
+ #define REAL_PRECISION_FLOAT_RE(x)		cln::cl_float(cln::realpart(x), cln::float_format(PRECISION + 1))

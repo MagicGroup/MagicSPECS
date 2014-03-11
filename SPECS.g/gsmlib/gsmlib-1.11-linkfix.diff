@@ -1,0 +1,24 @@
+diff -Naur gsmlib-1.11/ext/Makefile.am gsmlib-1.11.oden/ext/Makefile.am
+--- gsmlib-1.11/ext/Makefile.am	2004-06-03 16:09:24.000000000 -0400
++++ gsmlib-1.11.oden/ext/Makefile.am	2008-05-22 11:25:29.000000000 -0400
+@@ -20,7 +20,7 @@
+ 
+ libgsmext_la_SOURCES =	gsm_sie_me.cc
+ 
+-libgsmext_la_LDFLAGS =	-version-info $(GSM_VERSION)
++libgsmext_la_LDFLAGS =	-version-info $(GSM_VERSION) ../gsmlib/libgsmme.la $(INTLLIBS)
+ 
+ gsmincludedir =		$(includedir)/gsmlib
+ 
+diff -Naur gsmlib-1.11/ext/Makefile.in gsmlib-1.11.oden/ext/Makefile.in
+--- gsmlib-1.11/ext/Makefile.in	2004-06-03 16:56:25.000000000 -0400
++++ gsmlib-1.11.oden/ext/Makefile.in	2008-05-22 11:25:41.000000000 -0400
+@@ -130,7 +130,7 @@
+ 
+ libgsmext_la_SOURCES = gsm_sie_me.cc
+ 
+-libgsmext_la_LDFLAGS = -version-info $(GSM_VERSION)
++libgsmext_la_LDFLAGS = -version-info $(GSM_VERSION) ../gsmlib/libgsmme.la $(INTLLIBS)
+ 
+ gsmincludedir = $(includedir)/gsmlib
+ 

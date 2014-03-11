@@ -1,0 +1,12 @@
+diff -up DBD-mysql-4.018/mysql.xs.isprefix DBD-mysql-4.018/mysql.xs
+--- DBD-mysql-4.018/mysql.xs.isprefix	2010-07-09 19:47:47.000000000 +0200
++++ DBD-mysql-4.018/mysql.xs	2011-05-10 18:08:07.812894258 +0200
+@@ -721,7 +721,7 @@ dbd_mysql_get_info(dbh, sql_info_type)
+ 	case SQL_IDENTIFIER_QUOTE_CHAR:
+ 	    /*XXX What about a DB started in ANSI mode? */
+ 	    /* Swiped from MyODBC's get_info.c */
+-	    using_322=is_prefix(mysql_get_server_info(imp_dbh->pmysql),"3.22");
++	    using_322 = ((strncmp(mysql_get_server_info(imp_dbh->pmysql),"3.22",4) == 0) ? 1 : 0 );
+ 	    retsv = newSVpv(!using_322 ? "`" : " ", 1);
+ 	    break;
+ 	case SQL_MAXIMUM_STATEMENT_LENGTH:

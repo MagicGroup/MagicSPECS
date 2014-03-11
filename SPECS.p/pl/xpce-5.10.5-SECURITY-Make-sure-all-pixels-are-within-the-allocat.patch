@@ -1,0 +1,61 @@
+From 4bc3a0a32132c04b11ad83f2b5847be83ab7364b Mon Sep 17 00:00:00 2001
+From: Jan Wielemaker <J.Wielemaker@cs.vu.nl>
+Date: Wed, 24 Aug 2011 14:40:31 +0200
+Subject: [PATCH 2/2] SECURITY: Make sure all pixels are within the allocated
+ colormap
+
+---
+ src/img/gifread.c |   10 ++++++++--
+ 1 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/img/gifread.c b/src/img/gifread.c
+index 9c35f63..5d4755e 100644
+--- a/src/img/gifread.c
++++ b/src/img/gifread.c
+@@ -69,6 +69,7 @@ static int LZWReadByte (IOSTREAM *fd,int flag, int  input_code_size);
+ static int ReadImage(IOSTREAM *fd,
+ 		     PIXEL *bigMemBuf,
+ 		     int width, int height,
++		     int ncolors,
+ 		     int interlace);
+ 
+ 
+@@ -251,14 +252,14 @@ GIFReadFD(IOSTREAM *fd,
+ 	return rval;
+       }
+       /*read image */
+-      if ( (rval=ReadImage(fd, bigBuf, w, h,
++      if ( (rval=ReadImage(fd, bigBuf, w, h, bitPixel,
+ 			   BitSet((UCHAR) buf[8], INTERLACE))) != GIF_OK )
+       { setGifError("Error reading GIF file.  LocalColorMap. Giving up");
+ 	pceFree(bigBuf);
+ 	return rval;
+       }
+     } else
+-    { if ( (rval=ReadImage(fd, bigBuf, w, h,
++    { if ( (rval=ReadImage(fd, bigBuf, w, h, GifScreen.BitPixel,
+ 			   BitSet((UCHAR) buf[8], INTERLACE))) != GIF_OK )
+       { setGifError("Error reading GIF file.  GIFScreen Colormap.  Giving up");
+ 	pceFree(bigBuf);
+@@ -548,6 +549,7 @@ static int
+ ReadImage(IOSTREAM *fd,
+ 	  PIXEL *bigMemBuf,
+ 	  int width, int height,
++	  int ncolors,
+ 	  int interlace)
+ {
+   UCHAR c;
+@@ -567,6 +569,10 @@ ReadImage(IOSTREAM *fd,
+   {
+     curidx = (long) xpos + (long) ypos *(long) width; /* optimize */
+ 
++    if ( color >= ncolors )
++    { /*Cprintf("Color %d; ncolors = %d\n", color, ncolors);*/
++      return GIF_INVALID;
++    }
+     bigMemBuf[curidx] = color;
+ 
+     ++xpos;
+-- 
+1.7.6
+

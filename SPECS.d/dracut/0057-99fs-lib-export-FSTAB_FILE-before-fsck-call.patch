@@ -1,0 +1,26 @@
+From f07aaccd0600cefd113d1393cb4ca6a7e969a8e1 Mon Sep 17 00:00:00 2001
+From: Michal Soltys <soltys@ziu.info>
+Date: Tue, 6 Sep 2011 01:22:15 +0200
+Subject: [PATCH] 99fs-lib: export FSTAB_FILE before fsck call
+
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+---
+ modules.d/99fs-lib/fs-lib.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/99fs-lib/fs-lib.sh b/modules.d/99fs-lib/fs-lib.sh
+index edb5852..f36299a 100755
+--- a/modules.d/99fs-lib/fs-lib.sh
++++ b/modules.d/99fs-lib/fs-lib.sh
+@@ -210,10 +210,10 @@ fsck_batch() {
+         info "    $_dev"
+     done
+ 
++    export FSTAB_FILE
+     _out="$(fsck -M -T "$@" -- -a)"
+     _ret=$?
+ 
+-    export FSTAB_FILE
+     fsck_tail
+ 
+     return $_ret

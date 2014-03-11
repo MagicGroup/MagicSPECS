@@ -1,0 +1,28 @@
+From 320b3ca0a544fd5024ddfeca6f491a0344b9ecd2 Mon Sep 17 00:00:00 2001
+From: John Bradshaw <john@johnbradshaw.org>
+Date: Sat, 5 Feb 2011 18:14:27 +0000
+Subject: [PATCH] setfacl.1: fix typo 'inclu de' -> 'include'
+
+Bug: https://bugzilla.redhat.com/675451
+---
+ man/man1/setfacl.1 |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/man/man1/setfacl.1 b/man/man1/setfacl.1
+index 64f0e33..0c7c046 100644
+--- a/man/man1/setfacl.1
++++ b/man/man1/setfacl.1
+@@ -240,8 +240,8 @@ owner, owning group, or others entry, a copy of the ACL owner, owning group, or
+ .IP * 4
+ If a Default ACL contains named user entries or named group entries, and no mask entry exists, a mask entry containing the same permissions as the default Default ACL's group entry is added. Unless the
+ .I \-n
+-option is given, the permissions of the mask entry are further adjusted to inclu
+-de the union of all permissions affected by the mask entry. (See the
++option is given, the permissions of the mask entry are further adjusted to
++include the union of all permissions affected by the mask entry. (See the
+ .I \-n
+ option description).
+ .PP
+-- 
+1.7.1
+

@@ -1,0 +1,1 @@
+#DAEMON_ARGS="-c $CONF_DIR -f > /dev/null"

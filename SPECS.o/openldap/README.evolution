@@ -1,0 +1,22 @@
+These files are here specifically for use in building the evolution-connector
+package, and should not be used for any other purpose.
+
+In order to authenticate to older servers, an LDAP client must perform an
+ntlm_bind operation instead of a simple or SASL bind.  The ntlm_bind is not the
+same thing as performing SASL authentication using NTLM as the mechanism, which
+wouldn't require any patching.  Newer servers properly support DIGEST-MD5, so
+this requirement only applies to clients which want to authenticate to older
+servers, and this requirement will hopefully go away at some point.
+
+Because the changes involved both modify the libldap ABI and add
+non-standardized messages to the protocol, changed libraries are built
+statically and stashed in a directory where they will not be found by a
+compiler using the default search paths.
+
+The openldap-devel package provides "openldap-evolution-devel" if it includes a
+patched version of these libraries in such a directory.  Packages which depend
+on these libraries should BuildRequire this virtual provision so that they
+don't fail to compile or get miscompiled if the libraries are not present.
+
+If/when the evolution-connector package stops requiring these changes, the
+changed libraries will simply disappear.

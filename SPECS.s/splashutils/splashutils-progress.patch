@@ -1,0 +1,14 @@
+diff -Nur splashutils-1.5.4.2.ori/scripts/splash-functions.sh.in splashutils-1.5.4.2/scripts/splash-functions.sh.in
+--- splashutils-1.5.4.2.ori/scripts/splash-functions.sh.in	2008-07-22 06:30:12.000000000 +0800
++++ splashutils-1.5.4.2/scripts/splash-functions.sh.in	2008-08-02 17:14:55.000000000 +0800
+@@ -554,8 +554,8 @@
+ # updated.  It should recalculate the progress and send it to the
+ # splash daemon.
+ splash_update_progress() {
+-	# splash_comm_send "progress ${progress}"
+-	# splash_comm_send "paint"
++	splash_comm_send "progress ${progress}"
++	splash_comm_send "paint"
+ 	return
+ }
+ 

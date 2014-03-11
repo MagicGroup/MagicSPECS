@@ -1,0 +1,30 @@
+From 1e2f60993fa3e4638ab03db1701e0b0d3f100ca0 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 30 Aug 2011 16:23:17 +0200
+Subject: [PATCH] 99base/init: move switch_root breakpoint to a later point in
+ the script
+
+---
+ modules.d/99base/init |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/99base/init b/modules.d/99base/init
+index 21b9468..b666d3e 100755
+--- a/modules.d/99base/init
++++ b/modules.d/99base/init
+@@ -359,7 +359,6 @@ done
+     emergency_shell
+ }
+ 
+-getarg rd.break rdbreak && emergency_shell -n switch_root "Break before switch_root"
+ 
+ if [ $UDEVVERSION -lt 168 ]; then
+     # stop udev queue before killing it
+@@ -443,6 +442,7 @@ fi
+ 
+ wait_for_loginit
+ 
++getarg rd.break rdbreak && emergency_shell -n switch_root "Break before switch_root"
+ info "Switching root"
+ 
+ unset PS4

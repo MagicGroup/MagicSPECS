@@ -1,0 +1,56 @@
+Date: Mon, 21 Jul 2008 11:43:35 -0600
+From: Kevin Hartig <kevin.hartig@gmail.com>
+To: "Tom \"spot\" Callaway" <tcallawa@redhat.com>
+Subject: Re: Licensing question
+
+Hi Tom,
+
+You found the right person. :-)
+All the addresses listed except kevin.hartig@gmail.com are no longer valid.
+
+I'd be happy to relicense the fonts under SIL Open Font License. What do 
+I need to do in order to bundle the new license with the font?
+
+-kevin.
+
+Tom "spot" Callaway wrote:
+> Hi,
+>
+> I'm looking for the Kevin Hartig who is listed as the copyright holder
+> for the Calligraphic-Hiragana (fhirw.gsf) and Calligraphic-Katakana
+> (fkarw.gsf) Fonts. Are you that Kevin?
+>
+> If so, your fonts are currently included in the Ghostscript Font
+> collection under the following license terms:
+>
+>  These copyrighted fonts were developed by Kevin Hartig. Permission is
+>  granted to freely distribute them in entirety along with this 
+>  statement.
+>  This is shareware. If you decide to use these fonts please contribute
+>  $10 US to help support further freeware and shareware software 
+>  development.
+>  Questions and comments may be sent to:
+>
+>  hartig@fsl.noaa.gov
+>  khartig@nyx.cs.du.edu
+>
+>  Kevin Hartig
+>  1126 Collyer Street
+>  Longmont, CO 80501 USA
+>
+>  copyright 1993.
+>
+> We would like to include these fonts in Fedora (a popular distribution
+> of Linux), but the license is not a Free License. Would you be willing
+> to relicense your fonts under a Free License?
+>
+> We recommend the SIL Open Font License (http://scripts.sil.org/OFL_web),
+> but we have a list of acceptable Font Licenses here:
+> http://fedoraproject.org/wiki/Licensing/Fonts
+>
+> Thanks in advance, and apologies if you are not the copyright holder,
+>
+> Tom Callaway, Fedora Legal
+>
+>   
+

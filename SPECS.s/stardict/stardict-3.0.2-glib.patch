@@ -1,0 +1,12 @@
+diff -ur stardict-3.0.2.orig/src/tomboykeybinder.h stardict-3.0.2/src/tomboykeybinder.h
+--- stardict-3.0.2.orig/src/tomboykeybinder.h	2012-02-09 18:21:12.000000000 -0500
++++ stardict-3.0.2/src/tomboykeybinder.h	2012-02-09 18:44:05.000000000 -0500
+@@ -2,7 +2,7 @@
+ #ifndef __TOMBOY_KEY_BINDER_H__
+ #define __TOMBOY_KEY_BINDER_H__
+ 
+-#include <glib/gtypes.h>
++#include <glib.h>
+ 
+ G_BEGIN_DECLS
+ 

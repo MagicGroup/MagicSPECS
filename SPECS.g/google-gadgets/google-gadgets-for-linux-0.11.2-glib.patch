@@ -1,0 +1,60 @@
+diff -ur google-gadgets-for-linux-0.11.2.orig/ggadget/gtk/main_loop.cc google-gadgets-for-linux-0.11.2/ggadget/gtk/main_loop.cc
+--- google-gadgets-for-linux-0.11.2.orig/ggadget/gtk/main_loop.cc	2011-12-07 12:54:05.000000000 -0500
++++ google-gadgets-for-linux-0.11.2/ggadget/gtk/main_loop.cc	2011-12-07 13:01:41.000000000 -0500
+@@ -16,9 +16,9 @@
+ 
+ #include <fcntl.h>
+ #include <stdint.h>
+-#include <glib/ghash.h>
++#include <glib.h>
+ #include <gtk/gtk.h>
+-#include <glib/gthread.h>
++#include <glib.h>
+ #include <ggadget/common.h>
+ #include "main_loop.h"
+ #include "utilities.h"
+@@ -58,11 +58,11 @@
+       main_thread_(NULL) {
+     // Initialize the glib thread environment, otherwise the glib main loop
+     // will not be thread safe.
+-    if (!g_thread_supported())
+-      g_thread_init(NULL);
++    //if (!g_thread_supported())
++      //g_thread_init(NULL);
+ 
+     main_thread_ = g_thread_self();
+-    g_static_mutex_init(&mutex_);
++    //g_static_mutex_init(&mutex_);
+     watches_ = g_hash_table_new_full(g_direct_hash,
+                                      g_direct_equal,
+                                      NULL,
+@@ -76,7 +76,7 @@
+     g_hash_table_foreach_remove(watches_, ForeachRemoveCallback, this);
+     g_hash_table_destroy(watches_);
+     g_static_mutex_unlock(&mutex_);
+-    g_static_mutex_free(&mutex_);
++    //g_static_mutex_free(&mutex_);
+   }
+ 
+   int AddIOWatch(MainLoopInterface::WatchType type, int fd,
+@@ -124,7 +124,7 @@
+                             node, NULL));
+     node->watch_id = watch_id;
+     g_hash_table_insert(watches_, GINT_TO_POINTER(node->watch_id), node);
+-    g_static_mutex_unlock(&mutex_);
++    //g_static_mutex_unlock(&mutex_);
+     return watch_id;
+   }
+ 
+diff -ur google-gadgets-for-linux-0.11.2.orig/hosts/gtk/main.cc google-gadgets-for-linux-0.11.2/hosts/gtk/main.cc
+--- google-gadgets-for-linux-0.11.2.orig/hosts/gtk/main.cc	2011-12-07 12:54:04.000000000 -0500
++++ google-gadgets-for-linux-0.11.2/hosts/gtk/main.cc	2011-12-07 12:55:43.000000000 -0500
+@@ -15,7 +15,7 @@
+ */
+ 
+ #include <gtk/gtk.h>
+-#include <glib/gthread.h>
++#include <glib.h>
+ #include <locale.h>
+ #include <signal.h>
+ #include <unistd.h>

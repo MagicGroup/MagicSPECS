@@ -1,0 +1,22 @@
+From c07c80fd95ad296fca701ef726fd3b9458a47dd9 Mon Sep 17 00:00:00 2001
+From: Akira TAGOH <akira@tagoh.org>
+Date: Mon, 22 Oct 2012 10:08:44 +0900
+Subject: [PATCH] Run imsettings-switch on GNOME3 only when the session is
+ gnome-fallback
+
+---
+ utils/imsettings-start.desktop.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/utils/imsettings-start.desktop.in b/utils/imsettings-start.desktop.in
+index fdb41d8..c307d6a 100644
+--- a/utils/imsettings-start.desktop.in
++++ b/utils/imsettings-start.desktop.in
+@@ -6,3 +6,4 @@ _Name=Input Method starter
+ _Comment=Input Method starter
+ Exec=imsettings-switch -n -q -x
+ Terminal=false
++AutostartCondition=GNOME3 if-session gnome-fallback
+-- 
+1.7.11.7
+

@@ -1,0 +1,87 @@
+--- dvb-apps-d4e8bf5658ce/util/av7110_loadkeys/README.orig	2011-11-12 16:53:01.233227473 +0000
++++ dvb-apps-d4e8bf5658ce/util/av7110_loadkeys/README	2011-11-12 16:57:19.299251777 +0000
+@@ -5,7 +5,7 @@
+ 
+ just call
+ 
+-   # ./av7110_loadkeys [-i|--invert] [-a|--address <num>] keymapname.(rc5|rcmm) > /proc/av7110_ir
++   # av7110_loadkeys [-i|--invert] [-a|--address <num>] keymapname.(rc5|rcmm) > /proc/av7110_ir
+ 
+ If your IR receiver hardware inverts the signal, you should use the -i
+ or --invert command line option.
+@@ -15,17 +15,17 @@
+ driver listens to all device addresses. Some examples:
+ 
+ Listen to *any* IR transmitter with uses the RC5 protocol:
+-# ./av7110_loadkeys hauppauge.rc5 > /proc/av7110_ir
++# av7110_loadkeys hauppauge.rc5 > /proc/av7110_ir
+ 
+ Listen to RC5 transmitter with address 2:
+-# ./av7110_loadkeys -a 2 hauppauge.rc5 > /proc/av7110_ir
++# av7110_loadkeys -a 2 hauppauge.rc5 > /proc/av7110_ir
+ 
+ If you don't know the correct value for the -a parameter, take a look
+ on the debug output of the driver (see below).
+ 
+ Now you can test your hardware setup using evtest
+ 
+-   # ./evtest /dev/input/eventX
++   # evtest /dev/input/eventX
+ 
+ where eventX is the IR input event device, usually event0 if you don't
+ use USB mice or keyboards.
+--- dvb-apps-d4e8bf5658ce/util/scan/README.orig	2011-11-12 16:53:09.756222723 +0000
++++ dvb-apps-d4e8bf5658ce/util/scan/README	2011-11-12 16:56:17.387230135 +0000
+@@ -6,13 +6,13 @@
+ feel free to submit it to the linux-dvb mailing list
+ http://www.linuxtv.org/lists.php.
+ 
+-Basic usage: ./dvbscan dvb-s/Astra-19.2E | tee mychannels.conf
+-or           ./atscscan atsc/us-NTSC-center-frequencies-8VSB
++Basic usage: dvbscan dvb-s/Astra-19.2E | tee mychannels.conf
++or           atscscan atsc/us-NTSC-center-frequencies-8VSB
+ 
+ If you want it to check a specific frequency, tune to that frequency
+-(e.g. using szap/tzap/czap/azap) and then use './dvbscan -c' or './atscscan -c'.
++(e.g. using szap/tzap/czap/azap) and then use 'dvbscan -c' or 'atscscan -c'.
+ 
+-For more scan options see ./dvbscan -h or ./atscscan -h
++For more scan options see dvbscan -h or atscscan -h
+ 
+ atscscan is _just_ a copy of dvbscan to not confuse ATSC-user.
+ 
+--- dvb-apps-d4e8bf5658ce/util/szap/README.orig	2011-11-12 16:53:15.587217543 +0000
++++ dvb-apps-d4e8bf5658ce/util/szap/README	2011-11-12 16:55:25.100234795 +0000
+@@ -5,19 +5,19 @@
+ 
+ For DVB-S, Astra Channel config file:
+ 
+-$ ./szap -c channels-conf/dvb-s/Astra-19.2E n24
++$ szap -c channels-conf/dvb-s/Astra-19.2E n24
+ 
+ will tune to N24. For DVB-C, Berlin Cable channel config:
+ 
+-$ ./czap -c channels-conf/dvb-c/de-Berlin Arte
++$ czap -c channels-conf/dvb-c/de-Berlin Arte
+ 
+ For DVB-T, Berlin Config:
+ 
+-$ ./tzap -c channels-conf/dvb-t/de-Berlin phoenix
++$ tzap -c channels-conf/dvb-t/de-Berlin phoenix
+ 
+ For ATSC, Raleigh Durham Config:
+ 
+-$ ./azap -c channels-conf/atsc/us-Raleigh-Durham WRAL
++$ azap -c channels-conf/atsc/us-Raleigh-Durham WRAL
+ 
+ will tune to WRAL's Digital Channel 5-1.
+ 
+@@ -25,7 +25,7 @@
+ record the stream to disk you will route it to the DVR device by using the
+ '-r' option:
+ 
+-$ ./tzap -c channels-conf/dvb-t/de-Berlin phoenix -r
++$ tzap -c channels-conf/dvb-t/de-Berlin phoenix -r
+ [keep it running in one console]
+ $ cat /dev/dvb/adapter0/dvr0 > /tmp/recording.ts
+ [in a second console, will dump the MPEG transport stream to /tmp/recording.ts]

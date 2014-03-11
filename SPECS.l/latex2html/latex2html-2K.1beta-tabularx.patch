@@ -1,0 +1,26 @@
+--- latex2html-2K.1beta/versions/table.pl.tabularx	Fri Nov 14 11:10:52 1997
++++ latex2html-2K.1beta/versions/table.pl	Wed Jan 24 15:11:01 2001
+@@ -121,6 +121,10 @@
+ 	    $htmlcolspec .= "<COL ALIGN=RIGHT>";
+ 	    push(@colspec,"$cellopen=RIGHT NOWRAP>$content_mark$cellclose");
+ 	    $cols++;
++	} elsif ( $char eq "X" ) {
++	    $htmlcolspec .= "<COL ALIGN=JUSTIFY>";
++	    push(@colspec,"$cellopen=LEFT>$content_mark$cellclose");
++	    $cols++;
+ 	} elsif ( $char eq "p" ) {
+ 	    $colspec =~ s/$next_pair_rx//;
+ 	    ($pts,$len) = &convert_length($2);
+@@ -170,7 +174,11 @@
+     local($_) = @_;
+     s/$next_pair_rx//;
+     local($pts,$len) = &convert_length($2);
+-    &do_env_tabular($_," width=$pts");
++    if ($pts != "") {
++	&do_env_tabular($_," width=$pts");
++    } else {
++	&do_env_tabular($_);
++    }
+ }
+ 
+ sub do_env_tabular {

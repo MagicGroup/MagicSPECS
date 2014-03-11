@@ -1,0 +1,24 @@
+diff -Nur libaio-0.3.109-orig/libaio-0.3.109/src/libaio.h libaio-0.3.109/libaio-0.3.109/src/libaio.h
+--- libaio-0.3.109-orig/libaio-0.3.109/src/libaio.h  2013-05-14 22:47:32.000000000 -0400
++++ libaio-0.3.109/libaio-0.3.109/src/libaio.h	2013-05-14 22:47:48.000000000 -0400
+@@ -53,7 +53,7 @@
+ #define PADDED(x, y)	x; unsigned y
+ #define PADDEDptr(x, y)	x; unsigned y
+ #define PADDEDul(x, y)	unsigned long x; unsigned y
+-#elif defined(__ia64__) || defined(__x86_64__) || defined(__alpha__)
++#elif defined(__ia64__) || defined(__x86_64__) || defined(__alpha__) || defined(__mips64)
+ #define PADDED(x, y)	x, y
+ #define PADDEDptr(x, y)	x
+ #define PADDEDul(x, y)	unsigned long x
+diff -Nur libaio-0.3.109-orig/src/libaio.h libaio-0.3.109/src/libaio.h
+--- libaio-0.3.109-orig/src/libaio.h	2013-05-14 22:47:32.000000000 -0400
++++ libaio-0.3.109/src/libaio.h	2013-05-14 22:47:45.000000000 -0400
+@@ -53,7 +53,7 @@
+ #define PADDED(x, y)	x; unsigned y
+ #define PADDEDptr(x, y)	x; unsigned y
+ #define PADDEDul(x, y)	unsigned long x; unsigned y
+-#elif defined(__ia64__) || defined(__x86_64__) || defined(__alpha__)
++#elif defined(__ia64__) || defined(__x86_64__) || defined(__alpha__) || defined(__mips64)
+ #define PADDED(x, y)	x, y
+ #define PADDEDptr(x, y)	x
+ #define PADDEDul(x, y)	unsigned long x

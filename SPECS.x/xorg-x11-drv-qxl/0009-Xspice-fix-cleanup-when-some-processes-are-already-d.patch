@@ -1,0 +1,35 @@
+From eb437149e26c995aac780dc8bb67ea41275d0429 Mon Sep 17 00:00:00 2001
+From: Alon Levy <alevy@redhat.com>
+Date: Mon, 21 Oct 2013 18:26:02 +0300
+Subject: [PATCH 09/10] Xspice: fix cleanup when some processes are already
+ dead
+
+---
+ scripts/Xspice | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Xspice b/scripts/Xspice
+index be87c08..9b82bfe 100755
+--- a/scripts/Xspice
++++ b/scripts/Xspice
+@@ -162,9 +162,15 @@ def cleanup(*args):
+         if os.path.exists(f):
+             os.remove(f)
+     for p in cleanup_processes:
+-        p.kill()
++        try:
++            p.kill()
++        except OSError:
++            pass
+     for p in cleanup_processes:
+-        p.wait()
++        try:
++            p.wait()
++        except OSError:
++            pass
+     del cleanup_processes[:]
+ 
+ def launch(*args, **kw):
+-- 
+1.8.3.1
+

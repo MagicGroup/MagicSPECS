@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=obmenu
+Icon=/usr/share/obmenu/mnu48.png
+Comment=Graphical Openbox menu editor
+GenericName=Openbox menu editor
+Exec=obmenu
+Terminal=false
+Type=Application
+Categories=Settings;GTK;DesktopSettings;

@@ -1,0 +1,35 @@
+diff -ur festival.orig/speech_tools/main/siod_main.cc festival/speech_tools/main/siod_main.cc
+--- festival.orig/speech_tools/main/siod_main.cc	2004-09-30 08:53:36.000000000 -0400
++++ festival/speech_tools/main/siod_main.cc	2007-03-13 00:49:35.000000000 -0400
+@@ -224,10 +224,10 @@
+ 			    cons(flocons(subminor),NIL))));
+ 
+     EST_Pathname etcdircommon = est_libdir;
+-    etcdircommon += "etc";
++    etcdircommon += "etc/";
+ 
+-    EST_Pathname etcdir = etcdircommon;
+-    etcdir += est_ostype;
++    EST_Pathname etcdir = {{HORRIBLELIBARCHKLUDGE}};
++    etcdir += "festival/etc/";
+     
+     //  Modify my PATH to include these directories
+     siod_set_lval("etc-path",cons(rintern(etcdir),
+diff -ur festival.orig/src/arch/festival/festival.cc festival/src/arch/festival/festival.cc
+--- festival.orig/src/arch/festival/festival.cc	2007-03-13 00:41:42.000000000 -0400
++++ festival/src/arch/festival/festival.cc	2007-03-13 00:47:55.000000000 -0400
+@@ -349,10 +349,10 @@
+ 	proclaim_module("mplayeraudio");
+     
+     // Add etc-dir path and machine specific directory etc/$OSTYPE
+-    char *etcdir = walloc(char,strlen(festival_libdir)+strlen("etc/")+
+-			  strlen(FTOSTYPE)+3);
+-    sprintf(etcdir,"%s/etc/%s/",festival_libdir,FTOSTYPE);
+-    char *etcdircommon = walloc(char,strlen(festival_libdir)+strlen("etc/")+3);
++    char *etcdir = walloc(char,strlen({{HORRIBLELIBARCHKLUDGE}})+
++			  strlen("etc/festival/")+2);
++    sprintf(etcdir,"%s/festival/etc/",{{HORRIBLELIBARCHKLUDGE}});
++    char *etcdircommon = walloc(char,strlen(festival_libdir)+strlen("etc/")+2);
+     sprintf(etcdircommon,"%s/etc/",festival_libdir);
+     
+     //  Modify my PATH to include these directories

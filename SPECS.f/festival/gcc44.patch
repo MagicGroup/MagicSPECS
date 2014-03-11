@@ -1,0 +1,22 @@
+diff -up festival/speech_tools/speech_class/EST_wave_io.cc.gcc44 festival/speech_tools/speech_class/EST_wave_io.cc
+--- festival/speech_tools/speech_class/EST_wave_io.cc.gcc44	2009-02-26 17:26:58.672421948 -0500
++++ festival/speech_tools/speech_class/EST_wave_io.cc	2009-02-26 17:50:02.065661124 -0500
+@@ -68,7 +68,7 @@ static const char *NIST_END_SIG = "end_h
+ 
+ int nist_get_param_int(const char *hdr, const char *field, int def_val)
+ {
+-    char *p;
++    const char *p;
+     int val;
+ 
+     if (((p=strstr(hdr,field)) != NULL) &&
+@@ -84,7 +84,8 @@ int nist_get_param_int(const char *hdr, 
+ 
+ char *nist_get_param_str(const char *hdr, const char *field, const char *def_val)
+ {
+-    char *p,*val;
++    const char *p;
++    char *val;
+     int size;
+ 
+     if (((p=strstr(hdr,field)) != NULL) &&

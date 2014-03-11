@@ -1,0 +1,61 @@
+From f8342dd5f2235979db7b5fc0d54df408538921e6 Mon Sep 17 00:00:00 2001
+From: Michal Soltys <soltys@ziu.info>
+Date: Mon, 17 Oct 2011 23:36:33 +0200
+Subject: [PATCH] check root candidates more carefully
+
+This is from the following thread:
+
+http://thread.gmane.org/gmane.linux.raid/35753/focus=35795
+
+Additional tests + more specific info.
+
+Signed-off-by: Michal Soltys <soltys@ziu.info>
+
+[harald@redhat.com: usable_root(): relaxed check for root]
+---
+ modules.d/99base/dracut-lib.sh |    9 +++++++++
+ modules.d/99base/init          |   12 ++++++++++--
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/modules.d/99base/dracut-lib.sh b/modules.d/99base/dracut-lib.sh
+index bc4d7c9..2cfaf93 100755
+--- a/modules.d/99base/dracut-lib.sh
++++ b/modules.d/99base/dracut-lib.sh
+@@ -544,3 +544,12 @@ foreach_uuid_until() (
+ 
+     return 1
+ )
++
++usable_root() {
++    local _d
++    [ -d $1 ] || return 1
++    for _d in proc sys dev; do
++        [ -e "$1"/$_d ] || return 1
++    done
++    return 0
++}
+diff --git a/modules.d/99base/init b/modules.d/99base/init
+index 06d61a8..556ac68 100755
+--- a/modules.d/99base/init
++++ b/modules.d/99base/init
+@@ -286,10 +286,18 @@ getarg 'rd.break=mount' 'rdbreak=mount' && emergency_shell -n mount "Break mount
+ # be sourced any number of times. As soon as one suceeds, no more are sourced.
+ i=0
+ while :; do
+-    [ -d "$NEWROOT/proc" ] && break;
++    if ismounted "$NEWROOT"; then
++        usable_root "$NEWROOT" && break;
++        umount "$NEWROOT"
++    fi
+     for f in $hookdir/mount/*.sh; do
+         [ -f "$f" ] && . "$f"
+-        [ -d "$NEWROOT/proc" ] && break;
++        if ismounted "$NEWROOT"; then
++            usable_root "$NEWROOT" && break;
++            warn "$NEWROOT has no proper rootfs layout, ignoring and removing offending mount hook"
++            umount "$NEWROOT"
++            rm -f "$f"
++        fi
+     done
+ 
+     i=$(($i+1))

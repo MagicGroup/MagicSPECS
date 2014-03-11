@@ -1,0 +1,24 @@
+From 566dab2ac1323df9d21b4d682312f787b10a4bdc Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Wed, 17 Aug 2011 08:24:30 +0200
+Subject: [PATCH] 90dmsquash-live/dmsquash-live-root: include fs_lib.sh for
+ det_fs()
+
+https://bugzilla.redhat.com/show_bug.cgi?id=730579
+---
+ modules.d/90dmsquash-live/dmsquash-live-root |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/modules.d/90dmsquash-live/dmsquash-live-root b/modules.d/90dmsquash-live/dmsquash-live-root
+index 265de19..90e633c 100755
+--- a/modules.d/90dmsquash-live/dmsquash-live-root
++++ b/modules.d/90dmsquash-live/dmsquash-live-root
+@@ -3,6 +3,8 @@
+ # ex: ts=8 sw=4 sts=4 et filetype=sh
+ 
+ type getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
++type det_fs >/dev/null 2>&1 || . /lib/fs-lib.sh
++
+ [ -f /tmp/root.info ] && . /tmp/root.info
+ 
+ PATH=/usr/sbin:/usr/bin:/sbin:/bin

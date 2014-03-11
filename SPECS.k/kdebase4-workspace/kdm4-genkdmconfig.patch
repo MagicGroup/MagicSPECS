@@ -1,0 +1,17 @@
+diff -ur kdebase-workspace-4.2.96.orig/kdm/kfrontend/genkdmconf.c kdebase-workspace-4.2.96/kdm/kfrontend/genkdmconf.c
+--- kdebase-workspace-4.2.96.orig/kdm/kfrontend/genkdmconf.c	2009-07-10 15:59:49.000000000 +0800
++++ kdebase-workspace-4.2.96/kdm/kfrontend/genkdmconf.c	2009-07-10 16:03:43.000000000 +0800
+@@ -684,6 +684,13 @@
+ "    ;;\n"
+ "esac\n"
+ "\n"
++"# run all system xinitrc shell scripts.\n"
++"for i in /etc/X11/xinit/xinitrc.d/* ; do\n"
++"    if [ -x \"$i\" ]; then\n"
++"       . \"$i\"\n"
++"    fi\n"
++"done\n"
++"\n"
+ "[ -f /etc/xprofile ] && . /etc/xprofile\n"
+ "[ -f $HOME/.xprofile ] && . $HOME/.xprofile\n"
+ "\n"

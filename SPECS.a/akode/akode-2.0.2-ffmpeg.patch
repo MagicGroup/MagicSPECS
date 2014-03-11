@@ -1,0 +1,93 @@
+diff -ur akode-2.0.2/admin/acinclude.m4.in akode-2.0.2.new//admin/acinclude.m4.in
+--- akode-2.0.2/admin/acinclude.m4.in	2007-03-19 12:45:09.000000000 -0400
++++ akode-2.0.2.new//admin/acinclude.m4.in	2011-10-27 12:05:32.000000000 -0400
+@@ -3136,7 +3136,7 @@
+   fi
+ 
+   if test "$kde_use_debug_define" = "yes"; then
+-    CFLAGS="-DNDEBUG $CFLAGS"
++    CFLAGS="-D__STDC_CONSTANT_MACROS -DNDEBUG $CFLAGS"
+   fi
+ 
+ 
+@@ -3181,7 +3181,7 @@
+   fi
+ 
+   if test "$kde_use_debug_define" = "yes"; then
+-    CXXFLAGS="-DNDEBUG -DNO_DEBUG $CXXFLAGS"
++    CXXFLAGS="-D__STDC_CONSTANT_MACROS -DNDEBUG -DNO_DEBUG $CXXFLAGS"
+   fi  
+ 
+   if test "$kde_use_profiling" = "yes"; then
+@@ -3484,7 +3484,7 @@
+ AM_PROG_LIBTOOL
+ AC_LIBTOOL_CXX
+ 
+-LIBTOOL_SHELL="/bin/sh ./libtool"
++LIBTOOL_SHELL="libtool"
+ #  LIBTOOL="$LIBTOOL --silent"
+ KDE_PLUGIN="-avoid-version -module -no-undefined \$(KDE_NO_UNDEFINED) \$(KDE_RPATH) \$(KDE_MT_LDFLAGS)"
+ AC_SUBST(KDE_PLUGIN)
+diff -ur akode-2.0.2/akode/plugins/ffmpeg_decoder/ffmpeg_decoder.cpp akode-2.0.2.new//akode/plugins/ffmpeg_decoder/ffmpeg_decoder.cpp
+--- akode-2.0.2/akode/plugins/ffmpeg_decoder/ffmpeg_decoder.cpp	2006-08-10 14:37:20.000000000 -0400
++++ akode-2.0.2.new//akode/plugins/ffmpeg_decoder/ffmpeg_decoder.cpp	2011-10-27 09:21:51.000000000 -0400
+@@ -25,10 +25,12 @@
+ #include "audioframe.h"
+ #include "decoder.h"
+ 
++extern "C" {
+ #include <assert.h>
+-#include <ffmpeg/avcodec.h>
+-#include <ffmpeg/avformat.h>
+-#include <ffmpeg/avio.h>
++#include <libavcodec/avcodec.h>
++#include <libavformat/avformat.h>
++#include <libavformat/avio.h>
++}
+ 
+ #include "ffmpeg_decoder.h"
+ #include <iostream>
+@@ -45,7 +47,7 @@
+         aKode::File *file = (aKode::File*)opaque;
+         return file->write((char*)buf, size);
+     }
+-    static offset_t akode_seek(void* opaque, offset_t pos, int whence)
++    static int64_t akode_seek(void* opaque, int64_t pos, int whence)
+     {
+         aKode::File *file = (aKode::File*)opaque;
+         return file->seek(pos, whence);
+@@ -200,10 +202,10 @@
+     d->audioStream = -1;
+     d->videoStream = -1;
+     for (int i = 0; i < d->ic->nb_streams; i++) {
+-        if (d->ic->streams[i]->codec->codec_type == CODEC_TYPE_AUDIO)
++        if (d->ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
+             d->audioStream = i;
+         else
+-        if (d->ic->streams[i]->codec->codec_type == CODEC_TYPE_VIDEO)
++        if (d->ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO)
+             d->videoStream = i;
+     }
+     if (d->audioStream == -1)
+@@ -314,9 +316,20 @@
+     assert(d->packet.stream_index == d->audioStream);
+ 
+ retry:
+-    int len = avcodec_decode_audio( d->ic->streams[d->audioStream]->codec,
++#if LIBAVCODEC_VERSION_INT < ((53<<16)+(0<<8)+0)
++    int len = avcodec_decode_audio2( d->ic->streams[d->audioStream]->codec,
+                                     (short*)d->buffer, &d->buffer_size,
+                                     d->packetData, d->packetSize );
++#else
++    AVPacket apkt;
++    av_init_packet(&apkt);
++    apkt.data = d->packetData;
++    apkt.size = d->packetSize;
++    int len = avcodec_decode_audio3( d->ic->streams[d->audioStream]->codec,
++                                    (short*)d->buffer, &d->buffer_size,
++                                    &apkt );
++#endif
++
+ 
+     if (len <= 0) {
+         d->retries++;

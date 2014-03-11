@@ -1,0 +1,28 @@
+From 194b80f974751b2eb5e6f50075d150b9c8083b77 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 2 Jul 2012 22:51:24 +0200
+Subject: [PATCH] dracut-functions.sh:find_kernel_modules_by_path() fixed
+ hostonly part
+
+filter /sys/module/* modules by path
+---
+ dracut-functions.sh |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/dracut-functions.sh b/dracut-functions.sh
+index 2898c30..6de7c72 100755
+--- a/dracut-functions.sh
++++ b/dracut-functions.sh
+@@ -1277,7 +1277,11 @@ find_kernel_modules_by_path () (
+         IFS=$_OLDIFS
+     else
+         ( cd /sys/module; echo *; ) \
+-        | xargs -r modinfo -F filename -k $kernel 2>/dev/null
++        | xargs -r modinfo -F filename -k $kernel 2>/dev/null \
++        | while read a; do
++            [[ $a = kernel*/$1/* ]] || continue
++            echo $srcmods/$a
++        done
+     fi
+     return 0
+ )

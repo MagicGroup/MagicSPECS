@@ -1,0 +1,33 @@
+----------------------------------------------------------------------
+Revision: 9d51cb9fbcc04d21597eed0381f4d06c53facc44
+Parent:   17326b88b85d2f13939a71ca80d4a617f0527f9a
+Author:   Cristi Posoiu
+Date:     06/03/11 02:55:31
+Branch:   im.pidgin.pidgin
+
+Changelog: 
+
+Fix up some cases of file transfers never finishing.  This will help certain
+instances of Yahoo file transfers not working, but not all.  Fixes #12472.
+
+Changes against parent 17326b88b85d2f13939a71ca80d4a617f0527f9a
+
+  patched  libpurple/ft.c
+
+============================================================
+--- libpurple/ft.c	2b8633b159e16099b858dd21ed122e9c3811a9d5
++++ libpurple/ft.c	ffba61c0a50c9d5f866f8b1f0dec16cf13bbd65c
+@@ -1100,9 +1100,11 @@ purple_xfer_write(PurpleXfer *xfer, cons
+ 		r = write(xfer->fd, buffer, s);
+ 		if (r < 0 && errno == EAGAIN)
+ 			r = 0;
+-		if ((purple_xfer_get_bytes_sent(xfer)+r) >= purple_xfer_get_size(xfer))
+-			purple_xfer_set_completed(xfer, TRUE);
+ 	}
++	if (r >= 0 && (purple_xfer_get_bytes_sent(xfer)+r) >= purple_xfer_get_size(xfer) &&
++		!purple_xfer_is_completed(xfer))
++		purple_xfer_set_completed(xfer, TRUE);
++	
+ 
+ 	return r;
+ }

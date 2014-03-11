@@ -1,0 +1,543 @@
+--- other/README.html~	2001-11-08 21:32:41.000000000 +0100
++++ other/README.html	2008-10-14 14:08:32.000000000 +0200
+@@ -26,7 +26,7 @@
+ just "Use the source, Luke!"
+ <p>
+ 
+-<h4><tt>cmpf</tt></h4>
++<h4><tt>ttf2pt1_cmpf</tt></h4>
+ <!
+ ----
+ >
+@@ -40,7 +40,7 @@
+ to compare them.
+ <p>
+ 
+-<h4><tt>dmpf</tt></h4>
++<h4><tt>ttf2pt1_dmpf</tt></h4>
+ <!
+ ----
+ >
+@@ -52,7 +52,7 @@
+ search for rendering anomalies.
+ <p>
+ 
+-<h4><tt>lst.pl</tt></h4>
++<h4><tt>ttf2pt1_lst</tt></h4>
+ <!
+ ------
+ >
+@@ -64,7 +64,7 @@
+ at the converted fonts in Netscape (or other
+ graphical browser).
+ 
+-<h4><tt>cntstems.pl</tt></h4>
++<h4><tt>ttf2pt1_cntstems</tt></h4>
+ <!
+ ------
+ >
+@@ -74,7 +74,7 @@
+ useful in search for missing glyphs which may be aborted due to
+ insufficient stack depth.
+ 
+-<h4><tt>showg</tt></h4>
++<h4><tt>ttf2pt1_showg</tt></h4>
+ <!
+ -----
+ >
+@@ -85,7 +85,7 @@
+ by <tt>ttf2pt1</tt>. The intended use is like:
+ <p>
+ 
+-&nbsp;&nbsp;<tt>showg [-c <i>&lt;fontfile.t1a&gt;</i>]...  <i>&lt;fontfile.t1a&gt; &lt;glyph-to-draw&gt;</i>... &gt;file.ps</tt><br>
++&nbsp;&nbsp;<tt>ttf2pt1_showg [-c <i>&lt;fontfile.t1a&gt;</i>]...  <i>&lt;fontfile.t1a&gt; &lt;glyph-to-draw&gt;</i>... &gt;file.ps</tt><br>
+ &nbsp;&nbsp;<tt>gv file.ps # start the Ghostscript viewer</tt>
+ <p>
+ 
+@@ -103,7 +103,7 @@
+ parenthesis" three times:
+ <p>
+ 
+-&nbsp;&nbsp;<tt>showg file.t1a 40 /parenleft .\( >/file.ps</tt>
++&nbsp;&nbsp;<tt>ttf2pt1_showg file.t1a 40 /parenleft .\( >/file.ps</tt>
+ <p>
+ 
+ Don't forget that some characters have to be protected from the shell
+@@ -126,7 +126,7 @@
+ parenthesis" from three files on the same page:
+ <p>
+ 
+-&nbsp;&nbsp;<tt>showg -c fileA.t1a -c fileB.t1a file.t1a .\( >/file.ps</tt>
++&nbsp;&nbsp;<tt>ttf2pt1_showg -c fileA.t1a -c fileB.t1a file.t1a .\( >/file.ps</tt>
+ <p>
+ 
+ This program is quite valuable it you want to take a close-up view at 
+@@ -142,7 +142,7 @@
+ marked twice, on each size of the picture.
+ <p>
+ 
+-<h4><tt>showdf</tt></h4>
++<h4><tt>ttf2pt1_showdf</tt></h4>
+ <!
+ ------
+ >
+@@ -153,15 +153,14 @@
+ program for display.  The intended use is like:
+ <p>
+ 
+-&nbsp;&nbsp;<tt>showdf <i>&lt;showg-location&gt;</i> <i>&lt;fontfile1.t1a&gt;</i> <i>&lt;fontfile2.t1a&gt;</i> &gt;file.ps</tt><br>
++&nbsp;&nbsp;<tt>ttf2pt1_showdf <i>&lt;showg-location&gt;</i> <i>&lt;fontfile1.t1a&gt;</i> <i>&lt;fontfile2.t1a&gt;</i> &gt;file.ps</tt><br>
+ &nbsp;&nbsp;<tt>gv file.ps # start the Ghostscript viewer</tt>
+ <p>
+ 
+-If both <tt>showdf</tt> and <tt>showg</tt> scripts are located in the
+-same directory, the command would look like:
++The command would look like:
+ <p>
+ 
+-&nbsp;&nbsp;<tt>./showdf ./showg font1.t1a font2.t1a &gt;file.ps</tt><br>
++&nbsp;&nbsp;<tt>ttf2pt1_showdf ttf2pt1_showg font1.t1a font2.t1a &gt;file.ps</tt><br>
+ <p>
+ 
+ For decent results both font files should be converted from the same original
+--- README.html~	2002-08-30 20:01:12.000000000 +0200
++++ README.html	2008-10-14 17:50:40.000000000 +0200
+@@ -107,8 +107,6 @@
+    benefit from using this option. But there is a catch: the X11 library
+    has rather low limit for the font size. Including more glyphs increases
+    the file size and thus increases the chance of hitting this limit.
+-   See <A HREF="app/X11/README.html"><tt>app/X11/README</tt></A> for the description of a 
+-   patch to X11 which fixes this problem.
+ <p>
+ 
+ <!-- ==item * -->
+@@ -339,7 +337,7 @@
+    The default value is 128, according to the limitation in X11. This seems to
+    be the lowest (and thus the safest) widespread value. To display the
+    hint stack depth required by each glyph in a <tt>.t1a</tt> file use the script
+-   <tt>scripts/cntstems.pl</tt>.
++   <tt>ttf2pt1_cntstems</tt>.
+ <p>
+ </blockquote>
+ 
+@@ -376,8 +374,8 @@
+    the chance of hitting this limit (that does not mean that you shall hit it
+    but you may if your fonts are particularly big). This is especially 
+    probable for Unicode fonts converted with option '<b>-a</b>', so you may want to 
+-   use '<b>-a</b>' together with '<b>-Ou</b>'. See <A HREF="app/X11/README.html"><tt>app/X11/README</tt></A> for the description of 
+-   a patch to X11 which fixes this problem. Second, some rasterizers (again,
++   use '<b>-a</b>' together with '<b>-Ou</b>'.
++   Second, some rasterizers (again,
+    X11 is the typical example) have a limitation for total number of hints
+    used when drawing a glyph (also known as the hint stack depth). If that
+    stack overflows the glyph is ignored. Starting from version 3.22 <tt>ttf2pt1</tt>
+@@ -390,7 +388,7 @@
+    hinting may emphasize the defects of the design, such as non-even thickness 
+    of lines. So provided that you are not afraid of the X11 bug the best idea 
+    would be to generate a font with this feature and without it, then compare 
+-   the results using the program <tt>other/cmpf</tt> (see the description 
++   the results using the program <tt>ttf2pt1_cmpf</tt> (see the description 
+    in <A HREF="other/README.html"><tt>other/README</tt></A>) and decide which one looks better.
+    <b>Default: enabled</b>
+ <p>
+@@ -510,7 +508,7 @@
+    <tt>&nbsp;&nbsp;cat *.pf[ab] | grep UniqueID | sort | uniq -c | grep -v ' 1 '</tt>
+ <p>
+ 
+-   Or if you use <tt>scripts/convert</tt> it will do that for you automatically 
++   Or if you use <tt>ttf2pt1_convert</tt> it will do that for you automatically 
+    plus it will also give the exact list of files with duplicate UIDs.
+ <p>
+ 
+@@ -771,17 +769,15 @@
+ <!-- =section t1 FILES -->
+ <!-- ==over 2 -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_LIBXDIR/t1asm -->
+-<!-- ==item * -->
+ <!-- =text TTF2PT1_SHAREDIR/* -->
+ <!-- ==item * -->
+ <!-- =text TTF2PT1_SHAREDIR/scripts/* -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/other/* -->
++<!-- =text TTF2PT1_DOCDIR/other/* -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/README -->
++<!-- =text TTF2PT1_DOCDIR/README -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/FONTS -->
++<!-- =text TTF2PT1_DOCDIR/FONTS -->
+ <!-- ==back -->
+ <!-- =stop -->
+ 
+--- Makefile~	2008-10-14 13:26:16.000000000 +0200
++++ Makefile	2008-10-14 17:51:26.000000000 +0200
+@@ -127,6 +127,7 @@
+ LIBXDIR = $(INSTDIR)/libexec/ttf2pt1
+ # for scripts, maps/encodings etc.
+ SHAREDIR = $(INSTDIR)/share/ttf2pt1
++DOCDIR=$(INSTDIR)/share/doc/ttf2pt1-$(VERSION)
+ MANDIR = $(INSTDIR)/man
+ 
+ # owner and group of installed files
+@@ -254,6 +255,7 @@
+ 	for i in $(MANS1); do { \
+ 		sed -e 's|TTF2PT1_BINDIR|$(BINDIR)|' \
+ 		    -e 's|TTF2PT1_LIBXDIR|$(LIBXDIR)|' \
++		    -e 's|TTF2PT1_DOCDIR|$(DOCDIR)|' \
+ 		    -e 's|TTF2PT1_SHAREDIR|$(SHAREDIR)|' <$$i >$(DESTDIR)$(MANDIR)/man1/$$i \
+ 		&& chown $(OWNER) $(DESTDIR)$(MANDIR)/man1/$$i \
+ 		&& chgrp $(GROUP) $(DESTDIR)$(MANDIR)/man1/$$i \
+--- FONTS.html~	2001-05-28 04:28:37.000000000 +0200
++++ FONTS.html	2008-10-14 17:54:15.000000000 +0200
+@@ -72,13 +72,10 @@
+ <!-- =text B&lt;ttf2pt1_convert&gt; - convenience font conversion script -->
+ <!-- =stop -->
+ To simplify the conversion a set of scripts is provided with <b>ttf2pt1</b>.
+-They are collected in the `<TT>scripts</TT>' subdirectory. 
+ <p>
+ 
+ <!-- =section cv DESCRIPTION -->
+-`<b>Convert</b>' is the master conversion script provided with ttf2pt1. 
+-When installed into a public directory it's named `<b>ttf2pt1_convert</b>' 
+-to avoid name collisions with the other programs.
++<b>Ttf2pt1_Convert</b>' is the master conversion script provided with ttf2pt1. 
+ <p>
+ <!-- =stop -->
+ 
+@@ -89,7 +86,7 @@
+ <!-- =text ttf2pt1_convert B&lt;[config-file]&gt; -->
+ <!-- =stop -->
+ <blockquote>
+-  convert <i>[config-file]</i>
++  ttf2pt1_convert <i>[config-file]</i>
+ </blockquote>
+ 
+ <!-- =section cv DESCRIPTION -->
+@@ -99,7 +96,7 @@
+ file `<TT>convert.cfg.sample</TT>'. Please copy it to `<TT>convert.cfg</TT>',
+ look inside it and change the configuration variables. The more stable
+ configuration variables, such as the path names of the scripts and
+-encoding files are located in `<TT>convert</TT>' itself, they are
++encoding files are located in `<TT>ttf2pt1_convert</TT>' itself, they are
+ automatically updated when installing <b>ttf2pt1</b>.
+ <p>
+ 
+@@ -234,7 +231,7 @@
+   UniqueID and shows those. Still, this does not quarantee that these
+   UniqueIDs won't overlap with some other fonts. The UniqueIDs are
+   generated as hash values from the font names, so it's guaranteed
+-  that if the `<tt>convert</tt>' script runs multiple times it will
++  that if the `<tt>ttf2pt1_convert</tt>' script runs multiple times it will
+   generate the same UniqueIDs during each run. See further description 
+   of this option in the <A HREF="README.html">README</A> file.
+ <p>
+@@ -250,7 +247,8 @@
+ The following parameters are used to locate the other scripts and
+ configuration files. By default the scripts do a bit of guessing for them:
+ they search in the <b>ttf2pt1</b> installation directory if <b>ttf2pt1</b>
+-was installed or otherwise suppose that you are running `<tt>convert</tt>' with
++was installed or otherwise suppose that you are running
++`<tt>ttf2pt1_convert</tt>' with
+ `<tt>scripts</tt>' subdirectory being the current directory.
+ <p>
+ 
+@@ -263,7 +261,8 @@
+ <p>
+ <!-- ==back -->
+ 
+-Besides that a few parameters are built into the `<tt>convert</tt>' script itself.
++Besides that a few parameters are built into the `<tt>ttf2pt1_convert</tt>'
++script itself.
+ You probably won't need to change them:
+ <p>
+ 
+@@ -276,12 +275,14 @@
+ Also there are a few parameters controlling the installation of
+ fonts for Ghostscript. Please look at their description in the 
+ <A HREF="#gs">Ghostscript</a> section of documentation or in the <b>ttf2pt1_x2gs(1)</b>
+-manual page before running `<tt>convert</tt>'. If these parameters are
+-set, `<tt>convert</tt>' will call the `<tt>x2gs</tt>' script automatically
++manual page before running `<tt>ttf2pt1_convert</tt>'. If these parameters are
++set, `<tt>ttf2pt1_convert</tt>' will call the `<tt>x2gs</tt>' script
++automatically
+ to install the newly converted fonts in Ghostscript.
+ <p>
+ 
+-After creating the configuration file run the `<tt>convert</tt>' script. Look at
++After creating the configuration file run the `<tt>ttf2pt1_convert</tt>'
++script. Look at
+ the result and the log file in <tt>DSTDIR</tt>.
+ <p>
+ 
+@@ -308,53 +309,6 @@
+ <!-- ==head2 Known problems -->
+ 
+ <ul>
+-<li> One catch is that the X11 Type 1 font library has a rather low limit
+-  on the font size. Because of this the fonts with  more complicated
+-  outlines and the enabled hint substitution may not fit into
+-  this limit. The same applies to the fonts with very complicated
+-  outlines or with very many glyphs (especially the fonts with
+-  over 256 glyphs). So you will need to excercise caution with
+-  these options if you plan using these fonts with X11. Some vendors 
+-  such as HP provide the Type 1 implementation licensed from Adobe 
+-  which should have no such problem.
+-<p>
+-
+-  But there is a solution even for the generic X11. A patch located
+-  in the subdirectory `<tt>app/X11</tt>' fixes this problem as well
+-  as some other minor problems. Its description is provided in
+-  <A HREF="app/X11/README.html">app/X11/README</A>.
+-<p>
+-
+-  To fix the X11 font library, you have to get the X11 sources. I
+-  can recommend the ftp sites of the XFree86 project <A HREF="ftp://ftp.xfree86.org">ftp://ftp.xfree86.org</A>
+-  or of the Open Group <A HREF="ftp://ftp.x.org">ftp://ftp.x.org</A>. This patch was made on the sources
+-  of XFree86 so you may have better success with applying it to the
+-  XFree86 distribution. After you have got the sources, make sure
+-  that you can compile them. Then apply the patch as described.
+-  Make sure that it was applied properly. Compile the sources again
+-  (actually, you need only the fonts library, the fonts server, and
+-  possibly the X server). It would be prudent now to save your old
+-  font library, font server and, possibly, X server. Then install
+-  the new recently compiled versions of these files. Of course,
+-  if you know someone who already has compiled these files for the
+-  same OS as yours, you can just copy the binary fles from him.
+-<p>
+-
+-  Alas, building the X11 system from the source code is not the
+-  easiest thing in the world and if you have no experience it
+-  can be quite difficult. In this case just avoid the aforementioned
+-  features or check each converted font to make sure that it
+-  works properly.
+-<p>
+-
+-<li> The Type1 font library from the standard X11 distribution
+-  does not work on HP-UX (at least, up to 10.01). The font server
+-  supplied with HP-UX up to 10.01 is also broken. Starting from 
+-  HP-UX 10.20 (I don't know about 10.10) they supply a proprietary font 
+-  library and the converted fonts work fine with it, provided that
+-  they are configured properly (see the file <A HREF="FONTS.hpux.html">FONTS.hpux</A>).
+-<p>
+-
+ <li> The <tt>fonts.scale</tt> files created by the older versions of the
+   <tt>ttf2pt1</tt> installation program (up to release 3.1) have conflicted 
+   with the language definitions of the <tt>Xfsft</tt> font server and
+@@ -375,13 +329,13 @@
+ <!-- =section cv FILES -->
+ <!-- ==over 2 -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/scripts/convert.cfg.sample -->
++<!-- =text TTF2PT1_DOCDIR/convert.cfg.sample -->
+ <!-- ==item * -->
+ <!-- =text TTF2PT1_SHAREDIR/scripts/* -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/README -->
++<!-- =text TTF2PT1_DOCDIR/README -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/FONTS -->
++<!-- =text TTF2PT1_DOCDIR/FONTS -->
+ <!-- ==item * -->
+ <!-- =text TTF2PT1_SHAREDIR/* -->
+ <!-- ==item * -->
+@@ -412,9 +366,8 @@
+ 
+ <!-- =section gs DESCRIPTION -->
+ The fonts generated with <b>ttf2pt1</b> work fine with Ghostscript by
+-themselves. The script `<b>x2gs</b>' (or `<b>ttf2pt1_x2gs</b>' when installed
+-into a public directory, to avoid name conflicts with other
+-programs) links the font files from the X11 direcotry into the Ghostscript 
++themselves. The script `<b>ttf2pt1_x2gs</b>'
++links the font files from the X11 direcotry into the Ghostscript 
+ directory and automatically creates the description file (<tt>Fontmap</tt>) 
+ in Ghostscript format.
+ <!-- =stop -->
+@@ -426,7 +379,7 @@
+ <!-- =text ttf2pt1_x2gs B&lt;[config-file]&gt; -->
+ <!-- =stop -->
+ <blockquote>
+-  x2gs <i>[config-file]</i>
++  ttf2pt1_x2gs <i>[config-file]</i>
+ </blockquote>
+ 
+ <!-- =section gs DESCRIPTION -->
+@@ -439,13 +392,14 @@
+ The Ghostscript-related parameters in the configuration file are:
+ <p>
+ 
+-<b><tt>DSTDIR</tt></b> - the X11 font directory used by `<tt>x2gs</tt>' as the
++<b><tt>DSTDIR</tt></b> - the X11 font directory used by 
++  `<tt>ttf2pt1_x2gs</tt>' as the
+   source of the fonts. This parameter is common with the X11 
+   configuration.
+ <p>
+ 
+ <b><tt>GSDIR</tt></b> - the base directory of Ghostsript. If this
+-  parameter is set to an empty string then `<tt>convert</tt>' won't
++  parameter is set to an empty string then `<tt>ttf2pt1_convert</tt>' won't
+   call `<tt>x2gs</tt>'. So if you want to get only the X11 fonts
+   installed then set this parameter to an empty string. This 
+   directory may vary on various system, so please check your 
+@@ -484,7 +438,7 @@
+ But it's your responsibility to watch that the names of the
+ font files don't overlap. If the X11 font directory gets
+ renamed then you have to remove its font entries from the
+-<tt>Fontmap</tt> and only after that re-run `<tt>x2gs</tt>'
++<tt>Fontmap</tt> and only after that re-run `<tt>ttf2pt1_x2gs</tt>'
+ for the new directory. 
+ <p>
+ 
+@@ -505,13 +459,13 @@
+ <!-- =section gs FILES -->
+ <!-- ==over 2 -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/scripts/convert.cfg.sample -->
++<!-- =text TTF2PT1_DOCDIR/convert.cfg.sample -->
+ <!-- ==item * -->
+ <!-- =text TTF2PT1_SHAREDIR/scripts/* -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/README -->
++<!-- =text TTF2PT1_DOCDIR/README -->
+ <!-- ==item * -->
+-<!-- =text TTF2PT1_SHAREDIR/FONTS -->
++<!-- =text TTF2PT1_DOCDIR/FONTS -->
+ <!-- ==item * -->
+ <!-- =text TTF2PT1_SHAREDIR/* -->
+ <!-- ==item * -->
+@@ -529,135 +483,6 @@
+ <!-- ==back -->
+ <!-- =stop -->
+ 
+-<A NAME="win"></A>
+-<H3>
+-MS Windows
+-</H3>
+-<!
+-===========
+->
+-
+-<b>Ttf2pt1</b> can be built on Windows either with native compiler or in
+-POSIX emulation mode.
+-<p>
+-
+-Native MS Windows compilers require a different way to build the converter 
+-instead of the Makefile (their <tt>make</tt> programs commonly are quite weird
+-and limited in capabilities). An example of batch file <tt>winbuild.bat</tt> 
+-is provided for MS Visual C/C++. Probably it can be easily adapted for other 
+-32-bit Windows and DOS compilers. The important part is to define the 
+-preprocessor symbol WINDOWS during compilation.
+-<p>
+-
+-Cygnus <tt>make</tt> almost supports full Makefiles but not quite. Seems
+-like its POSIX support is also of the same quality "almost but not quite".
+-So another command file <tt>cygbuild.sh</tt> is provided for Cygnus GNU C, also 
+-with the preprocessor symbol WINDOWS defined. It is intended to be run from
+-the Cygnus BASH shell. To run the programs produced by the Cygnus compiler 
+-the Cygnus library file <tt>CYGWIN1.DLL</tt> should be copied first into 
+-<tt>C:\WINDOWS</tt>.
+-<p>
+-
+-To run the accompanying scripts Perl for Windows will be required as well as 
+-other tools from the Cygnus set.
+-<p>
+-
+-The Windows support was not particularly tested, so in case of problems with
+-building or running the converter please let us know.
+-<p>
+-
+-The pre-built code (possibly of an older version) of ttf2pt1 for MS Windows is
+-available from the GnuWin32 project from
+-
+-<A HREF="http://gnuwin32.sourceforge.net/packages/ttf2pt1.htm">http://gnuwin32.sourceforge.net/packages/ttf2pt1.htm</A>
+-<p>
+-
+-<A NAME="netscape"></a>
+-<H3>
+-Netscape Navigator/Communicator
+-</H3>
+-<!
+-===============================
+->
+-
+-Basically, the biggest problem with Netscape Navigator is that
+-it has built-in fixed PostScript font names and built-in fixed 
+-glyph tables for them. Oh, no, that's two! Let's start over: 
+-basically the two biggest problems of Netscape Navigator are 
+-that (one)it has built-in fixed PostScript font names and (two)
+-built-in fixed glyph tables for them and (three) it always
+-assumes that the fonts have ISOLatin1 encoding. OK, let's
+-start over again: basically the three biggest problems of Netscape 
+-Navigator are that (one) it has built-in fixed PostScript font names, 
+-(two) built-in fixed glyph tables for them and (three) it always
+-assumes that the fonts have ISOLatin1 encoding and (four) it
+-does not remember the scaled font size between the sessions.
+-You did not expect such a Spanish Inquisition, did you ? (<A HREF="#nsfn1">*</a>)
+-<p>
+-
+-Luckily, we have solutions for all of these problems. They are
+-located in the subdirectory `<tt>app/netscape</tt>' and described
+-in <A HREF="app/netscape/README.html">app/netscape/README</a>.
+-<p>
+-
+-<A NAME="nsfn1"></a>
+-&nbsp;&nbsp;-------<br>
+-&nbsp;&nbsp;<FONT SIZE=-1>*) See Monty Python's Flying Circus, episode 15</FONT></FONT>
+-<p>
+-
+-<FONT COLOR="#3333FF"><FONT SIZE=-1>*8*</FONT></FONT>
+-<H4>
+-Netscape and cyrillic fonts<br>
+-<!
+----------------------------
+->
+-(courtesy of Zvezdan Petkovic)
+-</H4>
+-
+-If you use TrueType fonts in your X, as I do, and you always get
+-KOI8-R encoded pages, then your Netscape does not recognise windows-1251
+-encoding.  Microsoft TrueType fonts simply declare all encodings they
+-can support including KOI8-R.  For some reason, KOI8-R always wins over
+-ISO-8859-5 in Netscape under X.  If you are reading other cyrillic
+-languages besides Russian, you might want to either erase KOI8-R entries
+-from the fonts.dir and fonts.scale files, or alternatively fix Netscape.
+-I put this line in my .Xdefaults.
+-<p>
+-
+-<blockquote><tt>
+-    Netscape*documentFonts.charset*koi8-r:               iso-8859-5
+-</tt></blockquote>
+-<p>
+-
+-Notice that you can still read Russian sites without trouble because
+-Netscape translates KOI8-R to ISO-8859-5 on the fly. I read both Russian
+-and Serbian sites with no trouble.
+-<p>
+-
+-<b>Note:</b> <i>If anybody knows the way to tell Netscape under Unix how to 
+-recognise {windows,ibm,cp}-1251 encoded fonts, I'd like to hear about that.</i>
+-<p>
+-
+-<A NAME="rpm"></a>
+-<H3>
+-Linux RPM package
+-</H3>
+-<!
+-=================
+->
+-
+-The spec file for the creation of a Linux RPM package is located in 
+-<tt>app/RPM</tt>. It has been contributed by Johan Vromans.  When 
+-<tt>make all</tt> is ran in the main directory it among the other 
+-things creates the version of itself adapted to Linux in <tt>app/RPM</tt>,
+-you may want to copy that version back to the main directory.
+-<p>
+-
+-<B>Warning:</B> Please note that the install section is incomplete, and 
+-the installed scripts won't work until the paths inside them
+-are corrected.
+-<p>
+-
+ <A NAME="framemaker"></a>
+ <H3>
+ FrameMaker

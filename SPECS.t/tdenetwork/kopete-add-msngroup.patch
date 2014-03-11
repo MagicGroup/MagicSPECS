@@ -1,0 +1,35 @@
+diff -u -r kdenetwork-3.5.8.orig/kopete/protocols/msn/msnswitchboardsocket.cpp kdenetwork-3.5.8/kopete/protocols/msn/msnswitchboardsocket.cpp
+--- kdenetwork-3.5.8.orig/kopete/protocols/msn/msnswitchboardsocket.cpp	2007-10-08 17:49:11.000000000 +0800
++++ kdenetwork-3.5.8/kopete/protocols/msn/msnswitchboardsocket.cpp	2007-10-21 11:20:36.000000000 +0800
+@@ -290,6 +290,16 @@
+ 		// sending a text message. So if it's not supplied, we'll just
+ 		// assume its that.
+ 
++        TQString P4Name;
++		if( msg.contains( "P4-Context:" ) )
++		{
++		// The P4-Context field can override the default contact name.
++		// It's typically used by plugins of the official client (e.g. Xiaoi's TQun).
++		    rx = TQRegExp("P4-Context: ([^\r\n]*)");
++		    rx.search(msg);
++		    P4Name = rx.cap(1);
++	    }
++
+ 		TQColor fontColor;
+ 		TQFont font;
+ 
+@@ -358,8 +368,12 @@
+ 			if( *it2 != m_msgHandle )
+ 				others.append( m_account->contacts()[ *it2 ] );
+ 		}
+-
+-		TQString message=msg.right( msg.length() - msg.find("\r\n\r\n") - 4 );
++		
++		TQString message;
++		if(P4Name!=TQString::null)
++		message=P4Name+" -- \r\n"+msg.right( msg.length() - msg.find("\r\n\r\n") - 4 );
++		else
++		message=msg.right( msg.length() - msg.find("\r\n\r\n") - 4 );
+ 
+ 		//Stupid MSN PLUS colors code. message with incorrect charactere are not showed correctly in the chatwindow.
+ 		//TODO: parse theses one to show the color too in Kopete

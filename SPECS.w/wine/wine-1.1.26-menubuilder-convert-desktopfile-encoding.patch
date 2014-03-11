@@ -1,0 +1,90 @@
+--- wine-1.1.26/programs/winemenubuilder/winemenubuilder.c	2009-07-18 00:38:57.000000000 +0800
++++ wine-1.1.26/programs/winemenubuilder/winemenubuilder.c	2009-07-26 10:40:34.000000000 +0800
+@@ -71,6 +71,7 @@
+ #include <ctype.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <iconv.h>
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+@@ -849,15 +850,56 @@
+         return FALSE;
+ 
+     fprintf(file, "[Desktop Entry]\n");
+-    fprintf(file, "Name=%s\n", linkname);
++    // convert from gb18030 to utf8
++    int inlen = strlen(linkname);
++    int outlen = 255;
++    char linkname__[outlen];
++    memset(linkname__,0,outlen);
++    char* p_out = linkname__;
++    iconv_t cd = iconv_open("UTF-8","GB18030");
++    if (cd == 0) return FALSE;
++    if (iconv(cd, &linkname, &inlen, &p_out, &outlen) == -1) return FALSE;
++    iconv_close(cd);
++    fprintf(file, "Name=%s\n", linkname__);
++    // convert from gb18030 to utf8
++    inlen = strlen(path);
++    char path__[outlen];
++    memset(path__,0,outlen);
++    p_out = path__;
++    cd = iconv_open("UTF-8","GB18030");
++    if (cd == 0) return FALSE;
++    if (iconv(cd, &path, &inlen, &p_out, &outlen) == -1) return FALSE;
++    iconv_close(cd);
+     fprintf(file, "Exec=env WINEPREFIX=\"%s\" wine \"%s\" %s\n",
+-            wine_get_config_dir(), path, args);
++            wine_get_config_dir(), path__, args);
+     fprintf(file, "Type=Application\n");
+     fprintf(file, "StartupNotify=true\n");
+     if (descr && lstrlenA(descr))
+-        fprintf(file, "Comment=%s\n", descr);
++    {
++        // convert from gb18030 to utf8
++        inlen = strlen(descr);
++        char descr__[outlen];
++        memset(descr__,0,outlen);
++        p_out = descr__;
++        cd = iconv_open("UTF-8","GB18030");
++        if (cd == 0) return FALSE;
++        if (iconv(cd, &descr, &inlen, &p_out, &outlen) == -1) return FALSE;
++        iconv_close(cd);
++        fprintf(file, "Comment=%s\n", descr__);
++    }
+     if (workdir && lstrlenA(workdir))
+-        fprintf(file, "Path=%s\n", workdir);
++    {
++        // convert from gb18030 to utf8
++        inlen = strlen(workdir);
++        char workdir__[outlen];
++        memset(workdir__,0,outlen);
++        p_out = workdir__;
++        cd = iconv_open("UTF-8","GB18030");
++        if (cd == 0) return FALSE;
++        if (iconv(cd, &workdir, &inlen, &p_out, &outlen) == -1) return FALSE;
++        iconv_close(cd);
++        fprintf(file, "Path=%s\n", workdir__);
++    }
+     if (icon && lstrlenA(icon))
+         fprintf(file, "Icon=%s\n", icon);
+ 
+@@ -897,7 +939,17 @@
+     }
+     else
+     {
+-        fprintf(file, "Name=%s\n", directory);
++        // convert from gb18030 to utf8
++        int inlen = strlen(directory);
++        int outlen = 255;
++        char directory__[outlen];
++        memset(directory__,0,outlen);
++        char* p_out = directory__;
++        iconv_t cd = iconv_open("UTF-8","GB18030");
++        if (cd == 0) return FALSE;
++        if (iconv(cd, &directory, &inlen, &p_out, &outlen) == -1) return FALSE;
++        iconv_close(cd);
++        fprintf(file, "Name=%s\n", directory__);
+         fprintf(file, "Icon=folder\n");
+     }
+ 

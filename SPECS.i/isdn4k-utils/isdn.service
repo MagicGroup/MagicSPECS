@@ -1,0 +1,15 @@
+[Unit]
+Description=ISDN Services
+Requires=syslog.target network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/isdn start
+ExecStop=/usr/libexec/isdn stop
+Environment=BOOTUP=serial
+Environment=CONSOLETYPE=serial
+StandardError=syslog
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

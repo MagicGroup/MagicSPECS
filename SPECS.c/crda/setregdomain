@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# Copyright 2009-2010 Red Hat, Inc.  All rights reserved.
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
+REGDOMAIN=/etc/sysconfig/regdomain
+CLOCK=/etc/sysconfig/clock
+
+if [ -f $REGDOMAIN ]
+then
+	# This should set COUNTRY
+	. $REGDOMAIN
+	if [ -n "$COUNTRY" ]
+	then
+		/sbin/iw reg set $COUNTRY
+		exit
+	fi
+fi
+
+if [ -f $CLOCK ]
+then
+	# This should set ZONE
+	. $CLOCK
+else
+	echo "Timezone information not found!  Unable to set regulatory domain."
+	exit
+fi
+
+if [ -z "$ZONE" ]
+then
+	echo "Timezone information not set!  Unable to set regulatory domain."
+	exit
+fi
+
+COOKED_ZONE=$(echo $ZONE | sed -e 's/ /_/')
+
+COUNTRY=$(grep $COOKED_ZONE /usr/share/zoneinfo/zone.tab | awk '{ print $1 }')
+
+if [ -z "$COUNTRY" ]
+then
+	echo "Could not determine country!  Unable to set regulatory domain."
+	exit
+fi
+
+/sbin/iw reg set $COUNTRY

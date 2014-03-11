@@ -1,0 +1,41 @@
+diff -up lablgtk-2.16.0/src/gtkThread.ml.orig lablgtk-2.16.0/src/gtkThread.ml
+--- lablgtk-2.16.0/src/gtkThread.ml.orig	2012-08-23 04:37:48.000000000 -0600
++++ lablgtk-2.16.0/src/gtkThread.ml	2012-10-17 10:49:34.581065898 -0600
+@@ -28,8 +28,14 @@ open GtkMain
+ 
+ let jobs : (unit -> unit) Queue.t = Queue.create ()
+ let m = Mutex.create ()
++type ('a, 'b) either = Left of 'a | Right of 'b
+ let with_jobs f =
+-  Mutex.lock m; let y = f jobs in Mutex.unlock m; y
++  Mutex.lock m;
++  let y = try Left (f jobs) with exn -> Right exn in
++  Mutex.unlock m;
++  match y with
++  | Left y -> y
++  | Right exn -> raise exn
+ 
+ let loop_id = ref None
+ let reset () = loop_id := None
+@@ -40,8 +46,6 @@ let cannot_sync () =
+ let gui_safe () =
+   not (Sys.os_type = "Win32") || !loop_id = Some(Thread.id (Thread.self ()))
+ 
+-let has_jobs () = not (with_jobs Queue.is_empty)
+-let n_jobs () = with_jobs Queue.length
+ let do_next_job () = with_jobs Queue.take ()
+ let has_timeout = ref false
+ let async j x = with_jobs
+@@ -71,10 +75,10 @@ let sync f x =
+ let do_jobs_delay = ref 0.013;;
+ let set_do_jobs_delay d = do_jobs_delay := max 0. d;;
+ let do_jobs () =
+-  for i = 1 to n_jobs () do do_next_job () done;
++  let rec loop () = do_next_job (); loop () in
++  (try loop () with Queue.Empty -> ());
+   true
+ 
+-
+ (* We check first whether there are some event pending, and run
+    some iterations. We then need to delay, thus focing a thread switch. *)
+ 

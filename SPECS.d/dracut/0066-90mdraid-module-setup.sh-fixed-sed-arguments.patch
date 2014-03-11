@@ -1,0 +1,22 @@
+From 54ffd5447da0a912f91d21dde22d56b0f5762484 Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Tue, 4 Oct 2011 13:30:35 +0200
+Subject: [PATCH] 90mdraid/module-setup.sh: fixed sed arguments
+
+---
+ modules.d/90mdraid/module-setup.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules.d/90mdraid/module-setup.sh b/modules.d/90mdraid/module-setup.sh
+index 5e819b1..fe793bb 100755
+--- a/modules.d/90mdraid/module-setup.sh
++++ b/modules.d/90mdraid/module-setup.sh
+@@ -54,7 +54,7 @@ install() {
+         # 65-md-inc*.rules and its fine-grained controls, or cause other problems
+         # when we explicitly don't want certain components to be incrementally
+         # assembled
+-        sed -ire '/RUN\+?="[[:alpha:]/]*mdadm[[:blank:]]+(--incremental|-I)[[:blank:]]+(\$env\{DEVNAME\}|\$tempnode)"/d' "${initdir}/lib/udev/rules.d/64-md-raid.rules"
++        sed -i -r -e '/RUN\+?="[[:alpha:]/]*mdadm[[:blank:]]+(--incremental|-I)[[:blank:]]+(\$env\{DEVNAME\}|\$tempnode)"/d' "${initdir}/lib/udev/rules.d/64-md-raid.rules"
+     fi
+ 
+     inst_rules "$moddir/65-md-incremental-imsm.rules"

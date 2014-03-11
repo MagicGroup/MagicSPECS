@@ -1,0 +1,35 @@
+From 7c3a7bd1f0414d8dcdfa16df108c28815fe921bb Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Fri, 21 Oct 2011 12:35:34 +0200
+Subject: [PATCH] dracut.spec: require new util-linux version with new
+ switch_root
+
+new switch_root knows how to handle "/run"
+---
+ dracut.spec |    7 +------
+ 1 files changed, 1 insertions(+), 6 deletions(-)
+
+diff --git a/dracut.spec b/dracut.spec
+index 69809ca..eaa39a0 100644
+--- a/dracut.spec
++++ b/dracut.spec
+@@ -72,18 +72,13 @@ Requires: module-init-tools >= 3.7-9
+ Requires: sed
+ Requires: tar
+ Requires: udev
++Requires: util-linux >= 2.20
+ 
+ %if 0%{?fedora} || 0%{?rhel} > 6
+-Requires: util-linux >= 2.16
+ Requires: initscripts >= 8.63-1
+ Requires: plymouth >= 0.8.0-0.2009.29.09.19.1
+ %endif
+ 
+-%if 0%{?suse_version}
+-Requires: util-linux >= 2.16
+-%endif
+-
+-
+ %description
+ Dracut contains tools to create a bootable initramfs for 2.6 Linux kernels.
+ Unlike existing implementations, dracut does hard-code as little as possible

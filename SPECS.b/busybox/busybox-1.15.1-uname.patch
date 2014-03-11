@@ -1,0 +1,12 @@
+diff -urpN busybox-1.15.1/coreutils/uname.c busybox-1.15.1/coreutils/uname.c
+--- busybox-1.15.1/coreutils/uname.c	2009-09-12 17:55:58.000000000 +0200
++++ busybox-1.15.1/coreutils/uname.c	2010-01-26 23:04:02.922149002 +0100
+@@ -123,7 +123,7 @@ int uname_main(int argc UNUSED_PARAM, ch
+ 	strcpy(uname_info.processor, unknown_str);
+ 	strcpy(uname_info.platform, unknown_str);
+ 	strcpy(uname_info.os, "GNU/Linux");
+-#if 0
++#if 1
+ 	/* Fedora does something like this */
+ 	strcpy(uname_info.processor, uname_info.name.machine);
+ 	strcpy(uname_info.platform, uname_info.name.machine);

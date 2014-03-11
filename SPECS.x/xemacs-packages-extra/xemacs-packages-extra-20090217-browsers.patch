@@ -1,0 +1,37 @@
+diff -up xemacs-packages-extra-20090217/xemacs-packages/psgml/psgml-html.el~ xemacs-packages-extra-20090217/xemacs-packages/psgml/psgml-html.el
+--- xemacs-packages-extra-20090217/xemacs-packages/psgml/psgml-html.el~	2007-05-29 18:56:55.000000000 +0300
++++ xemacs-packages-extra-20090217/xemacs-packages/psgml/psgml-html.el	2009-02-22 21:27:24.000000000 +0200
+@@ -931,25 +931,25 @@ get those characters to appear literally
+ 
+ (defvar sgml-html-menu
+   (cons "HTML"
+-	(append '(["View in Netscape" sgml-html-netscape-file
+-		   (buffer-file-name
+-		    (current-buffer))]
+-		  ["View in W3" w3-preview-this-buffer t]
+-		  ["View in kfm" sgml-html-kfm-file
++	(append '(["View in default browser" browse-url-of-buffer t]
++		  ["View in Firefox" sgml-html-netscape-file
++		   (buffer-file-name (current-buffer))]
++		  ["View in Konqueror" sgml-html-kfm-file
+ 		   (buffer-file-name (current-buffer))]
++		  ["View in W3" w3-preview-this-buffer t]
+ 		  "---"
+ 		  ["HTML-Quote Region" html-quote-region t]
+ 		  "---")
+ 		(cdr sgml-main-menu))))
+ 
+ (defun sgml-html-netscape-file ()
+-  "Preview the file for the current buffer in Netscape."
++  "Preview the file for the current buffer in Firefox."
+   (interactive)
+-  (browse-url-netscape
++  (browse-url-firefox
+    (concat "file:" (buffer-file-name (current-buffer)))))
+ 
+ (defun sgml-html-kfm-file ()
+-  "Preview the file for the current buffer in kfm."
++  "Preview the file for the current buffer in Konqueror."
+   (interactive)
+   (browse-url-kde
+    (concat "file:" (buffer-file-name (current-buffer)))))

@@ -1,0 +1,13 @@
+Index: kdebase-workspace-4.4.2/krunner/screensaver/saverengine.cpp
+===================================================================
+--- kdebase-workspace-4.4.2.orig/krunner/screensaver/saverengine.cpp	2010-04-07 22:57:34.167840848 -0400
++++ kdebase-workspace-4.4.2/krunner/screensaver/saverengine.cpp	2010-04-07 22:58:04.719858908 -0400
+@@ -199,7 +199,7 @@
+     if (mState != Waiting)
+         return false;
+ 
+-    if (e)
++    if (e && KScreenSaverSettings::screenSaverEnabled() )
+     {
+         if (!mXAutoLock)
+         {

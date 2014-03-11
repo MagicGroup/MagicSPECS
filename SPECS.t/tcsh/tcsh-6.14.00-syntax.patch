@@ -1,0 +1,37 @@
+diff -up tcsh-6.17.00/sh.func.c_old tcsh-6.17.00/sh.func.c
+--- tcsh-6.17.00/sh.func.c_old	2009-07-20 14:54:16.000000000 +0200
++++ tcsh-6.17.00/sh.func.c	2009-07-20 14:55:34.000000000 +0200
+@@ -753,8 +753,6 @@ search(int type, int level, Char *goal)
+ {
+     struct Strbuf word = Strbuf_INIT;
+     Char *cp;
+-    struct whyle *wp;
+-    int wlevel = 0;
+     struct wordent *histent = NULL, *ohistent = NULL;
+ 
+     Stype = type;
+@@ -811,24 +809,13 @@ search(int type, int level, Char *goal)
+ 
+ 	case TC_FOREACH:
+ 	case TC_WHILE:
+-	    wlevel++;
+ 	    if (type == TC_BREAK)
+ 		level++;
+ 	    break;
+ 
+ 	case TC_END:
+-	    if (type == TC_BRKSW) {
+-		if (wlevel == 0) {
+-		    wp = whyles;
+-		    if (wp) {
+-			    whyles = wp->w_next;
+-			    wpfree(wp);
+-		    }
+-		}
+-	    }
+ 	    if (type == TC_BREAK)
+ 		level--;
+-	    wlevel--;
+ 	    break;
+ 
+ 	case TC_SWITCH:

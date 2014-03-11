@@ -1,0 +1,14 @@
+--- dyninst/make.config.buildflags	2013-02-14 11:23:18.717002871 -0800
++++ dyninst/make.config	2013-02-14 11:23:46.588871846 -0800
+@@ -570,9 +570,9 @@ ifeq (ppc64_linux, $(findstring ppc64_li
+ endif
+ 
+ # flags for normal (non-kludge) files, with common warnings
+-CFLAGS		= $(IFLAGS) $(UNIFIED_DEF) $(OPT_FLAG) $(COMMON_WARNINGS) $(ARCH_FLAGS)
++CFLAGS		+= $(IFLAGS) $(UNIFIED_DEF) $(OPT_FLAG) $(COMMON_WARNINGS) $(ARCH_FLAGS)
+ CXXFLAGS	+= $(IFLAGS) $(UNIFIED_DEF) $(OPT_FLAG) $(COMMON_WARNINGS) $(STDINT_MACROS) $(ARCH_FLAGS)
+-LDFLAGS		= $(ARCH_FLAGS)
++LDFLAGS		+= $(ARCH_FLAGS)
+ 
+ # flags for kludge files, won't have warnings generated
+ KFLAGS          = $(IFLAGS) $(UNIFIED_DEF) $(BASICWARNINGS)

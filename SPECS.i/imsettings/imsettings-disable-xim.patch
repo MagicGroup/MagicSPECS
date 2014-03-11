@@ -1,0 +1,19 @@
+diff -pruN imsettings-1.2.2.orig/data/xinput.sh.in.in imsettings-1.2.2/data/xinput.sh.in.in
+--- imsettings-1.2.2.orig/data/xinput.sh.in.in	2011-04-22 20:35:24.000000000 +0900
++++ imsettings-1.2.2/data/xinput.sh.in.in	2011-04-26 16:41:19.165486325 +0900
+@@ -80,10 +80,11 @@ function is_qt_supported() {
+ }
+ 
+ function is_xim_supported() {
+-    [ -n "$IMSETTINGS_DISABLE_DESKTOP_CHECK" ] && return 0
+-    if check_imsettings_capability xim; then
+-	return 0
+-    fi
++# XXX: Disable XIM support so far
++#    [ -n "$IMSETTINGS_DISABLE_DESKTOP_CHECK" ] && return 0
++#    if check_imsettings_capability xim; then
++#	return 0
++#    fi
+ 
+     return 1
+ }

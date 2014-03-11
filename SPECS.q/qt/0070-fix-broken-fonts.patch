@@ -1,0 +1,349 @@
+qt-bugs@ issue : none
+bugs.kde.org number : none
+applied: yes
+author: TT
+Some arabic fonts seem to contain broken open type
+tables (esp. some fonts used on Ubuntu).
+
+To fix this we now check the return values of the open
+type code, and fall back to non open type shaping
+if the code fails.
+
+Index: src/kernel/qscriptengine.cpp
+===================================================================
+--- src/kernel/qscriptengine.cpp	(revision 546857)
++++ src/kernel/qscriptengine.cpp	(working copy)
+@@ -289,7 +289,7 @@
+     unsigned short *logClusters = item->log_clusters;
+ 
+     int i;
+-    for (i = 0; i < length; ++i) 
++    for (i = 0; i < length; ++i)
+         logClusters[i] = i;
+ 
+     // first char in a run is never (treated as) a mark
+@@ -304,7 +304,7 @@
+     } else {
+         item->attributes[0].zeroWidth = FALSE;
+     }
+-    
++
+     int lastCat = ::category(uc[0]);
+     for (i = 1; i < length; ++i) {
+         int cat = ::category(uc[i]);
+@@ -381,7 +381,7 @@
+ 
+ static bool basic_shape(QShaperItem *item)
+ {
+-    if (item->font->stringToCMap(item->string->unicode()+item->from, item->length, item->glyphs, item->advances, 
++    if (item->font->stringToCMap(item->string->unicode()+item->from, item->length, item->glyphs, item->advances,
+                                  &item->num_glyphs, item->flags & QTextEngine::RightToLeft) != QFontEngine::NoError)
+         return FALSE;
+ 
+@@ -421,7 +421,7 @@
+ 
+     if (openType && openType->supportsScript(item->script)) {
+         openType->selectScript(item->script, hebrew_features);
+-        
++
+         if (item->font->stringToCMap(item->string->unicode()+item->from, item->length, item->glyphs, item->advances,
+                                      &item->num_glyphs, item->flags & QTextEngine::RightToLeft) != QFontEngine::NoError)
+             return FALSE;
+@@ -437,7 +437,7 @@
+         ShinDot = 0x5c1,
+         SinDot = 0x5c2,
+         Patah = 0x5b7,
+-        Qamats = 0x5b8, 
++        Qamats = 0x5b8,
+         Holam = 0x5b9,
+         Rafe = 0x5bf
+     };
+@@ -446,7 +446,7 @@
+ 
+     const QChar *uc = item->string->unicode() + item->from;
+     unsigned short *logClusters = item->log_clusters;
+-    
++
+     *shapedChars = *uc;
+     logClusters[0] = 0;
+     int slen = 1;
+@@ -460,9 +460,9 @@
+             if (base >= 0x5d0
+                 && base <= 0x5ea
+                 && base != 0x5d7
+-                && base != 0x5dd 
+-                && base != 0x5df 
+-                && base != 0x5e2 
++                && base != 0x5dd
++                && base != 0x5df
++                && base != 0x5e2
+                 && base != 0x5e5) {
+                 shaped = base - 0x5d0 + 0xfb30;
+             } else if (base == 0xfb2a || base == 0xfb2b /* Shin with Shin or Sin dot */) {
+@@ -532,12 +532,12 @@
+         }
+         logClusters[i] = cluster_start;
+     }
+-    
++
+     if (item->font->stringToCMap(shapedChars, slen, item->glyphs, item->advances,
+                                  &item->num_glyphs, item->flags & QTextEngine::RightToLeft) != QFontEngine::NoError)
+         return FALSE;
+     for (i = 0; i < item->num_glyphs; ++i) {
+-        if (item->attributes[i].mark) 
++        if (item->attributes[i].mark)
+             item->advances[i] = 0;
+     }
+     qt_heuristicPosition(item);
+@@ -1461,12 +1461,12 @@
+ 
+ enum {
+     InitProperty = 0x2,
+-    IsolProperty = 0x4, 
++    IsolProperty = 0x4,
+     FinaProperty = 0x8,
+     MediProperty = 0x10,
+-    RligProperty = 0x20, 
+-    CaltProperty = 0x40, 
+-    LigaProperty = 0x80, 
++    RligProperty = 0x20,
++    CaltProperty = 0x40,
++    LigaProperty = 0x80,
+     DligProperty = 0x100,
+     CswhProperty = 0x200,
+     MsetProperty = 0x400
+@@ -1477,14 +1477,14 @@
+     { FT_MAKE_TAG('i', 's', 'o', 'l'), IsolProperty },
+     { FT_MAKE_TAG('f', 'i', 'n', 'a'), FinaProperty },
+     { FT_MAKE_TAG('m', 'e', 'd', 'i'), MediProperty },
+-    { FT_MAKE_TAG('i', 'n', 'i', 't'), InitProperty }, 
+-    { FT_MAKE_TAG('r', 'l', 'i', 'g'), RligProperty }, 
+-    { FT_MAKE_TAG('c', 'a', 'l', 't'), CaltProperty }, 
+-    { FT_MAKE_TAG('l', 'i', 'g', 'a'), LigaProperty }, 
+-    { FT_MAKE_TAG('d', 'l', 'i', 'g'), DligProperty }, 
++    { FT_MAKE_TAG('i', 'n', 'i', 't'), InitProperty },
++    { FT_MAKE_TAG('r', 'l', 'i', 'g'), RligProperty },
++    { FT_MAKE_TAG('c', 'a', 'l', 't'), CaltProperty },
++    { FT_MAKE_TAG('l', 'i', 'g', 'a'), LigaProperty },
++    { FT_MAKE_TAG('d', 'l', 'i', 'g'), DligProperty },
+     { FT_MAKE_TAG('c', 's', 'w', 'h'), CswhProperty },
+     // mset is used in old Win95 fonts that don't have a 'mark' positioning table.
+-    { FT_MAKE_TAG('m', 's', 'e', 't'), MsetProperty }, 
++    { FT_MAKE_TAG('m', 's', 'e', 't'), MsetProperty },
+     {0, 0}
+ };
+ 
+@@ -1496,16 +1496,18 @@
+     { FT_MAKE_TAG('f', 'i', 'n', '3'), FinaProperty },
+     { FT_MAKE_TAG('m', 'e', 'd', 'i'), MediProperty },
+     { FT_MAKE_TAG('m', 'e', 'd', '2'), MediProperty },
+-    { FT_MAKE_TAG('i', 'n', 'i', 't'), InitProperty }, 
+-    { FT_MAKE_TAG('r', 'l', 'i', 'g'), RligProperty }, 
+-    { FT_MAKE_TAG('c', 'a', 'l', 't'), CaltProperty }, 
+-    { FT_MAKE_TAG('l', 'i', 'g', 'a'), LigaProperty }, 
+-    { FT_MAKE_TAG('d', 'l', 'i', 'g'), DligProperty }, 
++    { FT_MAKE_TAG('i', 'n', 'i', 't'), InitProperty },
++    { FT_MAKE_TAG('r', 'l', 'i', 'g'), RligProperty },
++    { FT_MAKE_TAG('c', 'a', 'l', 't'), CaltProperty },
++    { FT_MAKE_TAG('l', 'i', 'g', 'a'), LigaProperty },
++    { FT_MAKE_TAG('d', 'l', 'i', 'g'), DligProperty },
+     {0, 0}
+ };
+ 
+-static bool arabicSyriacOpenTypeShape(QOpenType *openType, QShaperItem *item)
++static bool arabicSyriacOpenTypeShape(QOpenType *openType, QShaperItem *item, bool *ot_ok)
+ {
++    *ot_ok = true;
++
+     openType->selectScript(item->script, item->script == QFont::Arabic ? arabic_features : syriac_features);
+     int nglyphs = item->num_glyphs;
+     if (item->font->stringToCMap(item->string->unicode()+item->from, item->length, item->glyphs, item->advances,
+@@ -1562,7 +1564,10 @@
+             apply[i] |= IsolProperty|MediProperty|FinaProperty;
+     }
+ 
+-    openType->shape(item, apply.data());
++    if (!openType->shape(item, apply.data())) {
++        *ot_ok = false;
++        return false;
++    }
+     item->num_glyphs = nglyphs;
+     return openType->positionAndAdd(item);
+ }
+@@ -1577,8 +1582,14 @@
+ #if defined(Q_WS_X11) && !defined(QT_NO_XFTFREETYPE)
+     QOpenType *openType = item->font->openType();
+ 
+-    if (openType && openType->supportsScript(QFont::Arabic))
+-        return arabicSyriacOpenTypeShape(openType, item);
++    if (openType && openType->supportsScript(QFont::Arabic)) {
++        bool ot_ok;
++        if (arabicSyriacOpenTypeShape(openType, item, &ot_ok))
++            return true;
++        if (ot_ok)
++            return false;
++        // fall through to the non OT code
++    }
+ #endif
+ 
+     QVarLengthArray<ushort> shapedChars(item->length);
+Index: src/kernel/qfontengine_p.h
+===================================================================
+--- src/kernel/qfontengine_p.h	(revision 546857)
++++ src/kernel/qfontengine_p.h	(working copy)
+@@ -490,8 +490,8 @@
+         return supported_scripts[script];
+     }
+     void selectScript(unsigned int script, const Features *features = 0);
+-    
+-    void shape(QShaperItem *item, const unsigned int *properties = 0);
++
++    bool shape(QShaperItem *item, const unsigned int *properties = 0);
+     bool positionAndAdd(QShaperItem *item, bool doLogClusters = TRUE);
+ 
+     OTL_GlyphItem glyphs() const { return otl_buffer->in_string; }
+@@ -499,7 +499,7 @@
+     void setProperty(int index, uint property) { otl_buffer->in_string[index].properties = property; }
+ 
+ 
+-private: 
++private:
+     bool checkScript(unsigned int script);
+     QFontEngine *fontEngine;
+     FT_Face face;
+Index: src/kernel/qfontengine_x11.cpp
+===================================================================
+--- src/kernel/qfontengine_x11.cpp	(revision 546857)
++++ src/kernel/qfontengine_x11.cpp	(working copy)
+@@ -154,7 +154,7 @@
+         return;
+ 
+     w += h; // add some pixels to width because of italic correction
+-    QBitmap bm( w, h, TRUE );     // create bitmap 
++    QBitmap bm( w, h, TRUE );     // create bitmap
+     QPainter paint;
+     paint.begin( &bm );             // draw text in bitmap
+     fe->draw( &paint, 0, si->ascent, engine, si, textFlags );
+@@ -2396,7 +2396,7 @@
+         qDebug("error loading gpos table: %d", error);
+ #endif
+     }
+-    
++
+     for (uint i = 0; i < QFont::NScripts; ++i)
+         supported_scripts[i] = checkScript(i);
+ }
+@@ -2427,7 +2427,7 @@
+     if (requirements & RequiresGsub) {
+         if (!gsub)
+             return FALSE;
+-        
++
+         FT_UShort script_index;
+         FT_Error error = TT_GSUB_Select_Script(gsub, tag, &script_index);
+         if (error) {
+@@ -2437,11 +2437,11 @@
+             return FALSE;
+         }
+     }
+-    
++
+     if (requirements & RequiresGpos) {
+         if (!gpos)
+             return FALSE;
+-        
++
+         FT_UShort script_index;
+         FT_Error error = TT_GPOS_Select_Script(gpos, script, &script_index);
+         if (error) {
+@@ -2460,7 +2460,7 @@
+ {
+     if (current_script == script)
+         return;
+-    
++
+     assert(script < QFont::NScripts);
+     // find script in our list of supported scripts.
+     uint tag = ot_scripts[script].tag;
+@@ -2497,7 +2497,7 @@
+             }
+         }
+     }
+-    
++
+     if (gpos) {
+         TT_GPOS_Clear_Features(gpos);
+         FT_UShort script_index;
+@@ -2544,7 +2544,7 @@
+ 
+ extern void qt_heuristicPosition(QShaperItem *item);
+ 
+-void QOpenType::shape(QShaperItem *item, const unsigned int *properties)
++bool QOpenType::shape(QShaperItem *item, const unsigned int *properties)
+ {
+     length = item->num_glyphs;
+ 
+@@ -2571,8 +2571,11 @@
+ 
+     loadFlags = FT_LOAD_DEFAULT;
+ 
+-    if (gsub)
+-        TT_GSUB_Apply_String(gsub, otl_buffer);
++    if (gsub) {
++        uint error = TT_GSUB_Apply_String(gsub, otl_buffer);
++        if (error && error != TTO_Err_Not_Covered)
++            return false;
++    }
+ 
+ #ifdef OT_DEBUG
+ //     qDebug("log clusters before shaping:");
+@@ -2584,6 +2587,8 @@
+     qDebug("-----------------------------------------");
+ //     dump_string(otl_buffer);
+ #endif
++
++    return true;
+ }
+ 
+ bool QOpenType::positionAndAdd(QShaperItem *item, bool doLogClusters)
+@@ -2600,7 +2605,7 @@
+         unlockFTFace(static_cast<QFontEngineXft *>(fontEngine)->font());
+ #endif
+     }
+-    
++
+     // make sure we have enough space to write everything back
+     if (item->num_glyphs < (int)otl_buffer->in_length) {
+         item->num_glyphs = otl_buffer->in_length;
+@@ -2654,11 +2659,11 @@
+             // ###### fix the case where we have y advances. How do we handle this in Uniscribe?????
+             if (positions[i].new_advance) {
+                 item->advances[i] = item->flags & QTextEngine::RightToLeft
+-                                    ? -qRound((positions[i].x_advance >> 6)*scale) 
++                                    ? -qRound((positions[i].x_advance >> 6)*scale)
+                                     :  qRound((positions[i].x_advance >> 6)*scale);
+             } else {
+                 item->advances[i] += item->flags & QTextEngine::RightToLeft
+-                                     ? -qRound((positions[i].x_advance >> 6)*scale) 
++                                     ? -qRound((positions[i].x_advance >> 6)*scale)
+                                      :  qRound((positions[i].x_advance >> 6)*scale);
+             }
+ 	    item->offsets[i].x = qRound((positions[i].x_pos >> 6)*scale);
+Index: src/kernel/qscriptengine_x11.cpp
+===================================================================
+--- src/kernel/qscriptengine_x11.cpp	(revision 546857)
++++ src/kernel/qscriptengine_x11.cpp	(working copy)
+@@ -45,7 +45,12 @@
+ #ifndef QT_NO_XFTFREETYPE
+     QOpenType *openType = item->font->openType();
+     if (openType && openType->supportsScript(QFont::Syriac)) {
+-        return arabicSyriacOpenTypeShape(openType, item);
++        bool ot_ok;
++        if (arabicSyriacOpenTypeShape(openType, item, &ot_ok))
++            return true;
++        if (ot_ok)
++            return false;
++        // fall through to the non OT code
+     }
+ #endif
+     return basic_shape(item);

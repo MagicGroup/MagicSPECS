@@ -1,0 +1,15 @@
+diff -up acetoneiso_2.0.4/acetoneiso/menu/AcetoneISO.desktop.BAD acetoneiso_2.0.4/acetoneiso/menu/AcetoneISO.desktop
+--- acetoneiso_2.0.4/acetoneiso/menu/AcetoneISO.desktop.BAD	2009-07-23 18:30:22.496042966 -0400
++++ acetoneiso_2.0.4/acetoneiso/menu/AcetoneISO.desktop	2009-07-23 18:30:43.351041731 -0400
+@@ -2,9 +2,9 @@
+ Categories=Qt;KDE;Application;AudioVideo;DiscBurning;
+ Encoding=UTF-8
+ Exec=acetoneiso
+-Icon=/usr/share/pixmaps/Acetino2.png
++Icon=Acetino2
+ MimeType=application/x-iso
+-Name=AcetoneISO
++Name=AcetoneISO2
+ GenericName=CD/DVD image manipulator
+ GenericName[it]=Strumenti per immagini CD/DVD
+ GenericName[de]=CD/DVD-Abbildmanager

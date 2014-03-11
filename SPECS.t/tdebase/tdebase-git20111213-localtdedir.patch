@@ -1,0 +1,47 @@
+diff -ur tdebase-git20111213.orig/kcontrol/input/core/themepage.cpp tdebase-git20111213/kcontrol/input/core/themepage.cpp
+--- tdebase-git20111213.orig/kcontrol/input/core/themepage.cpp	2011-12-14 07:09:53.000000000 -0500
++++ tdebase-git20111213/kcontrol/input/core/themepage.cpp	2011-12-14 10:03:18.000000000 -0500
+@@ -173,8 +173,8 @@
+ 	// override dir.
+ 	//
+ 	// Next, if the user wants large cursors, copy the font
+-	// cursor_large.pcf.gz to (localtdedir)/share/fonts/override/cursor.pcf.gz.
+-	// Else remove the font cursor.pcf.gz from (localtdedir)/share/fonts/override.
++	// cursor_large.pcf.gz to (localkdedir)/share/fonts/override/cursor.pcf.gz.
++	// Else remove the font cursor.pcf.gz from (localkdedir)/share/fonts/override.
+ 	//
+ 	// Run mkfontdir to update fonts.dir in that dir.
+ 
+diff -ur tdebase-git20111213.orig/kcontrol/keys/shortcuts.cpp tdebase-git20111213/kcontrol/keys/shortcuts.cpp
+--- tdebase-git20111213.orig/kcontrol/keys/shortcuts.cpp	2011-12-14 07:09:52.000000000 -0500
++++ tdebase-git20111213/kcontrol/keys/shortcuts.cpp	2011-12-14 10:02:58.000000000 -0500
+@@ -104,7 +104,7 @@
+ 
+ void ShortcutsModule::initGUI()
+ {
+-	TQString kde_winkeys_env_dir = KGlobal::dirs()->localtdedir() + "/env/";
++	TQString kde_winkeys_env_dir = KGlobal::dirs()->localkdedir() + "/env/";
+ 
+ 	kdDebug(125) << "A-----------" << endl;
+ 	KAccelActions* keys = &m_actionsGeneral;
+@@ -458,7 +458,7 @@
+ 
+ void ShortcutsModule::slotUseRmWinKeysClicked()
+ {
+-	TQString kde_winkeys_env_dir = KGlobal::dirs()->localtdedir() + "/env/";
++	TQString kde_winkeys_env_dir = KGlobal::dirs()->localkdedir() + "/env/";
+ 
+ 	// See if ~/.trinity/env/win-key.sh exists
+ 	TQFile f( kde_winkeys_env_dir + "win-key.sh" );
+diff -ur tdebase-git20111213.orig/tdesu/tdesu/tdesu.cpp tdebase-git20111213/tdesu/tdesu/tdesu.cpp
+--- tdebase-git20111213.orig/tdesu/tdesu/tdesu.cpp	2011-12-14 07:09:50.000000000 -0500
++++ tdebase-git20111213/tdesu/tdesu/tdesu.cpp	2011-12-14 10:03:38.000000000 -0500
+@@ -288,7 +288,7 @@
+        // root uses TDEROOTHOME
+        
+        // Translate the TDEHOME of this user to the new user.
+-       TQString kdeHome = KGlobal::dirs()->relativeLocation("home", KGlobal::dirs()->localtdedir());
++       TQString kdeHome = KGlobal::dirs()->relativeLocation("home", KGlobal::dirs()->localkdedir());
+        if (kdeHome[0] != '/')
+           kdeHome.prepend("~/"); 
+        else

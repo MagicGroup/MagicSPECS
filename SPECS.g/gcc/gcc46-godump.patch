@@ -1,0 +1,35 @@
+2011-10-03  Jakub Jelinek  <jakub@redhat.com>
+	    Ian Lance Taylor  <iant@google.com>
+
+	* godump.c (go_output_typedef): Handle printing also
+	enum values that don't fit into signed HWI.
+
+--- gcc/godump.c.jj	2011-03-15 15:31:35.000000000 +0100
++++ gcc/godump.c	2011-10-03 20:27:50.762422071 +0200
+@@ -844,9 +844,23 @@ go_output_typedef (struct godump_contain
+       for (element = TYPE_VALUES (TREE_TYPE (decl));
+ 	   element != NULL_TREE;
+ 	   element = TREE_CHAIN (element))
+-	fprintf (go_dump_file, "const _%s = " HOST_WIDE_INT_PRINT_DEC "\n",
+-		 IDENTIFIER_POINTER (TREE_PURPOSE (element)),
+-		 tree_low_cst (TREE_VALUE (element), 0));
++	if (host_integerp (TREE_VALUE (element), 0))
++	  fprintf (go_dump_file, "const _%s = " HOST_WIDE_INT_PRINT_DEC "\n",
++		   IDENTIFIER_POINTER (TREE_PURPOSE (element)),
++		   tree_low_cst (TREE_VALUE (element), 0));
++	else if (host_integerp (TREE_VALUE (element), 1))
++	  fprintf (go_dump_file,
++		   "const _%s = " HOST_WIDE_INT_PRINT_UNSIGNED "\n",
++		   IDENTIFIER_POINTER (TREE_PURPOSE (element)),
++		   tree_low_cst (TREE_VALUE (element), 1));
++	else
++	  fprintf (go_dump_file,
++		   "const _%s = " HOST_WIDE_INT_PRINT_DOUBLE_HEX "\n",
++		   IDENTIFIER_POINTER (TREE_PURPOSE (element)),
++		   (unsigned HOST_WIDE_INT)
++		   TREE_INT_CST_HIGH (TREE_VALUE (element)),
++		   TREE_INT_CST_LOW (TREE_VALUE (element)));
++
+       pointer_set_insert (container->decls_seen, TREE_TYPE (decl));
+       if (TYPE_CANONICAL (TREE_TYPE (decl)) != NULL_TREE)
+ 	pointer_set_insert (container->decls_seen,

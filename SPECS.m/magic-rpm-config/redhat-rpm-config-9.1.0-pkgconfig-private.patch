@@ -1,0 +1,11 @@
+--- redhat-rpm-config-9.1.0/find-requires.pkgconfig	2010-05-26 19:38:28.892598734 -0400
++++ redhat-rpm-config-9.1.0/find-requires.pkgconfig.new-pkgconfig	2010-05-26 19:39:40.174602325 -0400
+@@ -4,7 +4,7 @@ test -x $pkgconfig || exit 0
+ while read filename ; do
+ case "${filename}" in
+ *.pc)
+-	$pkgconfig --print-requires "$filename" 2> /dev/null | while read n r v ; do
++	$pkgconfig --print-requires --print-requires-private "$filename" 2> /dev/null | while read n r v ; do
+ 		echo "pkgconfig($n)" "$r" "$v"
+ 	done
+ esac

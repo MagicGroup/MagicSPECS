@@ -1,0 +1,20 @@
+WINE REGISTRY Version 2
+;; All keys relative to \\User\\S-1-5-4
+
+[Software\\Wine\\WineBrowser] 
+ "Browsers"="konqueror" 
+ 
+ [Software\\Wine\\X11 Driver] 
+ "ClientSideAntiAliasWithRender"="N" 
+ 
+ [Software\\Wine\\Fonts\\Replacements] 
+@="AR PL ShanHeiSun Uni"
+ "System"="AR PL ShanHeiSun Uni" 
+ "Arial"="AR PL ShanHeiSun Uni" 
+ "Fixedsys"="AR PL ShanHeiSun Uni" 
+ "Microsoft Sans Serif"="AR PL ShanHeiSun Uni" 
+ "MS UI Gothic"="AR PL ShanHeiSun Uni" 
+ "Tahoma"="AR PL ShanHeiSun Uni" 
+ "Terminal"="AR PL ShanHeiSun Uni" 
+ "MingLiU"="AR PL ShanHeiSun Uni" 
+ "PMingLiU"="AR PL ShanHeiSun Uni"

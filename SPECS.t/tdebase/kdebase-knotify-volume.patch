@@ -1,0 +1,23 @@
+diff -u -r kdebase-3.5.6.orig/kcontrol/knotify/knotify.cpp kdebase-3.5.6/kcontrol/knotify/knotify.cpp
+--- kdebase-3.5.6.orig/kcontrol/knotify/knotify.cpp	2007-01-26 15:59:31.000000000 +0800
++++ kdebase-3.5.6/kcontrol/knotify/knotify.cpp	2007-03-10 14:56:20.000000000 +0800
+@@ -242,15 +242,15 @@
+     KConfig config( "knotifyrc", true, false );
+ 	 config.setReadDefaults( useDefaults );
+     config.setGroup( "Misc" );
+-    bool useExternal = config.readBoolEntry( "Use external player", false );
++    bool useExternal = config.readBoolEntry( "Use external player", true );
+     m_ui->cbExternal->setChecked( useExternal );
+-    m_ui->reqExternal->setURL( config.readPathEntry( "External player" ) );
+-    m_ui->volumeSlider->setValue( config.readNumEntry( "Volume", 100 ) );
++    m_ui->reqExternal->setURL( config.readPathEntry( "External player", "play" ) );
++    m_ui->volumeSlider->setValue( config.readNumEntry( "Volume", 70 ) );
+ 
+     if ( !m_ui->cbExternal->isChecked() )
+     {
+         config.setGroup( "StartProgress" );
+-        if ( config.readBoolEntry( "Use Arts", true ) )
++        if ( config.readBoolEntry( "Use Arts", false ) )
+         {
+             m_ui->cbArts->setChecked( true );
+         }

@@ -1,0 +1,128 @@
+--- nc/netcat.c	2011-03-09 15:12:34.609563002 +0100
++++ nc/netcat.c.new	2011-03-09 15:12:38.901562293 +0100
+@@ -761,59 +761,70 @@
+ build_ports(char *p)
+ {
+ 	const char *errstr;
+-	char *n;
++	char *n, *comma;
+ 	int hi, lo, cp;
+ 	int x = 0;
+ 
+-	if ((n = strchr(p, '-')) != NULL) {
+-		if (lflag)
+-			errx(1, "Cannot use -l with multiple ports!");
+-
+-		*n = '\0';
+-		n++;
+-
+-		/* Make sure the ports are in order: lowest->highest. */
+-		hi = strtonum(n, 1, PORT_MAX, &errstr);
+-		if (errstr)
+-			errx(1, "port number %s: %s", errstr, n);
+-		lo = strtonum(p, 1, PORT_MAX, &errstr);
+-		if (errstr)
+-			errx(1, "port number %s: %s", errstr, p);
+-
+-		if (lo > hi) {
+-			cp = hi;
+-			hi = lo;
+-			lo = cp;
+-		}
++	do {
++		comma = strchr(p, ',');
++		if (comma)
++			*comma = '\0';
++
++		if ((n = strchr(p, '-')) != NULL) {
++			if (lflag)
++				errx(1, "Cannot use -l with multiple ports!");
++
++			*n = '\0';
++			n++;
++
++			/* Make sure the ports are in order: lowest->highest. */
++			hi = strtonum(n, 1, PORT_MAX, &errstr);
++			if (errstr)
++				errx(1, "port number %s: %s", errstr, n);
++			lo = strtonum(p, 1, PORT_MAX, &errstr);
++			if (errstr)
++				errx(1, "port number %s: %s", errstr, p);
++
++			if (lo > hi) {
++				cp = hi;
++				hi = lo;
++				lo = cp;
++			}
++
++			/* Load ports sequentially. */
++			for (cp = lo; cp <= hi; cp++) {
++				portlist[x] = calloc(1, PORT_MAX_LEN);
++				if (portlist[x] == NULL)
++					err(1, NULL);
++				snprintf(portlist[x], PORT_MAX_LEN, "%d", cp);
++				x++;
++			}
+ 
+-		/* Load ports sequentially. */
+-		for (cp = lo; cp <= hi; cp++) {
+-			portlist[x] = calloc(1, PORT_MAX_LEN);
+-			if (portlist[x] == NULL)
++		} else {
++			hi = strtonum(p, 1, PORT_MAX, &errstr);
++			if (errstr)
++				errx(1, "port number %s: %s", errstr, p);
++			portlist[x] = strdup(p);
++			if (portlist[0] == NULL)
+ 				err(1, NULL);
+-			snprintf(portlist[x], PORT_MAX_LEN, "%d", cp);
+ 			x++;
+ 		}
+ 
+-		/* Randomly swap ports. */
+-		if (rflag) {
+-			int y;
+-			char *c;
+-
+-			for (x = 0; x <= (hi - lo); x++) {
+-				y = (arc4random() & 0xFFFF) % (hi - lo);
+-				c = portlist[x];
+-				portlist[x] = portlist[y];
+-				portlist[y] = c;
+-			}
++		if (comma)
++			p = comma + 1;
++	} while (comma);
++
++	/* Randomly swap ports. */
++	if (rflag) {
++		int y;
++		char *c;
++
++		for (x = 0; x <= (hi - lo); x++) {
++			y = (arc4random() & 0xFFFF) % (hi - lo);
++			c = portlist[x];
++			portlist[x] = portlist[y];
++			portlist[y] = c;
+ 		}
+-	} else {
+-		hi = strtonum(p, 1, PORT_MAX, &errstr);
+-		if (errstr)
+-			errx(1, "port number %s: %s", errstr, p);
+-		portlist[0] = strdup(p);
+-		if (portlist[0] == NULL)
+-			err(1, NULL);
+ 	}
+ }
+ 
+--- nc/nc.1	2011-03-09 15:13:13.676563001 +0100
++++ nc/nc.1.new	2011-03-09 15:17:25.354562498 +0100
+@@ -274,7 +274,7 @@
+ option is given).
+ .Pp
+ .Ar port
+-can be a single integer or a range of ports.
++can be one or more comma-separated integers or ranges of ports.
+ Ranges are in the form nn-mm.
+ In general,
+ a destination port must be specified,

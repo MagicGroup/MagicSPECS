@@ -1,0 +1,222 @@
+---
+ libmultipath/config.c    |    1 +
+ libmultipath/config.h    |    1 +
+ libmultipath/configure.c |   11 +++++++++++
+ libmultipath/defaults.h  |    1 +
+ libmultipath/dict.c      |   34 ++++++++++++++++++++++++++++++++++
+ libmultipath/wwids.c     |   26 ++++++++++++++++++++++++++
+ libmultipath/wwids.h     |    1 +
+ multipath/main.c         |    2 +-
+ multipathd/main.c        |    6 ++++++
+ 9 files changed, 82 insertions(+), 1 deletion(-)
+
+Index: multipath-tools-130222/libmultipath/config.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/config.c
++++ multipath-tools-130222/libmultipath/config.c
+@@ -547,6 +547,7 @@ load_config (char * file)
+ 	conf->reassign_maps = DEFAULT_REASSIGN_MAPS;
+ 	conf->checkint = DEFAULT_CHECKINT;
+ 	conf->max_checkint = MAX_CHECKINT(conf->checkint);
++	conf->find_multipaths = DEFAULT_FIND_MULTIPATHS;
+ 	conf->fast_io_fail = DEFAULT_FAST_IO_FAIL;
+ 	conf->retain_hwhandler = DEFAULT_RETAIN_HWHANDLER;
+ 	conf->detect_prio = DEFAULT_DETECT_PRIO;
+Index: multipath-tools-130222/libmultipath/configure.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/configure.c
++++ multipath-tools-130222/libmultipath/configure.c
+@@ -508,6 +508,10 @@ coalesce_paths (struct vectors * vecs, v
+ 
+ 	memset(empty_buff, 0, WWID_SIZE);
+ 
++	/* ignore refwwid if it's empty */
++	if (refwwid && !strlen(refwwid))
++		refwwid = NULL;
++
+ 	if (force_reload) {
+ 		vector_foreach_slot (pathvec, pp1, k) {
+ 			pp1->mpp = NULL;
+@@ -537,6 +541,13 @@ coalesce_paths (struct vectors * vecs, v
+ 		if (refwwid && strncmp(pp1->wwid, refwwid, WWID_SIZE))
+ 			continue;
+ 
++		/* If find_multipaths was selected check if the path is valid */
++		if (conf->find_multipaths && !refwwid &&
++		    !should_multipath(pp1, pathvec)) {
++			orphan_path(pp1);
++			continue;
++		}
++
+ 		/*
+ 		 * at this point, we know we really got a new mp
+ 		 */
+Index: multipath-tools-130222/libmultipath/defaults.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/defaults.h
++++ multipath-tools-130222/libmultipath/defaults.h
+@@ -15,6 +15,7 @@
+ #define DEFAULT_USER_FRIENDLY_NAMES    0
+ #define DEFAULT_VERBOSITY	2
+ #define DEFAULT_REASSIGN_MAPS	1
++#define DEFAULT_FIND_MULTIPATHS	0
+ #define DEFAULT_FAST_IO_FAIL	5
+ #define DEFAULT_RETAIN_HWHANDLER RETAIN_HWHANDLER_OFF
+ #define DEFAULT_DETECT_PRIO DETECT_PRIO_OFF
+Index: multipath-tools-130222/libmultipath/dict.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/dict.c
++++ multipath-tools-130222/libmultipath/dict.c
+@@ -585,6 +585,27 @@ def_reservation_key_handler(vector strve
+ }
+ 
+ static int
++def_find_multipaths_handler(vector strvec)
++{
++	char * buff;
++
++	buff = set_value(strvec);
++
++	if (!buff)
++		return 1;
++
++	if ((strlen(buff) == 2 && !strcmp(buff, "no")) ||
++	    (strlen(buff) == 1 && !strcmp(buff, "0")))
++		conf->find_multipaths = 0;
++	else if ((strlen(buff) == 3 && !strcmp(buff, "yes")) ||
++		 (strlen(buff) == 1 && !strcmp(buff, "1")))
++		conf->find_multipaths = 1;
++
++	FREE(buff);
++	return 0;
++}
++
++static int
+ def_names_handler(vector strvec)
+ {
+ 	char * buff;
+@@ -2700,6 +2721,18 @@ snprint_def_log_checker_err (char * buff
+ }
+ 
+ static int
++snprint_def_find_multipaths (char * buff, int len, void * data)
++{
++	if (conf->find_multipaths == DEFAULT_FIND_MULTIPATHS)
++		return 0;
++	if (!conf->find_multipaths)
++		return snprintf(buff, len, "no");
++
++	return snprintf(buff, len, "yes");
++}
++
++
++static int
+ snprint_def_user_friendly_names (char * buff, int len, void * data)
+ {
+ 	if (conf->user_friendly_names  == USER_FRIENDLY_NAMES_ON)
+@@ -2833,6 +2866,7 @@ init_keywords(void)
+ 	install_keyword("wwids_file", &wwids_file_handler, &snprint_def_wwids_file);
+ 	install_keyword("log_checker_err", &def_log_checker_err_handler, &snprint_def_log_checker_err);
+ 	install_keyword("reservation_key", &def_reservation_key_handler, &snprint_def_reservation_key);
++	install_keyword("find_multipaths", &def_find_multipaths_handler, &snprint_def_find_multipaths);
+ 	install_keyword("retain_attached_hw_handler", &def_retain_hwhandler_handler, &snprint_def_retain_hwhandler_handler);
+ 	install_keyword("detect_prio", &def_detect_prio_handler, &snprint_def_detect_prio);
+ 	__deprecated install_keyword("default_selector", &def_selector_handler, NULL);
+Index: multipath-tools-130222/libmultipath/wwids.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/wwids.c
++++ multipath-tools-130222/libmultipath/wwids.c
+@@ -125,6 +125,32 @@ out:
+ }
+ 
+ int
++should_multipath(struct path *pp1, vector pathvec)
++{
++	int i;
++	struct path *pp2;
++
++	condlog(4, "checking if %s should be multipathed", pp1->dev);
++	vector_foreach_slot(pathvec, pp2, i) {
++		if (pp1->dev == pp2->dev)
++			continue;
++		if (strncmp(pp1->wwid, pp2->wwid, WWID_SIZE) == 0) {
++			condlog(3, "found multiple paths with wwid %s, "
++				"multipathing %s", pp1->wwid, pp1->dev);
++			return 1;
++		}
++	}
++	if (check_wwids_file(pp1->wwid, 0) < 0) {
++		condlog(3, "wwid %s not in wwids file, skipping %s",
++			pp1->wwid, pp1->dev);
++		return 0;
++	}
++	condlog(3, "found wwid %s in wwids file, multipathing %s", pp1->wwid,
++		pp1->dev);
++	return 1;
++}
++
++int
+ remember_wwid(char *wwid)
+ {
+ 	int ret = check_wwids_file(wwid, 1);
+Index: multipath-tools-130222/libmultipath/wwids.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/wwids.h
++++ multipath-tools-130222/libmultipath/wwids.h
+@@ -12,6 +12,7 @@
+ "#\n" \
+ "# Valid WWIDs:\n"
+ 
++int should_multipath(struct path *pp, vector pathvec);
+ int remember_wwid(char *wwid);
+ int check_wwids_file(char *wwid, int write_wwid);
+ 
+Index: multipath-tools-130222/multipath/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipath/main.c
++++ multipath-tools-130222/multipath/main.c
+@@ -333,7 +333,7 @@ configure (void)
+ 	/*
+ 	 * core logic entry point
+ 	 */
+-	r = coalesce_paths(&vecs, NULL, NULL, conf->force_reload);
++	r = coalesce_paths(&vecs, NULL, refwwid, conf->force_reload);
+ 
+ out:
+ 	if (refwwid)
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -49,6 +49,7 @@
+ #include <print.h>
+ #include <configure.h>
+ #include <prio.h>
++#include <wwids.h>
+ #include <pgpolicies.h>
+ #include <uevent.h>
+ 
+@@ -471,6 +472,11 @@ rescan:
+ 			return 1;
+ 		}
+ 
++		if (conf->find_multipaths &&
++		    !should_multipath(pp, vecs->pathvec)) {
++			orphan_path(pp);
++			return 0;
++		}
+ 		condlog(4,"%s: creating new map", pp->dev);
+ 		if ((mpp = add_map_with_path(vecs, pp, 1))) {
+ 			mpp->action = ACT_CREATE;
+Index: multipath-tools-130222/libmultipath/config.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/config.h
++++ multipath-tools-130222/libmultipath/config.h
+@@ -106,6 +106,7 @@ struct config {
+ 	unsigned int dev_loss;
+ 	int log_checker_err;
+ 	int allow_queueing;
++	int find_multipaths;
+ 	uid_t uid;
+ 	gid_t gid;
+ 	mode_t mode;

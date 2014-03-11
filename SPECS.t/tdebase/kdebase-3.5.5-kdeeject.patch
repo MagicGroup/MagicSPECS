@@ -1,0 +1,55 @@
+diff -ur kdebase-3.5.13.orig/kdeeject/kdeeject kdebase-3.5.13/kdeeject/kdeeject
+--- kdebase-3.5.13.orig/kdeeject/kdeeject	2010-11-29 01:53:24.000000000 -0500
++++ kdebase-3.5.13/kdeeject/kdeeject	2010-11-29 04:17:47.000000000 -0500
+@@ -4,6 +4,10 @@
+ #
+ # Copyright GPL v2 by David Faure <david@mandrakesoft.com>
+ #
++error() {
++   kdialog --title "KDE Eject" --error "$1"
++   exit 1
++}
+ quiet=0
+ if test "$1" = "-q"; then
+   quiet=1
+@@ -51,8 +55,38 @@
+       # Warning, it has to be either eject 2.0.x or >=2.1.5
+       # Otherwise it doesn't work as expected (it requires a
+       # fstab entry for no reason).
+-      eject $1 >/dev/null 2>&1
+-      ;;
++     
++      # check if HAL userland tools are installed
++	if test -x `which hal-find-by-property`; then
++		HAL_major=`hal-find-by-property --version | cut -d " " -f 2 | cut -d. -f1`
++      		HAL_minor=`hal-find-by-property --version | cut -d " " -f 2 | cut -d. -f2`
++		# HAL umount and eject method exist only for HAL >= 0.5
++		if test $HAL_major -eq 0 -a  $HAL_minor -ge 5 -o $HAL_major -gt 0;  then
++			# Try to find the UDi from the device name
++			BLOCK_UDI=$(hal-find-by-property --key block.device --string "$1" | head -1)
++			[ -n "$BLOCK_UDI" ] || error "Can't find UDI for URL $1"
++			STORAGE_UDI=$(hal-get-property --udi $BLOCK_UDI --key block.storage_device)
++			[ -n "$STORAGE_UDI" ] || error "Can't find device for volume $BLOCK_UDI"
++	
++			# Unmount each device volume
++			for VOLUME_UDI in $(hal-find-by-property --key block.storage_device --string $STORAGE_UDI); do
++				[ $(hal-get-property --udi $VOLUME_UDI --key block.is_volume) = true ] || continue
++				[ $(hal-get-property --udi $VOLUME_UDI --key volume.is_mounted) = true ] || continue
++				ERROR=$(dcop kded mediamanager unmount $VOLUME_UDI)
++				
++				if test -n "$ERROR"; then
++					# try to use directly DBUS method in case mediamanager failed
++					ERROR=$(dbus-send --system --dest=org.freedesktop.Hal "$VOLUME_UDI" org.freedesktop.Hal.Device.Volume.Unmount array:string:"" >/dev/null 2>&1)
++					[ -n "$ERROR" ] && error "$ERROR"
++				fi
++			done
++			dbus-send --system --dest=org.freedesktop.Hal "$BLOCK_UDI" org.freedesktop.Hal.Device.Volume.Eject array:string:"" >/dev/null 2>&1
++		fi
++	else
++      		# fallback to the old eject method
++		eject $1 >/dev/null 2>&1
++	fi      
++	  ;;
+   esac
+   if test $? -eq 0; then
+ #    dcop kdesktop default refreshIcons

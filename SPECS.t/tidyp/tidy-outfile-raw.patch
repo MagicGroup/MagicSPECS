@@ -1,0 +1,14 @@
+--- tidy/src/config.c.orig	2008-06-18 21:18:54.000000000 +0100
++++ tidy/src/config.c	2011-07-26 13:19:45.688344233 +0100
+@@ -919,7 +919,10 @@
+         TidyBuffer inbuf;            /* Set up input source */
+         tidyBufInitWithAllocator( &inbuf, doc->allocator );
+         tidyBufAttach( &inbuf, (byte*)optval, TY_(tmbstrlen)(optval)+1 );
+-        doc->config.cfgIn = TY_(BufferInput)( doc, &inbuf, ASCII );
++        if (optId == TidyOutFile)
++            doc->config.cfgIn = TY_(BufferInput)( doc, &inbuf, RAW );
++        else
++            doc->config.cfgIn = TY_(BufferInput)( doc, &inbuf, ASCII );
+         doc->config.c = GetC( &doc->config );
+ 
+         status = option->parser( doc, option );

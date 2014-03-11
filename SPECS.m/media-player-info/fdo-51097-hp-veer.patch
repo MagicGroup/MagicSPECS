@@ -1,0 +1,28 @@
+From 1451b1c6fcd59e21b33893368e18ae4cf05fed05 Mon Sep 17 00:00:00 2001
+From: Dan Williams <dcbw@redhat.com>
+Date: Thu, 21 Jun 2012 09:57:41 +0000
+Subject: Add HP Veer
+
+https://bugs.freedesktop.org/show_bug.cgi?id=51097
+---
+diff --git a/media-players/hp_veer.mpi b/media-players/hp_veer.mpi
+new file mode 100644
+index 0000000..b347c89
+--- a/dev/null
++++ b/media-players/hp_veer.mpi
+@@ -0,0 +1,13 @@
++[Device]
++Product=Veer
++Vendor=HP
++AccessProtocol=storage
++DeviceMatch=usb:0830:8034;usb:0830:8032
++Icon=phone-palm-pre
++
++[Media]
++OutputFormats=audio/mpeg;audio/3gpp;audio/mp4;audio/aac;audio/x-wav
++
++[storage]
++AudioFolders=Music/
++
+--
+cgit v0.9.0.2-2-gbebe

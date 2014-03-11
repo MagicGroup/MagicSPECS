@@ -1,0 +1,29 @@
+Index: gdb-7.4.50.20120602/gdb/linux-nat.c
+===================================================================
+--- gdb-7.4.50.20120602.orig/gdb/linux-nat.c	2012-06-02 20:54:30.000000000 +0200
++++ gdb-7.4.50.20120602/gdb/linux-nat.c	2012-06-02 20:56:03.966493352 +0200
+@@ -1816,8 +1816,22 @@ get_pending_status (struct lwp_info *lp,
+ 			    gdb_signal_to_string (signo));
+     }
+ 
+-  if (*status == 0 && GET_PID (lp->ptid) == pid_was_stopped)
+-    *status = W_STOPCODE (SIGSTOP);
++  /* Workaround RHEL-5 kernel which has unreliable PTRACE_DETACH, SIGSTOP (that
++     many TIDs are left unstopped).  See RH Bug 496732.  */
++  if (GET_PID (lp->ptid) == pid_was_stopped)
++    {
++      int err;
++
++      errno = 0;
++      err = kill_lwp (GET_LWP (lp->ptid), SIGSTOP);
++      if (debug_linux_nat)
++	{
++	  fprintf_unfiltered (gdb_stdlog,
++			      "SC:  lwp kill %d %s\n",
++			      err,
++			      errno ? safe_strerror (errno) : "ERRNO-OK");
++	}
++    }
+ 
+   return 0;
+ }

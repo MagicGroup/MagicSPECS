@@ -1,0 +1,31 @@
+---
+ kpartx/gpt.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+Index: multipath-tools-120821/kpartx/gpt.c
+===================================================================
+--- multipath-tools-120821.orig/kpartx/gpt.c
++++ multipath-tools-120821/kpartx/gpt.c
+@@ -637,6 +637,7 @@ read_gpt_pt (int fd, struct slice all, s
+ 	uint32_t i;
+ 	int n = 0;
+         int last_used_index=-1;
++	int sector_size_mul = get_sector_size(fd)/512;
+ 
+ 	if (!find_valid_gpt (fd, &gpt, &ptes) || !gpt || !ptes) {
+ 		if (gpt)
+@@ -652,9 +653,11 @@ read_gpt_pt (int fd, struct slice all, s
+ 			sp[n].size = 0;
+ 			n++;
+ 		} else {
+-			sp[n].start = __le64_to_cpu(ptes[i].starting_lba);
+-			sp[n].size  = __le64_to_cpu(ptes[i].ending_lba) -
+-				__le64_to_cpu(ptes[i].starting_lba) + 1;
++			sp[n].start = sector_size_mul *
++				      __le64_to_cpu(ptes[i].starting_lba);
++			sp[n].size  = sector_size_mul *
++				      (__le64_to_cpu(ptes[i].ending_lba) -
++				       __le64_to_cpu(ptes[i].starting_lba) + 1);
+                         last_used_index=n;
+ 			n++;
+ 		}

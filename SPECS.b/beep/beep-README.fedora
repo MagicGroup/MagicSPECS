@@ -1,0 +1,22 @@
+On systems with Fedora 12 or later, the kernel does not by default
+alias the system device to the pcspkr.ko kernel driver any more. This
+means that the pcspkr.ko driver is not loaded by default any more on
+system startup.
+
+You can check whether pcspkr.ko is loaded by running "lsmod | grep
+pcspkr".
+
+On these systems, the beep package ships a config file
+/etc/modprobe.d/beep.conf with a configuration line that reintroduces
+the default loading of pcspkr.ko. Due to possible side effects, you
+will need to manually uncomment that line in the beep.conf file, though.
+
+You do not need to reboot your system in order to get pcspkr.ko
+loaded, though. Running "modprobe pcspkr" should do the job without a
+reboot.
+
+Caution: There appear to be some issues with access to the
+/dev/console device which beep uses, possibly related to
+ConsoleKit. This means that sometimes, just having pcspkr.ko loaded is
+not enough for beep to actually beep. This issue is being
+investigated.

@@ -1,0 +1,11 @@
+--- htdig-3.2.0b6/configure.fc5	2005-12-19 17:43:54.000000000 -0500
++++ htdig-3.2.0b6/configure	2005-12-19 18:09:21.000000000 -0500
+@@ -28034,7 +28034,7 @@
+       APACHE_REQUEST=`echo 1.3.1 | sed -e 's/\.//g'`
+       APACHE_REQUEST_MAJOR=`expr $APACHE_REQUEST : '\(..\)'`
+       APACHE_REQUEST_MINOR=`expr $APACHE_REQUEST : '..\(.*\)'`
+-      if test "$APACHE_MAJOR" -lt "$APACHE_REQUEST_MAJOR" -o "$APACHE_MINOR" -lt "$APACHE_REQUEST_MINOR" ; then
++      if test "$APACHE_MAJOR" -eq "APACHE_REQUEST_MAJOR" -a "$APACHE_MINOR" -lt "$APACHE_REQUEST_MINOR" -o "$APACHE_MAJOR" -lt "$APACHE_REQUEST_MAJOR" ; then
+         echo "$as_me:$LINENO: result: no" >&5
+ echo "${ECHO_T}no" >&6
+         { { echo "$as_me:$LINENO: error: apache version is $APACHE_READABLE_VERSION" >&5

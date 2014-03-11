@@ -1,0 +1,42 @@
+diff -up chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gypi.chromiumthreading chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gypi
+--- chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gypi.chromiumthreading	2011-03-30 05:01:06.000000000 -0400
++++ chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gypi	2011-03-30 16:40:47.042848757 -0400
+@@ -625,6 +625,7 @@
+             'wtf/brew/SystemMallocBrew.h',
+             'wtf/chromium/ChromiumThreading.h',
+             'wtf/chromium/MainThreadChromium.cpp',
++            '../WebKit/chromium/src/ChromiumThreading.cpp',
+             'wtf/dtoa.cpp',
+             'wtf/efl/MainThreadEfl.cpp',
+             'wtf/gobject/GOwnPtr.cpp',
+diff -up chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp.chromiumthreading chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp
+--- chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp.chromiumthreading	2011-03-30 16:39:45.000000000 -0400
++++ chromium-12.0.718.0/third_party/WebKit/Source/JavaScriptCore/JavaScriptCore.gyp/JavaScriptCore.gyp	2011-03-30 16:41:54.552842720 -0400
+@@ -103,6 +103,8 @@
+         '../',
+         '../wtf',
+         '../wtf/unicode',
++        '../../WebKit/chromium/public/',
++        '../../../../..',
+       ],
+       'sources': [
+         '<@(javascriptcore_publicheader_files)',
+@@ -114,6 +116,7 @@
+         ['exclude', '../'],
+         # ... Then include what we want.
+         ['include', '../wtf/'],
++        ['include', '../../WebKit/chromium/src/ChromiumThreading.cpp'],
+         # FIXME: This is clearly not sustainable. 
+         ['exclude', '../wtf/android'], 
+         ['exclude', '../wtf/brew'], 
+diff -up chromium-12.0.718.0/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp.chromiumthreading chromium-12.0.718.0/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp
+--- chromium-12.0.718.0/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp.chromiumthreading	2011-03-30 16:39:45.000000000 -0400
++++ chromium-12.0.718.0/third_party/WebKit/Source/WebKit/chromium/WebKit.gyp	2011-03-30 16:42:20.533964181 -0400
+@@ -317,7 +317,6 @@
+                 'src/ChromeClientImpl.h',
+                 'src/ChromiumCurrentTime.cpp',
+                 'src/ChromiumOSRandomSource.cpp',
+-                'src/ChromiumThreading.cpp',
+                 'src/CompositionUnderlineBuilder.h',
+                 'src/CompositionUnderlineVectorBuilder.cpp',
+                 'src/CompositionUnderlineVectorBuilder.h',

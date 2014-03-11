@@ -1,0 +1,12 @@
+diff -uNr clutter-gst-1.6.0/clutter-gst/clutter-gst-video-sink.c clutter-gst-1.6.0-new/clutter-gst/clutter-gst-video-sink.c
+--- clutter-gst-1.6.0/clutter-gst/clutter-gst-video-sink.c	2012-04-27 07:11:08.000000000 -0400
++++ clutter-gst-1.6.0-new/clutter-gst/clutter-gst-video-sink.c	2012-08-21 10:01:03.254238072 -0400
+@@ -1133,7 +1133,7 @@
+ clutter_gst_build_renderers_list (void)
+ {
+   GSList             *list = NULL;
+-  GLint               nb_texture_units = 0;
++  gint               nb_texture_units = 0;
+   gint                features = 0, i;
+   /* The order of the list of renderers is important. They will be prepended
+    * to a GSList and we'll iterate over that list to choose the first matching

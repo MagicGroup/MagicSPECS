@@ -1,0 +1,31 @@
+--- mldonkey-3.0.3.orig/src/utils/lib/CryptoPP.cc	2008-07-29 12:26:38.000000000 -0500
++++ mldonkey-3.0.3/src/utils/lib/CryptoPP.cc	2012-02-15 10:11:21.944760350 -0600
+@@ -5439,7 +5439,7 @@
+ 	Element g[3]={b, a};
+ 	unsigned int i0=0, i1=1, i2=2;
+ 
+-	while (!Equal(g[i1], this->Identity()))
++	while (!this->Equal(g[i1], this->Identity()))
+ 	{
+ 		g[i2] = Mod(g[i0], g[i1]);
+ 		unsigned int t = i0; i0 = i1; i1 = i2; i2 = t;
+--- mldonkey-3.0.3.orig/src/utils/lib/CryptoPP.h	2007-12-13 12:06:56.000000000 -0600
++++ mldonkey-3.0.3/src/utils/lib/CryptoPP.h	2012-02-15 10:11:55.981137572 -0600
+@@ -2603,7 +2603,7 @@
+ 
+ 	pointer allocate(size_type n, const void * = NULL)
+ 	{
+-		CheckSize(n);
++		this->CheckSize(n);
+ 		if (n == 0)
+ 			return NULL;
+ 		return new T[n];
+@@ -5582,7 +5582,7 @@
+ {
+ 	this->ThrowIfInvalidTruncatedSize(size);
+ 
+-	PadLastBlock(this->BlockSize() - 2*sizeof(HashWordType));
++	this->PadLastBlock(this->BlockSize() - 2*sizeof(HashWordType));
+ 	CorrectEndianess(this->m_data, this->m_data, this->BlockSize() - 2*sizeof(HashWordType));
+ 
+ 	this->m_data[this->m_data.size()-2] = B::ToEnum() ? this->GetBitCountHi() : this->GetBitCountLo();

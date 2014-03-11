@@ -1,0 +1,14 @@
+diff -up yap-6/C/gprof.c.macro yap-6/C/gprof.c
+--- yap-6/C/gprof.c.macro	2011-06-23 14:45:25.000000000 +0200
++++ yap-6/C/gprof.c	2011-06-23 14:45:43.000000000 +0200
+@@ -102,8 +102,8 @@ typedef greg_t context_reg;
+ 
+ #else
+ 
+-#define CONTEXT_PC NULL
+-#define CONTEXT_BP NULL
++#define CONTEXT_PC(scv) NULL
++#define CONTEXT_BP(scv) NULL
+ 
+ #endif
+ 

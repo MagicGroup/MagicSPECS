@@ -1,0 +1,11 @@
+--- ./lisp/x-init.el.orig	2012-08-02 12:38:28.000000000 -0600
++++ ./lisp/x-init.el	2012-08-06 20:31:09.330411828 -0600
+@@ -154,7 +154,7 @@ it was previously unaware of, the predic
+ 	       (string-equal "X Consortium" vendor))
+            ;; Ok, we think this could be a Sun keyboard.  Run the Sun code.
+ 	   (x-win-init-sun device))
+-          ((string-match #r"XFree86\|Cygwin/X\|The X\.Org Foundation" vendor)
++          ((string-match #r"XFree86\|Cygwin/X\|The X\.Org Foundation\|Fedora Project" vendor)
+            ;; Those XFree86 people do some weird keysym stuff, too.
+ 	   (x-win-init-xfree86 device)))))
+ 

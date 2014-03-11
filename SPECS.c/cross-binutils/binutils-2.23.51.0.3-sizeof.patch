@@ -1,0 +1,21 @@
+diff -ur binutils-2.23.51.0.3/bfd/elf32-xtensa.c binutils-2.23.51.0.3.new/bfd/elf32-xtensa.c
+--- binutils-2.23.51.0.3/bfd/elf32-xtensa.c	2012-09-18 17:00:44.000000000 +0000
++++ binutils-2.23.51.0.3.new/bfd/elf32-xtensa.c	2013-02-28 19:14:47.718721222 +0000
+@@ -6077,7 +6077,7 @@
+       release_internal_relocs (sec_cache->sec, sec_cache->relocs);
+       if (sec_cache->ptbl)
+ 	free (sec_cache->ptbl);
+-      memset (sec_cache, 0, sizeof (sec_cache));
++      memset (sec_cache, 0, sizeof (*sec_cache));
+     }
+ }
+ 
+@@ -6119,7 +6119,7 @@
+ 
+   /* Fill in the new section cache.  */
+   clear_section_cache (sec_cache);
+-  memset (sec_cache, 0, sizeof (sec_cache));
++  memset (sec_cache, 0, sizeof (*sec_cache));
+ 
+   sec_cache->sec = sec;
+   sec_cache->contents = contents;

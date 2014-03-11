@@ -1,0 +1,36 @@
+diff -up festival/src/modules/Text/text_modes.cc.gcc43 festival/src/modules/Text/text_modes.cc
+--- festival/src/modules/Text/text_modes.cc.gcc43	2008-02-22 21:50:33.000000000 -0500
++++ festival/src/modules/Text/text_modes.cc	2008-02-22 21:50:41.000000000 -0500
+@@ -59,8 +59,8 @@ static void um_apply_filter(const EST_St
+ void tts_file_user_mode(LISP filename, LISP params)
+ {
+ 
+-    volatile EST_String tmpname = make_tmp_filename();
+-    volatile EST_String inname = get_c_string(filename);
++    EST_String tmpname = make_tmp_filename();
++    EST_String inname = get_c_string(filename);
+     volatile EST_String filter;
+     volatile EST_TokenStream ts;
+     volatile LISP func;
+diff -up festival/speech_tools/base_class/EST_TSimpleVector.cc.gcc43 festival/speech_tools/base_class/EST_TSimpleVector.cc
+--- festival/speech_tools/base_class/EST_TSimpleVector.cc.gcc43	2006-07-06 08:57:18.000000000 -0400
++++ festival/speech_tools/base_class/EST_TSimpleVector.cc	2008-02-22 21:43:03.000000000 -0500
+@@ -43,6 +43,7 @@
+ #include "EST_TSimpleVector.h"
+ #include "EST_matrix_support.h"
+ #include <fstream>
++#include <cstring>
+ #include "EST_cutils.h"
+ 
+ template<class T> void EST_TSimpleVector<T>::copy(const EST_TSimpleVector<T> &a)
+diff -up festival/speech_tools/base_class/EST_TSimpleMatrix.cc.gcc43 festival/speech_tools/base_class/EST_TSimpleMatrix.cc
+--- festival/speech_tools/base_class/EST_TSimpleMatrix.cc.gcc43	2004-09-30 08:53:35.000000000 -0400
++++ festival/speech_tools/base_class/EST_TSimpleMatrix.cc	2008-02-22 21:43:03.000000000 -0500
+@@ -44,6 +44,7 @@
+ #include "EST_TVector.h"
+ #include <fstream>
+ #include <iostream>
++#include <cstring>
+ #include "EST_cutils.h"
+ 
+ template<class T> 

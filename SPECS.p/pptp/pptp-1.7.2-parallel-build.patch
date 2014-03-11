@@ -1,0 +1,26 @@
+Index: Makefile
+===================================================================
+RCS file: /cvsroot/pptpclient/pptp-linux/Makefile,v
+retrieving revision 1.50
+diff -u -r1.50 Makefile
+--- Makefile	4 Jun 2010 01:04:12 -0000	1.50
++++ Makefile	11 Nov 2011 13:31:16 -0000
+@@ -48,11 +48,13 @@
+ pptpsetup.8: pptpsetup
+ 	pod2man $? > $@
+ 
+-config.h: 
+-	echo "/* text added by Makefile target config.h */" > config.h
+-	echo "#define PPTP_LINUX_VERSION \"$(VERSION)$(RELEASE)\"" >> config.h
+-	echo "#define PPPD_BINARY \"$(PPPD)\"" >> config.h
+-	echo "#define IP_BINARY \"$(IP)\"" >> config.h
++config.h:
++	( \
++	echo "/* text added by Makefile target config.h */"; \
++	echo "#define PPTP_LINUX_VERSION \"$(VERSION)$(RELEASE)\""; \
++	echo "#define PPPD_BINARY \"$(PPPD)\""; \
++	echo "#define IP_BINARY \"$(IP)\"" \
++	) > config.h
+ 
+ vector_test: vector_test.o vector.o
+ 	$(CC) -o vector_test vector_test.o vector.o

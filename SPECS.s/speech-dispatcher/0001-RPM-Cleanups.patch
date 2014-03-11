@@ -1,0 +1,37 @@
+From 33d7aa0f39058f82414e50ad9ed13664bbecadeb Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 29 Nov 2012 15:46:23 +0100
+Subject: [PATCH] RPM Cleanups
+
+diff --git a/src/tests/Makefile.am b/src/tests/Makefile.am
+index 7fdf847..15e9ae6 100644
+--- a/src/tests/Makefile.am
++++ b/src/tests/Makefile.am
+@@ -5,10 +5,10 @@ c_api = $(top_builddir)/src/c/api
+ 
+ AM_CFLAGS = -I$(top_srcdir)/src/c/api -DLOCALEDIR=\"$(localedir)\" $(inc_local) @glib_include@ -I../audio/
+ 
+-bin_PROGRAMS = long_message clibrary clibrary2 run_test connection_recovery
++bin_PROGRAMS = sdp_long_message clibrary clibrary2 sdp_run_test connection_recovery
+ 
+-long_message_SOURCES = long_message.c
+-long_message_LDADD = $(c_api)/libspeechd.la -lpthread @EXTRA_SOCKET_LIBS@
++sdp_long_message_SOURCES = long_message.c
++sdp_long_message_LDADD = $(c_api)/libspeechd.la -lpthread @EXTRA_SOCKET_LIBS@
+ 
+ clibrary_SOURCES = clibrary.c
+ clibrary_LDADD = $(c_api)/libspeechd.la -lpthread @EXTRA_SOCKET_LIBS@
+@@ -19,8 +19,8 @@ clibrary2_LDADD = $(c_api)/libspeechd.la -lpthread @EXTRA_SOCKET_LIBS@
+ connection_recovery_SOURCES = connection-recovery.c
+ connection_recovery_LDADD = $(c_api)/libspeechd.la -lpthread @EXTRA_SOCKET_LIBS@
+ 
+-run_test_SOURCES = run_test.c
+-run_test_LDADD = $(c_api)/libspeechd.la -lpthread @EXTRA_SOCKET_LIBS@
++sdp_run_test_SOURCES = run_test.c
++sdp_run_sest_LDADD = $(c_api)/libspeechd.la -lpthread @EXTRA_SOCKET_LIBS@
+ 
+ EXTRA_DIST= basic.test general.test keys.test priority_progress.test \
+             pronunciation.test punctuation.test sound_icons.test spelling.test \
+-- 
+1.8.0
+

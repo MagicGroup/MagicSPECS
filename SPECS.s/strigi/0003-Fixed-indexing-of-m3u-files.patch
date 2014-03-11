@@ -1,0 +1,114 @@
+From ee49b5e1a8065ae7823c1ee091ace2e7741059e9 Mon Sep 17 00:00:00 2001
+From: Sebastian Trueg <trueg@kde.org>
+Date: Mon, 13 Feb 2012 09:20:47 +0100
+Subject: [PATCH 3/8] Fixed indexing of m3u files.
+
+The analyzer now constructs absolute paths to the containing files and
+creates nie:links relations to them. nie:hasLogicalPart does not make
+much sense since the audio files are not actually contained in the
+playlist, they are just referenced. NFO specifies the usage of rdf:list.
+However, that is not supported in Nepomuk at the moment. Thus, we
+cannot put any order on the linked audio files yet.
+
+REVIEW: 103961
+---
+ lib/lineanalyzers/m3ustreamanalyzer.cpp |   33 ++++++++++++++++++++++++++-----
+ lib/lineanalyzers/m3ustreamanalyzer.h   |    4 ++++
+ 2 files changed, 32 insertions(+), 5 deletions(-)
+
+diff --git a/lib/lineanalyzers/m3ustreamanalyzer.cpp b/lib/lineanalyzers/m3ustreamanalyzer.cpp
+index dacc15a..c20b28a 100644
+--- a/lib/lineanalyzers/m3ustreamanalyzer.cpp
++++ b/lib/lineanalyzers/m3ustreamanalyzer.cpp
+@@ -26,13 +26,16 @@
+ #include <string>
+ #include <cstring>
+ 
++#include <unistd.h>
++#include <stdlib.h>
++
+ // AnalyzerFactory
+ void M3uLineAnalyzerFactory::registerFields(Strigi::FieldRegister& reg) 
+ {
+ // track list length is easily obtained via API
+ //    tracksField = reg.registerField();
+     trackPathField = reg.registerField(
+-        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#hasLogicalPart");
++        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#links");
+     m3uTypeField = reg.registerField(
+         "http://freedesktop.org/standards/xesam/1.0/core#formatSubtype");
+     typeField = reg.typeField;
+@@ -43,7 +46,7 @@ void M3uLineAnalyzerFactory::registerFields(Strigi::FieldRegister& reg)
+ }
+ 
+ // Analyzer
+-void M3uLineAnalyzer::startAnalysis(Strigi::AnalysisResult* i) 
++void M3uLineAnalyzer::startAnalysis(Strigi::AnalysisResult* i)
+ {
+     extensionOk = i->extension() == "m3u" || i->extension() == "M3U";
+ 
+@@ -52,7 +55,24 @@ void M3uLineAnalyzer::startAnalysis(Strigi::AnalysisResult* i)
+     count = 0;
+ }
+ 
+-void M3uLineAnalyzer::handleLine(const char* data, uint32_t length) 
++std::string M3uLineAnalyzer::constructAbsolutePath(const std::string &relative) const
++{
++    if(char* buf = realpath(analysisResult->path().c_str(), 0)) {
++#ifdef _WIN32
++        static const char s_pathSeparator = '\\';
++#else
++        static const char s_pathSeparator = '/';
++#endif
++        std::string path(buf);
++        free(buf);
++        return path.substr(0, path.rfind(s_pathSeparator)+1) + relative;
++    }
++    else {
++        return std::string();
++    }
++}
++
++void M3uLineAnalyzer::handleLine(const char* data, uint32_t length)
+ {
+     if (!extensionOk) 
+         return;
+@@ -68,8 +88,11 @@ void M3uLineAnalyzer::handleLine(const char* data, uint32_t length)
+         //if (line == 1)
+         //    analysisResult->addValue(factory->m3uTypeField, "simple");
+ 
+-        // TODO: Check for a valid url with QUrl
+-        analysisResult->addValue(factory->trackPathField, std::string(data, length));
++        // we create absolute paths and drop links to non-existing files
++        const std::string path = constructAbsolutePath(std::string(data, length));
++        if(!access(path.c_str(), F_OK)) {
++            analysisResult->addValue(factory->trackPathField, path);
++        }
+ 
+         ++count;
+     } else if (line == 1 && strncmp(data, "#EXTM3U", 7) == 0) {      
+diff --git a/lib/lineanalyzers/m3ustreamanalyzer.h b/lib/lineanalyzers/m3ustreamanalyzer.h
+index 461def3..9033f14 100644
+--- a/lib/lineanalyzers/m3ustreamanalyzer.h
++++ b/lib/lineanalyzers/m3ustreamanalyzer.h
+@@ -26,6 +26,8 @@
+ #include <strigi/analyzerplugin.h>
+ #include <strigi/streamlineanalyzer.h>
+ 
++#include <string>
++
+ class M3uLineAnalyzerFactory;
+ 
+ class M3uLineAnalyzer : public Strigi::StreamLineAnalyzer 
+@@ -37,6 +39,8 @@ private:
+     bool extensionOk;
+     int32_t count;
+ 
++    std::string constructAbsolutePath(const std::string& relative) const;
++
+ public:
+     M3uLineAnalyzer(const M3uLineAnalyzerFactory* f) : factory(f) {}
+     ~M3uLineAnalyzer() {}
+-- 
+1.7.10.4
+

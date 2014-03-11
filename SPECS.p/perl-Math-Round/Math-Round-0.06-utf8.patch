@@ -1,0 +1,11 @@
+--- Math-Round-0.06/README
++++ Math-Round-0.06/README
+@@ -37,7 +37,7 @@
+     make install
+ 
+ 
+-Copyright © 2002 Geoffrey Rommel.  All rights reserved.
++Copyright Â© 2002 Geoffrey Rommel.  All rights reserved.
+ This program is free software; you can redistribute it and/or modify
+ it under the same terms as Perl itself.
+ 

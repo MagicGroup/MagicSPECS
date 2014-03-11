@@ -1,0 +1,30 @@
+diff -up dejagnu-1.5/lib/remote.exp.smp-1 dejagnu-1.5/lib/remote.exp
+--- dejagnu-1.5/lib/remote.exp.smp-1	2011-03-22 14:51:40.962914270 +0100
++++ dejagnu-1.5/lib/remote.exp	2011-03-22 14:54:36.152608589 +0100
+@@ -86,11 +86,16 @@ proc local_exec { commandline inp outp t
+     # doesn't assign process groups correctly and we can't reliably kill
+     # programs that bear children. We can't use tcl's exec because it has
+     # no way to timeout programs that hang. *sigh*
++    #
++    # The expect command will close the connection when it sees EOF. On
++    # SMP machine, close the connection may send SIGHUP to the child
++    # and cause it to exit before it can exit normally.  We should make
++    # the child to ignore SIGHUP.
+ 
+     global errorInfo
+     if { "$inp" == "" && "$outp" == "" } {
+ 	set id -1
+-	set result [catch "eval spawn \{${commandline}\}" pid]
++	set result [catch "eval spawn -ignore SIGHUP \{${commandline}\}" pid]
+ 	if { $result == 0 } {
+ 	    set result2 0
+ 	} else {
+@@ -130,7 +135,7 @@ proc local_exec { commandline inp outp t
+ 	    return [list -1 "open of $commandline $inp $outp failed: $errorInfo"]
+ 	}
+ 	set pid [pid $id]
+-	set result [catch "spawn -leaveopen $id" result2]
++	set result [catch "spawn -ignore SIGHUP -leaveopen $id" result2]
+     }
+     # Prepend "-" to each pid, to generate the "process group IDs" needed by
+     # kill.

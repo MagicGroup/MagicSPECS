@@ -1,0 +1,11 @@
+diff -up QScintilla-gpl-2.4/designer-Qt4/designer.pro.qt4_designer_incpath QScintilla-gpl-2.4/designer-Qt4/designer.pro
+--- QScintilla-gpl-2.4/designer-Qt4/designer.pro.qt4_designer_incpath	2009-05-03 11:26:12.000000000 -0500
++++ QScintilla-gpl-2.4/designer-Qt4/designer.pro	2009-10-21 08:01:56.561731098 -0500
+@@ -12,4 +12,6 @@ SOURCES = qscintillaplugin.cpp
+ target.path = $$[QT_INSTALL_PLUGINS]/designer
+ INSTALLS += target
+ 
+-LIBS += -lqscintilla2
++LIBS += -L$(DESTDIR)../Qt4 -lqscintilla2
++
++INCPATH = $(DESTDIR)../Qt4

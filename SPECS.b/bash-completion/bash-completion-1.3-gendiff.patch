@@ -1,0 +1,29 @@
+commit d066ace4cbca7f5da611f0fee2497e24e9d84f67
+Author: Ville Skyttä <ville.skytta@iki.fi>
+Date:   Mon Feb 7 20:59:01 2011 +0200
+
+    Do file completion after gendiff output redirection.
+    
+    Common use case is "gendiff DIR EXTENSION > FILE".
+
+diff --git a/completions/rpm b/completions/rpm
+index bbab036..5838365 100644
+--- a/completions/rpm
++++ b/completions/rpm
+@@ -294,9 +294,13 @@ have gendiff &&
+ _gendiff()
+ {
+     COMPREPLY=()
+-    local cur cword
+-    _get_comp_words_by_ref cur cword
+-    [[ $cword != 1 ]] || _filedir -d
++    local cur prev cword
++    _get_comp_words_by_ref cur prev cword
++    if [[ $cword -eq 1 ]]; then
++        _filedir -d
++    elif [[ $prev == *\> ]]; then
++        _filedir
++    fi
+ } &&
+ complete -F _gendiff gendiff
+ 

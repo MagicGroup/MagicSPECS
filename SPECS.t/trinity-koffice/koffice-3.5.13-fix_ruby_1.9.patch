@@ -1,0 +1,118 @@
+diff -urN koffice/configure.in koffice.new/configure.in
+--- koffice/configure.in	2011-08-21 18:30:53.000000000 -0500
++++ koffice.new/configure.in	2011-12-08 17:56:31.000000000 -0600
+@@ -1539,14 +1539,22 @@
+ # Check for Ruby
+ 
+ if test "x$compile_kross" = "xyes" ; then
+-  AC_CHECK_PROGS([RUBY], [ruby ruby1.8 ruby18], ruby)
++  AC_CHECK_PROGS([RUBY], [ruby ruby1.8 ruby18 ruby1.9 ruby19], ruby)
+ 
+   if test -n "$RUBY"; then
+     AC_MSG_CHECKING(for Ruby dirs)
+     RUBY_ARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"archdir"@:>@)'`
+     RUBY_SITEARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitearchdir"@:>@)'`
+     RUBY_SITEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitelibdir"@:>@)'`
+-    RUBY_INCLUDEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyincludedir"@:>@)'`
++    if test -n "$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyhdrdir"@:>@)'"; then
++      # Ruby 1.9
++      RUBY_INCLUDEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyhdrdir"@:>@)'`
++      RUBY_VERSION_H=ruby/version.h
++    else
++      # not Ruby 1.9
++      RUBY_INCLUDEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyincludedir"@:>@)'`
++      RUBY_VERSION_H=version.h
++    fi
+     RUBY_LIBDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"libdir"@:>@)'`
+     RUBY_LIBRUBYARG=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"LIBRUBYARG_SHARED"@:>@)'`
+     RUBY_ENABLESHARED=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"ENABLE_SHARED"@:>@)'`
+@@ -1599,7 +1607,7 @@
+           [
+             AC_TRY_COMPILE([
+                 #include <ruby.h>
+-                #include <version.h>
++                #include <$RUBY_VERSION_H>
+             ],[
+             
+ #if(RUBY_VERSION_MAJOR==1 && RUBY_VERSION_MINOR == 8 && RUBY_VERSION_TEENY <= 1)
+diff -urN koffice/lib/kross/configure.in.in koffice.new/lib/kross/configure.in.in
+--- koffice/lib/kross/configure.in.in	2010-08-11 22:16:27.000000000 -0500
++++ koffice.new/lib/kross/configure.in.in	2011-12-08 17:56:28.000000000 -0600
+@@ -21,14 +21,22 @@
+ # Check for Ruby
+ 
+ if test "x$compile_kross" = "xyes" ; then
+-  AC_CHECK_PROGS([RUBY], [ruby ruby1.8 ruby18], ruby)
++  AC_CHECK_PROGS([RUBY], [ruby ruby1.8 ruby18 ruby1.9 ruby19], ruby)
+ 
+   if test -n "$RUBY"; then
+     AC_MSG_CHECKING(for Ruby dirs)
+     RUBY_ARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"archdir"@:>@)'`
+     RUBY_SITEARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitearchdir"@:>@)'`
+     RUBY_SITEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitelibdir"@:>@)'`
+-    RUBY_INCLUDEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyincludedir"@:>@)'`
++    if test -n "$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyhdrdir"@:>@)'"; then
++      # Ruby 1.9
++      RUBY_INCLUDEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyhdrdir"@:>@)'`
++      RUBY_VERSION_H=ruby/version.h
++    else
++      # not Ruby 1.9
++      RUBY_INCLUDEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"rubyincludedir"@:>@)'`
++      RUBY_VERSION_H=version.h
++    fi
+     RUBY_LIBDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"libdir"@:>@)'`
+     RUBY_LIBRUBYARG=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"LIBRUBYARG_SHARED"@:>@)'`
+     RUBY_ENABLESHARED=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"ENABLE_SHARED"@:>@)'`
+@@ -81,7 +89,7 @@
+           [
+             AC_TRY_COMPILE([
+                 #include <ruby.h>
+-                #include <version.h>
++                #include <$RUBY_VERSION_H>
+             ],[
+             
+ #if(RUBY_VERSION_MAJOR==1 && RUBY_VERSION_MINOR == 8 && RUBY_VERSION_TEENY <= 1)
+diff -urN koffice/lib/kross/ruby/rubyextension.cpp koffice.new/lib/kross/ruby/rubyextension.cpp
+--- koffice/lib/kross/ruby/rubyextension.cpp	2011-08-17 20:25:04.000000000 -0500
++++ koffice.new/lib/kross/ruby/rubyextension.cpp	2011-12-08 21:18:42.000000000 -0600
+@@ -18,7 +18,7 @@
+  ***************************************************************************/
+ #include "rubyextension.h"
+ 
+-#include <st.h>
++#include <ruby/st.h>
+ 
+ #include <tqmap.h>
+ #include <tqstring.h>
+@@ -211,7 +211,7 @@
+         case T_ARRAY:
+         {
+             TQValueList<Kross::Api::Object::Ptr> l;
+-            for(int i = 0; i < RARRAY(value)->len; i++)
++            for(int i = 0; i < RARRAY_LEN(value); i++)
+             {
+                 Kross::Api::Object::Ptr o = toObject( rb_ary_entry( value , i ) );
+                 if(o) l.append(o);
+diff -urN koffice/lib/kross/ruby/rubyscript.cpp koffice.new/lib/kross/ruby/rubyscript.cpp
+--- koffice/lib/kross/ruby/rubyscript.cpp	2011-06-25 13:42:29.000000000 -0500
++++ koffice.new/lib/kross/ruby/rubyscript.cpp	2011-12-08 21:45:36.000000000 -0600
+@@ -21,8 +21,8 @@
+ 
+ #include <ruby.h>
+ #include <env.h>
+-#include <rubysig.h>
+-#include <node.h>
++#include <ruby/backward/rubysig.h>
++#include <ruby/node.h>
+ 
+ #include <main/scriptcontainer.h>
+ 
+@@ -70,6 +70,8 @@
+     krossdebug("RubyScript::compile()");
+ #endif
+     int critical;
++    int ruby_nerrs;
++    int ruby_in_eval;
+ 
+     ruby_nerrs = 0;
+     ruby_errinfo = Qnil;

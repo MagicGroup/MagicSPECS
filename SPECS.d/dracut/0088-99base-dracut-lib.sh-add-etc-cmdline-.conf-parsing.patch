@@ -1,0 +1,59 @@
+From c2801d093829e3b87ec4c6d7054b43bad4bd59ad Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Thu, 20 Oct 2011 11:14:10 +0200
+Subject: [PATCH] 99base/dracut-lib.sh: add /etc/cmdline/*.conf parsing
+
+modules and overlay images can set default kernel command line
+parameters in /etc/cmdline/*.conf in the initramfs.
+---
+ dracut.kernel.7.xml            |    8 ++++++++
+ modules.d/99base/dracut-lib.sh |    9 ++++++++-
+ 2 files changed, 16 insertions(+), 1 deletions(-)
+
+diff --git a/dracut.kernel.7.xml b/dracut.kernel.7.xml
+index 8d50d94..2ba0570 100644
+--- a/dracut.kernel.7.xml
++++ b/dracut.kernel.7.xml
+@@ -1268,6 +1268,14 @@ set in the configuration files.</para>
+           <para>Can contain additional command line options.</para>
+         </listitem>
+       </varlistentry>
++      <varlistentry>
++        <term>
++          <filename>/etc/cmdline.d/*.conf</filename>
++        </term>
++        <listitem>
++          <para>Can contain additional command line options.</para>
++        </listitem>
++      </varlistentry>
+     </variablelist>
+   </refsect1>
+   <refsect1>
+diff --git a/modules.d/99base/dracut-lib.sh b/modules.d/99base/dracut-lib.sh
+index 2cfaf93..8d294ee 100755
+--- a/modules.d/99base/dracut-lib.sh
++++ b/modules.d/99base/dracut-lib.sh
+@@ -32,6 +32,7 @@ str_replace() {
+ 
+ _getcmdline() {
+     local _line
++    local _i
+     unset _line
+     if [ -z "$CMDLINE" ]; then
+         if [ -e /etc/cmdline ]; then
+@@ -39,8 +40,14 @@ _getcmdline() {
+                 CMDLINE_ETC="$CMDLINE_ETC $_line";
+             done </etc/cmdline;
+         fi
++        for _i in /etc/cmdline.d/*.conf; do
++            [ -e "$_i" ] || continue
++            while read -r _line; do
++                CMDLINE_ETC_D="$CMDLINE_ETC_D $_line";
++            done <"$_i";
++        done
+         read -r CMDLINE </proc/cmdline;
+-        CMDLINE="$CMDLINE $CMDLINE_ETC"
++        CMDLINE="$CMDLINE_ETC_D $CMDLINE_ETC $CMDLINE"
+     fi
+ }
+ 

@@ -1,0 +1,48 @@
+diff -up quesoglc-0.7.2/configure~ quesoglc-0.7.2/configure
+--- quesoglc-0.7.2/configure~	2009-03-31 22:26:09.000000000 +0200
++++ quesoglc-0.7.2/configure	2012-07-28 13:30:37.739212475 +0200
+@@ -21170,13 +21170,13 @@ fi
+ 
+ 
+ 
+-{ echo "$as_me:$LINENO: checking for glewContextInit in -lGLEW" >&5
+-echo $ECHO_N "checking for glewContextInit in -lGLEW... $ECHO_C" >&6; }
++{ echo "$as_me:$LINENO: checking for glewContextInit in -lGLEWmx" >&5
++echo $ECHO_N "checking for glewContextInit in -lGLEWmx... $ECHO_C" >&6; }
+ if test "${ac_cv_lib_GLEW_glewContextInit+set}" = set; then
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lGLEW  $LIBS"
++LIBS="-lGLEWmx  $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -21236,7 +21236,7 @@ if test $ac_cv_lib_GLEW_glewContextInit
+ #define HAVE_LIBGLEW 1
+ _ACEOF
+ 
+-  LIBS="-lGLEW $LIBS"
++  LIBS="-lGLEWmx $LIBS"
+ 
+ else
+   no_glew="yes"
+@@ -21282,7 +21282,7 @@ eval "echo \"\$as_me:$LINENO: $ac_try_ec
+ 	 test ! -s conftest.err
+        } && test -s conftest$ac_exeext &&
+        $as_test_x conftest$ac_exeext; then
+-  LIBS="-lGLEW $LIBS"
++  LIBS="-lGLEWmx $LIBS"
+ else
+   echo "$as_me: failed program was:" >&5
+ sed 's/^/| /' conftest.$ac_ext >&5
+@@ -21306,7 +21306,8 @@ if (test "x$no_glew" = "xyes"); then
+   GLEW_CFLAGS="-DGLEW_MX"
+   GLEW_OBJ="libGLC_la-glew.lo"
+ else
+-  PKGCONFIG_LIBS_PRIVATE="-lGLEW $PKGCONFIG_LIBS_PRIVATE"
++  GLEW_CFLAGS="-DGLEW_MX"
++  PKGCONFIG_LIBS_PRIVATE="-lGLEWmx $PKGCONFIG_LIBS_PRIVATE"
+ fi
+ 
+ # Special flags for MinGW32 build.

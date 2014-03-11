@@ -1,0 +1,11 @@
+diff -Nuarp rekonq-0.4.0.orig/src/mainview.cpp rekonq-0.4.0/src/mainview.cpp
+--- rekonq-0.4.0.orig/src/mainview.cpp	2010-03-12 18:42:17.000000000 +0800
++++ rekonq-0.4.0/src/mainview.cpp	2010-04-13 22:27:28.000000000 +0800
+@@ -83,6 +83,7 @@ MainView::MainView(MainWindow *parent)
+     // connecting tabbar signals
+     connect(tabBar, SIGNAL(closeTab(int)),          this,   SLOT(closeTab(int)) );
+     connect(tabBar, SIGNAL(mouseMiddleClick(int)),  this,   SLOT(closeTab(int)) );
++    connect(tabBar, SIGNAL(tabDoubleClicked(int)),  this,   SLOT(closeTab(int)) );
+     connect(tabBar, SIGNAL(newTabRequest()),        this,   SLOT(newTab())      );
+     
+     connect(tabBar, SIGNAL(cloneTab(int)),          this,   SLOT(cloneTab(int)) );

@@ -1,0 +1,30 @@
+diff -up chromium-23.0.1271.95/net/http/infinite_cache.cc.zlibfix chromium-23.0.1271.95/net/http/infinite_cache.cc
+--- chromium-23.0.1271.95/net/http/infinite_cache.cc.zlibfix	2012-12-13 15:56:13.880915985 -0500
++++ chromium-23.0.1271.95/net/http/infinite_cache.cc	2012-12-13 15:57:54.979926341 -0500
+@@ -28,7 +28,11 @@
+ #include "net/http/http_response_headers.h"
+ #include "net/http/http_response_info.h"
+ #include "net/http/http_util.h"
++#if defined(USE_SYSTEM_ZLIB)
++#include <zlib.h>
++#else
+ #include "third_party/zlib/zlib.h"
++#endif
+ 
+ using base::PlatformFile;
+ using base::Time;
+diff -up chromium-23.0.1271.95/rlz/lib/crc32_wrapper.cc.zlibfix chromium-23.0.1271.95/rlz/lib/crc32_wrapper.cc
+--- chromium-23.0.1271.95/rlz/lib/crc32_wrapper.cc.zlibfix	2012-12-13 15:58:16.821927347 -0500
++++ chromium-23.0.1271.95/rlz/lib/crc32_wrapper.cc	2012-12-13 15:58:26.149927577 -0500
+@@ -8,7 +8,11 @@
+ #include "rlz/lib/assert.h"
+ #include "rlz/lib/crc32.h"
+ #include "rlz/lib/string_utils.h"
++#if defined(USE_SYSTEM_ZLIB)
++#include <zlib.h>
++#else
+ #include "third_party/zlib/zlib.h"
++#endif
+ 
+ namespace rlz_lib {
+ 

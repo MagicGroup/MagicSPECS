@@ -1,0 +1,54 @@
+Date: Fri, 14 Jul 2006 07:41:41 +0100
+From: Kidney Bingos <chris@bingosnet.co.uk>
+To: Chris Weyl <cweyl@alumni.drew.edu>
+Subject: Re: POE::Filter::IRCD
+Message-ID: <20060714064141.GA31205@klanker.bingosnet.co.uk>
+References: <7dd7ab490607132301w350fb9dcp5a84186cdda44c6c@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
+In-Reply-To: <7dd7ab490607132301w350fb9dcp5a84186cdda44c6c@mail.gmail.com>
+User-Agent: Mutt/1.4i
+
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 13, 2006 at 11:01:47PM -0700, Chris Weyl wrote:
+> Hi Chris!
+>=20
+> I'm thinking about packaging POE::Filter::IRCD up for Fedora Extras,
+> however I can't find any information as to what license this module is
+> released under.  Is it under "the same terms as perl itself", namely
+> both the GPL and Artistic licenses?
+
+It is indeed under the same terms as perl.
+
+Unless clearly expressed all my modules on CPAN are under that licence.
+
+Many thanks,
+
+--=20
+Chris Williams
+aka BinGOs
+PGP ID 0x4658671F
+http://www.gumbynet.org.uk
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2 (GNU/Linux)
+
+iD8DBQFEtzyl7eyMi0ZYZx8RAl2NAJ41kru3emXC4Dp+/LMxLJH/H11RoACfZ1ZW
+ZYcp5Q3T6uupJzfHgrAY7ig=
+=nHoI
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--

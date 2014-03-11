@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# This stupid scripts prevent the launch of 'plasma-desktop'
+# (from KDE4) alongside with TDE.
+
+case "${DESKTOP_SESSION}" in
+	"kde3"|"trinity"|"TDE") ;;
+	*) exec /usr/bin/plasma-desktop;;
+esac

@@ -1,0 +1,22 @@
+From fbf658fece613a838f2d1b0acfc78f670799e3da Mon Sep 17 00:00:00 2001
+From: Harald Hoyer <harald@redhat.com>
+Date: Mon, 9 Jul 2012 10:02:35 +0200
+Subject: [PATCH] dracut.sh: corrected error messages, if mktemp failed
+
+---
+ dracut.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dracut.sh b/dracut.sh
+index 0b43f44..9be7cac 100755
+--- a/dracut.sh
++++ b/dracut.sh
+@@ -577,7 +577,7 @@ fi
+ readonly TMPDIR="$tmpdir"
+ readonly initdir=$(mktemp --tmpdir="$TMPDIR/" -d -t initramfs.XXXXXX)
+ [ -d "$initdir" ] || {
+-    echo "dracut: mktemp --tmpdir=\"$TMPDIR/\" -d -t initramfs.XXXXXXfailed." >&2
++    echo "dracut: mktemp --tmpdir=\"$TMPDIR/\" -d -t initramfs.XXXXXX failed." >&2
+     exit 1
+ }
+ 

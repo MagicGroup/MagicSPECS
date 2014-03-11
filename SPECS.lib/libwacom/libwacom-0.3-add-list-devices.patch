@@ -1,0 +1,64 @@
+commit 93dc2413517f4c7760e6218143bad6eec59cfd71
+Author: Olivier Fourdan <ofourdan@redhat.com>
+Date:   Fri Feb 24 11:56:57 2012 +0100
+
+    lib: Add API to list all items in the database
+
+diff --git a/libwacom/libwacom-database.c b/libwacom/libwacom-database.c
+index b30cc10..c9f31b6 100644
+--- a/libwacom/libwacom-database.c
++++ b/libwacom/libwacom-database.c
+@@ -466,4 +466,29 @@ libwacom_database_destroy(WacomDeviceDatabase *db)
+ 	g_free (db);
+ }
+ 
++WacomDevice**
++libwacom_list_devices_from_database(WacomDeviceDatabase *db, WacomError *error)
++{
++	GList *cur, *devices;
++	WacomDevice **list, **p;
++
++	if (!db) {
++		libwacom_error_set(error, WERROR_INVALID_DB, "db is NULL");
++		return NULL;
++	}
++
++	devices =  g_hash_table_get_values (db->device_ht);
++	list = calloc (g_list_length (devices) + 1, sizeof (WacomDevice *));
++	if (!list) {
++		libwacom_error_set(error, WERROR_BAD_ALLOC, "Memory allocation failed");
++		return NULL;
++	}
++
++	for (p = list, cur = devices; cur; cur = g_list_next (cur))
++		*p++ = (WacomDevice *) cur->data;
++	g_list_free (devices);
++
++	return list;
++}
++
+ /* vim: set noexpandtab tabstop=8 shiftwidth=8: */
+diff --git a/libwacom/libwacom.h b/libwacom/libwacom.h
+index b1122eb..4f537c4 100644
+--- a/libwacom/libwacom.h
++++ b/libwacom/libwacom.h
+@@ -244,6 +244,19 @@ WacomDevice* libwacom_new_from_usbid(WacomDeviceDatabase *db, int vendor_id, int
+ WacomDevice* libwacom_new_from_name(WacomDeviceDatabase *db, const char *name, WacomError *error);
+ 
+ /**
++ * Returns the list of devices in the given database.
++ *
++ * @param db A device database
++ * @param error If not NULL, set to the error if any occurs
++ *
++ * @return A NULL terminated list of pointers to all the devices inside the
++ * database.
++ * The content of the list is owned by the database and should not be
++ * modified of freed. Use free() to free the list.
++ */
++WacomDevice** libwacom_list_devices_from_database(WacomDeviceDatabase *db, WacomError *error);
++
++/**
+  * Remove the device and free all memory and references to it.
+  *
+  * @param device The device to delete

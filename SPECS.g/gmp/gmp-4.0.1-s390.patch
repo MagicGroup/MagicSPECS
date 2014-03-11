@@ -1,0 +1,44 @@
+diff -up gmp-5.0.4/configure.in.s390 gmp-5.0.4/configure.in
+--- gmp-5.0.4/configure.in.s390	2012-02-10 11:23:05.000000000 +0100
++++ gmp-5.0.4/configure.in	2012-04-18 12:49:59.681014202 +0200
+@@ -1097,6 +1097,10 @@ case $host in
+     path="pyr"
+     ;;
+ 
++  s390x-*-*)
++    gcc_cflags="-g -O2 $fomit_frame_pointer"
++    path="s390x"
++    ;;
+ 
+   # IBM System/390 and z/Architecture
+   S390_PATTERN | S390X_PATTERN)
+diff -up gmp-5.0.4/mpn/s390x/gmp-mparam.h.s390 gmp-5.0.4/mpn/s390x/gmp-mparam.h
+--- gmp-5.0.4/mpn/s390x/gmp-mparam.h.s390	2012-04-18 12:44:04.482509106 +0200
++++ gmp-5.0.4/mpn/s390x/gmp-mparam.h	2012-04-18 12:44:04.482509106 +0200
+@@ -0,0 +1,26 @@
++/* gmp-mparam.h -- Compiler/machine parameter header file.
++
++Copyright 1991, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2003,
++2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
++
++This file is part of the GNU MP Library.
++
++The GNU MP Library is free software; you can redistribute it and/or modify
++it under the terms of the GNU Lesser General Public License as published by
++the Free Software Foundation; either version 3 of the License, or (at your
++option) any later version.
++
++The GNU MP Library is distributed in the hope that it will be useful, but
++WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++License for more details.
++
++You should have received a copy of the GNU Lesser General Public License
++along with the GNU MP Library.  If not, see http://www.gnu.org/licenses/.  */
++
++#define BITS_PER_MP_LIMB 64
++#define BYTES_PER_MP_LIMB 8
++#define BITS_PER_LONGINT 64
++#define BITS_PER_INT 32
++#define BITS_PER_SHORTINT 16
++#define BITS_PER_CHAR 8

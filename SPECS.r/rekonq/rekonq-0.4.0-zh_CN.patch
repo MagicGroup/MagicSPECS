@@ -1,0 +1,1103 @@
+diff -Nuarp rekonq-0.4.0.orig/i18n/rekonq_zh_CN.po rekonq-0.4.0/i18n/rekonq_zh_CN.po
+--- rekonq-0.4.0.orig/i18n/rekonq_zh_CN.po	2010-03-12 18:42:17.000000000 +0800
++++ rekonq-0.4.0/i18n/rekonq_zh_CN.po	2010-04-13 22:42:21.000000000 +0800
+@@ -5,9 +5,10 @@
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: rekonq\n"
+-"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+-"POT-Creation-Date: 2010-02-21 07:01+0100\n"
+-"PO-Revision-Date: 2010-02-23 20:57+0800\n"
++"Report-Msgid-Bugs-To: http://sourceforge."
++"net/tracker/?group_id=252277&atid=1126949\n"
++"POT-Creation-Date: 2010-04-13 22:31+0800\n"
++"PO-Revision-Date: 2010-04-13 22:42+0800\n"
+ "Last-Translator: Ni Hui <shuizhuyuanluo@126.com>\n"
+ "Language-Team: Chinese Simplified <kde-china@kde.org>\n"
+ "MIME-Version: 1.0\n"
+@@ -16,8 +17,11 @@ msgstr ""
+ "Plural-Forms: nplurals=1; plural=0;\n"
+ "X-Generator: Lokalize 1.0\n"
+ 
+-#: application.cpp:300
+-#, kde-format
++#: adblock/adblocknetworkreply.cpp:71
++msgid "Blocked by AdBlockRule: %1"
++msgstr "已按广告屏蔽规则屏蔽：%1"
++
++#: application.cpp:297
+ msgid ""
+ "Malformed URL:\n"
+ "%1"
+@@ -25,11 +29,30 @@ msgstr ""
+ "无效的 URL：\n"
+ "%1"
+ 
+-#: clicktoflash.cpp:54
++#: bookmarks/bookmarksmanager.cpp:260
++msgid "&Bookmarks"
++msgstr "书签(&B)"
++
++#: bookmarks/bookmarkspanel.cpp:80
++msgid "&Search:"
++msgstr "搜索(&S)："
++
++#: bookmarks/bookmarkstreemodel.cpp:174
++msgid "Bookmark"
++msgstr "书签"
++
++#. i18n: file: settings/settings_general.ui:257
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_newTabStartPage)
++#: bookmarks/bookmarkstreemodel.cpp:245 rekonqpage/newtabpage.cpp:127
++#: rekonqpage/newtabpage.cpp:311 rc.cpp:96
++msgid "Bookmarks"
++msgstr "书签"
++
++#: clicktoflash.cpp:55
+ msgid "Load Plugin"
+ msgstr "装入插件"
+ 
+-#: findbar.cpp:54
++#: findbar.cpp:55
+ msgid "&Match case"
+ msgstr "区分大小写(&M)"
+ 
+@@ -37,14 +60,35 @@ msgstr "区分大小写(&M)"
+ msgid "Find:"
+ msgstr "查找："
+ 
+-#: findbar.cpp:85
++#: findbar.cpp:89
+ msgid "&Next"
+ msgstr "下一个(&N)"
+ 
+-#: findbar.cpp:86
++#: findbar.cpp:90
+ msgid "&Previous"
+ msgstr "上一个(&P)"
+ 
++#: history/historymodels.cpp:98
++msgid "Title"
++msgstr "标题"
++
++#: history/historymodels.cpp:99
++msgid "Address"
++msgstr "地址"
++
++#: history/historymodels.cpp:690
++msgid "Earlier Today"
++msgstr "今天早些时候"
++
++#: history/historymodels.cpp:695
++msgid "1 item"
++msgid_plural "%1 items"
++msgstr[0] "%1 项"
++
++#: history/historypanel.cpp:82
++msgid "Search:"
++msgstr "搜索："
++
+ #: main.cpp:41
+ msgid "A lightweight Web Browser for KDE based on WebKit"
+ msgstr "基于 WebKit 的轻量级 KDE 网页浏览器"
+@@ -177,11 +221,11 @@ msgstr "首个令人惊叹的地址栏�
+ msgid "Location to open"
+ msgstr "要打开的位置"
+ 
+-#: mainview.cpp:351 mainview.cpp:353 mainview.cpp:605
++#: mainview.cpp:353 mainview.cpp:355 mainview.cpp:607
+ msgid "(Untitled)"
+ msgstr "(无标题)"
+ 
+-#: mainview.cpp:497
++#: mainview.cpp:499
+ msgid ""
+ "This tab contains changes that have not been submitted.\n"
+ "Closing the tab will discard these changes.\n"
+@@ -191,19 +235,19 @@ msgstr ""
+ "关闭标签将会丢弃这些更改。\n"
+ "您真的想要关闭此标签吗？\n"
+ 
+-#: mainview.cpp:500
++#: mainview.cpp:502
+ msgid "Closing Modified Tab"
+ msgstr "关闭已修改的标签"
+ 
+-#: mainview.cpp:547
++#: mainview.cpp:549
+ msgid "Loading..."
+ msgstr "正在装入..."
+ 
+-#: mainview.cpp:576
++#: mainview.cpp:578
+ msgid "Done"
+ msgstr "完成"
+ 
+-#: mainview.cpp:578
++#: mainview.cpp:580
+ msgid "Failed to load"
+ msgstr "装入失败"
+ 
+@@ -211,7 +255,7 @@ msgstr "装入失败"
+ msgid "&New Window"
+ msgstr "新窗口(&N)"
+ 
+-#: mainwindow.cpp:293 mainwindow.cpp:981
++#: mainwindow.cpp:293 mainwindow.cpp:968
+ msgid "Reload"
+ msgstr "刷新"
+ 
+@@ -315,24 +359,22 @@ msgstr "网页检查器"
+ msgid "Web &Inspector"
+ msgstr "网页检查器(&I)"
+ 
+-#: mainwindow.cpp:674
++#: mainwindow.cpp:667
+ msgctxt "Window title when private browsing is activated"
+ msgid "rekonq (Private Browsing)"
+ msgstr "rekonq (隐私浏览)"
+ 
+-#: mainwindow.cpp:685
+-#, kde-format
++#: mainwindow.cpp:678
+ msgctxt "window title, %1 = title of the active website"
+ msgid "%1 – rekonq (Private Browsing)"
+ msgstr "%1 – rekonq (隐私浏览)"
+ 
+-#: mainwindow.cpp:689
+-#, kde-format
++#: mainwindow.cpp:682
+ msgctxt "window title, %1 = title of the active website"
+ msgid "%1 – rekonq"
+ msgstr "%1 – rekonq"
+ 
+-#: mainwindow.cpp:698
++#: mainwindow.cpp:691
+ msgid ""
+ "*.html *.htm *.svg *.png *.gif *.svgz|Web Resources (*.html *.htm *.svg *."
+ "png *.gif *.svgz)\n"
+@@ -342,16 +384,15 @@ msgstr ""
+ "gif *.svgz)\n"
+ "*.*|所有文件 (*.*)"
+ 
+-#: mainwindow.cpp:701
++#: mainwindow.cpp:694
+ msgid "Open Web Resource"
+ msgstr "打开网页资源"
+ 
+-#: mainwindow.cpp:739
++#: mainwindow.cpp:732
+ msgid "Are you sure you want to turn on private browsing?"
+ msgstr "您确定想要启用隐私浏览吗？"
+ 
+-#: mainwindow.cpp:740
+-#, kde-format
++#: mainwindow.cpp:733
+ msgid ""
+ "<b>%1</b><p>When private browsing is turned on, web pages are not added to "
+ "the history, new cookies are not stored, current cookies cannot be accessed, "
+@@ -363,32 +404,29 @@ msgstr ""
+ "cookie、不能当前 的 cookie、不存储站点图标并且也不保存会话。在您关闭窗口之"
+ "前，您仍旧可以点击前进和后退按钮来 返回到您曾打开过的网页。</p>"
+ 
+-#: mainwindow.cpp:972
++#: mainwindow.cpp:959
+ msgid "Stop loading the current page"
+ msgstr "停止装入当前页面"
+ 
+-#: mainwindow.cpp:973
++#: mainwindow.cpp:960
+ msgid "Stop"
+ msgstr "停止"
+ 
+-#: mainwindow.cpp:980
++#: mainwindow.cpp:967
+ msgid "Reload the current page"
+ msgstr "刷新当前页面"
+ 
+ #: protocolhandler.cpp:208
+-#, kde-format
+ msgctxt "%1=an URL"
+ msgid "Error opening '%1': No such file or directory."
+ msgstr "打开“%1”出错：没有该文件或目录。"
+ 
+ #: protocolhandler.cpp:214
+-#, kde-format
+ msgctxt "%1=an URL"
+ msgid "Unable to read %1"
+ msgstr "无法读取 %1"
+ 
+ #: protocolhandler.cpp:229
+-#, kde-format
+ msgctxt "%1=an URL"
+ msgid "<h1>Index of %1</h1>"
+ msgstr "<h1>%1 的索引</h1>"
+@@ -409,126 +447,198 @@ msgstr "大小"
+ msgid "Last Modified"
+ msgstr "修改时间"
+ 
+-#. i18n: file: cleardata.ui:14
+-#. i18n: ectx: property (windowTitle), widget (QWidget, ClearDataWidget)
+-#: rc.cpp:3
+-msgid "Clear Private Data"
+-msgstr "清除隐私数据"
+-
+-#. i18n: file: cleardata.ui:20
+-#. i18n: ectx: property (text), widget (QLabel, label)
+-#: rc.cpp:6
+-msgid "Clear the following items:"
+-msgstr "清除以下项目："
++#. i18n: file: settings/settings_general.ui:247
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_newTabStartPage)
++#: rekonqpage/newtabpage.cpp:111 rekonqpage/newtabpage.cpp:297 rc.cpp:90
++msgid "Favorites"
++msgstr "最爱"
++
++#. i18n: file: settings/settings_general.ui:252
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_newTabStartPage)
++#: rekonqpage/newtabpage.cpp:117 rekonqpage/newtabpage.cpp:304 rc.cpp:93
++msgid "Closed Tabs"
++msgstr "已关闭的标签"
+ 
+ #. i18n: file: cleardata.ui:27
+ #. i18n: ectx: property (text), widget (QCheckBox, clearHistory)
+-#: rc.cpp:9
++#. i18n: file: settings/settings_general.ui:262
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_newTabStartPage)
++#: rekonqpage/newtabpage.cpp:122 rekonqpage/newtabpage.cpp:318 rc.cpp:9
++#: rc.cpp:99
+ msgid "History"
+ msgstr "历史"
+ 
+-#. i18n: file: cleardata.ui:37
+-#. i18n: ectx: property (text), widget (QCheckBox, clearCookies)
+-#: rc.cpp:12
+-msgid "Cookies"
+-msgstr "Cookies"
+-
+-#. i18n: file: cleardata.ui:47
+-#. i18n: ectx: property (text), widget (QCheckBox, clearCachedPages)
+-#: rc.cpp:15
+-msgid "Cached web pages"
+-msgstr "缓存的网页"
+-
+-#. i18n: file: cleardata.ui:57
+-#. i18n: ectx: property (text), widget (QCheckBox, clearWebIcons)
+-#: rc.cpp:18
+-msgid "Website icons"
+-msgstr "网站图标"
++#: rekonqpage/newtabpage.cpp:167
++msgid "Set a Preview..."
++msgstr "设定预览..."
++
++#: rekonqpage/newtabpage.cpp:183
++msgid "Loading Preview..."
++msgstr "正在装入预览..."
++
++#: rekonqpage/previewselectorbar.cpp:55
++msgid "Please open up the webpage you want to add as favorite"
++msgstr "请打开您想要添加为最爱的网页"
++
++#: rekonqpage/previewselectorbar.cpp:63
++msgid "Set to This Page"
++msgstr "设为此页"
++
++#: rekonqpage/previewselectorbar.cpp:95
++msgid "You can not add this webpage as favorite"
++msgstr "您不能将此页添加为最爱"
++
++#: rekonqpage/previewselectorbar.cpp:103
++msgid "Page is loading..."
++msgstr "页面正在装入..."
++
++#. i18n: file: settings/settings_general.ui:14
++#. i18n: ectx: property (windowTitle), widget (QWidget, general)
++#: settings/settingsdialog.cpp:88 rc.cpp:45
++msgid "General"
++msgstr "常规"
++
++#. i18n: file: settings/settings_tabs.ui:14
++#. i18n: ectx: property (windowTitle), widget (QWidget, tabs)
++#: settings/settingsdialog.cpp:94 rc.cpp:114
++msgid "Tabs"
++msgstr "标签"
++
++#. i18n: file: settings/settings_fonts.ui:20
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
++#: settings/settingsdialog.cpp:100 rc.cpp:27
++msgid "Fonts"
++msgstr "字体"
++
++#: settings/settingsdialog.cpp:121
++msgid "WebKit"
++msgstr "WebKit"
++
++#: settings/settingsdialog.cpp:132
++msgid "Shortcuts"
++msgstr "快捷方式"
++
++#: settings/settingsdialog.cpp:154
++msgctxt "Window title of the settings dialog"
++msgid "Configure – rekonq"
++msgstr "配置 – rekonq"
++
++#: settings/settingsdialog.cpp:184
++msgid "Specifies whether images are automatically loaded in web pages."
++msgstr "指定是否自动装入网页中的图像。"
++
++#: settings/settingsdialog.cpp:185
++msgid "Enables the execution of JavaScript programs."
++msgstr "启用 JavaScript 程序的执行。"
++
++#: settings/settingsdialog.cpp:186
++msgid "Enables support for Java applets."
++msgstr "启用 Java 小程序支持。"
++
++#: settings/settingsdialog.cpp:187
++msgid "Enables support for plugins in web pages."
++msgstr "启用网页中的插件支持。"
++
++#: settings/settingsdialog.cpp:188
++msgid "If enabled, JavaScript programs are allowed to open new windows."
++msgstr "如果启用，则允许 JavaScript 程序打开新窗口。"
+ 
+-#. i18n: file: cleardata.ui:67
+-#. i18n: ectx: property (text), widget (QCheckBox, homePageThumbs)
+-#: rc.cpp:21
+-msgid "Home page thumbs"
+-msgstr "主页缩略图"
++#: settings/settingsdialog.cpp:189
++msgid ""
++"If enabled, JavaScript programs are allowed to read from and to write to the "
++"clipboard."
++msgstr "如果启用，则允许 JavaScript 程序读写剪贴板。"
++
++#: settings/settingsdialog.cpp:190
++msgid "If enabled, hyperlinks are included in the keyboard focus chain."
++msgstr "如果启用，则将超链接包含于键盘焦点链中。"
++
++#: settings/settingsdialog.cpp:191
++msgid "If enabled, the zoom factor on a frame is only applied to the text."
++msgstr "如果启用，则框架中的缩放系数只应用于文本。"
+ 
+-#: rc.cpp:22
+-msgctxt "NAME OF TRANSLATORS"
+-msgid "Your names"
+-msgstr "Ni Hui"
+-
+-#: rc.cpp:23
+-msgctxt "EMAIL OF TRANSLATORS"
+-msgid "Your emails"
+-msgstr "shuizhuyuanluo@126.com"
++#: settings/settingsdialog.cpp:192
++msgid ""
++"If enabled, background colors and images are also drawn when the page is "
++"printed."
++msgstr "如果启用，则在打印页面时同时绘制背景颜色和图像。"
++
++#: settings/settingsdialog.cpp:193
++msgid "Enables support for the HTML 5 offline storage feature."
++msgstr "启用 HTML 5 离线存储特性支持。"
++
++#: settings/settingsdialog.cpp:194
++msgid "Enables support for the HTML 5 web application cache feature."
++msgstr "启用 HTML 5 网页应用程序缓存特性支持。"
++
++#: settings/settingsdialog.cpp:195
++msgid "Enables support for the HTML 5 local storage feature."
++msgstr "启用 HTML 5 本地存储特性支持。"
+ 
+-#: walletbar.cpp:52
++#: walletbar.cpp:55
+ msgid "Remember"
+ msgstr "记住"
+ 
+-#: walletbar.cpp:53
++#: walletbar.cpp:56
+ msgid "Never for This Site"
+ msgstr "不对此网站"
+ 
+-#: walletbar.cpp:54
++#: walletbar.cpp:57
+ msgid "Not Now"
+ msgstr "不是现在"
+ 
+-#: walletbar.cpp:112
+-#, kde-format
++#: walletbar.cpp:119
+ msgid "Do you want rekonq to remember the password on %1?"
+ msgstr "您想要让 rekonq 记住 %1 上的密码吗？"
+ 
+-#: webpage.cpp:113
++#: webpage.cpp:116
+ msgid "Are you sure you want to send your data again?"
+ msgstr "您确定想要再次发送您的数据吗？"
+ 
+-#: webpage.cpp:114
++#: webpage.cpp:117
+ msgid "Resend form data"
+ msgstr "重新发送表单数据"
+ 
+-#: webpage.cpp:167
++#: webpage.cpp:168
+ msgid "No service can handle this :("
+ msgstr "没有可处理这个的服务 :("
+ 
+-#: webpage.cpp:263
+-#, kde-format
++#: webpage.cpp:274
+ msgid "Error loading: %1"
+ msgstr "装入出错：%1"
+ 
+-#: webpage.cpp:267
+-#, kde-format
++#: webpage.cpp:278
+ msgctxt "%1=an URL, e.g.'kde.org'"
+ msgid "When connecting to: %1"
+ msgstr "当连接到：%1"
+ 
+-#: webpage.cpp:268
++#: webpage.cpp:279
+ msgid ""
+ "Check the address for errors such as <b>ww</b>.kde.org instead of <b>www</b>."
+ "kde.org"
+ msgstr "检查地址的错误，比如 <b>ww</b>.kde.org 而不是 <b>www</b>.kde.org"
+ 
+-#: webpage.cpp:269
++#: webpage.cpp:280
+ msgid "If the address is correct, try to check the network connection."
+ msgstr "如果地址正确，那么试着检查网络连接。"
+ 
+-#: webpage.cpp:270
++#: webpage.cpp:281
+ msgid ""
+ "If your computer or network is protected by a firewall or proxy, make sure "
+ "that rekonq is permitted to access the network."
+-msgstr ""
+-"如果您的计算机或网络处于防火墙之后或使用代理，请确保允许 rekonq 访问网络。"
++msgstr "如果您的计算机或网络处于防火墙之后或使用代理，请确保允许 rekonq 访问网络。"
+ 
+-#: webpage.cpp:271
++#: webpage.cpp:282
+ msgid ""
+ "Of course, if rekonq does not work properly, you can always say it is a "
+ "programmer error ;)"
+ msgstr "当然，要是 rekonq 工作不正常，您总是可以归咎于是程序员的错 ;)"
+ 
+-#: webpage.cpp:274
++#: webpage.cpp:285
+ msgid "Try Again"
+ msgstr "重试"
+ 
+-#: webpage.cpp:304
++#: webpage.cpp:315
+ msgid "Overwrite File?"
+ msgstr "覆盖文件吗？"
+ 
+@@ -557,12 +667,10 @@ msgid "&View Image"
+ msgstr "查看图像(&V)"
+ 
+ #: webview.cpp:225
+-#, kde-format
+ msgid "Open '%1' in New Tab"
+ msgstr "在新标签中打开“%1”"
+ 
+ #: webview.cpp:231
+-#, kde-format
+ msgid "Open '%1' in New Window"
+ msgstr "在新窗口中打开“%1”"
+ 
+@@ -582,27 +690,358 @@ msgstr "列出全部链接"
+ msgid "Inspect Element"
+ msgstr "检查元素"
+ 
+-#~ msgid "&Bookmarks"
+-#~ msgstr "书签(&B)"
++#. i18n: file: cleardata.ui:14
++#. i18n: ectx: property (windowTitle), widget (QWidget, ClearDataWidget)
++#: rc.cpp:3
++msgid "Clear Private Data"
++msgstr "清除隐私数据"
++
++#. i18n: file: cleardata.ui:20
++#. i18n: ectx: property (text), widget (QLabel, label)
++#: rc.cpp:6
++msgid "Clear the following items:"
++msgstr "清除以下项目："
++
++#. i18n: file: cleardata.ui:37
++#. i18n: ectx: property (text), widget (QCheckBox, clearCookies)
++#: rc.cpp:12
++msgid "Cookies"
++msgstr "Cookies"
++
++#. i18n: file: cleardata.ui:47
++#. i18n: ectx: property (text), widget (QCheckBox, clearCachedPages)
++#: rc.cpp:15
++msgid "Cached web pages"
++msgstr "缓存的网页"
++
++#. i18n: file: cleardata.ui:57
++#. i18n: ectx: property (text), widget (QCheckBox, clearWebIcons)
++#: rc.cpp:18
++msgid "Website icons"
++msgstr "网站图标"
+ 
+-#~ msgid "Title"
+-#~ msgstr "标题"
++#. i18n: file: cleardata.ui:67
++#. i18n: ectx: property (text), widget (QCheckBox, homePageThumbs)
++#: rc.cpp:21
++msgid "Home page thumbs"
++msgstr "主页缩略图"
+ 
+-#~ msgid "Address"
+-#~ msgstr "地址"
++#. i18n: file: settings/settings_fonts.ui:14
++#. i18n: ectx: property (windowTitle), widget (QWidget, fonts)
++#: rc.cpp:24
++msgid "Appearance"
++msgstr "外观"
+ 
+-#~ msgid "Earlier Today"
+-#~ msgstr "今天早些时候"
++#. i18n: file: settings/settings_fonts.ui:28
++#. i18n: ectx: property (text), widget (QLabel, label)
++#: rc.cpp:30
++msgid "Standard font:"
++msgstr "标准字体："
++
++#. i18n: file: settings/settings_fonts.ui:35
++#. i18n: ectx: property (text), widget (QLabel, label_2)
++#: rc.cpp:33
++msgid "Fixed font:"
++msgstr "等宽字体："
++
++#. i18n: file: settings/settings_fonts.ui:53
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
++#: rc.cpp:36
++msgid "Dimension"
++msgstr "大小"
+ 
+-#~ msgid "1 item"
+-#~ msgid_plural "%1 items"
+-#~ msgstr[0] "%1 项"
++#. i18n: file: settings/settings_fonts.ui:61
++#. i18n: ectx: property (text), widget (QLabel, label_3)
++#: rc.cpp:39
++msgid "Font size:"
++msgstr "字体大小："
++
++#. i18n: file: settings/settings_fonts.ui:75
++#. i18n: ectx: property (text), widget (QLabel, label_4)
++#: rc.cpp:42
++msgid "Minimal font size:"
++msgstr "最小字体大小："
++
++#. i18n: file: settings/settings_general.ui:20
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
++#: rc.cpp:48
++msgid "Startup"
++msgstr "启动"
+ 
+-#~ msgid "Closed Tabs"
+-#~ msgstr "已关闭的标签"
++#. i18n: file: settings/settings_general.ui:47
++#. i18n: ectx: property (text), widget (QLabel, label)
++#: rc.cpp:51
++msgid "When starting rekonq:"
++msgstr "启动 rekonq 时："
++
++#. i18n: file: settings/settings_general.ui:61
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_startupBehaviour)
++#: rc.cpp:54
++msgid "Open the Home Page"
++msgstr "打开主页"
++
++#. i18n: file: settings/settings_general.ui:66
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_startupBehaviour)
++#: rc.cpp:57
++msgid "Open the New Tab Page"
++msgstr "打开新标签页"
++
++#. i18n: file: settings/settings_general.ui:71
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_startupBehaviour)
++#: rc.cpp:60
++msgid "Restore the Last Opened Tabs"
++msgstr "还原上次打开的标签"
++
++#. i18n: file: settings/settings_general.ui:82
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
++#: rc.cpp:63
++msgid "Home Page"
++msgstr "主页"
++
++#. i18n: file: settings/settings_general.ui:106
++#. i18n: ectx: property (text), widget (QLabel, label_2)
++#: rc.cpp:66
++msgid "Home page URL:"
++msgstr "主页 URL："
++
++#. i18n: file: settings/settings_general.ui:128
++#. i18n: ectx: property (text), widget (QPushButton, setHomeToCurrentPageButton)
++#: rc.cpp:69
++msgid "Set to Current Page"
++msgstr "设为当前页"
++
++#. i18n: file: settings/settings_general.ui:153
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
++#: rc.cpp:72
++msgid "New Tabs Behaviour"
++msgstr "新标签行为"
++
++#. i18n: file: settings/settings_general.ui:177
++#. i18n: ectx: property (text), widget (QLabel, label_4)
++#: rc.cpp:75
++msgid "New tab opens:"
++msgstr "新标签打开："
++
++#. i18n: file: settings/settings_general.ui:194
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_newTabsBehaviour)
++#: rc.cpp:78
++msgid "New Tab Page"
++msgstr "新标签页"
++
++#. i18n: file: settings/settings_general.ui:199
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_newTabsBehaviour)
++#: rc.cpp:81
++msgid "Blank Page"
++msgstr "空页面"
++
++#. i18n: file: settings/settings_general.ui:204
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_newTabsBehaviour)
++#: rc.cpp:84
++msgctxt "@item:inlistbox"
++msgid "Home Page"
++msgstr "主页"
++
++#. i18n: file: settings/settings_general.ui:230
++#. i18n: ectx: property (text), widget (QLabel, label_5)
++#: rc.cpp:87
++msgid "New tab page starts with:"
++msgstr "新标签打开："
++
++#. i18n: file: settings/settings_general.ui:273
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
++#: rc.cpp:102
++msgid "Download Manager"
++msgstr "下载管理器"
++
++#. i18n: file: settings/settings_general.ui:279
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_kgetDownload)
++#: rc.cpp:105
++msgid "Use KGet for downloading files"
++msgstr "使用 KGet 下载文件"
++
++#. i18n: file: settings/settings_general.ui:286
++#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_kgetList)
++#: rc.cpp:108
++msgid ""
++"If enabled, rekonq will display an additional context menu entry, which, "
++"when selected, lists all available links of the current website in KGet."
++msgstr "如果启用，rekonq 将显示额外的上下文菜单项，点击后将在 KGet 中列出当前网站的全部可用链接。"
++
++#. i18n: file: settings/settings_general.ui:289
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_kgetList)
++#: rc.cpp:111
++msgid "List links with KGet"
++msgstr "用 KGet 列出链接"
++
++#. i18n: file: settings/settings_tabs.ui:20
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
++#: rc.cpp:117
++msgid "Tabbed Browsing"
++msgstr "标签页浏览"
++
++#. i18n: file: settings/settings_tabs.ui:26
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_openTabNoWindow)
++#: rc.cpp:120
++msgid "Open links in new tab instead of in new window"
++msgstr "在新标签中打开链接而不是新窗口"
++
++#. i18n: file: settings/settings_tabs.ui:33
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_alwaysShowTabBar)
++#: rc.cpp:123
++msgid "Always show tab bar"
++msgstr "总是显示标签栏"
++
++#. i18n: file: settings/settings_tabs.ui:40
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_openTabsBack)
++#: rc.cpp:126
++msgid "Open new tabs in the background"
++msgstr "在后台打开新标签"
++
++#. i18n: file: settings/settings_tabs.ui:47
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_openTabsNearCurrent)
++#: rc.cpp:129
++msgid "Open new tabs after currently active one"
++msgstr "在当前活动标签后面打开新标签"
++
++#. i18n: file: settings/settings_tabs.ui:54
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_alwaysShowTabPreviews)
++#: rc.cpp:132
++msgid "Show preview when hovering tab"
++msgstr "悬停标签时显示预览"
++
++#. i18n: file: settings/settings_tabs.ui:64
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_closeTabSelectPrevious)
++#: rc.cpp:135
++msgid "Activate previously used tab when closing the current one"
++msgstr "关闭当前页时激活上次使用过的页面"
++
++#. i18n: file: settings/settings_webkit.ui:17
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
++#: rc.cpp:138
++msgid "WebKit Settings"
++msgstr "WebKit 设置"
++
++#. i18n: file: settings/settings_webkit.ui:23
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_autoLoadImages)
++#: rc.cpp:141
++msgid "Autoload images"
++msgstr "自动装入图像"
++
++#. i18n: file: settings/settings_webkit.ui:30
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_linksIncludedInFocusChain)
++#: rc.cpp:144
++msgid "Links included in focus chain"
++msgstr "包含于在焦点链中的链接"
++
++#. i18n: file: settings/settings_webkit.ui:43
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_javascriptEnabled)
++#: rc.cpp:147
++msgid "JavaScript support"
++msgstr "JavaScript 支持"
++
++#. i18n: file: settings/settings_webkit.ui:50
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_zoomTextOnly)
++#: rc.cpp:150
++msgid "Zoom text only"
++msgstr "只缩放文本"
++
++#. i18n: file: settings/settings_webkit.ui:57
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_javaEnabled)
++#: rc.cpp:153
++msgid "Java support"
++msgstr "Java 支持"
++
++#. i18n: file: settings/settings_webkit.ui:64
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_printElementBackgrounds)
++#: rc.cpp:156
++msgid "Print element backgrounds"
++msgstr "显示元素背景"
++
++#. i18n: file: settings/settings_webkit.ui:71
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_offlineStorageDatabaseEnabled)
++#: rc.cpp:159
++msgid "Offline storage database"
++msgstr "离线存储数据库"
++
++#. i18n: file: settings/settings_webkit.ui:78
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_offlineWebApplicationCacheEnabled)
++#: rc.cpp:162
++msgid "Offline web application cache"
++msgstr "离线网页应用程序缓存"
++
++#. i18n: file: settings/settings_webkit.ui:85
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_localStorageDatabaseEnabled)
++#: rc.cpp:165
++msgid "Local storage database"
++msgstr "本地存储数据库"
++
++#. i18n: file: settings/settings_webkit.ui:92
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_javascriptCanOpenWindows)
++#: rc.cpp:168
++msgid "JavaScript can open windows"
++msgstr "JavaScript 可以打开窗口"
++
++#. i18n: file: settings/settings_webkit.ui:99
++#. i18n: ectx: property (text), widget (QCheckBox, kcfg_javascriptCanAccessClipboard)
++#: rc.cpp:171
++msgid "JavaScript can access clipboard"
++msgstr "JavaScript 可以访问剪贴板"
++
++#. i18n: file: settings/settings_webkit.ui:131
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
++#: rc.cpp:174
++msgid "Plugin Settings"
++msgstr "插件设置"
++
++#. i18n: file: settings/settings_webkit.ui:146
++#. i18n: ectx: property (text), widget (QLabel, label_2)
++#: rc.cpp:177
++msgid "When loading web pages:"
++msgstr "装入网页时："
++
++#. i18n: file: settings/settings_webkit.ui:154
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_pluginsEnabled)
++#: rc.cpp:180
++msgid "Autoload Plugins"
++msgstr "自动装入插件"
++
++#. i18n: file: settings/settings_webkit.ui:159
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_pluginsEnabled)
++#: rc.cpp:183
++msgid "Manually Load Plugins"
++msgstr "手动装入插件"
++
++#. i18n: file: settings/settings_webkit.ui:164
++#. i18n: ectx: property (text), item, widget (KComboBox, kcfg_pluginsEnabled)
++#: rc.cpp:186
++msgid "Never Load Plugins"
++msgstr "从不装入插件"
++
++#. i18n: file: settings/settings_webkit.ui:175
++#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
++#: rc.cpp:189
++msgid "User Style Sheet"
++msgstr "用户样式表"
+ 
+-#~ msgid "Favorites"
+-#~ msgstr "最爱"
++#. i18n: file: settings/settings_webkit.ui:181
++#. i18n: ectx: property (text), widget (QLabel, label)
++#: rc.cpp:192
++msgid "User CSS path:"
++msgstr "用户 CSS 路径："
++
++#. i18n: file: settings/settings_webkit.ui:188
++#. i18n: ectx: property (filter), widget (KUrlRequester, kcfg_userCSS)
++#: rc.cpp:195
++msgid "*.css"
++msgstr "*.css"
++
++#~ msgctxt "NAME OF TRANSLATORS"
++#~ msgid "Your names"
++#~ msgstr "Ni Hui"
++
++#~ msgctxt "EMAIL OF TRANSLATORS"
++#~ msgid "Your emails"
++#~ msgstr "shuizhuyuanluo@126.com"
+ 
+ #~ msgid "&Enlarge Font"
+ #~ msgstr "放大字体(&E)"
+@@ -626,12 +1065,6 @@ msgstr "检查元素"
+ #~ msgid "C&lose Current Tab"
+ #~ msgstr "关闭当前标签(&L)"
+ 
+-#~ msgid "Search:"
+-#~ msgstr "搜索："
+-
+-#~ msgid "Loading preview..."
+-#~ msgstr "正在装入预览..."
+-
+ #~ msgid "Add Preview"
+ #~ msgstr "添加预览"
+ 
+@@ -641,9 +1074,6 @@ msgstr "检查元素"
+ #~ msgid "Refresh Thumbnail"
+ #~ msgstr "刷新缩略图"
+ 
+-#~ msgid "Set Page to Preview"
+-#~ msgstr "设定要预览的页面"
+-
+ #~ msgid "History is Empty"
+ #~ msgstr "历史为空"
+ 
+@@ -656,76 +1086,12 @@ msgstr "检查元素"
+ #~ msgid "Connect to proxy"
+ #~ msgstr "连接到代理"
+ 
+-#~ msgid "Appearance"
+-#~ msgstr "外观"
+-
+-#~ msgid "Fonts"
+-#~ msgstr "字体"
+-
+-#~ msgid "Standard font:"
+-#~ msgstr "标准字体："
+-
+-#~ msgid "Fixed font:"
+-#~ msgstr "等宽字体："
+-
+-#~ msgid "Dimension"
+-#~ msgstr "大小"
+-
+-#~ msgid "Font size:"
+-#~ msgstr "字体大小："
+-
+-#~ msgid "General"
+-#~ msgstr "常规"
+-
+-#~ msgid "Startup"
+-#~ msgstr "启动"
+-
+-#~ msgid "When starting rekonq:"
+-#~ msgstr "启动 rekonq 时："
+-
+-#~ msgid "Open the Home Page"
+-#~ msgstr "打开主页"
+-
+-#~ msgid "Open the New Tab Page"
+-#~ msgstr "打开新标签页"
+-
+-#~ msgid "Restore the Last Opened Tabs"
+-#~ msgstr "还原上次打开的标签"
+-
+-#~ msgid "Home Page"
+-#~ msgstr "主页"
+-
+-#~ msgid "Home page URL:"
+-#~ msgstr "主页 URL："
+-
+-#~ msgid "Set to Current Page"
+-#~ msgstr "设为当前页"
+-
+-#~ msgid "New Tab Behavior"
+-#~ msgstr "新标签行为"
+-
+-#~ msgid "New tab opens:"
+-#~ msgstr "新标签打开："
+-
+-#~ msgid "New Tab Page"
+-#~ msgstr "新标签页"
+-
+-#~ msgid "Blank Page"
+-#~ msgstr "空页面"
+-
+-#~ msgctxt "@item:inlistbox"
+-#~ msgid "Home Page"
+-#~ msgstr "主页"
+-
+ #~ msgid "Proxy"
+ #~ msgstr "代理"
+ 
+ #~ msgid "Enable proxy"
+ #~ msgstr "启用代理"
+ 
+-#~ msgid "Proxy Settings"
+-#~ msgstr "代理设置"
+-
+ #~ msgid "Type:"
+ #~ msgstr "类型："
+ 
+@@ -741,96 +1107,6 @@ msgstr "检查元素"
+ #~ msgid "Port:"
+ #~ msgstr "端口："
+ 
+-#~ msgid "Tabs"
+-#~ msgstr "标签"
+-
+-#~ msgid "Tabbed Browsing"
+-#~ msgstr "标签页浏览"
+-
+-#~ msgid "Open links in new tab instead of in new window"
+-#~ msgstr "在新标签中打开链接而不是新窗口"
+-
+-#~ msgid "Always show tab bar"
+-#~ msgstr "总是显示标签栏"
+-
+-#~ msgid "Open new tabs in the background"
+-#~ msgstr "在后台打开新标签"
+-
+-#~ msgid "Open new tabs after currently active one"
+-#~ msgstr "在当前活动标签后面打开新标签"
+-
+-#~ msgid "Show preview when hovering tab"
+-#~ msgstr "悬停标签时显示预览"
+-
+-#~ msgid "WebKit Settings"
+-#~ msgstr "WebKit 设置"
+-
+-#~ msgid "Autoload images"
+-#~ msgstr "自动装入图像"
+-
+-#~ msgid "Links included in focus chain"
+-#~ msgstr "包含于在焦点链中的链接"
+-
+-#~ msgid "JavaScript support"
+-#~ msgstr "JavaScript 支持"
+-
+-#~ msgid "Zoom text only"
+-#~ msgstr "只缩放文本"
+-
+-#~ msgid "Java support"
+-#~ msgstr "Java 支持"
+-
+-#~ msgid "Print element backgrounds"
+-#~ msgstr "显示元素背景"
+-
+-#~ msgid "Offline storage database"
+-#~ msgstr "离线存储数据库"
+-
+-#~ msgid "JavaScript can open windows"
+-#~ msgstr "JavaScript 可以打开窗口"
+-
+-#~ msgid "Offline web application cache"
+-#~ msgstr "离线网页应用程序缓存"
+-
+-#~ msgid "JavaScript can access clipboard"
+-#~ msgstr "JavaScript 可以访问剪贴板"
+-
+-#~ msgid "Local storage database"
+-#~ msgstr "本地存储数据库"
+-
+-#~ msgid "User Style Sheet"
+-#~ msgstr "用户样式表"
+-
+-#~ msgid "User CSS path:"
+-#~ msgstr "用户 CSS 路径："
+-
+-#~ msgid "*.css"
+-#~ msgstr "*.css"
+-
+-#~ msgid "WebKit"
+-#~ msgstr "WebKit"
+-
+-#~ msgid "Shortcuts"
+-#~ msgstr "快捷方式"
+-
+-#~ msgid "Enables the execution of JavaScript programs."
+-#~ msgstr "启用 JavaScript 程序的执行。"
+-
+-#~ msgid "Enables support for Java applets."
+-#~ msgstr "启用 Java 小程序支持。"
+-
+-#~ msgid "Enables support for plugins in web pages."
+-#~ msgstr "启用网页中的插件支持。"
+-
+-#~ msgid "Enables support for the HTML 5 offline storage feature."
+-#~ msgstr "启用 HTML 5 离线存储特性支持。"
+-
+-#~ msgid "Enables support for the HTML 5 web application cache feature."
+-#~ msgstr "启用 HTML 5 网页应用程序缓存特性支持。"
+-
+-#~ msgid "Enables support for the HTML 5 local storage feature."
+-#~ msgstr "启用 HTML 5 本地存储特性支持。"
+-
+ #~ msgid "JavaScript"
+ #~ msgstr "JavaScript"
+ 
+diff -Nuarp rekonq-0.4.0.orig/src/data/rekonq.desktop rekonq-0.4.0/src/data/rekonq.desktop
+--- rekonq-0.4.0.orig/src/data/rekonq.desktop	2010-03-12 18:42:17.000000000 +0800
++++ rekonq-0.4.0/src/data/rekonq.desktop	2010-04-13 22:30:41.000000000 +0800
+@@ -1,18 +1,6 @@
+ [Desktop Entry]
+ Name=rekonq
+-Name[sv]=Rekonq
+-Name[tr]=Rekonq
+-Name[x-test]=xxrekonqxx
+-GenericName=Webkit KDE Browser
+-GenericName[de]=Webkit-Browser für KDE
+-GenericName[et]=KDE Webkiti veebibrauser
+-GenericName[km]=កម្មវិធី​រុករក​ Webkit KDE
+-GenericName[pt]=Navegador Web com WebKit
+-GenericName[pt_BR]=Navegador Webkit do KDE
+-GenericName[sv]=Webkit webbläsare för KDE
+-GenericName[tr]=Webkit KDE Tarayıcı
+-GenericName[uk]=Переглядач мережі на WebKit для KDE
+-GenericName[x-test]=xxWebkit KDE Browserxx
++GenericName[zh_CN]=Webkit KDE 浏览器
+ Icon=rekonq
+ Type=Application
+ Exec=rekonq %u

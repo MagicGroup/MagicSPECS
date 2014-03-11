@@ -1,0 +1,35 @@
+--- etc/Emacs.ad.orig	2011-04-29 07:31:05.000000000 -0600
++++ etc/Emacs.ad	2011-05-03 13:45:02.269991498 -0600
+@@ -222,8 +222,12 @@
+ ! *menubar*FontSet:	-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*, \
+ !			-*-*-*-*-*-*-*-120-*-jisx0208.1983-0
+ !
+-*menubar*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+-*popup*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
++*menubar*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*
++*popup*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*
++
++XEmacs*FontSet:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso10646-1, \
++				-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*, \
++				*
+ *menubar*FontSet:		-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*, \
+  			        -*-*-*-*-*-*-*-120-*-iso10646-1, \
+  			        -*-*-*-*-*-*-*-120-*-jisx0208.1983-0, \
+@@ -235,7 +239,7 @@
+ 
+ ! Gui elements share this font
+ !
+-Emacs.gui-element.attributeFont:  -*-helvetica-medium-r-*-*-*-120-*-*-*-*-iso8859-*
++Emacs.gui-element.attributeFont:  -*-helvetica-medium-r-*-*-*-120-*-*-*-*-*-*
+ 
+ ! Font in the Motif dialog boxes.
+ ! (Motif uses `fontList' while most other things use `font' - if you don't
+@@ -251,7 +255,7 @@
+ ! Some people use 12-point anyway because you get more text, but
+ ! there's no purpose at all in doing this for dialog boxes.
+ 
+-*Dialog*Font:			-*-helvetica-bold-r-*-*-*-140-*-*-*-*-iso8859-*
++*Dialog*Font:			-*-helvetica-bold-r-*-*-*-140-*-*-*-*-*-*
+ 
+ ! Dialog box translations.
+ ! =======================

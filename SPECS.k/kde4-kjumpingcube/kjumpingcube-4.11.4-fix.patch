@@ -1,0 +1,14 @@
+diff -ur kjumpingcube-4.11.4.orig/settingswidget.h kjumpingcube-4.11.4/settingswidget.h
+--- kjumpingcube-4.11.4.orig/settingswidget.h	2013-12-13 00:01:45.530606051 +0000
++++ kjumpingcube-4.11.4/settingswidget.h	2013-12-13 00:02:18.811605559 +0000
+@@ -1,3 +1,5 @@
++#ifndef SETTINGWIDGET_H
++#define SETTINGWIDGET_H
+ /* **********************************************************************
+    Copyright 2013  Ian Wadham <iandw.au@gmail.com>
+ 
+@@ -27,3 +29,4 @@
+             setupUi(this);
+         }
+ };
++#endif

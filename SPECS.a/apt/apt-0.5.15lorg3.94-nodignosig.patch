@@ -1,0 +1,28 @@
+diff -u -r apt-0.5.15lorg3.94a.orig/apt-pkg/rpm/rpmhandler.cc apt-0.5.15lorg3.94a/apt-pkg/rpm/rpmhandler.cc
+--- apt-0.5.15lorg3.94a.orig/apt-pkg/rpm/rpmhandler.cc	2008-01-25 15:19:22.000000000 +0800
++++ apt-0.5.15lorg3.94a/apt-pkg/rpm/rpmhandler.cc	2008-01-25 18:48:10.000000000 +0800
+@@ -879,6 +879,9 @@
+    } else if (Handler != NULL) {
+       rpmtsFree(Handler);
+    }
++   rpmtsSetVSFlags(Handler, rpmVSFlags(rpmtsVSFlags(Handler) | 
++                   _RPMVSF_NODIGESTS | _RPMVSF_NOSIGNATURES));
++
+ #else
+    if (Handler != NULL) {
+       rpmdbClose(Handler);
+Only in apt-0.5.15lorg3.94a/apt-pkg/rpm: rpmhandler.cc.orig
+diff -u -r apt-0.5.15lorg3.94a.orig/tools/gensrclist.cc apt-0.5.15lorg3.94a/tools/gensrclist.cc
+--- apt-0.5.15lorg3.94a.orig/tools/gensrclist.cc	2008-01-25 15:19:22.000000000 +0800
++++ apt-0.5.15lorg3.94a/tools/gensrclist.cc	2008-01-25 18:49:11.000000000 +0800
+@@ -288,7 +288,7 @@
+ #if RPM_VERSION >= 0x040100
+    rpmReadConfigFiles(NULL, NULL);
+    rpmts ts = rpmtsCreate();
+-   rpmtsSetVSFlags(ts, (rpmVSFlags_e)-1);
++   rpmtsSetVSFlags(ts, rpmVSFlags(rpmtsVSFlags(ts) | _RPMVSF_NODIGESTS | _RPMVSF_NOSIGNATURES));
+ #else
+    Header sigs;
+ #endif   
+Only in apt-0.5.15lorg3.94a/tools: gensrclist.cc.orig
+Only in apt-0.5.15lorg3.94a/tools: gensrclist.cc.rej

@@ -1,0 +1,10 @@
+--- tcsh-6.17.00/sh.proc.c.orig	2011-02-03 12:31:14.000000000 -0700
++++ tcsh-6.17.00/sh.proc.c	2011-02-03 12:32:00.000000000 -0700
+@@ -910,6 +910,7 @@
+ 
+     if (pcurrjob && (pcurrjob->p_flags & (PFOREGND | PSTOPPED)) == 0) {
+ 	pp = pcurrjob;
++	pcurrjob = 0;
+ 	while (pp->p_procid != pp->p_jobid)
+ 	    pp = pp->p_friends;
+ 	xprintf("[%d]", pp->p_index);

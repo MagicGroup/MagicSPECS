@@ -1,0 +1,12 @@
+--- mpeg4ip-1.6.1/lib/ismacryp/ismacryplib.c~	2007-02-07 18:34:15.000000000 +0100
++++ mpeg4ip-1.6.1/lib/ismacryp/ismacryplib.c	2011-07-26 12:22:12.428126498 +0200
+@@ -345,7 +345,7 @@
+   }
+ 
+   // Init cipher.
+-  rc=aes_icm_context_init(sp->cp->state, sp->kk.aes_overlay);
++  rc=aes_icm_context_init(sp->cp->state, sp->kk.aes_overlay, AES_TOT_LEN);
+   if ( rc != err_status_ok ) {
+       fprintf(stdout," - init cipher for session %d FAILED  rc = %d\n", session,
+                                      rc );
+

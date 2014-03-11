@@ -1,0 +1,301 @@
+diff --git a/fonts/Makefile b/fonts/Makefile
+index b5a918a..b747af4 100644
+--- a/fonts/Makefile
++++ b/fonts/Makefile
+@@ -43,24 +43,26 @@ FONTS	=	\
+ 		Helvetica-Bold \
+ 		Helvetica-BoldOblique \
+ 		Helvetica-Oblique \
+-		Monospace \
+-		Monospace-Bold \
+-		Monospace-BoldOblique \
+-		Monospace-Oblique \
+-		Sans \
+-		Sans-Bold \
+-		Sans-BoldOblique \
+-		Sans-Oblique \
+-		Serif-Roman \
+-		Serif-Bold \
+-		Serif-BoldOblique \
+-		Serif-Oblique \
+ 		Symbol \
+ 		Times-Bold \
+ 		Times-BoldItalic \
+ 		Times-Italic \
+ 		Times-Roman
+ 
++TTF_FONTS =	\
++		DejaVuSansMono \
++		DejaVuSansMono-Bold \
++		DejaVuSansMono-BoldOblique \
++		DejaVuSansMono-Oblique \
++		DejaVuSans \
++		DejaVuSans-Oblique \
++		DejaVuSans-Bold \
++		DejaVuSans-BoldOblique \
++		DejaVuSerif \
++		DejaVuSerif-Bold \
++		DejaVuSerif-Italic \
++		DejaVuSerif-BoldItalic
++
+ 
+ #
+ # Make everything...
+@@ -79,10 +81,12 @@ install:
+ 		$(MKDIR) $(datadir)/htmldoc/fonts;\
+ 	fi
+ 	for font in $(FONTS); do \
+-		$(CP) $$font.afm $(datadir)/htmldoc/fonts; \
+-		$(CP) $$font.pfa $(datadir)/htmldoc/fonts; \
++		$(CP) -a $$font.afm $(datadir)/htmldoc/fonts; \
++		$(CP) -a $$font.pfb $(datadir)/htmldoc/fonts; \
++	done
++	for font in $(TTF_FONTS); do \
++		$(CP) -a $$font.ttf $(datadir)/htmldoc/fonts; \
+ 	done
+-	$(CHMOD) ugo+r $(datadir)/htmldoc/fonts/*
+ 
+ 
+ #
+diff --git a/htmldoc/htmllib.cxx b/htmldoc/htmllib.cxx
+index 7281964..57ddd08 100644
+--- a/htmldoc/htmllib.cxx
++++ b/htmldoc/htmllib.cxx
+@@ -212,22 +212,22 @@ const char	*_htmlFonts[TYPE_MAX][STYLE_MAX] =
+ 		    "Helvetica-BoldOblique"
+ 		  },
+ 		  {
+-		    "Monospace",
+-		    "Monospace-Bold",
+-		    "Monospace-Oblique",
+-		    "Monospace-BoldOblique"
++		    "DejaVuSansMono",
++		    "DejaVuSansMono-Bold",
++		    "DejaVuSansMono-Oblique",
++		    "DejaVuSansMono-BoldOblique"
+ 		  },
+ 		  {
+-		    "Serif-Roman",
+-		    "Serif-Bold",
+-		    "Serif-Oblique",
+-		    "Serif-BoldOblique"
++		    "DejaVuSerif",
++		    "DejaVuSerif-Bold",
++		    "DejaVuSerif-Italic",
++		    "DejaVuSerif-BoldItalic"
+ 		  },
+ 		  {
+-		    "Sans",
+-		    "Sans-Bold",
+-		    "Sans-Oblique",
+-		    "Sans-BoldOblique"
++		    "DejaVuSans",
++		    "DejaVuSans-Bold",
++		    "DejaVuSans-Oblique",
++		    "DejaVuSans-BoldOblique"
+ 		  },
+ 		  {
+ 		    "Symbol",
+@@ -2104,7 +2104,8 @@ htmlLoadFontWidths(void)
+   float		width;			/* Width value */
+   char		glyph[64];		/* Glyph name */
+   char		line[1024];		/* Line from AFM file */
+-
++  int           used_popen;             /* Did we popen? */
++  char          popen_command[2048];    /* Argument to popen */
+ 
+  /*
+   * Now read all of the font widths...
+@@ -2118,8 +2119,22 @@ htmlLoadFontWidths(void)
+ 
+       snprintf(filename, sizeof(filename), "%s/fonts/%s.afm", _htmlData,
+                _htmlFonts[i][j]);
++      used_popen = 0;
+       if ((fp = fopen(filename, "r")) == NULL)
+       {
++       /*
++        * Try opening as ttf
++        */
++
++        snprintf(filename, sizeof(filename), "%s/fonts/%s.ttf", _htmlData,
++                 _htmlFonts[i][j]);
++        snprintf(popen_command, sizeof(popen_command),
++                 "ttf2pt1 '%s' -G A - 2> /dev/null", filename);
++        used_popen = 1;
++        fp = popen(popen_command, "r");
++      }
++      if (fp == NULL)
++      {
+ #ifndef DEBUG
+         progress_error(HD_ERROR_FILE_NOT_FOUND,
+                        "Unable to open font width file %s!", filename);
+@@ -2160,7 +2175,14 @@ htmlLoadFontWidths(void)
+ 	}
+       }
+ 
+-      fclose(fp);
++      if (used_popen)
++      {
++        pclose(fp);
++      }
++      else
++      {
++        fclose(fp);
++      }
+ 
+       // Make sure that non-breaking space has the same width as
+       // a breaking space...
+diff --git a/htmldoc/ps-pdf.cxx b/htmldoc/ps-pdf.cxx
+index 0bc8271..9cfae68 100644
+--- a/htmldoc/ps-pdf.cxx
++++ b/htmldoc/ps-pdf.cxx
+@@ -471,6 +471,10 @@ static void	write_trailer(FILE *out, int pages);
+ static int	write_type1(FILE *out, typeface_t typeface,
+ 			    style_t style);
+ static void	write_utf16(FILE *out, uchar *s);
++static FILE	*open_afm_file(char *name);
++static FILE	*open_pfa_file(char *name);
++static FILE	*tmpfile_from_popen(char *command);
++
+ 
+ 
+ /*
+@@ -12336,10 +12340,9 @@ write_type1(FILE       *out,		/* I - File to write to */
+  /*
+   * Try to open the PFA file for the Type1 font...
+   */
+-
+-  snprintf(filename, sizeof(filename), "%s/fonts/%s.pfa", _htmlData,
++  snprintf(filename, sizeof(filename), "%s/fonts/%s", _htmlData,
+            _htmlFonts[typeface][style]);
+-  if ((fp = fopen(filename, "r")) == NULL)
++  if ((fp = open_pfa_file(filename)) == NULL)
+   {
+ #ifndef DEBUG
+     progress_error(HD_ERROR_FILE_NOT_FOUND,
+@@ -12457,9 +12460,9 @@ write_type1(FILE       *out,		/* I - File to write to */
+     * Try to open the AFM file for the Type1 font...
+     */
+ 
+-    snprintf(filename, sizeof(filename), "%s/fonts/%s.afm", _htmlData,
++    snprintf(filename, sizeof(filename), "%s/fonts/%s", _htmlData,
+              _htmlFonts[typeface][style]);
+-    if ((fp = fopen(filename, "r")) == NULL)
++    if ((fp = open_afm_file(filename)) == NULL)
+     {
+ #ifndef DEBUG
+       progress_error(HD_ERROR_FILE_NOT_FOUND,
+@@ -12577,6 +12580,113 @@ write_type1(FILE       *out,		/* I - File to write to */
+ 
+ 
+ /*
++ * 'open_afm_file()' - Get a seekable AFM file either directly or otherwise
++ */
++
++static FILE *                           // O - AFM file
++open_afm_file(char *name)               // I - Font filename without extension
++{
++
++  char		filename[1024];		/* AFM filename */
++  char          popen_command[2048];    /* Argument to popen */
++  FILE		*fp;                    /* The file */
++
++ /*
++  * First try AFM
++  */
++  snprintf(filename, sizeof(filename), "%s.afm", name);
++  fp = fopen(filename, "r");
++
++ /*
++  * Then try TTF
++  */
++  if (fp == NULL)
++  {
++    snprintf(filename, sizeof(filename), "%s.ttf", name);
++    snprintf(popen_command, sizeof(popen_command),
++	     "ttf2pt1 '%s' -G A - 2> /dev/null", filename);
++    fp = tmpfile_from_popen(popen_command);
++  }
++
++  return (fp);
++}
++
++/*
++ * 'open_pfa_file()' - Get a seekable PFA file from PFB or TTF
++ */
++
++static FILE *                           // O - PFA file
++open_pfa_file(char *name)               // I - Font filename without extension
++{
++
++  char		filename[1024];		/* PFA filename */
++  char          popen_command[2048];    /* Argument to popen */
++  FILE		*fp;                    /* The file */
++
++ /*
++  * First try PFB
++  */
++  snprintf(filename, sizeof(filename), "%s.pfb", name);
++  if (access(filename, F_OK) == 0)
++  {
++    snprintf(popen_command, sizeof(popen_command),
++	     "t1ascii '%s' -l 60", filename);
++    fp = tmpfile_from_popen(popen_command);
++  }
++  else
++  {
++   /*
++    * Then try TTF
++    */
++    snprintf(filename, sizeof(filename), "%s.ttf", name);
++    snprintf(popen_command, sizeof(popen_command),
++	     "ttf2pt1 '%s' -G F - 2> /dev/null | t1asm -a -l 60", filename);
++    fp = tmpfile_from_popen(popen_command);
++  }
++
++  return (fp);
++}
++
++/*
++ * 'tmpfile_from_popen()' - Generate a temporary text file from popen
++ */
++
++static FILE *                             // O - Output file
++tmpfile_from_popen(char *command)         // I - Command for popen
++{
++
++  FILE		*fp;			/* file */
++  FILE		*pfp;                   /* popen file */
++  char		line[1024];		/* Line from file */
++
++  pfp = popen(command, "r");
++
++  if (pfp == NULL)
++    return (NULL);
++
++ /*
++  * Open a temporary file to hold the result
++  */
++  fp = tmpfile();
++  if (fp == NULL) {
++    pclose(pfp);
++    return (NULL);
++  }
++
++  while (fgets(line, sizeof(line), pfp) != NULL)
++    fputs(line, fp);
++
++  if (line[strlen(line) - 1] != '\n')
++    fputs("\n", fp);
++
++  rewind(fp);
++
++  pclose(pfp);
++
++  return (fp);
++}
++
++/*
+  * 'write_utf16()' - Write a UTF-16 string...
+  */
+ 

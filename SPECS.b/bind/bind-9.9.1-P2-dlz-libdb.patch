@@ -1,0 +1,27 @@
+diff -up bind-9.9.4/contrib/dlz/config.dlz.in.libdb bind-9.9.4/contrib/dlz/config.dlz.in
+--- bind-9.9.4/contrib/dlz/config.dlz.in.libdb	2014-01-06 13:24:24.669256364 +0100
++++ bind-9.9.4/contrib/dlz/config.dlz.in	2014-01-06 13:26:29.861420493 +0100
+@@ -257,7 +257,7 @@ case "$use_dlz_bdb" in
+ 			# Check other locations for includes.
+ 			# Order is important (sigh).
+ 
+-			bdb_incdirs="/ /db48/ /db47/ /db46/ /db45/ /db44/ /db43/ /db42/ /db41/ /db4/ /db/"
++			bdb_incdirs="/ /db48/ /db47/ /db46/ /db45/ /db44/ /db43/ /db42/ /db41/ /db4/ /libdb/ /db/"
+ 			for d in $bdb_incdirs
+ 			do
+ 				if test -f "$dd/include${d}db.h"
+@@ -283,13 +283,7 @@ case "$use_dlz_bdb" in
+ 			do
+ 				if test -f "$dd/${target_lib}/lib${d}.so"
+ 				then
+-					if test "$dd" != "/usr"
+-					then
+-						dlz_bdb_libs="-L${dd}/${target_lib} "
+-					else
+-						dlz_bdb_libs=""
+-					fi
+-					dlz_bdb_libs="${dlz_bdb_libs}-l${d}"
++					dlz_bdb_libs="-L${dd}/${target_lib}/libdb -l${d}"
+ 					break
+ 				fi
+ 			done

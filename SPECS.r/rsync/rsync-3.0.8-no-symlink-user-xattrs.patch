@@ -1,0 +1,59 @@
+From 562c23886699a93882d9a090475a44f5761f7d8d Mon Sep 17 00:00:00 2001
+From: "Vojtech Vitek (V-Teq)" <vvitek@redhat.com>
+Date: Wed, 14 Sep 2011 18:31:35 +0200
+Subject: [PATCH] Adapt do_symlink() from upstream 3.0.8+; fix context
+
+---
+ configure.ac |    1 +
+ syscall.c    |   20 ++++++++++++++++++--
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index ff21b3a..c841013 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -979,6 +979,7 @@ else
+ 	AC_MSG_RESULT(Using FreeBSD extattrs)
+ 	AC_DEFINE(HAVE_FREEBSD_XATTRS, 1, [True if you have FreeBSD xattrs])
+ 	AC_DEFINE(SUPPORT_XATTRS, 1)
++	AC_DEFINE(NO_SYMLINK_USER_XATTRS, 1, [True if symlinks do not support user xattrs])
+ 	;;
+     *)
+ 	if test x"$enable_xattr_support" = x"yes"; then
+diff --git a/syscall.c b/syscall.c
+index c85f73e..ddfd042 100644
+--- a/syscall.c
++++ b/syscall.c
+@@ -53,11 +53,27 @@ int do_unlink(const char *fname)
+ 	return unlink(fname);
+ }
+ 
+-int do_symlink(const char *fname1, const char *fname2)
++int do_symlink(const char *lnk, const char *fname)
+ {
+ 	if (dry_run) return 0;
+ 	RETURN_ERROR_IF_RO_OR_LO;
+-	return symlink(fname1, fname2);
++
++#if defined NO_SYMLINK_XATTRS || defined NO_SYMLINK_USER_XATTRS
++	/* For --fake-super, we create a normal file with mode 0600
++	 * and write the lnk into it. */
++	if (am_root < 0) {
++		int ok, len = strlen(lnk);
++		int fd = open(fname, O_WRONLY|O_CREAT|O_TRUNC, S_IWUSR|S_IRUSR);
++		if (fd < 0)
++			return -1;
++		ok = write(fd, lnk, len) == len;
++		if (close(fd) < 0)
++			ok = 0;
++		return ok ? 0 : -1;
++	}
++#endif
++
++	return symlink(lnk, fname);
+ }
+ 
+ #ifdef HAVE_LINK
+-- 
+1.7.6
+

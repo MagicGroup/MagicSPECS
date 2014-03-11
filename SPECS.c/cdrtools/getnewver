@@ -1,0 +1,17 @@
+#!/bin/bash
+url="http://ccal.chinesebay.com/ccal/index.html.html"
+new1="cdrtools-"
+new2=".tar.bz2"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	ver=`lftp -c "open ftp://ftp.berlios.de/pub/cdrecord/alpha/;ls -t" | grep "$new1.*$new2" |head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	newver=$(echo $ver|cut -d"a" -f1).a$(echo $ver|cut -d"a" -f2)
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

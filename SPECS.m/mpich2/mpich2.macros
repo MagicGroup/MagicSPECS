@@ -1,0 +1,7 @@
+%_mpich2_load \
+ . /etc/profile.d/modules.sh; \
+ module load mpi/mpich2-%{_arch}; \
+ export CFLAGS="$CFLAGS %{optflags}";
+%_mpich2_unload \
+ . /etc/profile.d/modules.sh; \
+ module unload mpi/mpich2-%{_arch};

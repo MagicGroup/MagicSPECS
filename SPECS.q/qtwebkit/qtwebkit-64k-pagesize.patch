@@ -1,0 +1,15 @@
+diff -up qtwebkit-2.2.2-source/Source/JavaScriptCore/wtf/OSAllocatorPosix.cpp.me qtwebkit-2.2.2-source/Source/JavaScriptCore/wtf/OSAllocatorPosix.cpp
+diff -up qtwebkit-2.2.2-source/Source/JavaScriptCore/wtf/PageAllocationAligned.cpp.me qtwebkit-2.2.2-source/Source/JavaScriptCore/wtf/PageAllocationAligned.cpp
+--- qtwebkit-2.2.2-source/Source/JavaScriptCore/wtf/PageAllocationAligned.cpp.me	2013-01-11 22:33:35.233535266 +0100
++++ qtwebkit-2.2.2-source/Source/JavaScriptCore/wtf/PageAllocationAligned.cpp	2013-01-11 22:53:23.706822547 +0100
+@@ -50,7 +50,9 @@ PageAllocationAligned PageAllocationAlig
+     vm_map(current_task(), &address, size, alignmentMask, flags, MEMORY_OBJECT_NULL, 0, FALSE, protection, PROT_READ | PROT_WRITE | PROT_EXEC, VM_INHERIT_DEFAULT);
+     return PageAllocationAligned(reinterpret_cast<void*>(address), size);
+ #else
+-    size_t alignmentDelta = alignment - pageSize();
++    size_t pagesize =  pageSize();
++    if (alignment < pagesize) alignment = pagesize;
++    size_t alignmentDelta = alignment - pagesize;
+ 
+     // Resererve with suffcient additional VM to correctly align.
+     size_t reservationSize = size + alignmentDelta;

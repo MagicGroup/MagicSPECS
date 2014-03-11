@@ -1,0 +1,21 @@
+--- kdebase-3.5.3/khelpcenter/infotree.cpp.tn	2006-07-16 22:39:40.000000000 +0200
++++ kdebase-3.5.3/khelpcenter/infotree.cpp	2006-07-16 22:57:50.000000000 +0200
+@@ -123,6 +123,7 @@
+   }
+ 
+   m_alphabItem->sortChildItems( 0, true /* ascending */ );
++  m_categoryItem->sortChildItems( 0, true /* ascending */ );
+ }
+ 
+ void InfoTree::parseInfoDirFile( const QString &infoDirFileName )
+@@ -174,8 +175,10 @@
+ 
+         item = new InfoNodeItem( alphabSection, appName );
+         item->entry()->setUrl( url );
++        alphabSection->sortChildItems( 0, true /* ascending */ );
+       }
+     }
++    catItem->sortChildItems( 0, true /* ascending */ );
+   }
+   infoDirFile.close();
+ }

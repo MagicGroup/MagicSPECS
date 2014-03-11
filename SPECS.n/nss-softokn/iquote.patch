@@ -1,0 +1,37 @@
+diff -up ./nss/cmd/bltest/Makefile.iquote ./nss/cmd/bltest/Makefile
+--- ./nss/cmd/bltest/Makefile.iquote	2014-01-03 11:59:10.000000000 -0800
++++ ./nss/cmd/bltest/Makefile	2014-01-06 20:18:58.539098560 -0800
+@@ -45,6 +45,7 @@ include $(CORE_DEPTH)/coreconf/rules.mk
+ # (6) Execute "component" rules. (OPTIONAL)                           #
+ #######################################################################
+ 
++INCLUDES += -iquote $(DIST)/../private/nss
+ 
+ 
+ #######################################################################
+diff -up ./nss/coreconf/location.mk.iquote ./nss/coreconf/location.mk
+--- ./nss/coreconf/location.mk.iquote	2014-01-03 11:59:10.000000000 -0800
++++ ./nss/coreconf/location.mk	2014-01-06 20:18:58.539098560 -0800
+@@ -45,6 +45,10 @@ endif
+ 
+ ifdef NSS_INCLUDE_DIR
+     INCLUDES += -I$(NSS_INCLUDE_DIR)
++    ifdef IN_TREE_FREEBL_HEADERS_FIRST
++        INCLUDES += -iquote $(DIST)/../public/nss
++        INCLUDES += -iquote $(DIST)/../private/nss
++    endif
+ endif
+ 
+ ifndef NSS_LIB_DIR
+diff -up ./nss/lib/softoken/Makefile.iquote ./nss/lib/softoken/Makefile
+--- ./nss/lib/softoken/Makefile.iquote	2014-01-06 20:35:19.931937299 -0800
++++ ./nss/lib/softoken/Makefile	2014-01-06 20:36:15.336390664 -0800
+@@ -42,6 +42,8 @@ ifdef NSS_DISABLE_DBM
+ DIRS=
+ endif
+ 
++INCLUDES += -iquote $(DIST)/../private/nss
++
+ #######################################################################
+ # (7) Execute "local" rules. (OPTIONAL).                              #
+ #######################################################################

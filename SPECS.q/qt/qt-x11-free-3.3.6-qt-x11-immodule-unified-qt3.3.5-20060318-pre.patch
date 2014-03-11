@@ -1,0 +1,65 @@
+--- qt-x11-free-3.3.6/src/widgets/qtextedit.cpp.im	2006-03-08 17:47:58.000000000 +0100
++++ qt-x11-free-3.3.6/src/widgets/qtextedit.cpp	2005-09-02 14:43:14.000000000 +0200
+@@ -1028,7 +1028,7 @@
+ 
+     bool drawCur = hasFocus() || viewport()->hasFocus();
+     if (( hasSelectedText() && !style().styleHint( QStyle::SH_BlinkCursorWhenTextSelected ) ) ||
+-	isReadOnly() || !cursorVisible || doc->hasSelection( QTextDocument::IMSelectionText ))
++	isReadOnly() || !cursorVisible )
+ 	drawCur = FALSE;
+     QColorGroup g = colorGroup();
+     const QColorGroup::ColorRole backRole = QPalette::backgroundRoleFromMode(backgroundMode());
+@@ -1589,7 +1589,7 @@
+     insert( e->text() );
+     // insert can trigger an imEnd event as it emits a textChanged signal, so better
+     // be careful
+-    if(d->preeditStart != -1) {
++    if(d->preeditStart != -1) { 
+ 	cursor->setIndex( d->preeditStart + d->preeditLength );
+ 	QTextCursor c = *cursor;
+ 	cursor->setIndex( d->preeditStart );
+@@ -1609,7 +1609,6 @@
+ 	}
+     }
+ 
+-    updateMicroFocusHint();
+     repaintChanged();
+ }
+ 
+@@ -2120,7 +2119,6 @@
+ 	 ( !style().styleHint( QStyle::SH_BlinkCursorWhenTextSelected ) &&
+ 	   ( d->optimMode ? optimHasSelection() : doc->hasSelection( QTextDocument::Standard, TRUE ))) ||
+ 	 ( visible && !hasFocus() && !viewport()->hasFocus() && !inDnD ) ||
+-         doc->hasSelection( QTextDocument::IMSelectionText ) ||
+ 	 isReadOnly() )
+ 	return;
+ 
+@@ -2823,14 +2821,8 @@
+ void QTextEdit::updateMicroFocusHint()
+ {
+     QTextCursor c( *cursor );
+-    if ( d->preeditStart != -1 ) {
++    if ( d->preeditStart != -1 )
+ 	c.setIndex( d->preeditStart );
+-        if(doc->hasSelection(QTextDocument::IMSelectionText)) {
+-            int para, index;
+-            doc->selectionStart(QTextDocument::IMSelectionText, para, index);
+-            c.setIndex(index);
+-        }
+-    }
+ 
+     if ( hasFocus() || viewport()->hasFocus() ) {
+ 	int h = c.paragraph()->lineHeightOfChar( cursor->index() );
+--- qt-x11-free-3.3.6/src/widgets/qlineedit.cpp.im	2006-03-08 17:47:59.000000000 +0100
++++ qt-x11-free-3.3.6/src/widgets/qlineedit.cpp	2006-03-20 11:45:08.000000000 +0100
+@@ -1794,9 +1794,8 @@
+     d->imend = d->imstart + e->text().length();
+     d->imselstart = d->imstart + e->cursorPos();
+     d->imselend = d->imselstart + e->selectionLength();
+-    d->cursor = d->imstart + e->cursorPos();
++    d->cursor = e->selectionLength() ? d->imend : d->imselend;
+     d->updateTextLayout();
+-    d->updateMicroFocusHint();
+     update();
+ }
+ 

@@ -1,0 +1,33 @@
+--- t/png.t.orig	2011-04-28 16:53:40.149925007 +0800
++++ t/png.t	2011-04-28 16:55:24.229044665 +0800
+@@ -19,13 +19,21 @@
+ use strict;
+ my $code = new Barcode::Code128;
+ my $file = "t/code128.png";
+-my $good;
+-{
+-    open IM, $file or die "Can't read $file: $!";
+-    binmode IM;
+-    read IM, $good, -s $file;
+-    close IM;
+-}
++my $expected_image = GD::Image->new($file);
++
+ my $test = $code->png("CODE 128");
+-print "not " unless $test eq $good;
++my $got_image = GD::Image->new($test);
++
++my $cmp = $expected_image->compare($got_image);
++print "not " if $cmp != 0;
+ print "ok 2\n";
++
++if ($cmp & &GD::GD_CMP_IMAGE) { warn "The two images look different\n" }
++if ($cmp & &GD::GD_CMP_NUM_COLORS) { warn "The two images have different numbers of colors\n"}
++if ($cmp & &GD::GD_CMP_COLOR) { warn "The two images' palettes differ\n"}
++if ($cmp & &GD::GD_CMP_SIZE_X) { warn "The two images differ in the horizontal dimension\n"}
++if ($cmp & &GD::GD_CMP_SIZE_Y) { warn "The two images differ in the vertical dimension\n"}
++if ($cmp & &GD::GD_CMP_TRANSPARENT) { warn "The two images have different transparency\n"}
++if ($cmp & &GD::GD_CMP_BACKGROUND) { warn "The two images have different background colors\n"}
++if ($cmp & &GD::GD_CMP_INTERLACE) { warn "The two images differ in their interlace\n"}
++if ($cmp & &GD::GD_CMP_TRUECOLOR) { warn "The two images are not both true color\n"}
+

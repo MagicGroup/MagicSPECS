@@ -1,0 +1,21 @@
+--- a/packages/jpl/jpl.pl
++++ b/packages/jpl/jpl.pl
+@@ -4390,7 +4390,8 @@ prolog:error_message(java_exception(Ex)) -->
+ :- multifile user:file_search_path/2.
+ :- dynamic   user:file_search_path/2.
+ 
+-user:file_search_path(jar, swi(lib)).
++user:file_search_path(jar, 'LIBDIR/swipl-jpl').
++user:file_search_path(jni, 'LIBDIR/swipl-jpl').
+ 
+ %%	add_search_path(+Var, +Value) is det.
+ %
+@@ -4534,7 +4535,7 @@ add_jpl_to_classpath :-
+ 
+ libjpl(File) :-
+ 	(   current_prolog_flag(unix, true)
+-	->  File = foreign(libjpl)
++	->  File = jni(libjpl)
+ 	;   File = foreign(jpl)
+ 	).
+ 

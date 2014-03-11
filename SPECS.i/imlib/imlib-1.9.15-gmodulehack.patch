@@ -1,0 +1,279 @@
+--- imlib-1.9.15/gdk_imlib/Makefile.am	2007-03-27 14:59:33.000000000 +0100
++++ imlib-1.9.15/gdk_imlib/Makefile.am	2007-03-27 14:58:42.000000000 +0100
+@@ -87,7 +87,7 @@
+ 
+ 
+ libgdk_imlib_la_LDFLAGS = -version-info 10:15:9
+-libgdk_imlib_la_LIBADD = $(GX_LIBS)
++libgdk_imlib_la_LIBADD = $(GX_LIBS) local-hack-gmodule/libgmodule-local.la
+ 
+ 
+ include_HEADERS = gdk_imlib.h gdk_imlib_private.h gdk_imlib_types.h
+--- imlib-1.9.15/configure.in	2007-03-27 15:01:15.000000000 +0100
++++ imlib-1.9.15/configure.in	2007-03-27 15:02:59.000000000 +0100
+@@ -32,56 +32,12 @@
+ 	fi
+ ])
+ 
+-dynworks=false
+-if test x$with_modules = xno; then
+-	AC_MSG_RESULT(no)
+-else 
+-	AC_MSG_RESULT(yes)
+-
+-if test "x$GDK_IMLIB" != x; then
+-  oLIBS="$LIBS"
+-  oCFLAGS="$CFLAGS"
+-  LIBS="$LIBS `glib-config --libs gmodule`"
+-  CFLAGS="$CFLAGS `glib-config --cflags gmodule`"
+-  AC_TRY_RUN([
+-#include <glib.h>
+-#include <gmodule.h>
+-main ()
+-{
+-    if (g_module_supported ())
+-        exit (0);
+-    else
+-        exit (1);
+-}
+-], dynworks=true)
+-  LIBS="$oLIBS"
+-  CFLAGS="$oCFLAGS"
+-fi
+-
+-dnl Now we check to see if our libtool supports shared lib deps
+-dnl (in a rather ugly way even)
+-builddir=`pwd`
+-if $dynworks; then
+-   imlib_libtool_config="$builddir/libtool --config"
+-   imlib_deplibs_check=`$imlib_libtool_config | \
+-      grep '^[[a-z_]]*check[[a-z_]]*_method=[['\''"]]' | \
+-      sed 's/.*[['\''"]]\(.*\)[['\''"]]$/\1/'`
+-   if test "x$imlib_deplibs_check" = "xnone" || \
+-      test "x$imlib_deplibs_check" = "xunknown" || \
+-      test "x$imlib_deplibs_check" = "x"; then
+-      dynworks=false
+-   fi
+-fi
+-
+-if $dynworks; then
+-   AC_DEFINE(USE_GMODULE, 1, [ ])
+-   GMODULE_LIBS="`glib-config --libs gmodule`"
+-   GMODULE_FLAGS="`glib-config --cflags gmodule`"
+-   AC_SUBST(GMODULE_LIBS)
+-   AC_SUBST(GMODULE_FLAGS)
+-fi
+-
+-fi
++dynworks=true
++GMODULE_LIBS=
++GMODULE_CFLAGS=
++AC_DEFINE(USE_GMODULE, 1, [ ])
++AC_SUBST(GMODULE_LIBS)
++AC_SUBST(GMODULE_CFLAGS)
+ 
+ AC_SUBST(TIFFLIBS)
+ AC_SUBST(GIFLIBS)
+--- imlib-1.9.15/configure	2010-05-14 11:12:48.000000000 +0100
++++ imlib-1.9.15/configure	2010-05-14 11:15:06.000000000 +0100
+@@ -463,7 +463,7 @@
+ # include <unistd.h>
+ #endif"
+ 
+-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os SED EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB CPP CXX CXXFLAGS ac_ct_CXX CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT GTK_CONFIG GTK_CFLAGS GTK_LIBS GMODULE_LIBS GMODULE_FLAGS TIFFLIBS GIFLIBS JPEGLIBS PNGLIBS GDK_IMLIB DYNAMIC_MODULES_WORK_TRUE DYNAMIC_MODULES_WORK_FALSE X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS GX_LIBS HAVE_LIBPNG HAVE_GIF_TRUE HAVE_GIF_FALSE HAVE_TIFF_TRUE HAVE_TIFF_FALSE HAVE_PNG_TRUE HAVE_PNG_FALSE HAVE_JPEG_TRUE HAVE_JPEG_FALSE SUPPORT_LIBS GDK_SUPPORT_LIBS LIBOBJS LTLIBOBJS'
++ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE build build_cpu build_vendor build_os host host_cpu host_vendor host_os SED EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB CPP CXX CXXFLAGS ac_ct_CXX CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT GTK_CONFIG GTK_CFLAGS GTK_LIBS GMODULE_LIBS GMODULE_CFLAGS TIFFLIBS GIFLIBS JPEGLIBS PNGLIBS GDK_IMLIB DYNAMIC_MODULES_WORK_TRUE DYNAMIC_MODULES_WORK_FALSE X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS GX_LIBS HAVE_LIBPNG HAVE_GIF_TRUE HAVE_GIF_FALSE HAVE_TIFF_TRUE HAVE_TIFF_FALSE HAVE_PNG_TRUE HAVE_PNG_FALSE HAVE_JPEG_TRUE HAVE_JPEG_FALSE SUPPORT_LIBS GDK_SUPPORT_LIBS LIBOBJS LTLIBOBJS'
+ ac_subst_files=''
+ 
+ # Initialize some variables set by options.
+@@ -18982,94 +18982,16 @@
+ 
+ fi;
+ 
+-dynworks=false
+-if test x$with_modules = xno; then
+-	echo "$as_me:$LINENO: result: no" >&5
+-echo "${ECHO_T}no" >&6
+-else
+-	echo "$as_me:$LINENO: result: yes" >&5
+-echo "${ECHO_T}yes" >&6
+-
+-if test "x$GDK_IMLIB" != x; then
+-  oLIBS="$LIBS"
+-  oCFLAGS="$CFLAGS"
+-  LIBS="$LIBS `glib-config --libs gmodule`"
+-  CFLAGS="$CFLAGS `glib-config --cflags gmodule`"
+-  if test "$cross_compiling" = yes; then
+-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
+-  cat >conftest.$ac_ext <<_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h >>conftest.$ac_ext
+-cat >>conftest.$ac_ext <<_ACEOF
+-/* end confdefs.h.  */
+-
+-#include <glib.h>
+-#include <gmodule.h>
+-main ()
+-{
+-    if (g_module_supported ())
+-        exit (0);
+-    else
+-        exit (1);
+-}
+-
+-_ACEOF
+-rm -f conftest$ac_exeext
+-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+-  (eval $ac_link) 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
+-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+-  (eval $ac_try) 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); }; }; then
+-  dynworks=true
+-else
+-  echo "$as_me: program exited with status $ac_status" >&5
+-echo "$as_me: failed program was:" >&5
+-sed 's/^/| /' conftest.$ac_ext >&5
+-
+-fi
+-rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
+-  LIBS="$oLIBS"
+-  CFLAGS="$oCFLAGS"
+-fi
+-
+-builddir=`pwd`
+-if $dynworks; then
+-   imlib_libtool_config="$builddir/libtool --config"
+-   imlib_deplibs_check=`$imlib_libtool_config | \
+-      grep '^[a-z_]*check[a-z_]*_method=['\''"]' | \
+-      sed 's/.*['\''"]\(.*\)['\''"]$/\1/'`
+-   if test "x$imlib_deplibs_check" = "xnone" || \
+-      test "x$imlib_deplibs_check" = "xunknown" || \
+-      test "x$imlib_deplibs_check" = "x"; then
+-      dynworks=false
+-   fi
+-fi
+-
+-if $dynworks; then
++dynworks=true
++GMODULE_LIBS=
++GMODULE_CFLAGS=
+ 
+ cat >>confdefs.h <<\_ACEOF
+ #define USE_GMODULE 1
+ _ACEOF
+ 
+-   GMODULE_LIBS="`glib-config --libs gmodule`"
+-   GMODULE_FLAGS="`glib-config --cflags gmodule`"
+ 
+ 
+-fi
+-
+-fi
+ 
+ 
+ 
+@@ -24928,7 +24850,7 @@
+ s,@GTK_CFLAGS@,$GTK_CFLAGS,;t t
+ s,@GTK_LIBS@,$GTK_LIBS,;t t
+ s,@GMODULE_LIBS@,$GMODULE_LIBS,;t t
+-s,@GMODULE_FLAGS@,$GMODULE_FLAGS,;t t
++s,@GMODULE_CFLAGS@,$GMODULE_CFLAGS,;t t
+ s,@TIFFLIBS@,$TIFFLIBS,;t t
+ s,@GIFLIBS@,$GIFLIBS,;t t
+ s,@JPEGLIBS@,$JPEGLIBS,;t t
+--- imlib-1.9.15/config/Makefile.in	2010-05-14 11:12:48.000000000 +0100
++++ imlib-1.9.15/config/Makefile.in	2010-05-14 11:15:08.000000000 +0100
+@@ -91,7 +91,7 @@
+ GDK_IMLIB = @GDK_IMLIB@
+ GDK_SUPPORT_LIBS = @GDK_SUPPORT_LIBS@
+ GIFLIBS = @GIFLIBS@
+-GMODULE_FLAGS = @GMODULE_FLAGS@
++GMODULE_CFLAGS = @GMODULE_CFLAGS@
+ GMODULE_LIBS = @GMODULE_LIBS@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_CONFIG = @GTK_CONFIG@
+--- imlib-1.9.15/doc/Makefile.in	2010-05-14 11:12:48.000000000 +0100
++++ imlib-1.9.15/doc/Makefile.in	2010-05-14 11:15:08.000000000 +0100
+@@ -81,7 +81,7 @@
+ GDK_IMLIB = @GDK_IMLIB@
+ GDK_SUPPORT_LIBS = @GDK_SUPPORT_LIBS@
+ GIFLIBS = @GIFLIBS@
+-GMODULE_FLAGS = @GMODULE_FLAGS@
++GMODULE_CFLAGS = @GMODULE_CFLAGS@
+ GMODULE_LIBS = @GMODULE_LIBS@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_CONFIG = @GTK_CONFIG@
+--- imlib-1.9.15/gdk_imlib/Makefile.in	2010-05-14 11:12:48.000000000 +0100
++++ imlib-1.9.15/gdk_imlib/Makefile.in	2010-05-14 11:15:08.000000000 +0100
+@@ -60,7 +60,8 @@
+ moduleLTLIBRARIES_INSTALL = $(INSTALL)
+ LTLIBRARIES = $(lib_LTLIBRARIES) $(module_LTLIBRARIES)
+ am__DEPENDENCIES_1 =
+-libgdk_imlib_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
++libgdk_imlib_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
++	local-hack-gmodule/libgmodule-local.la
+ am_libgdk_imlib_la_OBJECTS = cache.lo colors.lo globals.lo load.lo \
+ 	misc.lo rend.lo utils.lo save.lo modules.lo
+ libgdk_imlib_la_OBJECTS = $(am_libgdk_imlib_la_OBJECTS)
+@@ -169,7 +170,7 @@
+ GDK_IMLIB = @GDK_IMLIB@
+ GDK_SUPPORT_LIBS = @GDK_SUPPORT_LIBS@
+ GIFLIBS = @GIFLIBS@
+-GMODULE_FLAGS = @GMODULE_FLAGS@
++GMODULE_CFLAGS = @GMODULE_CFLAGS@
+ GMODULE_LIBS = @GMODULE_LIBS@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_CONFIG = @GTK_CONFIG@
+@@ -322,7 +323,7 @@
+ 	modules.c
+ 
+ libgdk_imlib_la_LDFLAGS = -version-info 10:15:9
+-libgdk_imlib_la_LIBADD = $(GX_LIBS)
++libgdk_imlib_la_LIBADD = $(GX_LIBS) local-hack-gmodule/libgmodule-local.la
+ include_HEADERS = gdk_imlib.h gdk_imlib_private.h gdk_imlib_types.h
+ INCLUDES = -I. -I$(srcdir) -I.. -I$(srcdir)/.. \
+ 	$(GTK_CFLAGS) $(X_CFLAGS) $(GMODULE_FLAGS) 
+--- imlib-1.9.15/Imlib/Makefile.in	2010-05-14 11:12:48.000000000 +0100
++++ imlib-1.9.15/Imlib/Makefile.in	2010-05-14 11:15:08.000000000 +0100
+@@ -137,7 +137,7 @@
+ GDK_IMLIB = @GDK_IMLIB@
+ GDK_SUPPORT_LIBS = @GDK_SUPPORT_LIBS@
+ GIFLIBS = @GIFLIBS@
+-GMODULE_FLAGS = @GMODULE_FLAGS@
++GMODULE_CFLAGS = @GMODULE_CFLAGS@
+ GMODULE_LIBS = @GMODULE_LIBS@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_CONFIG = @GTK_CONFIG@
+--- imlib-1.9.15/Makefile.in	2010-05-14 11:12:48.000000000 +0100
++++ imlib-1.9.15/Makefile.in	2010-05-14 11:15:09.000000000 +0100
+@@ -126,7 +126,7 @@
+ GDK_IMLIB = @GDK_IMLIB@
+ GDK_SUPPORT_LIBS = @GDK_SUPPORT_LIBS@
+ GIFLIBS = @GIFLIBS@
+-GMODULE_FLAGS = @GMODULE_FLAGS@
++GMODULE_CFLAGS = @GMODULE_CFLAGS@
+ GMODULE_LIBS = @GMODULE_LIBS@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_CONFIG = @GTK_CONFIG@
+--- imlib-1.9.15/utils/Makefile.in	2010-05-14 11:12:48.000000000 +0100
++++ imlib-1.9.15/utils/Makefile.in	2010-05-14 11:15:09.000000000 +0100
+@@ -107,7 +107,7 @@
+ GDK_IMLIB = @GDK_IMLIB@
+ GDK_SUPPORT_LIBS = @GDK_SUPPORT_LIBS@
+ GIFLIBS = @GIFLIBS@
+-GMODULE_FLAGS = @GMODULE_FLAGS@
++GMODULE_CFLAGS = @GMODULE_CFLAGS@
+ GMODULE_LIBS = @GMODULE_LIBS@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_CONFIG = @GTK_CONFIG@

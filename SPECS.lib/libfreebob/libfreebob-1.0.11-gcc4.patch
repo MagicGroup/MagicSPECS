@@ -1,0 +1,11 @@
+diff -ur libfreebob-1.0.11.orig/src/libfreebobavc/avc_generic.h libfreebob-1.0.11/src/libfreebobavc/avc_generic.h
+--- libfreebob-1.0.11.orig/src/libfreebobavc/avc_generic.h	2012-12-27 08:55:18.000000000 +0000
++++ libfreebob-1.0.11/src/libfreebobavc/avc_generic.h	2012-12-27 08:55:35.000000000 +0000
+@@ -26,6 +26,7 @@
+ #include "../fbtypes.h"
+ 
+ #include <libavc1394/avc1394.h>
++#include <unistd.h>
+ 
+ class IOSSerialize;
+ class IISDeserialize;

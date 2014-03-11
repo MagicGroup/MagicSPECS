@@ -1,0 +1,12 @@
+diff -ur libindi-0.9/libs/lilxml.c libindi-0.9.new/libs/lilxml.c
+--- libindi-0.9/libs/lilxml.c	2012-01-13 19:40:07.000000000 +0100
++++ libindi-0.9.new/libs/lilxml.c	2012-01-25 00:04:47.486466181 +0100
+@@ -14,7 +14,7 @@
+ 
+     You should have received a copy of the GNU Lesser General Public
+     License along with this library; if not, write to the Free Software
+-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ 
+ #endif
+ 

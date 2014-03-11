@@ -1,0 +1,82 @@
+diff -up ptex-src-3.1.10/Makefile.in.fmts ptex-src-3.1.10/Makefile.in
+--- ptex-src-3.1.10/Makefile.in.fmts	2006-06-05 03:50:47.000000000 +0200
++++ ptex-src-3.1.10/Makefile.in	2008-01-01 23:28:57.000000000 +0100
+@@ -3,11 +3,9 @@ version = @WEB2CVERSION@
+ configopt = @configopt@
+ configkcode = @configkcode@
+ 
+-default: programs formats
++default: programs texmf.cnf
+ 
+ programs=ptex tftopl pltotf pdvitype jbibtex
+-euc-formats=ptex-euc.fmt platex-euc.fmt
+-sjis-formats=ptex-sjis.fmt platex-sjis.fmt
+ 
+ ac_include ../../make/paths.mk
+ 
+@@ -162,30 +160,12 @@ $(kpathsea):
+ 
+ # 
+ # Making formats and bases.
+-formats=$(euc-formats) $(sjis-formats)
+-formats: $(formats)
+ 
+ texmf.cnf: $(kpathsea_dir)/texmf.cnf
+ 	$(SHELL) $(thisdir)/mkconf $(kpathsea_dir)/texmf.cnf > texmf.cnf
+ 
+ dumpenv = TEXMFCNF=$(thisdir)
+ 
+-ptex-euc.fmt: ptex texmf.cnf
+-	$(dumpenv) $(MAKE) progname=ptex files="ptex.tex min10.tfm" prereq-check
+-	$(dumpenv) ./ptex --ini --kanji=euc --progname=ptex --jobname=ptex-euc \\input ptex.tex \\dump </dev/null
+-
+-ptex-sjis.fmt: ptex texmf.cnf
+-	$(dumpenv) $(MAKE) progname=ptex files="ptex.tex min10.tfm" prereq-check
+-	$(dumpenv) ./ptex --ini --kanji=sjis --progname=ptex --jobname=ptex-sjis \\input ptex.tex \\dump </dev/null
+-
+-platex-euc.fmt: ptex texmf.cnf
+-	$(dumpenv) $(MAKE) progname=platex files="platex.ltx" prereq-check
+-	$(dumpenv) ./ptex --ini --kanji=euc --progname=platex --jobname=platex-euc \\input platex.ltx </dev/null
+-
+-platex-sjis.fmt: ptex texmf.cnf
+-	$(dumpenv) $(MAKE) progname=platex files="platex.ltx" prereq-check
+-	$(dumpenv) ./ptex --ini --kanji=sjis --progname=platex --jobname=platex-sjis \\input platex.ltx </dev/null
+-
+ # This is meant to be called recursively, with $(files) set.
+ prereq-check: $(kpathsea_dir)/kpsewhich
+ 	$(dumpenv) $(kpathsea_dir)/kpsewhich --progname=$(progname) $(files) >/dev/null || $(MAKE) prereq-lose >/dev/null
+@@ -209,7 +189,6 @@ $(kpathsea_dir)/kpsewhich: $(kpathsea)
+ install: install-exec install-data
+ 	$(top_srcdir)/kpathsea/mktexlsr
+ install-exec:: install-links
+-install-data:: install-formats
+ 
+ # Installation directories.
+ $(bindir)::
+@@ -223,17 +202,7 @@ install-programs: $(programs) $(bindir)
+ 
+ # The links to ptex for each format.
+ install-links: install-programs $(bindir)
+-	cd $(bindir) && (rm -f iniptex virptex platex; $(LN) ptex platex)
+-
+-# Always do plain.*, so examples from the TeXbook (etc.) will work.
+-install-formats: $(formats) $(web2cdir)
+-	for f in $(formats); do $(INSTALL_DATA) $$f $(web2cdir)/$$f; done
+-	cd $(web2cdir) && (rm -f ptex-jis.fmt platex-jis.fmt ;\
+-		$(LN) ptex-euc.fmt ptex-jis.fmt ;\
+-		$(LN) platex-euc.fmt platex-jis.fmt)
+-	cd $(web2cdir) && (rm -f ptex.fmt platex.fmt ;\
+-		$(LN) ptex-$(configkcode).fmt ptex.fmt ;\
+-		$(LN) platex-$(configkcode).fmt platex.fmt )
++	cd $(bindir) && (rm -f iniptex virptex platex platex209; $(LN) ptex platex ; $(LN) ptex platex209)
+ 
+ # Auxiliary files.
+ install-data::
+@@ -323,6 +292,7 @@ distclean:: clean
+ 	rm -fr failure
+ 	rm -f ptex.web ptex.ch ptex.p ptex.pool ptex.log ptex-euc.fmt ptex-sjis.fmt
+ 	rm -f platex.log platex-euc.fmt platex-sjis.fmt texsys.aux platex
++	rm -f platex209.log platex209-euc.fmt platex209-sjis.fmt platex209
+ 	rm -f tftopl.web tftopl.p
+ 	rm -f pltotf.web pltotf.p
+ 	rm -f pdvitype.web pdvitype.p
