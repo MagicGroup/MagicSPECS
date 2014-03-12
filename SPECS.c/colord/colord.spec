@@ -11,14 +11,14 @@
 # logic that these are probably not doing press proofing or editing
 # in different CMYK spaces
 %ifarch %{ix86} x86_64
-%define build_print_profiles %{?enable_print_profiles}
-%else
-%define build_print_profiles 0
+ %if !0%{?rhel}
+  %define build_print_profiles %{?enable_print_profiles}
+ %endif
 %endif
 
 Summary:   Color daemon
 Name:      colord
-Version:   0.1.33
+Version:   1.1.7
 Release:   1%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/colord/
@@ -39,6 +39,9 @@ BuildRequires: vala-tools
 BuildRequires: libgusb-devel
 BuildRequires: gtk-doc
 BuildRequires: color-filesystem
+%if !0%{?rhel}
+BuildRequires: bash-completion
+%endif
 %if 0%{?build_print_profiles}
 BuildRequires: argyllcms
 %endif
@@ -52,6 +55,7 @@ BuildRequires: dbus-devel
 Requires: color-filesystem
 Requires: systemd-units
 Requires(pre): shadow-utils
+Requires: colord-libs%{?_isa} = %{version}-%{release}
 
 # Self-obsoletes to fix the multilib upgrade path
 Obsoletes: colord < 0.1.27-3
@@ -105,11 +109,6 @@ This may be useful for CMYK soft-proofing or for extra device support.
 %setup -q
 
 %build
-# we can't use _hardened_build here, see
-# https://bugzilla.redhat.com/show_bug.cgi?id=892837
-export CFLAGS='-fPIC %optflags'
-export LDFLAGS='-pie -Wl,-z,now -Wl,-z,relro'
-
 # Set ~2 GiB limit so that colprof is forced to work in chunks when
 # generating the print profile rather than trying to allocate a 3.1 GiB
 # chunk of RAM to put the entire B-to-A tables in.
@@ -125,6 +124,12 @@ ulimit -Sv 2000000
 %endif
 %if 0%{?enable_sane}
         --enable-sane \
+%endif
+%if 0%{?rhel}
+        --disable-bash-completion \
+%endif
+%if !0%{?rhel}
+        --enable-libcolordcompat \
 %endif
         --disable-static \
         --disable-rpath \
@@ -147,6 +152,11 @@ touch $RPM_BUILD_ROOT%{_localstatedir}/lib/colord/storage.db
 
 %find_lang %{name}
 
+%check
+# known failure as of 1.1.5: colorhug/device-queue
+make check || \
+{ rc=$?; find . -name test-suite.log | xargs cat; } # exit $rc; }
+
 %pre
 getent group colord >/dev/null || groupadd -r colord
 getent passwd colord >/dev/null || \
@@ -155,15 +165,21 @@ getent passwd colord >/dev/null || \
 exit 0
 
 %post
-/sbin/ldconfig
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+%systemd_post colord.service
+
+%preun
+%systemd_preun colord.service
 
 %postun
-/sbin/ldconfig
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+%systemd_postun colord.service
+
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files -f %{name}.lang
-%doc README AUTHORS NEWS COPYING
+%doc README.md AUTHORS NEWS COPYING
 %{_libexecdir}/colord
 %attr(755,colord,colord) %dir %{_localstatedir}/lib/colord
 %attr(755,colord,colord) %dir %{_localstatedir}/lib/colord/icc
@@ -175,13 +191,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/dbus-1/system-services/org.freedesktop.ColorManager.service
 %{_datadir}/man/man1/*.1.gz
 %{_datadir}/colord
-%config %{_sysconfdir}/colord.conf
+%if !0%{?rhel}
+%{_datadir}/bash-completion/completions/colormgr
+%endif
 /usr/lib/udev/rules.d/*.rules
 %{_libdir}/colord-sensors
 %{_libdir}/colord-plugins
-%verify(not size md5 mtime) %attr(-,colord,colord) %{_localstatedir}/lib/colord/*.db
+%ghost %attr(-,colord,colord) %{_localstatedir}/lib/colord/*.db
 /usr/lib/systemd/system/colord.service
-%{_sysconfdir}/bash_completion.d/*-completion.bash
 
 # session helper
 %{_libexecdir}/colord-session
@@ -263,6 +280,138 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gtk-doc/html/colord/*
 
 %changelog
+* Fri Feb 28 2014 Richard Hughes <richard@hughsie.com> 1.1.7-1
+- New upstream version
+- Use the new cmsContext functionality in LCMS 2.6
+- Fix the GObject introspection for cd_device_get_profiles()
+- Load the profile defaults when using cd_icc_create_default()
+
+* Fri Feb 28 2014 Rex Dieter <rdieter@fedoraproject.org> 1.1.6-3
+- revert Conflicts: icc-profiles-openicc pending (hopefully) better solution (#1069672)
+
+* Tue Jan 21 2014 Richard Hughes <richard@hughsie.com> 1.1.6-2
+- We don't actually need the valgrind BR...
+
+* Tue Jan 21 2014 Dan Horák <dan[at]danny.cz> - 1.1.6-1.1
+- valgrind is available only on selected arches
+
+* Mon Jan 20 2014 Richard Hughes <richard@hughsie.com> 1.1.6-1
+- New upstream version
+- Fix the tag 'size' when viewing a profile in cd-iccdump
+- Only include libudev in Requires.private on Linux
+- Use the corect sensor-kind values for GretagMacbeth sensors
+- Do not use G_GNUC_WARN_UNUSED_RESULT when uninhibiting
+- Handle failure to initialise GUsb in self-tests
+
+* Sat Dec 21 2013 Ville Skyttä <ville.skytta@iki.fi> - 1.1.5-3
+- Move ldconfig %%post* scriptlets to -libs.
+- Run test suite during build.
+- Fix bogus date in %%changelog.
+
+* Wed Dec 11 2013 Richard Hughes <richard@hughsie.com> 1.1.5-2
+- Add conflict on icc-profiles-openicc
+- The OpenICC profiles are not really compatible for a few reasons:
+ * The profiles are duplicates of the ones shipped in the colord package
+ * The don't contain the correct metadata so the standard spaces show up in the
+   device profile chooser.
+ * The profiles don't contain an embedded ID, so colord has to hash them all
+   manually at startup, which makes colord look bad in bootchart
+ * A duplicate mime rule is installed which matches shared-mime-info one
+
+* Wed Dec 11 2013 Richard Hughes <richard@hughsie.com> 1.1.5-1
+- New upstream version
+- Do not crash when moving the sensor position during calibration
+- Do not crash with zero-sized ICC file
+- Do not create legacy locations
+- Ensure the ICC version is set when creating from the EDID
+- Ensure the parsed EDID strings are valid UTF-8
+- Fix crash when using cd_color_get_blackbody_rgb()
+- Never add USB hubs as scanner devices even if tagged
+- Never create color managed webcam devices
+
+* Tue Nov 19 2013 Richard Hughes <richard@hughsie.com> 1.1.4-1
+- New upstream version
+- Only syslog() profile additions when they're added via DBus
+- Reset the LCMS log handlers to default after use
+- Use the threadsafe versions of the LCMS functions
+- Resolves: #1016425
+
+* Wed Oct 30 2013 Richard Hughes <richard@hughsie.com> 1.1.3-1
+- New upstream version
+- Never print incomplete 'colormgr dump' output
+- Restrict the length of key and values when setting metadata
+
+* Fri Sep 13 2013 Richard Hughes <richard@hughsie.com> 1.1.2-1
+- New upstream version
+- Add a 'dump' colormgr command to aid debugging
+- Allow profiles to be added or removed when the device is not enabled
+- Always return soft-add calibration profiles before soft-add EDID profiles
+- Do not mix up device paths and device IDs in the documentation
+- Fix an error when building the print profiles
+- Fix the AdobeRGB and WideGamutRGB gamma values
+- Fix up various vendor quirks
+- Migrate from usb_id and usb_db to udev builtins usb_id and hwdb
+- Set 'GAMUT_coverage(srgb)' when generating standard space profiles
+- Show a warning for incorrect or extra command line arguments
+- Use %ghost to avoid removing databases on upgrades
+- Use the exact D50 whitepoint values
+
+* Tue Jul 30 2013 Richard Hughes <richard@hughsie.com> 1.1.1-1
+- New upstream version
+- This release bumps the soname of libcolord as long deprecated methods have
+  finally been removed. Any programs that link against libcolord will have to
+  be recompiled against this new version.
+- This unstable branch is full of new features and experimental code, and
+  therefore this release will be restricted to rawhide.
+- Remove the now-unused /etc/colord.conf
+- Update the colormgr man page to reflect reality
+
+* Thu Jul 18 2013 Matthias Clasen <mclasen@redhat.com> 1.0.2-2
+- Add an archful dep to silence rpmdiff
+
+* Sun Jul 07 2013 Richard Hughes <richard@hughsie.com> 1.0.2-1
+- New upstream version
+- Add cd_icc_save_data() so that we can easily set _ICC_PROFILE
+- Add CdIccStore to monitor directories of ICC profiles
+- Add SystemVendor and SystemModel properties to the main interface
+- Allow to specify a non-qualified path when using FindProfileByFilename
+- Allow using the key 'Filename' when using FindProfileByProperty
+- Always return the error if any sync method failed
+- Fix GObject introspection when getting lists
+- Fix GObject introspection when getting metadata
+
+* Tue Jun 11 2013 Richard Hughes <richard@hughsie.com> 1.0.1-1
+- New upstream version
+- Do not unconditionally enable BPC on the color transform
+- Fix profile created time for non-UTC timezones
+- Record the gamma table in the session helper error message
+
+* Mon May 13 2013 Richard Hughes <richard@hughsie.com> 1.0.0-1
+- New upstream version
+- Add a config option for monitors with identical EDID values
+- Allow a different input and output format in CdTransform
+- Build all installed binaries with PIE
+- Build the colord binary with full RELRO
+- Do not show a warning when using 'colormgr device-get-profile-for-qualifier'
+- Fix crash in cd-iccdump by working around an lcms2 bug
+- Fix using the color sensors on ARM hardware
+- Set the STANDARD_space metadata for the print profiles
+- Show all the translations when dumping an ICC profile
+
+* Wed May 01 2013 Richard Hughes <richard@hughsie.com> 0.1.34-1
+- New upstream version
+- Add a ICC transform object for simple RGB conversions
+- Add a warning for RGB profiles with unlikely whitepoint values
+- Add Qt DBus annotations
+- Allow clients to call org.freedesktop.DBus.Peer
+- Correct a lot more company names when creating devices
+- Do not automatically add EDID profiles with warnings to devices
+- Increase the delay between patches in the session-helper
+- Install the bash completion support into /usr
+
+* Wed Apr 24 2013 Václav Pavlín <vpavlin@redhat.com> - 0.1.33-2
+- Add new systemd macros (#856659)
+
 * Tue Apr 16 2013 Richard Hughes <richard@hughsie.com> 0.1.33-1
 - New upstream version
 - Add some translated profile descriptions for the CMYK profiles
