@@ -3,14 +3,14 @@
 %endif
 
 Name:          cogl
-Version:       1.14.0
-Release:       1%{?dist}
+Version:       1.17.4
+Release:       2%{?dist}
 Summary:       A library for using 3D graphics hardware to draw pretty pictures
 
 Group:         Development/Libraries
 License:       LGPLv2+
 URL:           http://www.clutter-project.org/
-Source0:       http://download.gnome.org/sources/cogl/1.14/cogl-%{version}.tar.xz
+Source0:       http://download.gnome.org/sources/cogl/1.17/cogl-%{version}.tar.xz
 
 BuildRequires: cairo-devel
 BuildRequires: gdk-pixbuf2-devel
@@ -27,12 +27,13 @@ BuildRequires: pango-devel
 BuildRequires: pkgconfig
 
 %if %{with_wayland}
+BuildRequires: libwayland-server-devel
 BuildRequires: libwayland-client-devel
 BuildRequires: libwayland-cursor-devel
 BuildRequires: libwayland-egl-devel
 BuildRequires: libxkbcommon-devel
+BuildRequires: mesa-libgbm-devel
 %endif
-
 
 %description
 Cogl is a small open source library for using 3D graphics hardware to draw
@@ -76,10 +77,19 @@ This package contains documentation for %{name}.
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -fPIC"
+%configure \
+  --enable-cairo=yes \
+  --enable-cogl-pango=yes \
+  --enable-gdk-pixbuf=yes \
+  --enable-glx=yes \
+  --enable-gtk-doc \
+  --enable-introspection=yes \
+  --enable-kms-egl-platform \
+  --enable-wayland-egl-platform \
+  --enable-wayland-egl-server \
+  --enable-xlib-egl-platform
 
-%configure --enable-cairo=yes --enable-gdk-pixbuf=yes --enable-cogl-pango=yes --enable-glx=yes --enable-gtk-doc --enable-introspection=yes --enable-wayland-egl-platform
-
-make V=1
+make %{?_smp_mflags} V=1
 
 %install
 make install DESTDIR=%{buildroot} INSTALL='install -p'
@@ -98,7 +108,7 @@ rm %{buildroot}%{_datadir}/cogl/examples-data/crate.jpg
 
 %files -f %{name}.lang
 %doc COPYING NEWS README ChangeLog
-%{_libdir}/libcogl*.so.*
+%{_libdir}/libcogl*.so.20*
 %{_libdir}/girepository-1.0/Cogl*.typelib
 
 %files devel
@@ -112,6 +122,51 @@ rm %{buildroot}%{_datadir}/cogl/examples-data/crate.jpg
 %{_datadir}/gtk-doc/html/cogl-2.0-experimental
 
 %changelog
+* Fri Feb 21 2014 Kalev Lember <kalevlember@gmail.com> - 1.17.4-2
+- Drop compat-libcogl19
+
+* Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 1.17.4-1
+- Update to 1.17.4, which includes soname bump
+- Build a temporary compat-libcogl19 subpackage to ease the rebuilds
+
+* Wed Feb 05 2014 Richard Hughes <rhughes@redhat.com> - 1.17.2-1
+- Update to 1.17.2
+
+* Tue Jan 21 2014 Richard Hughes <rhughes@redhat.com> - 1.16.2-1
+- Update to 1.16.2
+
+* Wed Sep 25 2013 Dan Horák <dan[at]danny.cz> - 1.16.0-2
+- fix build on big endians (#1011893)
+
+* Tue Sep 24 2013 Kalev Lember <kalevlember@gmail.com> - 1.16.0-1
+- Update to 1.16.0
+
+* Thu Sep 12 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.10-3
+- More configure options for enabling the gnome-shell Wayland compositor
+- Enable parallel build
+
+* Tue Sep 10 2013 Matthias Clasen <mclasen@redhat.com> - 1.15.10-2
+- Add configure options that are needed to enable the gnome-shell
+  Wayland compositor
+
+* Mon Sep 02 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.10-1
+- Update to 1.15.10
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.8-1
+- Update to 1.15.8
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.4-1
+- Update to 1.15.4
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.14.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jun 12 2013 Kalev Lember <kalevlember@gmail.com> 1.14.0-3
+- Rebuilt
+
+* Wed May 22 2013 Adam Jackson <ajax@redhat.com> 1.14.0-2
+- cogl-1.14.0-21-ge26464f.patch: Sync with 1.14 branch for a crash fix.
+
 * Mon Mar 25 2013 Kalev Lember <kalevlember@gmail.com> 1.14.0-1
 - Update to 1.14.0
 
