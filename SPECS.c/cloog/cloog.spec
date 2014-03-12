@@ -1,7 +1,7 @@
 Name:           cloog
 %define         tarball_name %{name}-ppl
 Version:        0.15.11
-Release:        5%{?dist}
+Release:        7%{?dist}
 Epoch:		1
 Summary:        The Chunky Loop Generator
 
@@ -93,6 +93,12 @@ fi
 %postun ppl -p /sbin/ldconfig
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.15.11-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.15.11-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Dec  3 2012 Tom Callaway <spot@fedoraproject.org> - 1:0.15.11-5
 - roll back to 0.15.11
 
