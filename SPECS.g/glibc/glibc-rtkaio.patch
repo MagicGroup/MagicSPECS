@@ -1,0 +1,5000 @@
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/Banner glibc-2.17-931-g30bbc0c.new/rtkaio/Banner
+--- glibc-2.17-931-g30bbc0c/rtkaio/Banner	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/Banner	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++RT using linux kernel aio
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/ChangeLog glibc-2.17-931-g30bbc0c.new/rtkaio/ChangeLog
+--- glibc-2.17-931-g30bbc0c/rtkaio/ChangeLog	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/ChangeLog	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1,255 @@
++2009-10-30  Andreas Schwab  <schwab@redhat.com>
++
++	* tst-aiod.h: Include <string.h>.
++
++2009-09-30  Andreas Schwab  <schwab@redhat.com>
++
++	* sysdeps/unix/sysv/linux/x86_64/librtkaio-cancellation.S: New
++	file.
++
++2007-12-12  Jakub Jelinek  <jakub@redhat.com>
++
++	* sysdeps/unix/sysv/linux/kaio_read.c (aio_read64): Define to
++	something else while including kaio_misc.h.
++	* sysdeps/unix/sysv/linux/kaio_write.c (aio_write64): Likewise.
++
++2007-08-01  Jakub Jelinek  <jakub@redhat.com>
++
++	* sysdeps/unix/sysv/linux/kaio_misc.h (AIO_MISC_NOTIFY,
++	AIO_MISC_WAIT): Add LLL_PRIVATE as last argument to lll_futex_*wait.
++
++2006-09-15  Jakub Jelinek  <jakub@redhat.com>
++
++	[BZ #3138]
++	* rt/tst-aiod.c (do_prepare): Give name_len type size_t.
++	* rt/tst-aiod64.c (do_prepare): Likewise.
++
++2006-09-07  Jakub Jelinek  <jakub@redhat.com>
++
++	* tst-aiod2.c: Adjust test for new semantics of lio_listio.
++	* tst-aiod3.c: The thread is now supposed to be created.
++
++	* Makefile: Use $(..) in place of ../.
++	(tests): Add tst-aio{8,9,10}, tst-cpuclock{1,2}, tst-cputimer{1,2,3}
++	and tst-clock2.
++	(CPPFLAGS-librtkaio): Append -I$(..)rt.
++	* Versions.def (librtkaio): Add GLIBC_2.4 version.
++	* sysdeps/unix/sysv/linux/kaio_misc.c (wait_for_kernel_requests)
++	[!DONT_NEED_AIO_MISC_COND]: Don't use condvar, use AIO_MISC_WAIT.
++	* sysdeps/unix/sysv/linux/kaio_misc.h [HAVE_FORCED_UNWIND]
++	(DONT_NEED_AIO_MISC_COND, AIO_MISC_NOTIFY, AIO_MISC_WAIT): Define.
++	(struct waitlist) [DONT_NEED_AIO_MISC_COND]: Remove cond.
++	* sysdeps/unix/sysv/linux/kaio_suspend.c (struct clparam)
++	[DONT_NEED_AIO_MISC_COND]: Remove cond.
++	(cleanup) [DONT_NEED_AIO_MISC_COND]: Lock __aio_requests_mutex on
++	entry.  Don't destroy param->cond.
++	(aio_suspend): Fail if nent is negative.
++	(aio_suspend) [DONT_NEED_AIO_MISC_COND]: Don't use cond, use
++	AIO_MISC_WAIT.
++	* sysdeps/unix/sysv/linux/klio_listio.c (lio_listio): Renamed to...
++	(lio_listio_internal): ... this.  Don't use cond, but AIO_MISC_WAIT,
++	if DONT_NEED_AIO_MISC_COND.  Remove mode parameter check.  Only set
++	sigevent type to SIGEV_NONE if LIO_NO_INDIVIDUAL_EVENT is set.
++	(__lio_listio_21): New function.  Compatiblity version which sets
++	LIO_NO_INDIVIDUAL_EVENT before calling lio_listio_internal.
++	(__lio_listio_item_notify): New function.
++	* sysdeps/unix/sysv/linux/klio_listio64.c: Define __lio_listio_21 and
++	__lio_listio_item_notify macros.
++	* aio.h: Removed.
++	* configure.in: New file
++	* configure: Regenerated.
++	* sysdeps/rtkaio/kaio_cancel.c: Moved to...
++	* kaio_cancel.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_error.c: Moved to...
++	* kaio_error.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_fsync.c: Moved to...
++	* kaio_fsync.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_misc.c: Moved to...
++	* kaio_misc.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_notify.c: Moved to...
++	* kaio_notify.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_read.c: Moved to...
++	* kaio_read.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_read64.c: Moved to...
++	* kaio_read64.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_return.c: Moved to...
++	* kaio_return.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_sigqueue.c: Moved to...
++	* kaio_sigqueue.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_suspend.c: Moved to...
++	* kaio_suspend.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_write.c: Moved to...
++	* kaio_write.c: ... here.  New file.
++	* sysdeps/rtkaio/kaio_write64.c: Moved to...
++	* kaio_write64.c: ... here.  New file.
++	* sysdeps/rtkaio/klio_listio.c: Moved to...
++	* klio_listio.c: ... here.  New file.
++	* sysdeps/rtkaio/klio_listio64.c: Moved to...
++	* klio_listio64.c: ... here.  New file.
++	* sysdeps/pthread/Versions: New file.
++	* tst-aio8.c: New file.
++	* tst-aio9.c: New file.
++	* tst-aio10.c: New file.
++	* tst-clock2.c: New file.
++	* tst-cpuclock1.c: New file.
++	* tst-cpuclock2.c: New file.
++	* tst-cputimer1.c: New file.
++	* tst-cputimer2.c: New file.
++	* tst-cputimer3.c: New file.
++	* sysdeps/unix/sysv/linux/sparc/Makefile: New file.
++	* sysdeps/unix/sysv/linux/sparc/rtkaio-sysdep.c: New file.
++	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions: New file.
++	* sysdeps/mips/Makefile: Removed.
++	* sysdeps/unix/mips/rtkaio-sysdep.S: Removed.
++	* sysdeps/unix/sysv/linux/hppa/Versions: Removed.
++	* sysdeps/unix/sysv/linux/hppa/kaio_cancel.c: Removed.
++
++2006-07-19  Jakub Jelinek  <jakub@redhat.com>
++
++	* sysdeps/unix/sysv/linux/kaio_misc.c: Include atomic.h.
++	(kernel_callback): Ensure __return_value is updated before
++	__error_code is set.
++
++2006-05-11  Jakub Jelinek  <jakub@redhat.com>
++
++	* Makefile (tests): Add tst-mqueue{8,9}, tst-timer5 and
++	tst-aiod{,64,2,3,4,5}.
++	(LDFLAGS-rtkaio.so): Add -Wl,--enable-new-dtags,-z,nodelete.
++	* sysdeps/unix/sysv/linux/kaio_misc.h: Include signal.h and
++	sysdep.h.
++	(aio_start_notify_thread, aio_create_helper_thread): Define
++	for !BROKEN_THREAD_SIGNALS.
++	(__aio_start_notify_thread, __aio_create_helper_thread): New
++	functions for !BROKEN_THREAD_SIGNALS.
++	* sysdeps/unix/sysv/linux/kaio_misc.c: Include sys/sysmacros.h.
++	(aio_create_helper_thread): Define if not yet defined.
++	(__aio_create_helper_thread): New function.
++	(__aio_wait_for_events): Pass 1 rather than 0 as min_nr to
++	io_getevents.
++	(handle_kernel_aio): Likewise.
++	(__aio_create_kernel_thread): Use aio_create_helper_thread.
++	(__aio_enqueue_user_request): Likewise.
++	(handle_fildes_io): Likewise.  Remove noreturn attribute,
++	return NULL instead of calling pthread_exit (NULL).
++	(__aio_enqueue_request_ctx): Call fcntl and fxstat64 to avoid using
++	kaio on non-O_DIRECT non-/dev/raw* filedescriptors.  For LIO_SYNC
++	and LIO_DSYNC also set kctx to KCTX_NONE.
++	* sysdeps/unix/sysv/linux/kaio_suspend.c (aio_suspend): Don't start
++	handle_kernel_aio thread if ktotal is zero.
++	* sysdeps/pthread/Makefile (tests): Add tst-mqueue8x.
++	(CFLAGS-tst-mqueue8x.c): Add -fexceptions.
++	* Versions.def (librtkaio): Add GLIBC_2.3.4 version.
++	* kaio_mq_close.c: New file.
++	* kaio_mq_getattr.c: New file.
++	* kaio_mq_notify.c: New file.
++	* kaio_mq_open.c: New file.
++	* kaio_mq_receive.c: New file.
++	* kaio_mq_send.c: New file.
++	* kaio_mq_setattr.c: New file.
++	* kaio_mq_timedreceive.c: New file.
++	* kaio_mq_timedsend.c: New file.
++	* kaio_mq_unlink.c: New file.
++	* sysdeps/pthread/tst-mqueue8x.c: New file.
++	* sysdeps/unix/sysv/linux/syscalls.list: New file.
++	* tst-mqueue8.c: New file.
++	* tst-mqueue9.c: New file.
++	* tst-timer5.c: New file.
++	* tst-aiod.h: New file.
++	* tst-aiod.c: New test.
++	* tst-aiod64.c: New test.
++	* tst-aiod2.c: New test.
++	* tst-aiod3.c: New test.
++	* tst-aiod4.c: New test.
++	* tst-aiod5.c: New test.
++	* sysdeps/mips/Makefile: New file.
++	* sysdeps/unix/alpha/Makefile: New file.
++	* sysdeps/unix/alpha/rtkaio-sysdep.S: New file.
++	* sysdeps/unix/mips/rtkaio-sysdep.S: New file.
++	* sysdeps/unix/sysv/linux/Makefile: New file.
++	* sysdeps/unix/sysv/linux/s390/Makefile: New file.
++	* sysdeps/unix/sysv/linux/s390/rtkaio-sysdep.S: New file.
++	* sysdeps/unix/sysv/linux/powerpc/Makefile: New file.
++	* sysdeps/unix/sysv/linux/powerpc/rtkaio-sysdep.c: New file.
++	* sysdeps/unix/sysv/linux/ia64/Makefile: New file.
++	* sysdeps/unix/sysv/linux/ia64/rtkaio-sysdep.S: New file.
++
++2004-04-17  Jakub Jelinek  <jakub@redhat.com>
++
++	* rt/Makefile (mq-routines): Set.
++	(librt-routines): Use it.
++	(tests): Add tst-mqueue{1,2,3,4,5,6,7} and tst-timer{3,4}.
++	(tst-mqueue7-ARGS): Set.
++	* rt/Versions (librt): Add mq_*@@GLIBC_2.3.4.
++	* rt/tst-mqueue1.c: New file.
++	* rt/tst-mqueue2.c: New file.
++	* rt/tst-mqueue3.c: New file.
++	* rt/tst-mqueue4.c: New file.
++	* rt/tst-mqueue5.c: New file.
++	* rt/tst-mqueue6.c: New file.
++	* rt/tst-mqueue7.c: New file.
++	* rt/tst-timer3.c: New file.
++	* rt/tst-timer4.c: New file.
++
++2003-08-14  Jakub Jelinek  <jakub@redhat.com>
++
++	* sysdeps/unix/sysv/linux/kaio_misc.c (wait_for_kernel_requests):
++	New function.
++	(handle_fildes_io): Use it for LIO_SYNC and LIO_DSYNC.
++
++	* sysdeps/pthread/Makefile (CPPFLAGS): Add -DBROKEN_THREAD_SIGNALS
++	for rtkaio/linuxthreads combo.
++	* sysdeps/unix/sysv/linux/kaio_misc.c (__aio_enqueue_request_ctx):
++	Only set caller_pid if BROKEN_THREAD_SIGNALS.
++	* sysdeps/unix/sysv/linux/kaio_misc.h (struct waitlist,
++	struct requestlist): Remove caller_pid unless BROKEN_THREAD_SIGNALS.
++	(__aio_notify_only): Remove last argument if not
++	BROKEN_THREAD_SIGNALS.
++	* sysdeps/unix/sysv/linux/kaio_suspend.c (aio_suspend): Only set
++	caller_pid if not BROKEN_THREAD_SIGNALS.
++	* sysdeps/unix/sysv/linux/klio_listio.c (lio_listio): Likewise.
++	Remove last argument in call to __aio_notify_only unless
++	BROKEN_THREAD_SIGNALS.
++
++	* tst-aio.c: Avoid test duplication.  Include rt/aio.c instead.
++	* tst-aio2.c: Similarly.
++	* tst-aio3.c: Similarly.
++	* tst-aio4.c: Similarly.
++	* tst-aio5.c: Similarly.
++	* tst-aio6.c: Similarly.
++	* tst-aio64.c: Similarly.
++	* tst-aio7.c: Similarly.
++	* tst-clock.c: Similarly.
++	* tst-clock_nanosleep.c: Similarly.
++	* tst-shm.c: Similarly.
++	* tst-timer2.c: Similarly.
++
++2003-07-29  Roland McGrath  <roland@redhat.com>
++
++	* rt/tst-timer2.c: New file.
++	* rt/Makefile (tests): Add it.
++
++2003-07-25  Jakub Jelinek  <jakub@redhat.com>
++
++	* sysdeps/unix/sysv/linux/kaio_cancel.c (aio_cancel): Attempt
++	to cancel kioctx != KCTX_NONE requests even if second argument
++	to aio_cancel is NULL.
++
++2003-07-24  Jakub Jelinek  <jakub@redhat.com>
++
++	* sysdeps/unix/sysv/linux/kaio_cancel.c (aio_cancel): Return
++	AIO_ALLDONE if aiocbp != NULL and has already completed.  Return
++	-1/EINVAL if aiocbp->aio_fildes does not match fildes.
++
++	* sysdeps/unix/sysv/linux/alpha/kaio_cancel.c: New file.
++	* sysdeps/unix/sysv/linux/hppa/kaio_cancel.c: New file.
++	* sysdeps/unix/sysv/linux/sparc/kaio_cancel.c: New file.
++	* sysdeps/unix/sysv/linux/kaio_cancel.c (aio_cancel): Attempt
++	to cancel request handled by kernel (so far just if aiocbp != NULL).
++	* sysdeps/unix/sysv/linux/kaio_misc.c (__aio_remove_krequest): Fix
++	assertion, req->kioctx must NOT be KCTX_NONE.
++	* sysdeps/unix/sysv/linux/kaio_misc.h (__aio_remove_krequest): New
++	prototype.
++
++2003-07-23  Jakub Jelinek  <jakub@redhat.com>
++
++	* New add-on.
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/configure glibc-2.17-931-g30bbc0c.new/rtkaio/configure
+--- glibc-2.17-931-g30bbc0c/rtkaio/configure	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/configure	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1,4 @@
++# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
++
++libc_add_on_canonical=
++libc_add_on_subdirs=.
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/configure.in glibc-2.17-931-g30bbc0c.new/rtkaio/configure.in
+--- glibc-2.17-931-g30bbc0c/rtkaio/configure.in	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/configure.in	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1,5 @@
++dnl glibc configure fragment for rtkaio add-on
++GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
++
++libc_add_on_canonical=
++libc_add_on_subdirs=.
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/Depend glibc-2.17-931-g30bbc0c.new/rtkaio/Depend
+--- glibc-2.17-931-g30bbc0c/rtkaio/Depend	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/Depend	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++rt
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_cancel.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_cancel.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_cancel.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_cancel.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <aio_cancel.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_getcpuclockid.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_getcpuclockid.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_getcpuclockid.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_getcpuclockid.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <clock_getcpuclockid.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_getres.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_getres.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_getres.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_getres.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <clock_getres.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_gettime.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_gettime.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_gettime.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_gettime.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <clock_gettime.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_nanosleep.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_nanosleep.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_nanosleep.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_nanosleep.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <clock_nanosleep.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_settime.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_settime.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_clock_settime.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_clock_settime.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <clock_settime.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_error.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_error.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_error.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_error.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <aio_error.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_fsync.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_fsync.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_fsync.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_fsync.c	2013-08-16 16:23:23.241028404 +0530
+@@ -0,0 +1 @@
++#include <aio_fsync.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_get_clockfreq.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_get_clockfreq.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_get_clockfreq.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_get_clockfreq.c	2013-08-16 16:23:23.241028404 +0530
+@@ -0,0 +1 @@
++#include <get_clockfreq.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_misc.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_misc.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_misc.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_misc.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <aio_misc.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_close.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_close.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_close.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_close.c	2013-08-16 16:23:23.241028404 +0530
+@@ -0,0 +1 @@
++#include <mq_close.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_getattr.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_getattr.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_getattr.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_getattr.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <mq_getattr.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_notify.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_notify.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_notify.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_notify.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <mq_notify.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_open.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_open.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_open.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_open.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <mq_open.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_receive.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_receive.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_receive.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_receive.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <mq_receive.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_send.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_send.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_send.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_send.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <mq_send.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_setattr.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_setattr.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_setattr.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_setattr.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <mq_setattr.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_timedreceive.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_timedreceive.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_timedreceive.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_timedreceive.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <mq_timedreceive.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_timedsend.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_timedsend.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_timedsend.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_timedsend.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <mq_timedsend.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_unlink.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_unlink.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_mq_unlink.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_mq_unlink.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <mq_unlink.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_notify.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_notify.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_notify.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_notify.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <aio_notify.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_read64.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_read64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_read64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_read64.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <aio_read64.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_read.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_read.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_read.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_read.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <aio_read.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_return.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_return.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_return.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_return.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <aio_return.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_shm_open.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_shm_open.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_shm_open.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_shm_open.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <shm_open.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_shm_unlink.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_shm_unlink.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_shm_unlink.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_shm_unlink.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <shm_unlink.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_sigqueue.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_sigqueue.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_sigqueue.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_sigqueue.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <aio_sigqueue.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_suspend.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_suspend.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_suspend.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_suspend.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <aio_suspend.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_create.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_create.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_create.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_create.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <timer_create.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_delete.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_delete.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_delete.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_delete.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <timer_delete.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_getoverr.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_getoverr.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_getoverr.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_getoverr.c	2013-08-16 16:23:23.241028404 +0530
+@@ -0,0 +1 @@
++#include <timer_getoverr.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_gettime.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_gettime.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_gettime.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_gettime.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <timer_gettime.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_settime.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_settime.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_timer_settime.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_timer_settime.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <timer_settime.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_write64.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_write64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_write64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_write64.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <aio_write64.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/kaio_write.c glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_write.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/kaio_write.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/kaio_write.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <aio_write.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/klio_listio64.c glibc-2.17-931-g30bbc0c.new/rtkaio/klio_listio64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/klio_listio64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/klio_listio64.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <lio_listio64.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/klio_listio.c glibc-2.17-931-g30bbc0c.new/rtkaio/klio_listio.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/klio_listio.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/klio_listio.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <lio_listio.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/Makefile	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1,101 @@
++# Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
++# This file is part of the GNU C Library.
++
++# The GNU C Library is free software; you can redistribute it and/or
++# modify it under the terms of the GNU Lesser General Public
++# License as published by the Free Software Foundation; either
++# version 2.1 of the License, or (at your option) any later version.
++
++# The GNU C Library is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++# Lesser General Public License for more details.
++
++# You should have received a copy of the GNU Lesser General Public
++# License along with the GNU C Library; if not, write to the Free
++# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++# 02111-1307 USA.
++
++#
++#	Sub-makefile for real-time kaio portion of the library.
++#
++subdir	:= rtkaio
++
++aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\
++		  aio_read64 aio_return aio_suspend aio_write		\
++		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
++		  aio_notify
++clock-routines := get_clockfreq clock_getcpuclockid			\
++		  clock_getres clock_gettime clock_settime		\
++		  clock_nanosleep
++timer-routines := timer_create timer_delete timer_getoverr		\
++		  timer_gettime timer_settime
++shm-routines   := shm_open shm_unlink
++mq-routines    := mq_open mq_close mq_unlink mq_getattr mq_setattr	\
++		  mq_notify mq_send mq_receive mq_timedsend		\
++		  mq_timedreceive
++
++librtkaio-routines = $(patsubst %,k%,$(aio-routines)) \
++		     $(patsubst %,kaio_%,$(clock-routines) $(timer-routines) \
++					 $(shm-routines) $(mq-routines))
++
++tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
++	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
++	 tst-aio7 tst-aio8 tst-aio9 tst-aio10 \
++	 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4 \
++	 tst-mqueue5 tst-mqueue6 tst-mqueue7 tst-mqueue8 tst-mqueue9 \
++	 tst-timer3 tst-timer4 tst-timer5 \
++	 tst-cpuclock1 tst-cpuclock2 \
++	 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
++	 tst-clock2 \
++	 tst-aiod tst-aiod64 tst-aiod2 tst-aiod3 tst-aiod4 tst-aiod5
++
++extra-libs := librtkaio
++extra-libs-others := $(extra-libs)
++
++include $(..)Makeconfig
++
++ifeq (yesyes,$(build-shared)$(elf))
++generated += librt.so$(librt.so-version)
++
++$(objpfx)librt.so$(librt.so-version): $(objpfx)librtkaio.so; $(make-link)
++endif
++
++include $(..)Rules
++
++CFLAGS-kaio_suspend.c = -fexceptions
++CFLAGS-kaio_clock_nanosleep.c = -fexceptions -fasynchronous-unwind-tables
++CFLAGS-kaio_librt-cancellation.c = -fasynchronous-unwind-tables
++
++LDFLAGS-rtkaio.so = -Wl,-soname=lib$(libprefix)rt.so$(librt.so-version) \
++		    -Wl,--enable-new-dtags,-z,nodelete
++CPPFLAGS-librtkaio += -DIS_IN_librt=1 -I$(..)rt
++
++rpath-dirs := $(patsubst rt,rtkaio,$(rpath-dirs))
++
++ifeq (yesyes,$(build-shared)$(elf))
++others: $(objpfx)librt.so$(librt.so-version)
++endif
++
++# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
++# This ensures they will load libc.so for needed symbols if loaded by
++# a statically-linked program that hasn't already loaded it.
++$(objpfx)librtkaio.so: $(common-objpfx)libc.so $(common-objpfx)libc_nonshared.a \
++		   $(shared-thread-library) \
++		   $(if $(filter yes,$(elf)), $(elfobjdir)/ld.so)
++
++ifeq (yes,$(build-shared))
++$(addprefix $(objpfx),$(tests)): $(objpfx)librtkaio.so $(shared-thread-library)
++else
++$(addprefix $(objpfx),$(tests)): $(objpfx)librtkaio.a $(static-thread-library)
++endif
++ifeq (yes,$(build-bounded))
++$(tests:%=$(objpfx)%-bp): $(objpfx)librtkaio_b.a $(bounded-thread-library)
++endif
++
++tst-mqueue7-ARGS = -- $(built-program-cmd)
++
++ifeq (yes,$(build-static-nss))
++otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
++             $(resolvobjdir)/libresolv.a
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/shlib-versions glibc-2.17-931-g30bbc0c.new/rtkaio/shlib-versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/shlib-versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/shlib-versions	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1,2 @@
++mips.*-.*-linux.*	librtkaio=1		GLIBC_2.0 GLIBC_2.2
++.*-.*-.*		librtkaio=1
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/kaio_timer_routines.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/kaio_timer_routines.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/kaio_timer_routines.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/kaio_timer_routines.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <timer_routines.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/librtkaio-cancellation.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/librtkaio-cancellation.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/librtkaio-cancellation.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/librtkaio-cancellation.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <librt-cancellation.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/Makefile	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1,39 @@
++ifeq ($(filter nptl,$(sorted-subdirs)),nptl)
++
++ifeq ($(subdir),rtkaio)
++librtkaio-sysdep_routines += kaio_timer_routines librtkaio-cancellation rtkaio-unwind-resume
++librtkaio-shared-only-routines += rtkaio-unwind-resume
++tests += tst-cancel17 tst-cancelx17
++CPPFLAGS-kaio_timer_routines.c = -I../nptl
++CFLAGS-librtkaio-cancellation.c += -fexceptions -fasynchronous-unwind-tables
++CFLAGS-rtkaio-unwind-resume.c += -fexceptions -fasynchronous-unwind-tables
++CFLAGS-tst-cancelx17.c += -fexceptions
++
++ifeq (yes,$(build-shared))
++$(objpfx)tst-timer: $(objpfx)librtkaio.so $(shared-thread-library)
++else
++$(objpfx)tst-timer: $(objpfx)librtkaio.a $(static-thread-library)
++endif
++
++ifeq ($(have-forced-unwind),yes)
++tests += tst-mqueue8x
++CFLAGS-tst-mqueue8x.c += -fexceptions
++endif
++endif
++
++endif
++
++ifeq ($(filter linuxthreads,$(sorted-subdirs)),linuxthreads)
++
++ifeq ($(subdir),rtkaio)
++librtkaio-sysdep_routines += kaio_timer_routines
++CPPFLAGS += -DBROKEN_THREAD_SIGNALS
++
++ifeq (yes,$(build-shared))
++$(objpfx)tst-timer: $(objpfx)librtkaio.so $(shared-thread-library)
++else
++$(objpfx)tst-timer: $(objpfx)librtkaio.a $(static-thread-library)
++endif
++endif
++
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/rtkaio-unwind-resume.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/rtkaio-unwind-resume.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/rtkaio-unwind-resume.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/rtkaio-unwind-resume.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt-unwind-resume.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-cancel17.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-cancel17.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-cancel17.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-cancel17.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <nptl/tst-cancel17.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-cancelx17.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-cancelx17.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-cancelx17.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-cancelx17.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include "tst-cancel17.c"
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-mqueue8x.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-mqueue8x.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-mqueue8x.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-mqueue8x.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include_next <tst-mqueue8x.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-timer.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-timer.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/tst-timer.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/tst-timer.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include_next <tst-timer.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/pthread/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/pthread/Versions	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1,7 @@
++%ifdef HAVE_FORCED_UNWIND
++librtkaio {
++  GLIBC_2.4 {
++    lio_listio; lio_listio64;
++  }
++}
++%endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/alpha/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/alpha/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/alpha/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/alpha/Makefile	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,3 @@
++ifeq ($(subdir),rtkaio)
++librtkaio-sysdep_routines += rtkaio-sysdep
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/alpha/rtkaio-sysdep.S glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/alpha/rtkaio-sysdep.S
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/alpha/rtkaio-sysdep.S	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/alpha/rtkaio-sysdep.S	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1 @@
++#include <rt-sysdep.S>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/alpha/kaio_cancel.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/alpha/kaio_cancel.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/alpha/kaio_cancel.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/alpha/kaio_cancel.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,33 @@
++#include <shlib-compat.h>
++
++#define aio_cancel64 XXX
++#include <aio.h>
++#undef aio_cancel64
++#include <errno.h>
++
++extern __typeof (aio_cancel) __new_aio_cancel;
++extern __typeof (aio_cancel) __old_aio_cancel;
++
++#define aio_cancel	__new_aio_cancel
++
++#include <sysdeps/unix/sysv/linux/kaio_cancel.c>
++
++#undef aio_cancel
++strong_alias (__new_aio_cancel, __new_aio_cancel64);
++versioned_symbol (librt, __new_aio_cancel, aio_cancel, GLIBC_2_3);
++versioned_symbol (librt, __new_aio_cancel64, aio_cancel64, GLIBC_2_3);
++
++#if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_3)
++
++#undef ECANCELED
++#define aio_cancel	__old_aio_cancel
++#define ECANCELED	125
++
++#include <sysdeps/unix/sysv/linux/kaio_cancel.c>
++
++#undef aio_cancel
++strong_alias (__old_aio_cancel, __old_aio_cancel64);
++compat_symbol (librt, __old_aio_cancel, aio_cancel, GLIBC_2_1);
++compat_symbol (librt, __old_aio_cancel64, aio_cancel64, GLIBC_2_1);
++
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/alpha/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/alpha/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/alpha/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/alpha/Versions	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,6 @@
++librtkaio {
++  GLIBC_2.3 {
++    # AIO functions.
++    aio_cancel; aio_cancel64;
++  }
++}
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/ia64/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/ia64/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/ia64/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/ia64/Makefile	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,3 @@
++ifeq ($(subdir),rtkaio)
++librtkaio-routines += rtkaio-sysdep
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/ia64/rtkaio-sysdep.S glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/ia64/rtkaio-sysdep.S
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/ia64/rtkaio-sysdep.S	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/ia64/rtkaio-sysdep.S	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1 @@
++#include <rt-sysdep.S>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/ia64/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/ia64/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/ia64/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/ia64/Versions	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,9 @@
++%ifdef HAVE_FORCED_UNWIND
++librtkaio {
++  GLIBC_2.3.3 {
++    # Changed timer_t.
++    timer_create; timer_delete; timer_getoverrun; timer_gettime;
++    timer_settime;
++  }
++}
++%endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_cancel.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_cancel.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_cancel.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_cancel.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,240 @@
++/* Cancel requests associated with given file descriptor.
++   Copyright (C) 1997, 1998, 2000, 2002, 2003, 2005 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++/* We use an UGLY hack to prevent gcc from finding us cheating.  The
++   implementation of aio_cancel and aio_cancel64 are identical and so
++   we want to avoid code duplication by using aliases.  But gcc sees
++   the different parameter lists and prints a warning.  We define here
++   a function so that aio_cancel64 has no prototype.  */
++#ifndef aio_cancel
++#define aio_cancel64 XXX
++#include <aio.h>
++/* And undo the hack.  */
++#undef aio_cancel64
++#endif
++
++#include <kaio_misc.h>
++
++#ifndef USE_KAIO
++#include <aio_cancel.c>
++#else
++
++#include <unistd.h>
++#include <fcntl.h>
++#include <assert.h>
++#include <errno.h>
++
++int
++aio_cancel (fildes, aiocbp)
++     int fildes;
++     struct aiocb *aiocbp;
++{
++  struct requestlist *req = NULL;
++  int result = AIO_ALLDONE;
++
++  /* If fildes is invalid, error. */
++  if (fcntl (fildes, F_GETFL) < 0)
++    {
++      __set_errno (EBADF);
++      return -1;
++    }
++
++  /* Request the mutex.  */
++  pthread_mutex_lock (&__aio_requests_mutex);
++
++  /* We are asked to cancel a specific AIO request.  */
++  if (aiocbp != NULL)
++    {
++      /* If the AIO request is not for this descriptor it has no value
++	 to look for the request block.  */
++      if (aiocbp->aio_fildes != fildes)
++	{
++	  pthread_mutex_unlock (&__aio_requests_mutex);
++	  __set_errno (EINVAL);
++	  return -1;
++	}
++      else if (aiocbp->__error_code == EINPROGRESS)
++	{
++	  struct requestlist *last = NULL;
++
++	  req = __aio_find_req_fd (fildes);
++
++	  if (req != NULL)
++	    while (req->aiocbp != (aiocb_union *) aiocbp)
++	      {
++		last = req;
++		req = req->next_prio;
++		if (req == NULL)
++		  break;
++	      }
++
++	  if (req != NULL)
++	    {
++	      /* Don't remove the entry if a thread is already working on
++		 it.  */
++	      if (req->running == allocated)
++		{
++		  result = AIO_NOTCANCELED;
++		  req = NULL;
++		}
++	      else
++		{
++		  /* We can remove the entry.  */
++		  __aio_remove_request (last, req, 0);
++
++		  result = AIO_CANCELED;
++
++		  req->next_prio = NULL;
++		}
++	    }
++	  else
++	    {
++	      /* Try kernel requests.  */
++	      req = __aio_find_req ((aiocb_union *) aiocbp);
++
++	      if (req == NULL)
++		{
++		  pthread_mutex_unlock (&__aio_requests_mutex);
++		  __set_errno (EINVAL);
++		  return -1;
++		}
++
++	      assert (req->kioctx != KCTX_NONE);
++
++	      /* If kernel is working on it, try cancelling it.  */
++	      if (req->running == allocated)
++		{
++		  struct kio_event ev;
++		  INTERNAL_SYSCALL_DECL (err);
++		  int res;
++
++		  res = INTERNAL_SYSCALL (io_cancel, err, 3, __aio_kioctx,
++					  &req->kiocb, &ev);
++		  if (INTERNAL_SYSCALL_ERROR_P (res, err))
++		    {
++		      result = AIO_NOTCANCELED;
++		      req = NULL;
++		    }
++		  else
++		    req->running = queued;
++		}
++	      if (req != NULL)
++		{
++		  /* We can remove the entry.  */
++		  __aio_remove_krequest (req);
++		  result = AIO_CANCELED;
++		  req->next_prio = NULL;
++		}
++	    }
++	}
++    }
++  else
++    {
++      /* Find the beginning of the list of all requests for this
++	 desriptor.  */
++      req = __aio_find_req_fd (fildes);
++
++      /* If any request is worked on by a thread it must be the first.
++	 So either we can delete all requests or all but the first.  */
++      if (req != NULL)
++	{
++	  if (req->running == allocated)
++	    {
++	      struct requestlist *old = req;
++	      req = req->next_prio;
++	      old->next_prio = NULL;
++
++	      result = AIO_NOTCANCELED;
++
++	      if (req != NULL)
++		__aio_remove_request (old, req, 1);
++	    }
++	  else
++	    {
++	      result = AIO_CANCELED;
++
++	      /* We can remove the entry.  */
++	      __aio_remove_request (NULL, req, 1);
++	    }
++	}
++
++      if (result != AIO_NOTCANCELED)
++	{
++	  /* Try to cancel kernel requests.  */
++	  struct requestlist *kreq = __aio_find_kreq_fd (fildes);
++
++	  while (kreq)
++	    {
++	      struct requestlist *next;
++
++	      /* If kernel is working on it, try cancelling it.  */
++	      if (kreq->running == allocated)
++		{
++		  struct kio_event ev;
++		  INTERNAL_SYSCALL_DECL (err);
++		  int res;
++
++		  res = INTERNAL_SYSCALL (io_cancel, err, 3, __aio_kioctx,
++					  &kreq->kiocb, &ev);
++		  if (INTERNAL_SYSCALL_ERROR_P (res, err))
++		    {
++		      result = AIO_NOTCANCELED;
++		      break;
++		    }
++		  else
++		    kreq->running = queued;
++		}
++	      next = kreq->next_prio;
++	      __aio_remove_krequest (kreq);
++	      result = AIO_CANCELED;
++	      kreq->next_prio = NULL;
++	      assert (kreq->running == yes || kreq->running == queued);
++	      kreq->aiocbp->aiocb.__error_code = ECANCELED;
++	      kreq->aiocbp->aiocb.__return_value = -1;
++	      __aio_notify (kreq);
++	      __aio_free_request (kreq);
++	      kreq = next;
++	    }
++	}
++    }
++
++  /* Mark requests as canceled and send signal.  */
++  while (req != NULL)
++    {
++      struct requestlist *old = req;
++      assert (req->running == yes || req->running == queued);
++      req->aiocbp->aiocb.__error_code = ECANCELED;
++      req->aiocbp->aiocb.__return_value = -1;
++      __aio_notify (req);
++      req = req->next_prio;
++      __aio_free_request (old);
++    }
++
++  /* Release the mutex.  */
++  pthread_mutex_unlock (&__aio_requests_mutex);
++
++  return result;
++}
++
++#ifndef aio_cancel
++weak_alias (aio_cancel, aio_cancel64)
++#endif
++
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_error.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_error.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_error.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_error.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,54 @@
++/* Return error status of asynchronous I/O request.
++   Copyright (C) 1997, 2002, 2003 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++/* We use an UGLY hack to prevent gcc from finding us cheating.  The
++   implementation of aio_error and aio_error64 are identical and so
++   we want to avoid code duplication by using aliases.  But gcc sees
++   the different parameter lists and prints a warning.  We define here
++   a function so that aio_error64 has no prototype.  */
++#define aio_error64 XXX
++#include <aio.h>
++/* And undo the hack.  */
++#undef aio_error64
++
++#include <kaio_misc.h>
++
++#ifndef USE_KAIO
++#include <aio_error.c>
++#else
++
++#include <errno.h>
++
++int
++aio_error (aiocbp)
++     const struct aiocb *aiocbp;
++{
++  int ret = aiocbp->__error_code;
++
++  if (ret == EINPROGRESS)
++    {
++      __aio_read_one_event ();
++      ret = aiocbp->__error_code;
++    }
++  return ret;
++}
++
++weak_alias (aio_error, aio_error64)
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_fsync.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_fsync.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_fsync.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_fsync.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,6 @@
++#define aio_fsync64 XXX
++#include <aio.h>
++/* And undo the hack.  */
++#undef aio_fsync64
++#include <kaio_misc.h>
++#include <aio_fsync.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,1139 @@
++/* Handle general operations.
++   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2006,2010
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <kaio_misc.h>
++
++#ifndef USE_KAIO
++#include <aio_misc.c>
++#else
++
++#include <aio.h>
++#include <assert.h>
++#include <atomic.h>
++#include <errno.h>
++#include <limits.h>
++#include <pthread.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <sys/stat.h>
++#include <sys/time.h>
++#include <sys/sysmacros.h>
++
++#ifndef aio_create_helper_thread
++# define aio_create_helper_thread __aio_create_helper_thread
++
++extern inline int
++__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
++{
++  pthread_attr_t attr;
++
++  /* Make sure the thread is created detached.  */
++  pthread_attr_init (&attr);
++  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
++
++  int ret = pthread_create (threadp, &attr, tf, arg);
++
++  (void) pthread_attr_destroy (&attr);
++  return ret;
++}
++
++#endif
++
++
++static void add_request_to_runlist (struct requestlist *newrequest)
++	internal_function;
++static int add_request_to_list (struct requestlist *newrequest, int fildes,
++				int prio)
++	internal_function;
++static void * handle_kernel_aio (void *arg);
++static void kernel_callback (kctx_t ctx, struct kiocb *kiocb, long res,
++			     long res2);
++
++/* Pool of request list entries.  */
++static struct requestlist **pool;
++
++/* Number of total and allocated pool entries.  */
++static size_t pool_max_size;
++static size_t pool_size;
++
++/* Kernel AIO context.  */
++kctx_t __aio_kioctx = KCTX_NONE;
++int __have_no_kernel_aio;
++int __kernel_thread_started;
++
++/* We implement a two dimensional array but allocate each row separately.
++   The macro below determines how many entries should be used per row.
++   It should better be a power of two.  */
++#define ENTRIES_PER_ROW	32
++
++/* How many rows we allocate at once.  */
++#define ROWS_STEP	8
++
++/* List of available entries.  */
++static struct requestlist *freelist;
++
++/* List of request waiting to be processed.  */
++static struct requestlist *runlist;
++
++/* Structure list of all currently processed requests.  */
++static struct requestlist *requests, *krequests;
++
++/* Number of threads currently running.  */
++static int nthreads;
++
++/* Number of threads waiting for work to arrive. */
++static int idle_thread_count;
++
++
++/* These are the values used to optimize the use of AIO.  The user can
++   overwrite them by using the `aio_init' function.  */
++static struct aioinit optim =
++{
++  20,	/* int aio_threads;	Maximal number of threads.  */
++  64,	/* int aio_num;		Number of expected simultanious requests. */
++  0,
++  0,
++  0,
++  0,
++  1,
++  0
++};
++
++
++/* Since the list is global we need a mutex protecting it.  */
++pthread_mutex_t __aio_requests_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
++
++/* When you add a request to the list and there are idle threads present,
++   you signal this condition variable. When a thread finishes work, it waits
++   on this condition variable for a time before it actually exits. */
++pthread_cond_t __aio_new_request_notification = PTHREAD_COND_INITIALIZER;
++
++
++/* Functions to handle request list pool.  */
++static struct requestlist *
++get_elem (void)
++{
++  struct requestlist *result;
++
++  if (freelist == NULL)
++    {
++      struct requestlist *new_row;
++      int cnt;
++
++      assert (sizeof (struct aiocb) == sizeof (struct aiocb64));
++
++      if (pool_size + 1 >= pool_max_size)
++	{
++	  size_t new_max_size = pool_max_size + ROWS_STEP;
++	  struct requestlist **new_tab;
++
++	  new_tab = (struct requestlist **)
++	    realloc (pool, new_max_size * sizeof (struct requestlist *));
++
++	  if (new_tab == NULL)
++	    return NULL;
++
++	  pool_max_size = new_max_size;
++	  pool = new_tab;
++	}
++
++      /* Allocate the new row.  */
++      cnt = pool_size == 0 ? optim.aio_num : ENTRIES_PER_ROW;
++      new_row = (struct requestlist *) calloc (cnt,
++					       sizeof (struct requestlist));
++      if (new_row == NULL)
++	return NULL;
++
++      pool[pool_size++] = new_row;
++
++      /* Put all the new entries in the freelist.  */
++      do
++	{
++	  new_row->next_prio = freelist;
++	  freelist = new_row++;
++	}
++      while (--cnt > 0);
++    }
++
++  result = freelist;
++  freelist = freelist->next_prio;
++
++  return result;
++}
++
++
++void
++internal_function
++__aio_free_request (struct requestlist *elem)
++{
++  elem->running = no;
++  elem->next_prio = freelist;
++  freelist = elem;
++}
++
++
++struct requestlist *
++internal_function
++__aio_find_req (aiocb_union *elem)
++{
++  struct requestlist *runp;
++  int fildes = elem->aiocb.aio_fildes;
++  int i;
++
++  for (i = 0; i < 2; i++)
++    {
++      runp = i ? requests : krequests;
++
++      while (runp != NULL && runp->aiocbp->aiocb.aio_fildes < fildes)
++	runp = runp->next_fd;
++
++      if (runp != NULL)
++	{
++	  if (runp->aiocbp->aiocb.aio_fildes != fildes)
++	    runp = NULL;
++	  else
++	    while (runp != NULL && runp->aiocbp != elem)
++	      runp = runp->next_prio;
++	  if (runp != NULL)
++	    return runp;
++	}
++    }
++
++  return NULL;
++}
++
++
++struct requestlist *
++internal_function
++__aio_find_req_fd (int fildes)
++{
++  struct requestlist *runp = requests;
++
++  while (runp != NULL && runp->aiocbp->aiocb.aio_fildes < fildes)
++    runp = runp->next_fd;
++
++  return (runp != NULL && runp->aiocbp->aiocb.aio_fildes == fildes
++	  ? runp : NULL);
++}
++
++
++struct requestlist *
++internal_function
++__aio_find_kreq_fd (int fildes)
++{
++  struct requestlist *runp = krequests;
++
++  while (runp != NULL && runp->aiocbp->aiocb.aio_fildes < fildes)
++    runp = runp->next_fd;
++
++  return (runp != NULL && runp->aiocbp->aiocb.aio_fildes == fildes
++	  ? runp : NULL);
++}
++
++
++void
++internal_function
++__aio_remove_request (struct requestlist *last, struct requestlist *req,
++		      int all)
++{
++  assert (req->running == yes || req->running == queued
++	  || req->running == done);
++  assert (req->kioctx == KCTX_NONE);
++
++  if (last != NULL)
++    last->next_prio = all ? NULL : req->next_prio;
++  else
++    {
++      if (all || req->next_prio == NULL)
++	{
++	  if (req->last_fd != NULL)
++	    req->last_fd->next_fd = req->next_fd;
++	  else
++	    requests = req->next_fd;
++	  if (req->next_fd != NULL)
++	    req->next_fd->last_fd = req->last_fd;
++	}
++      else
++	{
++	  if (req->last_fd != NULL)
++	    req->last_fd->next_fd = req->next_prio;
++	  else
++	    requests = req->next_prio;
++
++	  if (req->next_fd != NULL)
++	    req->next_fd->last_fd = req->next_prio;
++
++	  req->next_prio->last_fd = req->last_fd;
++	  req->next_prio->next_fd = req->next_fd;
++
++	  /* Mark this entry as runnable.  */
++	  req->next_prio->running = yes;
++	}
++
++      if (req->running == yes)
++	{
++	  struct requestlist *runp = runlist;
++
++	  last = NULL;
++	  while (runp != NULL)
++	    {
++	      if (runp == req)
++		{
++		  if (last == NULL)
++		    runlist = runp->next_run;
++		  else
++		    last->next_run = runp->next_run;
++		  break;
++		}
++	      last = runp;
++	      runp = runp->next_run;
++	    }
++	}
++    }
++}
++
++void
++internal_function
++__aio_remove_krequest (struct requestlist *req)
++{
++  assert (req->running == yes || req->running == queued
++	  || req->running == done);
++  assert (req->kioctx != KCTX_NONE);
++
++  if (req->prev_prio != NULL)
++    {
++      req->prev_prio->next_prio = req->next_prio;
++      if (req->next_prio != NULL)
++	req->next_prio->prev_prio = req->prev_prio;
++    }
++  else if (req->next_prio == NULL)
++    {
++      if (req->last_fd != NULL)
++	req->last_fd->next_fd = req->next_fd;
++      else
++	krequests = req->next_fd;
++      if (req->next_fd != NULL)
++	req->next_fd->last_fd = req->last_fd;
++    }
++  else
++    {
++      if (req->last_fd != NULL)
++	req->last_fd->next_fd = req->next_prio;
++      else
++	krequests = req->next_prio;
++      if (req->next_fd != NULL)
++	req->next_fd->last_fd = req->next_prio;
++
++      req->next_prio->prev_prio = NULL;
++      req->next_prio->last_fd = req->last_fd;
++      req->next_prio->next_fd = req->next_fd;
++    }
++}
++
++
++/* The thread handler.  */
++static void *handle_fildes_io (void *arg);
++static int wait_for_kernel_requests (int fildes);
++
++
++/* User optimization.  */
++void
++__aio_init (const struct aioinit *init)
++{
++  /* Get the mutex.  */
++  pthread_mutex_lock (&__aio_requests_mutex);
++
++  /* Only allow writing new values if the table is not yet allocated.  */
++  if (pool == NULL)
++    {
++      optim.aio_threads = init->aio_threads < 1 ? 1 : init->aio_threads;
++      optim.aio_num = (init->aio_num < ENTRIES_PER_ROW
++		       ? ENTRIES_PER_ROW
++		       : init->aio_num & ~ENTRIES_PER_ROW);
++    }
++
++  if (init->aio_idle_time != 0)
++    optim.aio_idle_time = init->aio_idle_time;
++
++  /* Release the mutex.  */
++  pthread_mutex_unlock (&__aio_requests_mutex);
++}
++weak_alias (__aio_init, aio_init)
++
++static void
++kernel_callback (kctx_t ctx, struct kiocb *kiocb, long res, long res2)
++{
++  struct requestlist *req = (struct requestlist *)kiocb;
++  long errcode = 0;
++
++  if (res < 0 && res > -1000)
++    {
++      errcode = -res;
++      res = -1;
++    }
++  req->aiocbp->aiocb.__return_value = res;
++  atomic_write_barrier ();
++  req->aiocbp->aiocb.__error_code = errcode;
++  __aio_notify (req);
++  assert (req->running == allocated);
++  req->running = done;
++  __aio_remove_krequest (req);
++  __aio_free_request (req);
++}
++
++void
++internal_function
++__aio_read_one_event (void)
++{
++  struct kio_event ev[10];
++  struct timespec ts;
++  int count, i;
++
++  if (__aio_kioctx == KCTX_NONE)
++    return;
++  ts.tv_sec = 0;
++  ts.tv_nsec = 0;
++  do
++    {
++      INTERNAL_SYSCALL_DECL (err);
++      count = INTERNAL_SYSCALL (io_getevents, err, 5, __aio_kioctx, 0, 10,
++				ev, &ts);
++      if (INTERNAL_SYSCALL_ERROR_P (count, err) || count == 0)
++	break;
++      pthread_mutex_lock (&__aio_requests_mutex);
++      for (i = 0; i < count; i++)
++	{
++	  void (*cb)(kctx_t, struct kiocb *, long, long);
++
++	  cb = (void *) (uintptr_t) ev[i].kioe_data;
++	  cb (__aio_kioctx, (struct kiocb *) (uintptr_t) ev[i].kioe_obj,
++	      ev[i].kioe_res, ev[i].kioe_res2);
++	}
++      pthread_mutex_unlock (&__aio_requests_mutex);
++    }
++  while (count == 10);
++}
++
++int
++internal_function
++__aio_wait_for_events (kctx_t kctx, const struct timespec *timespec)
++{
++  int ret, i;
++  struct kio_event ev[10];
++  struct timespec ts;
++  INTERNAL_SYSCALL_DECL (err);
++
++  pthread_mutex_unlock (&__aio_requests_mutex);
++  ts.tv_sec = 0;
++  ts.tv_nsec = 0;
++  do
++    {
++      ret = INTERNAL_SYSCALL (io_getevents, err, 5, kctx, 1, 10, ev,
++			      timespec);
++      if (INTERNAL_SYSCALL_ERROR_P (ret, err) || ret == 0)
++	break;
++
++      pthread_mutex_lock (&__aio_requests_mutex);
++      for (i = 0; i < ret; i++)
++	{
++	  void (*cb)(kctx_t, struct kiocb *, long, long);
++
++	  cb = (void *) (uintptr_t) ev[i].kioe_data;
++	  cb (kctx, (struct kiocb *) (uintptr_t) ev[i].kioe_obj,
++	      ev[i].kioe_res, ev[i].kioe_res2);
++	}
++      if (ret < 10)
++	return 0;
++      pthread_mutex_unlock (&__aio_requests_mutex);
++      timespec = &ts;
++    }
++  while (1);
++
++  pthread_mutex_lock (&__aio_requests_mutex);
++  return (timespec != &ts
++	  && INTERNAL_SYSCALL_ERROR_P (ret, err)
++	  && INTERNAL_SYSCALL_ERRNO (ret, err) == ETIMEDOUT) ? ETIMEDOUT : 0;
++}
++
++int
++internal_function
++__aio_create_kernel_thread (void)
++{
++  pthread_t thid;
++
++  if (__kernel_thread_started)
++    return 0;
++
++  if (aio_create_helper_thread (&thid, handle_kernel_aio, NULL) != 0)
++    return -1;
++  __kernel_thread_started = 1;
++  return 0;
++}
++
++static void *
++handle_kernel_aio (void *arg __attribute__((unused)))
++{
++  int ret, i;
++  INTERNAL_SYSCALL_DECL (err);
++  struct kio_event ev[10];
++
++  for (;;)
++    {
++      ret = INTERNAL_SYSCALL (io_getevents, err, 5, __aio_kioctx, 1, 10, ev,
++			      NULL);
++      if (INTERNAL_SYSCALL_ERROR_P (ret, err) || ret == 0)
++        continue;
++      pthread_mutex_lock (&__aio_requests_mutex);
++      for (i = 0; i < ret; i++)
++	{
++	  void (*cb)(kctx_t, struct kiocb *, long, long);
++
++	  cb = (void *) (uintptr_t) ev[i].kioe_data;
++	  cb (__aio_kioctx, (struct kiocb *) (uintptr_t) ev[i].kioe_obj,
++	      ev[i].kioe_res, ev[i].kioe_res2);
++	}
++      pthread_mutex_unlock (&__aio_requests_mutex);
++    }
++  return NULL;
++}
++
++static int
++internal_function
++add_request_to_list (struct requestlist *newp, int fildes, int prio)
++{
++  struct requestlist *last, *runp, *reqs;
++
++  last = NULL;
++  reqs = newp->kioctx != KCTX_NONE ? krequests : requests;
++  runp = reqs;
++
++  /* First look whether the current file descriptor is currently
++     worked with.  */
++  while (runp != NULL
++	 && runp->aiocbp->aiocb.aio_fildes < fildes)
++    {
++      last = runp;
++      runp = runp->next_fd;
++    }
++
++  if (runp != NULL
++      && runp->aiocbp->aiocb.aio_fildes == fildes)
++    {
++      /* The current file descriptor is worked on.  It makes no sense
++	 to start another thread since this new thread would fight
++	 with the running thread for the resources.  But we also cannot
++	 say that the thread processing this desriptor shall immediately
++	 after finishing the current job process this request if there
++	 are other threads in the running queue which have a higher
++	 priority.  */
++
++      /* Simply enqueue it after the running one according to the
++	 priority.  */
++      while (runp->next_prio != NULL
++	     && runp->next_prio->aiocbp->aiocb.__abs_prio >= prio)
++	runp = runp->next_prio;
++
++      newp->next_prio = runp->next_prio;
++      runp->next_prio = newp;
++      if (newp->kioctx != KCTX_NONE)
++	{
++	  newp->prev_prio = runp;
++	  if (newp->next_prio != NULL)
++	    newp->next_prio->prev_prio = newp;
++	}
++      return queued;
++    }
++  else
++    {
++      /* Enqueue this request for a new descriptor.  */
++      if (last == NULL)
++	{
++	  newp->last_fd = NULL;
++	  newp->next_fd = reqs;
++	  if (reqs != NULL)
++	    reqs->last_fd = newp;
++	  if (newp->kioctx != KCTX_NONE)
++	    krequests = newp;
++	  else
++	    requests = newp;
++	}
++      else
++	{
++	  newp->next_fd = last->next_fd;
++	  newp->last_fd = last;
++	  last->next_fd = newp;
++	  if (newp->next_fd != NULL)
++	    newp->next_fd->last_fd = newp;
++	}
++
++      newp->next_prio = NULL;
++      if (newp->kioctx != KCTX_NONE)
++	newp->prev_prio = NULL;
++      return yes;
++    }
++}
++
++static int
++internal_function
++__aio_enqueue_user_request (struct requestlist *newp)
++{
++  int result = 0;
++  int running = add_request_to_list (newp, newp->aiocbp->aiocb.aio_fildes,
++				     newp->aiocbp->aiocb.__abs_prio);
++
++  if (running == yes)
++    {
++      /* We try to create a new thread for this file descriptor.  The
++	 function which gets called will handle all available requests
++	 for this descriptor and when all are processed it will
++	 terminate.
++
++	 If no new thread can be created or if the specified limit of
++	 threads for AIO is reached we queue the request.  */
++
++      /* See if we need to and are able to create a thread.  */
++      if (nthreads < optim.aio_threads && idle_thread_count == 0)
++	{
++	  pthread_t thid;
++
++	  running = newp->running = allocated;
++
++	  /* Now try to start a thread.  */
++	  result = aio_create_helper_thread (&thid, handle_fildes_io, newp);
++	  if (result == 0)
++	    /* We managed to enqueue the request.  All errors which can
++	       happen now can be recognized by calls to `aio_return' and
++	       `aio_error'.  */
++	    ++nthreads;
++	  else
++	    {
++	      /* Reset the running flag.  The new request is not running.  */
++	      running = newp->running = yes;
++
++	      if (nthreads == 0)
++		{
++		  /* We cannot create a thread in the moment and there is
++		     also no thread running.  This is a problem.  `errno' is
++		     set to EAGAIN if this is only a temporary problem.  */
++		  __aio_remove_request (NULL, newp, 0);
++		}
++	      else
++		result = 0;
++	    }
++	}
++    }
++
++  /* Enqueue the request in the run queue if it is not yet running.  */
++  if (running == yes && result == 0)
++    {
++      add_request_to_runlist (newp);
++
++      /* If there is a thread waiting for work, then let it know that we
++	 have just given it something to do. */
++      if (idle_thread_count > 0)
++	pthread_cond_signal (&__aio_new_request_notification);
++    }
++
++  if (result == 0)
++    newp->running = running;
++  return result;
++}
++
++/* The main function of the async I/O handling.  It enqueues requests
++   and if necessary starts and handles threads.  */
++struct requestlist *
++internal_function
++__aio_enqueue_request_ctx (aiocb_union *aiocbp, int operation, kctx_t kctx)
++{
++  int policy, prio, result;
++  struct sched_param param;
++  struct requestlist *newp;
++  int op = (operation & 0xffff);
++
++  if (op == LIO_SYNC || op == LIO_DSYNC)
++    {
++      aiocbp->aiocb.aio_reqprio = 0;
++      /* FIXME: Kernel doesn't support sync yet.  */
++      operation &= ~LIO_KTHREAD;
++      kctx = KCTX_NONE;
++    }
++  else if (aiocbp->aiocb.aio_reqprio < 0
++	   || aiocbp->aiocb.aio_reqprio > AIO_PRIO_DELTA_MAX)
++    {
++      /* Invalid priority value.  */
++      __set_errno (EINVAL);
++      aiocbp->aiocb.__error_code = EINVAL;
++      aiocbp->aiocb.__return_value = -1;
++      return NULL;
++    }
++
++  if ((operation & LIO_KTHREAD) || kctx != KCTX_NONE)
++    {
++      /* io_* is only really asynchronous for O_DIRECT or /dev/raw*.  */
++      int fl = __fcntl (aiocbp->aiocb.aio_fildes, F_GETFL);
++      if (fl < 0 || (fl & O_DIRECT) == 0)
++	{
++	  struct stat64 st;
++	  if (__fxstat64 (_STAT_VER, aiocbp->aiocb.aio_fildes, &st) < 0
++	      || ! S_ISCHR (st.st_mode)
++	      || major (st.st_rdev) != 162)
++	    {
++	      operation &= ~LIO_KTHREAD;
++	      kctx = KCTX_NONE;
++	    }
++	}
++    }
++
++  /* Compute priority for this request.  */
++  pthread_getschedparam (pthread_self (), &policy, &param);
++  prio = param.sched_priority - aiocbp->aiocb.aio_reqprio;
++
++  /* Get the mutex.  */
++  pthread_mutex_lock (&__aio_requests_mutex);
++
++  if (operation & LIO_KTHREAD)
++    {
++      if (__aio_kioctx == KCTX_NONE && !__have_no_kernel_aio)
++	{
++	  int res;
++	  INTERNAL_SYSCALL_DECL (err);
++
++	  __aio_kioctx = 0;
++	  do
++	    res = INTERNAL_SYSCALL (io_setup, err, 2, 1024, &__aio_kioctx);
++	  while (INTERNAL_SYSCALL_ERROR_P (res, err)
++		 && INTERNAL_SYSCALL_ERRNO (res, err) == EINTR);
++	  if (INTERNAL_SYSCALL_ERROR_P (res, err))
++	    {
++              __have_no_kernel_aio = 1;
++	      __aio_kioctx = KCTX_NONE;
++	    }
++	}
++
++      kctx = __aio_kioctx;
++
++      if (kctx != KCTX_NONE && !__kernel_thread_started
++	  && ((operation & LIO_KTHREAD_REQUIRED)
++	      || aiocbp->aiocb.aio_sigevent.sigev_notify != SIGEV_NONE))
++	{
++	  if (__aio_create_kernel_thread () < 0)
++	    kctx = KCTX_NONE;
++	}
++    }
++
++  /* Get a new element for the waiting list.  */
++  newp = get_elem ();
++  if (newp == NULL)
++    {
++      pthread_mutex_unlock (&__aio_requests_mutex);
++      __set_errno (EAGAIN);
++      return NULL;
++    }
++  newp->aiocbp = aiocbp;
++#ifdef BROKEN_THREAD_SIGNALS
++  newp->caller_pid = (aiocbp->aiocb.aio_sigevent.sigev_notify == SIGEV_SIGNAL
++		      ? getpid () : 0);
++#endif
++  newp->waiting = NULL;
++  newp->kioctx = kctx;
++
++  aiocbp->aiocb.__abs_prio = prio;
++  aiocbp->aiocb.__policy = policy;
++  aiocbp->aiocb.aio_lio_opcode = op;
++  aiocbp->aiocb.__error_code = EINPROGRESS;
++  aiocbp->aiocb.__return_value = 0;
++
++  if (newp->kioctx != KCTX_NONE)
++    {
++      int res;
++      INTERNAL_SYSCALL_DECL (err);
++
++      aiocb_union *aiocbp = newp->aiocbp;
++      struct kiocb *kiocbs[] __attribute__((unused)) = { &newp->kiocb };
++
++      newp->kiocb.kiocb_data = (uintptr_t) kernel_callback;
++      switch (op & 127)
++        {
++        case LIO_READ: newp->kiocb.kiocb_lio_opcode = IO_CMD_PREAD; break;
++        case LIO_WRITE: newp->kiocb.kiocb_lio_opcode = IO_CMD_PWRITE; break;
++        case LIO_SYNC:
++        case LIO_DSYNC: newp->kiocb.kiocb_lio_opcode = IO_CMD_FSYNC; break;
++        }
++      if (op & 128)
++	newp->kiocb.kiocb_offset = aiocbp->aiocb64.aio_offset;
++      else
++	newp->kiocb.kiocb_offset = aiocbp->aiocb.aio_offset;
++      newp->kiocb.kiocb_fildes = aiocbp->aiocb.aio_fildes;
++      newp->kiocb.kiocb_buf = (uintptr_t) aiocbp->aiocb.aio_buf;
++      newp->kiocb.kiocb_nbytes = aiocbp->aiocb.aio_nbytes;
++      /* FIXME.  */
++      newp->kiocb.kiocb_req_prio = 0;
++      res = INTERNAL_SYSCALL (io_submit, err, 3, newp->kioctx, 1, kiocbs);
++      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
++	{
++	  newp->running = allocated;
++	  add_request_to_list (newp, aiocbp->aiocb.aio_fildes, prio);
++	  /* Release the mutex.  */
++	  pthread_mutex_unlock (&__aio_requests_mutex);
++	  return newp;
++	}
++      newp->kioctx = KCTX_NONE;
++    }
++
++  result = __aio_enqueue_user_request (newp);
++  if (result)
++    {
++      /* Something went wrong.  */
++      __aio_free_request (newp);
++      aiocbp->aiocb.__error_code = result;
++      __set_errno (result);
++      newp = NULL;
++    }
++
++  /* Release the mutex.  */
++  pthread_mutex_unlock (&__aio_requests_mutex);
++
++  return newp;
++}
++
++
++static int
++wait_for_kernel_requests (int fildes)
++{
++  pthread_mutex_lock (&__aio_requests_mutex);
++
++  struct requestlist *kreq = __aio_find_kreq_fd (fildes), *req;
++  int nent = 0;
++  int ret = 0;
++
++  req = kreq;
++  while (req)
++    {
++      if (req->running == allocated)
++	++nent;
++      req = req->next_prio;
++    }
++
++  if (nent)
++    {
++      if (__aio_create_kernel_thread () < 0)
++	{
++	  pthread_mutex_unlock (&__aio_requests_mutex);
++	  return -1;
++	}
++
++#ifndef DONT_NEED_AIO_MISC_COND
++      pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++#endif
++      struct waitlist waitlist[nent];
++      int cnt = 0;
++
++      while (kreq)
++	{
++	  if (kreq->running == allocated)
++	    {
++#ifndef DONT_NEED_AIO_MISC_COND
++	      waitlist[cnt].cond = &cond;
++#endif
++	      waitlist[cnt].result = NULL;
++	      waitlist[cnt].next = kreq->waiting;
++	      waitlist[cnt].counterp = &nent;
++	      waitlist[cnt].sigevp = NULL;
++#ifdef BROKEN_THREAD_SIGNALS
++	      waitlist[cnt].caller_pid = 0;   /* Not needed.  */
++#endif
++	      kreq->waiting = &waitlist[cnt++];
++	    }
++	  kreq = kreq->next_prio;
++	}
++
++#ifdef DONT_NEED_AIO_MISC_COND
++      AIO_MISC_WAIT (ret, nent, NULL, 0);
++#else
++      do
++	pthread_cond_wait (&cond, &__aio_requests_mutex);
++      while (nent);
++
++      pthread_cond_destroy (&cond);
++#endif
++    }
++
++  pthread_mutex_unlock (&__aio_requests_mutex);
++  return ret;
++}
++
++
++static void *
++handle_fildes_io (void *arg)
++{
++  pthread_t self = pthread_self ();
++  struct sched_param param;
++  struct requestlist *runp = (struct requestlist *) arg;
++  aiocb_union *aiocbp;
++  int policy;
++  int fildes;
++
++  pthread_getschedparam (self, &policy, &param);
++
++  do
++    {
++      /* If runp is NULL, then we were created to service the work queue
++	 in general, not to handle any particular request. In that case we
++	 skip the "do work" stuff on the first pass, and go directly to the
++	 "get work off the work queue" part of this loop, which is near the
++	 end. */
++      if (runp == NULL)
++	pthread_mutex_lock (&__aio_requests_mutex);
++      else
++	{
++	  /* Hopefully this request is marked as running.  */
++	  assert (runp->running == allocated);
++
++	  /* Update our variables.  */
++	  aiocbp = runp->aiocbp;
++	  fildes = aiocbp->aiocb.aio_fildes;
++
++	  /* Change the priority to the requested value (if necessary).  */
++	  if (aiocbp->aiocb.__abs_prio != param.sched_priority
++	      || aiocbp->aiocb.__policy != policy)
++	    {
++	      param.sched_priority = aiocbp->aiocb.__abs_prio;
++	      policy = aiocbp->aiocb.__policy;
++	      pthread_setschedparam (self, policy, &param);
++	    }
++
++	  /* Process request pointed to by RUNP.  We must not be disturbed
++	     by signals.  */
++	  if ((aiocbp->aiocb.aio_lio_opcode & 127) == LIO_READ)
++	    {
++	      if (aiocbp->aiocb.aio_lio_opcode & 128)
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (__pread64 (fildes, (void *)
++						 aiocbp->aiocb64.aio_buf,
++						 aiocbp->aiocb64.aio_nbytes,
++						 aiocbp->aiocb64.aio_offset));
++	      else
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (pread (fildes,
++					     (void *) aiocbp->aiocb.aio_buf,
++					     aiocbp->aiocb.aio_nbytes,
++					     aiocbp->aiocb.aio_offset));
++
++	      if (aiocbp->aiocb.__return_value == -1 && errno == ESPIPE)
++		/* The Linux kernel is different from others.  It returns
++		   ESPIPE if using pread on a socket.  Other platforms
++		   simply ignore the offset parameter and behave like
++		   read.  */
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (read (fildes,
++					    (void *) aiocbp->aiocb64.aio_buf,
++					    aiocbp->aiocb64.aio_nbytes));
++	    }
++	  else if ((aiocbp->aiocb.aio_lio_opcode & 127) == LIO_WRITE)
++	    {
++	      if (aiocbp->aiocb.aio_lio_opcode & 128)
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (__pwrite64 (fildes, (const void *)
++						  aiocbp->aiocb64.aio_buf,
++						  aiocbp->aiocb64.aio_nbytes,
++						  aiocbp->aiocb64.aio_offset));
++	      else
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (__libc_pwrite (fildes, (const void *)
++						     aiocbp->aiocb.aio_buf,
++						     aiocbp->aiocb.aio_nbytes,
++						     aiocbp->aiocb.aio_offset));
++
++	      if (aiocbp->aiocb.__return_value == -1 && errno == ESPIPE)
++		/* The Linux kernel is different from others.  It returns
++		   ESPIPE if using pwrite on a socket.  Other platforms
++		   simply ignore the offset parameter and behave like
++		   write.  */
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (write (fildes,
++					     (void *) aiocbp->aiocb64.aio_buf,
++					     aiocbp->aiocb64.aio_nbytes));
++	    }
++	  else if (aiocbp->aiocb.aio_lio_opcode == LIO_DSYNC
++		   || aiocbp->aiocb.aio_lio_opcode == LIO_SYNC)
++	    {
++	      if (wait_for_kernel_requests (fildes) < 0)
++		{
++		  aiocbp->aiocb.__return_value = -1;
++		  __set_errno (ENOMEM);
++		}
++	      else if (aiocbp->aiocb.aio_lio_opcode == LIO_DSYNC)
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (fdatasync (fildes));
++	      else
++		aiocbp->aiocb.__return_value =
++		  TEMP_FAILURE_RETRY (fsync (fildes));
++	    }
++	  else
++	    {
++	      /* This is an invalid opcode.  */
++	      aiocbp->aiocb.__return_value = -1;
++	      __set_errno (EINVAL);
++	    }
++
++	  /* Get the mutex.  */
++	  pthread_mutex_lock (&__aio_requests_mutex);
++
++	  /* In theory we would need here a write memory barrier since the
++	     callers test using aio_error() whether the request finished
++	     and once this value != EINPROGRESS the field __return_value
++	     must be committed to memory.
++
++	     But since the pthread_mutex_lock call involves write memory
++	     barriers as well it is not necessary.  */
++
++	  if (aiocbp->aiocb.__return_value == -1)
++	    aiocbp->aiocb.__error_code = errno;
++	  else
++	    aiocbp->aiocb.__error_code = 0;
++
++	  /* Send the signal to notify about finished processing of the
++	     request.  */
++	  __aio_notify (runp);
++
++	  /* For debugging purposes we reset the running flag of the
++	     finished request.  */
++	  assert (runp->running == allocated);
++	  runp->running = done;
++
++	  /* Now dequeue the current request.  */
++	  __aio_remove_request (NULL, runp, 0);
++	  if (runp->next_prio != NULL)
++	    add_request_to_runlist (runp->next_prio);
++
++	  /* Free the old element.  */
++	  __aio_free_request (runp);
++	}
++
++      runp = runlist;
++
++      /* If the runlist is empty, then we sleep for a while, waiting for
++	 something to arrive in it. */
++      if (runp == NULL && optim.aio_idle_time >= 0)
++	{
++	  struct timeval now;
++	  struct timespec wakeup_time;
++
++	  ++idle_thread_count;
++	  gettimeofday (&now, NULL);
++	  wakeup_time.tv_sec = now.tv_sec + optim.aio_idle_time;
++	  wakeup_time.tv_nsec = now.tv_usec * 1000;
++	  if (wakeup_time.tv_nsec > 1000000000)
++	    {
++	      wakeup_time.tv_nsec -= 1000000000;
++	      ++wakeup_time.tv_sec;
++	    }
++	  pthread_cond_timedwait (&__aio_new_request_notification,
++				  &__aio_requests_mutex,
++				  &wakeup_time);
++	  --idle_thread_count;
++	  runp = runlist;
++	}
++
++      if (runp == NULL)
++	--nthreads;
++      else
++	{
++	  assert (runp->running == yes);
++	  runp->running = allocated;
++	  runlist = runp->next_run;
++
++	  /* If we have a request to process, and there's still another in
++	     the run list, then we need to either wake up or create a new
++	     thread to service the request that is still in the run list. */
++	  if (runlist != NULL)
++	    {
++	      /* There are at least two items in the work queue to work on.
++		 If there are other idle threads, then we should wake them
++		 up for these other work elements; otherwise, we should try
++		 to create a new thread. */
++	      if (idle_thread_count > 0)
++		pthread_cond_signal (&__aio_new_request_notification);
++	      else if (nthreads < optim.aio_threads)
++		{
++		  pthread_t thid;
++
++		  /* Now try to start a thread. If we fail, no big deal,
++		     because we know that there is at least one thread (us)
++		     that is working on AIO operations. */
++		  if (aio_create_helper_thread (&thid, handle_fildes_io, NULL)
++		      == 0)
++		    ++nthreads;
++		}
++	    }
++	}
++
++      /* Release the mutex.  */
++      pthread_mutex_unlock (&__aio_requests_mutex);
++    }
++  while (runp != NULL);
++
++  return NULL;
++}
++
++
++/* Free allocated resources.  */
++libc_freeres_fn (free_res)
++{
++  size_t row;
++
++  for (row = 0; row < pool_max_size; ++row)
++    free (pool[row]);
++
++  free (pool);
++}
++
++
++/* Add newrequest to the runlist. The __abs_prio flag of newrequest must
++   be correctly set to do this. Also, you had better set newrequest's
++   "running" flag to "yes" before you release your lock or you'll throw an
++   assertion. */
++static void
++internal_function
++add_request_to_runlist (struct requestlist *newrequest)
++{
++  int prio = newrequest->aiocbp->aiocb.__abs_prio;
++  struct requestlist *runp;
++
++  if (runlist == NULL || runlist->aiocbp->aiocb.__abs_prio < prio)
++    {
++      newrequest->next_run = runlist;
++      runlist = newrequest;
++    }
++  else
++    {
++      runp = runlist;
++
++      while (runp->next_run != NULL
++	     && runp->next_run->aiocbp->aiocb.__abs_prio >= prio)
++	runp = runp->next_run;
++
++      newrequest->next_run = runp->next_run;
++      runp->next_run = newrequest;
++    }
++}
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.h glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.h
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.h	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_misc.h	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,329 @@
++/* Copyright (C) 1997,1999,2000,2001,2002,2003,2006
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#ifndef _AIO_MISC_H
++
++#include <sysdep.h>
++
++#if !defined __NR_io_setup || !defined __NR_io_destroy \
++    || !defined __NR_io_getevents || !defined __NR_io_submit \
++    || !defined __NR_io_cancel
++
++#include <aio_misc.h>
++
++#else
++
++#define _AIO_MISC_H	1
++#define USE_KAIO	1
++
++#include <aio.h>
++#include <pthread.h>
++#include <stdint.h>
++#include <signal.h>
++#include <sysdep.h>
++#include <limits.h>
++
++#ifdef HAVE_FORCED_UNWIND
++
++/* We define a special synchronization primitive for AIO.  POSIX
++   conditional variables would be ideal but the pthread_cond_*wait
++   operations do not return on EINTR.  This is a requirement for
++   correct aio_suspend and lio_listio implementations.  */
++
++#include <assert.h>
++#include <pthreadP.h>
++#include <lowlevellock.h>
++
++# define DONT_NEED_AIO_MISC_COND	1
++
++# define AIO_MISC_NOTIFY(waitlist) \
++  do {									      \
++    if (*waitlist->counterp > 0 && --*waitlist->counterp == 0)		      \
++      lll_futex_wake (waitlist->counterp, 1, LLL_PRIVATE);		      \
++  } while (0)
++
++# define AIO_MISC_WAIT(result, futex, timeout, cancel)			      \
++  do {									      \
++    volatile int *futexaddr = &futex;					      \
++    int oldval = futex;							      \
++									      \
++    if (oldval != 0)							      \
++      {									      \
++	pthread_mutex_unlock (&__aio_requests_mutex);			      \
++									      \
++	int oldtype;							      \
++	if (cancel)							      \
++	  oldtype = LIBC_CANCEL_ASYNC ();				      \
++									      \
++	int status;							      \
++	do								      \
++	  {								      \
++	    status = lll_futex_timed_wait (futexaddr, oldval, timeout,	      \
++					   LLL_PRIVATE);		      \
++	    if (status != -EWOULDBLOCK)					      \
++	      break;							      \
++									      \
++	    oldval = *futexaddr;					      \
++	  }								      \
++	while (oldval != 0);						      \
++									      \
++	if (cancel)							      \
++	  LIBC_CANCEL_RESET (oldtype);					      \
++									      \
++	if (status == -EINTR)						      \
++	  result = EINTR;						      \
++	else if (status == -ETIMEDOUT)					      \
++	  result = EAGAIN;						      \
++	else								      \
++	  assert (status == 0 || status == -EWOULDBLOCK);		      \
++									      \
++	pthread_mutex_lock (&__aio_requests_mutex);			      \
++      }									      \
++  } while (0)
++
++#endif
++
++typedef unsigned long kctx_t;
++#define KCTX_NONE ~0UL
++extern kctx_t __aio_kioctx;
++
++enum
++{
++  IO_CMD_PREAD,
++  IO_CMD_PWRITE,
++  IO_CMD_FSYNC,
++  IO_CMD_FDSYNC,
++  IO_CMD_PREADX,
++  IO_CMD_POLL
++};
++
++struct kiocb
++{
++  uint64_t kiocb_data;
++  uint64_t kiocb_key;
++  uint16_t kiocb_lio_opcode;
++  int16_t  kiocb_req_prio;
++  uint32_t kiocb_fildes;
++  uint64_t kiocb_buf;
++  uint64_t kiocb_nbytes;
++  int64_t  kiocb_offset;
++  int64_t  __pad3, __pad4;
++};
++
++struct kio_event
++{
++  uint64_t kioe_data;
++  uint64_t kioe_obj;
++  int64_t  kioe_res;
++  int64_t  kioe_res2;
++};
++
++/* Extend the operation enum.  */
++enum
++{
++  LIO_DSYNC = LIO_NOP + 1,
++  LIO_SYNC,
++  LIO_READ64 = LIO_READ | 128,
++  LIO_WRITE64 = LIO_WRITE | 128,
++  LIO_KTHREAD = 0x10000,
++  LIO_KTHREAD_REQUIRED = 0x20000
++};
++
++
++/* Union of the two request types.  */
++typedef union
++  {
++    struct aiocb aiocb;
++    struct aiocb64 aiocb64;
++  } aiocb_union;
++
++
++/* Used to synchronize.  */
++struct waitlist
++  {
++    struct waitlist *next;
++
++    /* The next two fields is used in synchronous io_listio' operations.  */
++#ifndef DONT_NEED_AIO_MISC_COND
++    pthread_cond_t *cond;
++#endif
++    int *result;
++
++    volatile int *counterp;
++    /* The next field is used in asynchronous `lio_listio' operations.  */
++    struct sigevent *sigevp;
++#ifdef BROKEN_THREAD_SIGNALS
++    /* XXX See requestlist, it's used to work around the broken signal
++       handling in Linux.  */
++    pid_t caller_pid;
++#endif
++  };
++
++
++/* Status of a request.  */
++enum
++{
++  no,
++  queued,
++  yes,
++  allocated,
++  done
++};
++
++
++/* Used to queue requests..  */
++struct requestlist
++  {
++    struct kiocb kiocb;
++    kctx_t kioctx;
++
++    int running;
++
++    struct requestlist *last_fd;
++    struct requestlist *next_fd;
++    struct requestlist *next_prio;
++    struct requestlist *next_run;
++    /* For kioctx != KCTX_NONE requests we are doubly linked.  */
++#define prev_prio next_run
++
++    /* Pointer to the actual data.  */
++    aiocb_union *aiocbp;
++
++#ifdef BROKEN_THREAD_SIGNALS
++    /* PID of the initiator thread.
++       XXX This is only necessary for the broken signal handling on Linux.  */
++    pid_t caller_pid;
++#endif
++
++    /* List of waiting processes.  */
++    struct waitlist *waiting;
++  };
++
++
++/* Lock for global I/O list of requests.  */
++extern pthread_mutex_t __aio_requests_mutex attribute_hidden;
++
++
++/* Enqueue request.  */
++extern struct requestlist *__aio_enqueue_request_ctx (aiocb_union *aiocbp,
++						      int operation,
++						      kctx_t kctx)
++     attribute_hidden internal_function;
++
++#define __aio_enqueue_request(aiocbp, operation) \
++  __aio_enqueue_request_ctx (aiocbp, operation | LIO_KTHREAD, KCTX_NONE)
++
++/* Find request entry for given AIO control block.  */
++extern struct requestlist *__aio_find_req (aiocb_union *elem)
++     attribute_hidden internal_function;
++
++/* Find request entry for given file descriptor.  */
++extern struct requestlist *__aio_find_req_fd (int fildes)
++     attribute_hidden internal_function;
++
++/* Find request entry for given file descriptor.  */
++extern struct requestlist *__aio_find_kreq_fd (int fildes)
++     attribute_hidden internal_function;
++
++/* Remove request from the list.  */
++extern void __aio_remove_request (struct requestlist *last,
++				  struct requestlist *req, int all)
++     attribute_hidden internal_function;
++
++extern void __aio_remove_krequest (struct requestlist *req)
++     attribute_hidden internal_function;
++
++/* Release the entry for the request.  */
++extern void __aio_free_request (struct requestlist *req)
++     attribute_hidden internal_function;
++
++/* Notify initiator of request and tell this everybody listening.  */
++extern void __aio_notify (struct requestlist *req)
++     attribute_hidden internal_function;
++
++/* Notify initiator of request.  */
++#ifdef BROKEN_THREAD_SIGNALS
++extern int __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
++     attribute_hidden internal_function;
++#else
++extern int __aio_notify_only (struct sigevent *sigev)
++     attribute_hidden internal_function;
++#endif
++
++/* Send the signal.  */
++extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
++     attribute_hidden internal_function;
++
++extern int __aio_wait_for_events (kctx_t kctx, const struct timespec *timeout)
++     attribute_hidden internal_function;
++
++extern void __aio_read_one_event (void) attribute_hidden internal_function;
++
++extern int __aio_create_kernel_thread (void)
++     attribute_hidden internal_function;
++
++extern int __have_no_kernel_aio attribute_hidden;
++extern int __kernel_thread_started attribute_hidden;
++
++#ifndef BROKEN_THREAD_SIGNALS
++# define aio_start_notify_thread __aio_start_notify_thread
++# define aio_create_helper_thread __aio_create_helper_thread
++
++extern inline void
++__aio_start_notify_thread (void)
++{
++  sigset_t ss;
++  sigemptyset (&ss);
++  INTERNAL_SYSCALL_DECL (err);
++  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
++}
++
++extern inline int
++__aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
++{
++  pthread_attr_t attr;
++
++  /* Make sure the thread is created detached.  */
++  pthread_attr_init (&attr);
++  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
++
++  /* The helper thread needs only very little resources.  */
++  (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
++
++  /* Block all signals in the helper thread.  To do this thoroughly we
++     temporarily have to block all signals here.  */
++  sigset_t ss;
++  sigset_t oss;
++  sigfillset (&ss);
++  INTERNAL_SYSCALL_DECL (err);
++  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
++
++  int ret = pthread_create (threadp, &attr, tf, arg);
++
++  /* Restore the signal mask.  */
++  INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &oss, NULL,
++		    _NSIG / 8);
++
++  (void) pthread_attr_destroy (&attr);
++  return ret;
++}                                                                                 
++#endif
++
++#endif
++#endif /* aio_misc.h */
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_notify.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_notify.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_notify.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_notify.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,2 @@
++#include <kaio_misc.h>
++#include <aio_notify.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_read64.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_read64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_read64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_read64.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,2 @@
++#include <kaio_misc.h>
++#include <aio_read64.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_read.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_read.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_read.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_read.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,4 @@
++#define aio_read64 __renamed_aio_read64
++#include <kaio_misc.h>
++#undef aio_read64
++#include <aio_read.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_return.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_return.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_return.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_return.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,50 @@
++/* Return exit value of asynchronous I/O request.
++   Copyright (C) 1997, 2002, 2003 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++
++/* We use an UGLY hack to prevent gcc from finding us cheating.  The
++   implementation of aio_return and aio_return64 are identical and so
++   we want to avoid code duplication by using aliases.  But gcc sees
++   the different parameter lists and prints a warning.  We define here
++   a function so that aio_return64 has no prototype.  */
++#define aio_return64 XXX
++#include <aio.h>
++/* And undo the hack.  */
++#undef aio_return64
++
++#include <kaio_misc.h>
++
++#ifndef USE_KAIO
++#include <aio_return.c>
++#else
++
++#include <errno.h>
++
++ssize_t
++aio_return (aiocbp)
++     struct aiocb *aiocbp;
++{
++  if (aiocbp->__error_code == EINPROGRESS)
++    __aio_read_one_event ();
++  return aiocbp->__return_value;
++}
++
++weak_alias (aio_return, aio_return64)
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_sigqueue.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_sigqueue.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_sigqueue.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_sigqueue.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,2 @@
++#include <kaio_misc.h>
++#include <aio_sigqueue.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_suspend.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_suspend.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_suspend.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_suspend.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,327 @@
++/* Suspend until termination of a requests.
++   Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2006
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++
++/* We use an UGLY hack to prevent gcc from finding us cheating.  The
++   implementations of aio_suspend and aio_suspend64 are identical and so
++   we want to avoid code duplication by using aliases.  But gcc sees
++   the different parameter lists and prints a warning.  We define here
++   a function so that aio_suspend64 has no prototype.  */
++#define aio_suspend64 XXX
++#include <aio.h>
++/* And undo the hack.  */
++#undef aio_suspend64
++
++#include <kaio_misc.h>
++
++#ifndef USE_KAIO
++#include <aio_suspend.c>
++#else
++
++#include <assert.h>
++#include <errno.h>
++#include <stdbool.h>
++#include <stdlib.h>
++#include <sys/time.h>
++
++#include <bits/libc-lock.h>
++#include <sysdep-cancel.h>
++
++
++struct clparam
++{
++  const struct aiocb *const *list;
++  struct waitlist *waitlist;
++  struct requestlist **requestlist;
++#ifndef DONT_NEED_AIO_MISC_COND
++  pthread_cond_t *cond;
++#endif
++  int nent;
++};
++
++
++static void
++cleanup (void *arg)
++{
++#ifdef DONT_NEED_AIO_MISC_COND
++  /* Acquire the mutex.  If pthread_cond_*wait is used this would
++     happen implicitly.  */
++  pthread_mutex_lock (&__aio_requests_mutex);
++#endif
++
++  const struct clparam *param = (const struct clparam *) arg;
++
++  /* Now remove the entry in the waiting list for all requests
++     which didn't terminate.  */
++  int cnt = param->nent;
++  while (cnt-- > 0)
++    if (param->list[cnt] != NULL
++	&& param->list[cnt]->__error_code == EINPROGRESS)
++      {
++	struct waitlist **listp;
++
++	assert (param->requestlist[cnt] != NULL);
++
++	/* There is the chance that we cannot find our entry anymore. This
++	   could happen if the request terminated and restarted again.  */
++	listp = &param->requestlist[cnt]->waiting;
++	while (*listp != NULL && *listp != &param->waitlist[cnt])
++	  listp = &(*listp)->next;
++
++	if (*listp != NULL)
++	  *listp = (*listp)->next;
++      }
++
++#ifndef DONT_NEED_AIO_MISC_COND
++  /* Release the conditional variable.  */
++  (void) pthread_cond_destroy (param->cond);
++#endif
++
++  /* Release the mutex.  */
++  pthread_mutex_unlock (&__aio_requests_mutex);
++}
++
++
++int
++aio_suspend (list, nent, timeout)
++     const struct aiocb *const list[];
++     int nent;
++     const struct timespec *timeout;
++{
++  if (__builtin_expect (nent < 0, 0))
++    {
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  struct waitlist waitlist[nent];
++  struct requestlist *requestlist[nent];
++#ifndef DONT_NEED_AIO_MISC_COND
++  pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++#endif
++  int cnt;
++  int result = 0;
++  int cntr = 1;
++  int total = 0, ktotal = 0;
++
++  /* Request the mutex.  */
++  pthread_mutex_lock (&__aio_requests_mutex);
++
++  /* There is not yet a finished request.  Signal the request that
++     we are working for it.  */
++  for (cnt = 0; cnt < nent; ++cnt)
++    if (list[cnt] != NULL)
++      {
++	if (list[cnt]->__error_code == EINPROGRESS)
++	  {
++	    requestlist[cnt] = __aio_find_req ((aiocb_union *) list[cnt]);
++
++	    if (requestlist[cnt] != NULL)
++	      {
++#ifndef DONT_NEED_AIO_MISC_COND
++		waitlist[cnt].cond = &cond;
++#endif
++		waitlist[cnt].result = NULL;
++		waitlist[cnt].next = requestlist[cnt]->waiting;
++		waitlist[cnt].counterp = &cntr;
++		waitlist[cnt].sigevp = NULL;
++#ifdef BROKEN_THREAD_SIGNALS
++		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
++#endif
++		requestlist[cnt]->waiting = &waitlist[cnt];
++		total++;
++		if (requestlist[cnt]->kioctx != KCTX_NONE)
++		  ktotal++;
++	      }
++	    else
++	      /* We will never suspend.  */
++	      break;
++	  }
++	else
++	  /* We will never suspend.  */
++	  break;
++      }
++
++
++  /* Only if none of the entries is NULL or finished to be wait.  */
++  if (cnt == nent && total)
++    {
++      struct clparam clparam =
++	{
++	  .list = list,
++	  .waitlist = waitlist,
++	  .requestlist = requestlist,
++#ifndef DONT_NEED_AIO_MISC_COND
++	  .cond = &cond,
++#endif
++	  .nent = nent
++	};
++
++      pthread_cleanup_push (cleanup, &clparam);
++
++      if (!__kernel_thread_started && ktotal)
++	{
++	  /* If the kernel aio thread was not started yet all requests
++	     are served by the kernel and there are no other threads running,
++	     read events with mutex hold, so that nobody else can get them
++	     instead of us here.  */
++          if (SINGLE_THREAD_P && total == ktotal)
++	    {
++	      if (timeout == NULL)
++		{
++		  while (cntr == 1)
++		    __aio_wait_for_events (__aio_kioctx, NULL);
++		}
++	      else
++		{
++		  struct timeval now;
++		  struct timespec abstime, ts;
++
++		  __gettimeofday (&now, NULL);
++		  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
++		  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
++		  if (abstime.tv_nsec >= 1000000000)
++		    {
++		      abstime.tv_nsec -= 1000000000;
++		      abstime.tv_sec += 1;
++		    }
++
++		  for (;;)
++		    {
++		      result = __aio_wait_for_events (__aio_kioctx, timeout);
++		      if (cntr < 1)
++			break;
++		      if (result == ETIMEDOUT)
++			break;
++
++		      __gettimeofday (&now, NULL);
++		      if (now.tv_sec > abstime.tv_sec
++			  || (now.tv_sec == abstime.tv_sec
++			      && now.tv_usec * 1000 >= abstime.tv_nsec))
++			break;
++
++		      ts.tv_nsec = abstime.tv_nsec - now.tv_usec * 1000;
++		      ts.tv_sec = abstime.tv_sec - now.tv_sec;
++		      if (abstime.tv_nsec < now.tv_usec * 1000)
++			{
++			  ts.tv_nsec += 1000000000;
++			  ts.tv_sec -= 1;
++			}
++		      timeout = &ts;
++		    }
++
++		  if (cntr < 1)
++		    result = 0;
++		  else
++		    result = ETIMEDOUT;
++		}
++	      total = 0;
++	    }
++ 	  else if (__aio_create_kernel_thread () < 0)
++	    {
++	      total = 0;
++	      __set_errno (ENOMEM);
++	      result = -1;
++	    }
++	}
++
++      if (total == 0)
++	/* Suspending was handled above.  */
++	;
++#ifdef DONT_NEED_AIO_MISC_COND
++      else
++	AIO_MISC_WAIT (result, cntr, timeout, 1);
++#else
++      else if (timeout == NULL)
++	result = pthread_cond_wait (&cond, &__aio_requests_mutex);
++      else
++	{
++	  /* We have to convert the relative timeout value into an
++	     absolute time value with pthread_cond_timedwait expects.  */
++	  struct timeval now;
++	  struct timespec abstime;
++
++	  __gettimeofday (&now, NULL);
++	  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
++	  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
++	  if (abstime.tv_nsec >= 1000000000)
++	    {
++	      abstime.tv_nsec -= 1000000000;
++	      abstime.tv_sec += 1;
++	    }
++
++	  result = pthread_cond_timedwait (&cond, &__aio_requests_mutex,
++					   &abstime);
++	}
++#endif
++
++      pthread_cleanup_pop (0);
++    }
++
++  /* Now remove the entry in the waiting list for all requests
++     which didn't terminate.  */
++  while (cnt-- > 0)
++    if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
++      {
++	struct waitlist **listp;
++
++	assert (requestlist[cnt] != NULL);
++
++	/* There is the chance that we cannot find our entry anymore. This
++	   could happen if the request terminated and restarted again.  */
++	listp = &requestlist[cnt]->waiting;
++	while (*listp != NULL && *listp != &waitlist[cnt])
++	  listp = &(*listp)->next;
++
++	if (*listp != NULL)
++	  *listp = (*listp)->next;
++      }
++
++#ifndef DONT_NEED_AIO_MISC_COND
++  /* Release the conditional variable.  */
++  if (__builtin_expect (pthread_cond_destroy (&cond) != 0, 0))
++    /* This must never happen.  */
++    abort ();
++#endif
++
++  if (result != 0)
++    {
++#ifndef DONT_NEED_AIO_MISC_COND
++      /* An error occurred.  Possibly it's ETIMEDOUT.  We have to translate
++	 the timeout error report of `pthread_cond_timedwait' to the
++	 form expected from `aio_suspend'.  */
++      if (result == ETIMEDOUT)
++	__set_errno (EAGAIN);
++      else
++#endif
++	__set_errno (result);
++
++      result = -1;
++    }
++
++  /* Release the mutex.  */
++  pthread_mutex_unlock (&__aio_requests_mutex);
++
++  return result;
++}
++
++weak_alias (aio_suspend, aio_suspend64)
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_write64.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_write64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_write64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_write64.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,2 @@
++#include <kaio_misc.h>
++#include <aio_write64.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_write.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_write.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/kaio_write.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/kaio_write.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,4 @@
++#define aio_write64 __renamed_aio_write64
++#include <kaio_misc.h>
++#undef aio_write64
++#include <aio_write.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/klio_listio64.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/klio_listio64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/klio_listio64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/klio_listio64.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,40 @@
++/* Enqueue and list of read or write requests, 64bit offset version.
++   Copyright (C) 1997, 1998, 1999, 2003, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <kaio_misc.h>
++
++#ifndef USE_KAIO
++#include <lio_listio64.c>
++#else
++
++#include <aio.h>
++#include <assert.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <unistd.h>
++
++#define lio_listio lio_listio64
++#define __lio_listio_21 __lio_listio64_21
++#define __lio_listio_item_notify __lio_listio64_item_notify
++#define aiocb aiocb64
++#define LIO_OPCODE_BASE 128
++#include <klio_listio.c>
++
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/klio_listio.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/klio_listio.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/klio_listio.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/klio_listio.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,322 @@
++/* Enqueue and list of read or write requests.
++   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2005,2006
++   Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <kaio_misc.h>
++
++#ifndef USE_KAIO
++#include <lio_listio.c>
++#else
++
++#ifndef lio_listio
++#include <aio.h>
++#include <assert.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <unistd.h>
++
++#define LIO_OPCODE_BASE 0
++#endif
++
++#include <shlib-compat.h>
++
++
++/* We need this special structure to handle asynchronous I/O.  */
++struct async_waitlist
++  {
++    int counter;
++    struct sigevent sigev;
++    struct waitlist list[0];
++  };
++
++
++/* The code in glibc 2.1 to glibc 2.4 issued only one event when all
++   requests submitted with lio_listio finished.  The existing practice
++   is to issue events for the individual requests as well.  This is
++   what the new code does.  */
++#if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_4)
++# define LIO_MODE(mode) ((mode) & 127)
++# define NO_INDIVIDUAL_EVENT_P(mode) ((mode) & 128)
++#else
++# define LIO_MODE(mode) mode
++# define NO_INDIVIDUAL_EVENT_P(mode) 0
++#endif
++
++
++static int
++lio_listio_internal (int mode, struct aiocb *const list[], int nent,
++		     struct sigevent *sig)
++{
++  struct sigevent defsigev;
++  struct requestlist *requests[nent];
++  int cnt;
++  volatile int total = 0;
++  int result = 0, op = 0;
++  kctx_t kctx = KCTX_NONE;
++
++  if (sig == NULL)
++    {
++      defsigev.sigev_notify = SIGEV_NONE;
++      sig = &defsigev;
++    }
++
++  /* Request the mutex.  */
++  pthread_mutex_lock (&__aio_requests_mutex);
++
++  if (LIO_MODE (mode) == LIO_WAIT && ! __have_no_kernel_aio && nent > 0)
++    {
++      int res;
++      INTERNAL_SYSCALL_DECL (err);
++
++      kctx = 0;
++      do
++	res = INTERNAL_SYSCALL (io_setup, err, 2, nent, &kctx);
++      while (INTERNAL_SYSCALL_ERROR_P (res, err)
++	     && INTERNAL_SYSCALL_ERRNO (res, err) == EINTR);
++      if (INTERNAL_SYSCALL_ERROR_P (res, err))
++	{
++	  kctx = KCTX_NONE;
++	  if (INTERNAL_SYSCALL_ERRNO (res, err) == ENOSYS)
++	    __have_no_kernel_aio = 1;
++	}
++    }
++  else if (LIO_MODE (mode) == LIO_NOWAIT)
++    {
++      op = LIO_KTHREAD;
++      if (sig->sigev_notify != SIGEV_NONE)
++	op = LIO_KTHREAD | LIO_KTHREAD_REQUIRED;
++    }
++  op |= LIO_OPCODE_BASE;
++
++  /* Now we can enqueue all requests.  Since we already acquired the
++     mutex the enqueue function need not do this.  */
++  for (cnt = 0; cnt < nent; ++cnt)
++    if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
++      {
++	if (NO_INDIVIDUAL_EVENT_P (mode))
++	  list[cnt]->aio_sigevent.sigev_notify = SIGEV_NONE;
++	requests[cnt]
++	  = __aio_enqueue_request_ctx ((aiocb_union *) list[cnt],
++				       list[cnt]->aio_lio_opcode | op,
++				       kctx);
++
++	if (requests[cnt] != NULL)
++	  /* Successfully enqueued.  */
++	  ++total;
++	else
++	  /* Signal that we've seen an error.  `errno' and the error code
++	     of the aiocb will tell more.  */
++	  result = -1;
++      }
++    else
++      requests[cnt] = NULL;
++
++  if (total == 0)
++    {
++      /* We don't have anything to do except signalling if we work
++	 asynchronously.  */
++
++      if (kctx != KCTX_NONE)
++	{
++	  INTERNAL_SYSCALL_DECL (err);
++	  INTERNAL_SYSCALL (io_destroy, err, 1, kctx);
++	}
++
++      /* Release the mutex.  We do this before raising a signal since the
++	 signal handler might do a `siglongjmp' and then the mutex is
++	 locked forever.  */
++      pthread_mutex_unlock (&__aio_requests_mutex);
++
++      if (LIO_MODE (mode) == LIO_NOWAIT)
++	{
++#ifdef BROKEN_THREAD_SIGNALS
++	  __aio_notify_only (sig,
++			     sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0);
++#else
++	  __aio_notify_only (sig);
++#endif
++	}
++
++      return result;
++    }
++  else if (LIO_MODE (mode) == LIO_WAIT)
++    {
++#ifndef DONT_NEED_AIO_MISC_COND
++      pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++      int oldstate;
++#endif
++      struct waitlist waitlist[nent];
++      volatile int ktotal = 0;
++
++      total = 0;
++      for (cnt = 0; cnt < nent; ++cnt)
++	{
++	  assert (requests[cnt] == NULL || list[cnt] != NULL);
++
++	  if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
++	    {
++	      if (requests[cnt]->kioctx != KCTX_NONE)
++		{
++		  assert (requests[cnt]->kioctx == kctx);
++		  waitlist[cnt].counterp = &ktotal;
++		  ++ktotal;
++		}
++	      else
++		{
++		  waitlist[cnt].counterp = &total;
++	  	  ++total;
++		}
++#ifndef DONT_NEED_AIO_MISC_COND
++	      waitlist[cnt].cond = &cond;
++#endif
++	      waitlist[cnt].result = &result;
++	      waitlist[cnt].next = requests[cnt]->waiting;
++	      waitlist[cnt].sigevp = NULL;
++#ifdef BROKEN_THREAD_SIGNALS
++	      waitlist[cnt].caller_pid = 0;	/* Not needed.  */
++#endif
++	      requests[cnt]->waiting = &waitlist[cnt];
++	    }
++	}
++
++      while (ktotal > 0)
++	__aio_wait_for_events (kctx, NULL);
++#ifdef DONT_NEED_AIO_MISC_COND
++      AIO_MISC_WAIT (result, total, NULL, 0);
++#else
++      /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancellation
++	 points we must be careful.  We added entries to the waiting lists
++	 which we must remove.  So defer cancellation for now.  */
++      pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
++
++      while (total > 0)
++	pthread_cond_wait (&cond, &__aio_requests_mutex);
++
++      /* Now it's time to restore the cancellation state.  */
++      pthread_setcancelstate (oldstate, NULL);
++
++      /* Release the conditional variable.  */
++      if (pthread_cond_destroy (&cond) != 0)
++	/* This must never happen.  */
++	abort ();
++#endif
++
++      if (kctx != KCTX_NONE)
++	{
++	  INTERNAL_SYSCALL_DECL (err);
++	  INTERNAL_SYSCALL (io_destroy, err, 1, kctx);
++	}
++
++      /* If any of the I/O requests failed, return -1 and set errno.  */
++      if (result != 0)
++	{
++	  __set_errno (result == EINTR ? EINTR : EIO);
++	  result = -1;
++	}
++    }
++  else if (sig->sigev_notify != SIGEV_NONE)
++    {
++      struct async_waitlist *waitlist;
++
++      waitlist = (struct async_waitlist *)
++	malloc (sizeof (struct async_waitlist)
++		+ (nent * sizeof (struct waitlist)));
++
++      if (waitlist == NULL)
++	{
++	  __set_errno (EAGAIN);
++	  result = -1;
++	}
++      else
++	{
++#ifdef BROKEN_THREAD_SIGNALS
++	  pid_t caller_pid = sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0;
++#endif
++	  total = 0;
++
++	  for (cnt = 0; cnt < nent; ++cnt)
++	    {
++	      assert (requests[cnt] == NULL || list[cnt] != NULL);
++
++	      if (requests[cnt] != NULL
++		  && list[cnt]->aio_lio_opcode != LIO_NOP)
++		{
++#ifndef DONT_NEED_AIO_MISC_COND
++		  waitlist->list[cnt].cond = NULL;
++#endif
++		  waitlist->list[cnt].result = NULL;
++		  waitlist->list[cnt].next = requests[cnt]->waiting;
++		  waitlist->list[cnt].counterp = &waitlist->counter;
++		  waitlist->list[cnt].sigevp = &waitlist->sigev;
++#ifdef BROKEN_THREAD_SIGNALS
++		  waitlist->list[cnt].caller_pid = caller_pid;
++#endif
++		  requests[cnt]->waiting = &waitlist->list[cnt];
++		  ++total;
++		}
++	    }
++
++	  waitlist->counter = total;
++	  waitlist->sigev = *sig;
++	}
++    }
++
++  /* Release the mutex.  */
++  pthread_mutex_unlock (&__aio_requests_mutex);
++
++  return result;
++}
++
++
++#if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_4)
++int
++attribute_compat_text_section
++__lio_listio_21 (int mode, struct aiocb *const list[], int nent,
++		 struct sigevent *sig)
++{
++  /* Check arguments.  */
++  if (mode != LIO_WAIT && mode != LIO_NOWAIT)
++    {
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  return lio_listio_internal (mode | LIO_NO_INDIVIDUAL_EVENT, list, nent, sig);
++}
++compat_symbol (librt, __lio_listio_21, lio_listio, GLIBC_2_1);
++#endif
++
++
++int
++__lio_listio_item_notify (int mode, struct aiocb *const list[], int nent,
++			  struct sigevent *sig)
++{
++    /* Check arguments.  */
++  if (mode != LIO_WAIT && mode != LIO_NOWAIT)
++    {
++      __set_errno (EINVAL);
++      return -1;
++    }
++
++  return lio_listio_internal (mode, list, nent, sig);
++}
++versioned_symbol (librt, __lio_listio_item_notify, lio_listio, GLIBC_2_4);
++
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/Makefile	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,4 @@
++ifeq ($(subdir),rtkaio)
++CFLAGS-kaio_mq_send.c += -fexceptions
++CFLAGS-kaio_mq_receive.c += -fexceptions
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/powerpc/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/powerpc/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/powerpc/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/powerpc/Makefile	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,3 @@
++ifeq ($(subdir),rtkaio)
++librtkaio-routines += rtkaio-sysdep
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/powerpc/powerpc64/Versions	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,9 @@
++%ifdef HAVE_FORCED_UNWIND
++librtkaio {
++  GLIBC_2.3.3 {
++    # Changed timer_t.
++    timer_create; timer_delete; timer_getoverrun; timer_gettime;
++    timer_settime;
++  }
++}
++%endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/powerpc/rtkaio-sysdep.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/powerpc/rtkaio-sysdep.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/powerpc/rtkaio-sysdep.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/powerpc/rtkaio-sysdep.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt-sysdep.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/s390/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/s390/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/s390/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/s390/Makefile	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,3 @@
++ifeq ($(subdir),rtkaio)
++librtkaio-routines += rtkaio-sysdep
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/s390/rtkaio-sysdep.S glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/s390/rtkaio-sysdep.S
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/s390/rtkaio-sysdep.S	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/s390/rtkaio-sysdep.S	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1 @@
++#include <rt-sysdep.S>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/s390/s390-64/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/s390/s390-64/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/s390/s390-64/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/s390/s390-64/Versions	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,9 @@
++%ifdef HAVE_FORCED_UNWIND
++librtkaio {
++  GLIBC_2.3.3 {
++    # Changed timer_t.
++    timer_create; timer_delete; timer_getoverrun; timer_gettime;
++    timer_settime;
++  }
++}
++%endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/kaio_cancel.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/kaio_cancel.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/kaio_cancel.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/kaio_cancel.c	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,33 @@
++#include <shlib-compat.h>
++
++#define aio_cancel64 XXX
++#include <aio.h>
++#undef aio_cancel64
++#include <errno.h>
++
++extern __typeof (aio_cancel) __new_aio_cancel;
++extern __typeof (aio_cancel) __old_aio_cancel;
++
++#define aio_cancel	__new_aio_cancel
++
++#include <sysdeps/unix/sysv/linux/kaio_cancel.c>
++
++#undef aio_cancel
++strong_alias (__new_aio_cancel, __new_aio_cancel64);
++versioned_symbol (librt, __new_aio_cancel, aio_cancel, GLIBC_2_3);
++versioned_symbol (librt, __new_aio_cancel64, aio_cancel64, GLIBC_2_3);
++
++#if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_3)
++
++#undef ECANCELED
++#define aio_cancel	__old_aio_cancel
++#define ECANCELED	125
++
++#include <sysdeps/unix/sysv/linux/kaio_cancel.c>
++
++#undef aio_cancel
++strong_alias (__old_aio_cancel, __old_aio_cancel64);
++compat_symbol (librt, __old_aio_cancel, aio_cancel, GLIBC_2_1);
++compat_symbol (librt, __old_aio_cancel64, aio_cancel64, GLIBC_2_1);
++
++#endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/Makefile glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/Makefile
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/Makefile	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/Makefile	2013-08-16 16:23:23.243028404 +0530
+@@ -0,0 +1,3 @@
++ifeq ($(subdir),rtkaio)
++librtkaio-routines += rtkaio-sysdep
++endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/rtkaio-sysdep.c glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/rtkaio-sysdep.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/rtkaio-sysdep.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/rtkaio-sysdep.c	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1 @@
++#include <rt-sysdep.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/sparc64/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/sparc64/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/sparc64/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/sparc64/Versions	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,9 @@
++%ifdef HAVE_FORCED_UNWIND
++librtkaio {
++  GLIBC_2.3.3 {
++    # Changed timer_t.
++    timer_create; timer_delete; timer_getoverrun; timer_gettime;
++    timer_settime;
++  }
++}
++%endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/sparc/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/sparc/Versions	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,6 @@
++librtkaio {
++  GLIBC_2.3 {
++    # AIO functions.
++    aio_cancel; aio_cancel64;
++  }
++}
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/syscalls.list glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/syscalls.list
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/syscalls.list	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/syscalls.list	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,5 @@
++# File name		Caller	Syscall name	Args		Strong name		Weak names
++
++kaio_mq_timedsend	-	mq_timedsend	Ci:ipiip	__GI_mq_timedsend	mq_timedsend
++kaio_mq_timedreceive	-	mq_timedreceive	Ci:ipipp	__GI_mq_timedreceive	mq_timedreceive
++kaio_mq_setattr		-	mq_getsetattr	i:ipp		__GI_mq_setattr		mq_setattr
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/x86_64/librtkaio-cancellation.S glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/x86_64/librtkaio-cancellation.S
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/x86_64/librtkaio-cancellation.S	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/x86_64/librtkaio-cancellation.S	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1 @@
++#include <librt-cancellation.S>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/x86_64/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/x86_64/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/sysdeps/unix/sysv/linux/x86_64/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/sysdeps/unix/sysv/linux/x86_64/Versions	2013-08-16 16:23:23.244028404 +0530
+@@ -0,0 +1,9 @@
++%ifdef HAVE_FORCED_UNWIND
++librtkaio {
++  GLIBC_2.3.3 {
++    # Changed timer_t.
++    timer_create; timer_delete; timer_getoverrun; timer_gettime;
++    timer_settime;
++  }
++}
++%endif
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio10.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio10.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio10.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio10.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio10.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio2.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio2.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio2.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio2.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio2.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio3.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio3.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio3.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio3.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio3.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio4.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio4.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio4.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio4.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio4.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio5.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio5.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio5.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio5.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio5.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio64.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio64.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio64.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio6.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio6.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio6.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio6.c	2013-08-16 16:23:23.241028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio6.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio7.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio7.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio7.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio7.c	2013-08-16 16:23:23.241028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio7.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio8.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio8.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio8.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio8.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio8.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio9.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio9.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio9.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio9.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio9.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aio.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aio.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aio.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-aio.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod2.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod2.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod2.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod2.c	2013-08-16 16:23:23.241028404 +0530
+@@ -0,0 +1,128 @@
++/* Test for notification mechanism in lio_listio.
++   Copyright (C) 2000, 2002, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <aio.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <errno.h>
++#include "tst-aiod.h"
++
++
++static pthread_barrier_t b;
++
++
++static void
++thrfct (sigval_t arg)
++{
++  int e = pthread_barrier_wait (&b);
++  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
++    {
++      puts ("thread: barrier_wait failed");
++      exit (1);
++    }
++}
++
++
++static int
++do_test (int argc, char *argv[])
++{
++  char name[] = "/tmp/aio2.XXXXXX";
++  int fd;
++  struct aiocb *arr[1];
++  struct aiocb cb;
++  static const char buf[] = "Hello World\n";
++
++  fd = mkstemp (name);
++  if (fd == -1)
++    {
++      printf ("cannot open temp name: %m\n");
++      return 1;
++    }
++
++  unlink (name);
++
++  if (pthread_barrier_init (&b, NULL, 2) != 0)
++    {
++      puts ("barrier_init failed");
++      return 1;
++    }
++
++  arr[0] = &cb;
++
++  void *p;
++  int sz = set_o_direct (fd);
++  if (sz != -1)
++    {
++      int err = posix_memalign (&p, sz, sz);
++      if (err)
++	{
++	  errno = err;
++	  printf ("cannot allocate memory: %m\n");
++	  return 1;
++	}
++      memcpy (p, buf, sizeof (buf) - 1);
++      memset (p + sizeof (buf) - 1, ' ', sz - sizeof (buf) + 1);
++      printf ("Using O_DIRECT with block size %d\n", sz);
++    }
++  else
++    {
++      p = (void *) buf;
++      sz = sizeof (buf) - 1;
++    }
++
++  cb.aio_fildes = fd;
++  cb.aio_lio_opcode = LIO_WRITE;
++  cb.aio_reqprio = 0;
++  cb.aio_buf = p;
++  cb.aio_nbytes = sz;
++  cb.aio_offset = 0;
++  cb.aio_sigevent.sigev_notify = SIGEV_THREAD;
++  cb.aio_sigevent.sigev_notify_function = thrfct;
++  cb.aio_sigevent.sigev_notify_attributes = NULL;
++  cb.aio_sigevent.sigev_value.sival_ptr = NULL;
++
++  if (lio_listio (LIO_WAIT, arr, 1, NULL) < 0)
++    {
++      if (errno == ENOSYS)
++	{
++	  puts ("no aio support in this configuration");
++	  return 0;
++	}
++      printf ("lio_listio failed: %m\n");
++      return 1;
++    }
++
++  puts ("lio_listio returned");
++
++  int e = pthread_barrier_wait (&b);
++  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
++    {
++      puts ("barrier_wait failed");
++      return 1;
++    }
++
++  puts ("all OK");
++
++  return 0;
++}
++
++#include "../test-skeleton.c"
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod3.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod3.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod3.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod3.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1,131 @@
++/* Test for notification mechanism in lio_listio.
++   Copyright (C) 2000, 2002, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <aio.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <errno.h>
++#include "tst-aiod.h"
++
++
++static pthread_barrier_t b;
++
++
++static void
++thrfct (sigval_t arg)
++{
++  int e = pthread_barrier_wait (&b);
++  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
++    {
++      puts ("child: barrier_wait failed");
++      exit (1);
++    }
++}
++
++
++static int
++do_test (int argc, char *argv[])
++{
++  char name[] = "/tmp/aio3.XXXXXX";
++  int fd;
++  struct aiocb *arr[1];
++  struct aiocb cb;
++  static const char buf[] = "Hello World\n";
++
++  fd = mkstemp (name);
++  if (fd == -1)
++    {
++      printf ("cannot open temp name: %m\n");
++      return 1;
++    }
++
++  unlink (name);
++
++  if (pthread_barrier_init (&b, NULL, 2) != 0)
++    {
++      puts ("barrier_init failed");
++      return 1;
++    }
++
++  arr[0] = &cb;
++
++  void *p;
++  int sz = set_o_direct (fd);
++  if (sz != -1)
++    {
++      int err = posix_memalign (&p, sz, sz);
++      if (err)
++	{
++	  errno = err;
++	  printf ("cannot allocate memory: %m\n");
++	  return 1;
++	}
++      memcpy (p, buf, sizeof (buf) - 1);
++      memset (p + sizeof (buf) - 1, ' ', sz - sizeof (buf) + 1);
++      printf ("Using O_DIRECT with block size %d\n", sz);
++    }
++  else
++    {
++      p = (void *) buf;
++      sz = sizeof (buf) - 1;
++    }
++
++  cb.aio_fildes = fd;
++  cb.aio_lio_opcode = LIO_WRITE;
++  cb.aio_reqprio = 0;
++  cb.aio_buf = p;
++  cb.aio_nbytes = sz;
++  cb.aio_offset = 0;
++  cb.aio_sigevent.sigev_notify = SIGEV_THREAD;
++  cb.aio_sigevent.sigev_notify_function = thrfct;
++  cb.aio_sigevent.sigev_notify_attributes = NULL;
++  cb.aio_sigevent.sigev_value.sival_ptr = NULL;
++
++  if (lio_listio (LIO_NOWAIT, arr, 1, NULL) < 0)
++    {
++      if (errno == ENOSYS)
++	{
++	  puts ("no aio support in this configuration");
++	  return 0;
++	}
++      printf ("lio_listio failed: %m\n");
++      return 1;
++    }
++
++  if (aio_suspend ((const struct aiocb *const *) arr, 1, NULL) < 0)
++    {
++      printf ("aio_suspend failed: %m\n");
++      return 1;
++    }
++
++  int e = pthread_barrier_wait (&b);
++  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
++    {
++      puts ("parent: barrier_wait failed");
++      return 1;
++    }
++
++  puts ("all OK");
++
++  return 0;
++}
++
++#include "../test-skeleton.c"
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod4.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod4.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod4.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod4.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1,182 @@
++/* Test for completion signal handling.
++   Copyright (C) 2000, 2001, 2002, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <aio.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <errno.h>
++#include "tst-aiod.h"
++
++/* We might need a bit longer timeout.  */
++#define TIMEOUT 10 /* sec */
++
++int my_signo;
++
++volatile sig_atomic_t flag;
++
++
++static void
++sighandler (const int signo)
++{
++  flag = signo;
++}
++
++static int
++wait_flag (void)
++{
++  while (flag == 0)
++    {
++      puts ("Sleeping...");
++      sleep (1);
++    }
++
++  if (flag != my_signo)
++    {
++      printf ("signal handler received wrong signal, flag is %d\n", flag);
++      return 1;
++    }
++
++  return 0;
++}
++
++#ifndef SIGRTMIN
++# define SIGRTMIN -1
++# define SIGRTMAX -1
++#endif
++
++static int
++do_test (int argc, char *argv[])
++{
++  char name[] = "/tmp/aio4.XXXXXX";
++  int fd;
++  struct aiocb *arr[1];
++  struct aiocb cb;
++  static const char buf[] = "Hello World\n";
++  struct aioinit init = {10, 20, 0};
++  struct sigaction sa;
++  struct sigevent ev;
++
++  if (SIGRTMIN == -1)
++  {
++      printf ("RT signals not supported.\n");
++      return 0;
++  }
++
++  /* Select a signal from the middle of the available choices... */
++  my_signo = (SIGRTMAX + SIGRTMIN) / 2;
++
++  fd = mkstemp (name);
++  if (fd == -1)
++    {
++      printf ("cannot open temp name: %m\n");
++      return 1;
++    }
++
++  unlink (name);
++
++  /* Test also aio_init.  */
++  aio_init (&init);
++
++  arr[0] = &cb;
++
++  void *p;
++  int sz = set_o_direct (fd);
++  if (sz != -1)
++    {
++      int err = posix_memalign (&p, sz, sz);
++      if (err)
++	{
++	  errno = err;
++	  printf ("cannot allocate memory: %m\n");
++	  return 1;
++	}
++      memcpy (p, buf, sizeof (buf) - 1);
++      memset (p + sizeof (buf) - 1, ' ', sz - sizeof (buf) + 1);
++      printf ("Using O_DIRECT with block size %d\n", sz);
++    }
++  else
++    {
++      p = (void *) buf;
++      sz = sizeof (buf) - 1;
++    }
++
++  cb.aio_fildes = fd;
++  cb.aio_lio_opcode = LIO_WRITE;
++  cb.aio_reqprio = 0;
++  cb.aio_buf = p;
++  cb.aio_nbytes = sz;
++  cb.aio_offset = 0;
++  cb.aio_sigevent.sigev_notify = SIGEV_SIGNAL;
++  cb.aio_sigevent.sigev_notify_function = NULL;
++  cb.aio_sigevent.sigev_notify_attributes = NULL;
++  cb.aio_sigevent.sigev_signo = my_signo;
++  cb.aio_sigevent.sigev_value.sival_ptr = NULL;
++
++  ev.sigev_notify = SIGEV_SIGNAL;
++  ev.sigev_notify_function = NULL;
++  ev.sigev_notify_attributes = NULL;
++  ev.sigev_signo = my_signo;
++
++  sa.sa_handler = sighandler;
++  sigemptyset (&sa.sa_mask);
++  sa.sa_flags = SA_RESTART;
++
++  if (sigaction (my_signo, &sa, NULL) < 0)
++    {
++      printf ("sigaction failed: %m\n");
++      return 1;
++    }
++
++  flag = 0;
++  /* First use aio_write.  */
++  if (aio_write (arr[0]) < 0)
++    {
++      if (errno == ENOSYS)
++	{
++	  puts ("no aio support in this configuration");
++	  return 0;
++	}
++      printf ("aio_write failed: %m\n");
++      return 1;
++    }
++
++  if (wait_flag ())
++    return 1;
++
++  puts ("aio_write OK");
++
++  flag = 0;
++  /* Again with lio_listio.  */
++  if (lio_listio (LIO_NOWAIT, arr, 1, &ev) < 0)
++    {
++      printf ("lio_listio failed: %m\n");
++      return 1;
++    }
++
++  if (wait_flag ())
++    return 1;
++
++  puts ("all OK");
++
++  return 0;
++}
++
++#include "../test-skeleton.c"
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod5.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod5.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod5.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod5.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1,152 @@
++/* Test for completion thread handling.
++   Copyright (C) 2000, 2002, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <aio.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <errno.h>
++#include "tst-aiod.h"
++
++/* We might need a bit longer timeout.  */
++#define TIMEOUT 10 /* sec */
++
++#define MY_SIVAL 27
++
++volatile sig_atomic_t flag;
++
++
++static void
++callback (sigval_t s)
++{
++  flag = s.sival_int;
++}
++
++static int
++wait_flag (void)
++{
++  while (flag == 0)
++    {
++      puts ("Sleeping...");
++      sleep (1);
++    }
++
++  if (flag != MY_SIVAL)
++    {
++      printf ("signal handler received wrong signal, flag is %d\n", flag);
++      return 1;
++    }
++
++  return 0;
++}
++
++
++static int
++do_test (int argc, char *argv[])
++{
++  char name[] = "/tmp/aio5.XXXXXX";
++  int fd;
++  struct aiocb *arr[1];
++  struct aiocb cb;
++  static const char buf[] = "Hello World\n";
++  struct sigevent ev;
++
++  fd = mkstemp (name);
++  if (fd == -1)
++    {
++      printf ("cannot open temp name: %m\n");
++      return 1;
++    }
++
++  unlink (name);
++
++  arr[0] = &cb;
++
++  void *p;
++  int sz = set_o_direct (fd);
++  if (sz != -1)
++    {
++      int err = posix_memalign (&p, sz, sz);
++      if (err)
++	{
++	  errno = err;
++	  printf ("cannot allocate memory: %m\n");
++	  return 1;
++	}
++      memcpy (p, buf, sizeof (buf) - 1);
++      memset (p + sizeof (buf) - 1, ' ', sz - sizeof (buf) + 1);
++      printf ("Using O_DIRECT with block size %d\n", sz);
++    }
++  else
++    {
++      p = (void *) buf;
++      sz = sizeof (buf) - 1;
++    }
++
++  cb.aio_fildes = fd;
++  cb.aio_lio_opcode = LIO_WRITE;
++  cb.aio_reqprio = 0;
++  cb.aio_buf = p;
++  cb.aio_nbytes = sz;
++  cb.aio_offset = 0;
++  cb.aio_sigevent.sigev_notify = SIGEV_THREAD;
++  cb.aio_sigevent.sigev_notify_function = callback;
++  cb.aio_sigevent.sigev_notify_attributes = NULL;
++  cb.aio_sigevent.sigev_value.sival_int = MY_SIVAL;
++
++  ev.sigev_notify = SIGEV_THREAD;
++  ev.sigev_notify_function = callback;
++  ev.sigev_notify_attributes = NULL;
++  ev.sigev_value.sival_int = MY_SIVAL;
++
++  /* First use aio_write.  */
++  if (aio_write (arr[0]) < 0)
++    {
++      if (errno == ENOSYS)
++	{
++	  puts ("no aio support in this configuration");
++	  return 0;
++	}
++      printf ("aio_write failed: %m\n");
++      return 1;
++    }
++
++  if (wait_flag ())
++    return 1;
++
++  puts ("aio_write OK");
++
++  flag = 0;
++  /* Again with lio_listio.  */
++  if (lio_listio (LIO_NOWAIT, arr, 1, &ev) < 0)
++    {
++      printf ("lio_listio failed: %m\n");
++      return 1;
++    }
++
++  if (wait_flag ())
++    return 1;
++
++  puts ("all OK");
++
++  return 0;
++}
++
++#include "../test-skeleton.c"
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod64.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod64.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod64.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod64.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1,308 @@
++/* Tests for 64bit AIO in librt.
++   Copyright (C) 1998, 1999, 2000, 2002, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#define _LARGEFILE_SOURCE 1
++#include <aio.h>
++#include <errno.h>
++#include <error.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/stat.h>
++#include "tst-aiod.h"
++
++
++/* Prototype for our test function.  */
++extern void do_prepare (int argc, char *argv[]);
++extern int do_test (int argc, char *argv[]);
++
++/* We have a preparation function.  */
++#define PREPARE do_prepare
++
++/* We might need a bit longer timeout.  */
++#define TIMEOUT 20 /* sec */
++
++/* This defines the `main' function and some more.  */
++#include <test-skeleton.c>
++
++
++/* These are for the temporary file we generate.  */
++char *name;
++int fd;
++char *tmpbuf;
++int blksz = 100;
++
++void
++do_prepare (int argc, char *argv[])
++{
++  size_t name_len;
++
++  name_len = strlen (test_dir);
++  name = malloc (name_len + sizeof ("/aioXXXXXX"));
++  mempcpy (mempcpy (name, test_dir, name_len),
++	   "/aioXXXXXX", sizeof ("/aioXXXXXX"));
++  add_temp_file (name);
++
++  /* Open our test file.   */
++  fd = mkstemp (name);
++  if (fd == -1)
++    error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
++
++  int sz = set_o_direct (fd);
++  if (sz != -1)
++    {
++      blksz = sz;
++      printf ("Using O_DIRECT with block size %d\n", blksz);
++    }
++}
++
++
++static int
++test_file (const void *buf, size_t size, int fd, const char *msg)
++{
++  struct stat st;
++  char *tmp = tmpbuf;
++
++  errno = 0;
++  if (fstat (fd, &st) < 0)
++    {
++      error (0, errno, "%s: failed stat", msg);
++      return 1;
++    }
++
++  if (st.st_size != (off_t) size)
++    {
++      error (0, errno, "%s: wrong size: %lu, should be %lu",
++	     msg, (unsigned long int) st.st_size, (unsigned long int) size);
++      return 1;
++    }
++
++  if (pread (fd, tmp, size, 0) != (ssize_t) size)
++    {
++      error (0, errno, "%s: failed pread", msg);
++      return 1;
++    }
++
++  if (memcmp (buf, tmp, size) != 0)
++    {
++      error (0, errno, "%s: failed comparison", msg);
++      return 1;
++    }
++
++  printf ("%s test ok\n", msg);
++
++  return 0;
++}
++
++
++static int
++do_wait (struct aiocb64 **cbp, size_t nent, int allowed_err)
++{
++  int go_on;
++  size_t cnt;
++  int result = 0;
++
++  do
++    {
++      aio_suspend64 ((const struct aiocb64 *const *) cbp, nent, NULL);
++      go_on = 0;
++      for (cnt = 0; cnt < nent; ++cnt)
++	if (cbp[cnt] != NULL)
++	  {
++	    if (aio_error64 (cbp[cnt]) == EINPROGRESS)
++	      go_on = 1;
++	    else
++	      {
++		if (aio_return64 (cbp[cnt]) == -1
++		    && (allowed_err == 0
++			|| aio_error64 (cbp[cnt]) != allowed_err))
++		  {
++		    error (0, aio_error64 (cbp[cnt]), "Operation failed\n");
++		    result = 1;
++		  }
++		cbp[cnt] = NULL;
++	      }
++	  }
++    }
++  while (go_on);
++
++  return result;
++}
++
++
++int
++do_test (int argc, char *argv[])
++{
++  struct aiocb64 cbs[10];
++  struct aiocb64 cbs_fsync;
++  struct aiocb64 *cbp[10];
++  struct aiocb64 *cbp_fsync[1];
++  char *buf;
++  size_t cnt;
++  int result = 0;
++
++  buf = mmap (NULL, 20 * blksz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
++  tmpbuf = buf + 10 * blksz;
++  if (buf == MAP_FAILED)
++    {
++      error (0, errno, "mmap failed");
++      return 1;
++    }
++
++  /* Preparation.  */
++  for (cnt = 0; cnt < 10; ++cnt)
++    {
++      cbs[cnt].aio_fildes = fd;
++      cbs[cnt].aio_reqprio = 0;
++      cbs[cnt].aio_buf = memset (&buf[cnt * blksz], '0' + cnt, blksz);
++      cbs[cnt].aio_nbytes = blksz;
++      cbs[cnt].aio_offset = cnt * blksz;
++      cbs[cnt].aio_sigevent.sigev_notify = SIGEV_NONE;
++
++      cbp[cnt] = &cbs[cnt];
++    }
++
++  /* First a simple test.  */
++  for (cnt = 10; cnt > 0; )
++    if (aio_write64 (cbp[--cnt]) < 0 && errno == ENOSYS)
++      {
++	error (0, 0, "no aio support in this configuration");
++	return 0;
++      }
++  /* Wait 'til the results are there.  */
++  result |= do_wait (cbp, 10, 0);
++  /* Test this.  */
++  result |= test_file (buf, 10 * blksz, fd, "aio_write");
++
++  /* Read now as we've written it.  */
++  memset (buf, '\0', 10 * blksz);
++  /* Issue the commands.  */
++  for (cnt = 10; cnt > 0; )
++    {
++      --cnt;
++      cbp[cnt] = &cbs[cnt];
++      aio_read64 (cbp[cnt]);
++    }
++  /* Wait 'til the results are there.  */
++  result |= do_wait (cbp, 10, 0);
++  /* Test this.  */
++  for (cnt = 0; cnt < 10 * blksz; ++cnt)
++    if (buf[cnt] != '0' + (cnt / blksz))
++      {
++	result = 1;
++	error (0, 0, "comparison failed for aio_read test");
++	break;
++      }
++
++  if (cnt == 10 * blksz)
++    puts ("aio_read test ok");
++
++  /* Remove the test file contents.  */
++  if (ftruncate64 (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Test lio_listio.  */
++  for (cnt = 0; cnt < 10; ++cnt)
++    {
++      cbs[cnt].aio_lio_opcode = LIO_WRITE;
++      cbp[cnt] = &cbs[cnt];
++    }
++  /* Issue the command.  */
++  lio_listio64 (LIO_WAIT, cbp, 10, NULL);
++  /* ...and immediately test it since we started it in wait mode.  */
++  result |= test_file (buf, 10 * blksz, fd, "lio_listio (write)");
++
++  /* Test aio_fsync.  */
++  cbs_fsync.aio_fildes = fd;
++  cbs_fsync.aio_sigevent.sigev_notify = SIGEV_NONE;
++  cbp_fsync[0] = &cbs_fsync;
++
++  /* Remove the test file contents first.  */
++  if (ftruncate64 (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Write again.  */
++  for (cnt = 10; cnt > 0; )
++    aio_write64 (cbp[--cnt]);
++
++  if (aio_fsync64 (O_SYNC, &cbs_fsync) < 0)
++    {
++      error (0, errno, "aio_fsync failed\n");
++      result = 1;
++    }
++  result |= do_wait (cbp_fsync, 1, 0);
++
++  /* ...and test since all data should be on disk now.  */
++  result |= test_file (buf, 10 * blksz, fd, "aio_fsync (aio_write)");
++
++  /* Test aio_cancel.  */
++  /* Remove the test file contents first.  */
++  if (ftruncate64 (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Write again.  */
++  for (cnt = 10; cnt > 0; )
++    aio_write64 (cbp[--cnt]);
++
++  /* Cancel all requests.  */
++  if (aio_cancel64 (fd, NULL) == -1)
++    printf ("aio_cancel64 (fd, NULL) cannot cancel anything\n");
++
++  result |= do_wait (cbp, 10, ECANCELED);
++
++  /* Another test for aio_cancel.  */
++  /* Remove the test file contents first.  */
++  if (ftruncate64 (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Write again.  */
++  for (cnt = 10; cnt > 0; )
++    {
++      --cnt;
++      cbp[cnt] = &cbs[cnt];
++      aio_write64 (cbp[cnt]);
++    }
++  puts ("finished3");
++
++  /* Cancel all requests.  */
++  for (cnt = 10; cnt > 0; )
++    if (aio_cancel64 (fd, cbp[--cnt]) == -1)
++      /* This is not an error.  The request can simply be finished.  */
++      printf ("aio_cancel64 (fd, cbp[%Zd]) cannot be canceled\n", cnt);
++  puts ("finished2");
++
++  result |= do_wait (cbp, 10, ECANCELED);
++
++  puts ("finished");
++
++  return result;
++}
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1,307 @@
++/* Tests for AIO in librt.
++   Copyright (C) 1998, 2000, 2002, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <aio.h>
++#include <errno.h>
++#include <error.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/stat.h>
++#include "tst-aiod.h"
++
++
++/* Prototype for our test function.  */
++extern void do_prepare (int argc, char *argv[]);
++extern int do_test (int argc, char *argv[]);
++
++/* We have a preparation function.  */
++#define PREPARE do_prepare
++
++/* We might need a bit longer timeout.  */
++#define TIMEOUT 20 /* sec */
++
++/* This defines the `main' function and some more.  */
++#include <test-skeleton.c>
++
++
++/* These are for the temporary file we generate.  */
++char *name;
++int fd;
++char *tmpbuf;
++int blksz = 100;
++
++void
++do_prepare (int argc, char *argv[])
++{
++  size_t name_len;
++
++  name_len = strlen (test_dir);
++  name = malloc (name_len + sizeof ("/aioXXXXXX"));
++  mempcpy (mempcpy (name, test_dir, name_len),
++	   "/aioXXXXXX", sizeof ("/aioXXXXXX"));
++  add_temp_file (name);
++
++  /* Open our test file.   */
++  fd = mkstemp (name);
++  if (fd == -1)
++    error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
++
++  int sz = set_o_direct (fd);
++  if (sz != -1)
++    {
++      blksz = sz;
++      printf ("Using O_DIRECT with block size %d\n", blksz);
++    }
++}
++
++
++static int
++test_file (const void *buf, size_t size, int fd, const char *msg)
++{
++  struct stat st;
++  char *tmp = tmpbuf;
++
++  errno = 0;
++  if (fstat (fd, &st) < 0)
++    {
++      error (0, errno, "%s: failed stat", msg);
++      return 1;
++    }
++
++  if (st.st_size != (off_t) size)
++    {
++      error (0, errno, "%s: wrong size: %lu, should be %lu",
++	     msg, (unsigned long int) st.st_size, (unsigned long int) size);
++      return 1;
++    }
++
++  if (pread (fd, tmp, size, 0) != (ssize_t) size)
++    {
++      error (0, errno, "%s: failed pread", msg);
++      return 1;
++    }
++
++  if (memcmp (buf, tmp, size) != 0)
++    {
++      error (0, errno, "%s: failed comparison", msg);
++      return 1;
++    }
++
++  printf ("%s test ok\n", msg);
++
++  return 0;
++}
++
++
++static int
++do_wait (struct aiocb **cbp, size_t nent, int allowed_err)
++{
++  int go_on;
++  size_t cnt;
++  int result = 0;
++
++  do
++    {
++      aio_suspend ((const struct aiocb *const *) cbp, nent, NULL);
++      go_on = 0;
++      for (cnt = 0; cnt < nent; ++cnt)
++	if (cbp[cnt] != NULL)
++	  {
++	    if (aio_error (cbp[cnt]) == EINPROGRESS)
++	      go_on = 1;
++	    else
++	      {
++		if (aio_return (cbp[cnt]) == -1
++		    && (allowed_err == 0
++			|| aio_error (cbp[cnt]) != allowed_err))
++		  {
++		    error (0, aio_error (cbp[cnt]), "Operation failed\n");
++		    result = 1;
++		  }
++		cbp[cnt] = NULL;
++	      }
++	  }
++    }
++  while (go_on);
++
++  return result;
++}
++
++
++int
++do_test (int argc, char *argv[])
++{
++  struct aiocb cbs[10];
++  struct aiocb cbs_fsync;
++  struct aiocb *cbp[10];
++  struct aiocb *cbp_fsync[1];
++  char *buf;
++  size_t cnt;
++  int result = 0;
++
++  buf = mmap (NULL, 20 * blksz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
++  tmpbuf = buf + 10 * blksz;
++  if (buf == MAP_FAILED)
++    {
++      error (0, errno, "mmap failed");
++      return 1;
++    }
++
++  /* Preparation.  */
++  for (cnt = 0; cnt < 10; ++cnt)
++    {
++      cbs[cnt].aio_fildes = fd;
++      cbs[cnt].aio_reqprio = 0;
++      cbs[cnt].aio_buf = memset (&buf[cnt * blksz], '0' + cnt, blksz);
++      cbs[cnt].aio_nbytes = blksz;
++      cbs[cnt].aio_offset = cnt * blksz;
++      cbs[cnt].aio_sigevent.sigev_notify = SIGEV_NONE;
++
++      cbp[cnt] = &cbs[cnt];
++    }
++
++  /* First a simple test.  */
++  for (cnt = 10; cnt > 0; )
++    if (aio_write (cbp[--cnt]) < 0 && errno == ENOSYS)
++      {
++	error (0, 0, "no aio support in this configuration");
++	return 0;
++      }
++  /* Wait 'til the results are there.  */
++  result |= do_wait (cbp, 10, 0);
++  /* Test this.  */
++  result |= test_file (buf, 10 * blksz, fd, "aio_write");
++
++  /* Read now as we've written it.  */
++  memset (buf, '\0', 10 * blksz);
++  /* Issue the commands.  */
++  for (cnt = 10; cnt > 0; )
++    {
++      --cnt;
++      cbp[cnt] = &cbs[cnt];
++      aio_read (cbp[cnt]);
++    }
++  /* Wait 'til the results are there.  */
++  result |= do_wait (cbp, 10, 0);
++  /* Test this.  */
++  for (cnt = 0; cnt < 10 * blksz; ++cnt)
++    if (buf[cnt] != '0' + (cnt / blksz))
++      {
++	result = 1;
++	error (0, 0, "comparison failed for aio_read test");
++	break;
++      }
++
++  if (cnt == 10 * blksz)
++    puts ("aio_read test ok");
++
++  /* Remove the test file contents.  */
++  if (ftruncate (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Test lio_listio.  */
++  for (cnt = 0; cnt < 10; ++cnt)
++    {
++      cbs[cnt].aio_lio_opcode = LIO_WRITE;
++      cbp[cnt] = &cbs[cnt];
++    }
++  /* Issue the command.  */
++  lio_listio (LIO_WAIT, cbp, 10, NULL);
++  /* ...and immediately test it since we started it in wait mode.  */
++  result |= test_file (buf, 10 * blksz, fd, "lio_listio (write)");
++
++  /* Test aio_fsync.  */
++  cbs_fsync.aio_fildes = fd;
++  cbs_fsync.aio_sigevent.sigev_notify = SIGEV_NONE;
++  cbp_fsync[0] = &cbs_fsync;
++
++  /* Remove the test file contents first.  */
++  if (ftruncate (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Write again.  */
++  for (cnt = 10; cnt > 0; )
++    aio_write (cbp[--cnt]);
++
++  if (aio_fsync (O_SYNC, &cbs_fsync) < 0)
++    {
++      error (0, errno, "aio_fsync failed\n");
++      result = 1;
++    }
++  result |= do_wait (cbp_fsync, 1, 0);
++
++  /* ...and test since all data should be on disk now.  */
++  result |= test_file (buf, 10 * blksz, fd, "aio_fsync (aio_write)");
++
++  /* Test aio_cancel.  */
++  /* Remove the test file contents first.  */
++  if (ftruncate (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Write again.  */
++  for (cnt = 10; cnt > 0; )
++    aio_write (cbp[--cnt]);
++
++  /* Cancel all requests.  */
++  if (aio_cancel (fd, NULL) == -1)
++    printf ("aio_cancel (fd, NULL) cannot cancel anything\n");
++
++  result |= do_wait (cbp, 10, ECANCELED);
++
++  /* Another test for aio_cancel.  */
++  /* Remove the test file contents first.  */
++  if (ftruncate (fd, 0) < 0)
++    {
++      error (0, errno, "ftruncate failed\n");
++      result = 1;
++    }
++
++  /* Write again.  */
++  for (cnt = 10; cnt > 0; )
++    {
++      --cnt;
++      cbp[cnt] = &cbs[cnt];
++      aio_write (cbp[cnt]);
++    }
++  puts ("finished3");
++
++  /* Cancel all requests.  */
++  for (cnt = 10; cnt > 0; )
++    if (aio_cancel (fd, cbp[--cnt]) == -1)
++      /* This is not an error.  The request can simply be finished.  */
++      printf ("aio_cancel (fd, cbp[%Zd]) cannot be canceled\n", cnt);
++  puts ("finished2");
++
++  result |= do_wait (cbp, 10, ECANCELED);
++
++  puts ("finished");
++
++  return result;
++}
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod.h glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod.h
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-aiod.h	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-aiod.h	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1,53 @@
++/* Tests for AIO in librt.
++   Copyright (C) 1998, 2000, 2002, 2006 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, write to the Free
++   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
++   02111-1307 USA.  */
++
++#include <fcntl.h>
++#include <sys/mman.h>
++#include <string.h>
++#include <unistd.h>
++
++static int
++set_o_direct (int fd)
++{
++  int ret = -1;
++#ifdef O_DIRECT
++  if (fcntl (fd, F_SETFL, fcntl (fd, F_GETFL) | O_DIRECT) >= 0)
++    {
++      int pgsz = sysconf (_SC_PAGESIZE);
++      char *buf = mmap (NULL, 16 * pgsz, PROT_READ | PROT_WRITE,
++			MAP_PRIVATE | MAP_ANON, -1, 0);
++      if (buf != MAP_FAILED)
++	{
++	  memset (buf, 0, 16 * pgsz);
++	  for (int sz = 256; sz <= 16 * pgsz; sz *= 2)
++	    if (write (fd, buf, sz) > 0)
++	      {
++		ret = sz;
++		break;
++	      }
++	  ftruncate64 (fd, 0);
++	  munmap (buf, 16 * pgsz);
++	}
++      if (ret < 0)
++	fcntl (fd, F_SETFL, fcntl (fd, F_GETFL) & ~O_DIRECT);
++    }
++#endif
++  return ret;
++}
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-clock2.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-clock2.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-clock2.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-clock2.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-clock2.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-clock.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-clock.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-clock.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-clock.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-clock.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-clock_nanosleep.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-clock_nanosleep.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-clock_nanosleep.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-clock_nanosleep.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-clock_nanosleep.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-cpuclock1.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cpuclock1.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-cpuclock1.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cpuclock1.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-cpuclock1.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-cpuclock2.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cpuclock2.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-cpuclock2.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cpuclock2.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-cpuclock2.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-cputimer1.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cputimer1.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-cputimer1.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cputimer1.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-cputimer1.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-cputimer2.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cputimer2.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-cputimer2.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cputimer2.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-cputimer2.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-cputimer3.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cputimer3.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-cputimer3.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-cputimer3.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-cputimer3.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue1.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue1.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue1.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue1.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue1.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue2.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue2.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue2.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue2.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue2.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue3.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue3.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue3.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue3.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue3.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue4.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue4.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue4.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue4.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue4.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue5.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue5.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue5.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue5.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue5.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue6.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue6.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue6.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue6.c	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue6.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue7.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue7.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue7.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue7.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue7.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue8.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue8.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue8.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue8.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue8.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue9.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue9.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue9.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue9.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue9.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue.h glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue.h
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-mqueue.h	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-mqueue.h	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-mqueue.h>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-shm.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-shm.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-shm.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-shm.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-shm.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-timer2.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer2.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-timer2.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer2.c	2013-08-16 16:23:23.245028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-timer2.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-timer3.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer3.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-timer3.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer3.c	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-timer3.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-timer4.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer4.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-timer4.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer4.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-timer4.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-timer5.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer5.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-timer5.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer5.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-timer5.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/tst-timer.c glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer.c
+--- glibc-2.17-931-g30bbc0c/rtkaio/tst-timer.c	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/tst-timer.c	2013-08-16 16:23:23.246028404 +0530
+@@ -0,0 +1 @@
++#include <rt/tst-timer.c>
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/Versions glibc-2.17-931-g30bbc0c.new/rtkaio/Versions
+--- glibc-2.17-931-g30bbc0c/rtkaio/Versions	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/Versions	2013-08-16 16:23:23.247028404 +0530
+@@ -0,0 +1,25 @@
++librtkaio {
++  GLIBC_2.1 {
++    # AIO functions.
++    aio_cancel; aio_cancel64; aio_error; aio_error64; aio_fsync; aio_fsync64;
++    aio_init; aio_read; aio_read64; aio_return; aio_return64; aio_suspend;
++    aio_suspend64; aio_write; aio_write64; lio_listio; lio_listio64;
++  }
++  GLIBC_2.2 {
++    # c*
++    clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
++    clock_nanosleep;
++
++    # s*
++    shm_open; shm_unlink;
++
++    # t*
++    timer_create; timer_delete; timer_getoverrun; timer_gettime;
++    timer_settime;
++  }
++  GLIBC_2.3.4 {
++    # m*
++    mq_open; mq_close; mq_unlink; mq_getattr; mq_setattr;
++    mq_notify; mq_send; mq_receive; mq_timedsend; mq_timedreceive;
++  }
++}
+diff -pruN glibc-2.17-931-g30bbc0c/rtkaio/Versions.def glibc-2.17-931-g30bbc0c.new/rtkaio/Versions.def
+--- glibc-2.17-931-g30bbc0c/rtkaio/Versions.def	1970-01-01 05:30:00.000000000 +0530
++++ glibc-2.17-931-g30bbc0c.new/rtkaio/Versions.def	2013-08-16 16:23:23.242028404 +0530
+@@ -0,0 +1,8 @@
++librtkaio {
++  GLIBC_2.1
++  GLIBC_2.2
++  GLIBC_2.3
++  GLIBC_2.3.3
++  GLIBC_2.3.4
++  GLIBC_2.4
++}

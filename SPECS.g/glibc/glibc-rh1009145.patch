@@ -1,0 +1,22 @@
+#
+# Will not go upstream. This is a Fedora local patch that is a workaround.
+#
+--- glibc-2.18-151-g303e567.orig/elf/ldconfig.c	2013-09-25 14:01:01.522446341 -0400
++++ glibc-2.18-151-g303e567/elf/ldconfig.c	2013-09-25 14:06:31.094218857 -0400
+@@ -959,6 +959,16 @@
+ 				|| dlib_ptr->flag == FLAG_ELF_LIBC6)
+ 			       && flag == FLAG_ELF)
+ 			dlib_ptr->flag = flag;
++#ifdef __arm__
++		      /* In Fedora 20 binutils regressed temporarily and failed to
++			 mark hard ABI objects with the correct flag. Therefore we
++			 must accept unmarked objects that were previously marked
++			 hard ABI. We can remove this check once the entire distribution
++			 has been rebuilt.  */
++		      else if (dlib_ptr->flag & FLAG_ARM_LIBHF &&
++			       (flag == FLAG_ELF_LIBC6))
++			;
++#endif
+ 		      else
+ 			error (0, 0, _("libraries %s and %s in directory %s have same soname but different type."),
+ 			       dlib_ptr->name, direntry->d_name,

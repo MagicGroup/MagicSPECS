@@ -1,41 +1,42 @@
 diff -rup c/sysdeps/ieee754/dbl-64/slowexp.c d/sysdeps/ieee754/dbl-64/slowexp.c
---- c/sysdeps/ieee754/dbl-64/slowexp.c	2012-05-20 19:47:38.000000000 -0600
-+++ d/sysdeps/ieee754/dbl-64/slowexp.c	2012-05-21 10:02:51.693957300 -0600
-@@ -30,6 +30,8 @@
- #include "mpa.h"
+--- c/sysdeps/ieee754/dbl-64/slowexp.c	2013-06-04 16:40:55.000000000 +0530
++++ d/sysdeps/ieee754/dbl-64/slowexp.c	2013-06-04 21:02:49.377439607 +0530
+@@ -29,6 +29,8 @@
+ /**************************************************************************/
  #include <math_private.h>
  
 +#include <stap-probe.h>
 +
- #ifndef SECTION
- # define SECTION
- #endif
-@@ -60,12 +62,21 @@ __slowexp(double x) {
-   __sub(&mpy,&mpcor,&mpz,p);
-   __mp_dbl(&mpw, &w, p);
-   __mp_dbl(&mpz, &z, p);
--  if (w == z) return w;
-+  if (w == z) {
-+    /* Track how often we get to the slow exp code plus
-+       its input/output values.  */
-+    LIBC_PROBE (slowexp_p6, 2, &x, &w);
-+    return w;
-+  }
-   else  {                   /* if calculating is not exactly   */
-     p = 32;
-     __dbl_mp(x,&mpx,p);
-     __mpexp(&mpx, &mpy, p);
-     __mp_dbl(&mpy, &res, p);
+ #ifndef USE_LONG_DOUBLE_FOR_MP
+ # include "mpa.h"
+ void __mpexp (mp_no *x, mp_no *y, int p);
+@@ -60,13 +62,22 @@ __slowexp (double x)
+   __mp_dbl (&mpw, &w, p);
+   __mp_dbl (&mpz, &z, p);
+   if (w == z)
+-    return w;
++    {
++      /* Track how often we get to the slow exp code plus
++	 its input/output values.  */
++      LIBC_PROBE (slowexp_p6, 2, &x, &w);
++      return w;
++    }
+   else
+     {
+       p = 32;
+       __dbl_mp (x, &mpx, p);
+       __mpexp (&mpx, &mpy, p);
+       __mp_dbl (&mpy, &res, p);
 + 
-+    /* Track how often we get to the uber-slow exp code plus
-+       its input/output values.  */
-+    LIBC_PROBE (slowexp_p32, 2, &x, &res);
-     return res;
-   }
- }
++      /* Track how often we get to the uber-slow exp code plus
++	 its input/output values.  */
++      LIBC_PROBE (slowexp_p32, 2, &x, &res);
+       return res;
+     }
+ #else
 diff -rup c/sysdeps/ieee754/dbl-64/slowpow.c d/sysdeps/ieee754/dbl-64/slowpow.c
---- c/sysdeps/ieee754/dbl-64/slowpow.c	2012-05-20 19:47:38.000000000 -0600
-+++ d/sysdeps/ieee754/dbl-64/slowpow.c	2012-05-21 10:02:51.694957291 -0600
+--- c/sysdeps/ieee754/dbl-64/slowpow.c	2013-06-04 16:40:55.000000000 +0530
++++ d/sysdeps/ieee754/dbl-64/slowpow.c	2013-06-04 21:05:21.776433149 +0530
 @@ -34,6 +34,8 @@
  #include "mpa.h"
  #include <math_private.h>
@@ -45,28 +46,28 @@ diff -rup c/sysdeps/ieee754/dbl-64/slowpow.c d/sysdeps/ieee754/dbl-64/slowpow.c
  #ifndef SECTION
  # define SECTION
  #endif
-@@ -65,7 +67,12 @@ __slowpow(double x, double y, double z)
-   __mp_dbl(&mpr, &res, p);
-   __sub(&mpp,&eps,&mpr1,p);   /*  pp -eps =r1 */
-   __mp_dbl(&mpr1, &res1, p);  /*  converting into double precision */
--  if (res == res1) return res;
-+  if (res == res1) {
-+    /* Track how often we get to the slow pow code plus
-+       its input/output values.  */
-+    LIBC_PROBE (slowpow_p6, 4, &x, &y, &z, &res);
-+    return res;
-+  }
+@@ -97,7 +99,12 @@ __slowpow (double x, double y, double z)
+   __sub (&mpp, &eps, &mpr1, p);
+   __mp_dbl (&mpr1, &res1, p);
+   if (res == res1)
+-    return res;
++    {
++      /* Track how often we get to the slow pow code plus
++	 its input/output values.  */
++      LIBC_PROBE (slowpow_p10, 4, &x, &y, &z, &res);
++      return res;
++    }
  
-   p = 32;     /* if we get here result wasn't calculated exactly, continue */
-   __dbl_mp(x,&mpx,p);                          /* for more exact calculation */
-@@ -75,5 +82,10 @@ __slowpow(double x, double y, double z)
-   __mul(&mpy,&mpz,&mpw,p);  /* y*z =w    */
-   __mpexp(&mpw, &mpp, p);   /* e^w=pp    */
-   __mp_dbl(&mpp, &res, p);  /* converting into double precision */
+   /* If we don't, then we repeat using a higher precision.  768 bits of
+      precision ought to be enough for anybody.  */
+@@ -109,5 +116,10 @@ __slowpow (double x, double y, double z)
+   __mul (&mpy, &mpz, &mpw, p);
+   __mpexp (&mpw, &mpp, p);
+   __mp_dbl (&mpp, &res, p);
 +
 +  /* Track how often we get to the uber-slow pow code plus
 +     its input/output values.  */
-+    LIBC_PROBE (slowpow_p32, 4, &x, &y, &z, &res);
++  LIBC_PROBE (slowpow_p32, 4, &x, &y, &z, &res);
 +
    return res;
  }

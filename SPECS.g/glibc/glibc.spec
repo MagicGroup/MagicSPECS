@@ -1,9 +1,29 @@
-%define glibcsrcdir glibc-2.16-75f0d304
-%define glibcversion 2.16
-%define glibcportsdir glibc-ports-2.16-a20c2b3c
-### glibc.spec.in follows:
+%define glibcsrcdir glibc-2.18
+%define glibcversion 2.18
+%define glibcrelease 11%{?dist}
+# Pre-release tarballs are pulled in from git using a command that is
+# effectively:
+#
+# git archive HEAD --format=tar --prefix=$(git describe --match 'glibc-*')/ \
+#	> $(git describe --match 'glibc-*').tar
+# gzip -9 $(git describe --match 'glibc-*').tar
+#
+# glibc_release_url is only defined when we have a release tarball.
+%define glibc_release_url http://ftp.gnu.org/gnu/glibc/
+##############################################################################
+# If run_glibc_tests is zero then tests are not run for the build.
+# You must always set run_glibc_tests to one for production builds.
 %define run_glibc_tests 1
+##############################################################################
+# Auxiliary arches are those arches that can be built in addition
+# to the core supported arches. You either install an auxarch or
+# you install the base arch, not both. You would do this in order
+# to provide a more optimized version of the package for your arch.
 %define auxarches athlon alphaev6
+##############################################################################
+# We build a special package for Xen that includes TLS support with
+# no negative segment offsets for use with Xen guests. This is
+# purely an optimization for increased performance on those arches.
 %define xenarches i686 athlon
 %ifarch %{xenarches}
 %define buildxen 1
@@ -12,23 +32,54 @@
 %define buildxen 0
 %define xenpackage 0
 %endif
+##############################################################################
+# For Power we actually support alternate runtimes in the same base package.
+# If we build for Power or Power64 we additionally build a power6 runtime that
+# is enabled by AT_HWCAPS selection and an alternate runtime directory.
 %ifarch ppc ppc64
 %define buildpower6 1
 %else
 %define buildpower6 0
 %endif
-%define rtkaioarches %{ix86} x86_64 ia64 ppc %{power64} s390 s390x
+##############################################################################
+# We build librtkaio for all rtkaioarches. The library is installed into
+# a distinct subdirectory in the lib dir. This define enables the rtkaio
+# add-on during the build. Upstream does not have rtkaio and it is provided
+# strictly as part of our builds.
+%define rtkaioarches %{ix86} x86_64 ppc %{power64} s390 s390x
+##############################################################################
+# Any architecture/kernel combination that supports running 32-bit and 64-bit
+# code in userspace is considered a biarch arch.
 %define biarcharches %{ix86} x86_64 ppc %{power64} s390 s390x
+##############################################################################
+# If the debug information is split into two packages, the core debuginfo
+# pacakge and the common debuginfo package then the arch should be listed
+# here. If the arch is not listed here then a single core debuginfo package
+# will be created for the architecture.
 %define debuginfocommonarches %{biarcharches} alpha alphaev6
+##############################################################################
+# If the architecture has multiarch support in glibc then it should be listed
+# here to enable support in the build. Multiarch support is a single library
+# with implementations of certain functions for multiple architectures. The
+# most optimal function is selected at runtime based on the hardware that is
+# detected by glibc. The underlying support for function selection and
+# execution is provided by STT_GNU_IFUNC.
 %define multiarcharches ppc %{power64} %{ix86} x86_64 %{sparc}
-%define systemtaparches %{ix86} x86_64 mips64el
-# Remove -s to get verbose output.
-%define silentrules PARALLELMFLAGS=-s
-
+##############################################################################
+# If the architecture has SDT probe point support then we build glibc with
+# --enable-systemtap and include all SDT probe points in the library. It is
+# the eventual goal that all supported arches should be on this list.
+%define systemtaparches %{ix86} x86_64
+##############################################################################
+# Add -s for a less verbose build output.
+%define silentrules PARALLELMFLAGS=
+##############################################################################
+# %%package glibc - The GNU C Library (glibc) core package.
+##############################################################################
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 22%{?dist}
+Release: %{glibcrelease}
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -38,13 +89,22 @@ License: LGPLv2+ and LGPLv2+ with exceptions and GPLv2+
 Group: System Environment/Libraries
 URL: http://www.gnu.org/software/glibc/
 Source0: %{?glibc_release_url}%{glibcsrcdir}.tar.gz
-Source1: %{?glibc_release_url}%{glibcportsdir}.tar.gz
-Source2: %{glibcsrcdir}-fedora.tar.gz
+Source1: build-locale-archive.c
+Source2: glibc_post_upgrade.c
+Source3: libc-lock.h
+Source4: nscd.conf
+Source5: nscd.service
+Source6: nscd.socket
+Source7: nsswitch.conf
+Source8: power6emul.c
 
+##############################################################################
+# Start of glibc patches
+##############################################################################
 # 0000-0999 for patches which are unlikely to ever go upstream or which
 # have not been analyzed to see if they ought to go upstream yet.
-# 
-# 1000-2000 for patches that are already upstream. 
+#
+# 1000-2000 for patches that are already upstream.
 #
 # 2000-3000 for patches that are awaiting upstream approval
 #
@@ -58,23 +118,16 @@ Source2: %{glibcsrcdir}-fedora.tar.gz
 
 
 #
-# Patches that are highly unlikely to ever be accepated upstream.
+# Patches that are highly unlikely to ever be accepted upstream.
 #
-# Still needs to be broken down into individual patches
-Patch0000: %{name}-fedora.patch
 
-# Is this still necessary, if so, it needs to go upstream
-Patch0001: %{name}-stap.patch
+# Configuration twiddle, not sure there's a good case to get upstream to
+# change this.
+Patch0001: %{name}-fedora-nscd.patch
 
-# Reverting an upstream patch.  I don't think this has been discussed
-# upstream yet.
-Patch0002: %{name}-rh769421.patch
+Patch0003: %{name}-fedora-ldd.patch
 
-# Not likely to be accepted upstream
-Patch0003: %{name}-rh787201.patch
-
-# Not necessary to send upstream, fedora specific
-Patch0004: %{name}-rh688948.patch
+Patch0004: %{name}-fedora-ppc-unwind.patch
 
 # Build info files in the source tree, then move to the build
 # tree so that they're identical for multilib builds
@@ -84,108 +137,112 @@ Patch0005: %{name}-rh825061.patch
 # has been rebuilt to use the new ld.so path.
 Patch0006: %{name}-arm-hardfloat-3.patch
 
+# Needs to be sent upstream
+Patch0008: %{name}-fedora-getrlimit-PLT.patch
+Patch0009: %{name}-fedora-include-bits-ldbl.patch
 
 # stap, needs to be sent upstream
-Patch0007: %{name}-rh179072.patch
+Patch0010: %{name}-stap-libm.patch
 
 # Needs to be sent upstream
-Patch0008: %{name}-rh697421.patch
+Patch0029: %{name}-rh841318.patch
+
+# All these were from the glibc-fedora.patch mega-patch and need another
+# round of reviewing.  Ideally they'll either be submitted upstream or
+# dropped.
+Patch0012: %{name}-fedora-linux-tcsetattr.patch
+Patch0014: %{name}-fedora-nptl-linklibc.patch
+Patch0015: %{name}-fedora-localedef.patch
+Patch0016: %{name}-fedora-i386-tls-direct-seg-refs.patch
+Patch0017: %{name}-fedora-gai-canonical.patch
+Patch0019: %{name}-fedora-nis-rh188246.patch
+Patch0020: %{name}-fedora-manual-dircategory.patch
+Patch0024: %{name}-fedora-locarchive.patch
+Patch0025: %{name}-fedora-streams-rh436349.patch
+Patch0028: %{name}-fedora-localedata-rh61908.patch
+Patch0030: %{name}-fedora-uname-getrlimit.patch
+Patch0031: %{name}-fedora-__libc_multiple_libcs.patch
+Patch0032: %{name}-fedora-elf-rh737223.patch
+Patch0033: %{name}-fedora-elf-ORIGIN.patch
+Patch0034: %{name}-fedora-elf-init-hidden_undef.patch
 
 # Needs to be sent upstream
-Patch0009: %{name}-rh740682.patch
+Patch0035: %{name}-rh911307.patch
+Patch0037: %{name}-rh952799.patch
 
-# Needs to be sent upstream
-Patch0010: %{name}-rh657588.patch
+# rtkaio and c_stubs.  Note that despite the numbering, these are always
+# applied first.
+Patch0038: %{name}-rtkaio.patch
+Patch0039: %{name}-c_stubs.patch
 
-# Needs to be sent upstream
-Patch0011: %{name}-rh564528.patch
+# Remove non-ELF support in rtkaio
+Patch0040: %{name}-rh731833-rtkaio.patch
+Patch0041: %{name}-rh731833-rtkaio-2.patch
+Patch0042: %{name}-rh970865.patch
 
-# stap, needs to be sent upstream
-Patch0012: %{name}-stap-libm.patch
-
-# Needs to be sent upstream
-Patch0034: %{name}-rh841318.patch
+# ARM: Accept that some objects marked hard ABI are now not because of a
+#      binutils bug.
+Patch0043: %{name}-rh1009145.patch
 
 #
 # Patches from upstream
 #
-Patch1035: %{name}-rh845960.patch
-Patch1037: %{name}-rh849203.patch
-Patch1038: %{name}-rh805093.patch
-Patch1041: %{name}-rh848748.patch
-Patch1042: %{name}-rh865520.patch
+Patch1001: %{name}-rh995841.patch
+Patch1002: %{name}-rh1008299.patch
 
 #
 # Patches submitted, but not yet approved upstream.
 # Each should be associated with a BZ.
 # Obviously we're not there right now, but that's the goal
 #
+# http://sourceware.org/ml/libc-alpha/2012-12/msg00103.html
+Patch2007: %{name}-rh697421.patch
 
-Patch2013: %{name}-rh757881.patch
+Patch2011: %{name}-rh757881.patch
 
-# Upstream BZ 13013
-Patch2014: %{name}-rh730856.patch
-
-Patch2015: %{name}-rh741105.patch
-Patch2016: %{name}-rh770869.patch
-Patch2017: %{name}-rh770439.patch
-Patch2018: %{name}-rh789209.patch
-Patch2019: %{name}-rh691912.patch
-
-# Upstream BZ 13604
-Patch2020: %{name}-rh790292.patch
-
-# Upstream BZ 13603
-Patch2021: %{name}-rh790298.patch
-
-# Upstream BZ 13698
-Patch2022: %{name}-rh791161.patch
+Patch2013: %{name}-rh741105.patch
 
 # Upstream BZ 9954
-Patch2024: %{name}-rh739743.patch
+Patch2021: %{name}-rh739743.patch
 
-# Upstream BZ 13939
-Patch2025: %{name}-rh789238.patch
-
-#Upstream BZ 13818
-Patch2026: %{name}-rh800224.patch
+# Upstream BZ 13818
+Patch2022: %{name}-rh800224.patch
 
 # Upstream BZ 14247
-Patch2027: %{name}-rh827510.patch
-
-Patch2028: %{name}-rh803286.patch
-
-
-# Upstream BZ 13939
-Patch2029: %{name}-rh789238-2.patch
-
-# Upstream BZ 13761
-Patch2030: %{name}-rh788989-2.patch
+Patch2023: %{name}-rh827510.patch
 
 # Upstream BZ 13028
-Patch2031: %{name}-rh841787.patch
+Patch2026: %{name}-rh841787.patch
 
 # Upstream BZ 14185
-Patch2032: %{name}-rh819430.patch
+Patch2027: %{name}-rh819430.patch
 
-# See http://sourceware.org/ml/libc-alpha/2012-06/msg00074.html
-Patch2033: %{name}-rh767693-2.patch
+#Upstream BZ 14547
+Patch2028: %{name}-strcoll-cve.patch
 
-# Upstream BZ 14459
-Patch2036: %{name}-rh847718.patch
+# Initialize res_hconf in nscd
+Patch2029: %{name}-rh1000924.patch
 
-# Upstream BZ 14543
-Patch2039: %{name}-rh854337.patch
+# Pass dl_hwcap to IFUNC resolver on 32-bit ARM.
+Patch2030: %{name}-rh985342.patch
 
-# Upstream BZ 14583
-Patch2040: %{name}-rh857236.patch
+# Upstream BZ 15754
+Patch2031: %{name}-rh985625-CVE-2013-4788.patch
 
-Patch2042: %{name}-rh864820.patch
+Patch2032: %{name}-rh1007590.patch
 
+##############################################################################
+# End of glibc patches.
+##############################################################################
+
+##############################################################################
+# Continued list of core "glibc" package information:
+##############################################################################
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Obsoletes: glibc-profile < 2.4
 Obsoletes: nss_db
 Provides: ldconfig
+
 # The dynamic linker supports DT_GNU_HASH
 Provides: rtld(GNU_HASH)
 
@@ -197,8 +254,10 @@ Provides: ld-linux.so.3(GLIBC_2.4)
 %endif
 
 Requires: glibc-common = %{version}-%{release}
+
 # Require libgcc in case some program calls pthread_cancel in its %%post
 Requires(pre): basesystem, libgcc
+
 # This is for building auxiliary programs like memusage, nscd
 # For initial glibc bootstraps it can be commented out
 BuildRequires: gd-devel libpng-devel zlib-devel texinfo
@@ -207,6 +266,10 @@ BuildRequires: /bin/ps, /bin/kill, /bin/awk
 %ifarch %{systemtaparches}
 BuildRequires: systemtap-sdt-devel
 %endif
+
+# We use systemd rpm macros for nscd
+BuildRequires: systemd
+
 # This is to ensure that __frame_state_for is exported by glibc
 # will be compatible with egcs 1.x.y
 BuildRequires: gcc >= 3.2
@@ -219,14 +282,22 @@ Conflicts: kernel < %{enablekernel}
 %ifarch %{power64}
 %define target ppc64-redhat-linux
 %endif
+
 %ifarch %{multiarcharches}
 # Need STT_IFUNC support
 %ifarch ppc %{power64}
 BuildRequires: binutils >= 2.20.51.0.2
 Conflicts: binutils < 2.20.51.0.2
 %else
+%ifarch s390 s390x
+# Needed for STT_GNU_IFUNC support for s390/390x
+BuildRequires: binutils >= 2.23.52.0.1-8
+Conflicts: binutils < 2.23.52.0.1-8
+%else
+# Default to this version
 BuildRequires: binutils >= 2.19.51.0.10
 Conflicts: binutils < 2.19.51.0.10
+%endif
 %endif
 # Earlier releases have broken support for IRELATIVE relocations
 Conflicts: prelink < 0.4.2
@@ -235,6 +306,7 @@ Conflicts: prelink < 0.4.2
 # Need --hash-style=* support
 BuildRequires: binutils >= 2.17.50.0.2-5
 %endif
+
 BuildRequires: gcc >= 3.2.1-5
 %ifarch ppc s390 s390x
 BuildRequires: gcc >= 4.1.0-0.17
@@ -243,6 +315,13 @@ BuildRequires: gcc >= 4.1.0-0.17
 BuildRequires: elfutils >= 0.72
 BuildRequires: rpm >= 4.2-0.56
 %endif
+
+# The testsuite builds static C++ binaries that require a static
+# C++ runtime from libstdc++-static.
+BuildRequires: libstdc++-static
+
+# Filter out all GLIBC_PRIVATE symbols since they are internal to
+# the package and should not be examined by any other tool.
 %global __filter_GLIBC_PRIVATE 1
 
 %description
@@ -254,6 +333,9 @@ contains the most important sets of shared libraries: the standard C
 library and the standard math library. Without these two libraries, a
 Linux system will not function.
 
+##############################################################################
+# glibc "xen" sub-package
+##############################################################################
 %if %{xenpackage}
 %package xen
 Summary: The GNU libc libraries (optimized for running under Xen)
@@ -268,6 +350,9 @@ library binaries that will be selected instead when running under Xen.
 Install glibc-xen if you might run your system under the Xen hypervisor.
 %endif
 
+##############################################################################
+# glibc "devel" sub-package
+##############################################################################
 %package devel
 Summary: Object files for development using standard C libraries.
 Group: Development/Libraries
@@ -287,6 +372,9 @@ executables.
 Install glibc-devel if you are going to develop programs which will
 use the standard C libraries.
 
+##############################################################################
+# glibc "static" sub-package
+##############################################################################
 %package static
 Summary: C library static libraries for -static linking.
 Group: Development/Libraries
@@ -297,6 +385,9 @@ The glibc-static package contains the C library static libraries
 for -static linking.  You don't need these, unless you link statically,
 which is highly discouraged.
 
+##############################################################################
+# glibc "headers" sub-package
+##############################################################################
 %package headers
 Summary: Header files for development using standard C libraries.
 Group: Development/Libraries
@@ -322,6 +413,9 @@ executables.
 Install glibc-headers if you are going to develop programs which will
 use the standard C libraries.
 
+##############################################################################
+# glibc "common" sub-package
+##############################################################################
 %package common
 Summary: Common binaries and locale data for glibc
 Requires: %{name} = %{version}-%{release}
@@ -332,19 +426,25 @@ Group: System Environment/Base
 The glibc-common package includes common binaries for the GNU libc
 libraries, as well as national language (locale) support.
 
+##############################################################################
+# glibc "nscd" sub-package
+##############################################################################
 %package -n nscd
 Summary: A Name Service Caching Daemon (nscd).
 Group: System Environment/Daemons
 Requires: %{name} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd, coreutils
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units, /usr/sbin/userdel
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd, /usr/sbin/userdel
 
 %description -n nscd
 Nscd caches name service lookups and can dramatically improve
 performance with NIS+, and may help with DNS as well.
 
+##############################################################################
+# glibc "utils" sub-package
+##############################################################################
 %package utils
 Summary: Development utilities from GNU C library
 Group: Development/Tools
@@ -357,6 +457,9 @@ which can be helpful during program debugging.
 
 If unsure if you need this, don't install this package.
 
+##############################################################################
+# glibc core "debuginfo" sub-package
+##############################################################################
 %if 0%{?_enable_debug_packages}
 %define debug_package %{nil}
 %define __debug_install_post %{nil}
@@ -384,8 +487,11 @@ debugging information.  You need this only if you want to step into
 C library routines during debugging programs statically linked against
 one or more of the standard C libraries.
 To use this debugging information, you need to link binaries
-with -static -L%{_prefix}/lib/debug%{_prefix}/%{_lib} compiler options.
+with -static -L%{_prefix}/lib/debug%{_libdir} compiler options.
 
+##############################################################################
+# glibc common "debuginfo-common" sub-package
+##############################################################################
 %ifarch %{debuginfocommonarches}
 
 %package debuginfo-common
@@ -398,83 +504,126 @@ This package provides debug information for package %{name}.
 Debug information is useful when developing applications that use this
 package or when debugging this package.
 
-%endif
-%endif
+%endif # %{debuginfocommonarches}
+%endif # 0%{?_enable_debug_packages}
 
+##############################################################################
+# Prepare for the build.
+##############################################################################
 %prep
-rm -rf %{glibcportsdir}
-%setup -q -n %{glibcsrcdir} -b1 -b2
+%setup -q -n %{glibcsrcdir}
 
-%patch0000 -E -p1
-%patch0001 -E -p1
-%patch0002 -p1
+# Patch order is important as some patches depend on other patches and
+# therefore the order must not be changed.  First two are rtkaio and c_stubs;
+# we maintain this only in Fedora.
+%patch0038 -p1
+%patch0039 -p1
+%patch0001 -p1
 %patch0003 -p1
 %patch0004 -p1
 %patch0005 -p1
 %patch0006 -p1
-%patch0007 -p1
+%patch2007 -p1
 %patch0008 -p1
 %patch0009 -p1
 %patch0010 -p1
-%patch0011 -p1
+%patch2011 -p1
 %patch0012 -p1
 %patch2013 -p1
-%patch2014 -p1
-%patch2015 -p1
-%patch2016 -p1
-%patch2017 -p1
-%patch2018 -p1
-%patch2019 -p1
-%patch2020 -p1
+%patch0014 -p1
+%patch0015 -p1
+%patch0016 -p1
+%patch0017 -p1
+%patch0019 -p1
+%patch0020 -p1
 %patch2021 -p1
 %patch2022 -p1
-%patch2024 -p1
-%patch2025 -p1
+%patch2023 -p1
+%patch0024 -p1
+%patch0025 -p1
 %patch2026 -p1
 %patch2027 -p1
+%patch0028 -p1
+%patch0029 -p1
+%patch0030 -p1
+%patch0031 -p1
+%patch0032 -p1
+%patch0033 -p1
+%patch0034 -p1
+%patch0035 -p1
+%patch0037 -p1
 %patch2028 -p1
+%patch1001 -p1
+%patch0040 -p1
+%patch0041 -p1
+%patch0042 -p1
 %patch2029 -p1
 %patch2030 -p1
+%patch1002 -p1
 %patch2031 -p1
 %patch2032 -p1
-%patch2033 -p1
-%patch0034 -p1
-%patch1035 -p1
-%patch2036 -p1
-%patch1037 -p1
-%patch1038 -p1
-%patch2039 -p1
-%patch2040 -p1
-%patch1041 -p1
-%patch2042 -p1
-%patch1042 -p1
+%patch0043 -p1
 
+##############################################################################
+# %%prep - Additional prep required...
+##############################################################################
+
+# XXX: This sounds entirely out of date, particularly in light of the fact
+#      that we want to be building newer Power support. We should review this
+#      and potentially remove this workaround. However it will require
+#      determining which arches we support building for on our distributions.
+# ~~~
 # On powerpc32, hp timing is only available in power4/power6
 # libs, not in base, so pre-power4 dynamic linker is incompatible
 # with power6 libs.
+# ~~~
 %if %{buildpower6}
 rm -f sysdeps/powerpc/powerpc32/power4/hp-timing.[ch]
 %endif
 
+# Remove all files generated from patching.
 find . -type f -size 0 -o -name "*.orig" -exec rm -f {} \;
+
+# Ensure timestamps on configure files are current to prevent
+# regenerating them.
 touch `find . -name configure`
+
+# Ensure *-kw.h files are current to prevent regenerating them.
 touch locale/programs/*-kw.h
 
+##############################################################################
+# Build glibc...
+##############################################################################
 %build
+
+# We build using the native system compilers.
 GCC=gcc
 GXX=g++
+
+##############################################################################
+# %%build - x86 options.
+##############################################################################
+# On x86 we build for the specific target cpu rpm is using.
 %ifarch %{ix86}
 BuildFlags="-march=%{_target_cpu} -mtune=generic"
 %endif
-%ifarch i686
+# We don't support building for i386. The generic i386 architecture lacks the
+# atomic primitives required for NPTL support. However, when a user asks to
+# build for i386 we interpret that as "for whatever works on x86" and we
+# select i686. Thus we treat i386 as an alias for i686.
+%ifarch i386 i686
 BuildFlags="-march=i686 -mtune=generic"
 %endif
-%ifarch i386 i486 i586
+%ifarch i486 i586
 BuildFlags="$BuildFlags -mno-tls-direct-seg-refs"
 %endif
 %ifarch x86_64
 BuildFlags="-mtune=generic"
 %endif
+
+##############################################################################
+# %%build - SPARC options.
+##############################################################################
 %ifarch sparc
 BuildFlags="-fcall-used-g6"
 GCC="gcc -m32"
@@ -501,16 +650,14 @@ GCC="gcc -m64"
 GXX="g++ -m64"
 %endif
 %ifarch %{power64}
-BuildFlags="-mno-minimal-toc"
+BuildFlags=""
 GCC="gcc -m64"
 GXX="g++ -m64"
 %endif
-%ifarch mips64el
-BuildFlags="-mtune=from-abi"
-GCC="gcc -mabi=64"
-GXX="g++ -mabi=64"
-%endif
 
+##############################################################################
+# %%build - Generic options.
+##############################################################################
 BuildFlags="$BuildFlags -fasynchronous-unwind-tables"
 # Add -DNDEBUG unless using a prerelease
 case %{version} in
@@ -520,98 +667,138 @@ case %{version} in
      ;;
 esac
 EnableKernel="--enable-kernel=%{enablekernel}"
+# Save the used compiler and options into the file "Gcc" for use later
+# by %%install.
 echo "$GCC" > Gcc
 AddOns=`echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\|powerpc-cpu\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
 %ifarch %{rtkaioarches}
 AddOns=,rtkaio$AddOns
 %endif
 
+##############################################################################
+# build()
+#	Build glibc in `build-%{target}$1', passing the rest of the arguments
+#	as CFLAGS to the build (not the same as configure CFLAGS). Several
+#	global values are used to determine build flags, add-ons, kernel
+#	version, multiarch support, system tap support, etc.
+##############################################################################
 build()
 {
-builddir=build-%{target}${1:+-$1}
-${1+shift}
-rm -rf $builddir
-mkdir $builddir ; cd $builddir
-build_CFLAGS="$BuildFlags -g -O3 $*"
-# Some configure checks can spuriously fail for some architectures if
-# unwind info is present
-configure_CFLAGS="$build_CFLAGS -fno-asynchronous-unwind-tables"
-../configure CC="$GCC" CXX="$GXX" CFLAGS="$configure_CFLAGS" \
-	--prefix=%{_prefix} \
-	--enable-add-ons=../%{glibcportsdir},nptl$AddOns \
-	--with-headers=%{_prefix}/include $EnableKernel --enable-bind-now \
-	--build=%{target} \
+	builddir=build-%{target}${1:+-$1}
+	${1+shift}
+	rm -rf $builddir
+	mkdir $builddir
+	pushd $builddir
+	build_CFLAGS="$BuildFlags -g -O3 $*"
+	# Some configure checks can spuriously fail for some architectures if
+	# unwind info is present
+	configure_CFLAGS="$build_CFLAGS -fno-asynchronous-unwind-tables"
+	../configure CC="$GCC" CXX="$GXX" CFLAGS="$configure_CFLAGS" \
+		--prefix=%{_prefix} \
+		--enable-add-ons=ports,nptl$AddOns \
+		--with-headers=%{_prefix}/include $EnableKernel --enable-bind-now \
+		--build=%{target} \
 %ifarch %{multiarcharches}
-	--enable-multi-arch \
+		--enable-multi-arch \
 %endif
-	--enable-obsolete-rpc \
+		--enable-obsolete-rpc \
 %ifarch %{systemtaparches}
-	--enable-systemtap \
+		--enable-systemtap \
 %endif
 %ifarch ppc64p7
-	--with-cpu=power7 \
+		--with-cpu=power7 \
 %endif
-	--disable-profile --enable-nss-crypt ||
-{ cat config.log; false; }
+		--enable-lock-elision \
+		--disable-profile --enable-nss-crypt ||
+		{ cat config.log; false; }
 
-make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" %{silentrules}
-
-cd ..
+	make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" %{silentrules}
+	popd
 }
 
+##############################################################################
+# Build glibc for the default set of options.
+##############################################################################
 build
 
+##############################################################################
+# Build glibc for xen:
+# If we support xen build glibc again for xen support.
+##############################################################################
 %if %{buildxen}
 build nosegneg -mno-tls-direct-seg-refs
 %endif
 
+##############################################################################
+# Build glibc for power6:
+# If we support building a power6 alternate runtime then built glibc again for
+# power6.
+# XXX: We build in a sub-shell for no apparent reason.
+##############################################################################
 %if %{buildpower6}
 (
-platform=`LD_SHOW_AUXV=1 /bin/true | sed -n 's/^AT_PLATFORM:[[:blank:]]*//p'`
-if [ "$platform" != power6 ]; then
-  mkdir -p power6emul/{lib,lib64}
-  $GCC -shared -O2 -fpic -o power6emul/%{_lib}/power6emul.so fedora/power6emul.c -Wl,-z,initfirst
+	platform=`LD_SHOW_AUXV=1 /bin/true | sed -n 's/^AT_PLATFORM:[[:blank:]]*//p'`
+	if [ "$platform" != power6 ]; then
+		mkdir -p power6emul/{lib,lib64}
+		$GCC -shared -O2 -fpic -o power6emul/%{_lib}/power6emul.so %{SOURCE8} -Wl,-z,initfirst
 %ifarch ppc
-  gcc -shared -nostdlib -O2 -fpic -m64 -o power6emul/lib64/power6emul.so -xc - </dev/null
+		gcc -shared -nostdlib -O2 -fpic -m64 -o power6emul/lib64/power6emul.so -xc - </dev/null
 %endif
 %ifarch ppc64
-  gcc -shared -nostdlib -O2 -fpic -m32 -o power6emul/lib/power6emul.so -xc - < /dev/null
+		gcc -shared -nostdlib -O2 -fpic -m32 -o power6emul/lib/power6emul.so -xc - < /dev/null
 %endif
-  export LD_PRELOAD=`pwd`/power6emul/\$LIB/power6emul.so
-fi
-AddOns="$AddOns --with-cpu=power6"
-GCC="$GCC -mcpu=power6"
-GXX="$GXX -mcpu=power6"
-build power6
+		export LD_PRELOAD=`pwd`/power6emul/\$LIB/power6emul.so
+	fi
+	AddOns="$AddOns --with-cpu=power6"
+	GCC="$GCC -mcpu=power6"
+	GXX="$GXX -mcpu=power6"
+	build power6
 )
-%endif
+%endif # %{buildpower6}
 
-cd build-%{target}
-$GCC -static -L. -Os -g ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_target_cpu} \
-  '-DLIBTLS="/%{_lib}/tls/"' \
-  '-DGCONV_MODULES_DIR="%{_prefix}/%{_lib}/gconv"' \
-  '-DLD_SO_CONF="/etc/ld.so.conf"' \
-  '-DICONVCONFIG="%{_sbindir}/iconvconfig.%{_target_cpu}"'
-cd ..
+##############################################################################
+# Build the glibc post-upgrade program:
+# We only build one of these with the default set of options. This program
+# must be able to run on all hardware for the lowest common denomintor since
+# we only build it once.
+##############################################################################
+pushd build-%{target}
+$GCC -static -L. -Os -g %{SOURCE2} \
+	-o glibc_post_upgrade.%{_target_cpu} \
+	'-DLIBTLS="/%{_lib}/tls/"' \
+	'-DGCONV_MODULES_DIR="%{_libdir}/gconv"' \
+	'-DLD_SO_CONF="/etc/ld.so.conf"' \
+	'-DICONVCONFIG="%{_sbindir}/iconvconfig.%{_target_cpu}"'
+popd
 
+##############################################################################
+# Install glibc...
+##############################################################################
 %install
+# Reload compiler and build options that were used during %%build.
 GCC=`cat Gcc`
 
+# Cleanup any previous installs...
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
-make -j1 install_root=$RPM_BUILD_ROOT install -C build-%{target} %{silentrules}
-chmod +x $RPM_BUILD_ROOT%{_prefix}/libexec/pt_chown
+make -j1 install_root=$RPM_BUILD_ROOT \
+	install -C build-%{target} %{silentrules}
+# If we are not building an auxiliary arch then install all of the supported
+# locales.
 %ifnarch %{auxarches}
-cd build-%{target} && \
-  make %{?_smp_mflags} install_root=$RPM_BUILD_ROOT install-locales -C ../localedata objdir=`pwd` && \
-  cd ..
+pushd build-%{target}
+make %{?_smp_mflags} install_root=$RPM_BUILD_ROOT \
+	install-locales -C ../localedata objdir=`pwd`
+popd
 %endif
 
-librtso=`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
-
+##############################################################################
+# Install rtkaio libraries.
+##############################################################################
 %ifarch %{rtkaioarches}
+librtso=`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
 rm -f $RPM_BUILD_ROOT{,%{_prefix}}/%{_lib}/librtkaio.*
-rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/librt.so.*
+rm -f $RPM_BUILD_ROOT%{_libdir}/librt.so.*
 mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio
 mv $RPM_BUILD_ROOT/%{_lib}/librtkaio-*.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/
 rm -f $RPM_BUILD_ROOT/%{_lib}/$librtso
@@ -619,91 +806,168 @@ ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/$li
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/librtkaio-*.so` $RPM_BUILD_ROOT/%{_lib}/rtkaio/$librtso
 %endif
 
+# install_different:
+#	Install all core libraries into DESTDIR/SUBDIR. Either the file is
+#	installed as a copy or a symlink to the default install (if it is the
+#	same). The path SUBDIR_UP is the prefix used to go from
+#	DESTDIR/SUBDIR to the default installed libraries e.g.
+#	ln -s SUBDIR_UP/foo.so DESTDIR/SUBDIR/foo.so.
+#	When you call this function it is expected that you are in the root
+#	of the build directory, and that the default build directory is:
+#	"../build-%{target}" (relatively).
+#	The primary use of this function is to install alternate runtimes
+#	into the build directory and avoid duplicating this code for each
+#	runtime.
+install_different()
+{
+	local lib libbase libbaseso dlib
+	local destdir="$1"
+	local subdir="$2"
+	local subdir_up="$3"
+	local libdestdir="$destdir/$subdir"
+	# All three arguments must be non-zero paths.
+	if ! [ "$destdir" \
+	       -a "$subdir" \
+	       -a "$subdir_up" ]; then
+		echo "One of the arguments to install_different was emtpy."
+		exit 1
+	fi
+	# Create the destination directory and the multilib directory.
+	mkdir -p "$destdir"
+	mkdir -p "$libdestdir"
+	# Walk all of the libraries we installed...
+	for lib in libc math/libm nptl/libpthread rt/librt nptl_db/libthread_db
+	do
+		libbase=${lib#*/}
+		# Take care that `libbaseso' has a * that needs expanding so
+		# take care with quoting.
+		libbaseso=$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}-*.so)
+		# Only install if different from default build library.
+		if cmp -s ${lib}.so ../build-%{target}/${lib}.so; then
+			ln -sf "$subdir_up"/$libbaseso $libdestdir/$libbaseso
+		else
+			cp -a ${lib}.so $libdestdir/$libbaseso
+		fi
+		dlib=$libdestdir/$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}.so.*)
+		ln -sf $libbaseso $dlib
+	done
+%ifarch %{rtkaioarches}
+	local rtkdestdir="$RPM_BUILD_ROOT/%{_lib}/rtkaio/$subdir"
+	local librtso=`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
+	mkdir -p $rtkdestdir
+	librtkaioso=$(basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/)
+	if cmp -s rtkaio/librtkaio.so ../build-%{target}/rtkaio/librtkaio.so; then
+		ln -s %{nosegneg_subdir_up}/$librtkaioso $rtkdestdir/$librtkaioso
+	else
+		cp -a rtkaio/librtkaio.so $rtkdestdir/$librtkaioso
+	fi
+	ln -sf $librtkaioso $rtkdestdir/$librtso
+%endif
+}
+
+##############################################################################
+# Install the xen build files.
+##############################################################################
 %if %{buildxen}
 %define nosegneg_subdir_base i686
 %define nosegneg_subdir i686/nosegneg
 %define nosegneg_subdir_up ../..
-cd build-%{target}-nosegneg
-destdir=$RPM_BUILD_ROOT/%{_lib}/%{nosegneg_subdir}
-mkdir -p $destdir
-for lib in libc math/libm nptl/libpthread rt/librt nptl_db/libthread_db
-do
-  libbase=${lib#*/}
-  libbaseso=$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}-*.so)
-  # Only install if different from base lib
-  if cmp -s ${lib}.so ../build-%{target}/${lib}.so; then
-    ln -sf %{nosegneg_subdir_up}/$libbaseso $destdir/$libbaseso
-  else
-    cp -a ${lib}.so $destdir/$libbaseso
-  fi
-  ln -sf $libbaseso $destdir/$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}.so.*)
-done
-%ifarch %{rtkaioarches}
-destdir=$RPM_BUILD_ROOT/%{_lib}/rtkaio/%{nosegneg_subdir}
-mkdir -p $destdir
-librtkaioso=$(basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/)
-if cmp -s rtkaio/librtkaio.so ../build-%{target}/rtkaio/librtkaio.so; then
-  ln -s %{nosegneg_subdir_up}/$librtkaioso $destdir/$librtkaioso
-else
-  cp -a rtkaio/librtkaio.so $destdir/$librtkaioso
-fi
-ln -sf $librtkaioso $destdir/$librtso
-%endif
-cd ..
-%endif
+pushd build-%{target}-nosegneg
+destdir=$RPM_BUILD_ROOT/%{_lib}
+install_different "$destdir" "%{nosegneg_subdir}" "%{nosegneg_subdir_up}"
+popd
+%endif # %{buildxen}
 
+##############################################################################
+# Install the power6 build files.
+##############################################################################
 %if %{buildpower6}
-cd build-%{target}-power6
-destdir=$RPM_BUILD_ROOT/%{_lib}/power6
-mkdir -p ${destdir}
-for lib in libc math/libm nptl/libpthread rt/librt nptl_db/libthread_db
-do
-  libbase=${lib#*/}
-  libbaseso=$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}-*.so)
-  cp -a ${lib}.so $destdir/$libbaseso
-  ln -sf $libbaseso $destdir/$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}.so.*)
-done
-mkdir -p ${destdir}x
-pushd ${destdir}x
-ln -sf ../power6/*.so .
-cp -a ../power6/*.so.* .
+%define power6_subdir power6
+%define power6_subdir_up ..
+%define power6_legacy power6x
+%define power6_legacy_up ..
+pushd build-%{target}-power6
+destdir=$RPM_BUILD_ROOT/%{_lib}
+install_different "$destdir" "%{power6_subdir}" "%{power6_subdir_up}"
+# Make a legacy /usr/lib[64]/power6x directory that is a symlink to the
+# power6 runtime.
+# XXX: When can we remove this? What is the history behind this?
+mkdir -p ${destdir}/%{power6_legacy}
+pushd ${destdir}/%{power6_legacy}
+ln -sf %{power6_legacy_up}/%{power6_subdir}/*.so .
+cp -a %{power6_legacy_up}/%{power6_subdir}/*.so.* .
 popd
 %ifarch %{rtkaioarches}
-destdir=$RPM_BUILD_ROOT/%{_lib}/rtkaio/power6
-mkdir -p $destdir
-librtkaioso=$(basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/)
-cp -a rtkaio/librtkaio.so $destdir/$librtkaioso
-ln -sf $librtkaioso $destdir/$librtso
-mkdir -p ${destdir}x
-pushd ${destdir}x
+destdir=${destdir}/rtkaio
+mkdir -p ${destdir}/%{power6_legacy}
+pushd ${destdir}/%{power6_legacy}
 ln -sf ../power6/*.so .
 cp -a ../power6/*.so.* .
 popd
 %endif
-cd ..
-%endif
+popd
+%endif # %{buildpower6}
 
+##############################################################################
 # Remove the files we don't want to distribute
-rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libNoVersion*
+##############################################################################
+
+# Remove the libNoVersion files.
+# XXX: This looks like a bug in glibc that accidentally installed these
+#      wrong files. We probably don't need this today.
+rm -f $RPM_BUILD_ROOT%{_libdir}/libNoVersion*
 rm -f $RPM_BUILD_ROOT/%{_lib}/libNoVersion*
 
-# NPTL <bits/stdio-lock.h> is not usable outside of glibc, so include
-# the generic one (#162634)
-cp -a bits/stdio-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/stdio-lock.h
-# And <bits/libc-lock.h> needs sanitizing as well.
-cp -a fedora/libc-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/libc-lock.h
+# rquota.x and rquota.h are now provided by quota
+rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
 
+# In F7+ this is provided by rpcbind rpm
+rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
+
+# Remove the old nss modules.
+rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss1-*
+rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss-*.so.1
+
+##############################################################################
+# Install info files
+##############################################################################
+
+# Move the info files if glibc installed them into the wrong location.
 if [ -d $RPM_BUILD_ROOT%{_prefix}/info -a "%{_infodir}" != "%{_prefix}/info" ]; then
   mkdir -p $RPM_BUILD_ROOT%{_infodir}
   mv -f $RPM_BUILD_ROOT%{_prefix}/info/* $RPM_BUILD_ROOT%{_infodir}
   rm -rf $RPM_BUILD_ROOT%{_prefix}/info
 fi
 
+# Compress all of the info files.
 gzip -9nvf $RPM_BUILD_ROOT%{_infodir}/libc*
 
-ln -sf libbsd-compat.a $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libbsd.a
+##############################################################################
+# Install locale files
+##############################################################################
 
-install -p -m 644 fedora/nsswitch.conf $RPM_BUILD_ROOT/etc/nsswitch.conf
+# Create archive of locale files
+%ifnarch %{auxarches}
+olddir=`pwd`
+pushd ${RPM_BUILD_ROOT}%{_prefix}/lib/locale
+rm -f locale-archive
+# Intentionally we do not pass --alias-file=, aliases will be added
+# by build-locale-archive.
+$olddir/build-%{target}/elf/ld.so \
+	--library-path $olddir/build-%{target}/ \
+	$olddir/build-%{target}/locale/localedef \
+	--prefix ${RPM_BUILD_ROOT} --add-to-archive \
+	*_*
+rm -rf *_*
+mv locale-archive{,.tmpl}
+popd
+%endif
+
+##############################################################################
+# Install configuration files for services
+##############################################################################
+
+install -p -m 644 %{SOURCE7} $RPM_BUILD_ROOT/etc/nsswitch.conf
 
 %ifnarch %{auxarches}
 mkdir -p $RPM_BUILD_ROOT/etc/default
@@ -711,70 +975,92 @@ install -p -m 644 nis/nss $RPM_BUILD_ROOT/etc/default/nss
 
 # This is for ncsd - in glibc 2.2
 install -m 644 nscd/nscd.conf $RPM_BUILD_ROOT/etc
-mkdir -p $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/
-install -m 644 fedora/nscd.conf %{buildroot}/usr/lib/tmpfiles.d/
-mkdir -p $RPM_BUILD_ROOT/usr/lib/systemd/system
-install -m 644 fedora/nscd.service fedora/nscd.socket $RPM_BUILD_ROOT/usr/lib/systemd/system
+mkdir -p $RPM_BUILD_ROOT%{_tmpfilesdir}
+install -m 644 %{SOURCE4} %{buildroot}%{_tmpfilesdir}
+mkdir -p $RPM_BUILD_ROOT/lib/systemd/system
+install -m 644 %{SOURCE5} %{SOURCE6} $RPM_BUILD_ROOT/lib/systemd/system
 %endif
 
 # Include ld.so.conf
 echo 'include ld.so.conf.d/*.conf' > $RPM_BUILD_ROOT/etc/ld.so.conf
-> $RPM_BUILD_ROOT/etc/ld.so.cache
+truncate -s 0 $RPM_BUILD_ROOT/etc/ld.so.cache
 chmod 644 $RPM_BUILD_ROOT/etc/ld.so.conf
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 %ifnarch %{auxarches}
 mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
-> $RPM_BUILD_ROOT/etc/sysconfig/nscd
-> $RPM_BUILD_ROOT/etc/gai.conf
+truncate -s 0 $RPM_BUILD_ROOT/etc/sysconfig/nscd
+truncate -s 0 $RPM_BUILD_ROOT/etc/gai.conf
 %endif
 
-# Include %{_prefix}/%{_lib}/gconv/gconv-modules.cache
-> $RPM_BUILD_ROOT%{_prefix}/%{_lib}/gconv/gconv-modules.cache
-chmod 644 $RPM_BUILD_ROOT%{_prefix}/%{_lib}/gconv/gconv-modules.cache
+# Include %{_libdir}/gconv/gconv-modules.cache
+truncate -s 0 $RPM_BUILD_ROOT%{_libdir}/gconv/gconv-modules.cache
+chmod 644 $RPM_BUILD_ROOT%{_libdir}/gconv/gconv-modules.cache
+
+##############################################################################
+# Misc...
+##############################################################################
+
+# NPTL <bits/stdio-lock.h> is not usable outside of glibc, so include
+# the generic one (#162634)
+cp -a bits/stdio-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/stdio-lock.h
+# And <bits/libc-lock.h> needs sanitizing as well.
+cp -a %{SOURCE3} $RPM_BUILD_ROOT%{_prefix}/include/bits/libc-lock.h
+
+# XXX: What is this for?
+ln -sf libbsd-compat.a $RPM_BUILD_ROOT%{_libdir}/libbsd.a
 
 # Install the upgrade program
 install -m 700 build-%{target}/glibc_post_upgrade.%{_target_cpu} \
-  $RPM_BUILD_ROOT/usr/sbin/glibc_post_upgrade.%{_target_cpu}
+  $RPM_BUILD_ROOT%{_prefix}/sbin/glibc_post_upgrade.%{_target_cpu}
 
-strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/*.o
+# Strip all of the installed object files.
+strip -g $RPM_BUILD_ROOT%{_libdir}/*.o
 
-%if 0%{?_enable_debug_packages}
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}
-cp -a $RPM_BUILD_ROOT%{_prefix}/%{_lib}/*.a \
-  $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}/
-rm -f $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}/*_p.a
-%endif
-
-# rquota.x and rquota.h are now provided by quota
-rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
-
-# Create archive of locale files
-%ifnarch %{auxarches}
-olddir=`pwd`
-pushd ${RPM_BUILD_ROOT}%{_prefix}/lib/locale
-rm locale-archive || :
-# Intentionally we do not pass --alias-file=, aliases will be added
-# by build-locale-archive.
-$olddir/build-%{target}/elf/ld.so \
-  --library-path $olddir/build-%{target}/ \
-  $olddir/build-%{target}/locale/localedef \
-    --prefix ${RPM_BUILD_ROOT} --add-to-archive \
-    *_*
-rm -rf *_*
-mv locale-archive{,.tmpl}
-popd
-%endif
-
-rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss1-*
-rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss-*.so.1
-
-# Ugly hack for buggy rpm
+# XXX: Ugly hack for buggy rpm. What bug? BZ? Is this fixed?
 ln -f ${RPM_BUILD_ROOT}%{_sbindir}/iconvconfig{,.%{_target_cpu}}
 
-# In F7+ this is provided by rpcbind rpm
-rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
+##############################################################################
+# Install debug copies of unstripped static libraries
+# - This step must be last in order to capture any additional static
+#   archives we might have added.
+##############################################################################
 
-# BUILD THE FILE LIST
+# If we are building a debug package then copy all of the static archives
+# into the debug directory to keep them as unstripped copies.
+%if 0%{?_enable_debug_packages}
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_libdir}
+cp -a $RPM_BUILD_ROOT%{_libdir}/*.a \
+	$RPM_BUILD_ROOT%{_prefix}/lib/debug%{_libdir}/
+rm -f $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_libdir}/*_p.a
+%endif
+
+##############################################################################
+# Build the file lists used for describing the package and subpackages.
+##############################################################################
+# There are 11 file lists:
+# * rpm.fileslist
+#	- Master file list. Eventually, after removing files from this list
+#	  we are left with the list of files for the glibc package.
+# * common.filelist
+#	- Contains the list of flies for the common subpackage.
+# * utils.filelist
+#	- Contains the list of files for the utils subpackage.
+# * nscd.filelist
+#	- Contains the list of files for the nscd subpackage.
+# * devel.filelist
+#	- Contains the list of files for the devel subpackage.
+# * headers.filelist
+#	- Contains the list of files for the headers subpackage.
+# * static.filelist
+#	- Contains the list of files for the static subpackage.
+# * nosegneg.filelist
+#	- Contains the list of files for the xen subpackage.
+# * debuginfo.filelist
+#	- Contains the list of files for the glibc debuginfo package.
+# * debuginfocommon.filelist
+#	- Contains the list of files for the glibc common debuginfo package.
+#
+
 {
   find $RPM_BUILD_ROOT \( -type f -o -type l \) \
        \( \
@@ -803,67 +1089,109 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
       -e '\,bin/\(memusage\|mtrace\|xtrace\|pcprofiledump\),d'
 } | sort > rpm.filelist
 
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/%{_lib}
-mv -f $RPM_BUILD_ROOT/%{_lib}/lib{pcprofile,memusage}.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}
+mkdir -p $RPM_BUILD_ROOT%{_libdir}
+mv -f $RPM_BUILD_ROOT/%{_lib}/lib{pcprofile,memusage}.so $RPM_BUILD_ROOT%{_libdir}
+
+# The xtrace and memusage scripts have hard-coded paths that need to be
+# translated to a correct set of paths using the $LIB token which is
+# dynamically translated by ld.so as the default lib directory.
 for i in $RPM_BUILD_ROOT%{_prefix}/bin/{xtrace,memusage}; do
-  sed -e 's~=/%{_lib}/libpcprofile.so~=%{_prefix}/%{_lib}/libpcprofile.so~' \
-      -e 's~=/%{_lib}/libmemusage.so~=%{_prefix}/%{_lib}/libmemusage.so~' \
+  sed -e 's~=/%{_lib}/libpcprofile.so~=%{_libdir}/libpcprofile.so~' \
+      -e 's~=/%{_lib}/libmemusage.so~=%{_libdir}/libmemusage.so~' \
       -e 's~='\''/\\\$LIB/libpcprofile.so~='\''%{_prefix}/\\$LIB/libpcprofile.so~' \
       -e 's~='\''/\\\$LIB/libmemusage.so~='\''%{_prefix}/\\$LIB/libmemusage.so~' \
       -i $i
 done
 
+# Put the info files into the devel file list.
 grep '%{_infodir}' < rpm.filelist | grep -v '%{_infodir}/dir' > devel.filelist
+
+# Put the stub headers into the devel file list.
 grep '%{_prefix}/include/gnu/stubs-[32164]\+\.h' < rpm.filelist >> devel.filelist || :
 
+# Put the include files into headers file list.
 grep '%{_prefix}/include' < rpm.filelist |
-  egrep -v '%{_prefix}/include/(linuxthreads|gnu/stubs-[32164]+\.h)' \
+	egrep -v '%{_prefix}/include/(linuxthreads|gnu/stubs-[32164]+\.h)' \
 	> headers.filelist
 
-sed -i -e '\|%{_prefix}/%{_lib}/lib.*_p.a|d' \
+# Remove partial (lib*_p.a) static libraries, include files, and info files from
+# the core glibc package.
+sed -i -e '\|%{_libdir}/lib.*_p.a|d' \
        -e '\|%{_prefix}/include|d' \
        -e '\|%{_infodir}|d' rpm.filelist
 
-grep '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist \
+# Put some static files into the devel package.
+grep '%{_libdir}/lib.*\.a' < rpm.filelist \
   | grep '/lib\(\(c\|pthread\|nldbl\)_nonshared\|bsd\(\|-compat\)\|g\|ieee\|mcheck\|rpcsvc\)\.a$' \
   >> devel.filelist
-grep '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist \
+
+# Put the rest of the static files into the static package.
+grep '%{_libdir}/lib.*\.a' < rpm.filelist \
   | grep -v '/lib\(\(c\|pthread\|nldbl\)_nonshared\|bsd\(\|-compat\)\|g\|ieee\|mcheck\|rpcsvc\)\.a$' \
   > static.filelist
-grep '%{_prefix}/%{_lib}/.*\.o' < rpm.filelist >> devel.filelist
-grep '%{_prefix}/%{_lib}/lib.*\.so' < rpm.filelist >> devel.filelist
 
-sed -i -e '\|%{_prefix}/%{_lib}/lib.*\.a|d' \
-       -e '\|%{_prefix}/%{_lib}/.*\.o|d' \
-       -e '\|%{_prefix}/%{_lib}/lib.*\.so|d' \
-       -e '\|%{_prefix}/%{_lib}/linuxthreads|d' \
+# Put all of the object files and *.so (not the versioned ones) into the
+# devel package.
+grep '%{_libdir}/.*\.o' < rpm.filelist >> devel.filelist
+grep '%{_libdir}/lib.*\.so' < rpm.filelist >> devel.filelist
+
+# Remove all of the static, object, unversioned DSOs, old linuxthreads stuff,
+# and nscd from the core glibc package.
+sed -i -e '\|%{_libdir}/lib.*\.a|d' \
+       -e '\|%{_libdir}/.*\.o|d' \
+       -e '\|%{_libdir}/lib.*\.so|d' \
+       -e '\|%{_libdir}/linuxthreads|d' \
        -e '\|nscd|d' rpm.filelist
 
+# All of the bin and certain sbin files go into the common package.
+# We explicitly exclude certain sbin files that need to go into
+# the core glibc package for use during upgrades.
 grep '%{_prefix}/bin' < rpm.filelist >> common.filelist
 grep '%{_prefix}/sbin/[^gi]' < rpm.filelist >> common.filelist
+# All of the files under share go into the common package since
+# they should be multilib-independent.
 grep '%{_prefix}/share' < rpm.filelist | \
   grep -v -e '%{_prefix}/share/zoneinfo' -e '%%dir %{prefix}/share' \
        >> common.filelist
 
+# Remove the bin, locale, some sbin, and share from the
+# core glibc package. We cheat a bit and use the slightly dangerous
+# /usr/sbin/[^gi] to match the inverse of the search that put the
+# files into common.filelist. It's dangerous in that additional files
+# that start with g, or i would get put into common.filelist and
+# rpm.filelist.
 sed -i -e '\|%{_prefix}/bin|d' \
        -e '\|%{_prefix}/lib/locale|d' \
-       -e '\|%{_prefix}/libexec/pt_chown|d' \
        -e '\|%{_prefix}/sbin/[^gi]|d' \
        -e '\|%{_prefix}/share|d' rpm.filelist
 
-> nosegneg.filelist
+##############################################################################
+# Build the xen package file list (nosegneg.filelist)
+##############################################################################
+truncate -s 0 nosegneg.filelist
 %if %{xenpackage}
 grep '/%{_lib}/%{nosegneg_subdir}' < rpm.filelist >> nosegneg.filelist
 sed -i -e '\|/%{_lib}/%{nosegneg_subdir}|d' rpm.filelist
+# TODO: There are files in the nosegneg list which should be in the devel
+#	pacakge, but we leave them instead in the xen subpackage. We may
+#	wish to clean that up at some point.
 %endif
 
+# Add the binary to build localse to the common subpackage.
 echo '%{_prefix}/sbin/build-locale-archive' >> common.filelist
+
+# The nscd binary must go into the nscd subpackage.
 echo '%{_prefix}/sbin/nscd' > nscd.filelist
 
+# The memusage and pcprofile libraries are put back into the core
+# glibc package even though they are only used by utils package
+# scripts..
 cat >> rpm.filelist <<EOF
-%{_prefix}/%{_lib}/libmemusage.so
-%{_prefix}/%{_lib}/libpcprofile.so
+%{_libdir}/libmemusage.so
+%{_libdir}/libpcprofile.so
 EOF
+
+# Add the utils scripts and programs to the utils subpackage.
 cat > utils.filelist <<EOF
 %{_prefix}/bin/memusage
 %{_prefix}/bin/memusagestat
@@ -872,28 +1200,36 @@ cat > utils.filelist <<EOF
 %{_prefix}/bin/xtrace
 EOF
 
+# Remove the zoneinfo files
+# XXX: Why isn't this don't earlier when we are removing files?
+#      Won't this impact what is shipped?
 rm -rf $RPM_BUILD_ROOT%{_prefix}/share/zoneinfo
 
-# Make sure %config files have the same timestamp
-touch -r fedora/glibc.spec.in $RPM_BUILD_ROOT/etc/ld.so.conf
+# Make sure %config files have the same timestamp across multilib packages.
+#
+# XXX: Ideally ld.so.conf should have the timestamp of the spec file, but there
+# doesn't seem to be any macro to give us that.  So we do the next best thing,
+# which is to at least keep the timestamp consistent.  The choice of using
+# glibc_post_upgrade.c is arbitrary.
+touch -r %{SOURCE2} $RPM_BUILD_ROOT/etc/ld.so.conf
 touch -r sunrpc/etc.rpc $RPM_BUILD_ROOT/etc/rpc
 
 # We allow undefined symbols in shared libraries because the libraries
 # referenced at link time here, particularly ld.so, may be different than
-# the one used at runtime.  This is really only needed during the ARM 
+# the one used at runtime.  This is really only needed during the ARM
 # transition from ld-linux.so.3 to ld-linux-armhf.so.3.
-cd fedora
-$GCC -Os -g -o build-locale-archive build-locale-archive.c \
-  ../build-%{target}/locale/locarchive.o \
-  ../build-%{target}/locale/md5.o \
-  -DDATADIR=\"%{_datadir}\" -DPREFIX=\"%{_prefix}\" \
-  -L../build-%{target} \
-  -Wl,--allow-shlib-undefined \
-  -B../build-%{target}/csu/ -lc -lc_nonshared
-install -m 700 build-locale-archive $RPM_BUILD_ROOT/usr/sbin/build-locale-archive
-cd ..
+pushd build-%{target}
+$GCC -Os -g -o build-locale-archive %{SOURCE1} \
+	../build-%{target}/locale/locarchive.o \
+	../build-%{target}/locale/md5.o \
+	-I. -DDATADIR=\"%{_datadir}\" -DPREFIX=\"%{_prefix}\" \
+	-L../build-%{target} \
+	-Wl,--allow-shlib-undefined \
+	-B../build-%{target}/csu/ -lc -lc_nonshared
+install -m 700 build-locale-archive $RPM_BUILD_ROOT%{_prefix}/sbin/build-locale-archive
+popd
 
-# the last bit: more documentation
+# Lastly copy some additional documentation for the packages.
 rm -rf documentation
 mkdir documentation
 cp crypt/README.ufc-crypt documentation/README.ufc-crypt
@@ -907,13 +1243,6 @@ cp posix/gai.conf documentation/
 mkdir -p $RPM_BUILD_ROOT/lib
 ln -sf /%{_lib}/ld64.so.1 $RPM_BUILD_ROOT/lib/ld64.so.1
 %endif
-%ifarch ia64
-%if "%{_lib}" == "lib64"
-# Compatibility symlink
-mkdir -p $RPM_BUILD_ROOT/lib
-ln -sf /%{_lib}/ld-linux-ia64.so.2 $RPM_BUILD_ROOT/lib/ld-linux-ia64.so.2
-%endif
-%endif
 
 # Leave a compatibility symlink for the dynamic loader on armhfp targets,
 # at least until the world gets rebuilt
@@ -921,32 +1250,45 @@ ln -sf /%{_lib}/ld-linux-ia64.so.2 $RPM_BUILD_ROOT/lib/ld-linux-ia64.so.2
 ln -sf /lib/ld-linux-armhf.so.3 $RPM_BUILD_ROOT/lib/ld-linux.so.3
 %endif
 
+##############################################################################
+# Run the glibc testsuite
+##############################################################################
 %if %{run_glibc_tests}
-
 # Increase timeouts
 export TIMEOUTFACTOR=16
 parent=$$
 echo ====================TESTING=========================
-cd build-%{target}
+##############################################################################
+# - Test the default runtime.
+##############################################################################
+pushd build-%{target}
 ( make %{?_smp_mflags} -k check %{silentrules} 2>&1
   sleep 10s
   teepid="`ps -eo ppid,pid,command | awk '($1 == '${parent}' && $3 ~ /^tee/) { print $2 }'`"
   [ -n "$teepid" ] && kill $teepid
 ) | tee check.log || :
-cd ..
+popd
+
+##############################################################################
+# - Test the xen runtimes (nosegneg).
+##############################################################################
 %if %{buildxen}
 echo ====================TESTING -mno-tls-direct-seg-refs=============
-cd build-%{target}-nosegneg
+pushd build-%{target}-nosegneg
 ( make %{?_smp_mflags} -k check %{silentrules} 2>&1
   sleep 10s
   teepid="`ps -eo ppid,pid,command | awk '($1 == '${parent}' && $3 ~ /^tee/) { print $2 }'`"
   [ -n "$teepid" ] && kill $teepid
 ) | tee check.log || :
-cd ..
+popd
 %endif
+
+##############################################################################
+# - Test the power6 runtimes.
+##############################################################################
 %if %{buildpower6}
 echo ====================TESTING -mcpu=power6=============
-cd build-%{target}-power6
+pushd build-%{target}-power6
 ( if [ -d ../power6emul ]; then
     export LD_PRELOAD=`cd ../power6emul; pwd`/\$LIB/power6emul.so
   fi
@@ -955,7 +1297,7 @@ cd build-%{target}-power6
   teepid="`ps -eo ppid,pid,command | awk '($1 == '${parent}' && $3 ~ /^tee/) { print $2 }'`"
   [ -n "$teepid" ] && kill $teepid
 ) | tee check.log || :
-cd ..
+popd
 %endif
 echo ====================TESTING DETAILS=================
 for i in `sed -n 's|^.*\*\*\* \[\([^]]*\.out\)\].*$|\1|p' build-*-linux*/check.log`; do
@@ -971,53 +1313,79 @@ echo ====================PLT RELOCS LIBC.SO==============
 readelf -Wr $RPM_BUILD_ROOT/%{_lib}/libc-*.so | sed -n -e "$PLTCMD"
 echo ====================PLT RELOCS END==================
 
-%endif
+%endif # %{run_glibc_tests}
 
-pushd $RPM_BUILD_ROOT/usr/%{_lib}/
+###############################################################################
+# Rebuild libpthread.a using --whole-archive to ensure all of libpthread
+# is included in a static link. This prevents any problems when linking
+# statically, using parts of libpthread, and other necessary parts not
+# being included. Upstream has decided that this is the wrong approach to
+# this problem and that the full set of dependencies should be resolved
+# such that static linking works and produces the most minimally sized
+# static application possible.
+###############################################################################
+pushd $RPM_BUILD_ROOT%{_prefix}/%{_lib}/
 $GCC -r -nostdlib -o libpthread.o -Wl,--whole-archive ./libpthread.a
 rm libpthread.a
 ar rcs libpthread.a libpthread.o
 rm libpthread.o
 popd
+###############################################################################
 
 %if 0%{?_enable_debug_packages}
 
 # The #line directives gperf generates do not give the proper
 # file name relative to the build directory.
-(cd locale; ln -s programs/*.gperf .)
-(cd iconv; ln -s ../locale/programs/charmap-kw.gperf .)
+pushd locale
+ln -s programs/*.gperf .
+popd
+pushd iconv
+ln -s ../locale/programs/charmap-kw.gperf .
+popd
 
-ls -l $RPM_BUILD_ROOT/usr/bin/getconf
-ls -l $RPM_BUILD_ROOT/usr/libexec/getconf
-eu-readelf -hS $RPM_BUILD_ROOT/usr/bin/getconf $RPM_BUILD_ROOT/usr/libexec/getconf/*
+# Print some diagnostic information in the builds about the
+# getconf binaries.
+# XXX: Why do we do this?
+ls -l $RPM_BUILD_ROOT%{_prefix}/bin/getconf
+ls -l $RPM_BUILD_ROOT%{_prefix}/libexec/getconf
+eu-readelf -hS $RPM_BUILD_ROOT%{_prefix}/bin/getconf \
+	$RPM_BUILD_ROOT%{_prefix}/libexec/getconf/*
 
 find_debuginfo_args='--strict-build-id -g'
 %ifarch %{debuginfocommonarches}
-echo %{_prefix}/libexec/pt_chown > workaround.filelist
 find_debuginfo_args="$find_debuginfo_args \
-  -l common.filelist -l utils.filelist -l nscd.filelist -l workaround.filelist \
-  -p '.*/(sbin|libexec)/.*' \
-  -o debuginfocommon.filelist \
-  -l rpm.filelist -l nosegneg.filelist \
-"
+	-l common.filelist \
+	-l utils.filelist \
+	-l nscd.filelist \
+	-p '.*/(sbin|libexec)/.*' \
+	-o debuginfocommon.filelist \
+	-l rpm.filelist \
+	-l nosegneg.filelist"
 %endif
-eval /usr/lib/rpm/find-debuginfo.sh "$find_debuginfo_args" -o debuginfo.filelist
+eval /usr/lib/rpm/find-debuginfo.sh \
+	"$find_debuginfo_args" \
+	-o debuginfo.filelist
 
+# List all of the *.a archives in the debug directory.
 list_debug_archives()
 {
-  local dir=%{_prefix}/lib/debug%{_prefix}/%{_lib}
-  find $RPM_BUILD_ROOT$dir -name "*.a" -printf "$dir/%%P\n"
+	local dir=%{_prefix}/lib/debug%{_libdir}
+	find $RPM_BUILD_ROOT$dir -name "*.a" -printf "$dir/%%P\n"
 }
 
 %ifarch %{debuginfocommonarches}
 
+# Remove the source files from the common package debuginfo.
 sed -i '\#^%{_prefix}/src/debug/#d' debuginfocommon.filelist
+
+# Create a list of all of the source files we copied to the debug directory.
 find $RPM_BUILD_ROOT%{_prefix}/src/debug \
      \( -type d -printf '%%%%dir ' \) , \
      -printf '%{_prefix}/src/debug/%%P\n' > debuginfocommon.sources
 
 %ifarch %{biarcharches}
 
+# Add the source files to the core debuginfo package.
 cat debuginfocommon.sources >> debuginfo.filelist
 
 %else
@@ -1029,48 +1397,74 @@ cat debuginfocommon.sources >> debuginfo.filelist
 %define basearch sparc
 %endif
 
-# auxarches get only these few source files
+# The auxarches get only these few source files.
 auxarches_debugsources=\
 '/(generic|linux|%{basearch}|nptl(_db)?)/|/%{glibcsrcdir}/build|/dl-osinfo\.h'
 
+# Place the source files into the core debuginfo pakcage.
 egrep "$auxarches_debugsources" debuginfocommon.sources >> debuginfo.filelist
 
+# Remove the source files from the common debuginfo package.
 egrep -v "$auxarches_debugsources" \
   debuginfocommon.sources >> debuginfocommon.filelist
 
-%endif
+%endif # %{biarcharches}
 
+# Add the list of *.a archives in the debug directory to
+# the common debuginfo package.
 list_debug_archives >> debuginfocommon.filelist
 
-%endif
+# It happens that find-debuginfo.sh produces duplicate entries even
+# though the inputs are unique. Therefore we sort and unique the
+# entries in the debug file lists. This avoids the following warnings:
+# ~~~
+# Processing files: glibc-debuginfo-common-2.17.90-10.fc20.x86_64
+# warning: File listed twice: /usr/lib/debug/usr/sbin/build-locale-archive.debug
+# warning: File listed twice: /usr/lib/debug/usr/sbin/nscd.debug
+# warning: File listed twice: /usr/lib/debug/usr/sbin/zdump.debug
+# warning: File listed twice: /usr/lib/debug/usr/sbin/zic.debug
+# ~~~
+sort -u debuginfocommon.filelist > debuginfocommon2.filelist
+mv debuginfocommon2.filelist debuginfocommon.filelist
 
-%endif
+%endif # %{debuginfocommonarches}
 
+# Remove any duplicates output by a buggy find-debuginfo.sh.
+sort -u debuginfo.filelist > debuginfo2.filelist
+mv debuginfo2.filelist debuginfo.filelist
+
+%endif # 0%{?_enable_debug_packages}
+
+# Remove the `dir' info-heirarchy file which will be maintained
+# by the system as it adds info files to the install.
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 %ifarch %{auxarches}
 
+# Delete files that we do not intended to ship with the auxarch.
 echo Cutting down the list of unpackaged files
->> debuginfocommon.filelist
 sed -e '/%%dir/d;/%%config/d;/%%verify/d;s/%%lang([^)]*) //;s#^/*##' \
-    common.filelist devel.filelist static.filelist headers.filelist \
-    utils.filelist nscd.filelist debuginfocommon.filelist |
-(cd $RPM_BUILD_ROOT; xargs --no-run-if-empty rm -f 2> /dev/null || :)
-rm -f $RPM_BUILD_ROOT%{_prefix}/libexec/pt_chown
+	common.filelist devel.filelist static.filelist headers.filelist \
+	utils.filelist nscd.filelist \
+%ifarch %{debuginfocommonarches}
+	debuginfocommon.filelist \
+%endif
+	| (cd $RPM_BUILD_ROOT; xargs --no-run-if-empty rm -f 2> /dev/null || :)
 
 %else
 
 mkdir -p $RPM_BUILD_ROOT/var/{db,run}/nscd
 touch $RPM_BUILD_ROOT/var/{db,run}/nscd/{passwd,group,hosts,services}
 touch $RPM_BUILD_ROOT/var/run/nscd/{socket,nscd.pid}
-%endif
+
+%endif # %{auxarches}
 
 %ifnarch %{auxarches}
-> $RPM_BUILD_ROOT/%{_prefix}/lib/locale/locale-archive
+truncate -s 0 $RPM_BUILD_ROOT/%{_prefix}/lib/locale/locale-archive
 %endif
 
 mkdir -p $RPM_BUILD_ROOT/var/cache/ldconfig
-> $RPM_BUILD_ROOT/var/cache/ldconfig/aux-cache
+truncate -s 0 $RPM_BUILD_ROOT/var/cache/ldconfig/aux-cache
 
 %pre -p <lua>
 -- Check that the running kernel is new enough
@@ -1080,7 +1474,7 @@ if rpm.vercmp(rel, required) < 0 then
   error("FATAL: kernel too old", 0)
 end
 
-%post -p /usr/sbin/glibc_post_upgrade.%{_target_cpu}
+%post -p %{_prefix}/sbin/glibc_post_upgrade.%{_target_cpu}
 
 %postun -p /sbin/ldconfig
 
@@ -1153,6 +1547,7 @@ rm -f *.filelist*
 
 %files -f rpm.filelist
 %defattr(-,root,root)
+%dir %{_prefix}/%{_lib}/audit
 %ifarch %{rtkaioarches}
 %dir /%{_lib}/rtkaio
 %endif
@@ -1175,12 +1570,7 @@ rm -f *.filelist*
 %ifarch s390x
 /lib/ld64.so.1
 %endif
-%ifarch ia64
-%if "%{_lib}" == "lib64"
-/lib/ld-linux-ia64.so.2
-%endif
-%endif
-%ifarch armv7hl armv7hnl 
+%ifarch armv7hl armv7hnl
 /lib/ld-linux.so.3
 %endif
 %verify(not md5 size mtime) %config(noreplace) /etc/nsswitch.conf
@@ -1188,12 +1578,12 @@ rm -f *.filelist*
 %verify(not md5 size mtime) %config(noreplace) /etc/rpc
 %dir /etc/ld.so.conf.d
 %dir %{_prefix}/libexec/getconf
-%dir %{_prefix}/%{_lib}/gconv
+%dir %{_libdir}/gconv
 %dir %attr(0700,root,root) /var/cache/ldconfig
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/cache/ldconfig/aux-cache
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/ld.so.cache
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/gai.conf
-%doc README NEWS INSTALL BUGS PROJECTS CONFORMANCE
+%doc README NEWS INSTALL BUGS PROJECTS CONFORMANCE elf/rtld-debugger-interface.txt
 %doc COPYING COPYING.LIB LICENSES
 %doc hesiod/README.hesiod
 
@@ -1211,7 +1601,6 @@ rm -f *.filelist*
 %attr(0644,root,root) %verify(not md5 size mtime mode) %ghost %config(missingok,noreplace) %{_prefix}/lib/locale/locale-archive
 %dir %attr(755,root,root) /etc/default
 %verify(not md5 size mtime) %config(noreplace) /etc/default/nss
-%attr(755,root,root) %caps(cap_chown,cap_fowner=pe) %{_prefix}/libexec/pt_chown
 %doc documentation/*
 
 %files -f devel.filelist devel
@@ -1231,9 +1620,9 @@ rm -f *.filelist*
 %config(noreplace) /etc/nscd.conf
 %dir %attr(0755,root,root) /var/run/nscd
 %dir %attr(0755,root,root) /var/db/nscd
-/usr/lib/systemd/system/nscd.service
-/usr/lib/systemd/system/nscd.socket
-/usr/lib/tmpfiles.d/nscd.conf
+/lib/systemd/system/nscd.service
+/lib/systemd/system/nscd.socket
+%{_tmpfilesdir}/nscd.conf
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/nscd.pid
 %attr(0666,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/socket
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/passwd
@@ -1259,325 +1648,586 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.16-22
-- 为 Magic 3.0 重建
+* Wed Oct  2 2013 Carlos O'Donell <carlos@redhat.com> - 2.18-11
+- Allow ldconfig cached objects previously marked as hard or soft
+  ABI to now become unmarked without raising an error. This works
+  around a binutils bug that caused objects to become unmarked.
+  (#1009145)
 
-* Tue Dec 04 2012 Liu Di <liudidi@gmail.com> - 2.16-21
-- 为 Magic 3.0 重建
+* Tue Oct  1 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.18-10
+- Fix check for PI mutex on non-x86 systems (#1007590).
 
-* Fri Oct 12 2012 Patsy Franklin <pfrankli@redhat.com> - 2.16-20
-  - Backport of upstream BZ #14251: powerpc: add name_to_handle, 
-    open_by_handle, etc to PowerPC bits/fcntl.h. (#rh865520).
+* Mon Sep 23 2013 Carlos O'Donell <carlos@redhat.com> - 2.18-9
+- Fix CVE-2013-4788: Static applications now support pointer mangling.
+  Existing static applications must be recompiled (#985625).
 
-* Wed Oct 10 2012 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.16-19
-  - Fix Marathi names for Wednesday, September and October (#rh864820).
+* Wed Sep 18 2013 Patsy Franklin <pfrankli@redhat.com> - 2.18-8
+- Fix conditional requiring specific binutils for s390/s390x.
 
-* Mon Oct 1 2012 Jeff Law <law@redhat.com> - 2.16-18
-  - Set proper max length when parsing xdr requests (#848748).
+* Mon Sep 16 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.18-7
+- Fix integer overflows in *valloc and memalign (CVE-2013-4332, #1008299).
 
-* Fri Sep 21 2012 Jeff Law <law@redhat.com> - 2.16-17
-  - Remove broken patch for 816647.
+* Thu Aug 29 2013 Carlos O'Donell <carlos@redhat.com> - 2.18-6
+- Fix Power build (#997531).
 
-* Thu Sep 20 2012 Jeff Law <law@redhat.com> - 2.16-16
-  - Demangle function pointers before testing them (#816647)
-  - Remove handling of /etc/localtime and /var/spool/postfix/etc/localtime
-    as systemd will be handling them from now on (#858735).
+* Wed Aug 28 2013 Carlos O'Donell <carlos@redhat.com> - 2.18-5
+- Fix indirect function support to avoid calling optimized routines
+  for the wrong hardware (#985342).
 
-* Mon Sep 17 2012 Jeff Law <law@redhat.com> - 2.16-15
-  - Move /etc/localtime into glibc-common package since glibc-common
-    owns the scriptlets which update it.
+* Mon Aug 26 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.18-4
+- Initialize res_hconf in nscd. (#1000924).
 
-* Fri Sep 14 2012 Jeff Law <law@redhat.com> - 2.16-14
-  - Fix prototype of sigsetjmp in pthread.h (#857236).
+* Tue Aug 20 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.18-3
+- Remove non-ELF support in rtkaio.
+- Avoid inlining of cleanup function for kaio_suspend.
+- Expand sizes of some types in strcoll (#855399, CVE-2012-4424).
+- Fix tst-aiod2 and tst-aiod3 test failures (#970865).
 
-* Tue Sep 4 2012 Jeff Law <law@redhat.com> - 2.16-13
-  - Update fseek fix (#854337)
+* Mon Aug 19 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.18-2
+- Fix buffer overflow in readdir_r (#995841, CVE-2013-4237).
+- Remove releng tarball.
 
-* Tue Sep 4 2012 Jeff Law <law@redhat.com> - 2.16-12
-  - Incorporate ppc64p7 arch changes (#854250)
-  - Fix fseek in wide mode (#854337)
-  - Pick up s390/s390x IFUNC support.
+* Fri Aug 16 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.18-1
+- Upstream release 2.18.
+- Pull in systemd during build and use the tmpfilesdir macro.
 
-* Tue Aug 21 2012 Jeff Law <law@redhat.com> - 2.16-11
-  - Replace manual systemd scriptlets with macroized scriptlets (#850129)
+* Wed Aug 14 2013 Carlos O'Donell <codonell@redhat.com> - 2.17.90-14
+- Update spec file to use rpm prefix everywhere.
 
-* Mon Aug 20 2012 Jeff Law <law@redhat.com> - 2.16-10
-  - Use upstream accepted changes for 179072 (stap linker probes).
+* Tue Aug 13 2013 Carlos O'Donell <codonell@redhat.com> - 2.17.90-13
+- Revert `Move to /usr' transition.
 
-* Fri Aug 17 2012 Jeff Law <law@redhat.com> - 2.16-9
-  - Fix race in intl/* testsuite (#849203)
+* Tue Aug 13 2013 Carlos O'Donell <codonell@redhat.com> - 2.17.90-12
+- Complete `Move to /usr' transition. All relevant files are now
+  installed into `/usr'.
 
-* Wed Aug 15 2012 Jeff Law <law@redhat.com> - 2.16-8
-  - Fix integer overflow leading to buffer overflow in strto* (#847718)
+* Wed Aug 07 2013 Karsten Hopp <karsten@redhat.com> 2.17.90-11
+- rebuild with the latest rpm to fix missing ld64.so provides on PPC
+
+* Mon Jul 29 2013 Carlos O'Donell <codonell@redhat.com> - 2.17.90-10
+- Fix missing libbsd.a in debuginfo packages.
+
+* Mon Jul 29 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17.90-9
+- Fix strcoll flaws (#855399, CVE-2012-4412, CVE-2012-4424).
+
+* Mon Jul 29 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17.90-8
+- Resync with upstream master.
+- Disable pt_chown (CVE-2013-2207).
+
+* Thu Jul 25 2013 Carlos O'Donell <carlos@redhat.com> - 2.17.90-7
+- Correctly name the 240-bit slow path sytemtap probe slowpow_p10 for slowpow.
+
+* Wed Jul 24 2013 Carlos O'Donell <carlos@redhat.com> - 2.17.90-6
+- Add build requirement on static libstdc++ library to fix testsuite failures
+  for static C++ tests.
+
+* Fri Jul 12 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17.90-5
+- Enable lock elision support (#982363).
+- Depend on systemd instead of systemd-units (#983760).
+
+* Tue Jul  9 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17.90-4
+- Resync with upstream master.
+
+* Thu Jun 20 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17.90-3
+- Resync with upstream master.
+
+* Tue Jun 11 2013 Remi Collet <rcollet@redhat.com> - 2.17.90-2
+- rebuild for new GD 2.1.0
+
+* Tue Jun  4 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17.90-1
+- Resync with upstream master.
+
+* Tue May 14 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17-9
+- Avoid crashing in LD_DEBUG when program name is unavailable (#961238).
+
+* Sun May  5 2013 Patsy Franklin <pfrankli@redhat.com> - 2.17-8
+- Fix _nl_find_msg malloc failure case, and callers. (#959034).
+
+* Tue Apr 23 2013 Patsy Franklin <pfrankli@redhat.com> - 2.17-7
+- Test init_fct for NULL, not result->__init_fct, after demangling (#952799).
+
+* Tue Apr 23 2013 Patsy Franklin <pfrankli@redhat.com> - 2.17-6
+- Increase limits on xdr name and record requests (#892777).
+- Consistently MANGLE/DEMANGLE init_fct, end_fct and btow_fct (#952799).
+
+* Thu Mar 28 2013 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.17-5
+- Don't add input group during initgroups_dyn in hesiod (#921760).
+
+* Sun Mar 17 2013 Carlos O'Donell <carlos@redhat.com> - 2.17-4
+- Fixed i386 glibc builds (#917161).
+- Fixed multibyte character processing crash in regexp (#905877, CVE-2013-0242)
+
+* Wed Feb 27 2013 Carlos O'Donell <carlos@redhat.com> - 2.17-3
+- Renamed release engineering directory to `releng' (#903754).
+- Fix building with gcc 4.8.0 (#911307).
+
+* Thu Feb 7 2013 Carlos O'Donell <carlos@redhat.com> - 2.17-2
+- Fix ownership of /usr/lib[64]/audit (#894307).
+- Support unmarked ARM objects in ld.so.cache and aux cache (#905184).
+
+* Tue Jan 1 2013 Jeff Law <law@redhat.com> - 2.17-1
+- Resync with official glibc-2.17 release
+
+* Fri Dec 21 2012 Jeff Law <law@redhat.com> - 2.16.90-40
+- Resync with master
+
+* Wed Dec 19 2012 Jeff Law <law@redhat.com> - 2.16.90-39
+- Add rtld-debugger-interface.txt as documentation. (#872242)
+
+* Fri Dec 7 2012 Jeff Law <law@redhat.com> - 2.16.90-38
+- Resync with master
+- Drop patch for 731228 that is no longer needed.
+
+* Thu Dec 6 2012 Jeff Law <law@redhat.com> - 2.16.90-37
+- Resync with master
+- Patch for 697421 has been submitted upstream.
+- Drop local patch for 691912 that is no longer needed.
+
+* Mon Dec 3 2012 Jeff Law <law@redhat.com> - 2.16.90-36
+- Resync with master
+- Drop local patch for 657588 that is no longer needed.
+- Drop local patch for 740682 that is no longer needed.
+- Drop local patch for 770439 that is no longer needed.
+- Drop local patch for 789209 that is no longer needed.
+- Drop local patch for nss-files-overflow that seems
+  useless.
+- Drop localedata-locales-fixes as they were rejected
+  upstream.
+- Drop test-debug-gnuc-hack.patch that seems useless now.
+- Repack patchlist.
+
+* Fri Nov 30 2012 Jeff Law <law@redhat.com> - 2.16.90-35
+- Resync with master (#882137).
+- Remove local patch for strict-aliasing warnings that
+  is no longer needed.
+- Remove local patch for 730856 that is no longer needed.
+- Repack patchlist.
+
+* Thu Nov 29 2012 Jeff Law <law@redhat.com> - 2.16.90-34
+- Remove local patch which "temporarily" re-added currences
+  obsoleted by the Euro.
+- Remove hunks from strict-aliasing patch that are no longer
+  needed.
+
+* Thu Nov 29 2012 Jeff Law <law@redhat.com> - 2.16.90-33
+- Resync with master.
+- Drop local patch for 788989.
+- Repack patchlist.
+
+* Wed Nov 28 2012 Jeff Law <law@redhat.com> - 2.16.90-32
+- Resync with master.
+- Drop local patch for 878913.
+- Drop local patch for 880666.
+- Drop local patch for 767693.
+- Repack patchlist.
+
+* Tue Nov 27 2012 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.16.90-31
+- Ensure that hashtable size is greater than 3 (#878913).
+- fwrite returns 0 on EOF (#880666).
+
+* Mon Nov 26 2012 Jeff Law <law@redhat.com> - 2.16.90-30
+- Resync with upstream sources
+- Drop local patch for getconf.
+- Repack patchlist.
+
+* Fri Nov 16 2012 Jeff Law <law@redhat.com> - 2.16.90-29
+- Rsync with upstream sources
+- Drop local patches for 803286, 791161, 790292, 790298
+
+* Wed Nov 7 2012 Jeff Law <law@redhat.com> - 2.16.90-28
+- Resync with upstream sources (#873397)
+
+* Mon Nov 5 2012 Jeff Law <law@redhat.com> - 2.16.90-27
+- Resync with upstream sources.
+- Don't use distinct patches for 770869, 787201 and 688948
+  as they all modify stuff under fedora/
+- Repack patchlist
+
+* Thu Nov 1 2012 Jeff Law <law@redhat.com> - 2.16.90-26
+- Resync with upstream sources (#872336)
+
+* Mon Oct 22 2012 Jeff Law <law@redhat.com> - 2.16.90-25
+- Rsync with upstream sources
+- Drop 864820 patch as now that it's upstream.
+- Add sss to /etc/nsswitch.conf (#867473)
+
+* Thu Oct 11 2012 Jeff Law <law@redhat.com> - 2.16.90-24
+- Rsync with upstream sources
+- Drop local 552960-2 patch now that it's upstream.
+- Drop local 858274 patch now that the root problem is fixed upstream.
+- Repack patchlist.
+
+* Wed Oct 10 2012 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.16.90-23
+- Fix Marathi names for Wednesday, September and October (#rh864820).
+
+* Fri Oct  5 2012 Jeff Law <law@redhat.com> - 2.16.90-22
+- Resync with upstream sources
+- Drop local 552960 patch now that it's upstream
+- Drop local stap patch now obsolete
+- Drop local s390 patch which avoided problems with old assemblers
+- Drop old fortify source patch to deal with old compilers
+
+* Thu Oct 4 2012 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.16.90-21
+- Take mutex in cleanup only if it is not already taken.
+
+* Tue Oct 2 2012 Jeff Law <law@redhat.com> - 2.16.90-20
+- Resync with upstream sources.
+- Repack patchlist.
+
+* Mon Oct 1 2012 Jeff Law <law@redhat.com> - 2.16.90-19
+- Resync with upstream sources to pick up fma fixes
+
+* Fri Sep 28 2012 Jeff Law <law@redhat.com> - 2.16.90-18
+- Resync with upstream sources.
+- Drop fedora-cdefs-gnuc.patch, it's not needed anymore.
+- Drop fedora-gai-rfc1918.patch, it's upstream now.
+- Drop fedora-localedata-no_NO.patch, it was supposed to be
+  temporary -- that was back in 2003.  This should have been
+  sorted out long ago.  We'll just have to deal with the
+  fallout.
+- Drop fedora-vfprintf-sw6530.patch, it's upstream now.
+- Drop rh769421.patch; Siddhesh has fixed this properly with 552960.
+
+* Fri Sep 28 2012 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.16.90-17
+- Release mutex before going back to wait for PI mutexes (#552960).
+
+* Tue Sep 25 2012 Jeff Law <law@redhat.com> - 2.16.90-16
+- Resync with upstream sources.
+
+* Fri Sep 21 2012 Jeff Law <law@redhat.com> - 2.16.90-15
+- Remove most of fedora-nscd patch as we no longer use the
+  old init files, but systemd instead.
+- Remove path-to-vi patch.  With the usr-move changes that
+  patch is totally unnecessary.
+- Remove i686-nopl patch.  Gas was changed back in 2011 to
+  avoid nopl.
+- Move gai-rfc1918 patch to submitted upstream status
+
+* Fri Sep 21 2012 Jeff Law <law@redhat.com> - 2.16.90-14
+- Revert patch for 816647, it's blatently broken.
+
+* Fri Sep 21 2012 Siddhesh Poyarekar <siddhesh@redhat.com> - 2.16.90-13
+- Bring back byteswap-16.h (#859268).
+
+* Thu Sep 20 2012 Jeff Law <law@redhat.com> - 2.16.90-12
+- Revert recent upstream strstr changes (#858274)
+- Demangle function pointers before testing them (#816647)
+- Remove handling of /etc/localtime and /var/spool/postfix/etc/localtime
+  as systemd will be handling them from now on (#858735).
+
+* Fri Sep 14 2012 Jeff Law <law@redhat.com> - 2.16.90-11
+- Resync with upstream sources (#857236).
+
+* Sat Sep  8 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 2.16.90-10
+- Enable ports to fix FTBFS on ARM
+
+* Wed Sep 5 2012 Jeff Law <law@redhat.com> - 2.16.90-9
+- Resync with upstream sources.
+
+* Tue Sep 4 2012 Jeff Law <law@redhat.com> - 2.16.90-8
+- Incorporate ppc64p7 arch changes (#854250)
+
+* Thu Aug 30 2012 Jeff Law <law@redhat.com> - 2.16.90-7
+- Resync with upstream sources.
+
+* Wed Aug 22 2012 Jeff Law <law@redhat.com> - 2.16.90-6
+- Resync with upstream sources.
+
+* Tue Aug 21 2012 Jeff Law <law@redhat.com> - 2.16.90-5
+- Replace manual systemd scriptlets with macroized scriptlets (#850129)
+
+* Mon Aug 20 2012 Jeff Law <law@redhat.com> - 2.16.90-4
+- Move /etc/localtime into glibc-common package since glibc-common
+  owns the scriptlets which update it.
+
+* Mon Aug 20 2012 Jeff Law <law@redhat.com> - 2.16.90-3
+- Remove obsolete patches from glibc-fedora.patch.  Explode
+  remaining patches into distinct patchfiles.  Thanks to
+  Dmitry V. Levin for identifying them!
+  Drop ia64 specific patches and specfile fragments
+
+* Wed Aug 15 2012 Jeff Law <law@redhat.com> - 2.16.90-2
+- Fix integer overflow leading to buffer overflow in strto* (#847718)
+
+* Mon Aug 13 2012 Jeff Law <law@redhat.com> - 2.16.90-1
+- Resync with upstream sources, drop obsolete patches.
+- Drop glibc-ports bits as they're part of the master
+  sources now.
+
+* Mon Aug 13 2012 Jeff Law <law@redhat.com> - 2.16-9
+- Replace patch for 179072 with official version from upstream.
+
+* Fri Aug 10 2012 Jeff Law <law@redhat.com> - 2.16-8
+- Replace patch for 789238 with official version from upstream.
 
 * Wed Jul 25 2012 Jeff Law <law@redhat.com> - 2.16-7
-  - Pack IPv4 servers at the start of nsaddr_list and
-    only track the number of IPV4 servers in EXT(statp->nscounti (#808147)
-  - Mark set*uid, set*gid as __wur (warn unused result) (#845960)
+- Pack IPv4 servers at the start of nsaddr_list and
+  only track the number of IPV4 servers in EXT(statp->nscounti (#808147)
+- Mark set*uid, set*gid as __wur (warn unused result) (#845960)
 
 * Wed Jul 25 2012 Jeff Law <law@redhat.com> - 2.16-6
-  - Revert patch for BZ696143, it made it impossible to use IPV6
-    addresses explicitly in getaddrinfo, which in turn broke
-    ssh, apache and other code. (#808147)
-  - Avoid another unbound alloca in vfprintf (#841318)
-  - Remove /etc/localtime.tzupdate in lua scriptlets
-  - Revert back to using posix.symlink as posix.link with a 3rd
-    argument isn't supported in the lua version embedded in rpm.
-  - Revert recent changes to res_send (804630, 835090).
-  - Fix memcpy args in res_send (#841787).
+- Revert patch for BZ696143, it made it impossible to use IPV6
+  addresses explicitly in getaddrinfo, which in turn broke
+  ssh, apache and other code. (#808147)
+- Avoid another unbound alloca in vfprintf (#841318)
+- Remove /etc/localtime.tzupdate in lua scriptlets
+- Revert back to using posix.symlink as posix.link with a 3rd
+  argument isn't supported in the lua version embedded in rpm.
+- Revert recent changes to res_send (804630, 835090).
+- Fix memcpy args in res_send (#841787).
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.16-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Thu Jul 5 2012 Jeff Law <law@redhat.com> - 2.16-2
-  - Use posix.link rather than posix.symlink in scriptlet to
-    update /etc/localtime (#837344).
+- Use posix.link rather than posix.symlink in scriptlet to
+  update /etc/localtime (#837344).
 
 * Mon Jul 2 2012 Jeff Law <law@redhat.com> - 2.16-1
-  - Resync with upstream glibc-2.16 release.
+- Resync with upstream glibc-2.16 release.
 
-* Fri Jun 21 2012 Jeff Law <law@redhat.com> - 2.15.90-16
-  - Resync with upstream sources, drop obsolete patch.
+* Fri Jun 22 2012 Jeff Law <law@redhat.com> - 2.15.90-16
+- Resync with upstream sources, drop obsolete patch.
 
 * Thu Jun 21 2012 Jeff Law <law@redhat.com> - 2.15.90-15
-  - Resync with upstream sources (#834447).
-  - Fix use-after-free in dcigettext.c (#816647).
+- Resync with upstream sources (#834447).
+- Fix use-after-free in dcigettext.c (#816647).
 
 * Fri Jun 15 2012 Jeff Law <law@redhat.com> - 2.15.90-14
-  - Resync with master.
+- Resync with master.
 
 * Thu Jun 14 2012 Jeff Law <law@redhat.com> - 2.15.90-13
-  - Delay setting DECIDED field in locale file structure until
-    we have read the file's data (#827510).
+- Delay setting DECIDED field in locale file structure until
+  we have read the file's data (#827510).
 
 * Mon Jun 11 2012 Dennis Gilmore <dennis@ausil.us> - 2.15.90-12
-  - actually apply the arm linker hack
+- actually apply the arm linker hack
 
 * Mon Jun 11 2012 Dennis Gilmore <dennis@ausil.us> - 2.15.90-11
-  - only deal with the arm linker compat hack on armhfp arches 
-  - armsfp arches do not have a linker change
-  - Backward compat hack for armhf binaries.
+- only deal with the arm linker compat hack on armhfp arches
+- armsfp arches do not have a linker change
+- Backward compat hack for armhf binaries.
 
 * Thu Jun  7 2012 Jeff Law <law@redhat.com> - 2.15.90-10
-  - Fix parsing of /etc/sysconfig/clock when ZONE has spaces. (#828291)
+- Fix parsing of /etc/sysconfig/clock when ZONE has spaces. (#828291)
 
 * Tue Jun  5 2012 Jeff Law <law@redhat.com> - 2.15.90-9
-  - Resync with upstream sources, drop unnecessary patches.
-  - Fix DoS in RPC implementation (#767693)
-  - Remove deprecated alpha support.
-  - Remove redundant hunk from patch. (#823905)
+- Resync with upstream sources, drop unnecessary patches.
+- Fix DoS in RPC implementation (#767693)
+- Remove deprecated alpha support.
+- Remove redundant hunk from patch. (#823905)
 
 * Fri Jun  1 2012 Patsy Franklin <patsy@redhat.com> - 2.15.90-8
-  - Fix iconv() segfault when the invalid multibyte character 0xffff is input
-    when converting from IBM930 (#823905)
+- Fix iconv() segfault when the invalid multibyte character 0xffff is input
+  when converting from IBM930 (#823905)
 
 * Fri Jun 1 2012 Jeff Law <law@redhat.com> - 2.15.90-7
-  - Resync with upstream sources.  (#827040)
+- Resync with upstream sources.  (#827040)
 
 * Thu May 31 2012 Patsy Franklin <patsy@redhat.com> - 2.15.90-6
-  - Fix fnmatch() when '*' wildcard is applied on a file name containing
+- Fix fnmatch() when '*' wildcard is applied on a file name containing
   multibyte chars. (#819430)
 
 * Wed May 30 2012  Jeff Law <law@redhat.com> - 2.15.90-5
-  - Resync with upstream sources, drop unnecessary patches.
+- Resync with upstream sources, drop unnecessary patches.
 
 * Tue May 29 2012  Jeff Law <law@redhat.com> - 2.15.90-4
-  - Build info files in the source dir, then move to objdir
-    to avoid multilib conflicts (#825061)
+- Build info files in the source dir, then move to objdir
+  to avoid multilib conflicts (#825061)
 
 * Fri May 25 2012  Jeff Law <law@redhat.com> - 2.15.90-3
-  - Work around RPM dropping the contents of /etc/localtime
-    when it turns into a symlink with %post common script (#825159).
+- Work around RPM dropping the contents of /etc/localtime
+  when it turns into a symlink with %post common script (#825159).
 
 * Wed May 23 2012  Jeff Law <law@redhat.com> - 2.15.90-2
-  - Fix option rotate when one IPV6 server is enabled (#804630)
-  - Reenable slow/uberslow path taps slowpow/slowexp.
+- Fix option rotate when one IPV6 server is enabled (#804630)
+- Reenable slow/uberslow path taps slowpow/slowexp.
 
 * Wed May 23 2012  Jeff Law <law@redhat.com> - 2.15.90-1
-  - Resync with upstream sources, drop unnecessary patches.
+- Resync with upstream sources, drop unnecessary patches.
 
 * Tue May 22 2012 Patsy Franklin <pfrankli@redhat.com> - 2.15-41
-  - Fix tzdata trigger (#822200)
-  - Make the symlink relative rather than linking into the buildroot (#822200).
-  - Changed /etc/localtime to a symlink. 8222000 (#822200)
+- Fix tzdata trigger (#822200)
+- Make the symlink relative rather than linking into the buildroot (#822200).
+- Changed /etc/localtime to a symlink. 8222000 (#822200)
 
 * Tue May 15 2012 Jeff Law <law@redhat.com> - 2.15-40
-  - Update to upstream patch for 806070 (#806070)
+- Update to upstream patch for 806070 (#806070)
 
 * Mon May 14 2012 Jeff Law <law@redhat.com> - 2.15-39
-  - Update upstream patch for AVX testing (#801650)
+- Update upstream patch for AVX testing (#801650)
 
 * Fri May 11 2012 Jeff Law <law@redhat.com> - 2.15-38
-  - Upstream patch to fix AVX testing (#801650)
+- Upstream patch to fix AVX testing (#801650)
 
 * Thu May 10 2012 Jeff Law <law@redhat.com> - 2.15-37
-  - Try again to fix AVX testing (#801650)
+- Try again to fix AVX testing (#801650)
 
 * Mon May 7 2012 Jeff Law <law@redhat.com> - 2.15-36
-  - Improve fortification disabled warning.
-  - Change location of dynamic linker for armhf.
+- Improve fortification disabled warning.
+- Change location of dynamic linker for armhf.
 
 * Mon Apr 30 2012 Jeff Law <law@redhat.com> - 2.15-35
-  - Implement context routines for ARM (#817276)
+- Implement context routines for ARM (#817276)
 
 * Fri Apr 13 2012 Jeff Law <law@redhat.com> - 2.15-34
-  - Issue a warning if FORTIFY_CHECKING is requested, but disabled.
+- Issue a warning if FORTIFY_CHECKING is requested, but disabled.
 
 * Thu Apr 12 2012 Jeff Law <law@redhat.com> - 2.15-33
-  - Fix another unbound alloca in nscd groups (#788989)
+- Fix another unbound alloca in nscd groups (#788989)
 
 * Tue Apr 3 2012 Jeff Law <law@redhat.com> - 2.15-32
-  - Fix first day of week for lv_LV (#682500)
+- Fix first day of week for lv_LV (#682500)
 
 * Mon Apr 2 2012 Jeff Law <law@redhat.com> - 2.15-31
-  - When retrying after main arena failure, always retry in a 
-    different arena. (#789238)
+- When retrying after main arena failure, always retry in a
+  different arena. (#789238)
 
 * Tue Mar 27 2012 Jeff Law <law@redhat.com> - 2.15-30
-  - Avoid unbound alloca usage in *-crypt routines (#804792)
-  - Fix data race in nscd (#806070)
+- Avoid unbound alloca usage in *-crypt routines (#804792)
+- Fix data race in nscd (#806070)
 
 * Fri Mar 23 2012 Jeff Law <law@redhat.com> - 2.15-29
-  - Fix typo in __nss_getent (#806403).
+- Fix typo in __nss_getent (#806403).
 
-* Wed Mar 13 2012 Jeff Law <law@redhat.com> - 2.15-28
-  - Add doi_IN, sat_IN and mni_IN to SUPPORTED locals (#803286)
-  - Add stap probes in slowpow and slowexp.
+* Wed Mar 14 2012 Jeff Law <law@redhat.com> - 2.15-28
+- Add doi_IN, sat_IN and mni_IN to SUPPORTED locals (#803286)
+- Add stap probes in slowpow and slowexp.
 
 * Fri Mar 09 2012 Jeff Law <law@redhat.com> - 2.15-27
-  - Fix AVX checks (#801650)
+- Fix AVX checks (#801650)
 
 * Wed Feb 29 2012 Jeff Law <law@redhat.com> - 2.15-26
-  - Set errno properly in vfprintf (#794797)
-  - Don't kill application when LD_PROFILE is set. (#800224)
+- Set errno properly in vfprintf (#794797)
+- Don't kill application when LD_PROFILE is set. (#800224)
 
 * Wed Feb 29 2012 Jeff Law <law@redhat.com> - 2.15-25
-  - Fix out of bounds memory access in resolver (#798471)
-  - Always mark vDSO as used (#758888)
+- Fix out of bounds memory access in resolver (#798471)
+- Always mark vDSO as used (#758888)
 
 * Fri Feb 24 2012 Jeff Law <law@redhat.com> - 2.15-24
-  - Fix bogus underflow (#760935)
-  - Correctly handle dns request where large numbers of A and AAA records
-    are returned (#795498)
-  - Fix nscd crash when group has many members (#788989)
- 
+- Fix bogus underflow (#760935)
+- Correctly handle dns request where large numbers of A and AAA records
+  are returned (#795498)
+- Fix nscd crash when group has many members (#788989)
+
 * Mon Feb 20 2012 Jeff Law <law@redhat.com> - 2.15-23
-  - Avoid "nargs" integer overflow which could be used to bypass FORTIFY_SOURCE (#794797)
+- Avoid "nargs" integer overflow which could be used to bypass FORTIFY_SOURCE (#794797)
 
 * Mon Feb 20 2012 Jeff Law <law@redhat.com> - 2.15-22
-  - Fix main arena locking in malloc/calloc retry path (#789238)
+- Fix main arena locking in malloc/calloc retry path (#789238)
 
 * Fri Feb 17 2012 Jeff Law <law@redhat.com> - 2.15-21
-  - Correctly identify all 127.x.y.z addresses (#739743)
-  - Don't assign native result if result has no associated interface (#739743)
+- Correctly identify all 127.x.y.z addresses (#739743)
+- Don't assign native result if result has no associated interface (#739743)
 
 * Fri Feb 17 2012 Jeff Law <law@redhat.com> - 2.15-20
-  - Ignore link-local IPV6 addresses for AI_ADDRCONFIG (#697149)
+- Ignore link-local IPV6 addresses for AI_ADDRCONFIG (#697149)
 
 * Fri Feb 17 2012 Jeff Law <law@redhat.com> - 2.15-19
-  - Fix reply buffer mismanagement in resolver (#730856)
+- Fix reply buffer mismanagement in resolver (#730856)
 
 * Thu Feb 16 2012 Jeff Law <law@redhat.com> - 2.15-18
-  - Revert 552960/769421 changes again, still causing problems.
-  - Add doi_IN (#791161)
-  - Add sat_IN (#790292)
-  - Add mni_IN (#790298)
+- Revert 552960/769421 changes again, still causing problems.
+- Add doi_IN (#791161)
+- Add sat_IN (#790292)
+- Add mni_IN (#790298)
 
-* Fri Feb 8 2012 Jeff Law <law@redhat.com> - 2.15-17
-  - Fix lost wakeups in pthread_cond_*.  (#552960, #769421)
-  - Clarify info page for snprintf (#564528)
-  - Fix first_weekday and first_workday for ru_UA (#624296)
+* Thu Feb 9 2012 Jeff Law <law@redhat.com> - 2.15-17
+- Fix lost wakeups in pthread_cond_*.  (#552960, #769421)
+- Clarify info page for snprintf (#564528)
+- Fix first_weekday and first_workday for ru_UA (#624296)
 
 * Tue Feb 7 2012 Jeff Law <law@redhat.com> - 2.15-16
-  - Fix currency_symbol for uk_UA (#789209)
-  - Fix weekday names in Kashmiri locale (#770439)
+- Fix currency_symbol for uk_UA (#789209)
+- Fix weekday names in Kashmiri locale (#770439)
 
 * Tue Feb 7 2012 Jeff Law <law@redhat.com> - 2.15-15
-  - Remove change for 787662, correct fix is in gcc.
+- Remove change for 787662, correct fix is in gcc.
 
 * Mon Feb 6 2012 Jeff Law <law@redhat.com> - 2.15-13
-  - More accurately detect if we're in a chroot (#688948)
+- More accurately detect if we're in a chroot (#688948)
 
 * Fri Feb 3 2012 Jeff Law <law@redhat.com> - 2.15-12
-  - Add fedfs to /etc/rpc (#691912)
-  - Run nscd in the foreground w/ syslogging, fix systemd config (#770869)
-  - Avoid mapping past end of shared object (#741105)
-  - Turn off -mno-minimal-toc on PPC (#787201)
-  - Remove hunk from glibc-rh657588.patch that didn't belong
+- Add fedfs to /etc/rpc (#691912)
+- Run nscd in the foreground w/ syslogging, fix systemd config (#770869)
+- Avoid mapping past end of shared object (#741105)
+- Turn off -mno-minimal-toc on PPC (#787201)
+- Remove hunk from glibc-rh657588.patch that didn't belong
 
 * Wed Feb 1 2012 Jeff Law <law@redhat.com> - 2.15-8
-  - Prevent erroneous inline optimization of initfini.s on PowerPC64 (#783979)
-  - Use upstream variant of fix for 740506.
-  - Fix month abbreviations for zh_CN (#657588)
+- Prevent erroneous inline optimization of initfini.s on PowerPC64 (#783979)
+- Use upstream variant of fix for 740506.
+- Fix month abbreviations for zh_CN (#657588)
 
 * Sun Jan 29 2012 Jeff Law <law@redhat.com> - 2.15-7
-  - Sort objects before relocations (sw#13618)
-  - Fix bogus sort code that was copied from dl-deps.c.
+- Sort objects before relocations (sw#13618)
+- Fix bogus sort code that was copied from dl-deps.c.
 
 * Thu Jan 26 2012 Jeff Law <law@redhat.com> - 2.15-6
-  - First argument to settimeofday can be null (#740682)
-  - Add aliases for ISO-10646-UCS-2 (#697421)
+- First argument to settimeofday can be null (#740682)
+- Add aliases for ISO-10646-UCS-2 (#697421)
 
 * Tue Jan 24 2012 Jeff Law <law@redhat.com> - 2.15-4
-  - Update ports from master.
-  - Fix first workday/weekday for it_IT (#622499)
-  - Fix type to uint16_t based on upstream comments (729661)
-  - Do not cache negative results in nscd if these are transient (#784402)
+- Update ports from master.
+- Fix first workday/weekday for it_IT (#622499)
+- Fix type to uint16_t based on upstream comments (729661)
+- Do not cache negative results in nscd if these are transient (#784402)
 
 * Mon Jan 23 2012 Jeff Law <law@redhat.com> - 2.15-3
-  - Fix cycle detection (#729661)
-  - Fix first workday/weekday for it_IT (#446078)
-  - Fix first workday/weekday for ca_ES (#454629)
+- Fix cycle detection (#729661)
+- Fix first workday/weekday for it_IT (#446078)
+- Fix first workday/weekday for ca_ES (#454629)
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.15-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Sun Jan 1 2012 Jeff Law <law@redhat.com> - 2.15-1.fc17
-  - Update from master (a316c1f)
+- Update from master (a316c1f)
 
 * Thu Dec 22 2011 Jeff Law <law@redhat.com> - 2.14.90-26.fc17
-  - Update from master (16c6f99)
-  - Fix typo in recent tzfile change (#769476)
-  - Make MALLOC_ARENA_MAX and MALLOC_ARENA_TEST match documentation (#740506)
-  - Revert "fix" to pthread_cond_wait (#769421)
-  - Extract patch for 730856 from fedora-patch into a distinct patchfile
+- Update from master (16c6f99)
+- Fix typo in recent tzfile change (#769476)
+- Make MALLOC_ARENA_MAX and MALLOC_ARENA_TEST match documentation (#740506)
+- Revert "fix" to pthread_cond_wait (#769421)
+- Extract patch for 730856 from fedora-patch into a distinct patchfile
 
 * Mon Dec 19 2011 Jeff Law <law@redhat.com> - 2.14.90-25.fc17
-  - Update from master (a4647e7).
+- Update from master (a4647e7).
 
 * Sun Dec 18 2011 Jeff Law <law@redhat.com> - 2.14.90-24.fc16.3
-  - Check values from TZ file header (#767696)
-  - Handle EAGAIN from FUTEX_WAIT_REQUEUE_PI (#552960)
-  - Add {dist}.#
-  - Correct return value from pthread_create when stack alloction fails.
-    (#767746)
+- Check values from TZ file header (#767696)
+- Handle EAGAIN from FUTEX_WAIT_REQUEUE_PI (#552960)
+- Add {dist}.#
+- Correct return value from pthread_create when stack alloction fails.
+  (#767746)
 
 * Wed Dec 7 2011 Jeff Law <law@redhat.com> - 2.14.90-23
-  - Fix a wrong constant in powerpc hypot implementation (#750811)
-    #13534 in python bug database
-    #13472 in glibc bug database
-  - Truncate time values in Linux futimes when falling back to utime
+- Fix a wrong constant in powerpc hypot implementation (#750811)
+  #13534 in python bug database
+  #13472 in glibc bug database
+- Truncate time values in Linux futimes when falling back to utime
 
 * Mon Dec 5 2011 Jeff Law <law@redhat.com> - 2.14.90-22
-  - Mark fortified __FD_ELT as extension (#761021)
-  - Fix typo in manual (#708455)
+- Mark fortified __FD_ELT as extension (#761021)
+- Fix typo in manual (#708455)
 
 * Wed Nov 30 2011 Jeff Law <law@redhat.com> - 2.14.90-21
-  - Don't fail in makedb if SELinux is disabled (#750858)
-  - Fix access after end of search string in regex matcher (#757887)
+- Don't fail in makedb if SELinux is disabled (#750858)
+- Fix access after end of search string in regex matcher (#757887)
 
 * Mon Nov 28 2011 Jeff Law <law@redhat.com> - 2.14.90-20
-  - Drop lock before calling malloc_printerr (#757881)
+- Drop lock before calling malloc_printerr (#757881)
 
 * Fri Nov 18 2011 Jeff Law <law@redhat.com> - 2.14.90-19
-  - Check malloc arena atomically  (BZ#13071)
-  - Don't call reused_arena when _int_new_arena failed (#753601)
-  
+- Check malloc arena atomically (BZ#13071)
+- Don't call reused_arena when _int_new_arena failed (#753601)
+
 * Wed Nov 16 2011 Jeff Law <law@redhat.com> - 2.14.90-18
-  - Fix grouping and reuse other locales in various locales (BZ#13147)
-  
+- Fix grouping and reuse other locales in various locales (BZ#13147)
+
 * Tue Nov 15 2011 Jeff Law <law@redhat.com> - 2.14.90-17
-  Revert bogus commits/rebasing of Nov 14, Nov 11 and Nov 8.  Sources
+- Revert bogus commits/rebasing of Nov 14, Nov 11 and Nov 8.  Sources
   should be equivalent to Fedora 16's initial release.
 
 * Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.14.90-15
@@ -1744,7 +2394,7 @@ rm -f *.filelist*
 - Fix more bugs in GB18030 charmap
 - Don't use gethostbyaddr to determine canonical name
 
-* Mon Jun 21 2011 Andreas Schwab <schwab@redhat.com> - 2.14-3
+* Tue Jun 21 2011 Andreas Schwab <schwab@redhat.com> - 2.14-3
 - Update from 2.14 branch
   - Fix typo in recent resolver change which causes segvs (#710279)
   - Fix memory leak in getaddrinfo (#712178)
@@ -2469,7 +3119,7 @@ rm -f *.filelist*
 * Thu Jul  2 2009 Andreas Schwab <aschwab@redhat.com> 2.10.90-2
 - Update from master.
 
-* Thu Jun 26 2009 Andreas Schwab <aschwab@redhat.com> 2.10.90-1
+* Fri Jun 26 2009 Andreas Schwab <aschwab@redhat.com> 2.10.90-1
 - Update from master.
 - Enable multi-arch support on x86/x86-64.
 - Add requires glibc-headers to glibc-devel (#476295).
@@ -3157,7 +3807,7 @@ rm -f *.filelist*
 - fix l{,l}rint{,f,l} around zero (BZ#2592)
 - avoid stack trampoline in s390{,x} makecontext
 
-* Tue Sep 15 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-33
+* Tue Sep 19 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-33
 - fix dlclose (#206639)
 - don't load platform optimized libraries if kernel doesn't set
   AT_PLATFORM
@@ -3260,7 +3910,7 @@ rm -f *.filelist*
 - disallow RTLD_GLOBAL flag for dlmopen in secondary namespaces (#197462)
 - PI mutex support
 
-* Tue Jul 10 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-13
+* Mon Jul 10 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-13
 - DT_GNU_HASH support
 
 * Fri Jun 30 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-12
@@ -3709,7 +4359,7 @@ rm -f *.filelist*
   - grok PT_NOTE in vDSO for kernel version and extra hwcap dirs,
     support "hwcap" keyword in ld.so.conf files
 
-* Tue Apr  4 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-21
+* Tue Apr  5 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-21
 - update from CVS
   - fix xdr_rmtcall_args on 64-bit arches (#151686)
 - fix <pthread.h> and <bits/libc-lock.h> with -std=c89 -fexceptions (#153774)
@@ -4213,7 +4863,7 @@ rm -f *.filelist*
 - use atomic instructions even in i386 nscd on i486+ CPUs
   (conditionally)
 
-* Sat Sep  3 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-49
+* Fri Sep  3 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-49
 - update from CVS
 - fix linuxthreads tst-cancel{[45],-static}
 
@@ -4418,7 +5068,7 @@ rm -f *.filelist*
   - fix pthread_getattr_np guardsize reporting in NPTL
 - report PLT relocations in ld.so and libc.so during the build
 
-* Fri Mar 25 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-20
+* Thu Mar 25 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-20
 - update from CVS
   - change NPTL PTHREAD_MUTEX_ADAPTIVE_NP mutexes to spin on SMP
   - strtol speed optimization
@@ -4701,7 +5351,7 @@ rm -f *.filelist*
   ld.so and NPTL (on IA-32 also FLOATING_STACKS linuxthreads) libraries
   and tests
 
-* Tue Aug 25 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-78
+* Mon Aug 25 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-78
 - include dl-osinfo.h only in glibc-debuginfo-2*.rpm, not
   in glibc-debuginfo-common*
 
@@ -4842,7 +5492,7 @@ rm -f *.filelist*
 - don't prelink -R libc.so on any architecture, it prohibits
   address randomization
 
-* Fri Jun  5 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-48
+* Thu Jun  5 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-48
 - update from CVS
   - fix IA-64 NPTL build
 
@@ -4856,10 +5506,10 @@ rm -f *.filelist*
 - enable NPTL on AMD64
 - avoid using trampolines in localedef
 
-* Fri May 29 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-45
+* Thu May 29 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-45
 - enable NPTL on IA-64
 
-* Fri May 29 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-44
+* Thu May 29 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-44
 - update from CVS
 - enable NPTL on s390 and s390x
 - make __init_array_start etc. symbols in elf-init.oS hidden undefined
@@ -5039,7 +5689,7 @@ rm -f *.filelist*
 - fix TLS IE/LE model handling in dlopened libraries
   on TCB_AT_TP arches
 
-* Thu Feb 25 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-5
+* Tue Feb 25 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-5
 - update from CVS
 
 * Tue Feb 25 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-4
@@ -5576,7 +6226,7 @@ rm -f *.filelist*
 - disable autoreq in glibc-debug
 - readd %%lang() to locale files
 
-* Fri Feb  7 2002 Jakub Jelinek <jakub@redhat.com> 2.2.90-4
+* Thu Feb  7 2002 Jakub Jelinek <jakub@redhat.com> 2.2.90-4
 - update to CVS
 - move glibc private symbols to GLIBC_PRIVATE symbol version
 

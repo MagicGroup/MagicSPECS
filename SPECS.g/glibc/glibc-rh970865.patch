@@ -1,0 +1,24 @@
+diff -pruN glibc-2.18/rtkaio/tst-aiod2.c glibc-2.18.new/rtkaio/tst-aiod2.c
+--- glibc-2.18/rtkaio/tst-aiod2.c	2013-08-22 14:53:31.326806349 +0530
++++ glibc-2.18.new/rtkaio/tst-aiod2.c	2013-08-22 14:53:05.474807462 +0530
+@@ -25,7 +25,7 @@
+ #include <unistd.h>
+ #include <errno.h>
+ #include "tst-aiod.h"
+-
++#include <pthread.h>
+ 
+ static pthread_barrier_t b;
+ 
+diff -pruN glibc-2.18/rtkaio/tst-aiod3.c glibc-2.18.new/rtkaio/tst-aiod3.c
+--- glibc-2.18/rtkaio/tst-aiod3.c	2013-08-22 14:53:31.326806349 +0530
++++ glibc-2.18.new/rtkaio/tst-aiod3.c	2013-08-22 14:53:12.796807147 +0530
+@@ -24,7 +24,7 @@
+ #include <unistd.h>
+ #include <errno.h>
+ #include "tst-aiod.h"
+-
++#include <pthread.h>
+ 
+ static pthread_barrier_t b;
+ 
