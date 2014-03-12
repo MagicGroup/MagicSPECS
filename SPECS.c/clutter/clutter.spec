@@ -1,30 +1,38 @@
+%global _changelog_trimtime %(date +%s -d "1 year ago")
+
 %if 0%{?fedora}
 %global with_wayland 1
 %endif
 
 Name:          clutter
-Version:       1.14.0
+Version:       1.17.4
 Release:       1%{?dist}
 Summary:       Open Source software library for creating rich graphical user interfaces
 
 Group:         Development/Libraries
 License:       LGPLv2+
 URL:           http://www.clutter-project.org/
-Source0:       http://download.gnome.org/sources/clutter/1.14/clutter-%{version}.tar.xz
+Source0:       http://download.gnome.org/sources/clutter/1.17/clutter-%{version}.tar.xz
+Patch0: clutter-1.16.0-fix-evdev-touchpad.patch
 
 BuildRequires: glib2-devel mesa-libGL-devel pkgconfig pango-devel
 BuildRequires: cairo-gobject-devel gdk-pixbuf2-devel atk-devel
-BuildRequires: cogl-devel >= 1.14.0
+BuildRequires: cogl-devel >= 1.15.1
 BuildRequires: gobject-introspection-devel >= 0.9.6
 BuildRequires: gtk3-devel
 BuildRequires: json-glib-devel >= 0.12.0
 BuildRequires: libXcomposite-devel
 BuildRequires: libXdamage-devel
 BuildRequires: libXi-devel
+BuildRequires: libevdev-devel
+# Temporary for autoreconf
+BuildRequires: gettext-devel
 Requires:      gobject-introspection
 %if %{with_wayland}
+BuildRequires: libgudev1-devel
 BuildRequires: libwayland-client-devel
 BuildRequires: libwayland-cursor-devel
+BuildRequires: libwayland-server-devel
 BuildRequires: libxkbcommon-devel
 %endif
 
@@ -74,14 +82,21 @@ This package contains documentation for clutter.
 
 %prep
 %setup -q
+%patch0 -p1 -b .touch
 
 %build
+# needed for patch1, autogen.sh is not enough due to divergent autoconf
+# versions at present - adamw 2013/12
+autoreconf -i
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; CONFIGFLAGS=--enable-gtk-doc; fi;
  %configure $CONFIGFLAGS \
 	--enable-xinput \
         --enable-gdk-backend \
 %if %{with_wayland}
+        --enable-egl-backend \
+        --enable-evdev-input \
         --enable-wayland-backend \
+        --enable-wayland-compositor \
 %endif
  # clutter git ships with some magic to put the git log in shipped tarballs
  # which gets listed in files; don't blow up if it's missing
@@ -122,6 +137,78 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/cally
 
 %changelog
+* Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 1.17.4-1
+- Update to 1.17.4
+
+* Sun Feb 09 2014 Peter Hutterer <peter.hutterer@redhat.com> - 1.17.2-2
+- Rebuild for libevdev soname bump
+
+* Wed Feb 05 2014 Richard Hughes <rhughes@redhat.com> - 1.17.2-1
+- Update to 1.17.2
+
+* Wed Jan 29 2014 Richard Hughes <rhughes@redhat.com> - 1.16.4-1
+- Update to 1.16.4
+
+* Thu Dec 26 2013 Adam Williamson <awilliam@redhat.com> - 1.16.2-4
+- backport upstream patch to stop using deprecated libevdev functions
+
+* Mon Dec  9 2013 Matthias Clasen <mclasen@redhat.com> - 1.16.2-3
+- A followup fix to the previous changes
+
+* Tue Nov 26 2013 Matthias Clasen <mclasen@redhat.com> - 1.16.2-2
+- Avoid excessive redraws when windows are moved in gnome-shell
+
+* Thu Nov 21 2013 Richard Hughes <rhughes@redhat.com> - 1.16.2-1
+- Update to 1.16.2
+
+* Mon Oct 07 2013 Adam Jackson <ajax@redhat.com> 1.16.0-2
+- Fix touchpads to not warp to bizarre places on initial touch.
+
+* Tue Sep 24 2013 Kalev Lember <kalevlember@gmail.com> - 1.16.0-1
+- Update to 1.16.0
+
+* Fri Sep 20 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.96-1
+- Update to 1.15.96
+
+* Fri Sep 20 2013 Matthias Clasen <mclasen@redhat.com> - 1.15.94-2
+- Fix a shell crash
+
+* Thu Sep 19 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.94-1
+- Update to 1.15.94
+
+* Thu Sep 12 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.92-3
+- Add missing build deps
+
+* Thu Sep 12 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.92-2
+- Add configure options that are needed to enable the gnome-shell
+  Wayland compositor
+
+* Tue Sep 03 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.92-1
+- Update to 1.15.92
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.90-1
+- Update to 1.15.90
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 1.15.2-1
+- Update to 1.15.2
+- Dropped upstream patches
+- Backport patches for wayland / cogl 1.15.4 API changes
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.14.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jun 23 2013 Matthias Clasen <mclasen@redhat.com> - 1.14.4-3
+- Backport another upstream patch for gnome-shell crashes (#954054)
+
+* Fri May 17 2013 Kalev Lember <kalevlember@gmail.com> - 1.14.4-2
+- Backport an upstream patch for frequent gnome-shell crashes (#827158)
+
+* Wed May 15 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.14.4-1
+- Update to 1.14.4
+
+* Wed Apr 17 2013 Richard Hughes <rhughes@redhat.com> - 1.14.2-1
+- Update to 1.14.2
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 1.14.0-1
 - Update to 1.14.0
 

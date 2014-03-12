@@ -1,0 +1,38 @@
+diff -up clutter-1.16.0/clutter/evdev/clutter-device-manager-evdev.c.jx clutter-1.16.0/clutter/evdev/clutter-device-manager-evdev.c
+--- clutter-1.16.0/clutter/evdev/clutter-device-manager-evdev.c.jx	2013-09-22 13:22:30.000000000 -0400
++++ clutter-1.16.0/clutter/evdev/clutter-device-manager-evdev.c	2013-10-07 16:48:28.232916813 -0400
+@@ -535,11 +535,6 @@ dispatch_one_event (ClutterEventSource *
+       else if (e->code == BTN_TOOL_FINGER && e->value != AUTOREPEAT_VALUE)
+ 	{
+ 	  source->touching = e->value;
+-	  if (e->value)
+-	    {
+-	      source->last_x = source->cur_x;
+-	      source->last_y = source->cur_y;
+-	    }
+ 	}
+       else
+ 	{
+@@ -580,6 +575,22 @@ dispatch_one_event (ClutterEventSource *
+       break;
+ 
+     case EV_ABS:
++      /* first touch is magic */
++      if (source->touching == 1)
++        {
++	  switch (e->code)
++	    {
++	    case ABS_X:
++	      source->last_x = source->cur_x = e->value;
++	      break;
++	    case ABS_Y:
++	      source->last_y = source->cur_y = e->value;
++	      source->touching = 2; /* note, assumes delivery order... */
++	      break;
++	    }
++	  break;
++	}
++
+       switch (e->code)
+ 	{
+ 	case ABS_X:
