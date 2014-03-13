@@ -1,23 +1,25 @@
-Summary: Images for components included in Fedora
+Summary: Images for package groups
 Name: comps-extras
-Version: 20
-Release: 4%{?dist}
+Version: 23
+Release: 1%{?dist}
 URL: http://git.fedorahosted.org/git/?p=comps-extras.git;a=summary
 Source0: http://fedorahosted.org/releases/c/o/comps-extras/%{name}-%{version}.tar.gz
 # while GPL isn't normal for images, it is the case here
 # No version specified.
-# KDE logo is LGPL
+# KDE logo is LGPLv2+
 # LXDE logo is GPLv2+
+# MATE logo is GPLv2+
+# Cinnamon logo is GPLv3
 # Haskell logo is a variation on MIT/X11
 # Sugar and Ruby logos are CC-BY-SA
 # See COPYING for more details
-License: GPL+ and LGPL+ and GPLv2+ and CC-BY-SA and MIT
+License: GPL+ and LGPLv2+ and GPLv2+ and GPLv3 and CC-BY-SA and MIT
 Group: Applications/System
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 %description
-This package contains images for the components included in Fedora.
+This package contains images for the components included in this distribution.
 
 %prep
 %setup -q
@@ -39,11 +41,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/comps/*
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 20-4
-- 为 Magic 3.0 重建
+* Fri Oct  4 2013 Bill Nottingham <notting@redhat.com> - 23-1
+- add Cinnamon logo (#1015319)
 
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+* Thu Oct  3 2013 Bill Nottingham <notting@redhat.com> - 22-1
+- add MATE logo (#1014275)
+- de-Fedora-ize spec file
+
+* Fri Dec  7 2012 Bill Nottingham <notting@redhat.com> - 21-1
+- add icons for toplevel environments and a couple of apps
 
 * Fri Apr 23 2010 Bill Nottingham <notting@redhat.com> - 20-1
 - update haskell icon (#583868)
