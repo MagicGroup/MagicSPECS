@@ -11,15 +11,16 @@
 %bcond_without rdma
 %endif
 %bcond_without systemd
+%bcond_with upstart
 %bcond_without xmlconf
-%bcond_with runautogen
+%bcond_without runautogen
 
 %global gitver %{?numcomm:.%{numcomm}}%{?alphatag:.%{alphatag}}%{?dirty:.%{dirty}}
 %global gittarver %{?numcomm:.%{numcomm}}%{?alphatag:-%{alphatag}}%{?dirty:-%{dirty}}
 
 Name: corosync
 Summary: The Corosync Cluster Engine and Application Programming Interfaces
-Version: 2.3.0
+Version: 2.3.3
 Release: 1%{?gitver}%{?dist}
 License: BSD
 Group: System Environment/Base
@@ -106,11 +107,15 @@ export rdmacm_LIBS=-lrdmacm \
 %if %{with systemd}
 	--enable-systemd \
 %endif
+%if %{with upstart}
+	--enable-upstart \
+%endif
 %if %{with xmlconf}
 	--enable-xmlconf \
 %endif
 	--with-initddir=%{_initrddir} \
-	--with-systemddir=%{_unitdir}
+	--with-systemddir=%{_unitdir} \
+	--with-upstartdir=%{_sysconfdir}/init
 
 make %{_smp_mflags}
 
@@ -130,6 +135,10 @@ rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/*.la
 # drop docs and html docs for now
 rm -rf %{buildroot}%{_docdir}/*
+# /etc/sysconfig/corosync-notifyd
+mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
+install -m 644 tools/corosync-notifyd.sysconfig.example \
+   %{buildroot}%{_sysconfdir}/sysconfig/corosync-notifyd
 
 %clean
 rm -rf %{buildroot}
@@ -177,7 +186,7 @@ fi
 %{_bindir}/corosync-xmlproc
 %config(noreplace) %{_sysconfdir}/corosync/corosync.xml.example
 %dir %{_datadir}/corosync
-%dir %{_datadir}/corosync/xml2conf.xsl
+%{_datadir}/corosync/xml2conf.xsl
 %{_mandir}/man8/corosync-xmlproc.8*
 %{_mandir}/man5/corosync.xml.5*
 %endif
@@ -185,6 +194,7 @@ fi
 %dir %{_sysconfdir}/corosync/uidgid.d
 %config(noreplace) %{_sysconfdir}/corosync/corosync.conf.example
 %config(noreplace) %{_sysconfdir}/corosync/corosync.conf.example.udpu
+%config(noreplace) %{_sysconfdir}/sysconfig/corosync-notifyd
 %if %{with dbus}
 %{_sysconfdir}/dbus-1/system.d/corosync-signals.conf
 %endif
@@ -200,6 +210,10 @@ fi
 %else
 %{_initrddir}/corosync
 %{_initrddir}/corosync-notifyd
+%endif
+%if %{with upstart}
+%{_sysconfdir}/init/corosync.conf
+%{_sysconfdir}/init/corosync-notifyd.conf
 %endif
 %dir %{_localstatedir}/lib/corosync
 %dir %{_localstatedir}/log/cluster
@@ -317,6 +331,33 @@ The Corosync Cluster Engine APIs.
 %{_mandir}/man8/quorum_overview.8*
 
 %changelog
+* Tue Jan 14 2014 Jan Friesse <jfriesse@redhat.com> - 2.3.3-1
+- New upstream release
+
+* Mon Sep 16 2013 Jan Friesse <jfriesse@redhat.com> - 2.3.2-1
+- New upstream release
+
+* Mon Aug 19 2013 Jan Friesse <jfriesse@redhat.com> 2.3.1-3
+- Resolves: rhbz#998362
+
+- Fix scheduler pause-detection timeout (rhbz#998362)
+- merge upstream commit 2740cfd1eac60714601c74df2137fe588b607866 (rhbz#998362)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 10 2013 Jan Friesse <jfriesse@redhat.com> - 2.3.1-1
+- New upstream release
+- Fix incorrect dates in specfile changelog section
+
+* Mon Mar 25 2013 Jan Friesse <jfriesse@redhat.com> - 2.3.0-3
+- Resolves: rhbz#925185
+
+- Run autogen by default
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Fri Jan 18 2013 Jan Friesse <jfriesse@redhat.com> - 2.3.0-1
 - New upstream release
 
@@ -332,7 +373,7 @@ The Corosync Cluster Engine APIs.
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Tue May 12 2012 Jan Friesse <jfriesse@redhat.com> - 2.0.1-1
+* Tue May 22 2012 Jan Friesse <jfriesse@redhat.com> - 2.0.1-1
 - New upstream release
 
 * Tue Apr 17 2012 Fabio M. Di Nitto <fdinitto@redhat.com> - 2.0.0-2
@@ -378,13 +419,13 @@ The Corosync Cluster Engine APIs.
 - New upstream release
 - Temporary disable xml config (broken upstream tarball)
 
-* Wed Jan 24 2012 Jan Friesse <jfriesse@redhat.com> - 1.99.0-1
+* Tue Jan 24 2012 Jan Friesse <jfriesse@redhat.com> - 1.99.0-1
 - New upstream release
 
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Wed Oct 06 2011 Jan Friesse <jfriesse@redhat.com> - 1.4.2-1
+* Thu Oct 06 2011 Jan Friesse <jfriesse@redhat.com> - 1.4.2-1
 - New upstream release
 
 * Thu Sep 08 2011 Jan Friesse <jfriesse@redhat.com> - 1.4.1-2
@@ -396,7 +437,7 @@ The Corosync Cluster Engine APIs.
 * Wed Jul 20 2011 Jan Friesse <jfriesse@redhat.com> - 1.4.0-2
 - Change attributes of cluster log directory
 
-* Wed Jul 19 2011 Jan Friesse <jfriesse@redhat.com> - 1.4.0-1
+* Tue Jul 19 2011 Jan Friesse <jfriesse@redhat.com> - 1.4.0-1
 - New upstream release
 - Resync spec file with upstream changes
 
@@ -595,7 +636,7 @@ The Corosync Cluster Engine APIs.
 * Mon Oct 13 2008 Dennis Gilmore <dennis@ausil.us> - 0.92-3
 - remove ExclusiveArch line
 
-* Fri Sep 24 2008 Steven Dake <sdake@redhat.com> - 0.92-2
+* Wed Sep 24 2008 Steven Dake <sdake@redhat.com> - 0.92-2
 - Add conflicts for openais and openais-devel packages older then 0.90.
 
 * Wed Sep 24 2008 Steven Dake <sdake@redhat.com> - 0.92-1
