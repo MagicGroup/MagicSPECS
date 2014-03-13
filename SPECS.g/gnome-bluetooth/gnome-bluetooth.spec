@@ -1,13 +1,13 @@
 Name:		gnome-bluetooth
 Epoch:		1
-Version:	3.8.0
+Version:	3.11.3
 Release:	1%{?dist}
 Summary:	Bluetooth graphical utilities
 
 Group:		Applications/Communications
 License:	GPLv2+
 URL:		http://live.gnome.org/GnomeBluetooth
-Source0:	http://download.gnome.org/sources/gnome-bluetooth/3.8/gnome-bluetooth-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-bluetooth/3.11/gnome-bluetooth-%{version}.tar.xz
 Source1:	61-gnome-bluetooth-rfkill.rules
 
 %if 0%{?rhel}
@@ -19,6 +19,7 @@ BuildRequires:	dbus-glib-devel
 
 BuildRequires:	intltool desktop-file-utils gettext gtk-doc
 BuildRequires:	itstool
+BuildRequires:	systemd-devel
 
 BuildRequires:	gobject-introspection-devel
 
@@ -29,10 +30,8 @@ Obsoletes:	bluez-gnome <= 1.8
 
 # Otherwise we might end up with mismatching version
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-Requires:	bluez >= 4.42
+Requires:	bluez >= 5.0
 %ifnarch s390 s390x
-Requires:	gvfs-obexftp
-Requires:	obexd
 Requires:	pulseaudio-module-bluetooth
 %endif
 
@@ -98,10 +97,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %postun
 update-desktop-database &>/dev/null || :
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
-if [ $1 -eq 0 ] ; then
-	touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-	gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
 
 %post libs
 /sbin/ldconfig
@@ -120,11 +115,6 @@ fi
 %files
 %doc README NEWS COPYING
 %{_bindir}/bluetooth-sendto
-%{_bindir}/bluetooth-wizard
-%dir %{_libdir}/gnome-bluetooth/
-%{_libdir}/gnome-bluetooth/GnomeBluetoothApplet-1.0.typelib
-%{_libdir}/gnome-bluetooth/libgnome-bluetooth-applet.so.*
-%{_libdir}/gnome-bluetooth/plugins/
 %{_datadir}/applications/*.desktop
 %{_datadir}/gnome-bluetooth/
 %{_mandir}/man1/*
@@ -139,7 +129,6 @@ fi
 
 %files libs-devel
 %{_includedir}/gnome-bluetooth/
-%{_libdir}/gnome-bluetooth/libgnome-bluetooth-applet.so
 %{_libdir}/libgnome-bluetooth.so
 %{_libdir}/libgnome-bluetooth.la
 %{_libdir}/pkgconfig/gnome-bluetooth-1.0.pc
@@ -147,6 +136,36 @@ fi
 %{_datadir}/gtk-doc
 
 %changelog
+* Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 1:3.11.3-1
+- Update to 3.11.3
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.10.0-1
+- Update to 3.10.0
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.91-2
+- Drop the dep on gvfs-obexftp
+
+* Tue Sep 10 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.91-1
+- Update to 3.9.91
+
+* Sun Aug 18 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.3-4
+- Drop an obsolete dep on obexd
+
+* Wed Aug 14 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.3-3
+- Require bluez >= 5.0
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.9.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 21 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.3-1
+- Update to 3.9.3
+
+* Mon Jun 03 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.8.1-1
+- Update to 3.8.1
+
+* Fri May 10 2013 Adam Williamson <awilliam@redhat.com>
+- no reason to update icon cache in %postun of main package *and* libs
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.8.0-1
 - Update to 3.8.0
 
