@@ -2,8 +2,8 @@
 %global priority 90
 
 Name:           vala
-Version:        0.23.2
-Release:        1%{?dist}
+Version:        0.23.3
+Release:        2%{?dist}
 Summary:        A modern programming language for GNOME
 
 # Most files are LGPLv2.1+, curses.vapi is 2-clause BSD
@@ -224,7 +224,7 @@ done
 
 
 %files
-%doc AUTHORS ChangeLog COPYING MAINTAINERS NEWS README THANKS
+%doc AUTHORS COPYING MAINTAINERS NEWS README THANKS
 %ghost %{_bindir}/vala
 %ghost %{_bindir}/valac
 %{_bindir}/vala-%{api_ver}
@@ -243,7 +243,6 @@ done
 %{_libdir}/pkgconfig/libvala-%{api_ver}.pc
 # directory owned by filesystem
 %{_datadir}/aclocal/vala.m4
-%{_datadir}/vala/Makefile.vapigen
 
 %files tools
 %ghost %{_bindir}/vala-gen-introspect
@@ -255,6 +254,7 @@ done
 %{_libdir}/vala-%{api_ver}
 %{_datadir}/aclocal/vapigen.m4
 %{_datadir}/pkgconfig/vapigen*.pc
+%{_datadir}/vala/Makefile.vapigen
 %ghost %{_mandir}/man1/vala-gen-introspect.1.gz
 %ghost %{_mandir}/man1/vapigen.1.gz
 %{_mandir}/man1/vala-gen-introspect-%{api_ver}.1.gz
@@ -274,6 +274,13 @@ done
 
 
 %changelog
+* Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 0.23.3-2
+- Move Makefile.vapigen to the -tools subpackage (#1030543)
+- Don't ship huge ChangeLog file
+
+* Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 0.23.3-1
+- Update to 0.23.3
+
 * Wed Feb 05 2014 Richard Hughes <rhughes@redhat.com> - 0.23.2-1
 - Update to 0.23.2
 
