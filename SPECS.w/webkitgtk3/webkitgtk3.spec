@@ -2,11 +2,11 @@
 ## "LICENSE") so this short macro allows us to distinguish them by using their
 ## directory names (from the source tree) as prefixes for the files.
 %global         add_to_doc_files()      \
-        mkdir -p %{buildroot}%{_docdir}/%{name}-%{version} ||: ; \
-        cp -p %1  %{buildroot}%{_docdir}/%{name}-%{version}/$(echo '%1' | sed -e 's!/!.!g')
+        mkdir -p %{buildroot}%{_pkgdocdir} ||: ; \
+        cp -p %1  %{buildroot}%{_pkgdocdir}/$(echo '%1' | sed -e 's!/!.!g')
 
 Name:           webkitgtk3
-Version:        1.11.2
+Version:        2.3.90
 Release:        3%{?dist}
 Summary:        GTK+ Web content engine library
 
@@ -16,54 +16,47 @@ URL:            http://www.webkitgtk.org/
 
 Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
-Patch1:         webkit-1.3.4-no-execmem.patch
-Patch2:         webkit-1.1.14-nspluginwrapper.patch
-# Explicitly link with -lrt
-# https://bugs.webkit.org/show_bug.cgi?id=103194
-Patch3:         webkitgtk-librt.patch
-# workarounds for non-JIT arches
-# https://bugs.webkit.org/show_bug.cgi?id=104270
-Patch4:         webkit-1.11.2-yarr.patch
-# https://bugs.webkit.org/show_bug.cgi?id=105295
-Patch5:         webkit-1.11.2-includes.patch
+Patch0:         webkit-1.1.14-nspluginwrapper.patch
 # https://bugs.webkit.org/show_bug.cgi?id=103128
-Patch6:         webkit-1.11.2-Double2Ints.patch
+Patch4:         webkit-2.1.90-double2intsPPC32.patch
+Patch9:         webkitgtk-2.3.2-libatomic.patch
+Patch10:        webkitgtk-aarch64.patch
 
-Patch7:         webkitgtk-1.11.2-mips64-fix.patch
-
+BuildRequires:  at-spi2-core-devel
 BuildRequires:  bison
+BuildRequires:  cairo-devel
 BuildRequires:  chrpath
 BuildRequires:  enchant-devel
 BuildRequires:  flex
+BuildRequires:  fontconfig-devel >= 2.5
+BuildRequires:  freetype-devel
 BuildRequires:  geoclue-devel
 BuildRequires:  gettext
 BuildRequires:  gperf
 BuildRequires:  gstreamer1-devel
 BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  gtk2-devel
-BuildRequires:  gtk3-devel >= 3.0
+BuildRequires:  gtk3-devel >= 3.6
 BuildRequires:  gtk-doc
-BuildRequires:  libsoup-devel >= 2.37.2.1
+BuildRequires:  glib2-devel >= 2.36.0
+BuildRequires:  harfbuzz-devel
+BuildRequires:  libsoup-devel >= 2.42.0
 BuildRequires:  libicu-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  libpng-devel
 BuildRequires:  libsecret-devel
+BuildRequires:  libwebp-devel
 BuildRequires:  libxslt-devel
 BuildRequires:  libXt-devel
 BuildRequires:  pcre-devel
 BuildRequires:  sqlite-devel
-BuildRequires:  gobject-introspection-devel
+BuildRequires:  gobject-introspection-devel >= 1.32.0
 BuildRequires:  perl-Switch
 BuildRequires:  ruby
 BuildRequires:  mesa-libGL-devel
 
-## Conditional dependencies...
-%if %{with pango}
-BuildRequires:  pango-devel
-%else
-BuildRequires:  cairo-devel
-BuildRequires:  fontconfig-devel
-BuildRequires:  freetype-devel
+%ifarch ppc
+BuildRequires:  libatomic
 %endif
 
 %description
@@ -72,12 +65,19 @@ GTK+ platform.
 
 This package contains WebKitGTK+ for GTK+ 3.
 
+%package -n     libwebkit2gtk
+Summary:        The libwebkit2gtk library
+Group:          Development/Libraries
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description -n libwebkit2gtk
+The libwebkit2gtk package contains the libwebkit2gtk library
+that is part of %{name}.
+
 %package        devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
-Requires:       pkgconfig
-Requires:       gtk3-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries, build data, and header
@@ -94,37 +94,36 @@ This package contains developer documentation for %{name}.
 
 %prep
 %setup -qn "webkitgtk-%{version}"
-# tbzatek - doesn't apply, is this fixed?
-# %patch1 -p1 -b .no-execmem
-%patch2 -p1 -b .nspluginwrapper
-%patch3 -p1 -b .librt
-%patch4 -p1 -b .yarr
-%patch5 -p1 -b .includes
-%patch6 -p1 -b .double2ints
-%patch7 -p1 -b .mips64
-
-# For patch3
-autoreconf --verbose --install -I Source/autotools
+%patch0 -p1 -b .nspluginwrapper
+%ifarch ppc s390
+%patch4 -p1 -b .double2intsPPC32
+%endif
+%ifarch ppc
+#patch9 -p1 -b .libatomic
+%endif
+%patch10 -p1 -b .aarch64
 
 %build
-%ifarch s390 %{arm} ppc
-# Use linker flags to reduce memory consumption on low-mem architectures
+# Use linker flags to reduce memory consumption
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
-%endif
-%ifarch s390 s390x
+
+%ifarch s390 %{arm}
 # Decrease debuginfo verbosity to reduce memory consumption even more
-%global optflags %(echo %{optflags} | sed 's/-g/-g1/')
+%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
 
-# Build with -g1 on all platforms to avoid running into 4 GB ar format limit
-# https://bugs.webkit.org/show_bug.cgi?id=91154
-%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
+%ifarch ppc
+# Use linker flag -relax to get WebKit2 build under ppc(32) with JIT disabled
+%global optflags %{optflags} -Wl,-relax -latomic
+%endif
 
-# explicitly disable JIT on ARM https://bugs.webkit.org/show_bug.cgi?id=85076
-CFLAGS="%{optflags} -DLIBSOUP_I_HAVE_READ_BUG_594377_AND_KNOW_SOUP_PASSWORD_MANAGER_MIGHT_GO_AWAY" %configure                                                   \
-                        --with-gstreamer=1.0                    \
+%ifarch s390 s390x ppc ppc64
+%global optflags %{optflags} -DENABLE_YARR_JIT=0
+%endif
+
+%configure                                                      \
                         --with-gtk=3.0                          \
-%ifarch %{arm} s390 s390x ppc ppc64 mips64el
+%ifarch s390 s390x ppc ppc64 aarch64
                         --disable-jit                           \
 %else
                         --enable-jit                            \
@@ -135,8 +134,10 @@ mkdir -p DerivedSources/webkit
 mkdir -p DerivedSources/WebCore
 mkdir -p DerivedSources/ANGLE
 mkdir -p DerivedSources/WebKit2
+mkdir -p DerivedSources/webkitdom/
 mkdir -p DerivedSources/InjectedBundle
-%define _smp_mflags -j1
+mkdir -p DerivedSources/Platform
+
 make %{_smp_mflags} V=1
 
 %install
@@ -144,21 +145,24 @@ make install DESTDIR=%{buildroot}
 
 install -d -m 755 %{buildroot}%{_libexecdir}/%{name}
 install -m 755 Programs/GtkLauncher %{buildroot}%{_libexecdir}/%{name}
+install -m 755 Programs/MiniBrowser %{buildroot}%{_libexecdir}/%{name}
 
 # Remove lib64 rpaths
 chrpath --delete %{buildroot}%{_bindir}/jsc-3
 chrpath --delete %{buildroot}%{_libdir}/libwebkitgtk-3.0.so
 chrpath --delete %{buildroot}%{_libdir}/libwebkit2gtk-3.0.so
 chrpath --delete %{buildroot}%{_libexecdir}/%{name}/GtkLauncher
+chrpath --delete %{buildroot}%{_libexecdir}/%{name}/MiniBrowser
 chrpath --delete %{buildroot}%{_libexecdir}/WebKitPluginProcess
 chrpath --delete %{buildroot}%{_libexecdir}/WebKitWebProcess
 
-# for some reason translations don't get installed in 1.3.7
-%find_lang webkitgtk-3.0
+# Remove .la files
+find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
+
+%find_lang WebKitGTK-3.0
 
 ## Finally, copy over and rename the various files for %%doc inclusion.
 %add_to_doc_files Source/WebKit/LICENSE
-%add_to_doc_files Source/WebKit/gtk/po/README
 %add_to_doc_files Source/WebKit/gtk/NEWS
 %add_to_doc_files Source/WebCore/icu/LICENSE
 %add_to_doc_files Source/WebCore/LICENSE-APPLE
@@ -172,30 +176,31 @@ chrpath --delete %{buildroot}%{_libexecdir}/WebKitWebProcess
 
 
 %post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
-%postun
-/sbin/ldconfig
-if [ $1 -eq 0 ] ; then
-    glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
-fi
-
-%posttrans
-glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
+%post -n libwebkit2gtk -p /sbin/ldconfig
+%postun -n libwebkit2gtk -p /sbin/ldconfig
 
 
-%files -f webkitgtk-3.0.lang
-%doc %{_docdir}/%{name}-%{version}/
-%exclude %{_libdir}/*.la
+%files -f WebKitGTK-3.0.lang
+%doc %{_pkgdocdir}/
 %{_libdir}/libwebkitgtk-3.0.so.*
-%{_libdir}/libwebkit2gtk-3.0.so.*
 %{_libdir}/libjavascriptcoregtk-3.0.so.*
 %{_libdir}/girepository-1.0/WebKit-3.0.typelib
+%{_libdir}/girepository-1.0/JavaScriptCore-3.0.typelib
+%dir %{_libexecdir}/%{name}
+%{_libexecdir}/%{name}/GtkLauncher
+%{_datadir}/webkitgtk-3.0
+
+%files -n libwebkit2gtk
+%{_libdir}/libwebkit2gtk-3.0.so.*
+%{_libdir}/webkit2gtk-3.0/
 %{_libdir}/girepository-1.0/WebKit2-3.0.typelib
-%{_libdir}/girepository-1.0/JSCore-3.0.typelib
-%{_libexecdir}/%{name}/
+%{_libdir}/girepository-1.0/WebKit2WebExtension-3.0.typelib
+%{_libexecdir}/%{name}/MiniBrowser
+%{_libexecdir}/WebKitNetworkProcess
 %{_libexecdir}/WebKitPluginProcess
 %{_libexecdir}/WebKitWebProcess
-%{_datadir}/webkitgtk-3.0
 
 %files  devel
 %{_bindir}/jsc-3
@@ -208,16 +213,185 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/pkgconfig/javascriptcoregtk-3.0.pc
 %{_datadir}/gir-1.0/WebKit-3.0.gir
 %{_datadir}/gir-1.0/WebKit2-3.0.gir
-%{_datadir}/gir-1.0/JSCore-3.0.gir
+%{_datadir}/gir-1.0/WebKit2WebExtension-3.0.gir
+%{_datadir}/gir-1.0/JavaScriptCore-3.0.gir
 
 %files doc
 %dir %{_datadir}/gtk-doc
 %dir %{_datadir}/gtk-doc/html
 %{_datadir}/gtk-doc/html/webkitgtk
 %{_datadir}/gtk-doc/html/webkit2gtk
-
+%{_datadir}/gtk-doc/html/webkitdomgtk
 
 %changelog
+* Thu Feb 27 2014 Karsten Hopp <karsten@redhat.com> 2.3.90-3
+- disable libatomic patch on ppc. webkitgtk3 now uses std::atomic
+
+* Tue Feb 18 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.3.90-2
+- Disable JIT on aarch64
+
+* Tue Feb 18 2014 Tomas Popela <tpopela@redhat.com> - 2.3.90-1
+- Update to 2.3.90
+- Enable full debuginfo on s390x
+
+* Thu Feb 13 2014 Paul Howarth <paul@city-fan.org> - 2.3.5-3
+- Rebuild against new libicu
+
+* Fri Feb  7 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.3.5-2
+- Add support for aarch64
+
+* Thu Feb 6 2014 Tomas Popela <tpopela@redhat.com> - 2.3.5-1
+- Update to 2.3.5
+
+* Mon Jan 13 2014 Tomas Popela <tpopela@redhat.com> - 2.3.4-1
+- Update to 2.3.4
+- Add patch that fixes compilation on i686
+
+* Thu Jan 02 2014 Orion Poplawski <orion@cora.nwra.com> - 2.3.3-2
+- Rebuild for libwebp soname bump
+
+* Thu Dec 19 2013 Tomas Popela <tpopela@redhat.com> - 2.3.3-1
+- Update to 2.3.3
+
+* Thu Dec 5 2013 Tomas Popela <tpopela@redhat.com> - 2.3.2-1
+- Update to 2.3.2
+- Add libatomic as BR on ppc
+
+* Wed Dec 4 2013 Tomas Popela <tpopela@redhat.com> - 2.2.3-1
+- Update to 2.2.3
+
+* Thu Nov 28 2013 Tomas Popela <tpopela@redhat.com> - 2.2.2-2
+- Fix for RH bug #1035764 - Crashes with certain Google Drive documents
+
+* Mon Nov 11 2013 Tomas Popela <tpopela@redhat.com> - 2.2.2-1
+- Update to 2.2.2
+
+* Fri Oct 18 2013 Tomas Popela <tpopela@redhat.com> - 2.2.1-1
+- Update to 2.2.1
+
+* Fri Sep 27 2013 Kalev Lember <kalevlember@gmail.com> - 2.2.0-1
+- Update to 2.2.0
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.92-1
+- Update to 2.1.92
+
+* Thu Sep 12 2013 Dan Horák <dan[at]danny.cz> - 2.1.91-2
+- rediff the ppc32 patch, it failed to apply on s390
+
+* Wed Sep 11 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.91-1
+- Update to 2.1.91
+
+* Fri Aug 30 2013 Karsten Hopp <karsten@redhat.com> 2.1.90.1-2
+- modify ppc32 patch, the macro interpretResolveWithBase got removed
+
+* Fri Aug 30 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.90.1-1
+- Update to 2.1.90.1
+
+* Wed Aug 28 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.90-1
+- Update to 2.1.90
+- Add missing at-spi2-core-devel build dep
+
+* Mon Aug 12 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.4-1
+- Update to 2.1.4
+
+* Sat Aug 10 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.3-3
+- Switch to unversioned docdirs (#993890)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 9 2013 Tomas Popela <tpopela@redhat.com> - 2.1.3-1
+- Update to 2.1.3
+
+* Wed Jun 19 2013 Tomas Popela <tpopela@redhat.com> - 2.1.2-1
+- Update to 2.1.2
+
+* Fri Jun 07 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.1-3
+- Link with harfbuzz-icu (split into separate library in harfbuzz 0.9.18)
+
+* Mon Jun 03 2013 Kalev Lember <kalevlember@gmail.com> - 2.1.1-2
+- Remove glib-compile-schemas scriptlets: the schemas are no longer installed
+- Add ldconfig calls to the libwebkit2gtk subpackage
+- Remove rpath from MiniBrowser
+- Re-enable full debuginfo (#861452)
+
+* Mon Jun 3 2013 Tomas Popela <tpopela@redhat.com> - 2.1.1-1
+- Update to 2.1.1
+- Drop unused patches
+
+* Mon May 13 2013 Tomas Popela <tpopela@redhat.com> - 2.0.2-1
+- Update to 2.0.2
+
+* Mon May  6 2013 Matthias Clasen <mclasen@redhat.com> - 2.0.1-2
+- Split libwebkit2gtk off into a subpackage to avoid
+  pulling this 35M behemoth of a library onto the livecd
+  needlessly
+
+* Tue Apr 16 2013 Tomas Popela <tpopela@redhat.com> - 2.0.1-1
+- Update to 2.0.1
+
+* Thu Apr 11 2013 Tomas Popela <tpopela@redhat.com> - 2.0.0-3
+- Add fix for broken GObject casting
+
+* Wed Apr 3 2013 Tomas Popela <tpopela@redhat.com> - 2.0.0-2
+- Apply double2intsPPC32.patch also on s390
+
+* Wed Mar 27 2013 Tomas Popela <tpopela@redhat.com> - 2.0.0-1
+- Update to 2.0.0
+- Update BR versions
+- Drop unused patches
+
+* Wed Mar 20 2013 Kalev Lember <kalevlember@gmail.com> - 1.11.92-1
+- Update to 1.11.92
+
+* Fri Mar 08 2013 Tomas Popela <tpopela@redhat.com> 1.11.91-1
+- Update to 1.11.91
+- Fix for RH bug #915990 - Seed segfaults in JSC::LLInt::CLoop::execute()
+
+* Mon Feb 25 2013 Tomas Popela <tpopela@redhat.com> 1.11.90-3
+- Fix for not building on ppc32 with JIT disabled
+
+* Sat Feb 23 2013 Kevin Fenzi <kevin@scrye.com> 1.11.90-2
+- Add webkit2 MiniBrowser
+
+* Fri Feb 22 2013 Kalev Lember <kalevlember@gmail.com> - 1.11.90-1
+- Update to 1.11.90
+
+* Fri Feb 22 2013 Tomas Popela <tpopela@redhat.com> 1.11.5-5
+- Fix for not building on ppc32 with JIT disabled
+- BR libatomic (needs gcc >= 4.8.0) for ppc32
+
+* Mon Feb 18 2013 Tomas Popela <tpopela@redhat.com> 1.11.5-4
+- Backported fixes for not building with disabled JIT
+
+* Sat Feb 16 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.11.5-3
+- Re-enable JIT on ARM (hopefully the gmail crash is fixed)
+
+* Thu Feb 14 2013 Tomas Popela <tpopela@redhat.com> 1.11.5-2
+- Add upstream patch for RH bug #908143 - AccessibilityTableRow::parentTable crash
+
+* Wed Feb 06 2013 Kalev Lember <kalevlember@gmail.com> - 1.11.5-1
+- Update to 1.11.5
+- Drop upstreamed patches
+
+* Wed Jan 30 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.11.4-5
+- Rebuild against new icu again
+
+* Sat Jan 26 2013 Kalev Lember <kalevlember@gmail.com> - 1.11.4-4
+- Rebuilt for icu 50
+
+* Fri Jan 25 2013 Kalev Lember <kalevlember@gmail.com> - 1.11.4-3
+- Backport a fix for a crash in AccessibilityTableCell::parentTable()
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 1.11.4-2
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Wed Jan 16 2013 Kalev Lember <kalevlember@gmail.com> - 1.11.4-1
+- Update to 1.11.4
+- Remove conditional pango deps; the build now uses harfbuzz directly
+- BR libwebp-devel
+- Drop upstreamed librt linking patch
+
 * Tue Dec 18 2012 Dan Horák <dan[at]danny.cz> - 1.11.2-3
 - fix 32-bit non-JIT arches
 
@@ -387,7 +561,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 * Wed Dec  1 2010 Matthias Clasen <mclasen@redhat.com> 1.3.7-1
 - Update to 1.3.7
 
-* Wed Nov 11 2010 Matthias Clasen <mclasen@redhat.com> 1.3.6-1
+* Thu Nov 11 2010 Matthias Clasen <mclasen@redhat.com> 1.3.6-1
 - Update to 1.3.6
 - Disable the s390 patch again :-( Upstream it, maybe ?
 

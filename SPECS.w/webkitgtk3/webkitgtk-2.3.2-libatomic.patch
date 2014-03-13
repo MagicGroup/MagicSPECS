@@ -1,0 +1,19 @@
+diff -up webkitgtk-2.3.2/Source/WTF/wtf/Atomics.h.libatomic webkitgtk-2.3.2/Source/WTF/wtf/Atomics.h
+--- webkitgtk-2.3.2/Source/WTF/wtf/Atomics.h.libatomic	2013-12-05 15:43:22.160186327 +0100
++++ webkitgtk-2.3.2/Source/WTF/wtf/Atomics.h	2013-12-05 15:44:02.630264977 +0100
+@@ -101,11 +101,11 @@ inline int atomicDecrement(int volatile*
+ 
+ #elif COMPILER(GCC)
+ 
+-inline int atomicIncrement(int volatile* addend) { return __sync_add_and_fetch(addend, 1); }
+-inline int atomicDecrement(int volatile* addend) { return __sync_sub_and_fetch(addend, 1); }
++inline int atomicIncrement(int volatile* addend) { return __atomic_fetch_add(addend, 1, __ATOMIC_ACQ_REL); }
++inline int atomicDecrement(int volatile* addend) { return __atomic_fetch_sub(addend, 1, __ATOMIC_ACQ_REL); }
+ 
+-inline int64_t atomicIncrement(int64_t volatile* addend) { return __sync_add_and_fetch(addend, 1); }
+-inline int64_t atomicDecrement(int64_t volatile* addend) { return __sync_sub_and_fetch(addend, 1); }
++inline int64_t atomicIncrement(int64_t volatile* addend) { return __atomic_fetch_add(addend, 1, __ATOMIC_ACQ_REL); }
++inline int64_t atomicDecrement(int64_t volatile* addend) { return __atomic_fetch_sub(addend, 1, __ATOMIC_ACQ_REL); }
+ 
+ #endif
+ 
