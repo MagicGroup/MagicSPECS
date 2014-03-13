@@ -2,8 +2,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           grilo
-Version:        0.2.5
-Release:        1%{?dist}
+Version:        0.2.9
+Release:        2%{?dist}
 Summary:        Content discovery framework
 
 Group:          Applications/Multimedia
@@ -19,8 +19,11 @@ BuildRequires:  gtk-doc
 BuildRequires:  gobject-introspection-devel >= 0.9.0
 BuildRequires:  libxml2-devel
 BuildRequires:  libsoup-devel
+BuildRequires:  glib2-devel
 # For the test UI
 BuildRequires:  gtk3-devel
+BuildRequires:  liboauth-devel
+BuildRequires:  totem-pl-parser-devel
 
 Requires:       gobject-introspection
 
@@ -57,15 +60,13 @@ This package contains the Vala language bindings.
 %prep
 %setup -q
 
-# Fix vala detection for version 0.20
-sed -i.vala 's/libvala-0.18/libvala-0.20/g' configure*
-
 %build
 %configure                      \
         --enable-vala           \
         --enable-gtk-doc        \
         --enable-introspection  \
         --enable-grl-net        \
+        --disable-debug          \
         --disable-tests
 
 make %{?_smp_mflags}
@@ -85,11 +86,13 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_bindir}/grilo-simple-playlist
 
+%find_lang grilo
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
-%files
+%files -f grilo.lang
 %doc AUTHORS COPYING NEWS README TODO
 %{_libdir}/*.so.*
 %{_libdir}/girepository-1.0/*.typelib
@@ -112,6 +115,26 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/grilo-simple-playlist
 %{_datadir}/vala/vapi/*
 
 %changelog
+* Wed Feb 19 2014 Kalev Lember <kalevlember@gmail.com> - 0.2.9-2
+- Build with totem-pl-parser and oauth support
+
+* Wed Feb 19 2014 Kalev Lember <kalevlember@gmail.com> - 0.2.9-1
+- Update to 0.2.9
+
+* Wed Feb 05 2014 Adam Williamson <awilliam@redhat.com> - 0.2.7-2
+- backport some patches from upstream that are needed for totem
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 0.2.7-1
+- Update to 0.2.7
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat May 18 2013 Kalev Lember <kalevlember@gmail.com> - 0.2.6-1
+- Update to 0.2.6
+- Drop the vala sed hack, 0.2.6 now works with recent vala
+- Include man pages
+
 * Wed Mar 20 2013 Kalev Lember <kalevlember@gmail.com> - 0.2.5-1
 - Update to 0.2.5
 
