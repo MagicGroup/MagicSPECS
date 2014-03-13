@@ -1,0 +1,26 @@
+From 5d478332677df7e428f82d4de0fe9ae4368d9554 Mon Sep 17 00:00:00 2001
+From: Rui Matos <tiagomatos@gmail.com>
+Date: Tue, 14 May 2013 13:24:09 +0200
+Subject: [PATCH] default-input-sources: Switch ja_JP default to ibus-kkc
+
+This should be the default ibus engine for Japanese in F19.
+---
+ libgnome-desktop/default-input-sources.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libgnome-desktop/default-input-sources.h b/libgnome-desktop/default-input-sources.h
+index c38e339..bb0b8b8 100644
+--- a/libgnome-desktop/default-input-sources.h
++++ b/libgnome-desktop/default-input-sources.h
+@@ -30,7 +30,7 @@ static DefaultInputSource default_input_sources[] =
+   { "he_IL",    "xkb",          "il" },
+   { "hi_IN",    "ibus",         "m17n:hi:inscript" },
+   { "it_IT",    "xkb",          "it" },
+-  { "ja_JP",    "ibus",         "anthy" },
++  { "ja_JP",    "ibus",         "kkc" },
+   { "kn_IN",    "ibus",         "m17n:kn:kgp" },
+   { "ko_KR",    "ibus",         "hangul" },
+   { "mai_IN",   "ibus",         "m17n:mai:inscript" },
+-- 
+1.8.1.4
+
