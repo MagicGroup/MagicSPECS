@@ -1,16 +1,16 @@
 Name:           libgweather
-Version:        3.5.5
-Release:        2%{?dist}
+Version:        3.11.90
+Release:        1%{?dist}
 Summary:        A library for weather information
 
 Group:          System Environment/Libraries
 License:        GPLv2+
 URL:            http://www.gnome.org
 #VCS: git:git://git.gnome.org/libgweather
-Source0:        http://download.gnome.org/sources/libgweather/3.5/%{name}-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/libgweather/3.11/%{name}-%{version}.tar.xz
 
-BuildRequires:  GConf2-devel >= 2.8.0
 BuildRequires:  dbus-devel
+BuildRequires:  glade-devel
 BuildRequires:  gtk3-devel >= 2.90.0
 BuildRequires:  gtk-doc
 BuildRequires:  libsoup-devel >= 2.4
@@ -20,6 +20,8 @@ BuildRequires:  intltool
 BuildRequires:  autoconf automake libtool
 BuildRequires:  gobject-introspection-devel >= 0.10
 BuildRequires:  gnome-common
+BuildRequires:  vala-devel
+BuildRequires:  vala-tools
 
 # for directories
 Requires: gnome-icon-theme
@@ -32,12 +34,7 @@ services for numerous locations.
 %package        devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries
-# libgweather used to be part of gnome-applets, and
-# gnome-applets-devel only had the libgweather-devel parts in it
-Obsoletes:	gnome-applets-devel < 1:2.21.4-1
-Requires:       %{name} = %{version}-%{release}
-Requires:       pkgconfig
-Requires:       gtk-doc
+Requires:       %{name}%{_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -54,54 +51,148 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-magic_rpm_clean.sh
+
 %find_lang %{name} --all-name
 
 %post
-/usr/sbin/ldconfig
+/sbin/ldconfig
 touch --no-create %{_datadir}/icons/gnome &>/dev/null || :
 
-%preun
-
 %postun
-/usr/sbin/ldconfig
+/sbin/ldconfig
 if [ $1 -eq 0 ]; then
   touch --no-create %{_datadir}/icons/gnome &>/dev/null
   gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
-  glib-compile-schemas %{_datadir}/glib-2.0/schemas
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 fi
 
 %posttrans
 gtk-update-icon-cache -q %{_datadir}/icons/gnome &>/dev/null || :
-glib-compile-schemas %{_datadir}/glib-2.0/schemas
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/libgweather-3.so.*
 %{_libdir}/girepository-1.0/GWeather-3.0.typelib
 %dir %{_datadir}/libgweather
 %{_datadir}/libgweather/Locations.xml
-%{_datadir}/libgweather/Locations.*.xml
 %{_datadir}/libgweather/locations.dtd
 %{_datadir}/icons/gnome/*/status/*
 %{_datadir}/glib-2.0/schemas/org.gnome.GWeather.enums.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.GWeather.gschema.xml
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/libgweather-3.0
 %{_libdir}/libgweather-3.so
 %{_libdir}/pkgconfig/gweather-3.0.pc
 %{_datadir}/gir-1.0/GWeather-3.0.gir
+%dir %{_datadir}/glade/
+%dir %{_datadir}/glade/catalogs/
+%{_datadir}/glade/catalogs/libgweather.xml
 %dir %{_datadir}/gtk-doc
 %dir %{_datadir}/gtk-doc/html
 %{_datadir}/gtk-doc/html/libgweather-3.0
+%dir %{_datadir}/vala/
+%dir %{_datadir}/vala/vapi/
+%{_datadir}/vala/vapi/gweather-3.0.vapi
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.5.5-2
-- 为 Magic 3.0 重建
+* Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Mon Feb 03 2014 Richard Hughes <rhughes@redhat.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Tue Jan 14 2014 Richard Hughes <rhughes@redhat.com> - 3.11.4-1
+- Update to 3.11.4
+
+* Wed Jan 08 2014 Richard Hughes <rhughes@redhat.com> - 3.11.3-1
+- Update to 3.11.3
+
+* Tue Oct 29 2013 Richard Hughes <rhughes@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.92-1
+- Update to 3.9.92
+
+* Wed Sep 04 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.91-1
+- Update to 3.9.91
+- Install the glade catalog
+- Enable vala support
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.90-1
+- Update to 3.9.90
+
+* Mon Aug 05 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.9.5-1
+- Update to 3.9.5
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 21 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.3-2
+- Tighten the -devel subpackage deps
+
+* Thu Jun 20 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.3-1
+- Update to 3.9.3
+
+* Sun Jun 02 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.2-1
+- Update to 3.9.2
+
+* Sat May 04 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.1-1
+- Update to 3.9.1
+- Remove old gnome-applets-devel obsoletes
+
+* Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
+- Update to 3.8.1
+
+* Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
+- Update to 3.8.0
+
+* Tue Mar 19 2013 Richard Hughes <rhughes@redhat.com> - 3.7.92-1
+- Update to 3.7.92
+
+* Thu Mar  7 2013 Matthias Clasen <mclasen@redhat.com> - 3.7.91-1
+- Update to 3.7.91
+
+* Tue Feb 19 2013 Richard Hughes <rhughes@redhat.com> - 3.7.90-1
+- Update to 3.7.90
+
+* Wed Feb 06 2013 Kalev Lember <kalevlember@gmail.com> - 3.7.5-1
+- Update to 3.7.5
+
+* Wed Jan 16 2013 Richard Hughes <hughsient@gmail.com> - 3.7.4-1
+- Update to 3.7.4
+
+* Thu Dec 20 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.3-1
+- Update to 3.7.3
+
+* Tue Nov 20 2012 Richard Hughes <hughsient@gmail.com> - 3.7.2-1
+- Update to 3.7.2
+
+* Tue Nov 13 2012 Kalev Lember <kalevlember@gmail.com> - 3.6.2-1
+- Update to 3.6.2
+
+* Tue Oct 16 2012 Kalev Lember <kalevlember@gmail.com> - 3.6.1-1
+- Update to 3.6.1
+
+* Tue Sep 25 2012 Kalev Lember <kalevlember@gmail.com> - 3.6.0-1
+- Update to 3.6.0
+
+* Wed Sep 19 2012 Kalev Lember <kalevlember@gmail.com> - 3.5.92-2
+- Silence glib-compile-schemas scriplets
+
+* Wed Sep 19 2012 Richard Hughes <hughsient@gmail.com> - 3.5.92-1
+- Update to 3.5.92
+
+* Tue Sep 04 2012 Richard Hughes <hughsient@gmail.com> - 3.5.91-1
+- Update to 3.5.91
+
+* Tue Aug 21 2012 Richard Hughes <hughsient@gmail.com> - 3.5.90-1
+- Update to 3.5.90
 
 * Tue Aug 07 2012 Richard Hughes <hughsient@gmail.com> - 3.5.5-1
 - Update to 3.5.5
