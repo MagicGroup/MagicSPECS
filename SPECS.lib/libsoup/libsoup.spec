@@ -1,16 +1,16 @@
-%define glib2_version 2.35.0
+%define glib2_version 2.36.0
 
 ### Abstract ###
 
 Name: libsoup
-Version: 2.41.5
+Version: 2.45.90
 Release: 1%{?dist}
 License: LGPLv2
 Group: Development/Libraries
 Summary: Soup, an HTTP library implementation
 URL: http://live.gnome.org/LibSoup
 #VCS: git:git://git.gnome.org/libsoup
-Source: http://download.gnome.org/sources/libsoup/2.41/libsoup-%{version}.tar.xz
+Source: http://download.gnome.org/sources/libsoup/2.45/libsoup-%{version}.tar.xz
 Requires: glib-networking >= %{glib2_version}
 
 ### Build Dependencies ###
@@ -81,6 +81,63 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 %{_datadir}/gtk-doc/html/%{name}-2.4
 
 %changelog
+* Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 2.45.90-1
+- Update to 2.45.90
+
+* Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 2.45.3-1
+- Update to 2.45.3
+
+* Thu Nov 14 2013 Richard Hughes <rhughes@redhat.com> - 2.44.2-1
+- Update to 2.44.2
+
+* Tue Oct 29 2013 Richard Hughes <rhughes@redhat.com> - 2.44.1-1
+- Update to 2.44.1
+
+* Sun Sep 29 2013 Dan Winship <danw@redhat.com> - 2.44.0-2
+- Fix hang on early close with streaming API
+
+* Tue Sep 24 2013 Kalev Lember <kalevlember@gmail.com> - 2.44.0-1
+- Update to 2.44.0
+
+* Tue Sep 17 2013 Kalev Lember <kalevlember@gmail.com> - 2.43.92-1
+- Update to 2.43.92
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 2.43.90-1
+- Update to 2.43.90
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 2.43.5-1
+- Update to 2.43.5
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.43.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 12 2013 Dan Winship <danw@redhat.com> - 2.43.4-1
+- Update to 2.43.4
+
+* Sun Jun 02 2013 Kalev Lember <kalevlember@gmail.com> - 2.43.2-1
+- Update to 2.43.2
+
+* Sat May 04 2013 Kalev Lember <kalevlember@gmail.com> - 2.43.1-1
+- Update to 2.43.1
+
+* Mon Apr 29 2013 Kalev Lember <kalevlember@gmail.com> - 2.42.2-1
+- Update to 2.42.2
+
+* Tue Apr 16 2013 Richard Hughes <rhughes@redhat.com> - 2.42.1-1
+- Update to 2.42.1
+
+* Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 2.42.0-1
+- Update to 2.42.0
+
+* Tue Mar 19 2013 Richard Hughes <rhughes@redhat.com> - 2.41.92-1
+- Update to 2.41.92
+
+* Thu Mar  7 2013 Matthias Clasen <mclasen@redhat.com> - 2.41.91-1
+- Update to 2.41.91
+
+* Tue Feb 19 2013 Richard Hughes <rhughes@redhat.com> - 2.41.90-1
+- Update to 2.41.90
+
 * Wed Feb 06 2013 Kalev Lember <kalevlember@gmail.com> - 2.41.5-1
 - Update to 2.41.5
 
@@ -230,7 +287,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 * Wed Jun 23 2010 Matthew Barnes <mbarnes@redhat.com> - 2.31.2-3
 - libsoup-devel doesn't need gtk-doc (RH bug #604396).
 
-* Tue Jun 21 2010 Peter Robinson <pbrobinson@gmail.com> - 2.31.2-2
+* Mon Jun 21 2010 Peter Robinson <pbrobinson@gmail.com> - 2.31.2-2
 - enable introspection support
 
 * Thu May 27 2010 Matthias Clasen <mclasen@redhat.com> - 2.31.2-1
@@ -409,7 +466,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 * Mon Jan 08 2007 Matthew Barnes <mbarnes@redhat.com> - 2.2.99-1
 - Update to 2.2.99
 
-* Mon Nov 21 2006 Matthew Barnes <mbarnes@redhat.com> - 2.2.98-1
+* Tue Nov 21 2006 Matthew Barnes <mbarnes@redhat.com> - 2.2.98-1
 - Update to 2.2.98
 - Remove patch for RH bug #215919 (fixed upstream).
 
@@ -574,7 +631,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 * Mon Jun  9 2003 Jeremy Katz <katzj@redhat.com> 1.99.23-1
 - 1.99.23
 
-* Wed Jun 5 2003 Elliot Lee <sopwith@redhat.com>
+* Thu Jun 5 2003 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
 * Thu Jun  5 2003 Jeremy Katz <katzj@redhat.com> 1.99.22-2
