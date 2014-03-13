@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           gsettings-desktop-schemas
-Version:        3.8.0
+Version:        3.11.90
 Release:        1%{?dist}
 Summary:        A collection of GSettings schemas
 
@@ -10,7 +10,7 @@ License:        LGPLv2+
 # no homepage exists for this component
 URL:            http://bugzilla.gnome.org/enter_bug.cgi?product=gsettings-desktop-schemas
 #VCS: git:git://git.gnome.org/gsettings-desktop-schemas
-Source:         http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+Source:         http://download.gnome.org/sources/%{name}/3.10/%{name}-%{version}.tar.xz
 
 BuildRequires: glib2-devel >= 2.31.0
 BuildRequires: intltool
@@ -69,6 +69,45 @@ fi
 
 
 %changelog
+* Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Tue Jan 14 2014 Richard Hughes <rhughes@redhat.com> - 3.11.4-1
+- Update to 3.11.4
+
+* Mon Dec 23 2013 Adam Williamson <awilliam@redhat.com> - 3.11.3-1
+- Update to 3.11.3
+
+* Wed Oct 16 2013 Richard Hughes <rhughes@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+
+* Tue Sep 24 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Tue Sep 03 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.91-1
+- Update to 3.9.91
+
+* Wed Aug 21 2013 Richard Hughes <rhughes@redhat.com> - 3.9.90-1
+- Update to 3.9.90
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.5-1
+- Update to 3.9.5
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jun 20 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.3-1
+- Update to 3.9.3
+
+* Tue May 28 2013 Florian Müllner <fmuellner@redhat.com> - 3.9.2-1
+- Update to 3.9.2
+
+* Tue May 14 2013 Richard Hughes <rhughes@redhat.com> - 3.8.2-1
+- Update to 3.8.2
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
 - Update to 3.8.0
 
