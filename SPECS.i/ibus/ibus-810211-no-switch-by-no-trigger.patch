@@ -1,4 +1,4 @@
-From 092d20121fc5401810b60c1d01f331a80b4ed42c Mon Sep 17 00:00:00 2001
+From d3bc903b487bb301395947f692ce0d8c130874e3 Mon Sep 17 00:00:00 2001
 From: fujiwarat <takao.fujiwara1@gmail.com>
 Date: Sat, 6 Oct 2012 17:54:27 +0900
 Subject: [PATCH] Fix not to switch engines by non-trigger keys.
@@ -8,10 +8,10 @@ Subject: [PATCH] Fix not to switch engines by non-trigger keys.
  1 file changed, 6 insertions(+)
 
 diff --git a/ui/gtk3/switcher.vala b/ui/gtk3/switcher.vala
-index 494fab9..c5286b1 100644
+index 4a02743..c606682 100644
 --- a/ui/gtk3/switcher.vala
 +++ b/ui/gtk3/switcher.vala
-@@ -127,6 +127,7 @@ class Switcher : Gtk.Window {
+@@ -140,6 +140,7 @@ class Switcher : Gtk.Window {
          /* Let gtk recalculate the window size. */
          resize(1, 1);
  
@@ -19,7 +19,7 @@ index 494fab9..c5286b1 100644
          m_selected_engine = index;
          m_label.set_text(m_buttons[index].longname);
          m_buttons[index].grab_focus();
-@@ -365,6 +366,11 @@ class Switcher : Gtk.Window {
+@@ -378,6 +379,11 @@ class Switcher : Gtk.Window {
                      break;
                  default:
                      debug("0x%04x", pe->keyval);

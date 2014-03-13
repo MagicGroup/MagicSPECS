@@ -1,31 +1,31 @@
-From 84354457b25d77fed1184224ce71a31ff6facfec Mon Sep 17 00:00:00 2001
+From a6d4b9ac9a22c5b88c362b659eaf6fd59a0cf5bd Mon Sep 17 00:00:00 2001
 From: fujiwarat <takao.fujiwara1@gmail.com>
-Date: Thu, 31 Jan 2013 17:30:09 +0900
+Date: Tue, 14 Jan 2014 15:30:24 +0900
 Subject: [PATCH] Reload preload engines until users customize the list.
 
 The idea is, if users don't customize the preload_engines with ibus-setup,
 users would prefer to load the system default engines again by login.
-The gconf value 'preload_engine_mode' is
+The gsettings value 'preload-engine-mode' is
 IBUS_PRELOAD_ENGINE_MODE_USER by default but set
 IBUS_PRELOAD_ENGINE_MODE_LANG_RELATIVE for the initial login.
-If preload_engine_mode is IBUS_PRELOAD_ENGINE_MODE_LANG_RELATIVE,
+If 'preload-engine-mode' is IBUS_PRELOAD_ENGINE_MODE_LANG_RELATIVE,
 ibus-daemon loads the system preload engines by langs.
-If preload_engine_mode is IBUS_PRELOAD_ENGINE_MODE_USER,
-ibus-daemon do not update the gconf value preload_engines.
+If 'preload-engine-mode' is IBUS_PRELOAD_ENGINE_MODE_USER,
+ibus-daemon do not update the gsettings value 'preload-engines'
 On the other hand, if users enable the customized engine checkbutton
-on ibus-setup, ibus-setup sets 'preload_engine_mode' as
+on ibus-setup, ibus-setup sets 'preload-engine-mode' as
 IBUS_PRELOAD_ENGINE_MODE_USER and users can customize the value
-'preload_engines'.
+'preload-engines'.
 ---
- data/ibus.schemas.in |  24 +++++++++
- setup/main.py        |  73 ++++++++++++++++++++++++---
- setup/setup.ui       |  22 +++++++--
- src/ibustypes.h      |  10 ++++
- ui/gtk3/panel.vala   | 136 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 254 insertions(+), 11 deletions(-)
+ data/ibus.schemas.in | 24 ++++++++++++++
+ setup/main.py        | 70 +++++++++++++++++++++++++++++++++++----
+ setup/setup.ui       | 22 +++++++++++--
+ src/ibustypes.h      | 10 ++++++
+ ui/gtk3/panel.vala   | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 210 insertions(+), 9 deletions(-)
 
 diff --git a/data/ibus.schemas.in b/data/ibus.schemas.in
-index 70bf9ca..7833959 100644
+index 8fd7e15..28d2219 100644
 --- a/data/ibus.schemas.in
 +++ b/data/ibus.schemas.in
 @@ -2,6 +2,30 @@
@@ -60,26 +60,29 @@ index 70bf9ca..7833959 100644
        <applyto>/desktop/ibus/general/preload_engines</applyto>
        <owner>ibus</owner>
 diff --git a/setup/main.py b/setup/main.py
-index 707faa4..4826037 100644
+index d3f4414..235ef9c 100644
 --- a/setup/main.py
 +++ b/setup/main.py
-@@ -190,16 +190,27 @@ class Setup(object):
-         self.__checkbutton_use_global_engine.connect("toggled",
-                 self.__checkbutton_use_global_engine_toggled_cb)
+@@ -190,16 +190,30 @@ class Setup(object):
+                                     'active',
+                                     Gio.SettingsBindFlags.DEFAULT)
  
 +        # set preload mode
-+        preload_engine_mode = IBus.PreloadEngineMode.USER
-+        variant = self.__config.get_value("general", "preload_engine_mode")
-+        if variant != None:
-+            preload_engine_mode = variant.get_int32()
++        preload_engine_mode = \
++                self.__settings_general.get_int('preload-engine-mode')
 +        button = self.__builder.get_object("checkbutton_preload_engine_mode")
++        hbox = self.__builder.get_object("hbox_customize_active_input_methods")
 +        if preload_engine_mode == IBus.PreloadEngineMode.USER:
 +            button.set_active(True)
-+            self.__builder.get_object("hbox_customize_active_input_methods").set_sensitive(True)
++            hbox.set_sensitive(True)
 +        else:
 +            button.set_active(False)
-+            self.__builder.get_object("hbox_customize_active_input_methods").set_sensitive(False)
-+        button.connect("toggled", self.__checkbutton_preload_engine_mode_toggled_cb)
++            hbox.set_sensitive(False)
++        button.connect('toggled',
++                       self.__checkbutton_preload_engine_mode_toggled_cb)
++
++        self.__settings_general.connect('changed::preload-engines',
++                self.__settings_general_preload_engines_cb)
 +
          # init engine page
          self.__engines = self.__bus.list_engines()
@@ -89,32 +92,25 @@ index 707faa4..4826037 100644
 -        tmp_dict = {}
 -        for e in self.__engines:
 -            tmp_dict[e.get_name()] = e
-         engine_names = values.get("preload_engines", [])
+         engine_names = self.__settings_general.get_strv('preload-engines')
 -        engines = [tmp_dict[name] for name in engine_names if name in tmp_dict]
 +        engines = self.__get_engine_descs_from_names(engine_names)
  
          self.__treeview = self.__builder.get_object("treeview_engines")
          self.__treeview.set_engines(engines)
-@@ -243,6 +254,7 @@ class Setup(object):
-                 self.__checkbutton_auto_start_toggled_cb)
- 
-         self.__config = self.__bus.get_config()
-+        self.__config.connect("value-changed", self.__config_value_changed_cb)
- 
-         self.__init_hotkey()
-         self.__init_panel()
-@@ -251,8 +263,8 @@ class Setup(object):
+@@ -249,8 +263,9 @@ class Setup(object):
      def __combobox_notify_active_engine_cb(self, combobox, property):
          engine = self.__combobox.get_active_engine()
          button = self.__builder.get_object("button_engine_add")
 -        button.set_sensitive(
 -                engine != None and engine not in self.__treeview.get_engines())
 +        button.set_sensitive(engine != None and \
-+                engine.get_name() not in map(lambda e: e.get_name(), self.__treeview.get_engines()))
++                engine.get_name() not in [e.get_name() for e \
++                                          in self.__treeview.get_engines()])
  
      def __get_engine_setup_exec_args(self, engine):
          args = []
-@@ -272,6 +284,13 @@ class Setup(object):
+@@ -270,6 +285,13 @@ class Setup(object):
              args.append(path.basename(setup_path))
          return args
  
@@ -128,18 +124,17 @@ index 707faa4..4826037 100644
      def __treeview_notify_cb(self, treeview, prop):
          if prop.name not in ("active-engine", "engines"):
              return
-@@ -324,6 +343,34 @@ class Setup(object):
+@@ -321,6 +343,43 @@ class Setup(object):
              del self.__engine_setup_exec_list[name]
          self.__engine_setup_exec_list[name] = os.spawnl(os.P_NOWAIT, *args)
  
 +    def __checkbutton_preload_engine_mode_toggled_cb(self, button):
 +        if button.get_active():
-+            variant = GLib.Variant.new_int32(IBus.PreloadEngineMode.USER)
-+            self.__config.set_value("general",
-+                                    "preload_engine_mode",
-+                                    variant)
-+            self.__builder.get_object("hbox_customize_active_input_methods").set_sensitive(True)
-+            self.__treeview.notify("engines")
++            self.__settings_general.set_int('preload-engine-mode',
++                                            IBus.PreloadEngineMode.USER)
++            self.__builder.get_object(
++                    "hbox_customize_active_input_methods").set_sensitive(True)
++            self.__treeview.notify('engines')
 +        else:
 +            message = _("The list of your saved input methods will be " \
 +                        "cleared immediately and the list will be " \
@@ -154,38 +149,27 @@ index 707faa4..4826037 100644
 +            if id != Gtk.ResponseType.YES:
 +                button.set_active(True)
 +                return
-+            variant = GLib.Variant.new_int32(IBus.PreloadEngineMode.LANG_RELATIVE)
-+            self.__config.set_value("general",
-+                                    "preload_engine_mode",
-+                                    variant)
-+            self.__builder.get_object("hbox_customize_active_input_methods").set_sensitive(False)
++            self.__settings_general.set_int(
++                    'preload-engine-mode',
++                    IBus.PreloadEngineMode.LANG_RELATIVE)
++            self.__builder.get_object(
++                    "hbox_customize_active_input_methods").set_sensitive(False)
++
++    def __settings_general_preload_engines_cb(self, settings, key):
++        engine_names = self.__settings_general.get_strv('preload-engines')
++        engines = self.__get_engine_descs_from_names(engine_names)
++        current_engines = self.__treeview.get_engines()
++        engines_csv = str.join(',', [e.get_name() for e in engines])
++        current_engines_csv = \
++                str.join(',', [e.get_name() for e in current_engines])
++        if engines_csv != current_engines_csv:
++            self.__treeview.set_engines(engines)
 +
      def __init_bus(self):
          self.__bus = IBus.Bus()
          if self.__bus.is_connected():
-@@ -538,8 +585,18 @@ class Setup(object):
-         value = GLib.Variant.new_boolean(value)
-         self.__config.set_value("general", "use_global_engine", value)
- 
--    def __config_value_changed_cb(self, bus, section, name, value):
--        pass
-+    def __config_value_changed_cb(self, bus, section, name, variant):
-+        if section == 'general' and name == 'preload_engines':
-+            value = []
-+            if variant != None:
-+                value = variant.unpack()
-+            engines = self.__get_engine_descs_from_names(value)
-+            current_engines = self.__treeview.get_engines()
-+            engines_csv = str.join(',', map(lambda e: e.get_name(), engines))
-+            current_engines_csv = \
-+                    str.join(',', map(lambda e: e.get_name(), current_engines))
-+            if engines_csv != current_engines_csv:
-+                self.__treeview.set_engines(engines)
- 
-     def __config_reloaded_cb(self, bus):
-         pass
 diff --git a/setup/setup.ui b/setup/setup.ui
-index e56e917..b3165aa 100644
+index 65dcee4..a6a001b 100644
 --- a/setup/setup.ui
 +++ b/setup/setup.ui
 @@ -669,7 +669,23 @@
@@ -222,7 +206,7 @@ index e56e917..b3165aa 100644
                        </packing>
                      </child>
                      <child>
-@@ -905,7 +921,7 @@ You may use up/down buttons to change it.&lt;/i&gt;&lt;/small&gt;</property>
+@@ -905,7 +921,7 @@
                        <packing>
                          <property name="expand">False</property>
                          <property name="fill">True</property>
@@ -232,10 +216,10 @@ index e56e917..b3165aa 100644
                      </child>
                    </object>
 diff --git a/src/ibustypes.h b/src/ibustypes.h
-index 737b3e2..8ce5a16 100644
+index 86fc2cc..cb9eb22 100644
 --- a/src/ibustypes.h
 +++ b/src/ibustypes.h
-@@ -204,6 +204,16 @@ typedef enum {
+@@ -206,6 +206,16 @@ typedef enum {
  } IBusError;
  
  /**
@@ -253,73 +237,55 @@ index 737b3e2..8ce5a16 100644
   * @x: x coordinate.
   * @y: y coordinate.
 diff --git a/ui/gtk3/panel.vala b/ui/gtk3/panel.vala
-index 55b63ce..4717431 100644
+index 1da7966..fc60fd4 100644
 --- a/ui/gtk3/panel.vala
 +++ b/ui/gtk3/panel.vala
-@@ -291,6 +291,8 @@ class Panel : IBus.PanelService {
-         if (m_config != null) {
-             m_config.value_changed.connect(config_value_changed_cb);
-             m_config.watch("general", "preload_engines");
-+            m_config.watch("general", "preload_engines_inited");
-+            m_config.watch("general", "preload_engine_mode");
-             m_config.watch("general", "engines_order");
-             m_config.watch("general", "switcher_delay_time");
-             m_config.watch("general/hotkey", "triggers");
-@@ -358,7 +360,136 @@ class Panel : IBus.PanelService {
+@@ -136,6 +136,10 @@ class Panel : IBus.PanelService {
+                                null);
+         });
+ 
++        m_settings_general.changed["preload-engine-mode"].connect((key) => {
++                update_im_engines();
++        });
++
+         m_settings_general.changed["switcher-delay-time"].connect((key) => {
+                 set_switcher_delay_time();
+         });
+@@ -524,7 +528,96 @@ class Panel : IBus.PanelService {
              init_gkbd();
          }
  
-+        GLib.Variant var_engines = 
-+                m_config.get_value("general", "preload_engines");
-+        string[] preload_engines = {};
++        string[] preload_engines =
++                m_settings_general.get_strv("preload-engines");
 +
-+        if (var_engines != null) {
-+            preload_engines = var_engines.dup_strv();
-+        }
-+
-+        bool preload_engines_inited = false;
-+        GLib.Variant var_preload_engines_inited =
-+                m_config.get_value("general", "preload_engines_inited");
-+
-+        if (var_preload_engines_inited != null) {
-+            preload_engines_inited = var_preload_engines_inited.get_boolean();
-+        }
++        bool preload_engines_inited =
++                m_settings_general.get_boolean("preload-engines-inited");
 +
 +        // Set preload_engines_inited = true for back compatibility
 +        if (preload_engines.length != 0 && !preload_engines_inited) {
 +                preload_engines_inited = true;
-+                m_config.set_value("general",
-+                                   "preload_engines_inited",
-+                                   new GLib.Variant.boolean(true));
++                m_settings_general.set_boolean("preload-engines-inited", true);
 +        }
 +
          update_xkb_engines();
 +
 +        // Before update preload_engine_mode, update_xkb_engines() is called
-+        // because config_value_changed_cb() calls update_im_engines().
-+        if (!preload_engines_inited) {
-+            GLib.Variant variant = new GLib.Variant.int32(
-+                    IBus.PreloadEngineMode.LANG_RELATIVE);
-+            m_config.set_value("general",
-+                               "preload_engine_mode",
-+                               variant);
-+        }
++        // because "preload-engine-mode" signal calls update_im_engines().
++        if (!preload_engines_inited)
++            m_settings_general.set_int("preload-engine-mode",
++                                       IBus.PreloadEngineMode.LANG_RELATIVE);
 +
 +        update_im_engines();
 +
-+        if (!preload_engines_inited) {
-+            m_config.set_value("general",
-+                               "preload_engines_inited",
-+                               new GLib.Variant.boolean(true));
-+        }
++        if (!preload_engines_inited)
++            m_settings_general.set_boolean("preload-engines-inited", true);
 +    }
 +
 +    private bool set_lang_relative_preload_engines() {
 +        string locale = Intl.setlocale(LocaleCategory.CTYPE, null);
 +
-+        if (locale == null) {
++        if (locale == null)
 +            locale = "C";
-+        }
 +
 +        string lang = locale.split(".")[0];
 +        GLib.List<IBus.EngineDesc> engines = m_bus.list_engines();
@@ -329,10 +295,8 @@ index 55b63ce..4717431 100644
 +             p != null;
 +             p = p.next) {
 +            unowned IBus.EngineDesc engine = p.data;
-+            if (engine.get_language() == lang &&
-+                engine.get_rank() > 0) {
++            if (engine.get_language() == lang && engine.get_rank() > 0)
 +                im_engines += engine.get_name();
-+            }
 +        }
 +
 +        lang = lang.split("_")[0];
@@ -341,79 +305,49 @@ index 55b63ce..4717431 100644
 +                 p != null;
 +                 p = p.next) {
 +                unowned IBus.EngineDesc engine = p.data;
-+                if (engine.get_language() == lang &&
-+                    engine.get_rank() > 0) {
++                if (engine.get_language() == lang && engine.get_rank() > 0)
 +                    im_engines += engine.get_name();
-+                }
 +            }
 +        }
 +
-+        if (im_engines.length == 0) {
++        if (im_engines.length == 0)
 +            return false;
-+        }
 +
-+        GLib.Variant var_engines = 
-+                m_config.get_value("general", "preload_engines");
-+        string[] orig_preload_engines = {};
++        string[] orig_preload_engines =
++                m_settings_general.get_strv("preload-engines");
 +        string[] preload_engines = {};
-+
-+        if (var_engines != null) {
-+            orig_preload_engines = var_engines.dup_strv();
-+        }
 +
 +        // clear input method engines
 +        foreach (string name in orig_preload_engines) {
-+            if (name.ascii_ncasecmp("xkb:", 4) != 0) {
++            if (name.ascii_ncasecmp("xkb:", 4) != 0)
 +                continue;
-+            }
++
 +            preload_engines += name;
 +        }
 +
 +        foreach (string name in im_engines) {
-+            if (!(name in preload_engines)) {
++            if (!(name in preload_engines))
 +                preload_engines += name;
-+            }
 +        }
 +
-+        if ("".joinv(",", orig_preload_engines) !=
-+            "".joinv(",", preload_engines)) {
-+            m_config.set_value("general",
-+                               "preload_engines",
-+                               new GLib.Variant.strv(preload_engines));
-+        }
++        if (string.joinv(",", orig_preload_engines) !=
++            string.joinv(",", preload_engines))
++            m_settings_general.set_strv("preload-engines", preload_engines);
 +
 +        return true;
 +    }
 +
 +    private void update_im_engines() {
-+        int preload_engine_mode = IBus.PreloadEngineMode.USER;
-+        GLib.Variant var_preload_engine_mode =
-+                m_config.get_value("general", "preload_engine_mode");
++        int preload_engine_mode =
++                m_settings_general.get_int("preload-engine-mode");
 +
-+        if (var_preload_engine_mode != null) {
-+            preload_engine_mode = var_preload_engine_mode.get_int32();
-+        }
-+
-+        if (preload_engine_mode == IBus.PreloadEngineMode.USER) {
++        if (preload_engine_mode == IBus.PreloadEngineMode.USER)
 +            return;
-+        }
 +
 +        set_lang_relative_preload_engines();
      }
  
      private void update_xkb_engines() {
-@@ -573,6 +704,11 @@ class Panel : IBus.PanelService {
-                                          string section,
-                                          string name,
-                                          Variant variant) {
-+        if (section == "general" && name == "preload_engine_mode") {
-+            update_im_engines();
-+            return;
-+        }
-+
-         if (section == "general" && name == "preload_engines") {
-             update_engines(variant, null);
-             return;
 -- 
 1.8.0
 

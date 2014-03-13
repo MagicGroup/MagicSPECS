@@ -1,12 +1,14 @@
-From 6772bc0fc82074cd00d56c0e9795d163b489281e Mon Sep 17 00:00:00 2001
+From 8085ca38cb9c2ea370ebe64d80a4d7894a485960 Mon Sep 17 00:00:00 2001
 From: fujiwarat <takao.fujiwara1@gmail.com>
-Date: Fri, 11 Jan 2013 22:55:17 +0900
-Subject: [PATCH] Add ibus-xkb and libgnomekbd.
+Date: Tue, 14 Jan 2014 15:27:50 +0900
+Subject: [PATCH] Add libgnomekbd and load preload engines.
 
 ---
  bindings/vala/Gkbd-3.0.metadata |   1 +
- bindings/vala/Makefile.am       |  15 ++
+ bindings/vala/Makefile.am       |  19 +-
  bindings/vala/Xkl-1.0.metadata  |   3 +
+ bindings/vala/gkbd.deps         |   3 +
+ bus/ibusimpl.c                  |  12 +-
  configure.ac                    |  40 ++++
  data/ibus.schemas.in            |  59 +++++
  ibus-1.0.pc.in                  |   1 +
@@ -18,11 +20,12 @@ Subject: [PATCH] Add ibus-xkb and libgnomekbd.
  ui/gtk3/Makefile.am             |  36 ++++
  ui/gtk3/gkbdlayout.vala.false   |  63 ++++++
  ui/gtk3/gkbdlayout.vala.true    | 108 ++++++++++
- ui/gtk3/panel.vala              | 216 ++++++++++++++++++-
- ui/gtk3/xkblayout.vala          | 431 +++++++++++++++++++++++++++++++++++++
- 16 files changed, 1641 insertions(+), 1 deletion(-)
+ ui/gtk3/panel.vala              | 196 ++++++++++++++++-
+ ui/gtk3/xkblayout.vala          | 429 ++++++++++++++++++++++++++++++++++++
+ 18 files changed, 1634 insertions(+), 5 deletions(-)
  create mode 100644 bindings/vala/Gkbd-3.0.metadata
  create mode 100644 bindings/vala/Xkl-1.0.metadata
+ create mode 100644 bindings/vala/gkbd.deps
  create mode 100644 src/ibusxkbxml.c
  create mode 100644 src/ibusxkbxml.h
  create mode 100644 ui/gtk3/gkbdlayout.vala.false
@@ -37,42 +40,53 @@ index 0000000..661e6fd
 @@ -0,0 +1 @@
 +Configuration cheader_filename="libgnomekbd/gkbd-configuration.h"
 diff --git a/bindings/vala/Makefile.am b/bindings/vala/Makefile.am
-index aba3454..bf3074a 100644
+index 29cc1eb..1d28501 100644
 --- a/bindings/vala/Makefile.am
 +++ b/bindings/vala/Makefile.am
-@@ -28,6 +28,17 @@ vapi_deps = \
+@@ -28,8 +28,6 @@ vapi_deps = \
  	$(top_builddir)/src/IBus-1.0.gir \
  	$(NULL)
  
+-ibus-1.0.vapi: $(vapi_deps)
+-
+ VAPIGEN_VAPIS = ibus-1.0.vapi
+ 
+ ibus_1_0_vapi_DEPS = gio-2.0
+@@ -39,19 +37,34 @@ ibus_1_0_vapi_FILES = \
+ 	$(srcdir)/IBus-1.0-custom.vala \
+ 	$(NULL)
+ 
 +if ENABLE_LIBGNOMEKBD
-+vapi_deps += $(builddir)/gkbd.vapi
++ibus-1.0.vapi: $(vapi_deps) gkbd.vapi
 +
-+$(builddir)/gkbd.vapi:
-+	$(AM_V_GEN) $(VAPIGEN) --library gkbd \
-+	    --metadatadir $(srcdir) \
-+	    --pkg gtk+-3.0 --pkg glib-2.0 --pkg gmodule-2.0 \
-+	    /usr/share/gir-1.0/Gkbd-3.0.gir
-+	$(NULL)
++VAPIGEN_VAPIS += gkbd.vapi
++
++gkbd_vapi_DEPS = gtk+-3.0 glib-2.0 gmodule-2.0
++gkbd_vapi_METADATADIRS = $(srcdir)
++gkbd_vapi_FILES = /usr/share/gir-1.0/Gkbd-3.0.gir
++else
++ibus-1.0.vapi: $(vapi_deps)
 +endif
 +
- ibus-1.0.vapi: $(vapi_deps)
+ vapidir = $(datadir)/vala/vapi
+-vapi_DATA = $(VAPIGEN_VAPIS) $(VAPIGEN_VAPIS:.vapi=.deps)
++vapi_DATA = ibus-1.0.vapi ibus-1.0.deps
  
- VAPIGEN_VAPIS = ibus-1.0.vapi
-@@ -43,11 +54,15 @@ vapidir = $(datadir)/vala/vapi
- vapi_DATA = $(VAPIGEN_VAPIS) $(VAPIGEN_VAPIS:.vapi=.deps)
+ MAINTAINERCLEANFILES = $(VAPIGEN_VAPIS)
  
  EXTRA_DIST = \
+ 	$(VAPIGEN_VAPIS) \
 +	Gkbd-3.0.metadata \
++	gkbd.deps \
  	IBus-1.0.metadata \
  	IBus-1.0-custom.vala \
  	ibus-1.0.deps \
+ 	ibus-private.vapi \
  	config.vapi \
  	xi.vapi \
 +	Xkl-1.0.metadata \
  	$(NULL)
  
-+CLEANFILES = gkbd.vapi
-+
  -include $(top_srcdir)/git.mk
 diff --git a/bindings/vala/Xkl-1.0.metadata b/bindings/vala/Xkl-1.0.metadata
 new file mode 100644
@@ -83,12 +97,44 @@ index 0000000..4961d0c
 +Xkl cheader_filename="libxklavier/xklavier.h"
 +Engine
 +    .filter_events.evt ref type="X.Event"
+diff --git a/bindings/vala/gkbd.deps b/bindings/vala/gkbd.deps
+new file mode 100644
+index 0000000..172632c
+--- /dev/null
++++ b/bindings/vala/gkbd.deps
+@@ -0,0 +1,3 @@
++gtk+-3.0
++glib-2.0
++gmodule-2.0
+diff --git a/bus/ibusimpl.c b/bus/ibusimpl.c
+index eec6da3..f84c034 100644
+--- a/bus/ibusimpl.c
++++ b/bus/ibusimpl.c
+@@ -1135,7 +1135,17 @@ _ibus_get_engines_by_names (BusIBusImpl           *ibus,
+     g_variant_builder_init (&builder, G_VARIANT_TYPE ("av"));
+     while (names[i] != NULL) {
+         IBusEngineDesc *desc = (IBusEngineDesc *) g_hash_table_lookup (
+-                ibus->engine_table, names[i++]);
++                ibus->engine_table, names[i]);
++
++        /* preload engines return user XKB so if the engine does not
++         * exist in simple.xml, fall back to 'us' layout. */
++        if (desc == NULL && g_str_has_prefix (names[i], "xkb:")) {
++            desc = (IBusEngineDesc *) g_hash_table_lookup (
++                    ibus->engine_table, "xkb:us::eng");
++        }
++
++        i++;
++
+         if (desc == NULL)
+             continue;
+         g_variant_builder_add (
 diff --git a/configure.ac b/configure.ac
-index b328073..61d1464 100644
+index d71c415..779e29e 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -237,6 +237,45 @@ else
-     enable_xim="no (disabled, use --enable-xim to enable)"
+@@ -261,6 +261,45 @@ else
+     enable_wayland="no (disabled, use --enable-wayland to enable)"
  fi
  
 +# Option for XKB command.
@@ -133,19 +179,19 @@ index b328073..61d1464 100644
  # GObject introspection
  GOBJECT_INTROSPECTION_CHECK([0.6.8])
  
-@@ -579,6 +618,7 @@ Build options:
-   No snooper regexes        "$NO_SNOOPER_APPS"
+@@ -619,6 +658,7 @@ Build options:
    Panel icon                "$IBUS_ICON_KEYBOARD"
    Enable surrounding-text   $enable_surrounding_text
+   Enable libnotify          $enable_libnotify
 +  Build libgnomebkd         $enable_libgnomekbd
    Run test cases            $enable_tests
  ])
  
 diff --git a/data/ibus.schemas.in b/data/ibus.schemas.in
-index dbb6da8..70bf9ca 100644
+index d256cbb..8fd7e15 100644
 --- a/data/ibus.schemas.in
 +++ b/data/ibus.schemas.in
-@@ -42,6 +42,52 @@
+@@ -56,6 +56,52 @@
        </locale>
      </schema>
      <schema>
@@ -198,7 +244,7 @@ index dbb6da8..70bf9ca 100644
        <key>/schemas/desktop/ibus/general/hotkey/trigger</key>
        <applyto>/desktop/ibus/general/hotkey/trigger</applyto>
        <owner>ibus</owner>
-@@ -66,6 +112,19 @@
+@@ -80,6 +126,19 @@
        </locale>
      </schema>
      <schema>
@@ -231,54 +277,54 @@ index 9f593ab..c93a0ed 100644
  Name: IBus
  Description: IBus Library
 diff --git a/ibus.spec.in b/ibus.spec.in
-index 58cac38..4b6f869 100644
+index 334f37e..2017af9 100644
 --- a/ibus.spec.in
 +++ b/ibus.spec.in
-@@ -4,6 +4,7 @@
+@@ -5,6 +5,7 @@
  
  # Build flags
  %define build_python_library 0
-+%define build_xkb 0
++%define build_libgnomekbd 0
  
  %define glib_ver %([ -a %{_libdir}/pkgconfig/glib-2.0.pc ] && pkg-config --modversion glib-2.0 | cut -d. -f 1,2 || echo -n "999")
  %define gconf2_version 2.12.0
-@@ -38,6 +39,10 @@ BuildRequires:  GConf2-devel
+@@ -40,6 +41,10 @@ BuildRequires:  dconf-devel
  BuildRequires:  pygobject2-devel
  BuildRequires:  intltool
  BuildRequires:  iso-codes-devel
-+%if %{build_xkb}
++%if %{build_libgnomekbd}
 +BuildRequires:  libxkbfile-devel
 +BuildRequires:  libgnomekbd-devel
 +%endif
  
  Requires:   %{name}-libs = %{version}-%{release}
  Requires:   %{name}-gtk2 = %{version}-%{release}
-@@ -51,6 +56,9 @@ Requires:   im-chooser >= %{im_chooser_version}
- Requires:   GConf2 >= %{gconf2_version}
+@@ -52,6 +57,9 @@ Requires:   dbus-python >= %{dbus_python_version}
+ Requires:   im-chooser >= %{im_chooser_version}
  Requires:   notify-python
  Requires:   librsvg2
-+%if %{build_xkb}
++%if %{build_libgnomekbd}
 +Requires:   libgnomekbd
 +%endif
  
  Requires(post):  desktop-file-utils
  Requires(postun):  desktop-file-utils
-@@ -132,6 +140,10 @@ OPTIONS="$OPTIONS --enable-python-library"
+@@ -152,6 +160,10 @@ OPTIONS="$OPTIONS --enable-python-library"
  OPTIONS="$OPTIONS --disable-python-library"
  %endif
  
-+%if %{build_xkb}
-+OPTIONS="$OPTIONS --enable-xkb --enable-libgnomekbd"
++%if %{build_libgnomekbd}
++OPTIONS="$OPTIONS --enable-libgnomekbd"
 +%endif
 +
  %configure $OPTIONS
  
  # make -C po update-gmo
 diff --git a/src/Makefile.am b/src/Makefile.am
-index 7ee5df8..8fa954e 100644
+index 404e1d2..f00fab7 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -197,6 +197,9 @@ typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+@@ -202,6 +202,9 @@ typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
  CLEANFILES += $(dist_gir_DATA) $(typelibs_DATA)
  endif
  
@@ -289,7 +335,7 @@ index 7ee5df8..8fa954e 100644
  ibusenumtypes.h: $(ibus_headers) ibusenumtypes.h.template
  	$(AM_V_GEN) ( top_builddir=`cd $(top_builddir) && pwd`; \
 diff --git a/src/ibus.h b/src/ibus.h
-index ef811a4..f82a162 100644
+index d8e226e..f0a9456 100644
 --- a/src/ibus.h
 +++ b/src/ibus.h
 @@ -47,6 +47,7 @@
@@ -302,16 +348,16 @@ index ef811a4..f82a162 100644
  #include <ibusobservedpath.h>
 diff --git a/src/ibusxkbxml.c b/src/ibusxkbxml.c
 new file mode 100644
-index 0000000..4792664
+index 0000000..f815e5d
 --- /dev/null
 +++ b/src/ibusxkbxml.c
 @@ -0,0 +1,466 @@
 +/* -*- mode: C; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
 +/* vim:set et sts=4: */
 +/* bus - The Input Bus
-+ * Copyright (C) 2012 Takao Fujiwara <takao.fujiwara1@gmail.com>
-+ * Copyright (C) 2012 Peng Huang <shawn.p.huang@gmail.com>
-+ * Copyright (C) 2012 Red Hat, Inc.
++ * Copyright (C) 2013 Takao Fujiwara <takao.fujiwara1@gmail.com>
++ * Copyright (C) 2013 Peng Huang <shawn.p.huang@gmail.com>
++ * Copyright (C) 2013 Red Hat, Inc.
 + *
 + * This library is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU Lesser General Public
@@ -774,16 +820,16 @@ index 0000000..4792664
 +#undef TABLE_LOOKUP_STRING_FUNC
 diff --git a/src/ibusxkbxml.h b/src/ibusxkbxml.h
 new file mode 100644
-index 0000000..6f5b7bd
+index 0000000..5aa486d
 --- /dev/null
 +++ b/src/ibusxkbxml.h
 @@ -0,0 +1,187 @@
 +/* -*- mode: C; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
 +/* vim:set et sts=4: */
 +/* bus - The Input Bus
-+ * Copyright (C) 2012 Takao Fujiwara <takao.fujiwara1@gmail.com>
-+ * Copyright (C) 2012 Peng Huang <shawn.p.huang@gmail.com>
-+ * Copyright (C) 2012 Red Hat, Inc.
++ * Copyright (C) 2013 Takao Fujiwara <takao.fujiwara1@gmail.com>
++ * Copyright (C) 2013 Peng Huang <shawn.p.huang@gmail.com>
++ * Copyright (C) 2013 Red Hat, Inc.
 + *
 + * This library is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU Lesser General Public
@@ -966,19 +1012,19 @@ index 0000000..6f5b7bd
 +G_END_DECLS
 +#endif
 diff --git a/ui/gtk3/Makefile.am b/ui/gtk3/Makefile.am
-index 5473027..b7e663c 100644
+index 6012cfa..3dfa0df 100644
 --- a/ui/gtk3/Makefile.am
 +++ b/ui/gtk3/Makefile.am
-@@ -47,6 +47,8 @@ USE_SYMBOL_ICON = FALSE
- # force include config.h before gi18n.h.
- AM_CPPFLAGS = -include $(CONFIG_HEADER)
+@@ -44,6 +44,8 @@ AM_CPPFLAGS = \
+ 
+ USE_SYMBOL_ICON = FALSE
  
 +HAVE_IBUS_GKBD_C = $(strip $(subst false, FALSE, $(subst true, TRUE, $(HAVE_IBUS_GKBD))))
 +
  AM_CFLAGS = \
  	@GLIB2_CFLAGS@ \
  	@GIO2_CFLAGS@ \
-@@ -58,6 +60,8 @@ AM_CFLAGS = \
+@@ -54,6 +56,8 @@ AM_CFLAGS = \
  	-DBINDIR=\"$(bindir)\" \
  	-DIBUS_DISABLE_DEPRECATED \
  	-DSWITCHER_USE_SYMBOL_ICON=$(USE_SYMBOL_ICON) \
@@ -987,24 +1033,9 @@ index 5473027..b7e663c 100644
  	-Wno-unused-variable \
  	-Wno-unused-but-set-variable \
  	-Wno-unused-function \
-@@ -91,6 +95,7 @@ ibus_ui_gtk3_SOURCES = \
- 	application.vala \
- 	candidatearea.vala \
- 	candidatepanel.vala \
-+	gkbdlayout.vala \
- 	handle.vala \
- 	iconwidget.vala \
- 	keybindingmanager.vala \
-@@ -99,17 +104,48 @@ ibus_ui_gtk3_SOURCES = \
- 	property.vala \
- 	separator.vala \
- 	switcher.vala \
-+	xkblayout.vala \
+@@ -97,12 +101,40 @@ AM_VALAFLAGS += \
  	$(NULL)
- 
- ibus_ui_gtk3_LDADD = \
- 	$(AM_LDADD) \
- 	$(NULL)
+ endif
  
 +if ENABLE_LIBGNOMEKBD
 +AM_CFLAGS += \
@@ -1033,20 +1064,40 @@ index 5473027..b7e663c 100644
 +	@cp $(srcdir)/gkbdlayout.vala.false $(srcdir)/gkbdlayout.vala
 +endif
 +
- CLEANFILES = \
+ libexec_PROGRAMS = ibus-ui-gtk3
+ 
+ ibus_ui_gtk3_SOURCES = \
+ 	application.vala \
+ 	candidatearea.vala \
+ 	candidatepanel.vala \
 +	gkbdlayout.vala \
+ 	handle.vala \
+ 	iconwidget.vala \
+ 	keybindingmanager.vala \
+@@ -112,6 +144,7 @@ ibus_ui_gtk3_SOURCES = \
+ 	propertypanel.vala \
+ 	separator.vala \
+ 	switcher.vala \
++	xkblayout.vala \
+ 	$(NULL)
+ 
+ ibus_ui_gtk3_LDADD = \
+@@ -120,9 +153,12 @@ ibus_ui_gtk3_LDADD = \
+ 
+ CLEANFILES = \
  	gtkpanel.xml \
++	gkbdlayout.vala \
  	$(NULL)
  
  EXTRA_DIST = \
 +	gkbdlayout.vala.false \
 +	gkbdlayout.vala.true \
- 	gtkpanel.xml.in.in \
+ 	gtkpanel.xml.in \
  	$(NULL)
  
 diff --git a/ui/gtk3/gkbdlayout.vala.false b/ui/gtk3/gkbdlayout.vala.false
 new file mode 100644
-index 0000000..a387de9
+index 0000000..506aff2
 --- /dev/null
 +++ b/ui/gtk3/gkbdlayout.vala.false
 @@ -0,0 +1,63 @@
@@ -1054,9 +1105,9 @@ index 0000000..a387de9
 + *
 + * ibus - The Input Bus
 + *
-+ * Copyright 2012 Red Hat, Inc.
-+ * Copyright(c) 2012 Peng Huang <shawn.p.huang@gmail.com>
-+ * Copyright(c) 2012 Takao Fujiwara <tfujiwar@redhat.com>
++ * Copyright(c) 2013 Red Hat, Inc.
++ * Copyright(c) 2013 Peng Huang <shawn.p.huang@gmail.com>
++ * Copyright(c) 2013 Takao Fujiwara <tfujiwar@redhat.com>
 + *
 + * This library is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU Lesser General Public
@@ -1115,7 +1166,7 @@ index 0000000..a387de9
 +}
 diff --git a/ui/gtk3/gkbdlayout.vala.true b/ui/gtk3/gkbdlayout.vala.true
 new file mode 100644
-index 0000000..2b78c69
+index 0000000..a6e0f8d
 --- /dev/null
 +++ b/ui/gtk3/gkbdlayout.vala.true
 @@ -0,0 +1,108 @@
@@ -1123,9 +1174,9 @@ index 0000000..2b78c69
 + *
 + * ibus - The Input Bus
 + *
-+ * Copyright 2012 Red Hat, Inc.
-+ * Copyright(c) 2012 Peng Huang <shawn.p.huang@gmail.com>
-+ * Copyright(c) 2012 Takao Fujiwara <tfujiwar@redhat.com>
++ * Copyright(c) 2013 Red Hat, Inc.
++ * Copyright(c) 2013 Peng Huang <shawn.p.huang@gmail.com>
++ * Copyright(c) 2013 Takao Fujiwara <tfujiwar@redhat.com>
 + *
 + * This library is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU Lesser General Public
@@ -1228,13 +1279,13 @@ index 0000000..2b78c69
 +    */
 +}
 diff --git a/ui/gtk3/panel.vala b/ui/gtk3/panel.vala
-index 24e6b2e..55b63ce 100644
+index a7a0c40..1da7966 100644
 --- a/ui/gtk3/panel.vala
 +++ b/ui/gtk3/panel.vala
-@@ -48,6 +48,13 @@ class Panel : IBus.PanelService {
-     private Gtk.AboutDialog m_about_dialog;
+@@ -58,6 +58,13 @@ class Panel : IBus.PanelService {
      private Gtk.CssProvider m_css_provider;
      private int m_switcher_delay_time = 400;
+     private bool m_use_system_keyboard_layout = false;
 +    private GkbdLayout m_gkbdlayout = null;
 +    private XKBLayout m_xkblayout = null;
 +    private string[] m_layouts = {};
@@ -1242,10 +1293,10 @@ index 24e6b2e..55b63ce 100644
 +    private int m_fallback_lock_id = -1;
 +    private bool m_changed_xkb_option = false;
 +    private GLib.Timer m_changed_layout_timer;
-     private const string ACCELERATOR_SWITCH_IME_FOREWARD = "<Control>space";
  
      private GLib.List<Keybinding> m_keybindings = new GLib.List<Keybinding>();
-@@ -90,6 +97,14 @@ class Panel : IBus.PanelService {
+ 
+@@ -108,6 +115,14 @@ class Panel : IBus.PanelService {
  
      ~Panel() {
          unbind_switch_shortcut();
@@ -1259,17 +1310,17 @@ index 24e6b2e..55b63ce 100644
 +        m_xkblayout = null;
      }
  
-     private void keybinding_manager_bind(KeybindingManager keybinding_manager,
-@@ -281,6 +296,7 @@ class Panel : IBus.PanelService {
-             m_config.watch("general/hotkey", "triggers");
-             m_config.watch("panel", "custom_font");
-             m_config.watch("panel", "use_custom_font");
-+            init_engines_order();
-             update_engines(m_config.get_value("general", "preload_engines"),
-                            m_config.get_value("general", "engines_order"));
-             unbind_switch_shortcut();
-@@ -293,6 +309,204 @@ class Panel : IBus.PanelService {
-         set_custom_font();
+     private void init_settings() {
+@@ -444,6 +459,7 @@ class Panel : IBus.PanelService {
+     }
+ 
+     public void load_settings() {
++        init_engines_order();
+         // Update m_use_system_keyboard_layout before update_engines()
+         // is called.
+         set_use_system_keyboard_layout();
+@@ -463,6 +479,184 @@ class Panel : IBus.PanelService {
+         set_version();
      }
  
 +    private void gkbdlayout_changed_cb() {
@@ -1308,11 +1359,7 @@ index 24e6b2e..55b63ce 100644
 +    }
 +
 +    private void init_engines_order() {
-+        if (m_config == null) {
-+            return;
-+        }
-+
-+        m_xkblayout = new XKBLayout(m_config);
++        m_xkblayout = new XKBLayout();
 +        string session = Environment.get_variable("DESKTOP_SESSION");
 +
 +        if (HAVE_IBUS_GKBD &&
@@ -1363,14 +1410,9 @@ index 24e6b2e..55b63ce 100644
 +            var_xkb_engine_names += "%s:%s:%s".printf("xkb", name, lang);
 +        }
 +
-+        GLib.Variant var_engines =
-+           m_config.get_value("general", "preload_engines");
-+        string[] engine_names = {};
++        string[] engine_names =
++                m_settings_general.get_strv("preload-engines");
 +        bool updated_engine_names = false;
-+
-+        if (var_engines != null) {
-+            engine_names = var_engines.dup_strv();
-+        }
 +
 +        foreach (string name in var_xkb_engine_names) {
 +            if (name in engine_names)
@@ -1379,20 +1421,12 @@ index 24e6b2e..55b63ce 100644
 +            engine_names += name;
 +        }
 +
-+        if (updated_engine_names) {
-+            m_config.set_value("general",
-+                               "preload_engines",
-+                               new GLib.Variant.strv(engine_names));
-+        }
++        if (updated_engine_names)
++            m_settings_general.set_strv("preload-engines", engine_names);
 +
-+        GLib.Variant var_order =
-+            m_config.get_value("general", "engines_order");
-+        string[] order_names = {};
++        string[] order_names =
++                m_settings_general.get_strv("engines-order");
 +        bool updated_order_names = false;
-+
-+        if (var_order != null) {
-+            order_names = var_order.dup_strv();
-+        }
 +
 +        foreach (var name in var_xkb_engine_names) {
 +            if (name in order_names)
@@ -1401,11 +1435,8 @@ index 24e6b2e..55b63ce 100644
 +            updated_order_names = true;
 +        }
 +
-+        if (updated_order_names) {
-+            m_config.set_value("general",
-+                               "engines_order",
-+                               new GLib.Variant.strv(order_names));
-+        }
++        if (updated_order_names)
++            m_settings_general.set_strv("engines-order", order_names);
 +    }
 +
 +    private void set_xkb_group_layout(IBus.EngineDesc engine) {
@@ -1473,28 +1504,28 @@ index 24e6b2e..55b63ce 100644
      private void exec_setxkbmap(IBus.EngineDesc engine) {
          string layout = engine.get_layout();
          string variant = engine.get_layout_variant();
-@@ -352,7 +566,7 @@ class Panel : IBus.PanelService {
-             return;
-         }
-         // set xkb layout
--        exec_setxkbmap(engine);
-+        set_layout(engine);
-     }
+@@ -528,7 +722,7 @@ class Panel : IBus.PanelService {
  
-     private void config_value_changed_cb(IBus.Config config,
+         // set xkb layout
+         if (!m_use_system_keyboard_layout)
+-            exec_setxkbmap(engine);
++            set_layout(engine);
+ 
+         engine_contexts_insert(engine);
+     }
 diff --git a/ui/gtk3/xkblayout.vala b/ui/gtk3/xkblayout.vala
 new file mode 100644
-index 0000000..165a905
+index 0000000..b7dfb3e
 --- /dev/null
 +++ b/ui/gtk3/xkblayout.vala
-@@ -0,0 +1,431 @@
+@@ -0,0 +1,429 @@
 +/* vim:set et sts=4 sw=4:
 + *
 + * ibus - The Input Bus
 + *
-+ * Copyright 2012 Red Hat, Inc.
-+ * Copyright(c) 2012 Peng Huang <shawn.p.huang@gmail.com>
-+ * Copyright(c) 2012 Takao Fujiwara <tfujiwar@redhat.com>
++ * Copyright(c) 2013 Red Hat, Inc.
++ * Copyright(c) 2013 Peng Huang <shawn.p.huang@gmail.com>
++ * Copyright(c) 2013 Takao Fujiwara <tfujiwar@redhat.com>
 + *
 + * This library is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU Lesser General Public
@@ -1518,7 +1549,7 @@ index 0000000..165a905
 +class XKBLayout
 +{
 +    string m_xkb_command = "setxkbmap";
-+    IBus.Config m_config = null;
++    GLib.Settings m_settings_general;
 +    string[] m_xkb_latin_layouts = {};
 +    GLib.Pid m_xkb_pid = -1;
 +    GLib.Pid m_xmodmap_pid = -1;
@@ -1530,18 +1561,16 @@ index 0000000..165a905
 +    string m_default_variant = "";
 +    string m_default_option = "";
 +
-+    public XKBLayout(IBus.Config? config) {
-+        m_config = config;
++    public XKBLayout() {
++        m_settings_general = new GLib.Settings("org.freedesktop.ibus.general");
 +
-+        if (config != null) {
-+            var value  = config.get_value("general", "xkb_latin_layouts");
-+            for (int i = 0; value != null && i < value.n_children(); i++) {
-+                m_xkb_latin_layouts +=
-+                        value.get_child_value(i).dup_string();
-+            }
-+            if (m_use_xmodmap) {
-+                m_use_xmodmap = config.get_value("general", "use_xmodmap").get_boolean();
-+            }
++        var value  = m_settings_general.get_value("xkb-latin-layouts");
++        for (int i = 0; value != null && i < value.n_children(); i++) {
++            m_xkb_latin_layouts +=
++                    value.get_child_value(i).dup_string();
++        }
++        if (m_use_xmodmap) {
++            m_use_xmodmap = m_settings_general.get_boolean("use-xmodmap");
 +        }
 +    }
 +

@@ -1,20 +1,19 @@
-From 1f21bce0403cdf7f99faa33842bc23b49aaee8cc Mon Sep 17 00:00:00 2001
+From 6c5b4f197afde5185c23ed725eecb36da43507e6 Mon Sep 17 00:00:00 2001
 From: fujiwarat <takao.fujiwara1@gmail.com>
-Date: Thu, 31 Jan 2013 17:31:55 +0900
+Date: Tue, 14 Jan 2014 15:30:54 +0900
 Subject: [PATCH] Enable ibus-setup to show the frequently used languages
  only in IME list.
 
 ---
  data/ibus.schemas.in    | 168 ++++++++++++++++++++++++++++++++++++++++++++++++
- setup/enginecombobox.py | 155 +++++++++++++++++++++++++++++++++++++-------
- setup/main.py           |   1 +
- 3 files changed, 300 insertions(+), 24 deletions(-)
+ setup/enginecombobox.py | 148 +++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 292 insertions(+), 24 deletions(-)
 
 diff --git a/data/ibus.schemas.in b/data/ibus.schemas.in
-index 7833959..72bcc72 100644
+index 28d2219..0600133 100644
 --- a/data/ibus.schemas.in
 +++ b/data/ibus.schemas.in
-@@ -325,6 +325,174 @@ se,si,sk,sy,sy(ku),th,tj,tr,ua,uz,vn
+@@ -351,6 +351,174 @@ se,si,sk,sy,sy(ku),th,tj,tr,ua,uz,vn
        </locale>
      </schema>
      <schema>
@@ -190,60 +189,35 @@ index 7833959..72bcc72 100644
        <applyto>/desktop/ibus/panel/custom_font</applyto>
        <owner>ibus</owner>
 diff --git a/setup/enginecombobox.py b/setup/enginecombobox.py
-index 0f8a6ae..9828ee6 100644
+index b45ad56..830f0e8 100644
 --- a/setup/enginecombobox.py
 +++ b/setup/enginecombobox.py
-@@ -45,6 +45,9 @@ class EngineComboBox(Gtk.ComboBox):
+@@ -24,6 +24,7 @@ import locale
+ import functools
+ import sys
+ 
++from gi.repository import Gio
+ from gi.repository import GObject
+ from gi.repository import Gtk
+ from gi.repository import IBus
+@@ -47,6 +48,10 @@ class EngineComboBox(Gtk.ComboBox):
          self.connect("notify::active", self.__notify_active_cb)
  
          self.__model = None
 +        self.__all_model = None
-+        self.__config = None
 +        self.__show_sub_lang = False
++        self.__settings_xkblayoutconfig = Gio.Settings(
++                "org.freedesktop.ibus.general.xkblayoutconfig");
  
          renderer = Gtk.CellRendererPixbuf()
          renderer.set_property("xalign", 0)
-@@ -58,20 +61,51 @@ class EngineComboBox(Gtk.ComboBox):
+@@ -60,20 +65,45 @@ class EngineComboBox(Gtk.ComboBox):
          self.pack_start(renderer, True)
          self.set_cell_data_func(renderer, self.__name_cell_data_cb, None)
  
 -    def set_engines(self, engines):
 -        self.__model = Gtk.TreeStore(object)
-+    def __gconf_get_lang_list_from_locale(self):
-+        common_list = ['en', 'Other']
-+        if  self.__config == None:
-+            return None
-+        loc = None
-+        try:
-+           loc = locale.setlocale (locale.LC_ALL)
-+        except:
-+            pass
-+        if loc == None:
-+            return common_list
-+        current_lang = IBus.get_language_name(loc)
-+        if current_lang == None:
-+            return common_list
-+        group_list = self.__config.get_value("general/xkblayoutconfig",
-+                                             "group_list")
-+        if group_list == None:
-+            return [loc] + common_list
-+        group_list = list(group_list)
-+        lang_list = None
-+        for group in group_list:
-+            group = str(group)
-+            langs = list(self.__config.get_value("general/xkblayoutconfig",
-+                                                  group))
-+            for lang in langs:
-+                lang = str(lang)
-+                if current_lang == IBus.get_language_name(lang):
-+                    lang_list = langs
-+                    break
-+            if lang_list != None:
-+                break
-+        if lang_list == None:
-+            return [loc] + common_list
-+        return lang_list + common_list
- 
+-
 -        iter1 = self.__model.append(None)
 -        self.__model.set(iter1, 0, 0)
 -        langs = {}
@@ -254,6 +228,35 @@ index 0f8a6ae..9828ee6 100644
 -            if l not in langs:
 -                langs[l] = []
 -            langs[l].append(e)
++    def __gconf_get_lang_list_from_locale(self):
++        common_list = ['en', 'Other']
++        loc = None
++        try:
++           loc = locale.setlocale (locale.LC_ALL)
++        except:
++            pass
++        if loc == None:
++            return common_list
++        current_lang = IBus.get_language_name(loc)
++        if current_lang == None:
++            return common_list
++        group_list = self.__settings_xkblayoutconfig.get_strv('group-list')
++        if len(group_list) == 0:
++            return [loc] + common_list
++        lang_list = None
++        for group in group_list:
++            group = group.replace('_', '-')
++            langs = self.__settings_xkblayoutconfig.get_strv(group)
++            for lang in langs:
++                if current_lang == IBus.get_language_name(lang):
++                    lang_list = langs
++                    break
++            if lang_list != None:
++                break
++        if lang_list == None:
++            return [loc] + common_list
++        return lang_list + common_list
++
 +    def __has_engine_in_lang_list(self, engine, lang_list):
 +        retval = False
 +        for lang in lang_list:
@@ -264,10 +267,10 @@ index 0f8a6ae..9828ee6 100644
 +        return retval
  
 +    def __model_append_langs(self, model, langs, visible):
-         keys = langs.keys()
-         keys.sort(locale.strcoll)
+         keys = list(langs.keys())
+         keys.sort(key=functools.cmp_to_key(locale.strcoll))
          loc = locale.getlocale()[0]
-@@ -89,29 +123,86 @@ class EngineComboBox(Gtk.ComboBox):
+@@ -91,22 +121,62 @@ class EngineComboBox(Gtk.ComboBox):
              keys.remove(IBus.get_language_name("Other"))
              keys += [IBus.get_language_name("Other")]
          for l in keys:
@@ -279,7 +282,7 @@ index 0f8a6ae..9828ee6 100644
                  if a.get_rank() == b.get_rank():
                      return locale.strcoll(a.get_longname(), b.get_longname())
                  return int(b.get_rank() - a.get_rank())
-             langs[l].sort(cmp_engine)
+             langs[l].sort(key=functools.cmp_to_key(cmp_engine))
              for e in langs[l]:
 -                iter2 = self.__model.append(iter1)
 -                self.__model.set(iter2, 0, e)
@@ -288,7 +291,8 @@ index 0f8a6ae..9828ee6 100644
 +
 +    def set_engines(self, engines):
 +        self.__model = Gtk.TreeStore(object)
-+
+ 
+-        self.set_model(self.__model)
 +        iter1 = self.__model.append(None)
 +        self.__model.set(iter1, 0, 0)
 +        lang_list = self.__gconf_get_lang_list_from_locale()
@@ -319,8 +323,7 @@ index 0f8a6ae..9828ee6 100644
 +        self.__model_append_langs(self.__all_model, sub_lang, False)
 +
 +        self.__toggle_sub_lang()
- 
--        self.set_model(self.__model)
++
 +    def __toggle_sub_lang(self):
 +        self.set_model(None)
 +        if self.__show_sub_lang:
@@ -334,7 +337,9 @@ index 0f8a6ae..9828ee6 100644
 +        model = self.get_model()
 +        engine = model.get_value(iter, 0)
  
-         if isinstance(engine, str) or isinstance (engine, unicode):
+         if isinstance(engine, str):
+             renderer.set_property("visible", False)
+@@ -115,8 +185,25 @@ class EngineComboBox(Gtk.ComboBox):
              renderer.set_property("visible", False)
              renderer.set_property("sensitive", False)
          elif isinstance(engine, int):
@@ -362,7 +367,7 @@ index 0f8a6ae..9828ee6 100644
          else:
              renderer.set_property("visible", True)
              renderer.set_property("sensitive", True)
-@@ -119,7 +210,8 @@ class EngineComboBox(Gtk.ComboBox):
+@@ -124,7 +211,8 @@ class EngineComboBox(Gtk.ComboBox):
              renderer.set_property("pixbuf", pixbuf)
  
      def __name_cell_data_cb(self, celllayout, renderer, model, iter, data):
@@ -370,9 +375,9 @@ index 0f8a6ae..9828ee6 100644
 +        model = self.get_model()
 +        engine = model.get_value(iter, 0)
  
-         if isinstance (engine, str) or isinstance (engine, unicode):
+         if isinstance (engine, str):
              renderer.set_property("sensitive", False)
-@@ -127,8 +219,15 @@ class EngineComboBox(Gtk.ComboBox):
+@@ -136,8 +224,15 @@ class EngineComboBox(Gtk.ComboBox):
              renderer.set_property("weight", Pango.Weight.NORMAL)
          elif isinstance(engine, int):
              renderer.set_property("sensitive", True)
@@ -390,7 +395,7 @@ index 0f8a6ae..9828ee6 100644
          else:
              renderer.set_property("sensitive", True)
              renderer.set_property("text", engine.get_longname())
-@@ -144,10 +243,18 @@ class EngineComboBox(Gtk.ComboBox):
+@@ -153,7 +248,12 @@ class EngineComboBox(Gtk.ComboBox):
              if i == 0 or i == -1:
                  return None
              iter = self.get_active_iter()
@@ -402,26 +407,8 @@ index 0f8a6ae..9828ee6 100644
 +                return None
 +            return model[iter][0]
          else:
-             raise AttributeError, 'unknown property %s' % property.name
+             raise AttributeError('unknown property %s' % property.name)
  
-+    def set_config(self, config):
-+        self.__config = config
-+
-     def get_active_engine(self):
-         return self.get_property("active-engine")
- 
-diff --git a/setup/main.py b/setup/main.py
-index 4826037..42fcb33 100644
---- a/setup/main.py
-+++ b/setup/main.py
-@@ -207,6 +207,7 @@ class Setup(object):
-         # init engine page
-         self.__engines = self.__bus.list_engines()
-         self.__combobox = self.__builder.get_object("combobox_engines")
-+        self.__combobox.set_config(self.__config)
-         self.__combobox.set_engines(self.__engines)
- 
-         engine_names = values.get("preload_engines", [])
 -- 
 1.8.0
 
