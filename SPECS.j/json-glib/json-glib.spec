@@ -1,15 +1,15 @@
 %define glib_ver 2.16
 
 Name:		json-glib
-Version:	0.14.2
-Release:	2%{?dist}
+Version:	0.99.2
+Release:	1%{?dist}
 Summary:	Library for JavaScript Object Notation format
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		http://live.gnome.org/JsonGlib
 #VCS:		git:git://git.gnome.org/json-glib
-Source0:	http://download.gnome.org/sources/%{name}/0.14/%{name}-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/%{name}/0.99/%{name}-%{version}.tar.xz
 
 BuildRequires:	glib2-devel >= %{glib_ver}
 BuildRequires:	gobject-introspection-devel
@@ -25,7 +25,6 @@ Summary:	Development files for %{name}
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	glib2-devel >= %{glib_ver}
-Requires:	gtk-doc
 Requires:	pkgconfig
 
 
@@ -61,7 +60,7 @@ cp -a doc/reference/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
 
 
 %files -f json-glib-1.0.lang
-%doc COPYING README NEWS
+%doc COPYING NEWS
 %{_libdir}/lib%{name}*.so.*
 %{_libdir}/girepository-1.0/Json-1.0.typelib
 
@@ -69,13 +68,34 @@ cp -a doc/reference/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
 %{_libdir}/lib%{name}*.so
 %{_libdir}/pkgconfig/%{name}-1.0.pc
 %{_includedir}/%{name}-1.0/
-%{_datadir}/gtk-doc/html/%{name}/
+%{_datadir}/gtk-doc/
 %{_datadir}/gir-1.0/Json-1.0.gir
+%{_bindir}/json-glib-format
+%{_bindir}/json-glib-validate
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.14.2-2
-- 为 Magic 3.0 重建
+* Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 0.99.2-1
+- Update to 0.99.2
+
+* Sat Sep 21 2013 Kalev Lember <kalevlember@gmail.com> - 0.16.2-1
+- Update to 0.16.2
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.16.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Apr 16 2013 Kalev Lember <kalevlember@gmail.com> - 0.16.0-1
+- Update to 0.16.0
+- Don't depend on gtk-doc (#604377)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jul 17 2012 Richard Hughes <hughsient@gmail.com> - 0.15.2-1
+- Update to 0.15.2
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Nov  2 2011 Matthias Clasen <mclasen@redhat.com> - 0.14.2-1
 - Update to 0.14.2
