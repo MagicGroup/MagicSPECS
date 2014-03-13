@@ -1,38 +1,42 @@
+%global gnome_desktop_version 3.11.1
+%global libgweather_version 3.9.5
+%global gsettings_desktop_schemas_version 3.9.91
+%global geoclue_version 1.99.3
+%global geocode_glib_version 3.10.0
+
 Name:           gnome-settings-daemon
-Version:        3.8.1
-Release:        1%{?dist}
+Version:        3.11.90
+Release:        2%{?dist}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
 
 Group:          System Environment/Daemons
 License:        GPLv2+
 URL:            http://download.gnome.org/sources/%{name}
 #VCS: git:git://git.gnome.org/gnome-settings-daemon
-Source:         http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+Source:         http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
 # disable wacom for ppc/ppc64 (used on RHEL)
 Patch0:         %{name}-3.5.4-ppc-no-wacom.patch
 
-Requires: control-center-filesystem
-
-BuildRequires:  dbus-glib-devel
 BuildRequires:  gtk3-devel >= 3.7.8
-BuildRequires:  gnome-desktop3-devel >= 3.1.4
+BuildRequires:  gnome-desktop3-devel >= %{gnome_desktop_version}
 BuildRequires:  xorg-x11-proto-devel libXxf86misc-devel
-BuildRequires:  gstreamer-devel
-BuildRequires:  gstreamer-plugins-base-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  libgnomekbd-devel
 BuildRequires:  libnotify-devel
 BuildRequires:  gettext intltool
 BuildRequires:  fontconfig-devel
+BuildRequires:  geoclue2-devel >= %{geoclue_version}
+BuildRequires:  geocode-glib-devel >= %{geocode_glib_version}
 BuildRequires:  libcanberra-devel
 BuildRequires:  polkit-devel
 BuildRequires:  autoconf automake libtool
 BuildRequires:  libxklavier-devel
-BuildRequires:  gsettings-desktop-schemas-devel >= 0.1.7
+BuildRequires:  gsettings-desktop-schemas-devel >= %{gsettings_desktop_schemas_version}
 BuildRequires:  PackageKit-glib-devel
 BuildRequires:  cups-devel
 BuildRequires:  upower-devel
 BuildRequires:  libgudev1-devel
+BuildRequires:  libgweather-devel >= %{libgweather_version}
 BuildRequires:  librsvg2-devel
 BuildRequires:  nss-devel
 BuildRequires:  colord-devel >= 0.1.12
@@ -44,10 +48,19 @@ BuildRequires:  libxkbfile-devel
 BuildRequires:  ibus-devel
 BuildRequires:  libxslt
 BuildRequires:  docbook-style-xsl
+BuildRequires:  xkeyboard-config-devel
 %ifnarch s390 s390x %{?rhel:ppc ppc64}
 BuildRequires:  libwacom-devel >= 0.7
 BuildRequires:  xorg-x11-drv-wacom-devel
 %endif
+
+Requires: colord
+Requires: control-center-filesystem
+Requires: geoclue2 >= %{geoclue_version}
+Requires: geocode-glib%{?_isa} >= %{geocode_glib_version}
+Requires: gnome-desktop3%{?_isa} >= %{gnome_desktop_version}
+Requires: gsettings-desktop-schemas%{?_isa} >= %{gsettings_desktop_schemas_version}
+Requires: libgweather%{?_isa} >= %{libgweather_version}
 
 %description
 A daemon to share settings from GNOME to other applications. It also
@@ -57,7 +70,6 @@ handles global keybindings, as well as a number of desktop-wide settings.
 Summary:        Development files for %{name}
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
-Requires:       dbus-glib-devel
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -119,8 +131,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
 %doc AUTHORS COPYING NEWS
-%dir %{_sysconfdir}/gnome-settings-daemon
-%dir %{_sysconfdir}/gnome-settings-daemon/xrandr
 
 # list plugins explicitly, so we notice if one goes missing
 # some of these don't have a separate gschema
@@ -129,6 +139,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %{_libdir}/gnome-settings-daemon-3.0/clipboard.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/libclipboard.so
+
+%{_libdir}/gnome-settings-daemon-3.0/datetime.gnome-settings-plugin
+%{_libdir}/gnome-settings-daemon-3.0/libdatetime.so
+%{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.datetime.gschema.xml
 
 %{_libdir}/gnome-settings-daemon-3.0/housekeeping.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/libhousekeeping.so
@@ -155,14 +169,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/libprint-notifications.so
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.print-notifications.gschema.xml
 
-%{_libdir}/gnome-settings-daemon-3.0/remote-display.gnome-settings-plugin
-%{_libdir}/gnome-settings-daemon-3.0/libremote-display.so
+%{_libdir}/gnome-settings-daemon-3.0/librfkill.so
+%{_libdir}/gnome-settings-daemon-3.0/rfkill.gnome-settings-plugin
 
 %{_libdir}/gnome-settings-daemon-3.0/screensaver-proxy.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/libscreensaver-proxy.so
 
-#{_libdir}/gnome-settings-daemon-3.0/smartcard.gnome-settings-plugin
-#{_libdir}/gnome-settings-daemon-3.0/libsmartcard.so
+%{_libdir}/gnome-settings-daemon-3.0/smartcard.gnome-settings-plugin
+%{_libdir}/gnome-settings-daemon-3.0/libsmartcard.so
 
 %{_libdir}/gnome-settings-daemon-3.0/sound.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/libsound.so
@@ -174,6 +188,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/wacom.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/libgsdwacom.so
 %{_libexecdir}/gsd-wacom-led-helper
+%{_libexecdir}/gsd-wacom-oled-helper
 %{_datadir}/polkit-1/actions/org.gnome.settings-daemon.plugins.wacom.policy
 %endif
 
@@ -202,10 +217,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/libgsd.so
 
 %{_libexecdir}/gnome-settings-daemon
+%{_libexecdir}/gnome-settings-daemon-localeexec
 %{_libexecdir}/gsd-locate-pointer
 %{_libexecdir}/gsd-printer
-%{_libexecdir}/gsd-input-sources-switcher
 
+/usr/lib/udev/rules.d/*.rules
 %{_datadir}/gnome-settings-daemon/
 %{_sysconfdir}/xdg/autostart/gnome-settings-daemon.desktop
 %{_datadir}/icons/hicolor/*/apps/gsd-xrandr.*
@@ -232,6 +248,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libexecdir}/gsd-test-a11y-keyboard
 %{_libexecdir}/gsd-test-a11y-settings
 %{_libexecdir}/gsd-test-cursor
+%{_libexecdir}/gsd-test-datetime
 %{_libexecdir}/gsd-test-housekeeping
 %{_libexecdir}/gsd-test-input-helper
 %{_libexecdir}/gsd-test-keyboard
@@ -239,10 +256,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libexecdir}/gsd-test-mouse
 %{_libexecdir}/gsd-test-orientation
 %{_libexecdir}/gsd-test-print-notifications
-%{_libexecdir}/gsd-test-remote-display
+%{_libexecdir}/gsd-test-rfkill
 %{_libexecdir}/gsd-test-screensaver-proxy
-#{_libexecdir}/gsd-test-smartcard
+%{_libexecdir}/gsd-test-smartcard
 %{_libexecdir}/gsd-test-sound
+%{_libexecdir}/gsd-test-updates
 %{_libexecdir}/gsd-test-xrandr
 %{_libexecdir}/gsd-test-xsettings
 
@@ -252,6 +270,87 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.updates.gschema.xml
 
 %changelog
+* Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-2
+- Rebuilt for gnome-desktop soname bump
+
+* Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Thu Jan 30 2014 Richard Hughes <rhughes@redhat.com> - 3.11.3-2
+- Rebuild for libpackagekit-glib soname bump
+
+* Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 3.11.3-1
+- Update to 3.11.3
+
+* Mon Nov 25 2013 Richard Hughes <rhughes@redhat.com> - 3.11.2-1
+- Update to 3.11.2
+
+* Thu Oct 31 2013 Florian Müllner <fmuellner@redhat.com> - 3.11.1-1
+- Update to 3.11.1
+
+* Mon Oct 28 2013 Richard Hughes <rhughes@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+
+* Fri Oct 11 2013 Richard Hughes <rhughes@redhat.com> - 3.10.0-3
+- Apply the previous patch on Fedora too.
+
+* Fri Oct 11 2013 Richard Hughes <rhughes@redhat.com> - 3.10.0-2
+- Grab a patch from upstream to fix the multiple notifications about updates.
+- Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=1009132
+
+* Tue Sep 24 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.92-1
+- Update to 3.9.92
+
+* Tue Sep 17 2013 Richard Hughes <rhughes@redhat.com> - 3.9.91.1-2
+- Grab a patch from upstream so that the offline updates feature can
+  actually work when reboot returns with success.
+
+* Tue Sep 03 2013 Matthias Clasen <mclasen@redhat.com> - 3.9.91.1-1
+- Update to 3.9.91.1
+
+* Tue Sep 03 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.91-1
+- Update to 3.9.91
+- Include the new datetime plugin
+
+* Fri Aug 23 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.90-2
+- Keep middle click paste enabled for now
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.90-1
+- Update to 3.9.90
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.5-1
+- Update to 3.9.5
+- Remove empty /etc/gnome-settings-daemon directory
+- Install new rfkill plugin and add back the smartcard plugin
+
+* Tue Jul 30 2013 Richard Hughes <rhughes@redhat.com> - 3.9.3-3
+- Rebuild for colord soname bump
+
+* Mon Jul 22 2013 Bastien Nocera <bnocera@redhat.com> 3.9.3-2
+- Remove obsolete GStreamer 0.10 BRs
+
+* Thu Jun 20 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.3-1
+- Update to 3.9.3
+
+* Sun Jun 02 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.2-1
+- Update to 3.9.2
+- Drop the ibus-kkc-libpinyin patch; the hardcoded input sources
+  list is gone from g-s-d
+- Set the minimum required gnome-desktop3 version
+
+* Tue May 14 2013 Richard Hughes <rhughes@redhat.com> - 3.8.2-1
+- Update to 3.8.2
+
+* Thu May  9 2013 Jens Petersen <petersen@redhat.com> - 3.8.1-2
+- default ibus engine in Fedora is now kkc for Japanese
+  and libpinyin for Chinese (#948117)
+
 * Tue Apr 16 2013 Richard Hughes <rhughes@redhat.com> - 3.8.1-1
 - Update to 3.8.1
 
