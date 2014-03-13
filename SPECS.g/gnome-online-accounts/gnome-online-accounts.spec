@@ -1,12 +1,12 @@
 Name:		gnome-online-accounts
-Version:	3.8.1
+Version:	3.11.90
 Release:	1%{?dist}
-Summary:	Provide online accounts information
+Summary:	Single sign-on framework for GNOME
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		https://live.gnome.org/GnomeOnlineAccounts
-Source0:	http://download.gnome.org/sources/gnome-online-accounts/3.8/%{name}-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-online-accounts/3.11/%{name}-%{version}.tar.xz
 
 BuildRequires:	gcr-devel
 BuildRequires:	glib2-devel >= 2.35
@@ -20,11 +20,15 @@ BuildRequires:	json-glib-devel
 BuildRequires:	libsecret-devel >= 0.7
 BuildRequires:	libsoup-devel >= 2.41
 BuildRequires:	rest-devel
+BuildRequires:	telepathy-glib-devel
 BuildRequires:	libxml2-devel
 
+Requires:	realmd
+
 %description
-gnome-online-accounts provides interfaces so applications and
-libraries in GNOME can access the user's online accounts.
+GNOME Online Accounts provides interfaces so that applications and libraries
+in GNOME can access the user's online accounts. It has providers for Google,
+ownCloud, Facebook, Flickr, Windows Live, Microsoft Exchange and Kerberos.
 
 %package devel
 Summary:	Development files for %{name}
@@ -34,8 +38,8 @@ Requires:	pkgconfig
 Requires:	gobject-introspection-devel
 
 %description devel
-The gnome-online-accounts-devel package contains libraries and header
-files for developing applications that use gnome-online-accounts.
+The %{name}-devel package contains libraries and header files for
+developing applications that use %{name}.
 
 %prep
 %setup -q
@@ -46,10 +50,12 @@ files for developing applications that use gnome-online-accounts.
   --enable-gtk-doc \
   --enable-exchange \
   --enable-facebook \
+  --enable-flickr \
   --enable-google \
   --enable-imap-smtp \
   --enable-kerberos \
   --enable-owncloud \
+  --enable-telepathy \
   --enable-windows-live
 make %{?_smp_mflags}
 
@@ -58,6 +64,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la $RPM_BUILD_ROOT/%{_libdir}/control-center-1/panels/*.la
 
 %find_lang %{name}
+%find_lang %{name}-tpaw
 
 %post
 /sbin/ldconfig
@@ -66,25 +73,32 @@ touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 %postun
 /sbin/ldconfig
 if [ $1 -eq 0 ] ; then
+    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
   touch --no-create %{_datadir}/icons/hicolor &>/dev/null
   gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
 %posttrans
+/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
-%files -f %{name}.lang
+%files -f %{name}.lang -f %{name}-tpaw.lang
 %doc NEWS COPYING
 %{_libdir}/girepository-1.0/Goa-1.0.typelib
 %{_libdir}/libgoa-1.0.so.0
 %{_libdir}/libgoa-1.0.so.0.0.0
-%{_libdir}/libgoa-backend-1.0.so.0
-%{_libdir}/libgoa-backend-1.0.so.0.0.0
+%{_libdir}/libgoa-backend-1.0.so.1
+%{_libdir}/libgoa-backend-1.0.so.1.0.0
 %{_prefix}/libexec/goa-daemon
 %{_datadir}/dbus-1/services/org.gnome.OnlineAccounts.service
 %{_datadir}/icons/hicolor/*/apps/goa-*.png
+%{_datadir}/icons/hicolor/*/apps/im-*.png
+%{_datadir}/icons/hicolor/*/apps/im-*.svg
 %{_datadir}/man/man8/goa-daemon.8.gz
+
+%dir %{_datadir}/%{name}
 %{_datadir}/%{name}/goawebview.css
+%{_datadir}/%{name}/irc-networks.xml
 
 %files devel
 %{_includedir}/goa-1.0/
@@ -99,6 +113,64 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/goa-1.0/include
 
 %changelog
+* Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Wed Jan 15 2014 Richard Hughes <rhughes@redhat.com> - 3.11.4-1
+- Update to 3.11.4
+
+* Wed Dec 18 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.11.3-1
+- Update to 3.11.3
+
+* Mon Nov 25 2013 Richard Hughes <rhughes@redhat.com> - 3.11.2-1
+- Update to 3.11.2
+
+* Tue Nov 12 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.10.2-1
+- Update to 3.10.2
+
+* Fri Oct 18 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.10.1-2
+- Adapt to changes in the redirect URI used by Facebook (GNOME #710363)
+
+* Wed Oct 16 2013 Richard Hughes <rhughes@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+
+* Tue Oct 08 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.10.0-3
+- Add a Requires on realmd (Red Hat #949741)
+
+* Fri Sep 27 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.10.0-2
+- Fix GNOME #708462 and #708832
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.92-1
+- Update to 3.9.92
+
+* Tue Sep 03 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.91-1
+- Update to 3.9.91
+
+* Thu Aug 29 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.90-2
+- Update to new webkitgtk-2.1.90 API
+
+* Thu Aug 22 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.9.90-1
+- Update to 3.9.90
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 11 2013 Debarshi Ray <rishi@fedoraproject.org> - 3.9.4-1
+- Update to 3.9.4
+- Update summary and description to match upstream DOAP file
+
+* Sun Jun 02 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.2-1
+- Update to 3.9.2
+
+* Sat May 04 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.1-1
+- Update to 3.9.1
+
 * Mon Apr 15 2013 Richard Hughes <rhughes@redhat.com> - 3.8.1-1
 - Update to 3.8.1
 
