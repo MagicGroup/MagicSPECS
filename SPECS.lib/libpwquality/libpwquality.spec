@@ -1,14 +1,16 @@
 Summary: A library for password generation and password quality checking
 Name: libpwquality
-Version: 1.2.1
+Version: 1.2.3
 Release: 2%{?dist}
 # The package is BSD licensed with option to relicense as GPLv2+
 # - this option is redundant as the BSD license allows that anyway.
 License: BSD or GPLv2+
 Group: System Environment/Base
 Source0: http://fedorahosted.org/releases/l/i/libpwquality/libpwquality-%{version}.tar.bz2
+Patch1: libpwquality-1.2.3-translation-updates.patch
 
-%global _moduledir /%{_lib}/security
+%global _pwqlibdir %{_libdir}
+%global _moduledir %{_libdir}/security
 %global _secconfdir %{_sysconfdir}/security
 
 Requires: cracklib-dicts >= 2.8
@@ -31,7 +33,7 @@ to perform some of the checks.
 
 %package devel
 Group: Development/Libraries
-Summary: Files needed for developing PAM-aware applications and modules for PAM
+Summary: Support for development of applications using the libpwquality library
 Requires: libpwquality%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -53,22 +55,26 @@ pronounceable passwords from Python applications.
 
 %prep
 %setup -q
+%patch1 -p2 -b .translations
 
 %build
 %configure \
-	--with-securedir=/%{_lib}/security \
+	--with-securedir=%{_moduledir} \
 	--with-pythonsitedir=%{python_sitearch} \
 	--disable-static
 
+make -C po update-po
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 
+%if "%{_pwqlibdir}" != "%{_libdir}"
 pushd $RPM_BUILD_ROOT%{_libdir}
-mv libpwquality.so.* $RPM_BUILD_ROOT/%{_lib}/
-ln -sf ../../%{_lib}/libpwquality.so.*.* libpwquality.so
+mv libpwquality.so.* $RPM_BUILD_ROOT%{_pwqlibdir}
+ln -sf %{_pwqlibdir}/libpwquality.so.*.* libpwquality.so
 popd
+%endif
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_moduledir}/*.la
 
@@ -87,7 +93,7 @@ rm -f $RPM_BUILD_ROOT%{_moduledir}/*.la
 %{_bindir}/pwmake
 %{_bindir}/pwscore
 %{_moduledir}/pam_pwquality.so
-/%{_lib}/libpwquality.so.*
+%{_pwqlibdir}/libpwquality.so.*
 %config(noreplace) %{_secconfdir}/pwquality.conf
 %{_mandir}/man1/*
 %{_mandir}/man5/*
@@ -104,8 +110,20 @@ rm -f $RPM_BUILD_ROOT%{_moduledir}/*.la
 %{python_sitearch}/pwquality.so
 
 %changelog
-* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+* Fri Nov 29 2013 Tomáš Mráz <tmraz@redhat.com> 1.2.3-2
+- translation updates
+
+* Thu Sep 12 2013 Tomáš Mráz <tmraz@redhat.com> 1.2.3-1
+- fix problem with parsing the pam_pwquality options
+  patch by Vladimir Sorokin.
+- updated translations from Transifex
+- treat empty user or password as NULL
+- move the library to /usr
+
+* Wed Jun 19 2013 Tomas Mraz <tmraz@redhat.com> 1.2.2-1
+- manual page fixes
+- make it possible to set the maxsequence configuration value
+- updated translations from Transifex
 
 * Thu Dec 20 2012 Tomas Mraz <tmraz@redhat.com> 1.2.1-1
 - properly free pwquality settings
