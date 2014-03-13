@@ -1,9 +1,9 @@
 %define gettext_package gnome-control-center-2.0
 
-%define glib2_version 2.35.1
-%define gtk3_version 3.7.7
+%define glib2_version 2.37.7
+%define gtk3_version 3.9.12
 %define gsd_version 3.7.3
-%define gnome_desktop_version 3.7.90
+%define gnome_desktop_version 3.9.90
 %define desktop_file_utils_version 0.9
 %define redhat_menus_version 1.8
 %define gnome_menus_version 3.7.90
@@ -11,19 +11,19 @@
 
 Summary: Utilities to configure the GNOME desktop
 Name: control-center
-Version: 3.8.1
+Version: 3.11.90
 Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+ and GFDL
 #VCS: git:git://git.gnome.org/gnome-control-center
-Source: http://download.gnome.org/sources/gnome-control-center/3.8/gnome-control-center-%{version}.tar.xz
+Source: http://download.gnome.org/sources/gnome-control-center/3.11/gnome-control-center-%{version}.tar.xz
 URL: http://www.gnome.org
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=695691
 Patch0: distro-logo.patch
 
 Requires: gnome-settings-daemon >= %{gsd_version}
-Requires: magic-menus >= %{redhat_menus_version}
+Requires: redhat-menus >= %{redhat_menus_version}
 Requires: gnome-icon-theme
 Requires: alsa-lib
 Requires: gnome-menus >= %{gnome_menus_version}
@@ -36,6 +36,8 @@ Requires: libXrandr >= %{libXrandr_version}
 Requires: accountsservice
 # For the user languages
 Requires: iso-codes
+# For the sharing panel
+Requires: rygel vino
 # For the sound panel
 Requires: gnome-icon-theme-symbolic
 # For the printers panel
@@ -46,12 +48,13 @@ Requires: nm-connection-editor
 Requires: glx-utils
 # For the keyboard panel
 Requires: /usr/bin/gkbd-keyboard-display
+# For the color panel
+Requires: colord
 
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gtk3-devel >= %{gtk3_version}
 BuildRequires: gdk-pixbuf2-devel >= 2.23.0
 BuildRequires: librsvg2-devel
-BuildRequires: GConf2-devel
 BuildRequires: gnome-desktop3-devel >= %{gnome_desktop_version}
 BuildRequires: desktop-file-utils >= %{desktop_file_utils_version}
 BuildRequires: libXcursor-devel
@@ -61,19 +64,18 @@ BuildRequires: gnome-menus-devel >= %{gnome_menus_version}
 BuildRequires: gnome-settings-daemon-devel >= %{gsd_version}
 BuildRequires: intltool >= 0.37.1
 BuildRequires: libsmbclient-devel
+BuildRequires: libsoup-devel
 BuildRequires: libXxf86misc-devel
 BuildRequires: libxkbfile-devel
 BuildRequires: libXScrnSaver-devel
-BuildRequires: gnome-doc-utils
 BuildRequires: libxml2-devel
-BuildRequires: dbus-devel >= 0.90
-BuildRequires: dbus-glib-devel >= 0.70
 BuildRequires: libcanberra-devel
 BuildRequires: chrpath
 BuildRequires: gsettings-desktop-schemas-devel
 BuildRequires: pulseaudio-libs-devel libcanberra-devel
 BuildRequires: upower-devel
 BuildRequires: accountsservice-devel
+BuildRequires: ModemManager-glib-devel
 BuildRequires: NetworkManager-glib-devel >= 0.9.8
 BuildRequires: libnm-gtk-devel >= 0.9.8
 BuildRequires: polkit-devel
@@ -81,17 +83,19 @@ BuildRequires: gnome-common
 BuildRequires: cups-devel
 BuildRequires: libgtop2-devel
 BuildRequires: iso-codes-devel
-BuildRequires: cheese-libs-devel >= 1:3.0.1 clutter-gst-devel clutter-gtk-devel
+BuildRequires: cheese-libs-devel >= 1:3.0.1
+BuildRequires: clutter-gtk-devel
 BuildRequires: gnome-online-accounts-devel
 BuildRequires: colord-devel
 BuildRequires: colord-gtk-devel
 BuildRequires: libnotify-devel
-BuildRequires: gnome-doc-utils
+BuildRequires: docbook-style-xsl
 BuildRequires: systemd-devel
 BuildRequires: libpwquality-devel
 BuildRequires: ibus-devel
+BuildRequires: grilo-devel
 %ifnarch s390 s390x
-BuildRequires: gnome-bluetooth-devel >= 3.3.4
+BuildRequires: gnome-bluetooth-devel >= 3.9.3
 BuildRequires: libwacom-devel
 %endif
 
@@ -143,7 +147,7 @@ utilities.
 # libtool doesn't make this easy, so we do it the hard way
 sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' -e 's/    if test "$export_dynamic" = yes && test -n "$export_dynamic_flag_spec"; then/      func_append compile_command " -Wl,-O1,--as-needed"\n      func_append finalize_command " -Wl,-O1,--as-needed"\n\0/' libtool
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -204,6 +208,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/pixmaps/faces
 %{_datadir}/man/man1/gnome-control-center.1.*
 %{_datadir}/dbus-1/services/org.gnome.ControlCenter.SearchProvider.service
+%{_datadir}/dbus-1/services/org.gnome.ControlCenter.service
 %{_datadir}/gnome-shell/search-providers/gnome-control-center-search-provider.ini
 %{_datadir}/polkit-1/rules.d/gnome-control-center.rules
 %{_datadir}/bash-completion/completions/gnome-control-center
@@ -216,6 +221,77 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 1:3.11.90-2
+- Rebuilt for gnome-desktop soname bump
+
+* Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 1:3.11.90-1
+- Update to 3.11.90
+
+* Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 1:3.11.5-1
+- Update to 3.11.5
+
+* Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 1:3.11.3-1
+- Update to 3.11.3
+
+* Mon Nov 25 2013 Richard Hughes <rhughes@redhat.com> - 1:3.11.2-1
+- Update to 3.11.2
+
+* Wed Nov 13 2013 Bastien Nocera <bnocera@redhat.com> - 1:3.11.1-2
+- Add vino dependency
+
+* Thu Oct 31 2013 Florian Müllner <fmuellner@redhat.com> - 1:3.11.1-1
+- Update to 3.11.1
+
+* Mon Oct 28 2013 Richard Hughes <rhughes@redhat.com> - 1:3.10.1-1
+- Update to 3.10.1
+
+* Wed Sep 25 2013 Richard Hughes <rhughes@redhat.com> - 1:3.10.0-1
+- Update to 3.10.0
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.92-1
+- Update to 3.9.92
+
+* Wed Sep 04 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.91-1
+- Update to 3.9.91
+
+* Tue Sep 03 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.90.1-2
+- Rebuilt for libgnome-desktop soname bump
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.90.1-1
+- Update to 3.9.90.1
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.90-1
+- Update to 3.9.90
+- Drop obsolete build deps
+
+* Thu Aug 15 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.5-2
+- Rebuilt with bluetooth support
+
+* Wed Jul 31 2013 Adam Williamson <awilliam@redhat.com> - 1:3.9.5-1
+- Update to 3.9.5
+- buildrequires libsoup-devel
+
+* Tue Jul 30 2013 Richard Hughes <rhughes@redhat.com> - 1:3.9.3-2
+- Rebuild for colord soname bump
+
+* Tue Jul 16 2013 Richard Hughes <rhughes@redhat.com> - 1:3.9.3-1
+- Update to 3.9.3
+
+* Wed Jun 26 2013 Debarshi Ray <rishi@fedoraproject.org> - 1:3.9.2.1-2
+- Add 'Requires: rygel' for the sharing panel
+
+* Mon Jun 03 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.2.1-1
+- Update to 3.9.2.1
+
+* Tue May 14 2013 Richard Hughes <rhughes@redhat.com> - 1:3.8.2-1
+- Update to 3.8.2
+
+* Mon May 06 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.8.1.5-1
+- Update to 3.8.1.5
+
+* Fri May  3 2013 Matthias Clasen <mclasen@redhat.com> - 1:3.8.1-3
+- Improve the distro logo patch
+
 * Tue Apr 16 2013 Ray Strode <rstrode@redhat.com> - 1:3.8.1-2
 - Add a requires for the keyboard viewer
 

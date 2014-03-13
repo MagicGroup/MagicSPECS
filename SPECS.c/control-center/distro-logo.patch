@@ -1,4 +1,4 @@
-From e249c4821bd58aa0e772ecdb57d0e35886acbf8f Mon Sep 17 00:00:00 2001
+From 5e18d79082c6f931ceab4c32c969749cf1d71c34 Mon Sep 17 00:00:00 2001
 From: Matthias Clasen <mclasen@redhat.com>
 Date: Sun, 31 Mar 2013 20:28:19 -0400
 Subject: [PATCH] info: Switch around GNOME and distro information
@@ -8,23 +8,158 @@ information in the small print.
 
 https://bugzilla.gnome.org/show_bug.cgi?id=695691
 ---
- panels/info/info.ui | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ panels/info/cc-info-panel.c | 90 +++++++++++++++++++++++++++++++++------------
+ panels/info/info.ui         | 77 +++++++++++++++++++++++++++-----------
+ 2 files changed, 121 insertions(+), 46 deletions(-)
 
+diff --git a/panels/info/cc-info-panel.c b/panels/info/cc-info-panel.c
+index 1f79540..bfb83d8 100644
+--- a/panels/info/cc-info-panel.c
++++ b/panels/info/cc-info-panel.c
+@@ -492,48 +492,85 @@ cc_info_panel_class_init (CcInfoPanelClass *klass)
+ }
+ 
+ static char *
++get_item (const char *buffer, const char *name)
++{
++  char *label, *start, *end, *result;
++  char end_char;
++
++  result = NULL;
++  start = NULL;
++  end = NULL;
++  label = g_strconcat (name, "=", NULL);
++  if ((start = strstr (buffer, label)) != NULL)
++    {
++      start += strlen (label);
++      end_char = '\n';
++      if (*start == '"')
++        {
++          start++;
++          end_char = '"';
++        }
++
++      end = strchr (start, end_char);
++    }
++
++    if (start != NULL && end != NULL)
++      {
++        result = g_strndup (start, end - start);
++      }
++
++  g_free (label);
++
++  return result;
++}
++
++static char *
+ get_os_type (void)
+ {
+-  int bits;
+   char *buffer;
+   char *name;
+   char *result;
++  char *version;
+ 
++  result = NULL;
+   name = NULL;
+-
++  version = NULL;
+   if (g_file_get_contents ("/etc/os-release", &buffer, NULL, NULL))
+     {
+-       char *start, *end;
++      name = get_item (buffer, "NAME");
++      version = get_item (buffer, "VERSION_ID");
+ 
+-       start = end = NULL;
+-       if ((start = strstr (buffer, "PRETTY_NAME=\"")) != NULL)
+-         {
+-           start += strlen ("PRETTY_NAME=\"");
+-           end = strchr (start, '"');
+-         }
+-
+-       if (start != NULL && end != NULL)
+-         {
+-           name = g_strndup (start, end - start);
+-         }
++      g_free (buffer);
++    }
+ 
+-       g_free (buffer);
++  if (name && version)
++    {
++      result = g_strconcat (name, " ", version, NULL);
++    }
++  else if (name)
++    {
++      result = g_strdup (name);
+     }
+ 
++  g_free (name);
++  g_free (version);
++
++  return result;
++}
++
++static char *
++get_os_description (void)
++{
++  int bits;
++  gchar *result;
++
+   if (GLIB_SIZEOF_VOID_P == 8)
+     bits = 64;
+   else
+     bits = 32;
+ 
+-  /* translators: This is the name of the OS, followed by the type
+-   * of architecture, for example:
+-   * "Fedora 18 (Spherical Cow) 64-bit" or "Ubuntu (Oneric Ocelot) 32-bit" */
+-  if (name)
+-    result = g_strdup_printf (_("%s %d-bit"), name, bits);
+-  else
+-    result = g_strdup_printf (_("%d-bit"), bits);
+-
+-  g_free (name);
++  /* translators: This is the the type of OS architecture, eg: "64-bit" or "32-bit" */
++  result = g_strdup_printf (_("%d-bit"), bits);
+ 
+   return result;
+ }
+@@ -1555,6 +1592,11 @@ info_panel_setup_overview (CcInfoPanel  *self)
+   gtk_label_set_text (GTK_LABEL (widget), text ? text : "");
+   g_free (text);
+ 
++  widget = WID ("os_description_label");
++  text = get_os_description ();
++  gtk_label_set_text (GTK_LABEL (widget), text ? text : "");
++  g_free (text);
++
+   get_primary_disc_info (self);
+ 
+   widget = WID ("graphics_label");
 diff --git a/panels/info/info.ui b/panels/info/info.ui
-index c7b193a..f71f037 100644
+index c7b193a..74f3c98 100644
 --- a/panels/info/info.ui
 +++ b/panels/info/info.ui
-@@ -243,7 +243,7 @@
+@@ -237,13 +237,14 @@
+                           <object class="GtkBox" id="vbox2">
+                             <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+-                            <property name="spacing">18</property>
++                            <property name="spacing">6</property>
+                             <property name="orientation">vertical</property>
+                             <child>
                                <object class="GtkImage" id="system_image">
                                  <property name="visible">True</property>
                                  <property name="can_focus">False</property>
 -                                <property name="pixbuf">GnomeLogoVerticalMedium.svg</property>
-+                                <property name="pixbuf">/usr/share/icons/Fedora/scalable/places/start-here.svg</property>
++                                <property name="pixel_size">128</property>
++                                <property name="icon_name">fedora-logo-icon</property>
                                </object>
                                <packing>
                                  <property name="expand">False</property>
-@@ -252,7 +252,7 @@
+@@ -252,11 +253,12 @@
                                </packing>
                              </child>
                              <child>
@@ -33,7 +168,32 @@ index c7b193a..f71f037 100644
                                  <property name="visible">True</property>
                                  <property name="can_focus">False</property>
                                  <property name="label">Version 3.0</property>
-@@ -324,8 +324,8 @@
+                                 <property name="selectable">True</property>
++                                <property name="margin-bottom">24</property>
+                                 <attributes>
+                                   <attribute name="scale" value="1.25"/>
+                                 </attributes>
+@@ -320,19 +322,35 @@
+                                   </packing>
+                                 </child>
+                                 <child>
++                                  <object class="GtkLabel" id="label19">
++                                    <property name="visible">True</property>
++                                    <property name="can_focus">False</property>
++                                    <property name="xalign">1</property>
++                                    <property name="label" translatable="yes">OS Type</property>
++                                    <property name="mnemonic_widget">os_description_label</property>
++                                    <style>
++                                      <class name="dim-label"/>
++                                    </style>
++                                  </object>
++                                  <packing>
++                                    <property name="top_attach">3</property>
++                                    <property name="bottom_attach">4</property>
++                                  </packing>
++                                </child>
++                                <child>
+                                   <object class="GtkLabel" id="label7">
                                      <property name="visible">True</property>
                                      <property name="can_focus">False</property>
                                      <property name="xalign">1</property>
@@ -44,14 +204,116 @@ index c7b193a..f71f037 100644
                                      <style>
                                        <class name="dim-label"/>
                                      </style>
-@@ -392,7 +392,7 @@
+                                   </object>
+                                   <packing>
+-                                    <property name="top_attach">4</property>
+-                                    <property name="bottom_attach">5</property>
++                                    <property name="top_attach">5</property>
++                                    <property name="bottom_attach">6</property>
+                                   </packing>
+                                 </child>
+                                 <child>
+@@ -347,8 +365,8 @@
+                                     </style>
+                                   </object>
+                                   <packing>
+-                                    <property name="top_attach">6</property>
+-                                    <property name="bottom_attach">7</property>
++                                    <property name="top_attach">7</property>
++                                    <property name="bottom_attach">8</property>
+                                   </packing>
+                                 </child>
+                                 <child>
+@@ -392,7 +410,7 @@
                                    </packing>
                                  </child>
                                  <child>
 -                                  <object class="GtkLabel" id="os_type_label">
-+                                  <object class="GtkLabel" id="version_label">
++                                  <object class="GtkLabel" id="os_description_label">
                                      <property name="visible">True</property>
                                      <property name="can_focus">False</property>
                                      <property name="xalign">0</property>
+@@ -402,8 +420,23 @@
+                                   <packing>
+                                     <property name="left_attach">1</property>
+                                     <property name="right_attach">2</property>
+-                                    <property name="top_attach">4</property>
+-                                    <property name="bottom_attach">5</property>
++                                    <property name="top_attach">3</property>
++                                    <property name="bottom_attach">4</property>
++                                  </packing>
++                                </child>
++                                <child>
++                                  <object class="GtkLabel" id="version_label">
++                                    <property name="visible">True</property>
++                                    <property name="can_focus">False</property>
++                                    <property name="xalign">0</property>
++                                    <property name="label">Unknown</property>
++                                    <property name="selectable">True</property>
++                                  </object>
++                                  <packing>
++                                    <property name="left_attach">1</property>
++                                    <property name="right_attach">2</property>
++                                    <property name="top_attach">5</property>
++                                    <property name="bottom_attach">6</property>
+                                   </packing>
+                                 </child>
+                                 <child>
+@@ -417,8 +450,8 @@
+                                   <packing>
+                                     <property name="left_attach">1</property>
+                                     <property name="right_attach">2</property>
+-                                    <property name="top_attach">6</property>
+-                                    <property name="bottom_attach">7</property>
++                                    <property name="top_attach">7</property>
++                                    <property name="bottom_attach">8</property>
+                                   </packing>
+                                 </child>
+                                 <child>
+@@ -500,8 +533,8 @@
+                                     </style>
+                                   </object>
+                                   <packing>
+-                                    <property name="top_attach">3</property>
+-                                    <property name="bottom_attach">4</property>
++                                    <property name="top_attach">4</property>
++                                    <property name="bottom_attach">5</property>
+                                   </packing>
+                                 </child>
+                                 <child>
+@@ -529,8 +562,8 @@
+                                   <packing>
+                                     <property name="left_attach">1</property>
+                                     <property name="right_attach">2</property>
+-                                    <property name="top_attach">3</property>
+-                                    <property name="bottom_attach">4</property>
++                                    <property name="top_attach">4</property>
++                                    <property name="bottom_attach">5</property>
+                                   </packing>
+                                 </child>
+                                 <child>
+@@ -548,8 +581,8 @@
+                                     </style>
+                                   </object>
+                                   <packing>
+-                                    <property name="top_attach">5</property>
+-                                    <property name="bottom_attach">6</property>
++                                    <property name="top_attach">6</property>
++                                    <property name="bottom_attach">7</property>
+                                   </packing>
+                                 </child>
+                                 <child>
+@@ -563,8 +596,8 @@
+                                   <packing>
+                                     <property name="left_attach">1</property>
+                                     <property name="right_attach">2</property>
+-                                    <property name="top_attach">5</property>
+-                                    <property name="bottom_attach">6</property>
++                                    <property name="top_attach">6</property>
++                                    <property name="bottom_attach">7</property>
+                                   </packing>
+                                 </child>
+                               </object>
 -- 
-1.8.2
+1.8.1.4
+
