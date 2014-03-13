@@ -28,6 +28,7 @@ TERM rxvt-unicode256
 TERM screen-256color
 TERM xterm-256color
 TERM gnome-256color
+TERM st-256color
 
 # EIGHTBIT, followed by '1' for on, '0' for off. (8-bit output)
 EIGHTBIT 1
@@ -86,26 +87,34 @@ EXEC 38;5;34
 #.bat 38;5;34
 #.sh  38;5;34
 #.csh 38;5;34
- # archives or compressed (bright red)
+
+# archives or compressed (bright red)
 .tar 38;5;9
 .tgz 38;5;9
+.arc 38;5;9
 .arj 38;5;9
 .taz 38;5;9
+.lha 38;5;9
+.lz4 38;5;9
 .lzh 38;5;9
 .lzma 38;5;9
 .tlz 38;5;9
 .txz 38;5;9
+.tzo 38;5;9
+.t7z 38;5;9
 .zip 38;5;9
 .z   38;5;9
 .Z   38;5;9
 .dz  38;5;9
 .gz  38;5;9
+.lrz 38;5;9
 .lz  38;5;9
+.lzo 38;5;9
 .xz  38;5;9
 .bz2 38;5;9
+.bz  38;5;9
 .tbz 38;5;9
 .tbz2 38;5;9
-.bz  38;5;9
 .tz  38;5;9
 .deb 38;5;9
 .rpm 38;5;9
@@ -114,11 +123,13 @@ EXEC 38;5;34
 .ear 38;5;9
 .sar 38;5;9
 .rar 38;5;9
+.alz 38;5;9
 .ace 38;5;9
 .zoo 38;5;9
 .cpio 38;5;9
 .7z  38;5;9
 .rz  38;5;9
+.cab 38;5;9
 
 # image formats (magenta)
 .jpg 38;5;13
@@ -143,6 +154,7 @@ EXEC 38;5;34
 .mpeg 38;5;13
 .m2v 38;5;13
 .mkv 38;5;13
+.webm 38;5;13
 .ogm 38;5;13
 .mp4 38;5;13
 .m4v 38;5;13

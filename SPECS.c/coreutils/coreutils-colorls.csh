@@ -1,3 +1,6 @@
+# skip everything for non-interactive shells
+if (! $?prompt) exit
+
 # color-ls initialization
 if ( $?USER_LS_COLORS ) then
   if ( "$USER_LS_COLORS" != "" ) then
@@ -10,14 +13,15 @@ endif
 alias ll 'ls -l'
 alias l. 'ls -d .*'
 set COLORS=/etc/DIR_COLORS
+
 if ($?TERM) then
-  if ( -e "/etc/DIR_COLORS.$TERM" ) then
-     set COLORS="/etc/DIR_COLORS.$TERM"
-  endif
   if ( -e "/etc/DIR_COLORS.256color" ) then
     if ( "`tput colors`" == "256" ) then
        set COLORS=/etc/DIR_COLORS.256color
     endif
+  endif
+  if ( -e "/etc/DIR_COLORS.$TERM" ) then
+     set COLORS="/etc/DIR_COLORS.$TERM"
   endif
 endif
 if ( -f ~/.dircolors ) set COLORS=~/.dircolors
@@ -26,10 +30,18 @@ if ($?TERM) then
   if ( -f ~/.dircolors."$TERM" ) set COLORS=~/.dircolors."$TERM"
   if ( -f ~/.dir_colors."$TERM" ) set COLORS=~/.dir_colors."$TERM"
 endif
+set INCLUDE="`cat "$COLORS" | grep '^INCLUDE' | cut -d ' ' -f2-`"
 
 if ( ! -e "$COLORS" ) exit
 
-eval "`dircolors -c $COLORS`"
+set _tmp="`mktemp .colorlsXXX --tmpdir=/tmp`"
+
+if ( "$INCLUDE" != '' ) cat "$INCLUDE" >> $_tmp
+grep -v '^INCLUDE' "$COLORS" >> $_tmp
+
+eval "`dircolors -c $_tmp`"
+
+rm -f $_tmp
 
 if ( "$LS_COLORS" == '' ) exit
 set color_none=`sed -n '/^COLOR.*none/Ip' < $COLORS`
@@ -38,6 +50,9 @@ if ( "$color_none" != '' ) then
    exit
 endif
 unset color_none
+unset _tmp
+unset INCLUDE
+unset COLORS
 
 finish:
 alias ll 'ls -l --color=auto'

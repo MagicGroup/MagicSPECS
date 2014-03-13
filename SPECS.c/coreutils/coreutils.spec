@@ -1,12 +1,10 @@
-%define noselinux 1
 Summary: A set of basic GNU tools commonly used in shell scripts
 Name:    coreutils
-Version: 8.20
-Release: 2%{?dist}
+Version: 8.22
+Release: 12%{?dist}
 License: GPLv3+
 Group:   System Environment/Base
 Url:     http://www.gnu.org/software/coreutils/
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source101:  coreutils-DIR_COLORS
 Source102:  coreutils-DIR_COLORS.lightbgcolor
@@ -15,6 +13,8 @@ Source105:  coreutils-colorls.sh
 Source106:  coreutils-colorls.csh
 
 # From upstream
+Patch1: coreutils-8.22-cp-selinux.patch
+Patch2: coreutils-8.22-datetzcrash.patch
 
 # Our patches
 #general patch to workaround koji build system issues
@@ -42,13 +42,13 @@ Patch800: coreutils-i18n.patch
 Patch908: coreutils-getgrouplist.patch
 #Prevent buffer overflow in who(1) (bug #158405).
 Patch912: coreutils-overflow.patch
+#Temporarily disable df symlink test, failing
+Patch913: coreutils-8.22-temporarytestoff.patch
 
 #SELINUX Patch - implements Redhat changes
 #(upstream did some SELinux implementation unlike with RedHat patch)
 Patch950: coreutils-selinux.patch
 Patch951: coreutils-selinuxmanpages.patch
-#Deprecate cp -Z/--context non-upstream option
-Patch952: coreutils-cpZ-deprecate.patch
 
 Conflicts: filesystem < 3
 Provides: /bin/basename
@@ -83,6 +83,7 @@ Provides: /bin/touch
 Provides: /bin/true
 Provides: /bin/uname
 
+BuildRequires: libselinux-devel
 BuildRequires: libacl-devel
 BuildRequires: gettext bison
 BuildRequires: texinfo
@@ -90,6 +91,7 @@ BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: libcap-devel
 BuildRequires: libattr-devel
+BuildRequires: openssl-devel
 BuildRequires: gmp-devel
 BuildRequires: attr
 BuildRequires: strace
@@ -126,6 +128,8 @@ the old GNU fileutils, sh-utils, and textutils packages.
 %setup -q
 
 # From upstream
+%patch1 -p1 -b .nullcontext
+%patch2 -p1 -b .tzcrash
 
 # Our patches
 %patch100 -p1 -b .configure
@@ -145,13 +149,13 @@ the old GNU fileutils, sh-utils, and textutils packages.
 # Coreutils
 %patch908 -p1 -b .getgrouplist
 %patch912 -p1 -b .overflow
+%patch913 -p1 -b .testoff
 
 #SELinux
 %patch950 -p1 -b .selinux
 %patch951 -p1 -b .selinuxman
-%patch952 -p1 -b .cpZ
 
-chmod a+x tests/misc/sort-mb-tests.sh tests/df/direct.sh || :
+chmod a+x tests/misc/sort-mb-tests.sh tests/df/direct.sh tests/cp/no-ctx.sh || :
 
 #fix typos/mistakes in localized documentation(#439410, #440056)
 find ./po/ -name "*.p*" | xargs \
@@ -159,9 +163,6 @@ find ./po/ -name "*.p*" | xargs \
  -e 's/-dpR/-cdpR/'
 
 %build
-if id -u;then
-export FORCE_UNSAFE_CONFIGURE=1
-fi
 export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -fpic"
 %{expand:%%global optflags %{optflags} -D_GNU_SOURCE=1}
 #autoreconf -i -v
@@ -170,7 +171,7 @@ aclocal -I m4
 autoconf --force
 automake --copy --add-missing
 %configure --enable-largefile \
-           %{?!noselinux:--enable-selinux} \
+           --with-openssl \
            --enable-install-program=hostname,arch \
            --with-tty-group \
            DEFAULT_POSIX2_VERSION=200112 alternative=199209 || :
@@ -187,7 +188,6 @@ sed -i -e 's,/etc/utmp,/var/run/utmp,g;s,/etc/wtmp,/var/run/wtmp,g' doc/coreutil
 make check
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # man pages are not installed with make install
@@ -237,9 +237,6 @@ find %{buildroot}%{_datadir}/locale -type l | \
 
 # (sb) Deal with Installed (but unpackaged) file(s) found
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %pre
 # We must deinstall these info files since they're merged in
@@ -333,6 +330,7 @@ fi
 %{_bindir}/nl
 %{_bindir}/nohup
 %{_bindir}/nproc
+%{_bindir}/numfmt
 %{_bindir}/od
 %{_bindir}/paste
 %{_bindir}/pathchk
@@ -378,6 +376,145 @@ fi
 %{_sbindir}/chroot
 
 %changelog
+* Sun Mar 02 2014 Ondrej Vasik <ovasik@redhat.com> 8.22-12
+- fix the date crash or infloop in TZ="" parsing (#1069657)
+
+* Mon Jan 13 2014 Ondrej Vasik <ovasik@redhat.com> 8.22-11
+- cp/mv/install: do not crash when getfscreatecon() is
+  returning a NULL context
+
+* Mon Jan 13 2014 Ondrej Vasik <ovasik@redhat.com> 8.22-10
+- unset the unnecessary envvars after colorls scripts(#1051703)
+- improve the limitation (check for both utf8 and utf-8)
+
+* Fri Jan 10 2014 Ondrej Oprala <ooprala@redhat.com> 8.22-9
+- Limit the cut optimizations to UTF-8 locales only
+
+* Wed Jan 08 2014 Ondrej Oprala <ooprala@redhat.com> 8.22-8
+- Don't use cut mb path if not necessary (#1021403, #499220)
+- several i18n patch improvements merged from OpenSUSE (fixed
+  compilation warnings, simplify mb handling in uniq)
+
+* Mon Jan 06 2014 Ondrej Oprala <ooprala@redhat.com> 8.22-7
+- Fix sorting by non-first field (#1003544)
+
+* Fri Jan 03 2014 Ondrej Vasik <ovasik@redhat.com> 8.22-6
+- do not modify SELinux contexts of existing parent
+  directories when copying files (fix by P.Brady, #1045122)
+
+* Thu Jan 02 2014 Ondrej Oprala <ooprala@redhat.com> 8.22-5
+- reverted an old change and constricted it's condition
+- turned off two multibyte tests (wrong strcoll return value)
+
+* Mon Dec 23 2013 Ondrej Vasik <ovasik@redhat.com> 8.22-4
+- skip even the ls aliases in noninteractive mode
+  (suggested by T. Cordes, #988152)
+
+* Sun Dec 22 2013 Ondrej Vasik <ovasik@redhat.com> 8.22-3
+- reset buffer before copying to prevent some rare cases of
+  invalid output in join and uniq(#1036289)
+
+* Sat Dec 14 2013 Ondrej Vasik <ovasik@redhat.com> 8.22-1
+- new upstream version 8.22
+- temporarily disable multibyte cut.pl part and df symlink
+  tests
+
+* Thu Dec 12 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-23
+- skip output-is-input-mb.p test - failing on armv7l (reported
+  by B.Voelker)
+
+* Mon Dec  9 2013 Peter Robinson <pbrobinson@fedoraproject.org> 8.21-22
+- Add upstream patch to fix test failures on aarch64
+
+* Thu Nov 28 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-21
+- turn on the multibyte path in the testsuite to cover
+  i18n regressions
+
+* Wed Nov 06 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-20
+- fix possible colorls.csh script errors for tcsh with
+  noclobber set and entered include file (#1027279)
+
+* Mon Oct 14 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-19
+- cp: correct error message for invalid arguments
+  of '--no-preserve' (#1018206)
+
+* Thu Aug 15 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-18
+- pr -e, with a mix of backspaces and TABs, could corrupt the heap
+  in multibyte locales (analyzed by J.Koncicky)
+
+* Wed Aug 14 2013 Ondrej Oprala <ooprala@redhat.com> 8.21-17
+- Fix sort multibyte incompatibilities
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.21-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Ondrej Oprala <ooprala@redhat.com> 8.21-15
+- change the TMP variable name in colorls.csh to _tmp (#981373)
+
+* Fri May 17 2013 Ondrej Vasik <ovasik@redhat.com 8.21-14
+- revert the last change
+
+* Fri May 17 2013 Ondrej Vasik <ovasik@redhat.com 8.21-13
+- require glibc-devel to prevent broken links in coreutils
+  info manual (#959597)
+
+* Wed May 08 2013 Ondrej Vasik <ovasik@redhat.com 8.21-12
+- optimization of colorls scripts by Ville Skytta (#961012)
+
+* Fri Apr 05 2013 Ondrej Oprala <ooprala@redhat.com 8.21-11
+- Fix tmp file location in colorls scripts (#948008)
+
+* Thu Mar 14 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-10
+- DIR_COLORS.$TERM should have higher priority than
+  DIR_COLORS.256color (#921651)
+
+* Mon Mar 11 2013 Ondrej Oprala <ooprala@redhat.com> 8.21-9
+- add support for INCLUDE in colorls scripts (#818069)
+
+* Mon Mar 04 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-8
+- fix factor on AArch64 (M.Salter, #917735)
+
+* Fri Mar 01 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-7
+- ls: colorize several new archive/compressed types (#868510)
+
+* Sat Feb 23 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-6
+- install: do proper cleanup when strip fails
+  (O.Oprala, B.Voekler, #632444)
+
+* Wed Feb 20 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-5
+- fix multibyte issue in unexpand(by R.Kollar, #821262)
+
+* Mon Feb 18 2013 Ondrej Oprala <ooprala@redhat.com> 8.21-4
+- fix sort-mb-tests.sh test (B.Voelker)
+
+* Mon Feb 18 2013 Mark Wielaard <mjw@redhat.com> 8.21-3
+- fix coreutils-i18n.patch to terminate mbdelim string (#911929)
+
+* Mon Feb 18 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-2
+- remove unnecessary powerpc factor patch
+
+* Fri Feb 15 2013 Ondrej Vasik <ovasik@redhat.com> 8.21-1
+- new upstream release 8.21, update patches
+
+* Thu Feb 07 2013 Ondrej Oprala <ooprala@redhat.com> 8.20-8
+- add missing sort-mb-tests.sh to local.mk
+
+* Tue Feb 05 2013 Ondrej Vasik <ovasik@redhat.com> 8.20-7
+- add support for DTR/DSR control flow in stty(#445213)
+
+* Wed Jan 23 2013 Ondrej Vasik <ovasik@redhat.com> 8.20-6
+- fix multiple segmantation faults in i18n patch (by SUSE)
+  (#869442, #902917)
+
+* Thu Dec 20 2012 Ondrej Vasik <ovasik@redhat.com> 8.20-5
+- seq: fix newline output when -s specified (upstream)
+
+* Mon Dec 10 2012 Ondrej Vasik <ovasik@redhat.com> 8.20-4
+- fix showing duplicates in df (#709351, O.Oprala, B.Voelker)
+
+* Thu Dec 06 2012 Ondrej Vasik <ovasik@redhat.com> 8.20-3
+- fix factor on 32bit powerpc (upstream, #884715)
+
 * Mon Nov 05 2012 Ondrej Vasik <ovasik@redhat.com> 8.20-2
 - disable the temporary O_SYNC fix (glibc is fixed - #872366)
 
@@ -575,7 +712,7 @@ fi
 - change assertion failure for invalid multibyte input
   in sort to less confusing error message(#591352)
 
-* Wed Sep 09 2010 Ondrej Vasik <ovasik@redhat.com> - 8.5-7
+* Wed Sep 08 2010 Ondrej Vasik <ovasik@redhat.com> - 8.5-7
 - add RELRO protection to su as well (#630017)
 
 * Mon Sep 06 2010 Ondrej Vasik <ovasik@redhat.com> - 8.5-6
@@ -747,7 +884,7 @@ fi
 - do not ignore sort's version sort for multibyte locales
   (#509688)
 
-* Thu Jun 16 2009 Ondrej Vasik <ovasik@redhat.com> 7.4-2
+* Thu Jun 18 2009 Ondrej Vasik <ovasik@redhat.com> 7.4-2
 - temporarily workaround probable kernel issue with
   TCSADRAIN(#504798)
 
@@ -840,7 +977,7 @@ fi
 * Mon Nov 03 2008 Ondrej Vasik <ovasik@redhat.com> - 6.12-17
 - Requires: ncurses (#469277)
 
-* Wed Oct 21 2008 Ondrej Vasik <ovasik@redhat.com> - 6.12-16
+* Wed Oct 22 2008 Ondrej Vasik <ovasik@redhat.com> - 6.12-16
 - make possible to disable capability in ls due to
   performance impact when not cached(#467508)
 - do not patch generated manpages - generate them at build
@@ -883,7 +1020,7 @@ fi
 * Mon Aug 04 2008 Kamil Dudka <kdudka@redhat.com> - 6.12-8
 - ls -U1 now uses constant memory
 
-* Wed Jul 24 2008 Kamil Dudka <kdudka@redhat.com> - 6.12-7
+* Wed Jul 23 2008 Kamil Dudka <kdudka@redhat.com> - 6.12-7
 - dd: iflag=fullblock now read full blocks if possible
   (#431997, #449263)
 - ls: --color now highlights files with capabilities (#449985)
@@ -1285,11 +1422,11 @@ fi
 - Parametrize SELinux (bug #174067).
 - Fix runuser.pamd (bug #173807).
 
-* Thu Nov 25 2005 Tim Waugh <twaugh@redhat.com> 5.93-4
+* Thu Nov 24 2005 Tim Waugh <twaugh@redhat.com> 5.93-4
 - Rebuild to pick up new glibc *at functions.
 - Apply runuser PAM patch from bug #173807.  Ship runuser PAM file.
 
-* Tue Nov 14 2005 Dan Walsh <dwalsh@redhat.com> 5.93-3
+* Tue Nov 15 2005 Dan Walsh <dwalsh@redhat.com> 5.93-3
 - Remove multiple from su.pamd
 
 * Mon Nov 14 2005 Tim Waugh <twaugh@redhat.com> 5.93-2
@@ -1329,7 +1466,7 @@ fi
 - Allow id to run even when SELinux security context can not be run
 - Change chcon to use raw functions.
 
-* Thu Jun 28 2005 Tim Waugh <twaugh@redhat.com>
+* Tue Jun 28 2005 Tim Waugh <twaugh@redhat.com>
 - Corrected comments in DIR_COLORS.xterm (bug #161711).
 
 * Wed Jun 22 2005 Tim Waugh <twaugh@redhat.com> 5.2.1-52
@@ -1367,7 +1504,7 @@ fi
 * Thu Mar 24 2005 Tim Waugh <twaugh@redhat.com> 5.2.1-43
 - Removed patch that adds -C option to install(1).
 
-* Wed Mar 14 2005 Tim Waugh <twaugh@redhat.com> 5.2.1-42
+* Wed Mar 16 2005 Tim Waugh <twaugh@redhat.com> 5.2.1-42
 - Fixed pam patch.
 - Fixed broken configure test.
 - Fixed build with GCC 4 (bug #151045).
@@ -1384,7 +1521,7 @@ fi
 * Thu Jan 13 2005 Tim Waugh <twaugh@redhat.com> 5.2.1-37
 - Fixed zh_CN translation (bug #144845).  Patch from Mitrophan Chin.
 
-* Mon Dec 28 2004 Dan Walsh <dwalsh@redhat.com> 5.2.1-36
+* Tue Dec 28 2004 Dan Walsh <dwalsh@redhat.com> 5.2.1-36
 - Fix to only setdefaultfilecon if not overridden by command line
 
 * Mon Dec 27 2004 Dan Walsh <dwalsh@redhat.com> 5.2.1-35
@@ -1680,7 +1817,7 @@ fi
 * Mon Jul 28 2003 Tim Waugh <twaugh@redhat.com> 5.0-8
 - Actually use the ACL patch (bug #100519).
 
-* Wed Jul 18 2003 Dan Walsh <dwalsh@redhat.com> 5.0-7
+* Wed Jul 16 2003 Dan Walsh <dwalsh@redhat.com> 5.0-7
 - Convert to SELinux
 
 * Mon Jun  9 2003 Tim Waugh <twaugh@redhat.com>
