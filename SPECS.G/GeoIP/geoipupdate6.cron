@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Update IPv6 free databases
+
+# It would be much better if we could use geoipupdate for this as it only
+# downloads the data if it has changed and checks it after download
+
+PATH=/usr/libexec:$PATH
+
+DB_LOC=http://geolite.maxmind.com/download/geoip/database
+ASDB_LOC=http://download.maxmind.com/download/geoip/database/asnum
+
+GEOIP_DIR=/usr/share/GeoIP
+
+DATABASES="$DB_LOC/GeoIPv6.dat.gz $DB_LOC/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz $ASDB_LOC/GeoIPASNumv6.dat.gz"
+
+cd $GEOIP_DIR
+
+status=0
+
+for URL in $DATABASES; do
+    RENEW=
+
+    BASENAME=$(basename $URL .gz)
+    ONLINE=$(lastmod.pl $URL)
+
+    if [ ! -f $BASENAME || ! -f .$BASENAME.timestamp ]; then
+	RENEW=1
+    else
+	TIMESTAMP=$(cat .$BASENAME.timestamp)
+	if [ $ONLINE -gt $TIMESTAMP ]; then
+	    RENEW=1
+	fi
+    fi
+
+    if [ -n "$RENEW" ]; then
+	( wget -q -N $URL \
+	  && mv -f $BASENAME $BASENAME.old \
+	  && gunzip $BASENAME.gz \
+	  && echo $ONLINE > .$BASENAME.timestamp ) \
+	|| { status=1 ; echo "Failed to update $BASENAME" >&2 }
+    fi
+done
+
+exit $status

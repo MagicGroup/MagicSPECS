@@ -1,0 +1,38 @@
+--- GeoIP-1.5.0/apps/geoipupdate.c.orig	2013-02-27 14:13:11.000000000 -0700
++++ GeoIP-1.5.0/apps/geoipupdate.c	2013-06-10 10:37:08.542133407 -0600
+@@ -40,7 +40,7 @@ static void * realloc_or_die( void * ptr
+     if ( !new ) {
+         free(ptr);
+         fprintf(stderr, "Out of memory\n");
+-        exit(1);
++        exit(-GEOIP_OUT_OF_MEMORY_ERR);
+     }
+     return new;
+ }
+@@ -121,7 +121,7 @@ int main (int argc, char *argv[]) {
+ 								 "Unknown option character `\\x%x'.\n",
+ 								 optopt);
+ 			usage();
+-			exit(1);
++			exit(1);		// need unambiguous exit code
+ 		default:
+ 			abort();
+ 		}
+@@ -140,7 +140,7 @@ int main (int argc, char *argv[]) {
+   license_fh = fopen(license_file,"r");
+ 	if (license_fh == NULL) {
+ 		fprintf(stderr,"Error opening GeoIP Configuration file %s\n",license_file);
+-		exit(1);
++		exit(1);			// need unambiguous exit code
+ 	}
+ 
+ 	if (verbose == 1)
+@@ -292,5 +292,7 @@ int main (int argc, char *argv[]) {
+ 	if (client_ipaddr) {
+ 		free(client_ipaddr);
+ 	}
+-	exit(err);
++	exit((err >= 0) ? 0 : -err);		// use GeoIPUpdateCode as exit code
+ }
++
++// vim:ts=2

@@ -1,0 +1,45 @@
+diff -U0 ./ChangeLog.utf8 ./ChangeLog
+--- ./ChangeLog.utf8	2013-03-23 02:26:09.000000000 +0000
++++ ./ChangeLog	2013-06-13 09:11:18.640720014 +0100
+@@ -185,2 +185,2 @@
+-	* Fixed a typo in the geoipupdate(1) manpage and also an non-existent path on Debian (Patrick Matthäi)
+-	* Fixes two little format errors (hyphen used as minus sign) in both manpages (Patrick Matthäi)
++	* Fixed a typo in the geoipupdate(1) manpage and also an non-existent path on Debian (Patrick MatthÃ¤i)
++	* Fixes two little format errors (hyphen used as minus sign) in both manpages (Patrick MatthÃ¤i)
+@@ -297 +297 @@
+-	* Fixed build issue when using --as-needed flag (Diego 'Flameeyes' Pettenò)
++	* Fixed build issue when using --as-needed flag (Diego 'Flameeyes' PettenÃ²)
+@@ -443,7 +443,7 @@
+-		 1) Use a single buf ptr inside the loops.
+-		    Set to the stack buffer or the cached memory the start of the function.
+-		 2) Unroll the i=0,1 loop to allow constant folding.
+-		 3) Unroll the j loop for the common case of j = STANDARD_RECORD_LENGTH
+-		    (I've already done the above changes see attached function.)
+-		    With gcc -O2 calculating x[0] and x[1] for STANDARD_RECORD_LENGTH now
+-		    only takes 15 (was > 100) i80x86 instructions with 6 byte accesses of RAM.                 4) only calculate x[0], x[1] when needed, may be a bigger win
++		Â 1) Use a single buf ptr inside the loops.
++		Â Â Â  Set to the stack buffer or the cached memory the start of the function.
++		Â 2) Unroll the i=0,1 loop to allow constant folding.
++		Â 3) Unroll the j loop for the common case of j = STANDARD_RECORD_LENGTH
++		Â Â Â  (I've already done the above changes see attached function.)
++		Â Â Â  With gcc -O2 calculating x[0] and x[1] for STANDARD_RECORD_LENGTH now
++		Â Â Â  only takes 15 (was > 100) i80x86 instructions with 6 byte accesses of RAM.                 4) only calculate x[0], x[1] when needed, may be a bigger win
+diff -up ./TODO.utf8 ./TODO
+--- ./TODO.utf8	2013-03-23 02:26:09.000000000 +0000
++++ ./TODO	2013-06-13 09:16:19.274926385 +0100
+@@ -9,12 +9,12 @@ Maurice Cinquini
+ 
+ *** ifndef WIN32 on netdb.h ? ***
+ In GeoIPCity.c you don't "#ifndef WIN32" the netdb.h include,
+-but in GeoIP.c you do.  Which one is right?
++but in GeoIP.c you do.Â  Which one is right?
+ 
+ *** Warnings in GeoIP-1.2.1 before I made changes ***
+ GeoIPUpdate.c:73: warning: implicit declaration of function `_setup_dbfilename'
+-    I suggest a GeoIP_private.h file to include prototypes for
+-    _setup_dbfilename and other private functions also used by GeoIPCity.c
++Â Â Â  I suggest a GeoIP_private.h file to include prototypes for
++Â Â Â  _setup_dbfilename and other private functions also used by GeoIPCity.c
+ 
+ *** Drop the GeoIP_*_by_addr API calls ***
+ And now that I think of it, why do you need a seperate
