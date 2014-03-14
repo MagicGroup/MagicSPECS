@@ -1,0 +1,25 @@
+#!/bin/bash
+url="http://drvbp1.linux-foundation.org/~mcgrof/rel-html/crda/"
+new1="\\/crda-"
+new2=".tar.xz"
+url1="https://www.kernel.org/pub/software/network/wireless-regdb/?C=M;O=D"
+new3="wireless-regdb-"
+new4=".tar.xz"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+rm -f index1.html && $downcommand "$url1" -O index1.html
+if [ -f index.html ];then
+	newver1=`grep "$new1.*$new2" index.html|head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+if [ -f index1.html ];then
+        newver2=`grep "$new3.*$new4" index1.html|head -n 1| sed "s/.*$new3//" | sed "s/$new4.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+else
+        echo "不能正常取得新版本号"
+        exit 1
+fi
+echo "$newver1"_"$newver2"
+popd > /dev/null

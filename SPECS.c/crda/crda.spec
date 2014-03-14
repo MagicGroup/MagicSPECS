@@ -1,9 +1,9 @@
-%define         crda_version    1.1.2
-%define         regdb_version   2011.04.28
+%define         crda_version    3.13
+%define         regdb_version   2013.11.27
 
 Name:           crda
 Version:        %{crda_version}_%{regdb_version}
-Release:        3%{?dist}
+Release:        2%{?dist}
 Summary:        Regulatory compliance daemon for 802.11 wireless networking
 
 Group:          System Environment/Base
@@ -12,20 +12,26 @@ URL:            http://www.linuxwireless.org/en/developers/Regulatory/CRDA
 BuildRoot:      %{_tmppath}/%{name}-%{crda_version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  kernel-headers >= 2.6.27
-BuildRequires:  libnl-devel >= 1.1
+BuildRequires:  libnl3-devel
 BuildRequires:  libgcrypt-devel
 BuildRequires:  pkgconfig python m2crypto
+BuildRequires:  openssl
 
 Requires:       udev, iw
+Requires:       systemd >= 190
 
-Source0:        http://wireless.kernel.org/download/crda/crda-%{crda_version}.tar.bz2
-Source1:        http://wireless.kernel.org/download/wireless-regdb/wireless-regdb-%{regdb_version}.tar.bz2
+Source0:        http://www.kernel.org/pub/software/network/crda/crda-%{crda_version}.tar.xz
+Source1:        http://www.kernel.org/pub/software/network/wireless-regdb/wireless-regdb-%{regdb_version}.tar.xz
 Source2:        setregdomain
 Source3:        setregdomain.1
 
 # Add udev rule to call setregdomain on wireless device add
 Patch0:         regulatory-rules-setregdomain.patch
-Patch1:		crda-1.1.2-libnl3.patch
+# Add DESTDIR in install rules for libreg in crda Makefile
+Patch1:         crda-Add-DESTDIR-support-in-install-libreg-rules-in-.patch 
+# Do not call ldconfig in crda Makefile
+Patch2:         crda-remove-ldconfig.patch
+
 
 %description
 CRDA acts as the udev helper for communication between the kernel
@@ -34,26 +40,40 @@ for communication. CRDA is intended to be run only through udev
 communication from the kernel.
 
 
+%package devel
+Summary:        Header files for use with libreg. 
+Group:          Development/System
+
+
+%description devel
+Header files to make use of libreg for accessing regulatory info.
+
+
 %prep
 %setup -q -c
 %setup -q -T -D -a 1
 
 %patch0 -p1 -b .setregdomain
-%patch1 -p0
+
+cd crda-%{crda_version}
+%patch1 -p1 -b .libreg-DESTDIR
+%patch2 -p1 -b .ldconfig-remove
 
 %build
+export CFLAGS="%{optflags}"
 
 # Use our own signing key to generate regulatory.bin
 cd wireless-regdb-%{regdb_version}
 
-make %{?_smp_mflags} CFLAGS="%{optflags}" maintainer-clean
-make %{?_smp_mflags} CFLAGS="%{optflags}" REGDB_PRIVKEY=key.priv.pem REGDB_PUBKEY=key.pub.pem
+make %{?_smp_mflags} maintainer-clean
+make %{?_smp_mflags} REGDB_PRIVKEY=key.priv.pem REGDB_PUBKEY=key.pub.pem
 
 # Build CRDA using the new key and regulatory.bin from above
 cd ../crda-%{crda_version}
 cp ../wireless-regdb-%{regdb_version}/key.pub.pem pubkeys
 
-make %{?_smp_mflags} CFLAGS="%{optflags}" REG_BIN=../wireless-regdb-%{regdb_version}/regulatory.bin
+make %{?_smp_mflags} SBINDIR=%{_sbindir}/ LIBDIR=%{_libdir}/ \
+	REG_BIN=../wireless-regdb-%{regdb_version}/regulatory.bin
 
 
 %install
@@ -61,16 +81,20 @@ rm -rf %{buildroot}
 
 cd crda-%{crda_version}
 cp README README.crda
-make install DESTDIR=%{buildroot} PREFIX=%{_prefix} MANDIR=%{_mandir}
+make install DESTDIR=%{buildroot} MANDIR=%{_mandir}/ \
+	SBINDIR=%{_sbindir}/ LIBDIR=%{_libdir}/
 
 cd ../wireless-regdb-%{regdb_version}
 cp README README.wireless-regdb
-make install DESTDIR=%{buildroot} PREFIX=%{_prefix} MANDIR=%{_mandir}
+make install DESTDIR=%{buildroot} MANDIR=%{_mandir}
 
 install -D -pm 0755 %SOURCE2 %{buildroot}%{_sbindir}
 install -D -pm 0644 %SOURCE3 %{buildroot}%{_mandir}/man1/setregdomain.1
 
-magic_rpm_clean.sh
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
 
 %clean
 rm -rf %{buildroot}
@@ -81,9 +105,10 @@ rm -rf %{buildroot}
 %{_sbindir}/%{name}
 %{_sbindir}/regdbdump
 %{_sbindir}/setregdomain
-%{_prefix}/lib/udev/rules.d/85-regulatory.rules
-# location of database is hardcoded to /lib/%{name}
-%{_prefix}/lib/%{name}
+%{_libdir}/libreg.so
+/lib/udev/rules.d/85-regulatory.rules
+# location of database is hardcoded to /usr/lib/%{name}
+/usr/lib/%{name}
 %{_mandir}/man1/setregdomain.1*
 %{_mandir}/man5/regulatory.bin.5*
 %{_mandir}/man8/crda.8*
@@ -92,9 +117,67 @@ rm -rf %{buildroot}
 %doc wireless-regdb-%{regdb_version}/README.wireless-regdb
 
 
+%files devel
+%{_includedir}/reglib/nl80211.h
+%{_includedir}/reglib/regdb.h
+%{_includedir}/reglib/reglib.h
+
+
+
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.1.2_2011.04.28-3
-- 为 Magic 3.0 重建
+* Fri Feb 28 2014 John W. Linville <linville@redhat.com> - 3.13_2013.11.27-2
+- Accomodate relative pathnames in the symlink for /etc/localtime
+
+* Fri Feb 14 2014 John W. Linville <linville@redhat.com> - 3.13_2013.11.27-1
+- Update crda to version 3.13
+- Remove obsolete patch for regdbdump to display DFS region
+- Add patch to use DESTDIR rule for crda libreg installation
+- Add patch to avoid calling ldconfig from crda Makefile
+- Remove PREFIX='' lines from make commands
+- Use SBINDIR and LIBDIR definitions in make commands
+
+* Thu Jan 23 2014 John W. Linville <linville@redhat.com> - 1.1.3_2013.11.27-3
+- Correct a typo in setregdomain
+
+* Fri Jan 17 2014 John W. Linville <linville@redhat.com> - 1.1.3_2013.11.27-2
+- Add patch for regdbdump to display DFS region
+
+* Mon Dec  2 2013 John W. Linville <linville@redhat.com> - 1.1.3_2013.11.27-1
+- Update wireless-regdb to version 2013.11.27
+
+* Fri Nov 22 2013 Xose Vazquez Perez <xose.vazquez@gmail.com> - 1.1.3_2013.02.13-5
+- fixed wrong dates
+- link with libnl3
+- new home for sources
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3_2013.02.13-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Apr  3 2013 John W. Linville <linville@redhat.com> - 1.1.3_2013.02.13-3
+- setregdomain: remove sed and awk calls
+- setregdomain: reimplement COUNTRY assignment with shell function
+
+* Fri Mar  1 2013 John W. Linville <linville@redhat.com> - 1.1.3_2013.02.13-2
+- Bump release to prevent upgrade issues from F17...oops!
+
+* Wed Feb 13 2013 John W. Linville <linville@redhat.com> - 1.1.3_2013.02.13-1
+- Update wireless-regdb to version 2013.02.13
+
+* Tue Feb 12 2013 John W. Linville <linville@redhat.com> - 1.1.3_2013.02.12-1
+- Update wireless-regdb to version 2013.02.12
+
+* Fri Jan 25 2013 John W. Linville <linville@redhat.com> - 1.1.3_2013.01.11-2
+- Update setregdomain to determine timezone info from /etc/timezone
+
+* Fri Jan 25 2013 John W. Linville <linville@redhat.com> - 1.1.3_2013.01.11-1
+- Update crda to version 1.1.3
+- Update wireless-regdb to version 2013.01.11
+
+* Fri Aug 10 2012 John W. Linville <linville@redhat.com>
+- Add BuildRequires for openssl
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2_2011.04.28-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2_2011.04.28-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -125,10 +208,10 @@ rm -rf %{buildroot}
 * Tue Jan 26 2010 John W. Linville <linville@redhat.com> 1.1.1_2009.11.25-1
 - Update for crda version 1.1.1
 
-* Tue Dec 21 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.11.25-5
+* Mon Dec 21 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.11.25-5
 - Remove unnecessary explicit Requries for libgcrypt and libnl -- oops!
 
-* Tue Dec 21 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.11.25-4
+* Mon Dec 21 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.11.25-4
 - Add libgcrypt and libnl to Requires
 
 * Mon Dec 21 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.11.25-3
@@ -144,7 +227,7 @@ rm -rf %{buildroot}
 * Wed Nov 11 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.11.10-1
 - Update wireless-regdb to version 2009.11.10 
 
-* Wed Oct  1 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.09.08-3
+* Thu Oct  1 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.09.08-3
 - Move regdb to /lib/crda to facilitate /usr mounted over wireless network
 
 * Wed Sep  9 2009 John W. Linville <linville@redhat.com> 1.1.0_2009.09.08-2
