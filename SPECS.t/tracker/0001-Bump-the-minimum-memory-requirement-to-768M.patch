@@ -1,0 +1,26 @@
+From 5d841e9bdf3dc2a8e39e67d52c0b547fd6a26c88 Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@gnome.org>
+Date: Tue, 12 Nov 2013 16:09:57 +0100
+Subject: [PATCH] Bump the minimum memory requirement to 768M
+
+http://bugzilla.gnome.org/show_bug.cgi?id=712142
+---
+ src/libtracker-common/tracker-os-dependant-unix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libtracker-common/tracker-os-dependant-unix.c b/src/libtracker-common/tracker-os-dependant-unix.c
+index 24108f4..2fa7c93 100644
+--- a/src/libtracker-common/tracker-os-dependant-unix.c
++++ b/src/libtracker-common/tracker-os-dependant-unix.c
+@@ -39,7 +39,7 @@
+ /* Maximum here is a G_MAXLONG, so if you want to use > 2GB, you have
+  * to set MEM_LIMIT to RLIM_INFINITY
+  */
+-#define MEM_LIMIT_MIN 256 * 1024 * 1024
++#define MEM_LIMIT_MIN 768 * 1024 * 1024
+ 
+ #if defined(__OpenBSD__) && !defined(RLIMIT_AS)
+ #define RLIMIT_AS RLIMIT_DATA
+-- 
+1.8.4.2
+
