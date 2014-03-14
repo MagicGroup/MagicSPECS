@@ -61,7 +61,6 @@ if [ ! -r $MOZ_LIB_DIR/firefox/$MOZ_FIREFOX_FILE ]; then
     MOZ_LIB_DIR="$SECONDARY_LIB_DIR"
 fi
 MOZ_DIST_BIN="$MOZ_LIB_DIR/firefox"
-MOZ_XUL_DIR="$MOZ_LIB_DIR/XULRUNNER_DIRECTORY"
 MOZ_LANGPACKS_DIR="$MOZ_DIST_BIN/langpacks"
 MOZ_EXTENSIONS_PROFILE_DIR="$HOME/.mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
 MOZ_PROGRAM="$MOZ_DIST_BIN/$MOZ_FIREFOX_FILE"
@@ -144,11 +143,11 @@ GNOME_DISABLE_CRASH_DIALOG=1
 export GNOME_DISABLE_CRASH_DIALOG
 
 ##
-## Use $MOZ_TMPDIR if set. Otherwise use /var/tmp instead of /tmp
+## Use $TMPDIR if set. Otherwise use /var/tmp instead of /tmp
 ## because of 1GB /tmp limit in Fedora 18 and later.
 ## See: https://bugzilla.redhat.com/show_bug.cgi?id=867073
 ##
-TMPDIR="${MOZ_TMPDIR:-/var/tmp}"
+TMPDIR="${TMPDIR:-/var/tmp}"
 export TMPDIR
 
 # OK, here's where all the real work gets done
@@ -172,9 +171,9 @@ FEDORA_LANGPACK_CONFIG="$MOZ_EXTENSIONS_PROFILE_DIR/.fedora-langpack-install"
 # MOZ_DISABLE_LANGPACKS disables language packs completely
 MOZILLA_DOWN=0
 if ! [ $MOZ_DISABLE_LANGPACKS ] || [ $MOZ_DISABLE_LANGPACKS -eq 0 ]; then
-    if [ -x $MOZ_XUL_DIR/mozilla-xremote-client ]; then
+    if [ -x $MOZ_DIST_BIN/mozilla-xremote-client ]; then
         # Is firefox running?
-        $MOZ_XUL_DIR/mozilla-xremote-client -a firefox 'ping()' > /dev/null 2>&1
+        $MOZ_DIST_BIN/mozilla-xremote-client -a firefox 'ping()' > /dev/null 2>&1
         MOZILLA_DOWN=$?
     fi
 fi
@@ -196,7 +195,7 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
     CURRENT_LOCALE=$LC_ALL
     CURRENT_LOCALE=${CURRENT_LOCALE:-$LC_MESSAGES}
     CURRENT_LOCALE=${CURRENT_LOCALE:-$LANG}
-    
+
     # Try with a local variant first, then without a local variant
     SHORTMOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*||g"`
     MOZLOCALE=`echo $CURRENT_LOCALE | sed "s|_\([^.]*\).*|-\1|g"`
@@ -221,6 +220,10 @@ if [ $MOZILLA_DOWN -ne 0 ]; then
 
     create_langpack_link $MOZLOCALE || create_langpack_link $SHORTMOZLOCALE || true
 fi
+
+# BEAST fix (rhbz#1005611)
+NSS_SSL_CBC_RANDOM_IV=${NSS_SSL_CBC_RANDOM_IV-1}
+export NSS_SSL_CBC_RANDOM_IV
 
 # Prepare command line arguments
 script_args=""
