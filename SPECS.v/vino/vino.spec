@@ -4,11 +4,11 @@
 
 Summary: A remote desktop system for GNOME
 Name: vino
-Version: 3.3.3
-Release: 3%{?dist}
+Version: 3.11.4
+Release: 1%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/vino
-Source0: http://download.gnome.org/sources/vino/3.3/%{name}-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/vino/3.11/%{name}-%{version}.tar.xz
 
 License: GPLv2+
 Group: User Interface/Desktops
@@ -17,15 +17,14 @@ BuildRequires: gtk3-devel
 BuildRequires: libgcrypt-devel >= %{libgcrypt_version}
 BuildRequires: libnotify-devel >= %{libnotify_version}
 BuildRequires: telepathy-glib-devel >= %{telepathy_glib_version}
-BuildRequires: libXt-devel, libXtst-devel, libXdamage-devel, avahi-glib-devel
-BuildRequires: desktop-file-utils
+BuildRequires: libXt-devel, libXtst-devel, libXdamage-devel
+BuildRequires: pkgconfig(avahi-client) pkgconfig(avahi-glib)
 BuildRequires: intltool
 BuildRequires: gettext
+BuildRequires: libsecret-devel
 BuildRequires: libsoup-devel
 BuildRequires: NetworkManager-devel
 BuildRequires: libSM-devel
-BuildRequires: libgnome-keyring-devel
-BuildRequires: unique-devel
 # BuildRequires: autoconf automake libtool
 BuildRequires: gnome-common
 
@@ -41,13 +40,13 @@ connect to a running GNOME session using VNC.
 
 %build
 %configure                      \
-  --enable-avahi                \
-  --enable-gnome-keyring        \
-  --disable-gnutls              \
   --disable-http-server         \
-  --enable-libnotify            \
-  --enable-network-manager      \
-  --enable-telepathy
+  --disable-silent-rules        \
+  --with-avahi                  \
+  --with-network-manager        \
+  --with-secret                 \
+  --with-telepathy              \
+  --with-gnutls                 \
 
 # drop unneeded direct library deps with --as-needed
 # libtool doesn't make this easy, so we do it the hard way
@@ -58,14 +57,6 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
-desktop-file-install --vendor gnome --delete-original                   \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications                         \
-  --add-only-show-in GNOME                                              \
-  $RPM_BUILD_ROOT%{_datadir}/applications/vino-preferences.desktop
-
-# stuff we don't want
-rm -rf $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/icon-theme.cache
-
 %find_lang %{name}
 
 %post
@@ -75,21 +66,18 @@ touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 if [ $1 -eq 0 ]; then
   touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
   gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-  glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 fi
 
 %posttrans
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %files -f %{name}.lang
 %doc AUTHORS COPYING NEWS README docs/TODO docs/remote-desktop.txt
-%{_datadir}/vino
-%{_datadir}/applications/*.desktop
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Vino.service
 %{_datadir}/telepathy/clients/Vino.client
-%{_bindir}/*
 %{_libexecdir}/*
 %{_sysconfdir}/xdg/autostart/vino-server.desktop
 %{_datadir}/glib-2.0/schemas/org.gnome.Vino.enums.xml
@@ -97,8 +85,97 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %{_datadir}/GConf/gsettings/org.gnome.Vino.convert
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.3.3-3
-- 为 Magic 3.0 重建
+* Mon Jan 13 2014 Richard Hughes <rhughes@redhat.com> - 3.11.4-1
+- Update to 3.11.4
+
+* Tue Oct 29 2013 Richard Hughes <rhughes@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+
+* Thu Sep 26 2013 Rex Dieter <rdieter@fedoraproject.org> 3.10.0-2
+- add explicit avahi build deps, build verbosely.
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.92-1
+- Update to 3.9.92
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 16 2013 Richard Hughes <rhughes@redhat.com> - 3.9.3-1
+- Update to 3.9.3
+
+* Sun Jun 02 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.2-1
+- Update to 3.9.2
+- Adapt the spec file for dropped preferences dialog
+- Build with libsecret
+- Update the configure options; most have been renamed from --enable to --with
+
+* Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
+- Update to 3.8.1
+
+* Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
+- Update to 3.8.0
+
+* Tue Mar 19 2013 Richard Hughes <rhughes@redhat.com> - 3.7.92-1
+- Update to 3.7.92
+
+* Fri Mar  8 2013 Matthias Clasen <mclasen@redhat.com> - 3.7.91-1
+- Update to 3.7.91
+
+* Tue Feb 19 2013 Richard Hughes <rhughes@redhat.com> - 3.7.90-1
+- Update to 3.7.90
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan 16 2013 Richard Hughes <hughsient@gmail.com> - 3.7.4-1
+- Update to 3.7.4
+
+* Wed Jan 09 2013 Richard Hughes <hughsient@gmail.com> - 3.7.3-1
+- Update to 3.7.3
+
+* Sun Dec  2 2012 Matthias Clasen <mclasen@redhat.com> - 3.6.2-2
+- Don't add a vendor prefix to the desktop file, that breaks
+  activating the preferences from the statusicon (#827913)
+
+* Tue Nov 13 2012 Kalev Lember <kalevlember@gmail.com> - 3.6.2-1
+- Update to 3.6.2
+
+* Wed Oct 17 2012 Kalev Lember <kalevlember@gmail.com> - 3.6.1-1
+- Update to 3.6.1
+
+* Tue Sep 25 2012 Matthias Clasen <mclasen@redhat.com> - 3.6.0-1
+- Update to 3.6.0
+
+* Wed Sep 19 2012 Richard Hughes <hughsient@gmail.com> - 3.5.92-1
+- Update to 3.5.92
+
+* Wed Aug 22 2012 Richard Hughes <hughsient@gmail.com> - 3.5.90-1
+- Update to 3.5.90
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 07 2012 Richard Hughes <hughsient@gmail.com> - 3.5.2-1
+- Update to 3.5.2
+
+* Sun May 06 2012 Kalev Lember <kalevlember@gmail.com> - 3.5.1-1
+- Update to 3.5.1
+
+* Tue Apr 24 2012 Kalev Lember <kalevlember@gmail.com> - 3.4.1-2
+- Silence rpm scriptlet output
+
+* Tue Apr 17 2012 Kalev Lember <kalevlember@gmail.com> - 3.4.1-1
+- Update to 3.4.1
+
+* Tue Mar 27 2012 Debarshi Ray <rishi@fedoraproject.org> - 3.4.0-1
+- Update to 3.4.0
+
+* Wed Mar 21 2012 Kalev Lember <kalevlember@gmail.com> - 3.3.92-1
+- Update to 3.3.92
+- Don't BR unique-devel; vino doesn't use libunique any more
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
