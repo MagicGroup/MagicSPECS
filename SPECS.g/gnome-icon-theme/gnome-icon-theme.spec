@@ -1,20 +1,22 @@
-Summary: GNOME icon theme
-Name: gnome-icon-theme
-Version: 3.8.0
-Release: 1%{?dist}
+Summary:    GNOME icon theme
+Name:       gnome-icon-theme
+Version:    3.11.5
+License:    LGPLv3+
+Group:      User Interface/Desktops
+Release:    1%{?dist}
+URL:        http://www.gnome.org
+
 #VCS: git:git://git.gnome.org/gnome-icon-theme
-Source0: http://download.gnome.org/sources/gnome-icon-theme/3.7/%{name}-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/gnome-icon-theme/3.11/%{name}-%{version}.tar.xz
 Source1: legacy-icon-mapping.xml
-License: GPL+
-BuildArch: noarch
-Group: User Interface/Desktops
-BuildRequires: icon-naming-utils >= 0.8.7
-BuildRequires: gettext
-BuildRequires: librsvg2
-BuildRequires: intltool
+
 BuildRequires: gtk2
+BuildRequires: icon-naming-utils >= 0.8.7
+BuildRequires: intltool
+BuildRequires: librsvg2
 Requires: hicolor-icon-theme
-Requires: pkgconfig
+
+BuildArch: noarch
 
 %description
 This package contains the default icon theme used by the GNOME desktop.
@@ -28,6 +30,15 @@ Requires: %{name} = %{version}-%{release}
 This package contains symlinks to make the icons in gnome-icon-theme
 available under old names.
 
+%package devel
+
+Summary: Development files for gnome-icon-theme
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
+
+%description devel
+Development files for gnome-icon-theme
+
 %prep
 %setup -q
 
@@ -37,7 +48,6 @@ available under old names.
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
-rm $RPM_BUILD_ROOT%{_datadir}/icons/gnome/icon-theme.cache
 touch $RPM_BUILD_ROOT%{_datadir}/icons/gnome/icon-theme.cache
 
 cp %{SOURCE1} .
@@ -107,12 +117,43 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 
 %files -f files.txt
 %doc COPYING AUTHORS
-%{_datadir}/pkgconfig/gnome-icon-theme.pc
 %ghost %{_datadir}/icons/gnome/icon-theme.cache
 
 %files legacy -f legacy.txt
 
+%files devel
+%{_datadir}/pkgconfig/gnome-icon-theme.pc
+
 %changelog
+* Thu Feb 06 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.5-1
+- Update to 3.9.5
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jun 12 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 3.8.2-4
+- Update license to LGPLv3+
+
+* Tue Jun 11 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 3.8.2-3
+- Split pc file into devel package properly as per guidelines (972372)
+- Update to proper license (LGPLv2+)
+- Update BR's (use gnome-common)
+- Update bogus changelog dates
+- Make spec file easier to read
+- Add missing url tag
+
+* Sat Jun  8 2013 Matthias Clasen <mclasen@redhat.com> - 3.8.2-2
+- Drop dep on pkgconfig, instead co-own /usr/share/pkgconfig
+
+* Tue May 14 2013 Richard Hughes <rhughes@redhat.com> - 3.8.2-1
+- Update to 3.8.2
+
 * Tue Mar 26 2013 Richard Hughes <rhughes@redhat.com> - 3.8.0-1
 - Update to 3.8.0
 
@@ -319,7 +360,7 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 * Tue Jun 17 2008 Matthias Clasen <mclasen@redhat.com> - 2.23.2-1
 - Update to 2.23.2
 
-* Thu Apr 16 2008 David Zeuthen <davidz@redhat.com> - 2.22.0-6
+* Wed Apr 16 2008 David Zeuthen <davidz@redhat.com> - 2.22.0-6
 - Refresh disc icons
 
 * Tue Apr  1 2008 David Zeuthen <davidz@redhat.com> - 2.22.0-5
@@ -374,7 +415,7 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 * Wed Jan 10 2007 Matthias Clasen <mclasen@redhat.com> - 2.17.5-1
 - Update to 2.17.5
 
-* Wed Dec 21 2006 Matthias Clasen <mclasen@redhat.com> - 2.17.4.1-1
+* Thu Dec 21 2006 Matthias Clasen <mclasen@redhat.com> - 2.17.4.1-1
 - Update to 2.17.4.1
 
 * Wed Dec 20 2006 Matthias Clasen <mclasen@redhat.com> - 2.17.4-1
@@ -408,7 +449,7 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 * Sat Aug 12 2006 Matthias Clasen <mclasen@redhat.com> 2.15.91-1.fc6
 - Update to 2.15.91
 
-* Thu Aug  2 2006 Matthias Clasen <mclasen@redhat.com> 2.15.90-1.fc6
+* Wed Aug  2 2006 Matthias Clasen <mclasen@redhat.com> 2.15.90-1.fc6
 - Update to 2.15.90
 
 * Wed Jul 12 2006 Matthias Clasen <mclasen@redhat.com> 2.15.3-1
@@ -500,7 +541,7 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 * Thu Mar 17 2005 John (J5) Palmieri <johnp@redhat.com> - 2.9.92-1
 - Update to upstream version 2.9.92
 
-* Sun Mar  7 2005 Matthias Clasen <mclasen@redhat.com> - 2.9.91-2
+* Mon Mar  7 2005 Matthias Clasen <mclasen@redhat.com> - 2.9.91-2
 - Fix %%post 
 
 * Wed Feb  9 2005 Matthias Clasen <mclasen@redhat.com> - 2.9.91-1
