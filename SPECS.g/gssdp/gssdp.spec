@@ -1,23 +1,24 @@
 Name:          gssdp
-Version:       0.12.1
-Release:       3%{?dist}
+Version:       0.14.7
+Release:       1%{?dist}
 Summary:       Resource discovery and announcement over SSDP
 
 Group:         System Environment/Libraries
 License:       LGPLv2+
 URL:           http://www.gupnp.org/
-Source0:       http://download.gnome.org/sources/%{name}/0.12/%{name}-%{version}.tar.xz
+Source0:       http://download.gnome.org/sources/%{name}/0.14/%{name}-%{version}.tar.xz
 
 BuildRequires: dbus-glib-devel
 BuildRequires: GConf2-devel
 BuildRequires: glib2-devel
-BuildRequires: gobject-introspection-devel
-BuildRequires: gtk2-devel
+BuildRequires: gobject-introspection-devel >= 1.36
+BuildRequires: gtk3-devel
 BuildRequires: gtk-doc
 BuildRequires: libsoup-devel
 BuildRequires: libxml2-devel
 BuildRequires: NetworkManager-devel
 BuildRequires: pkgconfig
+BuildRequires: vala-tools >= 0.20
 
 Requires: dbus
 
@@ -37,6 +38,14 @@ Requires: pkgconfig
 
 %description devel
 Files for development with gssdp.
+
+%package utils
+Summary: Various GUI utuls for %{name}
+Group: Applications/System
+Requires: %{name} = %{version}-%{release}
+
+%description utils
+This package contains GUI utilies for %{name}.
 
 %package docs
 Summary: Documentation files for %{name}
@@ -66,28 +75,89 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING README NEWS
 %dir %{_datadir}/gssdp
-%{_bindir}/gssdp-device-sniffer
 %{_libdir}/libgssdp-1.0.so.*
-%{_datadir}/gssdp/gssdp-device-sniffer.ui
 %{_libdir}/girepository-1.0/GSSDP-1.0.typelib
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/libgssdp-1.0.so
 %{_libdir}/pkgconfig/gssdp-1.0.pc
 %{_includedir}/gssdp-1.0
 %{_datadir}/gir-1.0/GSSDP-1.0.gir
+%{_datadir}/vala/vapi/gssdp*
+
+%files utils
+%{_bindir}/gssdp-device-sniffer
+%{_datadir}/gssdp/gssdp-device-sniffer.ui
 
 %files docs
-%defattr(-,root,root,-)
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.12.1-3
-- 为 Magic 3.0 重建
+* Tue Feb  4 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.7-1
+- 0.14.7 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.7.news
+
+* Sun Nov  3 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.6-1
+- 0.14.6 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.6.news
+
+* Mon Sep  9 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.5-1
+- 0.14.5 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.5.news
+
+* Tue Jul 30 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.4-1
+- 0.14.4 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.4.news
+
+* Thu May 30 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.3-1
+- 0.14.3 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.3.news
+
+* Tue Mar  5 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.2-1
+- 0.14.2 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.2.news
+
+* Sat Feb 23 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.1-1
+- 0.14.1 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.1.news
+
+* Wed Feb 20 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.14.0
+- 0.14.0 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.14/gssdp-0.14.0.news
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Dec  1 2012 Peter Robinson <pbrobinson@fedoraproject.org> 0.13.2-1
+- 0.13.2 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.13/gssdp-0.13.2.news
+
+* Mon Oct 29 2012 Peter Robinson <pbrobinson@fedoraproject.org> 0.13.1-1
+- 0.13.1 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.13/gssdp-0.13.1.news
+
+* Sun Oct  7 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.13.0-1
+- 0.13.0 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.13/gssdp-0.13.0.news
+
+* Tue Aug 28 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.12.2.1-2
+- Enable vala bindings
+
+* Tue Aug 21 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.12.2.1-1
+- 0.12.2.1 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.12/gssdp-0.12.2.1.news
+
+* Sun Aug 19 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.12.2-1
+- 0.12.2 release
+- http://ftp.gnome.org/pub/GNOME/sources/gssdp/0.12/gssdp-0.12.2.news
+
+* Thu Jul 19 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.12.1-4
+- Split utils out to a sub package to reduce libs deps. RHBZ #840689
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
