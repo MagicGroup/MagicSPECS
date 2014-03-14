@@ -1,20 +1,20 @@
 Name:          gupnp
-Version:       0.18.2
-Release:       2%{?dist}
+Version:       0.20.10
+Release:       1%{?dist}
 Summary:       A framework for creating UPnP devices & control points
 
 Group:         System Environment/Libraries
 License:       LGPLv2+
 URL:           http://www.gupnp.org/
-Source0:       http://download.gnome.org/sources/%{name}/0.18/%{name}-%{version}.tar.xz
+Source0:       http://download.gnome.org/sources/%{name}/0.20/%{name}-%{version}.tar.xz
 
-BuildRequires: gssdp-devel >= 0.12.0
+BuildRequires: gssdp-devel >= 0.14.0
 BuildRequires: gtk-doc
-BuildRequires: gobject-introspection-devel
-BuildRequires: libgdbus-devel
+BuildRequires: gobject-introspection-devel >= 1.36
 BuildRequires: libsoup-devel
 BuildRequires: libxml2-devel
 BuildRequires: libuuid-devel
+BuildRequires: NetworkManager-devel
 
 Requires: dbus
 
@@ -33,6 +33,7 @@ Requires: libsoup-devel
 Requires: libxml2-devel
 Requires: libuuid-devel
 Requires: pkgconfig
+Obsoletes: gupnp-vala
 
 %description devel
 Files for development with %{name}.
@@ -50,7 +51,7 @@ This package contains developer documentation for %{name}.
 %setup -q
 
 %build
-%configure --disable-static
+%configure --disable-static --with-context-manager=network-manager
 make %{?_smp_mflags} V=1
 
 %install
@@ -64,26 +65,110 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING README
 %{_libdir}/libgupnp-1.0.so.*
 %{_bindir}/gupnp-binding-tool
 %{_libdir}/girepository-1.0/GUPnP-1.0.typelib
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/pkgconfig/gupnp-1.0.pc
 %{_libdir}/libgupnp-1.0.so
 %{_includedir}/gupnp-1.0
 %{_datadir}/gir-1.0/GUPnP-1.0.gir
 
 %files docs
-%defattr(-,root,root,-)
 %doc %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.18.2-2
-- 为 Magic 3.0 重建
+* Tue Feb  4 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.10-1
+- 0.20.10 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.10.news
+
+* Sun Dec 15 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.9-1
+- 0.20.9 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.9.news
+
+* Sun Nov  3 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.8-1
+- 0.20.8 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.8.news
+
+* Wed Oct 16 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.7-1
+- 0.20.7 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.7.news
+
+* Mon Sep  9 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.6-1
+- 0.20.6 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.6.news
+
+* Wed Aug 21 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.5-1
+- 0.20.5 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.5.news
+
+* Tue Jul 30 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.4-1
+- 0.20.4 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.4.news
+
+* Thu May 30 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.3-1
+- 0.20.3 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.3.news
+
+* Sat Apr 13 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.2-1
+- 0.20.2 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.2.news
+
+* Tue Mar  5 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.1-1
+- 0.20.1 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.1.news
+
+* Thu Feb 21 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.0-2
+- Obsolete gupnp-vala
+
+* Thu Feb 21 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.0-2
+- bump
+
+* Thu Feb 21 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.20.0-1
+- 0.20.0 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.20/gupnp-0.20.0.news
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Jan 13 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.19.4-1
+- 0.19.4 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.19/gupnp-0.19.4.news
+
+* Thu Dec  6 2012 Peter Robinson <pbrobinson@fedoraproject.org> 0.19.3-1
+- 0.19.3 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.19/gupnp-0.19.3.news
+
+* Sat Dec  1 2012 Peter Robinson <pbrobinson@fedoraproject.org> 0.19.2-1
+- 0.19.2 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.19/gupnp-0.19.2.news
+
+* Mon Oct 29 2012 Peter Robinson <pbrobinson@fedoraproject.org> 0.19.1-1
+- 0.19.1 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.19/gupnp-0.19.1.news
+
+* Sun Oct  7 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.19.0-1
+- 0.19.0 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.19/gupnp-0.19.0.news
+
+* Sun Aug 19 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.18.4-1
+- 0.18.4 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.18/gupnp-0.18.4.news
+
+* Mon Aug 13 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.18.3-3
+- Use NetworkManager for connectivity detection
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat May  5 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.18.3-1
+- 0.18.3 release
+- http://ftp.gnome.org/pub/GNOME/sources/gupnp/0.18/gupnp-0.18.3.news
+
+* Thu Apr 26 2012 Zeeshan Ali <zeenix@redhat.com> - 0.18.2-2
+- Remove bogus dependency on libgdbus-devel.
 
 * Sun Mar 18 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.18.2-1
 - 0.18.2 release
@@ -123,7 +208,7 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
-* Sat Jan 19 2011 Peter Robinson <pbrobinson@fedoraproject.org> 0.15.1-1
+* Sat Jan 15 2011 Peter Robinson <pbrobinson@fedoraproject.org> 0.15.1-1
 - Update to 0.15.1
 
 * Tue Nov 30 2010 Peter Robinson <pbrobinson@fedoraproject.org> 0.15.0-1
