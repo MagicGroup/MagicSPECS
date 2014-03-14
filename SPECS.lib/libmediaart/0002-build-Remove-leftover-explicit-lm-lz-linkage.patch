@@ -1,0 +1,39 @@
+From 4f07de740e3d2ec3a4b6c063c48b21b405aff207 Mon Sep 17 00:00:00 2001
+From: Yanko Kaneti <yaneti@declera.com>
+Date: Mon, 10 Feb 2014 11:45:15 +0200
+Subject: [PATCH 2/3] build: Remove leftover explicit -lm -lz linkage
+
+https://bugzilla.gnome.org/show_bug.cgi?id=723877
+---
+ configure.ac            | 2 --
+ libmediaart/Makefile.am | 1 -
+ 2 files changed, 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index ddba936..792cfd3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -151,8 +151,6 @@ PKG_CHECK_MODULES(LIBMEDIAART, [$LIBMEDIAART_REQUIRED])
+ GLIB_GENMARSHAL=`$PKG_CONFIG glib-2.0 --variable=glib_genmarshal`
+ AC_SUBST(GLIB_GENMARSHAL)
+ 
+-LIBMEDIAART_LIBS="$LIBMEDIAART_LIBS -lz -lm"
+-
+ ####################################################################
+ # General CFLAGS/LIBS
+ ####################################################################
+diff --git a/libmediaart/Makefile.am b/libmediaart/Makefile.am
+index 6d370f2..a7879e3 100644
+--- a/libmediaart/Makefile.am
++++ b/libmediaart/Makefile.am
+@@ -46,7 +46,6 @@ libmediaart_@LIBMEDIAART_API_VERSION@_la_LDFLAGS = \
+ 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ 
+ libmediaart_@LIBMEDIAART_API_VERSION@_la_LIBADD = \
+-	-lm \
+ 	$(BUILD_LIBS) \
+ 	$(LIBMEDIAART_LIBS)
+ 
+-- 
+1.8.5.3
+
