@@ -1,0 +1,71 @@
+diff -up libgcrypt-1.6.1/random/rndlinux.c.use-poll libgcrypt-1.6.1/random/rndlinux.c
+--- libgcrypt-1.6.1/random/rndlinux.c.use-poll	2014-02-28 15:17:55.294433915 +0100
++++ libgcrypt-1.6.1/random/rndlinux.c	2014-02-28 15:34:52.505945274 +0100
+@@ -32,6 +32,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <fcntl.h>
++#include <poll.h>
+ #include "types.h"
+ #include "g10lib.h"
+ #include "rand-internal.h"
+@@ -199,9 +200,11 @@ _gcry_rndlinux_gather_random (void (*add
+                  return with something we will actually use 100ms. */
+   while (length)
+     {
+-      fd_set rfds;
+-      struct timeval tv;
+       int rc;
++      struct pollfd pfd;
++
++      pfd.fd = fd;
++      pfd.events = POLLIN;
+ 
+       /* If we collected some bytes update the progress indicator.  We
+          do this always and not just if the select timed out because
+@@ -215,33 +218,18 @@ _gcry_rndlinux_gather_random (void (*add
+           any_need_entropy = 1;
+         }
+ 
+-      /* If the system has no limit on the number of file descriptors
+-         and we encounter an fd which is larger than the fd_set size,
+-         we don't use the select at all.  The select code is only used
+-         to emit progress messages.  A better solution would be to
+-         fall back to poll() if available.  */
+-#ifdef FD_SETSIZE
+-      if (fd < FD_SETSIZE)
+-#endif
+-        {
+-          FD_ZERO(&rfds);
+-          FD_SET(fd, &rfds);
+-          tv.tv_sec = delay;
+-          tv.tv_usec = delay? 0 : 100000;
+-          if ( !(rc=select(fd+1, &rfds, NULL, NULL, &tv)) )
+-            {
+-              any_need_entropy = 1;
+-              delay = 3; /* Use 3 seconds henceforth.  */
+-              continue;
+-            }
+-          else if( rc == -1 )
+-            {
+-              log_error ("select() error: %s\n", strerror(errno));
+-              if (!delay)
+-                delay = 1; /* Use 1 second if we encounter an error before
+-                              we have ever blocked.  */
+-              continue;
+-            }
++      if ( !(rc=poll(&pfd, 1, delay)) )
++        {
++          delay = 3000; /* Use 3 seconds henceforth.  */
++          continue;
++        }
++        else if( rc == -1 )
++        {
++          log_error ("poll() error: %s\n", strerror(errno));
++          if (!delay)
++            delay = 1000; /* Use 1 second if we encounter an error before
++                          we have ever blocked.  */
++          continue;
+         }
+ 
+       do

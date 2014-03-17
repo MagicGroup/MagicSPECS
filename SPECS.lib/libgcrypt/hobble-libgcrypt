@@ -6,4 +6,6 @@ set -e -x
 # Clean out patent-or-otherwise-encumbered code.
 # EC:    ????????? ??/??/2015
 
-rm -f cipher/ecc.c
+rm -f cipher/ecc-curves.c
+rm -f tests/curves.c
+rm -f tests/t_mpi_point.c

@@ -1,37 +1,47 @@
 Name: libgcrypt
-Version: 1.5.1
+Version: 1.6.1
 Release: 1%{?dist}
 URL: http://www.gnupg.org/
 Source0: libgcrypt-%{version}-hobbled.tar.xz
 # The original libgcrypt sources now contain potentially patented ECC
 # cipher support. We have to remove it in the tarball we ship with
-# the hobble-libgcrypt script.
+# the hobble-libgcrypt script. 
+# (We replace it with RH approved ECC in Source4-5)
 #Source0: ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-%{version}.tar.bz2
 #Source1: ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-%{version}.tar.bz2.sig
 Source2: wk@g10code.com
 Source3: hobble-libgcrypt
-# do not run the ecc curves test
-Patch1: libgcrypt-1.5.0-noecc.patch
+# Approved ECC support (from 1.6.1)
+Source4: ecc-curves.c
+Source5: curves.c
+Source6: t-mpi-point.c
 # make FIPS hmac compatible with fipscheck - non upstreamable
 Patch2: libgcrypt-1.5.0-use-fipscheck.patch
 # fix tests in the FIPS mode, fix the FIPS-186-3 DSA keygen
-Patch5: libgcrypt-1.5.0-tests.patch
+Patch5: libgcrypt-1.6.1-tests.patch
 # add configurable source of RNG seed and seed by default
 # from /dev/urandom in the FIPS mode
-Patch6: libgcrypt-1.5.0-fips-cfgrandom.patch
+Patch6: libgcrypt-1.6.1-fips-cfgrandom.patch
 # make the FIPS-186-3 DSA CAVS testable
-Patch7: libgcrypt-1.5.0-fips-cavs.patch
+Patch7: libgcrypt-1.6.1-fips-cavs.patch
 # fix for memory leaks an other errors found by Coverity scan
-Patch9: libgcrypt-1.5.0-leak.patch
+Patch9: libgcrypt-1.6.1-leak.patch
 # use poll instead of select when gathering randomness
-Patch11: libgcrypt-1.5.1-use-poll.patch
+Patch11: libgcrypt-1.6.1-use-poll.patch
+# compile rijndael with -fno-strict-aliasing
+Patch12: libgcrypt-1.5.2-aliasing.patch
+# slight optimalization of mpicoder.c to silence Valgrind (#968288)
+Patch13: libgcrypt-1.6.1-mpicoder-gccopt.patch
+# fix tests to work with approved ECC
+Patch14: libgcrypt-1.6.1-ecc-test-fix.patch
+
+%define gcrylibdir %{_libdir}
 
 # Technically LGPLv2.1+, but Fedora's table doesn't draw a distinction.
 # Documentation and some utilities are GPLv2+ licensed. These files
 # are in the devel subpackage.
 License: LGPLv2+
 Summary: A general-purpose cryptography library
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gawk, libgpg-error-devel >= 1.4, pkgconfig
 BuildRequires: fipscheck
 # This is needed only when patching the .texi doc.
@@ -59,16 +69,17 @@ applications using libgcrypt.
 %prep
 %setup -q
 %{SOURCE3}
-%patch1 -p1 -b .noecc
 %patch2 -p1 -b .use-fipscheck
 %patch5 -p1 -b .tests
 %patch6 -p1 -b .cfgrandom
 %patch7 -p1 -b .cavs
 %patch9 -p1 -b .leak
 %patch11 -p1 -b .use-poll
-
-mv AUTHORS AUTHORS.iso88591
-iconv -f ISO-8859-1 -t UTF-8 AUTHORS.iso88591 >AUTHORS
+#%patch12 -p1 -b .aliasing
+%patch13 -p1 -b .gccopt
+%patch14 -p1 -b .eccfix
+cp %{SOURCE4} cipher/
+cp %{SOURCE5} %{SOURCE6} tests/
 
 %build
 %configure --disable-static \
@@ -77,8 +88,9 @@ iconv -f ISO-8859-1 -t UTF-8 AUTHORS.iso88591 >AUTHORS
 %endif
      --enable-noexecstack \
      --enable-hmac-binary-check \
-     --enable-pubkey-ciphers='dsa elgamal rsa' \
+     --enable-pubkey-ciphers='dsa elgamal rsa ecc' \
      --disable-O-flag-munging
+sed -i -e '/^sys_lib_dlsearch_path_spec/s,/lib /usr/lib,/usr/lib /lib64 /usr/lib64 /lib,g' libtool
 make %{?_smp_mflags}
 
 %check
@@ -90,11 +102,10 @@ make check
     %{?__debug_package:%{__debug_install_post}} \
     %{__arch_install_post} \
     %{__os_install_post} \
-    fipshmac $RPM_BUILD_ROOT/%{_lib}/*.so.?? \
+    fipshmac $RPM_BUILD_ROOT%{gcrylibdir}/*.so.?? \
 %{nil}
 
 %install
-rm -fr $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Change /usr/lib64 back to /usr/lib.  This saves us from having to patch the
@@ -107,26 +118,20 @@ sed -i -e 's,^my_host=".*"$,my_host="none",g' $RPM_BUILD_ROOT/%{_bindir}/libgcry
 rm -f ${RPM_BUILD_ROOT}/%{_infodir}/dir ${RPM_BUILD_ROOT}/%{_libdir}/*.la
 /sbin/ldconfig -n $RPM_BUILD_ROOT/%{_libdir}
 
-# Relocate the shared libraries to /%{_lib}.
-mkdir -p $RPM_BUILD_ROOT/%{_lib}
-for shlib in $RPM_BUILD_ROOT/%{_libdir}/*.so* ; do
+%if "%{gcrylibdir}" != "%{_libdir}"
+# Relocate the shared libraries to %{gcrylibdir}.
+mkdir -p $RPM_BUILD_ROOT%{gcrylibdir}
+for shlib in $RPM_BUILD_ROOT%{_libdir}/*.so* ; do
 	if test -L "$shlib" ; then
 		rm "$shlib"
 	else
-		mv "$shlib" $RPM_BUILD_ROOT/%{_lib}/
+		mv "$shlib" $RPM_BUILD_ROOT%{gcrylibdir}/
 	fi
-done
-
-# Figure out where /%{_lib} is relative to %{_libdir}.
-touch $RPM_BUILD_ROOT/root_marker
-relroot=..
-while ! test -f $RPM_BUILD_ROOT/%{_libdir}/$relroot/root_marker ; do
-	relroot=$relroot/..
 done
 
 # Overwrite development symlinks.
 pushd $RPM_BUILD_ROOT/%{_libdir}
-for shlib in $relroot/%{_lib}/lib*.so.* ; do
+for shlib in %{gcrylibdir}/lib*.so.* ; do
 	shlib=`echo "$shlib" | sed -e 's,//,/,g'`
 	target=`basename "$shlib" | sed -e 's,\.so.*,,g'`.so
 	ln -sf $shlib $target
@@ -135,14 +140,15 @@ popd
 
 # Add soname symlink.
 /sbin/ldconfig -n $RPM_BUILD_ROOT/%{_lib}/
-rm -f $RPM_BUILD_ROOT/root_marker
+
+%endif
+
+# temporary compat library for buildroots
+install %{gcrylibdir}/libgcrypt.so.11.*.* $RPM_BUILD_ROOT/%{_libdir}
 
 # Create /etc/gcrypt (hardwired, not dependent on the configure invocation) so
 # that _someone_ owns it.
 mkdir -p -m 755 $RPM_BUILD_ROOT/etc/gcrypt
-
-%clean
-rm -fr $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
 
@@ -162,8 +168,8 @@ exit 0
 %files
 %defattr(-,root,root,-)
 %dir /etc/gcrypt
-/%{_lib}/libgcrypt.so.*
-/%{_lib}/.libgcrypt.so.*.hmac
+%{gcrylibdir}/libgcrypt.so.*
+%{gcrylibdir}/.libgcrypt.so.*.hmac
 %doc COPYING.LIB AUTHORS NEWS THANKS
 
 %files devel
@@ -171,14 +177,42 @@ exit 0
 %{_bindir}/%{name}-config
 %{_bindir}/dumpsexp
 %{_bindir}/hmac256
+%{_bindir}/mpicalc
 %{_includedir}/*
 %{_libdir}/*.so
 %{_datadir}/aclocal/*
+%{_mandir}/man1/*
 
 %{_infodir}/gcrypt.info*
 %doc COPYING
 
 %changelog
+* Fri Feb 28 2014 Tomáš Mráz <tmraz@redhat.com> 1.6.1-1
+- new upstream version breaking ABI compatibility
+- this release temporarily includes old compatibility .so
+
+* Tue Jan 21 2014 Tomáš Mráz <tmraz@redhat.com> 1.5.3-3
+- add back the nistp521r1 EC curve
+- fix a bug in the Whirlpool hash implementation
+- speed up the PBKDF2 computation
+
+* Sun Oct 20 2013 Tom Callaway <spot@fedoraproject.org> - 1.5.3-2
+- add cleared ECC support
+
+* Fri Jul 26 2013 Tomáš Mráz <tmraz@redhat.com> 1.5.3-1
+- new upstream version fixing cache side-channel attack on RSA private keys
+
+* Thu Jun 20 2013 Tomáš Mráz <tmraz@redhat.com> 1.5.2-3
+- silence false error detected by valgrind (#968288)
+
+* Thu Apr 25 2013 Tomáš Mráz <tmraz@redhat.com> 1.5.2-2
+- silence strict aliasing warning in Rijndael
+- apply UsrMove
+- spec file cleanups
+
+* Fri Apr 19 2013 Tomáš Mráz <tmraz@redhat.com> 1.5.2-1
+- new upstream version
+
 * Wed Mar 20 2013 Tomas Mraz <tmraz@redhat.com> 1.5.1-1
 - new upstream version
 
@@ -227,7 +261,7 @@ exit 0
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
-* Thu Feb  4 2011 Tomas Mraz <tmraz@redhat.com> 1.4.5-6
+* Fri Feb  4 2011 Tomas Mraz <tmraz@redhat.com> 1.4.5-6
 - fix a bug in the fips-186-3 dsa parameter generation code
 
 * Tue Feb  1 2011 Tomas Mraz <tmraz@redhat.com> 1.4.5-5
@@ -404,5 +438,5 @@ exit 0
 * Thu Jan 10 2002 Nalin Dahyabhai <nalin@redhat.com> 1.1.5-1
 - fix the Source tag so that it's a real URL
 
-* Wed Dec 20 2001 Nalin Dahyabhai <nalin@redhat.com>
+* Thu Dec 20 2001 Nalin Dahyabhai <nalin@redhat.com>
 - initial package

@@ -1,0 +1,198 @@
+diff -up libgcrypt-1.6.1/cipher/dsa.c.tests libgcrypt-1.6.1/cipher/dsa.c
+--- libgcrypt-1.6.1/cipher/dsa.c.tests	2014-02-28 13:39:01.727288335 +0100
++++ libgcrypt-1.6.1/cipher/dsa.c	2014-02-28 13:46:21.727458285 +0100
+@@ -423,22 +423,29 @@ generate_fips186 (DSA_secret_key *sk, un
+             initial_seed.seed = sexp_nth_data (initial_seed.sexp, 1,
+                                                     &initial_seed.seedlen);
+         }
+-
+-      /* Fixme: Enable 186-3 after it has been approved and after fixing
+-         the generation function.  */
+-      /*   if (use_fips186_2) */
+-      (void)use_fips186_2;
+-      ec = _gcry_generate_fips186_2_prime (nbits, qbits,
++      if (use_fips186_2)
++        ec = _gcry_generate_fips186_2_prime (nbits, qbits,
+                                            initial_seed.seed,
+                                            initial_seed.seedlen,
+                                            &prime_q, &prime_p,
+                                            r_counter,
+                                            r_seed, r_seedlen);
+-      /*   else */
+-      /*     ec = _gcry_generate_fips186_3_prime (nbits, qbits, NULL, 0, */
+-      /*                                          &prime_q, &prime_p, */
+-      /*                                          r_counter, */
+-      /*                                          r_seed, r_seedlen, NULL); */
++      else if (!domain->p || !domain->q)
++        ec = _gcry_generate_fips186_3_prime (nbits, qbits,
++                                          initial_seed.seed,
++                                          initial_seed.seedlen,
++                                          &prime_q, &prime_p,
++                                          r_counter,
++                                          r_seed, r_seedlen, NULL);
++      else
++        {
++          /* Domain parameters p and q are given; use them.  */
++          prime_p = mpi_copy (domain->p);
++          prime_q = mpi_copy (domain->q);
++          gcry_assert (mpi_get_nbits (prime_p) == nbits);
++          gcry_assert (mpi_get_nbits (prime_q) == qbits);
++          ec = 0;
++        }
+       sexp_release (initial_seed.sexp);
+       if (ec)
+         goto leave;
+@@ -829,13 +829,12 @@ dsa_generate (const gcry_sexp_t genparms
+       sexp_release (l1);
+       sexp_release (domainsexp);
+ 
+-      /* Check that all domain parameters are available.  */
+-      if (!domain.p || !domain.q || !domain.g)
++      /* Check that p and q domain parameters are available.  */
++      if (!domain.p || !domain.q || (!domain.g && !(flags & PUBKEY_FLAG_USE_FIPS186)))
+         {
+           _gcry_mpi_release (domain.p);
+           _gcry_mpi_release (domain.q);
+           _gcry_mpi_release (domain.g);
+-          sexp_release (deriveparms);
+           return GPG_ERR_MISSING_VALUE;
+         }
+ 
+diff -up libgcrypt-1.6.1/cipher/primegen.c.tests libgcrypt-1.6.1/cipher/primegen.c
+--- libgcrypt-1.6.1/cipher/primegen.c.tests	2014-01-29 10:48:38.000000000 +0100
++++ libgcrypt-1.6.1/cipher/primegen.c	2014-02-28 13:49:52.291325147 +0100
+@@ -1649,7 +1649,7 @@ _gcry_generate_fips186_3_prime (unsigned
+   gpg_err_code_t ec;
+   unsigned char seed_help_buffer[256/8];  /* Used to hold a generated SEED. */
+   unsigned char *seed_plus;     /* Malloced buffer to hold SEED+x.  */
+-  unsigned char digest[256/8];  /* Helper buffer for SHA-1 digest.  */
++  unsigned char digest[256/8];  /* Helper buffer for SHA-x digest.  */
+   gcry_mpi_t val_2 = NULL;      /* Helper for the prime test.  */
+   gcry_mpi_t tmpval = NULL;     /* Helper variable.  */
+   int hashalgo;                 /* The id of the Approved Hash Function.  */
+@@ -1739,7 +1739,7 @@ _gcry_generate_fips186_3_prime (unsigned
+         }
+       _gcry_mpi_release (prime_q); prime_q = NULL;
+       ec = _gcry_mpi_scan (&prime_q, GCRYMPI_FMT_USG,
+-                           value_u, sizeof value_u, NULL);
++                           value_u, qbits/8, NULL);
+       if (ec)
+         goto leave;
+       mpi_set_highbit (prime_q, qbits-1 );
+@@ -1784,11 +1784,11 @@ _gcry_generate_fips186_3_prime (unsigned
+               if (seed_plus[i])
+                 break;
+             }
+-          _gcry_md_hash_buffer (GCRY_MD_SHA1, digest, seed_plus, seedlen);
++          _gcry_md_hash_buffer (hashalgo, digest, seed_plus, seedlen);
+ 
+           _gcry_mpi_release (tmpval); tmpval = NULL;
+           ec = _gcry_mpi_scan (&tmpval, GCRYMPI_FMT_USG,
+-                               digest, sizeof digest, NULL);
++                               digest, qbits/8, NULL);
+           if (ec)
+             goto leave;
+           if (value_j == value_n)
+@@ -1824,11 +1824,11 @@ _gcry_generate_fips186_3_prime (unsigned
+     }
+ 
+   /* Step 12:  Save p, q, counter and seed.  */
+-  log_debug ("fips186-3 pbits p=%u q=%u counter=%d\n",
++  /* log_debug ("fips186-3 pbits p=%u q=%u counter=%d\n",
+              mpi_get_nbits (prime_p), mpi_get_nbits (prime_q), counter);
+   log_printhex ("fips186-3 seed", seed, seedlen);
+   log_printmpi ("fips186-3    p", prime_p);
+-  log_printmpi ("fips186-3    q", prime_q);
++  log_printmpi ("fips186-3    q", prime_q); */
+   if (r_q)
+     {
+       *r_q = prime_q;
+diff -up libgcrypt-1.6.1/cipher/rsa.c.tests libgcrypt-1.6.1/cipher/rsa.c
+--- libgcrypt-1.6.1/cipher/rsa.c.tests	2014-01-29 08:49:49.000000000 +0100
++++ libgcrypt-1.6.1/cipher/rsa.c	2014-02-28 13:39:01.727288335 +0100
+@@ -399,7 +399,7 @@ generate_x931 (RSA_secret_key *sk, unsig
+ 
+   *swapped = 0;
+ 
+-  if (e_value == 1)   /* Alias for a secure value. */
++  if (e_value == 1 || e_value == 0)   /* Alias for a secure value. */
+     e_value = 65537;
+ 
+   /* Point 1 of section 4.1:  k = 1024 + 256s with S >= 0  */
+diff -up libgcrypt-1.6.1/random/random-fips.c.tests libgcrypt-1.6.1/random/random-fips.c
+--- libgcrypt-1.6.1/random/random-fips.c.tests	2014-01-29 10:48:38.000000000 +0100
++++ libgcrypt-1.6.1/random/random-fips.c	2014-02-28 13:39:01.727288335 +0100
+@@ -692,6 +692,7 @@ get_random (void *buffer, size_t length,
+ 
+   check_guards (rng_ctx);
+ 
++ reinitialize:
+   /* Initialize the cipher handle and thus setup the key if needed.  */
+   if (!rng_ctx->cipher_hd)
+     {
+@@ -711,13 +712,11 @@ get_random (void *buffer, size_t length,
+   if (rng_ctx->key_init_pid != getpid ()
+       || rng_ctx->seed_init_pid != getpid ())
+     {
+-      /* We are in a child of us.  Because we have no way yet to do
+-         proper re-initialization (including self-checks etc), the
+-         only chance we have is to bail out.  Obviusly a fork/exec
+-         won't harm because the exec overwrites the old image. */
+-      fips_signal_error ("fork without proper re-initialization "
+-                         "detected in RNG");
+-      goto bailout;
++      /* Just reinitialize the key & seed. */
++      gcry_cipher_close(rng_ctx->cipher_hd);
++      rng_ctx->cipher_hd = NULL;
++      rng_ctx->is_seeded = 0;
++      goto reinitialize;
+     }
+ 
+   if (x931_aes_driver (buffer, length, rng_ctx))
+diff -up libgcrypt-1.6.1/tests/keygen.c.tests libgcrypt-1.6.1/tests/keygen.c
+--- libgcrypt-1.6.1/tests/keygen.c.tests	2014-02-28 13:39:01.728288358 +0100
++++ libgcrypt-1.6.1/tests/keygen.c	2014-02-28 13:42:18.288831563 +0100
+@@ -215,11 +215,11 @@ check_rsa_keys (void)
+ 
+ 
+   if (verbose)
+-    show ("creating 512 bit RSA key with e=257\n");
++    show ("creating 1024 bit RSA key with e=257\n");
+   rc = gcry_sexp_new (&keyparm,
+                       "(genkey\n"
+                       " (rsa\n"
+-                      "  (nbits 3:512)\n"
++                      "  (nbits 4:1024)\n"
+                       "  (rsa-use-e 3:257)\n"
+                       " ))", 0, 1);
+   if (rc)
+@@ -233,11 +233,11 @@ check_rsa_keys (void)
+   gcry_sexp_release (key);
+ 
+   if (verbose)
+-    show ("creating 512 bit RSA key with default e\n");
++    show ("creating 1024 bit RSA key with default e\n");
+   rc = gcry_sexp_new (&keyparm,
+                       "(genkey\n"
+                       " (rsa\n"
+-                      "  (nbits 3:512)\n"
++                      "  (nbits 4:1024)\n"
+                       "  (rsa-use-e 1:0)\n"
+                       " ))", 0, 1);
+   if (rc)
+@@ -307,12 +307,12 @@ check_dsa_keys (void)
+     }
+ 
+   if (verbose)
+-    show ("creating 1536 bit DSA key\n");
++    show ("creating 2048 bit DSA key\n");
+   rc = gcry_sexp_new (&keyparm,
+                       "(genkey\n"
+                       " (dsa\n"
+-                      "  (nbits 4:1536)\n"
+-                      "  (qbits 3:224)\n"
++                      "  (nbits 4:2048)\n"
++                      "  (qbits 3:256)\n"
+                       " ))", 0, 1);
+   if (rc)
+     die ("error creating S-expression: %s\n", gpg_strerror (rc));

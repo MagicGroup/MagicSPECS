@@ -1,0 +1,141 @@
+diff -up libgcrypt-1.6.1/random/random-fips.c.cfgrandom libgcrypt-1.6.1/random/random-fips.c
+--- libgcrypt-1.6.1/random/random-fips.c.cfgrandom	2014-02-28 16:06:20.026572478 +0100
++++ libgcrypt-1.6.1/random/random-fips.c	2014-02-28 16:06:34.851915121 +0100
+@@ -27,10 +27,10 @@
+    There are 3 random context which map to the different levels of
+    random quality:
+ 
+-   Generator                Seed and Key        Kernel entropy (init/reseed)
+-   ------------------------------------------------------------
+-   GCRY_VERY_STRONG_RANDOM  /dev/random         256/128 bits
+-   GCRY_STRONG_RANDOM       /dev/random         256/128 bits
++   Generator                Seed and Key                      Kernel entropy (init/reseed)
++   ---------------------------------------------------------------------------------------
++   GCRY_VERY_STRONG_RANDOM  /etc/gcrypt/rngseed+/dev/urandom  256/128 bits
++   GCRY_STRONG_RANDOM       /etc/gcrypt/rngseed+/dev/urandom  256/128 bits
+    gcry_create_nonce        GCRY_STRONG_RANDOM  n/a
+ 
+    All random generators return their data in 128 bit blocks.  If the
+@@ -40,8 +40,10 @@
+    (SEED_TTL) output blocks; the re-seeding is disabled in test mode.
+ 
+    The GCRY_VERY_STRONG_RANDOM and GCRY_STRONG_RANDOM generators are
+-   keyed and seeded from the /dev/random device.  Thus these
+-   generators may block until the kernel has collected enough entropy.
++   keyed and seeded with data that is loaded from the /etc/gcrypt/rngseed
++   if the device or symlink to device exists xored with the data
++   from the /dev/urandom device. This allows the system administrator
++   to always seed the RNGs from /dev/random if it is required.
+ 
+    The gcry_create_nonce generator is keyed and seeded from the
+    GCRY_STRONG_RANDOM generator.  It may also block if the
+@@ -560,9 +562,13 @@ get_entropy (size_t nbytes)
+   entropy_collect_buffer_len = 0;
+ 
+ #if USE_RNDLINUX
++  _gcry_rndlinux_gather_random (entropy_collect_cb, 0,
++                                     X931_AES_KEYLEN,
++                                     -1);
++  entropy_collect_buffer_len = 0;
+   rc = _gcry_rndlinux_gather_random (entropy_collect_cb, 0,
+                                      X931_AES_KEYLEN,
+-                                     GCRY_VERY_STRONG_RANDOM);
++                                     GCRY_STRONG_RANDOM);
+ #elif USE_RNDW32
+   do
+     {
+@@ -713,7 +719,7 @@ get_random (void *buffer, size_t length,
+       || rng_ctx->seed_init_pid != getpid ())
+     {
+       /* Just reinitialize the key & seed. */
+-      gcry_cipher_close(rng_ctx->cipher_hd);
++      _gcry_cipher_close(rng_ctx->cipher_hd);
+       rng_ctx->cipher_hd = NULL;
+       rng_ctx->is_seeded = 0;
+       goto reinitialize;
+diff -up libgcrypt-1.6.1/random/rndlinux.c.cfgrandom libgcrypt-1.6.1/random/rndlinux.c
+--- libgcrypt-1.6.1/random/rndlinux.c.cfgrandom	2013-12-16 18:44:32.000000000 +0100
++++ libgcrypt-1.6.1/random/rndlinux.c	2014-02-28 16:06:20.027572501 +0100
+@@ -36,7 +36,9 @@
+ #include "g10lib.h"
+ #include "rand-internal.h"
+ 
+-static int open_device (const char *name, int retry);
++#define NAME_OF_CFG_RNGSEED "/etc/gcrypt/rngseed"
++
++static int open_device (const char *name, int retry, int fatal);
+ 
+ 
+ static int
+@@ -59,7 +61,7 @@ set_cloexec_flag (int fd)
+  * a fatal error but retries until it is able to reopen the device.
+  */
+ static int
+-open_device (const char *name, int retry)
++open_device (const char *name, int retry, int fatal)
+ {
+   int fd;
+ 
+@@ -67,6 +69,8 @@ open_device (const char *name, int retry
+     _gcry_random_progress ("open_dev_random", 'X', 1, 0);
+  again:
+   fd = open (name, O_RDONLY);
++  if (fd == -1 && !fatal)
++      return fd;
+   if (fd == -1 && retry)
+     {
+       struct timeval tv;
+@@ -111,6 +115,7 @@ _gcry_rndlinux_gather_random (void (*add
+ {
+   static int fd_urandom = -1;
+   static int fd_random = -1;
++  static int fd_configured = -1;
+   static unsigned char ever_opened;
+   int fd;
+   int n;
+@@ -134,6 +139,11 @@ _gcry_rndlinux_gather_random (void (*add
+           close (fd_urandom);
+           fd_urandom = -1;
+         }
++      if (fd_configured != -1)
++        {
++          close (fd_configured);
++          fd_configured = -1;
++        }
+       return 0;
+     }
+ 
+@@ -153,20 +163,30 @@ _gcry_rndlinux_gather_random (void (*add
+      that we always require the device to be existent but want a more
+      graceful behaviour if the rarely needed close operation has been
+      used and the device needs to be re-opened later. */
++
++  if (level == -1)
++    {
++      if (fd_configured == -1)
++        fd_configured = open_device ( NAME_OF_CFG_RNGSEED, 0, 0 );
++      fd = fd_configured;
++      if (fd == -1)
++        return -1;
++    }
++
+   if (level >= 2)
+     {
+       if (fd_random == -1)
+         {
+-          fd_random = open_device (NAME_OF_DEV_RANDOM, (ever_opened & 1));
++          fd_random = open_device (NAME_OF_DEV_RANDOM, (ever_opened & 1), 1);
+           ever_opened |= 1;
+         }
+       fd = fd_random;
+     }
+-  else
++  else if (level != -1)
+     {
+       if (fd_urandom == -1)
+         {
+-          fd_urandom = open_device (NAME_OF_DEV_URANDOM, (ever_opened & 2));
++          fd_urandom = open_device (NAME_OF_DEV_URANDOM, (ever_opened & 2), 1);
+           ever_opened |= 2;
+         }
+       fd = fd_urandom;

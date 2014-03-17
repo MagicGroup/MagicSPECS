@@ -60,7 +60,7 @@ diff -up libgcrypt-1.5.0/src/fips.c.use-fipscheck libgcrypt-1.5.0/src/fips.c
        else
          {
 -          fname = gcry_malloc (strlen (info.dli_fname) + 1 + 5 + 1 );
-+          fname = gcry_malloc (strlen (libpath) + 1 + 5 + 1 );
++          fname = _gcry_malloc (strlen (libpath) + 1 + 5 + 1 );
            if (!fname)
              err = gpg_error_from_syserror ();
            else
