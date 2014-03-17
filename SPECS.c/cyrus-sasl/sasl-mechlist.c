@@ -1,8 +1,9 @@
-#include "sasl.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "sasl.h"
 
 static int
 my_getopt(void *context, const char *plugin_name,

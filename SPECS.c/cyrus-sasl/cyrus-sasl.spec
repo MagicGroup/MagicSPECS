@@ -3,19 +3,18 @@
 %define homedir		/run/saslauthd
 
 %define _plugindir2 %{_libdir}/sasl2
-%define bootstrap_cyrus_sasl 1
+%define bootstrap_cyrus_sasl 0
 
 Summary: The Cyrus SASL library
 Name: cyrus-sasl
-Version: 2.1.23
-Release: 31%{?dist}
+Version: 2.1.26
+Release: 16%{?dist}
 License: BSD with advertising
 Group: System Environment/Libraries
 # Source0 originally comes from ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/;
 # make-no-dlcompatorsrp-tarball.sh removes the "dlcompat" subdirectory and builds a
 # new tarball.
 Source0: cyrus-sasl-%{version}-nodlcompatorsrp.tar.gz
-Source4: saslauthd.init
 Source5: saslauthd.service
 Source7: sasl-mechlist.c
 Source8: sasl-checkpass.c
@@ -23,42 +22,50 @@ Source9: saslauthd.sysconfig
 Source10: make-no-dlcompatorsrp-tarball.sh
 Source11: saslauthd.tmpfiles
 URL: http://asg.web.cmu.edu/sasl/sasl-library.html
-Requires: %{name}-lib = %{version}-%{release}
-Patch11: cyrus-sasl-2.1.18-no_rpath.patch
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
+Patch11: cyrus-sasl-2.1.25-no_rpath.patch
 Patch15: cyrus-sasl-2.1.20-saslauthd.conf-path.patch
 Patch23: cyrus-sasl-2.1.23-man.patch
 Patch24: cyrus-sasl-2.1.21-sizes.patch
-Patch25: cyrus-sasl-2.1.22-typo.patch
-Patch26: cyrus-sasl-2.1.22-digest-commas.patch
-Patch27: cyrus-sasl-2.1.22-automake-1.10.patch
-Patch28: cyrus-sasl-2.1.21-keytab.patch
-Patch30: cyrus-sasl-2.1.22-rimap.patch
 Patch31: cyrus-sasl-2.1.22-kerberos4.patch
-Patch32: cyrus-sasl-2.1.22-warnings.patch
-Patch33: cyrus-sasl-2.1.22-current-db.patch
+Patch32: cyrus-sasl-2.1.26-warnings.patch
 Patch34: cyrus-sasl-2.1.22-ldap-timeout.patch
-Patch35: cyrus-sasl-2.1.22-bad-elif.patch
-Patch36: cyrus-sasl-2.1.23-ac-quote.patch
-Patch37: cyrus-sasl-2.1.23-race.patch
 # removed due to #759334
 #Patch38: cyrus-sasl-2.1.23-pam_rhosts.patch
-Patch39: cyrus-sasl-2.1.23-ntlm.patch
-Patch40: cyrus-sasl-2.1.23-rimap2.patch
-Patch41: cyrus-sasl-2.1.23-db5.patch
-Patch42: cyrus-sasl-2.1.23-relro.patch
+Patch42: cyrus-sasl-2.1.26-relro.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=816250
+Patch43: cyrus-sasl-2.1.26-null-crypt.patch
+Patch44: cyrus-sasl-2.1.26-release-server_creds.patch
+# AM_CONFIG_HEADER is obsolete, use AC_CONFIG_HEADERS instead
+Patch45: cyrus-sasl-2.1.26-obsolete-macro.patch
+# missing size_t declaration in sasl.h
+Patch46: cyrus-sasl-2.1.26-size_t.patch
+# disable incorrect check for MkLinux
+Patch47: cyrus-sasl-2.1.26-ppc.patch
+# detect gsskrb5_register_acceptor_identity macro (#976538)
+Patch48: cyrus-sasl-2.1.26-keytab.patch
+Patch49: cyrus-sasl-2.1.26-md5global.patch
+# revert upstream commit 080e51c7fa0421eb2f0210d34cf0ac48a228b1e9 (#984079)
+# https://bugzilla.cyrusimap.org/show_bug.cgi?id=3480
+Patch50: cyrus-sasl-2.1.26-revert-upstream-080e51c7fa0421eb2f0210d34cf0ac48a228b1e9.patch
+# improve sql libraries detection
+Patch51: cyrus-sasl-2.1.26-sql.patch
+# improve configuration error message
+Patch52: cyrus-sasl-2.1.26-config-error.patch
+# Treat SCRAM-SHA-1/DIGEST-MD5 as more secure than PLAIN (#970718)
+Patch53: cyrus-sasl-2.1.26-prefer-SCRAM-SHA-1-over-PLAIN.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf, automake, libtool, gdbm-devel, groff
 BuildRequires: krb5-devel >= 1.2.2, openssl-devel, pam-devel, pkgconfig
 BuildRequires: mysql-devel, postgresql-devel, zlib-devel
 BuildRequires: libdb-devel
-BuildRequires: fedora-usermgmt-devel
 %if ! %{bootstrap_cyrus_sasl}
 BuildRequires: openldap-devel
 %endif
-Requires(post): chkconfig, /sbin/service
-Requires(pre): /usr/sbin/useradd /usr/sbin/groupadd
-Requires(postun): /usr/sbin/userdel /usr/sbin/groupdel
+Requires(post): chkconfig, /sbin/service systemd-units
+Requires(pre): /usr/sbin/useradd /usr/sbin/groupadd systemd-units
+Requires(postun): /usr/sbin/userdel /usr/sbin/groupdel systemd-units
 Requires: /sbin/nologin
 Provides: user(%username)
 Provides: group(%username)
@@ -78,8 +85,9 @@ The %{name}-lib package contains shared libraries which are needed by
 applications which use the Cyrus SASL library.
 
 %package devel
-Requires: %{name}-lib = %{version}-%{release}
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: pkgconfig
 Group: Development/Libraries
 Summary: Files needed for developing applications with Cyrus SASL
 
@@ -88,7 +96,7 @@ The %{name}-devel package contains files needed for developing and
 compiling applications which use the Cyrus SASL library.
 
 %package gssapi
-Requires: %{name}-lib = %{version}-%{release}
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
 Group: System Environment/Libraries
 Summary: GSSAPI authentication support for Cyrus SASL
 
@@ -98,7 +106,7 @@ support GSSAPI authentication. GSSAPI is commonly used for Kerberos
 authentication.
 
 %package plain
-Requires: %{name}-lib = %{version}-%{release}
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
 Group: System Environment/Libraries
 Summary: PLAIN and LOGIN authentication support for Cyrus SASL
 
@@ -107,7 +115,7 @@ The %{name}-plain package contains the Cyrus SASL plugins which support
 PLAIN and LOGIN authentication schemes.
 
 %package md5
-Requires: %{name}-lib = %{version}-%{release}
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
 Group: System Environment/Libraries
 Summary: CRAM-MD5 and DIGEST-MD5 authentication support for Cyrus SASL
 
@@ -116,7 +124,7 @@ The %{name}-md5 package contains the Cyrus SASL plugins which support
 CRAM-MD5 and DIGEST-MD5 authentication schemes.
 
 %package ntlm
-Requires: %{name}-lib = %{version}-%{release}
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
 Group: System Environment/Libraries
 Summary: NTLM authentication support for Cyrus SASL
 
@@ -126,7 +134,7 @@ the NTLM authentication scheme.
 
 # This would more appropriately be named cyrus-sasl-auxprop-sql.
 %package sql
-Requires: %{name}-lib = %{version}-%{release}
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
 Group: System Environment/Libraries
 Summary: SQL auxprop support for Cyrus SASL
 
@@ -137,7 +145,7 @@ using a RDBMS for storing shared secrets.
 %if ! %{bootstrap_cyrus_sasl}
 # This was *almost* named cyrus-sasl-auxprop-ldapdb, but that's a lot of typing.
 %package ldap
-Requires: %{name}-lib = %{version}-%{release}
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
 Group: System Environment/Libraries
 Summary: LDAP auxprop support for Cyrus SASL
 
@@ -146,14 +154,23 @@ The %{name}-ldap package contains the Cyrus SASL plugin which supports using
 a directory server, accessed using LDAP, for storing shared secrets.
 %endif
 
-%package sysvinit
-Summary: The SysV initscript to manage the cyrus SASL authd.
-Group: System Environment/Daemons
-Requires: %{name} = %{version}-%{release}
+%package scram
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
+Group: System Environment/Libraries
+Summary: SCRAM auxprop support for Cyrus SASL
 
-%description sysvinit
-The %{name}-sysvinit package contains the SysV init script to manage
-the cyrus SASL authd when running a legacy SysV-compatible init system.
+%description scram
+The %{name}-scram package contains the Cyrus SASL plugin which supports
+the SCRAM authentication scheme.
+
+%package gs2
+Requires: %{name}-lib%{?_isa} = %{version}-%{release}
+Group: System Environment/Libraries
+Summary: GS2 support for Cyrus SASL
+
+%description gs2
+The %{name}-gs2 package contains the Cyrus SASL plugin which supports
+the GS2 authentication scheme.
 
 ###
 
@@ -166,49 +183,24 @@ chmod -x include/*.h
 %patch15 -p1 -b .path
 %patch23 -p1 -b .man
 %patch24 -p1 -b .sizes
-%patch25 -p1 -b .typo
-%patch26 -p2 -b .digest-commas
-%patch27 -p1 -b .automake-1.10
-%patch28 -p1 -b .keytab
-%patch30 -p1 -b .rimap
 %patch31 -p1 -b .krb4
 %patch32 -p1 -b .warnings
-%patch33 -p1 -b .current-db
 %patch34 -p1 -b .ldap-timeout
-%patch35 -p1 -b .elif
-%patch36 -p1 -b .ac-quote
-%patch37 -p1 -b .race
-#%patch38 -p1 -b .pam_rhosts
-%patch39 -p1 -b .ntlm
-%patch40 -p1 -b .rimap2
-%patch41 -p1 -b .db5
 %patch42 -p1 -b .relro
+%patch43 -p1 -b .null-crypt
+%patch44 -p1 -b .release-server_creds
+%patch45 -p1 -b .obsolete-macro
+%patch46 -p1 -b .size_t
+%patch47 -p1 -b .ppc
+%patch48 -p1 -b .keytab
+%patch49 -p1 -b .md5global.h
+%patch50 -p1 -b .gssapi
+%patch51 -p1 -b .sql
+%patch52 -p1 -b .configerr
+%patch53 -p1 -b .sha1vsplain
+
 
 %build
-# FIXME - we remove these files directly so that we can avoid using the -f
-# flag, which has a nasty habit of overwriting files like COPYING.
-rm -f config/config.guess config/config.sub 
-rm -f config/ltconfig config/ltmain.sh config/libtool.m4
-rm -fr autom4te.cache
-libtoolize -c
-aclocal -I config -I cmulocal
-automake -a -c
-autoheader
-autoconf
-
-pushd saslauthd
-rm -f config/config.guess config/config.sub 
-rm -f config/ltconfig config/ltmain.sh config/libtool.m4
-rm -fr autom4te.cache
-libtoolize -c
-aclocal -I config -I ../cmulocal -I ../config
-automake -a -c
-autoheader
-autoconf
-popd
-
-CFLAGS="$RPM_OPT_FLAGS -fPIC"; export CFLAGS
-
 # Find Kerberos.
 krb5_prefix=`krb5-config --prefix`
 if test x$krb5_prefix = x%{_prefix} ; then
@@ -245,7 +237,14 @@ if test x"$LIB_DIR" != "x-L%{_libdir}"; then
         LDFLAGS="$LIB_DIR $LDFLAGS"; export LDFLAGS
 fi
 
-CFLAGS="$CFLAGS $CPPFLAGS"; export CFLAGS
+# Patch config.sub to support ppc64p7 subarch (Fedora specific)
+# This is similar to what the config.sub from automake has
+for i in `find . -name config.sub`; do
+  perl -pi -e "s/ppc64-\*/ppc64-\* \| ppc64p7-\*/" $i
+done
+
+CFLAGS="$RPM_OPT_FLAGS $CFLAGS $CPPFLAGS -fPIE"; export CFLAGS
+LDFLAGS="$LDFLAGS -pie -Wl,-z,now"; export LDFLAGS
 
 echo "$CFLAGS"
 echo "$CPPFLAGS"
@@ -261,6 +260,7 @@ echo "$LDFLAGS"
         --with-gss_impl=mit \
         --with-rc4 \
         --with-dblib=berkeley \
+        --with-bdb=db \
         --with-saslauthd=/run/saslauthd --without-pwcheck \
 %if ! %{bootstrap_cyrus_sasl}
         --with-ldap \
@@ -278,7 +278,7 @@ echo "$LDFLAGS"
 %if ! %{bootstrap_cyrus_sasl}
         --enable-ldapdb \
 %endif
-        --enable-sql --with-mysql=%{_prefix} --with-pgsql=%{_prefix} \
+        --enable-sql --with-mysql=yes --with-pgsql=yes \
         --without-sqlite \
         "$@"
         # --enable-auth-sasldb -- EXPERIMENTAL
@@ -288,7 +288,7 @@ make -C sample
 
 # Build a small program to list the available mechanisms, because I need it.
 pushd lib
-../libtool --tag=CC --mode=link %{__cc} -o sasl2-shared-mechlist -I../include $CFLAGS %{SOURCE7} $LDFLAGS ./libsasl2.la
+../libtool --mode=link %{__cc} -o sasl2-shared-mechlist -I../include $CFLAGS %{SOURCE7} $LDFLAGS ./libsasl2.la
 
 
 %install
@@ -298,36 +298,36 @@ make install DESTDIR=$RPM_BUILD_ROOT sasldir=%{_plugindir2}
 make install DESTDIR=$RPM_BUILD_ROOT sasldir=%{_plugindir2} -C plugins
 
 install -m755 -d $RPM_BUILD_ROOT%{_bindir}
-./libtool --tag=CC --mode=install \
+./libtool --mode=install \
 install -m755 sample/client $RPM_BUILD_ROOT%{_bindir}/sasl2-sample-client
-./libtool --tag=CC --mode=install \
+./libtool --mode=install \
 install -m755 sample/server $RPM_BUILD_ROOT%{_bindir}/sasl2-sample-server
-./libtool --tag=CC --mode=install \
+./libtool --mode=install \
 install -m755 saslauthd/testsaslauthd $RPM_BUILD_ROOT%{_sbindir}/testsaslauthd
 
 # Install the saslauthd mdoc page in the expected location.  Sure, it's not
 # really a man page, but groff seems to be able to cope with it.
 install -m755 -d $RPM_BUILD_ROOT%{_mandir}/man8/
 install -m644 -p saslauthd/saslauthd.mdoc $RPM_BUILD_ROOT%{_mandir}/man8/saslauthd.8
+install -m644 -p saslauthd/testsaslauthd.8 $RPM_BUILD_ROOT%{_mandir}/man8/testsaslauthd.8
 
 # Create the saslauthd listening directory.
 install -m755 -d $RPM_BUILD_ROOT/run/saslauthd
 
 # Install the init script for saslauthd and the init script's config file.
 install -m755 -d $RPM_BUILD_ROOT/etc/rc.d/init.d $RPM_BUILD_ROOT/etc/sysconfig
-install -m755 -p %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/saslauthd
 install -d -m755 $RPM_BUILD_ROOT/%{_unitdir}
 install -m644 -p %{SOURCE5} $RPM_BUILD_ROOT/%{_unitdir}/saslauthd.service
 install -m644 -p %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/saslauthd
-install -m755 -d $RPM_BUILD_ROOT/etc/tmpfiles.d
-install -m644 -p %{SOURCE11} $RPM_BUILD_ROOT/etc/tmpfiles.d/saslauthd.conf
+install -m755 -d $RPM_BUILD_ROOT/%{_prefix}/lib/tmpfiles.d
+install -m644 -p %{SOURCE11} $RPM_BUILD_ROOT/%{_prefix}/lib/tmpfiles.d/saslauthd.conf
 
 # Install the config dirs if they're not already there.
 install -m755 -d $RPM_BUILD_ROOT/%{_sysconfdir}/sasl2
 install -m755 -d $RPM_BUILD_ROOT/%{_plugindir2}
 
 # Provide an easy way to query the list of available mechanisms.
-./libtool --tag=CC --mode=install \
+./libtool --mode=install \
 install -m755 lib/sasl2-shared-mechlist $RPM_BUILD_ROOT/%{_sbindir}/
 
 # Remove unpackaged files from the buildroot.
@@ -337,37 +337,27 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/sasl2/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_mandir}/cat8/saslauthd.8
 
-magic_rpm_clean.sh
 
 %clean
 test "$RPM_BUILD_ROOT" != "/" && rm -rf $RPM_BUILD_ROOT
 
 %pre
-getent group %{username} >/dev/null || groupadd -r %{username}
+getent group %{username} >/dev/null || groupadd -g 76 -r %{username}
 getent passwd %{username} >/dev/null || useradd -r -g %{username} -d %{homedir} -s /sbin/nologin -c \"%{hint}\" %{username}
 
 %post
-if [ $1 -eq 1 ]; then
-	/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
+%systemd_post saslauthd.service
 
 %preun
-if [ $1 -eq 0 ]; then
-	/usr/bin/systemctl --no-reload disable saslauthd.service >/dev/null 2>&1 || :
-	/usr/bin/systemctl stop saslauthd.service >/dev/null 2>&1 || :
-fi
+%systemd_preun saslauthd.service
 
 %postun
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ]; then
-	/usr/bin/systemctl try-restart saslauthd.service >/dev/null 2>&1 || :
-fi
-exit 0
+%systemd_postun_with_restart saslauthd.service
 
 %triggerun -n cyrus-sasl -- cyrus-sasl < 2.1.23-32
 /usr/bin/systemd-sysv-convert --save saslauthd >/dev/null 2>&1 || :
-/usr/sbin/chkconfig --del saslauthd >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart saslauthd.service >/dev/null 2>&1 || :
+/sbin/chkconfig --del saslauthd >/dev/null 2>&1 || :
+/bin/systemctl try-restart saslauthd.service >/dev/null 2>&1 || :
 
 %post lib -p /sbin/ldconfig
 %postun lib -p /sbin/ldconfig
@@ -375,14 +365,13 @@ exit 0
 %files
 %defattr(-,root,root)
 %doc saslauthd/LDAP_SASLAUTHD
-%dir %{_plugindir2}/
 %{_mandir}/man8/*
 %{_sbindir}/pluginviewer
 %{_sbindir}/saslauthd
 %{_sbindir}/testsaslauthd
 %config(noreplace) /etc/sysconfig/saslauthd
 %{_unitdir}/saslauthd.service
-/etc/tmpfiles.d/saslauthd.conf
+%{_prefix}/lib/tmpfiles.d/saslauthd.conf
 %dir /run/saslauthd
 
 %files lib
@@ -424,6 +413,14 @@ exit 0
 %defattr(-,root,root)
 %{_plugindir2}/*gssapi*.so*
 
+%files scram
+%defattr(-,root,root)
+%{_plugindir2}/libscram.so*
+
+%files gs2
+%defattr(-,root,root)
+%{_plugindir2}/libgs2.so*
+
 %files devel
 %defattr(-,root,root)
 %doc doc/*.txt
@@ -431,18 +428,94 @@ exit 0
 %{_bindir}/sasl2-sample-server
 %{_includedir}/*
 %{_libdir}/libsasl*.*so
+%{_libdir}/pkgconfig/*.pc
 %{_mandir}/man3/*
 %{_sbindir}/sasl2-shared-mechlist
 
-%files sysvinit
-/etc/rc.d/init.d/saslauthd
-
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 2.1.23-31
-- 为 Magic 3.0 重建
+* Sun Jan 19 2014 Ville Skyttä <ville.skytta@iki.fi> - 2.1.26-16
+- Don't order service after syslog.target.
 
-* Tue Aug 28 2012 Liu Di <liudidi@gmail.com> - 2.1.23-30
-- 为 Magic 3.0 重建
+* Fri Nov 15 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-15
+- Treat SCRAM-SHA-1/DIGEST-MD5 as more secure than PLAIN (#970718)
+- improve configuration error message
+
+* Fri Nov 01 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-14
+- revert upstream commit 080e51c7fa0421eb2f0210d34cf0ac48a228b1e9 (#984079)
+
+* Tue Oct 15 2013 Karsten Hopp <karsten@redhat.com> 2.1.26-13
+- add ppc64p7 subarch support in config.sub (Fedora only)
+
+* Mon Sep 09 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-12
+- build with RPM_OPT_FLAGS <ville.skytta@iki.fi> (#1005535)
+
+* Tue Sep 03 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-11
+- fix hardening for /usr/sbin/saslauthd
+- add testsaslauthd.8 man page to the package
+- use static md5global.h file
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.26-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jun 24 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-9
+- detect gsskrb5_register_acceptor_identity macro <nalin@redhat.com> (#976538)
+
+* Tue Jun 04 2013 Karsten Hopp <karsten@redhat.com> 2.1.26-8
+- disable incorrect check for MkLinux to allow building with shared libraries on PPC
+
+* Tue May 21 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-7
+- fix the spec file in order to build the cyrus-sasl-sql plugin
+  with support for PostgreSQL and MySQL
+
+* Thu Feb 21 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-6
+- don't include system sasl2 library needed for rebuilds after rebase
+
+* Mon Feb 11 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-5
+- enable full relro and PIE compiler flags for saslauthd
+
+* Fri Feb 01 2013 Petr Lautrbach <plautrba@redhat.com> 2.1.26-4
+- fix library symlinks
+
+* Thu Jan 31 2013 Rex Dieter <rdieter@fedoraproject.org> 2.1.26-3
+- actually apply size_t patch (#906519)
+
+* Thu Jan 31 2013 Rex Dieter <rdieter@fedoraproject.org> 2.1.26-2
+- sasl.h: +#include<sys/types.h> for missing size_t type (#906519)
+- tighten subpkg deps via %%?_isa
+
+* Thu Dec 20 2012 Petr Lautrbach <plautrba@redhat.com> 2.1.26-1
+- update to 2.1.26
+- fix segfaults in sasl_gss_encode (#886140)
+
+* Mon Dec 10 2012 Petr Lautrbach <plautrba@redhat.com> 2.1.25-2
+- always use the current external Berkeley DB when linking
+
+* Fri Dec 07 2012 Petr Lautrbach <plautrba@redhat.com> 2.1.25-1
+- update to 2.1.25
+- add cyrus-sasl-scram and cyrus-sasl-gs2 packages
+
+* Fri Sep 14 2012 Petr Lautrbach <plautrba@redhat.com> 2.1.23-36
+- replace scriptlets with systemd macros (#856666)
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.23-35
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 17 2012 Petr Lautrbach <plautrba@redhat.com> 2.1.23-34
+- move /etc/tmpfiles.d/saslauthd.conf to /usr/lib/tmpfiles.d/saslauthd.conf (#840193)
+
+* Wed Jun 20 2012 Petr Lautrbach <plautrba@redhat.com> 2.1.23-33
+- properly deal with crypt() returning NULL (#816250)
+- use fixed gid 76 for saslauth
+
+* Mon Apr 16 2012 Jindrich Novy <jnovy@redhat.com> 2.1.23-32
+- re-enable libdb support and utilities
+
+* Wed Apr 04 2012 Jindrich Novy <jnovy@redhat.com> 2.1.23-31
+- temporarily disable libdb support to resolve cyrus-sasl
+  chicken and egg build problem against libdb
+
+* Tue Apr 03 2012 Jindrich Novy <jnovy@redhat.com> 2.1.23-30
+- rebuild against new libdb
 
 * Wed Feb 08 2012 Petr Lautrbach <plautrba@redhat.com> 2.1.23-29
 - Change saslauth user homedir to /run/saslauthd (#752889)
@@ -500,7 +573,7 @@ exit 0
 * Fri Apr  9 2010 Jan F. Chadima <jchadima@redhat.com> - 2.1.23-12
 - Update init script to impeach pid file
 
-* Fri Mar 11 2010 Jan F. Chadima <jchadima@redhat.com> - 2.1.23-11
+* Thu Mar 11 2010 Jan F. Chadima <jchadima@redhat.com> - 2.1.23-11
 - Update pre post preun and postun scripts (#572399)
 
 * Wed Mar 10 2010 Jan F. Chadima <jchadima@redhat.com> - 2.1.23-10
@@ -721,10 +794,10 @@ exit 0
 * Wed Oct 27 2004 Nalin Dahyabhai <nalin@redhat.com> 2.1.20-0
 - update to 2.1.20, including the fix for CAN-2004-0884
 
-* Thu Oct  5 2004 Nalin Dahyabhai <nalin@redhat.com> 2.1.19-3
+* Tue Oct  5 2004 Nalin Dahyabhai <nalin@redhat.com> 2.1.19-3
 - use notting's fix for incorrect patch for CAN-2004-0884 for 1.5.28
 
-* Thu Oct  5 2004 Nalin Dahyabhai <nalin@redhat.com> 2.1.19-2
+* Tue Oct  5 2004 Nalin Dahyabhai <nalin@redhat.com> 2.1.19-2
 - don't trust the environment in setuid/setgid contexts (CAN-2004-0884, #134660)
 
 * Thu Aug 19 2004 Nalin Dahyabhai <nalin@redhat.com> 2.1.19-1
@@ -857,7 +930,7 @@ exit 0
 * Tue Nov 12 2002 Tim Powers <timp@redhat.com> 2.1.7-5
 - remove files from $RPM_BUILD_ROOT that we don't intend to include
 
-* Tue Oct  9 2002 Nalin Dahyabhai <nalin@redhat.com> 2.1.7-4
+* Wed Oct  9 2002 Nalin Dahyabhai <nalin@redhat.com> 2.1.7-4
 - update to SASLv1 to final 1.5.28
 
 * Fri Sep 13 2002 Nalin Dahyabhai <nalin@redhat.com> 2.1.7-3
@@ -997,7 +1070,7 @@ exit 0
 - incorporated changes from Mads Kiilerich
 - release number is 1, not mk1
 
-* Tue Nov 10 1999 Mads Kiilerich <mads@kiilerich.com>
+* Wed Nov 10 1999 Mads Kiilerich <mads@kiilerich.com>
 - updated to sasl 1.5.11
 - configure --disable-krb4 --without-rc4 --disable-cram 
   because of missing libraries and pine having cram as default...
