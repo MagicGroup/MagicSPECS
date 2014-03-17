@@ -1,13 +1,13 @@
 Summary: A utility for setting up encrypted disks
 Name: cryptsetup
-Version: 1.6.0
+Version: 1.6.4
 Release: 2%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: http://cryptsetup.googlecode.com/
 BuildRequires: libgcrypt-devel, popt-devel, device-mapper-devel
-BuildRequires: libgpg-error-devel, libuuid-devel
-BuildRequires: python-devel, libpwquality-devel
+BuildRequires: libgpg-error-devel, libuuid-devel, libsepol-devel
+BuildRequires: libselinux-devel, python-devel, libpwquality-devel
 BuildRequires: fipscheck-devel >= 1.3.0
 Provides: cryptsetup-luks = %{version}-%{release}
 Obsoletes: cryptsetup-luks < 1.4.0
@@ -16,13 +16,7 @@ Requires: fipscheck-lib%{_isa} >= 1.3.0
 Requires: libpwquality >= 1.2.0
 
 %define upstream_version %{version}
-Source0: http://cryptsetup.googlecode.com/files/cryptsetup-%{upstream_version}.tar.bz2
-
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%define configure_cipher --enable-gcrypt-pbkdf2
-%else
-%define configure_cipher --with-luks1-cipher=aes --with-luks1-mode=cbc-essiv:sha256 --with-luks1-keybits=256
-%endif
+Source0: https://www.kernel.org/pub/linux/utils/cryptsetup/v1.6/cryptsetup-%{upstream_version}.tar.xz
 
 %description
 The cryptsetup package contains a utility for setting up
@@ -47,10 +41,8 @@ Summary: Cryptsetup shared library
 Provides: cryptsetup-luks-libs = %{version}-%{release}
 Obsoletes: cryptsetup-luks-libs < 1.4.0
 Requires: fipscheck-lib%{_isa} >= 1.3.0
-# Need support for empty password in gcrypt PBKDF2
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-Requires: libgcrypt >= 1.5.0-9
-%endif
+# Need support for fixed gcrypt PBKDF2 and fixed Whirlpool hash.
+Requires: libgcrypt >= 1.6.1
 
 %description libs
 This package contains the cryptsetup shared library, libcryptsetup.
@@ -90,7 +82,7 @@ chmod -x python/pycryptsetup-test.py
 chmod -x misc/dracut_90reencrypt/*
 
 %build
-%configure --enable-python --enable-fips --enable-cryptsetup-reencrypt --enable-pwquality %{?configure_cipher}
+%configure --enable-python --enable-fips --enable-cryptsetup-reencrypt --enable-pwquality %{?configure_pbkdf2}
 # remove rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -102,7 +94,6 @@ make %{?_smp_mflags}
   %{?__debug_package:%{__debug_install_post}} \
   %{__arch_install_post} \
   %{__os_install_post} \
-  fipshmac -d %{buildroot}/%{_libdir}/fipscheck %{buildroot}/%{_sbindir}/cryptsetup \
   fipshmac -d %{buildroot}/%{_libdir}/fipscheck %{buildroot}/%{_libdir}/libcryptsetup.so.* \
 %{nil}
 
@@ -116,10 +107,9 @@ install -d %{buildroot}/%{_libdir}/fipscheck
 %postun -n cryptsetup-libs -p /sbin/ldconfig
 
 %files
-%doc COPYING ChangeLog AUTHORS TODO FAQ
+%doc COPYING AUTHORS FAQ docs/*ReleaseNotes
 %{_mandir}/man8/cryptsetup.8.gz
 %{_sbindir}/cryptsetup
-%{_libdir}/fipscheck/cryptsetup.hmac
 
 %files -n veritysetup
 %doc COPYING
@@ -138,7 +128,7 @@ install -d %{buildroot}/%{_libdir}/fipscheck
 %{_libdir}/pkgconfig/libcryptsetup.pc
 
 %files libs -f cryptsetup.lang
-%doc COPYING
+%doc COPYING COPYING.LGPL
 %{_libdir}/libcryptsetup.so.*
 %{_libdir}/fipscheck/libcryptsetup.so.*.hmac
 
@@ -150,6 +140,28 @@ install -d %{buildroot}/%{_libdir}/fipscheck
 %clean
 
 %changelog
+* Sun Mar 02 2014 Milan Broz <gmazyland@gmail.com> - 1.6.4-2
+- Require libgcrypt 1.6.1 (with fixed PBKDF2 and Whirlpool hash).
+
+* Thu Feb 27 2014 Milan Broz <gmazyland@gmail.com> - 1.6.4-1
+- Update to cryptsetup 1.6.4.
+
+* Tue Jan 07 2014 Ondrej Kozina <okozina@redhat.com> - 1.6.3-2
+- remove useless hmac checksum
+
+* Fri Dec 13 2013 Milan Broz <gmazyland@gmail.com> - 1.6.3-1
+- Update to cryptsetup 1.6.3.
+
+* Sun Aug 04 2013 Milan Broz <gmazyland@gmail.com> - 1.6.2-1
+- Update to cryptsetup 1.6.2.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Mar 31 2013 Milan Broz <gmazyland@gmail.com> - 1.6.1-1
+- Update to cryptsetup 1.6.1.
+- Install ReleaseNotes files instead of empty Changelog file.
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
