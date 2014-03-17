@@ -1,15 +1,14 @@
 Name:           cups-pk-helper
-Version:        0.2.4
-Release:        1%{?dist}
+Version:        0.2.5
+Release:        2%{?dist}
 Summary:        A helper that makes system-config-printer use PolicyKit
 
 Group:          System Environment/Base
 License:        GPLv2+
-URL:            http://www.vuntz.net/download/cups-pk-helper/
-Source0:        http://cgit.freedesktop.org/cups-pk-helper/snapshot/cups-pk-helper-%{version}.tar.bz2
+URL:            http://www.freedesktop.org/wiki/Software/cups-pk-helper/
+Source0:        http://www.freedesktop.org/software/cups-pk-helper/releases/cups-pk-helper-%{version}.tar.xz
 
 Patch0:         polkit_result.patch
-Patch1:         0001-Be-stricter-when-validating-printer-names.patch
 
 BuildRequires:  libtool >= 1.4.3
 BuildRequires:  cups-devel >= 1.2
@@ -37,15 +36,10 @@ interfaces available under control of PolicyKit.
 
 %prep
 %setup -q
-
 %patch0 -p1 -b .polkit-result
-%patch1 -p1 -R -b .strict-names
 
 
 %build
-# grr, tarball without configure
-./autogen.sh
-
 %configure
 make %{?_smp_mflags}
 
@@ -67,6 +61,18 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun  7 2013 Marek Kasik <mkasik@redhat.com> - 0.2.5-1
+- Update to 0.2.5
+- Change URL of cups-pk-helper project
+- Use tarballs with configure
+- Fix changelog's dates
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Oct 17 2012 Marek Kasik <mkasik@redhat.com> - 0.2.4-1
 - Update to 0.2.4
 - Resolves CVE-2012-4510
@@ -176,10 +182,10 @@ make install DESTDIR=$RPM_BUILD_ROOT
 - Add ability to reconnect to CUPS server after its reload
   (caused by cupsAdminSetServerSettings() or cupsPutFile())
 
-* Tue Jan 28 2009 Marek Kasik <mkasik@redhat.com> 0.0.3-3
+* Wed Jan 28 2009 Marek Kasik <mkasik@redhat.com> 0.0.3-3
 - Add functions for handling jobs (JobRestart, JobCancel, JobSetHoldUntil)
 
-* Tue Jan 26 2009 Marek Kasik <mkasik@redhat.com> 0.0.3-2
+* Mon Jan 26 2009 Marek Kasik <mkasik@redhat.com> 0.0.3-2
 - Add handling of file:/ protocol
 - Change order of checked policies so the PolicyKit asks only for
   "printer-enable" policy when enabling/disabling a printer
