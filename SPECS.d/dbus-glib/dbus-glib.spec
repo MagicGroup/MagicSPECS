@@ -7,7 +7,7 @@
 
 Summary: GLib bindings for D-Bus
 Name: dbus-glib
-Version: 0.100
+Version: 0.100.2
 Release: 2%{?dist}
 URL: http://www.freedesktop.org/software/dbus/
 #VCS: git:git://git.freedesktop.org/git/dbus/dbus-glib
@@ -73,7 +73,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -86,7 +85,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 
-%doc COPYING ChangeLog NEWS
+%doc COPYING NEWS
 
 %{_libdir}/*glib*.so.*
 %{_bindir}/dbus-binding-tool
@@ -111,8 +110,21 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.100-2
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.100.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 01 2013 Colin Walters <walters@redhat.com> - 0.100.2
+- New upstream version
+
+* Fri Jun 21 2013 Matthias Clasen <mclasen@redhat.com> - 0.100-4
+- Don't install ChangeLog (need to save space on the live image)
+
+* Wed Feb 20 2013 Colin Walters <walters@redhat.com> - 0.100-3
+- CVE-2013-0292
+  Resolves: #911714
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.100-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Tue Jul 17 2012 Colin Walters <walters@verbum.org> - 0.100-1
 - Update to 0.100
