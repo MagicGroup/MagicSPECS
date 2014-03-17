@@ -1,21 +1,19 @@
 Name:           cryptopp
-Version:        5.6.1
-Release:        8%{?dist}
-Summary:        Public domain C++ class library of cryptographic schemes
-License:        Public Domain
+Version:        5.6.2
+Release:        3%{?dist}
+Summary:        C++ class library of cryptographic schemes
+License:        Boost
 Group:          System Environment/Libraries
 URL:            http://www.cryptopp.com/
-Source0:        http://www.cryptopp.com/cryptopp561.zip
+Source0:        http://www.cryptopp.com/cryptopp562.zip
 Source1:        cryptopp.pc
-Patch0:         cryptopp-5.6.1-autotools.patch
-Patch1:         cryptopp-5.6.1-s390.patch
+Patch0:         cryptopp-autotools.patch
+Patch1:         cryptopp-s390.patch
 # Debian patch installs TestVectors and TestData in /usr/share/cryptopp/
 # http://groups.google.com/group/cryptopp-users/browse_thread/thread/6fe2192340f07e5d
 Patch2:         cryptopp-data-files-location.patch
 # Enable SSE2 only on x86_64
 Patch3:         cryptopp-x86-disable-sse2.patch
-# fix build with gcc-4.7.0 http://groups.google.com/group/cryptopp-users/browse_thread/thread/abad017df4a83883
-Patch4:         cryptopp-5.6.1-gcc-4.7.0.patch
 BuildRequires:  doxygen, autoconf, libtool
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -66,7 +64,6 @@ rm -f GNUmakefile
 %patch1 -p1 -b .s390
 %patch2 -p1
 %patch3
-%patch4 -p1
 autoreconf --verbose --force --install
 perl -pi -e 's/\r$//g' License.txt Readme.txt
 
@@ -129,6 +126,19 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.6.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Apr  4 2013 Alexey Kurov <nucleo@fedoraproject.org> - 5.6.2-2
+- cryptopp.pc cleanup
+
+* Wed Apr  3 2013 Alexey Kurov <nucleo@fedoraproject.org> - 5.6.2-1
+- Crypto++ 5.6.2
+- License: Boost
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.6.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.6.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
