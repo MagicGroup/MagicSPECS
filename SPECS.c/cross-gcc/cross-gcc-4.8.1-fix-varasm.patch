@@ -1,0 +1,13 @@
+diff -uNr gcc-4.8.1-20130717.orig/gcc/varasm.c gcc-4.8.1-20130717/gcc/varasm.c
+--- gcc-4.8.1-20130717.orig/gcc/varasm.c	2013-08-09 12:16:46.380938093 +0100
++++ gcc-4.8.1-20130717/gcc/varasm.c	2013-08-09 12:34:53.451759678 +0100
+@@ -1053,8 +1053,8 @@
+ 	  if (! DECL_THREAD_LOCAL_P (decl) || const_align <= BITS_PER_WORD)
+ 	    align = const_align;
+ 	}
+-    }
+ #endif
++    }
+ 
+   return align;
+ }
