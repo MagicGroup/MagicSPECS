@@ -1,0 +1,36 @@
+*** ../binutils-2.23.2.orig/bfd/doc/bfd.texinfo	2013-05-17 08:53:44.811925730 +0100
+--- bfd/doc/bfd.texinfo	2013-05-17 08:58:10.712933101 +0100
+*************** All of BFD lives in one directory.
+*** 322,328 ****
+  @printindex cp
+  
+  @tex
+! % I think something like @colophon should be in texinfo.  In the
+  % meantime:
+  \long\def\colophon{\hbox to0pt{}\vfill
+  \centerline{The body of this manual is set in}
+--- 322,328 ----
+  @printindex cp
+  
+  @tex
+! % I think something like @@colophon should be in texinfo.  In the
+  % meantime:
+  \long\def\colophon{\hbox to0pt{}\vfill
+  \centerline{The body of this manual is set in}
+*************** All of BFD lives in one directory.
+*** 333,339 ****
+  \centerline{{\sl\fontname\tensl\/}}
+  \centerline{are used for emphasis.}\vfill}
+  \page\colophon
+! % Blame: doc@cygnus.com, 28mar91.
+  @end tex
+  
+  @bye
+--- 333,339 ----
+  \centerline{{\sl\fontname\tensl\/}}
+  \centerline{are used for emphasis.}\vfill}
+  \page\colophon
+! % Blame: doc@@cygnus.com, 28mar91.
+  @end tex
+  
+  @bye

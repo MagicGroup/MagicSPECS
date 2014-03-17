@@ -1,0 +1,368 @@
+diff -cp ../binutils-2.23.52.0.1.orig/gas/doc/c-arm.texi gas/doc/c-arm.texi
+*** ../binutils-2.23.52.0.1.orig/gas/doc/c-arm.texi	2013-03-04 08:25:32.039931945 +0000
+--- gas/doc/c-arm.texi	2013-03-04 08:27:37.462927978 +0000
+*************** ARM and THUMB instructions had their own
+*** 390,418 ****
+  @code{unified} syntax, which can be selected via the @code{.syntax}
+  directive, and has the following main features:
+  
+! @table @bullet
+! @item
+  Immediate operands do not require a @code{#} prefix.
+  
+! @item
+  The @code{IT} instruction may appear, and if it does it is validated
+  against subsequent conditional affixes.  In ARM mode it does not
+  generate machine code, in THUMB mode it does.
+  
+! @item
+  For ARM instructions the conditional affixes always appear at the end
+  of the instruction.  For THUMB instructions conditional affixes can be
+  used, but only inside the scope of an @code{IT} instruction.
+  
+! @item
+  All of the instructions new to the V6T2 architecture (and later) are
+  available.  (Only a few such instructions can be written in the
+  @code{divided} syntax).
+  
+! @item
+  The @code{.N} and @code{.W} suffixes are recognized and honored.
+  
+! @item
+  All instructions set the flags if and only if they have an @code{s}
+  affix.
+  @end table
+--- 390,418 ----
+  @code{unified} syntax, which can be selected via the @code{.syntax}
+  directive, and has the following main features:
+  
+! @table @code
+! @item 1
+  Immediate operands do not require a @code{#} prefix.
+  
+! @item 2
+  The @code{IT} instruction may appear, and if it does it is validated
+  against subsequent conditional affixes.  In ARM mode it does not
+  generate machine code, in THUMB mode it does.
+  
+! @item 3
+  For ARM instructions the conditional affixes always appear at the end
+  of the instruction.  For THUMB instructions conditional affixes can be
+  used, but only inside the scope of an @code{IT} instruction.
+  
+! @item 4
+  All of the instructions new to the V6T2 architecture (and later) are
+  available.  (Only a few such instructions can be written in the
+  @code{divided} syntax).
+  
+! @item 5
+  The @code{.N} and @code{.W} suffixes are recognized and honored.
+  
+! @item 6
+  All instructions set the flags if and only if they have an @code{s}
+  affix.
+  @end table
+*************** Either @samp{#} or @samp{$} can be used
+*** 451,478 ****
+  @cindex register names, ARM
+  *TODO* Explain about ARM register naming, and the predefined names.
+  
+- @node ARM-Neon-Alignment
+- @subsection NEON Alignment Specifiers
+- 
+- @cindex alignment for NEON instructions
+- Some NEON load/store instructions allow an optional address
+- alignment qualifier.
+- The ARM documentation specifies that this is indicated by
+- @samp{@@ @var{align}}. However GAS already interprets
+- the @samp{@@} character as a "line comment" start,
+- so @samp{: @var{align}} is used instead.  For example:
+- 
+- @smallexample
+-         vld1.8 @{q0@}, [r0, :128]
+- @end smallexample
+- 
+- @node ARM Floating Point
+- @section Floating Point
+- 
+- @cindex floating point, ARM (@sc{ieee})
+- @cindex ARM floating point (@sc{ieee})
+- The ARM family uses @sc{ieee} floating-point numbers.
+- 
+  @node ARM-Relocations
+  @subsection ARM relocation generation
+  
+--- 451,456 ----
+*************** respectively.  For example to load the 3
+*** 519,524 ****
+--- 497,524 ----
+          MOVT r0, #:upper16:foo
+  @end smallexample
+  
++ @node ARM-Neon-Alignment
++ @subsection NEON Alignment Specifiers
++ 
++ @cindex alignment for NEON instructions
++ Some NEON load/store instructions allow an optional address
++ alignment qualifier.
++ The ARM documentation specifies that this is indicated by
++ @samp{@@ @var{align}}. However GAS already interprets
++ the @samp{@@} character as a "line comment" start,
++ so @samp{: @var{align}} is used instead.  For example:
++ 
++ @smallexample
++         vld1.8 @{q0@}, [r0, :128]
++ @end smallexample
++ 
++ @node ARM Floating Point
++ @section Floating Point
++ 
++ @cindex floating point, ARM (@sc{ieee})
++ @cindex ARM floating point (@sc{ieee})
++ The ARM family uses @sc{ieee} floating-point numbers.
++ 
+  @node ARM Directives
+  @section ARM Machine Directives
+  
+*** ../binutils-2.23.2.orig/gas/doc/c-arc.texi	2013-04-24 11:06:46.573176853 +0100
+--- gas/doc/c-arc.texi	2013-04-24 11:13:18.257187711 +0100
+*************** The extension instructions are not macro
+*** 220,226 ****
+  encodings for use of these instructions according to the specification
+  by the user.  The parameters are:
+  
+! @table @bullet
+  @item @var{name}
+  Name of the extension instruction 
+  
+--- 220,226 ----
+  encodings for use of these instructions according to the specification
+  by the user.  The parameters are:
+  
+! @table @code
+  @item @var{name}
+  Name of the extension instruction 
+  
+*** ../binutils-2.23.2.orig/gas/doc/c-cr16.texi	2013-04-24 11:06:46.576176853 +0100
+--- gas/doc/c-cr16.texi	2013-04-24 11:14:25.456189574 +0100
+*************** Operand expression type qualifier is an
+*** 44,69 ****
+  CR16 target operand qualifiers and its size (in bits):
+  
+  @table @samp
+! @item Immediate Operand
+! - s ---- 4 bits
+! @item 
+! - m ---- 16 bits, for movb and movw instructions.
+! @item 
+! - m ---- 20 bits, movd instructions.
+! @item 
+! - l ---- 32 bits
+! 
+! @item Absolute Operand
+! - s ---- Illegal specifier for this operand.
+! @item  
+! - m ---- 20 bits, movd instructions.
+! 
+! @item Displacement Operand
+! - s ---- 8 bits
+! @item
+! - m ---- 16 bits
+! @item 
+! - l ---- 24 bits
+  @end table
+  
+  For example:
+--- 44,76 ----
+  CR16 target operand qualifiers and its size (in bits):
+  
+  @table @samp
+! @item Immediate Operand: s
+! 4 bits.
+! 
+! @item Immediate Operand: m
+! 16 bits, for movb and movw instructions.
+! 
+! @item Immediate Operand: m
+! 20 bits, movd instructions.
+! 
+! @item Immediate Operand: l
+! 32 bits.
+! 
+! @item Absolute Operand: s
+! Illegal specifier for this operand.
+! 
+! @item Absolute Operand: m
+! 20 bits, movd instructions.
+! 
+! @item Displacement Operand: s
+! 8 bits.
+! 
+! @item Displacement Operand: m
+! 16 bits.
+! 
+! @item Displacement Operand: l
+! 24 bits.
+! 
+  @end table
+  
+  For example:
+*** ../binutils-2.23.2.orig/gas/doc/c-tic54x.texi	2013-04-24 11:06:46.571176853 +0100
+--- gas/doc/c-tic54x.texi	2013-04-24 11:15:13.653190910 +0100
+*************** In this example, x is replaced with SYM2
+*** 109,115 ****
+  is replaced with x.  At this point, x has already been encountered
+  and the substitution stops.
+  
+! @smallexample @code
+   .asg   "x",SYM1 
+   .asg   "SYM1",SYM2
+   .asg   "SYM2",x
+--- 109,115 ----
+  is replaced with x.  At this point, x has already been encountered
+  and the substitution stops.
+  
+! @smallexample
+   .asg   "x",SYM1 
+   .asg   "SYM1",SYM2
+   .asg   "SYM2",x
+*************** Substitution may be forced in situations
+*** 126,132 ****
+  ambiguous by placing colons on either side of the subsym.  The following
+  code: 
+  
+! @smallexample @code
+   .eval  "10",x
+  LAB:X:  add     #x, a
+  @end smallexample
+--- 126,132 ----
+  ambiguous by placing colons on either side of the subsym.  The following
+  code: 
+  
+! @smallexample
+   .eval  "10",x
+  LAB:X:  add     #x, a
+  @end smallexample
+*************** The @code{LDX} pseudo-op is provided for
+*** 309,315 ****
+  of a label or address.  For example, if an address @code{_label} resides
+  in extended program memory, the value of @code{_label} may be loaded as
+  follows:
+! @smallexample @code
+   ldx     #_label,16,a    ; loads extended bits of _label
+   or      #_label,a       ; loads lower 16 bits of _label
+   bacc    a               ; full address is in accumulator A
+--- 309,315 ----
+  of a label or address.  For example, if an address @code{_label} resides
+  in extended program memory, the value of @code{_label} may be loaded as
+  follows:
+! @smallexample
+   ldx     #_label,16,a    ; loads extended bits of _label
+   or      #_label,a       ; loads lower 16 bits of _label
+   bacc    a               ; full address is in accumulator A
+diff -cp ../binutils-2.23.2.orig/gas/doc/c-mips.texi gas/doc/c-mips.texi
+*** ../binutils-2.23.2.orig/gas/doc/c-mips.texi	2013-04-25 16:43:35.115767923 +0100
+--- gas/doc/c-mips.texi	2013-04-26 08:07:10.338304064 +0100
+*************** the @samp{mad} and @samp{madu} instructi
+*** 234,240 ****
+  instructions around accesses to the @samp{HI} and @samp{LO} registers.
+  @samp{-no-m4650} turns off this option.
+  
+! @itemx -m3900
+  @itemx -no-m3900
+  @itemx -m4100
+  @itemx -no-m4100
+--- 234,240 ----
+  instructions around accesses to the @samp{HI} and @samp{LO} registers.
+  @samp{-no-m4650} turns off this option.
+  
+! @item -m3900
+  @itemx -no-m3900
+  @itemx -m4100
+  @itemx -no-m4100
+diff -cp ../binutils-2.23.2.orig/gas/doc/c-score.texi gas/doc/c-score.texi
+*** ../binutils-2.23.2.orig/gas/doc/c-score.texi	2013-04-25 16:43:35.043767921 +0100
+--- gas/doc/c-score.texi	2013-04-26 08:07:37.975304830 +0100
+*************** implicitly with the @code{gp} register.
+*** 37,43 ****
+  @item -EB
+  Assemble code for a big-endian cpu
+  
+! @itemx -EL
+  Assemble code for a little-endian cpu
+  
+  @item -FIXDD 
+--- 37,43 ----
+  @item -EB
+  Assemble code for a big-endian cpu
+  
+! @item -EL
+  Assemble code for a little-endian cpu
+  
+  @item -FIXDD 
+*************** Assemble code for no warning message for
+*** 49,61 ****
+  @item -SCORE5
+  Assemble code for target is SCORE5
+  
+! @itemx -SCORE5U
+  Assemble code for target is SCORE5U
+  
+! @itemx -SCORE7
+  Assemble code for target is SCORE7, this is default setting
+  
+! @itemx -SCORE3
+  Assemble code for target is SCORE3
+  
+  @item -march=score7
+--- 49,61 ----
+  @item -SCORE5
+  Assemble code for target is SCORE5
+  
+! @item -SCORE5U
+  Assemble code for target is SCORE5U
+  
+! @item -SCORE7
+  Assemble code for target is SCORE7, this is default setting
+  
+! @item -SCORE3
+  Assemble code for target is SCORE3
+  
+  @item -march=score7
+diff -cp ../binutils-2.23.2.orig/gas/doc/c-tic54x.texi gas/doc/c-tic54x.texi
+*** ../binutils-2.23.2.orig/gas/doc/c-tic54x.texi	2013-04-25 16:43:35.042767921 +0100
+--- gas/doc/c-tic54x.texi	2013-04-26 08:08:02.418305508 +0100
+*************** LAB:X:  add     #x, a
+*** 133,139 ****
+  
+  When assembled becomes:
+  
+! @smallexample @code
+  LAB10  add     #10, a
+  @end smallexample
+  
+--- 133,139 ----
+  
+  When assembled becomes:
+  
+! @smallexample 
+  LAB10  add     #10, a
+  @end smallexample
+  
+*************** Assign @var{name} the string @var{string
+*** 345,351 ****
+  performed on @var{string} before assignment.
+  
+  @cindex @code{eval} directive, TIC54X
+! @itemx .eval @var{string}, @var{name}
+  Evaluate the contents of string @var{string} and assign the result as a
+  string to the subsym @var{name}.  String replacement is performed on
+  @var{string} before assignment. 
+--- 345,351 ----
+  performed on @var{string} before assignment.
+  
+  @cindex @code{eval} directive, TIC54X
+! @item .eval @var{string}, @var{name}
+  Evaluate the contents of string @var{string} and assign the result as a
+  string to the subsym @var{name}.  String replacement is performed on
+  @var{string} before assignment. 

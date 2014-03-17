@@ -1,0 +1,207 @@
+diff -rcp ../binutils-2.23.2.orig/gas/ChangeLog gas/ChangeLog
+*** ../binutils-2.23.2.orig/gas/ChangeLog	2013-07-19 12:55:22.375756756 +0100
+--- gas/ChangeLog	2013-07-19 13:01:50.274744487 +0100
+***************
+*** 136,141 ****
+--- 136,153 ----
+  
+  	* config/tc-aarch64.c (aarch64_archs): Rename 'armv8' to 'armv8-a'.
+  
++ 2012-09-06  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
++ 
++ 	* config/tc-s390.c (set_highgprs_p): New variable.
++ 	(s390_machinemode): New function.
++ 	(md_pseudo_table): Add new pseudo command machinemode.
++ 	(md_parse_option): Set set_highgprs_p to TRUE if -mzarch was
++ 	specified on command line.
++ 	(s390_elf_final_processing): Set the highgprs flag in the ELF
++ 	header depending on set_highgprs_p.
++ 
++ 	* doc/c-s390.texi: Document new pseudo machinemode.
++ 
+  2012-08-17  Nagajyothi Eggone  <nagajyothi.eggone@amd.com>
+  
+  	* config/tc-i386.c (cpu_arch): Add CPU_BTVER1_FLAGS and
+diff -rcp ../binutils-2.23.2.orig/gas/config/tc-s390.c gas/config/tc-s390.c
+*** ../binutils-2.23.2.orig/gas/config/tc-s390.c	2013-07-19 12:55:22.390756755 +0100
+--- gas/config/tc-s390.c	2013-07-19 13:01:01.537746029 +0100
+*************** static int s390_arch_size = 0;
+*** 44,49 ****
+--- 44,53 ----
+  static unsigned int current_cpu = S390_OPCODE_MAXCPU - 1;
+  static unsigned int current_mode_mask = 0;
+  
++ /* Set to TRUE if the highgprs flag in the ELF header needs to be set
++    for the output file.  */
++ static bfd_boolean set_highgprs_p = FALSE;
++ 
+  /* Whether to use user friendly register names. Default is TRUE.  */
+  #ifndef TARGET_REG_NAMES_P
+  #define TARGET_REG_NAMES_P TRUE
+*************** static void s390_bss (int);
+*** 86,91 ****
+--- 90,96 ----
+  static void s390_insn (int);
+  static void s390_literals (int);
+  static void s390_machine (int);
++ static void s390_machinemode (int);
+  
+  const pseudo_typeS md_pseudo_table[] =
+  {
+*************** const pseudo_typeS md_pseudo_table[] =
+*** 101,106 ****
+--- 106,112 ----
+    { "ltorg",    s390_literals,  0 },
+    { "string",   stringer,       8 + 1 },
+    { "machine",  s390_machine,   0 },
++   { "machinemode",  s390_machinemode,   0 },
+    { NULL,	NULL,		0 }
+  };
+  
+*************** md_parse_option (int c, char *arg)
+*** 409,415 ****
+  	current_mode_mask = 1 << S390_OPCODE_ESA;
+  
+        else if (arg != NULL && strcmp (arg, "zarch") == 0)
+! 	current_mode_mask = 1 << S390_OPCODE_ZARCH;
+  
+        else if (arg != NULL && strncmp (arg, "arch=", 5) == 0)
+  	{
+--- 415,425 ----
+  	current_mode_mask = 1 << S390_OPCODE_ESA;
+  
+        else if (arg != NULL && strcmp (arg, "zarch") == 0)
+! 	{
+! 	  if (s390_arch_size == 32)
+! 	    set_highgprs_p = TRUE;
+! 	  current_mode_mask = 1 << S390_OPCODE_ZARCH;
+! 	}
+  
+        else if (arg != NULL && strncmp (arg, "arch=", 5) == 0)
+  	{
+*************** s390_machine (int ignore ATTRIBUTE_UNUSE
+*** 1863,1868 ****
+--- 1873,1955 ----
+    demand_empty_rest_of_line ();
+  }
+  
++ /* The .machinemode pseudo op allows to switch to a different
++    architecture mode in the asm listing.  The current architecture
++    mode setting can be stored on a stack with .machinemode push and
++    restored with .machinemode pop.  */
++ 
++ static void
++ s390_machinemode (int ignore ATTRIBUTE_UNUSED)
++ {
++   char *mode_string;
++ #define MAX_HISTORY 100
++   static unsigned int *mode_history;
++   static int curr_hist;
++ 
++   SKIP_WHITESPACE ();
++ 
++   if (*input_line_pointer == '"')
++     {
++       int len;
++       mode_string = demand_copy_C_string (&len);
++     }
++   else
++     {
++       char c;
++       mode_string = input_line_pointer;
++       c = get_symbol_end ();
++       mode_string = xstrdup (mode_string);
++       *input_line_pointer = c;
++     }
++ 
++   if (mode_string != NULL)
++     {
++       unsigned int old_mode_mask = current_mode_mask;
++       char *p;
++ 
++       for (p = mode_string; *p != 0; p++)
++ 	*p = TOLOWER (*p);
++ 
++       if (strcmp (mode_string, "push") == 0)
++ 	{
++ 	  if (mode_history == NULL)
++ 	    mode_history = xmalloc (MAX_HISTORY * sizeof (*mode_history));
++ 
++ 	  if (curr_hist >= MAX_HISTORY)
++ 	    as_bad (_(".machinemode stack overflow"));
++ 	  else
++ 	    mode_history[curr_hist++] = current_mode_mask;
++ 	}
++       else if (strcmp (mode_string, "pop") == 0)
++ 	{
++ 	  if (curr_hist <= 0)
++ 	    as_bad (_(".machinemode stack underflow"));
++ 	  else
++ 	    current_mode_mask = mode_history[--curr_hist];
++ 	}
++       else
++ 	{
++ 	  if (strcmp (mode_string, "esa") == 0)
++ 	    current_mode_mask = 1 << S390_OPCODE_ESA;
++ 	  else if (strcmp (mode_string, "zarch") == 0)
++ 	    {
++ 	      if (s390_arch_size == 32)
++ 		set_highgprs_p = TRUE;
++ 	      current_mode_mask = 1 << S390_OPCODE_ZARCH;
++ 	    }
++ 	  else if (strcmp (mode_string, "zarch_nohighgprs") == 0)
++ 	    current_mode_mask = 1 << S390_OPCODE_ZARCH;
++ 	  else
++ 	    as_bad (_("invalid machine `%s'"), mode_string);
++ 	}
++ 
++       if (current_mode_mask != old_mode_mask)
++ 	s390_setup_opcodes ();
++     }
++ 
++   demand_empty_rest_of_line ();
++ }
++ 
+  char *
+  md_atof (int type, char *litp, int *sizep)
+  {
+*************** tc_s390_regname_to_dw2regnum (char *regn
+*** 2381,2386 ****
+  void
+  s390_elf_final_processing (void)
+  {
+!   if (s390_arch_size == 32 && (current_mode_mask & (1 << S390_OPCODE_ZARCH)))
+      elf_elfheader (stdoutput)->e_flags |= EF_S390_HIGH_GPRS;
+  }
+--- 2468,2473 ----
+  void
+  s390_elf_final_processing (void)
+  {
+!   if (set_highgprs_p)
+      elf_elfheader (stdoutput)->e_flags |= EF_S390_HIGH_GPRS;
+  }
+diff -rcp ../binutils-2.23.2.orig/gas/doc/c-s390.texi gas/doc/c-s390.texi
+*** ../binutils-2.23.2.orig/gas/doc/c-s390.texi	2013-07-19 12:55:21.966756769 +0100
+--- gas/doc/c-s390.texi	2013-07-19 12:57:35.845752534 +0100
+*************** restored with @code{.machine pop}.  Be a
+*** 873,878 ****
+--- 873,891 ----
+  to be put into double quotes in case it contains characters not
+  appropriate for identifiers.  So you have to write @code{"z9-109"}
+  instead of just @code{z9-109}.
++ 
++ @cindex @code{.machinemode} directive, s390
++ @item .machinemode string
++ This directive allows to change the architecture mode for which code
++ is being generated.  @code{string} may be @code{esa}, @code{zarch},
++ @code{zarch_nohighgprs}, @code{push}, or @code{pop}.
++ @code{.machinemode zarch_nohighgprs} can be used to prevent the
++ @code{highgprs} flag from being set in the ELF header of the output
++ file.  This is useful in situations where the code is gated with a
++ runtime check which makes sure that the code is only executed on
++ kernels providing the @code{highgprs} feature.
++ @code{.machinemode push} saves the currently selected mode, which may
++ be restored with @code{.machinemode pop}.
+  @end table
+  
+  @node s390 Floating Point
