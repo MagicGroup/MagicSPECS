@@ -1,46 +1,64 @@
+%global _hardened_build 1
+
 %define initdir %{_sysconfdir}/rc.d/init.d
+%define with_systemd 1
 
 Summary: A Clustered Database based on Samba's Trivial Database (TDB)
 Name: ctdb
-Version: 1.2.28
-Release: 3%{?dist}
+Version: 2.5.2
+Release: 1%{?dist}
 License: GPLv3+
 Group: System Environment/Daemons
 URL: http://ctdb.samba.org/
 
-# Tarfile created using git
-# git clone git://git.samba.org/sahlberg/ctdb.git ctdb
-# cd ctdb
-# git-archive --format=tar --prefix=%{name}-%{version}/ %{name}-%{version} | bzip2 > %{name}-%{version}.tar.bz2
-Source0: %{name}-%{version}.tar.bz2
+Source0: https://ftp.samba.org/pub/ctdb/%{name}-%{version}.tar.gz
 
 # Fedora specific patch, ctdb should not be enabled by default in the runlevels
 Patch1: ctdb-no_default_runlevel.patch
-# Fix configure issue, submitted to upstream for review http://lists.samba.org/archive/samba-technical/2011-February/076248.html
-Patch2: 0001-Add-missing-eval-to-m4-script.patch
 
-# Assorted backports of patches already upstream
-Patch11: 0001-backport-server-recoverd-do-takeover_run-after-verifying-the-.patch
-Patch12: 0002-backport-server-recoverd-if-we-can-t-get-the-recovery-lock-ba.patch
-Patch13: 0003-backport-server-banning-also-release-all-ips-if-we-re-banning.patch
-Patch14: 0004-backport-events.d-11.routing-handle-updateip-event.patch
-Patch15: 0005-backport-event.d-13.per_ip_routing-remember-the-result-if-we-.patch
-Patch16: 0006-backport-Revert-config-let-13.per_ip_routing-use-a-flock-for-.patch
-Patch17: 0007-backport-config-13.per_ip_routing-use-a-global-flock-for-the-.patch
-Patch18: 0008-backport-config-13.per_ip_routing-we-don-t-need-locks-in-gene.patch
-Patch19: 0009-backport-config-13.per_ip_routing-add-CTDB_PER_IP_ROUTING_DEB.patch
-Patch20: 0010-backport-config-interface_modify.sh-before-calling-a-script-c.patch
-Patch21: 0011-backport-config-interface_modify.sh-do-the-echo-before-runnin.patch
+# Fedora specific patch, ctdb should use /var/lib/ctdb as state directory
+Patch2: use_var_lib.patch
+
 
 Requires: chkconfig coreutils psmisc
 Requires: fileutils sed
 Requires: tdb-tools
+%if %{with_systemd}
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+%else
 Requires(preun): chkconfig initscripts
 Requires(post): chkconfig
 Requires(postun): initscripts
+%endif
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires: autoconf net-tools popt-devel
+# For make check
+BuildRequires: procps iproute
+
+# Always use the bundled versions of these libraries.
+%define with_included_talloc 0
+%define with_included_tdb 0
+%define with_included_tevent 0
+
+# If the above options are changed then mandate minimum system
+# versions.
+%define libtalloc_version 2.0.8
+%define libtdb_version 1.2.11
+%define libtevent_version 0.9.18
+
+%if ! %with_included_talloc
+BuildRequires: libtalloc-devel >= %{libtalloc_version}
+%endif
+%if ! %with_included_tdb
+BuildRequires: libtdb-devel >= %{libtdb_version}
+%endif
+%if ! %with_included_tevent
+BuildRequires: libtevent-devel >= %{libtevent_version}
+%endif
+
 
 %description
 CTDB is a cluster implementation of the TDB database used by Samba and other
@@ -60,6 +78,18 @@ projects to store temporary data. If an application is already using TDB for
 temporary data it is very easy to convert that application to be cluster aware
 and use CTDB instead.
 
+%package tests
+Summary: CTDB clustered database test suite
+Group: Development/Tools
+Requires: ctdb = %{version}
+Requires: nc
+
+%description tests
+Test suite for CTDB.
+CTDB is a cluster implementation of the TDB database used by Samba and other
+projects to store temporary data. If an application is already using TDB for
+temporary data it is very easy to convert that application to be cluster aware
+and use CTDB instead.
 
 #######################################################################
 
@@ -77,10 +107,23 @@ CC="gcc"
 ## always run autogen.sh
 ./autogen.sh
 
-CFLAGS="$(echo '%{optflags}') $EXTRA -D_GNU_SOURCE -DCTDB_VERS=\"%{version}-%{release}\"" %configure
+CFLAGS="$(echo '%{optflags}') $EXTRA -D_GNU_SOURCE -DCTDB_VERS=\"%{version}-%{release}\"" %configure \
+%if %with_included_talloc
+        --with-included-talloc \
+%endif
+%if %with_included_tdb
+        --with-included-tdb \
+%endif
+%if %with_included_tevent
+        --with-included-tevent
+%endif
 
 make showflags
 make %{_smp_mflags}
+
+# make test does not work in koji
+#%check
+#make test
 
 %install
 # Clean up in case there is trash left from a previous build
@@ -88,12 +131,31 @@ rm -rf %{buildroot}
 
 # Create the target build directory hierarchy
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
+mkdir -p %{buildroot}%{_sysconfdir}/sudoers.d
 mkdir -p %{buildroot}%{initdir}
 
 make DESTDIR=%{buildroot} install
 
+make DESTDIR=%{buildroot} docdir=%{_docdir} install install_tests
+
 install -m644 config/ctdb.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/ctdb
+
+%if %{with_systemd}
+mkdir -p %{buildroot}%{_unitdir}
+install -m 755 config/ctdb.service %{buildroot}%{_unitdir}
+%else
+mkdir -p %{buildroot}%{initdir}
 install -m755 config/ctdb.init %{buildroot}%{initdir}/ctdb
+%endif
+
+# create /run/ctdbd
+mkdir -p %{buildroot}%{_tmpfilesdir}
+echo "d /run/ctdbd  755 root root" >> %{buildroot}%{_tmpfilesdir}/%{name}.conf
+
+mkdir -p %{buildroot}/run
+install -d -m 0755 %{buildroot}/run/ctdbd/
+
+install -d -m 0755 %{buildroot}%{_localstatedir}/lib/ctdb/
 
 mkdir -p %{buildroot}%{_docdir}/ctdb/tests/bin
 install -m755 tests/bin/ctdb_transaction %{buildroot}%{_docdir}/ctdb/tests/bin
@@ -102,13 +164,21 @@ install -m755 tests/bin/ctdb_transaction %{buildroot}%{_docdir}/ctdb/tests/bin
 # Remove "*.old" files
 find %{buildroot} -name "*.old" -exec rm -f {} \;
 
-# fix doc path
-mv %{buildroot}%{_docdir}/ctdb %{buildroot}%{_docdir}/ctdb-%{version}
-cp -r COPYING web %{buildroot}%{_docdir}/ctdb-%{version}
+cp -r COPYING web %{buildroot}%{_docdir}/ctdb
 
 %clean
 rm -rf %{buildroot}
 
+%if %{with_systemd}
+%post
+%systemd_post ctdb.service
+
+%preun
+%systemd_preun ctdb.service
+
+%postun
+%systemd_postun_with_restart ctdb.service
+%else
 %post
 /sbin/chkconfig --add ctdb
 
@@ -122,32 +192,61 @@ fi
 if [ "$1" -ge "1" ]; then
  /sbin/service ctdb condrestart >/dev/null 2>&1 || true
 fi
-
+%endif
 
 # Files section
 
 %files
 %defattr(-,root,root,-)
+
 %config(noreplace) %{_sysconfdir}/sysconfig/ctdb
 %config(noreplace) %{_sysconfdir}/ctdb/notify.sh
+%config(noreplace) %{_sysconfdir}/ctdb/debug-hung-script.sh
 %config(noreplace) %{_sysconfdir}/ctdb/ctdb-crash-cleanup.sh
+%config(noreplace) %{_sysconfdir}/ctdb/gcore_trace.sh
 %config(noreplace) %{_sysconfdir}/ctdb/functions
-%attr(755,root,root) %{initdir}/ctdb
+%config(noreplace) %{_sysconfdir}/ctdb/debug_locks.sh
+%dir /run/ctdbd/
+%dir %{_localstatedir}/lib/ctdb/
+%{_tmpfilesdir}/%{name}.conf
 
-%{_docdir}/ctdb-%{version}
+%if %{with_systemd}
+%{_unitdir}/ctdb.service
+%else
+%attr(755,root,root) %{initdir}/ctdb
+%endif
+
+%{_docdir}/ctdb
 %dir %{_sysconfdir}/ctdb
 %{_sysconfdir}/ctdb/statd-callout
-%{_sysconfdir}/ctdb/interface_modify.sh
+%dir %{_sysconfdir}/ctdb/nfs-rpc-checks.d
+%{_sysconfdir}/ctdb/nfs-rpc-checks.d/10.statd.check
+%{_sysconfdir}/ctdb/nfs-rpc-checks.d/20.nfsd.check
+%{_sysconfdir}/ctdb/nfs-rpc-checks.d/30.lockd.check
+%{_sysconfdir}/ctdb/nfs-rpc-checks.d/40.mountd.check
+%{_sysconfdir}/ctdb/nfs-rpc-checks.d/50.rquotad.check
+%{_sysconfdir}/sudoers.d/ctdb
 %{_sysconfdir}/ctdb/events.d/
 %{_sbindir}/ctdbd
+%{_sbindir}/ctdbd_wrapper
 %{_bindir}/ctdb
 %{_bindir}/smnotify
 %{_bindir}/ping_pong
+%{_bindir}/ltdbtool
 %{_bindir}/ctdb_diagnostics
 %{_bindir}/onnode
+%{_bindir}/ctdb_lock_helper
+%{_bindir}/ctdb_event_helper
+
 %{_mandir}/man1/ctdb.1.gz
 %{_mandir}/man1/ctdbd.1.gz
 %{_mandir}/man1/onnode.1.gz
+%{_mandir}/man1/ltdbtool.1.gz
+%{_mandir}/man1/ping_pong.1.gz
+%{_mandir}/man1/ctdbd_wrapper.1.gz
+%{_mandir}/man5/ctdbd.conf.5.gz
+%{_mandir}/man7/ctdb.7.gz
+%{_mandir}/man7/ctdb-tunables.7.gz
 
 %files devel
 %defattr(-,root,root,-)
@@ -156,12 +255,74 @@ fi
 %{_includedir}/ctdb_protocol.h
 %{_includedir}/ctdb_private.h
 %{_includedir}/ctdb_typesafe_cb.h
-%{_libdir}/libctdb.a
 %{_libdir}/pkgconfig/ctdb.pc
 
+%files tests
+%defattr(-,root,root,-)
+%dir %{_datadir}/%{name}-tests
+%{_datadir}/%{name}-tests/*
+%dir %{_libdir}/%{name}-tests
+%{_libdir}/%{name}-tests/*
+%{_bindir}/ctdb_run_tests
+%{_bindir}/ctdb_run_cluster_tests
+%doc tests/README
+
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.2.28-3
-- 为 Magic 3.0 重建
+* Wed Feb 05 2014 Jose A. Rivera <jarrpa@redhat.com> - 2.5.2-1
+- Update to ctdb version 2.5.2
+
+* Wed Dec 11 2013 Sumit Bose <sbose@redhat.com> - 2.5.1-1
+- Update to ctdb version 2.5.1
+  Resolves: rhbz#1024820
+
+* Fri Nov 01 2013 Jose A. Rivera <jarrpa@redhat.com> - 2.5-1
+- Update to ctdb version 2.5
+
+* Fri Aug 23 2013 Sumit Bose <sbose@redhat.com> - 2.4-1
+- Update to ctdb version 2.4
+  Resolves: rhbz#1000471
+- removed version from doc dir
+  Resolves: rhbz#993712
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri May 17 2013 Sumit Bose <sbose@redhat.com> - 2.1-3
+- added _hardened_build to spec file
+  Resolves: rhbz#955324
+
+* Mon Mar 25 2013 Sumit Bose <sbose@redhat.com> - 2.1-2
+- added updated patch files
+
+* Mon Mar 25 2013 Sumit Bose <sbose@redhat.com> - 2.1-1
+- Update to ctdb version  2.1
+- added fix for tevent configure check
+- make sure autogen.sh is called before configure
+  Resolves: rhbz#925204
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.39-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Sep 05 2012 Václav Pavlín <vpavlin@redhat.com> - 1.2.39-5
+- Scriptlets replaced with new systemd macros (#850072)
+
+* Wed Aug 22 2012 Sumit Bose <sbose@redhat.com> - 1.2.39-4
+- Add cleanups for systemd (#850861)
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.39-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 06 2012 Sumit Bose <sbose@redhat.com> - 1.2.39-2
+ - Add systemd fixes (#829235).
+
+* Wed Feb 01 2012 Sumit Bose <sbose@redhat.com> - 1.2.39-1
+ - Update to ctdb version 1.2.39
+ - Added support for systemd
+
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.28-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Jun 27 2011 Michael Schwendt <mschwendt@fedoraproject.org> - 1.2.28-2
 - Provide virtual -static package to meet guidelines (#700029).
@@ -337,7 +498,7 @@ fi
  - Add logging for every time we create a filedescriptor so we can trap
    fd leaks.
 
-* Thu Oct 14 2009 : Version 1.0.97
+* Wed Oct 14 2009 : Version 1.0.97
  - From martins : update onnode.
    Update onnode to allow specifying an alternative nodes file from
    the command line and also to be able to specify hostnames on the
@@ -372,10 +533,10 @@ fi
  - Be aggressive and ban nodes where the recovery transaction start call
    fails.
 
-* Thu Oct 10 2009 : Version 1.0.94
+* Sat Oct 10 2009 : Version 1.0.94
  - Be very aggressive and quickly ban nodes that can not freeze their databases
 
-* Tue Oct 8 2009 : Version 1.0.93
+* Thu Oct 8 2009 : Version 1.0.93
  - When adding an ip, make sure to update this assignment on all nodes
    so it wont show up as -1 on other nodes.
  - When adding an ip and immediately deleting it, it was possible that
@@ -393,7 +554,7 @@ fi
  - Add documentation for notification
  - from martin, a fix for restarting vsftpd in the eventscript
 
-* Wed Sep 29 2009 Sumit Bose <sbose@redhat.com> - 1.0.91-1
+* Wed Sep 30 2009 Sumit Bose <sbose@redhat.com> - 1.0.91-1
  - Update to ctdb version 1.0.91
 
 * Tue Sep 29 2009 : Version 1.0.91
@@ -642,7 +803,7 @@ fi
    during a releaseip event. Similar to the reasons why we must add addresses
    back during releaseip in 10.interfaces
 
-* Wed Mar 24 2009 : Version 1.0.76
+* Wed Mar 25 2009 : Version 1.0.76
  - Add a debugging command "xpnn" which can print the pnn of the node even when
    ctdbd is not running.
  - Redo the NATGW implementation to allow multiple disjoing NATGW groups in the
@@ -682,13 +843,13 @@ fi
  - Use netstat to check for services and ports and fallback to netcat
    only if netstat is unavailable.
 
-* Thu Feb 17 2009 Sumit Bose <sbose@redhat.com> - 1.0.71-5
+* Tue Feb 17 2009 Sumit Bose <sbose@redhat.com> - 1.0.71-5
  - more fixed according to https://bugzilla.redhat.com/show_bug.cgi?id=459444
 
-* Thu Feb 8 2009 Sumit Bose <sbose@redhat.com> - 1.0.71-4
+* Sun Feb 8 2009 Sumit Bose <sbose@redhat.com> - 1.0.71-4
  - added upstream patch with license file
 
-* Thu Feb 6 2009 Sumit Bose <sbose@redhat.com> - 1.0.71-3
+* Fri Feb 6 2009 Sumit Bose <sbose@redhat.com> - 1.0.71-3
  - fixed package according to https://bugzilla.redhat.com/show_bug.cgi?id=459444
 
 * Thu Feb 5 2009 Guenther Deschner <gdeschner@redhat.com> - 1.0.71-2

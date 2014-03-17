@@ -1,11 +1,25 @@
---- ctdb-1.0.71/config/ctdb.init.orig	2009-02-06 19:52:08.591170458 +0100
-+++ ctdb-1.0.71/config/ctdb.init	2009-02-06 19:53:32.137882847 +0100
-@@ -14,7 +14,7 @@
- # Required-Start:      $network
- # Required-Stop:       $network
- # Default-Stop:
--# Default-Start:       3 5
-+# Default-Start:
+From 4c82e441054729582dc7f28cc14aa8eeb0c5e322 Mon Sep 17 00:00:00 2001
+From: "Jose A. Rivera" <jarrpa@redhat.com>
+Date: Fri, 1 Nov 2013 15:55:13 -0500
+Subject: [PATCH] No default runlevel
+
+---
+ config/ctdb.init | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/ctdb.init b/config/ctdb.init
+index 0e0d379..5fac7ab 100755
+--- a/config/ctdb.init
++++ b/config/ctdb.init
+@@ -12,7 +12,7 @@
+ # Provides:            ctdb
+ # Required-Start:      $local_fs $syslog $network $remote_fs
+ # Required-Stop:       $local_fs $syslog $network $remote_fs
+-# Default-Start:       2 3 4 5
++# Default-Start:       
+ # Default-Stop:        0 1 6
  # Short-Description:   start and stop ctdb service
- # Description:         initscript for the ctdb service
- ### END INIT INFO
+ # Description:         Start and stop CTDB (Clustered TDB daemon)
+-- 
+1.8.3.1
+
