@@ -1,0 +1,56 @@
+diff -up cronie-1.4.11/src/security.c.old cronie-1.4.11/src/security.c
+--- cronie-1.4.11/src/security.c.old	2013-07-18 14:27:08.000000000 +0200
++++ cronie-1.4.11/src/security.c	2013-09-25 12:29:19.467145843 +0200
+@@ -129,15 +129,13 @@ int cron_set_job_security_context(entry
+ 	}
+ #endif
+ 
+-	*jobenv = build_env(e->envp);
+-
+ #ifdef WITH_SELINUX
+ 	/* we must get the crontab context BEFORE changing user, else
+ 	 * we'll not be permitted to read the cron spool directory :-)
+ 	 */
+ 	security_context_t ucontext = 0;
+ 
+-	if (cron_get_job_range(u, &ucontext, *jobenv) < OK) {
++	if (cron_get_job_range(u, &ucontext, e->envp) < OK) {
+ 		log_it(e->pwd->pw_name, getpid(), "ERROR",
+ 			"failed to get SELinux context", 0);
+ 		return -1;
+@@ -165,6 +163,8 @@ int cron_set_job_security_context(entry
+ 		return -1;
+ 	}
+ 
++	*jobenv = build_env(e->envp);
++
+ 	time_t job_run_time = time(0L);
+ 
+ 	if ((minutely_time > 0) && ((job_run_time / 60) != (minutely_time / 60))) {
+@@ -615,16 +615,23 @@ int crontab_security_access(void) {
+ */
+ static char **build_env(char **cronenv) {
+ #ifdef WITH_PAM
+-	char **jobenv;
+-	char **pamenv = pam_getenvlist(pamh);
++	char **jobenv = pam_getenvlist(pamh);
+ 	char *cronvar;
+ 	int count = 0;
+-	jobenv = env_copy(pamenv);
+ 
+ 	/* Now add the cron environment variables. Since env_set()
+ 	 * overwrites existing variables, this will let cron's
+ 	 * environment settings override pam's */
+ 
++	if (jobenv == NULL) {
++		jobenv = env_init();
++		if (jobenv == NULL) {
++			log_it("CRON", getpid(),
++				"ERROR", "Initialization of cron environment variables failed", 0);
++			return NULL;
++		}
++	}
++
+ 	while ((cronvar = cronenv[count++])) {
+ 		if (!(jobenv = env_set(jobenv, cronvar))) {
+ 			log_it("CRON", getpid(),

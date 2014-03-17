@@ -1,23 +1,19 @@
-%bcond_with selinux
+%bcond_without selinux
 %bcond_without pam
-%bcond_with audit
+%bcond_without audit
 %bcond_without inotify
 
 Summary:   Cron daemon for executing programs at set times
 Name:      cronie
-Version:   1.4.8
-Release:   11%{?dist}
-License:   MIT and BSD and ISC and GPLv2
+Version:   1.4.11
+Release:   5%{?dist}
+Patch0:    correct-env.patch
+Patch1:    unitfile-killprocess.patch
+License:   MIT and BSD and ISC and GPLv2+
 Group:     System Environment/Base
 URL:       https://fedorahosted.org/cronie
 Source0:   https://fedorahosted.org/releases/c/r/cronie/%{name}-%{version}.tar.gz
-Source1:   cronie.systemd
-Patch1:    cronie-1.4.8-inotify-fix.patch
 
-Requires:  syslog, bash >= 2.0
-Conflicts: sysklogd < 1.4.1
-Provides:  vixie-cron = 4:4.4
-Obsoletes: vixie-cron <= 4:4.3
 Requires:  dailyjobs
 
 %if %{with selinux}
@@ -32,11 +28,14 @@ Buildrequires: pam-devel >= 1.0.1
 Buildrequires: audit-libs-devel >= 1.4.1
 %endif
 
+BuildRequires:    systemd
+Obsoletes:        %{name}-sysvinit
+
 Requires(post):   coreutils sed
-Requires(post):   systemd-units
-Requires(preun):  systemd-units
-Requires(postun): systemd-units
-Requires(post):   systemd-sysv
+Requires(post):   systemd
+Requires(preun):  systemd
+Requires(postun): systemd
+Requires(post):   systemd
 
 %description
 Cronie contains the standard UNIX daemon crond that runs specified programs at
@@ -76,19 +75,10 @@ Requires:  %{name} = %{version}-%{release}
 Old style of running {hourly,daily,weekly,monthly}.jobs without anacron. No
 extra features.
 
-%package sysvinit
-Summary:   SysV init script for cronie
-Group:     System Environment/Base
-Requires:  %{name} = %{version}-%{release}
-Requires(post):  /usr/sbin/chkconfig 
-
-%description sysvinit
-SysV style init script for cronie. It needs to be installed only if systemd
-is not used as the system init process.
-
 %prep
 %setup -q
-%patch1 -p1 -b .inotify
+%patch0 -p1 -b .jobenv
+%patch1 -p1
 
 %build
 %configure \
@@ -133,21 +123,12 @@ touch $RPM_BUILD_ROOT/var/spool/anacron/cron.monthly
 install -m 644 contrib/dailyjobs $RPM_BUILD_ROOT/%{_sysconfdir}/cron.d/dailyjobs
 
 # install systemd initscript
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/systemd/system/
-install -m 644 %SOURCE1 $RPM_BUILD_ROOT%{_prefix}/lib/systemd/system/crond.service
-# install sysvinit initscript into sub-package
-mkdir -pm755 $RPM_BUILD_ROOT%{_initrddir}
-install -m 755 cronie.init $RPM_BUILD_ROOT%{_initrddir}/crond
-
-magic_rpm_clean.sh
+mkdir -p $RPM_BUILD_ROOT/lib/systemd/system/
+install -m 644 contrib/cronie.systemd $RPM_BUILD_ROOT/lib/systemd/system/crond.service
 
 %post
 # run after an installation
-if [ $1 -eq 1 ] ; then 
-    # Initial installation 
-    /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-    /usr/bin/systemctl enable crond.service >/dev/null 2>&1 || :
-fi
+%systemd_post crond.service
 
 %post anacron
 [ -e /var/spool/anacron/cron.daily ] || touch /var/spool/anacron/cron.daily
@@ -156,17 +137,11 @@ fi
 
 %preun
 # run before a package is removed
-if [ $1 -eq 0 ]; then
-    /usr/bin/systemctl --no-reload disable crond.service >/dev/null 2>&1 || :
-    /usr/bin/systemctl stop crond.service > /dev/null 2>&1 || :
-fi
+%systemd_preun crond.service
 
 %postun
 # run after a package is removed
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ]; then
-    /usr/bin/systemctl try-restart crond.service >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart crond.service
 
 %triggerun -- cronie-anacron < 1.4.1
 # empty /etc/crontab in case there are only old regular jobs
@@ -184,24 +159,21 @@ exit 0
 /usr/bin/systemd-sysv-convert --save crond
 
 # The package is allowed to autostart:
-/usr/bin/systemctl enable crond.service >/dev/null 2>&1
+/bin/systemctl enable crond.service >/dev/null 2>&1
 
-/usr/sbin/chkconfig --del crond >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart crond.service >/dev/null 2>&1 || :
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/sbin/chkconfig --del crond >/dev/null 2>&1 || :
+/bin/systemctl try-restart crond.service >/dev/null 2>&1 || :
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
 %triggerin -- pam, glibc, libselinux
 # changes in pam, glibc or libselinux can make crond crash
 # when it calls pam
-/usr/bin/systemctl try-restart crond.service >/dev/null 2>&1 || :
-
-%triggerpostun -n cronie-sysvinit -- cronie < 1.4.8-1
-/usr/sbin/chkconfig --add crond >/dev/null 2>&1 || :
+/bin/systemctl try-restart crond.service >/dev/null 2>&1 || :
 
 %files
-%doc AUTHORS COPYING INSTALL README ChangeLog
+%doc AUTHORS COPYING README ChangeLog
 %attr(755,root,root) %{_sbindir}/crond
-%attr(6755,root,root) %{_bindir}/crontab
+%attr(4755,root,root) %{_bindir}/crontab
 %{_mandir}/man8/crond.*
 %{_mandir}/man8/cron.*
 %{_mandir}/man5/crontab.*
@@ -214,7 +186,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/sysconfig/crond
 %config(noreplace) %{_sysconfdir}/cron.deny
 %attr(0644,root,root) %{_sysconfdir}/cron.d/0hourly
-%attr(0644,root,root) %{_prefix}/lib/systemd/system/crond.service
+%attr(0644,root,root) /lib/systemd/system/crond.service
 
 %files anacron
 %{_sbindir}/anacron
@@ -230,15 +202,54 @@ exit 0
 %files noanacron
 %attr(0644,root,root) %{_sysconfdir}/cron.d/dailyjobs
 
-%files sysvinit
-%attr(0755,root,root) %{_initrddir}/crond
-
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.4.8-11
-- 为 Magic 3.0 重建
+* Thu Jan 16 2014 Ville Skyttä <ville.skytta@iki.fi> - 1.4.11-5
+- Drop INSTALL from docs, fix rpmlint tabs vs spaces warning.
 
-* Mon Apr 16 2012 Liu Di <liudidi@gmail.com> - 1.4.8-10
-- 为 Magic 3.0 重建
+* Wed Sep 25 2013 Marcela Mašláňová <mmaslano@redhat.com> - 1.4.11-4
+- some jobs are not executed because not all environment variables are set 995590
+- cronie's systemd script use "KillMode=process" 919290
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.11-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Marcela Mašláňová <mmaslano@redhat.com> - 1.4.11-2
+- scriptlets are not created correctly if systemd is not in BR 986698
+- remove sub-package sysvinit, which is not needed anymore
+- update license, anacron is under GPLv2+
+
+* Thu Jul 18 2013 Marcela Mašláňová <mmaslano@redhat.com> - 1.4.11-1
+- new release 1.4.11 (contains previous bug fixes from 1.4.10-5)
+
+* Tue Jun 11 2013 Tomáš Mráz <tmraz@redhat.com> - 1.4.10-5
+- add support for RANDOM_DELAY - delaying job startups
+- pass some environment variables to processes (LANG, etc.) (#969761)
+- do not use putenv() with string literals (#971516)
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.10-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan  2 2013 Marcela Mašláňová <mmaslano@redhat.com> - 1.4.10-3
+- change configuration files to 644
+- change 6755 to 4755 for crontab binary
+
+* Tue Nov 27 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.4.10-1
+- New release 1.4.10
+
+* Thu Nov 22 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.4.9-1
+- New release 1.4.9
+
+* Wed Sep 05 2012 Václav Pavlín <vpavlin@redhat.com> - 1.4.8-13
+- Scriptlets replaced with new systemd macros (#850070)
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-10
+- Rebuilt for glibc bug#747377
 
 * Tue Oct 25 2011 Tomáš Mráz <tmraz@redhat.com> - 1.4.8-9
 - make crond run a little bit later in the boot process (#747759)
@@ -411,7 +422,7 @@ exit 0
 
 * Tue Feb  5 2008 Marcela Maslanova <mmaslano@redhat.com> - 1.0-3
 - 431366 trigger part => after update from vixie-cron on cronie will 
-	be daemon running.
+  be daemon running.
 
 * Wed Jan 30 2008 Marcela Maslanova <mmaslano@redhat.com> - 1.0-2
 - change the provides on higher version than obsoletes
