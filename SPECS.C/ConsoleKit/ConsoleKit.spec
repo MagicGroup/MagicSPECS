@@ -3,21 +3,25 @@
 %define dbus_glib_version       0.70
 %define polkit_version          0.92
 
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Summary: System daemon for tracking users, sessions and seats
 Name: ConsoleKit
 Version: 0.4.5
-Release: 3%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://www.freedesktop.org/wiki/Software/ConsoleKit
 Source0: http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-%{version}.tar.bz2
 # Convert to new upstart syntax
 Patch0: ConsoleKit-0.4.1-upstart06.patch
+Patch1: ConsoleKit-aarch64.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: dbus >= %{dbus_version}
 Requires: dbus-glib >= %{dbus_glib_version}
 Conflicts: upstart < 0.6.0
+Conflicts: filesystem < 3
 
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: dbus-devel  >= %{dbus_version}
@@ -84,9 +88,10 @@ This package contains developer documentation for ConsoleKit.
 %prep
 %setup -q
 %patch0 -p1 -b .upstart06
+%patch1 -p1
 
 %build
-%configure --with-pid-file=%{_localstatedir}/run/console-kit-daemon.pid --enable-pam-module --with-pam-module-dir=%{_libdir}/security --enable-docbook-docs --docdir=%{_datadir}/doc/%{name}-%{version}
+%configure --with-pid-file=%{_localstatedir}/run/console-kit-daemon.pid --enable-pam-module --with-pam-module-dir=/%{_lib}/security --enable-docbook-docs --docdir=%{_pkgdocdir}
 
 make
 
@@ -96,8 +101,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-rm -f $RPM_BUILD_ROOT/%{_libdir}/security/*.a
-rm -f $RPM_BUILD_ROOT/%{_libdir}/security/*.la
+rm -f $RPM_BUILD_ROOT/%{_lib}/security/*.a
+rm -f $RPM_BUILD_ROOT/%{_lib}/security/*.la
 
 # make sure we don't package a history log
 rm -f $RPM_BUILD_ROOT/%{_var}/log/ConsoleKit/history
@@ -106,9 +111,7 @@ rm -f $RPM_BUILD_ROOT/%{_var}/log/ConsoleKit/history
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/init
 cp data/ck-log-system-{start,stop,restart}.conf $RPM_BUILD_ROOT%{_sysconfdir}/init
 
-cp README AUTHORS NEWS COPYING $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}
-
-magic_rpm_clean.sh
+cp README AUTHORS NEWS COPYING $RPM_BUILD_ROOT%{_pkgdocdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -118,24 +121,24 @@ if [ -f /var/log/ConsoleKit/history ]; then
        chmod a+r /var/log/ConsoleKit/history
 fi
 if [ $1 -eq 1 ]; then
-        /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+        /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
 %preun
 if [ $1 -eq 0 ]; then
-        /usr/bin/systemctl stop console-kit-daemon.service >/dev/null 2>&1 || :
+        /bin/systemctl stop console-kit-daemon.service >/dev/null 2>&1 || :
 fi
 
 %postun
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
 %files
 %defattr(-,root,root,-)
-%doc %dir %{_datadir}/doc/%{name}-%{version}
-%doc %{_datadir}/doc/%{name}-%{version}/README
-%doc %{_datadir}/doc/%{name}-%{version}/AUTHORS
-%doc %{_datadir}/doc/%{name}-%{version}/NEWS
-%doc %{_datadir}/doc/%{name}-%{version}/COPYING
+%doc %dir %{_pkgdocdir}
+%doc %{_pkgdocdir}/README
+%doc %{_pkgdocdir}/AUTHORS
+%doc %{_pkgdocdir}/NEWS
+%doc %{_pkgdocdir}/COPYING
 %{_sysconfdir}/dbus-1/system.d/*
 %dir %{_sysconfdir}/init
 %config(noreplace) %{_sysconfdir}/init/*
@@ -177,7 +180,7 @@ fi
 %files libs
 %defattr(-,root,root,-)
 %{_libdir}/lib*.so.*
-%{_libdir}/security/*.so
+/%{_lib}/security/*.so
 %{_mandir}/man8/pam_ck_connector.8.gz
 
 %files devel
@@ -190,15 +193,30 @@ fi
 
 %files docs
 %defattr(-,root,root,-)
-%doc %dir %{_datadir}/doc/%{name}-%{version}/spec
-%doc %{_datadir}/doc/%{name}-%{version}/spec/*
+%doc %dir %{_pkgdocdir}/spec
+%doc %{_pkgdocdir}/spec/*
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.4.5-3
-- 为 Magic 3.0 重建
+* Mon Aug 12 2013 Ville Skyttä <ville.skytta@iki.fi> - 0.4.5-7
+- Install docs to %%{_pkgdocdir} where available (#993708).
 
-* Sun Apr 15 2012 Liu Di <liudidi@gmail.com> - 0.4.5-2
-- 为 Magic 3.0 重建
+* Fri Aug 02 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Mar 29 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 0.4.5-5
+- Fix aarch64 support (925181)
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Feb  7 2012 Lennart Poettering <lpoetter@redhat.com> - 0.4.5-2
+- Forward port changes from f15 which were never applied to master
+
+* Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue May  3 2011 Lennart Poettering <lpoetter@redhat.com> - 0.4.5-1
 - New upstream release
