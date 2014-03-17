@@ -1,5 +1,5 @@
 %global use_alternatives 1
-%global lspp 0
+%global lspp 1
 
 # {_exec_prefix}/lib/cups is correct, even on x86_64.
 # It is not used for shared objects but for executables.
@@ -11,7 +11,7 @@ Summary: CUPS printing system
 Name: cups
 Epoch: 1
 Version: 1.7.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 Url: http://www.cups.org/
@@ -643,6 +643,9 @@ rm -f %{cups_serverbin}/backend/smb
 %{_mandir}/man5/ipptoolfile.5.gz
 
 %changelog
+* Mon Feb 17 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-4
+- Document 'journal' logging target.
+
 * Tue Feb 11 2014 Tim Waugh <twaugh@redhat.com> - 1:1.7.1-3
 - Prevent dnssd backend exiting too early (bug #1026940, STR #4365).
 
