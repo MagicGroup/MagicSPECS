@@ -1,30 +1,26 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
-Version: 7.25.0
-Release: 3%{?dist}
+Version: 7.35.0
+Release: 2%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.lzma
 Source2: curlbuild.h
-Source3: hide_selinux.c
 
-# use NSS_InitContext() to initialize NSS if available (#738456)
-Patch1: 0001-curl-7.25.00-20cb12db.patch
-
-# provide human-readable names for NSS errors (upstream commit a60edcc6)
-Patch2: 0002-curl-7.25.00-a60edcc6.patch
+# refresh expired cookie in test172 from upstream test-suite (#1068967)
+Patch1: 0001-curl-7.32.0-ffb8a21d.patch
 
 # patch making libcurl multilib ready
-Patch101: 0101-curl-7.25.0-multilib.patch
+Patch101: 0101-curl-7.32.0-multilib.patch
 
 # prevent configure script from discarding -g in CFLAGS (#496778)
-Patch102: 0102-curl-7.25.0-debug.patch
+Patch102: 0102-curl-7.32.0-debug.patch
+
+# make the curl tool link SSL libraries also used by src/tool_metalink.c
+Patch103: 0103-curl-7.32.0-metalink.patch
 
 # use localhost6 instead of ip6-localhost in the curl test-suite
 Patch104: 0104-curl-7.19.7-localhost6.patch
-
-# exclude test1112 from the test suite (#565305)
-Patch105: 0105-curl-7.21.3-disable-test1112.patch
 
 # disable valgrind for certain test-cases (libssh2 problem)
 Patch106: 0106-curl-7.21.0-libssh2-valgrind.patch
@@ -34,7 +30,7 @@ Patch107: 0107-curl-7.21.4-libidn-valgrind.patch
 
 # Fix character encoding of docs, which are of mixed encoding originally so
 # a simple iconv can't fix them
-Patch108: 0108-curl-7.25.0-utf8.patch
+Patch108: 0108-curl-7.32.0-utf8.patch
 
 Provides: webclient
 URL: http://curl.haxx.se/
@@ -42,6 +38,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires: groff
 BuildRequires: krb5-devel
 BuildRequires: libidn-devel
+BuildRequires: libmetalink-devel
 BuildRequires: libssh2-devel
 BuildRequires: nss-devel
 BuildRequires: openldap-devel
@@ -51,8 +48,8 @@ BuildRequires: pkgconfig
 BuildRequires: stunnel
 BuildRequires: zlib-devel
 
-# valgrind is not available on s390(x), sparc or arm5
-%ifnarch s390 s390x %{sparc} %{arm} mips64el
+# require valgrind to boost test coverage on i386 and x86_64
+%ifarch %{ix86} x86_64
 BuildRequires: valgrind
 %endif
 
@@ -88,6 +85,16 @@ Summary: Files needed for building applications with libcurl
 Group: Development/Libraries
 Requires: libcurl = %{version}-%{release}
 
+# From Fedora 14, %%{_datadir}/aclocal is included in the filesystem package
+%if 0%{?fedora} < 14
+Requires: %{_datadir}/aclocal
+%endif
+
+# From Fedora 11, RHEL-6, pkgconfig dependency is auto-detected
+%if 0%{?fedora} < 11 && 0%{?rhel} < 6
+Requires: pkgconfig
+%endif
+
 Provides: curl-devel = %{version}-%{release}
 Obsoletes: curl-devel < %{version}-%{release}
 
@@ -101,29 +108,35 @@ documentation of the library, too.
 
 # upstream patches
 %patch1 -p1
-%patch2 -p1
 
 # Fedora patches
 %patch101 -p1
 %patch102 -p1
+%patch103 -p1
 %patch104 -p1
 %patch106 -p1
 %patch107 -p1
 %patch108 -p1
 
-# exclude test1112 from the test suite (#565305)
-%patch105 -p1
-rm -f tests/data/test1112
-
-# replace hard wired port numbers in the test suite
+# replace hard wired port numbers in the test suite (this only boosts test
+# coverage by enabling tests that would otherwise be disabled due to using
+# runtests.pl -b)
 cd tests/data/
-sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ test*
+sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ test{309,1028,1055,1056}
 cd -
+
+# disable test 1112 (#565305)
+printf "1112\n" >> tests/data/DISABLED
+
+# disable test 1319 on ppc64 (server times out)
+%ifarch ppc64
+echo "1319" >> tests/data/DISABLED
+%endif
 
 %build
 [ -x /usr/kerberos/bin/krb5-config ] && KRB5_PREFIX="=/usr/kerberos"
 %configure --disable-static \
-    --enable-hidden-symbols \
+    --enable-symbol-hiding \
     --enable-ipv6 \
     --enable-ldaps \
     --enable-manual \
@@ -131,6 +144,7 @@ cd -
     --with-ca-bundle=%{_sysconfdir}/pki/tls/certs/ca-bundle.crt \
     --with-gssapi${KRB5_PREFIX} \
     --with-libidn \
+    --with-libmetalink \
     --with-libssh2 \
     --without-ssl --with-nss
 #    --enable-debug
@@ -153,12 +167,6 @@ export LD_LIBRARY_PATH
 
 cd tests
 make %{?_smp_mflags}
-
-# make it possible to start a testing OpenSSH server with SELinux
-# in the enforcing mode (#521087)
-gcc -o hide_selinux.so -fPIC -shared %{SOURCE3}
-LD_PRELOAD="`readlink -f ./hide_selinux.so`:$LD_PRELOAD"
-export LD_PRELOAD
 
 # use different port range for 32bit and 64bit build, thus make it possible
 # to run both in parallel on the same machine
@@ -184,8 +192,6 @@ mv $RPM_BUILD_ROOT%{_includedir}/curl/curlbuild.h \
    $RPM_BUILD_ROOT%{_includedir}/curl/%{_curlbuild_h}
 
 install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_includedir}/curl/curlbuild.h
-
-magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -220,8 +226,116 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 7.25.0-3
-- 为 Magic 3.0 重建
+* Tue Feb 25 2014 Kamil Dudka <kdudka@redhat.com> 7.35.0-2
+- refresh expired cookie in test172 from upstream test-suite (#1068967)
+
+* Wed Jan 29 2014 Kamil Dudka <kdudka@redhat.com> 7.35.0-1
+- new upstream release (fixes CVE-2014-0015)
+
+* Wed Dec 18 2013 Kamil Dudka <kdudka@redhat.com> 7.34.0-1
+- new upstream release
+
+* Mon Dec 02 2013 Kamil Dudka <kdudka@redhat.com> 7.33.0-2
+- allow to use TLS > 1.0 if built against recent NSS
+
+* Mon Oct 14 2013 Kamil Dudka <kdudka@redhat.com> 7.33.0-1
+- new upstream release
+- fix missing initialization in NTLM code causing test 906 to fail
+- fix missing initialization in SSH code causing test 619 to fail
+
+* Fri Oct 11 2013 Kamil Dudka <kdudka@redhat.com> 7.32.0-3
+- do not limit the speed of SCP upload on a fast connection
+
+* Mon Sep 09 2013 Kamil Dudka <kdudka@redhat.com> 7.32.0-2
+- avoid delay if FTP is aborted in CURLOPT_HEADERFUNCTION callback (#1005686)
+
+* Mon Aug 12 2013 Kamil Dudka <kdudka@redhat.com> 7.32.0-1
+- new upstream release
+- make sure that NSS is initialized prior to calling PK11_GenerateRandom()
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.31.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 09 2013 Kamil Dudka <kdudka@redaht.com> 7.31.0-4
+- mention all option listed in 'curl --help' in curl.1 man page
+
+* Tue Jul 02 2013 Kamil Dudka <kdudka@redhat.com> 7.31.0-3
+- restore the functionality of 'curl -u :'
+
+* Wed Jun 26 2013 Kamil Dudka <kdudka@redhat.com> 7.31.0-2
+- build the curl tool with metalink support
+
+* Sat Jun 22 2013 Kamil Dudka <kdudka@redhat.com> 7.31.0-1
+- new upstream release (fixes CVE-2013-2174)
+
+* Fri Apr 26 2013 Kamil Dudka <kdudka@redhat.com> 7.30.0-2
+- prevent an artificial timeout event due to stale speed-check data (#906031)
+
+* Fri Apr 12 2013 Kamil Dudka <kdudka@redhat.com> 7.30.0-1
+- new upstream release (fixes CVE-2013-1944)
+- prevent test-suite failure due to using non-default port ranges in tests
+
+* Tue Mar 12 2013 Kamil Dudka <kdudka@redhat.com> 7.29.0-4
+- do not ignore poll() failures other than EINTR (#919127)
+- curl_global_init() now accepts the CURL_GLOBAL_ACK_EINTR flag (#919127)
+
+* Wed Mar 06 2013 Kamil Dudka <kdudka@redhat.com> 7.29.0-3
+- switch SSL socket into non-blocking mode after handshake
+- drop the hide_selinux.c hack no longer needed in %%check
+
+* Fri Feb 22 2013 Kamil Dudka <kdudka@redhat.com> 7.29.0-2
+- fix a SIGSEGV when closing an unused multi handle (#914411)
+
+* Wed Feb 06 2013 Kamil Dudka <kdudka@redhat.com> 7.29.0-1
+- new upstream release (fixes CVE-2013-0249)
+
+* Tue Jan 15 2013 Kamil Dudka <kdudka@redhat.com> 7.28.1-3
+- require valgrind for build only on i386 and x86_64 (#886891)
+
+* Tue Jan 15 2013 Kamil Dudka <kdudka@redhat.com> 7.28.1-2
+- prevent NSS from crashing on client auth hook failure
+- clear session cache if a client cert from file is used
+- fix error messages for CURLE_SSL_{CACERT,CRL}_BADFILE
+
+* Tue Nov 20 2012 Kamil Dudka <kdudka@redhat.com> 7.28.1-1
+- new upstream release
+
+* Wed Oct 31 2012 Kamil Dudka <kdudka@redhat.com> 7.28.0-1
+- new upstream release
+
+* Mon Oct 01 2012 Kamil Dudka <kdudka@redhat.com> 7.27.0-3
+- use the upstream facility to disable problematic tests
+- do not crash if MD5 fingerprint is not provided by libssh2
+
+* Wed Aug 01 2012 Kamil Dudka <kdudka@redhat.com> 7.27.0-2
+- eliminate unnecessary inotify events on upload via file protocol (#844385)
+
+* Sat Jul 28 2012 Kamil Dudka <kdudka@redhat.com> 7.27.0-1
+- new upstream release
+
+* Mon Jul 23 2012 Kamil Dudka <kdudka@redhat.com> 7.26.0-6
+- print reason phrase from HTTP status line on error (#676596)
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.26.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 09 2012 Kamil Dudka <kdudka@redhat.com> 7.26.0-4
+- fix duplicated SSL handshake with multi interface and proxy (#788526)
+
+* Wed May 30 2012 Karsten Hopp <karsten@redhat.com> 7.26.0-3
+- disable test 1319 on ppc64, server times out
+
+* Mon May 28 2012 Kamil Dudka <kdudka@redhat.com> 7.26.0-2
+- use human-readable error messages provided by NSS (upstream commit 72f4b534)
+
+* Fri May 25 2012 Kamil Dudka <kdudka@redhat.com> 7.26.0-1
+- new upstream release
+
+* Wed Apr 25 2012 Karsten Hopp <karsten@redhat.com> 7.25.0-3
+- valgrind on ppc64 works fine, disable ppc32 only
+
+* Wed Apr 25 2012 Karsten Hopp <karsten@redhat.com> 7.25.0-3
+- drop BR valgrind on PPC(64) until bugzilla #810992 gets fixed
 
 * Fri Apr 13 2012 Kamil Dudka <kdudka@redhat.com> 7.25.0-2
 - use NSS_InitContext() to initialize NSS if available (#738456)
@@ -632,7 +746,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Aug 11 2008 Tom "spot" Callaway <tcallawa@redhat.com> 7.18.2-4
 - make miniature library for libcurl.so.3
 
-* Wed Jul  4 2008 Jindrich Novy <jnovy@redhat.com> 7.18.2-3
+* Fri Jul  4 2008 Jindrich Novy <jnovy@redhat.com> 7.18.2-3
 - enable support for libssh2 (#453958)
 
 * Wed Jun 18 2008 Jindrich Novy <jnovy@redhat.com> 7.18.2-2
@@ -833,7 +947,7 @@ rm -rf $RPM_BUILD_ROOT
 - update to use ca-bundle in /etc/pki
 - mark License as MIT not MPL
 
-* Mon Mar  9 2005 Ivana Varekova <varekova@redhat.com> 7.13.1-1
+* Wed Mar  9 2005 Ivana Varekova <varekova@redhat.com> 7.13.1-1
 - rebuilt (7.13.1)
 
 * Tue Mar  1 2005 Tomas Mraz <tmraz@redhat.com> 7.13.0-2
@@ -864,7 +978,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Sep 27 2004 Warren Togami <wtogami@redhat.com> 7.12.0-3
 - remove INSTALL, move libcurl docs to -devel
 
-* Fri Jul 26 2004 Jindrich Novy <jnovy@redhat.com>
+* Mon Jul 26 2004 Jindrich Novy <jnovy@redhat.com>
 - updated to 7.12.0
 - updated nousr patch
 
@@ -898,10 +1012,10 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Oct 07 2003 Adrian Havill <havill@redhat.com> 7.10.6-5
 - match serverAltName certs with SSL (#106168)
 
-* Mon Sep 16 2003 Adrian Havill <havill@redhat.com> 7.10.6-4.1
+* Tue Sep 16 2003 Adrian Havill <havill@redhat.com> 7.10.6-4.1
 - bump n-v-r for RHEL
 
-* Mon Sep 16 2003 Adrian Havill <havill@redhat.com> 7.10.6-4
+* Tue Sep 16 2003 Adrian Havill <havill@redhat.com> 7.10.6-4
 - restore ca cert bundle (#104400)
 - require openssl, we want to use its ca-cert bundle
 
@@ -917,7 +1031,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Aug 25 2003 Adrian Havill <havill@redhat.com> 7.10.6-2
 - devel subpkg needs openssl-devel as a Require (#102963)
 
-* Tue Jul 28 2003 Adrian Havill <havill@redhat.com> 7.10.6-1
+* Mon Jul 28 2003 Adrian Havill <havill@redhat.com> 7.10.6-1
 - bumped version
 
 * Tue Jul 01 2003 Adrian Havill <havill@redhat.com> 7.10.5-1
@@ -936,7 +1050,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Jan 21 2003 Joe Orton <jorton@redhat.com> 7.9.8-4
 - don't add -L/usr/lib to 'curl-config --libs' output
 
-* Mon Jan  7 2003 Nalin Dahyabhai <nalin@redhat.com> 7.9.8-3
+* Tue Jan  7 2003 Nalin Dahyabhai <nalin@redhat.com> 7.9.8-3
 - rebuild
 
 * Wed Nov  6 2002 Joe Orton <jorton@redhat.com> 7.9.8-2
