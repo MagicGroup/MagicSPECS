@@ -1,0 +1,35 @@
+diff -pruN Canna37p3.orig/cmd/catdic/can.c Canna37p3/cmd/catdic/can.c
+--- Canna37p3.orig/cmd/catdic/can.c	2003-02-02 04:34:20.000000000 +0900
++++ Canna37p3/cmd/catdic/can.c	2013-12-10 12:34:20.000000000 +0900
+@@ -1236,7 +1236,7 @@ char  **argv;
+ 	break;
+       default:
+ 	if (init[0] == '/') {
+-	    (void)fprintf(stderr,msg_abnl);
++	    (void)fprintf(stderr,"%s", msg_abnl);
+ 	} else {
+ 	    (void)fprintf(stderr,msg_abnls,init);
+ 	}
+@@ -1297,11 +1297,11 @@ char  **argv;
+ 
+     if ( opt_fq ) {
+       if ( opt_s ) {
+-        (void) fprintf(stderr,msg_sfq);
++        (void) fprintf(stderr,"%s", msg_sfq);
+         exit(ERR_VALUE) ;
+       }  
+       if ( opt_l || opt_std ) {
+-        (void) fprintf(stderr,msg_l);
++        (void) fprintf(stderr,"%s", msg_l);
+         exit(ERR_VALUE) ;
+       }
+       mode = mode | PL_DIC ;
+@@ -1491,7 +1491,7 @@ int force;
+     break;
+   default:
+     if(init[0] == '/') {
+-      fprintf(stderr,msg_abnl );
++      fprintf(stderr,"%s", msg_abnl );
+     }
+     else {
+       fprintf(stderr,msg_abnls,init);

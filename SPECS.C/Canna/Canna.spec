@@ -1,16 +1,16 @@
-%define pubdicrhver 20021028
-%define zipcodever 20030204
-%define cannadicver 0.95c
-%define cannadir Canna37p3
+%global pubdicrhver 20021028
+%global zipcodever 20030204
+%global cannadicver 0.95c
+%global cannadir Canna37p3
 %global username      canna
-%global homedir       %{_var}/lib/%{username}
+%global homedir       %{_localstatedir}/lib/%{username}
 %global gecos         Canna Service User
-
+%global _hardened_build 1
 
 Summary: A Japanese character set input system.
 Name: Canna
 Version: 3.7p3
-Release: 31%{?dist}
+Release: 41%{?dist}
 # lib/RKindep/cksum.c is licensed under 4-clause BSD, otherwise MIT.
 License: MIT and BSD with advertising
 Group: System Environment/Libraries
@@ -23,9 +23,10 @@ Source2: pubdic-bonobo-%{pubdicrhver}.tar.bz2
 Source3: shion.tar.gz
 # Source4: http://bonobo.gnome.gr.jp/~nakai/canna/zipcode-%{zipcodever}.tar.bz2
 Source4: zipcode-%{zipcodever}.tar.bz2
-Source20: canna.init
 Source21: dot-canna
 Source22: cannaping.c
+Source30: canna-tmpfiles.conf
+Source31: canna.service
 
 Patch0: Canna-conf.patch
 Patch2: Canna-3.6-sharedir.patch
@@ -46,13 +47,16 @@ Patch40: Canna-3.7p1-fix-duplicated-strings.patch
 Patch41: Canna-3.7p3-yenbs.patch
 Patch42: Canna-3.7p3-redecl.patch
 Patch43: Canna-3.7p3-fix-gcc4-warning.patch
+Patch44: Canna-3.7p3-no-strip.patch
+Patch45: %{name}-3.7p3-fix-format.patch
+Patch50: %{name}-aarch64.patch
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(pre): shadow-utils
-Requires(post): /bin/grep /etc/services /sbin/chkconfig %{__chown}
-Requires(preun): /sbin/service /sbin/chkconfig
-Requires(postun): /sbin/service
-BuildRequires: cpp gawk
+Requires(post): /bin/grep /etc/services /sbin/chkconfig %{__chown} systemd-units
+Requires(preun): /sbin/service systemd-units
+Requires(postun): /sbin/service systemd-units
+Requires: initscripts
+BuildRequires: cpp gawk systemd-units
 BuildRequires: imake >= 1.0.1-3
 Obsoletes: tamago
 
@@ -102,10 +106,14 @@ cd %{cannadir}
 %patch41 -p1 -b .yenbs
 %patch42 -p1 -b .redecl
 %patch43 -p1 -b .gcc4
+%patch44 -p1 -b .no-strip
+%patch45 -p1 -b .format
 cd ..
+%patch50 -p1 -b .aarch64
 
 for file in %{cannadir}/{cmd/mkromdic/mkromdic.man,lib/RK/RkIntro.man}; do
 	iconv -f euc-jp -t utf-8 < "$file" > "${file}_"
+	touch -r $file "${file}_"
 	mv "${file}_" "$file"
 done
 
@@ -120,6 +128,8 @@ cat $RPM_BUILD_DIR/Canna-%{version}/pubdic-bonobo/*.p | sort >> \
 find $RPM_BUILD_DIR/%{name}-%{version} -name .cvsignore -exec rm -f {} \;
 
 %build
+export RPM_OPT_FLAGS="$RPM_OPT_FLAGS %{__global_ldflags}"
+
 function builddic() {
   dic=$1
   dicname=`echo $dic | sed -e 's/\(.*\)\..*\$/\1/'`
@@ -194,46 +204,46 @@ builddic sup.ctd mwd sort
 cd ..
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 cd %{cannadir}
 make libCannaDir=%{_libdir} DESTDIR=$RPM_BUILD_ROOT install
 make DESTDIR=$RPM_BUILD_ROOT MANDIR=%{_mandir} MANSUFFIX=1 LIBMANSUFFIX=3 install.man
 for i in `find $RPM_BUILD_ROOT%{_mandir}/ja -type f`; do
-	iconv -f euc-jp -t utf-8 $i > $i.new && mv -f $i.new $i && chmod 444 $i
+	iconv -f euc-jp -t utf-8 $i > $i.new && touch -r $i $i.new && mv -f $i.new $i && chmod 444 $i
 done
-%{__install} -c -s -m755 ./misc/cannaping $RPM_BUILD_ROOT%{_bindir}/cannaping
+install -p -m755 ./misc/cannaping $RPM_BUILD_ROOT%{_bindir}/cannaping
+install -d -m 0755 $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
+install -p -m 0644 %{SOURCE30} $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/%{name}.conf
 cd ..
 
 cd %{cannadir}
-%{__mv} misc/manual.sed .
-%{__rm} -fr misc
-%{__mkdir} misc
-%{__mv} manual.sed misc
+mv misc/manual.sed .
+rm -fr misc
+mkdir misc
+mv manual.sed misc
 cd ..
 
 cd cannadic-%{cannadicver}
-%{__mkdir_p} $RPM_BUILD_ROOT%{_var}/lib/canna/dic/canna
-%{__install} -m 644 gcanna*.c[bl]d \
-	$RPM_BUILD_ROOT%{_var}/lib/canna/dic/canna
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/canna/dic/canna
+install -p -m 644 gcanna*.c[bl]d \
+	$RPM_BUILD_ROOT%{_localstatedir}/lib/canna/dic/canna
 cd ..
 
 cd pubdic-bonobo
-%{__install} -m 644 bonobo*.c[bl]d \
-        $RPM_BUILD_ROOT%{_var}/lib/canna/dic/canna
+install -p -m 644 bonobo*.c[bl]d \
+        $RPM_BUILD_ROOT%{_localstatedir}/lib/canna/dic/canna
 cd ..
 
 cd shion
-%{__install} -m 644 basho.cld basho.cbd kaom.ctd keisan.cld keisan.cbd \
+install -p -m 644 basho.cld basho.cbd kaom.ctd keisan.cld keisan.cbd \
 	pub.cld pub.cbd scien.cld scien.cbd sup.cld sup.cbd \
-	$RPM_BUILD_ROOT%{_var}/lib/canna/dic/canna
+	$RPM_BUILD_ROOT%{_localstatedir}/lib/canna/dic/canna
 cd ..
 
-%{__mkdir_p} $RPM_BUILD_ROOT/etc/rc.d/init.d
-%{__mkdir_p} $RPM_BUILD_ROOT/etc/skel
-%{__install} -m 755 %SOURCE20 $RPM_BUILD_ROOT/etc/rc.d/init.d/canna
-%{__cp} %SOURCE21 $RPM_BUILD_ROOT/etc/skel/.canna
-%{__cp} -f %SOURCE21 $RPM_BUILD_ROOT/etc/canna/default.canna
+mkdir -p $RPM_BUILD_ROOT/etc/skel
+mkdir -p $RPM_BUILD_ROOT%{_unitdir}
+install -p -m 0644 %SOURCE21 $RPM_BUILD_ROOT/etc/skel/.canna
+install -p -m 0644 %SOURCE21 $RPM_BUILD_ROOT/etc/canna/default.canna
+install -p -m 0644 %SOURCE31 $RPM_BUILD_ROOT%{_unitdir}/canna.service
 ## chmod 755 $RPM_BUILD_ROOT/etc/rc.d/init.d/canna
 
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/hosts.canna << EOF
@@ -250,14 +260,16 @@ done
 ln -sf ../bin/catdic $RPM_BUILD_ROOT%{_sbindir}/cannakill
 
 mv $RPM_BUILD_ROOT%{_sysconfdir}/canna/sample $RPM_BUILD_DIR/%{name}-%{version}
-%{__mkdir_p} $RPM_BUILD_ROOT%{_var}/run/.iroha_unix
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/.iroha_unix
 
 # remove the static libraries
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.a
 
-%clean
-rm -fr $RPM_BUILD_ROOT
 
+%triggerun -- Canna < 3.7p3-33
+/usr/bin/systemd-sysv-convert --save canna >/dev/null 2>&1 || :
+/sbin/chkconfig --del canna >/dev/null 2>&1 || :
+/bin/systemctl try-restart canna.service >/dev/null 2>&1 || :
 
 %pre
 getent group %{username} >/dev/null || groupadd -r %{username}
@@ -269,37 +281,31 @@ if ! grep -q canna /etc/services
 then
 	echo "canna		5680/tcp" >>/etc/services
 fi
-/sbin/chkconfig --add canna
-%{__chown} -R %{username}:%{username} %{_var}/lib/canna
+%{__chown} -R %{username}:%{username} %{_localstatedir}/lib/canna
+%systemd_post canna.service
 
 %preun
-if [ "$1" = "0" ]; then
-    /sbin/service canna stop > /dev/null 2>&1 || :
-    /sbin/chkconfig --del canna
-fi
+%systemd_preun canna.service
 
 %postun
-if [ "$1" -ge "1" ]; then
-    /sbin/service canna try-restart >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart canna.service
 
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
 
 %files
-%defattr (-,root,root,-)
 %lang(ja) %doc %{cannadir}/CHANGES.jp %{cannadir}/OCHANGES.jp
 %lang(ja) %doc %{cannadir}/README.jp %{cannadir}/RKCCONF.jp %{cannadir}/WHATIS.jp
 %doc %{cannadir}/ChangeLog %{cannadir}/README %{cannadir}/WHATIS
 %doc %{cannadir}/Canna.conf
 %doc $RPM_BUILD_DIR/%{name}-%{version}/sample
-%config %{_sysconfdir}/rc.d/init.d/canna
 %config %{_sysconfdir}/skel/.canna
 %config(noreplace) %{_sysconfdir}/hosts.canna
 %config(noreplace) %{_sysconfdir}/canna/cannahost
 %dir %{_sysconfdir}/canna
 %config %{_sysconfdir}/canna/default.canna
+%config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 %{_bindir}/*
 %{_datadir}/canna
 %{_mandir}/man1/*
@@ -308,12 +314,12 @@ fi
 %{_sbindir}/cannaserver
 %{_sbindir}/cannakill
 %defattr (-,%{username},%{username})
-%dir %{_var}/run/.iroha_unix
-%{_var}/lib/canna
-%{_var}/log/canna
+%dir %{_localstatedir}/run/.iroha_unix
+%{_localstatedir}/lib/canna
+%{_localstatedir}/log/canna
+%{_unitdir}/canna.service
 
 %files devel
-%defattr (-,root,root,-)
 %{_includedir}/canna/
 %{_mandir}/man3/*
 %lang(ja) %{_mandir}/ja/man3/*
@@ -324,15 +330,48 @@ fi
 
 
 %files libs
-%defattr (-,root,root,-)
 %{_libdir}/libRKC.so.*
 %{_libdir}/libRKC16.so.*
 %{_libdir}/libcanna.so.*
 %{_libdir}/libcanna16.so.*
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 3.7p3-31
-- 为 Magic 3.0 重建
+* Tue Dec 10 2013 Akira TAGOH <tagoh@redhat.com> - 3.7p3-41
+- Fix an error when building with -Werror=format-security. (#1037008)
+
+* Fri Aug 02 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7p3-40
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jun  3 2013 Akira TAGOH <tagoh@redhat.com> - 3.7p3-39
+- Built with PIE enabled. (Dhiru Kholia, #955179)
+
+* Tue Mar 26 2013 Akira TAGOH <tagoh@redhat.com> - 3.7p3-38
+- Rebuilt for aarch64 support (#925129)
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7p3-37
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Aug 27 2012 Akira TAGOH <tagoh@redhat.com> - 3.7p3-36
+- Update scriptlets with new systemd rpm macros. (#850054)
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7p3-35
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7p3-34
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Fri Nov 18 2011 Akira TAGOH <tagoh@redhat.com> - 3.7p3-33
+- Add native systemd service. (#754826)
+
+* Fri Feb 24 2011 Akira TAGOH <tagoh@redhat.com> - 3.7p3-32
+- Do not strip symbols from binaries.
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7p3-31
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Mon Feb  7 2011 Akira TAGOH <tagoh@redhat.com> - 3.7p3-30
+- tmpfiles.d support for /var/run/.iroha_unix. (#656555)
+- clean up the spec file.
 
 * Mon Jan 18 2010 Akira TAGOH <tagoh@redhat.com> - 3.7p3-29
 - Remove the static libraries. (#556034)
@@ -642,7 +681,7 @@ fi
 - Added patch by Ishikawa to make cannaserver listen only on a unix domain
   socket by default (#33420) and create "/var/lib/canna/cannahost" to help
   kinput2 find it.
-- Added fix from Ishikawa for "typo" in malloc call in lib/RK/dd.c. 
+- Added fix from Ishikawa for "typo" in malloc call in lib/RK/dd.c.
 
 * Tue Aug  9 2001 Yukihiro Nakai <ynakai@redhat.com> - 3.5b2-44
 - Off the S bit (#13135)
@@ -724,7 +763,7 @@ fi
 - rebuilt for RedHat 7.0.
 - man directory ja_JP.UJIS -> ja
 - Canna-3.5b2.conf.patch modified to install manpages to /usr/share/man
-- remove Canna-3.5b2-fhs.patch to install manpages to /usr/share/man 
+- remove Canna-3.5b2-fhs.patch to install manpages to /usr/share/man
 
 * Tue Jul 18 2000 Nalin Dahyabhai <nalin@redhat.com>
 - fix syntax error in postun
