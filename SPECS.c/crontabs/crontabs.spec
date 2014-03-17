@@ -1,8 +1,8 @@
-%global snap_release 20101115git
+%global snap_release 20130830git
 Summary: Root crontab files used to schedule the execution of programs
 Name: crontabs
 Version: 1.11
-Release: 4.%{snap_release}%{?dist}
+Release: 7.%{snap_release}%{?dist}
 License: Public Domain and GPLv2
 Group: System Environment/Base
 URL: https://fedorahosted.org/crontabs 
@@ -36,24 +36,43 @@ mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man4/
 
 install -m644 ./crontab $RPM_BUILD_ROOT/etc/crontab
 install -m755 ./run-parts $RPM_BUILD_ROOT/usr/bin/run-parts
-install -m644 ./crontabs.4 $RPM_BUILD_ROOT/%{_mandir}/man4/
+install -m644 ./{crontabs,run-parts}.4 $RPM_BUILD_ROOT/%{_mandir}/man4/
+
+mkdir -p $RPM_BUILD_ROOT/etc/sysconfig/
+touch $RPM_BUILD_ROOT/etc/sysconfig/run-parts
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{_bindir}/run-parts
 %config(noreplace) /etc/crontab
-%{_mandir}/man4/*
+%attr(0644,root,root) %config(noreplace) /etc/sysconfig/run-parts
+%{_bindir}/run-parts
 %dir /etc/cron.hourly
 %dir /etc/cron.daily
 %dir /etc/cron.weekly
 %dir /etc/cron.monthly
+%{_mandir}/man4/*
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.11-4.20101115git
-- 为 Magic 3.0 重建
+* Fri Aug 30 2013 Marcela Mašláňová <mmaslano@redhat.com> 1.11-7.20121102git
+- fix man page link 971583
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-6.20121102git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-5.20121102git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Nov  1 2012 Marcela Mašláňová <mmaslano@redhat.com> 1.11-5.20121102git
+- update to the latest git snapshot with copying file and fixed man pages
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-4.20101115git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-3.20101115git
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-2.20101115git
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
