@@ -1,68 +1,53 @@
-%define git_date 20090203
-%define git_version 13281b3
-Name:		dbus-c++
-Version:	0.5.0
-Release:	0.14.%{git_date}git%{git_version}%{?dist}
-Summary:	Native C++ bindings for D-Bus
+Name:           dbus-c++
+Version:        0.9.0
+Release:        2%{?dist}
+Summary:        Native C++ bindings for D-Bus
 
-Group:		System Environment/Libraries
-License:	LGPLv2+
-URL:		http://freedesktop.org/wiki/Software/dbus-c++
-# Generate tarball
-# git clone git://anongit.freedesktop.org/git/dbus/dbus-c++/
-# git-archive --format=tar --prefix=dbus-c++/ %{git_version} | bzip2 > dbus-c++-0.5.0.`date +%Y%m%d`git%{git_version}.tar.bz2
-Source0:	%{name}-%{version}.%{git_date}git%{git_version}.tar.bz2
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Group:          System Environment/Libraries
+License:        LGPLv2+
+URL:            http://sourceforge.net/projects/dbus-cplusplus/
+Source0:        http://downloads.sourceforge.net/dbus-cplusplus/lib%{name}-%{version}.tar.gz
 
-Patch1:	dbus-c++-get-uid-api.patch
-Patch2: gcc-44.patch
-Patch3: dbus-c++-build-fix.patch
-Patch4: dbus-c++-linkfix.patch
+Patch1: dbus-c++-gcc4.7.patch
+Patch2: dbus-c++-linkfix.patch
 
-BuildRequires:	dbus-devel
-BuildRequires:	glib2-devel
-Buildrequires:	gtkmm24-devel
-Buildrequires:	libtool
-BuildRequires:	expat-devel
+BuildRequires: dbus-devel
+BuildRequires: glib2-devel
+BuildRequires: gtkmm24-devel
+BuildRequires: autoconf automake libtool
+BuildRequires: expat-devel
+BuildRequires: ecore-devel
 
 %description
-Native C++ bindings for D-Bus for use in C++ programs.
+dbus-c++ attempts to provide a C++ API for D-Bus.
+The library has a glib/gtk and an Ecore mainloop integration.
 
-%package	devel
-Summary:	Development files for %{name}
-Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	pkgconfig
-%description	devel
-The %{name}-devel package contains libraries and header files for
+%package        devel
+Summary:        Development files for %{name}
+Group:          Development/Libraries
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig
+%description    devel
+This package contains libraries and header files for
 developing applications that use %{name}.
 
 
 %prep
-%setup -q -n %{name}
+%setup -q -n lib%{name}-%{version}
 %{__sed} -i 's/\r//' AUTHORS
-%{__sed} -i 's/-O3//' configure.ac
-%patch1 -p1 -b .uid
-%patch2 -p1 -b .gcc44
-%patch3 -p1 -b .buildfix
-%patch4 -p1 -b .linkfix
+%{__sed} -i 's/libtoolize --force --copy/libtoolize -if --copy/' bootstrap
+%patch1 -p1 -b .gcc47
+%patch2 -p1 -b .linkfix
 
 %build
 ./autogen.sh
 export CPPFLAGS='%{optflags}'
-%configure --disable-static --enable-glib
+%configure --disable-static --disable-tests
 make %{?_smp_mflags}
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 
 %post -p /sbin/ldconfig
 
@@ -70,22 +55,38 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING AUTHORS
 %{_bindir}/dbusxx-introspect
 %{_bindir}/dbusxx-xml2cpp
 %{_libdir}/*.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %doc TODO
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.5.0-0.14.20090203git13281b3
-- 为 Magic 3.0 重建
+* Wed Feb 26 2014 Jiri Popelka <jpopelka@redhat.com> - 0.9.0-2
+- fix bootstrap script for ppc64le (#1070306)
+
+* Tue Dec 17 2013 Jiri Popelka <jpopelka@redhat.com> - 0.9.0-1
+- 0.9.0
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-0.17.20090203git13281b3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-0.16.20090203git13281b3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-0.15.20090203git13281b3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-0.14.20090203git13281b3
+- Rebuilt for c++ ABI breakage
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-0.13.20090203git13281b3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-0.12.20090203git13281b3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
