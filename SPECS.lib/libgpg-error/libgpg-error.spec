@@ -1,7 +1,7 @@
 Summary: Library for error values used by GnuPG components
 Name: libgpg-error
-Version: 1.10
-Release: 3%{?dist}
+Version: 1.12
+Release: 1%{?dist}
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
@@ -13,8 +13,8 @@ BuildRequires: gawk, gettext, autoconf, automake, gettext-devel, libtool
 %if 0%{?fedora} > 13
 BuildRequires: gettext-autopoint
 %endif
-Requires(post): /usr/sbin/ldconfig
-Requires(postun): /usr/sbin/ldconfig
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description
 This is a library that defines common error values for all GnuPG
@@ -36,12 +36,8 @@ contains files necessary to develop applications using libgpg-error.
 %setup -q
 # The config script already suppresses the -L if it's /usr/lib, so cheat and
 # set it to a value which we know will be suppressed.
-sed -i -e 's|^libdir=@libdir@$|libdir=@exec_prefix@/lib|g' src/gpg-error-config.in
-# Recode the changelog into UTF-8 to meet packaging guidelines.
-iconv -f UTF-8 -t UTF-8 ChangeLog > /dev/null || \
-( mv ChangeLog ChangeLog.iso-8859-15 && \
-  iconv -f ISO-8859-15 -t UTF-8 ChangeLog.iso-8859-15 > ChangeLog &&
-  touch -r ChangeLog.iso-8859-15 ChangeLog )
+sed -i -e 's|^libdir=@libdir@$|libdir=@exec_prefix@/lib|g;s|@GPG_ERROR_CONFIG_HOST@|none|g' src/gpg-error-config.in
+
 # We need a version of libtool that won't decide to add an rpath of /usr/lib64
 # even when we ask it not to.
 autoreconf -f -i
@@ -55,18 +51,17 @@ rm -fr $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 
-magic_rpm_clean.sh
 %find_lang %{name}
 
 # Relocate the shared libraries to /%{_lib}.
-#mkdir -p $RPM_BUILD_ROOT/%{_lib}
-#for shlib in $RPM_BUILD_ROOT/%{_libdir}/*.so* ; do
-#	if test -L "$shlib" ; then
-#		rm "$shlib"
-#	else
-#		mv "$shlib" $RPM_BUILD_ROOT/%{_lib}/
-#	fi
-#done
+mkdir -p $RPM_BUILD_ROOT/%{_lib}
+for shlib in $RPM_BUILD_ROOT/%{_libdir}/*.so* ; do
+	if test -L "$shlib" ; then
+		rm "$shlib"
+	else
+		mv "$shlib" $RPM_BUILD_ROOT/%{_lib}/
+	fi
+done
 # Figure out where /%{_lib} is relative to %{_libdir}.
 touch $RPM_BUILD_ROOT/root_marker
 relroot=..
@@ -74,34 +69,32 @@ while ! test -f $RPM_BUILD_ROOT/%{_libdir}/$relroot/root_marker ; do
 	relroot=$relroot/..
 done
 # Overwrite development symlinks.
-#pushd $RPM_BUILD_ROOT/%{_libdir}
-#for shlib in $relroot/%{_lib}/lib*.so.* ; do
-#	shlib=`echo "$shlib" | sed -e 's,//,/,g'`
-#	target=`basename "$shlib" | sed -e 's,\.so.*,,g'`.so
-#	ln -sf $shlib $target
-#done
-#popd
+pushd $RPM_BUILD_ROOT/%{_libdir}
+for shlib in $relroot/%{_lib}/lib*.so.* ; do
+	shlib=`echo "$shlib" | sed -e 's,//,/,g'`
+	target=`basename "$shlib" | sed -e 's,\.so.*,,g'`.so
+	ln -sf $shlib $target
+done
+popd
 # Add the soname symlink.
-/usr/sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}/
+/sbin/ldconfig -n $RPM_BUILD_ROOT/%{_lib}/
 rm -f $RPM_BUILD_ROOT/root_marker
 
-%if 0%{?with_check}
 %check
 make check
-%endif
 
 %clean
 rm -fr $RPM_BUILD_ROOT
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc COPYING COPYING.LIB AUTHORS README NEWS ChangeLog
 %{_bindir}/gpg-error
-%{_libdir}/libgpg-error.so.0*
+/%{_lib}/libgpg-error.so.0*
 
 %files devel
 %defattr(-,root,root)
@@ -111,11 +104,23 @@ rm -fr $RPM_BUILD_ROOT
 %{_datadir}/aclocal/gpg-error.m4
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.10-3
-- 为 Magic 3.0 重建
+* Fri Aug 23 2013 Tomáš Mráz <tmraz@redhat.com> 1.12-1
+- new upstream release
 
-* Wed Apr 18 2012 Liu Di <liudidi@gmail.com> - 1.10-2
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Apr  5 2013 Tomáš Mráz <tmraz@redhat.com> 1.11-1
+- new upstream release
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Fri Jul 15 2011 Tomáš Mráz <tmraz@redhat.com> 1.10-1
 - new upstream release
