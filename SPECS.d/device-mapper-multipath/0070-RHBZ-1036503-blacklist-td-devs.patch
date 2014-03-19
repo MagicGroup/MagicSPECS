@@ -1,0 +1,17 @@
+---
+ libmultipath/blacklist.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: multipath-tools-130222/libmultipath/blacklist.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/blacklist.c
++++ multipath-tools-130222/libmultipath/blacklist.c
+@@ -163,7 +163,7 @@ setup_default_blist (struct config * con
+ 	if (store_ble(conf->blist_devnode, str, ORIGIN_DEFAULT))
+ 		return 1;
+ 
+-	str = STRDUP("^hd[a-z]");
++	str = STRDUP("^(td|hd)[a-z]");
+ 	if (!str)
+ 		return 1;
+ 	if (store_ble(conf->blist_devnode, str, ORIGIN_DEFAULT))

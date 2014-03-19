@@ -1,0 +1,18 @@
+---
+ multipath/multipath.rules |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+Index: multipath-tools-130222/multipath/multipath.rules
+===================================================================
+--- multipath-tools-130222.orig/multipath/multipath.rules
++++ multipath-tools-130222/multipath/multipath.rules
+@@ -4,7 +4,8 @@ SUBSYSTEM!="block", GOTO="end_mpath"
+ 
+ IMPORT{cmdline}="nompath"
+ ENV{nompath}=="?*", GOTO="end_mpath"
+-ENV{DEVTYPE}=="partition", GOTO="end_mpath"
++ENV{DEVTYPE}=="partition", IMPORT{parent}="DM_MULTIPATH_DEVICE_PATH", \
++	GOTO="end_mpath"
+ ENV{MPATH_SBIN_PATH}="/sbin"
+ TEST!="$env{MPATH_SBIN_PATH}/multipath", ENV{MPATH_SBIN_PATH}="/usr/sbin"
+ TEST!="/etc/multipath.conf", GOTO="check_kpartx"

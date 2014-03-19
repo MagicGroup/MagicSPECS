@@ -1,0 +1,159 @@
+---
+ kpartx/dos.c    |   17 ++++++++++-------
+ kpartx/gpt.c    |   20 +-------------------
+ kpartx/kpartx.c |   12 ++++++++++++
+ kpartx/kpartx.h |    8 ++++++++
+ 4 files changed, 31 insertions(+), 26 deletions(-)
+
+Index: multipath-tools-130222/kpartx/dos.c
+===================================================================
+--- multipath-tools-130222.orig/kpartx/dos.c
++++ multipath-tools-130222/kpartx/dos.c
+@@ -26,7 +26,9 @@ read_extended_partition(int fd, struct p
+ 	int moretodo = 1;
+ 	int i, n=0;
+ 
+-	next = start = le32_to_cpu(ep->start_sect);
++	int sector_size_mul = get_sector_size(fd)/512;
++
++	next = start = sector_size_mul * le32_to_cpu(ep->start_sect);
+ 
+ 	while (moretodo) {
+ 		here = next;
+@@ -45,14 +47,14 @@ read_extended_partition(int fd, struct p
+ 			memcpy(&p, bp + 0x1be + i * sizeof (p), sizeof (p));
+ 			if (is_extended(p.sys_type)) {
+ 				if (p.nr_sects && !moretodo) {
+-					next = start + le32_to_cpu(p.start_sect);
++					next = start + sector_size_mul * le32_to_cpu(p.start_sect);
+ 					moretodo = 1;
+ 				}
+ 				continue;
+ 			}
+ 			if (n < ns) {
+-				sp[n].start = here + le32_to_cpu(p.start_sect);
+-				sp[n].size = le32_to_cpu(p.nr_sects);
++				sp[n].start = here + sector_size_mul * le32_to_cpu(p.start_sect);
++				sp[n].size = sector_size_mul * le32_to_cpu(p.nr_sects);
+ 				n++;
+ 			} else {
+ 				fprintf(stderr,
+@@ -76,6 +78,7 @@ read_dos_pt(int fd, struct slice all, st
+ 	unsigned long offset = all.start;
+ 	int i, n=4;
+ 	unsigned char *bp;
++	int sector_size_mul = get_sector_size(fd)/512;
+ 
+ 	bp = (unsigned char *)getblock(fd, offset);
+ 	if (bp == NULL)
+@@ -89,8 +92,8 @@ read_dos_pt(int fd, struct slice all, st
+ 		if (is_gpt(p.sys_type))
+ 			return 0;
+ 		if (i < ns) {
+-			sp[i].start =  le32_to_cpu(p.start_sect);
+-			sp[i].size = le32_to_cpu(p.nr_sects);
++			sp[i].start =  sector_size_mul * le32_to_cpu(p.start_sect);
++			sp[i].size = sector_size_mul * le32_to_cpu(p.nr_sects);
+ 		} else {
+ 			fprintf(stderr,
+ 				"dos_partition: too many slices\n");
+@@ -99,7 +102,7 @@ read_dos_pt(int fd, struct slice all, st
+ 		if (is_extended(p.sys_type)) {
+ 			n += read_extended_partition(fd, &p, sp+n, ns-n);
+ 			/* hide the extended partition itself */
+-			sp[i].size = 2;
++			sp[i].size = sector_size_mul * 2;
+ 		}
+ 	}
+ 	return n;
+Index: multipath-tools-130222/kpartx/gpt.c
+===================================================================
+--- multipath-tools-130222.orig/kpartx/gpt.c
++++ multipath-tools-130222/kpartx/gpt.c
+@@ -38,6 +38,7 @@
+ #include <byteswap.h>
+ #include <linux/fs.h>
+ #include "crc32.h"
++#include "kpartx.h"
+ 
+ #if BYTE_ORDER == LITTLE_ENDIAN
+ #  define __le16_to_cpu(x) (x)
+@@ -116,25 +117,6 @@ is_pmbr_valid(legacy_mbr *mbr)
+ 
+ 
+ /************************************************************
+- * get_sector_size
+- * Requires:
+- *  - filedes is an open file descriptor, suitable for reading
+- * Modifies: nothing
+- * Returns:
+- *  sector size, or 512.
+- ************************************************************/
+-static int
+-get_sector_size(int filedes)
+-{
+-	int rc, sector_size = 512;
+-
+-	rc = ioctl(filedes, BLKSSZGET, &sector_size);
+-	if (rc)
+-		sector_size = 512;
+-	return sector_size;
+-}
+-
+-/************************************************************
+  * _get_num_sectors
+  * Requires:
+  *  - filedes is an open file descriptor, suitable for reading
+Index: multipath-tools-130222/kpartx/kpartx.c
+===================================================================
+--- multipath-tools-130222.orig/kpartx/kpartx.c
++++ multipath-tools-130222/kpartx/kpartx.c
+@@ -26,6 +26,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <stdint.h>
++#include <sys/ioctl.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <ctype.h>
+@@ -606,3 +607,14 @@ getblock (int fd, unsigned int secnr) {
+ 
+ 	return bp->block;
+ }
++
++int
++get_sector_size(int filedes)
++{
++	int rc, sector_size = 512;
++
++	rc = ioctl(filedes, BLKSSZGET, &sector_size);
++	if (rc)
++		sector_size = 512;
++	return sector_size;
++}
+Index: multipath-tools-130222/kpartx/kpartx.h
+===================================================================
+--- multipath-tools-130222.orig/kpartx/kpartx.h
++++ multipath-tools-130222/kpartx/kpartx.h
+@@ -2,6 +2,7 @@
+ #define _KPARTX_H
+ 
+ #include <stdint.h>
++#include <sys/ioctl.h>
+ 
+ /*
+  * For each partition type there is a routine that takes
+@@ -18,6 +19,13 @@
+ #define safe_sprintf(var, format, args...)	\
+ 	snprintf(var, sizeof(var), format, ##args) >= sizeof(var)
+ 
++#ifndef BLKSSZGET
++#define BLKSSZGET  _IO(0x12,104)	/* get block device sector size */
++#endif
++
++int
++get_sector_size(int filedes);
++
+ /*
+  * units: 512 byte sectors
+  */

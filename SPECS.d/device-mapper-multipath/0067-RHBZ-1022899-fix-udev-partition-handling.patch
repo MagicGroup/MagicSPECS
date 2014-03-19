@@ -1,0 +1,37 @@
+---
+ multipath/multipath.rules |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+Index: multipath-tools-130222/multipath/multipath.rules
+===================================================================
+--- multipath-tools-130222.orig/multipath/multipath.rules
++++ multipath-tools-130222/multipath/multipath.rules
+@@ -13,12 +13,13 @@ ACTION=="add", ENV{DM_MULTIPATH_DEVICE_P
+ 	PROGRAM=="$env{MPATH_SBIN_PATH}/multipath -c $tempnode", \
+ 	ENV{DM_MULTIPATH_DEVICE_PATH}="1", ENV{ID_FS_TYPE}="mpath_member"
+ 
+-ENV{DM_MULTIPATH_DEVICE_PATH}=="1", \
++ENV{DM_MULTIPATH_DEVICE_PATH}=="1", ENV{DM_MULTIPATH_WIPE_PARTS}="1", \
+ 	RUN+="/sbin/partx -d --nr 1-1024 $env{DEVNAME}"
+ 
+ ACTION!="change", GOTO="update_timestamp"
+ IMPORT{db}="DM_MULTIPATH_TIMESTAMP"
+ IMPORT{db}="DM_MULTIPATH_DEVICE_PATH"
++IMPORT{db}="DM_MULTIPATH_WIPE_PARTS"
+ # Check if the device is part of a multipath device. the -T option just keeps
+ # the old result if the timestamp hasn't changed.
+ PROGRAM=="$env{MPATH_SBIN_PATH}/multipath -T $env{DM_MULTIPATH_TIMESTAMP}:$env{DM_MULTIPATH_DEVICE_PATH} -c $env{DEVNAME}", \
+@@ -27,8 +28,13 @@ PROGRAM=="$env{MPATH_SBIN_PATH}/multipat
+ 
+ # If the device isn't part of a multipath device, clear this
+ ENV{DM_MULTIPATH_DEVICE_PATH}=""
++ENV{DM_MULTIPATH_WIPE_PARTS}=""
+ 
+ LABEL="update_timestamp"
++ENV{DM_MULTIPATH_DEVICE_PATH}=="1", ENV{DM_MULTIPATH_WIPE_PARTS}!="1", \
++	ENV{DM_MULTIPATH_WIPE_PARTS}="1", \
++	RUN+="/sbin/partx -d --nr 1-1024 $env{DEVNAME}"
++
+ IMPORT{file}="/run/multipathd/timestamp"
+ 
+ LABEL="check_kpartx"

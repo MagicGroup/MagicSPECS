@@ -1,0 +1,17 @@
+---
+ libmultipath/dict.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: multipath-tools-130222/libmultipath/dict.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/dict.c
++++ multipath-tools-130222/libmultipath/dict.c
+@@ -2562,7 +2562,7 @@ snprint_def_failback (char * buff, int l
+ 	if (!pgfailback)
+ 		pgfailback = DEFAULT_FAILBACK;
+ 
+-	switch(conf->pgfailback) {
++	switch(pgfailback) {
+ 	case  FAILBACK_UNDEF:
+ 		break;
+ 	case -FAILBACK_MANUAL:

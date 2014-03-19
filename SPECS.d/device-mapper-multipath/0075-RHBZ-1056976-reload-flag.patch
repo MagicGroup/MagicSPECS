@@ -1,0 +1,246 @@
+---
+ kpartx/devmapper.c        |    4 ++--
+ kpartx/devmapper.h        |    8 +++++++-
+ kpartx/kpartx.c           |    6 +++---
+ libmultipath/configure.c  |    4 ++--
+ libmultipath/devmapper.c  |   26 ++++++++++++++------------
+ libmultipath/devmapper.h  |   10 ++++++++--
+ multipathd/cli_handlers.c |    4 ++--
+ 7 files changed, 38 insertions(+), 24 deletions(-)
+
+Index: multipath-tools-130222/kpartx/devmapper.c
+===================================================================
+--- multipath-tools-130222.orig/kpartx/devmapper.c
++++ multipath-tools-130222/kpartx/devmapper.c
+@@ -60,7 +60,7 @@ dm_prereq (char * str, int x, int y, int
+ }
+ 
+ extern int
+-dm_simplecmd (int task, const char *name, int no_flush, uint32_t *cookie) {
++dm_simplecmd (int task, const char *name, int no_flush, uint32_t *cookie, uint16_t udev_flags) {
+ 	int r = 0;
+ 	int udev_wait_flag = (task == DM_DEVICE_RESUME ||
+ 			      task == DM_DEVICE_REMOVE);
+@@ -78,7 +78,7 @@ dm_simplecmd (int task, const char *name
+ 	if (no_flush)
+ 		dm_task_no_flush(dmt);
+ 
+-	if (udev_wait_flag && !dm_task_set_cookie(dmt, cookie, (udev_sync)? 0 : DM_UDEV_DISABLE_LIBRARY_FALLBACK))
++	if (udev_wait_flag && !dm_task_set_cookie(dmt, cookie, ((udev_sync)? 0 : DM_UDEV_DISABLE_LIBRARY_FALLBACK) | udev_flags))
+ 		goto out;
+ 	r = dm_task_run(dmt);
+ 
+Index: multipath-tools-130222/kpartx/devmapper.h
+===================================================================
+--- multipath-tools-130222.orig/kpartx/devmapper.h
++++ multipath-tools-130222/kpartx/devmapper.h
+@@ -2,10 +2,16 @@
+ #define MINOR(dev)      ((dev & 0xff) | ((dev >> 12) & 0xfff00))
+ #define MKDEV(ma,mi)    ((mi & 0xff) | (ma << 8) | ((mi & ~0xff) << 12))
+ 
++#ifdef DM_SUBSYSTEM_UDEV_FLAG0
++#define MPATH_UDEV_RELOAD_FLAG DM_SUBSYSTEM_UDEV_FLAG0
++#else
++#define MPATH_UDEV_RELOAD_FLAG 0
++#endif
++
+ extern int udev_sync;
+ 
+ int dm_prereq (char *, int, int, int);
+-int dm_simplecmd (int, const char *, int, uint32_t *);
++int dm_simplecmd (int, const char *, int, uint32_t *, uint16_t);
+ int dm_addmap (int, const char *, const char *, const char *, uint64_t,
+ 	       int, const char *, int, mode_t, uid_t, gid_t, uint32_t *);
+ int dm_map_present (char *);
+Index: multipath-tools-130222/kpartx/kpartx.c
+===================================================================
+--- multipath-tools-130222.orig/kpartx/kpartx.c
++++ multipath-tools-130222/kpartx/kpartx.c
+@@ -421,7 +421,7 @@ main(int argc, char **argv){
+ 					continue;
+ 
+ 				if (!dm_simplecmd(DM_DEVICE_REMOVE, partname,
+-						  0, &cookie)) {
++						  0, &cookie, 0)) {
+ 					r++;
+ 					continue;
+ 				}
+@@ -473,7 +473,7 @@ main(int argc, char **argv){
+ 				}
+ 				if (op == DM_DEVICE_RELOAD &&
+ 				    !dm_simplecmd(DM_DEVICE_RESUME, partname,
+-						  1, &cookie)) {
++						  1, &cookie, MPATH_UDEV_RELOAD_FLAG)) {
+ 					fprintf(stderr, "resume failed on %s\n",
+ 						partname);
+ 					r++;
+@@ -505,7 +505,7 @@ main(int argc, char **argv){
+ 					continue;
+ 
+ 				if (!dm_simplecmd(DM_DEVICE_REMOVE,
+-						  partname, 1, &cookie)) {
++						  partname, 1, &cookie, 0)) {
+ 					r++;
+ 					continue;
+ 				}
+Index: multipath-tools-130222/libmultipath/configure.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/configure.c
++++ multipath-tools-130222/libmultipath/configure.c
+@@ -390,13 +390,13 @@ domap (struct multipath * mpp, char * pa
+ 	case ACT_RELOAD:
+ 		r = dm_addmap_reload(mpp, params);
+ 		if (r)
+-			r = dm_simplecmd_noflush(DM_DEVICE_RESUME, mpp->alias);
++			r = dm_simplecmd_noflush(DM_DEVICE_RESUME, mpp->alias, MPATH_UDEV_RELOAD_FLAG);
+ 		break;
+ 
+ 	case ACT_RESIZE:
+ 		r = dm_addmap_reload(mpp, params);
+ 		if (r)
+-			r = dm_simplecmd_flush(DM_DEVICE_RESUME, mpp->alias, 1);
++			r = dm_simplecmd_flush(DM_DEVICE_RESUME, mpp->alias, 1, 0);
+ 		break;
+ 
+ 	case ACT_RENAME:
+Index: multipath-tools-130222/libmultipath/devmapper.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/devmapper.c
++++ multipath-tools-130222/libmultipath/devmapper.c
+@@ -103,7 +103,9 @@ dm_lib_prereq (void)
+ {
+ 	char version[64];
+ 	int v[3];
+-#ifdef LIBDM_API_COOKIE
++#if defined(DM_SUBSYSTEM_UDEV_FLAG0)
++	int minv[3] = {1, 2, 82};
++#elif defined(LIBDM_API_COOKIE)
+ 	int minv[3] = {1, 2, 38};
+ #else
+ 	int minv[3] = {1, 2, 8};
+@@ -200,7 +202,7 @@ dm_prereq (void)
+ }
+ 
+ static int
+-dm_simplecmd (int task, const char *name, int no_flush, int need_sync) {
++dm_simplecmd (int task, const char *name, int no_flush, int need_sync, uint16_t udev_flags) {
+ 	int r = 0;
+ 	int udev_wait_flag = (need_sync && (task == DM_DEVICE_RESUME ||
+ 					    task == DM_DEVICE_REMOVE));
+@@ -219,7 +221,7 @@ dm_simplecmd (int task, const char *name
+ 		dm_task_no_flush(dmt);		/* for DM_DEVICE_SUSPEND/RESUME */
+ #endif
+ 
+-	if (udev_wait_flag && !dm_task_set_cookie(dmt, &conf->cookie, (conf->daemon)? DM_UDEV_DISABLE_LIBRARY_FALLBACK : 0))
++	if (udev_wait_flag && !dm_task_set_cookie(dmt, &conf->cookie, ((conf->daemon)? DM_UDEV_DISABLE_LIBRARY_FALLBACK : 0) | udev_flags))
+ 		goto out;
+ 	r = dm_task_run (dmt);
+ 
+@@ -229,13 +231,13 @@ dm_simplecmd (int task, const char *name
+ }
+ 
+ extern int
+-dm_simplecmd_flush (int task, const char *name, int needsync) {
+-	return dm_simplecmd(task, name, 0, needsync);
++dm_simplecmd_flush (int task, const char *name, int needsync, uint16_t udev_flags) {
++	return dm_simplecmd(task, name, 0, needsync, udev_flags);
+ }
+ 
+ extern int
+-dm_simplecmd_noflush (int task, const char *name) {
+-	return dm_simplecmd(task, name, 1, 1);
++dm_simplecmd_noflush (int task, const char *name, uint16_t udev_flags) {
++	return dm_simplecmd(task, name, 1, 1, udev_flags);
+ }
+ 
+ extern int
+@@ -670,7 +672,7 @@ _dm_flush_map (const char * mapname, int
+ 		return 1;
+ 	}
+ 
+-	r = dm_simplecmd_flush(DM_DEVICE_REMOVE, mapname, need_sync);
++	r = dm_simplecmd_flush(DM_DEVICE_REMOVE, mapname, need_sync, 0);
+ 
+ 	if (r) {
+ 		condlog(4, "multipath map %s removed", mapname);
+@@ -703,14 +705,14 @@ dm_suspend_and_flush_map (const char * m
+ 	if (s)
+ 		queue_if_no_path = 0;
+ 	else
+-		s = dm_simplecmd_flush(DM_DEVICE_SUSPEND, mapname, 0);
++		s = dm_simplecmd_flush(DM_DEVICE_SUSPEND, mapname, 0, 0);
+ 
+ 	if (!dm_flush_map(mapname)) {
+ 		condlog(4, "multipath map %s removed", mapname);
+ 		return 0;
+ 	}
+ 	condlog(2, "failed to remove multipath map %s", mapname);
+-	dm_simplecmd_noflush(DM_DEVICE_RESUME, mapname);
++	dm_simplecmd_noflush(DM_DEVICE_RESUME, mapname, 0);
+ 	if (queue_if_no_path)
+ 		s = dm_queue_if_no_path((char *)mapname, 1);
+ 	return 1;
+@@ -1077,7 +1079,7 @@ dm_remove_partmaps (const char * mapname
+ 			condlog(4, "partition map %s removed",
+ 				names->name);
+ 			dm_simplecmd_flush(DM_DEVICE_REMOVE, names->name,
+-					   need_sync);
++					   need_sync, 0);
+ 		}
+ 
+ 		next = names->next;
+@@ -1305,7 +1307,7 @@ int dm_reassign_table(const char *name,
+ 			condlog(3, "%s: failed to reassign targets", name);
+ 			goto out_reload;
+ 		}
+-		dm_simplecmd_noflush(DM_DEVICE_RESUME, name);
++		dm_simplecmd_noflush(DM_DEVICE_RESUME, name, MPATH_UDEV_RELOAD_FLAG);
+ 	}
+ 	r = 1;
+ 
+Index: multipath-tools-130222/libmultipath/devmapper.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/devmapper.h
++++ multipath-tools-130222/libmultipath/devmapper.h
+@@ -6,11 +6,17 @@
+ #define TGT_MPATH	"multipath"
+ #define TGT_PART	"linear"
+ 
++#ifdef DM_SUBSYSTEM_UDEV_FLAG0
++#define MPATH_UDEV_RELOAD_FLAG DM_SUBSYSTEM_UDEV_FLAG0
++#else
++#define MPATH_UDEV_RELOAD_FLAG 0
++#endif
++
+ void dm_init(void);
+ int dm_prereq (void);
+ int dm_drv_version (unsigned int * version, char * str);
+-int dm_simplecmd_flush (int, const char *, int);
+-int dm_simplecmd_noflush (int, const char *);
++int dm_simplecmd_flush (int, const char *, int, uint16_t);
++int dm_simplecmd_noflush (int, const char *, uint16_t);
+ int dm_addmap_create (struct multipath *mpp, char *params);
+ int dm_addmap_reload (struct multipath *mpp, char *params);
+ int dm_map_present (const char *);
+Index: multipath-tools-130222/multipathd/cli_handlers.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/cli_handlers.c
++++ multipath-tools-130222/multipathd/cli_handlers.c
+@@ -783,7 +783,7 @@ cli_suspend(void * v, char ** reply, int
+ {
+ 	struct vectors * vecs = (struct vectors *)data;
+ 	char * param = get_keyparam(v, MAP);
+-	int r = dm_simplecmd_noflush(DM_DEVICE_SUSPEND, param);
++	int r = dm_simplecmd_noflush(DM_DEVICE_SUSPEND, param, 0);
+ 
+ 	param = convert_dev(param, 0);
+ 	condlog(2, "%s: suspend (operator)", param);
+@@ -805,7 +805,7 @@ cli_resume(void * v, char ** reply, int
+ {
+ 	struct vectors * vecs = (struct vectors *)data;
+ 	char * param = get_keyparam(v, MAP);
+-	int r = dm_simplecmd_noflush(DM_DEVICE_RESUME, param);
++	int r = dm_simplecmd_noflush(DM_DEVICE_RESUME, param, 0);
+ 
+ 	param = convert_dev(param, 0);
+ 	condlog(2, "%s: resume (operator)", param);

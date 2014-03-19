@@ -1,0 +1,87 @@
+---
+ libmultipath/devmapper.c |   45 ---------------------------------------------
+ libmultipath/devmapper.h |    1 -
+ libmultipath/propsel.c   |    2 --
+ 3 files changed, 48 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/devmapper.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/devmapper.c
++++ multipath-tools-130222/libmultipath/devmapper.c
+@@ -917,51 +917,6 @@ out:
+ 	return r;
+ }
+ 
+-extern char *
+-dm_get_name(char *uuid)
+-{
+-	struct dm_task *dmt;
+-	struct dm_info info;
+-	char *prefixed_uuid, *name = NULL;
+-	const char *nametmp;
+-
+-	dmt = dm_task_create(DM_DEVICE_INFO);
+-	if (!dmt)
+-		return NULL;
+-
+-	prefixed_uuid = MALLOC(UUID_PREFIX_LEN + strlen(uuid) + 1);
+-	if (!prefixed_uuid) {
+-		condlog(0, "cannot create prefixed uuid : %s",
+-			strerror(errno));
+-		goto freeout;
+-	}
+-	sprintf(prefixed_uuid, UUID_PREFIX "%s", uuid);
+-	if (!dm_task_set_uuid(dmt, prefixed_uuid))
+-		goto freeout;
+-
+-	if (!dm_task_run(dmt))
+-		goto freeout;
+-
+-	if (!dm_task_get_info(dmt, &info) || !info.exists)
+-		goto freeout;
+-
+-	nametmp = dm_task_get_name(dmt);
+-	if (nametmp && strlen(nametmp)) {
+-		name = MALLOC(strlen(nametmp) + 1);
+-		if (name)
+-			strcpy(name, nametmp);
+-	} else {
+-		condlog(2, "%s: no device-mapper name found", uuid);
+-	}
+-
+-freeout:
+-	if (prefixed_uuid)
+-		FREE(prefixed_uuid);
+-	dm_task_destroy(dmt);
+-
+-	return name;
+-}
+-
+ int
+ dm_geteventnr (char *name)
+ {
+Index: multipath-tools-130222/libmultipath/devmapper.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/devmapper.h
++++ multipath-tools-130222/libmultipath/devmapper.h
+@@ -40,7 +40,6 @@ int dm_remove_partmaps (const char * map
+ int dm_get_uuid(char *name, char *uuid);
+ int dm_get_info (char * mapname, struct dm_info ** dmi);
+ int dm_rename (char * old, char * new);
+-char * dm_get_name(char * uuid);
+ int dm_reassign(const char * mapname);
+ int dm_reassign_table(const char *name, char *old, char *new);
+ int dm_setgeometry(struct multipath *mpp);
+Index: multipath-tools-130222/libmultipath/propsel.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/propsel.c
++++ multipath-tools-130222/libmultipath/propsel.c
+@@ -263,8 +263,6 @@ select_alias (struct multipath * mp)
+ 					conf->bindings_file, mp->alias_prefix, conf->bindings_read_only);
+ 		}
+ 		if (mp->alias == NULL)
+-			mp->alias = dm_get_name(mp->wwid);
+-		if (mp->alias == NULL)
+ 			mp->alias = STRDUP(mp->wwid);
+ 	}
+ 

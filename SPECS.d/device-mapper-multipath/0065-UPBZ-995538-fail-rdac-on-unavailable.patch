@@ -1,0 +1,21 @@
+---
+ libmultipath/checkers/rdac.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/checkers/rdac.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/checkers/rdac.c
++++ multipath-tools-130222/libmultipath/checkers/rdac.c
+@@ -222,10 +222,9 @@ libcheck_check (struct checker * c)
+ 		goto done;
+ 	}
+ 
+-	/* check if controller is in service mode */
++	/* check if controller is reporting asymmetric access state of unavailable */
+ 	if ((inq.avtcvp & 0x10) &&
+-	    ((inq.asym_access_state_cur & 0x0F) == 0x3) &&
+-	    (inq.vendor_specific_cur == 0x7)) {
++	    ((inq.asym_access_state_cur & 0x0F) == 0x3)) {
+ 		ret = PATH_DOWN;
+ 		goto done;
+ 	}

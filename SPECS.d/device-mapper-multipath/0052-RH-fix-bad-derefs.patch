@@ -1,0 +1,54 @@
+---
+ multipathd/cli_handlers.c |    3 ++-
+ multipathd/main.c         |   12 ++++++------
+ 2 files changed, 8 insertions(+), 7 deletions(-)
+
+Index: multipath-tools-130222/multipathd/cli_handlers.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/cli_handlers.c
++++ multipath-tools-130222/multipathd/cli_handlers.c
+@@ -632,7 +632,8 @@ cli_resize(void *v, char **reply, int *l
+ 		return 1;
+ 
+ 	dm_lib_release();
+-	setup_multipath(vecs, mpp);
++	if (setup_multipath(vecs, mpp) != 0)
++		return 1;
+ 	sync_map_state(mpp);
+ 
+ 	return 0;
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -134,7 +134,6 @@ coalesce_maps(struct vectors *vecs, vect
+ 	struct multipath * ompp;
+ 	vector ompv = vecs->mpvec;
+ 	unsigned int i;
+-	int j;
+ 
+ 	vector_foreach_slot (ompv, ompp, i) {
+ 		if (!find_mp_by_wwid(nmpv, ompp->wwid)) {
+@@ -148,16 +147,17 @@ coalesce_maps(struct vectors *vecs, vect
+ 				/*
+ 				 * may be just because the device is open
+ 				 */
++				if (setup_multipath(vecs, ompp) != 0) {
++					i--;
++					continue;
++				}
+ 				if (!vector_alloc_slot(nmpv))
+ 					return 1;
+ 
+ 				vector_set_slot(nmpv, ompp);
+-				setup_multipath(vecs, ompp);
+ 
+-				if ((j = find_slot(ompv, (void *)ompp)) != -1)
+-					vector_del_slot(ompv, j);
+-
+-				continue;
++				vector_del_slot(ompv, i);
++				i--;
+ 			}
+ 			else {
+ 				dm_lib_release();

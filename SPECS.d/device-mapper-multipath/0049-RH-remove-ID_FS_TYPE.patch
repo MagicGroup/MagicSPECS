@@ -1,0 +1,17 @@
+---
+ multipath/multipath.rules |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: multipath-tools-130222/multipath/multipath.rules
+===================================================================
+--- multipath-tools-130222.orig/multipath/multipath.rules
++++ multipath-tools-130222/multipath/multipath.rules
+@@ -11,7 +11,7 @@ ACTION=="add", ENV{DEVTYPE}!="partition"
+ 	ENV{DM_MULTIPATH_DEVICE_PATH}!="1", \
+ 	TEST=="/etc/multipath.conf", \
+ 	PROGRAM=="$env{MPATH_SBIN_PATH}/multipath -c $tempnode", \
+-	ENV{DM_MULTIPATH_DEVICE_PATH}="1"
++	ENV{DM_MULTIPATH_DEVICE_PATH}="1" ENV{ID_FS_TYPE}="mpath_member"
+ 
+ ENV{DM_MULTIPATH_DEVICE_PATH}=="1", ENV{DEVTYPE}!="partition", \
+ 	RUN+="/sbin/partx -d --nr 1-1024 $env{DEVNAME}"

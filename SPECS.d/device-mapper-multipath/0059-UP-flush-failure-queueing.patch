@@ -1,0 +1,71 @@
+---
+ libmultipath/devmapper.c |   21 +++++++++++++++++----
+ libmultipath/devmapper.h |    2 +-
+ 2 files changed, 18 insertions(+), 5 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/devmapper.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/devmapper.c
++++ multipath-tools-130222/libmultipath/devmapper.c
+@@ -363,7 +363,7 @@ out:
+ }
+ 
+ extern int
+-dm_get_map(char * name, unsigned long long * size, char * outparams)
++dm_get_map(const char * name, unsigned long long * size, char * outparams)
+ {
+ 	int r = 1;
+ 	struct dm_task *dmt;
+@@ -682,7 +682,9 @@ _dm_flush_map (const char * mapname, int
+ extern int
+ dm_suspend_and_flush_map (const char * mapname)
+ {
+-	int s;
++	int s = 0, queue_if_no_path = 0;
++	unsigned long long mapsize;
++	char params[PARAMS_SIZE] = {0};
+ 
+ 	if (!dm_map_present(mapname))
+ 		return 0;
+@@ -690,8 +692,17 @@ dm_suspend_and_flush_map (const char * m
+ 	if (dm_type(mapname, TGT_MPATH) <= 0)
+ 		return 0; /* nothing to do */
+ 
+-	s = dm_queue_if_no_path((char *)mapname, 0);
+-	if (!s)
++	if (!dm_get_map(mapname, &mapsize, params)) {
++		if (strstr(params, "queue_if_no_path"))
++			queue_if_no_path = 1;
++	}
++
++	if (queue_if_no_path)
++		s = dm_queue_if_no_path((char *)mapname, 0);
++	/* Leave queue_if_no_path alone if unset failed */
++	if (s)
++		queue_if_no_path = 0;
++	else
+ 		s = dm_simplecmd_flush(DM_DEVICE_SUSPEND, mapname, 0);
+ 
+ 	if (!dm_flush_map(mapname)) {
+@@ -700,6 +711,8 @@ dm_suspend_and_flush_map (const char * m
+ 	}
+ 	condlog(2, "failed to remove multipath map %s", mapname);
+ 	dm_simplecmd_noflush(DM_DEVICE_RESUME, mapname);
++	if (queue_if_no_path)
++		s = dm_queue_if_no_path((char *)mapname, 1);
+ 	return 1;
+ }
+ 
+Index: multipath-tools-130222/libmultipath/devmapper.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/devmapper.h
++++ multipath-tools-130222/libmultipath/devmapper.h
+@@ -14,7 +14,7 @@ int dm_simplecmd_noflush (int, const cha
+ int dm_addmap_create (struct multipath *mpp, char *params);
+ int dm_addmap_reload (struct multipath *mpp, char *params);
+ int dm_map_present (const char *);
+-int dm_get_map(char *, unsigned long long *, char *);
++int dm_get_map(const char *, unsigned long long *, char *);
+ int dm_get_status(char *, char *);
+ int dm_type(const char *, char *);
+ int _dm_flush_map (const char *, int);

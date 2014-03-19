@@ -1,0 +1,100 @@
+---
+ libmultipath/config.c |   10 ++++++++--
+ libmultipath/config.h |    1 +
+ libmultipath/dict.c   |   26 ++++++++++++++++++++++++++
+ 3 files changed, 35 insertions(+), 2 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/config.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/config.c
++++ multipath-tools-130222/libmultipath/config.c
+@@ -431,11 +431,16 @@ restart:
+ 			break;
+ 		j = n;
+ 		vector_foreach_slot_after(hw, hwe2, j) {
+-			if (hwe_regmatch(hwe1, hwe2))
++			if (conf->hw_strmatch) {
++				if (hwe_strmatch(hwe2, hwe1))
++					continue;
++			}
++			else if (hwe_regmatch(hwe1, hwe2))
+ 				continue;
+ 			/* dup */
+ 			merge_hwe(hwe2, hwe1);
+-			if (hwe_strmatch(hwe2, hwe1) == 0) {
++			if (conf->hw_strmatch ||
++			    hwe_strmatch(hwe2, hwe1) == 0) {
+ 				vector_del_slot(hw, i);
+ 				free_hwe(hwe1);
+ 				n -= 1;
+@@ -550,6 +555,7 @@ load_config (char * file, struct udev *u
+ 	conf->fast_io_fail = DEFAULT_FAST_IO_FAIL;
+ 	conf->retain_hwhandler = DEFAULT_RETAIN_HWHANDLER;
+ 	conf->detect_prio = DEFAULT_DETECT_PRIO;
++	conf->hw_strmatch = 0;
+ 
+ 	/*
+ 	 * preload default hwtable
+Index: multipath-tools-130222/libmultipath/config.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/config.h
++++ multipath-tools-130222/libmultipath/config.h
+@@ -107,6 +107,7 @@ struct config {
+ 	int log_checker_err;
+ 	int allow_queueing;
+ 	int find_multipaths;
++	int hw_strmatch;
+ 	uid_t uid;
+ 	gid_t gid;
+ 	mode_t mode;
+Index: multipath-tools-130222/libmultipath/dict.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/dict.c
++++ multipath-tools-130222/libmultipath/dict.c
+@@ -693,6 +693,23 @@ def_detect_prio_handler(vector strvec)
+ 	return 0;
+ }
+ 
++static int
++def_hw_strmatch_handler(vector strvec)
++{
++	char *buff;
++
++	buff = set_value(strvec);
++	if (!buff)
++		return 1;
++
++	if (!strncmp(buff, "on", 2) || !strncmp(buff, "yes", 3) ||
++	    !strncmp(buff, "1", 1))
++		conf->hw_strmatch = 1;
++	else
++		conf->hw_strmatch = 0;
++	return 0;
++}
++
+ /*
+  * blacklist block handlers
+  */
+@@ -2795,6 +2812,14 @@ snprint_def_detect_prio(char * buff, int
+ }
+ 
+ static int
++snprint_def_hw_strmatch(char * buff, int len, void * data)
++{
++	if (conf->hw_strmatch)
++		return snprintf(buff, len, "yes");
++	return snprintf(buff, len, "no");
++}
++
++static int
+ snprint_ble_simple (char * buff, int len, void * data)
+ {
+ 	struct blentry * ble = (struct blentry *)data;
+@@ -2861,6 +2886,7 @@ init_keywords(void)
+ 	install_keyword("find_multipaths", &def_find_multipaths_handler, &snprint_def_find_multipaths);
+ 	install_keyword("retain_attached_hw_handler", &def_retain_hwhandler_handler, &snprint_def_retain_hwhandler_handler);
+ 	install_keyword("detect_prio", &def_detect_prio_handler, &snprint_def_detect_prio);
++	install_keyword("hw_str_match", &def_hw_strmatch_handler, &snprint_def_hw_strmatch);
+ 	__deprecated install_keyword("default_selector", &def_selector_handler, NULL);
+ 	__deprecated install_keyword("default_path_grouping_policy", &def_pgpolicy_handler, NULL);
+ 	__deprecated install_keyword("default_uid_attribute", &def_uid_attribute_handler, NULL);

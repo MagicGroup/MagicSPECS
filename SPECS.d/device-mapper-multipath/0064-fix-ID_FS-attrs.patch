@@ -1,0 +1,383 @@
+---
+ libmultipath/defaults.h       |    3 -
+ libmultipath/file.c           |   89 +++++++++++++++++++++++++++++++++++++++++-
+ libmultipath/file.h           |    3 +
+ libmultipath/wwids.c          |    7 ++-
+ multipath/main.c              |   36 +++++++++++++++-
+ multipath/multipath.rules     |   26 +++++++++---
+ multipathd/main.c             |    4 +
+ multipathd/multipathd.service |    2 
+ multipathd/pidfile.c          |    3 +
+ 9 files changed, 160 insertions(+), 13 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/defaults.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/defaults.h
++++ multipath-tools-130222/libmultipath/defaults.h
+@@ -24,7 +24,8 @@
+ #define MAX_CHECKINT(a)		(a << 2)
+ 
+ #define MAX_DEV_LOSS_TMO	0x7FFFFFFF
+-#define DEFAULT_PIDFILE		"/var/run/multipathd.pid"
++#define DEFAULT_PIDFILE		"/var/run/multipathd/multipathd.pid"
++#define DEFAULT_TIMESTAMP_FILE	"/var/run/multipathd/timestamp"
+ #define DEFAULT_SOCKET		"/org/kernel/linux/storage/multipathd"
+ #define DEFAULT_CONFIGFILE	"/etc/multipath.conf"
+ #define DEFAULT_BINDINGS_FILE	"/etc/multipath/bindings"
+Index: multipath-tools-130222/libmultipath/file.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/file.c
++++ multipath-tools-130222/libmultipath/file.c
+@@ -12,10 +12,12 @@
+ #include <limits.h>
+ #include <stdio.h>
+ #include <signal.h>
++#include <time.h>
+ 
+ #include "file.h"
+ #include "debug.h"
+ #include "uxsock.h"
++#include "defaults.h"
+ 
+ 
+ /*
+@@ -36,8 +38,8 @@
+  * See the file COPYING included with this distribution for more details.
+  */
+ 
+-static int
+-ensure_directories_exist(char *str, mode_t dir_mode)
++int
++ensure_directories_exist(const char *str, mode_t dir_mode)
+ {
+ 	char *pathname;
+ 	char *end;
+@@ -178,3 +180,86 @@ fail:
+ 	close(fd);
+ 	return -1;
+ }
++
++/* If you can't get the timestamp, return equal to just keep using the
++ * existing value.
++ */
++int timestamp_equal(long int chk_timestamp)
++{
++	char buf[4096];
++	FILE *file;
++	long int file_timestamp;
++	int ret = 1;
++
++	if ((file = fopen(DEFAULT_TIMESTAMP_FILE, "r")) == NULL) {
++		if (errno != ENOENT)
++			condlog(2, "Cannot open timestamp file [%s]: %s",
++				DEFAULT_TIMESTAMP_FILE, strerror(errno));
++		goto out;
++	}
++	errno = 0;
++	if (fgets(buf, sizeof(buf), file) == NULL) {
++		if (errno)
++			condlog(2, "Cannot read from timestamp file: %s",
++				strerror(errno));
++		goto out;
++	}
++	if (sscanf(buf, "DM_MULTIPATH_TIMESTAMP=%ld", &file_timestamp) != 1) {
++		if (errno)
++			condlog(0, "Cannot get timestamp: %s", strerror(errno));
++		else
++			condlog(0, "invalid timestamp file [%s]: %s",
++				DEFAULT_TIMESTAMP_FILE, strerror(errno));
++		goto out;
++	}
++	if (file_timestamp != chk_timestamp) {
++		condlog(3, "timestamp has changed");
++		ret = 0;
++	}
++	else
++		condlog(3, "timestamp has not changed");
++out:
++	if (file)
++		fclose(file);
++	return ret;
++}
++
++int update_timestamp(int create)
++{
++	char buf[44];
++	time_t timestamp;
++	int fd;
++	int flags = O_WRONLY;
++	if (create)
++		flags |= O_CREAT;
++	if((fd = open(DEFAULT_TIMESTAMP_FILE, flags,
++		      (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH))) < 0) {
++		if (errno == ENOENT)
++			return 0;
++		condlog(0, "Cannot open timestamp file [%s]: %s",
++			DEFAULT_TIMESTAMP_FILE, strerror(errno));
++		return 1;
++	}
++	if (ftruncate(fd, 0) < 0) {
++		condlog(0, "Cannot truncate timestamp file [%s]: %s",
++			DEFAULT_TIMESTAMP_FILE, strerror(errno));
++		goto fail;
++	}
++	if (time(&timestamp) == -1) {
++		condlog(0, "Cannot get current time: %s", strerror(errno));
++		goto fail;
++	}
++	memset(buf, 0, sizeof(buf));
++	snprintf(buf, sizeof(buf)-1, "DM_MULTIPATH_TIMESTAMP=%ld\n",
++		 timestamp);
++	if (write(fd, buf, strlen(buf)) != strlen(buf)) {
++		condlog(0, "Cannot write out timestamp to %s: %s",
++			DEFAULT_TIMESTAMP_FILE, strerror(errno));
++		goto fail;
++	}
++	close(fd);
++	return 0;
++fail:
++	close(fd);
++	return 1;
++}
+Index: multipath-tools-130222/libmultipath/file.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/file.h
++++ multipath-tools-130222/libmultipath/file.h
+@@ -7,5 +7,8 @@
+ 
+ #define FILE_TIMEOUT 30
+ int open_file(char *file, int *can_write, char *header);
++int ensure_directories_exist(const char *str, mode_t dir_mode);
++int update_timestamp(int create);
++int timestamp_equal(long int chk_timestamp);
+ 
+ #endif /* _FILE_H */
+Index: multipath-tools-130222/multipathd/pidfile.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/pidfile.c
++++ multipath-tools-130222/multipathd/pidfile.c
+@@ -9,6 +9,7 @@
+ #include <fcntl.h>     /* for fcntl() */
+ 
+ #include <debug.h>
++#include <file.h>
+ 
+ #include "pidfile.h"
+ 
+@@ -18,6 +19,8 @@ int pidfile_create(const char *pidFile,
+ 	struct flock lock;
+ 	int fd, value;
+ 
++	if (ensure_directories_exist(pidFile, 0700))
++		return 1;
+ 	if((fd = open(pidFile, O_WRONLY | O_CREAT,
+ 		       (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH))) < 0) {
+ 		condlog(0, "Cannot open pidfile [%s], error was [%s]",
+Index: multipath-tools-130222/libmultipath/wwids.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/wwids.c
++++ multipath-tools-130222/libmultipath/wwids.c
+@@ -125,6 +125,7 @@ replace_wwids(vector mp)
+ 			goto out_file;
+ 	}
+ 	ret = 0;
++	update_timestamp(0);
+ out_file:
+ 	close(fd);
+ out:
+@@ -209,6 +210,8 @@ remove_wwid(char *wwid) {
+ 		goto out_file;
+ 	}
+ 	ret = do_remove_wwid(fd, str);
++	if (!ret)
++		update_timestamp(0);
+ 
+ out_file:
+ 	close(fd);
+@@ -294,8 +297,10 @@ remember_wwid(char *wwid)
+ 		condlog(3, "failed writing wwid %s to wwids file", wwid);
+ 		return -1;
+ 	}
+-	if (ret == 1)
++	if (ret == 1) {
+ 		condlog(3, "wrote wwid %s to wwids file", wwid);
++		update_timestamp(0);
++	}
+ 	else
+ 		condlog(4, "wwid %s already in wwids file", wwid);
+ 	return 0;
+Index: multipath-tools-130222/multipath/multipath.rules
+===================================================================
+--- multipath-tools-130222.orig/multipath/multipath.rules
++++ multipath-tools-130222/multipath/multipath.rules
+@@ -4,18 +4,34 @@ SUBSYSTEM!="block", GOTO="end_mpath"
+ 
+ IMPORT{cmdline}="nompath"
+ ENV{nompath}=="?*", GOTO="end_mpath"
++ENV{DEVTYPE}=="partition", GOTO="end_mpath"
+ ENV{MPATH_SBIN_PATH}="/sbin"
+ TEST!="$env{MPATH_SBIN_PATH}/multipath", ENV{MPATH_SBIN_PATH}="/usr/sbin"
++TEST!="/etc/multipath.conf", GOTO="check_kpartx"
+ 
+-ACTION=="add", ENV{DEVTYPE}!="partition", \
+-	ENV{DM_MULTIPATH_DEVICE_PATH}!="1", \
+-	TEST=="/etc/multipath.conf", \
++ACTION=="add", ENV{DM_MULTIPATH_DEVICE_PATH}!="1", \
+ 	PROGRAM=="$env{MPATH_SBIN_PATH}/multipath -c $tempnode", \
+-	ENV{DM_MULTIPATH_DEVICE_PATH}="1" ENV{ID_FS_TYPE}="mpath_member"
++	ENV{DM_MULTIPATH_DEVICE_PATH}="1", ENV{ID_FS_TYPE}="mpath_member"
+ 
+-ENV{DM_MULTIPATH_DEVICE_PATH}=="1", ENV{DEVTYPE}!="partition", \
++ENV{DM_MULTIPATH_DEVICE_PATH}=="1", \
+ 	RUN+="/sbin/partx -d --nr 1-1024 $env{DEVNAME}"
+ 
++ACTION!="change", GOTO="update_timestamp"
++IMPORT{db}="DM_MULTIPATH_TIMESTAMP"
++IMPORT{db}="DM_MULTIPATH_DEVICE_PATH"
++# Check if the device is part of a multipath device. the -T option just keeps
++# the old result if the timestamp hasn't changed.
++PROGRAM=="$env{MPATH_SBIN_PATH}/multipath -T $env{DM_MULTIPATH_TIMESTAMP}:$env{DM_MULTIPATH_DEVICE_PATH} -c $env{DEVNAME}", \
++	ENV{DM_MULTIPATH_DEVICE_PATH}="1", ENV{ID_FS_TYPE}="mpath_member", \
++	GOTO="update_timestamp"
++
++# If the device isn't part of a multipath device, clear this
++ENV{DM_MULTIPATH_DEVICE_PATH}=""
++
++LABEL="update_timestamp"
++IMPORT{file}="/run/multipathd/timestamp"
++
++LABEL="check_kpartx"
+ KERNEL!="dm-*", GOTO="end_mpath"
+ ENV{DM_UUID}=="mpath-?*|part[0-9]*-mpath-?*", OPTIONS+="link_priority=10"
+ ACTION!="change", GOTO="end_mpath"
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -54,6 +54,7 @@
+ #include <pgpolicies.h>
+ #include <uevent.h>
+ #include <log.h>
++#include <file.h>
+ 
+ #include "main.h"
+ #include "pidfile.h"
+@@ -1417,6 +1418,7 @@ reconfigure (struct vectors * vecs)
+ 		free_config(old);
+ 		retval = 0;
+ 	}
++	update_timestamp(0);
+ 
+ 	return retval;
+ }
+@@ -1709,6 +1711,7 @@ child (void * param)
+ 
+ 	/* Startup complete, create logfile */
+ 	pid_rc = pidfile_create(DEFAULT_PIDFILE, daemon_pid);
++	update_timestamp(1);
+ 	/* Ignore errors, we can live without */
+ 
+ 	running_state = DAEMON_RUNNING;
+@@ -1758,6 +1761,7 @@ child (void * param)
+ 	if (!pid_rc) {
+ 		condlog(3, "unlink pidfile");
+ 		unlink(DEFAULT_PIDFILE);
++		unlink(DEFAULT_TIMESTAMP_FILE);
+ 	}
+ 
+ 	condlog(2, "--------shut down-------");
+Index: multipath-tools-130222/multipathd/multipathd.service
+===================================================================
+--- multipath-tools-130222.orig/multipathd/multipathd.service
++++ multipath-tools-130222/multipathd/multipathd.service
+@@ -9,7 +9,7 @@ Conflicts=shutdown.target
+ 
+ [Service]
+ Type=forking
+-PIDFile=/var/run/multipathd.pid
++PIDFile=/var/run/multipathd/multipathd.pid
+ ExecStartPre=/sbin/modprobe dm-multipath
+ ExecStart=/sbin/multipathd
+ ExecReload=/sbin/multipathd reconfigure
+Index: multipath-tools-130222/multipath/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipath/main.c
++++ multipath-tools-130222/multipath/main.c
+@@ -55,6 +55,7 @@
+ #include <sys/time.h>
+ #include <sys/resource.h>
+ #include <wwids.h>
++#include <file.h>
+ #include "dev_t.h"
+ 
+ int logsink;
+@@ -84,7 +85,7 @@ usage (char * progname)
+ {
+ 	fprintf (stderr, VERSION_STRING);
+ 	fprintf (stderr, "Usage:\n");
+-	fprintf (stderr, "  %s [-c|-w|-W] [-d] [-r] [-v lvl] [-p pol] [-b fil] [-q] [dev]\n", progname);
++	fprintf (stderr, "  %s [-c|-w|-W] [-d] [-T tm:val] [-r] [-v lvl] [-p pol] [-b fil] [-q] [dev]\n", progname);
+ 	fprintf (stderr, "  %s -l|-ll|-f [-v lvl] [-b fil] [dev]\n", progname);
+ 	fprintf (stderr, "  %s -F [-v lvl]\n", progname);
+ 	fprintf (stderr, "  %s -t\n", progname);
+@@ -98,6 +99,9 @@ usage (char * progname)
+ 		"  -f      flush a multipath device map\n" \
+ 		"  -F      flush all multipath device maps\n" \
+ 		"  -c      check if a device should be a path in a multipath device\n" \
++		"  -T tm:val\n" \
++		"          check if tm matches the multipathd timestamp. If so val is\n" \
++		"          whether or not the device is a path in a multipath device\n" \
+ 		"  -q      allow queue_if_no_path when multipathd is not running\n"\
+ 		"  -d      dry run, do not create or update devmaps\n" \
+ 		"  -t      dump internal hardware table\n" \
+@@ -441,7 +445,31 @@ main (int argc, char *argv[])
+ 	extern char *optarg;
+ 	extern int optind;
+ 	int r = 1;
+-
++	long int timestamp = -1;
++	int valid = -1;
++	while ((arg = getopt(argc, argv, ":dchl::FfM:v:p:b:BrtT:qwW")) != EOF ) {
++		switch(arg) {
++		case 'T':
++			if (optarg[0] == ':')
++				sscanf(optarg, ":%d", &valid);
++			else
++				sscanf(optarg, "%ld:%d", &timestamp, &valid);
++			if (timestamp_equal(timestamp))
++				return (valid != 1);
++			break;
++		case ':':
++			fprintf(stderr, "Missing option argument\n");
++			usage(argv[0]);
++			exit(1);
++		case '?':
++			fprintf(stderr, "Unknown switch: %s\n", optarg);
++			usage(argv[0]);
++			exit(1);
++		default:
++			break;
++		}
++	}
++	optind = 1;
+ 	if (getuid() != 0) {
+ 		fprintf(stderr, "need to be root\n");
+ 		exit(1);
+@@ -455,7 +483,7 @@ main (int argc, char *argv[])
+ 	if (dm_prereq())
+ 		exit(1);
+ 
+-	while ((arg = getopt(argc, argv, ":dchl::FfM:v:p:b:BrtqwW")) != EOF ) {
++	while ((arg = getopt(argc, argv, ":dchl::FfM:v:p:b:BrtT:qwW")) != EOF ) {
+ 		switch(arg) {
+ 		case 1: printf("optarg : %s\n",optarg);
+ 			break;
+@@ -517,6 +545,8 @@ main (int argc, char *argv[])
+ 		case 't':
+ 			r = dump_config();
+ 			goto out;
++		case 'T':
++			break;
+ 		case 'h':
+ 			usage(argv[0]);
+ 			exit(0);

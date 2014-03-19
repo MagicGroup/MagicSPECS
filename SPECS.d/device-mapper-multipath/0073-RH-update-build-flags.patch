@@ -1,0 +1,33 @@
+---
+ Makefile.inc                 |    2 +-
+ libmultipath/checkers/rdac.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+Index: multipath-tools-130222/Makefile.inc
+===================================================================
+--- multipath-tools-130222.orig/Makefile.inc
++++ multipath-tools-130222/Makefile.inc
+@@ -39,7 +39,7 @@ GZIP        = /bin/gzip -9 -c
+ INSTALL_PROGRAM = install
+ 
+ ifndef RPM_OPT_FLAGS
+-	RPM_OPT_FLAGS = -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4
++	RPM_OPT_FLAGS = -O2 -g -pipe -Wformat-security -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4
+ endif
+ 
+ LDFLAGS     += -Wl,-z,relro
+Index: multipath-tools-130222/libmultipath/checkers/rdac.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/checkers/rdac.c
++++ multipath-tools-130222/libmultipath/checkers/rdac.c
+@@ -308,8 +308,8 @@ libcheck_check (struct checker * c)
+ done:
+ 	switch (ret) {
+ 	case PATH_DOWN:
+-		MSG(c, (inqfail) ? MSG_RDAC_DOWN_TYPE("inquiry failed") :
+-			checker_msg_string(&inq));
++		MSG(c, "%s", (inqfail) ? MSG_RDAC_DOWN_TYPE("inquiry failed") :
++			     checker_msg_string(&inq));
+ 		break;
+ 	case PATH_UP:
+ 		MSG(c, MSG_RDAC_UP);

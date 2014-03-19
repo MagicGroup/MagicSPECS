@@ -1,0 +1,28 @@
+---
+ libmultipath/wwids.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+Index: multipath-tools-130222/libmultipath/wwids.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/wwids.c
++++ multipath-tools-130222/libmultipath/wwids.c
+@@ -4,6 +4,7 @@
+ #include <string.h>
+ #include <limits.h>
+ #include <stdio.h>
++#include <sys/types.h>
+ 
+ #include "checkers.h"
+ #include "vector.h"
+@@ -100,6 +101,11 @@ replace_wwids(vector mp)
+ 		condlog(0, "cannot truncate wwids file : %s", strerror(errno));
+ 		goto out_file;
+ 	}
++	if (lseek(fd, 0, SEEK_SET) < 0) {
++		condlog(0, "cannot seek to the start of the file : %s",
++			strerror(errno));
++		goto out_file;
++	}
+ 	len = strlen(WWIDS_FILE_HEADER);
+ 	if (write_all(fd, WWIDS_FILE_HEADER, len) != len) {
+ 		condlog(0, "Can't write wwid file header : %s",

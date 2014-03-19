@@ -1,0 +1,308 @@
+---
+ libmpathpersist/mpath_persist.c  |    7 ++++---
+ libmpathpersist/mpath_persist.h  |    2 +-
+ libmpathpersist/mpath_pr_ioctl.c |    5 +++--
+ libmultipath/config.c            |    9 +++------
+ libmultipath/config.h            |    2 +-
+ mpathpersist/Makefile            |    2 +-
+ mpathpersist/main.c              |   11 +++++++----
+ multipath/Makefile               |    2 +-
+ multipath/main.c                 |   12 ++++++++----
+ multipathd/main.c                |   11 ++++++++---
+ 10 files changed, 37 insertions(+), 26 deletions(-)
+
+Index: multipath-tools-130222/libmpathpersist/mpath_persist.c
+===================================================================
+--- multipath-tools-130222.orig/libmpathpersist/mpath_persist.c
++++ multipath-tools-130222/libmpathpersist/mpath_persist.c
+@@ -1,4 +1,3 @@
+-#include "mpath_persist.h"
+ #include <libdevmapper.h>
+ #include <defaults.h>
+ #include <sys/stat.h>
+@@ -8,6 +7,7 @@
+ #include <checkers.h>
+ #include <structs.h>
+ #include <structs_vec.h>
++#include <libudev.h>
+ 
+ #include <prio.h>
+ #include <unistd.h>
+@@ -20,6 +20,7 @@
+ #include <ctype.h>
+ #include <propsel.h>
+ 
++#include "mpath_persist.h"
+ #include "mpathpr.h"
+ #include "mpath_pr_ioctl.h"
+ 
+@@ -32,9 +33,9 @@
+ 
+ 
+ int
+-mpath_lib_init (void)
++mpath_lib_init (struct udev *udev)
+ {
+-	if (load_config(DEFAULT_CONFIGFILE)){
++	if (load_config(DEFAULT_CONFIGFILE, udev)){
+ 		condlog(0, "Failed to initialize multipath config.");
+ 		return 1;
+ 	}
+Index: multipath-tools-130222/libmpathpersist/mpath_persist.h
+===================================================================
+--- multipath-tools-130222.orig/libmpathpersist/mpath_persist.h
++++ multipath-tools-130222/libmpathpersist/mpath_persist.h
+@@ -174,7 +174,7 @@ struct prout_param_descriptor { 	/* PROU
+  *
+  * RETURNS: 0->Success, 1->Failed.
+  */
+-extern int mpath_lib_init (void );
++extern int mpath_lib_init (struct udev *udev);
+ 
+ 
+ /*
+Index: multipath-tools-130222/libmpathpersist/mpath_pr_ioctl.c
+===================================================================
+--- multipath-tools-130222.orig/libmpathpersist/mpath_pr_ioctl.c
++++ multipath-tools-130222/libmpathpersist/mpath_pr_ioctl.c
+@@ -10,8 +10,9 @@
+ #include <string.h>
+ #include <sys/ioctl.h>
+ #include <unistd.h>
+-#include "mpath_pr_ioctl.h" 
+-#include <mpath_persist.h> 
++#include <libudev.h>
++#include "mpath_pr_ioctl.h"
++#include <mpath_persist.h>
+ 
+ #include <debug.h>
+ 
+Index: multipath-tools-130222/libmultipath/config.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/config.c
++++ multipath-tools-130222/libmultipath/config.c
+@@ -467,9 +467,6 @@ free_config (struct config * conf)
+ 	if (conf->dev)
+ 		FREE(conf->dev);
+ 
+-	if (conf->udev)
+-		udev_unref(conf->udev);
+-
+ 	if (conf->multipath_dir)
+ 		FREE(conf->multipath_dir);
+ 
+@@ -519,12 +516,12 @@ free_config (struct config * conf)
+ }
+ 
+ int
+-load_config (char * file)
++load_config (char * file, struct udev *udev)
+ {
+ 	if (!conf)
+ 		conf = alloc_config();
+ 
+-	if (!conf)
++	if (!conf || !udev)
+ 		return 1;
+ 
+ 	/*
+@@ -533,7 +530,7 @@ load_config (char * file)
+ 	if (!conf->verbosity)
+ 		conf->verbosity = DEFAULT_VERBOSITY;
+ 
+-	conf->udev = udev_new();
++	conf->udev = udev;
+ 	dm_drv_version(conf->version, TGT_MPATH);
+ 	conf->dev_type = DEV_NONE;
+ 	conf->minio = DEFAULT_MINIO;
+Index: multipath-tools-130222/libmultipath/config.h
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/config.h
++++ multipath-tools-130222/libmultipath/config.h
+@@ -159,7 +159,7 @@ void free_mptable (vector mptable);
+ 
+ int store_hwe (vector hwtable, struct hwentry *);
+ 
+-int load_config (char * file);
++int load_config (char * file, struct udev * udev);
+ struct config * alloc_config (void);
+ void free_config (struct config * conf);
+ 
+Index: multipath-tools-130222/mpathpersist/main.c
+===================================================================
+--- multipath-tools-130222.orig/mpathpersist/main.c
++++ multipath-tools-130222/mpathpersist/main.c
+@@ -7,6 +7,7 @@
+ #include <vector.h>
+ #include <structs.h>
+ #include <getopt.h>
++#include <libudev.h>
+ #include <mpath_persist.h>
+ #include "main.h"
+ #include <pthread.h>
+@@ -68,7 +69,8 @@ int main (int argc, char * argv[])
+ 	int noisy = 0;
+ 	int num_transport =0;
+ 	void *resp = NULL;
+-	struct transportid * tmp; 
++	struct transportid * tmp;
++	struct udev *udev = NULL;
+ 
+ 	if (optind == argc)
+ 	{
+@@ -84,8 +86,8 @@ int main (int argc, char * argv[])
+ 		exit (1);
+ 	}
+ 
+-
+-	mpath_lib_init();
++	udev = udev_new();
++	mpath_lib_init(udev);
+ 	memset(transportids,0,MPATH_MX_TIDS);
+ 
+ 	while (1)
+@@ -461,12 +463,13 @@ int main (int argc, char * argv[])
+ 	if (res < 0)
+ 	{
+ 		mpath_lib_exit();
++		udev_unref(udev);
+ 		return MPATH_PR_FILE_ERROR;
+ 	}
+ 
+ out :
+ 	mpath_lib_exit();
+-
++	udev_unref(udev);
+ 	return (ret >= 0) ? ret : MPATH_PR_OTHER;
+ }
+ 
+Index: multipath-tools-130222/multipath/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipath/main.c
++++ multipath-tools-130222/multipath/main.c
+@@ -27,6 +27,7 @@
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <ctype.h>
++#include <libudev.h>
+ 
+ #include <checkers.h>
+ #include <prio.h>
+@@ -435,6 +436,7 @@ convert_dev(char *dev)
+ int
+ main (int argc, char *argv[])
+ {
++	struct udev *udev;
+ 	int arg;
+ 	extern char *optarg;
+ 	extern int optind;
+@@ -445,7 +447,9 @@ main (int argc, char *argv[])
+ 		exit(1);
+ 	}
+ 
+-	if (load_config(DEFAULT_CONFIGFILE))
++	udev = udev_new();
++
++	if (load_config(DEFAULT_CONFIGFILE, udev))
+ 		exit(1);
+ 
+ 	if (dm_prereq())
+@@ -560,11 +564,11 @@ main (int argc, char *argv[])
+ 
+ 	if (init_checkers()) {
+ 		condlog(0, "failed to initialize checkers");
+-		exit(1);
++		goto out;
+ 	}
+ 	if (init_prio()) {
+ 		condlog(0, "failed to initialize prioritizers");
+-		exit(1);
++		goto out;
+ 	}
+ 	dm_init();
+ 
+@@ -628,7 +632,7 @@ out:
+ 	 */
+ 	free_config(conf);
+ 	conf = NULL;
+-
++	udev_unref(udev);
+ #ifdef _DEBUG_
+ 	dbg_free_final(NULL);
+ #endif
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -93,6 +93,8 @@ static sem_t exit_sem;
+  */
+ struct vectors * gvecs;
+ 
++struct udev * udev;
++
+ static int
+ need_switch_pathgroup (struct multipath * mpp, int refresh)
+ {
+@@ -1408,7 +1410,7 @@ reconfigure (struct vectors * vecs)
+ 	vecs->pathvec = NULL;
+ 	conf = NULL;
+ 
+-	if (!load_config(DEFAULT_CONFIGFILE)) {
++	if (!load_config(DEFAULT_CONFIGFILE, udev)) {
+ 		conf->verbosity = old->verbosity;
+ 		conf->daemon = 1;
+ 		configure(vecs, 1);
+@@ -1601,6 +1603,8 @@ child (void * param)
+ 	sem_init(&exit_sem, 0, 0);
+ 	signal_init();
+ 
++	udev = udev_new();
++
+ 	setup_thread_attr(&misc_attr, 64 * 1024, 1);
+ 	setup_thread_attr(&waiter_attr, 32 * 1024, 1);
+ 
+@@ -1615,7 +1619,7 @@ child (void * param)
+ 	condlog(2, "--------start up--------");
+ 	condlog(2, "read " DEFAULT_CONFIGFILE);
+ 
+-	if (load_config(DEFAULT_CONFIGFILE))
++	if (load_config(DEFAULT_CONFIGFILE, udev))
+ 		exit(1);
+ 
+ 	if (init_checkers()) {
+@@ -1765,7 +1769,8 @@ child (void * param)
+ 	 */
+ 	free_config(conf);
+ 	conf = NULL;
+-
++	udev_unref(udev);
++	udev = NULL;
+ #ifdef _DEBUG_
+ 	dbg_free_final(NULL);
+ #endif
+Index: multipath-tools-130222/mpathpersist/Makefile
+===================================================================
+--- multipath-tools-130222.orig/mpathpersist/Makefile
++++ multipath-tools-130222/mpathpersist/Makefile
+@@ -5,7 +5,7 @@ include ../Makefile.inc
+ OBJS = main.o 
+ 
+ CFLAGS += -I$(multipathdir) -I$(mpathpersistdir) 
+-LDFLAGS += -lpthread -ldevmapper -L$(mpathpersistdir) -lmpathpersist -L$(multipathdir) -lmultipath 
++LDFLAGS += -lpthread -ldevmapper -L$(mpathpersistdir) -lmpathpersist -L$(multipathdir) -lmultipath -ludev
+ 
+ EXEC = mpathpersist
+ 
+Index: multipath-tools-130222/multipath/Makefile
+===================================================================
+--- multipath-tools-130222.orig/multipath/Makefile
++++ multipath-tools-130222/multipath/Makefile
+@@ -7,7 +7,7 @@ include ../Makefile.inc
+ OBJS = main.o
+ 
+ CFLAGS += -fPIC -I$(multipathdir)
+-LDFLAGS += -lpthread -ldevmapper -ldl -L$(multipathdir) -lmultipath
++LDFLAGS += -lpthread -ldevmapper -ldl -L$(multipathdir) -lmultipath -ludev
+ 
+ EXEC = multipath
+ 

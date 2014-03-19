@@ -1,0 +1,28 @@
+---
+ multipath/Makefile |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+Index: multipath-tools-130222/multipath/Makefile
+===================================================================
+--- multipath-tools-130222.orig/multipath/Makefile
++++ multipath-tools-130222/multipath/Makefile
+@@ -23,8 +23,8 @@ install:
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(bindir)
+ 	$(INSTALL_PROGRAM) -m 755 $(EXEC) $(DESTDIR)$(bindir)/
+ 	$(INSTALL_PROGRAM) -m 755 mpathconf $(DESTDIR)$(bindir)/
+-	$(INSTALL_PROGRAM) -d $(DESTDIR)/lib/udev/rules.d
+-	$(INSTALL_PROGRAM) -m 644 multipath.rules $(DESTDIR)/lib/udev/rules.d/62-multipath.rules
++	$(INSTALL_PROGRAM) -d $(DESTDIR)/usr/lib/udev/rules.d
++	$(INSTALL_PROGRAM) -m 644 multipath.rules $(DESTDIR)/usr/lib/udev/rules.d/62-multipath.rules
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(mandir)
+ 	$(INSTALL_PROGRAM) -m 644 $(EXEC).8.gz $(DESTDIR)$(mandir)
+ 	$(INSTALL_PROGRAM) -d $(DESTDIR)$(man5dir)
+@@ -32,7 +32,7 @@ install:
+ 	$(INSTALL_PROGRAM) -m 644 mpathconf.8.gz $(DESTDIR)$(mandir)
+ 
+ uninstall:
+-	rm $(DESTDIR)/lib/udev/rules.d/62-multipath.rules
++	rm $(DESTDIR)/usr/lib/udev/rules.d/62-multipath.rules
+ 	rm $(DESTDIR)$(bindir)/$(EXEC)
+ 	rm $(DESTDIR)$(bindir)/mpathconf
+ 	rm $(DESTDIR)$(mandir)/$(EXEC).8.gz

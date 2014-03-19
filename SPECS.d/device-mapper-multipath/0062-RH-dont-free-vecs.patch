@@ -1,0 +1,28 @@
+---
+ multipathd/main.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+Index: multipath-tools-130222/multipathd/main.c
+===================================================================
+--- multipath-tools-130222.orig/multipathd/main.c
++++ multipath-tools-130222/multipathd/main.c
+@@ -1735,8 +1735,9 @@ child (void * param)
+ 	vecs->pathvec = NULL;
+ 	unlock(vecs->lock);
+ 	/* Now all the waitevent threads will start rushing in. */
++	/* freeing vecs isn't worth the races
+ 	while (vecs->lock.depth > 0) {
+-		sleep (1); /* This is weak. */
++		sleep (1);
+ 		condlog(3, "Have %d wait event checkers threads to de-alloc,"
+ 			" waiting...", vecs->lock.depth);
+ 	}
+@@ -1746,7 +1747,7 @@ child (void * param)
+ 	vecs->lock.mutex = NULL;
+ 	FREE(vecs);
+ 	vecs = NULL;
+-
++	*/
+ 	cleanup_checkers();
+ 	cleanup_prio();
+ 

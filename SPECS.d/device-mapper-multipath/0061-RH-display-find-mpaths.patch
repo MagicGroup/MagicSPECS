@@ -1,0 +1,17 @@
+---
+ libmultipath/dict.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+Index: multipath-tools-130222/libmultipath/dict.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/dict.c
++++ multipath-tools-130222/libmultipath/dict.c
+@@ -2717,8 +2717,6 @@ snprint_def_log_checker_err (char * buff
+ static int
+ snprint_def_find_multipaths (char * buff, int len, void * data)
+ {
+-	if (conf->find_multipaths == DEFAULT_FIND_MULTIPATHS)
+-		return 0;
+ 	if (!conf->find_multipaths)
+ 		return snprintf(buff, len, "no");
+ 

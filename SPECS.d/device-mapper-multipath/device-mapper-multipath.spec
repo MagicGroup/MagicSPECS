@@ -1,7 +1,7 @@
 Summary: Tools to manage multipath devices using device-mapper
 Name: device-mapper-multipath
 Version: 0.4.9
-Release: 50%{?dist}
+Release: 63%{?dist}
 License: GPL+
 Group: System Environment/Base
 URL: http://christophe.varoqui.free.fr/
@@ -24,7 +24,7 @@ Patch0013: 0013-RHBZ-883981-cleanup-rpmdiff-issues.patch
 Patch0014: 0014-RH-handle-other-sector-sizes.patch
 Patch0015: 0015-RH-fix-output-buffer.patch
 Patch0016: 0016-RH-dont-print-ghost-messages.patch
-Patch0017: 0017-RH-fix-sigusr1.patch
+#Patch0017: 0017-RH-fix-sigusr1.patch
 Patch0018: 0018-RH-fix-factorize.patch
 Patch0019: 0019-RH-fix-sockets.patch
 Patch0020: 0020-RHBZ-907360-static-pthread-init.patch
@@ -39,18 +39,64 @@ Patch0028: 0028-RHBZ-929078-refresh-udev-dev.patch
 Patch0029: 0029-RH-no-prio-put-msg.patch
 Patch0030: 0030-RHBZ-916528-override-queue-no-daemon.patch
 Patch0031: 0031-RHBZ-957188-kpartx-use-dm-name.patch
+Patch0032: 0032-RHBZ-956464-mpathconf-defaults.patch
+Patch0033: 0033-RHBZ-829963-e-series-conf.patch
+Patch0034: 0034-RHBZ-851416-mpathconf-display.patch
+Patch0035: 0035-RHBZ-891921-list-mpp.patch
+Patch0036: 0036-RHBZ-949239-load-multipath-module.patch
+Patch0037: 0037-RHBZ-768873-fix-rename.patch
+Patch0038: 0038-RHBZ-799860-netapp-config.patch
+Patch0039: 0039-RH-detect-prio-fix.patch
+Patch0040: 0040-RH-bindings-fix.patch
+Patch0041: 0041-RH-check-for-erofs.patch
+Patch0042: 0042-UP-fix-signal-handling.patch
+Patch0043: 0043-RH-signal-waiter.patch
+Patch0044: 0044-RHBZ-976688-fix-wipe-wwids.patch
+Patch0045: 0045-RHBZ-977297-man-page-fix.patch
+Patch0046: 0046-RHBZ-883981-move-udev-rules.patch
+Patch0047: 0047-RHBZ-980777-kpartx-read-only-loop-devs.patch
+Patch0048: 0048-RH-print-defaults.patch
+Patch0049: 0049-RH-remove-ID_FS_TYPE.patch
+#Patch0050: 0050-RH-listing-speedup.patch
+Patch0051: 0051-UP-fix-cli-resize.patch
+Patch0052: 0052-RH-fix-bad-derefs.patch
+Patch0053: 0053-UP-fix-failback.patch
+Patch0054: 0054-UP-keep-udev-ref.patch
+Patch0055: 0055-UP-handle-quiesced-paths.patch
+Patch0056: 0056-UP-alua-prio-fix.patch
+Patch0057: 0057-UP-fix-tmo.patch
+Patch0058: 0058-UP-fix-failback.patch
+Patch0059: 0059-UP-flush-failure-queueing.patch
+Patch0060: 0060-UP-uevent-loop-udev.patch
+Patch0061: 0061-RH-display-find-mpaths.patch
+Patch0062: 0062-RH-dont-free-vecs.patch
+Patch0063: 0063-RH-fix-warning.patch
+Patch0064: 0064-fix-ID_FS-attrs.patch
+Patch0065: 0065-UPBZ-995538-fail-rdac-on-unavailable.patch
+Patch0066: 0066-UP-dos-4k-partition-fix.patch
+Patch0067: 0067-RHBZ-1022899-fix-udev-partition-handling.patch
+Patch0068: 0068-RHBZ-1034578-label-partition-devices.patch
+Patch0069: 0069-UPBZ-1033791-improve-rdac-checker.patch
+Patch0070: 0070-RHBZ-1036503-blacklist-td-devs.patch
+Patch0071: 0071-RHBZ-1031546-strip-dev.patch
+Patch0072: 0072-RHBZ-1039199-check-loop-control.patch
+Patch0073: 0073-RH-update-build-flags.patch
+Patch0074: 0074-RHBZ-1056976-dm-mpath-rules.patch
+Patch0075: 0075-RHBZ-1056976-reload-flag.patch
+Patch0076: 0076-RHBZ-1056686-add-hw_str_match.patch
 
 # runtime
 Requires: %{name}-libs = %{version}-%{release}
 Requires: kpartx = %{version}-%{release}
-Requires: device-mapper >= 1.02.39-1
+Requires: device-mapper >= 1.02.82-2
 Requires: initscripts
 Requires(post): systemd-units systemd-sysv chkconfig
 Requires(preun): systemd-units
 Requires(postun): systemd-units
 
 # build/setup
-BuildRequires: libaio-devel, device-mapper-devel >= 1.02.39-1
+BuildRequires: libaio-devel, device-mapper-devel >= 1.02.82-2
+BuildRequires: libselinux-devel, libsepol-devel
 BuildRequires: readline-devel, ncurses-devel
 BuildRequires: systemd-units, systemd-devel
 
@@ -106,7 +152,7 @@ kpartx manages partition creation and removal for device-mapper devices.
 %patch0014 -p1
 %patch0015 -p1
 %patch0016 -p1
-%patch0017 -p1
+# %%patch0017 -p1
 %patch0018 -p1
 %patch0019 -p1
 %patch0020 -p1
@@ -121,6 +167,51 @@ kpartx manages partition creation and removal for device-mapper devices.
 %patch0029 -p1
 %patch0030 -p1
 %patch0031 -p1
+%patch0032 -p1
+%patch0033 -p1
+%patch0034 -p1
+%patch0035 -p1
+%patch0036 -p1
+%patch0037 -p1
+%patch0038 -p1
+%patch0039 -p1
+%patch0040 -p1
+%patch0041 -p1
+%patch0042 -p1
+%patch0043 -p1
+%patch0044 -p1
+%patch0045 -p1
+%patch0046 -p1
+%patch0047 -p1
+%patch0048 -p1
+%patch0049 -p1
+# %%patch0050 -p1
+%patch0051 -p1
+%patch0052 -p1
+%patch0053 -p1
+%patch0054 -p1
+%patch0055 -p1
+%patch0056 -p1
+%patch0057 -p1
+%patch0058 -p1
+%patch0059 -p1
+%patch0060 -p1
+%patch0061 -p1
+%patch0062 -p1
+%patch0063 -p1
+%patch0064 -p1
+%patch0065 -p1
+%patch0066 -p1
+%patch0067 -p1
+%patch0068 -p1
+%patch0069 -p1
+%patch0070 -p1
+%patch0071 -p1
+%patch0072 -p1
+%patch0073 -p1
+%patch0074 -p1
+%patch0075 -p1
+%patch0076 -p1
 cp %{SOURCE1} .
 
 %build
@@ -186,7 +277,8 @@ bin/systemctl --no-reload enable multipathd.service >/dev/null 2>&1 ||:
 %{_mandir}/man8/multipathd.8.gz
 %{_mandir}/man8/mpathconf.8.gz
 %{_mandir}/man8/mpathpersist.8.gz
-%config /lib/udev/rules.d/62-multipath.rules
+%config /usr/lib/udev/rules.d/62-multipath.rules
+%config /usr/lib/udev/rules.d/11-dm-mpath.rules
 %doc AUTHOR COPYING FAQ
 %doc multipath.conf
 %dir /etc/multipath
@@ -214,6 +306,151 @@ bin/systemctl --no-reload enable multipathd.service >/dev/null 2>&1 ||:
 %{_mandir}/man8/kpartx.8.gz
 
 %changelog
+* Fri Jan 24 2014 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-63
+- Add 0074-RHBZ-1056976-dm-mpath-rules.patch
+  * Add rules to keep from doing work in udev if there are no
+    active paths, or if the event was for a multipath device
+    reloading its table due to a path change.
+- Add 0075-RHBZ-1056976-reload-flag.patch
+  * multipath code to identify reloads that the new rules can
+    ignore
+- Add 0076-RHBZ-1056686-add-hw_str_match.patch
+  * add a new default config paramter, "hw_str_match", to make user
+    device configs only overwrite builtin device configs if the
+    identifier strings match exactly, like the default in RHEL6.
+
+* Fri Jan 10 2014 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-62
+- Modify 0072-RHBZ-1039199-check-loop-control.patch
+  * only call close on the /dev/loop-control fd the open succeeds
+- Add 0073-RH-update-build-flags.patch
+  * fix print call to work with -Werror=format-security compile flag
+
+* Tue Dec 10 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-61
+- Add 0072-RHBZ-1039199-check-loop-control.patch
+  * Make kpartx use LOOP_CTL_GET_FREE and loop-control to find a free
+    loop device. This will autoload the loop module.
+
+* Mon Dec  9 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-60
+- Add 0067-RHBZ-1022899-fix-udev-partition-handling.patch
+  * Make sure to wipe partition devices on change event if they weren't
+    wiped on the device add event
+- Add 0068-RHBZ-1034578-label-partition-devices.patch
+  * Make sure that partition devices are labeled like the whole device
+- Add 0069-UPBZ-1033791-improve-rdac-checker.patch
+  *  Use RTPG data in RDAC checker
+- Add 0070-RHBZ-1036503-blacklist-td-devs.patch
+- Add 0071-RHBZ-1031546-strip-dev.patch
+  * make multipathd interactive commands able to handle /dev/<devnode>
+    instead of just <devnode>
+
+* Sat Oct 12 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-59
+- Add 0066-UP-dos-4k-partition-fix.patch
+  * Make kpartx correctly handle 4K sector size devices with dos partitions.
+
+* Fri Sep 27 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-58
+- Add 0065-UPBZ-995538-fail-rdac-on-unavailable.patch
+  * make rdac checker always mark paths with asymmetric access state of
+    unavailable as down
+
+* Fri Sep 20 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-57
+- Add 0063-RH-fix-warning.patch
+  * Fix complier warning
+- 0064-fix-ID_FS-attrs.patch
+  * make multipath create a timestamp file /run/multipathd/timestamp, and
+    add -T<timestamp>:<valid> option to shortcut processing if the
+    timestamp hasn't changed
+
+* Thu Sep  5 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-56
+- Add 0061-RH-display-find-mpaths.patch
+  * display the find_multipaths value in show config
+- Add 0062-RH-dont-free-vecs.patch
+  * don't free the vecs structure on shutdown. It's more pain than
+    it's worth.
+
+* Thu Jul 25 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-55
+- Modify 0015-RH-fix-output-buffer.patch
+  * Fix memory leak
+- Add 0047-RHBZ-kpartx-read-only-loop-devs.patch
+  * Fix read only loop device handling
+- Add 0048-RH-print-defaults.patch
+- Add 0049-RH-remove-ID_FS_TYPE.patch
+  * remove ID_FS_TYPE udev enviroment variable for multipath devices
+- Add 0051-UP-fix-cli-resize.patch
+  * check before dereferencing variables
+- Add 0052-RH-fix-bad-derefs.patch
+  * setup multipath free the multipath device when it fails, so don't keep
+    using it.
+- Add 0053-UP-fix-failback.patch
+  * setting failback in the devices section was broken
+- Add 0054-UP-keep-udev-ref.patch
+  * multipathd needs to keep the same udev object across reconfigures
+- Add 0055-UP-handle-quiesced-paths.patch
+  * quiesced paths should be treated as down
+- Add 0056-UP-alua-prio-fix.patch
+  * Don't count the preferred bit for paths that are active/optimized
+- Add 0057-UP-fix-tmo.patch
+  * Cleanup how multipath sets dev_loss_tmo and fast_io_fail_tmo.  Also
+    make multipath get changing values directly from sysfs, instead of
+    from udev, which caches them.
+- Add 0058-UP-fix-failback.patch
+  * make failback print the default value when you show configs.
+- Add 0059-UP-flush-failure-queueing.patch
+  * If you can't flush a multipath device, restore the queue_if_no_paths
+    value
+- Add 0060-UP-uevent-loop-udev.patch
+  * make ueventloop grab it's own udev reference, since it is cancelled
+    asychnrously.
+
+* Fri Jul  5 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-54
+- Add 0047-RHBZ-980777-kpartx-read-only-loop-devs.patch
+  * make kpartx support read-only files better
+- Resolves: bz #980777
+
+* Wed Jul  3 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-53
+- Add 0044-RHBZ-976688-fix-wipe-wwids.patch
+  * Seek back to the start of the file after truncating it
+- Add 0045-RHBZ-977297-man-page-fix.patch
+  * update man page to match actual defaults
+- Add 0046-RHBZ-883981-move-udev-rules.patch
+  * move udev rules file from /lib to /usr/lib
+- Resolves: bz #883981, #976688, #977297
+
+* Fri Jun 21 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-52
+- Add 0038-RHBZ-799860-netapp-config.patch
+- Add 0039-RH-detect-prio-fix.patch
+  * Don't autodetect ALUA prioritizer unless it actually can get a priority
+- Add 0040-RH-bindings-fix.patch
+  * Do a better job of trying to get the first free user_friendly_name
+- Add 0041-RH-check-for-erofs.patch
+  * Don't create/reload a device read-only unless doing it read/write fails
+    with EROFS
+- Remove 0017-RH-fix-sigusr1.patch
+  * fix signal handling upstream way instead
+- Add 0042-UP-fix-signal-handling.patch
+  * uxlsnr now handles all the signals sent to multipathd. This makes its
+    signal handling posix compliant, and harder to mess up.
+- Add 0043-RH-signal-waiter.patch
+  * ioctl isn't a pthread cancellation point.  Send a signal to the waiter
+    thread to break out of waiting in ioctl for a dm event.
+
+* Fri May 17 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-51
+- Add 0032-RHBZ-956464-mpathconf-defaults.patch
+  * fix defaults listed in usage
+- Add 0033-RHBZ-829963-e-series-conf.patch
+- Add 0034-RHBZ-851416-mpathconf-display.patch
+  * display whether or not multipathd is running in the status
+- Add 0035-RHBZ-891921-list-mpp.patch
+  * add a new path format wilcard to list the multipath device associated
+    with a path
+- Add 0036-RHBZ-949239-load-multipath-module.patch
+  * load the dm-multipath kernel module when multipathd starts
+- Add 0037-RHBZ-768873-fix-rename.patch
+  * When deciding on a multipth devices name on reload, don't default to
+    the existing name if there is no config file alias and user_friendly_names
+    isn't set. Use the wwid.
+- Modify multipath.conf
+- Resolves: bz #768873, #950252
+
 * Tue Apr 30 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-50
 - Add 0031-RHBZ-957188-kpartx-use-dm-name.patch
   * use the basename of the devices that will be created to choose the
@@ -292,7 +529,7 @@ bin/systemctl --no-reload enable multipathd.service >/dev/null 2>&1 ||:
   * makes abstract multipathd a cli sockets use the correct name.
 - Set find_multipaths in the default config
 
-* Wed Feb 19 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-44
+* Wed Feb 20 2013 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-44
 - Add 0036-UP-fix-state-handling.patch
   * handle transport-offline and quiesce sysfs state
 - Add 0037-UP-fix-params-size.patch
@@ -342,17 +579,17 @@ bin/systemctl --no-reload enable multipathd.service >/dev/null 2>&1 ||:
 * Thu Nov 01 2012 Peter Rajnoha <prajnoha@redhat.com> 0.4.9-36
 - Start multipathd.service systemd unit before LVM units.
 
-* Thu Oct 24 2012 Benjamin Marzinski <bmarizns@redhat.com> 0.4.9-35
+* Wed Oct 24 2012 Benjamin Marzinski <bmarizns@redhat.com> 0.4.9-35
 - Add 0022-RHBZ-864368-disable-libdm-failback.patch
   * make kpartx and multiapthd disable libdm failback device creation
 - Add 0023-RHBZ-866291-update-documentation.patch
 - Resolves: bz #864368, #866291
 
-* Wed Oct 23 2012 Benjamin Marzinski <bmarizns@redhat.com> 0.4.9-34
+* Tue Oct 23 2012 Benjamin Marzinski <bmarizns@redhat.com> 0.4.9-34
 - Add 0021-RH-fix-oom-adj.patch
   * don't use OOM_ADJUST_MIN unless you're sure it's defined
 
-* Wed Oct 23 2012 Benjamin Marzinski <bmarizns@redhat.com> 0.4.9-33
+* Tue Oct 23 2012 Benjamin Marzinski <bmarizns@redhat.com> 0.4.9-33
 - Modify 0016-RH-retain_hwhandler.patch
   * Check the dm-multipath module version, and don't enable
     retain_attached_hw_handler if the kernel doesn't support it
@@ -412,7 +649,7 @@ bin/systemctl --no-reload enable multipathd.service >/dev/null 2>&1 ||:
 Resolves: bz #831978
 
 
-* Mon May 18 2012 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-26
+* Thu May 17 2012 Benjamin Marzinski <bmarzins@redhat.com> 0.4.9-26
 - Add 0025-RHBZ-822714-update-nodes.patch
 - Resolves: bz #822714
 
@@ -460,11 +697,11 @@ Resolves: bz #831978
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Sep 20 2011 Benjamin Marzinski <bmarzins@redhat.com> -0.4.9-19
-  - Modify 0103-add-disable-sync-option.patch
-  - Add 0104-RHBZ-737989-systemd-unit-fix.patch
-    * systemd will only start multipathd if /etc/multipath.conf exists
-  - Add 0105-fix-oom-adj.patch
-    * first try setting oom_score_adj
+- Modify 0103-add-disable-sync-option.patch
+- Add 0104-RHBZ-737989-systemd-unit-fix.patch
+  * systemd will only start multipathd if /etc/multipath.conf exists
+- Add 0105-fix-oom-adj.patch
+  * first try setting oom_score_adj
 
 * Mon Aug 15 2011 Kalev Lember <kalevlember@gmail.com> - 0.4.9-18
 - Rebuilt for rpm bug #728707
@@ -620,7 +857,7 @@ Resolves: bz #831978
 - split the multipath libs out to a device-mapper-multipath-libs package
 - if appropriate, install multipath libs in /lib64 and /lib64/multipath
 
-* Thu Apr 7 2009 Milan Broz <mbroz@redhat.com> - 0.4.8-10
+* Tue Apr 7 2009 Milan Broz <mbroz@redhat.com> - 0.4.8-10
 - Fix insecure permissions on multipathd.sock (CVE-2009-0115)
 
 * Fri Mar 6 2009 Milan Broz <mbroz@redhat.com> - 0.4.8-9
@@ -717,7 +954,7 @@ Resolves: bz #831978
 * Wed Jun 28 2006 Benjamin Marzinski <bmarzins@redhat.com> 0.4.7-2.0
 - Updated to latest upstream source, fixes kpartx udev rule issue
 
-* Mon Jun 06 2006 Benjamin Marzinski <bmarzins@redhat.com> 0.4.7-1.0
+* Tue Jun 06 2006 Benjamin Marzinski <bmarzins@redhat.com> 0.4.7-1.0
 - Updated to Christophe's latest source
 
 * Mon May 22 2006 Alasdair Kergon <agk@redhat.com> - 0.4.5-16.0

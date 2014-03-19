@@ -1,0 +1,16 @@
+---
+ libmultipath/hwtable.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: multipath-tools-130222/libmultipath/hwtable.c
+===================================================================
+--- multipath-tools-130222.orig/libmultipath/hwtable.c
++++ multipath-tools-130222/libmultipath/hwtable.c
+@@ -794,6 +794,7 @@ static struct hwentry default_hw[] = {
+ 		.prio_name     = PRIO_ONTAP,
+ 		.prio_args     = NULL,
+ 		.retain_hwhandler = RETAIN_HWHANDLER_ON,
++		.user_friendly_names = USER_FRIENDLY_NAMES_OFF,
+ 		.detect_prio   = DETECT_PRIO_ON,
+ 	},
+ 	/*
