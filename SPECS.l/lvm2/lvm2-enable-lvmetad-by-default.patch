@@ -1,30 +1,30 @@
- doc/example.conf.in        | 2 +-
- lib/commands/toolcontext.c | 2 +-
+ conf/example.conf.in         | 2 +-
+ lib/config/config_settings.h | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/doc/example.conf.in b/doc/example.conf.in
-index 10cfe16..442ad64 100644
---- a/doc/example.conf.in
-+++ b/doc/example.conf.in
-@@ -491,7 +491,7 @@ global {
-     #
-     # If lvmetad has been running while use_lvmetad was 0, it MUST be stopped
-     # before changing use_lvmetad to 1 and started again afterwards.
+diff --git a/conf/example.conf.in b/conf/example.conf.in
+index ae571b6..241caa1 100644
+--- a/conf/example.conf.in
++++ b/conf/example.conf.in
+@@ -594,7 +594,7 @@ global {
+     # supported in clustered environment. If use_lvmetad=1 and locking_type=3
+     # is set at the same time, LVM always issues a warning message about this
+     # and then it automatically disables lvmetad use.
 -    use_lvmetad = 0
 +    use_lvmetad = 1
  
      # Full path of the utility called to check that a thin metadata device
      # is in a state that allows it to be used.
-diff --git a/lib/commands/toolcontext.c b/lib/commands/toolcontext.c
-index d72b0c0..d7f8ece 100644
---- a/lib/commands/toolcontext.c
-+++ b/lib/commands/toolcontext.c
-@@ -413,7 +413,7 @@ static int _process_config(struct cmd_context *cmd)
- 	lvmetad_set_socket(lvmetad_socket);
- 	cn = find_config_tree_node(cmd, "devices/global_filter");
- 	lvmetad_set_token(cn ? cn->v : NULL);
--	lvmetad_set_active(find_config_tree_int(cmd, "global/use_lvmetad", 0));
-+	lvmetad_set_active(find_config_tree_int(cmd, "global/use_lvmetad", 1));
- 	lvmetad_init(cmd);
- 
- 	return 1;
+diff --git a/lib/config/config_settings.h b/lib/config/config_settings.h
+index c935920..a9f35e6 100644
+--- a/lib/config/config_settings.h
++++ b/lib/config/config_settings.h
+@@ -158,7 +158,7 @@ cfg(global_metadata_read_only_CFG, "metadata_read_only", global_CFG_SECTION, 0,
+ cfg(global_mirror_segtype_default_CFG, "mirror_segtype_default", global_CFG_SECTION, 0, CFG_TYPE_STRING, DEFAULT_MIRROR_SEGTYPE, vsn(2, 2, 87), NULL)
+ cfg(global_raid10_segtype_default_CFG, "raid10_segtype_default", global_CFG_SECTION, 0, CFG_TYPE_STRING, DEFAULT_RAID10_SEGTYPE, vsn(2, 2, 99), NULL)
+ cfg(global_lvdisplay_shows_full_device_path_CFG, "lvdisplay_shows_full_device_path", global_CFG_SECTION, 0, CFG_TYPE_BOOL, DEFAULT_LVDISPLAY_SHOWS_FULL_DEVICE_PATH, vsn(2, 2, 89), NULL)
+-cfg(global_use_lvmetad_CFG, "use_lvmetad", global_CFG_SECTION, 0, CFG_TYPE_BOOL, 0, vsn(2, 2, 93), NULL)
++cfg(global_use_lvmetad_CFG, "use_lvmetad", global_CFG_SECTION, 0, CFG_TYPE_BOOL, 1, vsn(2, 2, 93), NULL)
+ cfg(global_thin_check_executable_CFG, "thin_check_executable", global_CFG_SECTION, CFG_ALLOW_EMPTY, CFG_TYPE_STRING, THIN_CHECK_CMD, vsn(2, 2, 94), NULL)
+ cfg_array(global_thin_check_options_CFG, "thin_check_options", global_CFG_SECTION, 0, CFG_TYPE_STRING, "#S" DEFAULT_THIN_CHECK_OPTIONS, vsn(2, 2, 96), NULL)
+ cfg_array(global_thin_disabled_features_CFG, "thin_disabled_features", global_CFG_SECTION, 0, CFG_TYPE_STRING, "#S", vsn(2, 2, 99), NULL)

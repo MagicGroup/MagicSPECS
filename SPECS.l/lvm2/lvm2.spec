@@ -1,4 +1,4 @@
-%define device_mapper_version 1.02.77
+%define device_mapper_version 1.02.84
 
 %define enable_thin 1
 %define enable_lvmetad 1
@@ -7,12 +7,12 @@
 
 %define systemd_version 189-3
 %define dracut_version 002-18
-%define util-linux_version 2.22.1
+%define util_linux_version 2.24
 %define bash_version 4.0
 %define corosync_version 1.99.9-1
 %define dlm_version 3.99.1-1
 %define libselinux_version 1.30.19-4
-%define persistent_data_version 0.1.4
+%define persistent_data_version 0.2.7-1
 
 %if 0%{?rhel}
   %ifnarch i686 x86_64
@@ -36,25 +36,18 @@
 
 Summary: Userland logical volume management tools 
 Name: lvm2
-Version: 2.02.98
-Release: 4%{?dist}
+Version: 2.02.105
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Base
 URL: http://sources.redhat.com/lvm2
-Source0: ftp://sources.redhat.com/pub/lvm2/LVM2.%{version}.tgz
+Source0: ftp://sources.redhat.com/pub/lvm2/releases/LVM2.%{version}.tgz
 Patch0: lvm2-set-default-preferred_names.patch
 Patch1: lvm2-enable-lvmetad-by-default.patch
-Patch2: lvm2-2_02_99-python-remove-liblvm-object.patch
-Patch3: lvm2-2_02_99-python-whitespace-and-conditional-cleanup.patch
-Patch4: lvm2-2_02_99-python-update-example-to-work-with-lvm-object-removal.patch
-Patch5: lvm2-2_02_99-python-implement-proper-refcounting-for-parent-objects.patch
-Patch6: lvm2-2_02_99-properly-set-cookie_set-var-on-dm_task_set_cookie-call.patch
-Patch7: lvm2-2_02_99-hardcode-use_lvmetad0-if-cluster-locking-used-and-issue-warning-msg.patch
-Patch8: lvm2-2_02_99-init-lvmetad-lazily-to-avoid-early-socket-access-on-config-overrides.patch
-Patch9: lvm2-2_02_99-various-updates-and-fixes-for-systemd-units.patch
-Patch10: lvm2-2_02_99-exit-pvscan-cache-immediately-if-cluster-locking-used-or-lvmetad-not-used.patch
-Patch11: lvm2-2_02_99-skip-mlocking-verctors-on-arm-arch.patch
+Patch2: lvm2-udev-remove-rules-to-handle-inappropriate-events.patch
+Patch3: lvm2-2_02_106-avoid-exposing-temporary-devices-when-initializing-thin-pool-volume.patch
 
+BuildRequires: libblkid-devel >= %{util_linux_version}
 BuildRequires: ncurses-devel
 BuildRequires: readline-devel
 %if %{enable_cluster}
@@ -89,16 +82,8 @@ or more physical volumes and creating one or more logical volumes
 %setup -q -n LVM2.%{version}
 %patch0 -p1 -b .preferred_names
 %patch1 -p1 -b .enable_lvmetad
-%patch2 -p1 -b .python_liblvm_object
-%patch3 -p1 -b .python_cleanup
-%patch4 -p1 -b .python_fix_example
-%patch5 -p1 -b .python_refcounting
-%patch6 -p1 -b .cookie_flags
-%patch7 -p1 -b .cluster_lvmetad
-%patch8 -p1 -b .lvmetad_lazy_init
-%patch9 -p1 -b .systemd_fixes
-%patch10 -p1 -b .pvscan_immediate
-%patch11 -p1 -b .arm_vectors
+%patch2 -p1 -b .udev_inappropriate_events
+%patch3 -p1 -b .thin_temp_no_expose
 
 %build
 %define _default_pid_dir /run
@@ -106,21 +91,20 @@ or more physical volumes and creating one or more logical volumes
 %define _default_run_dir /run/lvm
 %define _default_locking_dir /run/lock/lvm
 
-%define _udevbasedir %{_prefix}/lib/udev
-%define _udevdir %{_udevbasedir}/rules.d
+%define _udevdir %{_prefix}/lib/udev/rules.d
 %define _tmpfilesdir %{_prefix}/lib/tmpfiles.d
 
 %define configure_udev --with-udevdir=%{_udevdir} --enable-udev_sync
 
 %if %{enable_thin}
-%define configure_thin --with-thin=internal --with-thin-check=%{_sbindir}/thin_check
+%define configure_thin --with-thin=internal --with-thin-check=%{_sbindir}/thin_check --with-thin-dump=%{_sbindir}/thin_dump --with-thin-repair=%{_sbindir}/thin_repair
 %endif
 
 %if %{enable_lvmetad}
-%define configure_lvmetad --enable-lvmetad
+%define configure_lvmetad --enable-lvmetad --enable-udev-systemd-background-jobs
 %endif
 
-%configure --with-default-dm-run-dir=%{_default_dm_run_dir} --with-default-run-dir=%{_default_run_dir} --with-default-pid-dir=%{_default_pid_dir} --with-default-locking-dir=%{_default_locking_dir} --with-usrlibdir=%{_libdir} --enable-lvm1_fallback --enable-fsadm --with-pool=internal --with-user= --with-group= --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-python-bindings --enable-dmeventd %{?configure_cluster} %{?configure_cmirror} %{?configure_udev} %{?configure_thin} %{?configure_lvmetad}
+%configure --with-default-dm-run-dir=%{_default_dm_run_dir} --with-default-run-dir=%{_default_run_dir} --with-default-pid-dir=%{_default_pid_dir} --with-default-locking-dir=%{_default_locking_dir} --with-usrlibdir=%{_libdir} --enable-lvm1_fallback --enable-fsadm --with-pool=internal --enable-write_install --with-user= --with-group= --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-python-bindings --enable-dmeventd %{?configure_cluster} %{?configure_cmirror} %{?configure_udev} %{?configure_thin} %{?configure_lvmetad}
 
 make %{?_smp_mflags}
 
@@ -162,19 +146,30 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING COPYING.LIB INSTALL README VERSION WHATS_NEW
+%doc COPYING COPYING.LIB README VERSION WHATS_NEW
 %doc doc/lvm_fault_handling.txt
+
+#Main binaries
+%defattr(555,root,root,-)
 %{_sbindir}/blkdeactivate
 %{_sbindir}/fsadm
+%{_sbindir}/lvm
+%{_sbindir}/lvmconf
+%{_sbindir}/lvmdump
+%if %{enable_lvmetad}
+%{_sbindir}/lvmetad
+%endif
+%{_sbindir}/vgimportclone
+
+# Other files
+%defattr(444,root,root,-)
 %{_sbindir}/lvchange
 %{_sbindir}/lvconvert
 %{_sbindir}/lvcreate
 %{_sbindir}/lvdisplay
 %{_sbindir}/lvextend
-%{_sbindir}/lvm
 %{_sbindir}/lvmchange
 %{_sbindir}/lvmdiskscan
-%{_sbindir}/lvmdump
 %{_sbindir}/lvmsadc
 %{_sbindir}/lvmsar
 %{_sbindir}/lvreduce
@@ -202,7 +197,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/vgexport
 %{_sbindir}/vgextend
 %{_sbindir}/vgimport
-%{_sbindir}/vgimportclone
 %{_sbindir}/vgmerge
 %{_sbindir}/vgmknodes
 %{_sbindir}/vgreduce
@@ -211,10 +205,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/vgs
 %{_sbindir}/vgscan
 %{_sbindir}/vgsplit
-%{_sbindir}/lvmconf
-%if %{enable_lvmetad}
-%{_sbindir}/lvmetad
-%endif
 %{_mandir}/man5/lvm.conf.5.gz
 %{_mandir}/man8/blkdeactivate.8.gz
 %{_mandir}/man8/fsadm.8.gz
@@ -271,19 +261,23 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %dir %{_sysconfdir}/lvm
 %ghost %{_sysconfdir}/lvm/cache/.cache
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lvm/lvm.conf
+%attr(644, -, -) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lvm/lvm.conf
+%dir %{_sysconfdir}/lvm/profile
+%{_sysconfdir}/lvm/profile/default.profile
+%{_sysconfdir}/lvm/profile/thin-performance.profile
 %dir %{_sysconfdir}/lvm/backup
 %dir %{_sysconfdir}/lvm/cache
 %dir %{_sysconfdir}/lvm/archive
-%dir %{_default_locking_dir}
-%dir %{_default_run_dir}
+%ghost %dir %{_default_locking_dir}
+%ghost %dir %{_default_run_dir}
 %{_tmpfilesdir}/%{name}.conf
 %{_unitdir}/blk-availability.service
 %{_unitdir}/lvm2-monitor.service
-%{_prefix}/lib/systemd/system-generators/lvm2-activation-generator
+ %attr(555, -, -) %{_prefix}/lib/systemd/system-generators/lvm2-activation-generator
 %if %{enable_lvmetad}
 %{_unitdir}/lvm2-lvmetad.socket
 %{_unitdir}/lvm2-lvmetad.service
+%{_unitdir}/lvm2-pvscan@.service
 %endif
 
 ##############################################################################
@@ -303,7 +297,7 @@ This package contains files needed to develop applications that use
 the lvm2 libraries.
 
 %files devel
-%defattr(-,root,root,-)
+%defattr(444,root,root,-)
 %{_libdir}/liblvm2app.so
 %{_libdir}/liblvm2cmd.so
 %{_includedir}/lvm2app.h
@@ -325,10 +319,10 @@ This package contains shared lvm2 libraries for applications.
 %postun libs -p /sbin/ldconfig
 
 %files libs
-%defattr(-,root,root,-)
-%attr(755,root,root) %{_libdir}/liblvm2app.so.*
-%attr(755,root,root) %{_libdir}/liblvm2cmd.so.*
-%attr(755,root,root) %{_libdir}/libdevmapper-event-lvm2.so.*
+%defattr(555,root,root,-)
+%{_libdir}/liblvm2app.so.*
+%{_libdir}/liblvm2cmd.so.*
+%{_libdir}/libdevmapper-event-lvm2.so.*
 %dir %{_libdir}/device-mapper
 %{_libdir}/device-mapper/libdevmapper-event-lvm2mirror.so
 %{_libdir}/device-mapper/libdevmapper-event-lvm2snapshot.so
@@ -348,7 +342,7 @@ License: LGPLv2
 Group: Development/Libraries
 Provides: python-lvm = %{version}-%{release}
 Obsoletes: python-lvm < 2.02.98-2
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
 %description python-libs
 Python module to allow the creation and use of LVM
@@ -392,10 +386,10 @@ if [ "$1" = 0 ]; then
 fi
 
 %files cluster
-%defattr(-,root,root,-)
-%attr(755,root,root) /usr/sbin/clvmd
-%{_mandir}/man8/clvmd.8.gz
+%defattr(555,root,root,-)
+%{_sbindir}/clvmd
 %{_sysconfdir}/rc.d/init.d/clvmd
+%attr(444, -, -) %{_mandir}/man8/clvmd.8.gz
 
 %endif
 
@@ -425,10 +419,10 @@ if [ "$1" = 0 ]; then
 fi
 
 %files -n cmirror
-%defattr(-,root,root,-)
-%attr(755,root,root) /usr/sbin/cmirrord
-%{_mandir}/man8/cmirrord.8.gz
+%defattr(555,root,root,-)
+%{_sbindir}/cmirrord
 %{_sysconfdir}/rc.d/init.d/cmirrord
+%attr(444, -, -) %{_mandir}/man8/cmirrord.8.gz
 
 %endif
 %endif
@@ -447,6 +441,7 @@ SysV style init script for LVM2. It needs to be installed only if systemd
 is not used as the system init process.
 
 %files sysvinit
+%defattr(555,root,root,-)
 %{_sysconfdir}/rc.d/init.d/blk-availability
 %{_sysconfdir}/rc.d/init.d/lvm2-monitor
 %if %{enable_lvmetad}
@@ -464,7 +459,7 @@ License: GPLv2
 Group: System Environment/Base
 URL: http://sources.redhat.com/dm
 Requires: device-mapper-libs = %{device_mapper_version}-%{release}
-Requires: util-linux >= %{util-linux_version}
+Requires: util-linux >= %{util_linux_version}
 Requires: systemd >= %{systemd_version}
 # We need dracut to install required udev rules if udev_sync
 # feature is turned on so we don't lose required notifications.
@@ -476,12 +471,11 @@ for the kernel device-mapper.
 
 %files -n device-mapper
 %defattr(-,root,root,-)
-%doc COPYING COPYING.LIB WHATS_NEW_DM VERSION_DM README INSTALL
-%attr(755,root,root) %{_sbindir}/dmsetup
-%{_mandir}/man8/dmsetup.8.gz
+%doc COPYING COPYING.LIB WHATS_NEW_DM VERSION_DM README
 %doc udev/12-dm-permissions.rules
-%dir %{_udevbasedir}
-%dir %{_udevdir}
+%defattr(444,root,root,-)
+%attr(555,root,root) %{_sbindir}/dmsetup
+%{_mandir}/man8/dmsetup.8.gz
 %{_udevdir}/10-dm.rules
 %{_udevdir}/13-dm-disk.rules
 %{_udevdir}/95-dm-notify.rules
@@ -500,7 +494,7 @@ This package contains files needed to develop applications that use
 the device-mapper libraries.
 
 %files -n device-mapper-devel
-%defattr(-,root,root,-)
+%defattr(444,root,root,-)
 %{_libdir}/libdevmapper.so
 %{_includedir}/libdevmapper.h
 %{_libdir}/pkgconfig/devmapper.pc
@@ -521,7 +515,8 @@ This package contains the device-mapper shared library, libdevmapper.
 %postun -n device-mapper-libs -p /sbin/ldconfig
 
 %files -n device-mapper-libs
-%attr(755,root,root) %{_libdir}/libdevmapper.so.*
+%defattr(555,root,root,-)
+%{_libdir}/libdevmapper.so.*
 
 %package -n device-mapper-event
 Summary: Device-mapper event daemon
@@ -551,8 +546,8 @@ if [ $1 -ge 1 ]; then
 fi
 
 %files -n device-mapper-event
-%defattr(-,root,root,-)
-%{_sbindir}/dmeventd
+%defattr(444,root,root,-)
+%attr(555, -, -) %{_sbindir}/dmeventd
 %{_mandir}/man8/dmeventd.8.gz
 %{_unitdir}/dm-event.socket
 %{_unitdir}/dm-event.service
@@ -573,7 +568,8 @@ libdevmapper-event.
 %postun -n device-mapper-event-libs -p /sbin/ldconfig
 
 %files -n device-mapper-event-libs
-%attr(755,root,root) %{_libdir}/libdevmapper-event.so.*
+%defattr(555,root,root,-)
+%{_libdir}/libdevmapper-event.so.*
 
 %package -n device-mapper-event-devel
 Summary: Development libraries and headers for the device-mapper event daemon
@@ -589,12 +585,457 @@ This package contains files needed to develop applications that use
 the device-mapper event library.
 
 %files -n device-mapper-event-devel
-%defattr(-,root,root,-)
+%defattr(444,root,root,-)
 %{_libdir}/libdevmapper-event.so
 %{_includedir}/libdevmapper-event.h
 %{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
+* Mon Jan 27 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.105-2
+- Avoid exposing temporary devices when initializing thin pool volume.
+- Remove udev rule for multipath's PATH_FAILED event processing,
+  multipath handles that properly in its own udev rules now.
+- Remove duplicate udev rule for cryptsetup temporary devices,
+  cryptsetup handles that properly directly in its code.
+
+* Tue Jan 21 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.105-1
+- Fix thin LV flagging for udev to skip scanning only if the LV is wiped.
+- Replace use of xfs_check with xfs_repair in fsadm.
+- Mark lvm1 format metadata as FMT_OBSOLETE. Do not use it with lvmetad.
+- Invalidate cached VG struct after a PV in it gets orphaned. (2.02.87)
+- Mark pool format metadata as FMT_OBSOLETE.
+- Use major:minor in lvm2-pvscan@.service for proper global_filter application.
+- Syntax and spelling fixes in some man pages.
+- Dependency scan counts with snapshots and external origins.
+- Make sure VG extent size is always greater or equal to PV phys. block size.
+- Optimize double call of stat() for cached devices.
+- Enable support for thin provisioning for default configuration.
+- Disable online thin pool metadata resize for 1.9 kernel thin target.
+- Shortened code for initialization of raid segment types.
+- Test for remote exclusive activation after activation fails.
+- Support lvconvert --merge for thin snapshots.
+- Add support to read thin device id from table line entry.
+- Drop extra test for origin when testing merging origin in lv_refresh().
+- Extend lv_remove_single() to not print info about removed LV.
+- Replace open_count check with lv_check_not_in_use() for snapshot open test.
+- Add error messages with LV names for failing lv refresh.
+- Compile/link executables with new RELRO and PIE options (non-static builds).
+- Support per-object compilation cflags via CFLAGS_object.o.
+- Automatically detect support for compiler/linker options to use RELRO and PIE.
+- Add --splitsnapshot to lvconvert to separate out cow LV.
+- Reinstate origin reload to complete lvconvert -s with active LVs. (2.02.98)
+- Select only active volume groups if vgdisplay -A is used.
+- Add -p and LVM_LVMETAD_PID env var to lvmetad to change pid file.
+- Allow lvmetad to reuse stale socket.
+- Only unlink lvmetad socket on error if created by the same process.
+- Append missing newline to lvmetad missing socket path error message.
+- Add allocation/use_blkid_wiping to lvm.conf to enable blkid wiping.
+- Enable blkid_wiping by default if the blkid library is present.
+- Add configure --disable-blkid_wiping to disable libblkid signature detection.
+- Add -W/--wipesignatures lvcreate option to support wiping on new LVs.
+- Add allocation/wipe_signatures_when_zeroing_new_lvs to lvm.conf.
+- Do not fail the whole autoactivation if the VG refresh done before fails.
+- Do not connect to lvmetad on vg/lvchange --sysinit -aay and socket absent.
+- Use lv_check_not_in_use() when testing device in use before merging.
+- Check for failure of lvmcache_add_mda() when writing pv.
+- Check for failure of dev_get_size() when reporting device size.
+- Drop extra unneeded '/' when scanning sysfs directory.
+- Fix undef value if skipped clustered VG ignored for toollib PV seg. (2.02.103)
+- Support validation of VG/LV names in liblvm/python.
+- Allow creation of PVs with arguments to liblvm/python.
+- Ensure sufficient metadata copies retained in liblvm/python vgreduce.
+- Fix installation of profiles from conf subdir when not building in srcdir.
+- Show UUIDs for missing PVs in reports.
+- Add reporting of thin_id device id for thin volumes.
+- Fix reporting of empty numerical values for recently-added fields.
+- Revert activation of activated nodes if a node preload callback fails.
+- Avoid busy looping on CPU when dmeventd reads event DM_WAIT_RETRY.
+- Ensure global mutex is held when working with dmeventd thread.
+- Drop taking timeout mutex for un/registering dmeventd monitor.
+- Allow section names in config file data to be quoted strings.
+- Close fifos before exiting in dmeventd restart() error path.
+- Catch invalid use of string sort values when reporting numerical fields.
+- Require util-linux >= 2.24 for blkid wiping support (via device-mapper pkg).
+- Add BuildRequires: libblkid-devel to build with blkid wiping functionality.
+- Do not install /run and /run/lvm directory but only own them by lvm2 package.
+  These dirs are controlled by systemd's tmpfiles.d/lvm2.conf configuration.
+- Consolidate file permissions for all packaged files.
+
+* Thu Jan 16 2014 Ville Skyttä <ville.skytta@iki.fi> - 2.02.104-4
+- Drop INSTALL from docs, escape percents in %%changelog.
+
+* Fri Dec 13 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.104-3
+- Change lvm2-python-libs to require lvm2, not just lvm2-libs.
+
+* Wed Dec 11 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.104-2
+- Fix SYSTEMD_READY assignment for foreign devs in lvmetad rules.
+
+* Thu Nov 14 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.104-1
+- Workaround VG refresh race during autoactivation by retrying the refresh.
+- Handle failures in temporary mirror used when adding images to mirrors.
+- Fix and improve logic for implicitely exclusive activations.
+- Return success when LV cannot be activated because of volume_list filter.
+- Return proper error state for remote exclusive activation.
+- Fix clvmd message verification to not reject REMOTE flag. (2.02.100)
+- Compare equality of double values with DBL_EPSILON predefined constant.
+- Use additional gcc warning flags by default.
+- Add ignore_lvm_mirrors to config file to read/ignore labels on mirrors.
+- Use #ifdef __linux__ instead of linux throughout.
+- Consistently report on stderr when device is not found for dmsetup info.
+- Skip race errors when non-udev dmsetup build runs on udev-enabled system.
+- Skip error message when holders are not present in sysfs.
+
+* Wed Oct 30 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.103-3
+- Fix missing lvmetad scan for PVs found on MD partitions.
+- Respect DM_UDEV_DISABLE_OTHER_RULES_FLAG in lvmetad udev rules.
+
+* Fri Oct 25 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.103-2
+- Add internal flag for temporary LVs to properly direct udev to not interfere.
+- Fix endless loop in blkdeactivate <device>... if unable to umount/deactivate.
+- Add dev-block-<major>:<minor>.device systemd alias for complete PV tracking.
+- Use major:minor as short form of --major and --minor arg for pvscan --cache.
+- Remove 2>/dev/null from three lvm commands executed by vgimportclone.
+- Add configure --enable-udev-systemd-background-jobs.
+- Add lvm2-pvscan@.service to run pvscan as a service for lvmetad/autoactivation.
+- Fix lvconvert swap of poolmetadata volume for active thin pool.
+- Check for open count with a timeout before removal/deactivation of an LV.
+- Report RAID images split with tracking as out-of-sync ("I").
+- Improve parsing of snapshot lv segment.
+- Add workaround for deactivation problem of opened virtual snapshot.
+- Disable unsupported merge for virtual snapshot.
+- Move code to remove virtual snapshot from tools to lib for lvm2app.
+- Fix possible race during daemon worker thread creation (lvmetad).
+- Fix possible deadlock while clearing lvmetad cache for full rescan.
+- Fix possible race while creating/destroying memory pools.
+- Recognise NVM Express devices in filter.
+- Fix failing metadata repair when lvmetad is used.
+- Fix incorrect memory handling when reading messages from lvmetad.
+- Fix locking in lvmetad when handling the PV which is gone.
+- Recognize new flag to skip udev scanning in udev rules and act appropriately.
+- Add support for flagging an LV to skip udev scanning during activation.
+- Improve message when unable to change discards setting on active thin pool.
+- Run full scan before vgrename operation to avoid any cache name collision.
+- Fix lvconvert when converting to a thin pool and thin LV at once.
+- Skip race errors when non-udev dmsetup build runs on udev-enabled system.
+- Skip error message when holders are not present in sysfs.
+- Use __linux__ instead of linux define to make libdevmapper.h C compliant.
+
+* Fri Oct 04 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.103-1
+- Ensure vgid matches before removing vgname entry from lvmetad cache.
+- Add --ignoreskippedcluster for exit status success when clustered VGs skipped.
+- Fix 3 minute udev timeout so that it is applied for all LVM volumes.
+- Fix thin/raid & activation config defaults with configure --disable-devmapper.
+- Fix RAID calculation for sufficient allocatable space.
+- lvconvert from linear to mirror or RAID1 now honors mirror_segtype_default.
+- Add thin-performance configuration profile.
+- Add lvm.conf allocation/thin_pool_chunk_size_policy option.
+- Fix contiguous & cling allocation policies for parity RAID.  (2.02.100)
+- Have lvmconf --enable/disable-cluster reset/set use_lvmetad.
+- Add seg_size_pe field to reports.
+- Support start+length notation with command line PE ranges.
+- Exit cleanly with message when pvmove cannot restart because LV is inactive.
+- Define symbolic names for subsystem udev flags in libdevmapper for easier use.
+- Make subsystem udev rules responsible for importing DM_SUBSYSTEM_UDEV_FLAG*.
+
+* Tue Sep 24 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.102-1
+- Fix missing build dependency for scripts subdir in Makefile.
+- Fix node up/down handling in clvmd corosync module.
+- Fix 3-thread clvmd deadlock triggered by cleanup on EOF from client.
+- Remove VG from lvmetad before restoring it with vgcfgrestore.
+- Add devtypes report command to display built-in recognised block device types.
+- Fix CC Makefile override which had reverted to using built-in value. (2.02.75)
+- Recognise bcache block devices in filter (experimental).
+- Run lvm2-activation-net after lvm2-activation service to prevent parallel run.
+- Add man page entries for lvmdump's -u and -l options.
+- Fix lvm2app segfault while using lvm_list_pvs_free fn if there are no PVs.
+- Improve of clvmd singlenode locking simulation.
+- lvconvert no longer converts LVs of "mirror" segment type to thinpool.
+- lvconvert no longer converts thinpool sub-LVs to "mirror" segment type.
+- Direct udev to use 3min timeout for LVM devices. Recent udev has default 30s.
+- Do not scan multipath or RAID components and avoid incorrect autoactivation.
+- Fix MD/loop udev handling to fire autoactivation after setup or coldplug only.
+- Make RAID capable of single-machine exclusive operations in a cluster.
+- Drop calculation of read ahead for deactivated volume.
+- Check for exactly one lv segment in validation of thin pools and volumes.
+- Fix dmeventd unmonitoring of thin pools.
+- Fix lvresize for stacked thin pool volumes (i.e. mirrors).
+- Write Completed debug message before reinstating log defaults after command.
+- Refresh existing VG before autoactivation (event retrigger/device reappeared).
+- Use pvscan -b in udev rules to avoid a deadlock on udev process count limit.
+- Add pvscan -b/--background for the command to be processed in the background.
+- Don't assume stdin file descriptor is readable.
+- Avoid unlimited recursion when creating dtree containing inactive pvmove LV.
+- Require exactly 3 arguments for lvm2-activation-generator. Remove defaults.
+- Inform lvmetad about any lost PV label to make it in sync with system state.
+- Support most of lvchange operations on stacked thin pool meta/data LVs.
+- Enable non-clustered pvmove of snapshots and snapshot origins.
+- Add ability to pvmove non-clustered RAID, mirror, and thin volumes.
+- Make lvm2-activation-generator silent unless it's in error state.
+- Remove "mpath major is not dm major" msg for mpath component scan (2.02.94).
+- Prevent cluster mirror logs from being corrupted by redundant checkpoints.
+- Fix ignored lvmetad update on loop device configuration (2.02.99).
+- Use LVM_PATH instead of hardcoded value in lvm2 activation systemd generator.
+- Fix vgck to notice on-disk corruption even if lvmetad is used.
+- Move mpath device filter before partitioned filter (which opens devices).
+- Require confirmation for vgchange -c when no VGs listed explicitly.
+- Also skip /var and /var/log by default in blkdeactivate when unmounting.
+- Add support for bind mounts in blkdeactivate.
+- Add blkdeactivate -v/--verbose for debug output from external tools used.
+- Add blkdeactivate -e/--errors for error messages from external tools used.
+- Suppress messages from external tools called in blkdeactivate by default.
+- Fix inability to remove a VG's cluster flag if it contains a mirror.
+- Fix bug making lvchange unable to change recovery rate for RAID.
+- Prohibit conversion of thin pool to external origin.
+- Workaround gcc v4.8 -O2 bug causing failures if config/checks=1 (32bit arch).
+- Verify clvmd message validity before processing and log error if incorrect.
+- When creating PV on existing LV don't forbid reserved LV names on LVs below.
+- When converting mirrors, default segtype should be the same unless specified.
+- Make "raid1" the default mirror segment type.
+- Fix clogd descriptor leak when daemonizing.
+- Fix clvmd descriptor leak on restart.
+- Add pipe_open/close() to use instead of less efficient/secure popen().
+- Inherit and apply any profile attached to a VG if creating new thin pool.
+- Add initial support thin pool lvconvert --repair.
+- Add --with-thin-repair and --with-thin-dump configure options.
+- Add lvm.conf thin_repair/dump_executable and thin_repair_options.
+- Require 1.9 thin pool target version for online thin pool metadata resize.
+- Ignore previous LV seg with alloc contiguous & cling when num stripes varies.
+- Fix segfault if devices/global_filter is not specified correctly.
+- Tidy dmeventd fifo initialisation.
+- Detect invalid sector supplied to 'dmsetup message'.
+- Free any previously-set string if a dm_task_set_* function is called again.
+- Do not allow passing empty new name for dmsetup rename.
+- Display any output returned by 'dmsetup message'.
+- Add dm_task_get_message_response to libdevmapper.
+- Create dmeventd timeout threads as "detached" so exit status is freed.
+- Add DM_ABORT_ON_INTERNAL_ERRORS env var support to abort on internal errors.
+
+* Tue Aug 06 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.99-2
+- Fix metadata area offset/size overflow if it's >= 4g and while using lvmetad.
+- Require the newest device-mapper-persistent-data-0.2.3-1.
+- Fix spec file's util-linux version definition for proper expansion when used.
+
+* Thu Jul 25 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.99-1
+-  o Features/Extensions/Additions:
+- Add support for poolmetadataspare LV, that will be used for pool recovery.
+- Improve activation order when creating thin pools in non-clustered VG.
+- Add lvm2-activation-net systemd unit to activate LVs on net-attached storage.
+- Automatically flag thin snapshots to be skipped during activation.
+- Add support for persistent flagging of LVs to be skipped during activation.
+- Make selected thinp settings customizable by a profile.
+- Support storing profile name in metadata for both VGs and LVs.
+- Add support for configuration profiles.
+- Add support for thin volumes in vgsplit.
+- Add lvresize support for online thin pool metadata volume resize.
+- Add detection for thin pool metadata resize kernel support.
+- Add vg->vg_ondisk / lv_ondisk() holding committed metadata.
+- Add detection of mounted fs also for vgchange deactivation.
+- Detect maximum usable size for snapshot for lvresize.
+- Improve RAID kernel status retrieval to include sync_action/mismatch_cnt.
+- Add external origin support for lvcreate.
+- Support automatic config validation.
+- Add PV header extension: extension version, flags and bootloader areas.
+- Initial support for lvconvert of thin external origin.
+- Improve activation code for better support of stacked devices.
+- vgimport '--force' now allows import of VGs with missing PVs.
+- Allow removal or replacement of RAID LV components that are error segments.
+- Make 'vgreduce --removemissing' able to handle RAID LVs with missing PVs.
+- Give precedence to EMC power2 devices with duplicate PVIDs.
+- Recognise Storage Class Memory (IBM S/390) devices in filter.
+- Recognise STEC skd devices in filter.
+- Recognise Violin Memory vtms devices in filter.
+- Automatically restore MISSING PVs with no MDAs.
+- Detect mounted fs also via reading /proc/self/mountinfo.
+-  o Command Interface/Options:
+- Support ARG_GROUPABLE with merge_synonym (for --raidwritemostly).
+- Add --ignoreactivationskip to lvcreate/vgchange/lvchange to ignore skip flag.
+- Add --setactivationskip to lvcreate/lvchange to set activation skip flag.
+- Add --type profilable to lvm dumpconfig to show profilable config settings.
+- Add --mergedconfig to lvm dumpconfig for merged --config/--profile/lvm.conf.
+- Support changing VG/LV profiles: vgchange/lvchange --profile/--detachprofile.
+- Add new --profile command line arg to select a configuration profile for use.
+- For creation of snapshot require size for at least 3 chunks.
+- Do not accept size parameters bigger then 16EiB.
+- Accept --yes in all commands so test scripts can be simpler.
+- Add lvcreate/lvchange --[raid]{min|max}recoveryrate for raid LVs.
+- Add lvchange --[raid]writemostly/writebehind support for RAID1
+- Add lvchange --[raid]syncaction for scrubbing of RAID LVs.
+- Add --validate option to lvm dumpconfig to validate current config on demand.
+- Add --ignoreadvanced and --ignoreunsupported switch to lvm dumpconfig.
+- Add --withcomments and --withversions switch to lvm dumpconfig.
+- Add --type {current|default|missing|new} and --atversion to lvm dumpconfig.
+- Add --bootloaderareasize to pvcreate and vgconvert to create bootloader area.
+- Do not take a free lv name argument for lvconvert --thinpool option.
+- Allow lvconvert --stripes/stripesize only with --mirrors/--repair/--thinpool.
+- Do not ignore -f in lvconvert --repair -y -f for mirror and raid volumes.
+- Support use of option --yes for lvchange --persistent.
+- Fix clvmd support for option -d and properly use its argument.
+-  o Reporting:
+- Issue an error msg if lvconvert --type used incorrectly with other options.
+- Use LOG_DEBUG/ERR msg severity instead default for lvm2-activation-generator.
+- Add LV report fields: raid_mismatch_count/raid_sync_action/raid_write_behind.
+- Add LV reporting fields raid_min_recovery_rate, raid_max_recovery_rate.
+- Add sync_percent as alias for copy_percent LV reporting field.
+- Add lv_ prefix to modules reporting field.
+- Use units B or b (never E) with no decimal places when displaying sizes < 1k.
+- List thin-pool and thin modules for thin volumes.
+- Add 's(k)ip activation' bit to lvs -o lv_attr to indicate skip flag attached.
+- Improve error loging when user tries to interrupt commands.
+- Add vgs/lvs -o vg_profile/lv_profile to report profiles attached to VG/LV.
+- Report lvs volume type 'e' with higher priority.
+- Report lvs volume type 'o' also for external origin volumes.
+- Report lvs target type 't' only for thin pools and thin volumes.
+- Add "active" LV reporting field to show activation state.
+- Add "monitor" segment reporting field to show dmevent monitoring status.
+- Add explicit message about unsupported pvmove for thin/thinpool volumes.
+- Add pvs -o pv_ba_start,pv_ba_size to report bootloader area start and size.
+- Fix pvs -o pv_free reporting for PVs with zero PE count.
+- Report blank origin_size field if the LV doesn't have an origin instead of 0.
+- Report partial and in-sync RAID attribute based on kernel status
+- Log output also to syslog when abort_on_internal_error is set.
+- Change lvs heading Copy%% to Cpy%%Sync and print RAID4/5/6 sync%% there too.
+- Report error for nonexisting devices in dmeventd communication.
+- Reduce some log_error messages to log_warn where we don't fail.
+-  o Configuration:
+- Add activation/auto_set_activation_skip to control activation skip flagging.
+- Add default.profile configuration profile and install it on make install.
+- Add config/profile_dir to set working directory to load profiles from.
+- Use mirror_segtype_default if type not specified for linear->mirror upconvert.
+- Refine lvm.conf and man page documentation for autoactivation feature.
+- Override system's global_filter settings for vgimportclone.
+- Find newest timestamp of merged config files.
+- Add 'config' section to lvm.conf to set the way the LVM configuration is handled.
+- Add global/raid10_segtype_default to lvm.conf.
+- Accept activation/raid_region_size in preference to mirror_region_size config.
+- Add log/debug_classes to lvm.conf to control debug log messages.
+- Allow empty activation/{auto_activation|read_only|}_volume_list config option.
+- Relax ignore_suspended_devices to read from mirrors that don't have a device marked failed.
+-  o Documentation:
+- Add man page entries for profile configuration and related options.
+- Document lvextend --use-policies option in man.
+- Improve lvcreate, lvconvert and lvm man pages.
+-  o API/interfaces:
+- liblvm/python API: Additions: PV create/removal/resize/listing
+- liblvm/python API: Additions: LV attr/origin/Thin pool/Thin LV creation
+- Fix exported symbols regex for non-GNU busybox sed.
+- Add LV snapshot support to liblvm and python-lvm.
+- Remove python liblvm object. systemdir can only be changed using env var now.
+- Add dm_get_status_snapshot() for parsing snapshot status.
+- Append discards and read-only fields to exported struct dm_status_thin_pool.
+- Validate passed params to dm_get_status_raid/thin/thin_pool().
+- Add dm_mountinfo_read() for parsing /proc/self/mountinfo.
+- Add dm_config_write_{node_out/one_node_out} for enhanced config output.
+- Add dm_config_value_is_bool to check for boolean value in supported formats.
+- Add DM_ARRAY_SIZE public macro.
+- Add DM_TO_STRING public macro.
+- Implement ref-counting for parents in python lib.
+-  o Fixes (general):
+- Do not zero init 4KB of thin snapshot for non-zeroing thin pool (2.02.94).
+- Correct thin creation error paths.
+- Add whole log_lv and metadata_lv sub volumes when creating partial tree.
+- Properly use snapshot layer for origin which is also thin volume.
+- Avoid generating metadata backup when calling update_pool_lv().
+- Send thin messages also for active thin pool and inactive thin volume.
+- Avoid creation of multiple archives for one command.
+- Avoid flushing thin pool when just requesting transaction_id.
+- Fix use of too big chunks of memory when communication with lvmetad.
+- Also filter partitions on mpath components if multipath_component_detection=1.
+- Do not use persistent filter with lvmetad.
+- Move syslog code out of signal handle in dmeventd.
+- Fix lvresize --use-policies of VALID but 100%% full snapshot.
+- Skip monitoring of snapshots that are already bigger then origin.
+- Refuse to init a snapshot merge in lvconvert if there's no kernel support.
+- Fix alignment of PV data area if detected alignment less than 1 MB (2.02.74).
+- Fix creation and removal of clustered snapshot.
+- Fix clvmd caching of metadata when suspending inactive volumes.
+- Fix lvmetad error path in lvmetad_vg_lookup() for null vgname.
+- Fix clvmd _cluster_request() return code in memory fail path.
+- Fix vgextend to not allow a PV with 0 MDAs to be used while already in a VG.
+- Fix PV alignment to incorporate alignment offset if the PV has zero MDAs.
+- Fix missing cleanup of flags when the LV is detached from pool.
+- Fix check for some forbidden discards conversion of thin pools.
+- Limit RAID device replacement to repair only if LV is not in-sync.
+- Disallow RAID device replacement or repair on inactive LVs.
+- Unlock vg mutex in error path when lvmetad tries to lock_vg.
+- Detect key string duplication failure in config_make_nodes_v in libdaemon.
+- Disallow pvmove on RAID LVs until they are addressed properly
+- Recognize DM_DISABLE_UDEV environment variable for a complete fallback.
+- When no --stripes argument is given when creating a RAID10 volume, default to 2 stripes.
+- Do not allow lvconvert --splitmirrors on RAID10 logical volumes.
+- Repair a mirrored log before the mirror itself when both fail.
+- Avoid trying to read a mirror that has a failed device in its mirrored log.
+- Fix segfault for truncated string token in config file after the first '"'.
+- Fix config node lookup inside empty sections to not return the section itself.
+- Fix parsing of 64bit snapshot status in dmeventd snapshot plugin.
+- Always return success on dmeventd -V command call.
+-  o Fixes (segfaults/crashes/deadlocks/races):
+- Fix segfault when reporting raid_syncaction for older kernels.
+- Fix vgcfgrestore crash when specified incorrect vg name.
+- Check for memory failure of dm_config_write_node() in lvmetad.
+- Prevent double free error after dmeventd call of _fill_device_data().
+-  o Fixes (resource leaks/memleaks):
+- Release memory allocated with _cached_info().
+- Release memory and unblock signals in lock_vol error path.
+- Fix memory resource leak in memlocking error path.
+- Fix memleak in dmeventd thin plugin in device list obtaining err path.
+- Fix socket leak on error path in lvmetad's handle_connect.
+- Fix memleak on error path for lvmetad's pv_found.
+- Fix memleak in device_is_usable mirror testing function.
+- Fix memory leak on error path for pvcreate with invalid uuid.
+- Fix resource leak in error path of dmeventd's umount of thin volume.
+-  o Testing:
+- Fix test for active snapshot in cluster before resizing it.
+- Add python-lvm unit test case
+-  o Other:
+- Use local activation for clearing snapshot COW device.
+- Add configure --with-default-profile-subdir to select dir to keep profiles in.
+- Creation of snapshot takes at most 100%% origin coverage.
+- Use LC_ALL to set locale in daemons and fsadm instead of lower priority LANG.
+- Optimize out setting the same value of read_ahead.
+- Automatically deactivate failed preloaded dm tree node.
+- Process thin messages once to active thin pool target for dm_tree.
+-  o Packaging:
+- Add /etc/lvm/profile dir and /etc/lvm/profile/default.profile to lvm2 package.
+- Do not include /lib/udev and /lib/udev/rules.d in device-mapper package.
+- Fix some incorrect changelog dates.
+
+* Tue May 14 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.98-9
+- Fix 'dmsetup splitname -o' to not fail if used without '-c' switch (1.02.68).
+- Close open dmeventd FIFO file descriptors on exec (FD_CLOEXEC).
+- Fix premature DM version checking which caused useless mapper/control access.
+- Recognize DM_DISABLE_UDEV environment variable for a complete fallback.
+- Do not verify udev operations if --noudevsync command option is used.
+- Fix blkdeactivate to handle nested mountpoints and mangled mount paths.
+- Fix a crash-inducing race condition in lvmetad while updating metadata.
+- Fix possible race while removing metadata from lvmetad.
+- Fix possible deadlock when querying and updating lvmetad at the same time.
+- Avoid a global lock in pvs when lvmetad is in use.
+- Fix crash in pvscan --cache -aay triggered by non-mda PV.
+- Fix lvm2app to return all property sizes in bytes.
+- Add lvm.conf option global/thin_disabled_features.
+- Add lvconvert support to swap thin pool metadata volume.
+- Implement internal function detach_pool_metadata_lv().
+- Fix lvm2app and return lvseg discards property as string.
+- Allow forced vgcfgrestore of lvm2 metadata with thin volumes.
+- Add lvm.conf thin pool defs thin_pool_{chunk_size|discards|zero}.
+- Support discards for non-power-of-2 thin pool chunks.
+- Support allocation of pool metadata with lvconvert command.
+- Move common functionality for thin lvcreate and lvconvert to toollib.
+- Use lv_is_active() instead of lv_info() call.
+
+* Fri May 03 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.98-8
+- Fix non-functional autoactivation of LVM volumes on top of MD devices.
+
+* Fri Apr 19 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.98-7
+- Autoactivate VG/LV on coldplug of DM-based PVs at boot.
+
+* Tue Apr 09 2013 Peter Rajnoha <prajnoha@redhat.com> - 2.02.98-6
+- Synchronize with udev in pvscan --cache and fix dangling udev_sync cookies.
+- Fix autoactivation to not autoactivate VG/LV on each change of the PVs used.
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.02.98-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Dec 06 2012 Peter Rajnoha <prajnoha@redhat.com> - 2.02.98-4
 - Skip mlocking [vectors] on arm architecture.
 
@@ -789,7 +1230,7 @@ the device-mapper event library.
 - Update man pages to give them all the same look&feel.
 - Fix lvresize of thin pool for striped devices.
 - For lvresize round upward when specifying number of extents.
-- For lvcreate with %FREE support rounding downward stripe alignment.
+- For lvcreate with %%FREE support rounding downward stripe alignment.
 - Change message severity to log_very_verbose for missing dev info in udev db.
 - Fix lvconvert when specifying removal of a RAID device other than last one.
 - Fix ability to handle failures in mirrored log in dmeventd plugin. (2.02.89)
@@ -907,7 +1348,7 @@ the device-mapper event library.
 - Do not print warning for pv_min_size between 512KB and 2MB.
 - Clean up systemd unit ordering and requirements.
 - Allow ALLOC_NORMAL to track reserved extents for log and data on same PV.
-- Fix data% report for thin volume used as origin for non-thin snapshot.
+- Fix data%% report for thin volume used as origin for non-thin snapshot.
 
 * Thu Jan 26 2012 Alasdair Kergon <agk@redhat.com> - 2.02.89-2
 - New upstream release with experimental support for thinly-provisioned devices.
@@ -964,7 +1405,7 @@ the device-mapper event library.
 - Add dm-event and lvm2-monitor unit files for use with systemd.
 - Add sysvinit subpackage for legacy SysV init script support.
 
-* Wed Jul 8 2011 Alasdair Kergon <agk@redhat.com> - 2.02.86-1
+* Fri Jul 8 2011 Alasdair Kergon <agk@redhat.com> - 2.02.86-1
 - Fix activation sequences to avoid trapped I/O with multiple LVs.
 - Fix activation sequences to avoid allocating tables while devs suspended.
 - Remove unnecessary warning in pvcreate for MD linear devices.
@@ -2131,7 +2572,7 @@ the device-mapper event library.
 - Modify lvremove to prompt for removal if LV active on other cluster nodes.
 - Add '-f' to vgremove to force removal of VG even if LVs exist.
 
-* Thu Aug 24 2007 Alasdair Kergon <agk@redhat.com> - 2.02.28-1
+* Fri Aug 24 2007 Alasdair Kergon <agk@redhat.com> - 2.02.28-1
 - vgscan and pvscan now trigger clvmd -R, which should now work.
 - Fix clvmd logging so you can get lvm-level debugging out of it.
 - Allow clvmd debug to be turned on in a running daemon using clvmd -d [-C].
@@ -2295,7 +2736,7 @@ the device-mapper event library.
 * Mon Nov 20 2006 Alasdair Kergon <agk@redhat.com> - 2.02.15-1
 - New upstream - see WHATS_NEW.
 
-* Fri Nov 11 2006 Alasdair Kergon <agk@redhat.com> - 2.02.14-1
+* Sat Nov 11 2006 Alasdair Kergon <agk@redhat.com> - 2.02.14-1
 - New upstream - see WHATS_NEW.
 
 * Mon Oct 30 2006 Alasdair Kergon <agk@redhat.com> - 2.02.13-2
@@ -2493,7 +2934,7 @@ the device-mapper event library.
 * Wed Sep 15 2004 Alasdair Kergon <agk@redhat.com> - 2.00.23-1
 - Various minor upstream fixes.
 
-* Thu Sep  3 2004 Alasdair Kergon <agk@redhat.com> - 2.00.22-1
+* Fri Sep  3 2004 Alasdair Kergon <agk@redhat.com> - 2.00.22-1
 - Permission fix included upstream; use different endian conversion macros.
 
 * Thu Sep  2 2004 Jeremy Katz <katzj@redhat.com> - 2.00.21-2
