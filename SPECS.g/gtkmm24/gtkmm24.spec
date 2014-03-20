@@ -4,8 +4,8 @@
 %global api_ver 2.4
 
 Name:           gtkmm24
-Version:        2.24.3
-Release:        1%{?dist}
+Version:        2.24.4
+Release:        2%{?dist}
 
 Summary:        C++ interface for GTK2 (a GUI library for X)
 
@@ -80,7 +80,7 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %files
-%doc AUTHORS ChangeLog COPYING NEWS README
+%doc AUTHORS COPYING NEWS README
 %{_libdir}/*.so.*
 
 
@@ -100,6 +100,15 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 %doc %{_datadir}/devhelp/
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 28 2013 Kalev Lember <kalevlember@gmail.com> - 2.24.4-1
+- Update to 2.24.4
+
+* Fri Jun 21 2013 Matthias Clasen <mclasen@redhat.com> - 2.24.3-2
+- Don't install ChangeLog
+
 * Fri Apr 05 2013 Kalev Lember <kalevlember@gmail.com> - 2.24.3-1
 - Update to 2.24.3
 
