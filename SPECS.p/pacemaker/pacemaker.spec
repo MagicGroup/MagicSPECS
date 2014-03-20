@@ -2,23 +2,15 @@
 %global uname hacluster
 %global pcmk_docdir %{_docdir}/%{name}
 
-%global specversion 3
-%global upstream_version 394e906
+%global specversion 1
+%global upstream_version 9d39a6b
 %global upstream_prefix ClusterLabs-pacemaker
 
-# Compatibility macros for distros (fedora) that don't provide Python macros by default
-# Do this instead of trying to conditionally include {_rpmconfigdir}/macros.python
-%{!?py_ver:     %{expand: %%global py_ver      %%(echo `python -c "import sys; print sys.version[:3]"`)}}
-%{!?py_prefix:  %{expand: %%global py_prefix   %%(echo `python -c "import sys; print sys.prefix"`)}}
-%{!?py_libdir:  %{expand: %%global py_libdir   %%{expand:%%%%{py_prefix}/%%%%{_lib}/python%%%%{py_ver}}}}
-%{!?py_sitedir: %{expand: %%global py_sitedir  %%{expand:%%%%{py_libdir}/site-packages}}}
+%global py_site %(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")
 
-# Compatibility macro wrappers for legacy RPM versions that do not
-# support conditional builds
-%{!?bcond_without: %{expand: %%global bcond_without() %%{expand:%%%%{!?_without_%%{1}:%%%%global with_%%{1} 1}}}}
-%{!?bcond_with:    %{expand: %%global bcond_with()    %%{expand:%%%%{?_with_%%{1}:%%%%global with_%%{1} 1}}}}
-%{!?with:          %{expand: %%global with()          %%{expand:%%%%{?with_%%{1}:1}%%%%{!?with_%%{1}:0}}}}
-%{!?without:       %{expand: %%global without()       %%{expand:%%%%{?with_%%{1}:0}%%%%{!?with_%%{1}:1}}}}
+# Turn off the auto compilation of python files not in the site-packages directory
+# Needed so that the -devel package is multilib compliant
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 %global cs_major %(pkg-config corosync --modversion  | awk -F . '{print $1}')
 %global cs_minor %(pkg-config corosync --modversion  | awk -F . '{print $2}')
@@ -28,28 +20,20 @@
 # Invoke "rpmbuild --without <feature>" or "rpmbuild --with <feature>"
 # to disable or enable specific features
 
-# Supported cluster stacks, must support at least one
-%bcond_without corosync
-%bcond_with heartbeat
-%bcond_with cman
-
 # Legacy stonithd fencing agents
 %bcond_with stonithd
 
-# ESMTP is not available in RHEL, only in EPEL. Allow people to build
-# the RPM without ESMTP in case they choose not to use EPEL packages
-%bcond_with esmtp
-%bcond_with snmp
-
 # Build with/without support for profiling tools
 %bcond_with profiling
-%bcond_with gcov
 
 # We generate docs using Publican, Asciidoc and Inkscape, but they're not available everywhere
-%bcond_with doc
+%bcond_without doc
 
 # Use a different versioning scheme
 %bcond_with pre_release
+
+# Ship an Upstart job file
+%bcond_with upstart_job
 
 %if %{with profiling}
 # This disables -debuginfo package creation and also the stripping binaries/libraries
@@ -65,7 +49,7 @@
 
 Name:          pacemaker
 Summary:       Scalable High-Availability cluster resource manager
-Version:       1.1.8
+Version:       1.1.11
 Release:       %{pcmk_release}%{?dist}
 License:       GPLv2+ and LGPLv2+
 Url:           http://www.clusterlabs.org
@@ -75,7 +59,6 @@ Group:         System Environment/Daemons
 # wget --no-check-certificate -O ClusterLabs-pacemaker-${VER}.tar.gz https://github.com/ClusterLabs/pacemaker/tarball/${VER}
 Source0:       %{upstream_prefix}-%{upstream_version}.tar.gz
 Patch0:        pacemaker-1.1.8-cast-align.patch
-Patch1:	       pacemaker-deprecated-glib.patch
 BuildRoot:     %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 AutoReqProv:   on
 Requires:      resource-agents
@@ -83,33 +66,16 @@ Requires:      %{name}-libs = %{version}-%{release}
 Requires:      %{name}-cluster-libs = %{version}-%{release}
 Requires:      %{name}-cli = %{version}-%{release}
 Requires:      python >= 2.4
-Conflicts:     heartbeat < 2.99
-Obsoletes:     rgmanager < 3.2.0
-Provides:      rgmanager >= 3.2.0
-%if !%{with heartbeat}
-Obsoletes:     heartbeat < 3.0.4
-Provides:      heartbeat >= 3.0.4
+
+%if %{defined systemd_requires}
+%systemd_requires
 %endif
 
-%if %{defined _unitdir}
-# Needed for systemd unit
-Requires(post):   systemd-sysv
-Requires(post):   systemd-units
-Requires(preun):  systemd-units
-Requires(postun): systemd-units
-%endif
-
-%if %{with heartbeat}
-Requires(pre): cluster-glue
-%endif
-
-%if %{with snmp}
-Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+%if 0%{?rhel} > 0
+ExclusiveArch: i686 x86_64
 %endif
 
 %if 0%{?suse_version}
-# net-snmp-devel on SLES10 does not suck in tcpd-devel automatically
-BuildRequires: tcpd-devel
 # Suse splits this off into a separate package
 Requires:      python-curses python-xml
 BuildRequires: python-curses python-xml
@@ -120,19 +86,27 @@ BuildRequires: automake autoconf libtool pkgconfig python libtool-ltdl-devel
 BuildRequires: glib2-devel libxml2-devel libxslt-devel libuuid-devel
 BuildRequires: pkgconfig python-devel gcc-c++ bzip2-devel pam-devel
 
+# Required for agent_config.h which specifies the correct scratch directory
+BuildRequires: resource-agents
+
+# We need reasonably recent versions of libqb
+BuildRequires: libqb-devel > 0.11.0
+Requires:      libqb > 0.11.0
+
+# Enables optional functionality
+BuildRequires: ncurses-devel openssl-devel libselinux-devel docbook-style-xsl
+BuildRequires: bison byacc flex help2man dbus-devel
+
+%if %{defined _unitdir}
+BuildRequires: systemd-devel
+%endif
+
 %if 0%{?suse_version} >= 1100
 # Renamed since opensuse-11.0
 BuildRequires:  libgnutls-devel
 %else
 BuildRequires:  gnutls-devel
 %endif
-
-
-# Enables optional functionality
-BuildRequires: ncurses-devel openssl-devel docbook-style-xsl libqb-devel
-BuildRequires: bison byacc flex help2man
-
-%if %{with cman}
 
 %if 0%{?fedora} > 0
 %if 0%{?fedora} < 17
@@ -146,29 +120,8 @@ BuildRequires: clusterlib-devel
 %endif
 %endif
 
-%endif
-
-%if %{with esmtp}
-BuildRequires: libesmtp-devel
-%endif
-
-%if %{with snmp}
-%ifarch alpha %{ix86} x86_64
-BuildRequires: lm_sensors-devel
-%endif
-
-BuildRequires: net-snmp-devel
-%endif
-
-%if %{with corosync}
 Requires:      corosync
 BuildRequires: corosynclib-devel
-%endif
-
-%if %{with heartbeat}
-# Do not require heartbeat, the admin should select which stack to use and install it
-BuildRequires: cluster-glue-libs-devel heartbeat-devel heartbeat-libs >= 3.0.0
-%endif
 
 %if %{with stonithd}
 BuildRequires: cluster-glue-libs-devel
@@ -187,29 +140,28 @@ BuildRequires: publican inkscape asciidoc
 
 %description
 Pacemaker is an advanced, scalable High-Availability cluster resource
-manager for Linux-HA (Heartbeat) and/or Corosync.
+manager for Corosync, CMAN and/or Linux-HA.
 
-It supports "n-node" clusters with significant capabilities for
-managing resources and dependencies.
+It supports more than 16 node clusters with significant capabilities
+for managing resources and dependencies.
 
 It will run scripts at initialization, when machines go up or down,
 when related resources fail and can be configured to periodically check
 resource health.
 
 Available rpmbuild rebuild options:
-  --with(out) : heartbeat cman corosync doc publican snmp esmtp pre_release
+  --with(out) : stonithd doc profiling pre_release upstart_job
 
 %package cli
 License:      GPLv2+ and LGPLv2+
 Summary:      Command line tools for controlling Pacemaker clusters
 Group:        System Environment/Daemons
 Requires:     %{name}-libs = %{version}-%{release}
-Obsoletes:    modcluster < 1.0, cluster-snmp < 1.0, cluster-cim < 1.0
-Provides:     modcluster >= 1.0, cluster-snmp >= 1.0, cluster-cim >= 1.0
+Requires:     perl-TimeDate
 
 %description cli
 Pacemaker is an advanced, scalable High-Availability cluster resource
-manager for Linux-HA (Heartbeat) and/or Corosync.
+manager for Corosync, CMAN and/or Linux-HA.
 
 The %{name}-cli package contains command line tools that can be used
 to query and control the cluster from machines that may, or may not,
@@ -222,7 +174,7 @@ Group:        System Environment/Daemons
 
 %description -n %{name}-libs
 Pacemaker is an advanced, scalable High-Availability cluster resource
-manager for Linux-HA (Heartbeat) and/or Corosync.
+manager for Corosync, CMAN and/or Linux-HA.
 
 The %{name}-libs package contains shared libraries needed for cluster
 nodes and those just running the CLI tools.
@@ -235,29 +187,44 @@ Requires:     %{name}-libs = %{version}-%{release}
 
 %description -n %{name}-cluster-libs
 Pacemaker is an advanced, scalable High-Availability cluster resource
-manager for Linux-HA (Heartbeat) and/or Corosync.
+manager for Corosync, CMAN and/or Linux-HA.
 
 The %{name}-cluster-libs package contains cluster-aware shared
 libraries needed for nodes that will form part of the cluster nodes.
 
-%package -n %{name}-libs-devel 
+%package remote
+License:      GPLv2+ and LGPLv2+
+Summary:      Pacemaker remote daemon for non-cluster nodes
+Group:        System Environment/Daemons
+Requires:     %{name}-libs = %{version}-%{release}
+Requires:      %{name}-cli = %{version}-%{release}
+Requires:      resource-agents
+%if %{defined systemd_requires}
+%systemd_requires
+%endif
+
+%description remote
+Pacemaker is an advanced, scalable High-Availability cluster resource
+manager for Corosync, CMAN and/or Linux-HA.
+
+The %{name}-remote package contains the Pacemaker Remote daemon
+which is capable of extending pacemaker functionality to remote
+nodes not running the full corosync/cluster stack.
+
+%package -n %{name}-libs-devel
 License:      GPLv2+ and LGPLv2+
 Summary:      Pacemaker development package
 Group:        Development/Libraries
+Requires:     %{name}-cts = %{version}-%{release}
 Requires:     %{name}-libs = %{version}-%{release}
 Requires:     %{name}-cluster-libs = %{version}-%{release}
-Requires:     libtool-ltdl-devel
-Requires:     libxml2-devel libxslt-devel bzip2-devel glib2-devel 
-%if %{with corosync}
+Requires:     libtool-ltdl-devel libqb-devel libuuid-devel
+Requires:     libxml2-devel libxslt-devel bzip2-devel glib2-devel
 Requires:     corosynclib-devel
-%endif
-%if %{with heartbeat}
-Requires:     cluster-glue-libs-devel heartbeat-devel
-%endif
 
 %description -n %{name}-libs-devel
 Pacemaker is an advanced, scalable High-Availability cluster resource
-manager for Linux-HA (Heartbeat) and/or Corosync.
+manager for Corosync, CMAN and/or Linux-HA.
 
 The %{name}-libs-devel package contains headers and shared libraries
 for developing tools for Pacemaker.
@@ -268,6 +235,7 @@ License:      GPLv2+ and LGPLv2+
 Summary:      Test framework for cluster-related technologies like Pacemaker
 Group:        System Environment/Daemons
 Requires:     python
+Requires:     %{name}-libs = %{version}-%{release}
 
 %description  cts
 Test framework for cluster-related technologies like Pacemaker
@@ -281,38 +249,27 @@ Group:        Documentation
 Documentation for Pacemaker.
 
 Pacemaker is an advanced, scalable High-Availability cluster resource
-manager for Linux-HA (Heartbeat) and/or Corosync.
+manager for Corosync, CMAN and/or Linux-HA.
 
 
 %prep
 %setup -q -n %{upstream_prefix}-%{upstream_version}
+%patch0 -p1 -R
 
-%patch0 -p0
-%patch1 -p1
 # Force the local time
 #
-# 'hg archive' sets the file date to the date of the last commit.
+# 'git' sets the file date to the date of the last commit.
 # This can result in files having been created in the future
-# when building on machines in timezones 'behind' the one the 
+# when building on machines in timezones 'behind' the one the
 # commit occurred in - which seriously confuses 'make'
 find . -exec touch \{\} \;
 
 %build
 ./autogen.sh
 
-%if %{with snmp}
-eval `objdump --headers --private-headers /usr/bin/perl | grep RPATH | awk '{print "export LD_LIBRARY_PATH="$2}'`
-%endif
-
 # RHEL <= 5 does not support --docdir
 docdir=%{pcmk_docdir} %{configure}                 \
-        %{!?with_heartbeat:  --without-heartbeat}  \
-        %{!?with_corosync:   --without-ais}        \
-        %{!?with_esmtp:      --without-esmtp}      \
-        %{!?with_snmp:       --without-snmp}       \
-        %{?with_cman:        --with-cman}          \
         %{?with_profiling:   --with-profiling}     \
-        %{?with_gcov:        --with-gcov}          \
         --with-initdir=%{_initrddir}               \
         --localstatedir=%{_var}                    \
         --with-version=%{version}-%{release}
@@ -327,6 +284,12 @@ mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig
 mkdir -p ${RPM_BUILD_ROOT}%{_var}/lib/pacemaker/cores
 install -m 644 mcp/pacemaker.sysconfig ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig/pacemaker
 
+%if %{with upstart_job}
+mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/init
+install -m 644 mcp/pacemaker.upstart ${RPM_BUILD_ROOT}%{_sysconfdir}/init/pacemaker.conf
+install -m 644 mcp/pacemaker.combined.upstart ${RPM_BUILD_ROOT}%{_sysconfdir}/init/pacemaker.combined.conf
+%endif
+
 # Scripts that should be executable
 chmod a+x %{buildroot}/%{_datadir}/pacemaker/tests/cts/CTSlab.py
 
@@ -335,7 +298,7 @@ find %{buildroot} -name '*.xml' -type f -print0 | xargs -0 chmod a-x
 find %{buildroot} -name '*.xsl' -type f -print0 | xargs -0 chmod a-x
 find %{buildroot} -name '*.rng' -type f -print0 | xargs -0 chmod a-x
 find %{buildroot} -name '*.dtd' -type f -print0 | xargs -0 chmod a-x
- 
+
 # Dont package static libs
 find %{buildroot} -name '*.a' -type f -print0 | xargs -0 rm -f
 find %{buildroot} -name '*.la' -type f -print0 | xargs -0 rm -f
@@ -343,7 +306,13 @@ find %{buildroot} -name '*.la' -type f -print0 | xargs -0 rm -f
 # Do not package these either
 rm -f %{buildroot}/%{_libdir}/service_crm.so
 
-%if %{with gcov}
+# Don't ship init scripts for systemd based platforms
+%if %{defined _unitdir}
+rm -f %{buildroot}/%{_initrddir}/pacemaker
+rm -f %{buildroot}/%{_initrddir}/pacemaker_remote
+%endif
+
+%if %{with profiling}
 GCOV_BASE=%{buildroot}/%{_var}/lib/pacemaker/gcov
 mkdir -p $GCOV_BASE
 find . -name '*.gcno' -type f | while read F ; do
@@ -357,21 +326,27 @@ done
 rm -rf %{buildroot}
 
 %post
-%if %{defined _unitdir}
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%endif
-/sbin/chkconfig --add pacemaker || :
+%systemd_post pacemaker.service
 
 %preun
-if [ $1 -eq 0 ]; then
-        # Package removal, not upgrade
-        /sbin/service pacemaker stop &>/dev/null || :
-        /sbin/chkconfig --del pacemaker || :
-fi
+%systemd_preun pacemaker.service
+
+%postun
+%systemd_postun_with_restart pacemaker.service 
+
+%post remote
+%systemd_post pacemaker_remote.service
+
+%preun remote
+%systemd_preun pacemaker_remote.service
+
+%postun remote
+%systemd_postun_with_restart pacemaker_remote.service 
 
 %pre -n %{name}-libs
-getent group %{gname} >/dev/null || groupadd -r %{gname}
-getent passwd %{uname} >/dev/null || useradd -r -g %{gname} -s /sbin/nologin -c "heartbeat user" %{uname}
+
+getent group %{gname} >/dev/null || groupadd -r %{gname} -g 189
+getent passwd %{uname} >/dev/null || useradd -r -g %{gname} -u 189 -s /sbin/nologin -c "cluster user" %{uname}
 exit 0
 
 %post -n %{name}-libs -p /sbin/ldconfig
@@ -389,22 +364,19 @@ exit 0
 %exclude %{_datadir}/pacemaker/tests
 
 %config(noreplace) %{_sysconfdir}/sysconfig/pacemaker
-%if %{with corosync}
 %{_sbindir}/pacemakerd
-%{_initrddir}/pacemaker
-%endif
 
 %if %{defined _unitdir}
 %{_unitdir}/pacemaker.service
+%else
+%{_initrddir}/pacemaker
 %endif
 
 %{_datadir}/pacemaker
 %{_datadir}/snmp/mibs/PCMK-MIB.txt
+%exclude %{_libexecdir}/pacemaker/lrmd_test
+%exclude %{_sbindir}/pacemaker_remoted
 %{_libexecdir}/pacemaker/*
-
-%if %{with heartbeat}
-%{_libdir}/heartbeat/*
-%endif
 
 %{_sbindir}/crm_attribute
 %{_sbindir}/crm_master
@@ -412,14 +384,7 @@ exit 0
 %{_sbindir}/attrd_updater
 %{_sbindir}/fence_legacy
 %{_sbindir}/fence_pcmk
-%{_bindir}/ccs2cib
-%{_bindir}/ccs_flatten
-%{_bindir}/disable_rgmanager
 %{_sbindir}/stonith_admin
-
-%if %{with heartbeat}
-%{_sbindir}/crm_uuid
-%endif
 
 %doc %{_mandir}/man7/*
 %doc %{_mandir}/man8/attrd_updater.*
@@ -427,9 +392,7 @@ exit 0
 %doc %{_mandir}/man8/crm_node.*
 %doc %{_mandir}/man8/crm_master.*
 %doc %{_mandir}/man8/fence_pcmk.*
-%if %{with corosync}
 %doc %{_mandir}/man8/pacemakerd.*
-%endif
 %doc %{_mandir}/man8/stonith_admin.*
 
 %doc COPYING
@@ -440,17 +403,21 @@ exit 0
 %dir %attr (750, %{uname}, %{gname}) %{_var}/lib/pacemaker/cib
 %dir %attr (750, %{uname}, %{gname}) %{_var}/lib/pacemaker/cores
 %dir %attr (750, %{uname}, %{gname}) %{_var}/lib/pacemaker/pengine
+%dir %attr (750, %{uname}, %{gname}) %{_var}/lib/pacemaker/blackbox
 %ghost %dir %attr (750, %{uname}, %{gname}) %{_var}/run/crm
 %dir /usr/lib/ocf
 %dir /usr/lib/ocf/resource.d
 /usr/lib/ocf/resource.d/pacemaker
 
-%if %{with corosync}
 %if 0%{?cs_major} < 2
 %if 0%{?cs_minor} < 8
 %{_libexecdir}/lcrso/pacemaker.lcrso
 %endif
 %endif
+
+%if %{with upstart_job}
+%config(noreplace) %{_sysconfdir}/init/pacemaker.conf
+%config(noreplace) %{_sysconfdir}/init/pacemaker.combined.conf
 %endif
 
 %files cli
@@ -475,9 +442,8 @@ exit 0
 %exclude %{_mandir}/man8/crm_node.*
 %exclude %{_mandir}/man8/crm_master.*
 %exclude %{_mandir}/man8/fence_pcmk.*
-%if %{with corosync}
 %exclude %{_mandir}/man8/pacemakerd.*
-%endif
+%exclude %{_mandir}/man8/pacemaker_remoted.*
 %exclude %{_mandir}/man8/stonith_admin.*
 
 %doc COPYING
@@ -494,6 +460,7 @@ exit 0
 %{_libdir}/libpe_status.so.*
 %{_libdir}/libpe_rules.so.*
 %{_libdir}/libpengine.so.*
+%{_libdir}/libstonithd.so.*
 %{_libdir}/libtransitioner.so.*
 %doc COPYING.LIB
 %doc AUTHORS
@@ -501,7 +468,21 @@ exit 0
 %files -n %{name}-cluster-libs
 %defattr(-,root,root)
 %{_libdir}/libcrmcluster.so.*
-%{_libdir}/libstonithd.so.*
+%doc COPYING.LIB
+%doc AUTHORS
+
+%files remote
+%defattr(-,root,root)
+
+%config(noreplace) %{_sysconfdir}/sysconfig/pacemaker
+%if %{defined _unitdir}
+%{_unitdir}/pacemaker_remote.service
+%else
+%{_initrddir}/pacemaker_remote
+%endif
+
+%{_sbindir}/pacemaker_remoted
+%{_mandir}/man8/pacemaker_remoted.*
 %doc COPYING.LIB
 %doc AUTHORS
 
@@ -511,8 +492,9 @@ exit 0
 
 %files cts
 %defattr(-,root,root)
-%{py_sitedir}/cts
+%{py_site}/cts
 %{_datadir}/pacemaker/tests/cts
+%{_libexecdir}/pacemaker/lrmd_test
 %doc COPYING.LIB
 %doc AUTHORS
 
@@ -522,7 +504,7 @@ exit 0
 %{_datadir}/pacemaker/tests
 %{_includedir}/pacemaker
 %{_libdir}/*.so
-%if %{with gcov}
+%if %{with profiling}
 %{_var}/lib/pacemaker
 %endif
 %{_libdir}/pkgconfig/*.pc
@@ -530,13 +512,131 @@ exit 0
 %doc AUTHORS
 
 %changelog
+* Tue Feb 18 2014 Andrew Beekhof <abeekhof@redhat.com> - 1.1.11-1
+- Update for new upstream tarball: Pacemaker-1.1.11 (9d39a6b)
+- See included ChangeLog file or https://raw.github.com/ClusterLabs/pacemaker/master/ChangeLog for full details
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.9-3.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+ 
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.1.9-3.1
+- Perl 5.18 rebuild
+
+* Thu Jun 20 2013 Andrew Beekhof <abeekhof@redhat.com> - 1.1.9-3
+- Update to upstream 7d8acec
+- See included ChangeLog file or https://raw.github.com/ClusterLabs/pacemaker/master/ChangeLog for full details
+
+  + Feature: Turn off auto-respawning of systemd services when the cluster starts them
+  + Fix: crmd: Ensure operations for cleaned up resources don't block recovery
+  + Fix: logging: If SIGTRAP is sent before tracing is turned on, turn it on instead of crashing
+
+* Mon Jun 17 2013 Andrew Beekhof <abeekhof@redhat.com> - 1.1.9-2
+- Update for new upstream tarball: 781a388
+- See included ChangeLog file or https://raw.github.com/ClusterLabs/pacemaker/master/ChangeLog for full details
+
+  + crmd: Allow remote nodes to have transient attributes
+  + doc: Pacemaker Remote deployment and reference guide
+  + Feature: crm_error: Add the ability to list and print error symbols
+  + Feature: Pacemaker Remote Daemon for extending pacemaker functionality outside corosync cluster.
+  + Feature: pengine: Allow active nodes in our current membership to be fenced without quorum
+  + Feature: pengine: Display a list of nodes on which stopped anonymous clones are not active instead of meaningless clone IDs
+  + Feature: pengine: Suppress meaningless IDs when displaying anonymous clone status
+  + Fix: Check for and replace non-printing characters with their octal equivalent while exporting xml text
+  + Fix: Convert all exit codes to positive errno values
+  + Fix: Core: Ensure custom error codes are less than 256
+  + Fix: Core: Correctly unreference GSource inputs
+  + Fix: Core: Ensure the blackbox is saved on abnormal program termination
+  + Fix: corosync: Detect the loss of members for which we only know the nodeid
+  + Fix: corosync: Reduce excessive delays when resending CPG messages
+  + Fix: crm_attribute: Send details on duplicate values to stdout
+  + Fix: crmd: Ensure we return to a stable state if there have been too many fencing failures
+  + Fix: crmd: Initiate node shutdown if another node claims to have successfully fenced us
+  + Fix: crm_report: Find logs in compressed files
+  + Fix: crm_simulate: Support systemd and upstart actions
+  + Fix: Fencing: Restore the ability to manually confirm that fencing completed
+  + Fix: lrmd: Default to the upstream location for resource agent scratch directory
+  + Fix: pengine: Bug cl#5140 - Allow set members to be stopped when the subseqent set has require-all=false
+  + Fix: pengine: Bug cl#5143 - Prevent shuffling of anonymous master/slave instances
+  + Fix: pengine: cl#5142 - Do not delete orphaned children of an anonymous clone
+  + Fix: pengine: Correctly handle resources that recover before we operate on them
+  + Fix: pengine: If fencing is unavailable or disabled, block further recovery for resources that fail to stop
+  + Fix: pengine: Mark unrunnable stop actions as "blocked"
+  + Fix: systemd: Ensure we get shut down correctly by systemd
+  + Fix: xml: Restore the ability to embed comments in the cib
+
+
+* Wed Feb 27 2013 Andrew Beekhof <andrew@beekhof.net> 1.1.9-0.1.70ad9fa.git
+- Rebuild for upstream 1.1.9 pre-release
+
+- New upstream tarball: 70ad9fa
+  Changesets: 617
+  Diff:       1280 files changed, 88199 insertions(+), 57133 deletions(-)
+
+- See included ChangeLog file or https://raw.github.com/ClusterLabs/pacemaker/master/ChangeLog for full details
+
+  + Fix: Fencing: Do not merge new fencing requests with stale ones from dead nodes
+  + Fix: PE: Any location constraint for the slave role applies to all roles
+  + Fix: crmd: Correctly determin if cluster disconnection was abnormal
+  + Fix: Invoke destroy functions if we are evicted from the CPG group
+  + Fix: fencing: Do not wait for the query timeout if all replies have arrived
+  + Fix: crmd: Improved continue/wait logic in do_dc_join_finalize()
+  + Feature: fencing: Ability to identify fencing operations with a tag
+  + Fix: crmd: Detect and recover when we are evicted from CPG
+  + Fix: crmd: Prevent timeouts when performing pacemaker level membership negotiation
+  + Feature: crmd: Enable A_DC_JOIN_OFFER_ONE
+  + Feature: ipc: Support compressed messages from clients
+  + Feature: corosync: Use queues to avoid blocking when sending CPG messages
+  + Fix: systemd: Gracefully handle unexpected DBus return types
+  + Fix: Date/time: Bug cl#5118 - Correctly convert seconds-since-epoch to the current time
+  + Fix: corosync: Correctly detect corosync 2.0 clusters even if we don't have permission to access it
+  + Fix: Bug cl#5135 - Improved detection of the active cluster type
+  + Fix: fencing: Correctly record completed but previously unknown fencing operations
+  + Fix: crm_report: Ensure policy engine logs are found
+  + High: pengine: rhbz#902459 - Remove rsc node status for orphan resources
+  + High: pengine: Refresh after delete action is no long required.
+  + High: pengine: Process rsc_ticket dependencies earlier for correctly allocating resources (bnc#802307)
+  + High: pengine: cl#5025 - Automatically clear failcount for start/monitor failures after resource parameters change
+  + Refactor: Use our custom xml-to-string function for performance
+  + Feature: Compress messages that exceed the configured IPC message limit
+  + Feature: Reliably detect when an IPC message size exceeds the connection's maximum
+  + Feature: Use shared memory for IPC by default
+  + Feature: IPC: Use queues to prevent slow clients from blocking the server
+  + Refactor: Core: A faster and more consistant digest function
+  + High: tools: Have crm_resource generate a valid transition key when sending resource commands to the crmd
+  + High: Fencing: Only try peers for non-topology based operations once
+  + High: PE: cl#5099 - Probe operation uses the timeout value from the minimum interval monitor by default (#bnc776386)
+  + High: cib: Avoid use-after-free by correctly support cib_no_children for non-xpath queries
+  + High: Core: Prevent use-of_NULL in IPC code
+  + High: crmd: Prevent election storms caused by getrusage() values being too close
+  + High: corosync: Ensure peer state is preserved when matching names to nodeids
+  + High: Cluster: Preserve corosync membership state when matching node name/id entries
+  + High: Fencing: Record delegated self-fencing operations in case they fail
+  + High: Fencing: Correctly terminate when all device options have been exhausted
+  + High: cib: Remove text nodes from cib replace operations
+  + High: PE: Bug rhbz#880249 - Teach the PE how to recover masters into primitives
+  + High: PE: Bug rhbz#880249 - Ensure orphan masters are demoted before being stopped
+  + High: attrd: Correctly handle deletion of non-existant attributes
+  + High: tools: Fixes crm_mon crash when using snmp traps.
+  + High: mcp: Re-attach to existing pacemaker components when mcp fails
+  + High: pengine: cl#5111 - When clone/master child rsc has on-fail=stop, insure all children stop on failure.
+  + High: Replace the use of the insecure mktemp(3) with mkstemp(3)
+  + High: Core: Prevent ordering changes when applying xml diffs
+  + High: cib: Reduce duplication and ensure all diffs contain an md5 digest
+  + High: Core: Correctly process XML diff's involving element removal
+  + High: PE: Correctly unpack active anonymous clones
+  + High: IPC: Bug cl#5110 - Prevent 100% CPU usage when looking for synchronous replies
+  + High: PE: Bug cl#5101 - Ensure stop order is preserved for partially active groups
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.8-3.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Oct 17 2012 Jon Ciesla <limburgher@gmail.com> 1.1.8-3
 - EVR fix.
 
 * Wed Oct 17 2012 Jon Ciesla <limburgher@gmail.com> 1.1.8-2
 - Fix FTBFS on ARM by removing cast-align.
 
-* Fri Sep 21 2012 Andrew Beekhof <andrew@beekhof.net> 1.1.8-1
+* Fri Sep 21 2012 Andrew Beekhof <andrew@beekhof.net> 1.1.8-2
 - Rebuild for upstream 1.1.8 release
 
 - New upstream tarball: 394e906
@@ -545,26 +645,26 @@ exit 0
 
 - See included ChangeLog file or https://raw.github.com/ClusterLabs/pacemaker/master/ChangeLog for full details
 
-  + High: Core: Bug cl#5032 - Rewrite the iso8601 date handling code 
-  + High: corosync: Use unsigned nodeid's in the cib 
-  + High: crmd: Correctly handle scheduled node down events 
-  + High: fencing: Bug cl#5092 - Always timeout stonith operations if timeout period expires. 
-  + High: fencing: Bug cl#5093 - Stonith per device timeout option 
-  + High: fencing: Bug rhbz#801355 - Abort transition on DC when external fencing operation is detected 
-  + High: fencing: Bug rhbz#801355 - Merge fence requests for identical operations already in progress. 
-  + High: fencing: Bug rhbz#801355 - Report fencing operations external of pacemaker to cib 
-  + High: Fencing: fence_legacy - Fix passing of parameters containing '=' 
-  + High: fencing: Guarantee non-blocking when fetching stonith metadata 
-  + High: fencing: Return cached dynamic target list for busy devices. 
-  + High: lrmd: Cancel of recurring ops is now implied by rsc stop action. 
-  + High: lrmd: Bug cl#5090 - Do not block stonith monitor actions 
-  + High: lrmd: Bug cl#5092 - Fixes timeout value used when monitoring stonith resources 
-  + High: lrmd: Bug cl#5094 - Immediately report monitor errors for all stonith devices when lrmd's stonith connection fails. 
-  + High: PE: Bug cl#5044 - migrate_to no longer requires load_stopped due to transition loops 
-  + High: PE: Correctly find action definitions for anonymous clones 
-  + High: PE: Correctly find failcounts for /stopped/ anonymous clones 
-  + High: PE: Fix memory leaks found by valgrind 
-  + High: PE: Fix failcount expiration 
+  + High: Core: Bug cl#5032 - Rewrite the iso8601 date handling code
+  + High: corosync: Use unsigned nodeid's in the cib
+  + High: crmd: Correctly handle scheduled node down events
+  + High: fencing: Bug cl#5092 - Always timeout stonith operations if timeout period expires.
+  + High: fencing: Bug cl#5093 - Stonith per device timeout option
+  + High: fencing: Bug rhbz#801355 - Abort transition on DC when external fencing operation is detected
+  + High: fencing: Bug rhbz#801355 - Merge fence requests for identical operations already in progress.
+  + High: fencing: Bug rhbz#801355 - Report fencing operations external of pacemaker to cib
+  + High: Fencing: fence_legacy - Fix passing of parameters containing '='
+  + High: fencing: Guarantee non-blocking when fetching stonith metadata
+  + High: fencing: Return cached dynamic target list for busy devices.
+  + High: lrmd: Cancel of recurring ops is now implied by rsc stop action.
+  + High: lrmd: Bug cl#5090 - Do not block stonith monitor actions
+  + High: lrmd: Bug cl#5092 - Fixes timeout value used when monitoring stonith resources
+  + High: lrmd: Bug cl#5094 - Immediately report monitor errors for all stonith devices when lrmd's stonith connection fails.
+  + High: PE: Bug cl#5044 - migrate_to no longer requires load_stopped due to transition loops
+  + High: PE: Correctly find action definitions for anonymous clones
+  + High: PE: Correctly find failcounts for /stopped/ anonymous clones
+  + High: PE: Fix memory leaks found by valgrind
+  + High: PE: Fix failcount expiration
 
 
 * Wed Aug 8 2012 Andrew Beekhof <andrew@beekhof.net> 1.1.8-0.1-c72d970.git
@@ -596,7 +696,7 @@ exit 0
 * Thu Feb 16 2012 Andrew Beekhof <andrew@beekhof.net> 1.1.7-0.3-7742926.git
 - New upstream tarball: 7742926
 - Additional Provides and Obsoletes directives to enable upgrading from heartbeat
-- Rebuild now that the Corosync CFG API has been removed 
+- Rebuild now that the Corosync CFG API has been removed
 
 * Thu Feb 02 2012 Andrew Beekhof <andrew@beekhof.net> 1.1.7-0.2-bc7c125.git
 - Additional Provides and Obsoletes directives to enable upgrading from rgmanager
@@ -606,7 +706,7 @@ exit 0
 - Pre-release 1.1.7 build to deal with the removal of cman and support for corosync plugins
 - Add libqb as a dependancy
 
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.6-3.1
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> 1.1.6-3.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Sep 26 2011 Andrew Beekhof <andrew@beekhof.net> 1.1.6-3
@@ -619,11 +719,11 @@ exit 0
   footprint on non-cluster nodes
 - Better package descriptions
 
-* Thu Sep 07 2011 Andrew Beekhof <andrew@beekhof.net> 1.1.6-1
+* Wed Sep 07 2011 Andrew Beekhof <andrew@beekhof.net> 1.1.6-1
 - Upstream release of 1.1.6
 - See included ChangeLog file or http://hg.clusterlabs.org/pacemaker/1.1/file/tip/ChangeLog for details
 
-- Disabled eSMTP and SNMP support.  Painful to configure and rarely used. 
+- Disabled eSMTP and SNMP support.  Painful to configure and rarely used.
 - Created cli sub-package for non-cluster usage
 
 * Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 1.1.5-3.2
@@ -647,7 +747,7 @@ exit 0
 
 * Wed Apr 27 2011 Andrew Beekhof <andrew@beekhof.net> 1.1.5-1
 - New upstream release plus patches for CMAN integration
- 
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.4-5.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
@@ -671,7 +771,7 @@ exit 0
 * Wed Sep 29 2010 jkeating - 1.1.3-1.1
 - Rebuilt for gcc bug 634757
 
-* Thu Sep 21 2010 Andrew Beekhof <andrew@beekhof.net> - 1.1.3-1
+* Tue Sep 21 2010 Andrew Beekhof <andrew@beekhof.net> - 1.1.3-1
 - Upstream release of 1.1.3
   + High: crmd: Use the correct define/size for lrm resource IDs
   + High: crmd: Bug lf#2458 - Ensure stop actions always have the relevant resource attributes
@@ -773,7 +873,7 @@ exit 0
 - Mass rebuild with perl-5.12.0
 
 * Wed May 12 2010 Andrew Beekhof <andrew@beekhof.net> - 1.1.2-1
-- Update the tarball from the upstream 1.1.2 release 
+- Update the tarball from the upstream 1.1.2 release
   + High: ais: Bug lf#2340 - Force rogue child processes to terminate after waiting 2.5 minutes
   + High: ais: Bug lf#2359 - Default expected votes to 2 inside Corosync/OpenAIS plugin
   + High: ais: Bug lf#2359 - expected-quorum-votes not correctly updated after membership change
@@ -892,7 +992,7 @@ exit 0
 - No longer remove RPATH data, it prevents us finding libperl.so and no other
   libraries were being hardcoded
 - Compile in support for heartbeat
-- Conditionally add heartbeat-devel and corosynclib-devel to the -devel requirements 
+- Conditionally add heartbeat-devel and corosynclib-devel to the -devel requirements
   depending on which stacks are supported
 
 * Mon Aug 17 2009 Andrew Beekhof <andrew@beekhof.net> - 1.0.5-1
@@ -923,7 +1023,7 @@ exit 0
 
 * Fri Jul  24 2009 Andrew Beekhof <andrew@beekhof.net> - 1.0.4-3
 - Include an AUTHORS and license file in each package
-- Change the library package name to pacemaker-libs to be more 
+- Change the library package name to pacemaker-libs to be more
   Fedora compliant
 - Remove execute permissions from xml related files
 - Reference the new cluster-glue devel package name

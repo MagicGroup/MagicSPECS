@@ -1,10 +1,12 @@
---- configure.ac~	2012-08-31 13:31:49.000000000 -0500
-+++ configure.ac	2012-08-31 13:55:07.150000002 -0500
-@@ -1593,7 +1593,6 @@
+diff --git a/configure.ac b/configure.ac
+index be8261a..60fe8ed 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1681,6 +1681,7 @@ else
  		-Wall
  		-Waggregate-return
- 		-Wbad-function-cast 
--		-Wcast-align 
+ 		-Wbad-function-cast
++		-Wcast-align
  		-Wdeclaration-after-statement
  		-Wendif-labels
  		-Wfloat-equal
