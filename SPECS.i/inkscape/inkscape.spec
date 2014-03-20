@@ -1,20 +1,20 @@
 Name:           inkscape
-Version:        0.48.3.1
-Release:        4%{?dist}
+Version:        0.48.4
+Release:        11%{?dist}
 Summary:        Vector-based drawing program using SVG
 
 Group:          Applications/Productivity
 License:        GPLv2+
 URL:            http://inkscape.sourceforge.net/
-Source0:        http://download.sourceforge.net/inkscape/%{name}-%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/inkscape/%{name}-%{version}.tar.bz2
 Patch0:         inkscape-0.48.2-types.patch
 #Patch4:         inkscape-0.48.2-glib.patch
-Patch5:         inkscape-0.48.2-png.patch
-Patch6:         inkscape-0.48.2-png-write.patch
+#Patch5:         inkscape-0.48.2-png.patch
+#Patch6:         inkscape-0.48.2-png-write.patch
 #Patch7:         inkscape-0.48.2-gcc47.patch
-Patch8:         inkscape-0.48.2-poppler_020.patch
-Patch9:         inkscape-0.48.3.1-hugexml.patch
-Patch10:        inkscape-0.48.3.1-gcc-4.8.patch
+#Patch8:         inkscape-0.48.2-poppler_020.patch
+#Patch9:         inkscape-0.48.3.1-hugexml.patch
+Patch10:        inkscape-0.48.4-spuriouscomma.h
 
 %if 0%{?fedora} && 0%{?fedora} < 18
 %define desktop_vendor fedora
@@ -126,19 +126,19 @@ graphics in W3C standard Scalable Vector Graphics (SVG) file format.
 %setup -q
 %patch0 -p1 -b .types
 #%patch4 -p1 -b .glib
-%patch5 -p0 -b .png
-%patch6 -p0 -b .png-write
+#%patch5 -p0 -b .png
+#%patch6 -p0 -b .png-write
 #%patch7 -p0 -b .gcc47
-%patch8 -p1 -b .poppler_020
-%patch9 -p0 -b .hugexml
-%patch10 -p0 -b .gcc48
+#%patch8 -p1 -b .poppler_020
+#%patch9 -p0 -b .hugexml
+%patch10 -p0 -b .spuriouscomma
 
 # https://bugs.launchpad.net/inkscape/+bug/314381
 # A couple of files have executable bits set,
 # despite not being executable
-(find . \( -name '*.cpp' -o -name '*.h' \) -perm +111
-        find share/extensions -name '*.py' -perm +111
-) |xargs chmod -x
+find . -name '*.cpp' | xargs chmod -x
+find . -name '*.h' | xargs chmod -x
+find share/extensions -name '*.py' | xargs chmod -x
 
 # Fix end of line encodings
 dos2unix -k -q share/extensions/*.py
@@ -168,7 +168,7 @@ desktop-file-install --vendor="%{?desktop_vendor}" --delete-original  \
 
 # No skencil anymore
 rm -f $RPM_BUILD_ROOT%{_datadir}/%{name}/extensions/sk2svg.sh
-magic_rpm_clean.sh
+
 %find_lang %{name}
 
 
@@ -181,7 +181,7 @@ make -k check || :
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/usr/bin/touch --no-create %{_datadir}/icons/hicolor &> /dev/null || :
+/bin/touch --no-create %{_datadir}/icons/hicolor &> /dev/null || :
 
 %posttrans
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null || :
@@ -189,7 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun
 if [ $1 -eq 0 ] ; then
-/usr/bin/touch --no-create %{_datadir}/icons/hicolor &> /dev/null || :
+/bin/touch --no-create %{_datadir}/icons/hicolor &> /dev/null || :
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null || :
 /usr/bin/update-desktop-database -q &> /dev/null ||:
 fi
@@ -214,7 +214,8 @@ fi
 %{_datadir}/inkscape/ui
 %{_datadir}/applications/*inkscape.desktop
 %{_datadir}/icons/hicolor/*/*/inkscape*
-%{_mandir}/
+%{_mandir}/*/*gz
+%{_mandir}/*/*/*gz
 %exclude %{_mandir}/man1/inkview.1*
 %doc AUTHORS COPYING ChangeLog NEWS README
 
@@ -234,11 +235,46 @@ fi
 
 
 %changelog
-* Mon Jan 14 2013 Liu Di <liudidi@gmail.com> - 0.48.3.1-4
-- 为 Magic 3.0 重建
+* Wed Oct 09 2013 Jon Ciesla <limburgher@gmail.com> - 0.48.4-11
+- ImageMagick rebuild.
 
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.48.3.1-3
-- 为 Magic 3.0 重建
+* Mon Aug 19 2013 Marek Kasik <mkasik@redhat.com> - 0.48.4-10
+- Rebuild (poppler-0.24.0)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.48.4-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Petr Machata <pmachata@redhat.com> - 0.48.4-8
+- Rebuild for boost 1.54.0
+
+* Wed Jul 24 2013 Petr Pisar <ppisar@redhat.com> - 0.48.4-7
+- Perl 5.18 rebuild
+
+* Tue Jun 25 2013 Jon Ciesla <limburgher@gmail.com> - 0.48.4-6
+- libpoppler rebuild.
+
+* Mon Mar 18 2013 Jon Ciesla <limburgher@gmail.com> - 0.48.4-5
+- ImageMagick rebuild.
+
+* Fri Feb 15 2013 Jon Ciesla <limburgher@gmail.com> - 0.48.4-4
+- Fix FTBFS.
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.48.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jan 18 2013 Marek Kasik <mkasik@redhat.com> - 0.48.4-2
+- Rebuild (poppler-0.22.0)
+
+* Thu Dec 06 2012 Jon Ciesla <limburgher@gmail.com> - 0.48.3.1-4
+- 0.48.4, fix XXE security flaw.
+- Correct man page ownership.
+
+* Thu Dec 06 2012 Jon Ciesla <limburgher@gmail.com> - 0.48.3.1-4
+- Fix directory ownership, BZ 873817.
+- Fix previous changelog version.
+
+* Mon Nov 19 2012 Nils Philippsen <nils@redhat.com> - 0.48.3.1-3
+- update sourceforge download URL
 
 * Thu Nov 01 2012 Jon Ciesla <limburgher@gmail.com> - 0.48.3.1-2
 - Allow loading large XML, BZ 871012.
@@ -647,7 +683,7 @@ fi
 * Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 0.41-3
 - rebuild on all arches
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Thu Apr 07 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Wed Feb 09 2005 Phillip Compton <pcompton[AT]proteinmedia.com> - 0.41-1
@@ -657,7 +693,7 @@ fi
 * Sat Dec 04 2004 Phillip Compton <pcompton[AT]proteinmedia.com> - 0.40-1
 - 0.40.
 
-* Mon Nov 16 2004 Phillip Compton <pcompton[AT]proteinmedia.com> - 0.40-0.pre3
+* Tue Nov 16 2004 Phillip Compton <pcompton[AT]proteinmedia.com> - 0.40-0.pre3
 - 0.40pre3.
 
 * Thu Nov 11 2004 Phillip Compton <pcompton[AT]proteinmedia.com> - 0.39-0.fdr.2
@@ -667,7 +703,7 @@ fi
 * Sun Aug 29 2004 Phillip Compton <pcompton[AT]proteinmedia.com> - 0:0.39-0.fdr.1
 - 0.39.
 
-* Fri Apr 10 2004 P Linnell <scribusdocs at atlantictechsolutions.com> 0:0.38.1-0.fdr.1
+* Sat Apr 10 2004 P Linnell <scribusdocs at atlantictechsolutions.com> 0:0.38.1-0.fdr.1
 - respin real fix for Provides/Requires for perl(SpSVG)
 
 * Fri Apr 9 2004 P Linnell <scribusdocs at atlantictechsolutions.com> 0:0.38.1-0.fdr.0
