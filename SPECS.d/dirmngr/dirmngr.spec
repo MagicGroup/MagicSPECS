@@ -3,23 +3,21 @@
 
 Name:	 dirmngr
 Summary: Client for Managing/Downloading CRLs
-Version: 1.1.0
-Release: 7%{?dist}
+Version: 1.1.1
+Release: 2%{?dist}
 
-License: GPLv2+ and GPLv3+ and OpenLDAP
+License: GPLv3+
 Group:	 System Environment/Libraries
 URL:	 http://www.gnupg.org/
 Source0: ftp://ftp.gnupg.org/gcrypt/dirmngr/dirmngr-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/dirmngr/dirmngr-%{version}.tar.bz2.sig
-Patch1:  dirmngr-1.1.0-ocsp-crash.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source10: dirmngr.conf
 Source11: ldapservers.conf
 Source12: dirmngr.logrotate
 Source13: dirmngrtmp.conf
 
-## upstream patches
+Patch1:  dirmngr-1.1.0-ocsp-crash.patch
 
 BuildRequires: gawk
 BuildRequires: gettext
@@ -32,7 +30,6 @@ BuildRequires: pth-devel
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 Requires: logrotate
-Requires: /etc/tmpfiles.d
 
 %description
 Dirmngr is a server for managing and downloading certificate
@@ -67,7 +64,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 
 # dirs
 mkdir -p %{buildroot}%{_sysconfdir}/dirmngr/trusted-certs
@@ -85,7 +81,7 @@ install -p -m644 -D %{SOURCE12} %{buildroot}%{_sysconfdir}/logrotate.d/dirmngr
 install -p -m644 %{SOURCE10} %{SOURCE11} %{buildroot}%{_sysconfdir}/dirmngr/
 
 # autocreate /var/run/dirmngr on boot
-install -p -m644 -D %{SOURCE13} %{buildroot}%{_sysconfdir}/tmpfiles.d/dirmngrtmp.conf
+install -p -m644 -D %{SOURCE13} %{buildroot}%{_prefix}/lib/tmpfiles.d/dirmngr.conf
 
 %find_lang %{name}
 
@@ -107,10 +103,6 @@ if [ $1 -eq 0 ]; then
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING README ChangeLog NEWS
@@ -124,8 +116,8 @@ rm -rf %{buildroot}
 ## files/dirs for --daemon mode
 %dir %{_sysconfdir}/dirmngr
 %config(noreplace) %{_sysconfdir}/dirmngr/*.conf
-%config %{_sysconfdir}/logrotate.d/*
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/*.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/*
+%{_prefix}/lib/tmpfiles.d/*.conf
 %{_var}/cache/dirmngr/
 %{_var}/lib/dirmngr/
 %{_var}/log/dirmngr/
@@ -133,8 +125,24 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.1.0-7
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Apr 29 2013 Tomáš Mráz <tmraz@redhat.com> - 1.1.1-1
+- new upstream release
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Jun 20 2011 Tomas Mraz <tmraz@redhat.com> - 1.1.0-6
+- upstream fix for CVE-2011-2207 (blocking other request processing
+  when one CRL request is being processed) (#710529)
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
