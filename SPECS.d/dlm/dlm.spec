@@ -1,10 +1,10 @@
 Name:           dlm
-Version:        4.0.0
-Release:        7%{?dist}
+Version:        4.0.1
+Release:        2%{?dist}
 License:        GPLv2 and GPLv2+ and LGPLv2+
 # For a breakdown of the licensing, see README.license
 Group:          System Environment/Kernel
-Summary:        Cluster control daemon and tool
+Summary:        dlm control daemon and tool
 URL:            https://fedorahosted.org/cluster
 BuildRequires:  glibc-kernheaders
 BuildRequires:  corosynclib-devel >= 1.99.9
@@ -29,7 +29,7 @@ Requires(postun): systemd-units
 Conflicts: cman
 
 %description
-The kernel dlm requires a user daemon to control cluster membership.
+The kernel dlm requires a user daemon to control membership.
 
 %prep
 %setup -q
@@ -105,6 +105,15 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Mar 06 2013 David Teigland <teigland@redhat.com> - 4.0.1-1
+- New usptream release, fencing fixes
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Tue Nov 06 2012 David Teigland <teigland@redhat.com> - 4.0.0-1
 - New upstream release, systemd fixes
 
