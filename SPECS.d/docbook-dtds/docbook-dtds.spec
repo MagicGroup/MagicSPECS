@@ -1,9 +1,11 @@
-%define openjadever 1.3.2
-%define version_list "{3,4}.{0,1}-sgml 4.1.2-xml 4.{2,3,4,5}-{sgml,xml}"
+%global openjadever 1.3.2
+%global version_list "{3,4}.{0,1}-sgml 4.1.2-xml 4.{2,3,4,5}-{sgml,xml} 4.{2,3,4,5}-rng 4.{2,3,4,5}-xsd"
+%global catalog_list "{3,4}.{0,1}-sgml 4.1.2-xml 4.{2,3,4,5}-{sgml,xml}"
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name: docbook-dtds
 Version: 1.0
-Release: 57%{?dist}
+Release: 62%{?dist}
 Group: Applications/Text
 
 Summary: SGML and XML document type definitions for DocBook
@@ -16,7 +18,6 @@ Obsoletes: docbook-dtd31-sgml < %{version}-%{release}
 Obsoletes: docbook-dtd40-sgml < %{version}-%{release}
 Obsoletes: docbook-dtd41-sgml < %{version}-%{release}
 Obsoletes: docbook-dtd412-xml < %{version}-%{release}
-
 Provides: docbook-dtd-xml = %{version}-%{release}
 Provides: docbook-dtd-sgml = %{version}-%{release}
 Provides: docbook-dtd30-sgml = %{version}-%{release}
@@ -57,6 +58,16 @@ Source9: http://www.docbook.org/sgml/4.4/docbook-4.4.zip
 Source10: http://www.docbook.org/xml/4.4/docbook-xml-4.4.zip
 Source11: http://www.docbook.org/sgml/4.5/docbook-4.5.zip
 Source12: http://www.docbook.org/xml/4.5/docbook-xml-4.5.zip
+Source13: http://www.docbook.org/rng/4.2/docbook-rng-4.2.zip
+Source14: http://www.docbook.org/rng/4.3/docbook-rng-4.3.zip
+Source15: http://www.docbook.org/rng/4.4/docbook-rng-4.4.zip
+#compressed from http://www.docbook.org/rng/4.5/ upstream archive unavailable
+Source16: docbook-rng-4.5.zip
+Source17: http://www.docbook.org/xsd/4.2/docbook-xsd-4.2.zip
+Source18: http://www.docbook.org/xsd/4.3/docbook-xsd-4.3.zip
+Source19: http://www.docbook.org/xsd/4.4/docbook-xsd-4.4.zip
+#compressed from http://www.docbook.org/xsd/4.5/ upstream archive unavailable
+Source20: docbook-xsd-4.5.zip
 #fix old catalog files
 Patch0: docbook-dtd30-sgml-1.0.catalog.patch
 Patch1: docbook-dtd31-sgml-1.0.catalog.patch
@@ -153,6 +164,46 @@ cd 4.5-xml
 unzip %{SOURCE12}
 cd ..
 
+# Docbook RNG v4.2
+cd 4.2-rng
+unzip %{SOURCE13}
+cd ..
+
+# Docbook RNG v4.3
+cd 4.3-rng
+unzip %{SOURCE14}
+cd ..
+
+# Docbook RNG v4.4
+cd 4.4-rng
+unzip %{SOURCE15}
+cd ..
+
+# Docbook RNG v4.5
+cd 4.5-rng
+unzip %{SOURCE16}
+cd ..
+
+# Docbook XSD v4.2
+cd 4.2-xsd
+unzip %{SOURCE17}
+cd ..
+
+# Docbook XSD v4.3
+cd 4.3-xsd
+unzip %{SOURCE18}
+cd ..
+
+# Docbook XSD v4.4
+cd 4.4-xsd
+unzip %{SOURCE19}
+cd ..
+
+# Docbook XSD v4.5
+cd 4.5-xsd
+unzip %{SOURCE20}
+cd ..
+
 # Fix &euro; in SGML.
 %patch5 -p1
 
@@ -196,11 +247,27 @@ for dir
 do
   cd $dir
   fmt=${dir#*-} ver=${dir%%-*}
-  DESTDIR=$RPM_BUILD_ROOT/usr/share/sgml/docbook/$fmt-dtd-$ver
+  case $fmt in
+    sgml)   DESTDIR=$RPM_BUILD_ROOT/usr/share/sgml/docbook/$fmt-dtd-$ver ;;
+    xml)    DESTDIR=$RPM_BUILD_ROOT/usr/share/sgml/docbook/$fmt-dtd-$ver ;;
+    rng)    DESTDIR=$RPM_BUILD_ROOT/usr/share/sgml/docbook/$fmt-$ver ;;
+    xsd)    DESTDIR=$RPM_BUILD_ROOT/usr/share/sgml/docbook/$fmt-$ver ;;
+  esac
   case $fmt in
     sgml)   mkdir -p $DESTDIR ; install *.dcl $DESTDIR ;;
     xml)    mkdir -p $DESTDIR/ent ; install ent/* $DESTDIR/ent ;;
+    rng)    mkdir -p $DESTDIR ; install *.r* $DESTDIR ;;
+    xsd)    mkdir -p $DESTDIR ; install *.xsd $DESTDIR;;
   esac
+  cd ..
+done
+
+eval set %{catalog_list}
+for dir
+do
+  cd $dir
+  fmt=${dir#*-} ver=${dir%%-*}
+  DESTDIR=$RPM_BUILD_ROOT/usr/share/sgml/docbook/$fmt-dtd-$ver
   install *.dtd *.mod $DESTDIR
   install docbook.cat $DESTDIR/catalog
   cd ..
@@ -208,6 +275,12 @@ do
   touch $RPM_BUILD_ROOT/etc/sgml/$fmt-docbook-$ver.cat
 done
 
+#workaround the missing support for --parents hack in rpm 4.11+
+mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}
+for i in */*.txt */ChangeLog */README
+do
+  cp -pr --parents $i $RPM_BUILD_ROOT%{_pkgdocdir}
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -217,11 +290,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (0644,root,root,0755)
 #in upstream tarballs there is a lot of files with 0755 permissions
 #but they don't need to be, 0644 is enough for every file in tarball
-%doc --parents 3.1-sgml/ChangeLog 4.1-sgml/ChangeLog */*.txt
+%{_pkgdocdir}
 /usr/share/sgml/docbook/*ml-dtd-*
+/usr/share/sgml/docbook/rng-*
+/usr/share/sgml/docbook/xsd-*
 %config(noreplace) /etc/sgml/*ml-docbook.cat
 %ghost %config(noreplace) /etc/sgml/*ml-docbook-*.cat
-
 
 %post
 catcmd='/usr/bin/xmlcatalog --noout'
@@ -243,7 +317,7 @@ for STYLESHEETS in /usr/share/sgml/docbook/dsssl-stylesheets-*; do : ; done
 case $STYLESHEETS in
   *-"*") STYLESHEETS= ;;
 esac
-eval set %{version_list}
+eval set %{catalog_list}
 for dir
 do
   fmt=${dir#*-} ver=${dir%%-*}
@@ -354,7 +428,7 @@ ent/iso-lat2.ent
 ent/iso-amsr.ent
 ent/iso-cyr2.ent
   "
-  eval set %{version_list}
+  eval set %{catalog_list}
   for dir
   do
     fmt=${dir#*-} ver=${dir%%-*}
@@ -385,7 +459,7 @@ ent/iso-cyr2.ent
 fi
 
 %triggerin -- openjade >= %{openjadever}
-eval set %{version_list}
+eval set %{catalog_list}
 for dir
 do
   fmt=${dir#*-} ver=${dir%%-*}
@@ -395,7 +469,7 @@ done
 
 %triggerun -- openjade >= %{openjadever}
 [ $2 = 0 ] || exit 0
-eval set %{version_list}
+eval set %{catalog_list}
 for dir
 do
   fmt=${dir#*-} ver=${dir%%-*}
@@ -404,8 +478,27 @@ do
 done
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.0-57
-- 为 Magic 3.0 重建
+* Mon Aug 19 2013 Ondrej Vasik <ovasik@redhat.com> - 1.0-62
+- package Relax NG schema format (#839665)
+- package W3C XML (XSD) schema format
+
+* Tue Aug 06 2013 Ondrej Vasik <ovasik@redhat.com> - 1.0-61
+- use pkgdocdir variable when available (#993727)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-60
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 21 2013 Ondrej Vasik <ovasik@redhat.com> - 1.0-59
+- workaround incompatible change in rpm (causing FTBFS)
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-58
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-57
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-56
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue May 17 2011 Ondrej Vasik <ovasik@redhat.com> - 1.0-55
 - fix typo in 4.5 xml dtd catalog
@@ -565,7 +658,7 @@ done
 * Wed Nov 20 2002 Tim Powers <timp@redhat.com> 1.0-15
 - rebuild in current collinst
 
-* Mon Jul 30 2002 Tim Waugh <twaugh@redhat.com> 1.0-14
+* Mon Jul 29 2002 Tim Waugh <twaugh@redhat.com> 1.0-14
 - Fix typo in XML catalog (Eric Raymond).
 
 * Tue Jul 23 2002 Tim Waugh <twaugh@redhat.com> 1.0-13
