@@ -5,13 +5,15 @@
 
 Summary: GNU libraries and utilities for producing multi-lingual messages
 Name: gettext
-Version: 0.18.1.1
-Release: 17%{?dist}
+Version: 0.18.3.2
+Release: 1%{?dist}
 License: GPLv3+ and LGPLv2+
 Group: Development/Tools
 URL: http://www.gnu.org/software/gettext/
 Source: ftp://ftp.gnu.org/gnu/gettext/%{name}-%{version}.tar.gz
 Source2: msghack.py
+Source3: msghack.1
+Patch0: gettext-gnulib-tests-format-security.patch
 # removal of openmp.m4
 BuildRequires: autoconf >= 2.62
 BuildRequires: automake
@@ -48,9 +50,6 @@ Conflicts: filesystem < 3
 Provides: /bin/gettext
 # exception for bundled gnulib copylib
 Provides: bundled(gnulib)
-Patch1: gettext-readlink-einval.patch
-Patch2: gettext-0.18.1-fix-xgettext-crash.patch
-Patch3: gettext-0.18.1.1-stdio-gets.patch
 
 %description
 The GNU gettext package provides a set of tools and documentation for
@@ -136,15 +135,7 @@ Emacs.
 
 %prep
 %setup -q
-%patch1 -p1 -b .orig
-%patch2 -p1 -b .crash
-
-# patch gnulib for deprecated gets()
-for i in $(find -name stdio.in.h); do
-cd $(dirname $i)
-%patch3 -p1 -b .gets
-cd -
-done
+%patch0 -p1 -b .gnulib-tests-format-security
 
 
 %build
@@ -177,6 +168,7 @@ make install DESTDIR=${RPM_BUILD_ROOT} INSTALL="%{__install} -p" \
 
 
 install -pm 755 %SOURCE2 ${RPM_BUILD_ROOT}/%{_bindir}/msghack
+install -pm 644 %SOURCE3 ${RPM_BUILD_ROOT}/%{_mandir}/man1/msghack.1
 
 
 # make preloadable_libintl.so executable
@@ -296,7 +288,7 @@ fi
 %{_datadir}/%{name}/styles
 
 %files common-devel
-%{_datadir}/%{name}/archive.*.tar.gz
+%{_datadir}/%{name}/archive.*.tar.xz
 
 %files devel
 %doc gettext-runtime/man/*.3.html ChangeLog
@@ -339,6 +331,32 @@ fi
 %{_emacs_sitelispdir}/%{name}/*.el
 
 %changelog
+* Tue Jan  7 2014 Daiki Ueno <dueno@redhat.com> - 0.18.3.2-1
+- update to 0.18.3.2 release
+- apply patch to suppress -Wformat-security warnings in gnulib-tests
+
+* Sun Aug 25 2013 Daiki Ueno <dueno@redhat.com> - 0.18.3.1-1
+- update to 0.18.3.1 release
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 10 2013 Daiki Ueno <dueno@redhat.com> - 0.18.3-1
+- update to 0.18.3 release
+
+* Wed Jun 26 2013 Daiki Ueno <dueno@redhat.com> - 0.18.2.1-2
+- add a man page for msghack
+- fix bogus date in %%changelog
+
+* Tue Mar 12 2013 Daiki Ueno <dueno@redhat.com> - 0.18.2.1-1
+- update to 0.18.2.1 release (not really necessary though)
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Dec 26 2012 Daiki Ueno <dueno@redhat.com> - 0.18.2-1
+- update to 0.18.2 release (based on the spec patch by Jens Petersen)
+
 * Tue Oct  2 2012 Jens Petersen <petersen@redhat.com> - 0.18.1.1-17
 - move gettextize to the devel subpackage with its source data files
 - update msghack to GPL v3
@@ -849,7 +867,7 @@ fi
 * Sun Sep 13 1998 Cristian Gafton <gafton@redhat.com>
 - include the aclocal support files
 
-* Fri Sep  3 1998 Bill Nottingham <notting@redhat.com>
+* Thu Sep  3 1998 Bill Nottingham <notting@redhat.com>
 - remove devel package (functionality is in glibc)
 
 * Tue Sep  1 1998 Jeff Johnson <jbj@redhat.com>

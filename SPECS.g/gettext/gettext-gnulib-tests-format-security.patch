@@ -1,0 +1,27 @@
+commit 4e42bcc4f190909d49d38f1137726b3bc36b7191
+Author: Ivailo <xakepa10@gmail.com>
+Date:   Tue Dec 3 14:20:22 2013 +0000
+
+    test-xvasprintf: disable some -Wformat-security diagnostics
+    
+    * tests/test-xvasprintf.c: Disable -Wformat-zero-length and
+    -Wformat-nonliteral checks, as these edge cases are part of the test.
+
+diff --git a/tests/test-xvasprintf.c b/tests/test-xvasprintf.c
+index 453ca58..0987225 100644
+--- a/gettext-tools/gnulib-tests/test-xvasprintf.c
++++ b/gettext-tools/gnulib-tests/test-xvasprintf.c
+@@ -16,6 +16,13 @@
+ 
+ /* Written by Bruno Haible <bruno@clisp.org>, 2007.  */
+ 
++/* Tell GCC not to warn about the specific edge cases tested here.  */
++#if (__GNUC__ == 4 && 3 <= __GNUC_MINOR__) || 4 < __GNUC__
++# pragma GCC diagnostic ignored "-Wformat-zero-length"
++# pragma GCC diagnostic ignored "-Wformat-nonliteral"
++# pragma GCC diagnostic ignored "-Wformat-security"
++#endif
++
+ #include <config.h>
+ 
+ #include "xvasprintf.h"
