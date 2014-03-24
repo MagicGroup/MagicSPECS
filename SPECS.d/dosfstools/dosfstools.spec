@@ -1,18 +1,12 @@
 Name: dosfstools
 Summary: Utilities for making and checking MS-DOS FAT filesystems on Linux
-Version: 3.0.12
-Release: 3%{?dist}
+Version: 3.0.25
+Release: 1%{?dist}
 License: GPLv3+
 Group: Applications/System
-Source0: http://www.daniel-baumann.ch/software/dosfstools/%{name}-%{version}.tar.bz2
+Source0: http://www.daniel-baumann.ch/files/software/dosfstools/%{name}-%{version}.tar.xz
 URL: http://www.daniel-baumann.ch/software/dosfstools/
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# Fix buffer overflow in alloc_rootdir_entry (#674095)
-Patch0: dosfstools-3.0.12-fix-alloc-rootdir-entry.patch
-# Fix dosfslabel on FAT32 (#693662)
-Patch1: dosfstools-3.0.12-dosfslabel-fat32.patch
-# Fix device partitions detection (#710480)
-Patch2: dosfstools-3.0.12-dev-detect-fix.patch
 
 %description
 The dosfstools package includes the mkdosfs and dosfsck utilities,
@@ -21,18 +15,13 @@ drives or on floppies.
 
 %prep
 %setup -q
-%patch0 -p1 -b .fix-alloc-rootdir-entry
-%patch1 -p1 -b .dosfslabel-fat32
-%patch2 -p1 -b .dev-detect-fix
 
 %build
 make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fno-strict-aliasing"
 
 %install
 rm -rf %{buildroot}
-make DESTDIR=%{buildroot} install-bin install-man PREFIX=%{_prefix} SBINDIR=%{_sbindir}
-
-magic_rpm_clean.sh
+make DESTDIR=%{buildroot} install-bin install-man install-symlinks PREFIX=%{_prefix}
 
 %clean
 rm -rf %{buildroot}
@@ -42,13 +31,96 @@ rm -rf %{buildroot}
 %doc ChangeLog COPYING doc/*-2.x
 %{_sbindir}/*
 %{_mandir}/man8/*
+%{_mandir}/de/man8/*
+
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 3.0.12-3
-- 为 Magic 3.0 重建
+* Mon Feb 17 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.25-1
+- New version
+  Resolves: rhbz#1055259
 
-* Mon Apr 16 2012 Liu Di <liudidi@gmail.com> - 3.0.12-2
-- 为 Magic 3.0 重建
+* Mon Nov 25 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.24-1
+- New version
+  Resolves: rhbz#1034058
+- Dropped fix-big-endian patch (upstreamed)
+
+* Fri Nov 22 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.23-3
+- Used /usr/sbin directory instead of /sbin
+
+* Fri Nov 22 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.23-2
+- Fixed dosfsck on big endian platforms
+  Resolves: rhbz#1029695
+
+* Tue Oct 15 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.23-1
+- New version
+  Resolves: rhbz#1019081
+- Fixed bogus dates in changelog (best effort)
+
+* Thu Aug  8 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.22-4
+- Fixed sources URL
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.22-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 24 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.22-2
+- Fixed ownership of man directories
+  Resolves: rhbz#987735
+
+* Tue Jul 23 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.22-1
+- New version
+  Resolves: rhbz#987337
+
+* Wed Jul 17 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.21-1
+- New version
+  Resolves: rhbz#985279
+- Dropped manpage-fix patch (upstreamed)
+
+* Tue Jun 25 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.20-3
+- Fixed fsck.vfat manpage to be consistent with the tool options
+
+* Fri Jun 14 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.20-2
+- Installed compatibility symlinks
+
+* Thu Jun 13 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.20-1
+- New version
+  Resolves: rhbz#973937
+
+* Wed Jun 12 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.19-1
+- New version
+  Resolves: rhbz#971686
+
+* Tue Jun  4 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.17-1
+- New version
+  Resolves: rhbz#968400
+- Dropped fix-label patch (upstreamed)
+
+* Thu May  2 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.16-3
+- Fixed dosfslabel (by fix-label patch)
+  Resolves: rhbz#948055
+
+* Mon Mar 11 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.16-2
+- Source0 URL synced with upstream
+
+* Wed Mar  6 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.16-1
+- New version
+  Resolves: rhbz#916913
+
+* Fri Feb 22 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.15-1
+- New version
+  Resolves: rhbz#913884
+- Dropped patches: fix-alloc-rootdir-entry, dev-detect-fix (all upstreamed)
+
+* Thu Jan 24 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.14-1
+- New version
+  Resolves: rhbz#903581
+- Switched to xz compressed sources
+- Dropped dosfslabel-fat32 patch (upstreamed)
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.12-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Sat Oct 29 2011 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.12-1
 - New version, all patches were rebased
@@ -148,7 +220,7 @@ rm -rf %{buildroot}
 * Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 2.11-4.1
 - rebuilt for new gcc4.1 snapshot and glibc changes
 
-* Sun Dec 16 2005 Jakub Jelinek <jakub@redhat.com> 2.11-4
+* Fri Dec 16 2005 Jakub Jelinek <jakub@redhat.com> 2.11-4
 - rebuilt with GCC 4.1
 - make it build with -D_FORTIFY_SOURCE=2
 
@@ -229,7 +301,7 @@ rm -rf %{buildroot}
 * Wed Jul 12 2000 Prospector <bugzilla@redhat.com>
 - automatic rebuild
 
-* Fri Jun 17 2000 Bill Nottingham <notting@redhat.com>
+* Sat Jun 17 2000 Bill Nottingham <notting@redhat.com>
 - hard link mkdosfs
 
 * Thu Jun 15 2000 Matt Wilson <msw@redhat.com>
