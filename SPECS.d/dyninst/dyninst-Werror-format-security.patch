@@ -1,0 +1,24 @@
+commit 67ce417eab034187f0ea952e78c547051da4b276
+Author: Josh Stone <jistone@redhat.com>
+Date:   Tue Dec 3 14:03:21 2013 -0800
+
+    DatabaseOutputDriver: Print raw buffer via %s
+    
+    This is needed to pass -Werror=format-security, which flagged this
+    having passed the buffer as the format argument.
+    
+    Ref: https://bugzilla.redhat.com/show_bug.cgi?id=1037048
+
+diff --git a/src/DatabaseOutputDriver.C b/src/DatabaseOutputDriver.C
+index 0a866dbea458..2769d584e9be 100644
+--- a/src/DatabaseOutputDriver.C
++++ b/src/DatabaseOutputDriver.C
+@@ -311,7 +311,7 @@ void DatabaseOutputDriver::writeSQLLog() {
+        else
+            buf.clear();
+ 
+-       fprintf(out, buf.c_str());
++       fprintf(out, "%s", buf.c_str());
+        delete [] buffer;
+    }
+    if (buf.rfind("RESULT:") == std::string::npos) {

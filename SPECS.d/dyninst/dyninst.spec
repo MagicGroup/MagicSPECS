@@ -2,9 +2,9 @@ Summary: An API for Run-time Code Generation
 License: LGPLv2+
 Name: dyninst
 Group: Development/Libraries
-Release: 1%{?dist}
+Release: 6%{?dist}
 URL: http://www.dyninst.org
-Version: 8.1.1
+Version: 8.1.2
 Exclusiveos: linux
 #Right now dyninst does not know about the following architectures
 ExcludeArch: s390 s390x %{arm}
@@ -12,17 +12,19 @@ ExcludeArch: s390 s390x %{arm}
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
 #  git clone http://git.dyninst.org/dyninst.git; cd dyninst
-#  git archive --format=tar.gz --prefix=dyninst/ v8.1.1 > dyninst-8.1.1.tar.gz
+#  git archive --format=tar.gz --prefix=dyninst/ v8.1.2 > dyninst-8.1.2.tar.gz
 #  git clone http://git.dyninst.org/docs.git; cd docs
 #  git archive --format=tar.gz v8.1.1 > dyninst-docs-8.1.1.tar.gz
 # Verify the commit ids with:
-#  gunzip -c dyninst-8.1.1.tar.gz | git get-tar-commit-id
+#  gunzip -c dyninst-8.1.2.tar.gz | git get-tar-commit-id
 #  gunzip -c dyninst-docs-8.1.1.tar.gz | git get-tar-commit-id
 Source0: %{name}-%{version}.tar.gz
-Source1: %{name}-docs-%{version}.tar.gz
+Source1: %{name}-docs-8.1.1.tar.gz
 Patch1: dyninst-rpm-build-flags.patch
 Patch2: dyninst-install-testsuite.patch
-Patch3: dyninst-relative-symlinks.patch
+Patch3: dyninst-pokeuser.patch
+Patch4: dyninst-Werror-format-security.patch
+Patch5: dyninst-8.1.2-testsuite-opt.patch
 BuildRequires: libdwarf-devel >= 20111030
 BuildRequires: elfutils-libelf-devel
 BuildRequires: boost-devel
@@ -86,8 +88,11 @@ making sure that dyninst works properly.
 pushd dyninst
 %patch1 -p1 -b .buildflags
 %patch2 -p1 -b .testsuite
-%patch3 -p1 -b .symlinks
+%patch3 -p1 -b .pokeuser
+%patch4 -p1 -d testsuite -b .format-security
+%patch5 -p1 -b .testsuite-opt
 popd
+
 
 %build
 
@@ -156,6 +161,24 @@ chmod 644 %{buildroot}%{_libdir}/dyninst/testsuite/*
 %attr(755,root,root) %{_libdir}/dyninst/testsuite/*
 
 %changelog
+* Wed Dec 11 2013 Josh Stone <jistone@redhat.com> 8.1.2-6
+- Fix rhbz1040715 (testsuite g++ optimization)
+
+* Tue Dec 03 2013 Josh Stone <jistone@redhat.com> 8.1.2-5
+- Fix rhbz1037048 (-Werror=format-security FTBFS)
+
+* Mon Aug 05 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.1.2-4
+- Fix rhbz991889 (FTBFS).
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.1.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Petr Machata <pmachata@redhat.com> - 8.1.2-2
+- Rebuild for boost 1.54.0
+
+* Tue Jun 18 2013 Josh Stone <jistone@redhat.com> 8.1.2-1
+- Update to release 8.1.2.
+
 * Fri Mar 15 2013 Josh Stone <jistone@redhat.com> 8.1.1-1
 - Update to release 8.1.1.
 - Drop the backported dyninst-test2_4-kill-init.patch.
@@ -267,7 +290,7 @@ chmod 644 %{buildroot}%{_libdir}/dyninst/testsuite/*
 * Fri May 11 2012 William Cohen <wcohen@redhat.com> - 7.0.1-0.9
 - Clean up Makefile rules.
 
-* Wed May 5 2012 William Cohen <wcohen@redhat.com> - 7.0.1-0.8
+* Sat May 5 2012 William Cohen <wcohen@redhat.com> - 7.0.1-0.8
 - Clean up spec file.
 
 * Wed May 2 2012 William Cohen <wcohen@redhat.com> - 7.0.1-0.7
