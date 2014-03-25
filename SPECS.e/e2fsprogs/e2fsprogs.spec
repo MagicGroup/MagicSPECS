@@ -1,12 +1,12 @@
 Summary: Utilities for managing ext2, ext3, and ext4 filesystems
 Name: e2fsprogs
-Version: 1.42.6
-Release: 3%{?dist}
+Version: 1.42.9
+Release: 2%{?dist}
 
 # License tags based on COPYING file distinctions for various components
 License: GPLv2
 Group: System Environment/Base
-Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source0: https://www.kernel.org/pub/linux/kernel/people/tytso/%{name}/v%{version}/%{name}-%{version}.tar.xz
 Source1: ext2_types-wrapper.h
 Source2: e2fsck.conf
 
@@ -14,8 +14,8 @@ Patch1: e2fsprogs-1.40.4-sb_feature_check_ignore.patch
 
 Url: http://e2fsprogs.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: e2fsprogs-libs = %{version}-%{release}
-Requires: libcom_err = %{version}-%{release}
+Requires: e2fsprogs-libs%{?_isa} = %{version}-%{release}
+Requires: libcom_err%{?_isa} = %{version}-%{release}
 Requires: libss = %{version}-%{release}
 
 # e4fsprogs was a parallel ext4-capable package in RHEL5.x
@@ -24,7 +24,8 @@ Obsoletes: e4fsprogs < %{version}-%{release}
 Provides: e4fsprogs = %{version}-%{release}
 %endif
 
-BuildRequires: pkgconfig, texinfo
+BuildRequires: pkgconfig, texinfo, libselinux-devel
+BuildRequires: libsepol-devel
 BuildRequires: libblkid-devel
 BuildRequires: libuuid-devel
 BuildRequires: gettext
@@ -48,6 +49,7 @@ performance of an ext2, ext3, or ext4 filesystem.
 Summary: Ext2/3/4 filesystem-specific shared libraries
 Group: Development/Libraries
 License: GPLv2 and LGPLv2
+Requires: libcom_err%{?_isa} = %{version}-%{release}
 
 %description libs
 E2fsprogs-libs contains libe2p and libext2fs, the libraries of the
@@ -72,9 +74,9 @@ from userspace, and perform other useful functions.
 Summary: Ext2/3/4 filesystem-specific libraries and headers
 Group: Development/Libraries
 License: GPLv2 and LGPLv2
-Requires: e2fsprogs-libs = %{version}-%{release}
+Requires: e2fsprogs-libs%{?_isa} = %{version}-%{release}
+Requires: libcom_err-devel%{?_isa} = %{version}-%{release}
 Requires: gawk
-Requires: libcom_err-devel
 Requires: pkgconfig
 Requires(post): info
 Requires(preun): info
@@ -102,7 +104,7 @@ libcom_err is an attempt to present a common error-handling mechanism.
 Summary: Common error description library
 Group: Development/Libraries
 License: MIT
-Requires: libcom_err = %{version}-%{release}
+Requires: libcom_err%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description -n libcom_err-devel
@@ -117,6 +119,7 @@ libcom_err is an attempt to present a common error-handling mechanism.
 Summary: Command line interface parsing library
 Group: Development/Libraries
 License: MIT
+Requires: libcom_err%{?_isa} = %{version}-%{release}
 
 %description -n libss
 This is libss, a command line interface parsing library, part of e2fsprogs.
@@ -131,7 +134,7 @@ It was originally inspired by the Multics SubSystem library.
 Summary: Command line interface parsing library
 Group: Development/Libraries
 License: MIT
-Requires: libss = %{version}-%{release}
+Requires: libss%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description -n libss-devel
@@ -178,6 +181,15 @@ install -p -m 644 %{SOURCE2} %{buildroot}/etc/e2fsck.conf
 %find_lang %{name}
 
 %check
+# XXX ERS Hack for now; this bug has existed for a while,
+# i.e. it is not a regression in this release, but there
+# is no fix yet, and we need to get this package building.
+# See Bug 987133 - resize2fs tests failing on ppc, s390
+# ERS 2 Jan 2014 - re-enable for now and see how this goes
+#rm -rf tests/r_1024_small_bg*
+#rm -rf tests/r_64bit_big_expand*
+#rm -rf tests/r_bigalloc_big_expand*
+#rm -rf tests/r_ext4_big_expand*
 make check
 
 %clean
@@ -239,6 +251,9 @@ exit 0
 %{_mandir}/man1/chattr.1*
 %{_mandir}/man1/lsattr.1*
 
+%{_mandir}/man5/ext2.5*
+%{_mandir}/man5/ext3.5*
+%{_mandir}/man5/ext4.5*
 %{_mandir}/man5/e2fsck.conf.5*
 %{_mandir}/man5/mke2fs.conf.5*
 
@@ -321,8 +336,28 @@ exit 0
 %{_libdir}/pkgconfig/ss.pc
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.42.6-3
-- 为 Magic 3.0 重建
+* Mon Jan 20 2014 Eric Sandeen <sandeen@redhat.com> 1.42.9-2
+- Fix up Source0 URL
+
+* Thu Jan 01 2014 Eric Sandeen <sandeen@redhat.com> 1.42.9-1
+- New upstream release
+- Re-enable disabled tests for now
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.42.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Eric Sandeen <sandeen@redhat.com> 1.42.8-2
+- Interpackage dependencies should be for same arch
+- Remove newly added but failing resize2fs tests for now
+
+* Wed Jun 26 2013 Eric Sandeen <sandeen@redhat.com> 1.42.8-1
+- New upstream release
+
+* Tue Jan 29 2013 Eric Sandeen <sandeen@redhat.com> 1.42.7-2
+- Tighten up inter-package dependencies
+
+* Tue Jan 22 2013 Eric Sandeen <sandeen@redhat.com> 1.42.7-1
+- New upstream release
 
 * Tue Oct 02 2012 Eric Sandeen <sandeen@redhat.com> 1.42.6-2
 - Switch back to gzipped tarball to make sf.net source URL correct
