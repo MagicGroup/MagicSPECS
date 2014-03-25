@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+#  Check for error conditions which the init system expects us to check and
+#  for other common errors, and exit with the expected status codes.
+#
+kpropd=/usr/sbin/kpropd
+if ! test -f /var/kerberos/krb5kdc/kpropd.acl ; then
+	echo $"Error. This does not appear to be a slave server, kpropd.acl not found"
+	exit 6
+fi
+if ! test -x "$kpropd" ; then
+	exit 5
+fi
+exec "$kpropd" "$@"

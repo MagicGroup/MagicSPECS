@@ -1,0 +1,149 @@
+From acbb59cd4b1759afe492b8503cddb0a2f719e6c8 Mon Sep 17 00:00:00 2001
+From: Nalin Dahyabhai <nalin@dahyabhai.net>
+Date: Wed, 30 Oct 2013 21:47:14 -0400
+Subject: [PATCH 4/6] Try to use the default_ccache_name'd as the target
+
+Try to use the location named by the default_ccache_name setting as the
+target cache.  If it's a collection, just create or update a subsidiary
+cache.  If it's not, then fall back to creating a new cache to try to
+avoid destroying the contents of one that might already be there.  We
+can't really detect this in advance for KEYRING: caches, though.
+---
+ src/clients/ksu/ksu.h  |  2 +-
+ src/clients/ksu/main.c | 91 ++++++++++++++++++++++++++++++++++++--------------
+ 2 files changed, 67 insertions(+), 26 deletions(-)
+
+diff --git a/src/clients/ksu/ksu.h b/src/clients/ksu/ksu.h
+index a889fb9..a195f52 100644
+--- a/src/clients/ksu/ksu.h
++++ b/src/clients/ksu/ksu.h
+@@ -44,7 +44,7 @@
+ #define KRB5_DEFAULT_OPTIONS 0
+ #define KRB5_DEFAULT_TKT_LIFE 60*60*12 /* 12 hours */
+ 
+-#define KRB5_SECONDARY_CACHE "FILE:/tmp/krb5cc_"
++#define KRB5_DEFAULT_SECONDARY_CACHE "FILE:/tmp/krb5cc_%{uid}"
+ #define KRB5_TEMPORARY_CACHE "MEMORY:_ksu"
+ 
+ #define KRB5_LOGIN_NAME ".k5login"
+diff --git a/src/clients/ksu/main.c b/src/clients/ksu/main.c
+index 7497a2b..58df6a1 100644
+--- a/src/clients/ksu/main.c
++++ b/src/clients/ksu/main.c
+@@ -90,7 +90,10 @@ main (argc, argv)
+     krb5_ccache cc_tmp = NULL, cc_target = NULL;
+     krb5_context ksu_context;
+     char * cc_target_tag = NULL;
++    char * cc_target_tag_conf;
++    krb5_boolean cc_target_switchable;
+     char * target_user = NULL;
++    char * target_user_uid_str;
+     char * source_user;
+ 
+     krb5_ccache cc_source = NULL;
+@@ -116,7 +119,6 @@ main (argc, argv)
+     krb5_boolean stored = FALSE;
+     krb5_principal  kdc_server;
+     krb5_boolean zero_password;
+-    char * dir_of_cc_target;
+ 
+     options.opt = KRB5_DEFAULT_OPTIONS;
+     options.lifetime = KRB5_DEFAULT_TKT_LIFE;
+@@ -420,31 +422,70 @@ main (argc, argv)
+     }
+ 
+     if (cc_target_tag == NULL) {
+-
+         cc_target_tag = (char *)xcalloc(KRB5_SEC_BUFFSIZE ,sizeof(char));
+-        /* make sure that the new ticket file does not already exist
+-           This is run as source_uid because it is reasonable to
+-           require the source user to have write to where the target
+-           cache will be created.*/
+-
+-        do {
+-            snprintf(cc_target_tag, KRB5_SEC_BUFFSIZE, "%s%ld.%d",
+-                     KRB5_SECONDARY_CACHE,
+-                     (long) target_uid, gen_sym());
+-            cc_target_tag_tmp = strchr(cc_target_tag, ':') + 1;
+-
+-        } while (krb5_ccache_name_is_initialized(ksu_context,
+-                                                 cc_target_tag));
+-    }
+-
+-
+-    dir_of_cc_target = get_dir_of_file(cc_target_tag_tmp);
+-
+-    if (access(dir_of_cc_target, R_OK | W_OK )){
+-        fprintf(stderr,
+-                _("%s does not have correct permissions for %s\n"),
+-                source_user, cc_target_tag);
+-        exit(1);
++        if (cc_target_tag == NULL) {
++            com_err(prog_name, retval , _("while allocating memory for the "
++                                          "target ccache name"));
++            exit(1);
++        }
++        /* Read the configured value. */
++        if (profile_get_string(ksu_context->profile, KRB5_CONF_LIBDEFAULTS,
++                               KRB5_CONF_DEFAULT_CCACHE_NAME, NULL,
++                               KRB5_DEFAULT_SECONDARY_CACHE,
++                               &cc_target_tag_conf)) {
++            com_err(prog_name, retval , _("while allocating memory for the "
++                                          "target ccache name"));
++            exit(1);
++        }
++        /* Prepend "FILE:" if a cctype wasn't specified in the config. */
++        if (strchr(cc_target_tag_conf, ':')) {
++            cc_target_tag_tmp = strdup(cc_target_tag_conf);
++        } else {
++            if (asprintf(&cc_target_tag_tmp, "FILE:%s",
++                         cc_target_tag_conf) < 0)
++                cc_target_tag_tmp = NULL;
++        }
++        profile_release_string(cc_target_tag_conf);
++        if (cc_target_tag_tmp == NULL) {
++            com_err(prog_name, retval , _("while allocating memory for the "
++                                          "target ccache name"));
++            exit(1);
++        }
++        /* Resolve parameters in the configured value for the target user. */
++        if (asprintf(&target_user_uid_str, "%lu",
++                     (unsigned long)target_uid) < 0) {
++            com_err(prog_name, retval , _("while allocating memory for the "
++                                          "target ccache name"));
++            exit(1);
++        }
++        if (k5_expand_path_tokens_extra(ksu_context,
++                                        cc_target_tag_tmp, &cc_target_tag_conf,
++                                        "euid", target_user_uid_str,
++                                        "uid", target_user_uid_str,
++                                        "USERID", target_user_uid_str,
++                                        "username", target_user,
++                                        NULL) != 0) {
++            com_err(prog_name, retval , _("while allocating memory for the "
++                                          "target ccache name"));
++            exit(1);
++        }
++        cc_target_tag_tmp[strcspn(cc_target_tag_tmp, ":")] = '\0';
++        cc_target_switchable = krb5_cc_support_switch(ksu_context,
++                                                      cc_target_tag_tmp);
++        free(cc_target_tag_tmp);
++        /* Try to avoid destroying a target ccache. */
++        if (cc_target_switchable) {
++            snprintf(cc_target_tag, KRB5_SEC_BUFFSIZE, "%s",
++                     cc_target_tag_conf);
++        } else {
++            do {
++                snprintf(cc_target_tag, KRB5_SEC_BUFFSIZE, "%s.%d",
++                         cc_target_tag_conf, gen_sym());
++            } while (krb5_ccache_name_is_initialized(ksu_context,
++                                                     cc_target_tag));
++        }
++        cc_target_tag_tmp = strchr(cc_target_tag, ':') + 1;
++        krb5_free_string(ksu_context, cc_target_tag_conf);
+     }
+ 
+     if (auth_debug){
+-- 
+1.8.5.3
+

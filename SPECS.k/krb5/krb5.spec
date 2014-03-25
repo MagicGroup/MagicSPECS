@@ -1,77 +1,168 @@
 %global WITH_LDAP 1
 %global WITH_DIRSRV 1
+%if 0%{?fedora} >= 17 || 0%{?rhel} > 6
 # These next two *will* change.
 %global WITH_OPENSSL 1
 %global WITH_NSS 0
 %global WITH_SYSVERTO 1
+%else
+%global WITH_OPENSSL 1
+%global WITH_NSS 0
+%global WITH_SYSVERTO 0
+%endif
+# The "move everything to /usr" feature landed in Fedora 17, but we didn't
+# catch up until the Fedora 18 development cycle, at which point we found
+# that some packages were hard-coding paths.
+%if 0%{?fedora} > 17 || 0%{?rhel} > 6
+%global separate_usr 0
+%else
+%global separate_usr 1
+%endif
+# Systemd landed in Fedora 15, but this package was cut over for Fedora 16.
+%if 0%{?fedora} >= 16 || 0%{?rhel} > 6
+%global WITH_SYSTEMD 1
+%else
+%global WITH_SYSTEMD 0
+%endif
+# Set this so that find-lang.sh will recognize the .po files.
 %global gettext_domain mit-krb5
+# Guess where the -libs subpackage's docs are going to go.
+%define libsdocdir %{?_pkgdocdir:%(echo %{_pkgdocdir} | sed -e s,krb5,krb5-libs,g)}%{!?_pkgdocdir:%{_docdir}/%{name}-libs-%{version}}
+# Figure out where the default ccache lives and how we set it.
+%if 0%{?fedora} > 18 && 0%{?fedora} < 20
+%global compile_default_ccache_name 1
+%global compiled_default_ccache_name DIR:/run/user/%%{uid}/krb5cc
+%endif
+%if 0%{?fedora} >= 20 || 0%{?rhel} > 6
+%global configure_default_ccache_name 1
+%global configured_default_ccache_name KEYRING:persistent:%%{uid}
+%endif
 
 Summary: The Kerberos network authentication system
 Name: krb5
-Version: 1.10.1
-Release: 3%{?dist}
+Version: 1.12.1
+Release: 5%{?dist}
 # Maybe we should explode from the now-available-to-everybody tarball instead?
-# http://web.mit.edu/kerberos/dist/krb5/1.10/krb5-1.10.1-signed.tar
+# http://web.mit.edu/kerberos/dist/krb5/1.12/krb5-1.12.1-signed.tar
 Source0: krb5-%{version}.tar.gz
 Source1: krb5-%{version}.tar.gz.asc
+# Use a dummy krb5-%{version}-pdf.tar.xz the first time through, then
+#  tar cvJf $RPM_SOURCE_DIR/krb5-%%{version}-pdf.tar.xz build-pdf/*.pdf
+# after the build phase finishes.
+Source3: krb5-%{version}-pdf.tar.xz
 Source2: kprop.service
 Source4: kadmin.service
 Source5: krb5kdc.service
 Source6: krb5.conf
+Source7: _kpropd
+Source8: _kadmind
 Source10: kdc.conf
 Source11: kadm5.acl
 Source19: krb5kdc.sysconfig
 Source20: kadmin.sysconfig
-# The same source files we "check", generated with "krb5-tex-pdf.sh create"
-# and tarred up.
-Source23: krb5-%{version}-pdf.tar.xz
-Source24: krb5-tex-pdf.sh
-Source25: krb5-1.10-manpaths.txt
 Source29: ksu.pamd
-Source30: kerberos-iv.portreserve
 Source31: kerberos-adm.portreserve
 Source32: krb5_prop.portreserve
 Source33: krb5kdc.logrotate
 Source34: kadmind.logrotate
-Source35: kdb_check_weak.c
+Source36: kpropd.init
+Source37: kadmind.init
+Source38: krb5kdc.init
+Source39: krb5-krb5kdc.conf
 
-Patch5: krb5-1.10-ksu-access.patch
-Patch6: krb5-1.10-ksu-path.patch
-Patch12: krb5-1.7-ktany.patch
-Patch16: krb5-1.10-buildconf.patch
+BuildRequires: cmake
+# Carry this locally until it's available in a packaged form.
+Source100: nss_wrapper-0.0-20140204195100.git3d58327.tar.xz
+Source101: noport.c
+Source102: socket_wrapper-0.0-20140204194748.gitf3b2ece.tar.xz
+
+Patch6: krb5-1.12-ksu-path.patch
+Patch12: krb5-1.12-ktany.patch
+Patch16: krb5-1.12-buildconf.patch
 Patch23: krb5-1.3.1-dns.patch
 Patch29: krb5-1.10-kprop-mktemp.patch
 Patch30: krb5-1.3.4-send-pr-tempfile.patch
-Patch39: krb5-1.8-api.patch
+Patch39: krb5-1.12-api.patch
 Patch56: krb5-1.10-doublelog.patch
 Patch59: krb5-1.10-kpasswd_tcp.patch
-Patch60: krb5-1.10-pam.patch
-Patch61: krb5-1.10-manpaths.patch
-Patch63: krb5-1.10-selinux-label.patch
-Patch71: krb5-1.9-dirsrv-accountlock.patch
-Patch75: krb5-pkinit-debug.patch
+Patch60: krb5-1.12.1-pam.patch
+Patch63: krb5-1.12-selinux-label.patch
+Patch71: krb5-1.11-dirsrv-accountlock.patch
 Patch86: krb5-1.9-debuginfo.patch
-Patch100: krb5-trunk-7046.patch
-Patch101: krb5-trunk-7047.patch
-Patch102: krb5-trunk-7048.patch
-Patch103: krb5-1.10-gcc47.patch
 Patch105: krb5-kvno-230379.patch
+Patch129: krb5-1.11-run_user_0.patch
+Patch134: krb5-1.11-kpasswdtest.patch
+Patch135: krb5-master-keyring-kdcsync.patch
+Patch136: krb5-master-rcache-internal-const.patch
+Patch137: krb5-master-rcache-acquirecred-cleanup.patch
+Patch138: krb5-master-rcache-acquirecred-leak.patch
+Patch139: krb5-master-rcache-acquirecred-source.patch
+Patch140: krb5-master-empty-credstore.patch
+Patch141: krb5-master-rcache-acquirecred-test.patch
+Patch142: krb5-master-move-otp-sockets.patch
+Patch143: krb5-master-spnego-preserve-oid.patch
+Patch201: 0001-Don-t-try-to-stat-not-on-disk-ccache-residuals.patch
+Patch202: 0002-Use-an-in-memory-cache-until-we-need-the-target-s.patch
+Patch203: 0003-Learn-to-destroy-the-ccache-we-re-copying-from.patch
+Patch204: 0004-Try-to-use-the-default_ccache_name-d-as-the-target.patch
+Patch205: 0005-Be-more-careful-of-target-ccache-collections.patch
+Patch206: 0006-Copy-config-entries-to-the-target-ccache.patch
 
 License: MIT
 URL: http://web.mit.edu/kerberos/www/
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: autoconf, bison, flex, gawk, gettext
+BuildRequires: autoconf, bison, flex, gawk, gettext, pkgconfig, sed
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-BuildRequires: libcom_err-devel, libss-devel
+BuildRequires: libcom_err-devel, libedit-devel, libss-devel
 %endif
-BuildRequires: gzip, ncurses-devel, texinfo, texinfo-tex, tar
-BuildRequires: texlive-latex
-BuildRequires: keyutils-libs-devel
+BuildRequires: gzip, ncurses-devel, tar
+BuildRequires: python-sphinx
+# The texlive package got a lot more complicated here.
+%if 0%{?fedora} > 17 || 0%{?rhel} > 6
+# Taken from \usepackage directives produced by sphinx:
+BuildRequires: tex(babel.sty)
+BuildRequires: tex(bookmark.sty)
+BuildRequires: tex(fancybox.sty)
+BuildRequires: tex(fncychap.sty)
+BuildRequires: tex(fontenc.sty)
+BuildRequires: tex(framed.sty)
+BuildRequires: tex(hyperref.sty)
+BuildRequires: tex(ifthen.sty)
+BuildRequires: tex(inputenc.sty)
+BuildRequires: tex(longtable.sty)
+BuildRequires: tex(multirow.sty)
+BuildRequires: tex(times.sty)
+BuildRequires: tex(titlesec.sty)
+BuildRequires: tex(threeparttable.sty)
+BuildRequires: tex(wrapfig.sty)
+BuildRequires: tex(report.cls)
+%else
+BuildRequires: texlive-texmf, texlive-texmf-latex
+%endif
+# Typical fonts, and the commands which we need to have present.
+BuildRequires: texlive, texlive-latex, texlive-texmf-fonts
+BuildRequires: /usr/bin/pdflatex /usr/bin/makeindex
+BuildRequires: keyutils, keyutils-libs-devel >= 1.5.8
 BuildRequires: pam-devel
+%if %{WITH_SYSTEMD}
 BuildRequires: systemd-units
+%endif
 # For the test framework.
 BuildRequires: perl, dejagnu, tcl-devel
+BuildRequires: net-tools, rpcbind
+%if 0%{?fedora} >= 13 || 0%{?rhel} > 6
+BuildRequires: hostname
+BuildRequires: iproute
+%endif
+%if 0%{?fedora} >= 9
+BuildRequires: python-pyrad
+%endif
+%if 0%{?fedora} >= 8
+%ifarch %{ix86} x86_64
+BuildRequires: yasm
+%endif
+%endif
 
 %if %{WITH_LDAP}
 BuildRequires: openldap-devel
@@ -94,11 +185,12 @@ practice of sending passwords over the network in unencrypted form.
 %package devel
 Summary: Development files needed to compile Kerberos 5 programs
 Group: Development/Libraries
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 Requires: libcom_err-devel
 %endif
 Requires: keyutils-libs-devel
+Requires: libverto-devel
 
 %description devel
 Kerberos is a network authentication system. The krb5-devel package
@@ -109,6 +201,13 @@ to install this package.
 %package libs
 Summary: The shared libraries used by Kerberos 5
 Group: System Environment/Libraries
+%if 0%{?rhel} == 6
+# Some of the older libsmbclient builds here incorrectly called
+# krb5_locate_kdc(), which was mistakenly exported in 1.9.
+Conflicts: libsmbclient < 3.5.10-124
+%endif
+Requires: coreutils, gawk, grep, sed
+Requires: keyutils-libs >= 1.5.8
 
 %description libs
 Kerberos is a network authentication system. The krb5-libs package
@@ -118,21 +217,31 @@ Kerberos, you need to install this package.
 %package server
 Group: System Environment/Daemons
 Summary: The KDC and related programs for Kerberos 5
-Requires: %{name}-libs = %{version}-%{release}
-Requires(post): /usr/sbin/install-info
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires(post): chkconfig
+%if %{WITH_SYSTEMD}
 Requires(post): systemd-sysv
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
-# we need 'status -l' to work, and that option was added in 8.99
-Requires: initscripts >= 8.99-1
-# we drop files in its directory, but we don't want to own that directory
-Requires: logrotate
-Requires(preun): /usr/sbin/install-info
-# mktemp is used by krb5-send-pr
-Requires: coreutils
+%else
+Requires(preun): chkconfig
 # portreserve is used by init scripts for kadmind, kpropd, and krb5kdc
 Requires: portreserve
+%endif
+Requires(post): initscripts
+Requires(postun): initscripts
+# we need 'status -l' to work, and that option was added in 8.99
+Requires: initscripts >= 8.99-1
+# used by the triggers
+Requires: chkconfig
+# we drop files in its directory, but we don't want to own that directory
+Requires: logrotate
+Requires(preun): initscripts
+# mktemp is used by krb5-send-pr
+Requires: coreutils
+# we specify /usr/share/dict/words as the default dict_file in kdc.conf
+Requires: /usr/share/dict/words
 %if %{WITH_SYSVERTO}
 # for run-time, and for parts of the test suite
 BuildRequires: libverto-module-base
@@ -149,8 +258,8 @@ NOT install this package).
 %package server-ldap
 Group: System Environment/Daemons
 Summary: The LDAP storage plugin for the Kerberos 5 KDC
-Requires: %{name}-server = %{version}-%{release}
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-server%{?_isa} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description server-ldap
 Kerberos is a network authentication system. The krb5-server package
@@ -162,9 +271,7 @@ realm, you need to install this package.
 %package workstation
 Summary: Kerberos 5 programs for use on workstations
 Group: System Environment/Base
-Requires: %{name}-libs = %{version}-%{release}
-Requires(post): /usr/sbin/install-info
-Requires(preun): /usr/sbin/install-info
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 # mktemp is used by krb5-send-pr
 Requires: coreutils
 
@@ -174,20 +281,20 @@ package contains the basic Kerberos programs (kinit, klist, kdestroy,
 kpasswd). If your network uses Kerberos, this package should be
 installed on every workstation.
 
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 17 || 0%{?rhel} > 6
 %package pkinit
 %else
 %package pkinit-openssl
 %endif
 Summary: The PKINIT module for Kerberos 5
 Group: System Environment/Libraries
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
-Obsoletes: krb5-pkinit-openssl
+Obsoletes: krb5-pkinit-openssl < %{version}-%{release}
 Provides: krb5-pkinit-openssl = %{version}-%{release}
 %endif
 
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 17 || 0%{?rhel} > 6
 %description pkinit
 %else
 %description pkinit-openssl
@@ -198,66 +305,52 @@ to obtain initial credentials from a KDC using a private key and a
 certificate.
 
 %prep
-%setup -q -a 23 -n krb5-%{version}
+%setup -q -a 3 -a 100 -a 102
 ln -s NOTICE LICENSE
+
+%patch201 -p1 -b .Don-t-try-to-stat-not-on-disk-ccache-residuals
+%patch202 -p1 -b .Use-an-in-memory-cache-until-we-need-the-target-s
+%patch203 -p1 -b .Learn-to-destroy-the-ccache-we-re-copying-from
+%patch204 -p1 -b .Try-to-use-the-default_ccache_name-d-as-the-target
+%patch205 -p1 -b .Be-more-careful-of-target-ccache-collections
+%patch206 -p1 -b .Copy-config-entries-to-the-target-ccache
 
 %patch60 -p1 -b .pam
 
-%patch61 -p1 -b .manpaths
-
 %patch63 -p1 -b .selinux-label
 
-%patch5  -p1 -b .ksu-access
 %patch6  -p1 -b .ksu-path
 %patch12 -p1 -b .ktany
-%patch16 -p1 -b .buildconf
-%patch23 -p1 -b .dns
+%patch16 -p1 -b .buildconf %{?_rawbuild}
+%patch23 -p1 -b .dns %{?_rawbuild}
 %patch29 -p1 -b .kprop-mktemp
 %patch30 -p1 -b .send-pr-tempfile
 %patch39 -p1 -b .api
 %patch56 -p1 -b .doublelog
 %patch59 -p1 -b .kpasswd_tcp
-%patch71 -p1 -b .dirsrv-accountlock
-#%patch75 -p1 -b .pkinit-debug
+%patch71 -p1 -b .dirsrv-accountlock %{?_rawbuild}
 %patch86 -p0 -b .debuginfo
-%patch100 -p1 -b .7046
-%patch101 -p1 -b .7047
-%patch102 -p1 -b .7048
-%patch103 -p0 -b .gcc47
 %patch105 -p1 -b .kvno
-rm src/lib/krb5/krb/deltat.c
 
-gzip doc/*.ps
+# Apply when the hard-wired or configured default location is
+# DIR:/run/user/%%{uid}/krb5cc.
+%patch129 -p1 -b .run_user_0
 
-sed -i -e '1s!\[twoside\]!!;s!%\(\\usepackage{hyperref}\)!\1!' doc/api/library.tex
-sed -i -e '1c\
-\\documentclass{article}\
-\\usepackage{fixunder}\
-\\usepackage{functions}\
-\\usepackage{fancyheadings}\
-\\usepackage{hyperref}' doc/implement/implement.tex
+%patch134 -p1 -b .kpasswdtest
+
+%patch135 -p1 -b .keyring-kdcsync
+
+%patch136 -p1 -b .rcache-internal-const
+%patch137 -p1 -b .rcache-acquirecred-cleanup
+%patch138 -p1 -b .rcache-acquirecred-leak
+%patch139 -p1 -b .rcache-acquirecred-source
+%patch140 -p1 -b .empty-credstore
+%patch141 -p1 -b .rcache-acquirecred-test
+%patch142 -p1 -b .move-otp-sockets
+%patch143 -p1 -b .spnego-preserve-oid
 
 # Take the execute bit off of documentation.
-chmod -x doc/krb5-protocol/*.txt doc/*.html doc/*/*.html
-
-# Rename the man pages so that they'll get generated correctly.  Uses the
-# "krb5-1.8-manpaths.txt" source file.
-pushd src
-cat %{SOURCE25} | while read manpage ; do
-	mv "$manpage" "$manpage".in
-done
-popd
-
-# Check that the PDFs we built earlier match this source tree, using the
-# "krb5-tex-pdf.sh" source file.
-sh %{SOURCE24} check << EOF
-doc/api       library krb5
-doc/implement implement
-doc/kadm5     adb-unit-test
-doc/kadm5     api-unit-test
-doc/kadm5     api-funcspec
-doc/kadm5     api-server-design
-EOF
+chmod -x doc/krb5-protocol/*.txt doc/ccapi/*.html
 
 # Generate an FDS-compatible LDIF file.
 inldif=src/plugins/kdb/ldap/libkdb_ldap/kerberos.ldif
@@ -272,14 +365,49 @@ touch -r $inldif 60kerberos.ldif
 
 # Rebuild the configure scripts.
 pushd src
-autoheader
-autoconf
+#autoheader
+#autoconf
+./util/reconf --verbose
 popd
+
+# Create build spaces for the test wrappers.
+mkdir -p nss_wrapper/build
+mkdir -p socket_wrapper/build
+
+# Mess with some of the default ports that we use for testing, so that multiple
+# builds going on the same host don't step on each other.
+cfg="src/kadmin/testing/proto/kdc.conf.proto \
+     src/kadmin/testing/proto/krb5.conf.proto \
+     src/lib/kadm5/unit-test/api.current/init-v2.exp \
+     src/util/k5test.py \
+     src/tests/mk_migr/ldap_backend/input_conf/*.conf \
+     src/tests/mk_migr/db2_backend/input_conf/*.conf"
+LONG_BIT=`getconf LONG_BIT`
+PORT=`expr 61000 + $LONG_BIT - 48`
+sed -i -e s,61000,`expr "$PORT" + 0`,g $cfg
+PORT=`expr 1750 + $LONG_BIT - 48`
+sed -i -e s,1750,`expr "$PORT" + 0`,g $cfg
+sed -i -e s,1751,`expr "$PORT" + 1`,g $cfg
+sed -i -e s,1752,`expr "$PORT" + 2`,g $cfg
+PORT=`expr 8888 + $LONG_BIT - 48`
+sed -i -e s,8888,`expr "$PORT" - 0`,g $cfg
+sed -i -e s,8887,`expr "$PORT" - 1`,g $cfg
+sed -i -e s,8886,`expr "$PORT" - 2`,g $cfg
+PORT=`expr 7777 + $LONG_BIT - 48`
+sed -i -e s,7777,`expr "$PORT" + 0`,g $cfg
+sed -i -e s,7778,`expr "$PORT" + 1`,g $cfg
 
 %build
 # Go ahead and supply tcl info, because configure doesn't know how to find it.
 . %{_libdir}/tclConfig.sh
 pushd src
+# Keep the old default if the package is built against older releases.
+%if 0%{?compile_default_ccache_name}
+DEFCCNAME=%{compiled_default_ccache_name}; export DEFCCNAME
+%endif
+# Set this so that configure will have a value even if the current version of
+# autoconf doesn't set one.
+runstatedir=%{_localstatedir}/run; export runstatedir
 # Work out the CFLAGS and CPPFLAGS which we intend to use.
 INCLUDES=-I%{_includedir}/et
 CFLAGS="`echo $RPM_OPT_FLAGS $DEFINES $INCLUDES -fPIC -fno-strict-aliasing -fstack-protector-all`"
@@ -296,16 +424,16 @@ CPPFLAGS="`echo $DEFINES $INCLUDES`"
 	--enable-shared \
 	--localstatedir=%{_var}/kerberos \
 	--disable-rpath \
+	--without-krb5-config \
 	--with-system-et \
 	--with-system-ss \
 	--with-netlib=-lresolv \
 	--with-tcl \
 	--enable-dns-for-realm \
 %if %{WITH_LDAP}
-%if %{WITH_DIRSRV}
-	--with-dirsrv \
-%else
 	--with-ldap \
+%if %{WITH_DIRSRV}
+	--with-dirsrv-account-locking \
 %endif
 %endif
 %if %{WITH_OPENSSL} || %{WITH_NSS}
@@ -330,69 +458,146 @@ CPPFLAGS="`echo $DEFINES $INCLUDES`"
 make
 popd
 
-# A sanity checker for upgrades.
-env LD_LIBRARY_PATH=`pwd`/src/lib \
-%{__cc} -o kdb_check_weak \
-	-I src/include `./src/krb5-config --cflags kdb` \
-	%{SOURCE35} \
-	-L src/lib `./src/krb5-config --libs kdb`
+# Sanity check the KDC_RUN_DIR.
+configured_kdcrundir=`grep KDC_RUN_DIR src/include/osconf.h | awk '{print $NF}'`
+configured_kdcrundir=`eval echo $configured_kdcrundir`
+if test "$configured_kdcrundir" != %{_localstatedir}/run/krb5kdc ; then
+	exit 1
+fi
 
-%if 0%{?with_check}
+# Build the docs.
+make -C src/doc paths.py version.py
+cp src/doc/paths.py doc/
+mkdir -p build-man build-html build-pdf
+sphinx-build -a -b man   -t pathsubs doc build-man
+sphinx-build -a -b html  -t pathsubs doc build-html
+rm -fr build-html/_sources
+sphinx-build -a -b latex -t pathsubs doc build-pdf
+# Build the PDFs if we didn't have pre-built ones.
+for pdf in admin appdev basic build plugindev user ; do
+	test -s build-pdf/$pdf.pdf || make -C build-pdf
+done
+
+# Build the test wrappers.
+pushd nss_wrapper/build
+cmake ..
+make
+popd
+pushd socket_wrapper/build
+cmake ..
+make
+popd
+
+# We need to cut off any access to locally-running nameservers, too.
+%{__cc} -fPIC -shared -o noport.so -Wall -Wextra $RPM_SOURCE_DIR/noport.c
+
 %check
-# Run the test suite. We can't actually run the whole thing in the build system.
-make -C src fake-install
-: make -C src check TMPDIR=%{_tmppath}
-make -C src/lib check TMPDIR=%{_tmppath}
-make -C src/kdc check TMPDIR=%{_tmppath}
+# Alright, this much is still a work in progress.
+%if %{?__isa_bits:%{__isa_bits}}%{!?__isa_bits:32} == 64
+if hostname | grep -q build ; then
+	sleep 600
+fi
 %endif
+
+# Set things up to use the test wrappers.
+NSS_WRAPPER_HOSTNAME=test.example.com ; export NSS_WRAPPER_HOSTNAME
+NSS_WRAPPER_HOSTS="`pwd`/nss_wrapper/fakehosts" ; export NSS_WRAPPER_HOSTS
+echo 127.0.0.1 $NSS_WRAPPER_HOSTNAME $NSS_WRAPPER_HOSTNAME localhost localhost >"$NSS_WRAPPER_HOSTS"
+NOPORT=53,111; export NOPORT
+SOCKET_WRAPPER_DIR=`pwd`/sockets; mkdir -p $SOCKET_WRAPPER_DIR; export SOCKET_WRAPPER_DIR
+LD_PRELOAD=`pwd`/noport.so:`pwd`/nss_wrapper/build/src/libnss_wrapper.so:`pwd`/socket_wrapper/build/src/libsocket_wrapper.so ; export LD_PRELOAD
+
+# Run the test suite. We can't actually run the whole thing in the build
+# system, but we can at least run more than we used to.  The build system may
+# give us a revoked session keyring, so run affected tests with a new one.
+make -C src runenv.py
+: make -C src check TMPDIR=%{_tmppath}
+keyctl session - make -C src/lib check TMPDIR=%{_tmppath} OFFLINE=yes
+make -C src/kdc check TMPDIR=%{_tmppath}
+keyctl session - make -C src/appl check TMPDIR=%{_tmppath}
+make -C src/clients check TMPDIR=%{_tmppath}
+keyctl session - make -C src/util check TMPDIR=%{_tmppath}
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
-
-# Info docs.
-mkdir -p $RPM_BUILD_ROOT%{_infodir}
-install -m 644 doc/*.info* $RPM_BUILD_ROOT%{_infodir}/
-
-# Unconditionally compress the info pages so that we know the right file name
-# to pass to install-info in %%post.
-gzip $RPM_BUILD_ROOT%{_infodir}/*.info*
 
 # Sample KDC config files (bundled kdc.conf and kadm5.acl).
 mkdir -p $RPM_BUILD_ROOT%{_var}/kerberos/krb5kdc
 install -pm 600 %{SOURCE10} $RPM_BUILD_ROOT%{_var}/kerberos/krb5kdc/
 install -pm 600 %{SOURCE11} $RPM_BUILD_ROOT%{_var}/kerberos/krb5kdc/
 
+# Where per-user keytabs live by default.
+mkdir -p $RPM_BUILD_ROOT%{_var}/kerberos/krb5/user
+
 # Default configuration file for everything.
 mkdir -p $RPM_BUILD_ROOT/etc
 install -pm 644 %{SOURCE6} $RPM_BUILD_ROOT/etc/krb5.conf
 
+# Parent of configuration file for list of loadable GSS mechs ("mechs").  This
+# location is not relative to sysconfdir, but is hard-coded in g_initialize.c.
+mkdir -m 755 -p $RPM_BUILD_ROOT/etc/gss
+
+# If the default configuration needs to start specifying a default cache
+# location, add it now, then fixup the timestamp so that it looks the same.
+%if 0%{?configure_default_ccache_name}
+DEFCCNAME="%{configured_default_ccache_name}"; export DEFCCNAME
+awk '{print}
+     /^# default_realm/{print " default_ccache_name =", ENVIRON["DEFCCNAME"]}' \
+     %{SOURCE6} > $RPM_BUILD_ROOT/etc/krb5.conf
+touch -r %{SOURCE6} $RPM_BUILD_ROOT/etc/krb5.conf
+grep default_ccache_name $RPM_BUILD_ROOT/etc/krb5.conf
+%endif
+
 # Server init scripts (krb5kdc,kadmind,kpropd) and their sysconfig files.
+%if %{WITH_SYSTEMD}
 mkdir -p $RPM_BUILD_ROOT%{_unitdir}
-for init in \
+for unit in \
 	%{SOURCE5}\
 	%{SOURCE4} \
 	%{SOURCE2} ; do
 	# In the past, the init script was supposed to be named after the
 	# service that the started daemon provided.  Changing their names
 	# is an upgrade-time problem I'm in no hurry to deal with.
-	install -pm 644 ${init} $RPM_BUILD_ROOT%{_unitdir}
+	install -pm 644 ${unit} $RPM_BUILD_ROOT%{_unitdir}
 done
+mkdir -p $RPM_BUILD_ROOT%{_sbindir}
+for wrapper in \
+	%{SOURCE7} \
+	%{SOURCE8} ; do
+	install -pm 755 ${wrapper} $RPM_BUILD_ROOT%{_sbindir}/
+done
+mkdir -p $RPM_BUILD_ROOT/%{_tmpfilesdir}
+install -pm 644 %{SOURCE39} $RPM_BUILD_ROOT/%{_tmpfilesdir}/
+mkdir -p $RPM_BUILD_ROOT/%{_localstatedir}/run/krb5kdc
+%else
+mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
+for init in \
+	%{SOURCE36}\
+	%{SOURCE37} \
+	%{SOURCE38} ; do
+	# In the past, the init script was supposed to be named after the
+	# service that the started daemon provided.  Changing their names
+	# is an upgrade-time problem I'm in no hurry to deal with.
+	service=`basename ${init} .init`
+	install -pm 755 ${init} \
+	$RPM_BUILD_ROOT/etc/rc.d/init.d/${service%d}
+done
+# portreserve configuration files.
+mkdir -p $RPM_BUILD_ROOT/etc/portreserve
+for portreserve in \
+	%{SOURCE31} \
+	%{SOURCE32} ; do
+	install -pm 644 ${portreserve} \
+	$RPM_BUILD_ROOT/etc/portreserve/`basename ${portreserve} .portreserve`
+done
+%endif
+
 mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
 for sysconfig in \
 	%{SOURCE19}\
 	%{SOURCE20} ; do
 	install -pm 644 ${sysconfig} \
 	$RPM_BUILD_ROOT/etc/sysconfig/`basename ${sysconfig} .sysconfig`
-done
-
-# portreserve configuration files.
-mkdir -p $RPM_BUILD_ROOT/etc/portreserve
-for portreserve in \
-	%{SOURCE30} \
-	%{SOURCE31} \
-	%{SOURCE32} ; do
-	install -pm 644 ${portreserve} \
-	$RPM_BUILD_ROOT/etc/portreserve/`basename ${portreserve} .portreserve`
 done
 
 # logrotate configuration files
@@ -418,39 +623,88 @@ install -pdm 755 $RPM_BUILD_ROOT/%{_libdir}/krb5/plugins/kdb
 install -pdm 755 $RPM_BUILD_ROOT/%{_libdir}/krb5/plugins/authdata
 
 # The rest of the binaries, headers, libraries, and docs.
-make -C src DESTDIR=$RPM_BUILD_ROOT EXAMPLEDIR=%{_docdir}/krb5-libs-%{version}/examples install
+make -C src DESTDIR=$RPM_BUILD_ROOT EXAMPLEDIR=%{libsdocdir}/examples install
 
 # Munge krb5-config yet again.  This is totally wrong for 64-bit, but chunks
 # of the buildconf patch already conspire to strip out /usr/<anything> from the
 # list of link flags, and it helps prevent file conflicts on multilib systems.
 sed -r -i -e 's|^libdir=/usr/lib(64)?$|libdir=/usr/lib|g' $RPM_BUILD_ROOT%{_bindir}/krb5-config
 
-# Move specific libraries from %{_libdir} to /%{_lib}, and fixup the symlinks.
+%if %{separate_usr}
+# Move specific libraries from %%{_libdir} to /%%{_lib}, and fixup the symlinks.
 touch $RPM_BUILD_ROOT/rootfile
 rellibdir=..
 while ! test -r $RPM_BUILD_ROOT/%{_libdir}/${rellibdir}/rootfile ; do
 	rellibdir=../${rellibdir}
 done
 rm -f $RPM_BUILD_ROOT/rootfile
-#mkdir -p $RPM_BUILD_ROOT/%{_lib}
+mkdir -p $RPM_BUILD_ROOT/%{_lib}
 for library in libgssapi_krb5 libgssrpc libk5crypto libkrb5 libkrb5support ; do
-#	mv $RPM_BUILD_ROOT/%{_libdir}/${library}.so.* $RPM_BUILD_ROOT/%{_lib}/
+	mv $RPM_BUILD_ROOT/%{_libdir}/${library}.so.* $RPM_BUILD_ROOT/%{_lib}/
 	pushd $RPM_BUILD_ROOT/%{_libdir}
-	ln -fs ${library}.so.*.* ${library}.so
+	ln -fs ${rellibdir}/%{_lib}/${library}.so.*.* ${library}.so
 	popd
 done
+%endif
 
-# A sanity checker for upgrades.
-install -m 755 kdb_check_weak $RPM_BUILD_ROOT/%{_libdir}/krb5/
+# Install processed man pages.
+for section in 1 5 8 ; do
+	install -m 644 build-man/*.${section} \
+		       $RPM_BUILD_ROOT/%{_mandir}/man${section}/
+done
 
-magic_rpm_clean.sh
-
-%find_lang %{gettext_domain} || touch %{gettext_domain}.lang
+%find_lang %{gettext_domain}
 
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 %post libs -p /sbin/ldconfig
+
+%if 0%{?configure_default_ccache_name}
+%triggerun libs -- krb5-libs < 1.11.3-16
+# Triggered roughly on the version where this logic was introduced.
+# Try to add a default_ccache_name to /etc/krb5.conf, removing the previous
+# default which we configured, if we find it.
+DEFCCNAME="%{configured_default_ccache_name}"; export DEFCCNAME
+tmpfile=`mktemp /etc/krb5.conf.XXXXXX`
+if test -z "$tmpfile" ; then
+	# Give up.
+	exit 0
+fi
+# Remove the default value we previously set.  Be very exact about it.
+if grep -q default_ccache_name /etc/krb5.conf ; then
+	sed -r '/^ default_ccache_name = DIR:\/run\/user\/%%\{uid\}\/krb5cc$/d' /etc/krb5.conf > "$tmpfile"
+	if test -s "$tmpfile" ; then
+		if touch -r /etc/krb5.conf "$tmpfile" ; then
+			cat "$tmpfile" > /etc/krb5.conf
+			touch -r "$tmpfile" /etc/krb5.conf
+		fi
+	fi
+fi
+# Add the new default value, unless there's one set.  Don't be too particular
+# about it.
+if ! grep -q default_ccache_name /etc/krb5.conf ; then
+	awk '
+	/^\[.*\]$/ {
+		if (libdefaults) {
+			print " default_ccache_name =", ENVIRON["DEFCCNAME"]
+			print ""
+		}
+		libdefaults=0;
+	}
+	/^\[libdefaults\]$/ { libdefaults=1; }
+	{ print }' /etc/krb5.conf > "$tmpfile"
+	if test -s "$tmpfile" ; then
+		if touch -r /etc/krb5.conf "$tmpfile" ; then
+			cat "$tmpfile" > /etc/krb5.conf
+			touch -r "$tmpfile" /etc/krb5.conf
+		fi
+	fi
+fi
+if test -n "$tmpfile" ; then
+	rm -f "$tmpfile"
+fi
+%endif
 
 %postun libs -p /sbin/ldconfig
 
@@ -459,41 +713,62 @@ magic_rpm_clean.sh
 %postun server-ldap -p /sbin/ldconfig
 
 %post server
-if [ $1 -eq 1 ] ; then 
-    # Initial installation 
-    /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
 # Remove the init script for older servers.
-[ -x /etc/rc.d/init.d/krb5server ] && /usr/sbin/chkconfig --del krb5server
-# Install info pages.
-/usr/sbin/install-info %{_infodir}/krb5-admin.info.gz %{_infodir}/dir
-/usr/sbin/install-info %{_infodir}/krb5-install.info.gz %{_infodir}/dir
+[ -x /etc/rc.d/init.d/krb5server ] && /sbin/chkconfig --del krb5server
+%if %{WITH_SYSTEMD}
+if [ $1 -eq 1 ] ; then
+    # Initial installation
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+%else
+# Install the new ones.
+/sbin/chkconfig --add krb5kdc
+/sbin/chkconfig --add kadmin
+/sbin/chkconfig --add kprop
+%endif
 exit 0
 
 %preun server
 if [ "$1" -eq "0" ] ; then
-	/usr/bin/systemctl --no-reload disable krb5kdc.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl --no-reload disable kadmin.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl --no-reload disable kprop.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl stop krb5kdc.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl stop kadmin.service > /dev/null 2>&1 || :
-	/usr/bin/systemctl stop kprop.service > /dev/null 2>&1 || :
-	/usr/sbin/install-info --delete %{_infodir}/krb5-admin.info.gz %{_infodir}/dir
-	/usr/sbin/install-info --delete %{_infodir}/krb5-install.info.gz %{_infodir}/dir
+%if %{WITH_SYSTEMD}
+	/bin/systemctl --no-reload disable krb5kdc.service > /dev/null 2>&1 || :
+	/bin/systemctl --no-reload disable kadmin.service > /dev/null 2>&1 || :
+	/bin/systemctl --no-reload disable kprop.service > /dev/null 2>&1 || :
+	/bin/systemctl stop krb5kdc.service > /dev/null 2>&1 || :
+	/bin/systemctl stop kadmin.service > /dev/null 2>&1 || :
+	/bin/systemctl stop kprop.service > /dev/null 2>&1 || :
+%else
+	/sbin/chkconfig --del krb5kdc
+	/sbin/chkconfig --del kadmin
+	/sbin/chkconfig --del kprop
+	/sbin/service krb5kdc stop > /dev/null 2>&1 || :
+	/sbin/service kadmin stop > /dev/null 2>&1 || :
+	/sbin/service kprop stop > /dev/null 2>&1 || :
+%endif
 fi
 exit 0
 
 %postun server
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-	/usr/bin/systemctl try-restart krb5kdc.service >/dev/null 2>&1 || :
-	/usr/bin/systemctl try-restart kadmin.service >/dev/null 2>&1 || :
-	/usr/bin/systemctl try-restart kprop.service >/dev/null 2>&1 || :
+%if %{WITH_SYSTEMD}
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ "$1" -ge 1 ] ; then
+	/bin/systemctl try-restart krb5kdc.service >/dev/null 2>&1 || :
+	/bin/systemctl try-restart kadmin.service >/dev/null 2>&1 || :
+	/bin/systemctl try-restart kprop.service >/dev/null 2>&1 || :
 fi
+%else
+if [ "$1" -ge 1 ] ; then
+	/sbin/service krb5kdc condrestart > /dev/null 2>&1 || :
+	/sbin/service kadmin condrestart > /dev/null 2>&1 || :
+	/sbin/service kprop condrestart > /dev/null 2>&1 || :
+fi
+%endif
+exit 0
 
+%if %{WITH_SYSTEMD}
 %triggerun server -- krb5-server < 1.9.1-13
 # Save the current service runlevel info
-# User must manually run 
+# User must manually run
 #  systemd-sysv-convert --apply krb5kdc
 #  systemd-sysv-convert --apply kadmin
 #  systemd-sysv-convert --apply kprop
@@ -503,38 +778,28 @@ fi
 /usr/bin/systemd-sysv-convert --save kprop >/dev/null 2>&1 ||:
 
 # Run these because the SysV package being removed won't do them
-/usr/sbin/chkconfig --del krb5kdc >/dev/null 2>&1 || :
-/usr/sbin/chkconfig --del kadmin >/dev/null 2>&1 || :
-/usr/sbin/chkconfig --del kprop >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart krb5kdc.service >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart kadmin.service >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart kprop.service >/dev/null 2>&1 || :
+/sbin/chkconfig --del krb5kdc >/dev/null 2>&1 || :
+/sbin/chkconfig --del kadmin >/dev/null 2>&1 || :
+/sbin/chkconfig --del kprop >/dev/null 2>&1 || :
+/bin/systemctl try-restart krb5kdc.service >/dev/null 2>&1 || :
+/bin/systemctl try-restart kadmin.service >/dev/null 2>&1 || :
+/bin/systemctl try-restart kprop.service >/dev/null 2>&1 || :
+%endif
 
 %triggerun server -- krb5-server < 1.6.3-100
 if [ "$2" -eq "0" ] ; then
-	/usr/sbin/install-info --delete %{_infodir}/krb425.info.gz %{_infodir}/dir
+	/sbin/install-info --delete %{_infodir}/krb425.info.gz %{_infodir}/dir
 	/sbin/service krb524 stop > /dev/null 2>&1 || :
-	/usr/sbin/chkconfig --del krb524 > /dev/null 2>&1 || :
-fi
-exit 0
-
-%post workstation
-/usr/sbin/install-info %{_infodir}/krb5-user.info.gz %{_infodir}/dir
-exit 0
-
-%preun workstation
-if [ "$1" -eq "0" ] ; then
-	/usr/sbin/install-info --delete %{_infodir}/krb5-user.info.gz %{_infodir}/dir
+	/sbin/chkconfig --del krb524 > /dev/null 2>&1 || :
 fi
 exit 0
 
 %files workstation
 %defattr(-,root,root,-)
-%doc doc/user*.ps.gz src/config-files/services.append
-%doc doc/{kdestroy,kinit,klist,kpasswd,ksu}.html
-%doc doc/krb5-user.html
+%doc src/config-files/services.append
+%doc build-html/*
+%doc build-pdf/user.pdf build-pdf/basic.pdf
 %attr(0755,root,root) %doc src/config-files/convert-config-files
-%{_infodir}/krb5-user.info*
 
 # Clients of the KDC, including tools you're likely to need if you're running
 # app servers other than those built from this source package.
@@ -572,25 +837,24 @@ exit 0
 %files server
 %defattr(-,root,root,-)
 %docdir %{_mandir}
-
+%doc build-pdf/admin.pdf build-pdf/build.pdf
+%if %{WITH_SYSTEMD}
 %{_unitdir}/krb5kdc.service
 %{_unitdir}/kadmin.service
 %{_unitdir}/kprop.service
-%config(noreplace) /etc/sysconfig/krb5kdc
-%config(noreplace) /etc/sysconfig/kadmin
-%config(noreplace) /etc/portreserve/kerberos-iv
+%{_tmpfilesdir}/krb5-krb5kdc.conf
+%dir %{_localstatedir}/run/krb5kdc
+%else
+/etc/rc.d/init.d/krb5kdc
+/etc/rc.d/init.d/kadmin
+/etc/rc.d/init.d/kprop
 %config(noreplace) /etc/portreserve/kerberos-adm
 %config(noreplace) /etc/portreserve/krb5_prop
+%endif
+%config(noreplace) /etc/sysconfig/krb5kdc
+%config(noreplace) /etc/sysconfig/kadmin
 %config(noreplace) /etc/logrotate.d/krb5kdc
 %config(noreplace) /etc/logrotate.d/kadmind
-
-%doc doc/admin*.ps.gz
-%doc doc/install*.ps.gz
-%doc doc/krb5-admin.html
-%doc doc/krb5-install.html
-
-%{_infodir}/krb5-admin.info*
-%{_infodir}/krb5-install.info*
 
 %dir %{_var}/kerberos
 %dir %{_var}/kerberos/krb5kdc
@@ -598,15 +862,12 @@ exit 0
 %config(noreplace) %{_var}/kerberos/krb5kdc/kadm5.acl
 
 %dir %{_libdir}/krb5
-%if ! %{WITH_SYSVERTO}
-%{_libdir}/libverto-k5ev.so
-%{_libdir}/libverto-k5ev.so.*
-%endif
-%{_libdir}/krb5/kdb_check_weak
 %dir %{_libdir}/krb5/plugins
 %dir %{_libdir}/krb5/plugins/kdb
 %dir %{_libdir}/krb5/plugins/preauth
 %dir %{_libdir}/krb5/plugins/authdata
+%{_libdir}/krb5/plugins/preauth/otp.so
+
 
 # Problem-reporting tool.
 %{_sbindir}/krb5-send-pr
@@ -615,23 +876,26 @@ exit 0
 %{_mandir}/man1/krb5-send-pr.1*
 
 # KDC binaries and configuration.
+%{_mandir}/man5/kadm5.acl.5*
 %{_mandir}/man5/kdc.conf.5*
 %{_sbindir}/kadmin.local
 %{_mandir}/man8/kadmin.local.8*
 %{_sbindir}/kadmind
+%{_sbindir}/_kadmind
 %{_mandir}/man8/kadmind.8*
 %{_sbindir}/kdb5_util
 %{_mandir}/man8/kdb5_util.8*
 %{_sbindir}/kprop
 %{_mandir}/man8/kprop.8*
 %{_sbindir}/kpropd
+%{_sbindir}/_kpropd
 %{_mandir}/man8/kpropd.8*
 %{_sbindir}/kproplog
 %{_mandir}/man8/kproplog.8*
 %{_sbindir}/krb5kdc
 %{_mandir}/man8/krb5kdc.8*
 
-# This is here for people who want to test their server, and also 
+# This is here for people who want to test their server, and also
 # included in devel package for similar reasons.
 %{_bindir}/sclient
 %{_mandir}/man1/sclient.1*
@@ -659,26 +923,44 @@ exit 0
 %defattr(-,root,root,-)
 %doc README NOTICE LICENSE
 %docdir %{_mandir}
+# This is a hard-coded, not-dependent-on-the-configure-script path.
+%dir /etc/gss
 %verify(not md5 size mtime) %config(noreplace) /etc/krb5.conf
-/%{_mandir}/man1/kerberos.1*
 /%{_mandir}/man5/.k5identity.5*
 /%{_mandir}/man5/.k5login.5*
 /%{_mandir}/man5/k5identity.5*
 /%{_mandir}/man5/k5login.5*
 /%{_mandir}/man5/krb5.conf.5*
-/%{_libdir}/libgssapi_krb5.so.*
-/%{_libdir}/libgssrpc.so.*
-/%{_libdir}/libk5crypto.so.*
+%if %{separate_usr}
+/%{_lib}/libgssapi_krb5.so.*
+/%{_lib}/libgssrpc.so.*
+/%{_lib}/libk5crypto.so.*
+%else
+%{_libdir}/libgssapi_krb5.so.*
+%{_libdir}/libgssrpc.so.*
+%{_libdir}/libk5crypto.so.*
+%endif
 %{_libdir}/libkadm5clnt_mit.so.*
 %{_libdir}/libkadm5srv_mit.so.*
 %{_libdir}/libkdb5.so.*
-/%{_libdir}/libkrb5.so.*
-/%{_libdir}/libkrb5support.so.*
+%{_libdir}/libkrad.so.*
+%if %{separate_usr}
+/%{_lib}/libkrb5.so.*
+/%{_lib}/libkrb5support.so.*
+%else
+%{_libdir}/libkrb5.so.*
+%{_libdir}/libkrb5support.so.*
+%endif
 %dir %{_libdir}/krb5
 %dir %{_libdir}/krb5/plugins
 %dir %{_libdir}/krb5/plugins/*
 %{_libdir}/krb5/plugins/kdb/db2.so
+%dir %{_var}/kerberos
+%dir %{_var}/kerberos/krb5
+%dir %{_var}/kerberos/krb5/user
 %if ! %{WITH_SYSVERTO}
+%{_libdir}/libverto-k5ev.so
+%{_libdir}/libverto-k5ev.so.*
 # These really shouldn't be here, but until we have a system copy of libverto,
 # don't force people who are using libverto to install the KDC just to get the
 # shared library.  Not that there are any development headers, but anyway.
@@ -686,7 +968,7 @@ exit 0
 %{_libdir}/libverto.so.*
 %endif
 
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 17 || 0%{?rhel} > 6
 %files pkinit
 %else
 %files pkinit-openssl
@@ -700,15 +982,8 @@ exit 0
 %files devel
 %defattr(-,root,root,-)
 %docdir %{_mandir}
-%doc doc/api/*.pdf
-%doc doc/ccapi
-%doc doc/implement/*.pdf
-%doc doc/kadm5/*.pdf
-%doc doc/kadmin
-%doc doc/kim
 %doc doc/krb5-protocol
-%doc doc/rpc
-%doc doc/threads.txt
+%doc build-pdf/appdev.pdf build-pdf/plugindev.pdf
 
 %{_includedir}/*
 %{_libdir}/libgssapi_krb5.so
@@ -719,8 +994,10 @@ exit 0
 %{_libdir}/libkadm5srv.so
 %{_libdir}/libkadm5srv_mit.so
 %{_libdir}/libkdb5.so
+%{_libdir}/libkrad.so
 %{_libdir}/libkrb5.so
 %{_libdir}/libkrb5support.so
+%{_libdir}/pkgconfig/*
 
 %{_bindir}/krb5-config
 %{_bindir}/sclient
@@ -740,8 +1017,548 @@ exit 0
 %{_sbindir}/uuserver
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.10.1-3
-- 为 Magic 3.0 重建
+* Mon Feb 17 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12.1-5
+- spnego: pull in patch from master to restore preserving the OID of the
+  mechanism the initiator requested when we have multiple OIDs for the same
+  mechanism, so that we reply using the same mechanism OID and the initiator
+  doesn't get confused (#1066000, RT#7858)
+
+* Fri Feb  7 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12.1-4
+- pull in patch from master to move the default directory which the KDC uses
+  when computing the socket path for a local OTP daemon from the database
+  directory (/var/kerberos/krb5kdc) to the newly-added run directory
+  (/run/krb5kdc), in line with what we're expecting in 1.13 (RT#7859, more
+  of #1040056 as #1063905)
+- add a tmpfiles.d configuration file to have /run/krb5kdc created at
+  boot-time
+- own /var/run/krb5kdc
+
+* Fri Jan 31 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12.1-3
+- refresh nss_wrapper and add socket_wrapper to the %%check environment
+
+* Fri Jan 31 2014 Nalin Dahyabhai <nalin@redhat.com>
+- add currently-proposed changes to teach ksu about credential cache
+  collections and the default_ccache_name setting (#1015559,#1026099)
+
+* Tue Jan 21 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12.1-2
+- pull in multiple changes to allow replay caches to be added to a GSS
+  credential store as "rcache"-type credentials (RT#7818/#7819/#7836,
+  #1056078/#1056080)
+
+* Fri Jan 17 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12.1-1
+- update to 1.12.1
+  - drop patch for RT#7794, included now
+  - drop patch for RT#7797, included now
+  - drop patch for RT#7803, included now
+  - drop patch for RT#7805, included now
+  - drop patch for RT#7807, included now
+  - drop patch for RT#7045, included now
+  - drop patches for RT#7813 and RT#7815, included now
+  - add patch to always retrieve the KDC time offsets from keyring caches,
+    so that we don't mistakenly interpret creds as expired before their
+    time when our clock is ahead of the KDC's (RT#7820, #1030607)
+
+* Mon Jan 13 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12-11
+- update the PIC patch for iaesx86.s to not use ELF relocations to the version
+  that landed upstream (RT#7815, #1045699)
+
+* Thu Jan  9 2014 Nalin Dahyabhai <nalin@redhat.com>
+- pass -Wl,--warn-shared-textrel to the compiler when we're creating shared
+  libraries
+
+* Thu Jan  9 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12-10
+- amend the PIC patch for iaesx86.s to also save/restore ebx in the
+  functions where we modify it, because the ELF spec says we need to
+
+* Mon Jan  6 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12-9
+- grab a more-commented version of the most recent patch from upstream
+  master
+- make a guess at making the 32-bit AES-NI implementation sufficiently
+  position-independent to not require execmod permissions for libk5crypto
+  (more of #1045699)
+
+* Thu Jan  2 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12-8
+- add patch from Dhiru Kholia for the AES-NI implementations to allow
+  libk5crypto to be properly marked as not needing an executable stack
+  on arches where they're used (#1045699, and so many others)
+
+* Thu Jan  2 2014 Nalin Dahyabhai <nalin@redhat.com> - 1.12-7
+- revert that last change for a bit while sorting out execstack when we
+  use AES-NI (#1045699)
+
+* Thu Dec 19 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-6
+- add yasm as a build requirement for AES-NI support, on arches that have
+  yasm and AES-NI
+
+* Thu Dec 19 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-5
+- pull in fix from master to make reporting of errors encountered by
+  the SPNEGO mechanism work better (RT#7045, part of #1043962)
+
+* Thu Dec 19 2013 Nalin Dahyabhai <nalin@redhat.com>
+- update a test wrapper to properly handle things that the new libkrad does,
+  and add python-pyrad as a build requirement so that we can run its tests
+
+* Wed Dec 18 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-4
+- revise previous patch to initialize one more element
+
+* Wed Dec 18 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-3
+- backport fixes to krb5_copy_context (RT#7807, #1044735/#1044739)
+
+* Wed Dec 18 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-2
+- pull in fix from master to return a NULL pointer rather than allocating
+  zero bytes of memory if we read a zero-length input token (RT#7794, part of
+  #1043962)
+- pull in fix from master to ignore an empty token from an acceptor if
+  we've already finished authenticating (RT#7797, part of #1043962)
+- pull in fix from master to avoid a memory leak when a mechanism's
+  init_sec_context function fails (RT#7803, part of #1043962)
+- pull in fix from master to avoid a memory leak in a couple of error
+  cases which could occur while obtaining acceptor credentials (RT#7805, part
+  of #1043962)
+
+* Wed Dec 11 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-1
+- update to 1.12 final
+
+* Mon Dec  2 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-beta2.0
+- update to beta2
+  - drop obsolete backports for storing KDC time offsets and expiration times
+    in keyring credential caches
+
+* Tue Nov 19 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-beta1.0
+- rebase to master
+- update to beta1
+  - drop obsolete backport of fix for RT#7706
+
+* Mon Nov 18 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.4-2
+- pull in fix to store KDC time offsets in keyring credential caches (RT#7768,
+  #1030607)
+- pull in fix to set expiration times on credentials stored in keyring
+  credential caches (RT#7769, #1031724)
+
+* Tue Nov 12 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.4-1
+- update to 1.11.4
+  - drop patch for RT#7650, obsoleted
+  - drop patch for RT#7706, obsoleted as RT#7723
+  - drop patch for CVE-2013-1418/CVE-2013-6800, included in 1.11.4
+
+* Tue Nov 12 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-31
+- switch to the simplified version of the patch for #1029110 (RT#7764)
+
+* Mon Nov 11 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-30
+- check more thoroughly for errors when resolving KEYRING ccache names of type
+  "persistent", which should only have a numeric UID as the next part of the
+  name (#1029110)
+
+* Tue Nov  5 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-29
+- incorporate upstream patch for remote crash of KDCs which serve multiple
+  realms simultaneously (RT#7756, CVE-2013-1418/CVE-2013-6800,
+  #1026997/#1031501)
+
+* Mon Nov  4 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-28
+- drop patch to add additional access() checks to ksu - they add to breakage
+  when non-FILE: caches are in use (#1026099), shouldn't be resulting in any
+  benefit, and clash with proposed changes to fix its cache handling
+
+* Tue Oct 22 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-27
+- add some minimal description to the top of the wrapper scripts we use
+  when starting krb5kdc and kadmind to describe why they exist (tooling)
+
+* Thu Oct 17 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.12-alpha1.0
+- initial update to alpha1
+  - drop backport of persistent keyring support
+  - drop backport for RT#7689
+  - drop obsolete patch for fixing a use-before-init in a test program
+  - drop obsolete patch teaching config.guess/config.sub about aarch64-linux
+  - drop backport for RT#7598
+  - drop backport for RT#7172
+  - drop backport for RT#7642
+  - drop backport for RT#7643
+  - drop patches from master to not test GSSRPC-over-UDP and to not
+    depend on the portmapper, which are areas where our build systems
+    often give us trouble, too; obsolete
+  - drop backports for RT#7682
+  - drop backport for RT#7709
+  - drop backport for RT#7590 and partial backport for RT#7680
+  - drop OTP backport
+  - drop backports for RT#7656 and RT#7657
+- BuildRequires: libedit-devel to prefer it
+- BuildRequires: pkgconfig, since configure uses it
+
+* Wed Oct 16 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-26
+- create and own /etc/gss (#1019937)
+
+* Tue Oct 15 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-25
+- pull up fix for importing previously-exported credential caches in the
+  gssapi library (RT# 7706, #1019420)
+
+* Mon Oct 14 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-24
+- backport the callback to use the libkrb5 prompter when we can't load PEM
+  files for PKINIT (RT#7590, includes part of #965721/#1016690)
+- extract the rest of the fix #965721/#1016690 from the changes for RT#7680
+
+* Mon Oct 14 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-23
+- fix trigger scriptlet's invocation of sed (#1016945)
+
+* Fri Oct  4 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-22
+- rebuild with keyutils 1.5.8 (part of #1012043)
+
+* Wed Oct  2 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-21
+- switch to the version of persistent-keyring that was just merged to
+  master (RT#7711), along with related changes to kinit (RT#7689)
+- go back to setting default_ccache_name to a KEYRING type
+
+* Mon Sep 30 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-20
+- pull up fix for not calling a kdb plugin's check-transited-path
+  method before calling the library's default version, which only knows
+  how to read what's in the configuration file (RT#7709, #1013664)
+
+* Thu Sep 26 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-19
+- configure --without-krb5-config so that we don't pull in the old default
+  ccache name when we want to stop setting a default ccache name at configure-
+  time
+
+* Wed Sep 25 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-18
+- fix broken dependency on awk (should be gawk, rdieter)
+
+* Wed Sep 25 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-17
+- add missing dependency on newer keyutils-libs (#1012034)
+
+* Tue Sep 24 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-16
+- back out setting default_ccache_name to the new default for now, resetting
+  it to the old default while the kernel/keyutils bits get sorted (sgallagh)
+
+* Mon Sep 23 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-15
+- add explicit build-time dependency on a version of keyutils that's new
+  enough to include keyctl_get_persistent() (more of #991148)
+
+* Thu Sep 19 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-14
+- incorporate Simo's updated backport of his updated persistent-keyring changes
+  (more of #991148)
+
+* Fri Sep 13 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-13
+- don't break during %%check when the session keyring is revoked
+
+* Fri Sep 13 2013 Nalin Dahyabhai <nalin@redhat.com> - 1.11.3-12
+- pull the newer F21 defaults back to F20 (sgallagh)
+
+* Mon Sep  9 2013 Nalin Dahyabhai <nalin@redhat.com>
+- only apply the patch to autocreate /run/user/0 when we're hard-wiring the
+  default ccache location to be under it; otherwise it's unnecessary
+
+* Mon Sep  9 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-11
+- don't let comments intended for one scriptlet become part of the "script"
+  that gets passed to ldconfig as part of another one (Mattias Ellert, #1005675)
+
+* Fri Sep  6 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-10
+- incorporate Simo's backport of his persistent-keyring changes (#991148)
+- restore build-time default DEFCCNAME on Fedora 21 and later and EL, and
+  instead set default_ccache_name in the default krb5.conf's [libdefaults]
+  section (#991148)
+- on releases where we expect krb5.conf to be configured with a
+  default_ccache_name, add it whenever we upgrade from an older version of
+  the package that wouldn't have included it in its default configuration
+  file (#991148)
+
+* Fri Aug 23 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-9
+- take another stab at accounting for UnversionedDocdirs for the -libs
+  subpackage (spotted by ssorce)
+- switch to just the snapshot of nss_wrapper we were using, since we
+  no longer need to carry anything that isn't in the cwrap.org repository
+  (ssorce)
+
+* Thu Aug 15 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-8
+- drop a patch we weren't not applying (build tooling)
+- wrap kadmind and kpropd in scripts which check for the presence/absence
+  of files which dictate particular exit codes before exec'ing the actual
+  binaries, instead of trying to use ConditionPathExists in the unit files
+  to accomplish that, so that we exit with failure properly when what we
+  expect isn't actually in effect on the system (#800343)
+
+* Mon Jul 29 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-7
+- attempt to account for UnversionedDocdirs for the -libs subpackage
+
+* Fri Jul 26 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-6
+- tweak configuration files used during tests to try to reduce the number
+  of conflicts encountered when builds for multiple arches land on the same
+  builder
+
+* Mon Jul 22 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-5
+- pull up changes to allow GSSAPI modules to provide more functions
+  (RT#7682, #986564/#986565)
+
+* Fri Jul 19 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-4
+- use (a bundled, for now, copy of) nss_wrapper to let us run some of the
+  self-tests at build-time in more places than we could previously (#978756)
+- cover inconsistencies in whether or not there's a local caching nameserver
+  that's willing to answer when the build environment doesn't have a
+  resolver configuration, so that nss_wrapper's faking of the local
+  hostname can be complete
+
+* Mon Jul  1 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-3
+- specify dependencies on the same arch of krb5-libs by using the %%{?_isa}
+  suffix, to avoid dragging 32-bit libraries onto 64-bit systems (#980155)
+
+* Thu Jun 13 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-2
+- special-case /run/user/0, attempting to create it when resolving a
+  directory cache below it fails due to ENOENT and we find that it doesn't
+  already exist, either, before attempting to create the directory cache
+  (maybe helping, maybe just making things more confusing for #961235)
+
+* Tue Jun  4 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.3-1
+- update to 1.11.3
+  - drop patch for RT#7605, fixed in this release
+  - drop patch for CVE-2002-2443, fixed in this release
+  - drop patch for RT#7369, fixed in this release
+- pull upstream fix for breaking t_skew.py by adding the patch for #961221
+
+* Fri May 31 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-10
+- respin with updated version of patch for RT#7650 (#969331)
+
+* Thu May 30 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-9
+- don't forget to set the SELinux label when creating the directory for
+  a DIR: ccache
+- pull in proposed fix for attempts to get initial creds, which end up
+  following referrals, incorrectly trying to always use master KDCs if
+  they talked to a master at any point (should fix RT#7650)
+
+* Thu May 30 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-8
+- pull in patches from master to not test GSSRPC-over-UDP and to not
+  depend on the portmapper, which are areas where our build systems
+  often give us trouble, too
+
+* Tue May 28 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-7
+- backport fix for not being able to verify the list of transited realms
+  in GSS acceptors (RT#7639, #959685)
+- backport fix for not being able to pass an empty password to the
+  get-init-creds APIs and have them actually use it (RT#7642, #960001)
+- add backported proposed fix to use the unauthenticated server time
+  as the basis for computing the requested credential expiration times,
+  rather than the client's idea of the current time, which could be
+  significantly incorrect (#961221)
+
+* Tue May 21 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-6
+- pull in upstream fix to start treating a KRB5CCNAME value that begins
+  with DIR:: the same as it would a DIR: value with just one ccache file
+  in it (RT#7172, #965574)
+
+* Mon May 13 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-5
+- pull up fix for UDP ping-pong flaw in kpasswd service (CVE-2002-2443,
+  #962531,#962534)
+
+* Mon Apr 29 2013 Nathaniel McCallum <npmccallum@redhat.com> 1.11.2-4
+- Update otp patches
+- Merge otp patches into a single patch
+- Add keycheck patch
+
+* Tue Apr 23 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-3
+- pull the changing of the compiled-in default ccache location to
+  DIR:/run/user/%%{uid}/krb5cc back into F19, in line with SSSD and
+  the most recent pam_krb5 build
+
+* Wed Apr 17 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-2
+- correct some configuration file paths which the KDC_DIR patch missed
+
+* Mon Apr 15 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.2-1
+- update to 1.11.2
+  - drop pulled in patch for RT#7586, included in this release
+  - drop pulled in patch for RT#7592, included in this release
+- pull in fix for keeping track of the message type when parsing FAST requests
+  in the KDC (RT#7605, #951843) (also #951965)
+
+* Fri Apr 12 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.1-9
+- move the compiled-in default ccache location from the previous default of
+  FILE:/tmp/krb5cc_%%{uid} to DIR:/run/user/%%{uid}/krb5cc (part of #949588)
+
+* Tue Apr 09 2013 Nathaniel McCallum <npmccallum@redhat.com> - 1.11.1-8
+- Update otp backport patches (libk5radius => libkrad)
+
+* Wed Apr  3 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.1-7
+- when testing the RPC library, treat denials from the local portmapper the
+  same as a portmapper-not-running situation, to allow other library tests
+  to be run while building the package
+
+* Thu Mar 28 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.1-6
+- create and own /var/kerberos/krb5/user instead of /var/kerberos/kdc/user,
+  since that's what the libraries actually look for
+- add buildrequires on nss-myhostname, in an attempt to get more of the tests
+  to run properly during builds
+- pull in Simo's patch to recognize "client_keytab" as a key type which can
+  be passed in to gss_acquire_cred_from() (RT#7598)
+
+* Tue Mar 26 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.1-5
+- pull up Simo's patch to mark the correct mechanism on imported GSSAPI
+  contexts (RT#7592)
+- go back to using reconf to run autoconf and autoheader (part of #925640)
+- add temporary patch to use newer config.guess/config.sub (more of #925640)
+
+* Mon Mar 18 2013 Nalin Dahyabhai <nalin@redhat.com>
+- fix a version comparison to expect newer texlive build requirements when
+  %%{_rhel} > 6 rather than when it's > 7
+
+* Mon Mar 11 2013 Nathaniel McCallum <npmccallum@redhat.com> 1.11.1-4
+- Add libverto-devel requires for krb5-devel
+- Add otp support
+
+* Thu Feb 28 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.1-3
+- fix a memory leak when acquiring credentials using a keytab (RT#7586, #911110)
+
+* Wed Feb 27 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.1-2
+- prebuild PDF docs to reduce multilib differences (internal tooling, #884065)
+- drop the kerberos-iv portreserve file, and drop the rest on systemd systems
+- escape uses of macros in comments (more of #884065)
+
+* Mon Feb 25 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11.1-1
+- update to 1.11.1
+  - drop patch for noticing negative timeouts being passed to the poll()
+    wrapper in the client transmit functions
+
+* Fri Feb  8 2013 Nalin Dahyabhai <nalin@redhat.com> 1.11-2
+- set "rdns = false" in the default krb5.conf (#908323,#908324)
+
+* Tue Dec 18 2012 Nalin Dahyabhai <nalin@redhat.com> 1.11-1
+- update to 1.11 release
+
+* Thu Dec 13 2012 Nalin Dahyabhai <nalin@redhat.com> 1.11-0.beta2.0
+- update to 1.11 beta 2
+
+* Thu Dec 13 2012 Nalin Dahyabhai <nalin@redhat.com>
+- when building with our bundled copy of libverto, package it in with -libs
+  rather than with -server (#886049)
+
+* Wed Nov 21 2012 Nalin Dahyabhai <nalin@redhat.com> 1.11-0.beta1.0
+- update to 1.11 beta 1
+
+* Fri Nov 16 2012 Nalin Dahyabhai <nalin@redhat.com> 1.11-0.alpha1.1
+- handle releases where texlive packaging wasn't yet as complicated as it
+  is in Fedora 18
+- fix an uninitialized-variable error building one of the test programs
+
+* Fri Nov 16 2012 Nalin Dahyabhai <nalin@redhat.com> 1.11-0.alpha1.0
+- move the rather large pile of html and pdf docs to -workstation, so
+  that just having something that links to the libraries won't drag
+  them onto a system, and we avoid having to sort out hard-coded paths
+  that include %%{_libdir} showing up in docs in multilib packages
+- actually create %%{_var}/kerberos/kdc/user, so that it can be packaged
+- correct the list of packaged man pages
+- don't dummy up required tex stylesheets, require them
+- require pdflatex and makeindex
+
+* Thu Nov 15 2012 Nalin Dahyabhai <nalin@redhat.com>
+- update to 1.11 alpha 1
+  - drop backported patch for RT #7406
+  - drop backported patch for RT #7407
+  - drop backported patch for RT #7408
+  - the new docs system generates PDFs, so stop including them as sources
+  - drop backported patch to allow deltat.y to build with the usual
+    warning flags and the current gcc
+  - drop backported fix for disabling use of a replay cache when verifying
+    initial credentials
+  - drop backported fix for teaching PKINIT clients which trust the KDC's
+    certificate directly to verify signed-data messages that are signed with
+    the KDC's certificate, when the blobs don't include a copy of the KDC's
+    certificate
+  - drop backported patches to make keytab-based authentication attempts
+    work better when the client tells the KDC that it supports a particular
+    cipher, but doesn't have a key for it in the keytab
+  - drop backported fix for avoiding spurious clock skew when a TGT is
+    decrypted long after the KDC sent it to the client which decrypts it
+  - move the cross-referenced HTML docs into the -libs package to avoid
+    broken internal links
+  - drop patches to fixup paths in man pages, shouldn't be needed any more
+
+* Wed Oct 17 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.3-7
+- tag a couple of other patches which we still need to be applied during
+  %%{?_rawbuild} builds (zmraz)
+
+* Tue Sep 25 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.3-6
+- actually pull up the patch for RT#7063, and not some other ticket (#773496)
+
+* Mon Sep 10 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.3-5
+- add patch based on one from Filip Krska to not call poll() with a negative
+  timeout when the caller's intent is for us to just stop calling it (#838548)
+
+* Fri Sep  7 2012 Nalin Dahyabhai <nalin@redhat.com>
+- on EL6, conflict with libsmbclient before 3.5.10-124, which is when it
+  stopped linking with a symbol which we no longer export (#771687)
+- pull up patch for RT#7063, in which not noticing a prompt for a long
+  time throws the client library's idea of the time difference between it
+  and the KDC really far out of whack (#773496)
+- add a backport of more patches to set the client's list of supported enctypes
+  when using a keytab to be the list of types of keys in the keytab, plus the
+  list of other types the client supports but for which it doesn't have keys,
+  in that order, so that KDCs have a better chance of being able to issue
+  tickets with session keys of types that the client can use (#837855)
+
+* Thu Sep  6 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.3-4
+- cut down the number of times we load SELinux labeling configuration from
+  a minimum of two times to actually one (more of #845125)
+
+* Thu Aug 30 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.3-3
+- backport patch to disable replay detection in krb5_verify_init_creds()
+  while reading the AP-REQ that's generated in the same function (RT#7229)
+
+* Thu Aug 30 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.3-2
+- undo rename from krb5-pkinit-openssl to krb5-pkinit on EL6
+- version the Obsoletes: on the krb5-pkinit-openssl to krb5-pkinit rename
+- reintroduce the init scripts for non-systemd releases
+- forward-port %%{?_rawbuild} annotations from EL6 packaging
+
+* Thu Aug  9 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.3-1
+- update to 1.10.3, rolling in the fixes from MITKRB5-SA-2012-001
+
+* Thu Aug  2 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.2-7
+- selinux: hang on to the list of selinux contexts, freeing and reloading
+  it only when the file we read it from is modified, freeing it when the
+  shared library is being unloaded (#845125)
+
+* Thu Aug  2 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.2-6
+- go back to not messing with library file paths on Fedora 17: it breaks
+  file path dependencies in other packages, and since Fedora 17 is already
+  released, breaking that is our fault
+
+* Tue Jul 31 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.2-5
+- add upstream patch to fix freeing an uninitialized pointer and dereferencing
+  another uninitialized pointer in the KDC (MITKRB5-SA-2012-001, CVE-2012-1014
+  and CVE-2012-1015, #844779 and #844777)
+- fix a thinko in whether or not we mess around with devel .so symlinks on
+  systems without a separate /usr (sbose)
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 22 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.2-3
+- backport a fix to allow a PKINIT client to handle SignedData from a KDC
+  that's signed with a certificate that isn't in the SignedData, but which
+  is available as an anchor or intermediate on the client (RT#7183)
+
+* Tue Jun  5 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.2-2
+- back out this labeling change (dwalsh):
+  - when building the new label for a file we're about to create, also mix
+    in the current range, in addition to the current user
+
+* Fri Jun  1 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.2-1
+- update to 1.10.2
+  - when building the new label for a file we're about to create, also mix
+    in the current range, in addition to the current user
+  - also package the PDF format admin, user, and install guides
+  - drop some PDFs that no longer get built right
+- add a backport of Stef's patch to set the client's list of supported
+  enctypes to match the types of keys that we have when we are using a
+  keytab to try to get initial credentials, so that a KDC won't send us
+  an AS reply that we can't encrypt (RT#2131, #748528)
+- don't shuffle around any shared libraries on releases with no-separate-/usr,
+  since /usr/lib is the same place as /lib
+- add explicit buildrequires: on 'hostname', for the tests, on systems where
+  it's in its own package, and require net-tools, which used to provide the
+  command, everywhere
+
+* Mon May  7 2012 Nalin Dahyabhai <nalin@redhat.com>
+- skip the setfscreatecon() if fopen() is passed "rb" as the open mode (part
+  of #819115)
+
+* Tue May  1 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.1-3
+- have -server require /usr/share/dict/words, which we set as the default
+  dict_file in kdc.conf (#817089)
 
 * Tue Mar 20 2012 Nalin Dahyabhai <nalin@redhat.com> 1.10.1-2
 - change back dns_lookup_kdc to the default setting (Stef Walter, #805318)
@@ -1673,7 +2490,7 @@ exit 0
 * Wed Oct 18 2006 Nalin Dahyabhai <nalin@redhat.com> - 1.5-10
 - rename krb5.sh and krb5.csh so that they don't overlap (#210623)
 - way-late application of added error info in kadmind.init (#65853)
- 
+
 * Wed Oct 18 2006 Nalin Dahyabhai <nalin@redhat.com> - 1.5-9.pal_18695
 - add backport of in-development preauth module interface (#208643)
 
@@ -2448,13 +3265,13 @@ exit 0
 - update for krb5-1.1
 - add KDC rotation to rc.boot, based on ideas from Michael's C version
 
-* Mon Sep 26 1999 Nalin Dahyabhai <nsdahya1@eos.ncsu.edu>
+* Mon Sep 27 1999 Nalin Dahyabhai <nsdahya1@eos.ncsu.edu>
 - added -lncurses to telnet and telnetd makefiles
 
 * Mon Jul  5 1999 Nalin Dahyabhai <nsdahya1@eos.ncsu.edu>
 - added krb5.csh and krb5.sh to /etc/profile.d
 
-* Mon Jun 22 1999 Nalin Dahyabhai <nsdahya1@eos.ncsu.edu>
+* Tue Jun 22 1999 Nalin Dahyabhai <nsdahya1@eos.ncsu.edu>
 - broke out configuration files
 
 * Mon Jun 14 1999 Nalin Dahyabhai <nsdahya1@eos.ncsu.edu>

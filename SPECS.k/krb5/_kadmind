@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+#  Check for error conditions which the init system expects us to check and
+#  for other common errors, and exit with the expected status codes.
+#
+kadmind=/usr/sbin/kadmind
+if test -f /var/kerberos/krb5kdc/kpropd.acl ; then
+	echo $"Error. This appears to be a slave server, found kpropd.acl"
+	exit 6
+fi
+if ! test -x "$kadmind" ; then
+	exit 5
+fi
+exec "$kadmind" "$@"

@@ -1,0 +1,43 @@
+commit 970304b558a360e08d8421ef92245d2df0ac5e49
+Author: Greg Hudson <ghudson@mit.edu>
+Date:   Thu Jan 16 11:49:04 2014 -0500
+
+    Allow empty store in gss_acquire_cred_from
+    
+    There is no reason to deny a zero-length cred store, so don't check
+    for it in val_acq_cred_args or val_add_cred_args.
+    
+    ticket: 7836 (new)
+    target_version: 1.12.2
+    tags: pullup
+
+diff --git a/src/lib/gssapi/mechglue/g_acquire_cred.c b/src/lib/gssapi/mechglue/g_acquire_cred.c
+index 03b67e3..b9a3142 100644
+--- a/src/lib/gssapi/mechglue/g_acquire_cred.c
++++ b/src/lib/gssapi/mechglue/g_acquire_cred.c
+@@ -80,12 +80,6 @@ val_acq_cred_args(
+ 	return GSS_S_FAILURE;
+     }
+ 
+-    if (cred_store != NULL && cred_store->count == 0) {
+-	*minor_status = EINVAL;
+-	map_errcode(minor_status);
+-	return GSS_S_FAILURE;
+-    }
+-
+     return (GSS_S_COMPLETE);
+ }
+ 
+@@ -302,12 +296,6 @@ val_add_cred_args(
+ 	return GSS_S_FAILURE;
+     }
+ 
+-    if (cred_store != NULL && cred_store->count == 0) {
+-	*minor_status = EINVAL;
+-	map_errcode(minor_status);
+-	return GSS_S_FAILURE;
+-    }
+-
+     return (GSS_S_COMPLETE);
+ }
+ 

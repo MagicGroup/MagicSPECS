@@ -1,0 +1,95 @@
+From 85ac175a62fcd629592c049f2318fff79949884b Mon Sep 17 00:00:00 2001
+From: Nalin Dahyabhai <nalin@redhat.com>
+Date: Thu, 31 Oct 2013 15:43:49 -0400
+Subject: [PATCH 3/6] Learn to destroy the ccache we're copying from
+
+Add a flag to krb5_ccache_copy() which will instruct it to destroy a
+source ccache after reading its contents.  Using this when we copy the
+creds from a MEMORY cache to somewhere else is necessary to avoid having
+a subsequent call to krb5_cc_cache_match() select the MEMORY cache when
+we're trying to have it search a different location by default.
+---
+ src/clients/ksu/ccache.c | 10 +++++++++-
+ src/clients/ksu/ksu.h    |  2 +-
+ src/clients/ksu/main.c   |  5 +++--
+ 3 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/src/clients/ksu/ccache.c b/src/clients/ksu/ccache.c
+index 7917af2..90ba2f2 100644
+--- a/src/clients/ksu/ccache.c
++++ b/src/clients/ksu/ccache.c
+@@ -47,12 +47,14 @@ void show_credential();
+ */
+ 
+ krb5_error_code krb5_ccache_copy (context, cc_def, cc_other_tag,
+-                                  primary_principal, cc_out, stored, target_uid)
++                                  primary_principal, destroy_def,
++                                  cc_out, stored, target_uid)
+ /* IN */
+     krb5_context context;
+     krb5_ccache cc_def;
+     char *cc_other_tag;
+     krb5_principal primary_principal;
++    krb5_boolean destroy_def;
+     uid_t target_uid;
+     /* OUT */
+     krb5_ccache *cc_out;
+@@ -80,6 +82,12 @@ krb5_error_code krb5_ccache_copy (context, cc_def, cc_other_tag,
+         }
+     }
+ 
++    if (destroy_def) {
++        retval = krb5_cc_destroy(context, cc_def);
++        if (retval)
++            return retval;
++    }
++
+     *stored = krb5_find_princ_in_cred_list(context, cc_def_creds_arr,
+                                            primary_principal);
+ 
+diff --git a/src/clients/ksu/ksu.h b/src/clients/ksu/ksu.h
+index 1d102a1..a889fb9 100644
+--- a/src/clients/ksu/ksu.h
++++ b/src/clients/ksu/ksu.h
+@@ -108,7 +108,7 @@ extern krb5_error_code get_best_principal
+ /* ccache.c */
+ extern krb5_error_code krb5_ccache_copy
+ (krb5_context, krb5_ccache, char *, krb5_principal,
+- krb5_ccache *, krb5_boolean *, uid_t);
++ krb5_boolean, krb5_ccache *, krb5_boolean *, uid_t);
+ 
+ extern krb5_error_code krb5_store_all_creds
+ (krb5_context, krb5_ccache, krb5_creds **, krb5_creds **);
+diff --git a/src/clients/ksu/main.c b/src/clients/ksu/main.c
+index fa86c78..7497a2b 100644
+--- a/src/clients/ksu/main.c
++++ b/src/clients/ksu/main.c
+@@ -28,6 +28,7 @@
+ 
+ #include "ksu.h"
+ #include "adm_proto.h"
++#include "../../lib/krb5/os/os-proto.h"
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <signal.h>
+@@ -481,7 +482,7 @@ main (argc, argv)
+     } else {
+ 
+         retval = krb5_ccache_copy(ksu_context, cc_source, KRB5_TEMPORARY_CACHE,
+-                                  client, &cc_tmp, &stored, 0);
++                                  client, FALSE, &cc_tmp, &stored, 0);
+         if (retval) {
+             com_err(prog_name, retval, _("while copying cache %s to %s"),
+                     krb5_cc_get_name(ksu_context, cc_source),
+@@ -758,7 +759,7 @@ main (argc, argv)
+     }
+ 
+     retval = krb5_ccache_copy(ksu_context, cc_tmp, cc_target_tag,
+-                              client, &cc_target, &stored,
++                              client, TRUE, &cc_target, &stored,
+                               target_pwd->pw_uid);
+     if (retval) {
+         com_err(prog_name, retval, _("while copying cache %s to %s"),
+-- 
+1.8.5.3
+

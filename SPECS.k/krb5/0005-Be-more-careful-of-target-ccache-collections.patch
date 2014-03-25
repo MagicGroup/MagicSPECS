@@ -1,0 +1,179 @@
+From 5286fddf967af8952bd9d42d6d1ec1ddfcc159ad Mon Sep 17 00:00:00 2001
+From: Nalin Dahyabhai <nalin@dahyabhai.net>
+Date: Wed, 30 Oct 2013 21:34:27 -0400
+Subject: [PATCH 5/6] Be more careful of target ccache collections
+
+When copying credentials to a cache collection, take care to avoid
+generating multiple caches for a single client principal, but don't
+change the primary out from anyone who might already be using the
+target collection.
+---
+ src/clients/ksu/ccache.c | 62 ++++++++++++++++++++++++++++++++++++++++++------
+ src/clients/ksu/ksu.h    |  2 +-
+ src/clients/ksu/main.c   | 11 +++++++--
+ 3 files changed, 65 insertions(+), 10 deletions(-)
+
+diff --git a/src/clients/ksu/ccache.c b/src/clients/ksu/ccache.c
+index 90ba2f2..2a97893 100644
+--- a/src/clients/ksu/ccache.c
++++ b/src/clients/ksu/ccache.c
+@@ -48,7 +48,7 @@ void show_credential();
+ 
+ krb5_error_code krb5_ccache_copy (context, cc_def, cc_other_tag,
+                                   primary_principal, destroy_def,
+-                                  cc_out, stored, target_uid)
++                                  cc_out, stored, reused, target_uid)
+ /* IN */
+     krb5_context context;
+     krb5_ccache cc_def;
+@@ -59,10 +59,12 @@ krb5_error_code krb5_ccache_copy (context, cc_def, cc_other_tag,
+     /* OUT */
+     krb5_ccache *cc_out;
+     krb5_boolean *stored;
++    krb5_boolean *reused;
+ {
+     int i=0;
+     krb5_ccache  * cc_other;
+     const char * cc_other_type;
++    char * saved_cc_default_name;
+     krb5_error_code retval=0;
+     krb5_creds ** cc_def_creds_arr = NULL;
+     krb5_creds ** cc_other_creds_arr = NULL;
+@@ -99,9 +101,33 @@ krb5_error_code krb5_ccache_copy (context, cc_def, cc_other_tag,
+         return errno;
+     }
+ 
+-
+-    if ((retval = krb5_cc_initialize(context, *cc_other, primary_principal))){
+-        return retval;
++    if (krb5_cc_support_switch(context, cc_other_type)) {
++        *reused = TRUE;
++        krb5_cc_close(context, *cc_other);
++        saved_cc_default_name = strdup(krb5_cc_default_name(context));
++        krb5_cc_set_default_name(context, cc_other_tag);
++        if (krb5_cc_cache_match(context, primary_principal, cc_other) != 0) {
++            *reused = FALSE;
++            retval = krb5_cc_new_unique(context, cc_other_type, NULL,
++                                        cc_other);
++            if (retval) {
++                krb5_cc_set_default_name(context, saved_cc_default_name);
++                free(saved_cc_default_name);
++                return retval;
++            }
++        }
++        retval = krb5_cc_initialize(context, *cc_other, primary_principal);
++        krb5_cc_set_default_name(context, saved_cc_default_name);
++        free(saved_cc_default_name);
++        if (retval) {
++            return retval;
++        }
++    } else {
++        *reused = FALSE;
++        retval = krb5_cc_initialize(context, *cc_other, primary_principal);
++        if (retval) {
++            return retval;
++        }
+     }
+ 
+     retval = krb5_store_all_creds(context, * cc_other, cc_def_creds_arr,
+@@ -650,6 +676,7 @@ krb5_error_code krb5_ccache_copy_restricted (context, cc_def, cc_other_tag,
+     int i=0;
+     krb5_ccache  * cc_other;
+     const char * cc_other_type;
++    char * saved_cc_default_name;
+     krb5_error_code retval=0;
+     krb5_creds ** cc_def_creds_arr = NULL;
+     krb5_creds ** cc_other_creds_arr = NULL;
+@@ -677,9 +704,30 @@ krb5_error_code krb5_ccache_copy_restricted (context, cc_def, cc_other_tag,
+         return errno;
+     }
+ 
+-
+-    if ((retval = krb5_cc_initialize(context, *cc_other, prst))){
+-        return retval;
++    if (krb5_cc_support_switch(context, cc_other_type)) {
++        krb5_cc_close(context, *cc_other);
++        saved_cc_default_name = strdup(krb5_cc_default_name(context));
++        krb5_cc_set_default_name(context, cc_other_tag);
++        if (krb5_cc_cache_match(context, prst, cc_other) != 0) {
++            retval = krb5_cc_new_unique(context, cc_other_type, NULL,
++                                        cc_other);
++            if (retval) {
++                krb5_cc_set_default_name(context, saved_cc_default_name);
++                free(saved_cc_default_name);
++                return retval;
++            }
++        }
++        retval = krb5_cc_initialize(context, *cc_other, prst);
++        if (retval) {
++            return retval;
++        }
++        krb5_cc_set_default_name(context, saved_cc_default_name);
++        free(saved_cc_default_name);
++    } else {
++        retval = krb5_cc_initialize(context, *cc_other, prst);
++        if (retval) {
++            return retval;
++        }
+     }
+ 
+     retval = krb5_store_some_creds(context, * cc_other,
+diff --git a/src/clients/ksu/ksu.h b/src/clients/ksu/ksu.h
+index a195f52..b3ef7b9 100644
+--- a/src/clients/ksu/ksu.h
++++ b/src/clients/ksu/ksu.h
+@@ -108,7 +108,7 @@ extern krb5_error_code get_best_principal
+ /* ccache.c */
+ extern krb5_error_code krb5_ccache_copy
+ (krb5_context, krb5_ccache, char *, krb5_principal,
+- krb5_boolean, krb5_ccache *, krb5_boolean *, uid_t);
++ krb5_boolean, krb5_ccache *, krb5_boolean *, krb5_boolean *, uid_t);
+ 
+ extern krb5_error_code krb5_store_all_creds
+ (krb5_context, krb5_ccache, krb5_creds **, krb5_creds **);
+diff --git a/src/clients/ksu/main.c b/src/clients/ksu/main.c
+index 58df6a1..1c0c822 100644
+--- a/src/clients/ksu/main.c
++++ b/src/clients/ksu/main.c
+@@ -117,6 +117,7 @@ main (argc, argv)
+     int pargc;
+     char ** pargv;
+     krb5_boolean stored = FALSE;
++    krb5_boolean reused = FALSE;
+     krb5_principal  kdc_server;
+     krb5_boolean zero_password;
+ 
+@@ -523,7 +524,8 @@ main (argc, argv)
+     } else {
+ 
+         retval = krb5_ccache_copy(ksu_context, cc_source, KRB5_TEMPORARY_CACHE,
+-                                  client, FALSE, &cc_tmp, &stored, 0);
++                                  client, FALSE, &cc_tmp, &stored, &reused,
++                                  0);
+         if (retval) {
+             com_err(prog_name, retval, _("while copying cache %s to %s"),
+                     krb5_cc_get_name(ksu_context, cc_source),
+@@ -801,7 +803,7 @@ main (argc, argv)
+ 
+     retval = krb5_ccache_copy(ksu_context, cc_tmp, cc_target_tag,
+                               client, TRUE, &cc_target, &stored,
+-                              target_pwd->pw_uid);
++                              &reused, target_pwd->pw_uid);
+     if (retval) {
+         com_err(prog_name, retval, _("while copying cache %s to %s"),
+                 krb5_cc_get_name(ksu_context, cc_tmp), cc_target_tag);
+@@ -825,6 +827,11 @@ main (argc, argv)
+                 sweep_up(ksu_context, cc_target);
+                 exit(1);
+             }
++            if (reused && !keep_target_cache) {
++                print_status(_("Reusing cache %s, it will not be removed.\n"),
++                             cc_target_tag);
++                keep_target_cache = TRUE;
++            }
+             krb5_free_string(ksu_context, cc_target_tag);
+         } else {
+             com_err(prog_name, retval, _("while reading cache name from %s"),
+-- 
+1.8.5.3
+

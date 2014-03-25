@@ -41,15 +41,6 @@ PATH=/usr/lib64/krb5:/usr/lib/krb5:"$PATH"
 # Shell functions to cut down on useless shell instances.
 start() {
 	[ -x $krb5kdc ] || exit 5
-	# check that some of the basic principal names don't only have weak
-	# keys available. if they do, warn that they should be changed to
-	# get some keys for stronger ciphers added
-	if ! is_false "$KRB5CHECKWEAK" ; then
-		localhost=`hostname`
-		for principal in `kdb_check_weak -p "krbtgt/${KRB5REALM:+${KRB5REALM}@${KRB5REALM}}" "kadmin/admin${KRB5REALM:+@${KRB5REALM}}" "kadmin/changepw${KRB5REALM:+@${KRB5REALM}}" "kadmin/$localhost${KRB5REALM:+@${KRB5REALM}}"` ; do
-			echo -n "Keys for $principal should be changed to include keys for non-weak ciphers." ; warning ; echo ""
-		done
-	fi
 	echo -n $"Starting $prog: "
 	# tell portreserve to release the kerberos-iv port
 	[ -x /sbin/portrelease ] && /sbin/portrelease kerberos-iv &>/dev/null || :
