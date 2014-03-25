@@ -1,17 +1,15 @@
 %define vermajor 1
-%define verminor 5.5
+%define verminor 5.9
 %define version %{vermajor}.%{verminor}
-%define libdir %{_prefix}/%{_lib}
-%define usrlibdir %{_prefix}/%{_lib}
 %define libapivermajor 1
-%define libapiversion %{libapivermajor}.4
+%define libapiversion %{libapivermajor}.5
 
 # % define buildid .local
 
 Summary: Linux Key Management Utilities
 Name: keyutils
 Version: %{version}
-Release: 3%{?dist}%{?buildid}
+Release: 1%{?buildid}%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Base
 ExclusiveOS: Linux
@@ -47,13 +45,19 @@ This package provides headers and libraries for building key utilities.
 %prep
 %setup -q
 
+%define datadir %{_datarootdir}/keyutils
+
 %build
 make \
 	NO_ARLIB=1 \
-	LIBDIR=%{libdir} \
-	USRLIBDIR=%{usrlibdir} \
+	ETCDIR=%{_sysconfdir} \
+	LIBDIR=%{_libdir} \
+	USRLIBDIR=%{_libdir} \
 	BINDIR=%{_bindir} \
 	SBINDIR=%{_sbindir} \
+	MANDIR=%{_mandir} \
+	INCLUDEDIR=%{_includedir} \
+	SHAREDIR=%{datadir} \
 	RELEASE=.%{release} \
 	NO_GLIBC_KEYERR=1 \
 	CFLAGS="-Wall $RPM_OPT_FLAGS -Werror"
@@ -63,53 +67,81 @@ rm -rf $RPM_BUILD_ROOT
 make \
 	NO_ARLIB=1 \
 	DESTDIR=$RPM_BUILD_ROOT \
-	LIBDIR=%{libdir} \
-	USRLIBDIR=%{usrlibdir} \
-        BINDIR=%{_bindir} \
-        SBINDIR=%{_sbindir} \
+	ETCDIR=%{_sysconfdir} \
+	LIBDIR=%{_libdir} \
+	USRLIBDIR=%{_libdir} \
+	BINDIR=%{_bindir} \
+	SBINDIR=%{_sbindir} \
+	MANDIR=%{_mandir} \
+	INCLUDEDIR=%{_includedir} \
+	SHAREDIR=%{datadir} \
 	install
-magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post libs -p /usr/sbin/ldconfig
-%postun libs -p /usr/sbin/ldconfig
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
 %doc README LICENCE.GPL
 %{_sbindir}/*
 %{_bindir}/*
-/usr/share/keyutils
+%{datadir}
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
-%config(noreplace) /etc/*
+%config(noreplace) %{_sysconfdir}/*
 
 %files libs
 %defattr(-,root,root,-)
 %doc LICENCE.LGPL
-%{libdir}/libkeyutils.so.%{libapiversion}
-%{libdir}/libkeyutils.so.%{libapivermajor}
+%{_mandir}/man7/*
+%{_libdir}/libkeyutils.so.%{libapiversion}
+%{_libdir}/libkeyutils.so.%{libapivermajor}
 
 %files libs-devel
 %defattr(-,root,root,-)
-%{usrlibdir}/libkeyutils.so
+%{_libdir}/libkeyutils.so
 %{_includedir}/*
 %{_mandir}/man3/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.5.5-3
-- 为 Magic 3.0 重建
+* Fri Feb 21 2014 David Howells <dhowells@redhat.com> - 1.5.9-1
+- Add manpages for get_persistent.
+- Fix memory leaks in keyctl_describe/read/get_security_alloc().
+- Use keyctl_describe_alloc in dump_key_tree_aux rather than open coding it.
+- Exit rather than returning from act_xxx() functions.
+- Fix memory leak in dump_key_tree_aux.
+- Only get the groups list if we need it.
+- Don't trust sscanf's %n argument.
+- Use the correct path macros in the specfile.
+- Avoid use realloc when the memory has no content.
+- Fix a bunch of issues in key.dns_resolver.
+- Fix command table searching in keyctl utility.
+- Fix a typo in the permissions mask constants.
+- Improve the keyctl_read manpage.
+- Add man7 pages describing various keyrings concepts.
 
-* Wed Apr 18 2012 Liu Di <liudidi@gmail.com> - 1.5.5-2
-- 为 Magic 3.0 重建
+* Fri Oct 4 2013 David Howells <dhowells@redhat.com> - 1.5.8-1
+- New lib symbols should go in a new library minor version.
 
-* Tue Nov 30 2011 David Howells <dhowells@redhat.com> - 1.5.5-1
+* Wed Oct 2 2013 David Howells <dhowells@redhat.com> - 1.5.7-1
+- Provide a utility function to find a key by type and name.
+- Allow keyctl commands to take a type+name arg instead of a key-id arg.
+- Add per-UID get_persistent keyring function.
+
+* Thu Aug 29 2013 David Howells <dhowells@redhat.com> - 1.5.6-1
+- Fix the request-key.conf.5 manpage.
+- Fix the max depth of key tree dump (keyctl show).
+- The input buffer size for keyctl padd and pinstantiate should be larger.
+- Add keyctl_invalidate.3 manpage.
+
+* Wed Nov 30 2011 David Howells <dhowells@redhat.com> - 1.5.5-1
 - Fix a Makefile error.
 
-* Tue Nov 30 2011 David Howells <dhowells@redhat.com> - 1.5.4-1
+* Wed Nov 30 2011 David Howells <dhowells@redhat.com> - 1.5.4-1
 - Fix the keyctl padd command and similar to handle binary input.
 - Make keyctl show able to take a keyring to dump.
 - Make keyctl show able to take a flag to request hex key IDs.
@@ -118,7 +150,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Nov 15 2011 David Howells <dhowells@redhat.com>
 - Allow /sbin/request-key to have multiple config files.
 
-* Wed Aug 14 2011 David Howells <dhowells@redhat.com>
+* Wed Aug 31 2011 David Howells <dhowells@redhat.com>
 - Adjust the manual page for 'keyctl unlink' to show keyring is optional.
 - Add --version support for the keyutils version and build date.
 
@@ -144,7 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 - Add recursive scan utility function.
 - Add bad key reap command to keyctl.
 - Add multi-unlink variant to keyctl unlink command.
-- Add multi key purger command to keyctl.
+- Add multi key purge command to keyctl.
 - Handle multi-line commands in keyctl command table.
 - Move the package to version to 1.5.
 
@@ -233,15 +265,15 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Jul 20 2005 David Howells <dhowells@redhat.com> - 0.2-2
 - Bump version to permit building in main repositories.
 
-* Mon Jul 12 2005 David Howells <dhowells@redhat.com> - 0.2-1
+* Tue Jul 12 2005 David Howells <dhowells@redhat.com> - 0.2-1
 - Don't attempt to define the error codes in the header file.
 - Pass the release ID through to the makefile to affect the shared library name.
 
-* Mon Jul 12 2005 David Howells <dhowells@redhat.com> - 0.1-3
+* Tue Jul 12 2005 David Howells <dhowells@redhat.com> - 0.1-3
 - Build in the perror() override to get the key error strings displayed.
 
-* Mon Jul 12 2005 David Howells <dhowells@redhat.com> - 0.1-2
+* Tue Jul 12 2005 David Howells <dhowells@redhat.com> - 0.1-2
 - Need a defattr directive after each files directive.
 
-* Mon Jul 12 2005 David Howells <dhowells@redhat.com> - 0.1-1
+* Tue Jul 12 2005 David Howells <dhowells@redhat.com> - 0.1-1
 - Package creation.
