@@ -1,6 +1,6 @@
 Name: elfutils
 Summary: A collection of utilities and DSOs to handle compiled objects
-Version: 0.155
+Version: 0.158
 %global baserelease 1
 URL: https://fedorahosted.org/elfutils/
 %global source_url http://fedorahosted.org/releases/e/l/elfutils/%{version}/
@@ -24,7 +24,7 @@ Group: Development/Tools
 %global scanf_has_m             (%rhel >= 6)
 %global separate_devel_static   (%rhel >= 6)
 %global use_zlib                (%rhel >= 5)
-%global use_xz                  (%rhel >= 6)
+%global use_xz                  (%rhel >= 5)
 %endif
 %if 0%{?fedora}
 %global portability             (%fedora < 9)
@@ -43,9 +43,9 @@ Group: Development/Tools
 %global depsuffix %{?_isa}%{!?_isa:-%{_arch}}
 
 Source: %{?source_url}%{name}-%{version}.tar.bz2
+
 Patch1: %{?source_url}elfutils-robustify.patch
 Patch2: %{?source_url}elfutils-portability.patch
-Patch3: elfutils-0.155-binutils-pr-ld-13621.patch
 
 %if !%{compat}
 Release: %{baserelease}%{?dist}
@@ -210,15 +210,17 @@ sed -i.scanf-m -e 's/%m/%a/g' src/addr2line.c tests/line2addr.c
 %endif
 %endif
 
-%patch3 -p1 -b .binutils-pr-ld-13621
-
 find . -name \*.sh ! -perm -0100 -print | xargs chmod +x
 
 %build
 # Remove -Wall from default flags.  The makefiles enable enough warnings
 # themselves, and they use -Werror.  Appending -Wall defeats the cases where
 # the makefiles disable some specific warnings for specific code.
+# Also remove -Werror=format-security which doesn't work without
+# -Wformat (enabled by -Wall). We enable -Wformat explicitly for some
+# files later.
 RPM_OPT_FLAGS=${RPM_OPT_FLAGS/-Wall/}
+RPM_OPT_FLAGS=${RPM_OPT_FLAGS/-Werror=format-security/}
 
 %if %{compat}
 # Some older glibc headers can run afoul of -Werror all by themselves.
@@ -229,10 +231,9 @@ COMPAT_CONFIG_FLAGS="--disable-werror"
 COMPAT_CONFIG_FLAGS=""
 %endif
 
-%configure --enable-dwz $COMPAT_CONFIG_FLAGS CFLAGS="$RPM_OPT_FLAGS -fexceptions -Wno-error=sizeof-pointer-memaccess" || {
-  cat config.log
-  exit 2
-}
+trap 'cat config.log' EXIT
+%configure --enable-dwz $COMPAT_CONFIG_FLAGS CFLAGS="$RPM_OPT_FLAGS -fexceptions"
+trap '' EXIT
 make -s %{?_smp_mflags}
 
 %install
@@ -250,7 +251,7 @@ chmod +x ${RPM_BUILD_ROOT}%{_prefix}/%{_lib}/elfutils/lib*.so*
 %find_lang %{name}
 
 %check
-make -s check || %{nocheck}
+make -s %{?_smp_mflags} check || (cat tests/test-suite.log; %{nocheck})
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -276,6 +277,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_bindir}/eu-ranlib
 %{_bindir}/eu-readelf
 %{_bindir}/eu-size
+%{_bindir}/eu-stack
 %{_bindir}/eu-strings
 %{_bindir}/eu-strip
 #%%{_bindir}/eu-ld
@@ -327,6 +329,66 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libelf.a
 
 %changelog
+* Mon Jan  6 2014 Mark Wielaard <mjw@redhat.com> - 0.158-1
+- Update to 0.158. Remove all patches now upstream. Add eu-stack.
+
+* Thu Dec 19 2013 Mark Wielaard <mjw@redhat.com> - 0.157-4
+- Add elfutils-0.157-aarch64-got-special-symbol.patch.
+- Remove -Werror=format-security from RPM_OPT_FLAGS.
+
+* Fri Dec 13 2013 Petr Machata <pmachata@redhat.com> - 0.157-3
+- Add upstream support for aarch64
+
+* Wed Oct  9 2013 Mark Wielaard <mjw@redhat.com> 0.157-2
+- Show tests/test-suite.log in build.log when make check fails.
+
+* Mon Sep 30 2013 Mark Wielaard <mjw@redhat.com> 0.157-1
+- Update to 0.157.
+- Remove elfutils-0.156-abi_cfi-ppc-s390-arm.patch.
+- Remove elfutils-0.156-et_dyn-kernels.patch.
+
+* Fri Sep 06 2013 Mark Wielaard <mjw@redhat.com> 0.156-5
+- Add elfutils-0.156-abi_cfi-ppc-s390-arm.patch.
+  Sets up initial CFI return register, CFA location expression and
+  register rules for PPC, S390 and ARM (dwarf_cfi_addrframe support).
+
+* Mon Aug 26 2013 Mark Wielaard <mjw@redhat.com> 0.156-4
+- Add elfutils-0.156-et_dyn-kernels.patch.
+  Fixes an issue on ppc64 with systemtap kernel address placement.
+
+* Thu Aug  8 2013 Mark Wielaard <mjw@redhat.com> 0.156-3
+- Make check can now also be ran in parallel.
+
+* Thu Jul 25 2013 Jan Kratochvil <jan.kratochvil@redhat.com> 0.156-2
+- Update the %%configure command for compatibility with fc20 Koji.
+
+* Thu Jul 25 2013 Jan Kratochvil <jan.kratochvil@redhat.com> 0.156-1
+- Update to 0.156.
+  - #890447 - Add __bss_start and __TMC_END__ to elflint.
+  - #909481 - Only try opening files with installed compression libraries.
+  - #914908 - Add __bss_start__ to elflint.
+  - #853757 - Updated Polish translation.
+  - #985438 - Incorrect prototype of __libdwfl_find_elf_build_id.
+  - Drop upstreamed elfutils-0.155-binutils-pr-ld-13621.patch.
+  - Drop upstreamed elfutils-0.155-mem-align.patch.
+  - Drop upstreamed elfutils-0.155-sizeof-pointer-memaccess.patch.
+
+* Tue Jul 02 2013 Karsten Hopp <karsten@redhat.com> 0.155-6
+- bump release and rebuild to fix dependencies on PPC
+
+* Sun Feb 24 2013 Mark Wielaard <mjw@redhat.com> - 0.155-5
+- Add ARM variant to elfutils-0.155-binutils-pr-ld-13621.patch rhbz#914908.
+- rhel >= 5 has xz-devel
+
+* Fri Feb 22 2013 Mark Wielaard <mjw@redhat.com> - 0.155-4
+- Replace elfutils-0.155-binutils-pr-ld-13621.patch with upstream fix.
+
+* Thu Jan 24 2013 Mark Wielaard <mjw@redhat.com> - 0.155-3
+- Backport sizeof-pointer-memaccess upstream fixes.
+
+* Thu Jan 10 2013 Mark Wielaard <mjw@redhat.com> - 0.155-2
+- #891553 - unaligned memory access issues.
+
 * Mon Aug 27 2012 Mark Wielaard <mjw@redhat.com> - 0.155-1
 - Update to 0.155.
   - #844270 - eu-nm invalid %N$ use detected.
@@ -339,7 +401,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Wed Aug 01 2012 Mark Wielaard <mjw@redhat.com> 0.154-3
 - Add dwz support
 
-* Mon Jul 18 2012 Mark Wielaard <mjw@redhat.com> 0.154-2
+* Wed Jul 18 2012 Mark Wielaard <mjw@redhat.com> 0.154-2
 - Add upstream xlatetom fix (#835877)
 
 * Mon Jul 02 2012 Karsten Hopp <karsten@redhat.com> 0.154-1.1
