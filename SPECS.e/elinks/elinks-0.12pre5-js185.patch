@@ -27,9 +27,9 @@ diff --git a/Makefile.config.in b/Makefile.config.in
 index c463868..40a8cd7 100644
 --- a/Makefile.config.in
 +++ b/Makefile.config.in
-@@ -117,6 +117,7 @@ CONFIG_DOM = @CONFIG_DOM@
+@@ -115,6 +115,7 @@ CONFIG_DOC = @CONFIG_DOC@
+ CONFIG_DOM = @CONFIG_DOM@
  CONFIG_ECMASCRIPT = @CONFIG_ECMASCRIPT@
- CONFIG_ECMASCRIPT_SEE = @CONFIG_ECMASCRIPT_SEE@
  CONFIG_ECMASCRIPT_SMJS = @CONFIG_ECMASCRIPT_SMJS@
 +CONFIG_ECMASCRIPT_SMJS_HEARTBEAT = @CONFIG_ECMASCRIPT_SMJS@
  CONFIG_EXMODE = @CONFIG_EXMODE@
@@ -47,7 +47,7 @@ index f3e3d77..f79ca78 100644
  
  AC_CHECK_FUNCS([cygwin_conv_to_full_win32_path])
  
-@@ -651,6 +652,8 @@ AC_MSG_RESULT($cf_result)
+@@ -603,6 +604,8 @@ AC_MSG_RESULT($cf_result)
  CONFIG_SPIDERMONKEY="$cf_result"
  if test "$cf_result" = "yes"; then
  	AC_CHECK_FUNCS([[JS_ReportAllocationOverflow]])
@@ -56,8 +56,8 @@ index f3e3d77..f79ca78 100644
  fi
  EL_RESTORE_FLAGS
  
-@@ -665,6 +668,15 @@ EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SEE CONFIG_ECMASCRIPT_SM
- AC_SUBST(CONFIG_ECMASCRIPT_SEE)
+@@ -615,6 +618,15 @@ fi
+ EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
  AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
  
 +if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes &&
@@ -76,7 +76,7 @@ diff --git a/src/ecmascript/ecmascript.h b/src/ecmascript/ecmascript.h
 index e8d84b5..8613b34 100644
 --- a/src/ecmascript/ecmascript.h
 +++ b/src/ecmascript/ecmascript.h
-@@ -32,7 +32,11 @@ struct ecmascript_interpreter {
+@@ -33,7 +33,11 @@ struct ecmascript_interpreter {
  	/* The code evaluated by setTimeout() */
  	struct string code;
  
@@ -411,7 +411,7 @@ diff --git a/configure.in b/configure.in
 index f79ca78..64faf85 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -641,7 +641,15 @@ if test -z "$disable_spidermonkey"; then
+@@ -593,7 +593,15 @@ if test -z "$disable_spidermonkey"; then
  					CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
  
  					AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
@@ -1279,7 +1279,7 @@ index dd5b40b..752a890 100644
  
  const spidermonkeyFunctionSpec location_funcs[] = {
  	{ "toString",		location_toString,	0 },
-@@ -232,9 +233,14 @@ const spidermonkeyFunctionSpec location_funcs[] = {
+@@ -232,7 +233,12 @@ const spidermonkeyFunctionSpec location_funcs[] = {
  
  /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
  static JSBool
@@ -1294,8 +1294,6 @@ index dd5b40b..752a890 100644
 +	JS_SET_RVAL(ctx, rval, val);
 +	return ret;
  }
- 
- struct delayed_goto {
 diff --git a/src/ecmascript/spidermonkey/navigator.c b/src/ecmascript/spidermonkey/navigator.c
 index a009d62..e08a224 100644
 --- a/src/ecmascript/spidermonkey/navigator.c
@@ -1451,7 +1449,7 @@ index 5e93a6f..9bc8dd9 100644
  	case JSP_WIN_CLOSED:
  		/* TODO: It will be a major PITA to implement this properly.
  		 * Well, perhaps not so much if we introduce reference tracking
-@@ -254,7 +254,7 @@ void location_goto(struct document_view *doc_view, unsigned char *url);
+@@ -252,7 +252,7 @@ found_parent:
  
  /* @window_class.setProperty */
  static JSBool
@@ -1460,7 +1458,7 @@ index 5e93a6f..9bc8dd9 100644
  {
  	struct view_state *vs;
  
-@@ -266,8 +266,8 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+@@ -264,8 +264,8 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
  
  	vs = JS_GetInstancePrivate(ctx, obj, (JSClass *) &window_class, NULL);
  
@@ -1471,7 +1469,7 @@ index 5e93a6f..9bc8dd9 100644
  			struct document_view *doc_view = vs->doc_view;
  
  			location_goto(doc_view, jsval_to_string(ctx, vp));
-@@ -278,10 +278,10 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+@@ -276,10 +276,10 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
  		return JS_TRUE;
  	}
  
@@ -1484,7 +1482,7 @@ index 5e93a6f..9bc8dd9 100644
  	case JSP_WIN_STATUS:
  		mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, vp)));
  		print_screen_status(vs->doc_view->session);
-@@ -298,9 +298,9 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+@@ -296,9 +296,9 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
  }
  
  
@@ -1497,7 +1495,7 @@ index 5e93a6f..9bc8dd9 100644
  
  const spidermonkeyFunctionSpec window_funcs[] = {
  	{ "alert",	window_alert,		1 },
-@@ -311,8 +311,11 @@ const spidermonkeyFunctionSpec window_funcs[] = {
+@@ -309,8 +309,11 @@ const spidermonkeyFunctionSpec window_funcs[] = {
  
  /* @window_funcs{"alert"} */
  static JSBool
@@ -1510,7 +1508,7 @@ index 5e93a6f..9bc8dd9 100644
  	struct view_state *vs;
  	unsigned char *string;
  
-@@ -330,14 +333,18 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
+@@ -328,14 +331,18 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
  	info_box(vs->doc_view->session->tab->term, MSGBOX_FREE_TEXT,
  		N_("JavaScript Alert"), ALIGN_CENTER, stracpy(string));
  
@@ -1531,7 +1529,7 @@ index 5e93a6f..9bc8dd9 100644
  	struct view_state *vs;
  	struct document_view *doc_view;
  	struct session *ses;
-@@ -407,7 +414,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+@@ -405,7 +412,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
  			deo->uri = get_uri_reference(uri);
  			deo->target = stracpy(frame);
  			register_bottom_half(delayed_goto_uri_frame, deo);
@@ -1540,7 +1538,7 @@ index 5e93a6f..9bc8dd9 100644
  			goto end;
  		}
  	}
-@@ -418,7 +425,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+@@ -416,7 +423,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
  	    && can_open_in_new(ses->tab->term)) {
  		open_uri_in_new_window(ses, uri, NULL, ENV_ANY,
  				       CACHE_MODE_NORMAL, TASK_NONE);
@@ -1549,7 +1547,7 @@ index 5e93a6f..9bc8dd9 100644
  	} else {
  		/* When opening a new tab, we might get rerendered, losing our
  		 * context and triggerring a disaster, so postpone that. */
-@@ -428,9 +435,9 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+@@ -426,9 +433,9 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
  			deo->ses = ses;
  			deo->uri = get_uri_reference(uri);
  			register_bottom_half(delayed_open, deo);
@@ -1561,7 +1559,7 @@ index 5e93a6f..9bc8dd9 100644
  		}
  	}
  
-@@ -438,13 +445,15 @@ end:
+@@ -436,13 +443,15 @@ end:
  	done_uri(uri);
  	mem_free_if(frame);
  
@@ -1582,7 +1580,7 @@ diff --git a/src/scripting/smjs/action_object.c b/src/scripting/smjs/action_obje
 index d95564d..d0379e0 100644
 --- a/src/scripting/smjs/action_object.c
 +++ b/src/scripting/smjs/action_object.c
-@@ -40,25 +40,31 @@ smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
+@@ -42,25 +42,31 @@ smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
  
  /* @action_fn_class.call */
  static JSBool
@@ -1617,9 +1615,9 @@ index d95564d..d0379e0 100644
 +		return JS_TRUE;
 +	}
  
- 	if (argc >= 1) {
- 		int32 val;
-@@ -70,7 +76,8 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
+ 	if (!would_window_receive_keypresses(hop->ses->tab)) {
+ 		/* The user cannot run actions in this tab by pressing
+@@ -98,7 +104,8 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
  
  	do_action(hop->ses, hop->action_id, 1);
  
@@ -1629,7 +1627,7 @@ index d95564d..d0379e0 100644
  
  	return JS_TRUE;
  }
-@@ -79,7 +86,7 @@ static const JSClass action_fn_class = {
+@@ -107,7 +114,7 @@ static const JSClass action_fn_class = {
  	"action_fn",
  	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
  	JS_PropertyStub, JS_PropertyStub,
@@ -1638,7 +1636,7 @@ index d95564d..d0379e0 100644
  	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
  	smjs_action_fn_finalize,
  	NULL, NULL,
-@@ -124,14 +131,16 @@ smjs_get_action_fn_object(unsigned char *action_str)
+@@ -152,14 +159,16 @@ smjs_get_action_fn_object(unsigned char *action_str)
  
  /* @action_class.getProperty */
  static JSBool
@@ -1657,7 +1655,7 @@ index d95564d..d0379e0 100644
  	if (!action_str) return JS_TRUE;
  
  	action_fn = smjs_get_action_fn_object(action_str);
-@@ -146,7 +155,7 @@ static const JSClass action_class = {
+@@ -174,7 +183,7 @@ static const JSClass action_class = {
  	"action",
  	0,
  	JS_PropertyStub, JS_PropertyStub,

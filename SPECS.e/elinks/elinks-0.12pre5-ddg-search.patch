@@ -16,7 +16,7 @@ diff --git a/src/protocol/http/http.c b/src/protocol/http/http.c
 index ce14031..98053c0 100644
 --- a/src/protocol/http/http.c
 +++ b/src/protocol/http/http.c
-@@ -227,7 +227,8 @@ static struct option_info http_options[] = {
+@@ -227,7 +227,8 @@ static union option_info http_options[] = {
  		"pushing some lite version to them automagically.\n"
  		"\n"
  		"Use \" \" if you don't want any User-Agent header to be sent "
@@ -30,7 +30,7 @@ diff --git a/src/protocol/rewrite/rewrite.c b/src/protocol/rewrite/rewrite.c
 index dd5c7ab..e01da74 100644
 --- a/src/protocol/rewrite/rewrite.c
 +++ b/src/protocol/rewrite/rewrite.c
-@@ -121,6 +121,7 @@ static struct option_info uri_rewrite_options[] = {
+@@ -121,6 +121,7 @@ static union option_info uri_rewrite_options[] = {
  	INIT_OPT_DUMB_PREFIX("cia", "http://cia.navi.cx/"),
  	INIT_OPT_DUMB_PREFIX("b", "http://babelfish.altavista.com/babelfish/tr"),
  	INIT_OPT_DUMB_PREFIX("d", "http://www.dict.org"),
@@ -38,7 +38,7 @@ index dd5c7ab..e01da74 100644
  	INIT_OPT_DUMB_PREFIX("g", "http://www.google.com/"),
  	INIT_OPT_DUMB_PREFIX("gg", "http://www.google.com/"),
  	INIT_OPT_DUMB_PREFIX("go", "http://www.google.com/"),
-@@ -158,6 +159,7 @@ static struct option_info uri_rewrite_options[] = {
+@@ -158,6 +159,7 @@ static union option_info uri_rewrite_options[] = {
  	INIT_OPT_SMART_PREFIX("cambridge", "http://dictionary.cambridge.org/results.asp?searchword=%s"),
  	INIT_OPT_SMART_PREFIX("cliki", "http://www.cliki.net/admin/search?words=%s"),
  	INIT_OPT_SMART_PREFIX("d", "http://www.dict.org/bin/Dict?Query=%s&Form=Dict1&Strategy=*&Database=*&submit=Submit+query"),

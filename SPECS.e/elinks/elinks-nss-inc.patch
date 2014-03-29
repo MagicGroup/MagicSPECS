@@ -1,6 +1,10 @@
-diff -ruNp elinks-0.12pre3.orig/src/network/ssl/ssl.c elinks-0.12pre3/src/network/ssl/ssl.c
---- elinks-0.12pre3.orig/src/network/ssl/ssl.c	2009-04-29 12:48:26.250878000 +0200
-+++ elinks-0.12pre3/src/network/ssl/ssl.c	2009-04-29 13:03:51.318746893 +0200
+ src/network/ssl/ssl.c |   33 ++++++++++++++++++++++++++++++++-
+ 1 files changed, 32 insertions(+), 1 deletions(-)
+
+diff --git a/src/network/ssl/ssl.c b/src/network/ssl/ssl.c
+index 73446b5..eadff7f 100644
+--- a/src/network/ssl/ssl.c
++++ b/src/network/ssl/ssl.c
 @@ -48,10 +48,20 @@ SSL_CTX *context = NULL;
  static void
  init_openssl(struct module *module)
@@ -25,7 +29,7 @@ diff -ruNp elinks-0.12pre3.orig/src/network/ssl/ssl.c elinks-0.12pre3/src/networ
 @@ -61,10 +71,30 @@ done_openssl(struct module *module)
  }
  
- static struct option_info openssl_options[] = {
+ static union option_info openssl_options[] = {
 +#ifdef CONFIG_NSS_COMPAT_OSSL
 +	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates"),
 +		"cert_verify", 0, 0,
@@ -53,7 +57,7 @@ diff -ruNp elinks-0.12pre3.orig/src/network/ssl/ssl.c elinks-0.12pre3/src/networ
  
  	INIT_OPT_TREE("connection.ssl", N_("Client Certificates"),
          	"client_cert", OPT_SORT,
-@@ -187,7 +217,8 @@ static struct option_info gnutls_options
+@@ -187,7 +217,8 @@ static union option_info gnutls_options[] = {
  		"\n"
  		"If you change this option or the file, you must "
  		"restart ELinks for the changes to take effect. "
