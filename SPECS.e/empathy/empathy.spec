@@ -1,29 +1,29 @@
 ## Minimum required versions.
-%global	gtk3_min_version	3.5.1
-%global	glib2_min_version	2.33.3
+%global	gtk3_min_version	3.9.4
+%global	glib2_min_version	2.37.6
 %global	tp_mc_min_version	5.12.0
 %global	tp_glib_min_version	0.19.9
 %global	enchant_version		1.2.0
 %global network_manager_version 0.7.0
-%global libcanberra_version     0.4
-%global webkit_version          1.3.13
+%global libcanberra_version	0.4
+%global webkit_version		1.3.13
 %global goa_version		3.5.1
-%global libnotify_version       0.7.0
-%global libchamplain_version    0.12.1
-%global folks_version           0.9.0
-%global gstreamer_version       0.10.32
-%global libsecret_version       0.5
-%global gcr_version             2.91.4
+%global libnotify_version	0.7.0
+%global libchamplain_version	0.12.1
+%global folks_version		0.9.5
+%global gstreamer_version	0.10.32
+%global libsecret_version	0.5
+%global gcr_version		2.91.4
 
 Name:		empathy
-Version:	3.8.1
-Release:	1%{?dist}
+Version:	3.11.90
+Release:	2%{?dist}
 Summary:	Instant Messaging Client for GNOME
 
 License:	GPLv2+
 URL:		http://live.gnome.org/Empathy
 
-Source0:	http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
 Source1:	%{name}-README.ConnectionManagers
 
 BuildRequires:	enchant-devel >= %{enchant_version}
@@ -31,7 +31,6 @@ BuildRequires:	iso-codes-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 BuildRequires:	glib2-devel >= %{glib2_min_version}
-BuildRequires:	gnome-doc-utils >= 0.17.3
 BuildRequires:	libcanberra-devel >= %{libcanberra_version}
 BuildRequires:	webkitgtk3-devel >= %{webkit_version}
 BuildRequires:	gtk3-devel >= %{gtk3_min_version}
@@ -40,17 +39,18 @@ BuildRequires:	libxml2-devel
 BuildRequires:	scrollkeeper
 BuildRequires:	gsettings-desktop-schemas-devel
 BuildRequires:	telepathy-glib-devel >= %{tp_glib_min_version}
-BuildRequires:  telepathy-farstream-devel >= 0.2.1
+BuildRequires:	telepathy-farstream-devel >= 0.2.1
 BuildRequires:	libnotify-devel >= %{libnotify_version}
 BuildRequires:	NetworkManager-glib-devel >= %{network_manager_version}
-BuildRequires:  libchamplain-gtk-devel >= %{libchamplain_version}
-BuildRequires:  clutter-gtk-devel >= 1.1.2
-BuildRequires:  geoclue-devel >= 0.12
-BuildRequires:  telepathy-logger-devel >= 0.8.0
+BuildRequires:	libchamplain-gtk-devel >= %{libchamplain_version}
+BuildRequires:	clutter-gtk-devel >= 1.1.2
+BuildRequires:	geoclue2-devel
+BuildRequires:	geocode-glib-devel
+BuildRequires:	telepathy-logger-devel >= 0.8.0
 BuildRequires:	folks-devel >= 1:%{folks_version}
 BuildRequires:	clutter-gst2-devel
 BuildRequires:	gstreamer1-devel >= %{gstreamer_version}
-BuildRequires:  cogl-devel
+BuildRequires:	cogl-devel
 BuildRequires:	cheese-libs-devel
 BuildRequires:	pulseaudio-libs-devel
 BuildRequires:	libgudev1-devel
@@ -58,8 +58,10 @@ BuildRequires:	telepathy-mission-control-devel
 BuildRequires:	gnome-online-accounts-devel >= %{goa_version}
 BuildRequires:	libsecret-devel >= %{libsecret_version}
 BuildRequires:	gcr-devel >= %{gcr_version}
-BuildRequires:  pkgconfig(gee-0.8)
-BuildRequires:  itstool
+BuildRequires:	pkgconfig(gee-0.8)
+BuildRequires:	itstool
+# hack to conserve space on the live cd
+BuildRequires:	/usr/bin/convert
 
 Requires:	telepathy-filesystem
 Requires:	telepathy-mission-control >= %{tp_mc_min_version}
@@ -88,27 +90,34 @@ rm data/empathy.desktop
 %build
 ## GCC complains about some unused functions, so we forcibly show those as
 ## simple warnings instead of build-halting errors.
-%configure --disable-static
+%configure --disable-static --enable-ubuntu-online-accounts=no
 # Parallel builds are broken.
 make
 install -m 0644 %{SOURCE1} ./README.ConnectionManagers
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 %find_lang %{name} --with-gnome
+%find_lang empathy-tpaw
 
 desktop-file-install --delete-original			\
 	--dir %{buildroot}%{_datadir}/applications	\
 	%{buildroot}%{_datadir}/applications/%{name}.desktop
 
+# hack to conserve space on the live image
+for f in video_overview.png conf_overview.png croom_overview.png; do
+  convert %{buildroot}%{_datadir}/help/C/empathy/figures/$f -resize 150x150 $f
+  mv $f %{buildroot}%{_datadir}/help/C/empathy/figures
+done
+
 
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 /sbin/ldconfig
+
 
 %postun
 if [ $1 -eq 0 ]; then
@@ -124,7 +133,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%files -f %{name}.lang
+%files -f %{name}.lang -f empathy-tpaw.lang
 %doc AUTHORS COPYING README README.ConnectionManagers NEWS
 %doc COPYING-DOCS COPYING.LGPL COPYING.SHARE-ALIKE
 %{_bindir}/%{name}
@@ -136,6 +145,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/%{name}/libempathy-gtk.so
 %{_libdir}/%{name}/libempathy.so
 %{_libdir}/mission-control-plugins.0/mcp-account-manager-goa.so
+%{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/empathy/
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}*
@@ -145,11 +155,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.FileTransfer.service
 %{_datadir}/GConf/gsettings/empathy.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.Empathy.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.gnome.telepathy-account-widgets.gschema.xml
 %{_datadir}/telepathy/clients/Empathy.Call.client
 %{_datadir}/telepathy/clients/Empathy.Chat.client
 %{_datadir}/telepathy/clients/Empathy.Auth.client
 %{_datadir}/telepathy/clients/Empathy.FileTransfer.client
-%{_libdir}/nautilus-sendto/plugins/libnstempathy.so
 %{_mandir}/man1/empathy*.1.gz
 %{_libexecdir}/empathy-auth-client
 %{_libexecdir}/empathy-call
@@ -188,6 +198,77 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/adium/message-styles/PlanetGNOME.AdiumMessageStyle/Contents/Resources/main.css
 
 %changelog
+* Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.90-2
+- Rebuilt for cogl soname bump
+
+* Mon Feb 17 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Mon Feb 10 2014 Peter Hutterer <peter.hutterer@redhat.com> - 3.11.5-3
+- Rebuild for libevdev soname bump
+
+* Wed Feb 05 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.5-2
+- Rebuilt for cogl soname bump
+
+* Mon Feb 03 2014 Richard Hughes <rhughes@redhat.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Mon Jan 20 2014 Brian Pepple <bpepple@fedoraproject.org> - 3.11.4-1
+- Update to 3.11.4.
+
+* Thu Dec 19 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.11.3-1
+- Update to 3.11.3.
+- Drop empathy_ensure_individual_from_tp_contact() patch. Fixed upstream.
+
+* Mon Nov 25 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.11.1-2
+- Pull upstream patch to use empathy_ensure_individual_from_tp_contact().
+
+* Thu Oct 31 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.11.1-1
+- Update to 3.11.1.
+- Add appdata to file list.
+
+* Mon Oct 14 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.10.1-1
+- Update to 3.10.1.
+
+* Tue Sep 24 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.10.0-1
+- Update to 3.10.0.
+
+* Mon Sep 16 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.9.92-1
+- Update to 3.9.92.
+- Bump minimum version of gtk3 and folks needed.
+
+* Wed Sep 04 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.91-2
+- Enable geolocation
+
+* Tue Sep  3 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.9.91-1
+- Update to 3.9.91
+- Bump minimum version of glib2 needed.
+
+* Tue Aug 20 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.9.90-1
+- Update to 3.9.90.
+- Package telepathy account widget translations and schemas.
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.4-3
+- Rebuilt for cogl 1.15.4 soname bump
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul  9 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.9.4-1
+- Update to 3.9.4.
+
+* Mon Jun 17 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.9.3-1
+- Update to 3.9.3.
+
+* Thu May 30 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.9.2-1
+- Update to 3.9.2.
+
+* Tue May 14 2013 Matthias Clasen <mclasen@redhat.com> - 3.9.1-2
+- Save some space by shrinking figures
+
+* Fri May  3 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.9.1-1
+- Update to 3.9.1.
+
 * Mon Apr 15 2013 Brian Pepple <bpepple@fedoraproject.org> - 3.8.1-1
 - Update to 3.8.1.
 
@@ -466,7 +547,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 * Fri Jul 29 2011 Brian Pepple <bpepple@fedoraproject.org> - 3.1.4-2
 - Rebuild.
 
-* Tue Jul 27 2011 Matthias Clasen <mclasen@redhat.com> - 3.1.4-1
+* Wed Jul 27 2011 Matthias Clasen <mclasen@redhat.com> - 3.1.4-1
 - Update to 3.1.4
 
 * Mon Jul 25 2011 Matthias Clasen <mclasen@redhat.com> - 3.1.3-4
@@ -523,7 +604,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 - Update to 2.91.93.
 - Bump minimum tp-glib version.
 
-* Wed Mar 24 2011 Dan Williams <dcbw@redhat.com> 2.91.92-2
+* Thu Mar 24 2011 Dan Williams <dcbw@redhat.com> 2.91.92-2
 - Rebuild for NM 0.9
 
 * Wed Mar 23 2011 Ray Strode <rstrode@redhat.com> 2.91.92-1
@@ -1091,5 +1172,5 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 * Fri Jun  1 2007 David Nielsen <david@lovesunix.net> - 0.5-2
 - Let Empathy own the directory and not just the files in it
 
-* Tue May 30 2007 David Nielsen <david@lovesunix.net> - 0.5-1
+* Wed May 30 2007 David Nielsen <david@lovesunix.net> - 0.5-1
 - Initial package
