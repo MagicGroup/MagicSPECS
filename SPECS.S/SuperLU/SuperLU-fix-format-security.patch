@@ -1,0 +1,13 @@
+Index: SuperLU_4.3/SRC/util.c
+===================================================================
+--- SuperLU_4.3.orig/SRC/util.c
++++ SuperLU_4.3/SRC/util.c
+@@ -29,7 +29,7 @@
+ 
+ void superlu_abort_and_exit(char* msg)
+ {
+-    fprintf(stderr, msg);
++    fputs(stderr, msg);
+     exit (-1);
+ }
+ 

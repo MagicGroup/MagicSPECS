@@ -1,0 +1,13 @@
+diff -up SuperLU_4.3/MAKE_INC/make.linux.fpic SuperLU_4.3/MAKE_INC/make.linux
+--- SuperLU_4.3/MAKE_INC/make.linux.fpic	2012-01-06 10:39:58.474356562 +0530
++++ SuperLU_4.3/MAKE_INC/make.linux	2012-01-06 10:40:59.933356590 +0530
+@@ -46,7 +46,8 @@ ARCHFLAGS    = cr
+ RANLIB       = ranlib
+ 
+ CC           = gcc
+-CFLAGS       = -O3
++FPIC         = -fPIC
++CFLAGS       = -O3 $(FPIC)
+ NOOPTS       = 
+ FORTRAN	     = g77
+ FFLAGS       = -O2
