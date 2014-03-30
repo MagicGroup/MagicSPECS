@@ -1,28 +1,38 @@
+
+# re-enable pdf doc generation when/if ghostscript/texi2pdf is fixed,
+# https://bugzilla.redhat.com/921706
+# else, use pregenerated docs
+%if 0%{?fedora} < 19
+%define doc 1
+%endif
+
 Summary: Image Blending with Multiresolution Splines
 Name: enblend
-Version: 4.0
-Release: 17%{?dist}
+Version: 4.1.2
+Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
-Source: http://downloads.sourceforge.net/enblend/enblend-enfuse-%{version}.tar.gz
-Patch0: enblend-enfuse-4.0-png14.patch
+Source0: http://downloads.sourceforge.net/enblend/enblend-enfuse-%{version}.tar.gz
 URL: http://enblend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: libtiff-devel boost-devel lcms-devel plotutils-devel
+BuildRequires: libtiff-devel boost-devel lcms2-devel plotutils-devel
 BuildRequires: freeglut-devel glew-devel libjpeg-devel libpng-devel OpenEXR-devel
-Buildrequires: transfig gnuplot tidy texinfo
+BuildRequires: libXmu-devel libXi-devel
+BuildRequires: vigra-devel >= 1.9.0
+BuildRequires: gsl-devel
+%if 0%{?doc}
+BuildRequires: transfig gnuplot tidy texinfo
+BuildRequires: help2man ImageMagick texinfo-tex
+%if 0%{?fedora} >= 17
+BuildRequires: texlive-latex-fonts texlive-thumbpdf
+%endif
+%endif
 
-%if 0%{?fedora} >= 9
-BuildRequires: libXmu-devel libXi-devel 
-%endif
-%if 0%{?rhl} >= 4
-BuildRequires: xorg-x11-devel
-%endif
+# pregenerated info/pdf docs
+Source1: enblend-enfuse-doc-4.1.2.tar.gz
 
 Requires(post): info
 Requires(preun): info
-
-Provides: bundled(vigra) = 1.4.0
 
 %description
 Enblend is a tool for compositing images, given a set of images that overlap in
@@ -32,38 +42,54 @@ multiple images of the same subject into a single image with good exposure and
 good focus.  Enblend and Enfuse do not line up the images for you, use a tool
 like Hugin to do that.
 
+%package doc
+Summary: Usage Documentation for enblend and enfuse
+Group: Documentation
+
+%description doc
+PDF usage documentation for the enblend and enfuse command line tools
+
 %prep
-%setup -q -n enblend-enfuse-4.0-753b534c819d
-sed -i 's/info.arith_code = TRUE/info.arith_code = FALSE/' src/vigra_impex/jpeg.cxx
-%patch0 -p0
+%setup -q -n enblend-enfuse-%{version} %{!?doc:-a 1}
 
 %build
-%configure --disable-static  LIBS="-lboost_filesystem -lboost_system"
-make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+%configure --with-boost-filesystem
+
+make %{?_smp_mflags}
+
+%if 0%{?doc}
+(cd doc && make pdf )
+%endif
+
 
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+
+%if 0%{?doc}
 rm -f %{buildroot}%{_infodir}/dir
-magic_rpm_clean.sh
+%else
+install -m644 -p -D doc/enblend.info %{buildroot}%{_infodir}/enblend.info
+install -m644 -p -D doc/enfuse.info %{buildroot}%{_infodir}/enfuse.info
+%endif
 
 %clean
 rm -rf %{buildroot}
 
 %post
-/usr/sbin/install-info %{_infodir}/enblend.info %{_infodir}/dir || :
-/usr/sbin/install-info %{_infodir}/enfuse.info %{_infodir}/dir || :
+/sbin/install-info %{_infodir}/enblend.info %{_infodir}/dir || :
+/sbin/install-info %{_infodir}/enfuse.info %{_infodir}/dir || :
 
 %preun
 if [ $1 = 0 ] ; then
-  /usr/sbin/install-info --delete %{_infodir}/enblend.info %{_infodir}/dir || :
-  /usr/sbin/install-info --delete %{_infodir}/enfuse.info %{_infodir}/dir || :
+  /sbin/install-info --delete %{_infodir}/enblend.info %{_infodir}/dir || :
+  /sbin/install-info --delete %{_infodir}/enfuse.info %{_infodir}/dir || :
 fi
 
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS COPYING INSTALL NEWS README VIGRA_LICENSE
+%doc AUTHORS COPYING NEWS README
 
 %{_bindir}/enblend
 %{_bindir}/enfuse
@@ -71,16 +97,60 @@ fi
 %{_infodir}/enblend.*
 %{_infodir}/enfuse.*
 
+%files doc
+%defattr(-,root,root,-)
+%doc COPYING doc/enblend.pdf doc/enfuse.pdf
 
 %changelog
-* Sun Apr 28 2013 Liu Di <liudidi@gmail.com> - 4.0-17
-- 为 Magic 3.0 重建
+* Mon Dec 30 2013 Rex Dieter <rdieter@fedoraproject.org> 4.1.2-4
+- rebuild (vigra)
 
-* Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 4.0-16
-- 为 Magic 3.0 重建
+* Wed Nov 27 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.1.2-3
+- rebuild (openexr)
 
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 4.0-15
-- 为 Magic 3.0 重建
+* Mon Nov 18 2013 Dave Airlie <airlied@redhat.com> - 4.1.2-2
+- rebuilt for GLEW 1.10
+
+* Mon Oct 07 2013 Bruno Postle - 4.1.2-1
+- stable release
+
+* Sat Sep 14 2013 Bruno Wolff III <bruno@wolff.to> - 4.1.1-6
+- Rebuild for ilmbase related soname bumps
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.1.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 28 2013 Petr Machata <pmachata@redhat.com> - 4.1.1-4
+- Rebuild for boost 1.54.0
+
+* Mon Mar 11 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.1.1-3
+- avoid/fix pitfalls associated with texinfo-5.x (#919935)
+
+* Sun Mar 10 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.1.1-2
+- rebuild (OpenEXR)
+
+* Fri Feb 15 2013 Bruno Postle - 4.1.1-1
+- stable release
+
+* Sun Feb 10 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 4.1-3
+- Rebuild for Boost-1.53.0
+
+* Sat Feb 09 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 4.1-2
+- Rebuild for Boost-1.53.0
+
+* Sun Jan 20 2013 Bruno Postle <bruno@postle.net> - 4.1-1
+- Upstream release
+- No longer provides bundled(vigra)
+- New enblend-doc sub package containing pdf documentation
+
+* Fri Jan 18 2013 Adam Tkac <atkac redhat com> - 4.0-17
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Thu Dec 13 2012 Adam Jackson <ajax@redhat.com> - 4.0-16
+- Rebuild for glew 1.9.0
+
+* Tue Nov 13 2012 Dan Horák <dan[at]danny.cz> - 4.0-15
+- fix FTBFS due new boost
 
 * Wed Aug 01 2012 Adam Jackson <ajax@redhat.com> - 4.0-14
 - -Rebuild for new glew
@@ -159,7 +229,7 @@ fi
 * Tue Mar 20 2007 Bruno Postle <bruno@postle.net> 3.0-4
   - patch to build without glew library
 
-* Sat Jan 28 2007 Bruno Postle <bruno@postle.net>
+* Sun Jan 28 2007 Bruno Postle <bruno@postle.net>
   - 3.0 release
 
 * Tue Dec 13 2005 Bruno Postle <bruno@postle.net>
