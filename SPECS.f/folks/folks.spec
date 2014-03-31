@@ -1,27 +1,30 @@
+%global _changelog_trimtime %(date +%s -d "1 year ago")
+
 %define tp_glib_ver	0.19.0
-%define zeitgeist_ver   0.3.14
+%define zeitgeist_ver   0.9.14
 
 Name:           folks
 Epoch:          1
-Version:        0.9.1
-Release:        1%{?dist}
+Version:        0.9.6
+Release:        4%{?dist}
 Summary:        GObject contact aggregation library
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/Folks
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.8/%{name}-%{version}.tar.xz
+Patch0:         Remove_Assert.patch
 
 BuildRequires:  telepathy-glib-devel >= %{tp_glib_ver}
 BuildRequires:  telepathy-glib-vala
-BuildRequires:  libzeitgeist-devel >= %{zeitgeist_ver}
+BuildRequires:  zeitgeist-devel >= %{zeitgeist_ver}
 BuildRequires:  glib2-devel
 BuildRequires:  vala-devel >= 0.17.6
 BuildRequires:  vala-tools
 BuildRequires:  libxml2-devel
 BuildRequires:  gobject-introspection >= 0.9.12
 BuildRequires:  GConf2-devel
-BuildRequires:  evolution-data-server-devel >= 3.5.3
+BuildRequires:  evolution-data-server-devel >= 3.9.1
 BuildRequires:  readline-devel
 ## BuildRequires: tracker-devel >= 0.10
 BuildRequires:  pkgconfig(gee-0.8) >= 0.8.4
@@ -61,10 +64,12 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
+%patch0 -p1 -b .assert
+
 
 
 %build
-%configure --disable-static --enable-eds-backend --enable-vala --enable-inspect-tool --disable-libsocialweb-backend
+%configure --disable-static --disable-fatal-warnings --enable-eds-backend --enable-vala --enable-inspect-tool --disable-libsocialweb-backend
 make %{?_smp_mflags} V=1
 
 
@@ -89,10 +94,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files -f %{name}.lang
-%doc AUTHORS ChangeLog COPYING README
+%doc AUTHORS COPYING README NEWS
 %{_libdir}/*.so.*
 %{_libdir}/folks
 %{_libdir}/girepository-1.0/Folks-0.6.typelib
+%{_libdir}/girepository-1.0/FolksEds-0.6.typelib
+%{_libdir}/girepository-1.0/FolksTelepathy-0.6.typelib
 %{_datadir}/GConf/gsettings/folks.convert
 %{_datadir}/glib-2.0/schemas/org.freedesktop.folks.gschema.xml
 
@@ -105,10 +112,64 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/folks*.pc
 %{_datadir}/gir-1.0/Folks-0.6.gir
+%{_datadir}/gir-1.0/FolksEds-0.6.gir
+%{_datadir}/gir-1.0/FolksTelepathy-0.6.gir
 %{_datadir}/vala/vapi/%{name}*
 
 
 %changelog
+* Mon Feb 03 2014 Milan Crha <mcrha@redhat.com> - 1:0.9.6-4
+- Rebuild against newer evolution-data-server
+
+* Tue Jan 14 2014 Milan Crha <mcrha@redhat.com> - 1:0.9.6-3
+- Rebuild against newer evolution-data-server
+
+* Mon Nov 18 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.6-2
+- Add patch to remove assert that was causing IRC crash. (#1031252)
+
+* Thu Nov 14 2013 Richard Hughes <rhughes@redhat.com> - 1:0.9.6-1
+- Update to 0.9.6
+
+* Wed Oct 23 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.5-2
+- Rebuild for latest libcamel.
+
+* Tue Aug 27 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.5-1
+- Update to 0.9.5.
+
+* Mon Aug 19 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.4-1
+- Update to 0.9.4.
+- Bump minimum version of eds needed.
+
+* Mon Aug 19 2013 Milan Crha <mcrha@redhat.com> - 1:0.9.3-5
+- Rebuild against newer evolution-data-server
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 10 2013 Kalev Lember <kalevlember@gmail.com> - 1:0.9.3-3
+- Including missing files
+- Disable fatal warnings to fix the build
+
+* Tue Jul 09 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.3-2
+- Rebuild for new libcamel.
+
+* Tue Jun 25 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.3-1
+- Update to 0.9.3.
+- Bump minimum version of zeitgeist needed.
+
+* Sat Jun 22 2013 Matthias Clasen <mclasen@redhat.com> - 1:0.9.2-3
+- Trim %%changelog
+
+* Fri Jun 21 2013 Matthias Clasen <mclasen@redhat.com> - 1:0.9.2-2
+- Install NEWS instead of ChangeLog (saves some space)
+
+* Sat Jun  8 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.2-1
+- Update to 0.9.2.
+- Bump minimum version of eds needed.
+
+* Tue Apr 30 2013 Brian Pepple <bpepple@fedoraproject.org> - 1:0.9.1-2
+- Rebuild against new eds.
+
 * Tue Feb 19 2013 Richard Hughes <rhughes@redhat.com> - 1:0.9.1-1
 - Update to 0.9.1
 

@@ -1,0 +1,22 @@
+diff -urp folks-0.9.6.OLD/folks/individual.c folks-0.9.6/folks/individual.c
+--- folks-0.9.6.OLD/folks/individual.c	2013-11-06 11:36:18.000000000 -0500
++++ folks-0.9.6/folks/individual.c	2013-11-18 09:33:25.852692525 -0500
+@@ -3418,7 +3418,6 @@ static void _folks_individual_persona_no
+ 		_tmp1_ = _tmp6_ == self;
+ 	}
+ 	_tmp7_ = _tmp1_;
+-	_vala_assert (_tmp7_, "ps.name == \"individual\" || (obj as Persona).individual == this");
+ 	{
+ 		FolksIndividual_Notifier* notifier_collection = NULL;
+ 		gint notifier_collection_length1 = 0;
+diff -urp folks-0.9.6.OLD/folks/individual.vala folks-0.9.6/folks/individual.vala
+--- folks-0.9.6.OLD/folks/individual.vala	2013-11-06 10:04:08.000000000 -0500
++++ folks-0.9.6/folks/individual.vala	2013-11-18 09:47:10.666380935 -0500
+@@ -1206,7 +1206,6 @@ public class Folks.Individual : Object,
+   private void _persona_notify_cb (Object obj, ParamSpec ps)
+     {
+       assert (obj is Persona);
+-      assert (ps.name == "individual" || (obj as Persona).individual == this);
+ 
+       foreach (var notifier in Individual._notifiers)
+         {
