@@ -1,6 +1,6 @@
 Name:           telepathy-farstream
 Version:        0.6.0
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Telepathy client library to handle Call channels
 
 Group:          System Environment/Libraries
@@ -64,6 +64,10 @@ make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
+%check
+make check
+
+
 %post -p /sbin/ldconfig
 
 
@@ -85,8 +89,14 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.6.0-2
-- 为 Magic 3.0 重建
+* Fri Feb 14 2014 Debarshi Ray <rishi@fedoraproject.org> - 0.6.0-4
+- Add %%check to run the upstream test suite on each build
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Wed Oct  3 2012 Brian Pepple <bpepple@fedoraproject.org> - 0.6.0-1
 - Update to 0.6.0
