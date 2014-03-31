@@ -1,0 +1,12 @@
+diff -up facter-1.7.4/lib/facter/virtual.rb.dmidecode-drop-stderr facter-1.7.4/lib/facter/virtual.rb
+--- facter-1.7.4/lib/facter/virtual.rb.dmidecode-drop-stderr	2013-12-17 15:23:22.000000000 -0500
++++ facter-1.7.4/lib/facter/virtual.rb	2014-01-28 18:28:27.604949053 -0500
+@@ -133,7 +133,7 @@ Facter.add("virtual") do
+     end
+ 
+     # Parse dmidecode
+-    output = Facter::Util::Resolution.exec('dmidecode')
++    output = Facter::Util::Resolution.exec('dmidecode 2>/dev/null')
+     if output
+       lines = output.split("\n")
+       next "parallels"  if lines.any? {|l| l =~ /Parallels/ }

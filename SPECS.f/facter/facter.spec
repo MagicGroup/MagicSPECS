@@ -1,11 +1,15 @@
 # F-17 and above have ruby-1.9.x, and place libs in a different location
-# The checks also fail on older releases, due to an older mocha gem, it appears
 %if 0%{?fedora} >= 17
-%global enable_check    1
 %global facter_libdir   %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorlibdir"]')
 %else
-%global enable_check    0
 %global facter_libdir   %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["sitelibdir"]')
+%endif
+
+# Only enable checks on F-19, other releases fail for various reasons
+%if (0%{?fedora} >= 17 && 0%{?fedora} <= 19)
+%global enable_check 1
+%else
+%global enable_check 0
 %endif
 
 %global ruby_version    %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["ruby_version"]')
@@ -15,18 +19,17 @@
 %global debug_package %{nil}
 
 Name:           facter
-Version:        1.6.18
-Release:        2%{?dist}
+Version:        1.7.4
+Release:        1%{?dist}
 Summary:        Command and ruby library for gathering system information
 
 Group:          System Environment/Base
 License:        ASL 2.0
-URL:            http://www.puppetlabs.com/puppet/related-projects/%{name}/
-Source0:        http://downloads.puppetlabs.com/%{name}/%{name}-%{version}.tar.gz
-Source1:        http://downloads.puppetlabs.com/%{name}/%{name}-%{version}.tar.gz.asc
-# https://bugzilla.redhat.com/719611
-# https://projects.puppetlabs.com/issues/19989
-Patch0:         0001-19989-Filter-virt-what-warnings-from-virtual-fact.patch
+URL:            https://puppetlabs.com/%{name}
+Source0:        https://downloads.puppetlabs.com/%{name}/%{name}-%{version}.tar.gz
+Source1:        https://downloads.puppetlabs.com/%{name}/%{name}-%{version}.tar.gz.asc
+# https://tickets.puppetlabs.com/browse/FACT-86
+Patch0:         facter-1.7.4-dmidecode-drop-stderr.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ruby >= 1.8.1
@@ -68,7 +71,7 @@ key off the values returned by facts.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch0 -p1 -b .dmidecode-drop-stderr
 
 
 %build
@@ -78,6 +81,9 @@ key off the values returned by facts.
 %install
 rm -rf %{buildroot}
 ruby install.rb --destdir=%{buildroot} --quick --no-rdoc --sitelibdir=%{facter_libdir}
+
+# Create directory for external facts
+mkdir -p %{buildroot}/%{_sysconfdir}/%{name}/facts.d
 
 %if ! (0%{?fedora} || 0%{?rhel} >= 7)
 # Install man page, rubygem-rdoc is not available on older EL releases)
@@ -107,11 +113,29 @@ rspec spec
 %defattr(-,root,root,-)
 %doc LICENSE README.md
 %{_bindir}/%{name}
+%{_sysconfdir}/%{name}
 %{facter_libdir}/%{name}*
 %{_mandir}/man8/%{name}*
 
 
 %changelog
+* Tue Jan 28 2014 Todd Zullinger <tmz@pobox.com> - 1.7.4-1
+- Update to 1.7.4
+- Create /etc/facter/facts.d for external facts
+- Send dmiddecode errors to /dev/null in the virtual fact (FACT-86)
+
+* Tue Oct 8 2013 Sam Kottler <skottler@fedoraproject.org> - 1.7.3-1
+- Update to 1.7.3 (BZ #1016817)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.18-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 21 2013 Sam Kottler <skottler@fedoraproject.org> 1.6.18-4
+- Apply upstream patch to ensure the first non-127.0.0.1 interface
+
+* Wed Apr 03 2013 Todd Zullinger <tmz@pobox.com> - 1.6.18-3
+- Avoid warnings when virt-what produces no output
+
 * Tue Apr 02 2013 Todd Zullinger <tmz@pobox.com> - 1.6.18-2
 - Apply upstream patch to filter virt-what warnings from virtual fact
 
