@@ -1,20 +1,24 @@
 Summary: Gives a fake root environment
 Name: fakeroot
-Version: 1.12.4
-Release: 5%{?dist}
+Version: 1.18.4
+Release: 2%{?dist}
 License: GPL+
 Group: Development/Tools
 URL: http://fakeroot.alioth.debian.org/
-Source0: http://ftp.debian.org/debian/pool/main/f/fakeroot/%{name}_%{version}.tar.gz
-#Patch0: fakeroot-1.6.4-atfuncs.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires: gcc-c++
+Source0: http://ftp.debian.org/debian/pool/main/f/fakeroot/%{name}_%{version}.orig.tar.bz2
+# Address some POSIX-types related problems.
+Patch0: fakeroot-1.18.4-inttypes.patch
 BuildRequires: /usr/bin/getopt
 #Currently not needed
 #BuildRequires: po4a
+# uudecode used by tests/tartest
 BuildRequires: sharutils
 Requires: /usr/bin/getopt
 Requires: fakeroot-libs = %{version}-%{release}
+Requires(post): /usr/sbin/alternatives
+Requires(post): /usr/bin/readlink
+Requires(preun): /usr/sbin/alternatives
+
 
 %description
 fakeroot runs a command in an environment wherein it appears to have
@@ -32,7 +36,8 @@ This package contains the libraries required by %{name}.
 
 %prep
 %setup -q
-#patch0 -p1 -b .atfixes
+%patch0 -p1
+
 for file in ./doc/*/*.1; do
   iconv -f latin1 -t utf8 < $file > $file.new
   mv -f $file.new $file
@@ -43,7 +48,7 @@ for type in sysv tcp; do
 mkdir obj-$type
 cd obj-$type
 cat >> configure << 'EOF'
-#! /bin/sh
+#!/bin/sh
 exec ../configure "$@"
 EOF
 chmod +x configure
@@ -58,7 +63,6 @@ cd ..
 done
 
 %install
-rm -rf %{buildroot}
 for type in sysv tcp; do
   make -C obj-$type install libdir=%{_libdir}/libfakeroot DESTDIR=%{buildroot}
   chmod 644 %{buildroot}%{_libdir}/libfakeroot/libfakeroot-0.so 
@@ -66,11 +70,11 @@ for type in sysv tcp; do
      %{buildroot}%{_libdir}/libfakeroot/libfakeroot-$type.so
   strip -s %{buildroot}%{_libdir}/libfakeroot/libfakeroot-$type.so
   rm -f %{buildroot}%{_libdir}/libfakeroot/libfakeroot.so
-  rm -f %{buildroot}%{_libdir}/libfakeroot/libfakeroot.*a*
+  rm -f %{buildroot}%{_libdir}/libfakeroot/libfakeroot.*la
 done
 
+# FIXME: Likely should be handled through alternatives
 ln -s faked-tcp %{buildroot}%{_bindir}/faked
-ln -s fakeroot-tcp %{buildroot}%{_bindir}/fakeroot
 ln -s libfakeroot-tcp.so %{buildroot}%{_libdir}/libfakeroot/libfakeroot-0.so
 
 %check
@@ -78,38 +82,109 @@ for type in sysv tcp; do
   make -C obj-$type check
 done
 
-%clean
-rm -rf %{buildroot}
+%post
+link=$(readlink -e "/usr/bin/fakeroot")
+if [ "$link" = "/usr/bin/fakeroot" ]; then
+  rm -f /usr/bin/fakeroot
+fi
+
+/usr/sbin/alternatives --install "%{_bindir}/fakeroot" fakeroot \
+  "%{_bindir}/fakeroot-tcp" 50 \
+  --slave %{_mandir}/man1/fakeroot.1.gz fakeroot.1.gz %{_mandir}/man1/fakeroot-tcp.1.gz \
+  --slave %{_mandir}/man1/faked.1.gz faked.1.gz %{_mandir}/man1/faked-tcp.1.gz \
+  --slave %{_mandir}/de/man1/fakeroot.1.gz fakeroot.de.1.gz %{_mandir}/de/man1/fakeroot-tcp.1.gz \
+  --slave %{_mandir}/de/man1/faked.1.gz faked.de.1.gz %{_mandir}/de/man1/faked-tcp.1.gz \
+  --slave %{_mandir}/es/man1/fakeroot.1.gz fakeroot.es.1.gz %{_mandir}/es/man1/fakeroot-tcp.1.gz \
+  --slave %{_mandir}/es/man1/faked.1.gz faked.es.1.gz %{_mandir}/es/man1/faked-tcp.1.gz \
+  --slave %{_mandir}/fr/man1/fakeroot.1.gz fakeroot.fr.1.gz %{_mandir}/fr/man1/fakeroot-tcp.1.gz \
+  --slave %{_mandir}/fr/man1/faked.1.gz faked.fr.1.gz %{_mandir}/fr/man1/faked-tcp.1.gz \
+  --slave %{_mandir}/nl/man1/fakeroot.1.gz fakeroot.nl.1.gz %{_mandir}/nl/man1/fakeroot-tcp.1.gz \
+  --slave %{_mandir}/nl/man1/faked.1.gz faked.nl.1.gz %{_mandir}/nl/man1/faked-tcp.1.gz \
+  --slave %{_mandir}/sv/man1/fakeroot.1.gz fakeroot.sv.1.gz %{_mandir}/sv/man1/fakeroot-tcp.1.gz \
+  --slave %{_mandir}/sv/man1/faked.1.gz faked.sv.1.gz %{_mandir}/sv/man1/faked-tcp.1.gz
+
+/usr/sbin/alternatives --install "%{_bindir}/fakeroot" fakeroot \
+  "%{_bindir}/fakeroot-sysv" 40 \
+  --slave %{_mandir}/man1/fakeroot.1.gz fakeroot.1.gz %{_mandir}/man1/fakeroot-sysv.1.gz \
+  --slave %{_mandir}/man1/faked.1.gz faked.1.gz %{_mandir}/man1/faked-sysv.1.gz \
+  --slave %{_mandir}/de/man1/fakeroot.1.gz fakeroot.de.1.gz %{_mandir}/de/man1/fakeroot-sysv.1.gz \
+  --slave %{_mandir}/de/man1/faked.1.gz faked.de.1.gz %{_mandir}/de/man1/faked-sysv.1.gz \
+  --slave %{_mandir}/es/man1/fakeroot.1.gz fakeroot.es.1.gz %{_mandir}/es/man1/fakeroot-sysv.1.gz \
+  --slave %{_mandir}/es/man1/faked.1.gz faked.es.1.gz %{_mandir}/es/man1/faked-sysv.1.gz \
+  --slave %{_mandir}/fr/man1/fakeroot.1.gz fakeroot.fr.1.gz %{_mandir}/fr/man1/fakeroot-sysv.1.gz \
+  --slave %{_mandir}/fr/man1/faked.1.gz faked.fr.1.gz %{_mandir}/fr/man1/faked-sysv.1.gz \
+  --slave %{_mandir}/nl/man1/fakeroot.1.gz fakeroot.nl.1.gz %{_mandir}/nl/man1/fakeroot-sysv.1.gz \
+  --slave %{_mandir}/nl/man1/faked.1.gz faked.nl.1.gz %{_mandir}/nl/man1/faked-sysv.1.gz \
+  --slave %{_mandir}/sv/man1/fakeroot.1.gz fakeroot.sv.1.gz %{_mandir}/sv/man1/fakeroot-sysv.1.gz \
+  --slave %{_mandir}/sv/man1/faked.1.gz faked.sv.1.gz %{_mandir}/sv/man1/faked-sysv.1.gz
+
+%preun
+if [ $1 = 0 ]; then
+  /usr/sbin/alternatives --remove fakeroot "%{_bindir}/fakeroot-tcp"
+  /usr/sbin/alternatives --remove fakeroot "%{_bindir}/fakeroot-sysv"
+fi
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING AUTHORS BUGS DEBUG doc/README.saving debian/changelog
+%doc COPYING AUTHORS BUGS DEBUG doc/README.saving
 %{_bindir}/faked-*
 %{_bindir}/faked
 %{_bindir}/fakeroot-*
-%{_bindir}/fakeroot
-%{_mandir}/man1/faked-*.1*
-%{_mandir}/man1/fakeroot-*.1*
-%lang(es) %{_mandir}/es/man1/faked-*.1*
-%lang(es) %{_mandir}/es/man1/fakeroot-*.1*
-%lang(fr) %{_mandir}/fr/man1/faked-*.1*
-%lang(fr) %{_mandir}/fr/man1/fakeroot-*.1*
-%lang(sv) %{_mandir}/sv/man1/faked-*.1*
-%lang(sv) %{_mandir}/sv/man1/fakeroot-*.1*
-%lang(nl) %{_mandir}/nl/man1/faked-*.1*
-%lang(nl) %{_mandir}/nl/man1/fakeroot-*.1*
+%ghost %{_bindir}/fakeroot
+%{_mandir}/man1/faked-sysv.1*
+%{_mandir}/man1/faked-tcp.1*
+%{_mandir}/man1/fakeroot-sysv.1*
+%{_mandir}/man1/fakeroot-tcp.1*
+%ghost %{_mandir}/man1/fakeroot.1.gz
+%lang(de) %{_mandir}/de/man1/faked-sysv.1*
+%lang(de) %{_mandir}/de/man1/faked-tcp.1*
+%lang(de) %{_mandir}/de/man1/fakeroot-sysv.1*
+%lang(de) %{_mandir}/de/man1/fakeroot-tcp.1*
+%ghost %lang(de) %{_mandir}/de/man1/fakeroot.1.gz
+%lang(es) %{_mandir}/es/man1/faked-sysv.1*
+%lang(es) %{_mandir}/es/man1/faked-tcp.1*
+%lang(es) %{_mandir}/es/man1/fakeroot-sysv.1*
+%lang(es) %{_mandir}/es/man1/fakeroot-tcp.1*
+%ghost %lang(es) %{_mandir}/es/man1/fakeroot.1.gz
+%lang(fr) %{_mandir}/fr/man1/faked-sysv.1*
+%lang(fr) %{_mandir}/fr/man1/faked-tcp.1*
+%lang(fr) %{_mandir}/fr/man1/fakeroot-sysv.1*
+%lang(fr) %{_mandir}/fr/man1/fakeroot-tcp.1*
+%ghost %lang(fr) %{_mandir}/fr/man1/fakeroot.1.gz
+%lang(sv) %{_mandir}/sv/man1/faked-sysv.1*
+%lang(sv) %{_mandir}/sv/man1/faked-tcp.1*
+%lang(sv) %{_mandir}/sv/man1/fakeroot-sysv.1*
+%lang(sv) %{_mandir}/sv/man1/fakeroot-tcp.1*
+%ghost %lang(sv) %{_mandir}/sv/man1/fakeroot.1.gz
+%lang(nl) %{_mandir}/nl/man1/faked-sysv.1*
+%lang(nl) %{_mandir}/nl/man1/faked-tcp.1*
+%lang(nl) %{_mandir}/nl/man1/fakeroot-sysv.1*
+%lang(nl) %{_mandir}/nl/man1/fakeroot-tcp.1*
+%ghost %lang(nl) %{_mandir}/nl/man1/fakeroot.1.gz
 
 %files libs
 %dir %{_libdir}/libfakeroot
-%{_libdir}/libfakeroot/libfakeroot-*.so
+%{_libdir}/libfakeroot/libfakeroot-sysv.so
+%{_libdir}/libfakeroot/libfakeroot-tcp.so
 %{_libdir}/libfakeroot/libfakeroot-0.so
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.12.4-5
-- 为 Magic 3.0 重建
+* Mon Aug 26 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.18.4-2
+- Add alternatives (Mimic Debian's behavior).
 
-* Mon Nov 21 2011 Liu Di <liudidi@gmail.com> - 1.12.4-4
-- 为 Magic 3.0 重建
+* Fri Jul 26 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.18.4-1
+- Upstream update.
+- Spec cleanup.
+- Add fakeroot-1.18.4-inttypes.patch.
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12.4-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
