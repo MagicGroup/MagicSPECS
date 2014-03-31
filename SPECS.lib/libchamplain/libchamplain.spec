@@ -1,12 +1,13 @@
+%global _default_patch_fuzz 2
+
 Summary:	Map view for Clutter
 Name:		libchamplain
-Version:	0.12.3
-Release:	5%{?dist}
+Version:	0.12.7
+Release:	2%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://projects.gnome.org/libchamplain/
 Source0:	http://download.gnome.org/sources/libchamplain/0.12/%{name}-%{version}.tar.xz
-Patch0: champlain-grr.patch
 
 Requires:	gobject-introspection
 
@@ -19,8 +20,6 @@ BuildRequires:	gtk3-devel
 BuildRequires:	gtk-doc
 BuildRequires:	vala-devel
 BuildRequires:	vala-tools
-
-BuildRequires: autoconf automake libtool
 
 %description
 Libchamplain is a C library aimed to provide a ClutterActor to display
@@ -75,9 +74,6 @@ This package contains demos for development using %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
-
-autoreconf -i -f
 
 %build
 %configure --disable-debug --disable-silent-rules --disable-static \
@@ -95,7 +91,6 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 
 # Remove rpaths.
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/%{name}-gtk-*.so.*
-magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -107,13 +102,13 @@ magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING README NEWS
+%doc AUTHORS COPYING README NEWS
 %{_libdir}/girepository-1.0/Champlain-0.12.typelib
 %{_libdir}/%{name}-0.12.so.*
 
 %files devel
 %defattr(-,root,root,-)
-%doc %{_datadir}/gtk-doc/html/libchamplain
+%doc %{_datadir}/gtk-doc/html/libchamplain-0.12
 %{_datadir}/gir-1.0/Champlain-0.12.gir
 %{_libdir}/%{name}-0.12.so
 %{_libdir}/pkgconfig/champlain-0.12.pc
@@ -126,7 +121,7 @@ magic_rpm_clean.sh
 
 %files gtk-devel
 %defattr(-,root,root,-)
-%doc %{_datadir}/gtk-doc/html/libchamplain-gtk
+%doc %{_datadir}/gtk-doc/html/libchamplain-gtk-0.12
 %{_datadir}/gir-1.0/GtkChamplain-0.12.gir
 %{_libdir}/%{name}-gtk-0.12.so
 %{_libdir}/pkgconfig/champlain-gtk-0.12.pc
@@ -148,11 +143,39 @@ magic_rpm_clean.sh
 %doc demos/*.osm
 
 %changelog
-* Sun Apr 28 2013 Liu Di <liudidi@gmail.com> - 0.12.3-5
-- 为 Magic 3.0 重建
+* Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 0.12.7-2
+- Rebuilt for cogl soname bump
 
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.12.3-4
-- 为 Magic 3.0 重建
+* Thu Feb 06 2014 Kalev Lember <kalevlember@gmail.com> - 0.12.7-1
+- Update to 0.12.7
+
+* Wed Feb 05 2014 Kalev Lember <kalevlember@gmail.com> - 0.12.6-2
+- Rebuilt for cogl soname bump
+
+* Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 0.12.6-1
+- Update to 0.12.6
+
+* Wed Sep 18 2013 Kalev Lember <kalevlember@gmail.com> - 0.12.5-1
+- Update to 0.12.5
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 0.12.4-4
+- Rebuilt for cogl 1.15.4 soname bump
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 21 2013 Matthias Clasen <mclasen@redhat.com> - 0.12.4-2
+- Don't ship ChangeLog (we need to save space on the live image)
+
+* Fri May 17 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.12.4-1
+- Update to 0.12.4
+- http://ftp.gnome.org/pub/GNOME/sources/libchamplain/0.12/libchamplain-0.12.4.news
+
+* Fri Jan 25 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.12.3-5
+- Rebuild for new libcogl.
+
+* Fri Jan 25 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.12.3-4
+- Rebuild for new cogl
 
 * Sun Aug 19 2012 Brian Pepple <bpepple@fedoraproject.org> - 0.12.3-3
 - Rebuild for new libcogl.
