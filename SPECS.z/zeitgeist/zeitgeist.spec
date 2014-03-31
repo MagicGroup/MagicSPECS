@@ -1,7 +1,7 @@
 Summary:	Framework providing Desktop activity awareness
 Name:		zeitgeist
-Version:	0.9.12
-Release:	1%{?dist}
+Version:	0.9.14
+Release:	2%{?dist}
 
 # most of the source code is LGPLv2+, except:
 # datahub/ is LGPLv3+
@@ -69,7 +69,7 @@ developing applications that use %{name}.
 sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
 
 %build
-%configure --enable-fts
+%configure --enable-fts --enable-datahub     
 make %{?_smp_mflags} 
 
 %install
@@ -85,7 +85,6 @@ rm -rf %{buildroot}%{_datadir}/zeitgeist/doc
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
-#%files -f %{name}.lang
 %files
 %doc AUTHORS COPYING COPYING.GPL NEWS
 %{_bindir}/zeitgeist-daemon
@@ -117,6 +116,18 @@ rm -rf %{buildroot}%{_datadir}/zeitgeist/doc
 %{_datadir}/vala/vapi/zeitgeist-datamodel-2.0.vapi
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.14-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul  9 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.9.14-1
+- Update to 0.9.14.
+
+* Sun Jun 16 2013 Kalev Lember <kalevlember@gmail.com> - 0.9.13-2
+- Fix postun script syntax error
+
+* Fri Jun 14 2013 Deji Akingunola <dakingun@gmail.com> - 0.9.13-1
+- Update to 0.9.13
+
 * Sun Apr 14 2013 Kalev Lember <kalevlember@gmail.com> - 0.9.12-1
 - Update to 0.9.12 (#949286)
 - Obsolete zeitgeist-datahub
