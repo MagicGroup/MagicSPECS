@@ -1,19 +1,147 @@
-diff -up evolution-2.30.1.2/shell/e-shell-window-actions.c.help-contents evolution-2.30.1.2/shell/e-shell-window-actions.c
---- evolution-2.30.1.2/shell/e-shell-window-actions.c.help-contents	2010-04-26 09:13:18.000000000 -0400
-+++ evolution-2.30.1.2/shell/e-shell-window-actions.c	2010-05-07 21:29:06.269059830 -0400
-@@ -2001,6 +2001,15 @@ e_shell_window_actions_init (EShellWindo
+diff -up evolution-3.11.90/addressbook/gui/contact-editor/e-contact-editor.c.help-contents evolution-3.11.90/addressbook/gui/contact-editor/e-contact-editor.c
+--- evolution-3.11.90/addressbook/gui/contact-editor/e-contact-editor.c.help-contents	2014-02-16 15:11:01.000000000 +0100
++++ evolution-3.11.90/addressbook/gui/contact-editor/e-contact-editor.c	2014-02-17 09:11:15.407454286 +0100
+@@ -4281,6 +4281,11 @@ e_contact_editor_init (EContactEditor *e
+ 	g_signal_connect (
+ 		widget, "clicked",
+ 		G_CALLBACK (show_help_cb), e_contact_editor);
++	if (!e_misc_utils_is_help_package_installed ()) {
++		gtk_widget_set_sensitive (widget, FALSE);
++		gtk_widget_hide (widget);
++	}
++
+ 	widget = e_builder_get_widget (
+ 		e_contact_editor->priv->builder, "button-web-expand");
+ 	g_signal_connect_swapped (
+diff -up evolution-3.11.90/calendar/gui/dialogs/comp-editor.c.help-contents evolution-3.11.90/calendar/gui/dialogs/comp-editor.c
+--- evolution-3.11.90/calendar/gui/dialogs/comp-editor.c.help-contents	2014-02-16 15:11:01.000000000 +0100
++++ evolution-3.11.90/calendar/gui/dialogs/comp-editor.c	2014-02-17 09:11:15.408454286 +0100
+@@ -2169,6 +2169,12 @@ comp_editor_init (CompEditor *editor)
+ 			G_BINDING_SYNC_CREATE);
+ 	}
+ 
++	action = gtk_action_group_get_action (action_group, "help");
++	if (action && !e_misc_utils_is_help_package_installed ()) {
++		gtk_action_set_visible (action, FALSE);
++		gtk_action_set_sensitive (action, FALSE);
++	}
++
+ 	action_group = gtk_action_group_new ("individual");
+ 	gtk_action_group_set_translation_domain (
+ 		action_group, GETTEXT_PACKAGE);
+diff -up evolution-3.11.90/e-util/e-misc-utils.c.help-contents evolution-3.11.90/e-util/e-misc-utils.c
+--- evolution-3.11.90/e-util/e-misc-utils.c.help-contents	2014-02-11 14:39:16.000000000 +0100
++++ evolution-3.11.90/e-util/e-misc-utils.c	2014-02-17 09:11:15.408454286 +0100
+@@ -2102,3 +2102,20 @@ e_binding_transform_uid_to_source (GBind
+ 
+ 	return success;
+ }
++
++gboolean
++e_misc_utils_is_help_package_installed (void)
++{
++	gboolean is_installed;
++	gchar *path;
++
++	/* Viewing user documentation requires the evolution-help
++	 * package. Look for one of the files it installs. */
++	path = g_build_filename (EVOLUTION_DATADIR, "help", "C", PACKAGE, "index.page", NULL);
++
++	is_installed = g_file_test (path, G_FILE_TEST_IS_REGULAR);
++
++	g_free (path);
++
++	return is_installed;
++}
+diff -up evolution-3.11.90/e-util/e-misc-utils.h.help-contents evolution-3.11.90/e-util/e-misc-utils.h
+--- evolution-3.11.90/e-util/e-misc-utils.h.help-contents	2014-01-07 22:05:51.000000000 +0100
++++ evolution-3.11.90/e-util/e-misc-utils.h	2014-02-17 09:11:15.408454286 +0100
+@@ -184,6 +184,8 @@ gboolean	e_binding_transform_uid_to_sour
+ 						 GValue *target_value,
+ 						 ESourceRegistry *registry);
+ 
++gboolean	e_misc_utils_is_help_package_installed (void);
++
+ G_END_DECLS
+ 
+ #endif /* E_MISC_UTILS_H */
+diff -up evolution-3.11.90/e-util/e-preferences-window.c.help-contents evolution-3.11.90/e-util/e-preferences-window.c
+--- evolution-3.11.90/e-util/e-preferences-window.c.help-contents	2014-02-17 09:11:15.408454286 +0100
++++ evolution-3.11.90/e-util/e-preferences-window.c	2014-02-17 09:14:41.257445705 +0100
+@@ -385,6 +385,11 @@ e_preferences_window_init (EPreferencesW
+ 		GTK_BUTTON_BOX (container), widget, TRUE);
+ 	gtk_widget_show (widget);
+ 
++	if (!e_misc_utils_is_help_package_installed ()) {
++		gtk_widget_set_sensitive (widget, FALSE);
++		gtk_widget_hide (widget);
++	}
++
+ 	widget = e_dialog_button_new_with_icon ("window-close", _("_Close"));
+ 	g_signal_connect_swapped (
+ 		widget, "clicked",
+diff -up evolution-3.11.90/e-util/e-send-options.c.help-contents evolution-3.11.90/e-util/e-send-options.c
+--- evolution-3.11.90/e-util/e-send-options.c.help-contents	2014-01-07 22:05:51.000000000 +0100
++++ evolution-3.11.90/e-util/e-send-options.c	2014-02-17 09:11:15.408454286 +0100
+@@ -439,6 +439,7 @@ get_widgets (ESendOptionsDialog *sod)
+ {
+ 	ESendOptionsDialogPrivate *priv;
+ 	GtkBuilder *builder;
++	GtkWidget *helpbutton;
+ 
+ 	priv = sod->priv;
+ 	builder = sod->priv->builder;
+@@ -478,6 +479,12 @@ get_widgets (ESendOptionsDialog *sod)
+ 	priv->accepted_label = e_builder_get_widget (builder, "accepted-label");
+ 	priv->completed_label = e_builder_get_widget (builder, "completed-label");
+ 
++	helpbutton = e_builder_get_widget (builder, "helpbutton1");
++	if (helpbutton && !e_misc_utils_is_help_package_installed ()) {
++		gtk_widget_set_sensitive (helpbutton, FALSE);
++		gtk_widget_hide (helpbutton);
++	}
++
+ 	return (priv->priority
+ 		&& priv->security
+ 		&& priv->status
+diff -up evolution-3.11.90/plugins/email-custom-header/email-custom-header.c.help-contents evolution-3.11.90/plugins/email-custom-header/email-custom-header.c
+--- evolution-3.11.90/plugins/email-custom-header/email-custom-header.c.help-contents	2014-02-16 15:11:01.000000000 +0100
++++ evolution-3.11.90/plugins/email-custom-header/email-custom-header.c	2014-02-17 09:11:15.409454286 +0100
+@@ -118,6 +118,8 @@ static gboolean
+ epech_get_widgets (CustomHeaderOptionsDialog *mch)
+ {
+ 	CustomHeaderOptionsDialogPrivate *priv;
++	GtkWidget *helpbutton;
++
+ 	priv = mch->priv;
+ 
+ #define EMAIL_CUSTOM_HEADER(name) e_builder_get_widget (priv->builder, name)
+@@ -128,6 +130,13 @@ epech_get_widgets (CustomHeaderOptionsDi
+ 
+ 	priv->page  = EMAIL_CUSTOM_HEADER ("email-custom-header-vbox");
+ 	priv->header_table = EMAIL_CUSTOM_HEADER ("email-custom-header-options");
++
++	helpbutton = EMAIL_CUSTOM_HEADER ("helpbutton1");
++	if (helpbutton && !e_misc_utils_is_help_package_installed ()) {
++		gtk_widget_set_sensitive (helpbutton, FALSE);
++		gtk_widget_hide (helpbutton);
++	}
++
+ #undef EMAIL_CUSTOM_HEADER
+ 
+ 	return (priv->page
+diff -up evolution-3.11.90/shell/e-shell-window-actions.c.help-contents evolution-3.11.90/shell/e-shell-window-actions.c
+--- evolution-3.11.90/shell/e-shell-window-actions.c.help-contents	2014-02-16 15:11:01.000000000 +0100
++++ evolution-3.11.90/shell/e-shell-window-actions.c	2014-02-17 09:11:15.409454286 +0100
+@@ -1413,6 +1413,11 @@ e_shell_window_actions_init (EShellWindo
  	if (path == NULL)
  		gtk_action_set_visible (ACTION (SUBMIT_BUG), FALSE);
  	g_free (path);
 +
-+	/* Viewing user documentation requires the evolution-help
-+	 * Fedora package.  Look for one of the files it installs. */
-+	path = g_build_filename (
-+		EVOLUTION_DATADIR, "help", "C",
-+		PACKAGE, "index.page", NULL);
-+	if (!g_file_test (path, G_FILE_TEST_IS_REGULAR))
++	if (!e_misc_utils_is_help_package_installed ()) {
 +		gtk_action_set_visible (ACTION (CONTENTS), FALSE);
-+	g_free (path);
++		gtk_action_set_sensitive (ACTION (CONTENTS), FALSE);
++	}
  }
  
- static GList *
+ GtkWidget *

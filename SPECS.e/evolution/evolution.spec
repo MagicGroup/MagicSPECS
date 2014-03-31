@@ -1,4 +1,6 @@
-%define glib2_version 2.34.0
+%global _changelog_trimtime %(date +%s -d "1 year ago")
+
+%define glib2_version 2.36.0
 %define gtk3_version 3.4.0
 %define gtkhtml_version 4.5.2
 %define gnome_desktop_version 2.91.3
@@ -11,31 +13,32 @@
 %define clutter_gtk_version 0.10
 %define webkit_version 1.8.0
 
-%define evo_base_version 3.8
+%define evo_base_version 3.12
 
 %define last_anjal_version 0.3.2-3
 %define last_libgal2_version 2:2.5.3-2
 %define last_evo_nm_version 3.5.0
 
-%define inline_audio_support 1
 %define ldap_support 1
 %define libnotify_support 1
 %define libpst_support 1
-%define krb5_support 1
+
+# Coverity scan can override this to 0, to skip checking in gtk-doc generated code
+%{!?with_docs: %define with_docs 1}
 
 %define evo_plugin_dir %{_libdir}/evolution/%{evo_base_version}/plugins
 
 ### Abstract ###
 
 Name: evolution
-Version: 3.8.0
-Release: 1%{?dist}
+Version: 3.11.90
+Release: 2%{?dist}
 Group: Applications/Productivity
 Summary: Mail and calendar client for GNOME
 License: GPLv2+ and GFDL
-URL: http://projects.gnome.org/evolution/
+URL: https://wiki.gnome.org/Apps/Evolution
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-Source: http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+Source: http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
 
 Obsoletes: anjal <= %{last_anjal_version}
 Obsoletes: libgal2 <= %{last_libgal2_version}
@@ -53,6 +56,7 @@ Patch02: evolution-2.30.1-help-contents.patch
 
 Requires: gnome-icon-theme >= %{gnome_icon_theme_version}
 Requires: gvfs
+Requires: gtkspell3
 Requires: highlight
 
 ### Build Dependencies ###
@@ -69,11 +73,13 @@ BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gnome-common
 BuildRequires: gnome-desktop3-devel >= %{gnome_desktop_version}
 BuildRequires: gnome-doc-utils >= %{gnome_doc_utils_version}
+BuildRequires: gnome-icon-theme-devel >= %{gnome_icon_theme_version}
 BuildRequires: gnome-online-accounts
 BuildRequires: gnutls-devel
 BuildRequires: gtk-doc
 BuildRequires: gtk3-devel >= %{gtk3_version}
 BuildRequires: gtkhtml3-devel >= %{gtkhtml_version}
+BuildRequires: gtkspell3-devel
 BuildRequires: highlight
 BuildRequires: intltool >= %{intltool_version}
 BuildRequires: itstool
@@ -90,19 +96,8 @@ BuildRequires: pkgconfig
 BuildRequires: webkitgtk3-devel >= %{webkit_version}
 BuildRequires: yelp-tools
 
-%if %{inline_audio_support}
-BuildRequires: gstreamer1-devel
-%endif
-
 %if %{ldap_support}
 BuildRequires: openldap-devel >= 2.0.11 
-%endif
-
-%if %{krb5_support} 
-BuildRequires: krb5-devel 
-# tweak for krb5 1.2 vs 1.3
-%define krb5dir /usr/kerberos
-#define krb5dir `pwd`/krb5-fakeprefix
 %endif
 
 %if %{libnotify_support}
@@ -111,7 +106,6 @@ BuildRequires: libnotify-devel
 
 %if %{libpst_support}
 BuildRequires: libpst-devel
-BuildRequires: libytnef-devel
 %endif
 
 %description
@@ -127,6 +121,7 @@ Requires: %{name} = %{version}-%{release}
 Requires: evolution-data-server-devel >= %{version}
 Requires: gtk3-devel >= %{gtk3_version}
 Requires: gtkhtml3-devel >= %{gtkhtml_version}
+Requires: gtkspell3-devel
 Requires: libgdata-devel >= %{libgdata_version}
 Requires: libgweather-devel >= %{libgweather_version}
 Requires: libsoup-devel >= %{libsoup_version}
@@ -136,6 +131,17 @@ Obsoletes: libgal2-devel <= %{last_libgal2_version}
 %description devel
 Development files needed for building things which link against %{name}.
 
+%package devel-docs
+Summary: Developer documentation for Evolution
+Group: Development/Libraries
+Requires: devhelp
+Requires: evolution-devel = %{version}-%{release}
+BuildArch: noarch
+
+%description devel-docs
+This package contains developer documentation for Evolution.
+
+%if %{with_docs}
 %package help
 Group: Applications/Productivity
 Summary: Help files for %{name}
@@ -145,6 +151,7 @@ BuildArch: noarch
 
 %description help
 This package contains user documentation for %{name}. 
+%endif
 
 %package bogofilter
 Group: Applications/Productivity
@@ -179,7 +186,6 @@ This package contains supplemental utilities for %{name} that require Perl.
 Group: Applications/Productivity
 Summary: PST importer plugin for Evolution
 Requires: %{name} = %{version}-%{release}
-Requires: libpst
 
 %description pst
 This package contains the plugin to import Microsoft Personal Storage Table
@@ -190,10 +196,6 @@ This package contains the plugin to import Microsoft Personal Storage Table
 %setup -q -n evolution-%{version}
 %patch01 -p1 -b .ldaphack
 %patch02 -p1 -b .help-contents
-
-mkdir -p krb5-fakeprefix/include
-mkdir -p krb5-fakeprefix/lib
-mkdir -p krb5-fakeprefix/%{_lib}
 
 # Remove the welcome email from Novell
 for inbox in mail/default/*/Inbox; do
@@ -208,12 +210,6 @@ done
 %define ldap_flags --without-openldap
 %endif
 
-%if %{krb5_support}
-%define krb5_flags --with-krb5=%{krb5dir}
-%else
-%define krb5_flags --without-krb5
-%endif
-
 %define ssl_flags --enable-nss=yes --enable-smime=yes
 
 if ! pkg-config --exists nss; then 
@@ -221,8 +217,14 @@ if ! pkg-config --exists nss; then
   exit 1
 fi
 
+%if %{with_docs}
+%define gtkdoc_flags --enable-gtk-doc
+%else
+%define gtkdoc_flags --disable-gtk-doc
+%endif
+
 CPPFLAGS="-I%{_includedir}/et"; export CPPFLAGS
-CFLAGS="$RPM_OPT_FLAGS -fPIC -DLDAP_DEPRECATED -I%{_includedir}/et -Wno-sign-compare"; export CFLAGS
+CFLAGS="$RPM_OPT_FLAGS -fPIC -DLDAP_DEPRECATED -I%{_includedir}/et -Wno-sign-compare -Wno-deprecated-declarations"; export CFLAGS
 
 # Regenerate configure to pick up configure.ac changes
 aclocal -I m4
@@ -234,12 +236,13 @@ autoconf
 
 %configure \
 	--disable-maintainer-mode \
-	--enable-gtk-doc \
 	--with-sub-version=" (%{version}-%{release})" \
-	%ldap_flags %krb5_flags %ssl_flags \
+	%ldap_flags %ssl_flags %gtkdoc_flags \
 	--enable-plugins=all
 export tagname=CC
 make %{?_smp_mflags} LIBTOOL=/usr/bin/libtool CFLAGS="$CFLAGS -fno-strict-aliasing"
+
+%if %{with_docs}
 
 # Strip unneeded translations from .mo files.
 # This reduces the RPM size by several megabytes.
@@ -270,6 +273,8 @@ for f in $helpdir/C/figures/*.png; do
   done
 done
 
+# %{with_docs}
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -283,11 +288,6 @@ find $RPM_BUILD_ROOT/%{_libdir}/evolution -name '*.la' -exec rm {} \;
 
 # remove statically built libraries:
 find $RPM_BUILD_ROOT/%{_libdir}/evolution -name '*.a' -exec rm {} \;
-
-# remove additional things we don't want
-%if ! %{inline_audio_support}
-%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/evolution/%{evo_base_version}/modules/module-audio-inline.so
-%endif
 
 %find_lang evolution-%{evo_base_version} --all-name --with-gnome
 
@@ -317,7 +317,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f translations.lang
 %defattr(-, root, root)
-%doc AUTHORS COPYING ChangeLog NEWS README
+%doc AUTHORS COPYING NEWS README
 
 # GSettings schemas:
 %{_datadir}/GConf/gsettings/evolution.convert
@@ -343,6 +343,8 @@ rm -rf $RPM_BUILD_ROOT
 
 # The main executable
 %{_bindir}/evolution
+
+%{_datadir}/appdata/evolution.appdata.xml
 
 # Desktop files:
 %{_datadir}/applications/evolution.desktop
@@ -379,37 +381,33 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/evolution/%{evo_base_version}/modules/module-cal-config-webcal.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-calendar.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-composer-autosave.so
+%{_libdir}/evolution/%{evo_base_version}/modules/module-contact-photos.so
+%{_libdir}/evolution/%{evo_base_version}/modules/module-gravatar.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-itip-formatter.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-mail-config.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-mail.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-mailto-handler.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-mdn.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-offline-alert.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-online-accounts.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-prefer-plain.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-plugin-lib.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-plugin-manager.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-settings.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-startup-wizard.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-text-highlight.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-tnef-attachment.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-vcard-inline.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-web-inspector.so
 
-%if %{inline_audio_support}
-%{_libdir}/evolution/%{evo_base_version}/modules/module-audio-inline.so
-%endif
-
 # Shared libraries:
-%{_libdir}/evolution/%{evo_base_version}/libcomposer.so
+%{_libdir}/evolution/%{evo_base_version}/libevolution-mail-composer.so
 %{_libdir}/evolution/%{evo_base_version}/libeabutil.so
 %{_libdir}/evolution/%{evo_base_version}/libecontacteditor.so
 %{_libdir}/evolution/%{evo_base_version}/libecontactlisteditor.so
 %{_libdir}/evolution/%{evo_base_version}/libemail-engine.so
-%{_libdir}/evolution/%{evo_base_version}/libemformat.so
-%{_libdir}/evolution/%{evo_base_version}/libeshell.so
+%{_libdir}/evolution/%{evo_base_version}/libevolution-mail-formatter.so
+%{_libdir}/evolution/%{evo_base_version}/libevolution-shell.so
 %{_libdir}/evolution/%{evo_base_version}/libessmime.so
-%{_libdir}/evolution/%{evo_base_version}/libeutil.so
+%{_libdir}/evolution/%{evo_base_version}/libevolution-util.so
 %{_libdir}/evolution/%{evo_base_version}/libevolution-addressbook-importers.so
 %{_libdir}/evolution/%{evo_base_version}/libevolution-calendar.so
 %{_libdir}/evolution/%{evo_base_version}/libevolution-calendar-importers.so
@@ -461,9 +459,6 @@ rm -rf $RPM_BUILD_ROOT
 %{evo_plugin_dir}/org-gnome-mail-to-task.eplug
 %{evo_plugin_dir}/liborg-gnome-mail-to-task.so
 
-%{evo_plugin_dir}/org-gnome-mark-all-read.eplug
-%{evo_plugin_dir}/liborg-gnome-mark-all-read.so
-
 %{evo_plugin_dir}/org-gnome-prefer-plain.eplug
 %{evo_plugin_dir}/liborg-gnome-prefer-plain.so
 
@@ -482,8 +477,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-, root, root)
-%{_datadir}/gtk-doc/html/libeshell
-%{_datadir}/gtk-doc/html/libeutil
 %{_includedir}/evolution-%{evo_base_version}
 %{_libdir}/pkgconfig/evolution-calendar-3.0.pc
 %{_libdir}/pkgconfig/evolution-mail-3.0.pc
@@ -491,9 +484,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/evolution-shell-3.0.pc
 %{_libdir}/pkgconfig/libemail-engine.pc
 
+%files devel-docs
+%defattr(-,root,root,-)
+%doc %{_datadir}/gtk-doc/html/evolution-mail-composer
+%doc %{_datadir}/gtk-doc/html/evolution-mail-engine
+%doc %{_datadir}/gtk-doc/html/evolution-mail-formatter
+%doc %{_datadir}/gtk-doc/html/evolution-shell
+%doc %{_datadir}/gtk-doc/html/evolution-util
+
+%if %{with_docs}
 %files help -f help.lang
 %defattr(-, root, root)
 %dir %{_datadir}/help/*/evolution
+%endif
 
 %files bogofilter
 %defattr(-, root, root)
@@ -515,6 +518,100 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Feb 19 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.90-2
+- Rebuilt for libgnome-desktop soname bump
+
+* Mon Feb 17 2014 Milan Crha <mcrha@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Mon Feb 03 2014 Milan Crha <mcrha@redhat.com> - 3.11.5-2
+- Drop krb5 dependency
+
+* Mon Feb 03 2014 Milan Crha <mcrha@redhat.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Fri Jan 17 2014 Adam Williamson <awilliam@redhat.com> - 3.11.4-2
+- backport a couple of crasher fixes from upstream master
+
+* Mon Jan 13 2014 Milan Crha <mcrha@redhat.com> - 3.11.4-1
+- Update to 3.11.4
+
+* Thu Nov 21 2013 Milan Crha <mcrha@redhat.com> - 3.11.2-2
+- Rebuild for new libical (RH bug #1023020)
+
+* Mon Nov 18 2013 Milan Crha <mcrha@redhat.com> - 3.11.2-1
+- Update to 3.11.2
+- Conditionally build help subpackage
+- Disable compiler warnings about deprecated symbols
+
+* Mon Nov 11 2013 Milan Crha <mcrha@redhat.com> - 3.11.1-2
+- Hide more help-related widgets when evolution-help is not installed
+
+* Tue Oct 22 2013 Matthew Barnes <mbarnes@redhat.com> - 3.11.1-1
+- Update to 3.11.1
+
+* Mon Oct 14 2013 Milan Crha <mcrha@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+- Remove the dependency on libytnef, which apparently isn't needed for
+  the PST importer and disable the experimental TNEF attachments plugin
+- Avoid help launch with F1 when evolution-help is not installed
+
+* Mon Sep 23 2013 Milan Crha <mcrha@redhat.com> - 3.10.0-1
+- Update to 3.10.0
+- Remove explicit Requires on libpst in pst subpackage
+
+* Mon Sep 16 2013 Milan Crha <mcrha@redhat.com> - 3.9.92-1
+- Update to 3.9.92
+
+* Tue Sep 03 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.91-2
+- Rebuilt for libgnome-desktop soname bump
+
+* Mon Sep 02 2013 Milan Crha <mcrha@redhat.com> - 3.9.91-1
+- Update to 3.9.91
+
+* Fri Aug 23 2013 Milan Crha <mcrha@redhat.com> - 3.9.90-2
+- Split developer documentation into evolution-devel-docs subpackage
+
+* Mon Aug 19 2013 Milan Crha <mcrha@redhat.com> - 3.9.90-1
+- Update to 3.9.90
+
+* Tue Aug 06 2013 Adam Williamson <awilliam@redhat.com> - 3.9.5-3
+- rebuild for new libgweather
+
+* Thu Aug 01 2013 Petr Pisar <ppisar@redhat.com> - 3.9.5-2
+- Perl 5.18 rebuild
+
+* Mon Jul 29 2013 Milan Crha <mcrha@redhat.com> - 3.9.5-1
+- Update to 3.9.5
+
+* Wed Jul 17 2013 Matthew Barnes <mbarnes@redhat.com> - 3.9.4-3
+- Work around a crash caught by -fstack-protector-strong.
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 3.9.4-2
+- Perl 5.18 rebuild
+
+* Mon Jul 08 2013 Milan Crha <mcrha@redhat.com> - 3.9.4-1
+- Update to 3.9.4
+
+* Sat Jun 22 2013 Matthias Clasen <mclasen@redhat.com> - 3.9.3-3
+- Don't install ChangeLog
+- Trim %%changelog
+
+* Fri Jun 21 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.3-2
+- Rebuilt for libgweather 3.9.3 soname bump
+
+* Mon Jun 17 2013 Milan Crha <mcrha@redhat.com> - 3.9.3-1
+- Update to 3.9.3
+
+* Mon May 27 2013 Milan Crha <mcrha@redhat.com> - 3.9.2-1
+- Update to 3.9.2
+
+* Fri May 24 2013 Rex Dieter <rdieter@fedoraproject.org> 3.9.1-2
+- rebuild (libical)
+
+* Mon Apr 29 2013 Milan Crha <mcrha@redhat.com> - 3.9.1-1
+- Update to 3.9.1
+
 * Mon Mar 25 2013 Milan Crha <mcrha@redhat.com> - 3.8.0-1
 - Update to 3.8.0
 
@@ -546,7 +643,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Dec 20 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.3.2-2
 - Rebuilt for libgnome-desktop3 3.7.3 soname bump
 
-* Tue Dec 19 2012 Matthew Barnes <mbarnes@redhat.com> - 3.7.3.2-1
+* Wed Dec 19 2012 Matthew Barnes <mbarnes@redhat.com> - 3.7.3.2-1
 - Update to 3.7.3.2
 - Remove obsolete BuildRequires:
     bison
@@ -952,7 +1049,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Jun 14 2009 Matthias Clasen <mclasen@redhat.com> - 2.27.2-2.fc12
 - Don't make -perl own directories that are already owned by the base package
 
-* Mon May 29 2009 Matthew Barnes <mbarnes@redhat.com> - 2.27.2-1.fc12
+* Fri May 29 2009 Matthew Barnes <mbarnes@redhat.com> - 2.27.2-1.fc12
 - Update to 2.27.2
 - Patch broken libevolution-mail-shared library.
 - Remove strict_build_settings since the settings are used upstream now.
@@ -1195,7 +1292,7 @@ rm -rf $RPM_BUILD_ROOT
   evolution-spamassassin subpackages, each of which requires the
   necessary backend packages.  (RH bug #377381)
 
-* Mon Dec 05 2007 Matthew Barnes <mbarnes@redhat.com> - 2.21.3-3.fc9
+* Wed Dec 05 2007 Matthew Barnes <mbarnes@redhat.com> - 2.21.3-3.fc9
 - Bump eds_version to 2.21.3 and gtkhtml_version to 3.17.3.
 
 * Tue Dec  4 2007 Matthias Clasen <mclasen@redhat.com> - 2.21.3-2
@@ -1545,7 +1642,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Dec 11 2006 Matthew Barnes <mbarnes@redhat.com> - 2.9.3-2.fc7
 - Add patch for RH bug #215467 (missing meeting participants).
 
-* Thu Dec 09 2006 Matthew Barnes <mbarnes@redhat.com> - 2.9.3-1.fc7
+* Sat Dec 09 2006 Matthew Barnes <mbarnes@redhat.com> - 2.9.3-1.fc7
 - Update to 2.9.3
 - Configure with scrollkeeper disabled.
 - Disable automake portability checking.
@@ -1732,7 +1829,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Jul  6 2006 Matthew Barnes <mbarnes@redhat.com> - 2.7.3-8
 - Add patch for RH bug #166231 (also addresses #131227 and #157391).
 
-* Fri Jun 29 2006 Matthew Barnes <mbarnes@redhat.com> - 2.7.3-7
+* Thu Jun 29 2006 Matthew Barnes <mbarnes@redhat.com> - 2.7.3-7
 - Add patch for RH bug #157400, reorder some patch #'s.
 
 * Thu Jun 29 2006 Matthew Barnes <mbarnes@redhat.com> - 2.7.3-6
@@ -2503,7 +2600,7 @@ and run autoconf at the start of the build) (#156328)
 * Mon Jun  9 2003 Jeremy Katz <katzj@redhat.com> 1.4.0-1
 - 1.4.0
 
-* Wed Jun 5 2003 Elliot Lee <sopwith@redhat.com>
+* Thu Jun 05 2003 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
 * Thu Jun  5 2003 Jeremy Katz <katzj@redhat.com> 1.3.92-2
