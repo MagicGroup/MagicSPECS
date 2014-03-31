@@ -1,20 +1,18 @@
 %global	dbus_ver	0.95
 %global	dbus_glib_ver	0.90
-%global	glib_ver	2.32.0
+%global	glib_ver	2.36.0
 %global gobj_ver	1.30
 %global vala_ver	0.16.0
 
 Name:           telepathy-glib
-Version:        0.20.0
-Release:        3%{?dist}
+Version:        0.23.1
+Release:        1%{?dist}
 Summary:        GLib bindings for Telepathy
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/FrontPage
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
-Patch0:         0001-base-call-channel-Ignore-transitions-with-the-same-s.patch
-Patch1:         0002-base-call-channel-Don-t-call-set_state-from-set_ring.patch
 
 BuildRequires:  gtk-doc >= 1.17
 BuildRequires:  dbus-devel >= %{dbus_ver}
@@ -62,8 +60,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 
 %check
@@ -88,20 +84,17 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING README NEWS
 %{_libdir}/libtelepathy-glib*.so.*
 %{_libdir}/girepository-1.0/TelepathyGLib-0.12.typelib
 
 
 %files vala
-%defattr(-,root,root,-)
 %{_datadir}/vala/vapi/telepathy-glib.deps
 %{_datadir}/vala/vapi/telepathy-glib.vapi
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc %{_datadir}/gtk-doc/html/%{name}/
 %{_libdir}/libtelepathy-glib.so
 %{_libdir}/pkgconfig/*.pc
@@ -110,8 +103,37 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.20.0-3
-- 为 Magic 3.0 重建
+* Thu Feb 20 2014 Adam Williamson <awilliam@redhat.com> - 0.23.1-1
+- update to 0.23.1.
+
+* Thu Jan 30 2014 Brian Pepple <bpepple@fedoraproject.org> - 0.22.1-1
+- Update to 0.22.1.
+
+* Wed Oct  2 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.22.0-1
+- Update to 0.22.0.
+
+* Tue Sep 24 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.21.2-1
+- Update to 0.21.2.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jun 20 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.21.1-1
+- Update to 0.21.1.
+
+* Wed Apr  3 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.21.0-1
+- Update to 0.21.0.
+
+* Wed Apr  3 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.20.2-1
+- Update to 0.20.2.
+- Enable tests again.
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Nov  9 2012 Brian Pepple <bpepple@fedoraproject.org> - 0.20.1-1
+- Update to 0.20.1
+- Drop call channel patches. Fixed upstream.
 
 * Tue Oct 16 2012 Debarshi Ray <rishi@fedoraproject.org> - 0.20.0-2
 - Fix FD #56044
