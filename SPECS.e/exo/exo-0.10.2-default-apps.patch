@@ -1,0 +1,13 @@
+diff -Nur exo-0.10.2.orig/exo-helper/helpers/helpers.rc exo-0.10.2/exo-helper/helpers/helpers.rc
+--- exo-0.10.2.orig/exo-helper/helpers/helpers.rc	2012-12-27 05:50:31.000000000 -0700
++++ exo-0.10.2/exo-helper/helpers/helpers.rc	2013-05-17 19:56:07.788708933 -0600
+@@ -4,7 +4,7 @@
+ # Copyright (c) 2005-2006 Benedikt Meurer <benny@xfce.org>
+ #
+ 
+-WebBrowser=firefox
+-MailReader=thunderbird
++WebBrowser=midori
++MailReader=claws-mail
+ TerminalEmulator=xfce4-terminal
+ FileManager=Thunar
