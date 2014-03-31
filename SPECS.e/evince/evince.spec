@@ -1,21 +1,17 @@
 %global poppler_version 0.20.0
-%global glib2_version 2.25.9
-%global dbus_version 0.70
+%global glib2_version 2.33.2
 %global theme_version 2.17.1
 %global gxps_version 0.2.1
 
 Name:           evince
-Version:        3.8.0
-Release:        3%{?dist}
+Version:        3.11.90
+Release:        1%{?dist}
 Summary:        Document viewer
 
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and MIT and Afmparse
 Group:          Applications/Publishing
 URL:            http://projects.gnome.org/evince/
-Source0:        http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
-
-# https://bugzilla.gnome.org/show_bug.cgi?id=697559
-Patch0:         evince-man.patch
+Source0:        http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
 
 BuildRequires:  gtk3-devel
 BuildRequires:  glib2-devel >= %{glib2_version}
@@ -28,7 +24,7 @@ BuildRequires:  libspectre-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  gettext
 BuildRequires:  desktop-file-utils
-BuildRequires:  gnome-icon-theme >= %{theme_version}
+BuildRequires:  gnome-icon-theme-devel >= %{theme_version}
 BuildRequires:  libtool
 BuildRequires:  gtk-doc
 BuildRequires:  yelp-tools
@@ -48,6 +44,7 @@ BuildRequires: djvulibre-devel
 BuildRequires:  libgxps-devel >= %{gxps_version}
 
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: gnome-icon-theme-symbolic
 
 %description
 Evince is simple multi-page document viewer. It can display and print
@@ -104,12 +101,11 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: nautilus%{?_isa}
 
 %description nautilus
-This package contains the evince extension for the nautilus file manger.
+This package contains the evince extension for the nautilus file manager.
 It adds an additional tab called "Document" to the file properties dialog.
 
 %prep
 %setup -q
-%patch0 -p1 -b .man
 
 %build
 ./autogen.sh
@@ -220,6 +216,53 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 %{_libdir}/nautilus/extensions-3.0/libevince-properties-page.so
 
 %changelog
+* Sun Feb 23 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Thu Dec 19 2013 Marek Kasik <mkasik@redhat.com> - 3.11.3-1
+- Update to 3.11.3
+
+* Mon Nov 18 2013 Marek Kasik <mkasik@redhat.com> - 3.11.1-3
+- Fix source URL
+
+* Thu Nov 14 2013 Marek Kasik <mkasik@redhat.com> - 3.11.1-2
+- Fix a typo in description of nautilus subpackage
+- Resolves: #1028161
+
+* Wed Oct 30 2013 Marek Kasik <mkasik@redhat.com> - 3.11.1-1
+- Update to 3.11.1
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Thu Aug 22 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.90-1
+- Update to 3.9.90
+
+* Mon Aug 19 2013 Marek Kasik <mkasik@redhat.com> - 3.9.4-3
+- Add requirement of gnome-icon-theme-symbolic
+- Resolves: #980751
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 16 2013 Richard Hughes <rhughes@redhat.com> - 3.9.4-1
+- Update to 3.9.4
+
+* Wed Jun 19 2013 Marek Kasik <mkasik@redhat.com> - 3.9.3-3
+- Require gnome-icon-theme-devel instead of gnome-icon-theme
+
+* Wed Jun 19 2013 Marek Kasik <mkasik@redhat.com> - 3.9.3-2
+- Fix changelog dates
+
+* Wed Jun 19 2013 Marek Kasik <mkasik@redhat.com> - 3.9.3-1
+- Update to 3.9.3
+
+* Sun Jun 02 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.2-1
+- Update to 3.9.2
+
+* Wed May 15 2013 Marek Kasik <mkasik@redhat.com> - 3.8.2-1
+- Update to 3.8.2
+
 * Thu Apr 11 2013 Marek Kasik <mkasik@redhat.com> - 3.8.0-3
 - Fix a typo and add a description of an option to man page
 
@@ -979,25 +1022,25 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 * Sat Mar 12 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.8-1
 - Update to 0.1.8
 
-* Sat Mar  8 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.7-1
+* Tue Mar  8 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.7-1
 - Update to 0.1.7
 - Install the new schemas
 
-* Sat Mar  8 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.6-1
+* Tue Mar  8 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.6-1
 - Update to 0.1.6
 - Add poppler dependency
 
-* Sat Mar  3 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.5-2
+* Thu Mar  3 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.5-2
 - Rebuild
 
 * Sat Feb 26 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.5-1
 - Update to 0.1.5
 
-* Tue Feb  9 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.4-1
+* Wed Feb  9 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.4-1
 - Update to 0.1.4
 - Install schemas and update desktop database
 
-* Tue Feb  4 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.3-1
+* Fri Feb  4 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.3-1
 - Update to 0.1.3
 
 * Tue Feb  1 2005 Marco Pesenti Gritti <mpg@redhat.com> - 0.1.2-1
