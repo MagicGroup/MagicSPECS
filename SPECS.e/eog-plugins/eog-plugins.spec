@@ -1,13 +1,15 @@
+%global __python %{__python3}
+
 Name:           eog-plugins
-Version:        3.8.0
-Release:        1%{?dist}
+Version:        3.11.4
+Release:        4%{?dist}
 Summary:        A collection of plugins for the eog image viewer
 
 Group:          User Interface/Desktops
 License:        GPLv2+
 URL:            http://live.gnome.org/EyeOfGnome/Plugins
 #VCS: git:git://git.gnome.org/eog-plugins
-Source0:        http://download.gnome.org/sources/eog-plugins/3.6/%{name}-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/eog-plugins/3.11/%{name}-%{version}.tar.xz
 
 BuildRequires:  eog-devel
 BuildRequires:  clutter-gtk-devel
@@ -17,6 +19,7 @@ BuildRequires:  libexif-devel
 BuildRequires:  intltool
 BuildRequires:  libgdata-devel >= 0.6.0
 BuildRequires:  libpeas-devel
+BuildRequires:  python3-devel
 
 Requires:       eog
 
@@ -50,8 +53,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %files -f %{name}.lang
 %doc COPYING NEWS
 %{_libdir}/eog/plugins/*.so
-%{_libdir}/eog/plugins/*.py*
+%{_libdir}/eog/plugins/*.py
 %{_libdir}/eog/plugins/*.plugin
+%{_libdir}/eog/plugins/__pycache__
 %{_libdir}/eog/plugins/pythonconsole/
 %{_datadir}/eog/plugins
 %{_datadir}/glib-2.0/schemas/org.gnome.eog.plugins.exif-display.gschema.xml
@@ -60,6 +64,36 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %{_datadir}/glib-2.0/schemas/org.gnome.eog.plugins.export-to-folder.gschema.xml
 
 %changelog
+* Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.4-4
+- Rebuilt for cogl soname bump
+
+* Mon Feb 10 2014 Peter Hutterer <peter.hutterer@redhat.com> - 3.11.4-3
+- Rebuild for libevdev soname bump
+
+* Wed Feb 05 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.4-2
+- Build with Python 3
+
+* Tue Jan 14 2014 Richard Hughes <rhughes@redhat.com> - 3.11.4-1
+- Update to 3.11.4
+
+* Mon Oct 28 2013 Richard Hughes <rhughes@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Sat Aug 10 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.5-1
+- Update to 3.9.5
+
+* Fri Aug 09 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-3
+- Rebuilt for cogl 1.15.4 soname bump
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed May 22 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
+- Update to 3.8.1
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
 - Update to 3.8.0
 
