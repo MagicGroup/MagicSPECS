@@ -1,13 +1,17 @@
 %define ldap_support 1
-%define static_ldap 1
+%define static_ldap 0
 %define krb5_support 1
 %define nntp_support 1
 %define largefile_support 1
 
-%define glib2_version 2.34.0
+# Coverity scan can override this to 0, to skip checking in gtk-doc generated code
+%{!?with_docs: %define with_docs 1}
+
+%define glib2_version 2.36.0
 %define gtk3_version 3.2.0
 %define gcr_version 3.4
 %define gtk_doc_version 1.9
+%define goa_version 3.8
 %define intltool_version 0.35.5
 %define libsecret_version 0.5
 %define libgdata_version 0.10.0
@@ -15,8 +19,9 @@
 %define libical_version 0.46
 %define libsoup_version 2.40.3
 %define sqlite_version 3.5
+%define nss_version 3.14
 
-%define eds_base_version 3.8
+%define eds_base_version 3.12
 
 %define camel_provider_dir %{_libdir}/evolution-data-server/camel-providers
 %define ebook_backends_dir %{_libdir}/evolution-data-server/addressbook-backends
@@ -26,14 +31,14 @@
 ### Abstract ###
 
 Name: evolution-data-server
-Version: 3.8.0
+Version: 3.11.90
 Release: 1%{?dist}
 Group: System Environment/Libraries
 Summary: Backend data server for Evolution
 License: LGPLv2+
-URL: http://projects.gnome.org/evolution/
+URL: https://wiki.gnome.org/Apps/Evolution
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-Source: http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+Source: http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
 
 Provides: evolution-webcal = %{version}
 Obsoletes: evolution-webcal < 2.24.0
@@ -43,6 +48,10 @@ Obsoletes: evolution-webcal < 2.24.0
 # RH bug #243296
 Patch01: evolution-data-server-1.11.5-fix-64bit-acinclude.patch
 
+### Dependencies ###
+
+Requires: dconf
+
 ### Build Dependencies ###
 
 BuildRequires: libdb-devel
@@ -50,7 +59,7 @@ BuildRequires: gcr-devel >= %{gcr_version}
 BuildRequires: gettext
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gnome-common
-BuildRequires: gnome-online-accounts-devel
+BuildRequires: gnome-online-accounts-devel >= %{goa_version}
 BuildRequires: gnutls-devel
 BuildRequires: gperf
 BuildRequires: gtk-doc >= %{gtk_doc_version}
@@ -63,14 +72,14 @@ BuildRequires: libsecret-devel >= %{libsecret_version}
 BuildRequires: libsoup-devel >= %{libsoup_version}
 BuildRequires: libtool
 BuildRequires: nspr-devel
-BuildRequires: nss-devel
+BuildRequires: nss-devel >= %{nss_version}
 BuildRequires: sqlite-devel >= %{sqlite_version}
 BuildRequires: vala
 BuildRequires: vala-tools
 
 %if %{ldap_support}
 %if %{static_ldap}
-BuildRequires: openldap-evolution-devel%{?_isa}
+BuildRequires: openldap-devel%{?_isa}
 BuildRequires: openssl-devel
 %else
 BuildRequires: openldap-devel >= 2.0.11 
@@ -78,10 +87,7 @@ BuildRequires: openldap-devel >= 2.0.11
 %endif
 
 %if %{krb5_support} 
-BuildRequires: krb5-devel 
-# tweak for krb5 1.2 vs 1.3
-%define krb5dir /usr/kerberos
-#define krb5dir `pwd`/krb5-fakeprefix
+BuildRequires: krb5-devel >= 1.11
 %endif
 
 %description
@@ -106,6 +112,8 @@ Requires: sqlite-devel
 %description devel
 Development files needed for building things which link against %{name}.
 
+%if %{with_docs}
+
 %package doc
 Summary: Documentation files for %{name}
 Group: Development/Libraries
@@ -114,20 +122,19 @@ BuildArch: noarch
 %description doc
 This package contains developer documentation for %{name}.
 
+# %{with_docs}
+%endif
+
 %prep
 %setup -q
 
 %patch01 -p1 -b .fix-64bit-acinclude
 
-mkdir -p krb5-fakeprefix/include
-mkdir -p krb5-fakeprefix/lib
-mkdir -p krb5-fakeprefix/%{_lib}
-
 %build
 %if %{ldap_support}
 
 %if %{static_ldap}
-%define ldap_flags --with-openldap=%{_libdir}/evolution-openldap --with-static-ldap
+%define ldap_flags --with-openldap=yes --with-static-ldap
 # Set LIBS so that configure will be able to link with static LDAP libraries,
 # which depend on Cyrus SASL and OpenSSL.  XXX Is the "else" clause necessary?
 if pkg-config openssl ; then
@@ -151,7 +158,7 @@ fi
 %endif
 
 %if %{krb5_support}
-%define krb5_flags --with-krb5=%{krb5dir}
+%define krb5_flags --with-krb5
 %else
 %define krb5_flags --without-krb5
 %endif
@@ -170,13 +177,19 @@ fi
 
 %define ssl_flags --enable-smime=yes
 
+%if %{with_docs}
+%define gtkdoc_flags --enable-gtk-doc
+%else
+%define gtkdoc_flags --disable-gtk-doc
+%endif
+
 if ! pkg-config --exists nss; then 
   echo "Unable to find suitable version of nss to use!"
   exit 1
 fi
 
 export CPPFLAGS="-I%{_includedir}/et"
-export CFLAGS="$RPM_OPT_FLAGS -DLDAP_DEPRECATED -fPIC -I%{_includedir}/et"
+export CFLAGS="$RPM_OPT_FLAGS -DLDAP_DEPRECATED -fPIC -I%{_includedir}/et -Wno-deprecated-declarations"
 
 # Regenerate configure to pick up configure.in and acinclude.m4 changes..
 aclocal -I m4
@@ -195,11 +208,10 @@ autoconf
 	--with-libdb=/usr \
 	--enable-file-locking=fcntl \
 	--enable-dot-locking=no \
-	--enable-gtk-doc \
 	--enable-introspection=yes \
 	--enable-vala-bindings \
 	%ldap_flags %krb5_flags %nntp_flags %ssl_flags \
-	%largefile_flags
+	%largefile_flags %gtkdoc_flags
 export tagname=CC
 
 # Do not build in parallel. The libedata-book and libedata-cal directories
@@ -243,7 +255,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %files -f %{name}-%{eds_base_version}.lang
 %defattr(-,root,root,-)
-%doc README COPYING ChangeLog NEWS AUTHORS
+%doc README COPYING ChangeLog NEWS
 %{_libdir}/libcamel-1.2.so.*
 %{_libdir}/libebackend-1.2.so.*
 %{_libdir}/libebook-1.2.so.*
@@ -261,11 +273,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/camel-lock-helper-1.2
 %{_libexecdir}/evolution-addressbook-factory
 %{_libexecdir}/evolution-calendar-factory
+%{_libexecdir}/evolution-scan-gconf-tree-xml
 %{_libexecdir}/evolution-source-registry
 %{_libexecdir}/evolution-user-prompter
 
 # GSettings schemas:
-%{_datadir}/GConf/gsettings/libedataserver.convert
 %{_datadir}/GConf/gsettings/evolution-data-server.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.Evolution.DefaultSources.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.evolution-data-server.addressbook.gschema.xml
@@ -310,17 +322,17 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{ebook_backends_dir}/libebookbackendgoogle.so
 %{ebook_backends_dir}/libebookbackendldap.so
 %{ebook_backends_dir}/libebookbackendwebdav.so
-%{ebook_backends_dir}/module-data-book-factory-goa.so
 %{ecal_backends_dir}/libecalbackendcaldav.so
 %{ecal_backends_dir}/libecalbackendcontacts.so
 %{ecal_backends_dir}/libecalbackendfile.so
 %{ecal_backends_dir}/libecalbackendhttp.so
 %{ecal_backends_dir}/libecalbackendweather.so
-%{ecal_backends_dir}/module-data-cal-factory-goa.so
 %{modules_dir}/module-cache-reaper.so
 %{modules_dir}/module-google-backend.so
 %{modules_dir}/module-gnome-online-accounts.so
+%{modules_dir}/module-outlook-backend.so
 %{modules_dir}/module-owncloud-backend.so
+%{modules_dir}/module-secret-monitor.so
 %{modules_dir}/module-trust-prompt.so
 %{modules_dir}/module-yahoo-backend.so
 
@@ -354,18 +366,90 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/vala/vapi/libedataserver-1.2.deps
 %{_datadir}/vala/vapi/libedataserver-1.2.vapi
 
+%if %{with_docs}
+
 %files doc
 %defattr(-,root,root,-)
-%{_datadir}/gtk-doc/html/camel
-%{_datadir}/gtk-doc/html/libebackend
-%{_datadir}/gtk-doc/html/libebook
-%{_datadir}/gtk-doc/html/libebook-contacts
-%{_datadir}/gtk-doc/html/libecal
-%{_datadir}/gtk-doc/html/libedata-book
-%{_datadir}/gtk-doc/html/libedata-cal
-%{_datadir}/gtk-doc/html/libedataserver
+%{_datadir}/gtk-doc/html/*
+
+%endif
 
 %changelog
+* Mon Feb 17 2014 Milan Crha <mcrha@redhat.com> - 3.11.90-1
+- Update to 3.11.90
+
+* Fri Feb 14 2014 Adam Williamson <awilliam@redhat.com> - 3.11.5-3
+- rebuild for new icu
+
+* Mon Feb 03 2014 Milan Crha <mcrha@redhat.com> - 3.11.5-2
+- Avoid compiler warning due to incorrect krb5 include folder
+
+* Mon Feb 03 2014 Milan Crha <mcrha@redhat.com> - 3.11.5-1
+- Update to 3.11.5
+
+* Mon Jan 13 2014 Milan Crha <mcrha@redhat.com> - 3.11.4-1
+- Update to 3.11.4
+
+* Sun Dec 22 2013 Ville Skyttä <ville.skytta@iki.fi> - 3.11.2-3
+- Drop empty AUTHORS from docs.
+
+* Thu Nov 21 2013 Milan Crha <mcrha@redhat.com> - 3.11.2-2
+- Rebuild for new libical (RH bug #1023020)
+
+* Mon Nov 18 2013 Milan Crha <mcrha@redhat.com> - 3.11.2-1
+- Update to 3.11.2
+- Conditionally build devel documentation
+- Disable compiler warnings about deprecated symbols
+
+* Tue Oct 22 2013 Matthew Barnes <mbarnes@redhat.com> - 3.11.1-1
+- Update to 3.11.1
+
+* Mon Oct 14 2013 Milan Crha <mcrha@redhat.com> - 3.10.1-1
+- Update to 3.10.1
+
+* Mon Sep 23 2013 Milan Crha <mcrha@redhat.com> - 3.10.0-1
+- Update to 3.10.0
+
+* Mon Sep 16 2013 Milan Crha <mcrha@redhat.com> - 3.9.92-1
+- Update to 3.9.92
+
+* Mon Sep 02 2013 Milan Crha <mcrha@redhat.com> - 3.9.91-1
+- Update to 3.9.91
+
+* Mon Aug 19 2013 Milan Crha <mcrha@redhat.com> - 3.9.90-1
+- Update to 3.9.90
+
+* Mon Aug 12 2013 Milan Crha <mcrha@redhat.com> - 3.9.5-3
+- Bump nss version requirement to 3.14
+
+* Tue Aug 06 2013 Adam Williamson <awilliam@redhat.com> - 3.9.5-2
+- rebuild for new libgweather
+
+* Mon Jul 29 2013 Milan Crha <mcrha@redhat.com> - 3.9.5-1
+- Update to 3.9.5
+
+* Sun Jul 21 2013 Matthew Barnes <mbarnes@redhat.com> - 3.9.4-2
+- Require dconf for dconf-service, necessary for evolution-data-server
+  to operate properly.
+
+* Mon Jul 08 2013 Milan Crha <mcrha@redhat.com> - 3.9.4-1
+- Update to 3.9.4
+
+* Fri Jun 21 2013 Kalev Lember <kalevlember@gmail.com> - 3.9.3-2
+- Rebuilt for libgweather 3.9.3 soname bump
+
+* Mon Jun 17 2013 Milan Crha <mcrha@redhat.com> - 3.9.3-1
+- Update to 3.9.3
+
+* Mon May 27 2013 Milan Crha <mcrha@redhat.com> - 3.9.2-1
+- Update to 3.9.2
+
+* Fri May 24 2013 Rex Dieter <rdieter@fedoraproject.org> 3.9.1-2
+- rebuild (libical)
+
+* Mon Apr 29 2013 Milan Crha <mcrha@redhat.com> - 3.9.1-1
+- Update to 3.9.1
+
 * Mon Mar 25 2013 Milan Crha <mcrha@redhat.com> - 3.8.0-1
 - Update to 3.8.0
 
