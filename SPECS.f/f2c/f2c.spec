@@ -1,13 +1,13 @@
 Name:           f2c
 Summary:        A Fortran 77 to C/C++ conversion program
-Version:        20090411
-Release:        8%{?dist}
+Version:        20110801
+Release:        4%{?dist}
 License:        MIT
 Group:          Development/Languages
 URL:            http://netlib.org/f2c/
 Source:         ftp://netlib.org/f2c.tar
 # Patch makefile to build a shared library
-Patch:          f2c-20090411.patch
+Patch:          f2c-20110801.patch
 BuildRequires:  unzip
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:       %{name}-libs = %{version}-%{release}
@@ -44,9 +44,9 @@ rm -rf %{buildroot}
 install -D -p -m 644 f2c.h %{buildroot}%{_includedir}/f2c.h
 install -D -p -m 755 src/f2c %{buildroot}%{_bindir}/f2c
 install -D -p -m 644 src/f2c.1t %{buildroot}%{_mandir}/man1/f2c.1
-install -D -p -m 755 libf2c/libf2c.so.0.22 %{buildroot}%{_libdir}/libf2c.so.0.22
-ln -s libf2c.so.0.22 %{buildroot}%{_libdir}/libf2c.so.0
-ln -s libf2c.so.0.22 %{buildroot}%{_libdir}/libf2c.so
+install -D -p -m 755 libf2c/libf2c.so.0.23 %{buildroot}%{_libdir}/libf2c.so.0.23
+ln -s libf2c.so.0.23 %{buildroot}%{_libdir}/libf2c.so.0
+ln -s libf2c.so.0.23 %{buildroot}%{_libdir}/libf2c.so
 
 %post libs -p /sbin/ldconfig
 
@@ -70,11 +70,24 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 20090411-8
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20110801-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sun Nov 20 2011 Liu Di <liudidi@gmail.com> - 20090411-7
-- 为 Magic 3.0 重建
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20110801-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20110801-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Apr 08 2012 Carl Byington <carl@five-ten-sg.com> 20110801-1
+- update to newer upstream version
+- patch from Jaroslav Škarvada for 4 byte ints on x86_64
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20090411-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20090411-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Wed Jul 07 2010 Carl Byington <carl@five-ten-sg.com> 20090411-6
 - Subpackage Licensing, move Notice to -libs.
