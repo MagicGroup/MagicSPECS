@@ -1,12 +1,14 @@
+%define _default_patch_fuzz 2
+
 Name:           seed
-Version:        3.2.0
-Release:        4%{?dist}.2
+Version:        3.8.1
+Release:        2%{?dist}
 Summary:        GNOME JavaScript interpreter
 
 Group:          Development/Languages
 License:        LGPLv3+
 URL:            http://live.gnome.org/Seed
-Source0:        http://ftp.gnome.org/pub/gnome/sources/seed/3.1/seed-%{version}.tar.xz
+Source0:        http://ftp.gnome.org/pub/gnome/sources/seed/3.8/seed-%{version}.tar.xz
 # Seed.js multilib fix
 Patch0:         seed-3.0.0-multilib.patch
 
@@ -91,7 +93,7 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 mv $RPM_BUILD_ROOT%{_docdir}/seed devdocs
 # remove files already bundled with main package
 rm devdocs/{AUTHORS,COPYING,INSTALL,README}
-magic_rpm_clean.sh
+
 
 %check
 # currently tests the installed version of seed, and requires X
@@ -127,8 +129,17 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.2.0-4.2
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Apr 17 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
+- Update to 3.8.1
+
+* Tue Apr 16 2013 Richard Hughes <rhughes@redhat.com> - 3.8.0-1
+- Update to 3.8.0
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.0-4.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.0-3.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
