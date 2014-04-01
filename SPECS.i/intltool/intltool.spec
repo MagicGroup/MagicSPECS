@@ -3,20 +3,18 @@
 
 Name: intltool
 Summary: Utility for internationalizing various kinds of data files
-Version: 0.50.0
-Release: 3%{?dist}
+Version: 0.50.2
+Release: 7%{?dist}
 License: GPLv2 with exceptions
 Group: Development/Tools
 #VCS: bzr:https://code.edge.launchpad.net/~intltool/intltool/trunk
 Source: http://edge.launchpad.net/intltool/trunk/%{version}/+download/intltool-%{version}.tar.gz
-URL: http://www.gnome.org
+URL: https://launchpad.net/intltool
 BuildArch: noarch
 Requires: patch
 # for /usr/share/aclocal
 Requires: automake
 Requires: gettext-devel
-Obsoletes: xml-i18n-tools
-Provides: xml-i18n-tools = 0.11
 Requires: perl(XML::Parser)
 BuildRequires: perl(XML::Parser)
 BuildRequires: gettext
@@ -40,15 +38,12 @@ them in the po files.
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make install DESTDIR=$RPM_BUILD_ROOT
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%check
+make check
 
 %files
-%defattr(-,root,root)
 %doc AUTHORS COPYING README
 %{_bindir}/*
 %{_datadir}/intltool
@@ -56,8 +51,30 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man*/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.50.0-3
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50.2-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 24 2013 Petr Pisar <ppisar@redhat.com> - 0.50.2-6
+- Perl 5.18 rebuild
+
+* Fri Feb  8 2013 Matthias Clasen <mclasen@redhat.com> - 0.50.2-5
+- Update url (#908562)
+
+* Sun Oct 21 2012 Matthias Clasen <mclasen@redhat.com> - 0.50.2-3
+- Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Apr 17 2012 Kalev Lember <kalevlember@gmail.com> - 0.50.2-2
+- Clean up previous change and fix Requires/BuildRequires (#225902)
+
+* Fri Apr 06 2012 Jon Ciesla <limburgher@gmail.com> - 0.50.2-1
+- Latest stable release.
+- Merge review BZ 225902 fixes:
+- Removed Obsoletes/Provides for xml-i18n-tools.
+- Swapped gettext/gettext-devel Requires, BuildRequires.
+- Added %%check section.
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
