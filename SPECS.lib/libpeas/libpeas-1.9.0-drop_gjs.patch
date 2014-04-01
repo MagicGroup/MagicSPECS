@@ -1,0 +1,1436 @@
+From 730edb65d6da0ebd0bd7065aeb9435b31d304b08 Mon Sep 17 00:00:00 2001
+From: Garrett Regier <garrettregier@gmail.com>
+Date: Wed, 13 Nov 2013 07:56:39 +0000
+Subject: Remove support for gjs-based Javascript plugins
+
+There have been changes to the gjs bindings and as the issue
+has only recently been noticed it is assumed that support for
+them is not highly desired.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=711356
+---
+diff --git a/configure.ac b/configure.ac
+index d2b862b..2c3ba51 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -268,43 +268,6 @@ fi
+ AM_CONDITIONAL([ENABLE_SEED],[test "x$found_seed" = "xyes"])
+ 
+ dnl ================================================================
+-dnl GJS Javascript Engine
+-dnl ================================================================
+-
+-GJS_REQUIRED=1.37.1
+-
+-AC_ARG_ENABLE(gjs,
+-	      AS_HELP_STRING([--enable-gjs],[Enable GJS support]),
+-	      [enable_gjs=$enableval],
+-	      [enable_gjs=auto])
+-
+-AC_MSG_CHECKING([for GJS JS availability.])
+-
+-if test "x$enable_gjs" = "xno"; then
+-	found_gjs="no (disabled, use --enable-gjs to enable)"
+-else
+-	PKG_CHECK_EXISTS([gjs-internals-1.0 >= $GJS_REQUIRED],
+-			 [found_gjs=yes],
+-			 [found_gjs=no])
+-fi
+-
+-if test "$enable_gjs" = "yes" -a "$found_gjs" = "no"; then
+-	AC_MSG_ERROR([You need to have gjs-internals-1.0 >= $GJS_REQUIRED installed to build libpeas])
+-fi
+-AC_MSG_RESULT([$found_gjs])
+-
+-if test "$found_gjs" = "yes"; then
+-	GJS_CFLAGS=`$PKG_CONFIG --cflags gjs-internals-1.0`
+-	GJS_LIBS=`$PKG_CONFIG --libs gjs-internals-1.0`
+-	AC_SUBST(GJS_CFLAGS)
+-	AC_SUBST(GJS_LIBS)
+-
+-	AC_DEFINE(ENABLE_GJS,1,[Define to compile with GJS support])
+-fi
+-
+-AM_CONDITIONAL([ENABLE_GJS],[test "x$found_gjs" = "xyes"])
+-
+-dnl ================================================================
+ dnl Python
+ dnl ================================================================
+ 
+@@ -474,7 +437,6 @@ docs/reference/version.xml
+ libpeas/Makefile
+ libpeas-gtk/Makefile
+ loaders/Makefile
+-loaders/gjs/Makefile
+ loaders/python/Makefile
+ loaders/python3/Makefile
+ loaders/seed/Makefile
+@@ -485,7 +447,6 @@ data/libpeas-1.0.pc
+ data/libpeas-gtk-1.0.pc
+ peas-demo/Makefile
+ peas-demo/plugins/Makefile
+-peas-demo/plugins/gjshello/Makefile
+ peas-demo/plugins/helloworld/Makefile
+ peas-demo/plugins/pythonhello/Makefile
+ peas-demo/plugins/secondtime/Makefile
+@@ -495,8 +456,8 @@ tests/Makefile
+ tests/libpeas/Makefile
+ tests/libpeas/plugins/Makefile
+ tests/libpeas/plugins/extension-c/Makefile
+-tests/libpeas/plugins/extension-js/Makefile
+ tests/libpeas/plugins/extension-python/Makefile
++tests/libpeas/plugins/extension-seed/Makefile
+ tests/libpeas/introspection/Makefile
+ tests/libpeas/testing/Makefile
+ tests/libpeas-gtk/Makefile
+@@ -531,6 +492,5 @@ Languages support:
+ 
+         Python 2 support              : ${found_python2}
+         Python 3 support              : ${found_python3}
+-        Javascript support (Seed)     : ${found_seed}
+-        Javascript support (GJS)      : ${found_gjs}
++        Seed Javascript support       : ${found_seed}
+ "
+diff --git a/libpeas/peas-extension-base.c b/libpeas/peas-extension-base.c
+index dccface..882862b 100644
+--- a/libpeas/peas-extension-base.c
++++ b/libpeas/peas-extension-base.c
+@@ -37,8 +37,8 @@
+  * access the related #PeasPluginInfo, and especially the location where all
+  * the data of your plugin lives.
+  *
+- * Non-C extensions will usually not inherit from this class: Python, Seed
+- * and GJS plugins automatically get a "plugin_info" attribute that serves
++ * Non-C extensions will usually not inherit from this class: Python and
++ * Seed plugins automatically get a "plugin_info" attribute that serves
+  * the same purpose.
+  **/
+ 
+diff --git a/loaders/Makefile.am b/loaders/Makefile.am
+index dd5ac86..dc9cb45 100644
+--- a/loaders/Makefile.am
++++ b/loaders/Makefile.am
+@@ -1,9 +1,5 @@
+ SUBDIRS =
+ 
+-if ENABLE_GJS
+-SUBDIRS += gjs
+-endif
+-
+ if ENABLE_PYTHON2
+ SUBDIRS += python
+ endif
+diff --git a/loaders/gjs/Makefile.am b/loaders/gjs/Makefile.am
+deleted file mode 100644
+index fb8c1a6..0000000
+--- a/loaders/gjs/Makefile.am
++++ /dev/null
+@@ -1,25 +0,0 @@
+-# GJS plugin loader
+-
+-loaderdir = $(libdir)/libpeas-1.0/loaders
+-
+-INCLUDES = \
+-	-I$(top_srcdir)			\
+-	$(PEAS_CFLAGS)			\
+-	$(GCOV_CFLAGS)			\
+-	$(WARN_CFLAGS)			\
+-	$(DISABLE_DEPRECATED)		\
+-	$(GJS_CFLAGS)
+-
+-loader_LTLIBRARIES = libgjsloader.la
+-
+-libgjsloader_la_SOURCES = \
+-	peas-extension-gjs.c		\
+-	peas-extension-gjs.h		\
+-	peas-plugin-loader-gjs.c 	\
+-	peas-plugin-loader-gjs.h
+-
+-libgjsloader_la_LDFLAGS = $(LOADER_LIBTOOL_FLAGS) $(GCOV_LDFLAGS)
+-libgjsloader_la_LIBADD = $(PEAS_LIBS) $(GJS_LIBS)
+-
+-gcov_sources = $(libgjsloader_la_SOURCES)
+-include $(top_srcdir)/Makefile.gcov
+diff --git a/loaders/gjs/peas-extension-gjs.c b/loaders/gjs/peas-extension-gjs.c
+deleted file mode 100644
+index 691968d..0000000
+--- a/loaders/gjs/peas-extension-gjs.c
++++ /dev/null
+@@ -1,427 +0,0 @@
+-/*
+- * peas-extension-gjs.c
+- * This file is part of libpeas
+- *
+- * Copyright (C) 2011 - Garrett Regier, Steve Frécinaux
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU Library General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU Library General Public License for more details.
+- *
+- *  You should have received a copy of the GNU Library General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+- */
+-
+-#ifdef HAVE_CONFIG_H
+-#include <config.h>
+-#endif
+-
+-#include <string.h>
+-
+-#include <gjs/gjs-module.h>
+-#include <girepository.h>
+-#include <gi/arg.h>
+-#include <gi/value.h>
+-
+-#include <libpeas/peas-introspection.h>
+-#include <libpeas/peas-extension-subclasses.h>
+-
+-#include "peas-extension-gjs.h"
+-
+-G_DEFINE_TYPE (PeasExtensionGjs, peas_extension_gjs, PEAS_TYPE_EXTENSION_WRAPPER);
+-
+-typedef struct {
+-  GIArgInfo arg_info;
+-  GITypeInfo type_info;
+-
+-  /* Only used by out arguments */
+-  gpointer ptr;
+-} CachedArg;
+-
+-static void
+-peas_extension_gjs_init (PeasExtensionGjs *gexten)
+-{
+-}
+-
+-static gchar *
+-convert_property_name (const gchar *pname)
+-{
+-  gint i;
+-  gchar *prop_name;
+-
+-  prop_name = g_strdup (pname);
+-
+-  for (i = 0; prop_name[i] != '\0'; ++i)
+-    {
+-      if (prop_name[i] == '-')
+-        prop_name[i] = '_';
+-    }
+-
+-  return prop_name;
+-}
+-
+-static void
+-peas_extension_gjs_set_property (GObject      *object,
+-                                 guint         prop_id,
+-                                 const GValue *value,
+-                                 GParamSpec   *pspec)
+-{
+-  PeasExtensionGjs *gexten = PEAS_EXTENSION_GJS (object);
+-  gchar *prop_name;
+-  jsval js_value;
+-
+-  prop_name = convert_property_name (g_param_spec_get_name (pspec));
+-
+-  if (!gjs_value_from_g_value (gexten->js_context, &js_value, value))
+-    {
+-      g_warning ("Error: failed to convert GValue to "
+-                 "jsval for property '%s'", prop_name);
+-    }
+-  else if (!JS_SetProperty (gexten->js_context, gexten->js_object,
+-                            prop_name, &js_value))
+-    {
+-      g_warning ("Error: failed to set property '%s'", prop_name);
+-    }
+-
+-  g_free (prop_name);
+-}
+-
+-static void
+-peas_extension_gjs_get_property (GObject    *object,
+-                                 guint       prop_id,
+-                                 GValue     *value,
+-                                 GParamSpec *pspec)
+-{
+-  PeasExtensionGjs *gexten = PEAS_EXTENSION_GJS (object);
+-  gchar *prop_name;
+-  jsval js_value;
+-
+-  prop_name = convert_property_name (g_param_spec_get_name (pspec));
+-
+-  if (!JS_GetProperty (gexten->js_context, gexten->js_object,
+-                       prop_name, &js_value))
+-    {
+-      g_warning ("Error: failed to get property '%s'", prop_name);
+-    }
+-  else if (!gjs_value_to_g_value (gexten->js_context, js_value, value))
+-    {
+-      g_warning ("Error: failed to convert jsval to "
+-                 "GValue for property '%s'", prop_name);
+-    }
+-
+-  g_free (prop_name);
+-}
+-
+-static void
+-peas_extension_gjs_dispose (GObject *object)
+-{
+-  PeasExtensionGjs *gexten = PEAS_EXTENSION_GJS (object);
+-
+-  if (gexten->js_context != NULL)
+-    {
+-      JS_RemoveObjectRoot (gexten->js_context, &gexten->js_object);
+-      gexten->js_context = NULL;
+-      gexten->js_object = NULL;
+-    }
+-
+-  G_OBJECT_CLASS (peas_extension_gjs_parent_class)->dispose (object);
+-}
+-
+-static gboolean
+-set_out_arg (JSContext      *js_context,
+-             GIFunctionInfo *func_info,
+-             gboolean        is_return_value,
+-             GIArgInfo      *arg_info,
+-             GITypeInfo     *type_info,
+-             gpointer        ptr,
+-             jsval           js_value)
+-{
+-  gboolean nullable;
+-  GITransfer transfer;
+-  GIArgument argument;
+-  GjsArgumentType arg_type;
+-
+-  if (is_return_value)
+-    {
+-      arg_type = GJS_ARGUMENT_RETURN_VALUE;
+-      nullable = g_callable_info_may_return_null (func_info);
+-      transfer = g_callable_info_get_caller_owns (func_info);
+-    }
+-  else
+-    {
+-      arg_type = GJS_ARGUMENT_ARGUMENT;
+-      nullable = g_arg_info_may_be_null (arg_info);
+-      transfer = g_arg_info_get_ownership_transfer (arg_info);
+-    }
+-
+-  if (!gjs_value_to_g_argument (js_context, js_value, type_info, NULL,
+-                                arg_type, transfer, nullable, &argument))
+-    {
+-      if (is_return_value)
+-        {
+-          g_warning ("Error failed to convert return value to GIArgument");
+-        }
+-      else
+-        {
+-          g_warning ("Error failed to convert OUT argument '%s' from "
+-                     "jsval to GIArgument", g_base_info_get_name (arg_info));
+-        }
+-
+-      return FALSE;
+-    }
+-
+-  peas_gi_argument_to_pointer (type_info, &argument, ptr);
+-
+-  return TRUE;
+-}
+-
+-static gboolean
+-peas_extension_gjs_call (PeasExtensionWrapper *exten,
+-                         GType                 exten_type,
+-                         GICallableInfo       *func_info,
+-                         const gchar          *method_name,
+-                         GIArgument           *args,
+-                         GIArgument           *retval)
+-{
+-  PeasExtensionGjs *gexten = PEAS_EXTENSION_GJS (exten);
+-  gboolean success = FALSE;
+-  jsval js_method, js_retval;
+-  jsval *js_args;
+-  CachedArg *arg_cache;
+-  gint i, n_args, nth_out_arg;
+-  gint n_in_args = 0;
+-  gint n_out_args = 0;
+-  gint cached_args = 0;
+-
+-  /* Fetch the JS method we want to call */
+-  if (!JS_GetProperty (gexten->js_context, gexten->js_object,
+-                       method_name, &js_method) ||
+-      JSVAL_IS_VOID (js_method))
+-    {
+-      g_warning ("Method '%s.%s' was not found",
+-                 g_type_name (exten_type), method_name);
+-      return FALSE;
+-    }
+-
+-  if (JSVAL_IS_NULL (js_method) || !JSVAL_IS_OBJECT (js_method) ||
+-      !JS_ObjectIsFunction (gexten->js_context, JSVAL_TO_OBJECT (js_method)))
+-    {
+-      g_warning ("Method '%s.%s' in not a function",
+-                 g_type_name (exten_type), method_name);
+-      return FALSE;
+-    }
+-
+-  n_args = g_callable_info_get_n_args (func_info);
+-  if (n_args < 0)
+-    {
+-      g_warn_if_fail (n_args >= 0);
+-      return FALSE;
+-    }
+-
+-  js_args = g_newa (jsval, n_args);
+-  arg_cache = g_newa (CachedArg, n_args + 1);
+-
+-  /* Return value is an out arg */
+-  g_callable_info_load_return_type (func_info, &arg_cache[0].type_info);
+-  if (g_type_info_get_tag (&arg_cache[0].type_info) != GI_TYPE_TAG_VOID)
+-    {
+-      ++n_out_args;
+-      arg_cache[cached_args++].ptr = &retval->v_pointer;
+-    }
+-
+-  /* Handle the arguments */
+-  for (i = 0; i < n_args; ++i, ++cached_args)
+-    {
+-      GIDirection direction;
+-
+-      g_callable_info_load_arg (func_info, i, &arg_cache[cached_args].arg_info);
+-      direction = g_arg_info_get_direction (&arg_cache[cached_args].arg_info);
+-      g_arg_info_load_type (&arg_cache[cached_args].arg_info,
+-                            &arg_cache[cached_args].type_info);
+-
+-      if (direction == GI_DIRECTION_IN &&
+-          !gjs_value_from_g_argument (gexten->js_context, &js_args[n_in_args++],
+-                                      &arg_cache[cached_args].type_info,
+-                                      &args[i], TRUE))
+-        {
+-          g_warning ("Error failed to convert argument '%s'",
+-                     g_base_info_get_name (&arg_cache[cached_args].arg_info));
+-          return FALSE;
+-        }
+-
+-      if (direction == GI_DIRECTION_INOUT)
+-        {
+-          GIArgument arg;
+-
+-          peas_gi_pointer_to_argument (&arg_cache[cached_args].type_info,
+-                                       args[i].v_pointer, &arg);
+-
+-          if (!gjs_value_from_g_argument (gexten->js_context, &js_args[n_in_args++],
+-                                          &arg_cache[cached_args].type_info, &arg, TRUE))
+-            {
+-              g_warning ("Error failed to convert argument '%s'",
+-                         g_base_info_get_name (&arg_cache[cached_args].arg_info));
+-              return FALSE;
+-            }
+-        }
+-
+-      if (direction == GI_DIRECTION_OUT || direction == GI_DIRECTION_INOUT)
+-        {
+-          ++n_out_args;
+-          arg_cache[cached_args].ptr = args[i].v_pointer;
+-        }
+-    }
+-
+-  success = JS_CallFunctionValue (gexten->js_context, gexten->js_object,
+-                                  js_method, n_in_args, js_args, &js_retval);
+-
+-  if (!success)
+-    {
+-      if (!gjs_log_exception (gexten->js_context))
+-        {
+-          g_warning ("Error while calling '%s.%s'",
+-                     g_type_name (exten_type), method_name);
+-        }
+-
+-      return FALSE;
+-    }
+-
+-  /* First we need to release in argument */
+-  for (i = 0; i < cached_args; ++i)
+-    {
+-      GIDirection direction;
+-
+-      /* First cached argument may be the return value */
+-      if (i == 0 && cached_args > n_args)
+-        continue;
+-
+-      direction = g_arg_info_get_direction (&arg_cache[i].arg_info);
+-
+-      if (direction == GI_DIRECTION_IN || direction == GI_DIRECTION_INOUT)
+-        {
+-          GITransfer transfer;
+-
+-          transfer = g_arg_info_get_ownership_transfer (&arg_cache[i].arg_info);
+-
+-          if (!gjs_g_argument_release_in_arg (gexten->js_context, transfer,
+-                                              &arg_cache[i].type_info,
+-                                              &args[i]))
+-            {
+-              g_warning ("Error failed to release IN argument '%s'",
+-                         g_base_info_get_name (&arg_cache[i].arg_info));
+-            }
+-        }
+-    }
+-
+-  /* Check that we have a valid return value */
+-  if (n_out_args > 1)
+-    {
+-      if (!JSVAL_IS_OBJECT (js_retval) ||
+-          !JS_IsArrayObject (gexten->js_context, JSVAL_TO_OBJECT (js_retval)))
+-        {
+-          g_warning ("Error return value is not an array");
+-          return FALSE;
+-        }
+-    }
+-
+-  /* Set out arguments */
+-  for (i = 0, nth_out_arg = 0; i < cached_args && success; ++i)
+-    {
+-      gboolean is_return_value;
+-
+-      is_return_value = i == 0 && cached_args > n_args;
+-
+-      /* Return value does not have a GIArgInfo and is always out */
+-      if (!is_return_value)
+-        {
+-          GIDirection direction;
+-
+-          direction = g_arg_info_get_direction (&arg_cache[i].arg_info);
+-
+-          if (direction == GI_DIRECTION_IN)
+-            continue;
+-        }
+-
+-      if (n_out_args == 1)
+-        {
+-          success = set_out_arg (gexten->js_context, func_info, is_return_value,
+-                                 &arg_cache[i].arg_info, &arg_cache[i].type_info,
+-                                 arg_cache[i].ptr, js_retval);
+-          break;
+-        }
+-      else if (n_out_args > 1)
+-        {
+-          jsval js_value;
+-
+-          if (!JS_GetElement (gexten->js_context, JSVAL_TO_OBJECT (js_retval),
+-                              nth_out_arg++, &js_value) ||
+-              JSVAL_IS_VOID (js_value))
+-            {
+-              g_warning ("Error failed to get out argument %i", nth_out_arg);
+-              return FALSE;
+-            }
+-          else
+-            {
+-              success = set_out_arg (gexten->js_context, func_info,
+-                                     is_return_value, &arg_cache[i].arg_info,
+-                                     &arg_cache[i].type_info, arg_cache[i].ptr,
+-                                     js_value);
+-            }
+-        }
+-    }
+-
+-  return success;
+-}
+-
+-static void
+-peas_extension_gjs_class_init (PeasExtensionGjsClass *klass)
+-{
+-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+-  PeasExtensionWrapperClass *extension_class = PEAS_EXTENSION_WRAPPER_CLASS (klass);
+-
+-  object_class->set_property = peas_extension_gjs_set_property;
+-  object_class->get_property = peas_extension_gjs_get_property;
+-  object_class->dispose = peas_extension_gjs_dispose;
+-
+-  extension_class->call = peas_extension_gjs_call;
+-}
+-
+-GObject *
+-peas_extension_gjs_new (GType      exten_type,
+-                        GType     *interfaces,
+-                        JSContext *js_context,
+-                        JSObject  *js_object)
+-{
+-  PeasExtensionGjs *gexten;
+-  GType real_type;
+-
+-  g_return_val_if_fail (js_context != NULL, NULL);
+-  g_return_val_if_fail (js_object != NULL, NULL);
+-
+-  real_type = peas_extension_register_subclass (PEAS_TYPE_EXTENSION_GJS,
+-                                                interfaces);
+-
+-  /* Already Warned */
+-  if (real_type == G_TYPE_INVALID)
+-    {
+-      g_free (interfaces);
+-      return NULL;
+-    }
+-
+-  gexten = PEAS_EXTENSION_GJS (g_object_new (real_type, NULL));
+-
+-  gexten->js_context = js_context;
+-  gexten->js_object = js_object;
+-  PEAS_EXTENSION_WRAPPER (gexten)->exten_type = exten_type;
+-  PEAS_EXTENSION_WRAPPER (gexten)->interfaces = interfaces;
+-  JS_AddObjectRoot (gexten->js_context, &gexten->js_object);
+-
+-  return G_OBJECT (gexten);
+-}
+diff --git a/loaders/gjs/peas-extension-gjs.h b/loaders/gjs/peas-extension-gjs.h
+deleted file mode 100644
+index 88fcf17..0000000
+--- a/loaders/gjs/peas-extension-gjs.h
++++ /dev/null
+@@ -1,60 +0,0 @@
+-/*
+- * peas-extension-gjs.h
+- * This file is part of libpeas
+- *
+- * Copyright (C) 2011 - Garrett Regier, Steve Frécinaux
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU Library General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU Library General Public License for more details.
+- *
+- *  You should have received a copy of the GNU Library General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+- */
+-
+-#ifndef __PEAS_EXTENSION_GJS_H__
+-#define __PEAS_EXTENSION_GJS_H__
+-
+-#include <libpeas/peas-extension-wrapper.h>
+-#include <gjs/gjs-module.h>
+-
+-G_BEGIN_DECLS
+-
+-#define PEAS_TYPE_EXTENSION_GJS            (peas_extension_gjs_get_type ())
+-#define PEAS_EXTENSION_GJS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), PEAS_TYPE_EXTENSION_GJS, PeasExtensionGjs))
+-#define PEAS_EXTENSION_GJS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), PEAS_TYPE_EXTENSION_GJS, PeasExtensionGjsClass))
+-#define PEAS_IS_EXTENSION_GJS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), PEAS_TYPE_EXTENSION_GJS))
+-#define PEAS_IS_EXTENSION_GJS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), PEAS_TYPE_EXTENSION_GJS))
+-#define PEAS_EXTENSION_GJS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), PEAS_TYPE_EXTENSION_GJS, PeasExtensionGjsClass))
+-
+-typedef struct _PeasExtensionGjs       PeasExtensionGjs;
+-typedef struct _PeasExtensionGjsClass  PeasExtensionGjsClass;
+-
+-struct _PeasExtensionGjs {
+-  PeasExtensionWrapper parent;
+-
+-  JSContext *js_context;
+-  JSObject *js_object;
+-};
+-
+-struct _PeasExtensionGjsClass {
+-  PeasExtensionWrapperClass parent_class;
+-};
+-
+-GType            peas_extension_gjs_get_type (void) G_GNUC_CONST;
+-
+-GObject         *peas_extension_gjs_new      (GType      exten_type,
+-                                              GType     *interfaces,
+-                                              JSContext *js_context,
+-                                              JSObject  *js_object);
+-
+-G_END_DECLS
+-
+-#endif /* __PEAS_EXTENSION_GJS_H__ */
+diff --git a/loaders/gjs/peas-plugin-loader-gjs.c b/loaders/gjs/peas-plugin-loader-gjs.c
+deleted file mode 100644
+index 8cea724..0000000
+--- a/loaders/gjs/peas-plugin-loader-gjs.c
++++ /dev/null
+@@ -1,396 +0,0 @@
+-/*
+- * peas-plugin-loader-gjs.c
+- * This file is part of libpeas
+- *
+- * Copyright (C) 2011 - Garrett Regier, Steve Frécinaux
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU Library General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU Library General Public License for more details.
+- *
+- *  You should have received a copy of the GNU Library General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+- */
+-
+-#ifdef HAVE_CONFIG_H
+-#include <config.h>
+-#endif
+-
+-#include <gjs/gjs-module.h>
+-#include <gi/object.h>
+-#include <gi/repo.h>
+-#include <gi/value.h>
+-
+-#include <libpeas/peas-introspection.h>
+-
+-#include "peas-plugin-loader-gjs.h"
+-#include "peas-extension-gjs.h"
+-
+-typedef struct {
+-  JSObject *extensions;
+-  GjsContext *context;
+-} GjsInfo;
+-
+-G_DEFINE_TYPE (PeasPluginLoaderGjs, peas_plugin_loader_gjs, PEAS_TYPE_PLUGIN_LOADER);
+-
+-static gchar *
+-get_script_filename_for_plugin_info (PeasPluginInfo *info)
+-{
+-  gchar *basename;
+-  gchar *filename;
+-
+-  basename = g_strconcat (peas_plugin_info_get_module_name (info), ".js", NULL);
+-  filename = g_build_filename (peas_plugin_info_get_module_dir (info), basename, NULL);
+-
+-  g_free (basename);
+-
+-  return filename;
+-}
+-
+-static gboolean
+-peas_plugin_loader_gjs_load (PeasPluginLoader *loader,
+-                             PeasPluginInfo   *info)
+-{
+-  PeasPluginLoaderGjs *gloader = PEAS_PLUGIN_LOADER_GJS (loader);
+-  gchar **search_paths;
+-  const gchar *version;
+-  GjsContext *context;
+-  gchar *filename;
+-  GjsInfo *ginfo;
+-  GError *error = NULL;
+-  JSContext *js_context;
+-  JSObject *global;
+-  jsval extensions;
+-
+-  filename = get_script_filename_for_plugin_info (info);
+-
+-  g_debug ("GJS script filename is '%s'", filename);
+-
+-  search_paths = g_new (gchar *, 2);
+-  search_paths[0] = g_strdup (peas_plugin_info_get_module_dir (info));
+-  search_paths[1] = NULL;
+-
+-  version = gjs_context_scan_file_for_js_version (filename);
+-
+-  context = g_object_new (GJS_TYPE_CONTEXT,
+-                          "search-path", search_paths,
+-                          "js-version", version,
+-                          NULL);
+-
+-  gjs_context_eval_file (context, filename, NULL, &error);
+-
+-  g_strfreev (search_paths);
+-  g_free (filename);
+-
+-  if (error != NULL)
+-    {
+-      g_warning ("Error: %s", error->message);
+-      g_error_free (error);
+-      g_object_unref (context);
+-      return FALSE;
+-    }
+-
+-  js_context = gjs_context_get_native_context (context);
+-  global = JS_GetGlobalObject (js_context);
+-
+-  if (!JS_GetProperty (js_context, global, "extensions", &extensions))
+-    {
+-      g_warning ("Error: could not find extensions");
+-      return FALSE;
+-    }
+-
+-  if (!JSVAL_IS_OBJECT (extensions) || JSVAL_IS_NULL (extensions))
+-    {
+-      g_warning ("Error: 'extensions' is of invalid type '%s'",
+-                 gjs_get_type_name (extensions));
+-      return FALSE;
+-    }
+-
+-  ginfo = g_slice_new (GjsInfo);
+-  ginfo->context = g_object_ref (context);
+-  ginfo->extensions = JSVAL_TO_OBJECT (extensions);
+-  JS_AddObjectRoot (js_context, &ginfo->extensions);
+-
+-  g_hash_table_insert (gloader->loaded_plugins, info, ginfo);
+-
+-  g_object_unref (context);
+-
+-  return TRUE;
+-}
+-
+-static gboolean
+-peas_plugin_loader_gjs_provides_extension  (PeasPluginLoader *loader,
+-                                            PeasPluginInfo   *info,
+-                                            GType             exten_type)
+-{
+-  PeasPluginLoaderGjs *gloader = PEAS_PLUGIN_LOADER_GJS (loader);
+-  GjsInfo *ginfo;
+-  JSContext *js_context;
+-  jsval extension;
+-
+-  ginfo = g_hash_table_lookup (gloader->loaded_plugins, info);
+-
+-  js_context = gjs_context_get_native_context (ginfo->context);
+-
+-  return JS_GetProperty (js_context, ginfo->extensions,
+-                         g_type_name (exten_type), &extension) &&
+-         JSVAL_IS_OBJECT (extension) && !JSVAL_IS_NULL (extension);
+-}
+-
+-static void
+-sort_interfaces (GArray *interfaces)
+-{
+-  gint i;
+-
+-  for (i = 0; i < interfaces->len; ++i)
+-    {
+-      gint j;
+-      GType *a = &g_array_index (interfaces, GType, i);
+-
+-      for (j = i + 1; j < interfaces->len; ++j)
+-        {
+-          GType *b = &g_array_index (interfaces, GType, j);
+-
+-          if (g_type_is_a (*a, *b))
+-            {
+-              GType temp = *a;
+-
+-              *a = *b;
+-              *b = temp;
+-            }
+-        }
+-    }
+-}
+-
+-static PeasExtension *
+-peas_plugin_loader_gjs_create_extension (PeasPluginLoader *loader,
+-                                         PeasPluginInfo   *info,
+-                                         GType             exten_type,
+-                                         guint             n_parameters,
+-                                         GParameter       *parameters)
+-{
+-  PeasPluginLoaderGjs *gloader = PEAS_PLUGIN_LOADER_GJS (loader);
+-  GjsInfo *ginfo;
+-  JSContext *js_context;
+-  jsval extension_ctor;
+-  JSObject *extension;
+-  guint i;
+-  jsval js_value;
+-  GValue gvalue = G_VALUE_INIT;
+-  GArray *interfaces;
+-  JSObject *prop_iter;
+-  jsid prop_name_id;
+-
+-  ginfo = g_hash_table_lookup (gloader->loaded_plugins, info);
+-
+-  js_context = gjs_context_get_native_context (ginfo->context);
+-
+-  if (!JS_GetProperty (js_context, ginfo->extensions,
+-                       g_type_name (exten_type), &extension_ctor) ||
+-      JSVAL_IS_VOID (extension_ctor) || JSVAL_IS_NULL (extension_ctor))
+-    return NULL;
+-
+-  if (!JSVAL_IS_OBJECT (extension_ctor))
+-    {
+-      g_warning ("Extension '%s' in plugin '%s' in not a valid constructor object",
+-                 g_type_name (exten_type),
+-                 peas_plugin_info_get_module_name (info));
+-      return NULL;
+-    }
+-
+-  /* Instantiate the extension ctor object to a new specific object. */
+-  extension = JS_New (js_context, JSVAL_TO_OBJECT (extension_ctor), 0, NULL);
+-
+-  if (!extension)
+-    {
+-      g_warning ("Extension '%s' in plugin '%s' is not a valid constructor object",
+-                 g_type_name (exten_type),
+-                 peas_plugin_info_get_module_name (info));
+-      return NULL;
+-    }
+-
+-  /* Cannot use g_object_set_property()
+-   * because the property may be construct-only
+-   */
+-  for (i = 0; i < n_parameters; i++)
+-    {
+-      guint j;
+-      gchar *prop_name;
+-
+-      prop_name = g_strdup (parameters[i].name);
+-      for (j = 0; prop_name[j] != '\0'; ++j)
+-        {
+-          if (prop_name[j] == '-')
+-            prop_name[j] = '_';
+-        }
+-
+-      if (!gjs_value_from_g_value (js_context, &js_value, &parameters[i].value))
+-        {
+-          g_warning ("Error: failed to convert GValue to jsval for property '%s'", prop_name);
+-        }
+-      else if (!JS_SetProperty (js_context, extension, prop_name, &js_value))
+-        {
+-          g_warning ("Error: failed to set property '%s'", prop_name);
+-        }
+-
+-      g_free (prop_name);
+-    }
+-
+-
+-  /* Set the plugin info as an attribute of the instance */
+-  g_value_init (&gvalue, PEAS_TYPE_PLUGIN_INFO);
+-  g_value_set_boxed (&gvalue, info);
+-
+-  if (!gjs_value_from_g_value (js_context, &js_value, &gvalue))
+-    {
+-      g_warning ("Error: failed to convert PeasPluginInfo GValue to jsvalue");
+-    }
+-  else if (!JS_SetProperty (js_context, extension, "plugin_info", &js_value))
+-    {
+-      g_warning ("Error: failed to set property 'plugin_info'");
+-    }
+-
+-  g_value_unset (&gvalue);
+-
+-
+-  /* Do not add exten_type as it will be added below */
+-  interfaces = g_array_new (TRUE, FALSE, sizeof (GType));
+-
+-  prop_iter = JS_NewPropertyIterator (js_context, ginfo->extensions);
+-
+-  /* If this returns FALSE then an error has occurred */
+-  while (JS_NextProperty (js_context, prop_iter, &prop_name_id))
+-    {
+-      jsval prop_extension_ctor;
+-      jsval prop_name_val;
+-      gchar *prop_name;
+-      GType the_type;
+-
+-      /* No more properties to iterate over */
+-      if (prop_name_id == JSID_VOID)
+-        break;
+-
+-      if (!JS_GetPropertyById (js_context, ginfo->extensions,
+-                               prop_name_id, &prop_extension_ctor) ||
+-          JSVAL_TO_OBJECT (prop_extension_ctor) != JSVAL_TO_OBJECT (extension_ctor))
+-        continue;
+-
+-      if (!JS_IdToValue (js_context, prop_name_id, &prop_name_val) ||
+-          !JSVAL_IS_STRING (prop_name_val) ||
+-          !gjs_string_to_utf8 (js_context, prop_name_val, &prop_name))
+-        {
+-          g_warning ("Invalid extension in plugin '%s' it is not a valid "
+-                     "constructor object",
+-                     peas_plugin_info_get_module_name (info));
+-          continue;
+-        }
+-
+-      the_type = peas_gi_get_type_from_name (prop_name);
+-
+-      if (the_type == G_TYPE_INVALID)
+-        {
+-          g_warning ("Could not find GType for '%s', "
+-                     "did you forget to import it?", prop_name);
+-        }
+-      else
+-        {
+-          g_array_append_val (interfaces, the_type);
+-        }
+-
+-      g_free (prop_name);
+-    }
+-
+-  sort_interfaces (interfaces);
+-
+-  return peas_extension_gjs_new (exten_type,
+-                                 (GType *) g_array_free (interfaces, FALSE),
+-                                 js_context, extension);
+-}
+-
+-static void
+-peas_plugin_loader_gjs_unload (PeasPluginLoader *loader,
+-                               PeasPluginInfo   *info)
+-{
+-  PeasPluginLoaderGjs *gloader = PEAS_PLUGIN_LOADER_GJS (loader);
+-
+-  g_hash_table_remove (gloader->loaded_plugins, info);
+-}
+-
+-static void
+-garbage_collect (PeasPluginInfo *info,
+-                 GjsInfo        *ginfo)
+-{
+-  gjs_context_gc (ginfo->context);
+-}
+-
+-static void
+-peas_plugin_loader_gjs_garbage_collect (PeasPluginLoader *loader)
+-{
+-  PeasPluginLoaderGjs *gloader = PEAS_PLUGIN_LOADER_GJS (loader);
+-
+-  g_hash_table_foreach (gloader->loaded_plugins,
+-                        (GHFunc) garbage_collect,
+-                        NULL);
+-}
+-
+-static void
+-peas_plugin_loader_gjs_finalize (GObject *object)
+-{
+-  PeasPluginLoaderGjs *gloader = PEAS_PLUGIN_LOADER_GJS (object);
+-
+-  g_hash_table_destroy (gloader->loaded_plugins);
+-
+-  G_OBJECT_CLASS (peas_plugin_loader_gjs_parent_class)->finalize (object);
+-}
+-
+-static void
+-peas_plugin_loader_gjs_class_init (PeasPluginLoaderGjsClass *klass)
+-{
+-  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+-  PeasPluginLoaderClass *loader_class = PEAS_PLUGIN_LOADER_CLASS (klass);
+-
+-  gobject_class->finalize = peas_plugin_loader_gjs_finalize;
+-
+-  loader_class->load = peas_plugin_loader_gjs_load;
+-  loader_class->provides_extension = peas_plugin_loader_gjs_provides_extension;
+-  loader_class->create_extension = peas_plugin_loader_gjs_create_extension;
+-  loader_class->unload = peas_plugin_loader_gjs_unload;
+-  loader_class->garbage_collect = peas_plugin_loader_gjs_garbage_collect;
+-}
+-
+-static void
+-destroy_gjs_info (GjsInfo *ginfo)
+-{
+-  JSContext *js_context;
+-
+-  js_context = gjs_context_get_native_context (ginfo->context);
+-
+-  JS_RemoveObjectRoot (js_context, &ginfo->extensions);
+-  g_object_unref (ginfo->context);
+-
+-  g_slice_free (GjsInfo, ginfo);
+-}
+-
+-static void
+-peas_plugin_loader_gjs_init (PeasPluginLoaderGjs *gloader)
+-{
+-  gloader->loaded_plugins = g_hash_table_new_full (g_direct_hash,
+-                                                   g_direct_equal,
+-                                                   NULL,
+-                                                   (GDestroyNotify) destroy_gjs_info);
+-}
+-
+-G_MODULE_EXPORT void
+-peas_register_types (PeasObjectModule *module)
+-{
+-  peas_object_module_register_extension_type (module,
+-                                              PEAS_TYPE_PLUGIN_LOADER,
+-                                              PEAS_TYPE_PLUGIN_LOADER_GJS);
+-}
+diff --git a/loaders/gjs/peas-plugin-loader-gjs.h b/loaders/gjs/peas-plugin-loader-gjs.h
+deleted file mode 100644
+index f717bf7..0000000
+--- a/loaders/gjs/peas-plugin-loader-gjs.h
++++ /dev/null
+@@ -1,55 +0,0 @@
+-/*
+- * peas-plugin-loader-gjs.h
+- * This file is part of libpeas
+- *
+- * Copyright (C) 2011 - Garrett Regier, Steve Frécinaux
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU Library General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU Library General Public License for more details.
+- *
+- *  You should have received a copy of the GNU Library General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+- */
+-
+-#ifndef __PEAS_PLUGIN_LOADER_GJS_H__
+-#define __PEAS_PLUGIN_LOADER_GJS_H__
+-
+-#include <libpeas/peas-plugin-loader.h>
+-#include <libpeas/peas-object-module.h>
+-
+-G_BEGIN_DECLS
+-
+-#define PEAS_TYPE_PLUGIN_LOADER_GJS            (peas_plugin_loader_gjs_get_type ())
+-#define PEAS_PLUGIN_LOADER_GJS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), PEAS_TYPE_PLUGIN_LOADER_GJS, PeasPluginLoaderGjs))
+-#define PEAS_PLUGIN_LOADER_GJS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), PEAS_TYPE_PLUGIN_LOADER_GJS, PeasPluginLoaderGjsClass))
+-#define PEAS_IS_PLUGIN_LOADER_GJS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), PEAS_TYPE_PLUGIN_LOADER_GJS))
+-#define PEAS_IS_PLUGIN_LOADER_GJS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), PEAS_TYPE_PLUGIN_LOADER_GJS))
+-#define PEAS_PLUGIN_LOADER_GJS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), PEAS_TYPE_PLUGIN_LOADER_GJS, PeasPluginLoaderGjsClass))
+-
+-typedef struct _PeasPluginLoaderGjs       PeasPluginLoaderGjs;
+-typedef struct _PeasPluginLoaderGjsClass  PeasPluginLoaderGjsClass;
+-
+-struct _PeasPluginLoaderGjs {
+-  PeasPluginLoader parent;
+-
+-  GHashTable *loaded_plugins;
+-};
+-
+-struct _PeasPluginLoaderGjsClass {
+-  PeasPluginLoaderClass parent_class;
+-};
+-
+-GType                    peas_plugin_loader_gjs_get_type  (void) G_GNUC_CONST;
+-G_MODULE_EXPORT void     peas_register_types              (PeasObjectModule *module);
+-
+-G_END_DECLS
+-
+-#endif /* __PEAS_PLUGIN_LOADER_GJS_H__ */
+diff --git a/peas-demo/peas-demo.c b/peas-demo/peas-demo.c
+index 50c6a0f..d01031d 100644
+--- a/peas-demo/peas-demo.c
++++ b/peas-demo/peas-demo.c
+@@ -124,7 +124,6 @@ main (int    argc,
+   peas_engine_add_search_path (engine, plugin_dir, plugin_dir);
+   g_free (plugin_dir);
+ 
+-  peas_engine_enable_loader (engine, "gjs");
+   peas_engine_enable_loader (engine, "python3");
+   peas_engine_enable_loader (engine, "seed");
+ 
+diff --git a/peas-demo/plugins/Makefile.am b/peas-demo/plugins/Makefile.am
+index d9ea866..5aa1cf4 100644
+--- a/peas-demo/plugins/Makefile.am
++++ b/peas-demo/plugins/Makefile.am
+@@ -1,9 +1,5 @@
+ SUBDIRS = helloworld secondtime
+ 
+-if ENABLE_GJS
+-SUBDIRS += gjshello
+-endif
+-
+ if ENABLE_PYTHON3
+ SUBDIRS += pythonhello
+ endif
+diff --git a/peas-demo/plugins/gjshello/Makefile.am b/peas-demo/plugins/gjshello/Makefile.am
+deleted file mode 100644
+index 1a688da..0000000
+--- a/peas-demo/plugins/gjshello/Makefile.am
++++ /dev/null
+@@ -1,7 +0,0 @@
+-plugindir = $(libdir)/peas-demo/plugins/gjshello
+-
+-plugin_DATA = \
+-	gjshello.js	\
+-	gjshello.plugin
+-
+-EXTRA_DIST = $(plugin_DATA)
+diff --git a/peas-demo/plugins/gjshello/gjshello.js b/peas-demo/plugins/gjshello/gjshello.js
+deleted file mode 100644
+index ede389f..0000000
+--- a/peas-demo/plugins/gjshello/gjshello.js
++++ /dev/null
+@@ -1,36 +0,0 @@
+-const Gtk = imports.gi.Gtk;
+-
+-var LABEL_STRING = "GJS Also Says Hello!";
+-
+-print("LABEL_STRING=" +  LABEL_STRING);
+-
+-function activatable_extension() {
+-}
+-
+-activatable_extension.prototype = {
+-  activate: function() {
+-    print("GJSHelloPlugin.activate");
+-    this.object._gjshello_label = new Gtk.Label({ label: LABEL_STRING });
+-    this.object._gjshello_label.show();
+-    this.object.get_child().add(this.object._gjshello_label);
+-  },
+-  deactivate: function() {
+-    print("GJSHelloPlugin.deactivate");
+-    this.object.get_child().remove(this.object._gjshello_label);
+-    this.object._gjshello_label.destroy();
+-  },
+-  update_state: function() {
+-    print("GJSHelloPlugin.update_state");
+-  }
+-};
+-
+-function configurable_extension() {
+-  this.create_configure_widget = function () {
+-    return new Gtk.Label({ label: "Example of configuration dialog for a GJS plugin" });
+-  };
+-};
+-
+-var extensions = {
+-  'PeasActivatable': activatable_extension,
+-  'PeasGtkConfigurable': configurable_extension,
+-};
+diff --git a/peas-demo/plugins/gjshello/gjshello.plugin b/peas-demo/plugins/gjshello/gjshello.plugin
+deleted file mode 100644
+index 9a1a0a5..0000000
+--- a/peas-demo/plugins/gjshello/gjshello.plugin
++++ /dev/null
+@@ -1,8 +0,0 @@
+-[Plugin]
+-Module=gjshello
+-Loader=gjs
+-Name=GJS Also Says Hello
+-Description=Inserts a box containing "GJS Also Says Hello" in every windows.
+-Authors=Steve Frécinaux <code@istique.net>
+-Copyright=Copyright © 2009 Steve Frécinaux
+-Website=http://code.istique.net/
+diff --git a/tests/libpeas/Makefile.am b/tests/libpeas/Makefile.am
+index 1917bde..35d3465 100644
+--- a/tests/libpeas/Makefile.am
++++ b/tests/libpeas/Makefile.am
+@@ -25,12 +25,6 @@
+ 	extension-set	\
+ 	plugin-info
+ 
+-if ENABLE_GJS
+-TEST_PROGS            += extension-gjs
+-extension_gjs_CFLAGS   = $(GJS_CFLAGS)
+-extension_gjs_LDADD    = $(LDADD) $(GJS_LIBS)
+-endif
+-
+ if ENABLE_PYTHON2
+ TEST_PROGS               += extension-python
+ extension_python_CFLAGS   = $(PYGOBJECT_CFLAGS) $(PYTHON2_CFLAGS)
+
+diff --git a/tests/libpeas/extension-gjs.c b/tests/libpeas/extension-gjs.c
+deleted file mode 100644
+index 38358de..0000000
+--- a/tests/libpeas/extension-gjs.c
++++ /dev/null
+@@ -1,57 +0,0 @@
+-/*
+- * extension-gjs.c
+- * This file is part of libpeas
+- *
+- * Copyright (C) 2011 - Garrett Regier
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU Library General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU Library General Public License for more details.
+- *
+- *  You should have received a copy of the GNU Library General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+- */
+-
+-#ifdef HAVE_CONFIG_H
+-#include <config.h>
+-#endif
+-
+-#include <gjs/gjs-module.h>
+-#include <gi/value.h>
+-
+-#include "loaders/gjs/peas-extension-gjs.h"
+-
+-#include "testing/testing-extension.h"
+-
+-static void
+-test_extension_gjs_nonexistent (PeasEngine *engine)
+-{
+-  PeasPluginInfo *info;
+-
+-  testing_util_push_log_hook ("*Failed to open *extension-gjs-nonexistent.js*");
+-  testing_util_push_log_hook ("Error loading plugin 'extension-gjs-nonexistent'");
+-
+-  info = peas_engine_get_plugin_info (engine, "extension-gjs-nonexistent");
+-
+-  g_assert (!peas_engine_load_plugin (engine, info));
+-}
+-
+-int
+-main (int   argc,
+-      char *argv[])
+-{
+-  testing_init (&argc, &argv);
+-
+-  testing_extension_all ("gjs");
+-
+-  EXTENSION_TEST (gjs, "nonexistent", nonexistent);
+-
+-  return testing_extension_run_tests ();
+-}
+diff --git a/tests/libpeas/plugins/Makefile.am b/tests/libpeas/plugins/Makefile.am
+index 00d28e4..396a18a 100644
+--- a/tests/libpeas/plugins/Makefile.am
++++ b/tests/libpeas/plugins/Makefile.am
+@@ -2,14 +2,6 @@ include $(top_srcdir)/tests/Makefile.plugin
+ 
+ SUBDIRS = extension-c
+ 
+-if ENABLE_GJS
+-SUBDIRS += extension-js
+-else
+-if ENABLE_SEED
+-SUBDIRS += extension-js
+-endif
+-endif
+-
+ if ENABLE_PYTHON3
+ SUBDIRS += extension-python
+ else
+@@ -18,10 +10,13 @@ SUBDIRS += extension-python
+ endif
+ endif
+ 
++if ENABLE_SEED
++SUBDIRS += extension-seed
++endif
++
+ noinst_PLUGIN = \
+ 	disabled-loader.plugin			\
+ 	extension-c-nonexistent.plugin		\
+-	extension-gjs-nonexistent.plugin	\
+ 	extension-python-nonexistent.plugin	\
+ 	extension-python3-nonexistent.plugin	\
+ 	extension-seed-nonexistent.plugin	\
+diff --git a/tests/libpeas/plugins/extension-gjs-nonexistent.plugin b/tests/libpeas/plugins/extension-gjs-nonexistent.plugin
+deleted file mode 100644
+index f4afb8a..0000000
+--- a/tests/libpeas/plugins/extension-gjs-nonexistent.plugin
++++ /dev/null
+@@ -1,8 +0,0 @@
+-[Plugin]
+-Module=extension-gjs-nonexistent
+-Loader=gjs
+-Name=Extension GJS Nonexistent
+-Description=This plugin is nonexistent.
+-Authors=Garrett Regier
+-Copyright=Copyright © 2011 Garrett Regier
+-Website=http://live.gnome.org/Libpeas
+diff --git a/tests/libpeas/plugins/extension-js/Makefile.am b/tests/libpeas/plugins/extension-js/Makefile.am
+deleted file mode 100644
+index 767bc6f..0000000
+--- a/tests/libpeas/plugins/extension-js/Makefile.am
++++ /dev/null
+@@ -1,31 +0,0 @@
+-include $(top_srcdir)/tests/Makefile.plugin
+-
+-noinst_DATA = \
+-	extension-gjs.gschema.xml	\
+-	extension-gjs.js		\
+-	extension-gjs.plugin		\
+-	extension-seed.gschema.xml	\
+-	extension-seed.js		\
+-	extension-seed.plugin
+-
+-extension-js.%:
+-	test -e $@
+-
+-extension-gjs.gschema.xml extension-seed.gschema.xml: extension-js.gschema.xml
+-	$(AM_V_GEN) cp $< $@ && \
+-	$(SED) -i -e 's%JS_LOADER%$(@:extension-%.gschema.xml=%)%g' $@
+-
+-extension-gjs.js extension-seed.js: extension-js.js
+-	$(AM_V_GEN) $(LN_S) $< $@
+-
+-extension-gjs.plugin extension-seed.plugin: extension-js.plugin
+-	$(AM_V_GEN) cp $< $@ && \
+-	$(SED) -i -e 's%JS_LOADER%$(@:extension-%.plugin=%)%g' $@
+-
+-EXTRA_DIST = \
+-	extension-js.gschema.xml	\
+-	extension-js.js 		\
+-	extension-js.plugin
+-
+-CLEANFILES = $(noinst_DATA)
+-DISTCLEANFILES = $(noinst_DATA)
+diff --git a/tests/libpeas/plugins/extension-js/extension-js.plugin b/tests/libpeas/plugins/extension-js/extension-js.plugin
+deleted file mode 100644
+index 0524c76..0000000
+--- a/tests/libpeas/plugins/extension-js/extension-js.plugin
++++ /dev/null
+@@ -1,8 +0,0 @@
+-[Plugin]
+-Module=extension-JS_LOADER
+-Loader=JS_LOADER
+-Name=Extension JS_LOADER
+-Description=This plugin is for the JS_LOADER PeasExtension tests.
+-Authors=Garrett Regier
+-Copyright=Copyright © 2011 Garrett Regier
+-Website=http://live.gnome.org/Libpeas
+diff --git a/tests/libpeas/plugins/extension-seed/Makefile.am b/tests/libpeas/plugins/extension-seed/Makefile.am
+new file mode 100644
+index 0000000..8462f69
+--- /dev/null
++++ b/tests/libpeas/plugins/extension-seed/Makefile.am
+@@ -0,0 +1,8 @@
++include $(top_srcdir)/tests/Makefile.plugin
++
++noinst_PLUGIN = \
++	extension-seed.gschema.xml	\
++	extension-seed.js		\
++	extension-seed.plugin
++
++EXTRA_DIST = $(noinst_PLUGIN)
+diff --git a/tests/libpeas/plugins/extension-js/extension-js.gschema.xml b/tests/libpeas/plugins/extension-seed/extension-seed.gschema.xml
+index 043a6ee..bd1e6aa 100644
+--- a/tests/libpeas/plugins/extension-js/extension-js.gschema.xml
++++ b/tests/libpeas/plugins/extension-seed/extension-seed.gschema.xml
+@@ -1,5 +1,5 @@
+ <schemalist>
+-  <schema id="extension-JS_LOADER" path="/org/gnome/libpeas/tests/extension-JS_LOADER/">
++  <schema id="extension-seed" path="/org/gnome/libpeas/tests/extension-seed/">
+     <key name="a-setting" type="s">
+       <default>'Blah'</default>
+       <summary>Just a setting.</summary>
+diff --git a/tests/libpeas/plugins/extension-js/extension-js.js b/tests/libpeas/plugins/extension-seed/extension-seed.js
+index 27413a9..27413a9 100644
+--- a/tests/libpeas/plugins/extension-js/extension-js.js
++++ b/tests/libpeas/plugins/extension-seed/extension-seed.js
+diff --git a/tests/libpeas/plugins/extension-seed/extension-seed.plugin b/tests/libpeas/plugins/extension-seed/extension-seed.plugin
+new file mode 100644
+index 0000000..a5de4fe
+--- /dev/null
++++ b/tests/libpeas/plugins/extension-seed/extension-seed.plugin
+@@ -0,0 +1,8 @@
++[Plugin]
++Module=extension-seed
++Loader=seed
++Name=Extension seed
++Description=This plugin is for the seed PeasExtension tests.
++Authors=Garrett Regier
++Copyright=Copyright © 2011 Garrett Regier
++Website=http://live.gnome.org/Libpeas
+--
+cgit v0.9.2
+

@@ -7,14 +7,16 @@
 %endif
 
 Name:		libpeas
-Version:	1.7.0
-Release:	2%{?dist}
+Version:	1.9.0
+Release:	3%{?dist}
 Summary:	Plug-ins implementation convenience library
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		http://ftp.acc.umu.se/pub/GNOME/sources/libpeas/
-Source0:	http://ftp.acc.umu.se/pub/GNOME/sources/%{name}/1.7/%{name}-%{version}.tar.xz
+Source0:	http://ftp.acc.umu.se/pub/GNOME/sources/%{name}/1.9/%{name}-%{version}.tar.xz
+# Upstream 730edb65d6 , drop gjs plugin support as apparently no-one wants it
+Patch0:    libpeas-1.9.0-drop_gjs.patch
 
 BuildRequires:	chrpath
 BuildRequires:	gtk3-devel >= 3.0.0
@@ -26,7 +28,6 @@ BuildRequires:	libtool
 %if %{use_seed}
 BuildRequires:	seed-devel
 %endif
-BuildRequires:	gjs-devel
 BuildRequires:	gtk-doc
 BuildRequires:	glade-devel
 
@@ -50,6 +51,7 @@ that are needed to write applications that use libpeas.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure %{seed_option}
@@ -92,7 +94,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %if %{use_seed}
 %{_libdir}/libpeas-1.0/loaders/libseedloader.so
 %endif
-%{_libdir}/libpeas-1.0/loaders/libgjsloader.so
 %{_libdir}/girepository-1.0/*.typelib
 %{_datadir}/icons/hicolor/*/actions/libpeas-plugin.*
 
@@ -109,6 +110,18 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/glade/catalogs/libpeas-gtk.xml
 
 %changelog
+* Wed Feb 05 2014 Adam Williamson <awilliam@redhat.com> - 1.9.0-3
+- drop gjs plugin support (backported from upstream; no-one wants it)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jun 20 2013 Kalev Lember <kalevlember@gmail.com> - 1.9.0-1
+- Update to 1.9.0
+
+* Tue Mar 26 2013 Ignacio Casal Quinteiro <icq@gnome.org> - 1.8.0-1
+- Update to 1.8.0
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
