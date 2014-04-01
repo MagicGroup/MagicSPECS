@@ -3,8 +3,10 @@ Version:        1.7.9
 Release:        1%{?dist}
 License:        LGPLv2+
 Summary:        Thumbnail generation library for EFL
+Summary(zh_CN.UTF-8): EFL 的缩略图生成库
 Url:            http://enlightenment.org/
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source:         http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
 
 BuildRequires:  doxygen 
@@ -19,13 +21,21 @@ BuildRequires:  libexif-devel
 %description
 Ethumb is a thumbnail generation library.
 
+%description -l zh_CN.UTF-8
+EFL 的缩略图生成库。
+
 %package devel
 Summary:        Ethumb headers, documentation and test programs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Headers, test programs and documentation for Ethumb.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -37,6 +47,7 @@ make %{?_smp_mflags}
 %install
 %make_install
 find %{buildroot} -name '*.la' -delete
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

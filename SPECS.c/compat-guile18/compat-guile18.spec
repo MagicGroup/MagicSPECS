@@ -2,6 +2,7 @@
 %global mver 1.8
 
 Summary: A GNU implementation of Scheme for application extensibility
+Summary(zh_CN.UTF-8): Guile 的 1.8 版本
 Name: compat-guile18
 Version: %{mver}.8
 Release: 7%{?dist}
@@ -12,6 +13,7 @@ Patch2: guile-1.8.7-testsuite.patch
 Patch3: guile-1.8.8-deplibs.patch
 License: LGPLv2+
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 BuildRequires: libtool libtool-ltdl-devel gmp-devel readline-devel
 BuildRequires: gettext-devel
 %{?with_emacs:BuildRequires: emacs}
@@ -29,9 +31,14 @@ as a library during the building of extensible programs.
 Install the compat-guile18 package if you'd like to add extensibility to
 programs that you are developing.
 
+%description -l zh_CN.UTF-8
+Guile 的 1.8 版本，仅为兼容目的使用。
+
 %package devel
 Summary: Libraries and header files for the GUILE extensibility library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release} gmp-devel
 Requires: pkgconfig
 Provides: guile-devel = 5:%{version}-7
@@ -47,6 +54,9 @@ GUILE extensibility library.
 You need to install the compat-guile18-devel package if you want to develop
 applications that will be linked to GUILE.  You'll also need to install the
 compat-guile18 package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n guile-%{version}

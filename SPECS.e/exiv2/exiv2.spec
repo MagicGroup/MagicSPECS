@@ -1,11 +1,12 @@
-
 Summary: Exif and Iptc metadata manipulation library
+Summary(zh_CN.UTF-8): Exif 和 Iptc 元数据处理库
 Name:	 exiv2
 Version: 0.22
 Release: 2%{?dist}
 
 License: GPLv2+
 Group:	 Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL: 	 http://www.exiv2.org/
 Source0: http://www.exiv2.org/exiv2-%{version}%{?pre:-%{pre}}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -35,22 +36,34 @@ A command line utility to access image metadata, allowing one to:
 * extract, insert and delete Exif metadata (including thumbnails),
   Iptc metadata and Jpeg comments
 
+%description -l zh_CN.UTF-8
+Exif 和 Iptc 元数据处理库。
+
 %package devel
 Summary: Header files, libraries and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:	 Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package libs
 Summary: Exif and Iptc metadata manipulation library
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 %description libs
 A C++ library to access image metadata, supporting full read and write access
 to the Exif and Iptc metadata, Exif MakerNote support, extract and delete 
 methods for Exif thumbnails, classes to access Ifd and so on.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q -n %{name}-%{version}%{?pre:-%{pre}}
@@ -70,7 +83,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot} 
 
 make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 %find_lang exiv2
 
 ## Unpackaged files

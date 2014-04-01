@@ -1,6 +1,6 @@
 Name:           cln
-Version:        1.3.2
-Release:        4%{?dist}
+Version:	1.3.3
+Release:        1%{?dist}
 Summary:        Class Library for Numbers
 Summary(zh_CN.UTF-8): 数字类库
 
@@ -47,7 +47,7 @@ the CLN library.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 
 %build
 %configure --disable-static
@@ -92,6 +92,9 @@ fi
 %exclude %{_libdir}/*.la
 
 %changelog
+* Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.3.3-1
+- 更新到 1.3.3
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.3.2-4
 - 为 Magic 3.0 重建
 

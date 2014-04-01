@@ -2,11 +2,13 @@
 
 Name:      elinks
 Summary:   A text-mode Web browser
+Summary(zh_CN.UTF-8): 文本界面的网页浏览器
 Version:   0.12
 Release:   0.37.%{prerel}%{?dist}
 License:   GPLv2
 URL:       http://elinks.or.cz
 Group:     Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source:    http://elinks.or.cz/download/elinks-%{version}%{prerel}.tar.bz2
 Source2:   elinks.conf
 
@@ -48,6 +50,9 @@ Elinks is a text-based Web browser. Elinks does not display any images,
 but it does support frames, tables and most other HTML tags. Elinks'
 advantage over graphical browsers is its speed--Elinks starts and exits
 quickly and swiftly displays Web pages.
+
+%description -l zh_CN.UTF-8
+文本界面的网页浏览器，不支持图像显示，蛤支持框架、表格和大多数 HTML 标签。
 
 %prep
 %setup -q -n %{name}-%{version}%{prerel}

@@ -7,11 +7,14 @@ Name:           evince
 Version:        3.11.90
 Release:        1%{?dist}
 Summary:        Document viewer
+Summary(zh_CN.UTF-8): 文档查看器
 
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and MIT and Afmparse
 Group:          Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 URL:            http://projects.gnome.org/evince/
-Source0:        http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  gtk3-devel
 BuildRequires:  glib2-devel >= %{glib2_version}
@@ -56,53 +59,78 @@ table-of-contents bookmarks and editing of forms.
  Support for other document formats such as DVI and DJVU can be added by
 installing additional backends.
 
+%description -l zh_CN.UTF-8
+文档查看器，可以显示和打印 PDF, PS, EPS 文件。
+
+其它的文档格式，比如 DVI 和 DJVU 可以通过安装附加包提供支持
 
 %package libs
 Summary: Libraries for the evince document viewer
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains shared libraries needed for evince
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary: Support for developing backends for the evince document viewer
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains libraries and header files needed for evince
 backend development.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package dvi
 Summary: Evince backend for dvi files
+Summary(zh_CN.UTF-8): %{name} 的 dvi 文档支持
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: texlive-collection-fontsrecommended
 
 %description dvi
 This package contains a backend to let evince display dvi files.
 
+%description dvi -l zh_CN.UTF-8
+安装此包可以使 %{name} 支持显示 dvi 文档。
 
 %package djvu
 Summary: Evince backend for djvu files
+Summary(zh_CN.UTF-8): %{name} 的 djvu 文档支持
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description djvu
 This package contains a backend to let evince display djvu files.
 
+%description djvu -l zh_CN.UTF-8
+安装此包可以使 %{name} 支持显示 djvu 文档。
 
 %package nautilus
 Summary: Evince extension for nautilus
+Summary(zh_CN.UTF-8): nautilus 的 %{name} 扩展
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: nautilus%{?_isa}
 
 %description nautilus
 This package contains the evince extension for the nautilus file manager.
 It adds an additional tab called "Document" to the file properties dialog.
+
+%description nautilus -l zh_CN.UTF-8
+nautilus 的 %{name} 扩展，它给文件属性对话框增加了一个 "文档" 标签。
 
 %prep
 %setup -q
@@ -125,7 +153,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 desktop-file-install --delete-original \
   --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
   $RPM_BUILD_ROOT%{_datadir}/applications/evince.desktop
-
+magic_rpm_clean.sh
 %find_lang evince --with-gnome
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications

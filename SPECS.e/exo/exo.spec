@@ -1,7 +1,6 @@
 %if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
-%global minorversion 0.10
 %global xfceversion 4.10
 
 Name:           exo
@@ -15,6 +14,7 @@ Group:          System Environment/Libraries
 License:        LGPLv2+ and GPLv2+
 URL:            http://xfce.org/
 #VCS git:git://git.xfce.org/xfce/libxfce4ui
+%global minorversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{minorversion}/%{name}-%{version}.tar.bz2
 # internet-mail icon taken from GNOME, license is LGPLv3
 Source1:        internet-mail-24.png

@@ -2,8 +2,10 @@ Name:           engine_pkcs11
 Version:        0.1.8
 Release:        5%{?dist}
 Summary:        A PKCS#11 engine for use with OpenSSL
+Summary(zh_CN.UTF-8): 使用 OpenSSL 的 PKCS#11 引擎
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://www.opensc-project.org/engine_pkcs11/
 Source0:        http://www.opensc-project.org/files/%{name}/%{name}-%{version}.tar.gz
@@ -19,6 +21,9 @@ using code, config file or command line and will pass any function call by
 openssl to a PKCS#11 module. Engine_pkcs11 is meant to be used with smart
 cards and software for using smart cards in PKCS#11 format, such as OpenSC.
 
+%description -l zh_CN.UTF-8
+使用 OpenSSL 的 PKCS#11 引擎。
+
 
 %prep
 %setup -q
@@ -33,6 +38,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

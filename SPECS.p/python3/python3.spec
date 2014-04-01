@@ -192,8 +192,8 @@ Source: http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 # Avoid having various bogus auto-generated Provides lines for the various
 # python c modules' SONAMEs:
 Source1: find-provides-without-python-sonames.sh
-%global _use_internal_dependency_generator 0
-%global __find_provides %{SOURCE1}
+#global _use_internal_dependency_generator 0
+#global __find_provides %{SOURCE1}
 
 # Supply various useful macros for building python 3 modules:
 #  __python3, python3_sitelib, python3_sitearch

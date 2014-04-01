@@ -1,9 +1,11 @@
 Name:           debconf
-Version:        1.5.52
+Version:	1.5.52
 Release:        1%{?dist}
 Summary:        Debian configuration management system
+Summary(zh_CN.UTF-8): Debina 的配置管理系统
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        BSD
 URL:            http://packages.debian.org/sid/debconf
 Source0:        http://ftp.de.debian.org/debian/pool/main/d/%{name}/%{name}_%{version}.tar.gz
@@ -27,23 +29,36 @@ Debconf is a configuration management system for Debian
 packages. Packages use Debconf to ask questions when
 they are installed.
 
+%description -l zh_CN.UTF-8
+这个包是 Debian 安装包的配置管理系统。
+
 %package gnome
 Summary:       GNOME frontend for debconf
+Summary(zh_CN.UTF-8): debconf 的 GNOME 前端
 Requires:      %{name} = %{version}-%{release}
 
 %description gnome
 This package contains the GNOME frontend for debconf.
 
+%description gnome -l zh_CN.UTF-8
+debconf 的 GNOME 界面。
+
 %package kde
 Summary:       KDE frontend for debconf
+Summary(zh_CN.UTF-8): debconf 的 KDE 前端
 Requires:      %{name} = %{version}-%{release}
 
 %description kde
 This package contains the KDE frontend for debconf.
 
+%description kde -l zh_CN.UTF-8
+debconf 的 KDE 界面。
+
 %package doc
 Summary:        Debconf documentation
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 文档
 Requires:       %{name} = %{version}-%{release}
 
 %description doc
@@ -52,9 +67,14 @@ including the debconf user's guide, documentation about using
 different backend databases via the /etc/debconf.conf file, and a
 developer's guide to debconf.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package i18n
 Summary:        Full internationalization support for debconf
+Summary(zh_CN.UTF-8): debconf 的国际化支持
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:       %{name} = %{version}-%{release}
 
 %description i18n
@@ -63,13 +83,21 @@ including translations into all available languages, support
 for using translated debconf templates, and support for
 proper display of multibyte character sets.
 
+%description i18n -l zh_CN.UTF-8
+%{name} 的国际化支持。
+
 %package utils
 Summary:        This package contains some small utilities for debconf developers
+Summary(zh_CN.UTF-8): debconf 开发者使用的工具
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:       %{name} = %{version}-%{release}
 
 %description utils
 This package contains some small utilities for debconf developers.
+
+%description utils -l zh_CN.UTF-8
+这个包包含了 debconf 开发人员使用的一些小工具。
 
 %prep
 %setup -q -n debconf
@@ -92,11 +120,7 @@ touch %{buildroot}/%{_var}/cache/%{name}/templates.dat
 
 mkdir -p \
         %{buildroot}/%{perl_vendorlib} \
-        %{buildroot}/%{_mandir}/man{1,3,5,7,8} \
-        %{buildroot}/%{_mandir}/de/man{1,3,5,7,8} \
-        %{buildroot}/%{_mandir}/fr/man{1,3,5,7,8} \
-        %{buildroot}/%{_mandir}/ru/man{1,3,5,7,8} \
-        %{buildroot}/%{_mandir}/pt_BR/man{1,3,8}
+        %{buildroot}/%{_mandir}/man{1,3,5,7,8} 
 
 %if "%{_datadir}/perl5" != "%{perl_vendorlib}"
 mv %{buildroot}/%{_datadir}/perl5/Debconf %{buildroot}/%{perl_vendorlib}/.
@@ -104,7 +128,7 @@ mv %{buildroot}/%{_datadir}/perl5/Debian %{buildroot}/%{perl_vendorlib}/.
 %endif
 
 chmod 755 %{buildroot}/%{_datadir}/%{name}/confmodule*
-
+magic_rpm_clean.sh
 # Base and i18n man pages
 for man in \
         "debconf-apt-progress" \
@@ -118,13 +142,6 @@ for man in \
         "dpkg-reconfigure"; do
 
     for level in 1 8; do
-        for lang in de fr pt_BR ru; do
-            if test -f doc/man/gen/$man.$lang.$level; then
-                short_lang=`echo "$lang" | sed 's/_.*//'`
-                install -m 644 doc/man/gen/$man.$lang.$level %{buildroot}/%{_mandir}/$lang/man$level/$man.$level
-                echo "%lang($short_lang) %{_mandir}/$lang/man$level/$man.$level*" >> "man-i18n.lang"
-            fi
-        done
         test -f doc/man/gen/$man.$level && \
             install -m 644 doc/man/gen/$man.$level %{buildroot}/%{_mandir}/man$level/$man.$level
     done
@@ -139,13 +156,6 @@ for man in \
         "debconf"; do
 
     for level in 3 5 7; do
-        for lang in de fr pt_BR ru; do
-            if test -f doc/man/$man.$lang.$level*; then
-                short_lang=`echo "$lang" | sed 's/_.*//'`
-                install -m 644 doc/man/$man.$lang.$level* %{buildroot}/%{_mandir}/$lang/man$level/$man.$level
-                echo "%lang($short_lang) %{_mandir}/$lang/man$level/$man.$level*" >> "man-doc.lang"
-            fi
-        done
         test -f doc/man/$man.$level && \
             install -m 644 doc/man/$man.$level %{buildroot}/%{_mandir}/man$level/$man.$level
     done
@@ -156,17 +166,9 @@ for man in get-selections \
             getlang \
             loadtemplate \
             mergetemplate; do
-    for lang in de fr pt_BR ru; do
-        short_lang=`echo "$lang" | sed 's/_.*//'`
-        if test -f doc/man/gen/debconf-$man.$lang.1; then
-            install -m 644 doc/man/gen/debconf-$man.$lang.1 %{buildroot}/%{_mandir}/$lang/man1/debconf-$man.1
-            echo "%lang($short_lang) %{_mandir}/$lang/man1/debconf-$man.1*" >> "man-utils.lang"
-        fi
-    done
     test -f doc/man/gen/debconf-$man.1 && \
         install -m 644 doc/man/gen/debconf-$man.1 %{buildroot}/%{_mandir}/man1/debconf-$man.1
 done
-
 %find_lang debconf
 
 %files
@@ -214,7 +216,7 @@ done
 %{perl_vendorlib}/Debconf/FrontEnd/Kde*
 
 
-%files doc -f man-doc.lang
+%files doc 
 %doc samples/
 %doc doc/CREDITS doc/README doc/README.LDAP doc/TODO
 %doc debian/changelog
@@ -229,11 +231,11 @@ done
 %{_mandir}/man7/debconf.7*
 
 
-%files i18n -f man-i18n.lang -f debconf.lang
+%files i18n -f debconf.lang
 %doc debian/changelog debian/copyright debian/README.Debian
 
 
-%files utils -f man-utils.lang
+%files utils
 %doc debian/changelog debian/copyright debian/README.Debian
 %{_bindir}/debconf-get-selections
 %{_bindir}/debconf-getlang
@@ -246,6 +248,12 @@ done
 
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com>
+- 更新到 不能正常取得新版本号
+
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 1.5.52-1
+- 更新到
+
 * Thu Oct 10 2013 Sandro Mani <manisandro@gmail.com> - 1.5.51-1
 - Update to 1.5.51
 - Drop upstreamed patches

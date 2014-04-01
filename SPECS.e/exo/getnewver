@@ -20,7 +20,7 @@ rm -f index.html
 url1="$url$newver1/"
 $downcommand $url1 -O index.html
 new3="exo-"
-new4=".tar.xz"
+new4=".tar.bz2"
 if [ -f index.html ];then
 	newver=`grep "$new3.*$new4" index.html |tail -n 1| sed "s/.*$new3//" | sed "s/$new4.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
 	echo $newver

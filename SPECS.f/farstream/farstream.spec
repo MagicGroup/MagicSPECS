@@ -7,6 +7,7 @@ Name:           farstream
 Version:        0.1.2
 Release:        3%{?dist}
 Summary:        Libraries for videoconferencing
+Summary(zh_CN.UTF-8): 视频会议库
 
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/Farstream
@@ -34,10 +35,14 @@ Obsoletes:      farsight2 < 0.0.32
 %{name} is a collection of GStreamer modules and libraries for
 videoconferencing.
 
+%description -l zh_CN.UTF-8
+用于视频会议的 GStreamer 模块和库。
 
 %package        python
 Summary:        Python binding for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 ## Obsolete farsight2 with Fedora 17.
@@ -48,10 +53,14 @@ Obsoletes:      farsight2-python < 0.0.32
 %description    python
 Python bindings for %{name}.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-python = %{version}-%{release}
 Requires:       gstreamer-devel  >= %{gst_ver}
@@ -66,6 +75,8 @@ Obsoletes:      farsight2-devel < 0.0.32
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

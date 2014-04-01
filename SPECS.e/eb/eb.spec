@@ -2,9 +2,10 @@ Name:           eb
 Version:        4.4.3
 Release:        1%{?dist}
 Summary:        Library for accessing Japanese CD-ROM electronic books
-Summary(ja):    CD-ROM 書籍にアクセスするためのライブラリ
+Summary(zh_CN.UTF-8):   访问日文 CD-ROM 电子书的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://www.sra.co.jp/people/m-kasahr/eb/
 Source0:        ftp://ftp.sra.co.jp/pub/misc/eb/%{name}-%{version}.tar.bz2
@@ -22,21 +23,24 @@ EB Library is a C library for accessing CD-ROM books.
 EB Library supports to access CD-ROM books of 
 EB, EBG, EBXA, EBXA-C, S-EBXA and EPWING formats.  
 
-%description -l ja
-EB ライブラリは CD-ROM 書籍にアクセスするための C のライブラリです。
-EB, EBG, EBXA, EBXA-C, S-EBXA および EPWING 形式の 
-CD-ROM 書籍に対応しています。
+%description -l zh_CN.UTF-8
+访问日文 CD-ROM 电子书的库，支持 EB, EBG, EBXA, EBXA-C, 
+S-EBXA 和 EPWING 格式。
 
 
 %package devel
 Summary:        Development files for eb
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       eb = %{version}
 Requires:       zlib-devel
 
 %description devel
 This package contains development files needs to use eb in programs.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -59,7 +63,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/libeb.la
 rm -rf tmp
 mkdir -p tmp
 mv $RPM_BUILD_ROOT%{_datadir}/eb/doc tmp/html
-
+magic_rpm_clean.sh
 %find_lang %{name}
 %find_lang %{name}utils
 cat %{name}utils.lang >> %{name}.lang

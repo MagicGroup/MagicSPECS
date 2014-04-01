@@ -2,7 +2,7 @@
 
 Name:           driconf
 Version:        0.9.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A configuration applet for the Direct Rendering Infrastructure
 Summary(zh_CN.UTF-8): 直接渲染基础的配置工具
 

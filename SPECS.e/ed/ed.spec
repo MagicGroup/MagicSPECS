@@ -1,10 +1,12 @@
 Summary: The GNU line editor
+Summary(zh_CN.UTF-8): GNU 行编辑器
 Name: ed
-Version: 1.6
+Version: 1.10
 Release: 2%{?dist}
 License: GPLv3+
 Group:  Applications/Text
-Source: ftp://ftp.gnu.org/gnu/ed/%{name}-%{version}.tar.gz
+Group(zh_CN.UTF-8): 应用程序/文本
+Source: ftp://ftp.gnu.org/gnu/ed/%{name}-%{version}.tar.lz
 URL:    http://www.gnu.org/software/ed/
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -21,6 +23,9 @@ purposes, ed has been replaced in normal usage by full-screen editors
 Ed was the original UNIX editor, and may be used by some programs.  In
 general, however, you probably don't need to install it and you probably
 won't use it.
+
+%description -l zh_CN.UTF-8
+GNU 行编辑器，一般情况下只会被一些程序使用。
 
 %prep
 %setup -q
@@ -60,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Thu Mar 27 2014 Liu Di <liudidi@gmail.com> - 1.10-2
+- 更新到 1.10
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.6-2
 - 为 Magic 3.0 重建
 

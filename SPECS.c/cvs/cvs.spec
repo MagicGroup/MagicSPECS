@@ -5,9 +5,11 @@
 
 Name: cvs
 Version: 1.11.23
-Release: 30%{?dist}
+Release: 31%{?dist}
 Summary: Concurrent Versions System
+Summary(zh_CN.UTF-8): 版本控制系统
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://cvs.nongnu.org/
 # Source files in zlib/ directory are licensed under zlib/libpng
 # Other files are mostly GPL+, some of them are GPLv2+ or
@@ -22,6 +24,8 @@ Source4: cvs.csh
 Source5: cvs@.service
 Source6: cvs.socket
 Source7: cvs.target
+Source8: cvs.sh.5
+Source9: cvs.csh.5
 Requires(post): /sbin/install-info, systemd
 Requires(preun): /sbin/install-info, systemd
 Requires(postun): systemd
@@ -90,6 +94,13 @@ Patch26: cvs-1.11.23-Back-port-KeywordExpand-configuration-keyword.patch
 Patch27: cvs-1.11.23-Pass-server-IP-address-instead-of-hostname-to-GSSAPI.patch
 # CVE-2012-0804, bug #787683
 Patch28: cvs-1.11.23-Fix-proxy-response-parser.patch
+# Correct texinfo syntax, bug #970716, submitted to upstream as bug #39166
+Patch29: cvs-1.11.23-doc-Add-mandatory-argument-to-sp.patch
+# Excpect crypt(3) can return NULL, bug #966497, upstream bug #39040
+Patch30: cvs-1.11.23-crypt-2.diff
+# Pass compilation with -Wformat-security, bug #1037029, submitted to upstream
+# as bug #40787
+Patch31: cvs-1.11.23-Pass-compilation-with-Wformat-security.patch
 
 %description
 CVS (Concurrent Versions System) is a version control system that can
@@ -106,10 +117,14 @@ of directories consisting of revision controlled files. These
 directories and files can then be combined together to form a software
 release.
 
+%description -l zh_CN.UTF-8
+一个版本控制系统，方便软件的开发和用户协同工作。
 
 %package contrib
 Summary: Unsupported contributions collected by CVS developers
+Summary(zh_CN.UTF-8): 由 CVS 开发者提供的贡献集合
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 # check_cvs is Copyright only
 License: GPLv2+ and Copyright only
 BuildArch: noarch
@@ -119,10 +134,14 @@ Requires: %{name} = %{version}-%{release}
 Scripts sent to CVS developers by contributors around the world. These
 contributions are really unsupported.
 
+%description contrib -l zh_CN.UTF-8
+由 CVS 开发者提供的贡献集合，这些并不提供支持。
 
 %package inetd
 Summary: CVS server configuration for xinetd
+Summary(zh_CN.UTF-8): xinetd 的 CVS 服务配置
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License: GPL+
 BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
@@ -132,10 +151,14 @@ Requires: xinetd
 CVS server can be run locally, via remote shell or by inetd. This package
 provides configuration for xinetd.
 
+%description inetd -l zh_CN.UTF-8
+xinetd 的 CVS 服务配置。
 
 %package doc
 Summary: Additional documentation for Concurrent Versions System
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 License: GPL+
 BuildArch: noarch
 
@@ -143,6 +166,8 @@ BuildArch: noarch
 FAQ, RCS format description, parallel development how-to, and Texinfo
 pages in PDF.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -175,6 +200,9 @@ pages in PDF.
 %patch26 -p1 -b .keywordexpand
 %patch27 -p1 -b .gssapi_dns
 %patch28 -p1 -b .proxy_response_parser
+%patch29 -p1 -b .texinfo_sp
+%patch30 -p1 -b .null_crypt
+%patch31 -p1 -b .format
 
 # Apply a patch to the generated files, OR
 # run autoreconf and require autoconf >= 2.58, automake >= 1.7.9
@@ -185,18 +213,19 @@ for F in FAQ; do
 done
 
 %build
+%global _hardened_build 1
 autoreconf --install
 
-%if %{pamified} 
+%if %{pamified}
     PAM_CONFIG="--enable-pam"
 %endif
 
 %if %{kerberized}
-	k5prefix=`krb5-config --prefix`
-	CPPFLAGS=-I${k5prefix}/include/kerberosIV; export CPPFLAGS
-	CFLAGS=-I${k5prefix}/include/kerberosIV; export CFLAGS
-	LIBS="-lk5crypto"; export LIBS
-	KRB_CONFIG="--with-gssapi --without-krb4 --enable-encryption"
+        k5prefix=`krb5-config --prefix`
+        CPPFLAGS=-I${k5prefix}/include/kerberosIV; export CPPFLAGS
+        CFLAGS=-I${k5prefix}/include/kerberosIV; export CFLAGS
+        LIBS="-lk5crypto"; export LIBS
+        KRB_CONFIG="--with-gssapi --without-krb4 --enable-encryption"
 %endif
 
 %configure CFLAGS="$CFLAGS $RPM_OPT_FLAGS \
@@ -207,7 +236,7 @@ make %{?_smp_mflags}
 
 %check
 if [ $(id -u) -ne 0 ] ; then
-	make check
+        make check
 fi
 
 %install
@@ -227,7 +256,9 @@ install -D -m 644 %{SOURCE4} $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/cvs.csh
 install -p -m 644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_unitdir}/cvs\@.service
 install -p -m 644 -D %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/cvs.socket
 install -p -m 644 -D %{SOURCE7} $RPM_BUILD_ROOT%{_unitdir}/cvs.target
-
+install -D -m 644 %{SOURCE8} $RPM_BUILD_ROOT/%{_mandir}/man5/cvs.sh.5
+install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT/%{_mandir}/man5/cvs.csh.5
+magic_rpm_clean.sh
 
 %post
 /sbin/install-info %{_infodir}/cvs.info.gz %{_infodir}/dir
@@ -272,7 +303,6 @@ exit 0
 %files doc
 %doc FAQ doc/RCSFILES doc/*.pdf
 %doc COPYING
-
 
 %changelog
 * Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 1.11.23-30

@@ -75,6 +75,7 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/libgupnp-1.0.so
 %{_includedir}/gupnp-1.0
 %{_datadir}/gir-1.0/GUPnP-1.0.gir
+%{_datadir}/vala/vapi/gupnp-1.0.*
 
 %files docs
 %doc %{_datadir}/gtk-doc/html/%{name}

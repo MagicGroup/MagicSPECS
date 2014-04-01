@@ -1,9 +1,11 @@
 Summary: Gives a fake chroot environment
+Summary(zh_CN.UTF-8): 创建一个假的 chroot 环境
 Name: fakechroot
 Version: 2.9
 Release: 27%{?dist}
 License: LGPLv2+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://fakechroot.alioth.debian.org/
 Source0: http://ftp.debian.org/debian/pool/main/f/fakechroot/%{name}_%{version}.orig.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -31,12 +33,20 @@ useful for allowing users to create their own chrooted environment
 with possibility to install another packages without need for root
 privileges.
 
+%description -l zh_CN.UTF-8
+创建一个假的 chroot 环境。
+
 %package libs
 Summary: Gives a fake chroot environment (libraries)
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description libs
 This package contains the libraries required by %{name}.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q

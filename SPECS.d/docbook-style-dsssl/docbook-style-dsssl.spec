@@ -2,8 +2,10 @@ Name: docbook-style-dsssl
 Version: 1.79
 Release: 14%{?dist}
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 
 Summary: Norman Walsh's modular stylesheets for DocBook
+Summary(zh_CN.UTF-8): DocBook 的样式表
 
 License: Copyright only
 URL: http://docbook.sourceforge.net/
@@ -25,6 +27,9 @@ Source1: %{name}.Makefile
 These DSSSL stylesheets allow to convert any DocBook document to another
 printed (for example, RTF or PostScript) or online (for example, HTML) format.
 They are highly customizable.
+
+%description -l zh_CN.UTF-8
+DocBook 的样式表。
 
 %prep
 %setup -q -n docbook-dsssl-%{version}

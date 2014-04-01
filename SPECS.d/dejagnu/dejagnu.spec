@@ -1,12 +1,14 @@
 Summary: A front end for testing other programs
+Summary(zh_CN.UTF-8): 测试其它程序的前端
 Name: dejagnu
-Version: 1.5
+Version: 1.5.1
 Release: 3%{?dist}
 Epoch: 1
 License: GPLv3+
 Source: ftp://ftp.gnu.org/gnu/dejagnu/dejagnu-%{version}.tar.gz
 Source2: dejagnu.texi
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/dejagnu/
 Requires: expect
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -22,6 +24,10 @@ program; to allow you to write tests which will be portable to any
 host or target where a program must be tested; and to standardize the
 output format of all tests (making it easier to integrate the testing
 into software development).
+
+%description -l zh_CN.UTF-8
+这是基于 Expect/Tcl 的一个测试其它程序的框架。被很多常用软件，比如 gcc
+使用。
 
 %prep
 %setup -q
@@ -53,6 +59,7 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 chmod a-x $RPM_BUILD_ROOT/%{_datadir}/dejagnu/runtest.exp
 make DESTDIR=$RPM_BUILD_ROOT install-man
 install -D -m 644 doc/dejagnu.info $RPM_BUILD_ROOT/%{_infodir}/%{name}.info
+magic_rpm_clean.sh
 
 %post
 /sbin/install-info %{_infodir}/%{name}.info.gz --dir-file=%{_infodir}/dir &> /dev/null
@@ -77,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/dejagnu*
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 1:1.5.1-3
+- 更新到 1.5.1
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1:1.5-3
 - 为 Magic 3.0 重建
 

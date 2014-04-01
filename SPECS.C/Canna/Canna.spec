@@ -8,12 +8,14 @@
 %global _hardened_build 1
 
 Summary: A Japanese character set input system.
+Summary(zh_CN.UTF-8): 日文输入系统
 Name: Canna
 Version: 3.7p3
 Release: 41%{?dist}
 # lib/RKindep/cksum.c is licensed under 4-clause BSD, otherwise MIT.
 License: MIT and BSD with advertising
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.nec.co.jp/japanese/product/computer/soft/canna/
 Source0: http://osdn.dl.sourceforge.jp/canna/9565/%{cannadir}.tar.bz2
 Source1: http://cannadic.oucrc.org/cannadic-%{cannadicver}.tar.gz
@@ -68,22 +70,35 @@ rules and dictionaries, and input Japanese in the same way. Canna
 automatically supports Kana-to-Kanji conversions; the conversions are
 based on a client-server model.
 
+%description -l zh_CN.UTF-8
+日文输入系统。
+
 %package devel
 Summary: Header file and library for developing programs which use Canna.
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: Canna-libs >= %{version}-%{release}
 
 %package libs
 Summary: The runtime library for Canna.
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description devel
 The Canna-devel package contains the development files needed to build
 programs that will use the Canna Japanese character input system.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发库。
+
 %description libs
 The Canna-libs package contains the runtime library for running
 programs with the Canna Japanese input system.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q -c -a 1 -a 2 -a 3 -a 4

@@ -1,9 +1,11 @@
 Name: enca
 Summary: Character set analyzer and detector
-Version: 1.13
-Release: 4%{?dist}
+Summary(zh_CN.UTF-8): 字符集分析和检测程序
+Version: 1.15
+Release: 1%{?dist}
 License: GPLv2
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Source: http://dl.cihar.com/enca/enca-%{version}.tar.bz2
 URL: http://gitorious.org/enca
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -25,10 +27,14 @@ This package also contains shared Enca library other programs can make use of.
 Install %{name} if you need to cope with text files of dubious origin
 and unknown encoding and convert them to some reasonable encoding.
 
+%description -l zh_CN.UTF-8
+字符编码的分析和检测程序。
 
 %package devel
 Summary: Header files and libraries for %{name} charset analyzer
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -40,6 +46,8 @@ and its API documentation.
 Install %{name}-devel if you are going to create applications using the Enca
 library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -64,7 +72,7 @@ make install DESTDIR=$RPM_BUILD_ROOT HTML_DIR=/tmp/html
 rm -rf $RPM_BUILD_ROOT/tmp/html
 rm -rf $RPM_BUILD_ROOT/%{_libexecdir}
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -92,10 +100,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 %{?_with_static: %{_libdir}/*.a}
 %{_libdir}/*.so
-%doc devel-docs/html/*.html README.devel
 
 
 %changelog
+* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 1.15-1
+- 更新到 1.15
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.13-4
 - 为 Magic 3.0 重建
 

@@ -80,6 +80,7 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gir-1.0/GUPnPDLNA-2.0.gir
 %{_datadir}/gir-1.0/GUPnPDLNAGst-2.0.gir
 %{_includedir}/%{name}-2.0/
+%{_datadir}/vala/vapi/gupnp-dlna-*.*
 
 %files docs
 %{_datadir}/gtk-doc/html/%{name}

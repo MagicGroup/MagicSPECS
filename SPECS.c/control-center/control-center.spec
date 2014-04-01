@@ -10,20 +10,22 @@
 %define libXrandr_version 1.2.99
 
 Summary: Utilities to configure the GNOME desktop
+Summary(zh_CN.UTF-8): 配置 GNOME 桌面的工具
 Name: control-center
-Version: 3.11.90
+Version: 3.11.91
 Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+ and GFDL
 #VCS: git:git://git.gnome.org/gnome-control-center
-Source: http://download.gnome.org/sources/gnome-control-center/3.11/gnome-control-center-%{version}.tar.xz
+%define majorver 3.11
+Source: http://download.gnome.org/sources/gnome-control-center/%{majorver}/gnome-control-center-%{version}.tar.xz
 URL: http://www.gnome.org
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=695691
 Patch0: distro-logo.patch
 
 Requires: gnome-settings-daemon >= %{gsd_version}
-Requires: redhat-menus >= %{redhat_menus_version}
+Requires: magic-menus >= %{redhat_menus_version}
 Requires: gnome-icon-theme
 Requires: alsa-lib
 Requires: gnome-menus >= %{gnome_menus_version}
@@ -119,8 +121,12 @@ allow to configure accessibility options, desktop fonts, keyboard and mouse
 properties, sound setup, desktop theme and background, user interface
 properties, screen resolution, and other settings.
 
+%description -l zh_CN.UTF-8
+GNOME 桌面环境的配置工具。
+
 %package filesystem
 Summary: GNOME Control Center directories
+Summary(zh_CN.UTF-8): %{name} 的目录
 # NOTE: this is an "inverse dep" subpackage. It gets pulled in
 # NOTE: by the main package an MUST not depend on the main package
 
@@ -130,6 +136,8 @@ for applications. This package contains directories where applications
 can install configuration files that are picked up by the control-center
 utilities.
 
+%description filesystem -l zh_CN.UTF-8
+%{name} 的目录。
 
 %prep
 %setup -q -n gnome-control-center-%{version}
@@ -221,6 +229,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Thu Mar 13 2014 Liu Di <liudidi@gmail.com> - 1:3.11.91-2
+- 更新到 3.11.91
+
 * Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 1:3.11.90-2
 - Rebuilt for gnome-desktop soname bump
 

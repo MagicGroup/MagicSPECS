@@ -53,8 +53,6 @@ Header files to make use of libreg for accessing regulatory info.
 %setup -q -c
 %setup -q -T -D -a 1
 
-%patch0 -p1 -b .setregdomain
-
 cd crda-%{crda_version}
 %patch1 -p1 -b .libreg-DESTDIR
 %patch2 -p1 -b .ldconfig-remove

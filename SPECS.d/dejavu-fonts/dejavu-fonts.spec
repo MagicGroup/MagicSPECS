@@ -15,7 +15,7 @@ original style, using an open collaborative development process.
 
 
 Name:    %{fontname}-fonts
-Version: 2.33
+Version:	2.34
 Release: 4%{?alphatag}%{?dist}
 Summary: DejaVu fonts
 
@@ -200,6 +200,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 2.34-4
+- 更新到 2.34
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.33-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

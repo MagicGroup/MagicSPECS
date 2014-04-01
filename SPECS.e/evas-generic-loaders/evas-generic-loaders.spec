@@ -2,8 +2,10 @@ Name:           evas-generic-loaders
 Version:        1.7.9
 Release:        2%{?dist}
 Summary:        Set of generic loaders for Evas
+Summary(zh_CN.UTF-8): Evas 的通用载入器集合
 License:        GPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Url:            http://enlightenment.org/
 Source:         http://download.enlightenment.org/releases/evas_generic_loaders-%{version}.tar.bz2
 Requires:       evas
@@ -14,6 +16,9 @@ BuildRequires:  libspectre-devel zlib-devel
 %description
 Extra loaders for GPL loaders and unstable libraries.
 
+%description -l zh_CN.UTF-8
+Evas 的通用载入器集合。
+
 %prep
 %setup -q -n evas_generic_loaders-%{version}
 
@@ -23,6 +28,7 @@ make %{?_smp_mflags}
 
 %install
 %make_install
+magic_rpm_clean.sh
 
 %files
 %doc ChangeLog README COPYING

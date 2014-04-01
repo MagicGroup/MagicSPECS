@@ -2,8 +2,10 @@ Name:           cryptopp
 Version:        5.6.2
 Release:        3%{?dist}
 Summary:        C++ class library of cryptographic schemes
+Summary(zh_CN.UTF-8): 密码方案的 C++ 类库
 License:        Boost
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.cryptopp.com/
 Source0:        http://www.cryptopp.com/cryptopp562.zip
 Source1:        cryptopp.pc
@@ -25,10 +27,14 @@ One purpose of Crypto++ is to act as a repository of public domain
 (not copyrighted) source code. Although the library is copyrighted as a
 compilation, the individual files in it are in the public domain.
 
+%description -l zh_CN.UTF-8
+密码方案的 C++ 类库。
 
 %package devel
 Summary:        Header files and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 %description devel
@@ -37,9 +43,14 @@ Crypto++ Library is a free C++ class library of cryptographic schemes.
 This package contains the header files and development documentation
 for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 
 %description doc
@@ -47,15 +58,23 @@ Crypto++ Library is a free C++ class library of cryptographic schemes.
 
 This package contains documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package progs
 Summary:        Programs for manipulating %{name} routines
+Summary(zh_CN.UTF-8): %{name} 的相关程序
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:       %{name} = %{version}-%{release}
 
 %description progs
 Crypto++ Library is a free C++ class library of cryptographic schemes.
 
 This package contains programs for manipulating %{name} routines.
+
+%description progs -l zh_CN.UTF-8
+%{name} 的相关程序。
 
 %prep
 %setup -q -c

@@ -4,10 +4,12 @@
 
 Name:		%{name}
 Summary:	DDC Monitor Detection Tool
+Summary(zh_CN.UTF-8): DDC 显示器检测工具
 Version:	%{version}
 Release:	%{release}
 License:	GPL
-Group:		System/Tools
+Group:		Applications/Tools
+Group(zh_CN.UTF-8): 应用程序/工具
 Source:		%{name}-%{version}.tar.bz2
 Packager:	Yuichiro Nakada <berry@po.yui.mine.nu>
 Buildroot:	%{_tmppath}/%{name}-%{version}
@@ -18,6 +20,8 @@ BuildArchitectures: i586
 This package installs ddcprobe and ddcxinfo for detecting monitor configuration
 values using the DDC protocol.
 
+%description -l zh_CN.UTF-8
+这个包包含了 ddcprobe 和 ddcxinfo，可以通过 DDC 协议来检测显示器的配置。
 
 ## Setup Section
 %prep
@@ -39,6 +43,7 @@ strip ddcxinfo-berry
 mkdir -p %{buildroot}/opt/berry
 install -m 755 ddcprobe %{buildroot}/opt/berry
 install -m 755 ddcxinfo-berry %{buildroot}/opt/berry/ddcxinfo
+magic_rpm_clean.sh
 
 ## Clean Section
 %clean

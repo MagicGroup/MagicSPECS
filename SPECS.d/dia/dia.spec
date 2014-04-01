@@ -3,7 +3,9 @@ Version:        0.97.2
 Release:        2%{?dist}
 Epoch:          1
 Summary:        Diagram drawing program
+Summary(zh_CN.UTF-8): 图像绘制程序
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://www.gnome.org/projects/dia/
 Source0:        ftp://ftp.gnome.org/pub/GNOME/sources/dia/0.97/dia-%{version}.tar.xz
@@ -23,6 +25,8 @@ entity relationship modeling, and network diagrams.  Dia can load and
 save diagrams to a custom file format, can load and save in .xml format,
 and can export to PostScript(TM).
 
+%description -l zh_CN.UTF-8
+一个图像绘制程序。主要用来绘制流程图、网络图、电路图等。
 
 %prep
 %setup -q

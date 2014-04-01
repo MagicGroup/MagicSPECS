@@ -1,9 +1,11 @@
 Summary:	A C++ port of Lucene
+Summary(zh_CN.UTF-8): Lucene 的 C++ 移植
 Name:		clucene
 Version:	2.3.3.4
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	LGPLv2+ or ASL 2.0
 Group:		Development/System
+Group(zh_CN.UTF-8): 开发/系统
 URL:		http://www.sourceforge.net/projects/clucene
 Source0:	http://downloads.sourceforge.net/clucene/clucene-core-2.3.3.4.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,23 +18,37 @@ CLucene aims to be a high-speed alternative to Java Lucene, its API is very
 similar to that of the Java version. CLucene has recently been brought up to
 date with Lucene 2.3.2. It contains most of the same functionality as the Java version.
 
+%description -l zh_CN.UTF-8
+这是一个流行的 Apache Lucene 搜索引擎 (http://lucene.apache.org/java) 的
+C++ 移植版本。
+
 %package core
 Summary:	Core clucene module
+Summary(zh_CN.UTF-8): %{name} 的核心模块
 Group:		Development/System
+Group(zh_CN.UTF-8): 开发/系统
 Provides:	clucene
 #Requires: %{name} = %{version}-%{release}
 
 %description core
 The core clucene module
 
+%description core -l zh_CN.UTF-8
+%{name} 的核心模块。
+
 %package core-devel
 Summary:	Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-core = %{version}-%{release}
 
 %description core-devel
 This package contains the static libraries and header files needed for
 developing with clucene
+
+%description core-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -n %{name}-core-%{version}

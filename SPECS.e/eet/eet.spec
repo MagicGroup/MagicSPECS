@@ -1,8 +1,10 @@
 Name:           eet
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 Summary:        Library for speedy data storage, retrieval, and compression
+Summary(zh_CN.UTF-8): 快速数据存储、检索和压缩库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+ and BSD
 URL:            http://web.enlightenment.org/p.php?p=about/efl/eet
 Source0:        http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
@@ -23,15 +25,23 @@ other machines, or just writing to arbitary files on the system. All
 data is encoded in a platform independent way and can be written and
 read by any architecture.
 
+%description -l zh_CN.UTF-8
+快速数据存储、检索和压缩库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release} 
 Requires:       pkgconfig
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -79,6 +89,9 @@ find %{buildroot} -name '*.la' -delete
 %{_datadir}/eet/
 
 %changelog
+* Fri Mar 28 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.7.9-1
 - Update to 1.7.9
 

@@ -8,17 +8,20 @@
 %define libexif_version 0.6.14
 
 Summary: Eye of GNOME image viewer
+Summary(zh_CN.UTF-8): GNOME 的图像查看器
 Name:    eog
-Version: 3.11.90
+Version:	3.11.92
 Release: 2%{?dist}
 URL: http://projects.gnome.org/eog/
 #VCS: git:git://git.gnome.org/eog
-Source: http://download.gnome.org/sources/eog/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/eog/%{majorver}/%{name}-%{version}.tar.xz
 
 # The GFDL has an "or later version" clause embedded inside the license.
 # There is no need to add the + here.
 License: GPLv2+ and GFDL
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gtk3-devel >= %{gtk3_version}
 BuildRequires: libexif-devel >= %{libexif_version}
@@ -53,9 +56,14 @@ well as large image collections.
 
 eog is extensible through a plugin system.
 
+%description -l zh_CN.UTF-8
+GNOME 桌面环境下的图像查看器，支持多种格式，也可以利用插件扩展。
+
 %package devel
 Summary: Support for developing plugins for the eog image viewer
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: gtk3-devel
 
@@ -63,6 +71,9 @@ Requires: gtk3-devel
 The Eye of GNOME image viewer (eog) is the official image viewer for the
 GNOME desktop. This package allows you to develop plugins that add new
 functionality to eog.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -73,7 +84,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
 rm -rf $RPM_BUILD_ROOT%{_libdir}/eog/plugins/*.la
@@ -115,6 +126,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/gtk-doc/
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.11.92-2
+- 更新到 3.11.92
+
 * Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-2
 - Rebuilt for gnome-desktop soname bump
 

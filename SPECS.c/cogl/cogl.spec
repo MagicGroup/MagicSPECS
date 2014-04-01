@@ -6,8 +6,10 @@ Name:          cogl
 Version:       1.17.4
 Release:       2%{?dist}
 Summary:       A library for using 3D graphics hardware to draw pretty pictures
+Summary(zh_CN.UTF-8): 使用 3D 图形硬件绘制漂亮图形的库
 
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2+
 URL:           http://www.clutter-project.org/
 Source0:       http://download.gnome.org/sources/cogl/1.17/cogl-%{version}.tar.xz
@@ -52,9 +54,14 @@ once and there is no risk of inconsistency between implementations.
 Having other backends, besides OpenGL, such as drm, Gallium or D3D are
 options we are interested in for the future.
 
+%description -l zh_CN.UTF-8
+使用 3D 图形硬件绘制漂亮图形的库
+
 %package devel
 Summary:       %{name} development environment
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:      %{name} = %{version}-%{release}
 Requires:      pkgconfig glib2-devel pango-devel cairo-devel
 Requires:      mesa-libGL-devel
@@ -63,14 +70,22 @@ Requires:      gobject-introspection-devel
 %description devel
 Header files and libraries for building and developing apps with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package       doc
 Summary:       Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:         Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:      %{name} = %{version}-%{release}
 BuildArch:     noarch
 
 %description   doc
 This package contains documentation for %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q

@@ -1,5 +1,5 @@
 %global use_alternatives 1
-%global lspp 1
+%global lspp 0
 
 # {_exec_prefix}/lib/cups is correct, even on x86_64.
 # It is not used for shared objects but for executables.

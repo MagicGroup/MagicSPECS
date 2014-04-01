@@ -47,7 +47,6 @@ rm -rf ${RPM_BUILD_DIR}/all-%{version}
 
 %files
 %defattr (-,root,root)
-%dir %{_libdir}/win32
 %{_libdir}/win32
 %{_libdir}/codecs/*
 

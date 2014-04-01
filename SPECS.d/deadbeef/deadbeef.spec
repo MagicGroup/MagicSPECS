@@ -1,12 +1,12 @@
 Name: deadbeef
-Version: 0.5.6
-Release: 2%{?dist}
+Version: 0.6.1
+Release: 1%{?dist}
 
 Summary: mp3/ogg/flac/sid/mod/nsf music player based on GTK2
-Summary(zh_CN): 基于 GTK2 的音乐播放器
+Summary(zh_CN.UTF-8): 基于 GTK2 的音乐播放器
 License: GPLv2+
 Group: Applications/Multimedia
-Group(zh_CN): 应用程序/多媒体
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Url: http://deadbeef.sourceforge.net/
 
 Source0: http://downloads.sourceforge.net/project/deadbeef/%name-%version.tar.bz2
@@ -16,13 +16,12 @@ BuildRequires: gcc-c++ alsa-lib-devel libcurl-devel flac-devel gtk2-devel libmad
 %description
 mp3/ogg/flac/sid/mod/nsf music player based on GTK2.
 
-%description -l zh_CN
+%description -l zh_CN.UTF-8
 基于 GTK2 的音乐播放器.
 
 %prep
 %setup -q
 #临时性的
-sed -i 's/CODEC_TYPE/AVMEDIA_TYPE/g' plugins/ffmpeg/ffmpeg.c
 
 %build
 %configure \
@@ -48,6 +47,9 @@ rm %{buildroot}%{_libdir}/deadbeef/*.la
 %_datadir/locale/*
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 0.6.1-1
+- 更新到 0.6.1
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.5.6-2
 - 为 Magic 3.0 重建
 

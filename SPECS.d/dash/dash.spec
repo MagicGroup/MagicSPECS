@@ -2,7 +2,9 @@ Name:           dash
 Version:        0.5.7
 Release:        3%{?dist}
 Summary:        Small and fast POSIX-compliant shell
+Summary(zh_CN.UTF-8): 小而快速的 POSIX 兼容 shell
 Group:          System Environment/Shells
+Group(zh_CN.UTF-8): 系统环境/外壳
 License:        BSD
 URL:            http://gondor.apana.org.au/~herbert/dash/
 Source0:        http://gondor.apana.org.au/~herbert/dash/files/dash-%{version}.tar.gz
@@ -11,6 +13,9 @@ Source0:        http://gondor.apana.org.au/~herbert/dash/files/dash-%{version}.t
 DASH is a POSIX-compliant implementation of /bin/sh that aims to be as small as
 possible. It does this without sacrificing speed where possible. In fact, it is
 significantly faster than bash (the GNU Bourne-Again SHell) for most tasks.
+
+%description -l zh_CN.UTF-8
+小而快速的 POSIX 兼容 shell，大部分时候比 bash 快。
 
 %prep
 %setup -q

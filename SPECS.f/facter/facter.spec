@@ -22,8 +22,10 @@ Name:           facter
 Version:        1.7.4
 Release:        1%{?dist}
 Summary:        Command and ruby library for gathering system information
+Summary(zh_CN.UTF-8): 收集系统信息的命令和 ruby 库
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        ASL 2.0
 URL:            https://puppetlabs.com/%{name}
 Source0:        https://downloads.puppetlabs.com/%{name}/%{name}-%{version}.tar.gz
@@ -69,6 +71,9 @@ custom or site specific. It is easy to extend by including your own custom
 facts. Facter can also be used to create conditional expressions in Puppet that
 key off the values returned by facts.
 
+%description -l zh_CN.UTF-8
+收集硬件和系统基本信息的轻量级程序。
+
 %prep
 %setup -q
 %patch0 -p1 -b .dmidecode-drop-stderr
@@ -89,6 +94,7 @@ mkdir -p %{buildroot}/%{_sysconfdir}/%{name}/facts.d
 # Install man page, rubygem-rdoc is not available on older EL releases)
 install -D -pv -m 644 man/man8/%{name}.8 %{buildroot}/%{_mandir}/man8/%{name}.8
 %endif
+magic_rpm_clean.sh
 
 %postun
 # Work around issues where puppet fails to run after a facter update

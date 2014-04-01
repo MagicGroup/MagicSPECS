@@ -2,17 +2,16 @@
 %global pkgname desktop-file-utils
 
 Summary: Utilities for manipulating .desktop files
+Summary(zh_CN.UTF-8): 处理 .desktop 文件的工具
 Name: desktop-file-utils
-Version: 0.19
-Release: 8%{?dist}
+Version:	0.22
+Release: 1%{?dist}
 URL: http://www.freedesktop.org/software/desktop-file-utils
 Source0: http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.xz
 Source1: desktop-entry-mode-init.el
 License: GPLv2+
 Group: Development/Tools
-
-# https://bugs.freedesktop.org/show_bug.cgi?id=44098
-Patch0: localelist-fixup.patch
+Group(zh_CN.UTF-8): 开发/工具
 
 BuildRequires: glib2-devel
 
@@ -24,9 +23,14 @@ http://www.freedesktop.org/standards/, and desktop-file-install
 which installs a desktop file to the standard directory, optionally
 fixing it up in the process.
 
+%description -l zh_CN.UTF-8
+处理 .desktop 文件的工具。.desktop 文件是 GNOME 或 KDE 用的菜单。
+
 %package -n     emacs-%{pkg}
 Summary:        Compiled elisp files to run %{pkgname} under GNU Emacs
+Summary(zh_CN.UTF-8): 在 GNU Emacs 下运行 %{pkgname} 的 elisp 文件 
 Group:          Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch:      noarch
 BuildRequires:  emacs
 Requires:       emacs(bin) >= %{_emacs_version}
@@ -34,9 +38,14 @@ Requires:       emacs(bin) >= %{_emacs_version}
 %description -n emacs-%{pkg}
 %{pkgname} is an add-on package for GNU Emacs.
 
+%description -n emacs-%{pkg} -l zh_CN.UTF-8
+在 GNU Emacs 下运行 %{pkgname} 的 elisp 文件。
+
 %package -n     emacs-%{pkg}-el
 Summary:        Elisp source files for %{pkgname} under GNU Emacs
+Summary(zh_CN.UTF-8):  在 GNU Emacs 下运行 %{pkgname} 的 elisp 文件源码
 Group:          Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch:      noarch
 Requires:       emacs-%{pkg} = %{version}-%{release}
 
@@ -45,10 +54,11 @@ This package contains the elisp source files for %{pkgname} under
 GNU Emacs. You do not need to install this package to run %{pkgname}.
 Install the %{name} package to use %{pkgname} with GNU Emacs.
 
+%description -n emacs-%{pkg}-el -l zh_CN.UTF-8
+在 GNU Emacs 下运行 %{pkgname} 的 elisp 文件源码。
 
 %prep
 %setup -q
-%patch0 -p1 -b .localelist
 
 %build
 %configure
@@ -61,6 +71,7 @@ mkdir -p $RPM_BUILD_ROOT%{_emacs_sitelispdir}/%{pkg}
 mv $RPM_BUILD_ROOT%{_emacs_sitelispdir}/*.el* $RPM_BUILD_ROOT%{_emacs_sitelispdir}/%{pkg}
 install -Dpm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_emacs_sitestartdir}/desktop-entry-mode-init.el
 touch $RPM_BUILD_ROOT%{_emacs_sitestartdir}/desktop-entry-mode-init.elc
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING README NEWS
@@ -80,6 +91,9 @@ touch $RPM_BUILD_ROOT%{_emacs_sitestartdir}/desktop-entry-mode-init.elc
 %{_emacs_sitelispdir}/%{pkg}/*.el
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 0.22-1
+- 更新到 0.22
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.19-8
 - 为 Magic 3.0 重建
 

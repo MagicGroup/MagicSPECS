@@ -1,9 +1,11 @@
 Summary:	Data Type Library
+Summary(zh_CN.UTF-8): 数据类型库
 Name:		libeina
-Version:	1.7.9
+Version:	1.7.10
 Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.enlightenment.org/
 Source:		http://download.enlightenment.org/releases/eina-%{version}.tar.bz2
 BuildRequires:	check-devel
@@ -14,14 +16,22 @@ BuildRequires:  pkgconfig
 Eina is a multi-platform library that provides optimized data types 
 and useful tools for projects.
 
+%description -l zh_CN.UTF-8
+数据类型库。
+
 %package	devel
 Summary:	Eina headers, documentation and test programs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	pkgconfig
 
 %description	devel
 Headers, test programs and documentation for %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n eina-%{version}
@@ -62,6 +72,7 @@ find %{buildroot}/ -type f  -iname '*.a' -exec rm {} \;
 ## needs --enable-tests with %%configure
 ##%%check
 ##make check
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -79,6 +90,9 @@ find %{buildroot}/ -type f  -iname '*.a' -exec rm {} \;
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Wed Mar 26 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.7.9-1
 - Update to 1.7.9
 

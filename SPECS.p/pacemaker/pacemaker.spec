@@ -27,7 +27,7 @@
 %bcond_with profiling
 
 # We generate docs using Publican, Asciidoc and Inkscape, but they're not available everywhere
-%bcond_without doc
+%bcond_with doc
 
 # Use a different versioning scheme
 %bcond_with pre_release
@@ -94,7 +94,7 @@ BuildRequires: libqb-devel > 0.11.0
 Requires:      libqb > 0.11.0
 
 # Enables optional functionality
-BuildRequires: ncurses-devel openssl-devel libselinux-devel docbook-style-xsl
+BuildRequires: ncurses-devel openssl-devel docbook-style-xsl
 BuildRequires: bison byacc flex help2man dbus-devel
 
 %if %{defined _unitdir}

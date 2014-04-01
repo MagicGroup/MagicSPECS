@@ -2,8 +2,10 @@ Name:           cups-pk-helper
 Version:        0.2.5
 Release:        2%{?dist}
 Summary:        A helper that makes system-config-printer use PolicyKit
+Summary(zh_CN.UTF-8): 让 system-config-printer 使用 PolicyKit 的一个辅助程序
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/cups-pk-helper/
 Source0:        http://www.freedesktop.org/software/cups-pk-helper/releases/cups-pk-helper-%{version}.tar.xz
@@ -33,6 +35,9 @@ Requires:       glib2 >= 2.29.8
 %description
 cups-pk-helper is an application which makes cups configuration
 interfaces available under control of PolicyKit.
+
+%description -l zh_CN.UTF-8
+让 system-config-printer 使用 PolicyKit 的一个辅助程序。
 
 %prep
 %setup -q

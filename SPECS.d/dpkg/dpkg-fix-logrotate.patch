@@ -1,6 +1,6 @@
-diff -up ./debian/dpkg.logrotate.orig ./debian/dpkg.logrotate
---- ./debian/dpkg.logrotate.orig	2013-06-30 10:04:23.369382622 +0300
-+++ ./debian/dpkg.logrotate	2013-06-30 10:04:39.268407865 +0300
+diff -ur dpkg-1.17.6.orig/debian/dpkg.logrotate dpkg-1.17.6/debian/dpkg.logrotate
+--- dpkg-1.17.6.orig/debian/dpkg.logrotate	2014-03-24 15:34:13.011287452 +0000
++++ dpkg-1.17.6/debian/dpkg.logrotate	2014-03-24 15:36:00.589284695 +0000
 @@ -7,12 +7,3 @@
  	notifempty
  	create 644 root root
@@ -14,3 +14,4 @@ diff -up ./debian/dpkg.logrotate.orig ./debian/dpkg.logrotate
 -	notifempty
 -	create 644 root root
 -}
+ 

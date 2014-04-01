@@ -2,13 +2,13 @@ Name: libgcrypt
 Version: 1.6.1
 Release: 1%{?dist}
 URL: http://www.gnupg.org/
-Source0: libgcrypt-%{version}-hobbled.tar.xz
+#Source0: libgcrypt-%{version}-hobbled.tar.xz
 # The original libgcrypt sources now contain potentially patented ECC
 # cipher support. We have to remove it in the tarball we ship with
 # the hobble-libgcrypt script. 
 # (We replace it with RH approved ECC in Source4-5)
-#Source0: ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-%{version}.tar.bz2
-#Source1: ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-%{version}.tar.bz2.sig
+Source0: ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-%{version}.tar.bz2
+Source1: ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-%{version}.tar.bz2.sig
 Source2: wk@g10code.com
 Source3: hobble-libgcrypt
 # Approved ECC support (from 1.6.1)
@@ -143,7 +143,7 @@ popd
 
 %endif
 
-# temporary compat library for buildroots
+# temporary compat library for buildroots, 临时性的，下次编译的时候要去掉，会使打出的包需要--nomd5参数安装
 install %{gcrylibdir}/libgcrypt.so.11.*.* $RPM_BUILD_ROOT/%{_libdir}
 
 # Create /etc/gcrypt (hardwired, not dependent on the configure invocation) so

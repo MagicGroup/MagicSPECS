@@ -4,14 +4,21 @@
 # Set to bcond_with or use --without gui to disable qt4 gui build
 %bcond_without gui
 # Set to RC version if building RC, else %{nil}
-%define rcver %{nil}
+%define rcver -rc1
+
+%define rpm_macros_dir %{_sysconfdir}/rpm
+%if 0%{?fedora} > 18
+%define rpm_macros_dir %{_rpmconfigdir}/macros.d
+%endif
 
 Name:           cmake
-Version:        2.8.9
-Release:        2%{?dist}
+Version:        3.0.0
+Release:        0.1.rc1%{?dist}
 Summary:        Cross-platform make system
+Summary(zh_CN.UTF-8): 跨平台的 make 系统
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 # most sources are BSD
 # Source/CursesDialog/form/ a bunch is MIT 
 # Source/kwsys/MD5.c is zlib 
@@ -19,15 +26,41 @@ Group:          Development/Tools
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
 Source0:        http://www.cmake.org/files/v2.8/cmake-%{version}%{?rcver}.tar.gz
+Source1:        cmake-init.el
 Source2:        macros.cmake
+
 # Patch to find DCMTK in Fedora (bug #720140)
 Patch0:         cmake-dcmtk.patch
-# (modified) Upstream patch to fix setting PKG_CONFIG_FOUND (bug #812188)
-Patch1:         cmake-pkgconfig.patch
 # Patch to fix RindRuby vendor settings
 # http://public.kitware.com/Bug/view.php?id=12965
 # https://bugzilla.redhat.com/show_bug.cgi?id=822796
+# Patch to use ninja-build instead of ninja (renamed in Fedora)
+# https://bugzilla.redhat.com/show_bug.cgi?id=886184
+Patch1:         cmake-ninja.patch
 Patch2:         cmake-findruby.patch
+# Patch to fix FindPostgreSQL
+# https://bugzilla.redhat.com/show_bug.cgi?id=828467
+# http://public.kitware.com/Bug/view.php?id=13378
+Patch3:         cmake-FindPostgreSQL.patch
+# Fix issue with finding consistent python versions
+# http://public.kitware.com/Bug/view.php?id=13794
+# https://bugzilla.redhat.com/show_bug.cgi?id=876118
+Patch4:         cmake-FindPythonLibs.patch
+# Add FindLua52.cmake
+Patch5:         cmake-2.8.11-rc4-lua-5.2.patch
+# Add -fno-strict-aliasing when compiling cm_sha2.c
+# http://www.cmake.org/Bug/view.php?id=14314
+Patch6:         cmake-strict_aliasing.patch
+# Patch away .png extension in icon name in desktop file.
+# http://www.cmake.org/Bug/view.php?id=14315
+Patch7:         cmake-desktop_icon.patch
+# Remove automatic Qt module dep adding
+# http://public.kitware.com/Bug/view.php?id=14750
+Patch8:         cmake-qtdeps.patch
+# Additiona python fixes from upstream
+Patch9:         cmake-FindPythonLibs2.patch
+
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  gcc-gfortran
@@ -62,22 +95,61 @@ environment of your choice. CMake is quite sophisticated: it is possible
 to support complex environments requiring system configuration, preprocessor
 generation, code generation, and template instantiation.
 
+%description -l zh_CN.UTF-8
+CMake是一个跨平台的安装(编译)工具,可以用简单的语句来描述所有平台的安装(编译过程)。
+他能够输出各种各样的makefile或者project文件,能测试编译器所支持的C++特性,类似UNIX
+下的automake。只是 CMake 的组态档取名为 CmakeLists.txt。
+
 
 %package        gui
 Summary:        Qt GUI for %{name}
+Summary(zh_CN.UTF-8): 用 Qt 写的 %{name} 图形界面
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:       %{name} = %{version}-%{release}
 
 %description    gui
 The %{name}-gui package contains the Qt based GUI for CMake.
 
+%description gui -l zh_CN.UTF-8
+用 Qt 写的 %{name} 图形界面。
+
+%package        doc
+Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
+Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
+Requires:       %{name} = %{version}-%{release}
+
+%description    doc
+This package contains documentation for CMake.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{name}-%{version}%{?rcver}
-%patch0 -p1 -b .dcmtk
-#%patch1 -p1 -b .pkgconfig
-%patch2 -p1 -b .findruby
 
+# We cannot use backups with patches to Modules as they end up being installed
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+# Setup copyright docs for main package
+mkdir _doc
+find Source Utilities -type f -iname copy\* | while read f
+do
+  fname=$(basename $f)
+  dir=$(dirname $f)
+  dname=$(basename $dir)
+  cp -p $f _doc/${fname}_${dname}
+done
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS"
@@ -85,7 +157,7 @@ export CXXFLAGS="$RPM_OPT_FLAGS"
 mkdir build
 pushd build
 ../bootstrap --prefix=%{_prefix} --datadir=/share/%{name} \
-             --docdir=/share/doc/%{name}-%{version} --mandir=/share/man \
+             --docdir=/share/doc/%{name} --mandir=/share/man \
              --%{?with_bootstrap:no-}system-libs \
              --parallel=`/usr/bin/getconf _NPROCESSORS_ONLN` \
              %{?qt_gui}
@@ -97,14 +169,22 @@ pushd build
 make install DESTDIR=%{buildroot}
 find %{buildroot}/%{_datadir}/%{name}/Modules -type f | xargs chmod -x
 popd
-cp -a Example %{buildroot}%{_docdir}/%{name}-%{version}/
+# Install bash completion symlinks
+mkdir -p %{buildroot}%{_datadir}/bash-completion/completions
+for f in %{buildroot}%{_datadir}/%{name}/completions/*
+do
+  ln -s ../../%{name}/completions/$(basename $f) %{buildroot}%{_datadir}/bash-completion/completions/
+done
+# Install emacs cmake mode
 mkdir -p %{buildroot}%{_emacs_sitelispdir}/%{name}
-install -m 0644 Docs/cmake-mode.el %{buildroot}%{_emacs_sitelispdir}/%{name}
+install -p -m 0644 Auxiliary/cmake-mode.el %{buildroot}%{_emacs_sitelispdir}/%{name}/
 %{_emacs_bytecompile} %{buildroot}%{_emacs_sitelispdir}/%{name}/cmake-mode.el
+mkdir -p %{buildroot}%{_emacs_sitestartdir}
+install -p -m 0644 %SOURCE1 %{buildroot}%{_emacs_sitestartdir}/
 # RPM macros
-install -p -m0644 -D %{SOURCE2} %{buildroot}%{_sysconfdir}/rpm/macros.cmake
-sed -i -e "s|@@CMAKE_VERSION@@|%{version}|" %{buildroot}%{_sysconfdir}/rpm/macros.cmake
-touch -r %{SOURCE2} %{buildroot}%{_sysconfdir}/rpm/macros.cmake
+install -p -m0644 -D %{SOURCE2} %{buildroot}%{rpm_macros_dir}/macros.cmake
+sed -i -e "s|@@CMAKE_VERSION@@|%{version}|" %{buildroot}%{rpm_macros_dir}/macros.cmake
+touch -r %{SOURCE2} %{buildroot}%{rpm_macros_dir}/macros.cmake
 mkdir -p %{buildroot}%{_libdir}/%{name}
 
 %if %{with gui}
@@ -136,44 +216,38 @@ update-desktop-database &> /dev/null || :
 update-mime-database %{_datadir}/mime &> /dev/null || :
 %endif
 
-
 %files
-%config(noreplace) %{_sysconfdir}/rpm/macros.cmake
-%{_docdir}/%{name}-%{version}/
+%doc Copyright.txt _doc/*
+%{rpm_macros_dir}/macros.cmake
 %if %{with gui}
-%exclude %{_docdir}/%{name}-%{version}/cmake-gui.*
+%exclude %{_docdir}/%{name}/cmake-gui.*
 %endif
 %{_bindir}/ccmake
 %{_bindir}/cmake
 %{_bindir}/cpack
 %{_bindir}/ctest
 %{_datadir}/aclocal/cmake.m4
+%{_datadir}/bash-completion/
 %{_datadir}/%{name}/
-%{_mandir}/man1/ccmake.1.gz
-%{_mandir}/man1/cmake.1.gz
-%{_mandir}/man1/cmakecommands.1.gz
-%{_mandir}/man1/cmakecompat.1.gz
-%{_mandir}/man1/cmakemodules.1.gz
-%{_mandir}/man1/cmakepolicies.1.gz
-%{_mandir}/man1/cmakeprops.1.gz
-%{_mandir}/man1/cmakevars.1.gz
-%{_mandir}/man1/cpack.1.gz
-%{_mandir}/man1/ctest.1.gz
 %{_emacs_sitelispdir}/%{name}
+%{_emacs_sitestartdir}/%{name}-init.el
 %{_libdir}/%{name}/
+
+%files doc
+%{_docdir}/cmake/*
 
 %if %{with gui}
 %files gui
-%{_docdir}/%{name}-%{version}/cmake-gui.*
 %{_bindir}/cmake-gui
 %{_datadir}/applications/CMake.desktop
 %{_datadir}/mime/packages/cmakecache.xml
 %{_datadir}/pixmaps/CMakeSetup32.png
-%{_mandir}/man1/cmake-gui.1.gz
 %endif
 
-
 %changelog
+* Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 2.8.12.2-2
+- 更新到 2.8.12.2
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 2.8.9-2
 - 为 Magic 3.0 重建
 

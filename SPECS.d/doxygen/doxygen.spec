@@ -1,4 +1,5 @@
 Summary: A documentation system for C/C++
+Summary(zh_CN.UTF-8): C/C++ 的文档系统
 Name:    doxygen
 Epoch:   1
 Version: 1.8.6
@@ -36,28 +37,38 @@ documentation is extracted directly from the sources. Doxygen can
 also be configured to extract the code structure from undocumented
 source files.
 
+%description -l zh_CN.UTF-8
+Doxygen 可以从带有注释的源文件中生成在线类浏览器（使用 HTML）和/或
+参考手册（使用 LaTeX）。文档是直接从源码中抽取的。也可以从无注释的
+源码中生成代码结构。
+
 %package doxywizard
 Summary: A GUI for creating and editing configuration files
+Summary(zh_CN.UTF-8): 建立和编辑配置文件的界面
 Requires: %{name} = %{epoch}:%{version}-%{release}
 BuildRequires: qt4-devel
 %description doxywizard
 Doxywizard is a GUI for creating and editing configuration files that
 are used by doxygen.
 
+%description doxywizard -l zh_CN.UTF-8
+建立和编辑 doxygen 配置文件的图形界面。
+
 %package latex
 Summary: Support for producing latex/pdf output from doxygen
+Summary(zh_CN.UTF-8): 从 doxygen 生成 latex/pdf 文件的支持
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: tex(latex)
-%if 0%{?fedora} > 17 || 0%{?rhel} > 6
 Requires: tex(multirow.sty)
 Requires: tex(sectsty.sty)
 Requires: tex(tocloft.sty)
 Requires: tex(xtab.sty)
 Requires: texlive-epstopdf-bin
-%endif
 %description latex
 %{summary}.
 
+%description latex -l zh_CN.UTF-8
+从 doxygen 生成 latex/pdf 文件的支持。
 
 %prep
 %setup -q

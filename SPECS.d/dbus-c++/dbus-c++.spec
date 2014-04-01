@@ -2,8 +2,9 @@ Name:           dbus-c++
 Version:        0.9.0
 Release:        2%{?dist}
 Summary:        Native C++ bindings for D-Bus
-
+Summary(zh_CN.UTF-8): D-Bus 的原生 C++ 绑定
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://sourceforge.net/projects/dbus-cplusplus/
 Source0:        http://downloads.sourceforge.net/dbus-cplusplus/lib%{name}-%{version}.tar.gz
@@ -22,15 +23,22 @@ BuildRequires: ecore-devel
 dbus-c++ attempts to provide a C++ API for D-Bus.
 The library has a glib/gtk and an Ecore mainloop integration.
 
+%description -l zh_CN.UTF-8
+D-Bus 的原生 C++ 绑定。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 %description    devel
 This package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n lib%{name}-%{version}

@@ -119,6 +119,8 @@ chmod 644 %{buildroot}%{_libdir}/dyninst/*.a
 # it package-wide.  The permissions are restored by attr(755,-,-) in files.
 chmod 644 %{buildroot}%{_libdir}/dyninst/testsuite/*
 
+magic_rpm_clean.sh
+
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 

@@ -1,8 +1,9 @@
 Name:           enlightenment
-Version:        0.17.5
+Version:	0.17.6
 Release:        2%{?dist}
 License:        BSD
 Summary:        Enlightenment window manager
+Summary(zh_CN.UTF-8): Enlightenment 窗口管理器
 Url:            http://enlightenment.org
 Source:         http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
 
@@ -39,19 +40,30 @@ things you need to operate your desktop (or laptop), but is not a whole '
 application suite. This covered launching applications, managing their windows 
 and doing other system tasks like suspending, reboots, managing files etc. 
 
+%description -l zh_CN.UTF-8
+Enlightenment 窗口管理器。
+
 %package        data
 Summary:        Enlightenment data files
+Summary(zh_CN.UTF-8): %{name} 的数据文件
 Requires:       %{name} = %{version}-%{release}
 BuildArch:      noarch
 
 %description data
 Contains data files for Enlightenment
 
+%description data -l zh_CN.UTF-8
+%{name} 的数据文件。
+
 %package        devel
 Summary:        Enlightenment headers, documentation and test programs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 
 %description devel
 Headers,  test programs and documentation for enlightenment
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -65,6 +77,7 @@ make install DESTDIR=%{buildroot}
 
 find %{buildroot} -name '*.la' -delete
 
+magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 
@@ -90,6 +103,9 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 %{_includedir}/enlightenment
 
 %changelog
+* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 0.17.6-2
+- 更新到 0.17.6
+
 * Tue Nov 12 2013 Dan Mashal <dan.mashal@fedoraproject.org> 0.17.5-2
 - Add emotion-devel to BRs
 

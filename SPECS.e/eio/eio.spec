@@ -1,9 +1,11 @@
 Name:           eio
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 Summary:        Extension of ecore for parallel io operations
+Summary(zh_CN.UTF-8): 并行操作的 ecore 扩展
 License:        LGPLv2+ and GPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Url:            http://enlightenment.org/
 Source:         http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
 BuildRequires:  doxygen 
@@ -18,13 +20,20 @@ Obsoletes: libeio < 4.18-3
 %description
 Enlightenment Input Output Library
 
+%description -l zh_CN.UTF-8
+Enlightement 输入输出库。
+
 %package devel
 Summary:  Development files for eio
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License:  LGPLv2+
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files, examples, man and HTML documentation for eio package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -41,7 +50,7 @@ make %{?_smp_mflags} V=1
 
 %install
 %make_install
-
+magic_rpm_clean.sh
 find %{buildroot} -name '*.la' -delete
 
 %post -p /sbin/ldconfig
@@ -59,6 +68,9 @@ find %{buildroot} -name '*.la' -delete
 %{_libdir}/libeio.so
 
 %changelog
+* Sat Mar 29 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.7.9-1
 - Update to 1.7.9
 

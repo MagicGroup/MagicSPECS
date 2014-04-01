@@ -7,11 +7,13 @@
 }
 
 Name:           debhelper
-Version:        9.20131227
+Version:	9.20140228
 Release:        1%{?dist}
 Summary:        Helper programs for Debian rules
+Summary(zh_CN.UTF-8): Debian 打包用的辅助程序
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv2+
 URL:            http://kitenet.net/~joey/code/debhelper/
 Source0:        http://ftp.de.debian.org/debian/pool/main/d/%{name}/%{name}_%{version}.tar.gz
@@ -40,6 +42,9 @@ compress files, fix file permissions, integrate your package with
 the Debian menu system, debconf, doc-base, etc. Most Debian
 packages use debhelper as part of their build process.
 
+%description -l zh_CN.UTF-8
+Debian 自动打包用的 rule 文件相关的一些程序集合。
+
 %prep
 %setup -q -n %{name}
 %patch0 -p1 -b .no-utf8-to-pod2man
@@ -57,7 +62,7 @@ make %{?_smp_mflags} build
 # Add man-pages to a .lang file:
 # We cannot use "find_lang --with-man" because it only handle
 # single man-page -- we have many
-
+magic_rpm_clean.sh
 rm -f debhelper-mans.lang
 for lang in de es fr; do
     for level in 1 7; do
@@ -86,6 +91,9 @@ make test
 %{perl_vendorlib}/Debian/Debhelper
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 9.20140228-1
+- 更新到 9.20140228
+
 * Mon Feb 10 2014 Sérgio Basto <sergio@serjux.com> - 9.20131227-1
 - Update to 9.20131227, most of the work by Sandro Mani <manisandro@gmail.com>
 - Drop debhelper-find-perm.patch, fixed upstream.

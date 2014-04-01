@@ -1,12 +1,15 @@
 Summary: A utility for creating TTY dialog boxes
+SUmmary(zh_Cn.UTF-8): 在控制台界面下显示对话框的工具
 Name: dialog
-%define dialogsubversion 20110707
-Version: 1.1
-Release: 16.%{dialogsubversion}%{?dist}
+Version: 1.2.20140219
+Release: 1%{?dist}
 License: LGPLv2
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://invisible-island.net/dialog/dialog.html
-Source: ftp://invisible-island.net/dialog/dialog-%{version}-%{dialogsubversion}.tgz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+%define dialogsubversion %(echo %{version} | awk -F. '{print $3}')
+Source: ftp://invisible-island.net/dialog/dialog-%{majorver}-%{dialogsubversion}.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: ncurses-devel gettext findutils libtool
 Patch1: dialog-incdir.patch
@@ -22,9 +25,14 @@ gauge.
 
 Install dialog if you would like to create TTY dialog boxes.
 
+%description -l zh_CN.UTF-8
+在控制台界面下显示对话框的工具。主要用在脚本文件编写中。
+
 %package devel 
 Summary: Development files for building applications with the dialog library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release} ncurses-devel
 
 %description devel
@@ -33,11 +41,14 @@ questions or messages) in TTY (text mode) interfaces. This package
 contains the files needed for developing applications, which use the 
 dialog library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
-%setup -q -n dialog-%{version}-%{dialogsubversion}
+%setup -q -n dialog-%{majorver}-%{dialogsubversion}
 %patch1 -p1 -b .incdir
 %patch2 -p1 -b .multilib
-%patch3 -p1 -b .libs
+#%patch3 -p1 -b .libs
 
 %build
 %configure \
@@ -86,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/dialog.*
 
 %changelog
+* Thu Mar 20 2014 Liu Di <liudidi@gmail.com> - 1.2.20140219-1
+- 更新到 1.2.20140219
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.1-16.20110707
 - 为 Magic 3.0 重建
 

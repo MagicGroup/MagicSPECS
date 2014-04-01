@@ -7,11 +7,13 @@
 %endif
 
 Summary: Image Blending with Multiresolution Splines
+Summary(zh_CN.UTF-8): 图像的多分辨率样条融合
 Name: enblend
-Version: 4.1.2
+Version: 4.1.3
 Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Source0: http://downloads.sourceforge.net/enblend/enblend-enfuse-%{version}.tar.gz
 URL: http://enblend.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -42,12 +44,20 @@ multiple images of the same subject into a single image with good exposure and
 good focus.  Enblend and Enfuse do not line up the images for you, use a tool
 like Hugin to do that.
 
+%description -l zh_CN.UTF-8
+图像的多分辨率样条融合。
+
 %package doc
 Summary: Usage Documentation for enblend and enfuse
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 PDF usage documentation for the enblend and enfuse command line tools
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n enblend-enfuse-%{version} %{!?doc:-a 1}
@@ -72,6 +82,8 @@ rm -f %{buildroot}%{_infodir}/dir
 install -m644 -p -D doc/enblend.info %{buildroot}%{_infodir}/enblend.info
 install -m644 -p -D doc/enfuse.info %{buildroot}%{_infodir}/enfuse.info
 %endif
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -102,6 +114,18 @@ fi
 %doc COPYING doc/enblend.pdf doc/enfuse.pdf
 
 %changelog
+* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 4.1.3-4
+- 更新到
+
+* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 4.1.3-4
+- 更新到
+
+* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 4.1.3-4
+- 更新到
+
+* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 4.1.3-4
+- 更新到 4.1.3
+
 * Mon Dec 30 2013 Rex Dieter <rdieter@fedoraproject.org> 4.1.2-4
 - rebuild (vigra)
 

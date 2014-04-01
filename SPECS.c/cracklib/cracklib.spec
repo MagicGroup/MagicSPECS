@@ -3,18 +3,20 @@
 %define dictpath %{dictdir}/pw_dict
 
 Summary: A password-checking library
+Summary(zh_CN.UTF-8): 一个密码检查库
 Name: cracklib
 Version: 2.9.1
 Release: 2%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://prdownloads.sourceforge.net/cracklib/cracklib-%{version}.tar.gz
 
 # Retrieved at 20091201191719Z.
 Source1: http://iweb.dl.sourceforge.net/project/cracklib/cracklib-words/2008-05-07/cracklib-words-20080507.gz
 
 # For man pages.
-Source2: http://ftp.us.debian.org/debian/pool/main/c/cracklib2/cracklib2_2.8.19-1.debian.tar.gz
-Source40: http://ftp.us.debian.org/debian/pool/main/c/cracklib2/cracklib2_2.8.19-1.dsc
+Source2: http://ftp.us.debian.org/debian/pool/main/c/cracklib2/cracklib2_2.8.19-3.debian.tar.gz
+Source40: http://ftp.us.debian.org/debian/pool/main/c/cracklib2/cracklib2_2.8.19-3.dsc
 
 # From attachment to https://bugzilla.redhat.com/show_bug.cgi?id=627449
 Source3: cracklib.default.zh_CN.po

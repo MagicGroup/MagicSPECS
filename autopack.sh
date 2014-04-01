@@ -387,7 +387,7 @@ fi
 GIT=$(cat $SPECNAME | grep "^%define git 1" |wc -l)
 CVS=$(cat $SPECNAME | grep "^%define cvs 1" |wc -l)
 SVN=$(cat $SPECNAME | grep "^%define svn 1" |wc -l)
-HG=$(cat $SPECNAME | grep "^%define hg 1" |wc -l)
+HG=$(cat $SPECNAME | grep "^%define hgm 1" |wc -l)
 if [ $GIT = "1" ] ; then
 	echo "$1.spec 中使用了 git 仓库中的源码，使用脚本下载"
 	downvcssources $1 git || exit 1

@@ -74,6 +74,7 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/gupnp-av-1.0.pc
 %{_libdir}/libgupnp-av-1.0.so
 %{_datadir}/gir-1.0/GUPnPAV-1.0.gir
+%{_datadir}/vala/vapi/gupnp-av-1.0.*
 
 %files docs
 %{_datadir}/gtk-doc/html/%{name}

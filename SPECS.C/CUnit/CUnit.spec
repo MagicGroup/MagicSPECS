@@ -2,8 +2,10 @@ Name:           CUnit
 Version:        2.1.3
 Release:        8%{?dist}
 Summary:        Unit testing framework for C
+Summary(zh_CN.UTF-8): C 语言的单元测试框架
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://cunit.sourceforge.net/
 # TODO: 404 Not Found
@@ -16,14 +18,22 @@ CUnit is a lightweight system for writing, administering,
 and running unit tests in C.  It provides C programmers a basic
 testing functionality with a flexible variety of user interfaces.
 
+%description -l zh_CN.UTF-8
+这是一个轻量级的系统，可以使用 C 语言编写、管理和运行单元测试。
+
 %package devel
 Summary:        Header files and libraries for CUnit development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel 
 The %{name}-devel package contains the header files
 and libraries for use with CUnit package.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-2.1-3

@@ -10,14 +10,16 @@
 %endif
 
 Name:           dnsmasq
-Version:        2.59
+Version:	2.68
 Release:        6%{?extraversion}%{?dist}
 Summary:        A lightweight DHCP/caching DNS server
+Summary(zh_CN.UTF-8): 一个轻量级的 DHCP/DNS缓存 服务
 
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        GPLv2
 URL:            http://www.thekelleys.org.uk/dnsmasq/
-Source0:        http://www.thekelleys.org.uk/dnsmasq/%{?extrapath}%{name}-%{version}%{?extraversion}.tar.lzma
+Source0:        http://www.thekelleys.org.uk/dnsmasq/%{?extrapath}%{name}-%{version}%{?extraversion}.tar.xz
 Source1:        %{name}.service
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -40,14 +42,21 @@ either in each host or in a central configuration file. Dnsmasq supports
 static and dynamic DHCP leases and BOOTP for network booting of diskless
 machines.
 
+%description -l zh_CN.UTF-8
+一个轻量级的 DHCP 和 DNS 服务程序。
+
 %package        utils
 Summary:        Utilities for manipulating DHCP server leases
+Summary(zh_CN.UTF-8): 处理 DHCP 服务的工具
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 
 %description    utils
 Utilities that use the standard DHCP protocol to
 query/remove a DHCP server's leases.
 
+%description utils -l zh_CN.UTF-8
+处理 DHCP 服务的工具。
 
 %prep
 %setup -q -n %{name}-%{version}%{?extraversion}
@@ -141,6 +150,9 @@ fi
 %{_mandir}/man1/dhcp_*
 
 %changelog
+* Fri Mar 21 2014 Liu Di <liudidi@gmail.com> - 2.68-6
+- 更新到 2.68
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 2.59-6
 - 为 Magic 3.0 重建
 

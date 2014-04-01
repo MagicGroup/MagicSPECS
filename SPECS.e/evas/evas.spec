@@ -1,8 +1,10 @@
 Name:           evas
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 Summary:        Hardware-accelerated state-aware canvas API
+Summary(zh_CN.UTF-8): 支持硬件加速和状态感知的画布 API
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://web.enlightenment.org/p.php?p=about/efl&l=en
 Source0:        http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
@@ -20,9 +22,14 @@ Evas is a clean display canvas API for several target display systems
 that can draw anti-aliased text, smooth super and sub-sampled scaled
 images, alpha-blend objects and much more.
 
+%description -l zh_CN.UTF-8
+支持硬件加速和状态感知的画布 API。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release} 
 Requires:       pkgconfig 
 Requires:       libX11-devel
@@ -30,6 +37,9 @@ Requires:       libX11-devel
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -63,6 +73,7 @@ install -Dpm0644 doc/man/man3/* %{buildroot}%{_mandir}/man3
 mv %{buildroot}%{_mandir}/man3/authors.3 %{buildroot}%{_mandir}/man3/%{name}-authors.3
 mv %{buildroot}%{_mandir}/man3/deprecated.3 %{buildroot}%{_mandir}/man3/%{name}-deprecated.3
 mv %{buildroot}%{_mandir}/man3/Examples.3 %{buildroot}%{_mandir}/man3/%{name}-Examples.3
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -87,6 +98,9 @@ mv %{buildroot}%{_mandir}/man3/Examples.3 %{buildroot}%{_mandir}/man3/%{name}-Ex
 
 
 %changelog
+* Fri Mar 28 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.7.9-1
 - Update to 1.7.9
 

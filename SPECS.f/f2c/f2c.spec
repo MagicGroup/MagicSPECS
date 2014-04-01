@@ -1,9 +1,11 @@
 Name:           f2c
 Summary:        A Fortran 77 to C/C++ conversion program
+Summary(zh_CN.UTF-8): Fortran 77 到 C/C++ 的转换程序
 Version:        20110801
 Release:        4%{?dist}
 License:        MIT
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL:            http://netlib.org/f2c/
 Source:         ftp://netlib.org/f2c.tar
 # Patch makefile to build a shared library
@@ -18,12 +20,21 @@ F2c converts Fortran 77 source code to C or C++ source files. If no
 Fortran files are named on the command line, f2c can read Fortran from
 standard input and write C to standard output.
 
+%description -l zh_CN.UTF-8
+转换 Fortran 77 源码到 C 或 C++ 源文件。如果没有在命令行指定 Fortran 文件，
+f2c 可以从标准输入中读取 Fortran 代码转换成 C 代码并输出到标准输出。
+
 %package libs
 Summary:    Dynamic libraries from %{name}
+Summary(zh_CN.UTF-8): %{name} 的动态库
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description libs
 Dynamic libraries from %{name}.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q -n %{name}
@@ -47,6 +58,8 @@ install -D -p -m 644 src/f2c.1t %{buildroot}%{_mandir}/man1/f2c.1
 install -D -p -m 755 libf2c/libf2c.so.0.23 %{buildroot}%{_libdir}/libf2c.so.0.23
 ln -s libf2c.so.0.23 %{buildroot}%{_libdir}/libf2c.so.0
 ln -s libf2c.so.0.23 %{buildroot}%{_libdir}/libf2c.so
+
+magic_rpm_clean.sh
 
 %post libs -p /sbin/ldconfig
 

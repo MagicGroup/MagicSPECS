@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://download.gnome.org/sources/control-center/"
+url="https://download.gnome.org/sources/gnome-control-center/"
 new1="a href="
 new2="\\/<\\/a"
 downcommand="wget -q" 

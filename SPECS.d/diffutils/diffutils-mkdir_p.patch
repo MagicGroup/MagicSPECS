@@ -1,0 +1,12 @@
+diff -up diffutils-3.3/po/Makefile.in.in.mkdir_p diffutils-3.3/po/Makefile.in.in
+--- diffutils-3.3/po/Makefile.in.in.mkdir_p	2013-03-26 11:25:58.869375066 +0000
++++ diffutils-3.3/po/Makefile.in.in	2013-03-26 11:26:00.114379442 +0000
+@@ -42,7 +42,7 @@ INSTALL_DATA = @INSTALL_DATA@
+ mkinstalldirs = $(SHELL) @install_sh@ -d
+ install_sh = $(SHELL) @install_sh@
+ MKDIR_P = @MKDIR_P@
+-mkdir_p = @mkdir_p@
++mkdir_p = @MKDIR_P@
+ 
+ GMSGFMT_ = @GMSGFMT@
+ GMSGFMT_no = @GMSGFMT@

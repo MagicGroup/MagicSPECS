@@ -1,9 +1,11 @@
 Summary: An Enchanting Spell Checking Library
+Summary(zh_CN.UTF-8): 一个更好的拼写检查库
 Name: enchant
 Version: 1.6.0
 Release: 5%{?dist}
 Epoch: 1
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
 Source: http://www.abisource.com/downloads/enchant/%{version}/enchant-%{version}.tar.gz
 URL: http://www.abisource.com/
@@ -17,31 +19,48 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 %description
 A library that wraps other spell checking backends.
 
+%description -l zh_CN.UTF-8
+可以绑定到其它拼写检查后端的库。
+
 %package aspell
 Summary: Integration with aspell for libenchant
+Summary(zh_CN.UTF-8): aspell 的 libenchant 集成
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: enchant = %{epoch}:%{version}-%{release}
 
 %description aspell
 Libraries necessary to integrate applications using libenchant with aspell.
 
+%description aspell -l zh_CN.UTF-8
+aspell 的 libenchant 集成。
+
 %package voikko
 Summary: Integration with voikko for libenchant
+Summary(zh_CN.UTF-8): libenchant 的 voikko 集成
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: enchant = %{epoch}:%{version}-%{release}
 
 %description voikko
 Libraries necessary to integrate applications using libenchant with voikko.
 
+%description voikko -l zh_CN.UTF-8
+libenchant 的 voikko 集成。
 
 %package devel
 Summary: Support files necessary to compile applications with libenchant.
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: enchant = %{epoch}:%{version}-%{release}
 Requires: glib2-devel
 
 %description devel
 Libraries, headers, and support files necessary to compile applications using libenchant.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -55,6 +74,7 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/enchant/*.la
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root)

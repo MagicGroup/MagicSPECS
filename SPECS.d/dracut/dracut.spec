@@ -46,6 +46,7 @@ Patch13: 0013-Do-not-reload-systemd-with-wait_for_dev.patch
 Patch14: 0014-systemd-add-sys-kernel-config.mount.patch
 Patch15: 0015-Factor-out-all-the-type-V-commands.patch
 
+Patch62: 0062-fbsplash-no-newroot-msg.patch
 
 BuildRequires: bash git
 
@@ -254,7 +255,7 @@ rm -fr -- $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/00bootchart
 rm -fr -- $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/00dash
 
 # remove gentoo specific modules
-rm -fr -- $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/50gensplash
+# rm -fr -- $RPM_BUILD_ROOT/%{dracutlibdir}/modules.d/50gensplash
 
 %if %{defined _unitdir}
 # with systemd IMA and selinux modules do not make sense
@@ -365,6 +366,7 @@ rm -rf -- $RPM_BUILD_ROOT
 %{dracutlibdir}/modules.d/45url-lib
 %{dracutlibdir}/modules.d/50drm
 %{dracutlibdir}/modules.d/50plymouth
+%{dracutlibdir}/modules.d/50gensplash
 %{dracutlibdir}/modules.d/80cms
 %{dracutlibdir}/modules.d/90btrfs
 %{dracutlibdir}/modules.d/90crypt

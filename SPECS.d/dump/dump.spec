@@ -4,12 +4,14 @@
 %define WITH_SELINUX 0
 
 Summary: Programs for backing up and restoring ext2/ext3 filesystems
+Summary(zh_CN.UTF-8): 备份和恢复 ext2/ext3 文件系统的程序
 Name: dump
 Epoch: 1
 Version: 0.4
 Release: 0.13.%{PREVER}%{?dist}
 License: BSD
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL: http://dump.sourceforge.net/
 Source: http://downloads.sourceforge.net/dump/dump-%{VERSION}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -40,14 +42,22 @@ directory subtrees may also be restored from full or partial backups.
 Install dump if you need a system for both backing up filesystems and
 restoring filesystems after backups.
 
+%description -l zh_CN.UTF-8
+备份和恢复 ext2/ext3 文件系统的程序。
+
 %package -n rmt
 Summary: Provides certain programs with access to remote tape devices
+Summary(zh_CN.UTF-8): 提供了访问远程磁带设备的程序
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 
 %description -n rmt
 The rmt utility provides remote access to tape devices for programs
 like dump (a filesystem backup program), restore (a program for
 restoring files from a backup), and tar (an archiving program).
+
+%description -n rmt -l zh_CN.UTF-8
+提供了访问远程磁带设备的程序。
 
 %prep
 %setup -q -n dump-%{VERSION}

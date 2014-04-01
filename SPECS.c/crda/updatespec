@@ -4,5 +4,9 @@ if [ -z "$1" ] ; then
         exit 1
 fi
 pushd $(dirname $0)
-sed -i "s/Version:.*/Version:\t$1/g" ccal.spec
+crdaver=$(echo $1|cut -d"_" -f1)
+regdbver=$(echo $1|cut -d"_" -f2)
+#sed -i "s/Version:.*/Version:\t$1/g" crda.spec
+sed -i "s/%define         crda_version.*/%define         crda_version    $crdaver/g" crda.spec
+sed -i "s/%define         regdb_version.*/%define         regdb_version   $regdbver/g" crda.spec
 popd

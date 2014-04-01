@@ -1,9 +1,11 @@
 Summary: A library for editing typed command lines
+Summary(zh_CN.UTF-8): readline 库的 5.x 版本
 Name: compat-readline5
 Version: 5.2
 Release: 21%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTf-8): 系统环境/库
 URL: http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
 Source: ftp://ftp.gnu.org/gnu/readline/readline-%{version}.tar.gz
 Patch1: ftp://ftp.gnu.org/gnu/readline/readline-5.2-patches/readline52-001
@@ -34,9 +36,14 @@ of previously-entered command lines for recalling or editing those
 lines, and for performing csh-like history expansion on previous
 commands.
 
+%description -l zh_CN.UTF-8
+readline 库的 5.x 版本。
+
 %package devel
 Summary: Files needed to develop programs which use the readline library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: ncurses-devel
 
@@ -46,14 +53,22 @@ edit typed command lines. If you want to develop programs that will
 use the readline library, you need to have the readline-devel package
 installed. You also need to have the readline package installed.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static libraries for the readline library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 The readline-static package contains the static version of the readline
 library.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q -n readline-%{version}

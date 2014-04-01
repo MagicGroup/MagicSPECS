@@ -1,14 +1,16 @@
 Summary: A GNU collection of diff utilities
+Summary(zh_CN.UTF-8): 一组 GNU 比较工具
 Name: diffutils
-Version: 3.2
+Version:	3.3
 Release: 11%{?dist}
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 URL: http://www.gnu.org/software/diffutils/diffutils.html
 Source: ftp://ftp.gnu.org/gnu/diffutils/diffutils-%{version}.tar.xz
 Patch1: diffutils-cmp-s-empty.patch
-Patch2: diffutils-ppc-float.patch
-Patch3: diffutils-stdio-gets.patch
-Patch4: diffutils-3.2-i18n.patch
+Patch2: diffutils-mkdir_p.patch
+Patch4: diffutils-i18n.patch
+Patch5: diffutils-format-security.patch
 License: GPLv3+
 Requires(post): info
 Requires(preun): info
@@ -29,18 +31,25 @@ to merge two files interactively.
 
 Install diffutils if you need to compare text files.
 
+%description -l zh_CN.UTF-8
+这是一组用来比较文本文件的工具，包括：diff, cmp, diff3 和 sdiff。
+
 %prep
 %setup -q
 # For 'cmp -s', compare file sizes only if both non-zero (bug #563618).
 %patch1 -p1 -b .cmp-s-empty
 
-# Applied upstream gnulib fix for float test on ppc (bug #733536).
-%patch2 -p1 -b .ppc-float
-
-# Fixed build failure.
-%patch3 -p1 -b .stdio-gets
+# Work around @mkdir_p@ build issue.
+%patch2 -p1 -b .mkdir_p
 
 %patch4 -p1 -b .i18n
+
+# Applied upstream gnulib patch to avoid -Wformat-security warning
+# (bug #1037038).
+%patch5 -p1 -b .format-security
+
+# Run autoreconf for aarch64 support (bug #925256).
+autoreconf
 
 %build
 %configure
@@ -51,6 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %check
@@ -75,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/diffutils.info*gz
 
 %changelog
+* Thu Mar 20 2014 Liu Di <liudidi@gmail.com> - 3.3-11
+- 更新到 3.3
+
 * Fri Oct 26 2012 Tim Waugh <twaugh@redhat.com> 3.2-11
 - Ported i18n patch and reinstated it (bug #870460).
 

@@ -2,7 +2,9 @@ Name:		epstool
 Version:	3.08
 Release:	3%{?dist}
 Summary:	A utility to create or extract preview images in EPS files
+Summary(zh_CN.UTF-8): 创建和解压 EPS 文件中预览图像的工具
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:	GPLv2+
 URL:		http://pages.cs.wisc.edu/~ghost/gsview/epstool.htm
 Source0:	http://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/%{name}-%{version}.tar.gz
@@ -24,6 +26,9 @@ Features:
 * works on little-endian machines (Intel) or big endian (Sun Sparc,
   Motorola) machines.
 
+%description -l zh_CN.UTF-8
+创建和解压 EPS 文件中预览图像的工具。
+
 %prep
 %setup -q
 %patch0 -p1
@@ -36,6 +41,7 @@ make
 rm -rf %{buildroot}
 install -D -p -m 755 bin/epstool %{buildroot}%{_bindir}/epstool
 install -D -p -m 644 doc/epstool.1 %{buildroot}%{_mandir}/man1/epstool.1
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

@@ -1,18 +1,25 @@
 # There's not been a release in a long time for dvb-apps
 # We use a Release based on the ChangeSet number and hash
-%define hgr 1457
-%define hgver bec11f78be51
+%define hgm 1
+%define vcsdate 20140324
 
 Name:    dvb-apps
 Version: 1.1.2
-Release: 0.%{hgr}.%{hgver}%{?dist}.2
+Release: 0.hg%{vcsdate}%{?dist}.2
 Summary: Utility, demo and test applications using the Linux DVB API
+Summary(zh_CN.UTF-8): 使用 Linux DVB API 的工具、示例和测试程序
 
 Group:   Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License: GPLv2+
 URL:     http://www.linuxtv.org/wiki/index.php/LinuxTV_dvb-apps
 
+%if 0%{hgm}
+Source0: %{name}-hg%{vcsdate}.tar.xz
+%else
 Source0: http://linuxtv.org/hg/dvb-apps/archive/%{hgver}.tar.bz2
+%endif
+Source1: make_dvb-apps_hg_package.sh
 Patch0:  dvb-apps-Make.patch
 Patch1:  dvb-apps-Docs.patch
 
@@ -27,8 +34,11 @@ Specifically, the utilities are geared towards the initial setup, testing, and
 operation of a DVB device, whether it be of the software decoding or hardware 
 decoding type.
 
+%description -l zh_CN.UTF-8
+使用 Linux DVB API 的工具、示例和测试程序。
+
 %prep
-%setup -q -n %{name}-%{hgver}
+%setup -q -n %{name}-hg%{vcsdate}
 
 # Various fixes to fix various upstream build issues
 %patch0 -p1 -b .make
@@ -80,6 +90,12 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 %exclude %{_includedir}/*
 
 %changelog
+* Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 1.1.2-0.hg20140324.2
+- 更新到 20140324 日期的仓库源码
+
+* Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 1.1.2-0.hg20140324.1
+- 更新到 20140324 日期的仓库源码
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.1.2-0.1457.bec11f78be51.2
 - 为 Magic 3.0 重建
 

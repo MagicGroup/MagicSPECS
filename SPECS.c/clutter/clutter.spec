@@ -5,11 +5,13 @@
 %endif
 
 Name:          clutter
-Version:       1.17.4
+Version:	1.17.6
 Release:       1%{?dist}
 Summary:       Open Source software library for creating rich graphical user interfaces
+Summary(zh_CN.UTF-8): 建立图形用户界面的开源软件库
 
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2+
 URL:           http://www.clutter-project.org/
 Source0:       http://download.gnome.org/sources/clutter/1.17/clutter-%{version}.tar.xz
@@ -25,6 +27,7 @@ BuildRequires: libXcomposite-devel
 BuildRequires: libXdamage-devel
 BuildRequires: libXi-devel
 BuildRequires: libevdev-devel
+BuildRequires: libinput-devel
 # Temporary for autoreconf
 BuildRequires: gettext-devel
 Requires:      gobject-introspection
@@ -55,9 +58,15 @@ visually rich graphical user interfaces. The most obvious example
 of potential usage is in media center type applications.
 We hope however it can be used for a lot more.
 
+%description -l zh_CN.UTF-8
+这是一个开源的软件库，可以建立快速的，视觉效果丰富的图形用户界面。
+一个明显可以使用的地方是媒体中心类的应用程序。
+
 %package devel
 Summary:       Clutter development environment
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:      %{name} = %{version}-%{release}
 Requires:      pkgconfig glib2-devel pango-devel fontconfig-devel
 Requires:      mesa-libGL-devel
@@ -67,9 +76,14 @@ Requires:      gobject-introspection-devel
 Header files and libraries for building a extension library for the
 clutter
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package       doc
 Summary:       Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:         Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:      %{name} = %{version}-%{release}
 
 %description   doc
@@ -80,9 +94,12 @@ We hope however it can be used for a lot more.
 
 This package contains documentation for clutter.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %prep
 %setup -q
-%patch0 -p1 -b .touch
+#%patch0 -p1 -b .touch
 
 %build
 # needed for patch1, autogen.sh is not enough due to divergent autoconf
@@ -137,6 +154,12 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/cally
 
 %changelog
+* Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.17.6-1
+- 更新到 1.17.6
+
+* Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.17.4-1
+- 更新到
+
 * Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 1.17.4-1
 - Update to 1.17.4
 

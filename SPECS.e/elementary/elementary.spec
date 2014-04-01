@@ -1,7 +1,8 @@
 Name:           elementary
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 Summary:        Basic widget set that is easy to use based on EFL
+Summary(zh_CN.UTF-8): 易于使用基于 EFL 系统的基本部件集
 License:        LGPLv2+
 URL:            http://www.enlightenment.org
 Source0:        http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
@@ -27,13 +28,21 @@ BuildRequires: libeina-devel
 Elementary is a widget set. It is a new-style of widget set much more canvas
 object based than anything else.
 
+%description -l zh_CN.UTF-8
+易于使用基于 EFL 系统的基本部件集.
+
 %package devel
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Summary:        Stuff
+Summary(zh_CN.UTF-8): %{name} 的开发包
 
 %description devel
 Devel packages
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,7 +67,7 @@ desktop-file-install                                                            
         --delete-original                                                               \
         --dir=%{buildroot}%{_datadir}/applications                                      \
 %{buildroot}%{_datadir}/applications/*.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -80,8 +89,7 @@ fi
 %{_bindir}/elementary_config
 %{_bindir}/elementary_quicklaunch
 %{_bindir}/elementary_run
-%{_libdir}/libelementary.so.1
-%{_libdir}/libelementary.so.1.7.9
+%{_libdir}/libelementary.so.1*
 %{_datadir}/applications/elementary_config.desktop
 %{_datadir}/elementary
 %{_datadir}/icons/elementary.png
@@ -94,6 +102,9 @@ fi
 %{_libdir}/pkgconfig/elementary.pc
 
 %changelog
+* Sun Mar 30 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> 1.7.9-1
 - Update to 1.7.9
 

@@ -1,10 +1,12 @@
 Name:           edje
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 License:        GPLv2+ and BSD
 Summary:        Abstract GUI layout and animation object library
+Summary(zh_CN.UTF-8): 抽象 GUI 层和动画元件库
 Url:            http://www.enlightenment.org
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source:         http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
 
 BuildRequires: doxygen
@@ -22,13 +24,21 @@ BuildRequires: intltool pkgconfig automake autoconf gettext libtool glib2-devel
 %description
 Abstract GUI layout and animation object library.
 
+%description -l zh_CN.UTF-8
+抽象 GUI 层和动画元件库。
+
 %package devel
 Summary:        Edje headers, documentation and test programs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Headers,  test programs and documentation for edje.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,6 +66,8 @@ find %{buildroot}%{_libdir} -name '*.la' -exec rm -r {} +
 #install -Dpm0644 doc/man/man3/* %{buildroot}%{_mandir}/man3
 #mv  %{buildroot}%{_mandir}/man3/authors.3 %{buildroot}%{_mandir}/man3/edje-authors.3
 
+magic_rpm_clean.sh
+
 %post
 /sbin/ldconfig
 /usr/bin/update-mime-database %{_datadir}/mime &> /dev/null || :
@@ -82,6 +94,9 @@ find %{buildroot}%{_libdir} -name '*.la' -exec rm -r {} +
 
 
 %changelog
+* Thu Mar 27 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> 1.7.9-1
 - Update to 1.7.9
 

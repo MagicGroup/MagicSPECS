@@ -1,4 +1,5 @@
 Summary:   GTK support library for colord
+Summary(zh_CN.UTF-8): colord 的 GTK 支持库
 Name:      colord-gtk
 Version:   0.1.25
 Release:   1%{?dist}
@@ -21,12 +22,19 @@ BuildRequires: gtk-doc
 colord-gtk is a support library for colord and provides additional
 functionality that requires GTK+.
 
+%description -l zh_CN.UTF-8
+colord 的 GTK 支持库，提供了需要 GTK+ 支持的额外函数。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Files for development with %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

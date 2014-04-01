@@ -33,7 +33,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files
 %defattr(-,root,root)
-/usr
+%{_datadir}/icons/FairytaleWorld/*
 
 %changelog
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0-6

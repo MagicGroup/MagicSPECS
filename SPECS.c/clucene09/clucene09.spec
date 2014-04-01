@@ -1,9 +1,11 @@
 Summary:	A C++ port of Lucene
+Summary(zh_CN.UTF-8): Lucene 的 C++ 移植
 Name:		clucene09
 Version:	0.9.21b
 Release:	5%{?dist}
 License:	LGPLv2+ or ASL 2.0
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.sourceforge.net/projects/clucene/
 Source0:	http://downloads.sourceforge.net/clucene/clucene-core-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -17,9 +19,17 @@ This package contains an old and deprecated version of clucene. You
 need it only if the software you are using has not been updated to
 work with the newer version and the newer API.
 
+%description -l zh_CN.UTF-8
+这是 Lucene 的 C++ 移植版本。它是一个高性能、全功能的文本搜索引擎。
+
+这个包是老旧过时的 clucene 版本，只在你使用一些没有升级到新 API 的
+程序时才需要。
+
 %package core
 Summary:	Core clucene module
+Summary(zh_CN.UTF-8): %{name} 的核心模块
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:	%{name} = %{version}-%{release}
 Provides:	%{name}%{?_isa} = %{version}-%{release}
 
@@ -30,9 +40,14 @@ This package contains an old and deprecated version of clucene-core.
 You need it only if the software you are using has not been updated
 to work with the newer version and the newer API.
 
+%description core -l zh_CN.UTF-8
+%{name} 的核心模块。
+
 %package core-devel
 Summary:	Development files for clucene-core
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-core%{?_isa} = %{version}-%{release}
 
 %description core-devel
@@ -42,6 +57,9 @@ necessary for developing programs which use clucene-core library.
 This package contains an old and deprecated version of clucene-core.
 You need it only if the software you are using has not been updated
 to work with the newer version and the newer API.
+
+%description core-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n clucene-core-%{version}

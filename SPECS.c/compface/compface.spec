@@ -2,8 +2,10 @@ Name:           compface
 Version:        1.5.2
 Release:        14%{?dist}
 Summary:        Library and tools for handling X-Face data
+Summary(zh_CN.UTF-8): 处理 X-Face 数据的库和工具
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://ftp.xemacs.org/pub/xemacs/aux/
 Source0:        http://ftp.xemacs.org/pub/xemacs/aux/%{name}-%{version}.tar.gz
@@ -21,15 +23,24 @@ user tools. Compface converts 48x48 .xbm format (X bitmap) images to a
 compressed format that can be placed in the X-Face: mail header. Some mail
 programs are able to display such images when opening messages.
 
+%description -l zh_CN.UTF-8
+这是一个 Compface 图像压缩和解压库及它的用户工具。
+Compface 转换 48x48 .xbm 格式图像 (X 位图) 到一个压缩格式，这种格式可以
+放在邮件头的 X-Face。有些邮件程序可以在打开信息的时候显示这些图像。
+
 %package        devel
 Summary:        Library and development files for handling X-Face data 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 These files are needed when building software that uses the Compface
 library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

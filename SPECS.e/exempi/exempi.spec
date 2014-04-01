@@ -1,9 +1,11 @@
 Summary:	Library for easy parsing of XMP metadata
+Summary(zh_CN.UTF-8): 易用的解析 XMP 元数据的库
 Name:		exempi
 Version:	2.2.0
 Release:	2%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://libopenraw.freedesktop.org/wiki/Exempi
 Source0:	http://libopenraw.freedesktop.org/download/%{name}-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -14,15 +16,23 @@ Exempi provides a library for easy parsing of XMP metadata. It is a port of
 Adobe XMP SDK to work on UNIX and to be build with GNU automake.
 It includes XMPCore and XMPFiles.
 
+%description -l zh_CN.UTF-8
+易用的解析 XMP 元数据的库。
+
 %package devel
 Summary:	Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
 %description devel
 This package contains the libraries and header files needed for
 developing with exempi
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,6 +54,7 @@ make DESTDIR=%{buildroot} install
 
 rm -rf %{buildroot}%{_libdir}/*.la
 rm -rf %{buildroot}%{_libdir}/*.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

@@ -4,6 +4,7 @@ Name:       dblatex
 Version:    0.3.4
 Release:    8%{?dist}
 Summary:    DocBook to LaTeX/ConTeXt Publishing
+Summary(zh_CN.UTF-8): DocBook 转换到 LaTeX/ConTeXt
 BuildArch:  noarch
 # Most of package is GPLv2+, except:
 # xsl/ directory is DMIT
@@ -75,6 +76,9 @@ Authors:
    Benoît Guillon <marsgui at users dot sourceforge dot net>
    Andreas Hoenen <andreas dot hoenen at arcor dot de>
 
+%description -l zh_CN.UTF-8
+这是一个转换 SGML/XML DocBook 文档到纯 LaTex 的程序，以便于
+制作 DVI, PS 或 PDF 文件。支持 MathML 2.0 标记。
 
 %prep
 %setup -q
@@ -130,148 +134,4 @@ cp -p %{SOURCE1} COPYING-docbook-xsl
 %postun -p /usr/bin/texhash
 
 %changelog
-* Thu Aug 08 2013 Michael J Gruber <mjg@fedoraproject.org> - 0.3.4-8
-- Merge in licensing changes from  Stanislav Ochotnicky <sochotnicky@redhat.com>:
--* Mon Jul 29 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.3.4-8
--- Add Public Domain license and licensing comment
--* Mon Jul 29 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0.3.4-7
--- Add DMIT, GPLv2 and LPPL licenses
--- Fix space and tab mixing
--- Cleanup old spec file parts
 
-* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.4-7
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
-
-* Wed May 29 2013 Michael J Gruber <mjg@fedoraproject.org> - 0.3.4-6
-- Add mising R texlive-multirow.
-
-* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.4-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
-
-* Wed Jan 02 2013 Benjamin De Kosnik  <bkoz@redhat.com> - 0.3.4-1
-- Update to 0.3.4.
-- Adjust for texlive rebase.
-
-* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 0.3-2
-- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
-
-* Mon Apr 12 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 0.3-1
-- Update to 0.3
-- Cleanup spec: drop some unnecessary conditionals for old releases (< F-11)
-
-* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.10-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Sun May 10 2009 Neal Becker <ndbecker2@gmail.com> - 0.2.10-2
-- remove dblatex-0.2.9-xetex.patch
-
-* Sun May 10 2009 Neal Becker <ndbecker2@gmail.com> - 0.2.10-1
-- Update to 0.2.10
-
-* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.9-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0.2.9-3
-- Rebuild for Python 2.6
-
-* Fri Jul  4 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 0.2.9-2
-- BR: texlive-xetex -> tex(xetex) for F-10 and later
-
-* Thu Jun 12 2008 Alex Lancaster <alexlan[AT]fedoraproject org> - 0.2.9-1
-- Update to latest upstream (0.2.9) (#448953)
-- Remove some redundant Requires and BuildRequires (passivetex pulls
-  in the tetex/tex requires, python dep added automatically)
-- For F-9+ BR on tex(latex) and texlive-xetex, fix the installation
-  scripts to install extra new files.
-- Add patch from dblatex mailing list for better handling of a missing
-  xetex.
-- Conditionally add .egg-info file only if F9+ to allow for unified
-  spec file
-
-* Sun Dec 16 2007 Patrice Dumas <pertusus@free.fr> - 0.2.8-2.1
-- don't install in docbook directory, it is a link to a versioned
-  directory and may break upon docbook update (#425251,#389231)
-
-* Sun Nov 25 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.8-1
-- Update to 0.2.8
-
-* Mon Nov 12 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-16
-- convert spec to utf8
-- change to gplv2+
-
-* Mon Nov 12 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-15
-- Add copyright info
-
-* Mon Nov  5 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-14
-- Req tetex-fonts for texhash
-- Fix post, postun
-
-* Sun Nov  4 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-13
-- Add texhash
-
-* Sun Nov  4 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-12
-- Fix xsl link
-
-* Sat Nov  3 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-12
-- Various fixes from pertusus@free.fr:
-- rm iconv stuff
-- simplify docs installation
-
-* Fri Nov  2 2007  <ndbecker2@gmail.com> - 0.2.7-11
-- Various minor fixes
-
-* Thu Nov  1 2007  <ndbecker2@gmail.com> - 0.2.7-10
-- Add some reqs and brs
-- rmdir /usr/share/dblatex/latex/{misc,contrib/example,style}
-
-* Sat Oct 27 2007  <ndbecker2@gmail.com> - 0.2.7-9
-- link /usr/share/dblatex/xsl -> /usr/share/sgml/docbook/xsl-stylesheets/dblatex
-- rmdir /usr/share/dblatex/latex/{misc,specs,style}
-- own /etc/dblatex
-- change $(...) -> `...`
-- Preserve timestamps on iconv
-
-* Mon Oct 15 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-9
-- mv all .sty files to datadir/texmf/tex/latex/dblatex
-- Add Conflicts tetex-tex4ht
-- mv all xsl stuff to datadir/sgml/docbook/xsl-stylesheets/dblatex/
-
-* Mon Oct 15 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-8
-- rm redundant latex files
-
-* Tue Sep 25 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-8
-- Fixed encodings in docs directory
-- Install docs at correct location
-
-* Fri Sep 21 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-7
-- Revert back to GPLv2
-- untabify
-
-* Fri Sep 21 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-6
-- Fix source URL
-- Install all docs
-- Tabify
-
-* Thu Sep 20 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-5
-- Add BR tetex-latex
-
-* Thu Sep 20 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-4
-- Add  BR tetex, ImageMagick
-
-* Thu Sep 20 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-3
-- Add BR libxslt
-
-* Wed Sep 19 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-2
-- Add BR python-devel
-
-* Fri Sep  7 2007 Neal Becker <ndbecker2@gmail.com> - 0.2.7-1
-- Initial

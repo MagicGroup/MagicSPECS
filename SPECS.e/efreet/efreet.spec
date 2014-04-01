@@ -1,8 +1,10 @@
 Summary:        Standards handling for freedesktop.org standards
+Summary(zh_CN.UTF-8): 处理 freedesktop.org 标准的库
 Name:           efreet
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD and GPLv2+
 URL:            http://enlightenment.org
 Source0:        http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
@@ -26,13 +28,21 @@ included:
   * Trash
   * Mime
 
+%description -l zh_CN.UTF-8
+处理 freedesktop.org 标准的库。
+
 %package        devel
 Summary:        Efreet headers, documentation and test programs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Libraries and header files for efreet
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -49,7 +59,7 @@ find %{buildroot} -name '*.la' -delete
 #Remove tests
 rm %{buildroot}%{_bindir}/%{name}_*
 rm -r %{buildroot}%{_datadir}/%{name}
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post -p /sbin/ldconfig
@@ -67,6 +77,9 @@ rm -r %{buildroot}%{_datadir}/%{name}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Mar 29 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.7.9-1
 - Update to 1.7.9
 

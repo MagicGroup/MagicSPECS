@@ -31,14 +31,17 @@
 ### Abstract ###
 
 Name: evolution-data-server
-Version: 3.11.90
+Version:	3.11.92
 Release: 1%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary: Backend data server for Evolution
+Summary(zh_CN.UTF-8): Evolution 的后端数据服务
 License: LGPLv2+
 URL: https://wiki.gnome.org/Apps/Evolution
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-Source: http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 Provides: evolution-webcal = %{version}
 Obsoletes: evolution-webcal < 2.24.0
@@ -97,9 +100,16 @@ with contacts, tasks, and calendar information.
 It was originally developed for Evolution (hence the name), but is now used
 by other packages.
 
+%description -l zh_CN.UTF-8
+这个包提供了处理联系人、任务和日程信息等程序的一个统一后端框架。
+
+它本来是为 Evolution 开的，但现在也被其它程序使用。
+
 %package devel
 Summary: Development files for building against %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: gnome-online-accounts-devel
 Requires: libgdata-devel
@@ -112,15 +122,23 @@ Requires: sqlite-devel
 %description devel
 Development files needed for building things which link against %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %if %{with_docs}
 
 %package doc
 Summary: Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description doc
 This package contains developer documentation for %{name}.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 # %{with_docs}
 %endif
@@ -236,7 +254,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/evolution-data-server/registry-modules/*.a
 
 # give the libraries some executable bits 
 find $RPM_BUILD_ROOT -name '*.so.*' -exec chmod +x {} \;
-
+magic_rpm_clean.sh
 %find_lang %{name}-%{eds_base_version}
 
 %clean
@@ -375,6 +393,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %endif
 
 %changelog
+* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 3.11.92-1
+- 更新到 3.11.92
+
 * Mon Feb 17 2014 Milan Crha <mcrha@redhat.com> - 3.11.90-1
 - Update to 3.11.90
 

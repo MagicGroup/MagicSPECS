@@ -14,6 +14,7 @@ Group: System Environment/Libraries
 # Source0 originally comes from ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/;
 # make-no-dlcompatorsrp-tarball.sh removes the "dlcompat" subdirectory and builds a
 # new tarball.
+#Source0: ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/cyrus-sasl-%{version}.tar.gz
 Source0: cyrus-sasl-%{version}-nodlcompatorsrp.tar.gz
 Source5: saslauthd.service
 Source7: sasl-mechlist.c

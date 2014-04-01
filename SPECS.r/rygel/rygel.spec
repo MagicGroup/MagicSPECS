@@ -1,5 +1,5 @@
 Name:          rygel
-Version:       0.21.4
+Version:       0.21.5
 Release:       1%{?dist}
 Summary:       A collection of UPnP/DLNA services
 

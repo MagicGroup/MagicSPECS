@@ -13,11 +13,13 @@ BuildRequires: bash-completion
 %endif
 
 Summary: Creates a common metadata repository
+Summary(zh_CN.UTF-8): 建立 YUM 仓库的程序
 Name: createrepo
 Version: 0.10.3
 Release: 1%{?dist}
 License: GPLv2
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source: http://createrepo.baseurl.org/download/%{name}-%{version}.tar.gz
 Patch1: ten-changelog-limit.patch
 Patch2: createrepo-HEAD.patch
@@ -31,6 +33,9 @@ BuildRequires: python
 %description
 This utility will generate a common metadata repository from a directory of rpm
 packages.
+
+%description -l zh_CN.UTF-8
+从含有 rpm 文件的目录中建立 YUM 仓库的工具。
 
 %prep
 %setup -q

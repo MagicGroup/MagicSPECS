@@ -2,8 +2,10 @@ Name:           espeak
 Version:        1.45.05
 Release:        4%{?dist}
 Summary:        Software speech synthesizer (text-to-speech)
+Summary(zh_CN.UTF-8): 软件语音合成器（文本转语音）
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv3+
 URL:            http://espeak.sourceforge.net
 Source0:        http://kent.dl.sourceforge.net/sourceforge/espeak/espeak-%{version}-source.zip
@@ -27,16 +29,21 @@ work to improve them.
 
 It can run as a command line program to speak text from a file or from stdin.
 
+%description -l zh_CN.UTF-8
+软件语音合成器（文本转语音）,支持英语等语言。
 
 %package devel
 Summary: Development files for espeak
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
-
 
 %description devel
 Development files for eSpeak, a software speech synthesizer.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n espeak-%{version}-source
@@ -76,6 +83,7 @@ make install DESTDIR=$RPM_BUILD_ROOT BINDIR=%{_bindir} INCDIR=%{_includedir}/esp
 # Install manpage
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
 cp -pf %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

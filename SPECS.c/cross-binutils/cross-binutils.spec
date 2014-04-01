@@ -44,6 +44,7 @@
 %define build_unicore32		0
 
 Summary: A GNU collection of cross-compilation binary utilities
+Summary(zh_CN.UTF-8): 交叉编译用的二进制工具集合
 Name: %{cross}-binutils
 # Note - this version number is a lie.  It should actually be 2.23.2 since
 # that is the version of the base sources.  But we have decided to switch
@@ -60,6 +61,7 @@ Version: 2.23.88.0.1
 Release: 2%{?dist}
 License: GPLv3+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://sources.redhat.com/binutils
 
 # Note - see comment about the definition of Version above.  Once Version is
@@ -131,32 +133,48 @@ of an object or archive file), strings (for listing printable strings
 from files), strip (for discarding symbols), and addr2line (for
 converting addresses to file and line).
 
+%description -l zh_CN.UTF-8
+交叉编译用的二进制文件处理工具集合。
+
 %package -n %{cross}-binutils-common
 Summary: Cross-build binary utility documentation and translation files
+Summary(zh_CN.UTF-8): %{name} 的各平台共用文件
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 BuildArch: noarch
 %description -n %{cross}-binutils-common
 Documentation, manual pages and translation files for cross-build binary image
 generation, manipulation and query tools.
 
+%description -n %{cross}-binutils-common -l zh_CN.UTF-8
+%{name} 的各平台共用文件，包括文档和语言文件。
+
 %define do_package() \
 %if %2 \
 %package -n %{rpmprefix}binutils-%1 \
 Summary: Cross-build binary utilities for %1 \
+Summary(zh_CN.UTF-8): %1 用的交叉编译用二进制工具 \
 Group: Development/Tools \
+Group(zh_CN.UTF-8): 开发/工具 \
 Requires: %{cross}-binutils-common == %{version}-%{release} \
 %description -n %{rpmprefix}binutils-%1 \
 Cross-build binary image generation, manipulation and query tools. \
+%description -n %{rpmprefix}binutils-%1 -l zh_CN.UTF-8 \
+交叉编译时处理二进制程序的工具。\
 %endif
 
 %define do_symlink() \
 %if %2 \
 %package -n %{rpmprefix}binutils-%1 \
 Summary: Cross-build binary utilities for %1 \
+Summary(zh_CN.UTF-8): %1 用的交叉编译用二进制工具 \
 Group: Development/Tools \
+Group(zh_CN.UTF-8): 开发/工具 \
 Requires: binutils-%3 == %{version}-%{release} \
 %description -n %{rpmprefix}binutils-%1 \
 Cross-build binary image generation, manipulation and query tools. \
+%description -n %{rpmprefix}binutils-%1 -l zh_CN.UTF-8 \
+交叉编译时处理二进制程序的工具。\
 %endif
 
 %do_package alpha-linux-gnu	%{build_alpha}

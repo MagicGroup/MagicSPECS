@@ -2,8 +2,10 @@ Name:           connect-proxy
 Version:        1.100
 Release:        7%{?dist}
 Summary:        SSH Proxy command helper
+Summary(zh_CN.UTF-8): SSH 代理辅助命令
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv2+
 URL:            http://www.taiyo.co.jp/~gotoh/ssh/connect.html
 Source0:        connect-%{version}.c
@@ -28,6 +30,9 @@ Features of connect-proxy are:
     * You can input password from tty, ssh-askpass or environment variable.
     * Simple and general program independent from OpenSSH.
     * You can also relay local socket stream instead of standard I/O.
+
+%description -l zh_CN.UTF-8
+SSH 代理辅助命令。可以支持 SOCKS4/5 和 https 代理。
 
 %prep
 #setup -q -T -c -n %{name}-%{version}

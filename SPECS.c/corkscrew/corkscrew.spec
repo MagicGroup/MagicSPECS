@@ -1,9 +1,11 @@
 Summary:	Tool for tunneling SSH through HTTP proxies
+Summary(zh_CN.UTF-8): 通过 HTTP 代理使用 SSH 隧道的工具
 Name:		corkscrew
 Version:	2.0
 Release:	13%{?dist}
 License:	GPLv2
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL:		http://www.agroman.net/corkscrew/
 Source0:	http://www.agroman.net/corkscrew/%{name}-%{version}.tar.gz
 Source1:	%{name}.1
@@ -21,6 +23,9 @@ It has been tested with the following HTTP proxies :
  * CacheFlow
  * JunkBuster
  * Apache mod_proxy
+
+%description -l zh_CN.UTF-8
+通过 HTTP 代理使用 SSH 隧道的工具。
 
 %prep
 %setup -q

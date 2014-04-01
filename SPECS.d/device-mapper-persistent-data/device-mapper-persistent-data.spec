@@ -2,13 +2,15 @@
 # Copyright (C) 2011-2012 Red Hat, Inc
 #
 Summary: Device-mapper thin provisioning tools
+Summary(zh_CN.UTF-8):  设备映射器自动精简配置工具
 Name: device-mapper-persistent-data
-Version: 0.1.4
+Version: 0.2.8
 Release: 3%{?dist}
 License: GPLv3+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: https://github.com/jthornber/thin-provisioning-tools
-Source0: https://github.com/downloads/jthornber/thin-provisioning-tools/thin-provisioning-tools-v%{version}.tar.bz2
+Source0: https://github.com/jthornber/thin-provisioning-tools/archive/v%{version}.tar.gz
 BuildRequires: expat-devel, libstdc++-devel, boost-devel
 Requires: expat
 
@@ -16,28 +18,42 @@ Requires: expat
 thin-provisioning-tools contains dump,restore and repair tools to
 manage device-mapper thin provisioning target metadata devices.
 
+%description -l zh_CN.UTF-8
+设备映射器自动精简配置工具。
+
 %prep
-%setup -q -n thin-provisioning-tools-v%{version}
+%setup -q -n thin-provisioning-tools-%{version}
 
 %build
+autoreconf
 %configure --enable-debug --enable-testing
 make %{?_smp_mflags}
 
 %install
 make DESTDIR=%{buildroot} MANDIR=%{_mandir} install
+magic_rpm_clean.sh
 
 %clean
 
 %files
-%doc COPYING README
+%doc COPYING 
 %{_mandir}/man8/thin_dump.8.gz
 %{_mandir}/man8/thin_check.8.gz
 %{_mandir}/man8/thin_restore.8.gz
 %{_sbindir}/thin_dump
 %{_sbindir}/thin_check
 %{_sbindir}/thin_restore
+%{_sbindir}/thin_metadata_size
+%{_sbindir}/thin_repair
+%{_sbindir}/thin_rmap
+%{_datadir}/man/man8/thin_metadata_size.8.gz
+%{_datadir}/man/man8/thin_repair.8.gz
+%{_datadir}/man/man8/thin_rmap.8.gz
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 0.2.8-3
+- 更新到 0.2.8
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

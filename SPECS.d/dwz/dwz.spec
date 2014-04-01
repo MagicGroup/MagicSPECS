@@ -1,9 +1,11 @@
 Summary: DWARF optimization and duplicate removal tool
+Summary(zh_CN.UTF-8): DWARF 优化和重复移除工具
 Name: dwz
-Version: 0.8
+Version: 0.11
 Release: 1%{?dist}
 License: GPLv2+ and GPLv3+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 # git archive --format=tar --remote=git://sourceware.org/git/dwz.git \
 #   --prefix=%{name}-%{version}/ %{name}-%{version} \
 #   | bzip2 -9 > %{name}-%{version}.tar.bz2
@@ -20,6 +22,9 @@ duplication using techniques from DWARF standard appendix E - creating
 DW_TAG_partial_unit compilation units (CUs) for duplicated information
 and using DW_TAG_imported_unit to import it into each CU that needs it.
 
+%description -l zh_CN.UTF-8
+这个包包含了一个优化 ELF 共享库和 ELF 可执行程序中的 DWARF 调试信息的工具。
+
 %prep
 %setup -q
 
@@ -31,6 +36,7 @@ make %{?_smp_mflags} CFLAGS='%{optflags}' prefix=%{_prefix} \
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} prefix=%{_prefix} mandir=%{_mandir} bindir=%{_bindir} \
   install
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

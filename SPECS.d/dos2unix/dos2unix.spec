@@ -1,8 +1,10 @@
 Summary: Text file format converters
+Summary(zh_CN.UTF-8): 文本文件格式转换工具
 Name: dos2unix
-Version: 5.3.2
+Version: 6.0.4
 Release: 2%{?dist}
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 License: BSD
 URL: http://waterlan.home.xs4all.nl/dos2unix.html
 Source: http://waterlan.home.xs4all.nl/dos2unix/%{name}-%{version}.tar.gz
@@ -14,6 +16,9 @@ Obsoletes: unix2dos < 5.1-1
 %description
 Convert text files with DOS or Mac line endings to Unix line endings and 
 vice versa.
+
+%description -l zh_CN.UTF-8
+转换文本文件的换行符，支持在 DOS 格式的换行符和 Unix 格式的换行符之间的互相转换。
 
 %prep
 %setup -q
@@ -31,7 +36,7 @@ rm -rf $RPM_BUILD_ROOT%{_docdir}
 
 %files -f %{name}.lang
 %defattr(-,root,root,0755)
-%doc dos2unix.htm  ChangeLog.txt COPYING.txt
+%doc ChangeLog.txt COPYING.txt
 %doc NEWS.txt README.txt TODO.txt
 %{_bindir}/dos2unix
 %{_bindir}/mac2unix
@@ -43,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT%{_docdir}
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 6.0.4-2
+- 更新到 6.0.4
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 5.3.2-2
 - 为 Magic 3.0 重建
 

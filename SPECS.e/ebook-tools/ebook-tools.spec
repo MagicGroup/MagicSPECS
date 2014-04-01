@@ -2,8 +2,10 @@ Name:		ebook-tools
 Version:	0.2.2
 Release:	1%{?dist}
 Summary:	Tools for accessing and converting various ebook file formats
+Summary(zh_CN.UTF-8): 访问和转换多种电子书格式的工具
 
 Group:		Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 License:	MIT
 URL:		http://sourceforge.net/projects/ebook-tools/
 
@@ -24,9 +26,14 @@ Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 %description
 Tools for accessing and converting various ebook file formats.
 
+%description -l zh_CN.UTF-8
+访问和转换多种电子书格式的工具。
+
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -34,13 +41,21 @@ Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package libs
 Summary:	Libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 The %{name}-libs package contains libraries to be used by 
 %{name} and others.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
@@ -61,6 +76,7 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 #remove because it doesnt work without clit
 rm -f %{buildroot}%{_bindir}/lit2epub
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

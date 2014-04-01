@@ -15,8 +15,10 @@ Name:           %{fontname}-fonts
 Version:        0.2.20080216.1
 Release:        52%{?dist}
 Summary:        Chinese Unicode TrueType font in Ming face
+Summary(zh_CN.UTF-8): 明体字体
 
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        Arphic
 URL:            http://www.freedesktop.org/wiki/Software/CJKUnifonts
 Source0:        http://ftp.debian.org/debian/pool/main/t/ttf-arphic-uming/ttf-arphic-uming_%{version}.orig.tar.gz
@@ -33,6 +35,9 @@ Provides:       cjkuni-fonts-common = 0.2.20080216.1-42
 %common_desc
 
 CJK Unifonts in Ming face.
+
+%description -l zh_CN.UTF-8
+明体字体。
 
 %prep
 %setup -q -c -n %{name}-%{version}

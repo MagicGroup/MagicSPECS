@@ -83,7 +83,6 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/%{name}/
 %{_datadir}/gir-1.0/GUPnPIgd-1.0.gir
 
-
 %changelog
 * Fri Feb  7 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.2.3-1
 - Update to 0.2.3

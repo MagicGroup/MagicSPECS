@@ -1,9 +1,11 @@
 Summary: Dynamic Kernel Module Support Framework
+Summary(zh_CN.UTF-8): 动态内核模块支持框架
 Name: dkms
 Version: 2.2.0.3
 Release: 4%{dist}
 License: GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 BuildArch: noarch
 Requires: sed gawk findutils kmod tar cpio gzip grep coreutils
 Requires: bash > 1.99
@@ -24,9 +26,13 @@ This package contains the framework for the Dynamic
 Kernel Module Support (DKMS) method for installing
 module RPMS as originally developed by Dell.
 
+%description -l zh_CN.UTF-8
+动态内核模块支持框架。
+
 %prep
 
 %setup -q -n dkms
+
 %build
 
 %triggerpostun -- %{name} < 1.90.00-1
@@ -85,6 +91,7 @@ make install-redhat DESTDIR=$RPM_BUILD_ROOT \
     ETC=$RPM_BUILD_ROOT%{_sysconfdir}/%{name} \
     BASHDIR=$RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d \
     LIBDIR=$RPM_BUILD_ROOT%{_prefix}/lib/%{name}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -1,7 +1,8 @@
 Name:           embryo
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 Summary:        Shared libraries for Enlightenment
+Summary(zh_CN.UTF-8): Enlightement 的共享库
 License:        BSD and GPLv2+
 URL:            http://www.enlightenment.org
 Source0:        http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
@@ -14,15 +15,22 @@ BuildRequires: libeina-devel
 %description
 Small Pawn based virtual machine and compiler.
 
+%description -l zh_CN.UTF-8
+Enlightement 的共享库。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
 %description devel
 Headers, test programs and documentation for %{name}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -35,6 +43,7 @@ make %{?_smp_mflags} V=1
 make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -rf {} ';'
 find %{buildroot} -name '*.a' -exec rm -rf {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -52,6 +61,9 @@ find %{buildroot} -name '*.a' -exec rm -rf {} ';'
 %{_datadir}/embryo/include/default.inc
 
 %changelog
+* Sat Mar 29 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> 1.7.9-1
 - Update to 1.7.9 release
 

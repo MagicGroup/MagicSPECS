@@ -11,18 +11,20 @@
 %define run_check 0%{!?_with_check:0}
 
 Name:		Cython
-Version:	0.17.1
+Version:	0.20.1
 ##Release:	4.b3%{?dist}
 Release:	3%{?dist}
 Summary:	A language for writing Python extension modules
+Summary(zh_CN.UTF-8): 编写 Python 扩展模块的语言
 
 %define upstreamversion %{version}
 ##%%define upstreamversion %{version}b3
 
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:	Python
 URL:		http://www.cython.org
-Source:		http://www.cython.org/Cython-%{upstreamversion}.tar.gz
+Source:		http://www.cython.org/release/Cython-%{upstreamversion}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	python-devel python-setuptools
@@ -46,10 +48,15 @@ For more info, see:
     USAGE.txt	   for usage instructions
     Demos	   for usage examples
 
+%description -l zh_CN.UTF-8
+编写 Python 扩展模块的语言。
+
 %if 0%{?with_python3}
 %package -n python3-Cython
 Summary:	A language for writing Python extension modules
+Summary(zh_CN.UTF-8): 编写 Python 扩展模块的语言
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description -n python3-Cython
 This is a development version of Pyrex, a language
@@ -61,6 +68,9 @@ For more info, see:
     INSTALL.txt	   for installation instructions
     USAGE.txt	   for usage instructions
     Demos	   for usage examples
+
+%description -l zh_CN.UTF-8
+编写 Python 扩展模块的语言。这是 Python3 的版本。
 %endif # with_python3
 
 %prep
@@ -140,6 +150,9 @@ popd
 
 
 %changelog
+* Tue Mar 18 2014 Liu Di <liudidi@gmail.com> - 0.20.1-3
+- 更新到 0.20.1
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.17.1-3
 - 为 Magic 3.0 重建
 

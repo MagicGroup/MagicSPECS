@@ -247,7 +247,7 @@ chmod +x ${RPM_BUILD_ROOT}%{_prefix}/%{_lib}/elfutils/lib*.so*
 (cd ${RPM_BUILD_ROOT}
  rm -f .%{_bindir}/eu-ld
 )
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %check

@@ -3,11 +3,13 @@
 %global majorver 5.45
 
 Summary: A program-script interaction and testing utility
+Summary(zh_CN.UTF-8): 一个程序脚本交互测试工具
 Name: expect
 Version: %{majorver}
 Release: 5%{?dist}
 License: Public Domain
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 # URL: probably more useful is http://sourceforge.net/projects/expect/
 URL: http://expect.nist.gov/
 Source: http://downloads.sourceforge.net/%{name}/%{name}%{version}.tar.gz
@@ -31,9 +33,15 @@ control another program and interact with it.
 
 This package contains expect and some scripts that use it.
 
+%description -l zh_CN.UTF-8
+这是一个 tcl 程序，可以自动化一些程序的交互，比如 telnet,
+ftp, passwd, fsck, rlogin, tip 等，并进行测试。
+
 %package devel
 Summary: A program-script interaction and testing utility
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/库
 Requires: expect = %{version}-%{release}
 
 %description devel
@@ -44,9 +52,14 @@ control another program and interact with it.
 
 This package contains development files for the expect library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n expectk
 Summary: A program-script interaction and testing utility
+Summary(zh_CN.UTF-8): 一个程序脚本交互测试工具
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: expect = %{version}-%{release}
 
 %description -n expectk
@@ -60,6 +73,10 @@ that used it. As expectk was removed from upstream tarball
 in expect-5.45, now the package contains just these scripts.
 Please use tclsh with package require Tk and Expect instead
 of expectk.
+
+%description -n expectk -l zh_CN.UTF-8
+这个包原来包含 expectk 和一些使用它的脚本。不过现在 expectk 
+已经在上游移除。
 
 %prep
 %setup -q -n expect%{version}
@@ -99,6 +116,8 @@ rm -f "$RPM_BUILD_ROOT"%{_bindir}/autopasswd
 
 # remove rpath
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libexpect%{version}.so
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf "$RPM_BUILD_ROOT"

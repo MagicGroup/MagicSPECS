@@ -6,14 +6,16 @@
 %define dbus_version 1.1
 
 Summary: GLib bindings for D-Bus
+Summary(zh_CN.UTF-8): D-Bus 的 GLib 绑定
 Name: dbus-glib
-Version: 0.100.2
+Version: 0.102
 Release: 2%{?dist}
 URL: http://www.freedesktop.org/software/dbus/
 #VCS: git:git://git.freedesktop.org/git/dbus/dbus-glib
 Source0: http://dbus.freedesktop.org/releases/dbus-glib/%{name}-%{version}.tar.gz
 License: AFL and GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: chkconfig >= 1.3.26
 BuildRequires: libtool
@@ -28,9 +30,14 @@ BuildRequires: gettext
 D-Bus add-on library to integrate the standard D-Bus library with
 the GLib thread abstraction and main loop.
 
+%description -l zh_CN.UTF-8
+D-Bus 的 GLib 绑定。
+
 %package devel
 Summary: Libraries and headers for the D-Bus GLib bindings
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name = %{version}-%{release}
 Requires: glib2-devel
 Requires: dbus-devel
@@ -40,6 +47,9 @@ Obsoletes: dbus-devel < 0.90
 %description devel
 
 Headers and static libraries for the D-Bus GLib bindings
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %if 0
 %package gtk
@@ -73,6 +83,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -110,6 +122,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 0.102-2
+- 更新到 0.102
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.100.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

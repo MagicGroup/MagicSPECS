@@ -1,10 +1,12 @@
 %global snap_release 20130830git
 Summary: Root crontab files used to schedule the execution of programs
+Summary(zh_CN.UTF-8): cronie 的根 crontabs 文件 
 Name: crontabs
 Version: 1.11
 Release: 7.%{snap_release}%{?dist}
 License: Public Domain and GPLv2
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: https://fedorahosted.org/crontabs 
 Source0: https://fedorahosted.org/releases/c/r/crontabs/%{name}-%{version}-1.%{snap_release}.tar.gz
 BuildArch: noarch
@@ -21,6 +23,9 @@ are scheduled, it executes them.
 
 Crontabs handles a basic system function, so it should be installed on
 your system.
+
+%description -l zh_CN.UTF-8
+cronie 的根 crontabs 文件。
 
 %prep
 %setup -q 

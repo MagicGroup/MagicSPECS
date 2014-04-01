@@ -1,6 +1,6 @@
 Name:		dotconf
 Version:	1.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Libraries to parse configuration files
 Summary(zh_CN.UTF-8): 解析配置文件的库
 

@@ -53,6 +53,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/tests
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

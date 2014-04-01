@@ -1,3 +1,5 @@
+%bcond_with selinux
+
 Summary: A set of basic GNU tools commonly used in shell scripts
 Name:    coreutils
 Version: 8.22
@@ -50,6 +52,9 @@ Patch913: coreutils-8.22-temporarytestoff.patch
 Patch950: coreutils-selinux.patch
 Patch951: coreutils-selinuxmanpages.patch
 
+#给cp和mv添加进度提示。
+Patch1000: advcpmv-0.5-8.21.patch
+
 Conflicts: filesystem < 3
 Provides: /bin/basename
 Provides: /bin/cat
@@ -83,7 +88,6 @@ Provides: /bin/touch
 Provides: /bin/true
 Provides: /bin/uname
 
-BuildRequires: libselinux-devel
 BuildRequires: libacl-devel
 BuildRequires: gettext bison
 BuildRequires: texinfo
@@ -154,6 +158,8 @@ the old GNU fileutils, sh-utils, and textutils packages.
 #SELinux
 %patch950 -p1 -b .selinux
 %patch951 -p1 -b .selinuxman
+
+%patch1000 -p1
 
 chmod a+x tests/misc/sort-mb-tests.sh tests/df/direct.sh tests/cp/no-ctx.sh || :
 

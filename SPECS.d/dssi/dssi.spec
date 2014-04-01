@@ -1,9 +1,11 @@
 Summary:      Disposable Soft Synth Interface
+Summary(zh_CN.UTF-8): 一次性软合成器接口
 Name:         dssi
 Version:      1.1.1
 Release:      4%{?dist}
 License:      MIT
 Group:        Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:          http://dssi.sourceforge.net/
 Source0:      http://download.sf.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
 Source1:      http://download.sf.net/sourceforge/%{name}/README
@@ -28,18 +30,28 @@ permitting them to be hosted in-process by Linux audio applications. Think of
 it as LADSPA-for-instruments, or something comparable to a simpler version of
 VSTi.
 
+%description -l zh_CN.UTF-8
+一次性软合成器接口。
+
 %package examples
 Summary:  DSSI plugin examples
+Summary(zh_CN.UTF-8): DSSI 插件样例
 Group:    Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:  Public Domain
 Requires: %{name} = %{version}
 
 %description examples
 Example plugins for the Disposable Soft Synth Interface.
 
+%description examples -l zh_CN.UTF-8
+DSSI 插件样例。
+
 %package devel
 Summary:  Libraries, includes, etc to develop DSSI applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:  LGPLv2+
 Requires: alsa-lib-devel
 Requires: ladspa-devel
@@ -47,6 +59,9 @@ Requires: pkgconfig
 
 %description devel
 Libraries, include files, etc you can use to develop DSSI based applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

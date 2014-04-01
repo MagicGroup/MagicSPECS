@@ -1,11 +1,13 @@
 %define _bindir /bin
 
 Summary: A GNU archiving program
+Summary(zh_CN.UTF-8): 一个 GNU 归档程序
 Name: cpio
 Version: 2.11
 Release: 15%{?dist}
 License: GPLv3+
 Group: Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL: http://www.gnu.org/software/cpio/
 Source: ftp://ftp.gnu.org/gnu/cpio/cpio-%{version}.tar.bz2
 # help2man generated manual page distributed only in RHEL/Fedora
@@ -47,6 +49,9 @@ archives, cpio automatically recognizes which kind of archive it is reading
 and can read archives created on machines with a different byte-order.
 
 Install cpio if you need a program to manage file archives.
+
+%description -l zh_CN.UTF-8
+一个文件归档程序。
 
 %prep
 %setup -q

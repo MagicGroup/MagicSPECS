@@ -2,8 +2,10 @@ Name:           dirac
 Version:        1.0.2
 Release:        8%{?dist}
 Summary:        Dirac is an open source video codec 
+Summary(zh_CN.UTF-8): 一个开源的视频编码
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MPLv1.1
 URL:            http://diracvideo.org
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -16,9 +18,7 @@ BuildRequires:  doxygen
 BuildRequires:  graphviz-devel
 BuildRequires:  tetex-latex
 BuildRequires:  tetex
-%if 0%{?fedora} > 8
 BuildRequires:  dvipdfm
-%endif
 
 %description
 Dirac is an open source video codec. It uses a traditional hybrid video codec
@@ -26,29 +26,46 @@ architecture, but with the wavelet transform instead of the usual block
 transforms.  Motion compensation uses overlapped blocks to reduce block 
 artefacts that would upset the transform coding stage.
 
+%description -l zh_CN.UTF-8
+一个开源的视频编码。
+
 %package libs
 Summary:        Libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains libraries for %{name}.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{version}-%{release} 
 Requires:       pkgconfig
 
 %description devel
 This package contains development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description docs
 This package contains documentation files for %{name}.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q

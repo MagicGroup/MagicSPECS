@@ -1,0 +1,16 @@
+#!/bin/bash
+url="https://github.com/clementine-player/Clementine/tags"
+new1="tags\\/"
+new2="\\\">"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	newver=`cat index.html|grep "Clementine\/releases\/tag"|head -n1|sed -e 's/^.*tag\///g'|sed -e 's/\">//g'` 
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

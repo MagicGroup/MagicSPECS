@@ -2,7 +2,9 @@ Name:           clamz
 Version:        0.5
 Release:        3%{?dist}
 Summary:        Amazon Downloader
+Summary(zh_CN.UTF-8): 亚马逊下载器
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 License:        GPLv3+
 URL:            http://clamz.googlecode.com/
 Source0:        http://clamz.googlecode.com/files/%{name}-%{version}.tar.gz
@@ -18,6 +20,9 @@ for Amazon's official MP3 Downloader, which is not free software (and
 therefore is only available in binary form for a limited set of
 platforms.)  Clamz can be used to download either individual songs or
 complete albums that you have purchased from Amazon.
+
+%description -l zh_CN.UTF-8
+这是一个可以从亚马逊音乐商店下载 MP3 的命令行程序。
 
 %prep
 %setup -q

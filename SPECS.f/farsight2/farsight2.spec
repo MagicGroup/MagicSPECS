@@ -9,8 +9,10 @@ Name:           farsight2
 Version:        0.0.31
 Release:        1%{?dist}
 Summary:        Libraries for videoconferencing
+Summary(zh_CN.UTF-8): 视频会议库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:            http://farsight.freedesktop.org/wiki/
 Source0:        http://farsight.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -27,25 +29,31 @@ BuildRequires:	pygobject2-devel >= 2.16.0
 Requires:	gstreamer-plugins-good >= 0.10.29
 Requires:	gstreamer-plugins-bad-free >= %{gst_plugins_bad}
 
-
 %description
 %{name} is a collection of GStreamer modules and libraries for
 videoconferencing.
 
+%description -l zh_CN.UTF-8
+这是用于视频会议的 gstreamer 模块和库。
 
 %package   	python
 Summary:	Python binding for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
-
 
 %description	python
 Python bindings for %{name}.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:	%{name}-python = %{version}-%{release}
 Requires:       gstreamer-devel  >= %{gst_ver}
@@ -56,6 +64,9 @@ Requires:       pkgconfig
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -80,7 +91,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

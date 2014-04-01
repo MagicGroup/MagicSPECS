@@ -1,9 +1,10 @@
-%bcond_without selinux
+%bcond_with selinux
 %bcond_without pam
-%bcond_without audit
+%bcond_with audit
 %bcond_without inotify
 
 Summary:   Cron daemon for executing programs at set times
+Summary(zh_CN.UTF-8): 在指定的时间执行程序的 cron 服务
 Name:      cronie
 Version:   1.4.11
 Release:   5%{?dist}
@@ -11,6 +12,7 @@ Patch0:    correct-env.patch
 Patch1:    unitfile-killprocess.patch
 License:   MIT and BSD and ISC and GPLv2+
 Group:     System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL:       https://fedorahosted.org/cronie
 Source0:   https://fedorahosted.org/releases/c/r/cronie/%{name}-%{version}.tar.gz
 
@@ -43,10 +45,16 @@ scheduled times and related tools. It is a fork of the original vixie-cron and
 has security and configuration enhancements like the ability to use pam and
 SELinux.
 
+%description -l zh_CN.UTF-8
+这个包是一个标准的 UNIX 服务 crond 的实现，可以在计划的时间执行指定的程序，也包括
+相关的芽人。它是原来的 vixie-cron 的一个移植，包含了安全和配置的增加，比如使用 pam。
+
 %package anacron
 Summary:   Utility for running regular jobs
+Summary(zh_CN.UTF-8): 运行有规律的任务的工具
 Requires:  crontabs
 Group:     System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Provides:  dailyjobs
 Provides:  anacron = 2.4
 Obsoletes: anacron <= 2.3
@@ -64,9 +72,16 @@ Using anacron allows running the periodic jobs even if the system is often
 powered off and it also allows randomizing the time of the job execution
 for better utilization of resources shared among multiple systems.
 
+%description anacron -l zh_CN.UTF-8
+这是 cronie 的一部分，它用来运行那些每天运行但无准确时间的周期性程序。
+
+默认设置支持每天、每周和每月运行程序，但可以设置任意的周期。
+
 %package noanacron
 Summary:   Utility for running simple regular jobs in old cron style
+Summary(zh_CN.UTF-8): 以旧的 cron 风格运行简单的有规律程序
 Group:     System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Provides:  dailyjobs
 Requires:  crontabs
 Requires:  %{name} = %{version}-%{release}
@@ -74,6 +89,10 @@ Requires:  %{name} = %{version}-%{release}
 %description noanacron
 Old style of running {hourly,daily,weekly,monthly}.jobs without anacron. No
 extra features.
+
+%description noanacron -l zh_CN.UTF-8
+以旧的 cron 风格运行简单的有规律程序。
+
 
 %prep
 %setup -q

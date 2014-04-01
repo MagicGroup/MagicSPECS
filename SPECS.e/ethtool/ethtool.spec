@@ -3,9 +3,11 @@ Epoch:		2
 Version:	3.6
 Release:	2%{?dist}
 Summary:	Settings tool for Ethernet NICs
+Summary(zh_CN.UTF-8): 以太网卡的设置工具
 
 License:	GPLv2
 Group:		Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 #Old URL:	http://sourceforge.net/projects/gkernel/
 URL:		http://ftp.kernel.org/pub/software/network/%{name}/
 
@@ -26,6 +28,10 @@ Conflicts:      filesystem < 3
 This utility allows querying and changing settings such as speed,
 port, auto-negotiation, PCI locations and checksum offload on many
 network devices, especially of Ethernet devices.
+
+%description -l zh_CN.UTF-8
+这个工具允许你查询和更改很多网络设备，尤其是一些以太网设备的设置，
+比如速度、端口、自动协商、PCI 位置、校验等。
 
 %prep
 %setup -q

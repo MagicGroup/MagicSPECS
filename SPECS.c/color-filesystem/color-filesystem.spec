@@ -2,8 +2,10 @@ Name:           color-filesystem
 Version:        1
 Release:        11%{?dist}
 Summary:        Color filesystem layout
+Summary(zh_CN.UTF-8): Color 文件系统
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        Public Domain
 BuildArch:      noarch
 
@@ -12,6 +14,9 @@ Requires:  rpm
 
 %description
 This package provides some directories that are required/used to store color. 
+
+%description -l zh_CN.UTF-8
+这个提供了存储 color 需要使用的一些目录。
 
 %prep
 # Nothing to prep

@@ -24,8 +24,7 @@ Obsoletes: e4fsprogs < %{version}-%{release}
 Provides: e4fsprogs = %{version}-%{release}
 %endif
 
-BuildRequires: pkgconfig, texinfo, libselinux-devel
-BuildRequires: libsepol-devel
+BuildRequires: pkgconfig, texinfo
 BuildRequires: libblkid-devel
 BuildRequires: libuuid-devel
 BuildRequires: gettext
@@ -149,7 +148,7 @@ It was originally inspired by the Multics SubSystem library.
 # ignore some flag differences on primary/backup sb feature checks
 # mildly unsafe but 'til I get something better, avoid full fsck
 # after an selinux install...
-%patch1 -p1 -b .featurecheck
+#%patch1 -p1 -b .featurecheck
 
 %build
 %configure --enable-elf-shlibs --enable-nls --disable-uuidd --disable-fsck \

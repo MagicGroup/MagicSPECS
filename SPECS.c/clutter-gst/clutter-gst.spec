@@ -2,8 +2,10 @@ Name:           clutter-gst
 Version:        1.6.0
 Release:        6%{?dist}
 Summary:        ClutterMedia interface to GStreamer
+Summary(zh_CN.UTF-8): Clutter 的 GStreamer 接口
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+
 URL:            http://www.clutter-project.org
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/1.5/%{name}-%{version}.tar.xz
@@ -22,9 +24,14 @@ BuildRequires:  gstreamer-plugins-base-devel
 This package contains a video texture actor and an audio player object for
 use with clutter
 
+%description -l zh_CN.UTF-8
+这个包包含了视频纹理和音频播放器对象，和旧版本的 gstreamer 配合使用。
+
 %package devel
 Summary:        clutter-gst development environment
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       clutter-devel
 Requires:       gstreamer-devel
@@ -34,6 +41,9 @@ Requires:       pkgconfig
 %description devel
 Header files and libraries for building a extension library for the
 clutter-gst
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

@@ -1,8 +1,10 @@
 Summary: An XML parser library
+Summary(zh_CN.UTF-8): XML 解析库
 Name: expat
 Version: 2.1.0
 Release: 4%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source: http://downloads.sourceforge.net/expat/expat-%{version}.tar.gz
 URL: http://www.libexpat.org/
 License: MIT
@@ -17,23 +19,36 @@ parser discovers the associated structures in the document being parsed. A
 start tag is an example of the kind of structures for which you may
 register handlers.
 
+%description -l zh_CN.UTF-8
+这是一个 C 语言编写的 XML 解析库。
+
 %package devel
 Summary: Libraries and header files to develop applications using expat
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: expat = %{version}-%{release}
 
 %description devel
 The expat-devel package contains the libraries, include files and documentation
 to develop XML applications with expat.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: expat XML parser static library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: expat-devel%{?_isa} = %{version}-%{release}
 
 %description static
 The expat-static package contains the static version of the expat library.
 Install it if you need to link statically with expat.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q

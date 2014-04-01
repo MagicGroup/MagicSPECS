@@ -2,10 +2,12 @@
 
 Name:           cvsps
 Version:        2.2
-Release:        0.10.%{prever}%{?dist}
+Release:        0.11.%{prever}%{?dist}
 Summary:        Patchset tool for CVS
+Summary(zh_CN.UTF-8): CVS 用的补丁工具集
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPL+
 URL:            http://www.cobite.com/cvsps/
 Source0:        http://www.cobite.com/cvsps/%{name}-%{version}%{prever}.tar.gz
@@ -30,6 +32,8 @@ to seeing the big picture of the evolution of a cvs project.  While
 cvs tracks revision information, it is often difficult to see what
 changes were committed 'atomically' to the repository.
 
+%description -l zh_CN.UTF-8
+CVS 用的补丁工具集。
 
 %prep
 %setup -q -n %{name}-%{version}%{prever}

@@ -1,8 +1,10 @@
 Summary: A utility which provides statistics based on the output of diff
+Summary(zh_CN.UTF-8): 提供基于 diff 输出统计的工具
 Name: diffstat
-Version: 1.54
+Version: 1.58
 Release: 4%{?dist}
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License: MIT
 URL: http://invisible-island.net/diffstat
 Source0: ftp://invisible-island.net/diffstat/%{name}-%{version}.tgz
@@ -19,6 +21,9 @@ to provide a summary of the changes in large, complex patch files.
 
 Install diffstat if you need a program which provides a summary of the
 diff command's output.
+
+%description -l zh_CN.UTF-8
+提供基于 diff 输出统计的工具。
 
 %prep
 %setup -q
@@ -42,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Thu Mar 20 2014 Liu Di <liudidi@gmail.com> - 1.58-4
+- 更新到 1.58
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.54-4
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Summary:        Tool to analyse BIOS DMI data
+Summary(zh_CN.UTF-8): 分析 BIOS DMI 数据的工具
 Name:           dmidecode
 Version:        2.12
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPLv2+
 Source0:        %{name}-%{version}.tar.bz2
 URL:            http://www.nongnu.org/dmidecode/
@@ -22,6 +24,9 @@ level of interest and reliability depending on the manufacturer.
 This will often include usage status for the CPU sockets, expansion
 slots (e.g. AGP, PCI, ISA) and memory module slots, and the list of
 I/O ports (e.g. serial, parallel, USB).
+
+%description -l zh_CN.UTF-8
+分析 BIOS DMI 数据的工具。
 
 %prep
 %setup -q

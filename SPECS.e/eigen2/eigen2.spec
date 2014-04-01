@@ -5,10 +5,12 @@
 
 Name:    eigen2
 Summary: A lightweight C++ template library for vector and matrix math
+Summary(zh_CN.UTF-8): 用于向量和矩阵数学的轻量级 C++ 模板库
 Epoch:   1
 Version: 2.0.17
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2+ or LGPLv3+
 URL:     http://eigen.tuxfamily.org/
 %if 0%{?snap:1}
@@ -46,15 +48,23 @@ BuildRequires: qt4-devel
 %description
 %{summary}
 
+%description -l zh_CN.UTF-8
+用于向量和矩阵数学的轻量级 C++ 模板库。
+
 %package devel
 Summary: A lightweight C++ template library for vector and matrix math
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # -devel subpkg only atm, compat with other distros
 Provides: %{name} = %{version}-%{release}
 # not *strictly* a -static pkg, but the results are the same
 Provides: %{name}-static = %{version}-%{release}
 %description devel
 %{summary}
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 
 %prep

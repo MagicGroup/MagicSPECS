@@ -1,0 +1,16 @@
+#!/bin/bash
+url="https://fedorahosted.org/releases/e/l/elfutils/?C=M;O=D"
+new1="a href="""
+new2="\\/"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	newver=`grep "$new1.*$new2" index.html|grep -E "0.[0-9]{3}" -o|head -n 1`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

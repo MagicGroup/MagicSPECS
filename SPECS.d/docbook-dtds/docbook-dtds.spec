@@ -7,8 +7,10 @@ Name: docbook-dtds
 Version: 1.0
 Release: 62%{?dist}
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 
 Summary: SGML and XML document type definitions for DocBook
+Summary(zh_CN.UTF-8): DocBook 的 SGML 和 XML 文档类型定义
 
 License: Copyright only
 URL: http://www.oasis-open.org/docbook/
@@ -90,6 +92,8 @@ technical documentation texts (articles, books and manual pages).
 This syntax is XML-compliant and is developed by the OASIS consortium.
 This package contains SGML and XML versions of the DocBook DTD.
 
+%description -l zh_CN.UTF-8
+DocBook 的 SGML 和 XML 文档类型定义。
 
 %prep
 %setup -c -T

@@ -8,12 +8,12 @@
 
 %define dbus_user_uid           81
 
-%define dbus_common_config_opts --enable-libaudit --enable-selinux=yes --with-init-scripts=redhat --with-system-pid-file=%{_localstatedir}/run/messagebus.pid --with-dbus-user=dbus --libdir=/%{_lib} --bindir=/bin --sysconfdir=/etc --exec-prefix=/ --libexecdir=/%{_lib}/dbus-1 --with-systemdsystemunitdir=/lib/systemd/system/ --docdir=%{_pkgdocdir} --enable-doxygen-docs --enable-xml-docs --disable-silent-rules
+%define dbus_common_config_opts --disable-libaudit --enable-selinux=no --with-init-scripts=redhat --with-system-pid-file=%{_localstatedir}/run/messagebus.pid --with-dbus-user=dbus --libdir=/%{_lib} --bindir=/bin --sysconfdir=/etc --exec-prefix=/ --libexecdir=/%{_lib}/dbus-1 --with-systemdsystemunitdir=/lib/systemd/system/ --docdir=%{_pkgdocdir} --enable-doxygen-docs --enable-xml-docs --disable-silent-rules
 
 Summary: D-BUS message bus
 Name: dbus
 Epoch: 1
-Version: 1.6.18
+Version:	1.6.18
 Release: 3%{?dist}
 URL: http://www.freedesktop.org/software/dbus/
 #VCS: git:git://git.freedesktop.org/git/dbus/dbus
@@ -25,8 +25,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: libtool
 BuildRequires: expat-devel >= %{expat_version}
-BuildRequires: libselinux-devel >= %{libselinux_version}
-BuildRequires: audit-libs-devel >= 0.9
 BuildRequires: libX11-devel
 BuildRequires: libcap-ng-devel
 BuildRequires: gettext
@@ -37,7 +35,6 @@ BuildRequires:  systemd-units
 Requires(post): systemd-units chkconfig
 Requires(preun): systemd-units
 Requires(postun): systemd-units
-Requires: libselinux%{?_isa} >= %{libselinux_version}
 Requires: dbus-libs%{?_isa} = %{epoch}:%{version}-%{release}
 Requires(pre): /usr/sbin/useradd
 
@@ -247,6 +244,9 @@ fi
 %{_includedir}/*
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 1:1.8.0-3
+- 更新到 1.8.0
+
 * Tue Jan 21 2014 Ville Skyttä <ville.skytta@iki.fi> - 1:1.6.18-3
 - Adapt to unversioned docdirs; don't ship all docs in main package.
 - Fix bogus dates in %%changelog and tabs vs spaces warning.

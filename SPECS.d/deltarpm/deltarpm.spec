@@ -4,19 +4,25 @@
 %global with_python3 1
 %endif
 
+%define git 1
+%define vcsdate 20140319
+
 Summary: Create deltas between rpms
+Summary(zh_CN.UTF-8): 在 rpm 包之间建立三角关系
 Name: deltarpm
 Version: 3.6
-Release: 0.12.20110223git%{?dist}
+Release: 0.14.%{vcsdate}git%{?dist}
 License: BSD
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://gitorious.org/deltarpm/deltarpm
 # Generate source by doing:
 # git clone git://gitorious.org/deltarpm/deltarpm
 # cd deltarpm
 # git archive --format=tar --prefix="deltarpm-git-20110223/" 7ed5208166 | \
 #   bzip2 > deltarpm-git-20110223.tar.bz2
-Source: %{name}-git-20110223.tar.bz2
+Source0: %{name}-git%{vcsdate}.tar.xz
+Source1: make_deltarpm_git_package.sh
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: bzip2-devel, xz-devel, rpm-devel, popt-devel
@@ -72,7 +78,7 @@ This package contains python bindings for deltarpm.
 
 
 %prep
-%setup -q -n %{name}-git-20110223
+%setup -q -n %{name}-git%{vcsdate}
 
 %build
 %{__make} %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS" \
@@ -113,6 +119,7 @@ rm -rf %{buildroot}%{_libdir}/python3*
 %doc LICENSE.BSD README
 %doc %{_mandir}/man8/applydeltaiso*
 %doc %{_mandir}/man8/makedeltaiso*
+%doc %{_mandir}/man8/fragiso*
 %{_bindir}/applydeltaiso
 %{_bindir}/fragiso
 %{_bindir}/makedeltaiso
@@ -138,6 +145,12 @@ rm -rf %{buildroot}%{_libdir}/python3*
 %endif
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 3.6-0.14.20140319git
+- 更新到 20140319 日期的仓库源码
+
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 3.6-0.13.20140319git
+- 更新到 20140319 日期的仓库源码
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.6-0.12.20110223git
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

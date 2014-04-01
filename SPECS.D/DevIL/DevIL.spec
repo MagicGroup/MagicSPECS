@@ -1,15 +1,18 @@
 Name:           DevIL
 Version:        1.7.8
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A cross-platform image library
+Summary(zh_CN.UTF-8): 一个跨平台的图像库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2
 URL:            http://openil.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/openil/%{name}-%{version}.tar.gz
 Patch0:         DevIL-1.7.5-allegropicfix.patch
 Patch1:         DevIL-1.7.5-il_endian_h.patch
 Patch2:         DevIL-1.7.8-CVE-2009-3994.patch
-Patch3:         DevIL-1.7.8-libpng15.patch
+Patch3: 	DevIL-1.7.8-libpng15.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  allegro-devel
 BuildRequires:  lcms-devel
 BuildRequires:  libGLU-devel
@@ -30,10 +33,14 @@ developer, so unnecessary conversions, etc. are not performed. DevIL utilizes
 a simple, yet powerful, syntax. DevIL can load, save, convert, manipulate,
 filter and display a wide variety of image formats.
 
+%description -l zh_CN.UTF-8
+一个跨平台的图像库。
 
 %package devel
 Summary:        Development files for DevIL
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}, pkgconfig
 Requires(post): info
 Requires(preun): info
@@ -41,19 +48,27 @@ Requires(preun): info
 %description devel
 Development files for DevIL
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package ILUT
 Summary:        The libILUT component of DevIL
+Summary(zh_CN.UTF-8): %{name} 的 libILUT 组件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{version}-%{release}
 
 %description ILUT
 The libILUT component of DevIL
 
+%description ILUT -l zh_CN.UTF-8
+%{name} 的 libILUT 组件。
 
 %package ILUT-devel
 Summary:        Development files for the libILUT component of DevIL
+Summary(zh_CN.UTF-8): ILUT 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-ILUT = %{version}-%{release}
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       pkgconfig allegro-devel libGLU-devel
@@ -61,6 +76,8 @@ Requires:       pkgconfig allegro-devel libGLU-devel
 %description ILUT-devel
 Development files for the libILUT component of DevIL
 
+%description ILUT-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n devil-%{version}
@@ -72,7 +89,6 @@ iconv -f iso8859-1 CREDITS -t utf8 > CREDITS.conv
 touch -r CREDITS CREDITS.conv
 mv CREDITS.conv CREDITS
 chmod -x src-IL/src/il_*.c
-sed -i 's|png12|png15|g' configure
 
 
 %build
@@ -83,19 +99,24 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 rm %{buildroot}%{_libdir}/*.la
 rm %{buildroot}%{_infodir}/dir
 magic_rpm_clean.sh
 
+%clean
+rm -rf %{buildroot}
+
+
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %post devel
-/usr/sbin/install-info %{_infodir}/DevIL_manual.info %{_infodir}/dir 2> /dev/null || :
+/sbin/install-info %{_infodir}/DevIL_manual.info %{_infodir}/dir 2> /dev/null || :
 %preun devel
 if [ $1 = 0 ] ; then
-  /usr/sbin/install-info --delete %{_infodir}/DevIL_manual.info %{_infodir}/dir 2> /dev/null || :
+  /sbin/install-info --delete %{_infodir}/DevIL_manual.info %{_infodir}/dir 2> /dev/null || :
 fi
 
 %post ILUT -p /sbin/ldconfig
@@ -108,6 +129,7 @@ fi
 %{_libdir}/libIL.so.*
 %{_libdir}/libILU.so.*
 %doc AUTHORS ChangeLog COPYING CREDITS README TODO
+
 
 %files devel
 %defattr(-,root,root,-)
@@ -122,9 +144,11 @@ fi
 %{_includedir}/IL/ilu_region.h
 %{_infodir}/DevIL_manual.info.gz
 
+
 %files ILUT
 %defattr(-,root,root,-)
 %{_libdir}/libILUT.so.*
+
 
 %files ILUT-devel
 %defattr(-,root,root,-)
@@ -134,18 +158,6 @@ fi
 
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.7.8-9
-- 为 Magic 3.0 重建
-
-* Fri Oct 26 2012 Liu Di <liudidi@gmail.com> - 1.7.8-8
-- 为 Magic 3.0 重建
-
-* Sun Nov 20 2011 Hans de Goede <hdegoede@redhat.com> - 1.7.8-7
-- Rebuild for new libpng (rhbz#751583)
-
-* Fri Jul 15 2011 Hans de Goede <hdegoede@redhat.com> - 1.7.8-6
-- Rebuild for new allegro-4.4
-
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.8-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

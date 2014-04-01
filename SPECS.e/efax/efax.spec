@@ -1,9 +1,11 @@
 Summary: A program for faxing using a Class 1, 2 or 2.0 fax modem
+Summary(zh_CN.UTF-8): 使用 Class 1, 2 或 2.0 传真猫进行传真的程序
 Name: efax
 Version: 0.9a
 Release: 11.001114%{?dist}
 License: GPLv2+
 Group: Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 Url: http://www.cce.com/efax/
 Source: http://www.cce.com/efax/download/%{name}-%{version}-001114.tar.gz
 Source1: logrotate-efax
@@ -29,6 +31,9 @@ using any Class 1, 2 or 2.0 fax modem.
 
 You need to install efax if you want to send faxes and you have a
 Class 1, 2 or 2.0 fax modem.
+
+%description -l zh_CN.UTF-8
+使用 Class 1, 2 或 2.0 传真猫进行传真的程序。
 
 %prep
 %setup -q -n %{name}-%{version}-001114
@@ -57,6 +62,8 @@ mkdir -p %{buildroot}%{_localstatedir}/log/fax
 make BINDIR=%{buildroot}%{_bindir} MANDIR=%{buildroot}%{_mandir} install
 mkdir -p %{buildroot}/etc/logrotate.d/
 install -c -m 644 %{SOURCE1} %{buildroot}/etc/logrotate.d/efax
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

@@ -2,8 +2,10 @@ Name: docbook-utils
 Version: 0.6.14
 Release: 33%{?dist}
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 
 Summary: Shell scripts for managing DocBook documents
+Summary(zh_CN.UTF-8): 管理 DocBook 文件的脚本
 URL: http://sources.redhat.com/docbook-tools/
 
 License: GPLv2+
@@ -43,6 +45,10 @@ This package contains scripts are for easy conversion from DocBook
 files to other formats (for example, HTML, RTF, and PostScript), and
 for comparing SGML files.
 
+%description -l zh_CN.UTF-8
+管理 DocBook 文档的脚本，可以简单的转 DocBook 文件到其它格式，比如 HTML,
+RTF 等。
+
 %package pdf
 Requires: jadetex >= 2.5
 Requires: docbook-utils = %{version}
@@ -57,6 +63,9 @@ URL: http://sources.redhat.com/docbook-tools/
 %description pdf
 This package contains a script for converting DocBook documents to
 PDF format.
+
+%description pdf -l zh_CN.UTF-8
+转换 DocBook 文档到 PDF 格式的脚本。
 
 %prep
 %setup -q

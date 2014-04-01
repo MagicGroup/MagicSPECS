@@ -5,8 +5,9 @@
 %define dbus_version 0.90
 
 Summary: D-Bus Python Bindings 
+Summary(zh_CN.UTF-8): D-Bus 的 Python 绑定
 Name: dbus-python
-Version: 1.1.1
+Version: 1.2.0
 Release: 1%{?dist}
 
 License: MIT
@@ -22,14 +23,20 @@ BuildRequires: dbus-x11 pygobject3
 %description
 D-Bus python bindings for use with python programs.   
 
+%description -l zh_CN.UTF-8
+D-Bus 的 Python 绑定。
+
 %package devel
 Summary: Libraries and headers for dbus-python
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Headers and static libraries for hooking up custom mainloops to the dbus python
 bindings.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -65,6 +72,9 @@ make check
 
 
 %changelog
+* Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 1.2.0-1
+- 更新到 1.2.0
+
 * Tue Aug 07 2012 Rex Dieter <rdieter@fedoraproject.org> 1.1.1-1
 - dbus-python-1.1.1 (#800487)
 

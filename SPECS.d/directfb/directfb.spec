@@ -4,7 +4,7 @@
 Summary: Graphics abstraction library for the Linux Framebuffer Device
 Name: directfb
 Version: %{major_ver}%{minor_ver}
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: System Environment/Libraries
 License: LGPLv2+
 URL: http://www.directfb.org/
@@ -96,13 +96,17 @@ rm interfaces/IDirectFBVideoProvider/{videodev.h,videodev2.h}
 %ifarch %{ix86}
     --disable-mmx --disable-sse \
 %endif
-    --with-gfxdrivers=all \
-%{?_with_sdl:--enable-sdl} \
+    --enable-sdl  \
     --enable-zlib \
 %{?_with_fusion:--enable-multi} \
     --enable-unique \
     --enable-video4linux2 \
-    --with-tests
+    --disable-vnc \
+    --disable-osx \
+    --disable-voodoo \
+    --enable-mesa \
+    --enable-drmkms \
+    --without-tests
 
 # Remove rpath for 64bit
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool

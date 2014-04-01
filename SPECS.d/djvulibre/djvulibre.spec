@@ -1,9 +1,11 @@
 Summary: DjVu viewers, encoders, and utilities
+Summary(zh_CN.UTF-8): DjVu 查看器，编码器和工具
 Name: djvulibre
 Version: 3.5.25.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 URL: http://djvu.sourceforge.net/
 Source: http://dl.sf.net/djvu/djvulibre-%{version}.tar.gz
 Patch0: djvulibre-3.5.22-cdefs.patch
@@ -37,24 +39,35 @@ DjVuLibre is a free (GPL'ed) implementation of DjVu, including viewers,
 decoders, simple encoders, and utilities. The browser plugin is in its own
 separate sub-package.
 
+%description -l zh_CN.UTF-8
+DjVu 查看器，编码器和工具，djvu 是一种文档和图像格式及发布的软件平台，可以用来
+代替 PDF 等。
 
 %package libs
 Summary: Library files for DjVuLibre
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 Library files for DjVuLibre.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary: Development files for DjVuLibre
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Development files for DjVuLibre.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-3.5.25

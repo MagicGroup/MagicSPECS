@@ -10,13 +10,16 @@ Name:           eigen3
 Version:        3.2.1
 Release:        3%{?dist}
 Summary:        A lightweight C++ template library for vector and matrix math
+Summary(zh_CN.UTF-8): 一个处理向量和矩阵数学的轻量级 C++ 模板库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        MPLv2.0 and LGPLv2+ and BSD
 URL:            http://eigen.tuxfamily.org/index.php?title=Main_Page
 # Source file is at: http://bitbucket.org/eigen/eigen/get/3.1.3.tar.bz2
 # Renamed source file so it's not just a version number
-Source0:        eigen-%{version}.tar.bz2
+# Source0:        eigen-%{version}.tar.bz2
+Source0:	http://bitbucket.org/eigen/eigen/get/%{version}.tar.bz2
 
 BuildRequires:  atlas-devel
 BuildRequires:  fftw-devel
@@ -38,9 +41,14 @@ BuildRequires:  tex(latex)
 %description
 %{summary}.
 
+%description -l zh_CN.UTF-8
+一个线性代数用的 C++ 模板库。
+
 %package devel
 Summary:   A lightweight C++ template library for vector and matrix math
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildArch: noarch
 # -devel subpkg only atm, compat with other distros
 Provides:  %{name} = %{version}-%{release}
@@ -49,12 +57,19 @@ Provides:  %{name}-static = %{version}-%{release}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary:   Developer documentation for Eigen
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires:  %{name}-devel = %{version}-%{release}
 BuildArch: noarch
 %description doc
 Developer documentation for Eigen.
+
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n eigen-eigen-%{commit}
@@ -72,6 +87,8 @@ rm -f %{_target_platform}/doc/html/unsupported/installdox
 
 %install
 %make_install -C %{_target_platform}
+
+magic_rpm_clean.sh
 
 %check
 # Run tests but make failures non-fatal. Note that upstream doesn't expect the

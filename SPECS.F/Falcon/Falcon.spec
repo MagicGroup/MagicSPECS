@@ -7,10 +7,11 @@ Name:            Falcon
 Version:         0.9.6.8
 Release:         2%{?dist}
 Summary:         The Falcon Programming Language
-Summary(it):     Il linguaggio di programmazione Falcon
+Summary(zh_CN.UTF-8):     Falcon 程序语言
 
 License:        GPLv2+
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL:            http://%{host}/
 Source0:        http://%{host}/project_dl/_official_rel/%{name}-%{version}.tgz
 Source1:        http://%{host}/project_dl/_official_rel/%{name}-docs-%{docver}.tgz
@@ -34,18 +35,14 @@ flexible, extensible and highly configurable scripting engine.
 Falcon is also a standalone multiplatform scripting language that
 aims to be both simple and powerful.
 
-%description -l it
-Il Falcon è un linguaggio di programmazione embeddabile che intende
-fornire nuove potenzialità anche a semplici applicazioni, fornendo
-loro un potente, flessibie, estendibile e configurabile motore
-di scripting.
-
-Falcon è anche uno scripting languge completo e multipiattaforma,
-semplice e potente.
+%description -l zh_CN.UTF-8
+一套脚本语言。
 
 %package   devel
 Summary:   Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:  %{name} = %{version}-%{release}
 Requires:  cmake
 
@@ -60,9 +57,14 @@ aims to be both simple and powerful.
 This package contains development files for %{name}. This is not
 necessary for using the %{name} interpreter.
 
+%description -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package   doc
 Summary:   Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:     Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:  %{name} = %{version}-%{release}
 BuildArch: noarch
 
@@ -76,6 +78,8 @@ aims to be both simple and powerful.
 
 This package contains HTML documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -a1
@@ -97,7 +101,7 @@ make VERBOSE=1 %{?_smp_flags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

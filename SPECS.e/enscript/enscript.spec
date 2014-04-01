@@ -1,9 +1,11 @@
 Summary: A plain ASCII to PostScript converter
+Summary(zh_CN.UTF-8): 一个纯 ASCII 文本到 PostScript 的转换程序
 Name: enscript
 Version: 1.6.6
 Release: 2%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 URL: http://www.gnu.org/software/enscript
 # Tarball exists nowhere. You have to obtain it via:
 # $ git clone git://git.savannah.gnu.org/enscript.git
@@ -40,6 +42,9 @@ generated PostScript output to the specified printer or saves it to a
 file. Enscript can be extended to handle different output media and
 includes many options for customizing printouts
 
+%description -l zh_CN.UTF-8
+转换 ASCII 文本到 PostScript 文件的程序。
+
 %prep
 %setup -q
 %patch3 -p1 -b .locale
@@ -63,7 +68,7 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/locale/{de,es,fi,fr,nl,sl}/LC_MESSAGES
 make DESTDIR=%{buildroot} install
 rm -f %{buildroot}%{_datadir}/info/dir
-
+magic_rpm_clean.sh
 %find_lang %name
 
 # XXX note doubled %% in sed script below.

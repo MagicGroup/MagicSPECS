@@ -4,12 +4,15 @@ Name:           eog-plugins
 Version:        3.11.4
 Release:        4%{?dist}
 Summary:        A collection of plugins for the eog image viewer
+Summary(zh_CN.UTF-8): eog 图像查看器的插件集合
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://live.gnome.org/EyeOfGnome/Plugins
 #VCS: git:git://git.gnome.org/eog-plugins
-Source0:        http://download.gnome.org/sources/eog-plugins/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/eog-plugins/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  eog-devel
 BuildRequires:  clutter-gtk-devel
@@ -28,6 +31,9 @@ It's a collection of plugins for use with the Eye of GNOME Image Viewer.
 The included plugins provide a map view for where the picture was taken,
 display of Exif information, Zoom to fit, etc.
 
+%description -l zh_CN.UTF-8
+eog 图像查看器的插件集合，包括 Exif 信息显示，缩放等。
+
 %prep
 %setup -q
 
@@ -39,7 +45,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm $RPM_BUILD_ROOT%{_libdir}/eog/plugins/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %postun

@@ -3,11 +3,13 @@
 
 Name:	 dirmngr
 Summary: Client for Managing/Downloading CRLs
+Summary(zh_CN.UTF-8): 管理/下载 CRL 的客户端
 Version: 1.1.1
 Release: 2%{?dist}
 
 License: GPLv3+
 Group:	 System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:	 http://www.gnupg.org/
 Source0: ftp://ftp.gnupg.org/gcrypt/dirmngr/dirmngr-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/dirmngr/dirmngr-%{version}.tar.bz2.sig
@@ -39,6 +41,8 @@ an alternative to CRLs. Dirmngr is either invoked internally by
 gpgsm (from gnupg2) or when running as a system daemon through
 the dirmngr-client tool.
 
+%description -l zh_CN.UTF-8
+Dirmngr 是一个管理和下载证书吊销列表 (CRL) 的服务。
 
 %prep
 %setup -q

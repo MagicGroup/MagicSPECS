@@ -1,10 +1,12 @@
 %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
 
 Summary: Automatic API documentation generation tool for Python
+Summary(zh_CN.UTF-8): Python 下的自动 API 文档生成工具
 Name: epydoc
 Version: 3.0.1
 Release: 13%{?dist}
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License: MIT
 URL: http://epydoc.sourceforge.net/
 Source0: http://dl.sf.net/epydoc/epydoc-%{version}.tar.gz
@@ -30,6 +32,8 @@ information  about  specific  fields,  such as parameters and instance
 variables.    Epydoc    also   understands   docstrings   written   in
 ReStructuredText, Javadoc, and plaintext.
 
+%description -l zh_CN.UTF-8
+Python 下的自动 API 文档生成工具。
 
 %prep
 %setup -q
@@ -58,7 +62,7 @@ desktop-file-install \
 
 # Prevent having *.pyc and *.pyo in _bindir
 %{__mv} %{buildroot}%{_bindir}/apirst2html.py %{buildroot}%{_bindir}/apirst2html
-
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}

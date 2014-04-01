@@ -72,7 +72,7 @@ cp -a doc/reference/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
 %{_datadir}/gir-1.0/Json-1.0.gir
 %{_bindir}/json-glib-format
 %{_bindir}/json-glib-validate
-
+%{_mandir}/man1/json-glib-*.1*
 
 %changelog
 * Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 0.99.2-1

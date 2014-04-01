@@ -1,14 +1,14 @@
 %define         clutter_version 1.0
 
 Name:           clutter-gtk
-Version:        1.4.4
+Version:	1.5.2
 Release:        1%{?dist}
 Summary:        A basic GTK clutter widget
 
 Group:          Development/Languages
 License:        LGPLv2+
 URL:            http://www.clutter-project.org
-Source0:        http://www.clutter-project.org/sources/%{name}/1.1/%{name}-%{version}.tar.xz
+Source0:        https://download.gnome.org/sources/clutter-gtk/1.5/%{name}-%{version}.tar.xz
 Patch0:         clutter-gtk-fixdso.patch
 
 BuildRequires:  gtk3-devel >= 3.0.0
@@ -64,6 +64,12 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/clutter-gtk-1.0
 
 %changelog
+* Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.5.2-1
+- 更新到 1.5.2
+
+* Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.5.0-1
+- 更新到 1.5.2
+
 * Wed Mar 20 2013 Richard Hughes <rhughes@redhat.com> - 1.4.4-1
 - Update to 1.4.4
 

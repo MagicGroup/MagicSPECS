@@ -1,0 +1,16 @@
+#!/bin/bash
+url="http://gondor.apana.org.au/~herbert/dash/files/?C=M;O=D"
+new1="dirmngr-"
+new2=".tar.bz2"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && lftp -c "open ftp://ftp.gnupg.org/gcrypt/dirmngr/;ls -t" >> index.html
+if [ -f index.html ];then
+	newver=`grep "$new1.*$new2" index.html|tail -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" `
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

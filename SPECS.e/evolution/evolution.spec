@@ -38,7 +38,8 @@ Summary: Mail and calendar client for GNOME
 License: GPLv2+ and GFDL
 URL: https://wiki.gnome.org/Apps/Evolution
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-Source: http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 Obsoletes: anjal <= %{last_anjal_version}
 Obsoletes: libgal2 <= %{last_libgal2_version}

@@ -6,6 +6,7 @@ Name:           %{far}02
 Version:        0.2.1
 Release:        3%{?dist}
 Summary:        Libraries for videoconferencing
+Summary(zh_CN.UTF-8): 视频会议库
 
 # Package is LGPLv2 except for a few files in /common/coverage/
 License:        LGPLv2+ and GPLv2+
@@ -28,10 +29,14 @@ Requires:       gstreamer1-plugins-bad-free >= 1.0.0
 %{name} is a collection of GStreamer modules and libraries for
 videoconferencing.
 
+%description -l zh_CN.UTF-8
+用于视频会议的 GStreamer 模块和库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       gstreamer1-devel  >= %{gst_ver}
 Requires:       gstreamer1-plugins-base-devel >= %{gst_plugins_base_ver}
@@ -42,6 +47,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{far}-%{version}

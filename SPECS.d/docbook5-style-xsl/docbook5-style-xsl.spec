@@ -1,9 +1,11 @@
 Name: docbook5-style-xsl
-Version: 1.78.0
-Release: 2%{?dist}
+Version: 1.78.1
+Release: 1%{?dist}
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 
 Summary: Norman Walsh's XSL stylesheets for DocBook 5.X
+Summary(zh_CN.UTF-8): DocBook 5.X 的 Norman Walsh 的 XSL 样式表
 
 # Package is licensed as MIT/X (http://wiki.docbook.org/topic/DocBookLicense),
 # some .js files under ./slides/browser/ are licensed MPLv1.1
@@ -26,6 +28,9 @@ These XSL namespace aware stylesheets allow you to transform any
 DocBook 5 document to other formats, such as HTML, manpages, FO,
 XHMTL and other formats. They are highly customizable. For more
 information see W3C page about XSL.
+
+%description -l zh_CN.UTF-8
+DocBook 5.X 的 Norman Walsh 的 XSL 样式表。
 
 %prep
 %setup -q -n docbook-xsl-ns-%{version}
@@ -85,6 +90,9 @@ if [ "$1" = 0 ]; then
 fi
 
 %changelog
+* Fri Mar 21 2014 Liu Di <liudidi@gmail.com> - 1.78.1-1
+- 更新到 1.78.1
+
 * Thu Jan 03 2013 Ondrej Vasik <ovasik@redhat.com> 1.78.0-2
 - resolve missing VERSION.xsl (#891459)
 

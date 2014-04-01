@@ -1,13 +1,15 @@
 Summary: A utility for setting up encrypted disks
+Summary(zh_CN.UTF-8): 设置加密磁盘的工具
 Name: cryptsetup
 Version: 1.6.4
 Release: 2%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://cryptsetup.googlecode.com/
 BuildRequires: libgcrypt-devel, popt-devel, device-mapper-devel
-BuildRequires: libgpg-error-devel, libuuid-devel, libsepol-devel
-BuildRequires: libselinux-devel, python-devel, libpwquality-devel
+BuildRequires: libgpg-error-devel, libuuid-devel
+BuildRequires: python-devel, libpwquality-devel
 BuildRequires: fipscheck-devel >= 1.3.0
 Provides: cryptsetup-luks = %{version}-%{release}
 Obsoletes: cryptsetup-luks < 1.4.0

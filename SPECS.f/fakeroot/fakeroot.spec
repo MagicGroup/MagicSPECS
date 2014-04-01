@@ -1,9 +1,11 @@
 Summary: Gives a fake root environment
+Summary(zh_CN.UTF-8): 创建一个假的 root 环境
 Name: fakeroot
 Version: 1.18.4
 Release: 2%{?dist}
 License: GPL+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://fakeroot.alioth.debian.org/
 Source0: http://ftp.debian.org/debian/pool/main/f/fakeroot/%{name}_%{version}.orig.tar.bz2
 # Address some POSIX-types related problems.
@@ -27,12 +29,20 @@ file manipulation library functions (chmod(2), stat(2) etc.) by ones
 that simulate the effect the real library functions would have had,
 had the user really been root.
 
+%description -l zh_CN.UTF-8
+这个包可以运行需要使用 root 权限操作文件的程序。
+
 %package libs
 Summary: Gives a fake root environment (libraries)
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description libs
 This package contains the libraries required by %{name}.
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %prep
 %setup -q
@@ -76,6 +86,8 @@ done
 # FIXME: Likely should be handled through alternatives
 ln -s faked-tcp %{buildroot}%{_bindir}/faked
 ln -s libfakeroot-tcp.so %{buildroot}%{_libdir}/libfakeroot/libfakeroot-0.so
+
+magic_rpm_clean.sh
 
 %check
 for type in sysv tcp; do

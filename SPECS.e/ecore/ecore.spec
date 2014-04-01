@@ -1,8 +1,10 @@
 Name:           ecore
-Version:        1.7.9
+Version:	1.7.10
 Release:        1%{?dist}
 Summary:        Event/X abstraction layer
+Summary(zh_CN.UTF-8): Event/X 抽象层
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://web.enlightenment.org/p.php?p=about/efl&l=en
 Source0:        http://download.enlightenment.org/releases/%{name}-%{version}.tar.bz2
@@ -21,14 +23,22 @@ Ecore is the event/X abstraction layer that makes doing selections,
 Xdnd, general X stuff, event loops, timeouts and idle handlers fast,
 optimized, and convenient.
 
+%description -l zh_CN.UTF-8
+Event/X 抽象层。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release} 
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -58,6 +68,7 @@ make install DESTDIR=%{buildroot} INSTALL='install -p'
 #chrpath --delete %{buildroot}%{_libdir}/ecore/immodules/xim.so
 
 find %{buildroot} -name '*.la' -delete
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # remove unfinished manpages
@@ -94,6 +105,9 @@ find %{buildroot} -name '*.la' -delete
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Mar 26 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
 * Thu Nov 07 2013 Dan Mashal <dan.mashal@fedoraproject.org> 1.7.9-1
 - Update to 1.7.9
 

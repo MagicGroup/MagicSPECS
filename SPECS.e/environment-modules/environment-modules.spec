@@ -1,5 +1,5 @@
 Name:           environment-modules
-Version:        3.2.9c
+Version:	3.2.10
 Release:        5%{?dist}
 Summary:        Provides dynamic modification of a user's environment
 
@@ -47,10 +47,9 @@ have access to the module alias.
 
 
 %prep
-%setup -q -n modules-3.2.9
+%setup -q -n modules-%{version}
 %patch0 -p1 -b .bindir
-%patch1 -p1 -b .regex
-
+#%patch1 -p1 -b .regex
 
 %build
 %configure --disable-versioning \
@@ -97,6 +96,9 @@ make test
 
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.2.10-5
+- 更新到 3.2.10
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.2.9c-5
 - 为 Magic 3.0 重建
 

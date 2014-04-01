@@ -36,7 +36,7 @@
 %else
 %global build_libtsan 0
 %endif
-%ifarch %{ix86} x86_64 ppc ppc64 s390 s390x %{arm}
+%ifarch %{ix86} x86_64 ppc ppc64 s390 s390x %{arm} mips64el
 %global build_libatomic 1
 %else
 %global build_libatomic 0
@@ -1018,7 +1018,12 @@ CC="$CC" CFLAGS="$OPT_FLAGS" \
 	--with-bugurl=http://www.magiclinux.org/bugs --enable-bootstrap \
 	--enable-shared --enable-threads=posix --enable-checking=release \
 	--with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions \
-	--enable-gnu-unique-object --enable-linker-build-id --with-linker-hash-style=gnu \
+        --enable-gnu-unique-object --enable-linker-build-id \
+%ifarch mips64el
+        --with-linker-hash-style=sysv \
+%else
+        --with-linker-hash-style=gnu \
+%endif
 	--enable-languages=c,c++,objc,obj-c++,java,fortran${enablelada}${enablelgo},lto \
 	--enable-plugin --enable-initfini-array \
 %if !%{build_java}
@@ -1080,6 +1085,9 @@ CC="$CC" CFLAGS="$OPT_FLAGS" \
 %else
 %ifarch %{ix86}
 	--with-arch=i686 \
+%endif
+%ifarch mips64el
+        --with-arch=mips3 --with-abi=64 --disable-multilib \
 %endif
 %ifarch x86_64
 	--with-arch_32=i686 \
@@ -1316,7 +1324,7 @@ find %{buildroot} -name libgcj.a -o -name libgtkpeer.a \
 		     -o -name libgij.a -o -name libgcj_bc.a -o -name libjavamath.a \
   | xargs rm -f
 
-mv %{buildroot}%{_prefix}/lib/libgcj.spec $FULLPATH/
+mv %{buildroot}%{_prefix}/lib*/libgcj.spec $FULLPATH/
 sed -i -e 's/lib: /&%%{static:%%eJava programs cannot be linked statically}/' \
   $FULLPATH/libgcj.spec
 %endif

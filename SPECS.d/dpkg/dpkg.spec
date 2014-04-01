@@ -2,7 +2,7 @@
 %global pkgdatadir      %{_datadir}/dpkg
 
 Name:           dpkg
-Version:        1.16.12
+Version:	1.17.6
 Release:        1%{?dist}
 Summary:        Package maintenance system for Debian Linux
 Group:          System Environment/Base
@@ -92,7 +92,7 @@ there are the following modules:
   - Dpkg::IPC: spawn sub-processes and feed/retrieve data
   - Dpkg::Substvars: substitute variables in strings
   - Dpkg::Vendor: identify current distribution vendor
-  - Dpkg::Version: parse and manipulate Debian package versions
+  - Dpkg::Version:	1.17.6
 
 %package -n dselect
 Summary:  Debian package management front-end
@@ -147,7 +147,7 @@ ln -sf fedora %{buildroot}/%{pkgconfdir}/origins/default
 %endif
 
 # from debian/dpkg.install
-install -pm0644 debian/archtable %{buildroot}/%{pkgdatadir}/archtable
+#install -pm0644 debian/archtable %{buildroot}/%{pkgdatadir}/archtable
 install -pm0644 debian/dpkg.cfg %{buildroot}/%{pkgconfdir}
 install -pm0644 debian/shlibs.default %{buildroot}/%{pkgconfdir}
 install -pm0644 debian/shlibs.override %{buildroot}/%{pkgconfdir}
@@ -156,7 +156,7 @@ install -pm0644 debian/shlibs.override %{buildroot}/%{pkgconfdir}
 mkdir -p %{buildroot}/%{_sysconfdir}/logrotate.d
 install -pm0644 debian/dpkg.logrotate %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
 
-
+magic_rpm_clean.sh
 %find_lang dpkg
 %find_lang dpkg-dev
 %find_lang dselect
@@ -221,7 +221,7 @@ create_logfile
 %{_bindir}/dpkg-statoverride
 %dir %{pkgdatadir}
 %{pkgdatadir}/abitable
-%{pkgdatadir}/archtable
+#%{pkgdatadir}/archtable
 %{pkgdatadir}/cputable
 %{pkgdatadir}/ostable
 %{pkgdatadir}/triplettable
@@ -238,15 +238,6 @@ create_logfile
 %{_mandir}/man5/dpkg.cfg.5.gz
 %{_mandir}/man8/dpkg-divert.8.gz
 %{_mandir}/man8/dpkg-statoverride.8.gz
-%{_mandir}/*/man1/dpkg.1.gz
-%{_mandir}/*/man1/dpkg-deb.1.gz
-%{_mandir}/*/man1/dpkg-maintscript-helper.1.gz
-%{_mandir}/*/man1/dpkg-query.1.gz
-%{_mandir}/*/man1/dpkg-split.1.gz
-%{_mandir}/*/man1/dpkg-trigger.1.gz
-%{_mandir}/*/man5/dpkg.cfg.5.gz
-%{_mandir}/*/man8/dpkg-divert.8.gz
-%{_mandir}/*/man8/dpkg-statoverride.8.gz
 
 %files devel
 %defattr(-,root,root,-)
@@ -305,35 +296,6 @@ create_logfile
 %{_mandir}/man5/deb-triggers.5.gz
 %{_mandir}/man5/deb-version.5.gz
 %{_mandir}/man5/deb.5.gz
-%{_mandir}/*/man1/dpkg-architecture.1.gz
-%{_mandir}/*/man1/dpkg-buildpackage.1.gz
-%{_mandir}/*/man1/dpkg-buildflags.1.gz
-%{_mandir}/*/man1/dpkg-checkbuilddeps.1.gz
-%{_mandir}/*/man1/dpkg-distaddfile.1.gz
-%{_mandir}/*/man1/dpkg-genchanges.1.gz
-%{_mandir}/*/man1/dpkg-gencontrol.1.gz
-%{_mandir}/*/man1/dpkg-gensymbols.1.gz
-%{_mandir}/*/man1/dpkg-mergechangelogs.1.gz
-%{_mandir}/*/man1/dpkg-name.1.gz
-%{_mandir}/*/man1/dpkg-parsechangelog.1.gz
-%{_mandir}/*/man1/dpkg-scanpackages.1.gz
-%{_mandir}/*/man1/dpkg-scansources.1.gz
-%{_mandir}/*/man1/dpkg-shlibdeps.1.gz
-%{_mandir}/*/man1/dpkg-source.1.gz
-%{_mandir}/*/man1/dpkg-vendor.1.gz
-%{_mandir}/*/man5/deb-control.5.gz
-%{_mandir}/*/man5/deb-extra-override.5.gz
-%{_mandir}/*/man5/deb-old.5.gz
-%{_mandir}/*/man5/deb-origin.5.gz
-%{_mandir}/*/man5/deb-override.5.gz
-%{_mandir}/*/man5/deb-shlibs.5.gz
-%{_mandir}/*/man5/deb-split.5.gz
-%{_mandir}/*/man5/deb-src-control.5.gz
-%{_mandir}/*/man5/deb-substvars.5.gz
-%{_mandir}/*/man5/deb-symbols.5.gz
-%{_mandir}/*/man5/deb-triggers.5.gz
-%{_mandir}/*/man5/deb-version.5.gz
-%{_mandir}/*/man5/deb.5.gz
 
 %files perl -f dpkg-dev.lang
 %defattr(-,root,root,-)
@@ -347,17 +309,18 @@ create_logfile
 %defattr(-,root,root,-)
 %doc dselect/methods/multicd/README.multicd dselect/methods/ftp/README.mirrors.txt
 %{_bindir}/dselect
-%{perl_vendorlib}/Debian
+%{perl_vendorlib}/Dselect/Ftp.pm
 %{_libdir}/dpkg/methods
 %{_mandir}/man1/dselect.1.gz
-%{_mandir}/*/man1/dselect.1.gz
 %{_mandir}/man5/dselect.cfg.5.gz
-%{_mandir}/*/man5/dselect.cfg.5.gz
 %dir %{pkgconfdir}/dselect.cfg.d
 /var/lib/dpkg/methods
 
 
 %changelog
+* Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 1.17.6-1
+- 更新到 1.17.6
+
 * Wed Oct 16 2013 Sérgio Basto <sergio@serjux.com> - 1.16.12-1
 - Update to 1.16.12
 - added /etc/dpkg/origins/... , by Oron Peled, rhbz #973832

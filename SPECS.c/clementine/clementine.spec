@@ -4,7 +4,7 @@
 %define _unpackaged_files_terminate_build	0
 
 Name:           clementine
-Version:        1.1.1
+Version:	1.2.2
 Release:        4%{?dist}
 Summary:        A music player and library organiser
 Summary(zh_CN.UTF-8):	一个音乐播放器和曲库管理工具
@@ -12,9 +12,10 @@ Summary(zh_CN.UTF-8):	一个音乐播放器和曲库管理工具
 Group:          Applications/Multimedia
 Group(zh_CN.UTF-8):	应用程序/多媒体
 License:        GPLv3 and GPLv2+
-URL:            http://code.google.com/p/clementine-player
-Source0:        http://clementine-player.googlecode.com/files/%{name}-%{version}.tar.gz
+URL:            http://www.clementine-player.org/
+Source0:        https://github.com/clementine-player/Clementine/archive/%{version}.tar.gz
 Patch0:		clementine-0.3-no3rd.patch
+Patch1:		clementine-1.2.2-fixcompile.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  desktop-file-utils
@@ -29,6 +30,7 @@ BuildRequires:  cmake
 BuildRequires:  sqlite-devel
 BuildRequires:  protobuf-devel
 BuildRequires:  protobuf-compiler
+BuildRequires:  qt4-linguist
 
 %if %{use_external_dependence}
 BuildRequires:  qtsingleapplication-devel
@@ -46,10 +48,10 @@ Clementine 是一个新潮的音乐播放器和曲库管理工具。它大体上
 Amarok 1.4 的一个移植版，捎带一些特性的重写以便得益于Qt4。
 
 %prep
-%setup -q
+%setup -q -n Clementine-%{version}
 #%patch0 -p1 -R -b .no3rd
 #%patch0 -p1 -b .no-external-lib
-#%patch1 -p1 -b .static
+%patch1 -p1
 
 %if %{use_external_dependence}
 # We already don't use these but just to make sure
@@ -83,16 +85,15 @@ rm -rf %{buildroot}
 %doc Changelog COPYING
 %{_bindir}/clementine
 %{_datadir}/applications/clementine.desktop
-#%{_datadir}/clementine/projectm-presets/*
 %{_datadir}/icons/hicolor/*/apps/application-x-clementine.*
-%ifnarch mips64el
-%{_bindir}/clementine-spotifyblob
-%endif
+%{_datadir}/clementine/projectm-presets/*
 %{_bindir}/clementine-tagreader
 %{kde4_servicesdir}/clementine-*.protocol
-#%{_topdir}/BUILD/%{name}-%{version}/%{_target_platform}/spotify/version14-64bit/blob
 
 %changelog
+* Tue Mar 11 2014 Liu Di <liudidi@gmail.com> - 1.2.2-4
+- 更新到 1.2.2
+
 * Sun Apr 28 2013 Liu Di <liudidi@gmail.com> - 1.1.1-4
 - 为 Magic 3.0 重建
 

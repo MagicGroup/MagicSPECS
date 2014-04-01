@@ -1,10 +1,12 @@
 Name:           dlm
-Version:        4.0.1
-Release:        2%{?dist}
+Version:        4.0.2
+Release:        1%{?dist}
 License:        GPLv2 and GPLv2+ and LGPLv2+
 # For a breakdown of the licensing, see README.license
 Group:          System Environment/Kernel
+Group(zh_CN.UTF-8): 系统环境/内核
 Summary:        dlm control daemon and tool
+Summary(zh_CN.UTF-8): dlm 控制服务和工具
 URL:            https://fedorahosted.org/cluster
 BuildRequires:  glibc-kernheaders
 BuildRequires:  corosynclib-devel >= 1.99.9
@@ -12,7 +14,7 @@ BuildRequires:  pacemaker-libs-devel >= 1.1.7
 BuildRequires:  libxml2-devel
 BuildRequires:  systemd-units
 BuildRequires:  systemd-devel
-Source0:	http://people.redhat.com/teigland/%{name}-%{version}.tar.gz
+Source0:	https://git.fedorahosted.org/cgit/dlm.git/snapshot/%{name}-%{version}.tar.xz
 
 #Patch0: 0001-foo.patch
 
@@ -30,6 +32,9 @@ Conflicts: cman
 
 %description
 The kernel dlm requires a user daemon to control membership.
+
+%description -l zh_CN.UTF-8
+内核的 dlm 需要的用户服务和控制。
 
 %prep
 %setup -q

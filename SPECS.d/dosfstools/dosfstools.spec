@@ -1,9 +1,11 @@
 Name: dosfstools
 Summary: Utilities for making and checking MS-DOS FAT filesystems on Linux
-Version: 3.0.25
+Summary(zh_CN.UTF-8): 在 Linux 上创建和检查 MS-DOS FAT 文件系统的工具 
+Version: 3.0.26
 Release: 1%{?dist}
 License: GPLv3+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source0: http://www.daniel-baumann.ch/files/software/dosfstools/%{name}-%{version}.tar.xz
 URL: http://www.daniel-baumann.ch/software/dosfstools/
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -12,6 +14,9 @@ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 The dosfstools package includes the mkdosfs and dosfsck utilities,
 which respectively make and check MS-DOS FAT filesystems on hard
 drives or on floppies.
+
+%description -l zh_CN.UTF-8
+这个包包含了 mkdosfs 和 dosfsck 工具，可以创建和检查硬盘或软盘上的 FAT 文件系统。
 
 %prep
 %setup -q
@@ -35,6 +40,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 3.0.26-1
+- 更新到 3.0.26
+
 * Mon Feb 17 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 3.0.25-1
 - New version
   Resolves: rhbz#1055259
