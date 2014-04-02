@@ -1,29 +1,34 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%define __libtoolize :
+%global __libtoolize :
+%global with_python3 0%{?fedora} || 0%{?rhel} >= 7
 
 Summary: A utility for determining file types
 Name: file
-Version: 5.11
-Release: 6%{?dist}
+Version: 5.14
+Release: 16%{?dist}
 License: BSD
 Group: Applications/File
 Source0: ftp://ftp.astron.com/pub/file/file-%{version}.tar.gz
 # Upstream says it's up to distributions to add a way to support local-magic.
 Patch0: file-localmagic.patch
 # sent upstream - should be included in next upstream release
-Patch1: file-tnef.patch
-Patch2: file-5.10-strength.patch
-Patch3: file-5.10-sticky-bit.patch
-Patch4: file-python-func.patch
-Patch5: file-qed-vdi-image.patch
-Patch6: file-5.11-ia64-swap.patch
-Patch7: file-4.17-rpm-name.patch
-Patch8: file-5.11-magicmgc-home.patch
-Patch9: file-5.11-compress.patch
+Patch1: file-5.10-strength.patch
+Patch2: file-5.10-sticky-bit.patch
+Patch3: file-4.17-rpm-name.patch
+Patch4: file-5.04-volume_key.patch
+Patch5: file-5.04-man-return-code.patch
+Patch6: file-5.04-generic-msdos.patch
+Patch7: file-5.14-x86boot.patch
+Patch8: file-5.14-perl.patch
+Patch9: file-5.14-elfspace.patch
+Patch10: file-5.14-bad-fsmagic-space.patch
+Patch11: file-5.14-no-magic.patch
+Patch12: file-5.14-journald.patch
+Patch13: file-5.14-magic_load.patch
+Patch14: file-5.14-CVE-2014-1943.patch
 URL: http://www.darwinsys.com/file/
 Requires: file-libs = %{version}-%{release}
 BuildRequires: zlib-devel
+BuildRequires: autoconf automake libtool
 
 %description
 The file command is used to identify a particular file according to the
@@ -49,30 +54,37 @@ Requires: %{name} = %{version}-%{release}
 The file-devel package contains the header files and libmagic library
 necessary for developing programs using libmagic.
 
-%package static
-Summary: Static library for file development
-Group:    Applications/File
-Requires: %{name} = %{version}-%{release}
-
-%description static
-The file-static package contains the static version of
-the libmagic library.
-
 %package -n python-magic
-Summary: Python bindings for the libmagic API
+Summary: Python 2 bindings for the libmagic API
 Group:   Development/Libraries
-BuildRequires: python-devel
+BuildRequires: python2-devel
+BuildArch: noarch
 Requires: %{name} = %{version}-%{release}
 
 %description -n python-magic
-This package contains the Python bindings to allow access to the
+This package contains the Python 2 bindings to allow access to the
 libmagic API. The libmagic library is also used by the familiar
 file(1) command.
+
+%if %{with_python3}
+%package -n python3-magic
+Summary: Python 3 bindings for the libmagic API
+Group:   Development/Libraries
+BuildRequires: python3-devel
+BuildArch: noarch
+Requires: %{name} = %{version}-%{release}
+
+%description -n python3-magic
+This package contains the Python 3 bindings to allow access to the
+libmagic API. The libmagic library is also used by the familiar
+file(1) command.
+%endif
 
 %prep
 
 # Don't use -b -- it will lead to poblems when compiling magic file!
 %setup -q
+
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -83,12 +95,25 @@ file(1) command.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
 
 iconv -f iso-8859-1 -t utf-8 < doc/libmagic.man > doc/libmagic.man_
 touch -r doc/libmagic.man doc/libmagic.man_
 mv doc/libmagic.man_ doc/libmagic.man
 
+%if %{with_python3}
+rm -rf %{py3dir}
+cp -a python %{py3dir}
+%endif
+
 %build
+# Fix config.guess to find aarch64 - #925339
+autoreconf -fi
+
 CFLAGS="%{optflags} -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE" \
 %configure --enable-fsect-man5 --disable-rpath
 # remove hardcoded library paths from local libtool
@@ -98,6 +123,10 @@ export LD_LIBRARY_PATH=%{_builddir}/%{name}-%{version}/src/.libs
 make
 cd python
 CFLAGS="%{optflags}" %{__python} setup.py build
+%if %{with_python3}
+cd %{py3dir}
+CFLAGS="%{optflags}" %{__python3} setup.py build
+%endif
 
 %install
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
@@ -115,11 +144,14 @@ cp -a ./magic/magic.local ${RPM_BUILD_ROOT}%{_sysconfdir}/magic
 
 cat magic/Magdir/* > ${RPM_BUILD_ROOT}%{_datadir}/misc/magic
 ln -s misc/magic ${RPM_BUILD_ROOT}%{_datadir}/magic
-#ln -s file/magic.mime ${RPM_BUILD_ROOT}%{_datadir}/magic.mime
 ln -s ../magic ${RPM_BUILD_ROOT}%{_datadir}/file/magic
 
 cd python
 %{__python} setup.py install -O1 --skip-build --root ${RPM_BUILD_ROOT}
+%if %{with_python3}
+cd %{py3dir}
+%{__python3} setup.py install -O1 --skip-build --root ${RPM_BUILD_ROOT}
+%endif
 %{__install} -d ${RPM_BUILD_ROOT}%{_datadir}/%{name}
 
 %post libs -p /sbin/ldconfig
@@ -145,21 +177,98 @@ cd python
 %{_includedir}/magic.h
 %{_mandir}/man3/*
 
-%files static
-%{_libdir}/*.a
-
 %files -n python-magic
 %doc python/README COPYING python/example.py
 %{python_sitelib}/magic.py
 %{python_sitelib}/magic.pyc
 %{python_sitelib}/magic.pyo
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
+%if 0%{?fedora} || 0%{?rhel} >= 6
 %{python_sitelib}/*egg-info
 %endif
 
+%if %{with_python3}
+%files -n python3-magic
+%doc python/README COPYING python/example.py
+%{python3_sitelib}/magic.py
+%{python3_sitelib}/*egg-info
+%{python3_sitelib}/__pycache__/magic*.pyc
+%{python3_sitelib}/__pycache__/magic*.pyo
+%endif
+
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 5.11-6
-- 为 Magic 3.0 重建
+* Tue Feb 25 2014 Jan Kaluza <jkaluza@redhat.com> - 5.14-16
+- fix potential memory leak introduced in previous commit
+
+* Tue Feb 18 2014 Jan Kaluza <jkaluza@redhat.com> - 5.14-15
+- fix #1065837 - fix for CVE-2014-1943
+
+* Wed Jan 15 2014 Jan Kaluza <jkaluza@redhat.com> - 5.14-14
+- fix #1051598 - reverse the order of shebang vs. package keyword detection
+  in Perl by increasing strength of all Perl patterns
+
+* Mon Sep 09 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-13
+- fix #1001689 - fix segfault when calling magic_load twice
+
+* Thu Aug 22 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-12
+- fix #985072 - add support for journald files
+
+* Thu Aug  8 2013 Ville Skyttä <ville.skytta@iki.fi> - 5.14-11
+- Build python-magic for python3 where applicable.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.14-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 02 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-9
+- fix #980446 - do not segfault when no magic is loaded
+
+* Mon Jun 17 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-8
+- replace sitearch with sitelib
+
+* Mon Jun 17 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-7
+- build python-magic as noarch
+
+* Wed May 15 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-6
+- fix #962678 - do not exit if no magic file is loaded, we can still provide
+  useful info without magic file
+
+* Mon May 13 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-5
+- fix #925339 - support aarch64
+
+* Mon Apr 08 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-4
+- fix #948255 - print white-space in fsmagic, but only when
+  we know there will be some more output
+
+* Fri Mar 29 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-3
+- fix #928995 - do not print white-space in the end of fsmagic
+
+* Mon Mar 25 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-2
+- fix useless space in ELF output which could break libtool
+
+* Fri Mar 22 2013 Jan Kaluza <jkaluza@redhat.com> - 5.14-1
+- fix #891856 - update to file-5.14
+- fix #909754 - magic number for Python-3.3
+- fix #912271 - do not report dwarf debug info packages as 'stripped'
+- fix #882321 - do not print 'unknown capability' for ELF capabilities for
+  architectures which File does not support
+- fix #866000 - show proper build id for ELF binaries
+- fix #860139 - better dump file recognition on big endian architectures
+- remove file-static subpackage
+- move python-magic .py files to python_sitearch
+
+* Mon Mar 11 2013 Jan Kaluza <jkaluza@redhat.com> - 5.11-9
+- fix #919466 - fix memory leak in get_default_magic
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.11-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Dec 04 2012 Jan Kaluza <jkaluza@redhat.com> - 5.11-7
+- removed duplicated patterns for backups generated by "dump" tool
+- recognize volume_key escrow packets
+- mention exit code in manpage
+- remove weak msdos patterns
+
+* Wed Nov 21 2012 Jan Kaluza <jkaluza@redhat.com> - 5.11-6
+- clean up the spec file
 
 * Tue Aug 14 2012 Jan Kaluza <jkaluza@redhat.com> - 5.11-5
 - fix #847936 - decompress bzip2 properly when using -z param
@@ -171,7 +280,7 @@ cd python
 * Thu Jul 19 2012 Jan Kaluza <jkaluza@redhat.com> - 5.11-3
 - removed buildroot, defattr
 
-* Tue Jun 21 2012 Jan Kaluza <jkaluza@redhat.com> - 5.11-2
+* Thu Jun 21 2012 Jan Kaluza <jkaluza@redhat.com> - 5.11-2
 - detect names of RPM packages
 - detect swap on ia64 architecture
 
@@ -249,7 +358,7 @@ cd python
 * Wed Nov 24 2010 Jan Kaluza <jkaluza@redhat.com> - 5.04-17
 - fix #656395 - "string" magic directive supports longer strings
 
-* Wed Aug 29 2010 Jan Kaluza <jkaluza@redhat.com> - 5.04-16
+* Wed Aug 25 2010 Jan Kaluza <jkaluza@redhat.com> - 5.04-16
 - fix #637785 - support for zip64 format
 
 * Tue Aug 24 2010 Jan Kaluza <jkaluza@redhat.com> - 5.04-15
@@ -261,7 +370,7 @@ cd python
 * Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 5.04-13
 - Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
 
-* Thu Jul 19 2010 Jan Kaluza <jkaluza@redhat.com> 5.04-12
+* Thu Jul 15 2010 Jan Kaluza <jkaluza@redhat.com> 5.04-12
 - fix #599695 - try to get "from" attribute for ELF binaries
   only from core dumps.
 
@@ -532,7 +641,7 @@ cd python
 * Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 4.16-6.1
 - rebuilt for new gcc4.1 snapshot and glibc changes
 
-* Sun Feb 04 2006 Radek Vokal <rvokal@redhat.com> 4.16-6
+* Sat Feb 04 2006 Radek Vokal <rvokal@redhat.com> 4.16-6
 - xen patch, recognizes Xen saved domain
 
 * Fri Jan 13 2006 Radek Vokal <rvokal@redhat.com> 4.16-5
@@ -562,7 +671,7 @@ cd python
 * Mon Sep 19 2005 Radek Vokal <rvokal@redhat.com> - 4.15-2
 - print xxx-style only once (#168617)
 
-* Thu Aug 09 2005 Radek Vokal <rvokal@redhat.com> - 4.15-1
+* Tue Aug 09 2005 Radek Vokal <rvokal@redhat.com> - 4.15-1
 - upgrade to upstream 
 
 * Tue Aug 09 2005 Radek Vokal <rvokal@redhat.com> - 4.14-4
@@ -748,7 +857,7 @@ cd python
 * Wed Jun 14 2000 Jeff Johnson <jbj@redhat.com>
 - FHS packaging.
 
-* Tue Apr 14 2000 Bernhard Rosenkraenzer <bero@redhat.com>
+* Fri Apr 14 2000 Bernhard Rosenkraenzer <bero@redhat.com>
 - 3.30
 
 * Wed Feb 16 2000 Cristian Gafton <gafton@redhat.com>
