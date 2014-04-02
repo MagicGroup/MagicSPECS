@@ -1,6 +1,6 @@
 Name:           flite
 Version:        1.3
-Release:        18%{?dist}
+Release:        21%{?dist}
 Summary:        Small, fast speech synthesis engine (text-to-speech)
 
 Group:          Applications/Multimedia
@@ -12,6 +12,7 @@ Patch0:         flite-1.3-sharedlibs.patch
 Patch1:         flite-1.3-doc_texinfo.patch
 Patch2:         flite-1.3-alsa_support.patch
 Patch3:         flite-1.3-implicit_dso_linking.patch
+Patch4:         0001-auserver.c-Only-write-audio-data-to-a-file-in-debug-.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?el4}
@@ -45,6 +46,7 @@ Development files for Flite, a small, fast speech synthesis engine.
 %patch1 -p1 -b .flite-1.3-doc_texinfo
 %patch2 -p1 -b .flite-1.3-alsa_support
 %patch3 -p1 -b .flite-1.3-implicit_dso_linking
+%patch4 -p1
 cp -p %{SOURCE1} .
 
 
@@ -96,11 +98,20 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.3-18
-- 为 Magic 3.0 重建
+* Mon Jan  6 2014 Rui Matos <rmatos@redhat.com> - 1.3-21
+- Resolves: (CVE-2014-0027) flite: insecure temporary file use
 
-* Thu Nov 24 2011 Liu Di <liudidi@gmail.com> - 1.3-17
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Mar 13 2011 Francois Aucamp <faucamp@fedoraproject.org> - 1.3-16
 - Added patch declaring explicit libm linking dependency (RHBZ #564899)
