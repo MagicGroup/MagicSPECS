@@ -1,7 +1,7 @@
 Summary: A tool for creating scanners (text pattern recognizers)
 Name: flex
-Version: 2.5.36
-Release: 3%{?dist}
+Version: 2.5.37
+Release: 4%{?dist}
 # parse.c and parse.h are under GPLv3+ with exception which allows
 #	relicensing.  Since flex is shipped under BDS-style license,
 #	let's  assume that the relicensing was done.
@@ -13,6 +13,12 @@ Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 
 # https://sourceforge.net/tracker/?func=detail&aid=3546447&group_id=97492&atid=618177
 Patch0: flex-2.5.36-bison-2.6.1.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=925801
+Patch1: flex-2.5.37-aarch64.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=993447
+Patch2: flex-2.5.37-types.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: m4
@@ -60,6 +66,8 @@ plain text and PDF formats.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %global flexdocdir %{_datadir}/doc/flex-doc-%{version}
 
@@ -120,6 +128,20 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_datadir}/doc/flex-doc-%{version}
 
 %changelog
+* Tue Sep  3 2013 Petr Machata <pmachata@redhat.com> - 2.5.37-4
+- Add a patch for "comparison between signed and unsigned" warnings
+  that GCC produces when compiling flex-generated scanners
+  (flex-2.5.37-types.patch)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.37-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Apr  4 2013 Petr Machata <pmachata@redhat.com> - 2.5.37-2
+- Update config.sub and config.guess to support aarch64
+
+* Wed Mar 20 2013 Petr Machata <pmachata@redhat.com> - 2.5.37-1
+- Rebase to 2.5.37
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.36-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

@@ -1,0 +1,41 @@
+From c53fd2db8c78fef5afd284c3e64da51bc71cf6c3 Mon Sep 17 00:00:00 2001
+From: nomis52 <nomis52@users.sourceforge.net>
+Date: Sat, 4 Aug 2012 15:03:31 -0400
+Subject: [PATCH] Change variable types to silence compiler warnings; resolves
+ #3552806
+
+Signed-off-by: Will Estes <westes575@gmail.com>
+---
+ flex.skl |    2 +-
+ gen.c    |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/flex.skl b/flex.skl
+index 01d8204..7802f45 100644
+--- a/flex.skl
++++ b/flex.skl
+@@ -2360,7 +2360,7 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, yy_size_t ,_yyb
+ 	YY_BUFFER_STATE b;
+ 	char *buf;
+ 	yy_size_t n;
+-	int i;
++	yy_size_t i;
+     m4_dnl M4_YY_DECL_GUTS_VAR();
+ 
+ 	/* Get memory for full buffer, including space for trailing EOB's. */
+diff --git a/gen.c b/gen.c
+index 5a5daef..8d24a86 100644
+--- a/gen.c
++++ b/gen.c
+@@ -1972,7 +1972,7 @@ void make_tables ()
+ 		("if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )");
+ 	indent_up ();
+ 	indent_puts ("{");
+-	indent_puts ("int yyl;");
++	indent_puts ("yy_size_t yyl;");
+ 	do_indent ();
+ 	out_str ("for ( yyl = %s; yyl < yyleng; ++yyl )\n",
+ 		 yymore_used ? (yytext_is_array ? "YY_G(yy_prev_more_offset)" :
+-- 
+1.7.6.5
+

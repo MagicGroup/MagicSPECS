@@ -1,0 +1,36 @@
+diff -urN flex-2.5.36/config.guess flex-2.5.36-aarch64/config.guess
+--- flex-2.5.36/config.guess	2012-06-22 16:02:51.000000000 -0500
++++ flex-2.5.36-aarch64/config.guess	2013-03-03 04:41:12.069186825 -0600
+@@ -854,6 +868,13 @@
+     i*86:Minix:*:*)
+ 	echo ${UNAME_MACHINE}-pc-minix
+ 	exit ;;
++    aarch64:Linux:*:*)
++	echo ${UNAME_MACHINE}-unknown-linux-gnu
++	exit ;;
++    aarch64_be:Linux:*:*)
++	UNAME_MACHINE=aarch64_be
++	echo ${UNAME_MACHINE}-unknown-linux-gnu
++	exit ;;
+     arm*:Linux:*:*)
+ 	eval $set_cc_for_build
+ 	if echo __ARM_EABI__ | $CC_FOR_BUILD -E - 2>/dev/null \
+diff -urN flex-2.5.36/config.sub flex-2.5.36-aarch64/config.sub
+--- flex-2.5.36/config.sub	2012-06-22 16:02:51.000000000 -0500
++++ flex-2.5.36-aarch64/config.sub	2013-03-03 04:41:12.105182658 -0600
+@@ -242,6 +255,7 @@
+ 	# Some are omitted here because they have special meanings below.
+ 	1750a | 580 \
+ 	| a29k \
++	| aarch64 | aarch64_be \
+ 	| alpha | alphaev[4-8] | alphaev56 | alphaev6[78] | alphapca5[67] \
+ 	| alpha64 | alpha64ev[4-8] | alpha64ev56 | alpha64ev6[78] | alpha64pca5[67] \
+ 	| am33_2.0 \
+@@ -322,6 +367,7 @@
+ 	# Recognize the basic CPU types with company name.
+ 	580-* \
+ 	| a29k-* \
++	| aarch64-* | aarch64_be-* \
+ 	| alpha-* | alphaev[4-8]-* | alphaev56-* | alphaev6[78]-* \
+ 	| alpha64-* | alpha64ev[4-8]-* | alpha64ev56-* | alpha64ev6[78]-* \
+ 	| alphapca5[67]-* | alpha64pca5[67]-* | arc-* \
