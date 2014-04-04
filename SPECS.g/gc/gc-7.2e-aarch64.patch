@@ -1,0 +1,462 @@
+diff -up gc-7.2/include/private/gcconfig.h.aarch64 gc-7.2/include/private/gcconfig.h
+--- gc-7.2/include/private/gcconfig.h.aarch64	2013-11-10 02:51:30.000000000 -0600
++++ gc-7.2/include/private/gcconfig.h	2013-11-15 07:19:06.279025167 -0600
+@@ -70,6 +70,13 @@
+ #    define I386
+ #    define mach_type_known
+ # endif
++# if defined(__aarch64__)
++#    define AARCH64
++#    if !defined(LINUX)
++#      define NOSYS
++#      define mach_type_known
++#    endif
++# endif
+ # if defined(__arm) || defined(__arm__) || defined(__thumb__)
+ #    define ARM32
+ #    if !defined(LINUX) && !defined(NETBSD) && !defined(FREEBSD) \
+@@ -251,6 +258,10 @@
+ #    define IA64
+ #    define mach_type_known
+ # endif
++# if defined(LINUX) && defined(__aarch64__)
++#    define AARCH64
++#    define mach_type_known
++# endif
+ # if defined(LINUX) && (defined(__arm) || defined(__arm__))
+ #    define ARM32
+ #    define mach_type_known
+@@ -546,6 +557,7 @@
+                     /*                  running Amdahl UTS4             */
+                     /*             S390       ==> 390-like machine      */
+                     /*                  running LINUX                   */
++                    /*             AARCH64    ==> ARM AArch64           */
+                     /*             ARM32      ==> Intel StrongARM       */
+                     /*             IA64       ==> Intel IPF             */
+                     /*                            (e.g. Itanium)        */
+@@ -1908,6 +1920,31 @@
+ #   endif
+ # endif
+ 
++# ifdef AARCH64
++#   define CPP_WORDSZ 64
++#   define MACH_TYPE "AARCH64"
++#   define ALIGNMENT 8
++#   ifndef HBLKSIZE
++#     define HBLKSIZE 4096
++#   endif
++#   ifdef LINUX
++#     define OS_TYPE "LINUX"
++#     define LINUX_STACKBOTTOM
++#     define DYNAMIC_LOADING
++      extern int __data_start[];
++#     define DATASTART ((ptr_t)__data_start)
++      extern char _end[];
++#     define DATAEND ((ptr_t)(&_end))
++#   endif
++#   ifdef NOSYS
++      /* __data_start is usually defined in the target linker script.   */
++      extern int __data_start[];
++#     define DATASTART ((ptr_t)__data_start)
++      extern void *__stack_base__;
++#     define STACKBOTTOM ((ptr_t)__stack_base__)
++#   endif
++# endif
++
+ # ifdef ARM32
+ #   define CPP_WORDSZ 32
+ #   define MACH_TYPE "ARM32"
+diff -up gc-7.2/libatomic_ops/src/atomic_ops.h.aarch64 gc-7.2/libatomic_ops/src/atomic_ops.h
+--- gc-7.2/libatomic_ops/src/atomic_ops.h.aarch64	2013-11-10 02:02:41.000000000 -0600
++++ gc-7.2/libatomic_ops/src/atomic_ops.h	2013-11-15 07:16:14.345140211 -0600
+@@ -251,6 +251,10 @@
+      || defined(__powerpc64__) || defined(__ppc64__)
+ #   include "atomic_ops/sysdeps/gcc/powerpc.h"
+ # endif /* __powerpc__ */
++# if defined(__aarch64__)
++#   include "atomic_ops/sysdeps/gcc/aarch64.h"
++#   define AO_CAN_EMUL_CAS
++# endif /* __aarch64__ */
+ # if defined(__arm__) && !defined(AO_USE_PTHREAD_DEFS)
+ #   include "atomic_ops/sysdeps/gcc/arm.h"
+ #   define AO_CAN_EMUL_CAS
+diff -up gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/Makefile.am.aarch64 gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/Makefile.am
+--- gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/Makefile.am.aarch64	2013-11-10 02:02:43.000000000 -0600
++++ gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/Makefile.am	2013-11-15 07:16:14.345140211 -0600
+@@ -30,6 +30,7 @@ nobase_sysdep_HEADERS= generic_pthread.h
+ 	  gcc/hexagon.h gcc/hppa.h gcc/ia64.h gcc/m68k.h \
+ 	  gcc/mips.h gcc/powerpc.h gcc/s390.h \
+ 	  gcc/sh.h gcc/sparc.h gcc/x86.h gcc/x86_64.h \
++	  gcc/aarch64.h \
+ 	\
+ 	  hpc/hppa.h hpc/ia64.h \
+ 	\
+diff -up gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/gcc/aarch64.h.aarch64 gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/gcc/aarch64.h
+--- gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/gcc/aarch64.h.aarch64	2013-11-15 07:16:14.345140211 -0600
++++ gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/gcc/aarch64.h	2013-11-15 07:16:14.345140211 -0600
+@@ -0,0 +1,353 @@
++/*
++ * Copyright (c) 1991-1994 by Xerox Corporation.  All rights reserved.
++ * Copyright (c) 1996-1999 by Silicon Graphics.  All rights reserved.
++ * Copyright (c) 1999-2003 by Hewlett-Packard Company. All rights reserved.
++ *
++ *
++ * THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY EXPRESSED
++ * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
++ *
++ * Permission is hereby granted to use or copy this program
++ * for any purpose,  provided the above notices are retained on all copies.
++ * Permission to modify the code and to distribute modified code is granted,
++ * provided the above notices are retained, and a notice that the code was
++ * modified is included with the above copyright notice.
++ *
++ */
++
++#include "../read_ordered.h"
++
++#include "../test_and_set_t_is_ao_t.h"
++
++#include "../standard_ao_double_t.h"
++
++#ifndef AO_UNIPROCESSOR
++  AO_INLINE void
++  AO_nop_write(void)
++  {
++    __asm__ __volatile__("dmb st" : : : "memory");
++  }
++# define AO_HAVE_nop_write
++#endif
++
++#ifndef AO_EXPECT_FALSE
++#if __GNUC__ >= 3 && !defined(LINT2)
++# define AO_EXPECT_FALSE(expr) __builtin_expect(expr, 0)
++  /* Equivalent to (expr) but predict that usually (expr) == 0. */
++#else
++# define AO_EXPECT_FALSE(expr) (expr)
++#endif /* !__GNUC__ */
++#endif
++
++/* TODO: Adjust version check on fixing double-wide AO support in GCC. */
++#if __GNUC__ == 4
++
++  AO_INLINE AO_double_t
++  AO_double_load(const volatile AO_double_t *addr)
++  {
++    AO_double_t result;
++    int status;
++
++    /* Note that STXP cannot be discarded because LD[A]XP is not        */
++    /* single-copy atomic (unlike LDREXD for 32-bit ARM).               */
++    do {
++      __asm__ __volatile__("//AO_double_load\n"
++      "       ldxp  %0, %1, %3\n"
++      "       stxp %w2, %0, %1, %3"
++      : "=&r" (result.AO_val1), "=&r" (result.AO_val2), "=&r" (status)
++      : "Q" (*addr));
++    } while (AO_EXPECT_FALSE(status));
++    return result;
++  }
++# define AO_HAVE_double_load
++
++  AO_INLINE AO_double_t
++  AO_double_load_acquire(const volatile AO_double_t *addr)
++  {
++    AO_double_t result;
++    int status;
++
++    do {
++      __asm__ __volatile__("//AO_double_load_acquire\n"
++      "       ldaxp  %0, %1, %3\n"
++      "       stxp %w2, %0, %1, %3"
++      : "=&r" (result.AO_val1), "=&r" (result.AO_val2), "=&r" (status)
++      : "Q" (*addr));
++    } while (AO_EXPECT_FALSE(status));
++    return result;
++  }
++# define AO_HAVE_double_load_acquire
++
++  AO_INLINE void
++  AO_double_store(volatile AO_double_t *addr, AO_double_t value)
++  {
++    AO_double_t old_val;
++    int status;
++
++    do {
++      __asm__ __volatile__("//AO_double_store\n"
++      "       ldxp  %0, %1, %3\n"
++      "       stxp %w2, %4, %5, %3"
++      : "=&r" (old_val.AO_val1), "=&r" (old_val.AO_val2), "=&r" (status),
++        "=Q" (*addr)
++      : "r" (value.AO_val1), "r" (value.AO_val2));
++      /* Compared to the arm.h implementation, the 'cc' (flags) are not */
++      /* clobbered because A64 has no concept of conditional execution. */
++    } while (AO_EXPECT_FALSE(status));
++  }
++# define AO_HAVE_double_store
++
++  AO_INLINE void
++  AO_double_store_release(volatile AO_double_t *addr, AO_double_t value)
++  {
++    AO_double_t old_val;
++    int status;
++
++    do {
++      __asm__ __volatile__("//AO_double_store_release\n"
++      "       ldxp  %0, %1, %3\n"
++      "       stlxp %w2, %4, %5, %3"
++      : "=&r" (old_val.AO_val1), "=&r" (old_val.AO_val2), "=&r" (status),
++        "=Q" (*addr)
++      : "r" (value.AO_val1), "r" (value.AO_val2));
++    } while (AO_EXPECT_FALSE(status));
++  }
++# define AO_HAVE_double_store_release
++
++  AO_INLINE int
++  AO_double_compare_and_swap(volatile AO_double_t *addr,
++                             AO_double_t old_val, AO_double_t new_val)
++  {
++    AO_double_t tmp;
++    int result = 1;
++
++    do {
++      __asm__ __volatile__("//AO_double_compare_and_swap\n"
++        "       ldxp  %0, %1, %2\n"
++        : "=&r" (tmp.AO_val1), "=&r" (tmp.AO_val2)
++        : "Q" (*addr));
++      if (tmp.AO_val1 != old_val.AO_val1 || tmp.AO_val2 != old_val.AO_val2)
++        break;
++      __asm__ __volatile__(
++        "       stxp %w0, %2, %3, %1\n"
++        : "=&r" (result), "=Q" (*addr)
++        : "r" (new_val.AO_val1), "r" (new_val.AO_val2));
++    } while (AO_EXPECT_FALSE(result));
++    return !result;
++  }
++# define AO_HAVE_double_compare_and_swap
++
++  AO_INLINE int
++  AO_double_compare_and_swap_acquire(volatile AO_double_t *addr,
++                                     AO_double_t old_val, AO_double_t new_val)
++  {
++    AO_double_t tmp;
++    int result = 1;
++
++    do {
++      __asm__ __volatile__("//AO_double_compare_and_swap_acquire\n"
++        "       ldaxp  %0, %1, %2\n"
++        : "=&r" (tmp.AO_val1), "=&r" (tmp.AO_val2)
++        : "Q" (*addr));
++      if (tmp.AO_val1 != old_val.AO_val1 || tmp.AO_val2 != old_val.AO_val2)
++        break;
++      __asm__ __volatile__(
++        "       stxp %w0, %2, %3, %1\n"
++        : "=&r" (result), "=Q" (*addr)
++        : "r" (new_val.AO_val1), "r" (new_val.AO_val2));
++    } while (AO_EXPECT_FALSE(result));
++    return !result;
++  }
++# define AO_HAVE_double_compare_and_swap_acquire
++
++  AO_INLINE int
++  AO_double_compare_and_swap_release(volatile AO_double_t *addr,
++                                     AO_double_t old_val, AO_double_t new_val)
++  {
++    AO_double_t tmp;
++    int result = 1;
++
++    do {
++      __asm__ __volatile__("//AO_double_compare_and_swap_release\n"
++        "       ldxp  %0, %1, %2\n"
++        : "=&r" (tmp.AO_val1), "=&r" (tmp.AO_val2)
++        : "Q" (*addr));
++      if (tmp.AO_val1 != old_val.AO_val1 || tmp.AO_val2 != old_val.AO_val2)
++        break;
++      __asm__ __volatile__(
++        "       stlxp %w0, %2, %3, %1\n"
++        : "=&r" (result), "=Q" (*addr)
++        : "r" (new_val.AO_val1), "r" (new_val.AO_val2));
++    } while (AO_EXPECT_FALSE(result));
++    return !result;
++  }
++# define AO_HAVE_double_compare_and_swap_release
++#endif
++
++AO_INLINE void
++AO_nop_full(void)
++{
++# ifndef AO_UNIPROCESSOR
++__sync_synchronize ();
++# endif
++}
++#define AO_HAVE_nop_full
++
++AO_INLINE AO_t
++AO_load(const volatile AO_t *addr)
++{
++  return  (AO_t)__atomic_load_n (addr, __ATOMIC_RELAXED);
++}
++#define AO_HAVE_load
++
++AO_INLINE AO_t
++AO_load_acquire(const volatile AO_t *addr)
++{
++  return (AO_t)__atomic_load_n (addr, __ATOMIC_ACQUIRE);
++}
++#define AO_HAVE_load_acquire
++
++AO_INLINE void
++ AO_store(volatile AO_t *addr, AO_t value)
++{
++  __atomic_store_n(addr, value, __ATOMIC_RELAXED);
++}
++#define AO_HAVE_store
++
++AO_INLINE void
++ AO_store_release(volatile AO_t *addr, AO_t value)
++{
++  __atomic_store_n(addr, value, __ATOMIC_RELEASE);
++}
++#define AO_HAVE_store_release
++
++AO_INLINE AO_TS_VAL_t
++AO_test_and_set(volatile AO_TS_t *addr)
++{
++  return (AO_TS_VAL_t)__atomic_test_and_set(addr, __ATOMIC_RELAXED);
++}
++# define AO_HAVE_test_and_set
++
++AO_INLINE AO_TS_VAL_t
++AO_test_and_set_acquire(volatile AO_TS_t *addr)
++{
++    return (AO_TS_VAL_t)__atomic_test_and_set(addr, __ATOMIC_ACQUIRE);
++}
++# define AO_HAVE_test_and_set_acquire
++
++AO_INLINE AO_TS_VAL_t
++AO_test_and_set_release(volatile AO_TS_t *addr)
++{
++    return (AO_TS_VAL_t)__atomic_test_and_set(addr, __ATOMIC_RELEASE);
++}
++# define AO_HAVE_test_and_set_release
++
++AO_INLINE AO_TS_VAL_t
++AO_test_and_set_full(volatile AO_TS_t *addr)
++{
++    return (AO_TS_VAL_t)__atomic_test_and_set(addr, __ATOMIC_SEQ_CST);
++}
++# define AO_HAVE_test_and_set_full
++
++AO_INLINE AO_t
++AO_fetch_and_add(volatile AO_t *p, AO_t incr)
++{
++  return (AO_t)__atomic_fetch_add(p, incr, __ATOMIC_RELAXED);
++}
++#define AO_HAVE_fetch_and_add
++
++AO_INLINE AO_t
++AO_fetch_and_add_acquire(volatile AO_t *p, AO_t incr)
++{
++  return (AO_t)__atomic_fetch_add(p, incr, __ATOMIC_ACQUIRE);
++}
++#define AO_HAVE_fetch_and_add_acquire
++
++AO_INLINE AO_t
++AO_fetch_and_add_release(volatile AO_t *p, AO_t incr)
++{
++  return (AO_t)__atomic_fetch_add(p, incr, __ATOMIC_RELEASE);
++}
++#define AO_HAVE_fetch_and_add_release
++
++AO_INLINE AO_t
++AO_fetch_and_add_full(volatile AO_t *p, AO_t incr)
++{
++  return (AO_t)__atomic_fetch_add(p, incr, __ATOMIC_SEQ_CST);
++}
++#define AO_HAVE_fetch_and_add_full
++
++AO_INLINE AO_t
++AO_fetch_and_add1(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_add(p, 1, __ATOMIC_RELAXED);
++}
++#define AO_HAVE_fetch_and_add1
++
++AO_INLINE AO_t
++AO_fetch_and_add1_acquire(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_add(p, 1, __ATOMIC_ACQUIRE);
++}
++#define AO_HAVE_fetch_and_add1_acquire
++
++AO_INLINE AO_t
++AO_fetch_and_add1_release(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_add(p, 1, __ATOMIC_RELEASE);
++}
++#define AO_HAVE_fetch_and_add1_release
++
++AO_INLINE AO_t
++AO_fetch_and_add1_full(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_add(p, 1, __ATOMIC_SEQ_CST);
++}
++#define AO_HAVE_fetch_and_add1_full
++
++AO_INLINE AO_t
++AO_fetch_and_sub1(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_sub(p, 1, __ATOMIC_RELAXED);
++}
++#define AO_HAVE_fetch_and_sub1
++
++AO_INLINE AO_t
++AO_fetch_and_sub1_acquire(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_sub(p, 1, __ATOMIC_ACQUIRE);
++}
++#define AO_HAVE_fetch_and_sub1_acquire
++
++AO_INLINE AO_t
++AO_fetch_and_sub1_release(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_sub(p, 1, __ATOMIC_RELEASE);
++}
++#define AO_HAVE_fetch_and_sub1_release
++
++AO_INLINE AO_t
++AO_fetch_and_sub1_full(volatile AO_t *p)
++{
++  return (AO_t)__atomic_fetch_sub(p, 1, __ATOMIC_SEQ_CST);
++}
++#define AO_HAVE_fetch_and_sub1_full
++
++/* Returns nonzero if the comparison succeeded.  */
++AO_INLINE int
++AO_compare_and_swap(volatile AO_t *addr, AO_t old_val, AO_t new_val)
++{
++  return (int)__sync_bool_compare_and_swap(addr, old_val, new_val);
++}
++# define AO_HAVE_compare_and_swap
++
++AO_INLINE AO_t
++AO_fetch_compare_and_swap(volatile AO_t *addr, AO_t old_val, AO_t new_val)
++{
++    return (AO_t)__sync_val_compare_and_swap(addr, old_val, new_val);
++}
++# define AO_HAVE_fetch_compare_and_swap
++
++
++
++#include "../../generalize.h"
+diff -up gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/standard_ao_double_t.h.aarch64 gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/standard_ao_double_t.h
+--- gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/standard_ao_double_t.h.aarch64	2013-11-10 02:02:47.000000000 -0600
++++ gc-7.2/libatomic_ops/src/atomic_ops/sysdeps/standard_ao_double_t.h	2013-11-15 07:16:14.346140193 -0600
+@@ -12,6 +12,8 @@
+   typedef __m128 double_ptr_storage;
+ #elif defined(_WIN32) && !defined(__GNUC__)
+   typedef unsigned __int64 double_ptr_storage;
++#elif defined(__aarch64__)
++  typedef unsigned __int128 double_ptr_storage;
+ #else
+   typedef unsigned long long double_ptr_storage;
+ #endif
