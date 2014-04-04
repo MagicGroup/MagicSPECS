@@ -3,8 +3,8 @@
 %global minorversion 0.2
 
 Name:           garcon
-Version:        0.2.0
-Release:        4%{?dist}
+Version:        0.2.1
+Release:        3%{?dist}
 Summary:        Implementation of the freedesktop.org menu specification
 
 Group:          System Environment/Libraries
@@ -24,7 +24,7 @@ BuildRequires:  gtk-doc
 BuildRequires:  gettext
 BuildRequires:  intltool
 
-Obsoletes:      libxfce4menu < 4.6.2
+Obsoletes:      libxfce4menu < 4.6.3
 # because of %%{_datadir}/desktop-directories/xfce-*
 Conflicts:      xfdesktop <= 4.6.2
 
@@ -60,7 +60,6 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-magic_rpm_clean.sh
 %find_lang %{name}
 install -pm 644 %{SOURCE1} %{buildroot}%{_datadir}/desktop-directories
 
@@ -95,8 +94,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.2.0-4
-- 为 Magic 3.0 重建
+* Wed Aug 28 2013 Kevin Fenzi <kevin@scrye.com> 0.2.1-3
+- Fix obsoletes. Fixes bug #1002131
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun May 05 2013 Kevin Fenzi <kevin@scrye.com> 0.2.1-1
+- Update to 0.2.1
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
