@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=gambas3
+Icon=gambas3
+Terminal=false
+Name=Gambas3
+Name[es_ES]=Gambas3
+GenericName=Basic IDE
+Comment=IDE based on a Basic interpreter
+Comment[es_ES]=Gambas3 casi es Visual Basic
+Type=Application
+Categories=GNOME;GTK;Development;IDE;
+StartupNotify=true

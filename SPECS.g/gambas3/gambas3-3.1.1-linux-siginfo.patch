@@ -1,0 +1,12 @@
+diff -up gambas3-3.1.1/main/lib/signal/csignal.c.linux-siginfo gambas3-3.1.1/main/lib/signal/csignal.c
+--- gambas3-3.1.1/main/lib/signal/csignal.c.linux-siginfo	2012-05-29 11:41:58.144780636 -0400
++++ gambas3-3.1.1/main/lib/signal/csignal.c	2012-05-29 11:42:14.442645392 -0400
+@@ -40,7 +40,7 @@
+ #define SIGPWR -1
+ #endif
+ 
+-#if !defined(OS_BSD) && !defined(OS_CYGWIN)
++#if !defined(OS_BSD) && !defined(OS_CYGWIN) && !defined(OS_LINUX)
+ typedef
+ 	struct siginfo siginfo_t;
+ #endif
