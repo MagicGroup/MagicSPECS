@@ -1,10 +1,12 @@
 Name:           game-music-emu
-Version:        0.5.5
+Version:        0.6.0
 Release:        3%{?dist}
+Provides:       libgme%{?_isa} = %{version}-%{release}
 Summary:        Video game music file emulation/playback library
 License:        LGPLv2+
 URL:            http://code.google.com/p/game-music-emu/
-Source0:        http://game-music-emu.googlecode.com/files/%{name}-%{version}.tbz2
+Source0:        http://game-music-emu.googlecode.com/files/%{name}-%{version}.tar.bz2
+Patch0:         gme-0.6.0-pc-lib-suffix.patch
 
 BuildRequires:  cmake
 # needed to build the player
@@ -12,7 +14,9 @@ BuildRequires:  SDL-devel
 
 %package devel
 Summary:        Development files for Game_Music_Emu
+Provides:       libgme-devel%{?_isa} = %{version}-%{release}
 Requires:       %{name}%{?_isa} = %{version}
+Requires:       pkgconfig
 
 %package player
 Summary:        Demo player utilizing Game_Music_Emu
@@ -42,8 +46,8 @@ This package contains the demo player for files supported by Game_Music_Emu.
 
 %prep
 %setup -q
-# fix install path on systems with lib64
-sed -i -e "s/DESTINATION lib/DESTINATION %{_lib}/" gme/CMakeLists.txt
+# fix libgme.pc install path
+%patch0
 # add install rule for the player
 echo -e "\ninstall(TARGETS gme_player RUNTIME DESTINATION %{_bindir})" >> player/CMakeLists.txt
 
@@ -78,12 +82,30 @@ cd ..
 %doc design.txt gme.txt
 %{_libdir}/libgme.so
 %{_includedir}/gme/
+%{_libdir}/pkgconfig/libgme.pc
 
 %files player
 %{_bindir}/gme_player
 
 
 %changelog
+* Fri Sep 20 2013 Karel Volný <kvolny@redhat.com> 0.6.0-3
+- Adjust virtual provides according to further comments on bug#1006881
+
+* Fri Sep 13 2013 Karel Volný <kvolny@redhat.com> 0.6.0-2
+- Add virtual provides libgme (bug #1006881)
+
+* Thu Aug 22 2013 Karel Volný <kvolny@redhat.com> 0.6.0-1
+- New release
+- See changes.txt for list of upstream changes
+- Adds pkgconfig file (+ patch to correct path)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
