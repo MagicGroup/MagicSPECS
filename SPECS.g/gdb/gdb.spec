@@ -1,5 +1,6 @@
 # rpmbuild parameters:
 # --with testsuite: Run the testsuite (biarch if possible).  Default is without.
+# --with asan: gcc -fsanitize=address
 # --without python: No python support.
 # --with profile: gcc -fprofile-generate / -fprofile-use: Before better
 #                 workload gets run it decreases the general performance now.
@@ -11,8 +12,9 @@
 %global dist .el5
 %global el5 1
 %endif
-# RHEL-5 Brew does not set %{el5}.
+# RHEL-5 Brew does not set %{el5}, BZ 1002198 tps-srpmtest does not set %{rhel}.
 %if "%{?dist}" == ".el5"
+%global rhel 5
 %global el5 1
 %endif
 
@@ -27,14 +29,17 @@
 Summary: A GNU source-level debugger for C, C++, Fortran, Go and other languages
 Name: %{?scl_prefix}gdb
 
-%global snap       20120817
+# 6e5c95e6cf1e3c37bd3a822ca9e6721caab97a85
+#global snap       20140127
+# Freeze it when GDB gets branched
+%global snapsrc    20140108
 # See timestamp of source gnulib installed into gdb/gnulib/ .
-%global snapgnulib 20120623
-Version: 7.5.0.20120926
+%global snapgnulib 20121213
+Version: 7.7
 
 # The release always contains a leading reserved number, start it at 1.
 # `upstream' is not a part of `name' to stay fully rpm dependencies compatible for the testing.
-Release: 25%{?dist}
+Release: 4%{?dist}
 
 License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ and GPLv2+ with exceptions and GPL+ and LGPLv2+ and BSD and Public Domain
 Group: Development/Debuggers
@@ -51,7 +56,6 @@ Obsoletes: devtoolset-1.0-%{pkg_name}
 # For our convenience
 %global gdb_src %{pkg_name}-%{version}
 %global gdb_build build-%{_target_platform}
-%global gdb_docdir %{_docdir}/%{name}-doc-%{version}
 
 # Make sure we get rid of the old package gdb64, now that we have unified
 # support for 32-64 bits in one single 64-bit gdb.
@@ -75,11 +79,11 @@ Conflicts: elfutils < 0.149
 %endif
 
 # https://fedorahosted.org/fpc/ticket/43 https://fedorahosted.org/fpc/ticket/109
-Provides: bundled(libiberty) = %{snap}
+Provides: bundled(libiberty) = %{snapsrc}
 Provides: bundled(gnulib) = %{snapgnulib}
-Provides: bundled(binutils) = %{snap}
+Provides: bundled(binutils) = %{snapsrc}
 # https://fedorahosted.org/fpc/ticket/130
-Provides: bundled(md5-gcc) = %{snap}
+Provides: bundled(md5-gcc) = %{snapsrc}
 
 # GDB patches have the format `gdb-<version>-bz<red-hat-bz-#>-<desc>.patch'.
 # They should be created using patch level 1: diff -up ./gdb (or gdb-6.3/gdb).
@@ -88,7 +92,6 @@ Provides: bundled(md5-gcc) = %{snap}
 #push=Should be pushed upstream.
 #maybepush=Should be pushed upstream unless it got obsoleted there.
 #fedora=Should stay as a Fedora patch.
-#ia64=Drop after RHEL-5 rebases and rebuilds are no longer meaningful.
 #fedoratest=Keep it in Fedora only as a regression test safety.
 #+ppc=Specific for ppc32/ppc64/ppc*
 #+work=Requires some nontrivial work.
@@ -119,10 +122,6 @@ Patch1: gdb-6.3-rh-dummykfail-20041202.patch
 # Match the Fedora's version info.
 #=fedora
 Patch2: gdb-6.3-rh-testversion-20041202.patch
-
-# Check that libunwind works - new test then fix
-#=ia64
-Patch3: gdb-6.3-rh-testlibunwind-20041202.patch
 
 # Better parse 64-bit PPC system call prologues.
 #=maybepush+ppc: Write new testcase.
@@ -165,33 +164,13 @@ Patch133: gdb-6.3-test-dtorfix-20050121.patch
 #=fedoratest
 Patch136: gdb-6.3-test-movedir-20050125.patch
 
-# Fix gcore for threads
-#=ia64
-Patch140: gdb-6.3-gcore-thread-20050204.patch
-
 # Test sibling threads to set threaded watchpoints for x86 and x86-64
 #=fedoratest
 Patch145: gdb-6.3-threaded-watchpoints2-20050225.patch
 
-# Do not issue warning message about first page of storage for ia64 gcore
-#=ia64
-Patch153: gdb-6.3-ia64-gcore-page0-20050421.patch
-
-# IA64 sigtramp prev register patch
-#=ia64
-Patch158: gdb-6.3-ia64-sigtramp-frame-20050708.patch
-
-# IA64 gcore speed-up patch
-#=ia64
-Patch160: gdb-6.3-ia64-gcore-speedup-20050714.patch
-
 # Notify observers that the inferior has been created
 #=fedoratest
 Patch161: gdb-6.3-inferior-notification-20050721.patch
-
-# Fix ia64 info frame bug
-#=ia64
-Patch162: gdb-6.3-ia64-info-frame-fix-20050725.patch
 
 # Verify printing of inherited members test
 #=fedoratest
@@ -200,10 +179,6 @@ Patch163: gdb-6.3-inheritancetest-20050726.patch
 # Add readnever option
 #=push
 Patch164: gdb-6.3-readnever-20050907.patch
-
-# Fix ia64 gdb problem with user-specified SIGILL handling
-#=ia64
-Patch169: gdb-6.3-ia64-sigill-20051115.patch
 
 # Fix debuginfo addresses resolving for --emit-relocs Linux kernels (BZ 203661).
 #=push+work: There was some mail thread about it, this patch may be a hack.
@@ -261,7 +236,7 @@ Patch231: gdb-6.3-bz202689-exec-from-pthread-test.patch
 
 # Backported fixups post the source tarball.
 #Xdrop: Just backports.
-#Patch232: gdb-upstream.patch
+Patch232: gdb-upstream.patch
 
 # Testcase for PPC Power6/DFP instructions disassembly (BZ 230000).
 #=fedoratest+ppc
@@ -308,6 +283,8 @@ Patch415: gdb-6.6-buildid-locate-core-as-arg.patch
 # Workaround librpm BZ 643031 due to its unexpected exit() calls (BZ 642879).
 #=push
 Patch519: gdb-6.6-buildid-locate-rpm-librpm-workaround.patch
+# [SCL] Skip deprecated .gdb_index warning for Red Hat built files (BZ 953585).
+Patch833: gdb-6.6-buildid-locate-rpm-scl.patch
 
 # Add kernel vDSO workaround (`no loadable ...') on RHEL-5 (kernel BZ 765875).
 #=push
@@ -320,10 +297,6 @@ Patch282: gdb-6.7-charsign-test.patch
 # Test PPC hiding of call-volatile parameter register.
 #=fedoratest+ppc
 Patch284: gdb-6.7-ppc-clobbered-registers-O2-test.patch
-
-# Testsuite fixes for more stable/comparable results.
-#=fedoratest
-Patch287: gdb-6.7-testsuite-stable-results.patch
 
 # Test ia64 memory leaks of the code using libunwind.
 #=fedoratest
@@ -366,16 +339,12 @@ Patch317: gdb-6.8-sparc64-silence-memcpy-check.patch
 #=fedoratest
 Patch320: gdb-6.5-section-num-fixup-test.patch
 
-# Fix PRPSINFO in the core files dumped by gcore (BZ 254229).
-#=push
-Patch329: gdb-6.8-bz254229-gcore-prpsinfo.patch
-
 # Fix register assignments with no GDB stack frames (BZ 436037).
 #=push+work: This fix is incorrect.
 Patch330: gdb-6.8-bz436037-reg-no-longer-active.patch
 
 # Make the GDB quit processing non-abortable to cleanup everything properly.
-#=push: It was useful only after gdb-6.8-attach-signalled-detach-stopped.patch .
+#=fedora: It was useful only after gdb-6.8-attach-signalled-detach-stopped.patch .
 Patch331: gdb-6.8-quit-never-aborts.patch
 
 # [RHEL5] Workaround kernel for detaching SIGSTOPped processes (BZ 809382).
@@ -433,12 +402,6 @@ Patch397: gdb-follow-child-stale-parent.patch
 #=fedoratest: ccache is rarely used and it is even fixed now.
 Patch403: gdb-ccache-workaround.patch
 
-# Implement `info common' for Fortran.
-#=push
-Patch404: gdb-fortran-common-reduce.patch
-#=push
-Patch405: gdb-fortran-common.patch
-
 # Testcase for "Do not make up line information" fix by Daniel Jacobowitz.
 #=fedoratest
 Patch407: gdb-lineno-makeup-test.patch
@@ -476,10 +439,6 @@ Patch491: gdb-gdb-add-index-script.patch
 #=drop+work: Inferior objects should be read in parts, then this patch gets obsoleted.
 Patch496: gdb-bz568248-oom-is-error.patch
 
-# Fix gcore writer for -Wl,-z,relro (PR corefiles/11804).
-#=push: There is different patch on gdb-patches, waiting now for resolution in kernel.
-Patch504: gdb-bz623749-gcore-relro.patch
-
 # Verify GDB Python built-in function gdb.solib_address exists (BZ # 634108).
 #=fedoratest
 Patch526: gdb-bz634108-solib_address.patch
@@ -510,18 +469,6 @@ Patch548: gdb-test-expr-cumulative-archer.patch
 #=push+work
 Patch579: gdb-7.2.50-sparc-add-workaround-to-broken-debug-files.patch
 
-# Fix dlopen of libpthread.so, patched glibc required (Gary Benson, BZ 669432).
-#=push
-Patch618: gdb-dlopen-stap-probe-1of7.patch
-Patch717: gdb-dlopen-stap-probe-2of7.patch
-Patch718: gdb-dlopen-stap-probe-3of7.patch
-Patch719: gdb-dlopen-stap-probe-4of7.patch
-Patch720: gdb-dlopen-stap-probe-5of7.patch
-Patch721: gdb-dlopen-stap-probe-6of7.patch
-Patch722: gdb-dlopen-stap-probe-7of7.patch
-Patch619: gdb-dlopen-stap-probe-test.patch
-Patch723: gdb-dlopen-stap-probe-test2.patch
-
 # Work around PR libc/13097 "linux-vdso.so.1" warning message.
 #=push
 Patch627: gdb-glibc-vdso-workaround.patch
@@ -534,22 +481,16 @@ Patch634: gdb-runtest-pie-override.patch
 #=fedora
 Patch642: gdb-readline62-ask-more-rh.patch
 
-# Enable smaller %{_bindir}/gdb in future by no longer using -rdynamic.
-#=push
-Patch643: gdb-python-rdynamic.patch
-
 # Print reasons for failed attach/spawn incl. SELinux deny_ptrace (BZ 786878).
 #=push
 Patch653: gdb-attach-fail-reasons-5of5.patch
-#=fedora
-Patch657: gdb-attach-fail-reasons-5of5configure.patch
 
 # Workaround crashes from stale frame_info pointer (BZ 804256).
 #=fedora
 Patch661: gdb-stale-frame_info.patch
 
 # Workaround PR libc/14166 for inferior calls of strstr.
-#=push+work: But push it to glibc.
+#=fedora: Compatibility with RHELs (unchecked which ones).
 Patch690: gdb-glibc-strstr-workaround.patch
 
 # Include testcase for `Unable to see a variable inside a module (XLF)' (BZ 823789).
@@ -561,21 +502,41 @@ Patch698: gdb-rhel5.9-testcase-xlf-var-inside-mod.patch
 #=fedoratest
 Patch703: gdb-rhbz-818343-set-solib-absolute-prefix-testcase.patch
 
-# Implement MiniDebugInfo F-18 Feature consumer (Alexander Larsson, BZ 834068).
-#=fedora
-Patch716: gdb-minidebuginfo.patch
+# Fix `GDB cannot access struct member whose offset is larger than 256MB'
+# (RH BZ 795424).
+#=push+work
+Patch811: gdb-rhbz795424-bitpos-20of25.patch
+Patch812: gdb-rhbz795424-bitpos-21of25.patch
+Patch813: gdb-rhbz795424-bitpos-22of25.patch
+Patch814: gdb-rhbz795424-bitpos-23of25.patch
+Patch816: gdb-rhbz795424-bitpos-25of25.patch
+Patch817: gdb-rhbz795424-bitpos-25of25-test.patch
+Patch818: gdb-rhbz795424-bitpos-lazyvalue.patch
 
-# [ppc32] Fix stepping over symbol-less code crash regression (BZ 860696).
-Patch725: gdb-step-symless.patch
+# Import regression test for `gdb/findvar.c:417: internal-error:
+# read_var_value: Assertion `frame' failed.' (RH BZ 947564) from RHEL 6.5.
+#=fedoratest
+Patch832: gdb-rhbz947564-findvar-assertion-frame-failed-testcase.patch
 
-# Fix crash printing classes (BZ 849357, Tom Tromey).
-Patch726: gdb-print-class.patch
+# Fix crash on 'enable count' (Simon Marchi, BZ 993118).
+Patch843: gdb-enable-count-crash.patch
 
-# Permit passing pointers as address number even for C++ methods (Keith Seitz).
-Patch728: gdb-check-type.patch
+# Fix testsuite "ERROR: no fileid for".
+Patch846: gdb-testsuite-nohostid.patch
 
-# entry values: Fix resolving in inlined frames.
-Patch729: gdb-entryval-inlined.patch
+# Fix Python stack corruption.
+Patch847: gdb-python-stacksmash.patch
+
+# [rhel6] DTS backward Python compatibility API (BZ 1020004, Phil Muldoon).
+Patch848: gdb-dts-rhel6-python-compat.patch
+
+# Fix gdb-7.7 auto-load from /usr/share/gdb/auto-load/ regression.
+Patch849: gdb-auto-load-lost-path-7.7.patch
+
+# Fix crash of -readnow /usr/lib/debug/usr/bin/gnatbind.debug (BZ 1069211).
+Patch850: gdb-gnat-dwarf-crash-1of3.patch
+Patch851: gdb-gnat-dwarf-crash-2of3.patch
+Patch852: gdb-gnat-dwarf-crash-3of3.patch
 
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
 # RL_STATE_FEDORA_GDB would not be found for:
@@ -593,7 +554,7 @@ BuildRequires: xz-devel%{?_isa}
 # dlopen() no longer makes rpm-libs%{?_isa} (it's .so) a mandatory dependency.
 BuildRequires: rpm-devel%{?_isa}
 %endif # 0%{!?el5:1}
-BuildRequires: zlib-devel%{?_isa}
+BuildRequires: zlib-devel%{?_isa} libselinux-devel%{?_isa}
 %if 0%{!?_without_python:1}
 %if 0%{?el5:1}
 # This RHEL-5.6 python version got split out python-libs for ppc64.
@@ -608,12 +569,17 @@ BuildRequires: python-devel%{?_isa}
 BuildRequires: libstdc++%{?_isa}
 %endif # 0%{?rhel:1} && 0%{?rhel} <= 6
 %endif # 0%{!?_without_python:1}
-# gdb-doc in PDF:
+# gdb-doc in PDF, see: https://bugzilla.redhat.com/show_bug.cgi?id=919891#c10
 BuildRequires: texinfo-tex
+%if 0%{!?rhel:1} || 0%{?rhel} > 6
+BuildRequires: texlive-collection-latexrecommended
+%endif
+# Permit rebuilding *.[0-9] files even if they are distributed in gdb-*.tar:
+BuildRequires: /usr/bin/pod2man
 
 # BuildArch would break RHEL-5 by overriding arch and not building noarch.
 %if 0%{?el5:1}
-ExclusiveArch: noarch i386 x86_64 ppc ppc64 ia64 s390 s390x
+ExclusiveArch: noarch i386 x86_64 ppc ppc64 s390 s390x
 %endif # 0%{?el5:1}
 
 %if 0%{?_with_testsuite:1}
@@ -637,8 +603,11 @@ ExclusiveArch: noarch i386 x86_64 ppc ppc64 ia64 s390 s390x
 
 BuildRequires: sharutils dejagnu
 # gcc-objc++ is not covered by the GDB testsuite.
-BuildRequires: gcc gcc-c++ gcc-gfortran gcc-java gcc-objc
-%if 0%{!?rhel:1} || 0%{?scl:1} || 0%{?rhel} > 6
+BuildRequires: gcc gcc-c++ gcc-gfortran gcc-objc
+%if 0%{!?rhel:1} || 0%{?rhel} < 7
+BuildRequires: gcc-java libgcj%{bits_local} libgcj%{bits_other}
+%endif
+%if 0%{!?rhel:1} || 0%{?rhel} > 6
 BuildRequires: gcc-go
 %endif
 # archer-sergiodj-stap-patch-split
@@ -660,7 +629,7 @@ BuildRequires: fpc
 BuildRequires: gcc44 gcc44-gfortran
 %endif
 # Copied from gcc-4.1.2-32.
-%ifarch %{ix86} x86_64 ia64 ppc alpha
+%ifarch %{ix86} x86_64 ppc alpha
 BuildRequires: gcc-gnat
 BuildRequires: libgnat%{bits_local} libgnat%{bits_other}
 %endif
@@ -668,8 +637,7 @@ BuildRequires: glibc-devel%{bits_local} glibc-devel%{bits_other}
 BuildRequires: libgcc%{bits_local} libgcc%{bits_other}
 # libstdc++-devel of matching bits is required only for g++ -static.
 BuildRequires: libstdc++%{bits_local} libstdc++%{bits_other}
-BuildRequires: libgcj%{bits_local} libgcj%{bits_other}
-%if 0%{!?rhel:1} || 0%{?scl:1} || 0%{?rhel} > 6
+%if 0%{!?rhel:1} || 0%{?rhel} > 6
 BuildRequires: libgo-devel%{bits_local} libgo-devel%{bits_other}
 %endif
 %if 0%{!?el5:1}
@@ -688,16 +656,6 @@ BuildRequires: xz
 %endif
 
 %endif # 0%{?_with_testsuite:1}
-
-%ifarch ia64
-%if 0%{!?el5:1}
-BuildRequires: libunwind-devel >= 0.99-0.1.frysk20070405cvs
-Requires: libunwind >= 0.99-0.1.frysk20070405cvs
-%else
-BuildRequires: libunwind >= 0.96-3
-Requires: libunwind >= 0.96-3
-%endif
-%endif
 
 %{?scl:Requires:%scl_runtime}
 
@@ -766,15 +724,18 @@ tar xjf %{SOURCE5}
 rm -f gdb/ada-exp.c gdb/ada-lex.c gdb/c-exp.c gdb/cp-name-parser.c gdb/f-exp.c
 rm -f gdb/jv-exp.c gdb/m2-exp.c gdb/objc-exp.c gdb/p-exp.c gdb/go-exp.c
 
+# *.info* is needlessly split in the distro tar; also it would not get used as
+# we build in %{gdb_build}, just to be sure.
+find -name "*.info*"|xargs rm -f
+
 # Apply patches defined above.
 
 # Match the Fedora's version info.
 %patch2 -p1
 
-#patch232 -p1
 %patch349 -p1
+%patch232 -p1
 %patch1 -p1
-%patch3 -p1
 
 %patch105 -p1
 %patch111 -p1
@@ -784,16 +745,10 @@ rm -f gdb/jv-exp.c gdb/m2-exp.c gdb/objc-exp.c gdb/p-exp.c gdb/go-exp.c
 %patch125 -p1
 %patch133 -p1
 %patch136 -p1
-%patch140 -p1
 %patch145 -p1
-%patch153 -p1
-%patch158 -p1
-%patch160 -p1
 %patch161 -p1
-%patch162 -p1
 %patch163 -p1
 %patch164 -p1
-%patch169 -p1
 %patch188 -p1
 %patch194 -p1
 %patch196 -p1
@@ -822,7 +777,6 @@ rm -f gdb/jv-exp.c gdb/m2-exp.c gdb/objc-exp.c gdb/p-exp.c gdb/go-exp.c
 %patch276 -p1
 %patch282 -p1
 %patch284 -p1
-%patch287 -p1
 %patch289 -p1
 %patch290 -p1
 %patch294 -p1
@@ -833,9 +787,7 @@ rm -f gdb/jv-exp.c gdb/m2-exp.c gdb/objc-exp.c gdb/p-exp.c gdb/go-exp.c
 %patch315 -p1
 %patch317 -p1
 %patch320 -p1
-%patch329 -p1
 %patch330 -p1
-%patch331 -p1
 %patch343 -p1
 %patch348 -p1
 %patch360 -p1
@@ -845,8 +797,6 @@ rm -f gdb/jv-exp.c gdb/m2-exp.c gdb/objc-exp.c gdb/p-exp.c gdb/go-exp.c
 %patch392 -p1
 %patch397 -p1
 %patch403 -p1
-%patch404 -p1
-%patch405 -p1
 %patch389 -p1
 %patch394 -p1
 %patch407 -p1
@@ -860,48 +810,56 @@ rm -f gdb/jv-exp.c gdb/m2-exp.c gdb/objc-exp.c gdb/p-exp.c gdb/go-exp.c
 %patch490 -p1
 %patch491 -p1
 %patch496 -p1
-%patch504 -p1
 %patch526 -p1
 %patch542 -p1
 %patch547 -p1
 %patch548 -p1
 %patch579 -p1
-%patch618 -p1
-%patch717 -p1
-%patch718 -p1
-%patch719 -p1
-%patch720 -p1
-%patch721 -p1
-%patch722 -p1
-%patch723 -p1
-%patch619 -p1
 %patch627 -p1
 %patch634 -p1
-%patch643 -p1
 %patch653 -p1
-%patch657 -p1
 %patch661 -p1
 %patch690 -p1
 %patch698 -p1
 %patch703 -p1
-%patch716 -p1
-%patch725 -p1
-%patch726 -p1
-%patch728 -p1
-%patch729 -p1
+%patch811 -p1
+%patch812 -p1
+%patch813 -p1
+%patch814 -p1
+%patch816 -p1
+%patch817 -p1
+%patch818 -p1
+%patch832 -p1
+%patch843 -p1
+%patch846 -p1
+%patch847 -p1
+%patch849 -p1
+%patch850 -p1
+%patch851 -p1
+%patch852 -p1
 
+%patch848 -p1
+%if 0%{!?el6:1}
+%patch848 -p1 -R
+%endif
 %patch393 -p1
 %if 0%{!?el5:1} || 0%{?scl:1}
 %patch393 -p1 -R
+%endif
+%patch833 -p1
+%if 0%{!?el6:1} || 0%{!?scl:1}
+%patch833 -p1 -R
 %endif
 %patch642 -p1
 %if 0%{?rhel:1} && 0%{?rhel} <= 6
 %patch642 -p1 -R
 %endif
 %patch337 -p1
+%patch331 -p1
 %patch335 -p1
 %if 0%{!?rhel:1} || 0%{?rhel} > 6
 %patch335 -p1 -R
+%patch331 -p1 -R
 %patch337 -p1 -R
 %endif
 
@@ -911,9 +869,9 @@ find -name "*.orig" | xargs rm -f
 # Change the version that gets printed at GDB startup, so it is RH specific.
 cat > gdb/version.in << _FOO
 %if 0%{!?rhel:1}
-Fedora (%{version}-%{release})
+Fedora %{version}-%{release}
 %else # !0%{!?rhel:1} 
-Red Hat Enterprise Linux (%{version}-%{release})
+Red Hat Enterprise Linux %{version}-%{release}
 %endif # !0%{!?rhel:1} 
 _FOO
 
@@ -948,21 +906,20 @@ do
 mkdir %{gdb_build}$fprofile
 cd %{gdb_build}$fprofile
 
-export CFLAGS="$RPM_OPT_FLAGS"
-export LDFLAGS="%{?__global_ldflags}"
+export CFLAGS="$RPM_OPT_FLAGS %{?_with_asan:-fsanitize=address}"
+export LDFLAGS="%{?__global_ldflags} %{?_with_asan:-fsanitize=address}"
 
+# --htmldir and --pdfdir are not used as they are used from %{gdb_build}.
 ../configure							\
 	--prefix=%{_prefix}					\
 	--libdir=%{_libdir}					\
 	--sysconfdir=%{_sysconfdir}				\
 	--mandir=%{_mandir}					\
 	--infodir=%{_infodir}					\
-	--htmldir=%{gdb_docdir}					\
-	--pdfdir=%{gdb_docdir}					\
 	--with-system-gdbinit=%{_sysconfdir}/gdbinit		\
 	--with-gdb-datadir=%{_datadir}/gdb			\
 	--enable-gdb-build-warnings=,-Wno-unused		\
-%ifnarch %{ix86} alpha ia64 ppc s390 s390x x86_64 ppc64 sparc sparcv9 sparc64
+%ifnarch %{ix86} alpha ppc s390 s390x x86_64 ppc64 sparc sparcv9 sparc64
 	--disable-werror					\
 %else
 	--enable-werror						\
@@ -1000,11 +957,7 @@ $(: RHEL-5 librpm has incompatible API. )			\
 %else
 	--without-lzma						\
 %endif
-%ifarch ia64
-	--with-libunwind					\
-%else
 	--without-libunwind					\
-%endif
 %ifarch sparc sparcv9 sparc64
 	--without-mmap						\
 %endif
@@ -1024,6 +977,7 @@ $(: It breaks RHEL-5 by %{_target_platform} being noarch-redhat-linux-gnu ) \
 %ifarch noarch
 	$(:)
 %else
+	--enable-targets=s390-linux-gnu,powerpc-linux-gnu,arm-linux-gnu,aarch64-linux-gnu	\
 	%{_target_platform}
 %endif
 %endif
@@ -1067,8 +1021,8 @@ perl -i.relocatable -pe 's/^(D\[".*_RELOCATABLE"\]=" )1(")$/${1}0$2/' gdb/config
 make %{?_smp_mflags} CFLAGS="$CFLAGS $FPROFILE_CFLAGS" LDFLAGS="$LDFLAGS $FPROFILE_CFLAGS"
 
 ! grep '_RELOCATABLE.*1' gdb/config.h
-#grep '^#define HAVE_LIBSELINUX 1$' gdb/config.h
-#grep '^#define HAVE_SELINUX_SELINUX_H 1$' gdb/config.h
+grep '^#define HAVE_LIBSELINUX 1$' gdb/config.h
+grep '^#define HAVE_SELINUX_SELINUX_H 1$' gdb/config.h
 
 if [ "$fprofile" = "-fprofile" ]
 then
@@ -1094,7 +1048,7 @@ $(: fmtutil: format directory '/builddir/.texmf-var/web2c' does not exist. ) \
 %else
      %{?_smp_mflags} \
 %endif
-     -C gdb/doc {gdb,annotate}{.info,/index.html} MAKEHTMLFLAGS=--no-split
+     -C gdb/doc {gdb,annotate}{.info,/index.html,.pdf} MAKEHTMLFLAGS=--no-split MAKEINFOFLAGS=--no-split
 
 grep '#define HAVE_ZLIB_H 1' gdb/config.h
 
@@ -1193,10 +1147,6 @@ rm -rf $RPM_BUILD_ROOT
 
 make %{?_smp_mflags} install DESTDIR=$RPM_BUILD_ROOT
 
-# install the gcore script in /usr/bin
-cp $RPM_BUILD_DIR/%{gdb_src}/gdb/gdb_gcore.sh $RPM_BUILD_ROOT%{_bindir}/gcore
-chmod 755 $RPM_BUILD_ROOT%{_bindir}/gcore
-
 # Provide gdbtui for RHEL-5 and RHEL-6 as it is removed upstream (BZ 797664).
 %if 0%{?rhel:1} && 0%{?rhel} <= 6
 test ! -e $RPM_BUILD_ROOT%{_prefix}/bin/gdbtui
@@ -1224,8 +1174,9 @@ for pyo in "" "-O";do
 done
 %endif # 0%{?_enable_debug_packages:1} && 0%{!?_without_python:1}
 
-%if 0%{?rhel:1} && 0%{?rhel} <= 6
 %if 0%{!?_without_python:1}
+mkdir $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load
+%if 0%{?rhel:1} && 0%{?rhel} <= 6
 # Temporarily now:
 for LIB in lib lib64;do
   LIBPATH="$RPM_BUILD_ROOT%{_datadir}/gdb/auto-load%{_root_prefix}/$LIB"
@@ -1247,12 +1198,20 @@ for i in `find $RPM_BUILD_ROOT%{_datadir}/gdb/python -name "*.py"` \
   # Files come from gdb-archer.patch and can be also further patched.
   touch -r $RPM_BUILD_DIR/%{gdb_src}/gdb/ChangeLog $i
 done
+%else # 0%{!?rhel:1} || 0%{?rhel} > 6
+# BZ 999645: /usr/share/gdb/auto-load/ needs filesystem symlinks
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load
+for i in $(echo bin lib $(basename %{_libdir}) sbin|tr ' ' '\n'|sort -u);do
+  ln -s $(echo %{_root_prefix}|sed 's#^/*##')/$i \
+        $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/$i
+done
+%endif # 0%{!?rhel:1} || 0%{?rhel} > 6
 %endif # 0%{!?_without_python:1}
-%endif # 0%{?rhel:1} && 0%{?rhel} <= 6
 
 # gdb-add-index cannot be run even for SCL package on RHEL<=6.
 %if 0%{?rhel:1} && 0%{?rhel} <= 6
 rm -f $RPM_BUILD_ROOT%{_bindir}/gdb-add-index
+rm -f $RPM_BUILD_ROOT%{_mandir}/*/gdb-add-index.1*
 %endif
 
 # Remove the files that are part of a gdb build but that are owned and
@@ -1298,6 +1257,7 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/gdb.info*
 # -j1: There is some race resulting in:
 # /usr/bin/texi2dvi: texinfo.tex appears to be broken, quitting.
 make -j1 -C gdb/doc install DESTDIR=$RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT%{_mandir}
 %endif # noarch
 
 # Documentation only for development; keep 'rm's here after "noarch" above.
@@ -1322,7 +1282,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/gdb
 %config(noreplace) %{_sysconfdir}/gdbinit
 %{_sysconfdir}/gdbinit.d
+%{_mandir}/*/gdbinit.5*
 %{_mandir}/*/gdb.1*
+%{_mandir}/*/gcore.1*
+# gdb-add-index cannot be run even for SCL package on RHEL<=6.
+%if 0%{!?rhel:1} || 0%{?rhel} > 6
+%{_mandir}/*/gdb-add-index.1*
+%endif
 %{_bindir}/gstack
 %{_mandir}/*/gstack.1*
 # Provide gdbtui for RHEL-5 and RHEL-6 as it is removed upstream (BZ 797664).
@@ -1350,12 +1316,29 @@ rm -rf $RPM_BUILD_ROOT
 %endif # %{have_inproctrace}
 %endif
 
+%if 0%{!?_without_python:1}
+# [rhel] Do not migrate /usr/share/gdb/auto-load/ with symlinks on RHELs.
+%if 0%{!?rhel:1}
+%pre
+for i in $(echo bin lib $(basename %{_libdir}) sbin|tr ' ' '\n'|sort -u);do
+  src="%{_datadir}/gdb/auto-load/$i"
+  dst="%{_datadir}/gdb/auto-load/%{_root_prefix}/$i"
+  if test -d $src -a ! -L $src;then
+    if ! rmdir 2>/dev/null $src;then
+      mv -n $src/* $dst/
+      rmdir $src
+    fi
+  fi
+done
+%endif # 0%{!?rhel:1}
+%endif # 0%{!?_without_python:1}
+
 # It would break RHEL-5 by leaving excessive files for the doc subpackage.
 %endif # !noarch
 %if 0%{!?el5:1} || "%{_target_cpu}" == "noarch"
 
 %files doc
-%doc %{gdb_build}/gdb/doc/{gdb,annotate}.html
+%doc %{gdb_build}/gdb/doc/{gdb,annotate}.{html,pdf}
 %defattr(-,root,root)
 %{_infodir}/annotate.info*
 %{_infodir}/gdb.info*
@@ -1385,6 +1368,233 @@ fi
 %endif # 0%{!?el5:1} || "%{_target_cpu}" == "noarch"
 
 %changelog
+* Mon Feb 24 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7-4.fc21
+- Fix crash of -readnow /usr/lib/debug/usr/bin/gnatbind.debug (BZ 1069211).
+
+* Sun Feb 23 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7-3.fc21
+- [rhel6] DTS backward Python compatibility API (BZ 1020004, Phil Muldoon).
+- [rhel6] Do not install its man page if gdb-add-index is not installed.
+- [rhel] Do not migrate /usr/share/gdb/auto-load/ with symlinks on RHELs.
+- Fix gdb-7.7 auto-load from /usr/share/gdb/auto-load/ regression.
+
+* Sun Feb  9 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7-2.fc21
+- [rhel] Fix rebase build regression on RHEL systems (Tobias Burnus).
+
+* Fri Feb  7 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.7-1.fc21
+- Rebase to FSF GDB 7.7.
+- New rpmbuild option: --with asan
+
+* Thu Jan 23 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20140119-20.fc20
+- [s390*,ppc*] Enable secondary targets s390* and ppc* (BZ 1056259).
+
+* Sun Jan 19 2014 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20140119-19.fc20
+- Backport several gdb-7.6.x stable branch fixes (BZ 1055155).
+
+* Wed Dec 25 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-18.fc20
+- [aarch64] Backport two breakpoint/watchpoint fixes.
+
+* Mon Nov 18 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-17.fc20
+- [rhel7] [--with testsuite] Remove gcc-java&co. BuildRequires.
+
+* Sat Nov  9 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-16.fc20
+- Fix explicit Class:: inside class scope (BZ 874817, Keith Seitz).
+
+* Tue Nov  5 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-15.fc20
+- [aarch64] Backport two fixes (BZ 1026484).
+
+* Sun Nov  3 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-14.fc20
+- Fix %{_bindir}gdb-add-index to also use -iex 'set auto-load no'.
+
+* Wed Oct 30 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-13.fc20
+- [rhel5] Fix /etc/gdbinit compatibility with python-2.4.
+
+* Mon Sep 30 2013 Sergio Durigan Junior <sergiodj@redhat.com> - 7.6.50.20130731-12.fc20
+- Fix the case when GDB leaks memory because value_struct_elt does not call
+  check_typedef.  (Doug Evans, BZ 15695, filed as RH BZ 1013453).
+
+* Wed Sep 25 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-11.fc20
+- Enable arm-linux-gnu and aarch64-linux-gnu targets on all archs (BZ 1011647).
+
+* Mon Sep  9 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-10.fc20
+- Fix the version string to be GNU standards compliant (BZ 1004949).
+
+* Fri Aug 30 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-9.fc20
+- Load /etc/gdbinit.d/*.{gdb,py} files automatically (BZ 981520).
+
+* Fri Aug 30 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-8.fc20
+- New %%pre to fix failed upgrade of the previous commit (BZ 999645).
+- Fix false warnings of new %%pre during future upgrades (BZ 999645).
+
+* Wed Aug 28 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-7.fc20
+- Fix /usr/share/gdb/auto-load/ need of filesystem symlinks (BZ 999645).
+  It needs: yum remove gdb-heap; yum reinstall gdb; yum install gdb-heap
+
+* Thu Aug  8 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-6.fc20
+- [rhel5] tps-srpmtest does not set %%{rhel} (BZ 1002198, Miroslav Franc).
+
+* Thu Aug  8 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-5.fc20
+- Simplify BuildRequires by texlive-collection-latexrecommended (see BZ 919891).
+
+* Tue Aug  6 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-4.fc20
+- Revert the texlive-collection-latexrecommended change (see BZ 919891).
+
+* Tue Aug  6 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-3.fc20
+- Simplify BuildRequires by texlive-collection-latexrecommended (see BZ 919891).
+- Fix crash on 'enable count' (Simon Marchi, BZ 993118).
+
+* Fri Aug  2 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-2.fc20
+- Drop ia64 patches and .spec support.
+
+* Fri Aug  2 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6.50.20130731-1.fc20
+- Rebase to FSF GDB 7.6.50.20130731 (snapshot between 7.6 and future 7.7).
+
+* Mon Jul 29 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-36.fc20
+- Remove %%{gdb_docdir}, rebuild for unversioned docdirs (for BZ 986871).
+
+* Wed Jul 24 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-35.fc20
+- [ppc] Support Power8 CPU (IBM, BZ 731875).
+
+* Wed Jul 17 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-34.fc20
+- Remove --disablerepo='*' from BZ 554152 as it conflicts with BZ 981154.
+
+* Wed Jul 17 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-33.fc20
+- Fix yum install command output when the binary RPM is missing (BZ 981154).
+- Fix the changlog entry formatting for 6.3.0.0-0.1.
+
+* Mon Jun 10 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-32.fc19
+- [scl] Disable Python frame filters on scl.
+- Update libraries opening performance fix from upstream.
+- Fix C++ lookups performance regression (Doug Evans, BZ 972677).
+
+* Tue May 28 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-31.fc19
+- [ppc] Backport hardware watchpoints fix (Edjunior Machado, BZ 967915).
+
+* Tue May 21 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-30.fc19
+- Backported Python frame filters (Phil Muldoon).
+- Backported breakpoint conditions crash fix (Sergio Durigan Junior).
+
+* Sun May 19 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-29.fc19
+- Fix performance regression opening many libraries (Gary Benson, BZ 965106).
+
+* Thu May  9 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-28.fc19
+- Fix needless expansion of non-gdbindex symtabs (Doug Evans).
+
+* Mon May  6 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-27.fc19
+- [testsuite] [RHEL-5] Fix gdb-orphanripper.c runtime error.
+
+* Fri May  3 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-26.fc19
+- Fix gcore for vDSO (on ppc64).
+
+* Sat Apr 27 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-25.fc19
+- Fix false "Unknown error 512" on x32 (H.J. Lu, BZ 956883).
+
+* Fri Apr 26 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.6-24.fc19
+- Rebase to FSF GDB 7.6.
+
+* Wed Apr 24 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130423-23.fc19
+- Fix man page BuildRequires (for BZ 881892).
+
+* Tue Apr 23 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130423-22.fc19
+- [spec] Fix virtual bundles after GDB has been branched.
+
+* Tue Apr 23 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130423-21.fc19
+- Rebase to FSF GDB 7.5.91.20130423 (pre-7.6 snapshot).
+
+* Mon Apr 22 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130407-20.fc19
+- [SCL] Skip deprecated .gdb_index warning for Red Hat built files (BZ 953585).
+
+* Mon Apr 22 2013 Sergio Durigan Junior <sergiodj@redhat.com> - 7.5.91.20130407-19.fc19
+- [RHEL-6] Regression test for RH BZ 947564.
+
+* Thu Apr 11 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130407-18.fc19
+- Provide man page for gcore.1 and gdb-add-index.1 (BZ 881892).
+
+* Sun Apr  7 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130407-17.fc19
+- [RHEL-5] Fix noarch doc build.
+
+* Sun Apr  7 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130407-16.fc19
+- Rebase to FSF GDB 7.5.91.20130407 (pre-7.6 snapshot).
+- [SCL] Remove BuildRequires of gcc-go on SCL (Miroslav Franc, BZ 948982).
+- Provide man page for gdbinit.5 (BZ 881892), document gdb -p in man (BZ 659000).
+
+* Tue Apr  2 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130402-15.fc19
+- Rebase to FSF GDB 7.5.91.20130402 (pre-7.6 snapshot).
+
+* Sat Mar 23 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.91.20130323-14.fc19
+- Rebase to FSF GDB 7.5.91.20130310 (pre-7.6 snapshot).
+- Fix crash regression from the dlopen of libpthread.so fix (BZ 911712).
+
+* Mon Mar 11 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130310-13.fc19
+- [RHEL-5] Import build regression fix.
+
+* Sun Mar 10 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130310-12.fc19
+- Add workaround of PDF gdb-doc build (filed as RH BZ 919891).
+
+* Sun Mar 10 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130310-11.fc19
+- Re-enable (again) PDF in gdb-doc after texinfo RH BZ 876710 has been fixed.
+
+* Sun Mar 10 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130310-10.fc19
+- Rebase to FSF GDB 7.5.50.20130310 (pre-7.6 snapshot).
+- Fix various entry-values sub-optimal results.
+
+* Mon Feb 25 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130215-9.fc19
+- testsuite: Fix gdb.arch/powerpc-power6.exp testcase (IBM, RH BZ 890900).
+
+* Tue Feb 19 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130215-8.fc19
+- Temporarily disable PDF in gdb-doc for still unavailable texinfo RH BZ 876710.
+
+* Mon Feb 18 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130215-7.fc19
+- Rebase to FSF GDB 7.5.50.20130215 (pre-7.6 snapshot).
+
+* Fri Feb  8 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130118-6.fc19
+- Re-enable PDF in gdb-doc after texinfo RH BZ 876710 has been fixed.
+
+* Mon Feb  4 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130118-5.fc19
+- Release bump only.
+
+* Fri Feb  1 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130118-4.fc19
+- Fix assert crashes with minidebuginfo (BZ 903522).
+
+* Fri Jan 25 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130118-3.fc19
+- Release bump only.
+
+* Mon Jan 21 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130118-2.fc19
+- [RHEL] Reintroduce gdb-6.8-quit-never-aborts.patch.
+
+* Sat Jan 19 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.50.20130118-1.fc19
+- Rebase to FSF GDB 7.5.50.20130118 (pre-7.6 snapshot).
+
+* Sun Jan 13 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-35.fc18
+- [testsuite] Fix gdb-orphanripper.c lockup on F-17 (/dev/pts/* glibc chown).
+
+* Tue Jan  8 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-34.fc18
+- Update dlopen to support map_failed probe of glibc (Gary Benson, BZ 886516).
+
+* Thu Jan  3 2013 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-33.fc18
+- [ppc*] Fix PowerPC disassembly regression (Alan Modra, Edjunior Machado).
+
+* Thu Dec 13 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-32.fc18
+- 'dwz -m' parsing fix (Tom Tromey).
+
+* Mon Dec  3 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-31.fc18
+- Fix DW_OP_GNU_implicit_pointer offset bug (Tom Tromey).
+
+* Sun Dec  2 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-30.fc18
+- Temporarily disable PDF in gdb-doc before texinfo RH BZ 876710 gets fixed.
+
+* Thu Nov 29 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-29.fc18
+- Provide Source URL when it is a release.
+
+* Thu Nov 29 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-28.fc18
+- Fix (unsplit) split info doc.
+
+* Thu Nov 29 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.1-27.fc18
+- Rebase to FSF GDB 7.5.1 (7.5 stable branch).
+
+* Fri Nov  9 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.0.20120926-26.fc18
+- Fix `GDB cannot access struct member whose offset is larger than 256MB'
+  (RH BZ 871066).
+
 * Fri Oct  5 2012 Jan Kratochvil <jan.kratochvil@redhat.com> - 7.5.0.20120926-25.fc18
 - entry values: Fix resolving in inlined frames.
 
@@ -2922,7 +3132,7 @@ fi
 * Sun Oct 14 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.6-36
 - Fix hardware watchpoints after inferior forks-off some process.
 
-* Fri Oct 13 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.6-35
+* Sat Oct 13 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.6-35
 - Fix non-threaded watchpoints CTRL-C regression on `set follow child'.
 
 * Fri Oct 12 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.6-34
@@ -3069,7 +3279,7 @@ fi
 * Mon Jan 15 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-27
 - Fix the testsuite results broken in 6.5-26, stop invalid testsuite runs.
 
-* Fri Jan 13 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-26
+* Sat Jan 13 2007 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-26
 - Fix unwinding of non-debug (.eh_frame) PPC code, Andreas Schwab (BZ 140532).
 - Fix unwinding of debug (.debug_frame) PPC code, workaround GCC (BZ 140532).
 - Fix missing testsuite .log output of testcases using get_compiler_info().
@@ -3103,16 +3313,16 @@ fi
 * Sat Nov 25 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-18
 - Fix readline history for input mode commands like `command' (BZ 215816).
 
-* Wed Nov 16 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-17
+* Thu Nov 16 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-17
 - Bugfix testcase typo of gdb-6.5-16.
 
-* Wed Nov 16 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-16
+* Thu Nov 16 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-16
 - Provide testcase for accessing the last address space byte.
 
-* Wed Nov  9 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-15
+* Thu Nov  9 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-15
 - Fix readline segfault on excessively long hand-typed lines.
 
-* Sat Nov  2 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-14
+* Thu Nov  2 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-14
 - Fix "??" resolving of symbols from (non-prelinked) debuginfo packages.
 - Fix "??" resolving of symbols from overlapping functions (nanosleep(3)).
 - Also disable testcase "checkpoint.exp" for a possible kernel Bug 207002.
@@ -3135,7 +3345,7 @@ fi
 - Support IPv6 for gdbserver (BZ 198365).
 - Temporarily disable testcase "chng-syms.exp" for a possible kernel Bug 207002.
 
-* Wed Sep 21 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-9
+* Thu Sep 21 2006 Jan Kratochvil <jan.kratochvil@redhat.com> - 6.5-9
 - Fix crash on C++ symbol failing to be demangled (BZ 206813).
 - Fix attach to stopped process, supersede `gdb-6.3-attach-stop-20051011.patch'.
 - Fix TLS symbols resolving for objects with separate .debug file (-debuginfo).
@@ -3578,8 +3788,8 @@ prelink base addresses.  Fixes BZ 175075, BZ 190545.
 - Enable PPC CFI, remove merged ppc patches.
 
 * Wed Jan 12 2005 Elena Zannoni <ezannoni@redhat.com> - 6.3.0.0-0.1
-		  Andrew Cagney <cagney@redhat.com>
-		  Jeff Johnston <jjohnstn@redhat.com>
+- commit co-authors Andrew Cagney <cagney@redhat.com> and
+  Jeff Johnston <jjohnstn@redhat.com>.
 - Various fixes to complete the import and merge.
 
 * Wed Dec 01 2004 Andrew Cagney <cagney@redhat.com> - 6.3.0.0
@@ -3670,11 +3880,11 @@ Bugzilla 135633
 - For 64-bit PPC, convert _dl_debug_state descriptor into a code address.
 - Fix --ignore option.
 
-* Mon Oct 10 2004 Andrew Cagney <cagney@redhat.com> - 1.200400607.40
+* Sun Oct 10 2004 Andrew Cagney <cagney@redhat.com> - 1.200400607.40
 - Disable attach-pie.exp test, hangs on amd64 without auxv.
 - Move pie tests to pie.
 
-* Mon Oct 10 2004 Andrew Cagney <cagney@redhat.com> - 1.200400607.39
+* Sun Oct 10 2004 Andrew Cagney <cagney@redhat.com> - 1.200400607.39
 - Fix comment bug in sigstep.exp.
 
 * Thu Oct 07 2004 Jeff Johnston <jjohnstn@redhat.com> - 1.200400607.38
@@ -3847,17 +4057,17 @@ Bugzilla 135633
 * Tue Mar 30 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.13
 - Fix testsuite glitches.
 
-* Thu Mar 24 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.12
+* Wed Mar 24 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.12
 - Fix typo.
 
-* Thu Mar 24 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.11
+* Wed Mar 24 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.11
 - Make gdb compile w/o warnings with gcc-3.4.
 - Reenable PIE support code.
 
-* Wed Mar 23 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.10
+* Tue Mar 23 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.10
 - Bump version number
 
-* Wed Mar 23 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.9
+* Tue Mar 23 2004 Elena Zannoni <ezannoni@redhat.com> - 0.20040223.9
 - temporarily disable PIE support.
 - Add section to obsolete gdb64 package.
 
@@ -4046,7 +4256,7 @@ to pointers when the address is in the ".opd" section.
 * Wed Aug 06 2003 Andrew Cagney <cagney@redhat.com> - 0.20030710.10
 - Sync to gdb-5.3.90-sync-20030806.patch.
 
-* Wed Jul 29 2003 Andrew Cagney <cagney@redhat.com> - 0.20030710.9
+* Tue Jul 29 2003 Andrew Cagney <cagney@redhat.com> - 0.20030710.9
 - add x86-64 i386 fixes
 
 * Tue Jul 29 2003 Elena Zannoni <ezannoni@redhat.com> - 0.20030710.8
@@ -4433,7 +4643,7 @@ General revamp.
 * Fri Mar 16 2001 Trond Eivind Glomsrod <teg@redhat.com>
 - build with old headers, new compiler
 
-* Wed Mar 16 2001 Trond Eivind Glomsrod <teg@redhat.com>
+* Fri Mar 16 2001 Trond Eivind Glomsrod <teg@redhat.com>
 - new snapshot
 
 * Mon Feb 26 2001 Trond Eivind Glomsrod <teg@redhat.com>
@@ -4456,7 +4666,7 @@ General revamp.
 * Fri Jan 19 2001 Trond Eivind Glomsrod <teg@redhat.com>
 - new snapshot
 
-* Thu Dec 20 2000 Trond Eivind Glomsrod <teg@redhat.com>
+* Wed Dec 20 2000 Trond Eivind Glomsrod <teg@redhat.com>
 - new snapshot
 
 * Mon Dec 04 2000 Trond Eivind Glomsrod <teg@redhat.com>
@@ -4476,7 +4686,7 @@ General revamp.
 * Wed Aug 09 2000 Trond Eivind Glomsrod <teg@redhat.com>
 - added patch from GDB team for C++ symbol handling
 
-* Mon Jul 25 2000 Trond Eivind Glomsrod <teg@redhat.com>
+* Tue Jul 25 2000 Trond Eivind Glomsrod <teg@redhat.com>
 - upgrade to CVS snapshot
 - excludearch SPARC, build on IA61
 
@@ -4489,7 +4699,7 @@ General revamp.
 * Sun Jul 02 2000 Trond Eivind Glomsrod <teg@redhat.com>
 - rebuild
 
-* Fri Jun 08 2000 Trond Eivind Glomsrod <teg@redhat.com>
+* Thu Jun 08 2000 Trond Eivind Glomsrod <teg@redhat.com>
 - use %%configure, %%makeinstall, %%{_infodir}, %%{_mandir},
   and %%{_tmppath}
 - the install scripts  for info are broken(they don't care about
@@ -4528,7 +4738,7 @@ sigtramp, sparc, xref, and threads patches.  Update sparcmin patch.
 * Mon Aug 23 1999 Jim Kingdon
 - Omit readline manpage.
 
-* Tue Aug 7 1999 Jim Kingdon
+* Sat Aug  7 1999 Jim Kingdon
 - Remove H.J. Lu's patches (they had been commented out).
 - Add sigtramp patch (from gdb.cygnus.com) and threads patch (adapted
 from code fusion CD-ROM).

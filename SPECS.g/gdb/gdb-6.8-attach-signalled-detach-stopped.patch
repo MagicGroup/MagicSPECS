@@ -1,8 +1,8 @@
-Index: gdb-7.4.50.20120703/gdb/linux-nat.c
+Index: gdb-7.7/gdb/linux-nat.c
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/linux-nat.c	2012-07-03 17:46:55.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/linux-nat.c	2012-07-03 17:57:29.608734933 +0200
-@@ -180,6 +180,9 @@ blocked.  */
+--- gdb-7.7.orig/gdb/linux-nat.c	2014-02-09 19:13:32.998214571 +0100
++++ gdb-7.7/gdb/linux-nat.c	2014-02-09 19:17:37.561499606 +0100
+@@ -176,6 +176,9 @@ blocked.  */
  static struct target_ops *linux_ops;
  static struct target_ops linux_ops_saved;
  
@@ -12,7 +12,7 @@ Index: gdb-7.4.50.20120703/gdb/linux-nat.c
  /* The method to call, if any, when a new thread is attached.  */
  static void (*linux_nat_new_thread) (struct lwp_info *);
  
-@@ -909,7 +912,14 @@ holding the child stopped.  Try \"set de
+@@ -652,7 +655,14 @@ holding the child stopped.  Try \"set de
  	  parent_inf->waiting_for_vfork_done = 0;
  	}
        else if (detach_fork)
@@ -28,25 +28,25 @@ Index: gdb-7.4.50.20120703/gdb/linux-nat.c
  
        /* Note that the detach above makes PARENT_INF dangling.  */
  
-@@ -1377,6 +1387,7 @@ linux_nat_post_attach_wait (ptid_t ptid,
+@@ -1099,6 +1109,7 @@ linux_nat_post_attach_wait (ptid_t ptid,
        if (debug_linux_nat)
  	fprintf_unfiltered (gdb_stdlog,
  			    "LNPAW: Attaching to a stopped process\n");
-+      pid_was_stopped = GET_PID (ptid);
++      pid_was_stopped = ptid_get_pid (ptid);
  
        /* The process is definitely stopped.  It is in a job control
  	 stop, unless the kernel predates the TASK_STOPPED /
-@@ -1805,6 +1816,9 @@ get_pending_status (struct lwp_info *lp,
+@@ -1518,6 +1529,9 @@ get_pending_status (struct lwp_info *lp,
  			    gdb_signal_to_string (signo));
      }
  
-+  if (*status == 0 && GET_PID (lp->ptid) == pid_was_stopped)
++  if (*status == 0 && ptid_get_pid (lp->ptid) == pid_was_stopped)
 +    *status = W_STOPCODE (SIGSTOP);
 +
    return 0;
  }
  
-@@ -1918,6 +1932,8 @@ linux_nat_detach (struct target_ops *ops
+@@ -1631,6 +1645,8 @@ linux_nat_detach (struct target_ops *ops
      }
    else
      linux_ops->to_detach (ops, args, from_tty);
@@ -55,7 +55,7 @@ Index: gdb-7.4.50.20120703/gdb/linux-nat.c
  }
  
  /* Resume LP.  */
-@@ -2104,6 +2120,14 @@ linux_nat_resume (struct target_ops *ops
+@@ -1813,6 +1829,14 @@ linux_nat_resume (struct target_ops *ops
       linux_nat_resume_callback.  */
    lp->stopped = 0;
  
@@ -64,25 +64,25 @@ Index: gdb-7.4.50.20120703/gdb/linux-nat.c
 +     it as stopped if the user detaches.  PTID variable has PID set to LWP
 +     while we need to check the real PID here.  */
 +
-+  if (!step && lp && pid_was_stopped == GET_PID (lp->ptid))
++  if (!step && lp && pid_was_stopped == ptid_get_pid (lp->ptid))
 +    pid_was_stopped = 0;
 +
    if (resume_many)
      iterate_over_lwps (ptid, linux_nat_resume_callback, NULL);
  
-@@ -4129,6 +4153,8 @@ linux_nat_mourn_inferior (struct target_
-        there are other viable forks to debug.  Delete the exiting
-        one and context-switch to the first available.  */
-     linux_fork_mourn_inferior ();
+@@ -3864,6 +3888,8 @@ linux_nat_mourn_inferior (struct target_
+ 
+   /* Let the arch-specific native code know this process is gone.  */
+   linux_nat_forget_process (pid);
 +
 +  pid_was_stopped = 0;
  }
  
  /* Convert a native/host siginfo object, into/from the siginfo in the
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.threads/attach-stopped.exp
+Index: gdb-7.7/gdb/testsuite/gdb.threads/attach-stopped.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.threads/attach-stopped.exp	2012-06-26 21:23:20.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.threads/attach-stopped.exp	2012-07-03 17:56:43.797790120 +0200
+--- gdb-7.7.orig/gdb/testsuite/gdb.threads/attach-stopped.exp	2014-01-08 10:23:36.000000000 +0100
++++ gdb-7.7/gdb/testsuite/gdb.threads/attach-stopped.exp	2014-02-09 19:13:33.321214945 +0100
 @@ -61,7 +61,65 @@ proc corefunc { threadtype } {
      gdb_reinitialize_dir $srcdir/$subdir
      gdb_load ${binfile}

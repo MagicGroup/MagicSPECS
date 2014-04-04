@@ -1,8 +1,8 @@
-Index: gdb-7.4.50.20120703/gdb/infrun.c
+Index: gdb-7.6.90.20140127/gdb/infrun.c
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/infrun.c	2012-07-03 20:26:25.060940765 +0200
-+++ gdb-7.4.50.20120703/gdb/infrun.c	2012-07-03 20:26:32.808929860 +0200
-@@ -1591,7 +1591,7 @@ static const char *const scheduler_enums
+--- gdb-7.6.90.20140127.orig/gdb/infrun.c	2014-02-04 23:48:27.262092869 +0100
++++ gdb-7.6.90.20140127/gdb/infrun.c	2014-02-04 23:48:31.674096613 +0100
+@@ -1618,7 +1618,7 @@ static const char *const scheduler_enums
    schedlock_step,
    NULL
  };
@@ -11,39 +11,11 @@ Index: gdb-7.4.50.20120703/gdb/infrun.c
  static void
  show_scheduler_mode (struct ui_file *file, int from_tty,
  		     struct cmd_list_element *c, const char *value)
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-console.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.mi/mi-cli.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.mi/mi-console.exp	2012-07-03 20:26:25.060940765 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-console.exp	2012-07-03 20:26:32.809929858 +0200
-@@ -46,6 +46,9 @@ if  { [gdb_compile "${srcdir}/${subdir}/
- 
- mi_run_to_main
- 
-+# thread-id=\"all\" vs. thread-id=\"1\" below:
-+mi_gdb_test "210-gdb-set scheduler-locking off" "210\\^done" "set scheduler-locking off"
-+
- # Next over the hello() call which will produce lots of output
- mi_gdb_test "220-exec-next" \
- 	    "220\\^running(\r\n\\*running,thread-id=\"all\")?" \
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi2-console.exp
-===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.mi/mi2-console.exp	2012-07-03 20:26:25.060940765 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi2-console.exp	2012-07-03 20:26:32.809929858 +0200
-@@ -46,6 +46,9 @@ if  { [gdb_compile "${srcdir}/${subdir}/
- 
- mi_run_to_main
- 
-+# thread-id=\"all\" vs. thread-id=\"1\" below:
-+mi_gdb_test "210-gdb-set scheduler-locking off" "210\\^done" "set scheduler-locking off"
-+
- # Next over the hello() call which will produce lots of output
- mi_gdb_test "220-exec-next" "220\\^running(\r\n)?(\\*running,thread-id=\"all\")?" \
- 	"Started step over hello"
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-cli.exp
-===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.mi/mi-cli.exp	2012-07-03 20:26:25.060940765 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-cli.exp	2012-07-03 20:26:32.810929856 +0200
-@@ -175,7 +175,7 @@ mi_execute_to "exec-continue" "breakpoin
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.mi/mi-cli.exp	2014-02-04 23:48:27.263092871 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.mi/mi-cli.exp	2014-02-04 23:48:31.674096613 +0100
+@@ -163,7 +163,7 @@ mi_execute_to "exec-continue" "breakpoin
  # Test that the token is output even for CLI commands
  # Also test that *stopped includes frame information.
  mi_gdb_test "34 next" \
@@ -52,11 +24,11 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-cli.exp
      "34 next: run"
  
  if {!$async} {
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-logging.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.mi/mi-logging.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.mi/mi-logging.exp	2012-06-29 00:11:23.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-logging.exp	2012-07-03 20:29:03.573717651 +0200
-@@ -56,7 +56,7 @@ close $chan
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.mi/mi-logging.exp	2014-02-04 23:48:27.263092871 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.mi/mi-logging.exp	2014-02-04 23:48:31.674096613 +0100
+@@ -53,7 +53,7 @@ close $chan
  
  set mi_log_prompt "\[(\]gdb\[)\] \[\r\n\]+"
  
@@ -65,7 +37,7 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-logging.exp
      pass "Log file contents"
  } else {
      fail "Log file contents"
-@@ -79,7 +79,7 @@ set chan [open $milogfile]
+@@ -76,7 +76,7 @@ set chan [open $milogfile]
  set logcontent [read $chan]
  close $chan
  
@@ -74,3 +46,17 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.mi/mi-logging.exp
      pass "Redirect log file contents"
  } else {
      fail "Redirect log file contents"
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.mi/mi-console.exp
+===================================================================
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.mi/mi-console.exp	2014-02-04 23:48:31.675096666 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.mi/mi-console.exp	2014-02-04 23:48:55.981127963 +0100
+@@ -60,6 +60,9 @@ if  { [gdb_compile "${srcdir}/${subdir}/
+ 
+ mi_run_to_main
+ 
++# thread-id=\"all\" vs. thread-id=\"1\" below:
++mi_gdb_test "210-gdb-set scheduler-locking off" "210\\^done" "set scheduler-locking off"
++
+ # The output we get from the target depends on how it is hosted.  If
+ # we are semihosted (e.g., the sim or a remote target that supports
+ # the File I/O remote protocol extension), we see the target I/O

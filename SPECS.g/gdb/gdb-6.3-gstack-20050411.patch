@@ -4,11 +4,11 @@
 	to install and uninstall.
 	* gstack.sh, gstack.1: New files.
 
-Index: gdb-7.4.50.20120103/gdb/Makefile.in
+Index: gdb-7.7/gdb/Makefile.in
 ===================================================================
---- gdb-7.4.50.20120103.orig/gdb/Makefile.in	2012-01-03 05:52:15.000000000 +0100
-+++ gdb-7.4.50.20120103/gdb/Makefile.in	2012-01-03 05:53:25.974210230 +0100
-@@ -1017,7 +1017,7 @@ gdb.z:gdb.1
+--- gdb-7.7.orig/gdb/Makefile.in	2014-02-06 20:29:09.401214339 +0100
++++ gdb-7.7/gdb/Makefile.in	2014-02-06 20:29:09.501214360 +0100
+@@ -1067,7 +1067,7 @@ info install-info clean-info dvi pdf ins
  install: all
  	@$(MAKE) $(FLAGS_TO_PASS) install-only
  
@@ -17,7 +17,7 @@ Index: gdb-7.4.50.20120103/gdb/Makefile.in
  	transformed_name=`t='$(program_transform_name)'; \
  			  echo gdb | sed -e "$$t"` ; \
  		if test "x$$transformed_name" = x; then \
-@@ -1039,7 +1039,25 @@ install-only: $(CONFIG_INSTALL)
+@@ -1104,7 +1104,25 @@ install-strip:
  install-python:
  	$(SHELL) $(srcdir)/../mkinstalldirs $(DESTDIR)$(GDB_DATADIR)/python/gdb
  
@@ -44,8 +44,8 @@ Index: gdb-7.4.50.20120103/gdb/Makefile.in
  	transformed_name=`t='$(program_transform_name)'; \
  			  echo gdb | sed -e $$t` ; \
  		if test "x$$transformed_name" = x; then \
-@@ -1051,6 +1069,18 @@ uninstall: force $(CONFIG_UNINSTALL)
- 		      $(DESTDIR)$(man1dir)/$$transformed_name.1
+@@ -1127,6 +1145,18 @@ uninstall: force $(CONFIG_UNINSTALL)
+ 	fi
  	@$(MAKE) DO=uninstall "DODIRS=$(SUBDIRS)" $(FLAGS_TO_PASS) subdir_do
  
 +.PHONY: uninstall-gstack
@@ -63,10 +63,10 @@ Index: gdb-7.4.50.20120103/gdb/Makefile.in
  # The C++ name parser can be built standalone for testing.
  test-cp-name-parser.o: cp-name-parser.c
  	$(COMPILE) -DTEST_CPNAMES cp-name-parser.c
-Index: gdb-7.4.50.20120103/gdb/gstack.sh
+Index: gdb-7.7/gdb/gstack.sh
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.4.50.20120103/gdb/gstack.sh	2012-01-03 05:52:37.278385632 +0100
++++ gdb-7.7/gdb/gstack.sh	2014-02-06 20:29:09.501214360 +0100
 @@ -0,0 +1,43 @@
 +#!/bin/sh
 +
@@ -101,7 +101,7 @@ Index: gdb-7.4.50.20120103/gdb/gstack.sh
 +
 +# Run GDB, strip out unwanted noise.
 +# --readnever is no longer used since .gdb_index is now in use.
-+$GDB --quiet -nx /proc/$1/exe $1 <<EOF 2>&1 | 
++$GDB --quiet -nx $GDBARGS /proc/$1/exe $1 <<EOF 2>&1 | 
 +set width 0
 +set height 0
 +set pagination no
@@ -111,10 +111,10 @@ Index: gdb-7.4.50.20120103/gdb/gstack.sh
 +    -e 's/^\((gdb) \)*//' \
 +    -e '/^#/p' \
 +    -e '/^Thread/p'
-Index: gdb-7.4.50.20120103/gdb/testsuite/gdb.base/gstack.exp
+Index: gdb-7.7/gdb/testsuite/gdb.base/gstack.exp
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.4.50.20120103/gdb/testsuite/gdb.base/gstack.exp	2012-01-03 05:52:37.279385629 +0100
++++ gdb-7.7/gdb/testsuite/gdb.base/gstack.exp	2014-02-06 20:43:17.774747352 +0100
 @@ -0,0 +1,66 @@
 +# Copyright (C) 2012 Free Software Foundation, Inc.
 +
@@ -133,7 +133,7 @@ Index: gdb-7.4.50.20120103/gdb/testsuite/gdb.base/gstack.exp
 +
 +set testfile gstack
 +set executable ${testfile}
-+set binfile ${objdir}/${subdir}/$executable
++set binfile [standard_output_file $executable]
 +if {[build_executable ${testfile} ${executable} "" {debug}] == -1} {
 +    return -1
 +}
@@ -167,7 +167,7 @@ Index: gdb-7.4.50.20120103/gdb/testsuite/gdb.base/gstack.exp
 +# exiting the function.  Still we could retry the gstack command if we fail.
 +
 +set test "spawn gstack"
-+set command "sh -c GDB=$GDB\\ sh\\ ${srcdir}/../gstack.sh\\ $pid\\;echo\\ GSTACK-END"
++set command "sh -c GDB=$GDB\\ GDBARGS=-data-directory\\\\\\ $BUILD_DATA_DIRECTORY\\ sh\\ ${srcdir}/../gstack.sh\\ $pid\\;echo\\ GSTACK-END"
 +set res [remote_spawn host $command];
 +if { $res < 0 || $res == "" } {
 +    perror "Spawning $command failed."
@@ -182,10 +182,10 @@ Index: gdb-7.4.50.20120103/gdb/testsuite/gdb.base/gstack.exp
 +gdb_exit
 +
 +remote_exec host "kill -9 $pid"
-Index: gdb-7.4.50.20120103/gdb/testsuite/gdb.base/gstack.c
+Index: gdb-7.7/gdb/testsuite/gdb.base/gstack.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.4.50.20120103/gdb/testsuite/gdb.base/gstack.c	2012-01-03 05:52:37.279385629 +0100
++++ gdb-7.7/gdb/testsuite/gdb.base/gstack.c	2014-02-06 20:29:09.502214360 +0100
 @@ -0,0 +1,43 @@
 +/* This testcase is part of GDB, the GNU debugger.
 +
