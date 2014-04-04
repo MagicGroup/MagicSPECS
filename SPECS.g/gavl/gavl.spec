@@ -2,8 +2,10 @@ Name:           gavl
 Version:        1.4.0
 Release:        2%{?dist}
 Summary:        A library for handling uncompressed audio and video data
+Summary(zh_CN.UTF-8): 处理未压缩的音频和视频数据的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:        GPLv3+
 URL:            http://gmerlin.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/gmerlin/gavl-%{version}.tar.gz
@@ -31,10 +33,14 @@ Some conversion functions are available in multiple versions (MMX...),
 which are selected by compile time configuration, CPU autodetection and
 user options.
 
+%description -l zh_CN.UTF-8
+处理未压缩的音频和视频数据的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -42,6 +48,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -73,7 +81,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 # Prevent timestamps build difference
 touch -r include/gavl/gavl.h $RPM_BUILD_ROOT%{_includedir}/gavl/gavl_version.h
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

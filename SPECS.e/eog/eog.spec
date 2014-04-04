@@ -10,7 +10,7 @@
 Summary: Eye of GNOME image viewer
 Summary(zh_CN.UTF-8): GNOME 的图像查看器
 Name:    eog
-Version:	3.11.92
+Version:	3.12.0
 Release: 2%{?dist}
 URL: http://projects.gnome.org/eog/
 #VCS: git:git://git.gnome.org/eog
@@ -126,6 +126,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/gtk-doc/
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.11.92-2
 - 更新到 3.11.92
 

@@ -1,10 +1,12 @@
 Summary: A garbage collector for C and C++
+Summary(zh_CN.UTF-8): C 和 C++ 的垃圾回收器
 Name:    gc
 %global base_ver 7.2
 Version: 7.2e
 Release: 2%{?dist}
 
 Group:   System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License: BSD
 Url:     http://www.hboehm.info/gc/
 Source0: http://www.hboehm.info/gc/gc_source/gc-%{version}%{?pre}.tar.gz
@@ -26,18 +28,28 @@ Provides:  libgc = %{version}-%{release}
 The Boehm-Demers-Weiser conservative garbage collector can be
 used as a garbage collecting replacement for C malloc or C++ new.
 
+%description -l zh_CN.UTF-8
+C 和 C++ 的垃圾回收器。
+
 %package devel
 Summary: Libraries and header files for %{name} development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Obsoletes: libgc-devel < %{version}-%{release}
 Provides:  libgc-devel = %{version}-%{release}
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n libatomic_ops-devel
 Summary:   Atomic memory update operations
+Summary(zh_CN.UTF-8): 原子内存更新操作
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # libatomic_ops.a is MIT
 # libatomic_ops_gpl.a is GPLv2+
 License:   MIT and GPLv2+
@@ -49,6 +61,8 @@ portable code. Unlike earlier similar packages, this one explicitly
 considers memory barrier semantics, and allows the construction of code
 that involves minimum overhead across a variety of architectures.
 
+%description -n libatomic_ops-devel -l zh_CN.UTF-8
+原子内存更新操作。
 
 %prep
 %setup -q -n gc-%{base_ver}%{?pre}
@@ -90,7 +104,7 @@ install -p -D -m644 doc/gc.man  %{buildroot}%{_mandir}/man3/gc.3
 rm -rfv %{buildroot}%{_datadir}/gc/
 rm -rfv %{buildroot}%{_datadir}/libatomic_ops/{COPYING,*.txt}
 rm -fv  %{buildroot}%{_libdir}/lib*.la
-
+magic_rpm_clean.sh
 
 %check
 make check

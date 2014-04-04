@@ -1,4 +1,5 @@
 Summary:        A freely licensed alternative to the GLUT library
+Summary(zh_CN.UTF-8): 一个 GLUT 库的自由授权版本
 Name:           freeglut
 Version:        2.8.1
 Release:        1%{?dist}
@@ -8,6 +9,7 @@ Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.
 Source1:        http://downloads.sourceforge.net/openglut/openglut-0.6.3-doc.tar.gz
 License:        MIT
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 
 BuildRequires:  pkgconfig libGLU-devel libXext-devel libXxf86vm-devel
 BuildRequires:  libXi-devel libICE-devel
@@ -30,10 +32,14 @@ freeglut allows the user to create and manage windows containing OpenGL
 contexts on a wide range of platforms and also read the mouse, keyboard and
 joystick functions.
 
+%description -l zh_CN.UTF-8
+一个 GLUT 库的自由授权版本。
 
 %package devel
 Summary:        Freeglut developmental libraries and header files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libGL-devel libGLU-devel
 Provides:       glut-devel = 3.7
@@ -45,6 +51,8 @@ software which links to the freeglut library, which is an open source
 alternative to the popular GLUT library, with an OSI approved free software
 license.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -a 1
@@ -54,14 +62,13 @@ license.
 %configure --disable-static --disable-warnings
 make %{?_smp_mflags}
 
-
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT/%{_libdir}/*.la
 
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man3
 install -p -m 644 doc/man/*.3 $RPM_BUILD_ROOT/%{_mandir}/man3
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

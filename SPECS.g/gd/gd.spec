@@ -3,10 +3,12 @@
 #global short     %(c=%{commit}; echo ${c:0:7})
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
+Summary(zh_CN.UTF-8): 快速创建 PNG 或 JPEG 图像的图形库
 Name:          gd
 Version:       2.1.0
 Release:       4%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:       MIT
 URL:           http://libgd.bitbucket.org/
 %if 0%{?commit:1}
@@ -41,20 +43,29 @@ JPEG file. This is particularly useful in Web applications, where PNG
 and JPEG are two of the formats accepted for inline images by most
 browsers. Note that gd is not a paint program.
 
+%description -l zh_CN.UTF-8
+这个图形库允许你的代码快速画出图像，比如线、弧、文本、多种颜色、从其它
+图像中剪切和粘贴等。并且可以把结果输出到 PNG 或 JPEG 文件。
 
 %package progs
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Summary:        Utility programs that use libgd
+Summary(zh_CN.UTF-8): 使用 libgd 的工具程序
 Group:          Applications/Multimedia
+Group(zh_CN.UTF): 应用程序/多媒体
 
 %description progs
 The gd-progs package includes utility programs supplied with gd, a
 graphics library for creating PNG and JPEG images. 
 
+%description progs -l zh_CN.UTF-8
+使用 libgd 的工具程序。
 
 %package devel
 Summary:  The development libraries and header files for gd
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: freetype-devel%{?_isa}
 Requires: fontconfig-devel%{?_isa}
@@ -70,6 +81,8 @@ Requires: zlib-devel%{?_isa}
 The gd-devel package contains the development libraries and header
 files for gd, a graphics library for creating PNG and JPEG graphics.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
@@ -111,7 +124,7 @@ make %{?_smp_mflags}
 make install INSTALL='install -p' DESTDIR=$RPM_BUILD_ROOT 
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
-
+magic_rpm_clean.sh
 
 %check
 make check

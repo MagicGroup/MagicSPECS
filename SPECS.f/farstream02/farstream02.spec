@@ -3,7 +3,7 @@
 %global far farstream
 
 Name:           %{far}02
-Version:        0.2.1
+Version:	0.2.3
 Release:        3%{?dist}
 Summary:        Libraries for videoconferencing
 Summary(zh_CN.UTF-8): 视频会议库
@@ -52,8 +52,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q -n %{far}-%{version}
-%patch0 -p1
-
 
 %build
 %configure                                                              \
@@ -106,6 +104,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 0.2.3-3
+- 更新到 0.2.3
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.2.1-3
 - 为 Magic 3.0 重建
 

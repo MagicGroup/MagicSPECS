@@ -1,4 +1,5 @@
 Summary:      Real-time software synthesizer
+Summary(zh_CN.UTF-8): 实时软件合成器
 Name:         fluidsynth
 Version:      1.1.6
 Release:      1%{?dist}
@@ -6,6 +7,7 @@ URL:          http://www.fluidsynth.org/
 Source0:      http://downloads.sourceforge.net/fluidsynth/fluidsynth-%{version}.tar.bz2
 License:      LGPLv2+
 Group:        Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:     fluidsynth-libs%{?_isa} = %{version}-%{release}
 
 # Fix cmake usage. Upstream informed on their mailing list
@@ -42,24 +44,37 @@ real-time effect modulation using SoundFont 2.01 modulators, and a built-in
 command line shell. It can also play MIDI files (note: FluidSynth was previously
 called IIWU Synth).
 
+%description -l zh_CN.UTF-8 
+这是一个处理 MIDI 音乐和输入设备的实时软件合成器。
+
 %package libs
 Summary:   Real-time software synthesizer run-time libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:     System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 
 %description libs
 FluidSynth is a real-time software synthesizer based on the SoundFont 2 
 specifications. It is a "software synthesizer". This package holds the run-time
 shared libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库
+
 %package devel
 Summary:   Real-time software synthesizer development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:  fluidsynth-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 FluidSynth is a real-time software synthesizer based on the SoundFont 2 
 specifications. It is a "software synthesizer". This package holds header files
 for building programs that link against fluidsynth.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -81,7 +96,7 @@ make doxygen -C %{_target_platform}/doc
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform} install
-
+magic_rpm_clean.sh
 
 %post libs -p /sbin/ldconfig
 

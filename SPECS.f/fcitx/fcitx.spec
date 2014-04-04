@@ -14,11 +14,11 @@ Source1:		xinput-%{name}
 BuildRequires:		pango-devel, dbus-devel, opencc-devel
 BuildRequires:		wget, intltool, chrpath, sysconftool, opencc
 BuildRequires:		cmake, libtool, doxygen, libicu-devel
-BuildRequires:		qt-devel, gtk3-devel, gtk2-devel, libicu
+BuildRequires:		qt4-devel, gtk3-devel, gtk2-devel, libicu
 BuildRequires:		xorg-x11-proto-devel, xorg-x11-xtrans-devel
 BuildRequires:		gobject-introspection-devel, libxkbfile-devel 
 BuildRequires:		enchant-devel, iso-codes-devel, libicu-devel
-BuildRequires:		libX11-devel, qt-x11, dbus-glib-devel, dbus-x11
+BuildRequires:		libX11-devel, qt4, dbus-glib-devel, dbus-x11
 BuildRequires:		desktop-file-utils, libxml2-devel
 BuildRequires:		lua-devel
 Requires:		%{name}-data = %{version}-%{release}
@@ -161,7 +161,7 @@ install -pm 644 AUTHORS ChangeLog THANKS TODO COPYING %{buildroot}/%{_docdir}/%{
 # confilict
 sed -i -e 's:%{_libdir}:`pkg-config --variable=libdir fcitx`:g' \
   ${RPM_BUILD_ROOT}%{_bindir}/fcitx4-config
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 desktop-file-install --delete-original \

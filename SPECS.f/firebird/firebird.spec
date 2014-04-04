@@ -1,14 +1,16 @@
-%global pkgname Firebird-2.5.2.26539-0
+%global pkgname Firebird-2.5.2.26540-0
 %global fbroot %{_libdir}/%{name}
 %global major 2.5.2
 
 
 Summary: SQL relational database management system
+Summary(zh_CN.UTF-8): SQL 关系数据库管理系统
 Name:  firebird
-Version: 2.5.2.26539.0
+Version: 2.5.2.26540.0
 Release: 2%{?dist}
 
 Group:  Applications/Databases
+Group(zh_CN.UTF-8): 应用程序/数据库
 License: Interbase
 URL:  http://www.firebirdsql.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot

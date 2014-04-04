@@ -1,9 +1,11 @@
 Summary: An encoder/decoder for the Free Lossless Audio Codec
+Summary(zh_CN.UTF-8): 自由无损音频编码 (FLAC) 的编码器/解码器
 Name: flac
 Version: 1.3.0
 Release: 3%{?dist}
 License: BSD and GPLv2+ and GFDL
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 
 Source0: http://downloads.xiph.org/releases/flac/flac-%{version}.tar.xz
 URL: http://www.xiph.org/flac/
@@ -30,9 +32,16 @@ various music players.
 
 This package contains the command-line tools and documentation.
 
+%description -l zh_CN.UTF-8
+自由无损音频编码 (FLAC) 的编码器/解码器。
+
+这个包是命令行工具和文档。
+
 %package libs
 Summary: Libraries for the Free Lossless Audio Codec
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Obsoletes: flac < 1.2.1-11
 
 %description libs
@@ -45,15 +54,23 @@ various music players.
 
 This package contains the FLAC libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development libraries and header files from FLAC
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 This package contains all the files needed to develop applications that
 will use the Free Lossless Audio Codec.
+
+%description devel -l zh_CN.UTF-8 
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -83,6 +100,7 @@ mv flac-doc{/html/api,-devel}
 rm flac-doc/FLAC.tag
 
 rm %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 make -C test check FLAC__TEST_LEVEL=0 &> /dev/null

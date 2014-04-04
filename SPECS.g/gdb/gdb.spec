@@ -554,7 +554,7 @@ BuildRequires: xz-devel%{?_isa}
 # dlopen() no longer makes rpm-libs%{?_isa} (it's .so) a mandatory dependency.
 BuildRequires: rpm-devel%{?_isa}
 %endif # 0%{!?el5:1}
-BuildRequires: zlib-devel%{?_isa} libselinux-devel%{?_isa}
+BuildRequires: zlib-devel%{?_isa}
 %if 0%{!?_without_python:1}
 %if 0%{?el5:1}
 # This RHEL-5.6 python version got split out python-libs for ppc64.
@@ -1021,8 +1021,6 @@ perl -i.relocatable -pe 's/^(D\[".*_RELOCATABLE"\]=" )1(")$/${1}0$2/' gdb/config
 make %{?_smp_mflags} CFLAGS="$CFLAGS $FPROFILE_CFLAGS" LDFLAGS="$LDFLAGS $FPROFILE_CFLAGS"
 
 ! grep '_RELOCATABLE.*1' gdb/config.h
-grep '^#define HAVE_LIBSELINUX 1$' gdb/config.h
-grep '^#define HAVE_SELINUX_SELINUX_H 1$' gdb/config.h
 
 if [ "$fprofile" = "-fprofile" ]
 then

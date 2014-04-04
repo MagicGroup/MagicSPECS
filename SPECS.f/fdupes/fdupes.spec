@@ -1,9 +1,11 @@
 Name:		fdupes
 Summary:	Finds duplicate files in a given set of directories
+Summary(zh_CN.UTF-8): 在给定的目录集合中查找重复文件
 Version:	1.51
 Release:	3%{?dist}
 License:	MIT
 Group:		Applications/File
+Group(zh_CN.UTF-8): 应用程序/文本
 URL:		https://code.google.com/p/fdupes/
 Source0:	https://fdupes.googlecode.com/files/%{name}-%{version}.tar.gz
 Source1:        macros.fdupes
@@ -19,6 +21,8 @@ Patch2:         fdupes-1.51-check-permissions.patch
 FDUPES is a program for identifying duplicate files residing within specified
 directories.
 
+%description -l zh_CN.UTF-8
+在给定的目录集合中查找重复文件。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -46,7 +50,7 @@ make install INSTALL="%{__install} -p" \
 
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
 install -m 0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d/
-
+magic_rpm_clean.sh
 
 %files
 %doc CHANGES CONTRIBUTORS README TODO

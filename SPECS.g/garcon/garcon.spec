@@ -6,8 +6,10 @@ Name:           garcon
 Version:        0.2.1
 Release:        3%{?dist}
 Summary:        Implementation of the freedesktop.org menu specification
+Summary(zh_CN.UTF-8): freedesktop.org 菜单标准的实现 
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 # garcon's source code is licensed under the LGPLv2+,
 # while its documentation is licensed under the GFDL 1.1
 License:        LGPLv2+ and GFDL
@@ -33,9 +35,15 @@ Garcon is an implementation of the freedesktop.org menu specification replacing
 the former Xfce menu library libxfce4menu. It is based on GLib/GIO only and 
 aims at covering the entire specification except for legacy menus.
 
+%description -l zh_CN.UTF-8
+这是 freedesktop.org 菜单标准的实现，用来替换 Xfce 菜单库 libxfce4menu。
+它只基于 GLib/GIO。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk2-devel
 Requires:       pkgconfig
@@ -45,6 +53,8 @@ Obsoletes:      libxfce4menu-devel < 4.6.2
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -60,6 +70,7 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 %find_lang %{name}
 install -pm 644 %{SOURCE1} %{buildroot}%{_datadir}/desktop-directories
 

@@ -4,8 +4,10 @@ Name:       gammu
 Version:        1.33.0
 Release:        2%{?dist}
 Summary:        Command Line utility to work with mobile phones
+Summary(zh_CN.UTF-8): 操作手机的命令行工具
 
 Group:          Applications/System
+Group(zh_CN.UTF): 应用程序/系统
 License:        GPLv2+
 URL:            http://wammu.eu/gammu/
 Source0:        http://sourceforge.net/projects/gammu/files/%{name}/%{version}/%{name}-%{version}.tar.bz2
@@ -19,7 +21,7 @@ BuildRequires:  libdbi-devel, libcurl-devel
 # Enabling bluetooth fonction
 BuildRequires:  bluez-libs-devel
 # Enabling Database sms fonction
-BuildRequires:  postgresql-devel, mariadb-devel
+BuildRequires:  postgresql-devel, mysql-devel
 BuildRequires:  glib2-devel libgudev1-devel
 
 Requires:       bluez, dialog
@@ -27,11 +29,15 @@ Requires:       bluez, dialog
 
 %package    libs
 Summary:    Libraries files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:      System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 
 %package -n     python-%{name}
 Summary:    Python bindings for Gammu
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:      Development/Languages
+Group(zh_CN.UTF): 开发/语言
 
 BuildRequires:  python2-devel
 Obsoletes:      python-%{name} <= 0.28
@@ -40,7 +46,9 @@ Requires:       %{name} = %{version}-%{release}
 
 %package    devel
 Summary:    Development files for %{name}   
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Requires:   %{name} = %{version}-%{release}
 Requires:   %{name}-libs = %{version}-%{release}
@@ -55,8 +63,14 @@ messages (SMS, EMS and MMS), calendar, todos, filesystem,
 integrated radio, camera, etc.
 It also supports daemon mode to send and receive SMSes.
 
+%description -l zh_CN.UTF-8
+支持多种手机的命令行工具和库。
+
 %description    libs
 The %{name}-libs package contains libraries files that used by %{name}
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %description -n python-%{name}
 Python bindings for Gammu library.
@@ -65,10 +79,15 @@ but range of covered functions is increasing,
 if you need some specific, feel free to use bug tracking system for feature 
 requests.
 
+%description -n python-%{name} -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %description    devel
 The %{name}-devel  package contains Header and libraries files for
 developing applications that use %{name}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -106,7 +125,7 @@ make -C build  install DESTDIR=$RPM_BUILD_ROOT
  
 #remove library
 rm -f $RPM_BUILD_ROOT%{_libdir}/libGammu.a
-
+magic_rpm_clean.sh
 %find_lang %{name}
 %find_lang lib%{name}
 cat lib%{name}.lang >> %{name}.lang

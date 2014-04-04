@@ -6,8 +6,8 @@
 Summary: Macromedia Flash Player 9.0
 Summary(zh_CN.UTF-8): Macromedia Flash 播放器 9.0
 Name: flash-plugin
-Version: 11.2.202.273
-Release: 2%{?dist}
+Version: 11.2.202.346
+Release: %{?dist}
 License: Commercial
 BuildArch: i686 x86_64
 Group: Applications/Internet

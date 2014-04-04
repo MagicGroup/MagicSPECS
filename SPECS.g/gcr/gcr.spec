@@ -1,12 +1,15 @@
 Name:           gcr
-Version:        3.5.3
+Version:	3.12.0
 Release:        2%{?dist}
 Summary:        A library for bits of crypto UI and parsing
+Summary(zh_CN.UTF-8): 一种位密码界面和解析库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/CryptoGlue/
-Source0:        http://download.gnome.org/sources/gcr/3.4/gcr-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/gcr/%{majorver}/gcr-%{version}.tar.xz
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  intltool
@@ -29,14 +32,21 @@ desktop.
 
 gck is a library for accessing PKCS#11 modules like smart cards.
 
+%description -l zh_CN.UTF-8
+一种位密码界面和解析库。
+
 %package devel
 Summary: Development files for gcr
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The gcr-devel package includes the header files for the gcr library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -93,6 +103,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_libdir}/libgck-1.so.*
 %{_libdir}/libgcr-3.so.*
 %{_libdir}/libgcr-base-3.so.*
+%{_libdir}/libgcr-ui-3.so.*
 %{_datadir}/gcr-3
 %{_datadir}/icons/hicolor/*/apps/*
 %{_datadir}/mime/packages/gcr-crypto-types.xml
@@ -115,9 +126,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %dir %{_datadir}/gtk-doc/html
 %{_datadir}/gtk-doc/html/gck
 %{_datadir}/gtk-doc/html/gcr-3
-
+%{_libdir}/libgcr-ui-3.so
+%{_libdir}/pkgconfig/gcr-ui-3.pc
+%{_datadir}/vala/vapi/*
 
 %changelog
+* Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.5.3-2
 - 为 Magic 3.0 重建
 

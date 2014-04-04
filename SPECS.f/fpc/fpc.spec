@@ -1,14 +1,16 @@
 Name:           fpc
-Version:        2.6.2
-Release:        0.1.rc1%{?dist}
+Version:        2.6.4
+Release:        1%{?dist}
 Summary:        Free Pascal Compiler
+Summary(zh_CN.UTF-8): 自由的 Pascal 编译器
 
 Group:          Development/Languages
+Group(zh_CN.UTF): 开发/语言
 License:        GPLv2+ and LGPLv2+ with exceptions
 URL:            http://www.freepascal.org/
-#Source0:        ftp://ftp.freepascal.org/pub/fpc/dist/${version}/source/fpcbuild-%{version}.tar.gz
+Source0:        ftp://ftp.freepascal.org/pub/fpc/dist/${version}/source/fpcbuild-%{version}.tar.gz
 # rc1 version
-Source0:        ftp://ftp.freepascal.org/pub/fpc/beta/2.6.2-rc1/source/fpcbuild-2.6.2rc1.tar.gz
+#Source0:        ftp://ftp.freepascal.org/pub/fpc/beta/2.6.2-rc1/source/fpcbuild-2.6.2rc1.tar.gz
 # This is only needed when useprebuiltcompiler is defined.
 # But it's not in an 'if defined' block, since the file has to be included in the srpm
 # Thus you should enable this line when useprebuildcompiler is defined for any target
@@ -17,8 +19,6 @@ Source0:        ftp://ftp.freepascal.org/pub/fpc/beta/2.6.2-rc1/source/fpcbuild-
 Source2:        fpc.cft
 Source3:        fppkg.cfg
 Source4:        default.cft
-Patch0:         fpc-2.6.2rc1-r22920.patch
-Patch1:         fpcdocs-2.6.2rc1-r954.patch
 
 Requires:       gpm, ncurses, binutils
 %if ! %{defined useprebuiltcompiler}
@@ -78,8 +78,6 @@ automatical-code generation purposes.
 %else
 %setup -n fpcbuild-%{version}rc1 -q
 %endif
-%patch0
-%patch1
 
 %build
 # The source-files:

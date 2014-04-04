@@ -9,15 +9,18 @@
 %define fontconfig_version 2.6.0
 
 Summary: The GNOME Display Manager
+Summary(zh_CN.UTF-8): GNOME 的登录管理器
 Name: gdm
 Version: 3.8.1.1
-Release: 6%{?dist}
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
+Group(zh_CN.UTF): 用户界面/X
 URL: http://download.gnome.org/sources/gdm
 #VCS: git:git://git.gnome.org/gdm
-Source: http://download.gnome.org/sources/gdm/3.8/gdm-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gdm/%{majorver}/gdm-%{version}.tar.xz
 Source1: org.gnome.login-screen.gschema.override
 
 Requires(pre): /usr/sbin/useradd
@@ -89,28 +92,38 @@ Provides: gdm-plugin-fingerprint = %{epoch}:%{version}-%{release}
 
 %package libs
 Summary: Client-side library to talk to gdm
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: Development/Libraries
+Group(zh_CN.UTF): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 
 %description libs
 The gdm-libs package contains libraries that can
 be used for writing custom greeters.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary: Development files for gdm-libs
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs = %{epoch}:%{version}-%{release}
 
 %description devel
 The gdm-devel package contains headers and other
 files needed to build custom greeters.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %description
 GDM provides the graphical login screen, shown shortly after boot up,
 log out, and when user-switching.
 
-%description devel
-Development files and headers for writing GDM greeters.
+%description -l zh_CN.UTF-8
+GNOME 的登录管理器。
 
 %prep
 %setup -q
@@ -180,7 +193,7 @@ rm $RPM_BUILD_ROOT%{_datadir}/gdm/greeter/applications/gdm-simple-greeter.deskto
 rm $RPM_BUILD_ROOT%{_datadir}/gdm/greeter/applications/polkit-gnome-authentication-agent-1.desktop
 rm $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdmsimplegreeter.pc
 rm -rf $RPM_BUILD_ROOT%{_includedir}/gdm/simple-greeter
-
+magic_rpm_clean.sh
 %find_lang gdm --with-gnome
 
 %pre

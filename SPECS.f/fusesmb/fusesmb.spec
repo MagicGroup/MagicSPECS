@@ -39,11 +39,10 @@ CFLAGS="%{optflags} -I/usr/include/samba-4.0" %configure
 %{__rm} -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 %{__strip} $RPM_BUILD_ROOT%{_bindir}/*
-/usr/sbin/magic_rpm_clean.sh
 
 mkdir -p $RPM_BUILD_ROOT/etc/skel/.smb
 install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/skel/.smb/fusesmb.conf
-
+magic_rpm_clean.sh
 #mkdir -p $RPM_BUILD_ROOT/root/.smb
 #install -m 600 %{SOURCE1} $RPM_BUILD_ROOT/root/.smb/fusesmb.conf
 

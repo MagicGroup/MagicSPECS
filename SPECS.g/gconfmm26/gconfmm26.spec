@@ -3,8 +3,10 @@ Version:        2.28.3
 Release:        2%{?dist}
 
 Summary:        C++ wrapper for GConf2
+Summary(zh_CN.UTF-8): GConf2 的 C++ 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/gconfmm/2.28/gconfmm-%{version}.tar.bz2
@@ -22,9 +24,14 @@ of the GTKmm project.  The interface provides a convenient interface
 for C++ programmers to create Gnome GUIs with GTK+'s flexible
 object-oriented framework.
 
+%description -l zh_CN.UTF-8
+GConf2 的 C++ 接口。这是 GTKmm 项目的子包。
+
 %package devel
 Summary:        Headers for developing programs that will use gconfmm
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       glibmm24-devel
 Requires:       gtkmm24-devel
@@ -34,6 +41,9 @@ Requires:       GConf2-devel
 This package contains the headers that programmers will need to
 develop applications which will use gconfmm, part of GTKmm, the C++
 interface to the GTK+.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 
 %prep
@@ -53,6 +63,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

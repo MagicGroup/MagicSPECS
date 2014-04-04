@@ -2,8 +2,10 @@ Name:           freealut
 Version:        1.1.0
 Release:        16%{?dist}
 Summary:        Implementation of OpenAL's ALUT standard
+Summary(zh_CN.UTF-8): OpenAL 的 ALUT 标准的实现 
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:        LGPLv2
 URL:            http://openal.org/
 Source0:        http://openal.org/openal_webstf/downloads/freealut-1.1.0.tar.gz
@@ -18,15 +20,23 @@ BuildRequires:  libtool
 freealut is a free implementation of OpenAL's ALUT standard. See the file
 AUTHORS for the people involved.
 
+%description -l zh_CN.UTF-8
+OpenAL 的 ALUT 标准的自由版本实现。
+
 %package devel
 Summary:        Development files for freealut
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release} 
 Requires:       pkgconfig
 Requires:       openal-soft-devel
 
 %description devel
 Development headers and libraries needed for freealut development
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -57,6 +67,7 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libalut.la
 #popd
 
 touch -r ChangeLog $RPM_BUILD_ROOT/%{_bindir}/freealut-config
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

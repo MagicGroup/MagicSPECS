@@ -4,12 +4,15 @@ Name:           gdk-pixbuf2
 Version:        2.29.3
 Release:        1%{?dist}
 Summary:        An image loading library
+Summary(zh_CN.UTF-8): 图像装载库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gt.org
 #VCS:           git:git://git.gnome.org/gdk-pixbuf
-Source0:        http://download.gnome.org/sources/gdk-pixbuf/2.29/gdk-pixbuf-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/gdk-pixbuf/%{majorver}/gdk-pixbuf-%{version}.tar.xz
 
 BuildRequires:  glib2-devel >= %{glib2_version}
 BuildRequires:  libpng-devel
@@ -38,9 +41,15 @@ gdk-pixbuf is an image loading library that can be extended by loadable
 modules for new image formats. It is used by toolkits such as GTK+ or
 clutter.
 
+%description -l zh_CN.UTF-8
+这是一个图像装载库，可以通过扩展载入模块支持新的图像格式。它被 GTK+ 或
+clutter 工具使用。
+
 %package devel
 Summary: Development files for gdk-pixbuf
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: glib2-devel%{?_isa} >= %{glib2_version}
 
@@ -51,15 +60,22 @@ Conflicts: gtk2-devel <= 2.21.2
 This package contains the libraries and header files that are needed
 for writing applications that are using gdk-pixbuf.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package tests
 Summary: Tests for the %{name} package
+Summary(zh_CN.UTF-8): %{name} 的测试包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tests
 The %{name}-tests package contains tests that can be used to verify
 the functionality of the installed %{name} package.
 
+%description tests -l zh_CN.UTF-8
+%{name} 的测试包。
 
 %prep
 %setup -q -n gdk-pixbuf-%{version}
@@ -88,7 +104,7 @@ touch $RPM_BUILD_ROOT%{_libdir}/gdk-pixbuf-2.0/2.10.0/loaders.cache
 (cd $RPM_BUILD_ROOT%{_bindir}
  mv gdk-pixbuf-query-loaders gdk-pixbuf-query-loaders-%{__isa_bits}
 )
-
+magic_rpm_clean.sh
 %find_lang gdk-pixbuf
 
 %post

@@ -1,14 +1,17 @@
 %define gconf2_version 2.14
 
 Summary: Editor/admin tool for GConf
+Summary(zh_CN.UTF-8): GConf 的编辑管理工具
 Name: gconf-editor
 Version: 3.0.1
 Release: 2%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/gconf-editor
-Source0: http://download.gnome.org/sources/gconf-editor/3.0/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gconf-editor/%{majorver}/%{name}-%{version}.tar.xz
 License: GPLv2+ and GFDL
 Group: Applications/System
+Group(zh_CN.UTF): 应用程序/系统
 
 Requires(pre): GConf2 >= %{gconf2_version}
 Requires(post): GConf2 >= %{gconf2_version}
@@ -28,6 +31,9 @@ BuildRequires: autoconf automake libtool
 gconf-editor allows you to browse and modify GConf configuration
 sources.
 
+%description -l zh_CN.UTF-8
+这个包允许你浏览和修改 GConf 配置源码。
+
 %prep
 %setup -q
 
@@ -46,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT/var/scrollkeeper
 desktop-file-install --vendor gnome --delete-original       \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications             \
   $RPM_BUILD_ROOT%{_datadir}/applications/*
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
 %post

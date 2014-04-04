@@ -8,9 +8,11 @@
 
 Name: freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
+Summary(zh_CN.UTF-8): TDS 协议的实现
 Version: 0.91
 Release: 11.git%{git_commit}%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/
 
@@ -37,10 +39,15 @@ DataStream) protocol. TDS is used by Sybase(TM) and Microsoft(TM) for
 client to database server communications. FreeTDS includes call
 level interfaces for DB-Lib, CT-Lib, and ODBC.
 
+%description -l zh_CN.UTF-8
+TDS 是 Sybase 和微软用于客户端和数据库服务器通信的协议。这是 TDS 
+的一个实现，它包含了 DB-Lib, CT-Lib 和 ODBC 的接口。
 
 %package devel
 Summary: Header files and development libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -48,10 +55,14 @@ This package contains the header files and development libraries
 for %{name}. If you like to develop programs using %{name}, you will need
 to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary: Development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Documentation
+Group(zh_CN.UTF): 文档
 BuildArch: noarch
 
 %description doc
@@ -59,6 +70,8 @@ This package contains the development documentation for %{name}.
 If you like to develop programs using %{name}, you will need to install
 %{name}-doc.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep 
 %setup -q -n freetds-freetds
@@ -111,7 +124,7 @@ rm -f doc/doc/freetds-%{version}/reference/installdox
 
 mv -f samples/unixodbc.freetds.driver.template \
 	samples/unixodbc.freetds.driver.template-%{bits}
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

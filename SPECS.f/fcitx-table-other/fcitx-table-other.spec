@@ -2,7 +2,9 @@ Name:		fcitx-table-other
 Version:	0.2.2
 Release:	1%{?dist}
 Summary:	Other tables for Fcitx
+Summary(zh_CN.UTF-8): Fcitx 的其它码表
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv3+
 URL:		https://fcitx-im.org/wiki/Fcitx
 Source0:	http://download.fcitx-im.org/fcitx-table-other/%{name}-%{version}.tar.xz
@@ -14,6 +16,9 @@ Requires:	fcitx
 %description
 Fcitx-table-other is a fork of ibus-table-others for Fcitx,
 provides additional tables.
+
+%description -l zh_CN.UTF-8
+这是 ibus-table-others 的移植，提供了一些附加码表。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -30,7 +35,7 @@ rm -rf $RPM_BUILD_ROOT
 pushd build
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 popd
-
+magic_rpm_clean.sh
 %find_lang %{name} 
 
 %clean

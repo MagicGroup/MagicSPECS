@@ -1,7 +1,8 @@
 %bcond_with largefile
 Summary: A GNU set of database routines which use extensible hashing
+Summary(zh_CN.UTF-8): 使用可扩展散列的数据库例程的 GNU 版本集合
 Name: gdbm
-Version: 1.10
+Version:	1.11
 Release: 7%{?dist}
 Source: http://ftp.gnu.org/gnu/gdbm/gdbm-%{version}.tar.gz
 # Prevent gdbm from storing uninitialized memory content
@@ -19,6 +20,7 @@ Patch3: gdbm-aarch64.patch
 License: GPLv3+
 URL: http://www.gnu.org/software/gdbm/
 Group: System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 BuildRequires: libtool
 BuildRequires: gettext
 
@@ -33,9 +35,14 @@ If you're a C developer and your programs need access to simple
 database routines, you should install gdbm.  You'll also need to
 install gdbm-devel.
 
+%description -l zh_CN.UTF-8
+使用可扩展散列的数据库例程的 GNU 版本集合.
+
 %package devel
 Summary: Development libraries and header files for the gdbm library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires(post): info
 Requires(preun): info
@@ -48,12 +55,15 @@ necessary if you plan to do development using the gdbm database.
 Install gdbm-devel if you are developing C programs which will use the
 gdbm database library.  You'll also need to install the gdbm package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1 -b .zeroheaders
 %patch1 -p1 -b .fedora
-%patch2 -p1 -b .sa1
-%patch3 -p1 -b .aarch64
+#%patch2 -p1 -b .sa1
+#%patch3 -p1 -b .aarch64
 
 %build
 %configure \
@@ -65,7 +75,7 @@ make %{?_smp_mflags}
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # create symlinks for compatibility
@@ -100,7 +110,7 @@ fi
 %doc COPYING NEWS README THANKS AUTHORS NOTE-WARNING 
 %{_libdir}/libgdbm.so.4*
 %{_libdir}/libgdbm_compat.so.4*
-%{_bindir}/testgdbm
+#%{_bindir}/testgdbm
 
 %files devel
 %{_libdir}/libgdbm.so
@@ -110,6 +120,9 @@ fi
 %{_mandir}/man3/* 
 
 %changelog
+* Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 1.11-7
+- 更新到 1.11
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

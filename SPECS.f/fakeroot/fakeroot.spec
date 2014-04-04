@@ -104,31 +104,11 @@ fi
   "%{_bindir}/fakeroot-tcp" 50 \
   --slave %{_mandir}/man1/fakeroot.1.gz fakeroot.1.gz %{_mandir}/man1/fakeroot-tcp.1.gz \
   --slave %{_mandir}/man1/faked.1.gz faked.1.gz %{_mandir}/man1/faked-tcp.1.gz \
-  --slave %{_mandir}/de/man1/fakeroot.1.gz fakeroot.de.1.gz %{_mandir}/de/man1/fakeroot-tcp.1.gz \
-  --slave %{_mandir}/de/man1/faked.1.gz faked.de.1.gz %{_mandir}/de/man1/faked-tcp.1.gz \
-  --slave %{_mandir}/es/man1/fakeroot.1.gz fakeroot.es.1.gz %{_mandir}/es/man1/fakeroot-tcp.1.gz \
-  --slave %{_mandir}/es/man1/faked.1.gz faked.es.1.gz %{_mandir}/es/man1/faked-tcp.1.gz \
-  --slave %{_mandir}/fr/man1/fakeroot.1.gz fakeroot.fr.1.gz %{_mandir}/fr/man1/fakeroot-tcp.1.gz \
-  --slave %{_mandir}/fr/man1/faked.1.gz faked.fr.1.gz %{_mandir}/fr/man1/faked-tcp.1.gz \
-  --slave %{_mandir}/nl/man1/fakeroot.1.gz fakeroot.nl.1.gz %{_mandir}/nl/man1/fakeroot-tcp.1.gz \
-  --slave %{_mandir}/nl/man1/faked.1.gz faked.nl.1.gz %{_mandir}/nl/man1/faked-tcp.1.gz \
-  --slave %{_mandir}/sv/man1/fakeroot.1.gz fakeroot.sv.1.gz %{_mandir}/sv/man1/fakeroot-tcp.1.gz \
-  --slave %{_mandir}/sv/man1/faked.1.gz faked.sv.1.gz %{_mandir}/sv/man1/faked-tcp.1.gz
 
 /usr/sbin/alternatives --install "%{_bindir}/fakeroot" fakeroot \
   "%{_bindir}/fakeroot-sysv" 40 \
   --slave %{_mandir}/man1/fakeroot.1.gz fakeroot.1.gz %{_mandir}/man1/fakeroot-sysv.1.gz \
   --slave %{_mandir}/man1/faked.1.gz faked.1.gz %{_mandir}/man1/faked-sysv.1.gz \
-  --slave %{_mandir}/de/man1/fakeroot.1.gz fakeroot.de.1.gz %{_mandir}/de/man1/fakeroot-sysv.1.gz \
-  --slave %{_mandir}/de/man1/faked.1.gz faked.de.1.gz %{_mandir}/de/man1/faked-sysv.1.gz \
-  --slave %{_mandir}/es/man1/fakeroot.1.gz fakeroot.es.1.gz %{_mandir}/es/man1/fakeroot-sysv.1.gz \
-  --slave %{_mandir}/es/man1/faked.1.gz faked.es.1.gz %{_mandir}/es/man1/faked-sysv.1.gz \
-  --slave %{_mandir}/fr/man1/fakeroot.1.gz fakeroot.fr.1.gz %{_mandir}/fr/man1/fakeroot-sysv.1.gz \
-  --slave %{_mandir}/fr/man1/faked.1.gz faked.fr.1.gz %{_mandir}/fr/man1/faked-sysv.1.gz \
-  --slave %{_mandir}/nl/man1/fakeroot.1.gz fakeroot.nl.1.gz %{_mandir}/nl/man1/fakeroot-sysv.1.gz \
-  --slave %{_mandir}/nl/man1/faked.1.gz faked.nl.1.gz %{_mandir}/nl/man1/faked-sysv.1.gz \
-  --slave %{_mandir}/sv/man1/fakeroot.1.gz fakeroot.sv.1.gz %{_mandir}/sv/man1/fakeroot-sysv.1.gz \
-  --slave %{_mandir}/sv/man1/faked.1.gz faked.sv.1.gz %{_mandir}/sv/man1/faked-sysv.1.gz
 
 %preun
 if [ $1 = 0 ]; then
@@ -148,31 +128,6 @@ fi
 %{_mandir}/man1/fakeroot-sysv.1*
 %{_mandir}/man1/fakeroot-tcp.1*
 %ghost %{_mandir}/man1/fakeroot.1.gz
-%lang(de) %{_mandir}/de/man1/faked-sysv.1*
-%lang(de) %{_mandir}/de/man1/faked-tcp.1*
-%lang(de) %{_mandir}/de/man1/fakeroot-sysv.1*
-%lang(de) %{_mandir}/de/man1/fakeroot-tcp.1*
-%ghost %lang(de) %{_mandir}/de/man1/fakeroot.1.gz
-%lang(es) %{_mandir}/es/man1/faked-sysv.1*
-%lang(es) %{_mandir}/es/man1/faked-tcp.1*
-%lang(es) %{_mandir}/es/man1/fakeroot-sysv.1*
-%lang(es) %{_mandir}/es/man1/fakeroot-tcp.1*
-%ghost %lang(es) %{_mandir}/es/man1/fakeroot.1.gz
-%lang(fr) %{_mandir}/fr/man1/faked-sysv.1*
-%lang(fr) %{_mandir}/fr/man1/faked-tcp.1*
-%lang(fr) %{_mandir}/fr/man1/fakeroot-sysv.1*
-%lang(fr) %{_mandir}/fr/man1/fakeroot-tcp.1*
-%ghost %lang(fr) %{_mandir}/fr/man1/fakeroot.1.gz
-%lang(sv) %{_mandir}/sv/man1/faked-sysv.1*
-%lang(sv) %{_mandir}/sv/man1/faked-tcp.1*
-%lang(sv) %{_mandir}/sv/man1/fakeroot-sysv.1*
-%lang(sv) %{_mandir}/sv/man1/fakeroot-tcp.1*
-%ghost %lang(sv) %{_mandir}/sv/man1/fakeroot.1.gz
-%lang(nl) %{_mandir}/nl/man1/faked-sysv.1*
-%lang(nl) %{_mandir}/nl/man1/faked-tcp.1*
-%lang(nl) %{_mandir}/nl/man1/fakeroot-sysv.1*
-%lang(nl) %{_mandir}/nl/man1/fakeroot-tcp.1*
-%ghost %lang(nl) %{_mandir}/nl/man1/fakeroot.1.gz
 
 %files libs
 %dir %{_libdir}/libfakeroot

@@ -2,7 +2,9 @@ Name:           dumb
 Version:        0.9.3
 Release:        18%{?dist}
 Summary:        IT, XM, S3M and MOD player library
+Summary(zh_CN.UTF-8): IT, XM, S3M 和 MOD 播放器库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:        zlib
 URL:            http://dumb.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -18,10 +20,15 @@ IT, XM, S3M and MOD player library. Mainly targeted for use with the allegro
 game programming library, but it can be used without allegro. Faithful to the
 original trackers, especially IT.
 
+%description -l zh_CN.UTF-8
+IT, XM, S3M 和 MOD 播放器库。主要目的是和 allegro 游戏程序库一块使用，不过可以
+不用 allegro。
 
 %package devel
 Summary: Development libraries and headers for dumb
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}
 Requires: allegro-devel
 
@@ -29,6 +36,8 @@ Requires: allegro-devel
 The developmental files that must be installed in order to compile
 applications which use dumb.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -b 01
@@ -47,7 +56,7 @@ make %{?_smp_mflags} LIBS=-lm
 %make_install
 #clean out .la and static libs
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

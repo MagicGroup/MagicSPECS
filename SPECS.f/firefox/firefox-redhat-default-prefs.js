@@ -18,4 +18,4 @@ pref("gfx.color_management.enablev4",       true);
 pref("ui.SpellCheckerUnderlineStyle",       1);
 pref("startup.homepage_override_url",       "");
 pref("browser.startup.homepage",            "data:text/plain,browser.startup.homepage=about:newtab");
-pref("browser.newtabpage.pinned",           '[{"url":"http://start.fedoraproject.org/","title":"Fedora Project - Start Page"}]');
+pref("browser.newtabpage.pinned",           '[{"url":"http://www.linuxfans.org/","title":"中国 Linux 公社 - 主页"}]');

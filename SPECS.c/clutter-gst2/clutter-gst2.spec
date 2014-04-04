@@ -5,7 +5,8 @@ Summary:        GStreamer integration for Clutter
 
 License:        LGPLv2+
 URL:            http://www.clutter-project.org
-Source0:        http://ftp.gnome.org/pub/GNOME/sources/clutter-gst/2.0/clutter-gst-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/clutter-gst/%{majorver}/clutter-gst-%{version}.tar.xz
 
 BuildRequires:  clutter-devel
 BuildRequires:  gobject-introspection-devel

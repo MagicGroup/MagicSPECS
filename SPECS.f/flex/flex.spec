@@ -1,6 +1,7 @@
 Summary: A tool for creating scanners (text pattern recognizers)
+Summary(zh_CN.UTF-8): 生成扫描器的工具（文本模式识别）
 Name: flex
-Version: 2.5.37
+Version:	2.5.39
 Release: 4%{?dist}
 # parse.c and parse.h are under GPLv3+ with exception which allows
 #	relicensing.  Since flex is shipped under BDS-style license,
@@ -8,6 +9,7 @@ Release: 4%{?dist}
 # gettext.h (copied from gnulib) is under LGPLv2+
 License: BSD and LGPLv2+
 Group: Development/Tools
+Group(zh_CN.UTF): 开发/工具
 URL: http://flex.sourceforge.net/
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 
@@ -40,11 +42,16 @@ build process.
 You should install flex if you are going to use your system for
 application development.
 
+%description -l zh_CN.UTF-8
+生成扫描器的工具。扫描器是一种可以识别文本中的指定模式的程序。
+
 # We keep the libraries in separate sub-package to allow for multilib
 # installations of flex.
 %package devel
 Summary: Libraries for flex scanner generator
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Tools
+Group(zh_CN.UTF): 开发/工具
 Obsoletes: flex-static < 2.5.35-15
 Provides: flex-static
 
@@ -54,20 +61,28 @@ This package contains the library with default implementations of
 `main' and `yywrap' functions that the client binary can choose to use
 instead of implementing their own.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation for flex scanner generator
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF): 文档
 
 %description doc
 
 This package contains documentation for flex scanner generator in
 plain text and PDF formats.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+#%patch0 -p1
+#%patch1 -p1
+#%patch2 -p1
 
 %global flexdocdir %{_datadir}/doc/flex-doc-%{version}
 
@@ -89,6 +104,8 @@ rm -f $RPM_BUILD_ROOT/%{flexdocdir}/{README.cvs,TODO}
   ln -s libfl.a .%{_libdir}/libl.a
 )
 
+rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 %find_lang flex
 
 %post
@@ -118,16 +135,21 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*
 %{_includedir}/FlexLexer.h
 %{_infodir}/flex.info*
+%{_libdir}/libfl*.so.*
 
 %files devel
 %defattr(-,root,root)
 %{_libdir}/*.a
+%{_libdir}/*.so
 
 %files doc
 %defattr(-,root,root)
 %{_datadir}/doc/flex-doc-%{version}
 
 %changelog
+* Thu Apr 03 2014 Liu Di <liudidi@gmail.com> - 2.5.39-4
+- 更新到 2.5.39
+
 * Tue Sep  3 2013 Petr Machata <pmachata@redhat.com> - 2.5.37-4
 - Add a patch for "comparison between signed and unsigned" warnings
   that GCC produces when compiling flex-generated scanners

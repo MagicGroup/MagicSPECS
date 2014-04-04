@@ -2,8 +2,10 @@ Name:           fcgi
 Version:        2.4.0
 Release:        20%{?dist}
 Summary:        FastCGI development kit
+Summary(zh_CN.UTF-8): FastCGI 开发包
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/库
 License:        OML
 URL:            http://www.fastcgi.com/#TheDevKit
 Source0:        http://fastcgi.com/dist/fcgi-%{version}.tar.gz
@@ -18,10 +20,14 @@ Patch3:         fcgi-2.4.0-gcc44_fixes.patch
 FastCGI is a language independent, scalable, open extension to CGI that
 provides high performance without the limitations of server specific APIs.
 
+%description -l zh_CN.UTF-8
+FastCGI 开发包
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -29,6 +35,8 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8 
+%{name} 的开发包。
 
 %prep
 %setup -q

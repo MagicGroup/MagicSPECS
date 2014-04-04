@@ -2,12 +2,14 @@
 %define CookieDir %{_datadir}/games/fortune
 
 Summary: A program which will display a fortune
+Summary(zh_CN.UTF-8): 显示信息的一个程序
 Name: fortune-mod
 Version: 1.99.1
 Release: 16%{?dist}
 URL: http://www.redellipse.net/code/fortune
 License: BSD
 Group: Amusements/Games
+Group(zh_CN.UTF): 娱乐/游戏
 Source: http://www.redellipse.net/code/downloads/fortune-mod-1.99.1.tar.gz
 Source1: kernelnewbies-fortunes.tar.gz
 Source2: bofh-excuses.tar.bz2
@@ -27,6 +29,9 @@ Fortune-mod contains the ever-popular fortune program, which will
 display quotes or witticisms. Fun-loving system administrators can add
 fortune to users' .login files, so that the users get their dose of
 wisdom each time they log in.
+
+%description -l zh_CN.UTF-8
+显示信息的一个程序?
 
 %prep
 %setup -q
@@ -91,7 +96,7 @@ for i in \
     kernelnewbies bofh-excuses tao hitchhiker \
     osfortune humorix-misc humorix-stories \
 ; do util/strfile $RPM_BUILD_ROOT%{CookieDir}/$i ; done
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -2,7 +2,9 @@ Name:		fcitx-fbterm
 Version:	0.2.0
 Release:	3%{?dist}
 Summary:	Fbterm Support for Fcitx
+Summary(zh_CN.UTF-8): Fcitx 的 fbterm 支持
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv2+
 URL:		http://code.google.com/p/fcitx/
 Source0:	http://fcitx.googlecode.com/files/%{name}-%{version}.tar.xz
@@ -15,6 +17,8 @@ Requires:	fcitx
 Fcitx-fbterm is a Wrapper for Fcitx in fbterm, 
 a fast Framebuffer based terminal emulator.
 
+%description -l zh_CN.UTF-8
+Fcitx 的 fbterm 支持。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -31,6 +35,7 @@ rm -rf $RPM_BUILD_ROOT
 pushd build
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 popd
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

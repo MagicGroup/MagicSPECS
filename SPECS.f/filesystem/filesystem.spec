@@ -1,10 +1,12 @@
 Summary: The basic directory layout for a Linux system
+Summary(zh_CN.UTF-8): Linux 系统的基本目录结构
 Name: filesystem
 Version: 3
 Release: 4%{?dist}
 License: Public Domain
 URL: https://fedorahosted.org/filesystem
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 # Raw source1 URL: https://fedorahosted.org/filesystem/browser/lang-exceptions?format=raw
 Source1: https://fedorahosted.org/filesystem/browser/lang-exceptions
 Source2: iso_639.sed
@@ -21,6 +23,9 @@ The filesystem package is one of the basic packages that is installed
 on a Linux system. Filesystem contains the basic directory layout
 for a Linux operating system, including the correct permissions for
 the directories.
+
+%description -l zh_CN.UTF-8
+Linux 系统的基本目录结构，包括权限。
 
 %prep
 rm -f $RPM_BUILD_DIR/filelist

@@ -2,7 +2,9 @@ Name:           alure
 Version:        1.2
 Release:        6%{?dist}
 Summary:        Audio Library Tools REloaded
+Summary(zh_CN.UTF-8): 重载音频库的工具
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 # ALURE code is LGPLv2+; note -devel subpackage has its own license tag
 License:        LGPLv2+ 
 URL:            http://kcat.strangesoft.net/alure.html
@@ -17,10 +19,14 @@ ALURE is a utility library to help manage common tasks with OpenAL
 applications. This includes device enumeration and initialization, 
 file loading, and streaming.  
 
+%description -l zh_CN.UTF-8
+这是一个管理 OpanAL 程序的通用工具。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # Devel doc includes some files under GPLv2+ from NaturalDocs
 License:        LGPLv2+ and GPLv2+
 Requires:       %{name} = %{version}-%{release}
@@ -31,6 +37,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -48,7 +56,7 @@ make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 # strip installed html doc
 rm -rf %{buildroot}%{_docdir}/alure/html
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

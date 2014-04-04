@@ -33,6 +33,7 @@ make %{?_smp_flags}
 
 %install
 make DESTDIR="$RPM_BUILD_ROOT" install
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

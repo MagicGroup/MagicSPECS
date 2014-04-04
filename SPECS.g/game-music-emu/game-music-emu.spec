@@ -3,6 +3,7 @@ Version:        0.6.0
 Release:        3%{?dist}
 Provides:       libgme%{?_isa} = %{version}-%{release}
 Summary:        Video game music file emulation/playback library
+Summary(zh_CN.UTF-8): 视频游戏音乐文件模拟/回放库
 License:        LGPLv2+
 URL:            http://code.google.com/p/game-music-emu/
 Source0:        http://game-music-emu.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -14,12 +15,14 @@ BuildRequires:  SDL-devel
 
 %package devel
 Summary:        Development files for Game_Music_Emu
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Provides:       libgme-devel%{?_isa} = %{version}-%{release}
 Requires:       %{name}%{?_isa} = %{version}
 Requires:       pkgconfig
 
 %package player
 Summary:        Demo player utilizing Game_Music_Emu
+Summary(zh_CN.UTF-8): %{name} 的样例播放器
 License:        MIT
 
 
@@ -37,12 +40,30 @@ the following formats and systems:
  * SPC      Super Nintendo/Super Famicom
  * VGM/VGZ  Sega Master System/Mark III, Sega Genesis/Mega Drive,BBC Micro
 
+%description -l zh_CN.UTF-8
+这是一个视频游戏音乐文件模拟器，支持下面的格式和系统：
+ 
+ * AY       ZX Spectrum/Amstrad CPC
+ * GBS      Nintendo Game Boy
+ * GYM      Sega Genesis/Mega Drive
+ * HES      NEC TurboGrafx-16/PC Engine
+ * KSS      MSX Home Computer/other Z80 systems (doesn't support FM sound)
+ * NSF/NSFE Nintendo NES/Famicom (with VRC 6, Namco 106, and FME-7 sound)
+ * SAP      Atari systems using POKEY sound chip
+ * SPC      Super Nintendo/Super Famicom
+ * VGM/VGZ  Sega Master System/Mark III, Sega Genesis/Mega Drive,BBC Micro
+
 %description devel
 This package contains files needed to compile code which uses Game_Music_Emu.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %description player
 This package contains the demo player for files supported by Game_Music_Emu.
 
+%description player -l zh_CN.UTF-8
+%{name} 的样例播放器。
 
 %prep
 %setup -q
@@ -66,7 +87,7 @@ make install DESTDIR=%{buildroot}
 cd player
 make install DESTDIR=%{buildroot}
 cd ..
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

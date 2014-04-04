@@ -2,7 +2,9 @@ Name:           fftw
 Version:        3.3
 Release:        5%{?dist}
 Summary:        A Fast Fourier Transform library
+Summary(zh_CN.UTF-8): 快速傅里叶变换库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.fftw.org
 Source0:        http://www.fftw.org/fftw-%{version}.tar.gz
@@ -39,9 +41,14 @@ FFTW is a C subroutine library for computing the Discrete Fourier
 Transform (DFT) in one or more dimensions, of both real and complex
 data, and of arbitrary input size.
 
+%description -l zh_CN.UTF-8
+快速的傅里叶变换库，支持实数和复数。
+
 %package libs
 Summary:        FFTW run-time library
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Provides:       fftw3 = %{version}-%{release}
 Obsoletes:      fftw3 < 3.3
 # Libs branched from rpm containing binaries in version 3.3
@@ -50,9 +57,14 @@ Obsoletes:      fftw < 3.3
 %description libs
 This package contains the FFTW run-time libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary:        Headers, libraries and docs for the FFTW library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       pkgconfig
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -71,6 +83,9 @@ data, and of arbitrary input size.
 
 This package contains header files and development libraries needed to
 develop programs using the FFTW fast Fourier transform library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package libs-threads
 Summary:        FFTW library with threading support
@@ -254,6 +269,9 @@ fi
 %{_libdir}/libfftw3*.a
 
 %changelog
+* Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 3.3-5
+- 更新到 3.3.4
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.3-5
 - 为 Magic 3.0 重建
 

@@ -2,12 +2,14 @@
 %define _with_gcrypt --with-gcrypt
 
 Summary: Base libraries for GGZ gaming zone
+Summary(zh_CN.UTF-8): GGZ 游戏的基本库
 Name:    ggz-base-libs
 Version: 0.99.5
 Release: 7%{?dist}
 
 License: LGPLv2+ and GPLv2+
 Group:   System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 URL: http://www.ggzgamingzone.org/
 #Source0: http://ftp.belnet.be/packages/ggzgamingzone/ggz/%{version}/ggz-base-libs-snapshot-%{version}.tar.gz
 Source0: http://mirrors.ibiblio.org/pub/mirrors/ggzgamingzone/ggz/snapshots/ggz-base-libs-snapshot-%{version}.tar.gz
@@ -36,9 +38,14 @@ GGZ (which is a recursive acronym for GGZ Gaming Zone) develops libraries,
 games and game-related applications for client-server online gaming. Player
 rankings, game spectators, AI players and a chat bot are part of this effort.
 
+%description -l zh_CN.UTF-8
+GGZ 游戏的基本库。
+
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Obsoletes: libggz-devel < 1:0.99.5
 Obsoletes: ggz-client-libs-devel < 1:0.99.5
 Provides: libggz-devel = 1:%{version}-%{release}
@@ -50,6 +57,8 @@ Requires: rpm
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-snapshot-%{version}
@@ -94,7 +103,7 @@ mkdir -p %{buildroot}%{_datadir}/ggz
 mkdir -p %{buildroot}%{_libdir}/ggz
 # RPM macros
 install -D -m644 -p %{SOURCE2} %{buildroot}%{_sysconfdir}/rpm/macros.ggz
-
+magic_rpm_clean.sh
 %find_lang ggzcore_snapshot-%{version}
 %find_lang ggz-config
 cat ggz*.lang >> all.lang

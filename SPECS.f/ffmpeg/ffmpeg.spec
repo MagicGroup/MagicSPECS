@@ -9,10 +9,10 @@ Summary: Hyper fast MPEG1/MPEG4/H263/RV and AC3/MPEG audio encoder and decoder
 Summary(zh_CN.UTF-8): 非常快速的 MPEG1/MPEG4/H263/RV 和 AC3/MPEG 声音编码和解码器
 Name: ffmpeg
 %if %{svn}
-Version: 0.9
+Version:	2.2
 Release: 0.svn%{date}.1%{?dist}.3
 %else
-Version: 2.0
+Version:	2.2
 Release: 1%{?dist}
 %endif
 License: GPL
@@ -220,6 +220,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_mandir}/man3/lib*.3*
 
 %changelog
+* Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 2.2-1
+- 更新到 2.2
+
 * Fri Jul 05 2013 Liu Di <liudidi@gmail.com> - 1.2.2-2
 - 为 Magic 3.0 重建
 

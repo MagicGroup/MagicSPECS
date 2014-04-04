@@ -15,11 +15,13 @@
 %endif
 
 Summary: Free Software (GPL) Implementation of the NX Server
+Summary(zh_CN.UTF-8): NX 服务的自由 (GPL) 实现 
 Name: freenx-server
 Version: 0.7.3
 Release: 31%{?dist}
 License: GPLv2
 Group: Applications/Internet
+Group(zh_CN.UTF): 应用程序/互联网
 URL: http://freenx.berlios.de/
 Source0: http://download.berlios.de/freenx/%{name}-%{version}.tar.gz
 Source1: freenx.logrotate
@@ -62,6 +64,10 @@ NX is an exciting new technology for remote display. It provides near
 local speed application responsiveness over high latency, low
 bandwidth links. The core libraries for NX are provided by NoMachine
 under the GPL. FreeNX-server is a GPL implementation of the NX Server.
+
+%description -l zh_CN.UTF-8
+NX 是一种很好的远程访问技术。NoMachine 基于 GPL 提供了核心库。
+这是 NX 服务的一个 GPL 实现。
 
 %prep
 %setup -q

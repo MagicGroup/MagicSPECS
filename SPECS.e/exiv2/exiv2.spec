@@ -1,7 +1,7 @@
 Summary: Exif and Iptc metadata manipulation library
 Summary(zh_CN.UTF-8): Exif 和 Iptc 元数据处理库
 Name:	 exiv2
-Version: 0.22
+Version: 0.24
 Release: 2%{?dist}
 
 License: GPLv2+
@@ -118,7 +118,7 @@ rm -rf %{buildroot}
 
 %files libs -f exiv2.lang
 %defattr(-,root,root,-)
-%{_libdir}/libexiv2.so.11*
+%{_libdir}/libexiv2.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -129,6 +129,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 0.24-2
+- 更新到 0.24
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.22-2
 - 为 Magic 3.0 重建
 

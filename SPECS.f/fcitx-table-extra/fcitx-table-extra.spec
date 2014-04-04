@@ -2,7 +2,9 @@ Name:		fcitx-table-extra
 Version:	0.3.4
 Release:	2%{?dist}
 Summary:	Extra tables for Fcitx
+Summary(zh_CN.UTF-8): Fcitx 的附加码表
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv2+
 URL:		http://fcitx-im.org/wiki/Fcitx
 Source0:	http://download.fcitx-im.org/%{name}/%{name}-%{version}.tar.xz
@@ -16,6 +18,8 @@ Fcitx-table-extra provides extra table for Fcitx, including Boshiamy, Zhengma, a
 
 Boshiamy table and its icon are released under their own license.
 
+%description -l zh_CN.UTF-8
+Fcitx 的附加码表，包括嘸蝦米、郑码和仓颉 3/5。
 
 %prep
 %setup -q -n %{name}-%{version}
