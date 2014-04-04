@@ -1,7 +1,8 @@
+%bcond_with largefile
 Summary: A GNU set of database routines which use extensible hashing
 Name: gdbm
-Version: 1.9.1
-Release: 2%{?dist}
+Version: 1.10
+Release: 7%{?dist}
 Source: http://ftp.gnu.org/gnu/gdbm/gdbm-%{version}.tar.gz
 # Prevent gdbm from storing uninitialized memory content
 # to database files.
@@ -11,14 +12,15 @@ Source: http://ftp.gnu.org/gnu/gdbm/gdbm-%{version}.tar.gz
 # from other applications. The patch is taken from Debian.
 # See https://bugzilla.redhat.com/show_bug.cgi?id=4457
 # See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=208927
-Patch0: gdbm-1.9.1-zeroheaders.patch
-# Make gdbm handle read(2) returning less data than it was asked for.
-# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=274417
-Patch1: gdbm-1.9.1-shortread.patch
-License: GPLv2+
+Patch0: gdbm-1.10-zeroheaders.patch
+Patch1: gdbm-1.10-fedora.patch
+Patch2: gdbm-sa1.patch
+Patch3: gdbm-aarch64.patch
+License: GPLv3+
 URL: http://www.gnu.org/software/gdbm/
 Group: System Environment/Libraries
 BuildRequires: libtool
+BuildRequires: gettext
 
 %description
 Gdbm is a GNU database indexing library, including routines which use
@@ -49,16 +51,22 @@ gdbm database library.  You'll also need to install the gdbm package.
 %prep
 %setup -q
 %patch0 -p1 -b .zeroheaders
-%patch1 -p1 -b .shortread
+%patch1 -p1 -b .fedora
+%patch2 -p1 -b .sa1
+%patch3 -p1 -b .aarch64
 
 %build
-%configure --disable-static --enable-libgdbm-compat
+%configure \
+    --disable-static \
+%{!?with_largefile: --disable-largefile} \
+    --enable-libgdbm-compat
 
-make
+make %{?_smp_mflags}
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
-%makeinstall
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%find_lang %{name}
 
 # create symlinks for compatibility
 mkdir -p $RPM_BUILD_ROOT/%{_includedir}/gdbm 
@@ -84,28 +92,52 @@ make check
 
 %preun devel
 if [ $1 = 0 ]; then
-   /sbin/install-info --delete %{_infodir}/gdbm.info.gz %{_infodir}/dir \
-      --entry="* gdbm: (gdbm).                   The GNU Database." || :
+    /sbin/install-info --delete %{_infodir}/gdbm.info.gz %{_infodir}/dir \
+        --entry="* gdbm: (gdbm).                   The GNU Database." || :
 fi
 
-%files
-%defattr(-,root,root,-)
-%doc COPYING NEWS README
+%files -f %{name}.lang
+%doc COPYING NEWS README THANKS AUTHORS NOTE-WARNING 
 %{_libdir}/libgdbm.so.4*
 %{_libdir}/libgdbm_compat.so.4*
 %{_bindir}/testgdbm
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/libgdbm.so
 %{_libdir}/libgdbm_compat.so
 %{_includedir}/*
 %{_infodir}/*.info*
-%{_mandir}/man3/*
+%{_mandir}/man3/* 
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.9.1-2
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Mar 25 2013 Honza Horak <hhorak@redhat.com> - 1.10-6
+- Fixed some issues found by Coverity
+- Add support of aarch64
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Aug 27 2012 Honza Horak <hhorak@redhat.com> - 1.10-4
+- Spec file cleanup
+- Use make DESTDIR=... install instead of %%make_install
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Nov 14 2011 Honza Horak <hhorak@redhat.com> - 1.10-1
+- Updated to new upstream release 1.10
+- Dropped -shortread patch, which has been already applied by upstream
+- Disable large file support, that is enabled by default since 1.9, 
+  but not compatible with db files created using gdbm-1.8.3 and lower
+- License change to GPLv3+
+- Add doc files THANKS AUTHORS NOTE-WARNING
+- Changed text in NOTE-WARNING to correspond with build settings
 
 * Tue Sep 20 2011 Honza Horak <hhorak@redhat.com> - 1.9.1-1
 - Updated to new upstream release 1.9.1
