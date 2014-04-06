@@ -1,6 +1,6 @@
 #!/bin/bash
-url="http://git-scm.com/downloaSummary(zh_CN.UTF-8):"
-new1="<span class=\\'version\\'>"
+url="http://git-scm.com/downloads"
+new1="<span class='version'>"
 new2="<\\/span>"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
