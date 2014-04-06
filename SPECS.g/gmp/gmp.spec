@@ -5,19 +5,21 @@
 
 Summary: A GNU arbitrary precision library
 Name: gmp
-Version: 5.0.5
-Release: 4%{?dist}
+Version: 5.1.3
+Release: 2%{?dist}
 Epoch: 1
 URL: http://gmplib.org/
-Source0: ftp://ftp.gnu.org/pub/gnu/gmp/gmp-%{version}.tar.xz
+Source0: ftp://ftp.gmplib.org/pub/gmp-%{version}/gmp-%{version}.tar.bz2
+# or ftp://ftp.gnu.org/pub/gnu/gmp/gmp-%{version}.tar.xz
 Source2: gmp.h
 Source3: gmp-mparam.h
 Patch0: gmp-4.0.1-s390.patch
-Patch1: gmp-5.0.5-de-ansi-fication.patch
 License: LGPLv3+
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf automake libtool
+#autoreconf on arm needs:
+BuildRequires: perl-Carp
 
 %description
 The gmp package contains GNU MP, a library for arbitrary precision
@@ -58,10 +60,9 @@ in applications.
 %prep
 %setup -q
 %patch0 -p1 -b .s390
-%patch01 -p1 -b .de-ansi
 
 %build
-autoreconf -if
+autoreconf -ifv
 if as --help | grep -q execstack; then
   # the object files do not require an executable stack
   export CCAS="gcc -c -Wa,--noexecstack"
@@ -87,7 +88,7 @@ export CFLAGS=$(echo $RPM_OPT_FLAGS | sed -e "s/-mtune=[^ ]*//g" | sed -e "s/-ma
          --sharedstatedir=%{_sharedstatedir} \
          --mandir=%{_mandir} \
          --infodir=%{_infodir} \
-         --enable-mpbsd --enable-cxx
+         --enable-cxx
 sed -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' \
     -e 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' \
     -e 's|-lstdc++ -lm|-lstdc++|' \
@@ -115,7 +116,7 @@ export CFLAGS=$(echo $RPM_OPT_FLAGS | sed -e "s/-mtune=[^ ]*//g" | sed -e "s/-ma
          --sharedstatedir=%{_sharedstatedir} \
          --mandir=%{_mandir} \
          --infodir=%{_infodir} \
-         --enable-mpbsd --enable-cxx
+         --enable-cxx
 sed -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' \
     -e 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' \
     -e 's|-lstdc++ -lm|-lstdc++|' \
@@ -127,14 +128,13 @@ cd ..
 %endif
 
 %install
-rm -rf $RPM_BUILD_ROOT
 cd base
 export LD_LIBRARY_PATH=`pwd`/.libs
 make install DESTDIR=$RPM_BUILD_ROOT
 install -m 644 gmp-mparam.h ${RPM_BUILD_ROOT}%{_includedir}
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib{gmp,mp,gmpxx}.la
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-/usr/sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
+/sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
 ln -sf libgmpxx.so.4 $RPM_BUILD_ROOT%{_libdir}/libgmpxx.so
 cd ..
 %ifarch %{ix86}
@@ -147,9 +147,6 @@ chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libgmp.so.[^.]*
 install -m 755 .libs/libgmpxx.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
 cp -a .libs/libgmpxx.so.? $RPM_BUILD_ROOT%{_libdir}/sse2
 chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libgmpxx.so.?
-install -m 755 .libs/libmp.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
-cp -a .libs/libmp.so.? $RPM_BUILD_ROOT%{_libdir}/sse2
-chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libmp.so.?
 cd ..
 %endif
 
@@ -175,7 +172,7 @@ mv %{buildroot}/%{_includedir}/gmp.h %{buildroot}/%{_includedir}/gmp-${basearch}
 install -m644 %{SOURCE2} %{buildroot}/%{_includedir}/gmp.h
 mv %{buildroot}/%{_includedir}/gmp-mparam.h %{buildroot}/%{_includedir}/gmp-mparam-${basearch}.h
 install -m644 %{SOURCE3} %{buildroot}/%{_includedir}/gmp-mparam.h
-magic_rpm_clean.sh
+
 
 %check
 %ifnarch ppc
@@ -191,9 +188,9 @@ make %{?_smp_mflags} check
 cd ..
 %endif
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %post devel
 if [ -f %{_infodir}/gmp.info.gz ]; then
@@ -209,14 +206,10 @@ if [ $1 = 0 ]; then
 fi
 exit 0
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(-,root,root,-)
 %doc COPYING COPYING.LIB NEWS README
 %{_libdir}/libgmp.so.*
-%{_libdir}/libmp.so.*
 %{_libdir}/libgmpxx.so.*
 %ifarch %{ix86}
 %{_libdir}/sse2/*
@@ -224,7 +217,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%{_libdir}/libmp.so
 %{_libdir}/libgmp.so
 %{_libdir}/libgmpxx.so
 %{_includedir}/*.h
@@ -232,14 +224,40 @@ rm -rf $RPM_BUILD_ROOT
 
 %files static
 %defattr(-,root,root,-)
-%{_libdir}/libmp.a
 %{_libdir}/libgmp.a
 %{_libdir}/libgmpxx.a
 
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1:5.0.5-4
-- 为 Magic 3.0 重建
+* Wed Nov 06 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.1.3-2
+- support for aarch64
+
+* Wed Nov 06 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.1.3-1
+- rebase to 5.1.3
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.1.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu May 30 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.1.2-1
+- rebase to 5.1.2
+
+* Thu Mar 28 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.1.1-3
+- added build dependency needed to autoreconf on arm
+
+* Thu Feb 14 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.1.1-2
+- rebase to 5.1.1
+- deleted unapplicable part of gmp-4.0.1-s390.patch
+
+* Fri Jan 25 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.1.0-1
+- rebase to 5.1.0, de-ansi patch no longer applicable
+- upstream dropped libmp.so (bsdmp-like interface)
+- silenced bogus date in changelog
+
+* Tue Jan 22 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1:5.0.5-6
+- Rebuild against new binutils to fix FTBFS on ARM
+
+* Fri Nov 23 2012 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.0.5-5
+- minor spec cleanup
 
 * Fri Jul 20 2012 Peter Schiffer <pschiffe@redhat.com> 1:5.0.5-3
 - fixed FTBFS
@@ -613,7 +631,7 @@ correctly identified as a 64 bit platform.
 * Wed Sep  2 1998 Michael Fulbright <msf@redhat.com>
 - looked over before inclusion in RH 5.2
 
-* Sat May 24 1998 Dick Porter <dick@cymru.net>
+* Sun May 24 1998 Dick Porter <dick@cymru.net>
 - Patch Makefile.in, not Makefile
 - Don't specify i586, let configure decide the arch
 
