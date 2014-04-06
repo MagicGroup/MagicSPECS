@@ -1,0 +1,67 @@
+diff -Nuri rpm-4.11.2-orig/installplatform rpm-4.11.2/installplatform
+--- rpm-4.11.2-orig/installplatform	2014-04-06 13:20:48.537383058 +0000
++++ rpm-4.11.2/installplatform	2014-04-06 13:22:43.666348254 +0000
+@@ -114,6 +114,12 @@
+ 	CANONARCH=aarch64
+ 	CANONCOLOR=3
+ 	;;
++    mips64el*)
++       ISANAME=mips
++        ISABITS=64
++        CANONARCH=mips64el
++        CANONCOLOR=3
++        ;;
+     noarch)
+ 	CANONARCH=noarch
+ 	CANONCOLOR=0
+diff -Nuri rpm-4.11.2-orig/lib/rpmrc.c rpm-4.11.2/lib/rpmrc.c
+--- rpm-4.11.2-orig/lib/rpmrc.c	2014-04-06 13:20:48.919219191 +0000
++++ rpm-4.11.2/lib/rpmrc.c	2014-04-06 13:23:51.821656587 +0000
+@@ -1106,7 +1106,11 @@
+ 
+ #	if defined(__MIPSEL__) || defined(__MIPSEL) || defined(_MIPSEL)
+ 	    /* little endian */
+-	    strcpy(un.machine, "mipsel");
++#          if defined(__mips64)
++               strcpy(un.machine, "mips64el");
++#          else
++               strcpy(un.machine, "mipsel");
++#          endif
+ #	elif defined(__MIPSEB__) || defined(__MIPSEB) || defined(_MIPSEB)
+ 	   /* big endian */
+ 		strcpy(un.machine, "mips");
+diff -Nuri rpm-4.11.2-orig/rpmrc.in rpm-4.11.2/rpmrc.in
+--- rpm-4.11.2-orig/rpmrc.in	2014-04-06 13:20:48.556914318 +0000
++++ rpm-4.11.2/rpmrc.in	2014-04-06 13:27:24.211413768 +0000
+@@ -59,6 +59,7 @@
+ 
+ optflags: mips -O2 -g
+ optflags: mipsel -O2 -g
++optflags: mips64el -O2 -g -mabi=64
+ 
+ optflags: armv3l -O2 -g -march=armv3
+ optflags: armv4b -O2 -g -march=armv4
+@@ -175,6 +176,7 @@
+ arch_canon:     ia64:	ia64	9
+ 
+ arch_canon:	mipsel:	mipsel	11
++arch_canon:     mips64el: mips64el  11
+ 
+ arch_canon:	armv3l: armv3l	12
+ arch_canon:     armv4b:	armv4b 	12
+@@ -377,6 +379,7 @@
+ 
+ arch_compat: mips: noarch
+ arch_compat: mipsel: noarch
++arch_compat: mips64el: mipsel
+ 
+ arch_compat: hppa2.0: hppa1.2
+ arch_compat: hppa1.2: hppa1.1
+@@ -495,6 +498,7 @@
+ 
+ buildarch_compat: mips: noarch
+ buildarch_compat: mipsel: noarch
++buildarch_compat: mips64el: noarch
+ 
+ buildarch_compat: armv4b: noarch
+ buildarch_compat: armv7l: armv6l
