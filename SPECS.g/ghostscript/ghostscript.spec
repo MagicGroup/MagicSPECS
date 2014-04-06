@@ -2,6 +2,7 @@
 %define gs_dot_ver 9.10
 %{expand: %%define build_with_freetype %{?_with_freetype:1}%{!?_with_freetype:0}}
 Summary: A PostScript interpreter and renderer
+Summary(zh_CN.UTF-8): PostScript 解释器和渲染器
 Name: ghostscript
 Version: %{gs_ver}
 
@@ -12,6 +13,7 @@ Release: 6%{?dist}
 License: AGPLv3+ and Redistributable, no modification permitted
 URL: http://www.ghostscript.com/
 Group: Applications/Publishing
+Group(zh_CN.UTF): 应用程序/出版
 Source0: ghostscript-%{gs_ver}-cleaned.tar.bz2
 # ghostscript contains a jpegxr directory containing code we cannot
 # ship due to licensing concerns. Therefore we use this script to
@@ -74,30 +76,48 @@ non-PostScript printers, you should install ghostscript. If you
 install ghostscript, you also need to install the ghostscript-fonts
 package.
 
+%description -l zh_CN.UTF-8
+Postscripts 解释器和渲染器。
+
 %package devel
 Summary: Files for developing applications that use ghostscript
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 The header files for developing applications that use ghostscript.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation for ghostscript
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires: %{name} = %{version}-%{release}
 Group: Documentation
+Group(zh_CN.UTF): 文档
 BuildArch: noarch
 
 %description doc
 The documentation files that come with ghostscript.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package gtk
 Summary: A GTK-enabled PostScript interpreter and renderer
+Summary(zh_CN.UTF-8): 使用 GTK 的 PostScript 解释器和渲染器
 Requires: %{name} = %{version}-%{release}
 Group: Applications/Publishing
+Group(zh_CN.UTF): 应用程序/出版
 
 %description gtk
 A GTK-enabled version of Ghostscript, called 'gsx'.
+
+%description gtk -l zh_CN.UTF-8
+使用 GTK 的 PostScript 解释器和渲染器，命名为 gsx。
 
 %prep
 %setup -q -n %{name}-%{gs_ver}
@@ -277,6 +297,7 @@ MAIN_PWD=`pwd`
  find .%{_bindir}/ | sed -e 's/\.//;' | \
                 grep -v '/$\|/hpijs$\|/gsx$\|/ijs-config$' \
                 >> $MAIN_PWD/rpm.sharelist)
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

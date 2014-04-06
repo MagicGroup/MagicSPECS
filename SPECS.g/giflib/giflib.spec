@@ -1,9 +1,11 @@
 Summary:	Library for manipulating GIF format image files
+Summary(zh_CN.UTF-8): 处理 GIF 格式图像文件的库
 Name:		giflib
 Version:	4.1.6
-Release:	7%{?dist}
+Release:	8%{?dist}
 License:	MIT
 Group:		System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 URL:		http://www.sourceforge.net/projects/%{name}/
 Source:		http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRequires:	libX11-devel, libICE-devel, libSM-devel, libXt-devel
@@ -17,9 +19,14 @@ saving GIF format image files. It is API and ABI compatible with libungif,
 the library which supported uncompressed GIFs while the Unisys LZW patent
 was in effect.
 
+%description -l zh_CN.UTF-8
+处理 GIF 格式图像文件的库。它的 API 和 ABI 兼容  libungif。
+
 %package devel
 Summary:	Development tools for programs using the giflib library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Provides:	libungif-devel = %{version}-%{release}
 Obsoletes:	libungif-devel <= %{version}-%{release}
@@ -29,9 +36,14 @@ The giflib-devel package includes header files, libraries necessary for
 developing programs which use the giflib library to load and save GIF format
 image files. It contains the documentation of the giflib library, too.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package utils
 Summary:	Programs for manipulating GIF format image files
+Summary(zh_CN.UTF-8): 处理 GIF 格式图像的程序
 Group:		Applications/Multimedia
+Group(zh_CN.UTF): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 Provides:	libungif-progs = %{version}-%{release}
 Obsoletes:	libungif-progs <= %{version}-%{release}
@@ -40,6 +52,9 @@ Obsoletes:	libungif-progs <= %{version}-%{release}
 The giflib-utils package contains various programs for manipulating GIF
 format image files. Install it if you need to manipulate GIF format image
 files.
+
+%description utils -l zh_CN.UTF-8
+处理 GIF 格式图像的程序。
 
 %prep
 %setup -q
@@ -66,6 +81,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.{a,la}
 
 # Remove makefile relics from documentation
 rm -f doc/Makefile*
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

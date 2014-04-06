@@ -1,7 +1,7 @@
 Summary:       An fdisk-like partitioning tool for GPT disks
 Summary(zh_CN.UTF-8): 给 GPT 磁盘使用的类似 fdisk 的工具
 Name:          gdisk
-Version:       0.8.2
+Version:	0.8.6
 Release:       1%{?dist}
 License:       GPLv2
 URL:           http://www.rodsbooks.com/gdisk/
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 %{_mandir}/man8/fixparts.8*
 
 %changelog
+* Sat Apr 05 2014 Liu Di <liudidi@gmail.com> - 0.8.6-1
+- 更新到 0.8.6
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.8.2-4
 - 为 Magic 3.0 重建
 

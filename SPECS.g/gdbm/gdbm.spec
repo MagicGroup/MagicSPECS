@@ -111,6 +111,8 @@ fi
 %{_libdir}/libgdbm.so.4*
 %{_libdir}/libgdbm_compat.so.4*
 #%{_bindir}/testgdbm
+%{_bindir}/gdbm*
+%{_mandir}/man1/gdbm*.1*
 
 %files devel
 %{_libdir}/libgdbm.so

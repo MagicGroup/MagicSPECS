@@ -7,8 +7,10 @@ Name:      geany
 Version:   1.23
 Release:   1%{?dist}
 Summary:   A fast and lightweight IDE using GTK2
-
+Summary(zh_CN.UTF-8): 一个使用 GTK2 开发的快速轻量级 IDE
+ 
 Group:     Development/Tools
+Group(zh_CN.UTF): 开发/工具
 License:   GPLv2+
 URL:       http://www.geany.org/
 Source0:   http://download.geany.org/%{name}-%{version}.tar.bz2
@@ -60,15 +62,35 @@ Some features:
 - Simple project management
 - Plugin interface
 
+%description -l zh_CN.UTF-8
+这是一个具有基本 IDE 特性并极少依赖其它包或桌面环境的小而快的集成开发环境。
+
+一些特性包括：
+- 语法高亮
+- 代码补全
+- 代码折叠
+- 结构构补全
+- 自动关闭 XML 或 HTML 标签
+- 支持多种语言，如 C, JAVA, PHP, HTML, Python, Perl, Pascal
+- 符号列表和符号名自动补全
+- 代码导航
+- 简单的项目管理
+- 插件接口
+
 %package devel
 Summary:   Header files for building Geany plug-ins
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/Tools
+Group(zh_CN.UTF-8): 开发/库
 Requires:  geany = %{version}-%{release}
 Requires:  pkgconfig gtk2-devel
 
 %description devel
 This package contains the header files and pkg-config file needed for building
 Geany plug-ins. You do not need to install this package to use Geany.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -86,10 +108,11 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT DOCDIR=$RPM_BUILD_ROOT/%{geany_docdir}
 rm -f $RPM_BUILD_ROOT%{_datadir}/pixmaps/%{name}.ico
-desktop-file-install --delete-original --vendor="fedora"        \
+desktop-file-install --delete-original --vendor="magic"        \
         --dir=${RPM_BUILD_ROOT}%{_datadir}/applications         \
         --mode 0644                                             \
         $RPM_BUILD_ROOT/%{_datadir}/applications/%{name}.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # Remove static library *.la files
