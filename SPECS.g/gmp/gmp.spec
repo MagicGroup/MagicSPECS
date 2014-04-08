@@ -4,18 +4,20 @@
 #
 
 Summary: A GNU arbitrary precision library
+Summary(zh_CN.UTF-8): GNU 任意精度库
 Name: gmp
-Version: 5.1.3
-Release: 2%{?dist}
+Version: 6.0.0a
+Release: 1%{?dist}
 Epoch: 1
 URL: http://gmplib.org/
-Source0: ftp://ftp.gmplib.org/pub/gmp-%{version}/gmp-%{version}.tar.bz2
+Source0: http://ftp.gnu.org/pub/gnu/gmp/gmp-%{version}.tar.xz
 # or ftp://ftp.gnu.org/pub/gnu/gmp/gmp-%{version}.tar.xz
 Source2: gmp.h
 Source3: gmp-mparam.h
 Patch0: gmp-4.0.1-s390.patch
 License: LGPLv3+
 Group: System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf automake libtool
 #autoreconf on arm needs:
@@ -33,9 +35,17 @@ emphasizes speed over simplicity/elegance in its operations.
 Install the gmp package if you need a fast arbitrary precision
 library.
 
+%description -l zh_CN.UTF-8
+GNU多重精度运算库是一个开源的任意精度运算库，支持正负数的整数、有理数、
+浮点数。它没有任何任何精度限制，只受限于可用内存。GMP有很多函数，它们都
+有一个规则的接口。它是C语言写成的，但用为其他很多语言做包装，包括Ada，
+C++，C#，OCaml，Perl，PHP和python。
+
 %package devel
 Summary: Development tools for the GNU MP arbitrary precision library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -48,17 +58,25 @@ If you want to develop applications which will use the GNU MP library,
 you'll need to install the gmp-devel package.  You'll also need to
 install the gmp package.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Development tools for the GNU MP arbitrary precision library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 The static libraries for using the GNU MP arbitrary precision library 
 in applications.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %prep
-%setup -q
+%setup -q -n %{name}-6.0.0
 %patch0 -p1 -b .s390
 
 %build
@@ -208,7 +226,7 @@ exit 0
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING COPYING.LIB NEWS README
+%doc COPYING NEWS README
 %{_libdir}/libgmp.so.*
 %{_libdir}/libgmpxx.so.*
 %ifarch %{ix86}
@@ -229,6 +247,12 @@ exit 0
 
 
 %changelog
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1:6.0.0a-1
+- 更新到 6.0.0a
+
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 1:6.0.0a-2
+- 更新到 6.0.0a
+
 * Wed Nov 06 2013 Frantisek Kluknavsky <fkluknav@redhat.com> - 1:5.1.3-2
 - support for aarch64
 

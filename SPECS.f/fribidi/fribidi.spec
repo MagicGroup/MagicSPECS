@@ -4,7 +4,7 @@ Name: fribidi
 Version:	0.19.6
 Release: 5%{?dist}
 URL: http://fribidi.org
-Source0: http://fribidi.org/download/%{name}-%{version}.tar.gz
+Source0: http://fribidi.org/download/%{name}-%{version}.tar.bz2
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF): 系统环境/库

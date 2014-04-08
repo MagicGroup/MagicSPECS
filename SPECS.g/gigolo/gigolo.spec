@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gigolo.1.gz
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 0.4.1-4
+- 更新到
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.4.1-4
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name:          gjs
-Version:       1.39.0
+Version:	1.40.0
 Release:       1%{?dist}
 Summary:       Javascript Bindings for GNOME
+Summary(zh_CN.UTF-8): GNOME 的 Javascipt 绑定
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 # The following files contain code from Mozilla which
 # is triple licensed under MPL1.1/LGPLv2+/GPLv2+:
 # The console module (modules/console.c)
@@ -11,7 +13,8 @@ Group:         System Environment/Libraries
 License:       MIT and (MPLv1.1 or GPLv2+ or LGPLv2+)
 URL:           http://live.gnome.org/Gjs/
 #VCS:          git://git.gnome.org/gjs
-Source0:       http://download.gnome.org/sources/%{name}/1.39/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: mozjs17-devel
 BuildRequires: cairo-gobject-devel
@@ -28,14 +31,22 @@ Gjs allows using GNOME libraries from Javascript. It's based on the
 Spidermonkey Javascript engine from Mozilla and the GObject introspection
 framework.
 
+%description -l zh_CN.UTF-8
+Gjs 允许从 Javascript 使用 GNOME 库。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Files for development with %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,6 +64,7 @@ make install DESTDIR=%{buildroot}
 
 #Remove libtool archives.
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %check
 #make check
@@ -77,6 +89,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/*.so
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 1.40.0-1
+- 更新到 1.40.0
+
 * Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 1.38.1-1
 - Update to 1.38.1
 

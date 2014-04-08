@@ -9,11 +9,14 @@
 
 Name:           nautilus
 Summary:        File manager for GNOME
-Version:        3.8.1
+Summary(zh_CN.UTF-8): GNOME 下的文件管理器
+Version:	3.12.0
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
-Source:         http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+Group(zh_CN.UTF): 用户界面/桌面
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 URL:            http://projects.gnome.org/nautilus/
 Requires:       magic-menus
@@ -64,19 +67,29 @@ It allows to browse directories on local and remote filesystems, preview
 files and launch applications associated with them.
 It is also responsible for handling the icons on the GNOME desktop.
 
+%description -l zh_CN.UTF-8 
+这是 GNOME 下的文件管理器和图形 shell。
+
 %package extensions
 Summary: Nautilus extensions library
+Summary(zh_CN.UTF-8): %{name} 的扩展库
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name} = %{version}-%{release}
 
 %description extensions
 This package provides the libraries used by nautilus extensions.
 
+%description extensions -l zh_CN.UTF-8
+%{name} 的扩展库。
+
 %package devel
 Summary: Support for developing nautilus extensions
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name} = %{version}-%{release}
 Requires:   nautilus-extensions = %{version}-%{release}
 Obsoletes:      eel2-devel < 2.26.0-3
@@ -86,10 +99,12 @@ Provides:       eel2-devel = 2.26.0-3
 This package provides libraries and header files needed
 for developing nautilus extensions.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n %{name}-%{version}
 
-#%patch4 -p1 -b .selinux
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -g -DNAUTILUS_OMIT_SELF_CHECK" %configure --disable-more-warnings --disable-update-mimedb
@@ -113,7 +128,7 @@ desktop-file-install --delete-original       \
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus/extensions-3.0/*.la
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %post
@@ -132,7 +147,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %postun extensions -p /sbin/ldconfig
 
 %files  -f %{name}.lang
-%doc AUTHORS COPYING COPYING-DOCS COPYING.LIB NEWS README
+%doc AUTHORS COPYING COPYING.LIB NEWS README
 %{_datadir}/nautilus
 %{_datadir}/applications/*
 %{_datadir}/mime/packages/nautilus.xml
@@ -149,6 +164,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %dir %{_libdir}/nautilus/extensions-3.0
 %{_libdir}/nautilus/extensions-3.0/libnautilus-sendto.so
 %{_sysconfdir}/xdg/autostart/nautilus-autostart.desktop
+%{_datadir}/appdata/nautilus.appdata.xml
 
 %files extensions
 %{_libdir}/libnautilus-extension.so.*
@@ -165,6 +181,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %doc %{_datadir}/gtk-doc/html/libnautilus-extension/
 
 %changelog
+* Mon Apr 07 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Tue Apr 16 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

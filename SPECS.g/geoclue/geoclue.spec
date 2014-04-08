@@ -2,8 +2,10 @@ Name:          geoclue
 Version:       0.12.99
 Release:       2%{?dist}
 Summary:       A modular geoinformation service
+Summary(zh_CN.UTF-8): 模块化的地理信息服务
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:       LGPLv2
 URL:           http://geoclue.freedesktop.org/
 Source0:       http://folks.o-hand.com/jku/geoclue-releases/%{name}-%{version}.tar.gz
@@ -27,9 +29,15 @@ Geoclue is a modular geoinformation service built on top of the D-Bus
 messaging system. The goal of the Geoclue project is to make creating 
 location-aware applications as simple as possible. 
 
+%description -l zh_CN.UTF-8
+这是一个 D-Bus 顶层的模块化地理信息服务。它的目的是让位置感知的应用程序
+尽量简单。
+
 %package devel
 Summary: Development package for geoclue
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: dbus-devel
 Requires: libxml2-devel
@@ -38,38 +46,61 @@ Requires: pkgconfig
 %description devel
 Files for development with geoclue.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Developer documentation for geoclue
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description doc
 Developer documentation for geoclue
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package gui
 Summary: Testing gui for geoclue
+Summary(zh_CN.UTF-8): %{name} 的测试界面
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description gui
 Testing gui for geoclue
 
+%description gui -l zh_CN.UTF-8
+%{name} 的测试图形界面。
+
 %package gypsy
 Summary: gypsy provider for geoclue
+Summary(zh_CN.UTF-8): %{name} 的 gypsy 模块
 Group: System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 
 %description gypsy
 A gypsy provider for geoclue
 
+%description gypsy -l zh_CN.UTF-8
+%{name} 的 gypsy 模块。
+
 %package gsmloc
 Summary: gsmloc provider for geoclue
+Summary(zh_CN.UTF-8): %{name} 的 gsmloc 模块
 Group: System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 
 %description gsmloc
 A gsmloc provider for geoclue
+
+%description gsmloc -l zh_CN.UTF-8
+%{name} 的 gsmloc 模块。
 
 %prep
 %setup -q
@@ -88,6 +119,7 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 # Install the test gui as it seems the test isn't installed any more
 mkdir $RPM_BUILD_ROOT%{_bindir}
 cp test/.libs/geoclue-test-gui $RPM_BUILD_ROOT%{_bindir}/
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

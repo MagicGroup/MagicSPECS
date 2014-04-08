@@ -43,11 +43,13 @@
 %endif
 
 Name:           git
-Version:        1.9.0
+Version:	1.9.0
 Release:        1%{?dist}
 Summary:        Fast Version Control System
+Summary(zh_CN.UTF-8): 快速版本控制系统
 License:        GPLv2
 Group:          Development/Tools
+Group(zh_CN.UTF): 开发/工具
 URL:            http://git-scm.com/
 Source0:        http://git-core.googlecode.com/files/%{name}-%{version}.tar.gz
 Source2:        git-init.el
@@ -631,6 +633,9 @@ rm -rf %{buildroot}
 # No files for you!
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
+- 更新到 1.9.1
+
 * Mon Feb 17 2014 Ondrej Oprala <ooprala@redhat.com> - 1.9.0-1
 - Update to 1.9.0
 

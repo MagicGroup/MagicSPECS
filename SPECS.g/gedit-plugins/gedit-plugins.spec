@@ -1,14 +1,17 @@
 %global __python %{__python3}
 
 Name:           gedit-plugins
-Version:        3.8.1
+Version:	3.12.0
 Release:        1%{?dist}
 Summary:        Plugins for gedit
+Summary(zh_CN.UTF-8): gedit 的插件
 
 Group:          Applications/Editors
+Group(zh_CN.UTF): 应用程序/编辑器
 License:        GPLv2+
 URL:            http://live.gnome.org/GeditPlugins
-Source0:        ftp://ftp.gnome.org/pub/gnome/sources/gedit-plugins/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        ftp://ftp.gnome.org/pub/gnome/sources/gedit-plugins/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  gedit-devel
 BuildRequires:  gnome-doc-utils
@@ -32,6 +35,8 @@ Requires:       gucharmap >= 2.33.2-6.fc15
 %description
 A collection of plugins for gedit.
 
+%description -l zh_CN.UTF-8
+gedit 的插件集合。
 
 %prep
 %setup -q
@@ -44,9 +49,10 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 %find_lang %{name}
 find $RPM_BUILD_ROOT/%{_libdir}/gedit/plugins -name "*.la" -exec rm {} \;
-
+rm -rf `ls %{buildroot}%{_datadir}/help/* |egrep -v '(C|zh_*)'`
 
 %postun
 if [ $1 -eq 0 ]; then
@@ -69,10 +75,13 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gedit/plugins/*
 %{_datadir}/glib-2.0/schemas/org.gnome.gedit.plugins.drawspaces.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.gedit.plugins.terminal.gschema.xml
-
-
+%{_datadir}/glib-2.0/schemas/org.gnome.gedit.plugins.wordcompletion.gschema.xml
+%{_datadir}/help/*
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

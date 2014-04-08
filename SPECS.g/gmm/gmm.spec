@@ -1,8 +1,10 @@
 Name:    gmm
 Summary: A generic C++ template library for sparse, dense and skyline matrices
+Summary(zh_CN.UTF-8): 稀疏矩阵、稠密矩阵、斯凯莱恩矩阵的 C++ 模板库
 Version: 4.0.0
 Release: 3%{?dist} 
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 License: LGPLv2+ 
 URL:     http://home.gna.org/getfem/gmm_intro
@@ -13,14 +15,21 @@ BuildArch: noarch
 %description
 %{summary}
 
+%description -l zh_CN.UTF-8
+稀疏矩阵、稠密矩阵、斯凯莱恩矩阵的 C++ 模板库
+
 %package devel
 Summary:A generic C++ template library for sparse, dense and skyline matrices
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: %{name} = %{version}-%{release}
 Provides: gmm++-devel = %{version}-%{release}
 %description devel
 %{summary}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -34,7 +43,7 @@ Provides: gmm++-devel = %{version}-%{release}
 rm -rf %{buildroot}
 
 make install DESTDIR=%{buildroot} 
-
+magic_rpm_clean.sh
 
 %clean 
 rm -rf %{buildroot}

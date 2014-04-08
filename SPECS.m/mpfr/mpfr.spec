@@ -82,6 +82,7 @@ fi
 %{_libdir}/libmpfr.so
 %{_includedir}/*.h
 %{_infodir}/mpfr.info*
+%{_docdir}/mpfr/*
 
 %changelog
 * Tue Aug 06 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 3.1.2-4

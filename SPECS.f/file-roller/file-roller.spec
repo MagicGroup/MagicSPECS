@@ -9,7 +9,7 @@ Group(zh_CN.UTF-8): 应用程序/归档
 URL:            http://download.gnome.org/sources/file-roller/
 #VCS: git:git://git.gnome.org/file-roller
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
-Source:         http://download.gnome.org/sources/file-roller/3.2/file-roller-%{version}.tar.xz
+Source:         http://download.gnome.org/sources/file-roller/%{majorver}/file-roller-%{version}.tar.xz
 
 BuildRequires: glib2-devel
 BuildRequires: pango-devel
@@ -105,7 +105,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %{_datadir}/file-roller
 %{_datadir}/applications/gnome-file-roller.desktop
 %{_libexecdir}/file-roller
-%{_libexecdir}/file-roller-server
+#%{_libexecdir}/file-roller-server
 %{_datadir}/dbus-1/services/org.gnome.FileRoller.service
 %{_datadir}/icons/hicolor/*/apps/file-roller.png
 %{_datadir}/glib-2.0/schemas/org.gnome.FileRoller.gschema.xml

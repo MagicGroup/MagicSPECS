@@ -4,7 +4,7 @@
 %global  _python_bytecompile_errors_terminate_build 0
 
 Name:      geany
-Version:   1.23
+Version:	1.23.1
 Release:   1%{?dist}
 Summary:   A fast and lightweight IDE using GTK2
 Summary(zh_CN.UTF-8): 一个使用 GTK2 开发的快速轻量级 IDE
@@ -149,7 +149,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/%{name}
 %{_datadir}/%{name}
 %{_libdir}/%{name}
-%{_datadir}/applications/fedora-%{name}.desktop
+%{_datadir}/applications/magic-%{name}.desktop
 %{_datadir}/icons/*/*/*/*.svg
 %{_datadir}/icons/*/*/*/*.png
 
@@ -160,6 +160,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/pkgconfig/geany.pc
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 1.23.1-1
+- 更新到 1.23.1
+
 * Sun Mar 10 2013 Dominic Hopf <dmaphy@fedoraproject.org> - 1.23-1
 - New upstream release: Geany 1.23
 

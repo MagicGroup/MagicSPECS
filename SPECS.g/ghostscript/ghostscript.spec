@@ -325,7 +325,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/ghostscript/%{gs_dot_ver}/lib
 %{_datadir}/ghostscript/%{gs_dot_ver}/iccprofiles
 %{_mandir}/man*/*
-%lang(de) %{_mandir}/de/man*/*
 %{_libdir}/libgs.so.*
 %{_libdir}/libijs-*.so*
 %dir %{_libdir}/%{name}

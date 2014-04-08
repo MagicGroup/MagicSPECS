@@ -1,13 +1,16 @@
 Name:           gmime
-Version:        2.6.11
+Version:	2.6.20
 Release:        2%{?dist}
 Summary:        Library for creating and parsing MIME messages
+Summary(zh_CN.UTF-8): 创建和解析 MIME 信息的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 # Files in examples/, src/ and tests/ are GPLv2+
 License:        LGPLv2+ and GPLv2+
 URL:            http://spruce.sourceforge.net/gmime/
-Source0:        http://download.gnome.org/sources/gmime/2.6/gmime-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/gmime/%{majorver}/gmime-%{version}.tar.xz
 
 BuildRequires:  glib2-devel >= 2.18.0
 BuildRequires:  gpgme-devel
@@ -38,10 +41,14 @@ The GMime suite provides a core library and set of utilities which may be
 used for the creation and parsing of messages using the Multipurpose
 Internet Mail Extension (MIME).
 
+%description -l zh_CN.UTF-8
+创建和解析 MIME 信息的库。
 
 %package        devel
 Summary:        Header files to develop libgmime applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       glib2-devel
 
@@ -51,10 +58,15 @@ used for the creation and parsing of messages using the Multipurpose
 Internet Mail Extension (MIME). The devel-package contains header files
 to develop applications that use libgmime.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %if 0%buildmono
 %package        sharp
 Summary:        Mono bindings for gmime
+Summary(zh_CN.UTF-8): %{name} 的 Mono 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk-sharp2
 
@@ -63,6 +75,9 @@ The GMime suite provides a core library and set of utilities which may be
 used for the creation and parsing of messages using the Multipurpose
 Internet Mail Extension (MIME). The devel-package contains support 
 for developing mono applications that use libgmime.
+
+%description sharp -l zh_CN.UTF-8
+%{name} 的 Mono 绑定。
 %endif
 
 %prep
@@ -92,7 +107,7 @@ make %{?_smp_mflags}
 export MONO_SHARED_DIR=%{_builddir}/%{?buildsubdir}
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -118,6 +133,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 %endif
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 2.6.20-2
+- 更新到 2.6.20
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.6.11-2
 - 为 Magic 3.0 重建
 

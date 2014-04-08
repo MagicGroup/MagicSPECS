@@ -1,7 +1,8 @@
 Name:           geoclue2
-Version:        2.1.2
+Version:	2.1.7
 Release:        2%{?dist}
 Summary:        Geolocation service
+Summary(zh_CN.UTF-8): 地址位置服务
 
 License:        GPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/GeoClue/
@@ -28,24 +29,33 @@ of the Geoclue project is to make creating location-aware applications as
 simple as possible, while the secondary goal is to ensure that no application
 can access location information without explicit permission from user.
 
+%description -l zh_CN.UTF-8
+这是一个提供位置信息的 D-Bus 服务。它的主要目标是让感知位置的程序尽量简单，次
+要目标是确保未经用户明确许可程序不能访问位置信息。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains files for developing applications that
 use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        server
 Summary:        Server for IP address geolocation
+Summary(zh_CN.UTF-8): IP 地址地理信息的服务
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    server
 The %{name}-server package contains the geoip-lookup and geoip-update binaries
 for running on IP address geolocation servers.
 
+%description server -l zh_CN.UTF-8
+IP 地址地理信息的服务。
 
 %prep
 %setup -q -n geoclue-%{version}
@@ -65,7 +75,7 @@ mkdir -p $RPM_BUILD_ROOT/var/lib/geoclue
 # Remove demo files
 rm $RPM_BUILD_ROOT%{_datadir}/applications/geoclue-demo-agent.desktop
 rm $RPM_BUILD_ROOT%{_datadir}/applications/geoclue-where-am-i.desktop
-
+magic_rpm_clean.sh
 
 %pre
 # Update the home directory for existing users
@@ -90,17 +100,21 @@ exit 0
 
 %files
 %doc COPYING NEWS
-%{_sysconfdir}/geoclue.conf
+%{_sysconfdir}/geoclue/geoclue.conf
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.GeoClue2.conf
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.GeoClue2.Agent.conf
 %{_libexecdir}/geoclue
 %{_datadir}/dbus-1/system-services/org.freedesktop.GeoClue2.service
 %{_unitdir}/geoclue.service
-%{_datadir}/geoclue-2.0/
+%{_libexecdir}/geoclue-2.0/demos/where-am-i
+%{_datadir}/dbus-1/interfaces/org.freedesktop.GeoClue2.Agent.xml
+%{_datadir}/dbus-1/interfaces/org.freedesktop.GeoClue2.xml
+#%{_datadir}/geoclue-2.0/
 %attr(755,geoclue,geoclue) %dir /var/lib/geoclue
 
 %files devel
 %{_libdir}/pkgconfig/geoclue-2.0.pc
+
 
 %files server
 %doc src/geoip-server/API-Documentation.txt
@@ -109,6 +123,9 @@ exit 0
 
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 2.1.7-2
+- 更新到 2.1.7
+
 * Thu Feb 06 2014 Kalev Lember <kalevlember@gmail.com> - 2.1.2-2
 - Add systemd rpm scripts
 - Don't install the demo .desktop files

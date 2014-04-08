@@ -11,23 +11,22 @@
 %define zeitgeist_version 0.9.12
 
 Summary:	Text editor for the GNOME desktop
+Summary(zh_CN.UTF-8): GNOME 桌面下的文本编辑器
 Name:		gedit
 Epoch:		2
-Version:	3.8.1
+Version:	3.12.0
 Release:	1%{?dist}
 License:	GPLv2+ and GFDL
 Group:		Applications/Editors
+Group(zh_CN.UTF): 应用程序/编辑器
 #VCS: git:git://git.gnome.org/gedit
-Source0:	http://download.gnome.org/sources/gedit/3.8/gedit-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://download.gnome.org/sources/gedit/%{majorver}/gedit-%{version}.tar.xz
 
 URL:		http://projects.gnome.org/gedit/
 
 Requires(post):         desktop-file-utils >= %{desktop_file_utils_version}
 Requires(postun):       desktop-file-utils >= %{desktop_file_utils_version}
-
-%ifarch ppc64,x86_64,ia64,s390x
-Patch1: gedit-2.13.90-libdir.patch
-%endif
 
 # http://bugzilla.gnome.org/show_bug.cgi?id=587053
 #Patch3: print-to-file.patch
@@ -72,9 +71,15 @@ support for spell checking, comparing files, viewing CVS ChangeLogs, and
 adjusting indentation levels. Further plugins can be found in the
 gedit-plugins package.
 
+%description -l zh_CN.UTF-8
+GNOME 下的文本编辑器，有大多数据标准编辑器有的功能，并完全支持 Unicode 的国际化
+语言。高级特性包括语法高亮，代码自动缩进，多标签窗口等。
+
 %package devel
 Summary: Support for developing plugins for the gedit text editor
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: gtksourceview3-devel >= %{gtksourceview_version}
 
@@ -85,10 +90,15 @@ to gedit.
 
 Install gedit-devel if you want to write plugins for gedit.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %if %{with_zeitgeist}
 %package zeitgeist
 Summary: Zeitgeist plugin for gedit
+Summary(zh_CN.UTF-8): %{name} 的 zeitgeist 插件
 Group: Applications/Editors
+Group(zh_CN.UTF): 应用程序/编辑器
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: zeitgeist >= %{zeitgeist_version}
 BuildRequires: zeitgeist-devel >= %{zeitgeist_version}
@@ -96,16 +106,13 @@ BuildRequires: zeitgeist-devel >= %{zeitgeist_version}
 %description zeitgeist
 This packages brings the Zeitgeist dataprovider - a plugin that logs
 access and leave event for documents used with gedit.
+
+%description zeitgeist -l zh_CN.UTF-8
+%{name} 的 zeitgeist 插件。
 %endif
 
 %prep
 %setup -q
-
-%ifarch ppc64,x86_64,ia64,s390x
-%patch1 -p1 -b .libdir
-%endif
-
-#%patch3 -p1 -b .print-to-file
 
 autoreconf -i -f
 intltoolize -f
@@ -125,7 +132,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 ## clean up all the static libs for plugins (workaround for no -module)
 /bin/rm -f `find $RPM_BUILD_ROOT%{_libdir} -name "*.a"`
 /bin/rm -f `find $RPM_BUILD_ROOT%{_libdir} -name "*.la"`
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
 %check
@@ -153,14 +160,15 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/applications/gedit.desktop
 %{_mandir}/man1/*
 %{python3_sitearch}/gi/overrides/Gedit.py*
-#%{python3_sitearch}/gi/overrides/__pycache__
+%{python3_sitearch}/gi/overrides/__pycache__/*
+%{_datadir}/appdata/gedit.appdata.xml
 %{_libexecdir}/gedit
 %{_libdir}/gedit/girepository-1.0
 %dir %{_libdir}/gedit
 %dir %{_libdir}/gedit/plugins
 %{_libdir}/gedit/libgedit-private.so
-%{_libdir}/gedit/plugins/changecase.plugin
-%{_libdir}/gedit/plugins/libchangecase.so
+#%{_libdir}/gedit/plugins/changecase.plugin
+#%{_libdir}/gedit/plugins/libchangecase.so
 %{_libdir}/gedit/plugins/docinfo.plugin
 %{_libdir}/gedit/plugins/libdocinfo.so
 %{_libdir}/gedit/plugins/externaltools.plugin
@@ -195,17 +203,21 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 
 
 %files devel
-%{_includedir}/gedit-3.0
+%{_includedir}/gedit-3.*
 %{_libdir}/pkgconfig/gedit.pc
 %{_datadir}/gtk-doc
+%{_datadir}/vala/vapi/gedit.*
 
 %if %{with_zeitgeist}
 %files zeitgeist
 %{_libdir}/gedit/plugins/zeitgeist.plugin
-%{_libdir}/gedit/plugins/libzeitgeistplugin.so
+%{_libdir}/gedit/plugins/libzeitgeist.so
 %endif
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 2:3.12.0-1
+- 更新到 3.12.0
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 2:3.8.1-1
 - Update to 3.8.1
 

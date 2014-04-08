@@ -12,7 +12,8 @@ Group:         Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2+
 URL:           http://www.clutter-project.org/
-Source0:       http://download.gnome.org/sources/cogl/1.17/cogl-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://download.gnome.org/sources/cogl/%{majorver}/cogl-%{version}.tar.xz
 
 BuildRequires: cairo-devel
 BuildRequires: gdk-pixbuf2-devel

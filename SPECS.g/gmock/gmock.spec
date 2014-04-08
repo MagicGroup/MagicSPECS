@@ -1,9 +1,11 @@
 Summary:        Google C++ Mocking Framework
+Summary(zh_CN.UTF-8): Google C++ Mock 框架
 Name:           gmock
-Version:        1.6.0
+Version:        1.7.0
 Release:        1%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 URL:            http://code.google.com/p/googlemock/
 Source0:        http://googlemock.googlecode.com/files/gmock-%{version}.zip
 Patch0:		gmock-1.6.0-enable-install.patch
@@ -30,13 +32,21 @@ Google Mock:
  o works on Linux, Mac OS X, Windows, Windows Mobile, minGW, and
    Symbian.
 
+%description -l zh_CN.UTF-8
+Google C++ Mock 框架。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 This package contains development files for %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

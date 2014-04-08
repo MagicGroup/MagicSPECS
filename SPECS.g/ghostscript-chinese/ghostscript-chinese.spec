@@ -10,7 +10,7 @@ ghostscript font configuration files for Chinese fonts.
 %define zenheiver        0.9.45
 
 Name:           ghostscript-chinese
-Version:        0.3.1
+Version:	0.4.0
 Release:        1%{?dist}
 Summary:        Ghostscript Chinese fonts configuration files
 Summary(zh_CN.UTF-8): Ghostscript 中文字体配置文件 
@@ -117,6 +117,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 0.4.0-1
+- 更新到 0.4.0
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.3.1-6
 - 为 Magic 3.0 重建
 
