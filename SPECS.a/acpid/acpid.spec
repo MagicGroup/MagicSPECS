@@ -21,7 +21,7 @@ Source5: acpid.service
 Source6: acpid.sysconfig
 Source7: acpid.socket
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-ExclusiveArch: ia64 x86_64 %{ix86}
+ExclusiveArch: ia64 x86_64 %{ix86} mips64el
 URL: http://sourceforge.net/projects/acpid2/
 BuildRequires: systemd
 Requires(post): systemd
