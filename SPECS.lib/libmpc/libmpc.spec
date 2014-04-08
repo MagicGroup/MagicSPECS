@@ -1,15 +1,23 @@
+
+# build compat-libmpc for bootstrapping purposes
+%define bootstrap 1
+
 Summary: C library for multiple precision complex arithmetic
 Name: libmpc
-Version: 0.9
-Release: 3%{?dist}
-License: LGPLv2+
+Version: 1.0.2
+Release: 1%{?dist}
+License: LGPLv3+ and GFDL
 Group: Development/Tools
 URL: http://www.multiprecision.org/
-Source0: mpc-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0: http://www.multiprecision.org/mpc/download/mpc-%{version}.tar.gz
+
 BuildRequires: gmp-devel >= 4.3.2
 BuildRequires: mpfr-devel >= 2.4.2
 BuildRequires: texinfo
+
+%if 0%{?bootstrap}
+Source1: http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
+%endif
 
 %description
 
@@ -20,33 +28,52 @@ built upon and follows the same principles as Mpfr.
 %package devel
 Summary: Header and shared development libraries for MPC
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: mpfr-devel gmp-devel
 
 %description devel
 Header files and shared object symlinks for MPC is a C library.
 
+%package -n compat-libmpc
+Summary: compat/bootstrap mpc-0.9 library
+%description -n compat-libmpc
+%{summary}.
+
+
 %prep
-%setup -q -n mpc-%{version}
+%setup -q -n mpc-%{version} %{?bootstrap:-a 1}
 
 %build
 export CPPFLAGS="%{optflags} -std=gnu99"
 export CFLAGS="%{optflags} -std=gnu99"
 export EGREP=egrep
-%configure
+
+%if 0%{?bootstrap}
+pushd mpc-0.9/
+%configure --disable-static
+make %{?_smp_mflags}
+popd
+%endif
+
+%configure --disable-static
 make %{?_smp_mflags}
 
 %check
 make check
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-rm -f $RPM_BUILD_ROOT/%{_libdir}/libmpc.{l,}a
-rm -f ${RPM_BUILD_ROOT}/%{_infodir}/dir
+%if 0%{?bootstrap}
+make install DESTDIR=$RPM_BUILD_ROOT -C mpc-0.9/
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+## remove everything but shlib
+rm -fv $RPM_BUILD_ROOT%{_libdir}/libmpc.so
+rm -fv $RPM_BUILD_ROOT%{_includedir}/*
+rm -fv $RPM_BUILD_ROOT%{_infodir}/*
+%endif
+
+make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT/%{_libdir}/libmpc.la
+rm -f ${RPM_BUILD_ROOT}/%{_infodir}/dir
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -64,22 +91,56 @@ if [ $1 = 0 ]; then
 fi
 
 %files
-%defattr(-,root,root,-)
-%doc README NEWS COPYING.LIB
-%{_libdir}/libmpc.so.*
+%doc README NEWS COPYING.LESSER
+%{_libdir}/libmpc.so.3*
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/libmpc.so
 %{_includedir}/mpc.h
 %{_infodir}/*.info*
 
-%changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9-3
-- 为 Magic 3.0 重建
+%post -n compat-libmpc -p /sbin/ldconfig
+%postun -n compat-libmpc -p /sbin/ldconfig
 
-* Tue Jan 10 2012 Liu Di <liudidi@gmail.com> - 0.9-2
-- 为 Magic 3.0 重建
+%files -n compat-libmpc
+%{_libdir}/libmpc.so.2*
+
+
+%changelog
+* Mon Feb 24 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.2-1
+- mpc-1.0.2
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Feb 19 2013 Rex Dieter <rdieter@fedoraproject.org> - 1.0.1-1
+- compat-libmpc (for bootsrapping purposes)
+- mpc-1.0.1
+- update Source URLs
+- fix License: tag
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Aug 02 2012 Rex Dieter <rdieter@fedoraproject.org> - 1.0-2
+- %%files: track lib soname (so bumps aren't a surprise)
+- tighten subpkg deps (%%_isa)
+- %%build: --disable-static
+
+* Thu Aug  2 2012 Petr Machata <pmachata@redhat.com> - 1.0-1
+- Upstream 1.0
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-3.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-2.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Oct 26 2011 Marcela Mašláňová <mmaslano@redhat.com> - 0.9-1.2
+- rebuild with new gmp without compat lib
+
+* Wed Oct 12 2011 Peter Schiffer <pschiffe@redhat.com> - 0.9-1.1
+- rebuild with new gmp
 
 * Wed Jun 22 2011  <pmachata@redhat.com> - 0.9-1
 - Upstream 0.9
