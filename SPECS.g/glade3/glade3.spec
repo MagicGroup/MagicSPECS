@@ -1,7 +1,7 @@
 Summary:	User Interface Designer for GTK+ 2
 Name:		glade3
-Version:	3.8.3
-Release:	2%{?dist}
+Version:	3.8.4
+Release:	1%{?dist}
 Epoch:		2
 License:	GPLv2+
 Group:		Development/Tools
@@ -107,14 +107,13 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -delete
 
 %find_lang glade3
 
-desktop-file-install %{?_remove_encoding} --vendor fedora --delete-original \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-  $RPM_BUILD_ROOT%{_datadir}/applications/glade-3.desktop
-
 # Rpath
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/glade3/modules/libgladegnome.so
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/glade3/modules/libgladegtk.so
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/glade3/modules/libgladepython.so
+
+%check
+desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/glade-3.desktop
 
 %post
 update-desktop-database &> /dev/null || :
@@ -144,7 +143,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc README
 %doc TODO
 %{_bindir}/glade-3
-%{_datadir}/applications/fedora-glade-3.desktop
+%{_datadir}/applications/glade-3.desktop
 %{_datadir}/icons/hicolor/16x16/apps/glade-3.png
 %{_datadir}/icons/hicolor/22x22/apps/glade-3.png
 %{_datadir}/icons/hicolor/24x24/apps/glade-3.png
@@ -186,8 +185,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libgladeui-1.0/gladeui
 
 %changelog
-* Thu Jan 17 2013 Liu Di <liudidi@gmail.com> - 2:3.8.3-2
-- 为 Magic 3.0 重建
+* Fri Sep 20 2013 Kalev Lember <kalevlember@gmail.com> - 2:3.8.4-1
+- Update to 3.8.4
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:3.8.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Feb 24 2013 Kalev Lember <kalevlember@gmail.com> - 2:3.8.3-3
+- Remove the desktop file vendor prefix
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:3.8.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Tue Dec 04 2012 Kalev Lember <kalevlember@gmail.com> - 2:3.8.3-1
 - Update to 3.8.3
