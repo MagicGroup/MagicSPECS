@@ -1,14 +1,15 @@
-%global codate 20121009
+%define svn 1
+%global vcsdate 20121009
 
 Name:           gl-manpages
 Version:        1.1
-Release:        3.%{codate}%{?dist}
+Release:        4.%{vcsdate}%{?dist}
 Summary:        OpenGL manpages
 
 License:        MIT and Open Publication
 URL:            http://www.opengl.org/wiki/Getting_started/XML_Toolchain_and_Man_Pages
 # see Source1
-Source0:        gl-manpages-%{version}-%{codate}.tar.xz
+Source0:        gl-manpages-%{version}-%{vcsdate}.tar.xz
 Source1:        make-gl-man-snapshot.sh
 # FIXME: Bundle mathml and the Oasis dbmathl until they are packaged
 Source2:        http://www.oasis-open.org/docbook/xml/mathml/1.1CR1/dbmathml.dtd
@@ -27,7 +28,7 @@ BuildRequires:  libxslt docbook-style-xsl
 OpenGL manpages
 
 %prep
-%setup -q -n %{name}-%{version}-%{codate}
+%setup -q -n %{name}-%{version}-%{vcsdate}
 tar xzf %{SOURCE3}
 cp -av %{SOURCE2} mathml2/
 tar xjf %{SOURCE4}
@@ -60,14 +61,17 @@ done
 
 
 %changelog
-* Mon Oct 15 2012 Yanko Kaneti <yaneti@declera.com> - 1.1-3.%{codate}
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1.1-4.20121009
+- 更新到 20140408 日期的仓库源码
+
+* Mon Oct 15 2012 Yanko Kaneti <yaneti@declera.com> - 1.1-3.%{vcsdate}
 - Fix symlinked man variants. 
 - Preserve timestamps on the older gl-manpages.
 
-* Tue Oct  9 2012 Yanko Kaneti <yaneti@declera.com> - 1.1-2.%{codate}
+* Tue Oct  9 2012 Yanko Kaneti <yaneti@declera.com> - 1.1-2.%{vcsdate}
 - Re-add the older gl-manpages for those not present in khronos
 
-* Tue Oct  9 2012 Yanko Kaneti <yaneti@declera.com> - 1.1-1.%{codate}
+* Tue Oct  9 2012 Yanko Kaneti <yaneti@declera.com> - 1.1-1.%{vcsdate}
 - Try building from source
 
 * Wed Sep  5 2012 Yanko Kaneti <yaneti@declera.com> - 1.0.1-1

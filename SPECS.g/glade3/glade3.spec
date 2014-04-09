@@ -1,10 +1,12 @@
 Summary:	User Interface Designer for GTK+ 2
+Summary(zh_CN.UTF-8): GTK+2 的用户界面设计器
 Name:		glade3
 Version:	3.8.4
 Release:	1%{?dist}
 Epoch:		2
 License:	GPLv2+
 Group:		Development/Tools
+Group(zh_CN.UTF): 开发/工具
 URL:		http://glade.gnome.org/
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/glade3/3.8/glade3-%{version}.tar.xz
 
@@ -37,28 +39,45 @@ is easy too.
 The glade3 package contains a version of Glade for GTK+ 2.x. For GTK+ 3.x
 support, use the glade package instead.
 
+%description -l zh_CN.UTF-8 
+这是一个快速开发工具，它可以快速的开发 GTK+ 和 GNOME 的用户界面。
+开发出的界面保存为 XML，可以让包括 C,C++, C#, Vala, Java, Perl,
+Python 等在内的语言使用。
+
+这个包是 Glade 的 GTK+ 2 版本。GTK+ 3.x 请使用 glade 包。
+
 %package libgladeui
 Summary:	Widget library for Glade UI designer
+Summary(zh_CN.UTF-8): Glade 界面设计的控件库
 # The libgladegtk.so modules is under (GPLv2+ and LGPLv2+), the icons are
 # under under LGPLv2, and the rest is GPLv2+.
 # For a breakdown of the licensing, see COPYING.
 License:	GPLv2+ and (GPLv2+ and LGPLv2+) and LGPLv2
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description libgladeui
 Libgladeui consists of the widgets that compose the Glade GUI as a separate
 library to ease the integration of Glade into other applications.
 
+%description libgladeui -l zh_CN.UTF-8
+Glade 界面设计的控件库。
+
 %package libgladeui-devel
 Summary:	Development files for %{name}-libgladeui
+Summary(zh_CN.UTF-8): %{name}-libgladeui 的开发包
 # The glade-parser.h header is under LGPLv2+, and the rest is GPLv2+.
 License:	GPLv2+ and LGPLv2+
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-libgladeui = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:	devhelp
 
 %description libgladeui-devel
 This package contains development files for %{name}-libgladeui.
+
+%description libgladeui-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -104,7 +123,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d
 make install INSTALL="%{__install} -p" DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 find $RPM_BUILD_ROOT -type f -name "*.a" -delete
-
+magic_rpm_clean.sh
 %find_lang glade3
 
 # Rpath

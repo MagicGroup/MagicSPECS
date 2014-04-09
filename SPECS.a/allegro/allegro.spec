@@ -19,7 +19,7 @@ Patch5:         allegro-4.4.2-doc-install.patch
 Patch6:         allegro-4.4.2-buildsys-fix.patch
 URL: http://alleg.sourceforge.net
 # If you don't have the icon, just comment it out.
-Icon: alex.xpm
+# Icon: alex.xpm
 Buildroot: %{_tmppath}/%{name}-buildroot
 # Older rpms don't support this; just make sure you have it.
 #BuildRequires: texinfo

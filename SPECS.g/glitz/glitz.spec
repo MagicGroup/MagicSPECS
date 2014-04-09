@@ -2,7 +2,9 @@ Name:           glitz
 Version:        0.5.6
 Release:        11%{?dist}
 Summary:        OpenGL image compositing library
+Summary(zh_CN.UTF-8): OpenGL 图像合成库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:        BSD
 URL:            http://www.freedesktop.org/Software/glitz
 Source:         http://cairographics.org/snapshots/%{name}-%{version}.tar.gz
@@ -14,9 +16,14 @@ Glitz is an OpenGL image compositing library. Glitz provides Porter/Duff
 compositing of images and implicit mask generation for geometric primitives
 including trapezoids, triangles, and rectangles.
 
+%description -l zh_CN.UTF-8
+OpenGL 图像合成库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -24,17 +31,27 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        glx
 Summary:        GLX extensions for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 GLX 扩展
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    glx
 The %{name}-glx package contains GLX extensions for %{name}.
 
+%description glx -l zh_CN.UTF-8 
+%{name} 的 GLX 扩展
+
 %package        glx-devel
 Summary:        Development files for %{name}-glx
+Summary(zh_CN.UTF-8): %{name}-glx 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-glx = %{version}-%{release}
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       libX11-devel, libGL-devel, pkgconfig
@@ -42,6 +59,9 @@ Requires:       libX11-devel, libGL-devel, pkgconfig
 %description    glx-devel
 The %{name}-glx-devel package contains libraries and header files for
 developing applications that use %{name}-glx.
+
+%description glx-devel -l zh_CN.UTF-8
+%{name}-glx 的开发包。
 
 %prep
 %setup -q
@@ -59,6 +79,7 @@ install -D -m 644 ./src/glitz.man \
         $RPM_BUILD_ROOT%{_mandir}/man3/glitz.3
 install -D -m 644 ./src/glx/glitz-glx.man \
         $RPM_BUILD_ROOT%{_mandir}/man3/glitz-glx.3
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

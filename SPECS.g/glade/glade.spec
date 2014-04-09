@@ -1,7 +1,8 @@
 Name:           glade
-Version:        3.14.1
+Version:	3.18.1
 Release:        2%{?dist}
 Summary:        User Interface Designer for GTK+ and GNOME
+Summary(zh_CN.UTF-8): GTK+ 和 GNOME 的用户界面设计器
 
 # - /usr/bin/glade is GPLv2+
 # - /usr/bin/glade-previewer is LGPLv2+
@@ -9,7 +10,8 @@ Summary:        User Interface Designer for GTK+ and GNOME
 #   GPLv2+ and LGPLv2+ code, so the resulting binaries are GPLv2+
 License:        GPLv2+ and LGPLv2+
 URL:            http://glade.gnome.org/
-Source0:        http://ftp.gnome.org/pub/GNOME/sources/glade/3.14/glade-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/glade/%{majorver}/glade-%{version}.tar.xz
 
 BuildRequires:  chrpath
 BuildRequires:  desktop-file-utils
@@ -36,18 +38,26 @@ The user interfaces designed in Glade are saved as XML, which can be used in
 numerous programming languages including C, C++, C#, Vala, Java, Perl, Python,
 and others.
 
+%description -l zh_CN.UTF-8
+这是一个快速开发工具，它可以快速的开发 GTK+ 和 GNOME 的用户界面。
+开发出的界面保存为 XML，可以让包括 C,C++, C#, Vala, Java, Perl, 
+Python 等在内的语言使用。
 
 %package libs
 Summary:        Widget library for Glade UI designer
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Obsoletes:      glade3-libgladeui < 1:3.11.0-3
 
 %description    libs
 The %{name}-libs package consists of the widgets that compose the Glade GUI as
 a separate library to ease the integration of Glade into other applications.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}-libs = %{version}-%{release}
 Obsoletes:      glade3-libgladeui-devel < 1:3.11.0-3
 
@@ -55,6 +65,8 @@ Obsoletes:      glade3-libgladeui-devel < 1:3.11.0-3
 The %{name}-devel package contains libraries and header files for
 developing applications that use Glade widget library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -78,7 +90,6 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/glade*
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/glade/modules/*.so
 magic_rpm_clean.sh
 %find_lang glade --with-gnome
-
 
 %check
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/glade.desktop
@@ -128,6 +139,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 3.14.3-2
+- 更新到 3.14.3
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.14.1-2
 - 为 Magic 3.0 重建
 

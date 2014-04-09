@@ -85,7 +85,7 @@ for developing mono applications that use libgmime.
 %patch3 -p1 -b .gpg-error
 
 %build
-autoreconf
+autoreconf -fisv
 MONO_ARGS="--enable-mono=no"
 %if 0%buildmono
 export MONO_SHARED_DIR=%{_builddir}/%{?buildsubdir}
@@ -123,6 +123,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/gmime-2.6.pc
 %{_includedir}/gmime-2.6
 %{_datadir}/gtk-doc/html/gmime-2.6
+%{_libdir}/girepository-1.0/GMime-2.6.typelib
+%{_datadir}/gir-1.0/GMime-2.6.gir
+%{_datadir}/vala/vapi/gmime-2.6.*
 
 %if 0%buildmono
 %files sharp

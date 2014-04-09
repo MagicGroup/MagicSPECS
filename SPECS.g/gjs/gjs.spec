@@ -51,8 +51,6 @@ Files for development with %{name}.
 %prep
 %setup -q
 
-rm -f configure
-
 %build
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; fi;
  %configure --disable-static)
@@ -79,7 +77,7 @@ magic_rpm_clean.sh
 %{_bindir}/gjs-console
 %{_libdir}/*.so.*
 %{_libdir}/gjs
-%{_datadir}/gjs-1.0
+#%{_datadir}/gjs-1.0
 
 %files devel
 %doc examples/*

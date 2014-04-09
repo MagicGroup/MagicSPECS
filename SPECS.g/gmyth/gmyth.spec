@@ -1,11 +1,13 @@
 %define gmyth_upnp_version 0.7.1
 
 Summary: MythTV remote access libraries
+Summary(zh_CN.UTF-8): MythTV 远程访问库
 Name: gmyth
 Version: 0.7.1
-Release: 20%{?dist}
+Release: 21%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 URL: http://gmyth.sf.net
 
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -26,15 +28,23 @@ TV listings.
 
 The package also includes GMyth-UPNP, used to discover MythTV servers using UPNP.
 
+%description -l zh_CN.UTF-8 
+MythTV 远程访问库。
+
 %package devel
 Summary: Development libraries for MythTV remote access
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: gmyth = %{version}-%{release}
 Requires: pkgconfig glib2-devel mysql-devel curl-devel libupnp-devel
 
 %description devel
 gmyth-devel contains development libraries and headers for the GMyth and
 GMyth-UPNP libraries.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -64,6 +74,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 popd
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.a
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

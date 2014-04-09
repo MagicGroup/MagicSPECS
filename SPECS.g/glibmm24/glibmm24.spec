@@ -2,11 +2,13 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           glibmm24
-Version:        2.36.0
+Version:	2.36.2
 Release:        1%{?dist}
 Summary:        C++ interface for the GLib library
+Summary(zh_CN.UTF-8): GLib 的 C++ 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/glibmm/%{release_version}/glibmm-%{version}.tar.xz
@@ -19,10 +21,14 @@ glibmm is the official C++ interface for the popular cross-platform
 library GLib. It provides non-UI API that is not available in standard
 C++ and makes it possible for gtkmm to wrap GObject-based APIs.
 
+%description -l zh_CN.UTF-8
+Glib 库的官方 C++ 接口。
 
 %package devel
 Summary:        Headers for developing programs that will use %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       glib2-devel%{?_isa}
 Requires:       libsigc++20-devel%{?_isa}
@@ -31,10 +37,14 @@ Requires:       libsigc++20-devel%{?_isa}
 This package contains the static libraries and header files needed for
 developing glibmm applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        Documentation for %{name}, includes full API docs
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF): 文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 Requires:       libsigc++20-doc
@@ -42,6 +52,8 @@ Requires:       libsigc++20-doc
 %description    doc
 This package contains the full API documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n glibmm-%{version}
@@ -54,7 +66,7 @@ sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make %{?_smp_mflags}
-
+magic_rpm_clean.sh
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -85,6 +97,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %changelog
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 2.36.2-1
+- 更新到 2.36.2
+
 * Wed Apr 17 2013 Kalev Lember <kalevlember@gmail.com> - 2.36.0-1
 - Update to 2.36.0
 
