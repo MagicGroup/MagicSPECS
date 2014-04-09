@@ -1,5 +1,5 @@
 %define glib2_version                   2.31.13
-%define gobject_intuirospection_version   1.30.0
+%define gobject_introspection_version   1.30.0
 %define polkit_version                  0.101
 %define systemd_version                 184
 %define libatasmart_version             0.12
@@ -7,8 +7,8 @@
 
 Summary: Disk Manager
 Name: udisks2
-Version: 2.1.0
-Release: 2%{?dist}
+Version: 2.1.2
+Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://www.freedesktop.org/wiki/Software/udisks
@@ -38,8 +38,6 @@ Requires: e2fsprogs
 Requires: xfsprogs
 # for mkfs.vfat
 Requires: dosfstools
-# for mlabel
-Requires: mtools
 # for partitioning
 Requires: parted
 Requires: gdisk
@@ -62,11 +60,6 @@ Requires: ntfsprogs
 
 # for /proc/self/mountinfo, only available in 2.6.26 or higher
 Conflicts: kernel < 2.6.26
-
-
-# Cannot mount external firewire hard drive or usb thumb drive as normal user, root required
-# https://bugzilla.redhat.com/show_bug.cgi?id=909010
-Patch0: udisks-2.1.1-firewire-ident.patch
 
 
 %description
@@ -98,7 +91,6 @@ daemon. This package is for the udisks 2.x series.
 
 %prep
 %setup -q -n udisks-%{version}
-%patch0 -p1 -b .firewire-ident
 
 %build
 # we can't use _hardened_build here, see
@@ -162,6 +154,15 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 
 # Note: please don't forget the %{?dist} in the changelog. Thanks
 %changelog
+* Wed Jan 15 2014 Tomas Bzatek <tbzatek@redhat.com> - 2.1.2-1%{?dist}
+- Update to 2.1.2
+
+* Wed Aug 21 2013 Tomas Bzatek <tbzatek@redhat.com> - 2.1.1-1%{?dist}
+- Update to 2.1.1
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Mar 28 2013 Tomas Bzatek <tbzatek@redhat.com> - 2.1.0-2%{?dist}
 - Fix firewire drives identification (#909010)
 
