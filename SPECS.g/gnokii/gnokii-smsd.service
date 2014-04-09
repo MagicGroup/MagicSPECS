@@ -1,0 +1,10 @@
+[Unit]
+Description=Gnokii SMS Daemon
+After=network.target 
+
+[Service]
+User=gnokii
+ExecStart=/usr/bin/gnokii-smsd -f /var/log/gnokii-smsd
+
+[Install]
+WantedBy=multi-user.target

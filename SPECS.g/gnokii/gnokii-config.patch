@@ -1,18 +1,9 @@
---- Docs/sample/gnokiirc~	2005-07-24 22:16:22.000000000 +0300
-+++ Docs/sample/gnokiirc	2005-08-06 23:33:26.000000000 +0300
-@@ -59,7 +59,7 @@
- # port software (eg. minicom). If you have wrong permissions for the
- # directory, a warning will be generated. If you don't want a lockfile, set
- # it to 'no'.
--use_locking = yes
-+use_locking = no
- 
- # Baudrate to use on serial port connections.
- # Currently used only by models AT and BIP/CIMD. Defaults to 19200.
-@@ -115,7 +115,7 @@
+--- Docs/sample/gnokiirc~	2012-04-17 13:09:03.000000000 -0500
++++ Docs/sample/gnokiirc	2012-04-17 13:10:42.793893402 -0500
+@@ -238,7 +238,7 @@
+ # In particular ensure that mgnokiidev is in this location, with
  # permissions 4750, owned by root, group gnokii.  Ensure you
  # are in the gnokii group and that the group exists...
- [gnokiid]
 -bindir = /usr/local/sbin/
 +bindir = /usr/sbin/
  

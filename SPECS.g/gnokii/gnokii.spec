@@ -1,15 +1,16 @@
+%global _hardened_build 1
 # TODO: merge patches upstream where applicable
 
 Name:           gnokii
-Version:        0.6.30
-Release:        2%{?dist}
+Version:        0.6.31
+Release:        7%{?dist}
 Summary:        Linux/Unix tool suite for various mobile phones
 
 Group:          Applications/Communications
 License:        GPLv2+
 URL:            http://www.gnokii.org/
 Source0:        http://www.gnokii.org/download/gnokii/%{name}-%{version}.tar.bz2
-Source2:        %{name}-smsd.init
+Source2:        %{name}-smsd.service
 Source3:        %{name}-smsd.sysconfig
 Source4:        %{name}-smsd.logrotate
 Source5:        %{name}-smsd2mail.sh
@@ -62,8 +63,9 @@ Summary:        Gnokii SMS daemon
 Group:          System Environment/Daemons
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires(pre):  %{_sbindir}/useradd
-Requires(post): /sbin/chkconfig
-Requires(preun): /sbin/chkconfig
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
 
 %description    smsd
 The Gnokii SMS daemon receives and sends SMS messages.
@@ -115,7 +117,9 @@ install -pm 644 %{SOURCE6} README.smsd2mail
 sed -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' -i libtool
 sed -e 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' -i libtool
 make %{?_smp_mflags}
-
+pushd xgnokii
+make %{?_smp_mflags}
+popd 
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -136,7 +140,12 @@ desktop-file-install \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
   --mode 644 \
   --add-category X-Fedora \
-  $RPM_BUILD_ROOT%{_datadir}/applications/xgnokii.desktop
+  xgnokii/xgnokii.desktop
+
+install -D -m 755 xgnokii/.libs/xgnokii $RPM_BUILD_ROOT%{_bindir}
+
+install -D -m 644 common/gnokii.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gnokii.pc
+install -D -m 644 xgnokii/xgnokii.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig/xgnokii.pc
 
 # Convert the default icons to PNG
 install -dm 755 $RPM_BUILD_ROOT%{_datadir}/pixmaps
@@ -145,7 +154,7 @@ convert Docs/sample/logo/gnokii.xpm \
 chmod 644 $RPM_BUILD_ROOT%{_datadir}/pixmaps/xgnokii.png
 
 # Install the configuration files
-install -Dpm 755 %{SOURCE2} $RPM_BUILD_ROOT%{_initrddir}/gnokii-smsd
+install -Dpm 644 %{SOURCE2} $RPM_BUILD_ROOT%{_unitdir}/gnokii-smsd.service
 install -Dpm 640 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/gnokii-smsd
 install -Dpm 644 %{SOURCE4} \
   $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/gnokii-smsd
@@ -173,19 +182,35 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %post smsd
-/sbin/chkconfig --add gnokii-smsd
+if [ $1 -eq 1 ] ; then 
+    # Initial installation 
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
 
 %preun smsd
 if [ $1 -eq 0 ] ; then
-  %{_initrddir}/gnokii-smsd stop >/dev/null 2>&1 || :
-  /sbin/chkconfig --del gnokii-smsd
+    # Package removal, not upgrade
+    /bin/systemctl --no-reload disable gnokii-smsd.service > /dev/null 2>&1 || :
+    /bin/systemctl stop gnokii-smsd.service > /dev/null 2>&1 || :
 fi
+
 
 %postun smsd
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ] ; then
-  %{_initrddir}/gnokii-smsd try-restart >/dev/null 2>&1 || :
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart gnokii-smsd.service >/dev/null 2>&1 || :
 fi
 
+%triggerun -- gnokii-smsd < 0.6.31-1
+# Save the current service runlevel info
+# User must manually run systemd-sysv-convert --apply gnokii-smsd
+# to migrate them to systemd targets
+/usr/bin/systemd-sysv-convert --save gnokii-smsd >/dev/null 2>&1 ||:
+
+# Run these because the SysV package being removed won't do them
+/sbin/chkconfig --del gnokii-smsd >/dev/null 2>&1 || :
+/bin/systemctl try-restart gnokii-smsd.service >/dev/null 2>&1 || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
@@ -214,7 +239,7 @@ fi
 %doc smsd/action smsd/ChangeLog smsd/README README.smsd2mail smsd2mail.sh
 %attr(-,gnokii,gnokii) %config(noreplace) %{_sysconfdir}/sysconfig/gnokii-smsd
 %config(noreplace) %{_sysconfdir}/logrotate.d/gnokii-smsd
-%{_initrddir}/gnokii-smsd
+%{_unitdir}/gnokii-smsd.service
 %{_bindir}/gnokii-smsd
 %{_mandir}/man8/gnokii-smsd.8*
 %dir %{_libdir}/smsd/
@@ -243,8 +268,31 @@ fi
 %{_libdir}/pkgconfig/xgnokii.pc
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.6.30-2
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.31-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri May 24 2013 Rex Dieter <rdieter@fedoraproject.org> 0.6.31-6
+- rebuild (libical)
+
+* Tue May 21 2013 Jon Ciesla <limburgher@gmail.com> - 0.6.31-5
+- Add hardened build, BZ 965508.
+
+* Wed Feb 27 2013 Jon Ciesla <limburgher@gmail.com> - 0.6.31-4
+- Correct xgnokii installation.
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.31-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.31-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Apr 17 2012 Jon Ciesla <limburgher@gmail.com> - 0.6.31-1
+- Migrate to systemd, BZ 781511.
+- Latest upstream.
+- Fixed up installation.
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.30-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Sun Oct 09 2011 Robert Scheck <robert@fedoraproject.org> 0.6.30-1
 - Update to 0.6.30 and added SQLite subpackage (#466880, #735717)
