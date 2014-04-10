@@ -1,12 +1,12 @@
 Summary: Movie player for GNOME
 Name: totem
-Version: 3.8.0
-Release: 1%{?dist}
+Version: 3.11.90
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+ with exceptions
 Group: Applications/Multimedia
 URL: http://projects.gnome.org/totem/
-Source0: http://download.gnome.org/sources/totem/3.8/totem-%{version}.tar.xz
+Source0: http://download.gnome.org/sources/totem/3.11/totem-%{version}.tar.xz
 
 Requires: gnome-icon-theme
 # For the opensubtitles plugin
@@ -33,7 +33,7 @@ BuildRequires: libpeas-devel
 
 BuildRequires: gcc-c++, pkgconfig, gettext
 BuildRequires: perl(XML::Parser) intltool
-BuildRequires: gnome-icon-theme
+BuildRequires: gnome-icon-theme-devel
 BuildRequires: gsettings-desktop-schemas-devel
 BuildRequires: itstool
 BuildRequires: libXtst-devel
@@ -46,6 +46,7 @@ BuildRequires: totem-pl-parser-devel
 BuildRequires: clutter-gst2-devel
 BuildRequires: clutter-gtk-devel
 BuildRequires: vala
+BuildRequires: appdata-tools
 
 # For the nautilus extension
 BuildRequires: nautilus-devel
@@ -60,10 +61,10 @@ BuildRequires: liberation-sans-fonts
 BuildRequires: lirc-devel
 BuildRequires: libgdata-devel
 BuildRequires: grilo-devel >= 0.2.0
-BuildRequires: libzeitgeist-devel
+BuildRequires: zeitgeist-devel
 
 BuildRequires: gnome-common
-BuildRequires: autoconf automake intltool
+BuildRequires: autoconf automake intltool gtk-doc
 
 # The mythtv sub-package was removed
 # (obsoleted by -upnp then by grilo in main)
@@ -154,10 +155,15 @@ audio and video files in the properties dialog.
 
 %build
 
+# only needed temporarily due to old appdata-tools being used in tarball
+# creation, can likely be dropped for next version - adamw 2014/02
+./autogen.sh
+
 export BROWSER_PLUGIN_DIR=%{_libdir}/mozilla/plugins
 %configure \
   --enable-browser-plugins \
   --enable-nautilus \
+  --disable-appdata-validate \
   --disable-static
 
 make %{?_smp_mflags}
@@ -207,10 +213,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/%{name}-audio-preview
 %{_libdir}/libtotem.so.*
 %{_libdir}/girepository-1.0/Totem-1.0.typelib
+%{_datadir}/appdata/totem.appdata.xml
 %{_datadir}/applications/%{name}.desktop
 %dir %{_datadir}/totem
-%{_datadir}/totem/*.png
-%{_datadir}/totem/fullscreen.ui
+%{_datadir}/totem/controls.ui
+%{_datadir}/totem/org_gnome_totem_PluginViewer.xml
 %{_datadir}/totem/playlist.ui
 %{_datadir}/totem/preferences.ui
 %{_datadir}/totem/properties.ui
@@ -227,7 +234,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/totem/plugins/chapters
 %{_libdir}/totem/plugins/dbus
 %{_libdir}/totem/plugins/gromit
-%{_libdir}/totem/plugins/grilo
 %{_libdir}/totem/plugins/im-status
 %{_libdir}/totem/plugins/ontop
 %{_libdir}/totem/plugins/recent
@@ -240,11 +246,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/totem/plugins/pythonconsole
 %{_libdir}/totem/plugins/screenshot
 %{_libdir}/totem/plugins/save-file
+%{_libdir}/totem/plugins/vimeo
 %{_libdir}/totem/plugins/zeitgeist-dp
 %{_datadir}/icons/hicolor/*/apps/totem.png
 %{_datadir}/icons/hicolor/*/devices/totem-tv.png
 %{_datadir}/icons/hicolor/scalable/devices/totem-tv.svg
-%{_datadir}/icons/hicolor/scalable/actions/view-sidebar-symbolic.svg
 %{_mandir}/man1/%{name}.1*
 %{_mandir}/man1/totem-video-thumbnailer.1.gz
 %{_datadir}/GConf/gsettings/*.convert
@@ -280,6 +286,46 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/mozilla/plugins/libtotem-vegas-plugin.so
 
 %changelog
+* Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.11.90-2
+- Rebuilt for cogl soname bump
+
+* Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 1:3.11.90-1
+- Update to 3.11.90
+
+* Mon Feb 10 2014 Peter Hutterer <peter.hutterer@redhat.com> - 1:3.11.5-4
+- Rebuild for libevdev soname bump
+
+* Thu Feb 06 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.11.5-3
+- Revert accidental epoch bump
+
+* Thu Feb 06 2014 Adam Williamson <awilliam@redhat.com> - 2:3.11.5-2
+- don't need patch to disable appdata validation, just autogen.sh
+
+* Wed Feb 05 2014 Richard Hughes <rhughes@redhat.com> - 1:3.11.5-1
+- Update to 3.11.5
+
+* Thu Oct 03 2013 Bastien Nocera <bnocera@redhat.com> 3.10.1-1
+- Update to 3.10.1
+
+* Wed Sep 25 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.10.0-1
+- Update to 3.10.0
+
+* Thu Sep 19 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.92-1
+- Update to 3.9.92
+
+* Sat Aug 10 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.9.5-1
+- Update to 3.9.5
+- Include the new vimeo plugin
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.8.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 28 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.8.2-2
+- Adapt for gnome-icon-theme packaging changes
+
+* Tue May 14 2013 Richard Hughes <rhughes@redhat.com> - 1:3.8.2-1
+- Update to 3.8.2
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.8.0-1
 - Update to 3.8.0
 
