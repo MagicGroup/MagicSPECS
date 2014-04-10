@@ -1,0 +1,41 @@
+diff -up gnupg-2.0.19/g10/encode.c.fips gnupg-2.0.19/g10/encode.c
+--- gnupg-2.0.19/g10/encode.c.fips	2012-03-27 10:00:37.000000000 +0200
++++ gnupg-2.0.19/g10/encode.c	2012-11-22 15:51:23.314371267 +0100
+@@ -732,7 +732,7 @@ encrypt_filter( void *opaque, int contro
+ 		if( efx->cfx.dek->algo == -1 ) {
+                     /* because 3DES is implicitly in the prefs, this can only
+                      * happen if we do not have any public keys in the list */
+-		    efx->cfx.dek->algo = DEFAULT_CIPHER_ALGO;
++		    efx->cfx.dek->algo = gcry_fips_mode_active() ? CIPHER_ALGO_AES : DEFAULT_CIPHER_ALGO;
+                 }
+ 
+                 /* In case 3DES has been selected, print a warning if
+diff -up gnupg-2.0.19/g10/gpg.c.fips gnupg-2.0.19/g10/gpg.c
+--- gnupg-2.0.19/g10/gpg.c.fips	2012-11-22 15:51:23.308371138 +0100
++++ gnupg-2.0.19/g10/gpg.c	2012-11-22 15:51:23.315371289 +0100
+@@ -1973,7 +1973,7 @@ main (int argc, char **argv)
+     opt.compress_algo = -1; /* defaults to DEFAULT_COMPRESS_ALGO */
+     opt.s2k_mode = 3; /* iterated+salted */
+     opt.s2k_count = 0; /* Auto-calibrate when needed.  */
+-    opt.s2k_cipher_algo = CIPHER_ALGO_CAST5;
++    opt.s2k_cipher_algo = gcry_fips_mode_active() ? CIPHER_ALGO_AES : CIPHER_ALGO_CAST5;
+     opt.completes_needed = 1;
+     opt.marginals_needed = 3;
+     opt.max_cert_depth = 5;
+diff -up gnupg-2.0.19/g10/mainproc.c.fips gnupg-2.0.19/g10/mainproc.c
+--- gnupg-2.0.19/g10/mainproc.c.fips	2012-03-27 10:00:37.000000000 +0200
++++ gnupg-2.0.19/g10/mainproc.c	2012-11-22 16:43:51.876084682 +0100
+@@ -685,9 +685,11 @@ proc_plaintext( CTX c, PACKET *pkt )
+ 	   often.  There is no good way to specify what algorithms to
+ 	   use in that case, so these three are the historical
+ 	   answer. */
+-	gcry_md_enable( c->mfx.md, DIGEST_ALGO_RMD160 );
++	if( !gcry_fips_mode_active() )
++	  gcry_md_enable( c->mfx.md, DIGEST_ALGO_RMD160 );
+ 	gcry_md_enable( c->mfx.md, DIGEST_ALGO_SHA1 );
+-	gcry_md_enable( c->mfx.md, DIGEST_ALGO_MD5 );
++	if( !gcry_fips_mode_active() )
++	  gcry_md_enable( c->mfx.md, DIGEST_ALGO_MD5 );
+       }
+     if( opt.pgp2_workarounds && only_md5 && !opt.skip_verify ) {
+ 	/* This is a kludge to work around a bug in pgp2.  It does only

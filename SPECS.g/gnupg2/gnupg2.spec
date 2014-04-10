@@ -1,7 +1,7 @@
 Summary: Utility for secure communication and data storage
 Name:    gnupg2
-Version: 2.0.18
-Release: 3%{?dist}
+Version: 2.0.22
+Release: 1%{?dist}
 
 License: GPLv3+
 Group:   Applications/System
@@ -9,11 +9,13 @@ Source0: ftp://ftp.gnupg.org/gcrypt/%{?pre:alpha/}gnupg/gnupg-%{version}%{?pre}.
 Source1: ftp://ftp.gnupg.org/gcrypt/%{?pre:alpha/}gnupg/gnupg-%{version}%{?pre}.tar.bz2.sig
 # svn export svn://cvs.gnupg.org/gnupg/trunk gnupg2; tar cjf gnupg-<date>svn.tar.bz2 gnupg2
 #Source0: gnupg2-20090809svn.tar.bz2
-Patch2:  gnupg-2.0.16-tests-s2kcount.patch
-Patch3:  gnupg-2.0.18-secmem.patch
+Patch1:  gnupg-2.0.20-insttools.patch
+Patch3:  gnupg-2.0.20-secmem.patch
+Patch4:  gnupg-2.0.18-protect-tool-env.patch
+Patch5:  gnupg-2.0.20-ocsp-keyusage.patch
+Patch6:  gnupg-2.0.19-fips-algo.patch
 
 URL:     http://www.gnupg.org/
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 #BuildRequires: automake libtool texinfo transfig
 BuildRequires: bzip2-devel
@@ -34,6 +36,16 @@ BuildRequires: zlib-devel
 Requires(post): /sbin/install-info
 Requires(postun): /sbin/install-info
 Requires: pinentry
+
+%if 0%{?rhel} > 5
+# pgp-tools, perl-GnuPG-Interface requires 'gpg' (not sure why) -- Rex
+Provides: gpg = %{version}-%{release}
+# Obsolete GnuPG-1 package
+Provides: gnupg = %{version}-%{release}
+Obsoletes: gnupg <= 1.4.10
+%endif
+
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 %package smime
 Summary: CMS encryption and signing tool and smart card support for GnuPG
@@ -61,8 +73,13 @@ to the base GnuPG package
 %prep
 %setup -q -n gnupg-%{version}
 
-%patch2 -p1 -b .s2k
+%if 0%{?rhel} > 5
+%patch1 -p1 -b .insttools
+%endif
 %patch3 -p1 -b .secmem
+%patch4 -p1 -b .ptool-env
+%patch5 -p1 -b .keyusage
+%patch6 -p1 -b .fips
 
 # pcsc-lite library major: 0 in 1.2.0, 1 in 1.2.9+ (dlopen()'d in pcsc-wrapper)
 # Note: this is just the name of the default shared lib to load in scdaemon,
@@ -85,14 +102,14 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make install DESTDIR=%{buildroot} \
   INSTALL="install -p" \
-  docdir=%{_docdir}/%{name}-%{version}
+  docdir=%{_pkgdocdir}
 
+%if ! (0%{?rhel} > 5)
 # drop file conflicting with gnupg-1.x
 rm -f %{buildroot}%{_mandir}/man1/gpg-zip.1*
+%endif
 
 %find_lang %{name}
 
@@ -102,7 +119,15 @@ touch %{buildroot}%{_sysconfdir}/gnupg/gpgconf.conf
 
 # more docs
 install -m644 -p AUTHORS COPYING ChangeLog NEWS THANKS TODO \
-  %{buildroot}%{_docdir}/%{name}-%{version}/
+  %{buildroot}%{_pkgdocdir}
+
+%if 0%{?rhel} > 5
+# compat symlinks
+ln -sf gpg2 %{buildroot}%{_bindir}/gpg
+ln -sf gpgv2 %{buildroot}%{_bindir}/gpgv
+ln -sf gpg2.1 %{buildroot}%{_mandir}/man1/gpg.1
+ln -sf gpgv2.1 %{buildroot}%{_mandir}/man1/gpgv.1
+%endif
 
 # info dir
 rm -f %{buildroot}%{_infodir}/dir
@@ -127,7 +152,7 @@ fi
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 #doc AUTHORS COPYING ChangeLog NEWS README THANKS TODO
-%{_docdir}/%{name}-%{version}/
+%{_pkgdocdir}
 %dir %{_sysconfdir}/gnupg
 %ghost %config(noreplace) %{_sysconfdir}/gnupg/gpgconf.conf
 ## docs say to install suid root, but fedora/rh security folk say not to
@@ -137,8 +162,15 @@ fi
 %{_bindir}/gpg-connect-agent
 %{_bindir}/gpg-agent
 %{_bindir}/gpgconf
-%{_bindir}/gpgkey2ssh
 %{_bindir}/gpgparsemail
+%if 0%{?rhel} > 5
+%{_bindir}/gpg
+%{_bindir}/gpgv
+%{_bindir}/gpgsplit
+%{_bindir}/gpg-zip
+%else
+%{_bindir}/gpgkey2ssh
+%endif
 %{_bindir}/watchgnupg
 %{_sbindir}/*
 %{_datadir}/gnupg/
@@ -148,24 +180,62 @@ fi
 %exclude %{_datadir}/gnupg/com-certs.pem
 %exclude %{_mandir}/man?/gpgsm*
 %exclude %{_mandir}/man?/scdaemon*
+%exclude %{_libexecdir}/scdaemon
 
 %files smime
 %defattr(-,root,root,-)
 %{_bindir}/gpgsm*
 %{_bindir}/kbxutil
-%{_bindir}/scdaemon
+%{_libexecdir}/scdaemon
 %{_mandir}/man?/gpgsm*
 %{_mandir}/man?/scdaemon*
 %{_datadir}/gnupg/com-certs.pem
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.0.18-3
-- 为 Magic 3.0 重建
+* Tue Oct  8 2013 Tomáš Mráz <tmraz@redhat.com> - 2.0.22-1
+- new upstream release fixing CVE-2013-4402
+
+* Fri Aug 23 2013 Tomáš Mráz <tmraz@redhat.com> - 2.0.21-1
+- new upstream release
+
+* Wed Aug  7 2013 Tomas Mraz <tmraz@redhat.com> - 2.0.20-3
+- adjust to the unversioned docdir change (#993785)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.20-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed May 15 2013 Tomas Mraz <tmraz@redhat.com> - 2.0.20-1
+- new upstream release
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.19-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan  2 2013 Tomas Mraz <tmraz@redhat.com> - 2.0.19-7
+- fix CVE-2012-6085 - skip invalid key packets (#891142)
+
+* Thu Nov 22 2012 Tomas Mraz <tmraz@redhat.com> - 2.0.19-6
+- use AES as default crypto algorithm in FIPS mode (#879047)
+
+* Fri Nov 16 2012 Jamie Nguyen <jamielinux@fedoraproject.org> - 2.0.19-5
+- rebuild for <f18 (#877106)
+
+* Fri Jul 27 2012 Tomas Mraz <tmraz@redhat.com> - 2.0.19-4
+- fix negated condition (#843842)
+
+* Thu Jul 26 2012 Tomas Mraz <tmraz@redhat.com> - 2.0.19-3
+- add compat symlinks and provides if built on RHEL
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.19-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Apr 24 2012 Tomas Mraz <tmraz@redhat.com> - 2.0.19-1
+- new upstream release
+- set environment in protect-tool (#548528)
+- do not reject OCSP signing certs without keyUsage (#720174)
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Oct 12 2011 Rex Dieter <rdieter@fedoraproject.org> 2.0.18-2
 - build with --enable-standard-socket
@@ -457,7 +527,7 @@ rm -rf %{buildroot}
 * Sat May  7 2005 David Woodhouse <dwmw2@infradead.org> 1.9.15-3
 - Rebuild.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Thu Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Tue Feb  1 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 0:1.9.15-1
