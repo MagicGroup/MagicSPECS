@@ -6,7 +6,7 @@
 function check_config_syntax()
 {
 	retcode=0
-	tmp_slaptest=`mktemp`
+	tmp_slaptest=`mktemp --tmpdir=/var/run/openldap`
 	run_as_ldap "/usr/sbin/slaptest $SLAPD_GLOBAL_OPTIONS -u" &>$tmp_slaptest
 	if [ $? -ne 0 ]; then
 		error "Checking configuration file failed:"

@@ -49,7 +49,7 @@ fi
 
 # perform the conversion
 
-tmp_convert=`mktemp`
+tmp_convert=`mktemp --tmpdir=/var/run/openldap`
 
 if [ `id -u` -eq 0 ]; then
 	install -d --owner $SLAPD_USER --group `id -g $SLAPD_USER` --mode 0700 "$SLAPD_CONFIG_DIR" &>>$tmp_convert

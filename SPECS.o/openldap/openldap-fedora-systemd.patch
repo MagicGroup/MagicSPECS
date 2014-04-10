@@ -6,10 +6,11 @@ Fedora specific patch.
 
 Author: Jan Vcelak <jvcelak@redhat.com>
 
-diff -uNPrp openldap-2.4.26/servers/slapd/main.c openldap-2.4.26.fix/servers/slapd/main.c
---- openldap-2.4.26/servers/slapd/main.c	2011-06-30 17:13:36.000000000 +0200
-+++ openldap-2.4.26.fix/servers/slapd/main.c	2011-10-27 17:05:02.641066298 +0200
-@@ -682,6 +682,10 @@ unhandled_option:;
+diff --git a/servers/slapd/main.c b/servers/slapd/main.c
+index dac4864..83614f4 100644
+--- a/servers/slapd/main.c
++++ b/servers/slapd/main.c
+@@ -685,6 +685,10 @@ unhandled_option:;
  		}
  	}
  
