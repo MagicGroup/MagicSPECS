@@ -1,19 +1,17 @@
 Summary: A GNU utility for secure communication and data storage
 Name: gnupg
-Version: 1.4.13
-Release: 3%{?dist}
+Version: 1.4.16
+Release: 4%{?dist}
 License: GPLv3+ with exceptions
 Group: Applications/System
 Source0: ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-%{version}.tar.bz2.sig
 Source2: gnupg-shm-coprocessing.expect
 Patch0: gnupg-1.4.1-gcc.patch
-# https://bugs.g10code.com/gnupg/issue1461
-Patch1: gnupg-1.4.13-big-endian.patch
-Patch2: gnupg-1.4.13-mips-fix.patch
 URL: http://www.gnupg.org/
 # Requires autoconf >= 2.60 because earlier autoconf didn't define $localedir.
 BuildRequires: autoconf >= 2.60
+BuildRequires: git
 BuildRequires: automake, bzip2-devel, expect, ncurses-devel
 BuildRequires: openldap-devel, readline-devel, zlib-devel, gettext-devel
 BuildRequires: curl-devel
@@ -35,15 +33,20 @@ only IDEA for symmetric-key encryption, which is patented worldwide).
 
 %prep
 %setup -q
-%patch0 -p1 -b .gcc
-%patch1 -p1 -b .big-endian
-%patch2 -p1 -b .mips-fix
 
+git init
+git config user.email "gnupg-owner@fedoraproject.org"
+git config user.name "Fedora Ninjas"
+git add .
+git commit -a -q -m "%{version} baseline."
+git am %{patches}
 # Convert these files to UTF-8, per rpmlint.
 iconv -f koi8-ru -t utf-8 doc/gpg.ru.1 > doc/gpg.ru.utf8.1
 mv doc/gpg.ru.utf8.1 doc/gpg.ru.1
 iconv -f iso-8859-15 -t utf-8 THANKS > THANKS.utf8
 mv THANKS.utf8 THANKS
+git commit -a -m "run iconv"
+git tag -a %{name}-%{version} -m "baseline"
 
 autoreconf -vif
 
@@ -99,7 +102,7 @@ exit 0
 
 %files -f %{name}.lang
 %defattr(-,root,root)
-%doc AUTHORS BUGS COPYING INSTALL NEWS PROJECTS README THANKS TODO
+%doc AUTHORS BUGS COPYING NEWS PROJECTS README THANKS TODO
 %doc doc/DETAILS doc/HACKING doc/OpenPGP doc/samplekeys.asc
 %{_bindir}/*
 %dir %{_datadir}/%{name}
@@ -118,6 +121,27 @@ exit 0
 %{_mandir}/man7/gnupg.7.gz
 
 %changelog
+* Thu Feb 27 2014 Brian C. Lane <bcl@redhat.com> 1.4.16-4
+- Cleanup some autoreconf complaints
+
+* Sat Dec 21 2013 Ville Skyttä <ville.skytta@iki.fi> - 1.4.16-3
+- Drop INSTALL from docs.
+- Fix bogus dates in %%changelog.
+
+* Wed Dec 18 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.4.16-2
+- New upstream v1.4.16
+  fixes for CVE-2013-4576
+
+* Mon Oct 07 2013 Brian C. Lane <bcl@redhat.com> 1.4.15-1
+- New upstream v1.4.15
+  fixes for CVE-2013-4402 (#1015967)
+  fixes for CVE-2013-4351 (#1010140)
+
+* Mon Jul 29 2013 Brian C. Lane <bcl@redhat.com> 1.4.14-1
+- New upstream v1.4.14
+  fixes for CVE-2013-4242 (#988592)
+  includes fix for build on big-endian arches
+
 * Sat Jan 26 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.4.13-3
 - Add -vif to autoreconf to fix build failure
 
@@ -470,10 +494,10 @@ exit 0
 * Tue Aug 27 2002 Nalin Dahyabhai <nalin@redhat.com> 1.0.7-6
 - rebuild
 
-* Fri Jul 24 2002 Nalin Dahyabhai <nalin@redhat.com> 1.0.7-5
+* Wed Jul 24 2002 Nalin Dahyabhai <nalin@redhat.com> 1.0.7-5
 - specify a menu entry when installing info pages
 
-* Thu Jul 24 2002 Nalin Dahyabhai <nalin@redhat.com> 1.0.7-4
+* Wed Jul 24 2002 Nalin Dahyabhai <nalin@redhat.com> 1.0.7-4
 - add and install info pages (#67931)
 - don't include two copies of the faq, add new doc files (#67931)
 
@@ -512,7 +536,7 @@ exit 0
 * Tue Feb 27 2001 Nalin Dahyabhai <nalin@redhat.com>
 - fix the group
 
-* Tue Dec 18 2000 Nalin Dahyabhai <nalin@redhat.com>
+* Mon Dec 18 2000 Nalin Dahyabhai <nalin@redhat.com>
 - go with this version -- 1.0.4c includes a lot of changes beyond just the
   two security fixes
 
