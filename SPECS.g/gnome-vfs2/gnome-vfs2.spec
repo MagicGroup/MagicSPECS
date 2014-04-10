@@ -8,13 +8,15 @@
 %endif
 
 Summary: The GNOME virtual file-system libraries
+Summary(zh_CN.UTF-8): GNOME 虚拟文件系统库
 Name: gnome-vfs2
 Version: 2.24.4
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: LGPLv2+ and GPLv2+
 # the daemon and the library are LGPLv2+
 # the modules are LGPLv2+ and GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #VCS: git:git://git.gnome.org/gnome-vfs
 Source0: http://download.gnome.org/sources/gnome-vfs/2.24/gnome-vfs-%{version}.tar.bz2
 URL: http://www.gnome.org/
@@ -94,24 +96,37 @@ http, ftp, and others. It provides a URI-based API, backend
 supporting asynchronous file operations, a MIME type manipulation
 library, and other features.
 
+%description -l zh_CN.UTF-8 
+GNOME 虚拟文件系统库。
+
 %package devel
 Summary: Libraries and include files for developing GNOME VFS applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name} = %{version}-%{release}
 
 %description devel
 This package provides the necessary development libraries for writing
 GNOME VFS modules and applications that use the GNOME VFS APIs.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package smb
 Summary: Windows fileshare support for gnome-vfs
+Summary(zh_CN.UTF-8): %{name} 的 Windows 文件共享支持
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:   %{name} = %{version}-%{release}
 Requires: libsmbclient
 
 %description smb
 This package provides support for reading and writing files on windows
 shares (SMB) to applications using GNOME VFS.
+
+%description smb -l zh_CN.UTF-8 
+%{name} 的 Windows 文件共享支持。
 
 %prep
 %setup -q -n gnome-vfs-%{version} 

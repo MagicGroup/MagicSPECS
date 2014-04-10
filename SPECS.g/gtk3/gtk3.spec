@@ -16,13 +16,14 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk3
-Version: 3.11.7
+Version:	3.12.0
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
 #VCS: git:git://git.gnome.org/gtk+
-Source: http://download.gnome.org/sources/gtk+/3.11/gtk+-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gtk+/%{majorver}/gtk+-%{version}.tar.xz
 
 BuildRequires: gnome-common autoconf automake intltool gettext
 BuildRequires: atk-devel >= %{atk_version}
@@ -298,6 +299,12 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/installed-tests
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.11.7-1
+- 更新到 3.12.0
+
 * Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 3.11.7-1
 - Update to 3.11.7
 

@@ -5,7 +5,7 @@ Summary:        Frei0r - a minimalistic plugin API for video effects
 Summary(zh_CN.UTF-8): Frei0r - 一个最简单的视频特效插件 API
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.piksel.org/frei0r
 Source0:        http://propirate.net/frei0r/frei0r-plugins-%{version}.tar.gz

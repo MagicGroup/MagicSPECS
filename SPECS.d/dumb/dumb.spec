@@ -4,7 +4,7 @@ Release:        18%{?dist}
 Summary:        IT, XM, S3M and MOD player library
 Summary(zh_CN.UTF-8): IT, XM, S3M 和 MOD 播放器库
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        zlib
 URL:            http://dumb.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz

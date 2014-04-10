@@ -8,9 +8,12 @@ Version: 2.91.93
 Release: 4%{?dist}
 License: LGPLv2+ and GPLv2+
 Group: Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Summary: GNOME pilot programs
+Summary(zh_CN.UTF-8): GNOME pilot 程序
 URL: http://live.gnome.org/GnomePilot
-Source: http://download.gnome.org/sources/%{name}/2.91/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 ExcludeArch: s390 s390x
 
 ### Patches ###
@@ -51,19 +54,29 @@ BuildRequires: evolution-data-server-devel
 gnome-pilot is a collection of programs and daemon for integrating
 GNOME and the PalmPilot<tm> or other PalmOS<tm> devices.
 
+%description -l zh_CN.UTF-8
+操作 PalmPilot<tm> 和 PalmOS<tm> 设备的 GNOME 程序。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: GNOME pilot libraries, includes, etc
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %if %{build_eds_conduits}
 %package eds
 Group: Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 Summary: Evolution-Data-Server conduits
+Summary(zh_CN.UTF-8): Evolution-Data-Server 管道
 Provides: evolution-conduits = %{version}-%{release}
 Obsoletes: evolution-conduits < 2.31.5-1
 Requires: %{name} = %{version}-%{release}
@@ -72,6 +85,9 @@ Requires: evolution-data-server
 %description eds
 This package contains conduits for synchronizing PalmPilot<tm> or other
 PalmOS<tm> devices with Evolution-Data-Server.
+
+%description eds -l zh_CN.UTF-8 
+Evolution-Data-Server 管道。
 %endif
 
 %prep
@@ -116,7 +132,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 # Remove this broken menu item (introduced in 2.0.16).
 rm -f $RPM_BUILD_ROOT/%{_datadir}/applications/gpilot-applet.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post

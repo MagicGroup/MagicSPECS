@@ -5,7 +5,7 @@ Summary:        A library for handling uncompressed audio and video data
 Summary(zh_CN.UTF-8): 处理未压缩的音频和视频数据的库
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv3+
 URL:            http://gmerlin.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/gmerlin/gavl-%{version}.tar.gz

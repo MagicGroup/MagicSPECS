@@ -7,7 +7,7 @@ Summary:        Command Line utility to work with mobile phones
 Summary(zh_CN.UTF-8): 操作手机的命令行工具
 
 Group:          Applications/System
-Group(zh_CN.UTF): 应用程序/系统
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv2+
 URL:            http://wammu.eu/gammu/
 Source0:        http://sourceforge.net/projects/gammu/files/%{name}/%{version}/%{name}-%{version}.tar.bz2
@@ -31,13 +31,13 @@ Requires:       bluez, dialog
 Summary:    Libraries files for %{name}
 Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:      System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 
 %package -n     python-%{name}
 Summary:    Python bindings for Gammu
 Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:      Development/Languages
-Group(zh_CN.UTF): 开发/语言
+Group(zh_CN.UTF-8): 开发/语言
 
 BuildRequires:  python2-devel
 Obsoletes:      python-%{name} <= 0.28

@@ -8,7 +8,7 @@ Release: 29%{?dist}
 # says (Fontmap is wrong).
 License: GPLv2+ and Hershey and MIT and OFL and Public Domain
 Group: Applications/Publishing
-Group(zh_CN.UTF): 应用程序/出版
+Group(zh_CN.UTF-8): 应用程序/出版
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://www.gnu.org/software/ghostscript/
 Source0: gnu-gs-fonts-other-%{version}-nobch.tar.gz

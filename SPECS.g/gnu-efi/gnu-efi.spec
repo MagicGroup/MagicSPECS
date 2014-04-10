@@ -1,8 +1,10 @@
 Summary: Development Libraries and headers for EFI
+Summary(zh_CN.UTF-8): EFI 的开发库和头文件 
 Name: gnu-efi
 Version: 3.0u
 Release: 0.2%{?dist}
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 License: BSD 
 URL: ftp://ftp.hpl.hp.com/pub/linux-ia64
 Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/gnu-efi_%{version}.orig.tar.gz
@@ -27,21 +29,34 @@ BuildRequires: git
 This package contains development headers and libraries for developing
 applications that run under EFI (Extensible Firmware Interface).
 
+%description -l zh_CN.UTF-8
+EFI 开发的头文件和库。
+
 %package devel
 Summary: Development Libraries and headers for EFI
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/库
 Obsoletes: gnu-efi < %{version}-%{release}
 
 %description devel
 This package contains development headers and libraries for developing
 applications that run under EFI (Extensible Firmware Interface).
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package utils
 Summary: Utilities for EFI systems
+Summary(zh_CN.UTF-8): EFI 系统的工具
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 
 %description utils
 This package contains utilties for debugging and developing EFI systems.
+
+%description utils -l zh_CN.UTF-8 
+EFI 系统的工具。
 
 %prep
 %setup -q -n gnu-efi-3.0
@@ -69,6 +84,7 @@ mv %{buildroot}/%{_libdir}/*.lds %{buildroot}/%{_libdir}/*.o %{buildroot}/%{_lib
 make -C apps clean route80h.efi modelist.efi
 mkdir -p %{buildroot}/boot/efi/EFI/%{efidir}/
 mv apps/{route80h.efi,modelist.efi} %{buildroot}/boot/efi/EFI/%{efidir}/
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

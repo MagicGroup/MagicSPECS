@@ -5,7 +5,7 @@ Summary:       A modular geoinformation service
 Summary(zh_CN.UTF-8): 模块化的地理信息服务
 
 Group:         System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2
 URL:           http://geoclue.freedesktop.org/
 Source0:       http://folks.o-hand.com/jku/geoclue-releases/%{name}-%{version}.tar.gz
@@ -80,7 +80,7 @@ Testing gui for geoclue
 Summary: gypsy provider for geoclue
 Summary(zh_CN.UTF-8): %{name} 的 gypsy 模块
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 
 %description gypsy
@@ -93,7 +93,7 @@ A gypsy provider for geoclue
 Summary: gsmloc provider for geoclue
 Summary(zh_CN.UTF-8): %{name} 的 gsmloc 模块
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 
 %description gsmloc

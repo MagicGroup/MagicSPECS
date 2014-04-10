@@ -10,7 +10,7 @@ Summary:   A fast and lightweight IDE using GTK2
 Summary(zh_CN.UTF-8): 一个使用 GTK2 开发的快速轻量级 IDE
  
 Group:     Development/Tools
-Group(zh_CN.UTF): 开发/工具
+Group(zh_CN.UTF-8): 开发/工具
 License:   GPLv2+
 URL:       http://www.geany.org/
 Source0:   http://download.geany.org/%{name}-%{version}.tar.bz2

@@ -6,7 +6,7 @@ Release:       1%{?dist}
 License:       GPLv2
 URL:           http://www.rodsbooks.com/gdisk/
 Group:         System Environment/Base
-Group(zh_CN.UTF): 系统环境/基本
+Group(zh_CN.UTF-8): 系统环境/基本
 Source0:       http://downloads.sourceforge.net/gptfdisk/gptfdisk-%{version}.tar.gz
 BuildRequires: popt-devel
 BuildRequires: libicu-devel

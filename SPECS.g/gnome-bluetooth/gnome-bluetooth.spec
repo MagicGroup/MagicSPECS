@@ -1,13 +1,16 @@
 Name:		gnome-bluetooth
 Epoch:		1
-Version:	3.11.3
+Version:	3.12.0
 Release:	1%{?dist}
 Summary:	Bluetooth graphical utilities
+Summary(zh_CN.UTF-8): 蓝牙管理图形工具 
 
 Group:		Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信 
 License:	GPLv2+
 URL:		http://live.gnome.org/GnomeBluetooth
-Source0:	http://download.gnome.org/sources/gnome-bluetooth/3.11/gnome-bluetooth-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://download.gnome.org/sources/gnome-bluetooth/%{majorver}/gnome-bluetooth-%{version}.tar.xz
 Source1:	61-gnome-bluetooth-rfkill.rules
 
 %if 0%{?rhel}
@@ -42,9 +45,14 @@ Requires(postun):	desktop-file-utils
 The gnome-bluetooth package contains graphical utilities to setup,
 monitor and use Bluetooth devices.
 
+%description -l zh_CN.UTF-8
+设置、监视和使用蓝牙设备的图形工具。
+
 %package libs
 Summary:	GTK+ Bluetooth device selection widgets
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 Requires:	gobject-introspection
 
@@ -52,9 +60,14 @@ Requires:	gobject-introspection
 This package contains libraries needed for applications that
 want to display a Bluetooth device selection widget.
 
+%description libs -l zh_CN.UTF-8 
+%{name} 的运行库。
+
 %package libs-devel
 Summary:	Development files for %{name}-libs
+Summary(zh_CN.UTF-8): %{name}-libs 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	LGPLv2+
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -65,6 +78,9 @@ Provides:	gnome-bluetooth-devel = %{version}
 %description libs-devel
 This package contains the libraries and header files that are needed
 for writing applications that require a Bluetooth device selection widget.
+
+%description libs-devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -84,6 +100,7 @@ install -m0644 -D %{SOURCE1} $RPM_BUILD_ROOT/usr/lib/udev/rules.d/61-gnome-bluet
 
 # gnome-bluetooth2 is the name for the gettext domain,
 # gnome-bluetooth is the name in the docs
+magic_rpm_clean.sh
 %find_lang gnome-bluetooth2
 %find_lang %{name} --with-gnome
 cat %{name}.lang >> gnome-bluetooth2.lang
@@ -136,6 +153,9 @@ fi
 %{_datadir}/gtk-doc
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 1:3.12.0-1
+- 更新到 3.12.0
+
 * Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 1:3.11.3-1
 - Update to 3.11.3
 

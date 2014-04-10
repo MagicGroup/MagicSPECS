@@ -5,7 +5,9 @@ Name:      %{fontname}-fonts
 Version:   20100919
 Release:   6%{?dist}
 Summary:   Free UCS Outline Fonts
+Summary(zh_CN.UTF-8): 自由的 UCS Outline 字体
 Group:     User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 # Standard font exception
 License:   GPLv3+ with special font exception
 URL:       http://www.gnu.org/software/freefont/ 

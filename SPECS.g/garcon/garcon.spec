@@ -9,7 +9,7 @@ Summary:        Implementation of the freedesktop.org menu specification
 Summary(zh_CN.UTF-8): freedesktop.org 菜单标准的实现 
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 # garcon's source code is licensed under the LGPLv2+,
 # while its documentation is licensed under the GFDL 1.1
 License:        LGPLv2+ and GFDL

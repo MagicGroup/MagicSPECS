@@ -1,0 +1,17 @@
+#!/bin/bash
+url="http://www.gnuplot.info/"
+new1="Current release is "
+new2="(patchlevel"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	newver1=`grep "$new1.*$new2" index.html|head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	newver2=`cat index.html|grep "$new1.*$new2"|head -n 1|sed 's/.*patchlevel //' |sed 's/).*//'`
+	echo $newver1.$newver2
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

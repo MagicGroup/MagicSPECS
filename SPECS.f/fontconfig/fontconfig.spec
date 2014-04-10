@@ -11,7 +11,7 @@ Release:	3%{?dist}
 # otherwise MIT
 License:	MIT and Public Domain and UCD
 Group:		System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 Source:		http://fontconfig.org/release/%{name}-%{version}.tar.bz2
 URL:		http://fontconfig.org
 Source1:	25-no-bitmap-fedora.conf
@@ -61,7 +61,7 @@ will use fontconfig.
 Summary:	Development Documentation files for fontconfig library
 Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:		Documentation
-Group(zh_CN.UTF): 文档
+Group(zh_CN.UTF-8): 文档
 BuildArch:	noarch
 Requires:	%{name}-devel = %{version}-%{release}
 

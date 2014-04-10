@@ -36,7 +36,7 @@ GNU 线性编程工具。
 Summary:        Documentation for %{name}
 Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
-Group(zh_CN.UTF): 文档
+Group(zh_CN.UTF-8): 文档
 
 %description    doc
 Documentation subpackage for %{name}.
@@ -130,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 4.47-2
+- 更新到 4.54
+
 * Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 4.47-2
 - 更新到 4.54
 

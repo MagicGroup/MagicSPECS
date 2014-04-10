@@ -7,7 +7,7 @@ Version: 0.7.1
 Release: 21%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://gmyth.sf.net
 
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz

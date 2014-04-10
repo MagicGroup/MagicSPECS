@@ -1,17 +1,23 @@
 Summary: Symbolic GNOME icons
+Summary(zh_CN.UTF-8): Symbolic GNOME 图标
 Name: gnome-icon-theme-symbolic
-Version: 3.8.0.1
+Version:	3.12.0
 Release: 1%{?dist}
 #VCS: git:git://git.gnome.org/gnome-icon-theme-symbolic
-Source0: http://download.gnome.org/sources/gnome-icon-theme-symbolic/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-icon-theme-symbolic/%{majorver}/%{name}-%{version}.tar.xz
 License: CC-BY-SA
 BuildArch: noarch
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildRequires: icon-naming-utils >= 0.8.7
 Requires: gnome-icon-theme >= 2.30.2.1-2
 
 %description
 This package contains symbolic icons for use by the GNOME desktop.
+
+%description -l zh_CN.UTF-8 
+Symbolic GNOME 图标。
 
 %prep
 %setup -q
@@ -24,6 +30,7 @@ export ac_cv_path_GTK_UPDATE_ICON_CACHE=/bin/true
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %post
 touch --no-create %{_datadir}/icons/gnome &>/dev/null || :
@@ -43,6 +50,9 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 %{_datadir}/pkgconfig/gnome-icon-theme-symbolic.pc
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Wed Mar 27 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0.1-1
 - Update to 3.8.0.1
 

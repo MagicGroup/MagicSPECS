@@ -6,16 +6,17 @@
 %define libgnomekbd_version    2.91.1
 
 Summary: GNOME Screensaver
+Summary(zh_CN.UTF-8): GNOME 屏幕保护
 Name: gnome-screensaver
 Version: 3.6.1
 Release: 5%{?dist}
 License: GPLv2+
 Group: Amusements/Graphics
+Group(zh_CN.UTF-8): 娱乐/图像
 #VCS: git:git://git.gnome.org/gnome-screensaver
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0: http://download.gnome.org/sources/gnome-screensaver/3.6/%{name}-%{version}.tar.xz
 Source1: gnome-screensaver-hide-xscreensaver.menu
-
-Patch8: gnome-screensaver-2.20.0-selinux-permit.patch
 
 URL: http://www.gnome.org
 BuildRequires: gtk3-devel => %{gtk3_version}
@@ -51,9 +52,11 @@ BuildRequires:  libxklavier-devel
 gnome-screensaver is a screen saver and locker that aims to have
 simple, sane, secure defaults and be well integrated with the desktop.
 
+%description -l zh_CN.UTF-8
+GNOME 的屏幕保护程序。
+
 %prep
 %setup -q
-%patch8 -p1 -b .selinux-permit
 
 autoreconf -f -i
 
@@ -63,7 +66,7 @@ make
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %files -f %{name}.lang

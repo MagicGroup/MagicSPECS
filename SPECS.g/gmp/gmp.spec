@@ -17,7 +17,7 @@ Source3: gmp-mparam.h
 Patch0: gmp-4.0.1-s390.patch
 License: LGPLv3+
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf automake libtool
 #autoreconf on arm needs:

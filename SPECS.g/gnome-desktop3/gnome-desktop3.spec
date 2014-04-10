@@ -5,11 +5,13 @@
 %define po_package                        gnome-desktop-3.0
 
 Summary: Shared code among gnome-panel, gnome-session, nautilus, etc
+Summary(zh_CN.UTF-8): gnome-panel, gnome-session, nautils 等包共享的代码
 Name: gnome-desktop3
-Version: 3.11.90
+Version:	3.12.0
 Release: 1%{?dist}
 URL: http://www.gnome.org
-Source0: http://download.gnome.org/sources/gnome-desktop/3.11/gnome-desktop-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-desktop/%{majorver}/gnome-desktop-%{version}.tar.xz
 Patch0: 0001-default-input-sources-Switch-ja_JP-default-to-ibus-k.patch
 
 License: GPLv2+ and LGPLv2+
@@ -18,7 +20,7 @@ Group: System Environment/Libraries
 # needed for GnomeWallClock
 Requires: gsettings-desktop-schemas >= %{gsettings_desktop_schemas_version}
 
-Requires: redhat-menus
+Requires: magic-menus
 
 # Make sure to update libgnome schema when changing this
 Requires: system-backgrounds-gnome
@@ -49,10 +51,15 @@ The gnome-desktop package contains an internal library
 desktop, and also some data files and other shared components of the
 GNOME user environment.
 
+%description -l zh_CN.UTF-8 
+GNOME 桌面环境程序的共享代码。
+
 %package devel
 Summary: Libraries and headers for libgnome-desktop
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name = %{version}-%{release}
 
 Requires: gtk3-devel >= %{gtk3_version}
@@ -62,6 +69,9 @@ Requires: startup-notification-devel >= %{startup_notification_version}
 %description devel
 Libraries and header files for the GNOME-internal private library
 libgnomedesktop.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n gnome-desktop-%{version}
@@ -77,7 +87,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # stuff we don't want
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
-
+magic_rpm_clean.sh
 %find_lang %{po_package} --all-name --with-gnome
 
 %post -p /sbin/ldconfig
@@ -102,6 +112,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 %doc %{_datadir}/gtk-doc/html/gnome-desktop3/
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
 - Update to 3.11.90
 

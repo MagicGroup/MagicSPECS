@@ -9,7 +9,7 @@ Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.
 Source1:        http://downloads.sourceforge.net/openglut/openglut-0.6.3-doc.tar.gz
 License:        MIT
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 
 BuildRequires:  pkgconfig libGLU-devel libXext-devel libXxf86vm-devel
 BuildRequires:  libXi-devel libICE-devel

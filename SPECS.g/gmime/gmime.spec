@@ -5,7 +5,7 @@ Summary:        Library for creating and parsing MIME messages
 Summary(zh_CN.UTF-8): 创建和解析 MIME 信息的库
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 # Files in examples/, src/ and tests/ are GPLv2+
 License:        LGPLv2+ and GPLv2+
 URL:            http://spruce.sourceforge.net/gmime/

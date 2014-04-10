@@ -51,7 +51,7 @@ called IIWU Synth).
 Summary:   Real-time software synthesizer run-time libraries
 Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:     System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 FluidSynth is a real-time software synthesizer based on the SoundFont 2 

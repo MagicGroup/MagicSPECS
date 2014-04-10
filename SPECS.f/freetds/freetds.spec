@@ -12,7 +12,7 @@ Summary(zh_CN.UTF-8): TDS 协议的实现
 Version: 0.91
 Release: 11.git%{git_commit}%{?dist}
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/
 
@@ -62,7 +62,7 @@ to install %{name}-devel.
 Summary: Development documentation for %{name}
 Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Documentation
-Group(zh_CN.UTF): 文档
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description doc

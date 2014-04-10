@@ -8,7 +8,7 @@ Release:        5%{?dist}
 Summary:        Fast Library for Approximate Nearest Neighbors
 Summary(zh_CN.UTF-8): 快速的近似最邻近查找算法库
 Group:          Development/Libraries
-Group(zh_CN.UTF): 开发/库
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://www.cs.ubc.ca/~mariusm/index.php/FLANN/FLANN
 Source0:        http://www.cs.ubc.ca/~mariusm/uploads/FLANN/%{name}-%{version}-src.zip
@@ -64,7 +64,7 @@ Development headers and libraries for flann.
 Summary: Static libraries for flann
 Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
-Group(zh_CN.UTF): 开发/库
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static

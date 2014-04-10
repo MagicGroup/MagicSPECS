@@ -6,7 +6,7 @@ Summary:        C++ wrapper for GConf2
 Summary(zh_CN.UTF-8): GConf2 的 C++ 接口
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/gconfmm/2.28/gconfmm-%{version}.tar.bz2

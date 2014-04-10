@@ -9,13 +9,16 @@
 %define enable_autoreconf 0
 
 Summary: Disks
+Summary(zh_CN.UTF-8): GNOME 的磁盘工具
 Name: gnome-disk-utility
-Version: 3.8.0
+Version:	3.12.0
 Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库 
 URL: http://git.gnome.org/browse/gnome-disk-utility
-Source0: http://download.gnome.org/sources/gnome-disk-utility/3.6/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-disk-utility/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gtk3-devel >= %{gtk3_version}
@@ -57,6 +60,10 @@ This package contains the Disks and Disk Image Mounter applications.
 Disks supports partitioning, file system creation, encryption,
 fstab/crypttab editing, ATA SMART and other features
 
+%description -l zh_CN.UTF-8
+这个包包含了磁盘和磁盘镜像挂载。
+支持分区、建立文件系统、加密、fstab/crypttab 编辑、ATA SMART 等功能。
+
 %prep
 %setup -q
 
@@ -77,7 +84,7 @@ desktop-file-install --delete-original  \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
   $RPM_BUILD_ROOT%{_datadir}/applications/gnome-disks.desktop \
   $RPM_BUILD_ROOT%{_datadir}/applications/gnome-disk-image-mounter.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -111,10 +118,11 @@ done
 %{_datadir}/glib-2.0/schemas/org.gnome.Disks.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.gdu-sd.gschema.xml
 
-%dir %{_datadir}/gnome-disk-utility
-%{_datadir}/gnome-disk-utility/*.ui
+#%dir %{_datadir}/gnome-disk-utility
+#%{_datadir}/gnome-disk-utility/*.ui
 %{_datadir}/icons/hicolor/*/apps/gnome-disks*
 %{_datadir}/icons/HighContrast/*/apps/gnome-disks.png
+%{_datadir}/applications/gnome-disk-image-writer.desktop
 
 %{_mandir}/man1/*
 
@@ -124,6 +132,9 @@ done
 %doc README AUTHORS NEWS COPYING
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Wed Mar 20 2013 Richard Hughes <rhughes@redhat.com> - 3.8.0-1
 - Update to 3.8.0
 

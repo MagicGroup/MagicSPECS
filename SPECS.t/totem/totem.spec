@@ -1,12 +1,15 @@
 Summary: Movie player for GNOME
+Summary(zh_CN.UTF-8): GNOME 的视频播放器
 Name: totem
-Version: 3.11.90
+Version:	3.12.0
 Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+ with exceptions
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL: http://projects.gnome.org/totem/
-Source0: http://download.gnome.org/sources/totem/3.11/totem-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/totem/%{majorver}/totem-%{version}.tar.xz
 
 Requires: gnome-icon-theme
 # For the opensubtitles plugin
@@ -46,7 +49,7 @@ BuildRequires: totem-pl-parser-devel
 BuildRequires: clutter-gst2-devel
 BuildRequires: clutter-gtk-devel
 BuildRequires: vala
-BuildRequires: appdata-tools
+#BuildRequires: appdata-tools
 
 # For the nautilus extension
 BuildRequires: nautilus-devel
@@ -157,7 +160,7 @@ audio and video files in the properties dialog.
 
 # only needed temporarily due to old appdata-tools being used in tarball
 # creation, can likely be dropped for next version - adamw 2014/02
-./autogen.sh
+# ./autogen.sh
 
 export BROWSER_PLUGIN_DIR=%{_libdir}/mozilla/plugins
 %configure \
@@ -286,6 +289,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/mozilla/plugins/libtotem-vegas-plugin.so
 
 %changelog
+* Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 1:3.12.0-2
+- 更新到 3.12.0
+
 * Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 1:3.11.90-2
 - Rebuilt for cogl soname bump
 

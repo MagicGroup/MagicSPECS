@@ -1,12 +1,15 @@
 Summary: Desktop backgrounds packaged with the GNOME desktop
+Summary(zh_CN.UTF-8): GNOME 桌面的桌面背景包
 Name: gnome-backgrounds
-Version: 3.8.1
+Version:	3.12.0
 Release: 1%{?dist}
 License: GPLv2
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/gnome-backgrounds
-Source0: http://download.gnome.org/sources/gnome-backgrounds/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-backgrounds/%{majorver}/%{name}-%{version}.tar.xz
 BuildArch: noarch
 BuildRequires: intltool
 BuildRequires: gettext
@@ -15,6 +18,9 @@ BuildRequires: gettext
 The gnome-backgrounds package contains images and tiles
 to use for your desktop background which are packaged
 with the GNOME desktop.
+
+%description -l zh_CN.UTF-8
+GNOME 桌面的桌面背景包。
 
 %prep
 %setup -q
@@ -30,6 +36,7 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/backgrounds/images
 
 # all translations are merged back into xml by intltool
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
+magic_rpm_clean.sh
 
 %files
 %doc COPYING NEWS README AUTHORS
@@ -37,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
 %{_datadir}/backgrounds/*
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

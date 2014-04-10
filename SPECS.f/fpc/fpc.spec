@@ -5,7 +5,7 @@ Summary:        Free Pascal Compiler
 Summary(zh_CN.UTF-8): 自由的 Pascal 编译器
 
 Group:          Development/Languages
-Group(zh_CN.UTF): 开发/语言
+Group(zh_CN.UTF-8): 开发/语言
 License:        GPLv2+ and LGPLv2+ with exceptions
 URL:            http://www.freepascal.org/
 Source0:        ftp://ftp.freepascal.org/pub/fpc/dist/${version}/source/fpcbuild-%{version}.tar.gz

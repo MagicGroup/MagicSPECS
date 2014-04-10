@@ -16,7 +16,7 @@ Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
-Group(zh_CN.UTF): 用户界面/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://download.gnome.org/sources/gdm
 #VCS: git:git://git.gnome.org/gdm
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')

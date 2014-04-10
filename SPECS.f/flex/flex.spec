@@ -9,7 +9,7 @@ Release: 4%{?dist}
 # gettext.h (copied from gnulib) is under LGPLv2+
 License: BSD and LGPLv2+
 Group: Development/Tools
-Group(zh_CN.UTF): 开发/工具
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://flex.sourceforge.net/
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 
@@ -51,7 +51,7 @@ application development.
 Summary: Libraries for flex scanner generator
 Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Tools
-Group(zh_CN.UTF): 开发/工具
+Group(zh_CN.UTF-8): 开发/工具
 Obsoletes: flex-static < 2.5.35-15
 Provides: flex-static
 
@@ -68,7 +68,7 @@ instead of implementing their own.
 Summary: Documentation for flex scanner generator
 Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
-Group(zh_CN.UTF): 文档
+Group(zh_CN.UTF-8): 文档
 
 %description doc
 

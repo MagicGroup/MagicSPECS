@@ -1,10 +1,12 @@
 Summary: A perfect hash function generator
+Summary(zh_CN.UTF-8): 完美哈希函数生成器
 Name: gperf
 Version: 3.0.4
 Release: 5%{?dist}
 License: GPLv3+
 Source: ftp://ftp.gnu.org/pub/gnu/gperf/gperf-%{version}.tar.gz
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/gperf/
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -15,6 +17,9 @@ Gperf is a perfect hash function generator written in C++. Simply
 stated, a perfect hash function is a hash function and a data
 structure that allows recognition of a key word in a set of words
 using exactly one probe into the data structure.
+
+%description -l zh_CN.UTF-8 
+完美哈希函数生成器。
 
 %prep
 %setup -q
@@ -31,6 +36,7 @@ make DESTDIR=$RPM_BUILD_ROOT install INSTALL='install -p'
 
 # remove the stuff from the buildroot
 rm -rf $RPM_BUILD_ROOT{%{_mandir}/{dvi,html},%{_datadir}/doc}
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

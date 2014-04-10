@@ -11,7 +11,7 @@ URL: http://www.gnome.org
 Source0: http://download.gnome.org/sources/gconf-editor/%{majorver}/%{name}-%{version}.tar.xz
 License: GPLv2+ and GFDL
 Group: Applications/System
-Group(zh_CN.UTF): 应用程序/系统
+Group(zh_CN.UTF-8): 应用程序/系统
 
 Requires(pre): GConf2 >= %{gconf2_version}
 Requires(post): GConf2 >= %{gconf2_version}

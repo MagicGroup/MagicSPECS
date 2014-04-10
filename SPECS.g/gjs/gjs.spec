@@ -5,7 +5,7 @@ Summary:       Javascript Bindings for GNOME
 Summary(zh_CN.UTF-8): GNOME 的 Javascipt 绑定
 
 Group:         System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 # The following files contain code from Mozilla which
 # is triple licensed under MPL1.1/LGPLv2+/GPLv2+:
 # The console module (modules/console.c)

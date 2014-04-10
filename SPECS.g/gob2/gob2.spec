@@ -1,10 +1,12 @@
 Summary: The GObject Builder
+Summary(zh_CN.UTF-8): GObject 构建程序
 Name: gob2
 Version: 2.0.18
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: GPLv2+
 Group: Development/Tools
-Source: http://ftp.5z.com/pub/gob/gob2-%{version}.tar.gz
+Group(zh_CN.UTF-8): 开发/工具
+Source: http://ftp.5z.com/pub/gob/gob2-%{version}.tar.xz
 Url: http://www.5z.com/jirka/gob.html
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: glib2-devel 
@@ -17,6 +19,9 @@ It makes objects from a single file which has inline C code so that
 you don't have to edit the generated files.  Syntax is somewhat inspired
 by java and yacc.  It supports generating C++ code
 
+%description -l zh_CN.UTF-8 
+GObject 构建程序。
+
 %prep
 %setup -q
 
@@ -28,6 +33,7 @@ make
 rm -rf $RPM_BUILD_ROOT
 
 %makeinstall
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

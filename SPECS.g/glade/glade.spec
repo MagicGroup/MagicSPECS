@@ -130,6 +130,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/glade/modules/libgladepython.so
 %{_libdir}/libgladeui-2.so.*
 %{_datadir}/glade/
+%{_datadir}/appdata/glade.appdata.xml
+%{_mandir}/man1/glade-previewer.1*
+%{_mandir}/man1/glade.1*
 
 %files devel
 %{_includedir}/libgladeui-2.0/

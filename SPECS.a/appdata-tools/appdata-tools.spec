@@ -1,4 +1,5 @@
 Summary:   Tools for AppData files
+Summary(zh_CN.UTF-8): AppData 文件的工具
 Name:      appdata-tools
 Version:   0.1.7
 Release:   1%{?alphatag}%{?dist}
@@ -23,6 +24,9 @@ BuildRequires: emacs
 appdata-tools contains a command line program designed to validate AppData
 application descriptions for standards compliance and to the style guide.
 
+%description -l zh_CN.UTF-8 
+这个包饮食了一个命令行程序，可以校验 AppData 程序，以符合标准和指南的说明。
+
 %prep
 %setup -q
 
@@ -32,7 +36,7 @@ make %{?_smp_mflags}
 
 %install
 %make_install
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %files -f %{name}.lang

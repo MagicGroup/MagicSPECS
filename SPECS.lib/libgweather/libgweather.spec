@@ -1,13 +1,16 @@
 Name:           libgweather
-Version:        3.11.90
+Version:	3.12.0
 Release:        1%{?dist}
 Summary:        A library for weather information
+Summary(zh_CN.UTF-8): 天气信息库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.gnome.org
 #VCS: git:git://git.gnome.org/libgweather
-Source0:        http://download.gnome.org/sources/libgweather/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/libgweather/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  dbus-devel
 BuildRequires:  glade-devel
@@ -30,16 +33,22 @@ Requires: gnome-icon-theme
 libgweather is a library to access weather information from online
 services for numerous locations.
 
+%description -l zh_CN.UTF-8
+这是一个可以从网上获得很多地点天气信息的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -51,7 +60,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{name} --all-name
 
 %post
@@ -98,6 +107,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
+* Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 3.11.90-1
+- 更新到 3.12.0
+
 * Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
 - Update to 3.11.90
 

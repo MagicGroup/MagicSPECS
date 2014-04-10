@@ -2,13 +2,13 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           glibmm24
-Version:	2.36.2
+Version:	2.39.93
 Release:        1%{?dist}
 Summary:        C++ interface for the GLib library
 Summary(zh_CN.UTF-8): GLib 的 C++ 接口
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/glibmm/%{release_version}/glibmm-%{version}.tar.xz
@@ -44,7 +44,7 @@ developing glibmm applications.
 Summary:        Documentation for %{name}, includes full API docs
 Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
-Group(zh_CN.UTF): 文档
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 Requires:       libsigc++20-doc
@@ -97,6 +97,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 2.39.93-1
+- 更新到 2.39.93
+
 * Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 2.36.2-1
 - 更新到 2.36.2
 

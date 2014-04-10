@@ -20,7 +20,7 @@ Patch3: gdbm-aarch64.patch
 License: GPLv3+
 URL: http://www.gnu.org/software/gdbm/
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRequires: libtool
 BuildRequires: gettext
 

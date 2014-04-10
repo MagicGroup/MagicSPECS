@@ -8,9 +8,10 @@
 %endif
 
 Name:           gstreamer1-plugins-good
-Version:        1.0.5
+Version:	1.2.3
 Release:        1%{?dist}
 Summary:        GStreamer plugins with good code and licensing
+Summary(zh_CN.UTF-8): 具有良好代码和授权支持的 GStreamer 插件
 
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
@@ -63,10 +64,14 @@ plugins.
 GStreamer Good Plugins is a collection of well-supported plugins of
 good quality and under the LGPL license.
 
+%description -l zh_CN.UTF-8
+具有良好代码和授权支持的 GStreamer 插件。
+
 
 %if %{with extras}
 %package extras
 Summary:        Extra GStreamer plugins with good code and licensing
+Summary(zh_CN.UTF-8): 具有良好代码和授权支持的 GStreamer 插件的附件包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 
@@ -80,6 +85,9 @@ good quality and under the LGPL license.
 %{name}-extras contains extra "good" plugins
 which are not used very much and require additional libraries
 to be installed.
+
+%description extras -l zh_CN.UTF-8
+具有良好代码和授权支持的 GStreamer 插件的附件包，需要额外安装依赖库。
 %endif
 
 
@@ -110,7 +118,7 @@ make %{?_smp_mflags} V=1
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang gst-plugins-good-%{majorminor}
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
@@ -204,6 +212,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 1.2.3-1
+- 更新到 1.2.3
+
 * Tue Jan  8 2013 Brian Pepple <bpepple@fedoraproject.org> - 1.0.5-1
 - Update to 1.0.5
 

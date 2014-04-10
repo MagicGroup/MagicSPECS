@@ -1,14 +1,17 @@
 Name:           gnome-shell
-Version:        3.8.0.1
+Version:	3.12.0
 Release:        2%{?dist}
 Summary:        Window management and application launching for GNOME
+Summary(zh_CN.UTF-8): GNOME 的窗口管理器和程序载入器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 Provides:       desktop-notification-daemon
 URL:            http://live.gnome.org/GnomeShell
 #VCS:           git:git://git.gnome.org/gnome-shell
-Source0:        http://download.gnome.org/sources/gnome-shell/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/gnome-shell/%{majorver}/%{name}-%{version}.tar.xz
 
 # Replace Epiphany with Firefox in the default favourite apps list
 Patch1: gnome-shell-favourite-apps-firefox.patch
@@ -107,6 +110,9 @@ advantage of the capabilities of modern graphics hardware and introduces
 innovative user interface concepts to provide a visually attractive and
 easy to use experience.
 
+%description -l zh_CN.UTF-8 
+GNOME 3 的窗口管理器。
+
 %prep
 %setup -q
 %patch1 -p1 -b .firefox
@@ -124,7 +130,7 @@ rm -rf %{buildroot}/%{_libdir}/mozilla/plugins/*.la
 desktop-file-validate %{buildroot}%{_datadir}/applications/gnome-shell.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/gnome-shell-extension-prefs.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/evolution-calendar.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %ifnarch s390 s390x ppc ppc64 ppc64p7
@@ -174,6 +180,9 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Thu Mar 28 2013 Adel Gadllah <adel.gadllah@gmail.com> - 3.8.0.1-2
 - Ship the perf tool
 

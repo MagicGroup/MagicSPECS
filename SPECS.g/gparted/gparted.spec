@@ -1,8 +1,10 @@
 Summary:	Gnome Partition Editor
+Summary(zh_CN.UTF-8): Gnome 分区编辑器
 Name:		gparted
 Version:	0.13.1
 Release:	2%{?dist}
 Group:		Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:	GPLv2+
 URL:		http://gparted.sourceforge.net
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
@@ -21,6 +23,10 @@ libparted. Among other features it supports creating, resizing, moving
 and copying of partitions. Also several (optional) filesystem tools provide
 support for filesystems not included in libparted. These optional packages
 will be detected at runtime and don't require a rebuild of GParted
+
+%description -l zh_CN.UTF-8 
+GNOME 下的分区编辑器，是 libparted 的图形前端。支持创建分区、调整分区大小、
+移动和复制分区。提供了一些不被 libparted 支持的文件系统工具。
 
 %prep
 %setup -q
@@ -53,7 +59,7 @@ cp %{SOURCE1} %{buildroot}%{_sysconfdir}/security/console.apps/gparted
 
 mkdir -p %{buildroot}%{_sysconfdir}/pam.d
 cp %{SOURCE2} %{buildroot}%{_sysconfdir}/pam.d/gparted
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean

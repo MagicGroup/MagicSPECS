@@ -3,7 +3,7 @@
 
 Name:           gl-manpages
 Version:        1.1
-Release:        4.%{vcsdate}%{?dist}
+Release:        5.%{vcsdate}%{?dist}
 Summary:        OpenGL manpages
 
 License:        MIT and Open Publication
@@ -61,6 +61,9 @@ done
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 1.1-5.20121009
+- 更新到 20140409 日期的仓库源码
+
 * Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1.1-4.20121009
 - 更新到 20140408 日期的仓库源码
 

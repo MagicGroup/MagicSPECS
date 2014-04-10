@@ -9,7 +9,7 @@ Release: 16%{?dist}
 URL: http://www.redellipse.net/code/fortune
 License: BSD
 Group: Amusements/Games
-Group(zh_CN.UTF): 娱乐/游戏
+Group(zh_CN.UTF-8): 娱乐/游戏
 Source: http://www.redellipse.net/code/downloads/fortune-mod-1.99.1.tar.gz
 Source1: kernelnewbies-fortunes.tar.gz
 Source2: bofh-excuses.tar.bz2

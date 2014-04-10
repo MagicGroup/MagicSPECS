@@ -13,7 +13,7 @@ Release: 6%{?dist}
 License: AGPLv3+ and Redistributable, no modification permitted
 URL: http://www.ghostscript.com/
 Group: Applications/Publishing
-Group(zh_CN.UTF): 应用程序/出版
+Group(zh_CN.UTF-8): 应用程序/出版
 Source0: ghostscript-%{gs_ver}-cleaned.tar.bz2
 # ghostscript contains a jpegxr directory containing code we cannot
 # ship due to licensing concerns. Therefore we use this script to
@@ -97,7 +97,7 @@ Summary: Documentation for ghostscript
 Summary(zh_CN.UTF-8): %{name} 的文档
 Requires: %{name} = %{version}-%{release}
 Group: Documentation
-Group(zh_CN.UTF): 文档
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description doc
@@ -111,7 +111,7 @@ Summary: A GTK-enabled PostScript interpreter and renderer
 Summary(zh_CN.UTF-8): 使用 GTK 的 PostScript 解释器和渲染器
 Requires: %{name} = %{version}-%{release}
 Group: Applications/Publishing
-Group(zh_CN.UTF): 应用程序/出版
+Group(zh_CN.UTF-8): 应用程序/出版
 
 %description gtk
 A GTK-enabled version of Ghostscript, called 'gsx'.

@@ -6,7 +6,7 @@ Version:	1.2.10
 Release:	38%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.gtk.org/
 Source:		ftp://ftp.gimp.org/pub/gtk/v1.2/glib-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)

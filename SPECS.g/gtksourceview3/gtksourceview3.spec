@@ -10,7 +10,7 @@ Release: 1%{?dist}
 License: LGPLv2+ and GPLv2+
 # the library itself is LGPL, some .lang files are GPL
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://gtksourceview.sourceforge.net/
 #VCS: git:git://git.gnome.org/gtksourceview
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')

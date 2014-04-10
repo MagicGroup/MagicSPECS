@@ -5,13 +5,16 @@
 %define libtasn1_version 0.3.4
 
 Summary: Framework for managing passwords and other secrets
+Summary(zh_CN.UTF-8): 管理密码和其它秘密的框架
 Name: gnome-keyring
-Version: 3.8.1
+Version:	3.12.0
 Release: 1%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #VCS: git:git://git.gnome.org/gnome-keyring
-Source: http://download.gnome.org/sources/gnome-keyring/3.8/gnome-keyring-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gnome-keyring/%{majorver}/gnome-keyring-%{version}.tar.xz
 URL: http://www.gnome.org
 
 BuildRequires: glib2-devel >= %{glib2_version}
@@ -38,10 +41,16 @@ The gnome-keyring session daemon manages passwords and other types of
 secrets for the user, storing them encrypted with a main password.
 Applications can use the gnome-keyring library to integrate with the keyring.
 
+%description -l zh_CN.UTF-8
+这个服务管理密码和其它类型的秘密，以一个主密码加密存储它们。
+可以和应用程序集成。
+
 %package pam
 Summary: Pam module for unlocking keyrings
+Summary(zh_CN.UTF-8): 解锁密钥的 pam 模块
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 # for /lib/security
 Requires: pam
@@ -50,6 +59,8 @@ Requires: pam
 The gnome-keyring-pam package contains a pam module that can
 automatically unlock the "login" keyring when the user logs in.
 
+%description pam -l zh_CN.UTF-8
+解锁密钥的 pam 模块。
 
 %prep
 %setup -q -n gnome-keyring-%{version}
@@ -70,7 +81,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT/%{_lib}/security/*.la
 rm $RPM_BUILD_ROOT%{_libdir}/pkcs11/*.la
 rm $RPM_BUILD_ROOT%{_libdir}/gnome-keyring/devel/*.la
-
+magic_rpm_clean.sh
 %find_lang gnome-keyring
 
 %post
@@ -109,6 +120,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Tue Apr 16 2013 Richard Hughes <rhughes@redhat.com> - 3.8.1-1
 - Update to 3.8.1
 

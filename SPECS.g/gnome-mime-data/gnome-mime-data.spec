@@ -1,12 +1,15 @@
 Summary: MIME type data files for GNOME desktop
+Summary(zh_CN.UTF-8): GNOME 桌面的 MIME 类型数据文件
 Name: gnome-mime-data
 Version: 2.18.0
 Release: 9%{?dist}
 URL: http://www.gnome.org
-Source0: http://ftp.gnome.org/pub/GNOME/sources/gnome-mime-data/2.18/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://ftp.gnome.org/pub/GNOME/sources/gnome-mime-data/%{majorver}/%{name}-%{version}.tar.bz2
 # No license attribution, just COPYING.
 License: GPL+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildArch: noarch
 BuildRequires: perl(XML::Parser)
 BuildRequires: gettext
@@ -20,6 +23,9 @@ Patch5: gnome-mime-data-2.4.0-OOo-startup.patch
 
 %description
 gnome-mime-data provides the file type recognition data files for gnome-vfs
+
+%description -l zh_CN.UTF-8
+NOME 桌面的 MIME 类型数据文件。
 
 %prep
 %setup -q
@@ -43,7 +49,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %files -f %{name}.lang
@@ -56,6 +62,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %{_datadir}/pkgconfig/*
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 2.18.0-9
+- 更新到
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.18.0-9
 - 为 Magic 3.0 重建
 

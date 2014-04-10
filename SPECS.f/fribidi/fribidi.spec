@@ -7,7 +7,7 @@ URL: http://fribidi.org
 Source0: http://fribidi.org/download/%{name}-%{version}.tar.bz2
 License: LGPLv2+
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: automake, autoconf, libtool, pkgconfig
 

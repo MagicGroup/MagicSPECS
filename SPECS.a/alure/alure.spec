@@ -4,7 +4,7 @@ Release:        6%{?dist}
 Summary:        Audio Library Tools REloaded
 Summary(zh_CN.UTF-8): 重载音频库的工具
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 # ALURE code is LGPLv2+; note -devel subpackage has its own license tag
 License:        LGPLv2+ 
 URL:            http://kcat.strangesoft.net/alure.html

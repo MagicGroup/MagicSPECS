@@ -7,7 +7,7 @@ Summary:        Plugins for gedit
 Summary(zh_CN.UTF-8): gedit 的插件
 
 Group:          Applications/Editors
-Group(zh_CN.UTF): 应用程序/编辑器
+Group(zh_CN.UTF-8): 应用程序/编辑器
 License:        GPLv2+
 URL:            http://live.gnome.org/GeditPlugins
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')

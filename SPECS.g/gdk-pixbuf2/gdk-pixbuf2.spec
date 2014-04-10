@@ -7,7 +7,7 @@ Summary:        An image loading library
 Summary(zh_CN.UTF-8): 图像装载库
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gt.org
 #VCS:           git:git://git.gnome.org/gdk-pixbuf

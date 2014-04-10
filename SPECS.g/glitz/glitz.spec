@@ -4,7 +4,7 @@ Release:        11%{?dist}
 Summary:        OpenGL image compositing library
 Summary(zh_CN.UTF-8): OpenGL 图像合成库
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            http://www.freedesktop.org/Software/glitz
 Source:         http://cairographics.org/snapshots/%{name}-%{version}.tar.gz

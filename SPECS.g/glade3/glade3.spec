@@ -6,7 +6,7 @@ Release:	1%{?dist}
 Epoch:		2
 License:	GPLv2+
 Group:		Development/Tools
-Group(zh_CN.UTF): 开发/工具
+Group(zh_CN.UTF-8): 开发/工具
 URL:		http://glade.gnome.org/
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/glade3/3.8/glade3-%{version}.tar.xz
 

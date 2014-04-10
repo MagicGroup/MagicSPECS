@@ -2,8 +2,10 @@ Name:           gnome-sharp
 Version:        2.24.2
 Release:        3%{?dist}
 Summary:        GTK+ and GNOME bindings for Mono
+Summary(zh_CN.UTF-8): GTK+ 和 GNOME 的 Mono 绑定
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库 
 License:        LGPLv2+
 URL:            ftp://ftp.gnome.org/pub/gnome/sources/gnome-sharp/2.24/
 Source0:        ftp://ftp.gnome.org/pub/gnome/sources/gnome-sharp/2.24/gnome-sharp-%{version}.tar.bz2
@@ -30,15 +32,23 @@ fully native graphical GNOME applications using Mono. gnome-sharp
 extends gtk-sharp2 and adds bindings for gconf, libgnome, gnome-vfs,
 libart, librsvg, and vte.
 
+%description -l zh_CN.UTF-8 
+GTK+ 和 GNOME 的 Mono 绑定。
+
 %package devel
 Summary: Files needed for developing with gnome-sharp
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 This package provides the necessary development libraries and headers
 for writing gnome-sharp2 applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,6 +68,7 @@ make
 export MONO_SHARED_DIR=%{_builddir}/%{?buildsubdir}
 make install DESTDIR=$RPM_BUILD_ROOT
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.*a
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

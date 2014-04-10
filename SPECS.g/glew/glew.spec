@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
+- 更新到
+
 * Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
 - 更新到 1.10.0
 

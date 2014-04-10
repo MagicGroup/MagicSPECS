@@ -5,15 +5,18 @@
 %global geocode_glib_version 3.10.0
 
 Name:           gnome-settings-daemon
-Version:        3.11.90
+Version:	3.12.0
 Release:        2%{?dist}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
+Summary(zh_CN.UTF-8): GNOME 和 GTK+/KDE 程序共享设置的服务
 
 Group:          System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 License:        GPLv2+
 URL:            http://download.gnome.org/sources/%{name}
 #VCS: git:git://git.gnome.org/gnome-settings-daemon
-Source:         http://download.gnome.org/sources/%{name}/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 # disable wacom for ppc/ppc64 (used on RHEL)
 Patch0:         %{name}-3.5.4-ppc-no-wacom.patch
 
@@ -66,22 +69,35 @@ Requires: libgweather%{?_isa} >= %{libgweather_version}
 A daemon to share settings from GNOME to other applications. It also
 handles global keybindings, as well as a number of desktop-wide settings.
 
+%description -l zh_CN.UTF-8
+GNOME 和 GTK+/KDE 程序共享设置的服务。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package	updates
 Summary:        updates plugin for  %{name} 
+Summary(zh_CN.UTF-8): %{name} 更新插件
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description	updates
 The %{name}-updates package contains the updates plugin for %{name} 
+
+%description updates -l zh_CN.UTF-8
+%{name} 的更新插件。
 
 %prep
 %setup -q
@@ -102,7 +118,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
 mkdir $RPM_BUILD_ROOT%{_libdir}/gnome-settings-daemon-3.0/gtk-modules
@@ -270,6 +286,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.updates.gschema.xml
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Wed Feb 19 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-2
 - Rebuilt for gnome-desktop soname bump
 

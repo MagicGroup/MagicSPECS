@@ -10,7 +10,7 @@ Version: 0.18.3.2
 Release: 1%{?dist}
 License: GPLv3+ and LGPLv2+
 Group: Development/Tools
-Group(zh_CN.UTF): 开发/工具
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/gettext/
 Source: ftp://ftp.gnu.org/gnu/gettext/%{name}-%{version}.tar.gz
 Source2: msghack.py
@@ -73,7 +73,7 @@ programs.
 Summary: Common development files for %{name}
 Summary(zh_CN.UTF-8): %{name} 的通用开发包
 Group: Development/Tools
-Group(zh_CN.UTF): 开发/工具
+Group(zh_CN.UTF-8): 开发/工具
 # autopoint archive
 License: GPLv3+
 BuildArch: noarch
@@ -116,7 +116,7 @@ want to add gettext support for your project.
 Summary: Libraries for %{name}
 Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 # libasprintf is LGPLv2+
 # libgettextpo is GPLv3+
 License: LGPLv2+ and GPLv3+
@@ -131,7 +131,7 @@ This package contains libraries used internationalization support.
 Summary: Support for editing po files within GNU Emacs
 Summary(zh_CN.UTF-8): 支持使用 GNU Emacs 编辑 po 文件 
 Group: Applications/Editors
-Group(zh_CN.UTF): 应用程序/编辑器
+Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch: noarch
 # help users find po-mode.el
 Provides: emacs-po-mode
@@ -147,7 +147,7 @@ This package provides a major mode for editing po files within GNU Emacs.
 Summary: Elisp source files for editing po files within GNU Emacs
 Summary(zh_CN.UTF-8): 使用 GNU Emacs 编辑 po 文件用 Elisp 源代码
 Group: Applications/Editors
-Group(zh_CN.UTF): 应用程序/编辑器
+Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch: noarch
 Requires: emacs-%{name} = %{version}-%{release}
 

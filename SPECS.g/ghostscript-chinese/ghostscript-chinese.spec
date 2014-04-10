@@ -15,7 +15,7 @@ Release:        1%{?dist}
 Summary:        Ghostscript Chinese fonts configuration files
 Summary(zh_CN.UTF-8): Ghostscript 中文字体配置文件 
 Group:          User Interface/X
-Group(zh_CN.UTF): 用户界面/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        GPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/CJKUnifonts
 Source0:        http://pwu.fedorapeople.org/ghostscript-chinese/ghostscript-chinese-%{version}.tar.gz
@@ -34,7 +34,7 @@ Obsoletes:    cjkuni-fonts-ghostscript < 0.2.20080216.1-45
 Summary:      Ghostscript Simplified Chinese fonts configuration files
 Summary(zh_CN.UTF-8): Ghostscript 简单中文字体配置文件 
 Group:        User Interface/X
-Group(zh_CN.UTF): 用户界面/X
+Group(zh_CN.UTF-8): 用户界面/X
 Requires:     ghostscript
 Requires:     wqy-zenhei-fonts >= %{zenheiver}
 Requires:     ghostscript-chinese = %{version}-%{release}
@@ -53,7 +53,7 @@ For Simplified Chinese.
 Summary:      Ghostscript Traditional Chinese fonts configuration files
 Summary(zh_CN.UTF-8): Ghostscript 繁体中文字体配置文件
 Group:        User Interface/X
-Group(zh_CN.UTF): 用户界面/X
+Group(zh_CN.UTF-8): 用户界面/X
 Requires:     ghostscript
 Requires:     cjkuni-uming-fonts = %{umingver}
 Requires:     cjkuni-ukai-fonts = %{ukaiver}

@@ -5,7 +5,7 @@ Summary:        Implementation of OpenAL's ALUT standard
 Summary(zh_CN.UTF-8): OpenAL 的 ALUT 标准的实现 
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2
 URL:            http://openal.org/
 Source0:        http://openal.org/openal_webstf/downloads/freealut-1.1.0.tar.gz

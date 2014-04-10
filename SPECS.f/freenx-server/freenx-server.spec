@@ -21,7 +21,7 @@ Version: 0.7.3
 Release: 31%{?dist}
 License: GPLv2
 Group: Applications/Internet
-Group(zh_CN.UTF): 应用程序/互联网
+Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://freenx.berlios.de/
 Source0: http://download.berlios.de/freenx/%{name}-%{version}.tar.gz
 Source1: freenx.logrotate

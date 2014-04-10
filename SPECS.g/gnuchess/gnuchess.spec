@@ -1,5 +1,5 @@
 Summary: The GNU chess program
-Summary(zh_CN): GNU 象棋程序
+Summary(zh_CN): GNU 国际象棋程序
 Name: gnuchess
 Version: 6.0.1
 Release: 2%{?dist}
@@ -28,7 +28,7 @@ computer.  If you'd like to use a graphical interface with GNU chess,
 you'll also need to install the xboard package and the X Window System.
 
 %description -l zh_CN
-GNU 象棋程序。
+GNU 国际象棋程序。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -42,6 +42,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_var}/lib/games/gnuchess $RPM_BUILD_ROOT%{_bindir}
 install -m 755 -p src/gnuchess $RPM_BUILD_ROOT%{_bindir}
 #install -m 644 -p book/book.dat $RPM_BUILD_ROOT%{_var}/lib/games/gnuchess
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

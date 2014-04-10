@@ -8,7 +8,7 @@ Release: 1%{?dist}
 # gettext.h is LGPL and random.c is BSD licensed
 License: GPLv3+ and GPL and LGPLv3+ and LGPL and BSD
 Group: Applications/Text
-Group(zh_CN.UTF): 应用程序/文本
+Group(zh_CN.UTF-8): 应用程序/文本
 URL: http://www.gnu.org/software/gawk/gawk.html
 Source0: http://ftp.gnu.org/gnu/gawk/gawk-%{version}.tar.xz
 Requires(post): /sbin/install-info

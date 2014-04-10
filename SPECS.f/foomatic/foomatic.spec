@@ -8,7 +8,7 @@ Version:    %{enginever}
 Release:    6%{?dist}
 License:    GPLv2+
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 
 # printer-filters package has gone (bug #967316).
 Obsoletes: printer-filters < printer-filters-1.1-8
@@ -82,7 +82,7 @@ Summary: CUPS print filters for the foomatic package
 Summary(zh_CN.UTF-8): foomatic 包的 CUPS 打印过滤器
 License: GPLv2+
 Group: System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description filters
 CUPS print filters for the foomatic package.

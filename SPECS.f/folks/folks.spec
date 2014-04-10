@@ -11,7 +11,7 @@ Summary:        GObject contact aggregation library
 Summary(zh_CN.UTF-8): GObject 联系人聚合库
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/Folks
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -45,7 +45,7 @@ GObject 联系人聚合库。
 Summary:        Tools for %{name}
 Summary(zh_CN.UTF-8): %{name} 的工具
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description    tools

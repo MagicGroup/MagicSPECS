@@ -9,7 +9,7 @@ Summary: Common directory and macro definitions used by font packages
 Summary(zh_CN.UTF-8): 字体包使用的通用目录和宏定义
 
 Group:     Development/System
-Group(zh_CN.UTF): 开发/系统
+Group(zh_CN.UTF-8): 开发/系统
 # Mostly means the scriptlets inserted via this package do not change the
 # license of the packages they're inserted in
 License:   LGPLv3+

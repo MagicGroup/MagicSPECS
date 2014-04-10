@@ -1,18 +1,24 @@
 Summary: Additional GNOME icons
+Summary(zh_CN.UTF-8): 额外的 GNOME 图标
 Name: gnome-icon-theme-extras
-Version: 3.6.2
+Version:	3.12.0
 Release: 2%{?dist}
 #VCS: git:git://git.gnome.org/gnome-icon-theme-extras
-Source0: http://download.gnome.org/sources/gnome-icon-theme-extras/3.6/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-icon-theme-extras/%{majorver}/%{name}-%{version}.tar.xz
 License: CC-BY-SA
 BuildArch: noarch
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildRequires: icon-naming-utils >= 0.8.7
 Requires: gnome-icon-theme
 
 %description
 This package contains extra device and mime-type icons for use by
 the GNOME desktop.
+
+%description -l zh_CN.UTF-8
+额外的 GNOME 图标，包括附加设备和 MIME 类型图标。
 
 %prep
 %setup -q
@@ -22,6 +28,7 @@ the GNOME desktop.
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %post
 touch --no-create %{_datadir}/icons/gnome &>/dev/null || :
@@ -41,6 +48,9 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.6.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

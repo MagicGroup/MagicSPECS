@@ -8,7 +8,7 @@ Name:          gd
 Version:       2.1.0
 Release:       4%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:       MIT
 URL:           http://libgd.bitbucket.org/
 %if 0%{?commit:1}
@@ -52,7 +52,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Summary:        Utility programs that use libgd
 Summary(zh_CN.UTF-8): 使用 libgd 的工具程序
 Group:          Applications/Multimedia
-Group(zh_CN.UTF): 应用程序/多媒体
+Group(zh_CN.UTF-8): 应用程序/多媒体
 
 %description progs
 The gd-progs package includes utility programs supplied with gd, a

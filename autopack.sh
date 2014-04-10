@@ -211,10 +211,12 @@ function downsources()
 				if ! [ x"$sourceurl" = x"" ]; then
 					if ! ( debug_run $DOWN $TOPDIR/SOURCES $sourceurl ) ; then
 						echo "官方地址无法下载，退出。"
+						touch $DIR/downfail
 						exit 1
 					fi
 				else
 					echo "找不到源码文件，退出。"
+					touch $DIR/downfail
                                         exit 1
 				fi
 			fi
@@ -322,7 +324,7 @@ function build()
                 exit 1
         fi
         echo "打包完成，清理目录"
-	rm -f $DIR/buildfail
+	rm -f $DIR/*fail
 }
 
 #安装函数

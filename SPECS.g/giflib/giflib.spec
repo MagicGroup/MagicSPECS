@@ -5,7 +5,7 @@ Version:	4.1.6
 Release:	8%{?dist}
 License:	MIT
 Group:		System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.sourceforge.net/projects/%{name}/
 Source:		http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRequires:	libX11-devel, libICE-devel, libSM-devel, libXt-devel
@@ -43,7 +43,7 @@ image files. It contains the documentation of the giflib library, too.
 Summary:	Programs for manipulating GIF format image files
 Summary(zh_CN.UTF-8): 处理 GIF 格式图像的程序
 Group:		Applications/Multimedia
-Group(zh_CN.UTF): 应用程序/多媒体
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 Provides:	libungif-progs = %{version}-%{release}
 Obsoletes:	libungif-progs <= %{version}-%{release}

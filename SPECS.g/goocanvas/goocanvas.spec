@@ -2,11 +2,14 @@ Name:           goocanvas
 Version:        1.0.0
 Release:        3%{?dist}
 Summary:        A new canvas widget for GTK+ that uses cairo for drawing
+Summary(zh_CN.UTF-8): 使用 cairo 绘画的 GTK+ 下的新画布控件
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/GooCanvas
-Source0:        ftp://ftp.gnome.org/pub/GNOME/sources/%{name}/1.0.0/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        ftp://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  pkgconfig, gettext, gtk2-devel
@@ -16,6 +19,9 @@ BuildRequires:  cairo-devel >= 1.4.0
 GooCanvas is a new canvas widget for GTK+ that uses the cairo 2D library for
 drawing. It has a model/view split, and uses interfaces for canvas items and
 views, so you can easily turn any application object into canvas items.
+
+%description -l zh_CN.UTF-8
+使用 cairo 绘画的 GTK+ 下的新画布控件。
 
 %prep
 %setup -q
@@ -31,7 +37,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # remove static libraries and libtool droppings
 rm -f $RPM_BUILD_ROOT/%{_libdir}/lib%{name}.{a,la}
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean

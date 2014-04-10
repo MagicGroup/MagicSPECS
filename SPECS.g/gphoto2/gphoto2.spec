@@ -1,9 +1,11 @@
 Summary: Software for accessing digital cameras
+Summary(zh_CN.UTF-8): 访问数码相机的软件
 Name: gphoto2
 Version: 2.4.11
 Release: 3%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0: http://downloads.sourceforge.net/gphoto/%{name}-%{version}.tar.bz2
 Url: http://www.gphoto.org/
@@ -24,6 +26,9 @@ This package contains the command-line utility gphoto2.
 
 Other (GUI) frontends are available separately.
 
+%description -l zh_CN.UTF-8 
+访问数码相机的命令行软件。
+
 %prep
 %setup -q
 
@@ -38,6 +43,7 @@ rm -f ChangeLog.tmp
 rm -rf %{buildroot}
 make install INSTALL="%{__install} -p" DESTDIR=%{buildroot}
 rm -rf %{buildroot}%{_docdir}/%{name}/*.sh
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean

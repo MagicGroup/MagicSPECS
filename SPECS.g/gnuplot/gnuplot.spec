@@ -1,10 +1,11 @@
 %define major 4
-%define minor 4
+%define minor 6
 %define patchlevel 4
 
 %define x11_app_defaults_dir %{_datadir}/X11/app-defaults
 
 Summary: A program for plotting mathematical expressions and data
+Summary(zh_CN.UTF-8): 一种绘制数学表达式和数据的程序
 Name: gnuplot
 Version: %{major}.%{minor}.%{patchlevel}
 Release: 2%{?dist}
@@ -12,6 +13,7 @@ Release: 2%{?dist}
 # aglfn.txt has license: MIT
 License: gnuplot and MIT
 Group: Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 URL: http://www.gnuplot.info/
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source2: gnuplot-init.el

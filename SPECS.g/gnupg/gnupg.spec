@@ -1,9 +1,11 @@
 Summary: A GNU utility for secure communication and data storage
+Summary(zh_CN.UTF-8): 加密通信和数据存储的 GNU 工具
 Name: gnupg
 Version: 1.4.16
 Release: 4%{?dist}
 License: GPLv3+ with exceptions
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Source0: ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-%{version}.tar.bz2.sig
 Source2: gnupg-shm-coprocessing.expect
@@ -30,6 +32,9 @@ capabilities and is compliant with the proposed OpenPGP Internet
 standard described in RFC2440. Since GnuPG doesn't use any patented
 algorithm, it is not compatible with any version of PGP2 (PGP2.x uses
 only IDEA for symmetric-key encryption, which is patented worldwide).
+
+%description -l zh_CN.UTF-8 
+加密通信和数据存储的 GNU 工具。
 
 %prep
 %setup -q
@@ -78,6 +83,7 @@ install -m644 doc/gnupg1.info %{buildroot}/%{_infodir}
 sed 's^\.\./g[0-9\.]*/^^g' tools/lspgpot > lspgpot
 install -m755 lspgpot %{buildroot}%{_bindir}/lspgpot
 rm -f %{buildroot}/%{_infodir}/dir
+magic_rpm_clean.sh
 %find_lang %name
 
 %post

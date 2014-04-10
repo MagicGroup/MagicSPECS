@@ -5,7 +5,7 @@ Summary: A helper program to download firmware into FX and FX2 EZ-USB devices
 Summary(zh_CN.UTF-8): 下载固件到 FX 和 FX2 EZ-USB 设备的帮助程序
 
 Group: System Environment/Kernel
-Group(zh_CN.UTF): 系统环境/内核
+Group(zh_CN.UTF-8): 系统环境/内核
 License: GPLv2+
 URL: http://linux-hotplug.sourceforge.net/
 Source0: fxload-2002_04_11-noa3load.tar.gz

@@ -2,12 +2,14 @@
 %define _default_patch_fuzz 2
 
 Summary: GNOME session manager
+Summary(zh_CN.UTF-8): GNOME 会话管理器
 Name: gnome-session
-Version: 3.8.1
+Version:	3.12.0
 Release: 1%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/gnome-session
-Source0: http://download.gnome.org/sources/gnome-session/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-session/%{majorver}/%{name}-%{version}.tar.xz
 Source1: gnome-authentication-agent.desktop
 Source2: gnome.desktop
 
@@ -18,6 +20,7 @@ Patch3: gnome-session-3.6.2-swrast.patch
 
 License: GPLv2+
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 Requires: system-logos
 # Needed for gnome-settings-daemon
@@ -64,13 +67,22 @@ Requires: dconf
 gnome-session manages a GNOME desktop or GDM login session. It starts up
 the other core GNOME components and handles logout and saving the session.
 
+%description -l zh_CN.UTF-8
+这个包管理 GNOME 桌面或 GDM 登录会话。它启动其它 GNOME 核心程序并处理退出和
+保存会话。
+
 %package xsession
 Summary: Desktop file for gnome-session
+Summary(zh_CN.UTF-8): %{name} 的桌面文件 
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires: gnome-session = %{version}-%{release}
 
 %description xsession
 Desktop file to add GNOME to display manager session menu.
+
+%description xsession -l zh_CN.UTF-8
+%{name} 的桌面文件。
 
 %prep
 %setup -q
@@ -91,10 +103,10 @@ make %{?_smp_mflags} V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
-desktop-file-install --vendor gnome --delete-original                   \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications           \
-  --add-only-show-in GNOME                                              \
-  $RPM_BUILD_ROOT%{_datadir}/applications/*
+#desktop-file-install --vendor gnome --delete-original                   \
+#  --dir $RPM_BUILD_ROOT%{_datadir}/applications           \
+#  --add-only-show-in GNOME                                              \
+#  $RPM_BUILD_ROOT%{_datadir}/applications/*
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gnome/autostart
 
@@ -102,7 +114,7 @@ install -Dp -m 644 %{SOURCE1} ${RPM_BUILD_ROOT}%{_datadir}/gnome/autostart
 install -Dp -m 644 %{SOURCE2} ${RPM_BUILD_ROOT}%{_datadir}/xsessions/
 
 cp -p AUTHORS COPYING NEWS README $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}
-
+magic_rpm_clean.sh
 %find_lang %{po_package}
 
 %post
@@ -133,7 +145,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %doc %dir %{_datadir}/doc/%{name}-%{version}/dbus
 %doc %{_datadir}/doc/%{name}-%{version}/dbus/*
 %doc %{_mandir}/man*/*
-%{_datadir}/applications/gnome-session-properties.desktop
+#%{_datadir}/applications/gnome-session-properties.desktop
 %dir %{_datadir}/gnome-session
 %dir %{_datadir}/gnome-session/sessions
 %{_datadir}/gnome-session/sessions/gnome.session
@@ -143,7 +155,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/gnome-session-check-accelerated
 %{_libexecdir}/gnome-session-check-accelerated-helper
 %{_libexecdir}/gnome-session-failed
-%{_datadir}/gnome-session/gsm-inhibit-dialog.ui
+#%{_datadir}/gnome-session/gsm-inhibit-dialog.ui
 %{_datadir}/gnome-session/session-properties.ui
 %{_datadir}/gnome-session/hardware-compatibility
 %{_datadir}/icons/hicolor/*/apps/session-properties.png
@@ -151,7 +163,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/GConf/gsettings/gnome-session.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.SessionManager.gschema.xml
 
+#wayland
+%{_datadir}/gnome-session/sessions/gnome-wayland.session
+%{_datadir}/wayland-sessions/gnome-wayland.desktop
+
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

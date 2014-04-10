@@ -29,7 +29,7 @@ Release:    7%{?dist}
 # The binary is under the GPL, while the libs are under LGPL
 License:    LGPLv3+ and GPLv3+
 Group:      System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 URL:        http://www.gegl.org/
 Source0:    ftp://ftp.gimp.org/pub/gegl/%{apiver}/%{name}-%{version}.tar.bz2
 Patch0:     gegl-0.2.0-lua-5.2.patch
@@ -81,7 +81,7 @@ minimal dependencies. and a simple well defined API.
 Summary:    Experimental operations for GEGL
 Summary(zh_CN.UTF-8): %{name} 的试验性操作
 Group:      System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:   %{name}%{_isa} = %{version}-%{release}
 
 %description operations-workshop

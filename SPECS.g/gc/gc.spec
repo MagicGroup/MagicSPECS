@@ -6,7 +6,7 @@ Version: 7.2e
 Release: 2%{?dist}
 
 Group:   System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License: BSD
 Url:     http://www.hboehm.info/gc/
 Source0: http://www.hboehm.info/gc/gc_source/gc-%{version}%{?pre}.tar.gz

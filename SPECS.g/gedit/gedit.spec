@@ -18,7 +18,7 @@ Version:	3.12.0
 Release:	1%{?dist}
 License:	GPLv2+ and GFDL
 Group:		Applications/Editors
-Group(zh_CN.UTF): 应用程序/编辑器
+Group(zh_CN.UTF-8): 应用程序/编辑器
 #VCS: git:git://git.gnome.org/gedit
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:	http://download.gnome.org/sources/gedit/%{majorver}/gedit-%{version}.tar.xz
@@ -98,7 +98,7 @@ Install gedit-devel if you want to write plugins for gedit.
 Summary: Zeitgeist plugin for gedit
 Summary(zh_CN.UTF-8): %{name} 的 zeitgeist 插件
 Group: Applications/Editors
-Group(zh_CN.UTF): 应用程序/编辑器
+Group(zh_CN.UTF-8): 应用程序/编辑器
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: zeitgeist >= %{zeitgeist_version}
 BuildRequires: zeitgeist-devel >= %{zeitgeist_version}

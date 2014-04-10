@@ -1,12 +1,15 @@
 
 Summary: Additional data for gnome-games
+Summary(zh_CN.UTF-8): gnome-games 的附加数据
 Name: gnome-games-extra-data
 Version: 3.2.0
 Release: 2%{?dist}
 License: GPL+
 Group: Amusements/Games
+Group(zh_CN.UTF-8): 娱乐/游戏
 #VCS: git:git://git.gnome.org/gnome-games-extra-data
-Source: http://download.gnome.org/sources/gnome-games-extra-data/3.2/gnome-games-extra-data-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gnome-games-extra-data/%{majorver}/gnome-games-extra-data-%{version}.tar.xz
 URL: http://www.gnome.org
 BuildArch: noarch
 Requires: gnome-games >= 2.18.0-3.fc7
@@ -14,6 +17,9 @@ Requires: gnome-games >= 2.18.0-3.fc7
 %description
 The gnome-games-extra-data package includes additional data
 and themes for the games in the gnome-games package.
+
+%description -l zh_CN.UTF-8 
+gnome-games 的附加数据和主题。
 
 %prep
 %setup -q
@@ -27,7 +33,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # We don't ship gnometris
 rm -rf $RPM_BUILD_ROOT%{_datadir}/pixmaps/gnometris
-
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING README NEWS

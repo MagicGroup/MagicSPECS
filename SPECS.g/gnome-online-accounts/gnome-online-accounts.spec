@@ -1,12 +1,15 @@
 Name:		gnome-online-accounts
-Version:	3.11.90
+Version:	3.12.0
 Release:	1%{?dist}
 Summary:	Single sign-on framework for GNOME
+Summary(zh_CN.UTF-8): GNOME 的单点登录框架
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		https://live.gnome.org/GnomeOnlineAccounts
-Source0:	http://download.gnome.org/sources/gnome-online-accounts/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://download.gnome.org/sources/gnome-online-accounts/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:	gcr-devel
 BuildRequires:	glib2-devel >= 2.35
@@ -30,9 +33,15 @@ GNOME Online Accounts provides interfaces so that applications and libraries
 in GNOME can access the user's online accounts. It has providers for Google,
 ownCloud, Facebook, Flickr, Windows Live, Microsoft Exchange and Kerberos.
 
+%description -l zh_CN.UTF-8
+GNOME 的单点登录框架，支持 Google, ownCloud, Facebook, Flickr, Window Live,
+微软 Exchage 和 kerberos。
+
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 Requires:	gobject-introspection-devel
@@ -40,6 +49,9 @@ Requires:	gobject-introspection-devel
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -62,7 +74,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la $RPM_BUILD_ROOT/%{_libdir}/control-center-1/panels/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 %find_lang %{name}-tpaw
 
@@ -113,6 +125,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/goa-1.0/include
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
 - Update to 3.11.90
 

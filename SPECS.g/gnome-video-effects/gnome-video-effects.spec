@@ -2,10 +2,13 @@ Name:           gnome-video-effects
 Version:        0.3.0
 Release:        3%{?dist}
 Summary:        Collection of GStreamer video effects
+Summary(zh_CN.UTF-8): GStreamer 视频效果集合
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2
 URL:            http://live.gnome.org/GnomeVideoEffects
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.3/%{name}-%{version}.tar.bz2
 Buildarch:      noarch
 
@@ -13,6 +16,9 @@ BuildRequires:  intltool
 
 %description
 A collection of GStreamer effects to be used in different GNOME Modules.
+
+%description -l zh_CN.UTF-8
+GStreamer 视频效果集合
 
 %prep
 %setup -q
@@ -24,7 +30,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)

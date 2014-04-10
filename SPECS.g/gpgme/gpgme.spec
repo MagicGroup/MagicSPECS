@@ -1,6 +1,7 @@
 
 Name:    gpgme
 Summary: GnuPG Made Easy - high level crypto API
+Summary(zh_CN.UTF-8): GnuPG Mode Easy - 高级加密 API
 Version: 1.3.0
 Release: 6%{?dist}
 
@@ -37,9 +38,15 @@ easier for applications.  It provides a high-level crypto API for
 encryption, decryption, signing, signature verification and key
 management.
 
+%description -l zh_CN.UTF-8
+这个包提供了一个库，它可以让程序访问 GnuPG 更容易，它是一个高级 API，
+可以加密、解密、签名、验证签名和管理密钥。
+
 %package devel
 Summary:  Development headers and libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libgpg-error-devel
 # http://bugzilla.redhat.com/676954
@@ -52,6 +59,8 @@ Requires(postun): /sbin/install-info
 %description devel
 %{summary}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -82,7 +91,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
 rm -rf $RPM_BUILD_ROOT%{_datadir}/common-lisp/source/gpgme/
-
+magic_rpm_clean.sh
 
 %check 
 # expect 1(+?) errors with gnupg < 1.2.4

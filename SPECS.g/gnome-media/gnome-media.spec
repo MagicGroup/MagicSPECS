@@ -10,13 +10,16 @@
 %define gettext_package gnome-media-2.0
 
 Summary:        GNOME media programs
+Summary(zh_CN.UTF-8): GNOME 媒体程序
 Name:           gnome-media
 Version:        3.4.0
 Release:        4%{?dist}
 License:        GPLv2+ and GFDL
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 #VCS: git:git://git.gnome.org/gnome-media
-Source:         http://download.gnome.org/sources/%{name}/%{version}/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 URL:            http://www.gnome.org
 ExcludeArch:    s390 s390x

@@ -4,7 +4,7 @@ Release:        2%{?dist}
 Summary:        File System in Userspace (FUSE) utilities
 Summary(zh_CN.UTF-8): 用户空间的文件系统 (FUSE) 工具
 Group:          System Environment/Base
-Group(zh_CN.UTF): 系统环境/基本
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPL+
 URL:            http://fuse.sf.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -31,7 +31,7 @@ mount a FUSE filesystem.
 Summary:        File System in Userspace (FUSE) libraries
 Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 Conflicts:      filesystem < 3
 

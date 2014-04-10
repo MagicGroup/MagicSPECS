@@ -1,14 +1,10 @@
-# Initial spec file created by autospec ver. 0.8 with rpm 3 compatibility
 Summary: magic-release
 Summary(zh_CN.UTF-8): MagicLinux的发行文件
-# The Summary: line should be expanded to about here -----^
-#Summary(zh): (translated summary goes here)
 Name: magic-release
 Version: 3.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
-#Group(zh): (translated group goes here)
 License: GPL
 Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
@@ -16,12 +12,7 @@ Packager: lovewilliam<williamlovecyl@hotmail.com>
 # Following are optional fields
 URL: http://www.magiclinux.org
 Distribution: Magic Linux
-#Patch: magic-release-1.2Tiger-%{version}.patch
-#Prefix: /
 BuildArch: noarch
-#Requires: 
-#Obsoletes: 
-#BuildRequires: 
 
 %description
 magic-release
@@ -30,7 +21,7 @@ for system Version
 %description -l zh_CN.UTF-8
 描述系统版本的发行文件
 
-%define fedora_version 18
+%define fedora_version 21
 %define dist_version 30
 
 %prep
@@ -68,6 +59,9 @@ magic_rpm_clean.sh
 /usr/*
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.0-5
+- 修改以符合 LSB 标准
+
 * Fri May 17 2013 Liu Di <liudidi@gmail.com> - 3.0-4
 - 重新编译
 

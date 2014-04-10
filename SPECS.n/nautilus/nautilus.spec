@@ -14,7 +14,7 @@ Version:	3.12.0
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
-Group(zh_CN.UTF): 用户界面/桌面
+Group(zh_CN.UTF-8): 用户界面/桌面
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source:         http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 

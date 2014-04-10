@@ -2,8 +2,10 @@ Name:           gnome-desktop-sharp
 Version:        2.26.0
 Release:        15%{?dist}
 Summary:        .NET language binding for mono
+Summary(zh_CN.UTF-8): mono 的 .NET 语言绑定
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2
 URL:            http://www.mono-project.com/GtkSharp
 Source0:        http://ftp.gnome.org/pub/gnome/sources/%{name}/2.26/%{name}-%{version}.tar.bz2
@@ -31,9 +33,16 @@ ExclusiveArch: %ix86 x86_64 ppc ppc64 ia64 %{arm} sparcv9 alpha s390x
 GnomeDesktop is a .NET language binding for assorted
 GNOME libraries from the desktop release.
 
+%description -l zh_CN.UTF-8 
+GNOME 桌面的 .NET 语言绑定。
+
+这是 GNOME 2 版本，已不再更新。
+
 %package         devel
 Summary:         Developing files for gnome-Desktop-sharp
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:           Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:        %{name} = %{version}-%{release}
 Requires:        pkgconfig
 
@@ -44,6 +53,8 @@ Obsoletes:       gtksourceview2-sharp-devel < 2:2.20.1-2
 Package %{name}-devel provides development files for writing
 %{name} applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -65,6 +76,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove libttol archive
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

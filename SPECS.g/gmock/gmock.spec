@@ -5,7 +5,7 @@ Version:        1.7.0
 Release:        1%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
-Group(zh_CN.UTF): 系统环境/库
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://code.google.com/p/googlemock/
 Source0:        http://googlemock.googlecode.com/files/gmock-%{version}.zip
 Patch0:		gmock-1.6.0-enable-install.patch
