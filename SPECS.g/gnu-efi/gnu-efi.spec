@@ -1,36 +1,56 @@
 Summary: Development Libraries and headers for EFI
 Name: gnu-efi
-Version: 3.0q
-Release: 1%{?dist}
+Version: 3.0u
+Release: 0.2%{?dist}
 Group: Development/System
 License: BSD 
 URL: ftp://ftp.hpl.hp.com/pub/linux-ia64
-Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/gnu-efi-%{version}.tar.gz
-Patch0: gnu-efi-3.0q-Fix-usage-of-INSTALLROOT-PREFIX-and-LIBDIR.patch
-Patch1: gnu-efi-3.0q-route80h.patch
-Patch2: gnu-efi-3.0q-modelist.patch
-Patch3: gnu-efi-3.0q-route80h-add-cougarpoint.patch
-Patch4: gnu-efi-3.0q-machine-types.patch
-Patch5: gnu-efi-3.0q-handle-uninitialized-gop.patch
-Patch6: gnu-efi-3.0q-Add-.S-and-.E-rules.patch
+Source: ftp://ftp.hpl.hp.com/pub/linux-ia64/gnu-efi_%{version}.orig.tar.gz
+Patch0001: 0001-fix-compilation-on-x86_64-without-HAVE_USE_MS_ABI.patch
+Patch0002: 0002-be-more-pedantic-when-linking.patch
+Patch0003: 0003-Sample-boot-service-driver.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExclusiveArch: i686 x86_64 ia64
 BuildRequires: git
 
 %define debug_package %{nil}
 
+# Figure out the right file path to use
+%if 0%{?rhel}
+%global efidir redhat
+%endif
+%if 0%{?fedora}
+%global efidir fedora
+%endif
+
 %description
 This package contains development headers and libraries for developing
 applications that run under EFI (Extensible Firmware Interface).
 
+%package devel
+Summary: Development Libraries and headers for EFI
+Group: Development/System
+Obsoletes: gnu-efi < %{version}-%{release}
+
+%description devel
+This package contains development headers and libraries for developing
+applications that run under EFI (Extensible Firmware Interface).
+
+%package utils
+Summary: Utilities for EFI systems
+Group: Applications/System
+
+%description utils
+This package contains utilties for debugging and developing EFI systems.
+
 %prep
-%setup -q
+%setup -q -n gnu-efi-3.0
 git init
 git config user.email "pjones@fedoraproject.org"
 git config user.name "Fedora Ninjas"
 git add .
 git commit -a -q -m "%{version} baseline."
-git am %{patches}
+git am %{patches} </dev/null
 
 %build
 # Package cannot build with %{?_smp_mflags}.
@@ -47,21 +67,44 @@ mkdir -p %{buildroot}/%{_libdir}/gnuefi
 mv %{buildroot}/%{_libdir}/*.lds %{buildroot}/%{_libdir}/*.o %{buildroot}/%{_libdir}/gnuefi
 
 make -C apps clean route80h.efi modelist.efi
-mkdir -p %{buildroot}/boot/efi/EFI/redhat/
-mv apps/{route80h.efi,modelist.efi} %{buildroot}/boot/efi/EFI/redhat/
+mkdir -p %{buildroot}/boot/efi/EFI/%{efidir}/
+mv apps/{route80h.efi,modelist.efi} %{buildroot}/boot/efi/EFI/%{efidir}/
 
 %clean
 rm -rf %{buildroot}
 
 %files
+%{_libdir}/*
+
+%files devel
 %defattr(-,root,root,-)
 %doc README.* ChangeLog
 %{_includedir}/efi
-%{_libdir}/*
-%dir /boot/efi/EFI/redhat/
-%attr(0644,root,root) /boot/efi/EFI/redhat/*.efi
+
+%files utils
+%dir /boot/efi/EFI/%{efidir}/
+%attr(0644,root,root) /boot/efi/EFI/%{efidir}/*.efi
 
 %changelog
+* Tue Sep 24 2013 Peter Jones <pjones@redhat.com> - 3.0u-0.1
+- Update to 3.0u
+- Split out subpackages so -devel can be multilib
+- Fix path in apps subpackage to vary by distro.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0t-0.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 07 2013 Peter Jones <pjones@redhat.com> - 3.0t-0.1
+- Update to 3.0t
+- Don't allow use of mmx or sse registers.
+
+* Thu May 16 2013 Peter Jones <pjones@redhat.com> - 3.0s-2
+- Update to 3.0s
+  Related: rhbz#963359
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0q-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Fri Jul 27 2012 Matthew Garrett <mjg@redhat.com> - 3.0q-1
 - Update to current upstream
 - License change - GPLv2+ to BSD
