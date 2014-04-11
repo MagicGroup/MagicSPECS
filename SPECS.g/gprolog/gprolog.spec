@@ -2,8 +2,10 @@ Name:           gprolog
 Version:	1.4.2
 Release:	1%{?dist}
 Summary: 	GNU Prolog is a free Prolog compiler
+Summary(zh_CN.UTF-8): 自由的 Prolog 编译器
 
 Group: 		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:	GPLv2
 URL: 		http://www.gprolog.org
 Source: 	http://www.gprolog.org/gprolog-%{version}.tar.gz
@@ -28,14 +30,21 @@ lot of extensions (global variables, DCG, sockets, OS interface,...).
 GNU Prolog also includes a powerful constraint solver over finite
 domains with many predefined constraints+heuristics.
 
+%description -l zh_CN.UTF-8
+自由的 Prolog 编译器。
 
 %package docs
 Summary:	Documentation for GNU Prolog
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:	%{name} = %{version}-%{release}
 
 %description docs
 Documentation for GNU Prolog.
+
+%description docs -l zh_CN.UTF-8 
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -77,6 +86,7 @@ for file in ChangeLog COPYING NEWS VERSION
 do
     rm -f $RPM_BUILD_ROOT%{_libdir}/gprolog-%{version}/$file
 done
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)

@@ -1,9 +1,11 @@
 Summary: A mouse server for the Linux console
+Summary(zh_CN.UTF-8): Linux 控制台的鼠标服务
 Name: gpm
 Version: 1.20.7
 Release: 4%{?dist}
 License: GPLv2 and GPLv2+ with exceptions and GPLv3+ and Verbatim and Copyright only
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL: http://www.nico.schottelius.org/software/gpm/
 #URL2 : http://freecode.com/projects/gpm
 
@@ -43,34 +45,52 @@ also provides console cut-and-paste operations using the mouse and
 includes a program to allow pop-up menus to appear at the click of a
 mouse button.
 
+%description -l zh_CN.UTF-8
+Linux 文本界面下的程序使用鼠标所需要的服务，比如 Emacs 或 MC.
+也支持使用鼠标复制粘贴。
+
 %package libs
 Summary: Dynamic library for for the gpm
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains the libgpm.so dynamic library which contains
 the gpm system calls and library functions.
 
+%description libs -l zh_CN.UTF-8 
+%{name} 的运行库。
+
 %package devel
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-libs = %{version}-%{release}
 Summary: Development files for the gpm library
-Group: Development/Libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group: Development/Libraries\
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 The gpm-devel package includes header files and libraries necessary
 for developing programs which use the gpm library. The gpm provides
 mouse support to text-based Linux applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Requires: %{name} = %{version}-%{release}
 Summary: Static development files for the gpm library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description static
 The gpm-static package includes static libraries of gpm. The gpm provides
 mouse support to text-based Linux applications.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
@@ -120,6 +140,7 @@ rm -rf %{buildroot}%{_sbindir}
 rm -rf %{buildroot}%{_bindir}
 rm -rf %{buildroot}%{_mandir}
 %endif
+magic_rpm_clean.sh
 
 %post
 %ifnarch s390 s390x

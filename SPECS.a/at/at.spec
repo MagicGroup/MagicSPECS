@@ -93,7 +93,6 @@ rm -f lex.yy.* y.tab.*
 	--with-jobdir=%{_localstatedir}/spool/at \
 	--with-daemon_username=root  \
 	--with-daemon_groupname=root \
-	--without-selinux \
 %if %{with pam}
 	--with-pam
 %endif

@@ -1,7 +1,7 @@
 #!/bin/bash
-url="http://www.gphoto.org/"
-new1="and gphoto2 "
-new2="<\\/b> have been"
+url="http://www.gprolog.org/"
+new1="gprolog-"
+new2=".tar.gz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

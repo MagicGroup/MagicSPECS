@@ -29,7 +29,7 @@
 Summary: RPM package installer/updater/manager
 Name: yum
 Version: 3.4.3
-Release: 64%{?dist}
+Release: 65%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Source0: http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz

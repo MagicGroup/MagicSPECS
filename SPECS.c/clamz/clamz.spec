@@ -1,6 +1,6 @@
 Name:           clamz
 Version:        0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Amazon Downloader
 Summary(zh_CN.UTF-8): 亚马逊下载器
 Group:          Applications/Internet

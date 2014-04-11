@@ -1,7 +1,7 @@
 #!/bin/bash
-url="http://www.gphoto.org/"
-new1="and gphoto2 "
-new2="<\\/b> have been"
+url="http://sourceforge.net/projects/lxde/files/GPicView%20%28image%20Viewer%29/"
+new1="tr title=\"GpicView "
+new2="\""
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

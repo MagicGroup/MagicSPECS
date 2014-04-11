@@ -802,6 +802,10 @@ rm -rf %{buildroot}
 %{_libdir}/samba/vfs/time_audit.so
 %{_libdir}/samba/vfs/xattr_tdb.so
 
+#额外的
+%{_libdir}/samba/vfs/ceph.so
+
+
 %{_unitdir}/nmb.service
 %{_unitdir}/smb.service
 %attr(1777,root,root) %dir /var/spool/samba

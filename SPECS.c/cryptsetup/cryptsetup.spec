@@ -2,7 +2,7 @@ Summary: A utility for setting up encrypted disks
 Summary(zh_CN.UTF-8): 设置加密磁盘的工具
 Name: cryptsetup
 Version: 1.6.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统

@@ -64,7 +64,7 @@
 
 # Do not forget to bump pam_ssh_agent_auth release if you rewind the main package release to 1
 %define openssh_ver 6.4p1
-%define openssh_rel 2
+%define openssh_rel 3
 %define pam_ssh_agent_ver 0.9.3
 %define pam_ssh_agent_rel 1
 

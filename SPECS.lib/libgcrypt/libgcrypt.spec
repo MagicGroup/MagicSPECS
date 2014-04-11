@@ -144,7 +144,7 @@ popd
 %endif
 
 # temporary compat library for buildroots
-install %{gcrylibdir}/libgcrypt.so.11.*.* $RPM_BUILD_ROOT/%{_libdir}
+# install %{gcrylibdir}/libgcrypt.so.11.*.* $RPM_BUILD_ROOT/%{_libdir}
 
 # Create /etc/gcrypt (hardwired, not dependent on the configure invocation) so
 # that _someone_ owns it.

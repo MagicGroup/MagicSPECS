@@ -50,7 +50,6 @@ BuildRequires:  jack-audio-connection-kit-devel
 # documentation
 BuildRequires:  gtk-doc
 BuildRequires:  python-devel
-BuildRequires:  PyXML
 
 
 %description
@@ -208,6 +207,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/gstreamer-%{majorminor}/libgstjack.so
 %{_libdir}/gstreamer-%{majorminor}/libgstcairo.so
 %{_libdir}/gstreamer-%{majorminor}/libgstgdkpixbuf.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdtmf.so
 %endif
 
 

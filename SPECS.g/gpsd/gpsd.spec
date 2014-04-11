@@ -1,16 +1,18 @@
 %global _hardened_build 1
-%global gitrev 20140127gitf2753b
+%define git 1
+%define vcsdate 20140127
 
 Name: gpsd
 Version: 3.10
-Release: 3.%{gitrev}%{?dist}
+Release: 3.git%{vcsdate}%{?dist}
 Summary: Service daemon for mediating access to a GPS
 
 Group: System Environment/Daemons
 License: BSD
 URL: http://catb.org/gpsd/
 #Source0: http://download.savannah.gnu.org/releases/gpsd/%{name}-%{version}.tar.gz
-Source0: gpsd-%{gitrev}.tar.gz
+Source0: %{name}-git%{vcsdate}.tar.xz
+Source1: make_gpsd_git_package.sh
 Source10: gpsd.service
 Source11: gpsd.sysconfig
 Source12: gpsdctl.service
@@ -74,7 +76,7 @@ can run on a serial terminal or terminal emulator.
 
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-git%{vcsdate}
 
 # fix RPATH
 sed -i 's|sysrpath =.*|sysrpath = ["%{_libdir}"]|' SConstruct

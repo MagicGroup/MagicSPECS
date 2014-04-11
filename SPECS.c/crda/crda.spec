@@ -3,7 +3,7 @@
 
 Name:           crda
 Version:        %{crda_version}_%{regdb_version}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Regulatory compliance daemon for 802.11 wireless networking
 
 Group:          System Environment/Base

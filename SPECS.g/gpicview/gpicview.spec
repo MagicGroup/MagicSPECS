@@ -1,13 +1,14 @@
 Name:           gpicview
 Version:        0.2.1
-Release:        8%{?dist}
+Release:        1%{?dist}
 Summary:        Simple and fast Image Viewer for X
+Summary(zh_CN.UTF-8): X 下简单快速的图形查看器
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://lxde.sourceforge.net/gpicview/
-Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
-Patch0:         gpicview-0.2.1-dsofix.patch
+Source0:        http://downloads.sourceforge.net/project/lxde/GPicView%20%28image%20Viewer%29/GpicView%20%{version}/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libjpeg-devel, gtk2-devel, desktop-file-utils, gettext, intltool
@@ -20,11 +21,11 @@ very suitable as default image viewer of desktop system. Although it is
 developed as the primary image viewer of LXDE, the Lightweight X11 Desktop 
 Environment, it only requires GTK+ and can be used in any desktop environment.
 
+%description -l zh_CN.UTF-8
+X 下简单快速的图形查看器。虽然主要是为 LXDE 开发的，但可以在任何桌面环境下使用。
 
 %prep
 %setup -q
-%patch0 -p1 -b .dsofix
-
 
 %build
 %configure
@@ -41,7 +42,7 @@ desktop-file-install --vendor="fedora"   --delete-original      \
   --remove-category=Utility                                     \
   --remove-category=Photography                                 \
    $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean

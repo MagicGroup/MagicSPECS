@@ -1,7 +1,7 @@
 Summary: A tool for creating scanners (text pattern recognizers)
 Summary(zh_CN.UTF-8): 生成扫描器的工具（文本模式识别）
 Name: flex
-Version:	2.5.39
+Version:	2.5.37
 Release: 4%{?dist}
 # parse.c and parse.h are under GPLv3+ with exception which allows
 #	relicensing.  Since flex is shipped under BDS-style license,
@@ -80,9 +80,9 @@ plain text and PDF formats.
 
 %prep
 %setup -q
-#%patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %global flexdocdir %{_datadir}/doc/flex-doc-%{version}
 
@@ -135,12 +135,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*
 %{_includedir}/FlexLexer.h
 %{_infodir}/flex.info*
-%{_libdir}/libfl*.so.*
+#%{_libdir}/libfl*.so.*
 
 %files devel
 %defattr(-,root,root)
 %{_libdir}/*.a
-%{_libdir}/*.so
+#%{_libdir}/*.so
 
 %files doc
 %defattr(-,root,root)

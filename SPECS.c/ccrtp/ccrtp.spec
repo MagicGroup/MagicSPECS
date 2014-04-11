@@ -1,9 +1,11 @@
 Summary: Common C++ class framework for RTP/RTCP
+Summary(zh_CN.UTF-8): RTP/RTCP 的通用 C++ 类框架
 Name: ccrtp
-Version: 2.0.7
-Release: 2%{?dist}
+Version: 2.0.8
+Release: 4%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://ftp.gnu.org/pub/gnu/ccrtp/ccrtp-%{version}.tar.gz
 URL: http://www.gnu.org/software/commoncpp/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -19,9 +21,14 @@ multi-unicast and multicast, manages multiple sources, handles RTCP
 automatically, supports different threading models and is generic as
 for underlying network and transport protocols.
 
+%description -l zh_CN.UTF-8
+RTP/RTCP 的通用 C++ 类框架。
+
 %package devel
 Summary: Header files and libraries for %{name} development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # Some of the headers are LGPLv2+
 License: GPLv2+ and LGPLv2+
 Requires: %{name} = %{version}-%{release}
@@ -33,6 +40,8 @@ Requires(preun): /usr/sbin/install-info
 The %{name}-devel package contains the header files and libraries needed
 to develop programs that use the %{name} library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -81,6 +90,9 @@ fi
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.0.8-4
+- 更新到 2.0.8
+
 * Fri Mar 07 2014 Liu Di <liudidi@gmail.com> - 2.0.7-2
 - 更新到 2.0.7
 
