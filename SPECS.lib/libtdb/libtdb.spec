@@ -5,8 +5,8 @@
 %{!?python_version: %global python_version %(%{__python} -c "from distutils.sysconfig import get_python_version; print(get_python_version())")}
 
 Name: libtdb
-Version: 1.2.11
-Release: 1%{?dist}
+Version: 1.2.12
+Release: 2%{?dist}
 Group: System Environment/Daemons
 Summary: The tdb library
 License: LGPLv3+
@@ -109,6 +109,15 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n python-tdb -p /sbin/ldconfig
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 04 2013 Jakub Hrozek <jhrozek@redhat.com> - 1.2.12-1
+- New upstream release 1.2.12
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.11-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Sun Dec 01 2012 Jakub Hrozek <jhrozek@redhat.com> - 1.2.11-1
 - New upstream release 1.2.11
 
