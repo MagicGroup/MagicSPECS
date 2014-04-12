@@ -3,7 +3,7 @@
 %{?!WITH_COMPAT_HOWL:   %global WITH_COMPAT_HOWL  1}
 %{?!WITH_QT3:           %global WITH_QT3 1}
 
-%ifarch sparc64 s390 aarch64
+%ifarch sparc64 s390 aarch64 mips64el
 %define WITH_MONO 0
 %endif
 %if 0%{?rhel}
