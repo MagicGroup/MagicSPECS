@@ -1,6 +1,6 @@
-%global source_date 20140224_r33038
+%global source_date 20140305_r33094
 %global tl_version 2013
-%global tl_rel 7
+%global tl_rel 8
 %global tl_release %{tl_rel}.%{source_date}%{?dist}
 %global tl_noarch_release %{tl_rel}%{?dist}
 %global source_name texlive-%{source_date}-source
@@ -149,7 +149,8 @@ cd work
 --disable-biber \
 --disable-ptexenc \
 --disable-largefile \
---disable-rpath
+--disable-rpath \
+--disable-luajittex
 
 # disable rpath
 for i in `find . -name libtool`; do
@@ -380,6 +381,9 @@ fi
 %{_libdir}/*.so
 
 %changelog
+* Fri Mar 21 2014 Dan Horák <dan[at]danny.cz> - 2013-8-20140305
+- do not attempt to built luajittex (#1070380)
+
 * Tue Feb 25 2014 Jindrich Novy <novyjindrich@gmail.com> - 2013-7-20140224
 - sync with upstream
 - fix fmt files removal
