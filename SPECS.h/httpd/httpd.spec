@@ -71,7 +71,7 @@ License: ASL 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, perl, pkgconfig, findutils, xmlto
-BuildRequires: zlib-devel, lua-devel
+BuildRequires: zlib-devel, libselinux-devel, lua-devel
 BuildRequires: apr-devel >= 1.5.0, apr-util-devel >= 1.2.0, pcre-devel >= 5.0
 BuildRequires: systemd-devel
 Requires: /etc/mime.types, system-logos-httpd
