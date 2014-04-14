@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# This script checks out TeX Live upstream sources to build binaries,
+# removes unneeded files and generates a tarball used to build RPMs.
+# Written by Jindrich Novy (novyjindrich@gmail.com)
+#
+svn co svn://tug.org/texlive/trunk/Build/source | tee /tmp/rsynclog
+[ "$?" != "0" ] && exit 1
+UPDATES=`grep -v '^Checked out revision' /tmp/rsynclog`
+[ "$UPDATES" == "" ] && exit 0
+cp -R source source.svn
+for i in \
+'.svn' \
+'*.exe' \
+'*.dsp' \
+'*.dsw' \
+'*.orig' \
+'*vcproj*' \
+'*vcxproj*' \
+'*.vc' \
+'*vc[678]*' \
+; do
+	find source -name $i | tee | xargs rm -rf
+done
+#rm -rf source/utils/biber*
+rm -rf \
+source/libs/zlib* \
+source/libs/libpng* \
+source/libs/expat* \
+source/libs/jpeg* \
+source/libs/t1lib* \
+source/libs/teckit* \
+source/libs/gd* \
+source/libs/freetype2* \
+source/libs/zziplib* \
+source/libs/poppler* \
+source/libs/unzip* \
+source/libs/xpdf* \
+source/libs/cairo* \
+source/libs/harfbuzz* \
+source/libs/pixman* \
+source/libs/paper* \
+source/libs/icu* \
+source/libs/graphite2* \
+source/libs/potrace* \
+source/libs/freetype/* \
+source/texk/texlive/w32_wrapper \
+source/utils/t1utils* \
+source/utils/xindy* \
+source/utils/asymptote* \
+source/utils/psutils* \
+source/utils/biber* \
+source/utils/xz* \
+source/extra*
+#source/utils/asymptote*
+DATE=`date +%Y%m%d`_r`grep Checked /tmp/rsynclog | cut -d" " -f4 | sed s/.$//`
+sed -i s/global\ source_date.*$/global\ source_date\ $DATE/g texlive.spec.template
+rm -f texlive-*-source.tar.xz
+echo "Packing..."
+time tar Oc source | xz -cv -T0 - > texlive-$DATE-source.tar.xz
+rm -rf source
+mv source.svn source
+mv texlive*-source.tar.xz `rpm --eval "%_topdir"`/SOURCES
