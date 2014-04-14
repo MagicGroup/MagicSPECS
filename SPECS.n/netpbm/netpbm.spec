@@ -1,7 +1,7 @@
 Summary: A library for handling different graphics file formats
 Name: netpbm
-Version: 10.57.04
-Release: 2%{?dist}
+Version: 10.61.02
+Release: 7%{?dist}
 # See copyright_summary for details
 License: BSD and GPLv2 and IJG and MIT and Public Domain
 Group: System Environment/Libraries
@@ -9,6 +9,7 @@ URL: http://netpbm.sourceforge.net/
 # Source0 is prepared by
 # svn checkout https://netpbm.svn.sourceforge.net/svnroot/netpbm/advanced netpbm-%{version}
 # svn checkout https://netpbm.svn.sourceforge.net/svnroot/netpbm/userguide netpbm-%{version}/userguide
+# svn checkout https://netpbm.svn.sourceforge.net/svnroot/netpbm/trunk/test netpbm-%{version}/test
 # and removing the .svn directories ( find -name "\.svn" -type d -print0 | xargs -0 rm -rf )
 # and removing the ppmtompeg code, due to patents ( rm -rf netpbm-%{version}/converter/ppm/ppmtompeg/ )
 Source0: netpbm-%{version}.tar.xz
@@ -22,7 +23,6 @@ Patch7: netpbm-bmptopnm.patch
 Patch8: netpbm-CAN-2005-2471.patch
 Patch9: netpbm-xwdfix.patch
 Patch11: netpbm-multilib.patch
-Patch12: netpbm-pamscale.patch
 Patch13: netpbm-glibc.patch
 Patch15: netpbm-docfix.patch
 Patch16: netpbm-ppmfadeusage.patch
@@ -31,6 +31,13 @@ Patch20: netpbm-noppmtompeg.patch
 Patch21: netpbm-cmuwtopbm.patch
 Patch22: netpbm-pamtojpeg2k.patch
 Patch23: netpbm-manfix.patch
+Patch24: netpbm-ppmtopict.patch
+Patch25: netpbm-pnmtopclxl.patch
+#Patch26: netpbm-man-repeated.patch
+Patch27: netpbm-multipage-pam.patch
+Patch28: netpbm-compare-same-images.patch
+#Patch29: netpbm-man-corrections.patch
+Patch29: netpbm-manual-pages.patch
 BuildRequires: libjpeg-devel, libpng-devel, libtiff-devel, flex
 BuildRequires: libX11-devel, python, jasper-devel, libxml2-devel
 
@@ -102,6 +109,14 @@ netpbm-doc.  You'll also need to install the netpbm-progs package.
 %patch21 -p1 -b .cmuwtopbmfix
 %patch22 -p1 -b .pamtojpeg2kfix
 %patch23 -p1 -b .manfix
+%patch24 -p1 -b .ppmtopict
+%patch25 -p1 -b .pnmtopclxl
+#%patch26 -p1 -b .man-repeated
+%patch27 -p1 -b .multipage-pam
+%patch28 -p1 -b .compare-same-images
+#%patch29 -p1 -b .man-corrections
+%patch29 -p1 -b .manual-pages
+exit 0
 
 sed -i 's/STRIPFLAG = -s/STRIPFLAG =/g' config.mk.in
 rm -rf converter/other/jpeg2000/libjasper/
@@ -131,6 +146,7 @@ sed -i -e 's/^SUBDIRS = libjasper/SUBDIRS =/' converter/other/jpeg2000/Makefile
 EOF
 
 TOP=`pwd`
+
 make \
 	CC="%{__cc}" \
 	LDFLAGS="-L$TOP/pbm -L$TOP/pgm -L$TOP/pnm -L$TOP/ppm" \
@@ -151,6 +167,10 @@ make \
 
 # prepare man files
 cd userguide
+# BZ 948531
+rm -f ppmtompeg*
+rm -f *.manual-pages
+rm -f *.manfix
 for i in *.html ; do
   ../buildtools/makeman ${i}
 done
@@ -213,6 +233,12 @@ echo -e '#!/bin/sh\npamditherbw $@ | pamtopnm\n' > pgmtopbm
 chmod 0755 pgmtopbm
 popd
 
+%check
+pushd test
+export LD_LIBRARY_PATH=$RPM_BUILD_ROOT%{_libdir}
+export PBM_TESTPREFIX=$RPM_BUILD_ROOT%{_bindir}
+./Execute-Tests && exit 0
+popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -245,8 +271,89 @@ rm -rf $RPM_BUILD_ROOT
 %doc userguide/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 10.57.04-2
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.61.02-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 10.61.02-6
+- Perl 5.18 rebuild
+
+* Mon Jun 17 2013 Petr Hracek <phracek@redhat.com> - 10.61.02-5
+- Manual page corrections (#948531)
+
+* Wed Jun 05 2013 Petr Hracek <phracek@redhat.com> - 10.61.02-4
+- pnmpsnr: compare the same images failed (#969479)
+
+* Tue May 28 2013 Petr Hracek <phracek@redhat.com> - 10.61.02-3
+- pnmtops: Multi-page PAM files correction (#833546)
+
+* Mon May 27 2013 Petr Hracek <phracek@redhat.com> 10.61.02-2
+- Man page corrections (#948531)
+
+* Wed Feb 20 2013 Jindrich Novy <jnovy@redhat.com> 10.61.02-1
+- update to 10.61.02
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.61.01-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 10.61.01-2
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Thu Jan 03 2013 Jindrich Novy <jnovy@redhat.com> 10.61.01-1
+- update to 10.61.01
+- sync patches
+
+* Fri Dec 14 2012 Jindrich Novy <jnovy@redhat.com> 10.60.05-1
+- update to 10.60.05
+- fixes pngtopam and ppmpat
+
+* Wed Dec 05 2012 Jindrich Novy <jnovy@redhat.com> 10.60.04-1
+- update to 10.60.04
+- fixes pamtotiff, pnmmontage, pnmpsnr, pbmpscale, pgmhist,
+  pampick, pamtompfont
+- fix dates in changelog
+
+* Tue Nov 27 2012 Jindrich Novy <jnovy@redhat.com> 10.60.03-2
+- add upstream test suite
+
+* Wed Nov 21 2012 Jindrich Novy <jnovy@redhat.com> 10.60.03-1
+- update to 10.60.3
+- fixes xbmptopbm, pamtojpeg2k
+
+* Mon Oct 08 2012 Jindrich Novy <jnovy@redhat.com> 10.60.01-1
+- update to 10.60.01
+- fixes pamgauss, sunicontopnm
+
+* Tue Oct 02 2012 Jindrich Novy <jnovy@redhat.com> 10.60.00-1
+- update to 10.60.00
+- speeds up xpmtoppm
+
+* Tue Sep 25 2012 Jindrich Novy <jnovy@redhat.com> 10.59.03-1
+- update to 10.59.03
+- fixes xpmtoppm
+
+* Fri Jul 20 2012 Jindrich Novy <jnovy@redhat.com> 10.59.02-1
+- update to 10.59.02
+- fixes getline() glibc function conflict
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.59.01-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Jindrich Novy <jnovy@redhat.com> 10.59.01-1
+- update to 10.59.01
+
+* Fri Jun 22 2012 Jindrich Novy <jnovy@redhat.com> 10.58.03-1
+- update to 10.58.03
+- pnmtops is back
+
+* Wed Jun 13 2012 Jindrich Novy <jnovy@redhat.com> 10.58.01-3
+- fix ppmtopict buffer underflow
+- fix memory corruption in pnmtopclxl
+
+* Sun May 06 2012 Jindrich Novy <jnovy@redhat.com> 10.58.01-2
+- rebuild against new libtiff
+
+* Mon Apr 09 2012 Jindrich Novy <jnovy@redhat.com> 10.58.01-1
+- update to 10.58.01
 
 * Mon Mar 12 2012 Jindrich Novy <jnovy@redhat.com> 10.57.04-1
 - update to 10.57.04
@@ -319,7 +426,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Oct 19 2010 Jindrich Novy <jnovy@redhat.com> 10.47.21-2
 - fix HTML pages from which man pages are now generated correctly (#644248)
 
-* Fri Oct 18 2010 Jindrich Novy <jnovy@redhat.com> 10.47.21-1
+* Mon Oct 18 2010 Jindrich Novy <jnovy@redhat.com> 10.47.21-1
 - update to 10.47.21
 
 * Fri Oct  1 2010 Jindrich Novy <jnovy@redhat.com> 10.47.20-1
@@ -400,7 +507,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Dec 30 2009 Jindrich Novy <jnovy@redhat.com> 10.47.07-1
 - update to 10.47.07
 
-* Fri Dec 14 2009 Jindrich Novy <jnovy@redhat.com> 10.47.06-1
+* Mon Dec 14 2009 Jindrich Novy <jnovy@redhat.com> 10.47.06-1
 - update to 10.47.06 - fixes the dumb pamtosvg mistake in 10.47.05
 - pnmmargin won't create leftovers in /tmp (#547888)
 
@@ -436,7 +543,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sat Jun 27 2009 Jindrich Novy <jnovy@redhat.com> 10.35.65-1
 - update to 10.35.65
 
-* Mon May 17 2009 Jindrich Novy <jnovy@redhat.com> 10.35.64-1
+* Sun May 17 2009 Jindrich Novy <jnovy@redhat.com> 10.35.64-1
 - update to 10.35.64
 - fixes pnmremap, giftopnm, ppmpat, ppmdraw
 
@@ -532,7 +639,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Aug 27 2008 Jindrich Novy <jnovy@redhat.com> 10.35.49-2
 - link against system jasper instead of embedded one (#460300)
 
-* Mon Aug 14 2008 Jindrich Novy <jnovy@rehdat.com> 10.35.49-1
+* Thu Aug 14 2008 Jindrich Novy <jnovy@rehdat.com> 10.35.49-1
 - update to 10.35.49
 - fixes crash in pamcut when cutting a region entirely to the
   left or right of the input image, with -pad
@@ -591,14 +698,14 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Dec 13 2007 Jindrich Novy <jnovy@redhat.com> 10.35.35-1
 - update to 10.35.35
 
-* Wed Nov 26 2007 Jindrich Novy <jnovy@redhat.com> 10.35.34-1
+* Mon Nov 26 2007 Jindrich Novy <jnovy@redhat.com> 10.35.34-1
 - update to 10.35.34
 - sync security patch and fix typos
 
 * Wed Nov 14 2007 Jindrich Novy <jnovy@redhat.com> 10.35.33-1
 - update to 10.35.33
 
-* Wed Nov  2 2007 Jindrich Novy <jnovy@redhat.com> 10.35.32-2
+* Fri Nov  2 2007 Jindrich Novy <jnovy@redhat.com> 10.35.32-2
 - remove man pages that lacks corresponding binaries (#220739)
 
 * Thu Oct 18 2007 Jindrich Novy <jnovy@redhat.com> 10.35.32-1
@@ -713,7 +820,7 @@ rm -rf $RPM_BUILD_ROOT
 - fix multilib conflict (#192735)
 - remove jbigtopnm man page
 
-* Thu Apr 14 2006 Jindrich Novy <jnovy@redhat.com> 10.33-2
+* Fri Apr 14 2006 Jindrich Novy <jnovy@redhat.com> 10.33-2
 - fix image corruption in ppmtogif, thanks to Gilles Detillieux (#188597)
 - fix nsting.h to let pnmtopng and other utilities using seekable opening
   mode work on x86_64 (#188594)
@@ -832,7 +939,7 @@ rm -rf $RPM_BUILD_ROOT
 - fix overflow checking of integers with incompatible endianess
   causing problems using xwdtopnm (#147790)
 
-* Mon Mar 09 2005 Jindrich Novy <jnovy@redhat.com> 10.26.4-2
+* Wed Mar 09 2005 Jindrich Novy <jnovy@redhat.com> 10.26.4-2
 - add .gcc4 patch to fix some missing declarations of headers,
   some pointer signedness mismatches, remove xmalloc2
 - rebuilt with gcc4
@@ -1049,7 +1156,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Jul 29 1999 Bill Nottingham <notting@redhat.com>
 - add a pile of foo-to-bar.fpi filters (#4251)
 
-* Mon Mar 23 1999 Michael Johnson <johnsonm@redhat.com>
+* Tue Mar 23 1999 Michael Johnson <johnsonm@redhat.com>
 - removed old png.h header file that was causing png utils to die
 - build png in build instead of install section...
 
