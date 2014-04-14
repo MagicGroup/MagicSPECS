@@ -1,15 +1,11 @@
 Summary: Utility to set/show the host name or domain name
 Name: hostname
-Version: 3.11
-Release: 2%{?dist}
+Version: 3.15
+Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 URL: http://packages.qa.debian.org/h/hostname.html
 Source0: http://ftp.de.debian.org/debian/pool/main/h/hostname/hostname_%{version}.tar.gz
-Source1: hostname.1.pt
-Source2: hostname.1.de
-
-Provides: /bin/dnsdomainname, /bin/domainname, /bin/hostname, /bin/nisdomainname, /bin/ypdomainname
 
 # Initial changes
 Patch1: hostname-rh.patch
@@ -22,35 +18,58 @@ DNS name, and to display or set its hostname or NIS domain name.
 %setup -q -n hostname
 %patch1 -p1 -b .rh
 
-#man pages conversion
-#french 
-iconv -f iso-8859-1 -t utf-8 -o hostname.tmp hostname.1.fr && mv hostname.tmp hostname.1.fr
-
 %build
-export CFLAGS="$RPM_OPT_FLAGS $CFLAGS"
-make
+make CFLAGS="%{optflags} $CFLAGS"
 
 %install
-make BASEDIR=%{buildroot} install
+make BASEDIR=%{buildroot} BINDIR=%{_bindir} install
 
-mkdir -p %{buildroot}%{_bindir}
-mv %{buildroot}/bin/* %{buildroot}%{_bindir}
-
-magic_rpm_clean.sh
-%find_lang %{name} --all-name --with-man || touch %{name}.lang
-
-%clean
-rm -rf %{buildroot}
-
-%files -f %{name}.lang
-%defattr(-,root,root)
+%files
 %doc COPYRIGHT
 %{_bindir}/*
 %{_mandir}/man1/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.11-2
-- 为 Magic 3.0 重建
+* Mon Nov 04 2013 Jiri Popelka <jpopelka@redhat.com> - 3.15-1
+- 3.15
+
+* Wed Oct 16 2013 Jiri Popelka <jpopelka@redhat.com> - 3.14-3
+- use BINDIR
+
+* Mon Oct 14 2013 Jaromír Končický <jkoncick@redhat.com> - 3.14-2
+- Install binaries into /usr/bin
+
+* Sun Sep 08 2013 Jiri Popelka <jpopelka@redhat.com> - 3.14-1
+- 3.14
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 18 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13-1
+- 3.13: -v references removed upstream
+
+* Tue Mar 26 2013 Jiri Popelka <jpopelka@redhat.com> - 3.12-4
+- remove void -v option from --help
+
+* Fri Mar 08 2013 Jiri Popelka <jpopelka@redhat.com> - 3.12-3
+- do not ship outdated french man pages (#919198)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Dec 07 2012  Jiri Popelka <jpopelka@redhat.com> - 3.12-1
+- 3.12: man page improvements
+
+* Fri Nov 30 2012  Jiri Popelka <jpopelka@redhat.com> - 3.11-4
+- revert /usr move for now
+
+* Fri Nov 30 2012  Jiri Popelka <jpopelka@redhat.com> - 3.11-3
+- remove some rh-specific bits from rh.patch as they are no longer valid (#881913)
+- remove outdated de & pt man pages
+- /usr move: use _bindir macro
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.11-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Tue Feb 21 2012  Jiri Popelka <jpopelka@redhat.com> - 3.11-1
 - 3.11
