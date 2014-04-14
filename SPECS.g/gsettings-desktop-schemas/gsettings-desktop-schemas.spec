@@ -1,16 +1,19 @@
 %global debug_package %{nil}
 
 Name:           gsettings-desktop-schemas
-Version:        3.11.90
+Version:	3.12.0
 Release:        1%{?dist}
 Summary:        A collection of GSettings schemas
+Summary(zh_CN.UTF-8): Gsettings 架构集合
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 # no homepage exists for this component
 URL:            http://bugzilla.gnome.org/enter_bug.cgi?product=gsettings-desktop-schemas
 #VCS: git:git://git.gnome.org/gsettings-desktop-schemas
-Source:         http://download.gnome.org/sources/%{name}/3.10/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: glib2-devel >= 2.31.0
 BuildRequires: intltool
@@ -22,15 +25,22 @@ Requires: glib2 >= 2.31.0
 gsettings-desktop-schemas contains a collection of GSettings schemas for
 settings shared by various components of a desktop.
 
+%description -l zh_CN.UTF-8 
+Gsettings 架构集合。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries
 and header files for developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -42,7 +52,7 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
 %posttrans
@@ -69,6 +79,9 @@ fi
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
 - Update to 3.11.90
 

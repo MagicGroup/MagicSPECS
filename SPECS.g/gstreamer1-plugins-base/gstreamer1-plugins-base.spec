@@ -2,7 +2,7 @@
 
 Name:           gstreamer1-plugins-base
 Version:        1.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer streaming media framework base plugins
 
 License:        LGPLv2+
@@ -350,6 +350,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Brian Pepple <bpepple@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3.
 - Drop patch to fix build on aarch64. Fixed upstream.

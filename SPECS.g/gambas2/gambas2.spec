@@ -4,7 +4,7 @@
 Name:		gambas2
 Summary:	IDE based on a basic interpreter with object extensions
 Version:	2.24.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPL+
 Group:		Development/Tools
 URL:		http://gambas.sourceforge.net/

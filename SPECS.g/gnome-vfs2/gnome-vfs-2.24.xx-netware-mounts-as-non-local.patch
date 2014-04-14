@@ -1,0 +1,26 @@
+From f732047ada92a99f1f0cd3ceb7b76499789990f8 Mon Sep 17 00:00:00 2001
+From: Alexander Larsson <alexl@redhat.com>
+Date: Mon, 25 May 2009 10:37:14 +0200
+Subject: [PATCH 4/6] Mark netware mounts as non-local (#582304)
+
+Filesystems of type "novfs" come from Novell Client for Linux, i.e.
+they are remote Netware mounts.
+---
+ modules/file-method.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/modules/file-method.c b/modules/file-method.c
+index b74535d..37e4853 100644
+--- a/modules/file-method.c
++++ b/modules/file-method.c
+@@ -1273,6 +1273,7 @@ do_is_local (GnomeVFSMethod *method,
+ 			    (strcmp (type, "afs") != 0) &&
+ 			    (strcmp (type, "autofs") != 0) &&
+ 			    (strcmp (type, "unknown") != 0) &&
++			    (strcmp (type, "novfs") != 0) &&
+ 			    (strcmp (type, "ncpfs") != 0));
+ 		G_UNLOCK (fstype);
+ 	} else {
+-- 
+1.6.3.3
+

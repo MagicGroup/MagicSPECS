@@ -1,8 +1,10 @@
 Name: grubby
 Version: 8.28
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Command line tool for updating bootloader configs
+Summary(zh_CN.UTF-8): 更新引导程序配置的命令行工具
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License: GPLv2+
 URL: http://git.fedorahosted.org/git/grubby.git
 # we only pull git snaps at the moment
@@ -40,6 +42,10 @@ the configuration files for the grub, lilo, elilo (ia64),  yaboot (powerpc)
 and zipl (s390) boot loaders. It is primarily designed to be used from scripts
 which install new kernels and need to find information about the current boot 
 environment.
+
+%description -l zh_CN.UTF-8 
+更新 grub, lilo, elilo (ia64), yaboot (powerpc) 和 zipl (s390) 启动器配置文件的
+命令行工具。它主要设计用来编写安装新内核的脚本，并需要从当前引导环境中取得信息。
 
 %prep
 %setup -q
@@ -84,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 8.28-3
+- 为 Magic 3.0 重建
+
 * Mon Jan 20 2014 Lubomir Rintel <lkundrak@v3.sk> - 8.28-2
 - Fix extlinux default
 

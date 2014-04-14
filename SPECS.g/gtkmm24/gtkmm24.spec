@@ -5,11 +5,13 @@
 
 Name:           gtkmm24
 Version:        2.24.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 Summary:        C++ interface for GTK2 (a GUI library for X)
+Summary(zh_CN.UTF-8): GTK2 的 C++ 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/gtkmm/%{release_version}/gtkmm-%{version}.tar.xz
@@ -27,10 +29,14 @@ Highlights include typesafe callbacks, widgets extensible via inheritance
 and a comprehensive set of widget classes that can be freely combined to
 quickly create complex user interfaces.
 
+%description -l zh_CN.UTF-8
+GTK 2 的 C++ 接口。
 
 %package        devel
 Summary:        Headers for developing programs that will use %{name}.
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk2-devel
 Requires:       glibmm24-devel
@@ -43,10 +49,14 @@ Requires:       cairomm-devel
 This package contains the static libraries and header files needed for
 developing gtkmm applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        docs
 Summary:        Documentation for %{name}, includes full API docs
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 Requires:       glibmm24-doc
@@ -54,6 +64,8 @@ Requires:       glibmm24-doc
 %description    docs
 This package contains the full API documentation for %{name}.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n gtkmm-%{version}
@@ -71,7 +83,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -100,6 +112,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 %doc %{_datadir}/devhelp/
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.24.4-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

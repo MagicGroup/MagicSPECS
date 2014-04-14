@@ -51,7 +51,7 @@
 
 Name:			graphviz
 Summary:		Graph Visualization Tools
-Version:		2.34.0
+Version:	2.36.0
 Release:		8%{?dist}
 Group:			Applications/Multimedia
 License:		EPL
@@ -562,6 +562,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.36.0-8
+- 更新到 2.36.0
+
 * Thu Jan  9 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.34.0-8
 - Prevent possible buffer overflow in yyerror()
   Resolves: CVE-2014-1235

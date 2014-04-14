@@ -1,8 +1,10 @@
 Name:           graphite2
-Version:        1.2.0
+Version:	1.2.4
 Release:        4%{?dist}
 Summary:        Font rendering capabilities for complex non-Roman writing systems
+Summary(zh_CN.UTF-8): 复杂非罗马书写系统的字体渲染
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 License:        LGPLv2+ and (Netscape or GPLv2 or LGPLv2)
 URL:            http://sourceforge.net/projects/silgraphite/
@@ -26,15 +28,23 @@ of displaying writing systems with various complex behaviors. With respect to
 the Text Encoding Model, Graphite handles the "Rendering" aspect of writing
 system implementation.
 
+%description -l zh_CN.UTF-8 
+复杂非罗马书写系统的字体渲染。
+
 %package devel
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Summary: Files for developing with graphite2
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Obsoletes: silgraphite-devel < 2.3.1-5
 
 %description devel
 Includes and definitions for developing with graphite2.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -50,6 +60,7 @@ sed -i -e 's!<a id="id[a-z]*[0-9]*"></a>!!g' doc/manual.html
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 ctest
@@ -74,6 +85,9 @@ ctest
 %{_libdir}/pkgconfig/graphite2.pc
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.4-4
+- 更新到 1.2.4
+
 * Tue Jan 29 2013 Parag Nemade <paragn AT fedoraproject DOT org> - 1.2.0-4
 - Drop refman.pdf as its same as manual.html
 - patch install path for cmake files as they are arch dependent

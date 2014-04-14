@@ -3,7 +3,7 @@
 
 Name:           grilo
 Version:	0.2.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Content discovery framework
 Summary(zh_CN.UTF-8): 内容发现框架
 
@@ -130,6 +130,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.10-3
+- 为 Magic 3.0 重建
+
 * Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 0.2.10-2
 - 更新到 0.2.10
 

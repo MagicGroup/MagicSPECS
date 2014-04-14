@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/gphoto2.1*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.4.11-3
+- 更新到 2.5.4
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.4.11-3
 - 为 Magic 3.0 重建
 

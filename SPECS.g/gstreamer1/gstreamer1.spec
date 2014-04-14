@@ -6,7 +6,7 @@
 
 Name:           gstreamer1
 Version:        1.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer streaming media framework runtime
 Summary(zh_CN.UTF-8): GStreamer 流媒体框架运行库
 
@@ -207,6 +207,9 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Brian Pepple <bpepple@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3.
 

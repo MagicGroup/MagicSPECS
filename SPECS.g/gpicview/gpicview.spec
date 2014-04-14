@@ -1,5 +1,5 @@
 Name:           gpicview
-Version:        0.2.1
+Version:	0.2.4
 Release:        1%{?dist}
 Summary:        Simple and fast Image Viewer for X
 Summary(zh_CN.UTF-8): X 下简单快速的图形查看器
@@ -68,6 +68,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.4-1
+- 更新到 0.2.4
+
 * Fri Dec 21 2012 Adam Tkac <atkac redhat com> - 0.2.1-8
 - rebuild against new libjpeg
 

@@ -1,6 +1,6 @@
 Name:           gnome-desktop-sharp
 Version:        2.26.0
-Release:        15%{?dist}
+Release:        18%{?dist}
 Summary:        .NET language binding for mono
 Summary(zh_CN.UTF-8): mono 的 .NET 语言绑定
 
@@ -96,21 +96,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/lib/mono/gac/gnome-print-sharp
 %{_prefix}/lib/mono/gac/gtksourceview2-sharp
 %{_prefix}/lib/mono/gac/rsvg2-sharp
-%{_prefix}/lib/mono/gac/vte-sharp
+#%{_prefix}/lib/mono/gac/vte-sharp
 %{_prefix}/lib/mono/gac/wnck-sharp
 %{_prefix}/lib/mono/gnomedesktop-sharp-2.20
 #%{_prefix}/lib/mono/gnome-panel-sharp-2.24
 %{_prefix}/lib/mono/gnome-print-sharp-2.18
 %{_prefix}/lib/mono/gtksourceview2-sharp-2.0
 %{_prefix}/lib/mono/rsvg2-sharp-2.0
-%{_prefix}/lib/mono/vte-sharp-0.16
+#%{_prefix}/lib/mono/vte-sharp-0.16
 %{_prefix}/lib/mono/wnck-sharp-2.20
 %{_datadir}/gnomedesktop-sharp
 #%{_datadir}/gnome-panel-sharp
 %{_datadir}/gnome-print-sharp
 %{_datadir}/gtksourceview2-sharp
 %{_datadir}/rsvg2-sharp
-%{_datadir}/vte-sharp
+#%{_datadir}/vte-sharp
 %{_datadir}/wnck-sharp
 
 %files           devel
@@ -119,6 +119,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 2.26.0-18
+- 为 Magic 3.0 重建
+
+* Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 2.26.0-17
+- 为 Magic 3.0 重建
+
+* Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 2.26.0-16
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.26.0-15
 - 为 Magic 3.0 重建
 

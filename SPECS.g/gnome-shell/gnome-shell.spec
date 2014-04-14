@@ -1,6 +1,6 @@
 Name:           gnome-shell
 Version:	3.12.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Window management and application launching for GNOME
 Summary(zh_CN.UTF-8): GNOME 的窗口管理器和程序载入器
 
@@ -100,7 +100,6 @@ Requires:       at-spi2-atk%{?_isa}
 Requires:       caribou%{?_isa} >= %{caribou_version}
 # needed for the user menu
 Requires:       accountsservice-libs%{?_isa}
-Requires:       gdm-libs%{?_isa}
 Requires:       clutter%{?_isa} >= %{clutter_version}
 
 %description
@@ -137,8 +136,8 @@ magic_rpm_clean.sh
 # The libdir rpath breaks nvidia binary only folks, so we remove it.
 # See bug 716572
 # skip on s390(x), workarounds a chrpath issue
-chrpath -r %{_libdir}/gnome-shell:%{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_bindir}/gnome-shell
-chrpath -r %{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_libdir}/gnome-shell/libgnome-shell.so
+# chrpath -r %{_libdir}/gnome-shell:%{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_bindir}/gnome-shell
+# chrpath -r %{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_libdir}/gnome-shell/libgnome-shell.so
 %endif
 
 %preun
@@ -157,7 +156,7 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %{_datadir}/applications/gnome-shell.desktop
 %{_datadir}/applications/gnome-shell-extension-prefs.desktop
 %{_datadir}/applications/evolution-calendar.desktop
-%{_datadir}/gnome-control-center/keybindings/50-gnome-shell-screenshot.xml
+#%{_datadir}/gnome-control-center/keybindings/50-gnome-shell-screenshot.xml
 %{_datadir}/gnome-control-center/keybindings/50-gnome-shell-system.xml
 %{_datadir}/gnome-shell/
 %{_datadir}/dbus-1/services/org.gnome.Shell.CalendarServer.service
@@ -165,6 +164,7 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %{_datadir}/dbus-1/interfaces/org.gnome.Shell.Screenshot.xml
 %{_datadir}/dbus-1/interfaces/org.gnome.ShellSearchProvider.xml
 %{_datadir}/dbus-1/interfaces/org.gnome.ShellSearchProvider2.xml
+%{_datadir}/dbus-1/interfaces/org.gnome.Shell.Screencast.xml
 %{_libdir}/gnome-shell/
 %{_libdir}/mozilla/plugins/*.so
 %{_libexecdir}/gnome-shell-calendar-server
@@ -180,6 +180,9 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.12.0-3
+- 为 Magic 3.0 重建
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
 - 更新到 3.12.0
 

@@ -1,8 +1,10 @@
 Name:           gt
 Version:        0.4
-Release:        14%{?dist}
+Release:        16%{?dist}
 Summary:        Modified Timidity which supportes enhanced gus format patches
+Summary(zh_CN.UTF-8): 带有 gus 格式补丁的增强版 Timidity
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://alsa.opensrc.org/index.php/GusSoundfont
 # This is ftp://ling.lll.hawaii.edu/pub/greg/gt-0.4.tar.gz
@@ -25,15 +27,21 @@ Requires:       timidity++-patches
 Modified timidity midi player which supportes enhanced gus format patches and
 surround audio output.
 
+%description -l zh_CN.UTF-8
+带有 gus 格式补丁的增强版 Timidity。
 
 %package -n soundfont-utils
 Summary:        Utilities for converting from / to various soundfont formats
+Summary(zh_CN.UTF-8): 转换多种 soundfont 格式的工具
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 
 %description -n soundfont-utils
 Utilities for converting from / to various soundfont formats and a midi file
 disassembler.
 
+%description -n soundfont-utils -l zh_CN.UTF-8 
+转换多种 soundfont 格式的工具。
 
 %prep
 %setup -q
@@ -62,7 +70,7 @@ mv $RPM_BUILD_ROOT%{_mandir}/man1/dim.1 \
    $RPM_BUILD_ROOT%{_mandir}/man1/midi-disasm.1
 sed -i 's/dim/midi-disasm/g' $RPM_BUILD_ROOT%{_mandir}/man1/midi-disasm.1
 touch -r utils/midifile.c $RPM_BUILD_ROOT%{_mandir}/man1/midi-disasm.1
- 
+magic_rpm_clean.sh 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -83,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.4-16
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.4-14
 - 为 Magic 3.0 重建
 

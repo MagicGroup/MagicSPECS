@@ -1,6 +1,6 @@
 Name: grub
 Version: 0.97
-Release: 16%{?dist}
+Release: 18%{?dist}
 Summary: GRUB - the Grand Unified Boot Loader.
 Summary(zh_CN.UTF-8): GRUB - 多重引导管理系统。
 Group: System Environment/Base
@@ -161,6 +161,9 @@ fi
 %{_libdir}/grub/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.97-18
+- 为 Magic 3.0 重建
+
 * Fri Feb 23 2007 Liu Di <liudidi@gmail.com> - 0.97-11mgc
 - readd ntfs support
 

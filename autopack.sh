@@ -12,7 +12,7 @@ DEBUG=0
 LOG=1
 # 是否给 release 加 1
 # 一般仅在重编译时使用
-BUMP=0
+AUTOBUMP=0
 # rpmbuild 的 _topdir 变量
 TOPDIR=$(rpm --eval "%{_topdir}")
 # rpmbuild 中是否执行 check 段
@@ -23,12 +23,8 @@ else
 	NOCHECK="--nocheck"
 fi
 # 打包用户名
-PACKAGER="Liu Di"
-PACKEMAIL="<liudidi@gmail.com>"
-
-if ! [ -z "$$RPM_PACKAGER" ];then
-        export RPM_PACKAGER="Liu Di <liudidi@gmail.com>"
-fi
+PACKAGER="Magic Group"
+PACKEMAIL="<magicgroup@linuxfans.org>"
 
 # RPM 下的目录名
 ARCH=$(uname -m)
@@ -40,6 +36,9 @@ INSTALLRPMS=0
 FORCEINSTALLRPMS=0
 #是否自动更新软件版本
 AUTOUPDATE=1
+if [ -f ~/.magicspec ]; then
+	. ~/.magicspec
+fi
 # 使用的下载命令
 DOWNCOMMAND=wget
 # 对应下载命令的命令行参数，其后应该跟随下载目录
@@ -60,6 +59,10 @@ if [ $LOG = "1" ];then
         LOGFILE=$DIR/build.log
 else    
         LOGFILE=/dev/null
+fi
+
+if ! [ -z "$$RPM_PACKAGER" ];then
+        export RPM_PACKAGER="$PACKAGER $PACKEMAIL"
 fi
 
 # 检查系统中是否有打包所需的命令。
@@ -350,6 +353,30 @@ function installrpms()
 		fi
 	popd
 }
+
+#自动更新版本函数
+function autoupdate () 
+{
+        DIR=`ls -d SPECS.*/$1`
+        SPECNAME=$(ls $DIR/*.spec)
+        if [ -f $DIR/getnewver ]; then
+                ./autoupdate.sh $1 || exit 1
+                #spec 有更新，所以需要重新复制
+		if [ -f $DIR/hasupdate ] ; then
+ 	               cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
+		fi
+        fi
+}
+
+#release +1
+function autobumpspec () 
+{
+        DIR=`ls -d SPECS.*/$1`
+        SPECNAME=$(ls $DIR/*.spec)
+	rpmdev-bumpspec -c "为 Magic 3.0 重建" $SPECNAME
+	#spec 有更新，所以需要重新复制
+        cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
+}
 	
 #主程序
 #判断对应的目录是否存在
@@ -378,12 +405,28 @@ checkcommand || exit 1
 #检测 spec
 preparefiles $1 || exit 1
 checkspec $1 || exit 1
-if [ $AUTOUPDATE = "1" ]; then	
-	if [ -f $DIR/getnewver ]; then
-		./autoupdate.sh $1
-		#spec 有更新，所以需要重新复制
-		cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
+#更新 spec
+if [ $AUTOBUMP = "1" ]; then
+	if [ $AUTOUPDATE = "1" ]; then
+		echo "自动更新 $1 版本"
+		if [ -f $DIR/getnewver ] ; then
+			autoupdate $1 || echo "$1 版本更新未成功，请检查网络环境和相关配置"
+			if [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
+				echo "暂不更新 release "			
+			else
+				autobumpspec $1
+			fi
+		else
+			autobumpspec $1
+		fi
+	else
+		autobumpspec $1
 	fi
+else
+        if [ $AUTOUPDATE = "1" ]; then
+                echo "自动更新 $1 版本"
+                autoupdate $1 || echo "$1 版本更新未成功，请检查网络环境和相关配置"
+        fi	
 fi
 #首先判断是否使用版本控制系统的源码，如果是，则下载，目前支持git/cvs/svn/hg
 GIT=$(cat $SPECNAME | grep "^%define git 1" |wc -l)

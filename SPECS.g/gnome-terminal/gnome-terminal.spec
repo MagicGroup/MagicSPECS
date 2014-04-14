@@ -57,6 +57,8 @@ desktop-file-install --vendor gnome --delete-original	\
   --remove-category=Application				\
   --add-category=System					\
   $RPM_BUILD_ROOT%{_datadir}/applications/gnome-terminal.desktop
+
+rm -f %{buildroot}%{_libdir}/nautilus/extensions-3.0/libterminal-nautilus.{a,la}
 magic_rpm_clean.sh
 %find_lang %{gettext_package} --with-gnome
 
@@ -77,6 +79,10 @@ fi
 %{_libexecdir}/gnome-terminal-server
 %{_datadir}/dbus-1/services/org.gnome.Terminal.service
 %{_datadir}/glib-2.0/schemas/org.gnome.Terminal.gschema.xml
+
+%{_libdir}/nautilus/extensions-3.0/libterminal-nautilus.so
+%{_datadir}/appdata/gnome-terminal.appdata.xml
+%{_datadir}/gnome-shell/search-providers/gnome-terminal-search-provider.ini
 
 %changelog
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1

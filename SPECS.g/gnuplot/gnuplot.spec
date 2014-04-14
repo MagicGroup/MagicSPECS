@@ -1,6 +1,6 @@
 %define major 4
 %define minor 6
-%define patchlevel 4
+%define patchlevel 5
 
 %define x11_app_defaults_dir %{_datadir}/X11/app-defaults
 
@@ -121,7 +121,7 @@ plotting tool.
 %setup -q
 %patch1 -p1 -b .refto
 %patch2 -p1 -b .font
-%patch3 -p1 -b .mp
+#%patch3 -p1 -b .mp
 sed -i -e 's:"/usr/lib/X11/app-defaults":"%{x11_app_defaults_dir}":' src/gplt_x11.c
 iconv -f windows-1252 -t utf-8 ChangeLog > ChangeLog.aux
 mv ChangeLog.aux ChangeLog
@@ -260,6 +260,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/texmf/tex/latex/gnuplot/gnuplot-lua-tikz.sty
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 4.6.5-2
+- 更新到 4.6.5
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 4.4.4-2
 - 为 Magic 3.0 重建
 

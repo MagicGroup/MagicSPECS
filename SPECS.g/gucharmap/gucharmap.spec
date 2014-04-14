@@ -6,13 +6,16 @@ Name:           gucharmap
 Version:        3.2.2
 Release:        3%{?dist}
 Summary:        Unicode character picker and font browser
+Summary(zh_CN.UTF-8): Unicode 字符选择程序和字体浏览器
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv3+ and GFDL and MIT
 # GPL for the source code, GFDL for the docs, MIT for Unicode data
 URL:            http://live.gnome.org/Gucharmap
 #VCS: git:git://git.gnome.org/gucharmap
-Source:         http://download.gnome.org/sources/gucharmap/3.2/gucharmap-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/gucharmap/%{majorver}/gucharmap-%{version}.tar.xz
 
 BuildRequires: gnome-doc-utils >= 0.3.2
 BuildRequires: glib2-devel >= %{glib2_version}
@@ -30,9 +33,14 @@ characters and categories for the installed fonts, and to examine their
 detailed properties. It is an easy way to find the character you might
 only know by its Unicode name or code point.
 
+%description -l zh_CN.UTF-8 
+Unicode 字符选择程序和字体浏览器。
+
 %package devel
 Summary: Libraries and headers for libgucharmap
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: glib2-devel >= %{glib2_version}
 Requires: gtk3-devel >= %{gtk3_version}
 Requires: gucharmap = %{version}-%{release}
@@ -40,6 +48,9 @@ Requires: gucharmap = %{version}-%{release}
 %description devel
 The gucharmap-devel package contains header files and other resources
 needed to use the libgucharmap library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n  %{name}-%{version}
@@ -64,7 +75,7 @@ desktop-file-install --vendor gnome --delete-original       \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications             \
   $RPM_BUILD_ROOT%{_datadir}/applications/*
 
-
+magic_rpm_clean.sh
 %find_lang gucharmap --with-gnome
 
 

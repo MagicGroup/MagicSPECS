@@ -2,7 +2,7 @@ Summary: Development Libraries and headers for EFI
 Summary(zh_CN.UTF-8): EFI 的开发库和头文件 
 Name: gnu-efi
 Version: 3.0u
-Release: 0.2%{?dist}
+Release: 0.3%{?dist}
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
 License: BSD 
@@ -102,6 +102,9 @@ rm -rf %{buildroot}
 %attr(0644,root,root) /boot/efi/EFI/%{efidir}/*.efi
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.0u-0.3
+- 为 Magic 3.0 重建
+
 * Tue Sep 24 2013 Peter Jones <pjones@redhat.com> - 3.0u-0.1
 - Update to 3.0u
 - Split out subpackages so -devel can be multilib

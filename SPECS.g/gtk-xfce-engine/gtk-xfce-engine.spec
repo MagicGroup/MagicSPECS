@@ -4,8 +4,10 @@ Name:           gtk-xfce-engine
 Version:        3.0.1
 Release:        1%{?dist}
 Summary:        Xfce GTK theme engine
+Summary(zh_CN.UTF-8): Xfce 的 GTK 主题引擎
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://www.xfce.org/
 #VCS: git:git://git.xfce.org/xfce/gtk-xfce-engine
@@ -16,6 +18,9 @@ BuildRequires:  pkgconfig(gtk+-3.0) >= 3.2.0
 
 %description
 This package includes the Xfce GTK theme engine with various different themes.
+
+%description -l zh_CN.UTF-8
+Xfce 的 GTK 主题引擎。
 
 %prep
 %setup -q
@@ -31,7 +36,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

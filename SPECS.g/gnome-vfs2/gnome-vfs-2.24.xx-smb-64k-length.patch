@@ -1,0 +1,26 @@
+From bd5a83f1a6327cbb376ec4915f252f292b5bfb07 Mon Sep 17 00:00:00 2001
+From: Alexander Larsson <alexl@redhat.com>
+Date: Mon, 25 May 2009 10:41:34 +0200
+Subject: [PATCH 5/6] Don't pass in lengths > 64k to smb (#582308)
+
+There seem to be some limitation in smb that makes this not work.
+---
+ modules/smb-method.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules/smb-method.c b/modules/smb-method.c
+index 8042a61..42d6c78 100644
+--- a/modules/smb-method.c
++++ b/modules/smb-method.c
+@@ -1646,7 +1646,7 @@ do_read (GnomeVFSMethod *method,
+ 		
+ 		/* Important: perform_authentication leaves and re-enters the lock! */
+ 		while (perform_authentication (&actx) > 0) {
+-			n = smb_context->read (smb_context, handle->file, buffer, num_bytes);
++			n = smb_context->read (smb_context, handle->file, buffer, MIN (USHRT_MAX, num_bytes));
+ 			actx.res = (n >= 0) ? GNOME_VFS_OK : gnome_vfs_result_from_errno ();
+ 		}
+ 		
+-- 
+1.6.3.3
+

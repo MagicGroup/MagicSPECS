@@ -1,6 +1,6 @@
 Name:           gnugo
 Version:        3.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 Summary:        Text based go program
 Summary(zh_CN.UTF-8): 基于文本的围棋程序
@@ -63,6 +63,9 @@ fi
 %{_infodir}/gnugo.*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.8-4
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.8-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		potrace
 Version:	1.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Transform bitmaps into vector graphics
 Group:		Applications/Multimedia
 # README defines license as GPLv2+
@@ -93,6 +93,9 @@ rm -rf %{buildroot}
 %doc potrace.pdf potracelib.pdf
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 1.11-4
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name:           gtk-recordmydesktop
 Version:        0.3.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GUI Desktop session recorder with audio and video
 Summary(zh_CN.UTF-8): recordmydesktop 的 Gtk 前端
 
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.3.8-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.8-3
 - 为 Magic 3.0 重建
 

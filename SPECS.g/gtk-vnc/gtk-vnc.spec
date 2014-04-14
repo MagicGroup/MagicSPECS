@@ -20,12 +20,15 @@
 %endif
 
 Summary: A GTK2 widget for VNC clients
+Summary(zh_CN.UTF-8): VNC 客户端的 GTK 控件
 Name: gtk-vnc
 Version: 0.4.4
 Release: 2%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
-Source: http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.4/%{name}-%{version}.tar.bz2
+Group(zh_CN.UTF-8): 开发/库
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://live.gnome.org/gtk-vnc
 BuildRequires: gtk2-devel >= 2.14
@@ -197,7 +200,7 @@ rm -f %{buildroot}%{_libdir}/python*/site-packages/*.la
 rm -f %{buildroot}%{_libdir}/mozilla/plugins/%{name}-plugin.a
 rm -f %{buildroot}%{_libdir}/mozilla/plugins/%{name}-plugin.la
 %endif
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean

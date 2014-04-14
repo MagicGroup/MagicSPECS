@@ -232,9 +232,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 %{_datadir}/gir-1.0/EvinceDocument-3.0.gir
 %{_datadir}/gir-1.0/EvinceView-3.0.gir
 
+%if 0
 %files dvi
 %{_libdir}/evince/4/backends/libdvidocument.so*
 %{_libdir}/evince/4/backends/dvidocument.evince-backend
+%endif
 
 %files djvu
 %{_libdir}/evince/4/backends/libdjvudocument.so

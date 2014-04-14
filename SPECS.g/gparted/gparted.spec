@@ -92,6 +92,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %config(noreplace) %{_sysconfdir}/security/console.apps/gparted
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.13.1-2
+- 更新到
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.13.1-2
 - 为 Magic 3.0 重建
 

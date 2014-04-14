@@ -2,6 +2,7 @@ Name:           gtkspell3
 Version:        3.0.4
 Release:        1%{?dist}
 Summary:        On-the-fly spell checking for GtkTextView widgets
+Summary(zh_CN.UTF-8): GtkTextView 部件上的即时拼写检查
 
 License:        GPLv2+
 URL:            http://gtkspell.sourceforge.net/
@@ -23,14 +24,21 @@ GtkSpell provides word-processor-style highlighting and replacement of
 misspelled words in a GtkTextView widget as you type. Right-clicking a
 misspelled word pops up a menu of suggested replacements.
 
+%description -l zh_CN.UTF-8
+GtkTextView 部件上的即时拼写检查。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Obsoletes:      %{name}-vala < 3.0.2-2
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use GtkSpell API version 3.0.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -43,7 +51,7 @@ make %{?_smp_mflags} V=1
 make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang gtkspell3
 
 %post -p /sbin/ldconfig

@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gocr.1*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.49-4
+- 更新到
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.49-4
 - 为 Magic 3.0 重建
 

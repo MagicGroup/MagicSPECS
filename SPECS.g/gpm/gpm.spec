@@ -2,7 +2,7 @@ Summary: A mouse server for the Linux console
 Summary(zh_CN.UTF-8): Linux 控制台的鼠标服务
 Name: gpm
 Version: 1.20.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2 and GPLv2+ with exceptions and GPLv3+ and Verbatim and Copyright only
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -200,6 +200,9 @@ fi
 %{_libdir}/libgpm.a
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.20.7-5
+- 为 Magic 3.0 重建
+
 * Wed Feb 05 2014 Jaromir Capik <jcapik@redhat.com> - 1.20.7-4
 - Fixing format-security flaws (#1037099)
 

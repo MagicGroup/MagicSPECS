@@ -18,7 +18,7 @@
 
 Name:           google-gadgets
 Version:        0.11.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        Apache License Version 2.0
 Group:          Productivity/Networking/Web/Utilities
 Group(zh_CN.UTF-8): 	应用程序/系统
@@ -482,6 +482,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/libggadget-webkitjs-1.0.la
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.11.2-5
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.11.2-4
 - 为 Magic 3.0 重建
 

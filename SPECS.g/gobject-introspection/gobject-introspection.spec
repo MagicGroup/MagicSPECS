@@ -1,5 +1,5 @@
 Name:           gobject-introspection
-Version:	1.39.90
+Version:	1.40.0
 Release:        1%{?dist}
 Summary:        Introspection system for GObject-based libraries
 Summary(zh_CN.UTF-8): 基于 GObject 库的自检系统
@@ -9,7 +9,8 @@ Group(zh_CN.UTF-8): 开发/库
 License:        GPLv2+, LGPLv2+, MIT
 URL:            http://live.gnome.org/GObjectIntrospection
 #VCS:           git:git://git.gnome.org/gobject-introspection
-Source0:        http://download.gnome.org/sources/gobject-introspection/1.39/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/gobject-introspection/%{majorver}/%{name}-%{version}.tar.xz
 
 Obsoletes:      gir-repository
 
@@ -105,6 +106,9 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/gi/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.40.0-1
+- 更新到 1.40.0
+
 * Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1.39.90-1
 - 更新到 1.39.90
 

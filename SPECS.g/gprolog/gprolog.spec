@@ -1,5 +1,5 @@
 Name:           gprolog
-Version:	1.4.2
+Version:	1.4.4
 Release:	1%{?dist}
 Summary: 	GNU Prolog is a free Prolog compiler
 Summary(zh_CN.UTF-8): 自由的 Prolog 编译器
@@ -99,6 +99,9 @@ magic_rpm_clean.sh
 %doc src/dist-doc/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.4.4-1
+- 更新到 1.4.4
+
 * Sat Dec 15 2012 Jochen Schmitt <Jochen herr-schmitt de> - 1.4.2-1
 - New upstream release
 

@@ -4,7 +4,7 @@
 
 Name:		gperftools
 Version:	2.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	BSD
 Group:		Development/Tools
 Summary:	Very fast malloc and performance analysis tools
@@ -111,6 +111,9 @@ rm -rf %{buildroot}%{_pkgdocdir}/INSTALL
 %{_libdir}/*.so.*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.1-5
+- 为 Magic 3.0 重建
+
 * Sat Jan  4 2014 Tom Callaway <spot@fedoraproject.org> - 2.1-4
 - re-enable FORTIFY_SOURCE
 

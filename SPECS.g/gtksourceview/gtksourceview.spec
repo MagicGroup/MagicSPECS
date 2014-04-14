@@ -6,7 +6,7 @@
 Summary: A library for viewing source files
 Name: gtksourceview
 Version: 1.8.5
-Release: 10%{?dist} 
+Release: 11%{?dist} 
 Epoch: 1
 License: GPLv2+
 Group: System Environment/Libraries
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1:1.8.5-11
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1:1.8.5-10
 - 为 Magic 3.0 重建
 

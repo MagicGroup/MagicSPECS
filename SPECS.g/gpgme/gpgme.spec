@@ -2,7 +2,7 @@
 Name:    gpgme
 Summary: GnuPG Made Easy - high level crypto API
 Summary(zh_CN.UTF-8): GnuPG Mode Easy - 高级加密 API
-Version: 1.3.0
+Version:	1.4.3
 Release: 6%{?dist}
 
 License: LGPLv2+
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.4.3-6
+- 更新到 1.4.3
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.3.0-6
 - 为 Magic 3.0 重建
 

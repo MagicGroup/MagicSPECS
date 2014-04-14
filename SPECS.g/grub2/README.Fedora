@@ -1,84 +1,70 @@
-This README describes how to get the most basic working
-torque service on a single host.
+Using GNU GRUB 2 in Fedora
+==========================
 
-To setup a basic single-node localhost-only batch system, install the
-torque-server, torque-mom, and torque-scheduler packages, and do something like
-this:
+GRUB 2 provides various feature enhancements over the previous GRUB version
+(referred to as "GRUB", or "GRUB Legacy") which has been unmaintained upstream
+for years. GRUB has thus been deprecated in Fedora and replaced by GRUB 2 for
+BIOS systems. (EFI systems still uses GRUB Legacy from the new grub-efi package.)
 
-0) If torque is built with munge support then this 
-   must be enabled first on all nodes. The munge
-   package should allready be installed.
+Utilities
+---------
 
-   Create a munge key with 
+The GRUB 2 utilities are prefixed with 'grub2':
 
-   /usr/sbin/create-munge-key
+grub2-bin2h
+grub2-editenv
+grub2-fstest
+grub2-install
+grub2-kbdcomp
+grub2-menulst2cfg
+grub2-mkconfig
+grub2-mkdevicemap
+grub2-mkfont
+grub2-mkimage
+grub2-mklayout
+grub2-mknetdir
+grub2-mkpasswd-pbkdf2
+grub2-mkrelpath
+grub2-mkrescue
+grub2-probe
+grub2-reboot
+grub2-script-check
+grub2-set-default
+grub2-setup
 
-   Copy resulting key /etc/munge/munge.key to 
-   all torque nodes in your cluster including
-   pbs_server, pbs_mom and client (qstat,qsub) nodes.
+The default location for boot loader installation is /boot/grub2/ .
 
-1) Get your full hostname with
+GRUB 2 in Fedora
+----------------
 
-# /bin/hostname --long
+The Fedora installer (anaconda) will make sure grub2 is installed for new and
+updated systems.  It will run grub2-install to install the boot loader in the
+MBR and in /boot/grub2/, and it will write /etc/default/grub and run
+grub2-mkconfig to create /boot/grub2/grub.cfg.
 
-e.g myhost.example.org
+The active boot loader will not be changed when the GRUB 2 package is updated.
+A new boot loader can be installed with something like:
 
-2) Edit /etc/torque/server_name 
-to contain the single line
+  grub2-install /dev/sda
 
-myhost.example.org
+grubby will patch grub.cfg (through /etc/grub2.cfg) when new kernels are
+installed. The GRUB 2 configuration system in /etc/default/grub and /etc/grub.d/
+is thus only used initially by anaconda, but it is possible to generate a new
+grub.cfg with:
 
-3) Edit /etc/torque/mom/config 
-to contain the single line
+  grub2-mkconfig -o /boot/grub2/grub.cfg
 
-$pbsserver myhost.example.org
+Documentation
+-------------
 
-4) Create a torque serverdb file.
-# /usr/sbin/pbs_server -D -t create
+The GRUB 2 manual can be found in grub.html or on
+http://www.gnu.org/software/grub/manual/ .
 
-Warning this will remove any existing serverdb 
-file located at /var/lib/torque/server_priv/serverdb
+Support channels
+----------------
 
-You will have to Ctrl^C the pbs_server command, it will
-only take a moment to create this file.
+If you find a bug in this package, report them to the Red Hat Bugzilla [2].
+For talk about using grub2, use IRC channel #grub on freenode Network [3].
 
-5) Start the pbs_server and configure it.
-service pbs_server start
-# qmgr -c "s s scheduling=true"
-# qmgr -c "c q batch queue_type=execution"
-# qmgr -c "s q batch started=true"
-# qmgr -c "s q batch enabled=true"
-# qmgr -c "s q batch resources_default.nodes=1"
-# qmgr -c "s q batch resources_default.walltime=3600"
-# qmgr -c "s s default_queue=batch"
-
-6) Add one batch worker to your pbs_server.
-
-# qmgr -c "c n myhost.example.org"
-
-7) Start the pbs_mom and pbs_sched deamons.
-
-# service pbs_mom start
-# service pbs_sched start
-
-8) Use chkconfig to start the services at boot time.
-
-# /sbin/chkconfig pbs_mom on
-# /sbin/chkconfig pbs_server on
-# /sbin/chkconfig pbs_sched on
-# /sbin/chkconfig munge on
-
-9) Submit a test job.
-As a user not as root run the following
-
-$ qsub <<EOF
-hostname 
-echo "Hi I am a batch job running in torque"
-EOF
-
-10 ) Monitor the state of that job with qstat.
-
-In case of problems first of all look in /var/log/torque
-
-
-
+[2] http://bugzilla.redhat.com/
+[3] http://freenode.net/

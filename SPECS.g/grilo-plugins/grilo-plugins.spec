@@ -3,7 +3,7 @@
 
 Name:		grilo-plugins
 Version:	0.2.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Plugins for the Grilo framework
 
 Group:		Applications/Multimedia
@@ -101,6 +101,9 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/*
 %{_datadir}/gnome/help/grilo-plugins/C/legal.xml
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.6-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 20 2013 Kalev Lember <kalevlember@gmail.com> - 0.2.6-1
 - Update to 0.2.6
 

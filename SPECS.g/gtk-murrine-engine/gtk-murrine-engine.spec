@@ -1,9 +1,11 @@
 Summary: Murrine GTK2 engine
+Summary(zh_CN.UTF-8): Murrine GTK2 引擎
 Name: gtk-murrine-engine
 Version: 0.98.2
-Release: 3%{?dist}
+Release: 5%{?dist}
 License: LGPLv2 or LGPLv3
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.cimitan.com/murrine/
 Source0: http://ftp.gnome.org/pub/GNOME/sources/murrine/0.98/murrine-%{version}.tar.xz
 Source10: http://cimi.netsons.org/media/download_gallery/MurrinaFancyCandy.tar.bz2
@@ -20,6 +22,8 @@ Murrine Engine is a Gtk2 theme engine, using the Cairo vector graphics
 library. It comes by default with a modern glassy look, inspired by
 Venetian glass artworks, and is extremely customizable.
 
+%description -l zh_CN.UTF-8
+这是一个 GTK2 主题引擎，使用 Cairo 向量图形库。它有玻璃外观，并高度可定制。
 
 %prep
 %setup -q -n murrine-%{version}
@@ -58,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/themes/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.98.2-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.98.2-3
 - 为 Magic 3.0 重建
 

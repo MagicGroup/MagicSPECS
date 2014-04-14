@@ -1,10 +1,10 @@
 %global _hardened_build 1
 %define git 1
-%define vcsdate 20140127
+%define vcsdate 20140411
 
 Name: gpsd
 Version: 3.10
-Release: 3.git%{vcsdate}%{?dist}
+Release: 5.git%{vcsdate}%{?dist}
 Summary: Service daemon for mediating access to a GPS
 
 Group: System Environment/Daemons
@@ -231,6 +231,12 @@ rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.10-5.git20140411
+- 更新到 20140411 日期的仓库源码
+
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.10-4.git20140127
+- 为 Magic 3.0 重建
+
 * Thu Feb 20 2014 Miroslav Lichvar <mlichvar@redhat.com> - 3.10-3.20140127gitf2753b
 - update to 20140127gitf2753b
 - replace udev hotplug script with gpsdctl service (#909563)

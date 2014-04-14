@@ -10,7 +10,7 @@
 
 Name:    gpxe
 Version: 1.0.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: A network boot loader
 
 Group:   System Environment/Base
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.0.1-8
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

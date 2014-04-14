@@ -3,11 +3,13 @@
 %define _default_patch_flags -p1
 
 Summary: A document formatting system
+Summary(zh_CN.UTF-8): 一个文档格式化系统
 Name: groff
-Version: 1.21
-Release: 11%{?dist}
+Version: 1.22.2
+Release: 1%{?dist}
 License: GPLv3+ and GFDL and BSD and MIT
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 URL: http://groff.ffii.org
 
 Source0: ftp://ftp.gnu.org/gnu/groff/groff-%{version}.tar.gz
@@ -417,6 +419,9 @@ fi
 %doc %{_docdir}/%{name}-%{version}/pdf/
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.22.2-1
+- 更新到 1.22.2
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.21-11
 - 为 Magic 3.0 重建
 

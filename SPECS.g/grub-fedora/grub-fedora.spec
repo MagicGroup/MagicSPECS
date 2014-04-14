@@ -1,10 +1,12 @@
 %define real_name grub
 Name: grub-fedora
 Version: 0.97
-Release: 91%{?dist}
+Release: 92%{?dist}
 Epoch: 1
 Summary: Grand Unified Boot Loader.
+Summary(zh_CN.UTF-8): GRUB 启动器
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License: GPLv2+
 
 ExclusiveArch: i686 x86_64 ia64
@@ -34,13 +36,21 @@ capable of booting into most free operating systems - Linux, FreeBSD,
 NetBSD, GNU Mach, and others as well as most commercial operating
 systems.
 
+%description -l zh_CN.UTF-8 
+Fedora 使用的 GRUB。
+
 %package efi
 Summary: GRUB bootloader for EFI systems
+Summary(zh_CN.UTF-8): 支持 EFI 系统的 GRUB
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Obsoletes: grub < 1:0.97-83
 
 %description efi
 GRUB for EFI systems is a bootloader used to boot EFI systems.
+
+%description efi -l zh_CN.UTF-8
+支持 EFI 启动的 GRUB。
 
 %prep
 %setup -q -n %{real_name}-%{version}
@@ -82,6 +92,7 @@ mkdir -m 0755 -p ${RPM_BUILD_ROOT}/boot/efi/EFI/redhat/
 install -m 755 grub.efi ${RPM_BUILD_ROOT}/boot/efi/EFI/redhat/grub.efi
 
 rm -f ${RPM_BUILD_ROOT}/%{_infodir}/dir
+magic_rpm_clean.sh
 
 %clean
 rm -fr $RPM_BUILD_ROOT
@@ -121,6 +132,9 @@ fi
 /sbin/grub-crypt
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1:0.97-92
+- 为 Magic 3.0 重建
+
 * Wed Apr 18 2012 Peter Jones <pjones@redhat.com> - 0.97-91
 - Disable Broadcom network devices on Apple hardware (mjg59)
 

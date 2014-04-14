@@ -1,7 +1,8 @@
 Summary: The GNU Scientific Library for numerical analysis
+Summary(zh_CN.UTF-8): 数值分析用的 GNU 科学库
 Name: gsl
 Version: 1.16
-Release: 11%{?dist}
+Release: 13%{?dist}
 URL: http://www.gnu.org/software/gsl/
 Source: ftp://ftp.gnu.org/gnu/gsl/%{name}-%{version}.tar.gz
 Patch0: gsl-1.10-lib64.patch
@@ -12,6 +13,7 @@ Patch2: gsl-1.16-atlas.patch
 # contains rutiens which are part of LAPACK - under BSD style license
 License: GPLv3 and GFDL and BSD
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pkgconfig
 BuildRequires: atlas-devel >= 3.10
@@ -20,9 +22,14 @@ BuildRequires: atlas-devel >= 3.10
 The GNU Scientific Library (GSL) is a collection of routines for
 numerical analysis, written in C.
 
+%description -l zh_CN.UTF-8 
+数值分析用的 GNU 科学库，用 C 写成。
+
 %package devel
 Summary: Libraries and the header files for GSL development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info 
@@ -31,6 +38,9 @@ Requires: pkgconfig, automake
 %description devel
 The gsl-devel package contains the header files necessary for 
 developing programs using the GSL (GNU Scientific Library).
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,7 +68,7 @@ rm -rf $RPM_BUILD_ROOT%{_infodir}/dir
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 # remove static libraries
 rm -r $RPM_BUILD_ROOT%{_libdir}/*.a
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -98,6 +108,9 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.16-13
+- 为 Magic 3.0 重建
+
 * Tue Oct 1 2013 Orion Poplawski <orion@cora.nwra.com> - 1.16-1
 - Update to 1.16
 - Rebase atlas patch

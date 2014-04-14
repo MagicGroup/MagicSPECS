@@ -1,9 +1,11 @@
 Summary: 	Library and utilities to access GSM mobile phones
+Summary(zh_CN.UTF-8): 访问 GSM 手机的库和工具
 Name: 	 	gsmlib
 Version: 	1.11
-Release: 	0.2%{?dist}
+Release: 	0.3%{?dist}
 License:	GPL
-Group:		Communications
+Group:		Application/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 URL:		http://www.pxh.de/fs/gsmlib/index.html
 Source0:	%{name}-pre1.11-041028.tar.bz2
 Patch0:		gsmlib-1.11-gcc41.patch
@@ -24,12 +26,21 @@ modems. Features include:
 Additionally, some simple command line programs are provided to use these
 functionalities. 
 
+%description -l zh_CN.UTF-8 
+访问 GSM 手机的库和工具，功能包括：修改存储在手机或 SIM 卡上的电话本、读取和
+写入存储在手机上的短信、发送和接收短信。
+
 %package  	devel
 Summary: 	Header files and static libraries from %name
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: 		Development/C
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 Libraries and includes files for developing programs based on %name.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 
@@ -50,7 +61,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 
 %makeinstall
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %post -p /sbin/ldconfig
@@ -78,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.11-0.3
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.11-0.2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary:   Tools for AppData files
 Name:      appdata-tools
 Version:   0.1.7
-Release:   1%{?alphatag}%{?dist}
+Release:   4%{?alphatag}%{?dist}
 License:   GPLv2+
 URL:       http://people.freedesktop.org/~hughsient/appdata/
 Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
@@ -15,7 +15,7 @@ BuildRequires: docbook-style-xsl
 BuildRequires: glib2-devel >= 2.25.9-2
 BuildRequires: libsoup-devel
 BuildRequires: gdk-pixbuf2-devel
-BuildRequires: trang
+#BuildRequires: trang
 BuildRequires: python-lxml > 2.3
 BuildRequires: emacs
 
@@ -27,7 +27,7 @@ application descriptions for standards compliance and to the style guide.
 %setup -q
 
 %build
-%configure --enable-schemas
+%configure --disable-schemas
 make %{?_smp_mflags}
 
 %install
@@ -42,13 +42,22 @@ make %{?_smp_mflags}
 %dir %{_datadir}/appdata/schema
 %{_datadir}/appdata/schema/appdata.xsd
 %{_datadir}/appdata/schema/appdata.rnc
-%{_datadir}/appdata/schema/appdata.rng
-%{_datadir}/appdata/schema/appdata.sch
+#%{_datadir}/appdata/schema/appdata.rng
+#%{_datadir}/appdata/schema/appdata.sch
 %{_datadir}/appdata/schema/schema-locating-rules.xml
 %{_datadir}/aclocal/appdata-xml.m4
 %{_emacs_sitestartdir}/appdata-rng-init.el
 
 %changelog
+* Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 0.1.7-4
+- 为 Magic 3.0 重建
+
+* Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 0.1.7-3
+- 为 Magic 3.0 重建
+
+* Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 0.1.7-2
+- 为 Magic 3.0 重建
+
 * Fri Jan 24 2014 Richard Hughes <richard@hughsie.com> 0.1.7-1
 - New upstream release
 - Add configure conditional to control validation

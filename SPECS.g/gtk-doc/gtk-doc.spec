@@ -1,11 +1,14 @@
 Summary: API documentation generation tool for GTK+ and GNOME
+Summary(zh_CN.UTF-8): GTK+ 和 GNOME 的 API 文档生成工具
 Name: gtk-doc
 Version: 1.19
 Release: 4%{?dist}
 License: GPLv2+ and GFDL
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 #VCS: git:git://git.gnome.org/gtk-doc
-Source: http://download.gnome.org/sources/gtk-doc/1.18/gtk-doc-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gtk-doc/%{majorver}/gtk-doc-%{version}.tar.xz
 
 # upstream fix
 Patch0: 0001-gtkdoc-mkdb-sort-entries-in-the-glossary.patch
@@ -41,6 +44,9 @@ gtk-doc is a tool for generating API reference documentation.
 It is used for generating the documentation for GTK+, GLib
 and GNOME.
 
+%description -l zh_CN.UTF-8
+GTK+ 和 GNOME 的 API 文档生成工具。
+
 %prep
 %setup -q
 %patch0 -p1
@@ -56,6 +62,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html
+magic_rpm_clean.sh
 
 %files
 %defattr(-, root, root,-)
@@ -68,6 +75,9 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html
 %{_datadir}/help/*/gtk-doc-manual/
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.19-4
+- 更新到 1.20
+
 * Tue Oct 29 2013 Matthias Clasen <mclasen@redhat.com> - 1.19-4
 - Fix sorting of the annotation glossary 
 
