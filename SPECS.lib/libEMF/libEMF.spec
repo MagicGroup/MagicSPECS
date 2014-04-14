@@ -8,6 +8,7 @@ Group:		System Environment/Libraries
 URL:		http://libemf.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/project/libemf/libemf/%{version}/libEMF-%{version}.tar.gz
 BuildRequires:	libstdc++-devel
+ExcludeArch:    mips64el
 
 %description
 libEMF is a library for generating Enhanced Metafiles on systems which
