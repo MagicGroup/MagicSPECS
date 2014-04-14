@@ -1,50 +1,127 @@
 Name: hwdata
 Summary: Hardware identification and configuration data
-Version: 0.234
-Release: 2%{?dist}
-License: GPLv2+ and LGPLv2+
+Version: 0.261
+Release: 1%{?dist}
+License: GPLv2+
 Group: System Environment/Base
-Source: hwdata-%{version}.tar.bz2
+Source: https://fedorahosted.org/releases/h/w/%{name}/%{name}-%{version}.tar.bz2
 URL:    http://git.fedorahosted.org/git/hwdata.git
 BuildArch: noarch
-Conflicts: Xconfigurator, system-config-display < 1.0.31, pcmcia-cs, kudzu < 1.2.0
-Requires: module-init-tools >= 3.2
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 hwdata contains various hardware identification and configuration data,
-such as the pci.ids database and MonitorsDb databases.
+such as the pci.ids and usb.ids databases.
 
 %prep
-
 %setup -q
+%configure
 
 %build
 # nothing to build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT libdir=%{_prefix}/lib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
 %doc LICENSE COPYING
 %dir %{_datadir}/%{name}
-%config(noreplace) %{_sysconfdir}/modprobe.d/blacklist.conf
+%{_prefix}/lib/modprobe.d/dist-blacklist.conf
 %{_datadir}/%{name}/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.234-2
-- 为 Magic 3.0 重建
+* Tue Feb 25 2014 Michal Minar <miminar@redhat.com> 0.261-1
+- Update of pci, usb and vendor ids.
 
-* Mon Aug 22 2011 David Nalley <david@gnsa.us> 0.234-1
-- packaging an update for mid-release
+* Sun Jan 19 2014 Michal Minar <miminar@redhat.com> 0.260-1
+- Update of pci, usb and vendor ids.
 
-* Mon Aug 08 2011 Karsten Hopp <karsten@redhat.com> 0.233-1
+* Tue Dec 31 2013 Michal Minar <miminar@redhat.com> 0.259-1
+- Update of pci, usb and vendor ids.
+
+* Fri Nov 29 2013 Michal Minar <miminar@redhat.com> 0.258-1
+- Update of pci and oui ids.
+
+* Tue Oct 29 2013 Michal Minar <miminar@redhat.com> 0.257-1
+- Update of pci, oui and usb ids.
+
+* Sun Sep 22 2013 Michal Minar <miminar@redhat.com> 0.256-1
+- Update of pci, oui and usb ids.
+
+* Wed Aug 21 2013 Michal Minar <miminar@redhat.com> 0.255-1
+- Update of pci, oui and usb ids.
+
+* Wed Aug 07 2013 Michal Minar <miminar@redhat.com> 0.254-1
+- Update of vendor ids.
+
+* Mon Jul 29 2013 Michal Minar <miminar@redhat.com> 0.253-1
+- Changelog fix and oui.ids update.
+
+* Sun Jul 21 2013 Michal Minar <miminar@redhat.com> 0.252-1
+- Data files update.
+
+* Sat Jul 06 2013 Michal Minar <miminar@redhat.com> 0.250-1
+- Data files update.
+
+* Thu Jun 20 2013 Michal Minar <miminar@redhat.com> 0.249-1
+- Data files update, pnp.ids included.
+
+* Thu Apr 18 2013 Michal Minar <miminar@redhat.com> 0.248-1
+- Data files update
+
+* Wed Mar 27 2013 Michal Minar <miminar@redhat.com> 0.247-1
+- Moved blacklist.conf from /etc/modprobe.d to /usr/lib/modprobe.d.
+- Renamed it to dist-blacklist.conf.
+- Data files update
+
+* Mon Mar 18 2013 Michal Minar <miminar@redhat.com> 0.245-1
+- Data files update
+
+* Mon Feb 18 2013 Michal Minar <miminar@redhat.com> 0.244-1
+- Data files updated
+
+* Fri Jan 18 2013 Michal Minar <miminar@redhat.com> 0.243-1
+- Data files updated
+
+* Fri Dec 07 2012 Michal Minar <miminar@redhat.com> 0.242-1
+- Update data files
+
+* Wed Nov 07 2012 Michal Minar <miminar@redhat.com> 0.241-1
+- Update data files
+
+* Wed Sep 26 2012 Michal Minar <miminar@redhat.com> 0.240-1
+- made use of configure script in prep
+
+* Tue Sep 25 2012 Michal Minar <miminar@redhat.com> 0.239-1
+- Update data files
+
+* Thu Aug 23 2012 Adam Jackson <ajax@redhat.com> 0.238-1
+- Fix reference specfile to current Fedora style
+
+* Thu Aug 23 2012 Adam Jackson <ajax@redhat.com> 0.235-1
+- Update data files
+- Remove upgradelist, not needed since kudzu-ectomy
+
+* Mon Aug 08 2011 Karsten Hopp <karsten@redhat.com> 0.233-7.3
 - update pci.ids, usb. ids
+
+* Mon May 02 2011 Karsten Hopp <karsten@redhat.com> 0.233-7.2
+- update pci.ids with a fix for QLogic Infiniband adapter
+
+* Wed Apr 27 2011 Karsten Hopp <karsten@redhat.com> 0.233-7.1
+- update to latest pci.ids, usb.ids
+
+* Fri Jan 28 2011 Karsten Hopp <karsten@redhat.com> 0.233-7
+- bump release
+- update oui.txt URL
+- fix tarball name in spec file
+- update usb.ids, out.txt and pci.ids
+
+* Wed Aug 25 2010 Karsten Hopp <karsten@redhat.com> 0.233-1
+- update usb.ids, out.txt and pci.ids
 
 * Thu Aug 05 2010 Karsten Hopp <karsten@redhat.com> 0.232-1
 - update usb.ids, out.txt and pci.ids (#550020, #611860)
@@ -65,6 +142,8 @@ rm -rf $RPM_BUILD_ROOT
 
 * Tue Feb 23 2010 Dave Airlie <airlied@redhat.com> 0.227-1
 - add viafb to blacklist
+
+* Mon Feb 22 2010 Karsten Hopp <karsten@redhat.com> 0.227-1
 - update usb.ids, pci.ids, oui.txt
 - update license
 
@@ -137,7 +216,7 @@ rm -rf $RPM_BUILD_ROOT
 - fix many monitor entries (Stanislav Ievlev, #430276)
 
 
-* Wed Mar 03 2008 Karsten Hopp <karsten@redhat.com> 0.216-1
+* Mon Mar 03 2008 Karsten Hopp <karsten@redhat.com> 0.216-1
 - update pci.ids, usb.ids (#431658)
 
 * Tue Jan 29 2008 Phil Knirsch <pknirsch@redhat.com> 0.215-1
@@ -339,7 +418,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Jul 13 2005 Bill Nottingham <notting@redhat.com> - 0.162-1
 - remove /etc/pcmcia/config, conflict with pcmcia-cs
 
-* Fri Jul  7 2005 Bill Nottingham <notting@redhat.com> - 0.160-1
+* Thu Jul  7 2005 Bill Nottingham <notting@redhat.com> - 0.160-1
 - move blacklist to /etc/modprobe.d, require new module-init-tools
 - add LG monitors (#162466, #161734)
 - add orinoco card (#161696)
@@ -715,7 +794,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Jul 30 2002 Bill Nottingham <notting@redhat.com> 0.36-1
 - tweaks for Dell Remote Assisstant cards (#60376)
 
-* Thu Jul 26 2002 Mike A. Harris <mharris@redhat.com> 0.35-1
+* Fri Jul 26 2002 Mike A. Harris <mharris@redhat.com> 0.35-1
 - Updated Cards db for CT69000
 - Various ATI cleanups and additions to Cards and pcitable
 - Updated S3 Trio3D to default to "vesa" driver (#59956)
@@ -739,7 +818,7 @@ rm -rf $RPM_BUILD_ROOT
   supported natively by 4.x will be changed to use the vesa or vga
   driver, or completely removed as unsupported.
 
-* Tue Apr 17 2002 Michael Fulbright <msf@redhat.com> 0.14-1
+* Wed Apr 17 2002 Michael Fulbright <msf@redhat.com> 0.14-1
 - another megaraid variant
 
 * Mon Apr 15 2002 Michael Fulbright <msf@redhat.com> 0.13-1
