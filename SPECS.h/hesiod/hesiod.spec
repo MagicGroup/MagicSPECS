@@ -1,17 +1,13 @@
 Name: hesiod
-Version: 3.1.0
-Release: 22%{?dist}
+Version: 3.2.1
+Release: 2%{?dist}
 Source: ftp://athena-dist.mit.edu/pub/ATHENA/hesiod/hesiod-%{version}.tar.gz
-Patch1: hesiod-3.1.0-env.patch
-Patch2: hesiod-3.1.0-str.patch
-Patch3: hesiod-3.1.0-dnsparse.patch
-Patch4: hesiod-3.1.0-libresolv.patch
-Patch5: hesiod-3.1.0-perms.patch
 Summary: Shared libraries for querying the Hesiod naming service
 Group: System Environment/Libraries
 License: MIT
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: autoconf, automake, libtool
+BuildRequires: autoconf, automake, libtool, libidn-devel
+Obsoletes: hesinfo < 3.2
 
 %description
 Hesiod is a system which uses existing DNS functionality to provide access
@@ -33,6 +29,21 @@ ensure the files are synchronized among multiple hosts.  This package contains
 the header files and libraries required for building programs which use Hesiod.
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Apr  3 2013 Nalin Dahyabhai <nalin@fedoraproject.org> - 3.2.1-1
+- update to 3.2.1
+  - merged all patches or equivalents
+  - re-merged hesinfo, so we obsolete it now
+  - adds a pkgconfig configuration file for libhesiod
+- correct inconsistent changelog dates, assuming day-of-week is correct
+- add build requirement on libidn-devel
+- package the license
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-22
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -77,7 +88,7 @@ the header files and libraries required for building programs which use Hesiod.
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 3.1.0-10
 - Autorebuild for GCC 4.3
 
-* Wed Aug 22 2006 Nalin Dahyabhai <nalin@redhat.com> - 3.1.0-9
+* Wed Aug 23 2006 Nalin Dahyabhai <nalin@redhat.com> - 3.1.0-9
 - rebuild
 
 * Mon Jul 17 2006 Nalin Dahyabhai <nalin@redhat.com> - 3.1.0-8
@@ -148,7 +159,7 @@ the header files and libraries required for building programs which use Hesiod.
 * Fri Jan 10 2003 Phil Knirsch <pknirsch@redhat.com> 3.0.2-23
 - Build shared lib correctly on s390 and s390x (with gcc -shared -fPIC).
 
-* Wed Sep 24 2002 Nalin Dahyabhai <nalin@redhat.com> 3.0.2-22
+* Wed Sep 25 2002 Nalin Dahyabhai <nalin@redhat.com> 3.0.2-22
 - look harder for res_mkquery() in libresolv
 
 * Wed Aug 21 2002 Nalin Dahyabhai <nalin@redhat.com>
@@ -186,7 +197,7 @@ the header files and libraries required for building programs which use Hesiod.
 - remove the shared library patch -- different packages with shared libraries
   tend to use different sonames, so we'd run inevitably run into problems
 
-* Thu Aug 21 2001 Nalin Dahyabhai <nalin@redhat.com>
+* Thu Aug 23 2001 Nalin Dahyabhai <nalin@redhat.com>
 - remove pre and post scripts -- authconfig handles that stuff now
 - add the hesiod man page back in, as bind-devel doesn't provide it any more
 
@@ -221,13 +232,9 @@ the header files and libraries required for building programs which use Hesiod.
 
 %prep
 %setup -q
-%patch1 -p1 -b .env
-%patch2 -p1 -b .str
-%patch3 -p1 -b .dnsparse
-%patch4 -p1 -b .libresolv
-%patch5 -p1 -b .perms
 libtoolize -f -i
 aclocal
+automake -f -a
 autoconf -f -i
 
 %build
@@ -248,12 +255,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README NEWS
+%doc README NEWS COPYING
+%{_bindir}/*
 %{_libdir}/libhesiod.so.*
+%{_mandir}/man1/*
 %{_mandir}/man5/*
 
 %files devel
 %defattr(-,root,root,-)
 %{_libdir}/libhesiod.so
+%{_libdir}/pkgconfig/*
 %{_includedir}/hesiod.h
 %{_mandir}/man3/*
