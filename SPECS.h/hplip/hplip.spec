@@ -1,9 +1,14 @@
+# we don't want to provide private python extension libs
+%{?filter_setup:
+%filter_provides_in %{python_sitearch}/.*\.so$
+%filter_setup
+}
+
 Summary: HP Linux Imaging and Printing Project
 Name: hplip
-Version: 3.12.11
-Release: 2%{?dist}
+Version: 3.14.1
+Release: 1%{?dist}
 License: GPLv2+ and MIT
-Group: System Environment/Daemons
 
 Url: http://hplip.sourceforge.net/
 Source0: http://downloads.sourceforge.net/sourceforge/hplip/hplip-%{version}.tar.gz
@@ -14,48 +19,24 @@ Patch2: hplip-strstr-const.patch
 Patch3: hplip-ui-optional.patch
 Patch4: hplip-no-asm.patch
 Patch5: hplip-deviceIDs-drv.patch
-Patch6: hplip-mucks-with-spooldir.patch
-Patch7: hplip-udev-rules.patch
-Patch8: hplip-retry-open.patch
-Patch9: hplip-snmp-quirks.patch
-Patch10: hplip-discovery-method.patch
-Patch11: hplip-hpijs-marker-supply.patch
-Patch12: hplip-clear-old-state-reasons.patch
-Patch13: hplip-systray-dbus-exception.patch
-Patch14: hplip-hpcups-sigpipe.patch
-Patch15: hplip-logdir.patch
-Patch16: hplip-bad-low-ink-warning.patch
-Patch17: hplip-deviceIDs-ppd.patch
-Patch18: hplip-skip-blank-lines.patch
-Patch19: hplip-dbglog-newline.patch
-Patch21: hplip-ppd-ImageableArea.patch
-Patch22: hplip-raw_deviceID-traceback.patch
-Patch23: hplip-UnicodeDecodeError.patch
-Patch24: hplip-addprinter.patch
-Patch25: hplip-dbus-exception.patch
-Patch26: hplip-notification-exception.patch
-Patch27: hplip-CVE-2010-4267.patch
-Patch28: hplip-wifisetup.patch
-Patch29: hplip-makefile-chgrp.patch
-Patch30: hplip-hpaio-localonly.patch
-Patch31: hplip-ipp-accessors.patch
-Patch32: hplip-IEEE-1284-4.patch
-Patch33: hplip-check.patch
-
-Requires(pre): /sbin/service
-Requires(post): /sbin/chkconfig
-Requires(preun): /sbin/service
-Requires(preun): /sbin/chkconfig
+Patch6: hplip-udev-rules.patch
+Patch7: hplip-retry-open.patch
+Patch8: hplip-snmp-quirks.patch
+Patch9: hplip-hpijs-marker-supply.patch
+Patch10: hplip-clear-old-state-reasons.patch
+Patch11: hplip-hpcups-sigpipe.patch
+Patch12: hplip-logdir.patch
+Patch13: hplip-bad-low-ink-warning.patch
+Patch14: hplip-deviceIDs-ppd.patch
+Patch15: hplip-ppd-ImageableArea.patch
 
 %global hpijs_epoch 1
-Requires: hpijs = %{hpijs_epoch}:%{version}-%{release}
-Requires: %{name}-libs = %{version}-%{release}
+Requires: hpijs%{?_isa} = %{hpijs_epoch}:%{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: python-imaging
 Requires: cups
 Requires: wget
 Requires: dbus-python
-# for /etc/cron.daily/hplip_cron
-Requires: crontabs
 
 BuildRequires: net-snmp-devel
 BuildRequires: cups-devel
@@ -69,6 +50,9 @@ BuildRequires: dbus-devel
 
 # Make sure we get postscriptdriver tags.
 BuildRequires: python-cups, cups
+
+# macros: %%{_tmpfilesdir}, %%{_udevrulesdir}
+BuildRequires: systemd
 
 %description
 The Hewlett-Packard Linux Imaging and Printing Project provides
@@ -88,7 +72,7 @@ Files needed by the HPLIP printer and scanner drivers.
 Summary: HPLIP libraries
 Group: System Environment/Libraries
 License: GPLv2+ and MIT
-Requires: %{name}-common = %{version}-%{release}
+Requires: %{name}-common%{?_isa} = %{version}-%{release}
 Requires: python
 
 %description libs
@@ -101,10 +85,8 @@ License: BSD
 Requires: PyQt4
 Requires: python-reportlab
 Requires: pygobject2
-Requires(post): desktop-file-utils >= 0.2.92
-Requires(postun): desktop-file-utils >= 0.2.92
-Requires: %{name} = %{version}-%{release}
-Requires: libsane-hpaio = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: libsane-hpaio%{?_isa} = %{version}-%{release}
 
 %description gui
 HPLIP graphical tools.
@@ -114,8 +96,7 @@ Summary: HP Printer Drivers
 Group: Applications/Publishing
 License: BSD
 Epoch: %{hpijs_epoch}
-Requires: %{name}-libs = %{version}-%{release}
-Requires: net-snmp
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: cups >= 1:1.4
 
 %description -n hpijs
@@ -131,7 +112,7 @@ License: GPLv2+
 Obsoletes: libsane-hpoj < 0.91
 Provides: libsane-hpoj = 0.91
 Requires: sane-backends
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description -n libsane-hpaio
 SANE driver for scanners in HP's multi-function devices (from HPOJ).
@@ -169,54 +150,46 @@ SANE driver for scanners in HP's multi-function devices (from HPOJ).
 # LaserJet M1536dnf MFP (bug #743915)
 # LaserJet M1522nf MFP (bug #745498)
 # LaserJet M1319f MFP (bug #746614)
-# LaserJet M1120 MFP (bug #754139).
+# LaserJet M1120 MFP (bug #754139)
 # LaserJet P1007 (bug #585272)
 # LaserJet P1505 (bug #680951)
 # LaserJet P2035 (Ubuntu #917703)
 # PSC 1600 series (bug #743821)
 # Officejet 6300 series (bug #689378)
 # LaserJet Professional P1102w (bug #795958)
+# Color LaserJet CM4540 MFP (bug #968177)
+# Color LaserJet cp4005 (bug #980976)
 %patch5 -p1 -b .deviceIDs-drv
 chmod +x %{SOURCE2}
 mv prnt/drv/hpijs.drv.in{,.deviceIDs-drv-hpijs}
 %{SOURCE2} prnt/drv/hpcups.drv.in \
-	prnt/drv/hpijs.drv.in.deviceIDs-drv-hpijs \
-	> prnt/drv/hpijs.drv.in
+           prnt/drv/hpijs.drv.in.deviceIDs-drv-hpijs \
+           > prnt/drv/hpijs.drv.in
 
-# Stopped hpcups pointlessly trying to read spool files
-# directly (bug #552572).
-%patch6 -p1 -b .mucks-with-spooldir
-
-# Removed SYSFS use in udev rules and actually made them work (bug #560754).
-# Move udev rules to /lib/udev/rules.d (bug #748208).
-%patch7 -p1 -b .udev-rules
+# Don't add printer queue, just check plugin.
+# Move udev rules from /etc/ to /usr/lib/ (bug #748208).
+%patch6 -p1 -b .udev-rules
 
 # Retry when connecting to device fails (bug #532112).
-%patch8 -p1 -b .retry-open
+%patch7 -p1 -b .retry-open
 
 # Mark SNMP quirks in PPD for HP OfficeJet Pro 8500 (bug #581825).
-%patch9 -p1 -b .snmp-quirks
-
-# Fixed hp-setup traceback when discovery page is skipped (bug #523685).
-%patch10 -p1 -b .discovery-method
+%patch8 -p1 -b .snmp-quirks
 
 # Fixed bogus low ink warnings from hpijs driver (bug #643643).
-%patch11 -p1 -b .hpijs-marker-supply
+%patch9 -p1 -b .hpijs-marker-supply
 
 # Clear old printer-state-reasons we used to manage (bug #510926).
-%patch12 -p1 -b .clear-old-state-reasons
-
-# Catch DBusException in hp-systray (bug #746024).
-%patch13 -p1 -b .systray-dbus-exception
+%patch10 -p1 -b .clear-old-state-reasons
 
 # Avoid busy loop in hpcups when backend has exited (bug #525944).
-%patch14 -p1 -b .hpcups-sigpipe
+%patch11 -p1 -b .hpcups-sigpipe
 
 # CUPS filters should use TMPDIR when available (bug #865603).
-%patch15 -p1 -b .logdir
+%patch12 -p1 -b .logdir
 
 # Fixed Device ID parsing code in hpijs's dj9xxvip.c (bug #510926).
-%patch16 -p1 -b .bad-low-ink-warning
+%patch13 -p1 -b .bad-low-ink-warning
 
 # Add Device ID for
 # LaserJet 1200 (bug #577308)
@@ -233,71 +206,29 @@ mv prnt/drv/hpijs.drv.in{,.deviceIDs-drv-hpijs}
 #                4650/4700/5550/CP3525 (bug #659040)
 # Color LaserJet CM4730 MFP (bug #658831)
 # Color LaserJet CM3530 MFP (bug #659381)
-# Designjet T770 (bug #747957).
-for ppd_file in $(grep '^diff' %{PATCH17} | cut -d " " -f 4);
+# Designjet T770 (bug #747957)
+# Color LaserJet CM4540 MFP (bug #968177)
+# Color LaserJet cp4005 (bug #980976)
+for ppd_file in $(grep '^diff' %{PATCH14} | cut -d " " -f 4);
 do
   gunzip ${ppd_file#*/}.gz
 done
-%patch17 -p1 -b .deviceIDs-ppd
-for ppd_file in $(grep '^diff' %{PATCH17} | cut -d " " -f 4);
+%patch14 -p1 -b .deviceIDs-ppd
+for ppd_file in $(grep '^diff' %{PATCH14} | cut -d " " -f 4);
 do
   gzip -n ${ppd_file#*/}
 done
-
-# Hpcups (ljcolor) was putting black lines where should be blank lines (bug #579461).
-%patch18 -p1 -b .skip-blank-lines
-
-# Added missing newline to string argument in dbglog() call (bug #585275).
-%patch19 -p1 -b .dbglog-newline
 
 # Fix ImageableArea for Laserjet 8150/9000 (bug #596298).
-for ppd_file in $(grep '^diff' %{PATCH21} | cut -d " " -f 4);
+for ppd_file in $(grep '^diff' %{PATCH15} | cut -d " " -f 4);
 do
   gunzip ${ppd_file#*/}.gz
 done
-%patch21 -p1 -b .ImageableArea
-for ppd_file in $(grep '^diff' %{PATCH21} | cut -d " " -f 4);
+%patch15 -p1 -b .ImageableArea
+for ppd_file in $(grep '^diff' %{PATCH15} | cut -d " " -f 4);
 do
   gzip -n ${ppd_file#*/}
 done
-
-# Fixed traceback on error condition in device.py (bug #628125).
-%patch22 -p1 -b .raw_deviceID-traceback
-
-# Avoid UnicodeDecodeError in printsettingstoolbox.py (bug #645739).
-%patch23 -p1 -b .UnicodeDecodeError
-
-# Call cupsSetUser in cupsext's addPrinter method before connecting so
-# that we can get an authentication callback (bug #538352).
-%patch24 -p1 -b .addprinter
-
-# Catch D-Bus exceptions in fax dialog (bug #645316).
-%patch25 -p1 -b .dbus-exception
-
-# Catch GError exception when notification showing failed (bug #665577).
-%patch26 -p1 -b .notification-exception
-
-# Applied patch to fix CVE-2010-4267, remote stack overflow
-# vulnerability (bug #670252).
-%patch27 -p1 -b .CVE-2010-4267
-
-# Avoid KeyError in ui4/wifisetupdialog.py (bug #680939).
-%patch28 -p1 -b .wifisetup
-
-# Don't run 'chgrp lp /var/log/hp' and 'chgrp lp /var/log/hp/tmp' in makefile
-%patch29 -p1 -b .chgrp
-
-# Pay attention to the SANE localOnly flag in hpaio (bug #743593).
-%patch30 -p1 -b .hpaio-localonly
-
-# To build against CUPS-1.6 (launchpad #1026666)
-%patch31 -p1 -b .ipp-accessors
-
-# Support IEEE 1284.4 protocol over USB (bug #858861).
-%patch32 -p1 -b .hplip-IEEE-1284-4
-
-# Various adjustments to make 'hp-check' run more smoothly (bug #683007).
-%patch33 -p1 -b .check
 
 sed -i.duplex-constraints \
     -e 's,\(UIConstraints.* \*Duplex\),//\1,' \
@@ -324,6 +255,18 @@ make
 %install
 mkdir -p %{buildroot}%{_bindir}
 make install DESTDIR=%{buildroot}
+
+# Create /run/hplip
+mkdir -p %{buildroot}/run/hplip
+
+# install /usr/lib/tmpfiles.d/hplip.conf (bug #1015831)
+mkdir -p %{buildroot}%{_tmpfilesdir}
+cat > %{buildroot}%{_tmpfilesdir}/hplip.conf <<EOF
+# See tmpfiles.d(5) for details
+
+d /run/hplip 0775 root lp -
+EOF
+
 
 # Remove unpackaged files
 rm -rf  %{buildroot}%{_sysconfdir}/sane.d \
@@ -375,6 +318,7 @@ rm -f %{buildroot}%{_bindir}/hp-uninstall
 rm -f %{buildroot}%{_datadir}/hplip/upgrade.*
 rm -f %{buildroot}%{_bindir}/hp-upgrade
 rm -f %{buildroot}%{_bindir}/hp-config_usb_printer
+rm -f %{buildroot}%{_unitdir}/hplip-printer@.service
 rm -f %{buildroot}%{_datadir}/hplip/config_usb_printer.*
 rm -f %{buildroot}%{_datadir}/hplip/hpijs.drv.in.template
 rm -f %{buildroot}%{_datadir}/cups/mime/pstotiff.types
@@ -388,7 +332,6 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %files
 %doc COPYING doc/*
 %{_bindir}/hp-align
-%{_bindir}/hp-check-plugin
 %{_bindir}/hp-clean
 %{_bindir}/hp-colorcal
 %{_bindir}/hp-devicesettings
@@ -403,7 +346,6 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_bindir}/hp-logcapture
 %{_bindir}/hp-makecopies
 %{_bindir}/hp-makeuri
-%{_bindir}/hp-mkuri
 %{_bindir}/hp-plugin
 %{_bindir}/hp-pqdiag
 %{_bindir}/hp-printsettings
@@ -419,7 +361,6 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_cups_serverbin}/backend/hp
 %{_cups_serverbin}/backend/hpfax
 %{_cups_serverbin}/filter/pstotiff
-%{_cups_serverbin}/filter/hpps
 %{_datadir}/cups/mime/pstotiff.convs
 # Files
 %{_datadir}/hplip/align.py*
@@ -434,6 +375,7 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_datadir}/hplip/faxsetup.py*
 %{_datadir}/hplip/firmware.py*
 %{_datadir}/hplip/hpdio.py*
+%{_datadir}/hplip/hplip_clean.sh
 %{_datadir}/hplip/hpssd*
 %{_datadir}/hplip/info.py*
 %{_datadir}/hplip/__init__.py*
@@ -466,13 +408,12 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_datadir}/hplip/prnt
 %{_datadir}/hplip/scan
 %{_localstatedir}/lib/hp
-%dir %attr(0774,root,lp) %{_localstatedir}/log/hp
-%dir %attr(1774,root,lp) %{_localstatedir}/log/hp/tmp
-%{_sysconfdir}/cron.daily/hplip_cron
+%dir %attr(0775,root,lp) /run/hplip
+%{_tmpfilesdir}/hplip.conf
 
 %files common
 %doc COPYING
-%{_prefix}/lib/udev/rules.d/*.rules
+%{_udevrulesdir}/*.rules
 %dir %{_sysconfdir}/hp
 %config(noreplace) %{_sysconfdir}/hp/hplip.conf
 %dir %{_datadir}/hplip
@@ -488,12 +429,14 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 
 %files gui
 %{_bindir}/hp-check
+%{_bindir}/hp-doctor
 %{_bindir}/hp-print
 %{_bindir}/hp-systray
 %{_bindir}/hp-toolbox
 %{_datadir}/applications/*.desktop
 # Files
 %{_datadir}/hplip/check.py*
+%{_datadir}/hplip/doctor.py*
 %{_datadir}/hplip/print.py*
 %{_datadir}/hplip/systray.py*
 %{_datadir}/hplip/toolbox.py*
@@ -509,17 +452,11 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %{_datadir}/cups/drv/*
 %{_cups_serverbin}/filter/hpcups
 %{_cups_serverbin}/filter/hpcupsfax
-%{_cups_serverbin}/filter/hplipjs
+%{_cups_serverbin}/filter/hpps
 
 %files -n libsane-hpaio
 %{_libdir}/sane/libsane-*.so*
 %config(noreplace) %{_sysconfdir}/sane.d/dll.d/hpaio
-
-%post gui
-/usr/bin/update-desktop-database &>/dev/null ||:
-
-%postun gui
-/usr/bin/update-desktop-database &>/dev/null ||:
 
 %post -n hpijs
 %{_bindir}/hpcups-update-ppds &>/dev/null ||:
@@ -529,6 +466,106 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Thu Jan 09 2014 Jiri Popelka <jpopelka@redhat.com> - 3.14.1-1
+- 3.14.1
+
+* Wed Nov 27 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.11-4
+- do not %%ghost /run/hplip (bug #1034928)
+
+* Mon Nov 25 2013 Tim Waugh <twaugh@redhat.com> - 3.13.11-3
+- Moved hp-doctor to gui sub-package as it requires check module
+  (bug #1015441).
+
+* Thu Nov 21 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.11-2
+- create /usr/lib/tmpfiles.d/hplip.conf (bug #1015831).
+
+* Wed Nov 06 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.11-1
+- 3.13.11
+
+* Tue Oct 15 2013 Jaromír Končický <jkoncick@redhat.com> - 3.13.10-1
+- 3.13.10: 8 patches applied upstream, big changes in tmp and log dirs, removed hp-mkuri
+- Fixed Incorrect IEEE 1284 MFG value for LaserJet Professional P1102 (bug #1018826).
+
+* Wed Sep 18 2013 Tim Waugh <twaugh@redhat.com> - 3.13.9-2
+- Applied patch to avoid unix-process authorization subject when using
+  polkit as it is racy (bug #1009541, CVE-2013-4325).
+
+* Tue Sep 10 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.9-1
+- 3.13.9: hplipjs filter removed, several patches applied upstream
+
+* Wed Aug 14 2013 Tim Waugh <twaugh@redhat.com> - 3.13.8-2
+- Moved hpps filter to hpijs sub-package (bug #996852).
+- Fixed typo in systemtray.py (bug #991638).
+
+* Tue Aug 13 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.8-1
+- 3.13.8
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 23 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.7-1
+- 3.13.7
+- Device IDs for CM4540 (bug #968177) and cp4005 (bug #980976).
+
+
+* Mon Jun 24 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.6-2
+- add one more arch-specific dependency.
+
+* Mon Jun 24 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.6-1
+- 3.13.6
+- hplip-ipp-accessors.patch merged upstream
+- /etc/cron.daily/hplip_cron -> /usr/share/hplip/hplip_clean.sh
+
+* Wed May 29 2013 Tim Waugh <twaugh@redhat.com> - 3.13.5-2
+- Avoid several bugs in createTempFile (bug #925032).
+
+* Tue May 14 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.5-1
+- 3.13.5
+- change udev rule to not add printer queue, just check plugin.
+
+* Fri May 10 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.4-3
+- Device ID for HP LaserJet 2200 (bug #873123#c8).
+
+* Thu Apr 11 2013 Tim Waugh <twaugh@redhat.com> - 3.13.4-2
+- Fixed changelog dates.
+- Device ID for HP LaserJet P1005 (bug #950776).
+- mark cron job file as config(noreplace)
+
+* Tue Apr 09 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.4-1
+- 3.13.4
+
+* Fri Mar 15 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.3-3
+- Remove unused Requires.
+
+* Thu Mar 14 2013 Tim Waugh <twaugh@redhat.com> - 3.13.3-2
+- Moved hpfax pipe to /var/run/hplip (bug #917756).
+
+* Fri Mar 08 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.3-1
+- 3.13.3
+
+* Thu Feb 14 2013 Jiri Popelka <jpopelka@redhat.com> - 3.13.2-1
+- 3.13.2
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.12.11-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan 22 2013 Jiri Popelka <jpopelka@redhat.com> - 3.12.11-7
+- No need to run update-desktop-database (and require desktop-file-utils)
+  because there are no MimeKey lines in the desktop files.
+
+* Fri Jan 18 2013 Adam Tkac <atkac redhat com> - 3.12.11-6
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Fri Jan 18 2013 Jiri Popelka <jpopelka@redhat.com> 3.12.11-5
+- Use arch-specific dependencies.
+- Don't provide private python extension libs.
+
+* Wed Jan 16 2013 Jiri Popelka <jpopelka@redhat.com> 3.12.11-4
+- hpijs no longer requires net-snmp (bug #376641, bug #895643).
+
+* Tue Jan 15 2013 Jiri Popelka <jpopelka@redhat.com> 3.12.11-3
+- Use the form of import of PIL that is pillow compatible (bug #895266).
+
 * Fri Dec 07 2012 Jiri Popelka <jpopelka@redhat.com> 3.12.11-2
 - desktop file: remove deprecated Encoding key and Application category
 
@@ -758,7 +795,7 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
   that we can get an authentication callback (bug #538352).
 - Prevent hp-fab traceback when run as root.
 
-* Thu Nov 1 2010 Jiri Popelka <jpopelka@redhat.com> 3.10.9-5
+* Thu Nov 11 2010 Jiri Popelka <jpopelka@redhat.com> 3.10.9-5
 - Don't emit SIGNALs in ui4.setupdialog.SetupDialog the PyQt3 way (bug #623834).
 
 * Sun Oct 24 2010 Jiri Popelka <jpopelka@redhat.com> 3.10.9-4
@@ -797,7 +834,7 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
   - The lib sub-package now runs ldconfig for post/postun.
   - Use python_sitearch macro.
 
-* Tue Sep 13 2010 Jiri Popelka <jpopelka@redhat.com>
+* Mon Sep 13 2010 Jiri Popelka <jpopelka@redhat.com>
 - Added IEEE 1284 Device ID for HP LaserJet 4000 (bug #633227).
 
 * Fri Aug 20 2010 Tim Waugh <twaugh@redhat.com> - 3.10.6-3
@@ -820,10 +857,10 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 * Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 3.10.5-8
 - Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
 
-* Mon Jun 24 2010 Jiri Popelka <jpopelka@redhat.com> - 3.10.5-7
+* Thu Jun 24 2010 Jiri Popelka <jpopelka@redhat.com> - 3.10.5-7
 - Added COPYING to common sub-package.
 
-* Mon Jun 24 2010 Jiri Popelka <jpopelka@redhat.com> - 3.10.5-6
+* Thu Jun 24 2010 Jiri Popelka <jpopelka@redhat.com> - 3.10.5-6
 - Main package requires explicit version of hplip-libs.
 
 * Thu Jun 17 2010 Tim Waugh <twaugh@redhat.com> - 3.10.5-5
@@ -867,7 +904,7 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
   - HP Color LaserJet 2840 (bug #582215).
   - HP PSC 2400 (bug #583103).
 
-* Thu Apr 16 2010 Jiri Popelka <jpopelka@redhat.com> - 3.10.2-10
+* Fri Apr 16 2010 Jiri Popelka <jpopelka@redhat.com> - 3.10.2-10
 - Fixed black/blank lines in ljcolor hpcups output (bug #579461).
   Work-around is to send entire blank raster lines instead of skipping them.
 
@@ -1309,7 +1346,7 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 * Fri Mar 30 2007 Tim Waugh <twaugh@redhat.com>
 - Use marker-supply-low IPP message.
 
-* Wed Mar  1 2007 Tim Waugh <twaugh@redhat.com> 1.7.2-1
+* Thu Mar  1 2007 Tim Waugh <twaugh@redhat.com> 1.7.2-1
 - 1.7.2.
 
 * Wed Feb 14 2007 Tim Waugh <twaugh@redhat.com> 1.7.1-1
