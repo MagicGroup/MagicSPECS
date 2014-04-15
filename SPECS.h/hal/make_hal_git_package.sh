@@ -1,8 +1,8 @@
 #!/bin/bash
-git clone git://anongit.freedesktop.org/$1  || exit 1
-pushd $1
+git clone git://anongit.freedesktop.org/hal  || exit 1
+pushd hal
 find . -name .git|xargs rm -rf
 popd
-mv $1 $1-git$2
-tar --remove-files -cJvf $1-git$2.tar.xz $1-git$2
+mv hal hal-git$1
+tar --remove-files -cJvf hal-git$1.tar.xz hal-git$1
 

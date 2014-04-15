@@ -1,10 +1,12 @@
 Summary: The GNU data compression program
+Summary(zh_CN.UTF-8): GNU 数据压缩程序
 Name: gzip
-Version: 1.5
+Version: 1.6
 Release: 3%{?dist}
 # info pages are under GFDL license
 License: GPLv3+ and GFDL
 Group: Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 Source: http://ftp.gnu.org/gnu/gzip/gzip-%{version}.tar.xz
 Patch0: gzip-1.3.12-openbsd-owl-tmp.patch
 Patch1: gzip-1.3.5-zforce.patch
@@ -37,6 +39,11 @@ program. Gzipped files have a .gz extension.
 Gzip should be installed on your system, because it is a
 very commonly used data compression program.
 
+%description -l zh_CN.UTF-8
+GNU 数据压缩程序，压缩文件扩展名为 .gz。
+
+这是常用的 GNU 数据压缩程序，你的系统应该安装它。
+
 %prep
 %setup -q
 %patch0 -p1 -b .owl-tmp
@@ -65,6 +72,7 @@ gzip -9nf ${RPM_BUILD_ROOT}%{_infodir}/gzip.info*
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 # uncompress is a part of ncompress package
 rm -f ${RPM_BUILD_ROOT}/%{_bindir}/uncompress
+magic_rpm_clean.sh
 
 %post
 if [ -f %{_infodir}/gzip.info* ]; then
@@ -86,6 +94,9 @@ fi
 %{_infodir}/gzip.info*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.6-3
+- 更新到 1.6
+
 * Tue Nov 13 2012 Daniel Drake <dsd@laptop.org> - 1.5-3
 - Fix "gzip --rsyncable" functionality by removing a spurious blank line from
   the patch.

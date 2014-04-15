@@ -277,20 +277,24 @@ function downvcssources()
         SPECNAME=$(ls $DIR/*.spec)
 	VCSDATE=$(cat $SPECNAME |grep "%define vcsdate"|cut -d " " -f3)
 	TODAY=$(date +%Y%m%d)
-	if [ $AUTOUPDATE = "1" ]; then
-		sed -i 's/%define vcsdate.*/%define vcsdate '"$TODAY"'/g' $SPECNAME
-		rpmdev-bumpspec -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
-		cp -f $SPECNAME $TOPDIR/SOURCES
-		VCSDATE=$TODAY
+	if ! [ x"$VCSDATE" = x"$TODAY" ]; then
+		if [ $AUTOUPDATE = "1" ]; then
+			sed -i 's/%define vcsdate.*/%define vcsdate '"$TODAY"'/g' $SPECNAME
+			rpmdev-bumpspec -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
+			cp -f $SPECNAME $TOPDIR/SOURCES
+			VCSDATE=$TODAY
+		fi
+		debug_run echo "从 $2 仓库中下载 $1 的源代码"
+        	pushd $TOPDIR/SOURCES
+                	if ! ( sh make_$1_$2_package.sh $VCSDATE ) ; then
+                        	echo "无法从 $1 版本控制系统下载 $2 的源代码！退出。"
+                        	exit 1
+                	fi
+        	popd
+		debug_run echo "源代码下载完成"
+	else
+		debug_run echo "无需更新"
 	fi
-	debug_run echo "从 $2 仓库中下载 $1 的源代码"
-        pushd $TOPDIR/SOURCES
-                if ! ( sh make_$1_$2_package.sh $VCSDATE ) ; then
-                        echo "无法从 $1 版本控制系统下载 $2 的源代码！退出。"
-                        exit 1
-                fi
-        popd
-	debug_run echo "源代码下载完成"
 }
 
 #安装依赖关系函数		

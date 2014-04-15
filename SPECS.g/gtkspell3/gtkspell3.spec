@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/gtkspell3-3.0.deps
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 3.0.4-1
+- 更新到
+
 * Thu Sep 26 2013 Sandro Mani <manisandro@gmail.com> - 3.0.4-1
 - Update to 3.0.4
 

@@ -22,7 +22,7 @@
 Summary: A GTK2 widget for VNC clients
 Summary(zh_CN.UTF-8): VNC 客户端的 GTK 控件
 Name: gtk-vnc
-Version: 0.4.4
+Version:	0.5.3
 Release: 2%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
@@ -302,6 +302,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.5.3-2
+- 更新到 0.5.3
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.4-2
 - 为 Magic 3.0 重建
 

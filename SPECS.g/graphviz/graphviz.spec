@@ -269,7 +269,7 @@ Various tcl packages (extensions) for the graphviz tools.
 
 %prep
 %setup -q
-%patch1 -p1 -b .testsuite-sigsegv-fix
+#%patch1 -p1 -b .testsuite-sigsegv-fix
 %patch2 -p1 -b .rtest-errout-fix
 %patch3 -p1 -b .lefty-getaddrinfo
 %patch4 -p1 -b .CVE-2014-0978-CVE-2014-1235
@@ -562,6 +562,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 2.36.0-8
+- 更新到
+
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 2.36.0-8
+- 更新到
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.36.0-8
 - 更新到 2.36.0
 

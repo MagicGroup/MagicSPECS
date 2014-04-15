@@ -2,13 +2,16 @@
 
 Name:           gupnp-igd
 Version:        0.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library to handle UPnP IGD port mapping        
+Summary(zh_CN.UTF-8): 处理 UPnP IGD 端口映射的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/GUPnP
-Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.2/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  glib2-devel
 BuildRequires:  gobject-introspection-devel
@@ -18,20 +21,28 @@ BuildRequires:  pygtk2-devel
 %description
 %{name} is a library to handle UPnP IGD port mapping.
 
+%description -l zh_CN.UTF-8
+处理 UPnP IGD 端口映射的库。
 
 %package        python
 Summary:        Python bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    python
 The %{name}-python package contains the Python bindings for
 %{name}.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       %{name}-python = %{version}-%{release}
 Requires:       pkgconfig
@@ -41,6 +52,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,7 +69,7 @@ LDFLAGS="$RPM_LD_FLAGS -lgobject-2.0" make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -84,6 +97,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gir-1.0/GUPnPIgd-1.0.gir
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.2.3-2
+- 为 Magic 3.0 重建
+
 * Fri Feb  7 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.2.3-1
 - Update to 0.2.3
 - Enable gobject-introspection

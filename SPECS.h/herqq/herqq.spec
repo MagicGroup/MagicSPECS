@@ -1,7 +1,8 @@
 Name:           herqq
 Version:        1.0.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A software library for building UPnP devices and control points
+Summary(zh_CN.UTF-8): 创建 UPnP 设备和控制点的软件库
 # test application is GPLv3 but we do not ship it
 License:        LGPLv3+
 URL:            http://herqq.org/
@@ -19,12 +20,19 @@ Herqq UPnP (HUPnP) is a software library for building UPnP
 devices and control points conforming to the UPnP Device 
 Architecture version 1.1. 
 
+%description -l zh_CN.UTF-8
+创建 UPnP 设备和控制点的软件库.
+
 %package devel
 Summary:  Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 Provides: hupnp-devel = %{version}-%{release}
 %description devel
 Header files for developing applications using %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -37,6 +45,7 @@ Header files for developing applications using %{name}.
 qmake-qt4 PREFIX=%{_prefix} -config DISABLE_QTSOAP \
   -config DISABLE_TESTAPP -config USE_QT_INSTALL_LOC
 make %{?_smp_mflags}
+magic_rpm_clean.sh
 
 %install
 make INSTALL_ROOT=%{buildroot} install
@@ -55,6 +64,9 @@ make INSTALL_ROOT=%{buildroot} install
 %{_qt4_headerdir}/HUpnpCore/
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.0.0-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

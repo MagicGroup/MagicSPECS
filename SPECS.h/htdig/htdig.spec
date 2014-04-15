@@ -2,12 +2,14 @@
 %define buildweb 1
 
 Summary: ht://Dig - Web search engine
+Summary(zh_CN.UTF-8): ht://Dig - 网页搜索引擎
 Name: htdig
 Version: 3.2.0
-Release: 0.15.b6%{?dist}
+Release: 0.16.b6%{?dist}
 Epoch: 4
 License: GPLv2
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Url: http://www.htdig.org/
 Source: http://www.htdig.org/files/%{name}-%{version}b6.tar.bz2
 Source1: htdig.conf
@@ -29,7 +31,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %package web
 Summary: Scripts and HTML code needed for using ht://Dig as a web search engine
+Summary(zh_CN.UTF-8): 使用 ht://Dig 做为网页搜索引擎需要的脚本和 HTML 代码
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires: %{name} = %{epoch}:%{version}-%{release} webserver
 
 %description
@@ -45,6 +49,9 @@ ht://Dig is also used by KDE to search KDE's HTML documentation.
 
 ht://Dig was developed at San Diego State University as a way to search the
 various web servers on the campus network.
+
+%description -l zh_CN.UTF-8
+一个网页搜索引擎。
 
 %description web
 The ht://Dig system is a complete world wide web indexing and searching
@@ -62,6 +69,8 @@ ht://Dig on a website.
 ht://Dig was developed at San Diego State University as a way to search the
 various web servers on the campus network.
 
+%description web -l zh_CN.UTF-8
+使用 ht://Dig 做为网页搜索引擎需要的脚本和 HTML 代码。
 
 %prep
 %setup -q -n %{name}-%{version}b6
@@ -123,6 +132,7 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/htdig/*.a
 rm -rf $RPM_BUILD_ROOT%{_libdir}/htdig/*.la
 rm -rf $RPM_BUILD_ROOT%{_libdir}/htdig_db/*.a
 rm -rf $RPM_BUILD_ROOT%{_libdir}/htdig_db/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -152,6 +162,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 4:3.2.0-0.16.b6
+- 为 Magic 3.0 重建
+
 * Wed Jul 25 2012 Jindrich Novy <jnovy@redhat.com> - 4:3.2.0-0.15.b6
 - remove bogus relocation from spec
 

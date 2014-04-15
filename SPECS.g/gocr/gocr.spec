@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gocr.1*
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.49-4
+- 更新到
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.49-4
 - 更新到
 

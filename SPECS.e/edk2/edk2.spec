@@ -1,11 +1,13 @@
-%define SVNDATE 20131114
+%define svn 1
+%define vcsdate 20140415
 %define SVNREV  14844
 
 # More subpackages to come once licensing issues are fixed
 Name:		edk2
-Version:	%{SVNDATE}svn%{SVNREV}
-Release:	1%{?dist}
+Version:	%{vcsdate}svn%{SVNREV}
+Release:	5%{?dist}
 Summary:	EFI Development Kit II
+Summary(zh_CN.UTF-8): EFI 开发工具包 II
 
 # There are no formal releases from upstream.
 # Tarballs are created with:
@@ -16,11 +18,13 @@ Summary:	EFI Development Kit II
 # rm -rf edk2-r${SVNREV}/ShellBinPkg
 # rm -rf edk2-r${SVNREV}/FatBinPkg
 # tar -cv edk2-r${SVNREV} | xz -6 > edk2-r${SVNREV}.tar.xz
-Source0:	edk2-r%{SVNREV}.tar.xz
+Source0:	edk2-svn%{vcsdate}.tar.xz
+Source1:	make_edk2_svn_package.sh
 Patch1:		basetools-arm.patch
 
 License:	BSD
 Group:		Applications/Emulators
+Group(zh_CN.UTF-8): 应用程序/仿真器
 URL:		http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=EDK2
 
 # We need to build tools everywhere, but how is still an open question
@@ -36,18 +40,28 @@ Requires:	edk2-tools%{?_isa} = %{version}-%{release}
 EDK II is a development code base for creating UEFI drivers, applications
 and firmware images.
 
+%description -l zh_CN.UTF-8
+这是一个创建 UEFI 设备，应用程序和固件镜像的开发工具。
+
 %package tools
 Summary:	EFI Development Kit II Tools
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	edk2-tools-python = %{version}-%{release}
 
 %description tools
 This package provides tools that are needed to
 build EFI executables and ROMs using the GNU tools.
 
+%description tools -l zh_CN.UTF-8
+%{name} 的工具。
+
 %package tools-python
 Summary:	EFI Development Kit II Tools
+Summary(zh_CN.UTF-8): %{name} 工具的 Python 版本
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 Requires:	python
 BuildArch:      noarch
 
@@ -56,17 +70,25 @@ This package provides tools that are needed to build EFI executables
 and ROMs using the GNU tools.  You do not need to install this package;
 you probably want to install edk2-tools only.
 
+%description tools-python -l zh_CN.UTF-8
+%{name} 工具的 Python 版本。
+
 %package tools-doc
 Summary:	Documentation for EFI Development Kit II Tools
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description tools-doc
 This package documents the tools that are needed to
 build EFI executables and ROMs using the GNU tools.
 
+%description tools-doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %prep
-%setup -q -n %{name}-r%{SVNREV}
-%patch1 -p1
+%setup -q -n %{name}-svn%{vcsdate}
+#%patch1 -p1
 
 %build
 source ./edksetup.sh
@@ -110,6 +132,7 @@ export PYTHONPATH
 exec python '%{_datadir}/%{name}/Python/$i/$i.py' "$@"' > %{buildroot}%{_bindir}/$i
   chmod +x %{buildroot}%{_bindir}/$i
 done
+magic_rpm_clean.sh
 
 %files tools
 %{_bindir}/BootSectImage
@@ -164,6 +187,18 @@ done
 %doc BaseTools/UserManuals/VolInfo_Utility_Man_Page.rtf
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415svn14844-5
+- 为 Magic 3.0 重建
+
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415svn14844-4
+- 为 Magic 3.0 重建
+
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415svn14844-3
+- 更新到 20140415 日期的仓库源码
+
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20131114svn14844-2
+- 为 Magic 3.0 重建
+
 * Thu Nov 14 2013 Paolo Bonzini <pbonzini@redhat.com> - 20131114svn14844-1
 - Upgrade to r14844.
 - Remove upstreamed parts of patch 1.

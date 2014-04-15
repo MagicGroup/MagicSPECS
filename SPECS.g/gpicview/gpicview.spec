@@ -64,8 +64,7 @@ update-desktop-database &> /dev/null || :
 %{_bindir}/gpicview
 %{_datadir}/applications/fedora-gpicview.desktop
 %{_datadir}/gpicview/
-%{_datadir}/pixmaps/gpicview.png
-
+%{_datadir}/icons/hicolor/*/apps/gpicview.png
 
 %changelog
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.4-1

@@ -4,16 +4,13 @@
 
 Summary: An ImageMagick fork, offering faster image generation and better quality
 Name: GraphicsMagick
-Version: 1.3.16
-Release: 2%{?dist}
+Version:	1.3.19
+Release: 1%{?dist}
 License: MIT
 Group: Applications/Multimedia
 Source0: http://downloads.sourceforge.net/sourceforge/graphicsmagick/GraphicsMagick-%{version}.tar.xz
 Url: http://www.graphicsmagick.org/
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-
-## upstreamable patches
-Patch50: GraphicsMagick-1.3.14-perl_linkage.patch
 
 BuildRequires: bzip2-devel
 BuildRequires: freetype-devel
@@ -101,8 +98,6 @@ however.
 
 %prep
 %setup -q
-
-%patch50 -p1 -b .perl_linkage
 
 iconv -f iso-8859-2 -t utf8 < ChangeLog > ChangeLog.utf8
 mv -f ChangeLog.utf8 ChangeLog
@@ -257,6 +252,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.3.19-1
+- 更新到 1.3.19
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3.16-2
 - 为 Magic 3.0 重建
 

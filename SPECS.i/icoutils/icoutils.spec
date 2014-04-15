@@ -1,16 +1,14 @@
 Name:           icoutils
 Version:        0.29.1
-Release:        7%{?dist}
+Release:        1%{?dist}
 Summary:        Utility for extracting and converting Microsoft icon and cursor files
+Summary(zh_CN.UTF-8): 解压和转换微软图标和光标文件的工具
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv3+
 URL:            http://www.nongnu.org/icoutils/
 Source0:        http://savannah.nongnu.org/download/%{name}/%{name}-%{version}.tar.bz2
-
-# this patch fixes http://bugzilla.redhat.com/show_bug.cgi?id=701855
-# it has already been applied to the upstream Git repo
-Patch0:         %{name}-%{version}-iconsize.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -25,7 +23,6 @@ libraries.
 
 %prep
 %setup -q
-%patch0 -p1
 
 for f in AUTHORS NEWS; do 
 	iconv -f ISO88592 -t UTF8 < $f > $f.utf8 && \
@@ -41,6 +38,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 %find_lang %{name}
 
 

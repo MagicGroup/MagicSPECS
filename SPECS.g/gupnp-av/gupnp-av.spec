@@ -1,12 +1,15 @@
 Name:          gupnp-av
 Version:       0.12.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       A collection of helpers for building UPnP AV applications
+Summary(zh_CN.UTF-8): 构建 UPnP 音视频程序的帮助程序
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2+
 URL:           http://www.gupnp.org/
-Source0:       http://download.gnome.org/sources/gupnp-av/0.12/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://download.gnome.org/sources/gupnp-av/%{majorver}/%{name}-%{version}.tar.xz
 Patch0:        gupnp-av-fixdso.patch
 
 BuildRequires: glib2-devel
@@ -25,9 +28,14 @@ The GUPnP API is intended to be easy to use, efficient and flexible.
 GUPnP-AV is a collection of helpers for building AV (audio/video) 
 applications using GUPnP.
 
+%description -l zh_CN.UTF-8
+构建 UPnP 音视频程序的帮助程序。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: gssdp-devel
 Requires: gupnp-devel
@@ -36,14 +44,22 @@ Requires: pkgconfig
 %description devel
 Files for development with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary: Documentation files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description docs
 This package contains developer documentation for %{name}.
+
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -58,6 +74,7 @@ make install DESTDIR=%{buildroot}
 
 #Remove libtool archives.
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -80,6 +97,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.12.5-2
+- 为 Magic 3.0 重建
+
 * Tue Feb  4 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.12.5-1
 - 0.12.5 release
 - http://ftp.gnome.org/pub/GNOME/sources/gupnp-av/0.12/gupnp-av-0.12.5.news

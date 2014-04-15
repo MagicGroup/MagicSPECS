@@ -1,9 +1,11 @@
 Summary: Utility to set/show the host name or domain name
+Summary(zh_CN.UTF-8): 设置和显示主机名及域名的工具
 Name: hostname
 Version: 3.15
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL: http://packages.qa.debian.org/h/hostname.html
 Source0: http://ftp.de.debian.org/debian/pool/main/h/hostname/hostname_%{version}.tar.gz
 
@@ -14,6 +16,9 @@ Patch1: hostname-rh.patch
 This package provides commands which can be used to display the system's
 DNS name, and to display or set its hostname or NIS domain name.
 
+%description -l zh_CN.UTF-8
+设置和显示主机名及域名的工具。
+
 %prep
 %setup -q -n hostname
 %patch1 -p1 -b .rh
@@ -23,6 +28,7 @@ make CFLAGS="%{optflags} $CFLAGS"
 
 %install
 make BASEDIR=%{buildroot} BINDIR=%{_bindir} install
+magic_rpm_clean.sh
 
 %files
 %doc COPYRIGHT
@@ -30,6 +36,9 @@ make BASEDIR=%{buildroot} BINDIR=%{_bindir} install
 %{_mandir}/man1/*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.15-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 04 2013 Jiri Popelka <jpopelka@redhat.com> - 3.15-1
 - 3.15
 

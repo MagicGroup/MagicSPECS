@@ -24,37 +24,37 @@
 # package is currently clashing in koji, so don't bother.
 %global debug_package %{nil}
 
-# Upstream don't do "releases" :-( So we're going to use the date
+# Upstream don't do "releases" :-( So we're going to use the vcsdate
 # as the version, and a GIT hash as the release. Generate new GIT
 # snapshots using the folowing commands:
 #
 # $ hash=`git log -1 --format='%h'`
-# $ date=`date '+%Y%m%d'`
-# $ git archive --output ipxe-${date}-git${hash}.tar.gz --prefix ipxe-${date}-git${hash}/ ${hash}
+# $ vcsdate=`date '+%Y%m%d'`
+# $ git archive --output ipxe-${vcsdate}-git${hash}.tar.gz --prefix ipxe-${vcsdate}-git${hash}/ ${hash}
 #
 # And then change these two:
 
-%global date 20130517
+%define git 1
+%define vcsdate 20140415
 %global hash c4bce43
 
 Name:    ipxe
-Version: %{date}
-Release: 3.git%{hash}%{?dist}
+Version: %{vcsdate}
+Release: 7.git%{hash}%{?dist}
 Summary: A network boot loader
 
 Group:   System Environment/Base
 License: GPLv2 and BSD
 URL:     http://ipxe.org/
 
-Source0: %{name}-%{version}-git%{hash}.tar.gz
+Source0: %{name}-git%{vcsdate}.tar.xz
 Source1: USAGE
-# Remove 2 second startup wait. This patch is not intended to
-# go upstream. Modifying the general config header file is the
-# intended means for downstream customization.
-Patch1: %{name}-banner-timeout.patch
-# GCC >= 4.8 doesn't like the use of 'ebp' in asm
-# https://bugzilla.redhat.com/show_bug.cgi?id=914091
-Patch2: %{name}-asm.patch
+Source2: make_ipxe_git_package.sh
+
+# Allow access to ipxe prompt if VM is set to pxe boot (bz #842932)
+Patch0001: 0001-Customize-ROM-banner-timeout.patch
+# Enable PNG support (bz #1058176)
+Patch0002: 0002-config-Enable-PNG-support.patch
 
 %ifarch %{buildarches}
 BuildRequires: perl
@@ -118,9 +118,13 @@ replacement for proprietary PXE ROMs, with many extra features such as
 DNS, HTTP, iSCSI, etc.
 
 %prep
-%setup -q -n %{name}-%{version}-git%{hash}
-%patch1 -p1
-%patch2 -p1
+%setup -q -n %{name}-git%{vcsdate}
+
+# Allow access to ipxe prompt if VM is set to pxe boot (bz #842932)
+%patch0001 -p1
+# Enable PNG support (bz #1058176)
+%patch0002 -p1
+
 cp -a %{SOURCE1} .
 
 %build
@@ -213,94 +217,16 @@ done
 %endif
 
 %changelog
-* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130517-3.gitc4bce43
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415-7.gitc4bce43
+- 为 Magic 3.0 重建
 
-* Mon May 20 2013 Paolo Bonzini <pbonzini@redhat.com> - 20130103-3.git717279a
-- Fix BuildRequires, use cross-compiler when building on 32-bit i686
-- Build UEFI drivers for QEMU and include them (patch from Gerd Hoffmann.
-  BZ#958875)
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415-6.gitc4bce43
+- 更新到 20140415 日期的仓库源码
 
-* Fri May 17 2013 Daniel P. Berrange <berrange@redhat.com> - 20130517-1.gitc4bce43
-- Update to latest upstream snapshot
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20130517-5.gitc4bce43
+- 为 Magic 3.0 重建
 
-* Fri May 17 2013 Daniel P. Berrange <berrange@redhat.com> - 20130103-3.git717279a
-- Fix build with GCC 4.8 (rhbz #914091)
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20130517-4.gitc4bce43
+- 为 Magic 3.0 重建
 
-* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130103-2.git717279a
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Thu Jan  3 2013 Daniel P. Berrange <berrange@redhat.com> - 20130103-1.git717279a
-- Updated to latest GIT snapshot
-
-* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120328-2.gitaac9718
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Wed Mar 28 2012 Daniel P. Berrange <berrange@redhat.com> - 20120328-1.gitaac9718
-- Update to newer upstream
-
-* Fri Mar 23 2012 Daniel P. Berrange <berrange@redhat.com> - 20120319-3.git0b2c788
-- Remove more defattr statements
-
-* Tue Mar 20 2012 Daniel P. Berrange <berrange@redhat.com> - 20120319-2.git0b2c788
-- Remove BuildRoot & rm -rf of it in install/clean sections
-- Remove defattr in file section
-- Switch to use global, instead of define for macros
-- Add note about Patch1 not going upstream
-- Split BRs across lines for easier readability
-
-* Mon Feb 27 2012 Daniel P. Berrange <berrange@redhat.com> - 20120319-1.git0b2c788
-- Initial package based on gPXE
-
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Mon Feb 21 2011 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.1-4
-- don't use -Werror, it flags a failure that is not a failure for gPXE
-
-* Mon Feb 21 2011 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.1-3
-- Fix virtio-net ethernet frame length (patch by cra), fixes BZ678789
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Thu Aug  5 2010 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.1-1
-- New drivers: Intel e1000, e1000e, igb, EFI snpnet, JMicron jme,
-  Neterion X3100, vxge, pcnet32.
-- Bug fixes and improvements to drivers, wireless, DHCP, iSCSI,
-  COMBOOT, and EFI.
-* Tue Feb  2 2010 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.0-1
-- bugfix release, also adds wireless card support
-- bnx2 builds again
-- drop our one patch
-
-* Tue Oct 27 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.9-1
-- new upstream version 0.9.9
--- plus patches from git up to 20090818 which fix build errors and
-   other release-critical bugs.
--- 0.9.9: added Attansic L1E and sis190/191 ethernet drivers.  Fixes
-   and updates to e1000 and 3c90x drivers.
--- 0.9.8: new commands: time, sleep, md5sum, sha1sum. 802.11 wireless
-   support with Realtek 8180/8185 and non-802.11n Atheros drivers.
-   New Marvell Yukon-II gigabet Ethernet driver.  HTTP redirection
-   support.  SYSLINUX floppy image type (.sdsk) with usable file
-   system.  Rewrites, fixes, and updates to 3c90x, forcedeth, pcnet32,
-   e1000, and hermon drivers.
-
-* Mon Oct  5 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-6
-- move rtl8029 from -roms to -roms-qemu for qemu ne2k_pci NIC (BZ 526776)
-
-* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.7-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Tue May 19 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-4
-- add undionly.kpxe to -bootimgs
-
-* Tue May 12 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-3
-- handle isolinux changing paths
-
-* Sat May  9 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-2
-- add dist tag
-
-* Thu Mar 26 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-1
-- Initial release based on etherboot spec

@@ -6,7 +6,7 @@ Summary: A library for viewing source files
 Summary(zh_CN.UTF-8): 查看源代码的库
 Name: gtksourceview3
 Version:	3.12.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+ and GPLv2+
 # the library itself is LGPL, some .lang files are GPL
 Group: System Environment/Libraries
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/GtkSource-3.0.gir
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 为 Magic 3.0 重建
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

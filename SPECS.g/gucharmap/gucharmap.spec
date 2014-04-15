@@ -3,7 +3,7 @@
 %define desktop_file_utils_version 0.9
 
 Name:           gucharmap
-Version:        3.2.2
+Version:	3.12.0
 Release:        3%{?dist}
 Summary:        Unicode character picker and font browser
 Summary(zh_CN.UTF-8): Unicode 字符选择程序和字体浏览器
@@ -121,6 +121,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 3.12.0-3
+- 更新到 3.12.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.2.2-3
 - 为 Magic 3.0 重建
 

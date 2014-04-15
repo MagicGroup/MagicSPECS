@@ -1,7 +1,8 @@
 Name:           harfbuzz
-Version:        0.9.18
+Version:	0.9.27
 Release:        2%{?dist}
 Summary:        Text shaping library
+Summary(zh_CN.UTF-8): 文本整形库
 
 License:        MIT
 URL:            http://freedesktop.org/wiki/Software/HarfBuzz
@@ -16,9 +17,12 @@ BuildRequires:  graphite2-devel
 %description
 HarfBuzz is an implementation of the OpenType Layout engine.
 
+%description -l zh_CN.UTF-8
+HarfBuzz 是 OpenType 布局引擎的实现。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-icu%{?_isa} = %{version}-%{release}
 
@@ -26,12 +30,19 @@ Requires:       %{name}-icu%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        icu
 Summary:        Harfbuzz ICU support library
+Summary(zh_CN.UTF-8): %{name} 的 ICU 支持库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    icu
 This package contains Harfbuzz ICU support library.
+
+%description icu -l zh_CN.UTF-8
+%{name} 的 ICU 支持库。
 
 %prep
 %setup -q
@@ -50,7 +61,7 @@ make %{?_smp_mflags} V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -77,6 +88,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/libharfbuzz-icu.so.*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.9.27-2
+- 更新到 0.9.27
+
 * Fri Jun 07 2013 Parag Nemade <pnemade AT redhat DOT com> - 0.9.18-2
 - Resolves:rh#971795:Merge -icu-devel subpackage into -devel subpackage
 

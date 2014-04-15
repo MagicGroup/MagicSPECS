@@ -161,6 +161,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/avogadro/%{main_ver}/tools/
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 1.1.1-2
+- 更新到
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 1.1.1-2
 - 更新到 1.1.1
 

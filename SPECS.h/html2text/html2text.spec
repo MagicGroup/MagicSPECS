@@ -1,6 +1,6 @@
 Name:           html2text
 Version:        1.3.2a
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        HTML-to-text converter
 Summary(zh_CN.UTF-8): HTML 到文本转换器
 
@@ -102,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.3.2a-8
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3.2a-7
 - 为 Magic 3.0 重建
 

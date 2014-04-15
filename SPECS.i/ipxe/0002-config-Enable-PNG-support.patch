@@ -1,0 +1,23 @@
+From 22e7c8723aa5a9251f1b8d76869f61bb1a2a59df Mon Sep 17 00:00:00 2001
+From: Cole Robinson <crobinso@redhat.com>
+Date: Mon, 3 Mar 2014 18:30:35 -0500
+Subject: [PATCH] config: Enable PNG support
+
+Requested here: https://bugzilla.redhat.com/show_bug.cgi?id=1058176
+---
+ src/config/general.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/config/general.h b/src/config/general.h
+index 07df6a1..57850b0 100644
+--- a/src/config/general.h
++++ b/src/config/general.h
+@@ -115,7 +115,7 @@ FILE_LICENCE ( GPL2_OR_LATER );
+ //#define	IMAGE_EFI		/* EFI image support */
+ //#define	IMAGE_SDI		/* SDI image support */
+ //#define	IMAGE_PNM		/* PNM image support */
+-//#define	IMAGE_PNG		/* PNG image support */
++#define	IMAGE_PNG		/* PNG image support */
+ 
+ /*
+  * Command-line commands to include

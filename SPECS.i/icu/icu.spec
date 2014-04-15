@@ -2,7 +2,9 @@ Name:      icu
 Version:   52.1
 Release:   1%{?dist}
 Summary:   International Components for Unicode
+Summary(zh_CN.UTF-8): Unicode 的国际化组件
 Group:     Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:   MIT and UCD and Public Domain
 URL:       http://www.icu-project.org/
 Source0:   http://download.icu-project.org/files/icu4c/52.1/icu4c-52_1-src.tgz
@@ -20,9 +22,14 @@ Patch6: icuinfo-man.patch
 %description
 Tools and utilities for developing with icu.
 
+%description -l zh_CN.UTF-8
+icu 开发用的工具。
+
 %package -n lib%{name}
 Summary: International Components for Unicode - libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n lib%{name}
 The International Components for Unicode (ICU) libraries provide
@@ -36,22 +43,35 @@ results across all the various platforms you support, without
 sacrificing performance. It offers great flexibility to extend and
 customize the supplied services.
 
+%description -n lib%{name} -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package  -n lib%{name}-devel
 Summary:  Development files for International Components for Unicode
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description -n lib%{name}-devel
 Includes and definitions for developing with icu.
 
+%description -n lib%{name}-devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n lib%{name}-doc
 Summary: Documentation for International Components for Unicode
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:   Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description -n lib%{name}-doc
 %{summary}.
+
+%description -n lib%{name}-doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %{!?endian: %global endian %(%{__python} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
 # " this line just fixes syntax highlighting for vim that is confused by the above and continues literal

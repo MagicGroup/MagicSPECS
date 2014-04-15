@@ -1,7 +1,7 @@
 Summary: A library for handling different graphics file formats
 Name: netpbm
 Version: 10.61.02
-Release: 7%{?dist}
+Release: 10%{?dist}
 # See copyright_summary for details
 License: BSD and GPLv2 and IJG and MIT and Public Domain
 Group: System Environment/Libraries
@@ -122,9 +122,13 @@ sed -i 's/STRIPFLAG = -s/STRIPFLAG =/g' config.mk.in
 rm -rf converter/other/jpeg2000/libjasper/
 sed -i -e 's/^SUBDIRS = libjasper/SUBDIRS =/' converter/other/jpeg2000/Makefile
 
+
 %build
+#有 mingw64-gcc 时需要 n，没有则不需要，这个地方有些问题。
 ./configure <<EOF
 
+
+n
 
 
 
@@ -271,6 +275,15 @@ rm -rf $RPM_BUILD_ROOT
 %doc userguide/*
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 10.61.02-10
+- 为 Magic 3.0 重建
+
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 10.61.02-9
+- 为 Magic 3.0 重建
+
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 10.61.02-8
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.61.02-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

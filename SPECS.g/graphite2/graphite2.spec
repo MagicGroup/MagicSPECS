@@ -48,7 +48,7 @@ Includes and definitions for developing with graphite2.
 
 %prep
 %setup -q
-%patch0 -p1 -b .arm
+#%patch0 -p1 -b .arm
 %patch1 -p1 -b .cmake
 
 %build

@@ -1,12 +1,15 @@
 Name:          gupnp-tools
 Version:       0.8.9
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       A collection of dev tools utilising GUPnP and GTK+
+Summary(zh_CN.UTF-8): GUPnP 和 GTK+ 的开发工具集
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       GPLv2+
 URL:           http://www.gupnp.org/
-Source0:       http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: gupnp-devel
 BuildRequires: gupnp-av-devel
@@ -27,6 +30,9 @@ GUPnP-tools is a collection of developer tools utilising GUPnP and GTK+.
 It features a universal control point application as well as a sample 
 DimmableLight v1.0 implementation. 
 
+%description -l zh_CN.UTF-8
+GUPnP 和 GTK+ 的开发工具集。
+
 %prep
 %setup -q
 
@@ -36,7 +42,7 @@ make %{?_smp_mflags} V=1
 
 %install
 make install DESTDIR=%{buildroot}
-
+magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-install --vendor=gupnp \
 --delete-original --dir=%{buildroot}%{_datadir}/applications \
@@ -68,6 +74,9 @@ desktop-file-install --vendor=gupnp \
 %{_datadir}/gupnp-tools/*.ui
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.8.9-2
+- 为 Magic 3.0 重建
+
 * Tue Feb  4 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.8.9-1
 - Update to 0.8.9
 - http://ftp.gnome.org/pub/GNOME/sources/gupnp-tools/0.8/gupnp-tools-0.8.9.news

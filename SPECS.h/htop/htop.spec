@@ -1,5 +1,5 @@
 Name:           htop
-Version:        1.0
+Version:	1.0.2
 Release:        2%{?dist}
 Summary:        Interactive process viewer
 Summary(zh_CN.UTF-8): 交互式进程查看器
@@ -9,8 +9,6 @@ Group(zh_CN.UTF-8):	应用程序/系统
 License:        GPL+
 URL:            http://htop.sourceforge.net/
 Source0:        http://download.sourceforge.net/htop/%{name}-%{version}.tar.gz
-Patch0:         %{name}-0.8.1-nonprint.patch
-Patch1:         %{name}-0.8.1-processlist.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  desktop-file-utils
@@ -26,8 +24,6 @@ htop 是一个 Linux 下文本模式的交互式进程查看器，类似 top。
 
 %prep
 %setup -q
-#%patch0 -p0
-#%patch1 -p0
 sed -i s#"INSTALL_DATA = @INSTALL_DATA@"#"INSTALL_DATA = @INSTALL_DATA@ -p"# Makefile.in
 #sed -i -e '2,3d' -e '9d' htop.desktop
 
@@ -65,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.0.2-2
+- 更新到 1.0.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0-2
 - 为 Magic 3.0 重建
 

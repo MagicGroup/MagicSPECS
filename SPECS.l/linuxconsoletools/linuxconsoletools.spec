@@ -1,6 +1,6 @@
 Name: linuxconsoletools
 Version: 1.4.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Tools for connecting joysticks & legacy devices to the kernel's input subsystem
 Group: Applications/System
 License: GPLv2+
@@ -62,6 +62,9 @@ chmod -x %{buildroot}%{_mandir}/man1/*
 
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 1.4.7-2
+- 为 Magic 3.0 重建
+
 * Wed Jan 08 2014 Jaromir Capik <jcapik@redhat.com> - 1.4.7-1
 - Update to 1.4.7
 

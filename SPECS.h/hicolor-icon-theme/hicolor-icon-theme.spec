@@ -1,9 +1,11 @@
 Summary: Basic requirement for icon themes
+Summary(zh_CN.UTF-8): 图标主题的基本依赖
 Name: hicolor-icon-theme
-Version: 0.12
-Release: 5%{?dist}
+Version: 0.13
+Release: 1%{?dist}
 License: GPL+
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://icon-theme.freedesktop.org/wiki/HicolorTheme
 Source: http://icon-theme.freedesktop.org/releases/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -13,6 +15,9 @@ Requires(postun): coreutils
 
 %description
 Contains the basic directories and files needed for icon theme support.
+
+%description -l zh_CN.UTF-8
+包含了图标主题支持所需要的基本目录和文件。
 
 %prep
 %setup -q
@@ -28,6 +33,7 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT PREFIX=/usr install
 
 touch $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/icon-theme.cache
+magic_rpm_clean.sh
 
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -51,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %ghost %{_datadir}/icons/hicolor/icon-theme.cache
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.13-1
+- 更新到 0.13
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.12-5
 - 为 Magic 3.0 重建
 

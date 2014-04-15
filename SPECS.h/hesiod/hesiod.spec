@@ -1,9 +1,11 @@
 Name: hesiod
 Version: 3.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source: ftp://athena-dist.mit.edu/pub/ATHENA/hesiod/hesiod-%{version}.tar.gz
 Summary: Shared libraries for querying the Hesiod naming service
+Summary(zh_CN.UTF-8): 查询 Hesiod 名称服务的共享库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: MIT
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf, automake, libtool, libidn-devel
@@ -15,9 +17,15 @@ to databases of information that changes infrequently.  It is often used to
 distribute information kept in the /etc/passwd, /etc/group, and /etc/printcap
 files, among others.
 
+%description -l zh_CN.UTF-8
+查询 Hesiod 名称服务的共享库。它使用已经存在的 DNS 函数来查询那些不经常变动
+的数据信息。通常分布存储在 /etc/passd, /etc/group 和 /etc/printcap 文件中。
+
 %package devel
 Summary: Development libraries and headers for Hesiod
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: hesiod = %{version}-%{release}
 
 %description devel
@@ -28,7 +36,13 @@ distribute information which might otherwise kept in the /etc/passwd,
 ensure the files are synchronized among multiple hosts.  This package contains
 the header files and libraries required for building programs which use Hesiod.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.2.1-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

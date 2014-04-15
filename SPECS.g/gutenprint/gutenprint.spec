@@ -3,7 +3,7 @@
 Name:           gutenprint
 Summary:        Printer Drivers Package
 Version:        5.2.9
-Release:        14%{?dist}
+Release:        15%{?dist}
 Group:          System Environment/Base
 URL:            http://gimp-print.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/gimp-print/%{name}-%{version}.tar.bz2
@@ -324,6 +324,9 @@ fi
 /bin/rm -f /var/cache/foomatic/*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 5.2.9-15
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.9-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

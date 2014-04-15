@@ -10,11 +10,13 @@
 %endif
 
 Name:           hiera
-Version:        1.0.0
-Release:        5%{?dist}
+Version:	1.3.2
+Release:        1%{?dist}
 Summary:        A simple hierarchical database supporting plugin data sources
+Summary(zh_CN.UTF-8): 一个简单的分层数据库支持插件数据源
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        ASL 2.0
 URL:            http://projects.puppetlabs.com/projects/%{name}/
 Source0:        http://downloads.puppetlabs.com/hiera/%{name}-%{version}.tar.gz
@@ -40,6 +42,9 @@ Requires:       ruby(abi) = 1.9.1
 
 %description
 A simple hierarchical database supporting plugin data sources.
+
+%description -l zh_CN.UTF-8
+一个简单的分层数据库支持插件数据源。
 
 %prep
 %setup -q
@@ -78,6 +83,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.3.2-1
+- 更新到 1.3.2
+
 * Fri Mar 15 2013 Vít Ondruch <vondruch@redhat.com> - 1.0.0-5
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 

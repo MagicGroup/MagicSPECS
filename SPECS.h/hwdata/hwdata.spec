@@ -1,9 +1,11 @@
 Name: hwdata
 Summary: Hardware identification and configuration data
-Version: 0.261
+Summary(zh_CN.UTF-8): 硬件定义和配置数据
+Version:	0.263
 Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source: https://fedorahosted.org/releases/h/w/%{name}/%{name}-%{version}.tar.bz2
 URL:    http://git.fedorahosted.org/git/hwdata.git
 BuildArch: noarch
@@ -11,6 +13,9 @@ BuildArch: noarch
 %description
 hwdata contains various hardware identification and configuration data,
 such as the pci.ids and usb.ids databases.
+
+%description -l zh_CN.UTF-8
+硬件定义和配置数据，比如 pci.ids 和 usb.ids 数据库。
 
 %prep
 %setup -q
@@ -22,6 +27,7 @@ such as the pci.ids and usb.ids databases.
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT libdir=%{_prefix}/lib
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -33,6 +39,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.263-1
+- 更新到 0.263
+
 * Tue Feb 25 2014 Michal Minar <miminar@redhat.com> 0.261-1
 - Update of pci, usb and vendor ids.
 

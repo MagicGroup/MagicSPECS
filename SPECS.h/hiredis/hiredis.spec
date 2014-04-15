@@ -1,9 +1,11 @@
 Name:           hiredis
 Version:        0.11.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A minimalistic C client library for Redis
+Summary(zh_CN.UTF-8): Redis 的简约 C 客户端库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD
 URL:            https://github.com/antirez/hiredis
 Source0:        antirez-%{name}-v%{version}-0-g0fff0f1.tar.gz
@@ -13,14 +15,22 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %description 
 Hiredis is a minimalistic C client library for the Redis database.
 
+%description -l zh_CN.UTF-8
+Redis 数据库的简约 C 客户端库。
+
 %package devel
 Summary:        Header files and libraries for hiredis C development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel 
 The %{name}-devel package contains the header files and 
 libraries to develop applications using a Redis database.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n antirez-%{name}-0fff0f1
@@ -38,6 +48,7 @@ cp hiredis-example %{buildroot}%{_bindir}
 cp hiredis-test    %{buildroot}%{_bindir}
 
 rm -f `find %{buildroot} -name *.a`
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -61,6 +72,9 @@ rm -rf %{buildroot}
 %{_libdir}/libhiredis.so
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.11.0-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 29 2012 Shakthi Kannan <shakthimaan [AT] fedoraproject dot org> 0.11.0-1
 - Updated to 0.11.0
 

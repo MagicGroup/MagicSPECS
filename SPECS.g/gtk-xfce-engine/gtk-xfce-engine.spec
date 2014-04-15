@@ -2,7 +2,7 @@
 
 Name:           gtk-xfce-engine
 Version:        3.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Xfce GTK theme engine
 Summary(zh_CN.UTF-8): Xfce 的 GTK 主题引擎
 
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 3.0.1-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 06 2012 Christoph Wickert <cwickert@fedoraproject.org> - 3.0.1-1
 - Update to 3.0.1
 
