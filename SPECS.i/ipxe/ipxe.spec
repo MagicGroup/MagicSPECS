@@ -13,7 +13,10 @@
 
 # We only build the ROMs if on an x86 build host. The resulting
 # binary RPM will be noarch, so other archs will still be able
-# to use the binary ROMs
+# to use the binary ROMs.
+#
+# We do cross-compilation for 32->64-bit, but not for other arches
+# because EDK II does not support big-endian hosts.
 %global buildarches %{ix86} x86_64
 
 # debugging firmwares does not goes the same way as a normal program.
@@ -31,12 +34,12 @@
 #
 # And then change these two:
 
-%global date 20120328
-%global hash aac9718
+%global date 20130517
+%global hash c4bce43
 
 Name:    ipxe
 Version: %{date}
-Release: 2.git%{hash}%{?dist}
+Release: 3.git%{hash}%{?dist}
 Summary: A network boot loader
 
 Group:   System Environment/Base
@@ -49,12 +52,20 @@ Source1: USAGE
 # go upstream. Modifying the general config header file is the
 # intended means for downstream customization.
 Patch1: %{name}-banner-timeout.patch
+# GCC >= 4.8 doesn't like the use of 'ebp' in asm
+# https://bugzilla.redhat.com/show_bug.cgi?id=914091
+Patch2: %{name}-asm.patch
 
 %ifarch %{buildarches}
 BuildRequires: perl
 BuildRequires: syslinux
 BuildRequires: mtools
 BuildRequires: mkisofs
+BuildRequires: edk2-tools
+
+BuildRequires: binutils-devel
+BuildRequires: binutils-x86_64-linux-gnu gcc-x86_64-linux-gnu
+
 Obsoletes: gpxe <= 1.0.1
 
 %package bootimgs
@@ -109,10 +120,17 @@ DNS, HTTP, iSCSI, etc.
 %prep
 %setup -q -n %{name}-%{version}-git%{hash}
 %patch1 -p1
+%patch2 -p1
 cp -a %{SOURCE1} .
 
 %build
 %ifarch %{buildarches}
+# The src/Makefile.housekeeping relies on .git/index existing
+# but since we pass GITVERSION= to make, we don't actally need
+# it to be the real deal, so just touch it to let the build pass
+mkdir .git
+touch .git/index
+
 ISOLINUX_BIN=/usr/share/syslinux/isolinux.bin
 cd src
 # ath9k drivers are too big for an Option ROM
@@ -120,12 +138,32 @@ rm -rf drivers/net/ath/ath9k
 
 #make %{?_smp_mflags} bin/undionly.kpxe bin/ipxe.{dsk,iso,usb,lkrn} allroms \
 make bin/undionly.kpxe bin/ipxe.{dsk,iso,usb,lkrn} allroms \
-                   ISOLINUX_BIN=${ISOLINUX_BIN} NO_WERROR=1 V=1
+                   ISOLINUX_BIN=${ISOLINUX_BIN} NO_WERROR=1 V=1 \
+		   GITVERSION=%{hash} \
+		   CROSS_COMPILE=x86_64-linux-gnu-
+
+# build roms with efi support for qemu
+mkdir bin-combined
+for rom in %qemuroms; do
+  make NO_WERROR=1 V=1 GITVERSION=%{hash} CROSS_COMPILE=x86_64-linux-gnu- bin/${rom}.rom
+  make NO_WERROR=1 V=1 GITVERSION=%{hash} CROSS_COMPILE=x86_64-linux-gnu- bin-i386-efi/${rom}.efidrv
+  make NO_WERROR=1 V=1 GITVERSION=%{hash} CROSS_COMPILE=x86_64-linux-gnu- bin-x86_64-efi/${rom}.efidrv
+  vid="0x${rom%%????}"
+  did="0x${rom#????}"
+  EfiRom -f "$vid" -i "$did" --pci23 \
+         -b  bin/${rom}.rom \
+         -ec bin-i386-efi/${rom}.efidrv \
+         -ec bin-x86_64-efi/${rom}.efidrv \
+         -o  bin-combined/${rom}.rom
+  EfiRom -d  bin-combined/${rom}.rom
+done
+
 %endif
 
 %install
 %ifarch %{buildarches}
 mkdir -p %{buildroot}/%{_datadir}/%{name}/
+mkdir -p %{buildroot}/%{_datadir}/%{name}.efi/
 pushd src/bin/
 
 cp -a undionly.kpxe ipxe.{iso,usb,dsk,lkrn} %{buildroot}/%{_datadir}/%{name}/
@@ -148,6 +186,10 @@ for fmt in rom ;do
   echo %{_datadir}/%{name}/${rom}.${fmt} >> qemu.${fmt}.list
  done
 done
+for rom in %{qemuroms}; do
+  cp src/bin-combined/${rom}.rom %{buildroot}/%{_datadir}/%{name}.efi/
+  echo %{_datadir}/%{name}.efi/${rom}.rom >> qemu.rom.list
+done
 %endif
 
 %ifarch %{buildarches}
@@ -166,10 +208,31 @@ done
 
 %files roms-qemu -f qemu.rom.list
 %dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}.efi
 %doc COPYING COPYRIGHTS
 %endif
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130517-3.gitc4bce43
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon May 20 2013 Paolo Bonzini <pbonzini@redhat.com> - 20130103-3.git717279a
+- Fix BuildRequires, use cross-compiler when building on 32-bit i686
+- Build UEFI drivers for QEMU and include them (patch from Gerd Hoffmann.
+  BZ#958875)
+
+* Fri May 17 2013 Daniel P. Berrange <berrange@redhat.com> - 20130517-1.gitc4bce43
+- Update to latest upstream snapshot
+
+* Fri May 17 2013 Daniel P. Berrange <berrange@redhat.com> - 20130103-3.git717279a
+- Fix build with GCC 4.8 (rhbz #914091)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130103-2.git717279a
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jan  3 2013 Daniel P. Berrange <berrange@redhat.com> - 20130103-1.git717279a
+- Updated to latest GIT snapshot
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120328-2.gitaac9718
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
