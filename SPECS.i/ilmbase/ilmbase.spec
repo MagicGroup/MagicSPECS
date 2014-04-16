@@ -1,24 +1,27 @@
-
-Name:	 ilmbase 
-Version: 1.0.2
-Release: 5%{?dist}
+Name:    ilmbase
+Version: 2.1.0
+Release: 1%{?dist}
 Summary: Abstraction/convenience libraries
 
-Group:	 System Environment/Libraries
 License: BSD
 URL:	 http://www.openexr.com/
 Source0: http://download.savannah.nongnu.org/releases/openexr/ilmbase-%{version}.tar.gz
-Source1: http://download.savannah.nongnu.org/releases/openexr/ilmbase-%{version}.tar.gz.sig
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 #BuildRequires: automake libtool
 BuildRequires: pkgconfig
+# silly rpm, won't pick up rpm dependencies for items not in it's buildroot
+# see http://bugzilla.redhat.com/866302
+BuildRequires: pkgconfig(gl) pkgconfig(glu)
 
 ## upstreamable patches
-# missing #include <cstring>
-Patch50: ilmbase-1.0.2-cstring.patch
 # explicitly add $(PTHREAD_LIBS) to libIlmThread linkage (helps workaround below)
-Patch51: ilmbase-1.0.2-no_undefined.patch
+Patch51: ilmbase-2.0.1-no_undefined.patch
+# add Requires.private: gl glu to IlmBase.pc
+Patch53:  ilmbase-1.0.3-pkgconfig.patch
+# use ucontext only on ix86/x86_64, avoid FTBFS on arm (patch borrowed from opensuse)
+Patch54: ilmbase-2.0-1-arm.patch
+
+## upstream patches
 
 %description
 Half is a class that encapsulates the ilm 16-bit floating-point format.
@@ -33,10 +36,7 @@ Iex is an exception-handling library.
 
 %package devel
 Summary: Headers and libraries for building apps that use %{name} 
-Group:	 Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: libGL-devel libGLU-devel
-Requires: pkgconfig
 %description devel
 %{summary}.
 
@@ -44,8 +44,11 @@ Requires: pkgconfig
 %prep
 %setup -q
 
-%patch50 -p1 -b .cstring
 %patch51 -p1 -b .no_undefined
+%patch53 -p1 -b .pkgconfig
+%patch54 -p1 -b .arm
+
+#/bootstrap
 
 
 %build
@@ -57,16 +60,15 @@ make %{?_smp_mflags} PTHREAD_LIBS="-pthread -lpthread"
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-
-rm -f  $RPM_BUILD_ROOT%{_libdir}/lib*.la
+rm -fv %{buildroot}%{_libdir}/lib*.la
 
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
 test "$(pkg-config --modversion IlmBase)" = "%{version}"
+# is the known-failure ix86-specific or 32bit specific? guess we'll find out -- rex
 %ifarch %{ix86}
 make check ||:
 %else
@@ -74,36 +76,58 @@ make check
 %endif
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
-
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/libHalf.so.6*
-%{_libdir}/libIex.so.6*
-%{_libdir}/libIlmThread.so.6*
-%{_libdir}/libImath.so.6*
+%{_libdir}/libHalf.so.11*
+%{_libdir}/libIex-2_1.so.11*
+%{_libdir}/libIexMath-2_1.so.11*
+%{_libdir}/libIlmThread-2_1.so.11*
+%{_libdir}/libImath-2_1.so.11*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/OpenEXR/
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/IlmBase.pc
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.2-5
-- 为 Magic 3.0 重建
+* Wed Nov 27 2013 Rex Dieter <rdieter@fedoraproject.org> 2.1.0-1
+- 2.1.0
 
-* Tue Dec 13 2011 Liu Di <liudidi@gmail.com> - 1.0.2-4
-- 为 Magic 3.0 重建
+* Thu Aug 29 2013 Rex Dieter <rdieter@fedoraproject.org>  2.0.1-1
+- 2.0.1
+
+* Thu Aug 29 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.3-7
+- Fix spec issues, modernise spec
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.3-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Oct 15 2012 Rex Dieter <rdieter@fedoraproject.org> 1.0.3-4
+- ilmbase-devel missing dependency on libGLU-devel (#866302)
+
+* Sat Sep 08 2012 Rex Dieter <rdieter@fedoraproject.org> - 1.0.3-3
+- IlmBase.pc: +Requires.private: gl glu
+- -devel: drop hard-coded libGL/pkgconfig deps, let rpm autodetect now
+
+* Tue Sep 04 2012 Dan Horák <dan[at]danny.cz> 1.0.3-2
+- fix build on non-x86 arches
+
+* Sun Aug 05 2012 Rex Dieter <rdieter@fedoraproject.org> 1.0.3-1
+- ilmbase-1.0.3
+- ix86 fix courtesy of Nicolas Chauvet <kwizart@gmail.com>
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
