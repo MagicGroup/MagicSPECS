@@ -1,0 +1,28 @@
+From f231ed52c4adeb071de0553af7a575687a6d3dc5 Mon Sep 17 00:00:00 2001
+From: Julien Cristau <jcristau@debian.org>
+Date: Sat, 17 Aug 2013 10:12:08 +0000
+Subject: Replace fprintf with fputs
+
+Fix build failure with -Werror=format-security:
+imake.c:1008:5: error: format not a string literal and no format arguments [-Werror=format-security]
+     fprintf (inFile, command);
+     ^
+
+Signed-off-by: Julien Cristau <jcristau@debian.org>
+Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+---
+diff --git a/imake.c b/imake.c
+index 7ea13e6..c20cd4a 100644
+--- a/imake.c
++++ b/imake.c
+@@ -1005,7 +1005,7 @@ get_libc_version(FILE *inFile)
+     abort ();
+ 
+   while (fgets (command, len, fp))
+-    fprintf (inFile, command);
++    fputs (command, inFile);
+ 
+   len = pclose (fp);
+   remove (aout);
+--
+cgit v0.9.0.2-2-gbebe
