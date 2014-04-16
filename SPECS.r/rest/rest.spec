@@ -1,6 +1,6 @@
 Name:          rest
-Version:       0.7.12
-Release:       2%{?dist}
+Version:       0.7.90
+Release:       5%{?dist}
 Summary:       A library for access to RESTful web services
 
 Group:         System Environment/Libraries
@@ -14,6 +14,9 @@ BuildRequires: gobject-introspection-devel
 BuildRequires: libsoup-devel
 BuildRequires: libxml2-devel
 BuildRequires: gtk-doc
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: libtool
 
 %description
 This library was designed to make it easier to access web services that
@@ -38,6 +41,7 @@ Files for development with %{name}.
 %patch0 -p1 -b .fixdso
 
 %build
+autoreconf -vif
 %configure --disable-static --enable-gtk-doc --enable-introspection=yes
 
 make %{?_smp_mflags} V=1
@@ -73,8 +77,26 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gir-1.0/RestExtras-0.7.gir
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.7.12-2
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.90-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 15 2013 Matthias Clasen <mclasen@redhat.com> 0.7.90-4
+- Rebuild with newer gtk-doc to fix multilib issue
+
+* Sat Apr 13 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.7.90-3
+- Run autoreconf for aarch64 (RHBZ 926440)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.90-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Aug 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.7.90-1
+- Release 0.7.90
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.12-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Thu Nov 10 2011 Peter Robinson <pbrobinson@fedoraproject.org> 0.7.12-1
 - Release 0.7.12. Fixes CVE-2011-4129 RHBZ 752022
