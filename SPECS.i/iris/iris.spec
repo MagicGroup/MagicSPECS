@@ -1,16 +1,13 @@
 
-%define snap 20110904
-%define svn 812
+%define snap 20131107
 
 Name:    iris
 Summary: A library for working with the XMPP/Jabber protocol
 Version: 1.0.0
-Release: 0.14.%{snap}svn%{svn}%{?dist}
+Release: 0.16.%{snap}git%{?dist}
 License: LGPLv2+
-URL:     http://delta.affinix.com/iris/
-# svn export https://delta.affinix.com/svn/trunk/iris iris-1.0.0
-# tar czf iris-1.0.0-%%{snap}.tar.gz iris-1.0.0/
-Source0: iris-1.0.0-r%{svn}.tar.gz
+URL:     https://github.com/psi-im/iris
+Source0: iris-1.0.0-%{snap}git.tar.gz
 
 BuildRequires: pkgconfig(libidn)
 BuildRequires: pkgconfig(qca2)
@@ -27,22 +24,10 @@ Requires: qca-ossl%{?_isa}
 Patch0: iris-1.0.0-install.patch
 # Build shared library, bump VERSION to 2.0.0 for ABI changes from Kopete
 Patch1: iris-1.0.0-sharedlib.patch
-# unbundle libidn, use system copy
-Patch2: iris-1.0.0-system_libidn.patch
 # install jdns
 Patch3: iris-1.0.0-jdns_install.patch
-
-## rebased patches from kopete
-Patch103: iris-1.0.0-003_case_insensitive_jid.patch
-Patch109: iris-1.0.0-009_filetransferpreview.patch
-Patch114: iris-1.0.0-014_fix_semicolons.patch
-Patch123: iris-1.0.0-023_jingle.patch
-# followup to patch123, to install new headers
-Patch223: iris-1.0.0-install_jingle.patch
-Patch124: iris-1.0.0-024_fix_semicolons_and_iterator.patch
-Patch127: iris-1.0.0-027_add_socket_access_function.patch
-Patch130: iris-1.0.0-030_xep_0115_hash_attribute.patch
-
+# omit source files with undefined references
+Patch4: iris-1.0.0-no_undefined.patch
 
 %description
 %{summary}.
@@ -75,20 +60,12 @@ Requires: qjdns%{?_isa} = %{version}-%{release}
 
 %prep
 %setup -q
+
 %patch0 -p1 -b .install
 %patch1 -p1 -b .shared
-%patch2 -p1 -b .system_libidn
-mv src/libidn src/libidn.BAK
 %patch3 -p1 -b .jdns_install
+%patch4 -p1 -b .no_undefined
 
-%patch103 -p1 -b .003
-%patch109 -p1 -b .009
-%patch114 -p1 -b .014
-%patch123 -p1 -b .023
-%patch223 -p1 -b .223
-%patch124 -p1 -b .024
-%patch127 -p1 -b .027
-%patch130 -p1 -b .030
 
 
 %build
@@ -110,9 +87,6 @@ mv %{buildroot}%{_qt4_headerdir}/iris/jid.h \
 sed -i -e 's|#include "xmpp/jid/jid.h"|#include "xmpp_jid.h"|g' \
   %{buildroot}%{_qt4_headerdir}/iris/*.h
 
-#修正pkgconfig的路径 
-mkdir -p %{buildroot}%{_libdir}/pkgconfig
-cp %{buildroot}%{_qt4_libdir}/pkgconfig/*.pc %{buildroot}%{_libdir}/pkgconfig
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_qt4_libdir}/pkgconfig:
@@ -134,7 +108,6 @@ test "$(pkg-config --modversion qjdns)" = "1.0.0"
 %{_qt4_headerdir}/iris/
 %{_qt4_libdir}/libiris.so
 %{_qt4_libdir}/libirisnet.so
-%{_libdir}/pkgconfig/*.pc
 %{_qt4_libdir}/pkgconfig/iris.pc
 %{_qt4_libdir}/pkgconfig/irisnet.pc
 
@@ -152,6 +125,12 @@ test "$(pkg-config --modversion qjdns)" = "1.0.0"
 
 
 %changelog
+* Sat Nov 23 2013 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.16.20131107git
+- 20131107 snapshot
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-0.15.20110904svn812
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue May 07 2013 Kevin Kofler <Kevin@tigcc.ticalc.org> 1.0.0-0.14.20110904svn812
 - bump soname version to 2.0.0 for ABI changes from Kopete (#958793)
 
