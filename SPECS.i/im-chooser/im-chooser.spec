@@ -7,11 +7,10 @@
 %endif
 
 Name:		im-chooser
-Version:	1.6.0
-Release:	4%{?dist}
-License:	GPLv2+
+Version:	1.6.4
+Release:	2%{?dist}
+License:	GPLv2+ and LGPLv2+
 URL:		http://fedorahosted.org/im-chooser/
-Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %{?_with_gtk2:BuildRequires:	gtk2-devel}
 %{!?_with_gtk2:BuildRequires:	gtk3-devel}
 BuildRequires:	libSM-devel imsettings-devel >= 1.3.0
@@ -37,6 +36,8 @@ Summary:	Common files for im-chooser subpackages
 Group:		Applications/System
 Requires:	imsettings >= 1.3.0
 Obsoletes:	im-chooser < 1.5.0.1
+## https://fedorahosted.org/fpc/ticket/174
+Provides:	bundled(egglib)
 
 %description	common
 im-chooser is a GUI configuration tool to choose the Input Method
@@ -44,20 +45,6 @@ to be used or disable Input Method usage on the desktop.
 
 This package contains the common libraries/files to be used in
 im-chooser subpackages.
-
-# %%if 0%%{!?_with_gtk2:1}
-%if 0
-%package	gnome3
-Summary:	control-center module for im-chooser on GNOME3
-Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-
-%description	gnome3
-im-chooser is a GUI configuration tool to choose the Input Method
-to be used or disable Input Method usage on the desktop.
-
-This package contains the control-center panel module on GNOME3.
-%endif
 
 %if 0%{?_with_xfce}
 %package	xfce
@@ -82,11 +69,12 @@ This package contains the XFCE settings panel for im-chooser.
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL="/usr/bin/install -p"
 
-make install DESTDIR=$RPM_BUILD_ROOT
-
-desktop-file-install	--vendor=fedora				\
+desktop-file-install \
+%if 0%{?fedora} && 0%{?fedora} < 19
+	--vendor=fedora				\
+%endif
 	--add-category=X-GNOME-PersonalSettings			\
 	--delete-original					\
 	--dir=$RPM_BUILD_ROOT%{_datadir}/applications		\
@@ -102,19 +90,16 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/libimchooseui.{so,la,a}
 # disable panel so far
 rm -rf $RPM_BUILD_ROOT%{_libdir}/control-center-1/panels/libim-chooser.so
 rm -rf $RPM_BUILD_ROOT%{_datadir}/applications/im-chooser-panel.desktop
-magic_rpm_clean.sh
-%find_lang %{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%find_lang %{name}
 
 
 %post	common
-/usr/sbin/ldconfig
+/sbin/ldconfig
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun	common
-/usr/sbin/ldconfig
+/sbin/ldconfig
 if [ $1 -eq 0 ] ; then
     touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
@@ -125,37 +110,56 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files
-%defattr (-, root, root)
 %{_bindir}/im-chooser
+%if 0%{?fedora} && 0%{?fedora} < 19
 %{_datadir}/applications/fedora-im-chooser.desktop
+%else
+%{_datadir}/applications/im-chooser.desktop
+%endif
+%{_mandir}/man1/im-chooser.1*
 
 %files	common -f %{name}.lang
-%defattr (-, root, root)
 %doc AUTHORS COPYING ChangeLog README
 %{_libdir}/libimchooseui.so.*
 %{_datadir}/icons/hicolor/*/apps/im-chooser.png
 %dir %{_datadir}/imchooseui
 %{_datadir}/imchooseui/imchoose.ui
 
-# %%if 0%%{!?_with_gtk2:1}
-%if 0
-%files	gnome3
-%defattr (-, root, root, -)
-%doc AUTHORS COPYING ChangeLog README
-%{_libdir}/control-center-1/panels/libim-chooser.so
-%{_datadir}/applications/im-chooser-panel.desktop
-%endif
-
 %if 0%{?_with_xfce}
 %files	xfce
-%defattr (-, root, root, -)
 %{_bindir}/xfce4-im-chooser
 %{_datadir}/applications/xfce4-im-chooser.desktop
 %endif
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.6.0-4
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 11 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.4-1
+- New upstream release.
+- Remove BR: docbook2X
+
+* Tue May 28 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.3-1
+- New upstream release.
+  - Add a link to the log file in the error dialog (#950488)
+  - Fix a crash issue (#859624)
+
+* Sat Feb 23 2013 Toshio Kuratomi <toshio@fedoraproject.org> - 1.6.2-3
+- Remove --vendora from desktop-file-utils in F19+ https://fedorahosted.org/fesco/ticket/1077
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Nov 23 2012 Akira TAGOH <tagoh@redhat.com> - 1.6.2-1
+- New upstream release.
+- the spec file cleanup.
+- Correct License field
+- Add Provides: bundled(egglib) to im-chooser-common since
+  it actually contains things in libimchooseui.so.0
+
+* Fri Nov  2 2012 Akira TAGOH <tagoh@redhat.com> - 1.6.1-1
+- New upstream release.
+  Translation updates. (#863375)
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
