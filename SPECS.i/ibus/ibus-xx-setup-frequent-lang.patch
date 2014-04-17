@@ -13,7 +13,7 @@ diff --git a/data/ibus.schemas.in b/data/ibus.schemas.in
 index 28d2219..0600133 100644
 --- a/data/ibus.schemas.in
 +++ b/data/ibus.schemas.in
-@@ -351,6 +351,174 @@ se,si,sk,sy,sy(ku),th,tj,tr,ua,uz,vn
+@@ -384,6 +384,174 @@ se,si,sk,sy,sy(ku),th,tj,tr,ua,uz,vn
        </locale>
      </schema>
      <schema>
@@ -355,7 +355,7 @@ index b45ad56..830f0e8 100644
 +                else:
 +                    pixbuf = load_icon("go-up", Gtk.IconSize.LARGE_TOOLBAR)
 +                if pixbuf == None:
-+                    pixbuf = load_icon(Gtk.STOCK_MISSING_IMAGE,
++                    pixbuf = load_icon("image-missing",
 +                                       Gtk.IconSize.LARGE_TOOLBAR)
 +                if pixbuf == None:
 +                    renderer.set_property("visible", False)

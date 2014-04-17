@@ -1,6 +1,6 @@
-From 8085ca38cb9c2ea370ebe64d80a4d7894a485960 Mon Sep 17 00:00:00 2001
+From bce8b85886075fbdbf28bd5795be8bd41f3a984e Mon Sep 17 00:00:00 2001
 From: fujiwarat <takao.fujiwara1@gmail.com>
-Date: Tue, 14 Jan 2014 15:27:50 +0900
+Date: Thu, 13 Mar 2014 15:49:11 +0900
 Subject: [PATCH] Add libgnomekbd and load preload engines.
 
 ---
@@ -20,9 +20,9 @@ Subject: [PATCH] Add libgnomekbd and load preload engines.
  ui/gtk3/Makefile.am             |  36 ++++
  ui/gtk3/gkbdlayout.vala.false   |  63 ++++++
  ui/gtk3/gkbdlayout.vala.true    | 108 ++++++++++
- ui/gtk3/panel.vala              | 196 ++++++++++++++++-
+ ui/gtk3/panel.vala              | 230 +++++++++++++++++++-
  ui/gtk3/xkblayout.vala          | 429 ++++++++++++++++++++++++++++++++++++
- 18 files changed, 1634 insertions(+), 5 deletions(-)
+ 18 files changed, 1668 insertions(+), 5 deletions(-)
  create mode 100644 bindings/vala/Gkbd-3.0.metadata
  create mode 100644 bindings/vala/Xkl-1.0.metadata
  create mode 100644 bindings/vala/gkbd.deps
@@ -130,7 +130,7 @@ index eec6da3..f84c034 100644
              continue;
          g_variant_builder_add (
 diff --git a/configure.ac b/configure.ac
-index d71c415..779e29e 100644
+index 9a502ec..3ec629d 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -261,6 +261,45 @@ else
@@ -179,7 +179,7 @@ index d71c415..779e29e 100644
  # GObject introspection
  GOBJECT_INTROSPECTION_CHECK([0.6.8])
  
-@@ -619,6 +658,7 @@ Build options:
+@@ -640,6 +679,7 @@ Build options:
    Panel icon                "$IBUS_ICON_KEYBOARD"
    Enable surrounding-text   $enable_surrounding_text
    Enable libnotify          $enable_libnotify
@@ -188,7 +188,7 @@ index d71c415..779e29e 100644
  ])
  
 diff --git a/data/ibus.schemas.in b/data/ibus.schemas.in
-index d256cbb..8fd7e15 100644
+index 2f76ce3..caec315 100644
 --- a/data/ibus.schemas.in
 +++ b/data/ibus.schemas.in
 @@ -56,6 +56,52 @@
@@ -1012,28 +1012,28 @@ index 0000000..5aa486d
 +G_END_DECLS
 +#endif
 diff --git a/ui/gtk3/Makefile.am b/ui/gtk3/Makefile.am
-index 6012cfa..3dfa0df 100644
+index b2fb800..f148202 100644
 --- a/ui/gtk3/Makefile.am
 +++ b/ui/gtk3/Makefile.am
-@@ -44,6 +44,8 @@ AM_CPPFLAGS = \
- 
- USE_SYMBOL_ICON = FALSE
+@@ -35,6 +35,8 @@ gtkpanel.xml: gtkpanel.xml.in
+ 		-e 's|@libexecdir[@]|$(libexecdir)|g' $< > $@.tmp && \
+ 		mv $@.tmp $@
  
 +HAVE_IBUS_GKBD_C = $(strip $(subst false, FALSE, $(subst true, TRUE, $(HAVE_IBUS_GKBD))))
 +
- AM_CFLAGS = \
- 	@GLIB2_CFLAGS@ \
- 	@GIO2_CFLAGS@ \
-@@ -54,6 +56,8 @@ AM_CFLAGS = \
+ # force include config.h before gi18n.h.
+ AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/src \
+@@ -51,6 +53,8 @@ AM_CFLAGS = \
+ 	-DG_LOG_DOMAIN=\"IBUS\" \
  	-DBINDIR=\"$(bindir)\" \
  	-DIBUS_DISABLE_DEPRECATED \
- 	-DSWITCHER_USE_SYMBOL_ICON=$(USE_SYMBOL_ICON) \
 +	-DHAVE_IBUS_GKBD=$(HAVE_IBUS_GKBD_C) \
 +	-DXKB_LAYOUTS_MAX_LENGTH=4 \
  	-Wno-unused-variable \
  	-Wno-unused-but-set-variable \
  	-Wno-unused-function \
-@@ -97,12 +101,40 @@ AM_VALAFLAGS += \
+@@ -94,12 +98,40 @@ AM_VALAFLAGS += \
  	$(NULL)
  endif
  
@@ -1074,7 +1074,7 @@ index 6012cfa..3dfa0df 100644
  	handle.vala \
  	iconwidget.vala \
  	keybindingmanager.vala \
-@@ -112,6 +144,7 @@ ibus_ui_gtk3_SOURCES = \
+@@ -109,6 +141,7 @@ ibus_ui_gtk3_SOURCES = \
  	propertypanel.vala \
  	separator.vala \
  	switcher.vala \
@@ -1082,7 +1082,7 @@ index 6012cfa..3dfa0df 100644
  	$(NULL)
  
  ibus_ui_gtk3_LDADD = \
-@@ -120,9 +153,12 @@ ibus_ui_gtk3_LDADD = \
+@@ -117,9 +150,12 @@ ibus_ui_gtk3_LDADD = \
  
  CLEANFILES = \
  	gtkpanel.xml \
@@ -1279,13 +1279,13 @@ index 0000000..a6e0f8d
 +    */
 +}
 diff --git a/ui/gtk3/panel.vala b/ui/gtk3/panel.vala
-index a7a0c40..1da7966 100644
+index 748cb32..7a15049 100644
 --- a/ui/gtk3/panel.vala
 +++ b/ui/gtk3/panel.vala
-@@ -58,6 +58,13 @@ class Panel : IBus.PanelService {
-     private Gtk.CssProvider m_css_provider;
-     private int m_switcher_delay_time = 400;
-     private bool m_use_system_keyboard_layout = false;
+@@ -63,6 +63,13 @@ class Panel : IBus.PanelService {
+                                                    GLib.str_equal);
+     private Gdk.RGBA m_xkb_icon_rgba = Gdk.RGBA(){
+             red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 };
 +    private GkbdLayout m_gkbdlayout = null;
 +    private XKBLayout m_xkblayout = null;
 +    private string[] m_layouts = {};
@@ -1296,7 +1296,7 @@ index a7a0c40..1da7966 100644
  
      private GLib.List<Keybinding> m_keybindings = new GLib.List<Keybinding>();
  
-@@ -108,6 +115,14 @@ class Panel : IBus.PanelService {
+@@ -113,6 +120,14 @@ class Panel : IBus.PanelService {
  
      ~Panel() {
          unbind_switch_shortcut();
@@ -1311,7 +1311,7 @@ index a7a0c40..1da7966 100644
      }
  
      private void init_settings() {
-@@ -444,6 +459,7 @@ class Panel : IBus.PanelService {
+@@ -487,6 +502,7 @@ class Panel : IBus.PanelService {
      }
  
      public void load_settings() {
@@ -1319,7 +1319,7 @@ index a7a0c40..1da7966 100644
          // Update m_use_system_keyboard_layout before update_engines()
          // is called.
          set_use_system_keyboard_layout();
-@@ -463,6 +479,184 @@ class Panel : IBus.PanelService {
+@@ -508,6 +524,184 @@ class Panel : IBus.PanelService {
          set_version();
      }
  
@@ -1504,7 +1504,7 @@ index a7a0c40..1da7966 100644
      private void exec_setxkbmap(IBus.EngineDesc engine) {
          string layout = engine.get_layout();
          string variant = engine.get_layout_variant();
-@@ -528,7 +722,7 @@ class Panel : IBus.PanelService {
+@@ -573,7 +767,7 @@ class Panel : IBus.PanelService {
  
          // set xkb layout
          if (!m_use_system_keyboard_layout)
@@ -1513,6 +1513,54 @@ index a7a0c40..1da7966 100644
  
          engine_contexts_insert(engine);
      }
+@@ -636,6 +830,39 @@ class Panel : IBus.PanelService {
+         }
+     }
+ 
++    /* IBus.Bus.get_engines_by_names() returns 'us' engine if the name 
++     * does not exist in simple.xml and 'us' engine could be duplicated.
++     */
++    private IBus.EngineDesc[] uniq_engines(IBus.EngineDesc[] engines) {
++        if (engines.length == 0)
++            return engines;
++
++        int i = 0;
++        IBus.EngineDesc[] retval = {};
++
++        for (; i < engines.length; i++) {
++            if (engines[i].get_name() == "xkb:us::eng")
++                break;
++        }
++
++        if (i == engines.length)
++            return engines;
++
++        for (int j = 0; j < engines.length; j++) {
++            if (j <= i) {
++                retval += engines[j];
++                continue;
++            }
++
++            if (engines[i].get_name() == engines[j].get_name())
++                continue;
++
++            retval += engines[j];
++        }
++
++        return retval;
++    }
++
+     private void run_preload_engines(IBus.EngineDesc[] engines, int index) {
+         string[] names = {};
+ 
+@@ -668,6 +895,7 @@ class Panel : IBus.PanelService {
+         }
+ 
+         var engines = m_bus.get_engines_by_names(names);
++        engines = uniq_engines(engines);
+ 
+         if (m_engines.length == 0) {
+             m_engines = engines;
 diff --git a/ui/gtk3/xkblayout.vala b/ui/gtk3/xkblayout.vala
 new file mode 100644
 index 0000000..b7dfb3e
@@ -1949,5 +1997,5 @@ index 0000000..b7dfb3e
 +    */
 +}
 -- 
-1.8.0
+1.8.5.3
 
