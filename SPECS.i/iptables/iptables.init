@@ -217,9 +217,14 @@ stop() {
     # Do not stop if iptables module is not loaded.
     [ ! -e "$PROC_IPTABLES_NAMES" ] && return 0
 
-    flush_n_delete
+    # Set default chain policy to ACCEPT, in order to not break shutdown
+    # on systems where the default policy is DROP and root device is
+    # network-based (i.e.: iSCSI, NFS)
     set_policy ACCEPT
     
+    # And then, flush the rules and delete chains
+    flush_n_delete
+
     if [ "x$IPTABLES_MODULES_UNLOAD" = "xyes" ]; then
 	echo -n $"${IPTABLES}: Unloading modules: "
 	ret=0
