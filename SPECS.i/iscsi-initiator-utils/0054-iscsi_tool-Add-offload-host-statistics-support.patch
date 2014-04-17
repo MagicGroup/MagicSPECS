@@ -1,0 +1,524 @@
+From fe6623803d1135fd382146faa847bcdf5dc6abc3 Mon Sep 17 00:00:00 2001
+From: Lalit Chandivade <lalit.chandivade@qlogic.com>
+Date: Fri, 22 Nov 2013 05:46:13 -0500
+Subject: [PATCH] iscsi_tool: Add offload host statistics support.
+
+Signed-off-by: Lalit Chandivade <lalit.chandivade@qlogic.com>
+Signed-off-by: Vikas Chaudhary <vikas.chaudhary@qlogic.com>
+---
+ include/iscsi_if.h | 116 ++++++++++++++++++++++++-
+ usr/iscsi_ipc.h    |   2 +
+ usr/iscsiadm.c     | 244 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ usr/netlink.c      |  47 +++++++++++
+ 4 files changed, 406 insertions(+), 3 deletions(-)
+
+diff --git a/include/iscsi_if.h b/include/iscsi_if.h
+index e59bcd0..9d15811 100644
+--- a/include/iscsi_if.h
++++ b/include/iscsi_if.h
+@@ -75,8 +75,8 @@ enum iscsi_uevent_e {
+ 	ISCSI_UEVENT_LOGOUT_FLASHNODE	= UEVENT_BASE + 29,
+ 	ISCSI_UEVENT_LOGOUT_FLASHNODE_SID	= UEVENT_BASE + 30,
+ 	ISCSI_UEVENT_SET_CHAP		= UEVENT_BASE + 31,
+-
+-	ISCSI_UEVENT_MAX		= ISCSI_UEVENT_SET_CHAP,
++	ISCSI_UEVENT_GET_HOST_STATS	= UEVENT_BASE + 32,
++	ISCSI_UEVENT_MAX		= ISCSI_UEVENT_GET_HOST_STATS,
+ 
+ 	/* up events */
+ 	ISCSI_KEVENT_RECV_PDU		= KEVENT_BASE + 1,
+@@ -251,6 +251,10 @@ struct iscsi_uevent {
+ 			uint32_t	host_no;
+ 			uint32_t	sid;
+ 		} logout_flashnode_sid;
++		struct msg_get_host_stats {
++			uint32_t	host_no;
++		} get_host_stats;
++
+ 	} u;
+ 	union {
+ 		/* messages k -> u */
+@@ -854,4 +858,112 @@ struct iscsi_chap_rec {
+ 	uint8_t password_length;
+ };
+ 
++#define ISCSI_HOST_STATS_CUSTOM_MAX		32
++#define ISCSI_HOST_STATS_CUSTOM_DESC_MAX	64
++struct iscsi_host_stats_custom {
++	char desc[ISCSI_HOST_STATS_CUSTOM_DESC_MAX];
++	uint64_t value;
++};
++
++/* struct iscsi_offload_host_stats: Host statistics,
++ * Include statistics for MAC, IP, TCP & iSCSI.
++ */
++struct iscsi_offload_host_stats {
++	/* MAC */
++	uint64_t mactx_frames;
++	uint64_t mactx_bytes;
++	uint64_t mactx_multicast_frames;
++	uint64_t mactx_broadcast_frames;
++	uint64_t mactx_pause_frames;
++	uint64_t mactx_control_frames;
++	uint64_t mactx_deferral;
++	uint64_t mactx_excess_deferral;
++	uint64_t mactx_late_collision;
++	uint64_t mactx_abort;
++	uint64_t mactx_single_collision;
++	uint64_t mactx_multiple_collision;
++	uint64_t mactx_collision;
++	uint64_t mactx_frames_dropped;
++	uint64_t mactx_jumbo_frames;
++	uint64_t macrx_frames;
++	uint64_t macrx_bytes;
++	uint64_t macrx_unknown_control_frames;
++	uint64_t macrx_pause_frames;
++	uint64_t macrx_control_frames;
++	uint64_t macrx_dribble;
++	uint64_t macrx_frame_length_error;
++	uint64_t macrx_jabber;
++	uint64_t macrx_carrier_sense_error;
++	uint64_t macrx_frame_discarded;
++	uint64_t macrx_frames_dropped;
++	uint64_t mac_crc_error;
++	uint64_t mac_encoding_error;
++	uint64_t macrx_length_error_large;
++	uint64_t macrx_length_error_small;
++	uint64_t macrx_multicast_frames;
++	uint64_t macrx_broadcast_frames;
++	/* IP */
++	uint64_t iptx_packets;
++	uint64_t iptx_bytes;
++	uint64_t iptx_fragments;
++	uint64_t iprx_packets;
++	uint64_t iprx_bytes;
++	uint64_t iprx_fragments;
++	uint64_t ip_datagram_reassembly;
++	uint64_t ip_invalid_address_error;
++	uint64_t ip_error_packets;
++	uint64_t ip_fragrx_overlap;
++	uint64_t ip_fragrx_outoforder;
++	uint64_t ip_datagram_reassembly_timeout;
++	uint64_t ipv6tx_packets;
++	uint64_t ipv6tx_bytes;
++	uint64_t ipv6tx_fragments;
++	uint64_t ipv6rx_packets;
++	uint64_t ipv6rx_bytes;
++	uint64_t ipv6rx_fragments;
++	uint64_t ipv6_datagram_reassembly;
++	uint64_t ipv6_invalid_address_error;
++	uint64_t ipv6_error_packets;
++	uint64_t ipv6_fragrx_overlap;
++	uint64_t ipv6_fragrx_outoforder;
++	uint64_t ipv6_datagram_reassembly_timeout;
++	/* TCP */
++	uint64_t tcptx_segments;
++	uint64_t tcptx_bytes;
++	uint64_t tcprx_segments;
++	uint64_t tcprx_byte;
++	uint64_t tcp_duplicate_ack_retx;
++	uint64_t tcp_retx_timer_expired;
++	uint64_t tcprx_duplicate_ack;
++	uint64_t tcprx_pure_ackr;
++	uint64_t tcptx_delayed_ack;
++	uint64_t tcptx_pure_ack;
++	uint64_t tcprx_segment_error;
++	uint64_t tcprx_segment_outoforder;
++	uint64_t tcprx_window_probe;
++	uint64_t tcprx_window_update;
++	uint64_t tcptx_window_probe_persist;
++	/* ECC */
++	uint64_t ecc_error_correction;
++	/* iSCSI */
++	uint64_t iscsi_pdu_tx;
++	uint64_t iscsi_data_bytes_tx;
++	uint64_t iscsi_pdu_rx;
++	uint64_t iscsi_data_bytes_rx;
++	uint64_t iscsi_io_completed;
++	uint64_t iscsi_unexpected_io_rx;
++	uint64_t iscsi_format_error;
++	uint64_t iscsi_hdr_digest_error;
++	uint64_t iscsi_data_digest_error;
++	uint64_t iscsi_sequence_error;
++	/*
++	 * iSCSI Custom Host Statistics support, i.e. Transport could
++	 * extend existing host statistics with its own specific statistics
++	 * up to ISCSI_HOST_STATS_CUSTOM_MAX
++	 */
++	uint32_t custom_length;
++	struct iscsi_host_stats_custom custom[0]
++		 __attribute__ ((aligned (sizeof(uint64_t))));
++};
++
+ #endif
+diff --git a/usr/iscsi_ipc.h b/usr/iscsi_ipc.h
+index a32da1c..9d26d54 100644
+--- a/usr/iscsi_ipc.h
++++ b/usr/iscsi_ipc.h
+@@ -161,6 +161,8 @@ struct iscsi_ipc {
+ 				  uint32_t flashnode_idx);
+ 	int (*logout_flash_node_sid) (uint64_t transport_handle,
+ 				      uint32_t host_no, uint32_t sid);
++	int (*get_host_stats) (uint64_t transport_handle, uint32_t host_no,
++			 char *host_stats);
+ };
+ 
+ #endif /* ISCSI_IPC_H */
+diff --git a/usr/iscsiadm.c b/usr/iscsiadm.c
+index 045259b..ed2c0c3 100644
+--- a/usr/iscsiadm.c
++++ b/usr/iscsiadm.c
+@@ -69,7 +69,8 @@ enum iscsiadm_mode {
+ 	MODE_FW,
+ 	MODE_PING,
+ 	MODE_CHAP,
+-	MODE_FLASHNODE
++	MODE_FLASHNODE,
++	MODE_HOST_STATS
+ };
+ 
+ enum iscsiadm_op {
+@@ -137,6 +138,7 @@ iscsiadm -m session [ -hV ] [ -d debug_level ] [ -P  printlevel] [ -r sessionid
+ iscsiadm -m iface [ -hV ] [ -d debug_level ] [ -P printlevel ] [ -I ifacename | -H hostno|MAC ] [ [ -o  operation  ] [ -n name ] [ -v value ] ] [ -C ping [ -a ip ] [ -b packetsize ] [ -c count ] [ -i interval ] ]\n\
+ iscsiadm -m fw [ -d debug_level ] [ -l ]\n\
+ iscsiadm -m host [ -P printlevel ] [ -H hostno|MAC ] [ [ -C chap [ -x chap_tbl_idx ] ] | [ -C flashnode [ -A portal_type ] [ -x flashnode_idx ] ] ] [ [ -o operation ] [ -n name ] [ -v value ] ] \n\
++iscsiadm -m host [ -P printlevel ] [ -H hostno|MAC ] [ [ -C chap [ -o operation ] [ -v chap_tbl_idx ] ] | [ -C flashnode [ -o operation ] [ -A portal_type ] [ -x flashnode_idx ] [ -n name ] [ -v value ] ] | [ -C stats ] ]\n\
+ iscsiadm -k priority\n");
+ 	}
+ 	exit(status);
+@@ -207,6 +209,9 @@ str_to_submode(char *str)
+ 		sub_mode = MODE_CHAP;
+ 	else if (!strcmp("flashnode", str))
+ 		sub_mode = MODE_FLASHNODE;
++	else if (!strcmp("stats", str))
++		sub_mode = MODE_HOST_STATS;
++
+ 	else
+ 		sub_mode = -1;
+ 
+@@ -2025,6 +2030,232 @@ exit_flashnode_op:
+ 	return rc;
+ }
+ 
++static void print_host_stats(struct iscsi_offload_host_stats *host_stats)
++{
++	/* MAC */
++	printf("Host Statistics:\n"
++	       "\tmactx_frames: %lld\n"
++	       "\tmactx_bytes: %lld\n"
++	       "\tmactx_multicast_frames: %lld\n"
++	       "\tmactx_broadcast_frames: %lld\n"
++	       "\tmactx_pause_frames: %lld\n"
++	       "\tmactx_control_frames: %lld\n"
++	       "\tmactx_deferral: %lld\n"
++	       "\tmactx_excess_deferral: %lld\n"
++	       "\tmactx_late_collision: %lld\n"
++	       "\tmactx_abort: %lld\n"
++	       "\tmactx_single_collision: %lld\n"
++	       "\tmactx_multiple_collision: %lld\n"
++	       "\tmactx_collision: %lld\n"
++	       "\tmactx_frames_dropped: %lld\n"
++	       "\tmactx_jumbo_frames: %lld\n"
++	       "\tmacrx_frames: %lld\n"
++	       "\tmacrx_bytes: %lld\n"
++	       "\tmacrx_unknown_control_frames: %lld\n"
++	       "\tmacrx_pause_frames: %lld\n"
++	       "\tmacrx_control_frames: %lld\n"
++	       "\tmacrx_dribble: %lld\n"
++	       "\tmacrx_frame_length_error: %lld\n"
++	       "\tmacrx_jabber: %lld\n"
++	       "\tmacrx_carrier_sense_error: %lld\n"
++	       "\tmacrx_frame_discarded: %lld\n"
++	       "\tmacrx_frames_dropped: %lld\n"
++	       "\tmac_crc_error: %lld\n"
++	       "\tmac_encoding_error: %lld\n"
++	       "\tmacrx_length_error_large: %lld\n"
++	       "\tmacrx_length_error_small: %lld\n"
++	       "\tmacrx_multicast_frames: %lld\n"
++	       "\tmacrx_broadcast_frames: %lld\n"
++	       /* IP */
++	       "\tiptx_packets: %lld\n"
++	       "\tiptx_bytes: %lld\n"
++	       "\tiptx_fragments: %lld\n"
++	       "\tiprx_packets: %lld\n"
++	       "\tiprx_bytes: %lld\n"
++	       "\tiprx_fragments: %lld\n"
++	       "\tip_datagram_reassembly: %lld\n"
++	       "\tip_invalid_address_error: %lld\n"
++	       "\tip_error_packets: %lld\n"
++	       "\tip_fragrx_overlap: %lld\n"
++	       "\tip_fragrx_outoforder: %lld\n"
++	       "\tip_datagram_reassembly_timeout: %lld\n"
++	       "\tipv6tx_packets: %lld\n"
++	       "\tipv6tx_bytes: %lld\n"
++	       "\tipv6tx_fragments: %lld\n"
++	       "\tipv6rx_packets: %lld\n"
++	       "\tipv6rx_bytes: %lld\n"
++	       "\tipv6rx_fragments: %lld\n"
++	       "\tipv6_datagram_reassembly: %lld\n"
++	       "\tipv6_invalid_address_error: %lld\n"
++	       "\tipv6_error_packets: %lld\n"
++	       "\tipv6_fragrx_overlap: %lld\n"
++	       "\tipv6_fragrx_outoforder: %lld\n"
++	       "\tipv6_datagram_reassembly_timeout: %lld\n"
++	       /* TCP */
++	       "\ttcptx_segments: %lld\n"
++	       "\ttcptx_bytes: %lld\n"
++	       "\ttcprx_segments: %lld\n"
++	       "\ttcprx_byte: %lld\n"
++	       "\ttcp_duplicate_ack_retx: %lld\n"
++	       "\ttcp_retx_timer_expired: %lld\n"
++	       "\ttcprx_duplicate_ack: %lld\n"
++	       "\ttcprx_pure_ackr: %lld\n"
++	       "\ttcptx_delayed_ack: %lld\n"
++	       "\ttcptx_pure_ack: %lld\n"
++	       "\ttcprx_segment_error: %lld\n"
++	       "\ttcprx_segment_outoforder: %lld\n"
++	       "\ttcprx_window_probe: %lld\n"
++	       "\ttcprx_window_update: %lld\n"
++	       "\ttcptx_window_probe_persist: %lld\n"
++	       /* ECC */
++	       "\tecc_error_correction: %lld\n"
++	       /* iSCSI */
++	       "\tiscsi_pdu_tx: %lld\n"
++	       "\tiscsi_data_bytes_tx: %lld\n"
++	       "\tiscsi_pdu_rx: %lld\n"
++	       "\tiscsi_data_bytes_rx: %lld\n"
++	       "\tiscsi_io_completed: %lld\n"
++	       "\tiscsi_unexpected_io_rx: %lld\n"
++	       "\tiscsi_format_error: %lld\n"
++	       "\tiscsi_hdr_digest_error: %lld\n"
++	       "\tiscsi_data_digest_error: %lld\n"
++	       "\tiscsi_sequence_error: %lld\n",
++	       /* MAC */
++	       (unsigned long long)host_stats->mactx_frames,
++	       (unsigned long long)host_stats->mactx_bytes,
++	       (unsigned long long)host_stats->mactx_multicast_frames,
++	       (unsigned long long)host_stats->mactx_broadcast_frames,
++	       (unsigned long long)host_stats->mactx_pause_frames,
++	       (unsigned long long)host_stats->mactx_control_frames,
++	       (unsigned long long)host_stats->mactx_deferral,
++	       (unsigned long long)host_stats->mactx_excess_deferral,
++	       (unsigned long long)host_stats->mactx_late_collision,
++	       (unsigned long long)host_stats->mactx_abort,
++	       (unsigned long long)host_stats->mactx_single_collision,
++	       (unsigned long long)host_stats->mactx_multiple_collision,
++	       (unsigned long long)host_stats->mactx_collision,
++	       (unsigned long long)host_stats->mactx_frames_dropped,
++	       (unsigned long long)host_stats->mactx_jumbo_frames,
++	       (unsigned long long)host_stats->macrx_frames,
++	       (unsigned long long)host_stats->macrx_bytes,
++	       (unsigned long long)host_stats->macrx_unknown_control_frames,
++	       (unsigned long long)host_stats->macrx_pause_frames,
++	       (unsigned long long)host_stats->macrx_control_frames,
++	       (unsigned long long)host_stats->macrx_dribble,
++	       (unsigned long long)host_stats->macrx_frame_length_error,
++	       (unsigned long long)host_stats->macrx_jabber,
++	       (unsigned long long)host_stats->macrx_carrier_sense_error,
++	       (unsigned long long)host_stats->macrx_frame_discarded,
++	       (unsigned long long)host_stats->macrx_frames_dropped,
++	       (unsigned long long)host_stats->mac_crc_error,
++	       (unsigned long long)host_stats->mac_encoding_error,
++	       (unsigned long long)host_stats->macrx_length_error_large,
++	       (unsigned long long)host_stats->macrx_length_error_small,
++	       (unsigned long long)host_stats->macrx_multicast_frames,
++	       (unsigned long long)host_stats->macrx_broadcast_frames,
++	       /* IP */
++	       (unsigned long long)host_stats->iptx_packets,
++	       (unsigned long long)host_stats->iptx_bytes,
++	       (unsigned long long)host_stats->iptx_fragments,
++	       (unsigned long long)host_stats->iprx_packets,
++	       (unsigned long long)host_stats->iprx_bytes,
++	       (unsigned long long)host_stats->iprx_fragments,
++	       (unsigned long long)host_stats->ip_datagram_reassembly,
++	       (unsigned long long)host_stats->ip_invalid_address_error,
++	       (unsigned long long)host_stats->ip_error_packets,
++	       (unsigned long long)host_stats->ip_fragrx_overlap,
++	       (unsigned long long)host_stats->ip_fragrx_outoforder,
++	       (unsigned long long)host_stats->ip_datagram_reassembly_timeout,
++	       (unsigned long long)host_stats->ipv6tx_packets,
++	       (unsigned long long)host_stats->ipv6tx_bytes,
++	       (unsigned long long)host_stats->ipv6tx_fragments,
++	       (unsigned long long)host_stats->ipv6rx_packets,
++	       (unsigned long long)host_stats->ipv6rx_bytes,
++	       (unsigned long long)host_stats->ipv6rx_fragments,
++	       (unsigned long long)host_stats->ipv6_datagram_reassembly,
++	       (unsigned long long)host_stats->ipv6_invalid_address_error,
++	       (unsigned long long)host_stats->ipv6_error_packets,
++	       (unsigned long long)host_stats->ipv6_fragrx_overlap,
++	       (unsigned long long)host_stats->ipv6_fragrx_outoforder,
++	       (unsigned long long)host_stats->ipv6_datagram_reassembly_timeout,
++	       /* TCP */
++	       (unsigned long long)host_stats->tcptx_segments,
++	       (unsigned long long)host_stats->tcptx_bytes,
++	       (unsigned long long)host_stats->tcprx_segments,
++	       (unsigned long long)host_stats->tcprx_byte,
++	       (unsigned long long)host_stats->tcp_duplicate_ack_retx,
++	       (unsigned long long)host_stats->tcp_retx_timer_expired,
++	       (unsigned long long)host_stats->tcprx_duplicate_ack,
++	       (unsigned long long)host_stats->tcprx_pure_ackr,
++	       (unsigned long long)host_stats->tcptx_delayed_ack,
++	       (unsigned long long)host_stats->tcptx_pure_ack,
++	       (unsigned long long)host_stats->tcprx_segment_error,
++	       (unsigned long long)host_stats->tcprx_segment_outoforder,
++	       (unsigned long long)host_stats->tcprx_window_probe,
++	       (unsigned long long)host_stats->tcprx_window_update,
++	       (unsigned long long)host_stats->tcptx_window_probe_persist,
++	       /* ECC */
++	       (unsigned long long)host_stats->ecc_error_correction,
++	       /* iSCSI */
++	       (unsigned long long)host_stats->iscsi_pdu_tx,
++	       (unsigned long long)host_stats->iscsi_data_bytes_tx,
++	       (unsigned long long)host_stats->iscsi_pdu_rx,
++	       (unsigned long long)host_stats->iscsi_data_bytes_rx,
++	       (unsigned long long)host_stats->iscsi_io_completed,
++	       (unsigned long long)host_stats->iscsi_unexpected_io_rx,
++	       (unsigned long long)host_stats->iscsi_format_error,
++	       (unsigned long long)host_stats->iscsi_hdr_digest_error,
++	       (unsigned long long)host_stats->iscsi_data_digest_error,
++	       (unsigned long long)host_stats->iscsi_sequence_error);
++}
++
++static int exec_host_stats_op(int op, int info_level, uint32_t host_no)
++{
++	struct iscsi_transport *t = NULL;
++	char *req_buf;
++	int rc = ISCSI_SUCCESS;
++	int fd = 0, buf_size = 0;
++
++	t = iscsi_sysfs_get_transport_by_hba(host_no);
++	if (!t) {
++		log_error("Could not match hostno %u to transport.", host_no);
++		rc = ISCSI_ERR_TRANS_NOT_FOUND;
++		goto exit_host_stats;
++	}
++
++	buf_size = sizeof(struct iscsi_offload_host_stats) +
++		   sizeof(struct iscsi_uevent);
++	req_buf = calloc(1, buf_size);
++	if (!req_buf) {
++		log_error("Could not allocate memory for host stats request.");
++		rc = ISCSI_ERR_NOMEM;
++		goto exit_host_stats;
++	}
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		rc = ISCSI_ERR_INTERNAL;
++		log_error("Netlink open failed.");
++		goto exit_host_stats;
++	}
++
++	rc = ipc->get_host_stats(t->handle, host_no, req_buf);
++	if (rc < 0) {
++		log_error("get_host_stats failed. errno=%d", errno);
++		rc = ISCSI_ERR;
++		goto exit_host_stats;
++	}
++
++	print_host_stats(req_buf + sizeof(struct iscsi_uevent));
++
++	ipc->ctldev_close();
++
++exit_host_stats:
++	if (req_buf)
++		free(req_buf);
++	return rc;
++}
++
+ static int verify_iface_params(struct list_head *params, struct node_rec *rec)
+ {
+ 	struct user_param *param;
+@@ -3239,6 +3470,17 @@ main(int argc, char **argv)
+ 						       index, portal_type,
+ 						       &params);
+ 				break;
++			case MODE_HOST_STATS:
++				if (!host_no) {
++					log_error("STATS mode requires host no");
++					rc = ISCSI_ERR_INVAL;
++					break;
++				}
++
++				rc = exec_host_stats_op(op, info_level,
++							host_no);
++				break;
++
+ 			default:
+ 				log_error("Invalid Sub Mode");
+ 				break;
+diff --git a/usr/netlink.c b/usr/netlink.c
+index 151b56d..1c4b5cc 100644
+--- a/usr/netlink.c
++++ b/usr/netlink.c
+@@ -339,6 +339,10 @@ __kipc_call(struct iovec *iovp, int count)
+ 		} else if (ev->type == ISCSI_UEVENT_GET_CHAP) {
+ 			/* kget_chap() will read */
+ 			return 0;
++		} else if (ev->type == ISCSI_UEVENT_GET_HOST_STATS) {
++			/* kget_host_stats() will read */
++			return 0;
++
+ 		} else {
+ 			if ((rc = nlpayload_read(ctrl_fd, (void*)ev,
+ 						 sizeof(*ev), 0)) < 0) {
+@@ -1439,6 +1443,48 @@ klogout_flashnode_sid(uint64_t transport_handle, uint32_t host_no,
+ 	return 0;
+ }
+ 
++static int kget_host_stats(uint64_t transport_handle, uint32_t host_no,
++		     char *host_stats)
++{
++	int rc = 0;
++	int ev_size;
++	struct iscsi_uevent ev;
++	struct iovec iov[2];
++	char nlm_ev[NLMSG_SPACE(sizeof(struct iscsi_uevent))];
++	struct nlmsghdr *nlh;
++
++	memset(&ev, 0, sizeof(struct iscsi_uevent));
++
++	ev.type = ISCSI_UEVENT_GET_HOST_STATS;
++	ev.transport_handle = transport_handle;
++	ev.u.get_host_stats.host_no = host_no;
++
++	iov[1].iov_base = &ev;
++	iov[1].iov_len = sizeof(ev);
++	rc = __kipc_call(iov, 2);
++	if (rc < 0)
++		return rc;
++
++	if ((rc = nl_read(ctrl_fd, nlm_ev,
++			  NLMSG_SPACE(sizeof(struct iscsi_uevent)),
++			  MSG_PEEK)) < 0) {
++		log_error("can not read nlm_ev, error %d", rc);
++		return rc;
++	}
++
++	nlh = (struct nlmsghdr *)nlm_ev;
++	ev_size = nlh->nlmsg_len - NLMSG_ALIGN(sizeof(struct nlmsghdr));
++
++	if ((rc = nlpayload_read(ctrl_fd, (void *)host_stats,
++				 ev_size, 0)) < 0) {
++		log_error("can not read from NL socket, error %d", rc);
++		return rc;
++	}
++
++	return rc;
++}
++
++
+ static void drop_data(struct nlmsghdr *nlh)
+ {
+ 	int ev_size;
+@@ -1737,6 +1783,7 @@ struct iscsi_ipc nl_ipc = {
+ 	.login_flash_node	= klogin_flashnode,
+ 	.logout_flash_node	= klogout_flashnode,
+ 	.logout_flash_node_sid	= klogout_flashnode_sid,
++	.get_host_stats		= kget_host_stats,
+ };
+ struct iscsi_ipc *ipc = &nl_ipc;
+ 
+-- 
+1.8.3.1
+

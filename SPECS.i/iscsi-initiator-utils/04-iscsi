@@ -1,7 +1,7 @@
 #!/bin/sh
 
 case "$2" in
-	up|down|vpn-up|vpn-down)
-		/bin/systemctl try-restart iscsi.service || :
+	up|vpn-up)
+		/bin/systemctl --no-block reload iscsi.service || :
 		;;
 esac

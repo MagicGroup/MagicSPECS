@@ -1,16 +1,15 @@
-%global _hardened_build 1
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-
 %define open_iscsi_version	2.0
 %define open_iscsi_build	873
-%define iscsiuio_version	0.7.2.1
 
 Summary: iSCSI daemon and utility programs
 Name: iscsi-initiator-utils
 Version: 6.%{open_iscsi_version}.%{open_iscsi_build}
-Release: 7%{?dist}
+Release: 21%{?dist}
+Group: System Environment/Daemons
+License: GPLv2+
+URL: http://www.open-iscsi.org
+
 Source0: http://www.open-iscsi.org/bits/open-iscsi-%{open_iscsi_version}-%{open_iscsi_build}.tar.gz
-Source1: iscsiuio-%{iscsiuio_version}.tar.gz
 Source4: 04-iscsi
 Source5: iscsi-tmpfiles.conf
 
@@ -25,52 +24,119 @@ Patch7: 0007-iscsid-iscsiadm-fix-abstract-socket-length-in-bind-c.patch
 Patch8: 0008-iscsid-implement-systemd-compatible-socket-activatio.patch
 Patch9: 0009-iscsid-add-example-unit-files-for-systemd.patch
 Patch10: 0010-iscsi-tools-fix-get_random_bytes-error-handling.patch
-# pending upstream merge
-Patch31: 0031-iscsid-add-initrd-option-to-set-run-from-initrd-hint.patch
-Patch32: 0032-iscsiadm-iscsid-newroot-command-to-survive-switch_ro.patch
-Patch33: 0033-iscsiadm-param-parsing-for-advanced-node-creation.patch
-Patch34: 0034-update-systemd-service-files-add-iscsi.service-for-s.patch
+Patch11: 0011-ISCSID-Added-socket-communication-hooks-for-uip.patch
+Patch12: 0012-ISCSID-Modified-the-Makefile-for-iscsiuio-compilatio.patch
+Patch13: 0013-ISCSID-Added-iscsiuio-source-to-the-open-iscsi-pkg.patch
+Patch14: 0014-From-Adheer-Chandravanshi-adheer.chandravanshi-qlogi.patch
+Patch15: 0015-Manpage-changes-for-flashnode-submode-support-for-ho.patch
+Patch16: 0016-README-changes-for-flashnode-submode-support-for-hos.patch
+Patch17: 0017-PATCH-1-of-1-correctly-check-return-value-of-nice.patch
+Patch18: 0018-Allow-firmware-mode-to-use-debug-flag.patch
+Patch19: 0019-iscsiadm-return-error-when-login-fails.patch
+Patch20: 0020-iscsiadm-bind-ifaces-to-portals-found-using-isns.patch
+Patch21: 0021-iscsiadm-Check-for-mode-is-not-required-when-creatin.patch
+Patch22: 0022-iscsid-iscsiadm-add-support-for-emulex-one-connect-s.patch
+Patch23: 0023-ISCSIUIO-Updated-iscsiuio-to-version-0.7.8.1b-for-pe.patch
+Patch24: 0024-Fix-discovery-error-return-without-return-value.patch
+Patch25: 0025-iscsid-Fix-strlen-parameter.patch
+Patch26: 0026-iscsiuio-Change-socket-bind-to-use-the-same-struct-s.patch
+Patch27: 0027-Make-rescan-run-in-parallel.patch
+Patch28: 0028-iscsiadm-Correctly-check-for-invalid-hostno-and-flas.patch
+Patch29: 0029-iscsi-tools-Print-additional-session-info-for-flashn.patch
+Patch30: 0030-iscsi-tools-sync-iscsi_if.h-with-kernel-space.patch
+Patch31: 0031-PATCH-v5-1-3-ISCSISTART-Saved-ibft-boot-info-to-the-.patch
+Patch32: 0032-ISCSID-Added-the-extraction-of-the-session-boot-info.patch
+Patch33: 0033-ISCSID-Added-iface-content-override-fix.patch
+Patch34: 0034-iscsi-tools-Bug-fix-on-IPC-address-copy-version-2.patch
+Patch35: 0035-flashnode-Add-support-to-set-ISCSI_FLASHNODE_CHAP_OU.patch
+Patch36: 0036-iscsiadm-Use-x-option-instead-of-v-to-specify-chap_t.patch
+Patch37: 0037-iscsiadm-Man-page-changes-to-use-x-option-for-chap_t.patch
+Patch38: 0038-README-changes-to-use-long-option-index-instead-of-f.patch
+Patch39: 0039-iscsiadm-Add-support-to-set-CHAP-entry-using-host-ch.patch
+Patch40: 0040-iscsi-tools-Correctly-get-username_in-and-password_i.patch
+Patch41: 0041-README-changes-for-adding-support-to-set-CHAP-entry.patch
+Patch42: 0042-iscsi-tools-Setup-iface-conf-file-with-all-iface-att.patch
+Patch43: 0043-iscsi_if.h-Remove-numbers-used-for-network-parameter.patch
+Patch44: 0044-iscsi_if.h-Additional-parameters-for-network-param-s.patch
+Patch45: 0045-iscsi-tools-Use-macro-to-set-IPv4-IPv6-IP-addresses.patch
+Patch46: 0046-iscsi-tools-Use-single-function-to-enable-disable-ne.patch
+Patch47: 0047-iscsi-tools-Use-single-function-to-set-integer-netwo.patch
+Patch48: 0048-iscsi-tools-Ignore-network-parameter-if-not-enabled-.patch
+Patch49: 0049-iscsi-tools-Additional-parameters-for-network-settin.patch
+Patch50: 0050-iscsi-tools-iface-params-should-be-updated-for-node_.patch
+Patch51: 0051-iscsi-tools-Let-default-type-of-iface-be-ipv4.patch
+Patch52: 0052-iscsi-tools-Show-iface-params-based-on-iface-type.patch
+Patch53: 0053-iscsiadm-Added-document-for-description-of-iface-att.patch
+Patch54: 0054-iscsi_tool-Add-offload-host-statistics-support.patch
+Patch55: 0055-README-Updated-for-host-statistics.patch
+Patch56: 0056-iscsiadm.8-Updated-man-page-for-host-statistics.patch
+Patch57: 0057-iscsi-tools-Fix-the-iscsiadm-help-options-for-host-m.patch
+Patch58: 0058-Man-page-correction-for-host-mode-options-of-iscsiad.patch
+Patch59: 0059-ISCSIUIO-Added-tx-doorbell-override-mechanism.patch
+Patch60: 0060-ISCSIUIO-Added-fix-for-the-iface.subnet_mask-decodin.patch
+Patch61: 0061-ISCSIUIO-Added-fix-for-the-ARP-cache-flush-mechanism.patch
+Patch62: 0062-ISCSIUIO-Updated-RELEASE-note-and-version.patch
+Patch63: 0063-ISCSIUIO-Updated-the-configure-file-to-reflect-the-n.patch
+Patch64: 0064-ISCSIUIO-Removed-the-auto-generated-COPYING-file.patch
+Patch68: 0068-iscsiuio-fix-compilation.patch
+Patch69: 0069-Add-missing-DESTDIR.patch
+Patch70: 0070-iscsi-tools-set-non-negotiated-params-early.patch
+
+# not (yet) upstream merged
+Patch131: 0131-iscsiadm-Fix-the-hostno-check-for-stats-submode-of-h.patch
+Patch132: 0132-iscsiadm-Fix-the-compile-time-warning.patch
+Patch143: 0143-idmb_rec_write-check-for-tpgt-first.patch
+Patch145: 0145-idbm_rec_write-seperate-old-and-new-style-writes.patch
+Patch146: 0146-idbw_rec_write-pick-tpgt-from-existing-record.patch
+Patch147: 0147-iscsiuio-systemd-socket-activation-support.patch
+Patch149: 0149-update-systemd-service-files-add-iscsi.service-for-s.patch
+Patch150: 0150-iscsi-boot-related-service-file-updates.patch
 # distro specific modifications
-Patch51: 0051-update-initscripts-and-docs.patch
-Patch52: 0052-use-var-for-config.patch
-Patch53: 0053-use-red-hat-for-name.patch
-Patch54: 0054-add-libiscsi.patch
-Patch55: 0055-dont-use-static.patch
-Patch56: 0056-remove-the-offload-boot-supported-ifdef.patch
-Patch57: 0057-iscsid-iscsiuio-ipc-interface.patch
-Patch58: 0058-iscsiuio-IPC-newroot-command.patch
-Patch59: 0059-iscsiuio-systemd-unit-files.patch
-Patch60: 0060-use-systemctl-to-start-iscsid.patch
-Patch61: 0061-resolve-565245-multilib-issues-caused-by-doxygen.patch
-Patch62: 0062-Don-t-check-for-autostart-sessions-if-iscsi-is-not-u.patch
-Patch63: 0063-fix-order-of-setting-uid-gid-and-drop-supplementary-.patch
-# iscsiuio patches
-Patch71: 0071-iscsiuio-0.7.4.3.patch
-Patch72: 0072-iscsiuio-0.7.6.1.patch
-Patch73: 0073-iscsiuio-fix-long-options.patch
-Patch74: 0074-iscsiuio-add-initrd-option-to-set-run-from-initrd-hi.patch
-Patch75: 0075-iscsiuio-systemd-socket-activation-support.patch
-Patch76: 0076-iscsiuio-iscsid-IPC-newroot-command.patch
-Patch77: 0077-iscsiuio-document-pidfile-option.patch
+Patch151: 0151-update-initscripts-and-docs.patch
+Patch152: 0152-use-var-for-config.patch
+Patch153: 0153-use-red-hat-for-name.patch
+Patch154: 0154-add-libiscsi.patch
+Patch155: 0155-dont-use-static.patch
+Patch156: 0156-remove-the-offload-boot-supported-ifdef.patch
+Patch159: 0159-iscsiuio-systemd-unit-files.patch
+Patch160: 0160-use-systemctl-to-start-iscsid.patch
+Patch161: 0161-resolve-565245-multilib-issues-caused-by-doxygen.patch
+Patch162: 0162-Don-t-check-for-autostart-sessions-if-iscsi-is-not-u.patch
+Patch163: 0163-fix-order-of-setting-uid-gid-and-drop-supplementary-.patch
+Patch164: 0164-libiscsi-fix-incorrect-strncpy-use.patch
+Patch165: 0165-fix-hardened-build-of-iscsiuio.patch
+Patch166: 0166-start-socket-listeners-on-iscsiadm-command.patch
+Patch167: 0167-Revert-iscsiadm-return-error-when-login-fails.patch
+Patch168: 0168-update-handling-of-boot-sessions.patch
+Patch169: 0169-update-iscsi.service-for-boot-session-recovery.patch
 # version string, needs to be updated with each build
-Patch99: 0099-use-Red-Hat-version-string-to-match-RPM-package-vers.patch
+Patch199: 0199-use-Red-Hat-version-string-to-match-RPM-package-vers.patch
 
-
-Group: System Environment/Daemons
-License: GPLv2+
-URL: http://www.open-iscsi.org
-Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: openssl-devel flex bison python-devel doxygen glibc-static kmod-devel
+BuildRequires: flex bison python-devel doxygen kmod-devel systemd-devel
 # For dir ownership
+Requires: %{name}-iscsiuio >= %{version}-%{release}
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
+
+%global _hardened_build 1
+%global __provides_exclude_from ^(%{python_sitearch}/.*\\.so)$
 
 %description
 The iscsi package provides the server daemon for the iSCSI protocol,
 as well as the utility programs used to manage it. iSCSI is a protocol
 for distributed disk access using SCSI commands sent over Internet
 Protocol networks.
+
+%package iscsiuio
+Summary: Userspace configuration daemon required for some iSCSI hardware
+Group: System Environment/Daemons
+License: BSD
+Requires: %{name} = %{version}-%{release}
+
+%description iscsiuio
+The iscsiuio configuration daemon provides network configuration help
+for some iSCSI offload hardware.
 
 %package devel
 Summary: Development files for %{name}
@@ -82,8 +148,7 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 %prep
-%setup -q -n open-iscsi-%{open_iscsi_version}-%{open_iscsi_build} -a 1
-mv iscsiuio-%{iscsiuio_version} iscsiuio
+%setup -q -n open-iscsi-%{open_iscsi_version}-%{open_iscsi_build}
 # upstream patches
 %patch1 -p1
 %patch2 -p1
@@ -95,12 +160,46 @@ mv iscsiuio-%{iscsiuio_version} iscsiuio
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-# pending upstream merge
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
 %patch31 -p1
 %patch32 -p1
 %patch33 -p1
 %patch34 -p1
-# distro specific modifications
+%patch35 -p1
+%patch36 -p1
+%patch37 -p1
+%patch38 -p1
+%patch39 -p1
+%patch40 -p1
+%patch41 -p1
+%patch42 -p1
+%patch43 -p1
+%patch44 -p1
+%patch45 -p1
+%patch46 -p1
+%patch47 -p1
+%patch48 -p1
+%patch49 -p1
+%patch50 -p1
 %patch51 -p1
 %patch52 -p1
 %patch53 -p1
@@ -114,30 +213,56 @@ mv iscsiuio-%{iscsiuio_version} iscsiuio
 %patch61 -p1
 %patch62 -p1
 %patch63 -p1
-# iscsiuio patches
-cd iscsiuio
-%patch71 -p1
-%patch72 -p1
-%patch73 -p1
-%patch74 -p1
-%patch75 -p1
-%patch76 -p1
-%patch77 -p1
-cd ..
+%patch64 -p1
+%patch68 -p1
+%patch69 -p1
+%patch70 -p1
+# pending upstream merge
+%patch131 -p1
+%patch132 -p1
+%patch143 -p1
+%patch145 -p1
+%patch146 -p1
+%patch147 -p1
+%patch149 -p1
+%patch150 -p1
+# distro specific modifications
+%patch151 -p1
+%patch152 -p1
+%patch153 -p1
+%patch154 -p1
+%patch155 -p1
+%patch156 -p1
+%patch159 -p1
+%patch160 -p1
+%patch161 -p1
+%patch162 -p1
+%patch163 -p1
+%patch164 -p1
+%patch165 -p1
+%patch166 -p1
+%patch167 -p1
+%patch168 -p1
+%patch169 -p1
 # version string
-%patch99 -p1
+%patch199 -p1
 
+# change exec_prefix, there's no easy way to override
+%{__sed} -i -e 's|^exec_prefix = /$|exec_prefix = %{_exec_prefix}|' Makefile
 
 %build
-make OPTFLAGS="%{optflags} %{?__global_ldflags} -DUSE_KMOD -lkmod"
 
+# configure sub-packages from here
+# letting the top level Makefile do it will lose setting from rpm
 cd iscsiuio
-chmod u+x configure
-./configure --enable-debug
-make OPTFLAGS="%{optflags}" LDFLAGS="%{?__global_ldflags}" CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS"
-
+%{__chmod} +x configure
+%{configure}
 cd ..
+cd utils/open-isns
+%{configure}
+cd ../..
 
+%{__make} OPTFLAGS="%{optflags} %{?__global_ldflags} -DUSE_KMOD -lkmod"
 pushd libiscsi
 python setup.py build
 touch -r libiscsi.doxy html/*
@@ -145,58 +270,55 @@ popd
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/sbin
-mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man8
-mkdir -p $RPM_BUILD_ROOT/etc/iscsi
-mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
-mkdir -p $RPM_BUILD_ROOT/etc/NetworkManager/dispatcher.d
-mkdir -p $RPM_BUILD_ROOT/var/lib/iscsi
-mkdir -p $RPM_BUILD_ROOT/var/lib/iscsi/nodes
-mkdir -p $RPM_BUILD_ROOT/var/lib/iscsi/send_targets
-mkdir -p $RPM_BUILD_ROOT/var/lib/iscsi/static
-mkdir -p $RPM_BUILD_ROOT/var/lib/iscsi/isns
-mkdir -p $RPM_BUILD_ROOT/var/lib/iscsi/slp
-mkdir -p $RPM_BUILD_ROOT/var/lib/iscsi/ifaces
-mkdir -p $RPM_BUILD_ROOT/var/lock/iscsi
-mkdir -p $RPM_BUILD_ROOT%{_libdir}
-mkdir -p $RPM_BUILD_ROOT%{_includedir}
-mkdir -p $RPM_BUILD_ROOT%{python_sitearch}
+%{__make} DESTDIR=%{?buildroot} install_programs install_doc install_etc
+# upstream makefile doesn't get everything the way we like it
+rm $RPM_BUILD_ROOT%{_sbindir}/iscsi_discovery
+rm $RPM_BUILD_ROOT%{_mandir}/man8/iscsi_discovery.8
+%{__install} -pm 755 usr/iscsistart $RPM_BUILD_ROOT%{_sbindir}
+%{__install} -pm 644 doc/iscsistart.8 $RPM_BUILD_ROOT%{_mandir}/man8
+%{__install} -pm 644 doc/iscsi-iname.8 $RPM_BUILD_ROOT%{_mandir}/man8
+%{__install} -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
+%{__install} -pm 644 iscsiuio/iscsiuiolog $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 
-
-
-install -p -m 755 usr/iscsid usr/iscsiadm utils/iscsi-iname usr/iscsistart $RPM_BUILD_ROOT/sbin
-install -p -m 644 doc/iscsiadm.8 $RPM_BUILD_ROOT/%{_mandir}/man8
-install -p -m 644 doc/iscsid.8 $RPM_BUILD_ROOT/%{_mandir}/man8
-install -p -m 644 etc/iscsid.conf $RPM_BUILD_ROOT%{_sysconfdir}/iscsi
-install -p -m 644 doc/iscsistart.8 $RPM_BUILD_ROOT/%{_mandir}/man8
-install -p -m 644 doc/iscsi-iname.8 $RPM_BUILD_ROOT/%{_mandir}/man8
-install -p -m 644 iscsiuio/docs/iscsiuio.8 $RPM_BUILD_ROOT/%{_mandir}/man8
-install -p -m 644 iscsiuio/iscsiuiolog $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install -p -m 755 iscsiuio/src/unix/iscsiuio $RPM_BUILD_ROOT/sbin
-
-install -p -D -m 644 etc/systemd/iscsi.service $RPM_BUILD_ROOT%{_unitdir}/iscsi.service
-install -p -D -m 644 etc/systemd/iscsid.service $RPM_BUILD_ROOT%{_unitdir}/iscsid.service
-install -p -D -m 644 etc/systemd/iscsid.socket $RPM_BUILD_ROOT%{_unitdir}/iscsid.socket
-install -p -D -m 644 etc/systemd/iscsiuio.service $RPM_BUILD_ROOT%{_unitdir}/iscsiuio.service
-install -p -D -m 644 etc/systemd/iscsiuio.socket $RPM_BUILD_ROOT%{_unitdir}/iscsiuio.socket
-install -p -D -m 755 etc/systemd/iscsi_mark_root_nodes $RPM_BUILD_ROOT/usr/libexec/iscsi_mark_root_nodes
-install -p -m 755 %{SOURCE4} $RPM_BUILD_ROOT/etc/NetworkManager/dispatcher.d
-install -p -D -m 644 %{SOURCE5} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/iscsi.conf
-
-install -p -m 755 libiscsi/libiscsi.so.0 $RPM_BUILD_ROOT%{_libdir}
-ln -s libiscsi.so.0 $RPM_BUILD_ROOT%{_libdir}/libiscsi.so
-install -p -m 644 libiscsi/libiscsi.h $RPM_BUILD_ROOT%{_includedir}
-
-install -p -m 755 libiscsi/build/lib.linux-*/libiscsimodule.so \
-	$RPM_BUILD_ROOT%{python_sitearch}
+%{__install} -d $RPM_BUILD_ROOT%{_sharedstatedir}/iscsi
+%{__install} -d $RPM_BUILD_ROOT%{_sharedstatedir}/iscsi/nodes
+%{__install} -d $RPM_BUILD_ROOT%{_sharedstatedir}/iscsi/send_targets
+%{__install} -d $RPM_BUILD_ROOT%{_sharedstatedir}/iscsi/static
+%{__install} -d $RPM_BUILD_ROOT%{_sharedstatedir}/iscsi/isns
+%{__install} -d $RPM_BUILD_ROOT%{_sharedstatedir}/iscsi/slp
+%{__install} -d $RPM_BUILD_ROOT%{_sharedstatedir}/iscsi/ifaces
 
 # for %%ghost
+%{__install} -d $RPM_BUILD_ROOT/var/lock/iscsi
 touch $RPM_BUILD_ROOT/var/lock/iscsi/lock
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+%{__install} -d $RPM_BUILD_ROOT%{_unitdir}
+%{__install} -pm 644 etc/systemd/iscsi.service $RPM_BUILD_ROOT%{_unitdir}
+%{__install} -pm 644 etc/systemd/iscsid.service $RPM_BUILD_ROOT%{_unitdir}
+%{__install} -pm 644 etc/systemd/iscsid.socket $RPM_BUILD_ROOT%{_unitdir}
+%{__install} -pm 644 etc/systemd/iscsiuio.service $RPM_BUILD_ROOT%{_unitdir}
+%{__install} -pm 644 etc/systemd/iscsiuio.socket $RPM_BUILD_ROOT%{_unitdir}
+
+%{__install} -d $RPM_BUILD_ROOT%{_libexecdir}
+%{__install} -pm 755 etc/systemd/iscsi-mark-root-nodes $RPM_BUILD_ROOT%{_libexecdir}
+
+%{__install} -d $RPM_BUILD_ROOT%{_sysconfdir}/NetworkManager/dispatcher.d
+%{__install} -pm 755 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/NetworkManager/dispatcher.d
+
+%{__install} -d $RPM_BUILD_ROOT%{_tmpfilesdir}
+%{__install} -pm 644 %{SOURCE5} $RPM_BUILD_ROOT%{_tmpfilesdir}/iscsi.conf
+
+%{__install} -d $RPM_BUILD_ROOT%{_libdir}
+%{__install} -pm 755 libiscsi/libiscsi.so.0 $RPM_BUILD_ROOT%{_libdir}
+%{__ln_s}    libiscsi.so.0 $RPM_BUILD_ROOT%{_libdir}/libiscsi.so
+%{__install} -d $RPM_BUILD_ROOT%{_includedir}
+%{__install} -pm 644 libiscsi/libiscsi.h $RPM_BUILD_ROOT%{_includedir}
+
+%{__install} -d $RPM_BUILD_ROOT%{python_sitearch}
+%{__install} -pm 755 libiscsi/build/lib.linux-*/libiscsimodule.so \
+	$RPM_BUILD_ROOT%{python_sitearch}
+
 
 %post
 /sbin/ldconfig
@@ -205,7 +327,7 @@ rm -rf $RPM_BUILD_ROOT
 
 if [ $1 -eq 1 ]; then
 	if [ ! -f %{_sysconfdir}/iscsi/initiatorname.iscsi ]; then
-		echo "InitiatorName=`/sbin/iscsi-iname`" > %{_sysconfdir}/iscsi/initiatorname.iscsi
+		echo "InitiatorName=`/usr/sbin/iscsi-iname`" > %{_sysconfdir}/iscsi/initiatorname.iscsi
 	fi
 	# enable socket activation and persistant session startup by default
 	/bin/systemctl enable iscsi.service >/dev/null 2>&1 || :
@@ -239,40 +361,94 @@ fi
 /bin/systemctl try-restart iscsi.service >/dev/null 1>&1 || :
 
 %files
-%defattr(-,root,root)
 %doc README
-%dir %{_var}/lib/iscsi
-%dir %{_var}/lib/iscsi/nodes
-%dir %{_var}/lib/iscsi/isns
-%dir %{_var}/lib/iscsi/static
-%dir %{_var}/lib/iscsi/slp
-%dir %{_var}/lib/iscsi/ifaces
-%dir %{_var}/lib/iscsi/send_targets
+%dir %{_sharedstatedir}/iscsi
+%dir %{_sharedstatedir}/iscsi/nodes
+%dir %{_sharedstatedir}/iscsi/isns
+%dir %{_sharedstatedir}/iscsi/static
+%dir %{_sharedstatedir}/iscsi/slp
+%dir %{_sharedstatedir}/iscsi/ifaces
+%dir %{_sharedstatedir}/iscsi/send_targets
 %ghost %{_var}/lock/iscsi
 %ghost %{_var}/lock/iscsi/lock
 %{_unitdir}/iscsi.service
 %{_unitdir}/iscsid.service
 %{_unitdir}/iscsid.socket
-%{_unitdir}/iscsiuio.service
-%{_unitdir}/iscsiuio.socket
-/usr/libexec/iscsi_mark_root_nodes
+%{_libexecdir}/iscsi-mark-root-nodes
 %{_sysconfdir}/NetworkManager/dispatcher.d/04-iscsi
-/usr/lib/tmpfiles.d/iscsi.conf
+%{_tmpfilesdir}/iscsi.conf
 %dir %{_sysconfdir}/iscsi
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/iscsi/iscsid.conf
-/sbin/*
+%{_sbindir}/iscsi-iname
+%{_sbindir}/iscsiadm
+%{_sbindir}/iscsid
+%{_sbindir}/iscsistart
 %{_libdir}/libiscsi.so.0
 %{python_sitearch}/libiscsimodule.so
-%{_mandir}/man8/*
-%{_sysconfdir}/logrotate.d/iscsiuiolog
+%{_mandir}/man8/iscsi-iname.8.gz
+%{_mandir}/man8/iscsiadm.8.gz
+%{_mandir}/man8/iscsid.8.gz
+%{_mandir}/man8/iscsistart.8.gz
+
+%files iscsiuio
+%{_sbindir}/iscsiuio
+%{_unitdir}/iscsiuio.service
+%{_unitdir}/iscsiuio.socket
+%config(noreplace) %{_sysconfdir}/logrotate.d/iscsiuiolog
+%{_mandir}/man8/iscsiuio.8.gz
 
 %files devel
-%defattr(-,root,root,-)
 %doc libiscsi/html
 %{_libdir}/libiscsi.so
 %{_includedir}/libiscsi.h
 
 %changelog
+* Mon Apr 14 2014 Chris Leech <cleech@redhat.com> - 6.2.0.873-21
+- boot session handling improvements
+- split out iscsiuio into a seperate sub-package
+- sync with new upstream additions
+- revert change to return code when calling login_portal for sessions
+  that already exist, as it impacts users scripting around iscsiadm
+
+* Tue Dec 10 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-17
+- fix regression in glob use, inappropriate error code escape
+- clean up dead node links from discovery when reusing tpgt
+
+* Mon Nov 25 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-16
+- fix iscsiuio socket activation
+- have systemd start socket units on iscsiadm use, if not already listening
+
+* Sun Sep 15 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-15
+- move /sbin to /usr/sbin
+- use rpm macros in install rules
+
+* Fri Sep 13 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-14
+- fix iscsiuio hardened build and other compiler flags
+
+* Fri Aug 23 2013 Andy Grover <agrover@redhat.com> - 6.2.0.873-13
+- Fix patch 0041 to check session != NULL before calling iscsi_sysfs_read_boot()
+
+* Tue Aug 20 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-12
+- fix regression in last build, database records can't be accessed
+
+* Mon Aug 19 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-11
+- iscsi boot related fixes
+  make sure iscsid gets started if there are any boot sessions running
+  add reload target to fix double session problem when restarting from NM
+  don't rely on session list passed from initrd, never got fully implemented
+  remove patches related to running iscsid from initrd, possible to revisit later
+
+* Sun Aug 18 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-10
+- sync with upstream git, minor context fixes after rebase of out-of-tree patches
+- iscsiuio is merged upstream, remove old source archive and patches
+- spec cleanups to fix rpmlint issues
+
+* Sun Aug  4 2013 Peter Robinson <pbrobinson@fedoraproject.org> 6.2.0.873-9
+- Fix FTBFS, cleanup spec
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.873-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Jun 11 2013 Chris Leech <cleech@redhat.com> - 6.2.0.873-7
 - Use the systemd tmpfiles service to recreate lockfiles in /var/lock
 - 955167 build as a position independent executable
@@ -302,11 +478,11 @@ fi
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.872-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Mon Feb 14 2012 Mike Christie <mchristi@redhat.com> 6.2.0.872.18
+* Tue Feb 14 2012 Mike Christie <mchristi@redhat.com> 6.2.0.872.18
 - 789683 Fix boot slow down when the iscsi service is started
   (regression added in 6.2.0.872.16 when the nm wait was added).
 
-* Mon Feb 5 2012 Mike Christie <mchristi@redhat.com> 6.2.0.872.17
+* Mon Feb 6 2012 Mike Christie <mchristi@redhat.com> 6.2.0.872.17
 - 786174 Change iscsid/iscsi service startup, so it always starts
   when called.
 
@@ -340,245 +516,3 @@ fi
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.872-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 6.2.0.872-8
-- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
-
-* Fri Jul 12 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.7
-- Sync to upstream open-iscsi-2.0-872-rc4 which fixes:
-  iscsiadm discovery port handling, add discoveryd init script
-  support, move from iscsid.conf to discovery db discoveryd settings,
-  and add discoverydb mode support.
-
-* Thu Jun 10 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.6
-- Fix last patch.
-
-* Wed Jun 9 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.5
-- Fix iscsiadm handling of port argument when it is not the default 3260.
-
-* Thu May 6 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.4
-- Fix iscsi script operations to check for offload drivers in rh_status
-- Fix iscsiadm logging to not trigger iscsi script error detection
-
-* Wed May 5 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.3
-- 578455 Fix initial R2T=0 handling for be2iscsi
-
-* Wed Mar 31 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.2
-- 578455 Fix handling of MaxXmitDataSegmentLength=0 for be2iscsi
-
-* Wed Mar 31 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.1
-- 578455 Fix handling of MaxXmitDataSegmentLength=0
-
-* Wed Mar 24 2010 Mike Christie <mchristi@redhat.com> 6.2.0.872.0
-- 516444 Add iSNS SCN handling (rebased to open-iscsi-2.0-872-rc1-)
-- Update brcm to 0.5.7
-
-* Sun Feb 14 2010 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-13
-- Preserve timestamps on doxygen generated files
-- Fix FTBFS (#565038)
-
-* Mon Feb 8 2010 Mike Christie <mchristi@redhat.com> 6.2.0.871.1.1-3
-- Add spec patch comments.
-
-* Thu Jan 21 2010 Mike Christie <mchristi@redhat.com> 6.2.0.871.1.1-2
-- 556985 Fix up init.d iscsid script to remove offload modules and
-  load be2iscsi.
-- Enable s390/s390x
-
-* Fri Jan 15 2010 Mike Christie <mchristi@redhat.com> 6.2.0.871.1.1-1
-- Sync to upstream
-- 529324 Add iscsi-iname and iscsistart man page
-- 463582 OF/iBFT support
-
-* Thu Jan  7 2010 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-12
-- Change python_sitelib macro to use %%global as the new rpm will break
-  using %%define here, see:
-  https://www.redhat.com/archives/fedora-devel-list/2010-January/msg00093.html
-
-* Tue Dec  1 2009 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-11
-- Own /etc/iscsi (#542849)
-- Do not own /etc/NetworkManager/dispatcher.d (#533700)
-
-* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.870-10.1
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Fri May 22 2009 Dan Horak <dan[at]danny.cz> 6.2.0.870-9.1
-- drop the s390/s390x ExcludeArch
-
-* Mon Apr 27 2009 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-9
-- Don't crash when asked to parse the ppc firmware table more then
-  once (which can be done from libiscsi) (#491363)
-
-* Fri Apr  3 2009 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-8
-- Stop the NM script from exiting with an error status when it
-  didn't do anything (#493411)
-
-* Fri Mar 20 2009 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-7
-- libiscsi: use fwparam_ibft_sysfs() instead of fw_get_entry(), as
-  the latter causes stack corruption (workaround #490515)
-
-* Sat Mar 14 2009 Terje Rosten <terje.rosten@ntnu.no> - 6.2.0.870-6
-- Add glibc-static to buildreq to build in F11
-
-* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.870-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Thu Feb 12 2009 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-4
-- Fix libiscsi.discover_sendtargets python method to accept None as valid
-  authinfo argument (#485217)
-
-* Wed Jan 28 2009 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-3
-- Fix reading of iBFT firmware with newer kernels
-
-* Wed Jan 28 2009 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-2
-- Add libiscsi iscsi administration library and -devel subpackage
-
-* Tue Nov  25 2008 Mike Christie <mchristie@redhat.com> 6.2.0.870-1.0
-- Rebase to upstream
-
-* Thu Nov  6 2008 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-0.2.rc1
-- Add force-start iscsid initscript option and use that in "patch to make
-  iscsiadm start iscsid when needed" so that iscsid will actual be started
-  even if there are no iscsi disks configured yet (rh 470437)
-- Do not start iscsid when not running when iscsiadm -k 0 gets executed
-  (rh 470438)
-
-* Tue Sep 30 2008 Hans de Goede <hdegoede@redhat.com> 6.2.0.870-0.1.rc1
-- Rewrite SysV initscripts, fixes rh 441290, 246960, 282001, 436175, 430791
-- Add patch to make iscsiadm complain and exit when run as user instead
-  of hang spinning for the database lock
-- Add patch to make iscsiadm start iscsid when needed (rh 436175 related)
-- Don't start iscsi service when network not yet up (in case of using NM)
-  add NM dispatcher script to start iscsi service once network is up
-
-* Mon Jun 30 2008 Mike Christie <mchristie@redhat.com> - 6.2.0.870
-- Rebase to open-iscsi-2-870
-- 453282 Handle sysfs changes.
-
-* Fri Apr 25 2008 Mike Christie <mchristie@redhat.com> - 6.2.0.868-0.7
-- 437522 log out sessions that are not used for root during "iscsi stop".
-
-* Fri Apr 4 2008 Mike Christie <mchristie@redhat.com> - 6.2.0.868-0.6
-- Rebase to RHEL5 to bring in bug fixes.
-- 437522 iscsi startup does not need to modify with network startup.
-- 436175 Check for running sessions when stopping service.
-
-* Wed Feb 5 2008 Mike Christie <mchristie@redhat.com> - 6.2.0.868-0.3
-- Rebase to upstream and RHEL5.
-- 246960 LSB init script changes.
-
-* Fri Oct 5 2007 Mike Christie <mchristie@redhat.com> - 6.2.0.865-0.2
-- Rebase to upstream's bug fix release.
-- Revert init script startup changes from 225915 which reviewers did
- not like.
-
-* Mon Jun 20 2007 Mike Christie <mchristie@redhat.com> - 6.2.0.754-0.1
-- 225915 From Adrian Reber - Fix up spec and init files for rpmlint.
-
-* Tue Feb 6 2007 Mike Christie <mchristie@redhat.com> - 6.2.0.754-0.0
-- Rebase to upstream.
-- Add back --map functionality but in session mode to match RHEL5 fixes
-- Break up iscsi init script into two, so iscsid can be started early for root
-
-* Tue Nov 28 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.747-0.0
-- Fix several bugs in actor.c (iscsi scheduling). This should result
-- in better dm-multipath intergation and fix bugs where time outs
-- or requests were missed or dropped.
-- Set default noop timeout correctly.
-
-* Sat Nov 25 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.742-0.0
-- Don't flood targets with nop-outs.
-
-* Fri Nov 24 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.737-0.0
-- Add commands missing from RHEL4/RHEL3 and document iscsid.conf.
-- Fixup README.
-
-* Mon Nov 7 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.695-0.8
-- Rebase to upstream open-iscsi-2.0-730.
-
-* Tue Oct 17 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.695-0.7
-- Change period to colon in default name
-
-* Thu Oct 5 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.695-0.6
-- BZ 209523 make sure the network is not going to get shutdown so
-iscsi devices (include iscsi root and dm/md over iscsi) get syncd.
-- BZ 209415 have package create iscsi var dirs
-
-* Tue Oct 3 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.695-0.5
-- BZ 208864 move /etc/iscsi/nodes and send_targets to /var/lib/iscsi
-
-* Mon Oct 1 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.695-0.4
-- BZ 208548 move /etc/iscsi/lock to /var/lock/iscsi/lock
-
-* Wed Sep 27 2006 Jeremy Katz <katzj@redhat.com> - 6.2.0.695-0.3
-- Add fix for initscript with pid file moved
-
-* Tue Sep 26 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.695-0.2
-- BZ 208050 - change default initiator name to reflect redhat
-- Move pid from /etc/iscsi to /var/run/iscsid.pid
-
-* Fri Sep 15 2006 Mike Christie <mchristie@redhat.com> - 6.2.0.695-0.1
-- Add compat with FC kernel so iscsid will pass startup checks and run.
-- Fix bug when using hw iscsi and software iscsi and iscsid is restarted.
-- Fix session matching bug when hw and software iscsi is both running
-
-* Tue Sep  5 2006 Jeremy Katz <katzj@redhat.com> - 6.1.1.685-0.1
-- Fix service startup
-- Fix another case where cflags weren't being used
-
-* Mon Aug 28 2006 Mike Christie <mchristie@redhat.com> - 6.1.1.685
-- Rebase to upstream to bring in many bug fixes and rm db.
-- iscsi uses /etc/iscsi instead of just etc now
-
-* Fri Jul 21 2006 Jeremy Katz <katzj@redhat.com> - 6.1.1.645-1
-- fix shutdown with root on iscsi
-
-* Thu Jul 13 2006 Mike Christie <mchristie@redhat.com> - 6.1.1.645
-- update to upstream 1.1.645
-- Note DB and interface changed so you must update kernel, tools and DB
-
-* Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - 6.0.5.595-2.1.1
-- rebuild
-
-* Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - 6.0.5.595-2.1
-- rebuild
-
-* Wed Jun 21 2006 Mike Christie <mchristi@redhat.com> - 6.0.5.595-2
-- add PatM's statics.c file. This is needed for boot since 
-  there is no getpwuid static available at that time.
-* Tue Jun 20 2006 Jeremy Katz <katzj@redhat.com> - 6.0.5.595-1
-- ensure that we respect %%{optflags}
-- cleaned up initscript to make use of standard functions, return right 
-  values and start by default
-- build iscsistart as a static binary for use in initrds
-
-* Tue May 30 2006 Mike Christie <mchristi@redhat.com>
-- rebase package to svn rev 595 to fix several bugs
-  NOTE!!!!!!!! This is not compatible with the older open-iscsi modules
-  and tools. You must upgrade.
-
-* Thu May 18 2006 Mike Christie <mchristi@redhat.com>
-- update package to open-iscsi svn rev 571
-  NOTE!!!!!!!! This is not compatible with the older open-iscsi modules
-  and tools. You must upgrade.
-
-* Fri Apr 7 2006 Mike Christie <mchristi@redhat.com>
-- From Andy Henson <andy@zexia.co.uk>:
-  Autogenerate /etc/initiatorname.iscsi during install if not already present
-- Remove code to autogenerate /etc/initiatorname.iscsi from initscript
-- From dan.y.roche@gmail.com:
-  add touch and rm lock code
-- update README
-- update default iscsid.conf. "cnx" was not supported. The correct
-  id was "conn".
-
-* Fri Feb 10 2006 Jesse Keating <jkeating@redhat.com> - 5.0.5.476-0.1
-- bump again for double-long bug on ppc(64)
-
-* Mon Jan 23 2006 Mike Christie <mchristi@redhat.com>
-- rebase package to bring in ppc64 unsigned long vs unsigned
-  long long fix and iscsadm return value fix. Also drop rdma patch
-  becuase it is now upstream.
-* Wed Dec 14 2005 Mike Christie <mchristi@redhat.com>
-- initial packaging
-

@@ -1,0 +1,75 @@
+From 8f79529354b4023c371e00091f11bdd523497639 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Mon, 19 Aug 2013 07:18:25 -0700
+Subject: iscsi boot related service file updates
+
+make sure iscsid gets started if there are any boot sessions running
+add reload target to fix double session problem when restarting from NM
+don't rely on session list passed from initrd, never got fully implemented
+---
+ etc/systemd/iscsi-mark-root-nodes | 13 +++++++++++++
+ etc/systemd/iscsi.service         |  3 ++-
+ etc/systemd/iscsi_mark_root_nodes | 14 --------------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
+ create mode 100644 etc/systemd/iscsi-mark-root-nodes
+ delete mode 100644 etc/systemd/iscsi_mark_root_nodes
+
+diff --git a/etc/systemd/iscsi-mark-root-nodes b/etc/systemd/iscsi-mark-root-nodes
+new file mode 100644
+index 0000000..157be62
+--- /dev/null
++++ b/etc/systemd/iscsi-mark-root-nodes
+@@ -0,0 +1,13 @@
++#!/bin/bash
++
++ISCSIADM=/sbin/iscsiadm
++
++$ISCSIADM -m session >/dev/null 2>&1 || exit 0
++
++$ISCSIADM -m session | while read t num i target; do
++  ip=${i%:*}
++  $ISCSIADM -m node -p $ip -T $target -o update -n node.startup -v onboot
++done
++
++systemctl start iscsid.service
++
+diff --git a/etc/systemd/iscsi.service b/etc/systemd/iscsi.service
+index 7b4efee..d5712bd 100644
+--- a/etc/systemd/iscsi.service
++++ b/etc/systemd/iscsi.service
+@@ -10,10 +10,11 @@ ConditionDirectoryNotEmpty=/var/lib/iscsi/nodes
+ [Service]
+ Type=oneshot
+ RemainAfterExit=true
+-ExecStart=/usr/libexec/iscsi_mark_root_nodes
++ExecStart=/usr/libexec/iscsi-mark-root-nodes
+ ExecStart=/sbin/iscsiadm -m node --loginall=automatic
+ ExecStop=/bin/sync
+ ExecStop=/sbin/iscsiadm -m node --logoutall=automatic
++ExecReload=/sbin/iscsiadm -m node --loginall=automatic
+ 
+ [Install]
+ WantedBy=sysinit.target
+diff --git a/etc/systemd/iscsi_mark_root_nodes b/etc/systemd/iscsi_mark_root_nodes
+deleted file mode 100644
+index c68475c..0000000
+--- a/etc/systemd/iscsi_mark_root_nodes
++++ /dev/null
+@@ -1,14 +0,0 @@
+-#!/bin/bash
+-
+-ISCSIADM=/sbin/iscsiadm
+-SESSION_FILE=/run/initramfs/iscsi.sessions
+-
+-if [ ! -f $SESSION_FILE ] ; then
+-  exit 0
+-fi
+-
+-while read t num i target; do
+-  ip=${i%:*}
+-  $ISCSIADM -m node -p $ip -T $target -o update -n node.startup -v onboot
+-done < $SESSION_FILE
+-
+-- 
+1.8.1.4
+

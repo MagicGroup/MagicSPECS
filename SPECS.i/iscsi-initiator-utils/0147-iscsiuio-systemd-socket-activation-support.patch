@@ -1,0 +1,58 @@
+From 8003178db245b43d04b27b559d5541ced24ec13f Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 19 Dec 2012 21:39:06 -0800
+Subject: [PATCH] iscsiuio systemd socket activation support
+
+---
+ iscsiuio/src/unix/iscsid_ipc.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/iscsiuio/src/unix/iscsid_ipc.c b/iscsiuio/src/unix/iscsid_ipc.c
+index e22de0d..4908cb7 100644
+--- a/iscsiuio/src/unix/iscsid_ipc.c
++++ b/iscsiuio/src/unix/iscsid_ipc.c
+@@ -948,6 +948,30 @@ static void *iscsid_loop(void *arg)
+ 	pthread_exit(NULL);
+ }
+ 
++#define SD_SOCKET_FDS_START 3
++
++static int ipc_systemd(void)
++{
++	char *env;
++
++	env = getenv("LISTEN_PID");
++
++	if (!env || (strtoul(env, NULL, 10) != getpid()))
++		return -EINVAL;
++
++	env = getenv("LISTEN_FDS");
++
++	if (!env)
++		return -EINVAL;
++
++	if (strtoul(env, NULL, 10) != 1) {
++		LOG_ERR("Did not receive exactly one IPC socket from systemd");
++		return -EINVAL;
++	}
++
++	return SD_SOCKET_FDS_START;
++}
++
+ /******************************************************************************
+  *  Initialize/Cleanup routines
+  ******************************************************************************/
+@@ -961,6 +985,10 @@ int iscsid_init()
+ 	int rc, addr_len;
+ 	struct sockaddr_un addr;
+ 
++	iscsid_opts.fd = ipc_systemd();
++	if (iscsid_opts.fd >= 0)
++		return 0;
++
+ 	iscsid_opts.fd = socket(AF_LOCAL, SOCK_STREAM, 0);
+ 	if (iscsid_opts.fd < 0) {
+ 		LOG_ERR(PFX "Can not create IPC socket");
+-- 
+1.8.3.1
+

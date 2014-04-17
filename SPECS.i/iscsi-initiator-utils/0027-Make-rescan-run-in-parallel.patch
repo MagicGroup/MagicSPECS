@@ -1,0 +1,299 @@
+From 3c5ec3835d5fd57a993cb814ecd74b48419a7459 Mon Sep 17 00:00:00 2001
+From: Mike Christie <michaelc@cs.wisc.edu>
+Date: Mon, 29 Jul 2013 14:13:36 -0500
+Subject: Make rescan run in parallel
+
+Patch from Saggi Mizrahi:
+
+This fixes a problem where a host which is inaccessible would block the
+scan of other hosts in the system.
+
+[compilation and minor cosmetic fixes by Mike Christie]
+Signed-off-by: Saggi Mizrahi <smizrahi@redhat.com>
+---
+ usr/host.c         |  2 +-
+ usr/initiator.c    |  3 ++-
+ usr/iscsi_sysfs.c  | 61 +++++++++++++++++++++++++++++++++++++++++++++---------
+ usr/iscsi_sysfs.h  |  3 ++-
+ usr/iscsiadm.c     | 18 +++++++++-------
+ usr/iscsid.c       |  3 ++-
+ usr/session_info.c |  4 ++--
+ usr/session_mgmt.c |  7 ++++---
+ 8 files changed, 74 insertions(+), 27 deletions(-)
+
+diff --git a/usr/host.c b/usr/host.c
+index b03e50f..1fcb350 100644
+--- a/usr/host.c
++++ b/usr/host.c
+@@ -242,7 +242,7 @@ static int host_info_print_tree(void *data, struct host_info *hinfo)
+ 	link_info.data = &hinfo->host_no;
+ 
+ 	err = iscsi_sysfs_for_each_session(&link_info, &num_found,
+-					   session_info_create_list);
++					   session_info_create_list, 0);
+ 	if (err || !num_found)
+ 		return 0;
+ 
+diff --git a/usr/initiator.c b/usr/initiator.c
+index 86df222..a3b24b7 100644
+--- a/usr/initiator.c
++++ b/usr/initiator.c
+@@ -1855,7 +1855,8 @@ static int session_is_running(node_rec_t *rec)
+ 	if (session_find_by_rec(rec))
+ 		return 1;
+ 
+-	if (iscsi_sysfs_for_each_session(rec, &nr_found, iscsi_match_session))
++	if (iscsi_sysfs_for_each_session(rec, &nr_found, iscsi_match_session,
++					 0))
+ 		return 1;
+ 
+ 	return 0;
+diff --git a/usr/iscsi_sysfs.c b/usr/iscsi_sysfs.c
+index 64a4ce7..aed10a3 100644
+--- a/usr/iscsi_sysfs.c
++++ b/usr/iscsi_sysfs.c
+@@ -24,6 +24,7 @@
+ #include <dirent.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/wait.h>
+ 
+ #include "log.h"
+ #include "initiator.h"
+@@ -1167,11 +1168,13 @@ int iscsi_sysfs_get_sessioninfo_by_id(struct session_info *info, char *session)
+ }
+ 
+ int iscsi_sysfs_for_each_session(void *data, int *nr_found,
+-				 iscsi_sysfs_session_op_fn *fn)
++				 iscsi_sysfs_session_op_fn *fn,
++				 int in_parallel)
+ {
+ 	struct dirent **namelist;
+-	int rc = 0, n, i;
++	int rc = 0, n, i, chldrc = 0;
+ 	struct session_info *info;
++	pid_t pid = 0;
+ 
+ 	info = calloc(1, sizeof(*info));
+ 	if (!info)
+@@ -1193,14 +1196,52 @@ int iscsi_sysfs_for_each_session(void *data, int *nr_found,
+ 			continue;
+ 		}
+ 
+-		rc = fn(data, info);
+-		if (rc > 0)
+-			break;
+-		else if (rc == 0)
+-			(*nr_found)++;
+-		else
+-			/* if less than zero it means it was not a match */
+-			rc = 0;
++		if (in_parallel) {
++			pid = fork();
++		}
++		if (pid == 0) {
++			rc = fn(data, info);
++			if (in_parallel) {
++				exit(rc);
++			} else {
++				if (rc > 0) {
++					break;
++				} else if (rc == 0) {
++					(*nr_found)++;
++				} else {
++					/* if less than zero it means it was not a match */
++					rc = 0;
++				}
++			}
++		} else if (pid < 0) {
++			log_error("could not fork() for session %s, err %d",
++				   namelist[i]->d_name, errno);
++		}
++	}
++
++	if (in_parallel) {
++		while (1) {
++			if (wait(&chldrc) < 0) {
++				/*
++				 * ECHILD means no more children which is
++				 * expected to happen sooner or later.
++				 */
++				if (errno != ECHILD) {
++					rc = errno;
++				}
++				break;
++			}
++
++			if ((chldrc > 0) && (rc == 0)) {
++				/*
++				 * The non-parallel code path returns the first
++				 * error so this keeps the same semantics.
++				 */
++				rc = chldrc;
++			} else if (chldrc == 0) {
++				(*nr_found)++;
++			}
++		}
+ 	}
+ 
+ 	for (i = 0; i < n; i++)
+diff --git a/usr/iscsi_sysfs.h b/usr/iscsi_sysfs.h
+index d130d36..9a56105 100644
+--- a/usr/iscsi_sysfs.h
++++ b/usr/iscsi_sysfs.h
+@@ -51,7 +51,8 @@ extern int iscsi_sysfs_for_each_iface_on_host(void *data, uint32_t host_no,
+ 					      int *nr_found,
+ 					      iscsi_sysfs_iface_op_fn *fn);
+ extern int iscsi_sysfs_for_each_session(void *data, int *nr_found,
+-					iscsi_sysfs_session_op_fn *fn);
++					iscsi_sysfs_session_op_fn *fn,
++					int in_parallel);
+ extern int iscsi_sysfs_for_each_host(void *data, int *nr_found,
+ 				     iscsi_sysfs_host_op_fn *fn);
+ extern uint32_t iscsi_sysfs_get_host_no_from_sid(uint32_t sid, int *err);
+diff --git a/usr/iscsiadm.c b/usr/iscsiadm.c
+index 5030894..da0a3ec 100644
+--- a/usr/iscsiadm.c
++++ b/usr/iscsiadm.c
+@@ -347,7 +347,8 @@ match_startup_mode(node_rec_t *rec, char *mode)
+ }
+ 
+ static int
+-for_each_session(struct node_rec *rec, iscsi_sysfs_session_op_fn *fn)
++for_each_session(struct node_rec *rec, iscsi_sysfs_session_op_fn *fn,
++		 int in_parallel)
+ {
+ 	int err, num_found = 0;
+ 
+@@ -355,7 +356,8 @@ for_each_session(struct node_rec *rec, iscsi_sysfs_session_op_fn *fn)
+ 		num_found = 1;
+ 		err = fn(rec, rec->session.info);
+ 	} else {
+-		err = iscsi_sysfs_for_each_session(rec, &num_found, fn);
++		err = iscsi_sysfs_for_each_session(rec, &num_found, fn,
++						   in_parallel);
+ 	}
+ 	if (err)
+ 		log_error("Could not execute operation on all sessions: %s",
+@@ -435,7 +437,7 @@ logout_by_startup(char *mode)
+ 	rc = iscsi_logout_portals(mode, &nr_found, 1, __logout_by_startup);
+ 	if (rc == ISCSI_ERR_NO_OBJS_FOUND)
+ 		log_error("No matching sessions found");
+-	return rc; 
++	return rc;
+ }
+ 
+ struct startup_data {
+@@ -479,7 +481,7 @@ __do_leading_login(void *data, struct list_head *list, struct node_rec *rec)
+ 	 * If there is an existing session that matcthes the target,
+ 	 * the leading login is complete.
+ 	 */
+-	if (iscsi_sysfs_for_each_session(rec, &nr_found, iscsi_match_target)) {
++	if (iscsi_sysfs_for_each_session(rec, &nr_found, iscsi_match_target, 0)) {
+ 		log_debug(1, "Skipping %s: Already a session for that target",
+ 			  rec->name);
+ 		return -1;
+@@ -579,7 +581,7 @@ login_by_startup(char *mode)
+ 		list_for_each_entry_safe(rec, tmp_rec, &startup.leading_logins,
+ 					 list) {
+ 			if (!iscsi_sysfs_for_each_session(rec, &nr_found,
+-							  iscsi_match_target))
++							  iscsi_match_target, 0))
+ 				missed_leading_login++;
+ 			/*
+ 			 * Cleanup the list, since 'iscsi_login_portals_safe'
+@@ -1210,7 +1212,7 @@ do_target_discovery(discovery_rec_t *drec, struct list_head *ifaces,
+ 		host_no = iscsi_sysfs_get_host_no_from_hwinfo(iface, &rc);
+ 		if (rc || host_no == -1) {
+ 			log_debug(1, "Could not match iface" iface_fmt " to "
+-				  "host.", iface_str(iface)); 
++				  "host.", iface_str(iface));
+ 			/* try software iscsi */
+ 			continue;
+ 		}
+@@ -2116,12 +2118,12 @@ static int exec_node_op(int op, int do_login, int do_logout,
+ 	}
+ 
+ 	if (do_rescan) {
+-		rc = for_each_session(rec, rescan_portal);
++		rc = for_each_session(rec, rescan_portal, 1);
+ 		goto out;
+ 	}
+ 
+ 	if (do_stats) {
+-		rc = for_each_session(rec, session_stats);
++		rc = for_each_session(rec, session_stats, 0);
+ 		goto out;
+ 	}
+ 
+diff --git a/usr/iscsid.c b/usr/iscsid.c
+index b4bb65b..8f19220 100644
+--- a/usr/iscsid.c
++++ b/usr/iscsid.c
+@@ -511,7 +511,8 @@ int main(int argc, char *argv[])
+ 	if (pid == 0) {
+ 		int nr_found = 0;
+ 		/* child */
+-		iscsi_sysfs_for_each_session(NULL, &nr_found, sync_session);
++		/* TODO - test with async support enabled */
++		iscsi_sysfs_for_each_session(NULL, &nr_found, sync_session, 0);
+ 		exit(0);
+ 	} else if (pid < 0) {
+ 		log_error("Fork failed error %d: existing sessions"
+diff --git a/usr/session_info.c b/usr/session_info.c
+index 1f84c49..de156c6 100644
+--- a/usr/session_info.c
++++ b/usr/session_info.c
+@@ -368,7 +368,7 @@ int session_info_print(int info_level, struct session_info *info, int do_show)
+ 			num_found = 1;
+ 		} else
+ 			err = iscsi_sysfs_for_each_session(info, &num_found,
+-						   session_info_print_flat);
++						   session_info_print_flat, 0);
+ 		break;
+ 	case 3:
+ 		version = iscsi_sysfs_get_iscsi_kernel_version();
+@@ -403,7 +403,7 @@ int session_info_print(int info_level, struct session_info *info, int do_show)
+ 		link_info.match_fn = NULL;
+ 
+ 		err = iscsi_sysfs_for_each_session(&link_info, &num_found,
+-						   session_info_create_list);
++						   session_info_create_list, 0);
+ 		if (err || !num_found)
+ 			break;
+ 
+diff --git a/usr/session_mgmt.c b/usr/session_mgmt.c
+index 0b7373f..87b8e00 100644
+--- a/usr/session_mgmt.c
++++ b/usr/session_mgmt.c
+@@ -172,7 +172,7 @@ int iscsi_login_portal(void *data, struct list_head *list, struct node_rec *rec)
+ 	 * that are missing.
+ 	 */
+ 	rc = iscsi_sysfs_for_each_session(rec, &session_count,
+-					  iscsi_match_session_count);
++					  iscsi_match_session_count, 0);
+ 	if (rc) {
+ 		log_error("Could not count current number of sessions");
+ 		goto done;
+@@ -421,7 +421,7 @@ int iscsi_logout_portals(void *data, int *nr_found, int wait,
+ 	*nr_found = 0;
+ 
+ 	err = iscsi_sysfs_for_each_session(&link_info, nr_found,
+-					   session_info_create_list);
++					   session_info_create_list, 0);
+ 	if (err && !list_empty(&session_list))
+ 		log_error("Could not read in all sessions: %s",
+ 			  iscsi_err_to_str(err));
+@@ -466,7 +466,8 @@ free_list:
+ int iscsi_check_for_running_session(struct node_rec *rec)
+ {
+ 	int nr_found = 0;
+-	if (iscsi_sysfs_for_each_session(rec, &nr_found, iscsi_match_session))
++	if (iscsi_sysfs_for_each_session(rec, &nr_found, iscsi_match_session,
++					 0))
+ 		return 1;
+ 	return 0;
+ }
+-- 
+1.8.1.4
+

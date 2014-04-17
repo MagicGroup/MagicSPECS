@@ -1,0 +1,104 @@
+From 487c312c96379e45648c782cee5b0d469cba80d0 Mon Sep 17 00:00:00 2001
+From: Eddie Wai <eddie.wai@broadcom.com>
+Date: Fri, 23 Aug 2013 14:04:11 -0700
+Subject: [PATCH] ISCSID: Added the extraction of the session boot info
+
+This patch does the work to extract the corresponding
+<boot_root>->ethernetN net params as specified from the kernel
+session boot_nic sysfs entry based on the transport param
+use_boot_info.
+
+This is only populated for iscsi_tcp and bnx2i.
+
+Signed-off-by: Eddie Wai <eddie.wai@broadcom.com>
+---
+ usr/iscsi_sysfs.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ usr/transport.c   |  1 +
+ usr/transport.h   |  1 +
+ 3 files changed, 42 insertions(+)
+
+diff --git a/usr/iscsi_sysfs.c b/usr/iscsi_sysfs.c
+index aed10a3..56cb90c 100644
+--- a/usr/iscsi_sysfs.c
++++ b/usr/iscsi_sysfs.c
+@@ -674,6 +674,43 @@ free_fnode:
+ 	return rc;
+ }
+ 
++static int iscsi_sysfs_read_boot(struct iface_rec *iface, char *session)
++{
++	char boot_root[BOOT_NAME_MAXLEN], boot_nic[BOOT_NAME_MAXLEN];
++	char boot_name[BOOT_NAME_MAXLEN], boot_content[BOOT_NAME_MAXLEN];
++
++	/* Extract boot info */
++	strlcpy(boot_name, "boot_target", sizeof(boot_name));
++	if (sysfs_get_str(session, ISCSI_SESSION_SUBSYS, boot_name,
++			  boot_content, BOOT_NAME_MAXLEN))
++		return -1;
++	strlcpy(boot_name, "boot_nic", sizeof(boot_name));
++	if (sysfs_get_str(session, ISCSI_SESSION_SUBSYS, boot_name, boot_nic,
++			  BOOT_NAME_MAXLEN))
++		return -1;
++	strlcpy(boot_name, "boot_root", sizeof(boot_name));
++	if (sysfs_get_str(session, ISCSI_SESSION_SUBSYS, boot_name, boot_root,
++			  BOOT_NAME_MAXLEN))
++		return -1;
++
++	/* If all boot_root/boot_target/boot_nic exist, then extract the
++	   info from the boot nic */
++	if (sysfs_get_str(boot_nic, boot_root, "vlan", boot_content,
++			  BOOT_NAME_MAXLEN))
++		log_debug(5, "could not read %s/%s/vlan", boot_root, boot_nic);
++	else
++		iface->vlan_id = atoi(boot_content);
++
++	if (sysfs_get_str(boot_nic, boot_root, "subnet-mask",
++			  iface->subnet_mask, NI_MAXHOST))
++		log_debug(5, "could not read %s/%s/subnet", boot_root,
++			  boot_nic);
++
++	log_debug(5, "sysfs read boot returns %s/%s/ vlan = %d subnet = %s",
++		  boot_root, boot_nic, iface->vlan_id, iface->subnet_mask);
++	return 0;
++}
++
+ /*
+  * Read in iface settings based on host and session values. If
+  * session is not passed in, then the ifacename will not be set. And
+@@ -802,6 +839,9 @@ static int iscsi_sysfs_read_iface(struct iface_rec *iface, int host_no,
+ 		}
+ 	}
+ 
++	if (session && t->template->use_boot_info)
++		iscsi_sysfs_read_boot(iface, session);
++
+ 	if (!iface_kern_id)
+ 		goto done;
+ 
+diff --git a/usr/transport.c b/usr/transport.c
+index 52b7674..2f38519 100644
+--- a/usr/transport.c
++++ b/usr/transport.c
+@@ -77,6 +77,7 @@ struct iscsi_transport_template cxgb4i = {
+ struct iscsi_transport_template bnx2i = {
+ 	.name		= "bnx2i",
+ 	.set_host_ip	= 1,
++	.use_boot_info	= 1,
+ 	.ep_connect	= ktransport_ep_connect,
+ 	.ep_poll	= ktransport_ep_poll,
+ 	.ep_disconnect	= ktransport_ep_disconnect,
+diff --git a/usr/transport.h b/usr/transport.h
+index 5dcf872..388e4b1 100644
+--- a/usr/transport.h
++++ b/usr/transport.h
+@@ -31,6 +31,7 @@ struct iscsi_transport_template {
+ 	 * the host's ip address.
+ 	 */
+ 	uint8_t set_host_ip;
++	uint8_t use_boot_info;
+ 	int (*ep_connect) (struct iscsi_conn *conn, int non_blocking);
+ 	int (*ep_poll) (struct iscsi_conn *conn, int timeout_ms);
+ 	void (*ep_disconnect) (struct iscsi_conn *conn);
+-- 
+1.8.3.1
+

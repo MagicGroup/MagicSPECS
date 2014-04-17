@@ -1,0 +1,28 @@
+From 89e9c2ff66d069b812fabcd4fefe453bbcea73e4 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Mon, 25 Nov 2013 22:28:12 -0800
+Subject: [PATCH] start socket listeners on iscsiadm command
+
+fix for trying to run iscsiadm commands right after installing the rpm
+without manually starting the systemd units
+---
+ etc/iscsid.conf | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/etc/iscsid.conf b/etc/iscsid.conf
+index 1fd3000..412f130 100644
+--- a/etc/iscsid.conf
++++ b/etc/iscsid.conf
+@@ -17,7 +17,8 @@
+ # maintainers.
+ #
+ # Default for Fedora and RHEL. (uncomment to activate).
+-#iscsid.startup = /bin/systemctl start iscsid.service
++# Use socket activation, but try to make sure the socket units are listening
++iscsid.startup = /bin/systemctl start iscsid.socket iscsiuio.socket
+ # 
+ # Default for upstream open-iscsi scripts (uncomment to activate).
+ # iscsid.startup = /sbin/iscsid
+-- 
+1.8.3.1
+
