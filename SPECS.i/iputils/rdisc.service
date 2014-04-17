@@ -1,11 +1,11 @@
 [Unit]
 Description=rdisc daemon which discovers routers on the local subnet
-After=syslog.target network.target
+After=network.target
+Documentation=man:rdisc
 
 [Service]
 Type=forking
-EnvironmentFile=/etc/sysconfig/rdisc
-ExecStart=/sbin/rdisc $RDISCOPTS
+ExecStart=/sbin/rdisc -s
 
 [Install]
 WantedBy=multi-user.target

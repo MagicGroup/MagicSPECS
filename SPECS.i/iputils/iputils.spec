@@ -1,38 +1,26 @@
+%global _hardened_build 1
+
 Summary: Network monitoring tools including ping
 Name: iputils
-Version: 20101006
-Release: 15%{?dist}
-License: BSD
+Version: 20121221
+Release: 10%{?dist}
+# some parts are under the original BSD (ping.c)
+# some are under GPLv2+ (tracepath.c)
+License: BSD and GPLv2+
 URL: http://www.skbuff.net/iputils
 Group: System Environment/Daemons
 
 Source0: http://www.skbuff.net/iputils/%{name}-s%{version}.tar.bz2
 Source1: ifenslave.tar.gz
-Source3: rdisc.initd
 Source4: rdisc.service
-Source5: rdisc.sysconfig
+Source6: ninfod.service
 
 Patch0: iputils-20020927-rh.patch
-Patch1: iputils-20020124-countermeasures.patch
-Patch2: iputils-20020927-addrcache.patch
-Patch3: iputils-20020927-ping-subint.patch
-Patch4: iputils-ping_cleanup.patch
-Patch5: iputils-ifenslave.patch
-Patch6: iputils-20070202-idn.patch
-Patch7: iputils-20070202-traffic_class.patch
-Patch8: iputils-20070202-ia64_align.patch
-Patch9: iputils-20071127-warnings.patch
-Patch10: iputils-20071127-corr_type.patch
-Patch11: iputils-20071127-infiniband.patch
-Patch12: iputils-20100418-convtoint.patch
-Patch13: iputils-20100418-flowlabel.patch
-Patch14: iputils-20101006-drop_caps.patch
-Patch15: iputils-20101006-unused.patch
-Patch16: iputils-20101006-man.patch
-Patch17: iputils-20101006-eth.patch
-Patch18: iputils-20101006-rr.patch
+Patch1: iputils-ifenslave.patch
+Patch2: iputils-20121221-floodlocale.patch
+Patch3: iputils-20121221-eperm-flood.patch
+Patch4: iputils-20121221-sigalrm-unblock.patch
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: docbook-utils perl-SGMLSpm
 BuildRequires: glibc-kernheaders >= 2.4-8.19
 BuildRequires: libidn-devel
@@ -40,11 +28,11 @@ BuildRequires: openssl-devel
 BuildRequires: libcap-devel
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
-BuildRequires: systemd-units
-Conflicts: filesystem < 3
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+BuildRequires: systemd
+Requires: filesystem >= 3
 Provides: /bin/ping
 Provides: /bin/ping6
 Provides: /sbin/arping
@@ -56,38 +44,24 @@ including ping. The ping command sends a series of ICMP protocol
 ECHO_REQUEST packets to a specified network host to discover whether
 the target machine is alive and receiving network traffic.
 
-%package sysvinit
+%package ninfod
 Group: System Environment/Daemons
-Summary: SysV initscript for rdisc daemon
+Summary: Node Information Query Daemon
 Requires: %{name} = %{version}-%{release}
-Requires(preun): /sbin/service
-Requires(postun): /sbin/service
+Provides: %{_sbindir}/ninfod
 
-%description sysvinit
-The iputils-sysvinit contains SysV initscritps support.
+%description ninfod
+Node Information Query (RFC4620) daemon. Responds to IPv6 Node Information
+Queries.
 
 %prep
 %setup -q -a 1 -n %{name}-s%{version}
 
 %patch0 -p1 -b .rh
-%patch1 -p1 -b .countermeasures
-%patch2 -p1 -b .addrcache
-%patch3 -p1 -b .ping-subint
-%patch4 -p1 -b .cleanup
-%patch5 -p1 -b .addr
-%patch6 -p1 -b .idn
-%patch7 -p1 -b .traffic_class
-%patch8 -p1 -b .ia64_align
-%patch9 -p1 -b .warnings
-%patch10 -p1 -b .corr_type
-%patch11 -p1 -b .infiniband
-%patch12 -p1 -b .convtoint
-%patch13 -p1 -b .flowlabel
-%patch14 -p1 -b .drop_caps
-%patch15 -p1 -b .unused
-%patch16 -p1 -b .man
-%patch17 -p1 -b .eth
-%patch18 -p1 -b .rr
+%patch1 -p1 -b .addr
+%patch2 -p1 -b .floc
+%patch3 -p1 -b .eperm
+%patch4 -p1 -b .sigalrm
 
 %build
 %ifarch s390 s390x
@@ -95,19 +69,17 @@ The iputils-sysvinit contains SysV initscritps support.
 %else
   export CFLAGS="-fpie"
 %endif
-export LDFLAGS="-pie"
+export LDFLAGS="-pie -Wl,-z,relro,-z,now"
 
-make %{?_smp_mflags} arping clockdiff ping ping6 rdisc tracepath tracepath6
-gcc -Wall $RPM_OPT_FLAGS ifenslave.c -o ifenslave
+make %{?_smp_mflags} arping clockdiff ping ping6 rdisc tracepath tracepath6 \
+                     ninfod
+gcc -Wall $RPM_OPT_FLAGS $CFLAGS $LDFLAGS ifenslave.c -o ifenslave
 make -C doc man
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
-
 mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
 mkdir -p $RPM_BUILD_ROOT/%{_unitdir}
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 
 install -c clockdiff		${RPM_BUILD_ROOT}%{_sbindir}/
 install -cp arping		${RPM_BUILD_ROOT}%{_sbindir}/
@@ -117,6 +89,7 @@ install -cp rdisc		${RPM_BUILD_ROOT}%{_sbindir}/
 install -cp ping6		${RPM_BUILD_ROOT}%{_bindir}/
 install -cp tracepath		${RPM_BUILD_ROOT}%{_bindir}/
 install -cp tracepath6		${RPM_BUILD_ROOT}%{_bindir}/
+install -cp ninfod/ninfod	${RPM_BUILD_ROOT}%{_sbindir}/
 
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
 ln -sf ../bin/ping6 ${RPM_BUILD_ROOT}%{_sbindir}
@@ -129,70 +102,173 @@ install -cp doc/arping.8	${RPM_BUILD_ROOT}%{_mandir}/man8/
 install -cp doc/ping.8		${RPM_BUILD_ROOT}%{_mandir}/man8/
 install -cp doc/rdisc.8		${RPM_BUILD_ROOT}%{_mandir}/man8/
 install -cp doc/tracepath.8	${RPM_BUILD_ROOT}%{_mandir}/man8/
+install -cp doc/ninfod.8	${RPM_BUILD_ROOT}%{_mandir}/man8/
 install -cp ifenslave.8		${RPM_BUILD_ROOT}%{_mandir}/man8/
 ln -s ping.8.gz ${RPM_BUILD_ROOT}%{_mandir}/man8/ping6.8.gz
 ln -s tracepath.8.gz ${RPM_BUILD_ROOT}%{_mandir}/man8/tracepath6.8.gz
 
 install -dp ${RPM_BUILD_ROOT}%{_sysconfdir}/rc.d/init.d
-install -m 755 -p %SOURCE3 ${RPM_BUILD_ROOT}%{_sysconfdir}/rc.d/init.d/rdisc
-install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rdisc
 install -m 644 %SOURCE4 ${RPM_BUILD_ROOT}/%{_unitdir}
+install -m 644 %SOURCE6 ${RPM_BUILD_ROOT}/%{_unitdir}
 
 iconv -f ISO88591 -t UTF8 RELNOTES -o RELNOTES.tmp
 touch -r RELNOTES RELNOTES.tmp
 mv -f RELNOTES.tmp RELNOTES
 
 %post
-%{_bindir}/systemctl daemon-reload >/dev/null 2>&1 || :
+%systemd_post rdisc.service
 
 %preun
-if [ $1 = 0 ]; then
-	/bin/systemctl disable rdisc.service > /dev/null 2>&1 || :
-	/bin/systemctl stop rdisc.service > /dev/null 2>&1 || :
-fi 
+%systemd_preun rdisc.service
 
 %postun
-%{_bindir}/systemctl daemon-reload >/dev/null 2>&1 || :
+%systemd_postun_with_restart rdisc.service
 
-if [ "$1" -ge "1" ]; then
-	/bin/systemctl try-restart rdisc.service >/dev/null 2>&1 || :
-fi
+%post ninfod
+%systemd_post ninfod.service
 
-%triggerun --  %{name} < 20101006-9
-	/sbin/chkconfig --del rdisc >/dev/null 2>&1 || :
-	/bin/systemctl try-restart rdisc.service >/dev/null 2>&1 || :
+%preun ninfod
+%systemd_preun ninfod.service
 
-%triggerpostun -n %{name}-sysvinit -- %{name} < 20101006-9
-	/sbin/chkconfig --add rdisc >/dev/null 2>&1 || :
-
-%clean
-rm -rf ${RPM_BUILD_ROOT}
+%postun ninfod
+%systemd_postun_with_restart ninfod.service
 
 %files
-%defattr(-,root,root,-)
 %doc RELNOTES README.bonding
 %{_unitdir}/rdisc.service
-%{_sbindir}/clockdiff
-%{_sbindir}/arping
-%{_sbindir}/arping
-%attr(0755,root,root) %caps(cap_net_raw=ep) %{_bindir}/ping
+%attr(0755,root,root) %caps(cap_net_raw=ep) %{_sbindir}/clockdiff
+%attr(0755,root,root) %caps(cap_net_raw=ep) %{_sbindir}/arping
+%attr(0755,root,root) %caps(cap_net_raw=ep cap_net_admin=ep) %{_bindir}/ping
 %{_sbindir}/ifenslave
 %{_sbindir}/rdisc
-%attr(0755,root,root) %caps(cap_net_raw=ep) %{_bindir}/ping6
+%attr(0755,root,root) %caps(cap_net_raw=ep cap_net_admin=ep) %{_bindir}/ping6
 %{_bindir}/tracepath
 %{_bindir}/tracepath6
 %{_sbindir}/ping6
 %{_sbindir}/tracepath
 %{_sbindir}/tracepath6
-%attr(644,root,root) %{_mandir}/man8/*
-%config(noreplace) %attr(0644,root,root) %{_sysconfdir}/sysconfig/rdisc
+%attr(644,root,root) %{_mandir}/man8/clockdiff.8.gz
+%attr(644,root,root) %{_mandir}/man8/arping.8.gz
+%attr(644,root,root) %{_mandir}/man8/ping.8.gz
+%attr(644,root,root) %{_mandir}/man8/ping6.8.gz
+%attr(644,root,root) %{_mandir}/man8/rdisc.8.gz
+%attr(644,root,root) %{_mandir}/man8/tracepath.8.gz
+%attr(644,root,root) %{_mandir}/man8/tracepath6.8.gz
+%attr(644,root,root) %{_mandir}/man8/ifenslave.8.gz
 
-%files sysvinit
-%{_sysconfdir}/rc.d/init.d/rdisc
+%files ninfod
+%attr(0755,root,root) %caps(cap_net_raw=ep) %{_sbindir}/ninfod
+%{_unitdir}/ninfod.service
+%attr(644,root,root) %{_mandir}/man8/ninfod.8.gz
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 20101006-15
-- 为 Magic 3.0 重建
+* Fri Apr 11 2014 Jan Synáček <jsynacek@redhat.com> - 20121221-10
+- Fix arping hang if SIGALRM is blocked (#1085971)
+
+* Wed Mar 26 2014 Jan Synáček <jsynacek@redhat.com> - 20121221-9
+- Fix message flood when EPERM is encountered in ping (#1061867)
+
+* Mon Feb  3 2014 Jan Synáček <jsynacek@redhat.com> - 20121221-8
+- reference documentation in the service files
+- remove redundant sysconfig-related stuff
+- remove sysvinit script
+
+* Tue Jan 21 2014 Jan Synáček <jsynacek@redhat.com> - 20121221-7
+- Build with pie/full RELRO (#1055742)
+
+* Sun Jan 19 2014 Ville Skyttä <ville.skytta@iki.fi> - 20121221-6
+- Don't order services after syslog.target.
+
+* Thu Oct 31 2013 Jan Synáček <jsynacek@redhat.com> - 20121221-5
+- Harden the package even more (full RELRO)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20121221-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Jan Synáček <jsynacek@redhat.com> - 20121221-3
+- Harden the package
+
+* Fri Feb 01 2013 Jan Synáček <jsynacek@redhat.com> - 20121221-2
+- Always use posix locale when reading -i (#905840)
+- Set correct ninfod capabilities
+
+* Mon Jan 07 2013 Jan Synáček <jsynacek@redhat.com> - 20121221-1
+- Update to iputils-s20121207 (#890397) and remove unnecessary patches
+
+* Fri Dec 07 2012 Jan Synáček <jsynacek@redhat.com> - 20121207-1
+- Update to iputils-s20121207 (#884983) - fixes a ping segfault introduced
+  by the previous update
+- Update ninfod-minor patch
+- Renumber patches
+- Fix -F switch (flowlabel patch)
+
+* Thu Dec 06 2012 Jan Synáček <jsynacek@redhat.com> - 20121205-1
+- Update to iputils-s20121205 (#884436) and remove unnecessary patches
+
+* Thu Dec 06 2012 Jan Synáček <jsynacek@redhat.com> - 20121125-3
+- Package ninfod (#877530)
+- Update systemd requirements
+
+* Mon Nov 26 2012 Jan Synáček <jsynacek@redhat.com> - 20121125-2
+- Comment patches and cleanup
+- Update ifaddrs patch
+- Call usage() before limiting capabilities
+- Correct ifaddrs patch
+- Drop corr_type patch (gcc 4.4 build hack)
+- Fix missing end tags in sgml documentation
+
+* Mon Nov 26 2012 Jan Synáček <jsynacek@redhat.com> - 20121125-1
+- Update to iputils-s20121125 (#879952)
+
+* Mon Nov 26 2012 Jan Synáček <jsynacek@redhat.com> - 20121121-2
+- Re-fix arping's default device search logic (#879807)
+
+* Thu Nov 22 2012 Jan Synáček <jsynacek@redhat.com> - 20121121-1
+- Update to iputils-s20121121, drop unnecessary patches
+- Add capabilities to clockdiff and arping
+- Renumber patches
+- Fix arping's default device search logic
+
+* Mon Nov 19 2012 Jan Synáček <jsynacek@redhat.com> - 20121112-2
+- Update License field
+
+* Tue Nov 13 2012 Jan Synáček <jsynacek@redhat.com> - 20121112-1
+- Update to iputils-s20121112 (#875767)
+  + drop unnecessary patches
+  + update patches
+  + wrap SO_BINDTODEVICE with the correct capability
+  + fix incorrect free (hits when -lidn is used)
+
+* Thu Nov 08 2012 Jan Synáček <jsynacek@redhat.com> - 20121106-2
+- Update ifenslave tarball (#859182)
+
+* Tue Nov 06 2012 Jan Synáček <jsynacek@redhat.com> - 20121106-1
+- Update to iputils-s20121106 (#873571) and update patches
+
+* Mon Oct 15 2012 Jan Synáček <jsynacek@redhat.com> - 20121011-1
+- Update to iputils-s20121011
+  + drop unnecessary patches
+  + update patches
+  + improve spec
+
+* Wed Aug 22 2012 Jan Synáček <jsynacek@redhat.com> - 20101006-18
+- Improve spec for fedora
+- Add systemd-rpm macros (#850167)
+
+* Mon Jul 23 2012 Jan Synáček <jsynacek@redhat.com> 20101006-17
+- Minor update: capabilities patch
+
+* Fri Jul 20 2012 Jan Synáček <jsynacek@redhat.com> 20101006-16
+- Make fedora-review friendly
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20101006-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 25 2012 Jan Synáček <jsynacek@redhat.com> 20101006-15
+- Ping fixes:
+  + enable marking packets when the correct capabilities are set (#802197)
+  + integer overflow (#834661)
+  + Fallback to numeric addresses while exiting (#834661)
 
 * Wed Jan 25 2012 Harald Hoyer <harald@redhat.com> 20101006-14
 - install everything in /usr
@@ -372,7 +448,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
 
-* Mon Dec 02 2005 Radek Vokal <rvokal@redhat.com> 20020927-31
+* Mon Dec 05 2005 Radek Vokal <rvokal@redhat.com> 20020927-31
 - ifenslave.8 from debian.org
 - separate ifenslave to its own tarball
 
@@ -502,7 +578,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Mon Aug 27 2001 Philipp Knirsch <pknirsch@redhat.de> 20001110-6
 - Fixed buffer overflow problem in traceroute6.c (#51135)
 
-* Mon Jul 01 2001 Philipp Knirsch <pknirsch@redhat.de>
+* Mon Jul 02 2001 Philipp Knirsch <pknirsch@redhat.de>
 - Made ping6 and traceroute6 setuid (safe as they drop it VERY early) (#46769)
 
 * Thu Jun 28 2001 Philipp Knirsch <pknirsch@redhat.de>
