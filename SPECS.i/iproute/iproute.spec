@@ -1,9 +1,8 @@
-%define with_doc 0
 %global             cbq_version v0.7.3
 Summary:            Advanced IP routing and network device configuration tools
 Name:               iproute
-Version:            3.7.0
-Release:            1%{?dist}
+Version:            3.12.0
+Release:            2%{?dist}
 Group:              Applications/System
 URL:                http://kernel.org/pub/linux/utils/net/%{name}2/
 Source0:            http://kernel.org/pub/linux/utils/net/%{name}2/%{name}2-%{version}.tar.gz
@@ -11,21 +10,32 @@ Source1:            cbq-0000.example
 Source2:            avpkt
 Patch0:             man-pages.patch
 Patch1:             iproute2-3.4.0-kernel.patch
-Patch2:             iproute2-3.5.0-optflags.patch
-Patch3:             iproute2-3.4.0-sharepath.patch
-Patch4:             iproute2-2.6.31-tc_modules.patch
-Patch5:             iproute2-2.6.29-IPPROTO_IP_for_SA.patch
-Patch6:             iproute2-example-cbq-service.patch
-Patch7:             iproute2-2.6.35-print-route.patch
-Patch8:             iproute2-2.6.39-create-peer-veth-without-a-name.patch
-Patch9:             iproute2-2.6.39-lnstat-dump-to-stdout.patch
+Patch2:             iproute2-3.11.0-optflags.patch
+Patch3:             iproute2-3.9.0-IPPROTO_IP_for_SA.patch
+Patch4:             iproute2-example-cbq-service.patch
+Patch5:             iproute2-2.6.35-print-route.patch
+Patch6:             iproute2-2.6.39-create-peer-veth-without-a-name.patch
+Patch7:             iproute2-3.12.0-lnstat-dump-to-stdout.patch
+Patch8:             iproute2-3.10.0-rtnl_send.patch
+# Rejected by upstream <http://thread.gmane.org/gmane.linux.network/284101>
+Patch9:             iproute2-3.11.0-tc-ok.patch
+Patch10:            iproute2-3.11.0-rtt.patch
+Patch11:            iproute2-3.12.0-lnstat-interval.patch
 License:            GPLv2+ and Public Domain
-%if %{with_doc}
-BuildRequires:      tex(latex) tex(dvips) tex(ecrm1000.tfm) tex(cm-super-t1.enc) linuxdoc-tools
-%endif
-BuildRequires:      flex linux-atm-libs-devel psutils libdb-devel bison
+BuildRequires:      bison
+BuildRequires:      flex
 BuildRequires:      iptables-devel >= 1.4.5
-BuildRequires:      libnl-devel
+BuildRequires:      libdb-devel
+BuildRequires:      linuxdoc-tools
+BuildRequires:      pkgconfig
+BuildRequires:      psutils
+BuildRequires:      tex(cm-super-t1.enc)
+BuildRequires:      tex(dvips)
+BuildRequires:      tex(ecrm1000.tfm)
+BuildRequires:      tex(latex)
+%if 0%{?fedora}
+BuildRequires:      linux-atm-libs-devel
+%endif
 # For the UsrMove transition period
 Conflicts:          filesystem < 3
 Provides:           /sbin/ip
@@ -35,7 +45,6 @@ The iproute package contains networking utilities (ip and rtmon, for example)
 which are designed to use the advanced networking capabilities of the Linux
 2.4.x and 2.6.x kernel.
 
-%if %{with_doc}
 %package doc
 Summary:            ip and tc documentation with examples
 Group:              Applications/System
@@ -43,7 +52,6 @@ License:            GPLv2+
 
 %description doc
 The iproute documentation contains howtos and examples of settings.
-%endif
 
 %package devel
 Summary:            iproute development files
@@ -55,27 +63,27 @@ Provides:           iproute-static = %{version}-%{release}
 The libnetlink static library.
 
 %prep
-%setup -q -n iproute-%{version}
+%setup -q -n %{name}2-%{version}
 %patch0 -p1
-sed -i "s/_VERSION_/%{version}/" man/man8/ss.8
 %patch1 -p1 -b .kernel
 %patch2 -p1 -b .opt_flags
-%patch3 -p1 -b .share
-%patch4 -p1 -b .ipt
-%patch5 -p1 -b .ipproto
-%patch6 -p1 -b .fix_cbq
-%patch7 -p1 -b .print-route
-%patch8 -p1 -b .peer-veth-without-name
-%patch9 -p1 -b .lnstat-dump-to-stdout
+%patch3 -p1 -b .ipproto
+%patch4 -p1 -b .fix_cbq
+%patch5 -p1 -b .print-route
+%patch6 -p1 -b .peer-veth-without-name
+%patch7 -p1 -b .lnstat-dump-to-stdout
+%patch8 -p1 -b .rtnl_send
+%patch9 -p1 -b .tc_ok
+%patch10 -p1 -b .rtt
+%patch11 -p1 -b .lnstat-interval
+sed -i 's/^LIBDIR=/LIBDIR?=/' Makefile
 
 %build
 export LIBDIR=/%{_libdir}
 export IPT_LIB_DIR=/%{_lib}/xtables
 ./configure
 make %{?_smp_mflags}
-%if %{with_doc}
 make -C doc
-%endif
 
 %install
 mkdir -p \
@@ -84,7 +92,6 @@ mkdir -p \
     %{buildroot}%{_mandir}/man3 \
     %{buildroot}%{_mandir}/man7 \
     %{buildroot}%{_mandir}/man8 \
-    %{buildroot}%{_datadir}/tc \
     %{buildroot}%{_libdir}/tc \
     %{buildroot}%{_sysconfdir}/iproute2 \
     %{buildroot}%{_sysconfdir}/sysconfig/cbq
@@ -115,11 +122,11 @@ cd %{buildroot}%{_sbindir}
 cd -
 
 # Libs
-for library in \
-    tc/q_atm.so \
-    tc/m_xt.so
-    do install -m755 ${library} %{buildroot}%{_libdir}/tc
-done
+install -m644 netem/*.dist %{buildroot}%{_libdir}/tc
+%if 0%{?fedora}
+install -m755 tc/q_atm.so %{buildroot}%{_libdir}/tc
+%endif
+install -m755 tc/m_xt.so %{buildroot}%{_libdir}/tc
 cd %{buildroot}%{_libdir}/tc
     ln -s m_xt.so m_ipt.so
 cd -
@@ -134,14 +141,6 @@ iconv -f latin1 -t utf8 man/man8/ss.8 > man/man8/ss.8.utf8 &&
 install -m644 man/man3/*.3 %{buildroot}%{_mandir}/man3
 install -m644 man/man7/*.7 %{buildroot}%{_mandir}/man7
 install -m644 man/man8/*.8 %{buildroot}%{_mandir}/man8
-
-# Share files
-for shared in \
-    netem/normal.dist \
-    netem/pareto.dist \
-    netem/paretonormal.dist
-    do install -m644 ${shared} %{buildroot}%{_datadir}/tc
-done
 
 # Config files
 install -m644 etc/iproute2/* %{buildroot}%{_sysconfdir}/iproute2
@@ -159,19 +158,15 @@ done
 %{_mandir}/man8/*
 %attr(644,root,root) %config(noreplace) %{_sysconfdir}/iproute2/*
 %{_sbindir}/*
-%dir %{_datadir}/tc
-%{_datadir}/tc/*
 %dir %{_libdir}/tc/
 %{_libdir}/tc/*
 %dir %{_sysconfdir}/sysconfig/cbq
 %config(noreplace) %{_sysconfdir}/sysconfig/cbq/*
 
-%if %{with_doc}
 %files doc
 %doc COPYING
 %doc doc/*.ps
 %doc examples
-%endif
 
 %files devel
 %doc COPYING
@@ -180,6 +175,64 @@ done
 %{_includedir}/libnetlink.h
 
 %changelog
+* Tue Nov 26 2013 Petr Šabata <contyk@redhat.com> - 3.12.0-2
+- Drop libnl from dependencies (#1034454)
+
+* Mon Nov 25 2013 Petr Šabata <contyk@redhat.com> - 3.12.0-1
+- 3.12.0 bump
+
+* Thu Nov 21 2013 Petr Šabata <contyk@redhat.com> - 3.11.0-2
+- Fix the rtt time parsing again
+
+* Tue Oct 22 2013 Petr Šabata <contyk@redhat.com> - 3.11.0-1
+- 3.11 bump
+
+* Tue Oct 01 2013 Petr Pisar <ppisar@redhat.com> - 3.10.0-8
+- Close file with bridge monitor file (bug #1011822)
+
+* Tue Sep 24 2013 Petr Pisar <ppisar@redhat.com> - 3.10.0-7
+- Add tc -OK option
+- Document "bridge mdb" and "bridge monitor mdb"
+
+* Fri Aug 30 2013 Petr Šabata <contyk@redhat.com> - 3.10.0-6
+- Fix lnstat -i properly this time
+
+* Thu Aug 29 2013 Petr Šabata <contyk@redhat.com> - 3.10.0-5
+- Fix an 'ip link' hang (#996537)
+
+* Tue Aug 13 2013 Petr Šabata <contyk@redhat.com> - 3.10.0-4
+- lnstat -i: Run indefinitely if the --count isn't specified (#977845)
+- Switch to unversioned %%docdir
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.10.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Šabata <contyk@redhat.com> - 3.10.0-2
+- Fix the XFRM patch
+
+* Wed Jul 17 2013 Petr Šabata <contyk@redhat.com> - 3.10.0-1
+- 3.10.0 bump
+- Drop the SHAREDIR patch and revert to upstream ways (#966445)
+- Fix an XFRM regression with FORTIFY_SOURCE
+
+* Tue Apr 30 2013 Petr Šabata <contyk@redhat.com> - 3.9.0-1
+- 3.9.0 bump
+
+* Thu Apr 25 2013 Petr Šabata <contyk@redhat.com> - 3.8.0-4
+- ATM is available in Fedora only
+
+* Tue Mar 12 2013 Petr Šabata <contyk@redhat.com> - 3.8.0-3
+- Mention the "up" argument in documentation and help outputs (#907468)
+
+* Mon Mar 04 2013 Petr Šabata <contyk@redhat.com> - 3.8.0-2
+- Bump for 1.4.18 rebuild
+
+* Tue Feb 26 2013 Petr Šabata <contyk@redhat.com> - 3.8.0-1
+- 3.8.0 bump
+
+* Fri Feb 08 2013 Petr Šabata <contyk@redhat.com> - 3.7.0-2
+- Don't propogate mounts out of ip (#882047)
+
 * Wed Dec 12 2012 Petr Šabata <contyk@redhat.com> - 3.7.0-1
 - 3.7.0 bump
 
