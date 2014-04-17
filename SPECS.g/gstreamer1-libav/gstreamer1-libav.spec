@@ -53,7 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{_libdir}/gstreamer-1.0/libgstlibav.so
-%{_libdir}/gstreamer-1.0/libgstavscale.so
+#%{_libdir}/gstreamer-1.0/libgstavscale.so
 
 
 %changelog

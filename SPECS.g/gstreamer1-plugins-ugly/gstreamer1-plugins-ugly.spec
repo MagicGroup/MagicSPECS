@@ -19,7 +19,6 @@ URL:            http://gstreamer.freedesktop.org/
 # http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-%{version}.tar.xz
 # modified with gst-p-ugly-cleanup.sh from SOURCE1
 Source0:        http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-%{version}.tar.xz
-Source1:        gst-p-ugly-cleanup.sh
 
 BuildRequires:  gstreamer1-devel >= %{version}
 BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
@@ -90,40 +89,6 @@ This package contains plug-ins that aren't tested well enough, or the code
 is not of good enough quality.
 
 
-%if %{with extras}
-%package extras
-Summary:         Extra GStreamer "ugly" plugins (less often used "ugly" plugins)
-Requires:        %{name} = %{version}-%{release}
-
-
-%description extras
-GStreamer is a streaming media framework, based on graphs of elements which
-operate on media data.
-
-gstreamer-plugins-ugly contains plug-ins that aren't tested well enough,
-or the code is not of good enough quality.
-
-This package (%{name}-extras) contains
-extra "ugly" plugins for sources (mythtv), sinks (fbdev) and
-effects (pitch) which are not used very much and require additional
-libraries to be installed.
-%endif
-
-
-%package devel
-Summary:        Development files for the GStreamer media framework "ugly" plug-ins
-Requires:       %{name} = %{version}-%{release}
-Requires:       gstreamer1-plugins-base-devel
-
-
-%description devel
-GStreamer is a streaming media framework, based on graphs of elements which
-operate on media data.
-
-This package contains the development files for the plug-ins that
-aren't tested well enough, or the code is not of good enough quality.
-
-
 %prep
 %setup -q -n gst-plugins-ugly-%{version}
 
@@ -143,13 +108,9 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang gst-plugins-ugly-%{majorminor}
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-# Kill rpath
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstvideoparsersugly.so
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerabin2.so
-
 
 %post -p /sbin/ldconfig
 
@@ -158,142 +119,22 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 
 
 %files -f gst-plugins-ugly-%{majorminor}.lang
-%doc AUTHORS COPYING COPYING.LIB README REQUIREMENTS
-
-%{_libdir}/libgstbasecamerabinsrc-%{majorminor}.so.*
-%{_libdir}/libgstcodecparsers-%{majorminor}.so.*
-%{_libdir}/libgstegl-%{majorminor}.so.*
-%{_libdir}/libgstinsertbin-%{majorminor}.so.*
-%{_libdir}/libgstmpegts-%{majorminor}.so.*
-%{_libdir}/libgstphotography-%{majorminor}.so.*
-%{_libdir}/libgsturidownloader-%{majorminor}.so.*
-
-%{_libdir}/girepository-1.0/GstEGL-1.0.typelib
-%{_libdir}/girepository-1.0/GstInsertBin-1.0.typelib
-%{_libdir}/girepository-1.0/GstMpegts-1.0.typelib
-
-# Plugins without external dependencies
-%{_libdir}/gstreamer-%{majorminor}/libgstaccurip.so
-%{_libdir}/gstreamer-%{majorminor}/libgstadpcmdec.so
-%{_libdir}/gstreamer-%{majorminor}/libgstadpcmenc.so
-%{_libdir}/gstreamer-%{majorminor}/libgstaiff.so
-%{_libdir}/gstreamer-%{majorminor}/libgstasfmux.so
-%{_libdir}/gstreamer-%{majorminor}/libgstaudiofxugly.so
-%{_libdir}/gstreamer-%{majorminor}/libgstaudiovisualizers.so
-%{_libdir}/gstreamer-%{majorminor}/libgstautoconvert.so
-%{_libdir}/gstreamer-%{majorminor}/libgstbayer.so
-%{_libdir}/gstreamer-%{majorminor}/libgstcamerabin2.so
-%{_libdir}/gstreamer-%{majorminor}/libgstcoloreffects.so
-%{_libdir}/gstreamer-%{majorminor}/libgstdashdemux.so
-%{_libdir}/gstreamer-%{majorminor}/libgstdataurisrc.so
-%{_libdir}/gstreamer-%{majorminor}/libgstfbdevsink.so
-%{_libdir}/gstreamer-%{majorminor}/libgstfestival.so
-%{_libdir}/gstreamer-%{majorminor}/libgstfieldanalysis.so
-%{_libdir}/gstreamer-%{majorminor}/libgstfreeverb.so
-%{_libdir}/gstreamer-%{majorminor}/libgstfrei0r.so
-%{_libdir}/gstreamer-%{majorminor}/libgstgaudieffects.so
-%{_libdir}/gstreamer-%{majorminor}/libgstgdp.so
-%{_libdir}/gstreamer-%{majorminor}/libgstgeometrictransform.so
-%{_libdir}/gstreamer-%{majorminor}/libgstid3tag.so
-%{_libdir}/gstreamer-%{majorminor}/libgstinter.so
-%{_libdir}/gstreamer-%{majorminor}/libgstinterlace.so
-%{_libdir}/gstreamer-%{majorminor}/libgstivtc.so
-%{_libdir}/gstreamer-%{majorminor}/libgstjpegformat.so
-%{_libdir}/gstreamer-%{majorminor}/libgstliveadder.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmfc.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmidi.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmpegpsdemux.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmpegtsdemux.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmpegpsmux.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmpegtsmux.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmxf.so
-%{_libdir}/gstreamer-%{majorminor}/libgstpcapparse.so
-%{_libdir}/gstreamer-%{majorminor}/libgstpnm.so
-%{_libdir}/gstreamer-%{majorminor}/libgstrawparse.so
-%{_libdir}/gstreamer-%{majorminor}/libgstremovesilence.so
-%{_libdir}/gstreamer-%{majorminor}/libgstresindvd.so
-%{_libdir}/gstreamer-%{majorminor}/libgstrfbsrc.so
-%{_libdir}/gstreamer-%{majorminor}/libgstrsvg.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsdpelem.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsegmentclip.so
-%{_libdir}/gstreamer-%{majorminor}/libgstshm.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsmooth.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsmoothstreaming.so
-%{_libdir}/gstreamer-%{majorminor}/libgstspeed.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsubenc.so
-%{_libdir}/gstreamer-%{majorminor}/libgstvdpau.so
-%{_libdir}/gstreamer-%{majorminor}/libgstvideofiltersugly.so
-%{_libdir}/gstreamer-%{majorminor}/libgstvideoparsersugly.so
-%{_libdir}/gstreamer-%{majorminor}/libgstyadif.so
-%{_libdir}/gstreamer-%{majorminor}/libgsty4mdec.so
-
-# System (Linux) specific plugins
-%{_libdir}/gstreamer-%{majorminor}/libgstdvb.so
-
-# Plugins with external dependencies
-%{_libdir}/gstreamer-%{majorminor}/libgstbz2.so
-%{_libdir}/gstreamer-%{majorminor}/libgstfragmented.so
-%{_libdir}/gstreamer-%{majorminor}/libgstgsm.so
-%{_libdir}/gstreamer-%{majorminor}/libgstladspa.so
-%{_libdir}/gstreamer-%{majorminor}/libgstopus.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsoundtouch.so
-%{_libdir}/gstreamer-%{majorminor}/libgstsrtp.so
-%{_libdir}/gstreamer-%{majorminor}/libgstwaylandsink.so
-
-#debugging plugin
-%{_libdir}/gstreamer-%{majorminor}/libgstdebugutilsugly.so
-
-
-%if %{with extras}
-%files extras
-# Plugins with external dependencies
-%{_libdir}/gstreamer-%{majorminor}/libgstassrender.so
-%{_libdir}/gstreamer-%{majorminor}/libgstcurl.so
-%{_libdir}/gstreamer-%{majorminor}/libgstdecklink.so
-%{_libdir}/gstreamer-%{majorminor}/libgstfluidsynthmidi.so
-%{_libdir}/gstreamer-%{majorminor}/libgstkate.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmodplug.so
-%{_libdir}/gstreamer-%{majorminor}/libgstschro.so
-%{_libdir}/gstreamer-%{majorminor}/libgstzbar.so
-%{_libdir}/gstreamer-%{majorminor}/libgstwildmidi.so
-
-%{_libdir}/gstreamer-%{majorminor}/libgsteglglessink.so
-%{_libdir}/gstreamer-%{majorminor}/libgstflite.so
-%{_libdir}/gstreamer-%{majorminor}/libgstuvch264.so
-%{_libdir}/gstreamer-%{majorminor}/libgstwebp.so
-%endif
-
-
-%files devel
-#%doc %{_datadir}/gtk-doc/html/gst-plugins-ugly-plugins-%{majorminor}
-%doc %{_datadir}/gtk-doc/html/gst-plugins-ugly-libs-%{majorminor}
-
-%{_datadir}/gir-1.0/GstEGL-%{majorminor}.gir
-%{_datadir}/gir-1.0/GstInsertBin-%{majorminor}.gir
-%{_datadir}/gir-1.0/GstMpegts-%{majorminor}.gir
-
-%{_libdir}/libgstbasecamerabinsrc-%{majorminor}.so
-%{_libdir}/libgstcodecparsers-%{majorminor}.so
-%{_libdir}/libgstegl-%{majorminor}.so
-%{_libdir}/libgstinsertbin-%{majorminor}.so
-%{_libdir}/libgstmpegts-%{majorminor}.so
-%{_libdir}/libgstphotography-%{majorminor}.so
-%{_libdir}/libgsturidownloader-%{majorminor}.so
-
-%{_includedir}/gstreamer-%{majorminor}/gst/basecamerabinsrc
-%{_includedir}/gstreamer-%{majorminor}/gst/codecparsers
-%{_includedir}/gstreamer-%{majorminor}/gst/egl
-%{_includedir}/gstreamer-%{majorminor}/gst/insertbin
-%{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography*
-%{_includedir}/gstreamer-%{majorminor}/gst/mpegts
-%{_includedir}/gstreamer-%{majorminor}/gst/uridownloader
-
-# pkg-config files
-%{_libdir}/pkgconfig/gstreamer-codecparsers-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-egl-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-insertbin-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-mpegts-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-plugins-ugly-%{majorminor}.pc
+%{_libdir}/gstreamer-%{majorminor}/libgsta52dec.so
+%{_libdir}/gstreamer-%{majorminor}/libgstamrnb.so
+%{_libdir}/gstreamer-%{majorminor}/libgstamrwbdec.so
+%{_libdir}/gstreamer-%{majorminor}/libgstasf.so
+%{_libdir}/gstreamer-%{majorminor}/libgstcdio.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdvdlpcmdec.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdvdread.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdvdsub.so
+%{_libdir}/gstreamer-%{majorminor}/libgstlame.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmad.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmpeg2dec.so
+%{_libdir}/gstreamer-%{majorminor}/libgstrmdemux.so
+%{_libdir}/gstreamer-%{majorminor}/libgstx264.so
+%{_libdir}/gstreamer-%{majorminor}/libgstxingmux.so
+%{_datadir}/gstreamer-%{majorminor}/presets/GstAmrnbEnc.prs
+%{_datadir}/gstreamer-%{majorminor}/presets/GstX264Enc.prs
 
 %changelog
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2

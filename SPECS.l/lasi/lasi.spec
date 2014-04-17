@@ -1,13 +1,16 @@
 Name:           lasi
 Version:        1.1.1
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        C++ library for creating Postscript documents
+Summary(zh_CN.UTF-8): 创建 PostScript 文档的 C++ 库
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 URL:            http://www.unifont.org/lasi/
 Source0:        http://downloads.sourceforge.net/lasi/libLASi-%{version}.tar.gz
 Patch0:         lasi-multilib.patch
+Patch1:		lasi-freetype.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  pango-devel, cmake
@@ -32,25 +35,31 @@ documents exists in large Open Source application framework libraries such as
 GTK+, QT, and KDE, LASi was designed for projects which require the ability
 to produce Postscript independent of any one application framework.
 
+%description -l zh_CN.UTF-8
+创建 PostScript 文档的 C++ 库。
 
 %package        devel
 Summary:        Development headers and libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pango-devel
 
 %description    devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libLASi-%{version}
 %patch0 -p1 -b .multilib
-
+%patch1 -p0 -b .freetype2
 
 %build
-mkdir fedora
-cd fedora
+mkdir magic
+cd magic
 export CFLAGS="$RPM_OPT_FLAGS"
 export CXXFLAGS="$RPM_OPT_FLAGS"
 export FFLAGS="$RPM_OPT_FLAGS"
@@ -60,12 +69,12 @@ make VERBOSE=1 %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-cd fedora
+cd magic
 make install DESTDIR=$RPM_BUILD_ROOT VERBOSE=1
 
 
 %check
-cd fedora
+cd magic
 ctest --verbose
 
 
@@ -94,6 +103,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1.1.1-8
+- 为 Magic 3.0 重建
+
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1.1.1-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.1-6
 - 为 Magic 3.0 重建
 

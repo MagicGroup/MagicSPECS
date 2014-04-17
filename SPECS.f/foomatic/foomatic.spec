@@ -5,14 +5,14 @@ Summary: Tools for using the foomatic database of printers and printer drivers
 Summary(zh_CN.UTF-8): 使用 foomatic 打印机数据库和驱动的工具
 Name:       foomatic
 Version:    %{enginever}
-Release:    6%{?dist}
+Release:    7%{?dist}
 License:    GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 
 # printer-filters package has gone (bug #967316).
-Obsoletes: printer-filters < printer-filters-1.1-8
-Provides: printer-filters = printer-filters-1.1-8
+Obsoletes: printer-filters < 1.1-8
+Provides: printer-filters = 1.1-8
 
 # The database engine.
 Source0: http://www.openprinting.org/download/foomatic/foomatic-db-engine-%{enginever}.tar.gz
@@ -204,6 +204,9 @@ exit 0
 %{_mandir}/man1/foomatic-rip.1*
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 4.0.11-7
+- 为 Magic 3.0 重建
+
 * Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 4.0.9-6
 - Perl 5.18 re-rebuild of bootstrapped packages
 

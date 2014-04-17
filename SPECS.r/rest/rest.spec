@@ -1,12 +1,15 @@
 Name:          rest
-Version:       0.7.90
+Version:	0.7.91
 Release:       5%{?dist}
 Summary:       A library for access to RESTful web services
+Summary(zh_CN.UTF-8): 访问 RESTful web 服务的库
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2
 URL:           http://www.gnome.org
-Source0:       ftp://ftp.gnome.org/pub/gnome/sources/%{name}/0.7/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 Patch0:        rest-fixdso.patch
 
 BuildRequires: glib2-devel
@@ -27,18 +30,29 @@ point usually has an API that is just simpler to use compared to other types
 of APIs they may support (XML-RPC, for instance). It is this kind of API that 
 this library is attempting to support.
 
+%description -l zh_CN.UTF-8
+访问 RESTful web 服务的库。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Files for development with %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1 -b .fixdso
+
+#新版本 gtk-doc 改了这个
+sed -i 's/HAVE_GTK_DOC/ENABLE_GTK_DOC/g' gtk-doc.make
 
 %build
 autoreconf -vif
@@ -51,6 +65,7 @@ make install DESTDIR=%{buildroot} INSTALL='install -p'
 
 #Remove libtool archives.
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -77,6 +92,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gir-1.0/RestExtras-0.7.gir
 
 %changelog
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 0.7.91-5
+- 更新到 0.7.91
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.90-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

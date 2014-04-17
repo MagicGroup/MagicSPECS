@@ -2,7 +2,7 @@
 
 Name:           gstreamer-python
 Version:        0.10.22
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python bindings for GStreamer
 
 Group:          Development/Languages
@@ -89,9 +89,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc docs-to-include/*
 %{_libdir}/pkgconfig/gst-python-%{majorminor}.pc
-
+%{_includedir}/gstreamer-%{majorminor}/gst/*.h
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.22-5
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.10.22-4
 - 为 Magic 3.0 重建
 

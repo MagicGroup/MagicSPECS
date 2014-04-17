@@ -82,7 +82,7 @@ Summary:        GNU Image Manipulation Program
 Name:           gimp
 Epoch:          2
 Version:        2.8.10
-Release:        %{?prerelprefix}5%{dotprerel}%{dotgitrev}%{?dist}
+Release:        %{?prerelprefix}5%{dotprerel}%{dotgitrev}%{?dist}.1
 
 # Compute some version related macros.
 # Ugly, need to get quoting percent signs straight.
@@ -196,7 +196,7 @@ Requires:       gimp-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 Obsoletes:      gimp-help-browser <= %{?epoch:%{epoch}:}%{version}-%{release}
 %endif
 
-Source0:        ftp://ftp.gimp.org/pub/gimp/v%{binver}/gimp-%{version}%{dashprerel}.tar.bz2
+Source0:        http://mirrors.zerg.biz/gimp/v%{binver}/gimp-%{version}%{dashprerel}.tar.bz2
 
 %if %{defined gitrev}
 Patch0:         gimp-%{version}%{dashprerel}-git%{gitrev}.patch.bz2
@@ -659,6 +659,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 2:2.8.10-5.1
+- 为 Magic 3.0 重建
+
 * Thu Feb 13 2014 Nils Philippsen <nils@redhat.com> - 2:2.8.10-5
 - cope with freetype >= 2.5.1 include madness
 

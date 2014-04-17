@@ -261,6 +261,18 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/gstreamer-%{majorminor}/libgstflite.so
 %{_libdir}/gstreamer-%{majorminor}/libgstuvch264.so
 %{_libdir}/gstreamer-%{majorminor}/libgstwebp.so
+
+%{_libdir}/gstreamer-%{majorminor}/libgstchromaprint.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdvbsuboverlay.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdvdspu.so
+%{_libdir}/gstreamer-%{majorminor}/libgstgme.so
+%{_libdir}/gstreamer-%{majorminor}/libgstopenjpeg.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsiren.so
+
+%{_libdir}/gstreamer-%{majorminor}/libgstofa.so
+%{_libdir}/gstreamer-%{majorminor}/libgstopencv.so
+%{_datadir}/gst-plugins-bad/%{majorminor}/opencv_haarcascades/fist.xml
+%{_datadir}/gst-plugins-bad/%{majorminor}/opencv_haarcascades/palm.xml
 %endif
 
 

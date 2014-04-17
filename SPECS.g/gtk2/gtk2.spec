@@ -23,7 +23,7 @@ License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
 #VCS: git:git://git.gnome.org/gtk+#gtk-2-24
-Source: http://download.gnome.org/sources/gtk+/2.24/gtk+-%{version}.tar.bz2
+Source: http://download.gnome.org/sources/gtk+/2.24/gtk+-%{version}.tar.xz
 Source2: update-gtk-immodules
 Source3: im-cedilla.conf
 
@@ -145,7 +145,7 @@ This package contains developer documentation for the GTK+ widget toolkit.
 %prep
 %setup -q -n gtk+-%{version}
 
-%patch0 -p1 -b .lib64
+#%patch0 -p1 -b .lib64
 %patch1 -p1 -b .system-python
 %patch2 -p1 -b .icon-padding
 %patch8 -p1 -b .tooltip-positioning

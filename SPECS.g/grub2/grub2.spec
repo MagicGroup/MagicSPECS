@@ -47,7 +47,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.4%{?dist}
+Release:        0.9%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 Summary(zh_CN.UTF-8): 支持 Linux，多重启动和更多功能启动引导程序
 
@@ -322,7 +322,7 @@ git am %{patches}
 cd grub-efi-%{tarversion}
 ./autogen.sh
 %configure							\
-	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
+	CFLAGS="$(echo $RPM_OPT_FLAGS -fno-stack-protector | sed			\
 		-e 's/-O.//g'					\
 		-e 's/-fstack-protector[[:alpha:]-]\+//g'	\
 		-e 's/--param=ssp-buffer-size=4//g'		\
@@ -373,7 +373,7 @@ cd grub-%{tarversion}
 %define platform pc
 %endif
 %configure							\
-	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
+	CFLAGS="$(echo $RPM_OPT_FLAGS -fno-stack-protector | sed			\
 		-e 's/-O.//g'					\
 		-e 's/-fstack-protector[[:alpha:]-]\+//g'	\
 		-e 's/--param=ssp-buffer-size=4//g'		\
@@ -628,6 +628,21 @@ fi
 %{_datarootdir}/grub/themes/
 
 %changelog
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1:2.02-0.9
+- 为 Magic 3.0 重建
+
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1:2.02-0.8
+- 为 Magic 3.0 重建
+
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1:2.02-0.7
+- 为 Magic 3.0 重建
+
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1:2.02-0.6
+- 为 Magic 3.0 重建
+
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1:2.02-0.5
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1:2.02-0.4
 - 为 Magic 3.0 重建
 

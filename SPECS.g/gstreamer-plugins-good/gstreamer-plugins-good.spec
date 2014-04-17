@@ -6,7 +6,7 @@
 
 Name:           %{gstreamer}-plugins-good
 Version:        0.10.31
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        GStreamer plug-ins with good code and licensing
 
 Group:          Applications/Multimedia
@@ -14,6 +14,17 @@ License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
 #Source:         http://gstreamer.freedesktop.org/src/gst-plugins-good/pre/gst-plugins-good-%{version}.tar.xz
 Source:         http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-%{version}.tar.xz
+
+# Cherry picks from upstream git which hopefully fix rhbz#815581
+Patch1:         0001-fix-v4l2_munmap.patch
+Patch2:         0002-clear_DISCONT_flag.patch
+# https://bugzilla.gnome.org/show_bug.cgi?id=677516
+Patch3:         0003-v4l2src-fix.patch
+# https://bugzilla.gnome.org/show_bug.cgi?id=677722
+Patch4:         0004-v4l2object-Don-t-probe-UVC-devices-for-being-interla.patch
+Patch5:         0001-sys-v4l2-Some-blind-compilation-fixes.patch
+# https://bugzilla.gnome.org/show_bug.cgi?id=724085
+Patch6:         gnome-724085.patch
 
 Requires:       %{gstreamer} >= %{_gst}
 Requires(pre): GConf2 
@@ -58,7 +69,7 @@ BuildRequires:  libraw1394-devel
 
 # documentation
 BuildRequires:  gtk-doc
-BuildRequires:  python-devel PyXML
+BuildRequires:  python-devel
 
 Provides: gstreamer-plugins-pulse = 0.9.8-1
 Obsoletes: gstreamer-plugins-pulse < 0.9.8
@@ -102,12 +113,18 @@ This package contains documentation for the provided plugins.
 
 %prep
 %setup -q -n gst-plugins-good-%{version}
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 
 %configure \
-  --with-package-name='Fedora gstreamer-plugins-good package' \
-  --with-package-origin='http://download.fedora.redhat.com/fedora' \
+  --with-package-name='Magic gstreamer-plugins-good package' \
+  --with-package-origin='http://apt.linuxfans.org/magic' \
   --enable-experimental \
   --enable-gtk-doc \
   --enable-orc \
@@ -132,7 +149,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang gst-plugins-good-%{majorminor}
 
 %files -f gst-plugins-good-%{majorminor}.lang
@@ -243,6 +260,12 @@ export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/gstreamer-%{majorminor}.schemas > /dev/null || :
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.31-6
+- 为 Magic 3.0 重建
+
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.31-5
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.10.31-4
 - 为 Magic 3.0 重建
 

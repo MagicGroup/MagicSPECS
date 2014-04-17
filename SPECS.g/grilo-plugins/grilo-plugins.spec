@@ -2,11 +2,13 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:		grilo-plugins
-Version:	0.2.6
-Release:	2%{?dist}
+Version:	0.2.12
+Release:	3%{?dist}
 Summary:	Plugins for the Grilo framework
+Summary(zh_CN.UTF-8): Grilo 框架的插件
 
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:	LGPLv2+
 Url:		https://live.gnome.org/Grilo
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/grilo-plugins/%{release_version}/grilo-plugins-%{version}.tar.xz
@@ -35,6 +37,25 @@ Requires:	yelp
 Grilo is a framework that provides access to different sources of
 multimedia content, using a pluggable system.
 This package contains plugins to get information from theses sources:
+- Apple Trailers
+- Bookmarks
+- Filesystem
+- Flickr
+- Gravatar
+- iTunes Music Sharing
+- Jamendo
+- Last.fm (for album arts)
+- Local metadata (album arts and thumbnails)
+- Metadata Store
+- Podcasts
+- Shoutcast
+- Tracker
+- UPnP
+- Vimeo
+- Youtube
+
+%description -l zh_CN.UTF-8 
+Grilo 框架的插件，包括这些源的支持：
 - Apple Trailers
 - Bookmarks
 - Filesystem
@@ -91,16 +112,31 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove files that will not be packaged
 rm -f $RPM_BUILD_ROOT%{_libdir}/grilo-%{release_version}/*.la
 rm -f $RPM_BUILD_ROOT%{_bindir}/*
+magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING NEWS README
 %{_libdir}/grilo-%{release_version}/*.so*
 %{_libdir}/grilo-%{release_version}/*.xml
-%{_datadir}/gnome/help/grilo-plugins/examples/example-tmdb.c
-%{_datadir}/gnome/help/grilo-plugins/C/grilo-plugins.xml
-%{_datadir}/gnome/help/grilo-plugins/C/legal.xml
+%{_datadir}/grilo-plugins/grl-lua-factory/grl-euronews.lua
+%{_datadir}/grilo-plugins/grl-lua-factory/grl-guardianvideos.lua
+%{_datadir}/grilo-plugins/grl-lua-factory/grl-metrolyrics.lua
+%{_datadir}/grilo-plugins/grl-lua-factory/grl-radiofrance.lua
+%{_datadir}/help/C/examples/example-tmdb.c
+%{_datadir}/help/C/grilo-plugins/grilo-plugins.xml
+%{_datadir}/help/C/grilo-plugins/legal.xml
+%{_datadir}/locale/zh_CN/LC_MESSAGES/grilo-plugins.mo
+%{_datadir}/locale/zh_HK/LC_MESSAGES/grilo-plugins.mo
+%{_datadir}/locale/zh_TW/LC_MESSAGES/grilo-plugins.mo
+                                                         
 
 %changelog
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 0.2.12-3
+- 更新到 0.2.12
+
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 0.2.6-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.6-2
 - 为 Magic 3.0 重建
 

@@ -109,9 +109,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/gnome-character-map
 %{_libdir}/libgucharmap_2_90.so.*
 %{_datadir}/applications/gnome-gucharmap.desktop
-%{_sysconfdir}/gconf/schemas/gucharmap.schemas
+#%{_sysconfdir}/gconf/schemas/gucharmap.schemas
 %{_libdir}/girepository-1.0
-
+%{_datadir}/appdata/gucharmap.appdata.xml
+%{_datadir}/glib-2.0/schemas/org.gnome.Charmap.*.xml
 
 %files devel
 %{_includedir}/gucharmap-2.90

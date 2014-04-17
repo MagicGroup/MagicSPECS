@@ -128,18 +128,18 @@ function checkspec()
 	SPECCOUNT=`ls $DIR/*.spec 2>/dev/null | wc -l`
 	if [ $SPECCOUNT -gt 1 ];then
         	echo "当前目录的 .spec 文件过多，只有一个 spec 文件的情况下，脚本才能正确执行"
-        	exit 1
+        	touch specfail && exit 1
 	fi
 	if [ $SPECCOUNT = "0" ];then
         	echo "当前目录中没有 .spec 文件，脚本退出！"
-        	exit 1
+        	touch specfail && exit 1
 	fi
 	#判断 spec 文件名是否和目录名一致。
 	SPECNAME=$(ls $DIR/*.spec)
 	NAME=$(basename $SPECNAME)
 	if ! [ $NAME = "$1.spec" ] ; then
 	        echo "spec 文件名和所在目录的名字不一致，请检查原因。"
-        	exit 1
+        	touch specfail && exit 1
 	fi
 	debug_echo "当前的 spec 文件名是 $SPECNAME"
 	#判断是否跳过 spec 解析判断
@@ -147,13 +147,13 @@ function checkspec()
 		#判断 spec 文件是否有问题
 		if !  (debug_run rpmspec -P $SPECNAME );then
   		        echo "spec 文件格式有错误，请检查，脚本退出！" 
-        		exit 1
+        		touch specfail && exit 1
 		fi
 	fi
 	if ! (rpmspec -P $SPECNAME | grep "Summary(zh_CN.UTF-8)" > /dev/null); then
         	if [ $HAVECNUTF8 = "1" ];then
                 	echo "spec 中没有中文简介，请添加"
-                	exit 1
+                	touch specfail && exit 1
         	else
                 	debug_echo "spec 中没有中文简介"
         	fi
@@ -162,7 +162,7 @@ function checkspec()
         	if [ $HAVECLEAN = "1" ];then
                 	echo "spec 中没有清理语句，请添加"
                 	#这里要做自动添加的尝试，但有些难
-                	exit 1
+                	touch specfail && exit 1
         	else
                 	debug_echo "spec 中没有清理语句"
         	fi

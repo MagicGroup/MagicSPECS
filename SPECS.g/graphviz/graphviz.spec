@@ -49,9 +49,11 @@
 %global FFSTORE -ffloat-store
 %endif
 
+%global JAVA 1
+
 Name:			graphviz
 Summary:		Graph Visualization Tools
-Version:	2.36.0
+Version:	2.38.0
 Release:		8%{?dist}
 Group:			Applications/Multimedia
 License:		EPL
@@ -71,7 +73,11 @@ BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:		zlib-devel, libpng-devel, libjpeg-devel, expat-devel, freetype-devel >= 2
 BuildRequires:		ksh, bison, m4, flex, tk-devel, tcl-devel >= 8.3, swig
 BuildRequires:		fontconfig-devel, libtool-ltdl-devel, ruby-devel, ruby, guile-devel, python-devel
-BuildRequires:		libXaw-devel, libSM-devel, libXext-devel, java-devel, php-devel
+BuildRequires:		libXaw-devel, libSM-devel, libXext-devel
+%if %{JAVA}
+BuildRequires:		java-devel
+%endif
+BuildRequires:		php-devel
 BuildRequires:		cairo-devel >= 1.1.10, pango-devel, gmp-devel, lua-devel, gtk2-devel, libgnomeui-devel
 BuildRequires:		gd-devel, perl-devel, swig >= 1.3.33, automake, autoconf, libtool, qpdf
 # Temporary workaound for perl(Carp) not pulled
@@ -270,19 +276,19 @@ Various tcl packages (extensions) for the graphviz tools.
 %prep
 %setup -q
 #%patch1 -p1 -b .testsuite-sigsegv-fix
-%patch2 -p1 -b .rtest-errout-fix
-%patch3 -p1 -b .lefty-getaddrinfo
-%patch4 -p1 -b .CVE-2014-0978-CVE-2014-1235
-%patch5 -p1 -b .CVE-2014-1236
+#%patch2 -p1 -b .rtest-errout-fix
+#%patch3 -p1 -b .lefty-getaddrinfo
 
 # Attempt to fix rpmlint warnings about executable sources
 find -type f -regex '.*\.\(c\|h\)$' -exec chmod a-x {} ';'
 
 %build
 autoreconf -if
+%if %{JAVA}
 # Hack in the java includes we need
 sed -i '/JavaVM.framework/!s/JAVA_INCLUDES=/JAVA_INCLUDES=\"_MY_JAVA_INCLUDES_\"/g' configure
 sed -i 's|_MY_JAVA_INCLUDES_|-I%{java_home}/include/ -I%{java_home}/include/linux/|g' configure
+%endif
 # Rewrite config_ruby.rb to work with Ruby 1.9
 sed -i 's|expand(|expand(Config::|' config/config_ruby.rb
 sed -i 's|sitearchdir|vendorarchdir|' config/config_ruby.rb
@@ -486,10 +492,12 @@ rm -rf %{buildroot}
 %{_libdir}/graphviz/guile/
 %{_mandir}/man3/gv.3guile*
 
+%if %{JAVA}
 %files java
 %defattr(-,root,root,-)
 %{_libdir}/graphviz/java/
 %{_mandir}/man3/gv.3java*
+%endif
 
 %files lua
 %defattr(-,root,root,-)
@@ -562,6 +570,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 2.38.0-8
+- 更新到 2.38.0
+
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 2.36.0-8
+- 更新到
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 2.36.0-8
 - 更新到
 

@@ -28,7 +28,7 @@ License: LGPLv2+
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
-Source: http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
+Source: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://live.gnome.org/gtk-vnc
 BuildRequires: gtk2-devel >= 2.14
@@ -233,7 +233,6 @@ rm -fr %{buildroot}
 
 %files python
 %defattr(-, root, root)
-%doc gtk-vnc-%{version}/examples/gvncviewer.py
 %{_libdir}/python*/site-packages/gtkvnc.so
 
 %if %{with_plugin}
@@ -252,6 +251,9 @@ rm -fr %{buildroot}
 %{_datadir}/vala/vapi/gvnc-1.0.vapi
 %endif
 
+#pulse
+%{_libdir}/libgvncpulse-1.0.so.*
+
 %files -n gvnc-devel
 %defattr(-, root, root)
 %{_libdir}/libgvnc-1.0.so
@@ -261,6 +263,14 @@ rm -fr %{buildroot}
 %if %{with_gir}
 %{_datadir}/gir-1.0/GVnc-1.0.gir
 %endif
+
+#pulse
+%{_includedir}/gvncpulse-1.0/*
+%{_libdir}/libgvncpulse-1.0.so
+%{_libdir}/pkgconfig/gvncpulse-1.0.pc
+%{_datadir}/gir-1.0/GVncPulse-1.0.gir
+%{_datadir}/vala/vapi/gvncpulse-1.0.vapi
+%{_libdir}/girepository-1.0/GVncPulse-1.0.typelib
 
 %files -n gvnc-tools
 %defattr(-, root, root)
