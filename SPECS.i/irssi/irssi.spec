@@ -1,19 +1,25 @@
 %define		perl_vendorarch	%(eval "`perl -V:installvendorarch`"; echo $installvendorarch)
 
+%global pretag rc1
+
 Summary:	Modular text mode IRC client with Perl scripting
 Name:		irssi
-Version:	0.8.15
-Release:	7%{?dist}
+Version:	0.8.16
+Release:	0.2%{?pretag:.%{pretag}}%{?dist}
 
 License:	GPLv2+
 Group:		Applications/Communications
 URL:		http://irssi.org/
-Source0:	http://irssi.org/files/irssi-%{version}.tar.bz2
+Source0:	http://irssi.org/files/irssi-%{version}%{?pretag:-%{pretag}}.tar.bz2
 Source1:	irssi-config.h
+Patch0:		irssi-0.8.15-no-static-unload.patch
+Patch1:		irssi-0.8.15-man-fix.patch
+Patch2:		irssi-0.8.16-format-security.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires:	ncurses-devel openssl-devel zlib-devel 
+BuildRequires:	ncurses-devel openssl-devel zlib-devel
 BuildRequires:	pkgconfig glib2-devel perl-devel perl(ExtUtils::Embed)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:	autoconf automake libtool
+Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %package devel
 Summary:	Development package for irssi
@@ -34,9 +40,13 @@ being maintained.
 
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}%{?pretag:-%{?pretag}}
+%patch0 -p1 -b .no-static-unload
+%patch1 -p1 -b .man-fix
+%patch2 -p1 -b .format-security
 
 %build
+autoreconf -i
 %configure --enable-ipv6 --with-textui	\
 	--with-proxy			\
 	--with-bot			\
@@ -84,8 +94,45 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8.15-7
-- 为 Magic 3.0 重建
+* Wed Dec  4 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.16-0.2rc1:.%{pretag}}%{?dist}
+- Fixed compilation with -Werror=format-security
+  Resolves: rhbz#1037139
+
+* Mon Sep 16 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.16-0.1.rc1
+- New version
+- Dropped init-resize-crash-fix (upstreamed)
+- Fixed bogus date in changelog (best effort)
+- Disabled unloading static modules (by no-static-unload patch)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.15-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.8.15-14
+- Perl 5.18 rebuild
+
+* Mon Mar 25 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.15-13
+- Added support for aarch64
+  Resolves: rhbz#925598
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.15-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Aug  3 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.15-11
+- Removed usage parameter from the man page (popt leftover)
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.15-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 0.8.15-9
+- Perl 5.16 rebuild
+
+* Fri Feb 24 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.15-8
+- Fixed crash that can occur if term is resized during irssi init
+  (init-resize-crash-fix patch)
+  Resolves: rhbz#796457
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.15-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Jun 20 2011 Marcela Mašláňová <mmaslano@redhat.com> - 0.8.15-6
 - Perl mass rebuild
@@ -204,7 +251,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Apr 11 2005 Michael Schwendt <mschwendt[AT]users.sf.net> 0.8.9-7
 - Two patches to fix build for GCC4 and new Perl with config.h.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Thu Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Fri Dec 24 2004 Michael Schwendt <mschwendt[AT]users.sf.net> 0:0.8.9-5
