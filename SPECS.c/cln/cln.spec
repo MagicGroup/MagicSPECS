@@ -10,7 +10,7 @@ License:        GPLv2+
 URL:            http://www.ginac.de/CLN/
 Source0:        http://www.ginac.de/CLN/%{name}-%{version}.tar.bz2
 Patch0:		cln-1.2.2-gcc44.patch
-Patch1:          cln-1.3.2-mips64el.patch
+Patch1:   cln-1.3.3-fix-mips64el.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(post): /sbin/install-info
@@ -47,7 +47,7 @@ the CLN library.
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p1
+%patch1 -p1
 
 %build
 %configure --disable-static
