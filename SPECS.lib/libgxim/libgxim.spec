@@ -1,13 +1,11 @@
 Name:		libgxim
-Version:	0.3.3
-Release:	7%{?dist}
+Version:	0.5.0
+Release:	2%{?dist}
 License:	LGPLv2+
-URL:		http://code.google.com/p/libgxim/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:		http://tagoh.bitbucket.org/libgxim/
 BuildRequires:	intltool gettext ruby
-BuildRequires:	dbus-devel > 0.23, dbus-glib-devel >= 0.74, glib2-devel >= 2.16, gtk2-devel
-Source0:	http://libgxim.googlecode.com/files/%{name}-%{version}.tar.bz2
-Patch0:		libgxim-fix-fontset.patch
+BuildRequires:	glib2-devel >= 2.26, gtk2-devel
+Source0:	http://bitbucket.org/tagoh/%{name}/downloads/%{name}-%{version}.tar.bz2
 
 Summary:	GObject-based XIM protocol library
 Group:		System Environment/Libraries
@@ -25,7 +23,7 @@ Summary:	Development files for libgxim
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
-Requires:	glib2-devel >= 2.16.0
+Requires:	glib2-devel >= 2.26.0
 Requires:	gtk2-devel
 
 %description	devel
@@ -39,7 +37,6 @@ libgxim.
 
 %prep
 %setup -q
-%patch0 -p0 -b 0-fontset
 
 
 %build
@@ -49,7 +46,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 # clean up the unnecessary files
@@ -57,21 +53,16 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %find_lang %{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files -f %{name}.lang
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog README
 %{_libdir}/libgxim.so.*
 
 %files	devel
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog README
 %{_libdir}/libgxim.so
 %{_libdir}/pkgconfig/*.pc
@@ -79,8 +70,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/libgxim
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.3-7
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb  8 2013 Akira TAGOH <tagoh@redhat.com> - 0.5.0-1
+- New upstream release.
+
+* Fri Nov 23 2012 Akira TAGOH <tagoh@redhat.com> - 0.4.0-1
+- New upstream release.
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.3-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
