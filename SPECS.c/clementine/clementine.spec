@@ -16,6 +16,7 @@ URL:            http://www.clementine-player.org/
 Source0:        https://github.com/clementine-player/Clementine/archive/%{version}.tar.gz
 Patch0:		clementine-0.3-no3rd.patch
 Patch1:		clementine-1.2.2-fixcompile.patch
+Patch2:     clementine-1.2.2-FIX-sha2.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  desktop-file-utils
@@ -52,6 +53,7 @@ Amarok 1.4 的一个移植版，捎带一些特性的重写以便得益于Qt4。
 #%patch0 -p1 -R -b .no3rd
 #%patch0 -p1 -b .no-external-lib
 %patch1 -p1
+%patch2 -p1
 
 %if %{use_external_dependence}
 # We already don't use these but just to make sure
