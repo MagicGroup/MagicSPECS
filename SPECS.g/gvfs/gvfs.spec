@@ -6,7 +6,8 @@ License: GPLv3 and LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
 
-Source: http://download.gnome.org/sources/gvfs/1.15/gvfs-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gvfs/%{majorver}/gvfs-%{version}.tar.xz
 BuildRequires: pkgconfig
 BuildRequires: glib2-devel >= 2.33.12
 # for post-install update-gio-modules and overall functionality
@@ -35,9 +36,6 @@ Requires(postun): desktop-file-utils
 # The patch touches Makefile.am files:
 BuildRequires: automake autoconf
 BuildRequires: libtool
-
-# http://bugzilla.gnome.org/show_bug.cgi?id=567235
-Patch0: gvfs-archive-integration.patch
 
 Obsoletes: gnome-mount <= 0.8
 Obsoletes: gnome-mount-nautilus-properties <= 0.8
@@ -151,16 +149,8 @@ to applications using gvfs.
 
 %prep
 %setup -q
-%patch0 -p1 -b .archive-integration
 
 %build
-# Needed for gvfs-0.2.1-archive-integration.patch
-libtoolize --force  || :
-aclocal  || :
-autoheader  || :
-automake  || :
-autoconf  || :
-
 %configure \
         --disable-hal \
         --disable-gdu \

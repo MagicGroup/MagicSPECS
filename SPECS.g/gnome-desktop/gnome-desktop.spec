@@ -1,6 +1,7 @@
 %define po_package gnome-desktop-2.0
 
 Summary: Shared code among gnome-panel, gnome-session, nautilus, etc
+Summary(zh_CN.UTF-8): gnome-panel, gnome-session, nautilus 等包共享的代码
 Name: gnome-desktop
 Version: 2.32.0
 Release: 11%{?dist}
@@ -34,15 +35,25 @@ The gnome-desktop package contains an internal library
 desktop, and also some data files and other shared components of the
 GNOME user environment.
 
+%description -l zh_CN.UTF-8 
+gnome-panel, gnome-session, nautilus 等包共享的代码。
+
+这是 GNOME 2 的版本，已不再更新。
+
 %package devel
 Summary: Libraries and headers for libgnome-desktop
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Libraries and header files for the GNOME-internal private library
 libgnomedesktop.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -63,7 +74,7 @@ rm -rf $RPM_BUILD_ROOT/var/scrollkeeper
 # already shipped in gnome-desktop3
 rm -rf $RPM_BUILD_ROOT/usr/share/omf
 rm -rf $RPM_BUILD_ROOT/usr/share/gnome/help
-
+magic_rpm_clean.sh
 %find_lang %{po_package} --all-name --with-gnome
 
 %post -p /sbin/ldconfig

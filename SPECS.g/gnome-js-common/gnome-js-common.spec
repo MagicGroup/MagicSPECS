@@ -4,8 +4,10 @@ Name:           gnome-js-common
 Version:        %{major_ver}.2
 Release:        7%{?dist}
 Summary:        Common modules for GNOME JavaScript interpreters
+Summary(zh_CN.UTF-8): GNOME JavaScript 解释器的通用模块
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库 
 # LGPLv3 part still being clarified with upstream
 License:        BSD and MIT and LGPLv3
 URL:            http://ftp.gnome.org/pub/GNOME/sources/%{name}
@@ -22,15 +24,22 @@ BuildRequires:  intltool
 This package contains some JavaScript modules for use by GNOME
 JavaScript extensions, namely GJS and Seed.
 
+%description -l zh_CN.UTF-8
+GNOME JavaScript 解释器的通用模块。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -47,7 +56,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)

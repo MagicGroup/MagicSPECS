@@ -1,0 +1,6 @@
+/var/log/glusterfs/*glusterfsd.log /var/log/glusterfs/bricks/*.log {
+    missingok
+    postrotate
+        /bin/kill -HUP `cat /var/run/glusterfsd.pid 2>/dev/null` 2>/dev/null || true
+    endscript
+}

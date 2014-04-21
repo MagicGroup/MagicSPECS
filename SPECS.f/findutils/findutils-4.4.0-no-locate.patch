@@ -5,8 +5,9 @@ Subject: [PATCH 1/4] findutils-4.4.0-no-locate.patch
 
 ---
  Makefile.am   |    2 +-
+ configure.ac  |    2 --
  doc/find.texi |   24 ++++++++----------------
- 2 files changed, 9 insertions(+), 17 deletions(-)
+ 3 files changed, 9 insertions(+), 19 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
 index c7f8f39..0dacb93 100644
@@ -16,11 +17,24 @@ index c7f8f39..0dacb93 100644
  
  
  # "tests" is the gnulib unit test dir.
--SUBDIRS = gnulib tests build-aux lib find xargs locate doc po m4
-+SUBDIRS = gnulib tests build-aux lib find xargs doc po m4
+-SUBDIRS = gl tests build-aux lib find xargs locate doc po m4
++SUBDIRS = gl tests build-aux lib find xargs doc po m4
  
- ACLOCAL_AMFLAGS = -I gnulib/m4 -I m4
+ ACLOCAL_AMFLAGS = -I gl/m4 -I m4
  
+diff --git a/configure.ac b/configure.ac
+index f31dd37..431f0ce 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -245,8 +245,6 @@ find/testsuite/Makefile
+ gl/Makefile
+ gl/lib/Makefile
+ lib/Makefile
+-locate/Makefile
+-locate/testsuite/Makefile
+ m4/Makefile
+ po/Makefile.in
+ po/Makefile
 diff --git a/doc/find.texi b/doc/find.texi
 index 1f278de..c584298 100644
 --- a/doc/find.texi
@@ -33,7 +47,7 @@ index 1f278de..c584298 100644
  
  @iftex
  @finalout
-@@ -570,8 +569,7 @@ the databases are updated, and the directories for which they contain
+@@ -571,8 +570,7 @@ the databases are updated, and the directories for which they contain
  entries.
  
  Here is how to select which file name databases @code{locate}
@@ -43,7 +57,7 @@ index 1f278de..c584298 100644
  
  @table @code
  @item --database=@var{path}
-@@ -2825,13 +2823,9 @@ thrashing the network.
+@@ -2872,13 +2870,9 @@ thrashing the network.
  directories are indexed by each database file.
  
  The default location for the locate database depends on how findutils
@@ -60,7 +74,7 @@ index 1f278de..c584298 100644
  
  @node Database Formats
  @section Database Formats
-@@ -3310,8 +3304,7 @@ present.
+@@ -3421,8 +3415,7 @@ present.
  
  @item --database=@var{path}
  @itemx -d @var{path}
@@ -70,7 +84,7 @@ index 1f278de..c584298 100644
  name databases in @var{path}, which is a colon-separated list of
  database file names.  You can also use the environment variable
  @code{LOCATE_PATH} to set the list of database files to search.  The
-@@ -3496,8 +3489,7 @@ The environment variable @code{PRUNEFS} also sets this value.  Default
+@@ -3597,8 +3590,7 @@ The environment variable @code{PRUNEFS} also sets this value.  Default
  is @file{nfs NFS proc}.
  
  @item --output=@var{dbfile}
@@ -80,7 +94,7 @@ index 1f278de..c584298 100644
  
  @item --localuser=@var{user}
  The user to search the non-network directories as, using @code{su}.
-@@ -5491,7 +5483,7 @@ why @code{xargs} is confused by your operating system).
+@@ -5617,7 +5609,7 @@ why @code{xargs} is confused by your operating system).
  @section Error Messages From @code{locate}
  
  @table @samp
@@ -89,7 +103,7 @@ index 1f278de..c584298 100644
  The @code{locate} program relies on a database which is periodically
  built by the @code{updatedb} program.  That hasn't happened in a long
  time.  To fix this problem, run @code{updatedb} manually.  This can
-@@ -5499,7 +5491,7 @@ often happen on systems that are generally not left on, so the
+@@ -5625,7 +5617,7 @@ often happen on systems that are generally not left on, so the
  periodic ``cron'' task which normally does this doesn't get a chance
  to run.
  

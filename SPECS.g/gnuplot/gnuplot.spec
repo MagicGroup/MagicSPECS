@@ -1,10 +1,11 @@
 %define major 4
-%define minor 4
-%define patchlevel 4
+%define minor 6
+%define patchlevel 5
 
 %define x11_app_defaults_dir %{_datadir}/X11/app-defaults
 
 Summary: A program for plotting mathematical expressions and data
+Summary(zh_CN.UTF-8): 一种绘制数学表达式和数据的程序
 Name: gnuplot
 Version: %{major}.%{minor}.%{patchlevel}
 Release: 2%{?dist}
@@ -12,6 +13,7 @@ Release: 2%{?dist}
 # aglfn.txt has license: MIT
 License: gnuplot and MIT
 Group: Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 URL: http://www.gnuplot.info/
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source2: gnuplot-init.el
@@ -119,7 +121,7 @@ plotting tool.
 %setup -q
 %patch1 -p1 -b .refto
 %patch2 -p1 -b .font
-%patch3 -p1 -b .mp
+#%patch3 -p1 -b .mp
 sed -i -e 's:"/usr/lib/X11/app-defaults":"%{x11_app_defaults_dir}":' src/gplt_x11.c
 iconv -f windows-1252 -t utf-8 ChangeLog > ChangeLog.aux
 mv ChangeLog.aux ChangeLog
@@ -210,12 +212,12 @@ rm -rf $RPM_BUILD_ROOT
 %files doc
 %defattr(-,root,root,-)
 %doc ChangeLog Copyright
-%doc docs/psdoc/ps_guide.ps docs/psdoc/ps_symbols.ps tutorial/tutorial.dvi demo docs/psdoc/ps_file.doc
-%doc docs/psdoc/ps_fontfile_doc.pdf docs/htmldocs tutorial/eg7.eps
+%doc docs/psdoc/ps_guide.ps docs/psdoc/ps_symbols.ps demo docs/psdoc/ps_file.doc
+%doc docs/psdoc/ps_fontfile_doc.pdf docs/htmldocs
 
 %files common
 %defattr(-,root,root,-)
-%doc BUGS ChangeLog Copyright NEWS README TODO
+%doc BUGS ChangeLog Copyright NEWS README 
 %{_mandir}/man1/gnuplot.1.gz
 %dir %{_datadir}/gnuplot
 %dir %{_datadir}/gnuplot/%{major}.%{minor}
@@ -224,14 +226,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnuplot/%{major}.%{minor}/PostScript/aglfn.txt
 %dir %{_datadir}/gnuplot/%{major}.%{minor}/js
 %{_datadir}/gnuplot/%{major}.%{minor}/js/*
-%dir %{_datadir}/gnuplot/4.4/lua/
-/usr/share/gnuplot/4.4/lua/gnuplot-tikz.lua
+%dir %{_datadir}/gnuplot/%{major}.%{minor}/lua/
+%{_datadir}/gnuplot/%{major}.%{minor}/lua/gnuplot-tikz.lua
 %{_datadir}/gnuplot/%{major}.%{minor}/gnuplot.gih
 %dir %{_libexecdir}/gnuplot
 %dir %{_libexecdir}/gnuplot/%{major}.%{minor}
 %{_libexecdir}/gnuplot/%{major}.%{minor}/gnuplot_x11
 %{x11_app_defaults_dir}/Gnuplot
-%{_infodir}/gnuplot.info.gz
+#%{_infodir}/gnuplot.info.gz
+%{_datadir}/gnuplot/%{major}.%{minor}/*.gp
+%{_datadir}/gnuplot/%{major}.%{minor}//gnuplotrc
+%{_datadir}/texmf/tex/latex/gnuplot/*.tex
 
 %files minimal
 %defattr(-,root,root,-)
@@ -258,6 +263,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/texmf/tex/latex/gnuplot/gnuplot-lua-tikz.sty
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 4.6.5-2
+- 更新到 4.6.5
+
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - %{major}.%{minor}.%{patchlevel}-2
+- 更新到 .
+
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 4.6.5-2
+- 更新到 4.6.5
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 4.4.4-2
 - 为 Magic 3.0 重建
 

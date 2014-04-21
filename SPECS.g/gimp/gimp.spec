@@ -46,6 +46,8 @@
 %else
 %bcond_without helpbrowser
 %endif
+# hardcode python interpreter in python plug-ins
+%bcond_without hardcoded_python
 
 # skip tests known to be problematic in a specific version
 #global skip_checks_version X.Y.Z
@@ -79,23 +81,23 @@
 Summary:        GNU Image Manipulation Program
 Name:           gimp
 Epoch:          2
-Version:        2.8.4
-Release:        %{?prerelprefix}1%{dotprerel}%{dotgitrev}%{?dist}
+Version:        2.8.10
+Release:        %{?prerelprefix}5%{dotprerel}%{dotgitrev}%{?dist}.1
 
-# Compute some version related macros
-# Ugly hack, you need to get your quoting backslashes/percent signs straight
-%global major %(ver=%version; echo ${ver%%%%.*})
-%global minor %(ver=%version; ver=${ver#%major.}; echo ${ver%%%%.*})
-%global micro %(ver=%version; ver=${ver#%major.%minor.}; echo ${ver%%%%.*})
-%global binver %major.%minor
+# Compute some version related macros.
+# Ugly, need to get quoting percent signs straight.
+%global major %(ver=%{version}; echo ${ver%%%%.*})
+%global minor %(ver=%{version}; ver=${ver#%major.}; echo ${ver%%%%.*})
+%global micro %(ver=%{version}; ver=${ver#%major.%minor.}; echo ${ver%%%%.*})
+%global binver %{major}.%{minor}
 %global interface_age 0
-%global gettext_version 20
-%global lib_api_version 2.0
+%global gettext_version %{major}0
+%global lib_api_version %{major}.0
 %if ! %unstable
 %global lib_minor %(echo $[%minor * 100])
 %global lib_micro %micro
 %else # unstable
-%global lib_minor %(echo $[%minor * 100 + %micro])
+%global lib_minor %(echo $[%minor * 100 + %{micro}])
 %global lib_micro 0
 %endif # unstable
 
@@ -111,7 +113,6 @@ URL:            http://www.gimp.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%__id_u -n)
 Obsoletes:      gimp-perl < 2:2.0
 Obsoletes:      gimp < 2:2.6.0-3
-BuildRequires:  chrpath >= 0.13-5
 %if %{with aalib}
 BuildRequires:  aalib-devel
 %endif
@@ -134,7 +135,7 @@ BuildRequires:  gtk-doc >= 1.0
 BuildRequires:  iso-codes-devel
 BuildRequires:  jasper-devel
 %if %{with lcms}
-BuildRequires:  lcms-devel >= 1.16
+BuildRequires:  lcms2-devel >= 2.2
 %endif
 BuildRequires:  libexif-devel >= 0.6.15
 BuildRequires:  libgnomeui-devel >= 2.10.0
@@ -167,10 +168,11 @@ BuildRequires:  zlib-devel
 BuildRequires:  libX11-devel
 BuildRequires:  libXmu-devel
 BuildRequires:  libXpm-devel
-BuildRequires:  sed
+
+BuildRequires:  chrpath >= 0.13-5
 BuildRequires:  intltool
 BuildRequires:  gettext
-BuildRequires:  findutils
+BuildRequires:  pkgconfig
 
 Requires:       babl%{?_isa} >= 0.1.10
 Requires:       gegl%{?_isa} >= 0.2.0
@@ -194,7 +196,7 @@ Requires:       gimp-libs%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 Obsoletes:      gimp-help-browser <= %{?epoch:%{epoch}:}%{version}-%{release}
 %endif
 
-Source0:        ftp://ftp.gimp.org/pub/gimp/v%{binver}/gimp-%{version}%{dashprerel}.tar.bz2
+Source0:        http://mirrors.zerg.biz/gimp/v%{binver}/gimp-%{version}%{dashprerel}.tar.bz2
 
 %if %{defined gitrev}
 Patch0:         gimp-%{version}%{dashprerel}-git%{gitrev}.patch.bz2
@@ -203,6 +205,19 @@ Patch0:         gimp-%{version}%{dashprerel}-git%{gitrev}.patch.bz2
 # Try using the system monitor profile for color management by default.
 # Fedora specific.
 Patch1:         gimp-2.8.2-cm-system-monitor-profile-by-default.patch
+
+# Avoid buffer overflows in the XWD loader
+# CVE-2013-1913, CVE-2013-1978
+# Upstream commit 7f2322e4ced8ba393abc5a0aa15a607f340f0db8
+# Upstream commit 0ffb3b6753aad00512349bba31bf5113054c6a0e
+Patch2:         gimp-2.8.10-CVE-2013-1913,1978.patch
+
+# Cope with freetype >= 2.5.1 include madness
+# Upstream commit 71c144c972d5582522b6d13a4194169916186c7a
+Patch3:         gimp-2.8.10-freetype-include-madness.patch
+
+# use external help browser directly if help browser plug-in is not built
+Patch100:       gimp-2.8.6-external-help-browser.patch
 
 %description
 GIMP (GNU Image Manipulation Program) is a powerful image composition and
@@ -231,6 +246,7 @@ Requires:       gimp-devel-tools = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:       gtk2-devel
 Requires:       glib2-devel
 Requires:       pkgconfig
+Requires:       rpm >= 4.11.0
 
 %description devel
 The gimp-devel package contains the static libraries and header files
@@ -279,6 +295,7 @@ build ASCII art plugin        %{with aalib}
 harden binaries:              %{with hardening}
 use poppler:                  %{with poppler}
 build help browser:           %{with helpbrowser}
+hardcode python interpreter   %{with hardcoded_python}
 --- >8 ---------------------------------------------------------------------
 EOF
 
@@ -289,6 +306,12 @@ EOF
 %endif
 
 %patch1 -p1 -b .cm-system-monitor-profile-by-default
+%patch2 -p1 -b .CVE-2013-1913,1978
+%patch3 -p1 -b .freetype-include-madness
+
+%if ! %{with helpbrowser}
+%patch100 -p1 -b .external-help-browser
+%endif
 
 %build
 %if %{with hardening}
@@ -298,8 +321,8 @@ EOF
 %global _hardened_build 1
 %else
 # fake things
-export CFLAGS='-fPIC %optflags'
-export CXXFLAGS='-fPIC %optflags'
+export CFLAGS='-fPIC %{optflags}'
+export CXXFLAGS='-fPIC %{optflags}'
 export LDFLAGS='-pie'
 %endif
 %endif
@@ -327,7 +350,7 @@ export LDFLAGS='-pie'
     --without-print \
 %endif
 %if %{with lcms}
-    --with-lcms \
+    --with-lcms=lcms2 \
 %else
     --without-lcms \
 %endif
@@ -361,19 +384,60 @@ export LDFLAGS='-pie'
 
 make %{?_smp_mflags}
 
+# Generate RPM macros from pkg-config data:
+# %%_gimp_datadir -- toplevel directory for brushes, gradients, scripts, ...
+# %%_gimp_libdir -- toplevel directory for modules, plug-ins, ...
+# %%_gimp_sysconfdir -- system-wide runtime configuration
+# %%_gimp_localedir -- toplevel directory for translation files
+# %%_gimp_scriptdir -- script-fu scripts directory
+# %%_gimp_plugindir -- plug-in directory
+gimp_pc_extract_normalize() {
+    PKG_CONFIG_PATH="$PWD" \
+        pkg-config --variable="$1" gimp-%{lib_api_version} | \
+    sed \
+        -e 's|^%_mandir|%%{_mandir}|' \
+        -e 's|^%_infodir|%%{_infodir}|' \
+        -e 's|^%_includedir|%%{_includedir}|' \
+        -e 's|^%_libdir|%%{_libdir}|' \
+        -e 's|^%_localstatedir|%%{_localstatedir}|' \
+        -e 's|^%_sharedstatedir|%%{_sharedstatedir}|' \
+        -e 's|^%_sysconfdir|%%{_sysconfdir}|' \
+        -e 's|^%_datadir|%%{_datadir}|' \
+        -e 's|^%_libexecdir|%%{_libexecdir}|' \
+        -e 's|^%_sbindir|%%{_sbindir}|' \
+        -e 's|^%_bindir|%%{_bindir}|' \
+        -e 's|^%_exec_prefix|%%{_exec_prefix}|' \
+        -e 's|^%_prefix|%%{_prefix}|'
+}
+
+_gimp_datadir="$(gimp_pc_extract_normalize gimpdatadir)"
+_gimp_libdir="$(gimp_pc_extract_normalize gimplibdir)"
+_gimp_sysconfdir="$(gimp_pc_extract_normalize gimpsysconfdir)"
+_gimp_localedir="$(gimp_pc_extract_normalize gimplocaledir)"
+_gimp_scriptdir="${_gimp_datadir}/scripts"
+_gimp_plugindir="${_gimp_libdir}/plug-ins"
+
+cat << EOF > macros.gimp
+# RPM macros for GIMP
+
+%%_gimp_datadir ${_gimp_datadir}
+%%_gimp_libdir ${_gimp_libdir}
+%%_gimp_sysconfdir ${_gimp_sysconfdir}
+%%_gimp_localedir ${_gimp_localedir}
+%%_gimp_scriptdir ${_gimp_scriptdir}
+%%_gimp_plugindir ${_gimp_plugindir}
+EOF
+
 %install
 rm -rf %{buildroot}
-
-# makeinstall macro won't work here - libexec is overriden
 make DESTDIR=%{buildroot} install
+install -D -m0644 macros.gimp %{buildroot}%{_rpmconfigdir}/macros.d/macros.gimp
 
 # remove rpaths
 find %buildroot -type f -print0 | xargs -0 -L 20 chrpath --delete --keepgoing 2>/dev/null || :
 
-%ifos linux
 # remove .la files
 find %buildroot -name \*.la -exec %__rm -f {} \;
-%endif
 
 #
 # Plugins and modules change often (grab the executeable ones)
@@ -382,12 +446,12 @@ echo "%defattr (-, root, root)" > gimp-plugin-files
 find %{buildroot}%{_libdir}/gimp/%{lib_api_version} -type f | sed "s@^%{buildroot}@@g" | grep -v '\.a$' >> gimp-plugin-files
 
 # .pyc and .pyo files don't exist yet
-#grep "\.py$" gimp-plugin-files > gimp-plugin-files-py
-#for file in $(cat gimp-plugin-files-py); do
-#    for newfile in ${file}c ${file}o; do
-#        grep -F -q -x "$newfile" gimp-plugin-files || echo "$newfile"
-#    done
-#done >> gimp-plugin-files
+grep "\.py$" gimp-plugin-files > gimp-plugin-files-py
+for file in $(cat gimp-plugin-files-py); do
+    for newfile in ${file}c ${file}o; do
+        grep -F -q -x "$newfile" gimp-plugin-files || echo "$newfile"
+    done
+done >> gimp-plugin-files
 
 %if %{with static}
 echo "%defattr (-, root, root)" > gimp-static-files
@@ -422,9 +486,19 @@ ln -snf gimptool-%{lib_api_version}.1 %{buildroot}%{_mandir}/man1/gimptool.1
 ln -snf gimprc-%{binver}.5 %{buildroot}/%{_mandir}/man5/gimprc.5
 %endif
 
+%if %{with hardcoded_python}
+# Hardcode python interpreter in shipped python plug-ins. This actually has no
+# effect because gimp maps hashbangs with and without the /usr/bin/env detour
+# to the system python interpreter, but this will avoid false alarms.
+grep -E -rl '^#!\s*%{_bindir}/env\s+python' --include=\*.py "%{buildroot}" |
+    while read file; do
+        sed -r '1s,^#!\s*%{_bindir}/env\s+python,#!%{__python},' -i "$file"
+    done
+%endif
+
 %check
 # skip tests known to be problematic in a specific version
-%if "%version" == "%{?skip_checks_version}"
+%if "%{version}" == "%{?skip_checks_version}"
 pushd app/tests
 for problematic in %{?skip_checks}; do
     rm -f "$problematic"
@@ -463,6 +537,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc AUTHORS COPYING ChangeLog NEWS README
 %doc docs/*.xcf*
 %{_datadir}/applications/*.desktop
+%{_datadir}/appdata/*.appdata.xml
 
 %dir %{_datadir}/gimp
 %dir %{_datadir}/gimp/%{lib_api_version}
@@ -565,6 +640,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/aclocal/*.m4
 %{_includedir}/gimp-%{lib_api_version}
 %{_libdir}/pkgconfig/*
+%{_rpmconfigdir}/macros.d/macros.gimp
 
 %files devel-tools
 %defattr (-, root, root, 0755)
@@ -583,6 +659,77 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 2:2.8.10-5.1
+- 为 Magic 3.0 重建
+
+* Thu Feb 13 2014 Nils Philippsen <nils@redhat.com> - 2:2.8.10-5
+- cope with freetype >= 2.5.1 include madness
+
+* Wed Feb 12 2014 Nils Philippsen <nils@redhat.com> - 2:2.8.10-5
+- remove BRs contained in the minimal build environment
+- group BRs into libraries and tools
+- remove various old cruft
+- ship RPM macros for packaging plug-ins e.a. (#1063144)
+
+* Wed Dec 04 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.10-4
+- avoid buffer overflows in file-xwd plug-in (CVE-2013-1913, CVE-2013-1978)
+
+* Fri Nov 29 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.10-1
+- version 2.8.10
+
+* Tue Nov 26 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.10-1
+- use grep -E instead of egrep
+
+* Fri Nov 08 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.8-3
+- file-bmp: don't close already closed FD
+
+* Thu Nov 07 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.8-2
+- fix crash in lcms plug-in
+- fix issues found during static code check
+
+* Mon Nov 04 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.8-1
+- version 2.8.8
+
+* Thu Sep 19 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.6-5
+- fix lcms2 patch
+
+* Wed Sep 18 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.6-4
+- build against lcms2
+
+* Mon Aug 26 2013 Jon Ciesla <limburgher@gmail.com> - 2:2.8.6-3.2
+- libmng rebuild.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.8.6-3.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 08 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.6-3
+- exit properly when quitting while loading images (#633107)
+
+* Tue Jul 02 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.6-2
+- use external help browser directly if help browser plug-in isn't built
+- fix changelog dates
+
+* Sun Jun 23 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.6-1
+- version 2.8.6
+
+* Tue Jun 04 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.4-5
+- patch rebuilt files after changing configure.ac
+
+* Wed May 29 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.4-4
+- fix upstream commit ids
+- fix double-free crashes when selecting gradients from script-fu (#964470)
+- fix crash in unsharp-mask plug-in (#966987)
+- hardcode python interpreter in python plug-ins (#952227)
+- fix crash when selecting text with multiple colors etc. (#919795, #951815)
+- don't crash upon not applying a color profile to a grayscale image (#922622)
+
+* Sat Apr 20 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.4-3
+- don't crash upon deleting tags in popup (#892828)
+
+* Wed Mar 06 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.4-2
+- get rid of strict overflow warning
+- don't have duplicate mime types in desktop file
+
 * Wed Feb 06 2013 Nils Philippsen <nils@redhat.com> - 2:2.8.4-1
 - version 2.8.4
 
@@ -787,7 +934,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Wed Aug 11 2010 David Malcolm <dmalcolm@redhat.com> - 2:2.6.10-3
 - recompiling .py files against Python 2.7 (rhbz#623309)
 
-* Mon Jul 09 2010 Nils Philippsen <nils@redhat.com> - 2:2.6.10-2
+* Mon Jul 12 2010 Nils Philippsen <nils@redhat.com> - 2:2.6.10-2
 - distribute license and other documentation with gimp-libs
 
 * Fri Jul 09 2010 Nils Philippsen <nils@redhat.com> - 2:2.6.10-1
@@ -2125,7 +2272,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Thu Jul 13 2000 Prospector <bugzilla@redhat.com>
 - automatic rebuild
 
-* Fri Jul  1 2000 Matt Wilson <msw@redhat.com>
+* Sat Jul  1 2000 Matt Wilson <msw@redhat.com>
 - 1.1.24
 
 * Sat Jun 17 2000 Matt Wilson <msw@redhat.com>

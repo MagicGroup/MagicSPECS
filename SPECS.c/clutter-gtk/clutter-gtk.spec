@@ -4,11 +4,14 @@ Name:           clutter-gtk
 Version:	1.5.2
 Release:        1%{?dist}
 Summary:        A basic GTK clutter widget
+Summary(zh_CN.UTF-8): 基本的 GTK clutter 组件
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        LGPLv2+
 URL:            http://www.clutter-project.org
-Source0:        https://download.gnome.org/sources/clutter-gtk/1.5/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        https://download.gnome.org/sources/clutter-gtk/%{majorver}/%{name}-%{version}.tar.xz
 Patch0:         clutter-gtk-fixdso.patch
 
 BuildRequires:  gtk3-devel >= 3.0.0
@@ -20,8 +23,13 @@ clutter-gtk is a library which allows the embedding of a Clutter
 canvas (or "stage") into a GTK+ application, as well as embedding
 GTK+ widgets inside the stage.
 
+%description -l zh_CN.UTF-8
+基本的 GTK clutter 组件。
+
 %package devel
 Summary:        Clutter-gtk development environment
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group(zh_CN.UTF-8): 开发/库
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk3-devel clutter-devel
@@ -30,6 +38,8 @@ Requires:       gtk3-devel clutter-devel
 Header files and libraries for building a extension library for the
 clutter-gtk.
 
+%description devel -l zh_CN.UTF-8 
+%{name} 的开发包。
 
 %prep
 %setup -q

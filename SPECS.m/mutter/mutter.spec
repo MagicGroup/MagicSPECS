@@ -1,12 +1,13 @@
 Name:          mutter
-Version:       3.8.0
+Version:	3.12.0
 Release:       1%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
 Group:         User Interface/Desktops
 License:       GPLv2+
 #VCS:          git:git://git.gnome.org/mutter
-Source0:       http://download.gnome.org/sources/%{name}/3.7/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: clutter-devel >= 1.13.5
 BuildRequires: pango-devel
@@ -108,12 +109,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %files -f %{name}.lang
 %doc README AUTHORS COPYING NEWS HACKING doc/theme-format.txt
 %doc %{_mandir}/man1/mutter.1.gz
-%doc %{_mandir}/man1/mutter-message.1.gz
+#%doc %{_mandir}/man1/mutter-message.1.gz
 %{_bindir}/mutter
-%{_bindir}/mutter-message
+#%{_bindir}/mutter-message
 %{_datadir}/applications/*.desktop
 %{_datadir}/gnome/wm-properties/mutter-wm.desktop
-%{_datadir}/mutter
+#%{_datadir}/mutter
 %{_libdir}/lib*.so.*
 %{_libdir}/mutter/
 %{_datadir}/GConf/gsettings/mutter-schemas.convert
@@ -122,17 +123,20 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files devel
-%{_bindir}/mutter-theme-viewer
-%{_bindir}/mutter-window-demo
+#%{_bindir}/mutter-theme-viewer
+#%{_bindir}/mutter-window-demo
 %{_includedir}/*
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*
-%doc %{_mandir}/man1/mutter-theme-viewer.1.gz
-%doc %{_mandir}/man1/mutter-window-demo.1.gz
+#%doc %{_mandir}/man1/mutter-theme-viewer.1.gz
+#%doc %{_mandir}/man1/mutter-window-demo.1.gz
 # exclude as these should be in a devel package (if packaged at all)
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Tue Mar 26 2013 Florian Müllner <fmuellner@redhat.com> - 3.8.0-1
 - Update to 3.8.0
 

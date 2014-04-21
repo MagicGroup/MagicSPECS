@@ -1,12 +1,14 @@
 Summary: Fonts for the Ghostscript PostScript interpreter
+Summary(zh_CN.UTF-8): Ghostscript PostScript 解释器字体
 Name: ghostscript-fonts
 Version: 5.50
-Release: 28%{?dist}
+Release: 29%{?dist}
 # Contacted Kevin Hartig, who agreed to relicense his fonts under the SIL Open Font 
 # License. Hershey fonts are under the "Hershey Font License", which is not what Fontmap 
 # says (Fontmap is wrong).
 License: GPLv2+ and Hershey and MIT and OFL and Public Domain
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://www.gnu.org/software/ghostscript/
 Source0: gnu-gs-fonts-other-%{version}-nobch.tar.gz
@@ -33,6 +35,9 @@ Ghostscript-fonts contains a set of fonts that Ghostscript, a
 PostScript interpreter, uses to render text. These fonts are in
 addition to the fonts shared by Ghostscript and the X Window System.
 
+%description -l zh_CN.UTF-8
+Ghostscript PostScript 解释器字体。
+
 %prep
 %setup -q -c ghostscript-fonts-%{version}
 cp -p %{SOURCE1} %{SOURCE2} .
@@ -50,6 +55,7 @@ touch $RPM_BUILD_ROOT%{fontdir}/fonts.{dir,scale}
 # Install catalogue symlink
 mkdir -p $RPM_BUILD_ROOT%{catalogue}
 ln -sf %{fontdir} $RPM_BUILD_ROOT%{catalogue}/default-ghostscript
+magic_rpm_clean.sh
 
 %post
 {

@@ -1,14 +1,17 @@
 %define glib2_version 2.35.8
 
 Name:           glib-networking
-Version:        2.39.3
+Version:	2.40.0
 Release:        1%{?dist}
 Summary:        Networking support for GLib
+Summary(zh_CN.UTF-8): GLib 的网络支持
 
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 URL:            http://www.gnome.org
-Source:         http://download.gnome.org/sources/glib-networking/2.39/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/glib-networking/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  glib2-devel >= %{glib2_version}
 BuildRequires:  libproxy-devel
@@ -27,6 +30,9 @@ GIO. In particular, it contains libproxy- and GSettings-based
 GProxyResolver implementations and a gnutls-based GTlsConnection
 implementation.
 
+%description -l zh_CN.UTF-8
+GLib 的网络支持。
+
 %prep
 %setup -q
 
@@ -44,7 +50,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT/files
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/gio/modules/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
@@ -63,6 +69,12 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 2.40.0-1
+- 更新到 2.40.0
+
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 2.39.90-1
+- 更新到 2.39.90
+
 * Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 2.39.3-1
 - Update to 2.39.3
 

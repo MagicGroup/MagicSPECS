@@ -1,12 +1,15 @@
 Summary:        Tool for viewing and creating archives
+Summary(zh_CN.UTF-8): 查看和创建压缩包的工具
 Name:           file-roller
-Version:        3.2.1
+Version:        3.12.0
 Release:        3%{?dist}
 License:        GPLv2+
 Group:          Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 URL:            http://download.gnome.org/sources/file-roller/
 #VCS: git:git://git.gnome.org/file-roller
-Source:         http://download.gnome.org/sources/file-roller/3.2/file-roller-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/file-roller/%{majorver}/file-roller-%{version}.tar.xz
 
 BuildRequires: glib2-devel
 BuildRequires: pango-devel
@@ -30,16 +33,23 @@ Requires: nautilus
 File Roller is an application for creating and viewing archives files,
 such as tar or zip files.
 
+%description -l zh_CN.UTF-8
+创建和查看压缩文件，比如 tar 或 zip 文件的工具。
 
 %package nautilus
 Summary: File Roller extension for nautilus
+Summary(zh_CN.UTF-8): %{name} 的 nautilus 插件
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires: %{name} = %{version}-%{release}
 
 %description nautilus
 This package contains the file-roller extension for the nautilus file manger.
 It adds an item to the nautilus contexst menu that lets you compress files
 or directories.
+
+%description nautilus -l zh_CN.UTF-8
+%{name} 的 nautilus 插件，它给 nautilus 的菜单添加了一个项目可以压缩文件或目录。
 
 %prep
 %setup -q
@@ -67,7 +77,7 @@ desktop-file-install --vendor gnome --delete-original       \
 rm -rf $RPM_BUILD_ROOT/var/scrollkeeper
 rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus/extensions-3.0/*.{a,la}
 rm -f $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/icon-theme.cache
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
 %post
@@ -95,7 +105,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %{_datadir}/file-roller
 %{_datadir}/applications/gnome-file-roller.desktop
 %{_libexecdir}/file-roller
-%{_libexecdir}/file-roller-server
+#%{_libexecdir}/file-roller-server
 %{_datadir}/dbus-1/services/org.gnome.FileRoller.service
 %{_datadir}/icons/hicolor/*/apps/file-roller.png
 %{_datadir}/glib-2.0/schemas/org.gnome.FileRoller.gschema.xml

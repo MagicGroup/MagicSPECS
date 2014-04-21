@@ -1,9 +1,11 @@
 Name:           gnome-sharp
-Version:        2.24.1
-Release:        10%{?dist}
+Version:        2.24.2
+Release:        3%{?dist}
 Summary:        GTK+ and GNOME bindings for Mono
+Summary(zh_CN.UTF-8): GTK+ 和 GNOME 的 Mono 绑定
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库 
 License:        LGPLv2+
 URL:            ftp://ftp.gnome.org/pub/gnome/sources/gnome-sharp/2.24/
 Source0:        ftp://ftp.gnome.org/pub/gnome/sources/gnome-sharp/2.24/gnome-sharp-%{version}.tar.bz2
@@ -11,11 +13,13 @@ Source0:        ftp://ftp.gnome.org/pub/gnome/sources/gnome-sharp/2.24/gnome-sha
 Patch0: %{name}-2241-getopts.patch
 # init gtype before using gconf
 Patch2: gnome-sharp-gconf-init.patch
+# https://github.com/meebey/gnome-sharp/commit/e9d06b56a54dcd399d1d3eaaf62bdacb7e07084d
+Patch3: gnome-sharp-2.24.2-dbus-thread-fix.patch
 
 BuildRequires:  mono-devel gtk2-devel libart_lgpl-devel gnome-vfs2-devel libgnomecanvas-devel libgnomeui-devel
 BuildRequires:  gtk-sharp2-devel >= 2.12.7
 BuildRequires:  gtk-sharp2-gapi >= 2.12.7
-BuildRequires:  librsvg2-devel vte-devel gnome-panel-devel
+BuildRequires:  librsvg2-devel vte-devel
 BuildRequires:  libgnomeprintui22-devel
 BuildRequires:  automake, libtool
 
@@ -28,9 +32,14 @@ fully native graphical GNOME applications using Mono. gnome-sharp
 extends gtk-sharp2 and adds bindings for gconf, libgnome, gnome-vfs,
 libart, librsvg, and vte.
 
+%description -l zh_CN.UTF-8 
+GTK+ 和 GNOME 的 Mono 绑定。
+
 %package devel
 Summary: Files needed for developing with gnome-sharp
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -38,10 +47,14 @@ Requires: pkgconfig
 This package provides the necessary development libraries and headers
 for writing gnome-sharp2 applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1 -b .getopts
 %patch2 -p1 -b .gconf-init
+%patch3 -p1 -b .threadfix
 
 %build
 autoreconf --force --install
@@ -55,6 +68,7 @@ make
 export MONO_SHARED_DIR=%{_builddir}/%{?buildsubdir}
 make install DESTDIR=$RPM_BUILD_ROOT
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.*a
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -75,6 +89,19 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/gconf-sharp-peditors-2.0.pc
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Apr  1 2013 Peter Robinson <pbrobinson@fedoraproject.org> 2.24.2-2
+- Drop dead gnome-panel dependency
+
+* Wed Mar 27 2013 Tom Callaway <spot@fedoraproject.org> - 2.24.2-1
+- update to 2.24.2
+- explicitly initialize dbus glib threading
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

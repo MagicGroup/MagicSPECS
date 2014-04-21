@@ -105,10 +105,11 @@ fi
 checkcommand || exit 1
 #检测 spec
 SPECNAME=$(ls $DIR/*.spec)
+rm -f $DIR/hasupdate
 #首先判断是否使用版本控制系统的源码，如果是，则将日期更新到当前日期，目前支持git/cvs/svn/hg。
 if `cat $SPECNAME | grep -q -E "%define git 1|%define svn 1|%define cvs 1|%define hg 1"` ; then
 	TODAY=$(date +%Y%m%d)
-	sed -i "s/%define vcsdate .*/%define vcsdate $TODAY/g" $SPECNAME
+	sed -i "s/%define vcsdate .*/%define vcsdate $TODAY/g" $SPECNAME && touch $DIR/hasupdate
 fi
 #如果不是，则检测新版本
 if [ -f $DIR/getnewver ]; then
@@ -127,7 +128,7 @@ if ! [ $NEWVER = $SPECVER ]; then
 	echo "$1 版本有更新，更新 spec 文件。"
 	if [ -f $DIR/updatespec ]; then
 		./$DIR/updatespec $NEWVER
-		rpmdev-bumpspec -n -c "更新到 $NEWVER" $SPECNAME
+		rpmdev-bumpspec -n -c "更新到 $NEWVER" $SPECNAME && touch $DIR/hasupdate
 	else
 		echo "不存在 spec 更新脚本，请自行添加。"
 		exit 1

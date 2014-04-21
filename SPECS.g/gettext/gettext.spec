@@ -4,11 +4,13 @@
 %bcond_without git
 
 Summary: GNU libraries and utilities for producing multi-lingual messages
+Summary(zh_CN.UTF-8): 用于生成多语言信息的 GNU 库和工具
 Name: gettext
 Version: 0.18.3.2
 Release: 1%{?dist}
 License: GPLv3+ and LGPLv2+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/gettext/
 Source: ftp://ftp.gnu.org/gnu/gettext/%{name}-%{version}.tar.gz
 Source2: msghack.py
@@ -63,10 +65,15 @@ library and tools for creating, using, and modifying natural language
 catalogs and is a powerful and simple method for internationalizing
 programs.
 
+%description -l zh_CN.UTF-8 
+这是一个用于处理多语言程序的库和相关工具，它可以让程序具备国际化、多语言
+的能力。程序可以根据情况自动选择显示的语言等。
 
 %package common-devel
 Summary: Common development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的通用开发包
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 # autopoint archive
 License: GPLv3+
 BuildArch: noarch
@@ -74,10 +81,14 @@ BuildArch: noarch
 %description common-devel
 This package contains common architecture independent gettext development files.
 
+%description common-devel -l zh_CN.UTF-8
+%{name} 的通用开发包。
 
 %package devel
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/库
 # autopoint is GPLv3+
 # libasprintf is LGPLv2+
 # libgettextpo is GPLv3+
@@ -98,10 +109,14 @@ developing or compiling applications/libraries that needs
 internationalization capability. You also need this package if you
 want to add gettext support for your project.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package libs
 Summary: Libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # libasprintf is LGPLv2+
 # libgettextpo is GPLv3+
 License: LGPLv2+ and GPLv3+
@@ -109,10 +124,14 @@ License: LGPLv2+ and GPLv3+
 %description libs
 This package contains libraries used internationalization support.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package -n emacs-%{name}
 Summary: Support for editing po files within GNU Emacs
+Summary(zh_CN.UTF-8): 支持使用 GNU Emacs 编辑 po 文件 
 Group: Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch: noarch
 # help users find po-mode.el
 Provides: emacs-po-mode
@@ -121,10 +140,14 @@ Requires: emacs(bin) >= %{_emacs_version}
 %description -n emacs-%{name}
 This package provides a major mode for editing po files within GNU Emacs.
 
+%description -n emacs-%{name} -l zh_CN.UTF-8
+支持使用 GNU Emacs 编辑 po 文件。
 
 %package -n emacs-%{name}-el
 Summary: Elisp source files for editing po files within GNU Emacs
+Summary(zh_CN.UTF-8): 使用 GNU Emacs 编辑 po 文件用 Elisp 源代码
 Group: Applications/Editors
+Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch: noarch
 Requires: emacs-%{name} = %{version}-%{release}
 
@@ -132,6 +155,8 @@ Requires: emacs-%{name} = %{version}-%{release}
 This package contains the Elisp source files for editing po files within GNU
 Emacs.
 
+%description -n emacs-%{name}-el -l zh_CN.UTF-8
+使用 GNU Emacs 编辑 po 文件用 Elisp 源代码。
 
 %prep
 %setup -q
@@ -216,7 +241,7 @@ rm ${RPM_BUILD_ROOT}%{_libdir}/libgettext{src,lib}.so
 install -d ${RPM_BUILD_ROOT}%{_emacs_sitestartdir}
 mv ${RPM_BUILD_ROOT}%{_emacs_sitelispdir}/%{name}/start-po.el ${RPM_BUILD_ROOT}%{_emacs_sitestartdir}
 rm ${RPM_BUILD_ROOT}%{_emacs_sitelispdir}/%{name}/start-po.elc
-
+magic_rpm_clean.sh
 %find_lang %{name}-runtime
 %find_lang %{name}-tools
 cat %{name}-*.lang > %{name}.lang

@@ -17,13 +17,13 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk2
-Version: 2.24.18
+Version:	2.24.23
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
 #VCS: git:git://git.gnome.org/gtk+#gtk-2-24
-Source: http://download.gnome.org/sources/gtk+/2.24/gtk+-%{version}.tar.bz2
+Source: http://download.gnome.org/sources/gtk+/2.24/gtk+-%{version}.tar.xz
 Source2: update-gtk-immodules
 Source3: im-cedilla.conf
 
@@ -145,7 +145,7 @@ This package contains developer documentation for the GTK+ widget toolkit.
 %prep
 %setup -q -n gtk+-%{version}
 
-%patch0 -p1 -b .lib64
+#%patch0 -p1 -b .lib64
 %patch1 -p1 -b .system-python
 %patch2 -p1 -b .icon-padding
 %patch8 -p1 -b .tooltip-positioning
@@ -337,6 +337,9 @@ fi
 %doc tmpdocs/examples
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.24.23-1
+- 更新到 2.24.23
+
 * Mon May 13 2013 Matthias Clasen <mclasen@redhat.com> - 2.24.18-1
 - Update to 2.24.18
 

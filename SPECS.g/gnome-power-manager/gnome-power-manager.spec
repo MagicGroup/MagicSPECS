@@ -1,33 +1,26 @@
 Summary: GNOME power management service
+Summary(zh_CN.UTF-8): GNOME 电源管理服务
 Name: gnome-power-manager
-Version: 3.2.1
+Version:	3.12.0
 Release: 2%{?dist}
 License: GPLv2+ and GFDL
 Group: Applications/System
-Source: http://download.gnome.org/sources/gnome-power-manager/3.2/gnome-power-manager-%{version}.tar.xz
+Group(zh_CN.UTF-8): 应用程序/系统
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gnome-power-manager/%{majorver}/gnome-power-manager-%{version}.tar.xz
 URL: http://projects.gnome.org/gnome-power-manager/
 
-BuildRequires: gnome-panel-devel >= 2.31.2
-BuildRequires: scrollkeeper
-BuildRequires: gnome-doc-utils >= 0.3.2
 BuildRequires: desktop-file-utils
 BuildRequires: gettext
 BuildRequires: libtool
 BuildRequires: cairo-devel
-BuildRequires: libcanberra-devel
-BuildRequires: libnotify-devel >= 0.7.0
 BuildRequires: upower-devel >= 0.9.0
 BuildRequires: intltool
 BuildRequires: glib2-devel >= 2.25.9
-BuildRequires: GConf2-devel >= 2.31.1
 BuildRequires: gtk3-devel >= 2.91.3
-BuildRequires: dbus-glib-devel
-BuildRequires: libwnck-devel
 BuildRequires: docbook-utils
-BuildRequires: gnome-keyring-devel
 
 Requires: gnome-icon-theme
-Requires: gnome-settings-daemon
 
 # obsolete sub-package
 Obsoletes: gnome-power-manager-extra <= 2.30.1
@@ -37,6 +30,9 @@ Provides: gnome-power-manager-extra
 GNOME Power Manager uses the information and facilities provided by UPower
 displaying icons and handling user callbacks in an interactive GNOME session.
 
+%description -l zh_CN.UTF-8 
+这个包使用 Upower 提供的信息和功能显示和处理电源管理。
+
 %prep
 %setup -q
 
@@ -45,7 +41,7 @@ displaying icons and handling user callbacks in an interactive GNOME session.
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %name --with-gnome
 
 %postun
@@ -67,14 +63,18 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/*
 %{_datadir}/applications/*.desktop
 %{_datadir}/glib-2.0/schemas/*.gschema.xml
-%{_datadir}/gnome-power-manager/*.ui
-%{_datadir}/gnome-power-manager/icons/hicolor/*/*/*.*
+#%{_datadir}/gnome-power-manager/*.ui
+%{_datadir}/appdata/gnome-power-statistics.appdata.xml
+%{_datadir}/icons/HighContrast/*/*/*.*
 %{_datadir}/icons/hicolor/*/apps/gnome-power-statistics.*
-%dir %{_datadir}/gnome-power-manager
+#%dir %{_datadir}/gnome-power-manager
 %{_datadir}/glib-2.0/schemas/*.gschema.xml
 %{_mandir}/man1/*.1.gz
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.2.1-2
 - 为 Magic 3.0 重建
 

@@ -58,7 +58,7 @@ Patch16: binutils-2.24-DW_FORM_ref_addr.patch
 
 Provides: bundled(libiberty)
 
-%define gold_arches %ix86 x86_64 %arm
+%define gold_arches %ix86 x86_64 %arm mips64el
 
 %ifarch %gold_arches
 %define build_gold	both
@@ -221,7 +221,7 @@ export CFLAGS="$RPM_OPT_FLAGS"
 %endif
 CARGS=
 
-case %{binutils_target} in i?86*|sparc*|ppc*|s390*|sh*|arm*|aarch64*)
+case %{binutils_target} in i?86*|sparc*|ppc*|s390*|sh*|arm*|aarch64*|mips64*)
   CARGS="$CARGS --enable-64-bit-bfd"
   ;;
 esac
@@ -308,6 +308,13 @@ make CFLAGS="-g -fPIC $RPM_OPT_FLAGS -fvisibility=hidden" -C bfd
 make -C opcodes clean
 make CFLAGS="-g -fPIC $RPM_OPT_FLAGS" -C opcodes
 
+%ifarch mips64el
+  mkdir -p %{buildroot}/etc/profile.d/
+  touch %{buildroot}/etc/profile.d/binutils.sh
+  echo "export LDEMULATION=\"elf64ltsmip\"" > %{buildroot}/etc/profile.d/binutils.sh
+  chmod +x %{buildroot}/etc/profile.d/binutils.sh
+%endif
+
 install -m 644 bfd/libbfd.a %{buildroot}%{_libdir}
 install -m 644 libiberty/libiberty.a %{buildroot}%{_libdir}
 install -m 644 include/libiberty.h %{buildroot}%{_prefix}/include
@@ -329,7 +336,7 @@ rm -f %{buildroot}%{_libdir}/lib{bfd,opcodes}.la
 # Sanity check --enable-64-bit-bfd really works.
 grep '^#define BFD_ARCH_SIZE 64$' %{buildroot}%{_prefix}/include/bfd.h
 # Fix multilib conflicts of generated values by __WORDSIZE-based expressions.
-%ifarch %{ix86} x86_64 ppc %{power64} s390 s390x sh3 sh4 sparc sparc64 arm
+%ifarch %{ix86} x86_64 ppc %{power64} s390 s390x sh3 sh4 sparc sparc64 arm mips64el
 sed -i -e '/^#include "ansidecl.h"/{p;s~^.*$~#include <bits/wordsize.h>~;}' \
     -e 's/^#define BFD_DEFAULT_TARGET_SIZE \(32\|64\) *$/#define BFD_DEFAULT_TARGET_SIZE __WORDSIZE/' \
     -e 's/^#define BFD_HOST_64BIT_LONG [01] *$/#define BFD_HOST_64BIT_LONG (__WORDSIZE == 64)/' \
@@ -475,6 +482,10 @@ exit 0
 %if %{isnative}
 %{_infodir}/[^b]*info*
 %{_infodir}/binutils*info*
+
+%ifarch mips64el
+/etc/profile.d/binutils.sh
+%endif
 
 %files devel
 %defattr(-,root,root,-)

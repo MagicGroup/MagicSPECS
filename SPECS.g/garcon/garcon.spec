@@ -3,11 +3,13 @@
 %global minorversion 0.2
 
 Name:           garcon
-Version:        0.2.0
-Release:        4%{?dist}
+Version:        0.2.1
+Release:        3%{?dist}
 Summary:        Implementation of the freedesktop.org menu specification
+Summary(zh_CN.UTF-8): freedesktop.org 菜单标准的实现 
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # garcon's source code is licensed under the LGPLv2+,
 # while its documentation is licensed under the GFDL 1.1
 License:        LGPLv2+ and GFDL
@@ -24,7 +26,7 @@ BuildRequires:  gtk-doc
 BuildRequires:  gettext
 BuildRequires:  intltool
 
-Obsoletes:      libxfce4menu < 4.6.2
+Obsoletes:      libxfce4menu < 4.6.3
 # because of %%{_datadir}/desktop-directories/xfce-*
 Conflicts:      xfdesktop <= 4.6.2
 
@@ -33,9 +35,15 @@ Garcon is an implementation of the freedesktop.org menu specification replacing
 the former Xfce menu library libxfce4menu. It is based on GLib/GIO only and 
 aims at covering the entire specification except for legacy menus.
 
+%description -l zh_CN.UTF-8
+这是 freedesktop.org 菜单标准的实现，用来替换 Xfce 菜单库 libxfce4menu。
+它只基于 GLib/GIO。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk2-devel
 Requires:       pkgconfig
@@ -45,6 +53,8 @@ Obsoletes:      libxfce4menu-devel < 4.6.2
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -95,8 +105,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.2.0-4
-- 为 Magic 3.0 重建
+* Wed Aug 28 2013 Kevin Fenzi <kevin@scrye.com> 0.2.1-3
+- Fix obsoletes. Fixes bug #1002131
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun May 05 2013 Kevin Fenzi <kevin@scrye.com> 0.2.1-1
+- Update to 0.2.1
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

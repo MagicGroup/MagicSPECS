@@ -1,9 +1,10 @@
 Name:           fuse
-Version:        2.9.2
+Version:	2.9.3
 Release:        2%{?dist}
 Summary:        File System in Userspace (FUSE) utilities
-
+Summary(zh_CN.UTF-8): 用户空间的文件系统 (FUSE) 工具
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPL+
 URL:            http://fuse.sf.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -23,9 +24,14 @@ With FUSE it is possible to implement a fully functional filesystem in a
 userspace program. This package contains the FUSE userspace tools to
 mount a FUSE filesystem.
 
+%description -l zh_CN.UTF-8
+通过 FUSE 你可以在用户空间的程序中实现完整的文件系统。
+
 %package libs
 Summary:        File System in Userspace (FUSE) libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 Conflicts:      filesystem < 3
 
@@ -33,10 +39,14 @@ Conflicts:      filesystem < 3
 Devel With FUSE it is possible to implement a fully functional filesystem in a
 userspace program. This package contains the FUSE libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary:        File System in Userspace (FUSE) devel files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       pkgconfig
 License:        LGPLv2+
@@ -47,6 +57,8 @@ With FUSE it is possible to implement a fully functional filesystem in a
 userspace program. This package contains development files (headers,
 pgk-config) to develop FUSE based applications/filesystems.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -77,6 +89,7 @@ install -p -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}
 
 # Delete pointless udev rules, which do not belong in /etc (brc#748204)
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d/99-fuse.rules
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -119,6 +132,9 @@ fi
 %{_includedir}/fuse
 
 %changelog
+* Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 2.9.3-2
+- 更新到 2.9.3
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.9.2-2
 - 为 Magic 3.0 重建
 

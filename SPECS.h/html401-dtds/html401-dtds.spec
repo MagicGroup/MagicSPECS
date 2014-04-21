@@ -8,7 +8,7 @@
 
 Name:           html401-dtds
 Version:        4.01
-Release:        %{date}.12%{?dist}.2
+Release:        %{date}.12%{?dist}.3
 Summary:        HTML 4.01 document type definitions
 
 # W3C Software License for DTDs etc:
@@ -71,6 +71,9 @@ cd -
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 4.01-19991224.12.3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.01-19991224.12.2
 - 为 Magic 3.0 重建
 

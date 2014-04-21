@@ -3,24 +3,19 @@
 %endif
 
 Name:           flann
-Version:        1.7.1
+Version:	1.8.4
 Release:        5%{?dist}
 Summary:        Fast Library for Approximate Nearest Neighbors
-
+Summary(zh_CN.UTF-8): 快速的近似最邻近查找算法库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        BSD
 URL:            http://www.cs.ubc.ca/~mariusm/index.php/FLANN/FLANN
 Source0:        http://www.cs.ubc.ca/~mariusm/uploads/FLANN/%{name}-%{version}-src.zip
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-# This patch fixes the library install path on 64-bit systems
-Patch0:         flann-1.6.7.64bit.patch
-# This patch adds a missing version and soversion to flann.
-Patch1:         flann-1.6.9.fixsoname.patch
 # Prevent the buildsysem from running setup.py, not submitted upstream
 Patch2:         flann-1.6.11.fixpyflann.patch 
-# Patch to fix detection of tbb.  Not submitted upstream
-Patch3:         flann-1.7.1-tbb.patch
 BuildRequires:  cmake
 BuildRequires:  zlib-devel
 
@@ -46,9 +41,14 @@ in high dimensional spaces. It contains a collection of algorithms found
 to work best for nearest neighbor search and a system for automatically 
 choosing the best algorithm and optimum parameters depending on the data sets.
 
+%description -l zh_CN.UTF-8
+快速的近似最邻近查找算法库，最邻近查找是指是一个在尺度空间中寻找最近点的优化问题。
+
 %package devel
 Summary: Development headers and libraries for flann
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 # flann/flann_mpi.hpp requires boost/mpi.hpp, which is a convenience header
 # inside of the boost-devel package
@@ -57,29 +57,42 @@ Requires: boost-devel
 %description devel
 Development headers and libraries for flann.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static libraries for flann
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 
 %description static
 Static libraries for flann.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package python
 Summary: Python bindings for flann
+Summary(zh_CN.UTF-8): %{name} 的 python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: numpy
 
 %description python
 Python bindings for flann
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %prep
 %setup -q -n %{name}-%{version}-src
-%patch0 -p1 -b .64bit
-%patch1 -p0 -b .fixsoname
 %patch2 -p0 -b .fixpyflann
-%patch3 -p0 -b .tbb
+
+# Fix library install directory
+sed -i 's/"lib"/"%{_lib}"/' cmake/flann_utils.cmake
 
 %build
 mkdir %{_target_platform}
@@ -138,6 +151,9 @@ rm -rf %{buildroot}
 %{python_sitearch}/flann-%{version}*.egg-info
 
 %changelog
+* Thu Apr 03 2014 Liu Di <liudidi@gmail.com> - 1.8.4-5
+- 更新到 1.8.4
+
 * Wed Oct 10 2012 Dan Horák <dan[at]danny.cz> - 1.7.1-5
 - TBB is available only on selected arches
 

@@ -1,10 +1,12 @@
 %define my_subversion b7
 Name:           html2ps
 Version:        1.0
-Release:        0.8.%{my_subversion}%{?dist}
+Release:        0.9.%{my_subversion}%{?dist}
 Summary:        HTML to PostScript converter
+Summary(zh_CN.UTF-8): HTML 到 PostScript 的转换器
 
 Group:          Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 License:        GPLv2+
 URL:            http://user.it.uu.se/~jan/%{name}.html
 Source0:        http://user.it.uu.se/~jan/%{name}-1.0%{my_subversion}.tar.gz
@@ -33,10 +35,14 @@ An HTML to PostScript converter written in Perl.
 * Configurable page headers/footers.
 * Automatic hyphenation and text justification can be selected. 
 
+%description -l zh_CN.UTF-8
+HTML 到 PostScript 的转换器，使用 Perl 语言编写。
 
 %package -n xhtml2ps
 Summary:     GUI front-end for html2ps
+Summary(zh_CN.UTF-8): %{name} 图形界面
 Group:       User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 Requires:    html2ps = %{version}-%{release}
 Requires:    xdg-utils
 
@@ -44,6 +50,8 @@ Requires:    xdg-utils
 X-html2ps is freely-available GUI front-end for html2ps, a HTML-to-PostScript
 converter.
 
+%description -n xhtml2ps -l zh_CN.UTF-8
+%{name} 的图形界面。
 
 %prep
 %setup -q -n %{name}-1.0%{my_subversion}
@@ -81,10 +89,10 @@ sed -e 's;/usr/bin;%{_bindir};' \
     debian/config/html2psrc > $RPM_BUILD_ROOT%{_sysconfdir}/html2psrc
 
 install -m0755 -p contrib/xhtml2ps/xhtml2ps $RPM_BUILD_ROOT%{_bindir}
-desktop-file-install --vendor="fedora"               \
+desktop-file-install --vendor="magic"               \
   --dir=${RPM_BUILD_ROOT}%{_datadir}/applications         \
   %{SOURCE1}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -105,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/*xhtml2ps.desktop
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.0-0.9.b7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0-0.8.b7
 - 为 Magic 3.0 重建
 

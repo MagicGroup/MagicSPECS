@@ -31,7 +31,7 @@
 ### Abstract ###
 
 Name: evolution-data-server
-Version:	3.11.92
+Version:	3.12.0
 Release: 1%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -393,6 +393,15 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %endif
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到
+
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.11.92-1
+- 更新到
+
 * Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 3.11.92-1
 - 更新到 3.11.92
 

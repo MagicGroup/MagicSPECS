@@ -1,14 +1,16 @@
 Summary: The GNU version of the awk text processing utility
+Summary(zh_CN.UTF-8): awk 文本处理工具的 GNU 版本
 Name: gawk
-Version: 4.0.0
-Release: 5%{?dist}
+Version:	4.1.0
+Release: 1%{?dist}
 # Most of source files are licensed under GPLv3+,
 # several files are GPL or LGPLv2.1+ licensed,
 # gettext.h is LGPL and random.c is BSD licensed
 License: GPLv3+ and GPL and LGPLv3+ and LGPL and BSD
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 URL: http://www.gnu.org/software/gawk/gawk.html
-Source0: http://ftp.gnu.org/gnu/gawk/gawk-%{version}.tar.bz2
+Source0: http://ftp.gnu.org/gnu/gawk/gawk-%{version}.tar.xz
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 Conflicts: filesystem < 3
@@ -23,6 +25,9 @@ quick and easy text pattern matching and reformatting jobs.
 
 Install the gawk package if you need a text processing utility. Gawk is
 considered to be a standard Linux tool for processing text.
+
+%description -l zh_CN.UTF-8
+awk 文本处理工具的 GNU 版本。
 
 %prep
 %setup -q
@@ -43,7 +48,7 @@ ln -sf gawk.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/awk.1.gz
 ln -sf gawk $RPM_BUILD_ROOT%{_bindir}/awk
 # remove %{version}* , when we are building a snapshot...
 rm -f $RPM_BUILD_ROOT/%{_bindir}/{,p}gawk-%{version}* $RPM_BUILD_ROOT%{_infodir}/dir
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %clean
@@ -61,7 +66,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc README COPYING FUTURES LIMITATIONS NEWS
+%doc README COPYING NEWS
 %doc README_d/README.multibyte README_d/README.tests POSIX.STD
 %{_bindir}/*awk
 %{_mandir}/man1/*
@@ -69,8 +74,14 @@ fi
 %{_infodir}/gawkinet.info*
 %{_libexecdir}/awk
 %{_datadir}/awk
+%{_mandir}/man3/*
+%{_includedir}/gawkapi.h
+%{_libdir}/gawk
 
 %changelog
+* Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 4.1.0-1
+- 更新到 4.1.0
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 4.0.0-5
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Summary: A utility for displaying and/or setting hard disk parameters
+Summary(zh_CN.UTF-8): 显示或设置硬盘参数的工具
 Name: hdparm
 Version: 9.39
 Release: 2%{?dist}
 License: BSD
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL:    http://sourceforge.net/projects/hdparm/
 Source: http://download.sourceforge.net/hdparm/hdparm-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -13,6 +15,9 @@ ExcludeArch: s390 s390x
 Hdparm is a useful system utility for setting (E)IDE hard drive
 parameters.  For example, hdparm can be used to tweak hard drive
 performance and to spin down hard drives for power conservation.
+
+%description -l zh_CN.UTF-8
+显示或设置硬盘参数的工具，支持 (E)IDE 硬盘。
 
 %prep
 %setup -q
@@ -39,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/hdparm.8*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 9.39-2
+- 更新到 9.43
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 9.39-2
 - 为 Magic 3.0 重建
 

@@ -6,8 +6,10 @@ Name:    fontpackages
 Version: 1.44
 Release: 5%{?dist}
 Summary: Common directory and macro definitions used by font packages
+Summary(zh_CN.UTF-8): 字体包使用的通用目录和宏定义
 
 Group:     Development/System
+Group(zh_CN.UTF-8): 开发/系统
 # Mostly means the scriptlets inserted via this package do not change the
 # license of the packages they're inserted in
 License:   LGPLv3+
@@ -21,19 +23,24 @@ BuildArch: noarch
 This package contains the basic directory layout, spec templates, rpm macros
 and other materials used to create font packages.
 
+%description -l zh_CN.UTF-8
+这个包包含了创建字体包使用的基本目录结构，spec 模板，rpm 宏和其它资料。
 
 %package filesystem
 Summary: Directories used by font packages
+Summary(zh_CN.UTF-8): 字体包使用的目录
 License: Public Domain
 
 %description filesystem
 This package contains the basic directory layout used by font packages,
 including the correct permissions for the directories.
 
+%description filesystem -l zh_CN.UTF-8
+字体包使用的基本目录结构。
 
 %package devel
 Summary: Templates and macros used to create font packages
-
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: rpmdevtools, %{name}-filesystem = %{version}-%{release}
 Requires: fontconfig
 
@@ -41,9 +48,12 @@ Requires: fontconfig
 This package contains spec templates, rpm macros and other materials used to
 create font packages.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package tools
 Summary: Tools used to check fonts and font packages
+Summary(zh_CN.UTF-8): 检查字体和字体包的工具
 
 Requires: fontconfig, fontforge
 Requires: curl, make, mutt
@@ -52,6 +62,8 @@ Requires: rpmlint, yum-utils
 %description tools
 This package contains tools used to check fonts and font packages
 
+%description tools -l zh_CN.UTF-8
+检查字体和字体包的工具。
 
 %prep
 %setup -q
@@ -101,6 +113,7 @@ cat <<EOF > %{name}-%{version}.files
 %dir ${_fontconfig_confdir}
 %dir ${_fontconfig_templatedir}
 EOF
+magic_rpm_clean.sh
 
 %clean
 rm -fr %{buildroot}

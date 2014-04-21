@@ -1,7 +1,5 @@
-%define majorver 2.11
-
 Name:           at-spi2-core
-Version: 2.11.90
+Version: 2.12.0
 Release:        1%{?dist}
 Summary:        Protocol definitions and daemon for D-Bus at-spi
 Summary(zh_CN.UTF-8): D-Bus at-spi 的协议定义和服务
@@ -10,6 +8,7 @@ Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.linuxfoundation.org/en/AT-SPI_on_D-Bus
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://download.gnome.org/sources/at-spi2-core/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  dbus-devel
@@ -98,6 +97,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libatspi.la
 %{_libdir}/pkgconfig/atspi-2.pc
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 2.12.0-1
+- 更新到 2.12.0
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 2.11.90-1
 - 更新到 2.11.90
 

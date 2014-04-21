@@ -6,7 +6,8 @@ Summary:        GIO/GVFS management application
 Group:          User Interface/Desktops
 License:        GPLv2
 URL:            http://goodies.xfce.org/projects/applications/gigolo/
-Source0:        http://archive.xfce.org/src/apps/%{name}/0.4/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://archive.xfce.org/src/apps/%{name}/%{majorver}/%{name}-%{version}.tar.bz2
 # http://git.xfce.org/apps/gigolo/commit/?id=95a37d4c
 Patch0:         gigolo-0.4.1-update-de.po.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=748228
@@ -32,8 +33,8 @@ bookmarks of such.
 
 %prep
 %setup -q
-%patch0 -p1 -b .updat
-%patch1 -p1 -b .fix
+#%patch0 -p1 -b .updat
+#%patch1 -p1 -b .fix
 
 %build
 export CFLAGS="%{optflags}"
@@ -74,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gigolo.1.gz
 
 %changelog
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 0.4.1-4
+- 更新到
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.4.1-4
 - 为 Magic 3.0 重建
 

@@ -7,7 +7,7 @@
 Summary: A free and portable font rendering engine
 Summary(zh_CN.UTF-8): 自由的可移植的 TrueType 字体绘制引擎。
 Name: freetype
-Version: 2.4.11
+Version:	2.5.3
 Release: 1%{?dist}
 License: FTL or GPLv2+
 Group: System Environment/Libraries
@@ -16,16 +16,23 @@ URL: http://www.freetype.org
 Source:  http://download.savannah.gnu.org/releases/freetype/freetype-%{version}.tar.bz2
 Source1: http://download.savannah.gnu.org/releases/freetype/freetype-doc-%{version}.tar.bz2
 Source2: http://download.savannah.gnu.org/releases/freetype/ft2demos-%{version}.tar.bz2
+Source3: ftconfig.h
 
-Patch21:  freetype-2.3.0-enable-spr.patch
+Patch21:  freetype-2.5.3-enable-spr.patch
 
 # Enable otvalid and gxvalid modules
 Patch46:  freetype-2.2.1-enable-valid.patch
 # Enable additional demos
-Patch47:  freetype-2.3.11-more-demos.patch
+Patch47:  freetype-2.5.2-more-demos.patch
 
 # Fix multilib conflicts
 Patch88:  freetype-multilib.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=961855
+Patch90:  freetype-2.4.12-pkgconfig.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1079302
+Patch91:  freetype-2.5.3-freetype-config-libs.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 
@@ -129,9 +136,17 @@ popd
 
 %patch88 -p1 -b .multilib
 
+%patch90 -p1 -b .pkgconfig
+
+%patch91 -p1 -b .freetype-config-libs
+
 %build
 
-%configure --enable-static
+%configure --enable-static \
+           --with-zlib=yes \
+           --with-bzip2=yes \
+           --with-png=yes \
+           --with-harfbuzz=no
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' builds/unix/libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' builds/unix/libtool
 make %{?_smp_mflags}
@@ -143,11 +158,15 @@ make TOP_DIR=".."
 popd
 %endif
 
-# Convert FTL.txt to UTF-8
+# Convert FTL.txt and example3.cpp to UTF-8
 pushd docs
 iconv -f latin1 -t utf-8 < FTL.TXT > FTL.TXT.tmp && \
 touch -r FTL.TXT FTL.TXT.tmp && \
 mv FTL.TXT.tmp FTL.TXT
+
+iconv -f iso-8859-1 -t utf-8 < "tutorial/example3.cpp" > "tutorial/example3.cpp.utf8"
+touch -r tutorial/example3.cpp tutorial/example3.cpp.utf8 && \
+mv tutorial/example3.cpp.utf8 tutorial/example3.cpp
 popd
 
 %install
@@ -170,32 +189,17 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 # fix multilib issues
-%ifarch x86_64 s390x ia64 ppc64 alpha sparc64 mips64el
+%ifarch x86_64 s390x ia64 ppc64 ppc64le alpha sparc64 aarch64
 %define wordsize 64
 %else
 %define wordsize 32
 %endif
 
-mv $RPM_BUILD_ROOT%{_includedir}/freetype2/freetype/config/ftconfig.h \
-   $RPM_BUILD_ROOT%{_includedir}/freetype2/freetype/config/ftconfig-%{wordsize}.h
-cat >$RPM_BUILD_ROOT%{_includedir}/freetype2/freetype/config/ftconfig.h <<EOF
-#ifndef __FTCONFIG_H__MULTILIB
-#define __FTCONFIG_H__MULTILIB
+mv $RPM_BUILD_ROOT%{_includedir}/freetype2/config/ftconfig.h \
+   $RPM_BUILD_ROOT%{_includedir}/freetype2/config/ftconfig-%{wordsize}.h
+install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{_includedir}/freetype2/config/ftconfig.h
 
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 32
-# include "ftconfig-32.h"
-#elif __WORDSIZE == 64
-# include "ftconfig-64.h"
-#else
-# error "unexpected value for __WORDSIZE macro"
-#endif
-
-#endif 
-EOF
-
-# Don't package static a or .la files
+# Don't package static .la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %clean
@@ -247,10 +251,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_includedir}/freetype2
 %{_datadir}/aclocal/freetype2.m4
 %{_includedir}/freetype2/*
-%{_includedir}/*.h
+#%{_includedir}/*.h
 %{_libdir}/libfreetype.so
 %{_bindir}/freetype-config
 %{_libdir}/pkgconfig/freetype2.pc
+%{_mandir}/man1/freetype-config.1*
 %doc docs/design
 %doc docs/glyphs
 %doc docs/reference
@@ -261,6 +266,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libfreetype.a
 
 %changelog
+* Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 2.5.3-1
+- 更新到 2.5.3
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.4.8-3
 - 为 Magic 3.0 重建
 

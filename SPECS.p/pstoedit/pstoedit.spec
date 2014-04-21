@@ -14,7 +14,7 @@ BuildRequires:  libpng-devel
 BuildRequires:  dos2unix
 BuildRequires:  ghostscript
 BuildRequires:  plotutils-devel
-%ifnarch ia64
+%ifnarch ia64 mips64el
 BuildRequires:  libEMF-devel
 %endif
 

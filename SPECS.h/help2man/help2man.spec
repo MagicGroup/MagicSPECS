@@ -4,12 +4,14 @@
 
 Name:           help2man
 Summary:        Create simple man pages from --help output
-Version:        1.40.10
+Summary(zh_CN.UTF-8): 从 --help 的输出中生成简单的手册页 (man)
+Version: 1.45.1
 Release:        2%{?dist}
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv3+
 URL:            http://www.gnu.org/software/help2man
-Source:         ftp://ftp.gnu.org/gnu/help2man/help2man-%{version}.tar.gz
+Source:         ftp://ftp.gnu.org/gnu/help2man/help2man-%{version}.tar.xz
 
 %bcond_with nls
 
@@ -27,6 +29,9 @@ help2man is a script to create simple man pages from the --help and
 Since most GNU documentation is now in info format, this provides a
 way to generate a placeholder man page pointing to that resource while
 still providing some useful information.
+
+%description -l zh_CN.UTF-8
+从 --help 的输出中生成简单的手册页 (man)。
 
 %prep
 %setup -q -n help2man-%{version}
@@ -62,6 +67,9 @@ fi
 %endif
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.45.1-2
+- 更新到 1.45.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.40.10-2
 - 为 Magic 3.0 重建
 

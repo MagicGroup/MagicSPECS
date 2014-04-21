@@ -1,9 +1,11 @@
 Summary:	A library for integrity verification of FIPS validated modules
+Summary(zh_CN.UTF-8): FIPS 校验模块的集成验证
 Name:		fipscheck
 Version:	1.4.1
 Release:	2%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # This is a Red Hat maintained package which is specific to
 # our distribution.
 URL:		http://fedorahosted.org/fipscheck/
@@ -20,23 +22,36 @@ FIPSCheck is a library for integrity verification of FIPS validated
 modules. The package also provides helper binaries for creation and
 verification of the HMAC-SHA256 checksum files.
 
+%description -l zh_CN.UTF-8
+FIPS 校验模块的集成验证.
+
 %package lib
 Summary:	Library files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 Requires:	%{_bindir}/fipscheck
 
 %description lib
 This package contains the FIPSCheck library.
 
+%description lib -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Requires:	%{name}-lib = %{version}-%{release}
 
 %description devel
 This package contains development files for %{name}.
+
+%description devel -l zh_CN.UTF-8 
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -68,6 +83,7 @@ mkdir -p $RPM_BUILD_ROOT%{_libdir}/fipscheck
 mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/prelink.conf.d
 install -m644 %{SOURCE1} \
 	$RPM_BUILD_ROOT/%{_sysconfdir}/prelink.conf.d/fipscheck.conf
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

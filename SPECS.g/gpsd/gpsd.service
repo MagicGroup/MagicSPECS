@@ -1,13 +1,13 @@
 [Unit]
-Description=GPS Service Daemon
-After=syslog.target network.target chronyd.service
+Description=GPS (Global Positioning System) Daemon
+Requires=gpsd.socket
+# Needed with chrony SOCK refclock
+After=chronyd.service
 
 [Service]
-Type=simple
-PIDFile=/var/run/gpsd.pid
 EnvironmentFile=-/etc/sysconfig/gpsd
-ExecStart=/usr/sbin/gpsd -P /var/run/gpsd.pid -F /var/run/gpsd.sock -N $OPTIONS $DEVICE
-StandardError=syslog
+ExecStart=/usr/sbin/gpsd -N $OPTIONS
 
 [Install]
 WantedBy=multi-user.target
+Also=gpsd.socket

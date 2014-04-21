@@ -8,14 +8,17 @@
 %define polkit_version 0.92
 
 Summary: Process and resource monitor
+Summary(zh_CN.UTF-8): 进程和资源监视器
 Name: gnome-system-monitor
-Version: 3.8.0
+Version:	3.12.0
 Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://www.gnome.org/
 #VCS: git:git://git.gnome.org/gnome-system-monitor
-Source: http://download.gnome.org/sources/gnome-system-monitor/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gnome-system-monitor/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: libgtop2-devel >= %{libgtop2_version}
 BuildRequires: libwnck3-devel >= %{libwnck_version}
@@ -37,6 +40,10 @@ gnome-system-monitor allows to graphically view and manipulate the running
 processes on your system. It also provides an overview of available resources
 such as CPU and memory.
 
+%description -l zh_CN.UTF-8
+这个包允许你以图形界面查看和处理你系统上运行进程，也提供了一些资源，比如 CPU
+和内存的查看。
+
 %prep
 %setup -q
 
@@ -53,7 +60,7 @@ desktop-file-install --vendor gnome --delete-original       \
   $RPM_BUILD_ROOT%{_datadir}/applications/*
 
 rm -rf $RPM_BUILD_ROOT/var/scrollkeeper
-
+magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
 %postun
@@ -68,14 +75,18 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %doc AUTHORS NEWS COPYING README
 %{_bindir}/gnome-system-monitor
 %{_datadir}/applications/*
-%{_datadir}/pixmaps/gnome-system-monitor/
+#%{_datadir}/pixmaps/gnome-system-monitor/
 %{_datadir}/glib-2.0/schemas/org.gnome.gnome-system-monitor.enums.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.gnome-system-monitor.gschema.xml
 %{_datadir}/polkit-1/actions/org.gnome.gnome-system-monitor.policy
-%{_datadir}/gnome-system-monitor/
+#%{_datadir}/gnome-system-monitor/
 %{_libexecdir}/gnome-system-monitor/gsm-*
+%{_datadir}/appdata/gnome-system-monitor.appdata.xml
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
 - Update to 3.8.0
 

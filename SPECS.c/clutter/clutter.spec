@@ -5,7 +5,7 @@
 %endif
 
 Name:          clutter
-Version:	1.17.6
+Version:	1.18.0
 Release:       1%{?dist}
 Summary:       Open Source software library for creating rich graphical user interfaces
 Summary(zh_CN.UTF-8): 建立图形用户界面的开源软件库
@@ -14,7 +14,8 @@ Group:         Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2+
 URL:           http://www.clutter-project.org/
-Source0:       http://download.gnome.org/sources/clutter/1.17/clutter-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://download.gnome.org/sources/clutter/%{majorver}/clutter-%{version}.tar.xz
 Patch0: clutter-1.16.0-fix-evdev-touchpad.patch
 
 BuildRequires: glib2-devel mesa-libGL-devel pkgconfig pango-devel
@@ -154,6 +155,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/cally
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 1.18.0-1
+- 更新到 1.18.0
+
 * Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.17.6-1
 - 更新到 1.17.6
 

@@ -1,9 +1,11 @@
 Summary: A X front-end for the Ghostscript PostScript(TM) interpreter
+Summary(zh_CN.UTF-8): Ghostscripts PostScript(TM) 解释器的 X 前端
 Name: gv
-Version: 3.7.3.90
+Version: 3.7.4
 Release: 3%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 Requires: ghostscript
 URL: http://www.gnu.org/software/gv/
 #Source0: ftp://ftp.gnu.org/gnu/gv/gv-%{version}.tar.gz
@@ -28,6 +30,8 @@ Requires(postun): /usr/bin/update-desktop-database
 GNU gv is a user interface for the Ghostscript PostScript(TM) interpreter.
 Gv can display PostScript and PDF documents on an X Window System.
 
+%description -l zh_CN.UTF-8
+Ghostscripts PostScript(TM) 解释器的 X 前端，它在在 X 窗口系统下显示 PS 和 PDF 文档。
 
 %prep
 %setup -q
@@ -111,6 +115,9 @@ fi
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.7.4-3
+- 更新到 3.7.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.7.3.90-3
 - 为 Magic 3.0 重建
 

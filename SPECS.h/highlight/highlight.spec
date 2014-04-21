@@ -1,15 +1,16 @@
 Name:           highlight
 Summary:        Universal source code to formatted text converter
+Summary(zh_CN.UTF-8): 通用源代码格式文本转换器
 
-Version:        3.13
+Version:	3.18
 Release:        1%{?dist}
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv3
 
 URL:            http://www.andre-simon.de/
 Source0:        http://www.andre-simon.de/zip/%{name}-%{version}.tar.bz2
-Patch1:         highlight-3.13-lua.patch
 
 BuildRequires:  qt4-devel >= 4.4
 BuildRequires:  lua-devel, boost-devel
@@ -29,16 +30,23 @@ Language descriptions are configurable and support regular expressions.
 The utility offers indentation and reformatting capabilities.
 It is easily possible to create new language definitions and colour themes.
 
+%description -l zh_CN.UTF-8
+把源代码转成带有语法高亮的格式化文本，支持 HTML, XHTML, RTF, LaTeX, Tex,
+XSL-FO, XML 和 ANSI序列。
+
 %package gui
 Summary:        GUI for the hihghlight source code formatter
+Summary(zh_CN.UTF-8): %{name} 的图形界面
 Requires:       %{name} = %{version}-%{release}
 
 %description gui
 A Qt-based GUI for the highlight source code formatter source.
 
+%description gui -l zh_CN.UTF-8 
+基于 Qt 的 %{name} 的图形界面。
+
 %prep
 %setup -q
-%patch1 -p1 -b .mk
 
 %build
 make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS" LDFLAGS=
@@ -78,6 +86,9 @@ desktop-file-install \
 %{_datadir}/pixmaps/highlight.xpm
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.18-1
+- 更新到 3.18
+
 * Tue Feb 19 2013 Jochen Schmitt <Jochen herr-schmitt de> - 3.13-1
 - New upstream release
 - Clean up sPEC file

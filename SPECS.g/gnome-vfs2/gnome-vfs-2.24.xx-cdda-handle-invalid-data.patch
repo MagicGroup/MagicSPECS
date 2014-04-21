@@ -1,0 +1,84 @@
+From 706b54502b1d3ccb179a4d8b91c585e152bbae81 Mon Sep 17 00:00:00 2001
+From: Alexander Larsson <alexl@redhat.com>
+Date: Mon, 25 May 2009 10:33:59 +0200
+Subject: [PATCH 3/6] cdda: Handle invalid data (#582303)
+
+Fix for CAN-2005-0706, handle negative values that may appear when
+there is invalid input. Patch from openSUSE.
+
+Note: cdda is disabled by default, so this doesn't affect all users.
+---
+ modules/cdda-cddb.c |   36 +++++++++++++++++++++---------------
+ 1 files changed, 21 insertions(+), 15 deletions(-)
+
+diff --git a/modules/cdda-cddb.c b/modules/cdda-cddb.c
+index ce83b52..0ec4e25 100644
+--- a/modules/cdda-cddb.c
++++ b/modules/cdda-cddb.c
+@@ -537,26 +537,30 @@ static void CDDBProcessLine(char *inbuffer,DiscData *data,
+   else if(!g_ascii_strncasecmp(inbuffer,"TTITLE",6)) {
+     track=atoi(strtok(inbuffer+6,"="));
+     
+-    if(track<numtracks)
++    if(track >= 0 && track<numtracks)
++    {
+       len=strlen(data->data_track[track].track_name);
+ 
+-    strncpy(data->data_track[track].track_name+len,
++      strncpy(data->data_track[track].track_name+len,
+ 	    ChopWhite(strtok(NULL,"")),256-len);
++    }
+   }
+   else if(!g_ascii_strncasecmp(inbuffer,"TARTIST",7)) {
+     data->data_multi_artist=TRUE;
+ 
+     track=atoi(strtok(inbuffer+7,"="));
+     
+-    if(track<numtracks)
++    if(track >= 0 && track<numtracks)
++    {
+       len=strlen(data->data_track[track].track_artist);
+ 
+-    st = strtok(NULL, "");
+-    if(st == NULL)
+-        return;    
+-    
+-    strncpy(data->data_track[track].track_artist+len,
++      st = strtok(NULL, "");
++      if(st == NULL)
++	  return;    
++      
++      strncpy(data->data_track[track].track_artist+len,
+ 	    ChopWhite(st),256-len);
++    }
+   }
+   else if(!g_ascii_strncasecmp(inbuffer,"EXTD",4)) {
+     len=strlen(data->data_extended);
+@@ -566,15 +570,17 @@ static void CDDBProcessLine(char *inbuffer,DiscData *data,
+   else if(!g_ascii_strncasecmp(inbuffer,"EXTT",4)) {
+     track=atoi(strtok(inbuffer+4,"="));
+     
+-    if(track<numtracks)
++    if(track >= 0 && track<numtracks)
++    {
+       len=strlen(data->data_track[track].track_extended);
+ 
+-    st = strtok(NULL, "");
+-    if(st == NULL)
+-        return;
+-    
+-    strncpy(data->data_track[track].track_extended+len,
+-	    ChopWhite(st),4096-len);
++      st = strtok(NULL, "");
++      if(st == NULL)
++	return;
++
++      strncpy(data->data_track[track].track_extended+len,
++	  ChopWhite(st),4096-len);
++    }
+   }
+   else if(!g_ascii_strncasecmp(inbuffer,"PLAYORDER",5)) {
+     len=strlen(data->data_playlist);
+-- 
+1.6.3.3
+

@@ -7,10 +7,13 @@ Name: gtkhtml3
 Version: 4.5.91
 Release: 2%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary: GtkHTML library
+Summary(zh_CN.UTF-8): GtkHTML 库
 License: LGPLv2+ and GPLv2
 URL: http://projects.gnome.org/evolution/
-Source: http://download.gnome.org/sources/gtkhtml/4.5/gtkhtml-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gtkhtml/%{majorver}/gtkhtml-%{version}.tar.xz
 
 ### Build Dependencies ###
 
@@ -30,18 +33,26 @@ GtkHTML is a lightweight HTML rendering/printing/editing engine.
 It was originally based on KHTMLW, but is now being developed
 independently of it.
 
+%description -l zh_CN.UTF-8
+这是一个轻量级的 HTML 渲染、打印、编辑引擎。
+它原来基于 KTHMLW，不过现在已经独立开发了。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n gtkhtml-%{version}
-#%patch01 -p1 -b .no-g-thread-init
 
 %build
 autoreconf -fi
@@ -75,6 +86,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 4.5.91-2
+- 更新到 4.8.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.5.91-2
 - 为 Magic 3.0 重建
 

@@ -24,7 +24,7 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 %endif
 
 BuildRequires:  cmake pcre-devel
-BuildRequires:  sqlite-devel
+BuildRequires:  sqlite-devel SDL_ttf-devel
 BuildRequires:  zlib-devel
 
 %description

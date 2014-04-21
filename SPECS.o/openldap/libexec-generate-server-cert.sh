@@ -90,7 +90,7 @@ fi
 # generate server certificate (self signed)
 
 
-CERT_RANDOM=$(mktemp)
+CERT_RANDOM=$(mktemp --tmpdir=/var/run/openldap)
 dd if=$RANDOM_SOURCE bs=$CERT_RANDOM_BYTES count=1 of=$CERT_RANDOM &>/dev/null
 
 certutil -d "$CERTDB_DIR" -f "$PASSWORD_FILE" -z "$CERT_RANDOM" \

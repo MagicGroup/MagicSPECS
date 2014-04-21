@@ -7,7 +7,7 @@
 
 Name:           %{gstreamer}
 Version:        0.10.36
-Release:        3%{?dist}
+Release:        7%{?dist}
 Summary:        GStreamer streaming media framework runtime
 
 Group:          Applications/Multimedia
@@ -40,6 +40,8 @@ Patch1:         gstreamer-inspect-rpm-format.patch
 Source1:        gstreamer.prov
 Source2:        gstreamer.attr
 
+Patch2:		gstreamer-0.10.36-bison3.patch
+
 ### documentation requirements
 BuildRequires:  python2
 BuildRequires:  openjade
@@ -53,7 +55,6 @@ BuildRequires:  xfig
 BuildRequires:  netpbm-progs
 BuildRequires:  tetex-dvips
 BuildRequires:  ghostscript
-BuildRequires:  PyXML
 
 %description
 GStreamer is a streaming media framework, based on graphs of filters which
@@ -118,6 +119,8 @@ with different major/minor versions of GStreamer.
 %setup -q
 
 %patch1 -p1 -b .rpm-provides
+
+%patch2 -p1
 
 %build
 %configure \
@@ -241,6 +244,15 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/gstreamer-plugins-%{majorminor}
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.36-7
+- 为 Magic 3.0 重建
+
+* Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 0.10.36-6
+- 为 Magic 3.0 重建
+
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.10.36-5
+- 为 Magic 3.0 重建
+
 * Tue Dec 25 2012 Liu Di <liudidi@gmail.com> - 0.10.36-3
 - 为 Magic 3.0 重建
 

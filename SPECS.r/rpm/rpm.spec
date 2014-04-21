@@ -77,6 +77,9 @@ Patch400: rpm-4.10.90-rpmlib-filesystem-check.patch
 # 修改 find-lang.sh 脚本，允许无翻译文件
 Patch1000: rpm-4.11.2-allowemptylang.patch
 
+# Mips64el
+Patch2000: rpm-4.11.2-mips64el.patch
+
 # Partially GPL/LGPL dual-licensed and some bits with BSD
 # SourceLicense: (GPLv2+ and LGPLv2+ with exceptions) and BSD 
 License: GPLv2+
@@ -276,6 +279,7 @@ packages on a system.
 %endif
 
 %patch1000 -p1
+%patch2000 -p1
 
 %if %{with int_bdb}
 ln -s db-%{bdbver} db

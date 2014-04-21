@@ -1,9 +1,7 @@
-Index: ./gdb/testsuite/gdb.threads/threadcrash.c
+Index: gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.c
 ===================================================================
-RCS file: gdb/testsuite/gdb.threads/threadcrash.c
-diff -N gdb/testsuite/gdb.threads/threadcrash.c
---- /dev/null	1 Jan 1970 00:00:00 -0000
-+++ ./gdb/testsuite/gdb.threads/threadcrash.c	31 Oct 2006 17:54:38 -0000
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.c	2013-05-21 13:35:45.592059786 +0200
 @@ -0,0 +1,301 @@
 +/*
 + * The point of this program is to crash in a multi-threaded app.
@@ -306,12 +304,10 @@ diff -N gdb/testsuite/gdb.threads/threadcrash.c
 +   
 +   return 0;
 +}
-Index: ./gdb/testsuite/gdb.threads/threadcrash.exp
+Index: gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.exp
 ===================================================================
-RCS file: gdb/testsuite/gdb.threads/threadcrash.exp
-diff -N gdb/testsuite/gdb.threads/threadcrash.exp
---- /dev/null	1 Jan 1970 00:00:00 -0000
-+++ ./gdb/testsuite/gdb.threads/threadcrash.exp	31 Oct 2006 17:54:38 -0000
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.exp	2013-05-21 13:36:01.451056746 +0200
 @@ -0,0 +1,37 @@
 +# threadcrash.exp - The point of this program is to crash in a multi-threaded app.
 +
@@ -337,7 +333,7 @@ diff -N gdb/testsuite/gdb.threads/threadcrash.exp
 +}
 +
 +# ${shellfile} argument must not contain any directories.
-+set fd [open "|bash ${shellfile} ${binfile} $GDB -nw $GDBFLAGS" r]
++set fd [open "|bash ${shellfile} ${binfile} $GDB $INTERNAL_GDBFLAGS $GDBFLAGS [host_info gdb_opts]" r]
 +while { [gets $fd line] >= 0 } {
 +    if [regexp " PASS: (.*)$" $line trash message] {
 +	pass $message
@@ -350,12 +346,10 @@ diff -N gdb/testsuite/gdb.threads/threadcrash.exp
 +}
 +
 +return 0
-Index: ./gdb/testsuite/gdb.threads/threadcrash.sh
+Index: gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.sh
 ===================================================================
-RCS file: gdb/testsuite/gdb.threads/threadcrash.sh
-diff -N gdb/testsuite/gdb.threads/threadcrash.sh
---- /dev/null	1 Jan 1970 00:00:00 -0000
-+++ ./gdb/testsuite/gdb.threads/threadcrash.sh	31 Oct 2006 17:54:38 -0000
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.sh	2013-05-21 13:35:45.593059786 +0200
 @@ -0,0 +1,324 @@
 +#! /bin/bash
 +
@@ -681,12 +675,10 @@ diff -N gdb/testsuite/gdb.threads/threadcrash.sh
 +rm -rf $WORKDIR
 +
 +exit $FAILURES
-Index: ./gdb/testsuite/gdb.threads/threadcrash.sh-orig
+Index: gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.sh-orig
 ===================================================================
-RCS file: gdb/testsuite/gdb.threads/threadcrash.sh-orig
-diff -N gdb/testsuite/gdb.threads/threadcrash.sh-orig
---- /dev/null	1 Jan 1970 00:00:00 -0000
-+++ ./gdb/testsuite/gdb.threads/threadcrash.sh-orig	31 Oct 2006 17:54:38 -0000
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gdb-7.6/gdb/testsuite/gdb.threads/threadcrash.sh-orig	2013-05-21 13:35:45.593059786 +0200
 @@ -0,0 +1,248 @@
 +#! /bin/bash
 +

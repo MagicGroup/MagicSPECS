@@ -6,14 +6,17 @@
 %define desktop_file_utils_version 0.2.90
 
 Summary: Terminal emulator for GNOME
+Summary(zh_CN.UTF-8): GNOME 的终端模拟器
 Name: gnome-terminal
-Version: 3.8.1
+Version:	3.12.0
 Release: 1%{?dist}
 License: GPLv3+ and GFDL
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.gnome.org/
 #VCS: git:git://git.gnome.org/gnome-terminal
-Source0: http://download.gnome.org/sources/gnome-terminal/3.8/gnome-terminal-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-terminal/%{majorver}/gnome-terminal-%{version}.tar.xz
 
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: GConf2-devel
@@ -35,6 +38,9 @@ Requires: gsettings-desktop-schemas
 gnome-terminal is a terminal emulator for GNOME. It features the ability to use
 multiple terminals in a single window (tabs) and profiles support.
 
+%description -l zh_CN.UTF-8
+GNOME 下的终端模拟器，支持多标签窗口和配置文件。
+
 %prep
 %setup -q
 
@@ -52,6 +58,8 @@ desktop-file-install --vendor gnome --delete-original	\
   --add-category=System					\
   $RPM_BUILD_ROOT%{_datadir}/applications/gnome-terminal.desktop
 
+rm -f %{buildroot}%{_libdir}/nautilus/extensions-3.0/libterminal-nautilus.{a,la}
+magic_rpm_clean.sh
 %find_lang %{gettext_package} --with-gnome
 
 %postun
@@ -72,7 +80,14 @@ fi
 %{_datadir}/dbus-1/services/org.gnome.Terminal.service
 %{_datadir}/glib-2.0/schemas/org.gnome.Terminal.gschema.xml
 
+%{_libdir}/nautilus/extensions-3.0/libterminal-nautilus.so
+%{_datadir}/appdata/gnome-terminal.appdata.xml
+%{_datadir}/gnome-shell/search-providers/gnome-terminal-search-provider.ini
+
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

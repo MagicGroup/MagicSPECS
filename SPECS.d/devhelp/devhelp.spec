@@ -5,7 +5,7 @@
 ### Abstract ###
 
 Name: devhelp
-Version:	3.11.92
+Version:	3.12.0
 Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
@@ -125,6 +125,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 1:3.12.0-1
+- 更新到 3.12.0
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 1:3.11.92-1
 - 更新到 3.11.92
 

@@ -36,7 +36,8 @@ Release: 4%{?dist}
 Epoch: 1
 License: GPLv2+ and GPLv3 and GFDL
 #VCS: git:git://git.gnome.org/gnome-games
-Source: http://download.gnome.org/sources/gnome-games/3.6/gnome-games-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gnome-games/%{majorver}/gnome-games-%{version}.tar.xz
 Patch0: glchess-respect-engine-args.patch
 
 Obsoletes: gnome-games-devel < %{epoch}:%{version}-%{release}

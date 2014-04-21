@@ -23,10 +23,13 @@ Version: 2.28.1
 Release: 8%{?dist}
 License: LGPLv2+
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Summary: PyGNOME Python extension module
+Summary(zh_CN.UTF-8): GNOME 的 Python 扩展模块
 URL: http://download.gnome.org/sources/gnome-python/
 #VCS: git:git://git.gnome.org/gnome-python
-Source: http://download.gnome.org/sources/gnome-python/2.28/gnome-python-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gnome-python/%{majorver}/gnome-python-%{version}.tar.bz2
 
 ### Dependencies ###
 

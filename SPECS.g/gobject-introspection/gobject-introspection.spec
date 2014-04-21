@@ -1,13 +1,16 @@
 Name:           gobject-introspection
-Version:        1.39.0
+Version:	1.40.0
 Release:        1%{?dist}
 Summary:        Introspection system for GObject-based libraries
+Summary(zh_CN.UTF-8): 基于 GObject 库的自检系统
 
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPLv2+, LGPLv2+, MIT
 URL:            http://live.gnome.org/GObjectIntrospection
 #VCS:           git:git://git.gnome.org/gobject-introspection
-Source0:        http://download.gnome.org/sources/gobject-introspection/1.39/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/gobject-introspection/%{majorver}/%{name}-%{version}.tar.xz
 
 Obsoletes:      gir-repository
 
@@ -38,9 +41,15 @@ generate introspection "typelib" files.  It also provides an API to examine
 typelib files, useful for creating language bindings among other
 things.
 
+%description -l zh_CN.UTF-8
+这个包可以扫描 C 头文件和源代码生成自检 "typelib" 文件。它也提供了
+检查 typelib 文件的 API。
+
 %package devel
 Summary: Libraries and headers for gobject-introspection
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name = %{version}-%{release}
 # Not always, but whatever, it's a tiny dep to pull in
 Requires: libtool
@@ -50,6 +59,9 @@ Obsoletes: gir-repository-devel
 
 %description devel
 Libraries and headers for gobject-introspection
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -94,6 +106,12 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/gi/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.40.0-1
+- 更新到 1.40.0
+
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1.39.90-1
+- 更新到 1.39.90
+
 * Mon Nov 25 2013 Richard Hughes <rhughes@redhat.com> - 1.39.0-1
 - Update to 1.39.0
 

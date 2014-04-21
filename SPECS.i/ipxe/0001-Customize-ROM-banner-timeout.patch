@@ -1,0 +1,31 @@
+From e6f314fa42148c9915b96b7541994c450ae9487c Mon Sep 17 00:00:00 2001
+From: Alex Williamson <alex.williamson@redhat.com>
+Date: Mon, 3 Mar 2014 10:34:14 -0700
+Subject: [PATCH] Customize ROM banner timeout
+
+Users want some opportunity to interact with the iPXE shell, but
+tools like libguestfs want to boot as quickly as possible.  Create
+a compromise by disabling the interactive banner prompt during ROM
+initialization, but retaining it when we actually attempt to boot
+from the device.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=842932
+
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ src/config/general.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/config/general.h b/src/config/general.h
+index 589798f..07df6a1 100644
+--- a/src/config/general.h
++++ b/src/config/general.h
+@@ -43,7 +43,7 @@ FILE_LICENCE ( GPL2_OR_LATER );
+  * to the user.
+  */
+ #define BANNER_TIMEOUT		20
+-#define ROM_BANNER_TIMEOUT	( 2 * BANNER_TIMEOUT )
++#define ROM_BANNER_TIMEOUT	0
+ 
+ /*
+  * Network protocols

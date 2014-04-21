@@ -1,26 +1,35 @@
 Name:      icu
-Version:   49.1.1
-Release:   8%{?dist}
+Version:   52.1
+Release:   1%{?dist}
 Summary:   International Components for Unicode
+Summary(zh_CN.UTF-8): Unicode 的国际化组件
 Group:     Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:   MIT and UCD and Public Domain
 URL:       http://www.icu-project.org/
-Source0:   http://download.icu-project.org/files/icu4c/49.1.1/icu4c-49_1_1-src.tgz
+Source0:   http://download.icu-project.org/files/icu4c/52.1/icu4c-52_1-src.tgz
 Source1:   icu-config.sh
-BuildRequires: doxygen, autoconf
-Requires: lib%{name} = %{version}-%{release}
+BuildRequires: doxygen, autoconf, python
+Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 Patch1: icu.8198.revert.icu5431.patch
 Patch2: icu.8800.freeserif.crash.patch
 Patch3: icu.7601.Indic-ccmp.patch
-Patch4: icu.9283.regexcmp.crash.patch
+Patch4: icu.9948.mlym-crash.patch
+Patch5: gennorm2-man.patch
+Patch6: icuinfo-man.patch
 
 %description
 Tools and utilities for developing with icu.
 
+%description -l zh_CN.UTF-8
+icu 开发用的工具。
+
 %package -n lib%{name}
 Summary: International Components for Unicode - libraries
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n lib%{name}
 The International Components for Unicode (ICU) libraries provide
@@ -34,36 +43,58 @@ results across all the various platforms you support, without
 sacrificing performance. It offers great flexibility to extend and
 customize the supplied services.
 
+%description -n lib%{name} -l zh_CN.UTF-8
+%{name} 的运行库。
+
 %package  -n lib%{name}-devel
 Summary:  Development files for International Components for Unicode
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
-Requires: lib%{name} = %{version}-%{release}
+Group(zh_CN.UTF-8): 开发/库
+Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description -n lib%{name}-devel
 Includes and definitions for developing with icu.
 
+%description -n lib%{name}-devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n lib%{name}-doc
 Summary: Documentation for International Components for Unicode
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:   Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description -n lib%{name}-doc
 %{summary}.
+
+%description -n lib%{name}-doc -l zh_CN.UTF-8
+%{name} 的文档。
+
+%{!?endian: %global endian %(%{__python} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
+# " this line just fixes syntax highlighting for vim that is confused by the above and continues literal
 
 %prep
 %setup -q -n %{name}
 %patch1 -p2 -R -b .icu8198.revert.icu5431.patch
 %patch2 -p1 -b .icu8800.freeserif.crash.patch
 %patch3 -p1 -b .icu7601.Indic-ccmp.patch
-%patch4 -p1 -b .icu9283.regexcmp.crash.patch
+%patch4 -p1 -b .icu9948.mlym-crash.patch
+%patch5 -p1 -b .gennorm2-man.patch
+%patch6 -p1 -b .icuinfo-man.patch
 
 %build
 cd source
 autoconf
 CFLAGS='%optflags -fno-strict-aliasing'
 CXXFLAGS='%optflags -fno-strict-aliasing'
-#rhbz#856594 to-do add --disable-renaming on next soname bump
+# Endian: BE=0 LE=1
+%if ! 0%{?endian}
+CPPFLAGS='-DU_IS_BIG_ENDIAN=1'
+%endif
+#rhbz856594 do not use --disable-renaming or cope with the mess
 %configure --with-data-packaging=library --disable-samples
 #rhbz#225896
 sed -i 's|-nodefaultlibs -nostdlib||' config/mh-linux
@@ -73,11 +104,16 @@ sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../lib -licuuc -licui18n -lc -lgcc|' io/M
 sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../lib -licuuc -lc|' layout/Makefile
 sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../lib -licuuc -licule -lc|' layoutex/Makefile
 sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../../lib -licutu -licuuc -lc|' tools/ctestfw/Makefile
-sed -i 's|^LIBS =.*|LIBS = -nostdlib -L../../lib -licui18n -licuuc -lpthread -lc|' tools/toolutil/Makefile
+# As of ICU 52.1 the -nostdlib in tools/toolutil/Makefile results in undefined reference to `__dso_handle'
+sed -i 's|^LIBS =.*|LIBS = -L../../lib -licui18n -licuuc -lpthread -lc|' tools/toolutil/Makefile
 #rhbz#813484
 sed -i 's| \$(docfilesdir)/installdox||' Makefile
 # There is no source/doc/html/search/ directory
 sed -i '/^\s\+\$(INSTALL_DATA) \$(docsrchfiles) \$(DESTDIR)\$(docdir)\/\$(docsubsrchdir)\s*$/d' Makefile
+# rhbz#856594 The configure --disable-renaming and possibly other options
+# result in icu/source/uconfig.h.prepend being created, include that content in
+# icu/source/common/unicode/uconfig.h to propagate to consumer packages.
+test -f uconfig.h.prepend && sed -e '/^#define __UCONFIG_H__/ r uconfig.h.prepend' -i common/unicode/uconfig.h
 
 make %{?_smp_mflags}
 make %{?_smp_mflags} doc
@@ -110,17 +146,18 @@ make %{?_smp_mflags} -C source check
 %{_bindir}/genbrk
 %{_bindir}/gencfu
 %{_bindir}/gencnval
-%{_bindir}/genctd
+%{_bindir}/gendict
 %{_bindir}/genrb
 %{_bindir}/makeconv
 %{_bindir}/pkgdata
 %{_bindir}/uconv
 %{_sbindir}/*
 %{_mandir}/man1/derb.1*
+%{_mandir}/man1/gencfu.1*
 %{_mandir}/man1/gencnval.1*
+%{_mandir}/man1/gendict.1*
 %{_mandir}/man1/genrb.1*
 %{_mandir}/man1/genbrk.1*
-%{_mandir}/man1/genctd.1*
 %{_mandir}/man1/makeconv.1*
 %{_mandir}/man1/pkgdata.1*
 %{_mandir}/man1/uconv.1*
@@ -136,6 +173,7 @@ make %{?_smp_mflags} -C source check
 %{_bindir}/%{name}-config*
 %{_bindir}/icuinfo
 %{_mandir}/man1/%{name}-config.1*
+%{_mandir}/man1/icuinfo.1*
 %{_includedir}/layout
 %{_includedir}/unicode
 %{_libdir}/*.so
@@ -154,8 +192,46 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{name}/html/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 49.1.1-8
-- 为 Magic 3.0 重建
+* Tue Feb 11 2014 Eike Rathke <erack@redhat.com> - 52.1-1
+- upgrade to upstream ICU 52.1
+- Resolves: rhbz#1049265 icu-52.1 is available
+- Resolves: rhbz#1050063 Trivial change to icu-config to support ppc64le
+- drop icu-51-layout-fix-10107.tgz source
+- drop integrated icu.10318.CVE-2013-2924_changeset_34076.patch
+- drop integrated icu.10143.memory.leak.crash.patch
+
+* Wed Oct 09 2013 Eike Rathke <erack@redhat.com> - 50.1.2-10
+- Resolves: rhbz#1015594 CVE-2013-2924 use-after-free
+
+* Fri Oct 04 2013 Eike Rathke <erack@redhat.com> - 50.1.2-9
+- added %{?_isa} to Requires for multi-arch systems
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 50.1.2-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Eike Rathke <erack@redhat.com> - 50.1.2-7
+- Resolves: rhbz#986814 install icu-config.sh from source2
+
+* Wed Jul 17 2013 Eike Rathke <erack@redhat.com> - 50.1.2-6
+- Resolves: rhbz#966141 various flaws in Layout Engine font processing
+- Resolves: rhbz#966077 aarch64 support for icu-config.sh wrapper
+
+* Mon Feb 25 2013 Eike Rathke <erack@redhat.com> - 50.1.2-5
+- added manpages for gennorm2 and icuinfo, rhbz#884035 related
+
+* Tue Feb 19 2013 Caolán McNamara <caolanm@redhat.com> - 50.1.2-4
+- Resolves: fdo#52519 crash on typing some Malayalam
+
+* Tue Jan 29 2013 Eike Rathke <erack@redhat.com> - 50.1.2-3
+- Resolves: rhbz#856594 roll back and build without --disable-renaming again
+
+* Mon Jan 28 2013 Eike Rathke <erack@redhat.com> - 50.1.2-2
+- Resolves: rhbz#856594 include content of icu/source/uconfig.h.prepend
+
+* Fri Jan 25 2013 Eike Rathke <erack@redhat.com> - 50.1.2-1
+- Update to 50.1.2
+- Resolves: rhbz#856594 to-do add --disable-renaming on next soname bump
+- removed upstream applied icu.9283.regexcmp.crash.patch
 
 * Wed Sep 12 2012 Caolán McNamara <caolanm@redhat.com> - 49.1.1-7
 - Related: rhbz#856594 reenable icu symbol renaming
@@ -343,7 +419,7 @@ make %{?_smp_mflags} -C source check
 * Wed Jun 04 2008 Caolán McNamara <caolanm@redhat.com> - 4.0-0.2.d02
 - drop icu.icu5498.openoffice.org.patch
 
-* Sun May 31 2008 Caolán McNamara <caolanm@redhat.com> - 4.0-0.1.d02
+* Sat May 31 2008 Caolán McNamara <caolanm@redhat.com> - 4.0-0.1.d02
 - 4.0 release candidate
 - drop integrated icu.regexp.patch
 
@@ -422,7 +498,7 @@ make %{?_smp_mflags} -C source check
 * Tue Feb 13 2007 Caolán McNamara <caolanm@redhat.com> - 3.6-18
 - Resolves: rhbz#228457 icu.icu5594.gujarati.patch
 
-* Mon Feb 09 2007 Caolán McNamara <caolanm@redhat.com> - 3.6-17
+* Fri Feb 09 2007 Caolán McNamara <caolanm@redhat.com> - 3.6-17
 - spec cleanups
 
 * Mon Feb 05 2007 Caolán McNamara <caolanm@redhat.com> - 3.6-16
@@ -431,7 +507,7 @@ make %{?_smp_mflags} -C source check
 * Fri Jan 19 2007 Caolán McNamara <caolanm@redhat.com> - 3.6-15
 - Resolves: rhbz#214948 icu.icu5506.multiplevowels.patch
 
-* Thu Jan 09 2007 Caolán McNamara <caolanm@redhat.com> - 3.6-14
+* Tue Jan 09 2007 Caolán McNamara <caolanm@redhat.com> - 3.6-14
 - Related: rhbz#216089 add icu.icu5557.safety.patch
 
 * Thu Dec 21 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-13
@@ -446,13 +522,13 @@ make %{?_smp_mflags} -C source check
 * Wed Nov 08 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-10
 - Resolves: rhbz#214555 icu.icu5500.devicetablecrash.patch
 
-* Thu Oct 18 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-9
+* Wed Oct 18 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-9
 - Resolves: rhbz#213648 extend prev/next to handle ZWJ
 
-* Tue Oct 18 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-8
+* Wed Oct 18 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-8
 - Resolves: rhbz213375 (icu.icu5488.assamese.patch)
 
-* Tue Oct 18 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-7
+* Wed Oct 18 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-7
 - Resolves: rhbz#211258 (icu.icu5465.telegu.patch)
 
 * Thu Oct 05 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-6
@@ -473,7 +549,7 @@ make %{?_smp_mflags} -C source check
 - fix rh#205252#/icu#5365 (gnome#121882#/#icu#4026#) to make icu 
   like pango for multiple dependant vowels
 
-* Mon Sep 03 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-1
+* Sun Sep 03 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-1
 - final release
 
 * Mon Aug 14 2006 Caolán McNamara <caolanm@redhat.com> - 3.6-0.1.d02
@@ -537,7 +613,7 @@ make %{?_smp_mflags} -C source check
 - Apply upstream case mapping mutex lock removal patch.
 - Build with gcc 3.2 as a temporary workaround for #152495.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 3.2-2
+* Thu Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 3.2-2
 - rebuilt
 
 * Sat Jan  1 2005 Ville Skyttä <ville.skytta at iki.fi> - 3.2-1

@@ -4,13 +4,14 @@
 Summary: Interfaces for accessibility support
 Summary(zh_CN.UTF-8): 可访问性支持的接口
 Name: atk
-Version: 2.11.90
+Version: 2.12.0
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 #VCS: git:git://git.gnome.org/atk
-Source: http://download.gnome.org/sources/atk/2.11/atk-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/atk/%{majorver}/atk-%{version}.tar.xz
 URL: http://developer.gnome.org/platform-overview/stable/atk
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gnome-doc-utils
@@ -77,6 +78,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 2.12.0-1
+- 更新到 2.12.0
+
 * Sat Mar 01 2014 Liu Di <liudidi@gmail.com> - 2.11.90-1
 - 更新到 2.11.90
 

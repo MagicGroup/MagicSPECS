@@ -2,8 +2,10 @@ Name:           frei0r-plugins
 Version:        1.3
 Release:        4%{?dist}
 Summary:        Frei0r - a minimalistic plugin API for video effects
+Summary(zh_CN.UTF-8): Frei0r - 一个最简单的视频特效插件 API
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.piksel.org/frei0r
 Source0:        http://propirate.net/frei0r/frei0r-plugins-%{version}.tar.gz
@@ -18,14 +20,22 @@ It is a minimalistic plugin API for video sources and filters. The behaviour of
 the effects can be controlled from the host by simple parameters. The intent is
 to solve the recurring reimplementation or adaptation issue of standard effect
 
+%description -l zh_CN.UTF-8
+一个最简单的视频特效插件 API。
+
 %package -n     frei0r-devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description -n frei0r-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n frei0r-%{version}
@@ -43,7 +53,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 #Remove installed doc
 rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}
 
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -1,12 +1,13 @@
 Summary:       An fdisk-like partitioning tool for GPT disks
+Summary(zh_CN.UTF-8): 给 GPT 磁盘使用的类似 fdisk 的工具
 Name:          gdisk
-Version:       0.8.2
-Release:       4%{?dist}
+Version:	0.8.6
+Release:       1%{?dist}
 License:       GPLv2
 URL:           http://www.rodsbooks.com/gdisk/
 Group:         System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source0:       http://downloads.sourceforge.net/gptfdisk/gptfdisk-%{version}.tar.gz
-Patch0:        gptfdisk-0.8.1-gcc47.patch
 BuildRequires: popt-devel
 BuildRequires: libicu-devel
 BuildRequires: libuuid-devel
@@ -18,9 +19,11 @@ command-line interface, fairly direct manipulation of partition table
 structures, recovery tools to help you deal with corrupt partition
 tables, and the ability to convert MBR disks to GPT format.
 
+%description -l zh_CN.UTF-8
+给 GPT 磁盘使用的类似 fdisk 的工具。也可以转换 MBR 磁盘到 GPT 格式。
+
 %prep
 %setup -q -n gptfdisk-%{version}
-%patch0 -p1
 chmod 0644 gdisk_test.sh
 
 %build
@@ -32,6 +35,7 @@ for f in gdisk sgdisk cgdisk fixparts ; do
     %{__install} -D -p -m 0755 $f %{buildroot}%{_sbindir}/$f
     %{__install} -D -p -m 0644 $f.8 %{buildroot}%{_mandir}/man8/$f.8
 done
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -49,6 +53,9 @@ done
 %{_mandir}/man8/fixparts.8*
 
 %changelog
+* Sat Apr 05 2014 Liu Di <liudidi@gmail.com> - 0.8.6-1
+- 更新到 0.8.6
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.8.2-4
 - 为 Magic 3.0 重建
 

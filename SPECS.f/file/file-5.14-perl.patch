@@ -1,0 +1,45 @@
+diff --git a/magic/Magdir/perl b/magic/Magdir/perl
+index 1d7bd31..0118358 100644
+--- a/magic/Magdir/perl
++++ b/magic/Magdir/perl
+@@ -7,22 +7,31 @@
+ # Send additions to <perl5-porters@perl.org>
+ 0	search/1/w	#!\ /bin/perl			Perl script text executable
+ !:mime	text/x-perl
++!:strength + 20
+ 0	search/1	eval\ "exec\ /bin/perl		Perl script text
++!:strength + 20
+ !:mime	text/x-perl
+ 0	search/1/w	#!\ /usr/bin/perl		Perl script text executable
+ !:mime	text/x-perl
++!:strength + 20
+ 0	search/1	eval\ "exec\ /usr/bin/perl	Perl script text
+ !:mime	text/x-perl
++!:strength + 20
+ 0	search/1/w	#!\ /usr/local/bin/perl		Perl script text executable
+ !:mime	text/x-perl
++!:strength + 20
+ 0	search/1	eval\ "exec\ /usr/local/bin/perl	Perl script text
+ !:mime	text/x-perl
++!:strength + 20
+ 0	search/1	eval\ '(exit\ $?0)'\ &&\ eval\ 'exec	Perl script text
+ !:mime	text/x-perl
++!:strength + 20
+ 0	search/1	#!/usr/bin/env\ perl	Perl script text executable
+ !:mime	text/x-perl
++!:strength + 20
+ 0	search/1	#!\ /usr/bin/env\ perl	Perl script text executable
+ !:mime	text/x-perl
++!:strength + 25
+ 
+ # by Dmitry V. Levin and Alexey Tourbin
+ # check the first line
+@@ -33,7 +42,7 @@
+ 0	search/1	!p
+ >0	regex		\^package[\ \t]+[0-9A-Za-z_:]+\ *;
+ >>0	regex		\^1\ *;|\^(use|sub|my)\ .*[(;{=]	Perl5 module source text
+-!:strength + 10
++!:strength + 45
+ 
+ # Perl POD documents
+ # From: Tom Hukins <tom@eborcom.com>

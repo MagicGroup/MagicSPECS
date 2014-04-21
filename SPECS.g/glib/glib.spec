@@ -1,10 +1,12 @@
 Summary:	A library of handy utility functions
+Summary(zh_CN.UTF-8): 方便的实用程序函数库
 Name:		glib
 Epoch:		1
 Version:	1.2.10
-Release:	37%{?dist}
+Release:	38%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.gtk.org/
 Source:		ftp://ftp.gimp.org/pub/gtk/v1.2/glib-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
@@ -27,16 +29,22 @@ GLib is a handy library of utility functions. This C library is
 designed to solve some portability problems and provide other useful
 functionality that most programs require.
 
+%description -l zh_CN.UTF-8
+方便的实用程序函数库。
 
 %package devel
 Summary: Libraries and header files for %{name} development 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:	 Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 %{summary}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q 
@@ -83,7 +91,7 @@ rm -rf %{buildroot}%{_infodir}
 rm -rf %{buildroot}%{_libdir}/lib*.la
 # despite use of --disable-static, delete static libs that get built anyway
 rm -rf %{buildroot}%{_libdir}/lib*.a
-
+magic_rpm_clean.sh
 
 %check
 make check LIBTOOL=%{_bindir}/libtool

@@ -31,9 +31,12 @@ Version: 2.32.0
 Release: 13%{?dist}
 License: GPLv2+
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Summary: The sources for additional PyGNOME Python extension modules
+Summary(zh_CN.UTF-8): PyGNOME Python 扩展模块的附加源文件 
 #VCS: git://git.gnome.org/gnome-python-desktop
-Source: http://download.gnome.org/sources/gnome-python-desktop/2.32/gnome-python-desktop-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/gnome-python-desktop/%{majorver}/gnome-python-desktop-%{version}.tar.bz2
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=616306
 Patch0: gnome-python-desktop-2.30.0-wnck-flagsfix.patch
@@ -53,7 +56,6 @@ BuildRequires: glib2-devel >= %{glib_version}
 BuildRequires: GConf2-devel >= %{gconf2_version}
 BuildRequires: gnome-desktop-devel >= %{gnome_desktop_version}
 BuildRequires: gnome-keyring-devel >= %{gnome_keyring_version}
-BuildRequires: gnome-panel-devel >= %{gnome_panel_version}
 BuildRequires: gnome-python2-bonobo >= %{gnome_python_version}
 BuildRequires: gnome-python2-canvas >= %{gnome_python_version}
 BuildRequires: gnome-python2-devel >= %{gnome_python_version}

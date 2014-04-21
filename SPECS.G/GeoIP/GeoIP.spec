@@ -6,7 +6,7 @@
 
 Name:		GeoIP
 Version:	1.5.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Library for country/city/organization to IP address or hostname mapping
 Group:		Development/Libraries
 License:	LGPLv2+ and GPLv2+ and CC-BY-SA
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 %{_libdir}/libGeoIPUpdate.so
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.5.1-5
+- 为 Magic 3.0 重建
+
 * Tue Feb 25 2014 Paul Howarth <paul@city-fan.org> - 1.5.1-4
 - Add %%check, so we can run tests by building using --with tests
 - Update databases from upstream

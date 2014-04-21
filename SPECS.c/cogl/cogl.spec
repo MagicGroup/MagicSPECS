@@ -3,7 +3,7 @@
 %endif
 
 Name:          cogl
-Version:       1.17.4
+Version:	1.18.0
 Release:       2%{?dist}
 Summary:       A library for using 3D graphics hardware to draw pretty pictures
 Summary(zh_CN.UTF-8): 使用 3D 图形硬件绘制漂亮图形的库
@@ -12,7 +12,8 @@ Group:         Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2+
 URL:           http://www.clutter-project.org/
-Source0:       http://download.gnome.org/sources/cogl/1.17/cogl-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://download.gnome.org/sources/cogl/%{majorver}/cogl-%{version}.tar.xz
 
 BuildRequires: cairo-devel
 BuildRequires: gdk-pixbuf2-devel
@@ -137,6 +138,9 @@ rm %{buildroot}%{_datadir}/cogl/examples-data/crate.jpg
 %{_datadir}/gtk-doc/html/cogl-2.0-experimental
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 1.18.0-2
+- 更新到 1.18.0
+
 * Fri Feb 21 2014 Kalev Lember <kalevlember@gmail.com> - 1.17.4-2
 - Drop compat-libcogl19
 

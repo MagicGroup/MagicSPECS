@@ -1,30 +1,12 @@
-diff -up ghostscript-9.05/base/gsicc_manage.c.icc-missing-check ghostscript-9.05/base/gsicc_manage.c
---- ghostscript-9.05/base/gsicc_manage.c.icc-missing-check	2012-02-08 08:48:48.000000000 +0000
-+++ ghostscript-9.05/base/gsicc_manage.c	2012-04-04 12:39:29.151888287 +0100
-@@ -140,6 +140,8 @@ gsicc_set_iccsmaskprofile(const char *pn
-     if (str != NULL) {
-         icc_profile = gsicc_profile_new(str, mem, pname, namelen);
-         code = sfclose(str);
-+    }
-+    if (str != NULL && icc_profile != NULL) {
-         /* Get the profile handle */
-         icc_profile->profile_handle =
-             gsicc_get_profile_handle_buffer(icc_profile->buffer,
-@@ -517,6 +519,8 @@ gsicc_set_srcgtag_struct(gsicc_manager_t
-                         icc_profile =
-                             gsicc_profile_new(str, mem, curr_ptr, strlen(curr_ptr));
-                         code = sfclose(str);
-+                    }
-+                    if (str != NULL && icc_profile != NULL) {
-                         gsicc_init_profile_info(icc_profile);
-                         break;
-                     } else {
-@@ -1127,6 +1131,8 @@ gsicc_set_device_profile(gx_device * pde
-             icc_profile =
-                 gsicc_profile_new(str, mem, file_name, strlen(file_name));
-             code = sfclose(str);
-+        }
-+        if (str != NULL && icc_profile != NULL) {
-             if (pro_enum < gsPROOFPROFILE) {
-                 if_debug1(gs_debug_flag_icc, "[icc] Setting device profile %d\n", pro_enum);
-                 pdev->icc_struct->device_profile[pro_enum] = icc_profile;
+diff -up ghostscript-9.08rc1/base/gsicc_manage.c.icc-missing-check ghostscript-9.08rc1/base/gsicc_manage.c
+--- ghostscript-9.08rc1/base/gsicc_manage.c.icc-missing-check	2013-08-09 14:12:18.000000000 +0100
++++ ghostscript-9.08rc1/base/gsicc_manage.c	2013-08-09 16:54:11.167695694 +0100
+@@ -599,6 +599,8 @@ gsicc_set_srcgtag_struct(gsicc_manager_t
+                             icc_profile =
+                                 gsicc_profile_new(str, mem, curr_ptr, strlen(curr_ptr));
+                             code = sfclose(str);
++                        }
++                        if (str != NULL && icc_profile != NULL) {
+                             gsicc_init_profile_info(icc_profile);
+                             cmm = gsCMM_DEFAULT;
+                             /* Check if this object is a devicelink profile. 

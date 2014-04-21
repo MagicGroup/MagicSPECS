@@ -1,11 +1,13 @@
 Summary: Library implementing the Unicode Bidirectional Algorithm
+Summary(zh_CN.UTF-8): Unicode 双向算法实现库
 Name: fribidi
-Version: 0.19.2
+Version:	0.19.6
 Release: 5%{?dist}
 URL: http://fribidi.org
-Source0: http://fribidi.org/download/%{name}-%{version}.tar.gz
+Source0: http://fribidi.org/download/%{name}-%{version}.tar.bz2
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: automake, autoconf, libtool, pkgconfig
 
@@ -14,15 +16,23 @@ A library to handle bidirectional scripts (for example Hebrew, Arabic),
 so that the display is done in the proper way; while the text data itself
 is always written in logical order.
 
+%description -l zh_CN.UTF-8
+处理双向脚本的为（比如希伯来语、阿拉伯语等）。
+
 %package devel
 Summary: Libraries and include files for FriBidi
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Include files and libraries needed for developing applications which use
 FriBidi.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -70,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/%{name}_*.gz
 
 %changelog
+* Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 0.19.6-5
+- 更新到 0.19.6
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.19.2-5
 - 为 Magic 3.0 重建
 

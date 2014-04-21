@@ -4,24 +4,20 @@
 %define dbus_glib_version 0.74
 
 Summary: A process-transparent configuration system
+Summary(zh_CN.UTF-8): 一种进程透明的配置系统
 Name: GConf2
-Version: 3.2.3
+Version:	3.2.6
 Release: 5%{?dist}
 License: LGPLv2+
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 #VCS: git:git://git.gnome.org/gconf
-Source0: http://download.gnome.org/sources/GConf/3.2/GConf-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/GConf/%{majorver}/GConf-%{version}.tar.xz
 Source1: macros.gconf2
 URL: http://projects.gnome.org/gconf/
 
 Patch0: GConf-gettext.patch
-
-# upstream patches
-Patch1: 0001-Cosmetics-Consistenly-capitalize-messages.patch
-Patch2: 0002-Skip-nonexisting-schemas.patch
-Patch3: 0003-Bump-GIO-dep-to-2.32.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=670033
-Patch4: fix-crasher.patch
 
 BuildRequires: libxml2-devel >= %{libxml2_version}
 BuildRequires: libxslt-devel
@@ -45,9 +41,14 @@ GConf is a process-transparent configuration database API used to
 store user preferences. It has pluggable backends and features to
 support workgroup administration.
 
+%description -l zh_CN.UTF-8
+一种进程透明的配置系统。
+
 %package devel
 Summary: Headers and libraries for GConf development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libxml2-devel >= %{libxml2_version}
 Requires: glib2-devel >= %{glib2_version}
@@ -61,22 +62,26 @@ Conflicts: GConf2-dbus-devel
 GConf development package. Contains files needed for doing
 development using GConf.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package gtk
 Summary: Graphical GConf utilities
+Summary(zh_CN.UTF-8): 图形化的 GConf 工具
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Requires: %{name} = %{version}-%{release}
 
 %description gtk
 The GConf2-gtk package contains graphical GConf utilities
 which require GTK+.
 
+%description gtk -l zh_CN.UTF-8
+图形化的 GConf 工具，使用 GTK+。
+
 %prep
 %setup -q -n GConf-%{version}
 %patch0 -p1 -b .gettext
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1 -b .fix-crasher
 
 autoreconf -i -f
 
@@ -105,7 +110,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/GConf/2/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gio/modules/*.la
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/GConf/gsettings
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %post
@@ -154,8 +159,10 @@ fi
 %{_libdir}/gio/modules/libgsettingsgconfbackend.so
 %{_libdir}/girepository-1.0
 
+%if 0
 %files gtk
 %{_libexecdir}/gconf-sanity-check-2
+%endif
 
 %files devel
 %{_libdir}/*.so
@@ -168,6 +175,9 @@ fi
 %doc %{_mandir}/man1/gsettings-schema-convert.1*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.2.6-5
+- 更新到 3.2.6
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.2.3-5
 - 为 Magic 3.0 重建
 

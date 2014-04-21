@@ -4,7 +4,8 @@ Release:        2%{?dist}
 Summary:        A simplified in-place on-screen keyboard
 License:        LGPLv2+
 URL:            http://live.gnome.org/Caribou
-Source0:        http://download.gnome.org/sources/caribou/0.4/caribou-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/caribou/%{majorver}/caribou-%{version}.tar.xz
 Patch0:         caribou-0.4.8-multilib.patch
 Patch1:         caribou-0.4.8-fix-python-exec.patch
 

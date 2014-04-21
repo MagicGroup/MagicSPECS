@@ -1,9 +1,11 @@
 Summary:	Create a tree of hardlinks
+Summary(zh_CN.UTF-8): 创建硬链接树
 Name:		hardlink
 Version:	1.0
-Release:	14%{?dist}
+Release:	15%{?dist}
 Epoch:		1
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL:		http://pkgs.fedoraproject.org/gitweb/?p=hardlink.git
 License:	GPL+
 Source0:	hardlink.c
@@ -15,6 +17,9 @@ Obsoletes:	kernel-utils
 hardlink is used to create a tree of hard links.
 It's used by kernel installation to dramatically reduce the
 amount of diskspace used by each kernel package installed.
+
+%description -l zh_CN.UTF-8
+创建硬链接树。它是用于内核安装，可以大大降低每个内核所占用的磁盘空间。
 
 %prep
 %setup -q -c -T
@@ -39,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/hardlink.1*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1:1.0-15
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1:1.0-14
 - 为 Magic 3.0 重建
 

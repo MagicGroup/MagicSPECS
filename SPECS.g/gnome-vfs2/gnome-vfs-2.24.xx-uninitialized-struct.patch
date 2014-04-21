@@ -1,0 +1,40 @@
+From ddccb959a78b44133716bf9f01c8faa2306c5408 Mon Sep 17 00:00:00 2001
+From: Alexander Larsson <alexl@redhat.com>
+Date: Thu, 16 Apr 2009 09:07:05 +0000
+Subject: [PATCH 1/6] =?utf-8?q?Bug=20500307=20=E2=80=93=20uninitialized=20GnomeVFSFileInfo=20struct=20in=20do=5Fseek()?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+2009-04-16  Alexander Larsson  <alexl@redhat.com>
+
+	Bug 500307 – uninitialized GnomeVFSFileInfo struct in do_seek()
+
+	* modules/sftp-method.c:
+	(do_seek):
+	Initialize info to avoid crashes.
+	Patch from Fabrice Bellet
+
+
+svn path=/trunk/; revision=5551
+---
+ ChangeLog             |    9 +++++++++
+ modules/sftp-method.c |    2 +-
+ 2 files changed, 10 insertions(+), 1 deletions(-)
+
+diff --git a/modules/sftp-method.c b/modules/sftp-method.c
+index 4a53af2..07f0e4e 100644
+--- a/modules/sftp-method.c
++++ b/modules/sftp-method.c
+@@ -2387,7 +2387,7 @@ do_seek (GnomeVFSMethod       *method,
+ 	 GnomeVFSContext      *context)
+ {
+ 	SftpOpenHandle *handle;
+-	GnomeVFSFileInfo file_info;
++	GnomeVFSFileInfo file_info = { 0, };
+ 	GnomeVFSResult res;
+ 
+ 	DEBUG (g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s: Enter", G_STRFUNC));
+-- 
+1.6.3.3
+

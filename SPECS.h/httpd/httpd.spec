@@ -14,7 +14,7 @@
 Summary: Apache HTTP Server
 Name: httpd
 Version: 2.4.7
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL: http://httpd.apache.org/
 Source0: http://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1: index.html
@@ -626,6 +626,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/rpm/macros.httpd
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 2.4.7-7
+- 为 Magic 3.0 重建
+
 * Fri Feb 28 2014 Joe Orton <jorton@redhat.com> - 2.4.7-6
 - use 2048-bit RSA key with SHA-256 signature in dummy certificate
 

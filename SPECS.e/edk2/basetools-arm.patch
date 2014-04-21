@@ -1,0 +1,14 @@
+diff --git a/BaseTools/Source/C/GNUmakefile b/BaseTools/Source/C/GNUmakefile
+index e0dde3e..bee0059 100644
+--- a/BaseTools/Source/C/GNUmakefile
++++ b/BaseTools/Source/C/GNUmakefile
+@@ -22,6 +22,9 @@ ifndef ARCH
+   ifeq ($(uname_m),x86_64)
+     ARCH=X64
+   endif
++  ifeq ($(patsubst arm%,ARM,$(uname_m)),ARM)
++    ARCH=ARM
++  endif
+   ifeq ($(patsubst i%86,IA32,$(uname_m)),IA32)
+     ARCH=IA32
+   endif

@@ -8,6 +8,7 @@ Release: 4%{?dist}
 License: GPLv2+ and LGPLv2+ and GFDL
 Group: Development/Tools
 Summary: Documentation utilities for GNOME
+Summary(zh_CN.UTF-8): GNOME 的文档工具
 URL: http://www.gnome.org/
 #VCS: git:git://git.gnome.org/gnome-doc-utils
 Source: http://download.gnome.org/sources/gnome-doc-utils/0.20/%{name}-%{version}.tar.xz
@@ -48,11 +49,17 @@ gnome-doc-utils is a collection of documentation utilities for the GNOME
 project. Notably, it contains utilities for building documentation and
 all auxiliary files in your source tree.
 
+%description -l zh_CN.UTF-8 
+%{name} 是 GNOME 项目的文档工具集合。需要注意的是，它包含了在你的源码树中
+构建文档的工具和所有辅助文件 。
+
 # note that this is an "inverse dependency" subpackage
 %package stylesheets
 Summary: XSL stylesheets used by gnome-doc-utils
+Summary(zh_CN.UTF-8): %{name} 使用的 XSL 样式表
 License: LGPLv2+
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 # for the validation with xsltproc to use local dtds
 Requires: docbook-dtds
 # for /usr/share/pkgconfig
@@ -63,6 +70,9 @@ Requires: xml-common
 %description stylesheets
 The gnome-doc-utils-stylesheets package contains XSL stylesheets which
 are used by the tools in gnome-doc-utils and by yelp.
+
+%description stylesheets -l zh_CN.UTF-8
+%{name} 使用的 XSL 样式表。
 
 %prep
 %setup -q

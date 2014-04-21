@@ -2,8 +2,10 @@ Name:           gocr
 Version:        0.49
 Release:        4%{?dist}
 Summary:        GNU Optical Character Recognition program
+Summary(zh_CN.UTF-8): GNU 文字识别程序
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://jocr.sourceforge.net/
 Source0:        http://www-e.uni-magdeburg.de/jschulen/ocr/gocr-%{version}.tar.gz
@@ -24,6 +26,9 @@ GOCR can be used with different front-ends, which makes it very easy to port
 to different OSes and architectures. It can open many different image
 formats, and its quality have been improving in a daily basis.
 
+%description -l zh_CN.UTF-8 
+GOCR 一个 OCR 程序，可以把扫描的图像转成文字文件。
+
 %prep
 %setup -q
 %patch0 -p1 -b .perms
@@ -41,6 +46,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 rm -rf $RPM_BUILD_ROOT%{_libdir} $RPM_BUILD_ROOT%{_includedir}
 # Don't ship buggy Tcl/Tk frontend
 rm $RPM_BUILD_ROOT/%{_bindir}/gocr.tcl
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,6 +60,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gocr.1*
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.49-4
+- 更新到
+
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.49-4
+- 更新到
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.49-4
 - 为 Magic 3.0 重建
 

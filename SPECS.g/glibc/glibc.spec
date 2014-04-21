@@ -1,6 +1,6 @@
 %define glibcsrcdir glibc-2.18
 %define glibcversion 2.18
-%define glibcrelease 11%{?dist}
+%define glibcrelease 12%{?dist}
 # Pre-release tarballs are pulled in from git using a command that is
 # effectively:
 #
@@ -79,7 +79,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: %{glibcrelease}
+Release: %{glibcrelease}.1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -230,6 +230,8 @@ Patch2030: %{name}-rh985342.patch
 Patch2031: %{name}-rh985625-CVE-2013-4788.patch
 
 Patch2032: %{name}-rh1007590.patch
+
+Patch3000: %{name}-fix-0e+0.patch
 
 ##############################################################################
 # End of glibc patches.
@@ -564,6 +566,8 @@ package or when debugging this package.
 %patch2032 -p1
 %patch0043 -p1
 
+%patch3000 -p1
+
 ##############################################################################
 # %%prep - Additional prep required...
 ##############################################################################
@@ -653,6 +657,13 @@ GXX="g++ -m64"
 BuildFlags=""
 GCC="gcc -m64"
 GXX="g++ -m64"
+%endif
+
+#### mips64el
+%ifarch mips64el
+BuildFlags=""
+GCC="gcc -mabi=64"
+GXX="g++ -mabi=64"
 %endif
 
 ##############################################################################
@@ -1648,6 +1659,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 2.18-12.1
+- 为 Magic 3.0 重建
+
 * Wed Oct  2 2013 Carlos O'Donell <carlos@redhat.com> - 2.18-11
 - Allow ldconfig cached objects previously marked as hard or soft
   ABI to now become unmarked without raising an error. This works

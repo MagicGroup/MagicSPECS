@@ -1,0 +1,21 @@
+diff -up gnome-vfs-2.19.3/modules/smb-method.c.posix gnome-vfs-2.19.3/modules/smb-method.c
+--- gnome-vfs-2.19.3/modules/smb-method.c.posix	2007-08-11 20:05:43.000000000 -0400
++++ gnome-vfs-2.19.3/modules/smb-method.c	2007-08-11 20:06:17.000000000 -0400
+@@ -1546,7 +1546,7 @@ do_open (GnomeVFSMethod *method,
+ 
+ 	/* Important: perform_authentication leaves and re-enters the lock! */
+ 	while (perform_authentication (&actx) > 0) {
+-		file = smb_context->open (smb_context, path, unix_mode, 0666);
++		file = (smb_context->open) (smb_context, path, unix_mode, 0666);
+ 		actx.res = (file != NULL) ? GNOME_VFS_OK : gnome_vfs_result_from_errno ();
+ 	}
+ 
+@@ -1740,7 +1740,7 @@ do_create (GnomeVFSMethod *method,
+ 	
+ 	/* Important: perform_authentication leaves and re-enters the lock! */	
+ 	while (perform_authentication (&actx) > 0) {
+-		file = smb_context->open (smb_context, path, unix_mode, perm);
++		file = (smb_context->open) (smb_context, path, unix_mode, perm);
+ 		actx.res = (file != NULL) ? GNOME_VFS_OK : gnome_vfs_result_from_errno ();
+ 	}
+ 

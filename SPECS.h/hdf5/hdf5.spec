@@ -405,6 +405,9 @@ done
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.8.12-4
+- 更新到 1.8.12
+
 * Sat Feb 22 2014 Deji Akingunola <dakingun@gmail.com> - 1.8.12-4
 - Rebuild for mpich-3.1
 

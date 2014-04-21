@@ -18,7 +18,7 @@ Version:	2.8.0
 %if %{svn}
 Release: 0.svn%rversion.1%{?dist}.5
 %else
-Release: 3%{?dist}
+Release: 4%{?dist}
 %endif
 
 %if %{svn}

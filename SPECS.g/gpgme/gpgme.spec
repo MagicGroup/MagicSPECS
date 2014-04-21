@@ -1,7 +1,8 @@
 
 Name:    gpgme
 Summary: GnuPG Made Easy - high level crypto API
-Version: 1.3.0
+Summary(zh_CN.UTF-8): GnuPG Mode Easy - 高级加密 API
+Version:	1.4.3
 Release: 6%{?dist}
 
 License: LGPLv2+
@@ -9,18 +10,20 @@ Group:   Applications/System
 URL:     http://www.gnupg.org/related_software/gpgme/
 Source0: ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-%{version}.tar.bz2.sig
+Source2: gpgme-multilib.h
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Patch1: gpgme-1.3.0-config_extras.patch
+Patch1: gpgme-1.3.2-config_extras.patch
 
-# fix ImplicitDSOLinking in tests/, upstreamable
-Patch2:  gpgme-1.3.0-ImplicitDSOLinking.patch
+# gpgsm t-verify check/test hangs if using gnupg2 < 2.0.22
+# see http://bugs.g10code.com/gnupg/issue1493
+Patch2: gpgme-1.4.3-no_gpgsm_t-verify.patch
 
-# add -D_FILE_OFFSET_BITS... to gpgme-config, upstreamable
-Patch3:  gpgme-1.2.0-largefile.patch
+# a%description -l zh_CN.UTF-8 -D_FILE_OFFSET_BITS... to gpgme-config, upstreamable
+Patch3:  gpgme-1.3.2-largefile.patch
 
 BuildRequires: gawk
-BuildRequires: gnupg2
+BuildRequires: gnupg2 >= 2.0.22
 BuildRequires: gnupg2-smime
 BuildRequires: libgpg-error-devel
 BuildRequires: pth-devel
@@ -37,9 +40,15 @@ easier for applications.  It provides a high-level crypto API for
 encryption, decryption, signing, signature verification and key
 management.
 
+%description -l zh_CN.UTF-8
+这个包提供了一个库，它可以让程序访问 GnuPG 更容易，它是一个高级 API，
+可以加密、解密、签名、验证签名和管理密钥。
+
 %package devel
 Summary:  Development headers and libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libgpg-error-devel
 # http://bugzilla.redhat.com/676954
@@ -52,12 +61,14 @@ Requires(postun): /sbin/install-info
 %description devel
 %{summary}
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 
 %patch1 -p1 -b .config_extras
-%patch2 -p1 -b .ImplicitDSOLinking
+#patch2 -p1 -b .no_gpgsm_t-verify
 %patch3 -p1 -b .largefile
 
 ## HACK ALERT
@@ -68,6 +79,7 @@ sed -i -e 's|^libdir=@libdir@$|libdir=@exec_prefix@/lib|g' src/gpgme-config.in
 %build
 %configure \
   --disable-static \
+  --without-gl3 \
   %{?_with_gpg}
 
 make %{?_smp_mflags}
@@ -83,6 +95,20 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
 rm -rf $RPM_BUILD_ROOT%{_datadir}/common-lisp/source/gpgme/
 
+# Hack to resolve multiarch conflict (#341351)
+%ifarch %{multilib_arches}
+mv $RPM_BUILD_ROOT%{_bindir}/gpgme-config{,.%{_target_cpu}}
+cat > gpgme-config-multilib.sh <<__END__
+#!/bin/sh
+exec %{_bindir}/gpgme-config.\$(arch) \$@
+__END__
+install -D -p gpgme-config-multilib.sh $RPM_BUILD_ROOT%{_bindir}/gpgme-config
+mv $RPM_BUILD_ROOT%{_includedir}/gpgme.h \
+   $RPM_BUILD_ROOT%{_includedir}/gpgme-%{__isa_bits}.h
+install -m644 -p -D %{SOURCE2} $RPM_BUILD_ROOT%{_includedir}/gpgme.h
+%endif
+
+magic_rpm_clean.sh
 
 %check 
 # expect 1(+?) errors with gnupg < 1.2.4
@@ -111,7 +137,7 @@ fi
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING* ChangeLog NEWS README* THANKS TODO VERSION
 %{_libdir}/libgpgme.so.11*
-%{_libdir}/libgpgme-pth.so.11*
+#%{_libdir}/libgpgme-pth.so.11*
 %{_libdir}/libgpgme-pthread.so.11*
 
 %files devel
@@ -124,6 +150,9 @@ fi
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.4.3-6
+- 更新到 1.4.3
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.3.0-6
 - 为 Magic 3.0 重建
 

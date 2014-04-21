@@ -1,17 +1,18 @@
 %global enable_debugging 0
 
 Summary:  A menu system for the GNOME project
+Summary(zh_CN.UTF-8): GNOME 项目的菜单系统
 Name: gnome-menus
-Version: 3.8.0
+Version:	3.10.1
 Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.gnome.org/
 
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 #VCS: git:git://git.gnome.org/gnome-menus
-Source0: http://download.gnome.org/sources/gnome-menus/3.8/%{name}-%{version}.tar.xz
-# https://bugzilla.gnome.org/show_bug.cgi?id=696816
-Patch0: gnome-menus-3.8.0-calculator.patch
+Source0: http://download.gnome.org/sources/gnome-menus/%{majorver}/%{name}-%{version}.tar.xz
 Requires:  magic-menus
 BuildRequires: gamin-devel
 BuildRequires: gawk
@@ -29,18 +30,25 @@ also contains the GNOME menu layout configuration files,
 .directory files and assorted menu related utility programs,
 Python bindings, and a simple menu editor.
 
+%description -l zh_CN.UTF-8 
+GNOME 桌面的菜单系统，实现了 freedesktop.org 的桌面菜单标准的支持。
+
 %package devel
 Summary: Libraries and include files for the GNOME menu system
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 This package provides the necessary development libraries for
 writing applications that use the GNOME menu system.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
-%patch0 -p1 -b .calculator
 
 %build
 %configure --disable-static \
@@ -57,7 +65,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang gnome-menus-3.0
 
 %post -p /sbin/ldconfig
@@ -78,6 +86,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gir-1.0/GMenu-3.0.gir
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.10.1-2
+- 更新到 3.10.1
+
 * Sat Mar 30 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-2
 - Fix gnome-calculator to show up in the menus again
 

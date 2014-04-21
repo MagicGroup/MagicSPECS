@@ -2,9 +2,11 @@
 
 Name:           gts
 Version:        0.7.6
-Release:        22.20%{snapshot}%{?dist}
+Release:        23.20%{snapshot}%{?dist}
 Summary:        GNU Triangulated Surface Library
+Summary(zh_CN.UTF-8): GNU 三角曲面库
 Group:          Applications/Engineering
+Group(zh_CN.UTF-8): 应用程序/工程
 License:        LGPLv2+
 URL:            http://gts.sourceforge.net/index.html
 Source0:        http://gts.sourceforge.net/tarballs/gts-snapshot-%{snapshot}.tar.gz
@@ -16,7 +18,9 @@ BuildRequires:  netpbm-devel
 
 %package devel
 Summary:        Development files for gts
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Applications/Engineering
+Group(zh_CN.UTF-8): 开发/库
 Requires:       pkgconfig
 Requires:       glib2-devel
 Requires:       %{name} = %{version}-%{release}
@@ -27,8 +31,14 @@ with interconnected triangles including collision detection,
 multiresolution models, constrained Delaunay triangulations and robust
 set operations (union, intersection, differences).
 
+%description -l zh_CN.UTF-8
+GNU 三角曲面库。
+
 %description devel
 This package contains the gts header files and libs.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-snapshot-%{snapshot}
@@ -52,6 +62,7 @@ mv -f $RPM_BUILD_ROOT%{_bindir}/transform $RPM_BUILD_ROOT%{_bindir}/gtstransform
 mv -f $RPM_BUILD_ROOT%{_mandir}/man1/delaunay.1 $RPM_BUILD_ROOT%{_mandir}/man1/gtsdelaunay.1 
 mv -f $RPM_BUILD_ROOT%{_mandir}/man1/happrox.1 $RPM_BUILD_ROOT%{_mandir}/man1/gtshapprox.1
 mv -f $RPM_BUILD_ROOT%{_mandir}/man1/transform.1 $RPM_BUILD_ROOT%{_mandir}/man1/gtstransform.1
+magic_rpm_clean.sh
 
 %check
 # Urgh, something is very broken with gts rsp. its testsuite
@@ -96,6 +107,9 @@ make check ||:
 %{_mandir}/man1/gts-config.1*
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.7.6-23.20111025
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.7.6-22.20111025
 - 为 Magic 3.0 重建
 

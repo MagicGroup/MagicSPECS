@@ -3,16 +3,19 @@
 %define desktop_file_utils_version 0.9
 
 Name:           gucharmap
-Version:        3.2.2
+Version:	3.12.0
 Release:        3%{?dist}
 Summary:        Unicode character picker and font browser
+Summary(zh_CN.UTF-8): Unicode 字符选择程序和字体浏览器
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv3+ and GFDL and MIT
 # GPL for the source code, GFDL for the docs, MIT for Unicode data
 URL:            http://live.gnome.org/Gucharmap
 #VCS: git:git://git.gnome.org/gucharmap
-Source:         http://download.gnome.org/sources/gucharmap/3.2/gucharmap-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/gucharmap/%{majorver}/gucharmap-%{version}.tar.xz
 
 BuildRequires: gnome-doc-utils >= 0.3.2
 BuildRequires: glib2-devel >= %{glib2_version}
@@ -30,9 +33,14 @@ characters and categories for the installed fonts, and to examine their
 detailed properties. It is an easy way to find the character you might
 only know by its Unicode name or code point.
 
+%description -l zh_CN.UTF-8 
+Unicode 字符选择程序和字体浏览器。
+
 %package devel
 Summary: Libraries and headers for libgucharmap
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: glib2-devel >= %{glib2_version}
 Requires: gtk3-devel >= %{gtk3_version}
 Requires: gucharmap = %{version}-%{release}
@@ -40,6 +48,9 @@ Requires: gucharmap = %{version}-%{release}
 %description devel
 The gucharmap-devel package contains header files and other resources
 needed to use the libgucharmap library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n  %{name}-%{version}
@@ -64,7 +75,7 @@ desktop-file-install --vendor gnome --delete-original       \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications             \
   $RPM_BUILD_ROOT%{_datadir}/applications/*
 
-
+magic_rpm_clean.sh
 %find_lang gucharmap --with-gnome
 
 
@@ -98,9 +109,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/gnome-character-map
 %{_libdir}/libgucharmap_2_90.so.*
 %{_datadir}/applications/gnome-gucharmap.desktop
-%{_sysconfdir}/gconf/schemas/gucharmap.schemas
+#%{_sysconfdir}/gconf/schemas/gucharmap.schemas
 %{_libdir}/girepository-1.0
-
+%{_datadir}/appdata/gucharmap.appdata.xml
+%{_datadir}/glib-2.0/schemas/org.gnome.Charmap.*.xml
 
 %files devel
 %{_includedir}/gucharmap-2.90
@@ -110,6 +122,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 3.12.0-3
+- 更新到 3.12.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.2.2-3
 - 为 Magic 3.0 重建
 

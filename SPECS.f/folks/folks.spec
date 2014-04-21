@@ -8,11 +8,14 @@ Epoch:          1
 Version:        0.9.6
 Release:        4%{?dist}
 Summary:        GObject contact aggregation library
+Summary(zh_CN.UTF-8): GObject 联系人聚合库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/Folks
-Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 Patch0:         Remove_Assert.patch
 
 BuildRequires:  telepathy-glib-devel >= %{tp_glib_ver}
@@ -35,19 +38,27 @@ libfolks is a library that aggregates people from multiple sources (e.g.
 Telepathy connection managers and eventually evolution data server,
 Facebook, etc.) to create meta-contacts.
 
+%description -l zh_CN.UTF-8
+GObject 联系人聚合库。
 
 %package        tools
 Summary:        Tools for %{name}
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 
 %description    tools
 %{name}-tools contains a database and import tool.
 
+%description tools -l zh_CN.UTF-8
+%{name} 的工具。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:	%{name}-tools = %{epoch}:%{version}-%{release}
 Requires:       telepathy-glib-devel >= %{tp_glib_ver}
@@ -61,6 +72,8 @@ Requires:	vala-tools
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -76,6 +89,7 @@ make %{?_smp_mflags} V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 %find_lang %{name}
 
 

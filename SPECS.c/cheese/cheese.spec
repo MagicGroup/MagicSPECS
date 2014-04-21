@@ -1,11 +1,11 @@
 Name:           cheese
 Epoch:          2
-Version:	3.11.92
+Version:	3.12.0
 Release:        1%{?dist}
 Summary:        Application for taking pictures and movies from a webcam
 Summary(zh_CN.UTF-8): 从网络摄像头中抓取图像和视频的程序
 
-%define majorver 3.11
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Group:          Amusements/Graphics
 Group(zh_CN.UTF-8): 娱乐/图像
 License:        GPLv2+
@@ -159,6 +159,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gir-1.0/Cheese-3.0.gir
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 2:3.12.0-1
+- 更新到 3.12.0
+
 * Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 2:3.11.92-1
 - 更新到 3.11.92
 

@@ -1,50 +1,58 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-Name:		gammu
-Version:        1.26.1
-Release:        9%{?dist}
+Name:       gammu
+Version:        1.33.0
+Release:        2%{?dist}
 Summary:        Command Line utility to work with mobile phones
+Summary(zh_CN.UTF-8): 操作手机的命令行工具
 
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License:        GPLv2+
-URL:            http://cihar.com/gammu/
-Source0:        ftp://dl.cihar.com/gammu/releases/%{name}-%{version}.tar.bz2
-Patch0:         %{name}-1.26.1-exec.patch
+URL:            http://wammu.eu/gammu/
+Source0:        http://sourceforge.net/projects/gammu/files/%{name}/%{version}/%{name}-%{version}.tar.bz2
 
-BuildRequires:	autoconf, gettext, cmake
+BuildRequires:  autoconf, gettext, cmake
 %ifnarch s390 s390x
-BuildRequires:	libusb1-devel
+BuildRequires:  libusb1-devel
 %endif
-BuildRequires:	doxygen
+BuildRequires:  doxygen
 BuildRequires:  libdbi-devel, libcurl-devel
 # Enabling bluetooth fonction
-BuildRequires:	bluez-libs-devel
+BuildRequires:  bluez-libs-devel
 # Enabling Database sms fonction
-BuildRequires:	postgresql-devel, mysql-devel
+BuildRequires:  postgresql-devel, mysql-devel
+BuildRequires:  glib2-devel libgudev1-devel
 
 Requires:       bluez, dialog
 
 
-%package	libs
-Summary:	Libraries files for %{name}
-Group:		System Environment/Libraries
+%package    libs
+Summary:    Libraries files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
+Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %package -n     python-%{name}
-Summary:	Python bindings for Gammu
-Group:		Development/Languages
+Summary:    Python bindings for Gammu
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
+Group:      Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 
-BuildRequires:  python-devel
+BuildRequires:  python2-devel
 Obsoletes:      python-%{name} <= 0.28
 
 Requires:       %{name} = %{version}-%{release}
 
-%package	devel
-Summary:	Development files for %{name}	
-Group:		Development/Libraries
+%package    devel
+Summary:    Development files for %{name}   
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
-Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-libs = %{version}-%{release}
-Requires:	pkgconfig
+Requires:   %{name} = %{version}-%{release}
+Requires:   %{name}-libs = %{version}-%{release}
+Requires:   pkgconfig
 
 %description
 Gammu is command line utility and library to work with mobile phones
@@ -55,53 +63,61 @@ messages (SMS, EMS and MMS), calendar, todos, filesystem,
 integrated radio, camera, etc.
 It also supports daemon mode to send and receive SMSes.
 
-%description	libs
+%description -l zh_CN.UTF-8
+支持多种手机的命令行工具和库。
+
+%description    libs
 The %{name}-libs package contains libraries files that used by %{name}
+
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %description -n python-%{name}
 Python bindings for Gammu library.
 It currently does not support all Gammu features,
 but range of covered functions is increasing,
-if you need some specific, feel free to use bug tracking system for feature requests.
+if you need some specific, feel free to use bug tracking system for feature 
+requests.
 
-%description	devel
+%description -n python-%{name} -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
+%description    devel
 The %{name}-devel  package contains Header and libraries files for
 developing applications that use %{name}
 
-
-
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch0 -p1 -b .exec
 
 #sed -i 's|${INSTALL_LIB_DIR}|%{_libdir}|' CMakeLists.txt libgammu/CMakeLists.txt \
-#				smsd/CMakeLists.txt gammu/CMakeLists.txt
+#                              smsd/CMakeLists.txt gammu/CMakeLists.txt
 
 # These flags make the compilation fail on F-14. We remove them for now to finish
 # python-2.7 rebuilds. Maintainer, please fix.
-sed -i -e '/-Werror/d' CMakeLists.txt
+#sed -i -e '/-Werror/d' CMakeLists.txt
 
 %build
 mkdir build
 pushd build
-%cmake					\
-	-DENABLE_BACKUP=ON		\
-	-DWITH_NOKIA_SUPPORT=ON		\
-	-DWITH_Bluez=ON			\
-	-DBUILD_PYTHON=/usr/bin/python		\
-	-DWITH_IrDA=On			\
-	../
+%cmake                  \
+    -DENABLE_BACKUP=ON      \
+    -DWITH_NOKIA_SUPPORT=ON     \
+    -DWITH_Bluez=ON         \
+    -DWITH_IrDA=On          \
+    ../
 make
 popd
 
-#fix lines ending 
-for docs in \
-	docs/develop/{protocol/'*',sounds/*,sms/'*'}	\
-	docs/develop/{*.htm,*.txt}			\
-	docs/user/*.* ; do
-	sed -e 's/\r//' -i $docs
-done
+##fix lines ending 
+#for docs in \
+#   docs/develop/{protocol/'*',sounds/*,sms/'*'}    \
+#   docs/develop/{*.htm,*.txt}          \
+#   docs/user/*.* ; do
+#   sed -e 's/\r//' -i $docs
+#done
 
 
 %install
@@ -109,14 +125,6 @@ make -C build  install DESTDIR=$RPM_BUILD_ROOT
  
 #remove library
 rm -f $RPM_BUILD_ROOT%{_libdir}/libGammu.a
-
-#Improve installed documentations directories
-mkdir devel_docs
-mkdir -p docs/symbian
-cp -pR $RPM_BUILD_ROOT%{_docdir}/%{name}/devel/* devel_docs
-cp -pR $RPM_BUILD_ROOT%{_docdir}/%{name}/symbian/* docs/symbian
-cp -p $RPM_BUILD_ROOT%{_docdir}/%{name}/*.* .
-rm -rf $RPM_BUILD_ROOT%{_docdir}/%{name}
 magic_rpm_clean.sh
 %find_lang %{name}
 %find_lang lib%{name}
@@ -130,15 +138,22 @@ cat lib%{name}.lang >> %{name}.lang
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc COPYING ChangeLog README docs/* BUGS SUPPORTERS *.html *.txt
+%doc %{_docdir}/%{name}/README 
+%doc %{_docdir}/%{name}/ChangeLog 
+%doc %{_docdir}/%{name}/COPYING
+%doc %{_docdir}/%{name}/examples
 %{_bindir}/%{name}*
 %{_bindir}/jadmaker
 %{_mandir}/man1/*.gz
 %{_mandir}/man5/*.gz
 %{_mandir}/man7/*.gz
+#%{_mandir}/cs/man1/*.gz
+#%{_mandir}/cs/man5/*.gz
+#%{_mandir}/cs/man7/*.gz
 %config %{_sysconfdir}/bash_completion.d/%{name}
+%{_datadir}/%{name}
 
-%files		libs
+%files      libs
 %defattr(-,root,root,-)
 %{_libdir}/*.so.*
 
@@ -146,15 +161,37 @@ cat lib%{name}.lang >> %{name}.lang
 %defattr(-,root,root,-)
 %{python_sitearch}/%{name}
 
-%files		devel
+%files      devel
 %defattr(-,root,root,-)
-%doc devel_docs/*
+%doc %{_docdir}/%{name}/manual
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/%{name}
 
 
 %changelog
+* Wed Jan 22 2014 Sérgio Basto <sergio@serjux.com> - 1.33.0-2
+- Rebuild for newer libdbi
+
+* Sat Sep 07 2013 Sérgio Basto <sergio@serjux.com> - 1.33.0-1
+- Update to lastest release. 
+- Pack all docs.
+- fixed W: mixed-use-of-spaces-and-tabs with vim :retab 
+
+* Sat Aug 31 2013 Sérgio Basto <sergio@serjux.com> - 1.30.0-1
+- Add BuildRequires glib2-devel libgudev1-devel  
+- Change mysql to mariadb.
+- Thu Sep 29 2011 Karel Volny <kvolny@redhat.com>
+  - Update release.
+  - Patch gammu-1.26.1-exec.patch no longer needed.
+  - Some docs are no longer present.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.26.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.26.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.26.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -235,13 +272,13 @@ cat lib%{name}.lang >> %{name}.lang
 * Mon Aug 25 2008 Xavier Lamien <lxtnow[at]gmail.com> - 1.20.90-1
 - Update release.
 
-* Mon Aug 23 2008 Xavier Lamien <lxntow[at]gmail.com> - 1.20.0-1
+* Mon Aug 25 2008 Xavier Lamien <lxntow[at]gmail.com> - 1.20.0-1
 - Update release.
 
 * Mon Jun 02 2008 Xavier Lamien <lxtnow[at]gmail.com> - 1.19.0-2
 - Added Require dialog.
 
-* Thu Apr 15 2008 Xavier Lamien <lxtnow[at]gmail.com> - 1.19.0-1
+* Thu Apr 17 2008 Xavier Lamien <lxtnow[at]gmail.com> - 1.19.0-1
 - Updated Release.
 
 * Fri Feb 29 2008 Xavier Lamien <lxtnow[at]gmail.com> - 1.18.91-1
@@ -260,7 +297,7 @@ cat lib%{name}.lang >> %{name}.lang
 * Fri Oct 12 2007 Xavier Lamien < lxtnow[at]gmail.com > - 1.13.0-1
 - Updated Release.
 
-* Wed Aug 02 2007 Xavier Lamien < lxtnow[at]gmail.com > - 1.12.92-1
+* Wed Aug 01 2007 Xavier Lamien < lxtnow[at]gmail.com > - 1.12.92-1
 - Updated Release.
 
 * Wed Jul 25 2007 Xavier Lamien < lxtnow[at]gmail.com > - 1.12.91-1

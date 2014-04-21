@@ -1,6 +1,6 @@
 Name:		htmldoc
 Version:	1.8.27
-Release:	20%{?dist}
+Release:	21%{?dist}
 Summary:	Converter from HTML into indexed HTML, PostScript, or PDF
 
 Group:		Applications/Publishing
@@ -190,6 +190,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.8.27-21
+- 为 Magic 3.0 重建
+
 * Sat Sep  1 2012 Daniel Drake <dsd@laptop.org> - 1.8.27-20
 - fix libpng-1.5 patch to not corrupt images
 

@@ -1,13 +1,16 @@
 Name:           gnome-common
-Version:        3.7.4
+Version:	3.12.0
 Release:        2%{?dist}
 Summary:        Useful things common to building gnome packages from scratch
+Summary(zh_CN.UTF-8): 从源码构建 gnome 包所需要的通用包
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 BuildArch:      noarch
 License:        GPLv3
 URL:            http://developer.gnome.org
-Source0:        http://download.gnome.org/sources/%{name}/3.6/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 # This will pull in the latest version; if your package requires something older,
 # well, BuildRequire it in that spec.  At least until such time as we have a
@@ -26,6 +29,11 @@ gnome apps or building ones from distributed tarballs.  They are only useful
 for compiling from CVS sources or when developing the build infrastructure for
 a GNOME application.
 
+%description -l zh_CN.UTF-8
+从源码构建 gnome 包所需要的通用包，饮食了许多 GNOME 程序使用的样例文件。
+运行 gnome 程序或从发布的 tar 包中编译不需要这个包，只在从 CVS 源码或开
+发 GNOME 程序时才需要。
+
 %prep
 %setup -q
 
@@ -38,6 +46,7 @@ cp doc/usage.txt usage.txt
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %files
 %doc doc-README usage.txt ChangeLog
@@ -46,6 +55,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_datadir}/%{name}
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.7.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

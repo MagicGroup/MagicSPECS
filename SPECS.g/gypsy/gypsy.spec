@@ -1,6 +1,6 @@
 Name:          gypsy
 Version:       0.8
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       A GPS multiplexing daemon
 
 Group:         System Environment/Libraries
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/gypsy
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.8-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8-4
 - 为 Magic 3.0 重建
 

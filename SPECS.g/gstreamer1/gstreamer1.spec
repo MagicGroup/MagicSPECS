@@ -6,8 +6,9 @@
 
 Name:           gstreamer1
 Version:        1.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer streaming media framework runtime
+Summary(zh_CN.UTF-8): GStreamer 流媒体框架运行库
 
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
@@ -54,9 +55,16 @@ else media-related.  Its plugin-based architecture means that new data
 types or processing capabilities can be added simply by installing new 
 plugins.
 
+%description -l zh_CN.UTF-8
+GStreamer 是一个流多媒体框架，以C语言写成。
+
+凭借GStreamer，程序员可以很容易地创建各种多媒体功能组件，包括简单的音频
+回放，音频和视频播放,录音，流媒体和音频编辑。基于流水线设计，可以创建诸
+如视频编辑器、流媒体广播和媒体播放器等等的很多多媒体应用。
 
 %package devel
 Summary:        Libraries/include files for GStreamer streaming media framework
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 Requires:       glib2-devel >= %{_glib2}
 Requires:       libxml2-devel >= %{_libxml2}
@@ -67,9 +75,12 @@ Requires:       check-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package devel-docs
 Summary:         Developer documentation for GStreamer streaming media framework
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires:        %{name} = %{version}-%{release}
 BuildArch:       noarch
 
@@ -78,6 +89,8 @@ BuildArch:       noarch
 This %{name}-devel-docs contains developer documentation for the
 GStreamer streaming media framework.
 
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q -n gstreamer-%{version}
@@ -107,7 +120,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libexecdir}/gstreamer-%{majorminor}/gst-plugi
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-inspect-1.0
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-launch-1.0
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-typefind-1.0
-
+magic_rpm_clean.sh
 %find_lang gstreamer-%{majorminor}
 # Clean out files that should not be part of the rpm.
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
@@ -194,6 +207,9 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Brian Pepple <bpepple@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3.
 

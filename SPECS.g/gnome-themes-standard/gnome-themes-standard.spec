@@ -2,14 +2,17 @@
 %global gtk3_version 3.6.2
 
 Name: gnome-themes-standard
-Version: 3.8.1
+Version:	3.12.0
 Release: 1%{?dist}
 Summary: Standard themes for GNOME applications
+Summary(zh_CN.UTF-8): GNOME 程序的标准主题 
 
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License: LGPLv2+
 URL: http://git.gnome.org/browse/gnome-themes-standard
-Source0: http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 Source1: settings.ini
 Source2: gtkrc
 
@@ -36,32 +39,50 @@ The gnome-themes-standard package contains the standard theme for the GNOME
 desktop, which provides default appearance for cursors, desktop background,
 window borders and GTK+ applications.
 
+%description -l zh_CN.UTF-8
+GNOME 3 程序的标准主题，包括默认光标，桌面背景，窗口边框等。
+
 %package -n adwaita-cursor-theme
 Summary: Adwaita cursor theme
+Summary(zh_CN.UTF-8): Adwaita 光标主题
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildArch: noarch
 
 %description -n adwaita-cursor-theme
 The adwaita-cursor-theme package contains a modern set of cursors originally
 designed for the GNOME desktop.
 
+%description -n adwaita-cursor-theme -l zh_CN.UTF-8
+Adwaita 光标主题。
+
 %package -n adwaita-gtk2-theme
 Summary: Adwaita gtk2 theme
+Summary(zh_CN.UTF-8): Adwaita gtk2 主题 
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires: gtk2%{_isa} >= %{gtk2_version}
 
 %description -n adwaita-gtk2-theme
 The adwaita-gtk2-theme package contains a gtk2 theme for presenting widgets
 with a GNOME look and feel.
 
+%description -n adwaita-gtk2-theme -l zh_CN.UTF-8
+Adwaita gtk2 主题。
+
 %package -n adwaita-gtk3-theme
 Summary: Adwaita gtk3 theme
+Summary(zh_CN.UTF-8): Adwaita gtk3 主题 
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires: gtk3%{_isa} >= %{gtk3_version}
 
 %description -n adwaita-gtk3-theme
 The adwaita-gtk3-theme package contains a gtk3 theme for rendering widgets
 with a GNOME look and feel.
+
+%description -n adwaita-gtk3-theme -l zh_CN.UTF-8
+Adwaita gtk3 主题。
 
 %prep
 %setup -q
@@ -85,6 +106,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gtk-3.0
 cp $RPM_SOURCE_DIR/settings.ini $RPM_BUILD_ROOT%{_sysconfdir}/gtk-3.0/settings.ini
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0
 cp $RPM_SOURCE_DIR/gtkrc $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0/gtkrc
+magic_rpm_clean.sh
 
 %post
 for t in HighContrast; do
@@ -132,6 +154,9 @@ done
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

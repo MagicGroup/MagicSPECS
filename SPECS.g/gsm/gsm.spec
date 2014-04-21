@@ -1,9 +1,11 @@
 Name:           gsm
 Version:        1.0.13
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Shared libraries for GSM speech compressor
+Summary(zh_CN.UTF-8): GSM 语音压缩用的共享库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        MIT
 URL:            http://kbs.cs.tu-berlin.de/~jutta/toast.html
 Source:         http://kbs.cs.tu-berlin.de/~jutta/gsm/%{name}-%{version}.tar.gz
@@ -34,9 +36,14 @@ a library API.  Compression and decompression run faster than realtime
 on most SPARCstations.  The implementation has been verified against the
 ETSI standard test patterns.
 
+%description -l zh_CN.UTF-8
+GSM 语音压缩用的共享库。
+
 %package        tools
 Summary:        GSM speech compressor tools
+Summary(zh_CN.UTF-8): GSM 语音压缩工具
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 
 %description    tools
 Contains command line utilities for libgsm, an implementation of
@@ -44,9 +51,14 @@ the European GSM 06.10 provisional standard for full-rate speech
 transcoding, prI-ETS 300 036, which uses RPE/LTP (residual pulse
 excitation/long term prediction) coding at 13 kbit/s.
 
+%description tools -l zh_CN.UTF-8 
+GSM 语音压缩工具。
+
 %package        devel
 Summary:        Header files and development libraries for libgsm
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
@@ -54,6 +66,9 @@ Contains header files and development libraries for libgsm, an
 implementation of the European GSM 06.10 provisional standard for
 full-rate speech transcoding, prI-ETS 300 036, which uses RPE/LTP
 (residual pulse excitation/long term prediction) coding at 13 kbit/s.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -n gsm-%{srcver} -q
@@ -86,7 +101,7 @@ ln -s libgsm.so.%{soname} $RPM_BUILD_ROOT%{_libdir}/libgsm.so
 ln -s gsm/gsm.h $RPM_BUILD_ROOT%{_includedir}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.a
-
+magic_rpm_clean.sh
 
 %check
 # This is to ensure that the patch creates the proper library version.
@@ -121,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.0.13-6
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.0.13-4
 - 为 Magic 3.0 重建
 

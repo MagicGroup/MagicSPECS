@@ -1,7 +1,7 @@
 %global dbver_rel 4.0
 # When you change dbver_snap, rebuild also foomatic against this build to pick up new IEEE 1284 Device IDs.
 # The postscriptdriver tags get put onto foomatic, because that's there the actual CUPS driver lives.
-%global dbver_snap 20130604
+%global dbver_snap 20140403
 
 Summary: Database of printers and printer drivers
 Name: foomatic-db

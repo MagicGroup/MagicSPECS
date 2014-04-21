@@ -1,10 +1,10 @@
 Some functionality is available on RHEL-5.4+ only with gcc44 and gfortran44 as
 the default gcc and gfortran binaries are from gcc-4.1.
 
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.base/vla.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.base/vla.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.base/vla.exp	2012-07-03 17:30:07.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.base/vla.exp	2012-07-03 17:50:57.999207540 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.base/vla.exp	2014-02-06 18:26:05.115083077 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.base/vla.exp	2014-02-06 18:26:06.689084765 +0100
 @@ -16,7 +16,25 @@
  set testfile vla
  set srcfile ${testfile}.c
@@ -32,10 +32,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.base/vla.exp
      untested "Couldn't compile test program"
      return -1
  }
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.base/break-interp.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.base/break-interp.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.base/break-interp.exp	2012-07-03 17:44:45.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.base/break-interp.exp	2012-07-03 17:50:58.000207539 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.base/break-interp.exp	2014-02-06 18:26:05.116083078 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.base/break-interp.exp	2014-02-06 18:26:06.689084765 +0100
 @@ -34,9 +34,29 @@ if [get_compiler_info] {
      return -1
  }
@@ -67,15 +67,16 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.base/break-interp.exp
      return -1
  }
  
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/common-block.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/common-block.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/common-block.exp	2012-07-03 17:36:21.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/common-block.exp	2012-07-03 17:50:58.001207537 +0200
-@@ -20,7 +20,25 @@ set testfile "common-block"
- set srcfile ${testfile}.f90
- set binfile ${objdir}/${subdir}/${testfile}
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/common-block.exp	2014-02-06 18:26:05.116083078 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/common-block.exp	2014-02-06 18:26:06.690084760 +0100
+@@ -22,8 +22,25 @@ if {[skip_fortran_tests]} {
  
--if  { [gdb_compile "${srcdir}/${subdir}/${srcfile}" "${binfile}" executable {debug f90 quiet}] != "" } {
+ standard_testfile .f90
+ 
+-if {[prepare_for_testing ${testfile}.exp ${testfile} \
+-	 $srcfile {debug f90 quiet}]} {
 +# Temporarily provide f90compiler=gfortran44 saving the original value around.
 +
 +set board [target_info name]
@@ -87,21 +88,21 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/common-block.exp
 +}
 +set_board_info f90compiler gfortran44
 +
-+set err [gdb_compile "${srcdir}/${subdir}/${srcfile}" "${binfile}" executable {debug f90 quiet}]
++set err [prepare_for_testing ${testfile}.exp ${testfile} $srcfile {debug f90 quiet}]
 +
 +unset_board_info f90compiler
 +if [info exists old_f90compiler] {
 +    set_board_info f90compiler $old_f90compiler
 +}
 +
-+if  { $err != "" } {
-     untested "Couldn't compile ${srcfile}"
++if {$err} {
      return -1
  }
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/dwarf-stride.exp
+ 
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/dwarf-stride.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/dwarf-stride.exp	2012-07-03 17:30:07.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/dwarf-stride.exp	2012-07-03 17:50:58.002207535 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/dwarf-stride.exp	2014-02-06 18:26:05.117083079 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/dwarf-stride.exp	2014-02-06 18:26:06.690084760 +0100
 @@ -27,7 +27,25 @@
  set testfile dwarf-stride
  set srcfile ${testfile}.f90
@@ -129,10 +130,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/dwarf-stride.exp
      return -1
  }
  
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/dynamic.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/dynamic.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/dynamic.exp	2012-07-03 17:30:07.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/dynamic.exp	2012-07-03 17:50:58.002207535 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/dynamic.exp	2014-02-06 18:26:05.117083079 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/dynamic.exp	2014-02-06 18:26:06.690084760 +0100
 @@ -25,7 +25,25 @@ set testfile "dynamic"
  set srcfile ${testfile}.f90
  set binfile ${objdir}/${subdir}/${testfile}
@@ -160,10 +161,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/dynamic.exp
      untested "Couldn't compile ${srcfile}"
      return -1
  }
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/library-module.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/library-module.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/library-module.exp	2012-06-25 22:51:35.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/library-module.exp	2012-07-03 17:52:57.666062981 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/library-module.exp	2014-02-06 18:26:05.117083079 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/library-module.exp	2014-02-06 18:26:06.690084760 +0100
 @@ -23,16 +23,34 @@ if [get_compiler_info] {
     return -1
  }
@@ -203,10 +204,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/library-module.exp
      untested "Couldn't compile ${srcfile}"
      return -1
  }
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/module.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/module.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/module.exp	2012-06-25 22:51:35.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/module.exp	2012-07-03 17:53:56.464992086 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/module.exp	2014-02-06 18:26:05.118083080 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/module.exp	2014-02-06 18:26:06.690084760 +0100
 @@ -15,7 +15,25 @@
  
  standard_testfile .f90
@@ -234,10 +235,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/module.exp
      return -1
  }
  
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/string.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/string.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/string.exp	2012-07-03 17:30:07.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/string.exp	2012-07-03 17:50:58.005207532 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/string.exp	2014-02-06 18:26:05.118083080 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/string.exp	2014-02-06 18:26:06.691084763 +0100
 @@ -23,7 +23,25 @@ set testfile "string"
  set srcfile ${testfile}.f90
  set binfile ${objdir}/${subdir}/${testfile}
@@ -265,10 +266,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/string.exp
      untested "Couldn't compile ${srcfile}"
      return -1
  }
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/omp-step.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/omp-step.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/omp-step.exp	2012-07-03 17:36:21.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/omp-step.exp	2012-07-03 17:50:58.006207531 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/omp-step.exp	2014-02-06 18:26:05.118083080 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/omp-step.exp	2014-02-06 18:26:06.691084763 +0100
 @@ -15,7 +15,26 @@
  
  set testfile "omp-step"
@@ -297,10 +298,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/omp-step.exp
      return -1
  }
  
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/derived-type.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/derived-type.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/derived-type.exp	2012-06-25 22:51:35.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/derived-type.exp	2012-07-03 17:55:46.583858849 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/derived-type.exp	2014-02-06 18:26:05.119083082 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/derived-type.exp	2014-02-06 18:26:06.691084763 +0100
 @@ -22,7 +22,25 @@ if { [skip_fortran_tests] } { return -1
  
  standard_testfile .f90
@@ -328,10 +329,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/derived-type.exp
      return -1
  }
  
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/subarray.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/subarray.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.fortran/subarray.exp	2012-06-25 22:51:35.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/subarray.exp	2012-07-03 17:56:20.454818198 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.fortran/subarray.exp	2014-02-06 18:26:05.119083082 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.fortran/subarray.exp	2014-02-06 18:26:06.691084763 +0100
 @@ -22,7 +22,25 @@ if { [skip_fortran_tests] } { return -1
  
  standard_testfile .f
@@ -359,10 +360,10 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.fortran/subarray.exp
      return -1
  }
  
-Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.threads/tls-sepdebug.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/gdb.threads/tls-sepdebug.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/gdb.threads/tls-sepdebug.exp	2012-07-03 17:32:05.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/gdb.threads/tls-sepdebug.exp	2012-07-03 17:50:58.007207530 +0200
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/gdb.threads/tls-sepdebug.exp	2014-02-06 18:26:05.119083082 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/gdb.threads/tls-sepdebug.exp	2014-02-06 18:26:06.691084763 +0100
 @@ -32,7 +32,25 @@ set binshareddebugfile ${objdir}/${subdi
  
  # FIXME: gcc dependency (-Wl,-soname).
@@ -390,13 +391,13 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/gdb.threads/tls-sepdebug.exp
      untested "Couldn't compile test library"
      return -1
  }
-Index: gdb-7.4.50.20120703/gdb/testsuite/lib/prelink-support.exp
+Index: gdb-7.6.90.20140127/gdb/testsuite/lib/prelink-support.exp
 ===================================================================
---- gdb-7.4.50.20120703.orig/gdb/testsuite/lib/prelink-support.exp	2012-07-03 17:44:45.000000000 +0200
-+++ gdb-7.4.50.20120703/gdb/testsuite/lib/prelink-support.exp	2012-07-03 17:50:58.008207529 +0200
-@@ -119,9 +119,31 @@ proc file_copy {src dest} {
+--- gdb-7.6.90.20140127.orig/gdb/testsuite/lib/prelink-support.exp	2014-02-06 18:26:06.692084767 +0100
++++ gdb-7.6.90.20140127/gdb/testsuite/lib/prelink-support.exp	2014-02-06 18:27:44.960190192 +0100
+@@ -118,9 +118,31 @@ proc file_copy {src dest} {
  proc build_executable_own_libs {testname executable sources options {interp ""} {dir ""}} {
-     global objdir subdir
+     global subdir
  
 -    if {[build_executable $testname $executable $sources $options] == -1} {
 -	return ""
@@ -425,6 +426,6 @@ Index: gdb-7.4.50.20120703/gdb/testsuite/lib/prelink-support.exp
 +	return ""   
 +    }
 +
-     set binfile ${objdir}/${subdir}/${executable}
+     set binfile [standard_output_file ${executable}]
  
-     set command "ldd $binfile"
+     set ldd [gdb_find_ldd]

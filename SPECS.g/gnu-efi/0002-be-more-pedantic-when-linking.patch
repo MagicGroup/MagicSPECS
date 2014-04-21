@@ -1,0 +1,46 @@
+From f99c72fe642e7ccc00012f01b8fc2adf8f93a79c Mon Sep 17 00:00:00 2001
+From: Nigel Croxon <ncroxon@redhat.com>
+Date: Tue, 25 Jun 2013 08:47:03 -0400
+Subject: [PATCH 2/3] be more pedantic when linking
+
+Don't allow duplicate symbols, abort upon first error.
+also make sure the linker script comes last for apps.
+
+Signed-off-by: David Decotigny <decot@googlers.com>
+---
+ Make.defaults | 2 +-
+ apps/Makefile | 8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/Make.defaults b/Make.defaults
+index a22a1b4..6b4b6de 100644
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -114,4 +114,4 @@ CFLAGS  += $(ARCH3264) -O2 -fpic -Wall -fshort-wchar -fno-strict-aliasing \
+            -fno-merge-constants -ffreestanding -fno-stack-protector       \
+            -fno-stack-check
+ ASFLAGS += $(ARCH3264)
+-LDFLAGS	+= -nostdlib --no-undefined
++LDFLAGS	+= -nostdlib --warn-common --no-undefined --fatal-warnings
+diff --git a/apps/Makefile b/apps/Makefile
+index 773bc08..6834e14 100644
+--- a/apps/Makefile
++++ b/apps/Makefile
+@@ -52,8 +52,12 @@ ifneq (,$(findstring FreeBSD,$(OS)))
+ LDSCRIPT	= $(TOPDIR)/gnuefi/elf_$(ARCH)_fbsd_efi.lds
+ endif
+ 
+-LDFLAGS		+= -T $(LDSCRIPT) -shared -Bsymbolic -L../lib -L../gnuefi $(CRTOBJS)
+-LOADLIBES	= -lefi -lgnuefi $(shell $(CC) $(ARCH3264) -print-libgcc-file-name)
++LDFLAGS		+= -shared -Bsymbolic -L../lib -L../gnuefi $(CRTOBJS)
++
++LOADLIBES	+= -lefi -lgnuefi
++LOADLIBES	+= $(shell $(CC) $(ARCH3264) -print-libgcc-file-name)
++LOADLIBES	+= -T $(LDSCRIPT)
++
+ FORMAT		= efi-app-$(ARCH)
+ 
+ TARGETS = t.efi t2.efi t3.efi t4.efi t5.efi t6.efi printenv.efi t7.efi tcc.efi modelist.efi route80h.efi
+-- 
+1.8.3.1
+

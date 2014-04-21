@@ -4,8 +4,10 @@ Name:		gnome-dvb-daemon
 Version:	0.2.10
 Release:	1%{?dist}
 Summary:	Digital Television manager
+Summary(zh_CN.UTF-8): 数字电视管理器
 
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:	GPLv3+
 URL:		http://live.gnome.org/DVBDaemon
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-dvb-daemon/0.2/%{name}-%{version}.tar.xz
@@ -35,6 +37,9 @@ channels.
 This package also contains a Totem plugin for the movie player and a plugin
 for sharing recordings and live TV over UPNP using Rygel.
 
+%description -l zh_CN.UTF-8
+数字电视管理器，支持录像、任务计划和扫描频道等。
+
 %prep
 %setup -q
 
@@ -48,7 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT/%{_datadir}/applications/*.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean

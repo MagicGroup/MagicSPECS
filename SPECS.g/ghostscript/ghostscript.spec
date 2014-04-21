@@ -1,37 +1,46 @@
-%define gs_ver 9.06
-%define gs_dot_ver 9.06
+%define gs_ver 9.10
+%define gs_dot_ver 9.10
 %{expand: %%define build_with_freetype %{?_with_freetype:1}%{!?_with_freetype:0}}
 Summary: A PostScript interpreter and renderer
+Summary(zh_CN.UTF-8): PostScript 解释器和渲染器
 Name: ghostscript
 Version: %{gs_ver}
 
-Release: 4%{?dist}
+Release: 6%{?dist}
 
 # Included CMap data is Redistributable, no modification permitted,
 # see http://bugzilla.redhat.com/487510
-License: GPLv3+ and Redistributable, no modification permitted
+License: AGPLv3+ and Redistributable, no modification permitted
 URL: http://www.ghostscript.com/
 Group: Applications/Publishing
-Source0: http://downloads.ghostscript.com/public/ghostscript-%{gs_ver}.tar.bz2
+Group(zh_CN.UTF-8): 应用程序/出版
+Source0: ghostscript-%{gs_ver}-cleaned.tar.bz2
+# ghostscript contains a jpegxr directory containing code we cannot
+# ship due to licensing concerns. Therefore we use this script to
+# remove that directory before shipping it. Download the upstream
+# tarball and invoke this script while in the tarball's directory:
+Source1: generate-tarball.sh
 Source2: CIDFnmap
 Source4: cidfmap
 
 Patch1: ghostscript-multilib.patch
 Patch2: ghostscript-scripts.patch
 Patch3: ghostscript-noopt.patch
-Patch4: ghostscript-ijs-automake-ver.patch
-Patch5: ghostscript-runlibfileifexists.patch
-Patch6: ghostscript-icc-missing-check.patch
-Patch10: ghostscript-cups-filters.patch
-Patch27: ghostscript-Fontmap.local.patch
-Patch28: ghostscript-iccprofiles-initdir.patch
-Patch29: ghostscript-gdevcups-debug-uninit.patch
+Patch4: ghostscript-runlibfileifexists.patch
+Patch5: ghostscript-icc-missing-check.patch
+Patch6: ghostscript-Fontmap.local.patch
+Patch7: ghostscript-iccprofiles-initdir.patch
+Patch8: ghostscript-gdevcups-debug-uninit.patch
+Patch9: ghostscript-wrf-snprintf.patch
+Patch10: ghostscript-gs694154.patch
+Patch11: ghostscript-gs694809.patch
+Patch12: ghostscript-duplex.patch
 
 Requires: urw-fonts >= 1.1, ghostscript-fonts
 Requires: poppler-data
 BuildRequires: xz
 BuildRequires: libjpeg-devel, libXt-devel
-BuildRequires: zlib-devel, libpng-devel, unzip, gtk2-devel
+BuildRequires: zlib-devel, libpng-devel, unzip, gtk3-devel
 BuildRequires: glib2-devel, gnutls-devel
 # Omni requires libxml
 BuildRequires: libxml2-devel
@@ -41,7 +50,7 @@ BuildRequires: libtool
 BuildRequires: jasper-devel
 BuildRequires: dbus-devel
 BuildRequires: poppler-data
-BuildRequires: lcms2-devel
+BuildRequires: lcms2-devel >= 2.4-5
 BuildRequires: openjpeg-devel
 %{?_with_freetype:BuildRequires: freetype-devel}
 BuildRoot: %{_tmppath}/%{name}-%{gs_ver}-root
@@ -67,43 +76,52 @@ non-PostScript printers, you should install ghostscript. If you
 install ghostscript, you also need to install the ghostscript-fonts
 package.
 
+%description -l zh_CN.UTF-8
+Postscripts 解释器和渲染器。
+
 %package devel
 Summary: Files for developing applications that use ghostscript
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 The header files for developing applications that use ghostscript.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package doc
 Summary: Documentation for ghostscript
+Summary(zh_CN.UTF-8): %{name} 的文档
 Requires: %{name} = %{version}-%{release}
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch: noarch
 
 %description doc
 The documentation files that come with ghostscript.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package gtk
 Summary: A GTK-enabled PostScript interpreter and renderer
+Summary(zh_CN.UTF-8): 使用 GTK 的 PostScript 解释器和渲染器
 Requires: %{name} = %{version}-%{release}
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 
 %description gtk
 A GTK-enabled version of Ghostscript, called 'gsx'.
 
-%package cups
-Summary: CUPS filter for interpreting PostScript and PDF
-Requires: %{name} = %{version}-%{release}
-Requires: cups
-Group: System Environment/Daemons
-
-%description cups
-CUPS filter and conversion rules for interpreting PostScript and PDF.
+%description gtk -l zh_CN.UTF-8
+使用 GTK 的 PostScript 解释器和渲染器，命名为 gsx。
 
 %prep
 %setup -q -n %{name}-%{gs_ver}
-rm -rf expat freetype icclib jasper jpeg lcms2 libpng openjpeg zlib cups/libs
+rm -rf expat freetype icclib jasper jpeg jpegxr lcms lcms2 libpng openjpeg zlib cups/libs
 
 # Fix ijs-config not to have multilib conflicts (bug #192672)
 %patch1 -p1 -b .multilib
@@ -114,30 +132,35 @@ rm -rf expat freetype icclib jasper jpeg lcms2 libpng openjpeg zlib cups/libs
 # Build igcref.c with -O0 to work around bug #150771.
 %patch3 -p1 -b .noopt
 
-# Fix ./autgen.sh in ijs sub-project
-# See http://bugs.ghostscript.com/show_bug.cgi?id=692040 for details.
-%patch4 -p1 -b .ijs-automake-ver
-
 # Define .runlibfileifexists.
-%patch5 -p1
+%patch4 -p1
 
 # Fixed missing error check when setting ICC profile.
-%patch6 -p1 -b .icc-missing-check
-
-# Install CUPS filter convs files in the correct place.
-%patch10 -p1 -b .cups-filters
+%patch5 -p1 -b .icc-missing-check
 
 # Restored Fontmap.local patch, incorrectly dropped after
 # ghostscript-8.15.4-3 (bug #610301).
 # Note: don't use -b here to avoid the backup file ending up in the
 # package manifest.
-%patch27 -p1
+%patch6 -p1
 
 # Don't assume %%rom%% device is available for initial ICC profile dir.
-%patch28 -p1 -b .iccprofiles-initdir
+%patch7 -p1 -b .iccprofiles-initdir
 
 # gdevcups: don't use uninitialized variables in debugging output.
-%patch29 -p1 -b .gdevcups-debug-uninit
+%patch8 -p1 -b .gdevcups-debug-uninit
+
+# Use more caution when converting floats to strings (bug #980085).
+%patch9 -p1 -b .wrf-snprintf
+
+# Use upstream patch to fix gs segfault (bug #1036428).
+%patch10 -p1 -b .gs694154
+
+# Use upstream patch to fix gs segfault (bug #1039718).
+%patch11 -p1 -b .gs694809
+
+# Use upstream patch to fix duplex for some devices (bug #1068896).
+%patch12 -p1 -b .duplex
 
 # Convert manual pages to UTF-8
 from8859_1() {
@@ -274,6 +297,7 @@ MAIN_PWD=`pwd`
  find .%{_bindir}/ | sed -e 's/\.//;' | \
                 grep -v '/$\|/hpijs$\|/gsx$\|/ijs-config$' \
                 >> $MAIN_PWD/rpm.sharelist)
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -292,6 +316,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/Init/gs_init.ps
 %config %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/Init/Fontmap*
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/CMap
+%dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/CIDFont
+%dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/CIDFSubst
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/ColorSpace
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/Decoding
 %dir %{_datadir}/ghostscript/%{gs_dot_ver}/Resource/Encoding
@@ -299,7 +325,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/ghostscript/%{gs_dot_ver}/lib
 %{_datadir}/ghostscript/%{gs_dot_ver}/iccprofiles
 %{_mandir}/man*/*
-%lang(de) %{_mandir}/de/man*/*
 %{_libdir}/libgs.so.*
 %{_libdir}/libijs-*.so*
 %dir %{_libdir}/%{name}
@@ -315,12 +340,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_bindir}/gsx
 
-%files cups
-%defattr(-,root,root)
-%{_datadir}/cups/model/pxl*
-%{_datadir}/cups/mime/*.convs
-%{_cups_serverbin}/filter/*
-
 %files devel
 %defattr(-,root,root)
 %dir %{_includedir}/ghostscript
@@ -333,8 +352,87 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgs.so
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 9.06-4
-- 为 Magic 3.0 重建
+* Thu Feb 27 2014 Tim Waugh <twaugh@redhat.com> 9.10-6
+- Use upstream patch to fix duplex for some devices (bug #1068896).
+
+* Tue Dec 10 2013 Tim Waugh <twaugh@redhat.com> 9.10-5
+- Use upstream patches to fix gs segfaults (bug #1026428, bug #1039718).
+
+* Wed Sep 25 2013 Tim Waugh <twaugh@redhat.com> 9.09-4
+- Regenerate tarball (bug #1000387).
+
+* Wed Aug 28 2013 Tim Waugh <twaugh@redhat.com> 9.09-3
+- Remove jpegxr to ensure it isn't built (bug #1000387).
+
+* Thu Aug 22 2013 Tim Waugh <twaugh@redhat.com> 9.09-2
+- Fixed character set conversion issue in pdfwrite (bug #999927).
+
+* Thu Aug 22 2013 Tim Waugh <twaugh@redhat.com> 9.09-1
+- 9.09.
+
+* Sat Aug 17 2013 Tim Waugh <twaugh@redhat.com> 9.09-0.rc1.1
+- 9.09rc1.
+
+* Thu Aug 15 2013 Tim Waugh <twaugh@redhat.com> 9.08-1
+- 9.08.
+
+* Mon Aug 12 2013 Tim Waugh <twaugh@redhat.com> 9.08-0.rc1.1
+- 9.08rc1.  CUPS filters moved to the cups-filters package.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.07-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Tim Waugh <twaugh@redhat.com> 9.07-11
+- Remove bundled (and unused) lcms source.
+- Fixed license tag (AGPLv3+).
+
+* Wed Jul 17 2013 Tim Waugh <twaugh@redhat.com> 9.07-10
+- Added in missing part of gs_sprintf backport: add in the header to
+  stdio_.h. Without this there are problems with va_args on some
+  platforms (bug #979681).
+
+* Mon Jul  8 2013 Tim Waugh <twaugh@redhat.com> 9.07-9
+- Upstream patch from bug #693921 to avoid zfapi crash (bug #969785).
+
+* Mon Jul  1 2013 Tim Waugh <twaugh@redhat.com> 9.07-8
+- Use correct colord device ID in gstoraster.
+
+* Mon Jul  1 2013 Tim Waugh <twaugh@redhat.com> 9.07-7
+- Use more caution when converting floats to strings (bug #980085).
+
+* Tue Jun 18 2013 Tim Waugh <twaugh@redhat.com> 9.07-6
+- Upstream patch from bug #690692 to handle strange fonts (bug #969660).
+
+* Fri May 17 2013 Tim Waugh <twaugh@redhat.com> 9.07-5
+- Remove pdfopt man pages which were mistakenly left in (bug #963882).
+
+* Thu May 16 2013 Tim Waugh <twaugh@redhat.com> 9.07-4
+- Upstream patch to fix pdfwrite segfault (bug #962120).
+
+* Thu May  9 2013 Tim Waugh <twaugh@redhat.com> - 9.07-3
+- Back-ported locale fix (bug #961149).
+
+* Thu Apr 25 2013 Tim Waugh <twaugh@redhat.com>
+- Unowned directories (bug #902525).
+
+* Mon Apr  8 2013 Tim Waugh <twaugh@redhat.com> - 9.07-2
+- Rebuilt.
+
+* Fri Mar  8 2013 Tim Waugh <twaugh@redhat.com> - 9.07-1
+- 9.07.
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.06-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jan 18 2013 Adam Tkac <atkac redhat com> - 9.06-6
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Fri Jan  4 2013 Tim Waugh <twaugh@redhat.com> - 9.06-5
+- Updated build requirement from gtk2-devel to gtk3-devel so that gsx
+  gets built using the correct loader (bug #884483).
+
+* Fri Dec 21 2012 Adam Tkac <atkac redhat com> - 9.06-4
+- rebuild against new libjpeg
 
 * Thu Sep 27 2012 Tim Waugh <twaugh@redhat.com> - 9.06-3
 - Remove cups/libs to avoid bundling, although it isn't built in any
@@ -1251,7 +1349,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Aug  9 2001 Yukihiro Nakai <ynakai@redhat.com> 6.51-5
 - Add cjk resources
 
-* Thu Aug  1 2001 Crutcher Dunnavant <crutcher@redhat.com> 6.51-4
+* Wed Aug  1 2001 Crutcher Dunnavant <crutcher@redhat.com> 6.51-4
 - applied drepper@redhat.com's patch for #50300
 - fixed build deps on zlib-devel and libpng-devel, #49853
 - made gs_init.ps a config file; #25096

@@ -2,11 +2,13 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           grilo
-Version:        0.2.9
-Release:        2%{?dist}
+Version:	0.2.10
+Release:        3%{?dist}
 Summary:        Content discovery framework
+Summary(zh_CN.UTF-8): 内容发现框架
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        LGPLv2+
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/grilo/%{release_version}/grilo-%{version}.tar.xz
 Url:            http://live.gnome.org/Grilo
@@ -32,9 +34,14 @@ Grilo is a framework that provides access to different sources of
 multimedia content, using a pluggable system.
 This package contains the core library and elements.
 
+%description -l zh_CN.UTF-8
+这是一个支持不同来源的媒体内容发现框架。
+
 %package devel
 Summary:        Libraries/include files for Grilo framework
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Requires:       %{name} = %{version}-%{release}
 Requires:       glib2-devel gobject-introspection-devel
@@ -45,9 +52,14 @@ multimedia content, using a pluggable system.
 This package contains the core library and elements, as well as
 general and API documentation.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package vala
 Summary:        Vala language bindings for Grilo framework
+Summary(zh_CN.UTF-8): Grilo 框架的 Vala 语言绑定
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       vala >= 0.7.2
@@ -56,6 +68,9 @@ Requires:       vala >= 0.7.2
 Grilo is a framework that provides access to different sources of
 multimedia content, using a pluggable system.
 This package contains the Vala language bindings.
+
+%description vala -l zh_CN.UTF-8
+Grilo 框架的 Vala 语言绑定。
 
 %prep
 %setup -q
@@ -85,7 +100,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgrlnet-%{release_version}.so.*
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_bindir}/grilo-simple-playlist
-
+magic_rpm_clean.sh
 %find_lang grilo
 
 %post -p /sbin/ldconfig
@@ -115,6 +130,12 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/grilo-simple-playlist
 %{_datadir}/vala/vapi/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.10-3
+- 为 Magic 3.0 重建
+
+* Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 0.2.10-2
+- 更新到 0.2.10
+
 * Wed Feb 19 2014 Kalev Lember <kalevlember@gmail.com> - 0.2.9-2
 - Build with totem-pl-parser and oauth support
 

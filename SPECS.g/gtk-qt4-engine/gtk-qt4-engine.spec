@@ -6,7 +6,7 @@ Name: 	 gtk-qt4-engine
 Group:	 User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 Version: 1.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 License: GPL
 URL:     http://www.freedesktop.org/Software/gtk-qt
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{kde4_iconsdir}/kcmgtk.png
 
 %changelog 
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.1-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1-6
 - 为 Magic 3.0 重建
 

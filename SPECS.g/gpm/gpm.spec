@@ -1,28 +1,42 @@
 Summary: A mouse server for the Linux console
+Summary(zh_CN.UTF-8): Linux 控制台的鼠标服务
 Name: gpm
-Version: 1.20.6
-Release: 24%{?dist}
-License: GPLv2+
+Version: 1.20.7
+Release: 6%{?dist}
+License: GPLv2 and GPLv2+ with exceptions and GPLv3+ and Verbatim and Copyright only
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL: http://www.nico.schottelius.org/software/gpm/
-Source: http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{version}.tar.lzma
+#URL2 : http://freecode.com/projects/gpm
+
+# The upstream source contains PDF docs with unclear licensing,
+# and that's why we need to remove them and recreate the tarball
+#
+# 1.] mkdir docs-removal && cd docs-removal
+# 2.] wget http://www.nico.schottelius.org/software/gpm/archives/%{name}-%{version}.tar.lzma
+# 3.] tar xf %{name}-%{version}.tar.lzma
+# 4.] rm -rf %{name}-%{version}/doc/specs
+# 5.] tar cJf %{name}-%{version}.tar.xz %{name}-%{version}
+
+Source: %{name}-%{version}.tar.xz
 Source1: gpm.service
-Source2: inputattach.c
 Patch1: gpm-1.20.6-multilib.patch
 Patch2: gpm-1.20.1-lib-silent.patch
-Patch3: gpm-1.20.3-gcc4.3.patch
 Patch4: gpm-1.20.5-close-fds.patch
 Patch5: gpm-1.20.1-weak-wgetch.patch
-Patch6: gpm-1.20.6-libtool.patch
-Patch7: 0001-rhbz-668480-gpm-types-7-manpage-fixes.patch
+Patch7: gpm-1.20.7-rhbz-668480-gpm-types-7-manpage-fixes.patch
+Patch8: gpm-1.20.6-missing-header-dir-in-make-depend.patch
+Patch9: gpm-format-security.patch
 #Patch7: gpm-1.20.6-capability.patch
-Requires(post): systemd-units systemd-sysv info
-Requires(preun): systemd-units info
-Requires(postun): systemd-units
+Requires(post): systemd systemd-sysv info
+Requires(preun): systemd info
+Requires(postun): systemd
 # this defines the library version that this package builds.
 %define LIBVER 2.1.0
-BuildRoot: %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires: sed gawk texinfo bison ncurses-devel autoconf automake libtool libcap-ng-devel
+BuildRequires: systemd
+Requires: linuxconsoletools
+Requires: %{name}-libs = %{version}-%{release}
 
 %description
 Gpm provides mouse support to text-based Linux applications like the
@@ -31,60 +45,79 @@ also provides console cut-and-paste operations using the mouse and
 includes a program to allow pop-up menus to appear at the click of a
 mouse button.
 
+%description -l zh_CN.UTF-8
+Linux 文本界面下的程序使用鼠标所需要的服务，比如 Emacs 或 MC.
+也支持使用鼠标复制粘贴。
+
 %package libs
 Summary: Dynamic library for for the gpm
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description libs
 This package contains the libgpm.so dynamic library which contains
 the gpm system calls and library functions.
 
+%description libs -l zh_CN.UTF-8 
+%{name} 的运行库。
+
 %package devel
 Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libs = %{version}-%{release}
 Summary: Development files for the gpm library
-Group: Development/Libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group: Development/Libraries\
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 The gpm-devel package includes header files and libraries necessary
 for developing programs which use the gpm library. The gpm provides
 mouse support to text-based Linux applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Requires: %{name} = %{version}-%{release}
 Summary: Static development files for the gpm library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description static
 The gpm-static package includes static libraries of gpm. The gpm provides
 mouse support to text-based Linux applications.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
+
+./autogen.sh
+
 %patch1 -p1 -b .multilib
 %patch2 -p1 -b .lib-silent
-%patch3 -p1 -b .gcc4.3
 %patch4 -p1 -b .close-fds
 %patch5 -p1 -b .weak-wgetch
-%patch6 -p1 -b .libtool
 %patch7 -p1
+# not sure if this is really needed
+%patch8 -p1
+%patch9 -p1
+
 #%patch7 -p1 -b .capability
 
-iconv -f iso-8859-1 -t utf-8 -o TODO.utf8 TODO
-touch -c -r TODO TODO.utf8
-mv -f TODO.utf8 TODO
-
-autoreconf
-
 %build
+# ld fails with PIE
+#LDFLAGS='-Wl,-z,relro,-z,now -pie'
+#CFLAGS='-fPIE -DPIE'
+
+LDFLAGS='-Wl,-z,relro,-z,now'
 %configure
 make %{?_smp_mflags}
-%__cc $RPM_OPT_FLAGS -o inputattach %{SOURCE2}
-
 
 %install
-rm -rf %{buildroot}
-
 %makeinstall
 
 chmod 0755 %{buildroot}/%{_libdir}/libgpm.so.%{LIBVER}
@@ -94,12 +127,11 @@ rm -f %{buildroot}%{_datadir}/emacs/site-lisp/t-mouse.el
 
 %ifnarch s390 s390x
 mkdir -p %{buildroot}%{_sysconfdir}/rc.d/init.d
-mkdir -p %{buildroot}%{_prefix}/lib/systemd/system/
-install -m 755 inputattach %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}%{_unitdir}
 install -m 644 conf/gpm-* %{buildroot}%{_sysconfdir}
 # Systemd
-mkdir -p %{buildroot}%{_prefix}/lib/systemd/system
-install -m644 %{SOURCE1} %{buildroot}%{_prefix}/lib/systemd/system
+mkdir -p %{buildroot}%{_unitdir}
+install -m644 %{SOURCE1} %{buildroot}%{_unitdir}
 rm -rf %{buildroot}%{_initrddir}
 %else
 # we're shipping only libraries in s390[x], so
@@ -108,17 +140,11 @@ rm -rf %{buildroot}%{_sbindir}
 rm -rf %{buildroot}%{_bindir}
 rm -rf %{buildroot}%{_mandir}
 %endif
-
 magic_rpm_clean.sh
-
-%clean
-rm -rf %{buildroot}
 
 %post
 %ifnarch s390 s390x
-if [ "$1" -ge 1 ]; then
-	/usr/bin/systemctl enable gpm.service >/dev/null 2>&1 || :
-fi
+%systemd_post gpm.service
 %endif
 if [ -e %{_infodir}/gpm.info.gz ]; then
   /sbin/install-info %{_infodir}/gpm.info.gz %{_infodir}/dir || :
@@ -126,15 +152,12 @@ fi
 
 %ifnarch s390 s390x
 %triggerun -- gpm < 1.20.6-15
-/usr/bin/systemctl enable gpm.service >/dev/null 2>&1 || :
+/bin/systemctl enable gpm.service >/dev/null 2>&1 || :
 %endif
 
 %preun
 %ifnarch s390 s390x
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    /usr/bin/systemctl try-restart gpm.service >/dev/null 2>&1 || :
-fi
+%systemd_preun gpm.service
 %endif
 if [ $1 = 0 -a -e %{_infodir}/gpm.info.gz ]; then
   /sbin/install-info %{_infodir}/gpm.info.gz --delete %{_infodir}/dir || :
@@ -142,53 +165,98 @@ fi
 
 %postun
 %ifnarch s390 s390x
-if [ $1 = 0 ]; then
-  /usr/bin/systemctl --no-reload gpm.service > /dev/null 2>&1 || :
-  /usr/bin/systemctl stop gpm.service > /dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart gpm.service
 %endif
 
 %triggerun -- gpm < 1.20.6-17
 %{_bindir}/systemd-sysv-convert --save gpm >/dev/null 2>&1 ||:
-/usr/bin/systemctl enable gpm.service >/dev/null 2>&1
-/usr/bin/systemctl try-restart gpm.service >/dev/null 2>&1 || :
+/bin/systemctl enable gpm.service >/dev/null 2>&1
+/bin/systemctl try-restart gpm.service >/dev/null 2>&1 || :
 
-%post libs -p /usr/sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
-%postun libs -p /usr/sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
-%doc BUGS COPYING README TODO
-%doc doc/README* doc/FAQ doc/Announce doc/changes/*
+%doc COPYING README TODO
+%doc doc/README* doc/FAQ doc/Announce doc/changelog
 %{_infodir}/*
 %ifnarch s390 s390x
 %config(noreplace) %{_sysconfdir}/gpm-*
-%{_prefix}/lib/systemd/system/gpm.service
+%{_unitdir}/gpm.service
 %{_sbindir}/*
 %{_bindir}/*
 %{_mandir}/man?/*
 %endif
 
 %files libs
-%defattr(-,root,root,-)
 %{_libdir}/libgpm.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/libgpm.so
 
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/libgpm.a
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.20.6-24
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 1.20.7-6
 - 为 Magic 3.0 重建
 
-* Mon Apr 16 2012 Liu Di <liudidi@gmail.com> - 1.20.6-23
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.20.7-5
 - 为 Magic 3.0 重建
+
+* Wed Feb 05 2014 Jaromir Capik <jcapik@redhat.com> - 1.20.7-4
+- Fixing format-security flaws (#1037099)
+
+* Wed Aug 07 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.7-3
+- Removing PDF docs with unclear licensing from the source archive
+- Fixing the license tag
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 19 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.7-1
+- Update to 1.20.7
+
+* Wed Jul 03 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.6-33
+- Replacing systemd unit path with _unitdir macro
+
+* Wed Jul 03 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.6-32
+- Fixing full RELRO ... bind_now -> now (#884017)
+
+* Mon Apr 08 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.6-31
+- fixing bogus dates in the changelog
+
+* Thu Mar 28 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.6-30
+- aarch64 support (#925474)
+
+* Wed Mar 06 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.6-29
+- Removing OPTFLAGS
+- Introducing full RELRO
+- Missing header dir in Makefile.in / depend
+- Fixing UsrMove for i686 (mv -f says 'directory not empty')
+
+* Wed Mar 06 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.6-28
+- Adding missing requires
+- Passing OPTFLAGS to make
+- UsrMove
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.6-27
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jan 03 2013 Jaromir Capik <jcapik@redhat.com> - 1.20.6-26
+- Removing bundled 'inputattach' tool (#875604)
+- ...gonna be shipped separately (linuxconsoletools)
+
+* Mon Sep 17 2012 Václav Pavlín <vpavlin@redhat.com> - 1.20.6-25
+- Scriptlets replaced with new systemd macros (#850134)
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.6-24
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Apr 16 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.20.6-23
+- Add w8001 support to inputattach (#645235)
 
 * Tue Jan 24 2012 Nikola Pajkovsky <npajkovs@redhat.com> - 1.20.6-22
 - 668480 - gpm-types(7) manpage fixes
@@ -260,7 +328,7 @@ fi
 - Spec review (#225856)
 - Updated to 1.20.6
 
-* Wed Dec 02 2008 Zdenek Prikryl <zprikryl@redhat.com> - 1.20.5-2
+* Tue Dec 02 2008 Zdenek Prikryl <zprikryl@redhat.com> - 1.20.5-2
 - Fixed debug mode (#473422)
 - Fixed description in init script (#474337)
 
@@ -270,7 +338,7 @@ fi
 - Removed lisp stuff, it is part of emacs-common now 
 - Spec clean up
 
-* Thu Jun 04 2008 Zdenek Prikryl <zprikryl@redhat.com> - 1.20.3-2
+* Wed Jun 04 2008 Zdenek Prikryl <zprikryl@redhat.com> - 1.20.3-2
 - Enable gpm in runlevel 5
 
 * Thu May 29 2008 Zdenek Prikryl <zprikryl@redhat.com> - 1.20.3-1
@@ -455,7 +523,7 @@ fi
 - re-add the $OPTIONS that gets pulled in from /etc/sysconfig/gpm
   to the init.d script (#110248)
 
-* Wed Aug 07 2003 Adrian Havill <havill@redhat.com> 1.20.1-38
+* Thu Aug 07 2003 Adrian Havill <havill@redhat.com> 1.20.1-38
 - Gpm_Open() NULL deref revisited (#101104). Patch by
   <leonardjo@hetnet.nl>
 * Wed Jul 30 2003 Adrian Havill <havill@redhat.com> 1.20.1-37

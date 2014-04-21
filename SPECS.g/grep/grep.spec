@@ -1,9 +1,11 @@
 Summary: Pattern matching utilities
+Summary(zh_CN.UTF-8): 文本模式匹配工具
 Name: grep
-Version: 2.11
+Version: 2.18
 Release: 3%{?dist}
 License: GPLv3+
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Source: ftp://ftp.gnu.org/pub/gnu/grep/grep-%{version}.tar.xz
 Source1: colorgrep.sh
 Source2: colorgrep.csh
@@ -23,6 +25,11 @@ textual input for lines which contain a match to a specified pattern and then
 prints the matching lines. GNU's grep utilities include grep, egrep and fgrep.
 
 GNU grep is needed by many scripts, so it shall be installed on every system.
+
+%description -l zh_CN.UTF-8
+文本匹配查找工具，包括 grep, egrep 和 fgrep。
+
+许多脚本都用这个命令，所以它应该安装在每个系统上。
 
 %prep
 %setup -q
@@ -80,6 +87,9 @@ fi
 %{_mandir}/*/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.18-3
+- 更新到 2.18
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.11-3
 - 为 Magic 3.0 重建
 

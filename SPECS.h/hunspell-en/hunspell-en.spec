@@ -2,7 +2,7 @@ Name: hunspell-en
 Summary: English hunspell dictionaries
 %define upstreamid 20110318
 Version: 0.%{upstreamid}
-Release: 10%{?dist}
+Release: 11%{?dist}
 #svn co https://wordlist.svn.sourceforge.net/svnroot/wordlist/trunk wordlist
 Source0: wordlist-%{upstreamid}.tar.bz2
 Source1: http://en-gb.pyxidium.co.uk/dictionary/en_GB.zip
@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/myspell/en_GB.*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.20110318-11
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.20110318-10
 - 为 Magic 3.0 重建
 

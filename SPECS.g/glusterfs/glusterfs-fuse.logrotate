@@ -1,0 +1,6 @@
+/var/log/glusterfs/glusterfs.log {
+    missingok
+    postrotate
+        /usr/bin/killall -HUP gluster 2>/dev/null || true
+    endscript
+}

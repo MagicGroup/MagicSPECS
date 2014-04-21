@@ -1,6 +1,6 @@
 Name:           gstreamer-ffmpeg
 Version:        0.10.13
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer FFmpeg-based plug-ins
 Summary(zh_CN.UTF-8): GStreamer FFmpeg 插件
 Group:          Applications/Multimedia
@@ -58,3 +58,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.10.13-2
+- 为 Magic 3.0 重建
+

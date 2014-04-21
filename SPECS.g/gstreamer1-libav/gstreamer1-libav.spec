@@ -1,5 +1,5 @@
 Name:           gstreamer1-libav
-Version:        1.0.5
+Version:	1.2.3
 Release:        1%{?dist}
 Summary:        GStreamer FFmpeg-based plug-ins
 Summary(zh_CN.UTF-8): GStreamer FFmpeg 插件
@@ -8,7 +8,7 @@ Group(zh_CN.UTF-8): 应用程序/多媒体
 # the ffmpeg plugin is LGPL, the postproc plugin is GPL
 License:        GPLv2+ and LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
-Source:         http://gstreamer.freedesktop.org/src/gst-ffmpeg/gst-libav-%{version}.tar.xz
+Source:         http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gstreamer-devel >= 0.10.0
 BuildRequires:  gstreamer-plugins-base-devel >= 0.10.0
@@ -53,10 +53,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{_libdir}/gstreamer-1.0/libgstlibav.so
-%{_libdir}/gstreamer-1.0/libgstavscale.so
+#%{_libdir}/gstreamer-1.0/libgstavscale.so
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-1
+- 更新到 1.2.3
+
 * Fri Jan 11 2013 Liu Di <liudidi@gmail.com> - 0.10.13-2
 - 为 Magic 3.0 重建
 

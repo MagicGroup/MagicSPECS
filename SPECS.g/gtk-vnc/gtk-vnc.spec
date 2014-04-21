@@ -20,12 +20,15 @@
 %endif
 
 Summary: A GTK2 widget for VNC clients
+Summary(zh_CN.UTF-8): VNC 客户端的 GTK 控件
 Name: gtk-vnc
-Version: 0.4.4
+Version:	0.5.3
 Release: 2%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
-Source: http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.4/%{name}-%{version}.tar.bz2
+Group(zh_CN.UTF-8): 开发/库
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://live.gnome.org/gtk-vnc
 BuildRequires: gtk2-devel >= 2.14
@@ -197,7 +200,7 @@ rm -f %{buildroot}%{_libdir}/python*/site-packages/*.la
 rm -f %{buildroot}%{_libdir}/mozilla/plugins/%{name}-plugin.a
 rm -f %{buildroot}%{_libdir}/mozilla/plugins/%{name}-plugin.la
 %endif
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -230,7 +233,6 @@ rm -fr %{buildroot}
 
 %files python
 %defattr(-, root, root)
-%doc gtk-vnc-%{version}/examples/gvncviewer.py
 %{_libdir}/python*/site-packages/gtkvnc.so
 
 %if %{with_plugin}
@@ -249,6 +251,9 @@ rm -fr %{buildroot}
 %{_datadir}/vala/vapi/gvnc-1.0.vapi
 %endif
 
+#pulse
+%{_libdir}/libgvncpulse-1.0.so.*
+
 %files -n gvnc-devel
 %defattr(-, root, root)
 %{_libdir}/libgvnc-1.0.so
@@ -258,6 +263,14 @@ rm -fr %{buildroot}
 %if %{with_gir}
 %{_datadir}/gir-1.0/GVnc-1.0.gir
 %endif
+
+#pulse
+%{_includedir}/gvncpulse-1.0/*
+%{_libdir}/libgvncpulse-1.0.so
+%{_libdir}/pkgconfig/gvncpulse-1.0.pc
+%{_datadir}/gir-1.0/GVncPulse-1.0.gir
+%{_datadir}/vala/vapi/gvncpulse-1.0.vapi
+%{_libdir}/girepository-1.0/GVncPulse-1.0.typelib
 
 %files -n gvnc-tools
 %defattr(-, root, root)
@@ -299,6 +312,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.5.3-2
+- 更新到 0.5.3
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.4-2
 - 为 Magic 3.0 重建
 

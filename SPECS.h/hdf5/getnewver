@@ -1,0 +1,15 @@
+#!/bin/bash
+url="www.hdfgroup.org/HDF5/"
+new1="Current Release:<\\/note> HDF5-"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	newver=`grep "$new1.*" index.html|head -n 1| sed "s/.*$new1//" `
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

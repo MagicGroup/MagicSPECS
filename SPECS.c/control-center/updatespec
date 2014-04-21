@@ -5,6 +5,4 @@ if [ -z "$1" ] ; then
 fi
 pushd $(dirname $0)
 sed -i "s/Version:.*/Version: $1/g" control-center.spec
-majorver=$(echo $1|cut -d"." -f1).$(echo $1|cut -d"." -f2)
-sed -i "s/%define majorver.*/%define majorver $majorver/g" control-center.spec
 popd

@@ -16,7 +16,7 @@ diff --git a/doc/find.texi b/doc/find.texi
 index c584298..9731b71 100644
 --- a/doc/find.texi
 +++ b/doc/find.texi
-@@ -1438,6 +1438,10 @@ them.
+@@ -1436,6 +1436,10 @@ them.
  There are two ways to avoid searching certain filesystems.  One way is
  to tell @code{find} to only search one filesystem:
  
@@ -31,7 +31,7 @@ diff --git a/find/defs.h b/find/defs.h
 index 11d1d00..f95ce72 100644
 --- a/find/defs.h
 +++ b/find/defs.h
-@@ -561,6 +561,9 @@ struct options
+@@ -557,6 +557,9 @@ struct options
    /* If true, don't cross filesystem boundaries. */
    bool stay_on_filesystem;
  
@@ -45,7 +45,7 @@ diff --git a/find/find.1 b/find/find.1
 index e851f82..a4799ff 100644
 --- a/find/find.1
 +++ b/find/find.1
-@@ -460,6 +460,9 @@ if standard input is a tty, and to
+@@ -461,6 +461,9 @@ if standard input is a tty, and to
  .B \-nowarn
  otherwise.
  
@@ -76,7 +76,7 @@ diff --git a/find/parser.c b/find/parser.c
 index 52a1ef6..995aec3 100644
 --- a/find/parser.c
 +++ b/find/parser.c
-@@ -151,6 +151,7 @@ static bool parse_user          (const struct parser_table*, char *argv[], int *
+@@ -146,6 +146,7 @@ static bool parse_user          (const struct parser_table*, char *argv[], int *
  static bool parse_version       (const struct parser_table*, char *argv[], int *arg_ptr);
  static bool parse_wholename     (const struct parser_table*, char *argv[], int *arg_ptr);
  static bool parse_xdev          (const struct parser_table*, char *argv[], int *arg_ptr);
@@ -84,7 +84,7 @@ index 52a1ef6..995aec3 100644
  static bool parse_ignore_race   (const struct parser_table*, char *argv[], int *arg_ptr);
  static bool parse_noignore_race (const struct parser_table*, char *argv[], int *arg_ptr);
  static bool parse_warn          (const struct parser_table*, char *argv[], int *arg_ptr);
-@@ -325,6 +326,7 @@ static struct parser_table const parse_table[] =
+@@ -306,6 +307,7 @@ static struct parser_table const parse_table[] =
    PARSE_TEST_NP    ("wholename",             wholename), /* GNU, replaced -path, but anyway -path will soon be in POSIX */
    {ARG_TEST,       "writable",               parse_accesscheck, pred_writable}, /* GNU, 4.3.0+ */
    PARSE_OPTION     ("xdev",                  xdev), /* POSIX */
@@ -92,7 +92,7 @@ index 52a1ef6..995aec3 100644
    PARSE_TEST       ("xtype",                 xtype),	     /* GNU */
  #ifdef UNIMPLEMENTED_UNIX
    /* It's pretty ugly for find to know about archive formats.
-@@ -1235,7 +1237,7 @@ operators (decreasing precedence; -and is implicit where no others are given):\n
+@@ -1230,7 +1232,7 @@ operators (decreasing precedence; -and is implicit where no others are given):\n
  positional options (always true): -daystart -follow -regextype\n\n\
  normal options (always true, specified before other expressions):\n\
        -depth --help -maxdepth LEVELS -mindepth LEVELS -mount -noleaf\n\
@@ -101,7 +101,7 @@ index 52a1ef6..995aec3 100644
    puts (_("\
  tests (N can be +N or -N or N): -amin N -anewer FILE -atime N -cmin N\n\
        -cnewer FILE -ctime N -empty -false -fstype TYPE -gid N -group NAME\n\
-@@ -2800,6 +2802,13 @@ parse_xdev (const struct parser_table* entry, char **argv, int *arg_ptr)
+@@ -2736,6 +2738,13 @@ parse_xdev (const struct parser_table* entry, char **argv, int *arg_ptr)
  }
  
  static bool
@@ -119,7 +119,7 @@ diff --git a/find/util.c b/find/util.c
 index 8577396..4d45f84 100644
 --- a/find/util.c
 +++ b/find/util.c
-@@ -1006,6 +1006,7 @@ set_option_defaults (struct options *p)
+@@ -1010,6 +1010,7 @@ set_option_defaults (struct options *p)
  
    p->full_days = false;
    p->stay_on_filesystem = false;

@@ -1,8 +1,7 @@
 %global at_spi2_core_version 2.7.5
-%define majorver 2.11
 
 Name:           at-spi2-atk
-Version: 2.11.90
+Version: 2.12.0
 Release:        1%{?dist}
 Summary:        A GTK+ module that bridges ATK to D-Bus at-spi
 Summary(zh_CN.UTF-8): ATK 到 D-Bus at-spi 桥的 GTK+ 模块
@@ -11,6 +10,7 @@ Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://www.linuxfoundation.org/en/AT-SPI_on_D-Bus
 #VCS: git:git://git.gnome.org/at-spi-atk
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://download.gnome.org/sources/at-spi2-atk/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  at-spi2-core-devel >= %{at_spi2_core_version}
@@ -90,6 +90,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libatk-bridge-2.0.la
 
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 2.12.0-1
+- 更新到 2.12.0
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 2.11.90-1
 - 更新到 2.11.90
 

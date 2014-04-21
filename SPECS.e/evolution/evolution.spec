@@ -31,7 +31,7 @@
 ### Abstract ###
 
 Name: evolution
-Version: 3.11.90
+Version:	3.12.0
 Release: 2%{?dist}
 Group: Applications/Productivity
 Summary: Mail and calendar client for GNOME
@@ -481,7 +481,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/evolution-%{evo_base_version}
 %{_libdir}/pkgconfig/evolution-calendar-3.0.pc
 %{_libdir}/pkgconfig/evolution-mail-3.0.pc
-%{_libdir}/pkgconfig/evolution-plugin-3.0.pc
+#%{_libdir}/pkgconfig/evolution-plugin-3.0.pc
 %{_libdir}/pkgconfig/evolution-shell-3.0.pc
 %{_libdir}/pkgconfig/libemail-engine.pc
 
@@ -519,6 +519,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
+* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.11.92-2
+- 更新到 3.11.92
+
 * Wed Feb 19 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.90-2
 - Rebuilt for libgnome-desktop soname bump
 

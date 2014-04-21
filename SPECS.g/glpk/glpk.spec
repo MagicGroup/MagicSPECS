@@ -2,8 +2,10 @@ Name:           glpk
 Version:        4.47
 Release:        2%{?dist}
 Summary:        GNU Linear Programming Kit
+Summary(zh_CN.UTF-8): GNU 线性编程工具
 
 Group:          System Environment/Libraries
+Summary(zh_CN.UTF-8): 系统环境/库
 License:        GPLv3
 URL:            http://www.gnu.org/software/glpk/glpk.html
 Source0:        ftp://ftp.gnu.org/gnu/glpk/glpk-%{version}.tar.gz
@@ -27,23 +29,34 @@ The GLPK package includes the following main components:
  * Application program interface (API).
  * Stand-alone LP/MIP solver. 
 
+%description -l zh_CN.UTF-8 
+GNU 线性编程工具。
+
 %package        doc
 Summary:        Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description    doc
 Documentation subpackage for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %package devel
 Summary:        Development headers and files for GLPK
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 The glpk-devel package contains libraries and headers for developing
 applications which use GLPK (GNU Linear Programming Kit).
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package utils
 Summary:        GLPK-related utilities and examples
@@ -78,6 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 make install prefix=$RPM_BUILD_ROOT%{_prefix} \
 	bindir=$RPM_BUILD_ROOT%{_bindir} libdir=$RPM_BUILD_ROOT%{_libdir} \
 	includedir=$RPM_BUILD_ROOT%{_includedir}
+magic_rpm_clean.sh
 
 %check
 make check
@@ -116,6 +130,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 4.47-2
+- 更新到 4.54
+
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 4.47-2
+- 更新到 4.54
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 4.47-2
 - 为 Magic 3.0 重建
 

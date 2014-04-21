@@ -1,13 +1,16 @@
 Summary:    GNOME icon theme
+Summary(zh_CN.UTF-8): GNOME 图标主题
 Name:       gnome-icon-theme
-Version:    3.11.5
+Version:	3.12.0
 License:    LGPLv3+
 Group:      User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Release:    1%{?dist}
 URL:        http://www.gnome.org
 
 #VCS: git:git://git.gnome.org/gnome-icon-theme
-Source0: http://download.gnome.org/sources/gnome-icon-theme/3.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-icon-theme/%{majorver}/%{name}-%{version}.tar.xz
 Source1: legacy-icon-mapping.xml
 
 BuildRequires: gtk2
@@ -21,23 +24,35 @@ BuildArch: noarch
 %description
 This package contains the default icon theme used by the GNOME desktop.
 
+%description -l zh_CN.UTF-8
+GNOME 桌面默认的图标主题。
+
 %package legacy
 Summary: Old names for icons in gnome-icon-theme
+Summary(zh_CN.UTF-8): 旧的 GNOME 图标主题
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires: %{name} = %{version}-%{release}
 
 %description legacy
 This package contains symlinks to make the icons in gnome-icon-theme
 available under old names.
 
-%package devel
+%description legacy -l zh_CN.UTF-8
+旧的 GNOME 图标主题。
 
+%package devel
 Summary: Development files for gnome-icon-theme
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Development files for gnome-icon-theme
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -90,6 +105,7 @@ touch files.txt
  echo "%%defattr(-,root,root)"
  find icons/gnome \( -type l -and -not -name *-rtl.png -and -not -name *-ltr.png \) -printf "%%%%{_datadir}/%%p\n"
 ) > legacy.txt
+magic_rpm_clean.sh
 
 %post
 touch --no-create %{_datadir}/icons/gnome &>/dev/null || :
@@ -125,6 +141,9 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 %{_datadir}/pkgconfig/gnome-icon-theme.pc
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Thu Feb 06 2014 Kalev Lember <kalevlember@gmail.com> - 3.11.5-1
 - Update to 3.11.5
 

@@ -2,8 +2,10 @@ Name:           icon-naming-utils
 Version:        0.8.90
 Release:        8%{?dist}
 Summary: 	A script to handle icon names in desktop icon themes
+Summary(zh_CN.UTF-8): 处理桌面图标主题里的图标名称的脚本
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv2
 BuildArch:	noarch
 URL:            http://tango.freedesktop.org/Standard_Icon_Naming_Specification
@@ -19,6 +21,9 @@ Patch0:		icon-naming-utils-0.8.7-paths.patch
 %description
 A script for creating a symlink mapping for deprecated icon names to
 the new Icon Naming Specification names, for desktop icon themes.
+
+%description -l zh_CN.UTF-8
+处理桌面图标主题里的图标名称的脚本，建立旧图标史称与新的图标名称标准名称的链接。
 
 %prep
 %setup -q
@@ -38,7 +43,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # hmm, it installs an -uninstalled.pc file ...
 rm -f $RPM_BUILD_ROOT%{_datadir}/pkgconfig/icon-naming-utils-uninstalled.pc
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -12,11 +12,13 @@
 	%{nil}
 
 Name:		hmaccalc
-Version:	0.9.12
-Release:	5%{?dist}
+Version:	0.9.13
+Release:	1%{?dist}
 Summary:	Tools for computing and checking HMAC values for files
+Summary(zh_CN.UTF-8): 计算和检查文件 HMAC 值的工具
 
 Group:		System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:	MIT
 URL:		https://fedorahosted.org/hmaccalc/
 Source0:	https://fedorahosted.org/released/hmaccalc/hmaccalc-%{version}.tar.gz
@@ -28,6 +30,9 @@ BuildRequires:	nss-devel, prelink
 The hmaccalc package contains tools which can calculate HMAC (hash-based
 message authentication code) values for files.  The names and interfaces are
 meant to mimic the sha*sum tools provided by the coreutils package.
+
+%description -l zh_CN.UTF-8
+计算和检查文件 HMAC 值的工具。
 
 %prep
 %setup -q
@@ -65,6 +70,9 @@ make check
 %{_mandir}/*/*
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.9.13-1
+- 更新到 0.9.13
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.12-5
 - 为 Magic 3.0 重建
 

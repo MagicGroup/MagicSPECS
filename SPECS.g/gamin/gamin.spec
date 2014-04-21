@@ -1,4 +1,5 @@
 Summary: Library providing the FAM File Alteration Monitor API
+Summary(zh_CN.UTF-8): 提供了文件更改监视器 (FAM) API 的库 
 Name: gamin
 Version: 0.1.10
 Release: 14%{?dist}
@@ -8,6 +9,7 @@ License: LGPLv2
 #says the whole is GPLv2
 #License: GPLv2
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Source: http://ftp.gnome.org/pub/GNOME/sources/gamin/0.1/gamin-%{version}.tar.bz2
 URL: http://www.gnome.org/~veillard/gamin/
 Obsoletes: fam < 2.6.10-12
@@ -34,9 +36,14 @@ This C library provides an API and ABI compatible file alteration
 monitor mechanism compatible with FAM but not dependent on a system wide
 daemon.
 
+%description -l zh_CN.UTF-8
+提供了文件更改监视器 (FAM) API 的库。
+
 %package devel
 Summary: Libraries, includes, etc. to embed the Gamin library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: gamin = %{version}-%{release}
 Obsoletes: fam-devel < 2.6.10-12
 Provides: fam-devel = 2.6.10-12
@@ -46,15 +53,23 @@ This C library provides an API and ABI compatible file alteration
 monitor mechanism compatible with FAM but not dependent on a system wide
 daemon.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python bindings for the gamin library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: gamin = %{version}-%{release}
 
 %description python
 The gamin-python package contains a module that allow monitoring of
 files and directories from the Python language based on the support
 of the gamin package.
+
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
@@ -90,6 +105,7 @@ rm -fr %{buildroot}
 
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
+magic_rpm_clean.sh
 
 %clean
 rm -fr %{buildroot}

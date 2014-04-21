@@ -1,0 +1,6 @@
+/var/log/glusterfs/*glusterd.vol.log {
+    missingok
+    postrotate
+        /bin/kill -HUP `cat /var/run/glusterd.pid 2>/dev/null` 2>/dev/null || true
+    endscript
+}

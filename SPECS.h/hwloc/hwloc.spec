@@ -1,7 +1,7 @@
 Summary:   Portable Hardware Locality - portable abstraction of hierarchical architectures
 Name:      hwloc
 Version:   1.8.1
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   BSD
 Group:     Applications/System
 URL:       http://www.open-mpi.org/projects/hwloc/
@@ -108,6 +108,9 @@ make check
 
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.8.1-3
+- 为 Magic 3.0 重建
+
 * Fri Feb 14 2014 Jirka Hladky <hladky.jiri@gmail.com> - 1.8.1-2
 - Fixed BuildRequires
 

@@ -1,7 +1,7 @@
 Summary: PDF rendering library
 Summary(zh_CN.UTF-8): PDF 渲染库
 Name: poppler
-Version: 0.20.5
+Version:	0.24.5
 Release: 2%{?dist}
 License: GPLv2 and Redistributable, no modification permitted
 # the code is GPLv2
@@ -9,7 +9,7 @@ License: GPLv2 and Redistributable, no modification permitted
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 URL:     http://poppler.freedesktop.org/
-Source0: http://poppler.freedesktop.org/poppler-%{version}.tar.gz
+Source0: http://poppler.freedesktop.org/poppler-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 
@@ -294,6 +294,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_mandir}/man1/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.24.5-2
+- 更新到 0.24.5
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.20.5-2
 - 为 Magic 3.0 重建
 

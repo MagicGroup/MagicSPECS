@@ -8,8 +8,8 @@ Requires:       perl-HTML-Parser
 Autoreqprov:    on
 Summary:        Graphical Boot Logo for LILO and SYSLINUX
 Summary(zh_CN.UTF-8):	LILO 和 SYSLINUX 以及 grub 的图形启动 Logo
-Version:        4.3.8
-Release:        5%{?dist}
+Version:        4.5.2
+Release:        1%{?dist}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Source:         gfxboot-%{version}.tar.bz2
 Source1:        NLD.tar.bz2
@@ -55,16 +55,19 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-/usr/sbin/gfxboot
-/usr/sbin/gfxboot-compile
-/usr/sbin/gfxboot-font
-/usr/sbin/gfxtest
+%{_sbindir}/gfxboot
+%{_sbindir}/gfxboot-compile
+%{_sbindir}/gfxboot-font
+%{_sbindir}/gfxtest
 %doc doc/gfxboot.html
 %doc doc/gfxboot.txt
-/etc/bootsplash/themes/*
+%{_sysconfdir}/bootsplash/themes/*
 %{_mandir}/man8/gfxboot.8.gz
 
 %changelog -n gfxboot
+* Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 4.5.2-1
+- 升级到 4.5.2
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 4.3.8-5
 - 为 Magic 3.0 重建
 

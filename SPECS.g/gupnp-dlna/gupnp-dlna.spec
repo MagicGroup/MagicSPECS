@@ -1,12 +1,15 @@
 Name:          gupnp-dlna
 Version:       0.10.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       A collection of helpers for building UPnP AV applications
+Summary(zh_CN.UTF-8): 支持 dlna 的 UPnP 辅助程序
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2+
 URL:           http://www.gupnp.org/
-Source0:       http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.10/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:       http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel >= 1.36
@@ -26,23 +29,36 @@ The GUPnP API is intended to be easy to use, efficient and flexible.
 GUPnP-dlna is a collection of helpers for building DLNA (Digital 
 Living Network Alliance) compliant applications using GUPnP.
 
+%description -l zh_CN.UTF-8
+支持 dlna 的 UPnP 辅助程序。
+
 %package devel
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 Contains libraries and header files for developing applications that 
 use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary: Development package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 
 %description docs
 Contains developer documentation for %{name}.
+
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q
@@ -57,6 +73,7 @@ make install DESTDIR=%{buildroot}
 
 #Remove libtool archives.
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -88,6 +105,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/%{name}-metadata
 
 %changelog
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.10.2-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

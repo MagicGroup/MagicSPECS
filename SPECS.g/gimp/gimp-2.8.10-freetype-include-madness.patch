@@ -1,0 +1,39 @@
+From e7fdd16c6f5bde5ca53a5c1e429e2d6074d9b45b Mon Sep 17 00:00:00 2001
+From: Nils Philippsen <nils@redhat.com>
+Date: Thu, 13 Feb 2014 12:04:17 +0100
+Subject: [PATCH] patch: freetype-include-madness
+
+Squashed commit of the following:
+
+commit 529499204591258106b359be24f03f734201b8ba
+Author: Michael Natterer <mitch@gimp.org>
+Date:   Fri Nov 29 21:57:46 2013 +0100
+
+    Bug 719560 - Build failure with freetype 2.5.1
+
+    Apply patch from su-v that fixes the freetype include to
+    the madness devised and recommended by freetype.
+
+    (cherry picked from commit 6c73f28b6d87a2afd11974552a075bffec52347f)
+---
+ app/text/gimpfont.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/app/text/gimpfont.c b/app/text/gimpfont.c
+index aa5f3ba..d052c6d 100644
+--- a/app/text/gimpfont.c
++++ b/app/text/gimpfont.c
+@@ -27,7 +27,9 @@
+ 
+ #define PANGO_ENABLE_ENGINE  1   /* Argh */
+ #include <pango/pango-ot.h>
+-#include <freetype/tttables.h>
++
++#include <ft2build.h>
++#include FT_TRUETYPE_TABLES_H
+ 
+ #include "text-types.h"
+ 
+-- 
+1.8.5.3
+

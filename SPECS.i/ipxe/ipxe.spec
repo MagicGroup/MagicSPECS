@@ -13,7 +13,10 @@
 
 # We only build the ROMs if on an x86 build host. The resulting
 # binary RPM will be noarch, so other archs will still be able
-# to use the binary ROMs
+# to use the binary ROMs.
+#
+# We do cross-compilation for 32->64-bit, but not for other arches
+# because EDK II does not support big-endian hosts.
 %global buildarches %{ix86} x86_64
 
 # debugging firmwares does not goes the same way as a normal program.
@@ -21,40 +24,48 @@
 # package is currently clashing in koji, so don't bother.
 %global debug_package %{nil}
 
-# Upstream don't do "releases" :-( So we're going to use the date
+# Upstream don't do "releases" :-( So we're going to use the vcsdate
 # as the version, and a GIT hash as the release. Generate new GIT
 # snapshots using the folowing commands:
 #
 # $ hash=`git log -1 --format='%h'`
-# $ date=`date '+%Y%m%d'`
-# $ git archive --output ipxe-${date}-git${hash}.tar.gz --prefix ipxe-${date}-git${hash}/ ${hash}
+# $ vcsdate=`date '+%Y%m%d'`
+# $ git archive --output ipxe-${vcsdate}-git${hash}.tar.gz --prefix ipxe-${vcsdate}-git${hash}/ ${hash}
 #
 # And then change these two:
 
-%global date 20120328
-%global hash aac9718
+%define git 1
+%define vcsdate 20140415
+%global hash c4bce43
 
 Name:    ipxe
-Version: %{date}
-Release: 2.git%{hash}%{?dist}
+Version: %{vcsdate}
+Release: 7.git%{hash}%{?dist}
 Summary: A network boot loader
 
 Group:   System Environment/Base
 License: GPLv2 and BSD
 URL:     http://ipxe.org/
 
-Source0: %{name}-%{version}-git%{hash}.tar.gz
+Source0: %{name}-git%{vcsdate}.tar.xz
 Source1: USAGE
-# Remove 2 second startup wait. This patch is not intended to
-# go upstream. Modifying the general config header file is the
-# intended means for downstream customization.
-Patch1: %{name}-banner-timeout.patch
+Source2: make_ipxe_git_package.sh
+
+# Allow access to ipxe prompt if VM is set to pxe boot (bz #842932)
+Patch0001: 0001-Customize-ROM-banner-timeout.patch
+# Enable PNG support (bz #1058176)
+Patch0002: 0002-config-Enable-PNG-support.patch
 
 %ifarch %{buildarches}
 BuildRequires: perl
 BuildRequires: syslinux
 BuildRequires: mtools
 BuildRequires: mkisofs
+BuildRequires: edk2-tools
+
+BuildRequires: binutils-devel
+BuildRequires: binutils-x86_64-linux-gnu gcc-x86_64-linux-gnu
+
 Obsoletes: gpxe <= 1.0.1
 
 %package bootimgs
@@ -107,12 +118,23 @@ replacement for proprietary PXE ROMs, with many extra features such as
 DNS, HTTP, iSCSI, etc.
 
 %prep
-%setup -q -n %{name}-%{version}-git%{hash}
-%patch1 -p1
+%setup -q -n %{name}-git%{vcsdate}
+
+# Allow access to ipxe prompt if VM is set to pxe boot (bz #842932)
+%patch0001 -p1
+# Enable PNG support (bz #1058176)
+%patch0002 -p1
+
 cp -a %{SOURCE1} .
 
 %build
 %ifarch %{buildarches}
+# The src/Makefile.housekeeping relies on .git/index existing
+# but since we pass GITVERSION= to make, we don't actally need
+# it to be the real deal, so just touch it to let the build pass
+mkdir .git
+touch .git/index
+
 ISOLINUX_BIN=/usr/share/syslinux/isolinux.bin
 cd src
 # ath9k drivers are too big for an Option ROM
@@ -120,12 +142,32 @@ rm -rf drivers/net/ath/ath9k
 
 #make %{?_smp_mflags} bin/undionly.kpxe bin/ipxe.{dsk,iso,usb,lkrn} allroms \
 make bin/undionly.kpxe bin/ipxe.{dsk,iso,usb,lkrn} allroms \
-                   ISOLINUX_BIN=${ISOLINUX_BIN} NO_WERROR=1 V=1
+                   ISOLINUX_BIN=${ISOLINUX_BIN} NO_WERROR=1 V=1 \
+		   GITVERSION=%{hash} \
+		   CROSS_COMPILE=x86_64-linux-gnu-
+
+# build roms with efi support for qemu
+mkdir bin-combined
+for rom in %qemuroms; do
+  make NO_WERROR=1 V=1 GITVERSION=%{hash} CROSS_COMPILE=x86_64-linux-gnu- bin/${rom}.rom
+  make NO_WERROR=1 V=1 GITVERSION=%{hash} CROSS_COMPILE=x86_64-linux-gnu- bin-i386-efi/${rom}.efidrv
+  make NO_WERROR=1 V=1 GITVERSION=%{hash} CROSS_COMPILE=x86_64-linux-gnu- bin-x86_64-efi/${rom}.efidrv
+  vid="0x${rom%%????}"
+  did="0x${rom#????}"
+  EfiRom -f "$vid" -i "$did" --pci23 \
+         -b  bin/${rom}.rom \
+         -ec bin-i386-efi/${rom}.efidrv \
+         -ec bin-x86_64-efi/${rom}.efidrv \
+         -o  bin-combined/${rom}.rom
+  EfiRom -d  bin-combined/${rom}.rom
+done
+
 %endif
 
 %install
 %ifarch %{buildarches}
 mkdir -p %{buildroot}/%{_datadir}/%{name}/
+mkdir -p %{buildroot}/%{_datadir}/%{name}.efi/
 pushd src/bin/
 
 cp -a undionly.kpxe ipxe.{iso,usb,dsk,lkrn} %{buildroot}/%{_datadir}/%{name}/
@@ -148,6 +190,10 @@ for fmt in rom ;do
   echo %{_datadir}/%{name}/${rom}.${fmt} >> qemu.${fmt}.list
  done
 done
+for rom in %{qemuroms}; do
+  cp src/bin-combined/${rom}.rom %{buildroot}/%{_datadir}/%{name}.efi/
+  echo %{_datadir}/%{name}.efi/${rom}.rom >> qemu.rom.list
+done
 %endif
 
 %ifarch %{buildarches}
@@ -166,78 +212,21 @@ done
 
 %files roms-qemu -f qemu.rom.list
 %dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}.efi
 %doc COPYING COPYRIGHTS
 %endif
 
 %changelog
-* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120328-2.gitaac9718
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415-7.gitc4bce43
+- 为 Magic 3.0 重建
 
-* Wed Mar 28 2012 Daniel P. Berrange <berrange@redhat.com> - 20120328-1.gitaac9718
-- Update to newer upstream
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415-6.gitc4bce43
+- 更新到 20140415 日期的仓库源码
 
-* Fri Mar 23 2012 Daniel P. Berrange <berrange@redhat.com> - 20120319-3.git0b2c788
-- Remove more defattr statements
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20130517-5.gitc4bce43
+- 为 Magic 3.0 重建
 
-* Tue Mar 20 2012 Daniel P. Berrange <berrange@redhat.com> - 20120319-2.git0b2c788
-- Remove BuildRoot & rm -rf of it in install/clean sections
-- Remove defattr in file section
-- Switch to use global, instead of define for macros
-- Add note about Patch1 not going upstream
-- Split BRs across lines for easier readability
+* Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20130517-4.gitc4bce43
+- 为 Magic 3.0 重建
 
-* Mon Feb 27 2012 Daniel P. Berrange <berrange@redhat.com> - 20120319-1.git0b2c788
-- Initial package based on gPXE
 
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Mon Feb 21 2011 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.1-4
-- don't use -Werror, it flags a failure that is not a failure for gPXE
-
-* Mon Feb 21 2011 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.1-3
-- Fix virtio-net ethernet frame length (patch by cra), fixes BZ678789
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Thu Aug  5 2010 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.1-1
-- New drivers: Intel e1000, e1000e, igb, EFI snpnet, JMicron jme,
-  Neterion X3100, vxge, pcnet32.
-- Bug fixes and improvements to drivers, wireless, DHCP, iSCSI,
-  COMBOOT, and EFI.
-* Tue Feb  2 2010 Matt Domsch <mdomsch@fedoraproject.org> - 1.0.0-1
-- bugfix release, also adds wireless card support
-- bnx2 builds again
-- drop our one patch
-
-* Tue Oct 27 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.9-1
-- new upstream version 0.9.9
--- plus patches from git up to 20090818 which fix build errors and
-   other release-critical bugs.
--- 0.9.9: added Attansic L1E and sis190/191 ethernet drivers.  Fixes
-   and updates to e1000 and 3c90x drivers.
--- 0.9.8: new commands: time, sleep, md5sum, sha1sum. 802.11 wireless
-   support with Realtek 8180/8185 and non-802.11n Atheros drivers.
-   New Marvell Yukon-II gigabet Ethernet driver.  HTTP redirection
-   support.  SYSLINUX floppy image type (.sdsk) with usable file
-   system.  Rewrites, fixes, and updates to 3c90x, forcedeth, pcnet32,
-   e1000, and hermon drivers.
-
-* Mon Oct  5 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-6
-- move rtl8029 from -roms to -roms-qemu for qemu ne2k_pci NIC (BZ 526776)
-
-* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.7-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Tue May 19 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-4
-- add undionly.kpxe to -bootimgs
-
-* Tue May 12 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-3
-- handle isolinux changing paths
-
-* Sat May  9 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-2
-- add dist tag
-
-* Thu Mar 26 2009 Matt Domsch <mdomsch@fedoraproject.org> - 0.9.7-1
-- Initial release based on etherboot spec

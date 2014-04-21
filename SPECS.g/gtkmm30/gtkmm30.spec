@@ -3,11 +3,13 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           gtkmm30
-Version:        3.8.0
+Version:	3.11.10
 Release:        1%{?dist}
 Summary:        C++ interface for the GTK+ library
+Summary(zh_CN.UTF-8): GTK 3 的 C++ 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/gtkmm/%{release_version}/gtkmm-%{version}.tar.xz
@@ -23,20 +25,28 @@ gtkmm is the official C++ interface for the popular GUI library GTK+.
 Highlights include type safe callbacks, and a comprehensive set of
 widgets that are easily extensible via inheritance.
 
+%description -l zh_CN.UTF-8 
+GTK 3 的 C++ 接口。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        doc
 Summary:        API documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
+Summary(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 Requires:       glibmm24-doc
@@ -44,6 +54,8 @@ Requires:       glibmm24-doc
 %description    doc
 This package contains the full API documentation for %{name}.
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n gtkmm-%{version}
@@ -64,7 +76,7 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 sed -i 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 
 make %{?_smp_mflags}
-
+magic_rpm_clean.sh
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -99,6 +111,9 @@ make check %{?_smp_mflags}
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.11.10-1
+- 更新到 3.11.10
+
 * Wed Apr 17 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
 - Update to 3.8.0
 

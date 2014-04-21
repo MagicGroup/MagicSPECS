@@ -23,7 +23,7 @@
 Summary: Utilities from the general purpose cryptography library with TLS implementation
 Name: openssl
 Version: 1.0.1e
-Release: 40%{?dist}
+Release: 42%{?dist}
 Epoch: 1
 # We have to remove certain patented algorithms from the openssl source
 # tarball with the hobble-openssl script which is included below.
@@ -92,6 +92,8 @@ Patch86: openssl-1.0.1e-cve-2013-6449.patch
 Patch87: openssl-1.0.1e-cve-2013-6450.patch
 Patch88: openssl-1.0.1e-cve-2013-4353.patch
 Patch89: openssl-1.0.1e-ephemeral-key-size.patch
+# upstream patch for CVE-2014-0160
+Patch100: openssl.git-96db902.patch
 
 License: OpenSSL
 Group: System Environment/Libraries
@@ -216,6 +218,8 @@ cp %{SOURCE12} %{SOURCE13} crypto/ec/
 %patch87 -p1 -b .dtls1-mitm
 %patch88 -p1 -b .handshake-crash
 %patch89 -p1 -b .ephemeral
+
+%patch100 -p1 -b .CVE-2014-0160
 
 sed -i 's/SHLIB_VERSION_NUMBER "1.0.0"/SHLIB_VERSION_NUMBER "%{version}"/' crypto/opensslv.h
 
@@ -479,6 +483,9 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/fipscanister.*
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 1:1.0.1e-42
+- 为 Magic 3.0 重建
+
 * Thu Feb  6 2014 Tomáš Mráz <tmraz@redhat.com> 1.0.1e-40
 - print ephemeral key size negotiated in TLS handshake (#1057715)
 - add DH_compute_key_padded needed for FIPS CAVS testing

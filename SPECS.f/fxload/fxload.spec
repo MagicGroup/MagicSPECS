@@ -2,8 +2,10 @@ Name: fxload
 Version: 2002_04_11
 Release: 12%{?dist}
 Summary: A helper program to download firmware into FX and FX2 EZ-USB devices
+Summary(zh_CN.UTF-8): 下载固件到 FX 和 FX2 EZ-USB 设备的帮助程序
 
 Group: System Environment/Kernel
+Group(zh_CN.UTF-8): 系统环境/内核
 License: GPLv2+
 URL: http://linux-hotplug.sourceforge.net/
 Source0: fxload-2002_04_11-noa3load.tar.gz
@@ -29,6 +31,9 @@ EZ-USB devices, as well as the original AnchorChips EZ-USB.  It is
 intended to be invoked by udev scripts when the unprogrammed device
 appears on the bus.
 
+%description -l zh_CN.UTF-8
+下载固件到 FX 和 FX2 EZ-USB 设备的帮助程序。
+
 %prep
 %setup -q 
 %patch0 -p0 -b .fxload-header
@@ -43,6 +48,7 @@ mkdir -p -m 755 %{buildroot}/sbin
 install -m 755 fxload %{buildroot}/sbin
 mkdir -p -m 755 %{buildroot}/%{_mandir}/man8/
 install -m 644 fxload.8 %{buildroot}/%{_mandir}/man8/
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

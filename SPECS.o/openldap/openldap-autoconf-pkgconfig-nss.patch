@@ -3,14 +3,14 @@ Use pkg-config for Mozilla NSS library detection
 Author: Jan Vcelak <jvcelak@redhat.com>
 
 ---
- configure.in |   20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
+ configure.in | 22 +++++-----------------
+ 1 file changed, 5 insertions(+), 17 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index f0f8d99..2a9cfb4 100644
+index ecffe30..2a9cfb4 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1223,26 +1223,16 @@ if test $ol_link_tls = no ; then
+@@ -1223,28 +1223,16 @@ if test $ol_link_tls = no ; then
  	fi
  fi
  
@@ -35,7 +35,9 @@ index f0f8d99..2a9cfb4 100644
 -					  [define if you have MozNSS])
 -			TLS_LIBS="-lssl3 -lsmime3 -lnss3 -lnssutil3 -lplds4 -lplc4 -lnspr4"
 -		else
+-			if test $ol_with_tls = moznss ; then
 -			AC_MSG_ERROR([MozNSS not found - please specify the location to the NSPR and NSS header files in CPPFLAGS and the location to the NSPR and NSS libraries in LDFLAGS (if not in the system location)])
+-			fi
 +			AC_DEFINE(HAVE_MOZNSS, 1, [define if you have MozNSS])
 +			TLS_LIBS="$MOZNSS_LIBS"
 +			CFLAGS="$CFLAGS $MOZNSS_CFLAGS"
@@ -43,5 +45,5 @@ index f0f8d99..2a9cfb4 100644
  	fi
  fi
 -- 
-1.7.10.4
+1.7.11.7
 

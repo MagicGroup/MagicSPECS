@@ -1,4 +1,5 @@
 Summary: Themes for GNOME
+Summary(zh_CN.UTF-8): GNOME 主题 
 Name: gnome-themes
 Version: 2.32.0
 Release: 8%{?dist}
@@ -7,6 +8,7 @@ URL: http://download.gnome.org/sources/gnome-themes/
 Source: http://download.gnome.org/sources/gnome-themes/2.32/%{name}-%{version}.tar.bz2
 License: LGPLv2 and GPLv2
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 BuildArch: noarch
 
 Requires: gtk2-engines
@@ -27,14 +29,22 @@ The gnome-themes package contains a collection of desktop themes for GNOME.
 These themes can change the appearance of application widgets, icons, window
 borders, cursors, etc.
 
+%description -l zh_CN.UTF-8
+GNOME 2 的主题。
+
 %package legacy
 Summary: Old names for icons in gnome-themes
+Summary(zh_CN.UTF-8): 旧的 GNOME 主题 
 Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Requires: %{name} = %{version}-%{release}
 
 %description legacy
 This package contains symlinks to make the icons in gnome-themes
 available under old names.
+
+%description legacy -l zh_CN.UTF-8
+旧的 GNOME 主题。
 
 %prep
 %setup -q
@@ -87,7 +97,7 @@ done
  echo "%%defattr(-,root,root,-)"
  find icons/Mist -type l -and -not -name "gtk-\*" -printf "%%%%{_datadir}/%%p\n"
 ) > legacy.txt
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post

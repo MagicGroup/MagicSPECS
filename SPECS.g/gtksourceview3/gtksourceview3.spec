@@ -3,15 +3,18 @@
 %define po_package gtksourceview-3.0
 
 Summary: A library for viewing source files
+Summary(zh_CN.UTF-8): 查看源代码的库
 Name: gtksourceview3
-Version: 3.8.1
-Release: 1%{?dist}
+Version:	3.12.0
+Release: 2%{?dist}
 License: LGPLv2+ and GPLv2+
 # the library itself is LGPL, some .lang files are GPL
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://gtksourceview.sourceforge.net/
 #VCS: git:git://git.gnome.org/gtksourceview
-Source0: http://download.gnome.org/sources/gtksourceview/3.8/gtksourceview-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gtksourceview/%{majorver}/gtksourceview-%{version}.tar.xz
 BuildRequires: libxml2-devel
 BuildRequires: gtk3-devel >= %{gtk_version}
 BuildRequires: intltool >= 0.35
@@ -26,9 +29,17 @@ syntax highlighting and other features typical of a source code editor.
 This package contains version 3 of GtkSourceView. The older version
 2 is contains in the gtksourceview2 package.
 
+%description -l zh_CN.UTF-8
+GtkSourceView 是标准 GTK+ 控件 GtkTextView 的一个扩展控件，实现了
+语法高亮等特性。
+
+这是 GtkSourceView 的 3 版本，老版本的 2 是 gtksourceview2 包。
+
 %package devel
 Summary: Files to compile applications that use gtksourceview3
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: gtk3-devel >= %{gtk_version}
 Requires: libxml2-devel
@@ -36,6 +47,9 @@ Requires: libxml2-devel
 %description devel
 gtksourceview3-devel contains the files required to compile
 applications which use GtkSourceView 3.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n gtksourceview-%{version}
@@ -52,7 +66,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_datadir}/gtksourceview-3.0/language-specs/check.sh
 rm -f $RPM_BUILD_ROOT%{_datadir}/gtksourceview-3.0/language-specs/convert.py
-
+magic_rpm_clean.sh
 %find_lang %{po_package}
 
 %post -p /sbin/ldconfig
@@ -75,6 +89,12 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/gtksourceview-3.0/language-specs/convert.py
 %{_datadir}/gir-1.0/GtkSource-3.0.gir
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 为 Magic 3.0 重建
+
+* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Mon Apr 15 2013 Ignacio Casal Quinteiro <icq@gnome.org> - 3.8.1-1
 - Update to 3.8.1
 

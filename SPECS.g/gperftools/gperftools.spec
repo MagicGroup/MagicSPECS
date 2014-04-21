@@ -1,26 +1,31 @@
 # This package used to be called "google-perftools", but it was renamed on 2012-02-03.
 
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:		gperftools
-Version:	2.0
-Release:	8%{?dist}
+Version:	2.1
+Release:	5%{?dist}
 License:	BSD
 Group:		Development/Tools
 Summary:	Very fast malloc and performance analysis tools
 URL:		http://code.google.com/p/gperftools/
 Source0:	http://gperftools.googlecode.com/files/%{name}-%{version}.tar.gz
-# http://code.google.com/p/gperftools/issues/detail?id=444
-Patch0:		gperftools-2.0-glibc216.patch
-# ppc64 still broken, bz 238390
-ExclusiveArch:	%{ix86} x86_64 ppc %{arm}
+ExclusiveArch:	%{ix86} x86_64 ppc ppc64 %{arm}
 %ifnarch ppc ppc64
 BuildRequires:	libunwind-devel
 %endif
+BuildRequires:	autoconf, automake, libtool
+Requires:	gperftools-devel = %{version}-%{release}
+Requires:	pprof = %{version}-%{release}
 
 %description
 Perf Tools is a collection of performance analysis tools, including a 
 high-performance multi-threaded malloc() implementation that works
 particularly well with threads and STL, a thread-friendly heap-checker,
 a heap profiler, and a cpu-profiler.
+
+This is a metapackage which pulls in all of the gperftools (and pprof)
+binaries, libraries, and development headers, so that you can use them.
 
 %package devel
 Summary:	Development libraries and headers for gperftools
@@ -52,7 +57,6 @@ Pprof is a heap and CPU profiler tool, part of the gperftools suite.
 
 %prep
 %setup -q
-%patch0 -p1 -b .glibc216
 
 # Fix end-of-line encoding
 sed -i 's/\r//' README_windows.txt
@@ -60,8 +64,11 @@ sed -i 's/\r//' README_windows.txt
 # No need to have exec permissions on source code
 chmod -x src/sampler.h src/sampler.cc
 
+autoreconf -i
+
 %build
-CXXFLAGS=`echo $RPM_OPT_FLAGS -DTCMALLOC_LARGE_PAGES| sed -e 's/-Wp,-D_FORTIFY_SOURCE=2//g'`
+CFLAGS=`echo $RPM_OPT_FLAGS -fno-strict-aliasing -Wno-unused-local-typedefs -DTCMALLOC_LARGE_PAGES | sed -e 's|-fexceptions||g'`
+CXXFLAGS=`echo $RPM_OPT_FLAGS -fno-strict-aliasing -Wno-unused-local-typedefs -DTCMALLOC_LARGE_PAGES | sed -e 's|-fexceptions||g'`
 %configure --disable-static 
 
 # Bad rpath!
@@ -71,32 +78,30 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make 
 
 %install
-make DESTDIR=%{buildroot} docdir=%{_docdir}/%{name}-%{version}/ install
+make DESTDIR=%{buildroot} docdir=%{_pkgdocdir}/ install
 find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
 
-# Zero files
-rm -rf %{buildroot}%{_docdir}/%{name}-%{version}/NEWS
-
 # Delete useless files
-rm -rf %{buildroot}%{_docdir}/%{name}-%{version}/INSTALL
-magic_rpm_clean.sh
+rm -rf %{buildroot}%{_pkgdocdir}/INSTALL
 
 %check
 # http://code.google.com/p/google-perftools/issues/detail?id=153
 %ifnarch ppc
-# Their test suite is junk. Disabling.
+# Their test suite is almost always broken.
 # LD_LIBRARY_PATH=./.libs make check
 %endif
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
+%files
+
 %files -n pprof
 %{_bindir}/pprof
 %{_mandir}/man1/*
 
 %files devel
-%{_docdir}/%{name}-%{version}/
+%{_pkgdocdir}/
 %{_includedir}/google/
 %{_includedir}/gperftools/
 %{_libdir}/*.so
@@ -106,8 +111,39 @@ magic_rpm_clean.sh
 %{_libdir}/*.so.*
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.0-8
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.1-5
 - 为 Magic 3.0 重建
+
+* Sat Jan  4 2014 Tom Callaway <spot@fedoraproject.org> - 2.1-4
+- re-enable FORTIFY_SOURCE
+
+* Fri Dec  6 2013 Ville Skyttä <ville.skytta@iki.fi> - 2.1-3
+- Install docs to %%{_pkgdocdir} where available (#993798), include NEWS.
+- Fix bogus date in %%changelog.
+
+* Sat Aug 03 2013 Petr Pisar <ppisar@redhat.com> - 2.1-2
+- Perl 5.18 rebuild
+
+* Wed Jul 31 2013 Tom Callaway <spot@fedoraproject.org> - 2.1-1
+- update to 2.1 (fixes arm)
+- disable -fexceptions, as that breaks things on el6, possibly arm
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 2.0-12
+- Perl 5.18 rebuild
+
+* Tue Jun  4 2013 Tom Callaway <spot@fedoraproject.org> - 2.0-11
+- pass -fno-strict-aliasing
+- create "gperftools" metapackage.
+- update to svn r218 (cleanups, some ARM fixes)
+
+* Thu Mar 14 2013 Dan Horák <dan[at]danny.cz> - 2.0-10
+- build on ppc64 as well
+
+* Fri Mar  1 2013 Tom Callaway <spot@fedoraproject.org> - 2.0-9
+- update to svn r190 (because google can't make releases)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Aug  3 2012 Tom Callaway <spot@fedoraproject.org> - 2.0-7
 - fix compile with glibc 2.16
@@ -245,7 +281,7 @@ magic_rpm_clean.sh
 * Mon Apr 23 2007 Tom "spot" Callaway <tcallawa@redhat.com> 0.91-1
 - alright, lets see if this works now.
 
-* Wed Oct 13 2005 Tom "spot" Callaway <tcallawa@redhat.com> 0.3-2
+* Wed Oct 12 2005 Tom "spot" Callaway <tcallawa@redhat.com> 0.3-2
 - change group to Development/Tools
 
 * Mon Oct 10 2005 Tom "spot" Callaway <tcallawa@redhat.com> 0.3-1

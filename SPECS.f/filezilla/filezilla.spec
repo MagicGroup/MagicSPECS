@@ -1,6 +1,6 @@
 #define fz_rc   rc2
 Name:           filezilla
-Version:        3.5.2
+Version:	3.8.0
 Release:        1%{?fz_rc:_%{?fz_rc}}%{?dist}.1
 Summary:        FileZilla FTP, FTPS and SFTP client
 Summary(zh_CN.UTF-8): FTP, FTPS 和 SFTP 客户端
@@ -118,12 +118,15 @@ fi || :
 %{_bindir}/*
 %{_datadir}/filezilla/
 %{_datadir}/applications/*%{name}.desktop
-%{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_datadir}/icons/hicolor/*/apps/%{name}.*
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 
 
 %changelog
+* Thu Apr 03 2014 Liu Di <liudidi@gmail.com> - 3.8.0-1.1
+- 更新到 3.8.0
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.5.2-1.1
 - 为 Magic 3.0 重建
 

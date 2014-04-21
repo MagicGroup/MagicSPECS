@@ -11,7 +11,7 @@
 Summary: GStreamer streaming media framework "ugly" plug-ins
 Name: gstreamer-plugins-ugly
 Version: 0.10.19
-Release: 3%{?dist}
+Release: 6%{?dist}
 License: LGPLv2+
 Group: Applications/Multimedia
 URL: http://gstreamer.freedesktop.org/
@@ -37,7 +37,6 @@ BuildRequires: libmad-devel >= 0.15.0
 BuildRequires: libmpeg2-devel >= 0.4.0
 BuildRequires: liboil-devel
 BuildRequires: libcdio-devel
-BuildRequires: PyXML
 
 Provides: gstreamer-sid = %{version}-%{release}
 Provides: gstreamer-lame = %{version}-%{release}
@@ -110,11 +109,20 @@ gstreamer-plugins-good because:
 %{_libdir}/gstreamer-%{majorminor}/libgstmad.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmpeg2dec.so
 #%{_libdir}/gstreamer-%{majorminor}/libgstsid.so
-%{_libdir}/gstreamer-%{majorminor}/libgsttwolame.so
+#%{_libdir}/gstreamer-%{majorminor}/libgsttwolame.so
 %{_libdir}/gstreamer-%{majorminor}/libgstx264.so
 %{_datadir}/gstreamer-%{majorminor}/presets/GstX264Enc.prs*
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.19-6
+- 为 Magic 3.0 重建
+
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.19-5
+- 为 Magic 3.0 重建
+
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.10.19-4
+- 为 Magic 3.0 重建
+
 * Sat Jul 06 2013 Liu Di <liudidi@gmail.com> - 0.10.19-3
 - 为 Magic 3.0 重建
 

@@ -1,14 +1,17 @@
 Name:           gnome-shell
-Version:        3.8.0.1
-Release:        2%{?dist}
+Version:	3.12.0
+Release:        3%{?dist}
 Summary:        Window management and application launching for GNOME
+Summary(zh_CN.UTF-8): GNOME 的窗口管理器和程序载入器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 Provides:       desktop-notification-daemon
 URL:            http://live.gnome.org/GnomeShell
 #VCS:           git:git://git.gnome.org/gnome-shell
-Source0:        http://download.gnome.org/sources/gnome-shell/3.8/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/gnome-shell/%{majorver}/%{name}-%{version}.tar.xz
 
 # Replace Epiphany with Firefox in the default favourite apps list
 Patch1: gnome-shell-favourite-apps-firefox.patch
@@ -97,7 +100,6 @@ Requires:       at-spi2-atk%{?_isa}
 Requires:       caribou%{?_isa} >= %{caribou_version}
 # needed for the user menu
 Requires:       accountsservice-libs%{?_isa}
-Requires:       gdm-libs%{?_isa}
 Requires:       clutter%{?_isa} >= %{clutter_version}
 
 %description
@@ -106,6 +108,9 @@ like switching to windows and launching applications. GNOME Shell takes
 advantage of the capabilities of modern graphics hardware and introduces
 innovative user interface concepts to provide a visually attractive and
 easy to use experience.
+
+%description -l zh_CN.UTF-8 
+GNOME 3 的窗口管理器。
 
 %prep
 %setup -q
@@ -124,15 +129,15 @@ rm -rf %{buildroot}/%{_libdir}/mozilla/plugins/*.la
 desktop-file-validate %{buildroot}%{_datadir}/applications/gnome-shell.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/gnome-shell-extension-prefs.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/evolution-calendar.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %ifnarch s390 s390x ppc ppc64 ppc64p7
 # The libdir rpath breaks nvidia binary only folks, so we remove it.
 # See bug 716572
 # skip on s390(x), workarounds a chrpath issue
-chrpath -r %{_libdir}/gnome-shell:%{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_bindir}/gnome-shell
-chrpath -r %{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_libdir}/gnome-shell/libgnome-shell.so
+# chrpath -r %{_libdir}/gnome-shell:%{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_bindir}/gnome-shell
+# chrpath -r %{_libdir}/gnome-bluetooth $RPM_BUILD_ROOT%{_libdir}/gnome-shell/libgnome-shell.so
 %endif
 
 %preun
@@ -151,7 +156,7 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %{_datadir}/applications/gnome-shell.desktop
 %{_datadir}/applications/gnome-shell-extension-prefs.desktop
 %{_datadir}/applications/evolution-calendar.desktop
-%{_datadir}/gnome-control-center/keybindings/50-gnome-shell-screenshot.xml
+#%{_datadir}/gnome-control-center/keybindings/50-gnome-shell-screenshot.xml
 %{_datadir}/gnome-control-center/keybindings/50-gnome-shell-system.xml
 %{_datadir}/gnome-shell/
 %{_datadir}/dbus-1/services/org.gnome.Shell.CalendarServer.service
@@ -159,6 +164,7 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %{_datadir}/dbus-1/interfaces/org.gnome.Shell.Screenshot.xml
 %{_datadir}/dbus-1/interfaces/org.gnome.ShellSearchProvider.xml
 %{_datadir}/dbus-1/interfaces/org.gnome.ShellSearchProvider2.xml
+%{_datadir}/dbus-1/interfaces/org.gnome.Shell.Screencast.xml
 %{_libdir}/gnome-shell/
 %{_libdir}/mozilla/plugins/*.so
 %{_libexecdir}/gnome-shell-calendar-server
@@ -174,6 +180,12 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.12.0-3
+- 为 Magic 3.0 重建
+
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Thu Mar 28 2013 Adel Gadllah <adel.gadllah@gmail.com> - 3.8.0.1-2
 - Ship the perf tool
 

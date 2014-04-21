@@ -3,20 +3,18 @@
 %define _default_patch_flags -p1
 
 Summary: A document formatting system
+Summary(zh_CN.UTF-8): 一个文档格式化系统
 Name: groff
-Version: 1.21
-Release: 11%{?dist}
+Version: 1.22.2
+Release: 1%{?dist}
 License: GPLv3+ and GFDL and BSD and MIT
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 URL: http://groff.ffii.org
 
 Source0: ftp://ftp.gnu.org/gnu/groff/groff-%{version}.tar.gz
 
 Patch1: groff-info-missing-x11.patch
-Patch2: groff-makefile-typo.patch
-Patch3: groff-manpages-typos.patch
-Patch4: groff-grofferdir-auto.patch
-Patch5: groff-grotty-wc-no-sgr.patch
 Patch6: groff-config-etc.patch
 Patch7: groff-cve-2009-5044_5080_5081.patch
 
@@ -174,6 +172,7 @@ fi
 %{_datadir}/%{name}/%{version}/font/devhtml/
 %{_datadir}/%{name}/%{version}/font/devlbp/
 %{_datadir}/%{name}/%{version}/font/devlj4/
+%{_datadir}/%{name}/%{version}/font/devpdf/
 %{_datadir}/%{name}/%{version}/oldfont/
 %{_datadir}/%{name}/%{version}/pic/
 %{_datadir}/%{name}/%{version}/tmac/62bit.tmac
@@ -200,6 +199,12 @@ fi
 %{_datadir}/%{name}/%{version}/tmac/spdf.tmac
 %{_datadir}/%{name}/%{version}/tmac/trace.tmac
 %{_datadir}/%{name}/%{version}/tmac/mm/
+%{_datadir}/%{name}/%{version}/tmac/fallbacks.tmac
+%{_datadir}/%{name}/%{version}/tmac/pdf.tmac
+%{_datadir}/%{name}/%{version}/tmac/refer-me.tmac
+%{_datadir}/%{name}/%{version}/tmac/refer-mm.tmac
+%{_datadir}/%{name}/%{version}/tmac/refer-ms.tmac
+%{_datadir}/%{name}/%{version}/tmac/refer.tmac
 # programs
 %{_bindir}/addftinfo
 %{_bindir}/eqn2graph
@@ -209,6 +214,8 @@ fi
 %{_bindir}/grodvi
 %{_bindir}/grolbp
 %{_bindir}/grolj4
+%{_bindir}/gropdf
+%{_bindir}/pdfmom
 %{_bindir}/hpftodit
 %{_bindir}/indxbib
 %{_bindir}/lkbib
@@ -245,6 +252,8 @@ fi
 %{_mandir}/man1/grefer.*
 %{_mandir}/man1/glookbib.*
 %{_mandir}/man1/gindxbib.*
+%{_mandir}/man1/gropdf.*
+%{_mandir}/man1/pdfmom.*
 # groff processor documentation
 %{_mandir}/man5/*
 %{_mandir}/man7/*
@@ -417,6 +426,9 @@ fi
 %doc %{_docdir}/%{name}-%{version}/pdf/
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.22.2-1
+- 更新到 1.22.2
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.21-11
 - 为 Magic 3.0 重建
 

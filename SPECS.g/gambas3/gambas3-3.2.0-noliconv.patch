@@ -1,0 +1,14 @@
+diff -up gambas3-3.2.0/main/configure.ac.noliconv gambas3-3.2.0/main/configure.ac
+--- gambas3-3.2.0/main/configure.ac.noliconv	2012-07-02 10:52:47.000000000 -0400
++++ gambas3-3.2.0/main/configure.ac	2012-07-02 12:30:14.993024570 -0400
+@@ -27,8 +27,8 @@ dnl ---- Check for charset conversion li
+ GB_COMPONENT(
+   conv, CONV, libiconv, [],
+   [GB_FIND(iconv.h, /opt/local /usr/local /usr, include)],
+-  [GB_FIND(libiconv.$SHLIBEXT, /opt/local /usr/local /usr, lib)],
+-  [-liconv],
++  [],
++  [],
+   [],
+   [This library may be located inside the system C library, so you can ignore that warning...])
+ 

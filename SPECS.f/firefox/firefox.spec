@@ -63,7 +63,7 @@
 %define official_branding       1
 %define build_langpacks         1
 %ifarch %{ix86} x86_64
-%define enable_mozilla_crashreporter       1
+%define enable_mozilla_crashreporter       0
 %else
 %define enable_mozilla_crashreporter       0
 %endif
@@ -84,12 +84,14 @@
 %endif
 
 Summary:        Mozilla Firefox Web browser
+Summary(zh_CN.UTF-8): 火狐网页浏览器
 Name:           firefox
 Version:        27.0.1
 Release:        1%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source0:        ftp://ftp.mozilla.org/pub/firefox/releases/%{version}%{?pre_version}/source/firefox-%{version}%{?pre_version}.source.tar.bz2
 %if %{build_langpacks}
 Source1:        firefox-langpacks-%{version}%{?pre_version}-20140224.tar.xz
@@ -190,6 +192,10 @@ Provides:       webclient
 %description
 Mozilla Firefox is an open-source web browser, designed for standards
 compliance, performance and portability.
+
+%description -l zh_CN.UTF-8
+一个开源的网页浏览器。
+
 %if %{enable_mozilla_crashreporter}
 %global moz_debug_prefix %{_prefix}/lib/debug
 %global moz_debug_dir %{moz_debug_prefix}%{mozappdir}
@@ -637,309 +643,4 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
-* Mon Feb 24 2014 Martin Stransky <stransky@redhat.com> - 27.0.1-1
-- Update to 27.0.1
 
-* Mon Feb 3 2014 Martin Stransky <stransky@redhat.com> - 27.0-1
-- Update to 27.0
-
-* Thu Jan 30 2014 Jan Horak <jhorak@redhat.com> - 26.0-7
-- Set default homepage to about:newtab and make start.fedoraproject.org page pinned on it
-- Disable system cairo because of rhbz#1059076
-
-* Mon Jan 20 2014 Jan Horak <jhorak@redhat.com> - 26.0-6
-- Fixed langpack installation
-
-* Thu Jan  9 2014 Jan Horak <jhorak@redhat.com> - 26.0-5
-- Build standalone firefox package without dependency on xulrunner
-
-* Tue Dec 17 2013 Martin Stransky <stransky@redhat.com> - 26.0-4
-- Added fix for rhbz#1007603 - NSS and cert9 (sql): firefox crash
-  on exit with https-everywhere installed (edit)
-
-* Fri Dec 13 2013 Martin Stransky <stransky@redhat.com> - 26.0-3
-- Build with -Werror=format-security (rhbz#1037063)
-
-* Mon Dec 9 2013 Martin Stransky <stransky@redhat.com> - 26.0-2
-- Update to 26.0 Build 2
-
-* Wed Oct 30 2013 Martin Stransky <stransky@redhat.com> - 25.0-3
-- Update to 25.0 Build 3
-
-* Thu Oct 24 2013 Martin Stransky <stransky@redhat.com> - 25.0-2
-- Fixed xulrunner dependency
-
-* Thu Oct 24 2013 Martin Stransky <stransky@redhat.com> - 25.0-1
-- Update to 25.0 Build 2
-
-* Thu Oct 17 2013 Martin Stransky <stransky@redhat.com> - 24.0-2
-- Fixed rhbz#1005611 - BEAST workaround not enabled in Firefox
-
-* Fri Sep 13 2013 Martin Stransky <stransky@redhat.com> - 24.0-1
-- Update to 24.0
-
-* Tue Sep  3 2013 Jan Horak <jhorak@redhat.com> - 23.0.1-5
-- Fixing rhbz#1003691
-
-* Fri Aug 30 2013 Martin Stransky <stransky@redhat.com> - 23.0.1-3
-- Spec tweak (rhbz#991493)
-
-* Fri Aug 30 2013 Jan Horak <jhorak@redhat.com> - 23.0.1-2
-- Homepage moved to pref file
-- Fixed migration from F18 -> F19 (rhbz#976420)
-
-* Mon Aug 19 2013 Jan Horak <jhorak@redhat.com> - 23.0.1-1
-- Update to 23.0.1
-
-* Mon Aug 5 2013 Martin Stransky <stransky@redhat.com> - 23.0-1
-- Updated to latest upstream (23.0 Build 2)
-
-* Thu Jul 25 2013 Martin Stransky <stransky@redhat.com> - 22.0-3
-- Fixed rhbz#988363 - firefox-redhat-default-prefs.js is not used
-
-* Fri Jun 28 2013 Jan Horak <jhorak@redhat.com> - 22.0-2
-- Fixed crashreporter for third arch
-
-* Fri Jun 21 2013 Martin Stransky <stransky@redhat.com> - 22.0-1
-- Updated to latest upstream (22.0)
-
-* Thu Jun 13 2013 Jan Horak <jhorak@redhat.com> - 21.0-5
-- Enable Mozilla crash report tool
-
-* Thu May 23 2013 Jan Horak <jhorak@redhat.com> - 21.0-4
-- Do not override user defined TMPDIR variable
-
-* Thu May 16 2013 Martin Stransky <stransky@redhat.com> - 21.0-3
-- Fixed extension compatibility dialog (rhbz#963422)
-
-* Wed May 15 2013 Martin Stransky <stransky@redhat.com> - 21.0-2
-- Keep compatibility with old preference dir
-
-* Tue May 14 2013 Martin Stransky <stransky@redhat.com> - 21.0-1
-- Updated to latest upstream (21.0)
-
-* Thu May 9 2013 Martin Stransky <stransky@redhat.com> - 20.0-5
-- Removed firstrun page (rhbz#864793)
-- Made zip/unzip quiet in langpacks processing
-
-* Thu Apr 18 2013 Martin Stransky <stransky@redhat.com> - 20.0-4
-- Updated xulrunner check
-
-* Thu Apr 18 2013 Martin Stransky <stransky@redhat.com> - 20.0-3
-- Added a workaround for rhbz#907424 - textarea redrawn wrongly 
-  during edit
-
-* Thu Apr 18 2013 Jan Horak <jhorak@redhat.com> - 20.0-2
-- Updated manual page
-
-* Mon Apr 1 2013 Martin Stransky <stransky@redhat.com> - 20.0-1
-- Updated to 20.0
-
-* Mon Mar 18 2013 Martin Stransky <stransky@redhat.com> - 19.0.2-2
-- Added fix for mozbz#239254 - local cache dir
-
-* Mon Mar 11 2013 Jan Horak <jhorak@redhat.com> - 19.0.2-1
-- Update to 19.0.2
-
-* Tue Feb 19 2013 Jan Horak <jhorak@redhat.com> - 19.0-1
-- Update to 19.0
-
-* Wed Feb  6 2013 Jan Horak <jhorak@redhat.com> - 18.0.2-1
-- Update to 18.0.2
-
-* Fri Jan 25 2013 Jan Horak <jhorak@redhat.com> - 18.0.1-1
-- Update to 18.0.1
-
-* Wed Jan 9 2013 Martin Stransky <stransky@redhat.com> - 18.0-1
-- Update to 18.0
-
-* Tue Dec 18 2012 Martin Stransky <stransky@redhat.com> - 17.0.1-2
-- Fix bug 878831 - Please enable gfx.color_management.enablev4=true
-
-* Thu Nov 29 2012 Jan Horak <jhorak@redhat.com> - 17.0.1-1
-- Update to 17.0.1
-
-* Mon Nov 19 2012 Martin Stransky <stransky@redhat.com> - 17.0-1
-- Update to 17.0
-
-* Thu Nov 15 2012 Martin Stransky <stransky@redhat.com> - 17.0-0.1b6
-- Update to 17.0 Beta 6
-
-* Wed Nov  7 2012 Jan Horak <jhorak@redhat.com> - 16.0.2-4
-- Added duckduckgo.com search engine
-
-* Thu Nov  1 2012 Jan Horak <jhorak@redhat.com> - 16.0.2-3
-- Added keywords to desktop file (871900)
-
-* Tue Oct 30 2012 Martin Stransky <stransky@redhat.com> - 16.0.2-2
-- Updated man page (#800234)
-
-* Fri Oct 26 2012 Jan Horak <jhorak@redhat.com> - 16.0.2-1
-- Update to 16.0.2
-
-* Thu Oct 11 2012 Martin Stransky <stransky@redhat.com> - 16.0.1-1
-- Update to 16.0.1
-
-* Thu Oct 11 2012 Martin Stransky <stransky@redhat.com> - 16.0.1-1
-- Update to 16.0.1
-
-* Mon Oct  8 2012 Jan Horak <jhorak@redhat.com> - 16.0-1
-- Update to 16.0
-- Use /var/tmp instead of /tmp (rhbz#860814)
-
-* Tue Sep 11 2012 Jan Horak <jhorak@redhat.com> - 15.0.1-1
-- Update to 15.0.1
-
-* Tue Aug 28 2012 Martin Stransky <stransky@redhat.com> - 15.0-2
-- Added fix for rhbz#851722 - conflict with incompatible xulrunner
-
-* Mon Aug 27 2012 Martin Stransky <stransky@redhat.com> - 15.0-1
-- Update to 15.0
-
-* Wed Aug 22 2012 Dan Horák <dan[at]danny.cz> - 14.0.1-3
-- add fix for secondary arches from xulrunner
-
-* Wed Aug 1 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-2
-- removed StartupWMClass (rhbz#844860)
-
-* Mon Jul 16 2012 Martin Stransky <stransky@redhat.com> - 14.0.1-1
-- Update to 14.0.1
-
-* Tue Jul 10 2012 Martin Stransky <stransky@redhat.com> - 13.0.1-2
-- Fixed rhbz#707100, rhbz#821169
-
-* Sat Jun 16 2012 Jan Horak <jhorak@redhat.com> - 13.0.1-1
-- Update to 13.0.1
-
-* Tue Jun 5 2012 Martin Stransky <stransky@redhat.com> - 13.0-1
-- Update to 13.0
-
-* Tue Apr 24 2012 Martin Stransky <stransky@redhat.com> - 12.0-1
-- Update to 12.0
-
-* Thu Mar 15 2012 Martin Stransky <stransky@redhat.com> - 11.0-2
-- Switched dependency to xulrunner (rhbz#803471)
-
-* Tue Mar 13 2012 Martin Stransky <stransky@redhat.com> - 11.0-1
-- Update to 11.0
-- Fixed rhbz#800622 - make default home page of fedoraproject.org conditional
-- Fixed rhbz#801796 - enable debug build by some simple way
-
-* Mon Feb 27 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 10.0.1-2
-- Add ARM config options to fix compile
-
-* Thu Feb  9 2012 Jan Horak <jhorak@redhat.com> - 10.0.1-1
-- Update to 10.0.1
-
-* Fri Feb  3 2012 Jan Horak <jhorak@redhat.com> - 10.0-2
-- Fixed rhbz#786983
-
-* Tue Jan 31 2012 Jan Horak <jhorak@redhat.com> - 10.0-1
-- Update to 10.0
-
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.0.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Fri Dec 23 2011 Jan Horak <jhorak@redhat.com> - 9.0.1-1
-- Update to 9.0.1
-
-* Wed Dec 21 2011 Jan Horak <jhorak@redhat.com> - 9.0-3
-- Update to 9.0
-
-* Thu Dec 15 2011 Jan Horak <jhorak@redhat.com> - 9.0-1.beta5
-- Update to 9.0 Beta 5
-
-* Tue Nov 15 2011 Martin Stransky <stransky@redhat.com> - 8.0-3
-- Disabled addon check UI (#753551)
-
-* Tue Nov 15 2011 Martin Stransky <stransky@redhat.com> - 8.0-2
-- Temporary workaround for langpacks (#753551)
-
-* Tue Nov  8 2011 Jan Horak <jhorak@redhat.com> - 8.0-1
-- Update to 8.0
-
-* Mon Oct 24 2011 Martin Stransky <stransky@redhat.com> - 7.0.1-3
-- reverted the desktop file name for Fedora15 & 16
-
-* Mon Oct 24 2011 Martin Stransky <stransky@redhat.com> - 7.0.1-2
-- renamed mozilla-firefox.desktop to firefox.desktop (#736558)
-- nspluginwrapper is not run in plugin-container (#747981)
-
-* Fri Sep 30 2011 Jan Horak <jhorak@redhat.com> - 7.0.1-1
-- Update to 7.0.1
-
-* Tue Sep 27 2011 Jan Horak <jhorak@redhat.com> - 7.0
-- Update to 7.0
-
-* Tue Sep  6 2011 Jan Horak <jhorak@redhat.com> - 6.0.2-1
-- Update to 6.0.2
-
-* Tue Aug 16 2011 Martin Stransky <stransky@redhat.com> - 6.0-1
-- Update to 6.0
-
-* Fri Jun 24 2011 Bill Nottingham <notting@redhat.com> - 5.0-2
-- Fix an issue with a stray glyph in the window title
-
-* Tue Jun 21 2011 Martin Stransky <stransky@redhat.com> - 5.0-1
-- Update to 5.0
-
-* Tue May 10 2011 Martin Stransky <stransky@redhat.com> - 4.0.1-2
-- Fixed rhbz#676183 - "firefox -g" is broken
-
-* Thu Apr 28 2011 Christopher Aillon <caillon@redhat.com> - 4.0.1-1
-- Update to 4.0.1
-
-* Thu Apr 21 2011 Christopher Aillon <caillon@redhat.com> - 4.0-4
-- Spec file cleanups
-
-* Mon Apr  4 2011 Christopher Aillon <caillon@redhat.com> - 4.0-3
-- Updates for NetworkManager 0.9
-- Updates for GNOME 3
-
-* Tue Mar 22 2011 Christopher Aillon <caillon@redhat.com> - 4.0-2
-- Rebuild
-
-* Tue Mar 22 2011 Christopher Aillon <caillon@redhat.com> - 4.0-1
-- Firefox 4
-
-* Fri Mar 18 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.21
-- Firefox 4.0 RC 2
-
-* Thu Mar 17 2011 Jan Horak <jhorak@redhat.com> - 4.0-0.20
-- Rebuild against xulrunner with disabled gnomevfs and enabled gio
-
-* Wed Mar  9 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.19
-- Firefox 4.0 RC 1
-
-* Sat Feb 26 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.18b12
-- Switch to using the omni chrome file format
-
-* Fri Feb 25 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.17b12
-- Firefox 4.0 Beta 12
-
-* Thu Feb 10 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.16b11
-- Update gecko-{libs,devel} requires
-
-* Tue Feb 08 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.15b11
-- Firefox 4.0 Beta 11
-
-* Mon Feb 07 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.14b10
-- Bring back the default browser check
-
-* Tue Jan 25 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.13b10
-- Firefox 4.0 Beta 10
-
-* Fri Jan 14 2011 Christopher Aillon <caillon@redhat.com> - 4.0-0.12b9
-- Firefox 4.0 Beta 9
-
-* Thu Jan 6 2011 Dan Horák <dan[at]danny.cz> - 4.0-0.11b8
-- disable ipc on non-x86 arches to match xulrunner
-
-* Thu Jan 6 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.10b8
-- application.ini permission check fix
-
-* Thu Jan 6 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.9b8
-- Fixed rhbz#667477 - broken launch script
-
-* Tue Jan 4 2011 Martin Stransky <stransky@redhat.com> - 4.0-0.8b8
-- Fixed rhbz#664877 - Cannot read application.ini

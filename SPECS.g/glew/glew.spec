@@ -2,7 +2,9 @@ Name:           glew
 Version:        1.9.0
 Release:        3%{?dist}
 Summary:        The OpenGL Extension Wrangler Library
+Summary(zh_CN.UTF-8): OpenGL 的扩展库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD and MIT
 URL:            http://glew.sourceforge.net
 
@@ -21,9 +23,14 @@ Mac OS X, FreeBSD, Irix, and Solaris.
 This package contains the demo GLEW utilities.  The libraries themselves
 are in libGLEW and libGLEWmx.
 
+%description -l zh_CN.UTF-8
+GLEW是一个跨平台的C++扩展库，基于OpenGL图形接口。
+
 %package devel
 Summary:        Development files for glew
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       libGLEW = %{version}-%{release}
 Requires:       libGLEWmx = %{version}-%{release}
 Requires:       libGLU-devel
@@ -31,10 +38,13 @@ Requires:       libGLU-devel
 %description devel
 Development files for glew
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n libGLEW
 Summary:        libGLEW
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n libGLEW
 libGLEW
@@ -42,6 +52,7 @@ libGLEW
 %package -n libGLEWmx
 Summary:        libGLEWmx
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description -n libGLEWmx
 libGLEWmx
@@ -62,6 +73,7 @@ make install.all GLEW_DEST="$RPM_BUILD_ROOT" libdir=%{_libdir} bindir=%{_bindir}
 rm -f $RPM_BUILD_ROOT%{_libdir}/libGLEW.a $RPM_BUILD_ROOT%{_libdir}/libGLEWmx.a
 # sigh
 chmod 0755 $RPM_BUILD_ROOT%{_libdir}/*.so*
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -99,6 +111,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
+- 更新到
+
+* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
+- 更新到 1.10.0
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

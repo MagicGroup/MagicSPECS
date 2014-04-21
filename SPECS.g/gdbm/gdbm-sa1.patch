@@ -1,0 +1,343 @@
+These issues have been found by Coverty static analysis tool:
+
+Error: RESOURCE_LEAK (CWE-404): [#def4]
+gdbm-1.10/src/flatfile.c:40: switch: Switch case value "2"
+gdbm-1.10/src/flatfile.c:42: switch_case: Reached case "2"
+gdbm-1.10/src/flatfile.c:43: open_fn: Returning handle opened by function "open(char const *, int, ...)".
+gdbm-1.10/src/flatfile.c:43: var_assign: Assigning: "nfd" = handle returned from "open(exportfile, 193, mode)".
+gdbm-1.10/src/flatfile.c:44: cond_false: Condition "nfd == -1", taking false branch
+gdbm-1.10/src/flatfile.c:48: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:49: break: Breaking from switch
+gdbm-1.10/src/flatfile.c:65: switch_end: Reached end of switch
+gdbm-1.10/src/flatfile.c:68: noescape: Resource "nfd" is not freed or pointed-to in function "write(int, void const *, size_t)".
+gdbm-1.10/src/flatfile.c:68: cond_true: Condition "write(nfd, header1, strlen(header1)) != strlen(header1)", taking true branch
+gdbm-1.10/src/flatfile.c:69: goto: Jumping to label "write_fail"
+gdbm-1.10/src/flatfile.c:107: label: Reached label "write_fail"
+gdbm-1.10/src/flatfile.c:110: leaked_handle: Handle variable "nfd" going out of scope leaks the handle.
+
+Error: RESOURCE_LEAK (CWE-404): [#def5]
+gdbm-1.10/src/flatfile.c:40: switch: Switch case value "3"
+gdbm-1.10/src/flatfile.c:50: switch_case: Reached case "3"
+gdbm-1.10/src/flatfile.c:51: open_fn: Returning handle opened by function "open(char const *, int, ...)".
+gdbm-1.10/src/flatfile.c:51: var_assign: Assigning: "nfd" = handle returned from "open(exportfile, 577, mode)".
+gdbm-1.10/src/flatfile.c:52: cond_false: Condition "nfd == -1", taking false branch
+gdbm-1.10/src/flatfile.c:56: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:57: break: Breaking from switch
+gdbm-1.10/src/flatfile.c:65: switch_end: Reached end of switch
+gdbm-1.10/src/flatfile.c:68: noescape: Resource "nfd" is not freed or pointed-to in function "write(int, void const *, size_t)".
+gdbm-1.10/src/flatfile.c:68: cond_true: Condition "write(nfd, header1, strlen(header1)) != strlen(header1)", taking true branch
+gdbm-1.10/src/flatfile.c:69: goto: Jumping to label "write_fail"
+gdbm-1.10/src/flatfile.c:107: label: Reached label "write_fail"
+gdbm-1.10/src/flatfile.c:110: leaked_handle: Handle variable "nfd" going out of scope leaks the handle.
+
+Error: RESOURCE_LEAK (CWE-404): [#def6]
+gdbm-1.10/src/flatfile.c:124: cond_false: Condition "ifd == -1", taking false branch
+gdbm-1.10/src/flatfile.c:128: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_false: Condition "seennewline > 2", taking false branch
+gdbm-1.10/src/flatfile.c:149: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_false: Condition "seennewline > 2", taking false branch
+gdbm-1.10/src/flatfile.c:149: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seennewline > 2", taking true branch
+gdbm-1.10/src/flatfile.c:148: break: Breaking from loop
+gdbm-1.10/src/flatfile.c:152: loop_end: Reached end of loop
+gdbm-1.10/src/flatfile.c:156: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gdbm-1.10/src/flatfile.c:156: var_assign: Assigning: "kbuffer" = storage returned from "malloc(kbufsize)".
+gdbm-1.10/src/flatfile.c:157: cond_false: Condition "kbuffer == NULL", taking false branch
+gdbm-1.10/src/flatfile.c:162: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:165: cond_true: Condition "dbuffer == NULL", taking true branch
+gdbm-1.10/src/flatfile.c:169: leaked_storage: Variable "kbuffer" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def8]
+gdbm-1.10/src/flatfile.c:124: cond_false: Condition "ifd == -1", taking false branch
+gdbm-1.10/src/flatfile.c:128: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_false: Condition "seennewline > 2", taking false branch
+gdbm-1.10/src/flatfile.c:149: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_false: Condition "seennewline > 2", taking false branch
+gdbm-1.10/src/flatfile.c:149: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seennewline > 2", taking true branch
+gdbm-1.10/src/flatfile.c:148: break: Breaking from loop
+gdbm-1.10/src/flatfile.c:152: loop_end: Reached end of loop
+gdbm-1.10/src/flatfile.c:157: cond_false: Condition "kbuffer == NULL", taking false branch
+gdbm-1.10/src/flatfile.c:162: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:164: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gdbm-1.10/src/flatfile.c:164: var_assign: Assigning: "dbuffer" = storage returned from "malloc(dbufsize)".
+gdbm-1.10/src/flatfile.c:165: cond_false: Condition "dbuffer == NULL", taking false branch
+gdbm-1.10/src/flatfile.c:170: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:173: cond_true: Condition "(rret = read(ifd, &rsize, 4UL /* sizeof (rsize) */)) != 0", taking true branch
+gdbm-1.10/src/flatfile.c:175: cond_false: Condition "rret != 4UL /* sizeof (rsize) */", taking false branch
+gdbm-1.10/src/flatfile.c:176: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:180: cond_true: Condition "size > kbufsize", taking true branch
+gdbm-1.10/src/flatfile.c:184: cond_true: Condition "kbuffer == NULL", taking true branch
+gdbm-1.10/src/flatfile.c:188: leaked_storage: Variable "dbuffer" going out of scope leaks the storage it points to.
+
+Error: RESOURCE_LEAK (CWE-404): [#def9]
+gdbm-1.10/src/flatfile.c:124: cond_false: Condition "ifd == -1", taking false branch
+gdbm-1.10/src/flatfile.c:128: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_false: Condition "seennewline > 2", taking false branch
+gdbm-1.10/src/flatfile.c:149: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_true: Condition "c == '!'", taking true branch
+gdbm-1.10/src/flatfile.c:143: cond_false: Condition "c == 10", taking false branch
+gdbm-1.10/src/flatfile.c:151: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_false: Condition "seennewline > 2", taking false branch
+gdbm-1.10/src/flatfile.c:149: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:152: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/flatfile.c:136: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/flatfile.c:136: cond_true: Condition "1", taking true branch
+gdbm-1.10/src/flatfile.c:138: cond_false: Condition "read(ifd, &c, 1) != 1", taking false branch
+gdbm-1.10/src/flatfile.c:139: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:141: cond_false: Condition "c == '!'", taking false branch
+gdbm-1.10/src/flatfile.c:142: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:143: cond_true: Condition "c == 10", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seenbang > 3", taking true branch
+gdbm-1.10/src/flatfile.c:145: cond_true: Condition "seennewline > 2", taking true branch
+gdbm-1.10/src/flatfile.c:148: break: Breaking from loop
+gdbm-1.10/src/flatfile.c:152: loop_end: Reached end of loop
+gdbm-1.10/src/flatfile.c:157: cond_false: Condition "kbuffer == NULL", taking false branch
+gdbm-1.10/src/flatfile.c:162: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:164: alloc_fn: Storage is returned from allocation function "malloc(size_t)".
+gdbm-1.10/src/flatfile.c:164: var_assign: Assigning: "dbuffer" = storage returned from "malloc(dbufsize)".
+gdbm-1.10/src/flatfile.c:165: cond_false: Condition "dbuffer == NULL", taking false branch
+gdbm-1.10/src/flatfile.c:170: if_end: End of if statement
+gdbm-1.10/src/flatfile.c:173: cond_false: Condition "(rret = read(ifd, &rsize, 4UL /* sizeof (rsize) */)) != 0", taking false branch
+gdbm-1.10/src/flatfile.c:229: loop_end: Reached end of loop
+gdbm-1.10/src/flatfile.c:232: leaked_storage: Variable "dbuffer" going out of scope leaks the storage it points to.
+
+Error: USE_AFTER_FREE (CWE-416): [#def16]
+gdbm-1.10/src/gdbmreorg.c:70: cond_false: Condition "dbf->read_write == 0", taking false branch
+gdbm-1.10/src/gdbmreorg.c:74: if_end: End of if statement
+gdbm-1.10/src/gdbmreorg.c:77: cond_false: Condition "fstat(dbf->desc, &fileinfo)", taking false branch
+gdbm-1.10/src/gdbmreorg.c:81: if_end: End of if statement
+gdbm-1.10/src/gdbmreorg.c:89: cond_false: Condition "new_name == NULL", taking false branch
+gdbm-1.10/src/gdbmreorg.c:93: if_end: End of if statement
+gdbm-1.10/src/gdbmreorg.c:97: cond_true: Condition "len > 0", taking true branch
+gdbm-1.10/src/gdbmreorg.c:97: cond_true: Condition "new_name[len - 1] != '/'", taking true branch
+gdbm-1.10/src/gdbmreorg.c:101: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/gdbmreorg.c:97: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/gdbmreorg.c:97: cond_true: Condition "len > 0", taking true branch
+gdbm-1.10/src/gdbmreorg.c:97: cond_false: Condition "new_name[len - 1] != '/'", taking false branch
+gdbm-1.10/src/gdbmreorg.c:101: loop_end: Reached end of loop
+gdbm-1.10/src/gdbmreorg.c:105: cond_true: Condition "dbf->cloexec", taking true branch
+gdbm-1.10/src/gdbmreorg.c:109: cond_false: Condition "new_dbf == NULL", taking false branch
+gdbm-1.10/src/gdbmreorg.c:114: if_end: End of if statement
+gdbm-1.10/src/gdbmreorg.c:120: cond_false: Condition "key.dptr != NULL", taking false branch
+gdbm-1.10/src/gdbmreorg.c:148: loop_end: Reached end of loop
+gdbm-1.10/src/gdbmreorg.c:160: cond_false: Condition "rename(new_name, dbf->name) != 0", taking false branch
+gdbm-1.10/src/gdbmreorg.c:166: if_end: End of if statement
+gdbm-1.10/src/gdbmreorg.c:169: cond_true: Condition "dbf->file_locking", taking true branch
+gdbm-1.10/src/gdbmreorg.c:173: closed_arg: "close(int)" closes "dbf->desc".
+gdbm-1.10/src/gdbmreorg.c:177: cond_true: Condition "dbf->bucket_cache != NULL", taking true branch
+gdbm-1.10/src/gdbmreorg.c:178: cond_true: Condition "index < dbf->cache_size", taking true branch
+gdbm-1.10/src/gdbmreorg.c:179: cond_true: Condition "(dbf->bucket_cache + index).ca_bucket != NULL", taking true branch
+gdbm-1.10/src/gdbmreorg.c:181: cond_true: Condition "(dbf->bucket_cache + index).ca_data.dptr != NULL", taking true branch
+gdbm-1.10/src/gdbmreorg.c:183: loop: Jumping back to the beginning of the loop
+gdbm-1.10/src/gdbmreorg.c:178: loop_begin: Jumped back to beginning of loop
+gdbm-1.10/src/gdbmreorg.c:178: cond_false: Condition "index < dbf->cache_size", taking false branch
+gdbm-1.10/src/gdbmreorg.c:183: loop_end: Reached end of loop
+gdbm-1.10/src/gdbmreorg.c:189: cond_true: Condition "dbf->memory_mapping", taking true branch
+gdbm-1.10/src/gdbmreorg.c:190: pass_closed_arg: Passing closed handle "dbf->desc" as an argument to function "_gdbm_mapped_init(GDBM_FILE)".
+
+
+
+diff -up gdbm-1.10/src/flatfile.c.sa1 gdbm-1.10/src/flatfile.c
+--- gdbm-1.10/src/flatfile.c.sa1	2012-12-10 15:45:41.835009811 +0100
++++ gdbm-1.10/src/flatfile.c	2012-12-10 15:55:22.650480928 +0100
+@@ -106,6 +106,7 @@ gdbm_export (GDBM_FILE dbf, const char *
+   
+  write_fail:
+   
++  close (nfd);
+   gdbm_errno = GDBM_FILE_WRITE_ERROR;
+   return -1;
+ }
+@@ -166,6 +167,7 @@ gdbm_import (GDBM_FILE dbf, const char *
+     {
+       gdbm_errno = GDBM_MALLOC_ERROR;
+       close (ifd);
++      free(kbuffer);
+       return -1;
+     }
+ 
+@@ -185,6 +187,7 @@ gdbm_import (GDBM_FILE dbf, const char *
+ 	    {
+ 	      gdbm_errno = GDBM_MALLOC_ERROR;
+ 	      close (ifd);
++	      free(dbuffer);
+ 	      return -1;
+ 	    }
+ 	}
+@@ -228,6 +231,11 @@ gdbm_import (GDBM_FILE dbf, const char *
+       count++;
+     }
+ 
++  if (kbuffer != NULL)
++    free (kbuffer);
++  if (dbuffer != NULL)
++    free (dbuffer);
++
+   close (ifd);
+   return count;
+ 
+diff -up gdbm-1.10/src/gdbmreorg.c.sa1 gdbm-1.10/src/gdbmreorg.c
+--- gdbm-1.10/src/gdbmreorg.c.sa1	2012-12-10 16:12:23.818314970 +0100
++++ gdbm-1.10/src/gdbmreorg.c	2012-12-10 16:12:30.947320804 +0100
+@@ -184,12 +184,6 @@ gdbm_reorganize (GDBM_FILE dbf)
+     free (dbf->bucket_cache);
+   }
+ 
+-#if HAVE_MMAP
+-  /* Re-initialize mapping if required */
+-  if (dbf->memory_mapping)
+-    _gdbm_mapped_init (dbf);
+-#endif
+-  
+   dbf->desc           = new_dbf->desc;
+   dbf->header         = new_dbf->header;
+   dbf->dir            = new_dbf->dir;
+@@ -203,6 +197,12 @@ gdbm_reorganize (GDBM_FILE dbf)
+   dbf->bucket_changed    = new_dbf->bucket_changed;
+   dbf->second_changed    = new_dbf->second_changed;
+    
++#if HAVE_MMAP
++  /* Re-initialize mapping if required */
++  if (dbf->memory_mapping)
++    _gdbm_mapped_init (dbf);
++#endif
++  
+   free (new_dbf->name);   
+   free (new_dbf);
+   free (new_name);

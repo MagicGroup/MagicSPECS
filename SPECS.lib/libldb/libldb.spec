@@ -4,17 +4,17 @@
 %endif
 
 %define talloc_version 2.0.8
-%define tdb_version 1.2.11
+%define tdb_version 1.2.12
 %define tevent_version 0.9.17
 
 Name: libldb
-Version: 1.1.15
-Release: 2%{?dist}
+Version: 1.1.16
+Release: 4%{?dist}
 Group: Development/Libraries
 Summary: A schema-less, ldap like, API and database
-Requires: libtalloc >= %{talloc_version}
-Requires: libtdb >= %{tdb_version}
-Requires: libtevent >= %{tevent_version}
+Requires: libtalloc%{?_isa} >= %{talloc_version}
+Requires: libtdb%{?_isa} >= %{tdb_version}
+Requires: libtevent%{?_isa} >= %{tevent_version}
 License: LGPLv3+
 URL: http://ldb.samba.org/
 Source: http://samba.org/ftp/ldb/ldb-%{version}.tar.gz
@@ -37,9 +37,9 @@ BuildRequires: python-tdb
 BuildRequires: pytalloc-devel
 BuildRequires: python-tevent
 BuildRequires: doxygen
+BuildRequires: openldap-devel
 
 Provides: bundled(libreplace)
-Provides: bundled(libtdb_compat)
 
 # Patches
 
@@ -50,7 +50,7 @@ servers, or use local tdb databases.
 %package -n ldb-tools
 Group: Development/Libraries
 Summary: Tools to manage LDB files
-Requires: libldb = %{version}-%{release}
+Requires: libldb%{?_isa} = %{version}-%{release}
 
 %description -n ldb-tools
 Tools to manage LDB files
@@ -58,10 +58,10 @@ Tools to manage LDB files
 %package devel
 Group: Development/Libraries
 Summary: Developer tools for the LDB library
-Requires: libldb = %{version}-%{release}
-Requires: libtdb-devel >= %{tdb_version}
-Requires: libtalloc-devel >= %{talloc_version}
-Requires: libtevent-devel >= %{tevent_version}
+Requires: libldb%{?_isa} = %{version}-%{release}
+Requires: libtdb-devel%{?_isa} >= %{tdb_version}
+Requires: libtalloc-devel%{?_isa} >= %{talloc_version}
+Requires: libtevent-devel%{?_isa} >= %{tevent_version}
 Requires: pkgconfig
 
 %description devel
@@ -70,8 +70,8 @@ Header files needed to develop programs that link against the LDB library.
 %package -n pyldb
 Group: Development/Libraries
 Summary: Python bindings for the LDB library
-Requires: libldb = %{version}-%{release}
-Requires: python-tdb = %{tdb_version}
+Requires: libldb%{?_isa} = %{version}-%{release}
+Requires: python-tdb%{?_isa} >= %{tdb_version}
 
 %description -n pyldb
 Python bindings for the LDB library
@@ -79,7 +79,7 @@ Python bindings for the LDB library
 %package -n pyldb-devel
 Group: Development/Libraries
 Summary: Development files for the Python bindings for the LDB library
-Requires: pyldb = %{version}-%{release}
+Requires: pyldb%{?_isa} = %{version}-%{release}
 
 %description -n pyldb-devel
 Development files for the Python bindings for the LDB library
@@ -177,6 +177,21 @@ rm -rf %{buildroot}
 %postun -n pyldb -p /sbin/ldconfig
 
 %changelog
+* Thu Jan 02 2014 Stephen Gallagher <sgallagh@redhat.com> - 1.1.16-4
+- Enable building libldb's LDAP interface module
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.16-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 08 2013 Jakub Hrozek <jhrozek@redhat.com> - 1.1.16-2
+- Make the Requires arch-specific
+
+* Tue Jul 02 2013 - Andreas Schneider <asn@redhat.com> - 1.1.16-1
+- New upstream release 1.1.16
+
+* Wed Jun 05 2013 Jakub Hrozek <jhrozek@redhat.com> - 1.1.15-3
+- Relax pytdb requirement
+
 * Thu Feb 07 2013 Jakub Hrozek <jhrozek@redhat.com> - 1.1.15-2
 - The 1.1.15 rebase obsoletes the patch from 1.1.14-2
 

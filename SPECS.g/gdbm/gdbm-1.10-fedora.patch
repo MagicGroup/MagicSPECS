@@ -1,0 +1,14 @@
+diff -up gdbm-1.10/NOTE-WARNING.fedora gdbm-1.10/NOTE-WARNING
+--- gdbm-1.10/NOTE-WARNING.fedora	2011-11-14 17:43:41.267566501 +0100
++++ gdbm-1.10/NOTE-WARNING	2011-11-14 17:47:53.312549265 +0100
+@@ -12,8 +12,8 @@ systems where it is not the default.  `L
+ when a system uses 64bit file offsets.  Gdbm has, of course, supported `large
+ files' on systems where it was the default for a very long time.
+ 
+-On some systems, such as Solaris, this functionality is not enabled by
+-default.  Gdbm will now enable it.  THIS MEANS THAT GDBM 1.9 MAY NOT BE
++On some systems this functionality is not enabled by default. To enable it, 
++build rpm with option --with=largefile. THIS MEANS THAT GDBM 1.9 MAY NOT BE 
+ ABLE TO ACCESS DATABASES CREATED BY PREVIOUS VERIONS ON THE SAME SYSTEM.
+ 
+ Running the `configure' script with the `--disable-largefile' flag should

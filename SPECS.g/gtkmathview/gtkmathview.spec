@@ -1,8 +1,10 @@
 Summary: A MathML rendering library
+Summary(zh_CN.UTF-8): MathML 渲染库
 Name: gtkmathview
 Version: 0.8.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv3+
 Source: http://helm.cs.unibo.it/mml-widget/sources/gtkmathview-%{version}.tar.gz
 URL: http://helm.cs.unibo.it/mml-widget/
@@ -40,9 +42,15 @@ GtkMathView is a C++ rendering engine for MathML documents.
 It provides an interactive view that can be used for browsing 
 and editing MathML markup.
 
+%description -l zh_CN.UTF-8 
+这是一个 MathML 文档的 C++ 渲染引擎。
+它提供了一个可浏览和编辑 MathML 标记的交互视图。
+
 %package devel
 Summary: Support files necessary to compile applications using gtkmathview
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: glib2-devel >= 2.2.1
 Requires: gtk2-devel >= 2.2.1
@@ -52,6 +60,9 @@ Requires: pkgconfig
 
 %description devel
 Libraries, headers, and support files needed for using gtkmathview.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -80,6 +91,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 
 rm -f $RPM_BUILD_ROOT/%{_mandir}/man1/mathml2ps.1
 rm -f $RPM_BUILD_ROOT/%{_mandir}/man1/mathmlviewer.1
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root)
@@ -112,6 +124,9 @@ rm -f $RPM_BUILD_ROOT/%{_mandir}/man1/mathmlviewer.1
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.8.0-11
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

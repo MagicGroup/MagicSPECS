@@ -15,24 +15,20 @@
 %define use_evolution_data_server 1
 
 Summary: GNOME panel
+Summary(zh_CN.UTF-8): GNOME 面板
 Name: gnome-panel
-Version: 3.6.3
-Release: 0.1%{?dist}
+Version:	3.8.0
+Release: 1%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/gnome-panel
-Source0: http://download.gnome.org/sources/gnome-panel/3.6/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/gnome-panel/%{majorver}/%{name}-%{version}.tar.xz
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=646749
 Patch0: Use-16px-menu-icons.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=685142
 Patch1: gnome-panel-use-gnome-menus.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=890219
-Patch2: drop-gweather-xml-include.patch
-
-# https://bugzilla.gnome.org/show_bug.cgi?id=690353
-Patch3: na-style-realize.patch
 
 License: GPLv2+ and LGPLv2+ and GFDL
 Group: User Interface/Desktops
@@ -132,31 +128,42 @@ Obsoletes: libpanelappletmm <= 0:2.26.0-3
 The GNOME panel provides the window list, workspace switcher, menus, and other
 features for the GNOME desktop.
 
+%description -l zh_CN.UTF-8
+GNOME 面板提供了窗口列表，工作区切换，菜单和其它的一些功能。
+
 %package libs
 Summary: Libraries for Panel Applets
+Summary(zh_CN.UTF-8): 面板小程序的运行库
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description libs
 This package contains the libpanel-applet library that
 is needed by Panel Applets.
 
+%description libs -l zh_CN.UTF-8 
+面板小程序的运行库。
+
 %package devel
 Summary: Headers and libraries for Panel Applet development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-libs = %{version}-%{release}
 
 %description devel
 Panel Applet development package. Contains files needed for developing
 Panel Applets using the libpanel-applet library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1 -b .16px
 %patch1 -p1 -b .menus
-#%patch2 -p0 -b .gweather
-#%patch3 -p1 -b .na-style
 
 rm -f libtool
 autoreconf -i -f
@@ -254,6 +261,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/gir-1.0/PanelApplet-4.0.gir
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.8.0-1
+- 更新到 3.8.0
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.6.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

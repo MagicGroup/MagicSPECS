@@ -1,8 +1,9 @@
 %global freetype_version 2.1.4
 
 Summary:	Font configuration and customization library
+Summary(zh_CN.UTF-8): 字体设置和定制库
 Name:		fontconfig
-Version:	2.10.91
+Version:	2.11.1
 Release:	3%{?dist}
 # src/ftglue.[ch] is in Public Domain
 # src/fccache.c contains Public Domain code
@@ -10,6 +11,7 @@ Release:	3%{?dist}
 # otherwise MIT
 License:	MIT and Public Domain and UCD
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source:		http://fontconfig.org/release/%{name}-%{version}.tar.bz2
 URL:		http://fontconfig.org
 Source1:	25-no-bitmap-fedora.conf
@@ -33,9 +35,14 @@ Fontconfig is designed to locate fonts within the
 system and select them according to requirements specified by 
 applications.
 
+%description -l zh_CN.UTF-8
+字体设置和定制库。
+
 %package	devel
 Summary:	Font configuration and customization library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	freetype-devel >= %{freetype_version}
 Requires:	pkgconfig
@@ -47,9 +54,14 @@ and developer docs for the fontconfig package.
 Install fontconfig-devel if you want to develop programs which 
 will use fontconfig.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package	devel-doc
 Summary:	Development Documentation files for fontconfig library
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:	noarch
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -57,10 +69,13 @@ Requires:	%{name}-devel = %{version}-%{release}
 The fontconfig-devel-doc package contains the documentation files
 which is useful for developing applications that uses fontconfig.
 
+%description devel-doc -l zh_CN.UTF-8
+%{name} 的开发文档。
+
 %prep
 %setup -q
 %patch0 -p1 -b .sleep-less
-%patch1 -p1 -b .1-automake113
+#%patch1 -p1 -b .1-automake113
 
 %build
 # update autotools stuff to avoid rpath definition.
@@ -87,6 +102,7 @@ ln -s %{_fontconfig_templatedir}/25-unhint-nonlatin.conf $RPM_BUILD_ROOT%{_fontc
 # in the right place
 mv $RPM_BUILD_ROOT%{_docdir}/fontconfig/* .
 rmdir $RPM_BUILD_ROOT%{_docdir}/fontconfig/
+magic_rpm_clean.sh
 
 %check
 make check
@@ -141,6 +157,9 @@ fi
 %doc fontconfig-devel.txt fontconfig-devel
 
 %changelog
+* Thu Apr 03 2014 Liu Di <liudidi@gmail.com> - 2.11.1-3
+- 更新到 2.11.1
+
 * Tue Feb 12 2013 Akira TAGOH <tagoh@redhat.com> - 2.10.91-3
 - Improve the spec to meet the latest packaging guidelines (#225759)
   - add -devel-doc subpackage.

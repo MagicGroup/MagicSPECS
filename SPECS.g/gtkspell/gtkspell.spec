@@ -2,10 +2,12 @@
 
 Name: gtkspell
 Version: 2.0.16
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Summary: On-the-fly spell checking for GtkTextView widgets
+Summary(zh_CN.UTF-8): GtkTextView 部件上的即时拼写检查
 URL: http://gtkspell.sourceforge.net/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n) 
 Source: http://gtkspell.sourceforge.net/download/%{name}-%{version}.tar.gz
@@ -22,9 +24,14 @@ GtkSpell provides word-processor-style highlighting and replacement of
 misspelled words in a GtkTextView widget as you type. Right-clicking a
 misspelled word pops up a menu of suggested replacements.
 
+%description -l zh_CN.UTF-8
+GtkTextView 部件上的即时拼写检查。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Development files for GtkSpell
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 Requires: gtk2-devel
 Requires: pkgconfig
@@ -32,6 +39,9 @@ Requires: pkgconfig
 %description devel
 The gtkspell-devel package provides header files for developing 
 applications which use GtkSpell.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -67,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/gtkspell-2.0.pc
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 2.0.16-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.16-5
 - 为 Magic 3.0 重建
 

@@ -76,6 +76,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 2.2.0-2
+- 更新到
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.2.0-2
 - 为 Magic 3.0 重建
 

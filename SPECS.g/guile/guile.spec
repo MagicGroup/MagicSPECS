@@ -1,7 +1,7 @@
 Summary: A GNU implementation of Scheme for application extensibility
 Name: guile
 %define mver 2.0
-Version: 2.0.9
+Version: 2.0.11
 Release: 5%{?dist}
 Epoch: 5
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
@@ -174,6 +174,9 @@ fi
 %{_includedir}/guile
 
 %changelog
+* Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 5:2.0.11-5
+- 更新到 2.0.11
+
 * Thu Jan 09 2014 Liu Di <liudidi@gmail.com> - 5:2.0.9-5
 - 为 Magic 3.0 重建
 

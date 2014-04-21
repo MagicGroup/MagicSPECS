@@ -1,12 +1,14 @@
 %define api_version		1.0
 
 Summary:	OpenGL Extension to GTK
+Summary(zh_CN.UTF-8): GTK 的 OpenGL 扩展
 Name:		gtkglext
 Version:	1.2.0
-Release:	18%{?dist}
+Release:	19%{?dist}
 
 License:	LGPLv2+ or GPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://gtkglext.sourceforge.net/
 Source0:	ftp://ftp.gnome.org/pub/gnome/sources/gtkglext/1.2/gtkglext-%{version}.tar.bz2
 # Upstream changes, addressing BZ 677457
@@ -28,9 +30,14 @@ GtkGLExt is an OpenGL extension to GTK. It provides the GDK objects
 which support OpenGL rendering in GTK, and GtkWidget API add-ons to
 make GTK+ widgets OpenGL-capable.
 
+%description -l zh_CN.UTF-8 
+GTK 的 OpenGL 扩展。
+
 %package libs
 Summary:	OpenGL Extension to GTK
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 
 %description libs
@@ -38,9 +45,14 @@ GtkGLExt is an OpenGL extension to GTK. It provides the GDK objects
 which support OpenGL rendering in GTK, and GtkWidget API add-ons to
 make GTK+ widgets OpenGL-capable.
 
+%description libs -l zh_CN.UTF-8 
+%{name} 的运行库。
+
 %package devel
 Summary:	Development tools for GTK-based OpenGL applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	LGPLv2+
 
 Requires:	%{name}-libs = %{version}
@@ -53,6 +65,9 @@ Requires:	pkgconfig
 %description devel
 The gtkglext-devel package contains the header files, static libraries,
 and developer docs for GtkGLExt.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n gtkglext-%{version}
@@ -68,6 +83,7 @@ make
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post libs
 /sbin/ldconfig
@@ -93,6 +109,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_datadir}/gtk-doc/html/*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.0-19
+- 为 Magic 3.0 重建
+
 * Mon Jul 23 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.2.0-18
 - Remove hard-coded rpath (BZ 828527).
 - Reflect Source0:-URL having changed.

@@ -1,10 +1,12 @@
 Summary:        OpenGL GTK widget
+Summary(zh_CN.UTF-8): OpenGL GTK 部件
 Name:           gtkglarea2
 Version:        2.0.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 
 License:        LGPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://ftp.gnome.org/pub/gnome/sources/gtkglarea/2.0/
 Source0:        http://ftp.gnome.org/pub/gnome/sources/gtkglarea/2.0/gtkglarea-%{version}.tar.bz2
 
@@ -29,11 +31,17 @@ Requires:       libGLU-devel
 GtkGLArea is a GTK widget that makes it easy to use OpenGL or Mesa
 from your GTK programs.
 
+%description -l zh_CN.UTF-8 
+OpenGL GTK 部件。
+
 %description devel
 GtkGLArea is a GTK widget that makes it easy to use OpenGL or Mesa
 from your GTK programs.
 This package contains header files and libraries for GtkGLArea
 software development.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n gtkglarea-%{version}
@@ -46,6 +54,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/gtkgl-2.0.pc
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.0.1-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

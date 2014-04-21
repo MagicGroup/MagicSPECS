@@ -1,9 +1,11 @@
 Summary: Software for accessing digital cameras
+Summary(zh_CN.UTF-8): 访问数码相机的软件
 Name: gphoto2
 Version: 2.4.11
 Release: 3%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0: http://downloads.sourceforge.net/gphoto/%{name}-%{version}.tar.bz2
 Url: http://www.gphoto.org/
@@ -24,6 +26,9 @@ This package contains the command-line utility gphoto2.
 
 Other (GUI) frontends are available separately.
 
+%description -l zh_CN.UTF-8 
+访问数码相机的命令行软件。
+
 %prep
 %setup -q
 
@@ -38,6 +43,7 @@ rm -f ChangeLog.tmp
 rm -rf %{buildroot}
 make install INSTALL="%{__install} -p" DESTDIR=%{buildroot}
 rm -rf %{buildroot}%{_docdir}/%{name}/*.sh
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -50,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/gphoto2.1*
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.4.11-3
+- 更新到 2.5.4
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.4.11-3
 - 为 Magic 3.0 重建
 

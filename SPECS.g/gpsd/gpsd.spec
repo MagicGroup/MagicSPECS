@@ -1,28 +1,33 @@
+%global _hardened_build 1
+%define git 1
+%define vcsdate 20140411
+
 Name: gpsd
-Version: 3.5
-Release: 3%{?dist}
+Version: 3.10
+Release: 5.git%{vcsdate}%{?dist}
 Summary: Service daemon for mediating access to a GPS
 
 Group: System Environment/Daemons
 License: BSD
 URL: http://catb.org/gpsd/
-Source0: http://download.savannah.gnu.org/releases/gpsd/%{name}-%{version}.tar.gz
+#Source0: http://download.savannah.gnu.org/releases/gpsd/%{name}-%{version}.tar.gz
+Source0: %{name}-git%{vcsdate}.tar.xz
+Source1: make_gpsd_git_package.sh
 Source10: gpsd.service
 Source11: gpsd.sysconfig
-Patch1: gpsd-nolibcap.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source12: gpsdctl.service
 
 BuildRequires: dbus-devel dbus-glib-devel ncurses-devel xmlto python-devel
 BuildRequires: scons desktop-file-utils bluez-libs-devel pps-tools-devel
-BuildRequires: chrpath
 %ifnarch s390 s390x
 BuildRequires: libusb1-devel
 %endif
 
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: udev
 Requires(post): systemd-units
 Requires(preun): systemd-units
+Requires(postun): systemd-units
 
 %description 
 gpsd is a service daemon that mediates access to a GPS sensor
@@ -45,7 +50,7 @@ to a GPS for applications.
 %package devel
 Summary: Development files for the gpsd library
 Group: Development/Libraries
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
@@ -71,17 +76,21 @@ can run on a serial terminal or terminal emulator.
 
 
 %prep
-%setup -q
-%patch1 -p1 -b .nolibcap
+%setup -q -n %{name}-git%{vcsdate}
+
+# fix RPATH
+sed -i 's|sysrpath =.*|sysrpath = ["%{_libdir}"]|' SConstruct
 
 %build
 export CCFLAGS="%{optflags}"
+export LINKFLAGS="%{__global_ldflags}"
 # breaks with %{_smp_mflags}
 scons \
-	dbus=yes \
+	dbus_export=yes \
 	systemd=yes \
 	libQgpsmm=no \
 	debug=yes \
+	leapfetch=no \
 	prefix="" \
 	sysconfdif=%{_sysconfdir} \
 	bindir=%{_bindir} \
@@ -95,102 +104,91 @@ scons \
 
 
 %install
-rm -rf %{buildroot}
 # avoid rebuilding
 export CCFLAGS="%{optflags}"
+export LINKFLAGS="%{__global_ldflags}"
 DESTDIR=%{buildroot} scons install
 
 # service files
-%{__install} -d -m 0755 %{buildroot}/usr/lib/systemd/system
+%{__install} -d -m 0755 %{buildroot}%{_unitdir}
 %{__install} -p -m 0644 %{SOURCE10} \
-	%{buildroot}/usr/lib/systemd/system/gpsd.service
+	%{buildroot}%{_unitdir}/gpsd.service
+%{__install} -p -m 0644 %{SOURCE12} \
+	%{buildroot}%{_unitdir}/gpsdctl@.service
+%{__install} -p -m 0644 systemd/gpsd.socket \
+	%{buildroot}%{_unitdir}/gpsd.socket
 
 %{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/sysconfig
 %{__install} -p -m 0644 %{SOURCE11} \
 	%{buildroot}%{_sysconfdir}/sysconfig/gpsd
 
 # udev rules
-%{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/udev/rules.d
+%{__install} -d -m 0755 %{buildroot}%{_udevrulesdir}
 %{__install} -p -m 0644 gpsd.rules \
-	%{buildroot}%{_sysconfdir}/udev/rules.d/99-gpsd.rules
+	%{buildroot}%{_udevrulesdir}/99-gpsd.rules
 
-# hotplug script
-%{__install} -d -m 0755 %{buildroot}/usr/lib/udev
-%{__install} -p -m 0755 gpsd.hotplug %{buildroot}/usr/lib/udev
+# Use gpsdctl service instead of hotplug script
+sed -i 's|RUN+="/lib/udev/gpsd.hotplug"|TAG+="systemd", ENV{SYSTEMD_WANTS}="gpsdctl@%k.service"|' \
+	%{buildroot}%{_udevrulesdir}/99-gpsd.rules
 
 # Install the .desktop files
-desktop-file-install --vendor magic \
+desktop-file-install \
 	--dir %{buildroot}%{_datadir}/applications \
-	--add-category X-Magic \
 	packaging/X11/xgps.desktop
-desktop-file-install --vendor magic \
+desktop-file-install \
 	--dir %{buildroot}%{_datadir}/applications \
-	--add-category X-Magic \
 	packaging/X11/xgpsspeed.desktop
 
 # Install logo icon for .desktop files
 %{__install} -d -m 0755 %{buildroot}%{_datadir}/gpsd
 %{__install} -p -m 0644 packaging/X11/gpsd-logo.png %{buildroot}%{_datadir}/gpsd/gpsd-logo.png
 
+# Missed in scons install 
+%{__install} -p -m 0755 gpsinit %{buildroot}%{_sbindir}
+
 # Not needed since gpsd.h is not installed
 rm %{buildroot}%{_libdir}/{libgpsd.so,pkgconfig/libgpsd.pc}
 
-# Remove RPATH (even the actual string)
-for i in %{buildroot}%{python_sitearch}/gps/*.so; do
-	chrpath -r "" $i
-	chrpath -d $i
-done
-
-%clean
-rm -rf %{buildroot}
-
-
 %post
-/usr/bin/systemctl daemon-reload &> /dev/null
-if [ -f %{_initrddir}/%{name} ] && /sbin/chkconfig --level 3 %{name}; then
-        /bin/systemctl enable %{name}.service &> /dev/null
-fi
-:
+%systemd_post gpsd.service gpsd.socket
 
 %preun
-if [ $1 = 0 ]; then
-	/bin/systemctl --no-reload disable %{name}.service &> /dev/null
-	/bin/systemctl stop %{name}.service &> /dev/null
-fi
-:
+%systemd_preun gpsd.service gpsd.socket
+
+%postun
+# Don't restart the service
+%systemd_postun
 
 %post libs -p /sbin/ldconfig
 
-
 %postun libs -p /sbin/ldconfig
 
-
 %files
-%defattr(-,root,root,-)
-%doc README INSTALL COPYING
+%doc README COPYING
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%config(noreplace) %{_sysconfdir}/udev/rules.d/*
 %{_sbindir}/gpsd
 %{_sbindir}/gpsdctl
+%{_sbindir}/gpsinit
 %{_bindir}/gpsprof
 %{_bindir}/gpsmon
 %{_bindir}/gpsctl
-/usr/lib/systemd/system/gpsd.service
-/usr/lib/udev/gpsd*
+%{_unitdir}/gpsd.service
+%{_unitdir}/gpsd.socket
+%{_unitdir}/gpsdctl@.service
+%{_udevrulesdir}/*.rules
 %{_mandir}/man8/gpsd.8*
 %{_mandir}/man8/gpsdctl.8*
+%{_mandir}/man8/gpsinit.8*
 %{_mandir}/man1/gpsprof.1*
 %{_mandir}/man1/gpsmon.1*
 %{_mandir}/man1/gpsctl.1*
 
 %files libs
-%defattr(-,root,root,-)
 %{_libdir}/libgps*.so.*
 %{python_sitearch}/gps*
 %exclude %{python_sitearch}/gps/fake*
 
 %files devel
-%defattr(-,root,root,-)
 %doc TODO
 %{_bindir}/gpsfake
 %{_libdir}/libgps*.so
@@ -207,9 +205,9 @@ fi
 %{_mandir}/man5/srec.5*
 
 %files clients
-%defattr(-,root,root,-)
 %{_bindir}/cgps
 %{_bindir}/gegps
+%{_bindir}/gps2udp
 %{_bindir}/gpscat
 %{_bindir}/gpsdecode
 %{_bindir}/gpspipe
@@ -219,6 +217,7 @@ fi
 %{_bindir}/xgpsspeed
 %{_mandir}/man1/gegps.1*
 %{_mandir}/man1/gps.1*
+%{_mandir}/man1/gps2udp.1*
 %{_mandir}/man1/gpsdecode.1*
 %{_mandir}/man1/gpspipe.1*
 %{_mandir}/man1/lcdgps.1*
@@ -232,8 +231,48 @@ fi
 
 
 %changelog
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.5-3
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.10-5.git20140411
+- 更新到 20140411 日期的仓库源码
+
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.10-4.git20140127
 - 为 Magic 3.0 重建
+
+* Thu Feb 20 2014 Miroslav Lichvar <mlichvar@redhat.com> - 3.10-3.20140127gitf2753b
+- update to 20140127gitf2753b
+- replace udev hotplug script with gpsdctl service (#909563)
+- add dependency on gpsd.socket to gpsd.service
+- reenable dbus export
+
+* Fri Dec 20 2013 Miroslav Lichvar <mlichvar@redhat.com> - 3.10-2
+- use systemd socket activation (#909563)
+- don't use -n in default gpsd service options
+- update gpsd service file
+
+* Mon Nov 25 2013 Miroslav Lichvar <mlichvar@redhat.com> - 3.10-1
+- update to 3.10
+- move udev rules from /etc to /usr/lib (#971851)
+- enable hardened build (#1000643)
+- drop also supplementary groups when dropping privileges
+- set time stamp in chrony SOCK sample correctly
+- remove RPATH from all files
+- don't package INSTALL file
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu May 02 2013 Miroslav Lichvar <mlichvar@redhat.com> - 3.9-1
+- update to 3.9
+- move files from /lib
+
+* Wed Feb 27 2013 Miroslav Lichvar <mlichvar@redhat.com> - 3.8-1
+- update to 3.8
+- use systemd macros (#850135)
+- don't set vendor for desktop files
+- make some dependencies arch-specific
+- remove obsolete macros
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

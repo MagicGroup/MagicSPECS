@@ -1,10 +1,12 @@
 Summary:	The GIMP ToolKit
+Summary(zh_CN.UTF-8): GIMP 工具集
 Name:		gtk+
 Epoch:		1
 Version:	1.2.10
-Release:	72%{?dist}
+Release:	73%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.gtk.org/
 Source0:	ftp://ftp.gimp.org/pub/gtk/v1.2/gtk+-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -92,9 +94,15 @@ originally written for the GIMP (GNU Image Manipulation Program) image
 processing program, but is now used by several other programs as
 well.
 
+%description -l zh_CN.UTF-8 
+这个包是 GTK+ 的 1.x 版本，GTK+ 是原为 GIMP 所写的库，但已经被许多
+其它程序使用。
+
 %package	devel
 Summary:	Development tools for GTK+ (GIMP ToolKit) applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides:	gtk1-devel = %{version}-%{release}
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	glib-devel
@@ -108,6 +116,8 @@ Requires:	%{x_deps}
 Libraries, header files and documentation for developing GTK+ 
 (GIMP ToolKit) applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -a 2
@@ -208,7 +218,7 @@ done
 %{__rm} -rf %{buildroot}%{_libdir}/lib*.la
 # despite use of --disable-static, delete static libs that get built anyway
 %{__rm} -rf %{buildroot}%{_libdir}/lib*.a
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -249,6 +259,9 @@ done
 
 
 %changelog
+* Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1:1.2.10-73
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1:1.2.10-72
 - 为 Magic 3.0 重建
 

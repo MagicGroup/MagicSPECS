@@ -1,11 +1,14 @@
 Summary:        GNOME User Documentation
+Summary(zh_CN.UTF-8): GNOME 用户文档
 Name:           gnome-user-docs
-Version:        3.8.0
+Version:	3.12.0
 Release:        1%{?dist}
 License:        GFDL
 #VCS: git:git://git.gnome.org/gnome-user-docs
-Source:         http://download.gnome.org/sources/gnome-user-docs/3.6/gnome-user-docs-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:         http://download.gnome.org/sources/gnome-user-docs/%{majorver}/gnome-user-docs-%{version}.tar.xz
 Group:          Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 
 BuildRequires: pkgconfig
@@ -17,6 +20,9 @@ BuildRequires: yelp-tools
 This package contains end user documentation for the GNOME desktop
 environment.
 
+%description -l zh_CN.UTF-8 
+GNOME 桌面环境的用户文档。
+
 %prep
 %setup -q -n gnome-user-docs-%{version}
 
@@ -26,13 +32,16 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-
+magic_rpm_clean.sh
 %find_lang %{name} --all-name --with-gnome
 
 %files -f %{name}.lang
 %doc COPYING AUTHORS NEWS README
 
 %changelog
+* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
+- 更新到 3.12.0
+
 * Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
 - Update to 3.8.0
 

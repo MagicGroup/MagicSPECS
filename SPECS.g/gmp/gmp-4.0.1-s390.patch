@@ -1,20 +1,6 @@
-diff -up gmp-5.0.4/configure.in.s390 gmp-5.0.4/configure.in
---- gmp-5.0.4/configure.in.s390	2012-02-10 11:23:05.000000000 +0100
-+++ gmp-5.0.4/configure.in	2012-04-18 12:49:59.681014202 +0200
-@@ -1097,6 +1097,10 @@ case $host in
-     path="pyr"
-     ;;
- 
-+  s390x-*-*)
-+    gcc_cflags="-g -O2 $fomit_frame_pointer"
-+    path="s390x"
-+    ;;
- 
-   # IBM System/390 and z/Architecture
-   S390_PATTERN | S390X_PATTERN)
 diff -up gmp-5.0.4/mpn/s390x/gmp-mparam.h.s390 gmp-5.0.4/mpn/s390x/gmp-mparam.h
---- gmp-5.0.4/mpn/s390x/gmp-mparam.h.s390	2012-04-18 12:44:04.482509106 +0200
-+++ gmp-5.0.4/mpn/s390x/gmp-mparam.h	2012-04-18 12:44:04.482509106 +0200
+--- gmp-5.0.4/mpn/s390-64/gmp-mparam.h.s390	2012-04-18 12:44:04.482509106 +0200
++++ gmp-5.0.4/mpn/s390-64/gmp-mparam.h	2012-04-18 12:44:04.482509106 +0200
 @@ -0,0 +1,26 @@
 +/* gmp-mparam.h -- Compiler/machine parameter header file.
 +

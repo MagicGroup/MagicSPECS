@@ -1,8 +1,20 @@
-Index: gdb-7.4.50.20120602/gdb/elfread.c
+Index: gdb-7.6.90.20140127/gdb/proc-service.list
 ===================================================================
---- gdb-7.4.50.20120602.orig/gdb/elfread.c	2012-06-02 21:35:09.669510757 +0200
-+++ gdb-7.4.50.20120602/gdb/elfread.c	2012-06-02 21:35:31.106502660 +0200
-@@ -1658,6 +1658,19 @@ build_id_to_filename (struct build_id *b
+--- gdb-7.6.90.20140127.orig/gdb/proc-service.list	2014-02-06 17:32:42.810640320 +0100
++++ gdb-7.6.90.20140127/gdb/proc-service.list	2014-02-06 17:33:35.406696964 +0100
+@@ -37,4 +37,7 @@
+   ps_pstop;
+   ps_ptread;
+   ps_ptwrite;
++
++  /* gdb-6.6-buildid-locate-rpm.patch */
++  rpmsqEnable;
+ };
+Index: gdb-7.6.90.20140127/gdb/build-id.c
+===================================================================
+--- gdb-7.6.90.20140127.orig/gdb/build-id.c	2014-02-06 17:30:14.230480264 +0100
++++ gdb-7.6.90.20140127/gdb/build-id.c	2014-02-06 17:34:28.846754283 +0100
+@@ -677,6 +677,19 @@ build_id_to_filename (const struct elf_b
  #include <dlfcn.h>
  #endif
  
@@ -22,15 +34,3 @@ Index: gdb-7.4.50.20120602/gdb/elfread.c
  /* This MISSING_RPM_HASH tracker is used to collect all the missing rpm files
     and avoid their duplicities during a single inferior run.  */
  
-Index: gdb-7.4.50.20120602/gdb/proc-service.list
-===================================================================
---- gdb-7.4.50.20120602.orig/gdb/proc-service.list	2012-06-02 21:35:09.669510757 +0200
-+++ gdb-7.4.50.20120602/gdb/proc-service.list	2012-06-02 21:35:14.296508989 +0200
-@@ -37,4 +37,7 @@
-   ps_pstop;
-   ps_ptread;
-   ps_ptwrite;
-+
-+  /* gdb-6.6-buildid-locate-rpm.patch */
-+  rpmsqEnable;
- };

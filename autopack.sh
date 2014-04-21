@@ -12,7 +12,7 @@ DEBUG=0
 LOG=1
 # 是否给 release 加 1
 # 一般仅在重编译时使用
-BUMP=0
+AUTOBUMP=0
 # rpmbuild 的 _topdir 变量
 TOPDIR=$(rpm --eval "%{_topdir}")
 # rpmbuild 中是否执行 check 段
@@ -23,12 +23,8 @@ else
 	NOCHECK="--nocheck"
 fi
 # 打包用户名
-PACKAGER="Liu Di"
-PACKEMAIL="<liudidi@gmail.com>"
-
-if ! [ -z "$$RPM_PACKAGER" ];then
-        export RPM_PACKAGER="Liu Di <liudidi@gmail.com>"
-fi
+PACKAGER="Magic Group"
+PACKEMAIL="<magicgroup@linuxfans.org>"
 
 # RPM 下的目录名
 ARCH=$(uname -m)
@@ -40,6 +36,9 @@ INSTALLRPMS=0
 FORCEINSTALLRPMS=0
 #是否自动更新软件版本
 AUTOUPDATE=1
+if [ -f ~/.magicspec ]; then
+	. ~/.magicspec
+fi
 # 使用的下载命令
 DOWNCOMMAND=wget
 # 对应下载命令的命令行参数，其后应该跟随下载目录
@@ -60,6 +59,10 @@ if [ $LOG = "1" ];then
         LOGFILE=$DIR/build.log
 else    
         LOGFILE=/dev/null
+fi
+
+if ! [ -z "$$RPM_PACKAGER" ];then
+        export RPM_PACKAGER="$PACKAGER $PACKEMAIL"
 fi
 
 # 检查系统中是否有打包所需的命令。
@@ -125,18 +128,18 @@ function checkspec()
 	SPECCOUNT=`ls $DIR/*.spec 2>/dev/null | wc -l`
 	if [ $SPECCOUNT -gt 1 ];then
         	echo "当前目录的 .spec 文件过多，只有一个 spec 文件的情况下，脚本才能正确执行"
-        	exit 1
+        	touch specfail && exit 1
 	fi
 	if [ $SPECCOUNT = "0" ];then
         	echo "当前目录中没有 .spec 文件，脚本退出！"
-        	exit 1
+        	touch specfail && exit 1
 	fi
 	#判断 spec 文件名是否和目录名一致。
 	SPECNAME=$(ls $DIR/*.spec)
 	NAME=$(basename $SPECNAME)
 	if ! [ $NAME = "$1.spec" ] ; then
 	        echo "spec 文件名和所在目录的名字不一致，请检查原因。"
-        	exit 1
+        	touch specfail && exit 1
 	fi
 	debug_echo "当前的 spec 文件名是 $SPECNAME"
 	#判断是否跳过 spec 解析判断
@@ -144,13 +147,13 @@ function checkspec()
 		#判断 spec 文件是否有问题
 		if !  (debug_run rpmspec -P $SPECNAME );then
   		        echo "spec 文件格式有错误，请检查，脚本退出！" 
-        		exit 1
+        		touch specfail && exit 1
 		fi
 	fi
 	if ! (rpmspec -P $SPECNAME | grep "Summary(zh_CN.UTF-8)" > /dev/null); then
         	if [ $HAVECNUTF8 = "1" ];then
                 	echo "spec 中没有中文简介，请添加"
-                	exit 1
+                	touch specfail && exit 1
         	else
                 	debug_echo "spec 中没有中文简介"
         	fi
@@ -159,7 +162,7 @@ function checkspec()
         	if [ $HAVECLEAN = "1" ];then
                 	echo "spec 中没有清理语句，请添加"
                 	#这里要做自动添加的尝试，但有些难
-                	exit 1
+                	touch specfail && exit 1
         	else
                 	debug_echo "spec 中没有清理语句"
         	fi
@@ -211,10 +214,12 @@ function downsources()
 				if ! [ x"$sourceurl" = x"" ]; then
 					if ! ( debug_run $DOWN $TOPDIR/SOURCES $sourceurl ) ; then
 						echo "官方地址无法下载，退出。"
+						touch $DIR/downfail
 						exit 1
 					fi
 				else
 					echo "找不到源码文件，退出。"
+					touch $DIR/downfail
                                         exit 1
 				fi
 			fi
@@ -272,20 +277,24 @@ function downvcssources()
         SPECNAME=$(ls $DIR/*.spec)
 	VCSDATE=$(cat $SPECNAME |grep "%define vcsdate"|cut -d " " -f3)
 	TODAY=$(date +%Y%m%d)
-	if [ $AUTOUPDATE = "1" ]; then
-		sed -i 's/%define vcsdate.*/%define vcsdate '"$TODAY"'/g' $SPECNAME
-		rpmdev-bumpspec -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
-		cp -f $SPECNAME $TOPDIR/SOURCES
-		VCSDATE=$TODAY
+	if ! [ x"$VCSDATE" = x"$TODAY" ]; then
+		if [ $AUTOUPDATE = "1" ]; then
+			sed -i 's/%define vcsdate.*/%define vcsdate '"$TODAY"'/g' $SPECNAME
+			rpmdev-bumpspec -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
+			cp -f $SPECNAME $TOPDIR/SOURCES
+			VCSDATE=$TODAY
+		fi
+		debug_run echo "从 $2 仓库中下载 $1 的源代码"
+        	pushd $TOPDIR/SOURCES
+                	if ! ( sh make_$1_$2_package.sh $VCSDATE ) ; then
+                        	echo "无法从 $1 版本控制系统下载 $2 的源代码！退出。"
+                        	exit 1
+                	fi
+        	popd
+		debug_run echo "源代码下载完成"
+	else
+		debug_run echo "无需更新"
 	fi
-	debug_run echo "从 $2 仓库中下载 $1 的源代码"
-        pushd $TOPDIR/SOURCES
-                if ! ( sh make_$1_$2_package.sh $VCSDATE ) ; then
-                        echo "无法从 $1 版本控制系统下载 $2 的源代码！退出。"
-                        exit 1
-                fi
-        popd
-	debug_run echo "源代码下载完成"
 }
 
 #安装依赖关系函数		
@@ -322,7 +331,7 @@ function build()
                 exit 1
         fi
         echo "打包完成，清理目录"
-	rm -f $DIR/buildfail
+	rm -f $DIR/*fail
 }
 
 #安装函数
@@ -347,6 +356,30 @@ function installrpms()
 			exit 1
 		fi
 	popd
+}
+
+#自动更新版本函数
+function autoupdate () 
+{
+        DIR=`ls -d SPECS.*/$1`
+        SPECNAME=$(ls $DIR/*.spec)
+        if [ -f $DIR/getnewver ]; then
+                ./autoupdate.sh $1 || exit 1
+                #spec 有更新，所以需要重新复制
+		if [ -f $DIR/hasupdate ] ; then
+ 	               cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
+		fi
+        fi
+}
+
+#release +1
+function autobumpspec () 
+{
+        DIR=`ls -d SPECS.*/$1`
+        SPECNAME=$(ls $DIR/*.spec)
+	rpmdev-bumpspec -c "为 Magic 3.0 重建" $SPECNAME
+	#spec 有更新，所以需要重新复制
+        cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
 }
 	
 #主程序
@@ -376,12 +409,28 @@ checkcommand || exit 1
 #检测 spec
 preparefiles $1 || exit 1
 checkspec $1 || exit 1
-if [ $AUTOUPDATE = "1" ]; then	
-	if [ -f $DIR/getnewver ]; then
-		./autoupdate.sh $1
-		#spec 有更新，所以需要重新复制
-		cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
+#更新 spec
+if [ $AUTOBUMP = "1" ]; then
+	if [ $AUTOUPDATE = "1" ]; then
+		echo "自动更新 $1 版本"
+		if [ -f $DIR/getnewver ] ; then
+			autoupdate $1 || echo "$1 版本更新未成功，请检查网络环境和相关配置"
+			if [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
+				echo "暂不更新 release "			
+			else
+				autobumpspec $1
+			fi
+		else
+			autobumpspec $1
+		fi
+	else
+		autobumpspec $1
 	fi
+else
+        if [ $AUTOUPDATE = "1" ]; then
+                echo "自动更新 $1 版本"
+                autoupdate $1 || echo "$1 版本更新未成功，请检查网络环境和相关配置"
+        fi	
 fi
 #首先判断是否使用版本控制系统的源码，如果是，则下载，目前支持git/cvs/svn/hg
 GIT=$(cat $SPECNAME | grep "^%define git 1" |wc -l)

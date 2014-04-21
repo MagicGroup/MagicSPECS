@@ -1,13 +1,10 @@
 %global _hardened_build 1
 
-%global evolution_connector_prefix %{_libdir}/evolution-openldap
-%global evolution_connector_includedir %{evolution_connector_prefix}/include
-%global evolution_connector_libdir %{evolution_connector_prefix}/%{_lib}
-
 %global systemctl_bin /usr/bin/systemctl
+%global check_password_version 1.1
 
 Name: openldap
-Version: 2.4.32
+Version: 2.4.39
 Release: 3%{?dist}
 Summary: LDAP support libraries
 Group: System Environment/Daemons
@@ -15,21 +12,19 @@ License: OpenLDAP
 URL: http://www.openldap.org/
 Source0: ftp://ftp.OpenLDAP.org/pub/OpenLDAP/openldap-release/openldap-%{version}.tgz
 Source1: slapd.service
-Source2: slapd.sysconfig
 Source3: slapd.tmpfiles
 Source4: slapd.ldif
 Source5: ldap.conf
+Source10: ltb-project-openldap-ppolicy-check-password-%{check_password_version}.tar.gz
 Source50: libexec-functions
 Source51: libexec-convert-config.sh
 Source52: libexec-check-config.sh
 Source53: libexec-upgrade-db.sh
 Source54: libexec-create-certdb.sh
 Source55: libexec-generate-server-cert.sh
-Source100: README.evolution
 
 # patches for 2.4
 Patch0: openldap-manpages.patch
-Patch1: openldap-security-pie.patch
 Patch2: openldap-sql-linking.patch
 Patch3: openldap-reentrant-gethostby.patch
 Patch4: openldap-smbk5pwd-overlay.patch
@@ -37,22 +32,30 @@ Patch5: openldap-ldaprc-currentdir.patch
 Patch6: openldap-userconfig-setgid.patch
 Patch7: openldap-dns-priority.patch
 Patch8: openldap-syncrepl-unset-tls-options.patch
-Patch9: openldap-constraint-count.patch
-Patch10: openldap-man-sasl-nocanon.patch
-Patch11: openldap-ai-addrconfig.patch
-Patch12: openldap-nss-prefer-unlocked-key.patch
-Patch13: openldap-nss-allow-certname-with-token-name.patch
+Patch9: openldap-man-sasl-nocanon.patch
+Patch10: openldap-ai-addrconfig.patch
+Patch11: openldap-nss-update-list-of-ciphers.patch
+Patch12: openldap-tls-no-reuse-of-tls_session.patch
+Patch13: openldap-nss-regex-search-hashed-cacert-dir.patch
+Patch14: openldap-nss-ignore-certdb-type-prefix.patch
+Patch15: openldap-nss-certs-from-certdb-fallback-pem.patch
+Patch16: openldap-nss-pk11-freeslot.patch
+# fix back_perl problems with lt_dlopen()
+# might cause crashes because of symbol collisions
+# the proper fix is to link all perl modules against libperl
+# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=327585
+Patch19: openldap-switch-to-lt_dlopenadvise-to-get-RTLD_GLOBAL-set.patch
+# ldapi sasl fix pending upstream inclusion
+Patch20: openldap-ldapi-sasl.patch
+# rwm reference counting fix, pending upstream inclusion
+Patch21: openldap-rwm-reference-counting.patch
 
 # Fedora specific patches
 Patch100: openldap-autoconf-pkgconfig-nss.patch
-Patch101: openldap-fedora-systemd.patch
+Patch102: openldap-fedora-systemd.patch
 
-# patches for the evolution library (see README.evolution)
-Patch200: openldap-evolution-ntlm.patch
-
-BuildRequires: autoconf
 BuildRequires: cyrus-sasl-devel, nss-devel, krb5-devel, tcp_wrappers-devel, unixODBC-devel
-BuildRequires: glibc-devel, libtool, libtool-ltdl-devel, groff, perl
+BuildRequires: glibc-devel, libtool, libtool-ltdl-devel, groff, perl, perl-devel, perl(ExtUtils::Embed)
 # smbk5pwd overlay:
 BuildRequires: openssl-devel
 Requires: nss-tools
@@ -70,7 +73,6 @@ libraries, and documentation for OpenLDAP.
 Summary: LDAP development libraries and header files
 Group: Development/Libraries
 Requires: openldap%{?_isa} = %{version}-%{release}, cyrus-sasl-devel%{?_isa}
-Provides: openldap-evolution-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 The openldap-devel package includes the development libraries and
@@ -85,11 +87,12 @@ Summary: LDAP server
 License: OpenLDAP
 Requires: openldap%{?_isa} = %{version}-%{release}, libdb-utils
 Requires(pre): shadow-utils
-Requires(post): systemd-units, systemd-sysv, chkconfig
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+Requires(post): systemd, systemd-sysv, chkconfig
+Requires(preun): systemd
+Requires(postun): systemd
 BuildRequires: libdb-devel
 BuildRequires: systemd-units
+BuildRequires: cracklib-devel
 Group: System Environment/Daemons
 # migrationtools (slapadd functionality):
 Provides: ldif2ldbm
@@ -131,20 +134,20 @@ over the Internet. The openldap-clients package contains the client
 programs needed for accessing and modifying OpenLDAP directories.
 
 %prep
-%setup -q -c -a 0
+%setup -q -c -a 0 -a 10
 
 pushd openldap-%{version}
 
 # use pkg-config for Mozilla NSS library
 %patch100 -p1
-AUTOMAKE=/bin/true autoreconf --install --force
 
 # alternative include paths for Mozilla NSS
 ln -s %{_includedir}/nss3 include/nss
 ln -s %{_includedir}/nspr4 include/nspr
 
+AUTOMAKE=%{_bindir}/true autoreconf -fi
+
 %patch0 -p1
-%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -157,12 +160,20 @@ ln -s %{_includedir}/nspr4 include/nspr
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
 
-%patch101 -p1
+%patch102 -p1
 
 # build smbk5pwd with other overlays
 ln -s ../../../contrib/slapd-modules/smbk5pwd/smbk5pwd.c servers/slapd/overlays
 mv contrib/slapd-modules/smbk5pwd/README contrib/slapd-modules/smbk5pwd/README.smbk5pwd
+
+mv servers/slapd/back-perl/README{,.back_perl}
 
 # fix documentation encoding
 for filename in doc/drafts/draft-ietf-ldapext-acl-model-xx.txt; do
@@ -172,20 +183,17 @@ done
 
 popd
 
-# patched static libraries for Evolution
-if ! cp -al openldap-%{version} evo-openldap-%{version} ; then
-	rm -fr evo-openldap-%{version}
-	cp -a  openldap-%{version} evo-openldap-%{version}
-fi
-pushd evo-openldap-%{version}
-%patch200 -p1 -b .evolution-ntlm
-popd
-
 %build
 
+%ifarch s390 s390x
+  export CFLAGS="-fPIE"
+%else
+  export CFLAGS="-fpie"
+%endif
+export LDFLAGS="-pie"
 # avoid stray dependencies (linker flag --as-needed)
 # enable experimental support for LDAP over UDP (LDAP_CONNECTIONLESS)
-export CFLAGS="%{optflags} -Wl,--as-needed -DLDAP_CONNECTIONLESS"
+export CFLAGS="${CFLAGS} %{optflags} -Wl,--as-needed -DLDAP_CONNECTIONLESS"
 
 pushd openldap-%{version}
 %configure \
@@ -213,9 +221,9 @@ pushd openldap-%{version}
 	--enable-backends=mod \
 	--enable-bdb=yes \
 	--enable-hdb=yes \
+	--enable-mdb=yes \
 	--enable-monitor=yes \
 	--disable-ndb \
-	--disable-perl \
 	\
 	--enable-overlays=mod \
 	\
@@ -234,47 +242,40 @@ pushd openldap-%{version}
 make %{_smp_mflags}
 popd
 
-# build patched static library for Evolution
-pushd evo-openldap-%{version}
-%configure \
-	--enable-debug \
-	--disable-dynamic \
-	--disable-syslog \
-	--disable-proctitle \
-	--enable-ipv6 \
-	--disable-local \
-	\
-	--disable-slapd \
-	\
-	--enable-static \
-	--disable-shared \
-	\
-	--with-cyrus-sasl \
-	--without-fetch \
-	--with-threads \
-	--with-pic \
-	--with-tls=moznss \
-	--with-gnu-ld \
-	\
-	--includedir=%{evolution_connector_includedir} \
-	--libdir=%{evolution_connector_libdir}
-
-make %{_smp_mflags}
+pushd ltb-project-openldap-ppolicy-check-password-%{check_password_version}
+make LDAP_INC="-I../openldap-%{version}/include \
+ -I../openldap-%{version}/servers/slapd \
+ -I../openldap-%{version}/build-servers/include"
 popd
 
 %install
 
 mkdir -p %{buildroot}%{_libdir}/
 
-# install evolution-specific libraries (conflicting files will be overwriten by generic version)
-pushd evo-openldap-%{version}
-make install DESTDIR=%{buildroot} STRIP=""
-install -m 644 %SOURCE100 %{buildroot}%{evolution_connector_prefix}/
-popd
-
 pushd openldap-%{version}
 make install DESTDIR=%{buildroot} STRIP=""
 popd
+
+# install check_password module
+pushd ltb-project-openldap-ppolicy-check-password-%{check_password_version}
+install -m 755 check_password.so %{buildroot}%{_libdir}/openldap/
+# install -m 644 README %{buildroot}%{_libdir}/openldap
+install -d -m 755 %{buildroot}%{_sysconfdir}/openldap
+cat > %{buildroot}%{_sysconfdir}/openldap/check_password.conf <<EOF
+# OpenLDAP pwdChecker library configuration
+
+#useCracklib 1
+#minPoints 3
+#minUpper 0
+#minLower 0
+#minDigit 0
+#minPunct 0
+EOF
+sed -i -e 's/check_password\.so/check_password.so.%{check_password_version}/' README
+mv README{,.check_pwd}
+popd
+# rename the library
+mv %{buildroot}%{_libdir}/openldap/check_password.so{,.%{check_password_version}}
 
 # setup directories for TLS certificates
 mkdir -p %{buildroot}%{_sysconfdir}/openldap/certs
@@ -286,8 +287,8 @@ install -m 0700 -d %{buildroot}%{_sharedstatedir}/ldap
 install -m 0755 -d %{buildroot}%{_localstatedir}/run/openldap
 
 # setup autocreation of runtime directories on tmpfs
-mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
-install -m 0644 %SOURCE3 %{buildroot}%{_sysconfdir}/tmpfiles.d/slapd.conf
+mkdir -p %{buildroot}%{_tmpfilesdir}
+install -m 0644 %SOURCE3 %{buildroot}%{_tmpfilesdir}/slapd.conf
 
 # install default ldap.conf (customized)
 rm -f %{buildroot}%{_sysconfdir}/openldap/ldap.conf
@@ -314,10 +315,6 @@ rm -f %{buildroot}%{_sysconfdir}/openldap/schema/*.default
 # install an init script for the servers
 mkdir -p %{buildroot}%{_unitdir}
 install -m 0644 %SOURCE1 %{buildroot}%{_unitdir}/slapd.service
-
-# install syconfig/ldap
-mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
-install -m 644 %SOURCE2 %{buildroot}%{_sysconfdir}/sysconfig/slapd
 
 # move slapd out of _libdir
 mv %{buildroot}%{_libdir}/slapd %{buildroot}%{_sbindir}/
@@ -348,21 +345,19 @@ chmod 0644 %{buildroot}%{_datadir}/openldap-servers/DB_CONFIG.example
 
 # remove files which we don't want packaged
 rm -f %{buildroot}%{_libdir}/*.la
-rm -f %{buildroot}%{evolution_connector_libdir}/*.la
 rm -f %{buildroot}%{_libdir}/openldap/*.so
 
 rm -f %{buildroot}%{_localstatedir}/openldap-data/DB_CONFIG.example
 rmdir %{buildroot}%{_localstatedir}/openldap-data
-magic_rpm_clean.sh
 
 %post
 
-/usr/sbin/ldconfig
+/sbin/ldconfig
 
 # create certificate database
 %{_libexecdir}/openldap/create-certdb.sh >&/dev/null || :
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %pre servers
 
@@ -387,12 +382,8 @@ exit 0
 
 %post servers
 
-/usr/sbin/ldconfig
-
-if [ $1 -eq 1 ]; then
-	# initial installation
-	%{systemctl_bin} daemon-reload &>/dev/null || :
-fi
+/sbin/ldconfig
+%systemd_post slapd.service
 
 # generate sample TLS certificate for server (will not replace)
 %{_libexecdir}/openldap/generate-server-cert.sh -o &>/dev/null || :
@@ -420,31 +411,6 @@ if [ -f %{_sharedstatedir}/ldap/rpm_upgrade_openldap ]; then
 	rm -f %{_sharedstatedir}/ldap/rpm_upgrade_openldap
 fi
 
-# conversion from /etc/sysconfig/ldap to /etc/sysconfig/slapd
-if [ $1 -eq 2 ]; then
-	# we expect that 'ldap' will be renamed to 'ldap.rpmsave' after removing the old package
-	[ -r %{_sysconfdir}/sysconfig/ldap ] || exit 0
-	source %{_sysconfdir}/sysconfig/ldap &>/dev/null
-
-	new_urls=
-	[ "$SLAPD_LDAP" != "no" ]   && new_urls="$new_urls ldap:///"
-	[ "$SLAPD_LDAPI" != "no" ]  && new_urls="$new_urls ldapi:///"
-	[ "$SLAPD_LDAPS" == "yes" ] && new_urls="$new_urls ldaps:///"
-	[ -n "$SLAPD_URLS" ]        && new_urls="$new_urls $SLAPD_URLS"
-
-	failure=0
-	cp -f %{_sysconfdir}/sysconfig/slapd %{_sysconfdir}/sysconfig/slapd.rpmconvert
-	sed -i '/^#\?SLAPD_URLS=/s@.*@SLAPD_URLS="'"$new_urls"'"@' %{_sysconfdir}/sysconfig/slapd.rpmconvert &>/dev/null || failure=1
-	[ -n "$SLAPD_OPTIONS" ] && \
-		sed -i '/^#\?SLAPD_OPTIONS=/s@.*$@SLAPD_OPTIONS="'"$SLAPD_OPTIONS"'"@' %{_sysconfdir}/sysconfig/slapd.rpmconvert &>/dev/null || failure=1
-
-	if [ $failure -eq 0 ]; then
-		mv -f %{_sysconfdir}/sysconfig/slapd.rpmconvert %{_sysconfdir}/sysconfig/slapd
-	else
-		rm -f %{_sysconfdir}/sysconfig/slapd.rpmconvert
-	fi
-fi
-
 # restart after upgrade
 if [ $1 -ge 1 ]; then
 	if [ $start_slapd -eq 1 ]; then
@@ -457,28 +423,14 @@ fi
 exit 0
 
 %preun servers
-if [ $1 -eq 0 ]; then
-	# package removal
-	%{systemctl_bin} --no-reload disable slapd.service &>/dev/null || :
-	%{systemctl_bin} stop slapd.service &>/dev/null || :
-fi
+
+%systemd_preun slapd.service
+
 
 %postun servers
-/usr/sbin/ldconfig
 
-%{systemctl_bin} daemon-reload &>/dev/null || :
-if [ $1 -ge 1 ]; then
-	# package upgrade
-	%{systemctl_bin} try-restart slapd.service &>/dev/null || :
-fi
-
-exit 0
-
-
-%post devel -p /usr/sbin/ldconfig
-
-
-%postun devel -p /usr/sbin/ldconfig
+/sbin/ldconfig
+%systemd_postun_with_restart slapd.service
 
 
 %triggerun servers -- openldap-servers < 2.4.26-6
@@ -546,11 +498,15 @@ exit 0
 %doc openldap-%{version}/contrib/slapd-modules/smbk5pwd/README.smbk5pwd
 %doc openldap-%{version}/doc/guide/admin/*.html
 %doc openldap-%{version}/doc/guide/admin/*.png
+%doc openldap-%{version}/servers/slapd/back-perl/SampleLDAP.pm
+%doc openldap-%{version}/servers/slapd/back-perl/README.back_perl
+%doc openldap-%{version}/servers/slapd/back-perl/README.back_perl
+%doc ltb-project-openldap-ppolicy-check-password-%{check_password_version}/README.check_pwd
 %doc README.schema
 %config(noreplace) %dir %attr(0750,ldap,ldap) %{_sysconfdir}/openldap/slapd.d
 %config(noreplace) %{_sysconfdir}/openldap/schema
-%config(noreplace) %{_sysconfdir}/sysconfig/slapd
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/slapd.conf
+%config(noreplace) %{_sysconfdir}/openldap/check_password.conf
+%{_tmpfilesdir}/slapd.conf
 %dir %attr(0700,ldap,ldap) %{_sharedstatedir}/ldap
 %dir %attr(-,ldap,ldap) %{_localstatedir}/run/openldap
 %{_unitdir}/slapd.service
@@ -559,13 +515,13 @@ exit 0
 %{_libdir}/openldap/auditlog*
 %{_libdir}/openldap/back_dnssrv*
 %{_libdir}/openldap/back_ldap*
-%{_libdir}/openldap/back_mdb*
 %{_libdir}/openldap/back_meta*
 %{_libdir}/openldap/back_null*
 %{_libdir}/openldap/back_passwd*
 %{_libdir}/openldap/back_relay*
 %{_libdir}/openldap/back_shell*
 %{_libdir}/openldap/back_sock*
+%{_libdir}/openldap/back_perl*
 %{_libdir}/openldap/collect*
 %{_libdir}/openldap/constraint*
 %{_libdir}/openldap/dds*
@@ -585,6 +541,7 @@ exit 0
 %{_libdir}/openldap/translucent*
 %{_libdir}/openldap/unique*
 %{_libdir}/openldap/valsort*
+%{_libdir}/openldap/check_password*
 %{_libexecdir}/openldap/functions
 %{_libexecdir}/openldap/convert-config.sh
 %{_libexecdir}/openldap/check-config.sh
@@ -612,11 +569,110 @@ exit 0
 %{_libdir}/lib*.so
 %{_includedir}/*
 %{_mandir}/man3/*
-%{evolution_connector_prefix}/
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.4.32-3
-- 为 Magic 3.0 重建
+* Wed Feb 19 2014 Jan Synáček <jsynacek@redhat.com> - 2.4.39-3
+- remove redundant sysconfig-related stuff
+- add documentation reference to service file
+- alias slapd.service as openldap.service
+
+* Tue Feb  4 2014 Jan Synáček <jsynacek@redhat.com> - 2.4.39-2
+- CVE-2013-4449: segfault on certain queries with rwm overlay (#1060851)
+
+* Wed Jan 29 2014 Jan Synáček <jsynacek@redhat.com> - 2.4.39-1
+- new upstream release (#1059186)
+
+* Mon Nov 18 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.38-1
+- new upstream release (#1031608)
+
+* Mon Nov 11 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.37-2
+- fix: slaptest incorrectly handles 'include' directives containing a custom file (#1028935)
+
+* Wed Oct 30 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.37-1
+- new upstream release (#1023916)
+- fix: missing a linefeed at the end of file /etc/openldap/ldap.conf (#1019836)
+
+* Mon Oct 21 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.36-4
+- fix: slapd daemon fails to start with segmentation fault on s390x (#1020661)
+
+* Tue Oct 15 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.36-3
+- rebuilt for libdb-5.3.28
+
+* Mon Oct 14 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.36-2
+- fix: CLDAP is broken for IPv6 (#1018688)
+
+* Wed Sep  4 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.36-2
+- fix: typos in manpages
+
+* Tue Aug 20 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.36-1
+- new upstream release
+  + compile-in mdb backend
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.35-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 2.4.35-6
+- Perl 5.18 rebuild
+
+* Fri Jun 14 2013 Jan Synáček <jsynacek@redhat.com> - 2.4.35-5
+- fix: using slaptest to convert slapd.conf to LDIF format ignores "loglevel 0"
+
+* Thu May 09 2013 Jan Synáček <jsynacek@redhat.com> 2.4.35-4
+- do not needlessly run ldconfig after installing openldap-devel
+- fix: LDAPI with GSSAPI does not work if SASL_NOCANON=on (#960222)
+- fix: lt_dlopen() with back_perl (#960048)
+
+* Tue Apr 09 2013 Jan Synáček <jsynacek@redhat.com> 2.4.35-3
+- fix: minor documentation fixes
+- set SASL_NOCANON to on by default (#949864)
+- remove trailing spaces
+
+* Fri Apr 05 2013 Jan Synáček <jsynacek@redhat.com> 2.4.35-2
+- drop the evolution patch
+
+* Tue Apr 02 2013 Jan Synáček <jsynacek@redhat.com> 2.4.35-1
+- new upstream release (#947235)
+- fix: slapd.service should ensure that network is up before starting (#946921)
+- fix: NSS related resource leak (#929357)
+
+* Mon Mar 18 2013 Jan Synáček <jsynacek@redhat.com> 2.4.34-2
+- fix: syncrepl push DELETE operation does not recover (#920482)
+- run autoreconf every build, drop autoreconf patch (#926280)
+
+* Mon Mar 11 2013 Jan Synáček <jsynacek@redhat.com> 2.4.34-1
+- enable perl backend (#820547)
+- package ppolicy-check-password (#829749)
+- add perl specific BuildRequires
+- fix bogus dates
+
+* Wed Mar 06 2013 Jan Vcelak <jvcelak@fedoraproject.org> 2.4.34-1
+- new upstream release (#917603)
+- fix: slapcat segfaults if cn=config.ldif not present (#872784)
+- use systemd-rpm macros in spec file (#850247)
+
+* Thu Jan 31 2013 Jan Synáček <jsynacek@redhat.com> 2.4.33-4
+- rebuild against new cyrus-sasl
+
+* Wed Oct 31 2012 Jan Vcelak <jvcelak@redhat.com> 2.4.33-3
+- fix update: libldap does not load PEM certificate if certdb is used as TLS_CACERTDIR (#857455)
+
+* Fri Oct 12 2012 Jan Vcelak <jvcelak@redhat.com> 2.4.33-2
+- fix: slapd with rwm overlay segfault following ldapmodify (#865685)
+
+* Thu Oct 11 2012 Jan Vcelak <jvcelak@redhat.com> 2.4.33-1
+- new upstream release:
+  + slapd: ACLs, syncrepl
+  + backends: locking and memory management in MDB
+  + manpages: slapo-refint
+- patch update: MozNSS certificate database in SQL format cannot be used (#860317)
+- fix: slapd.service should not use /tmp (#859019)
+
+* Fri Sep 14 2012 Jan Vcelak <jvcelak@redhat.com> 2.4.32-3
+- fix: some TLS ciphers cannot be enabled (#852338)
+- fix: connection hangs after fallback to second server when certificate hostname verification fails (#852476)
+- fix: not all certificates in OpenSSL compatible CA certificate directory format are loaded (#852786)
+- fix: MozNSS certificate database in SQL format cannot be used (#857373)
+- fix: libldap does not load PEM certificate if certdb is used as TLS_CACERTDIR (#857455)
 
 * Mon Aug 20 2012 Jan Vcelak <jvcelak@redhat.com> 2.4.32-2
 - enhancement: TLS, prefer private keys from authenticated slots
@@ -1016,7 +1072,7 @@ exit 0
 * Wed Mar  5 2008 Jan Safranek <jsafranek@redhat.com> 2.4.8-3
 - reworked the upgrade logic, slapcat/slapadd of the whole database
   is needed only if minor version changes (2.3.x -> 2.4.y)
-- do not try to save database in LDIF format, if openldap-servers package 
+- do not try to save database in LDIF format, if openldap-servers package
   is  being removed (it's up to the admin to do so manually)
 
 * Thu Feb 28 2008 Jan Safranek <jsafranek@redhat.com> 2.4.8-2
@@ -1060,7 +1116,7 @@ exit 0
   same content now (#342791)
 
 * Thu Oct  4 2007 Jan Safranek <jsafranek@redhat.com> 2.3.38-3
-- BDB downgraded back to 4.4.20 because 4.6.18 is not supported by 
+- BDB downgraded back to 4.4.20 because 4.6.18 is not supported by
   openldap (#314821)
 
 * Mon Sep 17 2007 Jan Safranek <jsafranek@redhat.com> 2.3.38-2
@@ -1090,7 +1146,7 @@ exit 0
 - MigrationTools-47 integrated
 
 * Wed Jul  4 2007 Jan Safranek <jsafranek@redhat.com> 2.3.34-6
-- fix compat-slapcat compilation. Now it can be found in 
+- fix compat-slapcat compilation. Now it can be found in
   /usr/lib/compat-openldap/slapcat, because the tool checks argv[0]
   (#246581)
 
@@ -1246,7 +1302,7 @@ exit 0
   bz#143393  Creates certificates + keys at an insecure/bad place
 - also use _sysconfdir instead of hard-coding /etc
 
-* Thu Aug 11 2005 Jay Fenlason <fenlason@redhat.com> 
+* Thu Aug 11 2005 Jay Fenlason <fenlason@redhat.com>
 - Add the tls-fix-connection-test patch to close
   bz#161991 openldap password disclosure issue
 - add the hop patches to prevent infinite looping when chasing referrals.
@@ -1574,7 +1630,7 @@ exit 0
 * Thu Dec 20 2001 Nalin Dahyabhai <nalin@redhat.com> 2.0.19-1
 - update to 2.0.19
 
-* Wed Nov  6 2001 Nalin Dahyabhai <nalin@redhat.com> 2.0.18-2
+* Tue Nov  6 2001 Nalin Dahyabhai <nalin@redhat.com> 2.0.18-2
 - fix the commented-out replication example in slapd.conf
 
 * Fri Oct 26 2001 Nalin Dahyabhai <nalin@redhat.com> 2.0.18-1
@@ -1685,7 +1741,7 @@ exit 0
 * Mon Feb  5 2001 Nalin Dahyabhai <nalin@redhat.com>
 - update to MigrationTools 36, adds netgroup support
 
-* Fri Jan 29 2001 Nalin Dahyabhai <nalin@redhat.com>
+* Mon Jan 29 2001 Nalin Dahyabhai <nalin@redhat.com>
 - fix thinko in that last patch
 
 * Thu Jan 25 2001 Nalin Dahyabhai <nalin@redhat.com>
@@ -1834,7 +1890,7 @@ exit 0
 * Fri Jun 16 2000 Nalin Dahyabhai <nalin@redhat.com>
 - update to 1.2.11
 - add condrestart logic to init script
-- munge migration scripts so that you don't have to be 
+- munge migration scripts so that you don't have to be
   /usr/share/openldap/migration to run them
 - add code to create pid files in /var/run
 
