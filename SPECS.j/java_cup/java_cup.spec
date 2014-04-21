@@ -34,21 +34,26 @@
 
 Name:           java_cup
 Version:        0.11a
-Release:        11%{?dist}
+Release:        16%{?dist}
 Epoch:          1
 Summary:        Java source interpreter
-Group:          Development/Tools
 License:        MIT
 URL:            http://www.cs.princeton.edu/%7Eappel/modern/java/CUP/
 #svn export -r 21 https://www2.in.tum.de/repos/cup/develop/ java_cup-0.11a 
 #tar cjf java_cup-0.11a.tar.bz2 java_cup-0.11a/
 Source0:        java_cup-0.11a.tar.bz2
 Source1:        java_cup-pom.xml
-Source2:	%{name}-runtime-MANIFEST.MF
+# Add OSGi manifests
+Source2:        %{name}-MANIFEST.MF
+Source4:        %{name}-runtime-MANIFEST.MF
 # Taken from http://www2.cs.tum.edu/projects/cup/
-Source3:	LICENSE.txt
+Source3:        LICENSE.txt
 Patch0:         %{name}-build.patch
 Patch1:         java_cup-0.11a-manifest.patch
+
+# Patch from eclipe-pdt to get around generated actions methods exceeding the 65535 bytes limit:
+# http://git.eclipse.org/c/pdt/org.eclipse.pdt.git/tree/plugins/org.eclipse.php.core.parser/javacup10k_split_do_action_method.diff
+Patch2:         javacup10k_split_do_action_method.diff
 
 BuildRequires: ant
 BuildRequires: java-devel
@@ -59,8 +64,7 @@ BuildRequires: java_cup >= 1:0.11a
 %endif
 BuildRequires: zip
 
-Requires:      java
-Requires:      jpackage-utils
+Requires:      java-headless
 BuildArch:     noarch
 
 
@@ -69,15 +73,12 @@ java_cup is a LALR Parser Generator for Java
 
 %package javadoc
 Summary:       Javadoc for java_cup
-Group:         Documentation
-Requires:      jpackage-utils
 
 %description javadoc
 Javadoc for java_cup
 
 %package manual
 Summary:        Documentation for java_cup
-Group:          Documentation
 
 %description manual
 Documentation for java_cup.
@@ -86,6 +87,9 @@ Documentation for java_cup.
 %setup -q 
 %patch0 -b .build
 %patch1 -p1 -b .manifest
+pushd src
+%patch2 -p1 -b .orig
+popd
 cp %{SOURCE1} pom.xml
 cp %{SOURCE3} .
 
@@ -110,9 +114,12 @@ find -name parser.cup -delete
 ant javadoc
 
 %install
-# inject OSGi manifest
+# inject OSGi manifests
 mkdir -p META-INF
 cp -p %{SOURCE2} META-INF/MANIFEST.MF
+touch META-INF/MANIFEST.MF
+zip -u dist/java-cup-%{pkg_version}.jar META-INF/MANIFEST.MF
+cp -p %{SOURCE4} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
 zip -u dist/java-cup-%{pkg_version}-runtime.jar META-INF/MANIFEST.MF
 
@@ -124,7 +131,7 @@ install -m 644 dist/java-cup-%{pkg_version}-runtime.jar %{buildroot}%{_javadir}/
 # poms
 install -d -m 755 %{buildroot}%{_mavenpomdir}
 install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-%add_to_maven_depmap java_cup java_cup %{version} JPP java_cup
+%add_maven_depmap
 
 # javadoc
 install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
@@ -139,16 +146,28 @@ cp -pr dist/javadoc/* %{buildroot}%{_javadocdir}/%{name}
 %files manual
 %doc manual.html LICENSE.txt
 
-%pre javadoc
-# workaround for rpm bug, can be removed in F-17
-[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
-rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
-
 %files javadoc
 %doc LICENSE.txt
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1:0.11a-16
+- Use Requires: java-headless rebuild (#1067528)
+
+* Sat Aug 31 2013 Mat Booth <fedora@matbooth.co.uk> - 1:0.11a-15
+- Inject OSGi manifests into both jars.
+
+* Fri Aug 30 2013 Mat Booth <fedora@matbooth.co.uk> - 1:0.11a-14
+- Patch so that generated action methods do not exceed the 65535 byte JVM
+  method size limit. Supplied by eclipse-pdt project.
+- Drop rpm bug workaround scriptlet.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.11a-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.11a-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Tue Nov 13 2012 gil cattaneo <puntogil@libero.it> 1:0.11a-11
 - adapt to current guideline
 - add %%pre javadoc script
