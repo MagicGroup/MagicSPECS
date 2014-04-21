@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        3.5.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -43,6 +43,13 @@ Summary:        Macros and scripts for Maven packaging support
 Requires:       %{name} = %{version}-%{release}
 Requires:       maven
 Requires:       xmvn >= 1.0.0-0.1
+# We want to use OpenJDK 8 for building packages as it is default
+# implementation used in Fedora.  Due to YUM bugs and limitations,
+# sometimes Java 7 may be installed alone.  To workaround this
+# maven-local explicitly requires version 8 of OpenJDK.  (If needed
+# Maven can still work with Java 7, but this needs to be enabled
+# explicitly in the spec file.)
+Requires:       java-1.8.0-openjdk-devel >= 1:1.8
 # POM files needed by maven itself
 Requires:       apache-commons-parent
 Requires:       apache-parent
@@ -154,6 +161,9 @@ popd
 
 
 %changelog
+* Wed Apr 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.0-6
+- Add explicit maven-local requires on java-1.8.0-openjdk-devel
+
 * Mon Feb 24 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.5.0-5
 - Backport java-headless patches
 
