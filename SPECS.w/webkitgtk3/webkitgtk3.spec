@@ -21,6 +21,7 @@ Patch0:         webkit-1.1.14-nspluginwrapper.patch
 Patch4:         webkit-2.1.90-double2intsPPC32.patch
 Patch9:         webkitgtk-2.3.2-libatomic.patch
 Patch10:        webkitgtk-aarch64.patch
+Patch90:        webkitgtk-2.3.90-fix-mips64el.diff
 
 BuildRequires:  at-spi2-core-devel
 BuildRequires:  bison
@@ -102,12 +103,13 @@ This package contains developer documentation for %{name}.
 #patch9 -p1 -b .libatomic
 %endif
 %patch10 -p1 -b .aarch64
+%patch90 -p1 -b .mips64el
 
 %build
 # Use linker flags to reduce memory consumption
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 
-%ifarch s390 %{arm}
+%ifarch s390 %{arm} mips64el
 # Decrease debuginfo verbosity to reduce memory consumption even more
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
@@ -117,13 +119,13 @@ This package contains developer documentation for %{name}.
 %global optflags %{optflags} -Wl,-relax -latomic
 %endif
 
-%ifarch s390 s390x ppc ppc64
+%ifarch s390 s390x ppc ppc64 mips64el
 %global optflags %{optflags} -DENABLE_YARR_JIT=0
 %endif
 
 %configure                                                      \
                         --with-gtk=3.0                          \
-%ifarch s390 s390x ppc ppc64 aarch64
+%ifarch s390 s390x ppc ppc64 aarch64 mips64el
                         --disable-jit                           \
 %else
                         --enable-jit                            \
