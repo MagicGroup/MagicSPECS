@@ -1,11 +1,16 @@
-%global _exec_prefix %{nil}
-%global _libdir %{_exec_prefix}/%{_lib}
 %define rsyslog_statedir %{_sharedstatedir}/rsyslog
 %define rsyslog_pkidir %{_sysconfdir}/pki/rsyslog
+%if 0%{?rhel} >= 7
+%global want_hiredis 0
+%global want_mongodb 0
+%else
+%global want_hiredis 1
+%global want_mongodb 1
+%endif
 
 Summary: Enhanced system logging and kernel message trapping daemon
 Name: rsyslog
-Version: 7.2.4
+Version: 7.4.8
 Release: 1%{?dist}
 License: (GPLv3+ and ASL 2.0)
 Group: System Environment/Daemons
@@ -15,17 +20,29 @@ Source2: rsyslog.conf
 Source3: rsyslog.sysconfig
 Source4: rsyslog.log
 # tweak the upstream service file to honour configuration from /etc/sysconfig/rsyslog
-Patch0: rsyslog-7.2.2-systemd.patch
+Patch0: rsyslog-7.4.1-sd-service.patch
 Patch1: rsyslog-7.2.2-manpage-dbg-mode.patch
 # prevent modification of trusted properties (proposed upstream)
 Patch2: rsyslog-7.2.1-msg_c_nonoverwrite_merge.patch
-Patch5: rsyslog-5.8.11-enlarge-cert-info-bufs.patch
+# merged upstream
+Patch3: rsyslog-7.4.8-imuxsock-wrn.patch
+# merged upstream
+Patch4: rsyslog-7.4.8-omjournal-warning.patch
+Patch5: rsyslog-7.4.7-numeric-uid.patch
+Patch6: rsyslog-7.4.7-atomicops.patch
+# merged upstream
+Patch7: rsyslog-7.4.8-dont-link-libee.patch
+Patch8: rsyslog-7.4.8-bz1026804-imjournal-message-loss.patch
 
 BuildRequires: bison
 BuildRequires: flex
 BuildRequires: json-c-devel
+BuildRequires: libestr-devel >= 0.1.9
 BuildRequires: libuuid-devel
 BuildRequires: pkgconfig
+BuildRequires: python-docutils
+# make sure systemd is in a version that isn't affected by rhbz#974132
+BuildRequires: systemd-devel >= 204-8
 BuildRequires: zlib-devel
 
 Requires: logrotate >= 3.5.2
@@ -37,6 +54,12 @@ Requires(postun): systemd
 Provides: syslog
 Obsoletes: sysklogd < 1.5-11
 
+%package crypto
+Summary: Encryption support
+Group: System Environment/Daemons
+Requires: %name = %version-%release
+BuildRequires: libgcrypt-devel
+
 %package doc
 Summary: Documentation for rsyslog
 Group: Documentation
@@ -47,11 +70,13 @@ Group: System Environment/Daemons
 Requires: %name = %version-%release
 BuildRequires: libcurl-devel
 
+%if %{want_hiredis}
 %package hiredis
 Summary: Redis support for rsyslog
 Group: System Environment/Daemons
 Requires: %name = %version-%release
 BuildRequires: hiredis-devel
+%endif
 
 %package mmjsonparse
 Summary: JSON enhanced logging support
@@ -86,17 +111,25 @@ Group: System Environment/Daemons
 Requires: %name = %version-%release
 BuildRequires: mysql-devel >= 4.0
 
+%if %{want_mongodb}
 %package mongodb
 Summary: MongoDB support for rsyslog
 Group: System Environment/Daemons
 Requires: %name = %version-%release
 BuildRequires: libmongo-client-devel
+%endif
 
 %package pgsql
 Summary: PostgresSQL support for rsyslog
 Group: System Environment/Daemons
 Requires: %name = %version-%release
 BuildRequires: postgresql-devel
+
+%package rabbitmq
+Summary: RabbitMQ support for rsyslog
+Group: System Environment/Daemons
+Requires: %name = %version-%release
+BuildRequires: librabbitmq-devel >= 0.2
 
 %package gssapi
 Summary: GSSAPI authentication and encryption support for rsyslog
@@ -108,7 +141,7 @@ BuildRequires: krb5-devel
 Summary: RELP protocol support for rsyslog
 Group: System Environment/Daemons
 Requires: %name = %version-%release
-BuildRequires: librelp-devel >= 1.0.1
+BuildRequires: librelp-devel >= 1.0.3
 
 %package gnutls
 Summary: TLS protocol support for rsyslog
@@ -136,6 +169,10 @@ and can be used as a drop-in replacement. Rsyslog is simple to set up, with
 advanced features suitable for enterprise-class, encryption-protected syslog
 relay chains.
 
+%description crypto
+This package contains a module providing log file encryption and a
+command line tool to process encrypted logs.
+
 %description doc
 This subpackage contains documentation for rsyslog.
 
@@ -143,8 +180,10 @@ This subpackage contains documentation for rsyslog.
 This module provides the capability for rsyslog to feed logs directly into
 Elasticsearch.
 
+%if %{want_hiredis}
 %description hiredis
 This module provides output to Redis.
+%endif
 
 %description mmjsonparse
 This module provides the capability to recognize and parse JSON enhanced
@@ -170,13 +209,18 @@ many systems. Drivers are available via the libdbi-drivers project.
 The rsyslog-mysql package contains a dynamic shared object that will add
 MySQL database support to rsyslog.
 
+%if %{want_mongodb}
 %description mongodb
 The rsyslog-mongodb package contains a dynamic shared object that will add
 MongoDB database support to rsyslog.
+%endif
 
 %description pgsql
 The rsyslog-pgsql package contains a dynamic shared object that will add
 PostgreSQL database support to rsyslog.
+
+%description rabbitmq
+This module allows rsyslog to send messages to a RabbitMQ server.
 
 %description gssapi
 The rsyslog-gssapi package contains the rsyslog plugins which support GSSAPI
@@ -207,7 +251,12 @@ of source ports.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
 
 %build
 %ifarch sparc64
@@ -218,9 +267,12 @@ export LDFLAGS="-pie -Wl,-z,relro -Wl,-z,now"
 export CFLAGS="$RPM_OPT_FLAGS -fpie -DSYSLOGD_PIDNAME=\\\"syslogd.pid\\\""
 export LDFLAGS="-pie -Wl,-z,relro -Wl,-z,now"
 %endif
+
+%if %{want_hiredis}
 # the hiredis-devel package doesn't provide a pkg-config file
 export HIREDIS_CFLAGS=-I/usr/include/hiredis
-export HIREDIS_LIBS=-L%{_libdir}
+export HIREDIS_LIBS="-L%{_libdir} -lhiredis"
+%endif
 %configure \
 	--prefix=/usr \
 	--disable-static \
@@ -230,19 +282,26 @@ export HIREDIS_LIBS=-L%{_libdir}
 	--enable-gssapi-krb5 \
 	--enable-imdiag \
 	--enable-imfile \
+	--enable-imjournal \
 	--enable-impstats \
 	--enable-imptcp \
-	--enable-kmsg \
 	--enable-libdbi \
 	--enable-mail \
+	--enable-mmanon \
 	--enable-mmaudit \
 	--enable-mmjsonparse \
 	--enable-mmnormalize \
 	--enable-mmsnmptrapd \
 	--enable-mysql \
+%if %{want_hiredis}
 	--enable-omhiredis \
+%endif
+	--enable-omjournal \
+%if %{want_mongodb}
 	--enable-ommongodb \
+%endif
 	--enable-omprog \
+	--enable-omrabbitmq \
 	--enable-omstdout \
 	--enable-omudpspoof \
 	--enable-omuxsock \
@@ -254,7 +313,9 @@ export HIREDIS_LIBS=-L%{_libdir}
 	--enable-pmsnare \
 	--enable-relp \
 	--enable-snmp \
-	--enable-unlimited-select
+	--enable-unlimited-select \
+	--enable-usertools \
+
 make
 
 %install
@@ -270,8 +331,13 @@ install -p -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/rsyslog.conf
 install -p -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/rsyslog
 install -p -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/logrotate.d/syslog
 
-#get rid of *.la
-rm %{buildroot}%{_libdir}/rsyslog/*.la
+# get rid of *.la
+rm -f %{buildroot}%{_libdir}/rsyslog/*.la
+# get rid of socket activation by default
+sed -i '/^Alias/s/^/;/;/^Requires=syslog.socket/s/^/;/' %{buildroot}%{_unitdir}/rsyslog.service
+
+# convert line endings from "\r\n" to "\n"
+cat tools/recover_qi.pl | tr -d '\r' > %{buildroot}%{_bindir}/rsyslog-recover-qi.pl
 
 %post
 for n in /var/log/{messages,secure,maillog,spooler}
@@ -295,7 +361,9 @@ done
 %dir %{rsyslog_statedir}
 %dir %{rsyslog_pkidir}
 %{_sbindir}/rsyslogd
-%{_mandir}/*/*
+%attr(755,root,root) %{_bindir}/rsyslog-recover-qi.pl
+%{_mandir}/man5/rsyslog.conf.5.gz
+%{_mandir}/man8/rsyslogd.8.gz
 %{_unitdir}/rsyslog.service
 %config(noreplace) %{_sysconfdir}/rsyslog.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/rsyslog
@@ -303,8 +371,8 @@ done
 # plugins
 %{_libdir}/rsyslog/imdiag.so
 %{_libdir}/rsyslog/imfile.so
+%{_libdir}/rsyslog/imjournal.so
 %{_libdir}/rsyslog/imklog.so
-%{_libdir}/rsyslog/imkmsg.so
 %{_libdir}/rsyslog/immark.so
 %{_libdir}/rsyslog/impstats.so
 %{_libdir}/rsyslog/imptcp.so
@@ -319,11 +387,13 @@ done
 %{_libdir}/rsyslog/lmtcpclt.so
 %{_libdir}/rsyslog/lmtcpsrv.so
 %{_libdir}/rsyslog/lmzlibw.so
-%{_libdir}/rsyslog/omtesting.so
+%{_libdir}/rsyslog/mmanon.so
+%{_libdir}/rsyslog/omjournal.so
 %{_libdir}/rsyslog/ommail.so
 %{_libdir}/rsyslog/omprog.so
 %{_libdir}/rsyslog/omruleset.so
 %{_libdir}/rsyslog/omstdout.so
+%{_libdir}/rsyslog/omtesting.so
 %{_libdir}/rsyslog/omuxsock.so
 %{_libdir}/rsyslog/pmaixforwardedfrom.so
 %{_libdir}/rsyslog/pmcisconames.so
@@ -331,16 +401,25 @@ done
 %{_libdir}/rsyslog/pmrfc3164sd.so
 %{_libdir}/rsyslog/pmsnare.so
 
+%files crypto
+%defattr(-,root,root)
+%{_bindir}/rscryutil
+%{_mandir}/man1/rscryutil.1.gz
+%{_libdir}/rsyslog/lmcry_gcry.so
+
 %files doc
+%defattr(-,root,root)
 %doc doc/*html
 
 %files elasticsearch
 %defattr(-,root,root)
 %{_libdir}/rsyslog/omelasticsearch.so
 
+%if %{want_hiredis}
 %files hiredis
 %defattr(-,root,root)
 %{_libdir}/rsyslog/omhiredis.so
+%endif
 
 %files libdbi
 %defattr(-,root,root)
@@ -367,14 +446,21 @@ done
 %doc plugins/ommysql/createDB.sql
 %{_libdir}/rsyslog/ommysql.so
 
+%if %{want_mongodb}
 %files mongodb
 %defattr(-,root,root)
+%{_bindir}/logctl
 %{_libdir}/rsyslog/ommongodb.so
+%endif
 
 %files pgsql
 %defattr(-,root,root)
 %doc plugins/ompgsql/createDB.sql
 %{_libdir}/rsyslog/ompgsql.so
+
+%files rabbitmq
+%defattr(-,root,root)
+%{_libdir}/rsyslog/omrabbitmq.so
 
 %files gssapi
 %defattr(-,root,root)
@@ -400,6 +486,116 @@ done
 %{_libdir}/rsyslog/omudpspoof.so
 
 %changelog
+* Mon Feb 10 2014 Tomas Heinrich <theinric@redhat.com> 7.4.8-1
+- rebase to 7.4.8
+- drop patch4, merged upstream
+  rsyslog-7.4.7-bz1030044-remove-ads.patch
+- add an explicit requirement on the version of libestr
+- drop the "v5" string from the conf file as it's misleading
+- add rsyslog-7.4.8-omjournal-warning.patch to fix
+  a condition for issuing a warning in omjournal
+- add rsyslog-7.4.8-dont-link-libee.patch to prevent
+  linking the main binary with libee
+- replace rsyslog-7.3.15-imuxsock-warning.patch
+  with rsyslog-7.4.8-imuxsock-wrn.patch
+- link to libhiredis explicitly
+- add a patch to prevent message loss in imjournal
+  rsyslog-7.4.8-bz1026804-imjournal-message-loss.patch
+- move the rscryutil man page to the crypto subpackage
+
+* Sun Feb 09 2014 Lubomir Rintel <lkundrak@v3.sk> 7.4.7-3
+- Fixed 32-bit PowerPC build
+
+* Mon Jan 27 2014 Tomas Heinrich <theinric@redhat.com> 7.4.7-2
+- rebuild for libdbi-0.9.0-1
+
+* Mon Jan 06 2014 Tomas Heinrich <theinric@redhat.com> 7.4.7-1
+- rebase to 7.4.7
+- install the rsyslog-recover-qi.pl tool
+- fix a typo in a package description
+- add missing defattr directives
+- add a patch to remove references to Google ads in the html docs
+  rsyslog-7.4.7-bz1030044-remove-ads.patch
+  Resolves: #1030044
+- add a patch to allow numeric specification of UIDs/GUIDs
+  rsyslog-7.4.7-numeric-uid.patch
+- change the installation prefix to "/usr"
+  Resolves: #1032577
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 09 2013 Tomas Heinrich <theinric@redhat.com> 7.4.2-1
+- rebase to 7.4.2
+  most importantly, this release fixes a potential vulnerability,
+  see http://www.lsexperts.de/advisories/lse-2013-07-03.txt
+  the impact should be low as only those using the omelasticsearch
+  plugin with a specific configuration are exposed
+
+* Mon Jun 17 2013 Tomas Heinrich <theinric@redhat.com> 7.4.1-1
+- rebase to 7.4.1
+  this release adds code that somewhat mitigates damage in cases
+  where large amounts of messages are received from systemd
+  journal (see rhbz#974132)
+- regenerate patch 0
+- drop patches merged upstream: 4..8
+- add a dependency on the version of systemd which resolves the bug
+  mentioned above
+- update option name in rsyslog.conf
+
+* Wed Jun 12 2013 Tomas Heinrich <theinric@redhat.com> 7.4.0-1
+- rebase to 7.4.0
+- drop autoconf automake libtool from BuildRequires
+- depends on systemd >= 201 because of the sd_journal_get_events() api
+- add a patch to prevent a segfault in imjournal caused by a bug in
+  systemd journal
+- add a patch to prevent an endless loop in the ratelimiter
+- add a patch to prevent another endless loop in the ratelimiter
+- add a patch to prevent a segfault in imjournal for undefined state file
+- add a patch to correctly reset state in the ratelimiter
+
+* Tue Jun 04 2013 Tomas Heinrich <theinric@redhat.com> 7.3.15-1.20130604git6e72fa6
+- rebase to an upstream snapshot, effectively version 7.3.15
+  plus several more changes
+- drop patches 3, 4 - merged upstream
+- add a patch to silence warnings emitted by the imuxsock module
+- drop the imkmsg plugin
+- enable compilation of additional modules
+  imjournal, mmanon, omjournal, omrabbitmq
+- new subpackages: crypto, rabbitmq
+- add python-docutils and autoconf to global BuildRequires
+- drop the option for backwards compatibility from the
+  sysconfig file - it is no longer supported
+- call autoreconf to prepare the snapshot for building
+- switch the local message source from imuxsock to imjournal
+  the imuxsock module is left enabled so it is easy to swich back to
+  it and because systemd drops a file into /etc/rsyslog.d which only
+  imuxsock can parse
+
+* Wed Apr 10 2013 Tomas Heinrich <theinric@redhat.com> 7.3.10-1
+- rebase to 7.3.10
+- add a patch to resolve #950088 - ratelimiter segfault, merged upstream
+  rsyslog-7.3.10-ratelimit-segv.patch
+- add a patch to correct a default value, merged upstream
+  rsyslog-7.3.10-correct-def-val.patch
+- drop patch 5 - fixed upstream
+
+* Thu Apr 04 2013 Tomas Heinrich <theinric@redhat.com> 7.3.9-1
+- rebase to 7.3.9
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.2.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Jan 21 2013 Tomas Heinrich <theinric@redhat.com> 7.2.5-2
+- update a line in rsyslog.conf for the new syntax
+
+* Sun Jan 13 2013 Tomas Heinrich <theinric@redhat.com> 7.2.5-1
+- upgrade to upstream version 7.2.5
+- update the compatibility mode in sysconfig file
+
+* Mon Dec 17 2012 Tomas Heinrich <theinric@redhat.com> 7.2.4-2
+- add a condition to disable several subpackages
+
 * Mon Dec 10 2012 Tomas Heinrich <theinric@redhat.com> 7.2.4-1
 - upgrade to upstream version 7.2.4
 - remove trailing whitespace
