@@ -1,38 +1,41 @@
 Name:           kbd
-Version:        1.15.3
-Release:        5%{?dist}
+Version:        2.0.1
+Release:        6%{?dist}
 Summary:        Tools for configuring the console (keyboard, virtual terminals, etc.)
 
 Group:          System Environment/Base
 License:        GPLv2+
-URL:            http://ftp.altlinux.org/pub/people/legion/kbd
-Source0:        ftp://ftp.kernel.org/pub/linux/utils/kbd/kbd-%{version}.tar.bz2
-Source1:        ftp://ftp.kernel.org/pub/linux/utils/kbd/kbd-%{version}.tar.bz2.sign
-Source2:        kbd-latsun-fonts.tar.bz2
-Source3:        kbd-latarcyrheb-16-fixed.tar.bz2
-Source4:        fr-dvorak.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:            http://www.kbd-project.org/
+Source0:        ftp://ftp.altlinux.org/pub/people/legion/kbd/kbd-%{version}.tar.gz
+Source1:        kbd-latsun-fonts.tar.bz2
+Source2:        kbd-latarcyrheb-32.tar.bz2
+Source3:        xml2lst.pl
+Source4:        vlock.pamd
+Source5:        kbdinfo.1
 # Patch0: puts additional information into man pages
 Patch0:         kbd-1.15-keycodes-man.patch
 # Patch1: sparc modifications
 Patch1:         kbd-1.15-sparc.patch
 # Patch2: adds default unicode font to unicode_start script
 Patch2:         kbd-1.15-unicode_start.patch
-# Patch3: adds resizecon binary also to the x86_64 arch
-Patch3:         kbd-1.15-resizecon-x86_64.patch
-# Patch4: default keymap in Fedora uses a little bit different name...
-Patch4:         kbd-1.15-defkeymap.patch
-# Patch5: fix of tranlation file broken after new tarball release
-Patch5:         kbd-1.15.3-fix-es-translation.patch
-# Patch6: add missing dumpkeys option to man page
-Patch6:         kbd-1.15.3-dumpkeys-man.patch
-# Patch7: already accepted by upstream
-Patch7:         kbd-1.15.3-loadkeys-d.patch 
+# Patch3: add missing dumpkeys option to man page
+Patch3:         kbd-1.15.3-dumpkeys-man.patch
+# Patch4: fixes decimal separator in Swiss German keyboard layout, bz 882529
+Patch4:         kbd-1.15.5-sg-decimal-separator.patch
+# Patch5: implement PAM account and password management, backported from upstream
+Patch5:         kbd-1.15.5-vlock-more-pam.patch
+# Patch6: adds xkb and legacy keymaps subdirs to loadkyes search path, bz 1028207 
+Patch6:         kbd-1.15.5-loadkeys-search-path.patch
 
-BuildRequires:  bison, flex, gettext
-Conflicts:      util-linux < 2.11r-9
+BuildRequires:  bison, flex, gettext, pam-devel, check-devel
+BuildRequires:  console-setup, xkeyboard-config
 Requires:       initscripts >= 5.86-1
 Requires:       %{name}-misc = %{version}-%{release}
+# Temporarily require -legacy
+Requires:       %{name}-legacy = %{version}-%{release}
+Provides:       vlock = %{version}
+Conflicts:      vlock <= 1.3
+Obsoletes:      vlock
 
 %description
 The %{name} package contains tools for managing a Linux
@@ -47,16 +50,24 @@ BuildArch:      noarch
 The %{name}-misc package contains data for kbd package - console fonts,
 keymaps etc. Please note that %{name}-misc is not helpful without kbd.
 
+%package legacy
+Summary:        Legacy data for kbd package
+BuildArch:      noarch
+ 
+%description legacy
+The %{name}-legacy package contains original keymaps for kbd package.
+Please note that %{name}-legacy is not helpful without kbd.
+
 %prep
-%setup -q -a 2 -a 3 -a 4
+%setup -q -a 1 -a 2
+cp -fp %{SOURCE3} .
 %patch0 -p1 -b .keycodes-man
 %patch1 -p1 -b .sparc
 %patch2 -p1 -b .unicode_start
-%patch3 -p1 -b .resizecon_x86_64
-%patch4 -p1 -b .defkeymap
-%patch5 -p1 -b .fix-es-fixtranslation
-%patch6 -p1 -b .dumpkeys-man
-%patch7 -p1 -b .loadkeys-d
+%patch3 -p1 -b .dumpkeys-man
+%patch4 -p1 -b .sg-decimal-separator
+%patch5 -p1 -b .vlock-more-pam
+%patch6 -p1 -b .loadkeys-search-path
 
 # 7-bit maps are obsolete; so are non-euro maps
 pushd data/keymaps/i386
@@ -88,69 +99,162 @@ iconv -f iso-8859-1 -t utf-8 < "ChangeLog" > "ChangeLog_"
 mv "ChangeLog_" "ChangeLog"
 
 %build
-%configure --prefix=%{_prefix} --datadir=%{_prefix}/lib/kbd --mandir=%{_mandir} --localedir=%{_datadir}/locale --enable-nls
+%configure --prefix=%{_prefix} --datadir=/lib/kbd --mandir=%{_mandir} --localedir=%{_datadir}/locale --enable-nls
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # ro_win.map.gz is useless
-rm -f $RPM_BUILD_ROOT%{_prefix}/lib/kbd/keymaps/i386/qwerty/ro_win.map.gz
+rm -f $RPM_BUILD_ROOT/lib/kbd/keymaps/i386/qwerty/ro_win.map.gz
 
 # Create additional name for Serbian latin keyboard
-ln -s sr-cy.map.gz $RPM_BUILD_ROOT%{_prefix}/lib/kbd/keymaps/i386/qwerty/sr-latin.map.gz
+ln -s sr-cy.map.gz $RPM_BUILD_ROOT/lib/kbd/keymaps/i386/qwerty/sr-latin.map.gz
 
 # The rhpl keyboard layout table is indexed by kbd layout names, so we need a
 # Korean keyboard
-ln -s us.map.gz $RPM_BUILD_ROOT%{_prefix}/lib/kbd/keymaps/i386/qwerty/ko.map.gz
+ln -s us.map.gz $RPM_BUILD_ROOT/lib/kbd/keymaps/i386/qwerty/ko.map.gz
 
 # Move binaries which we use before /usr is mounted from %{_bindir} to /bin.
-#mkdir -p $RPM_BUILD_ROOT/bin
-#for binary in setfont dumpkeys kbd_mode unicode_start unicode_stop loadkeys ; do
-#  mv $RPM_BUILD_ROOT%{_bindir}/$binary $RPM_BUILD_ROOT/bin/
-#done
+mkdir -p $RPM_BUILD_ROOT/bin
+for binary in setfont dumpkeys kbd_mode unicode_start unicode_stop loadkeys ; do
+  mv $RPM_BUILD_ROOT%{_bindir}/$binary $RPM_BUILD_ROOT/bin/
+done
 
 # Some microoptimization
-sed -i -e 's,\<kbd_mode\>,%{_bindir}/kbd_mode,g;s,\<setfont\>,%{_bindir}/setfont,g' \
-        $RPM_BUILD_ROOT%{_bindir}/unicode_start
+sed -i -e 's,\<kbd_mode\>,/bin/kbd_mode,g;s,\<setfont\>,/bin/setfont,g' \
+        $RPM_BUILD_ROOT/bin/unicode_start
 
 # Link open to openvt
 ln -s openvt $RPM_BUILD_ROOT%{_bindir}/open
+ln -s openvt.1.gz $RPM_BUILD_ROOT%{_mandir}/man1/open.1.gz
+
+# install kbdinfo manpage
+gzip -c %SOURCE5 > $RPM_BUILD_ROOT/%{_mandir}/man1/kbdinfo.1.gz
 
 # Move locale files to correct place
-cp -r $RPM_BUILD_ROOT%{_prefix}/lib/kbd/locale/ $RPM_BUILD_ROOT%{_datadir}/locale
-rm -rf $RPM_BUILD_ROOT%{_prefix}/lib/kbd/locale
+cp -r $RPM_BUILD_ROOT/lib/kbd/locale/ $RPM_BUILD_ROOT%{_datadir}/locale
+rm -rf $RPM_BUILD_ROOT/lib/kbd/locale
 
-magic_rpm_clean.sh
+# Install PAM configuration for vlock
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/pam.d
+install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/vlock
+
+# Move original keymaps to legacy directory
+mkdir -p $RPM_BUILD_ROOT/lib/kbd/keymaps/legacy
+mv $RPM_BUILD_ROOT/lib/kbd/keymaps/{amiga,atari,i386,include,mac,ppc,sun} $RPM_BUILD_ROOT/lib/kbd/keymaps/legacy
+
+# Convert X keyboard layouts to console keymaps
+mkdir -p $RPM_BUILD_ROOT/lib/kbd/keymaps/xkb
+perl xml2lst.pl < /usr/share/X11/xkb/rules/base.xml > layouts-variants.lst
+while read line; do
+  XKBLAYOUT=`echo "$line" | cut -d " " -f 1`
+  echo "$XKBLAYOUT" >> layouts-list.lst
+  XKBVARIANT=`echo "$line" | cut -d " " -f 2`
+  ckbcomp "$XKBLAYOUT" "$XKBVARIANT" | gzip > $RPM_BUILD_ROOT/lib/kbd/keymaps/xkb/"$XKBLAYOUT"-"$XKBVARIANT".map.gz
+done < layouts-variants.lst
+
+# Convert X keyboard layouts (plain, no variant)
+cat layouts-list.lst | sort -u >> layouts-list-uniq.lst
+while read line; do
+  ckbcomp "$line" | gzip > $RPM_BUILD_ROOT/lib/kbd/keymaps/xkb/"$line".map.gz
+done < layouts-list-uniq.lst
+
+# wipe converted layouts which cannot input ASCII (#1031848)
+zgrep -L "U+0041" $RPM_BUILD_ROOT/lib/kbd/keymaps/xkb/* | xargs rm -f
+
 %find_lang %{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files -f %{name}.lang
-%defattr(-,root,root,-)
-%doc ChangeLog AUTHORS README COPYING doc/kbd.FAQ*.html doc/font-formats/*.html doc/utf/utf* doc/dvorak/*
-%{_bindir}/*
+%doc ChangeLog AUTHORS README COPYING docs/doc/kbd.FAQ*.html docs/doc/font-formats/*.html docs/doc/utf/utf* docs/doc/dvorak/*
+/bin/*
 %{_bindir}/*
 %{_mandir}/*/*
+%config(noreplace) %{_sysconfdir}/pam.d/vlock
 
 %files misc
-%defattr(-,root,root,-)
-%{_prefix}/lib/kbd
+/lib/kbd
+%exclude /lib/kbd/keymaps/legacy
+
+%files legacy
+/lib/kbd/keymaps/legacy
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.15.3-5
-- 为 Magic 3.0 重建
+* Mon Feb 17 2014 Vitezslav Crhonek <vcrhonek@redhat.com> - 2.0.1-6
+- Add man page for kbdinfo, link open man page to openvt man page
 
-* Tue Apr 17 2012 Liu Di <liudidi@gmail.com> - 1.15.3-6
-- 为 Magic 3.0 重建
+* Wed Nov 27 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 2.0.1-5
+- Add missing patch for loadkeys search path
 
-* Tue Apr 17 2012 Liu Di <liudidi@gmail.com> - 1.15.3-5
-- 为 Magic 3.0 重建
+* Tue Nov 26 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 2.0.1-4
+- Add xkb and legacy keymaps subdirs to loadkyes search path, remove symlinks
+  Related: #1028207
+- Don't convert layouts that can't input ASCII (patch by Adam Williamson)
+  Resolves: #1031848
+- Fix vlock doesn't perform PAM account management or credential reinitialization
+  (patch by  Dmitry V. Levin)
+  Resolves: #913311
 
-* Tue Apr 17 2012 Liu Di <liudidi@gmail.com> - 1.15.3-4
-- 为 Magic 3.0 重建
+* Wed Nov 06 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 2.0.1-3
+- Add PAM config for vlock
+  Resolves: #913309
+
+* Mon Nov 04 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 2.0.1-2
+- Fix URL
+- Remove source files already included in upstream tarball
+
+* Mon Nov 04 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 2.0.1-1
+- Update to kbd-2.0.1
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15.5-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu May 23 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.5-8
+- Add vlock to obsoletes
+
+* Wed May 22 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.5-7
+- Convert also plain layouts (no variant), point relevant symlinks to them
+
+* Tue May 21 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.5-6
+- Original keymaps moved to legacy dir, created symlinks to xkb keymaps
+
+* Thu Feb 21 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.5-5
+- Fix decimal separator in Swiss German keyboard layout
+  Resolves: #882529
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan 22 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.5-3
+- Include xkb layouts from xkeyboard-config converted to console keymaps
+- Add version to vlock provides
+  Resolves: #902564
+
+* Mon Jan 21 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.5-2
+- Fix loadkeys regression
+  Resolves: #902259
+
+* Mon Jan 14 2013 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.5-1
+- Update to kbd-1.15.5 (removed kbd-1.15-resizecon-x86_64.patch,
+  kbd-1.15-defkeymap.patch, kbd-1.15.3-fix-es-translation.patch,
+  kbd-1.15.3-loadkeys-d.patch)
+
+* Thu Sep 13 2012 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.3-8
+- Fix link to upstream tarball
+
+* Tue Aug 28 2012 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.3-7
+- Fix issues found by fedora-review utility in the spec file
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15.3-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Dec 13 2011 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.3-4
+- Ship double scaled latarcyrheb console font for high resolution screens
+  (created by Tom Horsley)
+  Resolves: #617768
 
 * Mon Oct 24 2011 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.15.3-3
 * Fix loadkeys -d option (patch by Jaroslav Skarvada)
