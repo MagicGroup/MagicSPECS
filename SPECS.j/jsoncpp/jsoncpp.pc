@@ -8,4 +8,4 @@ Description: API for manipulating JSON
 Version: 0.6.0
 URL: http://jsoncpp.sourceforge.net/
 Libs: -L${libdir} -ljsoncpp
-Cflags: -I${includedir} -I${includedir}/jsoncpp/
+Cflags: -I${includedir}/jsoncpp/
