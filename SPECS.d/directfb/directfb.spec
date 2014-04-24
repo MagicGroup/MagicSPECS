@@ -158,6 +158,7 @@ make check
 # uwmdump Unique WM
 %{_bindir}/uwmdump
 ## New with 1.4.3
+%ifnarch mips64el
 %{_bindir}/coretest_blit2
 %{_bindir}/dfbtest_blit2
 %{_bindir}/dfbtest_mirror
@@ -174,23 +175,30 @@ make check
 %{_bindir}/fusion_reactor
 %{_bindir}/fusion_skirmish
 %{_bindir}/fusion_stream
+%endif
 %{_bindir}/pxa3xx_dump
 ## New with 1.4.11
+%ifnarch mips64el
 %{_bindir}/dfbtest_fillrect
 %{_bindir}/dfbtest_font
 %{_bindir}/fusion_call
+%endif
 %{_bindir}/mkdgifft
 #New with 1.5.0
+%ifnarch mips64el
 %{_bindir}/dfbtest_init
 %{_bindir}/dfbtest_water
 %{_bindir}/dfbtest_windows_watcher
+%endif
 %{_bindir}/fluxcomp
+%ifnarch mips64el
 %{_bindir}/fusion_call_bench
 #New with 1.5.3
 %{_bindir}/dfbtest_stereo_window
 %{_bindir}/dfbtest_gl1
 %{_bindir}/dfbtest_gl2
 %{_bindir}/dfbtest_gl3
+%endif
 %{_libdir}/libdirectfb-*.so.*
 %{_libdir}/libdirect-*.so.*
 %{_libdir}/libfusion-*.so.*
@@ -220,9 +228,9 @@ make check
 
 %changelog
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.5.3-5
-- 为 Magic 3.0 重建
+- 涓?Magic 3.0 閲嶅缓
 
-* Sat Jan 14 2012 Ville Skyttä <ville.skytta@iki.fi> - 1.5.3-4
+* Sat Jan 14 2012 Ville Skytt盲 <ville.skytta@iki.fi> - 1.5.3-4
 - Fix build with libpng 1.5 (patch from Gentoo).
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-3
@@ -363,7 +371,7 @@ make check
 
 * Fri Nov 25 2005 Hans de Goede <j.w.r.degoede@hhs.nl> 0.9.24-4
 - Merge FC-4 and devel specfiles for easier maintainance and consistence.
-- Incorperate improvements suggested by Ville Skyttä in bug 162358.
+- Incorperate improvements suggested by Ville Skytt盲 in bug 162358.
 
 * Thu Nov 24 2005 Hans de Goede <j.w.r.degoede@hhs.nl> 0.9.24-3
 - Remove "remove custom CFLAGS" patch, this only adds -ffast-math,
