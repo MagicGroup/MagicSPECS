@@ -5,7 +5,7 @@ Summary: Tools for using the foomatic database of printers and printer drivers
 Summary(zh_CN.UTF-8): 使用 foomatic 打印机数据库和驱动的工具
 Name:       foomatic
 Version:    %{enginever}
-Release:    7%{?dist}
+Release:    8%{?dist}
 License:    GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -16,15 +16,6 @@ Provides: printer-filters = 1.1-8
 
 # The database engine.
 Source0: http://www.openprinting.org/download/foomatic/foomatic-db-engine-%{enginever}.tar.gz
-
-# The CUPS driver and filter.
-# Source1: http://www.openprinting.org/download/foomatic/foomatic-filters-%{filtersver}.tar.gz
-# We need to remove test/*.sh, because those files are non-free (Artistic). We don't use them.
-# 不需要处理
-Source1: http://www.openprinting.org/download/foomatic/foomatic-filters-%{filtersver}.tar.gz
-
-## PATCHES FOR FOOMATIC-FILTERS (PATCHES 1 TO 100)
-Patch1: foomatic-filters-debug-string.patch
 
 ## PATCHES FOR FOOMATIC-DB-ENGINE (PATCHES 101 TO 200)
 
@@ -38,14 +29,11 @@ BuildRequires:  autoconf, automake
 BuildRequires:  cups-devel
 BuildRequires:  dbus-devel
 Requires:       dbus
-Requires:       %{name}-filters = %{version}-%{release}
+Requires:       cups-filters >= 1.0.42
 Requires:       perl >= 3:5.8.1
 Requires:       %(eval `perl -V:version`; echo "perl(:MODULE_COMPAT_$version)")
 # For 'rm' and '/sbin/service' in post
 Requires: fileutils initscripts
-
-# foomatic-filters checks for a conversion utility (bug #124931).
-BuildRequires: mpage
 
 # Make sure we get postscriptdriver tags.  Safe to comment out when
 # bootstrapping a new architecture.
@@ -77,36 +65,10 @@ The site http://www.linuxprinting.org/ is based on this database.
 %description -l zh_CN.UTF-8
 打印机驱动等。
 
-%package filters
-Summary: CUPS print filters for the foomatic package
-Summary(zh_CN.UTF-8): foomatic 包的 CUPS 打印过滤器
-License: GPLv2+
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-
-%description filters
-CUPS print filters for the foomatic package.
-
-%description filters -l zh_CN.UTF-8
-foomatic 包的 CUPS 打印过滤器。
-
 %prep
-%setup -q -c -a 1
+%setup -q -n foomatic-db-engine-%{version}
 
-pushd foomatic-filters-%{filtersver}
-# Too few arguments for format in a debugging string (bug #726384)
-%patch1 -p1 -b .debug-string
-
-aclocal
-automake --add-missing
-autoconf
-popd
-
-pushd foomatic-db-engine-%{enginever}
 chmod a+x mkinstalldirs
-aclocal
-autoconf
-popd
 
 %build
 export LIB_CUPS=%{_cups_serverbin}
@@ -114,34 +76,18 @@ export CUPS_BACKENDS=%{_cups_serverbin}/backend
 export CUPS_FILTERS=%{_cups_serverbin}/filter
 export CUPS_PPDS=%{_datadir}/cups/model
 
-pushd foomatic-filters-%{filtersver}
-%configure
-make PREFIX=%{_prefix} CFLAGS="$RPM_OPT_FLAGS"
-popd
-
-pushd foomatic-db-engine-%{enginever}
+aclocal
+autoconf
 %configure --disable-xmltest
 make PREFIX=%{_prefix} CFLAGS="$RPM_OPT_FLAGS"
-popd
 
 %install
-pushd foomatic-filters-%{filtersver}
-mkdir -p %{buildroot}%{perl_vendorlib}
-make    DESTDIR=%buildroot PREFIX=%{_prefix} \
-        INSTALLSITELIB=%{perl_vendorlib} \
-        INSTALLSITEARCH=%{perl_vendorarch} \
-        install-main install-cups
-popd
-
-pushd foomatic-db-engine-%{enginever}
 make    DESTDIR=%buildroot PREFIX=%{_prefix} \
         INSTALLSITELIB=%{perl_vendorlib} \
         INSTALLSITEARCH=%{perl_vendorarch} \
         install
-popd
 
-# Use relative, not absolute, symlink for CUPS filter and driver.
-ln -sf ../../../bin/foomatic-rip %{buildroot}%{_cups_serverbin}/filter/foomatic-rip
+# Use relative, not absolute, symlink for CUPS driver.
 ln -sf ../../../bin/foomatic-ppdfile %{buildroot}%{_cups_serverbin}/driver/foomatic
 
 mkdir -p %{buildroot}%{_var}/cache/foomatic
@@ -156,20 +102,13 @@ rm -rf  \
 #%{buildroot}%%{_libdir}/perl5/site_perl
 find %{buildroot} -name .packlist | xargs rm -f
 
-mkdir  _enginedocs
-cp -pr --parents foomatic-db-engine-%{enginever}/COPYING _enginedocs/
-mkdir _filtersdocs
-cp -pr --parents foomatic-filters-%{filtersver}/COPYING _filtersdocs/
-
-magic_rpm_clean.sh
-
 %post
 /bin/rm -f /var/cache/foomatic/*
 exit 0
 
 
 %files
-%doc _enginedocs/*
+%doc COPYING
 %config(noreplace) %{_sysconfdir}/foomatic/defaultspooler
 %{_bindir}/foomatic-combo-xml
 %{_bindir}/foomatic-compiledb
@@ -183,7 +122,6 @@ exit 0
 %{_bindir}/foomatic-searchprinter
 %{_sbindir}/*
 %{perl_vendorlib}/Foomatic
-%{_cups_serverbin}/backend/beh
 %{_cups_serverbin}/driver/*
 %{_mandir}/man1/foomatic-combo-xml.1*
 %{_mandir}/man1/foomatic-compiledb.1*
@@ -195,15 +133,11 @@ exit 0
 %{_mandir}/man8/*
 %{_var}/cache/foomatic
 
-%files filters
-%doc _filtersdocs/*
-%dir %{_sysconfdir}/foomatic
-%config(noreplace) %{_sysconfdir}/foomatic/filter.conf
-%{_bindir}/foomatic-rip
-%{_cups_serverbin}/filter/foomatic-rip
-%{_mandir}/man1/foomatic-rip.1*
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 4.0.11-8
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 4.0.11-7
 - 为 Magic 3.0 重建
 

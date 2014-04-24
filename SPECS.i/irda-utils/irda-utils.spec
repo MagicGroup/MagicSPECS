@@ -1,10 +1,12 @@
 Summary:         Utilities for infrared communication between devices
+Summary(zh_CN.UTF-8): 在设备间红外通信的工具
 Name:            irda-utils
 Version:         0.9.18
 Release:         16%{?dist}
 Url:             http://irda.sourceforge.net
 License:         GPLv2+
 Group:           Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 BuildRoot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExcludeArch:     s390 s390x
 Source0: http://downloads.sourceforge.net/irda/%{name}/%{version}/%{name}-%{version}.tar.gz
@@ -43,6 +45,8 @@ tools or programs can be used. Some configuration outside the kernel
 is required, however, and some IrDA features, like IrOBEX, are
 actually implemented outside the kernel.
 
+%description -l zh_CN.UTF-8
+支持红外通信的工具，一般是遥控器和老的手机使用。
 
 %prep
 %setup -q
@@ -90,7 +94,7 @@ iconv -f ISO8859-1 -t UTF-8 <README.irdadump >README.irdadump.new && \
 	mv -f README.irdadump.new README.irdadump
 mv etc/modules.conf.irda etc/modprobe.conf.irda
 chmod -x etc/ifcfg-irlan0
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

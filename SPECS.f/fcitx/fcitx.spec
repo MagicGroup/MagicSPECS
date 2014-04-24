@@ -5,7 +5,7 @@
 Name:			fcitx
 Summary:		An input method framework
 Version:		4.2.8.3
-Release:		2%{?dist}
+Release:		3%{?dist}
 License:		GPLv2+
 Group:			User Interface/Desktops
 URL:			https://fcitx-im.org/wiki/Fcitx
@@ -353,6 +353,9 @@ fi
 
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 4.2.8.3-3
+- 为 Magic 3.0 重建
+
 * Fri Feb 14 2014 Parag Nemade <paragn AT fedoraproject DOT org> - 4.2.8.3-2
 - Rebuild for icu 52
 

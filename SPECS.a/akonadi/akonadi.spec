@@ -14,7 +14,7 @@
 Summary: PIM Storage Service
 Summary(zh_CN.UTF-8): 个人信息管理存储服务
 Name:    akonadi
-Version: 1.11.80
+Version: 1.12.1
 Release: 2%{?dist}
 
 License: LGPLv2+
@@ -217,6 +217,9 @@ fi
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.12.1-2
+- 更新到 1.12.1
+
 * Thu Mar 06 2014 Liu Di <liudidi@gmail.com> - 1.11.80-2
 - 更新到 1.11.80
 

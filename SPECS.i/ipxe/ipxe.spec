@@ -35,7 +35,7 @@
 # And then change these two:
 
 %define git 1
-%define vcsdate 20140415
+%define vcsdate 20140418
 %global hash c4bce43
 
 Name:    ipxe
@@ -217,6 +217,9 @@ done
 %endif
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 20140418-7.gitc4bce43
+- 更新到 20140418 日期的仓库源码
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 20140415-7.gitc4bce43
 - 为 Magic 3.0 重建
 

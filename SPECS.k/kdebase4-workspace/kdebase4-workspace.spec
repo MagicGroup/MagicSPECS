@@ -14,8 +14,8 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-4.11.6.tar.xz
+Release: %{release_number}%{?dist}.1
+Source0: http://mirror.bjtu.edu.cn/kde/stable/4.12.4/src/%{real_name}-4.11.8.tar.xz
 Source1: extras.tar.gz
 # magic logo for kwin decoration
 Source2: magic.png
@@ -248,6 +248,7 @@ This package contains kdm, the login and session manager for KDE.
 %description -n kde4-kdm
 KDE 的登录和显示管理器。
 
+%if 0
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package googlegadgets
 Summary: Google Desktop Gadgets
@@ -260,6 +261,7 @@ Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description googlegadgets -l zh_CN.UTF-8
 Google 桌面部件。
+%endif
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package python-applet
@@ -382,7 +384,7 @@ Summary: Performance monitor daemon
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %prep
-%setup -q -n %{real_name}-4.11.6
+%setup -q -n %{real_name}-4.11.8
 
 %patch60 -p1
 
@@ -1231,6 +1233,9 @@ fi
 #重打包时要重新处理
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
+- 为 Magic 3.0 重建
+
 * Sat Dec 5 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.4-1mgc
 - 更新至 4.3.4
 - 修改 kickoff 徽标(patch 108)

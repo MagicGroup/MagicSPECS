@@ -9,12 +9,14 @@
 %global pagroup   pulse-rt
 
 Summary:       The Jack Audio Connection Kit
+Summary(zh_CN.UTF-8): Jack 音频连接工具
 Name:          jack-audio-connection-kit
 Version:       1.9.9.5
-Release:       5%{?dist}
+Release:       6%{?dist}
 # The entire source (~500 files) is a mixture of these three licenses
 License:       GPLv2 and GPLv2+ and LGPLv2+
 Group:         System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 URL:           http://www.jackaudio.org
 Source0:       https://dl.dropbox.com/u/28869550/jack-%{version}.tar.bz2
 Source1:       %{name}-README.Fedora
@@ -67,30 +69,49 @@ from the ground up to be suitable for professional audio work. This means that
 it focuses on two key areas: synchronous execution of all clients, and low
 latency operation.
 
+%description -l zh_CN.UTF-8
+JACK 是一个低延迟的音频服务，它主要用于 Linux 操作系统。它可以让不同的应用程序
+共享音频设备。它的客户端可以像普通程序那样运行，也可以在 JACK 服务器上当做插件
+运行。
+
 %package dbus
 Summary:       Jack D-Bus launcher
+Summary(zh_CN.UTF-8): Jack D-Bus 载入器
 Group:         Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:      %{name} = %{version}-%{release}
 
 %description dbus
 Launcher to start Jack through D-Bus.
 
+%description dbus -l zh_CN.UTF-8
+通过  D-Bus 载入开始 Jack。
 
 %package devel
 Summary:       Header files for Jack
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:      %{name} = %{version}-%{release}
 
 %description devel
 Header files for the Jack Audio Connection Kit.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package example-clients
 Summary:       Example clients that use Jack 
+Summary(zh_CN.UTF-8): 使用 Jack 的样例客户端
 Group:         Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:      %{name} = %{version}-%{release}
 
 %description example-clients
 Small example clients that use the Jack Audio Connection Kit.
+
+%description example-clients -l zh_CN.UTF-8
+使用 Jack 的样例客户端。
 
 %prep
 %setup -q -n jack-%{version}
@@ -157,6 +178,8 @@ mv $RPM_BUILD_ROOT%{_bindir}/jack_rec $RPM_BUILD_ROOT%{_bindir}/jackrec
 
 # Fix permissions of the modules
 chmod 755 $RPM_BUILD_ROOT%{_libdir}/jack/*.so $RPM_BUILD_ROOT%{_libdir}/libjack*.so.*.*.*
+
+magic_rpm_clean.sh
 
 %pre
 getent group %groupname > /dev/null || groupadd -r %groupname
@@ -258,6 +281,9 @@ exit 0
 
 
 %changelog
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 1.9.9.5-6
+- 为 Magic 3.0 重建
+
 * Wed Mar 26 2014 Jaromir Capik <jcapik@redhat.com> - 1.9.9.5-5
 - Adding bootstrap support to break libffado dependency loops
 

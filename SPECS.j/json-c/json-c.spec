@@ -2,9 +2,11 @@
 
 Name:		json-c
 Version:	0.11
-Release:	6%{?dist}
+Release:	11%{?dist}
 Summary:	A JSON implementation in C
+Summary(zh_CN.UTF-8): C 语言的 JSON 实现
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	MIT
 URL:		https://github.com/json-c/json-c/wiki
 Source0:	https://github.com/json-c/json-c/archive/json-c-%{version}-%{reldate}.tar.gz
@@ -26,6 +28,7 @@ BuildRequires:	libtool autoconf
 JSON-C implements a reference counting object model that allows you to easily
 construct JSON objects in C, output them as JSON formatted strings and parse
 JSON formatted strings back into the C representation of JSON objects.
+
 
 %package devel
 Summary:	Development headers and library for json-c
@@ -79,7 +82,7 @@ rm -rf %{buildroot}%{_libdir}/*.la
 
 # yum cannot replace a dir by a link
 # so switch the dir names
-rm %{buildroot}%{_includedir}/json
+rm -rf %{buildroot}%{_includedir}/json
 mv %{buildroot}%{_includedir}/json-c \
    %{buildroot}%{_includedir}/json
 ln -s json \
@@ -117,6 +120,36 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.11-11
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.11-10
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.12-9
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.12-8
+- 为 Magic 3.0 重建
+
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 0.12-7
+- 为 Magic 3.0 重建
+
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 0.12-6
+- 为 Magic 3.0 重建
+
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 0.12-5
+- 为 Magic 3.0 重建
+
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 0.12-4
+- 为 Magic 3.0 重建
+
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 0.12-3
+- 为 Magic 3.0 重建
+
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 0.12-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 09 2014 Susi Lehtola <jussilehtola@fedoraproject.org> - 0.11-7
 - Address CVE-2013-6371 and CVE-2013-6370 (BZ #1085676 and #1085677).
 - Enabled rdrand support.

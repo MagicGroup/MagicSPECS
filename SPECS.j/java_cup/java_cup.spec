@@ -30,7 +30,7 @@
 
 %define pkg_version     11a
 %define section         free
-%define with_bootstrap  0
+%define with_bootstrap  1
 
 Name:           java_cup
 Version:        0.11a
@@ -56,7 +56,8 @@ Patch1:         java_cup-0.11a-manifest.patch
 Patch2:         javacup10k_split_do_action_method.diff
 
 BuildRequires: ant
-BuildRequires: java-devel
+BuildRequires: jdk
+#BuildRequires: java-devel
 BuildRequires: jpackage-utils >= 0:1.5
 BuildRequires: jflex
 %if ! %{with_bootstrap}

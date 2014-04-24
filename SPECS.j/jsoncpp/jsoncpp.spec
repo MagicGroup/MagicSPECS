@@ -4,9 +4,11 @@
 
 Name:       jsoncpp
 Version:    %{src_release}
-Release:    0.11.%{src_prerelease}%{?dist}
+Release:    0.12.%{src_prerelease}%{?dist}
 Summary:    JSON library implemented in C++
+Summary(zh_CN.UTF-8): C++ 实现的 JSON 库
 Group:      System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:    Public Domain or MIT
 URL:        http://sourceforge.net/projects/%{name}/
 Source0:    http://downloads.sourceforge.net/project/%{name}/%{name}/%{src_version}/%{name}-src-%{src_version}.tar.gz
@@ -21,24 +23,34 @@ C++. JSON (JavaScript Object Notation) is a lightweight data-interchange format.
 It is easy for humans to read and write. It is easy for machines to parse and
 generate.
 
+%description -l zh_CN.UTF-8
+C++ 实现的 JSON 库。
 
 %package devel
 Summary:    Development headers and library for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the development headers and library for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary:    Documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group:      Documentation
+Group(zh_CN.UTF-8): 文档
 BuildArch:  noarch
 
 %description doc
 This package contains the documentation for %{name}
 
+%description doc -l zh_CN.UTF-8
+%{name} 的文档。
 
 %prep
 %setup -q -n %{name}-src-%{src_version}
@@ -71,6 +83,8 @@ install -d $RPM_BUILD_ROOT%{_libdir}/pkgconfig
 install -p -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/
 sed -i 's|@@LIBDIR@@|%{_libdir}|g' $RPM_BUILD_ROOT%{_libdir}/pkgconfig/jsoncpp.pc
 
+magic_rpm_clean.sh
+
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
@@ -89,6 +103,9 @@ sed -i 's|@@LIBDIR@@|%{_libdir}|g' $RPM_BUILD_ROOT%{_libdir}/pkgconfig/jsoncpp.p
 %{_docdir}/%{name}/
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.6.0-0.12.rc2
+- 为 Magic 3.0 重建
+
 * Tue Sep 10 2013 Sébastien Willmann <sebastien.willmann@gmail.com> - 0.6.0-0.11.rc2
 - https://bugzilla.redhat.com/show_bug.cgi?id=998149 : applied Michael Schwendt's
   patch to fix duplicated documentation

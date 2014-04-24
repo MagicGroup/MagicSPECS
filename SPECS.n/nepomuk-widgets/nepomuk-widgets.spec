@@ -10,7 +10,7 @@
 
 Name:    nepomuk-widgets
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Nepomuk  Widgets
 Summary(zh_CN.UTF-8): Nepomuk 小工具
 
@@ -110,6 +110,9 @@ make -C %{_target_platform}/autotests/test test  ||:
 %{kde4_libdir}/libnepomukwidgets.so.*
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.9.3-6
 - 为 Magic 3.0 重建
 

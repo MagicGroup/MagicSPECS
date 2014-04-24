@@ -1,12 +1,14 @@
 #% global hgdate 51702867d932
 
 Summary:		JavaScript interpreter and libraries
+Summary(zh_CN.UTF-8):  	JavaScript 解释器和库
 Name:		js
 Epoch:		1
 Version:		1.8.5
-Release:		12%{?hgdate:.hg%{hgdate}}%{?dist}
+Release:		13%{?hgdate:.hg%{hgdate}}%{?dist}
 License:		GPLv2+ or LGPLv2+ or MPLv1.1
 Group:		Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 URL:			http://www.mozilla.org/js/
 Source0:		http://ftp.mozilla.org/pub/mozilla.org/js/js185-1.0.0.tar.gz
 Patch0:		js-1.8.5-64bit-big-endian.patch
@@ -32,10 +34,14 @@ of web pages and server applications worldwide. Netscape's JavaScript is a
 superset of the ECMA-262 Edition 3 (ECMAScript) standard scripting language,
 with only mild differences from the published standard.
 
+%description -l zh_CN.UTF-8
+JavaScript 解释器和库.
 
 %package devel
 Summary: Header files, libraries and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: pkgconfig
 Requires: ncurses-devel readline-devel
@@ -46,6 +52,8 @@ This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -115,6 +123,7 @@ ln -s libmozjs185.so libjs.so
 popd
 
 install -m 0644 libjs.pc %{buildroot}%{_libdir}/pkgconfig/
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -139,6 +148,9 @@ rm -rf %{buildroot}
 %{_includedir}/js
 
 %changelog
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 1:1.8.5-13
+- 为 Magic 3.0 重建
+
 * Fri Jan 18 2013 Dennis Gilmore <dennis@ausil.us> - 1:1.8.5-12
 - make sure -march=armv7-a is not hardcoded in arm builds
 

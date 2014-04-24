@@ -1,12 +1,14 @@
 Name:           iw
-Version:        3.3
+Version:	3.14
 Release:        2%{?dist}
 Summary:        A nl80211 based wireless configuration tool
+Summary(zh_CN.UTF-8): 无线配置工具
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        ISC
 URL:            http://www.linuxwireless.org/en/users/Documentation/iw
-Source0:        http://wireless.kernel.org/download/iw/iw-%{version}.tar.bz2
+Source0:	https://www.kernel.org/pub/software/network/iw/iw-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  kernel-headers >= 2.6.24 
@@ -18,6 +20,9 @@ iw is a new nl80211 based CLI configuration utility for wireless devices.
 Currently you can only use this utility to configure devices which
 use a mac80211 driver as these are the new drivers being written - 
 only because most new wireless devices being sold are now SoftMAC.
+
+%description -l zh_CN.UTF-8
+无线配置工具。
 
 %prep
 %setup -q
@@ -43,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.14-2
+- 更新到 3.14
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.3-2
 - 为 Magic 3.0 重建
 

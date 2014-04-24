@@ -1,10 +1,12 @@
 
 Name:		console-setup
 Version:	1.107
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Tools for configuring the console using X Window System key maps
+Summary(zh_CN.UTF-8): 使用 X 窗口系统的键盘映射配置控制台的工具
 
 Group:		Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 # For a breakdown of the licensing, see COPYRIGHT, copyright, copyright.fonts and copyright.xkb
 License:	GPLv2+ and MIT and Public Domain
 URL:		http://packages.debian.org/cs/sid/console-setup
@@ -27,6 +29,10 @@ also the font on the console.  It includes a rich collection of fonts and
 supports several languages that would be otherwise unsupported on the console
 (such as Armenian, Georgian, Lao and Thai).
 
+%description -l zh_CN.UTF-8
+这个包提供了让控制台和 X 窗口系统使用一样的键盘配置方案的功能。除了键盘，还可以
+配置控制台的字体。
+
 
 %prep
 %setup -q
@@ -45,7 +51,7 @@ make prefix=$RPM_BUILD_ROOT install-linux
 # xkeyboard-config (require it?), so removing it
 # or maybe have these from tarball it in optional subpackage?
 rm -rf $RPM_BUILD_ROOT/etc/console-setup
-
+magic_rpm_clean.sh
 
 %files
 %doc README COPYRIGHT CHANGES copyright.fonts copyright.xkb Fonts/copyright
@@ -59,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT/etc/console-setup
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.107-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 10 2014 Vitezslav Crhonek <vcrhonek@redhat.com> - 1.107-1
 - Update to latest upstream version
   Resolves: #1084949

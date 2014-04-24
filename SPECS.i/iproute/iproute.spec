@@ -1,8 +1,8 @@
 %global             cbq_version v0.7.3
 Summary:            Advanced IP routing and network device configuration tools
 Name:               iproute
-Version:            3.12.0
-Release:            2%{?dist}
+Version:	3.14.0
+Release:            3%{?dist}
 Group:              Applications/System
 URL:                http://kernel.org/pub/linux/utils/net/%{name}2/
 Source0:            http://kernel.org/pub/linux/utils/net/%{name}2/%{name}2-%{version}.tar.gz
@@ -70,9 +70,9 @@ The libnetlink static library.
 %patch3 -p1 -b .ipproto
 %patch4 -p1 -b .fix_cbq
 %patch5 -p1 -b .print-route
-%patch6 -p1 -b .peer-veth-without-name
+#%patch6 -p1 -b .peer-veth-without-name
 %patch7 -p1 -b .lnstat-dump-to-stdout
-%patch8 -p1 -b .rtnl_send
+#%patch8 -p1 -b .rtnl_send
 %patch9 -p1 -b .tc_ok
 %patch10 -p1 -b .rtt
 %patch11 -p1 -b .lnstat-interval
@@ -175,6 +175,12 @@ done
 %{_includedir}/libnetlink.h
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.14.0-3
+- 为 Magic 3.0 重建
+
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.14.0-2
+- 更新到 3.14.0
+
 * Tue Nov 26 2013 Petr Šabata <contyk@redhat.com> - 3.12.0-2
 - Drop libnl from dependencies (#1034454)
 

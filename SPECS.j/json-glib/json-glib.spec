@@ -1,15 +1,18 @@
 %define glib_ver 2.16
 
 Name:		json-glib
-Version:	0.99.2
+Version:	1.0.0
 Release:	1%{?dist}
 Summary:	Library for JavaScript Object Notation format
+Summary(zh_CN.UTF-8): glib 的 JSON 库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://live.gnome.org/JsonGlib
 #VCS:		git:git://git.gnome.org/json-glib
-Source0:	http://download.gnome.org/sources/%{name}/0.99/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:	glib2-devel >= %{glib_ver}
 BuildRequires:	gobject-introspection-devel
@@ -19,10 +22,14 @@ BuildRequires:	gobject-introspection-devel
 %{name} is a library providing serialization and deserialization support
 for the JavaScript Object Notation (JSON) format.
 
+%description -l zh_CN.UTF-8
+glib 的 JSON 库。
 
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	glib2-devel >= %{glib_ver}
 Requires:	pkgconfig
@@ -32,6 +39,8 @@ Requires:	pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -50,7 +59,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 # different on different builds
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
 cp -a doc/reference/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
-
+magic_rpm_clean.sh
 %find_lang json-glib-1.0
 
 %post -p /sbin/ldconfig
@@ -75,6 +84,9 @@ cp -a doc/reference/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
 %{_mandir}/man1/json-glib-*.1*
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.0.0-1
+- 更新到 1.0.0
+
 * Tue Feb 04 2014 Richard Hughes <rhughes@redhat.com> - 0.99.2-1
 - Update to 0.99.2
 

@@ -11,7 +11,7 @@
 Summary: Enhanced system logging and kernel message trapping daemon
 Name: rsyslog
 Version: 7.4.8
-Release: 1%{?dist}
+Release: 5%{?dist}
 License: (GPLv3+ and ASL 2.0)
 Group: System Environment/Daemons
 URL: http://www.rsyslog.com/
@@ -486,6 +486,18 @@ done
 %{_libdir}/rsyslog/omudpspoof.so
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 7.4.8-5
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 7.4.8-4
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 7.4.8-3
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 7.4.8-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Tomas Heinrich <theinric@redhat.com> 7.4.8-1
 - rebase to 7.4.8
 - drop patch4, merged upstream

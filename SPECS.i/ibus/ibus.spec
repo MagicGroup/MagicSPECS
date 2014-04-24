@@ -36,7 +36,7 @@
 
 Name:           ibus
 Version:        1.5.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Intelligent Input Bus for Linux OS
 License:        LGPLv2+
 Group:          System Environment/Libraries
@@ -465,6 +465,9 @@ fi
 %{_datadir}/gtk-doc/html/*
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 1.5.6-3
+- 为 Magic 3.0 重建
+
 * Fri Mar 28 2014 Takao Fujiwara <tfujiwar@redhat.com> - 1.5.6-2
 - Updated ibus-HEAD.patch for Czech (qwerty) keymap.
 

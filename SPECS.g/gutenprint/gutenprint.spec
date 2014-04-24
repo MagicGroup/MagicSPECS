@@ -3,7 +3,7 @@
 Name:           gutenprint
 Summary:        Printer Drivers Package
 Version:        5.2.9
-Release:        15%{?dist}
+Release:        16%{?dist}
 Group:          System Environment/Base
 URL:            http://gimp-print.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/gimp-print/%{name}-%{version}.tar.bz2
@@ -324,6 +324,9 @@ fi
 /bin/rm -f /var/cache/foomatic/*
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 5.2.9-16
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 5.2.9-15
 - 为 Magic 3.0 重建
 

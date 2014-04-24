@@ -20,7 +20,6 @@ License: GPLv2
 BuildRequires: pkgconfig(libnetfilter_conntrack)
 # libnfnetlink-devel is requires for nfnl_osf
 BuildRequires: pkgconfig(libnfnetlink)
-BuildRequires: libselinux-devel
 BuildRequires: kernel-headers
 BuildRequires: systemd
 

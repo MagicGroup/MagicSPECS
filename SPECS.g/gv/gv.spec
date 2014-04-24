@@ -9,7 +9,7 @@ Group(zh_CN.UTF-8): 应用程序/出版
 Requires: ghostscript
 URL: http://www.gnu.org/software/gv/
 #Source0: ftp://ftp.gnu.org/gnu/gv/gv-%{version}.tar.gz
-Source0: ftp://alpha.gnu.org/gnu/gv/gv-%{version}.tar.gz
+Source0: http://ftp.gnu.org/gnu/gv/gv-%{version}.tar.gz
 Source1: gv.png
 BuildRequires: /usr/bin/makeinfo
 BuildRequires: Xaw3d-devel

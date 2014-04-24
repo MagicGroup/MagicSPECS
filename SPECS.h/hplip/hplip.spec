@@ -30,6 +30,8 @@ Patch12: hplip-logdir.patch
 Patch13: hplip-bad-low-ink-warning.patch
 Patch14: hplip-deviceIDs-ppd.patch
 Patch15: hplip-ppd-ImageableArea.patch
+Patch16: hplip-scan-tmp.patch
+Patch17: hplip-codec.patch
 
 %global hpijs_epoch 1
 Requires: hpijs%{?_isa} = %{hpijs_epoch}:%{version}-%{release}
@@ -167,7 +169,7 @@ mv prnt/drv/hpijs.drv.in{,.deviceIDs-drv-hpijs}
            prnt/drv/hpijs.drv.in.deviceIDs-drv-hpijs \
            > prnt/drv/hpijs.drv.in
 
-# Don't add printer queue, just check plugin.
+# Don't a%description -l zh_CN.UTF-8 printer queue, just check plugin.
 # Move udev rules from /etc/ to /usr/lib/ (bug #748208).
 %patch6 -p1 -b .udev-rules
 
@@ -230,6 +232,12 @@ for ppd_file in $(grep '^diff' %{PATCH15} | cut -d " " -f 4);
 do
   gzip -n ${ppd_file#*/}
 done
+
+# Scan to /var/tmp instead of /tmp (bug #1076954).
+%patch16 -p1 -b .scan-tmp
+
+# Fixed codec issue (bug #984167).
+%patch17 -p1 -b .codec
 
 sed -i.duplex-constraints \
     -e 's,\(UIConstraints.* \*Duplex\),//\1,' \

@@ -1,0 +1,7 @@
+diff -ur json-c-json-c-0.12-20140410.orig/Makefile.am.inc json-c-json-c-0.12-20140410/Makefile.am.inc
+--- json-c-json-c-0.12-20140410.orig/Makefile.am.inc	2014-04-21 17:22:04.885116520 +0000
++++ json-c-json-c-0.12-20140410/Makefile.am.inc	2014-04-21 17:23:00.539115094 +0000
+@@ -1,2 +1,2 @@
+-AM_CFLAGS = -Wall -Werror -Wno-error=deprecated-declarations -Wextra -Wwrite-strings -Wno-unused-parameter -std=gnu99 -D_GNU_SOURCE -D_REENTRANT
++AM_CFLAGS = -std=gnu99 -D_GNU_SOURCE -D_REENTRANT
+ 

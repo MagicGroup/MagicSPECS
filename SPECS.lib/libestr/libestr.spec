@@ -1,6 +1,6 @@
 Name:           libestr
 Version:        0.1.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        String handling essentials library
 
 License:        LGPLv2+
@@ -44,6 +44,9 @@ rm -f %{buildroot}/%{_libdir}/*.{a,la}
 %{_libdir}/pkgconfig/libestr.pc
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.1.9-2
+- 为 Magic 3.0 重建
+
 * Tue Jan 07 2014 Tomas Heinrich <theinric@redhat.com> - 0.1.9-1
 - rebase to 0.1.9
 - remove patch 0; doesn't seem to be necessary anymore

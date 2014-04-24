@@ -10,7 +10,7 @@
 
 Name:    nepomuk-core
 Version: %{rversion}
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: Nepomuk Core utilities and libraries
 Summary(zh_CN.UTF-8): Nepomuk 核心工具和库
 License: LGPLv2 or LGPLv3
@@ -177,6 +177,9 @@ make -C %{_target_platform}/autotests/test test  ||:
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Liu Di <liudidi@gmail.com> - 4.10.4-7
 - 为 Magic 3.0 重建
 

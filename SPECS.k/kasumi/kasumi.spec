@@ -1,6 +1,6 @@
 Name:    kasumi
 Version: 2.5
-Release: 9%{?dist}
+Release: 10%{?dist}
 
 License: GPLv2+
 URL:     http://kasumi.sourceforge.jp/
@@ -11,10 +11,14 @@ Patch0: kasumi-853099-manpage.patch
 
 
 Summary: An anthy dictionary management tool
+Summary(zh_CN.UTF-8): anthy 字典管理工具
 Group:   Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 %description
 Kasumi is a dictionary management tool for Anthy.
 
+%description -l zh_CN.UTF-8
+Anthy 字典管理工具。
 
 %prep
 %setup -q
@@ -31,7 +35,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 # remove .desktop file so that kasumi is accessible from scim panel/ibus panel and it's not necessary for other users.
 rm -rf $RPM_BUILD_ROOT%{_datadir}/applications/*.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -48,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 2.5-10
+- 为 Magic 3.0 重建
+
 * Fri Aug 31 2012 Akira TAGOH <tagoh@redhat.com> 2.5-9
 - Fix the missing descriptions for some options in --help (#853099)
 

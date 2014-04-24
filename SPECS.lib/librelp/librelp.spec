@@ -1,7 +1,7 @@
 Summary: The Reliable Event Logging Protocol library
 Name: librelp
 Version: 1.2.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: System Environment/Libraries
 URL: http://www.rsyslog.com/
@@ -62,6 +62,9 @@ fi
 %{_libdir}/pkgconfig/relp.pc
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.2.5-2
+- 为 Magic 3.0 重建
+
 * Thu Mar 27 2014 François Cami <fcami@fedoraproject.org> - 1.2.5-1
 - rebase to 1.2.5
 

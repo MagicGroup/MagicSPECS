@@ -2,8 +2,10 @@ Name:		iniparser
 Version:	3.1
 Release:	1%{?dist}
 Summary:	C library for parsing "INI-style" files
+Summary(zh_CN.UTF-8): 解析 "INI" 风格文件的 C 库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	MIT
 URL:		http://ndevilla.free.fr/%{name}/
 Source0:	http://ndevilla.free.fr/%{name}/%{name}-%{version}.tar.gz
@@ -12,15 +14,23 @@ Source0:	http://ndevilla.free.fr/%{name}/%{name}-%{version}.tar.gz
 iniParser is an ANSI C library to parse "INI-style" files, often used to
 hold application configuration information.
 
+%description -l zh_CN.UTF-8 
+解析 "INI" 风格文件的 C 库，通常用于处理程序配置信息。
+
 %package devel
 Summary:	Header files, libraries and development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}
@@ -39,6 +49,7 @@ install -d %{buildroot}%{_includedir} %{buildroot}%{_libdir}
 install -m 644 -t %{buildroot}%{_includedir}/ src/dictionary.h src/iniparser.h
 install -m 755 -t %{buildroot}%{_libdir}/ libiniparser.so.0
 ln -s libiniparser.so.0 %{buildroot}%{_libdir}/libiniparser.so
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 

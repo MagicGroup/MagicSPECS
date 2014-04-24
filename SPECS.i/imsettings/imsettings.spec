@@ -285,6 +285,7 @@ fi
 %files	gsettings
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/imsettings/libimsettings-gsettings.so
+%{_libdir}/imsettings/libimsettings-gconf.so
 
 %files	qt
 %doc AUTHORS COPYING ChangeLog NEWS README

@@ -1,6 +1,6 @@
 Name:           herqq
 Version:        1.0.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A software library for building UPnP devices and control points
 Summary(zh_CN.UTF-8): 创建 UPnP 设备和控制点的软件库
 # test application is GPLv3 but we do not ship it
@@ -64,6 +64,9 @@ make INSTALL_ROOT=%{buildroot} install
 %{_qt4_headerdir}/HUpnpCore/
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 1.0.0-6
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.0.0-5
 - 为 Magic 3.0 重建
 

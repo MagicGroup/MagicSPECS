@@ -1,11 +1,13 @@
 Name:        iso-codes
 Summary:       ISO code lists and translations
-Version:       3.33
+Summary(zh_CN.UTF-8): ISO 代码列表和翻译
+Version:	3.52
 Release:       2%{?dist}
 License:       LGPLv2+
 Group:        System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 URL:        http://alioth.debian.org/projects/pkg-isocodes/
-Source0:        http://pkg-isocodes.alioth.debian.org/downloads/iso-codes-%{version}.tar.bz2
+Source0:        http://pkg-isocodes.alioth.debian.org/downloads/iso-codes-%{version}.tar.xz
 BuildRequires: gettext
 BuildArch: noarch
 # for /usr/share/xml
@@ -16,15 +18,24 @@ This package provides the ISO 639 Language code list, the ISO 4217
 Currency code list, the ISO 3166 Territory code list, and ISO 3166-2
 sub-territory lists, and all their translations in gettext format.
 
+%description -l zh_CN.UTF-8
+这个包提供了 ISO 639 语言代码列表，ISO 4217 货币代码列表，ISO 3166
+领土代码列表和 ISO 3166-2 子领土代码列表，及他们在 gettext 格式的所
+有翻译。
+
 %package devel
 Summary: Files for development using %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:  Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 This package contains the pkg-config files for development
 when building programs that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -35,7 +46,7 @@ make %{_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-
+magic_rpm_clean.sh
 %find_lang iso-codes --all-name
 
 %files -f iso-codes.lang
@@ -47,6 +58,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %{_datadir}/pkgconfig/iso-codes.pc
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.52-2
+- 更新到 3.52
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.33-2
 - 为 Magic 3.0 重建
 

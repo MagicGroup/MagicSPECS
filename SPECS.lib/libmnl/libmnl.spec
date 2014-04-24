@@ -1,6 +1,6 @@
 Name:           libmnl
 Version:        1.0.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A minimalistic Netlink library
 
 Group:          System Environment/Libraries
@@ -71,6 +71,9 @@ mv examples examples-%{_arch}
 %{_libdir}/*.a
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 1.0.3-7
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

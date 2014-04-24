@@ -4,7 +4,7 @@
 Summary: iSCSI daemon and utility programs
 Name: iscsi-initiator-utils
 Version: 6.%{open_iscsi_version}.%{open_iscsi_build}
-Release: 21%{?dist}
+Release: 22%{?dist}
 Group: System Environment/Daemons
 License: GPLv2+
 URL: http://www.open-iscsi.org
@@ -403,6 +403,9 @@ fi
 %{_includedir}/libiscsi.h
 
 %changelog
+* Sun Apr 20 2014 Liu Di <liudidi@gmail.com> - 6.2.0.873-22
+- 为 Magic 3.0 重建
+
 * Mon Apr 14 2014 Chris Leech <cleech@redhat.com> - 6.2.0.873-21
 - boot session handling improvements
 - split out iscsiuio into a seperate sub-package

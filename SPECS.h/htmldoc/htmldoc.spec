@@ -1,6 +1,6 @@
 Name:		htmldoc
 Version:	1.8.27
-Release:	21%{?dist}
+Release:	22%{?dist}
 Summary:	Converter from HTML into indexed HTML, PostScript, or PDF
 
 Group:		Applications/Publishing
@@ -190,6 +190,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 1.8.27-22
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.8.27-21
 - 为 Magic 3.0 重建
 

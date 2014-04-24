@@ -3,10 +3,12 @@
 
 Name: intltool
 Summary: Utility for internationalizing various kinds of data files
+Summary(zh_CN.UTF-8): 国际化多种类型的数据文件的工具
 Version: 0.50.2
 Release: 7%{?dist}
 License: GPLv2 with exceptions
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 #VCS: bzr:https://code.edge.launchpad.net/~intltool/intltool/trunk
 Source: http://edge.launchpad.net/intltool/trunk/%{version}/+download/intltool-%{version}.tar.gz
 URL: https://launchpad.net/intltool
@@ -29,6 +31,10 @@ This tool automatically extracts translatable strings from oaf, glade,
 bonobo ui, nautilus theme, .desktop, and other data files and puts
 them in the po files.
 
+%description -l zh_CN.UTF-8
+这个工具自动的从 oaf, glade, bonobo ui, nautilus 主题, .desktop 和其它
+数据文件中抽出可翻译字符串并放入 po 文件中。
+
 %prep
 %setup -q
 
@@ -39,6 +45,7 @@ make
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+magic_rpm_clean.sh
 
 %check
 make check

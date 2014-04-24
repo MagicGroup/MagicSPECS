@@ -10,7 +10,7 @@
 Name:      librabbitmq
 Summary:   Client library for AMQP
 Version:   0.5.0
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
 URL:       https://github.com/alanxz/rabbitmq-c
@@ -123,6 +123,9 @@ make check
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.5.0-3
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Remi Collet <remi@fedoraproject.org> - 0.5.0-2
 - upstream patch for missing function
 

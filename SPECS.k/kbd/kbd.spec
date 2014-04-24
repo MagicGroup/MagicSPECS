@@ -1,9 +1,11 @@
 Name:           kbd
 Version:        2.0.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Tools for configuring the console (keyboard, virtual terminals, etc.)
+Summary(zh_CN.UTF-8): 配置控制台的工具（键盘、虚拟终端等）
 
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License:        GPLv2+
 URL:            http://www.kbd-project.org/
 Source0:        ftp://ftp.altlinux.org/pub/people/legion/kbd/kbd-%{version}.tar.gz
@@ -42,21 +44,33 @@ The %{name} package contains tools for managing a Linux
 system's console's behavior, including the keyboard, the screen
 fonts, the virtual terminals and font files.
 
+%description -l zh_CN.UTF-8
+这个包含了管理 Linux 系统下的控制台行为的一些工具，包括键盘、
+屏幕字体、虚拟终端和字体文件。
+
 %package misc
 Summary:        Data for kbd package
+Summary(zh_CN.UTF-8): kdb 包的数据
 BuildArch:      noarch
  
 %description misc
 The %{name}-misc package contains data for kbd package - console fonts,
 keymaps etc. Please note that %{name}-misc is not helpful without kbd.
 
+%description misc -l zh_CN.UTF-8
+kbd 包的数据，控制台字体、键盘映射等。
+
 %package legacy
 Summary:        Legacy data for kbd package
+Summary(zh_CN.UTF-8): kbd 包的过时数据
 BuildArch:      noarch
  
 %description legacy
 The %{name}-legacy package contains original keymaps for kbd package.
 Please note that %{name}-legacy is not helpful without kbd.
+
+%description legacy -l zh_CN.UTF-8 
+这个包包含了 kbd 包的最初键盘映射。
 
 %prep
 %setup -q -a 1 -a 2
@@ -162,7 +176,7 @@ done < layouts-list-uniq.lst
 
 # wipe converted layouts which cannot input ASCII (#1031848)
 zgrep -L "U+0041" $RPM_BUILD_ROOT/lib/kbd/keymaps/xkb/* | xargs rm -f
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %files -f %{name}.lang
@@ -180,6 +194,9 @@ zgrep -L "U+0041" $RPM_BUILD_ROOT/lib/kbd/keymaps/xkb/* | xargs rm -f
 /lib/kbd/keymaps/legacy
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 2.0.1-7
+- 为 Magic 3.0 重建
+
 * Mon Feb 17 2014 Vitezslav Crhonek <vcrhonek@redhat.com> - 2.0.1-6
 - Add man page for kbdinfo, link open man page to openvt man page
 

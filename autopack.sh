@@ -36,8 +36,13 @@ INSTALLRPMS=0
 FORCEINSTALLRPMS=0
 #是否自动更新软件版本
 AUTOUPDATE=1
+# 使用用户的配置
 if [ -f ~/.magicspec ]; then
 	. ~/.magicspec
+fi
+# 使用软件包本身的配置，也可以放一些需要前置执行的脚本。
+if [ -f ./packspec ]; then
+	. ./packspec
 fi
 # 使用的下载命令
 DOWNCOMMAND=wget
@@ -280,7 +285,7 @@ function downvcssources()
 	if ! [ x"$VCSDATE" = x"$TODAY" ]; then
 		if [ $AUTOUPDATE = "1" ]; then
 			sed -i 's/%define vcsdate.*/%define vcsdate '"$TODAY"'/g' $SPECNAME
-			rpmdev-bumpspec -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
+			rpmdev-bumpspec -n -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
 			cp -f $SPECNAME $TOPDIR/SOURCES
 			VCSDATE=$TODAY
 		fi
@@ -393,7 +398,7 @@ if [ $COUNT -ne 1 ]; then
 fi
 if [ -f $DIR/ignore ]; then
 	echo "$1 已经过时，不再编译，直接退出"
-	exit 1
+	exit 
 fi
 if [ -f $DIR/ignorearch ]; then
 	for IGNOREARCH in `cat $DIR/ignorearch`; do
