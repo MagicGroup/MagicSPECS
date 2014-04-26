@@ -26,20 +26,6 @@ Strigi analyzers for various graphic types, including: tiff, dvi
 %description -l zh_CN.UTF-8
 多种图形格式（包括 dvi, tiff）的 Strigi 分析器
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package devel
-Summary: Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-
-%description devel
-Contains the development files.
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发文件。包含 libbtcore 的开发文件。
-
 %prep
 %setup -q -n %{real_name}-%{rversion}
 

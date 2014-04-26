@@ -15,7 +15,7 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
+Release: %{release_number}%{?dist}.2
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -1125,7 +1125,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files -n kde-plasma-kimpanel
 %defattr(-,root,root)
-#%{kde4_plugindir}/libexec/kimpanel-*-panel
+%{kde4_plugindir}/libexec/kimpanel-*-panel
 %{kde4_plugindir}/plasma_*_kimpanel.so
 %{kde4_appsdir}/plasma/services/kimpanel.operations
 %{kde4_kcfgdir}/kimpanelconfig.kcfg
@@ -1170,6 +1170,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicesdir}/plasma-applet-bookmarks.desktop
 
 %changelog
+* Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
+- 为 Magic 3.0 重建
+
+* Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
+- 为 Magic 3.0 重建
+
 * Mon Dec 28 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.4-3mgc
 - 拆出 marble 和 konqueror 支持部件
 - dict plasmoid dict.cn 支持

@@ -398,13 +398,13 @@ if [ $COUNT -ne 1 ]; then
 fi
 if [ -f $DIR/ignore ]; then
 	echo "$1 已经过时，不再编译，直接退出"
-	exit 
+	exit 1 
 fi
 if [ -f $DIR/ignorearch ]; then
 	for IGNOREARCH in `cat $DIR/ignorearch`; do
 		if [ x"$IGNOREARCH" = x"$ARCH" ]; then
 			echo "$1 不能在本机架构 $ARCH 上打包，直接退出"
-			exit
+			exit 1
 		fi
 	done
 fi

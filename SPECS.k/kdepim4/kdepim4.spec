@@ -20,7 +20,7 @@ Group: System/GUI/KDE
 Group(zh_CN): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
+Release: %{release_number}%{?dist}.2
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -229,15 +229,6 @@ Summary: korganizer
 
 %description -n %{name}-korganizer
 korganizer.
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kpilot
-%package -n %{name}-kpilot
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
-Summary: kpilot
-
-%description -n %{name}-kpilot
-kpilot.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kresources
 %package -n %{name}-kresources
@@ -540,7 +531,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_servicesdir}/grammar_link.desktop
 %{kde4_servicesdir}/kcmpimactivity.desktop
 
-%{kde4_bindir}/akonadi_folderarchive_agent
+#%{kde4_bindir}/akonadi_folderarchive_agent
 %{kde4_bindir}/calendarjanitor
 %{kde4_bindir}/contactthemeeditor
 %{kde4_bindir}/kaddressbook-mobile
@@ -550,20 +541,14 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_bindir}/notes-mobile
 %{kde4_bindir}/tasks-mobile
 %{kde4_plugindir}/imports/org/kde/pim/mobileui/*
-%{kde4_libdir}/libfolderarchive.so.4
-%{kde4_libdir}/libfolderarchive.so.4.12.2
-%{kde4_libdir}/libgrantleetheme.so.4
-%{kde4_libdir}/libgrantleetheme.so.4.12.2
-%{kde4_libdir}/libgrantleethemeeditor.so.4
-%{kde4_libdir}/libgrantleethemeeditor.so.4.12.2
-%{kde4_libdir}/libkaddressbookgrantlee.so.4
-%{kde4_libdir}/libkaddressbookgrantlee.so.4.12.2
-%{kde4_libdir}/libkdepimmobileui.so.4
-%{kde4_libdir}/libkdepimmobileui.so.4.12.2
-%{kde4_libdir}/libknotesprivate.so.4
-%{kde4_libdir}/libknotesprivate.so.4.12.2
-%{kde4_datadir}/akonadi/agents/folderarchiveagent.desktop
-%{kde4_appsdir}/akonadi_folderarchive_agent/akonadi_folderarchive_agent.notifyrc
+#%{kde4_libdir}/libfolderarchive.so.*
+%{kde4_libdir}/libgrantleetheme.so.*
+%{kde4_libdir}/libgrantleethemeeditor.so.*
+%{kde4_libdir}/libkaddressbookgrantlee.so.*
+%{kde4_libdir}/libkdepimmobileui.so.*
+%{kde4_libdir}/libknotesprivate.so.*
+#%{kde4_datadir}/akonadi/agents/folderarchiveagent.desktop
+#%{kde4_appsdir}/akonadi_folderarchive_agent/akonadi_folderarchive_agent.notifyrc
 %{kde4_appsdir}/contactthemeeditor/contactthemeeditorui.rc
 %{kde4_appsdir}/kaddressbook-mobile/*
 %{kde4_appsdir}/kconf_update/grantleetheme.upd
@@ -576,7 +561,32 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_appsdir}/tasks-mobile/*
 %{kde4_configdir}/kaddressbook_themes.knsrc
 %{kde4_configdir}/ksieve_script.knsrc
-%{kde4_htmldir}/en/akonadi_folderarchive_agent/*
+#%{kde4_htmldir}/en/akonadi_folderarchive_agent/*
+
+   /usr/bin/akonadi_notes_agent
+   /usr/bin/sieveeditor
+   /usr/bin/storageservicemanager
+   /usr/lib64/libnoteshared.so.4
+   /usr/lib64/libnoteshared.so.4.13.0
+   /usr/share/akonadi/agents/folderarchiveagent.desktop
+   /usr/share/akonadi/agents/notesagent.desktop
+   /usr/share/apps/akonadi_notes_agent/akonadi_notes_agent.notifyrc
+   /usr/share/apps/kconf_update/noteglobalsettings.upd
+   /usr/share/apps/sieve/scripts/copy/template.desktop
+   /usr/share/apps/sieve/scripts/copy/template.txt
+   /usr/share/apps/sieveeditor/sieveeditorui.rc
+   /usr/share/apps/storageservicemanager/storageservicemanager.notifyrc
+   /usr/share/apps/storageservicemanager/storageservicemanagerui.rc
+   /usr/share/config/knotes_printing_theme.knsrc
+   /usr/share/doc/HTML/en/akonadi_notes_agent/common
+   /usr/share/doc/HTML/en/akonadi_notes_agent/index.cache.bz2
+   /usr/share/doc/HTML/en/akonadi_notes_agent/index.docbook
+   /usr/share/doc/HTML/en/contactthemeeditor/common
+   /usr/share/doc/HTML/en/contactthemeeditor/index.cache.bz2
+   /usr/share/doc/HTML/en/contactthemeeditor/index.docbook
+   /usr/share/doc/HTML/en/sieveeditor/common
+   /usr/share/doc/HTML/en/sieveeditor/index.cache.bz2
+   /usr/share/doc/HTML/en/sieveeditor/index.docbook
 
 %files -n %{name}-akregator
 %defattr(-,root,root)
@@ -727,8 +737,8 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_appsdir}//ktnef/ktnefui.rc
 %{kde4_htmldir}/en/ktnef/*
 %{kde4_iconsdir}/*color/*/a*/ktnef*.*
-%{kde4_datadir}/ontology/kde/messagetag.ontology
-%{kde4_datadir}/ontology/kde/messagetag.trig
+#%{kde4_datadir}/ontology/kde/messagetag.ontology
+#%{kde4_datadir}/ontology/kde/messagetag.trig
 
 %files -n %{name}-kmailcvt
 %defattr(-,root,root)
@@ -766,15 +776,15 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %defattr(-,root,root)
 %{kde4_bindir}/knotes
 %{kde4_plugindir}/kcm_knote.so
-%{kde4_plugindir}/knotes_local.so
+#%{kde4_plugindir}/knotes_local.so
 %{kde4_appsdir}/knotes/*
-%{kde4_kcfgdir}/knoteconfig.kcfg
+#%{kde4_kcfgdir}/knoteconfig.kcfg
 %{kde4_kcfgdir}/knotesglobalconfig.kcfg
 %{kde4_dbus_interfacesdir}/org.kde.KNotes.xml
 %{kde4_iconsdir}/hicolor/*/apps/knotes.*
 %{kde4_xdgappsdir}/knotes.desktop
-%{kde4_servicesdir}/kresources/knotes/local.desktop
-%{kde4_servicesdir}/kresources/knotes_manager.desktop
+#%{kde4_servicesdir}/kresources/knotes/local.desktop
+#%{kde4_servicesdir}/kresources/knotes_manager.desktop
 %{kde4_servicesdir}/knote_config_*.desktop
 %doc %lang(en) %{kde4_htmldir}/en/knotes
 
@@ -838,8 +848,8 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicesdir}/korganizer/*
 %{kde4_servicetypesdir}/calendardecoration.desktop
 %{kde4_servicetypesdir}/calendarplugin.desktop
-%{kde4_servicetypesdir}/korganizerpart.desktop
-%{kde4_servicetypesdir}/korgprintplugin.desktop
+#%{kde4_servicetypesdir}/korganizerpart.desktop
+#%{kde4_servicetypesdir}/korgprintplugin.desktop
 %doc %lang(en) %{kde4_htmldir}/en/korganizer
 
 %if 0
@@ -990,6 +1000,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
+- 为 Magic 3.0 重建
+
+* Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
+- 为 Magic 3.0 重建
+
 * Wed Aug 5 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.0-1mgc
 - 更新至 4.3.0
 - 己丑  六月十五
