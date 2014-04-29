@@ -1,6 +1,7 @@
+%define qt5 0
 Name:           qt-gstreamer
 Version:        0.10.3
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        C++ bindings for GStreamer with a Qt-style API
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/wiki/QtGStreamer
@@ -10,8 +11,10 @@ BuildRequires:  automoc
 BuildRequires:  boost-devel
 BuildRequires:  gstreamer-plugins-base-devel >= 0.10.33
 BuildRequires:  qt4-devel
+%if 0%{qt5}
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtquick1-devel
+%endif
 
 %{?_qt4_version:Requires: qt4%{?_isa} >= %{_qt4_version}}
 
@@ -29,6 +32,7 @@ Requires:       boost-devel%{?_isa}
 This package contains the header files and development documentation
 for %{name}.
 
+%if 0%{qt5}
 %package -n qt5-gstreamer
 Summary:        C++ bindings for GStreamer with a Qt5-style API
 %{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
@@ -44,6 +48,7 @@ Requires:       boost-devel%{?_isa}
 %description -n qt5-gstreamer-devel
 This package contains the header files and development documentation
 for qt5-gstreamer.
+%endif
 
 %prep
 %setup -q
@@ -56,18 +61,20 @@ popd
 
 make %{?_smp_mflags} -C %{_target_platform}
 
+%if 0%{qt5}
 mkdir -p %{_target_platform}-qt5
 pushd %{_target_platform}-qt5
 %{cmake} -DQT_VERSION=5 ..
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}-qt5
-
+%endif
 
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
+%if 0%{qt5}
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
-
+%endif
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -94,6 +101,7 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
 %{_libdir}/pkgconfig/QtGStreamerUi-0.10.pc
 %{_libdir}/pkgconfig/QtGStreamerUtils-0.10.pc
 
+%if 0%{qt5}
 %post -n qt5-gstreamer -p /sbin/ldconfig
 %postun -n qt5-gstreamer -p /sbin/ldconfig
 
@@ -118,9 +126,15 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-qt5
 %{_libdir}/pkgconfig/Qt5GStreamer-0.10.pc
 %{_libdir}/pkgconfig/Qt5GStreamerUi-0.10.pc
 %{_libdir}/pkgconfig/Qt5GStreamerUtils-0.10.pc
-
+%endif
 
 %changelog
+* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 0.10.3-4
+- 为 Magic 3.0 重建
+
+* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 0.10.3-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 15 2013 Alexey Kurov <nucleo@fedoraproject.org> - 0.10.3-2
 - rebuilt for arm switch qreal double
 

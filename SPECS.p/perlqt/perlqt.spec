@@ -18,7 +18,7 @@
 
 Name:           perlqt
 Version:        %{kde4_kdelibs_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PerlQt kdebindings library
 License:        GPL-2.0+
 Group:          Development/Languages/Perl
@@ -82,4 +82,7 @@ This package contains development files for the Perl bindings for the Qt4 librar
 %{_kde4_includedir}/perlqt/
 
 %changelog
+* Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 

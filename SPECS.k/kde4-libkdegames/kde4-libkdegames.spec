@@ -10,7 +10,7 @@ Summary(zh_CN.UTF-8): KDE 游戏的通用代码和数据
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
@@ -87,6 +87,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_plugindir}/imports/org/kde/games/core/*
 
 %changelog
+* Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Sun Apr 28 2013 Liu Di <liudidi@gmail.com> - 4.10.2-3
 - 为 Magic 3.0 重建
 
