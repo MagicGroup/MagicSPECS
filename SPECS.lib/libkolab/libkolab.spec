@@ -1,4 +1,6 @@
 %{!?php_inidir: %global php_inidir %{_sysconfdir}/php.d/}
+%{!?php_extdir: %global php_extdir %{_libdir}/php/modules}
+%{!?php_apiver: %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)}
 
 # Filter out private python and php libs. Does not work on EPEL5,
 # therefor we use it conditionally
@@ -9,26 +11,30 @@
 }
 
 Name:           libkolab
-Version:        0.4.1
-Release:        3%{?dist}
+Version:        0.5.0
+Release:        1%{?dist}
 Summary:        Kolab Object Handling Library
 
 License:        LGPLv3+
 URL:            http://git.kolab.org/libkolab
 
-# From http://git.kolab.org/%{name}/snapshot/f60ac8df94c5412c26ee89c6dda3f3f32e22b275.tar.gz
-Source0:        http://git.kolab.org/%{name}/snapshot/%{name}-%{version}.tar.gz
+Source0:        http://git.kolab.org/%{name}/snapshot/libkolab-%{version}.tar.gz
 
+# Fix #2588: kolabformatchecker uses kolab_static instead of kolab
+Patch0:         libkolab-0.5.0_kolab_static.patch
+
+BuildRequires:  cmake
 %if 0%{?rhel} > 6 || 0%{?fedora} > 16
-BuildRequires:  kdepimlibs4-devel >= 4.9
+BuildRequires:  kdepimlibs-devel >= 4.9
 %else
 # Note: available within kolabsys.com infrastructure only, as being (essentially) a
 # fork of various kde 4.9 libraries that depend on kde*, and that have no place in el6.
 BuildRequires:  libcalendaring-devel >= 4.9
 %endif
 BuildRequires:  libcurl-devel
-BuildRequires:  libkolabxml-devel >= 0.8
-BuildRequires:  php-devel
+BuildRequires:  libkolabxml-devel >= 1.0
+BuildRequires:  php >= 5.3
+BuildRequires:  php-devel >= 5.3
 BuildRequires:  python-devel
 BuildRequires:  qt-devel
 
@@ -39,13 +45,13 @@ The libkolab library is an advanced library to  handle Kolab objects.
 Summary:        Kolab library development headers
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?rhel} > 6 || 0%{?fedora} > 16
-BuildRequires:  kdepimlibs4-devel >= 4.9
+BuildRequires:  kdepimlibs-devel >= 4.9
 %else
 # Note: available within kolabsys.com infrastructure only, as being (essentially) a
 # fork of various kde 4.9 libraries that depend on kde*, and that have no place in el6.
 BuildRequires:  libcalendaring-devel >= 4.9
 %endif
-Requires:       libkolabxml-devel >= 0.8
+Requires:       libkolabxml-devel >= 1.0
 Requires:       php-devel
 Requires:       pkgconfig
 Requires:       python-devel
@@ -55,7 +61,6 @@ Development headers for the Kolab object libraries.
 
 %package -n php-kolab
 Summary:        PHP Bindings for libkolab
-Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?rhel} > 5 || 0%{?fedora} > 15
 Requires:       php(zend-abi) = %{php_zend_api}
@@ -69,20 +74,21 @@ PHP Bindings for libkolab
 
 %package -n python-kolab
 Summary:        Python bindings for libkolab
-Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       python-kolabformat >= 1.0.0
 
 %description -n python-kolab
 Python bindings for libkolab
 
 %prep
-%setup -q
+%setup -q -n libkolab-%{version}
+%patch0 -p0
 
 %build
-rm -rf build
 mkdir -p build
 pushd build
-%{cmake} -Wno-fatal-errors -Wno-errors \
+%{cmake} \
+    -Wno-fatal-errors -Wno-errors \
     -DINCLUDE_INSTALL_DIR=%{_includedir} \
 %if 0%{?rhel} < 7 && 0%{?fedora} < 17
     -DUSE_LIBCALENDARING=ON \
@@ -96,10 +102,7 @@ make
 popd
 
 %install
-rm -rf %{buildroot}
-pushd build
-make install DESTDIR=%{buildroot}
-popd
+make install DESTDIR=%{buildroot} -C build
 
 mkdir -p %{buildroot}/%{_datadir}/php
 mv %{buildroot}/%{php_extdir}/*.php %{buildroot}/%{_datadir}/php/.
@@ -107,11 +110,13 @@ mv %{buildroot}/%{php_extdir}/*.php %{buildroot}/%{_datadir}/php/.
 mkdir -p %{buildroot}/%{php_inidir}
 cat >%{buildroot}/%{php_inidir}/kolab.ini <<EOF
 ; Kolab libraries
-extension=kolabformat.so
-extension=kolabshared.so
 extension=kolabobject.so
+extension=kolabshared.so
 extension=kolabcalendaring.so
+extension=kolabicalendar.so
 EOF
+
+touch %{buildroot}/%{python_sitearch}/kolab/__init__.py
 
 %check
 pushd build/tests
@@ -124,19 +129,16 @@ pushd build/tests
 ./upgradetest || :
 popd
 
-%clean
-rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
 %files
-%{_libdir}/%{name}.so.0
-%{_libdir}/%{name}.so.%{version}
+%{_libdir}/libkolab.so.0
+%{_libdir}/libkolab.so.%{version}
 
 %files devel
-%{_libdir}/%{name}.so
+%{_libdir}/libkolab.so
 %{_libdir}/cmake/Libkolab
 %{_includedir}/kolab
 
@@ -152,14 +154,34 @@ rm -rf %{buildroot}
 %{php_extdir}/kolabshared.so
 
 %files -n python-kolab
+%dir %{python_sitearch}/kolab/
+%{python_sitearch}/kolab/__init__.py*
 %{python_sitearch}/kolab/_calendaring.so
 %{python_sitearch}/kolab/calendaring.py*
 %{python_sitearch}/kolab/_icalendar.so
 %{python_sitearch}/kolab/icalendar.py*
+%{python_sitearch}/kolab/_kolabobject.so*
+%{python_sitearch}/kolab/kolabobject.py*
 %{python_sitearch}/kolab/_shared.so*
 %{python_sitearch}/kolab/shared.py*
 
 %changelog
+* Mon Oct 14 2013 Jeroen van Meeuwen <vanmeeuwen@kolabsys.com> - 0.5.0-1
+- New upstream release
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 28 2013 Petr Machata <pmachata@redhat.com> - 0.4.2-2
+- Rebuild for boost 1.54.0
+
+* Wed May 15 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.2-1
+- Update to 0.4.2
+- Fix build error with cmake 2.8.11
+
+* Fri Mar 22 2013 Remi Collet <rcollet@redhat.com> - 0.4.1-4
+- rebuild for http://fedoraproject.org/wiki/Features/Php55
+
 * Sun Feb 10 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 0.4.1-3
 - Rebuild for Boost-1.53.0
 
