@@ -89,7 +89,7 @@ export NSS_USE_SYSTEM_SQLITE
 NSS_BUILD_NSSUTIL_ONLY=1
 export NSS_BUILD_NSSUTIL_ONLY
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
 USE_64=1
 export USE_64
 %endif
