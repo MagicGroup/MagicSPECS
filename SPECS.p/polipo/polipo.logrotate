@@ -1,0 +1,9 @@
+/var/log/polipo/polipo.log {
+    create 0640 polipo polipo
+    missingok
+    notifempty
+    delaycompress
+    postrotate
+    /usr/bin/systemctl try-restart polipo 2>/dev/null >/dev/null || : 
+    endscript
+}

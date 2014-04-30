@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ "$2" = "up" ]; then
+    # use restart - bugzilla #699677 (now with systemctl)
+    /usr/bin/systemctl try-restart polipo || :
+fi
