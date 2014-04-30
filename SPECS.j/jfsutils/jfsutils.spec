@@ -1,9 +1,11 @@
 Summary: Utilities for managing the JFS filesystem.
 Summary(zh_CN.UTF-8): 管理 JFS 文件系统的工具
 Name: jfsutils
-Version: 1.1.13
-Release: 3%{?dist}
-Source0: jfsutils-%{version}.tar.gz
+Version:	1.1.15
+Release: 1%{?dist}
+Source0: http://jfs.sourceforge.net/project/pub/jfsutils-%{version}.tar.gz
+Patch0: jfsutils-1.1.15_stdint.patch
+Patch1: jfsutils_format-security_ftbs.patch
 URL: http://jfs.sourceforge.net/
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -33,6 +35,9 @@ JFS 文件系统编辑器。
 
 %prep
 %setup -q
+find . -type f -name *.[ch] -exec chmod -x {} \;
+%patch0 -p1
+%patch1 -p1
 
 %build
 CFLAGS="${RPM_OPT_FLAGS}" ./configure --mandir=%{_mandir}
@@ -54,6 +59,9 @@ rm -f $RPM_BUILD_ROOT/%{_mandir}/*/*.gz
 %doc AUTHORS COPYING INSTALL NEWS README ChangeLog
 
 %changelog
+* Mon Apr 21 2014 Liu Di <liudidi@gmail.com> - 1.1.15-1
+- 更新到 1.1.15
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.13-3
 - 为 Magic 3.0 重建
 

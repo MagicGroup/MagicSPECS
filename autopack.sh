@@ -1,7 +1,21 @@
 #!/bin/bash
+# 返回值 
+# 1 = 无法准备源码，即不能下载源码或其它问题
+# 2 = spec 格式错误
+# 3 = 打包过程出错
+# 4 = 安装过程出错
+# 5 = 使用方法错误
+# 6 = 需要的命令没有安装
+# 7 = 没有 yum
+# 8 = spec名 或 目录名有问题
+# 9 = 不支持的架构
+#10 = 没有中文翻译
+#11 = 没有清理语句
+#12 = 自动更新出错
+#13 = 跳过编译
 if [ -z "$1" ] ; then
         echo "使用方法：$0 包名（不带.spec）"
-        exit 1
+        exit 5
 fi
 #进入脚本所在的目录
 pushd $(dirname $0)
@@ -36,8 +50,13 @@ INSTALLRPMS=0
 FORCEINSTALLRPMS=0
 #是否自动更新软件版本
 AUTOUPDATE=1
+# 使用用户的配置
 if [ -f ~/.magicspec ]; then
 	. ~/.magicspec
+fi
+# 使用软件包本身的配置，也可以放一些需要前置执行的脚本。
+if [ -f ./packspec ]; then
+	. ./packspec
 fi
 # 使用的下载命令
 DOWNCOMMAND=wget
@@ -75,13 +94,13 @@ function checkcommand()
 				echo "系统中没有 $command 命令，尝试自动安装"
 				if ! ( sudo yum install `yum provides \*/bin/$command | cut -d " " -f 1 ` ) ; then
 					echo "不能安装 $command 命令所属的包，请手工安装"
-					exit 1
+					exit 6
 				fi
 			fi
 		done
 	else
 		echo "没有 yum 命令，系统中必须有 yum 才可以继续执行脚本"
-		exit 1
+		exit 7
 	fi
 }
 
@@ -128,18 +147,18 @@ function checkspec()
 	SPECCOUNT=`ls $DIR/*.spec 2>/dev/null | wc -l`
 	if [ $SPECCOUNT -gt 1 ];then
         	echo "当前目录的 .spec 文件过多，只有一个 spec 文件的情况下，脚本才能正确执行"
-        	touch specfail && exit 1
+        	touch specfail && exit 8
 	fi
 	if [ $SPECCOUNT = "0" ];then
         	echo "当前目录中没有 .spec 文件，脚本退出！"
-        	touch specfail && exit 1
+        	touch specfail && exit 8
 	fi
 	#判断 spec 文件名是否和目录名一致。
 	SPECNAME=$(ls $DIR/*.spec)
 	NAME=$(basename $SPECNAME)
 	if ! [ $NAME = "$1.spec" ] ; then
 	        echo "spec 文件名和所在目录的名字不一致，请检查原因。"
-        	touch specfail && exit 1
+        	touch specfail && exit 8
 	fi
 	debug_echo "当前的 spec 文件名是 $SPECNAME"
 	#判断是否跳过 spec 解析判断
@@ -147,13 +166,13 @@ function checkspec()
 		#判断 spec 文件是否有问题
 		if !  (debug_run rpmspec -P $SPECNAME );then
   		        echo "spec 文件格式有错误，请检查，脚本退出！" 
-        		touch specfail && exit 1
+        		touch specfail && exit 2
 		fi
 	fi
 	if ! (rpmspec -P $SPECNAME | grep "Summary(zh_CN.UTF-8)" > /dev/null); then
         	if [ $HAVECNUTF8 = "1" ];then
                 	echo "spec 中没有中文简介，请添加"
-                	touch specfail && exit 1
+                	touch specfail && exit 10
         	else
                 	debug_echo "spec 中没有中文简介"
         	fi
@@ -162,7 +181,7 @@ function checkspec()
         	if [ $HAVECLEAN = "1" ];then
                 	echo "spec 中没有清理语句，请添加"
                 	#这里要做自动添加的尝试，但有些难
-                	touch specfail && exit 1
+                	touch specfail && exit 11
         	else
                 	debug_echo "spec 中没有清理语句"
         	fi
@@ -280,7 +299,7 @@ function downvcssources()
 	if ! [ x"$VCSDATE" = x"$TODAY" ]; then
 		if [ $AUTOUPDATE = "1" ]; then
 			sed -i 's/%define vcsdate.*/%define vcsdate '"$TODAY"'/g' $SPECNAME
-			rpmdev-bumpspec -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
+			rpmdev-bumpspec -n -c "更新到 $TODAY 日期的仓库源码" $SPECNAME
 			cp -f $SPECNAME $TOPDIR/SOURCES
 			VCSDATE=$TODAY
 		fi
@@ -328,7 +347,7 @@ function build()
         if ! (debug_run rpmbuild -ba --clean --rmsource --rmspec $NOCHECK $TOPDIR/SOURCES/$NAME ) ; then
                 echo "打包过程出错，请检查 build.log 文件" 
 		touch $DIR/buildfail     
-                exit 1
+                exit 3
         fi
         echo "打包完成，清理目录"
 	rm -f $DIR/*fail
@@ -353,7 +372,7 @@ function installrpms()
 		fi
 		if ! ( debug_run sudo $INSTALLCOMMAND `rpmspec -q --rpms $SPECNAME` ) ; then
 			echo "无法安装编译好的 rpm 包，可能存在依赖问题，请检查 build.log 文件。"
-			exit 1
+			exit 4
 		fi
 	popd
 }
@@ -364,10 +383,10 @@ function autoupdate ()
         DIR=`ls -d SPECS.*/$1`
         SPECNAME=$(ls $DIR/*.spec)
         if [ -f $DIR/getnewver ]; then
-                ./autoupdate.sh $1 || exit 1
+                ./autoupdate.sh $1 || exit 12
                 #spec 有更新，所以需要重新复制
 		if [ -f $DIR/hasupdate ] ; then
- 	               cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
+ 	               cp -f $SPECNAME $TOPDIR/SOURCES || exit 12
 		fi
         fi
 }
@@ -379,7 +398,7 @@ function autobumpspec ()
         SPECNAME=$(ls $DIR/*.spec)
 	rpmdev-bumpspec -c "为 Magic 3.0 重建" $SPECNAME
 	#spec 有更新，所以需要重新复制
-        cp -f $SPECNAME $TOPDIR/SOURCES || exit 1
+        cp -f $SPECNAME $TOPDIR/SOURCES || exit 12
 }
 	
 #主程序
@@ -393,13 +412,13 @@ if [ $COUNT -ne 1 ]; then
 fi
 if [ -f $DIR/ignore ]; then
 	echo "$1 已经过时，不再编译，直接退出"
-	exit 1
+	exit 13 
 fi
 if [ -f $DIR/ignorearch ]; then
 	for IGNOREARCH in `cat $DIR/ignorearch`; do
 		if [ x"$IGNOREARCH" = x"$ARCH" ]; then
 			echo "$1 不能在本机架构 $ARCH 上打包，直接退出"
-			exit
+			exit 9
 		fi
 	done
 fi

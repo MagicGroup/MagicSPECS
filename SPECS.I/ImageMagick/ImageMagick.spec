@@ -1,5 +1,5 @@
-%global VER 6.8.8
-%global Patchlevel 7
+%global VER 6.8.9
+%global Patchlevel 0
 
 Name:           ImageMagick
 Version:        %{VER}.%{Patchlevel}
@@ -9,7 +9,6 @@ Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/%{name}/%{name}-%{VER}-%{Patchlevel}.tar.xz
-Patch1:         ImageMagick-6.4.0-multilib.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -127,7 +126,6 @@ however.
 
 %prep
 %setup -q -n %{name}-%{VER}-%{Patchlevel}
-#%patch1 -p1 -b .multilib
 sed -i 's/libltdl.la/libltdl.so/g' configure
 iconv -f ISO-8859-1 -t UTF-8 README.txt > README.txt.tmp
 touch -r README.txt README.txt.tmp
@@ -308,6 +306,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 6.8.9.0-3
+- 更新到 6.8.9.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 6.8.0.1-3
 - 为 Magic 3.0 重建
 

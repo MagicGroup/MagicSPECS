@@ -1,5 +1,5 @@
-#不知道为什么没有dbugs信息，有时候又行
-%define  debug_package %{nil}
+#不知道为什么没有debugs信息，有时候又行
+# define  debug_package %{nil}
 
 %define rversion %{kde4_kdelibs_version}
 %define release_number 1
@@ -15,7 +15,7 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
+Release: %{release_number}%{?dist}.1
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -508,6 +508,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
+- 为 Magic 3.0 重建
+
 * Mon May 27 2013 Liu Di <liudidi@gmail.com> - 4.10.3-1
 - 对 spec 做了调整，将 rpm 配置部分单独成 kde4-rpm-config
 

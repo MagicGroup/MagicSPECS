@@ -13,7 +13,7 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
+Release: %{release_number}%{?dist}.3
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -205,7 +205,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/libmicroblog.so.*
 %{kde4_libdir}/libgpgme++.so.*
 %{kde4_libdir}/libgpgme++-pthread.so.*
-%{kde4_libdir}/libgpgme++-pth.so.*
+#%{kde4_libdir}/libgpgme++-pth.so.*
 %{kde4_libdir}/libkpimidentities.so.*
 %{kde4_libdir}/libqgpgme.so.*
 %{kde4_libdir}/libkontactinterface.so.*
@@ -259,7 +259,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/libmicroblog.so
 %{kde4_libdir}/libgpgme++.so
 %{kde4_libdir}/libgpgme++-pthread.so
-%{kde4_libdir}/libgpgme++-pth.so
+#%{kde4_libdir}/libgpgme++-pth.so
 %{kde4_libdir}/libkpimidentities.so
 %{kde4_libdir}/libqgpgme.so
 %{kde4_libdir}/libkontactinterface.so
@@ -302,6 +302,15 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2.3
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2.2
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2.1
+- 为 Magic 3.0 重建
+
 * Sat Dec 5 2009 Ni Hui <shuizhuyuanluo@126.com> -4.3.4-1mgc
 - 更新至 4.3.4
 - 乙丑  十月十九

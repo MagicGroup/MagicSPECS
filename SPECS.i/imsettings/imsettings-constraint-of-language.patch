@@ -1,7 +1,7 @@
-diff -pruN imsettings-1.2.8.orig/data/xinput.sh.in.in imsettings-1.2.8/data/xinput.sh.in.in
---- imsettings-1.2.8.orig/data/xinput.sh.in.in	2012-02-10 11:25:18.000000000 +0900
-+++ imsettings-1.2.8/data/xinput.sh.in.in	2012-02-10 12:38:44.000000000 +0900
-@@ -266,8 +266,22 @@ if [ -r "$USER_XINPUTRC" -a "x$IMSETTING
+diff -pruN imsettings-1.6.1.orig/data/xinput.sh.in.in imsettings-1.6.1/data/xinput.sh.in.in
+--- imsettings-1.6.1.orig/data/xinput.sh.in.in	2013-04-03 16:26:39.000000000 +0900
++++ imsettings-1.6.1/data/xinput.sh.in.in	2013-04-03 19:22:31.000000000 +0900
+@@ -52,8 +52,22 @@ if [ -r "$USER_XINPUTRC" -a "x$IMSETTING
  	SHORT_DESC="User Specific"
      fi
  elif [ -r "$SYS_XINPUTRC" ]; then

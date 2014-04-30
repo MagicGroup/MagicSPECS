@@ -1,0 +1,48 @@
+diff -up isdn4k-utils-CVS-2010-05-01-patched/ipppd/Makefile.in.me isdn4k-utils-CVS-2010-05-01-patched/ipppd/Makefile.in
+--- isdn4k-utils-CVS-2010-05-01-patched/ipppd/Makefile.in.me	2013-04-25 17:40:08.094933867 +0200
++++ isdn4k-utils-CVS-2010-05-01-patched/ipppd/Makefile.in	2013-04-25 17:40:53.068248859 +0200
+@@ -73,7 +73,7 @@ endif
+ 
+ DEBUG_FLAGS   = @CONFIG_IPPPD_DEBUGFLAGS@
+ COMPILE_FLAGS = @CFLAGS@
+-CFLAGS        = $(RPM_OPT_FLAGS)
++CFLAGS        = $(RPM_OPT_FLAGS) -fno-strict-aliasing
+ VER           = 2.2.0
+ 
+ # it's a hack
+diff -up isdn4k-utils-CVS-2010-05-01-patched/pcbit/Makefile.in.me isdn4k-utils-CVS-2010-05-01-patched/pcbit/Makefile.in
+--- isdn4k-utils-CVS-2010-05-01-patched/pcbit/Makefile.in.me	2013-04-25 17:38:59.497504029 +0200
++++ isdn4k-utils-CVS-2010-05-01-patched/pcbit/Makefile.in	2013-04-25 17:39:37.366085214 +0200
+@@ -5,7 +5,7 @@
+ #
+ #
+ SHELL			= /bin/sh
+-CFLAGS			= -Wall -Wstrict-prototypes $(RPM_OPT_FLAGS)
++CFLAGS			= -Wall -Wstrict-prototypes $(RPM_OPT_FLAGS) -fno-strict-aliasing
+ INCLUDES		= -I. -DDEBUG -I@CONFIG_KERNELDIR@/drivers/isdn/pcbit
+ LDFLAGS			= -L../lib @LIBS@
+ PROGRAM			= pcbitctl
+diff -up isdn4k-utils-CVS-2010-05-01-patched/rcapid/Makefile.am.me isdn4k-utils-CVS-2010-05-01-patched/rcapid/Makefile.am
+--- isdn4k-utils-CVS-2010-05-01-patched/rcapid/Makefile.am.me	2013-04-25 17:42:52.840761232 +0200
++++ isdn4k-utils-CVS-2010-05-01-patched/rcapid/Makefile.am	2013-04-25 17:43:05.903271787 +0200
+@@ -8,7 +8,7 @@ MAINTAINERCLEANFILES    = configure aclo
+ 			  stamp-h.in comperr
+ 
+ INCLUDES = -I../capi20 $(all_includes)
+-CFLAGS = -Wall $(RPM_OPT_FLAGS)
++CFLAGS = -Wall $(RPM_OPT_FLAGS) -fno-strict-aliasing
+ LDFLAGS = -L../capi20/.libs -L../capi20 $(all_libraries)
+ LDADD = -lcapi20
+ 
+diff -up isdn4k-utils-CVS-2010-05-01-patched/vbox/src/Makefile.in.me isdn4k-utils-CVS-2010-05-01-patched/vbox/src/Makefile.in
+--- isdn4k-utils-CVS-2010-05-01-patched/vbox/src/Makefile.in.me	2013-04-25 17:41:43.948342480 +0200
++++ isdn4k-utils-CVS-2010-05-01-patched/vbox/src/Makefile.in	2013-04-25 17:42:17.984067228 +0200
+@@ -13,7 +13,7 @@ NCURSES_HAVE    = @HAVE_NCURSES_PACK@
+ TCL_LIBS	= @LINK_TCL_LIBS@
+ TCL_HAVE	= @HAVE_TCL_PACK@
+ 
+-override CFLAGS += $(VBOX_CFLAGS)
++override CFLAGS += $(VBOX_CFLAGS) -fno-strict-aliasing
+ 
+ #----------------------------------------------------------------------------#
+ # Headers                                                                    #

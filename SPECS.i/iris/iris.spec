@@ -1,16 +1,13 @@
-
-%define snap 20110904
-%define svn 812
+%define git 1
+%define vcsdate 20140418
 
 Name:    iris
 Summary: A library for working with the XMPP/Jabber protocol
 Version: 1.0.0
-Release: 0.14.%{snap}svn%{svn}%{?dist}
+Release: 0.16.git%{vcsdate}%{?dist}
 License: LGPLv2+
-URL:     http://delta.affinix.com/iris/
-# svn export https://delta.affinix.com/svn/trunk/iris iris-1.0.0
-# tar czf iris-1.0.0-%%{snap}.tar.gz iris-1.0.0/
-Source0: iris-1.0.0-r%{svn}.tar.gz
+URL:     https://github.com/psi-im/iris
+Source0: iris-git%{vcsdate}git.tar.xz
 
 BuildRequires: pkgconfig(libidn)
 BuildRequires: pkgconfig(qca2)
@@ -27,22 +24,10 @@ Requires: qca-ossl%{?_isa}
 Patch0: iris-1.0.0-install.patch
 # Build shared library, bump VERSION to 2.0.0 for ABI changes from Kopete
 Patch1: iris-1.0.0-sharedlib.patch
-# unbundle libidn, use system copy
-Patch2: iris-1.0.0-system_libidn.patch
 # install jdns
 Patch3: iris-1.0.0-jdns_install.patch
-
-## rebased patches from kopete
-Patch103: iris-1.0.0-003_case_insensitive_jid.patch
-Patch109: iris-1.0.0-009_filetransferpreview.patch
-Patch114: iris-1.0.0-014_fix_semicolons.patch
-Patch123: iris-1.0.0-023_jingle.patch
-# followup to patch123, to install new headers
-Patch223: iris-1.0.0-install_jingle.patch
-Patch124: iris-1.0.0-024_fix_semicolons_and_iterator.patch
-Patch127: iris-1.0.0-027_add_socket_access_function.patch
-Patch130: iris-1.0.0-030_xep_0115_hash_attribute.patch
-
+# omit source files with undefined references
+Patch4: iris-1.0.0-no_undefined.patch
 
 %description
 %{summary}.
@@ -74,21 +59,13 @@ Requires: qjdns%{?_isa} = %{version}-%{release}
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-git%{vcsdate}
+
 %patch0 -p1 -b .install
 %patch1 -p1 -b .shared
-%patch2 -p1 -b .system_libidn
-mv src/libidn src/libidn.BAK
 %patch3 -p1 -b .jdns_install
+%patch4 -p1 -b .no_undefined
 
-%patch103 -p1 -b .003
-%patch109 -p1 -b .009
-%patch114 -p1 -b .014
-%patch123 -p1 -b .023
-%patch223 -p1 -b .223
-%patch124 -p1 -b .024
-%patch127 -p1 -b .027
-%patch130 -p1 -b .030
 
 
 %build
@@ -110,9 +87,6 @@ mv %{buildroot}%{_qt4_headerdir}/iris/jid.h \
 sed -i -e 's|#include "xmpp/jid/jid.h"|#include "xmpp_jid.h"|g' \
   %{buildroot}%{_qt4_headerdir}/iris/*.h
 
-#修正pkgconfig的路径 
-mkdir -p %{buildroot}%{_libdir}/pkgconfig
-cp %{buildroot}%{_qt4_libdir}/pkgconfig/*.pc %{buildroot}%{_libdir}/pkgconfig
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_qt4_libdir}/pkgconfig:
@@ -134,7 +108,6 @@ test "$(pkg-config --modversion qjdns)" = "1.0.0"
 %{_qt4_headerdir}/iris/
 %{_qt4_libdir}/libiris.so
 %{_qt4_libdir}/libirisnet.so
-%{_libdir}/pkgconfig/*.pc
 %{_qt4_libdir}/pkgconfig/iris.pc
 %{_qt4_libdir}/pkgconfig/irisnet.pc
 
@@ -152,48 +125,7 @@ test "$(pkg-config --modversion qjdns)" = "1.0.0"
 
 
 %changelog
-* Tue May 07 2013 Kevin Kofler <Kevin@tigcc.ticalc.org> 1.0.0-0.14.20110904svn812
-- bump soname version to 2.0.0 for ABI changes from Kopete (#958793)
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 1.0.0-0.16.git20140418
+- 更新到 20140418 日期的仓库源码
 
-* Thu Feb 14 2013 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.13.20110904svn812
-- port/rebase kopete patches (kudos to kkofler)
 
-* Mon Feb 11 2013 Rex Dieter <rdieter@fedoraproject.org> - 1.0.0-0.12.20110904svn812
-- iris.pc: +Requires: qca2
-- system_libidn.patch: link against system libidn too
-- -devel: install missing headers
-
-* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-0.11.20110904svn812
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Sat Jan 07 2012 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.10.20110904svn812
-- fix iris headers (#772410)
-
-* Fri Jan 06 2012 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.9.20110904svn812
-- use include/jdns instead of include/qjdns, that's what most consumers expect
-
-* Wed Nov 16 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.8.20110904svn812
-- fix Release
-
-* Tue Nov 15 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.7.r812
-- use svn revision instead of snapshot date
-
-* Tue Nov 15 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.6.20110904
-- qjdns-devel: Requires: qjdns
-
-* Tue Nov 08 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.5.20110904
-- install/package qjdns
-
-* Mon Nov 07 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.4.20110904
-- unbundle libidn
-
-* Fri Oct 28 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.3.20110904
-- pkgconfig-style deps
-- Requires: qca-ossl
-
-* Wed Oct 26 2011 Tom Callaway <spot@fedoraproject.org> 1.0.0-0.2.20110904
-- finish install patch
-- generate sharedlibs
-
-* Sun Sep 04 2011 Rex Dieter <rdieter@fedoraproject.org> 1.0.0-0.1.20110904
-- first try

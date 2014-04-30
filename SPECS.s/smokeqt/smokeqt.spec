@@ -1,7 +1,7 @@
 %define rversion %{kde4_kdelibs_version}
 Name:    smokeqt
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Bindings for Qt libraries
 
 License: LGPLv2+
@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 %{_datadir}/smoke/*
 
 %changelog
+* Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

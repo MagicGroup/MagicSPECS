@@ -1,0 +1,39 @@
+From 8e0ac9576056a71dd7ad69157a94d56d433afbf6 Mon Sep 17 00:00:00 2001
+From: Tomas Heinrich <theinric@redhat.com>
+Date: Mon, 20 Jan 2014 16:23:17 +0100
+Subject: [PATCH] imuxsock: don't issue a warning if there are no sockets
+ configured
+
+---
+ plugins/imuxsock/imuxsock.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/plugins/imuxsock/imuxsock.c b/plugins/imuxsock/imuxsock.c
+index df504dd..aadb853 100644
+--- a/plugins/imuxsock/imuxsock.c
++++ b/plugins/imuxsock/imuxsock.c
+@@ -1291,6 +1291,10 @@ CODESTARTactivateCnfPrePrivDrop
+ 	for(inst = runModConf->root ; inst != NULL ; inst = inst->next) {
+ 		addListner(inst);
+ 	}
++	if(runModConf->bOmitLocalLogging && nfd == 1) {
++		/* No sockets were configured, no reason to run. */
++		ABORT_FINALIZE(RS_RET_OK);
++	}
+ 	CHKiRet(activateListeners());
+ finalize_it:
+ ENDactivateCnfPrePrivDrop
+@@ -1329,6 +1333,10 @@ BEGINrunInput
+ #endif
+ 
+ CODESTARTrunInput
++	if(runModConf->bOmitLocalLogging && nfd == 1) {
++		/* No sockets were configured, no reason to run. */
++		ABORT_FINALIZE(RS_RET_OK);
++	}
+ 	/* this is an endless loop - it is terminated when the thread is
+ 	 * signalled to do so. This, however, is handled by the framework,
+ 	 * right into the sleep below.
+-- 
+1.8.4.3
+

@@ -1,0 +1,32 @@
+From 71f0db9ccb46be357c9b6505d35340150795996c Mon Sep 17 00:00:00 2001
+From: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+Date: Thu, 9 May 2013 13:57:49 +0530
+Subject: iscsiadm: Check for mode is not required when creating params list
+
+There is no need to explicitly check for mode while creating the params
+list of name/value pairs.
+
+Reported-by: Leeman Duncan <leeman.duncan@gmail.com>
+Signed-off-by: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+---
+ usr/iscsiadm.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/usr/iscsiadm.c b/usr/iscsiadm.c
+index efe6383..84d5a27 100644
+--- a/usr/iscsiadm.c
++++ b/usr/iscsiadm.c
+@@ -2962,9 +2962,7 @@ main(int argc, char **argv)
+ 			usage(0);
+ 		}
+ 
+-		if ((mode == MODE_IFACE ||
+-		     (mode == MODE_HOST && sub_mode == MODE_FLASHNODE)) &&
+-		    name && value) {
++		if (name && value) {
+ 			param = idbm_alloc_user_param(name, value);
+ 			if (!param) {
+ 				log_error("Cannot allocate memory for params.");
+-- 
+1.8.1.4
+

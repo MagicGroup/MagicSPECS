@@ -165,6 +165,9 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_mandir}/man1/pto_gen.*
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 2012.0.0-4
+- 更新到
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 2012.0.0-4
 - 更新到
 

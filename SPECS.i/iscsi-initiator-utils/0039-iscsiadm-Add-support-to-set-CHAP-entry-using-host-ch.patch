@@ -1,0 +1,590 @@
+From 062718a9579a10ea7c87e46162f80e3f57e80b67 Mon Sep 17 00:00:00 2001
+From: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+Date: Tue, 17 Sep 2013 08:07:32 -0400
+Subject: [PATCH] iscsiadm: Add support to set CHAP entry using host chap mode
+
+Provide support to add and update CHAP entry using chap submode of
+iscsiadm host mode.
+Both, new and update, iscsiadm operations perform the same function.
+Currently only one entry can be added or updated at a time.
+
+Signed-off-by: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+Signed-off-by: Vikas Chaudhary <vikas.chaudhary@qlogic.com>
+---
+ include/iscsi_if.h |  19 ++++-
+ usr/host.c         | 110 ++++++++++++++++++++++++++++
+ usr/host.h         |   1 +
+ usr/idbm.c         |   8 ++-
+ usr/idbm.h         |   1 +
+ usr/iscsi_ipc.h    |   3 +
+ usr/iscsiadm.c     | 207 ++++++++++++++++++++++++++++++++++++++++++++++++++---
+ usr/netlink.c      |  25 +++++++
+ 8 files changed, 360 insertions(+), 14 deletions(-)
+
+diff --git a/include/iscsi_if.h b/include/iscsi_if.h
+index 01d38e7..0284662 100644
+--- a/include/iscsi_if.h
++++ b/include/iscsi_if.h
+@@ -74,8 +74,9 @@ enum iscsi_uevent_e {
+ 	ISCSI_UEVENT_LOGIN_FLASHNODE	= UEVENT_BASE + 28,
+ 	ISCSI_UEVENT_LOGOUT_FLASHNODE	= UEVENT_BASE + 29,
+ 	ISCSI_UEVENT_LOGOUT_FLASHNODE_SID	= UEVENT_BASE + 30,
++	ISCSI_UEVENT_SET_CHAP		= UEVENT_BASE + 31,
+ 
+-	ISCSI_UEVENT_MAX		= ISCSI_UEVENT_LOGOUT_FLASHNODE_SID,
++	ISCSI_UEVENT_MAX		= ISCSI_UEVENT_SET_CHAP,
+ 
+ 	/* up events */
+ 	ISCSI_KEVENT_RECV_PDU		= KEVENT_BASE + 1,
+@@ -318,8 +319,16 @@ enum iscsi_param_type {
+ 	ISCSI_HOST_PARAM,	/* iscsi_host_param */
+ 	ISCSI_NET_PARAM,	/* iscsi_net_param */
+ 	ISCSI_FLASHNODE_PARAM,	/* iscsi_flashnode_param */
++	ISCSI_CHAP_PARAM,	/* iscsi_chap_param */
+ };
+ 
++/* structure for minimalist usecase */
++struct iscsi_param_info {
++	uint32_t len;		/* Actual length of the param value */
++	uint16_t param;		/* iscsi param */
++	uint8_t value[0];	/* length sized value follows */
++} __attribute__((__packed__));
++
+ struct iscsi_iface_param_info {
+ 	uint32_t iface_num;	/* iface number, 0 - n */
+ 	uint32_t len;		/* Actual length of the param */
+@@ -748,6 +757,14 @@ enum chap_type_e {
+ 	CHAP_TYPE_IN,
+ };
+ 
++enum iscsi_chap_param {
++	ISCSI_CHAP_PARAM_INDEX,
++	ISCSI_CHAP_PARAM_CHAP_TYPE,
++	ISCSI_CHAP_PARAM_USERNAME,
++	ISCSI_CHAP_PARAM_PASSWORD,
++	ISCSI_CHAP_PARAM_PASSWORD_LEN
++};
++
+ #define ISCSI_CHAP_AUTH_NAME_MAX_LEN	256
+ #define ISCSI_CHAP_AUTH_SECRET_MAX_LEN	256
+ struct iscsi_chap_rec {
+diff --git a/usr/host.c b/usr/host.c
+index 1fcb350..f2052d3 100644
+--- a/usr/host.c
++++ b/usr/host.c
+@@ -34,6 +34,7 @@
+ #include "initiator.h"
+ #include "iface.h"
+ #include "iscsi_err.h"
++#include "iscsi_netlink.h"
+ 
+ static int match_host_to_session(void *data, struct session_info *info)
+ {
+@@ -314,3 +315,112 @@ int host_info_print(int info_level, uint32_t host_no)
+ 	}
+ 	return 0;
+ }
++
++static int chap_fill_param_uint(struct iovec *iov, int param,
++				uint32_t param_val, int param_len)
++{
++	struct iscsi_param_info *param_info;
++	struct nlattr *attr;
++	int len;
++	uint8_t val8 = 0;
++	uint16_t val16 = 0;
++	uint32_t val32 = 0;
++	char *val = NULL;
++
++	len = sizeof(struct iscsi_param_info) + param_len;
++	iov->iov_base = iscsi_nla_alloc(param, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	param_info = (struct iscsi_param_info *)ISCSI_NLA_DATA(attr);
++	param_info->param = param;
++	param_info->len = param_len;
++
++	switch (param_len) {
++	case 1:
++		val8 = (uint8_t)param_val;
++		val = (char *)&val8;
++		break;
++
++	case 2:
++		val16 = (uint16_t)param_val;
++		val = (char *)&val16;
++		break;
++
++	case 4:
++		val32 = (uint32_t)param_val;
++		val = (char *)&val32;
++		break;
++
++	default:
++		goto free;
++	}
++	memcpy(param_info->value, val, param_len);
++
++	return 0;
++
++free:
++	free(iov->iov_base);
++	iov->iov_base = NULL;
++	iov->iov_len = 0;
++	return 1;
++}
++
++static int chap_fill_param_str(struct iovec *iov, int param, char *param_val,
++			       int param_len)
++{
++	struct iscsi_param_info *param_info;
++	struct nlattr *attr;
++	int len;
++
++	len = sizeof(struct iscsi_param_info) + param_len;
++	iov->iov_base = iscsi_nla_alloc(param, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	param_info = (struct iscsi_param_info *)ISCSI_NLA_DATA(attr);
++	param_info->param = param;
++	param_info->len = param_len;
++	memcpy(param_info->value, param_val, param_len);
++	return 0;
++}
++
++int chap_build_config(struct iscsi_chap_rec *crec, struct iovec *iovs)
++{
++	struct iovec *iov = NULL;
++	int count = 0;
++
++	/* start at 2, because 0 is for nlmsghdr and 1 for event */
++	iov = iovs + 2;
++
++	if (!chap_fill_param_uint(&iov[count], ISCSI_CHAP_PARAM_INDEX,
++				  crec->chap_tbl_idx,
++				  sizeof(crec->chap_tbl_idx)))
++		count++;
++
++	if (!chap_fill_param_uint(&iov[count], ISCSI_CHAP_PARAM_CHAP_TYPE,
++				  crec->chap_type, sizeof(crec->chap_type)))
++		count++;
++
++	if (!chap_fill_param_str(&iov[count], ISCSI_CHAP_PARAM_USERNAME,
++				 crec->username, strlen(crec->username)))
++		count++;
++
++	if (!chap_fill_param_str(&iov[count], ISCSI_CHAP_PARAM_PASSWORD,
++				 (char *)crec->password,
++				 strlen((char *)crec->password)))
++		count++;
++
++	if (!chap_fill_param_uint(&iov[count], ISCSI_CHAP_PARAM_PASSWORD_LEN,
++				  crec->password_length,
++				  sizeof(crec->password_length)))
++		count++;
++
++	return count;
++}
+diff --git a/usr/host.h b/usr/host.h
+index 52e5b9e..149aa0d 100644
+--- a/usr/host.h
++++ b/usr/host.h
+@@ -17,5 +17,6 @@ struct host_info {
+ };
+ 
+ extern int host_info_print(int info_level, uint32_t host_no);
++extern int chap_build_config(struct iscsi_chap_rec *crec, struct iovec *iovs);
+ 
+ #endif
+diff --git a/usr/idbm.c b/usr/idbm.c
+index 1e4f8c8..6b6f57c 100644
+--- a/usr/idbm.c
++++ b/usr/idbm.c
+@@ -456,7 +456,7 @@ void idbm_recinfo_iface(iface_rec_t *r, recinfo_t *ri)
+ 	__recinfo_uint16(IFACE_PORT, ri, r, port, IDBM_SHOW, num, 1);
+ }
+ 
+-static void idbm_recinfo_host_chap(struct iscsi_chap_rec *r, recinfo_t *ri)
++void idbm_recinfo_host_chap(struct iscsi_chap_rec *r, recinfo_t *ri)
+ {
+ 	int num = 0;
+ 
+@@ -465,14 +465,14 @@ static void idbm_recinfo_host_chap(struct iscsi_chap_rec *r, recinfo_t *ri)
+ 
+ 	if (r->chap_type == CHAP_TYPE_OUT) {
+ 		__recinfo_str(HOST_AUTH_USERNAME, ri, r, username, IDBM_SHOW,
+-			      num, 0);
++			      num, 1);
+ 		__recinfo_str(HOST_AUTH_PASSWORD, ri, r, password, IDBM_MASKED,
+ 			      num, 1);
+ 		__recinfo_int(HOST_AUTH_PASSWORD_LEN, ri, r, password_length,
+ 			      IDBM_HIDE, num, 1);
+ 	} else {
+ 		__recinfo_str(HOST_AUTH_USERNAME_IN, ri, r, username, IDBM_SHOW,
+-			      num, 0);
++			      num, 1);
+ 		__recinfo_str(HOST_AUTH_PASSWORD_IN, ri, r, password,
+ 			      IDBM_MASKED, num, 1);
+ 		__recinfo_int(HOST_AUTH_PASSWORD_IN_LEN, ri, r, password_length,
+@@ -852,6 +852,8 @@ updated:
+ 	check_password_param(discovery.sendtargets.auth.password_in);
+ 	check_password_param(discovery.slp.auth.password);
+ 	check_password_param(discovery.slp.auth.password_in);
++	check_password_param(host.auth.password);
++	check_password_param(host.auth.password_in);
+ 
+ 	return 0;
+ }
+diff --git a/usr/idbm.h b/usr/idbm.h
+index 5e4038d..b9020fe 100644
+--- a/usr/idbm.h
++++ b/usr/idbm.h
+@@ -185,6 +185,7 @@ extern struct node_rec *
+ idbm_create_rec_from_boot_context(struct boot_context *context);
+ 
+ extern int idbm_print_host_chap_info(struct iscsi_chap_rec *chap);
++extern void idbm_recinfo_host_chap(struct iscsi_chap_rec *r, recinfo_t *ri);
+ 
+ extern int idbm_print_flashnode_info(struct flashnode_rec *target);
+ extern void idbm_recinfo_flashnode(struct flashnode_rec *r, recinfo_t *ri);
+diff --git a/usr/iscsi_ipc.h b/usr/iscsi_ipc.h
+index b6665cb..a32da1c 100644
+--- a/usr/iscsi_ipc.h
++++ b/usr/iscsi_ipc.h
+@@ -143,6 +143,9 @@ struct iscsi_ipc {
+ 			 uint16_t chap_tbl_idx, uint32_t num_entries,
+ 			 char *chap_buf, uint32_t *valid_chap_entries);
+ 
++	int (*set_chap) (uint64_t transport_handle, uint32_t host_no,
++			 struct iovec *iovs, uint32_t param_count);
++
+ 	int (*delete_chap) (uint64_t transport_handle, uint32_t host_no,
+ 			    uint16_t chap_tbl_idx);
+ 	int (*set_flash_node_params) (uint64_t transport_handle,
+diff --git a/usr/iscsiadm.c b/usr/iscsiadm.c
+index beabdf0..045259b 100644
+--- a/usr/iscsiadm.c
++++ b/usr/iscsiadm.c
+@@ -115,7 +115,7 @@ static struct option const long_options[] =
+ 	{"packetsize", required_argument, NULL, 'b'},
+ 	{"count", required_argument, NULL, 'c'},
+ 	{"interval", required_argument, NULL, 'i'},
+-	{"index", optional_argument, NULL, 'x'},
++	{"index", required_argument, NULL, 'x'},
+ 	{"portal_type", optional_argument, NULL, 'A'},
+ 	{NULL, 0, NULL, 0},
+ };
+@@ -1426,11 +1426,193 @@ exit_chap_info:
+ 	return rc;
+ }
+ 
++static int fill_host_chap_rec(struct list_head *params,
++			      struct iscsi_chap_rec *crec, recinfo_t *cinfo,
++			      uint16_t chap_tbl_idx, int type, int *param_count)
++{
++	struct user_param *param;
++	int rc = 0;
++
++	crec->chap_tbl_idx = chap_tbl_idx;
++	crec->chap_type = type;
++
++	idbm_recinfo_host_chap(crec, cinfo);
++
++	list_for_each_entry(param, params, list) {
++		rc = idbm_rec_update_param(cinfo, param->name, param->value, 0);
++		if (rc)
++			break;
++	}
++
++	if (!rc)
++		*param_count += 3; /* index, type and password_length */
++
++	return rc;
++}
++
++static int verify_host_chap_params(struct list_head *params, int *type,
++				   int *param_count)
++{
++	struct user_param *param;
++	int username = -1;
++	int password = -1;
++	int rc = 0;
++
++	list_for_each_entry(param, params, list) {
++		*param_count += 1;
++
++		if (!strcmp(param->name, HOST_AUTH_USERNAME))
++			username = CHAP_TYPE_OUT;
++		else if (!strcmp(param->name, HOST_AUTH_PASSWORD))
++			password = CHAP_TYPE_OUT;
++		else if (!strcmp(param->name, HOST_AUTH_USERNAME_IN))
++			username = CHAP_TYPE_IN;
++		else if (!strcmp(param->name, HOST_AUTH_PASSWORD_IN))
++			password = CHAP_TYPE_IN;
++		else
++			continue;
++	}
++
++	if ((username == CHAP_TYPE_OUT) && (password == CHAP_TYPE_OUT)) {
++		if (type)
++			*type = CHAP_TYPE_OUT;
++
++		rc = ISCSI_SUCCESS;
++	} else if ((username == CHAP_TYPE_IN) && (password == CHAP_TYPE_IN)) {
++		if (type)
++			*type = CHAP_TYPE_IN;
++
++		rc = ISCSI_SUCCESS;
++	} else {
++		rc = ISCSI_ERR;
++	}
++
++	return rc;
++}
++
++static int set_host_chap_info(uint32_t host_no, uint64_t chap_index,
++			      struct list_head *params)
++{
++	struct iscsi_transport *t = NULL;
++	struct iscsi_chap_rec crec;
++	recinfo_t *chap_info = NULL;
++	struct iovec *iovs = NULL;
++	struct iovec *iov = NULL;
++	int type;
++	int param_count;
++	int param_used;
++	int rc = 0;
++	int fd, i = 0;
++
++	if (list_empty(params)) {
++		log_error("Chap username/password not provided.");
++		goto exit_set_chap;
++	}
++
++	chap_info = idbm_recinfo_alloc(MAX_KEYS);
++	if (!chap_info) {
++		log_error("Out of Memory.");
++		rc = ISCSI_ERR_NOMEM;
++		goto exit_set_chap;
++	}
++
++	t = iscsi_sysfs_get_transport_by_hba(host_no);
++	if (!t) {
++		log_error("Could not match hostno %d to transport.", host_no);
++		rc = ISCSI_ERR_TRANS_NOT_FOUND;
++		goto free_info_rec;
++	}
++
++	rc = verify_host_chap_params(params, &type, &param_count);
++	if (rc) {
++		log_error("Invalid username/password pair passed. Unable to determine the type of chap entry");
++		rc = ISCSI_ERR_INVAL;
++		goto free_info_rec;
++	}
++
++	if (param_count > 2) {
++		log_error("Only one pair of username/password can be passed.");
++		rc = ISCSI_ERR;
++		goto free_info_rec;
++	}
++
++	memset(&crec, 0, sizeof(crec));
++	rc = fill_host_chap_rec(params, &crec, chap_info, chap_index, type,
++				&param_count);
++	if (rc) {
++		log_error("Unable to fill CHAP record");
++		goto free_info_rec;
++	}
++
++	/* +2 for event and nlmsghdr */
++	param_count += 2;
++	iovs = calloc((param_count * sizeof(struct iovec)),
++		       sizeof(char));
++	if (!iovs) {
++		log_error("Out of Memory.");
++		rc = ISCSI_ERR_NOMEM;
++		goto free_info_rec;
++	}
++
++	/* param_used gives actual number of iovecs used for chap */
++	param_used = chap_build_config(&crec, iovs);
++	if (!param_used) {
++		log_error("Build chap config failed.");
++		rc = ISCSI_ERR;
++		goto free_iovec;
++	}
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		rc = ISCSI_ERR_INTERNAL;
++		log_error("Netlink open failed.");
++		goto free_iovec;
++	}
++
++	rc = ipc->set_chap(t->handle, host_no, iovs, param_count);
++	if (rc < 0) {
++		log_error("CHAP setting failed");
++		if (rc == -EBUSY) {
++			rc = ISCSI_ERR_BUSY;
++			log_error("CHAP index %d is in use.",
++				  crec.chap_tbl_idx);
++		} else {
++			rc = ISCSI_ERR;
++		}
++
++		goto exit_set_chap;
++	}
++
++	ipc->ctldev_close();
++
++free_iovec:
++	/* start at 2, because 0 is for nlmsghdr and 1 for event */
++	iov = iovs + 2;
++	for (i = 0; i < param_used; i++, iov++) {
++		if (iov->iov_base)
++			free(iov->iov_base);
++	}
++
++	free(iovs);
++
++free_info_rec:
++	if (chap_info)
++		free(chap_info);
++
++exit_set_chap:
++	return rc;
++}
++
+ static int delete_host_chap_info(uint32_t host_no, uint16_t chap_tbl_idx)
+ {
+ 	struct iscsi_transport *t = NULL;
+ 	int fd, rc = 0;
+ 
++	if (chap_tbl_idx > MAX_CHAP_ENTRIES) {
++		log_error("Invalid chap table index.");
++		goto exit_delete_chap;
++	}
++
+ 	t = iscsi_sysfs_get_transport_by_hba(host_no);
+ 	if (!t) {
+ 		log_error("Could not match hostno %d to "
+@@ -1464,19 +1646,18 @@ exit_delete_chap:
+ }
+ 
+ static int exec_host_chap_op(int op, int info_level, uint32_t host_no,
+-			     uint64_t chap_index)
++			     uint64_t chap_index, struct list_head *params)
+ {
+ 	int rc = ISCSI_ERR_INVAL;
+ 
+-	if (op != OP_SHOW && (chap_index > (uint64_t)MAX_CHAP_ENTRIES)) {
+-		log_error("Invalid chap table index.");
+-		goto exit_chap_op;
+-	}
+-
+ 	switch (op) {
+ 	case OP_SHOW:
+ 		rc = get_host_chap_info(host_no);
+ 		break;
++	case OP_NEW:
++	case OP_UPDATE:
++		rc = set_host_chap_info(host_no, chap_index, params);
++		break;
+ 	case OP_DELETE:
+ 		rc = delete_host_chap_info(host_no, chap_index);
+ 		break;
+@@ -1485,7 +1666,6 @@ static int exec_host_chap_op(int op, int info_level, uint32_t host_no,
+ 		break;
+ 	}
+ 
+-exit_chap_op:
+ 	return rc;
+ }
+ 
+@@ -2816,7 +2996,7 @@ main(int argc, char **argv)
+ 	struct iface_rec *iface = NULL, *tmp;
+ 	struct node_rec *rec = NULL;
+ 	uint64_t host_no =  (uint64_t)MAX_HOST_NO + 1;
+-	uint64_t index = (uint64_t)MAX_FLASHNODE_IDX + 1;
++	uint64_t index = ULLONG_MAX;
+ 	struct user_param *param;
+ 	struct list_head params;
+ 
+@@ -3038,8 +3218,12 @@ main(int argc, char **argv)
+ 					rc = ISCSI_ERR_INVAL;
+ 					break;
+ 				}
++
++				if (index == ULLONG_MAX)
++					index = (uint64_t)MAX_CHAP_ENTRIES + 1;
++
+ 				rc = exec_host_chap_op(op, info_level, host_no,
+-						       index);
++						       index, &params);
+ 				break;
+ 			case MODE_FLASHNODE:
+ 				if (host_no > MAX_HOST_NO) {
+@@ -3048,6 +3232,9 @@ main(int argc, char **argv)
+ 					break;
+ 				}
+ 
++				if (index == ULLONG_MAX)
++					index = (uint64_t)MAX_FLASHNODE_IDX + 1;
++
+ 				rc = exec_flashnode_op(op, info_level, host_no,
+ 						       index, portal_type,
+ 						       &params);
+diff --git a/usr/netlink.c b/usr/netlink.c
+index c07fe3c..151b56d 100644
+--- a/usr/netlink.c
++++ b/usr/netlink.c
+@@ -1228,6 +1228,30 @@ static int kget_chap(uint64_t transport_handle, uint32_t host_no,
+ 	return rc;
+ }
+ 
++static int kset_chap(uint64_t transport_handle, uint32_t host_no,
++			struct iovec *iovs, uint32_t param_count)
++{
++	int rc, ev_len;
++	struct iscsi_uevent ev;
++	struct iovec *iov = iovs + 1;
++
++	log_debug(8, "in %s", __func__);
++
++	ev_len = sizeof(ev);
++	ev.type = ISCSI_UEVENT_SET_CHAP;
++	ev.transport_handle = transport_handle;
++	ev.u.set_path.host_no = host_no;
++
++	iov->iov_base = &ev;
++	iov->iov_len = sizeof(ev);
++
++	rc = __kipc_call(iovs, param_count);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
+ static int kdelete_chap(uint64_t transport_handle, uint32_t host_no,
+ 			uint16_t chap_tbl_idx)
+ {
+@@ -1705,6 +1729,7 @@ struct iscsi_ipc nl_ipc = {
+ 	.recv_conn_state        = krecv_conn_state,
+ 	.exec_ping		= kexec_ping,
+ 	.get_chap		= kget_chap,
++	.set_chap		= kset_chap,
+ 	.delete_chap		= kdelete_chap,
+ 	.set_flash_node_params	= kset_flashnode_params,
+ 	.new_flash_node		= knew_flashnode,
+-- 
+1.8.3.1
+

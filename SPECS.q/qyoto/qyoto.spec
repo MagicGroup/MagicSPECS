@@ -4,7 +4,7 @@
 Name:    qyoto 
 Summary: .NET/Mono bindings for the Qt libraries 
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # libqyoto LGPLv2+, mono bindings GPLv2+
 License: LGPLv2+ and GPLv2+
@@ -106,6 +106,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

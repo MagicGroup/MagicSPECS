@@ -1,0 +1,26 @@
+From b852f846c46a3bb9451f99844edfbea41f3289f1 Mon Sep 17 00:00:00 2001
+From: Alan Antonuk <alan.antonuk@gmail.com>
+Date: Mon, 17 Feb 2014 19:28:56 -0800
+Subject: [PATCH] Add missing amqp_get_server_properties() function.
+
+Fixes #170
+---
+ librabbitmq/amqp_connection.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/librabbitmq/amqp_connection.c b/librabbitmq/amqp_connection.c
+index d3491fb..5d70b07 100644
+--- a/librabbitmq/amqp_connection.c
++++ b/librabbitmq/amqp_connection.c
+@@ -519,3 +519,8 @@ int amqp_send_frame(amqp_connection_state_t state,
+ 
+   return res;
+ }
++amqp_table_t *
++amqp_get_server_properties(amqp_connection_state_t state)
++{
++  return &state->server_properties;
++}
+-- 
+1.9.1
+

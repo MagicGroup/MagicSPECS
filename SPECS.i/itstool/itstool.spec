@@ -1,9 +1,11 @@
 Name:           itstool
-Version:        1.2.0
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        ITS-based XML translation tool
+Summary(zh_CN.UTF-8): 基于 ITS 的 XML 翻译工具
 
 Group:          Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv3+
 URL:            http://itstool.org/
 Source0:        http://files.itstool.org/itstool/%{name}-%{version}.tar.bz2
@@ -15,6 +17,10 @@ Requires:       libxml2-python
 ITS Tool allows you to translate XML documents with PO files, using rules from
 the W3C Internationalization Tag Set (ITS) to determine what to translate and
 how to separate it into PO file messages.
+
+%description -l zh_CN.UTF-8
+ITS 工具允许你使用 PO 文件翻译 XML 文档，使用 W3C 的标准 国际化标签集（ITS）来
+检测需要翻译什么和怎么在 PO 文件中分隔信息。
 
 %prep
 %setup -q

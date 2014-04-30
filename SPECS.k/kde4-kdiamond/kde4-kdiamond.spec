@@ -10,7 +10,7 @@ Summary(zh_CN.UTF-8): 一个钻石连线游戏
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
@@ -30,20 +30,6 @@ The object of the game is to build lines of three similar diamonds.
 
 %description -l zh_CN.UTF-8
 一个钻石连线游戏。
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package devel
-Summary: Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-
-%description devel
-Contains the development files.
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -89,6 +75,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/sounds/*
 
 %changelog
+* Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

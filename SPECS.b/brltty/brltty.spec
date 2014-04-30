@@ -21,7 +21,7 @@
 
 Name: brltty
 Version: %{pkg_version}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
 URL: http://mielke.cc/brltty/
@@ -406,6 +406,9 @@ fi
 %endif
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 5.0-2
+- 为 Magic 3.0 重建
+
 * Thu Feb 20 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 5.0-1
 - New version
   Resolves: rhbz#1067337

@@ -1,7 +1,7 @@
-diff -pruN imsettings-1.2.8.orig/data/xinput.sh.in.in imsettings-1.2.8/data/xinput.sh.in.in
---- imsettings-1.2.8.orig/data/xinput.sh.in.in	2012-02-10 12:40:12.000000000 +0900
-+++ imsettings-1.2.8/data/xinput.sh.in.in	2012-02-10 12:43:43.000000000 +0900
-@@ -267,9 +267,10 @@ if [ -r "$USER_XINPUTRC" -a "x$IMSETTING
+diff -pruN imsettings-1.6.1.orig/data/xinput.sh.in.in imsettings-1.6.1/data/xinput.sh.in.in
+--- imsettings-1.6.1.orig/data/xinput.sh.in.in	2013-04-03 19:23:22.000000000 +0900
++++ imsettings-1.6.1/data/xinput.sh.in.in	2013-04-03 19:23:50.000000000 +0900
+@@ -53,9 +53,10 @@ if [ -r "$USER_XINPUTRC" -a "x$IMSETTING
      fi
  elif [ -r "$SYS_XINPUTRC" ]; then
      # FIXME: This hardcoded list has to be gone in the future.
@@ -14,7 +14,7 @@ diff -pruN imsettings-1.2.8.orig/data/xinput.sh.in.in imsettings-1.2.8/data/xinp
          if echo $tmplang | grep -q -E "^$i"; then
              source "$SYS_XINPUTRC"
              READ_XINPUTRC=$SYS_XINPUTRC
-@@ -277,6 +278,19 @@ elif [ -r "$SYS_XINPUTRC" ]; then
+@@ -63,6 +64,19 @@ elif [ -r "$SYS_XINPUTRC" ]; then
              break
          fi
      done

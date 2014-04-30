@@ -1,0 +1,2505 @@
+From ade9aafd7cbbd3d1543ff005290e2571f56dd964 Mon Sep 17 00:00:00 2001
+From: Mike Christie <michaelc@cs.wisc.edu>
+Date: Mon, 13 May 2013 03:15:34 -0500
+Subject: From: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+
+This support lets the user manage the target entries in adapter flash
+and
+perform various operations like add, delete, login, logout,
+and update the target information.
+
+The sysfs entries will look as cited below:
+        /sys/bus/iscsi_flashnode/devices/flashnode_sess-<host_no>:<flashnode_id>/<session
+attrs>
+        /sys/bus/iscsi_flashnode/devices/flashnode_conn-<host_no>:<flashnode_id>:<conn_id>/<conn
+attrs>
+
+Operations using iscsiadm:
+=========================
+
+List all target nodes stored in the FLASH of the adapter
+\# iscsiadm -m host -H hostno -C flashnode -o show
+
+View all parameters of one particular flash node
+\# iscsiadm -m host -H hostno -C flashnode -x <flashnode_idx> -o show
+
+Update an entry and commit to adapter FLASH
+\# iscsiadm -m host -H hostno -C flashnode -x <flashnode_idx> -n <name>
+-v <value> -o update
+
+Multiple name, value pairs can be specified in a single command for
+update operation
+
+Delete an entry
+\# iscsiadm -m host -H hostno -C flashnode -x <flashnode_idx>  -o delete
+
+Create a new entry
+\# iscsiadm -m host -H hostno -C flashnode -o new -A <ipv4/ipv6>
+\# iscsiadm -m host -H hostno -C flashnode -x <flashnode_idx> -n <name>
+-v <value> -o update
+
+Example, create new entry:
+\#iscsiadm -m host -H 7 -C flashnode -o new -A ipv4
+Flashnode index: 2
+
+New flashnode for host7 added
+
+\#iscsiadm -m host -H 7 -C flashnode -o show
+qla4xxx: [0] 192.168.1.12:3260,2
+iqn.2002-03.com.compellent:5000d310004b0716
+qla4xxx: [1] 192.168.1.12:3260,2
+qla4xxx: [2]
+
+Here - The newly created entry is at flashnode_idx 2, use it to update
+the entry
+
+\# iscsiadm -m host -H 7 -C flashnode -x 2 -o update
+flashnode.conn[0].ipaddress -v 192.168.1.13
+\#iscsiadm -m host -H 7 -C flashnode -o show
+qla4xxx: [0] 192.168.1.12:3260,2
+iqn.2002-03.com.compellent:5000d310004b0716
+qla4xxx: [1] 192.168.1.12:3260,2
+qla4xxx: [2] 192.168.1.13:3260,0
+
+Login
+\# iscsiadm -m host -H hostno -C flashnode -x <flashnode_idx>  -o login
+
+Logout
+\# iscsiadm -m host -H hostno -C flashnode -x <flashnode_idx>  -o logout
+\# iscsiadm -m session -r sid -u
+
+Signed-off-by: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+Signed-off-by: Manish Rangankar <manish.rangankar@qlogic.com>
+Signed-off-by: Vikas Chaudhary <vikas.chaudhary@qlogic.com>
+---
+ include/iscsi_if.h | 190 ++++++++++++++++-
+ usr/Makefile       |   2 +-
+ usr/flashnode.c    | 609 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ usr/flashnode.h    | 127 +++++++++++
+ usr/idbm.c         | 179 ++++++++++++++++
+ usr/idbm.h         |   7 +
+ usr/idbm_fields.h  |  63 ++++++
+ usr/iscsi_ipc.h    |  13 ++
+ usr/iscsi_sysfs.c  | 234 ++++++++++++++++++++
+ usr/iscsi_sysfs.h  |  17 ++
+ usr/iscsiadm.c     | 429 ++++++++++++++++++++++++++++++++++++-
+ usr/netlink.c      | 171 ++++++++++++++-
+ 12 files changed, 2031 insertions(+), 10 deletions(-)
+ create mode 100644 usr/flashnode.c
+ create mode 100644 usr/flashnode.h
+
+diff --git a/include/iscsi_if.h b/include/iscsi_if.h
+index dad9fd8..20f2bc2 100644
+--- a/include/iscsi_if.h
++++ b/include/iscsi_if.h
+@@ -68,8 +68,14 @@ enum iscsi_uevent_e {
+ 	ISCSI_UEVENT_PING		= UEVENT_BASE + 22,
+ 	ISCSI_UEVENT_GET_CHAP		= UEVENT_BASE + 23,
+ 	ISCSI_UEVENT_DELETE_CHAP	= UEVENT_BASE + 24,
++	ISCSI_UEVENT_SET_FLASHNODE_PARAMS	= UEVENT_BASE + 25,
++	ISCSI_UEVENT_NEW_FLASHNODE	= UEVENT_BASE + 26,
++	ISCSI_UEVENT_DEL_FLASHNODE	= UEVENT_BASE + 27,
++	ISCSI_UEVENT_LOGIN_FLASHNODE	= UEVENT_BASE + 28,
++	ISCSI_UEVENT_LOGOUT_FLASHNODE	= UEVENT_BASE + 29,
++	ISCSI_UEVENT_LOGOUT_FLASHNODE_SID	= UEVENT_BASE + 30,
+ 
+-	ISCSI_UEVENT_MAX		= ISCSI_UEVENT_DELETE_CHAP,
++	ISCSI_UEVENT_MAX		= ISCSI_UEVENT_LOGOUT_FLASHNODE_SID,
+ 
+ 	/* up events */
+ 	ISCSI_KEVENT_RECV_PDU		= KEVENT_BASE + 1,
+@@ -219,6 +225,31 @@ struct iscsi_uevent {
+ 			uint32_t	host_no;
+ 			uint16_t	chap_tbl_idx;
+ 		} delete_chap;
++		struct msg_set_flashnode_param {
++			uint32_t	host_no;
++			uint32_t	flashnode_idx;
++			uint32_t	count;
++		} set_flashnode;
++		struct msg_new_flashnode {
++			uint32_t	host_no;
++			uint32_t	len;
++		} new_flashnode;
++		struct msg_del_flashnode {
++			uint32_t	host_no;
++			uint32_t	flashnode_idx;
++		} del_flashnode;
++		struct msg_login_flashnode {
++			uint32_t	host_no;
++			uint32_t	flashnode_idx;
++		} login_flashnode;
++		struct msg_logout_flashnode {
++			uint32_t	host_no;
++			uint32_t	flashnode_idx;
++		} logout_flashnode;
++		struct msg_logout_flashnode_sid {
++			uint32_t	host_no;
++			uint32_t	sid;
++		} logout_flashnode_sid;
+ 	} u;
+ 	union {
+ 		/* messages k -> u */
+@@ -276,6 +307,9 @@ struct iscsi_uevent {
+ 						   with each ping request */
+ 			uint32_t	data_size;
+ 		} ping_comp;
++		struct msg_new_flashnode_ret {
++			uint32_t	flashnode_idx;
++		} new_flashnode_ret;
+ 	} r;
+ } __attribute__ ((aligned (sizeof(uint64_t))));
+ 
+@@ -283,6 +317,7 @@ enum iscsi_param_type {
+ 	ISCSI_PARAM,		/* iscsi_param (session, conn, target, LU) */
+ 	ISCSI_HOST_PARAM,	/* iscsi_host_param */
+ 	ISCSI_NET_PARAM,	/* iscsi_net_param */
++	ISCSI_FLASHNODE_PARAM,	/* iscsi_flashnode_param */
+ };
+ 
+ struct iscsi_iface_param_info {
+@@ -502,6 +537,159 @@ enum iscsi_param {
+ #define ISCSI_TGT_RESET_TMO		(1ULL << ISCSI_PARAM_TGT_RESET_TMO)
+ #define ISCSI_TARGET_ALIAS		(1ULL << ISCSI_PARAM_TARGET_ALIAS)
+ 
++/* iSCSI Flash Target params */
++enum iscsi_flashnode_param {
++	ISCSI_FLASHNODE_IS_FW_ASSIGNED_IPV6,
++	ISCSI_FLASHNODE_PORTAL_TYPE,
++	ISCSI_FLASHNODE_AUTO_SND_TGT_DISABLE,
++	ISCSI_FLASHNODE_DISCOVERY_SESS,
++	ISCSI_FLASHNODE_ENTRY_EN,
++	ISCSI_FLASHNODE_HDR_DGST_EN,
++	ISCSI_FLASHNODE_DATA_DGST_EN,
++	ISCSI_FLASHNODE_IMM_DATA_EN,
++	ISCSI_FLASHNODE_INITIAL_R2T_EN,
++	ISCSI_FLASHNODE_DATASEQ_INORDER,
++	ISCSI_FLASHNODE_PDU_INORDER,
++	ISCSI_FLASHNODE_CHAP_AUTH_EN,
++	ISCSI_FLASHNODE_SNACK_REQ_EN,
++	ISCSI_FLASHNODE_DISCOVERY_LOGOUT_EN,
++	ISCSI_FLASHNODE_BIDI_CHAP_EN,
++	/* make authentication for discovery sessions optional */
++	ISCSI_FLASHNODE_DISCOVERY_AUTH_OPTIONAL,
++	ISCSI_FLASHNODE_ERL,
++	ISCSI_FLASHNODE_TCP_TIMESTAMP_STAT,
++	ISCSI_FLASHNODE_TCP_NAGLE_DISABLE,
++	ISCSI_FLASHNODE_TCP_WSF_DISABLE,
++	ISCSI_FLASHNODE_TCP_TIMER_SCALE,
++	ISCSI_FLASHNODE_TCP_TIMESTAMP_EN,
++	ISCSI_FLASHNODE_IP_FRAG_DISABLE,
++	ISCSI_FLASHNODE_MAX_RECV_DLENGTH,
++	ISCSI_FLASHNODE_MAX_XMIT_DLENGTH,
++	ISCSI_FLASHNODE_FIRST_BURST,
++	ISCSI_FLASHNODE_DEF_TIME2WAIT,
++	ISCSI_FLASHNODE_DEF_TIME2RETAIN,
++	ISCSI_FLASHNODE_MAX_R2T,
++	ISCSI_FLASHNODE_KEEPALIVE_TMO,
++	ISCSI_FLASHNODE_ISID,
++	ISCSI_FLASHNODE_TSID,
++	ISCSI_FLASHNODE_PORT,
++	ISCSI_FLASHNODE_MAX_BURST,
++	ISCSI_FLASHNODE_DEF_TASKMGMT_TMO,
++	ISCSI_FLASHNODE_IPADDR,
++	ISCSI_FLASHNODE_ALIAS,
++	ISCSI_FLASHNODE_REDIRECT_IPADDR,
++	ISCSI_FLASHNODE_MAX_SEGMENT_SIZE,
++	ISCSI_FLASHNODE_LOCAL_PORT,
++	ISCSI_FLASHNODE_IPV4_TOS,
++	ISCSI_FLASHNODE_IPV6_TC,
++	ISCSI_FLASHNODE_IPV6_FLOW_LABEL,
++	ISCSI_FLASHNODE_NAME,
++	ISCSI_FLASHNODE_TPGT,
++	ISCSI_FLASHNODE_LINK_LOCAL_IPV6,
++	ISCSI_FLASHNODE_DISCOVERY_PARENT_IDX,
++	ISCSI_FLASHNODE_DISCOVERY_PARENT_TYPE,
++	ISCSI_FLASHNODE_TCP_XMIT_WSF,
++	ISCSI_FLASHNODE_TCP_RECV_WSF,
++	ISCSI_FLASHNODE_CHAP_IN_IDX,
++	ISCSI_FLASHNODE_CHAP_OUT_IDX,
++	ISCSI_FLASHNODE_USERNAME,
++	ISCSI_FLASHNODE_USERNAME_IN,
++	ISCSI_FLASHNODE_PASSWORD,
++	ISCSI_FLASHNODE_PASSWORD_IN,
++	ISCSI_FLASHNODE_STATSN,
++	ISCSI_FLASHNODE_EXP_STATSN,
++	ISCSI_FLASHNODE_IS_BOOT_TGT,
++
++	ISCSI_FLASHNODE_MAX,
++};
++
++#define ISCSI_FNODE_IS_FW_ASSIGNED_IPV6				\
++	(1ULL << ISCSI_FLASHNODE_IS_FW_ASSIGNED_IPV6)
++#define ISCSI_FNODE_PORTAL_TYPE		(1ULL << ISCSI_FLASHNODE_PORTAL_TYPE)
++#define ISCSI_FNODE_AUTO_SND_TGT_DISABLE			\
++	(1ULL << ISCSI_FLASHNODE_OPT_AUTO_SND_TGT_DISABLE)
++#define ISCSI_FNODE_DISCOVERY_SESS				\
++	(1ULL << ISCSI_FLASHNODE_OPT_DISCOVERY_SESS)
++#define ISCSI_FNODE_ENTRY_EN		(1ULL << ISCSI_FLASHNODE_ENTRY_EN)
++#define ISCSI_FNODE_HDR_DGST_EN		(1ULL << ISCSI_FLASHNODE_HDR_DGST_EN)
++#define ISCSI_FNODE_DATA_DGST_EN	(1ULL << ISCSI_FLASHNODE_DATA_DGST_EN)
++#define ISCSI_FNODE_IMM_DATA_EN		(1ULL << ISCSI_FLASHNODE_IMM_DATA_EN)
++#define ISCSI_FNODE_INITIAL_R2T_EN	(1ULL << ISCSI_FLASHNODE_INITIAL_R2T_EN)
++#define ISCSI_FNODE_DATASEQ_INORDER				\
++	(1ULL << ISCSI_FLASHNODE_DATASEQ_INORDER)
++#define ISCSI_FNODE_PDU_INORDER		(1ULL << ISCSI_FLASHNODE_PDU_INORDER)
++#define ISCSI_FNODE_CHAP_AUTH_EN	(1ULL << ISCSI_FLASHNODE_CHAP_AUTH_EN)
++#define ISCSI_FNODE_SNACK_REQ_EN	(1ULL << ISCSI_FLASHNODE_SNACK_REQ_EN)
++#define ISCSI_FNODE_DISCOVERY_LOGOUT_EN				\
++	(1ULL << ISCSI_FLASHNODE_DISCOVERY_LOGOUT_EN)
++#define ISCSI_FNODE_BIDI_CHAP_EN	(1ULL << ISCSI_FLASHNODE_BIDI_CHAP_EN)
++#define ISCSI_FNODE_DISCOVERY_AUTH_OPTIONAL			\
++	(1ULL << ISCSI_FLASHNODE_DISCOVERY_AUTH_OPTIONAL)
++#define ISCSI_FNODE_ERL			(1ULL << ISCSI_FLASHNODE_ERL)
++#define ISCSI_FNODE_TCP_TIMESTAMP_STAT				\
++	(1ULL << ISCSI_FLASHNODE_TCP_TIMESTAMP_STAT)
++#define ISCSI_FNODE_TCP_NAGLE_DISABLE				\
++	(1ULL << ISCSI_FLASHNODE_TCP_NAGLE_DISABLE)
++#define ISCSI_FNODE_TCP_WSF_DISABLE				\
++	(1ULL << ISCSI_FLASHNODE_TCP_WSF_DISABLE)
++#define ISCSI_FNODE_TCP_TIMER_SCALE				\
++	(1ULL << ISCSI_FLASHNODE_TCP_TIMER_SCALE)
++#define ISCSI_FNODE_TCP_TIMESTAMP_ENABLE			\
++	(1ULL << ISCSI_FLASHNODE_TCP_TIMESTAMP_ENABLE)
++#define ISCSI_FNODE_IP_FRAG_DISABLE				\
++	(1ULL << ISCSI_FLASHNODE_IP_FRAG_DISABLE)
++#define ISCSI_FNODE_MAX_RECV_DLENGTH				\
++	(1ULL << ISCSI_FLASHNODE_MAX_RECV_DLENGTH)
++#define ISCSI_FNODE_MAX_XMIT_DLENGTH				\
++	(1ULL << ISCSI_FLASHNODE_MAX_XMIT_DLENGTH)
++#define ISCSI_FNODE_FIRST_BURST		(1ULL << ISCSI_FLASHNODE_FIRST_BURST)
++#define ISCSI_FNODE_DEF_TIME2WAIT	(1ULL << ISCSI_FLASHNODE_DEF_TIME2WAIT)
++#define ISCSI_FNODE_DEF_TIME2RETAIN	\
++	(1ULL << ISCSI_FLASHNODE_DEF_TIME2RETAIN)
++#define ISCSI_FNODE_MAX_R2T		(1ULL << ISCSI_FLASHNODE_MAX_R2T)
++#define ISCSI_FNODE_KEEPALIVE_TMO	(1ULL << ISCSI_FLASHNODE_KEEPALIVE_TMO)
++#define ISCSI_FNODE_ISID		(1ULL << ISCSI_FLASHNODE_ISID)
++#define ISCSI_FNODE_TSID		(1ULL << ISCSI_FLASHNODE_TSID)
++#define ISCSI_FNODE_PORT		(1ULL << ISCSI_FLASHNODE_PORT)
++#define ISCSI_FNODE_MAX_BURST		(1ULL << ISCSI_FLASHNODE_MAX_BURST)
++#define ISCSI_FNODE_DEF_TMF_TMO		(1ULL << ISCSI_FLASHNODE_DEF_TMF_TMO)
++#define ISCSI_FNODE_IPADDR		(1ULL << ISCSI_FLASHNODE_IPADDR)
++#define ISCSI_FNODE_ALIAS		(1ULL << ISCSI_FLASHNODE_ALIAS)
++#define ISCSI_FNODE_REDIRECT_IPADDR	\
++	(1ULL << ISCSI_FLASHNODE_REDIRECT_IPADDR)
++#define ISCSI_FNODE_MAX_SEGMENT_SIZE	\
++	(1ULL << ISCSI_FLASHNODE_MAX_SEGMENT_SIZE)
++#define ISCSI_FNODE_LOCAL_PORT		(1ULL << ISCSI_FLASHNODE_LOCAL_PORT)
++#define ISCSI_FNODE_IPV4_TOS		(1ULL << ISCSI_FLASHNODE_IPV4_TOS)
++#define ISCSI_FNODE_IPV6_TC		(1ULL << ISCSI_FLASHNODE_IPV6_TC)
++#define ISCSI_FNODE_IPV6_FLOW_LABEL	\
++	(1ULL << ISCSI_FLASHNODE_IPV6_FLOW_LABEL)
++#define ISCSI_FNODE_NAME		(1ULL << ISCSI_FLASHNODE_NAME)
++#define ISCSI_FNODE_TPGT		(1ULL << ISCSI_FLASHNODE_TPGT)
++#define ISCSI_FNODE_LINK_LOCAL_IPV6	\
++	(1ULL << ISCSI_FLASHNODE_LINK_LOCAL_IPV6)
++#define ISCSI_FNODE_DISCOVERY_PARENT_IDX	\
++	(1ULL << ISCSI_FLASHNODE_DISCOVERY_PARENT_IDX)
++#define ISCSI_FNODE_DISCOVERY_PARENT_TYPE	\
++	(1ULL << ISCSI_FLASHNODE_DISCOVERY_PARENT_TYPE)
++#define ISCSI_FNODE_TCP_XMIT_WSF	(1ULL << ISCSI_FLASHNODE_TCP_XMIT_WSF)
++#define ISCSI_FNODE_TCP_RECV_WSF	(1ULL << ISCSI_FLASHNODE_TCP_RECV_WSF)
++#define ISCSI_FNODE_CHAP_IN_IDX		(1ULL << ISCSI_FLASHNODE_CHAP_IN_IDX)
++#define ISCSI_FNODE_CHAP_OUT_IDX	(1ULL << ISCSI_FLASHNODE_CHAP_OUT_IDX)
++#define ISCSI_FNODE_USERNAME		(1ULL << ISCSI_FLASHNODE_USERNAME)
++#define ISCSI_FNODE_USERNAME_IN		(1ULL << ISCSI_FLASHNODE_USERNAME_IN)
++#define ISCSI_FNODE_PASSWORD		(1ULL << ISCSI_FLASHNODE_PASSWORD)
++#define ISCSI_FNODE_PASSWORD_IN		(1ULL << ISCSI_FLASHNODE_PASSWORD_IN)
++#define ISCSI_FNODE_STATSN		(1ULL << ISCSI_FLASHNODE_STATSN)
++#define ISCSI_FNODE_EXP_STATSN		(1ULL << ISCSI_FLASHNODE_EXP_STATSN)
++#define ISCSI_FNODE_IS_BOOT_TGT		(1ULL << ISCSI_FLASHNODE_IS_BOOT_TGT)
++
++struct iscsi_flashnode_param_info {
++	uint32_t len;		/* Actual length of the param */
++	uint16_t param;		/* iscsi param value */
++	uint8_t value[0];	/* length sized value follows */
++} __attribute__((__packed__));
++
+ /* iSCSI HBA params */
+ enum iscsi_host_param {
+ 	ISCSI_HOST_PARAM_HWADDRESS,
+diff --git a/usr/Makefile b/usr/Makefile
+index 33b517c..3d8ee22 100644
+--- a/usr/Makefile
++++ b/usr/Makefile
+@@ -40,7 +40,7 @@ SYSDEPS_SRCS = $(wildcard ../utils/sysdeps/*.o)
+ ISCSI_LIB_SRCS = iscsi_util.o io.o auth.o iscsi_timer.o login.o log.o md5.o \
+ 	sha1.o iface.o idbm.o sysfs.o host.o session_info.o iscsi_sysfs.o \
+ 	iscsi_net_util.o iscsid_req.o transport.o iser.o cxgbi.o be2iscsi.o \
+-	initiator_common.o iscsi_err.o uip_mgmt_ipc.o \
++	initiator_common.o iscsi_err.o flashnode.o uip_mgmt_ipc.o \
+ 	$(IPC_OBJ)  $(SYSDEPS_SRCS)
+ # core initiator files
+ INITIATOR_SRCS = initiator.o scsi.o actor.o event_poll.o mgmt_ipc.o kern_err_table.o
+diff --git a/usr/flashnode.c b/usr/flashnode.c
+new file mode 100644
+index 0000000..da1392a
+--- /dev/null
++++ b/usr/flashnode.c
+@@ -0,0 +1,609 @@
++/*
++ * iSCSI flashnode helpers
++ *
++ * Copyright (C) 2013 QLogic Corporation.
++ * Maintained by open-iscsi@googlegroups.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published
++ * by the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++ * General Public License for more details.
++ *
++ * See the file COPYING included with this distribution for more details.
++ */
++#include <errno.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <string.h>
++#include <sys/stat.h>
++#include <arpa/inet.h>
++
++#include "log.h"
++#include "idbm.h"
++#include "iscsi_util.h"
++#include "transport.h"
++#include "iscsi_sysfs.h"
++#include "list.h"
++#include "sysdeps.h"
++#include "idbm_fields.h"
++#include "iscsi_err.h"
++#include "iscsi_ipc.h"
++#include "iscsi_netlink.h"
++#include "flashnode.h"
++#include "iscsi_settings.h"
++
++char key[NAME_MAXVAL];
++
++char *to_key(const char *fmt)
++{
++	int i = 0;
++	memset(key, 0, sizeof(key));
++	sprintf(key, fmt, i);
++	return key;
++}
++
++int flashnode_info_print_flat(void *data, struct flashnode_rec *fnode,
++			      uint32_t host_no, uint32_t flashnode_idx)
++{
++	printf("%s: [%d] ", fnode->transport_name, flashnode_idx);
++	if (!strlen((char *)fnode->conn[0].ipaddress))
++		printf("%s:", UNKNOWN_VALUE);
++	else if (strchr((char *)fnode->conn[0].ipaddress, '.'))
++		printf("%s:", fnode->conn[0].ipaddress);
++	else
++		printf("[%s]:", fnode->conn[0].ipaddress);
++
++	if (!fnode->conn[0].port)
++		printf("%s,", UNKNOWN_VALUE);
++	else
++		printf("%u,", fnode->conn[0].port);
++
++	printf("%u ", fnode->sess.tpgt);
++
++	if (!strlen(fnode->sess.targetname))
++		printf("%s\n", UNKNOWN_VALUE);
++	else
++		printf("%s\n", fnode->sess.targetname);
++
++	return 0;
++}
++
++static int flashnode_fill_isid(struct flashnode_rec *fnode, struct iovec *iov)
++{
++	struct iscsi_flashnode_param_info *fnode_param;
++	struct nlattr *attr;
++	int len;
++	uint8_t isid[6];
++
++	len = sizeof(struct iscsi_flashnode_param_info) + 6;
++	iov->iov_base = iscsi_nla_alloc(ISCSI_FLASHNODE_ISID, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	fnode_param = (struct iscsi_flashnode_param_info *)ISCSI_NLA_DATA(attr);
++	fnode_param->param = ISCSI_FLASHNODE_ISID;
++	fnode_param->len = 6;
++
++	sscanf(fnode->sess.isid, "%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx",
++	       &isid[0], &isid[1], &isid[2], &isid[3], &isid[4], &isid[5]);
++
++	memcpy(fnode_param->value, isid, fnode_param->len);
++	return 0;
++}
++
++static int flashnode_fill_ipv4_addr(struct flashnode_rec *fnode,
++				    struct iovec *iov, int param_type)
++{
++	struct iscsi_flashnode_param_info *fnode_param;
++	struct nlattr *attr;
++	int len;
++	int rc;
++
++	len = sizeof(struct iscsi_flashnode_param_info) + 4;
++	iov->iov_base = iscsi_nla_alloc(param_type, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	fnode_param = (struct iscsi_flashnode_param_info *)ISCSI_NLA_DATA(attr);
++	fnode_param->param = param_type;
++	fnode_param->len = 4;
++
++	switch (param_type) {
++	case ISCSI_FLASHNODE_IPADDR:
++		rc = inet_pton(AF_INET, (char *)fnode->conn[0].ipaddress,
++			       fnode_param->value);
++		break;
++	case ISCSI_FLASHNODE_REDIRECT_IPADDR:
++		rc = inet_pton(AF_INET, (char *)fnode->conn[0].redirect_ipaddr,
++			       fnode_param->value);
++		break;
++	default:
++		goto free;
++	}
++
++	if (rc <= 0)
++		goto free;
++
++	return 0;
++
++free:
++	free(iov->iov_base);
++	iov->iov_base = NULL;
++	iov->iov_len = 0;
++	return 1;
++}
++
++static int flashnode_fill_ipv6_addr(struct flashnode_rec *fnode,
++				    struct iovec *iov, int param_type)
++{
++	struct iscsi_flashnode_param_info *fnode_param;
++	struct nlattr *attr;
++	int len;
++	int rc;
++
++	len = sizeof(struct iscsi_flashnode_param_info) + 16;
++	iov->iov_base = iscsi_nla_alloc(param_type, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	fnode_param = (struct iscsi_flashnode_param_info *)ISCSI_NLA_DATA(attr);
++	fnode_param->param = param_type;
++	fnode_param->len = 16;
++
++	switch (param_type) {
++	case ISCSI_FLASHNODE_IPADDR:
++		rc = inet_pton(AF_INET6, (char *)fnode->conn[0].ipaddress,
++			       fnode_param->value);
++		break;
++	case ISCSI_FLASHNODE_REDIRECT_IPADDR:
++		rc = inet_pton(AF_INET6, (char *)fnode->conn[0].redirect_ipaddr,
++			       fnode_param->value);
++		break;
++	case ISCSI_FLASHNODE_LINK_LOCAL_IPV6:
++		rc = inet_pton(AF_INET6, (char *)fnode->conn[0].link_local_ipv6,
++			       fnode_param->value);
++		break;
++	default:
++		goto free;
++	}
++
++	if (rc <= 0)
++		goto free;
++
++	return 0;
++
++free:
++	free(iov->iov_base);
++	iov->iov_base = NULL;
++	iov->iov_len = 0;
++	return 1;
++}
++
++static int flashnode_fill_ipaddr(struct flashnode_rec *fnode, struct iovec *iov,
++				 int param_type)
++{
++	int rc = 0;
++
++	if (!strncmp(fnode->sess.portal_type, "ipv4", 4))
++		rc = flashnode_fill_ipv4_addr(fnode, iov, param_type);
++	else
++		rc = flashnode_fill_ipv6_addr(fnode, iov, param_type);
++
++	return rc;
++}
++
++static int flashnode_fill_uint8(struct flashnode_rec *fnode, struct iovec *iov,
++				int param_type, uint8_t val)
++{
++	struct iscsi_flashnode_param_info *fnode_param;
++	struct nlattr *attr;
++	int len;
++
++	len = sizeof(struct iscsi_flashnode_param_info) + 1;
++	iov->iov_base = iscsi_nla_alloc(param_type, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	fnode_param = (struct iscsi_flashnode_param_info *)ISCSI_NLA_DATA(attr);
++	fnode_param->param = param_type;
++	fnode_param->len = 1;
++	fnode_param->value[0] = val;
++	return 0;
++}
++
++static int flashnode_fill_uint16(struct flashnode_rec *fnode, struct iovec *iov,
++				 int param_type, uint16_t val)
++{
++	struct iscsi_flashnode_param_info *fnode_param;
++	struct nlattr *attr;
++	int len;
++
++	len = sizeof(struct iscsi_flashnode_param_info) + 2;
++	iov->iov_base = iscsi_nla_alloc(param_type, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	fnode_param = (struct iscsi_flashnode_param_info *)ISCSI_NLA_DATA(attr);
++	fnode_param->param = param_type;
++	fnode_param->len = 2;
++	memcpy(fnode_param->value, &val, fnode_param->len);
++	return 0;
++}
++
++static int flashnode_fill_uint32(struct flashnode_rec *fnode, struct iovec *iov,
++				 int param_type, uint32_t val)
++{
++	struct iscsi_flashnode_param_info *fnode_param;
++	struct nlattr *attr;
++	int len;
++
++	len = sizeof(struct iscsi_flashnode_param_info) + 4;
++	iov->iov_base = iscsi_nla_alloc(param_type, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	fnode_param = (struct iscsi_flashnode_param_info *)ISCSI_NLA_DATA(attr);
++	fnode_param->param = param_type;
++	fnode_param->len = 4;
++	memcpy(fnode_param->value, &val, fnode_param->len);
++	return 0;
++}
++
++static int flashnode_fill_str(struct flashnode_rec *fnode, struct iovec *iov,
++			      int param_type, char *buf, int buflen)
++{
++	struct iscsi_flashnode_param_info *fnode_param;
++	struct nlattr *attr;
++	int len;
++
++	len = sizeof(struct iscsi_flashnode_param_info) + buflen;
++	iov->iov_base = iscsi_nla_alloc(param_type, len);
++	if (!iov->iov_base)
++		return 1;
++
++	attr = iov->iov_base;
++	iov->iov_len = NLA_ALIGN(attr->nla_len);
++
++	fnode_param = (struct iscsi_flashnode_param_info *)ISCSI_NLA_DATA(attr);
++	fnode_param->param = param_type;
++	fnode_param->len = buflen;
++	memcpy(fnode_param->value, buf, fnode_param->len);
++	return 0;
++}
++
++int flashnode_build_config(struct list_head *params,
++			   struct flashnode_rec *fnode, struct iovec *iovs)
++{
++	struct user_param *param;
++	struct iovec *iov = NULL;
++	int count = 0;
++	int port = 3260;
++
++	/* start at 2, because 0 is for nlmsghdr and 1 for event */
++	iov = iovs + 2;
++
++	list_for_each_entry(param, params, list) {
++		if (!strcmp(param->name, FLASHNODE_SESS_AUTO_SND_TGT_DISABLE)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_AUTO_SND_TGT_DISABLE,
++			    fnode->sess.auto_snd_tgt_disable))
++				count++;
++		} else if (!strcmp(param->name,
++				   FLASHNODE_SESS_DISCOVERY_SESS)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DISCOVERY_SESS,
++			    fnode->sess.discovery_session))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_ENTRY_EN)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_ENTRY_EN,
++			    fnode->sess.entry_enable))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_IMM_DATA_EN)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_IMM_DATA_EN,
++			    fnode->sess.immediate_data))
++				count++;
++		} else if (!strcmp(param->name,
++				   FLASHNODE_SESS_INITIAL_R2T_EN)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_INITIAL_R2T_EN,
++			    fnode->sess.initial_r2t))
++				count++;
++		} else if (!strcmp(param->name,
++				  FLASHNODE_SESS_DATASEQ_INORDER)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DATASEQ_INORDER,
++			    fnode->sess.data_seq_in_order))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_PDU_INORDER)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_PDU_INORDER,
++			    fnode->sess.data_pdu_in_order))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_CHAP_AUTH_EN)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_CHAP_AUTH_EN,
++			    fnode->sess.chap_auth_en))
++				count++;
++		} else if (!strcmp(param->name,
++				  FLASHNODE_SESS_DISCOVERY_LOGOUT_EN)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DISCOVERY_LOGOUT_EN,
++			    fnode->sess.discovery_logout_en))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_BIDI_CHAP_EN )) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_BIDI_CHAP_EN,
++			    fnode->sess.bidi_chap_en))
++				count++;
++		} else if (!strcmp(param->name,
++				  FLASHNODE_SESS_DISCOVERY_AUTH_OPTIONAL)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DISCOVERY_AUTH_OPTIONAL,
++			    fnode->sess.discovery_auth_optional))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_ERL)) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_ERL,
++			    fnode->sess.erl))
++				count++;
++		} else if (!strcmp(param->name,
++				  FLASHNODE_SESS_DEF_TIME2WAIT)) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DEF_TIME2WAIT,
++			    fnode->sess.def_time2wait))
++				count++;
++		} else if (!strcmp(param->name,
++				  FLASHNODE_SESS_DEF_TIME2RETAIN)) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DEF_TIME2RETAIN,
++			    fnode->sess.def_time2retain))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_MAX_R2T)) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_MAX_R2T,
++			    fnode->sess.max_outstanding_r2t))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_TSID)) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TSID,
++			    fnode->sess.tsid))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_MAX_BURST)) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_MAX_BURST,
++			    fnode->sess.max_burst_len))
++				count++;
++		} else if (!strcmp(param->name,
++				  FLASHNODE_SESS_DEF_TASKMGMT_TMO)) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DEF_TASKMGMT_TMO,
++			    fnode->sess.def_taskmgmt_tmo))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_NAME)) {
++			if (!flashnode_fill_str(fnode, &iov[count],
++			    ISCSI_FLASHNODE_NAME,
++			    fnode->sess.targetname,
++			    sizeof(fnode->sess.targetname)))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_FIRST_BURST)) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_FIRST_BURST,
++			    fnode->sess.first_burst_len))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_ISID)) {
++			if (!flashnode_fill_isid(fnode, &iov[count]))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_ALIAS)) {
++			if (!flashnode_fill_str(fnode, &iov[count],
++			    ISCSI_FLASHNODE_ALIAS,
++			    fnode->sess.targetalias,
++			    sizeof(fnode->sess.targetalias)))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_TPGT)) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TPGT,
++			    fnode->sess.tpgt))
++				count++;
++		} else if (!strcmp(param->name,
++			  FLASHNODE_SESS_DISCOVERY_PARENT_IDX)) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DISCOVERY_PARENT_IDX,
++			    fnode->sess.discovery_parent_idx))
++				count++;
++		} else if (!strcmp(param->name,
++			  FLASHNODE_SESS_DISCOVERY_PARENT_TYPE)) {
++			if (!flashnode_fill_str(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DISCOVERY_PARENT_TYPE,
++			    fnode->sess.discovery_parent_type,
++			    sizeof(fnode->sess.discovery_parent_type)))
++				count++;
++		} else if (!strcmp(param->name, FLASHNODE_SESS_PORTAL_TYPE)) {
++			if (!flashnode_fill_str(fnode, &iov[count],
++			    ISCSI_FLASHNODE_PORTAL_TYPE,
++			    fnode->sess.portal_type,
++			    sizeof(fnode->sess.portal_type)))
++				count++;
++		} else if (!strcmp(param->name, to_key(FLASHNODE_CONN_PORT))) {
++			if (fnode->conn[0].port)
++				port = fnode->conn[0].port;
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_PORT, port))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_IPADDR))) {
++			if (!flashnode_fill_ipaddr(fnode, &iov[count],
++						   ISCSI_FLASHNODE_IPADDR))
++					count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_MAX_RECV_DLENGTH))) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_MAX_RECV_DLENGTH,
++			    fnode->conn[0].max_recv_dlength))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_IS_FW_ASSIGNED_IPV6))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_IS_FW_ASSIGNED_IPV6,
++			    fnode->conn[0].is_fw_assigned_ipv6))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_HDR_DGST_EN))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_HDR_DGST_EN,
++			    fnode->conn[0].header_digest_en))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_DATA_DGST_EN))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_DATA_DGST_EN,
++			    fnode->conn[0].data_digest_en))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_SNACK_REQ_EN))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_SNACK_REQ_EN,
++			    fnode->conn[0].snack_req_en))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_TCP_TIMESTAMP_STAT))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TCP_TIMESTAMP_STAT,
++			    fnode->conn[0].tcp_timestamp_stat))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_TCP_NAGLE_DISABLE))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TCP_NAGLE_DISABLE,
++			    fnode->conn[0].tcp_nagle_disable))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_TCP_WSF_DISABLE))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TCP_WSF_DISABLE,
++			    fnode->conn[0].tcp_wsf_disable))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_TCP_TIMER_SCALE))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TCP_TIMER_SCALE,
++			    fnode->conn[0].tcp_timer_scale))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_TCP_TIMESTAMP_EN))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TCP_TIMESTAMP_EN,
++			    fnode->conn[0].tcp_timestamp_en))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_IP_FRAG_DISABLE))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_IP_FRAG_DISABLE,
++			    fnode->conn[0].fragment_disable))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_MAX_XMIT_DLENGTH))) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_MAX_XMIT_DLENGTH,
++			    fnode->conn[0].max_xmit_dlength))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_KEEPALIVE_TMO))) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_KEEPALIVE_TMO,
++			    fnode->conn[0].keepalive_tmo))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_REDIRECT_IPADDR))) {
++			if (!flashnode_fill_ipaddr(fnode, &iov[count],
++					ISCSI_FLASHNODE_REDIRECT_IPADDR))
++					count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_MAX_SEGMENT_SIZE))) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_MAX_SEGMENT_SIZE,
++			    fnode->conn[0].max_segment_size))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_LOCAL_PORT))) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_LOCAL_PORT,
++			    fnode->conn[0].local_port))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_IPV4_TOS))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_IPV4_TOS,
++			    fnode->conn[0].ipv4_tos))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_IPV6_TC))) {
++			if (!flashnode_fill_uint8(fnode, &iov[count],
++			    ISCSI_FLASHNODE_IPV6_TC,
++			    fnode->conn[0].ipv6_traffic_class))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_IPV6_FLOW_LABEL))) {
++			if (!flashnode_fill_uint16(fnode, &iov[count],
++			    ISCSI_FLASHNODE_IPV6_FLOW_LABEL,
++			    fnode->conn[0].ipv6_flow_lbl))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_LINK_LOCAL_IPV6))) {
++			if (!flashnode_fill_ipv6_addr(fnode, &iov[count],
++					ISCSI_FLASHNODE_LINK_LOCAL_IPV6))
++					count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_TCP_XMIT_WSF))) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TCP_XMIT_WSF,
++			    fnode->conn[0].tcp_xmit_wsf))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_TCP_RECV_WSF))) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_TCP_RECV_WSF,
++			    fnode->conn[0].tcp_recv_wsf))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_STATSN))) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_STATSN,
++			    fnode->conn[0].stat_sn))
++				count++;
++		} else if (!strcmp(param->name,
++			  to_key(FLASHNODE_CONN_EXP_STATSN))) {
++			if (!flashnode_fill_uint32(fnode, &iov[count],
++			    ISCSI_FLASHNODE_EXP_STATSN,
++			    fnode->conn[0].exp_stat_sn))
++				count++;
++		}
++	}
++
++	return count;
++}
+diff --git a/usr/flashnode.h b/usr/flashnode.h
+new file mode 100644
+index 0000000..c1de9cc
+--- /dev/null
++++ b/usr/flashnode.h
+@@ -0,0 +1,127 @@
++/*
++ * iSCSI flashnode helpers
++ *
++ * Copyright (C) 2013 QLogic Corporation.
++ * Maintained by open-iscsi@googlegroups.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published
++ * by the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++ * General Public License for more details.
++ *
++ * See the file COPYING included with this distribution for more details.
++ */
++#ifndef FLASHNODE_H
++#define FLASHNODE_H
++#include <sys/types.h>
++#include <netdb.h>
++#include <net/if.h>
++
++#include "types.h"
++#include "config.h"
++#include "auth.h"
++
++typedef enum portal_type {
++	IPV4,
++	IPV6,
++} portal_type_e;
++
++typedef struct flashnode_sess_rec {
++	char			targetname[TARGET_NAME_MAXLEN];
++	char			targetalias[TARGET_NAME_MAXLEN];
++	char			username[AUTH_STR_MAX_LEN];
++	char			username_in[AUTH_STR_MAX_LEN];
++	char			password[AUTH_STR_MAX_LEN];
++	char			password_in[AUTH_STR_MAX_LEN];
++	/* indicates if discovery was done through iSNS discovery service
++	 * or through sendTarget */
++	char			discovery_parent_type[ISCSI_MAX_STR_LEN];
++	char			isid[16];
++	char			portal_type[5]; /* ipv4 or ipv6 */
++	unsigned		first_burst_len;
++	unsigned		max_burst_len;
++	uint16_t		def_time2wait;
++	uint16_t		def_time2retain;
++	uint16_t		max_outstanding_r2t;
++	uint16_t		tsid;
++	uint16_t		def_taskmgmt_tmo;
++	uint16_t		tpgt;
++	uint16_t		chap_out_idx;
++	uint16_t		chap_in_idx;
++	/* index of iSCSI discovery session if the entry is
++	 * discovered by iSCSI discovery session
++	 */
++	uint16_t		discovery_parent_idx;
++	/* Firmware auto sendtarget discovery disable */
++	uint8_t			auto_snd_tgt_disable;
++	uint8_t			discovery_session;
++	/* indicates if this flashnode entry is enabled or disabled */
++	uint8_t			entry_enable;
++	uint8_t			immediate_data;
++	uint8_t			initial_r2t;
++	uint8_t			data_seq_in_order;
++	uint8_t			data_pdu_in_order;
++	uint8_t			chap_auth_en;
++	/* enables firmware to auto logout the discovery session on discovery
++	 * completion
++	 */
++	uint8_t			discovery_logout_en;
++	uint8_t			bidi_chap_en;
++	/* makes authentication for discovery session optional */
++	uint8_t			discovery_auth_optional;
++	uint8_t			erl;
++	uint8_t			is_boot_target;
++} flashnode_sess_rec_t;
++
++typedef struct flashnode_conn_rec {
++	char			ipaddress[NI_MAXHOST];
++	char			redirect_ipaddr[NI_MAXHOST];
++	char			link_local_ipv6[NI_MAXHOST];
++	unsigned		max_recv_dlength;
++	unsigned		max_xmit_dlength;
++	unsigned		max_segment_size;
++	unsigned		tcp_xmit_wsf;
++	unsigned		tcp_recv_wsf;
++	uint32_t		stat_sn;
++	uint32_t		exp_stat_sn;
++	uint16_t		keepalive_tmo;
++	uint16_t		port;
++	uint16_t		local_port;
++	uint16_t		ipv6_flow_lbl;
++	/* Link local IPv6 address is assigned by firmware or driver */
++	uint8_t			is_fw_assigned_ipv6;
++	uint8_t			header_digest_en;
++	uint8_t			data_digest_en;
++	uint8_t			snack_req_en;
++	/* tcp timestamp negotiation status */
++	uint8_t			tcp_timestamp_stat;
++	uint8_t			tcp_nagle_disable;
++	/* tcp window scale factor */
++	uint8_t			tcp_wsf_disable;
++	uint8_t			tcp_timer_scale;
++	uint8_t			tcp_timestamp_en;
++	uint8_t			fragment_disable;
++	uint8_t			ipv4_tos;
++	uint8_t			ipv6_traffic_class;
++} flashnode_conn_rec_t;
++
++struct flashnode_rec {
++	struct list_head	list;
++	char			transport_name[ISCSI_TRANSPORT_NAME_MAXLEN];
++	flashnode_sess_rec_t	sess;
++	flashnode_conn_rec_t	conn[ISCSI_CONN_MAX];
++};
++
++extern int flashnode_info_print_flat(void *data, struct flashnode_rec *tgt,
++				     uint32_t host_no, uint32_t flashnode_idx);
++extern int iscsi_logout_flashnode_sid(struct iscsi_transport *t,
++				      uint32_t host_no, uint32_t sid);
++extern int flashnode_build_config(struct list_head *params,
++				  struct flashnode_rec *flashnode,
++				  struct iovec *iovs);
++#endif
+diff --git a/usr/idbm.c b/usr/idbm.c
+index 4d30aa9..bc06058 100644
+--- a/usr/idbm.c
++++ b/usr/idbm.c
+@@ -94,6 +94,17 @@ static struct idbm *db;
+ 	_n++; \
+ } while (0)
+ 
++#define __recinfo_uint32(_key, _info, _rec, _name, _show, _n, _mod) do { \
++	_info[_n].type = TYPE_UINT32; \
++	strlcpy(_info[_n].name, _key, NAME_MAXVAL); \
++	snprintf(_info[_n].value, VALUE_MAXVAL, "%d", _rec->_name); \
++	_info[_n].data = &_rec->_name; \
++	_info[_n].data_len = sizeof(_rec->_name); \
++	_info[_n].visible = _show; \
++	_info[_n].can_modify = _mod; \
++	_n++; \
++} while (0)
++
+ #define __recinfo_int_o2(_key,_info,_rec,_name,_show,_op0,_op1,_n, _mod) do { \
+ 	_info[_n].type = TYPE_INT_O; \
+ 	strlcpy(_info[_n].name, _key, NAME_MAXVAL); \
+@@ -469,6 +480,158 @@ static void idbm_recinfo_host_chap(struct iscsi_chap_rec *r, recinfo_t *ri)
+ 	}
+ }
+ 
++void idbm_recinfo_flashnode(struct flashnode_rec *r, recinfo_t *ri)
++{
++	int num = 0;
++	int i;
++
++	__recinfo_uint8(FLASHNODE_SESS_AUTO_SND_TGT_DISABLE, ri, r,
++			sess.auto_snd_tgt_disable, IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_DISCOVERY_SESS, ri, r,
++			sess.discovery_session, IDBM_SHOW, num, 1);
++	__recinfo_str(FLASHNODE_SESS_PORTAL_TYPE, ri, r, sess.portal_type,
++		      IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_ENTRY_EN, ri, r,
++			sess.entry_enable, IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_IMM_DATA_EN, ri, r, sess.immediate_data,
++			IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_INITIAL_R2T_EN, ri, r, sess.initial_r2t,
++			IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_DATASEQ_INORDER, ri, r,
++			sess.data_seq_in_order, IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_PDU_INORDER, ri, r,
++			sess.data_pdu_in_order, IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_CHAP_AUTH_EN, ri, r, sess.chap_auth_en,
++			IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_DISCOVERY_LOGOUT_EN, ri, r,
++			sess.discovery_logout_en, IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_BIDI_CHAP_EN, ri, r, sess.bidi_chap_en,
++			IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_DISCOVERY_AUTH_OPTIONAL, ri, r,
++			sess.discovery_auth_optional, IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_ERL, ri, r, sess.erl, IDBM_SHOW, num, 1);
++	__recinfo_uint32(FLASHNODE_SESS_FIRST_BURST, ri, r,
++			 sess.first_burst_len, IDBM_SHOW, num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_DEF_TIME2WAIT, ri, r,
++			 sess.def_time2wait, IDBM_SHOW, num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_DEF_TIME2RETAIN, ri, r,
++			 sess.def_time2retain, IDBM_SHOW, num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_MAX_R2T, ri, r,
++			 sess.max_outstanding_r2t, IDBM_SHOW, num, 1);
++	__recinfo_str(FLASHNODE_SESS_ISID, ri, r, sess.isid, IDBM_SHOW, num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_TSID, ri, r, sess.tsid, IDBM_SHOW,
++			 num, 1);
++	__recinfo_uint32(FLASHNODE_SESS_MAX_BURST, ri, r, sess.max_burst_len,
++			 IDBM_SHOW, num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_DEF_TASKMGMT_TMO, ri, r,
++			 sess.def_taskmgmt_tmo, IDBM_SHOW, num, 1);
++	__recinfo_str(FLASHNODE_SESS_ALIAS, ri, r, sess.targetalias, IDBM_SHOW,
++		      num, 1);
++	__recinfo_str(FLASHNODE_SESS_NAME, ri, r, sess.targetname, IDBM_SHOW,
++		      num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_DISCOVERY_PARENT_IDX, ri, r,
++			 sess.discovery_parent_idx, IDBM_SHOW, num, 1);
++	__recinfo_str(FLASHNODE_SESS_DISCOVERY_PARENT_TYPE, ri, r,
++		      sess.discovery_parent_type, IDBM_SHOW, num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_TPGT, ri, r, sess.tpgt, IDBM_SHOW,
++			 num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_CHAP_OUT_IDX, ri, r, sess.chap_out_idx,
++			 IDBM_SHOW, num, 1);
++	__recinfo_uint16(FLASHNODE_SESS_CHAP_IN_IDX, ri, r, sess.chap_in_idx,
++			 IDBM_SHOW, num, 1);
++	__recinfo_str(FLASHNODE_SESS_USERNAME, ri, r, sess.username, IDBM_SHOW,
++		      num, 1);
++	__recinfo_str(FLASHNODE_SESS_USERNAME_IN, ri, r, sess.username_in,
++		      IDBM_SHOW, num, 1);
++	__recinfo_str(FLASHNODE_SESS_PASSWORD, ri, r, sess.password, IDBM_SHOW,
++		      num, 1);
++	__recinfo_str(FLASHNODE_SESS_PASSWORD_IN, ri, r, sess.password_in,
++		      IDBM_SHOW, num, 1);
++	__recinfo_uint8(FLASHNODE_SESS_IS_BOOT_TGT, ri, r, sess.is_boot_target,
++			IDBM_SHOW, num, 1);
++
++	for (i = 0; i < ISCSI_CONN_MAX; i++) {
++		char key[NAME_MAXVAL];
++
++		sprintf(key, FLASHNODE_CONN_IS_FW_ASSIGNED_IPV6, i);
++		__recinfo_uint8(key, ri, r, conn[i].is_fw_assigned_ipv6,
++				IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_HDR_DGST_EN, i);
++		__recinfo_uint8(key, ri, r, conn[i].header_digest_en, IDBM_SHOW,
++				num, 1);
++		sprintf(key, FLASHNODE_CONN_DATA_DGST_EN, i);
++		__recinfo_uint8(key, ri, r, conn[i].data_digest_en, IDBM_SHOW,
++				num, 1);
++		sprintf(key, FLASHNODE_CONN_SNACK_REQ_EN, i);
++		__recinfo_uint8(key, ri, r, conn[i].snack_req_en, IDBM_SHOW,
++				num, 1);
++		sprintf(key, FLASHNODE_CONN_TCP_TIMESTAMP_STAT, i);
++		__recinfo_uint8(key, ri, r, conn[i].tcp_timestamp_stat,
++				IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_TCP_NAGLE_DISABLE, i);
++		__recinfo_uint8(key, ri, r, conn[i].tcp_nagle_disable,
++				IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_TCP_WSF_DISABLE, i);
++		__recinfo_uint8(key, ri, r, conn[i].tcp_wsf_disable, IDBM_SHOW,
++				num, 1);
++		sprintf(key, FLASHNODE_CONN_TCP_TIMER_SCALE, i);
++		__recinfo_uint8(key, ri, r, conn[i].tcp_timer_scale, IDBM_SHOW,
++				num, 1);
++		sprintf(key, FLASHNODE_CONN_TCP_TIMESTAMP_EN, i);
++		__recinfo_uint8(key, ri, r, conn[i].tcp_timestamp_en,
++				IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_IP_FRAG_DISABLE, i);
++		__recinfo_uint8(key, ri, r, conn[i].fragment_disable, IDBM_SHOW,
++				num, 1);
++		sprintf(key, FLASHNODE_CONN_MAX_XMIT_DLENGTH, i);
++		__recinfo_uint32(key, ri, r, conn[i].max_xmit_dlength,
++				 IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_MAX_RECV_DLENGTH, i);
++		__recinfo_uint32(key, ri, r, conn[i].max_recv_dlength,
++				 IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_KEEPALIVE_TMO, i);
++		__recinfo_uint16(key, ri, r, conn[i].keepalive_tmo, IDBM_SHOW,
++				 num, 1);
++		sprintf(key, FLASHNODE_CONN_PORT, i);
++		__recinfo_uint16(key, ri, r, conn[i].port, IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_IPADDR, i);
++		__recinfo_str(key, ri, r, conn[i].ipaddress, IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_REDIRECT_IPADDR, i);
++		__recinfo_str(key, ri, r, conn[i].redirect_ipaddr, IDBM_SHOW,
++			      num, 1);
++		sprintf(key, FLASHNODE_CONN_MAX_SEGMENT_SIZE, i);
++		__recinfo_uint32(key, ri, r, conn[i].max_segment_size,
++				 IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_LOCAL_PORT, i);
++		__recinfo_uint16(key, ri, r, conn[i].local_port, IDBM_SHOW,
++				 num, 1);
++		sprintf(key, FLASHNODE_CONN_IPV4_TOS, i);
++		__recinfo_uint8(key, ri, r, conn[i].ipv4_tos, IDBM_SHOW,
++				num, 1);
++		sprintf(key, FLASHNODE_CONN_IPV6_TC, i);
++		__recinfo_uint8(key, ri, r, conn[i].ipv6_traffic_class,
++				IDBM_SHOW, num, 1);
++		sprintf(key, FLASHNODE_CONN_IPV6_FLOW_LABEL, i);
++		__recinfo_uint16(key, ri, r, conn[i].ipv6_flow_lbl, IDBM_SHOW,
++				 num, 1);
++		sprintf(key, FLASHNODE_CONN_LINK_LOCAL_IPV6, i);
++		__recinfo_str(key, ri, r, conn[i].link_local_ipv6, IDBM_SHOW,
++			      num, 1);
++		sprintf(key, FLASHNODE_CONN_TCP_XMIT_WSF, i);
++		__recinfo_uint32(key, ri, r, conn[i].tcp_xmit_wsf, IDBM_SHOW,
++				 num, 1);
++		sprintf(key, FLASHNODE_CONN_TCP_RECV_WSF, i);
++		__recinfo_uint32(key, ri, r, conn[i].tcp_recv_wsf, IDBM_SHOW,
++				 num, 1);
++		sprintf(key, FLASHNODE_CONN_STATSN, i);
++		__recinfo_uint32(key, ri, r, conn[i].stat_sn, IDBM_SHOW,
++				 num, 1);
++		sprintf(key, FLASHNODE_CONN_EXP_STATSN, i);
++		__recinfo_uint32(key, ri, r, conn[i].exp_stat_sn, IDBM_SHOW,
++				 num, 1);
++	}
++}
++
+ recinfo_t *idbm_recinfo_alloc(int max_keys)
+ {
+ 	recinfo_t *info;
+@@ -502,6 +665,9 @@ void idbm_print(int type, void *rec, int show, FILE *f)
+ 	case IDBM_PRINT_TYPE_HOST_CHAP:
+ 		idbm_recinfo_host_chap((struct iscsi_chap_rec *)rec, info);
+ 		break;
++	case IDBM_PRINT_TYPE_FLASHNODE:
++		idbm_recinfo_flashnode((struct flashnode_rec *)rec, info);
++		break;
+ 	}
+ 
+ 	fprintf(f, "%s\n", ISCSI_BEGIN_REC);
+@@ -629,6 +795,13 @@ setup_passwd_len:
+ 				*(uint16_t *)info[i].data =
+ 					strtoul(value, NULL, 10);
+ 				goto updated;
++			} else if (info[i].type == TYPE_UINT32) {
++				if (!info[i].data)
++					continue;
++
++				*(uint32_t *)info[i].data =
++					strtoul(value, NULL, 10);
++				goto updated;
+ 			} else if (info[i].type == TYPE_STR) {
+ 				if (!info[i].data)
+ 					continue;
+@@ -880,6 +1053,12 @@ int idbm_print_host_chap_info(struct iscsi_chap_rec *chap)
+ 	return 0;
+ }
+ 
++int idbm_print_flashnode_info(struct flashnode_rec *fnode)
++{
++	idbm_print(IDBM_PRINT_TYPE_FLASHNODE, fnode, 1, stdout);
++	return 0;
++}
++
+ int idbm_print_node_flat(void *data, node_rec_t *rec)
+ {
+ 	if (strchr(rec->conn[0].address, '.'))
+diff --git a/usr/idbm.h b/usr/idbm.h
+index 245f046..5e4038d 100644
+--- a/usr/idbm.h
++++ b/usr/idbm.h
+@@ -27,6 +27,7 @@
+ #include "initiator.h"
+ #include "config.h"
+ #include "list.h"
++#include "flashnode.h"
+ 
+ #define NODE_CONFIG_DIR		ISCSI_CONFIG_ROOT"nodes"
+ #define SLP_CONFIG_DIR		ISCSI_CONFIG_ROOT"slp"
+@@ -42,6 +43,7 @@
+ #define TYPE_STR	2
+ #define TYPE_UINT8	3
+ #define TYPE_UINT16	4
++#define TYPE_UINT32	5
+ #define MAX_KEYS	256   /* number of keys total(including CNX_MAX) */
+ #define NAME_MAXVAL	128   /* the maximum length of key name */
+ #define VALUE_MAXVAL	256   /* the maximum length of 223 bytes in the RFC. */
+@@ -85,6 +87,7 @@ struct user_param {
+ 	struct list_head list;
+ 	char *name;
+ 	char *value;
++	int param;
+ };
+ 
+ typedef int (idbm_iface_op_fn)(void *data, node_rec_t *rec);
+@@ -168,6 +171,7 @@ enum {
+ 	IDBM_PRINT_TYPE_NODE,
+ 	IDBM_PRINT_TYPE_IFACE,
+ 	IDBM_PRINT_TYPE_HOST_CHAP,
++	IDBM_PRINT_TYPE_FLASHNODE
+ };
+ 
+ extern void idbm_print(int type, void *rec, int show, FILE *f);
+@@ -182,4 +186,7 @@ idbm_create_rec_from_boot_context(struct boot_context *context);
+ 
+ extern int idbm_print_host_chap_info(struct iscsi_chap_rec *chap);
+ 
++extern int idbm_print_flashnode_info(struct flashnode_rec *target);
++extern void idbm_recinfo_flashnode(struct flashnode_rec *r, recinfo_t *ri);
++
+ #endif /* IDBM_H */
+diff --git a/usr/idbm_fields.h b/usr/idbm_fields.h
+index 358d014..179dda8 100644
+--- a/usr/idbm_fields.h
++++ b/usr/idbm_fields.h
+@@ -126,4 +126,67 @@
+ #define HOST_AUTH_PASSWORD_IN		"host.auth.password_in"
+ #define HOST_AUTH_PASSWORD_IN_LEN	"host.auth.password_in_length"
+ 
++/* flash target session fields */
++#define FLASHNODE_SESS_AUTO_SND_TGT_DISABLE	"flashnode.session.auto_snd_tgt_disable"
++#define FLASHNODE_SESS_DISCOVERY_SESS	"flashnode.session.discovery_session"
++#define FLASHNODE_SESS_PORTAL_TYPE	"flashnode.session.portal_type"
++#define FLASHNODE_SESS_ENTRY_EN		"flashnode.session.entry_enable"
++#define FLASHNODE_SESS_IMM_DATA_EN	"flashnode.session.immediate_data"
++#define FLASHNODE_SESS_INITIAL_R2T_EN	"flashnode.session.initial_r2t"
++#define FLASHNODE_SESS_DATASEQ_INORDER	"flashnode.session.data_seq_in_order"
++#define FLASHNODE_SESS_PDU_INORDER	"flashnode.session.data_pdu_in_order"
++#define FLASHNODE_SESS_CHAP_AUTH_EN	"flashnode.session.chap_auth_en"
++#define FLASHNODE_SESS_DISCOVERY_LOGOUT_EN	"flashnode.session.discovery_logout_en"
++#define FLASHNODE_SESS_BIDI_CHAP_EN	"flashnode.session.bidi_chap_en"
++#define FLASHNODE_SESS_DISCOVERY_AUTH_OPTIONAL	"flashnode.session.discovery_auth_optional"
++#define FLASHNODE_SESS_ERL 		"flashnode.session.erl"
++#define FLASHNODE_SESS_FIRST_BURST	"flashnode.session.first_burst_len"
++#define FLASHNODE_SESS_DEF_TIME2WAIT	"flashnode.session.def_time2wait"
++#define FLASHNODE_SESS_DEF_TIME2RETAIN	"flashnode.session.def_time2retain"
++#define FLASHNODE_SESS_MAX_R2T		"flashnode.session.max_outstanding_r2t"
++#define FLASHNODE_SESS_ISID		"flashnode.session.isid"
++#define FLASHNODE_SESS_TSID		"flashnode.session.tsid"
++#define FLASHNODE_SESS_MAX_BURST	"flashnode.session.max_burst_len"
++#define FLASHNODE_SESS_DEF_TASKMGMT_TMO	"flashnode.session.def_taskmgmt_tmo"
++#define FLASHNODE_SESS_ALIAS		"flashnode.session.targetalias"
++#define FLASHNODE_SESS_NAME		"flashnode.session.targetname"
++#define FLASHNODE_SESS_TPGT		"flashnode.session.tpgt"
++#define FLASHNODE_SESS_DISCOVERY_PARENT_IDX	"flashnode.session.discovery_parent_idx"
++#define FLASHNODE_SESS_DISCOVERY_PARENT_TYPE	"flashnode.session.discovery_parent_type"
++#define FLASHNODE_SESS_CHAP_OUT_IDX	"flashnode.session.chap_out_idx"
++#define FLASHNODE_SESS_CHAP_IN_IDX	"flashnode.session.chap_in_idx"
++#define FLASHNODE_SESS_USERNAME		"flashnode.session.username"
++#define FLASHNODE_SESS_USERNAME_IN	"flashnode.session.username_in"
++#define FLASHNODE_SESS_PASSWORD		"flashnode.session.password"
++#define FLASHNODE_SESS_PASSWORD_IN	"flashnode.session.password_in"
++#define FLASHNODE_SESS_IS_BOOT_TGT	"flashnode.session.is_boot_target"
++
++/* flash target connection fields */
++#define FLASHNODE_CONN_IS_FW_ASSIGNED_IPV6	"flashnode.conn[%d].is_fw_assigned_ipv6"
++#define FLASHNODE_CONN_HDR_DGST_EN	"flashnode.conn[%d].header_digest_en"
++#define FLASHNODE_CONN_DATA_DGST_EN	"flashnode.conn[%d].data_digest_en"
++#define FLASHNODE_CONN_SNACK_REQ_EN	"flashnode.conn[%d].snack_req_en"
++#define FLASHNODE_CONN_TCP_TIMESTAMP_STAT	"flashnode.conn[%d].tcp_timestamp_stat"
++#define FLASHNODE_CONN_TCP_NAGLE_DISABLE	"flashnode.conn[%d].tcp_nagle_disable"
++#define FLASHNODE_CONN_TCP_WSF_DISABLE	"flashnode.conn[%d].tcp_wsf_disable"
++#define FLASHNODE_CONN_TCP_TIMER_SCALE	"flashnode.conn[%d].tcp_timer_scale"
++#define FLASHNODE_CONN_TCP_TIMESTAMP_EN	"flashnode.conn[%d].tcp_timestamp_en"
++#define FLASHNODE_CONN_IP_FRAG_DISABLE	"flashnode.conn[%d].fragment_disable"
++#define FLASHNODE_CONN_MAX_RECV_DLENGTH	"flashnode.conn[%d].max_recv_dlength"
++#define FLASHNODE_CONN_MAX_XMIT_DLENGTH	"flashnode.conn[%d].max_xmit_dlength"
++#define FLASHNODE_CONN_KEEPALIVE_TMO	"flashnode.conn[%d].keepalive_tmo"
++#define FLASHNODE_CONN_PORT		"flashnode.conn[%d].port"
++#define FLASHNODE_CONN_IPADDR		"flashnode.conn[%d].ipaddress"
++#define FLASHNODE_CONN_REDIRECT_IPADDR	"flashnode.conn[%d].redirect_ipaddr"
++#define FLASHNODE_CONN_MAX_SEGMENT_SIZE	"flashnode.conn[%d].max_segment_size"
++#define FLASHNODE_CONN_LOCAL_PORT	"flashnode.conn[%d].local_port"
++#define FLASHNODE_CONN_IPV4_TOS		"flashnode.conn[%d].ipv4_tos"
++#define FLASHNODE_CONN_IPV6_TC		"flashnode.conn[%d].ipv6_traffic_class"
++#define FLASHNODE_CONN_IPV6_FLOW_LABEL	"flashnode.conn[%d].ipv6_flow_label"
++#define FLASHNODE_CONN_LINK_LOCAL_IPV6	"flashnode.conn[%d].link_local_ipv6"
++#define FLASHNODE_CONN_TCP_XMIT_WSF	"flashnode.conn[%d].tcp_xmit_wsf"
++#define FLASHNODE_CONN_TCP_RECV_WSF	"flashnode.conn[%d].tcp_recv_wsf"
++#define FLASHNODE_CONN_STATSN		"flashnode.conn[%d].statsn"
++#define FLASHNODE_CONN_EXP_STATSN	"flashnode.conn[%d].exp_statsn"
++
+ #endif
+diff --git a/usr/iscsi_ipc.h b/usr/iscsi_ipc.h
+index db5f1f0..b6665cb 100644
+--- a/usr/iscsi_ipc.h
++++ b/usr/iscsi_ipc.h
+@@ -145,6 +145,19 @@ struct iscsi_ipc {
+ 
+ 	int (*delete_chap) (uint64_t transport_handle, uint32_t host_no,
+ 			    uint16_t chap_tbl_idx);
++	int (*set_flash_node_params) (uint64_t transport_handle,
++				      uint32_t host_no, uint32_t flashnode_idx,
++				      struct iovec *iovs, uint32_t param_count);
++	int (*new_flash_node) (uint64_t transport_handle, uint32_t host_no,
++			       void *value, uint32_t *flashnode_idx);
++	int (*del_flash_node) (uint64_t transport_handle, uint32_t host_no,
++			       uint32_t flashnode_idx);
++	int (*login_flash_node) (uint64_t transport_handle, uint32_t host_no,
++				uint32_t flashnode_idx);
++	int (*logout_flash_node) (uint64_t transport_handle, uint32_t host_no,
++				  uint32_t flashnode_idx);
++	int (*logout_flash_node_sid) (uint64_t transport_handle,
++				      uint32_t host_no, uint32_t sid);
+ };
+ 
+ #endif /* ISCSI_IPC_H */
+diff --git a/usr/iscsi_sysfs.c b/usr/iscsi_sysfs.c
+index 4015b35..64a4ce7 100644
+--- a/usr/iscsi_sysfs.c
++++ b/usr/iscsi_sysfs.c
+@@ -29,6 +29,7 @@
+ #include "initiator.h"
+ #include "transport.h"
+ #include "idbm.h"
++#include "idbm_fields.h"
+ #include "version.h"
+ #include "iscsi_sysfs.h"
+ #include "sysdeps.h"
+@@ -37,6 +38,7 @@
+ #include "session_info.h"
+ #include "host.h"
+ #include "iscsi_err.h"
++#include "flashnode.h"
+ 
+ /*
+  * TODO: remove the _DIR defines and search for subsys dirs like
+@@ -45,18 +47,22 @@
+ #define ISCSI_TRANSPORT_DIR	"/sys/class/iscsi_transport"
+ #define ISCSI_SESSION_DIR	"/sys/class/iscsi_session"
+ #define ISCSI_HOST_DIR		"/sys/class/iscsi_host"
++#define ISCSI_FLASHNODE_DIR	"/sys/bus/iscsi_flashnode/devices"
+ 
+ #define ISCSI_SESSION_SUBSYS		"iscsi_session"
+ #define ISCSI_CONN_SUBSYS		"iscsi_connection"
+ #define ISCSI_HOST_SUBSYS		"iscsi_host"
+ #define ISCSI_TRANSPORT_SUBSYS		"iscsi_transport"
+ #define ISCSI_IFACE_SUBSYS		"iscsi_iface"
++#define ISCSI_FLASHNODE_SUBSYS		"iscsi_flashnode"
+ #define SCSI_HOST_SUBSYS		"scsi_host"
+ #define SCSI_SUBSYS			"scsi"
+ 
+ #define ISCSI_SESSION_ID		"session%d"
+ #define ISCSI_CONN_ID			"connection%d:0"
+ #define ISCSI_HOST_ID			"host%d"
++#define ISCSI_FLASHNODE_SESS		"flashnode_sess-%d:%d"
++#define ISCSI_FLASHNODE_CONN		"flashnode_conn-%d:%d:0"
+ 
+ /*
+  * TODO: make this into a real API and check inputs better and add doc.
+@@ -440,6 +446,234 @@ uint32_t iscsi_sysfs_get_host_no_from_hwinfo(struct iface_rec *iface, int *rc)
+ }
+ 
+ /*
++ * Read the flash node attributes based on host and flash node index.
++ */
++int iscsi_sysfs_get_flashnode_info(struct flashnode_rec *fnode,
++				   uint32_t host_no,
++				   uint32_t flashnode_idx)
++{
++	char sess_id[NAME_SIZE] = {'\0'};
++	char conn_id[NAME_SIZE] = {'\0'};
++	char fnode_path[PATH_SIZE] = {'\0'};
++	struct iscsi_transport *t;
++	int ret = 0;
++
++	t = iscsi_sysfs_get_transport_by_hba(host_no);
++	if (!t)
++		log_debug(7, "could not get transport name for host%d",
++			  host_no);
++	else
++		strncpy(fnode->transport_name, t->name,
++			ISCSI_TRANSPORT_NAME_MAXLEN);
++
++	snprintf(sess_id, sizeof(sess_id), ISCSI_FLASHNODE_SESS, host_no,
++		 flashnode_idx);
++
++	snprintf(fnode_path, sizeof(fnode_path), ISCSI_FLASHNODE_DIR"/%s",
++		 sess_id);
++	if (access(fnode_path, F_OK) != 0)
++		return errno;
++
++	snprintf(conn_id, sizeof(conn_id), ISCSI_FLASHNODE_CONN, host_no,
++		 flashnode_idx);
++
++	snprintf(fnode_path, sizeof(fnode_path), ISCSI_FLASHNODE_DIR"/%s",
++		 conn_id);
++	if (access(fnode_path, F_OK) != 0)
++		return errno;
++
++
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "is_fw_assigned_ipv6",
++			&((fnode->conn[0]).is_fw_assigned_ipv6));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "portal_type",
++		      (fnode->sess).portal_type,
++		      sizeof((fnode->sess).portal_type));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "auto_snd_tgt_disable",
++			&((fnode->sess).auto_snd_tgt_disable));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "discovery_session",
++			&((fnode->sess).discovery_session));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "entry_enable",
++			&((fnode->sess).entry_enable));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "header_digest",
++			&((fnode->conn[0]).header_digest_en));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "data_digest",
++			&((fnode->conn[0]).data_digest_en));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "immediate_data",
++			&((fnode->sess).immediate_data));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "initial_r2t",
++			&((fnode->sess).initial_r2t));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "data_seq_in_order",
++			&((fnode->sess).data_seq_in_order));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "data_pdu_in_order",
++			&((fnode->sess).data_pdu_in_order));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "chap_auth",
++			&((fnode->sess).chap_auth_en));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "snack_req",
++			&((fnode->conn[0]).snack_req_en));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "discovery_logout",
++			&((fnode->sess).discovery_logout_en));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "bidi_chap",
++			&((fnode->sess).bidi_chap_en));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS,
++			"discovery_auth_optional",
++			&((fnode->sess).discovery_auth_optional));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "erl",
++			&((fnode->sess).erl));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "tcp_timestamp_stat",
++			&((fnode->conn[0]).tcp_timestamp_stat));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "tcp_nagle_disable",
++			&((fnode->conn[0]).tcp_nagle_disable));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "tcp_wsf_disable",
++			&((fnode->conn[0]).tcp_wsf_disable));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "tcp_timer_scale",
++			&((fnode->conn[0]).tcp_timer_scale));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "tcp_timestamp_enable",
++			&((fnode->conn[0]).tcp_timestamp_en));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "fragment_disable",
++			&((fnode->conn[0]).fragment_disable));
++	sysfs_get_uint(conn_id, ISCSI_FLASHNODE_SUBSYS, "max_recv_dlength",
++		       &((fnode->conn[0]).max_recv_dlength));
++	sysfs_get_uint(conn_id, ISCSI_FLASHNODE_SUBSYS, "max_xmit_dlength",
++		       &((fnode->conn[0]).max_xmit_dlength));
++	sysfs_get_uint(sess_id, ISCSI_FLASHNODE_SUBSYS, "first_burst_len",
++		       &((fnode->sess).first_burst_len));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "def_time2wait",
++			 &((fnode->sess).def_time2wait));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "def_time2retain",
++			 &((fnode->sess).def_time2retain));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "max_outstanding_r2t",
++			 &((fnode->sess).max_outstanding_r2t));
++	sysfs_get_uint16(conn_id, ISCSI_FLASHNODE_SUBSYS, "keepalive_tmo",
++			 &((fnode->conn[0]).keepalive_tmo));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "isid",
++		      (fnode->sess).isid, sizeof((fnode->sess).isid));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "tsid",
++			 &((fnode->sess).tsid));
++	sysfs_get_uint16(conn_id, ISCSI_FLASHNODE_SUBSYS, "port",
++			 &((fnode->conn[0]).port));
++	sysfs_get_uint(sess_id, ISCSI_FLASHNODE_SUBSYS, "max_burst_len",
++		       &((fnode->sess).max_burst_len));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "def_taskmgmt_tmo",
++			 &((fnode->sess).def_taskmgmt_tmo));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "targetalias",
++		      (fnode->sess).targetalias,
++		      sizeof((fnode->sess).targetalias));
++	sysfs_get_str(conn_id, ISCSI_FLASHNODE_SUBSYS, "ipaddress",
++		      (fnode->conn[0]).ipaddress,
++		      sizeof((fnode->conn[0]).ipaddress));
++	sysfs_get_str(conn_id, ISCSI_FLASHNODE_SUBSYS, "redirect_ipaddr",
++		      (fnode->conn[0]).redirect_ipaddr,
++		      sizeof((fnode->conn[0]).redirect_ipaddr));
++	sysfs_get_uint(conn_id, ISCSI_FLASHNODE_SUBSYS, "max_segment_size",
++		       &((fnode->conn[0]).max_segment_size));
++	sysfs_get_uint16(conn_id, ISCSI_FLASHNODE_SUBSYS, "local_port",
++			 &((fnode->conn[0]).local_port));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "ipv4_tos",
++			&((fnode->conn[0]).ipv4_tos));
++	sysfs_get_uint8(conn_id, ISCSI_FLASHNODE_SUBSYS, "ipv6_traffic_class",
++			&((fnode->conn[0]).ipv6_traffic_class));
++	sysfs_get_uint16(conn_id, ISCSI_FLASHNODE_SUBSYS, "ipv6_flow_label",
++			 &((fnode->conn[0]).ipv6_flow_lbl));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "targetname",
++		      (fnode->sess).targetname,
++		      sizeof((fnode->sess).targetname));
++	sysfs_get_str(conn_id, ISCSI_FLASHNODE_SUBSYS, "link_local_ipv6",
++		      (fnode->conn[0]).link_local_ipv6,
++		      sizeof((fnode->conn[0]).link_local_ipv6));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS,
++			 "discovery_parent_idx",
++			 &((fnode->sess).discovery_parent_idx));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS,
++		      "discovery_parent_type",
++		      (fnode->sess).discovery_parent_type,
++		      sizeof((fnode->sess).discovery_parent_type));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "tpgt",
++			 &((fnode->sess).tpgt));
++	sysfs_get_uint(conn_id, ISCSI_FLASHNODE_SUBSYS, "tcp_xmit_wsf",
++		       &((fnode->conn[0]).tcp_xmit_wsf));
++	sysfs_get_uint(conn_id, ISCSI_FLASHNODE_SUBSYS, "tcp_recv_wsf",
++		       &((fnode->conn[0]).tcp_recv_wsf));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "chap_out_idx",
++			 &((fnode->sess).chap_out_idx));
++	sysfs_get_uint16(sess_id, ISCSI_FLASHNODE_SUBSYS, "chap_in_idx",
++			 &((fnode->sess).chap_in_idx));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "username",
++		      (fnode->sess).username, sizeof((fnode->sess).username));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "username_in",
++		      (fnode->sess).username,
++		      sizeof((fnode->sess).username_in));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "password",
++		      (fnode->sess).password, sizeof((fnode->sess).password));
++	sysfs_get_str(sess_id, ISCSI_FLASHNODE_SUBSYS, "password_in",
++		      (fnode->sess).password,
++		      sizeof((fnode->sess).password_in));
++	sysfs_get_uint(conn_id, ISCSI_FLASHNODE_SUBSYS, "statsn",
++		       &((fnode->conn[0]).stat_sn));
++	sysfs_get_uint(conn_id, ISCSI_FLASHNODE_SUBSYS, "exp_statsn",
++		       &((fnode->conn[0]).exp_stat_sn));
++	sysfs_get_uint8(sess_id, ISCSI_FLASHNODE_SUBSYS, "is_boot_target",
++			&((fnode->sess).is_boot_target));
++	return ret;
++}
++
++/*
++ * For each flash node of the given host, perform operation specified in fn.
++ */
++int iscsi_sysfs_for_each_flashnode(void *data, uint32_t host_no, int *nr_found,
++				   iscsi_sysfs_flashnode_op_fn *fn)
++{
++	struct dirent **namelist;
++	int rc = 0, i, n;
++	struct flashnode_rec *fnode;
++	uint32_t flashnode_idx;
++	uint32_t hostno;
++
++	fnode = malloc(sizeof(*fnode));
++	if (!fnode)
++		return ISCSI_ERR_NOMEM;
++
++	n = scandir(ISCSI_FLASHNODE_DIR, &namelist, trans_filter, alphasort);
++	if (n <= 0)
++		goto free_fnode;
++
++	for (i = 0; i < n; i++) {
++		memset(fnode, 0, sizeof(*fnode));
++
++		if (!strncmp(namelist[i]->d_name, "flashnode_conn",
++			     strlen("flashnode_conn")))
++			continue;
++
++		if (sscanf(namelist[i]->d_name, ISCSI_FLASHNODE_SESS,
++			   &hostno, &flashnode_idx) != 2) {
++			log_error("Invalid iscsi target dir: %s",
++				  namelist[i]->d_name);
++			break;
++		}
++
++		if (host_no != hostno)
++			continue;
++
++		rc = iscsi_sysfs_get_flashnode_info(fnode, host_no,
++						    flashnode_idx);
++		if (rc)
++			break;
++
++		rc = fn(data, fnode, host_no, flashnode_idx);
++		if (rc != 0)
++			break;
++		(*nr_found)++;
++	}
++
++	for (i = 0; i < n; i++)
++		free(namelist[i]);
++	free(namelist);
++
++free_fnode:
++	free(fnode);
++	return rc;
++}
++
++/*
+  * Read in iface settings based on host and session values. If
+  * session is not passed in, then the ifacename will not be set. And
+  * if the session is not passed in then iname will only be set for
+diff --git a/usr/iscsi_sysfs.h b/usr/iscsi_sysfs.h
+index 2b15d78..d130d36 100644
+--- a/usr/iscsi_sysfs.h
++++ b/usr/iscsi_sysfs.h
+@@ -31,6 +31,7 @@ struct iscsi_conn;
+ struct iscsi_session_operational_config;
+ struct iscsi_conn_operational_config;
+ struct iscsi_auth_config;
++struct flashnode_rec;
+ 
+ #define SCSI_MAX_STATE_VALUE 32
+ 
+@@ -42,6 +43,8 @@ extern int iscsi_sysfs_session_has_leadconn(uint32_t sid);
+ 
+ typedef int (iscsi_sysfs_session_op_fn)(void *, struct session_info *);
+ typedef int (iscsi_sysfs_host_op_fn)(void *, struct host_info *);
++typedef int (iscsi_sysfs_flashnode_op_fn)(void *, struct flashnode_rec *,
++					  uint32_t, uint32_t);
+ typedef int (iscsi_sysfs_iface_op_fn)(void *, struct iface_rec *);
+ 
+ extern int iscsi_sysfs_for_each_iface_on_host(void *data, uint32_t host_no,
+@@ -56,6 +59,20 @@ extern uint32_t iscsi_sysfs_get_host_no_from_hwinfo(struct iface_rec *iface,
+ 						    int *rc);
+ extern uint32_t iscsi_sysfs_get_host_no_from_hwaddress(char *hwaddress, int *rc);
+ extern int iscsi_sysfs_get_hostinfo_by_host_no(struct host_info *hinfo);
++extern int iscsi_sysfs_for_each_flashnode(void *data, uint32_t host_no,
++					  int *nr_found,
++					  iscsi_sysfs_flashnode_op_fn *fn);
++extern int iscsi_sysfs_get_flashnode_info(struct flashnode_rec *fnode,
++					  uint32_t host_no,
++					  uint32_t flashnode_id);
++extern int iscsi_sysfs_update_flashnode_param(uint32_t host_no,
++					      uint32_t flashnode_id,
++					      char *name, char *val);
++extern int iscsi_sysfs_create_flashnode(uint32_t host_no, char *ipver);
++extern int iscsi_sysfs_del_flashnode(uint32_t host_no, uint32_t flashnode_id);
++extern int iscsi_sysfs_login_flashnode(uint32_t host_no, uint32_t flashnode_id);
++extern int iscsi_sysfs_logout_flashnode(uint32_t host_no,
++					uint32_t flashnode_id);
+ extern int iscsi_sysfs_get_sid_from_path(char *session);
+ extern char *iscsi_sysfs_get_blockdev_from_lun(int hostno, int target, int sid);
+ 
+diff --git a/usr/iscsiadm.c b/usr/iscsiadm.c
+index 8f9de05..5a18522 100644
+--- a/usr/iscsiadm.c
++++ b/usr/iscsiadm.c
+@@ -53,6 +53,7 @@
+ #include "iscsi_err.h"
+ #include "iscsi_ipc.h"
+ #include "iscsi_timer.h"
++#include "flashnode.h"
+ 
+ static char program_name[] = "iscsiadm";
+ static char config_file[TARGET_NAME_MAXLEN];
+@@ -67,7 +68,8 @@ enum iscsiadm_mode {
+ 	MODE_IFACE,
+ 	MODE_FW,
+ 	MODE_PING,
+-	MODE_CHAP
++	MODE_CHAP,
++	MODE_FLASHNODE
+ };
+ 
+ enum iscsiadm_op {
+@@ -78,7 +80,9 @@ enum iscsiadm_op {
+ 	OP_SHOW			= 0x8,
+ 	OP_NONPERSISTENT	= 0x10,
+ 	OP_APPLY		= 0x20,
+-	OP_APPLY_ALL		= 0x40
++	OP_APPLY_ALL		= 0x40,
++	OP_LOGIN		= 0x80,
++	OP_LOGOUT		= 0x100
+ };
+ 
+ static struct option const long_options[] =
+@@ -111,9 +115,11 @@ static struct option const long_options[] =
+ 	{"packetsize", required_argument, NULL, 'b'},
+ 	{"count", required_argument, NULL, 'c'},
+ 	{"interval", required_argument, NULL, 'i'},
++	{"flashnode_idx", optional_argument, NULL, 'x'},
++	{"portal_type", optional_argument, NULL, 'A'},
+ 	{NULL, 0, NULL, 0},
+ };
+-static char *short_options = "RlDVhm:a:b:c:C:p:P:T:H:i:I:U:k:L:d:r:n:v:o:sSt:u";
++static char *short_options = "RlDVhm:a:b:c:C:p:P:T:H:i:I:U:k:L:d:r:n:v:o:sSt:ux:A:";
+ 
+ static void usage(int status)
+ {
+@@ -130,7 +136,7 @@ iscsiadm -m node [ -hV ] [ -d debug_level ] [ -P printlevel ] [ -L all,manual,au
+ iscsiadm -m session [ -hV ] [ -d debug_level ] [ -P  printlevel] [ -r sessionid | sysfsdir [ -R | -u | -s ] [ -o operation ] [ -n name ] [ -v value ] ]\n\
+ iscsiadm -m iface [ -hV ] [ -d debug_level ] [ -P printlevel ] [ -I ifacename | -H hostno|MAC ] [ [ -o  operation  ] [ -n name ] [ -v value ] ] [ -C ping [ -a ip ] [ -b packetsize ] [ -c count ] [ -i interval ] ]\n\
+ iscsiadm -m fw [ -l ]\n\
+-iscsiadm -m host [ -P printlevel ] [ -H hostno|MAC ] [ -C chap [ -o operation ] [ -v chap_tbl_idx ] ]\n\
++iscsiadm -m host [ -P printlevel ] [ -H hostno|MAC ] [ [ -C chap [ -o operation ] [ -v chap_tbl_idx ] ] | [ -C flashnode [ -o operation ] [ -A portal_type ] [ -x flashnode_idx ] [ -n name ] [ -v value ] ] ]\n\
+ iscsiadm -k priority\n");
+ 	}
+ 	exit(status);
+@@ -155,6 +161,10 @@ str_to_op(char *str)
+ 		op = OP_APPLY;
+ 	else if (!strcmp("applyall", str))
+ 		op = OP_APPLY_ALL;
++	else if (!strcmp("login", str))
++		op = OP_LOGIN;
++	else if (!strcmp("logout", str))
++		op = OP_LOGOUT;
+ 	else
+ 		op = OP_NOOP;
+ 
+@@ -195,6 +205,8 @@ str_to_submode(char *str)
+ 		sub_mode = MODE_PING;
+ 	else if (!strcmp("chap", str))
+ 		sub_mode = MODE_CHAP;
++	else if (!strcmp("flashnode", str))
++		sub_mode = MODE_FLASHNODE;
+ 	else
+ 		sub_mode = -1;
+ 
+@@ -221,6 +233,21 @@ str_to_type(char *str)
+ 	return type;
+ }
+ 
++static int
++str_to_portal_type(char *str)
++{
++	int ptype;
++
++	if (!strcmp("ipv4", str))
++		ptype = IPV4;
++	else if (!strcmp("ipv6", str))
++		ptype = IPV6;
++	else
++		ptype = -1;
++
++	return ptype;
++}
++
+ static void kill_iscsid(int priority)
+ {
+ 	iscsiadm_req_t req;
+@@ -582,6 +609,8 @@ static int iscsi_logout_matched_portal(void *data, struct list_head *list,
+ {
+ 	struct node_rec *pattern_rec = data;
+ 	struct iscsi_transport *t;
++	uint32_t host_no;
++	int rc = 0;
+ 
+ 	t = iscsi_sysfs_get_transport_by_sid(info->sid);
+ 	if (!t)
+@@ -590,7 +619,19 @@ static int iscsi_logout_matched_portal(void *data, struct list_head *list,
+ 	if (!iscsi_match_session(pattern_rec, info))
+ 		return -1;
+ 
+-	return iscsi_logout_portal(info, list);
++	host_no = iscsi_sysfs_get_host_no_from_sid(info->sid, &rc);
++	if (rc) {
++		log_error("could not get host_no for session%d: %s.",
++			  info->sid, iscsi_err_to_str(rc));
++		return -1;
++	}
++
++	if (!iscsi_sysfs_session_user_created(info->sid))
++		rc = iscsi_logout_flashnode_sid(t, host_no, info->sid);
++	else
++		rc = iscsi_logout_portal(info, list);
++
++	return rc;
+ }
+ 
+ static int rec_match_fn(void *data, node_rec_t *rec)
+@@ -1438,6 +1479,360 @@ static int exec_host_chap_op(int op, int info_level, uint32_t host_no,
+ 	return rc;
+ }
+ 
++static int get_flashnode_info(uint32_t host_no, uint32_t flashnode_idx)
++{
++	struct flashnode_rec fnode;
++	int rc = 0;
++
++	memset(&fnode, 0, sizeof(fnode));
++	rc = iscsi_sysfs_get_flashnode_info(&fnode, host_no, flashnode_idx);
++	if (rc) {
++		log_error("Could not read info for flashnode %u of host %u, %s",
++			  flashnode_idx, host_no, strerror(rc));
++		return rc;
++	}
++
++	idbm_print_flashnode_info(&fnode);
++	return rc;
++}
++
++static int list_flashnodes(int info_level, uint32_t host_no)
++{
++	int rc = 0;
++	int num_found = 0;
++
++	rc = iscsi_sysfs_for_each_flashnode(NULL, host_no, &num_found,
++					    flashnode_info_print_flat);
++
++	if (!num_found) {
++		log_error("No flashnodes attached to host %u.", host_no);
++		rc = ISCSI_ERR_NO_OBJS_FOUND;
++	}
++
++	return rc;
++}
++
++int iscsi_set_flashnode_params(struct iscsi_transport *t, uint32_t host_no,
++			       uint32_t flashnode_idx, struct list_head *params)
++{
++	struct flashnode_rec fnode;
++	recinfo_t *flashnode_info;
++	struct user_param *param;
++	struct iovec *iovs = NULL;
++	struct iovec *iov = NULL;
++	int fd, rc = 0;
++	int param_count = 0;
++	int param_used = 0;
++	int i;
++
++	flashnode_info = idbm_recinfo_alloc(MAX_KEYS);
++	if (!flashnode_info) {
++		log_error("Out of Memory.");
++		rc = ISCSI_ERR_NOMEM;
++		goto free_info_rec;
++	}
++
++	memset(&fnode, 0, sizeof(fnode));
++	rc = iscsi_sysfs_get_flashnode_info(&fnode, host_no, flashnode_idx);
++	if (rc) {
++		log_error("Could not read info for flashnode %u, %s",
++			  flashnode_idx, strerror(rc));
++		goto free_info_rec;
++	}
++
++	idbm_recinfo_flashnode(&fnode, flashnode_info);
++
++	i = 0;
++	list_for_each_entry(param, params, list) {
++		param_count++;
++		rc = idbm_verify_param(flashnode_info, param->name);
++		if (rc)
++			goto free_info_rec;
++	}
++
++	list_for_each_entry(param, params, list) {
++		rc = idbm_rec_update_param(flashnode_info, param->name,
++					   param->value, 0);
++		if (rc)
++			goto free_info_rec;
++	}
++
++	/* +2 for event and nlmsghdr */
++	param_count += 2;
++	iovs = calloc((param_count * sizeof(struct iovec)),
++		       sizeof(char));
++	if (!iovs) {
++		log_error("Out of Memory.");
++		rc = ISCSI_ERR_NOMEM;
++		goto free_info_rec;
++	}
++
++	/* param_used gives actual number of iovecs used for flashnode */
++	param_used = flashnode_build_config(params, &fnode, iovs);
++	if (!param_used) {
++		log_error("Build flashnode config failed.");
++		rc = ISCSI_ERR;
++		goto free_iovec;
++	}
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		log_error("Netlink open failed.");
++		rc = ISCSI_ERR_INTERNAL;
++		goto free_iovec;
++	}
++
++	log_info("Update flashnode %u.", flashnode_idx);
++	rc = ipc->set_flash_node_params(t->handle, host_no, flashnode_idx,
++					iovs, param_count);
++	if (rc < 0)
++		rc = ISCSI_ERR;
++
++
++	ipc->ctldev_close();
++
++free_iovec:
++	/* start at 2, because 0 is for nlmsghdr and 1 for event */
++	iov = iovs + 2;
++	for (i = 0; i < param_used; i++, iov++) {
++		if (iov->iov_base)
++			free(iov->iov_base);
++	}
++
++	free(iovs);
++
++free_info_rec:
++	if (flashnode_info)
++		free(flashnode_info);
++
++	return rc;
++}
++
++int iscsi_new_flashnode(struct iscsi_transport *t, uint32_t host_no, char *val,
++			uint32_t *flashnode_idx)
++{
++	int fd, rc = 0;
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		log_error("Netlink open failed.");
++		rc = ISCSI_ERR_INTERNAL;
++		goto exit_new_flashnode;
++	}
++
++	log_info("Create new flashnode for host %u.", host_no);
++	rc = ipc->new_flash_node(t->handle, host_no, val, flashnode_idx);
++	if (rc < 0)
++		rc = ISCSI_ERR;
++
++	ipc->ctldev_close();
++
++exit_new_flashnode:
++	return rc;
++}
++
++int iscsi_del_flashnode(struct iscsi_transport *t, uint32_t host_no,
++			uint32_t flashnode_idx)
++{
++	int fd, rc = 0;
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		log_error("Netlink open failed.");
++		rc = ISCSI_ERR_INTERNAL;
++		goto exit_del_flashnode;
++	}
++
++	log_info("Delete flashnode %u.", flashnode_idx);
++	rc = ipc->del_flash_node(t->handle, host_no, flashnode_idx);
++	if (rc < 0)
++		rc = ISCSI_ERR;
++
++	ipc->ctldev_close();
++
++exit_del_flashnode:
++	return rc;
++}
++
++int iscsi_login_flashnode(struct iscsi_transport *t, uint32_t host_no,
++			  uint32_t flashnode_idx)
++{
++	int fd, rc = 0;
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		log_error("Netlink open failed.");
++		rc = ISCSI_ERR_INTERNAL;
++		goto exit_login_flashnode;
++	}
++
++	log_info("Login to flashnode %u.", flashnode_idx);
++	rc = ipc->login_flash_node(t->handle, host_no, flashnode_idx);
++	if (rc == -EPERM)
++		rc = ISCSI_ERR_SESS_EXISTS;
++	else if (rc < 0)
++		rc = ISCSI_ERR_LOGIN;
++
++	ipc->ctldev_close();
++
++exit_login_flashnode:
++	return rc;
++}
++
++int iscsi_logout_flashnode(struct iscsi_transport *t, uint32_t host_no,
++			   uint32_t flashnode_idx)
++{
++	int fd, rc = 0;
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		log_error("Netlink open failed.");
++		rc = ISCSI_ERR_INTERNAL;
++		goto exit_logout;
++	}
++
++	log_info("Logout flashnode %u.", flashnode_idx);
++	rc = ipc->logout_flash_node(t->handle, host_no, flashnode_idx);
++	if (rc == -ESRCH)
++		rc = ISCSI_ERR_SESS_NOT_FOUND;
++	else if (rc < 0)
++		rc = ISCSI_ERR_LOGOUT;
++
++	ipc->ctldev_close();
++
++exit_logout:
++	return rc;
++}
++
++int iscsi_logout_flashnode_sid(struct iscsi_transport *t, uint32_t host_no,
++			       uint32_t sid)
++{
++	int fd, rc = 0;
++
++	fd = ipc->ctldev_open();
++	if (fd < 0) {
++		log_error("Netlink open failed.");
++		rc = ISCSI_ERR_INTERNAL;
++		goto exit_logout_sid;
++	}
++
++	log_info("Logout sid %u.", sid);
++	rc = ipc->logout_flash_node_sid(t->handle, host_no, sid);
++	if (rc < 0) {
++		log_error("Logout of sid %u failed.", sid);
++		rc = ISCSI_ERR_LOGOUT;
++	} else {
++		log_info("Logout of sid %u successful.", sid);
++	}
++
++	ipc->ctldev_close();
++
++exit_logout_sid:
++	return rc;
++}
++
++static int exec_flashnode_op(int op, int info_level, uint32_t host_no,
++			     uint32_t flashnode_idx, int type,
++			     struct list_head *params)
++{
++	struct iscsi_transport *t = NULL;
++	int rc = ISCSI_SUCCESS;
++	char *portal_type;
++
++	if (op != OP_SHOW && op != OP_NOOP && op != OP_NEW &&
++	    flashnode_idx == 0xffffffff) {
++		log_error("Invalid flashnode index");
++		rc = ISCSI_ERR_INVAL;
++		goto exit_flashnode_op;
++	}
++
++	t = iscsi_sysfs_get_transport_by_hba(host_no);
++	if (!t) {
++		log_error("Could not match hostno %u to transport.", host_no);
++		rc = ISCSI_ERR_TRANS_NOT_FOUND;
++		goto exit_flashnode_op;
++	}
++
++	switch (op) {
++	case OP_NOOP:
++	case OP_SHOW:
++		if (flashnode_idx == 0xffffffff)
++			rc = list_flashnodes(info_level, host_no);
++		else
++			rc = get_flashnode_info(host_no, flashnode_idx);
++		break;
++	case OP_NEW:
++		if (type == IPV4) {
++			portal_type = "ipv4";
++		} else if (type == IPV6) {
++			portal_type = "ipv6";
++		} else {
++			log_error("Invalid type mentioned for flashnode");
++			rc = ISCSI_ERR_INVAL;
++			goto exit_flashnode_op;
++		}
++		rc = iscsi_new_flashnode(t, host_no, portal_type,
++					 &flashnode_idx);
++		if (!rc)
++			log_info("New flashnode for host %u added at index %u.",
++				 host_no, flashnode_idx);
++		else
++			log_error("Creation of flashnode for host %u failed.",
++				  host_no);
++		break;
++	case OP_DELETE:
++		rc = iscsi_del_flashnode(t, host_no, flashnode_idx);
++		if (!rc)
++			log_info("Flashnode %u of host %u deleted.",
++				 flashnode_idx, host_no);
++		else
++			log_error("Deletion of flashnode %u of host %u failed.",
++				  flashnode_idx, host_no);
++		break;
++	case OP_UPDATE:
++		rc = iscsi_set_flashnode_params(t, host_no, flashnode_idx,
++						params);
++		if (!rc)
++			log_info("Update for flashnode %u of host %u successful.",
++				 flashnode_idx, host_no);
++		else
++			log_error("Update for flashnode %u of host %u failed.",
++				  flashnode_idx, host_no);
++		break;
++	case OP_LOGIN:
++		rc = iscsi_login_flashnode(t, host_no, flashnode_idx);
++		if (!rc)
++			log_info("Login to flashnode %u of host %u successful.",
++				 flashnode_idx, host_no);
++		else if (rc == ISCSI_ERR_SESS_EXISTS)
++			log_info("Flashnode %u of host %u already logged in.",
++				 flashnode_idx, host_no);
++		else
++			log_error("Login to flashnode %u of host %u failed.",
++				  flashnode_idx, host_no);
++		break;
++	case OP_LOGOUT:
++		rc = iscsi_logout_flashnode(t, host_no, flashnode_idx);
++		if (!rc)
++			log_info("Logout of flashnode %u of host %u successful.",
++				 flashnode_idx, host_no);
++		else if (rc == ISCSI_ERR_SESS_NOT_FOUND)
++			log_info("Flashnode %u of host %u not logged in.",
++				 flashnode_idx, host_no);
++		else
++			log_error("Logout of flashnode %u of host %u failed.",
++				  flashnode_idx, host_no);
++		break;
++	default:
++		log_error("Invalid operation");
++		rc = ISCSI_ERR_INVAL;
++		break;
++	}
++
++exit_flashnode_op:
++	return rc;
++}
++
+ static int verify_iface_params(struct list_head *params, struct node_rec *rec)
+ {
+ 	struct user_param *param;
+@@ -2403,6 +2798,7 @@ main(int argc, char **argv)
+ 	int tpgt = PORTAL_GROUP_TAG_UNKNOWN, killiscsid=-1, do_show=0;
+ 	int packet_size=32, ping_count=1, ping_interval=0;
+ 	int do_discover = 0, sub_mode = -1;
++	int flashnode_idx = -1, portal_type = -1;
+ 	struct sigaction sa_old;
+ 	struct sigaction sa_new;
+ 	struct list_head ifaces;
+@@ -2551,11 +2947,19 @@ main(int argc, char **argv)
+ 			printf("%s version %s\n", program_name,
+ 				ISCSI_VERSION_STR);
+ 			return 0;
++		case 'x':
++			flashnode_idx = atoi(optarg);
++			break;
++		case 'A':
++			portal_type = str_to_portal_type(optarg);
++			break;
+ 		case 'h':
+ 			usage(0);
+ 		}
+ 
+-		if (name && value) {
++		if ((mode == MODE_IFACE ||
++		     (mode == MODE_HOST && sub_mode == MODE_FLASHNODE)) &&
++		    name && value) {
+ 			param = idbm_alloc_user_param(name, value);
+ 			if (!param) {
+ 				log_error("Cannot allocate memory for params.");
+@@ -2603,7 +3007,7 @@ main(int argc, char **argv)
+ 
+ 	switch (mode) {
+ 	case MODE_HOST:
+-		if ((rc = verify_mode_params(argc, argv, "CHdmPov", 0))) {
++		if ((rc = verify_mode_params(argc, argv, "CHdmPotnvxA", 0))) {
+ 			log_error("host mode: option '-%c' is not "
+ 				  "allowed/supported", rc);
+ 			rc = ISCSI_ERR_INVAL;
+@@ -2621,6 +3025,17 @@ main(int argc, char **argv)
+ 				rc = exec_host_chap_op(op, info_level, host_no,
+ 						       value);
+ 				break;
++			case MODE_FLASHNODE:
++				if (!host_no) {
++					log_error("FLASHNODE mode requires host no");
++					rc = ISCSI_ERR_INVAL;
++					break;
++				}
++
++				rc = exec_flashnode_op(op, info_level, host_no,
++						       flashnode_idx,
++						       portal_type, &params);
++				break;
+ 			default:
+ 				log_error("Invalid Sub Mode");
+ 				break;
+diff --git a/usr/netlink.c b/usr/netlink.c
+index c43f686..c07fe3c 100644
+--- a/usr/netlink.c
++++ b/usr/netlink.c
+@@ -1252,6 +1252,169 @@ static int kdelete_chap(uint64_t transport_handle, uint32_t host_no,
+ 	return rc;
+ }
+ 
++static int
++kset_flashnode_params(uint64_t transport_handle, uint32_t host_no,
++		      uint32_t flashnode_idx, struct iovec *iovs,
++		      uint32_t param_count)
++{
++	struct iscsi_uevent ev;
++	int rc, ev_len;
++	struct iovec *iov = iovs + 1;
++
++	log_debug(8, "in %s", __FUNCTION__);
++
++	ev_len = sizeof(ev);
++	ev.type = ISCSI_UEVENT_SET_FLASHNODE_PARAMS;
++	ev.transport_handle = transport_handle;
++	ev.u.set_flashnode.host_no = host_no;
++	ev.u.set_flashnode.flashnode_idx = flashnode_idx;
++	/* first two iovs for nlmsg hdr and ev */
++	ev.u.set_flashnode.count = param_count - 2;
++
++	iov->iov_base = &ev;
++	iov->iov_len = ev_len;
++	rc = __kipc_call(iovs, param_count);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
++static int
++knew_flashnode(uint64_t transport_handle, uint32_t host_no, void *value,
++	       uint32_t *flashnode_idx)
++{
++	struct iscsi_uevent *ev;
++	char *param_str;
++	int rc, len;
++	struct iovec iov[2];
++
++	log_debug(7, "in %s", __FUNCTION__);
++
++	memset(setparam_buf, 0, NLM_SETPARAM_DEFAULT_MAX);
++	ev = (struct iscsi_uevent *)setparam_buf;
++	ev->type = ISCSI_UEVENT_NEW_FLASHNODE;
++	ev->transport_handle = transport_handle;
++	ev->u.new_flashnode.host_no = host_no;
++
++	param_str = setparam_buf + sizeof(*ev);
++	if (!strlen(value))
++		return 0;
++	sprintf(param_str, "%s", (char *)value);
++	len = strlen(param_str) + 1;
++	ev->u.new_flashnode.len = len;
++
++
++	iov[1].iov_base = ev;
++	iov[1].iov_len = sizeof(*ev) + len;
++	rc = __kipc_call(iov, 2);
++	if (rc < 0)
++		return rc;
++
++	*flashnode_idx = ev->r.new_flashnode_ret.flashnode_idx;
++	return 0;
++}
++
++static int
++kdel_flashnode(uint64_t transport_handle, uint32_t host_no,
++	       uint32_t flashnode_idx)
++{
++	struct iscsi_uevent ev;
++	int rc;
++	struct iovec iov[2];
++
++	log_debug(7, "in %s", __FUNCTION__);
++
++	memset(&ev, 0, sizeof(struct iscsi_uevent));
++	ev.type = ISCSI_UEVENT_DEL_FLASHNODE;
++	ev.transport_handle = transport_handle;
++	ev.u.del_flashnode.host_no = host_no;
++	ev.u.del_flashnode.flashnode_idx = flashnode_idx;
++
++	iov[1].iov_base = &ev;
++	iov[1].iov_len = sizeof(ev);
++	rc = __kipc_call(iov, 2);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
++static int
++klogin_flashnode(uint64_t transport_handle, uint32_t host_no,
++		 uint32_t flashnode_idx)
++{
++	struct iscsi_uevent ev;
++	int rc;
++	struct iovec iov[2];
++
++	log_debug(7, "in %s", __FUNCTION__);
++
++	memset(&ev, 0, sizeof(struct iscsi_uevent));
++	ev.type = ISCSI_UEVENT_LOGIN_FLASHNODE;
++	ev.transport_handle = transport_handle;
++	ev.u.login_flashnode.host_no = host_no;
++	ev.u.login_flashnode.flashnode_idx = flashnode_idx;
++
++	iov[1].iov_base = &ev;
++	iov[1].iov_len = sizeof(ev);
++	rc = __kipc_call(iov, 2);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
++static int
++klogout_flashnode(uint64_t transport_handle, uint32_t host_no,
++		  uint32_t flashnode_idx)
++{
++	struct iscsi_uevent ev;
++	int rc;
++	struct iovec iov[2];
++
++	log_debug(7, "in %s", __FUNCTION__);
++
++	memset(&ev, 0, sizeof(struct iscsi_uevent));
++	ev.type = ISCSI_UEVENT_LOGOUT_FLASHNODE;
++	ev.transport_handle = transport_handle;
++	ev.u.logout_flashnode.host_no = host_no;
++	ev.u.logout_flashnode.flashnode_idx = flashnode_idx;
++
++	iov[1].iov_base = &ev;
++	iov[1].iov_len = sizeof(ev);
++	rc = __kipc_call(iov, 2);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
++static int
++klogout_flashnode_sid(uint64_t transport_handle, uint32_t host_no,
++		      uint32_t sid)
++{
++	struct iscsi_uevent ev;
++	int rc;
++	struct iovec iov[2];
++
++	log_debug(7, "in %s", __FUNCTION__);
++
++	memset(&ev, 0, sizeof(struct iscsi_uevent));
++	ev.type = ISCSI_UEVENT_LOGOUT_FLASHNODE_SID;
++	ev.transport_handle = transport_handle;
++	ev.u.logout_flashnode_sid.host_no = host_no;
++	ev.u.logout_flashnode_sid.sid = sid;
++
++	iov[1].iov_base = &ev;
++	iov[1].iov_len = sizeof(ev);
++	rc = __kipc_call(iov, 2);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
+ static void drop_data(struct nlmsghdr *nlh)
+ {
+ 	int ev_size;
+@@ -1296,10 +1459,10 @@ static int ctldev_handle(void)
+ 						    ev->r.c_session_ret.sid);
+ 		return 0;
+ 	case ISCSI_KEVENT_DESTROY_SESSION:
++		drop_data(nlh);
+ 		if (!ipc_ev_clbk)
+ 			return 0;
+ 
+-		drop_data(nlh);
+ 		if (ipc_ev_clbk->destroy_session)
+ 			ipc_ev_clbk->destroy_session(ev->r.d_session.host_no,
+ 						     ev->r.d_session.sid);
+@@ -1543,6 +1706,12 @@ struct iscsi_ipc nl_ipc = {
+ 	.exec_ping		= kexec_ping,
+ 	.get_chap		= kget_chap,
+ 	.delete_chap		= kdelete_chap,
++	.set_flash_node_params	= kset_flashnode_params,
++	.new_flash_node		= knew_flashnode,
++	.del_flash_node		= kdel_flashnode,
++	.login_flash_node	= klogin_flashnode,
++	.logout_flash_node	= klogout_flashnode,
++	.logout_flash_node_sid	= klogout_flashnode_sid,
+ };
+ struct iscsi_ipc *ipc = &nl_ipc;
+ 
+-- 
+1.8.1.4
+

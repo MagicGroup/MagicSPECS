@@ -22,7 +22,7 @@ index 4a02743..c606682 100644
 @@ -378,6 +379,11 @@ class Switcher : Gtk.Window {
                      break;
                  default:
-                     debug("0x%04x", pe->keyval);
+                     debug("0x%04x", pe.keyval);
 +                    if (m_loop != null) {
 +                        m_loop.quit();
 +                        m_loop = null;

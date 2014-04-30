@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 Summary: A GNU program for formatting C code
+Summary(zh_CN.UTF-8): 格式化 C 代码的 GNU 程序
 Name: indent
 Version: 2.2.11
 Release: 5%{?dist}
 License: GPLv3+
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 URL: http://indent.isidore-it.eu/beautify.html
 Source: http://indent.isidore-it.eu/%{name}-%{version}.tar.gz
 Patch5: indent-2.2.9-lcall.patch
@@ -22,6 +24,10 @@ C syntax.
 
 Install the indent package if you are developing applications in C and
 you want a program to format your code.
+
+%description -l zh_CN.UTF-8
+格式化 C 代码的 GNU 程序。可以转换编写代码的不同风格，还可以修正 C 代码语法。
+
 
 %prep
 %setup -q

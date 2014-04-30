@@ -12,7 +12,7 @@ Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -90,6 +90,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/libkomparediff2/*.cmake
 
 %changelog
+* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

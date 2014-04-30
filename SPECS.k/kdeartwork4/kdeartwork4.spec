@@ -14,7 +14,7 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
+Release: %{release_number}%{?dist}.1
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -30,9 +30,6 @@ Requires: %{name}-IconThemes
 Requires: %{name}-desktopthemes
 Requires: %{name}-emoticons
 Requires: %{name}-kscreensaver
-%if 0
-Requires: %{name}-sounds
-%endif
 Requires: %{name}-styles
 
 %description
@@ -121,19 +118,6 @@ Group(zh_CN.UTF-8): 系统/GUI/KDE
 KDE 屏幕保护。
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package sounds
-Summary: KDE Sound Theme
-Summary(zh_CN.UTF-8): KDE 音效主题
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
-
-%description sounds
-%{summary}.
-
-%description sounds -l zh_CN.UTF-8
-KDE 音效主题。
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package styles
 Summary: KDE Control Styles
 Summary(zh_CN.UTF-8): KDE 控件风格
@@ -220,6 +204,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_appsdir}/aurorae/*
 
 %changelog
+* Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
+- 为 Magic 3.0 重建
+
 * Wed Aug 5 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.0-1mgc
 - 更新至 4.3.0
 - 己丑  六月十五

@@ -1,0 +1,44 @@
+From 9ef01a7d13358e96627ae1d263fea5537c4ed6f7 Mon Sep 17 00:00:00 2001
+From: Lee Duncan <lduncan@suse.com>
+Date: Wed, 29 Jan 2014 11:21:49 +0100
+Subject: [PATCH] Add missing DESTDIR
+
+Several Makefile targets are missing DESTDIR, making it
+hard for packagers.
+
+Signed-off-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+---
+ Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 88b3529..79bad84 100644
+--- a/Makefile
++++ b/Makefile
+@@ -124,7 +124,7 @@ install_iface: $(IFACEFILES)
+ 	$(INSTALL) -m 644 $^ $(DESTDIR)$(etcdir)/iscsi/ifaces
+ 
+ install_etc: $(ETCFILES)
+-	if [ ! -f /etc/iscsi/iscsid.conf ]; then \
++	if [ ! -f $(DESTDIR)/etc/iscsi/iscsid.conf ]; then \
+ 		$(INSTALL) -d $(DESTDIR)$(etcdir)/iscsi ; \
+ 		$(INSTALL) -m 644 $^ $(DESTDIR)$(etcdir)/iscsi ; \
+ 	fi
+@@ -137,11 +137,11 @@ install_kernel:
+ 	$(MAKE) -C kernel install_kernel
+ 
+ install_iname:
+-	if [ ! -f /etc/iscsi/initiatorname.iscsi ]; then \
++	if [ ! -f $(DESTDIR)/etc/iscsi/initiatorname.iscsi ]; then \
+ 		echo "InitiatorName=`$(DESTDIR)/sbin/iscsi-iname`" > $(DESTDIR)/etc/iscsi/initiatorname.iscsi ; \
+ 		echo "***************************************************" ; \
+ 		echo "Setting InitiatorName to `cat $(DESTDIR)/etc/iscsi/initiatorname.iscsi`" ; \
+-		echo "To override edit /etc/iscsi/initiatorname.iscsi" ; \
++		echo "To override edit $(DESTDIR)/etc/iscsi/initiatorname.iscsi" ; \
+ 		echo "***************************************************" ; \
+ 	fi
+ 
+-- 
+1.8.3.1
+

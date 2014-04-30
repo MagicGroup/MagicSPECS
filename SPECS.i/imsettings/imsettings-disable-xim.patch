@@ -1,7 +1,7 @@
-diff -pruN imsettings-1.2.2.orig/data/xinput.sh.in.in imsettings-1.2.2/data/xinput.sh.in.in
---- imsettings-1.2.2.orig/data/xinput.sh.in.in	2011-04-22 20:35:24.000000000 +0900
-+++ imsettings-1.2.2/data/xinput.sh.in.in	2011-04-26 16:41:19.165486325 +0900
-@@ -80,10 +80,11 @@ function is_qt_supported() {
+diff -pruN imsettings-1.6.1.orig/data/imsettings-functions.in imsettings-1.6.1/data/imsettings-functions.in
+--- imsettings-1.6.1.orig/data/imsettings-functions.in	2013-04-03 16:26:45.000000000 +0900
++++ imsettings-1.6.1/data/imsettings-functions.in	2013-04-03 19:20:35.000000000 +0900
+@@ -160,10 +160,11 @@ function is_qt_supported() {
  }
  
  function is_xim_supported() {

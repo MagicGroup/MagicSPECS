@@ -1,13 +1,14 @@
 Summary: The Reliable Event Logging Protocol library
 Name: librelp
-Version: 1.0.1
-Release: 1%{?dist}
+Version: 1.2.5
+Release: 2%{?dist}
 License: GPLv3+
 Group: System Environment/Libraries
 URL: http://www.rsyslog.com/
 Source0: http://download.rsyslog.com/librelp/%{name}-%{version}.tar.gz
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
+BuildRequires: gnutls-devel >= 1.4.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -61,6 +62,25 @@ fi
 %{_libdir}/pkgconfig/relp.pc
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.2.5-2
+- 为 Magic 3.0 重建
+
+* Thu Mar 27 2014 François Cami <fcami@fedoraproject.org> - 1.2.5-1
+- rebase to 1.2.5
+
+* Wed Jul 31 2013 Tomas Heinrich <theinric@redhat.com> - 1.2.0-1
+- rebase to 1.2.0
+- add gnutls-devel to BuildRequires
+
+* Wed Apr 10 2013 Tomas Heinrich <theinric@redhat.com> - 1.0.3-1
+- rebase to 1.0.3
+
+* Thu Apr 04 2013 Tomas Heinrich <theinric@redhat.com> - 1.0.2-1
+- rebase to 1.0.2
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Nov 21 2012 Tomas Heinrich <theinric@redhat.com> - 1.0.1-1
 - upgrade to upstream version 1.0.1
 

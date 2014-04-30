@@ -1,13 +1,13 @@
 Name:           iptux
-Version:        0.5.1
+Version:	0.6.2
 Release: 	3%{?dist}
-Source0:        %{name}-%{version}-2.tar.gz
+Source0:        https://github.com/iptux-src/iptux/archive/v%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  gtk2-devel
 Group:          Applications/Internet
 Group(zh_CN.UTF-8):   应用程序/互联网
 License:        GPLv2a+
-URL:	  	http://iptux.googlecode.com/
+URL:	  	https://github.com/iptux-src/iptux/
 Summary:        A GUI for ipmessage
 Summary(zh_CN.UTF-8): 飞鸽传书的 Linux 图形界面版本
 
@@ -26,7 +26,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%makeinstall
+make install DESTDIR=%{buildroot}
 
 %clean
 rm -rf "$RPM_BUILD_ROOT"
@@ -37,6 +37,9 @@ rm -rf "$RPM_BUILD_ROOT"
 %{_datadir}/*
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 0.6.2-3
+- 更新到 0.6.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.5.1-3
 - 为 Magic 3.0 重建
 

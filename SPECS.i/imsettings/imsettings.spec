@@ -1,34 +1,32 @@
-%define use_mate 1
-
 Name:		imsettings
-Version:	1.4.0
-Release:	3%{?dist}
+Version:	1.6.7
+Release:	1%{?dist}
 License:	LGPLv2+
-URL:		http://code.google.com/p/imsettings/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:		https://tagoh.bitbucket.org/%{name}/
 BuildRequires:	desktop-file-utils
 BuildRequires:	intltool gettext
 BuildRequires:	libtool automake autoconf
-BuildRequires:	glib2 >= 2.26.0, gobject-introspection-devel, gtk3-devel >= 3.3.3
+BuildRequires:	glib2 >= 2.32.0, gobject-introspection-devel, gtk3-devel >= 3.3.3
 BuildRequires:	libnotify-devel
-BuildRequires:	libX11-devel, libgxim-devel >= 0.3.1
+BuildRequires:	libX11-devel, libgxim-devel >= 0.5.0
 %if !0%{?rhel}
 BuildRequires:	xfconf-devel
-%if 0%{?use_mate}
-BuildRequires:	mate-conf-devel
 %endif
-%endif
-Source0:	http://imsettings.googlecode.com/files/%{name}-%{version}.tar.bz2
-Patch0:		imsettings-constraint-of-language.patch
-Patch1:		imsettings-disable-xim.patch
-Patch2:		imsettings-xinput-xcompose.patch
-Patch3:		imsettings-no-autostart-for-gnome-shell.patch
+Source0:	https://bitbucket.org/tagoh/%{name}/downloads/%{name}-%{version}.tar.bz2
+## Fedora specific: run IM for certain languages only
+Patch0:		%{name}-constraint-of-language.patch
+## Fedora specific: Disable XIM support
+Patch1:		%{name}-disable-xim.patch
+## Fedora specific: Enable xcompose for certain languages
+Patch2:		%{name}-xinput-xcompose.patch
+## Fedora specific: Force enable the IM management on imsettings for Cinnamon
+Patch3:		%{name}-force-enable-for-cinnamon.patch
 
 Summary:	Delivery framework for general Input Method configuration
 Group:		Applications/System
 Requires:	xorg-x11-xinit >= 1.0.2-22.fc8
-Requires:	imsettings-libs = %{version}-%{release}
-Requires:	imsettings-desktop-module = %{version}-%{release}
+Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
+Requires:	%{name}-desktop-module%{?_isa} = %{version}-%{release}
 Requires(post):	/bin/dbus-send %{_sbindir}/alternatives
 Requires(postun):	/bin/dbus-send %{_sbindir}/alternatives
 
@@ -55,9 +53,9 @@ This package contains the shared library for imsettings.
 %package	devel
 Summary:	Development files for imsettings
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 Requires:	pkgconfig
-Requires:	glib2-devel >= 2.26.0
+Requires:	glib2-devel >= 2.32.0
 
 %description	devel
 IMSettings is a framework that delivers Input Method
@@ -71,7 +69,7 @@ applications with imsettings.
 %package	xim
 Summary:	XIM support on imsettings
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	im-chooser
 
 %description	xim
@@ -82,28 +80,31 @@ or the desktop.
 
 This package contains a module to get this working with XIM.
 
-%package	gnome
-Summary:	GNOME support on imsettings
+%package	gsettings
+Summary:	GSettings support on imsettings
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Requires:	im-chooser dconf
-Provides:	imsettings-desktop-module = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	dconf
+Provides:	imsettings-desktop-module%{?_isa} = %{version}-%{release}
+Provides:	%{name}-gnome = %{version}-%{release}
+Obsoletes:	%{name}-gnome < 1.5.1-3
 
-%description	gnome
+%description	gsettings
 IMSettings is a framework that delivers Input Method
 settings and applies the changes so they take effect
 immediately without any need to restart applications
 or the desktop.
 
 This package contains a module to get this working on
-GNOME.
+GNOME and Cinnamon which requires GSettings in their
+own XSETTINGS daemons.
 
 %package	qt
 Summary:	Qt support on imsettings
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	im-chooser
-Provides:	imsettings-desktop-module = %{version}-%{release}
+Provides:	imsettings-desktop-module%{?_isa} = %{version}-%{release}
 
 %description	qt
 IMSettings is a framework that delivers Input Method
@@ -118,10 +119,10 @@ applications.
 %package	xfce
 Summary:	Xfce support on imsettings
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Requires:	im-chooser
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	im-chooser-xfce
 Requires:	xfce4-settings >= 4.5.99.1-2
-Provides:	imsettings-desktop-module = %{version}-%{release}
+Provides:	imsettings-desktop-module%{?_isa} = %{version}-%{release}
 
 %description	xfce
 IMSettings is a framework that delivers Input Method
@@ -134,12 +135,13 @@ This package contains a module to get this working on Xfce.
 %package	lxde
 Summary:	LXDE support on imsettings
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	lxde-settings-daemon
 # Hack for upgrades: see https://bugzilla.redhat.com/show_bug.cgi?id=693809
 Requires:	lxsession
 Requires:	/usr/bin/lxsession
-Provides:	imsettings-desktop-module = %{version}-%{release}
+Requires:	im-chooser
+Provides:	imsettings-desktop-module%{?_isa} = %{version}-%{release}
 
 %description	lxde
 IMSettings is a framework that delivers Input Method
@@ -149,27 +151,15 @@ or the desktop.
 
 This package contains a module to get this working on LXDE.
 
-%package        gconf
-Summary:        GConf support on imsettings
-Group:          Applications/System
-Requires:       %{name} = %{version}-%{release}
-Provides:       imsettings-desktop-module = %{version}-%{release}
-
-%description    gconf 
-IMSettings is a framework that delivers Input Method
-settings and applies the changes so they take effect
-immediately without any need to restart applications
-or the desktop.
-
-This package contains a module to get this working on GConf.
-
 %package	mate
 Summary:	MATE support on imsettings
 Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Requires:	mate-settings-daemon
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+# need to keep more deps for similar reason to https://bugzilla.redhat.com/show_bug.cgi?id=693809
+Requires:	mate-settings-daemon >= 1.5.0
 Requires:	mate-session-manager
-Provides:	imsettings-desktop-module = %{version}-%{release}
+Requires:	im-chooser
+Provides:	imsettings-desktop-module%{?_isa} = %{version}-%{release}
 
 %description	mate
 IMSettings is a framework that delivers Input Method
@@ -178,6 +168,24 @@ immediately without any need to restart applications
 or the desktop.
 
 This package contains a module to get this working on MATE.
+
+%package	cinnamon
+Summary:	Cinnamon support on imsettings
+Group:		Applications/System
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+# need to keep more deps for similar reason to https://bugzilla.redhat.com/show_bug.cgi?id=693809
+Requires:	cinnamon
+Requires:	cinnamon-session
+Requires:	im-chooser
+Provides:	imsettings-desktop-module%{?_isa} = %{version}-%{release}
+
+%description	cinnamon
+IMSettings is a framework that delivers Input Method
+settings and applies the changes so they take effect
+immediately without any need to restart applications
+or the desktop.
+
+This package contains a module to get this working on Cinnamon.
 %endif
 
 %prep
@@ -185,7 +193,7 @@ This package contains a module to get this working on MATE.
 %patch0 -p1 -b .0-lang
 %patch1 -p1 -b .1-xim
 %patch2 -p1 -b .2-xcompose
-%patch3 -p1 -b .3-no-autostart-for-gnome-shell
+%patch3 -p1 -b .3-force-cinnamon
 
 %build
 %configure	\
@@ -197,10 +205,10 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL="/usr/bin/install -p"
 
 # change the file attributes
+chmod 0755 $RPM_BUILD_ROOT%{_libexecdir}/imsettings-target-checker.sh
 chmod 0755 $RPM_BUILD_ROOT%{_libexecdir}/xinputinfo.sh
 chmod 0755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/50-xinput.sh
 
@@ -208,14 +216,17 @@ chmod 0755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/50-xinput.sh
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/imsettings/*.la
 %if 0%{?rhel}
-rm -f $RPM_BUILD_ROOT%{_libdir}/imsettings/libimsettings-{lxde,xfce}.so
+rm -f $RPM_BUILD_ROOT%{_libdir}/imsettings/libimsettings-{lxde,xfce,mate-gsettings}.so
 %endif
-magic_rpm_clean.sh
+
+desktop-file-validate $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/imsettings-start.desktop
+
 %find_lang %{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
+#%%check
+## Disable it because it requires DBus session
+# make check
 
 %post
 alternatives --install %{_sysconfdir}/X11/xinit/xinputrc xinputrc %{_sysconfdir}/X11/xinit/xinput.d/none.conf 10
@@ -235,29 +246,29 @@ fi
 %postun libs -p /sbin/ldconfig
 
 %files	-f %{name}.lang
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %dir %{_libdir}/imsettings
-%{_bindir}/imsettings-check
 %{_bindir}/imsettings-info
 %{_bindir}/imsettings-list
 %{_bindir}/imsettings-reload
 %{_bindir}/imsettings-switch
+%{_libexecdir}/imsettings-check
 %{_libexecdir}/imsettings-daemon
 %{_libexecdir}/xinputinfo.sh
+%{_libexecdir}/imsettings-functions
+%{_libexecdir}/imsettings-target-checker.sh
 %{_datadir}/dbus-1/services/*.service
 %{_datadir}/pixmaps/*.png
 %{_sysconfdir}/X11/xinit/xinitrc.d/50-xinput.sh
 %{_sysconfdir}/X11/xinit/xinput.d
 %{_sysconfdir}/xdg/autostart/imsettings-start.desktop
+%{_mandir}/man1/imsettings-*.1*
 
 %files	libs
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/libimsettings.so.*
 
 %files	devel
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_includedir}/imsettings
 %{_libdir}/libimsettings.so
@@ -267,49 +278,95 @@ fi
 %{_datadir}/gtk-doc/html/imsettings
 
 %files	xim
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_bindir}/imsettings-xim
 %{_libdir}/imsettings/libimsettings-xim.so
 
-%files	gnome
-%defattr(-, root, root, -)
+%files	gsettings
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/imsettings/libimsettings-gsettings.so
+%{_libdir}/imsettings/libimsettings-gconf.so
 
 %files	qt
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/imsettings/libimsettings-qt.so
 
 %if !0%{?rhel}
 %files	xfce
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/imsettings/libimsettings-xfce.so
 
 %files	lxde
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/imsettings/libimsettings-lxde.so
 
-%files  gconf
-%defattr(-, root, root, -)
-%doc AUTHORS COPYING ChangeLog NEWS README
-%{_libdir}/imsettings/libimsettings-gconf.so
-
-%if 0%{?use_mate}
 %files	mate
-%defattr(-, root, root, -)
 %doc AUTHORS COPYING ChangeLog NEWS README
-%{_libdir}/imsettings/libimsettings-mateconf.so
-%endif
+%{_libdir}/imsettings/libimsettings-mate-gsettings.so
+
+%files cinnamon
+%doc AUTHORS COPYING ChangeLog NEWS README
+%{_libdir}/imsettings/libimsettings-cinnamon-gsettings.so
 %endif
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-3
-- 为 Magic 3.0 重建
+* Tue Nov 26 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.7-1
+- New upstream release.
+
+* Thu Oct 10 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.6-1
+- New upstream release.
+- Enable imsettings forcibly for Cinnamon so far.
+
+* Thu Oct 10 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.5-1
+- New upstream release.
+- Add a module to support the latest Cinnamon Desktop. (#1017141)
+
+* Mon Sep 30 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.4-1
+- New upstream release.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 11 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.3-1
+- New upstream release.
+- Remove BR: docbook2X.
+
+* Mon May 27 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.2-1
+- New upstream release.
+
+* Mon Apr  8 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.1-2
+- Have a look gsettings on gnome-classic too.
+
+* Wed Apr  3 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.1-1
+- New upstream release.
+- Support gnome-classic session. (#947394)
+
+* Tue Mar 12 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.0-3
+- Run input methods on even non-GNOME desktops. (#920188)
+
+* Tue Feb 12 2013 Kalev Lember <kalevlember@gmail.com> - 1.6.0-2
+- Correct the imsettings-gnome obsoletes version
+
+* Fri Feb  8 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.0-1
+- New upstream release.
+  - Add Cinnamon support.
+- Rename imsettings-gnome to imsettings-gsettings
+
+* Thu Dec 20 2012 Akira TAGOH <tagoh@redhat.com> - 1.5.1-2
+- Fix dep errors.
+
+* Wed Dec 19 2012 Akira TAGOH <tagoh@redhat.com> - 1.5.1-1
+- New upstream release.
+  - Get rid of AutostartCondition. (#887951)
+- Update upstream URL.
+
+* Fri Nov 23 2012 Akira TAGOH <tagoh@redhat.com> - 1.5.0-2
+- Rebuilt against the latest version of libgxim.
+
+* Thu Nov 22 2012 Akira TAGOH <tagoh@redhat.com> - 1.5.0-1
+- New upstream release.
+  - MATE 1.5 support
 
 * Mon Oct 22 2012 Akira TAGOH <tagoh@redhat.com> - 1.4.0-2
 - No autostart on gnome-shell. (#868458)

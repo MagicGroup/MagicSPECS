@@ -26,7 +26,6 @@ Source1:        hiera.yaml
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if 0%{?with_checks}
-BuildRequires:  rubygem(rspec)
 BuildRequires:  rubygem(mocha)
 %endif
 BuildRequires:  ruby-devel
@@ -79,7 +78,7 @@ rm -rf %{buildroot}
 %{ruby_vendorlibdir}/hiera
 %dir %{_var}/lib/hiera
 %config(noreplace) %{_sysconfdir}/hiera.yaml
-%doc CHANGELOG COPYING README.md LICENSE
+%doc COPYING README.md LICENSE
 
 
 %changelog

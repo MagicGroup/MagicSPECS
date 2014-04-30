@@ -10,14 +10,10 @@ Summary(zh_CN.UTF-8): 管理 GPG 加密
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirrors.ustc.edu.cn/kde/stable/%{version}/src/%{real_name}-%{version}.tar.xz
-
-## upstreamable patches
-# add support for gpg2 to kgpg 
-Patch50: kgpg-gpg2.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
@@ -32,23 +28,8 @@ BuildRequires: kdepimlibs4-devel >= %{version}
 %description -l zh_CN.UTF-8
 。
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package devel
-Summary: Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-
-%description devel
-Contains the development files.
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发文件。包含 libbtcore 的开发文件。
-
 %prep
 %setup -q -n %{real_name}-%{rversion}
-#%patch50 -p1
 
 %build
 mkdir build
@@ -86,6 +67,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_dbus_interfacesdir}/*
 
 %changelog
+* Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

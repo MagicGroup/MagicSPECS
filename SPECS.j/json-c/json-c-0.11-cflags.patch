@@ -1,0 +1,7 @@
+diff -up json-c-json-c-0.11-20130402/Makefile.am.inc.orig json-c-json-c-0.11-20130402/Makefile.am.inc
+--- json-c-json-c-0.11-20130402/Makefile.am.inc.orig	2013-04-03 05:04:18.000000000 +0300
++++ json-c-json-c-0.11-20130402/Makefile.am.inc	2013-09-10 23:16:02.537432646 +0300
+@@ -1,2 +1,2 @@
+-AM_CFLAGS = -Wall -Werror -Wextra -Wwrite-strings -Wno-unused-parameter -std=gnu99 -D_GNU_SOURCE -D_REENTRANT
++AM_CFLAGS = -std=gnu99 -D_GNU_SOURCE -D_REENTRANT
+ 

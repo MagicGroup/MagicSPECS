@@ -10,7 +10,7 @@ Summary(zh_CN.UTF-8): 字符选择器
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
@@ -26,20 +26,6 @@ fonts and copy them into the clipboard.
 
 %description -l zh_CN.UTF-8
 这个程序可以从所有安装的字体中选择特殊字符并复制它们到剪贴板。
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package devel
-Summary: Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-
-%description devel
-Contains the development files.
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -83,6 +69,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/hicolor/*/apps/ark.*
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

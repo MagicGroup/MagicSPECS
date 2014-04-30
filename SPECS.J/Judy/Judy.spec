@@ -1,6 +1,6 @@
 Name:           Judy
 Version:        1.0.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        General purpose dynamic array
 
 Group:          System Environment/Libraries
@@ -101,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.0.5-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0.5-2
 - 为 Magic 3.0 重建
 

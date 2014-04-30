@@ -1,5 +1,5 @@
 Name:           icoutils
-Version:        0.29.1
+Version:	0.31.0
 Release:        1%{?dist}
 Summary:        Utility for extracting and converting Microsoft icon and cursor files
 Summary(zh_CN.UTF-8): 解压和转换微软图标和光标文件的工具
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.31.0-1
+- 更新到 0.31.0
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.29.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

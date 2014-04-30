@@ -1,6 +1,6 @@
 Name:           harfbuzz
 Version:	0.9.27
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Text shaping library
 Summary(zh_CN.UTF-8): 文本整形库
 
@@ -83,11 +83,15 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/harfbuzz.pc
 %{_libdir}/libharfbuzz-icu.so
 %{_libdir}/pkgconfig/harfbuzz-icu.pc
+%{_datadir}/gtk-doc/html/harfbuzz/*
 
 %files icu
 %{_libdir}/libharfbuzz-icu.so.*
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 0.9.27-3
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.9.27-2
 - 更新到 0.9.27
 

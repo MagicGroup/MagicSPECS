@@ -1,0 +1,31 @@
+From 0e6cb00eac013c270741ee2bdb9427ccc62ad705 Mon Sep 17 00:00:00 2001
+From: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+Date: Mon, 24 Feb 2014 03:14:18 -0500
+Subject: [PATCH] iscsiadm: Fix the compile time warning
+
+This fixes the following compile time warning message:
+
+iscsiadm.c:2248: warning: passing argument 1 of 'print_host_stats' from incompatible pointer type
+
+Signed-off-by: Adheer Chandravanshi <adheer.chandravanshi@qlogic.com>
+---
+ usr/iscsiadm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/usr/iscsiadm.c b/usr/iscsiadm.c
+index 36617ab..389f4b8 100644
+--- a/usr/iscsiadm.c
++++ b/usr/iscsiadm.c
+@@ -2245,7 +2245,8 @@ static int exec_host_stats_op(int op, int info_level, uint32_t host_no)
+ 		goto exit_host_stats;
+ 	}
+ 
+-	print_host_stats(req_buf + sizeof(struct iscsi_uevent));
++	print_host_stats((struct iscsi_offload_host_stats *)(req_buf +
++			 sizeof(struct iscsi_uevent)));
+ 
+ 	ipc->ctldev_close();
+ 
+-- 
+1.8.3.1
+

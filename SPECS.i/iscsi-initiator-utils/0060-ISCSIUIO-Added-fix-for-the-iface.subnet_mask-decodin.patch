@@ -1,0 +1,29 @@
+From df68365bef167778fb59059e78090d33a01e4e7f Mon Sep 17 00:00:00 2001
+From: Eddie Wai <eddie.wai@broadcom.com>
+Date: Wed, 11 Dec 2013 15:38:13 -0800
+Subject: [PATCH] ISCSIUIO: Added fix for the iface.subnet_mask decoding for
+ IPv6
+
+Fixed a inet_pton decode error for the iface.subnet_mask for IPv6.
+
+Signed-off-by: Eddie Wai <eddie.wai@broadcom.com>
+---
+ iscsiuio/src/unix/iscsid_ipc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/iscsiuio/src/unix/iscsid_ipc.c b/iscsiuio/src/unix/iscsid_ipc.c
+index e22de0d..033308d 100644
+--- a/iscsiuio/src/unix/iscsid_ipc.c
++++ b/iscsiuio/src/unix/iscsid_ipc.c
+@@ -274,7 +274,7 @@ static int decode_iface(struct iface_rec_decode *ird, struct iface_rec *rec)
+ 				       sizeof(struct in6_addr));
+ 			/* Subnet mask priority: CIDR, then rec */
+ 			if (!ird->ipv6_subnet_mask.s6_addr)
+-				inet_pton(AF_INET, rec->subnet_mask,
++				inet_pton(AF_INET6, rec->subnet_mask,
+ 					  &ird->ipv6_subnet_mask);
+ 
+ 			/* For LL on, ignore the IPv6 addr in the iface */
+-- 
+1.8.3.1
+

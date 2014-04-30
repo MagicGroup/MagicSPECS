@@ -2,12 +2,14 @@
 %define version_dec 2.02.023
 
 Summary: Firmware for the Hauppauge PVR 250/350/150/500/USB2 model series
+Summary(zh_CN.UTF-8): Hauppauge PVR 250/350/150/500/USB2 系列型号的固件
 Name: ivtv-firmware
 Version: 20080701
 Release: 22
 Epoch: 2
 License: Redistributable, no modification permitted
 Group: System Environment/Kernel
+Group(zh_CN.UTF-8): 系统环境/内核
 URL: http://dl.ivtvdriver.org/ivtv/firmware/
 Source0: http://dl.ivtvdriver.org/ivtv/firmware/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -22,6 +24,9 @@ Provides: %{name}-enc = %{version_enc}
 %description
 This package contains the firmware for WinTV Hauppauge PVR
 250/350/150/500/USB2 cards.
+
+%description -l zh_CN.UTF-8
+WinTV Hauppauge PVR 250/350/150/500/USB2 系列型号的固件。
 
 %prep
 %setup -q -c

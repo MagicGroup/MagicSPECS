@@ -9,7 +9,7 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}.1
+Release: %{release_number}%{?dist}.2
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: kdebase4-runtime >= %{version}
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_datadir}/apps/kdm/sessions/kde4.desktop
 
 %changelog
+* Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.9.3-1.1
 - 为 Magic 3.0 重建
 

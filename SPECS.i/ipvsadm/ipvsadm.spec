@@ -1,9 +1,11 @@
 Summary: Utility to administer the Linux Virtual Server
+Summary(zh_CN.UTF-8): 管理 Linux 虚拟服务器的工具
 Name: ipvsadm
 Version: 1.26
 Release: 5%{?dist}
 License: GPLv2+
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://www.linuxvirtualserver.org/software/ipvs.html
 Source0: http://www.linuxvirtualserver.org/software/kernel-2.6/ipvsadm-%{version}.tar.gz
 Source1: ipvsadm.service
@@ -22,6 +24,8 @@ Requires(post): systemd-sysv
 ipvsadm is a utility to administer the IP Virtual Server services
 offered by the Linux kernel.
 
+%description -l zh_CN.UTF-8
+这是一个管理 Linux 内核提供的 IP 虚拟服务系统的工具。
 
 %prep
 %setup -q

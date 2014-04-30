@@ -12,7 +12,7 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
+Release: 11111111112%{?dist}
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -95,13 +95,18 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%doc COPYING COPYING.LIB
 %{kde4_bindir}/*
 %{kde4_libdir}/*.so.*
-%{kde4_libdir}/*.a
 %{kde4_plugindir}/*.so
 %{kde4_datadir}/*
 %{kde4_dbus_interfacesdir}/org.kde.Akonadi.*.Settings.xml
 %{kde4_plugindir}/imports/org/kde/*
 
 %changelog
+* Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-11111111112
+- 为 Magic 3.0 重建
+
+* Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
+- 为 Magic 3.0 重建
+
 * Tue Aug 4 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.0-1mgc
 - 更新至 4.3.0
 - 己丑  六月十四

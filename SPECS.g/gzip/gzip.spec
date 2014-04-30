@@ -11,7 +11,6 @@ Source: http://ftp.gnu.org/gnu/gzip/gzip-%{version}.tar.xz
 Patch0: gzip-1.3.12-openbsd-owl-tmp.patch
 Patch1: gzip-1.3.5-zforce.patch
 Patch4: gzip-1.3.13-rsync.patch
-Patch5: gzip-1.3.9-addsuffix.patch
 Patch6: gzip-1.3.5-cve-2006-4338.patch
 Patch7: gzip-1.3.13-cve-2006-4337.patch
 Patch8: gzip-1.3.5-cve-2006-4337_len.patch
@@ -49,7 +48,6 @@ GNU 数据压缩程序，压缩文件扩展名为 .gz。
 %patch0 -p1 -b .owl-tmp
 %patch1 -p1 -b .zforce
 %patch4 -p1 -b .rsync
-%patch5 -p1 -b .addsuffix
 %patch6 -p1 -b .4338
 %patch7 -p1 -b .4337
 %patch8 -p1 -b .4337l

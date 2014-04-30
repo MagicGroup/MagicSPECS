@@ -3,7 +3,7 @@ Name:    kde4-kactivities
 Summary: API for using and interacting with Activities 
 Summary(zh_CN.UTF-8): 使用和与 Activities 交互的 API
 Version: %{kde4_kdelibs_version}
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 License: GPLv2+ and LGPLv2+
 URL:     https://projects.kde.org/projects/kde/kdelibs/kactivities
@@ -112,6 +112,9 @@ magic_rpm_clean.sh
 %{_kde4_libdir}/pkgconfig/libkactivities-models.pc
 
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,50 @@
+From fef4db2784fac34fa99468de09c386114b228b36 Mon Sep 17 00:00:00 2001
+From: Jan Vesely <jvesely@redhat.com>
+Date: Wed, 26 Jun 2013 15:55:12 +0200
+Subject: iscsiuio: Change socket bind to use the same struct size as iscsid
+
+Without this patch connections to iscsiuio fail, and strace prints:
+
+connect(8, {sa_family=AF_FILE, path=@"ISCSID_UIP_ABSTRACT_NAMESPACE"}, 32) = -1 ECONNREFUSED (Connection refused)
+
+Note that updating mgmt_ipc_listen and ipc_connect to use sizeof(addr) instead
+of the precomputed values also fixes the issue.
+Looks like "(Null bytes in the name have no special significance.)" [man 7 unix] is the culprit here.
+
+Signed-off-by: Jan Vesely <jvesely@redhat.com>
+---
+ iscsiuio/src/unix/iscsid_ipc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/iscsiuio/src/unix/iscsid_ipc.c b/iscsiuio/src/unix/iscsid_ipc.c
+index 5c097e6..e22de0d 100644
+--- a/iscsiuio/src/unix/iscsid_ipc.c
++++ b/iscsiuio/src/unix/iscsid_ipc.c
+@@ -958,7 +958,7 @@ static void *iscsid_loop(void *arg)
+  */
+ int iscsid_init()
+ {
+-	int rc;
++	int rc, addr_len;
+ 	struct sockaddr_un addr;
+ 
+ 	iscsid_opts.fd = socket(AF_LOCAL, SOCK_STREAM, 0);
+@@ -967,12 +967,14 @@ int iscsid_init()
+ 		return iscsid_opts.fd;
+ 	}
+ 
++	addr_len = offsetof(struct sockaddr_un, sun_path) + strlen(ISCSID_UIP_NAMESPACE) + 1;
++
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.sun_family = AF_LOCAL;
+ 	memcpy((char *)&addr.sun_path + 1, ISCSID_UIP_NAMESPACE,
+ 	       strlen(ISCSID_UIP_NAMESPACE));
+ 
+-	rc = bind(iscsid_opts.fd, (struct sockaddr *)&addr, sizeof(addr));
++	rc = bind(iscsid_opts.fd, (struct sockaddr *)&addr, addr_len);
+ 	if (rc < 0) {
+ 		LOG_ERR(PFX "Can not bind IPC socket: %s", strerror(errno));
+ 		goto error;
+-- 
+1.8.1.4
+

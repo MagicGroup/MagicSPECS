@@ -172,11 +172,11 @@ diff --git a/setup/setup.ui b/setup/setup.ui
 index 65dcee4..a6a001b 100644
 --- a/setup/setup.ui
 +++ b/setup/setup.ui
-@@ -669,7 +669,23 @@
+@@ -677,7 +677,23 @@
                      <property name="visible">True</property>
                      <property name="can_focus">False</property>
                      <child>
--                      <object class="GtkHBox" id="hbox1">
+-                      <object class="GtkBox" id="hbox1">
 +                      <object class="GtkCheckButton" id="checkbutton_preload_engine_mode">
 +                        <property name="visible">True</property>
 +                        <property name="label" translatable="yes">Customize active input _methods</property>
@@ -193,11 +193,11 @@ index 65dcee4..a6a001b 100644
 +                      </packing>
 +                    </child>
 +                    <child>
-+                      <object class="GtkHBox" id="hbox_customize_active_input_methods">
++                      <object class="GtkBox" id="hbox_customize_active_input_methods">
+                         <property name="orientation">horizontal</property>
                          <property name="visible">True</property>
                          <property name="can_focus">False</property>
-                         <child>
-@@ -858,7 +874,7 @@
+@@ -868,7 +884,7 @@
                        <packing>
                          <property name="expand">True</property>
                          <property name="fill">True</property>
@@ -206,7 +206,7 @@ index 65dcee4..a6a001b 100644
                        </packing>
                      </child>
                      <child>
-@@ -905,7 +921,7 @@
+@@ -916,7 +932,7 @@
                        <packing>
                          <property name="expand">False</property>
                          <property name="fill">True</property>
@@ -240,7 +240,7 @@ diff --git a/ui/gtk3/panel.vala b/ui/gtk3/panel.vala
 index 1da7966..fc60fd4 100644
 --- a/ui/gtk3/panel.vala
 +++ b/ui/gtk3/panel.vala
-@@ -136,6 +136,10 @@ class Panel : IBus.PanelService {
+@@ -141,6 +141,10 @@ class Panel : IBus.PanelService {
                                 null);
          });
  
@@ -251,7 +251,7 @@ index 1da7966..fc60fd4 100644
          m_settings_general.changed["switcher-delay-time"].connect((key) => {
                  set_switcher_delay_time();
          });
-@@ -524,7 +528,96 @@ class Panel : IBus.PanelService {
+@@ -569,7 +573,96 @@ class Panel : IBus.PanelService {
              init_gkbd();
          }
  

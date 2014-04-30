@@ -12,7 +12,7 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
-Release: %{release_number}%{?dist}
+Release: %{release_number}%{?dist}.2
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 Source1: im.png
 Source2: extract_rpm.desktop
@@ -112,6 +112,7 @@ to develop KDE Runtime applications.
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
+%if 0
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package nepomuk 
 Summary: KDE Runtime Components nepomuk support files
@@ -124,6 +125,7 @@ Group(zh_CN.UTF-8): 系统/GUI/KDE
 
 %description nepomuk -l zh_CN.UTF-8
 KDE 运行时 nepomuk 支持文件。
+%endif
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package kwalletd
@@ -271,10 +273,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %exclude %{kde4_libdir}/libkwalletbackend.so
 %exclude %{kde4_libdir}/libknotifyplugin.so
 
+%if 0
 %files nepomuk
 %defattr(-,root,root)
 %{kde4_mandir}/man8/nepomuk*.8*
 #%{kde4_datadir}/autostart/nepomukcontroller.desktop
+%endif
 
 %files kwalletd
 %defattr(-,root,root)
@@ -353,6 +357,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 # 需要进一步处理
 %changelog
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
+- 为 Magic 3.0 重建
+
 * Sat Dec 5 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.4-1mgc
 - 更新至 4.3.4
 - 乙丑  十月十九

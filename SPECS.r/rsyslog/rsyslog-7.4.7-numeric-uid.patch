@@ -1,0 +1,129 @@
+From 032fcabdb7f3fc515d8155f48751271535df7b8e Mon Sep 17 00:00:00 2001
+From: Tomas Heinrich <theinric@redhat.com>
+Date: Thu, 5 Dec 2013 19:46:51 +0100
+Subject: [PATCH] Add directives for numerically specifying GIDs/UIDs
+
+The already present directives (FileOwner, FileGroup, DirOwner,
+DirGroup) translate names to numerical IDs, which depends on the user
+information being available during rsyslog's startup. This can fail if
+the information is obtained over a network or from a service such as
+SSSD. The new directives provide a way to specify the numerical IDs
+directly and bypass the lookup.
+---
+ doc/omfile.html              | 12 ++++++++++++
+ doc/rsyslog_conf_global.html |  4 ++++
+ tools/omfile.c               | 16 ++++++++++++++++
+ 3 files changed, 32 insertions(+)
+
+diff --git a/doc/omfile.html b/doc/omfile.html
+index 0f64f26..5f839fe 100644
+--- a/doc/omfile.html
++++ b/doc/omfile.html
+@@ -53,15 +53,27 @@
+ 	<li><strong>DirOwner </strong><br>
+ 	Set the file owner for directories newly created. Please note that this setting does not affect the owner of directories already existing. The parameter is a user name, for which the userid is obtained by rsyslogd during startup processing. Interim changes to the user mapping are not detected.<br></li><br>
+ 
++	<li><strong>DirOwnerNum </strong><br>
++	Set the file owner for directories newly created. Please note that this setting does not affect the owner of directories already existing. The parameter is a numerical ID, which is used regardless of whether the user actually exists. This can be useful if the user mapping is not available to rsyslog during startup.<br></li><br>
++
+ 	<li><strong>DirGroup </strong><br>
+ 	Set the group for directories newly created. Please note that this setting does not affect the group of directories already existing. The parameter is a group name, for which the groupid is obtained by rsyslogd on during startup processing. Interim changes to the user mapping are not detected.<br></li><br>
+ 
++	<li><strong>DirGroupNum </strong><br>
++	Set the group for directories newly created. Please note that this setting does not affect the group of directories already existing. The parameter is a numerical ID, which is used regardless of whether the group actually exists. This can be useful if the group mapping is not available to rsyslog during startup.<br></li><br>
++
+ 	<li><strong>FileOwner </strong><br>
+ 	Set the file owner for files newly created. Please note that this setting does not affect the owner of files already existing. The parameter is a user name, for which the userid is obtained by rsyslogd during startup processing. Interim changes to the user mapping are not detected.<br></li><br>
+ 
++	<li><strong>FileOwnerNum </strong><br>
++	Set the file owner for files newly created. Please note that this setting does not affect the owner of files already existing. The parameter is a numerical ID, which which is used regardless of whether the user actually exists. This can be useful if the user mapping is not available to rsyslog during startup.<br></li><br>
++
+ 	<li><strong>FileGroup </strong><br>
+ 	Set the group for files newly created. Please note that this setting does not affect the group of files already existing. The parameter is a group name, for which the groupid is obtained by rsyslogd during startup processing. Interim changes to the user mapping are not detected.<br></li><br>
+ 
++	<li><strong>$FileGroupNum </strong><br>
++	Set the group for files newly created. Please note that this setting does not affect the group of files already existing. The parameter is a numerical ID, which is used regardless of whether the group actually exists. This can be useful if the group mapping is not available to rsyslog during startup.<br></li><br>
++
+ 	<li><strong>DirCreateMode </strong>[defaul 0700]<br>
+ 	This is the same as $FileCreateMode, but for directories automatically generated.<br></li><br>
+ 
+diff --git a/doc/rsyslog_conf_global.html b/doc/rsyslog_conf_global.html
+index e48ed6d..b9a2ba2 100644
+--- a/doc/rsyslog_conf_global.html
++++ b/doc/rsyslog_conf_global.html
+@@ -136,7 +136,9 @@ our paper on <a href="multi_ruleset.html">using multiple rule sets in rsyslog</a
+ <li><a href="omfile.html"><b>$CreateDirs</b></a> [<b>on</b>/off] - create directories on an as-needed basis</li>
+ <li><a href="omfile.html"><b>$DirCreateMode</b></a></li>
+ <li><a href="omfile.html"><b>$DirGroup</b></a></li>
++<li><a href="omfile.html"><b>$DirGroupNum</b></a></li>
+ <li><a href="omfile.html"><b>$DirOwner</b></a></li>
++<li><a href="omfile.html"><b>$DirOwnerNum</b></a></li>
+ <li><a href="rsconf1_dropmsgswithmaliciousdnsptrrecords.html"><b>$DropMsgsWithMaliciousDnsPTRRecords</b></a></li>
+ <li><a href="rsconf1_droptrailinglfonreception.html"><b>$DropTrailingLFOnReception</b></a></li>
+ <li><a href="omfile.html"><b>$DynaFileCacheSize</b></a></li>
+@@ -148,7 +150,9 @@ our paper on <a href="multi_ruleset.html">using multiple rule sets in rsyslog</a
+ <li><a href="omfile.html"><b>$FailOnChownFailure</b></a></li>
+ <li><a href="omfile.html"><b>$FileCreateMode</b></a></li>
+ <li><a href="omfile.html"><b>$FileGroup</b></a></li>
++<li><a href="omfile.html"><b>$FileGroupNum</b></a></li>
+ <li><a href="omfile.html"><b>$FileOwner</b></a></li>
++<li><a href="omfile.html"><b>$FileOwnerNum</b></a></li>
+ <li><a href="rsconf1_generateconfiggraph.html"><b>$GenerateConfigGraph</b></a></li>
+ <li><a href="rsconf1_gssforwardservicename.html"><b>$GssForwardServiceName</b></a></li>
+ <li><a href="rsconf1_gsslistenservicename.html"><b>$GssListenServiceName</b></a></li>
+diff --git a/tools/omfile.c b/tools/omfile.c
+index 3dca347..fd14cb5 100644
+--- a/tools/omfile.c
++++ b/tools/omfile.c
+@@ -233,9 +233,13 @@ static struct cnfparamdescr actpdescr[] = {
+ 	{ "flushontxend", eCmdHdlrBinary, 0 }, /* legacy: omfileflushontxend */
+ 	{ "iobuffersize", eCmdHdlrSize, 0 }, /* legacy: omfileiobuffersize */
+ 	{ "dirowner", eCmdHdlrUID, 0 }, /* legacy: dirowner */
++	{ "dirownernum", eCmdHdlrInt, 0 }, /* legacy: dirownernum */
+ 	{ "dirgroup", eCmdHdlrGID, 0 }, /* legacy: dirgroup */
++	{ "dirgroupnum", eCmdHdlrInt, 0 }, /* legacy: dirgroupnum */
+ 	{ "fileowner", eCmdHdlrUID, 0 }, /* legacy: fileowner */
++	{ "fileownernum", eCmdHdlrInt, 0 }, /* legacy: fileownernum */
+ 	{ "filegroup", eCmdHdlrGID, 0 }, /* legacy: filegroup */
++	{ "filegroupnum", eCmdHdlrInt, 0 }, /* legacy: filegroupnum */
+ 	{ "dircreatemode", eCmdHdlrFileCreateMode, 0 }, /* legacy: dircreatemode */
+ 	{ "filecreatemode", eCmdHdlrFileCreateMode, 0 }, /* legacy: filecreatemode */
+ 	{ "failonchownfailure", eCmdHdlrBinary, 0 }, /* legacy: failonchownfailure */
+@@ -1139,12 +1143,20 @@ CODESTARTnewActInst
+ 			pData->iIOBufSize = (int) pvals[i].val.d.n;
+ 		} else if(!strcmp(actpblk.descr[i].name, "dirowner")) {
+ 			pData->dirUID = (int) pvals[i].val.d.n;
++		} else if(!strcmp(actpblk.descr[i].name, "dirownernum")) {
++			pData->dirUID = (int) pvals[i].val.d.n;
+ 		} else if(!strcmp(actpblk.descr[i].name, "dirgroup")) {
+ 			pData->dirGID = (int) pvals[i].val.d.n;
++		} else if(!strcmp(actpblk.descr[i].name, "dirgroupnum")) {
++			pData->dirGID = (int) pvals[i].val.d.n;
+ 		} else if(!strcmp(actpblk.descr[i].name, "fileowner")) {
+ 			pData->fileUID = (int) pvals[i].val.d.n;
++		} else if(!strcmp(actpblk.descr[i].name, "fileownernum")) {
++			pData->fileUID = (int) pvals[i].val.d.n;
+ 		} else if(!strcmp(actpblk.descr[i].name, "filegroup")) {
+ 			pData->fileGID = (int) pvals[i].val.d.n;
++		} else if(!strcmp(actpblk.descr[i].name, "filegroupnum")) {
++			pData->fileGID = (int) pvals[i].val.d.n;
+ 		} else if(!strcmp(actpblk.descr[i].name, "dircreatemode")) {
+ 			pData->fDirCreateMode = (int) pvals[i].val.d.n;
+ 		} else if(!strcmp(actpblk.descr[i].name, "filecreatemode")) {
+@@ -1377,9 +1389,13 @@ INITLegCnfVars
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"omfileflushontxend", 0, eCmdHdlrBinary, NULL, &cs.bFlushOnTXEnd, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"omfileiobuffersize", 0, eCmdHdlrSize, NULL, &cs.iIOBufSize, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"dirowner", 0, eCmdHdlrUID, NULL, &cs.dirUID, STD_LOADABLE_MODULE_ID));
++	CHKiRet(omsdRegCFSLineHdlr((uchar *)"dirownernum", 0, eCmdHdlrInt, NULL, &cs.dirUID, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"dirgroup", 0, eCmdHdlrGID, NULL, &cs.dirGID, STD_LOADABLE_MODULE_ID));
++	CHKiRet(omsdRegCFSLineHdlr((uchar *)"dirgroupnum", 0, eCmdHdlrInt, NULL, &cs.dirGID, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"fileowner", 0, eCmdHdlrUID, NULL, &cs.fileUID, STD_LOADABLE_MODULE_ID));
++	CHKiRet(omsdRegCFSLineHdlr((uchar *)"fileownernum", 0, eCmdHdlrInt, NULL, &cs.fileUID, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"filegroup", 0, eCmdHdlrGID, NULL, &cs.fileGID, STD_LOADABLE_MODULE_ID));
++	CHKiRet(omsdRegCFSLineHdlr((uchar *)"filegroupnum", 0, eCmdHdlrInt, NULL, &cs.fileGID, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"dircreatemode", 0, eCmdHdlrFileCreateMode, NULL, &cs.fDirCreateMode, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"filecreatemode", 0, eCmdHdlrFileCreateMode, NULL, &cs.fCreateMode, STD_LOADABLE_MODULE_ID));
+ 	CHKiRet(omsdRegCFSLineHdlr((uchar *)"createdirs", 0, eCmdHdlrBinary, NULL, &cs.bCreateDirs, STD_LOADABLE_MODULE_ID));
+-- 
+1.8.4.3
+

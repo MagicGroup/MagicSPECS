@@ -10,10 +10,10 @@ Summary(zh_CN.UTF-8): 游戏合集
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0: %{real_name}-%{version}.tar.xz
+Source0: http://mirror.bjtu.edu.cn/kde/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
@@ -35,20 +35,6 @@ increase. The game ends when you have lost all your lives.
 
 %description -l zh_CN.UTF-8
 一些游戏的合集。
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package devel
-Summary: Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-
-%description devel
-Contains the development files.
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -94,6 +80,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/sounds/*
 
 %changelog
+* Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-3
+- 为 Magic 3.0 重建
+
+* Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.9.3-2
 - 为 Magic 3.0 重建
 

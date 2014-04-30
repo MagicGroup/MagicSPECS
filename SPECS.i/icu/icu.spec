@@ -1,6 +1,6 @@
 Name:      icu
 Version:   52.1
-Release:   1%{?dist}
+Release:   3%{?dist}
 Summary:   International Components for Unicode
 Summary(zh_CN.UTF-8): Unicode 的国际化组件
 Group:     Development/Tools
@@ -192,6 +192,12 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{name}/html/*
 
 %changelog
+* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 52.1-3
+- 为 Magic 3.0 重建
+
+* Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 52.1-2
+- 为 Magic 3.0 重建
+
 * Tue Feb 11 2014 Eike Rathke <erack@redhat.com> - 52.1-1
 - upgrade to upstream ICU 52.1
 - Resolves: rhbz#1049265 icu-52.1 is available
