@@ -1,35 +1,73 @@
-%{!?tcl:%define tcl 1}
-%{!?guile:%define guile 1}
+# We can skip tests
+%bcond_without testsuite
 
-%if 0%{?rhel}
-%{!?octave:%define octave 0}
+%{!?tcl:%global tcl 1}
+%{!?guile:%global guile 1}
+%{!?lualang:%global lualang 1}
+%{!?rubylang:%global rubylang 1}
+%{!?javalang:%global javalang 1}
+
+%ifarch aarch64 %{arm} ppc64le ppc %{power64} s390 s390x
+%{!?golang:%global golang 0}
 %else
-%{!?octave:%define octave 1}
+%{!?golang:%global golang 1}
 %endif
 
-Summary: Connects C/C++/Objective C to some high-level programming languages
-Name: swig
-Version: 2.0.8
-Release: 2%{?dist}
-License: GPLv3+ and BSD
-Group: Development/Tools
-URL: http://swig.sourceforge.net/
-Source: http://downloads.sourceforge.net/project/swig/swig/swig-%{version}/swig-%{version}.tar.gz
-Patch4: swig203-rh706140.patch
-Patch6: swig204-rh752054.patch
-Patch9: swig207-setools.patch
+%if 0%{?rhel}
+%{!?octave:%global octave 0}
+%{!?Rlang:%global Rlang 0}
+%else
+%{!?octave:%global octave 1}
+%ifnarch aarch64
+%{!?Rlang:%global Rlang 1}
+%else
+%{!?Rlang:%global Rlang 0}
+%endif
+%endif
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: perl, python-devel, pcre-devel
+
+Summary: Connects C/C++/Objective C to some high-level programming languages
+Name:    swig
+Version: 3.0.0
+Release: 4%{?dist}
+License: GPLv3+ and BSD
+URL:     http://swig.sourceforge.net/
+Source0: http://downloads.sourceforge.net/project/swig/swig/swig-%{version}/swig-%{version}.tar.gz
+# Define the part of man page sections
+Source1: description.h2m
+Patch1:  swig207-setools.patch
+# Fix the failure on arch x390 during testing
+Patch2:  swig-2.0.10-Fix-x390-build.patch
+
+BuildRequires: perl, python2-devel, pcre-devel
+BuildRequires: autoconf, automake, gawk, dos2unix
+BuildRequires: help2man
+BuildRequires: perl-devel
+BuildRequires: perl(Test::More)
+BuildRequires: boost-devel
 %if %{tcl}
 BuildRequires: tcl-devel
 %endif
 %if %{guile}
 BuildRequires: guile-devel
 %endif
-BuildRequires: autoconf, automake, gawk, dos2unix
 %if %{octave}
 BuildRequires: octave-devel
+%endif
+%if %{golang}
+BuildRequires: golang
+%endif
+%if %{lualang}
+BuildRequires: lua-devel
+%endif
+%if %{rubylang}
+BuildRequires: ruby-devel
+%endif
+%if %{Rlang}
+BuildRequires: R-devel
+%endif
+%if %{javalang}
+BuildRequires: java, java-devel
 %endif
 
 %description
@@ -37,14 +75,14 @@ Simplified Wrapper and Interface Generator (SWIG) is a software
 development tool for connecting C, C++ and Objective C programs with a
 variety of high-level programming languages.  SWIG is primarily used
 with Perl, Python and Tcl/TK, but it has also been extended to Java,
-Eiffel and Guile.  SWIG is normally used to create high-level
+Eiffel and Guile. SWIG is normally used to create high-level
 interpreted programming environments, systems integration, and as a
 tool for building user interfaces
 
 %package doc
-Summary: Documentation files for SWIG
-License: BSD
-Group: Development/Tools
+Summary:   Documentation files for SWIG
+License:   BSD
+Group:     Development/Tools
 BuildArch: noarch
 
 %description doc
@@ -52,88 +90,146 @@ This package contains documentation for SWIG and useful examples
 
 %prep
 %setup -q -n swig-%{version}
-%patch4 -p1 -b .rh706140
-# Apply patch 6 when guile2 gets into distro
-#%patch6 -p1 -b .rh752054
 
-%patch9 -p1 -b .setools
-
-# as written on https://fedoraproject.org/wiki/Packaging_talk:Perl, section 2
-# (specific req/prov filtering). Before you remove this hack make sure you don't
-# reintroduce https://bugzilla.redhat.com/show_bug.cgi?id=489421
-cat << \EOF > %{name}-prov
-#!/bin/sh
-%{__perl_provides} `perl -p -e 's|\S+%{_docdir}/%{name}-doc-%{version}\S+||'`
-EOF
-
-%define __perl_provides %{_builddir}/%{name}-%{version}/%{name}-prov
-chmod +x %{__perl_provides}
-
-cat << \EOF > %{name}-req
-#!/bin/sh
-%{__perl_requires} `perl -p -e 's|\S+%{_docdir}/%{name}-doc-%{version}\S+||'`
-EOF
-
-%define __perl_requires %{_builddir}/%{name}-%{version}/%{name}-req
-chmod +x %{__perl_requires}
+%patch1 -p1 -b .setools
+%patch2 -p1 -b .x390
 
 for all in CHANGES README; do
-	iconv -f ISO88591 -t UTF8 < $all > $all.new
-	touch -r $all $all.new
-	mv -f $all.new $all
+    iconv -f ISO88591 -t UTF8 < $all > $all.new
+    touch -r $all $all.new
+    mv -f $all.new $all
 done
 
 %build
 ./autogen.sh
+
+# Disable maximum compile warnings when octave is supported, because Octave
+# code produces lots of the warnings demanded by strict ISO C and ISO C++.
+# It causes that log had more then 600M.
 %configure \
 %if %{octave}
   --with-octave=/usr/bin/octave \
+  --without-maximum-compile-warnings \
 %endif
 ;
 make %{?_smp_mflags}
 
-# Test suite is currently broken
-#make check
+%if %{with testsuite}
+## ppc* passes most tests but fail some java ones; disable for now
+%ifnarch ppc64le ppc %{power64}
+# Test suite
+make check
+%endif
+%endif
 
 %install
-rm -rf %{buildroot}
+# Remove all arch dependent files in Examples/ created during tests
+make clean-examples
 
 pushd Examples/
 # Remove all arch dependent files in Examples/
-find -type f -name 'Makefile.in' | xargs rm -f --
+find -type f -name 'Makefile.in' -delete -print
 
 # We don't want to ship files below.
 rm -rf test-suite
-find -type f -name '*.dsp' | xargs rm -f --
-find -type f -name '*.dsw' | xargs rm -f --
+find -type f -name '*.dsp' -delete -print
+find -type f -name '*.dsw' -delete -print
 
 # Convert files to UNIX format
 for all in `find -type f`; do
-	dos2unix -k $all
-	chmod -x $all
+    dos2unix -k $all
+    chmod -x $all
 done
 popd
 
 make DESTDIR=%{buildroot} install
 
-%clean
-rm -rf %{buildroot}
+# Use help output for generating of man page
+echo "Options:" >help_output
+%{buildroot}%{_bindir}/swig --help >>help_output
+
+# Update the output to be correctly formatted be help2man
+sed -i -e 's/^\(\s\+-[^-]\+\)- \(.*\)$/\1 \2/' help_output
+sed -i -e 's/^\(\s\+-\w\+-[^-]*\)- \(.*\)$/\1 \2/' help_output
+
+# Generate a helper script that will be used by help2man
+cat >h2m_helper <<'EOF'
+#!/bin/bash
+[ "$1" == "--version" ] && echo "" || cat help_output
+EOF
+chmod a+x h2m_helper
+
+# Generate man page
+help2man -N --section 1 ./h2m_helper --include %{SOURCE1} -o %{name}.1
+
+# Add man page for swig to repository
+mkdir -p %{buildroot}%{_mandir}/man1/
+install -p -m 0644 %{name}.1 %{buildroot}%{_mandir}/man1/
 
 %files
-%defattr(-,root,root,-)
 %{_bindir}/*
 %{_datadir}/swig
 %{_mandir}/man1/ccache-swig.1*
-%doc ANNOUNCE CHANGES CHANGES.current INSTALL LICENSE LICENSE-GPL
+%{_mandir}/man1/swig.1*
+%doc ANNOUNCE CHANGES CHANGES.current LICENSE LICENSE-GPL
 %doc LICENSE-UNIVERSITIES COPYRIGHT README TODO
 
 %files doc
-%defattr(-,root,root,-)
 %doc Doc Examples LICENSE LICENSE-GPL LICENSE-UNIVERSITIES COPYRIGHT
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.0.8-2
-- 为 Magic 3.0 重建
+* Fri Apr 25 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.0.0-4
+- No golang or R on aarch64 (currently)
+
+* Tue Apr 22 2014 Karsten Hopp <karsten@redhat.com> 3.0.0-3
+- golang is exclusivearch %{ix86} x86_64 %{arm}, don't BR it on ppc*, s390*
+- unit tests fail on other ppc archs, too. disable for now
+
+* Fri Mar 28 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.0-1
+- Small changes to enable ppc64le (BZ#1081724)
+
+* Thu Mar 20 2014 Jitka Plesnikova <jplesnik@redhat.com> - 3.0.0-1
+- Update to 3.0.0
+- Update BRs to run tests for Java, Ruby, Lua, R, Go
+- Replace %%define by %%global (BZ#1063589)
+- Remove Group tag (BZ#1063589)
+- Generate man page from help to have the correct list of options
+
+* Fri Feb 28 2014 Orion Poplawski <orion@cora.nwra.com> - 2.0.12-1
+- Update to 2.0.12
+- A patch to fix guile locale
+
+* Wed Oct 09 2013 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.11-2
+- Use bconds for enabling testsuite
+
+* Mon Sep 16 2013 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.11-1
+- Update to 2.0.11
+
+* Wed Aug 21 2013 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.10-4
+- Fixed BZ#994120
+  - Remove the req/prov filtering from version docdir (BZ#489421), because
+    it is not needed
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.10-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Petr Machata <pmachata@redhat.com> - 2.0.10-2
+- Rebuild for boost 1.54.0
+
+* Fri May 31 2013 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.10-1
+- Update to 2.0.10
+- swig203-rh706140.patch merged
+- swig204-rh752054.patch merged
+- Create swig-2.0.10-Fix-x390-build.patch
+
+* Fri May 24 2013 Jitka Plesnikova <jplesnik@redhat.com> - 2.0.9-3
+- Add man page for swig (BZ#948407)
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Jan 07 2013 Adam Tkac <atkac redhat com> 2.0.9-1
+- update to 2.0.9
 
 * Wed Sep 12 2012 Adam Tkac <atkac redhat com> 2.0.8-1
 - update to 2.0.8 (#851364)
