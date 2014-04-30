@@ -1,0 +1,164 @@
+diff -r 87dea3f5ebe7 api/go1.txt
+--- a/api/go1.txt	Fri Nov 29 08:32:31 2013 +1100
++++ b/api/go1.txt	Fri Dec 06 13:31:29 2013 -0500
+@@ -412,7 +412,6 @@
+ pkg crypto/ecdsa, type PublicKey struct, embedded elliptic.Curve
+ pkg crypto/elliptic, func GenerateKey(Curve, io.Reader) ([]uint8, *big.Int, *big.Int, error)
+ pkg crypto/elliptic, func Marshal(Curve, *big.Int, *big.Int) []uint8
+-pkg crypto/elliptic, func P224() Curve
+ pkg crypto/elliptic, func P256() Curve
+ pkg crypto/elliptic, func P384() Curve
+ pkg crypto/elliptic, func P521() Curve
+diff -r 87dea3f5ebe7 src/pkg/crypto/ecdsa/ecdsa_test.go
+--- a/src/pkg/crypto/ecdsa/ecdsa_test.go	Fri Nov 29 08:32:31 2013 +1100
++++ b/src/pkg/crypto/ecdsa/ecdsa_test.go	Fri Dec 06 13:31:29 2013 -0500
+@@ -33,7 +33,6 @@
+ }
+ 
+ func TestKeyGeneration(t *testing.T) {
+-	testKeyGeneration(t, elliptic.P224(), "p224")
+ 	if testing.Short() {
+ 		return
+ 	}
+@@ -63,7 +62,6 @@
+ }
+ 
+ func TestSignAndVerify(t *testing.T) {
+-	testSignAndVerify(t, elliptic.P224(), "p224")
+ 	if testing.Short() {
+ 		return
+ 	}
+@@ -129,8 +127,6 @@
+ 			parts := strings.SplitN(line, ",", 2)
+ 
+ 			switch parts[0] {
+-			case "P-224":
+-				pub.Curve = elliptic.P224()
+ 			case "P-256":
+ 				pub.Curve = elliptic.P256()
+ 			case "P-384":
+diff -r 87dea3f5ebe7 src/pkg/crypto/elliptic/bottombits.go
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/src/pkg/crypto/elliptic/bottombits.go	Fri Dec 06 13:31:29 2013 -0500
+@@ -0,0 +1,14 @@
++
++// Copyright 2012 The Go Authors.  All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package elliptic
++
++const bottom12Bits = 0xfff
++const bottom28Bits = 0xfffffff
++
++const two31p3 = 1<<31 + 1<<3
++const two31m3 = 1<<31 - 1<<3
++const two31m15m3 = 1<<31 - 1<<15 - 1<<3
++
+diff -r 87dea3f5ebe7 src/pkg/crypto/elliptic/elliptic.go
+--- a/src/pkg/crypto/elliptic/elliptic.go	Fri Nov 29 08:32:31 2013 +1100
++++ b/src/pkg/crypto/elliptic/elliptic.go	Fri Dec 06 13:31:29 2013 -0500
+@@ -326,7 +326,6 @@
+ var p521 *CurveParams
+ 
+ func initAll() {
+-	initP224()
+ 	initP256()
+ 	initP384()
+ 	initP521()
+diff -r 87dea3f5ebe7 src/pkg/crypto/elliptic/elliptic_test.go
+--- a/src/pkg/crypto/elliptic/elliptic_test.go	Fri Nov 29 08:32:31 2013 +1100
++++ b/src/pkg/crypto/elliptic/elliptic_test.go	Fri Dec 06 13:31:29 2013 -0500
+@@ -1,3 +1,5 @@
++// +build ignore
++
+ // Copyright 2010 The Go Authors. All rights reserved.
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+diff -r 87dea3f5ebe7 src/pkg/crypto/elliptic/p224.go
+--- a/src/pkg/crypto/elliptic/p224.go	Fri Nov 29 08:32:31 2013 +1100
++++ b/src/pkg/crypto/elliptic/p224.go	Fri Dec 06 13:31:29 2013 -0500
+@@ -1,3 +1,5 @@
++// +build ignore
++
+ // Copyright 2012 The Go Authors.  All rights reserved.
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+@@ -183,10 +185,6 @@
+ 	}
+ }
+ 
+-const two31p3 = 1<<31 + 1<<3
+-const two31m3 = 1<<31 - 1<<3
+-const two31m15m3 = 1<<31 - 1<<15 - 1<<3
+-
+ // p224ZeroModP31 is 0 mod p where bit 31 is set in all limbs so that we can
+ // subtract smaller amounts without underflow. See the section "Subtraction" in
+ // [1] for reasoning.
+@@ -215,9 +213,6 @@
+ // "Subtraction" in [1] for why.
+ var p224ZeroModP63 = [8]uint64{two63p35, two63m35, two63m35, two63m35, two63m35m19, two63m35, two63m35, two63m35}
+ 
+-const bottom12Bits = 0xfff
+-const bottom28Bits = 0xfffffff
+-
+ // p224Mul computes *out = a*b
+ //
+ // a[i] < 2**29, b[i] < 2**30 (or vice versa)
+diff -r 87dea3f5ebe7 src/pkg/crypto/elliptic/p224_test.go
+--- a/src/pkg/crypto/elliptic/p224_test.go	Fri Nov 29 08:32:31 2013 +1100
++++ b/src/pkg/crypto/elliptic/p224_test.go	Fri Dec 06 13:31:29 2013 -0500
+@@ -1,3 +1,5 @@
++// +build ignore
++
+ // Copyright 2012 The Go Authors.  All rights reserved.
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+diff -r 87dea3f5ebe7 src/pkg/crypto/x509/x509.go
+--- a/src/pkg/crypto/x509/x509.go	Fri Nov 29 08:32:31 2013 +1100
++++ b/src/pkg/crypto/x509/x509.go	Fri Dec 06 13:31:29 2013 -0500
+@@ -305,9 +305,6 @@
+ 
+ // RFC 5480, 2.1.1.1. Named Curve
+ //
+-// secp224r1 OBJECT IDENTIFIER ::= {
+-//   iso(1) identified-organization(3) certicom(132) curve(0) 33 }
+-//
+ // secp256r1 OBJECT IDENTIFIER ::= {
+ //   iso(1) member-body(2) us(840) ansi-X9-62(10045) curves(3)
+ //   prime(1) 7 }
+@@ -320,7 +317,6 @@
+ //
+ // NB: secp256r1 is equivalent to prime256v1
+ var (
+-	oidNamedCurveP224 = asn1.ObjectIdentifier{1, 3, 132, 0, 33}
+ 	oidNamedCurveP256 = asn1.ObjectIdentifier{1, 2, 840, 10045, 3, 1, 7}
+ 	oidNamedCurveP384 = asn1.ObjectIdentifier{1, 3, 132, 0, 34}
+ 	oidNamedCurveP521 = asn1.ObjectIdentifier{1, 3, 132, 0, 35}
+@@ -328,8 +324,6 @@
+ 
+ func namedCurveFromOID(oid asn1.ObjectIdentifier) elliptic.Curve {
+ 	switch {
+-	case oid.Equal(oidNamedCurveP224):
+-		return elliptic.P224()
+ 	case oid.Equal(oidNamedCurveP256):
+ 		return elliptic.P256()
+ 	case oid.Equal(oidNamedCurveP384):
+@@ -342,8 +336,6 @@
+ 
+ func oidFromNamedCurve(curve elliptic.Curve) (asn1.ObjectIdentifier, bool) {
+ 	switch curve {
+-	case elliptic.P224():
+-		return oidNamedCurveP224, true
+ 	case elliptic.P256():
+ 		return oidNamedCurveP256, true
+ 	case elliptic.P384():
+@@ -1373,7 +1365,7 @@
+ 		hashFunc = crypto.SHA1
+ 	case *ecdsa.PrivateKey:
+ 		switch priv.Curve {
+-		case elliptic.P224(), elliptic.P256():
++		case elliptic.P256():
+ 			hashFunc = crypto.SHA256
+ 			signatureAlgorithm.Algorithm = oidSignatureECDSAWithSHA256
+ 		case elliptic.P384():
