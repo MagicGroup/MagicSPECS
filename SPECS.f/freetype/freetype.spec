@@ -189,7 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 # fix multilib issues
-%ifarch x86_64 s390x ia64 ppc64 ppc64le alpha sparc64 aarch64
+%ifarch x86_64 s390x ia64 ppc64 ppc64le alpha sparc64 aarch64 mips64el
 %define wordsize 64
 %else
 %define wordsize 32
