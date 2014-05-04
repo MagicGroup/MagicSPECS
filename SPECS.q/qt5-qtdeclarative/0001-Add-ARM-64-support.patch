@@ -1,0 +1,30 @@
+From 86c52dab02836843e9e32793768ec5b9b3401049 Mon Sep 17 00:00:00 2001
+From: Florian Loitsch <floitsch@google.com>
+Date: Wed, 6 Feb 2013 23:10:21 +0100
+Subject: [PATCH] Add ARM 64 support.
+
+BUG: 33.
+
+Edited-by: Marcin Juszkiewicz <mjuszkiewicz@redhat.com>
+- only path changed
+---
+ src/utils.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/utils.h b/src/utils.h
+index 767094b..60ad86a 100644
+--- qtdeclarative-opensource-src-5.2.0-rc1.orig/src/3rdparty/double-conversion/utils.h
++++ qtdeclarative-opensource-src-5.2.0-rc1/src/3rdparty/double-conversion/utils.h
+@@ -58,7 +58,8 @@
+     defined(__mips__) || defined(__powerpc__) || \
+     defined(__sparc__) || defined(__sparc) || defined(__s390__) || \
+     defined(__SH4__) || defined(__alpha__) || \
+-    defined(_MIPS_ARCH_MIPS32R2)
++    defined(_MIPS_ARCH_MIPS32R2) || \
++    defined(_AARCH64EL_)
+ #define DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS 1
+ #elif defined(_M_IX86) || defined(__i386__) || defined(__i386)
+ #if defined(_WIN32)
+-- 
+1.8.4.2
+
