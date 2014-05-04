@@ -1,0 +1,16 @@
+diff -up qtwebkit-opensource-src-5.2.0-beta1/Source/JavaScriptCore/bytecode/CodeBlock.cpp.nojit qtwebkit-opensource-src-5.2.0-beta1/Source/JavaScriptCore/bytecode/CodeBlock.cpp
+--- qtwebkit-opensource-src-5.2.0-beta1/Source/JavaScriptCore/bytecode/CodeBlock.cpp.nojit	2013-11-28 15:43:39.169409385 -0500
++++ qtwebkit-opensource-src-5.2.0-beta1/Source/JavaScriptCore/bytecode/CodeBlock.cpp	2013-11-28 15:44:17.399410231 -0500
+@@ -2947,8 +2947,12 @@ void CodeBlock::countReoptimization()
+ 
+ unsigned CodeBlock::numberOfDFGCompiles()
+ {
++#if ENABLE(JIT)
+     ASSERT(JITCode::isBaselineCode(getJITType()));
+     return (JITCode::isOptimizingJIT(replacement()->getJITType()) ? 1 : 0) + m_reoptimizationRetryCounter;
++#else
++    return 0;
++#endif
+ }
+ 
+ int32_t CodeBlock::codeTypeThresholdMultiplier() const
