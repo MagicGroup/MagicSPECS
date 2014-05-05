@@ -50,7 +50,11 @@ chmod a+x configure
 (cd js/src && autoconf-2.13)
 
 %build
-%configure --disable-static --with-system-nspr --enable-threadsafe --enable-readline
+%configure --disable-static --with-system-nspr --enable-threadsafe --enable-readline \
+%ifarch mips64el
+        --disable-methodjit
+%endif
+
 make %{?_smp_mflags}
 
 %check
