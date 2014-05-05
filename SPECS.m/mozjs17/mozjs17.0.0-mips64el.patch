@@ -1,0 +1,24 @@
+diff -ur mozjs17.0.0-orig/js/src/Makefile.in mozjs17.0.0/js/src/Makefile.in
+--- mozjs17.0.0-orig/js/src/Makefile.in	2014-05-05 07:57:55.787754028 +0000
++++ mozjs17.0.0/js/src/Makefile.in	2014-05-05 09:14:16.888732363 +0000
+@@ -328,7 +328,7 @@
+            $(NONE)
+ endif
+ 
+-ifneq (,$(filter arm% sparc %86 x86_64 mips%,$(TARGET_CPU)))
++ifneq (,$(filter arm% sparc %86 x86_64,$(TARGET_CPU)))
+ ENABLE_YARR_JIT = 1
+ DEFINES += -DENABLE_YARR_JIT=1
+ 
+@@ -945,10 +945,9 @@
+ # Needed to "configure" it correctly.  Unfortunately these
+ # flags wind up being applied to all code in js/src, not just
+ # the code in js/src/assembler.
+-CXXFLAGS += -DUSE_SYSTEM_MALLOC=1 -DENABLE_ASSEMBLER=1
++CXXFLAGS += -DUSE_SYSTEM_MALLOC=1 
+ 
+ ifneq (,$(ENABLE_YARR_JIT)$(ENABLE_METHODJIT))
+-CXXFLAGS +=  -DENABLE_JIT=1
+ endif
+ 
+ INCLUDES +=	-I$(srcdir)/assembler -I$(srcdir)/yarr
