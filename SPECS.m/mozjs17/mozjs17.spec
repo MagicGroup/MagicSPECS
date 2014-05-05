@@ -16,6 +16,7 @@ Patch0:		js17-build-fixes.patch
 # makes mozjs to match js from xul 21
 Patch1:		js17-jsval.patch
 Patch2:         mozbug746112-no-decommit-on-large-pages.patch
+Patch3:         mozjs17.0.0-mips64el.patch
 
 %description
 JavaScript is the Netscape-developed object scripting language used in millions
@@ -41,11 +42,19 @@ rm js/src/ctypes/libffi -rf
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+# Mips64el only
+%ifarch mips64el
+%patch3 -p1
+%endif
 chmod a+x configure
 (cd js/src && autoconf-2.13)
 
 %build
-%configure --disable-static --with-system-nspr --enable-threadsafe --enable-readline
+%configure --disable-static --with-system-nspr --enable-threadsafe --enable-readline \
+%ifarch mips64el
+        --disable-methodjit
+%endif
+
 make %{?_smp_mflags}
 
 %check

@@ -11,6 +11,7 @@ Summary(zh_CN.UTF-8):	LILO 和 SYSLINUX 以及 grub 的图形启动 Logo
 Version:        4.5.2
 Release:        1%{?dist}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+ExcludeArch:    mips64el
 Source:         gfxboot-%{version}.tar.bz2
 Source1:        NLD.tar.bz2
 Source2:        SuSE.tar.bz2

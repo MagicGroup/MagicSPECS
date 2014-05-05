@@ -5,7 +5,7 @@
 %global allTools "certutil cmsutil crlutil derdump modutil pk12util pp signtool signver ssltap vfychain vfyserv"
 
 # solution taken from icedtea-web.spec
-%define multilib_arches ppc64 sparc64 x86_64 ppc64le
+%define multilib_arches ppc64 sparc64 x86_64 ppc64le mips64el
 %ifarch %{multilib_arches}
 %define alt_ckbi  libnssckbi.so.%{_arch}
 %else
@@ -254,7 +254,7 @@ export NSS_BUILD_WITHOUT_SOFTOKEN=1
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
 USE_64=1
 export USE_64
 %endif
@@ -368,7 +368,7 @@ export FREEBL_NO_DEPEND
 BUILD_OPT=1
 export BUILD_OPT
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
 USE_64=1
 export USE_64
 %endif

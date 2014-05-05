@@ -185,7 +185,7 @@ export NSSUTIL_LIB_DIR=%{_libdir}
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
 USE_64=1
 export USE_64
 %endif
@@ -251,7 +251,7 @@ export FREEBL_NO_DEPEND
 BUILD_OPT=1
 export BUILD_OPT
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64 ppc64le mips64el
 USE_64=1
 export USE_64
 %endif
