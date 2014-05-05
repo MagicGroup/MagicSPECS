@@ -1,7 +1,7 @@
 Summary: Backends for the gio framework in GLib
 Name: gvfs
-Version: 1.15.1
-Release: 3%{?dist}
+Version:	1.15.4
+Release: 4%{?dist}
 License: GPLv3 and LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
@@ -83,7 +83,7 @@ shares (SMB) to applications using gvfs.
 Summary: Archiving support for gvfs
 Group: System Environment/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: libarchive-devel >= libarchive-2.7.1-1
+BuildRequires: libarchive-devel >= 2.7.1
 
 %description archive
 This package provides support for accessing files inside Zip and Tar archives,
@@ -95,8 +95,8 @@ as well as ISO images, to applications using gvfs.
 Summary: ObexFTP support for gvfs
 Group: System Environment/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: obex-data-server >= 0.3.4-6
-BuildRequires: bluez-libs-devel >= 3.12
+Requires: bluez >= 5.15
+BuildRequires: bluez-libs-devel >= 5.15
 Obsoletes: gnome-vfs2-obexftp <= 0.4
 
 %description obexftp
@@ -146,6 +146,26 @@ This package provides support for reading and writing files on
 Mac OS X and original Mac OS network shares via Apple Filing Protocol
 to applications using gvfs.
 
+%package mtp
+Summary: MTP support for gvfs
+Group: System Environment/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: libmtp-devel >= 1.1.0
+
+%description mtp
+This package provides support for reading and writing files on
+MTP based devices (Media Transfer Protocol) to applications using gvfs.
+
+
+%package goa
+Summary: GOA support for gvfs
+Group: System Environment/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: gnome-online-accounts-devel >= 3.7.1
+
+%description goa
+This package provides seamless integration with gnome-online-accounts
+file services.
 
 %prep
 %setup -q
@@ -279,6 +299,7 @@ killall -USR1 gvfsd >&/dev/null || :
 
 %files fuse
 %{_libexecdir}/gvfsd-fuse
+%{_prefix}/lib/tmpfiles.d/gvfsd-fuse-tmpfiles.conf
 %doc %{_mandir}/man1/gvfsd-fuse.1.gz
 
 %files smb
@@ -289,7 +310,7 @@ killall -USR1 gvfsd >&/dev/null || :
 
 
 %files archive
-%{_datadir}/applications/mount-archive.desktop
+#%{_datadir}/applications/mount-archive.desktop
 %{_libexecdir}/gvfsd-archive
 %{_datadir}/gvfs/mounts/archive.mount
 
@@ -320,7 +341,26 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_datadir}/gvfs/mounts/afp.mount
 %{_datadir}/gvfs/mounts/afp-browse.mount
 
+%files mtp
+%{_libexecdir}/gvfsd-mtp
+%{_datadir}/gvfs/mounts/mtp.mount
+%{_libexecdir}/gvfs-mtp-volume-monitor
+%{_datadir}/dbus-1/services/org.gtk.Private.MTPVolumeMonitor.service
+%{_datadir}/gvfs/remote-volume-monitors/mtp.monitor
+
+%files goa
+%{_libexecdir}/gvfs-goa-volume-monitor
+%{_datadir}/dbus-1/services/org.gtk.Private.GoaVolumeMonitor.service
+%{_datadir}/gvfs/remote-volume-monitors/goa.monitor
+
+
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.15.4-4
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.15.4-3
+- 更新到 1.15.4
+
 * Mon Jan 07 2013 Adrian Reber <adrian@lisas.de> - 1.15.1-3
 - Rebuilt for libcdio-0.90
 

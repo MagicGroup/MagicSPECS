@@ -17,7 +17,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: php-pear
 Version: 1.9.4
-Release: 27%{?dist}
+Release: 28%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -309,6 +309,9 @@ fi
 
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1:1.9.4-28
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Remi Collet <rcollet@redhat.com> 1:1.9.4-27
 - revert previous, was a bad solution
 

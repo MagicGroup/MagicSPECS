@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:        3.8.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A high-level language for numerical computations
 Group:          Applications/Engineering
 License:        GPLv3+
@@ -291,6 +291,12 @@ fi
 
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 6:3.8.1-3
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 6:3.8.1-2
+- 为 Magic 3.0 重建
+
 * Fri Mar  7 2014 Susi Lehtola <jussilehtola@fedoraproject.org> - 6:3.8.1-1
 - Update to 3.8.1.
 

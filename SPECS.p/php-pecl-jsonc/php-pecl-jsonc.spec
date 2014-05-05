@@ -19,7 +19,7 @@
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
 Version:       1.3.5
-Release:       1%{?dist}
+Release:       3%{?dist}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -171,6 +171,12 @@ fi
 
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1.3.5-3
+- 为 Magic 3.0 重建
+
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1.3.5-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Remi Collet <rcollet@redhat.com> - 1.3.5-1
 - add numerical prefix to extension configuration file
 - update to 1.3.5 (stable)

@@ -11,7 +11,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.1
-Release: 3%{?dist}
+Release: 8%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -202,6 +202,21 @@ rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
 
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-8
+- 为 Magic 3.0 重建
+
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-7
+- 为 Magic 3.0 重建
+
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-6
+- 为 Magic 3.0 重建
+
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-5
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-4
+- 为 Magic 3.0 重建
+
 * Fri May 02 2014 Rex Dieter <rdieter@fedoraproject.org> 
 - 5.2.1-3
 - no rpath, drop chrpath hacks

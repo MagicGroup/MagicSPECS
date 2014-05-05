@@ -2,7 +2,7 @@
 Summary: Library to make writing a vnc server easy
 Name:    libvncserver
 Version: 0.9.9
-Release: 10%{?dist}
+Release: 11%{?dist}
 
 # NOTE: --with-tightvnc-filetransfer => GPLv2
 License: GPLv2+
@@ -128,6 +128,9 @@ xvfb-run -a make -C test test ||:
 
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.9.9-11
+- 为 Magic 3.0 重建
+
 * Sat Dec 21 2013 Rex Dieter <rdieter@fedoraproject.org> - 0.9.9-10
 - include additional dependencies for x11vnc (#864947)
 - %%build: --disable-silent-rules

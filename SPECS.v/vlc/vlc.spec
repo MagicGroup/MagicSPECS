@@ -27,22 +27,22 @@
 %global _with_schroedinger 1
 %endif
 
-%define git 1
-%define gitdate 20130705
-%define gitver 0023
+%define gitv 1
+%define gitdate 20140428
+%define gitver 0546
 
 Summary:	The cross-platform open-source multimedia framework, player and server
 Name:		vlc
 Version:	2.2.0
-%if 0%{?git}
-Release:	0.%{gitdate}.%{?dist}
+%if 0%{?gitv}
+Release:	0.%{gitdate}.%{?dist}.7
 %else
-Release:	1%{?dist}
+Release:	8%{?dist}
 %endif
 License:	GPLv2+
 Group:		Applications/Multimedia
 URL:		http://www.videolan.org
-%if 0%{?git}
+%if 0%{?gitv}
 Source0:	http://nightlies.videolan.org/build/source/vlc-%{version}-%{gitdate}-%{gitver}.tar.xz
 %else
 Source0:	http://download.videolan.org/pub/videolan/vlc/%{version}/vlc-%{version}%{?vlc_rc}.tar.xz
@@ -227,7 +227,7 @@ JACK audio plugin for the VLC media player.
 
 
 %prep
-%if 0%{?git}
+%if 0%{?gitv}
 %setup -q -n %{name}-%{version}-git
 %else
 %setup -q -n %{name}-%{version}%{?vlc_rc}
@@ -430,7 +430,7 @@ fi || :
 %{_libdir}/vlc/plugins/video_output/libxcb_x11_plugin.so
 %{_libdir}/vlc/plugins/video_output/libxcb_window_plugin.so
 %{_libdir}/vlc/plugins/video_output/libxcb_xv_plugin.so
-%{_libdir}/vlc/plugins/video_filter/libpanoramix_plugin.so
+#%{_libdir}/vlc/plugins/video_filter/libpanoramix_plugin.so
 }
 %{_libdir}/vlc/plugins/gui/libskins2_plugin.so
 %{?_with_projectm:
@@ -472,7 +472,7 @@ fi || :
 %exclude %{_libdir}/vlc/plugins/video_output/libxcb_x11_plugin.so
 %exclude %{_libdir}/vlc/plugins/video_output/libxcb_window_plugin.so
 %exclude %{_libdir}/vlc/plugins/video_output/libxcb_xv_plugin.so
-%exclude %{_libdir}/vlc/plugins/video_filter/libpanoramix_plugin.so
+#%exclude %{_libdir}/vlc/plugins/video_filter/libpanoramix_plugin.so
 }
 %{!?_without_directfb:
 %exclude %{_libdir}/vlc/plugins/video_output/libdirectfb_plugin.so
@@ -526,6 +526,33 @@ fi || :
 
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 更新到 20140504 日期的仓库源码
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 更新到 20140504 日期的仓库源码
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Wed Jan 02 2013 Nicolas Chauvet <kwizart@gmail.com> - 2.0.5-2
 - Fix build with FLAC-1.3.x
 

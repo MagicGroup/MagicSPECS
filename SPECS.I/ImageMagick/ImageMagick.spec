@@ -3,7 +3,7 @@
 
 Name:           ImageMagick
 Version:        %{VER}.%{Patchlevel}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -306,6 +306,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 6.8.9.0-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 6.8.9.0-3
 - 更新到 6.8.9.0
 

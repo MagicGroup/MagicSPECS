@@ -8,7 +8,7 @@
 Name:           qt5-%{qt_module}
 Summary:        Qt5 - module with set of QtQuick controls
 Version:        5.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 License:        BSD and (LGPLv2 with exceptions or GPLv3 with exceptions) and GFDL
 Url:            http://qt-project.org/
@@ -99,6 +99,9 @@ make install_docs INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
+- 为 Magic 3.0 重建
+
 * Thu Feb 06 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
 

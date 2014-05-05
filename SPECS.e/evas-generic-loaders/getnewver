@@ -1,6 +1,6 @@
 #!/bin/bash
 url="http://download.enlightenment.org/releases/?C=M;O=D"
-new1="evas-generic-loaders-"
+new1="evas_generic_loaders-"
 new2=".tar.bz2"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null

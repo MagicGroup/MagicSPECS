@@ -2,12 +2,13 @@ Summary:	A C++ port of Lucene
 Summary(zh_CN.UTF-8): Lucene 的 C++ 移植
 Name:		clucene09
 Version:	0.9.21b
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	LGPLv2+ or ASL 2.0
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.sourceforge.net/projects/clucene/
 Source0:	http://downloads.sourceforge.net/clucene/clucene-core-%{version}.tar.bz2
+Patch0:		clucene-core-0.9.21b-gcc48.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -63,6 +64,7 @@ to work with the newer version and the newer API.
 
 %prep
 %setup -q -n clucene-core-%{version}
+%patch0 -p1
 
 %build
 %configure --disable-static
@@ -117,6 +119,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 0.9.21b-6
+- 为 Magic 3.0 重建
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.21b-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

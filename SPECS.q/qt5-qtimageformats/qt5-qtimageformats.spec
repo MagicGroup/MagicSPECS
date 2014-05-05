@@ -8,7 +8,7 @@
 Summary: Qt5 - QtImageFormats component
 Name:    qt5-%{qt_module}
 Version: 5.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -94,6 +94,9 @@ make install_docs INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-3
+- 为 Magic 3.0 重建
+
 * Tue Mar 18 2014 Ville Skyttä <ville.skytta@iki.fi> - 5.2.1-2
 - Fix libmng test, build with system one instead of bundled
 

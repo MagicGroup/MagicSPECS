@@ -69,7 +69,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1539,6 +1539,9 @@ exit 0
 
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 5.5.9-3
+- 为 Magic 3.0 重建
+
 * Tue Feb 18 2014 Remi Collet <rcollet@redhat.com> 5.5.9-2
 - upstream patch for https://bugs.php.net/66731
 

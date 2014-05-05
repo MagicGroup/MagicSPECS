@@ -5,10 +5,10 @@
 Name: %{real_name}
 Summary: VLC backend to Phonon
 Summary(zh_CN.UTF-8): Phonon 的 VLC 后端
-Version: 0.6.1
-Release: 1%{?dist}
+Version: 0.7.1
+Release: 7%{?dist}
 URL: http://www.videolan.org/
-Source: ftp://ftp.kde.org/pub/kde/stable/%{real_name}/%{version}/src/%{real_name}-%{version}.tar.xz
+Source: http://mirror.bjtu.edu.cn/kde/stable/phonon/%{real_name}/%{version}/%{real_name}-%{version}.tar.xz
 License: LGPL v2+
 Group: System/Libraries
 Group(zh_CN.UTF-8): 系统/库
@@ -55,6 +55,27 @@ cd build
 #%ICON_INSTALL_DIR/hicolor/*/apps/phonon-vlc.*
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.1-7
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.1-6
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.1-5
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.1-4
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.1-3
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.1-2
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.6.1-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.4.1-2
 - 为 Magic 3.0 重建
 

@@ -46,7 +46,7 @@
 
 Name:           libkolabxml
 Version:        1.0.1
-Release:        2%{?dist}
+Release:        6%{?dist}
 Summary:        Kolab XML format collection parser library
 
 Group:          System Environment/Libraries
@@ -65,8 +65,8 @@ BuildRequires:  cmake >= 2.6
 BuildRequires:  e2fsprogs-devel
 BuildRequires:  gcc-c++
 %if 0%{?rhel} > 6 || 0%{?fedora} >= 16
-BuildRequires:  kdelibs-devel
-BuildRequires:  kdepimlibs-devel
+BuildRequires:  kdelibs4-devel
+BuildRequires:  kdepimlibs4-devel
 %endif
 BuildRequires:  libcurl-devel
 BuildRequires:  qt-devel >= 3
@@ -108,8 +108,8 @@ Requires:       cmake >= 2.6
 Requires:       e2fsprogs-devel
 Requires:       gcc-c++
 %if 0%{?rhel} > 6 || 0%{?fedora} >= 16
-Requires:       kdelibs-devel
-Requires:       kdepimlibs-devel
+Requires:       kdelibs4-devel
+Requires:       kdepimlibs4-devel
 %endif
 Requires:       libcurl-devel
 %if 0%{?with_php} > 0
@@ -284,6 +284,18 @@ popd
 %endif
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 1.0.1-6
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.0.1-5
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.0.1-4
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.0.1-3
+- 为 Magic 3.0 重建
+
 * Mon Jan 13 2014 Jeroen van Meeuwen <vanmeeuwen@kolabsys.com> - 1.0.1-2
 - Require php-kolab for php-kolabformat, and void
   /etc/php.d/kolabformat.ini (#2667)

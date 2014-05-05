@@ -1,7 +1,7 @@
 Name:           cheese
 Epoch:          2
-Version:	3.12.0
-Release:        1%{?dist}
+Version:	3.12.1
+Release:        3%{?dist}
 Summary:        Application for taking pictures and movies from a webcam
 Summary(zh_CN.UTF-8): 从网络摄像头中抓取图像和视频的程序
 
@@ -17,7 +17,7 @@ Source0:        http://download.gnome.org/sources/cheese/%{majorver}/%{name}-%{v
 
 BuildRequires: gtk3-devel >= 3.0.0
 BuildRequires: gstreamer1-devel
-BuildRequires: gstreamer1-plugins-bad-free-devel
+BuildRequires: gstreamer1-plugins-bad-devel
 BuildRequires: gstreamer1-plugins-base-devel
 BuildRequires: cairo-devel >= 1.4.0
 BuildRequires: librsvg2-devel >= 2.18.0
@@ -42,7 +42,7 @@ BuildRequires: itstool
 
 Requires: %{name}-libs = %{epoch}:%{version}-%{release}
 Requires: gstreamer1-plugins-good
-Requires: gstreamer1-plugins-bad-free
+Requires: gstreamer1-plugins-bad
 Requires: gnome-video-effects
 
 %description
@@ -159,6 +159,27 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gir-1.0/Cheese-3.0.gir
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.12.1-3
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.12.1-2
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.12.1-1
+- 更新到 3.12.1
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.13.1-2
+- 更新到 3.13.1
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.12.1-2
+- 更新到 3.12.1
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.13.1-2
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.13.1-1
+- 更新到 3.13.1
+
 * Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 2:3.12.0-1
 - 更新到 3.12.0
 

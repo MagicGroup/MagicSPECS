@@ -7,8 +7,8 @@
 
 Name:		ntfs-3g
 Summary:	Linux NTFS userspace driver
-Version:	2013.1.13
-Release:	6%{?dist}
+Version:	2014.2.15
+Release:	8%{?dist}
 License:	GPLv2+
 Group:		System Environment/Base
 Source0:	http://tuxera.com/opensource/%{name}_ntfsprogs-%{version}%{?subver}.tgz
@@ -25,12 +25,6 @@ Provides:	ntfsprogs-fuse = %{epoch}:%{version}-%{release}
 Obsoletes:	ntfsprogs-fuse
 Provides:	fuse-ntfs-3g = %{epoch}:%{version}-%{release}
 Patch0:		ntfs-3g_ntfsprogs-2011.10.9-RC-ntfsck-unsupported-return-0.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=951603
-Patch1:		ntfsck.c.4Ksectors.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=958681
-Patch2:		ntfs-3g-truncated-check.patch
-# http://tuxera.com/forum/viewtopic.php?p=37574#p37574
-Patch3:		compress-lastblock-v2.patch
 
 %description
 NTFS-3G is a stable, open source, GPL licensed, POSIX, read/write NTFS 
@@ -76,9 +70,6 @@ included utilities see man 8 ntfsprogs after installation).
 %prep
 %setup -q -n %{name}_ntfsprogs-%{version}%{?subver}
 %patch0 -p1 -b .unsupported
-%patch1 -p0 -b .4k
-%patch2 -p0 -b .truncated
-%patch3 -p0 -b .compressfix
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64"
@@ -177,6 +168,12 @@ rm -rf %{buildroot}%{_defaultdocdir}/%{name}/README
 %exclude %{_mandir}/man8/ntfs-3g*
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 2:2014.2.15-8
+- 为 Magic 3.0 重建
+
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 2:2013.1.13-7
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2013.1.13-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

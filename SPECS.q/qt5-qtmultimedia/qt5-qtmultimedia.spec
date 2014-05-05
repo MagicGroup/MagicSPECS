@@ -8,7 +8,7 @@
 Summary: Qt5 - Multimedia support
 Name:    qt5-%{qt_module}
 Version: 5.2.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -147,6 +147,9 @@ rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
 
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
+- 为 Magic 3.0 重建
+
 * Wed Feb 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
 

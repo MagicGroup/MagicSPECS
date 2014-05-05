@@ -3,7 +3,7 @@
 Name:           qt5-%{qt_module}
 Summary:        Qt5 - AccountService addon
 Version:        0.1.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Applications/System
 License:        LGPLv2+
 URL:            https://github.com/hawaii-desktop/qt-accountsservice-addon
@@ -73,6 +73,9 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 0.1.1-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 24 2013 Lubomir Rintel <lkundrak@v3.sk> - 0.1.1-1
 - Rebase
 

@@ -22,7 +22,7 @@
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
 Version: 5.2.1
-Release: 8%{?dist}
+Release: 13%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -227,6 +227,13 @@ Summary: PostgreSQL driver for Qt5's SQL classes
 BuildRequires: postgresql-devel
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description postgresql 
+%{summary}.
+
+%package sqlite2
+Summary: Sqlite2 driver for Qt5's SQL classes
+BuildRequires: sqlite2-devel
+Requires: %{name}%{?_isa} = %{version}-%{release}
+%description sqlite2
 %{summary}.
 
 %if "%{?tds}" != "-no-sql-tds"
@@ -642,6 +649,9 @@ popd
 %files examples
 %{_qt5_examplesdir}/
 
+%files sqlite2
+%{_qt5_plugindir}/sqldrivers/libqsqlite2.so
+
 %if "%{?ibase}" != "-no-sql-ibase"
 %files ibase
 %{_qt5_plugindir}/sqldrivers/libqsqlibase.so
@@ -694,6 +704,21 @@ popd
 
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-13
+- 为 Magic 3.0 重建
+
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-12
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-11
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-10
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-9
+- 为 Magic 3.0 重建
+
 * Thu Apr 24 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-8
 - DoS vulnerability in the GIF image handler (QTBUG-38367)
 

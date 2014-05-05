@@ -4,7 +4,7 @@
 Summary: Qt5 - QtTranslations module
 Name:    qt5-%{qt_module}
 Version: 5.2.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 License: LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 Url:     http://qt-project.org/
@@ -44,6 +44,9 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-2
+- 为 Magic 3.0 重建
+
 * Wed Feb 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
 - 5.2.1
 

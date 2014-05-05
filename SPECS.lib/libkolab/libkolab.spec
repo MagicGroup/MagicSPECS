@@ -12,7 +12,7 @@
 
 Name:           libkolab
 Version:        0.5.0
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Kolab Object Handling Library
 
 License:        LGPLv3+
@@ -25,7 +25,7 @@ Patch0:         libkolab-0.5.0_kolab_static.patch
 
 BuildRequires:  cmake
 %if 0%{?rhel} > 6 || 0%{?fedora} > 16
-BuildRequires:  kdepimlibs-devel >= 4.9
+BuildRequires:  kdepimlibs4-devel >= 4.9
 %else
 # Note: available within kolabsys.com infrastructure only, as being (essentially) a
 # fork of various kde 4.9 libraries that depend on kde*, and that have no place in el6.
@@ -45,7 +45,7 @@ The libkolab library is an advanced library to  handle Kolab objects.
 Summary:        Kolab library development headers
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?rhel} > 6 || 0%{?fedora} > 16
-BuildRequires:  kdepimlibs-devel >= 4.9
+BuildRequires:  kdepimlibs4-devel >= 4.9
 %else
 # Note: available within kolabsys.com infrastructure only, as being (essentially) a
 # fork of various kde 4.9 libraries that depend on kde*, and that have no place in el6.
@@ -166,6 +166,15 @@ popd
 %{python_sitearch}/kolab/shared.py*
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.5.0-4
+- 为 Magic 3.0 重建
+
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.5.0-3
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 0.5.0-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 14 2013 Jeroen van Meeuwen <vanmeeuwen@kolabsys.com> - 0.5.0-1
 - New upstream release
 

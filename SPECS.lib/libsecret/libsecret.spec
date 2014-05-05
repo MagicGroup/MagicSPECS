@@ -3,7 +3,7 @@
 
 Name:           libsecret
 Version:        0.15
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library for storing and retrieving passwords and other secrets
 
 License:        LGPLv2+
@@ -83,6 +83,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.15-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 20 2013 Kalev Lember <kalevlember@gmail.com> - 0.15-1
 - Update to 0.15
 

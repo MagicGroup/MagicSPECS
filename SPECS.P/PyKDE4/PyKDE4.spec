@@ -6,7 +6,7 @@
 
 Name: PyKDE4 
 Version: %{rversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Python bindings for KDE4 
 Summary(zh_CN.UTF-8): KDE4 的 Python 绑定
 
@@ -230,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.9.3-3
 - 为 Magic 3.0 重建
 

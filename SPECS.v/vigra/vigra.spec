@@ -2,7 +2,7 @@
 Summary:        Generic Programming for Computer Vision
 Name:           vigra
 Version:        1.10.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        MIT
 Group:          Development/Libraries
 Source0:        http://hci.iwr.uni-heidelberg.de/%{name}/%{name}-%{version}-src.tar.gz
@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.10.0-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 13 2013 Bruno Postle <bruno@postle.net> - 1.10.0-1
 - upstream release
 

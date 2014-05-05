@@ -5,7 +5,7 @@
 
 Name:           opencv
 Version:        2.4.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Collection of algorithms for computer vision
 
 Group:          Development/Libraries
@@ -228,6 +228,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 2.4.3-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 12 2012 Nicolas Chauvet <kwizart@gmail.com> - 2.4.3-3
 - Switch Build Type to ReleaseWithDebInfo to avoid -03
 

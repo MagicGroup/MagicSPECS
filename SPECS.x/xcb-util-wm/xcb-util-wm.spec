@@ -1,6 +1,6 @@
 Name:		xcb-util-wm
 Version:	0.4.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Client and window-manager helper library on top of libxcb
 Group:		System Environment/Libraries
 License:	MIT
@@ -62,6 +62,9 @@ rm %{buildroot}%{_libdir}/*.la
 
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.4.1-3
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Thomas Moschny <thomas.moschny@gmx.de> - 0.4.1-2
 - Disable silent build.
 

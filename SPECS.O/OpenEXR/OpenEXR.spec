@@ -2,7 +2,7 @@
 
 Name:	 OpenEXR
 Version: 1.7.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A high dynamic-range (HDR) image file format
 
 Group:	 System Environment/Libraries
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 1.7.1-4
+- 为 Magic 3.0 重建
+
 * Mon Oct 15 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.7.1-3
 - Fix glu.pc requires rhbz#866302
 

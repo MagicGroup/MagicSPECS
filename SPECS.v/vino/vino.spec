@@ -5,7 +5,7 @@
 Summary: A remote desktop system for GNOME
 Name: vino
 Version: 3.11.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/vino
 Source0: http://download.gnome.org/sources/vino/3.11/%{name}-%{version}.tar.xz
@@ -85,6 +85,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/GConf/gsettings/org.gnome.Vino.convert
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 3.11.4-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 13 2014 Richard Hughes <rhughes@redhat.com> - 3.11.4-1
 - Update to 3.11.4
 

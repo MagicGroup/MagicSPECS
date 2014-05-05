@@ -25,7 +25,7 @@
 
 Name:           golang
 Version:        1.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Go Programming Language
 
 License:        BSD
@@ -318,6 +318,9 @@ cp -av %{SOURCE101} $RPM_BUILD_ROOT%{_sysconfdir}/prelink.conf.d/golang.conf
 
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.2.1-2
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Adam Miller <maxamillion@fedoraproject.org> 1.2.1-1
 - Update to latest upstream
 
