@@ -1,118 +1,124 @@
 
-# enabling for the build sanity, the results
-# aren't all that useful, yet.
-%define phonon_build_tests -DPHONON_BUILD_TESTS:BOOL=ON
+# When bootstrapping new releases/archs, set this initially to avoid
+# unresolvable dependency on phonon-backend (and friends)
+#define bootstrap 1
 
-## split -experimental subpkgs
-#define experimental 1
+%if 0%{?fedora}
+# enable zeitgeist support
+%define zeitgeist 1
+%endif
 
 Summary: Multimedia framework api
 Name:    phonon
-Version: 4.6.0
-Release: 8%{?dist}
-Group:   System Environment/Libraries
+Version: 4.7.1
+Release: 2%{?dist}
 License: LGPLv2+
 URL:     http://phonon.kde.org/
 %if 0%{?snap}
-Source0: phonon-%{version}-%{snap}.tar.bz2
+Source0: phonon-%{version}-%{snap}.tar.xz
 %else
-Source0: ftp://ftp.kde.org/pub/kde/stable/phonon/%{version}/src/phonon-%{version}.tar.xz
+Source0: http://download.kde.org/stable/phonon/%{version}/phonon-%{version}.tar.xz
 %endif
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-## upstreamable patches
-# phonon_backend ... could not be loaded
-# http://bugzilla.redhat.com/760039
-Patch50: phonon-4.5.57-plugindir.patch 
-Patch51: phonon-4.6.0-syntax.patch
-# https://git.reviewboard.kde.org/r/103423
-Patch52: phonon-4.6.0-rpath.patch
-#临时补丁，修正rootDir问题
-Patch53: phonon-4.6.0-fixusr.patch
+Patch0: phonon-4.7.0-rpath_use_link_path.patch 
+# workaround cmake bogosity calculating relative dirs + /usr-move
+Patch1: phonon-4.7.0-rootDir.patch
 
-## Upstream patches
+## upstream patches
+Patch103: 0003-sync-FindQt4-from-kdelibs-master-to-unbreak-build-wi.patch
+Patch104: 0004-don-t-emit-backendchanged-when-we-have-no-backend.patch
 
 BuildRequires: automoc4 >= 0.9.86
-BuildRequires: cmake >= 2.6.0
+BuildRequires: cmake >= 2.6.9
+BuildRequires: kde-filesystem
 BuildRequires: pkgconfig
 BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(libpulse-mainloop-glib) > 0.9.15
 BuildRequires: pkgconfig(libxml-2.0)
-BuildRequires: pkgconfig(QtGui) >= 4.7.2
+# Qt4
+BuildRequires: pkgconfig(QtDBus) pkgconfig(QtDesigner) pkgconfig(QtOpenGL) pkgconfig(QtDeclarative) 
+# Qt5
+BuildRequires: pkgconfig(Qt5DBus) pkgconfig(Qt5Designer) pkgconfig(Qt5OpenGL) pkgconfig(Qt5Widgets)
+BuildRequires: pkgconfig(Qt5Declarative)
+%if 0%{?zeitgeist}
 BuildRequires: pkgconfig(QZeitgeist)
+%endif
 BuildRequires: pkgconfig(xcb)
 
-%global pulseaudio_version %(pkg-config --modversion libpulse 2>/dev/null || echo 0.9.15)
+%global pulseaudio_version %((pkg-config --modversion libpulse 2>/dev/null || echo 0.9.15) | cut -d- -f1)
 
-## Beware bootstrapping, have -Requires/+Requires this for step 0, then build at least one backend
-Requires: phonon-backend%{?_isa} => 4.4
-#Provides: phonon-backend%{?_isa} = 4.4
-Requires: pulseaudio-libs%{?_isa} >= %{pulseaudio_version}
-Requires: qt4%{?_isa} >= %{_qt4_version}
-
-%if ! 0%{?experimental}
-#Obsoletes: phonon-experimental < %{version}-%{release}
-Provides:  phonon-experimental = %{version}-%{release}
+Requires: kde-filesystem
+%if 0%{?bootstrap}
+Provides: phonon-backend%{?_isa} = 4.7
+%else
+Requires: phonon-backend%{?_isa} => 4.7
 %endif
+Requires: pulseaudio-libs%{?_isa} >= %{pulseaudio_version}
+%{?_qt4_version:Requires: qt4%{?_isa} >= %{_qt4_version}}
+
+Provides:  phonon-experimental = %{version}-%{release}
 
 %description
 %{summary}.
 
 %package devel
 Summary: Developer files for %{name}
-Group:   Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: qt4-devel
-Requires: pkgconfig
-%if ! 0%{?experimental}
-#Obsoletes: phonon-experimental-devel < %{version}-%{release}
 Provides:  phonon-experimental-devel = %{version}-%{release}
-%endif
 %description devel
 %{summary}.
 
-%if 0%{?experimental}
-%package experimental
-Summary: Experimental interfaces for %{name}
-Group:   System Environment/Libraries
-Requires: %{name}%{?_isa} = %{version}-%{release}
-%description experimental 
+%package qt5 
+Summary: phonon for Qt5
+%{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
+%if 0%{?bootstrap}
+Provides: %{name}-qt5-backend%{?_isa} = 4.7
+%else
+Requires: %{name}-qt5-backend%{?_isa} => 4.7
+%endif
+%description qt5 
 %{summary}.
 
-%package experimental-devel
-Summary: Developer files for %{name}-experimental
-Group:   System Environment/Libraries
-Requires: %{name}-experimental%{?_isa} = %{version}-%{release}
-Requires: %{name}-devel%{?_isa} = %{version}-%{release}
-%description experimental-devel
+%package qt5-devel
+Summary: Developer files for %{name}-qt5 
+Requires: %{name}-qt5%{?_isa} = %{version}-%{release}
+%description qt5-devel
 %{summary}.
-Includes experimental and unstable apis.
-%endif
 
 
 %prep
 %setup -q 
 
-%patch50 -p1 -b .plugindir
-%patch51 -p1 -b .syntax
-%patch52 -p1 -b .rpath
-%patch53 -p1
+%patch103 -p1 -b .0003
+%patch104 -p1 -b .0004
+
+%patch0 -p1 -b .rpath_use_link_path
+%patch1 -p1 -b .rootDir
+
 
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
 %{cmake} \
-  %{?phonon_build_tests} \
   -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT:BOOL=ON \
   ..
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}
 
+mkdir -p %{_target_platform}-Qt5
+pushd %{_target_platform}-Qt5
+%{cmake} \
+  -DPHONON_BUILD_PHONON4QT5:BOOL=ON \
+  -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT:BOOL=ON \
+  ..
+popd
+
+make %{?_smp_mflags} -C %{_target_platform}-Qt5
+
 
 %install
-rm -rf %{buildroot}
-
+make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-Qt5
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 # symlink for qt/phonon compatibility
@@ -121,26 +127,19 @@ ln -s ../KDE/Phonon %{buildroot}%{_includedir}/phonon/Phonon
 # own these dirs
 mkdir -p %{buildroot}%{_kde4_libdir}/kde4/plugins/phonon_backend/
 mkdir -p %{buildroot}%{_kde4_datadir}/kde4/services/phononbackends/
-magic_rpm_clean.sh
+mkdir -p %{buildroot}%{_qt5_plugindir}/phonon4qt5_backend
+
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
 test "$(pkg-config --modversion phonon)" = "%{version}"
-%if 0%{?phonon_build_tests:1}
-# many of these fail currently (4/10)
-make test -C %{_target_platform} ||:
-%endif
-
-
-%clean
-rm -rf %{buildroot}
+test "$(pkg-config --modversion phonon4qt5)" = "%{version}"
 
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING.LIB
 %{_libdir}/libphonon.so.4*
 %{_datadir}/dbus-1/interfaces/org.kde.Phonon.AudioOutput.xml
@@ -154,12 +153,10 @@ rm -rf %{buildroot}
 %postun experimental -p /sbin/ldconfig
 
 %files experimental
-%defattr(-,root,root,-)
 %endif
 %{_libdir}/libphononexperimental.so.4*
 
 %files devel
-%defattr(-,root,root,-)
 %{_datadir}/phonon/buildsystem/
 %dir %{_libdir}/cmake/
 %{_libdir}/cmake/phonon/
@@ -174,22 +171,77 @@ rm -rf %{buildroot}
 %exclude %{_includedir}/KDE/Phonon/Experimental/
 %exclude %{_includedir}/phonon/experimental/
 %files experimental-devel
-%defattr(-,root,root,-)
-%endif
 %{_includedir}/KDE/Phonon/Experimental/
 %{_includedir}/phonon/experimental/
+%endif
 %{_libdir}/libphononexperimental.so
+
+%post qt5 -p /sbin/ldconfig
+%postun qt5 -p /sbin/ldconfig
+
+%files qt5 
+%doc COPYING.LIB
+%dir %{_datadir}/phonon4qt5
+%{_libdir}/libphonon4qt5.so.4*
+%{_libdir}/libphonon4qt5experimental.so.4*
+%{_qt5_plugindir}/designer/libphononwidgets.so
+%dir %{_qt5_plugindir}/phonon4qt5_backend/
+%{_datadir}/dbus-1/interfaces/org.kde.Phonon4Qt5.AudioOutput.xml
+
+%files qt5-devel
+%{_datadir}/phonon4qt5/buildsystem/
+%dir %{_libdir}/cmake/
+%{_libdir}/cmake/phonon4qt5/
+%{_includedir}/phonon4qt5/
+%{_libdir}/libphonon4qt5.so
+%{_libdir}/libphonon4qt5experimental.so
+%{_libdir}/pkgconfig/phonon4qt5.pc
+%{_qt5_archdatadir}/mkspecs/modules/qt_phonon4qt5.pri
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.6.0-8
-- 为 Magic 3.0 重建
+* Wed Mar 26 2014 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-2
+- backport some upstream fixes, one that fixes building with cmake-3 particularly
 
-* Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 4.6.0-7
-- 为 Magic 3.0 重建
+* Fri Dec 06 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-1
+- phonon-4.7.1
 
-* Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 4.6.0-6
-- 为 Magic 3.0 重建
+* Fri Nov 15 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-8
+- more upstream fixes, upstreamable rpath_use_link_path handling
+
+* Mon Nov 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-7
+- workaround rootDir bogosity
+
+* Mon Nov 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-6
+- Ensure-the-PulseAudio-envrionment-is-set-up (kde#327279)
+
+* Mon Nov 11 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-5
+- rebuild (qt5 qreal/arm)
+
+* Sun Nov 10 2013 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.7.0-4
+- really fix rpath handling (the upstream version of the patch is incomplete)
+
+* Wed Nov 06 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-3
+- disable bootstrap
+
+* Tue Nov 05 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-2
+- use upstream version of rpath patch
+
+* Tue Nov 05 2013 Rex Dieter <rdieter@fedoraproject.org> 4.7.0-1
+- phonon-4.7.0, Qt5 support
+
+* Wed Oct 30 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.6.0-9
+- pull in upstream fixes
+- PhononConfig.cmake: fix/workaround regression'y cmake behavior
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jul 31 2012 Than Ngo <than@redhat.com> - 4.6.0-6
+- add rhel/fedora condition
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
