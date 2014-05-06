@@ -1,30 +1,35 @@
 Name:		perl-IPC-System-Simple 
-Version:	1.21
-Release:	5%{?dist}
+Version:	1.25
+Release:	1%{?dist}
 License:	GPL+ or Artistic 
 Group:		Development/Libraries
 Summary:	Run commands simply, with detailed diagnostics 
-Url:		http://search.cpan.org/dist/IPC-System-Simple
-Source:		http://search.cpan.org/CPAN/authors/id/P/PJ/PJF/IPC-System-Simple-%{version}.tar.gz 
+URL:		http://search.cpan.org/dist/IPC-System-Simple
+Source0:	http://search.cpan.org/CPAN/authors/id/P/PJ/PJF/IPC-System-Simple-%{version}.tar.gz 
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -un)
 BuildArch:	noarch
 BuildRequires:	perl(BSD::Resource)
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(Config)
+BuildRequires:	perl(constant)
 BuildRequires:	perl(Exporter)
-BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.30
 BuildRequires:	perl(File::Basename)
 BuildRequires:	perl(File::Spec)
 BuildRequires:	perl(List::Util)
+BuildRequires:	perl(Pod::Coverage::TrustPod)
 BuildRequires:	perl(POSIX)
+BuildRequires:	perl(re)
 BuildRequires:	perl(Scalar::Util)
+BuildRequires:	perl(strict)
 BuildRequires:	perl(Test)
-BuildRequires:	perl(Test::Kwalitee)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(Test::NoWarnings)
 BuildRequires:	perl(Test::Perl::Critic)
 BuildRequires:	perl(Test::Pod)
-BuildRequires:	perl(Test::Pod::Coverage)
-Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:	perl(Test::Pod::Coverage) >= 1.08
+BuildRequires:	perl(warnings)
+Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Calling Perl's in-built 'system()' function is easy; determining if it
@@ -50,13 +55,16 @@ perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
+rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
- TEST_AUTHOR=1
+make test TEST_AUTHOR=1 AUTHOR_TESTING=1 RELEASE_TESTING=1
+
+%clean
+rm -rf %{buildroot}
 
 %files
 %doc Changes LICENSE README examples/
@@ -64,11 +72,39 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/IPC::System::Simple.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.21-5
-- 为 Magic 3.0 重建
+* Sun Oct 20 2013 Paul Howarth <paul@city-fan.org> - 1.25-1
+- Update to 1.25
+  - No longer ship unrequired file Debian_CPANTS.txt (GH #7)
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.21-4
-- 为 Magic 3.0 重建
+* Fri Oct 18 2013 Paul Howarth <paul@city-fan.org> - 1.24-1
+- Update to 1.24
+  - No longer mark BSD::Resource as required (GH #6)
+  - Skip core-dump tests on OS X; they're not as straightforward as the test
+    script would like (GH #5)
+
+* Wed Oct  9 2013 Paul Howarth <paul@city-fan.org> - 1.23-1
+- Update to 1.23
+  - Silence "Statement unlikely to be reached" warning
+  - Repository information fix, and typo fixes
+  - Converted to using dzil
+- Specify all dependencies
+- Don't need to remove empty directories from the buildroot
+- Restore EL-5 compatibility
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.21-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 31 2013 Petr Pisar <ppisar@redhat.com> - 1.21-7
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.21-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.21-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 23 2012 Petr Pisar <ppisar@redhat.com> - 1.21-4
+- Perl 5.16 rebuild
 
 * Thu Jan 12 2012 Paul Howarth <paul@city-fan.org> - 1.21-3
 - Run author tests too for completeness
