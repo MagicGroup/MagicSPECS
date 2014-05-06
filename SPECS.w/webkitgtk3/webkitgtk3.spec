@@ -6,8 +6,8 @@
         cp -p %1  %{buildroot}%{_pkgdocdir}/$(echo '%1' | sed -e 's!/!.!g')
 
 Name:           webkitgtk3
-Version:        2.3.90
-Release:        4%{?dist}
+Version:        2.4.1
+Release:        1%{?dist}
 Summary:        GTK+ Web content engine library
 
 Group:          Development/Libraries
@@ -19,9 +19,7 @@ Source0:        http://webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 Patch0:         webkit-1.1.14-nspluginwrapper.patch
 # https://bugs.webkit.org/show_bug.cgi?id=103128
 Patch4:         webkit-2.1.90-double2intsPPC32.patch
-Patch9:         webkitgtk-2.3.2-libatomic.patch
 Patch10:        webkitgtk-aarch64.patch
-Patch90:        webkitgtk-2.3.90-fix-mips64el.diff
 
 BuildRequires:  at-spi2-core-devel
 BuildRequires:  bison
@@ -31,7 +29,7 @@ BuildRequires:  enchant-devel
 BuildRequires:  flex
 BuildRequires:  fontconfig-devel >= 2.5
 BuildRequires:  freetype-devel
-BuildRequires:  geoclue-devel
+BuildRequires:  geoclue2-devel
 BuildRequires:  gettext
 BuildRequires:  gperf
 BuildRequires:  gstreamer1-devel
@@ -55,10 +53,7 @@ BuildRequires:  gobject-introspection-devel >= 1.32.0
 BuildRequires:  perl-Switch
 BuildRequires:  ruby
 BuildRequires:  mesa-libGL-devel
-
-%ifarch ppc
-BuildRequires:  libatomic
-%endif
+Requires:       geoclue2
 
 %description
 WebKitGTK+ is the port of the portable web rendering engine WebKit to the
@@ -70,6 +65,7 @@ This package contains WebKitGTK+ for GTK+ 3.
 Summary:        The libwebkit2gtk library
 Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       geoclue2
 
 %description -n libwebkit2gtk
 The libwebkit2gtk package contains the libwebkit2gtk library
@@ -99,17 +95,13 @@ This package contains developer documentation for %{name}.
 %ifarch ppc s390
 %patch4 -p1 -b .double2intsPPC32
 %endif
-%ifarch ppc
-#patch9 -p1 -b .libatomic
-%endif
 %patch10 -p1 -b .aarch64
-%patch90 -p1 -b .mips64el
 
 %build
 # Use linker flags to reduce memory consumption
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 
-%ifarch s390 %{arm} mips64el
+%ifarch s390 %{arm}
 # Decrease debuginfo verbosity to reduce memory consumption even more
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
@@ -119,13 +111,13 @@ This package contains developer documentation for %{name}.
 %global optflags %{optflags} -Wl,-relax -latomic
 %endif
 
-%ifarch s390 s390x ppc ppc64 mips64el
+%ifarch s390 s390x ppc ppc64 aarch64
 %global optflags %{optflags} -DENABLE_YARR_JIT=0
 %endif
 
 %configure                                                      \
                         --with-gtk=3.0                          \
-%ifarch s390 s390x ppc ppc64 aarch64 mips64el
+%ifarch s390 s390x ppc ppc64 aarch64
                         --disable-jit                           \
 %else
                         --enable-jit                            \
@@ -212,6 +204,7 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
 %{_libdir}/libjavascriptcoregtk-3.0.so
 %{_libdir}/pkgconfig/webkitgtk-3.0.pc
 %{_libdir}/pkgconfig/webkit2gtk-3.0.pc
+%{_libdir}/pkgconfig/webkit2gtk-web-extension-3.0.pc
 %{_libdir}/pkgconfig/javascriptcoregtk-3.0.pc
 %{_datadir}/gir-1.0/WebKit-3.0.gir
 %{_datadir}/gir-1.0/WebKit2-3.0.gir
@@ -226,8 +219,20 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
 %{_datadir}/gtk-doc/html/webkitdomgtk
 
 %changelog
-* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 2.3.90-4
-- 为 Magic 3.0 重建
+* Mon Apr 14 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.1-1
+- Update to 2.4.1
+
+* Tue Mar 25 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.0-1
+- Update to 2.4.0
+
+* Wed Mar 19 2014 Kalev Lember <kalevlember@gmail.com> - 2.3.92-2
+- Switch over to geoclue2
+
+* Tue Mar 18 2014 Tomas Popela <tpopela@redhat.com> - 2.3.92-1
+- Update to 2.3.92
+
+* Tue Mar 4 2014 Tomas Popela <tpopela@redhat.com> - 2.3.91-1
+- Update to 2.3.91
 
 * Thu Feb 27 2014 Karsten Hopp <karsten@redhat.com> 2.3.90-3
 - disable libatomic patch on ppc. webkitgtk3 now uses std::atomic

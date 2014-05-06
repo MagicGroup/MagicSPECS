@@ -25,15 +25,6 @@
  #define WTF_USE_JSVALUE64 1
  #else
  #define WTF_USE_JSVALUE32_64 1
-@@ -807,7 +816,7 @@
- #define ENABLE_REGEXP_TRACING 0
- 
- /* Yet Another Regex Runtime - turned on by default for JIT enabled ports. */
--#if !defined(ENABLE_YARR_JIT) && (ENABLE(JIT) || ENABLE(LLINT_C_LOOP))
-+#if !defined(ENABLE_YARR_JIT) && (ENABLE(JIT) || ENABLE(LLINT_C_LOOP)) && !CPU(AARCH64) && !CPU(PPC)
- #define ENABLE_YARR_JIT 1
- 
- /* Setting this flag compares JIT results with interpreter results. */
 --- webkitgtk-2.3.5/Source/WTF/wtf/dtoa/utils.h.orig	2014-02-07 10:50:15.238174894 +0000
 +++ webkitgtk-2.3.5/Source/WTF/wtf/dtoa/utils.h	2014-02-07 10:50:32.640441629 +0000
 @@ -49,7 +49,7 @@
