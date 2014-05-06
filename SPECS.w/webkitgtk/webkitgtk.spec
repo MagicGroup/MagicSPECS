@@ -1,33 +1,17 @@
+# In f20+ use unversioned docdirs, otherwise the old versioned one
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 ## NOTE: Lots of files in various subdirectories have the same name (such as
 ## "LICENSE") so this short macro allows us to distinguish them by using their
 ## directory names (from the source tree) as prefixes for the files.
 %define 	add_to_doc_files()	\
-	mkdir -p %{buildroot}%{_docdir}/%{name}-%{version} ||: ; \
-	cp -p %1  %{buildroot}%{_docdir}/%{name}-%{version}/$(echo '%1' | sed -e 's!/!.!g')
-
-## Optional build modifications...
-## --with coverage: Enables compile-time checking of code coverage.
-##	(Default: No)
-##
-## --with debug: Enable more verbose debugging. Makes runtime a bit slower.
-##	Also disables the optimized memory allocator.
-##	(Default: No)
-##
-## --with pango: Use Pango instead of freetype2 as the font renderer.
-##	CJK support is functional only with the freetype2 backend.
-##	(Default: No - use freetype2)
-
-%bcond_with 	coverage
-%bcond_with 	debug
-%bcond_with 	pango
+	mkdir -p %{buildroot}%{_pkgdocdir} ||: ; \
+	cp -p %1  %{buildroot}%{_pkgdocdir}/$(echo '%1' | sed -e 's!/!.!g')
 
 Name:		webkitgtk
-Version:	1.10.2
-Release:	1%{?dist}
+Version:	2.4.1
+Release:	2%{?dist}
 Summary:	GTK+ Web content engine library
-
-Provides:	WebKit-gtk = %{version}-%{release}
-Obsoletes:	WebKit-gtk < %{version}-%{release}
 
 Group:		Development/Libraries
 License:	LGPLv2+ and BSD
@@ -35,26 +19,29 @@ URL:		http://www.webkitgtk.org/
 
 Source0:	http://www.webkitgtk.org/releases/webkitgtk-%{version}.tar.xz
 
-# add support for nspluginwrapper. 
-Patch2: 	webkit-1.3.10-nspluginwrapper.patch
-# Explicitly link with -lrt
-# https://bugs.webkit.org/show_bug.cgi?id=103194
-Patch3:		webkitgtk-librt.patch
-Patch4:		webkitgtk-1.10.2-mips64-fix.patch
+# add support for nspluginwrapper.
+Patch0: 	webkit-1.3.10-nspluginwrapper.patch
+# https://bugs.webkit.org/show_bug.cgi?id=103128
+Patch4:         webkit-2.1.90-double2intsPPC32.patch
+Patch10:        webkitgtk-aarch64.patch
 
 BuildRequires:	bison
 BuildRequires:	chrpath
 BuildRequires:	enchant-devel
 BuildRequires:	flex
-BuildRequires:	geoclue-devel
+BuildRequires:	geoclue2-devel
 BuildRequires:	gettext
 BuildRequires:	gperf
-BuildRequires:	gstreamer-devel
-BuildRequires:	gstreamer-plugins-base-devel
-BuildRequires:	gtk2-devel
-BuildRequires:	libsoup-devel >= 2.27.91
+BuildRequires:	gstreamer1-devel
+BuildRequires:	gstreamer1-plugins-base-devel
+BuildRequires:	gtk2-devel >= 2.24.10
+BuildRequires:	glib2-devel >= 2.36.0
+BuildRequires:	harfbuzz-devel
+BuildRequires:	libsoup-devel >= 2.42.0
 BuildRequires:	libicu-devel
 BuildRequires:	libjpeg-devel
+BuildRequires:	libsecret-devel
+BuildRequires:	libwebp-devel
 BuildRequires:	libxslt-devel
 BuildRequires:	libXt-devel
 BuildRequires:	pcre-devel
@@ -63,15 +50,14 @@ BuildRequires:	gobject-introspection-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  gtk-doc
 BuildRequires:  ruby
-
-## Conditional dependencies...
-%if %{with pango}
-BuildRequires:	pango-devel
-%else
 BuildRequires:	cairo-devel
-BuildRequires:  cairo-gobject-devel
-BuildRequires:	fontconfig-devel
+BuildRequires:	cairo-gobject-devel
+BuildRequires:	fontconfig-devel >= 2.5
 BuildRequires:	freetype-devel
+Requires:	geoclue2
+
+%ifarch ppc
+BuildRequires:  libatomic
 %endif
 
 %description
@@ -84,37 +70,31 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 Requires:	gtk2-devel
-Provides:	WebKit-gtk-devel = %{version}-%{release}
-Obsoletes:	WebKit-gtk-devel < %{version}-%{release}
 
 %description	devel
 The %{name}-devel package contains libraries, build data, and header
 files for developing applications that use %{name}.
-
 
 %package	doc
 Summary:	Documentation for %{name}
 Group:		Documentation
 BuildArch:	noarch
 Requires:	%{name} = %{version}-%{release}
-Provides:	WebKit-doc = %{version}-%{release}
-Obsoletes:	WebKit-doc < %{version}-%{release}
 
 %description	doc
 This package contains developer documentation for %{name}.
 
-
 %prep
 %setup -qn "webkitgtk-%{version}"
-%patch2 -p1 -b .nspluginwrapper
-%patch3 -p1 -b .librt
-%patch4 -p1 -b .mips64
-
-# For patch3
-autoreconf --verbose --install -I Source/autotools
+%patch0 -p1 -b .nspluginwrapper
+# required for 32-bit big-endians
+%ifarch ppc s390
+%patch4 -p1 -b .double2intsPPC32
+%endif
+%patch10 -p1 -b .aarch64
 
 %build
-%ifarch s390 %{arm}
+%ifarch s390 %{arm} ppc
 # Use linker flags to reduce memory consumption on low-mem architectures
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
 %endif
@@ -123,40 +103,37 @@ autoreconf --verbose --install -I Source/autotools
 %global optflags %(echo %{optflags} | sed 's/-g/-g1/')
 %endif
 
+%ifarch ppc
+# Use linker flag -relax to get WebKit2 build under ppc(32) with JIT disabled
+%global optflags %{optflags} -Wl,-relax
+%endif
+
 # Build with -g1 on all platforms to avoid running into 4 GB ar format limit
 # https://bugs.webkit.org/show_bug.cgi?id=91154
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 
-# explicitly disable JIT on ARM https://bugs.webkit.org/show_bug.cgi?id=85076
-
-CFLAGS="%optflags -DLIBSOUP_I_HAVE_READ_BUG_594377_AND_KNOW_SOUP_PASSWORD_MANAGER_MIGHT_GO_AWAY" %configure							\
-%ifarch %{arm} mips64el
+CFLAGS="%{optflags} -DLIBSOUP_I_HAVE_READ_BUG_594377_AND_KNOW_SOUP_PASSWORD_MANAGER_MIGHT_GO_AWAY" %configure                                                   \
+                        --with-gtk=2.0                          \
+                        --disable-webkit2                       \
+%ifarch s390 s390x ppc ppc64 aarch64
                         --disable-jit                           \
 %else
-%ifnarch s390 s390x ppc ppc64
                         --enable-jit                            \
 %endif
-%endif
-                        --disable-webkit2                       \
-			--enable-geolocation			\
-                        --enable-introspection                  \
-                        --with-gtk=2.0                          \
-                        --enable-webgl                          \
-%{?with_coverage:	--enable-coverage		}	\
-%{?with_debug:		--enable-debug			}	\
-%{?with_pango:		--with-font-backend=pango	}
+                        --enable-introspection
 
 mkdir -p DerivedSources/webkit
 mkdir -p DerivedSources/WebCore
 mkdir -p DerivedSources/ANGLE
 mkdir -p DerivedSources/WebKit2/webkit2gtk/webkit2
+mkdir -p DerivedSources/WebKit2
+mkdir -p DerivedSources/webkitdom/
 mkdir -p DerivedSources/InjectedBundle
-%define _smp_mflags -j16
-make V=1 %{?_smp_mflags}
+mkdir -p DerivedSources/Platform
+
+make %{_smp_mflags} V=1
 
 %install
-rm -rf %{buildroot}
-
 make install DESTDIR=%{buildroot}
 
 install -d -m 755 %{buildroot}%{_libexecdir}/%{name}
@@ -167,11 +144,13 @@ chrpath --delete %{buildroot}%{_bindir}/jsc-1
 chrpath --delete %{buildroot}%{_libdir}/libwebkitgtk-1.0.so
 chrpath --delete %{buildroot}%{_libexecdir}/%{name}/GtkLauncher
 
-%find_lang webkitgtk-2.0
+# Remove .la files
+find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
+
+%find_lang WebKitGTK-2.0
 
 ## Finally, copy over and rename the various files for %%doc inclusion.
 %add_to_doc_files Source/WebKit/LICENSE
-%add_to_doc_files Source/WebKit/gtk/po/README
 %add_to_doc_files Source/WebKit/gtk/NEWS
 %add_to_doc_files Source/WebCore/icu/LICENSE
 %add_to_doc_files Source/WebCore/LICENSE-APPLE
@@ -182,9 +161,6 @@ chrpath --delete %{buildroot}%{_libexecdir}/%{name}/GtkLauncher
 %add_to_doc_files Source/JavaScriptCore/AUTHORS
 %add_to_doc_files Source/JavaScriptCore/icu/README
 %add_to_doc_files Source/JavaScriptCore/icu/LICENSE
-
-%clean
-rm -rf %{buildroot}
 
 
 %post -p /sbin/ldconfig
@@ -199,20 +175,16 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
-%files -f webkitgtk-2.0.lang
-%defattr(-,root,root,-)
-%doc %{_docdir}/%{name}-%{version}/
-%exclude %{_libdir}/*.la
+%files -f WebKitGTK-2.0.lang
+%doc %{_pkgdocdir}
 %{_libdir}/libwebkitgtk-1.0.so.*
 %{_libdir}/libjavascriptcoregtk-1.0.so.*
 %{_libdir}/girepository-1.0/WebKit-1.0.typelib
-%{_libdir}/girepository-1.0/JSCore-1.0.typelib
-#{_datadir}/glib-2.0/schemas/org.webkitgtk-1.0.gschema.xml
+%{_libdir}/girepository-1.0/JavaScriptCore-1.0.typelib
 %{_libexecdir}/%{name}/
 %{_datadir}/webkitgtk-1.0
 
-%files	devel
-%defattr(-,root,root,-)
+%files  devel
 %{_bindir}/jsc-1
 %{_includedir}/webkitgtk-1.0
 %{_libdir}/libwebkitgtk-1.0.so
@@ -220,15 +192,102 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/pkgconfig/webkit-1.0.pc
 %{_libdir}/pkgconfig/javascriptcoregtk-1.0.pc
 %{_datadir}/gir-1.0/WebKit-1.0.gir
-%{_datadir}/gir-1.0/JSCore-1.0.gir
+%{_datadir}/gir-1.0/JavaScriptCore-1.0.gir
+%{_datadir}/gtk-doc/html/webkitdomgtk
 
-%files	doc
-%defattr(-,root,root,-)
+%files doc
 %dir %{_datadir}/gtk-doc
 %dir %{_datadir}/gtk-doc/html
 %{_datadir}/gtk-doc/html/webkitgtk
 
 %changelog
+* Fri Apr 25 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.4.1-2
+- Switch over to geoclue2
+
+* Tue Apr 15 2014 Kevin Fenzi <kevin@scrye.com> 2.4.1-1
+- Update to 2.4.1
+
+* Sat Mar 22 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.2.6-2
+- Fix build and disable JIT on aarch64
+
+* Wed Mar 19 2014 Tomas Popela <tpopela@redhat.com> 2.2.6-1
+- Update to 2.2.6
+
+* Wed Feb 19 2014 Tomas Popela <tpopela@redhat.com> 2.2.5-1
+- Update to 2.2.5
+
+* Tue Feb 18 2014 Tomas Popela <tpopela@redhat.com> 2.2.4-4
+- Enable full debuginfo on s390s
+
+* Wed Feb 12 2014 Nils Philippsen <nils@redhat.com> - 2.2.4-3
+- fix changelog release number
+- rebuild for new libicu
+
+* Tue Jan 21 2014 Tomas Popela <tpopela@redhat.com> 2.2.4-2
+- Update to 2.2.4
+
+* Thu Jan 02 2014 Orion Poplawski <orion@cora.nwra.com> - 2.2.3-2
+- Rebuild for libwebp soname bump
+
+* Wed Dec 04 2013 Tomas Popela <tpopela@redhat.com> - 2.2.3-1
+- Update to 2.2.3
+
+* Wed Dec 04 2013 Karsten Hopp <karsten@redhat.com> 2.2.2-2
+- apply the correct double2intsPPC32 patch on ppc
+
+* Mon Nov 11 2013 Kevin Fenzi <kevin@scrye.com> 2.2.2-1
+- Update to 2.2.2
+
+* Thu Oct 17 2013 Kevin Fenzi <kevin@scrye.com> 2.2.1-1
+- Update to 2.2.1
+
+* Fri Sep 27 2013 Kevin Fenzi <kevin@scrye.com> 2.2.0-1
+- Update 2.2.0
+
+* Sun Aug 04 2013 Karsten Hopp <karsten@redhat.com> 2.0.4-3
+- update ppc libatomic patch
+
+* Sat Jul 27 2013 Kevin Fenzi <kevin@scrye.com> 2.0.4-2
+- Fix for unversioned doc dirs
+
+* Mon Jul 22 2013 Tomas Popela <tpopela@redhat.com> - 2.0.4-1
+- Update to 2.0.4
+
+* Fri Jun 07 2013 Kalev Lember <kalevlember@gmail.com> - 2.0.2-2
+- Link with harfbuzz-icu (split into separate library in harfbuzz 0.9.18)
+
+* Mon May 13 2013 Tomas Popela <tpopela@redhat.com> - 2.0.2-1
+- Update to 2.0.2
+
+* Wed Apr 17 2013 Tomas Popela <tpopela@redhat.com> - 2.0.1-1
+- Update to 2.0.1
+
+* Wed Apr 3 2013 Tomas Popela <tpopela@redhat.com> - 2.0.0-2
+- Add cairo-gobject as BR
+- Apply double2intsPPC32.patch also on s390
+
+* Tue Apr 2 2013 Tomas Popela <tpopela@redhat.com> - 2.0.0-1
+- Update to 2.0.0
+- Update BR versions
+- Drop unused patches
+- Change spec structure to webkitgtk3 spec file
+
+* Tue Mar 12 2013 Tomas Popela <tpopela@redhat.com> 1.10.2-6
+- Add upstream patch for RH bug #908143 - AccessibilityTableRow::parentTable crash
+- Add fix for bug #907432 - Rendering glitches on some sites
+
+* Sat Feb 02 2013 Kevin Fenzi <kevin@scrye.com> 1.10.2-5
+- Drop building with -g1 now. Fixes bug #861452 
+
+* Wed Jan 30 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.10.2-4
+- Rebuild against new icu again
+
+* Sat Jan 26 2013 Kevin Fenzi <kevin@scrye.com> 1.10.2-3
+- Rebuild for new icu
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 1.10.2-2
+- rebuild due to "jpeg8-ABI" feature drop
+
 * Mon Dec 10 2012 Kalev Lember <kalevlember@gmail.com> 1.10.2-1
 - Update to 1.10.2
 - Add a patch to explicitly link with librt
