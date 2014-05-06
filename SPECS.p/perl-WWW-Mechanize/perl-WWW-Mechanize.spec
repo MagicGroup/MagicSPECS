@@ -6,13 +6,13 @@
 %bcond_with livetests
 
 Name:           perl-WWW-Mechanize
-Version:        1.72
-Release:        3%{?dist}
+Version:        1.73
+Release:        1%{?dist}
 Summary:        Automates web page form & link interaction
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/WWW-Mechanize/
-Source0:        http://search.cpan.org/CPAN/authors/id/J/JE/JESSE/WWW-Mechanize-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/WWW-Mechanize-%{version}.tar.gz
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # HTML::Status is not used anymore probably
@@ -108,6 +108,18 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Aug 25 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 1.73-1
+- Update to 1.73
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.72-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 24 2013 Petr Pisar <ppisar@redhat.com> - 1.72-5
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.72-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.72-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
