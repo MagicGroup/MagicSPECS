@@ -2,9 +2,9 @@
 Summary: Gstreamer phonon backend 
 Name:    phonon-backend-gstreamer
 Epoch:   2
-Version: 4.6.2
+Version: 4.7.1
 Release: 2%{?dist}
-Group:   System Environment/Libraries
+
 License: LGPLv2+
 URL:     http://phonon.kde.org/
 %if 0%{?snap}
@@ -12,20 +12,23 @@ Source0: phonon-backend-gstreamer-%{version}-%{snap}.tar.bz2
 # run this script to generate a snapshot tarball
 Source1: phonon-gstreamer_snapshot.sh
 %else
-Source0: http://download.kde.org/stable/phonon/phonon-backend-gstreamer/%{version}/src/phonon-backend-gstreamer-%{version}.tar.xz
+Source0: http://download.kde.org/stable/phonon/phonon-backend-gstreamer/%{version}/phonon-backend-gstreamer-%{version}.tar.xz
 %endif
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 ## upstream patches
+Patch2: 0002-do-not-unlock-not-locked-mutexes-prevent-crashing-wi.patch
+Patch3: 0003-Only-call-QApplication-syncX-from-the-main-thread.patch
 
 BuildRequires: automoc4
 BuildRequires: cmake
 BuildRequires: pkgconfig(gstreamer-0.10) 
 BuildRequires: pkgconfig(gstreamer-app-0.10) pkgconfig(gstreamer-audio-0.10) pkgconfig(gstreamer-video-0.10)
-BuildRequires: pkgconfig(phonon) >= 4.5.50
+BuildRequires: pkgconfig(phonon) >= 4.7.0
+BuildRequires: pkgconfig(phonon4qt5) >= 4.7.0
 BuildRequires: pkgconfig(QtOpenGL)
+BuildRequires: pkgconfig(Qt5OpenGL)
 
-%global phonon_version %(pkg-config --modversion phonon 2>/dev/null || echo 4.5.0)
+%global phonon_version %(pkg-config --modversion phonon 2>/dev/null || echo 4.7.0)
 
 Provides: phonon-backend%{?_isa} = %{phonon_version}
 
@@ -48,9 +51,20 @@ Requires: qt4%{?_isa} >= %{_qt4_version}
 %description
 %{summary}.
 
+%package -n phonon-qt5-backend-gstreamer
+Summary:  Gstreamer phonon-qt5 backend
+Provides: phonon-qt5-backend%{?_isa} = %{phonon_version}
+%{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
+Requires: gstreamer-plugins-good
+%description -n phonon-qt5-backend-gstreamer
+%{summary}.
+
 
 %prep
 %setup -q -n phonon-backend-gstreamer-%{version}
+
+%patch2 -p1 -b .0002
+%patch3 -p1 -b .0003
 
 
 %build
@@ -63,15 +77,20 @@ popd
 
 make %{?_smp_mflags} -C %{_target_platform}
 
+mkdir -p %{_target_platform}-Qt5
+pushd %{_target_platform}-Qt5
+%{cmake} \
+  -DUSE_INSTALL_PLUGIN:BOOL=ON \
+  -DPHONON_BUILD_PHONON4QT5:BOOL=ON \
+  ..
+popd
+
+make %{?_smp_mflags} -C %{_target_platform}-Qt5
+
 
 %install
-rm -rf %{buildroot}
-
+make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-Qt5
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-magic_rpm_clean.sh
-
-%clean
-rm -rf %{buildroot}
 
 
 %post
@@ -87,16 +106,40 @@ fi
 gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null ||:
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING.LIB
 %{_kde4_libdir}/kde4/plugins/phonon_backend/phonon_gstreamer.so
 %{_kde4_datadir}/kde4/services/phononbackends/gstreamer.desktop
 %{_datadir}/icons/hicolor/*/apps/phonon-gstreamer.*
 
+%files -n phonon-qt5-backend-gstreamer
+%doc COPYING.LIB
+%{_qt5_plugindir}/phonon4qt5_backend/phonon_gstreamer.so
+
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2:4.6.2-2
-- 为 Magic 3.0 重建
+* Sun Apr 27 2014 Rex Dieter <rdieter@fedoraproject.org> 2:4.7.1-2
+- pull in some upstream fixes
+
+* Fri Dec 06 2013 Rex Dieter <rdieter@fedoraproject.org> 2:4.7.1-1
+- 4.7.1
+
+* Tue Nov 12 2013 Rex Dieter <rdieter@fedoraproject.org> 2:4.7.0-3
+- pull in upstream fix for some phonon buildsys/api bogosity
+
+* Mon Nov 11 2013 Rex Dieter <rdieter@fedoraproject.org> 2:4.7.0-2
+- rebuild
+
+* Mon Nov 04 2013 Rex Dieter <rdieter@fedoraproject.org> 2:4.7.0-1
+- phonon-backend-gstreamer-4.7.0, Qt5 support
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:4.6.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 01 2013 Rex Dieter <rdieter@fedoraproject.org> 4.6.3-1
+- 4.6.3
+
+* Thu Nov 29 2012 Rex Dieter <rdieter@fedoraproject.org> 2:4.6.2-2
+- dragon playback re-appears for a brief moment (kde#305333)
 
 * Mon Aug 13 2012 Rex Dieter <rdieter@fedoraproject.org> 2:4.6.2-1
 - 4.6.2
