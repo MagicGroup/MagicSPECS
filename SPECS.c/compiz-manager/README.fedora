@@ -1,0 +1,7 @@
+The version of compiz-manager in Fedora uses the desktop dependent window 
+decorator by default (gtk-window-decorator/kde-window-decorator/kde4-window-decorator).
+The upstream default configuration is to use emerald instead. If you want to use 
+compiz-manager and emerald in a script (eg. to start it right after the login) 
+use this line in your script:
+
+# USE_EMERALD=yes compiz-manager
