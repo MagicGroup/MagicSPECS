@@ -1,0 +1,43 @@
+diff -upr ccsm-0.8.4-orig/ccm/Constants.py ccsm-0.8.4/ccm/Constants.py
+--- ccsm-0.8.4-orig/ccm/Constants.py	2009-10-14 03:05:30.000000000 +0200
++++ ccsm-0.8.4/ccm/Constants.py	2013-02-18 19:21:23.753873779 +0100
+@@ -45,7 +45,7 @@ TableY   = 2
+ 
+ # Action Constants
+ #
+-KeyModifier = ["Shift", "Control", "Mod1", "Mod2", "Mod3", "Mod4",
++KeyModifier = ["Shift", "Primary", "Mod1", "Mod2", "Mod3", "Mod4",
+                "Mod5", "Alt", "Meta", "Super", "Hyper", "ModeSwitch"]
+ Edges       = ["Left", "Right", "Top", "Bottom",
+                "TopLeft", "TopRight", "BottomLeft", "BottomRight"]
+diff -upr ccsm-0.8.4-orig/ccm/Constants.py.in ccsm-0.8.4/ccm/Constants.py.in
+--- ccsm-0.8.4-orig/ccm/Constants.py.in	2009-10-14 03:05:30.000000000 +0200
++++ ccsm-0.8.4/ccm/Constants.py.in	2013-02-18 19:22:35.368566815 +0100
+@@ -45,7 +45,7 @@ TableY   = 2
+ 
+ # Action Constants
+ #
+-KeyModifier = ["Shift", "Control", "Mod1", "Mod2", "Mod3", "Mod4",
++KeyModifier = ["Shift", "Primary", "Mod1", "Mod2", "Mod3", "Mod4",
+                "Mod5", "Alt", "Meta", "Super", "Hyper", "ModeSwitch"]
+ Edges       = ["Left", "Right", "Top", "Bottom",
+                "TopLeft", "TopRight", "BottomLeft", "BottomRight"]
+diff -upr ccsm-0.8.4-orig/ccm/Widgets.py ccsm-0.8.4/ccm/Widgets.py
+--- ccsm-0.8.4-orig/ccm/Widgets.py	2009-10-14 03:05:30.000000000 +0200
++++ ccsm-0.8.4/ccm/Widgets.py	2013-02-18 19:26:51.317044369 +0100
+@@ -408,13 +408,13 @@ class ModifierSelector (gtk.DrawingArea)
+         x0, y0, width, height = self._x0, self._y0, self._width, self._height
+         self._modifiers = {
+             "Shift"     : (x0, y0),
+-            "Control"   : (x0, y0 + height),
++            "Primary"   : (x0, y0 + height),
+             "Super"     : (x0 + width, y0),
+             "Alt"       : (x0 + width, y0 + height)
+         }
+ 
+         self._names = {
+-            "Control"   : "Ctrl"
++            "Primary"   : "Ctrl"
+         }
+ 
+     def set_current (self, value):
