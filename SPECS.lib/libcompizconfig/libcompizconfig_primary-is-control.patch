@@ -1,0 +1,12 @@
+diff -upr libcompizconfig-0.8.8-orig/src/bindings.c libcompizconfig-0.8.8/src/bindings.c
+--- libcompizconfig-0.8.8-orig/src/bindings.c	2011-04-21 12:03:54.000000000 +0200
++++ libcompizconfig-0.8.8/src/bindings.c	2013-02-10 17:55:15.305892978 +0100
+@@ -64,7 +64,7 @@ struct _Modifier
+ 
+ modifierList[] = {
+     { "<Shift>",      ShiftMask		 },
+-    { "<Control>",    ControlMask	 },
++    { "<Primary>",    ControlMask	 },
+     { "<Mod1>",	      Mod1Mask		 },
+     { "<Mod2>",	      Mod2Mask		 },
+     { "<Mod3>",	      Mod3Mask		 },

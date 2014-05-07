@@ -1,0 +1,25 @@
+Description: Minor configure.ac change to fix a FTBFS 
+ Fixes this error:
+ srcdir=. /usr/bin/intltool-update -m
+ Unmatched ( in regex; marked by <-- HERE in m/^libcompizconfig-esyscmd( <-- HERE ../VERSION;echo-n$VERSION/.*$/ at /usr/bin/intltool-update line 320, <FILE> line 1851.
+Author: Jasmine Hassan <jasmine.aura@gmail.com>
+Origin: other, LMDE
+Last-Update: 2012-10-11
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,6 +1,8 @@
+ AC_PREREQ(2.57)
+ 
+-AC_INIT([libcompizconfig],esyscmd(. ./VERSION;echo -n $VERSION), [dev@opencompositing.org])
++#AC_INIT([libcompizconfig],esyscmd(. ./VERSION;echo -n $VERSION), [dev@opencompositing.org])
++m4_define([libcompizconfig_version], [esyscmd(. ./VERSION;echo -n $VERSION)])
++AC_INIT([libcompizconfig],[libcompizconfig_version], [dev@opencompositing.org])
+ 
+ #AC_CONFIG_AUX_DIR(config)
+ 
+--- /dev/null
++++ b/po/POTFILES.skip
+@@ -0,0 +1 @@
++src/compizconfig.pb.cc
