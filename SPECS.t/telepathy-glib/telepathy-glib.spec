@@ -5,13 +5,11 @@
 %global vala_ver	0.16.0
 
 Name:           telepathy-glib
-Version:	0.24.0
+Version:        0.24.0
 Release:        1%{?dist}
 Summary:        GLib bindings for Telepathy
-Summary(zh_CN.UTF-8): Telepathy 的 GLib 绑定
 
 Group:          System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/FrontPage
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
@@ -31,14 +29,10 @@ Telepathy-glib is the glib bindings for the telepathy unified framework
 for all forms of real time conversations, including instant messaging, IRC, 
 voice calls and video calls.
 
-%description -l zh_CN.UTF-8
-Telepathy 的 GLib 绑定。
 
 %package vala
 Summary:	Vala bindings for %{name}
-Summary(zh_CN.UTF-8): %{name} 的 vala 绑定
 Group:		Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	vala
 
@@ -46,14 +40,10 @@ Requires:	vala
 %description vala
 Vala bindings for %{name}.
 
-%description vala
-%{name} 的 vala 绑定。
 
 %package 	devel
 Summary:	Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-vala = %{version}-%{release}
 Requires:	telepathy-filesystem
@@ -67,8 +57,6 @@ Requires:	pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %prep
 %setup -q
@@ -81,7 +69,7 @@ make check
 %build
 %configure --enable-static=no --enable-introspection=yes --enable-vala-bindings=yes
 make %{?_smp_mflags}
-magic_rpm_clean.sh
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -115,8 +103,14 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
-* Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 0.24.0-1
-- 更新到 0.24.0
+* Thu Mar 27 2014 Brian Pepple <bpepple@fedoraproject.org> - 0.24.0-1
+- Update to 0.24.0.
+
+* Tue Mar 18 2014 Brian Pepple <bpepple@fedoraproject.org> - 0.23.3-1
+- Update to 0.23.3.
+
+* Wed Mar 05 2014 Richard Hughes <rhughes@redhat.com> - 0.23.2-1
+- Update to 0.23.2.
 
 * Thu Feb 20 2014 Adam Williamson <awilliam@redhat.com> - 0.23.1-1
 - update to 0.23.1.
