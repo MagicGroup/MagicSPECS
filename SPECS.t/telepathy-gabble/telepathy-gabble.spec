@@ -5,36 +5,40 @@
 %endif
 
 Name:           telepathy-gabble
-Version:        0.17.1
-Release:        2%{?dist}
+Version:        0.18.2
+Release:        1%{?dist}
 Summary:        A Jabber/XMPP connection manager
 
 Group:          Applications/Communications
-# The entire source code is LGPLv2+, except src/libmd5-rfc/ and src/sha1/ which are BSD.
-License:        LGPLv2+ and (BSD)
+License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/
 Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
+Patch1:         telepathy-gabble-0.18.0-build.patch
+Patch2:         0001-xmpp-console-Explicitly-state-python-in-the-shebang.patch
 
 BuildRequires:  dbus-devel >= 1.1.0
 BuildRequires:  dbus-glib-devel >= 0.82
-BuildRequires:  telepathy-glib-devel >= 0.19.7
-BuildRequires:  glib2-devel >= 2.30
-BuildRequires:	sqlite-devel
+BuildRequires:  telepathy-glib-devel >= 0.19.9
+BuildRequires:  glib2-devel >= 2.32
+BuildRequires:  sqlite-devel
 BuildRequires:  libuuid-devel
 BuildRequires:  libsoup-devel
-BuildRequires:	libnice-devel >= 0.0.11
-BuildRequires:	cyrus-sasl-devel
+BuildRequires:  libnice-devel >= 0.0.11
+BuildRequires:  cyrus-sasl-devel
 BuildRequires:  libxslt
 %if %{run_tests}
 # Build Requires needed for tests.
 BuildRequires:  python
-BuildRequires:	python-twisted
-BuildRequires:	dbus-python
-BuildRequires:	pygobject2
+BuildRequires:  python-twisted
+BuildRequires:  dbus-python
+BuildRequires:  pygobject2
 %endif
 
 Requires:       telepathy-mission-control >= 5.5.0
 Requires:       telepathy-filesystem
+
+# Removed in F17
+Obsoletes:      telepathy-butterfly < 0.5.15-5
 
 
 %description
@@ -44,11 +48,15 @@ chats and voice calls.
 
 %prep
 %setup -q
+%patch1 -p 1 -b .build
+%patch2 -p 1 -b .shebang
+
 
 %if %{run_tests}
 %check
 #make check
 %endif
+
 
 %build
 %configure --enable-static=no
@@ -56,7 +64,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
@@ -93,8 +100,43 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/*.html
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.17.1-2
-- 为 Magic 3.0 重建
+* Thu Mar 20 2014 Brian Pepple <bpepple@fedoraproject.org> - 0.18.2-1
+- Update to 0.18.2.
+
+* Tue Nov  5 2013 Debarshi Ray <rishi@fedoraproject.org> - 0.18.1-2
+- Explicitly state python in the shebang
+
+* Fri Sep  6 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.18.1-1
+- Update to 0.18.1.
+
+* Sun Aug 11 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.18.0-1
+- Update to 0.18.0.
+- Bump minimum version of glib2 needed.
+
+* Thu Aug 01 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.17.5-2
+- Bump release number
+
+* Thu Aug  1 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.17.5-1
+- Update to 0.17.5.
+
+* Fri May 31 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.17.4-1
+- Update to 0.17.4.
+
+* Thu Mar  7 2013 Tomáš Mráz <tmraz@redhat.com> - 0.17.3-2
+- Try to make it build
+
+* Mon Mar 04 2013 Debarshi Ray <rishi@fedoraproject.org> - 0.17.3-1
+- Update to 0.17.3.
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.17.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Dec  7 2012 Brian Pepple <bpepple@fedoraproject.org> - 0.17.2-1
+- Update to 0.17.2.
+- Bump minimum version of tp-glib.
+
+* Sat Nov 17 2012 Kalev Lember <kalevlember@gmail.com> - 0.17.1-2
+- Obsolete telepathy-butterfly (#820858)
 
 * Tue Sep 11 2012 Brian Pepple <bpepple@fedoraproject.org> - 0.17.1-1
 - Update to 0.17.1.
