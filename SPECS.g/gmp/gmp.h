@@ -59,6 +59,8 @@ along with the GNU MP Library.  If not, see http://www.gnu.org/licenses/.  */
 #include "gmp-sparc.h"
 #elif defined(__aarch64__)
 #include "gmp-aarch64.h"
+#elif defined(__mips64) && defined(__MIPSEL)
+#include "gmp-mips64el.h"
 #else
 #error "The gmp-devel package is not usable with the architecture."
 #endif
