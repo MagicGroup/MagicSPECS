@@ -1,6 +1,6 @@
 Name:		telepathy-haze
-Version:	0.6.0
-Release:	3%{?dist}
+Version:	0.8.0
+Release:	1%{?dist}
 Summary:	A multi-protocol Libpurple connection manager for Telepathy
 
 Group:		Applications/Communications
@@ -9,7 +9,10 @@ URL:		http://developer.pidgin.im/wiki/Telepathy
 
 Source0:	http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{version}.tar.gz
 
+BuildRequires:	dbus-python
 BuildRequires:	libpurple-devel >= 2.7
+BuildRequires:	pygobject2
+BuildRequires:	python-twisted-words
 BuildRequires:	telepathy-glib-devel >= 0.15.1
 BuildRequires:  libxslt
   
@@ -38,8 +41,11 @@ make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_datadir}/telepathy/managers/haze.manager
 
 
+%check
+make check
+
+
 %files
-%defattr(-,root,root,-)
 %doc COPYING NEWS
 %{_libexecdir}/telepathy-haze
 %{_datadir}/dbus-1/services/*.haze.service
@@ -47,8 +53,30 @@ rm -f %{buildroot}%{_datadir}/telepathy/managers/haze.manager
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.6.0-3
-- 为 Magic 3.0 重建
+* Wed Oct  2 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.8.0-1
+- Update to 0.8.0.
+
+* Thu Sep 26 2013 Debarshi Ray <rishi@fedoraproject.org> - 0.7.1-2
+- Add %%check to run the upstream test suite on each build
+
+* Tue Sep 17 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.7.1-1
+- Update to 0.7.1.
+- Drop patches included in this release.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Apr 14 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.7.0-4
+- Drop def attribute bits. No longer needed.
+
+* Thu Apr 11 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.7.0-3
+- Pull some upstream patches to fix OCS support & memory leaks. (#754395)
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Nov 21 2012 Brian Pepple <bpepple@fedoraproject.org> - 0.7.0-1
+- Update to 0.7.0
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
