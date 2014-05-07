@@ -1,0 +1,4717 @@
+diff -uprN compiz-0.8.8-orig/compiz-gconf.pc.in compiz-0.8.8/compiz-gconf.pc.in
+--- compiz-0.8.8-orig/compiz-gconf.pc.in	2013-04-19 13:37:07.022678000 +0200
++++ compiz-0.8.8/compiz-gconf.pc.in	1970-01-01 01:00:00.000000000 +0100
+@@ -1,6 +0,0 @@
+-prefix=@prefix@
+-xsltdir=@datarootdir@/compiz
+-
+-Name: compiz-gconf
+-Description: GConf plugin for compiz
+-Version: @VERSION@
+diff -uprN compiz-0.8.8-orig/configure.ac compiz-0.8.8/configure.ac
+--- compiz-0.8.8-orig/configure.ac	2013-04-19 13:37:07.140680000 +0200
++++ compiz-0.8.8/configure.ac	2013-04-19 13:47:13.444800160 +0200
+@@ -170,67 +170,6 @@ fi
+ 
+ PKG_CHECK_MODULES(LIBPNG, libpng)
+ 
+-AC_ARG_ENABLE(glib,
+-  [  --disable-glib          Disable glib plugin],
+-  [use_glib=$enableval], [use_glib=yes])
+-
+-if test "x$use_glib" = "xyes"; then
+-  PKG_CHECK_MODULES(GLIB, glib-2.0)
+-fi
+-
+-AM_CONDITIONAL(USE_GLIB, test "x$use_glib" = "xyes")
+-if test "$use_glib" = yes; then
+-  AC_DEFINE(USE_GLIB, 1, [Build glib plugin])
+-fi
+-
+-AC_ARG_ENABLE(mateconf,
+-  [  --disable-mateconf         Disable mateconf plugin],
+-  [use_mateconf=$enableval], [use_mateconf=yes])
+-
+-if test "x$use_mateconf" = "xyes"; then
+-  PKG_CHECK_MODULES(MATECONF, mateconf-2.0)
+-
+-  AC_PATH_PROG(MATECONFTOOL, mateconftool-2, no)
+-  if test x"$MATECONFTOOL" = xno; then
+-    AC_MSG_ERROR([mateconftool-2 executable not found in your path - should be installed with MateConf])
+-  fi
+-fi
+-
+-AM_MATECONF_SOURCE_2
+-
+-AM_CONDITIONAL(USE_MATECONF, test "x$use_mateconf" = "xyes")
+-if test "$use_mateconf" = yes; then
+-  AC_DEFINE(USE_MATECONF, 1, [Build mateconf plugin])
+-fi
+-
+-stylesheetdir=$datadir/compiz
+-AC_SUBST(stylesheetdir)
+-
+-AC_ARG_ENABLE(dbus,
+-  [  --disable-dbus          Disable dbus plugin],
+-  [use_dbus=$enableval], [use_dbus=yes])
+-
+-if test "x$use_dbus" = "xyes"; then
+-  PKG_CHECK_MODULES(DBUS, dbus-1 libxml-2.0, [use_dbus=yes], [use_dbus=no])
+-fi
+-
+-AM_CONDITIONAL(DBUS_PLUGIN, test "x$use_dbus" = "xyes")
+-if test "$use_dbus" = yes; then
+-  AC_DEFINE(USE_DBUS, 1, [Build dbus plugin])
+-fi
+-
+-AC_ARG_ENABLE(dbus-glib,
+-  [  --disable-dbus-glib     Disable dbus-glib support],
+-  [use_dbus_glib=$enableval], [use_dbus_glib=yes])
+-
+-if test "x$use_dbus_glib" = "xyes"; then
+-  PKG_CHECK_MODULES(DBUS_GLIB, dbus-glib-1, [use_dbus_glib=yes], [use_dbus_glib=no])
+-fi
+-
+-if test "$use_dbus" = yes; then
+-  AC_DEFINE(USE_DBUS_GLIB, 1, [Build dbus glib support])
+-fi
+-
+ AC_ARG_ENABLE(inotify,
+   [  --disable-inotify       Disable inotify plugin],
+   [use_inotify=$enableval], [use_inotify=yes])
+@@ -451,7 +362,6 @@ AC_OUTPUT([
+ compiz.pc
+ compiz-cube.pc
+ compiz-scale.pc
+-compiz-mateconf.pc
+ Makefile
+ src/Makefile
+ libdecoration/Makefile
+@@ -468,9 +378,6 @@ metadata/Makefile
+ 
+ echo ""
+ echo "the following optional plugins will be compiled:"
+-echo "  glib:     $use_glib"
+-echo "  mateconf:    $use_mateconf"
+-echo "  dbus:     $use_dbus"
+ echo "  annotate: $use_annotate"
+ echo "  svg:      $use_librsvg"
+ echo "  inotify:  $use_inotify"
+diff -uprN compiz-0.8.8-orig/gtk/window-decorator/gtk-window-decorator.c compiz-0.8.8/gtk/window-decorator/gtk-window-decorator.c
+--- compiz-0.8.8-orig/gtk/window-decorator/gtk-window-decorator.c	2013-04-19 13:37:07.112679000 +0200
++++ compiz-0.8.8/gtk/window-decorator/gtk-window-decorator.c	2013-04-19 13:53:42.817735921 +0200
+@@ -36,16 +36,6 @@
+ #include <gdk/gdkx.h>
+ #include <glib/gi18n.h>
+ 
+-#ifdef USE_MATECONF
+-#include <mateconf/mateconf-client.h>
+-#endif
+-
+-#ifdef USE_DBUS_GLIB
+-#define DBUS_API_SUBJECT_TO_CHANGE
+-#include <dbus/dbus.h>
+-#include <dbus/dbus-glib-lowlevel.h>
+-#endif
+-
+ #define WNCK_I_KNOW_THIS_IS_UNSTABLE
+ #include <libwnck/libwnck.h>
+ #include <libwnck/window-action-menu.h>
+@@ -84,81 +74,6 @@
+ #define MATE_CURSOR_SIZE_KEY		\
+     MATE_MOUSE_DIR "/cursor_size"
+ 
+-#define MARCO_MATECONF_DIR "/apps/marco/general"
+-
+-#define COMPIZ_USE_SYSTEM_FONT_KEY		    \
+-    MARCO_MATECONF_DIR "/titlebar_uses_system_font"
+-
+-#define COMPIZ_TITLEBAR_FONT_KEY	\
+-    MARCO_MATECONF_DIR "/titlebar_font"
+-
+-#define COMPIZ_DOUBLE_CLICK_TITLEBAR_KEY	       \
+-    MARCO_MATECONF_DIR "/action_double_click_titlebar"
+-
+-#define COMPIZ_MIDDLE_CLICK_TITLEBAR_KEY	       \
+-    MARCO_MATECONF_DIR "/action_middle_click_titlebar"
+-
+-#define COMPIZ_RIGHT_CLICK_TITLEBAR_KEY	       \
+-    MARCO_MATECONF_DIR "/action_right_click_titlebar"
+-
+-#define COMPIZ_MATECONF_DIR1 "/apps/compiz/plugins/decoration/allscreens/options"
+-
+-#define COMPIZ_SHADOW_RADIUS_KEY \
+-    COMPIZ_MATECONF_DIR1 "/shadow_radius"
+-
+-#define COMPIZ_SHADOW_OPACITY_KEY \
+-    COMPIZ_MATECONF_DIR1 "/shadow_opacity"
+-
+-#define COMPIZ_SHADOW_COLOR_KEY \
+-    COMPIZ_MATECONF_DIR1 "/shadow_color"
+-
+-#define COMPIZ_SHADOW_OFFSET_X_KEY \
+-    COMPIZ_MATECONF_DIR1 "/shadow_x_offset"
+-
+-#define COMPIZ_SHADOW_OFFSET_Y_KEY \
+-    COMPIZ_MATECONF_DIR1 "/shadow_y_offset"
+-
+-#define META_THEME_KEY		\
+-    MARCO_MATECONF_DIR "/theme"
+-
+-#define META_BUTTON_LAYOUT_KEY		\
+-    MARCO_MATECONF_DIR "/button_layout"
+-
+-#define MATECONF_DIR "/apps/gwd"
+-
+-#define USE_META_THEME_KEY	    \
+-    MATECONF_DIR "/use_marco_theme"
+-
+-#define META_THEME_OPACITY_KEY	        \
+-    MATECONF_DIR "/marco_theme_opacity"
+-
+-#define META_THEME_SHADE_OPACITY_KEY	      \
+-    MATECONF_DIR "/marco_theme_shade_opacity"
+-
+-#define META_THEME_ACTIVE_OPACITY_KEY	       \
+-    MATECONF_DIR "/marco_theme_active_opacity"
+-
+-#define META_THEME_ACTIVE_SHADE_OPACITY_KEY          \
+-    MATECONF_DIR "/marco_theme_active_shade_opacity"
+-
+-#define BLUR_TYPE_KEY	   \
+-    MATECONF_DIR "/blur_type"
+-
+-#define WHEEL_ACTION_KEY   \
+-    MATECONF_DIR "/mouse_wheel_action"
+-
+-#define COMPIZ_MATECONF_DIR2 "/apps/compiz/general/allscreens/options"
+-#define COMPIZ_CURSOR_THEME_KEY          \
+-    COMPIZ_MATECONF_DIR2 "/cursor_theme"
+-
+-#define COMPIZ_CURSOR_SIZE_KEY           \
+-    COMPIZ_MATECONF_DIR2 "/cursor_size"
+-
+-#define DBUS_DEST       "org.freedesktop.compiz"
+-#define DBUS_PATH       "/org/freedesktop/compiz/decoration/allscreens"
+-#define DBUS_INTERFACE  "org.freedesktop.compiz"
+-#define DBUS_METHOD_GET "get"
+-
+ #define STROKE_ALPHA 0.6
+ 
+ #define ICON_SPACE 20
+diff -uprN compiz-0.8.8-orig/gtk/window-decorator/gwd.schemas.in compiz-0.8.8/gtk/window-decorator/gwd.schemas.in
+--- compiz-0.8.8-orig/gtk/window-decorator/gwd.schemas.in	2013-04-19 13:37:07.035679000 +0200
++++ compiz-0.8.8/gtk/window-decorator/gwd.schemas.in	1970-01-01 01:00:00.000000000 +0100
+@@ -1,81 +0,0 @@
+-<mateconfschemafile>
+-    <schemalist>
+-        <schema>
+-            <key>/schemas/apps/gwd/blur_type</key>
+-            <applyto>/apps/gwd/blur_type</applyto>
+-            <owner>gwd</owner>
+-            <type>string</type>
+-            <default>none</default>
+-            <locale name="C">
+-                <short>Blur type</short>
+-                <long>Type of blur used for window decorations</long>
+-            </locale>
+-        </schema>
+-        <schema>
+-            <key>/schemas/apps/gwd/use_marco_theme</key>
+-            <applyto>/apps/gwd/use_marco_theme</applyto>
+-            <owner>gwd</owner>
+-            <type>bool</type>
+-            <default>true</default>
+-            <locale name="C">
+-                <short>Use marco theme</short>
+-                <long>Use marco theme when drawing window decorations</long>
+-            </locale>
+-        </schema>
+-        <schema>
+-            <key>/schemas/apps/gwd/mouse_wheel_action</key>
+-            <applyto>/apps/gwd/mouse_wheel_action</applyto>
+-            <owner>gwd</owner>
+-            <type>string</type>
+-            <default>none</default>
+-            <locale name="C">
+-                <short>Title bar mouse wheel action</short>
+-                <long>Action to take when scrolling the mouse wheel on a window title bar.</long>
+-            </locale>
+-        </schema>
+-        <schema>
+-            <key>/schemas/apps/gwd/marco_theme_opacity</key>
+-            <applyto>/apps/gwd/marco_theme_opacity</applyto>
+-            <owner>gwd</owner>
+-            <type>float</type>
+-            <default>0.75</default>
+-            <locale name="C">
+-                <short>Marco theme opacity</short>
+-                <long>Opacity to use for marco theme decorations</long>
+-            </locale>
+-        </schema>
+-        <schema>
+-            <key>/schemas/apps/gwd/marco_theme_shade_opacity</key>
+-            <applyto>/apps/gwd/marco_theme_shade_opacity</applyto>
+-            <owner>gwd</owner>
+-            <type>bool</type>
+-            <default>true</default>
+-            <locale name="C">
+-                <short>Marco theme opacity shade</short>
+-                <long>Shade windows with marco theme decorations from opaque to translucent</long>
+-            </locale>
+-        </schema>
+-        <schema>
+-            <key>/schemas/apps/gwd/marco_theme_active_opacity</key>
+-            <applyto>/apps/gwd/marco_theme_active_opacity</applyto>
+-            <owner>gwd</owner>
+-            <type>float</type>
+-            <default>1.0</default>
+-            <locale name="C">
+-                <short>Marco theme active window opacity</short>
+-                <long>Opacity to use for active windows with marco theme decorations</long>
+-            </locale>
+-        </schema>
+-        <schema>
+-            <key>/schemas/apps/gwd/marco_theme_active_shade_opacity</key>
+-            <applyto>/apps/gwd/marco_theme_active_shade_opacity</applyto>
+-            <owner>gwd</owner>
+-            <type>bool</type>
+-            <default>true</default>
+-            <locale name="C">
+-                <short>Marco theme active window opacity shade</short>
+-                <long>Shade active windows with marco theme decorations from opaque to translucent</long>
+-            </locale>
+-        </schema>
+-    </schemalist>  
+-</mateconfschemafile>
+diff -uprN compiz-0.8.8-orig/gtk/window-decorator/Makefile.am compiz-0.8.8/gtk/window-decorator/Makefile.am
+--- compiz-0.8.8-orig/gtk/window-decorator/Makefile.am	2013-04-19 13:37:07.035679000 +0200
++++ compiz-0.8.8/gtk/window-decorator/Makefile.am	2013-04-19 13:56:15.257276948 +0200
+@@ -9,8 +9,6 @@ gtk_window_decorator_DEPENDENCIES = \
+ gtk_window_decorator_LDADD	  =		       \
+ 	$(top_builddir)/libdecoration/libdecoration.la \
+ 	@GTK_WINDOW_DECORATOR_LIBS@		       \
+-	@MATECONF_LIBS@				       \
+-	@DBUS_GLIB_LIBS@			       \
+ 	$(marcolibs)
+ 
+ gtk_window_decorator_SOURCES	  = \
+@@ -18,33 +16,11 @@ gtk_window_decorator_SOURCES	  = \
+ gtk_window_decorator_program = gtk-window-decorator
+ endif
+ 
+-if USE_MATECONF
+-schemadir       = $(MATECONF_SCHEMA_FILE_DIR)
+-schema_in_files = gwd.schemas.in
+-schema_files    = $(schema_in_files:.schemas.in=.schemas)
+-schema_DATA     = $(schema_files)
+-
+-@INTLTOOL_SCHEMAS_RULE@
+-
+-install-data-local:
+-	if test -z "$(DESTDIR)" ; then \
+-		MATECONF_CONFIG_SOURCE=$(MATECONF_SCHEMA_CONFIG_SOURCE) $(MATECONFTOOL) --makefile-install-rule $(schema_DATA); \
+-	fi
+-endif
+-
+ INCLUDES = \
+ 	-I$(top_srcdir)/include            \
+ 	@GTK_WINDOW_DECORATOR_CFLAGS@      \
+ 	@MARCO_CFLAGS@                  \
+-	@MATECONF_CFLAGS@                     \
+-	@DBUS_GLIB_CFLAGS@                 \
+ 	-DALL_LINGUAS="\"@ALL_LINGUAS@\""  \
+ 	-DLOCALEDIR="\"@datadir@/locale"\"
+ 
+ bin_PROGRAMS = $(gtk_window_decorator_program)
+-
+-EXTRA_DIST =		\
+-	$(schema_in_files)
+-
+-DISTCLEANFILES = \
+-	$(schema_files)
+diff -uprN compiz-0.8.8-orig/Makefile.am compiz-0.8.8/Makefile.am
+--- compiz-0.8.8-orig/Makefile.am	2013-04-19 13:37:07.152680000 +0200
++++ compiz-0.8.8/Makefile.am	2013-04-19 13:48:17.452445199 +0200
+@@ -7,23 +7,17 @@ EXTRA_DIST =		    \
+ 	COPYING.MIT	    \
+ 	compiz.pc.in	    \
+ 	compiz-cube.pc.in   \
+-	compiz-scale.pc.in  \
+-	compiz-mateconf.pc.in
++	compiz-scale.pc.in
+ 
+ DISTCLEANFILES =	 \
+ 	po/stamp-it	 \
+ 	po/.intltool-merge-cache
+ 
+-if USE_MATECONF
+-mateconfdata = compiz-mateconf.pc
+-endif
+-
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA =	\
+ 	compiz.pc	\
+ 	compiz-cube.pc	\
+-	compiz-scale.pc \
+-	$(mateconfdata)
++	compiz-scale.pc
+ 
+ # Some custom targets to make it easier to release things.
+ # Use either:
+diff -uprN compiz-0.8.8-orig/metadata/dbus.xml.in compiz-0.8.8/metadata/dbus.xml.in
+--- compiz-0.8.8-orig/metadata/dbus.xml.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/dbus.xml.in	1970-01-01 01:00:00.000000000 +0100
+@@ -1,7 +0,0 @@
+-<compiz>
+-    <plugin name="dbus">
+-	<_short>Dbus</_short>
+-	<_long>Dbus Control Backend</_long>
+-	<category>Utility</category>
+-    </plugin>
+-</compiz>
+diff -uprN compiz-0.8.8-orig/metadata/glib.xml.in compiz-0.8.8/metadata/glib.xml.in
+--- compiz-0.8.8-orig/metadata/glib.xml.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/glib.xml.in	1970-01-01 01:00:00.000000000 +0100
+@@ -1,7 +0,0 @@
+-<compiz>
+-    <plugin name="glib">
+-	<_short>GLib</_short>
+-	<_long>GLib main loop support</_long>
+-	<category>Utility</category>
+-    </plugin>
+-</compiz>
+diff -uprN compiz-0.8.8-orig/metadata/Makefile.am compiz-0.8.8/metadata/Makefile.am
+--- compiz-0.8.8-orig/metadata/Makefile.am	2013-04-19 13:37:07.153680000 +0200
++++ compiz-0.8.8/metadata/Makefile.am	2013-04-19 13:59:03.272973769 +0200
+@@ -6,12 +6,9 @@ xml_in_files =		   \
+ 	clone.xml.in	   \
+ 	commands.xml.in	   \
+ 	cube.xml.in	   \
+-	dbus.xml.in	   \
+ 	decoration.xml.in  \
+ 	fade.xml.in	   \
+ 	fs.xml.in	   \
+-	mateconf.xml.in	   \
+-	glib.xml.in	   \
+ 	matecompat.xml.in \
+ 	ini.xml.in	   \
+ 	inotify.xml.in	   \
+@@ -43,40 +40,8 @@ core.xml.in: core.xml.in.in Makefile
+ 
+ @INTLTOOL_XML_RULE@
+ 
+-if USE_MATECONF
+-schemadir    = $(MATECONF_SCHEMA_FILE_DIR)
+-schema_files = $(patsubst %.xml.in,compiz-%.schemas,$(xml_in_files))
+-schema_DATA  = $(schema_files)
+-
+-%.schemas: $(xml_files)
+-	xsltproc -o $@ --param defaultPlugins "'$(default_plugins)'" \
+-		$(srcdir)/schemas.xslt $(subst compiz-,,$*).xml
+-
+-schemas_stylesheets = schemas.xslt
+-
+-endif
+-
+-install-data-local:
+-if USE_MATECONF
+-if MATECONF_SCHEMAS_INSTALL
+-	if test -z "$(DESTDIR)" ; then \
+-		MATECONF_CONFIG_SOURCE=$(MATECONF_SCHEMA_CONFIG_SOURCE) $(MATECONFTOOL) --makefile-install-rule $(schema_DATA); \
+-        fi
+-endif
+-endif
+-
+-xsltdir    = $(stylesheetdir)
+-xslt_files =		       	  \
+-	$(schemas_stylesheets)
+-
+-xslt_DATA  = $(xslt_files)
+-
+ EXTRA_DIST =		    \
+-	$(xml_in_files)     \
+-	core.xml.in.in      \
+-	$(xslt_files)
++	core.xml.in.in
+ 
+ DISTCLEANFILES =	    \
+-	$(xml_files)        \
+-	core.xml.in         \
+-	$(schema_files)
++	core.xml.in
+diff -uprN compiz-0.8.8-orig/metadata/mateconf.xml.in compiz-0.8.8/metadata/mateconf.xml.in
+--- compiz-0.8.8-orig/metadata/mateconf.xml.in	2013-04-19 13:37:07.039679000 +0200
++++ compiz-0.8.8/metadata/mateconf.xml.in	1970-01-01 01:00:00.000000000 +0100
+@@ -1,18 +0,0 @@
+-<compiz>
+-    <plugin name="mateconf">
+-	<_short>MateConf</_short>
+-	<_long>MateConf Control Backend</_long>
+-	<deps>
+-	    <relation type="after">
+-		<plugin>glib</plugin>
+-	    </relation>
+-	    <relation type="before">
+-		<plugin>decoration</plugin>
+-		<plugin>wobbly</plugin>
+-		<plugin>fade</plugin>
+-		<plugin>cube</plugin>
+-		<plugin>scale</plugin>
+-	    </relation>
+-	</deps>
+-    </plugin>
+-</compiz>
+diff -uprN compiz-0.8.8-orig/metadata/schemas.xslt compiz-0.8.8/metadata/schemas.xslt
+--- compiz-0.8.8-orig/metadata/schemas.xslt	2013-04-19 13:37:07.039679000 +0200
++++ compiz-0.8.8/metadata/schemas.xslt	1970-01-01 01:00:00.000000000 +0100
+@@ -1,419 +0,0 @@
+-<!--
+-  Copyright © 2007 Dennis Kasprzyk
+-
+-  Permission to use, copy, modify, distribute, and sell this software
+-  and its documentation for any purpose is hereby granted without
+-  fee, provided that the above copyright notice appear in all copies
+-  and that both that copyright notice and this permission notice
+-  appear in supporting documentation, and that the name of
+-  Dennis Kasprzyk not be used in advertising or publicity pertaining to
+-  distribution of the software without specific, written prior permission.
+-  Dennis Kasprzyk makes no representations about the suitability of this
+-  software for any purpose. It is provided "as is" without express or
+-  implied warranty.
+-
+-  DENNIS KASPRZYK DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+-  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+-  NO EVENT SHALL DENNIS KASPRZYK BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+-  CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+-  OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+-  NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+-  WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+-
+-  Authors: Dennis Kasprzyk <onestone@deltatauchi.de>
+--->
+-
+-<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' >
+-  <xsl:output method="xml" indent="yes"/>
+-
+-  <xsl:param name="appName">/apps/compiz</xsl:param>
+-
+-  <xsl:template  match="/compiz">
+-    <mateconfschemafile>
+-      <schemalist>
+-        <xsl:for-each select="/compiz//option[not(@read_only='true') and not(@type='action')]">
+-          <xsl:call-template name="dumpOption"/>
+-        </xsl:for-each>
+-      </schemalist>
+-    </mateconfschemafile>
+-  </xsl:template>
+-
+-  <!-- generates the schema for an option -->
+-  <xsl:template name="dumpOption">
+-    <schema>
+-      <key>/schemas<xsl:call-template name="printKey"/></key>
+-      <applyto><xsl:call-template name="printKey"/></applyto>
+-      <owner>compiz</owner>
+-      <type><xsl:call-template name="printType"/></type>
+-      <xsl:choose>
+-        <!-- color values need a special handling -->
+-        <xsl:when test="@type = 'color'">
+-          <default>
+-            <xsl:choose>
+-              <xsl:when test="default">
+-                <xsl:for-each select="default[1]">
+-                  <xsl:call-template name="printColor"/>
+-                </xsl:for-each>
+-              </xsl:when>
+-              <xsl:otherwise>
+-                <xsl:text>#000000ff</xsl:text>
+-              </xsl:otherwise>
+-            </xsl:choose>
+-          </default>
+-        </xsl:when>
+-        <xsl:when test="@type = 'edge'">
+-          <default>
+-            <xsl:call-template name="printEdgeList"/>
+-          </default>
+-        </xsl:when>
+-        <xsl:when test="@type = 'list'">
+-          <list_type>
+-            <xsl:call-template name="printType">
+-              <xsl:with-param name="type" select="type/text()"/>
+-            </xsl:call-template>
+-          </list_type>
+-          <xsl:choose>
+-            <xsl:when test="type/text() = 'color'">
+-              <default>[<xsl:call-template name="printColorList"/>]</default>
+-            </xsl:when>
+-            <xsl:when test="@name = 'active_plugins'">
+-              <default>[<xsl:value-of select="$defaultPlugins"/>]</default>
+-	    </xsl:when>
+-            <xsl:otherwise>
+-              <default>[<xsl:call-template name="printValueList"/>]</default>
+-            </xsl:otherwise>
+-          </xsl:choose>
+-        </xsl:when>
+-        <!-- for most option types we can use the default value directly -->
+-        <xsl:otherwise>
+-          <default>
+-            <xsl:choose>
+-              <xsl:when test="default/text()">
+-                <xsl:value-of select="default/text()"/>
+-              </xsl:when>
+-              <xsl:otherwise>
+-                <!-- if no default value was specified we need to generate one -->
+-                <xsl:choose>
+-		  <xsl:when test="contains('bool,bell',@type)">
+-                    <xsl:text>false</xsl:text>
+-                  </xsl:when>
+-                  <xsl:when test="@type = 'int'">
+-                    <xsl:variable name="num">
+-                      <xsl:call-template name="printNumFallback"/>
+-                    </xsl:variable>
+-                    <xsl:value-of select="floor($num)"/>
+-                  </xsl:when>
+-                  <xsl:when test="@type = 'float'">
+-                    <xsl:call-template name="printNumFallback"/>
+-                  </xsl:when>
+-		  <xsl:when test="contains('key,button',@type)">
+-		    <xsl:text>Disabled</xsl:text>
+-                  </xsl:when>
+-                </xsl:choose>
+-              </xsl:otherwise>
+-            </xsl:choose>
+-          </default>
+-	</xsl:otherwise>
+-      </xsl:choose>
+-      <!-- add the short and long descriptions -->
+-      <xsl:call-template name="printDescription"/>
+-    </schema>
+-  </xsl:template>
+-
+-  <!-- converts a compiz type to a mateconf type -->
+-  <xsl:template name="printType">
+-    <xsl:param name="type">
+-      <xsl:value-of select="@type"/>
+-    </xsl:param>
+-    <xsl:choose>
+-      <xsl:when test="$type = 'int'">
+-        <xsl:text>int</xsl:text>
+-      </xsl:when>
+-      <xsl:when test="$type = 'float'">
+-        <xsl:text>float</xsl:text>
+-      </xsl:when>
+-      <xsl:when test="$type = 'bool'">
+-        <xsl:text>bool</xsl:text>
+-      </xsl:when>
+-      <xsl:when test="$type = 'list'">
+-        <xsl:text>list</xsl:text>
+-      </xsl:when>
+-      <xsl:when test="$type = 'bell'">
+-        <xsl:text>bool</xsl:text>
+-      </xsl:when>
+-      <xsl:otherwise>
+-        <xsl:text>string</xsl:text>
+-      </xsl:otherwise>
+-    </xsl:choose>
+-  </xsl:template>
+-
+-  <!-- prints the option long and short descriptions of an option -->
+-  <xsl:template name="printDescription">
+-    <xsl:param name="info">
+-      <xsl:call-template name="printInfo"/>
+-    </xsl:param>
+-    <locale name="C">
+-      <short><xsl:value-of select="short[not(@xml:lang)]/text()"/></short>
+-      <long>
+-        <xsl:value-of select="long[not(@xml:lang)]/text()"/>
+-        <xsl:value-of select="$info"/>
+-      </long>
+-    </locale>
+-    <xsl:for-each select="short[@xml:lang]">
+-      <xsl:variable name="language" select="@xml:lang"/>
+-      <xsl:variable name="infoTrans">
+-        <xsl:call-template name="printInfoTrans">
+-          <xsl:with-param name="language" select="$language"/>
+-        </xsl:call-template>
+-      </xsl:variable>
+-      <locale>
+-        <xsl:attribute name='name'>
+-          <xsl:value-of select="@xml:lang"/>
+-        </xsl:attribute>
+-        <short><xsl:value-of select="text()"/></short>
+-        <long>
+-          <xsl:choose>
+-            <xsl:when test="parent::option/long[lang($language)]">
+-              <xsl:value-of select="parent::option/long[lang($language)]/text()"/>
+-            </xsl:when>
+-            <xsl:otherwise>
+-              <xsl:value-of select="parent::option/long[not(@xml:lang)]/text()"/>
+-            </xsl:otherwise>
+-          </xsl:choose>
+-          <xsl:value-of select="$infoTrans"/>
+-        </long>
+-      </locale>
+-    </xsl:for-each>
+-  </xsl:template>
+-
+-  <!-- generates the additional info for the long option description -->
+-  <xsl:template name="printInfo">
+-    <xsl:variable name="info">
+-      <xsl:text> (</xsl:text>
+-      <xsl:choose>
+-        <xsl:when test="contains('int,float',@type) and not(desc/value/text())">
+-          <xsl:value-of select="min/text()"/> - <xsl:value-of select="max/text()"/>
+-        </xsl:when>
+-	<xsl:when test="@type='int' and desc/value/text()">
+-          <xsl:call-template name="printIntDescList"/>
+-        </xsl:when>
+-        <xsl:when test="@type = 'match'">
+-          <xsl:text>match</xsl:text>
+-        </xsl:when>
+-      </xsl:choose>
+-      <xsl:text>)</xsl:text>
+-    </xsl:variable>
+-    <xsl:if test="not(contains($info,' ()'))">
+-      <xsl:value-of select="$info"/>
+-    </xsl:if>
+-  </xsl:template>
+-
+-  <!-- generates a list of int descriptions -->
+-  <xsl:template name="printIntDescList">
+-    <xsl:variable name="list">
+-      <xsl:for-each select="desc">
+-          <xsl:value-of select="value/text()"/>
+-	  <xsl:text> = </xsl:text>
+-	  <xsl:value-of select="name/text()"/>
+-          <xsl:text>, </xsl:text>
+-      </xsl:for-each>
+-    </xsl:variable>
+-    <xsl:value-of select="substring($list,1,string-length($list) - 2)"/>
+-  </xsl:template>
+-
+-   <!-- generates the additional info for the long option description -->
+-  <xsl:template name="printInfoTrans">
+-    <xsl:param name="language"/>
+-    <xsl:variable name="info">
+-      <xsl:text> (</xsl:text>
+-      <xsl:choose>
+-        <xsl:when test="contains('int,float',parent::option/@type) and not(parent::option/desc/value/text())">
+-          <xsl:value-of select="parent::option/min/text()"/> - <xsl:value-of select="parent::option/max/text()"/>
+-        </xsl:when>
+-	<xsl:when test="parent::option/@type='int' and parent::option/desc/value/text()">
+-          <xsl:call-template name="printIntDescListTrans">
+-            <xsl:with-param name="language" select="$language"/>
+-          </xsl:call-template>
+-        </xsl:when>
+-        <xsl:when test="parent::option/@type = 'match'">
+-          <xsl:text>match</xsl:text>
+-        </xsl:when>
+-      </xsl:choose>
+-      <xsl:text>)</xsl:text>
+-    </xsl:variable>
+-    <xsl:if test="not(contains($info,' ()'))">
+-      <xsl:value-of select="$info"/>
+-    </xsl:if>
+-  </xsl:template>
+-  
+-  <!-- generates a list of int descriptions -->
+-  <xsl:template name="printIntDescListTrans">
+-    <xsl:param name="language"/>
+-    <xsl:variable name="list">
+-      <xsl:for-each select="parent::option/desc">
+-          <xsl:value-of select="value/text()"/>
+-          <xsl:text> = </xsl:text>
+-          <xsl:choose>
+-            <xsl:when test="name[lang($language)]/text()">
+-              <xsl:value-of select="name[lang($language)]/text()"/>
+-            </xsl:when>
+-            <xsl:otherwise>
+-              <xsl:value-of select="name[not(@xml:lang)]/text()"/>
+-            </xsl:otherwise>
+-          </xsl:choose>
+-          <xsl:text>, </xsl:text>
+-      </xsl:for-each>
+-    </xsl:variable>
+-    <xsl:value-of select="substring($list,1,string-length($list) - 2)"/>
+-  </xsl:template>
+-
+-  <!-- generates a default number out of the min and max values -->
+-  <xsl:template name="printNumFallback">
+-    <xsl:choose>
+-      <xsl:when test="max/text() and min/text()">
+-        <xsl:value-of select="(max/text() + min/text()) div 2"/>
+-      </xsl:when>
+-      <xsl:when test="max/text() and not(min/text())">
+-        <xsl:value-of select="max/text()"/>
+-      </xsl:when>
+-      <xsl:when test="not(max/text()) and min/text()">
+-        <xsl:value-of select="min/text()"/>
+-      </xsl:when>
+-      <xsl:otherwise>0</xsl:otherwise>
+-    </xsl:choose>
+-  </xsl:template>
+-
+-  <!-- generates a list of values -->
+-  <xsl:template name="printValueList">
+-    <xsl:variable name="list">
+-      <xsl:for-each select="default/value">
+-        <xsl:value-of select="text()"/>
+-        <xsl:text>,</xsl:text>
+-      </xsl:for-each>
+-    </xsl:variable>
+-    <xsl:value-of select="substring($list,1,string-length($list) - 1)"/>
+-  </xsl:template>
+-
+-  <!-- generates a list of color string values -->
+-  <xsl:template name="printColorList">
+-    <xsl:variable name="list">
+-      <xsl:for-each select="default/value">
+-        <xsl:call-template name="printColor"/>
+-        <xsl:text>,</xsl:text>
+-      </xsl:for-each>
+-    </xsl:variable>
+-    <xsl:value-of select="substring($list,1,string-length($list) - 1)"/>
+-  </xsl:template>
+-
+-  <!--
+-    generates the #00aabbcc color value out of the compiz
+-    metadata color description
+-  -->
+-  <xsl:template name="printColor">
+-    <xsl:variable name="red">
+-      <xsl:call-template name="getHexNum">
+-        <xsl:with-param name="value" select="red/text()"/>
+-      </xsl:call-template>
+-    </xsl:variable>
+-    <xsl:variable name="green">
+-      <xsl:call-template name="getHexNum">
+-        <xsl:with-param name="value" select="green/text()"/>
+-      </xsl:call-template>
+-    </xsl:variable>
+-    <xsl:variable name="blue">
+-      <xsl:call-template name="getHexNum">
+-        <xsl:with-param name="value" select="blue/text()"/>
+-      </xsl:call-template>
+-    </xsl:variable>
+-    <xsl:variable name="alpha">
+-      <xsl:choose>
+-        <xsl:when test="alpha/text()">
+-	  <xsl:call-template name="getHexNum">
+-            <xsl:with-param name="value" select="alpha/text()"/>
+-	  </xsl:call-template>
+-        </xsl:when>
+-	<xsl:otherwise>
+-          <xsl:text>ff</xsl:text>
+-	</xsl:otherwise>
+-      </xsl:choose>
+-    </xsl:variable>
+-    <xsl:value-of select="concat('#',concat($red,concat($green,concat($blue,$alpha))))"/>
+-  </xsl:template>
+-
+-  <!--
+-    converts a decimal number in the range of 0-65535 or
+-    a hex number in the range of 0x0000 - 0xffff to a hex number in the
+-    range of 00 - ff
+-  -->
+-  <xsl:template name="getHexNum">
+-    <xsl:param name="value"/>
+-    <xsl:choose>
+-      <xsl:when test="starts-with($value,'0x')">
+-        <xsl:variable name="number">
+-          <xsl:text>0000</xsl:text>
+-          <xsl:value-of select="substring-after($value,'0x')"/>
+-        </xsl:variable>
+-        <xsl:value-of select="substring(concat('000',$number),string-length($number),2)"/>
+-      </xsl:when>
+-      <xsl:when test="string-length($value)">
+-        <xsl:variable name="number">
+-          <xsl:call-template name="toHex">
+-            <xsl:with-param name="decimalNumber" select="$value"/>
+-          </xsl:call-template>
+-        </xsl:variable>
+-        <xsl:value-of select="substring(concat('000',$number),string-length($number),2)"/>
+-      </xsl:when>
+-      <xsl:otherwise>
+-        <xsl:text>00</xsl:text>
+-      </xsl:otherwise>
+-    </xsl:choose>
+-  </xsl:template>
+-
+-  <!-- generates a list of selected edges -->
+-  <xsl:template name="printEdgeList">
+-    <xsl:variable name="list">
+-      <xsl:for-each select="default/edge">
+-        <xsl:value-of select="@name"/>
+-        <xsl:text> | </xsl:text>
+-      </xsl:for-each>
+-    </xsl:variable>
+-    <xsl:value-of select="substring($list,1,string-length($list) - 3)"/>
+-  </xsl:template>
+-
+-  <!-- prints the key path for an option -->
+-  <xsl:template name="printKey">
+-    <xsl:value-of select="$appName"/>
+-    <xsl:choose>
+-      <xsl:when test="ancestor::plugin">
+-        <xsl:text>/plugins/</xsl:text>
+-        <xsl:value-of select="ancestor::plugin/@name"/>
+-      </xsl:when>
+-      <xsl:otherwise>
+-        <xsl:text>/general</xsl:text>
+-      </xsl:otherwise>
+-    </xsl:choose>
+-    <xsl:choose>
+-      <xsl:when test="ancestor::screen">
+-        <xsl:text>/screen0/options/</xsl:text>
+-      </xsl:when>
+-      <xsl:otherwise>
+-        <xsl:text>/allscreens/options/</xsl:text>
+-      </xsl:otherwise>
+-    </xsl:choose>
+-    <xsl:value-of select="@name"/>
+-  </xsl:template>
+-
+-  <!-- converts a decimal number to a hex number -->
+-  <xsl:variable name="hexDigits" select="'0123456789abcdef'" />
+-
+-  <xsl:template name="toHex">
+-    <xsl:param name="decimalNumber" />
+-    <xsl:if test="$decimalNumber >= 16">
+-      <xsl:call-template name="toHex">
+-        <xsl:with-param name="decimalNumber" select="floor($decimalNumber div 16)" />
+-      </xsl:call-template>
+-    </xsl:if>
+-    <xsl:value-of select="substring($hexDigits, ($decimalNumber mod 16) + 1, 1)" />
+-  </xsl:template>
+-
+-</xsl:stylesheet>
+diff -uprN compiz-0.8.8-orig/plugins/dbus.c compiz-0.8.8/plugins/dbus.c
+--- compiz-0.8.8-orig/plugins/dbus.c	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/plugins/dbus.c	1970-01-01 01:00:00.000000000 +0100
+@@ -1,2596 +0,0 @@
+-/*
+- * Copyright © 2006 Novell, Inc.
+- *
+- * Permission to use, copy, modify, distribute, and sell this software
+- * and its documentation for any purpose is hereby granted without
+- * fee, provided that the above copyright notice appear in all copies
+- * and that both that copyright notice and this permission notice
+- * appear in supporting documentation, and that the name of
+- * Novell, Inc. not be used in advertising or publicity pertaining to
+- * distribution of the software without specific, written prior permission.
+- * Novell, Inc. makes no representations about the suitability of this
+- * software for any purpose. It is provided "as is" without express or
+- * implied warranty.
+- *
+- * NOVELL, INC. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+- * NO EVENT SHALL NOVELL, INC. BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+- * OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+- * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+- * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+- *
+- * Author: David Reveman <davidr@novell.com>
+- */
+-
+-#include <string.h>
+-#include <stdlib.h>
+-#include <poll.h>
+-
+-#define DBUS_API_SUBJECT_TO_CHANGE
+-#include <dbus/dbus.h>
+-#include <libxml/xmlwriter.h>
+-
+-#include <compiz-core.h>
+-
+-static CompMetadata dbusMetadata;
+-
+-#define COMPIZ_DBUS_SERVICE_NAME	            "org.freedesktop.compiz"
+-#define COMPIZ_DBUS_INTERFACE			    "org.freedesktop.compiz"
+-#define COMPIZ_DBUS_ROOT_PATH			    "/org/freedesktop/compiz"
+-
+-#define COMPIZ_DBUS_ACTIVATE_MEMBER_NAME            "activate"
+-#define COMPIZ_DBUS_DEACTIVATE_MEMBER_NAME          "deactivate"
+-#define COMPIZ_DBUS_SET_MEMBER_NAME                 "set"
+-#define COMPIZ_DBUS_GET_MEMBER_NAME                 "get"
+-#define COMPIZ_DBUS_GET_METADATA_MEMBER_NAME	    "getMetadata"
+-#define COMPIZ_DBUS_LIST_MEMBER_NAME		    "list"
+-#define COMPIZ_DBUS_GET_PLUGINS_MEMBER_NAME	    "getPlugins"
+-#define COMPIZ_DBUS_GET_PLUGIN_METADATA_MEMBER_NAME "getPluginMetadata"
+-
+-#define COMPIZ_DBUS_CHANGED_SIGNAL_NAME		    "changed"
+-#define COMPIZ_DBUS_PLUGINS_CHANGED_SIGNAL_NAME	    "pluginsChanged"
+-
+-#define DBUS_FILE_WATCH_CURRENT 0
+-#define DBUS_FILE_WATCH_PLUGIN  1
+-#define DBUS_FILE_WATCH_HOME    2
+-#define DBUS_FILE_WATCH_NUM     3
+-
+-static int corePrivateIndex;
+-static int displayPrivateIndex;
+-
+-typedef struct _DbusCore {
+-    DBusConnection    *connection;
+-    CompWatchFdHandle watchFdHandle;
+-
+-    CompFileWatchHandle fileWatch[DBUS_FILE_WATCH_NUM];
+-
+-    InitPluginForObjectProc initPluginForObject;
+-    SetOptionForPluginProc  setOptionForPlugin;
+-} DbusCore;
+-
+-typedef struct _DbusDisplay {
+-    char         **pluginList;
+-    unsigned int nPlugins;
+-} DbusDisplay;
+-
+-static DBusHandlerResult dbusHandleMessage (DBusConnection *,
+-					    DBusMessage *,
+-					    void *);
+-
+-static DBusObjectPathVTable dbusMessagesVTable = {
+-    NULL, dbusHandleMessage, /* handler function */
+-    NULL, NULL, NULL, NULL
+-};
+-
+-#define GET_DBUS_CORE(c)				    \
+-    ((DbusCore *) (c)->base.privates[corePrivateIndex].ptr)
+-
+-#define DBUS_CORE(c)		     \
+-    DbusCore *dc = GET_DBUS_CORE (c)
+-
+-#define GET_DBUS_DISPLAY(d)                                       \
+-    ((DbusDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
+-
+-#define DBUS_DISPLAY(d)                    \
+-    DbusDisplay *dd = GET_DBUS_DISPLAY (d)
+-
+-static void
+-dbusUpdatePluginList (CompDisplay *d)
+-{
+-    CompListValue *pl;
+-    unsigned int  i;
+-
+-    DBUS_DISPLAY (d);
+-
+-    pl = &d->opt[COMP_DISPLAY_OPTION_ACTIVE_PLUGINS].value.list;
+-
+-    for (i = 0; i < dd->nPlugins; i++)
+-	free (dd->pluginList[i]);
+-
+-    dd->pluginList = realloc (dd->pluginList, pl->nValue * sizeof (char *));
+-    if (!dd->pluginList)
+-    {
+-	dd->nPlugins = 0;
+-	return;
+-    }
+-
+-    for (i = 0; i < pl->nValue; i++)
+-	dd->pluginList[i] = strdup (pl->value[i].s);
+-
+-    dd->nPlugins = pl->nValue;
+-}
+-
+-static CompOption *
+-dbusGetOptionsFromPath (char	     **path,
+-			CompObject   **returnObject,
+-			CompMetadata **returnMetadata,
+-			int	     *nOption)
+-{
+-    CompPlugin *p;
+-    CompObject *object;
+-
+-    object = compObjectFind (&core.base, COMP_OBJECT_TYPE_DISPLAY, NULL);
+-    if (!object)
+-	return NULL;
+-
+-    if (strncmp (path[1], "screen", 6) == 0)
+-    {
+-	object = compObjectFind (object, COMP_OBJECT_TYPE_SCREEN,
+-				 path[1] + 6);
+-	if (!object)
+-	    return NULL;
+-    }
+-    else if (strcmp (path[1], "allscreens") != 0)
+-    {
+-	return NULL;
+-    }
+-
+-    if (returnObject)
+-	*returnObject = object;
+-
+-    for (p = getPlugins (); p; p = p->next)
+-	if (strcmp (p->vTable->name, path[0]) == 0)
+-	    break;
+-
+-    if (returnMetadata)
+-    {
+-	if (p && p->vTable->getMetadata)
+-	    *returnMetadata = (*p->vTable->getMetadata) (p);
+-	else
+-	    *returnMetadata = NULL;
+-    }
+-
+-    if (!p)
+-	return NULL;
+-
+-    if (!p->vTable->getObjectOptions)
+-	return NULL;
+-
+-    return (*p->vTable->getObjectOptions) (p, object, nOption);
+-}
+-
+-/* functions to create introspection XML */
+-static void
+-dbusIntrospectStartInterface (xmlTextWriterPtr writer)
+-{
+-    xmlTextWriterStartElement (writer, BAD_CAST "interface");
+-    xmlTextWriterWriteAttribute (writer, BAD_CAST "name",
+-				 BAD_CAST COMPIZ_DBUS_SERVICE_NAME);
+-}
+-
+-static void
+-dbusIntrospectEndInterface (xmlTextWriterPtr writer)
+-{
+-    xmlTextWriterEndElement (writer);
+-}
+-
+-static void
+-dbusIntrospectAddArgument (xmlTextWriterPtr writer,
+-			   char             *type,
+-			   char             *direction)
+-{
+-    xmlTextWriterStartElement (writer, BAD_CAST "arg");
+-    xmlTextWriterWriteAttribute (writer, BAD_CAST "type", BAD_CAST type);
+-    xmlTextWriterWriteAttribute (writer, BAD_CAST "direction",
+-				 BAD_CAST direction);
+-    xmlTextWriterEndElement (writer);
+-}
+-
+-static void
+-dbusIntrospectAddMethod (xmlTextWriterPtr writer,
+-			 char             *name,
+-			 int              nArgs,
+-			 ...)
+-{
+-    va_list var_args;
+-    char *type, *direction;
+-
+-    xmlTextWriterStartElement (writer, BAD_CAST "method");
+-    xmlTextWriterWriteAttribute (writer, BAD_CAST "name", BAD_CAST name);
+-
+-    va_start (var_args, nArgs);
+-    while (nArgs)
+-    {
+-	type = va_arg (var_args, char *);
+-	direction = va_arg (var_args, char *);
+-	dbusIntrospectAddArgument (writer, type, direction);
+-	nArgs--;
+-    }
+-    va_end (var_args);
+-
+-    xmlTextWriterEndElement (writer);
+-}
+-
+-static void
+-dbusIntrospectAddSignal (xmlTextWriterPtr writer,
+-			 char             *name,
+-			 int              nArgs,
+-			 ...)
+-{
+-    va_list var_args;
+-    char *type;
+-
+-    xmlTextWriterStartElement (writer, BAD_CAST "signal");
+-    xmlTextWriterWriteAttribute (writer, BAD_CAST "name", BAD_CAST name);
+-
+-    va_start (var_args, nArgs);
+-    while (nArgs)
+-    {
+-	type = va_arg (var_args, char *);
+-	dbusIntrospectAddArgument (writer, type, "out");
+-	nArgs--;
+-    }
+-    va_end (var_args);
+-
+-    xmlTextWriterEndElement (writer);
+-}
+-
+-static void
+-dbusIntrospectAddNode (xmlTextWriterPtr writer,
+-		       char             *name)
+-{
+-    xmlTextWriterStartElement (writer, BAD_CAST "node");
+-    xmlTextWriterWriteAttribute (writer, BAD_CAST "name", BAD_CAST name);
+-    xmlTextWriterEndElement (writer);
+-}
+-
+-static void
+-dbusIntrospectStartRoot (xmlTextWriterPtr writer)
+-{
+-    xmlTextWriterStartElement (writer, BAD_CAST "node");
+-
+-    xmlTextWriterStartElement (writer, BAD_CAST "interface");
+-    xmlTextWriterWriteAttribute (writer, BAD_CAST "name",
+-				 BAD_CAST "org.freedesktop.DBus.Introspectable");
+-
+-    dbusIntrospectAddMethod (writer, "Introspect", 1, "s", "out");
+-
+-    xmlTextWriterEndElement (writer);
+-}
+-
+-static void
+-dbusIntrospectEndRoot (xmlTextWriterPtr writer)
+-{
+-    xmlTextWriterEndDocument (writer);
+-}
+-
+-/* introspection handlers */
+-static Bool
+-dbusHandleRootIntrospectMessage (DBusConnection *connection,
+-				 DBusMessage    *message)
+-{
+-    char **plugins, **pluginName;
+-    int nPlugins;
+-
+-    xmlTextWriterPtr writer;
+-    xmlBufferPtr buf;
+-
+-    buf = xmlBufferCreate ();
+-    writer = xmlNewTextWriterMemory (buf, 0);
+-
+-    dbusIntrospectStartRoot (writer);
+-    dbusIntrospectStartInterface (writer);
+-
+-    dbusIntrospectAddMethod (writer, COMPIZ_DBUS_GET_PLUGINS_MEMBER_NAME, 1,
+-			     "as", "out");
+-    dbusIntrospectAddMethod (writer,
+-			     COMPIZ_DBUS_GET_PLUGIN_METADATA_MEMBER_NAME, 7,
+-			     "s", "in", "s", "out", "s", "out", "s", "out",
+-			     "b", "out", "as", "out", "as", "out");
+-    dbusIntrospectAddSignal (writer,
+-			     COMPIZ_DBUS_PLUGINS_CHANGED_SIGNAL_NAME, 0);
+-
+-    dbusIntrospectEndInterface (writer);
+-
+-    plugins = availablePlugins (&nPlugins);
+-    if (plugins)
+-    {
+-	pluginName = plugins;
+-
+-	while (nPlugins--)
+-	{
+-	    dbusIntrospectAddNode (writer, *pluginName);
+-	    free (*pluginName);
+-	    pluginName++;
+-	}
+-
+-	free (plugins);
+-    }
+-    else
+-    {
+-	xmlFreeTextWriter (writer);
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    dbusIntrospectEndRoot (writer);
+-
+-    xmlFreeTextWriter (writer);
+-
+-    DBusMessage *reply = dbus_message_new_method_return (message);
+-    if (!reply)
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    DBusMessageIter args;
+-    dbus_message_iter_init_append (reply, &args);
+-
+-    if (!dbus_message_iter_append_basic (&args, DBUS_TYPE_STRING,
+-					 &buf->content))
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    xmlBufferFree (buf);
+-
+-    if (!dbus_connection_send (connection, reply, NULL))
+-    {
+-	return FALSE;
+-    }
+-
+-    dbus_connection_flush (connection);
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-/* MULTIDPYERROR: only works with one or less displays present */
+-static Bool
+-dbusHandlePluginIntrospectMessage (DBusConnection *connection,
+-				   DBusMessage    *message,
+-				   char           **path)
+-{
+-    CompDisplay *d;
+-    CompScreen *s;
+-    char screenName[256];
+-
+-    xmlTextWriterPtr writer;
+-    xmlBufferPtr buf;
+-
+-    buf = xmlBufferCreate ();
+-    writer = xmlNewTextWriterMemory (buf, 0);
+-
+-    dbusIntrospectStartRoot (writer);
+-
+-    for (d = core.displays; d; d = d->next)
+-    {
+-	dbusIntrospectAddNode (writer, "allscreens");
+-
+-	for (s = d->screens; s; s = s->next)
+-	{
+-	    sprintf (screenName, "screen%d", s->screenNum);
+-	    dbusIntrospectAddNode (writer, screenName);
+-	}
+-    }
+-
+-    dbusIntrospectEndRoot (writer);
+-
+-    xmlFreeTextWriter (writer);
+-
+-    DBusMessage *reply = dbus_message_new_method_return (message);
+-    if (!reply)
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    DBusMessageIter args;
+-    dbus_message_iter_init_append (reply, &args);
+-
+-    if (!dbus_message_iter_append_basic (&args, DBUS_TYPE_STRING,
+-					 &buf->content))
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    xmlBufferFree (buf);
+-
+-    if (!dbus_connection_send (connection, reply, NULL))
+-    {
+-	return FALSE;
+-    }
+-
+-    dbus_connection_flush (connection);
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-static Bool
+-dbusHandleScreenIntrospectMessage (DBusConnection *connection,
+-				   DBusMessage    *message,
+-				   char           **path)
+-{
+-    CompOption *option = NULL;
+-    int nOptions;
+-
+-    xmlTextWriterPtr writer;
+-    xmlBufferPtr buf;
+-
+-    buf = xmlBufferCreate ();
+-    writer = xmlNewTextWriterMemory (buf, 0);
+-
+-    dbusIntrospectStartRoot (writer);
+-    dbusIntrospectStartInterface (writer);
+-
+-    dbusIntrospectAddMethod (writer, COMPIZ_DBUS_LIST_MEMBER_NAME, 1,
+-			     "as", "out");
+-
+-    dbusIntrospectEndInterface (writer);
+-
+-    option = dbusGetOptionsFromPath (path, NULL, NULL, &nOptions);
+-    if (option)
+-    {
+-	while (nOptions--)
+-	{
+-	    dbusIntrospectAddNode (writer, option->name);
+-	    option++;
+-	}
+-    }
+-
+-    dbusIntrospectEndRoot (writer);
+-
+-    xmlFreeTextWriter (writer);
+-
+-    DBusMessage *reply = dbus_message_new_method_return (message);
+-    if (!reply)
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    DBusMessageIter args;
+-    dbus_message_iter_init_append (reply, &args);
+-
+-    if (!dbus_message_iter_append_basic (&args, DBUS_TYPE_STRING,
+-					 &buf->content))
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    xmlBufferFree (buf);
+-
+-    if (!dbus_connection_send (connection, reply, NULL))
+-    {
+-	return FALSE;
+-    }
+-
+-    dbus_connection_flush (connection);
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-static Bool
+-dbusHandleOptionIntrospectMessage (DBusConnection *connection,
+-				   DBusMessage    *message,
+-				   char           **path)
+-{
+-    CompOption       *option;
+-    int              nOptions;
+-    CompOptionType   restrictionType;
+-    Bool             metadataHandled;
+-    char             type[3];
+-    xmlTextWriterPtr writer;
+-    xmlBufferPtr     buf;
+-    Bool             isList = FALSE;
+-
+-    buf = xmlBufferCreate ();
+-    writer = xmlNewTextWriterMemory (buf, 0);
+-
+-    dbusIntrospectStartRoot (writer);
+-    dbusIntrospectStartInterface (writer);
+-
+-    option = dbusGetOptionsFromPath (path, NULL, NULL, &nOptions);
+-    if (!option)
+-    {
+-	xmlFreeTextWriter (writer);
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    while (nOptions--)
+-    {
+-	if (strcmp (option->name, path[2]) == 0)
+-	{
+-	    restrictionType = option->type;
+-	    if (restrictionType == CompOptionTypeList)
+-	    {
+-		restrictionType = option->value.list.type;
+-		isList = TRUE;
+-	    }
+-
+-	    metadataHandled = FALSE;
+-	    switch (restrictionType)
+-	    {
+-	    case CompOptionTypeInt:
+-		if (isList)
+-		    strcpy (type, "ai");
+-		else
+-		    strcpy (type, "i");
+-
+-		dbusIntrospectAddMethod (writer,
+-					 COMPIZ_DBUS_GET_METADATA_MEMBER_NAME,
+-					 6, "s", "out", "s", "out",
+-					 "b", "out", "s", "out",
+-					 "i", "out", "i", "out");
+-		metadataHandled = TRUE;
+-		break;
+-	    case CompOptionTypeFloat:
+-		if (isList)
+-		    strcpy (type, "ad");
+-		else
+-		    strcpy (type, "d");
+-
+-		dbusIntrospectAddMethod (writer,
+-					 COMPIZ_DBUS_GET_METADATA_MEMBER_NAME,
+-					 7, "s", "out", "s", "out",
+-					 "b", "out", "s", "out",
+-					 "d", "out", "d", "out",
+-					 "d", "out");
+-		metadataHandled = TRUE;
+-		break;
+-	    case CompOptionTypeString:
+-		if (isList)
+-		    strcpy (type, "as");
+-		else
+-		    strcpy (type, "s");
+-
+-		dbusIntrospectAddMethod (writer,
+-					 COMPIZ_DBUS_GET_METADATA_MEMBER_NAME,
+-					 5, "s", "out", "s", "out",
+-					 "b", "out", "s", "out",
+-					 "as", "out");
+-		metadataHandled = TRUE;
+-		break;
+-	    case CompOptionTypeBool:
+-	    case CompOptionTypeBell:
+-		if (isList)
+-		    strcpy (type, "ab");
+-		else
+-		    strcpy (type, "b");
+-
+-		break;
+-	    case CompOptionTypeColor:
+-	    case CompOptionTypeKey:
+-	    case CompOptionTypeButton:
+-	    case CompOptionTypeEdge:
+-	    case CompOptionTypeMatch:
+-		if (isList)
+-		    strcpy (type, "as");
+-		else
+-		    strcpy (type, "s");
+-		break;
+-	    default:
+-		continue;
+-	    }
+-
+-	    dbusIntrospectAddMethod (writer,
+-				     COMPIZ_DBUS_GET_MEMBER_NAME, 1,
+-				     type, "out");
+-	    dbusIntrospectAddMethod (writer,
+-				     COMPIZ_DBUS_SET_MEMBER_NAME, 1,
+-				     type, "in");
+-	    dbusIntrospectAddSignal (writer,
+-				     COMPIZ_DBUS_CHANGED_SIGNAL_NAME, 1,
+-				     type, "out");
+-
+-	    if (!metadataHandled)
+-		dbusIntrospectAddMethod (writer,
+-					 COMPIZ_DBUS_GET_METADATA_MEMBER_NAME,
+-					 4, "s", "out", "s", "out",
+-					 "b", "out", "s", "out");
+-	    break;
+-	}
+-
+-	option++;
+-    }
+-
+-    dbusIntrospectEndInterface (writer);
+-    dbusIntrospectEndRoot (writer);
+-
+-    xmlFreeTextWriter (writer);
+-
+-    DBusMessage *reply = dbus_message_new_method_return (message);
+-    if (!reply)
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    DBusMessageIter args;
+-    dbus_message_iter_init_append (reply, &args);
+-
+-    if (!dbus_message_iter_append_basic (&args, DBUS_TYPE_STRING,
+-					 &buf->content))
+-    {
+-	xmlBufferFree (buf);
+-	return FALSE;
+-    }
+-
+-    xmlBufferFree (buf);
+-
+-    if (!dbus_connection_send (connection, reply, NULL))
+-    {
+-	return FALSE;
+-    }
+-
+-    dbus_connection_flush (connection);
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-
+-/*
+- * Activate can be used to trigger any existing action. Arguments
+- * should be a pair of { string, bool|int32|double|string }.
+- *
+- * Example (rotate to face 1):
+- *
+- * dbus-send --type=method_call --dest=org.freedesktop.compiz \
+- * /org/freedesktop/compiz/rotate/allscreens/rotate_to	      \
+- * org.freedesktop.compiz.activate			      \
+- * string:'root'					      \
+- * int32:`xwininfo -root | grep id: | awk '{ print $4 }'`     \
+- * string:'face' int32:1
+- *
+- *
+- * You can also call the terminate function
+- *
+- * Example unfold and refold cube:
+- * dbus-send --type=method_call --dest=org.freedesktop.compiz \
+- * /org/freedesktop/compiz/cube/allscreens/unfold	      \
+- * org.freedesktop.compiz.activate			      \
+- * string:'root'					      \
+- * int32:`xwininfo -root | grep id: | awk '{ print $4 }'`
+- *
+- * dbus-send --type=method_call --dest=org.freedesktop.compiz \
+- * /org/freedesktop/compiz/cube/allscreens/unfold	      \
+- * org.freedesktop.compiz.deactivate			      \
+- * string:'root'					      \
+- * int32:`xwininfo -root | grep id: | awk '{ print $4 }'`
+- *
+- */
+-static Bool
+-dbusHandleActionMessage (DBusConnection *connection,
+-			 DBusMessage    *message,
+-			 char	        **path,
+-			 Bool           activate)
+-{
+-    CompObject *object;
+-    CompOption *option;
+-    int	       nOption;
+-
+-    option = dbusGetOptionsFromPath (path, &object, NULL, &nOption);
+-    if (!option)
+-	return FALSE;
+-
+-    while (nOption--)
+-    {
+-	if (strcmp (option->name, path[2]) == 0)
+-	{
+-	    CompOption	    *argument = NULL;
+-	    int		    i, nArgument = 0;
+-	    DBusMessageIter iter;
+-
+-	    if (!isActionOption (option))
+-		return FALSE;
+-
+-	    while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
+-		object = object->parent;
+-
+-	    if (!object)
+-		return FALSE;
+-
+-	    if (activate)
+-	    {
+-		if (!option->value.action.initiate)
+-		    return FALSE;
+-	    }
+-	    else
+-	    {
+-		if (!option->value.action.terminate)
+-		    return FALSE;
+-	    }
+-
+-	    if (dbus_message_iter_init (message, &iter))
+-	    {
+-		CompOptionValue value;
+-		CompOptionType  type = 0;
+-		char		*name;
+-		Bool		hasValue;
+-
+-		do
+-		{
+-		    name     = NULL;
+-		    hasValue = FALSE;
+-
+-		    while (!name)
+-		    {
+-			switch (dbus_message_iter_get_arg_type (&iter)) {
+-			case DBUS_TYPE_STRING:
+-			    dbus_message_iter_get_basic (&iter, &name);
+-			default:
+-			    break;
+-			}
+-
+-			if (!dbus_message_iter_next (&iter))
+-			    break;
+-		    }
+-
+-		    while (!hasValue)
+-		    {
+-			double tmp;
+-
+-			switch (dbus_message_iter_get_arg_type (&iter)) {
+-			case DBUS_TYPE_BOOLEAN:
+-			    hasValue = TRUE;
+-			    type     = CompOptionTypeBool;
+-
+-			    dbus_message_iter_get_basic (&iter, &value.b);
+-			    break;
+-			case DBUS_TYPE_INT32:
+-			    hasValue = TRUE;
+-			    type     = CompOptionTypeInt;
+-
+-			    dbus_message_iter_get_basic (&iter, &value.i);
+-			    break;
+-			case DBUS_TYPE_DOUBLE:
+-			    hasValue = TRUE;
+-			    type     = CompOptionTypeFloat;
+-
+-			    dbus_message_iter_get_basic (&iter, &tmp);
+-
+-			    value.f = tmp;
+-			    break;
+-			case DBUS_TYPE_STRING:
+-			    hasValue = TRUE;
+-
+-			    /* XXX: use match option type if name is "match" */
+-			    if (name && strcmp (name, "match") == 0)
+-			    {
+-				char *s;
+-
+-				type = CompOptionTypeMatch;
+-
+-				dbus_message_iter_get_basic (&iter, &s);
+-
+-				matchInit (&value.match);
+-				matchAddFromString (&value.match, s);
+-			    }
+-			    else
+-			    {
+-				type = CompOptionTypeString;
+-
+-				dbus_message_iter_get_basic (&iter, &value.s);
+-			    }
+-			default:
+-			    break;
+-			}
+-
+-			if (!dbus_message_iter_next (&iter))
+-			    break;
+-		    }
+-
+-		    if (name && hasValue)
+-		    {
+-			CompOption *a;
+-
+-			a = realloc (argument,
+-				     sizeof (CompOption) * (nArgument + 1));
+-			if (a)
+-			{
+-			    argument = a;
+-
+-			    argument[nArgument].name  = name;
+-			    argument[nArgument].type  = type;
+-			    argument[nArgument].value = value;
+-
+-			    nArgument++;
+-			}
+-		    }
+-		} while (dbus_message_iter_has_next (&iter));
+-	    }
+-
+-	    if (activate)
+-	    {
+-		(*option->value.action.initiate) (GET_CORE_DISPLAY (object),
+-						  &option->value.action,
+-						  0,
+-						  argument, nArgument);
+-	    }
+-	    else
+-	    {
+-		(*option->value.action.terminate) (GET_CORE_DISPLAY (object),
+-						   &option->value.action,
+-						   0,
+-						   argument, nArgument);
+-	    }
+-
+-	    for (i = 0; i < nArgument; i++)
+-		if (argument[i].type == CompOptionTypeMatch)
+-		    matchFini (&argument[i].value.match);
+-
+-	    if (argument)
+-		free (argument);
+-
+-	    if (!dbus_message_get_no_reply (message))
+-	    {
+-		DBusMessage *reply;
+-
+-		reply = dbus_message_new_method_return (message);
+-
+-		dbus_connection_send (connection, reply, NULL);
+-		dbus_connection_flush (connection);
+-
+-		dbus_message_unref (reply);
+-	    }
+-
+-	    return TRUE;
+-	}
+-
+-	option++;
+-    }
+-
+-    return FALSE;
+-}
+-
+-static Bool
+-dbusTryGetValueWithType (DBusMessageIter *iter,
+-			 int		 type,
+-			 void		 *value)
+-{
+-    if (dbus_message_iter_get_arg_type (iter) == type)
+-    {
+-	dbus_message_iter_get_basic (iter, value);
+-
+-	return TRUE;
+-    }
+-
+-    return FALSE;
+-}
+-
+-static Bool
+-dbusGetOptionValue (CompObject	    *object,
+-		    DBusMessageIter *iter,
+-		    CompOptionType  type,
+-		    CompOptionValue *value)
+-{
+-    double d;
+-    char   *s;
+-
+-    switch (type) {
+-    case CompOptionTypeBool:
+-	return dbusTryGetValueWithType (iter,
+-					DBUS_TYPE_BOOLEAN,
+-					&value->b);
+-	break;
+-    case CompOptionTypeInt:
+-	return dbusTryGetValueWithType (iter,
+-					DBUS_TYPE_INT32,
+-					&value->i);
+-	break;
+-    case CompOptionTypeFloat:
+-	if (dbusTryGetValueWithType (iter,
+-				     DBUS_TYPE_DOUBLE,
+-				     &d))
+-	{
+-	    value->f = d;
+-	    return TRUE;
+-	}
+-	break;
+-    case CompOptionTypeString:
+-	return dbusTryGetValueWithType (iter,
+-					DBUS_TYPE_STRING,
+-					&value->s);
+-	break;
+-    case CompOptionTypeColor:
+-	if (dbusTryGetValueWithType (iter,
+-				     DBUS_TYPE_STRING,
+-				     &s))
+-	{
+-	    if (stringToColor (s, value->c))
+-		return TRUE;
+-	}
+-	break;
+-    case CompOptionTypeKey:
+-	if (dbusTryGetValueWithType (iter,
+-				     DBUS_TYPE_STRING,
+-				     &s))
+-	{
+-	    while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
+-		object = object->parent;
+-
+-	    if (!object)
+-		return FALSE;
+-
+-	    stringToKeyAction (GET_CORE_DISPLAY (object), s, &value->action);
+-	    return TRUE;
+-	}
+-	break;
+-    case CompOptionTypeButton:
+-	if (dbusTryGetValueWithType (iter,
+-				     DBUS_TYPE_STRING,
+-				     &s))
+-	{
+-	    while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
+-		object = object->parent;
+-
+-	    if (!object)
+-		return FALSE;
+-
+-	    stringToButtonAction (GET_CORE_DISPLAY (object),
+-				  s, &value->action);
+-	    return TRUE;
+-	}
+-	break;
+-    case CompOptionTypeEdge:
+-	if (dbusTryGetValueWithType (iter,
+-				     DBUS_TYPE_STRING,
+-				     &s))
+-	{
+-	    value->action.edgeMask = stringToEdgeMask (s);
+-	    return TRUE;
+-	}
+-	break;
+-    case CompOptionTypeBell:
+-	return dbusTryGetValueWithType (iter,
+-					DBUS_TYPE_BOOLEAN,
+-					&value->action.bell);
+-	break;
+-    case CompOptionTypeMatch:
+-	if (dbusTryGetValueWithType (iter,
+-				     DBUS_TYPE_STRING,
+-				     &s))
+-	{
+-	    matchAddFromString (&value->match, s);
+-	    return TRUE;
+-	}
+-
+-    default:
+-	break;
+-    }
+-
+-    return FALSE;
+-}
+-
+-/*
+- * 'Set' can be used to change any existing option. Argument
+- * should be the new value for the option.
+- *
+- * Example (will set command0 option to firefox):
+- *
+- * dbus-send --type=method_call --dest=org.freedesktop.compiz \
+- * /org/freedesktop/compiz/core/allscreens/command0	      \
+- * org.freedesktop.compiz.set				      \
+- * string:'firefox'
+- *
+- * List and action options can be changed using more than one
+- * argument.
+- *
+- * Example (will set active_plugins option to
+- * [dbus,decoration,place]):
+- *
+- * dbus-send --type=method_call --dest=org.freedesktop.compiz \
+- * /org/freedesktop/compiz/core/allscreens/active_plugins     \
+- * org.freedesktop.compiz.set				      \
+- * array:string:'dbus','decoration','place'
+- *
+- * Example (will set run_command0 option to trigger on key
+- * binding <Control><Alt>Return and not trigger on any button
+- * bindings, screen edges or bell notifications):
+- *
+- * dbus-send --type=method_call --dest=org.freedesktop.compiz \
+- * /org/freedesktop/compiz/core/allscreens/run_command0	      \
+- * org.freedesktop.compiz.set				      \
+- * string:'<Control><Alt>Return'			      \
+- * string:'Disabled'					      \
+- * boolean:'false'					      \
+- * string:''						      \
+- * int32:'0'
+- */
+-static Bool
+-dbusHandleSetOptionMessage (DBusConnection *connection,
+-			    DBusMessage    *message,
+-			    char	   **path)
+-{
+-    CompObject *object;
+-    CompOption *option;
+-    int	       nOption;
+-
+-    option = dbusGetOptionsFromPath (path, &object, NULL, &nOption);
+-    if (!option)
+-	return FALSE;
+-
+-    while (nOption--)
+-    {
+-	if (strcmp (option->name, path[2]) == 0)
+-	{
+-	    DBusMessageIter iter, aiter;
+-	    CompOptionValue value, tmpValue;
+-	    Bool	    status = FALSE;
+-
+-	    memset (&value, 0, sizeof (value));
+-
+-	    if (option->type == CompOptionTypeList)
+-	    {
+-		if (dbus_message_iter_init (message, &iter) &&
+-		    dbus_message_iter_get_arg_type (&iter) == DBUS_TYPE_ARRAY)
+-		{
+-		    dbus_message_iter_recurse (&iter, &aiter);
+-
+-		    do
+-		    {
+-			memset (&tmpValue, 0, sizeof (tmpValue));
+-
+-			if (dbusGetOptionValue (object,
+-						&aiter,
+-						option->value.list.type,
+-						&tmpValue))
+-			{
+-			    CompOptionValue *v;
+-
+-			    v = realloc (value.list.value,
+-					 sizeof (CompOptionValue) *
+-					 (value.list.nValue + 1));
+-			    if (v)
+-			    {
+-				v[value.list.nValue++] = tmpValue;
+-				value.list.value = v;
+-			    }
+-			}
+-		    } while (dbus_message_iter_next (&aiter));
+-
+-		    status = TRUE;
+-		}
+-	    }
+-	    else if (dbus_message_iter_init (message, &iter))
+-	    {
+-		status = dbusGetOptionValue (object, &iter, option->type,
+-					     &value);
+-	    }
+-
+-	    if (status)
+-	    {
+-		(*core.setOptionForPlugin) (object,
+-					    path[0],
+-					    option->name,
+-					    &value);
+-
+-		if (!dbus_message_get_no_reply (message))
+-		{
+-		    DBusMessage *reply;
+-
+-		    reply = dbus_message_new_method_return (message);
+-
+-		    dbus_connection_send (connection, reply, NULL);
+-		    dbus_connection_flush (connection);
+-
+-		    dbus_message_unref (reply);
+-		}
+-
+-		return TRUE;
+-	    }
+-	    else
+-	    {
+-		return FALSE;
+-	    }
+-	}
+-
+-	option++;
+-    }
+-
+-    return FALSE;
+-}
+-
+-static void
+-dbusAppendSimpleOptionValue (CompObject      *object,
+-			     DBusMessage     *message,
+-			     CompOptionType  type,
+-			     CompOptionValue *value)
+-{
+-    double d;
+-    char   *s;
+-
+-    switch (type) {
+-    case CompOptionTypeBool:
+-	dbus_message_append_args (message,
+-				  DBUS_TYPE_BOOLEAN, &value->b,
+-				  DBUS_TYPE_INVALID);
+-	break;
+-    case CompOptionTypeInt:
+-	dbus_message_append_args (message,
+-				  DBUS_TYPE_INT32, &value->i,
+-				  DBUS_TYPE_INVALID);
+-	break;
+-    case CompOptionTypeFloat:
+-	d = value->f;
+-
+-	dbus_message_append_args (message,
+-				  DBUS_TYPE_DOUBLE, &d,
+-				  DBUS_TYPE_INVALID);
+-	break;
+-    case CompOptionTypeString:
+-	dbus_message_append_args (message,
+-				  DBUS_TYPE_STRING, &value->s,
+-				  DBUS_TYPE_INVALID);
+-	break;
+-    case CompOptionTypeColor:
+-	s = colorToString (value->c);
+-	if (s)
+-	{
+-	    dbus_message_append_args (message,
+-				      DBUS_TYPE_STRING, &s,
+-				      DBUS_TYPE_INVALID);
+-	    free (s);
+-	}
+-	break;
+-    case CompOptionTypeKey:
+-	s = keyActionToString ((CompDisplay *) object, &value->action);
+-	if (s)
+-	{
+-	    dbus_message_append_args (message,
+-				      DBUS_TYPE_STRING, &s,
+-				      DBUS_TYPE_INVALID);
+-	    free (s);
+-	}
+-	break;
+-    case CompOptionTypeButton:
+-	s = buttonActionToString ((CompDisplay *) object, &value->action);
+-	if (s)
+-	{
+-	    dbus_message_append_args (message,
+-				      DBUS_TYPE_STRING, &s,
+-				      DBUS_TYPE_INVALID);
+-	    free (s);
+-	}
+-	break;
+-    case CompOptionTypeEdge:
+-	s = edgeMaskToString (value->action.edgeMask);
+-	if (s)
+-	{
+-	    dbus_message_append_args (message,
+-				      DBUS_TYPE_STRING, &s,
+-				      DBUS_TYPE_INVALID);
+-	    free (s);
+-	}
+-	break;
+-    case CompOptionTypeBell:
+-	dbus_message_append_args (message,
+-				  DBUS_TYPE_BOOLEAN, &value->action.bell,
+-				  DBUS_TYPE_INVALID);
+-	break;
+-    case CompOptionTypeMatch:
+-	s = matchToString (&value->match);
+-	if (s)
+-	{
+-	    dbus_message_append_args (message,
+-				      DBUS_TYPE_STRING, &s,
+-				      DBUS_TYPE_INVALID);
+-	    free (s);
+-	}
+-    default:
+-	break;
+-    }
+-}
+-
+-static void
+-dbusAppendListOptionValue (CompObject      *object,
+-			   DBusMessage     *message,
+-			   CompOptionType  type,
+-			   CompOptionValue *value)
+-{
+-    DBusMessageIter iter;
+-    DBusMessageIter listIter;
+-    char	    sig[2];
+-    char	    *s;
+-    int		    i;
+-
+-    switch (value->list.type) {
+-    case CompOptionTypeInt:
+-	sig[0] = DBUS_TYPE_INT32;
+-	break;
+-    case CompOptionTypeFloat:
+-	sig[0] = DBUS_TYPE_DOUBLE;
+-	break;
+-    case CompOptionTypeBool:
+-    case CompOptionTypeBell:
+-	sig[0] = DBUS_TYPE_BOOLEAN;
+-	break;
+-    default:
+-	sig[0] = DBUS_TYPE_STRING;
+-	break;
+-    }
+-    sig[1] = '\0';
+-
+-    dbus_message_iter_init_append (message, &iter);
+-
+-    if (!dbus_message_iter_open_container (&iter, DBUS_TYPE_ARRAY,
+-					   sig, &listIter))
+-	return;
+-
+-    for (i = 0; i < value->list.nValue; i++)
+-    {
+-	switch (value->list.type) {
+-	case CompOptionTypeInt:
+-	    dbus_message_iter_append_basic (&listIter,
+-					    sig[0],
+-					    &value->list.value[i].i);
+-	    break;
+-	case CompOptionTypeFloat:
+-	    dbus_message_iter_append_basic (&listIter,
+-					    sig[0],
+-					    &value->list.value[i].f);
+-	    break;
+-	case CompOptionTypeBool:
+-	    dbus_message_iter_append_basic (&listIter,
+-					    sig[0],
+-					    &value->list.value[i].b);
+-	    break;
+-	case CompOptionTypeString:
+-	    dbus_message_iter_append_basic (&listIter,
+-					    sig[0],
+-					    &value->list.value[i].s);
+-	    break;
+-	case CompOptionTypeKey:
+-	    s = keyActionToString ((CompDisplay *) object,
+-				   &value->list.value[i].action);
+-	    if (s)
+-	    {
+-		dbus_message_iter_append_basic (&listIter, sig[0], &s);
+-		free (s);
+-	    }
+-	    break;
+-	case CompOptionTypeButton:
+-	    s = buttonActionToString ((CompDisplay *) object,
+-				      &value->list.value[i].action);
+-	    if (s)
+-	    {
+-		dbus_message_iter_append_basic (&listIter, sig[0], &s);
+-		free (s);
+-	    }
+-	    break;
+-	case CompOptionTypeEdge:
+-	    s = edgeMaskToString (value->list.value[i].action.edgeMask);
+-	    if (s)
+-	    {
+-		dbus_message_iter_append_basic (&listIter, sig[0], &s);
+-		free (s);
+-	    }
+-	    break;
+-	case CompOptionTypeBell:
+-	    dbus_message_iter_append_basic (&listIter,
+-					    sig[0],
+-					    &value->list.value[i].action.bell);
+-	    break;
+-	case CompOptionTypeMatch:
+-	    s = matchToString (&value->list.value[i].match);
+-	    if (s)
+-	    {
+-		dbus_message_iter_append_basic (&listIter, sig[0], &s);
+-		free (s);
+-	    }
+-	    break;
+-	case CompOptionTypeColor:
+-	    s = colorToString (value->list.value[i].c);
+-	    if (s)
+-	    {
+-		dbus_message_iter_append_basic (&listIter, sig[0], &s);
+-		free (s);
+-	    }
+-	    break;
+-	default:
+-	    break;
+-	}
+-    }
+-
+-    dbus_message_iter_close_container (&iter, &listIter);
+-}
+-
+-static void
+-dbusAppendOptionValue (CompObject      *object,
+-		       DBusMessage     *message,
+-		       CompOptionType  type,
+-		       CompOptionValue *value)
+-{
+-    if (type == CompOptionTypeList)
+-    {
+-	dbusAppendListOptionValue (object, message, type, value);
+-    }
+-    else
+-    {
+-	dbusAppendSimpleOptionValue (object, message, type, value);
+-    }
+-}
+-
+-/*
+- * 'Get' can be used to retrieve the value of any existing option.
+- *
+- * Example (will retrieve the current value of command0 option):
+- *
+- * dbus-send --print-reply --type=method_call	    \
+- * --dest=org.freedesktop.compiz		    \
+- * /org/freedesktop/compiz/core/allscreens/command0 \
+- * org.freedesktop.compiz.get
+- */
+-static Bool
+-dbusHandleGetOptionMessage (DBusConnection *connection,
+-			    DBusMessage    *message,
+-			    char	   **path)
+-{
+-    CompObject  *object;
+-    CompOption  *option;
+-    int	        nOption = 0;
+-    DBusMessage *reply = NULL;
+-
+-    option = dbusGetOptionsFromPath (path, &object, NULL, &nOption);
+-
+-    while (nOption--)
+-    {
+-	if (strcmp (option->name, path[2]) == 0)
+-	{
+-	    reply = dbus_message_new_method_return (message);
+-	    dbusAppendOptionValue (object, reply, option->type,
+-				   &option->value);
+-	    break;
+-	}
+-
+-	option++;
+-    }
+-
+-    if (!reply)
+-	reply = dbus_message_new_error (message,
+-					DBUS_ERROR_FAILED,
+-					"No such option");
+-
+-    dbus_connection_send (connection, reply, NULL);
+-    dbus_connection_flush (connection);
+-
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-/*
+- * 'List' can be used to retrieve a list of available options.
+- *
+- * Example:
+- *
+- * dbus-send --print-reply --type=method_call \
+- * --dest=org.freedesktop.compiz	      \
+- * /org/freedesktop/compiz/core/allscreens    \
+- * org.freedesktop.compiz.list
+- */
+-static Bool
+-dbusHandleListMessage (DBusConnection *connection,
+-		       DBusMessage    *message,
+-		       char	      **path)
+-{
+-    CompObject  *object;
+-    CompOption  *option;
+-    int	        nOption = 0;
+-    DBusMessage *reply;
+-
+-    option = dbusGetOptionsFromPath (path, &object, NULL, &nOption);
+-
+-    reply = dbus_message_new_method_return (message);
+-
+-    while (nOption--)
+-    {
+-	dbus_message_append_args (reply,
+-				  DBUS_TYPE_STRING, &option->name,
+-				  DBUS_TYPE_INVALID);
+-	option++;
+-    }
+-
+-    dbus_connection_send (connection, reply, NULL);
+-    dbus_connection_flush (connection);
+-
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-/*
+- * 'GetMetadata' can be used to retrieve metadata for an option.
+- *
+- * Example:
+- *
+- * dbus-send --print-reply --type=method_call		\
+- * --dest=org.freedesktop.compiz			\
+- * /org/freedesktop/compiz/core/allscreens/run_command0 \
+- * org.freedesktop.compiz.getMetadata
+- */
+-static Bool
+-dbusHandleGetMetadataMessage (DBusConnection *connection,
+-			      DBusMessage    *message,
+-			      char	     **path)
+-{
+-    CompObject   *object;
+-    CompOption   *option;
+-    int	         nOption = 0;
+-    DBusMessage  *reply = NULL;
+-    CompMetadata *m;
+-
+-    option = dbusGetOptionsFromPath (path, &object, &m, &nOption);
+-
+-    while (nOption--)
+-    {
+-	if (strcmp (option->name, path[2]) == 0)
+-	{
+-	    CompOptionType restrictionType = option->type;
+-	    const char	   *type;
+-	    char	   *shortDesc = NULL;
+-	    char	   *longDesc = NULL;
+-	    const char     *blankStr = "";
+-
+-	    reply = dbus_message_new_method_return (message);
+-
+-	    type = optionTypeToString (option->type);
+-
+-	    if (m)
+-	    {
+-		if (object->type == COMP_OBJECT_TYPE_SCREEN)
+-		{
+-		    shortDesc = compGetShortScreenOptionDescription (m, option);
+-		    longDesc  = compGetLongScreenOptionDescription (m, option);
+-		}
+-		else
+-		{
+-		    shortDesc =
+-			compGetShortDisplayOptionDescription (m, option);
+-		    longDesc  = compGetLongDisplayOptionDescription (m, option);
+-		}
+-	    }
+-
+-	    if (shortDesc)
+-		dbus_message_append_args (reply,
+-					  DBUS_TYPE_STRING, &shortDesc,
+-					  DBUS_TYPE_INVALID);
+-	    else
+-		dbus_message_append_args (reply,
+-					  DBUS_TYPE_STRING, &blankStr,
+-					  DBUS_TYPE_INVALID);
+-
+-	    if (longDesc)
+-		dbus_message_append_args (reply,
+-					  DBUS_TYPE_STRING, &longDesc,
+-					  DBUS_TYPE_INVALID);
+-	    else
+-		dbus_message_append_args (reply,
+-					  DBUS_TYPE_STRING, &blankStr,
+-					  DBUS_TYPE_INVALID);
+-
+-	    dbus_message_append_args (reply,
+-				      DBUS_TYPE_STRING, &type,
+-				      DBUS_TYPE_INVALID);
+-
+-	    if (shortDesc)
+-		free (shortDesc);
+-	    if (longDesc)
+-		free (longDesc);
+-
+-	    if (restrictionType == CompOptionTypeList)
+-	    {
+-		type = optionTypeToString (option->value.list.type);
+-		restrictionType = option->value.list.type;
+-
+-		dbus_message_append_args (reply,
+-					  DBUS_TYPE_STRING, &type,
+-					  DBUS_TYPE_INVALID);
+-	    }
+-
+-	    switch (restrictionType) {
+-	    case CompOptionTypeInt:
+-		dbus_message_append_args (reply,
+-					  DBUS_TYPE_INT32, &option->rest.i.min,
+-					  DBUS_TYPE_INT32, &option->rest.i.max,
+-					  DBUS_TYPE_INVALID);
+-		break;
+-	    case CompOptionTypeFloat: {
+-		double min, max, precision;
+-
+-		min	  = option->rest.f.min;
+-		max	  = option->rest.f.max;
+-		precision = option->rest.f.precision;
+-
+-		dbus_message_append_args (reply,
+-					  DBUS_TYPE_DOUBLE, &min,
+-					  DBUS_TYPE_DOUBLE, &max,
+-					  DBUS_TYPE_DOUBLE, &precision,
+-					  DBUS_TYPE_INVALID);
+-	    } break;
+-	    default:
+-		break;
+-	    }
+-	    break;
+-	}
+-
+-	option++;
+-    }
+-
+-    if (!reply)
+-	reply = dbus_message_new_error (message,
+-					DBUS_ERROR_FAILED,
+-					"No such option");
+-
+-    dbus_connection_send (connection, reply, NULL);
+-    dbus_connection_flush (connection);
+-
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-/*
+- * 'GetPlugins' can be used to retrieve a list of available plugins. There's
+- * no guarantee that a plugin in this list can actually be loaded.
+- *
+- * Example:
+- *
+- * dbus-send --print-reply --type=method_call \
+- * --dest=org.freedesktop.compiz	      \
+- * /org/freedesktop/compiz		      \
+- * org.freedesktop.compiz.getPlugins
+- */
+-static Bool
+-dbusHandleGetPluginsMessage (DBusConnection *connection,
+-			     DBusMessage    *message)
+-{
+-    DBusMessage *reply;
+-    char	**plugins, **p;
+-    int		n;
+-
+-    reply = dbus_message_new_method_return (message);
+-
+-    plugins = availablePlugins (&n);
+-    if (plugins)
+-    {
+-	p = plugins;
+-
+-	while (n--)
+-	{
+-	    dbus_message_append_args (reply,
+-				      DBUS_TYPE_STRING, p,
+-				      DBUS_TYPE_INVALID);
+-	    free (*p);
+-
+-	    p++;
+-	}
+-
+-	free (plugins);
+-    }
+-
+-    dbus_connection_send (connection, reply, NULL);
+-    dbus_connection_flush (connection);
+-
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-/*
+- * 'GetPluginMetadata' can be used to retrieve metadata for a plugin.
+- *
+- * Example:
+- *
+- * dbus-send --print-reply --type=method_call \
+- * --dest=org.freedesktop.compiz	      \
+- * /org/freedesktop/compiz		      \
+- * org.freedesktop.compiz.getPluginMetadata   \
+- * string:'png'
+- */
+-static Bool
+-dbusHandleGetPluginMetadataMessage (DBusConnection *connection,
+-				    DBusMessage    *message)
+-{
+-    DBusMessage     *reply;
+-    DBusMessageIter iter;
+-    char	    *name;
+-    CompPlugin	    *p, *loadedPlugin = NULL;
+-
+-    if (!dbus_message_iter_init (message, &iter))
+-	return FALSE;
+-
+-    if (!dbusTryGetValueWithType (&iter,
+-				  DBUS_TYPE_STRING,
+-				  &name))
+-	return FALSE;
+-
+-    p = findActivePlugin (name);
+-    if (!p)
+-	p = loadedPlugin = loadPlugin (name);
+-
+-    if (p)
+-    {
+-	Bool	   initializedPlugin = TRUE;
+-	char	   *shortDesc = NULL;
+-	char	   *longDesc = NULL;
+-	const char *blankStr = "";
+-
+-	reply = dbus_message_new_method_return (message);
+-
+-	if (loadedPlugin)
+-	{
+-	    if (!(*p->vTable->init) (p))
+-		initializedPlugin = FALSE;
+-	}
+-
+-	if (initializedPlugin && p->vTable->getMetadata)
+-	{
+-	    CompMetadata *m;
+-
+-	    m = (*p->vTable->getMetadata) (p);
+-	    if (m)
+-	    {
+-		shortDesc = compGetShortPluginDescription (m);
+-		longDesc  = compGetLongPluginDescription (m);
+-	    }
+-	}
+-
+-	dbus_message_append_args (reply,
+-				  DBUS_TYPE_STRING, &p->vTable->name,
+-				  DBUS_TYPE_INVALID);
+-
+-	if (shortDesc)
+-	    dbus_message_append_args (reply,
+-				      DBUS_TYPE_STRING, &shortDesc,
+-				      DBUS_TYPE_INVALID);
+-	else
+-	    dbus_message_append_args (reply,
+-				      DBUS_TYPE_STRING, &blankStr,
+-				      DBUS_TYPE_INVALID);
+-
+-	if (longDesc)
+-	    dbus_message_append_args (reply,
+-				      DBUS_TYPE_STRING, &longDesc,
+-				      DBUS_TYPE_INVALID);
+-	else
+-	    dbus_message_append_args (reply,
+-				      DBUS_TYPE_STRING, &blankStr,
+-				      DBUS_TYPE_INVALID);
+-
+-	dbus_message_append_args (reply,
+-				  DBUS_TYPE_BOOLEAN, &initializedPlugin,
+-				  DBUS_TYPE_INVALID);
+-
+-	if (shortDesc)
+-	    free (shortDesc);
+-	if (longDesc)
+-	    free (longDesc);
+-
+-	if (loadedPlugin && initializedPlugin)
+-	    (*p->vTable->fini) (p);
+-    }
+-    else
+-    {
+-	char *str;
+-
+-	str = malloc (strlen (name) + 256);
+-	if (!str)
+-	    return FALSE;
+-
+-	sprintf (str, "Plugin '%s' could not be loaded", name);
+-
+-	reply = dbus_message_new_error (message,
+-					DBUS_ERROR_FAILED,
+-					str);
+-
+-	free (str);
+-    }
+-
+-    if (loadedPlugin)
+-	unloadPlugin (loadedPlugin);
+-
+-    dbus_connection_send (connection, reply, NULL);
+-    dbus_connection_flush (connection);
+-
+-    dbus_message_unref (reply);
+-
+-    return TRUE;
+-}
+-
+-static DBusHandlerResult
+-dbusHandleMessage (DBusConnection *connection,
+-		   DBusMessage    *message,
+-		   void           *userData)
+-{
+-    Bool status = FALSE;
+-    char **path;
+-
+-    if (!dbus_message_get_path_decomposed (message, &path))
+-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+-
+-    if (!path[0] || !path[1] || !path[2])
+-    {
+-	dbus_free_string_array (path);
+-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+-    }
+-
+-    /* root messages */
+-    if (!path[3])
+-    {
+-	if (dbus_message_is_method_call (message,
+-					 DBUS_INTERFACE_INTROSPECTABLE,
+-					 "Introspect"))
+-	{
+-	    if (dbusHandleRootIntrospectMessage (connection, message))
+-	    {
+-		dbus_free_string_array (path);
+-		return DBUS_HANDLER_RESULT_HANDLED;
+-	    }
+-	}
+-	else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-				 COMPIZ_DBUS_GET_PLUGIN_METADATA_MEMBER_NAME))
+-	{
+-	    if (dbusHandleGetPluginMetadataMessage (connection, message))
+-	    {
+-		dbus_free_string_array (path);
+-		return DBUS_HANDLER_RESULT_HANDLED;
+-	    }
+-	}
+-	else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-					  COMPIZ_DBUS_GET_PLUGINS_MEMBER_NAME))
+-	{
+-	    if (dbusHandleGetPluginsMessage (connection, message))
+-	    {
+-		dbus_free_string_array (path);
+-		return DBUS_HANDLER_RESULT_HANDLED;
+-	    }
+-	}
+-
+-	dbus_free_string_array (path);
+-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+-    }
+-    /* plugin message */
+-    else if (!path[4])
+-    {
+-	if (dbus_message_is_method_call (message,
+-					 DBUS_INTERFACE_INTROSPECTABLE,
+-					 "Introspect"))
+-	{
+-	    if (dbusHandlePluginIntrospectMessage (connection, message,
+-						   &path[3]))
+-	    {
+-		dbus_free_string_array (path);
+-		return DBUS_HANDLER_RESULT_HANDLED;
+-	    }
+-	}
+-
+-	dbus_free_string_array (path);
+-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+-    }
+-    /* screen message */
+-    else if (!path[5])
+-    {
+-	if (dbus_message_is_method_call (message,
+-					 DBUS_INTERFACE_INTROSPECTABLE,
+-					 "Introspect"))
+-	{
+-	    if (dbusHandleScreenIntrospectMessage (connection, message,
+-						   &path[3]))
+-	    {
+-		dbus_free_string_array (path);
+-		return DBUS_HANDLER_RESULT_HANDLED;
+-	    }
+-	}
+-	else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-					      COMPIZ_DBUS_LIST_MEMBER_NAME))
+-	{
+-	    if (dbusHandleListMessage (connection, message, &path[3]))
+-	    {
+-		dbus_free_string_array (path);
+-		return DBUS_HANDLER_RESULT_HANDLED;
+-	    }
+-	}
+-
+-	dbus_free_string_array (path);
+-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+-    }
+-    /* option message */
+-    if (dbus_message_is_method_call (message, DBUS_INTERFACE_INTROSPECTABLE,
+-				     "Introspect"))
+-    {
+-	status = dbusHandleOptionIntrospectMessage (connection, message,
+-						    &path[3]);
+-    }
+-    else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-					  COMPIZ_DBUS_ACTIVATE_MEMBER_NAME))
+-    {
+-	status = dbusHandleActionMessage (connection, message, &path[3], TRUE);
+-    }
+-    else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-					  COMPIZ_DBUS_DEACTIVATE_MEMBER_NAME))
+-    {
+-	status = dbusHandleActionMessage (connection, message, &path[3],
+-					  FALSE);
+-    }
+-    else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-					  COMPIZ_DBUS_SET_MEMBER_NAME))
+-    {
+-	status = dbusHandleSetOptionMessage (connection, message, &path[3]);
+-    }
+-    else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-					  COMPIZ_DBUS_GET_MEMBER_NAME))
+-    {
+-	status = dbusHandleGetOptionMessage (connection, message, &path[3]);
+-    }
+-    else if (dbus_message_is_method_call (message, COMPIZ_DBUS_INTERFACE,
+-					  COMPIZ_DBUS_GET_METADATA_MEMBER_NAME))
+-    {
+-	status = dbusHandleGetMetadataMessage (connection, message, &path[3]);
+-    }
+-
+-    dbus_free_string_array (path);
+-
+-    if (status)
+-	return DBUS_HANDLER_RESULT_HANDLED;
+-
+-    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+-}
+-
+-static Bool
+-dbusProcessMessages (void *data)
+-{
+-    DBusDispatchStatus status;
+-
+-    DBUS_CORE (&core);
+-
+-    do
+-    {
+-	dbus_connection_read_write_dispatch (dc->connection, 0);
+-	status = dbus_connection_get_dispatch_status (dc->connection);
+-    }
+-    while (status == DBUS_DISPATCH_DATA_REMAINS);
+-
+-    return TRUE;
+-}
+-
+-static void
+-dbusSendChangeSignalForOption (CompObject *object,
+-			       CompOption *o,
+-			       const char *plugin)
+-{
+-    DBusMessage *signal;
+-    char	*name, path[256];
+-
+-    DBUS_CORE (&core);
+-
+-    if (!o)
+-	return;
+-
+-    name = compObjectName (object);
+-    if (name)
+-    {
+-	sprintf (path, "%s/%s/%s%s/%s", COMPIZ_DBUS_ROOT_PATH,
+-		 plugin, compObjectTypeName (object->type), name, o->name);
+-
+-	free (name);
+-    }
+-    else
+-	sprintf (path, "%s/%s/%s/%s", COMPIZ_DBUS_ROOT_PATH,
+-		 plugin, compObjectTypeName (object->type), o->name);
+-
+-    signal = dbus_message_new_signal (path,
+-				      COMPIZ_DBUS_SERVICE_NAME,
+-				      COMPIZ_DBUS_CHANGED_SIGNAL_NAME);
+-
+-    dbusAppendOptionValue (object, signal, o->type, &o->value);
+-
+-    dbus_connection_send (dc->connection, signal, NULL);
+-    dbus_connection_flush (dc->connection);
+-
+-    dbus_message_unref (signal);
+-}
+-
+-static Bool
+-dbusGetPathDecomposed (char *data,
+-		       char ***path,
+-		       int  *count)
+-{
+-    char **retval;
+-    char *temp;
+-    char *token;
+-    int nComponents;
+-    int i;
+-
+-    nComponents = 0;
+-    if (strlen (data) > 1)
+-    {
+-	i = 0;
+-	while (i < strlen (data))
+-	{
+-            if (data[i] == '/')
+-		nComponents += 1;
+-	    ++i;
+-	}
+-    }
+-
+-    retval = malloc (sizeof (char*) * (nComponents + 1));
+-
+-    if (nComponents == 0)
+-    {
+-	retval[0] = malloc (sizeof (char));
+-	retval[0][0] = '\0';
+-	*path  = retval;
+-	*count = 1;
+-
+-	return TRUE;
+-    }
+-
+-    temp = strdup (data);
+-
+-    i = 0;
+-    token = strtok (temp, "/");
+-    while (token != NULL)
+-    {
+-	retval[i] = strdup (token);
+-	token = strtok (NULL, "/");
+-	i++;
+-    }
+-    retval[i] = malloc (sizeof (char));
+-    retval[i][0] = '\0';
+-
+-    free (temp);
+-
+-    *path  = retval;
+-    *count = i + 1;
+-
+-    return TRUE;
+-}
+-
+-static void
+-dbusFreePathDecomposed (char **path,
+-			int  count)
+-{
+-    int i;
+-
+-    for (i = 0; i < count; i++)
+-	free (path[i]);
+-
+-    free (path);
+-}
+-
+-/* dbus registration */
+-
+-static Bool
+-dbusRegisterOptions (DBusConnection *connection,
+-		     char           *screenPath)
+-{
+-    CompOption *option = NULL;
+-    int        nOptions;
+-    char       objectPath[256];
+-    char       **path;
+-    int        count;
+-
+-    dbusGetPathDecomposed (screenPath, &path, &count);
+-
+-    option = dbusGetOptionsFromPath (&path[3], NULL, NULL, &nOptions);
+-
+-    if (!option) {
+-	dbusFreePathDecomposed (path, count);
+-	return FALSE;
+-    }
+-
+-    while (nOptions--)
+-    {
+-	snprintf (objectPath, 256, "%s/%s", screenPath, option->name);
+-
+-	dbus_connection_register_object_path (connection, objectPath,
+-					      &dbusMessagesVTable, 0);
+-	option++;
+-    }
+-
+-    dbusFreePathDecomposed (path, count);
+-
+-    return TRUE;
+-}
+-
+-static Bool
+-dbusUnregisterOptions (DBusConnection *connection,
+-		       char           *screenPath)
+-{
+-    CompOption *option = NULL;
+-    int        nOptions;
+-    char       objectPath[256];
+-    char       **path;
+-    int        count;
+-
+-    dbusGetPathDecomposed (screenPath, &path, &count);
+-
+-    option = dbusGetOptionsFromPath (&path[3], NULL, NULL, &nOptions);
+-
+-    dbusFreePathDecomposed (path, count);
+-
+-    if (!option)
+-	return FALSE;
+-
+-    while (nOptions--)
+-    {
+-	snprintf (objectPath, 256, "%s/%s", screenPath, option->name);
+-
+-	dbus_connection_unregister_object_path (connection, objectPath);
+-	option++;
+-    }
+-
+-    return TRUE;
+-}
+-
+-static void
+-dbusRegisterPluginForDisplay (DBusConnection *connection,
+-			      CompDisplay    *d,
+-			      char           *pluginName)
+-{
+-    char       objectPath[256];
+-
+-    /* register plugin root path */
+-    snprintf (objectPath, 256, "%s/%s", COMPIZ_DBUS_ROOT_PATH, pluginName);
+-    dbus_connection_register_object_path (connection, objectPath,
+-					  &dbusMessagesVTable, d);
+-
+-    /* register plugin/screen path */
+-    snprintf (objectPath, 256, "%s/%s/%s", COMPIZ_DBUS_ROOT_PATH,
+-	      pluginName, "allscreens");
+-    dbus_connection_register_object_path (connection, objectPath,
+-					  &dbusMessagesVTable, d);
+-}
+-
+-static void
+-dbusRegisterPluginForScreen (DBusConnection *connection,
+-			     CompScreen     *s,
+-			     char           *pluginName)
+-{
+-    char       objectPath[256];
+-
+-    /* register plugin/screen path */
+-    snprintf (objectPath, 256, "%s/%s/screen%d", COMPIZ_DBUS_ROOT_PATH,
+-	      pluginName, s->screenNum);
+-    dbus_connection_register_object_path (connection, objectPath,
+-					  &dbusMessagesVTable, s->display);
+-}
+-
+-static void
+-dbusRegisterPluginsForDisplay (DBusConnection *connection,
+-			       CompDisplay    *d)
+-{
+-    unsigned int i;
+-    char         path[256];
+-
+-    DBUS_DISPLAY (d);
+-
+-    for (i = 0; i < dd->nPlugins; i++)
+-    {
+-	snprintf (path, 256, "%s/%s/allscreens",
+-		  COMPIZ_DBUS_ROOT_PATH, dd->pluginList[i]);
+-
+-	dbusRegisterPluginForDisplay (connection, d, dd->pluginList[i]);
+-	dbusRegisterOptions (connection, path);
+-    }
+-}
+-
+-static void
+-dbusRegisterPluginsForScreen (DBusConnection *connection,
+-			      CompScreen    *s)
+-{
+-    unsigned int i;
+-    char         path[256];
+-
+-    DBUS_DISPLAY (s->display);
+-
+-    for (i = 0; i < dd->nPlugins; i++)
+-    {
+-	snprintf (path, 256, "%s/%s/screen%d",
+-		  COMPIZ_DBUS_ROOT_PATH, dd->pluginList[i], s->screenNum);
+-	dbusRegisterPluginForScreen (connection, s, dd->pluginList[i]);
+-	dbusRegisterOptions (connection, path);
+-    }
+-}
+-
+-static void
+-dbusUnregisterPluginForDisplay (DBusConnection *connection,
+-			        CompDisplay    *d,
+-			        char           *pluginName)
+-{
+-    char objectPath[256];
+-
+-    snprintf (objectPath, 256, "%s/%s/%s", COMPIZ_DBUS_ROOT_PATH,
+-	      pluginName, "allscreens");
+-
+-    dbusUnregisterOptions (connection, objectPath);
+-    dbus_connection_unregister_object_path (connection, objectPath);
+-
+-    snprintf (objectPath, 256, "%s/%s", COMPIZ_DBUS_ROOT_PATH, pluginName);
+-    dbus_connection_unregister_object_path (connection, objectPath);
+-}
+-
+-static void
+-dbusUnregisterPluginsForDisplay (DBusConnection *connection,
+-			         CompDisplay    *d)
+-{
+-    unsigned int i;
+-
+-    DBUS_DISPLAY (d);
+-
+-    for (i = 0; i < dd->nPlugins; i++)
+-	dbusUnregisterPluginForDisplay (connection, d, dd->pluginList[i]);
+-}
+-
+-static void
+-dbusUnregisterPluginForScreen (DBusConnection *connection,
+-			       CompScreen     *s,
+-			       char           *pluginName)
+-{
+-    char objectPath[256];
+-
+-    snprintf (objectPath, 256, "%s/%s/screen%d", COMPIZ_DBUS_ROOT_PATH,
+-	      pluginName, s->screenNum);
+-
+-    dbusUnregisterOptions (connection, objectPath);
+-    dbus_connection_unregister_object_path (connection, objectPath);
+-}
+-
+-static void
+-dbusUnregisterPluginsForScreen (DBusConnection *connection,
+-			        CompScreen     *s)
+-{
+-    unsigned int i;
+-
+-    DBUS_DISPLAY (s->display);
+-
+-    for (i = 0; i < dd->nPlugins; i++)
+-	dbusUnregisterPluginForScreen (connection, s, dd->pluginList[i]);
+-}
+-
+-static CompBool
+-dbusInitPluginForDisplay (CompPlugin  *p,
+-			  CompDisplay *d)
+-{
+-    char objectPath[256];
+-
+-    DBUS_CORE (&core);
+-
+-    snprintf (objectPath, 256, "%s/%s/%s", COMPIZ_DBUS_ROOT_PATH,
+-	      p->vTable->name, "allscreens");
+-    dbusRegisterOptions (dc->connection, objectPath);
+-
+-    return TRUE;
+-}
+-
+-static Bool
+-dbusInitPluginForScreen (CompPlugin *p,
+-			 CompScreen *s)
+-{
+-    char objectPath[256];
+-
+-    DBUS_CORE (&core);
+-
+-    snprintf (objectPath, 256, "%s/%s/screen%d", COMPIZ_DBUS_ROOT_PATH,
+-	      p->vTable->name, s->screenNum);
+-    dbusRegisterOptions (dc->connection, objectPath);
+-
+-    return TRUE;
+-}
+-
+-static CompBool
+-dbusInitPluginForObject (CompPlugin *p,
+-			 CompObject *o)
+-{
+-    CompBool status;
+-
+-    DBUS_CORE (&core);
+-
+-    UNWRAP (dc, &core, initPluginForObject);
+-    status = (*core.initPluginForObject) (p, o);
+-    WRAP (dc, &core, initPluginForObject, dbusInitPluginForObject);
+-
+-    if (status && p->vTable->getObjectOptions)
+-    {
+-	static InitPluginForObjectProc dispTab[] = {
+-	    (InitPluginForObjectProc) 0, /* InitPluginForCore */
+-	    (InitPluginForObjectProc) dbusInitPluginForDisplay,
+-	    (InitPluginForObjectProc) dbusInitPluginForScreen
+-	};
+-
+-	RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+-    }
+-
+-    return status;
+-}
+-
+-static CompBool
+-dbusSetOptionForPlugin (CompObject      *object,
+-			const char      *plugin,
+-			const char      *name,
+-			CompOptionValue *value)
+-{
+-    Bool status;
+-
+-    DBUS_CORE (&core);
+-
+-    UNWRAP (dc, &core, setOptionForPlugin);
+-    status = (*core.setOptionForPlugin) (object, plugin, name, value);
+-    WRAP (dc, &core, setOptionForPlugin, dbusSetOptionForPlugin);
+-
+-    if (status)
+-    {
+-	CompPlugin *p;
+-
+-	p = findActivePlugin (plugin);
+-	if (p && p->vTable->getObjectOptions)
+-	{
+-	    CompOption *option;
+-	    int	       nOption;
+-
+-	    option = (*p->vTable->getObjectOptions) (p, object, &nOption);
+-	    dbusSendChangeSignalForOption (object,
+-					   compFindOption (option,
+-							   nOption,
+-							   name, 0),
+-					   p->vTable->name);
+-
+-	    if (object->type == COMP_OBJECT_TYPE_DISPLAY &&
+-		strcmp (p->vTable->name, "core") == 0 &&
+-		strcmp (name, "active_plugins") == 0)
+-	    {
+-		CompScreen *s;
+-
+-		CORE_DISPLAY (object);
+-
+-		dbusUnregisterPluginsForDisplay (dc->connection, d);
+-		for (s = d->screens; s; s = s->next)
+-		    dbusUnregisterPluginsForScreen (dc->connection, s);
+-
+-		dbusUpdatePluginList (d);
+-
+-		dbusRegisterPluginsForDisplay (dc->connection, d);
+-		for (s = d->screens; s; s = s->next)
+-		    dbusRegisterPluginsForScreen (dc->connection, s);
+-	    }
+-	}
+-    }
+-
+-    return status;
+-}
+-
+-static void
+-dbusSendPluginsChangedSignal (const char *name,
+-			      void	 *closure)
+-{
+-    DBusMessage *signal;
+-
+-    DBUS_CORE (&core);
+-
+-    signal = dbus_message_new_signal (COMPIZ_DBUS_ROOT_PATH,
+-				      COMPIZ_DBUS_SERVICE_NAME,
+-				      COMPIZ_DBUS_PLUGINS_CHANGED_SIGNAL_NAME);
+-
+-    dbus_connection_send (dc->connection, signal, NULL);
+-    dbus_connection_flush (dc->connection);
+-
+-    dbus_message_unref (signal);
+-}
+-
+-static Bool
+-dbusInitCore (CompPlugin *p,
+-	      CompCore   *c)
+-{
+-    DbusCore    *dc;
+-    DBusError   error;
+-    dbus_bool_t status;
+-    int		fd, ret, mask;
+-    char        *home, *plugindir;
+-
+-    if (!checkPluginABI ("core", CORE_ABIVERSION))
+-	return FALSE;
+-
+-    dc = malloc (sizeof (DbusCore));
+-    if (!dc)
+-	return FALSE;
+-
+-    displayPrivateIndex = allocateDisplayPrivateIndex ();
+-    if (displayPrivateIndex < 0)
+-    {
+-	free (dc);
+-	return FALSE;
+-    }
+-
+-    dbus_error_init (&error);
+-
+-    dc->connection = dbus_bus_get (DBUS_BUS_SESSION, &error);
+-    if (dbus_error_is_set (&error))
+-    {
+-	compLogMessage ("dbus", CompLogLevelError,
+-			"dbus_bus_get error: %s", error.message);
+-
+-	dbus_error_free (&error);
+-	free (dc);
+-
+-	return FALSE;
+-    }
+-
+-    ret = dbus_bus_request_name (dc->connection,
+-				 COMPIZ_DBUS_SERVICE_NAME,
+-				 DBUS_NAME_FLAG_REPLACE_EXISTING |
+-				 DBUS_NAME_FLAG_ALLOW_REPLACEMENT,
+-				 &error);
+-
+-    if (dbus_error_is_set (&error))
+-    {
+-	compLogMessage ("dbus", CompLogLevelError,
+-			"dbus_bus_request_name error: %s", error.message);
+-
+-	/* dbus_connection_unref (dc->connection); */
+-	dbus_error_free (&error);
+-	free (dc);
+-
+-	return FALSE;
+-    }
+-
+-    dbus_error_free (&error);
+-
+-    if (ret != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER)
+-    {
+-	compLogMessage ("dbus", CompLogLevelError,
+-			"dbus_bus_request_name reply is not primary owner");
+-
+-	/* dbus_connection_unref (dc->connection); */
+-	free (dc);
+-
+-	return FALSE;
+-    }
+-
+-    status = dbus_connection_get_unix_fd (dc->connection, &fd);
+-    if (!status)
+-    {
+-	compLogMessage ("dbus", CompLogLevelError,
+-			"dbus_connection_get_unix_fd failed");
+-
+-	/* dbus_connection_unref (dc->connection); */
+-	free (dc);
+-
+-	return FALSE;
+-    }
+-
+-    dc->watchFdHandle = compAddWatchFd (fd,
+-					POLLIN | POLLPRI | POLLHUP | POLLERR,
+-					dbusProcessMessages,
+-					0);
+-
+-    mask = NOTIFY_CREATE_MASK | NOTIFY_DELETE_MASK | NOTIFY_MOVE_MASK;
+-
+-    dc->fileWatch[DBUS_FILE_WATCH_CURRENT] =
+-	addFileWatch (".",
+-		      mask,
+-		      dbusSendPluginsChangedSignal,
+-		      0);
+-    dc->fileWatch[DBUS_FILE_WATCH_PLUGIN]  =
+-	addFileWatch (PLUGINDIR,
+-		      mask,
+-		      dbusSendPluginsChangedSignal,
+-		      0);
+-    dc->fileWatch[DBUS_FILE_WATCH_HOME] = 0;
+-
+-    home = getenv ("HOME");
+-    if (home)
+-    {
+-	plugindir = malloc (strlen (home) + strlen (HOME_PLUGINDIR) + 3);
+-	if (plugindir)
+-	{
+-	    sprintf (plugindir, "%s/%s", home, HOME_PLUGINDIR);
+-
+-	    dc->fileWatch[DBUS_FILE_WATCH_HOME]  =
+-		addFileWatch (plugindir,
+-			      mask,
+-			      dbusSendPluginsChangedSignal,
+-			      0);
+-
+-	    free (plugindir);
+-	}
+-    }
+-
+-    WRAP (dc, c, initPluginForObject, dbusInitPluginForObject);
+-    WRAP (dc, c, setOptionForPlugin, dbusSetOptionForPlugin);
+-
+-    c->base.privates[corePrivateIndex].ptr = dc;
+-
+-    /* register the objects */
+-    dbus_connection_register_object_path (dc->connection,
+-					  COMPIZ_DBUS_ROOT_PATH,
+-					  &dbusMessagesVTable, 0);
+-
+-    return TRUE;
+-}
+-
+-static void
+-dbusFiniCore (CompPlugin *p,
+-	      CompCore   *c)
+-{
+-    int i;
+-
+-    DBUS_CORE (c);
+-
+-    for (i = 0; i < DBUS_FILE_WATCH_NUM; i++)
+-	removeFileWatch (dc->fileWatch[i]);
+-
+-    freeDisplayPrivateIndex (displayPrivateIndex);
+-
+-    compRemoveWatchFd (dc->watchFdHandle);
+-
+-    dbus_bus_release_name (dc->connection, COMPIZ_DBUS_SERVICE_NAME, NULL);
+-
+-    /*
+-      can't unref the connection returned by dbus_bus_get as it's
+-      shared and we can't know if it's closed or not.
+-
+-      dbus_connection_unref (dc->connection);
+-    */
+-
+-    UNWRAP (dc, c, initPluginForObject);
+-    UNWRAP (dc, c, setOptionForPlugin);
+-
+-    free (dc);
+-}
+-
+-static Bool
+-dbusInitDisplay (CompPlugin  *p,
+-		 CompDisplay *d)
+-{
+-    DbusDisplay *dd;
+-
+-    DBUS_CORE (&core);
+-
+-    dd = malloc (sizeof (DbusDisplay));
+-    if (!dd)
+-	return FALSE;
+-
+-    dd->pluginList = NULL;
+-    dd->nPlugins   = 0;
+-
+-    d->base.privates[displayPrivateIndex].ptr = dd;
+-
+-    dbusUpdatePluginList (d);
+-    dbusRegisterPluginsForDisplay (dc->connection, d);
+-
+-    return TRUE;
+-}
+-
+-static void
+-dbusFiniDisplay (CompPlugin  *p,
+-		 CompDisplay *d)
+-{
+-    DBUS_CORE (&core);
+-    DBUS_DISPLAY (d);
+-
+-    dbusUnregisterPluginsForDisplay (dc->connection, d);
+-
+-    if (dd->pluginList)
+-    {
+-	unsigned int i;
+-
+-	for (i = 0; i < dd->nPlugins; i++)
+-	    free (dd->pluginList[i]);
+-	free (dd->pluginList);
+-    }
+-
+-    free (dd);
+-}
+-
+-static Bool
+-dbusInitScreen (CompPlugin *p,
+-		CompScreen *s)
+-{
+-    DBUS_CORE (&core);
+-
+-    dbusRegisterPluginsForScreen (dc->connection, s);
+-
+-    return TRUE;
+-}
+-
+-static void
+-dbusFiniScreen (CompPlugin *p,
+-		CompScreen *s)
+-{
+-    DBUS_CORE (&core);
+-
+-    dbusUnregisterPluginsForScreen (dc->connection, s);
+-}
+-
+-static CompBool
+-dbusInitObject (CompPlugin *p,
+-		CompObject *o)
+-{
+-    static InitPluginObjectProc dispTab[] = {
+-	(InitPluginObjectProc) dbusInitCore,
+-	(InitPluginObjectProc) dbusInitDisplay,
+-	(InitPluginObjectProc) dbusInitScreen
+-    };
+-
+-    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+-}
+-
+-static void
+-dbusFiniObject (CompPlugin *p,
+-		CompObject *o)
+-{
+-    static FiniPluginObjectProc dispTab[] = {
+-	(FiniPluginObjectProc) dbusFiniCore,
+-	(FiniPluginObjectProc) dbusFiniDisplay,
+-	(FiniPluginObjectProc) dbusFiniScreen
+-    };
+-
+-    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+-}
+-
+-static Bool
+-dbusInit (CompPlugin *p)
+-{
+-    if (!compInitPluginMetadataFromInfo (&dbusMetadata, p->vTable->name,
+-					 0, 0, 0, 0))
+-	return FALSE;
+-
+-    corePrivateIndex = allocateCorePrivateIndex ();
+-    if (corePrivateIndex < 0)
+-    {
+-	compFiniMetadata (&dbusMetadata);
+-	return FALSE;
+-    }
+-
+-    return TRUE;
+-}
+-
+-static void
+-dbusFini (CompPlugin *p)
+-{
+-    freeCorePrivateIndex (corePrivateIndex);
+-    compFiniMetadata (&dbusMetadata);
+-}
+-
+-static CompMetadata *
+-dbusGetMetadata (CompPlugin *plugin)
+-{
+-    return &dbusMetadata;
+-}
+-
+-CompPluginVTable dbusVTable = {
+-    "dbus",
+-    dbusGetMetadata,
+-    dbusInit,
+-    dbusFini,
+-    dbusInitObject,
+-    dbusFiniObject,
+-    0, /* GetObjectOptions */
+-    0  /* SetObjectOption */
+-};
+-
+-CompPluginVTable *
+-getCompPluginInfo20070830 (void)
+-{
+-    return &dbusVTable;
+-}
+diff -uprN compiz-0.8.8-orig/plugins/glib.c compiz-0.8.8/plugins/glib.c
+--- compiz-0.8.8-orig/plugins/glib.c	2013-04-19 13:37:07.040679000 +0200
++++ compiz-0.8.8/plugins/glib.c	1970-01-01 01:00:00.000000000 +0100
+@@ -1,315 +0,0 @@
+-/*
+- * Copyright © 2007 Novell, Inc.
+- *
+- * Permission to use, copy, modify, distribute, and sell this software
+- * and its documentation for any purpose is hereby granted without
+- * fee, provided that the above copyright notice appear in all copies
+- * and that both that copyright notice and this permission notice
+- * appear in supporting documentation, and that the name of
+- * Novell, Inc. not be used in advertising or publicity pertaining to
+- * distribution of the software without specific, written prior permission.
+- * Novell, Inc. makes no representations about the suitability of this
+- * software for any purpose. It is provided "as is" without express or
+- * implied warranty.
+- *
+- * NOVELL, INC. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+- * NO EVENT SHALL NOVELL, INC. BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+- * OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+- * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+- * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+- *
+- * Author: David Reveman <davidr@novell.com>
+- */
+-
+-#include <glib.h>
+-
+-#include <compiz-core.h>
+-
+-static CompMetadata glibMetadata;
+-
+-static int displayPrivateIndex;
+-
+-typedef struct _GLibWatch {
+-    CompWatchFdHandle handle;
+-    int		      index;
+-    CompDisplay	      *display;
+-} GLibWatch;
+-
+-typedef struct _MateConfDisplay {
+-    HandleEventProc   handleEvent;
+-    CompTimeoutHandle timeoutHandle;
+-    CompTimeoutHandle wakeupTimeoutHandle;
+-    gint	      maxPriority;
+-    GPollFD	      *fds;
+-    gint	      fdsSize;
+-    gint	      nFds;
+-    GLibWatch	      *watch;
+-    Atom	      notifyAtom;
+-} GLibDisplay;
+-
+-#define GET_GLIB_DISPLAY(d)					  \
+-    ((GLibDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
+-
+-#define GLIB_DISPLAY(d)			   \
+-    GLibDisplay *gd = GET_GLIB_DISPLAY (d)
+-
+-static void
+-glibDispatch (CompDisplay  *display,
+-	      GMainContext *context)
+-{
+-    int i;
+-
+-    GLIB_DISPLAY (display);
+-
+-    g_main_context_check (context, gd->maxPriority, gd->fds, gd->nFds);
+-    g_main_context_dispatch (context);
+-
+-    for (i = 0; i < gd->nFds; i++)
+-	compRemoveWatchFd (gd->watch[i].handle);
+-}
+-
+-static void
+-glibPrepare (CompDisplay  *display,
+-	     GMainContext *context);
+-
+-static Bool
+-glibDispatchAndPrepare (void *closure)
+-{
+-    CompDisplay  *display = (CompDisplay *) closure;
+-    GLIB_DISPLAY (display);
+-    GMainContext *context = g_main_context_default ();
+-
+-    glibDispatch (display, context);
+-    glibPrepare (display, context);
+-
+-    gd->wakeupTimeoutHandle = 0;
+-
+-    return FALSE;
+-}
+-
+-static void
+-glibWakeup (CompDisplay *display)
+-{
+-    GLIB_DISPLAY (display);
+-
+-    if (gd->timeoutHandle)
+-    {
+-	compRemoveTimeout (gd->timeoutHandle);
+-	gd->timeoutHandle = 0;
+-
+-	gd->wakeupTimeoutHandle =
+-	    compAddTimeout (0, 0, glibDispatchAndPrepare, (void *) display);
+-    }
+-}
+-
+-static Bool
+-glibCollectEvents (void *closure)
+-{
+-    GLibWatch   *watch = (GLibWatch *) closure;
+-    CompDisplay *display = watch->display;
+-
+-    GLIB_DISPLAY (display);
+-
+-    gd->fds[watch->index].revents |= compWatchFdEvents (watch->handle);
+-
+-    glibWakeup (display);
+-
+-    return TRUE;
+-}
+-
+-static void
+-glibPrepare (CompDisplay  *display,
+-	     GMainContext *context)
+-{
+-    int nFds = 0;
+-    int timeout = -1;
+-    int i;
+-
+-    GLIB_DISPLAY (display);
+-
+-    g_main_context_prepare (context, &gd->maxPriority);
+-
+-    do
+-    {
+-	if (nFds > gd->fdsSize)
+-	{
+-	    if (gd->fds)
+-		free (gd->fds);
+-
+-	    gd->fds = malloc ((sizeof (GPollFD) + sizeof (GLibWatch)) * nFds);
+-	    if (!gd->fds)
+-	    {
+-		nFds = 0;
+-		break;
+-	    }
+-
+-	    gd->watch   = (GLibWatch *) (gd->fds + nFds);
+-	    gd->fdsSize = nFds;
+-	}
+-
+-	nFds = g_main_context_query (context,
+-				     gd->maxPriority,
+-				     &timeout,
+-				     gd->fds,
+-				     gd->fdsSize);
+-    } while (nFds > gd->fdsSize);
+-
+-    if (timeout < 0)
+-	timeout = INT_MAX;
+-
+-    for (i = 0; i < nFds; i++)
+-    {
+-	gd->watch[i].display = display;
+-	gd->watch[i].index   = i;
+-	gd->watch[i].handle  = compAddWatchFd (gd->fds[i].fd,
+-					       gd->fds[i].events,
+-					       glibCollectEvents,
+-					       &gd->watch[i]);
+-    }
+-
+-    gd->nFds	      = nFds;
+-    gd->timeoutHandle =
+-	compAddTimeout (timeout, timeout, glibDispatchAndPrepare, display);
+-}
+-
+-static void
+-glibHandleEvent (CompDisplay *d,
+-		 XEvent      *event)
+-{
+-    GLIB_DISPLAY (d);
+-
+-    if (event->type == ClientMessage)
+-    {
+-	if (event->xclient.message_type == gd->notifyAtom)
+-	    glibWakeup (d);
+-    }
+-
+-    UNWRAP (gd, d, handleEvent);
+-    (*d->handleEvent) (d, event);
+-    WRAP (gd, d, handleEvent, glibHandleEvent);
+-}
+-
+-static Bool
+-glibInitDisplay (CompPlugin  *p,
+-		 CompDisplay *d)
+-{
+-    GLibDisplay *gd;
+-
+-    if (!checkPluginABI ("core", CORE_ABIVERSION))
+-	return FALSE;
+-
+-    gd = malloc (sizeof (GLibDisplay));
+-    if (!gd)
+-	return FALSE;
+-
+-    gd->fds	      = NULL;
+-    gd->fdsSize	      = 0;
+-    gd->timeoutHandle = 0;
+-    gd->wakeupTimeoutHandle = 0;
+-    gd->notifyAtom    = XInternAtom (d->display, "_COMPIZ_GLIB_NOTIFY", 0);
+-
+-    WRAP (gd, d, handleEvent, glibHandleEvent);
+-
+-    d->base.privates[displayPrivateIndex].ptr = gd;
+-
+-    glibPrepare (d, g_main_context_default ());
+-
+-    return TRUE;
+-}
+-
+-static void
+-glibFiniDisplay (CompPlugin  *p,
+-		 CompDisplay *d)
+-{
+-    GLIB_DISPLAY (d);
+-
+-    if (gd->timeoutHandle)
+-	compRemoveTimeout (gd->timeoutHandle);
+-
+-    if (gd->wakeupTimeoutHandle)
+-	compRemoveTimeout (gd->wakeupTimeoutHandle);
+-
+-    glibDispatch (d, g_main_context_default ());
+-
+-    UNWRAP (gd, d, handleEvent);
+-
+-    if (gd->fds)
+-	free (gd->fds);
+-
+-    free (gd);
+-}
+-
+-static CompBool
+-glibInitObject (CompPlugin *p,
+-		CompObject *o)
+-{
+-    static InitPluginObjectProc dispTab[] = {
+-	(InitPluginObjectProc) 0, /* InitCore */
+-	(InitPluginObjectProc) glibInitDisplay
+-    };
+-
+-    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+-}
+-
+-static void
+-glibFiniObject (CompPlugin *p,
+-		CompObject *o)
+-{
+-    static FiniPluginObjectProc dispTab[] = {
+-	(FiniPluginObjectProc) 0, /* FiniCore */
+-	(FiniPluginObjectProc) glibFiniDisplay
+-    };
+-
+-    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+-}
+-
+-static Bool
+-glibInit (CompPlugin *p)
+-{
+-    if (!compInitPluginMetadataFromInfo (&glibMetadata, p->vTable->name,
+-					 0, 0, 0, 0))
+-	return FALSE;
+-
+-    displayPrivateIndex = allocateDisplayPrivateIndex ();
+-    if (displayPrivateIndex < 0)
+-    {
+-	compFiniMetadata (&glibMetadata);
+-	return FALSE;
+-    }
+-
+-    compAddMetadataFromFile (&glibMetadata, p->vTable->name);
+-
+-    return TRUE;
+-}
+-
+-static void
+-glibFini (CompPlugin *p)
+-{
+-    freeDisplayPrivateIndex (displayPrivateIndex);
+-    compFiniMetadata (&glibMetadata);
+-}
+-
+-static CompMetadata *
+-glibGetMetadata (CompPlugin *plugin)
+-{
+-    return &glibMetadata;
+-}
+-
+-CompPluginVTable glibVTable = {
+-    "glib",
+-    glibGetMetadata,
+-    glibInit,
+-    glibFini,
+-    glibInitObject,
+-    glibFiniObject,
+-    0, /* GetObjectOptions */
+-    0  /* SetObjectOption */
+-};
+-
+-CompPluginVTable *
+-getCompPluginInfo20070830 (void)
+-{
+-    return &glibVTable;
+-}
+diff -uprN compiz-0.8.8-orig/plugins/Makefile.am compiz-0.8.8/plugins/Makefile.am
+--- compiz-0.8.8-orig/plugins/Makefile.am	2013-04-19 13:37:07.153680000 +0200
++++ compiz-0.8.8/plugins/Makefile.am	2013-04-19 14:03:18.471548312 +0200
+@@ -94,27 +94,6 @@ libannotate_la_SOURCES = annotate.c
+ libannotate_module = libannotate.la
+ endif
+ 
+-if USE_GLIB
+-libglib_la_LDFLAGS = -module -avoid-version -no-undefined
+-libglib_la_LIBADD = @GLIB_LIBS@
+-libglib_la_SOURCES = glib.c
+-libglib_module = libglib.la
+-endif
+-
+-if USE_MATECONF
+-libmateconf_la_LDFLAGS = -module -avoid-version -no-undefined
+-libmateconf_la_LIBADD = @MATECONF_LIBS@
+-libmateconf_la_SOURCES = mateconf.c
+-libmateconf_module = libmateconf.la
+-endif
+-
+-if DBUS_PLUGIN
+-libdbus_la_LDFLAGS = -module -avoid-version -no-undefined
+-libdbus_la_LIBADD = @DBUS_LIBS@
+-libdbus_la_SOURCES = dbus.c
+-libdbus_module = libdbus.la
+-endif
+-
+ if INOTIFY_PLUGIN
+ libinotify_la_LDFLAGS = -module -avoid-version -no-undefined
+ libinotify_la_SOURCES = inotify.c
+@@ -133,9 +112,6 @@ INCLUDES =					\
+ 	@LIBPNG_CFLAGS@				\
+ 	@LIBRSVG_CFLAGS@			\
+ 	@ANNOTATE_CFLAGS@			\
+-	@MATECONF_CFLAGS@				\
+-	@DBUS_CFLAGS@				\
+-	@GLIB_CFLAGS@				\
+ 	@FUSE_CFLAGS@				\
+ 	-DFUSE_USE_VERSION=26			\
+ 	-DALL_LINGUAS="\"@ALL_LINGUAS@\""	\
+@@ -150,8 +126,6 @@ INCLUDES =					\
+ moduledir = $(plugindir)
+ 
+ module_LTLIBRARIES =		\
+-	$(libglib_module)	\
+-	$(libmateconf_module)	\
+ 	libdecoration.la	\
+ 	libwobbly.la		\
+ 	libfade.la		\
+@@ -163,7 +137,6 @@ module_LTLIBRARIES =		\
+ 	libmove.la		\
+ 	libresize.la		\
+ 	libplace.la             \
+-	$(libdbus_module)	\
+ 	libswitcher.la		\
+ 	libwater.la		\
+ 	libscreenshot.la	\
+diff -uprN compiz-0.8.8-orig/plugins/mateconf.c compiz-0.8.8/plugins/mateconf.c
+--- compiz-0.8.8-orig/plugins/mateconf.c	2013-04-19 13:37:07.042679000 +0200
++++ compiz-0.8.8/plugins/mateconf.c	1970-01-01 01:00:00.000000000 +0100
+@@ -1,849 +0,0 @@
+-/*
+- * Copyright © 2005 Novell, Inc.
+- *
+- * Permission to use, copy, modify, distribute, and sell this software
+- * and its documentation for any purpose is hereby granted without
+- * fee, provided that the above copyright notice appear in all copies
+- * and that both that copyright notice and this permission notice
+- * appear in supporting documentation, and that the name of
+- * Novell, Inc. not be used in advertising or publicity pertaining to
+- * distribution of the software without specific, written prior permission.
+- * Novell, Inc. makes no representations about the suitability of this
+- * software for any purpose. It is provided "as is" without express or
+- * implied warranty.
+- *
+- * NOVELL, INC. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+- * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+- * NO EVENT SHALL NOVELL, INC. BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+- * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+- * OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+- * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+- * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+- *
+- * Author: David Reveman <davidr@novell.com>
+- */
+-
+-#define _GNU_SOURCE
+-#include <string.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <ctype.h>
+-
+-#include <glib.h>
+-#include <glib/gprintf.h>
+-#include <mateconf/mateconf-client.h>
+-
+-#include <compiz-core.h>
+-
+-static CompMetadata mateconfMetadata;
+-
+-#define APP_NAME "compiz"
+-
+-/* From mateconf-internal.h. Bleah. */
+-int mateconf_value_compare (const MateConfValue *value_a,
+-			 const MateConfValue *value_b);
+-
+-static int corePrivateIndex;
+-
+-typedef struct _MateConfCore {
+-    MateConfClient *client;
+-    guint	cnxn;
+-
+-    CompTimeoutHandle reloadHandle;
+-
+-    InitPluginForObjectProc initPluginForObject;
+-    SetOptionForPluginProc  setOptionForPlugin;
+-} MateConfCore;
+-
+-#define GET_MATECONF_CORE(c)				     \
+-    ((MateConfCore *) (c)->base.privates[corePrivateIndex].ptr)
+-
+-#define MATECONF_CORE(c)		       \
+-    MateConfCore *gc = GET_MATECONF_CORE (c)
+-
+-
+-static gchar *
+-mateconfGetKey (CompObject  *object,
+-	     const gchar *plugin,
+-	     const gchar *option)
+-{
+-    const gchar *type;
+-    gchar	*key, *name, *objectName;
+-
+-    type = compObjectTypeName (object->type);
+-    if (strcmp (type, "display") == 0)
+-	type = "allscreens";
+-
+-    name = compObjectName (object);
+-    if (name)
+-    {
+-	objectName = g_strdup_printf ("%s%s", type, name);
+-	free (name);
+-    }
+-    else
+-	objectName = g_strdup (type);
+-
+-    if (strcmp (plugin, "core") == 0)
+-	key = g_strjoin ("/", "/apps", APP_NAME, "general", objectName,
+-			 "options", option, NULL);
+-    else
+-	key = g_strjoin ("/", "/apps", APP_NAME, "plugins", plugin, objectName,
+-			 "options", option, NULL);
+-
+-    g_free (objectName);
+-
+-    return key;
+-}
+-
+-static MateConfValueType
+-mateconfTypeFromCompType (CompOptionType type)
+-{
+-    switch (type) {
+-    case CompOptionTypeBool:
+-    case CompOptionTypeBell:
+-	return MATECONF_VALUE_BOOL;
+-    case CompOptionTypeInt:
+-	return MATECONF_VALUE_INT;
+-    case CompOptionTypeFloat:
+-	return MATECONF_VALUE_FLOAT;
+-    case CompOptionTypeString:
+-    case CompOptionTypeColor:
+-    case CompOptionTypeKey:
+-    case CompOptionTypeButton:
+-    case CompOptionTypeEdge:
+-    case CompOptionTypeMatch:
+-	return MATECONF_VALUE_STRING;
+-    case CompOptionTypeList:
+-	return MATECONF_VALUE_LIST;
+-    default:
+-	break;
+-    }
+-
+-    return MATECONF_VALUE_INVALID;
+-}
+-
+-static void
+-mateconfSetValue (CompObject      *object,
+-	       CompOptionValue *value,
+-	       CompOptionType  type,
+-	       MateConfValue      *gvalue)
+-{
+-    switch (type) {
+-    case CompOptionTypeBool:
+-	mateconf_value_set_bool (gvalue, value->b);
+-	break;
+-    case CompOptionTypeInt:
+-	mateconf_value_set_int (gvalue, value->i);
+-	break;
+-    case CompOptionTypeFloat:
+-	mateconf_value_set_float (gvalue, value->f);
+-	break;
+-    case CompOptionTypeString:
+-	mateconf_value_set_string (gvalue, value->s);
+-	break;
+-    case CompOptionTypeColor: {
+-	gchar *color;
+-
+-	color = colorToString (value->c);
+-	mateconf_value_set_string (gvalue, color);
+-
+-	free (color);
+-    } break;
+-    case CompOptionTypeKey: {
+-	gchar *action;
+-
+-	while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
+-	    object = object->parent;
+-
+-	if (!object)
+-	    return;
+-
+-	action = keyActionToString (GET_CORE_DISPLAY (object), &value->action);
+-	mateconf_value_set_string (gvalue, action);
+-
+-	free (action);
+-    } break;
+-    case CompOptionTypeButton: {
+-	gchar *action;
+-
+-	while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
+-	    object = object->parent;
+-
+-	if (!object)
+-	    return;
+-
+-	action = buttonActionToString (GET_CORE_DISPLAY (object),
+-				       &value->action);
+-	mateconf_value_set_string (gvalue, action);
+-
+-	free (action);
+-    } break;
+-    case CompOptionTypeEdge: {
+-	gchar *edge;
+-
+-	edge = edgeMaskToString (value->action.edgeMask);
+-	mateconf_value_set_string (gvalue, edge);
+-
+-	free (edge);
+-    } break;
+-    case CompOptionTypeBell:
+-	mateconf_value_set_bool (gvalue, value->action.bell);
+-	break;
+-    case CompOptionTypeMatch: {
+-	gchar *match;
+-
+-	match = matchToString (&value->match);
+-	mateconf_value_set_string (gvalue, match);
+-
+-	free (match);
+-    } break;
+-    default:
+-	break;
+-    }
+-}
+-
+-static void
+-mateconfSetOption (CompObject  *object,
+-		CompOption  *o,
+-		const gchar *plugin)
+-{
+-    MateConfValueType type = mateconfTypeFromCompType (o->type);
+-    MateConfValue     *gvalue, *existingValue = NULL;
+-    gchar          *key;
+-
+-    MATECONF_CORE (&core);
+-
+-    if (type == MATECONF_VALUE_INVALID)
+-	return;
+-
+-    key = mateconfGetKey (object, plugin, o->name);
+-
+-    existingValue = mateconf_client_get (gc->client, key, NULL);
+-    gvalue = mateconf_value_new (type);
+-
+-    if (o->type == CompOptionTypeList)
+-    {
+-	GSList     *node, *list = NULL;
+-	MateConfValue *gv;
+-	int	   i;
+-
+-	type = mateconfTypeFromCompType (o->value.list.type);
+-
+-	for (i = 0; i < o->value.list.nValue; i++)
+-	{
+-	    gv = mateconf_value_new (type);
+-	    mateconfSetValue (object, &o->value.list.value[i],
+-			   o->value.list.type, gv);
+-	    list = g_slist_append (list, gv);
+-	}
+-
+-	mateconf_value_set_list_type (gvalue, type);
+-	mateconf_value_set_list (gvalue, list);
+-
+-	if (!existingValue || mateconf_value_compare (existingValue, gvalue))
+-	    mateconf_client_set (gc->client, key, gvalue, NULL);
+-
+-	for (node = list; node; node = node->next)
+-	    mateconf_value_free ((MateConfValue *) node->data);
+-
+-	g_slist_free (list);
+-    }
+-    else
+-    {
+-	mateconfSetValue (object, &o->value, o->type, gvalue);
+-
+-	if (!existingValue || mateconf_value_compare (existingValue, gvalue))
+-	    mateconf_client_set (gc->client, key, gvalue, NULL);
+-    }
+-
+-    mateconf_value_free (gvalue);
+-
+-    if (existingValue)
+-	mateconf_value_free (existingValue);
+-
+-    g_free (key);
+-}
+-
+-static Bool
+-mateconfGetValue (CompObject      *object,
+-	       CompOptionValue *value,
+-	       CompOptionType  type,
+-	       MateConfValue      *gvalue)
+-
+-{
+-    if (type         == CompOptionTypeBool &&
+-	gvalue->type == MATECONF_VALUE_BOOL)
+-    {
+-	value->b = mateconf_value_get_bool (gvalue);
+-	return TRUE;
+-    }
+-    else if (type         == CompOptionTypeInt &&
+-	     gvalue->type == MATECONF_VALUE_INT)
+-    {
+-	value->i = mateconf_value_get_int (gvalue);
+-	return TRUE;
+-    }
+-    else if (type         == CompOptionTypeFloat &&
+-	     gvalue->type == MATECONF_VALUE_FLOAT)
+-    {
+-	value->f = mateconf_value_get_float (gvalue);
+-	return TRUE;
+-    }
+-    else if (type         == CompOptionTypeString &&
+-	     gvalue->type == MATECONF_VALUE_STRING)
+-    {
+-	const char *str;
+-
+-	str = mateconf_value_get_string (gvalue);
+-	if (str)
+-	{
+-	    value->s = strdup (str);
+-	    if (value->s)
+-		return TRUE;
+-	}
+-    }
+-    else if (type         == CompOptionTypeColor &&
+-	     gvalue->type == MATECONF_VALUE_STRING)
+-    {
+-	const gchar *color;
+-
+-	color = mateconf_value_get_string (gvalue);
+-
+-	if (stringToColor (color, value->c))
+-	    return TRUE;
+-    }
+-    else if (type         == CompOptionTypeKey &&
+-	     gvalue->type == MATECONF_VALUE_STRING)
+-    {
+-	const gchar *action;
+-
+-	action = mateconf_value_get_string (gvalue);
+-
+-	while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
+-	    object = object->parent;
+-
+-	if (!object)
+-	    return FALSE;
+-
+-	stringToKeyAction (GET_CORE_DISPLAY (object), action, &value->action);
+-	return TRUE;
+-    }
+-    else if (type         == CompOptionTypeButton &&
+-	     gvalue->type == MATECONF_VALUE_STRING)
+-    {
+-	const gchar *action;
+-
+-	action = mateconf_value_get_string (gvalue);
+-
+-	while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
+-	    object = object->parent;
+-
+-	if (!object)
+-	    return FALSE;
+-
+-	stringToButtonAction (GET_CORE_DISPLAY (object), action,
+-			      &value->action);
+-	return TRUE;
+-    }
+-    else if (type         == CompOptionTypeEdge &&
+-	     gvalue->type == MATECONF_VALUE_STRING)
+-    {
+-	const gchar *edge;
+-
+-	edge = mateconf_value_get_string (gvalue);
+-
+-	value->action.edgeMask = stringToEdgeMask (edge);
+-	return TRUE;
+-    }
+-    else if (type         == CompOptionTypeBell &&
+-	     gvalue->type == MATECONF_VALUE_BOOL)
+-    {
+-	value->action.bell = mateconf_value_get_bool (gvalue);
+-	return TRUE;
+-    }
+-    else if (type         == CompOptionTypeMatch &&
+-	     gvalue->type == MATECONF_VALUE_STRING)
+-    {
+-	const gchar *match;
+-
+-	match = mateconf_value_get_string (gvalue);
+-
+-	matchInit (&value->match);
+-	matchAddFromString (&value->match, match);
+-	return TRUE;
+-    }
+-
+-    return FALSE;
+-}
+-
+-static Bool
+-mateconfReadOptionValue (CompObject      *object,
+-		      MateConfEntry      *entry,
+-		      CompOption      *o,
+-		      CompOptionValue *value)
+-{
+-    MateConfValue *gvalue;
+-
+-    gvalue = mateconf_entry_get_value (entry);
+-    if (!gvalue)
+-	return FALSE;
+-
+-    compInitOptionValue (value);
+-
+-    if (o->type      == CompOptionTypeList &&
+-	gvalue->type == MATECONF_VALUE_LIST)
+-    {
+-	MateConfValueType type;
+-	GSList	       *list;
+-	int	       i, n;
+-
+-	type = mateconf_value_get_list_type (gvalue);
+-	if (mateconfTypeFromCompType (o->value.list.type) != type)
+-	    return FALSE;
+-
+-	list = mateconf_value_get_list (gvalue);
+-	n    = g_slist_length (list);
+-
+-	value->list.value  = NULL;
+-	value->list.nValue = 0;
+-	value->list.type   = o->value.list.type;
+-
+-	if (n)
+-	{
+-	    value->list.value = malloc (sizeof (CompOptionValue) * n);
+-	    if (value->list.value)
+-	    {
+-		for (i = 0; i < n; i++)
+-		{
+-		    if (!mateconfGetValue (object,
+-					&value->list.value[i],
+-					o->value.list.type,
+-					(MateConfValue *) list->data))
+-			break;
+-
+-		    value->list.nValue++;
+-
+-		    list = g_slist_next (list);
+-		}
+-
+-		if (value->list.nValue != n)
+-		{
+-		    compFiniOptionValue (value, o->type);
+-		    return FALSE;
+-		}
+-	    }
+-	}
+-    }
+-    else
+-    {
+-	if (!mateconfGetValue (object, value, o->type, gvalue))
+-	    return FALSE;
+-    }
+-
+-    return TRUE;
+-}
+-
+-static void
+-mateconfGetOption (CompObject *object,
+-		CompOption *o,
+-		const char *plugin)
+-{
+-    MateConfEntry *entry;
+-    gchar      *key;
+-
+-    MATECONF_CORE (&core);
+-
+-    key = mateconfGetKey (object, plugin, o->name);
+-
+-    entry = mateconf_client_get_entry (gc->client, key, NULL, TRUE, NULL);
+-    if (entry)
+-    {
+-	CompOptionValue value;
+-
+-	if (mateconfReadOptionValue (object, entry, o, &value))
+-	{
+-	    (*core.setOptionForPlugin) (object, plugin, o->name, &value);
+-	    compFiniOptionValue (&value, o->type);
+-	}
+-	else
+-	{
+-	    mateconfSetOption (object, o, plugin);
+-	}
+-
+-	mateconf_entry_free (entry);
+-    }
+-
+-    g_free (key);
+-}
+-
+-static CompBool
+-mateconfReloadObjectTree (CompObject *object,
+-			 void       *closure);
+-
+-static CompBool
+-mateconfReloadObjectsWithType (CompObjectType type,
+-			      CompObject     *parent,
+-			      void	     *closure)
+-{
+-    compObjectForEach (parent, type, mateconfReloadObjectTree, closure);
+-
+-    return TRUE;
+-}
+-
+-static CompBool
+-mateconfReloadObjectTree (CompObject *object,
+-		       void       *closure)
+-{
+-    CompPlugin *p = (CompPlugin *) closure;
+-    CompOption  *option;
+-    int		nOption;
+-
+-    option = (*p->vTable->getObjectOptions) (p, object, &nOption);
+-    while (nOption--)
+-	mateconfGetOption (object, option++, p->vTable->name);
+-
+-    compObjectForEachType (object, mateconfReloadObjectsWithType, closure);
+-
+-    return TRUE;
+-}
+-
+-static Bool
+-mateconfReload (void *closure)
+-{
+-    CompPlugin  *p;
+-
+-    MATECONF_CORE (&core);
+-
+-    for (p = getPlugins (); p; p = p->next)
+-    {
+-	if (!p->vTable->getObjectOptions)
+-	    continue;
+-
+-	mateconfReloadObjectTree (&core.base, (void *) p);
+-    }
+-
+-    gc->reloadHandle = 0;
+-
+-    return FALSE;
+-}
+-
+-static Bool
+-mateconfSetOptionForPlugin (CompObject      *object,
+-			 const char	 *plugin,
+-			 const char	 *name,
+-			 CompOptionValue *value)
+-{
+-    CompBool status;
+-
+-    MATECONF_CORE (&core);
+-
+-    UNWRAP (gc, &core, setOptionForPlugin);
+-    status = (*core.setOptionForPlugin) (object, plugin, name, value);
+-    WRAP (gc, &core, setOptionForPlugin, mateconfSetOptionForPlugin);
+-
+-    if (status && !gc->reloadHandle)
+-    {
+-	CompPlugin *p;
+-
+-	p = findActivePlugin (plugin);
+-	if (p && p->vTable->getObjectOptions)
+-	{
+-	    CompOption *option;
+-	    int	       nOption;
+-
+-	    option = (*p->vTable->getObjectOptions) (p, object, &nOption);
+-	    option = compFindOption (option, nOption, name, 0);
+-	    if (option)
+-		mateconfSetOption (object, option, p->vTable->name);
+-	}
+-    }
+-
+-    return status;
+-}
+-
+-static CompBool
+-mateconfInitPluginForObject (CompPlugin *p,
+-			  CompObject *o)
+-{
+-    CompBool status;
+-
+-    MATECONF_CORE (&core);
+-
+-    UNWRAP (gc, &core, initPluginForObject);
+-    status = (*core.initPluginForObject) (p, o);
+-    WRAP (gc, &core, initPluginForObject, mateconfInitPluginForObject);
+-
+-    if (status && p->vTable->getObjectOptions)
+-    {
+-	CompOption *option;
+-	int	   nOption;
+-
+-	option = (*p->vTable->getObjectOptions) (p, o, &nOption);
+-	while (nOption--)
+-	    mateconfGetOption (o, option++, p->vTable->name);
+-    }
+-
+-    return status;
+-}
+-
+-/* MULTIDPYERROR: only works with one or less displays present */
+-static void
+-mateconfKeyChanged (MateConfClient *client,
+-		 guint	     cnxn_id,
+-		 MateConfEntry  *entry,
+-		 gpointer    user_data)
+-{
+-    CompPlugin *plugin;
+-    CompObject *object;
+-    CompOption *option = NULL;
+-    int	       nOption = 0;
+-    gchar      **token;
+-    int	       objectIndex = 4;
+-
+-    token = g_strsplit (entry->key, "/", 8);
+-
+-    if (g_strv_length (token) < 7)
+-    {
+-	g_strfreev (token);
+-	return;
+-    }
+-
+-    if (strcmp (token[0], "")	    != 0 ||
+-	strcmp (token[1], "apps")   != 0 ||
+-	strcmp (token[2], APP_NAME) != 0)
+-    {
+-	g_strfreev (token);
+-	return;
+-    }
+-
+-    if (strcmp (token[3], "general") == 0)
+-    {
+-	plugin = findActivePlugin ("core");
+-    }
+-    else
+-    {
+-	if (strcmp (token[3], "plugins") != 0 || g_strv_length (token) < 8)
+-	{
+-	    g_strfreev (token);
+-	    return;
+-	}
+-
+-	objectIndex = 5;
+-	plugin = findActivePlugin (token[4]);
+-    }
+-
+-    if (!plugin)
+-    {
+-	g_strfreev (token);
+-	return;
+-    }
+-
+-    object = compObjectFind (&core.base, COMP_OBJECT_TYPE_DISPLAY, NULL);
+-    if (!object)
+-    {
+-	g_strfreev (token);
+-	return;
+-    }
+-
+-    if (strncmp (token[objectIndex], "screen", 6) == 0)
+-    {
+-	object = compObjectFind (object, COMP_OBJECT_TYPE_SCREEN,
+-				 token[objectIndex] + 6);
+-	if (!object)
+-	{
+-	    g_strfreev (token);
+-	    return;
+-	}
+-    }
+-    else if (strcmp (token[objectIndex], "allscreens") != 0)
+-    {
+-	g_strfreev (token);
+-	return;
+-    }
+-
+-    if (strcmp (token[objectIndex + 1], "options") != 0)
+-    {
+-	g_strfreev (token);
+-	return;
+-    }
+-
+-    if (plugin->vTable->getObjectOptions)
+-	option = (*plugin->vTable->getObjectOptions) (plugin, object,
+-						      &nOption);
+-
+-    option = compFindOption (option, nOption, token[objectIndex + 2], 0);
+-    if (option)
+-    {
+-	CompOptionValue value;
+-
+-	if (mateconfReadOptionValue (object, entry, option, &value))
+-	{
+-	    (*core.setOptionForPlugin) (object,
+-					plugin->vTable->name,
+-					option->name,
+-					&value);
+-
+-	    compFiniOptionValue (&value, option->type);
+-	}
+-    }
+-
+-    g_strfreev (token);
+-}
+-
+-static void
+-mateconfSendGLibNotify (CompScreen *s)
+-{
+-    Display *dpy = s->display->display;
+-    XEvent  xev;
+-
+-    xev.xclient.type    = ClientMessage;
+-    xev.xclient.display = dpy;
+-    xev.xclient.format  = 32;
+-
+-    xev.xclient.message_type = XInternAtom (dpy, "_COMPIZ_GLIB_NOTIFY", 0);
+-    xev.xclient.window	     = s->root;
+-
+-    memset (xev.xclient.data.l, 0, sizeof (xev.xclient.data.l));
+-
+-    XSendEvent (dpy,
+-		s->root,
+-		FALSE,
+-		SubstructureRedirectMask | SubstructureNotifyMask,
+-		&xev);
+-}
+-
+-static Bool
+-mateconfInitCore (CompPlugin *p,
+-	       CompCore   *c)
+-{
+-    MateConfCore *gc;
+-
+-    if (!checkPluginABI ("core", CORE_ABIVERSION))
+-	return FALSE;
+-
+-    gc = malloc (sizeof (MateConfCore));
+-    if (!gc)
+-	return FALSE;
+-
+-    g_type_init ();
+-
+-    gc->client = mateconf_client_get_default ();
+-
+-    mateconf_client_add_dir (gc->client, "/apps/" APP_NAME,
+-			  MATECONF_CLIENT_PRELOAD_NONE, NULL);
+-
+-    gc->reloadHandle = compAddTimeout (0, 0, mateconfReload, 0);
+-
+-    gc->cnxn = mateconf_client_notify_add (gc->client, "/apps/" APP_NAME,
+-					mateconfKeyChanged, c, NULL, NULL);
+-
+-    WRAP (gc, c, initPluginForObject, mateconfInitPluginForObject);
+-    WRAP (gc, c, setOptionForPlugin, mateconfSetOptionForPlugin);
+-
+-    c->base.privates[corePrivateIndex].ptr = gc;
+-
+-    return TRUE;
+-}
+-
+-static void
+-mateconfFiniCore (CompPlugin *p,
+-	       CompCore   *c)
+-{
+-    MATECONF_CORE (c);
+-
+-    UNWRAP (gc, c, initPluginForObject);
+-    UNWRAP (gc, c, setOptionForPlugin);
+-
+-    if (gc->reloadHandle)
+-	compRemoveTimeout (gc->reloadHandle);
+-
+-    if (gc->cnxn)
+-	mateconf_client_notify_remove (gc->client, gc->cnxn);
+-
+-    mateconf_client_remove_dir (gc->client, "/apps/" APP_NAME, NULL);
+-    mateconf_client_clear_cache (gc->client);
+-
+-    free (gc);
+-}
+-
+-static Bool
+-mateconfInitScreen (CompPlugin *p,
+-		 CompScreen *s)
+-{
+-    mateconfSendGLibNotify (s);
+-
+-    return TRUE;
+-}
+-
+-static CompBool
+-mateconfInitObject (CompPlugin *p,
+-		 CompObject *o)
+-{
+-    static InitPluginObjectProc dispTab[] = {
+-	(InitPluginObjectProc) mateconfInitCore,
+-	(InitPluginObjectProc) 0, /* InitDisplay */
+-	(InitPluginObjectProc) mateconfInitScreen
+-    };
+-
+-    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+-}
+-
+-static void
+-mateconfFiniObject (CompPlugin *p,
+-		 CompObject *o)
+-{
+-    static FiniPluginObjectProc dispTab[] = {
+-	(FiniPluginObjectProc) mateconfFiniCore
+-    };
+-
+-    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+-}
+-
+-static Bool
+-mateconfInit (CompPlugin *p)
+-{
+-    if (!compInitPluginMetadataFromInfo (&mateconfMetadata, p->vTable->name,
+-					 0, 0, 0, 0))
+-	return FALSE;
+-
+-    corePrivateIndex = allocateCorePrivateIndex ();
+-    if (corePrivateIndex < 0)
+-    {
+-	compFiniMetadata (&mateconfMetadata);
+-	return FALSE;
+-    }
+-
+-    compAddMetadataFromFile (&mateconfMetadata, p->vTable->name);
+-
+-    return TRUE;
+-}
+-
+-static void
+-mateconfFini (CompPlugin *p)
+-{
+-    freeCorePrivateIndex (corePrivateIndex);
+-    compFiniMetadata (&mateconfMetadata);
+-}
+-
+-static CompMetadata *
+-mateconfGetMetadata (CompPlugin *plugin)
+-{
+-    return &mateconfMetadata;
+-}
+-
+-CompPluginVTable mateconfVTable = {
+-    "mateconf",
+-    mateconfGetMetadata,
+-    mateconfInit,
+-    mateconfFini,
+-    mateconfInitObject,
+-    mateconfFiniObject,
+-    0, /* GetObjectOptions */
+-    0  /* SetObjectOption */
+-};
+-
+-CompPluginVTable *
+-getCompPluginInfo20070830 (void)
+-{
+-    return &mateconfVTable;
+-}

@@ -1,0 +1,5003 @@
+diff -upNr compiz-0.8.6.orign/metadata/Makefile.am compiz-0.8.6/metadata/Makefile.am
+--- compiz-0.8.6.orign/metadata/Makefile.am	2010-03-28 14:15:35.000000000 +0200
++++ compiz-0.8.6/metadata/Makefile.am	2010-03-30 14:53:23.499283857 +0200
+@@ -31,6 +31,7 @@ xml_in_files =		   \
+ 	video.xml.in       \
+ 	water.xml.in       \
+ 	wobbly.xml.in      \
++	wall.xml.in        \
+ 	zoom.xml.in
+ xml_files    = $(xml_in_files:.xml.in=.xml)
+ xml_DATA     = $(xml_files)
+diff -upNr compiz-0.8.6.orign/metadata/wall.xml.in compiz-0.8.6/metadata/wall.xml.in
+--- compiz-0.8.6.orign/metadata/wall.xml.in	1970-01-01 01:00:00.000000000 +0100
++++ compiz-0.8.6/metadata/wall.xml.in	2010-03-30 14:53:23.499283857 +0200
+@@ -0,0 +1,357 @@
++<?xml version="1.0"?>
++<compiz>
++	<plugin name="wall" useBcop="true">
++		<_short>Desktop Wall</_short>
++		<_long>Desktop Wall Plugin</_long>
++		<category>Desktop</category>
++		<feature>largedesktop</feature>
++		<deps>
++			<relation type="after">
++				<plugin>decoration</plugin>
++			</relation>
++			<relation type="before">
++				<plugin>wobbly</plugin>
++				<plugin>fade</plugin>
++			</relation>
++		</deps>
++		<display>
++			<group>
++				<_short>Viewport Switch Preview</_short>
++				<option name="show_switcher" type="bool">
++					<_short>Show Viewport Switcher Preview</_short>
++					<_long>Show switcher window while switching viewports</_long>
++					<default>true</default>
++				</option>
++				<option name="miniscreen" type="bool">
++					<_short>Show Live Viewport Previews</_short>
++					<_long>Show live viewport previews in switcher window</_long>
++					<default>false</default>
++				</option>
++				<option name="preview_timeout" type="float">
++					<_short>Switch Target Preview Visibility Time</_short>
++					<_long>Duration (in s) the switch target preview should remain visible after switching ends.</_long>
++					<default>0.4</default>
++					<min>0.0</min>
++					<max>2.0</max>
++					<precision>0.05</precision>
++				</option>
++				<option name="preview_scale" type="int">
++					<_short>Preview Scale</_short>
++					<_long>Size of the preview in %</_long>
++					<default>100</default>
++					<min>0</min>
++					<max>400</max>
++				</option>
++				<option name="edge_radius" type="int">
++					<_short>Edge Radius</_short>
++					<_long>Radius of the rounded edge</_long>
++					<default>5</default>
++					<min>0</min>
++					<max>20</max>
++				</option>
++				<option name="border_width" type="int">
++					<_short>Border Width</_short>
++					<_long>Width of the border between the previews</_long>
++					<default>10</default>
++					<min>0</min>
++					<max>30</max>
++				</option>
++				<option name="outline_color" type="color">
++					<_short>Outline Color</_short>
++					<_long>Outline color of the switcher window.</_long>
++					<default>
++						<red>0x3333</red>
++						<green>0x3333</green>
++						<blue>0x3333</blue>
++						<alpha>0xd998</alpha>
++						</default>
++				</option>
++				<subgroup>
++					<_short>Background Gradient</_short>
++					
++					<option name="background_gradient_base_color" type="color">
++						<_short>Base Color</_short>
++						<_long>First color for the background gradient of the switcher window.</_long>
++						<default>
++							<red>0xcccc</red>
++							<green>0xcccc</green>
++							<blue>0xe665</blue>
++							<alpha>0xd998</alpha>
++						</default>
++					</option>
++					<option name="background_gradient_highlight_color" type="color">
++						<_short>Highlight Color</_short>
++						<_long>Second color for the background gradient of the switcher window.</_long>
++						<default>
++							<red>0xf332</red>
++							<green>0xf332</green>
++							<blue>0xffff</blue>
++							<alpha>0xd998</alpha>
++						</default>
++					</option>
++					<option name="background_gradient_shadow_color" type="color">
++						<_short>Shadow Color</_short>
++						<_long>Third color for the background gradient of the switcher window.</_long>
++						<default>
++							<red>0xf332</red>
++							<green>0xf332</green>
++							<blue>0xffff</blue>
++							<alpha>0xd998</alpha>
++						</default>
++					</option>
++				</subgroup>
++				<subgroup>
++					<_short>Thumb Gradient</_short>
++
++					<option name="thumb_gradient_base_color" type="color">
++						<_short>Base Color</_short>
++						<_long>First color for the thumb gradient of the switcher window.</_long>
++						<default>
++							<red>0x3333</red>
++							<green>0x3333</green>
++							<blue>0x3333</blue>
++							<alpha>0x5999</alpha>
++						</default>
++					</option>
++					<option name="thumb_gradient_highlight_color" type="color">
++						<_short>Highlight Color</_short>
++						<_long>Second color for the thumb gradient of the switcher window.</_long>
++						<default>
++							<red>0x3fff</red>
++							<green>0x3fff</green>
++							<blue>0x3fff</blue>
++							<alpha>0x3fff</alpha>
++						</default>
++					</option>
++				</subgroup>
++				<subgroup>
++					<_short>Highlight Gradient</_short>
++
++					<option name="thumb_highlight_gradient_base_color" type="color">
++						<_short>Base Color</_short>
++						<_long>First color for the thumb highlight gradient of the switcher window.</_long>
++						<default>
++							<red>0xffff</red>
++							<green>0xffff</green>
++							<blue>0xffff</blue>
++							<alpha>0xf332</alpha>
++						</default>
++					</option>
++					<option name="thumb_highlight_gradient_shadow_color" type="color">
++						<_short>Shadow Color</_short>
++						<_long>Second color for the thumb highlight gradient of the switcher window.</_long>
++						<default>
++							<red>0xdfff</red>
++							<green>0xdfff</green>
++							<blue>0xdfff</blue>
++							<alpha>0xa665</alpha>
++						</default>
++					</option>
++				</subgroup>
++				<subgroup>
++					<_short>Arrow Colors</_short>
++
++					<option name="arrow_base_color" type="color">
++						<_short>Base Color</_short>
++						<_long>First color of the arrow of the switcher window.</_long>
++						<default>
++							<red>0xe665</red>
++							<green>0xe665</green>
++							<blue>0xe665</blue>
++							<alpha>0xd998</alpha>
++						</default>
++					</option>
++					<option name="arrow_shadow_color" type="color">
++						<_short>Shadow Color</_short>
++						<_long>Second color of the arrow of the switcher window.</_long>
++						<default>
++							<red>0xdc28</red>
++							<green>0xdc28</green>
++							<blue>0xdc28</blue>
++							<alpha>0xd998</alpha>
++						</default>
++					</option>
++				</subgroup>
++			</group>
++			<group>
++				<_short>Viewport Switching</_short>
++				<option name="allow_wraparound" type="bool">
++					<_short>Allow Wrap-Around</_short>
++					<_long>Allow wrap-around when moving the wall up/down/left/right</_long>
++					<default>false</default>
++				</option>
++				<option name="slide_duration" type="float">
++					<_short>Wall Sliding Duration</_short>
++					<_long>Duration (in s) for wall sliding viewport switching animation</_long>
++					<default>0.3</default>
++					<min>0.0</min>
++					<max>5.0</max>
++					<precision>0.05</precision>
++				</option>
++				<option name="no_slide_match" type="match">
++					<_short>Non Sliding Windows</_short>
++					<_long>Windows that should not slide during the slide animation</_long>
++					<default>type=Dock | type=Desktop | state=Sticky</default>
++				</option>
++			</group>
++			<group>
++				<_short>Bindings</_short>
++				<subgroup>
++					<_short>Move within wall</_short>
++					<option name="left_key" type="key">
++						<_short>Move Left</_short>
++						<_long>Move along the wall to the left</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;Left</default>
++					</option>
++					<option name="left_button" type="button">
++						<_short>Move Left</_short>
++						<_long>Move along the wall to the left</_long>
++					</option>
++					<option name="right_key" type="key">
++						<_short>Move Right</_short>
++						<_long>Move along the wall to the right</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;Right</default>
++					</option>
++					<option name="right_button" type="button">
++						<_short>Move Right</_short>
++						<_long>Move along the wall to the right</_long>
++					</option>
++					<option name="up_key" type="key">
++						<_short>Move Up</_short>
++						<_long>Move along the wall up</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;Up</default>
++					</option>
++					<option name="up_button" type="button">
++						<_short>Move Up</_short>
++						<_long>Move along the wall up</_long>
++					</option>
++					<option name="down_key" type="key">
++						<_short>Move Down</_short>
++						<_long>Move along the wall down</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;Down</default>
++					</option>
++					<option name="down_button" type="button">
++						<_short>Move Down</_short>
++						<_long>Move along the wall down</_long>
++					</option>
++					<option name="next_key" type="key">
++						<_short>Move Next</_short>
++						<_long>Move along the wall to the next viewport</_long>
++					</option>
++					<option name="next_button" type="button">
++						<_short>Move Next</_short>
++						<_long>Move along the wall to the next viewport</_long>
++					</option>
++					<option name="prev_key" type="key">
++						<_short>Move Prev</_short>
++						<_long>Move along the wall to the previous viewport</_long>
++					</option>
++					<option name="prev_button" type="button">
++						<_short>Move Prev</_short>
++						<_long>Move along the wall to the previous viewport</_long>
++					</option>
++				</subgroup>
++				<subgroup>
++					<_short>Move with window within wall</_short>
++					<option name="left_window_key" type="key">
++						<_short>Move Left With Window</_short>
++						<_long>Move with window along the wall to the left</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;&lt;Shift&gt;Left</default>
++					</option>
++					<option name="right_window_key" type="key">
++						<_short>Move Right With Window</_short>
++						<_long>Move with window along the wall to the right</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;&lt;Shift&gt;Right</default>
++					</option>
++					<option name="up_window_key" type="key">
++						<_short>Move Up With Window</_short>
++						<_long>Move with window along the wall up</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;&lt;Shift&gt;Up</default>
++					</option>
++					<option name="down_window_key" type="key">
++						<_short>Move Down With Window</_short>
++						<_long>Move with window along the wall down</_long>
++						<default>&lt;Primary&gt;&lt;Alt&gt;&lt;Shift&gt;Down</default>
++					</option>
++				</subgroup>
++				<subgroup>
++					<_short>Edge flipping</_short>
++					<option name="flip_left_edge" type="edge">
++						<_short>Flip Left</_short>
++						<_long>Flip left</_long>
++						<nodelay>true</nodelay>
++						<default>
++							<edge name="Left"/>
++						</default>
++						<allowed edgednd="true"/>
++					</option>
++					<option name="flip_right_edge" type="edge">
++						<_short>Flip Right</_short>
++						<_long>Flip right</_long>
++						<nodelay>true</nodelay>
++						<default>
++							<edge name="Right"/>
++						</default>
++						<allowed edgednd="true"/>
++					</option>
++					<option name="flip_up_edge" type="edge">
++						<_short>Flip Up</_short>
++						<_long>Flip up</_long>
++						<nodelay>true</nodelay>
++						<default>
++							<edge name="Top"/>
++						</default>
++						<allowed edgednd="true"/>
++					</option>
++					<option name="flip_down_edge" type="edge">
++						<_short>Flip Down</_short>
++						<_long>Flip down</_long>
++						<nodelay>true</nodelay>
++						<default>
++							<edge name="Bottom"/>
++						</default>
++						<allowed edgednd="true"/>
++					</option>
++				</subgroup>
++			</group>
++		</display>
++		<screen>
++			<group>
++				<_short>Viewport Switching</_short>
++				<option name="mmmode" type="int">
++					<_short>Multimonitor behavior</_short>
++					<_long>How should a multimonitor configuration be handled</_long>
++					<default>0</default>
++					<min>0</min>
++					<max>1</max>
++					<desc>
++						<value>0</value>
++						<_name>Switch all</_name>
++					</desc>
++					<desc>
++						<value>1</value>
++						<_name>Switch separately</_name>
++					</desc>
++				</option>
++			</group>
++			<group>
++				<_short>Edge Flipping</_short>
++				<option name="edgeflip_pointer" type="bool">
++					<_short>Edge Flip Pointer</_short>
++					<_long>Flip viewport when moving the pointer to a screen edge</_long>
++					<default>false</default>
++				</option>
++				<option name="edgeflip_move" type="bool">
++					<_short>Edge Flip Move</_short>
++					<_long>Flip viewport when moving a window to a screen edge</_long>
++					<default>true</default>
++				</option>
++				<option name="edgeflip_dnd" type="bool">
++					<_short>Edge Flip DnD</_short>
++					<_long>Flip viewport when dragging an object to a screen edge</_long>
++					<default>false</default>
++				</option>
++			</group>
++		</screen>
++	</plugin>
++</compiz>
+diff -upNr compiz-0.8.6.orign/plugins/Makefile.am compiz-0.8.6/plugins/Makefile.am
+--- compiz-0.8.6.orign/plugins/Makefile.am	2010-03-28 14:15:35.000000000 +0200
++++ compiz-0.8.6/plugins/Makefile.am	2010-03-30 14:53:23.499283857 +0200
+@@ -74,6 +74,9 @@ libcommands_la_SOURCES = commands.c
+ libmatecompat_la_LDFLAGS = -module -avoid-version -no-undefined
+ libmatecompat_la_SOURCES = matecompat.c
+ 
++libwall_la_LDFLAGS = -module -avoid-version -no-undefined `pkg-config --libs cairo`
++libwall_la_SOURCES = wall.c wall_options.c
++
+ if USE_LIBRSVG
+ libsvg_la_DEPENDENCIES = $(top_builddir)/libdecoration/libdecoration.la
+ libsvg_la_LDFLAGS = -module -avoid-version -no-undefined
+@@ -149,7 +152,8 @@ INCLUDES =					\
+ 	-DIMAGEDIR=\"$(imagedir)\"		\
+ 	-I$(top_srcdir)/include                 \
+ 	-I$(top_builddir)/include               \
+-	-DMETADATADIR=\"$(metadatadir)\"
++	-DMETADATADIR=\"$(metadatadir)\"	\
++	`pkg-config --cflags cairo`
+ 
+ moduledir = $(plugindir)
+ 
+@@ -181,6 +185,7 @@ module_LTLIBRARIES =		\
+ 	libobs.la		\
+ 	libcommands.la		\
+ 	libmatecompat.la	\
++	libwall.la		\
+ 	$(libsvg_module)	\
+ 	$(libannotate_module)	\
+ 	$(libinotify_module)	\
+diff -upNr compiz-0.8.6.orign/plugins/wall.c compiz-0.8.6/plugins/wall.c
+--- compiz-0.8.6.orign/plugins/wall.c	1970-01-01 01:00:00.000000000 +0100
++++ compiz-0.8.6/plugins/wall.c	2010-03-30 14:54:31.256187250 +0200
+@@ -0,0 +1,2264 @@
++/**
++ *
++ * Compiz wall plugin
++ *
++ * wall.c
++ *
++ * Copyright (c) 2006 Robert Carr <racarr@beryl-project.org>
++ *
++ * Authors:
++ * Robert Carr <racarr@beryl-project.org>
++ * Dennis Kasprzyk <onestone@opencompositing.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ **/
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <math.h>
++#include <sys/time.h>
++
++#include <compiz-core.h>
++#include "wall_options.h"
++
++#include <GL/glu.h>
++
++#include <cairo-xlib-xrender.h>
++#include <cairo.h>
++
++#define PI 3.14159265359f
++#define VIEWPORT_SWITCHER_SIZE 100
++#define ARROW_SIZE 33
++
++#define WIN_X(w) ((w)->attrib.x - (w)->input.left)
++#define WIN_Y(w) ((w)->attrib.y - (w)->input.top)
++#define WIN_W(w) ((w)->width + (w)->input.left + (w)->input.right)
++#define WIN_H(w) ((w)->height + (w)->input.top + (w)->input.bottom)
++
++#define getColorRGBA(name, _display) \
++    r = wallGet##name##Red(_display) / 65535.0f;\
++    g = wallGet##name##Green(_display) / 65535.0f; \
++    b = wallGet##name##Blue(_display) / 65535.0f; \
++    a = wallGet##name##Alpha(_display) / 65535.0f
++
++static int WallDisplayPrivateIndex;
++static int WallCorePrivateIndex;
++
++/* Enums */
++typedef enum
++{
++    Up = 0,
++    Left,
++    Down,
++    Right
++} Direction;
++
++typedef enum
++{
++    NoTransformation,
++    MiniScreen,
++    Sliding
++} ScreenTransformation;
++
++typedef struct _WallCairoContext
++{
++    Pixmap      pixmap;
++    CompTexture texture;
++
++    cairo_surface_t *surface;
++    cairo_t         *cr;
++
++    int width;
++    int height;
++} WallCairoContext;
++
++typedef struct _WallCore
++{
++    ObjectAddProc          objectAdd;
++    SetOptionForPluginProc setOptionForPlugin;
++} WallCore;
++
++typedef struct _WallDisplay
++{
++    int screenPrivateIndex;
++
++    HandleEventProc            handleEvent;
++    MatchExpHandlerChangedProc matchExpHandlerChanged;
++    MatchPropertyChangedProc   matchPropertyChanged;
++} WallDisplay;
++
++typedef struct _WallScreen
++{
++    int windowPrivateIndex;
++
++    DonePaintScreenProc          donePaintScreen;
++    PaintOutputProc              paintOutput;
++    PaintScreenProc              paintScreen;
++    PreparePaintScreenProc       preparePaintScreen;
++    PaintTransformedOutputProc   paintTransformedOutput;
++    PaintWindowProc              paintWindow;
++    WindowGrabNotifyProc         windowGrabNotify;
++    WindowUngrabNotifyProc       windowUngrabNotify;
++    ActivateWindowProc           activateWindow;
++
++    Bool moving; /* Used to track miniview movement */
++    Bool showPreview;
++
++    float curPosX;
++    float curPosY;
++    int   gotoX;
++    int   gotoY;
++    int   direction; /* >= 0 : direction arrow angle, < 0 : no direction */
++
++    int boxTimeout;
++    int boxOutputDevice;
++
++    int grabIndex;
++    int timer;
++
++    Window moveWindow;
++
++    CompWindow *grabWindow;
++
++    Bool focusDefault;
++
++    ScreenTransformation transform;
++    CompOutput           *currOutput;
++
++    WindowPaintAttrib mSAttribs;
++    float             mSzCamera;
++
++    int firstViewportX;
++    int firstViewportY;
++    int viewportWidth;
++    int viewportHeight;
++    int viewportBorder;
++
++    int moveWindowX;
++    int moveWindowY;
++
++    WallCairoContext switcherContext;
++    WallCairoContext thumbContext;
++    WallCairoContext highlightContext;
++    WallCairoContext arrowContext;
++} WallScreen;
++
++typedef struct _WallWindow
++{
++    Bool isSliding;
++} WallWindow;
++
++/* Helpers */
++#define WALL_CORE(c)	PLUGIN_CORE(c, Wall, w)
++#define WALL_DISPLAY(d)	PLUGIN_DISPLAY(d, Wall, w)
++#define WALL_SCREEN(s)	PLUGIN_SCREEN(s, Wall, w)
++#define WALL_WINDOW(w)	PLUGIN_WINDOW(w, Wall, w)
++
++#define GET_SCREEN					\
++    CompScreen *s;					\
++    Window xid;						\
++    xid = getIntOptionNamed(option, nOption, "root", 0);\
++    s = findScreenAtDisplay(d, xid);			\
++    if (!s)						\
++        return FALSE;
++
++#define sigmoid(x) (1.0f / (1.0f + exp (-5.5f * 2 * ((x) - 0.5))))
++#define sigmoidProgress(x) ((sigmoid (x) - sigmoid (0)) / \
++			    (sigmoid (1) - sigmoid (0)))
++
++
++static void
++wallClearCairoLayer (cairo_t *cr)
++{
++    cairo_save (cr);
++    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
++    cairo_paint (cr);
++    cairo_restore (cr);
++}
++
++static void
++wallDrawSwitcherBackground (CompScreen *s)
++{
++    cairo_t         *cr;
++    cairo_pattern_t *pattern;
++    float           outline = 2.0f;
++    int             width, height, radius;
++    float           r, g, b, a;
++    int             i, j;
++
++    WALL_SCREEN (s);
++
++    cr = ws->switcherContext.cr;
++    wallClearCairoLayer (cr);
++
++    width = ws->switcherContext.width - outline;
++    height = ws->switcherContext.height - outline;
++
++    cairo_save (cr);
++    cairo_translate (cr, outline / 2.0f, outline / 2.0f);
++
++    /* set the pattern for the switcher's background */
++    pattern = cairo_pattern_create_linear (0, 0, width, height);
++    getColorRGBA (BackgroundGradientBaseColor, s->display);
++    cairo_pattern_add_color_stop_rgba (pattern, 0.00f, r, g, b, a);
++    getColorRGBA (BackgroundGradientHighlightColor, s->display);
++    cairo_pattern_add_color_stop_rgba (pattern, 0.65f, r, g, b, a);
++    getColorRGBA (BackgroundGradientShadowColor, s->display);
++    cairo_pattern_add_color_stop_rgba (pattern, 0.85f, r, g, b, a);
++    cairo_set_source (cr, pattern);
++
++    /* draw the border's shape */
++    radius = wallGetEdgeRadius (s->display);
++    if (radius)
++    {
++	cairo_arc (cr, radius, radius, radius, PI, 1.5f * PI);
++	cairo_arc (cr, radius + width - 2 * radius,
++		   radius, radius, 1.5f * PI, 2.0 * PI);
++	cairo_arc (cr, width - radius, height - radius, radius, 0,  PI / 2.0f);
++	cairo_arc (cr, radius, height - radius, radius,  PI / 2.0f, PI);
++    }
++    else
++	cairo_rectangle (cr, 0, 0, width, height);
++
++    cairo_close_path (cr);
++
++    /* apply pattern to background... */
++    cairo_fill_preserve (cr);
++
++    /* ... and draw an outline */
++    cairo_set_line_width (cr, outline);
++    getColorRGBA (OutlineColor, s->display);
++    cairo_set_source_rgba (cr, r, g, b, a);
++    cairo_stroke(cr);
++
++    cairo_pattern_destroy (pattern);
++    cairo_restore (cr);
++
++    cairo_save (cr);
++    for (i = 0; i < s->vsize; i++)
++    {
++	cairo_translate (cr, 0.0, ws->viewportBorder);
++	cairo_save (cr);
++	for (j = 0; j < s->hsize; j++)
++	{
++	    cairo_translate (cr, ws->viewportBorder, 0.0);
++
++	    /* this cuts a hole into our background */
++	    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
++	    cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 1.0);
++	    cairo_rectangle (cr, 0, 0, ws->viewportWidth, ws->viewportHeight);
++
++	    cairo_fill_preserve (cr);
++	    cairo_set_operator (cr, CAIRO_OPERATOR_XOR);
++	    cairo_fill (cr);
++
++	    cairo_translate (cr, ws->viewportWidth, 0.0);
++	}
++	cairo_restore(cr);
++
++	cairo_translate (cr, 0.0, ws->viewportHeight);
++    }
++    cairo_restore (cr);
++}
++
++static void
++wallDrawThumb (CompScreen *s)
++{
++    cairo_t         *cr;
++    cairo_pattern_t *pattern;
++    float           r, g, b, a;
++    float           outline = 2.0f;
++    int             width, height;
++
++    WALL_SCREEN(s);
++
++    cr = ws->thumbContext.cr;
++    wallClearCairoLayer (cr);
++
++    width  = ws->thumbContext.width - outline;
++    height = ws->thumbContext.height - outline;
++
++    cairo_translate (cr, outline / 2.0f, outline / 2.0f);
++
++    pattern = cairo_pattern_create_linear (0, 0, width, height);
++    getColorRGBA (ThumbGradientBaseColor, s->display);
++    cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
++    getColorRGBA (ThumbGradientHighlightColor, s->display);
++    cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
++
++    /* apply the pattern for thumb background */
++    cairo_set_source (cr, pattern);
++    cairo_rectangle (cr, 0, 0, width, height);
++    cairo_fill_preserve (cr);
++
++    cairo_set_line_width (cr, outline);
++    getColorRGBA (OutlineColor, s->display);
++    cairo_set_source_rgba (cr, r, g, b, a);
++    cairo_stroke (cr);
++
++    cairo_pattern_destroy (pattern);
++
++    cairo_restore (cr);
++}
++
++static void
++wallDrawHighlight(CompScreen *s)
++{
++    cairo_t         *cr;
++    cairo_pattern_t *pattern;
++    int             width, height;
++    float           r, g, b, a;
++    float           outline = 2.0f;
++
++
++    WALL_SCREEN(s);
++
++    cr = ws->highlightContext.cr;
++    wallClearCairoLayer (cr);
++
++    width  = ws->highlightContext.width - outline;
++    height = ws->highlightContext.height - outline;
++
++    cairo_translate (cr, outline / 2.0f, outline / 2.0f);
++
++    pattern = cairo_pattern_create_linear (0, 0, width, height);
++    getColorRGBA (ThumbHighlightGradientBaseColor, s->display);
++    cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
++    getColorRGBA (ThumbHighlightGradientShadowColor, s->display);
++    cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
++
++    /* apply the pattern for thumb background */
++    cairo_set_source (cr, pattern);
++    cairo_rectangle (cr, 0, 0, width, height);
++    cairo_fill_preserve (cr);
++
++    cairo_set_line_width (cr, outline);
++    getColorRGBA (OutlineColor, s->display);
++    cairo_set_source_rgba (cr, r, g, b, a);
++    cairo_stroke (cr);
++
++    cairo_pattern_destroy (pattern);
++
++    cairo_restore (cr);
++}
++
++static void
++wallDrawArrow (CompScreen *s)
++{
++    cairo_t *cr;
++    float   outline = 2.0f;
++    float   r, g, b, a;
++
++    WALL_SCREEN(s);
++
++    cr = ws->arrowContext.cr;
++    wallClearCairoLayer (cr);
++
++    cairo_translate (cr, outline / 2.0f, outline / 2.0f);
++
++    /* apply the pattern for thumb background */
++    cairo_set_line_width (cr, outline);
++
++    /* draw top part of the arrow */
++    getColorRGBA (ArrowBaseColor, s->display);
++    cairo_set_source_rgba (cr, r, g, b, a);
++    cairo_move_to (cr, 15, 0);
++    cairo_line_to (cr, 30, 30);
++    cairo_line_to (cr, 15, 24.5);
++    cairo_line_to (cr, 15, 0);
++    cairo_fill (cr);
++
++    /* draw bottom part of the arrow */
++    getColorRGBA (ArrowShadowColor, s->display);
++    cairo_set_source_rgba (cr, r, g, b, a);
++    cairo_move_to (cr, 15, 0);
++    cairo_line_to (cr, 0, 30);
++    cairo_line_to (cr, 15, 24.5);
++    cairo_line_to (cr, 15, 0);
++    cairo_fill (cr);
++
++    /* draw the arrow outline */
++    getColorRGBA (OutlineColor, s->display);
++    cairo_set_source_rgba (cr, r, g, b, a);
++    cairo_move_to (cr, 15, 0);
++    cairo_line_to (cr, 30, 30);
++    cairo_line_to (cr, 15, 24.5);
++    cairo_line_to (cr, 0, 30);
++    cairo_line_to (cr, 15, 0);
++    cairo_stroke (cr);
++
++    cairo_restore (cr);
++}
++
++static void
++wallSetupCairoContext (CompScreen       *s,
++		       WallCairoContext *context)
++{
++    XRenderPictFormat *format;
++    Screen            *screen;
++    int               width, height;
++
++    screen = ScreenOfDisplay (s->display->display, s->screenNum);
++
++    width = context->width;
++    height = context->height;
++
++    initTexture (s, &context->texture);
++
++    format = XRenderFindStandardFormat (s->display->display,
++					PictStandardARGB32);
++
++    context->pixmap = XCreatePixmap (s->display->display, s->root,
++				     width, height, 32);
++
++    if (!bindPixmapToTexture(s, &context->texture, context->pixmap,
++			     width, height, 32))
++    {
++	compLogMessage ("wall", CompLogLevelError,
++			"Couldn't create cairo context for switcher");
++    }
++
++    context->surface =
++	cairo_xlib_surface_create_with_xrender_format (s->display->display,
++						       context->pixmap,
++						       screen, format,
++						       width, height);
++
++    context->cr = cairo_create (context->surface);
++    wallClearCairoLayer (context->cr);
++}
++
++static void
++wallDestroyCairoContext (CompScreen       *s,
++			 WallCairoContext *context)
++{
++    if (context->cr)
++	cairo_destroy (context->cr);
++
++    if (context->surface)
++	cairo_surface_destroy (context->surface);
++
++    finiTexture (s, &context->texture);
++
++    if (context->pixmap)
++	XFreePixmap (s->display->display, context->pixmap);
++}
++
++static Bool
++wallCheckDestination (CompScreen *s,
++		      int        destX,
++		      int        destY)
++{
++    if (s->x - destX < 0)
++	return FALSE;
++
++    if (s->x - destX >= s->hsize)
++	return FALSE;
++
++    if (s->y - destY >= s->vsize)
++	return FALSE;
++
++    if (s->y - destY < 0)
++	return FALSE;
++
++    return TRUE;
++}
++
++static void
++wallReleaseMoveWindow (CompScreen *s)
++{
++    CompWindow *w;
++    WALL_SCREEN (s);
++
++    w = findWindowAtScreen (s, ws->moveWindow);
++    if (w)
++	syncWindowPosition (w);
++
++    ws->moveWindow = 0;
++}
++
++static void
++wallComputeTranslation (CompScreen *s,
++			float      *x,
++			float      *y)
++{
++    float dx, dy, elapsed, duration;
++
++    WALL_SCREEN (s);
++
++    duration = wallGetSlideDuration (s->display) * 1000.0;
++    if (duration != 0.0)
++	elapsed = 1.0 - (ws->timer / duration);
++    else
++	elapsed = 1.0;
++
++    if (elapsed < 0.0)
++	elapsed = 0.0;
++    if (elapsed > 1.0)
++	elapsed = 1.0;
++
++    /* Use temporary variables to you can pass in &ps->cur_x */
++    dx = (ws->gotoX - ws->curPosX) * elapsed + ws->curPosX;
++    dy = (ws->gotoY - ws->curPosY) * elapsed + ws->curPosY;
++
++    *x = dx;
++    *y = dy;
++}
++
++/* movement remainder that gets ignored for direction calculation */
++#define IGNORE_REMAINDER 0.05
++
++static void
++wallDetermineMovementAngle (CompScreen *s)
++{
++    int angle;
++    float dx, dy;
++
++    WALL_SCREEN (s);
++
++    dx = ws->gotoX - ws->curPosX;
++    dy = ws->gotoY - ws->curPosY;
++
++    if (dy > IGNORE_REMAINDER)
++	angle = (dx > IGNORE_REMAINDER) ? 135 :
++	        (dx < -IGNORE_REMAINDER) ? 225 : 180;
++    else if (dy < -IGNORE_REMAINDER)
++	angle = (dx > IGNORE_REMAINDER) ? 45 :
++	        (dx < -IGNORE_REMAINDER) ? 315 : 0;
++    else
++	angle = (dx > IGNORE_REMAINDER) ? 90 :
++	        (dx < -IGNORE_REMAINDER) ? 270 : -1;
++
++    ws->direction = angle;
++}
++
++static Bool
++wallMoveViewport (CompScreen *s,
++		  int        x,
++		  int        y,
++		  Window     moveWindow)
++{
++    WALL_SCREEN (s);
++
++    if (!x && !y)
++	return FALSE;
++
++    if (otherScreenGrabExist (s, "move", "switcher", "group-drag", "wall", NULL))
++	return FALSE;
++
++    if (!wallCheckDestination (s, x, y))
++	return FALSE;
++
++    if (ws->moveWindow != moveWindow)
++    {
++	CompWindow *w;
++
++	wallReleaseMoveWindow (s);
++	w = findWindowAtScreen (s, moveWindow);
++	if (w)
++	{
++	    if (!(w->type & (CompWindowTypeDesktopMask |
++			     CompWindowTypeDockMask)))
++	    {
++		if (!(w->state & CompWindowStateStickyMask))
++		{
++		    ws->moveWindow = w->id;
++		    ws->moveWindowX = w->attrib.x;
++		    ws->moveWindowY = w->attrib.y;
++		    raiseWindow (w);
++		}
++	    }
++	}
++    }
++
++    if (!ws->moving)
++    {
++	ws->curPosX = s->x;
++	ws->curPosY = s->y;
++    }
++    ws->gotoX = s->x - x;
++    ws->gotoY = s->y - y;
++
++    wallDetermineMovementAngle (s);
++
++    if (!ws->grabIndex)
++	ws->grabIndex = pushScreenGrab (s, s->invisibleCursor, "wall");
++
++    moveScreenViewport (s, x, y, TRUE);
++
++    ws->moving          = TRUE;
++    ws->focusDefault    = TRUE;
++    ws->boxOutputDevice = outputDeviceForPoint (s, pointerX, pointerY);
++
++    if (wallGetShowSwitcher (s->display))
++	ws->boxTimeout = wallGetPreviewTimeout (s->display) * 1000;
++    else
++	ws->boxTimeout = 0;
++
++    ws->timer = wallGetSlideDuration (s->display) * 1000;
++
++    damageScreen (s);
++
++    return TRUE;
++}
++
++static void
++wallHandleEvent (CompDisplay *d,
++		 XEvent      *event)
++{
++    WALL_DISPLAY (d);
++
++    switch (event->type) {
++    case ClientMessage:
++	if (event->xclient.message_type == d->desktopViewportAtom)
++	{
++	    int        dx, dy;
++	    CompScreen *s;
++
++    	    s = findScreenAtDisplay (d, event->xclient.window);
++	    if (!s)
++		break;
++
++	    if (otherScreenGrabExist (s, "switcher", "wall", NULL))
++		break;
++
++    	    dx = event->xclient.data.l[0] / s->width - s->x;
++	    dy = event->xclient.data.l[1] / s->height - s->y;
++
++	    if (!dx && !dy)
++		break;
++
++	    wallMoveViewport (s, -dx, -dy, None);
++	}
++	break;
++    }
++
++    UNWRAP (wd, d, handleEvent);
++    (*d->handleEvent) (d, event);
++    WRAP (wd, d, handleEvent, wallHandleEvent);
++}
++
++static void
++wallActivateWindow (CompWindow *w)
++{
++    CompScreen *s = w->screen;
++
++    WALL_SCREEN (s);
++
++    if (w->placed && !otherScreenGrabExist (s, "wall", "switcher", NULL))
++    {
++	int dx, dy;
++
++	defaultViewportForWindow (w, &dx, &dy);
++	dx -= s->x;
++	dy -= s->y;
++	
++	if (dx || dy)
++	{
++	    wallMoveViewport (s, -dx, -dy, None);
++	    ws->focusDefault = FALSE;
++	}
++    }
++
++    UNWRAP (ws, s, activateWindow);
++    (*s->activateWindow) (w);
++    WRAP (ws, s, activateWindow, wallActivateWindow);
++}
++
++static void
++wallCheckAmount (CompScreen *s,
++		 int        dx,
++		 int        dy,
++		 int        *amountX,
++		 int        *amountY)
++{
++    *amountX = -dx;
++    *amountY = -dy;
++
++    if (wallGetAllowWraparound (s->display))
++    {
++	if ((s->x + dx) < 0)
++	    *amountX = -(s->hsize + dx);
++	else if ((s->x + dx) >= s->hsize)
++	    *amountX = s->hsize - dx;
++
++	if ((s->y + dy) < 0)
++	    *amountY = -(s->vsize + dy);
++	else if ((s->y + dy) >= s->vsize)
++	    *amountY = s->vsize - dy;
++    }
++}
++
++static Bool
++wallInitiate (CompScreen      *s,
++	      int             dx,
++	      int             dy,
++	      Window          win,
++	      CompAction      *action,
++	      CompActionState state)
++{
++    int amountX, amountY;
++
++    WALL_SCREEN (s);
++
++    wallCheckAmount (s, dx, dy, &amountX, &amountY);
++    if (!wallMoveViewport (s, amountX, amountY, win))
++	return TRUE;
++
++    if (state & CompActionStateInitKey)
++	action->state |= CompActionStateTermKey;
++
++    if (state & CompActionStateInitButton)
++	action->state |= CompActionStateTermButton;
++
++    ws->showPreview = wallGetShowSwitcher (s->display);
++
++    return TRUE;
++}
++
++static Bool
++wallTerminate (CompDisplay     *d,
++	       CompAction      *action,
++	       CompActionState state,
++	       CompOption      *option,
++	       int             nOption)
++{
++    CompScreen *s;
++
++    for (s = d->screens; s; s = s->next)
++    {
++	WALL_SCREEN (s);
++
++	if (ws->showPreview)
++	{
++	    ws->showPreview = FALSE;
++	    damageScreen (s);
++	}
++    }
++
++    if (action)
++	action->state &= ~(CompActionStateTermKey | CompActionStateTermButton);
++
++    return FALSE;
++}
++
++static Bool
++wallInitiateFlip (CompScreen *s,
++		  Direction  direction,
++		  Bool       dnd)
++{
++    int dx, dy;
++    int amountX, amountY;
++
++    if (otherScreenGrabExist (s, "wall", "move", "group-drag", NULL))
++	return FALSE;
++
++    if (dnd)
++    {
++	if (!wallGetEdgeflipDnd (s))
++	    return FALSE;
++
++	if (otherScreenGrabExist (s, "wall", NULL))
++	    return FALSE;
++    }
++    else if (otherScreenGrabExist (s, "wall", "group-drag", NULL))
++    {
++	/* not wall or group means move */
++	if (!wallGetEdgeflipMove (s))
++	    return FALSE;
++
++	WALL_SCREEN (s);
++
++	if (!ws->grabWindow)
++	    return FALSE;
++
++	/* bail out if window is sticky */
++	if (ws->grabWindow->state & CompWindowStateStickyMask)
++	    return FALSE;
++    }
++    else if (otherScreenGrabExist (s, "wall", NULL))
++    {
++	/* move was ruled out before, so we have group */
++	if (!wallGetEdgeflipDnd (s))
++	    return FALSE;
++    }
++    else if (!wallGetEdgeflipPointer (s))
++	return FALSE;
++
++    switch (direction) {
++    case Left:
++	dx = -1; dy = 0;
++	break;
++    case Right:
++	dx = 1; dy = 0;
++	break;
++    case Up:
++	dx = 0; dy = -1;
++	break;
++    case Down:
++	dx = 0; dy = 1;
++	break;
++    default:
++	dx = 0; dy = 0;
++	break;
++    }
++
++    wallCheckAmount (s, dx, dy, &amountX, &amountY);
++    if (wallMoveViewport (s, amountX, amountY, None))
++    {
++	int offsetX, offsetY;
++	int warpX, warpY;
++
++	if (dx < 0)
++	{
++	    offsetX = s->width - 10;
++	    warpX = pointerX + s->width;
++	}
++	else if (dx > 0)
++	{
++	    offsetX = 1- s->width;
++	    warpX = pointerX - s->width;
++	}
++	else
++	{
++	    offsetX = 0;
++	    warpX = lastPointerX;
++	}
++
++	if (dy < 0)
++	{
++	    offsetY = s->height - 10;
++	    warpY = pointerY + s->height;
++	}
++	else if (dy > 0)
++	{
++	    offsetY = 1- s->height;
++	    warpY = pointerY - s->height;
++	}
++	else
++	{
++	    offsetY = 0;
++	    warpY = lastPointerY;
++	}
++
++	warpPointer (s, offsetX, offsetY);
++	lastPointerX = warpX;
++	lastPointerY = warpY;
++    }
++
++    return TRUE;
++}
++
++static Bool
++wallLeft (CompDisplay     *d,
++	  CompAction      *action,
++	  CompActionState state,
++	  CompOption      *option,
++	  int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiate (s, -1, 0, None, action, state);
++}
++
++static Bool
++wallRight (CompDisplay     *d,
++	   CompAction      *action,
++	   CompActionState state,
++	   CompOption      *option,
++	   int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiate (s, 1, 0, None, action, state);
++}
++
++static Bool
++wallUp (CompDisplay     *d,
++	CompAction      *action,
++	CompActionState state,
++	CompOption      *option,
++	int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiate (s, 0, -1, None, action, state);
++}
++
++static Bool
++wallDown (CompDisplay     *d,
++	  CompAction      *action,
++	  CompActionState state,
++	  CompOption      *option,
++	  int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiate (s, 0, 1, None, action, state);
++}
++
++static Bool
++wallNext (CompDisplay     *d,
++	  CompAction      *action,
++	  CompActionState state,
++	  CompOption      *option,
++	  int             nOption)
++{
++    int amountX, amountY;
++    GET_SCREEN;
++
++    if ((s->x == s->hsize - 1) && (s->y == s->vsize - 1))
++    {
++	amountX = -(s->hsize - 1);
++	amountY = -(s->vsize - 1);
++    }
++    else if (s->x == s->hsize - 1)
++    {
++	amountX = -(s->hsize - 1);
++	amountY = 1;
++    }
++    else
++    {
++	amountX = 1;
++	amountY = 0;
++    }
++
++    return wallInitiate (s, amountX, amountY, None, action, state);
++}
++
++static Bool
++wallPrev (CompDisplay     *d,
++	  CompAction      *action,
++	  CompActionState state,
++	  CompOption      *option,
++	  int             nOption)
++{
++    int amountX, amountY;
++    GET_SCREEN;
++
++    if ((s->x == 0) && (s->y == 0))
++    {
++	amountX = s->hsize - 1;
++	amountY = s->vsize - 1;
++    }
++    else if (s->x == 0)
++    {
++	amountX = s->hsize - 1;
++	amountY = -1;
++    }
++    else
++    {
++	amountX = -1;
++	amountY = 0;
++    }
++
++    return wallInitiate (s, amountX, amountY, None, action, state);
++}
++
++static Bool
++wallFlipLeft (CompDisplay     *d,
++	      CompAction      *action,
++	      CompActionState state,
++	      CompOption      *option,
++	      int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiateFlip (s, Left, (state & CompActionStateInitEdgeDnd));
++}
++
++static Bool
++wallFlipRight (CompDisplay     *d,
++	       CompAction      *action,
++	       CompActionState state,
++	       CompOption      *option,
++	       int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiateFlip (s, Right, (state & CompActionStateInitEdgeDnd));
++}
++
++static Bool
++wallFlipUp (CompDisplay     *d,
++	    CompAction      *action,
++	    CompActionState state,
++	    CompOption      *option,
++	    int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiateFlip (s, Up, (state & CompActionStateInitEdgeDnd));
++}
++
++static Bool
++wallFlipDown (CompDisplay     *d,
++	      CompAction      *action,
++	      CompActionState state,
++	      CompOption      *option,
++	      int             nOption)
++{
++    GET_SCREEN;
++
++    return wallInitiateFlip (s, Down, (state & CompActionStateInitEdgeDnd));
++}
++
++static Bool
++wallLeftWithWindow (CompDisplay     *d,
++		    CompAction      *action,
++		    CompActionState state,
++		    CompOption      *option,
++		    int             nOption)
++{
++    GET_SCREEN;
++    Window win = getIntOptionNamed (option, nOption, "window", 0);
++
++    return wallInitiate (s, -1, 0, win, action, state);
++}
++
++static Bool
++wallRightWithWindow (CompDisplay     *d,
++		     CompAction      *action,
++		     CompActionState state,
++		     CompOption      *option,
++		     int             nOption)
++{
++    GET_SCREEN;
++    Window win = getIntOptionNamed (option, nOption, "window", 0);
++
++    return wallInitiate (s, 1, 0, win, action, state);
++}
++
++static Bool
++wallUpWithWindow (CompDisplay     *d,
++		  CompAction      *action,
++		  CompActionState state,
++		  CompOption      *option,
++		  int             nOption)
++{
++    GET_SCREEN;
++    Window win = getIntOptionNamed (option, nOption, "window", 0);
++
++    return wallInitiate (s, 0, -1, win, action, state);
++}
++
++static Bool
++wallDownWithWindow (CompDisplay     *d,
++		    CompAction      *action,
++		    CompActionState state,
++		    CompOption      *option,
++		    int             nOption)
++{
++    GET_SCREEN;
++    Window win = getIntOptionNamed (option, nOption, "window", 0);
++
++    return wallInitiate (s, 0, 1, win, action, state);
++}
++
++static inline void
++wallDrawQuad (CompMatrix *matrix, BOX *box)
++{
++    glTexCoord2f (COMP_TEX_COORD_X (matrix, box->x1),
++		  COMP_TEX_COORD_Y (matrix, box->y2));
++    glVertex2i (box->x1, box->y2);
++    glTexCoord2f (COMP_TEX_COORD_X (matrix, box->x2),
++		  COMP_TEX_COORD_Y (matrix, box->y2));
++    glVertex2i (box->x2, box->y2);
++    glTexCoord2f (COMP_TEX_COORD_X (matrix, box->x2),
++		  COMP_TEX_COORD_Y (matrix, box->y1));
++    glVertex2i (box->x2, box->y1);
++    glTexCoord2f (COMP_TEX_COORD_X (matrix, box->x1),
++		  COMP_TEX_COORD_Y (matrix, box->y1));
++    glVertex2i (box->x1, box->y1);
++}
++
++static void
++wallDrawCairoTextureOnScreen (CompScreen *s)
++{
++    float      centerX, centerY;
++    float      width, height;
++    float      topLeftX, topLeftY;
++    float      border;
++    int        i, j;
++    CompMatrix matrix;
++    BOX        box;
++
++    WALL_SCREEN(s);
++
++    glDisableClientState (GL_TEXTURE_COORD_ARRAY);
++    glEnable (GL_BLEND);
++
++    centerX = s->outputDev[ws->boxOutputDevice].region.extents.x1 +
++	      (s->outputDev[ws->boxOutputDevice].width / 2.0f);
++    centerY = s->outputDev[ws->boxOutputDevice].region.extents.y1 +
++	      (s->outputDev[ws->boxOutputDevice].height / 2.0f);
++
++    border = (float) ws->viewportBorder;
++    width  = (float) ws->switcherContext.width;
++    height = (float) ws->switcherContext.height;
++
++    topLeftX = centerX - floor (width / 2.0f);
++    topLeftY = centerY - floor (height / 2.0f);
++
++    ws->firstViewportX = topLeftX + border;
++    ws->firstViewportY = topLeftY + border;
++
++    if (!ws->moving)
++    {
++	double left, timeout;
++
++	timeout = wallGetPreviewTimeout (s->display) * 1000.0f;
++	left    = (timeout > 0) ? (float) ws->boxTimeout / timeout : 1.0f;
++
++	if (left < 0)
++    	    left = 0.0f;
++	else if (left > 0.5)
++	    left = 1.0f;
++	else
++	    left = 2 * left;
++
++	screenTexEnvMode (s, GL_MODULATE);
++
++	glColor4f (left, left, left, left);
++	glTranslatef (0.0f,0.0f, -(1 - left));
++
++	ws->mSzCamera = -(1 - left);
++    }
++    else
++	ws->mSzCamera = 0.0f;
++
++    /* draw background */
++
++    matrix = ws->switcherContext.texture.matrix;
++    matrix.x0 -= topLeftX * matrix.xx;
++    matrix.y0 -= topLeftY * matrix.yy;
++
++    box.x1 = topLeftX;
++    box.x2 = box.x1 + width;
++    box.y1 = topLeftY;
++    box.y2 = box.y1 + height;
++
++    enableTexture (s, &ws->switcherContext.texture, COMP_TEXTURE_FILTER_FAST);
++    glBegin (GL_QUADS);
++    wallDrawQuad (&matrix, &box);
++    glEnd ();
++    disableTexture (s, &ws->switcherContext.texture);
++
++    /* draw thumb */
++    width = (float) ws->thumbContext.width;
++    height = (float) ws->thumbContext.height;
++
++    enableTexture (s, &ws->thumbContext.texture, COMP_TEXTURE_FILTER_FAST);
++    glBegin (GL_QUADS);
++    for (i = 0; i < s->hsize; i++)
++    {
++	for (j = 0; j < s->vsize; j++)
++	{
++	    if (i == ws->gotoX && j == ws->gotoY && ws->moving)
++		continue;
++
++	    box.x1 = i * (width + border);
++	    box.x1 += topLeftX + border;
++    	    box.x2 = box.x1 + width;
++	    box.y1 = j * (height + border);
++	    box.y1 += topLeftY + border;
++	    box.y2 = box.y1 + height;
++
++	    matrix = ws->thumbContext.texture.matrix;
++	    matrix.x0 -= box.x1 * matrix.xx;
++	    matrix.y0 -= box.y1 * matrix.yy;
++
++	    wallDrawQuad (&matrix, &box);
++	}
++    }
++    glEnd ();
++    disableTexture (s, &ws->thumbContext.texture);
++
++    if (ws->moving || ws->showPreview)
++    {
++	/* draw highlight */
++	int   aW, aH;
++
++	box.x1 = s->x * (width + border) + topLeftX + border;
++	box.x2 = box.x1 + width;
++	box.y1 = s->y * (height + border) + topLeftY + border;
++	box.y2 = box.y1 + height;
++
++	matrix = ws->highlightContext.texture.matrix;
++	matrix.x0 -= box.x1 * matrix.xx;
++	matrix.y0 -= box.y1 * matrix.yy;
++
++	enableTexture (s, &ws->highlightContext.texture,
++		       COMP_TEXTURE_FILTER_FAST);
++	glBegin (GL_QUADS);
++	wallDrawQuad (&matrix, &box);
++	glEnd ();
++	disableTexture (s, &ws->highlightContext.texture);
++
++	/* draw arrow */
++	if (ws->direction >= 0)
++	{
++	    enableTexture (s, &ws->arrowContext.texture,
++			   COMP_TEXTURE_FILTER_GOOD);
++
++	    aW = ws->arrowContext.width;
++	    aH = ws->arrowContext.height;
++
++	    /* if we have a viewport preview we just paint the
++	       arrow outside the switcher */
++	    if (wallGetMiniscreen (s->display))
++	    {
++		width  = (float) ws->switcherContext.width;
++		height = (float) ws->switcherContext.height;
++
++		switch (ws->direction)
++		{
++		    /* top left */
++		    case 315:
++			box.x1 = topLeftX - aW - border;
++			box.y1 = topLeftY - aH - border;
++			break;
++			/* up */
++		    case 0:
++			box.x1 = topLeftX + width / 2.0f - aW / 2.0f;
++			box.y1 = topLeftY - aH - border;
++			break;
++			/* top right */
++		    case 45:
++			box.x1 = topLeftX + width + border;
++			box.y1 = topLeftY - aH - border;
++			break;
++			/* right */
++		    case 90:
++			box.x1 = topLeftX + width + border;
++			box.y1 = topLeftY + height / 2.0f - aH / 2.0f;
++			break;
++			/* bottom right */
++		    case 135:
++			box.x1 = topLeftX + width + border;
++			box.y1 = topLeftY + height + border;
++			break;
++			/* down */
++		    case 180:
++			box.x1 = topLeftX + width / 2.0f - aW / 2.0f;
++			box.y1 = topLeftY + height + border;
++			break;
++			/* bottom left */
++		    case 225:
++			box.x1 = topLeftX - aW - border;
++			box.y1 = topLeftY + height + border;
++			break;
++			/* left */
++		    case 270:
++			box.x1 = topLeftX - aW - border;
++			box.y1 = topLeftY + height / 2.0f - aH / 2.0f;
++			break;
++		    default:
++			break;
++		}
++	    }
++	    else
++	    {
++		/* arrow is visible (no preview is painted over it) */
++		box.x1 = s->x * (width + border) + topLeftX + border;
++		box.x1 += width / 2 - aW / 2;
++		box.y1 = s->y * (height + border) + topLeftY + border;
++		box.y1 += height / 2 - aH / 2;
++	    }
++
++	    box.x2 = box.x1 + aW;
++	    box.y2 = box.y1 + aH;
++
++	    glTranslatef (box.x1 + aW / 2, box.y1 + aH / 2, 0.0f);
++	    glRotatef (ws->direction, 0.0f, 0.0f, 1.0f);
++	    glTranslatef (-box.x1 - aW / 2, -box.y1 - aH / 2, 0.0f);
++
++	    matrix = ws->arrowContext.texture.matrix;
++	    matrix.x0 -= box.x1 * matrix.xx;
++	    matrix.y0 -= box.y1 * matrix.yy;
++
++	    glBegin (GL_QUADS);
++	    wallDrawQuad (&matrix, &box);
++	    glEnd ();
++
++	    disableTexture (s, &ws->arrowContext.texture);
++	}
++    }
++
++    glDisable (GL_BLEND);
++    glEnableClientState (GL_TEXTURE_COORD_ARRAY);
++    screenTexEnvMode (s, GL_REPLACE);
++    glColor4usv (defaultColor);
++}
++
++static void
++wallPaintScreen (CompScreen   *s,
++		 CompOutput   *outputs,
++     		 int          numOutputs,
++		 unsigned int mask)
++{
++    WALL_SCREEN (s);
++
++    if (ws->moving && numOutputs > 1 && wallGetMmmode(s) == MmmodeSwitchAll)
++    {
++	outputs = &s->fullscreenOutput;
++	numOutputs = 1;
++    }
++
++    UNWRAP (ws, s, paintScreen);
++    (*s->paintScreen) (s, outputs, numOutputs, mask);
++    WRAP (ws, s, paintScreen, wallPaintScreen);
++}
++
++static Bool
++wallPaintOutput (CompScreen              *s,
++		 const ScreenPaintAttrib *sAttrib,
++		 const CompTransform     *transform,
++		 Region                  region,
++		 CompOutput              *output,
++		 unsigned int            mask)
++{
++    Bool status;
++
++    WALL_SCREEN (s);
++
++    ws->transform = NoTransformation;
++    if (ws->moving)
++	mask |= PAINT_SCREEN_TRANSFORMED_MASK |
++	        PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
++
++    UNWRAP (ws, s, paintOutput);
++    status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
++    WRAP (ws, s, paintOutput, wallPaintOutput);
++
++    if (wallGetShowSwitcher (s->display) &&
++	(ws->moving || ws->showPreview || ws->boxTimeout) &&
++	(output->id == ws->boxOutputDevice || output == &s->fullscreenOutput))
++    {
++	CompTransform sTransform = *transform;
++
++	transformToScreenSpace (s, output, -DEFAULT_Z_CAMERA, &sTransform);
++
++	glPushMatrix ();
++	glLoadMatrixf (sTransform.m);
++
++	wallDrawCairoTextureOnScreen (s);
++
++	glPopMatrix ();
++
++	if (wallGetMiniscreen (s->display))
++	{
++	    int  i, j;
++	    float mw, mh;
++
++	    mw = ws->viewportWidth;
++	    mh = ws->viewportHeight;
++
++	    ws->transform = MiniScreen;
++	    ws->mSAttribs.xScale = mw / s->width;
++	    ws->mSAttribs.yScale = mh / s->height;
++	    ws->mSAttribs.opacity = OPAQUE * (1.0 + ws->mSzCamera);
++	    ws->mSAttribs.saturation = COLOR;
++
++	    for (j = 0; j < s->vsize; j++)
++    	    {
++		for (i = 0; i < s->hsize; i++)
++		{
++		    float        mx, my;
++		    unsigned int msMask;
++
++		    mx = ws->firstViewportX +
++			 (i * (ws->viewportWidth + ws->viewportBorder));
++    		    my = ws->firstViewportY + 
++			 (j * (ws->viewportHeight + ws->viewportBorder));
++
++		    ws->mSAttribs.xTranslate = mx / output->width;
++		    ws->mSAttribs.yTranslate = -my / output->height;
++
++		    ws->mSAttribs.brightness = 0.4f * BRIGHT;
++
++		    if (i == s->x && j == s->y && ws->moving)
++			ws->mSAttribs.brightness = BRIGHT;
++
++		    if ((ws->boxTimeout || ws->showPreview) &&
++			!ws->moving && i == s->x && j == s->y)
++		    {
++			ws->mSAttribs.brightness = BRIGHT;
++		    }
++
++		    setWindowPaintOffset (s, (s->x - i) * s->width,
++					  (s->y - j) * s->height);
++
++		    msMask = mask | PAINT_SCREEN_TRANSFORMED_MASK;
++		    (*s->paintTransformedOutput) (s, sAttrib, transform,
++						  region, output, msMask);
++
++
++		}
++	    }
++	    ws->transform = NoTransformation;
++	    setWindowPaintOffset (s, 0, 0);
++	}
++    }
++
++    return status;
++}
++
++static void
++wallPreparePaintScreen (CompScreen *s,
++			int        msSinceLastPaint)
++{
++    WALL_SCREEN (s);
++
++    if (!ws->moving && !ws->showPreview && ws->boxTimeout)
++	ws->boxTimeout -= msSinceLastPaint;
++
++    if (ws->timer)
++	ws->timer -= msSinceLastPaint;
++
++    if (ws->moving)
++    {
++	wallComputeTranslation (s, &ws->curPosX, &ws->curPosY);
++
++	if (ws->moveWindow)
++	{
++	    CompWindow *w;
++
++	    w = findWindowAtScreen (s, ws->moveWindow);
++	    if (w)
++    	    {
++		float dx, dy;
++
++		dx = ws->gotoX - ws->curPosX;
++		dy = ws->gotoY - ws->curPosY;
++
++		moveWindowToViewportPosition (w,
++					      ws->moveWindowX - s->width * dx,
++					      ws->moveWindowY - s->height * dy,
++					      TRUE);
++	    }
++	}
++    }
++
++    if (ws->moving && ws->curPosX == ws->gotoX && ws->curPosY == ws->gotoY)
++    {
++	ws->moving = FALSE;
++	ws->timer  = 0;
++
++	if (ws->moveWindow)
++	    wallReleaseMoveWindow (s);
++	else if (ws->focusDefault)
++	{
++	    int i;
++	    for (i = 0; i < s->maxGrab; i++)
++		if (s->grabs[i].active)
++		    if (strcmp(s->grabs[i].name, "switcher") == 0)
++			break;
++
++	    /* only focus default window if switcher is not active */
++	    if (i == s->maxGrab)
++		focusDefaultWindow (s);
++	}
++    }
++
++    UNWRAP (ws, s, preparePaintScreen);
++    (*s->preparePaintScreen) (s, msSinceLastPaint);
++    WRAP (ws, s, preparePaintScreen, wallPreparePaintScreen);
++}
++
++static void
++wallPaintTransformedOutput (CompScreen              *s,
++	     		    const ScreenPaintAttrib *sAttrib,
++			    const CompTransform     *transform,
++			    Region                  region,
++			    CompOutput              *output,
++			    unsigned int            mask)
++{
++    WALL_SCREEN (s);
++    Bool clear = (mask & PAINT_SCREEN_CLEAR_MASK);
++
++    if (ws->transform == MiniScreen)
++    {
++	CompTransform sTransform = *transform;
++
++	mask &= ~PAINT_SCREEN_CLEAR_MASK;
++
++	/* move each screen to the correct output position */
++
++	matrixTranslate (&sTransform,
++			 -(float) output->region.extents.x1 /
++			  (float) output->width,
++			 (float) output->region.extents.y1 /
++			 (float) output->height, 0.0f);
++	matrixTranslate (&sTransform, 0.0f, 0.0f, -DEFAULT_Z_CAMERA);
++
++	matrixTranslate (&sTransform,
++			 ws->mSAttribs.xTranslate,
++			 ws->mSAttribs.yTranslate,
++			 ws->mSzCamera);
++
++	/* move origin to top left */
++	matrixTranslate (&sTransform, -0.5f, 0.5f, 0.0f);
++	matrixScale (&sTransform,
++		     ws->mSAttribs.xScale, ws->mSAttribs.yScale, 1.0);
++
++	/* revert prepareXCoords region shift.
++	   Now all screens display the same */
++	matrixTranslate (&sTransform, 0.5f, 0.5f, DEFAULT_Z_CAMERA);
++	matrixTranslate (&sTransform,
++			 (float) output->region.extents.x1 /
++			 (float) output->width,
++			 -(float) output->region.extents.y2 /
++			 (float) output->height, 0.0f);
++
++	UNWRAP (ws, s, paintTransformedOutput);
++	(*s->paintTransformedOutput) (s, sAttrib, &sTransform,
++				      &s->region, output, mask);
++	WRAP (ws, s, paintTransformedOutput, wallPaintTransformedOutput);
++	return;
++    }
++
++    UNWRAP (ws, s, paintTransformedOutput);
++
++    if (!ws->moving)
++	(*s->paintTransformedOutput) (s, sAttrib, transform,
++				      region, output, mask);
++
++    mask &= ~PAINT_SCREEN_CLEAR_MASK;
++
++    if (ws->moving)
++    {
++	ScreenTransformation oldTransform = ws->transform;
++	CompTransform        sTransform = *transform;
++	float                xTranslate, yTranslate;
++	float                px, py;
++	int                  tx, ty;
++	Bool                 movingX, movingY;
++
++	if (clear)
++	    clearTargetOutput (s->display, GL_COLOR_BUFFER_BIT);
++
++	ws->transform  = Sliding;
++	ws->currOutput = output;
++
++	px = ws->curPosX;
++	py = ws->curPosY;
++
++	movingX = ((int) floor (px)) != ((int) ceil (px));
++	movingY = ((int) floor (py)) != ((int) ceil (py));
++
++	if (movingY)
++	{
++	    ty = ceil (py) - s->y;
++	    yTranslate = fmod (py, 1) - 1;
++
++	    matrixTranslate (&sTransform, 0.0f, yTranslate, 0.0f);
++
++	    if (movingX)
++	    {
++		tx = ceil (px) - s->x;
++		xTranslate = 1 - fmod (px, 1);
++
++		setWindowPaintOffset (s, (s->x - ceil(px)) * s->width,
++				      (s->y - ceil(py)) * s->height);
++		
++		matrixTranslate (&sTransform, xTranslate, 0.0f, 0.0f);
++
++		(*s->paintTransformedOutput) (s, sAttrib, &sTransform,
++					      &output->region, output, mask);
++
++		matrixTranslate (&sTransform, -xTranslate, 0.0f, 0.0f);
++	    }
++
++	    tx = floor (px) - s->x;
++	    xTranslate = -fmod (px, 1);
++
++	    setWindowPaintOffset (s, (s->x - floor(px)) * s->width,
++				  (s->y - ceil(py)) * s->height);
++
++	    matrixTranslate (&sTransform, xTranslate, 0.0f, 0.0f);
++
++	    (*s->paintTransformedOutput) (s, sAttrib, &sTransform,
++					  &output->region, output, mask);
++	    matrixTranslate (&sTransform, -xTranslate, -yTranslate, 0.0f);
++	}
++
++	ty = floor (py) - s->y;
++	yTranslate = fmod (py, 1);
++
++	matrixTranslate (&sTransform, 0.0f, yTranslate, 0.0f);
++
++	if (movingX)
++	{
++	    tx = ceil (px) - s->x;
++	    xTranslate = 1 - fmod (px, 1);
++
++	    setWindowPaintOffset (s, (s->x - ceil(px)) * s->width,
++				  (s->y - floor(py)) * s->height);
++
++	    matrixTranslate (&sTransform, xTranslate, 0.0f, 0.0f);
++
++	    (*s->paintTransformedOutput) (s, sAttrib, &sTransform,
++					  &output->region, output, mask);
++
++	    matrixTranslate (&sTransform, -xTranslate, 0.0f, 0.0f);
++	}
++
++	tx = floor (px) - s->x;
++	xTranslate = -fmod (px, 1);
++
++	setWindowPaintOffset (s, (s->x - floor(px)) * s->width,
++			      (s->y - floor(py)) * s->height);
++
++	matrixTranslate (&sTransform, xTranslate, 0.0f, 0.0f);
++	(*s->paintTransformedOutput) (s, sAttrib, &sTransform,
++				      &output->region, output, mask);
++
++	setWindowPaintOffset (s, 0, 0);
++	ws->transform = oldTransform;
++    }
++
++    WRAP (ws, s, paintTransformedOutput, wallPaintTransformedOutput);
++}
++
++static Bool
++wallPaintWindow (CompWindow              *w,
++		 const WindowPaintAttrib *attrib,
++		 const CompTransform     *transform,
++		 Region                  region,
++		 unsigned int            mask)
++{
++    Bool       status;
++    CompScreen *s = w->screen;
++
++    WALL_SCREEN (s);
++
++    if (ws->transform == MiniScreen)
++    {
++	WindowPaintAttrib pA = *attrib;
++
++	pA.opacity    = attrib->opacity *
++			((float) ws->mSAttribs.opacity / OPAQUE);
++	pA.brightness = attrib->brightness *
++			((float) ws->mSAttribs.brightness / BRIGHT);
++	pA.saturation = attrib->saturation *
++			((float) ws->mSAttribs.saturation / COLOR);
++
++	if (!pA.opacity || !pA.brightness)
++	    mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
++
++	UNWRAP (ws, s, paintWindow);
++	status = (*s->paintWindow) (w, &pA, transform, region, mask);
++    	WRAP (ws, s, paintWindow, wallPaintWindow);
++    }
++    else if (ws->transform == Sliding)
++    {
++	CompTransform wTransform;
++
++	WALL_WINDOW (w);
++
++	if (!ww->isSliding)
++	{
++	    matrixGetIdentity (&wTransform);
++	    transformToScreenSpace (s, ws->currOutput, -DEFAULT_Z_CAMERA,
++				    &wTransform);
++	    mask |= PAINT_WINDOW_TRANSFORMED_MASK;
++	}
++	else
++	{
++	    wTransform = *transform;
++	}
++
++	UNWRAP (ws, s, paintWindow);
++	status = (*s->paintWindow) (w, attrib, &wTransform, region, mask);
++	WRAP (ws, s, paintWindow, wallPaintWindow);
++    }
++    else
++    {
++	UNWRAP (ws, s, paintWindow);
++	status = (*s->paintWindow) (w, attrib, transform, region, mask);
++	WRAP (ws, s, paintWindow, wallPaintWindow);
++    }
++
++    return status;
++}
++
++static void
++wallDonePaintScreen (CompScreen *s)
++{
++    WALL_SCREEN (s);
++
++    if (ws->moving || ws->showPreview || ws->boxTimeout)
++    {
++	ws->boxTimeout = MAX (0, ws->boxTimeout);
++	damageScreen (s);
++    }
++
++    if (!ws->moving && !ws->showPreview && ws->grabIndex)
++    {
++	removeScreenGrab (s, ws->grabIndex, NULL);
++	ws->grabIndex = 0;
++    }
++
++    UNWRAP (ws, s, donePaintScreen);
++    (*s->donePaintScreen) (s);
++    WRAP (ws, s, donePaintScreen, wallDonePaintScreen);
++
++}
++
++static void
++wallCreateCairoContexts (CompScreen *s,
++			 Bool       initial)
++{
++    int width, height;
++
++    WALL_SCREEN (s);
++
++    ws->viewportWidth = VIEWPORT_SWITCHER_SIZE *
++			(float) wallGetPreviewScale (s->display) / 100.0f;
++    ws->viewportHeight = ws->viewportWidth *
++			 (float) s->height / (float) s->width;
++    ws->viewportBorder = wallGetBorderWidth (s->display);
++
++    width  = s->hsize * (ws->viewportWidth + ws->viewportBorder) +
++	     ws->viewportBorder;
++    height = s->vsize * (ws->viewportHeight + ws->viewportBorder) +
++	     ws->viewportBorder;
++
++    wallDestroyCairoContext (s, &ws->switcherContext);
++    ws->switcherContext.width = width;
++    ws->switcherContext.height = height;
++    wallSetupCairoContext (s, &ws->switcherContext);
++    wallDrawSwitcherBackground (s);
++
++    wallDestroyCairoContext (s, &ws->thumbContext);
++    ws->thumbContext.width = ws->viewportWidth;
++    ws->thumbContext.height = ws->viewportHeight;
++    wallSetupCairoContext (s, &ws->thumbContext);
++    wallDrawThumb (s);
++
++    wallDestroyCairoContext (s, &ws->highlightContext);
++    ws->highlightContext.width = ws->viewportWidth;
++    ws->highlightContext.height = ws->viewportHeight;
++    wallSetupCairoContext (s, &ws->highlightContext);
++    wallDrawHighlight (s);
++
++    if (initial)
++    {
++	ws->arrowContext.width = ARROW_SIZE;
++	ws->arrowContext.height = ARROW_SIZE;
++	wallSetupCairoContext (s, &ws->arrowContext);
++	wallDrawArrow (s);
++    }
++}
++
++static void
++wallDisplayOptionChanged (CompDisplay        *display,
++			  CompOption         *opt,
++			  WallDisplayOptions num)
++{
++    CompScreen *s;
++
++    switch(num)
++    {
++    case WallDisplayOptionOutlineColor:
++	for (s = display->screens; s; s = s->next)
++	{
++	    wallDrawSwitcherBackground (s);
++	    wallDrawHighlight (s);
++	    wallDrawThumb (s);
++	}
++	break;
++
++    case WallDisplayOptionEdgeRadius:
++    case WallDisplayOptionBackgroundGradientBaseColor:
++    case WallDisplayOptionBackgroundGradientHighlightColor:
++    case WallDisplayOptionBackgroundGradientShadowColor:
++	for (s = display->screens; s; s = s->next)
++	    wallDrawSwitcherBackground (s);
++	break;
++
++    case WallDisplayOptionBorderWidth:
++    case WallDisplayOptionPreviewScale:
++	for (s = display->screens; s; s = s->next)
++	    wallCreateCairoContexts (s, FALSE);
++	break;
++
++    case WallDisplayOptionThumbGradientBaseColor:
++    case WallDisplayOptionThumbGradientHighlightColor:
++	for (s = display->screens; s; s = s->next)
++	    wallDrawThumb (s);
++	break;
++
++    case WallDisplayOptionThumbHighlightGradientBaseColor:
++    case WallDisplayOptionThumbHighlightGradientShadowColor:
++	for (s = display->screens; s; s = s->next)
++	    wallDrawHighlight (s);
++	break;
++
++    case WallDisplayOptionArrowBaseColor:
++    case WallDisplayOptionArrowShadowColor:
++	for (s = display->screens; s; s = s->next)
++	    wallDrawArrow (s);
++	break;
++
++    case WallDisplayOptionNoSlideMatch:
++	for (s = display->screens; s; s = s->next)
++	{
++	    CompWindow *w;
++
++	    for (w = s->windows; w; w = w->next)
++	    {
++		WALL_WINDOW (w);
++		ww->isSliding = !matchEval (wallGetNoSlideMatch (display), w);
++	    }
++	}
++	break;
++
++    default:
++	break;
++    }
++}
++
++static Bool
++wallSetOptionForPlugin (CompObject      *o,
++			const char      *plugin,
++			const char      *name,
++			CompOptionValue *value)
++{
++    Bool status;
++
++    WALL_CORE (&core);
++
++    UNWRAP (wc, &core, setOptionForPlugin);
++    status = (*core.setOptionForPlugin) (o, plugin, name, value);
++    WRAP (wc, &core, setOptionForPlugin, wallSetOptionForPlugin);
++
++    if (status && o->type == COMP_OBJECT_TYPE_SCREEN)
++    {
++	if (strcmp (plugin, "core") == 0)
++	    if (strcmp (name, "hsize") == 0 || strcmp (name, "vsize") == 0)
++	    {
++		CompScreen *s = (CompScreen *) o;
++		
++		wallCreateCairoContexts (s, FALSE);
++	    }
++    }
++
++    return status;
++}
++
++static void
++wallMatchExpHandlerChanged (CompDisplay *d)
++{
++    CompScreen *s;
++
++    WALL_DISPLAY (d);
++
++    UNWRAP (wd, d, matchExpHandlerChanged);
++    (*d->matchExpHandlerChanged) (d);
++    WRAP (wd, d, matchExpHandlerChanged, wallMatchExpHandlerChanged);
++
++    for (s = d->screens; s; s = s->next)
++    {
++	CompWindow *w;
++
++	for (w = s->windows; w; w = w->next)
++	{
++	    WALL_WINDOW (w);
++
++	    ww->isSliding = !matchEval (wallGetNoSlideMatch (d), w);
++	}
++    }
++}
++
++static void
++wallMatchPropertyChanged (CompDisplay *d,
++			  CompWindow  *w)
++{
++    WALL_DISPLAY (d);
++    WALL_WINDOW (w);
++
++    UNWRAP (wd, d, matchPropertyChanged);
++    (*d->matchPropertyChanged) (d, w);
++    WRAP (wd, d, matchPropertyChanged, wallMatchPropertyChanged);
++
++    ww->isSliding = !matchEval (wallGetNoSlideMatch (d), w);
++}
++
++static void
++wallWindowGrabNotify (CompWindow   *w,
++		      int	     x,
++		      int	     y,
++		      unsigned int state,
++		      unsigned int mask)
++{
++    WALL_SCREEN (w->screen);
++
++    if (!ws->grabWindow)
++	ws->grabWindow = w;
++
++    UNWRAP (ws, w->screen, windowGrabNotify);
++    (*w->screen->windowGrabNotify) (w, x, y, state, mask);
++    WRAP (ws, w->screen, windowGrabNotify, wallWindowGrabNotify);
++}
++
++static void
++wallWindowUngrabNotify (CompWindow *w)
++{
++    WALL_SCREEN (w->screen);
++
++    if (w == ws->grabWindow)
++	ws->grabWindow = NULL;
++
++    UNWRAP (ws, w->screen, windowUngrabNotify);
++    (*w->screen->windowUngrabNotify) (w);
++    WRAP (ws, w->screen, windowUngrabNotify, wallWindowUngrabNotify);
++}
++
++static void
++wallWindowAdd (CompScreen *s,
++	       CompWindow *w)
++{
++    WALL_WINDOW (w);
++
++    ww->isSliding = !matchEval (wallGetNoSlideMatch (s->display), w);
++}
++
++static void
++wallObjectAdd (CompObject *parent,
++	       CompObject *object)
++{
++    static ObjectAddProc dispTab[] = {
++	(ObjectAddProc) 0, /* CoreAdd */
++	(ObjectAddProc) 0, /* DisplayAdd */
++	(ObjectAddProc) 0, /* ScreenAdd */
++	(ObjectAddProc) wallWindowAdd
++    };
++
++    WALL_CORE (&core);
++
++    UNWRAP (wc, &core, objectAdd);
++    (*core.objectAdd) (parent, object);
++    WRAP (wc, &core, objectAdd, wallObjectAdd);
++
++    DISPATCH (object, dispTab, ARRAY_SIZE (dispTab), (parent, object));
++}
++
++static Bool
++wallInitCore (CompPlugin *p,
++              CompCore   *c)
++{
++    WallCore *wc;
++
++    if (!checkPluginABI ("core", CORE_ABIVERSION))
++        return FALSE;
++
++    wc = malloc (sizeof (WallCore));
++    if (!wc)
++        return FALSE;
++
++    WallDisplayPrivateIndex = allocateDisplayPrivateIndex ();
++    if (WallDisplayPrivateIndex < 0)
++    {
++        free (wc);
++        return FALSE;
++    }
++
++    WRAP (wc, c, setOptionForPlugin, wallSetOptionForPlugin);
++    WRAP (wc, c, objectAdd, wallObjectAdd);
++
++    c->base.privates[WallCorePrivateIndex].ptr = wc;
++
++    return TRUE;
++}
++
++static void
++wallFiniCore (CompPlugin *p,
++              CompCore   *c)
++{
++    WALL_CORE (c);
++
++    UNWRAP (wc, c, setOptionForPlugin);
++    UNWRAP (wc, c, objectAdd);
++
++    freeDisplayPrivateIndex (WallDisplayPrivateIndex);
++
++    free (wc);
++}
++
++static Bool
++wallInitDisplay (CompPlugin  *p,
++		 CompDisplay *d)
++{
++    WallDisplay *wd;
++
++    wd = malloc (sizeof (WallDisplay));
++    if (!wd)
++	return FALSE;
++
++    wd->screenPrivateIndex = allocateScreenPrivateIndex (d);
++    if (wd->screenPrivateIndex < 0)
++    {
++	free (wd);
++ 	return FALSE;
++    }
++
++    wallSetLeftKeyInitiate (d, wallLeft);
++    wallSetLeftKeyTerminate (d, wallTerminate);
++    wallSetRightKeyInitiate (d, wallRight);
++    wallSetRightKeyTerminate (d, wallTerminate);
++    wallSetUpKeyInitiate (d, wallUp);
++    wallSetUpKeyTerminate (d, wallTerminate);
++    wallSetDownKeyInitiate (d, wallDown);
++    wallSetDownKeyTerminate (d, wallTerminate);
++    wallSetNextKeyInitiate (d, wallNext);
++    wallSetNextKeyTerminate (d, wallTerminate);
++    wallSetPrevKeyInitiate (d, wallPrev);
++    wallSetPrevKeyTerminate (d, wallTerminate);
++    wallSetLeftButtonInitiate (d, wallLeft);
++    wallSetLeftButtonTerminate (d, wallTerminate);
++    wallSetRightButtonInitiate (d, wallRight);
++    wallSetRightButtonTerminate (d, wallTerminate);
++    wallSetUpButtonInitiate (d, wallUp);
++    wallSetUpButtonTerminate (d, wallTerminate);
++    wallSetDownButtonInitiate (d, wallDown);
++    wallSetDownButtonTerminate (d, wallTerminate);
++    wallSetNextButtonInitiate (d, wallNext);
++    wallSetNextButtonTerminate (d, wallTerminate);
++    wallSetPrevButtonInitiate (d, wallPrev);
++    wallSetPrevButtonTerminate (d, wallTerminate);
++    wallSetLeftWindowKeyInitiate (d, wallLeftWithWindow);
++    wallSetLeftWindowKeyTerminate (d, wallTerminate);
++    wallSetRightWindowKeyInitiate (d, wallRightWithWindow);
++    wallSetRightWindowKeyTerminate (d, wallTerminate);
++    wallSetUpWindowKeyInitiate (d, wallUpWithWindow);
++    wallSetUpWindowKeyTerminate (d, wallTerminate);
++    wallSetDownWindowKeyInitiate (d, wallDownWithWindow);
++    wallSetDownWindowKeyTerminate (d, wallTerminate);
++    wallSetFlipLeftEdgeInitiate (d, wallFlipLeft);
++    wallSetFlipRightEdgeInitiate (d, wallFlipRight);
++    wallSetFlipUpEdgeInitiate (d, wallFlipUp);
++    wallSetFlipDownEdgeInitiate (d, wallFlipDown);
++
++    wallSetEdgeRadiusNotify (d, wallDisplayOptionChanged);
++    wallSetBorderWidthNotify (d, wallDisplayOptionChanged);
++    wallSetPreviewScaleNotify (d, wallDisplayOptionChanged);
++    wallSetOutlineColorNotify (d, wallDisplayOptionChanged);
++    wallSetBackgroundGradientBaseColorNotify (d, wallDisplayOptionChanged);
++    wallSetBackgroundGradientHighlightColorNotify (d, wallDisplayOptionChanged);
++    wallSetBackgroundGradientShadowColorNotify (d, wallDisplayOptionChanged);
++    wallSetThumbGradientBaseColorNotify (d, wallDisplayOptionChanged);
++    wallSetThumbGradientHighlightColorNotify (d, wallDisplayOptionChanged);
++    wallSetThumbHighlightGradientBaseColorNotify (d, wallDisplayOptionChanged);
++    wallSetThumbHighlightGradientShadowColorNotify (d,
++						    wallDisplayOptionChanged);
++    wallSetArrowBaseColorNotify (d, wallDisplayOptionChanged);
++    wallSetArrowShadowColorNotify (d, wallDisplayOptionChanged);
++    wallSetNoSlideMatchNotify (d, wallDisplayOptionChanged);
++
++    WRAP (wd, d, handleEvent, wallHandleEvent);
++    WRAP (wd, d, matchExpHandlerChanged, wallMatchExpHandlerChanged);
++    WRAP (wd, d, matchPropertyChanged, wallMatchPropertyChanged);
++
++    d->base.privates[WallDisplayPrivateIndex].ptr = wd;
++
++    return TRUE;
++}
++
++static void
++wallFiniDisplay (CompPlugin  *p,
++		 CompDisplay *d)
++{
++    WALL_DISPLAY (d);
++
++    UNWRAP (wd, d, handleEvent);
++    UNWRAP (wd, d, matchExpHandlerChanged);
++    UNWRAP (wd, d, matchPropertyChanged);
++
++    freeScreenPrivateIndex (d, wd->screenPrivateIndex);
++    free (wd);
++}
++
++static Bool
++wallInitScreen (CompPlugin *p,
++		CompScreen *s)
++{
++    WallScreen *ws;
++
++    WALL_DISPLAY (s->display);
++
++    ws = malloc (sizeof (WallScreen));
++    if (!ws)
++	return FALSE;
++
++    ws->windowPrivateIndex = allocateWindowPrivateIndex (s);
++    if (ws->windowPrivateIndex < 0)
++    {
++	free (ws);
++ 	return FALSE;
++    }
++
++    ws->timer      = 0;
++    ws->boxTimeout = 0;
++    ws->grabIndex  = 0;
++
++    ws->moving       = FALSE;
++    ws->showPreview  = FALSE;
++    ws->focusDefault = TRUE;
++    ws->moveWindow   = None;
++    ws->grabWindow   = NULL;
++
++    ws->transform  = NoTransformation;
++    ws->direction  = -1;
++
++    memset (&ws->switcherContext, 0, sizeof (WallCairoContext));
++    memset (&ws->thumbContext, 0, sizeof (WallCairoContext));
++    memset (&ws->highlightContext, 0, sizeof (WallCairoContext));
++    memset (&ws->arrowContext, 0, sizeof (WallCairoContext));
++
++    WRAP (ws, s, paintScreen, wallPaintScreen);
++    WRAP (ws, s, paintOutput, wallPaintOutput);
++    WRAP (ws, s, donePaintScreen, wallDonePaintScreen);
++    WRAP (ws, s, paintTransformedOutput, wallPaintTransformedOutput);
++    WRAP (ws, s, preparePaintScreen, wallPreparePaintScreen);
++    WRAP (ws, s, paintWindow, wallPaintWindow);
++    WRAP (ws, s, windowGrabNotify, wallWindowGrabNotify);
++    WRAP (ws, s, windowUngrabNotify, wallWindowUngrabNotify);
++    WRAP (ws, s, activateWindow, wallActivateWindow);
++
++    s->base.privates[wd->screenPrivateIndex].ptr = ws;
++
++    wallCreateCairoContexts (s, TRUE);
++
++    return TRUE;
++}
++
++static void
++wallFiniScreen (CompPlugin *p,
++		CompScreen *s)
++{
++    WALL_SCREEN (s);
++
++    if (ws->grabIndex)
++	removeScreenGrab (s, ws->grabIndex, NULL);
++
++    wallDestroyCairoContext (s, &ws->switcherContext);
++    wallDestroyCairoContext (s, &ws->thumbContext);
++    wallDestroyCairoContext (s, &ws->highlightContext);
++    wallDestroyCairoContext (s, &ws->arrowContext);
++
++    UNWRAP (ws, s, paintScreen);
++    UNWRAP (ws, s, paintOutput);
++    UNWRAP (ws, s, donePaintScreen);
++    UNWRAP (ws, s, paintTransformedOutput);
++    UNWRAP (ws, s, preparePaintScreen);
++    UNWRAP (ws, s, paintWindow);
++    UNWRAP (ws, s, windowGrabNotify);
++    UNWRAP (ws, s, windowUngrabNotify);
++    UNWRAP (ws, s, activateWindow);
++    
++    freeWindowPrivateIndex (s, ws->windowPrivateIndex);
++
++    free(ws);
++}
++
++static CompBool
++wallInitWindow (CompPlugin *p,
++		CompWindow *w)
++{
++    WallWindow *ww;
++
++    WALL_SCREEN (w->screen);
++
++    ww = malloc (sizeof (WallWindow));
++    if (!ww)
++	return FALSE;
++
++    ww->isSliding = TRUE;
++
++    w->base.privates[ws->windowPrivateIndex].ptr = ww;
++
++    return TRUE;
++}
++
++static void
++wallFiniWindow (CompPlugin *p,
++		CompWindow *w)
++{
++    WALL_WINDOW (w);
++
++    free (ww);
++}
++
++static CompBool
++wallInitObject (CompPlugin *p,
++		CompObject *o)
++{
++    static InitPluginObjectProc dispTab[] = {
++	(InitPluginObjectProc) wallInitCore,
++	(InitPluginObjectProc) wallInitDisplay,
++	(InitPluginObjectProc) wallInitScreen,
++	(InitPluginObjectProc) wallInitWindow
++    };
++
++    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
++}
++
++static void
++wallFiniObject (CompPlugin *p,
++		CompObject *o)
++{
++    static FiniPluginObjectProc dispTab[] = {
++	(FiniPluginObjectProc) wallFiniCore,
++	(FiniPluginObjectProc) wallFiniDisplay,
++	(FiniPluginObjectProc) wallFiniScreen,
++	(FiniPluginObjectProc) wallFiniWindow
++    };
++
++    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
++}
++
++static Bool
++wallInit (CompPlugin *p)
++{
++    dlopen ("libcairo.so.2", RTLD_LAZY);
++    WallCorePrivateIndex = allocateCorePrivateIndex ();
++    if (WallCorePrivateIndex < 0)
++	return FALSE;
++
++    return TRUE;
++}
++
++static void
++wallFini (CompPlugin *p)
++{
++    freeCorePrivateIndex (WallCorePrivateIndex);
++}
++
++CompPluginVTable wallVTable = {
++    "wall",
++    0,
++    wallInit,
++    wallFini,
++    wallInitObject,
++    wallFiniObject,
++    0,
++    0
++};
++
++CompPluginVTable*
++getCompPluginInfo (void)
++{
++    return &wallVTable;
++}
+diff -upNr compiz-0.8.6.orign/plugins/wall_options.c compiz-0.8.6/plugins/wall_options.c
+--- compiz-0.8.6.orign/plugins/wall_options.c	1970-01-01 01:00:00.000000000 +0100
++++ compiz-0.8.6/plugins/wall_options.c	2010-03-30 14:53:23.509344956 +0200
+@@ -0,0 +1,1949 @@
++/*
++ * This file is autogenerated with bcop:
++ * The Compiz option code generator
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include <compiz-core.h>
++
++#include "wall_options.h"
++
++static int WallOptionsDisplayPrivateIndex;
++
++static CompMetadata wallOptionsMetadata;
++
++static CompPluginVTable *wallPluginVTable = NULL;
++CompPluginVTable wallOptionsVTable;
++
++#define WALL_OPTIONS_DISPLAY(d) PLUGIN_DISPLAY(d, WallOptions, o)
++#define WALL_OPTIONS_SCREEN(s) PLUGIN_SCREEN(s, WallOptions, o)
++
++typedef struct _WallOptionsDisplay
++{
++    int screenPrivateIndex;
++
++    CompOption opt[WallDisplayOptionNum];
++    wallDisplayOptionChangeNotifyProc notify[WallDisplayOptionNum];
++} WallOptionsDisplay;
++
++typedef struct _WallOptionsScreen
++{
++    CompOption opt[WallScreenOptionNum];
++    wallScreenOptionChangeNotifyProc notify[WallScreenOptionNum];
++} WallOptionsScreen;
++
++Bool wallGetShowSwitcher (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionShowSwitcher].value.b;
++}
++
++CompOption * wallGetShowSwitcherOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionShowSwitcher];
++}
++
++void wallSetShowSwitcherNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionShowSwitcher] = notify;
++}
++
++Bool wallGetMiniscreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionMiniscreen].value.b;
++}
++
++CompOption * wallGetMiniscreenOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionMiniscreen];
++}
++
++void wallSetMiniscreenNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionMiniscreen] = notify;
++}
++
++float wallGetPreviewTimeout (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionPreviewTimeout].value.f;
++}
++
++CompOption * wallGetPreviewTimeoutOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionPreviewTimeout];
++}
++
++void wallSetPreviewTimeoutNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionPreviewTimeout] = notify;
++}
++
++int wallGetPreviewScale (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionPreviewScale].value.i;
++}
++
++CompOption * wallGetPreviewScaleOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionPreviewScale];
++}
++
++void wallSetPreviewScaleNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionPreviewScale] = notify;
++}
++
++int wallGetEdgeRadius (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionEdgeRadius].value.i;
++}
++
++CompOption * wallGetEdgeRadiusOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionEdgeRadius];
++}
++
++void wallSetEdgeRadiusNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionEdgeRadius] = notify;
++}
++
++int wallGetBorderWidth (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBorderWidth].value.i;
++}
++
++CompOption * wallGetBorderWidthOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionBorderWidth];
++}
++
++void wallSetBorderWidthNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionBorderWidth] = notify;
++}
++
++unsigned short * wallGetOutlineColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionOutlineColor].value.c;
++}
++
++unsigned short wallGetOutlineColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionOutlineColor].value.c[0];
++}
++
++unsigned short wallGetOutlineColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionOutlineColor].value.c[1];
++}
++
++unsigned short wallGetOutlineColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionOutlineColor].value.c[2];
++}
++
++unsigned short wallGetOutlineColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionOutlineColor].value.c[3];
++}
++
++CompOption * wallGetOutlineColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionOutlineColor];
++}
++
++void wallSetOutlineColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionOutlineColor] = notify;
++}
++
++unsigned short * wallGetBackgroundGradientBaseColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientBaseColor].value.c;
++}
++
++unsigned short wallGetBackgroundGradientBaseColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientBaseColor].value.c[0];
++}
++
++unsigned short wallGetBackgroundGradientBaseColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientBaseColor].value.c[1];
++}
++
++unsigned short wallGetBackgroundGradientBaseColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientBaseColor].value.c[2];
++}
++
++unsigned short wallGetBackgroundGradientBaseColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientBaseColor].value.c[3];
++}
++
++CompOption * wallGetBackgroundGradientBaseColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionBackgroundGradientBaseColor];
++}
++
++void wallSetBackgroundGradientBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionBackgroundGradientBaseColor] = notify;
++}
++
++unsigned short * wallGetBackgroundGradientHighlightColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientHighlightColor].value.c;
++}
++
++unsigned short wallGetBackgroundGradientHighlightColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientHighlightColor].value.c[0];
++}
++
++unsigned short wallGetBackgroundGradientHighlightColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientHighlightColor].value.c[1];
++}
++
++unsigned short wallGetBackgroundGradientHighlightColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientHighlightColor].value.c[2];
++}
++
++unsigned short wallGetBackgroundGradientHighlightColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientHighlightColor].value.c[3];
++}
++
++CompOption * wallGetBackgroundGradientHighlightColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionBackgroundGradientHighlightColor];
++}
++
++void wallSetBackgroundGradientHighlightColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionBackgroundGradientHighlightColor] = notify;
++}
++
++unsigned short * wallGetBackgroundGradientShadowColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientShadowColor].value.c;
++}
++
++unsigned short wallGetBackgroundGradientShadowColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientShadowColor].value.c[0];
++}
++
++unsigned short wallGetBackgroundGradientShadowColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientShadowColor].value.c[1];
++}
++
++unsigned short wallGetBackgroundGradientShadowColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientShadowColor].value.c[2];
++}
++
++unsigned short wallGetBackgroundGradientShadowColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionBackgroundGradientShadowColor].value.c[3];
++}
++
++CompOption * wallGetBackgroundGradientShadowColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionBackgroundGradientShadowColor];
++}
++
++void wallSetBackgroundGradientShadowColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionBackgroundGradientShadowColor] = notify;
++}
++
++unsigned short * wallGetThumbGradientBaseColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientBaseColor].value.c;
++}
++
++unsigned short wallGetThumbGradientBaseColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientBaseColor].value.c[0];
++}
++
++unsigned short wallGetThumbGradientBaseColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientBaseColor].value.c[1];
++}
++
++unsigned short wallGetThumbGradientBaseColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientBaseColor].value.c[2];
++}
++
++unsigned short wallGetThumbGradientBaseColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientBaseColor].value.c[3];
++}
++
++CompOption * wallGetThumbGradientBaseColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionThumbGradientBaseColor];
++}
++
++void wallSetThumbGradientBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionThumbGradientBaseColor] = notify;
++}
++
++unsigned short * wallGetThumbGradientHighlightColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientHighlightColor].value.c;
++}
++
++unsigned short wallGetThumbGradientHighlightColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientHighlightColor].value.c[0];
++}
++
++unsigned short wallGetThumbGradientHighlightColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientHighlightColor].value.c[1];
++}
++
++unsigned short wallGetThumbGradientHighlightColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientHighlightColor].value.c[2];
++}
++
++unsigned short wallGetThumbGradientHighlightColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbGradientHighlightColor].value.c[3];
++}
++
++CompOption * wallGetThumbGradientHighlightColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionThumbGradientHighlightColor];
++}
++
++void wallSetThumbGradientHighlightColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionThumbGradientHighlightColor] = notify;
++}
++
++unsigned short * wallGetThumbHighlightGradientBaseColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientBaseColor].value.c;
++}
++
++unsigned short wallGetThumbHighlightGradientBaseColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientBaseColor].value.c[0];
++}
++
++unsigned short wallGetThumbHighlightGradientBaseColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientBaseColor].value.c[1];
++}
++
++unsigned short wallGetThumbHighlightGradientBaseColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientBaseColor].value.c[2];
++}
++
++unsigned short wallGetThumbHighlightGradientBaseColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientBaseColor].value.c[3];
++}
++
++CompOption * wallGetThumbHighlightGradientBaseColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionThumbHighlightGradientBaseColor];
++}
++
++void wallSetThumbHighlightGradientBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionThumbHighlightGradientBaseColor] = notify;
++}
++
++unsigned short * wallGetThumbHighlightGradientShadowColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientShadowColor].value.c;
++}
++
++unsigned short wallGetThumbHighlightGradientShadowColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientShadowColor].value.c[0];
++}
++
++unsigned short wallGetThumbHighlightGradientShadowColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientShadowColor].value.c[1];
++}
++
++unsigned short wallGetThumbHighlightGradientShadowColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientShadowColor].value.c[2];
++}
++
++unsigned short wallGetThumbHighlightGradientShadowColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionThumbHighlightGradientShadowColor].value.c[3];
++}
++
++CompOption * wallGetThumbHighlightGradientShadowColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionThumbHighlightGradientShadowColor];
++}
++
++void wallSetThumbHighlightGradientShadowColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionThumbHighlightGradientShadowColor] = notify;
++}
++
++unsigned short * wallGetArrowBaseColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowBaseColor].value.c;
++}
++
++unsigned short wallGetArrowBaseColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowBaseColor].value.c[0];
++}
++
++unsigned short wallGetArrowBaseColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowBaseColor].value.c[1];
++}
++
++unsigned short wallGetArrowBaseColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowBaseColor].value.c[2];
++}
++
++unsigned short wallGetArrowBaseColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowBaseColor].value.c[3];
++}
++
++CompOption * wallGetArrowBaseColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionArrowBaseColor];
++}
++
++void wallSetArrowBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionArrowBaseColor] = notify;
++}
++
++unsigned short * wallGetArrowShadowColor (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowShadowColor].value.c;
++}
++
++unsigned short wallGetArrowShadowColorRed (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowShadowColor].value.c[0];
++}
++
++unsigned short wallGetArrowShadowColorGreen (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowShadowColor].value.c[1];
++}
++
++unsigned short wallGetArrowShadowColorBlue (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowShadowColor].value.c[2];
++}
++
++unsigned short wallGetArrowShadowColorAlpha (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionArrowShadowColor].value.c[3];
++}
++
++CompOption * wallGetArrowShadowColorOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionArrowShadowColor];
++}
++
++void wallSetArrowShadowColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionArrowShadowColor] = notify;
++}
++
++Bool wallGetAllowWraparound (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionAllowWraparound].value.b;
++}
++
++CompOption * wallGetAllowWraparoundOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionAllowWraparound];
++}
++
++void wallSetAllowWraparoundNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionAllowWraparound] = notify;
++}
++
++float wallGetSlideDuration (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return od->opt[WallDisplayOptionSlideDuration].value.f;
++}
++
++CompOption * wallGetSlideDurationOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionSlideDuration];
++}
++
++void wallSetSlideDurationNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionSlideDuration] = notify;
++}
++
++CompMatch * wallGetNoSlideMatch (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionNoSlideMatch].value.match;
++}
++
++CompOption * wallGetNoSlideMatchOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionNoSlideMatch];
++}
++
++void wallSetNoSlideMatchNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionNoSlideMatch] = notify;
++}
++
++CompAction * wallGetLeftKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionLeftKey].value.action;
++}
++
++void wallSetLeftKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionLeftKey].value.action.initiate = init;
++}
++
++void wallSetLeftKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionLeftKey].value.action.terminate = term;
++}
++
++CompOption * wallGetLeftKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionLeftKey];
++}
++
++void wallSetLeftKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionLeftKey] = notify;
++}
++
++CompAction * wallGetLeftButton (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionLeftButton].value.action;
++}
++
++void wallSetLeftButtonInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionLeftButton].value.action.initiate = init;
++}
++
++void wallSetLeftButtonTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionLeftButton].value.action.terminate = term;
++}
++
++CompOption * wallGetLeftButtonOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionLeftButton];
++}
++
++void wallSetLeftButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionLeftButton] = notify;
++}
++
++CompAction * wallGetRightKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionRightKey].value.action;
++}
++
++void wallSetRightKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionRightKey].value.action.initiate = init;
++}
++
++void wallSetRightKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionRightKey].value.action.terminate = term;
++}
++
++CompOption * wallGetRightKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionRightKey];
++}
++
++void wallSetRightKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionRightKey] = notify;
++}
++
++CompAction * wallGetRightButton (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionRightButton].value.action;
++}
++
++void wallSetRightButtonInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionRightButton].value.action.initiate = init;
++}
++
++void wallSetRightButtonTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionRightButton].value.action.terminate = term;
++}
++
++CompOption * wallGetRightButtonOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionRightButton];
++}
++
++void wallSetRightButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionRightButton] = notify;
++}
++
++CompAction * wallGetUpKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionUpKey].value.action;
++}
++
++void wallSetUpKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionUpKey].value.action.initiate = init;
++}
++
++void wallSetUpKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionUpKey].value.action.terminate = term;
++}
++
++CompOption * wallGetUpKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionUpKey];
++}
++
++void wallSetUpKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionUpKey] = notify;
++}
++
++CompAction * wallGetUpButton (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionUpButton].value.action;
++}
++
++void wallSetUpButtonInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionUpButton].value.action.initiate = init;
++}
++
++void wallSetUpButtonTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionUpButton].value.action.terminate = term;
++}
++
++CompOption * wallGetUpButtonOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionUpButton];
++}
++
++void wallSetUpButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionUpButton] = notify;
++}
++
++CompAction * wallGetDownKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionDownKey].value.action;
++}
++
++void wallSetDownKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionDownKey].value.action.initiate = init;
++}
++
++void wallSetDownKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionDownKey].value.action.terminate = term;
++}
++
++CompOption * wallGetDownKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionDownKey];
++}
++
++void wallSetDownKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionDownKey] = notify;
++}
++
++CompAction * wallGetDownButton (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionDownButton].value.action;
++}
++
++void wallSetDownButtonInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionDownButton].value.action.initiate = init;
++}
++
++void wallSetDownButtonTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionDownButton].value.action.terminate = term;
++}
++
++CompOption * wallGetDownButtonOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionDownButton];
++}
++
++void wallSetDownButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionDownButton] = notify;
++}
++
++CompAction * wallGetNextKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionNextKey].value.action;
++}
++
++void wallSetNextKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionNextKey].value.action.initiate = init;
++}
++
++void wallSetNextKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionNextKey].value.action.terminate = term;
++}
++
++CompOption * wallGetNextKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionNextKey];
++}
++
++void wallSetNextKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionNextKey] = notify;
++}
++
++CompAction * wallGetNextButton (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionNextButton].value.action;
++}
++
++void wallSetNextButtonInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionNextButton].value.action.initiate = init;
++}
++
++void wallSetNextButtonTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionNextButton].value.action.terminate = term;
++}
++
++CompOption * wallGetNextButtonOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionNextButton];
++}
++
++void wallSetNextButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionNextButton] = notify;
++}
++
++CompAction * wallGetPrevKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionPrevKey].value.action;
++}
++
++void wallSetPrevKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionPrevKey].value.action.initiate = init;
++}
++
++void wallSetPrevKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionPrevKey].value.action.terminate = term;
++}
++
++CompOption * wallGetPrevKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionPrevKey];
++}
++
++void wallSetPrevKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionPrevKey] = notify;
++}
++
++CompAction * wallGetPrevButton (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionPrevButton].value.action;
++}
++
++void wallSetPrevButtonInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionPrevButton].value.action.initiate = init;
++}
++
++void wallSetPrevButtonTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionPrevButton].value.action.terminate = term;
++}
++
++CompOption * wallGetPrevButtonOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionPrevButton];
++}
++
++void wallSetPrevButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionPrevButton] = notify;
++}
++
++CompAction * wallGetLeftWindowKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionLeftWindowKey].value.action;
++}
++
++void wallSetLeftWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionLeftWindowKey].value.action.initiate = init;
++}
++
++void wallSetLeftWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionLeftWindowKey].value.action.terminate = term;
++}
++
++CompOption * wallGetLeftWindowKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionLeftWindowKey];
++}
++
++void wallSetLeftWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionLeftWindowKey] = notify;
++}
++
++CompAction * wallGetRightWindowKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionRightWindowKey].value.action;
++}
++
++void wallSetRightWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionRightWindowKey].value.action.initiate = init;
++}
++
++void wallSetRightWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionRightWindowKey].value.action.terminate = term;
++}
++
++CompOption * wallGetRightWindowKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionRightWindowKey];
++}
++
++void wallSetRightWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionRightWindowKey] = notify;
++}
++
++CompAction * wallGetUpWindowKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionUpWindowKey].value.action;
++}
++
++void wallSetUpWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionUpWindowKey].value.action.initiate = init;
++}
++
++void wallSetUpWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionUpWindowKey].value.action.terminate = term;
++}
++
++CompOption * wallGetUpWindowKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionUpWindowKey];
++}
++
++void wallSetUpWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionUpWindowKey] = notify;
++}
++
++CompAction * wallGetDownWindowKey (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionDownWindowKey].value.action;
++}
++
++void wallSetDownWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionDownWindowKey].value.action.initiate = init;
++}
++
++void wallSetDownWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionDownWindowKey].value.action.terminate = term;
++}
++
++CompOption * wallGetDownWindowKeyOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionDownWindowKey];
++}
++
++void wallSetDownWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionDownWindowKey] = notify;
++}
++
++CompAction * wallGetFlipLeftEdge (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipLeftEdge].value.action;
++}
++
++void wallSetFlipLeftEdgeInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipLeftEdge].value.action.initiate = init;
++}
++
++void wallSetFlipLeftEdgeTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipLeftEdge].value.action.terminate = term;
++}
++
++CompOption * wallGetFlipLeftEdgeOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipLeftEdge];
++}
++
++void wallSetFlipLeftEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionFlipLeftEdge] = notify;
++}
++
++CompAction * wallGetFlipRightEdge (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipRightEdge].value.action;
++}
++
++void wallSetFlipRightEdgeInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipRightEdge].value.action.initiate = init;
++}
++
++void wallSetFlipRightEdgeTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipRightEdge].value.action.terminate = term;
++}
++
++CompOption * wallGetFlipRightEdgeOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipRightEdge];
++}
++
++void wallSetFlipRightEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionFlipRightEdge] = notify;
++}
++
++CompAction * wallGetFlipUpEdge (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipUpEdge].value.action;
++}
++
++void wallSetFlipUpEdgeInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipUpEdge].value.action.initiate = init;
++}
++
++void wallSetFlipUpEdgeTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipUpEdge].value.action.terminate = term;
++}
++
++CompOption * wallGetFlipUpEdgeOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipUpEdge];
++}
++
++void wallSetFlipUpEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionFlipUpEdge] = notify;
++}
++
++CompAction * wallGetFlipDownEdge (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipDownEdge].value.action;
++}
++
++void wallSetFlipDownEdgeInitiate (CompDisplay *d, CompActionCallBackProc init)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipDownEdge].value.action.initiate = init;
++}
++
++void wallSetFlipDownEdgeTerminate (CompDisplay *d, CompActionCallBackProc term)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->opt[WallDisplayOptionFlipDownEdge].value.action.terminate = term;
++}
++
++CompOption * wallGetFlipDownEdgeOption (CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[WallDisplayOptionFlipDownEdge];
++}
++
++void wallSetFlipDownEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    od->notify[WallDisplayOptionFlipDownEdge] = notify;
++}
++
++int wallGetMmmode (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return os->opt[WallScreenOptionMmmode].value.i;
++}
++
++CompOption * wallGetMmmodeOption (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return &os->opt[WallScreenOptionMmmode];
++}
++
++void wallSetMmmodeNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_SCREEN(s);
++    os->notify[WallScreenOptionMmmode] = notify;
++}
++
++Bool wallGetEdgeflipPointer (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return os->opt[WallScreenOptionEdgeflipPointer].value.b;
++}
++
++CompOption * wallGetEdgeflipPointerOption (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return &os->opt[WallScreenOptionEdgeflipPointer];
++}
++
++void wallSetEdgeflipPointerNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_SCREEN(s);
++    os->notify[WallScreenOptionEdgeflipPointer] = notify;
++}
++
++Bool wallGetEdgeflipMove (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return os->opt[WallScreenOptionEdgeflipMove].value.b;
++}
++
++CompOption * wallGetEdgeflipMoveOption (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return &os->opt[WallScreenOptionEdgeflipMove];
++}
++
++void wallSetEdgeflipMoveNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_SCREEN(s);
++    os->notify[WallScreenOptionEdgeflipMove] = notify;
++}
++
++Bool wallGetEdgeflipDnd (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return os->opt[WallScreenOptionEdgeflipDnd].value.b;
++}
++
++CompOption * wallGetEdgeflipDndOption (CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return &os->opt[WallScreenOptionEdgeflipDnd];
++}
++
++void wallSetEdgeflipDndNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify)
++{
++    WALL_OPTIONS_SCREEN(s);
++    os->notify[WallScreenOptionEdgeflipDnd] = notify;
++}
++
++CompOption * wallGetDisplayOption (CompDisplay *d, WallDisplayOptions num)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    return &od->opt[num];
++}
++
++CompOption * wallGetScreenOption (CompScreen *s, WallScreenOptions num)
++{
++    WALL_OPTIONS_SCREEN(s);
++    return &os->opt[num];
++}
++
++static const CompMetadataOptionInfo wallOptionsDisplayOptionInfo[] = {
++    { "show_switcher", "bool", 0, 0, 0 },
++    { "miniscreen", "bool", 0, 0, 0 },
++    { "preview_timeout", "float", "<min>0.0</min><max>2.0</max>", 0, 0 },
++    { "preview_scale", "int", "<min>0</min><max>400</max>", 0, 0 },
++    { "edge_radius", "int", "<min>0</min><max>20</max>", 0, 0 },
++    { "border_width", "int", "<min>0</min><max>30</max>", 0, 0 },
++    { "outline_color", "color", 0, 0, 0 },
++    { "background_gradient_base_color", "color", 0, 0, 0 },
++    { "background_gradient_highlight_color", "color", 0, 0, 0 },
++    { "background_gradient_shadow_color", "color", 0, 0, 0 },
++    { "thumb_gradient_base_color", "color", 0, 0, 0 },
++    { "thumb_gradient_highlight_color", "color", 0, 0, 0 },
++    { "thumb_highlight_gradient_base_color", "color", 0, 0, 0 },
++    { "thumb_highlight_gradient_shadow_color", "color", 0, 0, 0 },
++    { "arrow_base_color", "color", 0, 0, 0 },
++    { "arrow_shadow_color", "color", 0, 0, 0 },
++    { "allow_wraparound", "bool", 0, 0, 0 },
++    { "slide_duration", "float", "<min>0.0</min><max>5.0</max>", 0, 0 },
++    { "no_slide_match", "match", 0, 0, 0 },
++    { "left_key", "key", 0, 0, 0 },
++    { "left_button", "button", 0, 0, 0 },
++    { "right_key", "key", 0, 0, 0 },
++    { "right_button", "button", 0, 0, 0 },
++    { "up_key", "key", 0, 0, 0 },
++    { "up_button", "button", 0, 0, 0 },
++    { "down_key", "key", 0, 0, 0 },
++    { "down_button", "button", 0, 0, 0 },
++    { "next_key", "key", 0, 0, 0 },
++    { "next_button", "button", 0, 0, 0 },
++    { "prev_key", "key", 0, 0, 0 },
++    { "prev_button", "button", 0, 0, 0 },
++    { "left_window_key", "key", 0, 0, 0 },
++    { "right_window_key", "key", 0, 0, 0 },
++    { "up_window_key", "key", 0, 0, 0 },
++    { "down_window_key", "key", 0, 0, 0 },
++    { "flip_left_edge", "edge", 0, 0, 0 },
++    { "flip_right_edge", "edge", 0, 0, 0 },
++    { "flip_up_edge", "edge", 0, 0, 0 },
++    { "flip_down_edge", "edge", 0, 0, 0 },
++};
++
++static Bool wallOptionsSetDisplayOption (CompPlugin *plugin, CompDisplay *d, const char *name, CompOptionValue *value)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    CompOption *o;
++    int        index;
++
++    o = compFindOption (od->opt, WallDisplayOptionNum, name, &index);
++
++    if (!o)
++        return FALSE;
++
++    switch (index)
++    {
++     case WallDisplayOptionShowSwitcher:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionShowSwitcher])
++                (*od->notify[WallDisplayOptionShowSwitcher]) (d, o, WallDisplayOptionShowSwitcher);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionMiniscreen:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionMiniscreen])
++                (*od->notify[WallDisplayOptionMiniscreen]) (d, o, WallDisplayOptionMiniscreen);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionPreviewTimeout:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionPreviewTimeout])
++                (*od->notify[WallDisplayOptionPreviewTimeout]) (d, o, WallDisplayOptionPreviewTimeout);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionPreviewScale:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionPreviewScale])
++                (*od->notify[WallDisplayOptionPreviewScale]) (d, o, WallDisplayOptionPreviewScale);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionEdgeRadius:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionEdgeRadius])
++                (*od->notify[WallDisplayOptionEdgeRadius]) (d, o, WallDisplayOptionEdgeRadius);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionBorderWidth:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionBorderWidth])
++                (*od->notify[WallDisplayOptionBorderWidth]) (d, o, WallDisplayOptionBorderWidth);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionOutlineColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionOutlineColor])
++                (*od->notify[WallDisplayOptionOutlineColor]) (d, o, WallDisplayOptionOutlineColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionBackgroundGradientBaseColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionBackgroundGradientBaseColor])
++                (*od->notify[WallDisplayOptionBackgroundGradientBaseColor]) (d, o, WallDisplayOptionBackgroundGradientBaseColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionBackgroundGradientHighlightColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionBackgroundGradientHighlightColor])
++                (*od->notify[WallDisplayOptionBackgroundGradientHighlightColor]) (d, o, WallDisplayOptionBackgroundGradientHighlightColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionBackgroundGradientShadowColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionBackgroundGradientShadowColor])
++                (*od->notify[WallDisplayOptionBackgroundGradientShadowColor]) (d, o, WallDisplayOptionBackgroundGradientShadowColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionThumbGradientBaseColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionThumbGradientBaseColor])
++                (*od->notify[WallDisplayOptionThumbGradientBaseColor]) (d, o, WallDisplayOptionThumbGradientBaseColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionThumbGradientHighlightColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionThumbGradientHighlightColor])
++                (*od->notify[WallDisplayOptionThumbGradientHighlightColor]) (d, o, WallDisplayOptionThumbGradientHighlightColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionThumbHighlightGradientBaseColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionThumbHighlightGradientBaseColor])
++                (*od->notify[WallDisplayOptionThumbHighlightGradientBaseColor]) (d, o, WallDisplayOptionThumbHighlightGradientBaseColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionThumbHighlightGradientShadowColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionThumbHighlightGradientShadowColor])
++                (*od->notify[WallDisplayOptionThumbHighlightGradientShadowColor]) (d, o, WallDisplayOptionThumbHighlightGradientShadowColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionArrowBaseColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionArrowBaseColor])
++                (*od->notify[WallDisplayOptionArrowBaseColor]) (d, o, WallDisplayOptionArrowBaseColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionArrowShadowColor:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionArrowShadowColor])
++                (*od->notify[WallDisplayOptionArrowShadowColor]) (d, o, WallDisplayOptionArrowShadowColor);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionAllowWraparound:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionAllowWraparound])
++                (*od->notify[WallDisplayOptionAllowWraparound]) (d, o, WallDisplayOptionAllowWraparound);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionSlideDuration:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionSlideDuration])
++                (*od->notify[WallDisplayOptionSlideDuration]) (d, o, WallDisplayOptionSlideDuration);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionNoSlideMatch:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionNoSlideMatch])
++                (*od->notify[WallDisplayOptionNoSlideMatch]) (d, o, WallDisplayOptionNoSlideMatch);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionLeftKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionLeftKey])
++                (*od->notify[WallDisplayOptionLeftKey]) (d, o, WallDisplayOptionLeftKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionLeftButton:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionLeftButton])
++                (*od->notify[WallDisplayOptionLeftButton]) (d, o, WallDisplayOptionLeftButton);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionRightKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionRightKey])
++                (*od->notify[WallDisplayOptionRightKey]) (d, o, WallDisplayOptionRightKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionRightButton:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionRightButton])
++                (*od->notify[WallDisplayOptionRightButton]) (d, o, WallDisplayOptionRightButton);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionUpKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionUpKey])
++                (*od->notify[WallDisplayOptionUpKey]) (d, o, WallDisplayOptionUpKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionUpButton:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionUpButton])
++                (*od->notify[WallDisplayOptionUpButton]) (d, o, WallDisplayOptionUpButton);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionDownKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionDownKey])
++                (*od->notify[WallDisplayOptionDownKey]) (d, o, WallDisplayOptionDownKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionDownButton:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionDownButton])
++                (*od->notify[WallDisplayOptionDownButton]) (d, o, WallDisplayOptionDownButton);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionNextKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionNextKey])
++                (*od->notify[WallDisplayOptionNextKey]) (d, o, WallDisplayOptionNextKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionNextButton:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionNextButton])
++                (*od->notify[WallDisplayOptionNextButton]) (d, o, WallDisplayOptionNextButton);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionPrevKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionPrevKey])
++                (*od->notify[WallDisplayOptionPrevKey]) (d, o, WallDisplayOptionPrevKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionPrevButton:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionPrevButton])
++                (*od->notify[WallDisplayOptionPrevButton]) (d, o, WallDisplayOptionPrevButton);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionLeftWindowKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionLeftWindowKey])
++                (*od->notify[WallDisplayOptionLeftWindowKey]) (d, o, WallDisplayOptionLeftWindowKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionRightWindowKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionRightWindowKey])
++                (*od->notify[WallDisplayOptionRightWindowKey]) (d, o, WallDisplayOptionRightWindowKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionUpWindowKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionUpWindowKey])
++                (*od->notify[WallDisplayOptionUpWindowKey]) (d, o, WallDisplayOptionUpWindowKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionDownWindowKey:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionDownWindowKey])
++                (*od->notify[WallDisplayOptionDownWindowKey]) (d, o, WallDisplayOptionDownWindowKey);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionFlipLeftEdge:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionFlipLeftEdge])
++                (*od->notify[WallDisplayOptionFlipLeftEdge]) (d, o, WallDisplayOptionFlipLeftEdge);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionFlipRightEdge:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionFlipRightEdge])
++                (*od->notify[WallDisplayOptionFlipRightEdge]) (d, o, WallDisplayOptionFlipRightEdge);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionFlipUpEdge:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionFlipUpEdge])
++                (*od->notify[WallDisplayOptionFlipUpEdge]) (d, o, WallDisplayOptionFlipUpEdge);
++            return TRUE;
++        }
++        break;
++     case WallDisplayOptionFlipDownEdge:
++        if (compSetDisplayOption (d, o, value))
++        {
++            if (od->notify[WallDisplayOptionFlipDownEdge])
++                (*od->notify[WallDisplayOptionFlipDownEdge]) (d, o, WallDisplayOptionFlipDownEdge);
++            return TRUE;
++        }
++        break;
++    default:
++        break;
++    }
++    return FALSE;
++}
++
++static CompOption * wallOptionsGetDisplayOptions (CompPlugin *plugin, CompDisplay *d, int *count)
++{
++    WALL_OPTIONS_DISPLAY(d);
++    if (!od)
++    {
++        *count = 0;
++        return NULL;
++    }
++    *count = WallDisplayOptionNum;
++    return od->opt;
++}
++
++static const CompMetadataOptionInfo wallOptionsScreenOptionInfo[] = {
++    { "mmmode", "int", "<min>0</min><max>1</max>", 0, 0 },
++    { "edgeflip_pointer", "bool", 0, 0, 0 },
++    { "edgeflip_move", "bool", 0, 0, 0 },
++    { "edgeflip_dnd", "bool", 0, 0, 0 },
++};
++
++static Bool wallOptionsSetScreenOption (CompPlugin *plugin, CompScreen *s, const char *name, CompOptionValue *value)
++{
++    WALL_OPTIONS_SCREEN(s);
++    CompOption *o;
++    int        index;
++
++    o = compFindOption (os->opt, WallScreenOptionNum, name, &index);
++
++    if (!o)
++        return FALSE;
++
++    switch (index)
++    {
++     case WallScreenOptionMmmode:
++        if (compSetScreenOption (s, o, value))
++        {
++            if (os->notify[WallScreenOptionMmmode])
++                (*os->notify[WallScreenOptionMmmode]) (s, o, WallScreenOptionMmmode);
++            return TRUE;
++        }
++        break;
++     case WallScreenOptionEdgeflipPointer:
++        if (compSetScreenOption (s, o, value))
++        {
++            if (os->notify[WallScreenOptionEdgeflipPointer])
++                (*os->notify[WallScreenOptionEdgeflipPointer]) (s, o, WallScreenOptionEdgeflipPointer);
++            return TRUE;
++        }
++        break;
++     case WallScreenOptionEdgeflipMove:
++        if (compSetScreenOption (s, o, value))
++        {
++            if (os->notify[WallScreenOptionEdgeflipMove])
++                (*os->notify[WallScreenOptionEdgeflipMove]) (s, o, WallScreenOptionEdgeflipMove);
++            return TRUE;
++        }
++        break;
++     case WallScreenOptionEdgeflipDnd:
++        if (compSetScreenOption (s, o, value))
++        {
++            if (os->notify[WallScreenOptionEdgeflipDnd])
++                (*os->notify[WallScreenOptionEdgeflipDnd]) (s, o, WallScreenOptionEdgeflipDnd);
++            return TRUE;
++        }
++        break;
++    default:
++        break;
++    }
++    return FALSE;
++}
++
++static CompOption * wallOptionsGetScreenOptions (CompPlugin *plugin, CompScreen *s, int *count)
++{
++    WALL_OPTIONS_SCREEN(s);
++    if (!os)
++    {
++        *count = 0;
++        return NULL;
++    }
++    *count = WallScreenOptionNum;
++    return os->opt;
++}
++
++static Bool wallOptionsInitScreen (CompPlugin *p, CompScreen *s)
++{
++    WallOptionsScreen *os;
++    
++    WALL_OPTIONS_DISPLAY (s->display);
++
++    os = calloc (1, sizeof(WallOptionsScreen));
++    if (!os)
++        return FALSE;
++
++    s->base.privates[od->screenPrivateIndex].ptr = os;
++
++    if (!compInitScreenOptionsFromMetadata (s, &wallOptionsMetadata, wallOptionsScreenOptionInfo, os->opt, WallScreenOptionNum))
++    {
++        free (os);
++        return FALSE;
++    }
++
++    return TRUE;
++}
++
++static void wallOptionsFiniScreen (CompPlugin *p, CompScreen *s)
++{
++    WALL_OPTIONS_SCREEN (s);
++    WALL_OPTIONS_DISPLAY (s->display);
++
++
++    compFiniScreenOptions (s, os->opt, WallScreenOptionNum);
++
++    free (os);
++    s->base.privates[od->screenPrivateIndex].ptr = NULL;
++}
++
++static Bool wallOptionsInitDisplay (CompPlugin *p, CompDisplay *d)
++{
++    WallOptionsDisplay *od;
++   
++    
++    od = calloc (1, sizeof(WallOptionsDisplay));
++    if (!od)
++        return FALSE;
++
++    od->screenPrivateIndex = allocateScreenPrivateIndex(d);
++    if (od->screenPrivateIndex < 0)
++    {
++        free(od);
++        return FALSE;
++    }
++
++    d->base.privates[WallOptionsDisplayPrivateIndex].ptr = od;
++
++    if (!compInitDisplayOptionsFromMetadata (d, &wallOptionsMetadata, wallOptionsDisplayOptionInfo, od->opt, WallDisplayOptionNum))
++    {
++        free (od);
++        return FALSE;
++    }
++
++    return TRUE;
++}
++
++static void wallOptionsFiniDisplay (CompPlugin *p, CompDisplay *d)
++{
++    WALL_OPTIONS_DISPLAY (d);
++
++    freeScreenPrivateIndex(d, od->screenPrivateIndex);
++
++    compFiniDisplayOptions (d, od->opt, WallDisplayOptionNum);
++
++    free (od);
++    d->base.privates[WallOptionsDisplayPrivateIndex].ptr = NULL;
++}
++
++static Bool wallOptionsInit (CompPlugin *p)
++{
++    WallOptionsDisplayPrivateIndex = allocateDisplayPrivateIndex();
++    if (WallOptionsDisplayPrivateIndex < 0)
++        return FALSE;
++
++    if (!compInitPluginMetadataFromInfo (&wallOptionsMetadata, "wall",wallOptionsDisplayOptionInfo, WallDisplayOptionNum, wallOptionsScreenOptionInfo, WallScreenOptionNum))
++        return FALSE;
++
++    compAddMetadataFromFile (&wallOptionsMetadata, "wall");
++    if (wallPluginVTable && wallPluginVTable->init)
++        return wallPluginVTable->init (p);
++    return TRUE;
++}
++
++static void wallOptionsFini (CompPlugin *p)
++{
++    if (wallPluginVTable && wallPluginVTable->fini)
++        wallPluginVTable->fini (p);
++
++    if (WallOptionsDisplayPrivateIndex >= 0)
++        freeDisplayPrivateIndex (WallOptionsDisplayPrivateIndex);
++
++    compFiniMetadata (&wallOptionsMetadata);
++}
++
++static CompBool wallOptionsInitObject (CompPlugin *p, CompObject *o)
++{
++    static InitPluginObjectProc dispTab[] = {
++        (InitPluginObjectProc) 0,
++        (InitPluginObjectProc) wallOptionsInitDisplay,
++        (InitPluginObjectProc) wallOptionsInitScreen
++    };
++
++    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
++}
++
++static void wallOptionsFiniObject (CompPlugin *p, CompObject *o)
++{
++    static FiniPluginObjectProc dispTab[] = {
++        (FiniPluginObjectProc) 0,
++        (FiniPluginObjectProc) wallOptionsFiniDisplay,
++        (FiniPluginObjectProc) wallOptionsFiniScreen
++    };
++
++    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
++}
++
++static CompBool wallOptionsInitObjectWrapper (CompPlugin *p, CompObject *o)
++{
++    CompBool rv = TRUE;
++    rv = wallOptionsInitObject (p, o);
++    if (wallPluginVTable->initObject)
++        rv &= wallPluginVTable->initObject (p, o);
++    return rv;
++}
++
++static void wallOptionsFiniObjectWrapper (CompPlugin *p, CompObject *o)
++{
++    if (wallPluginVTable->finiObject)
++        wallPluginVTable->finiObject (p, o);
++    wallOptionsFiniObject (p, o);
++}
++
++static CompOption * wallOptionsGetObjectOptions (CompPlugin *p, CompObject *o, int *count)
++{
++    static GetPluginObjectOptionsProc dispTab[] = {
++        (GetPluginObjectOptionsProc) 0,
++            (GetPluginObjectOptionsProc) wallOptionsGetDisplayOptions,
++        (GetPluginObjectOptionsProc) wallOptionsGetScreenOptions
++    };
++
++    *count = 0;
++    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab),
++		     NULL, (p, o, count));
++}
++
++static CompBool wallOptionsSetObjectOption (CompPlugin *p, CompObject *o, const char *name, CompOptionValue *value)
++{
++    static SetPluginObjectOptionProc dispTab[] = {
++        (SetPluginObjectOptionProc) 0,
++        (SetPluginObjectOptionProc) wallOptionsSetDisplayOption,
++        (SetPluginObjectOptionProc) wallOptionsSetScreenOption
++    };
++
++    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), FALSE,
++		     (p, o, name, value));
++}
++
++static CompMetadata *
++wallOptionsGetMetadata (CompPlugin *plugin)
++{
++    return &wallOptionsMetadata;
++}
++
++CompPluginVTable *getCompPluginInfo20070830 (void)
++{
++    if (!wallPluginVTable)
++    {
++        wallPluginVTable = getCompPluginInfo ();
++        memcpy(&wallOptionsVTable, wallPluginVTable, sizeof(CompPluginVTable));
++        wallOptionsVTable.getMetadata = wallOptionsGetMetadata;
++        wallOptionsVTable.init = wallOptionsInit;
++        wallOptionsVTable.fini = wallOptionsFini;
++        wallOptionsVTable.initObject = wallOptionsInitObjectWrapper;
++        wallOptionsVTable.finiObject = wallOptionsFiniObjectWrapper;
++        wallOptionsVTable.getObjectOptions = wallOptionsGetObjectOptions;
++	wallOptionsVTable.setObjectOption = wallOptionsSetObjectOption;
++	
++    }
++    return &wallOptionsVTable;
++}
++
+diff -upNr compiz-0.8.6.orign/plugins/wall_options.h compiz-0.8.6/plugins/wall_options.h
+--- compiz-0.8.6.orign/plugins/wall_options.h	1970-01-01 01:00:00.000000000 +0100
++++ compiz-0.8.6/plugins/wall_options.h	2010-03-30 14:53:23.510343112 +0200
+@@ -0,0 +1,375 @@
++/*
++ * This file is autogenerated with bcop:
++ * The Compiz option code generator
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#ifndef _WALL_OPTIONS_H
++#define _WALL_OPTIONS_H
++
++#include <compiz-common.h>
++
++COMPIZ_BEGIN_DECLS
++
++CompPluginVTable * getCompPluginInfo (void);
++
++typedef enum
++{
++    WallDisplayOptionShowSwitcher,
++    WallDisplayOptionMiniscreen,
++    WallDisplayOptionPreviewTimeout,
++    WallDisplayOptionPreviewScale,
++    WallDisplayOptionEdgeRadius,
++    WallDisplayOptionBorderWidth,
++    WallDisplayOptionOutlineColor,
++    WallDisplayOptionBackgroundGradientBaseColor,
++    WallDisplayOptionBackgroundGradientHighlightColor,
++    WallDisplayOptionBackgroundGradientShadowColor,
++    WallDisplayOptionThumbGradientBaseColor,
++    WallDisplayOptionThumbGradientHighlightColor,
++    WallDisplayOptionThumbHighlightGradientBaseColor,
++    WallDisplayOptionThumbHighlightGradientShadowColor,
++    WallDisplayOptionArrowBaseColor,
++    WallDisplayOptionArrowShadowColor,
++    WallDisplayOptionAllowWraparound,
++    WallDisplayOptionSlideDuration,
++    WallDisplayOptionNoSlideMatch,
++    WallDisplayOptionLeftKey,
++    WallDisplayOptionLeftButton,
++    WallDisplayOptionRightKey,
++    WallDisplayOptionRightButton,
++    WallDisplayOptionUpKey,
++    WallDisplayOptionUpButton,
++    WallDisplayOptionDownKey,
++    WallDisplayOptionDownButton,
++    WallDisplayOptionNextKey,
++    WallDisplayOptionNextButton,
++    WallDisplayOptionPrevKey,
++    WallDisplayOptionPrevButton,
++    WallDisplayOptionLeftWindowKey,
++    WallDisplayOptionRightWindowKey,
++    WallDisplayOptionUpWindowKey,
++    WallDisplayOptionDownWindowKey,
++    WallDisplayOptionFlipLeftEdge,
++    WallDisplayOptionFlipRightEdge,
++    WallDisplayOptionFlipUpEdge,
++    WallDisplayOptionFlipDownEdge,
++    WallDisplayOptionNum
++} WallDisplayOptions;
++
++typedef void (*wallDisplayOptionChangeNotifyProc) (CompDisplay *display, CompOption *opt, WallDisplayOptions num);
++
++CompOption *wallGetDisplayOption (CompDisplay *d, WallDisplayOptions num);
++
++typedef enum
++{
++    WallScreenOptionMmmode,
++    WallScreenOptionEdgeflipPointer,
++    WallScreenOptionEdgeflipMove,
++    WallScreenOptionEdgeflipDnd,
++    WallScreenOptionNum
++} WallScreenOptions;
++
++typedef void (*wallScreenOptionChangeNotifyProc) (CompScreen *screen, CompOption *opt, WallScreenOptions num);
++
++CompOption *wallGetScreenOption (CompScreen *s, WallScreenOptions num);
++
++typedef enum
++{
++    MmmodeSwitchAll = 0,
++    MmmodeSwitchSeparately = 1,
++} WallMmmodeEnum;
++
++Bool             wallGetShowSwitcher (CompDisplay *d);
++CompOption *     wallGetShowSwitcherOption (CompDisplay *d);
++void             wallSetShowSwitcherNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++Bool             wallGetMiniscreen (CompDisplay *d);
++CompOption *     wallGetMiniscreenOption (CompDisplay *d);
++void             wallSetMiniscreenNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++float            wallGetPreviewTimeout (CompDisplay *d);
++CompOption *     wallGetPreviewTimeoutOption (CompDisplay *d);
++void             wallSetPreviewTimeoutNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++int              wallGetPreviewScale (CompDisplay *d);
++CompOption *     wallGetPreviewScaleOption (CompDisplay *d);
++void             wallSetPreviewScaleNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++int              wallGetEdgeRadius (CompDisplay *d);
++CompOption *     wallGetEdgeRadiusOption (CompDisplay *d);
++void             wallSetEdgeRadiusNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++int              wallGetBorderWidth (CompDisplay *d);
++CompOption *     wallGetBorderWidthOption (CompDisplay *d);
++void             wallSetBorderWidthNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetOutlineColor (CompDisplay *d);
++unsigned short   wallGetOutlineColorRed (CompDisplay *d);
++unsigned short   wallGetOutlineColorGreen (CompDisplay *d);
++unsigned short   wallGetOutlineColorBlue (CompDisplay *d);
++unsigned short   wallGetOutlineColorAlpha (CompDisplay *d);
++CompOption *     wallGetOutlineColorOption (CompDisplay *d);
++void             wallSetOutlineColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetBackgroundGradientBaseColor (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientBaseColorRed (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientBaseColorGreen (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientBaseColorBlue (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientBaseColorAlpha (CompDisplay *d);
++CompOption *     wallGetBackgroundGradientBaseColorOption (CompDisplay *d);
++void             wallSetBackgroundGradientBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetBackgroundGradientHighlightColor (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientHighlightColorRed (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientHighlightColorGreen (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientHighlightColorBlue (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientHighlightColorAlpha (CompDisplay *d);
++CompOption *     wallGetBackgroundGradientHighlightColorOption (CompDisplay *d);
++void             wallSetBackgroundGradientHighlightColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetBackgroundGradientShadowColor (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientShadowColorRed (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientShadowColorGreen (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientShadowColorBlue (CompDisplay *d);
++unsigned short   wallGetBackgroundGradientShadowColorAlpha (CompDisplay *d);
++CompOption *     wallGetBackgroundGradientShadowColorOption (CompDisplay *d);
++void             wallSetBackgroundGradientShadowColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetThumbGradientBaseColor (CompDisplay *d);
++unsigned short   wallGetThumbGradientBaseColorRed (CompDisplay *d);
++unsigned short   wallGetThumbGradientBaseColorGreen (CompDisplay *d);
++unsigned short   wallGetThumbGradientBaseColorBlue (CompDisplay *d);
++unsigned short   wallGetThumbGradientBaseColorAlpha (CompDisplay *d);
++CompOption *     wallGetThumbGradientBaseColorOption (CompDisplay *d);
++void             wallSetThumbGradientBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetThumbGradientHighlightColor (CompDisplay *d);
++unsigned short   wallGetThumbGradientHighlightColorRed (CompDisplay *d);
++unsigned short   wallGetThumbGradientHighlightColorGreen (CompDisplay *d);
++unsigned short   wallGetThumbGradientHighlightColorBlue (CompDisplay *d);
++unsigned short   wallGetThumbGradientHighlightColorAlpha (CompDisplay *d);
++CompOption *     wallGetThumbGradientHighlightColorOption (CompDisplay *d);
++void             wallSetThumbGradientHighlightColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetThumbHighlightGradientBaseColor (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientBaseColorRed (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientBaseColorGreen (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientBaseColorBlue (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientBaseColorAlpha (CompDisplay *d);
++CompOption *     wallGetThumbHighlightGradientBaseColorOption (CompDisplay *d);
++void             wallSetThumbHighlightGradientBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetThumbHighlightGradientShadowColor (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientShadowColorRed (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientShadowColorGreen (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientShadowColorBlue (CompDisplay *d);
++unsigned short   wallGetThumbHighlightGradientShadowColorAlpha (CompDisplay *d);
++CompOption *     wallGetThumbHighlightGradientShadowColorOption (CompDisplay *d);
++void             wallSetThumbHighlightGradientShadowColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetArrowBaseColor (CompDisplay *d);
++unsigned short   wallGetArrowBaseColorRed (CompDisplay *d);
++unsigned short   wallGetArrowBaseColorGreen (CompDisplay *d);
++unsigned short   wallGetArrowBaseColorBlue (CompDisplay *d);
++unsigned short   wallGetArrowBaseColorAlpha (CompDisplay *d);
++CompOption *     wallGetArrowBaseColorOption (CompDisplay *d);
++void             wallSetArrowBaseColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++unsigned short * wallGetArrowShadowColor (CompDisplay *d);
++unsigned short   wallGetArrowShadowColorRed (CompDisplay *d);
++unsigned short   wallGetArrowShadowColorGreen (CompDisplay *d);
++unsigned short   wallGetArrowShadowColorBlue (CompDisplay *d);
++unsigned short   wallGetArrowShadowColorAlpha (CompDisplay *d);
++CompOption *     wallGetArrowShadowColorOption (CompDisplay *d);
++void             wallSetArrowShadowColorNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++Bool             wallGetAllowWraparound (CompDisplay *d);
++CompOption *     wallGetAllowWraparoundOption (CompDisplay *d);
++void             wallSetAllowWraparoundNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++float            wallGetSlideDuration (CompDisplay *d);
++CompOption *     wallGetSlideDurationOption (CompDisplay *d);
++void             wallSetSlideDurationNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompMatch *      wallGetNoSlideMatch (CompDisplay *d);
++CompOption *     wallGetNoSlideMatchOption (CompDisplay *d);
++void             wallSetNoSlideMatchNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetLeftKey (CompDisplay *d);
++void             wallSetLeftKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetLeftKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetLeftKeyOption (CompDisplay *d);
++void             wallSetLeftKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetLeftButton (CompDisplay *d);
++void             wallSetLeftButtonInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetLeftButtonTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetLeftButtonOption (CompDisplay *d);
++void             wallSetLeftButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetRightKey (CompDisplay *d);
++void             wallSetRightKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetRightKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetRightKeyOption (CompDisplay *d);
++void             wallSetRightKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetRightButton (CompDisplay *d);
++void             wallSetRightButtonInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetRightButtonTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetRightButtonOption (CompDisplay *d);
++void             wallSetRightButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetUpKey (CompDisplay *d);
++void             wallSetUpKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetUpKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetUpKeyOption (CompDisplay *d);
++void             wallSetUpKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetUpButton (CompDisplay *d);
++void             wallSetUpButtonInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetUpButtonTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetUpButtonOption (CompDisplay *d);
++void             wallSetUpButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetDownKey (CompDisplay *d);
++void             wallSetDownKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetDownKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetDownKeyOption (CompDisplay *d);
++void             wallSetDownKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetDownButton (CompDisplay *d);
++void             wallSetDownButtonInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetDownButtonTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetDownButtonOption (CompDisplay *d);
++void             wallSetDownButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetNextKey (CompDisplay *d);
++void             wallSetNextKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetNextKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetNextKeyOption (CompDisplay *d);
++void             wallSetNextKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetNextButton (CompDisplay *d);
++void             wallSetNextButtonInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetNextButtonTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetNextButtonOption (CompDisplay *d);
++void             wallSetNextButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetPrevKey (CompDisplay *d);
++void             wallSetPrevKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetPrevKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetPrevKeyOption (CompDisplay *d);
++void             wallSetPrevKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetPrevButton (CompDisplay *d);
++void             wallSetPrevButtonInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetPrevButtonTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetPrevButtonOption (CompDisplay *d);
++void             wallSetPrevButtonNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetLeftWindowKey (CompDisplay *d);
++void             wallSetLeftWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetLeftWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetLeftWindowKeyOption (CompDisplay *d);
++void             wallSetLeftWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetRightWindowKey (CompDisplay *d);
++void             wallSetRightWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetRightWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetRightWindowKeyOption (CompDisplay *d);
++void             wallSetRightWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetUpWindowKey (CompDisplay *d);
++void             wallSetUpWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetUpWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetUpWindowKeyOption (CompDisplay *d);
++void             wallSetUpWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetDownWindowKey (CompDisplay *d);
++void             wallSetDownWindowKeyInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetDownWindowKeyTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetDownWindowKeyOption (CompDisplay *d);
++void             wallSetDownWindowKeyNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetFlipLeftEdge (CompDisplay *d);
++void             wallSetFlipLeftEdgeInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetFlipLeftEdgeTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetFlipLeftEdgeOption (CompDisplay *d);
++void             wallSetFlipLeftEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetFlipRightEdge (CompDisplay *d);
++void             wallSetFlipRightEdgeInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetFlipRightEdgeTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetFlipRightEdgeOption (CompDisplay *d);
++void             wallSetFlipRightEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetFlipUpEdge (CompDisplay *d);
++void             wallSetFlipUpEdgeInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetFlipUpEdgeTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetFlipUpEdgeOption (CompDisplay *d);
++void             wallSetFlipUpEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++CompAction *     wallGetFlipDownEdge (CompDisplay *d);
++void             wallSetFlipDownEdgeInitiate (CompDisplay *d, CompActionCallBackProc init);
++void             wallSetFlipDownEdgeTerminate (CompDisplay *d, CompActionCallBackProc term);
++CompOption *     wallGetFlipDownEdgeOption (CompDisplay *d);
++void             wallSetFlipDownEdgeNotify (CompDisplay *d, wallDisplayOptionChangeNotifyProc notify);
++
++int              wallGetMmmode (CompScreen *s);
++CompOption *     wallGetMmmodeOption (CompScreen *s);
++void             wallSetMmmodeNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify);
++
++Bool             wallGetEdgeflipPointer (CompScreen *s);
++CompOption *     wallGetEdgeflipPointerOption (CompScreen *s);
++void             wallSetEdgeflipPointerNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify);
++
++Bool             wallGetEdgeflipMove (CompScreen *s);
++CompOption *     wallGetEdgeflipMoveOption (CompScreen *s);
++void             wallSetEdgeflipMoveNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify);
++
++Bool             wallGetEdgeflipDnd (CompScreen *s);
++CompOption *     wallGetEdgeflipDndOption (CompScreen *s);
++void             wallSetEdgeflipDndNotify (CompScreen *s, wallScreenOptionChangeNotifyProc notify);
++
++#ifndef GENERIC_PRIVATE_DEFINES
++#define GENERIC_PRIVATE_DEFINES
++
++#define GET_PLUGIN_CORE(object, plugin) \
++    ((plugin##Core *) (object)->base.privates[plugin##CorePrivateIndex].ptr)
++#define PLUGIN_CORE(object, plugin, prefix) \
++    plugin##Core * prefix##c = GET_PLUGIN_CORE (object, plugin)
++
++#define GET_PLUGIN_DISPLAY(object, plugin) \
++    ((plugin##Display *) \
++	(object)->base.privates[plugin##DisplayPrivateIndex].ptr)
++#define PLUGIN_DISPLAY(object, plugin, prefix) \
++    plugin##Display * prefix##d = GET_PLUGIN_DISPLAY (object, plugin)
++
++#define GET_PLUGIN_SCREEN(object, parent, plugin) \
++    ((plugin##Screen *) \
++	(object)->base.privates[(parent)->screenPrivateIndex].ptr)
++#define PLUGIN_SCREEN(object, plugin, prefix) \
++    plugin##Screen * prefix##s = \
++	GET_PLUGIN_SCREEN (object, \
++	GET_PLUGIN_DISPLAY ((object)->display, plugin), plugin)
++
++#define GET_PLUGIN_WINDOW(object, parent, plugin) \
++    ((plugin##Window *) \
++	(object)->base.privates[(parent)->windowPrivateIndex].ptr)
++#define PLUGIN_WINDOW(object, plugin, prefix) \
++    plugin##Window * prefix##w = \
++	GET_PLUGIN_WINDOW  (object, \
++	GET_PLUGIN_SCREEN  ((object)->screen, \
++	GET_PLUGIN_DISPLAY ((object)->screen->display, plugin), plugin), plugin)
++
++#endif
++
++COMPIZ_END_DECLS
++
++#endif
