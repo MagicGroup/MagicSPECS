@@ -1,5 +1,5 @@
 # Necessary conditionals
-%ifarch ppc64 s390 s390x sparc64 %{arm} alpha aarch64
+%ifarch ppc64 s390 s390x sparc64 %{arm} alpha aarch64 mips64el
 %global SHARP  0
 %else
 %global SHARP  1
