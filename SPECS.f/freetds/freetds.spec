@@ -1,6 +1,6 @@
 %define git_commit	0a42888
 
-%ifarch alpha ia64 x86_64 ppc64 sparc64 s390x aarch64
+%ifarch alpha ia64 x86_64 ppc64 sparc64 s390x aarch64 mips64el
 %define bits	64
 %else
 %define bits	32

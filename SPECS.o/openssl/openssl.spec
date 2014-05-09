@@ -266,6 +266,9 @@ sslarch=linux-generic32
 %ifarch %{power64}
 sslarch=linux-ppc64
 %endif
+%ifarch mips64el
+sslarch=linux-generic64
+%endif
 
 # ia64, x86_64, ppc are OK by default
 # Configure the build tree.  Override OpenSSL defaults with known-good defaults
