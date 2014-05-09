@@ -1,0 +1,14 @@
+[Unit]
+Description=A caching web proxy
+Documentation=man:polipo(1) http://localhost:8123/
+
+[Service]
+Type=forking
+User=polipo
+Group=polipo
+EnvironmentFile=/etc/sysconfig/polipo
+ExecStart=/usr/bin/polipo -c $CONFIG
+ExecReload=/usr/bin/kill -USR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

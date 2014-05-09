@@ -1,7 +1,7 @@
 Summary:	Library (C API) for accessing CDDB servers
 Name:		libcddb
 Version:	1.3.2
-Release:	7%{?dist}
+Release:	8%{?dist}
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
 URL: 		http://libcddb.sourceforge.net/
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.3.2-8
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 1.3.2-7
 - 为 Magic 3.0 重建
 

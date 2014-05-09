@@ -1,0 +1,15 @@
+diff -Ppru a/src/csharp/CMakeLists.txt b/src/csharp/CMakeLists.txt
+--- a/src/csharp/CMakeLists.txt	2013-10-30 17:48:07.000000000 +0100
++++ b/src/csharp/CMakeLists.txt	2013-11-21 01:15:23.552898945 +0100
+@@ -44,8 +44,11 @@ set(KOLAB_SWIG_CSHARP_FILES
+         ${CMAKE_CURRENT_BINARY_DIR}/Related.cs
+         ${CMAKE_CURRENT_BINARY_DIR}/Relative.cs
+         ${CMAKE_CURRENT_BINARY_DIR}/Role.cs
++        ${CMAKE_CURRENT_BINARY_DIR}/Snippet.cs
++        ${CMAKE_CURRENT_BINARY_DIR}/SnippetsCollection.cs
+         ${CMAKE_CURRENT_BINARY_DIR}/Status.cs
+         ${CMAKE_CURRENT_BINARY_DIR}/SWIGTYPE_p_Kolab__Freebusy.cs
++        ${CMAKE_CURRENT_BINARY_DIR}/SWIGTYPE_p_std__vectorT_Kolab__Snippet_t.cs
+         ${CMAKE_CURRENT_BINARY_DIR}/SWIGTYPE_p_std__vectorT_Kolab__Todo_t.cs
+         ${CMAKE_CURRENT_BINARY_DIR}/Telephone.cs
+         ${CMAKE_CURRENT_BINARY_DIR}/Todo.cs

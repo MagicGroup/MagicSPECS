@@ -1,0 +1,33 @@
+diff -up qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/jsruntime.pri.no_sse2 qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/jsruntime.pri
+--- qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/jsruntime.pri.no_sse2	2013-12-08 11:10:19.000000000 -0600
++++ qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/jsruntime.pri	2013-12-12 11:30:36.763009499 -0600
+@@ -91,7 +91,7 @@ HEADERS += \
+ 
+ # Use SSE2 floating point math on 32 bit instead of the default
+ # 387 to make test results pass on 32 and on 64 bit builds.
+-linux-g++*:isEqual(QT_ARCH,i386) {
++linux-g++*:isEqual(QT_ARCH,i386):!no_sse2 {
+     QMAKE_CFLAGS += -march=pentium4 -msse2 -mfpmath=sse
+     QMAKE_CXXFLAGS += -march=pentium4 -msse2 -mfpmath=sse
+ }
+diff -up qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/qv4global_p.h.no_sse2 qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/qv4global_p.h
+--- qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/qv4global_p.h.no_sse2	2013-12-08 11:10:19.000000000 -0600
++++ qtdeclarative-opensource-src-5.2.0/src/qml/jsruntime/qv4global_p.h	2013-12-12 11:32:21.555865718 -0600
+@@ -45,6 +45,8 @@
+ #include <QtCore/qglobal.h>
+ #include <QString>
+ #include <qtqmlglobal.h>
++// To get __SSE2__ defined when building with MSVC
++//#include <private/qsimd_p.h>
+ 
+ #if defined(Q_CC_MSVC)
+ #include <float.h>
+@@ -70,7 +72,7 @@ inline double trunc(double d) { return d
+ 
+ // White list architectures
+ 
+-#if defined(Q_PROCESSOR_X86)
++#if defined(Q_PROCESSOR_X86) && defined(__SSE2__)
+ #define V4_ENABLE_JIT
+ #elif defined(Q_PROCESSOR_X86_64)
+ #define V4_ENABLE_JIT

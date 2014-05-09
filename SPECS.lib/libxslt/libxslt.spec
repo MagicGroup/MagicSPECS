@@ -1,7 +1,7 @@
 Summary: Library providing the Gnome XSLT engine
 Name: libxslt
 Version: 1.1.28
-Release: 1%{?dist}%{?extra_release}
+Release: 2%{?dist}%{?extra_release}
 License: MIT
 Group: Development/Libraries
 Source: ftp://xmlsoft.org/XSLT/libxslt-%{version}.tar.gz
@@ -120,6 +120,9 @@ make tests
 %doc python/tests/*.xsl
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1.1.28-2
+- 为 Magic 3.0 重建
+
 * Wed Nov 21 2012 Daniel Veillard <veillard@redhat.com> - 1.1.28-1
 - upstream release of libxslt-1.1.28
 - a few bug fixes and cleanups

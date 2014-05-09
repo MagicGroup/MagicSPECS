@@ -7,7 +7,7 @@
 
 Name:           webkitgtk3
 Version:        2.3.90
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GTK+ Web content engine library
 
 Group:          Development/Libraries
@@ -226,6 +226,9 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
 %{_datadir}/gtk-doc/html/webkitdomgtk
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 2.3.90-4
+- 为 Magic 3.0 重建
+
 * Thu Feb 27 2014 Karsten Hopp <karsten@redhat.com> 2.3.90-3
 - disable libatomic patch on ppc. webkitgtk3 now uses std::atomic
 

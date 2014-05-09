@@ -1,6 +1,6 @@
 Name:		obex-data-server
 Version:	0.4.6
-Release:	3%{?dist}
+Release:	4%{?dist}
 Epoch:		1
 Summary:	D-Bus service for Obex access
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/obex-data-server.1.gz
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1:0.4.6-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:0.4.6-3
 - 为 Magic 3.0 重建
 

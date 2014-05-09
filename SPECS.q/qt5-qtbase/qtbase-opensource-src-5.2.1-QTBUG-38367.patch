@@ -1,0 +1,17 @@
+diff -up qtbase-opensource-src-5.2.1/src/gui/image/qgifhandler.cpp.QTBUG-38367 qtbase-opensource-src-5.2.1/src/gui/image/qgifhandler.cpp
+--- qtbase-opensource-src-5.2.1/src/gui/image/qgifhandler.cpp.QTBUG-38367	2014-02-01 14:37:35.000000000 -0600
++++ qtbase-opensource-src-5.2.1/src/gui/image/qgifhandler.cpp	2014-04-24 16:28:10.952100278 -0500
+@@ -359,6 +359,13 @@ int QGIFFormat::decode(QImage *image, co
+                     memset(bits, 0, image->byteCount());
+                 }
+ 
++                // Check if the previous attempt to create the image failed. If it
++                // did then the image is broken and we should give up.
++                if (image->isNull()) {
++                    state = Error;
++                    return -1;
++                }
++
+                 disposePrevious(image);
+                 disposed = false;
+ 

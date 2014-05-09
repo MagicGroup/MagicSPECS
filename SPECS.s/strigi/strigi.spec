@@ -3,7 +3,7 @@
 
 Name:		strigi
 Version:	0.7.7
-Release:	8.20120626%{?dist}
+Release:	9.20120626%{?dist}
 Summary:	A desktop search program
 Group:		Applications/Productivity
 License:	LGPLv2+
@@ -167,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.7-9.20120626
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.7.7-8.20120626
 - 为 Magic 3.0 重建
 

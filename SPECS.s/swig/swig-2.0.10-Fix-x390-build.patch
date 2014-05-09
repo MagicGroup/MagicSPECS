@@ -1,0 +1,12 @@
+diff -up swig-2.0.10/configure.ac.orig swig-2.0.10/configure.ac
+--- swig-2.0.10/configure.ac.orig	2013-06-05 14:04:47.707542473 +0200
++++ swig-2.0.10/configure.ac	2013-06-05 14:07:20.338761781 +0200
+@@ -274,6 +274,8 @@ then
+ 		 then CCSHARED="-fpic"
+ 		 else CCSHARED="+z"
+ 		 fi;;
++	s390x*-*-*) CCSHARED="-fpic" ;;
++	s390*-*-*) CCSHARED="-fPIC" ;;
+ 	*-*-linux*) CCSHARED="-fpic";;
+ 	*-*-freebsd* | *-*-openbsd*) CCSHARED="-fpic";;
+ 	*-*-netbsd*) CCSHARED="-fPIC";;

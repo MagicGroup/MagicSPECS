@@ -1,7 +1,7 @@
 Summary:	Utilities for alternative packaging
 Name:		scl-utils
 Version:	20140127
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 URL:		https://fedorahosted.org/SoftwareCollections/
@@ -16,7 +16,7 @@ Run-time utility for alternative packaging.
 Summary:	RPM build macros for alternative packaging
 Group:		Applications/File
 Requires:	iso-codes
-Requires:	redhat-rpm-config
+Requires:	magic-rpm-config
 
 %description build
 Essential RPM build macros for alternative packaging.
@@ -70,6 +70,9 @@ rm -rf %buildroot
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 20140127-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 27 2014 Jan Zeleny <jzeleny@redhat.com> - 20140127-1
 - don't exclude provides from SCLs (#1056183)
 - don't generate scl-package(%scl) in macros.scl, it's already

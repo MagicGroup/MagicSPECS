@@ -1,8 +1,15 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+
+# python/Cython support busted on rawhide atm
+%if 0%{?fedora} < 21
+%global python 1
+%endif
+
 Name:          libimobiledevice
 Version:       1.1.5
-Release:       3%{?dist}
+Release:       6%{?dist}
 Summary:       Library for connecting to mobile devices
 
 Group:         System Environment/Libraries
@@ -50,7 +57,7 @@ Python bindings for libimobiledevice.
 chmod +x docs/html
 
 %build
-%configure --disable-static --disable-openssl --enable-dev-tools
+%configure --disable-static --disable-openssl --enable-dev-tools %{!?python:--without-cython}
 # Remove rpath as per https://fedoraproject.org/wiki/Packaging/Guidelines#Beware_of_Rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -79,10 +86,21 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/libimobiledevice.so
 %{_includedir}/libimobiledevice/
 
+%if 0%{?python}
 %files python
 %{python_sitearch}/imobiledevice*
+%endif
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.1.5-6
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.1.5-5
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.1.5-4
+- 为 Magic 3.0 重建
+
 * Sat Aug  3 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1.1.5-3
 - Add dep on libgcrypt-devel to fix FTBFS
 

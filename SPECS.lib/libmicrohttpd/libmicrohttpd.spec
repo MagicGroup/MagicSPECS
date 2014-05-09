@@ -1,7 +1,7 @@
 Summary: Lightweight library for embedding a webserver in applications
 Name: libmicrohttpd
 Version: 0.9.33
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Libraries
 License: LGPLv2+
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -128,6 +128,9 @@ fi
 %doc html
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.9.33-2
+- 为 Magic 3.0 重建
+
 * Thu Jan 02 2014 Václav Pavlín <vpavlin@redhat.com> - 0.9.33-1
 - Update to latest upstream release 0.9.33
 

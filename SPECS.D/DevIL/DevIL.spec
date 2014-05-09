@@ -1,6 +1,6 @@
 Name:           DevIL
 Version:        1.7.8
-Release:        10%{?dist}
+Release:        12%{?dist}
 Summary:        A cross-platform image library
 Summary(zh_CN.UTF-8): 一个跨平台的图像库
 Group:          System Environment/Libraries
@@ -158,6 +158,12 @@ fi
 
 
 %changelog
+* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 1.7.8-12
+- 为 Magic 3.0 重建
+
+* Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 1.7.8-11
+- 为 Magic 3.0 重建
+
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.8-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

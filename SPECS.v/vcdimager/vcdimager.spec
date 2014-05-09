@@ -2,7 +2,7 @@ Summary: VideoCD (pre-)mastering and ripping tool
 Summary(zh_CN): 视频光盘处理和抓取工具
 Name: vcdimager
 Version: 0.7.24
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
 Group(zh_CN): 应用程序/多媒体
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.24-4
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 0.7.24-3
 - 为 Magic 3.0 重建
 

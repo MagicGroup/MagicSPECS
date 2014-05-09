@@ -3,7 +3,7 @@
 
 Name:    m17n-lib
 Version:  1.6.4
-Release:  4%{?dist}
+Release:  5%{?dist}
 Summary:  Multilingual text library
 
 Group:    System Environment/Libraries
@@ -112,6 +112,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/libm17n-gui.so.*
 
 %changelog
+* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 1.6.4-5
+- 为 Magic 3.0 重建
+
 * Fri Nov 30 2012 Parag Nemade <pnemade AT redhat DOT com> - 1.6.4-4
 - Resolves:rh#880957 - m17n-lib doesn't uninstall properly
 

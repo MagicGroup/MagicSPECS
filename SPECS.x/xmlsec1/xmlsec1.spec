@@ -1,7 +1,7 @@
 Summary: Library providing support for "XML Signature" and "XML Encryption" standards
 Name: xmlsec1
 Version: 1.2.19
-Release: 4%{?dist}%{?extra_release}
+Release: 5%{?dist}%{?extra_release}
 License: MIT
 Group: System Environment/Libraries
 Source0: http://www.aleksey.com/xmlsec/download/xmlsec1-%{version}.tar.gz
@@ -214,6 +214,9 @@ rm -fr ${RPM_BUILD_ROOT}
 %{_libdir}/pkgconfig/xmlsec1-nss.pc
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 1.2.19-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 13 2013 Michael Schwendt <mschwendt@fedoraproject.org> - 1.2.19-3
 - Fix duplicate documentation (#1001250)
 - Turn on verbose build output via V=1 make

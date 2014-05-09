@@ -1,0 +1,35 @@
+#!/bin/sh        
+#
+# flush polipo disk cache
+#
+CONFIG_FILE=/etc/polipo/config
+ENVIRONMENT_FILE=/etc/sysconfig/polipo
+FORBIDDEN_FILE=/etc/polipo/forbidden
+PIDFILE=/var/run/polipo/polipo.pid
+
+if [ ! -x /usr/bin/polipo ]; then
+  exit 0
+fi
+
+if [ -f "$ENVIRONMENT_FILE" ]; then
+  . $ENVIRONMENT_FILE
+fi
+
+if [ ! -f "$FORBIDDEN_FILE" ]; then
+  FORBIDDEN_FILE=/dev/null
+fi  
+
+if [ -f "$PIDFILE" ]; then
+  # Instruct polipo to to flush its in-memory cache to disk (signal USR1)
+  kill -USR1 $(cat "$PIDFILE")
+  # Allow some time for polipo to perform the requested flush
+  sleep 2
+  # Since f17, the following su command prints "...killed." to stdout ???
+  runuser -s /bin/sh -c \
+    "nice polipo -x -c $CONFIG_FILE forbiddenFile=$FORBIDDEN_FILE > /dev/null" \
+    polipo
+  # Instruct polipo to to discard its in-memory cache (signal USR2)
+  kill -USR2 $(cat "$PIDFILE")
+fi
+
+exit 0

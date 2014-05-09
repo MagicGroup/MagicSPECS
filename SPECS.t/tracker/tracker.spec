@@ -15,7 +15,7 @@
 Summary:	Desktop-neutral search tool and indexer
 Name:		tracker
 Version:	0.17.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/System
 URL:		http://projects.gnome.org/tracker/
@@ -295,6 +295,9 @@ fi
 %{_datadir}/gtk-doc/html/ontology/
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.17.4-2
+- 为 Magic 3.0 重建
+
 * Sat Feb 22 2014 Kalev Lember <kalevlember@gmail.com> - 0.17.4-1
 - Update to 0.17.4
 

@@ -1,6 +1,6 @@
 Name:           evas-generic-loaders
-Version:        1.7.9
-Release:        2%{?dist}
+Version:	1.7.10
+Release:        1%{?dist}
 Summary:        Set of generic loaders for Evas
 Summary(zh_CN.UTF-8): Evas 的通用载入器集合
 License:        GPLv2+
@@ -35,6 +35,15 @@ magic_rpm_clean.sh
 %_libdir/evas/utils
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.7.10-1
+- 更新到 1.7.10
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.7.9-4
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.7.9-3
+- 为 Magic 3.0 重建
+
 * Tue Jan 21 2014 Jon Ciesla <limburgher@gmail.com> - 1.7.9-2
 - Rebuild for new LibRaw.
 

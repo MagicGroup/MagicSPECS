@@ -1,13 +1,18 @@
+
+%{?!mono_arches: %global mono_arches %{ix86} x86_64 sparc sparcv9 ia64 %{arm} alpha s390x ppc ppc64}
+
 %ifarch %{mono_arches}
-%global with_csharp 1
+# No linux system is actually using the csharp bindings
+%global with_csharp 0
 %endif
 %global with_java 1
 %global with_php 1
 %global with_python 1
 
 %if 0%{?with_php} > 0
+%{!?php_extdir: %global php_extdir %{_libdir}/php/modules}
 %{!?php_inidir: %global php_inidir %{_sysconfdir}/php.d/}
-%{?el5: %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)}
+%{!?php_apiver: %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)}
 %endif
 
 %if 0%{?with_python} > 0
@@ -40,23 +45,22 @@
 %endif
 
 Name:           libkolabxml
-Version:        0.8.3
-Release:        2%{?dist}
+Version:        1.0.1
+Release:        6%{?dist}
 Summary:        Kolab XML format collection parser library
 
 Group:          System Environment/Libraries
 License:        LGPLv3+
 URL:            http://www.kolab.org
 
-Source0:        http://git.kolab.org/libkolabxml/snapshot/%{name}-%{version}.tar.gz
+Source0:        http://git.kolab.org/libkolabxml/snapshot/libkolabxml-%{version}.tar.gz
+
+# Fix #2576 csharp bindings not building
+Patch0:         libkolabxml-1.0.1_csharp_bindings.patch
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-%if 0%{?rhel} < 6 && 0%{?fedora} < 15
-BuildRequires:  boost141-devel
-%else
 BuildRequires:  boost-devel
-%endif
 BuildRequires:  cmake >= 2.6
 BuildRequires:  e2fsprogs-devel
 BuildRequires:  gcc-c++
@@ -71,27 +75,24 @@ BuildRequires:  uuid-devel
 BuildRequires:  xerces-c-devel
 BuildRequires:  xsd
 
-# Only valid in kolabsys.com Koji
-#BuildRequires:  xsd-utils
-
 %if 0%{?with_csharp} < 1
 Obsoletes:      csharp-kolabformat < %{version}-%{release}
-Provides:       csharp-kolabformat = %{version}-%{release}
+#Provides:       csharp-kolabformat = %{version}-%{release}
 %endif
 
 %if 0%{?with_java} < 1
 Obsoletes:      java-kolabformat < %{version}-%{release}
-Provides:       java-kolabformat = %{version}-%{release}
+#Provides:       java-kolabformat = %{version}-%{release}
 %endif
 
 %if 0%{?with_php} < 1
 Obsoletes:      php-kolabformat < %{version}-%{release}
-Provides:       php-kolabformat = %{version}-%{release}
+#Provides:       php-kolabformat = %{version}-%{release}
 %endif
 
 %if 0%{?with_python} < 1
 Obsoletes:      python-kolabformat < %{version}-%{release}
-Provides:       python-kolabformat = %{version}-%{release}
+#Provides:       python-kolabformat = %{version}-%{release}
 %endif
 
 %description
@@ -101,13 +102,8 @@ are available through sub-packages.
 
 %package devel
 Summary:        Kolab XML library development headers
-Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} < 6 && 0%{?fedora} < 15
-Requires:       boost141-devel
-%else
 Requires:       boost-devel
-%endif
 Requires:       cmake >= 2.6
 Requires:       e2fsprogs-devel
 Requires:       gcc-c++
@@ -128,16 +124,12 @@ Requires:       uuid-devel
 Requires:       xerces-c-devel
 Requires:       xsd
 
-# Only valid in kolabsys.com Koji
-#Requires:       xsd-utils
-
 %description devel
 Development headers for the Kolab XML libraries.
 
 %if 0%{?with_csharp} > 0
 %package -n csharp-kolabformat
 Summary:        C# Bindings for libkolabxml
-Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  mono-core
 
@@ -148,7 +140,6 @@ C# bindings for libkolabxml
 %if 0%{?with_java} > 0
 %package -n java-kolabformat
 Summary:        Java Bindings for libkolabxml
-Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description -n java-kolabformat
@@ -158,7 +149,6 @@ Java bindings for libkolabxml
 %if 0%{?with_php} > 0
 %package -n php-kolabformat
 Summary:        PHP bindings for libkolabxml
-Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?rhel} > 5 || 0%{?fedora} > 15
 Requires:       php(zend-abi) = %{php_zend_api}
@@ -166,6 +156,7 @@ Requires:       php(api) = %{php_core_api}
 %else
 Requires:       php-api = %{php_apiver}
 %endif
+BuildRequires:  php >= 5.3
 BuildRequires:  php-devel >= 5.3
 
 %description -n php-kolabformat
@@ -176,7 +167,6 @@ bindings provided through libkolabxml.
 %if 0%{?with_python} > 0
 %package -n python-kolabformat
 Summary:        Python bindings for libkolabxml
-Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  python-devel
 
@@ -186,13 +176,14 @@ bindings provided through libkolabxml.
 %endif
 
 %prep
-%setup -q
+%setup -q -n libkolabxml-%{version}
+%patch0 -p1
 
 %build
-rm -rf build
 mkdir -p build
 pushd build
-%{cmake} -Wno-fatal-errors -Wno-errors \
+%cmake \
+    -Wno-fatal-errors -Wno-errors \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_PREFIX_PATH=%{_libdir} \
 %if 0%{?rhel} < 6 && 0%{?fedora} < 15
@@ -223,17 +214,16 @@ make
 popd
 
 %install
-rm -rf %{buildroot}
 pushd build
 make install DESTDIR=%{buildroot} INSTALL='install -p'
 popd
 
 %if 0%{?with_php} > 0
-mkdir -p %{buildroot}/%{_datadir}/php
+mkdir -p \
+    %{buildroot}/%{_datadir}/php \
+    %{buildroot}/%{php_inidir}/
 mv %{buildroot}/%{php_extdir}/kolabformat.php %{buildroot}/%{_datadir}/php/kolabformat.php
-
-mkdir -p %{buildroot}/%{php_inidir}/
-cat >%{buildroot}/%{php_inidir}/kolabformat.ini <<EOF
+cat > %{buildroot}/%{php_inidir}/kolabformat.ini << EOF
 extension=kolabformat.so
 EOF
 %endif
@@ -255,54 +245,76 @@ python src/python/test.py ||:
 %endif
 popd
 
-%clean
-rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc DEVELOPMENT NEWS README
 %{_libdir}/*.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/kolabxml
 %{_libdir}/*.so
 %{_libdir}/cmake/Libkolabxml
 
 %if 0%{?with_csharp} > 0
 %files -n csharp-kolabformat
-%defattr(-,root,root,-)
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/csharp
 %endif
 
 %if 0%{?with_java} > 0
 %files -n java-kolabformat
-%defattr(-,root,root,-)
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/java
 %endif
 
 %if 0%{?with_php} > 0
 %files -n php-kolabformat
-%defattr(-,root,root,-)
-%config(noreplace) %{php_inidir}/kolabformat.ini
 %{_datadir}/php/kolabformat.php
 %{php_extdir}/kolabformat.so
+%config(noreplace) %{php_inidir}/kolabformat.ini
 %endif
 
 %if 0%{?with_python} > 0
 %files -n python-kolabformat
-%defattr(-,root,root,-)
 %{python_sitearch}/kolabformat.py*
 %{python_sitearch}/_kolabformat.so
 %endif
 
 %changelog
+* Fri May 02 2014 Liu Di <liudidi@gmail.com> - 1.0.1-6
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.0.1-5
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.0.1-4
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.0.1-3
+- 为 Magic 3.0 重建
+
+* Mon Jan 13 2014 Jeroen van Meeuwen <vanmeeuwen@kolabsys.com> - 1.0.1-2
+- Require php-kolab for php-kolabformat, and void
+  /etc/php.d/kolabformat.ini (#2667)
+
+* Wed Oct 30 2013 Jeroen van Meeuwen <vanmeeuwen@kolabsys.com> - 1.0.1-1
+- New upstream release
+
+* Mon Oct 14 2013 Jeroen van Meeuwen <vanmeeuwen@kolabsys.com> - 1.0.0-1
+- New upstream release
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Jul 27 2013 pmachata@redhat.com - 0.8.4-2
+- Rebuild for boost 1.54.0
+
+* Fri Apr 12 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.8.4-1
+- Update to 0.8.4
+
 * Fri Mar 22 2013 Remi Collet <rcollet@redhat.com> - 0.8.3-2
 - rebuild for http://fedoraproject.org/wiki/Features/Php55
 

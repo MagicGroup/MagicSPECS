@@ -1,0 +1,11 @@
+diff -up qtimageformats-opensource-src-5.2.1/config.tests/libmng/libmng.cpp~ qtimageformats-opensource-src-5.2.1/config.tests/libmng/libmng.cpp
+--- qtimageformats-opensource-src-5.2.1/config.tests/libmng/libmng.cpp~	2014-02-01 22:38:05.000000000 +0200
++++ qtimageformats-opensource-src-5.2.1/config.tests/libmng/libmng.cpp	2014-03-18 18:21:32.340722308 +0200
+@@ -39,6 +39,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <stdio.h>
+ #include <libmng.h>
+ 
+ int main(int, char **)

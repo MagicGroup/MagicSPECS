@@ -17,7 +17,7 @@ Summary:    A graph based image processing framework
 Summary(zh_CN.UTF-8): 基于图形的图像处理框架
 Name:       gegl
 Version:    0.2.0
-Release:    7%{?dist}
+Release:    8%{?dist}
 
 # Compute some version related macros
 # Ugly hack, you need to get your quoting backslashes/percent signs straight
@@ -241,6 +241,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/%{name}-%{apiver}.pc
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 0.2.0-8
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.2.0-6
 - 为 Magic 3.0 重建
 

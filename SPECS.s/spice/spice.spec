@@ -8,7 +8,7 @@
 
 Name:           spice
 Version:        0.12.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Implements the SPICE protocol
 Group:          User Interface/Desktops
 License:        LGPLv2+
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.12.2-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 21 2012 Adam Tkac <atkac redhat com> - 0.12.2-2
 - rebuild against new libjpeg
 

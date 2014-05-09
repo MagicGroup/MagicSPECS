@@ -4,7 +4,7 @@
 # Set to bcond_with or use --without gui to disable qt4 gui build
 %bcond_without gui
 # Set to RC version if building RC, else %{nil}
-%define rcver -rc1
+%define rcver -rc4
 
 %define rpm_macros_dir %{_sysconfdir}/rpm
 %if 0%{?fedora} > 18
@@ -13,7 +13,7 @@
 
 Name:           cmake
 Version:        3.0.0
-Release:        0.1.rc1%{?dist}
+Release:        0.5.rc1%{?dist}
 Summary:        Cross-platform make system
 Summary(zh_CN.UTF-8): 跨平台的 make 系统
 
@@ -25,7 +25,7 @@ Group(zh_CN.UTF-8): 开发/工具
 # some GPL-licensed bison-generated files, these all include an exception granting redistribution under terms of your choice
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
-Source0:        http://www.cmake.org/files/v2.8/cmake-%{version}%{?rcver}.tar.gz
+Source0:        http://www.cmake.org/files/v3.8/cmake-%{version}%{?rcver}.tar.gz
 Source1:        cmake-init.el
 Source2:        macros.cmake
 
@@ -59,7 +59,10 @@ Patch7:         cmake-desktop_icon.patch
 Patch8:         cmake-qtdeps.patch
 # Additiona python fixes from upstream
 Patch9:         cmake-FindPythonLibs2.patch
-
+# Fix FindwxWiGroup(zh_CN.UTF-8):ets when cross-compiling for Windows
+# https://bugzilla.redhat.com/show_bug.cgi?id=1081207
+# http://public.kitware.com/Bug/view.php?id=11296
+Patch10:         cmake-FindwxWidgets.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -141,6 +144,8 @@ This package contains documentation for CMake.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
+
 # Setup copyright docs for main package
 mkdir _doc
 find Source Utilities -type f -iname copy\* | while read f
@@ -245,6 +250,18 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %endif
 
 %changelog
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 3.0.0-0.5.rc1
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 3.0.0-0.4.rc1
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 3.0.0-0.3.rc1
+- 为 Magic 3.0 重建
+
+* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 3.0.0-0.2.rc1
+- 为 Magic 3.0 重建
+
 * Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 2.8.12.2-2
 - 更新到 2.8.12.2
 

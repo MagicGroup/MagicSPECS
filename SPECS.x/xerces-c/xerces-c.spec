@@ -1,7 +1,7 @@
 Summary:	Validating XML Parser
 Name:		xerces-c
 Version:	3.1.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	ASL 2.0
 Group:		System Environment/Libraries
 URL:		http://xml.apache.org/xerces-c/
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README LICENSE NOTICE CREDITS doc _docs/*
 
 %changelog
+* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 3.1.1-5
+- 为 Magic 3.0 重建
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
