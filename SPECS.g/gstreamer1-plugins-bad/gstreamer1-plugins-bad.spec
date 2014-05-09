@@ -22,6 +22,7 @@ Source0:        http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins
 Source1:        gst-p-bad-cleanup.sh
 
 Patch1:         gst1-plugins-bad-fix-dfb-example.patch
+Patch2:         gst1-plugins-bad-fix-dfb-test.patch
 
 BuildRequires:  gstreamer1-devel >= %{version}
 BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
@@ -129,6 +130,7 @@ aren't tested well enough, or the code is not of good enough quality.
 %prep
 %setup -q -n gst-plugins-bad-%{version}
 %patch1 -p1 -b .fix-dfb
+%patch2 -p1 -b .fix-dfb1
 
 %build
 %configure \
