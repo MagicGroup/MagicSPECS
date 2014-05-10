@@ -1,5 +1,5 @@
 # Necessary conditionals
-%ifarch ppc64 s390 s390x sparc64 %{arm} alpha aarch64
+%ifarch ppc64 s390 s390x sparc64 %{arm} alpha aarch64 mips64el
 %global SHARP  0
 %else
 %global SHARP  1
@@ -69,6 +69,7 @@ Patch3:			graphviz-2.34.0-lefty-getaddrinfo.patch
 Patch4:			graphviz-2.34.0-CVE-2014-0978-CVE-2014-1235.patch
 # Fix chknum overflow (CVE-2014-1236)
 Patch5:			graphviz-2.34.0-CVE-2014-1236.patch
+Patch6:			graphviz-2.38.0-mips64-lib64-fix.patch
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:		zlib-devel, libpng-devel, libjpeg-devel, expat-devel, freetype-devel >= 2
 BuildRequires:		ksh, bison, m4, flex, tk-devel, tcl-devel >= 8.3, swig
@@ -278,6 +279,7 @@ Various tcl packages (extensions) for the graphviz tools.
 #%patch1 -p1 -b .testsuite-sigsegv-fix
 #%patch2 -p1 -b .rtest-errout-fix
 #%patch3 -p1 -b .lefty-getaddrinfo
+%patch6 -p1 -b .mips64el
 
 # Attempt to fix rpmlint warnings about executable sources
 find -type f -regex '.*\.\(c\|h\)$' -exec chmod a-x {} ';'
