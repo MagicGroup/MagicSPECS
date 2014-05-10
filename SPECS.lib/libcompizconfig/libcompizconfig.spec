@@ -2,7 +2,7 @@
 
 Name:           libcompizconfig
 Version:        0.8.8
-Release:        9%{?dist}
+Release:        11%{?dist}
 Epoch:          1
 Summary:        Configuration back end for compiz
 
@@ -93,6 +93,12 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8-11
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8-10
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.8.8-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

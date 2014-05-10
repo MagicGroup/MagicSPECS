@@ -11,7 +11,7 @@
 Summary: Multimedia framework api
 Name:    phonon
 Version: 4.7.1
-Release: 2%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+
 URL:     http://phonon.kde.org/
 %if 0%{?snap}
@@ -30,7 +30,7 @@ Patch104: 0004-don-t-emit-backendchanged-when-we-have-no-backend.patch
 
 BuildRequires: automoc4 >= 0.9.86
 BuildRequires: cmake >= 2.6.9
-BuildRequires: kde-filesystem
+BuildRequires: kde4-filesystem
 BuildRequires: pkgconfig
 BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(libpulse-mainloop-glib) > 0.9.15
@@ -47,7 +47,7 @@ BuildRequires: pkgconfig(xcb)
 
 %global pulseaudio_version %((pkg-config --modversion libpulse 2>/dev/null || echo 0.9.15) | cut -d- -f1)
 
-Requires: kde-filesystem
+Requires: kde4-filesystem
 %if 0%{?bootstrap}
 Provides: phonon-backend%{?_isa} = 4.7
 %else
@@ -200,6 +200,12 @@ test "$(pkg-config --modversion phonon4qt5)" = "%{version}"
 
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 4.7.1-4
+- 为 Magic 3.0 重建
+
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 4.7.1-3
+- 为 Magic 3.0 重建
+
 * Wed Mar 26 2014 Rex Dieter <rdieter@fedoraproject.org> 4.7.1-2
 - backport some upstream fixes, one that fixes building with cmake-3 particularly
 

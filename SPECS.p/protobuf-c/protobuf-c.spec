@@ -1,6 +1,6 @@
 Name:           protobuf-c
 Version:        0.15
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        C bindings for Google's Protocol Buffers
 
 Group:          System Environment/Libraries
@@ -60,6 +60,9 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libprotobuf-c.la
 %{_libdir}/pkgconfig/libprotobuf-c.pc
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.15-9
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

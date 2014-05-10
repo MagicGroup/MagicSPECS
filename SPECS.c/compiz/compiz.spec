@@ -9,10 +9,12 @@ Name:           compiz
 URL:            http://www.compiz.org
 License:        GPLv2+ and LGPLv2+ and MIT
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Version:        0.8.8
-Release:        26%{?dist}
+Release:        28%{?dist}
 Epoch:          1
 Summary:        OpenGL window and compositing manager
+Summary(zh_CN.UTF-8): OpenGL 窗口管理器
  
 # libdrm is not available on these arches
 ExcludeArch:   s390 s390x
@@ -331,6 +333,12 @@ fi
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8-28
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8-27
+- 为 Magic 3.0 重建
+
 * Sun Feb 16 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1:0.8.8-26
 - change BR to marco-devel for f21
 - rework remove-keybindings-and-mate-windows-settings-files patch

@@ -1,6 +1,6 @@
 Name:           mate-session-manager
 Version:        1.8.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        MATE Desktop session manager
 License:        GPLv2+
 URL:            http://mate-desktop.org
@@ -90,9 +90,15 @@ fi
 %{_datadir}/icons/hicolor/scalable/apps/mate-session-properties.svg
 %{_datadir}/glib-2.0/schemas/org.mate.session.gschema.xml
 %{_datadir}/xsessions/mate.desktop
-
+%{_docdir}/mate-session-manager/dbus/mate-session.html
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.1-3
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.1-2
+- 为 Magic 3.0 重建
+
 * Sun Mar 16 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.8.1-1
 - update to 1.8.1 release
 

@@ -5,7 +5,7 @@ URL:            http://www.compiz.org
 License:        GPLv2
 Group:          User Interface/Desktops
 Version:        0.5.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 Epoch:          1 
 Summary:        Themes for Emerald, a window decorator for Compiz Fusion
 Source0:        http://cgit.compiz.org/fusion/decorators/emerald-themes/snapshot/%{name}-%{version}.tar.bz2
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -type f -name "*.bak" | xargs rm -f
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.5.2-11
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.5.2-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

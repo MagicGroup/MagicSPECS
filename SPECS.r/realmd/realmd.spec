@@ -1,6 +1,6 @@
 Name:		realmd
 Version:	0.15.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Kerberos realm enrollment service
 License:	LGPLv2+
 URL:		http://cgit.freedesktop.org/realmd/realmd/
@@ -73,6 +73,9 @@ make install DESTDIR=%{buildroot}
 %doc %{_datadir}/doc/realmd/
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.15.0-3
+- 为 Magic 3.0 重建
+
 * Thu Jan 30 2014 Richard Hughes <rhughes@redhat.com> - 0.15.0-2
 - Rebuild for libpackagekit-glib soname bump
 

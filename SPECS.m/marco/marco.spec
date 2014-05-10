@@ -14,7 +14,7 @@
 
 Name:           marco
 Version:        %{branch}.0
-Release:        2%{?dist}
+Release:        4%{?dist}
 #Release:       0.5%{?git_rel}%{?dist}
 Summary:        MATE Desktop window manager
 License:        LGPLv2+ and GPLv2+
@@ -163,6 +163,12 @@ fi
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
+- 为 Magic 3.0 重建
+
 * Wed Apr 30 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.8.0-2
 - rebuild for libgtop2 soname bump
 

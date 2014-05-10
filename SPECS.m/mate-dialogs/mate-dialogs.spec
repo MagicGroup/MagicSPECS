@@ -1,6 +1,6 @@
 Name:           mate-dialogs
 Version:        1.8.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Displays dialog boxes from shell scripts
 License:        LGPLv2+ and GPLv2+
 URL:            http://mate-desktop.org
@@ -42,6 +42,9 @@ make %{?_smp_mflags} V=1
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
+- 为 Magic 3.0 重建
+
 * Sat Apr 12 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.8.0-2
 - remove obsolete --disable-scrollkeeper configure flag
 - add --with-gnome --all-name for find language

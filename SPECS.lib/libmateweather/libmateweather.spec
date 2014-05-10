@@ -1,6 +1,6 @@
 Name:          libmateweather
 Version:       1.8.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Libraries to allow MATE Desktop to display weather information
 License:       GPLv2+ and LGPLv2+
 URL:           http://mate-desktop.org
@@ -100,6 +100,9 @@ fi
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-2
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Dan Mashal <dan.mashal@fedoraproject.org> - 1.8.0-1
 - Update to 1.8.0
 

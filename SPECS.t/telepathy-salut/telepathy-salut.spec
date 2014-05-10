@@ -1,6 +1,6 @@
 Name:           telepathy-salut
 Version:        0.8.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Link-local XMPP telepathy connection manager
 
 Group:          Applications/Communications
@@ -78,6 +78,9 @@ make check
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.8.1-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 17 2013 Debarshi Ray <rishi@fedoraproject.org> - 0.8.1-5
 - Add %%check to run the upstream test suite on each build
 

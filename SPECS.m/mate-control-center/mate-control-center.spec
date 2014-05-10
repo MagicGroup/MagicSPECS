@@ -14,7 +14,7 @@
 
 Name:          mate-control-center
 Version:       %{branch}.1
-Release:       2%{?dist}
+Release:       4%{?dist}
 #Release:       0.6%{?git_rel}%{?dist}
 Summary:       MATE Desktop control-center
 License:       LGPLv2+ and GPLv2+
@@ -181,6 +181,12 @@ fi
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.1-4
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.1-3
+- 为 Magic 3.0 重建
+
 * Sat Apr 19 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.8.1-2
 - typo in gsettings key, rhbz (#1089461)
 

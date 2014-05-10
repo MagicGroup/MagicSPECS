@@ -1,6 +1,6 @@
 Name:		telepathy-haze
 Version:	0.8.0
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	A multi-protocol Libpurple connection manager for Telepathy
 
 Group:		Applications/Communications
@@ -53,6 +53,12 @@ make check
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.8.0-3
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.8.0-2
+- 为 Magic 3.0 重建
+
 * Wed Oct  2 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.8.0-1
 - Update to 0.8.0.
 

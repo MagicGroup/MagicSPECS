@@ -6,7 +6,7 @@
 
 Name:           telepathy-idle
 Version:        0.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        IRC connection manager for Telepathy
 
 Group:          Applications/Communications
@@ -63,6 +63,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.2.0-2
+- 为 Magic 3.0 重建
+
 * Thu Oct  3 2013 Brian Pepple <bpepple@fedoraproject.org> - 0.2.0-1
 - Update to 0.2.0.
 

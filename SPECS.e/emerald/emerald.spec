@@ -5,7 +5,7 @@ URL:            http://www.compiz.org/
 License:        GPLv2+
 Group:          User Interface/Desktops
 Version:        0.8.8
-Release:        9%{?dist}
+Release:        11%{?dist}
 Epoch:          1
 Summary:        Themeable window decorator and compositing manager for Compiz
 Source0:        http://releases.compiz.org/%{version}/%{name}-%{version}.tar.bz2
@@ -131,6 +131,12 @@ fi
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8-11
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8-10
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.8.8-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

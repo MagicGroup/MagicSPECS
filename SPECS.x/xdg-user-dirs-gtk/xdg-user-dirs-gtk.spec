@@ -1,6 +1,6 @@
 Name:		xdg-user-dirs-gtk
 Version:	0.10
-Release:	4%{?dist}
+Release:	6%{?dist}
 Summary:	Gnome integration of special directories
 
 Group:		User Interface/Desktops
@@ -50,6 +50,12 @@ desktop-file-validate $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/user-dirs-upda
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.10-6
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.10-5
+- 为 Magic 3.0 重建
+
 * Mon Jan 27 2014 Matthias Clasen <mclasen@redhat.com> - 0.10-4
 - Add Mate to OnlyShowIn
 

@@ -3,11 +3,11 @@ Name:           mate-desktop
 License:        GPLv2+ and LGPLv2+ and MIT
 %if 0%{?fedora} > 20
 Version:        1.8.0
-Release:        3%{?dist}
+Release:        5%{?dist}
 Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
 %else
 Version:        1.6.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 Source0:        http://pub.mate-desktop.org/releases/1.6/%{name}-%{version}.tar.xz
 %endif
 URL:            http://mate-desktop.org
@@ -40,7 +40,7 @@ BuildRequires:  mate-doc-utils
 %endif
 
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
-Requires: redhat-menus
+Requires: magic-menus
 Requires: pygtk2
 Requires: xdg-user-dirs-gtk
 Requires: mate-control-center-filesystem
@@ -248,6 +248,12 @@ fi
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-5
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
 * Sat Mar 22 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.8.0-3
 - add new f21 gsettings overrride file
 - remove caja-autostart override

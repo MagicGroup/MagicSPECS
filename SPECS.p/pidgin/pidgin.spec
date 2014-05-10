@@ -119,7 +119,7 @@
 
 Name:           pidgin
 Version:        2.10.9
-Release:        1%{?dist}
+Release:        3%{?dist}
 License:        GPLv2+ and GPLv2 and MIT
 # GPLv2+ - libpurple, gnt, finch, pidgin, most prpls
 # GPLv2 - silc & novell prpls
@@ -757,6 +757,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 2.10.9-3
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 2.10.9-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 03 2014 Dan Mashal <dan.mashal@fedoraproject.org> 2.10.9-1
 - Update to 2.10.9
 

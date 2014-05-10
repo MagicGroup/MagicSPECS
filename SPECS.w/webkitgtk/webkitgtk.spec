@@ -10,7 +10,7 @@
 
 Name:		webkitgtk
 Version:	2.4.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	GTK+ Web content engine library
 
 Group:		Development/Libraries
@@ -201,6 +201,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gtk-doc/html/webkitgtk
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 2.4.1-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 25 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.4.1-2
 - Switch over to geoclue2
 

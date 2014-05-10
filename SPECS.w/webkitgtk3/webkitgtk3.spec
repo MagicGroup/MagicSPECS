@@ -7,7 +7,7 @@
 
 Name:           webkitgtk3
 Version:        2.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GTK+ Web content engine library
 
 Group:          Development/Libraries
@@ -219,6 +219,9 @@ find $RPM_BUILD_ROOT%{_libdir} -name "*.la" -delete
 %{_datadir}/gtk-doc/html/webkitdomgtk
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 2.4.1-2
+- 为 Magic 3.0 重建
+
 * Mon Apr 14 2014 Kalev Lember <kalevlember@gmail.com> - 2.4.1-1
 - Update to 2.4.1
 

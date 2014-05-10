@@ -1,6 +1,6 @@
 Name:           compiz-manager
 Version:        0.6.0
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        A wrapper script to start compiz with proper options
 
 Group:          Applications/System
@@ -47,6 +47,9 @@ cp -p compiz-manager %{buildroot}/%{_bindir}/
 %{_bindir}/compiz-manager
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.6.0-20
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

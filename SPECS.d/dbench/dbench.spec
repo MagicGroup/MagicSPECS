@@ -1,6 +1,6 @@
 Name:           dbench
 Version:        4.0 
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Filesystem load benchmarking tool
 Summary(zh_CN.UTF-8): 文件系统载入测试工具
 
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 4.0-10
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

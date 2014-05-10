@@ -1,6 +1,6 @@
 Name:		perl-IPC-System-Simple 
 Version:	1.25
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+ or Artistic 
 Group:		Development/Libraries
 Summary:	Run commands simply, with detailed diagnostics 
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IPC::System::Simple.3pm*
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1.25-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 20 2013 Paul Howarth <paul@city-fan.org> - 1.25-1
 - Update to 1.25
   - No longer ship unrequired file Debian_CPANTS.txt (GH #7)

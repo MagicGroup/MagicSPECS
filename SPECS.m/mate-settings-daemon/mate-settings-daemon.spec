@@ -1,6 +1,6 @@
 Name:           mate-settings-daemon
 Version:        1.8.0
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        MATE Desktop settings daemon
 License:        GPLv2+
 URL:            http://mate-desktop.org
@@ -111,6 +111,15 @@ fi
 %{_libdir}/pkgconfig/mate-settings-daemon.pc
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 05 2014 Dan Mashal <dan.mashal@fedoraproject.org> - 1.8.0-1
 - Update to 1.8.0
 

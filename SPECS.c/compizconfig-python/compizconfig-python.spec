@@ -2,7 +2,7 @@
 
 Name:           compizconfig-python
 Version:        0.8.4
-Release:        9%{?dist}
+Release:        11%{?dist}
 Epoch:          1
 Summary:        Python bindings for the Compiz Configuration System
 Group:          Development/Libraries
@@ -62,6 +62,12 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -o -name "*.la" | xargs rm -f
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.4-11
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.4-10
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.8.4-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

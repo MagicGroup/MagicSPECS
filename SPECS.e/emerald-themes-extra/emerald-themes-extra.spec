@@ -5,7 +5,7 @@ URL:            http://packages.linuxmint.com
 License:        GPLv2+
 Group:          User Interface/Desktops
 Version:        0.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Themes for Emerald, a window decorator for Compiz Fusion
 Source0:        http://packages.linuxmint.com/pool/main/e/emerald-themes-extra/%{name}_%{version}-mint3.tar.gz
 Source1:        emerald-themes-extra.license
@@ -71,6 +71,9 @@ rm -r %{buildroot}%{_datadir}/emerald/themes/Fogo
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.7-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

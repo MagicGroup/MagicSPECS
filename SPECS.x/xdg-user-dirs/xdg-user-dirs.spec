@@ -3,7 +3,7 @@
 
 Name:		xdg-user-dirs
 Version:	0.15
-Release:	2%{?dist}
+Release:	4%{?dist}
 Summary:	Handles user special directories
 
 Group:		User Interface/Desktops
@@ -56,6 +56,12 @@ install -p -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.15-4
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.15-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

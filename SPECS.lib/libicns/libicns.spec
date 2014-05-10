@@ -1,6 +1,6 @@
 Name:           libicns
 Version:        0.8.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library for manipulating Macintosh icns files
 
 Group:          System Environment/Libraries
@@ -88,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.8.1-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

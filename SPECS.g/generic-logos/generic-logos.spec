@@ -1,6 +1,6 @@
 Name:       generic-logos
 Version:    17.0.0
-Release:    5%{?dist}
+Release:    7%{?dist}
 Summary:    Icons and pictures
 Summary(zh_CN.UTF-8): 图标和图像
 
@@ -164,6 +164,12 @@ rm -rf %{buildroot}
 %{_datadir}/pixmaps/poweredby.png
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 17.0.0-7
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 17.0.0-6
+- 为 Magic 3.0 重建
+
 * Fri Nov 22 2013 Bill Nottingham <notting@redhat.com> - 17.0.0-5
 - Add a -httpd subpackage. (#1031288)
 

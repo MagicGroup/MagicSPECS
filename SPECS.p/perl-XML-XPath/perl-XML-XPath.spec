@@ -1,6 +1,6 @@
 Name:           perl-XML-XPath
 Version:        1.13
-Release:        24%{?dist}
+Release:        25%{?dist}
 
 Summary:        XPath parser and evaluator for Perl
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1.13-25
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-24
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

@@ -14,7 +14,7 @@
 
 Name:           mate-panel
 Version:        %{branch}.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 #Release:        0.1%{?git_rel}%{?dist}
 Summary:        MATE Desktop panel and applets
 #libs are LGPLv2+ applications GPLv2+
@@ -168,6 +168,12 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
+- 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 05 2014 Dan Mashal <dan.mashal@fedoraproject.org> - 1.8.0-1
 - Update to 1.8.0
 

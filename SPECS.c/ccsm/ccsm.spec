@@ -2,7 +2,7 @@
 
 Name:           ccsm
 Version:        0.8.4
-Release:        14%{?dist}
+Release:        15%{?dist}
 Epoch:          1
 Summary:        Plugin and configuration tool - Compiz Fusion Project
 
@@ -94,6 +94,9 @@ fi
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.4-15
+- 为 Magic 3.0 重建
+
 * Tue Sep 24 2013 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1:0.8.4-14
 - fix no icons and text in main screen
 
