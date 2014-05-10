@@ -1,0 +1,14 @@
+diff -ur gst-plugins-bad-1.2.3-orig/tests/examples/directfb/gstdfb.c gst-plugins-bad-1.2.3/tests/examples/directfb/gstdfb.c
+--- gst-plugins-bad-1.2.3-orig/tests/examples/directfb/gstdfb.c	2014-05-09 15:35:48.387134180 +0000
++++ gst-plugins-bad-1.2.3/tests/examples/directfb/gstdfb.c	2014-05-09 15:36:08.840269652 +0000
+@@ -35,9 +35,9 @@
+ #include <math.h>
+ #include <time.h>
+ 
+-#include <directfb.h>
+ #include <gst/gst.h>
+ #include <string.h>
++#include <directfb.h>
+ 
+ /* macro for a safe call to DirectFB functions */
+ #define DFBCHECK(x...) \
