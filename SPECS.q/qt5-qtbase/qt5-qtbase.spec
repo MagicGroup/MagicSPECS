@@ -1,6 +1,6 @@
 # See http://bugzilla.redhat.com/223663
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le
-%define multilib_basearchs x86_64 ppc64 s390x sparc64 ppc64le
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le mips64el
+%define multilib_basearchs x86_64 ppc64 s390x sparc64 ppc64le mips64el
 
 # support qtchooser (adds qtchooser .conf file)
 %define qtchooser 1
