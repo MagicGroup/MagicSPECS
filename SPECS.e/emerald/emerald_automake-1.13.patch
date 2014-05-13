@@ -1,0 +1,55 @@
+diff -upr emerald-0.8.8-orig/engines/Makefile.am emerald-0.8.8/engines/Makefile.am
+--- emerald-0.8.8-orig/engines/Makefile.am	2011-04-21 14:06:20.000000000 +0200
++++ emerald-0.8.8/engines/Makefile.am	2013-05-26 02:19:02.280375960 +0200
+@@ -1,6 +1,6 @@
+ ## Process this file with automake to produce Makefile.in
+ #intentionally blank
+-INCLUDES = -I$(top_srcdir)/include @EMERALD_CFLAGS@
++AM_CPPFLAGS = -I$(top_srcdir)/include @EMERALD_CFLAGS@
+ 
+ ENGINELIBS = ../libengine/libemeraldengine.la
+ 
+diff -upr emerald-0.8.8-orig/libengine/Makefile.am emerald-0.8.8/libengine/Makefile.am
+--- emerald-0.8.8-orig/libengine/Makefile.am	2011-04-21 14:06:20.000000000 +0200
++++ emerald-0.8.8/libengine/Makefile.am	2013-05-26 02:19:44.981802978 +0200
+@@ -1,5 +1,5 @@
+ ## Process this file with automake to produce Makefile.in
+-INCLUDES = @EMERALD_CFLAGS@ -I$(top_srcdir)/include\
++AM_CPPFLAGS = @EMERALD_CFLAGS@ -I$(top_srcdir)/include\
+ 		   -DENGINE_DIR=\"$(enginesdir)\" \
+ 		   -DDEFTHEMEDIR='"@datadir@/emerald/theme/"' \
+ 		   -DDEFSETTINGSFILE='"@datadir@/emerald/settings.ini"'
+diff -upr emerald-0.8.8-orig/Makefile.am emerald-0.8.8/Makefile.am
+--- emerald-0.8.8-orig/Makefile.am	2011-04-21 14:06:20.000000000 +0200
++++ emerald-0.8.8/Makefile.am	2013-05-26 02:19:06.031413471 +0200
+@@ -1,5 +1,5 @@
+ ## Process this file with automake to produce Makefile.in
+-INCLUDES = -I$(top_srcdir)/include
++AM_CPPFLAGS = -I$(top_srcdir)/include
+ SUBDIRS = \
+ 		  libengine \
+ 		  src \
+diff -upr emerald-0.8.8-orig/src/Makefile.am emerald-0.8.8/src/Makefile.am
+--- emerald-0.8.8-orig/src/Makefile.am	2011-04-21 14:06:20.000000000 +0200
++++ emerald-0.8.8/src/Makefile.am	2013-05-26 02:20:09.607049233 +0200
+@@ -4,7 +4,7 @@ emerald_SOURCES = main.c \
+ 			   engine_loader.c
+ emerald_program = emerald
+ 
+-INCLUDES = @EMERALD_CFLAGS@ -I$(top_srcdir)/include \
++AM_CPPFLAGS = @EMERALD_CFLAGS@ -I$(top_srcdir)/include \
+ 		   -DLOCALEDIR="\"@datadir@/locale"\"\
+ 		   -DENGINE_DIR=\"$(enginesdir)\"
+ 
+diff -upr emerald-0.8.8-orig/themer/Makefile.am emerald-0.8.8/themer/Makefile.am
+--- emerald-0.8.8-orig/themer/Makefile.am	2011-04-21 14:06:20.000000000 +0200
++++ emerald-0.8.8/themer/Makefile.am	2013-05-26 02:20:27.402227187 +0200
+@@ -4,7 +4,7 @@ emerald_theme_manager_LDADD = $(EMERALD_
+ 
+ bin_PROGRAMS = emerald-theme-manager
+ 
+-INCLUDES = @EMERALD_CFLAGS@ \
++AM_CPPFLAGS = @EMERALD_CFLAGS@ \
+ 		   -DPIXMAPS_DIR=\""$(datadir)/pixmaps"\"\
+ 		   -DDATA_DIR=\""$(datadir)"\"\
+ 		   -DLOCALEDIR="\"@datadir@/locale"\"\

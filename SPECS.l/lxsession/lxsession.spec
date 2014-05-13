@@ -4,7 +4,7 @@
 
 Name:           lxsession
 Version:        0.4.6.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Lightweight X11 session manager
 Summary(de):    Leichtgewichtiger X11 Sitzungsverwalter
 
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/xdg/%{name}
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.4.6.1-7
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 0.4.6.1-6
 - 为 Magic 3.0 重建
 

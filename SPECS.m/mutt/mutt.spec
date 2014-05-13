@@ -13,38 +13,32 @@
 %bcond_with gdbm
 %bcond_without gpgme
 
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Summary: A text mode mail user agent
 Name: mutt
-Version: 1.5.21
-Release: 16%{?dist}
+Version: 1.5.23
+Release: 2%{?dist}
 Epoch: 5
 # The entire source code is GPLv2+ except
 # pgpewrap.c setenv.c sha1.c wcwidth.c which are Public Domain
 License: GPLv2+ and Public Domain
 Group: Applications/Internet
-Source: ftp://ftp.mutt.org/pub/mutt/devel/mutt-%{version}.tar.gz
+Source: ftp://ftp.mutt.org/mutt/devel/mutt-%{version}.tar.gz
 Source1: mutt_ldap_query
-Patch2: mutt-1.5.13-nodotlock.patch
-Patch3: mutt-1.5.18-muttrc.patch
-Patch4: mutt-1.5.18-manual.patch
-Patch5: mutt-1.5.21-updating.patch
-Patch6: mutt-1.5.21-hdrcnt.patch
-Patch7: mutt-1.5.21-testcert.patch
-Patch8: mutt-1.5.21-cabundle.patch
-Patch9: mutt-1.5.21-gpgme-1.2.0.patch
-Patch10: mutt-1.5.21-pophash.patch
-Patch11: mutt-1.5.21-certscomp.patch
-Patch12: mutt-1.5.21-notation.patch
-Patch13: mutt-1.5.21-syncdebug.patch
-Patch14: mutt-1.5.21-writehead.patch
-Patch15: mutt-1.5.21-tmpdir.patch
+Patch1: mutt-1.5.18-muttrc.patch
+Patch2: mutt-1.5.21-cabundle.patch
+# FIXME find on dev.mutt.org
+Patch3: mutt-1.5.21-syncdebug.patch
+# FIXME make it to upstream
+Patch4: mutt-1.5.23-add_debug_option.patch
 Url: http://www.mutt.org/
-Requires: mailcap urlview
-BuildRequires: ncurses-devel
-BuildRequires: gettext
-BuildRequires: automake
-# required to build documentation
-BuildRequires: docbook-style-xsl libxslt lynx
+Requires: mailcap, urlview
+BuildRequires: ncurses-devel, gettext, automake
+# manual generation
+BuildRequires: /usr/bin/xsltproc, docbook-style-xsl, perl
+# html manual -> txt manual conversion (lynx messes up the encoding)
+BuildRequires: w3m
 
 %if %{with hcache}
 %{?with_tokyocabinet:BuildRequires: tokyocabinet-devel}
@@ -52,15 +46,19 @@ BuildRequires: docbook-style-xsl libxslt lynx
 %{?with_qdbm:BuildRequires: qdbm-devel}
 %{?with_gdbm:BuildRequires: gdbm-devel}
 %endif
+
 %if %{with imap} || %{with pop} || %{with smtp}
 %{?with_gnutls:BuildRequires: gnutls-devel}
 %{?with_sasl:BuildRequires: cyrus-sasl-devel}
 %endif
+
 %if %{with imap}
 %{?with_gss:BuildRequires: krb5-devel}
 %endif
+
 %{?with_idn:BuildRequires: libidn-devel}
 %{?with_gpgme:BuildRequires: gpgme-devel}
+
 
 %description
 Mutt is a small but very powerful text-based MIME mail client.  Mutt
@@ -69,104 +67,173 @@ advanced features like key bindings, keyboard macros, mail threading,
 regular expression searches and a powerful pattern matching language
 for selecting groups of messages.
 
-%prep
-%setup -q
-#./prepare -V
-# Thou shalt use fcntl, and only fcntl
-%patch2 -p1 -b .nodl
-%patch3 -p1 -b .muttrc
-%patch4 -p1 -b .manual
-%patch5 -p1 -b .updating
-%patch6 -p1 -b .hdrcnt
-%patch7 -p1 -b .testcert
-%patch8 -p1 -b .cabundle
-%patch9 -p1 -b .gpgme-1.2.0
-%patch10 -p1 -b .pophash
-%patch11 -p1 -b .certscomp
-%patch12 -p1 -b .notation
-%patch13 -p1 -b .syncdebug
-%patch14 -p1 -b .writehead
-%patch15 -p1 -b .tmpdir
 
-sed -i.gpgerror 's/`$GPGME_CONFIG --libs`/"\0 -lgpg-error"/' configure
+%prep
+# unpack; cd
+%setup -q
+# do not run ./prepare -V, because it also runs ./configure
+autoreconf --install
+%patch1 -p1 -b .muttrc
+%patch2 -p1 -b .cabundle
+%patch3 -p1 -b .syncdebug
+%patch4 -p1 -b .add_debug_option
+
+sed -i -r 's/`$GPGME_CONFIG --libs`/"\0 -lgpg-error"/' configure
+# disable mutt_dotlock program - remove support from mutt binary
+sed -i -r 's|^(.*USE_DOTLOCK.*)$|//\1|' configure
+# disable mutt_dotlock program - disable post-install mutt_dotlock checking
+sed -i -r 's|install-exec-hook|my-useless-label|' Makefile.am
 
 install -p -m644 %{SOURCE1} mutt_ldap_query
 
 %global hgreldate \\.(201[0-9])([0-1][0-9])([0-3][0-9])hg
 if echo %{release} | grep -E -q '%{hgreldate}'; then
-	echo -n 'const char *ReleaseDate = ' > reldate.h
-	echo %{release} | sed -r 's/.*%{hgreldate}.*/"\1-\2-\3";/' >> reldate.h
+  echo -n 'const char *ReleaseDate = ' > reldate.h
+  echo %{release} | sed -r 's/.*%{hgreldate}.*/"\1-\2-\3";/' >> reldate.h
 fi
+
 
 %build
 %configure \
-		SENDMAIL=%{_sbindir}/sendmail \
-		ISPELL=%{_bindir}/hunspell \
-%{?with_debug:	--enable-debug}\
-%{?with_pop:	--enable-pop}\
-%{?with_imap:	--enable-imap} \
-%{?with_smtp:	--enable-smtp} \
-%if %{with hcache}
-		--enable-hcache \
-%{!?with_tokyocabinet:	--without-tokyocabinet} \
-%{!?with_gdbm:	--without-gdbm} \
-%{!?with_qdbm:	--without-qdbm} \
-%endif
-%if %{with imap} || %{with pop} || %{with smtp}
-%{?with_gnutls:	--with-gnutls} \
-%{?with_sasl:	--with-sasl} \
-%endif
-%if %{with imap}
-%{?with_gss: 	--with-gss} \
-%endif
-%{!?with_idn:	--without-idn} \
-%{?with_gpgme:	--enable-gpgme} \
-		--with-docdir=%{_docdir}/%{name}-%{version}
+    SENDMAIL=%{_sbindir}/sendmail \
+    ISPELL=%{_bindir}/hunspell \
+    %{?with_debug:	--enable-debug}\
+    %{?with_pop:	--enable-pop}\
+    %{?with_imap:	--enable-imap} \
+    %{?with_smtp:	--enable-smtp} \
+\
+    %if %{with hcache}
+    --enable-hcache \
+    %{!?with_tokyocabinet:	--without-tokyocabinet} \
+    %{!?with_gdbm:	--without-gdbm} \
+    %{!?with_qdbm:	--without-qdbm} \
+    %endif
+\
+    %if %{with imap} || %{with pop} || %{with smtp}
+    %{?with_gnutls:	--with-gnutls} \
+    %{?with_sasl:	--with-sasl} \
+    %endif
+\
+    %if %{with imap}
+    %{?with_gss:	--with-gss} \
+    %endif
+\
+    %{!?with_idn:	--without-idn} \
+    %{?with_gpgme:	--enable-gpgme} \
+    --with-docdir=%{_pkgdocdir}
 
 make %{?_smp_mflags}
+
+# remove unique id in manual.html because multilib conflicts
+sed -i -r 's/<a id="id[a-z0-9]\+">/<a id="id">/g' doc/manual.html
+
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # we like GPG here
 cat contrib/gpg.rc >> \
-	$RPM_BUILD_ROOT%{_sysconfdir}/Muttrc
+      $RPM_BUILD_ROOT%{_sysconfdir}/Muttrc
 
 grep -5 "^color" contrib/sample.muttrc >> \
-	$RPM_BUILD_ROOT%{_sysconfdir}/Muttrc
+      $RPM_BUILD_ROOT%{_sysconfdir}/Muttrc
 
-cat >> $RPM_BUILD_ROOT%{_sysconfdir}/Muttrc <<EOF
+cat >> $RPM_BUILD_ROOT%{_sysconfdir}/Muttrc <<\EOF
 source %{_sysconfdir}/Muttrc.local
 EOF
 
-echo "# Local configuration for Mutt." > $RPM_BUILD_ROOT%{_sysconfdir}/Muttrc.local
+echo "# Local configuration for Mutt." > \
+      $RPM_BUILD_ROOT%{_sysconfdir}/Muttrc.local
 
 # remove unpackaged files from the buildroot
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/{*.dist,mime.types}
-rm -f $RPM_BUILD_ROOT%{_bindir}/{flea,muttbug}
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/{flea,muttbug,mutt_dotlock}.1*
-rm -f $RPM_BUILD_ROOT%{_mandir}/man5/{mbox,mmdf}.5*
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/INSTALL
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/*.dist
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/mime.types
+# disable mutt_dotlock program - remove the compiled binary
+rm -f $RPM_BUILD_ROOT%{_bindir}/mutt_dotlock
+rm -f $RPM_BUILD_ROOT%{_bindir}/muttbug
+rm -f $RPM_BUILD_ROOT%{_bindir}/flea
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/mutt_dotlock.1*
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/muttbug.1*
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/flea.1*
+rm -f $RPM_BUILD_ROOT%{_mandir}/man5/mbox.5*
+rm -f $RPM_BUILD_ROOT%{_mandir}/man5/mmdf.5*
+rm -rf $RPM_BUILD_ROOT%{_pkgdocdir}
+
+# provide muttrc.local(5): the same as muttrc(5)
+ln -sf ./muttrc.5 $RPM_BUILD_ROOT%{_mandir}/man5/muttrc.local.5
 
 %find_lang %{name}
+
 
 %files -f %{name}.lang
 %config(noreplace) %{_sysconfdir}/Muttrc
 %config(noreplace) %{_sysconfdir}/Muttrc.local
 %doc COPYRIGHT ChangeLog GPL NEWS README* UPDATING mutt_ldap_query
 %doc contrib/*.rc contrib/sample.* contrib/colors.*
-%doc doc/manual.txt doc/smime-notes.txt
+%doc doc/manual.html doc/manual.txt doc/smime-notes.txt
 %{_bindir}/mutt
 %{_bindir}/pgpring
 %{_bindir}/pgpewrap
 %{_bindir}/smime_keys
 %{_mandir}/man1/mutt.*
 %{_mandir}/man1/smime_keys.*
+%{_mandir}/man1/pgpring.*
+%{_mandir}/man1/pgpewrap.*
 %{_mandir}/man5/muttrc.*
 
+
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5:1.5.21-16
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 5:1.5.23-2
 - 为 Magic 3.0 重建
+
+* Tue Apr 29 2014 Jan Pacner <jpacner@redhat.com> - 5:1.5.23-1
+- Resolves: #1034263 (new version due to CVE)
+- patch cleanup (upstream fixes)
+- add html documentation (in addition to the current txt one)
+
+* Mon Dec 02 2013 Jan Pacner <jpacner@redhat.com> - 5:1.5.22-1
+- new release (Resolves: #1034263)
+- use inline sed instead of nodotlock patch
+- patches removed: testcert, hdrcnt, certscomp, updating, pophash,
+  notation, writehead, tmpdir, verpeers, tlsv1v2
+- manhelp patch adjusted (only DEBUG logging capability was left)
+
+* Mon Oct 21 2013 Honza Horak <hhorak@redhat.com> - 5:1.5.21-26
+- Fixed patch for certificates comparison
+
+* Mon Sep 23 2013 Miroslav Lichvar <mlichvar@redhat.com> - 5:1.5.21-25
+- Revert to packaging only selected doc files
+
+* Thu Aug  8 2013 Ville Skyttä <ville.skytta@iki.fi> - 5:1.5.21-24
+- Fix FTBFS with unversioned %%{_docdir_fmt} (#992311), drop duplicate docs.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.5.21-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 5:1.5.21-22
+- Perl 5.18 rebuild
+
+* Thu Jun 27 2013 Honza Horak <hhorak@redhat.com> - 5:1.5.21-21
+- Backported support for TLS 1.2 and TLS 1.2 protocols
+  Resolves: #957840
+
+* Wed May 29 2013 Honza Horak <hhorak@redhat.com> - 5:1.5.21-20
+- Fix patch for #750929
+  Resolves: #957542
+
+* Mon May 20 2013 Honza Horak <hhorak@redhat.com> - 5:1.5.21-19
+- Fix missing options in doc and pgpring, pgpewrap man page
+
+* Mon Mar  4 2013 Honza Horak <hhorak@redhat.com> - 5:1.5.21-18
+- gnutls_certificate_verify_peers became deprecated, using
+  a recent alternative
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5:1.5.21-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Dec 03 2012 Honza Horak <hhorak@redhat.com> - 5:1.5.21-16
+- remove unique id in manual.html because multilib conflict
+- provide muttrc.local(5)
 
 * Thu Sep 27 2012 Honza Horak <hhorak@redhat.com> - 5:1.5.21-15
 - Change default tmpdir from /tmp to /var/tmp
@@ -588,10 +655,10 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/INSTALL
 * Sat Jan  1 2000 Bill Nottingham <notting@redhat.com>
 - fix an odd y2k issue on receiving mail from ancient clients
 
-* Fri Oct 21 1999 Bill Nottingham <notting@redhat.com>
+* Thu Oct 21 1999 Bill Nottingham <notting@redhat.com>
 - one-point-oh.
 
-* Fri Sep 25 1999 Bill Nottingham <notting@redhat.com>
+* Sat Sep 25 1999 Bill Nottingham <notting@redhat.com>
 - add a buffer overflow patch
 
 * Tue Aug 31 1999 Bill Nottingham <notting@redhat.com>

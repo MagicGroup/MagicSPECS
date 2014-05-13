@@ -1,0 +1,9 @@
+diff -upr compizconfig-python-0.8.4-orig/src/Makefile.am compizconfig-python-0.8.4/src/Makefile.am
+--- compizconfig-python-0.8.4-orig/src/Makefile.am	2009-10-14 02:59:10.000000000 +0200
++++ compizconfig-python-0.8.4/src/Makefile.am	2013-05-26 19:17:05.275653572 +0200
+@@ -1,4 +1,4 @@
+-INCLUDES=\
++AM_CPPFLAGS=\
+ 		 $(PYTHON_INCLUDES)\
+ 		 @CCS_CFLAGS@
+ 

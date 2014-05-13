@@ -1,0 +1,35 @@
+From 57f22699f6f9db224f952e7df4ac5ae246c4a37a Mon Sep 17 00:00:00 2001
+From: Harald Sitter <sitter@kde.org>
+Date: Wed, 26 Feb 2014 17:05:11 +0100
+Subject: [PATCH 2/3] do not unlock not locked mutexes, prevent crashing with
+ qt5
+
+handleEOS does not actually need mutex protection, or well, if it did then
+unlocking would be counter productive.
+from high level testing it seems that handleEOS only ought to be called
+after handleAboutToFinish returned, so at that point we are done with
+decision making. the other way is to have abouttonfinish waiting and
+issue a state change which ought to trigger EOS while ATF is still pending
+, in that case EOS will interrupt ATF which will result in essentially
+the same result anyway.
+
+eitherway, nothing to lock, so not unlocking is the way to go
+---
+ gstreamer/mediaobject.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/gstreamer/mediaobject.cpp b/gstreamer/mediaobject.cpp
+index 02a9b68..78b4d2b 100644
+--- a/gstreamer/mediaobject.cpp
++++ b/gstreamer/mediaobject.cpp
+@@ -589,7 +589,6 @@ void MediaObject::handleEndOfStream()
+         { // When working on EOS we do not want signals emitted to avoid bogus UI updates.
+             emit stateChanged(Phonon::StoppedState, m_state);
+             m_aboutToFinishWait.wakeAll();
+-            m_aboutToFinishLock.unlock();
+             m_pipeline->setState(GST_STATE_READY);
+             emit finished();
+         }
+-- 
+1.9.0
+

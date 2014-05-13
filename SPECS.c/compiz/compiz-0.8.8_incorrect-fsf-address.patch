@@ -1,0 +1,14 @@
+diff -upr compiz-0.8.8-orig/plugins/place.c compiz-0.8.8/plugins/place.c
+--- compiz-0.8.8-orig/plugins/place.c	2010-10-18 07:56:02.000000000 +0200
++++ compiz-0.8.8/plugins/place.c	2012-09-26 11:19:31.056809174 +0200
+@@ -16,8 +16,8 @@
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+- * 02111-1307, USA.
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
++ * 02110-1301, USA.
+  */
+ 
+ #include <math.h>

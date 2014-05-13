@@ -1,0 +1,13 @@
+[org.mate.background]
+picture-filename='/usr/share/backgrounds/default.png'
+
+[org.mate.session]
+required-components-list=[ 'windowmanager', 'panel' ]
+
+[org.mate.session.required-components]
+filemanager=''
+
+[org.mate.font-rendering]
+antialiasing='rgba'
+hinting='slight'
+

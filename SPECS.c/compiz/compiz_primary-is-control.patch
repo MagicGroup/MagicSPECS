@@ -1,0 +1,162 @@
+diff -upr compiz-0.8.8-orig/metadata/core.xml.in compiz-0.8.8/metadata/core.xml.in
+--- compiz-0.8.8-orig/metadata/core.xml.in	2011-03-30 11:41:22.000000000 +0200
++++ compiz-0.8.8/metadata/core.xml.in	2013-02-10 22:26:48.439117129 +0100
+@@ -108,7 +108,7 @@
+ 		<option name="raise_window_button" type="button">
+ 		    <_short>Raise Window</_short>
+ 		    <_long>Raise window above other windows</_long>
+-		    <default>&lt;Control&gt;Button6</default>
++		    <default>&lt;Primary&gt;Button6</default>
+ 		</option>
+ 		<option name="lower_window_key" type="key">
+ 		    <_short>Lower Window</_short>
+@@ -159,7 +159,7 @@
+ 		<option name="show_desktop_key" type="key">
+ 		    <_short>Show Desktop</_short>
+ 		    <_long>Hide all windows and focus desktop</_long>
+-		    <default>&lt;Control&gt;&lt;Alt&gt;d</default>
++		    <default>&lt;Primary&gt;&lt;Alt&gt;d</default>
+ 		</option>
+ 		<option name="show_desktop_edge" type="edge">
+ 		    <_short>Show Desktop</_short>
+@@ -185,7 +185,7 @@
+ 		<option name="toggle_window_shaded_key" type="key">
+ 		    <_short>Toggle Window Shaded</_short>
+ 		    <_long>Toggle active window shaded</_long>
+-		    <default>&lt;Control&gt;&lt;Alt&gt;s</default>
++		    <default>&lt;Primary&gt;&lt;Alt&gt;s</default>
+ 		</option>
+ 		<option name="slow_animations_key" type="key">
+ 		    <_short>Slow Animations</_short>
+diff -upr compiz-0.8.8-orig/metadata/core.xml.in.in compiz-0.8.8/metadata/core.xml.in.in
+--- compiz-0.8.8-orig/metadata/core.xml.in.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/core.xml.in.in	2013-02-10 23:22:41.956567990 +0100
+@@ -108,7 +120,7 @@
+ 		<option name="raise_window_button" type="button">
+ 		    <_short>Raise Window</_short>
+ 		    <_long>Raise window above other windows</_long>
+-		    <default>&lt;Control&gt;Button6</default>
++		    <default>&lt;Primary&gt;Button6</default>
+ 		</option>
+ 		<option name="lower_window_key" type="key">
+ 		    <_short>Lower Window</_short>
+@@ -159,7 +171,7 @@
+ 		<option name="show_desktop_key" type="key">
+ 		    <_short>Show Desktop</_short>
+ 		    <_long>Hide all windows and focus desktop</_long>
+-		    <default>&lt;Control&gt;&lt;Alt&gt;d</default>
++		    <default>&lt;Primary&gt;&lt;Alt&gt;d</default>
+ 		</option>
+ 		<option name="show_desktop_edge" type="edge">
+ 		    <_short>Show Desktop</_short>
+@@ -185,7 +197,7 @@
+ 		<option name="toggle_window_shaded_key" type="key">
+ 		    <_short>Toggle Window Shaded</_short>
+ 		    <_long>Toggle active window shaded</_long>
+-		    <default>&lt;Control&gt;&lt;Alt&gt;s</default>
++		    <default>&lt;Primary&gt;&lt;Alt&gt;s</default>
+ 		</option>
+ 		<option name="slow_animations_key" type="key">
+ 		    <_short>Slow Animations</_short>
+diff -upr compiz-0.8.8-orig/metadata/cube.xml.in compiz-0.8.8/metadata/cube.xml.in
+--- compiz-0.8.8-orig/metadata/cube.xml.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/cube.xml.in	2013-02-10 22:27:17.001397970 +0100
+@@ -16,7 +16,7 @@
+ 	    <option name="unfold_key" type="key">
+ 		<_short>Unfold</_short>
+ 		<_long>Unfold cube</_long>
+-		<default>&lt;Control&gt;&lt;Alt&gt;Down</default>
++		<default>&lt;Primary&gt;&lt;Alt&gt;Down</default>
+ 	    </option>
+ 	    <option name="next_slide_key" type="key">
+ 		<_short>Next Slide</_short>
+diff -upr compiz-0.8.8-orig/metadata/rotate.xml.in compiz-0.8.8/metadata/rotate.xml.in
+--- compiz-0.8.8-orig/metadata/rotate.xml.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/rotate.xml.in	2013-02-10 22:30:15.244159968 +0100
+@@ -46,12 +46,12 @@
+ 		    <option name="initiate_button" type="button">
+ 			<_short>Initiate</_short>
+ 			<_long>Start Rotation</_long>
+-			<default>&lt;Control&gt;&lt;Alt&gt;Button1</default>
++			<default>&lt;Primary&gt;&lt;Alt&gt;Button1</default>
+ 		    </option>
+ 		    <option name="rotate_left_key" type="key">
+ 			<_short>Rotate Left</_short>
+ 			<_long>Rotate left</_long>
+-			<default>&lt;Control&gt;&lt;Alt&gt;Left</default>
++			<default>&lt;Primary&gt;&lt;Alt&gt;Left</default>
+ 		    </option>
+ 		    <option name="rotate_left_button" type="button">
+ 			<_short>Rotate Left</_short>
+@@ -60,7 +60,7 @@
+ 		    <option name="rotate_right_key" type="key">
+ 			<_short>Rotate Right</_short>
+ 			<_long>Rotate right</_long>
+-			<default>&lt;Control&gt;&lt;Alt&gt;Right</default>
++			<default>&lt;Primary&gt;&lt;Alt&gt;Right</default>
+ 		    </option>
+ 		    <option name="rotate_right_button" type="button">
+ 			<_short>Rotate Right</_short>
+@@ -69,7 +69,7 @@
+ 		    <option name="rotate_left_window_key" type="key">
+ 			<_short>Rotate Left with Window</_short>
+ 			<_long>Rotate left and bring active window along</_long>
+-			<default>&lt;Control&gt;&lt;Alt&gt;&lt;Shift&gt;Left</default>
++			<default>&lt;Primary&gt;&lt;Alt&gt;&lt;Shift&gt;Left</default>
+ 		    </option>
+ 		    <option name="rotate_left_window_button" type="button">
+ 			<_short>Rotate Left with Window</_short>
+@@ -78,7 +78,7 @@
+ 		    <option name="rotate_right_window_key" type="key">
+ 			<_short>Rotate Right with Window</_short>
+ 			<_long>Rotate right and bring active window along</_long>
+-			<default>&lt;Control&gt;&lt;Alt&gt;&lt;Shift&gt;Right</default>
++			<default>&lt;Primary&gt;&lt;Alt&gt;&lt;Shift&gt;Right</default>
+ 		    </option>
+ 		    <option name="rotate_right_window_button" type="button">
+ 			<_short>Rotate Right with Window</_short>
+diff -upr compiz-0.8.8-orig/metadata/switcher.xml.in compiz-0.8.8/metadata/switcher.xml.in
+--- compiz-0.8.8-orig/metadata/switcher.xml.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/switcher.xml.in	2013-02-10 22:31:03.864642625 +0100
+@@ -31,7 +31,7 @@
+ 		<option name="next_all_key" type="key">
+ 		    <_short>Next window (All windows)</_short>
+ 		    <_long>Popup switcher if not visible and select next window out of all windows</_long>
+-		    <default>&lt;Control&gt;&lt;Alt&gt;Tab</default>
++		    <default>&lt;Primary&gt;&lt;Alt&gt;Tab</default>
+ 		</option>
+ 		<option name="prev_all_button" type="button">
+ 		    <_short>Prev window (All windows)</_short>
+@@ -40,7 +40,7 @@
+ 		<option name="prev_all_key" type="key">
+ 		    <_short>Prev window (All windows)</_short>
+ 		    <_long>Popup switcher if not visible and select previous window out of all windows</_long>
+-		    <default>&lt;Shift&gt;&lt;Control&gt;&lt;Alt&gt;Tab</default>
++		    <default>&lt;Shift&gt;&lt;Primary&gt;&lt;Alt&gt;Tab</default>
+ 		</option>
+ 		<option name="next_no_popup_button" type="button">
+ 		    <_short>Next window (No popup)</_short>
+diff -upr compiz-0.8.8-orig/metadata/water.xml.in compiz-0.8.8/metadata/water.xml.in
+--- compiz-0.8.8-orig/metadata/water.xml.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/water.xml.in	2013-02-10 22:31:20.369806613 +0100
+@@ -13,7 +13,7 @@
+ 	    <option name="initiate_key" type="key">
+ 		<_short>Initiate</_short>
+ 		<_long>Enable pointer water effects</_long>
+-		<default>&lt;Control&gt;&lt;Super&gt;</default>
++		<default>&lt;Primary&gt;&lt;Super&gt;</default>
+ 	    </option>
+ 	    <option name="toggle_rain_key" type="key">
+ 		<_short>Toggle rain</_short>
+diff -upr compiz-0.8.8-orig/src/option.c compiz-0.8.8/src/option.c
+--- compiz-0.8.8-orig/src/option.c	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/src/option.c	2013-02-10 17:54:28.257428457 +0100
+@@ -36,7 +36,7 @@ struct _Modifier {
+     int  modifier;
+ } modifiers[] = {
+     { "<Shift>",      ShiftMask		 },
+-    { "<Control>",    ControlMask	 },
++    { "<Primary>",    ControlMask	 },
+     { "<Mod1>",	      Mod1Mask		 },
+     { "<Mod2>",	      Mod2Mask		 },
+     { "<Mod3>",	      Mod3Mask		 },

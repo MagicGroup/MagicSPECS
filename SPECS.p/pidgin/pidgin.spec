@@ -19,7 +19,7 @@
 %global dist .el6
 %endif
 %if 0%{?rhel} == 7
-%global fedora 16
+%global fedora 19
 %global dist .el7
 %endif
 
@@ -112,12 +112,14 @@
 %endif
 # F18+ Disable evolution integration (temporarily?)
 # due to evolution-data-server 3.6 API changes
+%if 0%{?fedora} >= 18
 %global disable_evolution       1
 %global split_evolution         0
+%endif
 
 Name:           pidgin
-Version:        2.10.6
-Release:        5%{?dist}
+Version:        2.10.9
+Release:        3%{?dist}
 License:        GPLv2+ and GPLv2 and MIT
 # GPLv2+ - libpurple, gnt, finch, pidgin, most prpls
 # GPLv2 - silc & novell prpls
@@ -155,6 +157,7 @@ Patch0:         pidgin-NOT-UPSTREAM-2.5.2-rhel4-sound-migration.patch
 
 ## Patches 100+: To be Included in Future Upstream
 Patch100:       pidgin-2.10.1-fix-msn-ft-crashes.patch
+#Patch101:       pidgin-2.10.7-link-libirc-to-libsasl2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 Summary:        A Gtk+ based multiprotocol instant messaging client
@@ -238,7 +241,7 @@ Requires:       xdg-utils
 BuildRequires:  dbus-glib-devel >= 0.70
 %endif
 %if %{bonjour_support}
-BuildRequires:  avahi-glib-devel
+BuildRequires:  pkgconfig(avahi-client) pkgconfig(avahi-glib)
 %endif
 # Meanwhile integration (F6+)
 %if %{meanwhile_integration}
@@ -268,13 +271,20 @@ Requires:       gstreamer-plugins-bad-free
 %if %{libidn_support}
 BuildRequires:  libidn-devel
 %endif
-# use system libgadu (F13+)
 %if %{use_system_libgadu}
 BuildRequires:  libgadu-devel
 %endif
 
 %if %{api_docs}
 BuildRequires:  doxygen
+%endif
+
+# Need rpm 4.9+ to be able to do this filtering in arch packages with binaries
+%if 0%{?fedora} >= 15
+# Filter out plugins from provides
+%global __provides_exclude_from ^%{_libdir}/purple
+# Use define to delay evaluation
+%define __requires_exclude ^%(cat %{_builddir}/%{?buildsubdir}/plugins.list)|perl\\(Purple\\)
 %endif
 
 %description
@@ -342,6 +352,10 @@ Obsoletes:  gaim-meanwhile
 Requires:   glib2 >= %{glib_ver}
 # Bug #212817 Jabber needs cyrus-sasl plugins for authentication
 Requires:   cyrus-sasl-plain, cyrus-sasl-md5
+# Bug #979052 - Can't connect to xmpp server since upgrade from f18 to f19
+%if 0%{?fedora} >= 19
+Requires:   cyrus-sasl-scram
+%endif
 # Use system SSL certificates (F11+)
 %if %{use_system_certs}
 Requires:   ca-certificates
@@ -448,6 +462,8 @@ echo "FEDORA=%{fedora} RHEL=%{rhel}"
 
 # http://pidgin.im/pipermail/devel/2011-November/010477.html
 %patch100 -p0 -R -b .ftcrash
+# https://developer.pidgin.im/ticket/15517
+#%patch101 -p1 -b .irc-sasl
 
 # Our preferences
 cp %{SOURCE1} prefs.xml
@@ -508,8 +524,13 @@ SWITCHES="--with-extraversion=%{release}"
 %endif
 
 # FC5+ automatic -fstack-protector-all switch
-export RPM_OPT_FLAGS=${RPM_OPT_FLAGS//-fstack-protector/-fstack-protector-all}
-export CFLAGS="$RPM_OPT_FLAGS"
+# F20+ uses -fstack-protector-strong
+export RPM_OPT_FLAGS=${RPM_OPT_FLAGS//-fstack-protector /-fstack-protector-all }
+#Work around broken Werror=format-security macro on F21/Rawhide by adding -Wformat in front of it.
+export CFLAGS="-O2 -g -pipe -Wall -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -fstack-protector -fstack-protector-all"
+
+# remove after irc-sasl patch has been merged upstream
+autoreconf --force --install
 
 # gnutls is buggy so use mozilla-nss on all distributions
 %configure --enable-gnutls=no --enable-nss=yes --enable-cyrus-sasl \
@@ -576,13 +597,16 @@ rm -rf html
 rm -f doc/html/installdox
 mv doc/html/ html/
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/
-ln -sf ../../doc/pidgin-docs-%{version}/html/ \
+ln -sf ../../doc/pidgin-docs/html/ \
     $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/pidgin
 %endif
 
 %if %{build_only_libs}
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/purple.schemas
 %endif
+
+# Create list of plugins for __requires_exclude
+find %{buildroot}/%{_libdir}/purple-2 -name \*.so\* -printf '%f|' | sed -e 's/|$//' > plugins.list
 
 %if ! %{build_only_libs}
 %pre
@@ -733,8 +757,45 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Mon Jan 07 2013 Liu Di <liudidi@gmail.com> - 2.10.6-5
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 2.10.9-3
 - 为 Magic 3.0 重建
+
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 2.10.9-2
+- 为 Magic 3.0 重建
+
+* Mon Feb 03 2014 Dan Mashal <dan.mashal@fedoraproject.org> 2.10.9-1
+- Update to 2.10.9
+
+* Thu Sep 26 2013 Rex Dieter <rdieter@fedoraproject.org> 2.10.7-9
+- add explicit avahi build deps
+
+* Thu Aug  8 2013 Jan Synáček <jsynacek@redhat.com> - 2.10.7-8
+- Remove versioned docdirs, BZ 994039
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.7-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Aug 01 2013 Petr Pisar <ppisar@redhat.com> - 2.10.7-6
+- Perl 5.18 rebuild
+
+* Fri Jul 19 2013 Orion Poplawski <orion@cora.nwra.com> - 2.10.7-5
+- Fix setting -fstack-protector on F20+, use -fstack-protector-strong there
+- Filter out provides from plugins
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 2.10.7-4
+- Perl 5.18 rebuild
+
+* Mon Jul 01 2013 Jan Synáček <jsynacek@redhat.com> - 2.10.7-3
+- Require cyrus-sasl-scram, BZ 979052
+
+* Mon Feb 25 2013 Jan Synáček <jsynacek@redhat.com> - 2.10.7-2
+- Fix IRC support, BZ 914794
+
+* Wed Feb 20 2013 Jan Synáček <jsynacek@redhat.com> - 2.10.7-1
+- Update to 2.10.7, BZ 911088
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.6-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Wed Sep 26 2012 Jan Synáček <jsynacek@redhat.com> - 2.10.6-4
 - Correctly obsolete pidgin-evolution if evolution integration is disabled,
@@ -983,10 +1044,10 @@ rm -rf $RPM_BUILD_ROOT
 - Voice and Video support via farsight2 (Fedora 11+)
 - Numerous other bug fixes
 
-* Tue Aug 06 2009 Warren Togami <wtogami@redhat.com> 2.6.0-0.11.20090812
+* Thu Aug 06 2009 Warren Togami <wtogami@redhat.com> 2.6.0-0.11.20090812
 - new snapshot at the request of maiku
 
-* Tue Aug 06 2009 Warren Togami <wtogami@redhat.com> 2.6.0-0.10.20090806
+* Thu Aug 06 2009 Warren Togami <wtogami@redhat.com> 2.6.0-0.10.20090806
 - new snapshot - theoretically better sound quality in voice chat
 
 * Tue Aug 04 2009 Warren Togami <wtogami@redhat.com> 2.6.0-0.9.20090804
@@ -1182,7 +1243,7 @@ rm -rf $RPM_BUILD_ROOT
 - Add missing Requires to -devel packages
 - Add missing BuildRequires for libxml2-devel
 
-* Fri May 31 2007 Stu Tomlinson <stu@nosnilmot.com> - 2.0.1-2
+* Fri Jun 1 2007 Stu Tomlinson <stu@nosnilmot.com> - 2.0.1-2
 - Call g_thread_init early (#241883)
 - Fix purple-remote syntax error (#241905)
 
@@ -1616,7 +1677,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Jun 22 2004 Warren Togami <wtogami@redhat.com> 0.78-8
 - rebuilt
 
-* Mon Jun 08 2004 Warren Togami <wtogami@redhat.com> 0.78-7
+* Mon Jun 07 2004 Warren Togami <wtogami@redhat.com> 0.78-7
 - CVS backport 125: MSN disconnect on non-fatal error fix
                126: Paste html with img crash fix
                127: Misplaced free fix
@@ -1652,7 +1713,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Apr 25 2004 Warren Togami <wtogami@redhat.com> 0.77-1
 - 0.77, remove cvs backports
 
-* Fri Apr 15 2004 Warren Togami <wtogami@redhat.com> 0.76-6
+* Thu Apr 15 2004 Warren Togami <wtogami@redhat.com> 0.76-6
 - CVS backports:
   111 Prevent Crash during password change if blank fields
   112 Prevent Crash if remote sends invalid characters
@@ -1660,7 +1721,7 @@ rm -rf $RPM_BUILD_ROOT
 - Tray Icon enabled by default
 - Relabel internal version with V-R
 
-* Fri Apr 14 2004 Warren Togami <wtogami@redhat.com> 0.76-5
+* Wed Apr 14 2004 Warren Togami <wtogami@redhat.com> 0.76-5
 - CVS backports: 
   102 Fix ^F keybinding when gtkrc is set to emacs mode
   103 Add Missing File: evolution-1.5.x buildability
@@ -1710,7 +1771,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Dec 04 2003 Christopher Blizzard <blizzard@redhat.com> 1:0.74-9
 - Bump release to rebuild for fc2.
 
-* Wed Nov 25 2003 Christopher Blizzard <blizzard@redhat.com> 1:0.74-0
+* Wed Nov 26 2003 Christopher Blizzard <blizzard@redhat.com> 1:0.74-0
 - Upgrade to 0.74
 - Include libao-devel and startup-notification-devel to the
   buildreq list

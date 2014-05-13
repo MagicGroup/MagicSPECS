@@ -1,0 +1,21 @@
+diff -upr compiz-manager-0.6.0-orig/compiz-manager compiz-manager-0.6.0/compiz-manager
+--- compiz-manager-0.6.0-orig/compiz-manager	2007-10-15 21:10:06.000000000 +0200
++++ compiz-manager-0.6.0/compiz-manager	2012-05-17 15:53:30.107243850 +0200
+@@ -31,7 +31,7 @@ COMPIZ_BIN_PATH="/usr/local/bin/" # For
+ PLUGIN_PATH="/usr/local/lib/compiz/" 
+ GLXINFO="/usr/bin/glxinfo"
+ KWIN="/usr/bin/kwin"
+-METACITY="/usr/bin/metacity"
++MARCO="/usr/bin/marco"
+ COMPIZ_NAME="compiz" # Final name for compiz (compiz.real) 
+ 
+ # For Xgl LD_PRELOAD
+@@ -47,7 +47,7 @@ NVIDIA_SETTINGS="nvidia-settings" # Assu
+ # For detecting what driver is in use, the + is for one or more /'s
+ XORG_DRIVER_PATH="/usr/lib/xorg/modules/drivers/+"
+ 
+-FALLBACKWM="${METACITY}"
++FALLBACKWM="${MARCO}"
+ FALLBACKWM_OPTIONS="--replace $@"
+ 
+ # Driver whitelist

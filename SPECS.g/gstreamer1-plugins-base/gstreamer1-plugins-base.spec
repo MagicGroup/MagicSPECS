@@ -1,7 +1,7 @@
 %global         majorminor      1.0
 
 Name:           gstreamer1-plugins-base
-Version:        1.2.3
+Version:	1.3.1
 Release:        2%{?dist}
 Summary:        GStreamer streaming media framework base plugins
 
@@ -313,6 +313,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 %{_includedir}/gstreamer-%{majorminor}/gst/video/videoorientation.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/videooverlay.h
 
+%{_includedir}/gstreamer-%{majorminor}/gst/sdp/gstmikey.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/video-tile.h
+
 %{_libdir}/libgstallocators-%{majorminor}.so
 %{_libdir}/libgstaudio-%{majorminor}.so
 %{_libdir}/libgstriff-%{majorminor}.so
@@ -350,6 +353,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1.3.1-2
+- 更新到 1.3.1
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
 - 为 Magic 3.0 重建
 

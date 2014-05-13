@@ -1,6 +1,6 @@
 Name:		imsettings
 Version:	1.6.7
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	LGPLv2+
 URL:		https://tagoh.bitbucket.org/%{name}/
 BuildRequires:	desktop-file-utils
@@ -169,6 +169,7 @@ or the desktop.
 
 This package contains a module to get this working on MATE.
 
+%if 0
 %package	cinnamon
 Summary:	Cinnamon support on imsettings
 Group:		Applications/System
@@ -187,13 +188,16 @@ or the desktop.
 
 This package contains a module to get this working on Cinnamon.
 %endif
+%endif
 
 %prep
 %setup -q
 %patch0 -p1 -b .0-lang
 %patch1 -p1 -b .1-xim
 %patch2 -p1 -b .2-xcompose
+%if 0
 %patch3 -p1 -b .3-force-cinnamon
+%endif
 
 %build
 %configure	\
@@ -218,9 +222,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/imsettings/*.la
 %if 0%{?rhel}
 rm -f $RPM_BUILD_ROOT%{_libdir}/imsettings/libimsettings-{lxde,xfce,mate-gsettings}.so
 %endif
+%if 1
+rm -f $RPM_BUILD_ROOT%{_libdir}/imsettings/libimsettings-cinnamon-gsettings.so
+%endif
 
 desktop-file-validate $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/imsettings-start.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -304,13 +311,18 @@ fi
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/imsettings/libimsettings-mate-gsettings.so
 
+%if 0
 %files cinnamon
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/imsettings/libimsettings-cinnamon-gsettings.so
 %endif
+%endif
 
 
 %changelog
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.6.7-2
+- 为 Magic 3.0 重建
+
 * Tue Nov 26 2013 Akira TAGOH <tagoh@redhat.com> - 1.6.7-1
 - New upstream release.
 

@@ -5,7 +5,7 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:        1.2.3
+Version:	1.3.1
 Release:        2%{?dist}
 Summary:        GStreamer streaming media framework runtime
 Summary(zh_CN.UTF-8): GStreamer 流媒体框架运行库
@@ -207,6 +207,9 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1.3.1-2
+- 更新到 1.3.1
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
 - 为 Magic 3.0 重建
 

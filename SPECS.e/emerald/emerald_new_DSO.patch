@@ -1,0 +1,13 @@
+diff -upr emerald-0.8.8-orig/src/Makefile.am emerald-0.8.8/src/Makefile.am
+--- emerald-0.8.8-orig/src/Makefile.am	2011-04-21 14:06:20.000000000 +0200
++++ emerald-0.8.8/src/Makefile.am	2013-05-26 02:12:30.062453745 +0200
+@@ -1,5 +1,8 @@
+ ## Process this file with automake to produce Makefile.in
+-emerald_LDADD   = @EMERALD_LIBS@ $(top_builddir)/libengine/libemeraldengine.la
++emerald_LDADD   = @EMERALD_LIBS@ $(top_builddir)/libengine/libemeraldengine.la \
++					-lm \
++					-ldl
++
+ emerald_SOURCES = main.c \
+ 			   engine_loader.c
+ emerald_program = emerald

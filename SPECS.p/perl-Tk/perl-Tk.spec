@@ -3,12 +3,12 @@
 
 Name:           perl-Tk
 # devel version fix for perl 5.14: 
-Version:        804.030
-Release:        2%{?dist}
+Version:        804.031
+Release:        5%{?dist}
 Summary:        Perl Graphical User Interface ToolKit
 
 Group:          Development/Libraries
-License:        GPL+ or Artistic
+License:        (GPL+ or Artistic) and SWL
 URL:            http://search.cpan.org/dist/Tk/
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SR/SREZIC/Tk-%{version}.tar.gz
 Patch0:         perl-Tk-widget.patch
@@ -16,6 +16,8 @@ Patch0:         perl-Tk-widget.patch
 Patch1:         perl-Tk-debian.patch.gz
 # fix segfaults as in #235666 because of broken cashing code
 Patch2:         perl-Tk-seg.patch
+# Detect system libpng properly, CPAN RT#86988
+Patch3:         Tk-804.031-Link-PNG-test-to-zlib.patch
 
 # Versions before this have Unicode issues
 BuildRequires:  perl-devel >= 3:5.8.3
@@ -23,10 +25,13 @@ BuildRequires:  libjpeg-devel
 BuildRequires:  libpng-devel
 BuildRequires:  libX11-devel
 BuildRequires:  libXft-devel
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(lib)
 
 Requires:       perl(:MODULE_COMPAT_%{perlver})
 Provides:       perl(Tk::LabRadio) = 4.004
-Provides:       perl(Tk::TextReindex)
 Provides:       perl(Tk) = %{version}
 
 %{?perl_default_filter}
@@ -68,11 +73,13 @@ chmod -x pod/Popup.pod Tixish/lib/Tk/balArrow.xbm
 # fix for widget as docs
 %patch0
 %{__perl} -pi -e \
-'s,\@demopath\@,%{_datadir}/doc/%{name}-%{version}/demos,g' demos/widget
+'s,\@demopath\@,%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}/demos,g' demos/widget
 # debian patch
 %patch1 -p1
 # patch to fix #235666 ... seems like caching code is broken
 %patch2 -p1 -b .seg
+# CPAN RT #86988
+%patch3 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor X11LIB=%{_libdir} XFT=1
@@ -81,10 +88,10 @@ make %{?_smp_mflags}
 
 # disable because they need an x screen
 %check
-# 
+# make test
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
@@ -96,7 +103,7 @@ cp -pR $RPM_BUILD_ROOT%{perl_vendorarch}/Tk/demos __demos
 find __demos/ -type f -exec chmod -x {} \;
 
 %files
-%doc Changes README README.linux ToDo pTk/*license* __demos/demos demos/widget
+%doc Changes README README.linux ToDo pTk/*license* __demos/demos demos/widget COPYING
 %doc blib/man1/widget.1
 %{_bindir}/p*
 %{_bindir}/tkjpeg
@@ -119,8 +126,35 @@ find __demos/ -type f -exec chmod -x {} \;
 
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 804.030-2
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 804.031-5
 - 为 Magic 3.0 重建
+
+* Sat Aug 10 2013 Ville Skyttä <ville.skytta@iki.fi> - 804.031-4
+- Use %%{_pkgdocdir} where available.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.031-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Jitka Plesnikova <jplesnik@redhat.com> - 804.031-2
+- Update license
+- Package COPYING
+- Specify all dependencies
+- Replace PERL_INSTALL_ROOT with DESTDIR
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 804.031-1
+- 804.031 bump
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 804.030-5
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.030-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 804.030-3
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Fri Dec 21 2012 Adam Tkac <atkac redhat com> - 804.030-2
+- rebuild against new libjpeg
 
 * Wed Aug 29 2012 Jitka Plesnikova <jplesnik@redhat.com> - 804.030-1
 - 804.030 bump, update source link

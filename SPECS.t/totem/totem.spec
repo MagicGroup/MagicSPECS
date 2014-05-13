@@ -1,7 +1,7 @@
 Summary: Movie player for GNOME
 Summary(zh_CN.UTF-8): GNOME 的视频播放器
 Name: totem
-Version:	3.12.0
+Version:	3.12.1
 Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+ with exceptions
@@ -21,7 +21,7 @@ Requires: iso-codes
 Requires: gstreamer1
 Requires: gstreamer1-plugins-base
 Requires: gstreamer1-plugins-good
-Requires: gstreamer1-plugins-bad-free
+Requires: gstreamer1-plugins-bad
 Requires: gvfs-fuse
 # Disabled until ported to GStreamer 1.0
 # Requires: gnome-dvb-daemon
@@ -29,7 +29,7 @@ Requires: grilo-plugins
 Requires: gsettings-desktop-schemas
 
 BuildRequires: gstreamer1-devel
-BuildRequires: gstreamer1-plugins-bad-free-devel
+BuildRequires: gstreamer1-plugins-bad-devel
 BuildRequires: gstreamer1-plugins-base-devel
 BuildRequires: gstreamer1-plugins-good
 BuildRequires: libpeas-devel
@@ -289,6 +289,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/mozilla/plugins/libtotem-vegas-plugin.so
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1:3.12.1-2
+- 更新到 3.12.1
+
 * Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 1:3.12.0-2
 - 更新到 3.12.0
 

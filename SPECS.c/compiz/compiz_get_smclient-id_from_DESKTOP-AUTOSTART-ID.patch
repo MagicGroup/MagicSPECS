@@ -1,0 +1,16 @@
+diff -upr compiz-0.8.8-orig/src/main.c compiz-0.8.8/src/main.c
+--- compiz-0.8.8-orig/src/main.c	2013-05-09 19:35:11.326618000 +0200
++++ compiz-0.8.8/src/main.c	2013-05-09 19:50:49.446073959 +0200
+@@ -394,6 +394,12 @@ main (int argc, char **argv)
+ 	}
+     }
+ 
++    if (!clientId)
++    {
++      clientId = getenv ("DESKTOP_AUTOSTART_ID");
++    }
++ 
++
+     if (refreshRateArg)
+     {
+ 	ctx.refreshRateData = malloc (strlen (refreshRateArg) + 256);

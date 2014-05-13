@@ -1,6 +1,6 @@
 Name:           perl-XML-XPath
 Version:        1.13
-Release:        22%{?dist}
+Release:        25%{?dist}
 
 Summary:        XPath parser and evaluator for Perl
 
@@ -47,7 +47,7 @@ cat >> $RPM_BUILD_ROOT/%{_mandir}/man1/xpath.1 << EOF
 EOF
 
 %check
-
+make test
 
 
 %clean
@@ -64,8 +64,17 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.13-22
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1.13-25
 - 为 Magic 3.0 重建
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-24
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 24 2013 Petr Pisar <ppisar@redhat.com> - 1.13-23
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-22
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Tue Oct 16 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.13-21
 - revert the patch. It breaks backward compatibility for some apps. 

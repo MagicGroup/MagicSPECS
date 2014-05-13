@@ -1,0 +1,12 @@
+diff -uprN emerald-0.8.8-orig/misc/Makefile.am emerald-0.8.8/misc/Makefile.am
+--- emerald-0.8.8-orig/misc/Makefile.am	2011-04-21 14:06:20.000000000 +0200
++++ emerald-0.8.8/misc/Makefile.am	2013-04-24 11:37:29.293906850 +0200
+@@ -20,6 +20,7 @@ EXTRA_DIST = \
+ if MIMEUPDATE
+ install-data-local: install-desktopDATA
+ 	$(UPDATE_MIME_DATABASE) $(datadir)/mime
++	$(UPDATE_ICON_CACHE) $(datadir)/icons/mate
+ 	$(UPDATE_ICON_CACHE) $(datadir)/icons/gnome
+ 	$(UPDATE_DESKTOP_DATABASE)
+ endif
+ 

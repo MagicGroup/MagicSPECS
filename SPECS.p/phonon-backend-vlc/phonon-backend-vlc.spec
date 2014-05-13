@@ -6,7 +6,7 @@ Name: %{real_name}
 Summary: VLC backend to Phonon
 Summary(zh_CN.UTF-8): Phonon 的 VLC 后端
 Version: 0.7.1
-Release: 7%{?dist}
+Release: 9%{?dist}
 URL: http://www.videolan.org/
 Source: http://mirror.bjtu.edu.cn/kde/stable/phonon/%{real_name}/%{version}/%{real_name}-%{version}.tar.xz
 License: LGPL v2+
@@ -55,6 +55,12 @@ cd build
 #%ICON_INSTALL_DIR/hicolor/*/apps/phonon-vlc.*
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 0.7.1-9
+- 为 Magic 3.0 重建
+
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 0.7.1-8
+- 为 Magic 3.0 重建
+
 * Sun May 04 2014 Liu Di <liudidi@gmail.com> - 0.7.1-7
 - 为 Magic 3.0 重建
 

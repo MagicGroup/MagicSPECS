@@ -1,0 +1,12 @@
+diff -upr compiz-0.8.8-orig/metadata/cube.xml.in compiz-0.8.8/metadata/cube.xml.in
+--- compiz-0.8.8-orig/metadata/cube.xml.in	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/metadata/cube.xml.in	2014-02-16 17:03:02.206250377 +0100
+@@ -161,7 +161,7 @@
+ 		<option name="active_opacity" type="float">
+ 		    <_short>Opacity During Rotation</_short>
+ 		    <_long>Opacity of desktop window during rotation.</_long>
+-		    <default>100.0</default>
++		    <default>70.0</default>
+ 		    <min>0.0</min>
+ 		    <max>100.0</max>
+ 		    <precision>1.0</precision>

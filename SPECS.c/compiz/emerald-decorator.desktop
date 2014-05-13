@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Emerald Decorator
+Comment=switch to Emerald windows-decorator if compiz is running
+TryExec=compiz-decorator-emerald
+Exec=compiz-decorator-emerald
+Icon=emerald-decorator
+NoDisplay=false
+StartupNotify=true
+Categories=Utility;
+OnlyShowIn=MATE;
+Name[de_DE]=Emerald Decorator
+X-Desktop-File-Install-Version=0.21

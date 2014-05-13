@@ -2,7 +2,7 @@
 
 Name:		vpnc
 Version:	0.5.3
-Release:	20%{snapshot}%{?dist}
+Release:	21%{snapshot}%{?dist}
 
 Summary:	IPSec VPN client compatible with Cisco equipment
 
@@ -119,6 +119,9 @@ install -d -m 0755 %{buildroot}%{_localstatedir}/run/%{name}/
 %config(noreplace) %{_sysconfdir}/vpnc/vpnc-script
 
 %changelog
+* Tue May 06 2014 Liu Di <liudidi@gmail.com> - 0.5.3-21.svn457
+- 为 Magic 3.0 重建
+
 * Fri Nov 15 2013 Paul Wouters <pwouters@redhat.com> - 0.5.3-20.svn457
 - Actually patch the vpnc-script we ship with the unbound patch
 

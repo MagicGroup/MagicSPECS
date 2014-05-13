@@ -1,0 +1,49 @@
+diff -uprN compiz-0.8.8-orig/gtk/window-decorator/Makefile.am compiz-0.8.8/gtk/window-decorator/Makefile.am
+--- compiz-0.8.8-orig/gtk/window-decorator/Makefile.am	2013-05-26 00:46:26.115813000 +0200
++++ compiz-0.8.8/gtk/window-decorator/Makefile.am	2013-05-26 00:48:40.157154237 +0200
+@@ -16,7 +16,7 @@ gtk_window_decorator_SOURCES	  = \
+ gtk_window_decorator_program = gtk-window-decorator
+ endif
+ 
+-INCLUDES = \
++AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/include            \
+ 	@GTK_WINDOW_DECORATOR_CFLAGS@      \
+ 	@MARCO_CFLAGS@                  \
+diff -uprN compiz-0.8.8-orig/libdecoration/Makefile.am compiz-0.8.8/libdecoration/Makefile.am
+--- compiz-0.8.8-orig/libdecoration/Makefile.am	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/libdecoration/Makefile.am	2013-05-26 00:49:02.710379771 +0200
+@@ -4,9 +4,9 @@ libdecoration_la_LIBADD  = @DECORATION_L
+ libdecoration_la_LDFLAGS = -no-undefined
+ libdecoration_la_SOURCES = decoration.c
+ 
+-INCLUDES = @DECORATION_CFLAGS@ -I$(top_srcdir)/include
++AM_CPPFLAGS = @DECORATION_CFLAGS@ -I$(top_srcdir)/include
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = libdecoration.pc
+ 
+-EXTRA_DIST = libdecoration.pc.in
+\ Kein Zeilenumbruch am Dateiende.
++EXTRA_DIST = libdecoration.pc.in
+diff -uprN compiz-0.8.8-orig/plugins/Makefile.am compiz-0.8.8/plugins/Makefile.am
+--- compiz-0.8.8-orig/plugins/Makefile.am	2013-05-26 00:46:26.118813000 +0200
++++ compiz-0.8.8/plugins/Makefile.am	2013-05-26 00:49:31.336666036 +0200
+@@ -107,7 +107,7 @@ libfs_la_SOURCES = fuse.c
+ libfs_module = libfs.la
+ endif
+ 
+-INCLUDES =					\
++AM_CPPFLAGS =					\
+ 	@COMPIZ_CFLAGS@				\
+ 	@LIBPNG_CFLAGS@				\
+ 	@LIBRSVG_CFLAGS@			\
+diff -uprN compiz-0.8.8-orig/src/Makefile.am compiz-0.8.8/src/Makefile.am
+--- compiz-0.8.8-orig/src/Makefile.am	2010-05-21 13:18:14.000000000 +0200
++++ compiz-0.8.8/src/Makefile.am	2013-05-26 00:49:56.542918101 +0200
+@@ -1,4 +1,4 @@
+-INCLUDES =			     \
++AM_CPPFLAGS =			     \
+ 	@COMPIZ_CFLAGS@		     \
+ 	@GL_CFLAGS@		     \
+ 	-I$(top_srcdir)/include	     \

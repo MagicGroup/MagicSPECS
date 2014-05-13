@@ -1,0 +1,11 @@
+diff -upNr compiz-0.8.6.orign/include/compiz-core.h compiz-0.8.6/include/compiz-core.h
+--- compiz-0.8.6.orign/include/compiz-core.h	2010-03-28 14:15:35.000000000 +0200
++++ compiz-0.8.6/include/compiz-core.h	2010-03-30 14:48:59.055172395 +0200
+@@ -27,6 +27,7 @@
+ #define _COMPIZ_CORE_H
+ 
+ #include <compiz-plugin.h>
++#include <dlfcn.h>
+ 
+ #define CORE_ABIVERSION 20091102
+ 

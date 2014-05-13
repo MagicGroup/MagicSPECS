@@ -1,6 +1,6 @@
 Name:           telepathy-salut
-Version:        0.8.0
-Release:        3%{?dist}
+Version:        0.8.1
+Release:        6%{?dist}
 Summary:        Link-local XMPP telepathy connection manager
 
 Group:          Applications/Communications
@@ -10,12 +10,15 @@ Source0:        http://telepathy.freedesktop.org/releases/%{name}/%{name}-%{vers
 
 BuildRequires:  dbus-devel >= 1.1.0
 BuildRequires:	dbus-glib-devel >= 0.61
+BuildRequires:	dbus-python
 BuildRequires:	avahi-gobject-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	openssl-devel
 BuildRequires:	cyrus-sasl-devel
 BuildRequires:	libxslt
 BuildRequires:	libasyncns-devel >= 0.3
+BuildRequires:	pygobject2
+BuildRequires:	python-twisted-words
 BuildRequires:	telepathy-glib-devel >= 0.17.1
 BuildRequires:  libuuid-devel
 BuildRequires:	libsoup-devel
@@ -49,6 +52,10 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/*.html
 
 
+%check
+make check
+
+
 %post -p /sbin/ldconfig
 
 
@@ -56,8 +63,7 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/*.html
 
 
 %files
-%defattr(-,root,root,-)
-%doc COPYING AUTHORS NEWS README docs/clique.html
+%doc COPYING AUTHORS NEWS README docs/clique.xml
 %{_libexecdir}/%{name}
 %{_datadir}/dbus-1/services/*.service
 %{_datadir}/telepathy/managers/*.manager
@@ -65,15 +71,30 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/*.html
 %dir %{_libdir}/telepathy
 %dir %{_libdir}/telepathy/salut-0
 %dir %{_libdir}/telepathy/salut-0/lib
-%{_libdir}/telepathy/salut-0/lib/libsalut-plugins-0.8.0.so
+%{_libdir}/telepathy/salut-0/lib/libsalut-plugins-*.so
 %{_libdir}/telepathy/salut-0/lib/libsalut-plugins.so
-%{_libdir}/telepathy/salut-0/lib/libwocky-telepathy-salut-0.8.0.so
+%{_libdir}/telepathy/salut-0/lib/libwocky-telepathy-salut-*.so
 %{_libdir}/telepathy/salut-0/lib/libwocky.so
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.8.0-3
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.8.1-6
 - 为 Magic 3.0 重建
+
+* Thu Oct 17 2013 Debarshi Ray <rishi@fedoraproject.org> - 0.8.1-5
+- Add %%check to run the upstream test suite on each build
+
+* Wed Oct 16 2013 Debarshi Ray <rishi@fedoraproject.org> - 0.8.1-4
+- Resolve possible multilib conflict
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Nov 16 2012 Brian Pepple <bpepple@fedoraproject.org> - 0.8.1-1
+- Update to 0.8.1.
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

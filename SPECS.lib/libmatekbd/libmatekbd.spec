@@ -1,78 +1,134 @@
-Name:		libmatekbd
-Version:	1.4.0
-Release:	7%{?dist}
-Summary:	Libraries for mate kbd
-License:	LGPLv2+
-URL:		http://mate-desktop.org
-Source0:	http://pub.mate-desktop.org/releases/1.4/%{name}-%{version}.tar.xz
+Name:           libmatekbd
+Version:        1.8.0
+Release:        2%{?dist}
+Summary:        Libraries for mate kbd
+License:        LGPLv2+
+URL:            http://mate-desktop.org
+Source0:        http://pub.mate-desktop.org/releases/1.8/%{name}-%{version}.tar.xz
 
-BuildRequires:	desktop-file-utils gtk2-devel libxklavier-devel mate-common mate-conf-devel
-Requires(pre):	mate-conf
-Requires(post):	mate-conf
-Requires(preun):	mate-conf
-
+BuildRequires:  desktop-file-utils
+BuildRequires:  gsettings-desktop-schemas-devel
+BuildRequires:  gtk2-devel
+BuildRequires:  libICE-devel
+BuildRequires:  libxklavier-devel
+BuildRequires:  mate-common
 
 %description
 Libraries for matekbd
 
 %package devel
-Summary: Development libraries for libmatekbd
-Requires:	%{name}%{?_isa} = %{version}-%{release}
+Summary:  Development libraries for libmatekbd
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries for libmatekbd
 
 %prep
 %setup -q
-NOCONFIGURE=1 ./autogen.sh
 
 
 %build
-%configure --disable-static --disable-schemas-install
+# To work around rpath issue
+autoreconf -fi
+
+%configure                   \
+   --disable-static          \
+   --with-gtk=2.0            \
+   --disable-schemas-compile \
+   --with-x
+  
 make %{?_smp_mflags} V=1
 
 
 %install
-make install DESTDIR=%{buildroot}
+%{make_install}
 
 find %{buildroot} -name '*.la' -exec rm -fv {} ';'
-magic_rpm_clean.sh
-%find_lang %{name} --all-name
 
-%check
-desktop-file-validate %{buildroot}%{_datadir}/applications/matekbd-indicator-plugins-capplet.desktop
+# remove needless gsettings convert file
+rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/matekbd.convert
+
+%find_lang %{name} --with-gnome --all-name
 
 
-%pre
-/usr/sbin/ldconfig
-%mateconf_schema_prepare desktop_mate_peripherals_keyboard_xkb
+%post -p /sbin/ldconfig
 
-%preun
-%mateconf_schema_remove desktop_mate_peripherals_keyboard_xkb
+%postun
+/sbin/ldconfig
+if [ $1 -eq 0 ] ; then
+    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+fi
 
-%post
-/usr/sbin/ldconfig
-%mateconf_schema_upgrade desktop_mate_peripherals_keyboard_xkb
+%posttrans
+/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+
 
 %files -f %{name}.lang
-%doc AUTHORS COPYING.LIB README
-%config(noreplace) %{_sysconfdir}/mateconf/schemas/desktop_mate_peripherals_keyboard_xkb.schemas
-%{_bindir}/matekbd-indicator-plugins-capplet
-%{_datadir}/applications/matekbd-indicator-plugins-capplet.desktop
-%{_datadir}/libmatekbd/
+%doc AUTHORS COPYING README
+%{_datadir}/libmatekbd
+%{_datadir}/glib-2.0/schemas/org.mate.peripherals-keyboard-xkb.gschema.xml
 %{_libdir}/libmatekbd.so.4*
 %{_libdir}/libmatekbdui.so.4*
 
 %files devel
-%{_includedir}/libmatekbd/
+%{_includedir}/libmatekbd
 %{_libdir}/pkgconfig/libmatekbd.pc
 %{_libdir}/pkgconfig/libmatekbdui.pc
 %{_libdir}/libmatekbdui.so
 %{_libdir}/libmatekbd.so
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-7
+* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.8.0-2
 - 为 Magic 3.0 重建
+
+* Tue Mar 04 2014 Dan Mashal <dan.mashal@fedoraproject.org> - 1.8.0-1
+- Update to 1.8.0
+
+* Sun Feb 16 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.7.90-1
+- update to 1.7.90 release
+
+* Thu Feb 13 2014 Dan Mashal <dan.mashal@fedoraproject.org> - 1.7.2-2
+- Add autoreconf to workaround rpath issue
+- Sort BRs
+
+* Sat Jan 18 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.7.2-1
+- update to 1.7.2
+- use modern 'make install' macro
+- remove needless gsettings convert file
+- use --with-gnome --all-name for find locale
+- add BR libICE-devel
+- fix ld scriptlets
+
+* Wed Dec 04 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.7.1-1
+- Update to 1.7.1
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jun 24 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.6.1-1
+- Update to latest upstream release.
+
+* Sat Jun 22 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.6.0-2
+- Add upstream commits patch for various bugfixes
+
+* Wed Apr 03 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.6.0-1
+- Update to latest 1.6.0 stable release.
+
+* Fri Feb 08 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 1.5.1-1
+-Update to latest upstream release
+-Update BR's
+-Own dirs we are supposed to own
+-Update configure flags
+
+* Mon Dec 10 2012 Dan Mashal <dan.mashal@fedoraproject.org> - 1.5.0-2
+- Rebuild for ARM
+
+* Mon Oct 29 2012 Leigh Scott <leigh123linux@googlemail.com> - 1.5.0-1
+- update to 1.5.0 release
+- change build requires style
+- remove mateconf scriplets and replace with schema scriptlets
+- add requires gsettings-desktop-schemas
+- add build requires gsettings-desktop-schemas-devel
 
 * Wed Sep 26 2012 Dan Mashal <dan.mashal@fedoraproject.org>  1.4.0-6
 - Remove onlyshowin from desktop-fileinstall  and mateconf_obsolete macro
