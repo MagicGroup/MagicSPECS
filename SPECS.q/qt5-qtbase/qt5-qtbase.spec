@@ -76,6 +76,9 @@ Patch50: qt5-poll.patch
 # https://bugreports.qt-project.org/browse/QTBUG-38367
 Patch200: qtbase-opensource-src-5.2.1-QTBUG-38367.patch
 
+#mips64el
+Patch300: qt5-mips64el-fix.patch
+
 # macros
 %define _qt5 %{name}
 %define _qt5_prefix %{_libdir}/qt5
@@ -277,6 +280,8 @@ rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 #patch50 -p1 -b .poll
 
 %patch200 -p1 -b .QTBUG-38367
+
+%patch300 -p1 -b .mips64el
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
