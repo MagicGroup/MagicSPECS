@@ -281,7 +281,10 @@ rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 
 %patch200 -p1 -b .QTBUG-38367
 
+# mips64el only
+%ifarch mips64el
 %patch300 -p1 -b .mips64el
+%endif
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
