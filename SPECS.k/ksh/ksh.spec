@@ -21,6 +21,9 @@ Patch1:       ksh-20070328-builtins.patch
 #fix regression test suite to be usable during packagebuild - Fedora/RHEL specific
 Patch2:       ksh-20100826-fixregr.patch
 
+#fix build err
+Patch3:       ksh-build-fix.patch
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Conflicts:    pdksh
 Requires: coreutils, glibc-common, diffutils
@@ -44,6 +47,10 @@ with "sh" (the Bourne Shell).
 
 #/dev/fd test does not work because of mock
 sed -i 's|ls /dev/fd|ls /proc/self/fd|' src/cmd/ksh93/features/options
+
+%ifarch mips64el
+%patch3 -p1 -b .build
+%endif
 
 %build
 ./bin/package
