@@ -13,6 +13,7 @@ URL:            http://wwwfun.kurims.kyoto-u.ac.jp/soft/olabl/lablgtk.html
 Source:         http://wwwfun.kurims.kyoto-u.ac.jp/soft/olabl/dist/lablgtk-%{version}.tar.gz
 
 Patch0:         ocaml-lablgtk-2.12.0-gnome-ui-init-header.patch
+Patch1:         ocaml-lablgtk-2.12.0-ocaml-4-fix.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -85,6 +86,7 @@ developing applications that use %{name}.
 %setup -q -n lablgtk-%{version}
 
 #%patch0 -p1
+%patch1 -p1
 
 # version information in META file is wrong
 perl -pi -e 's|version="1.3.1"|version="%{version}"|' META
