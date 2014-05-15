@@ -63,8 +63,8 @@ bindings from many languages.  http://libguestfs.org
      (Some (new gtkdoc :> Odoc_info.Args.doc_generator))
 +
 +END
---- lablgtk-2.14.2.old/configure.in	2009-09-22 22:39:32.000000000 +0100
-+++ lablgtk-2.14.2/configure.in	2012-06-08 22:52:01.175516146 +0100
+--- lablgtk-2.14.2.old/configure	2009-09-22 22:39:32.000000000 +0100
++++ lablgtk-2.14.2/configure	2012-06-08 22:52:01.175516146 +0100
 @@ -154,7 +154,9 @@
  	AC_MSG_ERROR(Cannot find camlp4o.)
  fi
