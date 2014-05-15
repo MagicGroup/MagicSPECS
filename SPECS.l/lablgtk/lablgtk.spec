@@ -135,7 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README COPYING CHANGES
 %dir %{_libdir}/ocaml/lablgtk2
 %{_libdir}/ocaml/lablgtk2/*.cmi
+%ifnarch mips64el
 %{_libdir}/ocaml/lablgtk2/*.cmxs
+%endif
 %{_libdir}/ocaml/lablgtk2/*.cma
 %{_libdir}/ocaml/stublibs/*.so
 %{_bindir}/gdk_pixbuf_mlsource
@@ -149,8 +151,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/ocaml/lablgtk2
 %{_libdir}/ocaml/lablgtk2/META
 %{_libdir}/ocaml/lablgtk2/*.a
+%ifnarch mips64el
 %{_libdir}/ocaml/lablgtk2/*.cmxa
 %{_libdir}/ocaml/lablgtk2/*.cmx
+%endif
 %{_libdir}/ocaml/lablgtk2/*.mli
 %{_libdir}/ocaml/lablgtk2/*.ml
 %{_libdir}/ocaml/lablgtk2/*.h
