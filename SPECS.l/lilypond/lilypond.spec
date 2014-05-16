@@ -99,6 +99,9 @@ export GUILE_CONFIG=/usr/bin/guile1.8-config
 export GUILE_TOOLS=/usr/bin/guile1.8-tools
 %configure --without-kpathsea --disable-checking \
 	--with-ncsb-dir=%{_datadir}/fonts/default/Type1
+#Fix build with bison-3.0
+#https://bugs.archlinux.org/task/38309
+rm lily/out/parser.*
 make
 
 
