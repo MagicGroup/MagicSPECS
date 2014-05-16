@@ -1,0 +1,85 @@
+diff -ur lilypond-2.16.2-orig/mf/feta-autometric.mf lilypond-2.16.2/mf/feta-autometric.mf
+--- lilypond-2.16.2-orig/mf/feta-autometric.mf	2014-05-16 11:38:16.903896546 +0000
++++ lilypond-2.16.2/mf/feta-autometric.mf	2014-05-16 11:40:18.345364974 +0000
+@@ -149,7 +149,6 @@
+ 			& to_bp (w) & " "
+ 			& to_bp (h);
+ 		special "% MF2PT1: font_size " & decimal designsize;
+-		special "% MF2PT1: font_slant " & decimal font_slant_;
+ 
+ 		for fvar = "font_identifier",
+ 			   "font_coding_scheme",
+@@ -175,9 +174,6 @@
+ 			fi;
+ 		endfor;
+ 
+-		special "% MF2PT1: font_fixed_pitch "
+-			& (if font_fixed_pitch_: "1" else: "0" fi);
+-
+ 		% this must come after the `font_size' special
+ 		special "% MF2PT1: charwd " & decimal charwd;
+ 	fi;
+diff -ur lilypond-2.16.2-orig/mf/mf2pt1.mp lilypond-2.16.2/mf/mf2pt1.mp
+--- lilypond-2.16.2-orig/mf/mf2pt1.mp	2014-05-16 11:38:16.911709050 +0000
++++ lilypond-2.16.2/mf/mf2pt1.mp	2014-05-16 11:43:31.415776326 +0000
+@@ -61,7 +61,6 @@
+     def to_bp (expr num) = decimal (round (num*bp_per_pixel)) enddef;
+     special "% MF2PT1: glyph_dimensions 0 " & to_bp (-d) & " " & to_bp(w) & " " & to_bp(h);
+     special "% MF2PT1: font_size " & decimal designsize;
+-    special "% MF2PT1: font_slant " & decimal font_slant_;
+     special "% MF2PT1: charwd " & decimal charwd;   % Must come after the |font_size| |special|
+     for fvar = "font_identifier", "font_coding_scheme", "font_version",
+       "font_comment", "font_family", "font_weight", "font_unique_id",
+@@ -76,8 +75,6 @@
+           scantokens ("decimal " & fvar & "_");
+       fi;
+     endfor;
+-    special "% MF2PT1: font_fixed_pitch " &
+-            (if font_fixed_pitch_: "1" else: "0" fi);
+ enddef;
+ 
+ 
+@@ -91,19 +88,6 @@
+ 
+ 
+ %% \begin{explaincode}
+-%%   Store the value of \mfcomment
+-%    |font_slant_|, so we can recall it at each |beginchar|.
+-%% \end{explaincode}
+-
+-font_slant_ := 0;
+-
+-def font_slant expr x =
+-  font_slant_ := x;
+-  fontdimen 1: x
+-enddef;
+-
+-
+-%% \begin{explaincode}
+ %%   Redefine \mfcomment
+ %    |bpppix_|, the number of ``big'' points per pixel. \mfcomment
+ %    This in turn redefines |mm|, |in|, |pt|, and other derived units.
+@@ -141,11 +125,6 @@
+   scantokens ("def " & str fvar & " expr x = " & str fvar & "_ := x enddef;");
+ endfor;
+ 
+-boolean font_fixed_pitch_;
+-font_fixed_pitch_ := false;
+-def font_fixed_pitch expr x = font_fixed_pitch_ := x enddef;
+-
+-
+ %% \begin{explaincode}
+ %%   We'd like to be able to use calligraphic pens.  Normally, MetaPost's
+ %%   output routine does all the work for us of converting these to filled
+diff -ur lilypond-2.16.2-orig/scripts/build/mf2pt1.pl lilypond-2.16.2/scripts/build/mf2pt1.pl
+--- lilypond-2.16.2-orig/scripts/build/mf2pt1.pl	2014-05-16 11:38:15.423427038 +0000
++++ lilypond-2.16.2/scripts/build/mf2pt1.pl	2014-05-16 11:44:32.319127821 +0000
+@@ -427,7 +427,7 @@
+ sub get_bboxes ($)
+ {
+     execute_command 1, ("mpost", "-mem=mf2pt1", "-progname=mpost",
+-                        "\\mode:=localfont; mag:=$mag; bpppix $bpppix; nonstopmode; input $mffile");
++                        "\\mode:=localfont; mag:=$mag; bpppix:=$bpppix; input $mffile");
+     opendir (CURDIR, ".") || die "${progname}: $! ($filedir)\n";
+     @charfiles = sort
+                    { ($a=~ /\.(\d+)$/)[0] <=> ($b=~ /\.(\d+)$/)[0] }
