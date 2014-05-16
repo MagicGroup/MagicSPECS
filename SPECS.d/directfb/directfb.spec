@@ -1,14 +1,11 @@
-%lib_package direct-1.7 4
-%lib_package directfb-1.7 4
-%lib_package fusion-1.7 4
-%lib_package ++dfb-1.7 4
-
 Summary: Hardware graphics acceleration for the framebuffer device
+Summary(zh_CN.UTF-8): 帧缓存设备的硬件图形加速
 Name: directfb
 Version: 1.7.4
 Release: 17%{?dist}
 License: GPL
 Group: System/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.directfb.org/
 Source0: http://www.directfb.org/downloads/Core/DirectFB-1.4/DirectFB-%{version}.tar.gz
 #Source1: i2c-dev.h
@@ -34,19 +31,27 @@ It is a complete hardware abstraction layer with software fallbacks
 for every graphics operation that is not supported by the underlying
 hardware.
 
-%devel_extra_Requires pkgconfig
-%devel_extra_Requires SDL-devel, freetype-devel >= 2.0.1
-%devel_extra_Requires libjpeg-devel >= 6b, libpng-devel >= 1.0, zlib-devel
+%package devel
+Summary: Development files for building applications with the directfb library
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name} = %{version}-%{release} SDL-devel freetype-devel
+Requires: libjpeg-devel >= 6b, libpng-devel >= 1.0 zlib-devel
+
+%description devel
+Dialog is a utility that allows you to show dialog boxes (containing
+questions or messages) in TTY (text mode) interfaces. This package
+contains the files needed for developing applications, which use the
+dialog library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n DirectFB-%{version}
-#patch0 -p1
-#cp -a %{SOURCE1} gfxdrivers/matrox/
-#perl -pi -e's,#include <linux/i2c-dev.h>,#include "i2c-dev.h",' gfxdrivers/matrox/matrox_maven.c
-#perl -pi -e's,#include <linux/compiler.h>,,' interfaces/IDirectFBVideoProvider/idirectfbvideoprovider_v4l.c
 %ifarch ppc
 grep -rl '#include <linux/config.h>' . | xargs perl -pi -e's,#include <linux/config.h>,/* #include <linux/config.h> */,'
-#perl -pi -e's,#include <asm/page.h>,#define PAGE_SIZE   sysconf( _SC_PAGESIZE ),' lib/direct/system.c
 %endif
 perl -pi -e's,/usr/X11R6/lib ,/usr/X11R6/%{_lib} ,' configure directfb-config.in
 
@@ -82,14 +87,7 @@ make
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
-cat > develfiles.list << EOF
-%defattr(-,root,root,-)
-%{_bindir}/directfb-config
-%{_bindir}/directfb-csource
-%{_bindir}/coretest_task
-%{_bindir}/coretest_task_fillrect
-%{_mandir}/man1/directfb-csource.1*
-EOF
+rm -f %{buildroot}%{_libdir}/*.la
 
 %clean
 rm -rf %{buildroot}
@@ -98,6 +96,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING AUTHORS INSTALL README NEWS TODO
 %{_libdir}/%{name}-*
+%{_libdir}/lib*.so.*
 %{_datadir}/%{name}-*
 %{_bindir}/dfb*
 %{_bindir}/mkdfiff
@@ -110,6 +109,17 @@ rm -rf %{buildroot}
 %{_mandir}/man1/dfbg.1*
 %{_mandir}/man5/directfbrc.5*
 
+%files devel 
+%defattr(-,root,root,-)
+%{_bindir}/directfb-config
+%{_bindir}/directfb-csource
+%{_bindir}/coretest_task
+%{_bindir}/coretest_task_fillrect
+%{_mandir}/man1/directfb-csource.1*
+%{_includedir}/*
+%{_libdir}/lib*.so
+%{_libdir}/lib*.a
+%{_libdir}/pkgconfig/*.pc
 
 %changelog
 * Sun May  4 2014 Axel Thimm <Axel.Thimm@ATrpms.net> - 1.7.4-17
