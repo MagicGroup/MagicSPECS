@@ -12,6 +12,7 @@ Patch0:		lilypond-2.11.65-python26.patch
 Patch1:		lilypond-2.21.2-gcc44-relocate.patch
 #Patch2:		lilypond-2.15.38-backintime.patch
 Patch3:         lilypond-2.16.2-freetype-header-fix.patch
+Patch4:         texlive-workaround.patch
 
 Requires:	ghostscript >= 8.15
 Obsoletes: 	lilypond-fonts <= 2.12.1-1
@@ -90,6 +91,7 @@ This contains the directory common to all lilypond fonts.
 %patch1 -p0
 #%patch2 -p0
 %patch3 -p1
+%patch4 -p1
 
 %build
 export GUILE=/usr/bin/guile1.8
