@@ -13,6 +13,7 @@ URL:            http://wwwfun.kurims.kyoto-u.ac.jp/soft/olabl/lablgtk.html
 Source:         http://wwwfun.kurims.kyoto-u.ac.jp/soft/olabl/dist/lablgtk-%{version}.tar.gz
 
 Patch0:         ocaml-lablgtk-2.12.0-gnome-ui-init-header.patch
+Patch1:         ocaml-lablgtk-2.12.0-ocaml-4-fix.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -85,6 +86,7 @@ developing applications that use %{name}.
 %setup -q -n lablgtk-%{version}
 
 #%patch0 -p1
+%patch1 -p1
 
 # version information in META file is wrong
 perl -pi -e 's|version="1.3.1"|version="%{version}"|' META
@@ -133,7 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README COPYING CHANGES
 %dir %{_libdir}/ocaml/lablgtk2
 %{_libdir}/ocaml/lablgtk2/*.cmi
+%ifnarch mips64el
 %{_libdir}/ocaml/lablgtk2/*.cmxs
+%endif
 %{_libdir}/ocaml/lablgtk2/*.cma
 %{_libdir}/ocaml/stublibs/*.so
 %{_bindir}/gdk_pixbuf_mlsource
@@ -147,8 +151,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/ocaml/lablgtk2
 %{_libdir}/ocaml/lablgtk2/META
 %{_libdir}/ocaml/lablgtk2/*.a
+%ifnarch mips64el
 %{_libdir}/ocaml/lablgtk2/*.cmxa
 %{_libdir}/ocaml/lablgtk2/*.cmx
+%endif
 %{_libdir}/ocaml/lablgtk2/*.mli
 %{_libdir}/ocaml/lablgtk2/*.ml
 %{_libdir}/ocaml/lablgtk2/*.h

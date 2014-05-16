@@ -1,6 +1,6 @@
 # See http://bugzilla.redhat.com/223663
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le
-%define multilib_basearchs x86_64 ppc64 s390x sparc64 ppc64le
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le mips64el
+%define multilib_basearchs x86_64 ppc64 s390x sparc64 ppc64le mips64el
 
 # support qtchooser (adds qtchooser .conf file)
 %define qtchooser 1
@@ -75,6 +75,9 @@ Patch50: qt5-poll.patch
 ## security patches
 # https://bugreports.qt-project.org/browse/QTBUG-38367
 Patch200: qtbase-opensource-src-5.2.1-QTBUG-38367.patch
+
+#mips64el
+Patch300: qt5-mips64el-fix.patch
 
 # macros
 %define _qt5 %{name}
@@ -277,6 +280,11 @@ rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 #patch50 -p1 -b .poll
 
 %patch200 -p1 -b .QTBUG-38367
+
+# mips64el only
+%ifarch mips64el
+%patch300 -p1 -b .mips64el
+%endif
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`

@@ -1,0 +1,24 @@
+--- qtbase-opensource-src-5.2.1/mkspecs/linux-g++-64/qmake.conf.mips64el	2014-05-13 15:55:12.819560871 +0000
++++ qtbase-opensource-src-5.2.1/mkspecs/linux-g++-64/qmake.conf	2014-05-13 15:55:36.415276077 +0000
+@@ -9,8 +9,8 @@
+ CONFIG                 += incremental gdb_dwarf_index
+ QMAKE_INCREMENTAL_STYLE = sublib
+ 
+-QMAKE_CFLAGS            = -m64
+-QMAKE_LFLAGS            = -m64
++QMAKE_CFLAGS            = -mabi=64
++QMAKE_LFLAGS            = -mabi=64
+ 
+ QMAKE_CFLAGS_RELEASE   += -O2
+ 
+--- qtbase-opensource-src-5.2.1/tests/auto/gui/text/qtextlayout/tst_qtextlayout.cpp.mips64el	2014-05-13 15:56:24.451433484 +0000
++++ qtbase-opensource-src-5.2.1/tests/auto/gui/text/qtextlayout/tst_qtextlayout.cpp	2014-05-13 15:57:18.983687967 +0000
+@@ -1887,7 +1887,7 @@
+     opt.setWrapMode(QTextOption::WrapAnywhere);
+     layout.setTextOption(opt);
+     layout.setText(QString::fromLatin1(
+-                       "g++ -c -m64 -pipe -g -fvisibility=hidden -fvisibility-inlines-hidden -Wall -W -D_REENTRANT -fPIC -DCORE_LIBRARY -DIDE_LIBRARY_BASENAME=\"lib\" -DWITH_TESTS "
++                       "g++ -c -pipe -g -fvisibility=hidden -fvisibility-inlines-hidden -Wall -W -D_REENTRANT -fPIC -DCORE_LIBRARY -DIDE_LIBRARY_BASENAME=\"lib\" -DWITH_TESTS "
+                        "-DQT_NO_CAST_TO_ASCII -DQT_USE_FAST_OPERATOR_PLUS -DQT_USE_FAST_CONCATENATION -DQT_PLUGIN -DQT_TESTLIB_LIB -DQT_SCRIPT_LIB -DQT_SVG_LIB -DQT_SQL_LIB -DQT_XM"
+                        "L_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_SHARED -I../../../../qt-qml/mkspecs/linux-g++-64 -I. -I../../../../qt-qml/include/QtCore -I../../../."
+                        "./qt-qml/include/QtNetwork -I../../../../qt-qml/include/QtGui -I../../../../qt-qml/include/QtXml -I../../../../qt-qml/include/QtSql -I../../../../qt-qml/inc"

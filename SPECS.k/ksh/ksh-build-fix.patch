@@ -1,0 +1,142 @@
+diff -ur ksh-20120801-orig/src/cmd/INIT/make.probe ksh-20120801/src/cmd/INIT/make.probe
+--- ksh-20120801-orig/src/cmd/INIT/make.probe	2014-05-15 07:32:53.964654088 +0000
++++ ksh-20120801/src/cmd/INIT/make.probe	2014-05-15 07:33:57.798671146 +0000
+@@ -1899,7 +1899,7 @@
+ # path cleanup
+ #
+ 
+-for i in ar ccnative dld ld nm size stdinclude stdlib strip 
++for i in ar ccnative ld nm size stdinclude stdlib strip 
+ do	eval o='$'$i
+ 	v=$o
+ 	case $v in
+diff -ur ksh-20120801-orig/src/cmd/ksh93/features/externs ksh-20120801/src/cmd/ksh93/features/externs
+--- ksh-20120801-orig/src/cmd/ksh93/features/externs	2014-05-15 07:32:53.920708753 +0000
++++ ksh-20120801/src/cmd/ksh93/features/externs	2014-05-15 07:34:25.113138256 +0000
+@@ -4,7 +4,7 @@
+ lib	setreuid,setregid,nice,fork,spawnveg,fchdir
+ lib	pathnative,pathposix,uwin_path,uwin_unpath,fts_notify
+ lib	memcntl sys/mman.h
+-lib	getexecuser,free_execattr exec_attr.h -lsecdb
++lib	getexecuser,free_execattr exec_attr.h
+ 
+ reference	unistd.h
+ 
+diff -ur ksh-20120801-orig/src/cmd/ksh93/Makefile ksh-20120801/src/cmd/ksh93/Makefile
+--- ksh-20120801-orig/src/cmd/ksh93/Makefile	2014-05-15 07:32:53.904107182 +0000
++++ ksh-20120801/src/cmd/ksh93/Makefile	2014-05-15 07:36:02.906157076 +0000
+@@ -123,7 +123,7 @@
+ 	/* the linux.sparc linker still has some problems */
+ 	LIBS_opt += -ldll
+ end
+-LIBS_opt += -lsecdb
++/* LIBS_opt += -lsecdb */
+ if CC.HOSTTYPE == "sol.*"
+ 	LIBS_opt += -lw
+ end
+diff -ur ksh-20120801-orig/src/cmd/ksh93/Mamfile ksh-20120801/src/cmd/ksh93/Mamfile
+--- ksh-20120801-orig/src/cmd/ksh93/Mamfile	2014-05-15 07:32:53.861138410 +0000
++++ ksh-20120801/src/cmd/ksh93/Mamfile	2014-05-15 07:37:05.205993661 +0000
+@@ -52,7 +52,7 @@
+ exec - case "" in
+ exec - *?) echo " " ;;
+ exec - esac
+-exec - for i in shell dll coshell cmd ast m jobs i socket nsl secdb
++exec - for i in shell dll coshell cmd ast m socket nsl
+ exec - do case $i in
+ exec - "shell"|shell)
+ exec - ;;
+diff -ur ksh-20120801-orig/src/lib/libcmd/features/ids ksh-20120801/src/lib/libcmd/features/ids
+--- ksh-20120801-orig/src/lib/libcmd/features/ids	2014-05-15 07:32:54.030083809 +0000
++++ ksh-20120801/src/lib/libcmd/features/ids	2014-05-15 07:37:28.983349585 +0000
+@@ -1,5 +1,5 @@
+ lib	endgrent,getgrent,setgrent
+-lib	fsid,getfsgid,isfsg sys/types.h sys/fss.h fsg.h -lfsg
++lib	fsid,getfsgid,isfsg sys/types.h sys/fss.h fsg.h
+ lib	getsid unistd.h
+ mac	fsid sys/types.h sys/fss.h fsg.h
+ cat{
+diff -ur ksh-20120801-orig/src/lib/libcmd/Makefile ksh-20120801/src/lib/libcmd/Makefile
+--- ksh-20120801-orig/src/lib/libcmd/Makefile	2014-05-15 07:32:54.024224431 +0000
++++ ksh-20120801/src/lib/libcmd/Makefile	2014-05-15 07:38:39.164049580 +0000
+@@ -26,7 +26,7 @@
+ 	rmdir.c stty.c sum.c sync.c tail.c tee.c tty.c uname.c uniq.c \
+ 	vmstate.c wc.c revlib.c wclib.c sumlib.o \
+ 	fts_fix.c lib.c \
+-	-lfsg -lmd -lutil
++	-lutil
+ 
+ sumlib.o : +lsum
+ 	$(AR) x $(*:O=1) $(<)
+diff -ur ksh-20120801-orig/src/lib/libcmd/Mamfile ksh-20120801/src/lib/libcmd/Mamfile
+--- ksh-20120801-orig/src/lib/libcmd/Mamfile	2014-05-15 07:32:54.014458801 +0000
++++ ksh-20120801/src/lib/libcmd/Mamfile	2014-05-15 07:39:41.975605177 +0000
+@@ -48,7 +48,7 @@
+ exec - case "" in
+ exec - *?) echo " " ;;
+ exec - esac
+-exec - for i in cmd fsg md util ast
++exec - for i in cmd util ast
+ exec - do case $i in
+ exec - "cmd"|cmd)
+ exec - ;;
+diff -ur ksh-20120801-orig/src/lib/libdll/Makefile ksh-20120801/src/lib/libdll/Makefile
+--- ksh-20120801-orig/src/lib/libdll/Makefile	2014-05-15 07:32:54.008599423 +0000
++++ ksh-20120801/src/lib/libdll/Makefile	2014-05-15 07:40:00.444364633 +0000
+@@ -6,7 +6,7 @@
+ 
+ dll 1.0 :LIBRARY: dlfcn.c dllopen.c dllfind.c dllplug.c dll_lib.c \
+ 	dllnext.c dlllook.c dllscan.c dllcheck.c dllerror.c \
+-	-ldl -ldld
++	-ldl
+ 
+ win32.i386-64 :NOOPTIMIZE: dllscan.c
+ 
+diff -ur ksh-20120801-orig/src/lib/libdll/Mamfile ksh-20120801/src/lib/libdll/Mamfile
+--- ksh-20120801-orig/src/lib/libdll/Mamfile	2014-05-15 07:32:54.006646297 +0000
++++ ksh-20120801/src/lib/libdll/Mamfile	2014-05-15 07:45:23.591014459 +0000
+@@ -48,7 +48,7 @@
+ exec - case "" in
+ exec - *?) echo " " ;;
+ exec - esac
+-exec - for i in dll dl dld ast
++exec - for i in dll dl ast
+ exec - do case $i in
+ exec - "dll"|dll)
+ exec - ;;
+diff -ur ksh-20120801-orig/src/lib/libsum/features/sum ksh-20120801/src/lib/libsum/features/sum
+--- ksh-20120801-orig/src/lib/libsum/features/sum	2014-05-15 07:32:54.040826002 +0000
++++ ksh-20120801/src/lib/libsum/features/sum	2014-05-15 07:45:44.142782794 +0000
+@@ -1,4 +1,4 @@
+-lib	MD4Init md4.h -lmd
+-lib	MD5Init md5.h -lmd
+-lib	SHA1Init sha1.h -lmd
+-lib	SHA2Init sha2.h -lmd
++lib	MD4Init md4.h
++lib	MD5Init md5.h
++lib	SHA1Init sha1.h
++lib	SHA2Init sha2.h
+diff -ur ksh-20120801-orig/src/lib/libsum/Makefile ksh-20120801/src/lib/libsum/Makefile
+--- ksh-20120801-orig/src/lib/libsum/Makefile	2014-05-15 07:32:54.039849439 +0000
++++ ksh-20120801/src/lib/libsum/Makefile	2014-05-15 07:46:08.410373344 +0000
+@@ -4,7 +4,7 @@
+ 
+ CCFLAGS = $(CC.OPTIMIZE) $(CC.PIC)
+ 
+-sum 1.0 :LIBRARY: sum.h sumlib.c -lmd
++sum 1.0 :LIBRARY: sum.h sumlib.c
+ 
+ $(INCLUDEDIR) :INSTALLPROTO: sum.h
+ 
+diff -ur ksh-20120801-orig/src/lib/libsum/Mamfile ksh-20120801/src/lib/libsum/Mamfile
+--- ksh-20120801-orig/src/lib/libsum/Mamfile	2014-05-15 07:32:54.037896313 +0000
++++ ksh-20120801/src/lib/libsum/Mamfile	2014-05-15 07:46:34.232652190 +0000
+@@ -48,7 +48,7 @@
+ exec - case "" in
+ exec - *?) echo " " ;;
+ exec - esac
+-exec - for i in sum md ast
++exec - for i in sum ast
+ exec - do case $i in
+ exec - "sum"|sum)
+ exec - ;;

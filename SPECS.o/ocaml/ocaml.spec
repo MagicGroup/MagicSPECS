@@ -66,7 +66,7 @@ Provides:       ocaml(compiler) = %{version}
 
 # We can compile OCaml on just about anything, but the native code
 # backend is only available on a subset of architectures.
-ExclusiveArch:  alpha %{arm} ia64 %{ix86} x86_64 ppc ppc64 sparc sparcv9
+ExclusiveArch:  alpha %{arm} ia64 %{ix86} x86_64 ppc ppc64 sparc sparcv9 mips64el
 
 %ifarch %{arm} %{ix86} ppc ppc64 sparc sparcv9 x86_64
 %global native_compiler 1
