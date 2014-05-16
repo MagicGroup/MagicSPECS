@@ -11,6 +11,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Patch0:		lilypond-2.11.65-python26.patch
 Patch1:		lilypond-2.21.2-gcc44-relocate.patch
 #Patch2:		lilypond-2.15.38-backintime.patch
+Patch3:         lilypond-2.16.2-freetype-header-fix.patch
+Patch4:         texlive-workaround.patch
 
 Requires:	ghostscript >= 8.15
 Obsoletes: 	lilypond-fonts <= 2.12.1-1
@@ -88,6 +90,8 @@ This contains the directory common to all lilypond fonts.
 %patch0 -p0
 %patch1 -p0
 #%patch2 -p0
+%patch3 -p1
+%patch4 -p1
 
 %build
 export GUILE=/usr/bin/guile1.8
@@ -95,6 +99,9 @@ export GUILE_CONFIG=/usr/bin/guile1.8-config
 export GUILE_TOOLS=/usr/bin/guile1.8-tools
 %configure --without-kpathsea --disable-checking \
 	--with-ncsb-dir=%{_datadir}/fonts/default/Type1
+#Fix build with bison-3.0
+#https://bugs.archlinux.org/task/38309
+rm lily/out/parser.*
 make
 
 
