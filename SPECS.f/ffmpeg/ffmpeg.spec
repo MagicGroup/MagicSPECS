@@ -169,6 +169,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 ### Remove from the included docs
 %{__rm} -f doc/Makefile doc/*.1
 
+%{__rm} -rf %{buildroot}/%{_docdir}/ffmpeg
+
 ### Move man to right dir
 
 %clean

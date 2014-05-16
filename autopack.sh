@@ -451,26 +451,28 @@ else
                 autoupdate $1 || echo "$1 版本更新未成功，请检查网络环境和相关配置"
         fi	
 fi
+if [ $AUTOUPDATE = "1" ]; then
 #首先判断是否使用版本控制系统的源码，如果是，则下载，目前支持git/cvs/svn/hg
-GIT=$(cat $SPECNAME | grep "^%define git 1" |wc -l)
-CVS=$(cat $SPECNAME | grep "^%define cvs 1" |wc -l)
-SVN=$(cat $SPECNAME | grep "^%define svn 1" |wc -l)
-HG=$(cat $SPECNAME | grep "^%define hgm 1" |wc -l)
-if [ $GIT = "1" ] ; then
-	echo "$1.spec 中使用了 git 仓库中的源码，使用脚本下载"
-	downvcssources $1 git || exit 1
-fi
-if [ $CVS = "1" ] ; then
-        echo "$1.spec 中使用了 cvs 仓库中的源码，使用脚本下载"
-        downvcssources $1 cvs || exit 1
-fi
-if [ $SVN = "1" ] ; then
-        echo "$1.spec 中使用了 svn 仓库中的源码，使用脚本下载"
-        downvcssources $1 svn || exit 1
-fi
-if [ $HG = "1" ] ; then
-        echo "spec 中使用了 hg 仓库中的源码，使用脚本下载"
-        downvcssources $1 hg || exit 1
+	GIT=$(cat $SPECNAME | grep "^%define git 1" |wc -l)
+	CVS=$(cat $SPECNAME | grep "^%define cvs 1" |wc -l)
+	SVN=$(cat $SPECNAME | grep "^%define svn 1" |wc -l)
+	HG=$(cat $SPECNAME | grep "^%define hgm 1" |wc -l)
+	if [ $GIT = "1" ] ; then
+		echo "$1.spec 中使用了 git 仓库中的源码，使用脚本下载"
+		downvcssources $1 git || exit 1
+	fi
+	if [ $CVS = "1" ] ; then
+        	echo "$1.spec 中使用了 cvs 仓库中的源码，使用脚本下载"
+        	downvcssources $1 cvs || exit 1
+	fi
+	if [ $SVN = "1" ] ; then
+        	echo "$1.spec 中使用了 svn 仓库中的源码，使用脚本下载"
+        	downvcssources $1 svn || exit 1
+	fi
+	if [ $HG = "1" ] ; then
+        	echo "spec 中使用了 hg 仓库中的源码，使用脚本下载"
+        	downvcssources $1 hg || exit 1
+	fi
 fi
 #然后下载源码
 downsources $1 || exit 1

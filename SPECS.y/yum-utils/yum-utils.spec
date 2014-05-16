@@ -5,15 +5,15 @@
 %endif
 
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%define pluginhome /usr/lib/yum-plugins
 
 Summary: Utilities based around the yum package manager
 Name: yum-utils
 Version: 1.1.31
-Release: 7%{?dist}
+Release: 21%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Source: http://yum.baseurl.org/download/yum-utils/%{name}-%{version}.tar.gz
-Patch0: auto-update-debuginfo.patch
 Patch1: yum-utils-HEAD.patch
 URL: http://yum.baseurl.org/download/yum-utils/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -113,18 +113,6 @@ Requires: yum >= 3.0
 This plugin allows you to specify optional transaction flags on the yum
 command line
 
-%package -n yum-plugin-downloadonly
-Summary: Yum plugin to add downloadonly command option
-Group: System Environment/Base
-Provides: yum-downloadonly = %{version}-%{release}
-Obsoletes: yum-downloadonly < 1.1.20-0
-Conflicts: yum-downloadonly < 1.1.20-0
-Requires: yum >= 3.0
-
-%description -n yum-plugin-downloadonly
-This plugin adds a --downloadonly flag to yum so that yum will only download
-the packages and not install/update them.
-
 %package -n yum-plugin-priorities
 Summary: plugin to give priorities to packages from different repos
 Group: System Environment/Base
@@ -166,20 +154,6 @@ Requires: yum >= 3.0
 This yum plugin adds the "--merge-conf" command line option. With this option,
 Yum will ask you what to do with config files which have changed on updating a
 package.
-
-%package -n yum-plugin-security
-Summary: Yum plugin to enable security filters
-Group: System Environment/Base
-Provides: yum-security = %{version}-%{release}
-Obsoletes: yum-security < 1.1.20-0
-Conflicts: yum-security < 1.1.20-0
-Requires: yum >= 3.2.18
-
-%description -n yum-plugin-security
-This plugin adds the options --security, --cve, --bz and --advisory flags
-to yum and the list-security and info-security commands.
-The options make it possible to limit list/upgrade of packages to specific
-security relevant ones. The commands give you the security information.
 
 %package -n yum-plugin-upgrade-helper
 Summary: Yum plugin to help upgrades to the next distribution version
@@ -300,7 +274,7 @@ This plugin allows the user to run arbitrary actions immediately following a
 transaction when specified packages are changed.
 
 %package -n yum-NetworkManager-dispatcher
-Summary: NetworkManager script which tells yum to check it's cache on network change
+Summary: NetworkManager script which tells yum to check its cache on network change
 Group: System Environment/Base
 Requires: yum >= 3.2.17
 
@@ -390,7 +364,6 @@ Supplies checksums for files in packages from puppet's state file.
 
 %prep
 %setup -q
-# patch0 -p1
 %patch1 -p1
 
 %install
@@ -407,10 +380,8 @@ plugins="\
  protectbase \
  versionlock \
  tsflags \
- downloadonly \
  priorities \
  merge-conf \
- security \
  upgrade-helper \
  aliases \
  list-data \
@@ -435,14 +406,14 @@ plugins="$plugins \
 "
 %endif
 
-mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/yum/pluginconf.d/ $RPM_BUILD_ROOT/usr/lib/yum-plugins/
+mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/yum/pluginconf.d/ $RPM_BUILD_ROOT/%pluginhome
 mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/yum/post-actions
 
 cd plugins
 for plug in $plugins; do
     install -m 644 $plug/*.conf $RPM_BUILD_ROOT/%{_sysconfdir}/yum/pluginconf.d/
-    install -m 644 $plug/*.py $RPM_BUILD_ROOT/usr/lib/yum-plugins/
-    %{__python} -c "import compileall; compileall.compile_dir('$RPM_BUILD_ROOT/usr/lib/yum-plugins', 1)"
+    install -m 644 $plug/*.py $RPM_BUILD_ROOT/%pluginhome
+    %{__python} -c "import compileall; compileall.compile_dir('$RPM_BUILD_ROOT/%pluginhome', 1)"
 done
 install -m 644 aliases/aliases $RPM_BUILD_ROOT/%{_sysconfdir}/yum/aliases.conf
 install -m 644 versionlock/versionlock.list $RPM_BUILD_ROOT/%{_sysconfdir}/yum/pluginconf.d/
@@ -509,6 +480,14 @@ fi
 %{_mandir}/man1/yum-groups-manager.1.*
 %{_mandir}/man8/yumdb.8.*
 %{_mandir}/man1/yumdownloader.1.*
+%{_mandir}/man1/find-repos-of-install.1.*
+%{_mandir}/man1/needs-restarting.1.*
+%{_mandir}/man1/repo-graph.1.*
+%{_mandir}/man1/repoclosure.1.*
+%{_mandir}/man1/repomanage.1.*
+%{_mandir}/man1/repotrack.1.*
+%{_mandir}/man1/verifytree.1.*
+%{_mandir}/man1/yum-config-manager.1.*
 
 %files -n yum-updateonboot
 %defattr(-, root, root)
@@ -520,7 +499,7 @@ fi
 %defattr(-, root, root)
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/changelog.conf
 %doc COPYING
-/usr/lib/yum-plugins/changelog.*
+%{pluginhome}/changelog.*
 %{_mandir}/man1/yum-changelog.1.*
 %{_mandir}/man5/yum-changelog.conf.5.*
 
@@ -528,20 +507,20 @@ fi
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/fastestmirror.conf
-/usr/lib/yum-plugins/fastestmirror*.*
+%{pluginhome}/fastestmirror*.*
 
 %files -n yum-plugin-protectbase
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/protectbase.conf
-/usr/lib/yum-plugins/protectbase.*
+%{pluginhome}/protectbase.*
 
 %files -n yum-plugin-versionlock
 %defattr(-, root, root)
 %doc plugins/versionlock/README COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/versionlock.conf
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/versionlock.list
-/usr/lib/yum-plugins/versionlock.*
+%{pluginhome}/versionlock.*
 %{_mandir}/man1/yum-versionlock.1.*
 %{_mandir}/man5/yum-versionlock.conf.5.*
 
@@ -549,87 +528,74 @@ fi
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/tsflags.conf
-/usr/lib/yum-plugins/tsflags.*
-
-%files -n yum-plugin-downloadonly
-%defattr(-, root, root)
-%doc COPYING
-%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/downloadonly.conf
-/usr/lib/yum-plugins/downloadonly.*
+%{pluginhome}/tsflags.*
 
 %files -n yum-plugin-priorities
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/priorities.conf
-/usr/lib/yum-plugins/priorities.*
+%{pluginhome}/priorities.*
 
 %if %{package_yum_updatesd}
 %files -n yum-plugin-refresh-updatesd
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/refresh-updatesd.conf
-/usr/lib/yum-plugins/refresh-updatesd.*
+%{pluginhome}/refresh-updatesd.*
 %endif
 
 %files -n yum-plugin-merge-conf
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/merge-conf.conf
-/usr/lib/yum-plugins/merge-conf.*
-
-%files -n yum-plugin-security
-%defattr(-, root, root)
-%doc COPYING
-%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/security.conf
-/usr/lib/yum-plugins/security.*
-%{_mandir}/man8/yum-security.8.*
+%{pluginhome}/merge-conf.*
 
 %files -n yum-plugin-upgrade-helper
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/upgrade-helper.conf
-/usr/lib/yum-plugins/upgrade-helper.*
+%{pluginhome}/upgrade-helper.*
 
 %files -n yum-plugin-aliases
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/aliases.conf
 %config(noreplace) %{_sysconfdir}/yum/aliases.conf
-/usr/lib/yum-plugins/aliases.*
+%{pluginhome}/aliases.*
 %{_mandir}/man1/yum-aliases.1.*
 
 %files -n yum-plugin-list-data
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/list-data.conf
-/usr/lib/yum-plugins/list-data.*
+%{pluginhome}/list-data.*
 %{_mandir}/man1/yum-list-data.1.*
 
 %files -n yum-plugin-filter-data
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/filter-data.conf
-/usr/lib/yum-plugins/filter-data.*
+%{pluginhome}/filter-data.*
 %{_mandir}/man1/yum-filter-data.1.*
 
 %files -n yum-plugin-tmprepo
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/tmprepo.conf
-/usr/lib/yum-plugins/tmprepo.*
+%{pluginhome}/tmprepo.*
 
 %files -n yum-plugin-verify
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/verify.conf
-/usr/lib/yum-plugins/verify.*
+%{pluginhome}/verify.*
 %{_mandir}/man1/yum-verify.1.*
 
 %files -n yum-plugin-keys
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/keys.conf
-/usr/lib/yum-plugins/keys.*
+%{pluginhome}/keys.*
 
 %files -n yum-NetworkManager-dispatcher
 %defattr(-, root, root)
@@ -639,13 +605,13 @@ fi
 %files -n yum-plugin-remove-with-leaves
 %defattr(-, root, root)
 %doc COPYING
-/usr/lib/yum-plugins/remove-with-leaves.*
+%{pluginhome}/remove-with-leaves.*
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/remove-with-leaves.conf
 
 %files -n yum-plugin-post-transaction-actions
 %defattr(-, root, root)
 %doc COPYING
-/usr/lib/yum-plugins/post-transaction-actions.*
+%{pluginhome}/post-transaction-actions.*
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/post-transaction-actions.conf
 %doc plugins/post-transaction-actions/sample.action
 # Default *.action file dropping dir.
@@ -654,19 +620,19 @@ fi
 %files -n yum-plugin-rpm-warm-cache
 %defattr(-, root, root)
 %doc COPYING
-/usr/lib/yum-plugins/rpm-warm-cache.*
+%{pluginhome}/rpm-warm-cache.*
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/rpm-warm-cache.conf
 
 %files -n yum-plugin-auto-update-debug-info
 %defattr(-, root, root)
 %doc COPYING
-/usr/lib/yum-plugins/auto-update-debuginfo.*
+%{pluginhome}/auto-update-debuginfo.*
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/auto-update-debuginfo.conf
 
 %files -n yum-plugin-show-leaves
 %defattr(-, root, root)
 %doc COPYING
-/usr/lib/yum-plugins/show-leaves.*
+%{pluginhome}/show-leaves.*
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/show-leaves.conf
 
 %files -n yum-plugin-local
@@ -674,13 +640,13 @@ fi
 %doc COPYING
 %ghost %{_sysconfdir}/yum.repos.d/_local.repo
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/local.conf
-/usr/lib/yum-plugins/local.*
+%{pluginhome}/local.*
 
 %files -n yum-plugin-fs-snapshot
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/fs-snapshot.conf
-/usr/lib/yum-plugins/fs-snapshot.*
+%{pluginhome}/fs-snapshot.*
 %{_mandir}/man1/yum-fs-snapshot.1.*
 %{_mandir}/man5/yum-fs-snapshot.conf.5.*
 
@@ -688,17 +654,113 @@ fi
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/ps.conf
-/usr/lib/yum-plugins/ps.*
+%{pluginhome}/ps.*
 
 %files -n yum-plugin-puppetverify
 %defattr(-, root, root)
 %doc COPYING
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/puppetverify.conf
-/usr/lib/yum-plugins/puppetverify.*
+%{pluginhome}/puppetverify.*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1.31-7
-- 为 Magic 3.0 重建
+* Thu Jan 16 2014 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-21
+- Update to latest HEAD
+- completion: Fix file/dir completions for names containing spaces or tabs
+- post-transaction-actions: fix filename matching. BZ 1045494
+- debuginfo-install: Adjust logic for debug repos in CDN. BZ 1052871
+
+* Fri Jan 10 2014 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-20
+- Update to latest HEAD
+- post-transaction-actions: no rpmdb lookup of removed pkgs. BZ 1045494
+- yum-config-manager: Fail grecefully with garbage in *.repo files. BZ 1046161
+- repodiff: Use "C" locale for timestamps. BZ 1050885
+
+* Fri Dec 13 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-19
+- Update to latest HEAD
+- Don't remove pkgs which are already removals (Eg. via. updates). BZ 1013475.
+- remove yum-plugin-security. BZ 1002491
+- repoquery: handle MiscError. BZ 808500
+- repoquery: handle Yum exceptions on .conf setup. BZ 996027, 982043
+- needs-restarting: don't trigger abrt on repo errors. BZ 1017600
+- repoquery --whatrequires/--whatprovides: handle MiscError. BZ 1024783
+- fastestmirror: Less verbose mirror filtering. BZ 1036121
+- Remove -v from repoquery man page.
+- repoquery -i: Add License. BZ 1040478
+
+* Fri Sep 27 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-18
+- Update to latest HEAD
+- repoquery: handle Yum exceptions on .conf setup. BZ 996027
+- repo-rss: non-ASCII fix, sorting
+- Add repoquery --installroot completion.
+- Add --nogroups and --noplugins options to verifytree.
+- yumdownloader: make --destdir less of a hack. BZ 1004089
+- fs-snapshot: btrfsctl is obsolete, use btrfs. BZ 1010974
+- yum-config-manager: fix --add-repo. BZ 984216
+
+* Wed Aug  7 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-17
+- Update to latest HEAD
+- Use new findRepos() API for yum-config-manager. BZ 971599
+- repoquery: add --installroot option. BZ 988429
+- repoquery: obey conf.exit_on_lock
+- reposync: fix a copy-paste error. BZ 994514
+
+* Thu Jul 25 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-16
+- Update to latest HEAD
+- Fix pacakge => package typos
+- docs: Add missing man page short descriptions
+- docs: Escape dashes in command-line options
+- docs: Add missing man pages for all yum-utils
+- Add --show-duplicates to repoquery manpage. BZ 975565
+- yum-complete-transaction: unlock yum.pid. BZ 984119
+- sanitize repoquery --repofrompath. BZ 988140
+- yum changelog: implicit since=all. BZ 961782
+- repoquery: retry doLock() BZ 988223
+
+* Mon Jun 24 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-15
+- Update to latest HEAD
+- debuginfo-install: handle YumBaseError
+- fs-snapshot: "dmsetup -o" workaround.  BZ 954358, BZ 949569
+- tmprepo: avoid spaces in repoid. BZ 965806
+- repoquery: add cachedir locking. BZ 969776
+- Fix a bug in Modified/Upgraded/Downgraded output. BZ 819502
+
+* Thu Apr 18 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-14
+- yum-utils.bash: load yum.bash first
+
+* Wed Apr 17 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-13
+- Update to latest HEAD
+- versionlock add: Skip packages already locked.
+- versionlock delete: Match all names, not just envra.
+- Allow --old=/foo urls for repodiff.
+- Don't check timestamps for repofrompath repos. BZ 880944
+- Output couldn't find a pkg. for 'foo'. BZ 838158
+
+* Tue Mar 12 2013 James Antill <james@fedoraproject.org> - 1.1.31-12
+- Update to latest HEAD.
+- FS snapshot tweaks for snapper support.
+
+* Mon Mar 11 2013 James Antill <james@fedoraproject.org> - 1.1.31-11
+- Update to latest HEAD.
+- FS snapshot fixes, and thin provisioning support.
+- search-quiet for yumdb.
+
+* Wed Feb  6 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-10
+- Update to latest HEAD
+- Small fixes in documentation and error handling
+
+* Mon Jan 14 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-9
+- Update to latest HEAD.
+- Added pluginhome define to get rid of hardcoded paths
+- Fix yum-NetworkManager-dispatcher description, BZ 894729
+- reposync should lock. BZ 880722
+- Initialize exit_code correctly.  BZ 882536
+
+* Mon Jan 14 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-8
+- Update to latest HEAD.
+
+* Wed Aug  8 2012 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-7
+- Update to latest HEAD.
+- Use package downloader from Yum.
 
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.31-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
