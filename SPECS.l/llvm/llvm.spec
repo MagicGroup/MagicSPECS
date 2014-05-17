@@ -326,6 +326,10 @@ export CXX=c++
   --with-fpu=vfpv3-d16 \
   --with-abi=aapcs-linux \
 %endif
+%ifarch mips64el
+  --with-arch=mips3 \
+  --with-abi=64 \
+%endif
   \
 %if %{with gold}
   --with-binutils-include=%{_includedir} \
