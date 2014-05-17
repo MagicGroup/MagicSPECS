@@ -4,10 +4,14 @@
 # Components built by default:
 %bcond_without clang
 %bcond_without crt
+%ifnarch mips64el
 %bcond_without lldb
+%else
+%bcond_with lldb
+%endif
 
 # Components enabled if supported by target arch:
-%ifnarch s390 s390x sparc64
+%ifnarch s390 s390x sparc64 mips64el
   %bcond_without ocaml
 %else
   %bcond_with ocaml
