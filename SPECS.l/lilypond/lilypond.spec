@@ -1,16 +1,14 @@
 Name:		lilypond
-Version:	2.16.2
-Release:	2%{?dist}
+Version:	2.18.2
+Release:	1%{?dist}
 Summary:	A typesetting system for music notation
 
 Group:		Applications/Publishing
 License:	GPLv3
 URL:		http://www.lilypond.org
-Source0:	http://download.linuxaudio.org/lilypond/sources/v2.15/%{name}-%{version}.tar.gz
+Source0:	http://download.linuxaudio.org/lilypond/sources/v2.18/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Patch0:		lilypond-2.11.65-python26.patch
-Patch1:		lilypond-2.21.2-gcc44-relocate.patch
-#Patch2:		lilypond-2.15.38-backintime.patch
+Patch0:		lilypond-2.21.2-gcc44-relocate.patch
 
 Requires:	ghostscript >= 8.15
 Obsoletes: 	lilypond-fonts <= 2.12.1-1
@@ -25,9 +23,11 @@ BuildRequires:  compat-guile18-devel
 BuildRequires:  ghostscript >= 8.15
 BuildRequires:  pango-devel >= 1.12.0
 BuildRequires:  fontpackages-devel
-BuildRequires:	texlive-base
+BuildRequires:	dblatex
+BuildRequires:	texinfo-tex
 BuildRequires:	texi2html
 BuildRequires:	perl-Pod-Parser
+BuildRequires:	rsync
 
 %description
 LilyPond is an automated music engraving system. It formats music
@@ -86,13 +86,8 @@ This contains the directory common to all lilypond fonts.
 %setup -q
 
 %patch0 -p0
-%patch1 -p0
-#%patch2 -p0
 
 %build
-export GUILE=/usr/bin/guile1.8
-export GUILE_CONFIG=/usr/bin/guile1.8-config
-export GUILE_TOOLS=/usr/bin/guile1.8-tools
 %configure --without-kpathsea --disable-checking \
 	--with-ncsb-dir=%{_datadir}/fonts/default/Type1
 make
@@ -101,7 +96,7 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT package_infodir=%{_infodir} \
-	vimdir=%{_datadir}/vim/vim73
+	vimdir=%{_datadir}/vim/vim74
 
 chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}/%{version}/python/midi.so
 
@@ -135,7 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS.txt COPYING DEDICATION HACKING INSTALL.txt
-%doc NEWS.txt README.txt ROADMAP THANKS VERSION
+%doc NEWS.txt README.txt ROADMAP VERSION
 %{_bindir}/*
 %{_libdir}/lilypond
 %{_datadir}/lilypond
@@ -156,6 +151,38 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 18 2014 Jon Ciesla <limburgher@gmail.com> - 2.18.2-1
+- 2.18.2.
+
+* Fri Jan 03 2014 Jon Ciesla <limburgher@gmail.com> - 2.18.0-1
+- 2.18.0, BZ 1047196.
+
+* Mon Dec 09 2013 Jon Ciesla <limburgher@gmail.com> - 2.17.97-1
+- 2.17.97.
+
+* Mon Nov 25 2013 Jon Ciesla <limburgher@gmail.com> - 2.17.96-1
+- 2.17.96.
+
+* Mon Nov 04 2013 Jon Ciesla <limburgher@gmail.com> - 2.17.30-1
+- 2.17.30.
+
+* Wed Oct 23 2013 Jon Ciesla <limburgher@gmail.com> - 2.17.29-1
+- 2.17.29.
+
+* Mon Sep 09 2013 Jon Ciesla <limburgher@gmail.com> - 2.17.26-1
+- 2.17.26.
+- Fix vim dir, BZ 1005394.
+
+* Mon Aug 26 2013 Jon Ciesla <limburgher@gmail.com> - 2.17.25-1
+- 2.17.25.
+
+* Tue Aug 13 2013 Jon Ciesla <limburgher@gmail.com> - 2.17.24-1
+- Fix FTBFS, 992140.  Updated to latest as 2.16.x will not build
+- with texlive > 2012.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.16.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.16.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
