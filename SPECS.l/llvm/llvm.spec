@@ -308,7 +308,7 @@ export CXX=c++
   --disable-embed-stdcxx \
   --enable-timestamps \
   --enable-backtraces \
-  --enable-targets=x86,powerpc,arm,aarch64,cpp,nvptx,systemz \
+  --enable-targets=x86,powerpc,arm,mips,aarch64,cpp,nvptx,systemz \
   --enable-experimental-targets=R600 \
 %if %{with ocaml}
   --enable-bindings=ocaml \
