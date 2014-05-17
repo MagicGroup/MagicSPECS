@@ -4,11 +4,7 @@
 # Components built by default:
 %bcond_without clang
 %bcond_without crt
-%ifnarch mips64el
 %bcond_without lldb
-%else
-%bcond_with lldb
-%endif
 
 # Components enabled if supported by target arch:
 %ifnarch s390 s390x sparc64 mips64el
@@ -54,6 +50,7 @@ Source11:       llvm-Config-llvm-config.h
 Patch1:         0001-data-install-preserve-timestamps.patch
 Patch2:         0002-linker-flags-speedup-memory.patch
 Patch3:         0003-fix-clear-cache-declaration.patch
+Patch4:         llvm-lldm-mips-fix.patch
 
 BuildRequires:  bison
 BuildRequires:  chrpath
@@ -272,6 +269,7 @@ mv lldb-%{version}.src tools/lldb
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 # fix library paths
 sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' ./configure
