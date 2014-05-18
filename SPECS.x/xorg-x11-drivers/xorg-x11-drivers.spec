@@ -18,7 +18,7 @@ ExcludeArch: s390 s390x
 
 # relevant hardware 
 
-Requires: xorg-x11-drv-ast
+#Requires: xorg-x11-drv-ast
 Requires: xorg-x11-drv-ati
 Requires: xorg-x11-drv-cirrus
 Requires: xorg-x11-drv-dummy
@@ -57,7 +57,7 @@ Requires: xorg-x11-drv-i740
 Requires: xorg-x11-drv-keyboard
 Requires: xorg-x11-drv-mach64
 Requires: xorg-x11-drv-mouse
-Requires: xorg-x11-drv-nv
+#Requires: xorg-x11-drv-nv
 Requires: xorg-x11-drv-r128
 Requires: xorg-x11-drv-rendition
 Requires: xorg-x11-drv-s3virge

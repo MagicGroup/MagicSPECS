@@ -59,7 +59,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 # Remove files we don't want packaged
-rm $RPM_BUILD_ROOT%{perl_vendorarch}/{mkconsts,scan}.pl
+rm -f $RPM_BUILD_ROOT%{perl_vendorarch}/{mkconsts,scan}.pl
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
