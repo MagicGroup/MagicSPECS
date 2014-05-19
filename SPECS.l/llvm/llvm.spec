@@ -7,7 +7,7 @@
 %bcond_without lldb
 
 # Components enabled if supported by target arch:
-%ifnarch s390 s390x sparc64
+%ifnarch s390 s390x sparc64 mips64el
   %bcond_without ocaml
 %else
   %bcond_with ocaml
@@ -50,6 +50,7 @@ Source11:       llvm-Config-llvm-config.h
 Patch1:         0001-data-install-preserve-timestamps.patch
 Patch2:         0002-linker-flags-speedup-memory.patch
 Patch3:         0003-fix-clear-cache-declaration.patch
+Patch4:         llvm-lldm-mips-fix.patch
 
 BuildRequires:  bison
 BuildRequires:  chrpath
@@ -268,6 +269,7 @@ mv lldb-%{version}.src tools/lldb
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 # fix library paths
 sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' ./configure
@@ -308,7 +310,7 @@ export CXX=c++
   --disable-embed-stdcxx \
   --enable-timestamps \
   --enable-backtraces \
-  --enable-targets=x86,powerpc,arm,aarch64,cpp,nvptx,systemz \
+  --enable-targets=x86,powerpc,arm,mips,aarch64,cpp,nvptx,systemz \
   --enable-experimental-targets=R600 \
 %if %{with ocaml}
   --enable-bindings=ocaml \
@@ -325,6 +327,10 @@ export CXX=c++
   --with-float=hard \
   --with-fpu=vfpv3-d16 \
   --with-abi=aapcs-linux \
+%endif
+%ifarch mips64el
+  --with-arch=mips3 \
+  --with-abi=64 \
 %endif
   \
 %if %{with gold}
