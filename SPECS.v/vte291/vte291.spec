@@ -2,7 +2,7 @@
 
 Name:           vte291
 Version:        0.37.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Terminal emulator library
 
 License:        LGPLv2+
@@ -99,6 +99,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
+* Mon May 19 2014 Liu Di <liudidi@gmail.com> - 0.37.0-3
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Kalev Lember <kalevlember@gmail.com> - 0.37.0-2
 - Split out a vte-profile subpackage that can be used with both vte291 / vte3
 

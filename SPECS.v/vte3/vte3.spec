@@ -1,14 +1,14 @@
 Name: vte3
-Version: 0.34.4
+Version:	0.36.2
 Release: 1%{?dist}
 Summary: A terminal emulator
+Summary(zh_CN.UTF-8): 终端模拟器
 License: LGPLv2+
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 #VCS: git:git://git.gnome.org/vte
-Source: http://download.gnome.org/sources/vte/0.34/vte-%{version}.tar.xz
-Patch0: honey-I-shrank-the-terminal.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=663779
-Patch1: vte-alt-meta-confusion.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/vte/%{majorver}/vte-%{version}.tar.xz
 # https://bugzilla.gnome.org/show_bug.cgi?id=688456
 Patch2: 0001-widget-Only-show-the-cursor-on-motion-if-moved.patch
 
@@ -25,9 +25,14 @@ Requires: initscripts
 %description
 VTE is a terminal emulator widget for use with GTK+.
 
+%description -l zh_CN.UTF-8
+GTK+ 3 使用的终端模拟器控件。
+
 %package devel
 Summary: Files needed for developing applications which use vte
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: ncurses-devel
 
@@ -38,10 +43,11 @@ for the vte package.
 Install vte-devel if you want to develop programs which will use
 vte.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n vte-%{version}
-%patch0 -p1 -b .grow-up
-%patch1 -p1 -b .alt-meta
 %patch2 -p1 -b .motion
 
 %build
@@ -63,7 +69,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang vte-2.90
 
 %post -p /sbin/ldconfig
@@ -90,6 +96,12 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Mon May 19 2014 Liu Di <liudidi@gmail.com> - 0.36.2-1
+- 更新到 0.36.2
+
+* Mon May 19 2014 Liu Di <liudidi@gmail.com> - 0.34.9-1
+- 更新到 0.34.9
+
 * Mon Apr 15 2013 Kalev Lember <kalevlember@gmail.com> - 0.34.4-1
 - Update to 0.34.4
 

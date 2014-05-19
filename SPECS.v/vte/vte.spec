@@ -4,10 +4,12 @@
 
 Name: vte
 Version: 0.28.2
-Release: 10%{?dist}
+Release: 12%{?dist}
 Summary: A terminal emulator
+Summary(zh_CN.UTF-8): 终端模块器
 License: LGPLv2+
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 #VCS: git:git://git.gnome.org/vte
 URL: http://developer.gnome.org/vte/
 Source: http://download.gnome.org/sources/vte/0.28/%{name}-%{version}.tar.xz
@@ -39,9 +41,14 @@ Requires: initscripts
 %description
 VTE is a terminal emulator widget for use with GTK+ 2.0.
 
+%description -l zh_CN.UTF-8
+GTK+ 2.0 使用的终端模拟器控件。
+
 %package devel
 Summary: Files needed for developing applications which use vte
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: gtk2-devel
 Requires: ncurses-devel
@@ -54,6 +61,9 @@ for the vte package.
 
 Install vte-devel if you want to develop programs which will use
 vte.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -84,7 +94,7 @@ rm $RPM_BUILD_ROOT/%{_libdir}/lib%{name}.la
 # Remove static python modules and la files, which are probably useless to Python anyway.
 rm -f $RPM_BUILD_ROOT/%{_libdir}/python*/site-packages/gtk-2.0/*.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/python*/site-packages/gtk-2.0/*.a
-
+magic_rpm_clean.sh
 %find_lang vte-0.0
 
 %post -p /sbin/ldconfig
@@ -116,6 +126,12 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/python*/site-packages/gtk-2.0/*.a
 %doc %{_datadir}/gtk-doc/html/vte-0.0
 
 %changelog
+* Mon May 19 2014 Liu Di <liudidi@gmail.com> - 0.28.2-12
+- 为 Magic 3.0 重建
+
+* Mon May 19 2014 Liu Di <liudidi@gmail.com> - 0.28.2-11
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.28.2-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
