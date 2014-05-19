@@ -1,6 +1,6 @@
 Name:		lilypond
 Version:	2.18.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A typesetting system for music notation
 
 Group:		Applications/Publishing
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 17 2014 Liu Di <liudidi@gmail.com> - 2.18.2-2
+- 为 Magic 3.0 重建
+
 * Tue Mar 18 2014 Jon Ciesla <limburgher@gmail.com> - 2.18.2-1
 - 2.18.2.
 

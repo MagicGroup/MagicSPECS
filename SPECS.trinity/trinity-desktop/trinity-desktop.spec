@@ -7,7 +7,7 @@
 
 Name:		trinity-desktop
 Version:	3.5.13.2
-Release:	2%{?dist}%{?_variant}
+Release:	4%{?dist}%{?_variant}
 License:	GPL
 Summary:	Meta-package to install TDE
 Group:		User Interface/Desktops
@@ -19,10 +19,6 @@ URL:		http://www.trinitydesktop.org/
 Prefix:		%{_prefix}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
-
-Source0:	trinity-3.5.13-fedora.repo
-Source1:	trinity-3.5.13-rhel.repo
-Source2:	RPM-GPG-KEY-trinity
 
 Source11:	pclinuxos201304-32.jpg
 Source12:	pclinuxos201304-64.jpg
@@ -42,11 +38,6 @@ Requires:	trinity-tdepim >= %{version}
 Requires:	trinity-tdeutils >= %{version}
 Requires:	trinity-tdetoys >= %{version}
 Requires:	hal
-
-%if 0%{?rhel} || 0%{?fedora}
-# YUM configuration file
-Requires:	trinity-repo >= %{version}
-%endif
 
 %description
 The TDE project aims to keep the KDE3.5 computing style alive, as well as 
@@ -274,105 +265,19 @@ Requires:	%{name}-devel = %{version}
 
 ##########
 
-%if 0%{?rhel} || 0%{?fedora}
-%package -n trinity-repo
-Group:		User Interface/Desktops
-Summary:	Yum configuration files for Trinity
-
-%description -n trinity-repo
-%{summary}
-
-%pre -n trinity-repo
-# Make sure every Trinity related repository is deleted before installing new one.
-%__rm -f %{_sysconfdir}/yum.repos.d/trinity-*.repo
-
-%files -n trinity-repo
-%defattr(-,root,root,-)
-%{_sysconfdir}/yum.repos.d/*.repo
-%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-trinity
-%endif
-
-##########
-
-%if 0%{?pclinuxos}
-%package -n trinity-wallpaper-theme-default
-Group:		User Interface/Desktops
-Summary:	Default wallpaper for Trinity
-
-%description -n trinity-wallpaper-theme-default
-%{summary}
-
-%files -n trinity-wallpaper-theme-default
-%defattr(-,root,root,-)
-%{tde_datadir}/wallpapers/pclinuxos32.jpg
-%{tde_datadir}/wallpapers/pclinuxos64.jpg
-%endif
-
-##########
-
 %prep
 
 %build
 
 %install
 %__rm -rf %{?buildroot}
-%__mkdir_p "%{?buildroot}%{_sysconfdir}/yum.repos.d"
-
-# FEDORA configuration for YUM
-%if 0%{?fedora}
-%__sed %{SOURCE0} \
-  -e 's/\$releasever/%{fedora}/g' \
-  -e 's/-fedora/-f%{fedora}/g' \
-  >"%{?buildroot}%{_sysconfdir}/yum.repos.d/trinity-3.5.13.repo"
-%endif
-
-# RHEL configuration for YUM
-# $releasever is replaced with its value
-%if 0%{?rhel}
-%__sed %{SOURCE1} \
-  -e 's/\$releasever/%{rhel}/g' \
-  >"%{?buildroot}%{_sysconfdir}/yum.repos.d/trinity-3.5.13.repo"
-%endif
-
-%if 0%{?fedora} || 0%{?rhel}
-%__chmod 644 %{?buildroot}%{_sysconfdir}/yum.repos.d/*.repo
-%endif
-
-# RPM signing key
-%if 0%{?rhel} || 0%{?fedora}
-%__install -D -m 644 "%{SOURCE2}" "%{?buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-trinity"
-%endif
-
-# PCLinuxOS wallpaper
-%if 0%{?pclinuxos} == 2013
-%__install -D -m 644 "%{SOURCE11}" "%{?buildroot}%{tde_datadir}/wallpapers/pclinuxos32.jpg"
-%__install -D -m 644 "%{SOURCE12}" "%{?buildroot}%{tde_datadir}/wallpapers/pclinuxos64.jpg"
-%endif
 
 %changelog
-* Thu Aug 15 2013 Liu Di <liudidi@gmail.com> - 3.5.13.2-2.opt
+* Sat May 17 2014 Liu Di <liudidi@gmail.com> - 3.5.13.2-4.opt
 - 为 Magic 3.0 重建
 
-* Mon Jun 03 2013 Francois Andriot <francois.andriot@free.fr> - 3.5.13.2-1
-- Update to version 3.5.13.2
-- Add GPG signing key
+* Sat May 17 2014 Liu Di <liudidi@gmail.com> - 3.5.13.2-3.opt
+- 为 Magic 3.0 重建
 
-* Mon Oct 01 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13.1-1
-- Update to version 3.5.13.1
-
-* Mon Aug 06 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13-6
-- Add 'applications' subpackage
-
-* Wed Aug 01 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13-5
-- Updates to reflect new packages names
-- Add Mageia 2 support
-- Removes 'extras' packages
-
-* Wed Jun 06 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13-4
-- Enable mirrorlist
-
-* Wed Nov 30 2011 Francois Andriot <francois.andriot@free.fr> - 3.5.13-3
-- Fix repo files name and content
-
-* Sat Nov 12 2011 Francois Andriot <francois.andriot@free.fr> - 3.5.13-2
-- Add 'repo' package
+* Thu Aug 15 2013 Liu Di <liudidi@gmail.com> - 3.5.13.2-2.opt
+- 为 Magic 3.0 重建
