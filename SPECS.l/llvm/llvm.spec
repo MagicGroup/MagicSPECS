@@ -51,6 +51,7 @@ Patch1:         0001-data-install-preserve-timestamps.patch
 Patch2:         0002-linker-flags-speedup-memory.patch
 Patch3:         0003-fix-clear-cache-declaration.patch
 Patch4:         llvm-lldm-mips-fix.patch
+Patch5:         llvm-3.3-add-mips64el-target.patch
 
 BuildRequires:  bison
 BuildRequires:  chrpath
@@ -270,6 +271,7 @@ mv lldb-%{version}.src tools/lldb
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 # fix library paths
 sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' ./configure
