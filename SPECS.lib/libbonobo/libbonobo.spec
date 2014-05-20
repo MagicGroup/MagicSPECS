@@ -27,6 +27,7 @@ Provides: bonobo-activation = %{version}-%{release}
 
 Patch0: libbonobo-multishlib.patch
 Patch1: 01_disable_deprecated.patch
+Patch2: libbonobo-test-no-srcdir.diff
 
 %description
 Bonobo is a component system based on CORBA, used by the GNOME desktop.
@@ -58,6 +59,7 @@ use Bonobo.
 %patch0 -p1 -b .multishlib
 %endif
 %patch1 -p1 -b .disable_deprecated
+%patch2 -p1 -b .no-src
 
 autoreconf -i -f
 
