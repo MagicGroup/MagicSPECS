@@ -1,14 +1,14 @@
 %define __soversion_major 5
 %define __soversion %{__soversion_major}.3
 
-%define WITH_JAVA 0
-
 Summary: The Berkeley DB database library for C
 Name: libdb
-Version: 5.3.21
+Version: 5.3.28
 Release: 4%{?dist}
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
+# For mt19937db.c
+Source2: http://www.gnu.org/licenses/lgpl-2.1.txt
 Patch0: libdb-multiarch.patch
 # db-1.85 upstream patches
 Patch10: http://www.oracle.com/technology/products/berkeley-db/db/update/1.85/patch.1.1
@@ -19,15 +19,15 @@ Patch13: http://www.oracle.com/technology/products/berkeley-db/db/update/1.85/pa
 Patch20: db-1.85-errno.patch
 Patch22: db-4.6.21-1.85-compat.patch
 Patch24: db-4.5.20-jni-include-dir.patch
+# License clarification patch
+# http://devel.trisquel.info/gitweb/?p=package-helpers.git;a=blob;f=helpers/DATA/db4.8/007-mt19937db.c_license.patch;h=1036db4d337ce4c60984380b89afcaa63b2ef88f;hb=df48d40d3544088338759e8bea2e7f832a564d48
+Patch25: 007-mt19937db.c_license.patch
 URL: http://www.oracle.com/database/berkeley-db/
-License: BSD
+License: BSD and LGPLv2 and Sleepycat
 Group: System Environment/Libraries
 BuildRequires: perl libtool
 BuildRequires: tcl-devel >= 8.5.2-3
-%if 0%{?WITH_JAVA}
-BuildRequires: gcc-java
 BuildRequires: java-devel >= 1:1.6.0
-%endif
 BuildRequires: chrpath
 Conflicts: filesystem < 3
 
@@ -191,6 +191,7 @@ for building programs which use the Berkeley DB in Java.
 
 %prep
 %setup -q -n db-%{version} -a 1
+cp %{SOURCE2} .
 
 %patch0 -p1 -b .multiarch
 pushd db.1.85/PORT/linux
@@ -205,33 +206,38 @@ popd
 
 %patch22 -p1 -b .185compat
 %patch24 -p1 -b .4.5.20.jni
+%patch25 -p1 -b .licensefix
 
 cd dist
 ./s_config
+cd ..
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
+CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
+CFLAGS="$CFLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_DISABLE_DIRSYNC=1 -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -I../../../lang/sql/sqlite/ext/fts3/"
+export CFLAGS
 
 # Build the old db-185 libraries.
 make -C db.1.85/PORT/%{_os} OORG="$CFLAGS"
 
 test -d dist/dist-tls || mkdir dist/dist-tls
 # Static link db_dump185 with old db-185 libraries.
-/usr/bin/sh libtool --tag=CC --mode=compile	%{__cc} $RPM_OPT_FLAGS -Idb.1.85/PORT/%{_os}/include -D_REENTRANT -c util/db_dump185.c -o dist/dist-tls/db_dump185.lo
-/usr/bin/sh libtool --tag=LD --mode=link %{__cc} -o dist/dist-tls/db_dump185 dist/dist-tls/db_dump185.lo db.1.85/PORT/%{_os}/libdb.a
+/bin/sh libtool --tag=CC --mode=compile	%{__cc} $RPM_OPT_FLAGS -Idb.1.85/PORT/%{_os}/include -D_REENTRANT -c util/db_dump185.c -o dist/dist-tls/db_dump185.lo
+/bin/sh libtool --tag=LD --mode=link %{__cc} -o dist/dist-tls/db_dump185 dist/dist-tls/db_dump185.lo db.1.85/PORT/%{_os}/libdb.a
+
+# Update config files to understand aarch64
+for dir in dist lang/sql/sqlite lang/sql/jdbc lang/sql/odbc; do
+  cp /usr/lib/rpm/redhat/config.{guess,sub} "$dir"
+done
 
 pushd dist/dist-tls
-ln -sf ../configure .
+%define _configure ../configure
 %configure -C \
 	--enable-compat185 --enable-dump185 \
 	--enable-shared --enable-static \
 	--enable-tcl --with-tcl=%{_libdir} \
 	--enable-cxx --enable-sql \
-%if 0%{?WITH_JAVA}
 	--enable-java \
-%else
-	--disable-java \
-%endif
 	--enable-test \
 	--disable-rpath \
 	--with-tcl=%{_libdir}/tcl8.5
@@ -246,13 +252,11 @@ perl -pi -e 's/-shared -nostdlib/-shared/' libtool
 
 make %{?_smp_mflags}
 
-%if 0%{WITH_JAVA}
 # XXX hack around libtool not creating ./libs/libdb_java-X.Y.lai
 LDBJ=./.libs/libdb_java-%{__soversion}.la
 if test -f ${LDBJ} -a ! -f ${LDBJ}i; then
 	sed -e 's,^installed=no,installed=yes,' < ${LDBJ} > ${LDBJ}i
 fi
-%endif
 popd
 
 %install
@@ -260,7 +264,7 @@ rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_includedir}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}
 
-%makeinstall -C dist/dist-tls
+%makeinstall STRIP=/bin/true -C dist/dist-tls
 
 # XXX Nuke non-versioned archives and symlinks
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/{libdb.a,libdb_cxx.a,libdb_tcl.a,libdb_sql.a}
@@ -277,11 +281,9 @@ for i in db.h db_cxx.h db_185.h; do
 	ln -s %{name}/$i ${RPM_BUILD_ROOT}%{_includedir}
 done
 
-%if 0%{WITH_JAVA}
 # Move java jar file to the correct place
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/java
 mv ${RPM_BUILD_ROOT}%{_libdir}/*.jar ${RPM_BUILD_ROOT}%{_datadir}/java
-%endif
 
 # Eliminate installed doco
 rm -rf ${RPM_BUILD_ROOT}%{_prefix}/docs
@@ -300,7 +302,6 @@ rm -rf docs/csharp
 rm -rf examples/csharp
 rm -rf docs/installation
 mv examples docs
-magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -321,15 +322,13 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %postun -p /sbin/ldconfig tcl
 
-%if 0%{WITH_JAVA}
 %post -p /sbin/ldconfig java
 
 %postun -p /sbin/ldconfig java
-%endif
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README
+%doc LICENSE README lgpl-2.1.txt
 %{_libdir}/libdb-%{__soversion}.so
 %{_libdir}/libdb-%{__soversion_major}.so
 
@@ -352,9 +351,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libdb_cxx-%{__soversion}.a
 %{_libdir}/libdb_tcl-%{__soversion}.a
 %{_libdir}/libdb_sql-%{__soversion}.a
-%if 0%{WITH_JAVA}
 %{_libdir}/libdb_java-%{__soversion}.a
-%endif
 
 %files utils
 %defattr(-,root,root,-)
@@ -403,7 +400,6 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libdb_sql.so
 %{_includedir}/%{name}/dbsql.h
 
-%if 0%{WITH_JAVA}
 %files java
 %defattr(-,root,root,-)
 %{_libdir}/libdb_java-%{__soversion_major}*.so
@@ -412,10 +408,133 @@ rm -rf ${RPM_BUILD_ROOT}
 %files java-devel
 %defattr(-,root,root,-)
 %{_libdir}/libdb_java.so
-%endif
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 5.3.21-4
-- 为 Magic 3.0 重建
+* Sat Feb 22 2014 Peter Robinson <pbrobinson@fedoraproject.org> 5.3.28-4
+- Add some of the previous aarch64 bits back as the sub configure don't use the macro
 
+* Sun Jan 26 2014 Peter Robinson <pbrobinson@fedoraproject.org> 5.3.28-3
+- Fix configure macro usage for better aarch64 build fix
 
+* Wed Nov 06 2013 Jan Stanek <jstanek@redhat.com> - 5.3.28-2
+- Updated config files to allow build on aarch64 (#1022970)
+
+* Tue Oct 08 2013 Jan Stanek <jstanek@redhat.com> - 5.3.28-1
+- Added Sleepycat to the license list (#1013841)
+- Updated to 5.3.28 (#1013233)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.21-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 28 2013 Tom Callaway <spot@fedoraproject.org> - 5.3.21-12
+- add copy of lgpl-2.1.txt
+
+* Thu May 16 2013 Jan Stanek <jstanek@redhat.com> - 5.3.21-11
+- Fix missing debuginfo issue for utils subpackage
+
+* Thu May  9 2013 Tom Callaway <spot@fedoraproject.org> - 5.3.21-10
+- add license clarification fix
+
+* Wed Apr 03 2013 Jan Stanek <jstanek@redhat.com> 5.3.21-9
+- Added sqlite compability CFLAGS (#788496)
+
+* Wed Mar 27 2013 Jan Stanek <jstanek@redhat.com> 5.3.21-8
+- Cleaning the specfile - removed gcc-java dependecy other way
+
+* Wed Mar 27 2013 Jan Stanek <jstanek@redhat.com> 5.3.21-7
+- Removed dependency on obsolete gcc-java package (#927742)
+
+* Thu Mar  7 2013 Jindrich Novy <jnovy@redhat.com> 5.3.21-6
+- add LGPLv2+ and remove Sleepycat in license tag (#886838)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.21-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Nov 27 2012 Tom Callaway <spot@fedoraproject.org> - 5.3.21-4
+- fix license tag
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.21-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jul 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 5.3.21-2
+- Specify tag for libtool (fixes FTBFS # 838334 )
+
+* Thu Jul  5 2012 Jindrich Novy <jnovy@redhat.com> 5.3.21-1
+- update to 5.3.21
+http://download.oracle.com/otndocs/products/berkeleydb/html/changelog_5_3.html
+
+* Tue Jul  3 2012 Jindrich Novy <jnovy@redhat.com> 5.3.15-5
+- move C++ header files to cxx-devel
+
+* Tue Jul  3 2012 Jindrich Novy <jnovy@redhat.com> 5.3.15-4
+- fix -devel packages dependencies yet more (#832225)
+
+* Sun May  6 2012 Jindrich Novy <jnovy@redhat.com> 5.3.15-3
+- package -devel packages correctly
+
+* Sat Apr 21 2012 Jindrich Novy <jnovy@redhat.com> 5.3.15-2
+- fix multiarch conflict in libdb-devel (#812901)
+- remove unneeded dos2unix BR
+
+* Thu Mar 15 2012 Jindrich Novy <jnovy@redhat.com> 5.3.15-1
+- update to 5.3.15
+  http://download.oracle.com/otndocs/products/berkeleydb/html/changelog_5_3.html
+
+* Fri Feb 17 2012 Deepak Bhole <dbhole@redhat.com> 5.2.36-5
+- Resolves rhbz#794472
+- Patch from Omair Majid <omajid@redhat.com> to remove explicit Java 6 req.
+
+* Wed Jan 25 2012 Harald Hoyer <harald@redhat.com> 5.2.36-4
+- add filesystem guard
+
+* Wed Jan 25 2012 Harald Hoyer <harald@redhat.com> 5.2.36-3
+- install everything in /usr
+  https://fedoraproject.org/wiki/Features/UsrMove
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.36-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Jun 15 2011 Jindrich Novy <jnovy@redhat.com> 5.2.36-1
+- update to 5.2.36,
+  http://download.oracle.com/otndocs/products/berkeleydb/html/changelog_5_2.html#id3647664
+
+* Wed Jun 15 2011 Jindrich Novy <jnovy@redhat.com> 5.2.28-2
+- move development documentation to devel-doc subpackage (#705386)
+
+* Tue Jun 14 2011 Jindrich Novy <jnovy@redhat.com> 5.2.28-1
+- update to 5.2.28
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1.25-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Feb  3 2011 Jindrich Novy <jnovy@redhat.com> 5.1.25-1
+- update to 5.1.25
+
+* Wed Sep 29 2010 jkeating - 5.1.19-2
+- Rebuilt for gcc bug 634757
+
+* Fri Sep 10 2010 Jindrich Novy <jnovy@redhat.com> 5.1.19-1
+- update to 5.1.19
+- rename -devel-static to -static subpackage (#617800)
+- build java on all arches
+
+* Wed Jul  7 2010 Jindrich Novy <jnovy@redhat.com> 5.0.26-1
+- update to 5.0.26
+- drop BR: ed
+
+* Thu Jun 17 2010 Jindrich Novy <jnovy@redhat.com> 5.0.21-2
+- add Requires: libdb-cxx to libdb-devel
+
+* Wed Apr 21 2010 Jindrich Novy <jnovy@redhat.com> 5.0.21-1
+- initial build
+
+* Thu Apr 15 2010 Jindrich Novy <jnovy@redhat.com> 5.0.21-0.2
+- remove C# documentation
+- disable/remove rpath
+- fix description
+- tighten dependencies
+- run ldconfig for cxx and sql subpackages
+
+* Fri Apr  9 2010 Jindrich Novy <jnovy@redhat.com> 5.0.21-0.1
+- enable sql
+- package 5.0.21
