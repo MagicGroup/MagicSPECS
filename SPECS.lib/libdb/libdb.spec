@@ -1,10 +1,12 @@
 %define __soversion_major 5
 %define __soversion %{__soversion_major}.3
 
+%define with_java 0
+
 Summary: The Berkeley DB database library for C
 Name: libdb
 Version: 5.3.28
-Release: 4%{?dist}
+Release: 8%{?dist}
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
 # For mt19937db.c
@@ -27,7 +29,9 @@ License: BSD and LGPLv2 and Sleepycat
 Group: System Environment/Libraries
 BuildRequires: perl libtool
 BuildRequires: tcl-devel >= 8.5.2-3
+%if 0%{?with_java}
 BuildRequires: java-devel >= 1:1.6.0
+%endif
 BuildRequires: chrpath
 Conflicts: filesystem < 3
 
@@ -167,6 +171,7 @@ provides embedded database support for both traditional and
 client/server applications. This package contains the libraries
 for building programs which use the Berkeley DB in SQL.
 
+%if 0%{?with_java}
 %package java
 Summary: Development files for using the Berkeley DB with Java
 Group: Development/Libraries
@@ -188,6 +193,7 @@ The Berkeley Database (Berkeley DB) is a programmatic toolkit that
 provides embedded database support for both traditional and
 client/server applications. This package contains the libraries
 for building programs which use the Berkeley DB in Java.
+%endif
 
 %prep
 %setup -q -n db-%{version} -a 1
@@ -227,7 +233,7 @@ test -d dist/dist-tls || mkdir dist/dist-tls
 
 # Update config files to understand aarch64
 for dir in dist lang/sql/sqlite lang/sql/jdbc lang/sql/odbc; do
-  cp /usr/lib/rpm/redhat/config.{guess,sub} "$dir"
+  cp /usr/lib/rpm/magic/config.{guess,sub} "$dir"
 done
 
 pushd dist/dist-tls
@@ -237,7 +243,9 @@ pushd dist/dist-tls
 	--enable-shared --enable-static \
 	--enable-tcl --with-tcl=%{_libdir} \
 	--enable-cxx --enable-sql \
+%if 0%{?with_java}
 	--enable-java \
+%endif
 	--enable-test \
 	--disable-rpath \
 	--with-tcl=%{_libdir}/tcl8.5
@@ -252,11 +260,13 @@ perl -pi -e 's/-shared -nostdlib/-shared/' libtool
 
 make %{?_smp_mflags}
 
+%if 0%{?with_java}
 # XXX hack around libtool not creating ./libs/libdb_java-X.Y.lai
 LDBJ=./.libs/libdb_java-%{__soversion}.la
 if test -f ${LDBJ} -a ! -f ${LDBJ}i; then
 	sed -e 's,^installed=no,installed=yes,' < ${LDBJ} > ${LDBJ}i
 fi
+%endif
 popd
 
 %install
@@ -281,9 +291,11 @@ for i in db.h db_cxx.h db_185.h; do
 	ln -s %{name}/$i ${RPM_BUILD_ROOT}%{_includedir}
 done
 
+%if 0%{with_java}
 # Move java jar file to the correct place
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/java
 mv ${RPM_BUILD_ROOT}%{_libdir}/*.jar ${RPM_BUILD_ROOT}%{_datadir}/java
+%endif
 
 # Eliminate installed doco
 rm -rf ${RPM_BUILD_ROOT}%{_prefix}/docs
@@ -322,9 +334,11 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %postun -p /sbin/ldconfig tcl
 
+%if 0%{?with_java}
 %post -p /sbin/ldconfig java
 
 %postun -p /sbin/ldconfig java
+%endif
 
 %files
 %defattr(-,root,root,-)
@@ -351,7 +365,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libdb_cxx-%{__soversion}.a
 %{_libdir}/libdb_tcl-%{__soversion}.a
 %{_libdir}/libdb_sql-%{__soversion}.a
+%if 0%{?with_java}
 %{_libdir}/libdb_java-%{__soversion}.a
+%endif
 
 %files utils
 %defattr(-,root,root,-)
@@ -400,6 +416,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libdb_sql.so
 %{_includedir}/%{name}/dbsql.h
 
+%if 0%{?with_java}
 %files java
 %defattr(-,root,root,-)
 %{_libdir}/libdb_java-%{__soversion_major}*.so
@@ -408,8 +425,21 @@ rm -rf ${RPM_BUILD_ROOT}
 %files java-devel
 %defattr(-,root,root,-)
 %{_libdir}/libdb_java.so
+%endif
 
 %changelog
+* Tue May 20 2014 Liu Di <liudidi@gmail.com> - 5.3.28-8
+- 为 Magic 3.0 重建
+
+* Tue May 20 2014 Liu Di <liudidi@gmail.com> - 5.3.28-7
+- 为 Magic 3.0 重建
+
+* Tue May 20 2014 Liu Di <liudidi@gmail.com> - 5.3.28-6
+- 为 Magic 3.0 重建
+
+* Tue May 20 2014 Liu Di <liudidi@gmail.com> - 5.3.28-5
+- 为 Magic 3.0 重建
+
 * Sat Feb 22 2014 Peter Robinson <pbrobinson@fedoraproject.org> 5.3.28-4
 - Add some of the previous aarch64 bits back as the sub configure don't use the macro
 
