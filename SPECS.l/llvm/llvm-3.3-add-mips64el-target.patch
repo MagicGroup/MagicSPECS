@@ -1,0 +1,25 @@
+diff -ur llvm-3.3.src-orig/tools/clang/lib/Driver/ToolChains.cpp llvm-3.3.src/tools/clang/lib/Driver/ToolChains.cpp
+--- llvm-3.3.src-orig/tools/clang/lib/Driver/ToolChains.cpp	2014-05-19 10:40:25.790164320 +0000
++++ llvm-3.3.src/tools/clang/lib/Driver/ToolChains.cpp	2014-05-19 10:48:45.039143416 +0000
+@@ -1122,13 +1122,19 @@
+   static const char *const MIPSELTriples[] = {
+     "mipsel-linux-gnu",
+     "mipsel-linux-android",
+-    "mips-linux-gnu"
++    "mips-linux-gnu",
++    "mipsel-magic-linux",
++    "mipsel-magic-linux-gnu"
+   };
+ 
+   static const char *const MIPS64LibDirs[] = { "/lib64", "/lib" };
+   static const char *const MIPS64Triples[] = { "mips64-linux-gnu" };
+   static const char *const MIPS64ELLibDirs[] = { "/lib64", "/lib" };
+-  static const char *const MIPS64ELTriples[] = { "mips64el-linux-gnu" };
++  static const char *const MIPS64ELTriples[] = {
++    "mips64el-linux-gnu",
++    "mips64el-magic-linux",
++    "mips64el-magic-linux-gnu"
++  };
+ 
+   static const char *const PPCLibDirs[] = { "/lib32", "/lib" };
+   static const char *const PPCTriples[] = {
