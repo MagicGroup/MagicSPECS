@@ -29,17 +29,10 @@ LOG=1
 AUTOBUMP=0
 # rpmbuild 的 _topdir 变量
 TOPDIR=$(rpm --eval "%{_topdir}")
-# rpmbuild 中是否执行 check 段
-CHECK=0
-if [ "$CHECK" = 1 ] ;then
-	NOCHECK=""
-else
-	NOCHECK="--nocheck"
-fi
-# 打包用户名
 PACKAGER="Magic Group"
 PACKEMAIL="<magicgroup@linuxfans.org>"
-
+# rpmbuild 中是否执行 check 段
+CHECK=0
 # RPM 下的目录名
 ARCH=$(uname -m)
 if [ "$ARCH" = "mips64" ];then
@@ -57,6 +50,12 @@ fi
 # 使用软件包本身的配置，也可以放一些需要前置执行的脚本。
 if [ -f ./packspec ]; then
 	. ./packspec
+fi
+# rpmbuild 中是否执行 check 段
+if [ "$CHECK" = 1 ] ;then
+        NOCHECK=""
+else
+        NOCHECK="--nocheck"
 fi
 # 使用的下载命令
 DOWNCOMMAND=wget

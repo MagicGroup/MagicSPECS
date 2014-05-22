@@ -36,7 +36,7 @@
 
 Name:           llvm
 Version:        3.4
-Release:        6%{?dist}
+Release:        17%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
@@ -61,6 +61,8 @@ Patch2:         0002-linker-flags-speedup-memory.patch
 
 # radeonsi GL 3.3 backport
 Patch3:         llvm-3.4-radeonsi-backport.patch
+
+Patch10: 	clang-3.4-magic.patch
 
 BuildRequires:  bison
 BuildRequires:  chrpath
@@ -295,6 +297,10 @@ mv lldb-%{version} tools/lldb
 %patch2 -p1
 %patch3 -p1
 
+pushd tools/clang
+%patch10 -p1
+popd
+
 # fix library paths
 sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' ./configure
 sed -i 's|(PROJ_prefix)/lib|(PROJ_prefix)/%{_lib}/%{name}|g' Makefile.config.in
@@ -356,7 +362,7 @@ export CXX=c++
 %if %{with gold}
   --with-binutils-include=%{_includedir} \
 %endif
-  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}*/*/include) \
+  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}-magic-linux/*/include) \
   --with-optimize-option=-O3
 
 make %{_smp_mflags} REQUIRES_RTTI=1 VERBOSE=1 \
@@ -563,7 +569,8 @@ exit 0
 
 %files devel
 %defattr(-,root,root,-)
-%doc %{llvmdocdir llvm-devel}/
+#只有执行 check 段才有这个。
+#doc %{llvmdocdir llvm-devel}/
 %{_bindir}/llvm-config-%{__isa_bits}
 %{_includedir}/%{name}
 %{_includedir}/%{name}-c
@@ -597,7 +604,7 @@ exit 0
 
 %files -n clang-devel
 %defattr(-,root,root,-)
-%doc %{llvmdocdir clang-devel}/
+#doc %{llvmdocdir clang-devel}/
 %{_includedir}/clang
 %{_includedir}/clang-c
 
@@ -659,6 +666,39 @@ exit 0
 %endif
 
 %changelog
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-17
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-16
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-15
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-14
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-13
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-12
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-11
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-10
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-9
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-8
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-7
+- 为 Magic 3.0 重建
+
 * Thu Mar 27 2014 Rex Dieter <rdieter@fedoraproject.org> 3.4-6
 - -libs: Obsoletes: OpenGTL libQtGTL
 
