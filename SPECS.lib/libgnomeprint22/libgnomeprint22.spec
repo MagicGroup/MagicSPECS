@@ -3,7 +3,7 @@
 Summary: Printing library for GNOME
 Name:  libgnomeprint22
 Version: 2.18.8
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: LGPLv2+ and BSD
 # BSD applies to ttsubset code that was taken from STSF
 Group:          System Environment/Base
@@ -77,7 +77,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name *.la -exec rm {} \;
-
+magic_rpm_clean.sh
 %find_lang %{gettext_package}
 
 %post -p /sbin/ldconfig
@@ -99,6 +99,9 @@ find $RPM_BUILD_ROOT -name *.la -exec rm {} \;
 %{_datadir}/gtk-doc/html/libgnomeprint
 
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 2.18.8-9
+- 为 Magic 3.0 重建
+
 * Tue Jan 14 2014 Lubomir Rintel <lkundrak@v3.sk> - 2.18.8-8
 - bonobo-activation has been included in libbonobo and the provide is gone now
 

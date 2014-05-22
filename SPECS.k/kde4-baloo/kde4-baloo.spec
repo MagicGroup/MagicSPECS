@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name baloo
 
@@ -9,10 +8,11 @@ Summary: A framework for searching and managing metadata
 Summary(zh_CN.UTF-8): 查找和管理元数据的框架
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 4%{?dist}
+Version: 4.13.1
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
+%define rversion %version
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 Source1: 97-kde-baloo-filewatch-inotify.conf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -29,11 +29,10 @@ BuildRequires: polkit-qt-devel
 BuildRequires: xapian-core-devel
 
 %description
-KCharSelect is a tool to select special characters from all installed
-fonts and copy them into the clipboard.
+A framework for searching and managing metadata.
 
 %description -l zh_CN.UTF-8
-这个程序可以从所有安装的字体中选择特殊字符并复制它们到剪贴板。
+查找和管理元数据的框架。
 
 %package file
 Summary: File indexing and search for %{name}
@@ -92,6 +91,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %files
 %doc COPYING COPYING.LIB
 %{_kde4_bindir}/akonadi_baloo_indexer
+%{_kde4_bindir}/balooctl
 %{_kde4_bindir}/baloosearch
 %{_kde4_bindir}/balooshow
 %{_kde4_datadir}/akonadi/agents/akonadibalooindexingagent.desktop
@@ -150,6 +150,9 @@ fi
 %{_kde4_libdir}/cmake/Baloo/
 
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-4
 - 为 Magic 3.0 重建
 

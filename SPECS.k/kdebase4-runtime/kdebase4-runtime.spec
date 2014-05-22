@@ -1,5 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name kde-runtime
 
 #define kde4_enable_final_bool OFF
@@ -8,11 +6,12 @@ Name: kdebase4-runtime
 Summary: The KDE Runtime Components
 Summary(zh_CN.UTF-8): KDE 运行环境组件
 License: GPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.2
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 Source1: im.png
 Source2: extract_rpm.desktop
@@ -112,21 +111,6 @@ to develop KDE Runtime applications.
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
-%if 0
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package nepomuk 
-Summary: KDE Runtime Components nepomuk support files
-Summary(zh_CN.UTF-8): KDE 运行时 nepomuk 支持文件
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
-
-%description nepomuk 
-%{summary}.
-
-%description nepomuk -l zh_CN.UTF-8
-KDE 运行时 nepomuk 支持文件。
-%endif
-
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package kwalletd
 Summary: KDE Runtime Components kwallet support files
@@ -139,22 +123,6 @@ Group(zh_CN.UTF-8): 系统/GUI/KDE
 
 %description kwalletd -l zh_CN.UTF-8
 KDE 运行时 kwallet 支持文件。
-
-%if 0
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-%package -n kcm_phononxine
-Summary: Phonon Xine backend configuration module
-Summary(zh_CN.UTF-8): Phonon Xine 后端配置模块
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
-Requires: phonon-xine
-
-%description -n kcm_phononxine
-%{summary}.
-
-%description -n kcm_phononxine -l zh_CN.UTF-8
-Phonon Xine 后端配置模块。
-%endif
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
@@ -273,13 +241,6 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %exclude %{kde4_libdir}/libkwalletbackend.so
 %exclude %{kde4_libdir}/libknotifyplugin.so
 
-%if 0
-%files nepomuk
-%defattr(-,root,root)
-%{kde4_mandir}/man8/nepomuk*.8*
-#%{kde4_datadir}/autostart/nepomukcontroller.desktop
-%endif
-
 %files kwalletd
 %defattr(-,root,root)
 %{kde4_bindir}/kwalletd
@@ -357,6 +318,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 # 需要进一步处理
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
 - 为 Magic 3.0 重建
 

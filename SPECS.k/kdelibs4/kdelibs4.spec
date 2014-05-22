@@ -1,7 +1,6 @@
 #不知道为什么没有debugs信息，有时候又行
 # define  debug_package %{nil}
 
-%define rversion %{kde4_kdelibs_version}
 %define release_number 1
 %define real_name kdelibs
 %define apidocs 1
@@ -14,8 +13,9 @@ License: LGPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
 Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -318,10 +318,10 @@ sed -i -e "s|@@VERSION_RELEASE@@|%{version}-%{release}|" kio/kio/kprotocolmanage
 %patch1103 -p1
 %patch1104 -p1
 %patch1105 -p1
-#%patch1106 -p0
+%patch1106 -p0
 %patch1107 -p1
 %patch1108 -p1
-#%patch1109 -p1
+%patch1109 -p1
 %patch1110 -p1
 
 %build
@@ -508,6 +508,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
 - 为 Magic 3.0 重建
 
