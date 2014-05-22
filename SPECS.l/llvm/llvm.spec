@@ -4,10 +4,9 @@
 # Components built by default:
 %bcond_without clang
 %bcond_without crt
-%bcond_without lldb
 
 # Components enabled if supported by target arch:
-%ifnarch s390 s390x sparc64 mips64el
+%ifnarch s390 s390x sparc64
   %bcond_without ocaml
 %else
   %bcond_with ocaml
@@ -17,19 +16,27 @@
 %else
   %bcond_with gold
 %endif
+# lldb not ported to anything but x86 so far.
+%ifarch x86_64 %{ix86}
+  %bcond_without lldb
+%else
+  %bcond_with lldb
+%endif
+
 
 # Documentation install path
-%if 0%{fedora} < 20
+%if 0%{?fedora} < 20
   %global llvmdocdir() %{_docdir}/%1-%{version}
 %else
   %global llvmdocdir() %{_docdir}/%1
 %endif
 
-%global downloadurl http://llvm.org/releases/%{version}
+#global prerel rc3
+%global downloadurl http://llvm.org/%{?prerel:pre-}releases/%{version}%{?prerel:/%{prerel}}
 
 Name:           llvm
-Version:        3.3
-Release:        4%{?dist}
+Version:        3.4
+Release:        17%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
@@ -37,10 +44,12 @@ License:        NCSA
 URL:            http://llvm.org/
 
 # source archives
-Source0:        %{downloadurl}/llvm-%{version}.src.tar.gz
-Source1:        %{downloadurl}/cfe-%{version}.src.tar.gz
-Source2:        %{downloadurl}/compiler-rt-%{version}.src.tar.gz
-Source3:        %{downloadurl}/lldb-%{version}.src.tar.gz
+Source0:        %{downloadurl}/llvm-%{version}%{?prerel}.src.tar.gz
+Source1:        %{downloadurl}/clang-%{version}%{?prerel}.src.tar.gz
+Source2:        %{downloadurl}/compiler-rt-%{version}%{?prerel}.src.tar.gz
+%if %{with lldb}
+Source3:        %{downloadurl}/lldb-%{version}%{?prerel}.src.tar.gz
+%endif
 
 # multilib fixes
 Source10:       llvm-Config-config.h
@@ -49,9 +58,11 @@ Source11:       llvm-Config-llvm-config.h
 # patches
 Patch1:         0001-data-install-preserve-timestamps.patch
 Patch2:         0002-linker-flags-speedup-memory.patch
-Patch3:         0003-fix-clear-cache-declaration.patch
-Patch4:         llvm-lldm-mips-fix.patch
-Patch5:         llvm-3.3-add-mips64el-target.patch
+
+# radeonsi GL 3.3 backport
+Patch3:         llvm-3.4-radeonsi-backport.patch
+
+Patch10: 	clang-3.4-magic.patch
 
 BuildRequires:  bison
 BuildRequires:  chrpath
@@ -65,6 +76,7 @@ BuildRequires:  binutils-devel
 %if %{with ocaml}
 BuildRequires:  ocaml-ocamldoc
 %endif
+BuildRequires:  ncurses-devel
 BuildRequires:  zip
 # for DejaGNU test suite
 BuildRequires:  dejagnu tcl-devel python
@@ -90,7 +102,7 @@ Group:          Development/Languages
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       libffi-devel
 Requires:       libstdc++-devel >= 3.4
-
+Requires:       ncurses-devel
 Requires(posttrans): /usr/sbin/alternatives
 Requires(postun):    /usr/sbin/alternatives
 
@@ -114,6 +126,12 @@ Documentation for the LLVM compiler infrastructure.
 %package libs
 Summary:        LLVM shared libraries
 Group:          System Environment/Libraries
+## retire OpenGTL/libQtGTL here
+Obsoletes: OpenGTL < 0.9.18-50
+Obsoletes: OpenGTL-libs < 0.9.18-50
+Obsoletes: OpenGTL-devel < 0.9.18-50
+Obsoletes: libQtGTL < 0.9.3-50
+Obsoletes: libQtGTL-devel < 0.9.3-50
 
 %description libs
 Shared libraries for the LLVM compiler infrastructure.
@@ -193,6 +211,14 @@ LLDB is a next generation, high-performance debugger. It is built as a set
 of reusable components which highly leverage existing libraries in the
 larger LLVM Project, such as the Clang expression parser and LLVM
 disassembler.
+
+%package -n lldb-devel
+Summary:        Header files for LLDB
+Group:          Development/Languages
+Requires:       lldb%{?_isa} = %{version}-%{release}
+
+%description -n lldb-devel
+This package contains header files for the LLDB debugger.
 %endif
 
 %if %{with doxygen}
@@ -255,23 +281,25 @@ HTML documentation for LLVM's OCaml binding.
 
 
 %prep
-%setup -q -n llvm-%{version}.src %{?with_clang:-a1} %{?with_crt:-a2} %{?with_lldb:-a3}
+%setup -q %{?with_clang:-a1} %{?with_crt:-a2} %{?with_lldb:-a3}
 rm -rf tools/clang tools/lldb projects/compiler-rt
 %if %{with clang}
-mv cfe-%{version}.src tools/clang
+mv clang-%{version} tools/clang
 %endif
 %if %{with crt}
-mv compiler-rt-%{version}.src projects/compiler-rt
+mv compiler-rt-%{version} projects/compiler-rt
 %endif
 %if %{with lldb}
-mv lldb-%{version}.src tools/lldb
+mv lldb-%{version} tools/lldb
 %endif
 
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
+
+pushd tools/clang
+%patch10 -p1
+popd
 
 # fix library paths
 sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' ./configure
@@ -312,7 +340,7 @@ export CXX=c++
   --disable-embed-stdcxx \
   --enable-timestamps \
   --enable-backtraces \
-  --enable-targets=x86,powerpc,arm,mips,aarch64,cpp,nvptx,systemz \
+  --enable-targets=x86,powerpc,arm,aarch64,cpp,nvptx,systemz \
   --enable-experimental-targets=R600 \
 %if %{with ocaml}
   --enable-bindings=ocaml \
@@ -330,15 +358,11 @@ export CXX=c++
   --with-fpu=vfpv3-d16 \
   --with-abi=aapcs-linux \
 %endif
-%ifarch mips64el
-  --with-arch=mips3 \
-  --with-abi=64 \
-%endif
   \
 %if %{with gold}
   --with-binutils-include=%{_includedir} \
 %endif
-  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}*/*/include) \
+  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}-magic-linux/*/include) \
   --with-optimize-option=-O3
 
 make %{_smp_mflags} REQUIRES_RTTI=1 VERBOSE=1 \
@@ -529,6 +553,7 @@ exit 0
 %{_bindir}/bugpoint
 %{_bindir}/llc
 %{_bindir}/lli
+%{_bindir}/lli-child-target
 %exclude %{_bindir}/llvm-config-%{__isa_bits}
 %{_bindir}/llvm*
 %{_bindir}/macho-dump
@@ -544,7 +569,8 @@ exit 0
 
 %files devel
 %defattr(-,root,root,-)
-#%doc %{llvmdocdir llvm-devel}/
+#只有执行 check 段才有这个。
+#doc %{llvmdocdir llvm-devel}/
 %{_bindir}/llvm-config-%{__isa_bits}
 %{_includedir}/%{name}
 %{_includedir}/%{name}-c
@@ -578,7 +604,7 @@ exit 0
 
 %files -n clang-devel
 %defattr(-,root,root,-)
-#%doc %{llvmdocdir clang-devel}/
+#doc %{llvmdocdir clang-devel}/
 %{_includedir}/clang
 %{_includedir}/clang-c
 
@@ -598,6 +624,10 @@ exit 0
 %{_bindir}/lldb-platform
 %{_libdir}/%{name}/liblldb.so
 %doc %{_mandir}/man1/lldb.1.*
+
+%files -n lldb-devel
+%defattr(-,root,root,-)
+%{_includedir}/lldb
 %endif
 
 %files doc
@@ -609,7 +639,8 @@ exit 0
 %defattr(-,root,root,-)
 %{_libdir}/ocaml/*.cma
 %{_libdir}/ocaml/*.cmi
-%{_libdir}/ocaml/META.llvm
+%{_libdir}/ocaml/dll*.so
+%{_libdir}/ocaml/META.llvm*
 
 %files ocaml-devel
 %defattr(-,root,root,-)
@@ -635,6 +666,58 @@ exit 0
 %endif
 
 %changelog
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-17
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-16
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-15
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-14
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-13
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-12
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-11
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-10
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-9
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-8
+- 为 Magic 3.0 重建
+
+* Wed May 21 2014 Liu Di <liudidi@gmail.com> - 3.4-7
+- 为 Magic 3.0 重建
+
+* Thu Mar 27 2014 Rex Dieter <rdieter@fedoraproject.org> 3.4-6
+- -libs: Obsoletes: OpenGTL libQtGTL
+
+* Wed Mar 19 2014 Dave Airlie <airlied@redhat.com> 3.4-5
+- backport patches from 3.5 to enable GL3.3 on radeonsi
+
+* Fri Jan 31 2014 Kyle McMartin <kyle@redhat.com> 3.4-4
+- Disable lldb on everything but x86_64, and i686. It hasn't been ported
+  beyond those platforms so far.
+
+* Fri Jan 17 2014 Dave Airlie <airlied@redhat.com> 3.4-3
+- bump nvr for lldb on ppc disable
+
+* Tue Jan 14 2014 Dave Airlie <airlied@redhat.com> 3.4-2
+- add ncurses-devel BR and Requires
+
+* Tue Jan 14 2014 Dave Airlie <airlied@redhat.com> 3.4-1
+- update to llvm 3.4 release
+
 * Fri Dec 20 2013 Jan Vcelak <jvcelak@fedoraproject.org> 3.3-4
 - remove RPATHs
 - run ldconfig when installing lldb (#1044431)

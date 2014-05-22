@@ -22,7 +22,7 @@
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
 Version: 5.2.1
-Release: 13%{?dist}
+Release: 14%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -709,9 +709,12 @@ popd
 %{_qt5_plugindir}/platforms/libqxcb.so
 %{_qt5_plugindir}/platformthemes/libqgtk2.so
 %{_qt5_plugindir}/printsupport/libcupsprintersupport.so
-
+%{_qt5_plugindir}/platforms/libqdirectfb.so
 
 %changelog
+* Fri May 16 2014 Liu Di <liudidi@gmail.com> - 5.2.1-14
+- 为 Magic 3.0 重建
+
 * Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-13
 - 为 Magic 3.0 重建
 

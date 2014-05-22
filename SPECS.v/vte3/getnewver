@@ -3,6 +3,7 @@ url="https://download.gnome.org/sources/vte/"
 new1="a href="
 new2="\\/<\\/a"
 downcommand="wget -q" 
+unset UPDATEMAJOR
 pushd $(dirname $0) > /dev/null
 if ! [ x"$UPDATEMAJOR" = x"" ]; then
 	rm -f index.html && $downcommand $url -O index.html
@@ -13,7 +14,7 @@ if ! [ x"$UPDATEMAJOR" = x"" ]; then
 		exit 1
 	fi
 else
-	specver=`rpmspec -q --qf "%{version}\n" vte.spec |head -n 1`
+	specver=`rpmspec -q --qf "%{version}\n" vte3.spec |head -n 1`
 	newver1=$(echo $specver | cut -d"." -f1).$(echo $specver | cut -d"." -f2)
 fi	
 rm -f index.html
