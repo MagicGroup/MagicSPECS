@@ -8,6 +8,7 @@ License:        MIT
 URL:            http://www.mono-project.com/Main_Page
 Source0:        http://ftp.novell.com/pub/mono/sources/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		libgdiplus-2.10.1-libpng15.patch
+Patch1:         libgdiplus-2.10-fix-freetype.patch
 BuildRequires:  freetype-devel glib2-devel libjpeg-devel libtiff-devel
 BuildRequires:  libungif-devel libpng-devel fontconfig-devel
 BuildRequires:  cairo-devel giflib-devel libexif-devel
@@ -28,6 +29,7 @@ Development files for libgdiplus
 %prep
 %setup -q 
 %patch0 
+%patch1
 
 %build
 %configure --disable-static 
