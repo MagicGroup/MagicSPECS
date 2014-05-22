@@ -10,6 +10,7 @@ Group:          System Environment/Base
 Source:  http://download.gnome.org/sources/libgnomeprint/2.18/libgnomeprint-%{version}.tar.bz2
 URL:            http://www.gnome.org
 Patch0:  libgnomeprint22-stdio.patch
+Patch1:  libgnomeprint-2.18.8-freetype-2.5.1.patch
 
 Requires: urw-fonts
 Requires: ghostscript
@@ -60,6 +61,7 @@ want to use the GNOME desktop environment.
 %prep
 %setup -q -n libgnomeprint-%{version}
 %patch0 -p1 -b .stdio
+%patch1 -p1 -b .freetype
 
 # Convert to utf-8
 for file in NEWS; do
