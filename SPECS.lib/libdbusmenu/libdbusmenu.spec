@@ -31,7 +31,9 @@ BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
 BuildRequires:	pkgconfig(gnome-doc-utils)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(json-glib-1.0)
+%ifnarch mips64el
 BuildRequires:	pkgconfig(valgrind)
+%endif
 BuildRequires:	pkgconfig(x11)
 
 %description
