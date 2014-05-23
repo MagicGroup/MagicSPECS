@@ -1,22 +1,28 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%global tar_name OpenCV
 #global indice   a
 
 Name:           opencv
-Version:        2.4.3
-Release:        4%{?dist}
+Version:        2.4.7
+Release:        6%{?dist}
 Summary:        Collection of algorithms for computer vision
-
 Group:          Development/Libraries
 # This is normal three clause BSD.
 License:        BSD
-URL:            http://opencv.willowgarage.com/wiki/
-Source0:        http://prdownloads.sourceforge.net/opencvlibrary/%{tar_name}-%{version}%{?indice}.tar.bz2
+URL:            http://opencv.org
+# Need to remove SIFT/SURF from source tarball, due to legal concerns
+# rm -rf opencv-%%{version}/modules/nonfree/src/sift.cpp
+# rm -rf opencv-%%{version}/modules/nonfree/src/surf.cpp
+# Removed because we don't use pre-built contribs
+# rm -rf 3rdparty
+#Source0:        http://downloads.sourceforge.net/opencvlibrary/opencv-unix/%{version}/%{name}-%{version}%{?indice}.tar.gz
+Source0:	%{name}-clean-%{version}%{?indice}.tar.xz
 Source1:        opencv-samples-Makefile
 Patch0:         opencv-pkgcmake.patch
-Patch1:         opencv-pkgcmake2.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#http://code.opencv.org/issues/2720
+Patch2:         OpenCV-2.4.4-pillow.patch
+Patch3:         opencv-2.4.7-ts_static.patch
+# fix/simplify cmake config install location (upstreamable)
+# https://bugzilla.redhat.com/1031312
+Patch4:         opencv-2.4.7-cmake_paths.patch
 
 BuildRequires:  libtool
 BuildRequires:  cmake >= 2.6.3
@@ -27,15 +33,19 @@ BuildRequires:  chrpath
 BuildRequires:  gtk2-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
+%if 0%{?fedora} >= 1
 %ifnarch s390 s390x
 BuildRequires:  libraw1394-devel
 BuildRequires:  libdc1394-devel
+%endif
 %endif
 BuildRequires:  jasper-devel
 BuildRequires:  libpng-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  libtiff-devel
 BuildRequires:  libv4l-devel
+BuildRequires:  libGL-devel
+BuildRequires:  gtkglext-devel
 BuildRequires:  OpenEXR-devel
 %{?_with_openni:
 %ifarch %{ix86} x86_64
@@ -44,17 +54,21 @@ BuildRequires:  openni-primesense
 %endif
 }
 %{?_with_ttb:
-%ifarch %{ix86} x86_64 ia64
+%ifarch %{ix86} x86_64 ia64 ppc ppc64
 BuildRequires:  tbb-devel
 %endif
 }
-BuildRequires:  zlib-devel, pkgconfig
-BuildRequires:  python-devel
-BuildRequires:  python-imaging, numpy, swig >= 1.3.24
+BuildRequires:  zlib-devel pkgconfig
+BuildRequires:  python2-devel
+BuildRequires:  numpy, swig >= 1.3.24
 BuildRequires:  python-sphinx
 %{?_with_ffmpeg:BuildRequires:  ffmpeg-devel >= 0.4.9}
 %{!?_without_gstreamer:BuildRequires:  gstreamer-devel gstreamer-plugins-base-devel}
 %{?_with_xine:BuildRequires:  xine-lib-devel}
+BuildRequires:  opencl-headers
+
+Requires:       opencv-core%{_isa} = %{version}-%{release}
+
 
 %description
 OpenCV means Intel® Open Source Computer Vision Library. It is a collection of
@@ -62,43 +76,49 @@ C functions and a few C++ classes that implement some popular Image Processing
 and Computer Vision algorithms.
 
 
-%package devel
+%package        core
+Summary:        OpenCV core libraries
+Group:          Development/Libraries
+
+%description    core
+This package contains the OpenCV C/C++ core libraries.
+
+%package        devel
 Summary:        Development files for using the OpenCV library
 Group:          Development/Libraries
-Requires:       opencv = %{version}-%{release}
-Requires:       pkgconfig
+Requires:       opencv%{_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 This package contains the OpenCV C/C++ library and header files, as well as
 documentation. It should be installed if you want to develop programs that
 will use the OpenCV library. You should consider installing opencv-devel-docs
 package.
 
-%package devel-docs
+%package        devel-docs
 Summary:        Development files for using the OpenCV library
 Group:          Development/Libraries
 Requires:       opencv-devel = %{version}-%{release}
-Requires:       pkgconfig
 BuildArch:      noarch
 
-%description devel-docs
+%description    devel-docs
 This package contains the OpenCV documentation and examples programs.
 
-%package python
+%package        python
 Summary:        Python bindings for apps which use OpenCV
 Group:          Development/Libraries
-Requires:       opencv = %{version}-%{release}
-Requires:       python-imaging
+Requires:       opencv%{_isa} = %{version}-%{release}
 Requires:       numpy
 
-%description python
+%description    python
 This package contains Python bindings for the OpenCV library.
 
 
 %prep
-%setup -q -n %{tar_name}-%{version}
+%setup -q
 %patch0 -p1 -b .pkgcmake
-%patch1 -p1 -b .pkgcmake2
+%patch2 -p1 -b .pillow
+%patch3 -p1 -b .ts_static
+%patch4 -p1 -b .cmake_paths
 
 # fix dos end of lines
 sed -i 's|\r||g'  samples/c/adaptiveskindetector.cpp
@@ -120,6 +140,7 @@ pushd build
  %{!?_with_sse3:-DENABLE_SSE3=0} \
  -DCMAKE_BUILD_TYPE=ReleaseWithDebInfo \
  -DBUILD_TEST=1 \
+ -DBUILD_opencv_java=0 \
 %{?_with_ttb:
 %ifarch %{ix86} x86_64 ia64
  -DWITH_TBB=1 -DTBB_LIB_DIR=%{_libdir} \
@@ -142,6 +163,7 @@ pushd build
  %{!?_with_xine:-DWITH_XINE=0} \
  -DINSTALL_C_EXAMPLES=1 \
  -DINSTALL_PYTHON_EXAMPLES=1 \
+ -DOPENCL_INCLUDE_DIR=${_includedir}/CL \
  ..
 
 make VERBOSE=1 %{?_smp_mflags}
@@ -150,28 +172,21 @@ popd
 
 
 %install
-rm -rf $RPM_BUILD_ROOT  __devel-doc
+rm -rf __devel-doc
 pushd build
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p" CPPROG="cp -p"
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+make install DESTDIR=%{buildroot} INSTALL="install -p" CPPROG="cp -p"
+find %{buildroot} -name '*.la' -delete
 
-
-rm -f $RPM_BUILD_ROOT%{_datadir}/OpenCV/samples/c/build_all.sh \
-      $RPM_BUILD_ROOT%{_datadir}/OpenCV/samples/c/cvsample.dsp \
-      $RPM_BUILD_ROOT%{_datadir}/OpenCV/samples/c/cvsample.vcproj \
-      $RPM_BUILD_ROOT%{_datadir}/OpenCV/samples/c/facedetect.cmd
-install -pm644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/OpenCV/samples/c/GNUmakefile
+rm -f %{buildroot}%{_datadir}/OpenCV/samples/c/build_all.sh \
+      %{buildroot}%{_datadir}/OpenCV/samples/c/cvsample.dsp \
+      %{buildroot}%{_datadir}/OpenCV/samples/c/cvsample.vcproj \
+      %{buildroot}%{_datadir}/OpenCV/samples/c/facedetect.cmd
+install -pm644 %{SOURCE1} %{buildroot}%{_datadir}/OpenCV/samples/c/GNUmakefile
 
 # remove unnecessary documentation
-rm -rf $RPM_BUILD_ROOT%{_datadir}/OpenCV/doc
+rm -rf %{buildroot}%{_datadir}/OpenCV/doc
 
 popd
-
-#Cmake mess
-mkdir -p  $RPM_BUILD_ROOT%{_libdir}/cmake/OpenCV
-mv $RPM_BUILD_ROOT%{_datadir}/OpenCV/*.cmake \
-  $RPM_BUILD_ROOT%{_libdir}/cmake/OpenCV
-
 
 %check
 # Check fails since we don't support most video
@@ -185,51 +200,113 @@ pushd build
 popd
 %endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+%post core -p /sbin/ldconfig
+%postun core -p /sbin/ldconfig
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-
-
 %files
-%defattr(-,root,root,-)
 %doc doc/license.txt
 %{_bindir}/opencv_*
-%{_libdir}/lib*.so.*
+%{_libdir}/libopencv_calib3d.so.2.4*
+%{_libdir}/libopencv_contrib.so.2.4*
+%{_libdir}/libopencv_features2d.so.2.4*
+%{_libdir}/libopencv_highgui.so.2.4*
+%{_libdir}/libopencv_legacy.so.2.4*
+%{_libdir}/libopencv_objdetect.so.2.4*
+%{_libdir}/libopencv_ocl.so.2.4*
+%{_libdir}/libopencv_stitching.so.2.4*
+%{_libdir}/libopencv_superres.so.2.4*
+%{_libdir}/libopencv_ts.so.2.4*
+%{_libdir}/libopencv_videostab.so.2.4*
 %dir %{_datadir}/OpenCV
 %{_datadir}/OpenCV/haarcascades
 %{_datadir}/OpenCV/lbpcascades
 
+%files core
+%{_libdir}/libopencv_core.so.2.4*
+%{_libdir}/libopencv_flann.so.2.4*
+%{_libdir}/libopencv_imgproc.so.2.4*
+%{_libdir}/libopencv_ml.so.2.4*
+%{_libdir}/libopencv_photo.so.2.4*
+%{_libdir}/libopencv_video.so.2.4*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/opencv
 %{_includedir}/opencv2
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/opencv.pc
-# own cmake dir avoiding dep on cmake
-%{_libdir}/cmake/
-
+%dir %{_libdir}/OpenCV/
+%{_libdir}/OpenCV/*.cmake
 
 %files devel-docs
-%defattr(-,root,root,-)
-%doc doc/opencv_tutorials.pdf
 %doc doc/*.{htm,png,jpg}
 %doc %{_datadir}/OpenCV/samples
-%doc %{_datadir}/opencv/samples
 
 %files python
-%defattr(-,root,root,-)
-%{python_sitearch}/cv.py*
-%{python_sitearch}/cv2.so
-
+%{python2_sitearch}/cv.py*
+%{python2_sitearch}/cv2.so
 
 %changelog
-* Sat May 03 2014 Liu Di <liudidi@gmail.com> - 2.4.3-4
-- 为 Magic 3.0 重建
+* Sat Apr 26 2014 Rex Dieter <rdieter@fedoraproject.org> 2.4.7-6
+- revert pkgcmake2 patch (#1070428)
+
+* Fri Jan 17 2014 Nicolas Chauvet <kwizart@gmail.com> - 2.4.7-5
+- Fix opencv_ocl isn't part of -core
+
+* Thu Jan 16 2014 Christopher Meng <rpm@cicku.me> - 2.4.7-4
+- Enable OpenCL support.
+- SPEC small cleanup.
+
+* Wed Nov 27 2013 Rex Dieter <rdieter@fedoraproject.org> 2.4.7-3
+- rebuild (openexr)
+
+* Mon Nov 18 2013 Rex Dieter <rdieter@fedoraproject.org> 2.4.7-2
+- OpenCV cmake configuration broken (#1031312)
+
+* Wed Nov 13 2013 Nicolas Chauvet <kwizart@gmail.com> - 2.4.7-1
+- Update to 2.4.7
+
+* Sun Sep 08 2013 Rex Dieter <rdieter@fedoraproject.org> 2.4.6.1-2
+- rebuild (openexr)
+
+* Wed Jul 24 2013 Nicolas Chauvet <kwizart@gmail.com> - 2.4.6.1-1
+- Update to 2.4.6.1
+
+* Thu May 23 2013 Nicolas Chauvet <kwizart@gmail.com> - 2.4.5-1
+- Update to 2.4.5-clean
+- Spec file clean-up
+- Split core libraries into a sub-package
+
+* Sat May 11 2013 François Cami <fcami@fedoraproject.org> - 2.4.4-3
+- change project URL.
+
+* Tue Apr 02 2013 Tom Callaway <spot@fedoraproject.org> - 2.4.4-2
+- make clean source without SIFT/SURF
+
+* Sat Mar 23 2013 Nicolas Chauvet <kwizart@gmail.com> - 2.4.4-1
+- Update to 2.4.4a
+- Fix ttb-devel architecture conditionals
+
+* Sun Mar 10 2013 Rex Dieter <rdieter@fedoraproject.org> 2.4.4-0.2.beta
+- rebuild (OpenEXR)
+
+* Mon Feb 18 2013 Nicolas Chauvet <kwizart@gmail.com> - 2.4.4-0.1.beta
+- Update to 2.4.4 beta
+- Drop python-imaging also from requires
+- Drop merged patch for additionals codecs
+- Disable the java binding for now (untested)
+
+* Fri Jan 25 2013 Honza Horak <hhorak@redhat.com> - 2.4.3-7
+- Do not build with 1394 libs in rhel
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 2.4.3-6
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Sun Jan 20 2013 Nicolas Chauvet <kwizart@gmail.com> - 2.4.3-5
+- Add more FourCC for gstreamer - rhbz#812628
+- Allow to use python-pillow - rhbz#895767
 
 * Mon Nov 12 2012 Nicolas Chauvet <kwizart@gmail.com> - 2.4.3-3
 - Switch Build Type to ReleaseWithDebInfo to avoid -03
@@ -242,7 +319,7 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Mon Jul 09 2012 Honza Horak <kwizart@gmail.com> - 2.4.2-1
+* Mon Jul 09 2012 Honza Horak <hhorak@redhat.com> - 2.4.2-1
 - Update to 2.4.2
 
 * Fri Jun 29 2012 Honza Horak <hhorak@redhat.com> - 2.4.1-2
@@ -322,7 +399,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Apr 13 2010 Karel Klic <kklic@redhat.com> - 2.0.0-10
 - Fix nonstandard executable permissions
 
-* Mon Mar 09 2010 Karel Klic <kklic@redhat.com> - 2.0.0-9
+* Tue Mar 09 2010 Karel Klic <kklic@redhat.com> - 2.0.0-9
 - apply the previously added patch
 
 * Mon Mar 08 2010 Karel Klic <kklic@redhat.com> - 2.0.0-8
@@ -362,10 +439,10 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Sep 10 2009 Karsten Hopp <karsten@redhat.com> - 1.1.0-0.7.pre1
 - fix build on s390x where we don't have libraw1394 and devel
 
-* Fri Jul 30 2009 Haïkel Guémar <karlthered@gmail.com> - 1.1.0.0.6.pre1
+* Thu Jul 30 2009 Haïkel Guémar <karlthered@gmail.com> - 1.1.0.0.6.pre1
 - Fix typo I introduced that prevented build on i386/i586
 
-* Fri Jul 30 2009 Haïkel Guémar <karlthered@gmail.com> - 1.1.0.0.5.pre1
+* Thu Jul 30 2009 Haïkel Guémar <karlthered@gmail.com> - 1.1.0.0.5.pre1
 - Added 1394 libs and unicap support
 
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-0.4.pre1
