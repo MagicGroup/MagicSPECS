@@ -1,0 +1,11 @@
+--- kmess-libisf-qt/src/CMakeLists.txt.orig	2014-05-24 03:14:36.892249853 +0000
++++ kmess-libisf-qt/src/CMakeLists.txt	2014-05-24 03:15:02.633473970 +0000
+@@ -69,7 +69,7 @@
+ # Do not install the library if we're bundling it in KMess
+ IF( NOT ISFQT_IS_BUNDLED )
+   INSTALL( TARGETS isf-qt LIBRARY
+-          DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"            )
++          DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64"          )
+   INSTALL( FILES ${ISFQT_PUBLIC_HEADERS}
+           DESTINATION "${CMAKE_INSTALL_PREFIX}/include/isf-qt" )
+ ENDIF()
