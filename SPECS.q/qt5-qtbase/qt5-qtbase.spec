@@ -1,6 +1,6 @@
 # See http://bugzilla.redhat.com/223663
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le mips64el
-%define multilib_basearchs x86_64 ppc64 s390x sparc64 ppc64le mips64el
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le
+%define multilib_basearchs x86_64 ppc64 s390x sparc64 ppc64le
 
 # support qtchooser (adds qtchooser .conf file)
 %define qtchooser 1
@@ -21,19 +21,19 @@
 
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
-Version: 5.2.1
-Release: 14%{?dist}
+Version: 5.3.0
+Release: 4%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?snap:1}
-Source0: http://download.qt-project.org/snapshots/qt/5.2/%{version}-%{pre}/%{snap}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/snapshots/qt/5.3/%{version}-%{pre}/%{snap}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 %endif
 
@@ -45,21 +45,11 @@ Source5: qconfig-multilib.h
 # QT_XCB_FORCE_SOFTWARE_OPENGL for them
 Source6: 10-qt5-check-opengl2.sh
 
-# help build on some lowmem archs, e.g. drop hard-coded -O3 optimization on some files
-Patch1: qtbase-opensource-src-5.0.2-lowmem.patch
-
 # support multilib optflags
 Patch2: qtbase-multilib_optflags.patch
 
-# qatomic on ppc/ppc64, http://bugzilla.redhat.com/1005482
-Patch3: qtbase-qatomic-ppc.patch
-
 # fix QTBUG-35459 (too low entityCharacterLimit=1024 for CVE-2013-4549)
 Patch4: qt-everywhere-opensource-src-4.8.5-QTBUG-35459.patch
-
-# add a QT_XCB_FORCE_SOFTWARE_OPENGL environment variable to allow forcing
-# LIBGL_ALWAYS_SOFTWARE (llvmpipe) for Qt 5 apps only
-Patch6: qtbase-opensource-src-5.2.0-allow-forcing-llvmpipe.patch
 
 # unconditionally enable freetype lcdfilter support
 Patch12: qtbase-opensource-src-5.2.0-enable_ft_lcdfilter.patch
@@ -71,13 +61,6 @@ Patch12: qtbase-opensource-src-5.2.0-enable_ft_lcdfilter.patch
 Patch50: qt5-poll.patch
 
 ##upstream patches
-
-## security patches
-# https://bugreports.qt-project.org/browse/QTBUG-38367
-Patch200: qtbase-opensource-src-5.2.1-QTBUG-38367.patch
-
-#mips64el
-Patch300: qt5-mips64el-fix.patch
 
 # macros
 %define _qt5 %{name}
@@ -122,9 +105,15 @@ BuildRequires: pkgconfig(libudev)
 BuildRequires: pkgconfig(NetworkManager)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libpulse) pkgconfig(libpulse-mainloop-glib)
-%if 0%{?fedora}
-BuildRequires: pkgconfig(xkbcommon)
+%if 0%{?fedora} > 20
+BuildRequires: pkgconfig(xkbcommon) >= 0.4.1
+BuildRequires: pkgconfig(xkbcommon-x11) >= 0.4.1
+%global xkbcommon -system-xkbcommon
+%else
+Provides: bundled(libxkbcommon) = 0.4.1
+%global xkbcommon -qt-xkbcommon
 %endif
+BuildRequires: pkgconfig(xkeyboard-config)
 %if 0%{?fedora} || 0%{?rhel} > 6
 %define egl 1
 BuildRequires: pkgconfig(atspi-2)
@@ -232,13 +221,6 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %description postgresql 
 %{summary}.
 
-%package sqlite2
-Summary: Sqlite2 driver for Qt5's SQL classes
-BuildRequires: sqlite2-devel
-Requires: %{name}%{?_isa} = %{version}-%{release}
-%description sqlite2
-%{summary}.
-
 %if "%{?tds}" != "-no-sql-tds"
 %package tds
 Summary: TDS driver for Qt5's SQL classes
@@ -272,27 +254,13 @@ Qt5 libraries used for drawing widgets and OpenGL items.
 # drop backup file(s), else they get installed too, http://bugzilla.redhat.com/639463
 rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 
-%patch3 -p1 -b .qatomic-ppc
 %patch4 -p1 -b .QTBUG-35459
-%patch6 -p1 -b .allow-forcing-llvmpipe
 %patch12 -p1 -b .enable_ft_lcdfilter
 
 #patch50 -p1 -b .poll
 
-%patch200 -p1 -b .QTBUG-38367
-
-# mips64el only
-%ifarch mips64el
-%patch300 -p1 -b .mips64el
-%endif
-
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
-
-# lowmem hacks
-#ifarch %{arm} s390
-%patch1 -p1 -b .lowmem
-#endif
 
 %define platform linux-g++
 %ifarch %{multilib_archs}
@@ -322,6 +290,7 @@ popd
 
 %build
 
+# limit -reduce-relocations to %%ix86 x86_64 archs, https://bugreports.qt-project.org/browse/QTBUG-36129
 ./configure -v \
   -confirm-license \
   -opensource \
@@ -356,13 +325,16 @@ popd
   -no-rpath \
   -no-separate-debug-info \
   -no-strip \
+%ifarch %{ix86} x86_64
   -reduce-relocations \
+%endif
   %{?harfbuzz} \
   -system-libjpeg \
   -system-libpng \
   %{?pcre} \
   %{?sqlite} \
   %{?tds} \
+  %{?xkbcommon} \
   -system-zlib
 
 make %{?_smp_mflags}
@@ -501,7 +473,7 @@ popd
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-%files 
+%files
 %doc LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt
 %if 0%{?qtchooser}
 # not editable config files, so not using %%config here
@@ -569,6 +541,7 @@ popd
 %{_bindir}/rcc*
 %{_bindir}/syncqt*
 %{_bindir}/uic*
+%{_bindir}/qlalr
 %{_qt5_bindir}/moc*
 %{_qt5_bindir}/qdbuscpp2xml*
 %{_qt5_bindir}/qdbusxml2cpp*
@@ -577,6 +550,7 @@ popd
 %{_qt5_bindir}/rcc*
 %{_qt5_bindir}/syncqt*
 %{_qt5_bindir}/uic*
+%{_qt5_bindir}/qlalr
 %if "%{_qt5_headerdir}" != "%{_includedir}"
 %dir %{_qt5_headerdir}
 %endif
@@ -657,9 +631,6 @@ popd
 %files examples
 %{_qt5_examplesdir}/
 
-%files sqlite2
-%{_qt5_plugindir}/sqldrivers/libqsqlite2.so
-
 %if "%{?ibase}" != "-no-sql-ibase"
 %files ibase
 %{_qt5_plugindir}/sqldrivers/libqsqlibase.so
@@ -709,26 +680,20 @@ popd
 %{_qt5_plugindir}/platforms/libqxcb.so
 %{_qt5_plugindir}/platformthemes/libqgtk2.so
 %{_qt5_plugindir}/printsupport/libcupsprintersupport.so
-%{_qt5_plugindir}/platforms/libqdirectfb.so
+
 
 %changelog
-* Fri May 16 2014 Liu Di <liudidi@gmail.com> - 5.2.1-14
-- 为 Magic 3.0 重建
+* Fri May 23 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.0-4
+- -system-libxkbcommon (f21+)
 
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-13
-- 为 Magic 3.0 重建
+* Thu May 22 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.0-3
+- qt5-qtbase-5.3.0-2.fc21 breaks keyboard input (#1100213)
 
-* Mon May 05 2014 Liu Di <liudidi@gmail.com> - 5.2.1-12
-- 为 Magic 3.0 重建
+* Wed May 21 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.0-2
+- limit -reduce-relocations to %%ix86 x86_64 archs (QTBUG-36129)
 
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-11
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-10
-- 为 Magic 3.0 重建
-
-* Sun May 04 2014 Liu Di <liudidi@gmail.com> - 5.2.1-9
-- 为 Magic 3.0 重建
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
 
 * Thu Apr 24 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-8
 - DoS vulnerability in the GIF image handler (QTBUG-38367)
