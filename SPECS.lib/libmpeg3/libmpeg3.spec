@@ -58,7 +58,7 @@ LibMPEG3解码许多MPEG标准派生出的标准到未压缩数据以便于编�
 %setup
 #%patch0 -p1 -b .makefile
 %ifarch mips64el
-%patch0 -p1 -b .mips
+%patch1 -p1 -b .mips
 %endif
 
 %build

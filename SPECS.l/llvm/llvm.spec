@@ -17,7 +17,7 @@
   %bcond_with gold
 %endif
 # lldb not ported to anything but x86 so far.
-%ifarch x86_64 %{ix86}
+%ifarch x86_64 %{ix86} mips64el
   %bcond_without lldb
 %else
   %bcond_with lldb

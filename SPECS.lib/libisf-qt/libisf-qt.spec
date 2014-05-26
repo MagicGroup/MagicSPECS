@@ -9,6 +9,7 @@ Packager:      gil <puntogil@libero.it>
 URL:           http://kmess.org/projects/isf-qt/
 # http://gitorious.org/kmess/libisf-qt/trees/master
 Source:        kmess-libisf-qt-master.tar.gz
+Patch0:       libisf-qt-lib64-dir.patch
 License:       LGPL
 BuildRequires: cmake
 ## AUTOBUILDREQ-BEGIN
@@ -40,6 +41,9 @@ This package contains static libraries and header files need for development.
 
 %prep
 %setup -q -n kmess-%{name}
+%ifarch mips64el
+%patch0 -p1
+%endif
 
 %build
 mkdir build
