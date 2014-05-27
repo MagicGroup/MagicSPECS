@@ -1,0 +1,163 @@
+From b3f6d615ce53310bd05622492357cc06c7e875c6 Mon Sep 17 00:00:00 2001
+From: Jakub Filak <jfilak@redhat.com>
+Date: Mon, 28 Apr 2014 14:00:14 +0200
+Subject: [LIBREPORT PATCH 04/10] define priorities for the existing workflows
+
+Related to #259
+
+Signed-off-by: Jakub Filak <jfilak@redhat.com>
+---
+ src/workflows/workflow_AnacondaFedora.xml.in       | 1 +
+ src/workflows/workflow_AnacondaRHEL.xml.in         | 1 +
+ src/workflows/workflow_AnacondaRHELBugzilla.xml.in | 1 +
+ src/workflows/workflow_RHELCCpp.xml.in             | 1 +
+ src/workflows/workflow_RHELJava.xml.in             | 1 +
+ src/workflows/workflow_RHELKerneloops.xml.in       | 1 +
+ src/workflows/workflow_RHELLibreport.xml.in        | 1 +
+ src/workflows/workflow_RHELPython.xml.in           | 1 +
+ src/workflows/workflow_RHELvmcore.xml.in           | 1 +
+ src/workflows/workflow_RHELxorg.xml.in             | 1 +
+ src/workflows/workflow_Upload.xml.in               | 3 ++-
+ 11 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/src/workflows/workflow_AnacondaFedora.xml.in b/src/workflows/workflow_AnacondaFedora.xml.in
+index 6322d9a..5deab24 100644
+--- a/src/workflows/workflow_AnacondaFedora.xml.in
++++ b/src/workflows/workflow_AnacondaFedora.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report a bug to Fedora maintainers</_name>
+     <_description>Process the report using the Fedora infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>report_Bugzilla</event>
+diff --git a/src/workflows/workflow_AnacondaRHEL.xml.in b/src/workflows/workflow_AnacondaRHEL.xml.in
+index 4400546..ef4f658 100644
+--- a/src/workflows/workflow_AnacondaRHEL.xml.in
++++ b/src/workflows/workflow_AnacondaRHEL.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report a bug to Red Hat Customer Portal</_name>
+     <_description>Process the report using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>report_RHTSupport</event>
+diff --git a/src/workflows/workflow_AnacondaRHELBugzilla.xml.in b/src/workflows/workflow_AnacondaRHELBugzilla.xml.in
+index fd7853f..e2f8b57 100644
+--- a/src/workflows/workflow_AnacondaRHELBugzilla.xml.in
++++ b/src/workflows/workflow_AnacondaRHELBugzilla.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report a bug to Red Hat Bugzilla</_name>
+     <_description>Process the report using the Red Hat infrastructure</_description>
++    <priority>98</priority>
+ 
+     <events>
+         <event>report_Bugzilla</event>
+diff --git a/src/workflows/workflow_RHELCCpp.xml.in b/src/workflows/workflow_RHELCCpp.xml.in
+index 4d0251a..a6df6eb 100644
+--- a/src/workflows/workflow_RHELCCpp.xml.in
++++ b/src/workflows/workflow_RHELCCpp.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report to Red Hat Customer Portal</_name>
+     <_description>Process the C/C++ crash using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>collect_*</event>
+diff --git a/src/workflows/workflow_RHELJava.xml.in b/src/workflows/workflow_RHELJava.xml.in
+index 23ef0cb..2adc4b7 100644
+--- a/src/workflows/workflow_RHELJava.xml.in
++++ b/src/workflows/workflow_RHELJava.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report to Red Hat Customer Portal</_name>
+     <_description>Process the Java exception using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>collect_*</event>
+diff --git a/src/workflows/workflow_RHELKerneloops.xml.in b/src/workflows/workflow_RHELKerneloops.xml.in
+index 941a898..d8d3b18 100644
+--- a/src/workflows/workflow_RHELKerneloops.xml.in
++++ b/src/workflows/workflow_RHELKerneloops.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report to Red Hat Customer Portal</_name>
+     <_description>Process the kerneloops using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>collect_*</event>
+diff --git a/src/workflows/workflow_RHELLibreport.xml.in b/src/workflows/workflow_RHELLibreport.xml.in
+index b8b4f04..e76bf13 100644
+--- a/src/workflows/workflow_RHELLibreport.xml.in
++++ b/src/workflows/workflow_RHELLibreport.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report to Red Hat Customer Portal</_name>
+     <_description>Process the problem using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>report_RHTSupport</event>
+diff --git a/src/workflows/workflow_RHELPython.xml.in b/src/workflows/workflow_RHELPython.xml.in
+index ee1c4e7..15a8978 100644
+--- a/src/workflows/workflow_RHELPython.xml.in
++++ b/src/workflows/workflow_RHELPython.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report to Red Hat Customer Portal</_name>
+     <_description>Process the python exception using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>collect_*</event>
+diff --git a/src/workflows/workflow_RHELvmcore.xml.in b/src/workflows/workflow_RHELvmcore.xml.in
+index f2a775d..3984129 100644
+--- a/src/workflows/workflow_RHELvmcore.xml.in
++++ b/src/workflows/workflow_RHELvmcore.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report to Red Hat Customer Portal</_name>
+     <_description>Process the kernel crash using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>collect_*</event>
+diff --git a/src/workflows/workflow_RHELxorg.xml.in b/src/workflows/workflow_RHELxorg.xml.in
+index 13697b9..55cd88d 100644
+--- a/src/workflows/workflow_RHELxorg.xml.in
++++ b/src/workflows/workflow_RHELxorg.xml.in
+@@ -2,6 +2,7 @@
+ <workflow>
+     <_name>Report to Red Hat Customer Portal</_name>
+     <_description>Process the X Server problem using the Red Hat infrastructure</_description>
++    <priority>99</priority>
+ 
+     <events>
+         <event>report_RHTSupport</event>
+diff --git a/src/workflows/workflow_Upload.xml.in b/src/workflows/workflow_Upload.xml.in
+index 3965f99..7f22cb8 100644
+--- a/src/workflows/workflow_Upload.xml.in
++++ b/src/workflows/workflow_Upload.xml.in
+@@ -2,10 +2,11 @@
+ <workflow>
+     <_name>Upload the problem data to a server</_name>
+     <_description>Analyze the problem locally and upload the data via scp or ftp</_description>
++    <priority>-99</priority>
+ 
+     <events>
+         <event>collect_*</event>
+         <event>analyze_CCpp</event>
+         <event>report_Uploader</event>
+     </events>
+-</workflow>
+\ No newline at end of file
++</workflow>
+-- 
+1.8.3.1
+
