@@ -4,7 +4,7 @@
 Summary:	Qt library to start applications only once per user
 Name:		qtsingleapplication
 Version:	2.6.1
-Release:	8%{?dist}
+Release:	9%{?dist}
 Group:		System Environment/Libraries
 License:	GPLv3 or LGPLv2 with exceptions
 URL:		http://qt.nokia.com/products/appdev/add-on-products/catalog/4/Utilities/qtsingleapplication
@@ -97,18 +97,18 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 
 # libraries
-mkdir -p $RPM_BUILD_ROOT%{_qt4_libdir}
-cp -a lib/* $RPM_BUILD_ROOT%{_qt4_libdir}
-chmod 755 $RPM_BUILD_ROOT%{_qt4_libdir}/*.so.*.*.*
+mkdir -p $RPM_BUILD_ROOT%{_libdir}
+cp -a lib/* $RPM_BUILD_ROOT%{_libdir}
+chmod 755 $RPM_BUILD_ROOT%{_libdir}/*.so.*.*.*
 
 # headers
-mkdir -p $RPM_BUILD_ROOT%{_qt4_headerdir}/QtSolutions
+mkdir -p $RPM_BUILD_ROOT%{_includedir}/QtSolutions
 cp -a \
     src/qtsingleapplication.h \
     src/QtSingleApplication \
     src/qtsinglecoreapplication.h \
     src/QtSingleCoreApplication \
-    $RPM_BUILD_ROOT%{_qt4_headerdir}/QtSolutions
+    $RPM_BUILD_ROOT%{_includedir}/QtSolutions
 
 mkdir -p $RPM_BUILD_ROOT%{_qt4_datadir}/mkspecs/features
 cp -a %{SOURCE1} %{SOURCE2} $RPM_BUILD_ROOT%{_qt4_datadir}/mkspecs/features/
@@ -152,6 +152,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_qt4_datadir}/mkspecs/features/qtsinglecoreapplication.prf
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
