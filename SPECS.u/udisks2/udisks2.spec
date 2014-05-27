@@ -7,7 +7,7 @@
 
 Summary: Disk Manager
 Name: udisks2
-Version: 2.1.2
+Version: 2.1.3
 Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
@@ -154,6 +154,13 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 
 # Note: please don't forget the %{?dist} in the changelog. Thanks
 %changelog
+* Thu Mar 27 2014 Tomas Bzatek <tbzatek@redhat.com> - 2.1.3-1%{?dist}
+- Update to 2.1.3
+
+* Mon Mar 10 2014 Jan Safranek <jsafrane@redhat.com>- 2.1.2-2%{?dist}
+- Fix CVE-2014-0004: stack-based buffer overflow when handling long path names
+  (#1074459)
+
 * Wed Jan 15 2014 Tomas Bzatek <tbzatek@redhat.com> - 2.1.2-1%{?dist}
 - Update to 2.1.2
 
