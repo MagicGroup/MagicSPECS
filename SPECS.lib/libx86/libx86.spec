@@ -10,7 +10,7 @@ Source0:        http://www.codon.org.uk/~mjg59/libx86/downloads/%{name}-%{versio
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # does not build on ppc, ppc64 and s390* yet, due to the lack of port i/o
 # redirection and video routing
-ExcludeArch:    ppc ppc64 s390 s390x %{sparc}
+ExcludeArch:    ppc ppc64 s390 s390x %{sparc} mips64el
 
 Patch0: libx86-add-pkgconfig.patch
 Patch1: libx86-mmap-offset.patch
