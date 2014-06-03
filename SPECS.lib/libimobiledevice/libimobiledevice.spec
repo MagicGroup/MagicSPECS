@@ -16,6 +16,7 @@ Group:         System Environment/Libraries
 License:       LGPLv2+
 URL:           http://www.libimobiledevice.org/
 Source0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
+Patch0:        libimobiledevice-1.1.5-fix-cythpn-lockdown.pxi.patch
 
 BuildRequires: glib2-devel
 BuildRequires: gnutls-devel
@@ -52,6 +53,7 @@ Python bindings for libimobiledevice.
 
 %prep
 %setup -q
+%patch0 -p1
 
 # Fix dir permissions on html docs
 chmod +x docs/html

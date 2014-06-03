@@ -19,6 +19,7 @@ Source0: http://xorg.freedesktop.org/archive/individual/lib/%{name}-%{version}.t
 %endif
 
 Patch2: dont-forward-keycode-0.patch
+Patch3: libX11-remove-unneed-srcdir.patch
 BuildRequires: xorg-x11-util-macros >= 1.11
 BuildRequires: pkgconfig(xproto) >= 7.0.15
 BuildRequires: xorg-x11-xtrans-devel >= 1.0.3-4
@@ -50,6 +51,7 @@ X.Org X11 libX11 development package
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 %patch2 -p1 -b .dont-forward-keycode-0
+%patch3 -p1 -b .fix-unneed-srcdir
 
 %build
 # sodding libtool
