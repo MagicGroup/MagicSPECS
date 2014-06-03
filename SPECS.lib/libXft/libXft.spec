@@ -1,7 +1,7 @@
 Summary: X.Org X11 libXft runtime library
 Name: libXft
 Version: 2.3.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Xft.3*
 
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 2.3.1-7
+- 为 Magic 3.0 重建
+
 * Sat Apr 12 2014 Dennis Gilmore <dennis @ausil.us> - 2.3.1-6
 - add patch to fix FTBFS due to freetype changes
 
