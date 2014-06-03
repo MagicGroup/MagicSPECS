@@ -1,18 +1,21 @@
 %ifarch %{arm}
 %global with_neon --enable-neon
 %endif
+%define svn 1
+%define vcsdate 20140603
 
 
 Name:		libyuv
 Summary:	YUV conversion and scaling functionality library
 Version:	0
-Release:	0.15.20121001svn389%{?dist}
+Release:	0.svn%{vcsdate}%{?dist}.5
 License:	BSD
 Group:		Development/Libraries
 Url:		http://code.google.com/p/libyuv/
 ## svn -r 389 export http://libyuv.googlecode.com/svn/trunk libyuv-0
 ## tar -cjvf libyuv-0.tar.bz2 libyuv-0
-Source0:	%{name}-%{version}.tar.bz2
+Source0:	%{name}-svn%{vcsdate}.tar.xz
+Source1:	make_libyuv_svn_package.sh
 # Fedora-specific. Upstream isn't interested in this.
 Patch1:		libyuv-0001-Initial-autotools-support.patch
 BuildRequires:	autoconf
@@ -43,13 +46,13 @@ Additional header files for development with %{name}.
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-svn%{vcsdate}
 %patch1 -p1 -b .autotools
 
 
 %build
 sh autogen.sh
-%configure --disable-static --with-pic --with-test --with-mjpeg %{?with_neon}
+%configure --disable-static --with-pic --without-test --with-mjpeg %{?with_neon}
 make %{?_smp_mflags}
 
 
@@ -86,6 +89,24 @@ make check
 
 
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.5
+- 为 Magic 3.0 重建
+
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.4
+- 为 Magic 3.0 重建
+
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.3
+- 为 Magic 3.0 重建
+
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.2
+- 为 Magic 3.0 重建
+
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20140603.1
+- 更新到 20140603 日期的仓库源码
+
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0-0.svn20121001.1
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0-0.15.20121001svn389
 - 为 Magic 3.0 重建
 
