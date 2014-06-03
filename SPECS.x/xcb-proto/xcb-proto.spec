@@ -2,8 +2,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(0)")}
 
 Name:           xcb-proto
-Version:        1.8
-Release:        2%{?dist}
+Version:        1.10
+Release:        1%{?dist}
 Summary:        XCB protocol descriptions
 
 Group:          Development/Libraries
@@ -46,6 +46,15 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/xcbgen
 
 %changelog
+* Fri Jan 17 2014 Adam Jackson <ajax@redhat.com> 1.10-1
+- xcb-proto 1.10
+
+* Mon Dec 02 2013 Adam Jackson <ajax@redhat.com> 1.9-1
+- xcb-proto 1.9
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
