@@ -1,6 +1,8 @@
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 Name:           libxcb
-Version:        1.9
-Release:        2%{?dist}
+Version:        1.10
+Release:        1%{?dist}
 Summary:        A C binding to the X11 protocol
 
 Group:          System Environment/Libraries
@@ -14,12 +16,15 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # the pkgconfig file so libs that link against libxcb know this...
 Source1:	pthread-stubs.pc.in
 
+# http://cgit.freedesktop.org/xcb/libxcb/patch/?id=3b72a2c9d1d656c74c691a45689e1d637f669e3a
+Patch0:		0001-Force-XCB-event-structures-with-64-bit-extended-fiel.patch
+
 BuildRequires:  autoconf automake libtool pkgconfig
 BuildRequires:  doxygen
 BuildRequires:  graphviz
 BuildRequires:  libXau-devel
 BuildRequires:  libxslt
-BuildRequires:  xcb-proto >= 1.7-3
+BuildRequires:  xcb-proto >= 1.10
 BuildRequires:  xorg-x11-proto-devel
 BuildRequires:  xorg-x11-util-macros
 
@@ -48,18 +53,19 @@ The %{name}-doc package contains documentation for the %{name} library.
 
 %prep
 %setup -q 
+%patch0 -p1
 
 %build
 sed -i 's/pthread-stubs //' configure.ac
 autoreconf -v --install
-%configure --disable-static --docdir=%{_datadir}/doc/%{name}-%{version} \
+%configure --disable-static --docdir=%{_pkgdocdir} \
 	   --enable-selinux --enable-xkb --disable-xprint
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-install -m 644 COPYING NEWS README $RPM_BUILD_ROOT/%{_datadir}/doc/%{name}-%{version}
+install -pm 644 COPYING NEWS README $RPM_BUILD_ROOT%{_pkgdocdir}
 sed 's,@libdir@,%{_libdir},;s,@prefix@,%{_prefix},;s,@exec_prefix@,%{_exec_prefix},' %{SOURCE1} > $RPM_BUILD_ROOT%{_libdir}/pkgconfig/pthread-stubs.pc
 
 find $RPM_BUILD_ROOT -name '*.la' -delete
@@ -76,7 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libxcb-damage.so.0*
 %{_libdir}/libxcb-dpms.so.0*
 %{_libdir}/libxcb-dri2.so.0*
+%{_libdir}/libxcb-dri3.so.0*
 %{_libdir}/libxcb-glx.so.0*
+%{_libdir}/libxcb-present.so.0*
 %{_libdir}/libxcb-randr.so.0*
 %{_libdir}/libxcb-record.so.0*
 %{_libdir}/libxcb-render.so.0*
@@ -84,12 +92,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libxcb-screensaver.so.0*
 %{_libdir}/libxcb-shape.so.0*
 %{_libdir}/libxcb-shm.so.0*
-%{_libdir}/libxcb-sync.so.0*
+%{_libdir}/libxcb-sync.so.1*
 %{_libdir}/libxcb-xevie.so.0*
 %{_libdir}/libxcb-xf86dri.so.0*
 %{_libdir}/libxcb-xfixes.so.0*
 %{_libdir}/libxcb-xinerama.so.0*
-%{_libdir}/libxcb-xkb.so.0*
+%{_libdir}/libxcb-xkb.so.1*
 %{_libdir}/libxcb-xselinux.so.0*
 %{_libdir}/libxcb-xtest.so.0*
 %{_libdir}/libxcb-xv.so.0*
@@ -105,9 +113,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-,root,root,-)
-%{_datadir}/doc/%{name}-%{version}
+%{_pkgdocdir}
 
 %changelog
+* Mon Jan 27 2014 Adam Jackson <ajax@redhat.com> 1.10-1
+- libxcb 1.10 plus one. Updated ABIs: sync, xkb. New libs: dri3, present.
+
+* Tue Aug  6 2013 Ville Skyttä <ville.skytta@iki.fi> - 1.9.1-3
+- Install docs to %%{_pkgdocdir} where available.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri May 31 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.9.1-1
+- libxcb 1.9.1
+
+* Fri May 24 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.9-3
+- Fix integer overflow in read_packet (CVE-2013-2064)
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
@@ -131,116 +154,3 @@ rm -rf $RPM_BUILD_ROOT
 
 * Wed Jan 11 2012 Adam Jackson <ajax@redhat.com> 1.8-1
 - libxcb 1.8
-
-* Thu Jun 23 2011 Adam Jackson <ajax@redhat.com> 1.7-3
-- libxcb-1.7-xts-fixes.patch: Backport some XTS5 fixes from git.
-
-* Tue Feb 08 2011 Adam Jackson <ajax@redhat.com> 1.7-2
-- Fix FTBFS.
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Thu Aug 26 2010 Adam Jackson <ajax@redhat.com> 1.7-2
-- Drop python bindings, nothing's using them.
-
-* Mon Aug 16 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.7-1
-- libxcb 1.7
-
-* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 1.5-3
-- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
-
-* Thu Jul 08 2010 Adam Jackson <ajax@redhat.com> 1.5-2
-- Include COPYING in base package too
-
-* Wed Jan 13 2010 Dave Airlie <airlied@redhat.com> 1.5-1
-- libxcb 1.5
-
-* Wed Dec 02 2009 Adam Jackson <ajax@redhat.com> 1.4-2
-- libxcb-1.4-keepalive.patch: setsockopt(SO_KEEPALIVE) for TCP (#476415)
-
-* Thu Aug 27 2009 Adam Jackson <ajax@redhat.com> 1.4-1
-- libxcb 1.4 (#518597)
-
-* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Tue Jul 14 2009 Adam Jackson <ajax@redhat.com> 1.3-1
-- libxcb 1.3
-- List DSO versions explicitly.
-- Don't package any xprint bits.  Seriously, no.
-
-* Mon Jul 13 2009 Adam Jackson <ajax@redhat.com> 1.2-8
-- Really fix xpyb build.
-
-* Mon Jul 06 2009 Adam Jackson <ajax@redhat.com> 1.2-7
-- Fix xpyb build
-
-* Mon Jun 29 2009 Adam Jackson <ajax@redhat.com> 1.2-6
-- BuildRequires: xcb-proto >= 1.5
-
-* Wed Jun 24 2009 Adam Jackson <ajax@redhat.com> 1.2-5
-- libxcb-1.2-no-nagle.patch: Disable Nagle's algorithm on TCP. (#442158)
-
-* Tue May 19 2009 Adam Jackson <ajax@redhat.com> 1.2-4
-- Add libxcb-python subpackage
-
-* Tue Apr 07 2009 Adam Jackson <ajax@redhat.com> 1.2-3
-- libxcb-1.2-to-git-6e2e87d.patch: Various updates from git, XID generation
-  being the most important.
-
-* Tue Feb 24 2009 Matthias Clasen <mclasen@redhat.com> 1.2-2
-- Make -doc noarch
-
-* Wed Feb 18 2009 Adam Jackson <ajax@redhat.com> 1.2-1
-- libxcb 1.2
-
-* Tue Feb 10 2009 Adam Jackson <ajax@redhat.com> 1.1.93-4
-- Fix selinux module build. (#474249)
-
-* Sun Feb 08 2009 Adam Jackson <ajax@redhat.com> 1.1.93-3
-- Remove aforementioned egregious hack.  Now I can sleep easier.
-
-* Thu Dec 18 2008 Adam Jackson <ajax@redhat.com> 1.1.93-2
-- Egregious hack to make the next libX11 build work.  Hands... won't come
-  clean...
-
-* Wed Dec 17 2008 Adam Jackson <ajax@redhat.com> 1.1.93-1
-- libxcb 1.1.93
-
-* Sun Oct 19 2008 Adam Jackson <ajax@redhat.com> 1.1.91-5
-- Add pthread-stubs.pc
-
-* Mon Oct 13 2008 Adam Jackson <ajax@redhat.com> 1.1.91-4
-- libxcb-1.1-abstract-socket.patch: Drop.
-- libxcb-1.1.91-git.patch: Update to git master.
-
-* Wed Sep 17 2008 Adam Jackson <ajax@redhat.com> 1.1.91-3
-- libxcb-1.1-xreply-leak.patch: Plug a memory leak in _XReply when the
-  caller has a non-fatal error handler. (mclasen, fdo #17616)
-
-* Thu Sep 11 2008 Adam Jackson <ajax@redhat.com> 1.1.91-2
-- Enable x-selinux bindings.
-
-* Wed Sep 10 2008 Adam Jackson <ajax@redhat.com> 1.1.91-1
-- libxcb 1.1.91
-
-* Tue Apr 22 2008 Adam Jackson <ajax@redhat.com> 1.1-4
-- libxcb-1.1-sloppy-lock.patch: Turn sloppy locking on all the time.  I'm
-  tired of fighting it. (#390261)
-
-* Mon Feb 18 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1.1-2
-- Autorebuild for GCC 4.3
-
-* Mon Nov 12 2007 Adam Jackson <ajax@redhat.com> 1.1-1
-- libxcb 1.1
-
-* Fri Aug 24 2007 Adam Jackson <ajax@redhat.com> 1.0-3
-- libxcb-1.0-abstract-socket.patch: When connecting to the X server, prefer
-  abstract-namespace unix sockets to filesystem-bound sockets.
-
-* Wed Aug 22 2007 Adam Jackson <ajax@redhat.com> - 1.0-2
-- Rebuild for PPC toolchain bug
-
-* Fri Jun 29 2007 Adam Jackson <ajax@redhat.com> 1.0-1
-- Initial revision.
