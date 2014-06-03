@@ -5,7 +5,7 @@
 Summary: Core X11 protocol client library
 Name: libX11
 Version: 1.6.1
-Release: 2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
@@ -19,7 +19,6 @@ Source0: http://xorg.freedesktop.org/archive/individual/lib/%{name}-%{version}.t
 %endif
 
 Patch2: dont-forward-keycode-0.patch
-Patch3: libX11-remove-unneed-srcdir.patch
 BuildRequires: xorg-x11-util-macros >= 1.11
 BuildRequires: pkgconfig(xproto) >= 7.0.15
 BuildRequires: xorg-x11-xtrans-devel >= 1.0.3-4
@@ -51,7 +50,6 @@ X.Org X11 libX11 development package
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 %patch2 -p1 -b .dont-forward-keycode-0
-%patch3 -p1 -b .fix-unneed-srcdir
 
 %build
 # sodding libtool
@@ -115,9 +113,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/*.5*
 
 %changelog
-* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.6.1-2
-- 为 Magic 3.0 重建
-
 * Tue Jul 30 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.6.1-1
 - libX11 1.6.1
 
