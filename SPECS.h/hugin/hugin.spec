@@ -1,7 +1,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 Summary: A panoramic photo stitcher and more
 Name: hugin
-Version: 2012.0.0
+Version:	2013.0.0
 Release: 5%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
@@ -84,6 +84,12 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_bindir}/icpfind
 %{_bindir}/calibrate_lens_gui
 %{_bindir}/autopano-noop.sh
+%{_bindir}/geocpset
+%{_bindir}/pto_lensstack
+%{_bindir}/pto_var
+%{_mandir}/man1/geocpset.1.gz
+%{_mandir}/man1/pto_lensstack.1.gz
+%{_mandir}/man1/pto_var.1.gz
 %{_libdir}/%{name}/libhuginbasewx.so*
 %{_libdir}/%{name}/libicpfindlib.so*
 %{_datadir}/%{name}/xrc
@@ -165,6 +171,9 @@ touch --no-create %{_datadir}/icons/gnome || :
 %{_mandir}/man1/pto_gen.*
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 2013.0.0-5
+- 更新到 2013.0.0
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2012.0.0-5
 - 更新到
 

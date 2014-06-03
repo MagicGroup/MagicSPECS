@@ -8,9 +8,9 @@
 Name:			kde4-kaffeine
 Version:			%{version}
 %if %{svn}
-Release:		0.%{date}_%{order}%{?dist}.1
+Release:		4.%{date}_%{order}%{?dist}
 %else
-Release:		%{order}%{?dist}
+Release:		4%{?dist}
 %endif
 Summary:		A xine-based Media Player for KDE
 Summary(zh_CN.UTF-8):	KDE 下基于 xine 引擎的媒体播放器
@@ -147,6 +147,9 @@ magic_rpm_clean.sh
 %{kde4_localedir}/*
 
 %changelog
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 1.2.2-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.2.2-2
 - 为 Magic 3.0 重建
 

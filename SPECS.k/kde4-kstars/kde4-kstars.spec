@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name kstars
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: Cantor for KDE Edu
-Summary(zh_CN.UTF-8): KDE Edu 的数学组件 
+Summary: Desktop Planetarium
+Summary(zh_CN.UTF-8): 桌面天文馆 
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
-URL: http://ktorrent.org
-Version: %{rversion}
-Release: 3%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+URL: http://www.kde.org
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -49,7 +48,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -95,6 +94,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.a
 
 %changelog
+* Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-3
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 url="http://sourceforge.net/projects/glew/"
 new1="glew-"
-new2="-win32.zip"
+new2=".tgz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

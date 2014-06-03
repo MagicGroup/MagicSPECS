@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name gwenview
 
@@ -11,9 +10,10 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 3%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -32,19 +32,6 @@ KTorrent 是一个 KDE 下的 BT 下载程序。它的主要特性有：
 上传速度控制；
 使用 BT 网页搜索引擎进行互联网搜索；
 支持 UDP Tracker 等。
-
-%package devel
-Summary: Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-
-%description devel
-Contains the development files.
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -81,15 +68,13 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/hicolor/*
 %{kde4_xdgappsdir}/*.desktop
 %{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_localedir}/*
 %{kde4_htmldir}/en/gwenview/*
-
-%files devel
-%defattr(-,root,root,-)
 %{kde4_libdir}/*.so
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-3
 - 为 Magic 3.0 重建
 

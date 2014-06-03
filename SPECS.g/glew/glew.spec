@@ -1,6 +1,6 @@
 Name:           glew
-Version:        1.9.0
-Release:        3%{?dist}
+Version:	1.10.0
+Release:        1%{?dist}
 Summary:        The OpenGL Extension Wrangler Library
 Summary(zh_CN.UTF-8): OpenGL 的扩展库
 Group:          System Environment/Libraries
@@ -9,7 +9,8 @@ License:        BSD and MIT
 URL:            http://glew.sourceforge.net
 
 Source0:        http://downloads.sourceforge.net/project/glew/glew/%{version}/glew-%{version}.tgz
-Patch0:         glew-1.9.0-makefile.patch
+Patch0:		0001-BUILD-respect-DESTDIR-variable.patch
+Patch1:         glew-1.9.0-makefile.patch
 BuildRequires:  libGLU-devel
 
 %description
@@ -59,18 +60,19 @@ libGLEWmx
 
 %prep
 %setup -q
-%patch0 -p1 -b .make
+%patch0 -p1 -b .bld
+%patch1 -p1 -b .make
 
-sed -i -e 's/\r//g' config/config.guess
+# update config.guess for new arch support
+cp /usr/lib/rpm/magic/config.guess config/
 
 %build
 
-make %{?_smp_mflags} CFLAGS.EXTRA="$RPM_OPT_FLAGS" includedir=%{_includedir} GLEW_DEST= STRIP= libdir=%{_libdir} bindir=%{_bindir}
+make %{?_smp_mflags} CFLAGS.EXTRA="$RPM_OPT_FLAGS -fPIC" includedir=%{_includedir} GLEW_DEST= STRIP= libdir=%{_libdir} bindir=%{_bindir} GLEW_DEST=
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install.all GLEW_DEST="$RPM_BUILD_ROOT" libdir=%{_libdir} bindir=%{_bindir} includedir=%{_includedir}
-rm -f $RPM_BUILD_ROOT%{_libdir}/libGLEW.a $RPM_BUILD_ROOT%{_libdir}/libGLEWmx.a
+make install.all GLEW_DEST= DESTDIR="$RPM_BUILD_ROOT" libdir=%{_libdir} bindir=%{_bindir} includedir=%{_includedir}
+find $RPM_BUILD_ROOT -type f -name "*.a" -delete
 # sigh
 chmod 0755 $RPM_BUILD_ROOT%{_libdir}/*.so*
 magic_rpm_clean.sh
@@ -111,10 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*
 
 %changelog
-* Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
-- 更新到
-
-* Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 1.10.0-1
 - 更新到 1.10.0
 
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.0-3

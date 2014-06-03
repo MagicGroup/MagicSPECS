@@ -1,0 +1,5 @@
+[all32]
+name=Magic-3.0 - All32
+repo=all32
+baseurl=http://apt.linuxfans.org/magic/3.0/i686
+gpgcheck=0

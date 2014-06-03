@@ -1,4 +1,3 @@
-%define rversion 1.4
 #define svn_number 971668
 %define betatag %{nil}
 %define real_name konversation
@@ -12,14 +11,11 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://konversation.kde.org
-Version: %{rversion}
-#Release: 0.svn%svn_number.1%{?dist}
-Release: 3%{?dist}
-Source0: http://mirrors.ustc.edu.cn/kde/stable/%{name}/1.4/src/%{real_name}-%{version}.tar.xz
+Version: 1.5
+Release: 2%{?dist}
+Source0: http://download.kde.org/stable/%{real_name}/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-#Provides: konversation = %{version}
 
 BuildRequires: cmake >= 2.6.2
 BuildRequires: gettext
@@ -32,7 +28,7 @@ Patch101: konversation-1.4-default_preference.patch
 # 如果 utf-8 字符串无法解析则回滚到 gb18030 而非 iso-8859-1, written by nihui, Dec.29th, 2009
 Patch102: konversation-1.2.3-fallback_to_gb18030.patch
 # 默认使用 utf-8 编码, written by nihui, Dec.29th, 2009
-Patch103: konversation-1.2.3-utf8_default_charset.patch
+Patch103: konversation-1.5-utf8_default_charset.patch
 
 
 %description
@@ -82,9 +78,21 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %files
 %defattr(-,root,root,-)
 %doc COPYING README
-%{kde4_prefix}/*
+%{kde4_bindir}/*
+%{kde4_appsdir}/*
+%{kde4_xdgappsdir}/*.desktop
+%{kde4_servicesdir}/*
+%{kde4_htmldir}/en/*
+%{kde4_iconsdir}/hicolor/*/a*/*
+%{kde4_localedir}/*
 
 %changelog
+* Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 1.5-2
+- 为 Magic 3.0 重建
+
+* Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 1.5-1
+- 更新到 1.5
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4-3
 - 为 Magic 3.0 重建
 

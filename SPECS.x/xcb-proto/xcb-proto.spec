@@ -3,7 +3,7 @@
 
 Name:           xcb-proto
 Version:        1.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        XCB protocol descriptions
 
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/xcbgen
 
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.10-2
+- 为 Magic 3.0 重建
+
 * Fri Jan 17 2014 Adam Jackson <ajax@redhat.com> 1.10-1
 - xcb-proto 1.10
 

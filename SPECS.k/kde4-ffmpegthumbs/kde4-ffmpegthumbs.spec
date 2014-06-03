@@ -1,19 +1,19 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name ffmpegthumbs
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: KDE volume control 
-Summary(zh_CN.UTF-8): KDE4 音量控制程序
+Summary: Video thumbnail generator using ffmpeg
+Summary(zh_CN.UTF-8): 使用 ffmpeg 的视频缩略图生成程序
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 3%{?dist}
-Source0:  http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
+Source0:  http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -23,10 +23,15 @@ BuildRequires: libkdelibs4-devel >= 4.0.82
 BuildRequires: ffmpeg-devel
 
 %description
-KDE volume control
+FFMpegThumbs is a video thumbnail generator for KDE file managers 
+like Dolphin and Konqueror. It enables them to show preview images 
+of video files using FFMpeg.
+
+This package is part of the KDE multimedia module.
 
 %description -l zh_CN.UTF-8
-KDE4 音量控制程序。
+这是 KDE 文件管理器（如 Dolphin 或 Konqueror）的视频缩略图生成器。
+它使用 FFMpeg 来给视频显示一个预览图。
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -73,6 +78,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_htmldir}/en/*
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-3
 - 为 Magic 3.0 重建
 

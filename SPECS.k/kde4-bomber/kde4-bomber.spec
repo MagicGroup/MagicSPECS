@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name bomber
 
@@ -7,13 +6,14 @@
 Name: kde4-%{real_name}
 Summary: Arcade bombing game
 Summary(zh_CN.UTF-8): 街机的炸弹游戏
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Group: Amusements/Games
+Group(zh_CN.UTF-8): 娱乐/游戏
+Version: 4.13.1
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0:  http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+%define rversion %version
+Source0:  http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
@@ -74,6 +74,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

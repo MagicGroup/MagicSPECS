@@ -2,7 +2,7 @@
 
 Name:           libxkbcommon
 Version:        0.4.2
-Release:        2%{?gitdate:.%{gitdate}}%{?dist}
+Release:        3%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        X.Org X11 XKB parsing library
 License:        MIT
 URL:            http://www.x.org
@@ -91,6 +91,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -fv {} ';'
 %{_libdir}/pkgconfig/xkbcommon-x11.pc
 
 %changelog
+* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 0.4.2-3
+- 为 Magic 3.0 重建
+
 * Fri May 23 2014 Hans de Goede <hdegoede@redhat.com> - 0.4.2-2
 - Bump release to 2 to avoid confusion with non official non scratch 0.4.2-1
 

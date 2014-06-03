@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name kanagram
 
@@ -10,10 +9,11 @@ Summary(zh_CN.UTF-8): 字谜游戏
 License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
-URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+URL: http://www.kde.org
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -86,6 +86,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

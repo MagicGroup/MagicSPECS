@@ -12,8 +12,8 @@ Source0:        https://api.opensuse.org:443/public/source/home:eduardhc/kmldonk
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:  desktop-file-utils
-BuildRequires: qt-devel 
-Requires: qt 
+BuildRequires: qt4-devel 
+Requires: qt4 
 
 BuildRequires: kdelibs4-devel >= 4.0
 Requires: kdelibs4

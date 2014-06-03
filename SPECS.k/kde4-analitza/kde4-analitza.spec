@@ -1,3 +1,6 @@
+%ifnarch %{arm}
+%global opengl 1
+%endif
 #define svn_number rc1
 %define real_name analitza
 
@@ -9,11 +12,11 @@ Summary(zh_CN.UTF-8): KDE4 用的数学库
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: 4.13.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 %define rversion %version
-Source0:  http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0:  http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 # add SHOULD_BUILD_OPENGL option, to be able to disable support
 # on arm because plotter3d assumes qreal=double all over the place
 Patch1: analitza-4.10.1-opengl_optional.patch
@@ -87,6 +90,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/*
 
 %changelog
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 4.13.1-3
+- 为 Magic 3.0 重建
+
 * Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-2
 - 更新到 4.13.1
 

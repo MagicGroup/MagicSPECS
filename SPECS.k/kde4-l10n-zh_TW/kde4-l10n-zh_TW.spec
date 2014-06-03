@@ -18,7 +18,7 @@ Group(zh_TW.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
 Release: %{release_number}%{?dist}.1
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/kde-l10n/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/%{rversion}/src/kde-l10n/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 

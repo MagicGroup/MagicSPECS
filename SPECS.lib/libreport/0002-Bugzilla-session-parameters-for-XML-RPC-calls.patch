@@ -1,0 +1,347 @@
+From c5be23b5c5efd1d8ec6df807fc2039454f22414d Mon Sep 17 00:00:00 2001
+From: Jakub Filak <jfilak@redhat.com>
+Date: Wed, 23 Apr 2014 18:13:47 +0200
+Subject: [LIBREPORT PATCH 2/2] Bugzilla: session parameters for XML RPC calls
+
+The session parameters are added to every XMLRPC call.
+
+abrt_xmlrpc_call*() functions expected formatting string in form of
+"({...})" for some good but unknown reason. Since now, the functions
+expects formatting string without the outer brackets.
+
+() - means empty array (allowed in xmlrpc-c)
+{} - means empty structure (allowed in xmlrpc-c)
+
+Signed-off-by: Jakub Filak <jfilak@redhat.com>
+---
+ src/lib/abrt_xmlrpc.c | 95 ++++++++++++++++++++++++++++++++++++++++-----------
+ src/lib/abrt_xmlrpc.h |  5 +--
+ src/plugins/rhbz.c    | 52 +++++++++++++---------------
+ 3 files changed, 102 insertions(+), 50 deletions(-)
+
+diff --git a/src/lib/abrt_xmlrpc.c b/src/lib/abrt_xmlrpc.c
+index 24bdd9e..84ed50d 100644
+--- a/src/lib/abrt_xmlrpc.c
++++ b/src/lib/abrt_xmlrpc.c
+@@ -20,6 +20,12 @@
+ #include "abrt_xmlrpc.h"
+ #include "proxies.h"
+ 
++struct abrt_xmlrpc_param_pair
++{
++    char *name;
++    xmlrpc_value *value;
++};
++
+ void abrt_xmlrpc_die(xmlrpc_env *env)
+ {
+     error_msg_and_die("fatal: %s", env->fault_string);
+@@ -106,12 +112,77 @@ void abrt_xmlrpc_free_client(struct abrt_xmlrpc *ax)
+     if (ax->ax_client)
+         xmlrpc_client_destroy(ax->ax_client);
+ 
+-    if (ax->ax_session_data && ax->ax_session_data_free)
+-        ax->ax_session_data_free(ax->ax_session_data);
++    for (GList *iter = ax->ax_session_params; iter; iter = g_list_next(iter))
++    {
++        struct abrt_xmlrpc_param_pair *param_pair = (struct abrt_xmlrpc_param_pair *)iter->data;
++        xmlrpc_DECREF(param_pair->value);
++        free(param_pair->name);
++        free(param_pair);
++    }
++
++    g_list_free(ax->ax_session_params);
+ 
+     free(ax);
+ }
+ 
++void abrt_xmlrpc_client_add_session_param_string(xmlrpc_env *env, struct abrt_xmlrpc *ax,
++        const char *name, const char *value)
++{
++    struct abrt_xmlrpc_param_pair *new_ses_param = xmalloc(sizeof(*new_ses_param));
++    new_ses_param->name = xstrdup(name);
++
++    new_ses_param->value = xmlrpc_string_new(env, value);
++    if (env->fault_occurred)
++        abrt_xmlrpc_die(env);
++
++    ax->ax_session_params = g_list_append(ax->ax_session_params, new_ses_param);
++}
++
++/* internal helper function */
++static xmlrpc_value *abrt_xmlrpc_call_params_internal(xmlrpc_env *env, struct abrt_xmlrpc *ax, const char *method, xmlrpc_value *params)
++{
++    xmlrpc_value *array = xmlrpc_array_new(env);
++    if (env->fault_occurred)
++        abrt_xmlrpc_die(env);
++
++    bool destroy_params = false;
++    if (xmlrpc_value_type(params) == XMLRPC_TYPE_NIL)
++    {
++        destroy_params = true;
++        params = abrt_xmlrpc_params_new(env);
++    }
++
++    if (xmlrpc_value_type(params) == XMLRPC_TYPE_STRUCT)
++    {
++        for (GList *iter = ax->ax_session_params; iter; iter = g_list_next(iter))
++        {
++            struct abrt_xmlrpc_param_pair *param_pair = (struct abrt_xmlrpc_param_pair *)iter->data;
++
++            xmlrpc_struct_set_value(env, params, param_pair->name, param_pair->value);
++            if (env->fault_occurred)
++                abrt_xmlrpc_die(env);
++        }
++    }
++    else
++    {
++        log_warning("Bug: not yet supported XML RPC call type.");
++    }
++
++    xmlrpc_array_append_item(env, array, params);
++    if (env->fault_occurred)
++        abrt_xmlrpc_die(env);
++
++    xmlrpc_value *result = NULL;
++    xmlrpc_client_call2(env, ax->ax_client, ax->ax_server_info, method,
++                        array, &result);
++
++    if (destroy_params)
++        xmlrpc_DECREF(params);
++
++    xmlrpc_DECREF(array);
++    return result;
++}
++
+ /* internal helper function */
+ static
+ xmlrpc_value *abrt_xmlrpc_call_full_va(xmlrpc_env *env, struct abrt_xmlrpc *ax,
+@@ -136,10 +207,8 @@ xmlrpc_value *abrt_xmlrpc_call_full_va(xmlrpc_env *env, struct abrt_xmlrpc *ax,
+             suffix);
+     }
+     else
+-    {
+-        xmlrpc_client_call2(env, ax->ax_client, ax->ax_server_info, method,
+-                            param, &result);
+-    }
++        result = abrt_xmlrpc_call_params_internal(env, ax, method, param);
++
+     xmlrpc_DECREF(param);
+ 
+     return result;
+@@ -195,25 +264,13 @@ void abrt_xmlrpc_params_add_array(xmlrpc_env *env, xmlrpc_value *params, const c
+     if (env->fault_occurred)
+         abrt_xmlrpc_die(env);
+ }
+-
+ xmlrpc_value *abrt_xmlrpc_call_params(xmlrpc_env *env, struct abrt_xmlrpc *ax, const char *method, xmlrpc_value *params)
+ {
+-    xmlrpc_value *array = xmlrpc_array_new(env);
+-    if (env->fault_occurred)
+-        abrt_xmlrpc_die(env);
+-
+-    xmlrpc_array_append_item(env, array, params);
+-    if (env->fault_occurred)
+-        abrt_xmlrpc_die(env);
+-
+-    xmlrpc_value *result = NULL;
+-    xmlrpc_client_call2(env, ax->ax_client, ax->ax_server_info, method,
+-                        array, &result);
++    xmlrpc_value *result = abrt_xmlrpc_call_params_internal(env, ax, method, params);
+ 
+     if (env->fault_occurred)
+         abrt_xmlrpc_die(env);
+ 
+-    xmlrpc_DECREF(array);
+     return result;
+ }
+ 
+diff --git a/src/lib/abrt_xmlrpc.h b/src/lib/abrt_xmlrpc.h
+index ff7a65c..feaa04d 100644
+--- a/src/lib/abrt_xmlrpc.h
++++ b/src/lib/abrt_xmlrpc.h
+@@ -23,6 +23,7 @@
+  * include/xmlrpc-c/base.h: typedef int32_t xmlrpc_int32;
+  */
+ 
++#include <glib.h>
+ #include <xmlrpc-c/base.h>
+ #include <xmlrpc-c/client.h>
+ 
+@@ -35,8 +36,7 @@ typedef void (*abrt_xmlrpc_destroy_fn)(void *);
+ struct abrt_xmlrpc {
+     xmlrpc_client *ax_client;
+     xmlrpc_server_info *ax_server_info;
+-    void *ax_session_data;
+-    abrt_xmlrpc_destroy_fn ax_session_data_free;
++    GList *ax_session_params;
+ };
+ 
+ xmlrpc_value *abrt_xmlrpc_array_new(xmlrpc_env *env);
+@@ -49,6 +49,7 @@ void abrt_xmlrpc_params_add_array(xmlrpc_env *env, xmlrpc_value *params, const c
+ 
+ struct abrt_xmlrpc *abrt_xmlrpc_new_client(const char *url, int ssl_verify);
+ void abrt_xmlrpc_free_client(struct abrt_xmlrpc *ax);
++void abrt_xmlrpc_client_add_session_param_string(xmlrpc_env *env, struct abrt_xmlrpc *ax, const char *name, const char *value);
+ void abrt_xmlrpc_die(xmlrpc_env *env) __attribute__((noreturn));
+ void abrt_xmlrpc_error(xmlrpc_env *env);
+ 
+diff --git a/src/plugins/rhbz.c b/src/plugins/rhbz.c
+index bc0f87a..bad9ed4 100644
+--- a/src/plugins/rhbz.c
++++ b/src/plugins/rhbz.c
+@@ -85,9 +85,8 @@ static GList *rhbz_comments(struct abrt_xmlrpc *ax, int bug_id)
+      *           <value><array>
+      * ...
+      */
+-    xmlrpc_value *xml_response = abrt_xmlrpc_call(ax, "Bug.comments", "({s:(i),s:s})",
+-                                                                      "ids", bug_id,
+-                                                                      "Bugzilla_token", (char *)ax->ax_session_data);
++    xmlrpc_value *xml_response = abrt_xmlrpc_call(ax, "Bug.comments", "{s:(i)}",
++                                                                      "ids", bug_id);
+     /* bugs
+      *     This is used for bugs specified in ids. This is a hash, where the
+      *     keys are the numeric ids of the bugs, and the value is a hash with a
+@@ -216,7 +215,7 @@ bool rhbz_login(struct abrt_xmlrpc *ax, const char *login, const char *password)
+     func_entry();
+ 
+     xmlrpc_env env;
+-    xmlrpc_value *result = abrt_xmlrpc_call_full(&env, ax, "User.login", "({s:s,s:s})",
++    xmlrpc_value *result = abrt_xmlrpc_call_full(&env, ax, "User.login", "{s:s,s:s}",
+                                                  "login", login, "password", password);
+ 
+     if (env.fault_occurred)
+@@ -229,8 +228,13 @@ bool rhbz_login(struct abrt_xmlrpc *ax, const char *login, const char *password)
+         return false;
+     }
+ 
+-    ax->ax_session_data = rhbz_bug_read_item("token", result, RHBZ_READ_STR);
+-    ax->ax_session_data_free = (abrt_xmlrpc_destroy_fn)free;
++    char *token = rhbz_bug_read_item("token", result, RHBZ_READ_STR);
++    if (token != NULL)
++    {
++        log_debug("Adding session param Bugzilla_token");
++        abrt_xmlrpc_client_add_session_param_string(&env, ax, "Bugzilla_token", token);
++        free(token);
++    }
+ 
+ //TODO: with URL like http://bugzilla.redhat.com (that is, with http: instead of https:)
+ //we are getting this error:
+@@ -301,7 +305,7 @@ unsigned rhbz_version(struct abrt_xmlrpc *ax)
+     func_entry();
+ 
+     xmlrpc_value *result;
+-    result = abrt_xmlrpc_call(ax, "Bugzilla.version", "()");
++    result = abrt_xmlrpc_call(ax, "Bugzilla.version", "{}");
+     char *version = NULL;
+     if (result)
+         version = rhbz_bug_read_item("version", result, RHBZ_READ_STR);
+@@ -476,9 +480,8 @@ struct bug_info *rhbz_bug_info(struct abrt_xmlrpc *ax, int bug_id)
+      *        <value><array><data>
+      *        ...
+      */
+-    xmlrpc_value *xml_bug_response = abrt_xmlrpc_call(ax, "Bug.get", "({s:(i),s:s})",
+-                                                          "ids", bug_id,
+-                                                          "Bugzilla_token", (char *)ax->ax_session_data);
++    xmlrpc_value *xml_bug_response = abrt_xmlrpc_call(ax, "Bug.get", "{s:(i)}",
++                                                          "ids", bug_id);
+ 
+     xmlrpc_value *bugs_memb = rhbz_get_member("bugs", xml_bug_response);
+     xmlrpc_value *bug_item = rhbz_array_item_at(bugs_memb, 0);
+@@ -604,7 +607,6 @@ int rhbz_new_bug(struct abrt_xmlrpc *ax,
+     abrt_xmlrpc_params_add_string(&env, params, "summary", (summary ? summary : bzsummary));
+     abrt_xmlrpc_params_add_string(&env, params, "description", bzcomment);
+     abrt_xmlrpc_params_add_string(&env, params, "status_whiteboard", status_whiteboard);
+-    abrt_xmlrpc_params_add_string(&env, params, "Bugzilla_token", (char *)ax->ax_session_data);
+ 
+     if(arch)
+         abrt_xmlrpc_params_add_string(&env, params, "platform", arch);
+@@ -674,7 +676,7 @@ int rhbz_attach_blob(struct abrt_xmlrpc *ax, const char *bug_id,
+      *   6 -> base64,  two arguments (char* plain data which will be encoded by xmlrpc-c to base64,
+      *                                size_t number of bytes to encode)
+      */
+-    result = abrt_xmlrpc_call(ax, "Bug.add_attachment", "({s:(s),s:s,s:s,s:s,s:6,s:i,s:s})",
++    result = abrt_xmlrpc_call(ax, "Bug.add_attachment", "{s:(s),s:s,s:s,s:s,s:6,s:i}",
+                 "ids", bug_id,
+                 "summary", fn,
+                 "file_name", filename,
+@@ -687,8 +689,7 @@ int rhbz_attach_blob(struct abrt_xmlrpc *ax, const char *bug_id,
+                 /* Undocumented argument but it works with Red Hat Bugzilla version 4.2.4-7
+                  * and version 4.4.rc1.b02
+                  */
+-                "nomail", nomail_notify,
+-                "Bugzilla_token", (char *)ax->ax_session_data
++                "nomail", nomail_notify
+     );
+ 
+     free(fn);
+@@ -745,8 +746,7 @@ void rhbz_logout(struct abrt_xmlrpc *ax)
+     func_entry();
+ 
+     xmlrpc_env env;
+-    xmlrpc_value *result = abrt_xmlrpc_call_full(&env, ax, "User.logout", "({s:s})",
+-                                    "Bugzilla_token", (char *)ax->ax_session_data);
++    xmlrpc_value *result = abrt_xmlrpc_call_full(&env, ax, "User.logout", "{}");
+ 
+     if (env.fault_occurred)
+         log_warning("xmlrpc fault: (%d) %s", env.fault_code, env.fault_string);
+@@ -798,11 +798,10 @@ void rhbz_mail_to_cc(struct abrt_xmlrpc *ax, int bug_id, const char *mail, int f
+     );
+ #endif
+     /* Bugzilla 4.0+ uses this API: */
+-    result = abrt_xmlrpc_call(ax, "Bug.update", "({s:i,s:{s:(s),s:i},s:s})",
++    result = abrt_xmlrpc_call(ax, "Bug.update", "{s:i,s:{s:(s),s:i}}",
+                               "ids", bug_id,
+                               "cc", "add", mail,
+-                                    "nomail", nomail_notify,
+-                              "Bugzilla_token", (char *)ax->ax_session_data
++                                    "nomail", nomail_notify
+     );
+     if (result)
+         xmlrpc_DECREF(result);
+@@ -836,10 +835,9 @@ void rhbz_add_comment(struct abrt_xmlrpc *ax, int bug_id, const char *comment,
+     int nomail_notify = !!IS_NOMAIL_NOTIFY(flags);
+ 
+     xmlrpc_value *result;
+-    result = abrt_xmlrpc_call(ax, "Bug.add_comment", "({s:i,s:s,s:b,s:i,s:s})",
++    result = abrt_xmlrpc_call(ax, "Bug.add_comment", "{s:i,s:s,s:b,s:i}",
+                               "id", bug_id, "comment", comment,
+-                              "private", private, "nomail", nomail_notify,
+-                              "Bugzilla_token", (char *)ax->ax_session_data);
++                              "private", private, "nomail", nomail_notify);
+ 
+     if (result)
+         xmlrpc_DECREF(result);
+@@ -850,15 +848,14 @@ void rhbz_set_url(struct abrt_xmlrpc *ax, int bug_id, const char *url, int flags
+     func_entry();
+ 
+     const int nomail_notify = !!IS_NOMAIL_NOTIFY(flags);
+-    xmlrpc_value *result = abrt_xmlrpc_call(ax, "Bug.update", "({s:i,s:s,s:i,s:s})",
++    xmlrpc_value *result = abrt_xmlrpc_call(ax, "Bug.update", "{s:i,s:s,s:i}",
+                               "ids", bug_id,
+                               "url", url,
+ 
+                 /* Undocumented argument but it works with Red Hat Bugzilla version 4.2.4-7
+                  * and version 4.4.rc1.b02
+                  */
+-                              "nomail", nomail_notify,
+-                              "Bugzilla_token", (char *)ax->ax_session_data
++                              "nomail", nomail_notify
+     );
+ 
+     if (result)
+@@ -886,10 +883,7 @@ xmlrpc_value *rhbz_search_duphash(struct abrt_xmlrpc *ax,
+ 
+     char *s = strbuf_free_nobuf(query);
+     log_debug("search for '%s'", s);
+-    xmlrpc_value *search = (ax->ax_session_data == NULL)
+-            ? abrt_xmlrpc_call(ax, "Bug.search", "({s:s})", "quicksearch", s)
+-            : abrt_xmlrpc_call(ax, "Bug.search", "({s:s,s:s})", "quicksearch", s,
+-                               "Bugzilla_token", (char *)ax->ax_session_data);
++    xmlrpc_value *search = abrt_xmlrpc_call(ax, "Bug.search", "{s:s}", "quicksearch", s);
+ 
+     free(s);
+     xmlrpc_value *bugs = rhbz_get_member("bugs", search);
+-- 
+1.8.3.1
+

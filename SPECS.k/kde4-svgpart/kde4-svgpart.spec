@@ -13,7 +13,7 @@ Version: %{rversion}
 Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2

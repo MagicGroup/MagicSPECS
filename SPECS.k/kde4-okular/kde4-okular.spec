@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name okular
 
@@ -7,13 +6,13 @@
 Name: kde4-%{real_name}
 Summary: A document viewer
 Summary(zh_CN.UTF-8): 文档阅读器
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Version: 4.13.1
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 Patch1:	okular-4.9.2-patch1.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
@@ -55,7 +54,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 #%patch1 -p1
 
 %build
@@ -103,6 +102,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/*
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

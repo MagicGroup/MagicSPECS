@@ -13,7 +13,7 @@ Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 %define rversion %version
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 Source1: 97-kde-baloo-filewatch-inotify.conf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext

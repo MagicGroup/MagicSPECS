@@ -1,0 +1,14 @@
+#!/bin/bash
+url="http://carroll.aset.psu.edu/pub/kde/stable/konversation/?C=M;O=D"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	newver=`grep ">1\..*\/<" index.html -o | grep -o "1.*[0-9]" |head -n 1`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

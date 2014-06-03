@@ -7,7 +7,7 @@
 Summary: Generic library for reporting various problems
 Name: libreport
 Version: 2.2.2
-Release: 3%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: https://fedorahosted.org/abrt/
@@ -662,6 +662,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.2.2-6
+- 为 Magic 3.0 重建
+
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.2.2-5
+- 为 Magic 3.0 重建
+
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.2.2-4
+- 为 Magic 3.0 重建
+
 * Wed Apr 30 2014 Jakub Filak <jfilak@redhat.com> - 2.2.2-3
 - improve User Experience in Anaconda
 

@@ -1,0 +1,5 @@
+[allmips64el]
+name=Magic-3.0 - Allmips64el
+repo=all64
+baseurl=http://apt.linuxfans.org/magic/3.0/mips64el
+gpgcheck=0

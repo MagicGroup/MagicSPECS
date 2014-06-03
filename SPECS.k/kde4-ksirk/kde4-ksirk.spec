@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name ksirk
 
@@ -7,13 +6,13 @@
 Name: kde4-%{real_name}
 Summary: Conquer-the-world strategy game
 Summary(zh_CN.UTF-8): 征服世界的战略游戏
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Version: 4.13.1
 Release: 3%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 # use the system iris library
 Patch0: ksirk-4.10.0-system-iris.patch
 # if using bundled iris, link statically
@@ -45,7 +44,7 @@ neighbors with your armies.
 征服世界的战略游戏。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 %if 0%{?system_iris}
 %patch0 -p1 -b .system-iris
 mv ksirk/iris ksirk/iris.BAK
@@ -93,6 +92,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 4.13.1-3
+- 更新到 4.13.1
+
 * Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-3
 - 为 Magic 3.0 重建
 

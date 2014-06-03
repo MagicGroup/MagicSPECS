@@ -15,7 +15,7 @@ Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
 Release: %{release_number}%{?dist}.1
-Source0: http://mirror.bjtu.edu.cn/kde/stable/4.12.4/src/%{real_name}-4.11.8.tar.xz
+Source0: http://download.kde.org/stable/4.12.4/src/%{real_name}-4.11.8.tar.xz
 Source1: extras.tar.gz
 # magic logo for kwin decoration
 Source2: magic.png

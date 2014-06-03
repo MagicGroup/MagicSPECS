@@ -12,7 +12,7 @@ URL: http://www.kde.org/
 Version: 4.13.1
 Release: 1%{?dist}
 %define rversion %version
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 Source1: im.png
 Source2: extract_rpm.desktop
 Source3: magic-kde4soundtheme.tar.gz

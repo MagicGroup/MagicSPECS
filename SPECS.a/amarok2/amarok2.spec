@@ -25,7 +25,7 @@ Release: 4%{?dist}
 Source0: %{real_name}.tar.bz2
 Source1: amarok.po
 %else
-Source0: http://mirror.bjtu.edu.cn/kde/stable/amarok/%{version}/src/amarok-%{version}.tar.bz2
+Source0: http://download.kde.org/stable/amarok/%{version}/src/amarok-%{version}.tar.bz2
 
 Source1: amarok.po
 %endif

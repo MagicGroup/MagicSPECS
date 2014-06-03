@@ -1,22 +1,18 @@
 %define real_name      kchmviewer
-%define version    6.0
-%define release    1%{?dist}
-%define _dir		build-5.1
-
+%define betatag    beta1
 %define prefix     /usr
 %define sysconfdir /etc
 
 Summary:	A CHM viewer program for KDE.
 Summary(zh_CN.UTF-8):	KDE下的一个CHM查看程序
 Name:	kde4-%{real_name}
-Version:	%{version}
-Release:	%{release}
+Version:	7.0
+Release:	1%{?dist}
 License:	GPL
 Group:		Applications/File
 Group(zh_CN.UTF-8):	应用程序/文件
 Url:		http://www.ulduzsoft.com/linux/kchmviewer/
-Source0:	http://downloads.sourceforge.net/project/kchmviewer/kchmviewer/%{version}/%{real_name}-%{version}.tar.gz
-Source1:	kchmviewer_zh_CN.po
+Source0:	http://downloads.sourceforge.net/project/kchmviewer/kchmviewer/%{version}%{?betatag:%{betatag}}/%{real_name}-%{version}%{?betatag:%{betatag}}.tar.gz
 Source2:	kchmviewer.desktop
 Packager:	sejishikong <sejishikong@263.net>
 BuildRoot:	%{_tmppath}/%{name}--buildroot
@@ -31,13 +27,14 @@ Kchmviewer是一个chm（微软HTML帮助文件格式）查看器，用C++写成
 
 %prep
 rm -rf %{buildroot}
-%setup -q -n %{real_name}-%{version}
+%setup -q -n %{real_name}-%{version}%{?betatag:%{betatag}}
 
 %build
 qmake
 %cmake_kde4
 make
 rm -rf $RPM_BUILD_ROOT
+
 %install
 make install DESTDIR=%{buildroot}
 cp -f %{SOURCE2} %{buildroot}%{kde4_xdgappsdir}
@@ -53,6 +50,9 @@ rm -rf %{buildroot}
 %{kde4_localedir}/*
 
 %changelog
+* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 7.0-1
+- 更新到 7.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 5.3-3
 - 为 Magic 3.0 重建
 

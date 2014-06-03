@@ -1,10 +1,9 @@
-%define rversion %{kde4_kdelibs_version}
 %global monodir /usr/lib/mono
 
 Name:    qyoto 
 Summary: .NET/Mono bindings for the Qt libraries 
-Version: %{rversion}
-Release: 2%{?dist}
+Version: 4.13.1
+Release: 1%{?dist}
 
 # libqyoto LGPLv2+, mono bindings GPLv2+
 License: LGPLv2+ and GPLv2+
@@ -106,6 +105,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

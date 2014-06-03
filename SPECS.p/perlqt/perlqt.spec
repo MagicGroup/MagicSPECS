@@ -23,7 +23,7 @@ Summary:        PerlQt kdebindings library
 License:        GPL-2.0+
 Group:          Development/Languages/Perl
 Url:            https://projects.kde.org/projects/kde/kdebindings/perl/perlqt
-Source0:        http://mirror.bjtu.edu.cn/kde/stable/%{version}/src/perlqt-%{version}.tar.xz
+Source0:        http://download.kde.org/stable/%{version}/src/perlqt-%{version}.tar.xz
 BuildRequires:  cmake
 BuildRequires:  kde4-filesystem
 BuildRequires:  smokegen

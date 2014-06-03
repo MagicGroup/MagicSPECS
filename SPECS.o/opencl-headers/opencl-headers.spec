@@ -1,7 +1,7 @@
 Summary:  Khronos OpenCL development headers
 Name:     opencl-headers
 Version:  1.2
-Release:  5%{?dist}
+Release:  6%{?dist}
 License:  MIT
 URL:      http://www.khronos.org/registry/cl/
 BuildArch: noarch
@@ -65,6 +65,9 @@ cp \
 %{_includedir}/CL/cl.hpp
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 1.2-6
+- 为 Magic 3.0 重建
+
 * Fri Apr 25 2014 Fabian Deutsch <fabiand@fedoraproject.org> - 1.2-5
 - Pull patch application into pre
 

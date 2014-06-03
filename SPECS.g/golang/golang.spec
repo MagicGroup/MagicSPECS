@@ -39,24 +39,15 @@
 
 Name:           golang
 Version:        1.2.2
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        The Go Programming Language
 
 License:        BSD
 URL:            http://golang.org/
 Source0:        https://go.googlecode.com/files/go%{version}.src.tar.gz
 
-# this command moved places
-%if 0%{?fedora} >= 21
 BuildRequires:  /usr/bin/hostname
 Patch210:       golang-f21-hostname.patch
-
-# Patch211 - F21+ has glibc 2.19.90 (2.20 devel)+ which deprecates 
-#            _BSD_SOURCE and _SVID_SOURCE
-Patch211:       golang-1.2-BSD-SVID-SOURCE.patch
-%else
-BuildRequires:  /bin/hostname
-%endif
 
 Provides:       go = %{version}-%{release}
 Requires:       golang-bin
@@ -379,10 +370,7 @@ end
 
 cp %SOURCE400 src/pkg/archive/tar/testdata/xattrs.tar
 
-%if 0%{?fedora} >= 21
 %patch210 -p0
-%patch211 -p0
-%endif
 
 # increase verbosity of build
 %patch0 -p1
@@ -978,6 +966,12 @@ GOROOT=%{goroot} GOOS=openbsd GOARCH=amd64 go install std
 
 
 %changelog
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 1.2.2-9
+- 为 Magic 3.0 重建
+
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 1.2.2-8
+- 为 Magic 3.0 重建
+
 * Wed May 21 2014 Vincent Batts <vbatts@redhat.com> 1.2.2-7
 - bz1099206 ghost files are not what is needed
 

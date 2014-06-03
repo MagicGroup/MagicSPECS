@@ -2,7 +2,7 @@
 
 Name:           libxcb
 Version:        1.10
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A C binding to the X11 protocol
 
 Group:          System Environment/Libraries
@@ -116,6 +116,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgdocdir}
 
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.10-3
+- 为 Magic 3.0 重建
+
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.10-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 27 2014 Adam Jackson <ajax@redhat.com> 1.10-1
 - libxcb 1.10 plus one. Updated ABIs: sync, xkb. New libs: dri3, present.
 

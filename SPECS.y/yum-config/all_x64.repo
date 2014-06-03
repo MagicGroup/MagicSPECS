@@ -1,0 +1,5 @@
+[all64]
+name=Magic-3.0 - All64
+repo=all64
+baseurl=http://apt.linuxfans.org/magic/3.0/x86_64
+gpgcheck=0

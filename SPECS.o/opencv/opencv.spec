@@ -2,7 +2,7 @@
 
 Name:           opencv
 Version:        2.4.7
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Collection of algorithms for computer vision
 Group:          Development/Libraries
 # This is normal three clause BSD.
@@ -13,8 +13,8 @@ URL:            http://opencv.org
 # rm -rf opencv-%%{version}/modules/nonfree/src/surf.cpp
 # Removed because we don't use pre-built contribs
 # rm -rf 3rdparty
-#Source0:        http://downloads.sourceforge.net/opencvlibrary/opencv-unix/%{version}/%{name}-%{version}%{?indice}.tar.gz
-Source0:	%{name}-clean-%{version}%{?indice}.tar.xz
+Source0:        http://downloads.sourceforge.net/opencvlibrary/opencv-unix/%{version}/%{name}-%{version}%{?indice}.tar.gz
+#Source0:	%{name}-clean-%{version}%{?indice}.tar.xz
 Source1:        opencv-samples-Makefile
 Patch0:         opencv-pkgcmake.patch
 #http://code.opencv.org/issues/2720
@@ -249,6 +249,15 @@ popd
 %{python2_sitearch}/cv2.so
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 2.4.7-9
+- 为 Magic 3.0 重建
+
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 2.4.7-8
+- 为 Magic 3.0 重建
+
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 2.4.7-7
+- 为 Magic 3.0 重建
+
 * Sat Apr 26 2014 Rex Dieter <rdieter@fedoraproject.org> 2.4.7-6
 - revert pkgcmake2 patch (#1070428)
 

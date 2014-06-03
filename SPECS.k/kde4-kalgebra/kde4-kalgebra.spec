@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name kalgebra
 
@@ -8,12 +7,13 @@ Name: kde4-%{real_name}
 Summary: MathML-based graph calculator
 Summary(zh_CN.UTF-8): 基于 MathML 的图形计算器
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -21,6 +21,7 @@ BuildRequires: cmake >= 2.6.2
 BuildRequires: gettext
 BuildRequires: libkdelibs4-devel >= 4.0.82
 BuildRequires: libkdeedu4-devel = %{version}
+BuildRequires: kde4-analitza-devel >= %{version}
 
 %description
 MathML-based graph calculator
@@ -76,6 +77,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

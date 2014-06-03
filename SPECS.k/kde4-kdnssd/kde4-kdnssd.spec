@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name kdnssd
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: Cantor for KDE Edu
+Summary: 
 Summary(zh_CN.UTF-8): KDE Edu 的数学组件 
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 3%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/4.12.3/src/%{real_name}-4.12.3.tar.xz
+Version: 4.13.0
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/4.12.3/src/%{real_name}-4.12.3.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 

@@ -22,7 +22,7 @@
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
 Version: 5.3.0
-Release: 4%{?dist}
+Release: 6%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -683,6 +683,12 @@ popd
 
 
 %changelog
+* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 5.3.0-6
+- 为 Magic 3.0 重建
+
+* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 5.3.0-5
+- 为 Magic 3.0 重建
+
 * Fri May 23 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.0-4
 - -system-libxkbcommon (f21+)
 

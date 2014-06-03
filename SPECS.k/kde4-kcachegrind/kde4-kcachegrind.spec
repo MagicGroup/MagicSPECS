@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name kcachegrind
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: Cantor for KDE Edu
-Summary(zh_CN.UTF-8): KDE Edu 的数学组件 
+Summary: GUI to profilers such as Valgrind
+Summary(zh_CN.UTF-8): Valgrind 的配置文件界面
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -33,7 +32,7 @@ Cantor 是一个 KDE 集成程序，可以让你用你喜欢的数学程序做�
 工作表处理。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -61,25 +60,15 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %defattr(-,root,root,-)
 %doc COPYING
 %{kde4_bindir}/*
-#%{kde4_libdir}/*.so*
-#%{kde4_plugindir}/*
 %{kde4_iconsdir}/hicolor/*
 %{kde4_xdgappsdir}/*.desktop
 %{kde4_appsdir}/*
-#%{kde4_kcfgdir}/*.kcfg
-#%{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_configdir}/*
 %{kde4_htmldir}/en/*
 
-%if 0
-%files devel
-%defattr(-,root,root,-)
-%{kde4_includedir}/*
-%{kde4_libdir}/*.so
-%endif
-
 %changelog
+* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 
