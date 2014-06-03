@@ -1,13 +1,16 @@
 Summary: X.Org X11 libXft runtime library
 Name: libXft
 Version: 2.3.1
-Release: 2%{?dist}
+Release: 6%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
+Patch0: fix-freetype-includes.patch
 
+BuildRequires: xorg-x11-util-macros
+BuildRequires: autoconf automake libtool
 BuildRequires: pkgconfig(xrender)
 BuildRequires: freetype-devel >= 2.1.9-2
 BuildRequires: fontconfig-devel >= 2.2-1
@@ -27,8 +30,10 @@ X.Org X11 libXft development package
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
+autoreconf -v --install --force
 
 %configure --disable-static
 make %{?_smp_mflags} 
@@ -45,7 +50,6 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man1/xft-config*
 
 # We intentionally don't ship *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -71,8 +75,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Xft.3*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.3.1-2
-- 为 Magic 3.0 重建
+* Sat Apr 12 2014 Dennis Gilmore <dennis @ausil.us> - 2.3.1-6
+- add patch to fix FTBFS due to freetype changes
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.1-4
+- autoreconf for aarch64
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Mon Jun 04 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.3.1-1
 - libXft 2.3.1

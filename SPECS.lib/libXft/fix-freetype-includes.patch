@@ -1,0 +1,22 @@
+Dscription: Fix build failure with freetype 2.5.1
+Author: Juhani Numminen <juhaninumminen0@gmail.com>
+Bug-Debian: http://bugs.debian.org/733385
+
+--- a/src/xftglyphs.c
++++ b/src/xftglyphs.c
+@@ -21,10 +21,11 @@
+  */
+ 
+ #include "xftint.h"
+-#include <freetype/ftoutln.h>
+-#include <freetype/ftlcdfil.h>
++#include <ft2build.h>
++#include FT_OUTLINE_H
++#include FT_LCD_FILTER_H
+ 
+-#include <freetype/ftsynth.h>
++#include FT_SYNTHESIS_H
+ 
+ /*
+  * Validate the memory info for a font
+
