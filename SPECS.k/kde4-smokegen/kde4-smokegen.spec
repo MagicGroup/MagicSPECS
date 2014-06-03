@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name smokegen
 
-%define kde4_enable_final_bool OFF
+%define kde4_enable_final_bool ON
 
 Name: kde4-%{real_name}
-Summary: Cantor for KDE Edu
-Summary(zh_CN.UTF-8): KDE Edu 的数学组件 
+Summary: Smoke Generator
+Summary(zh_CN.UTF-8): Smoke 生成器 
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
-URL: http://ktorrent.org
-Version: %{rversion}
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+URL: http://www.kde.org
+Version: 4.13.1
 Release: 1%{?dist}
-Source0: %{real_name}-%{rversion}.tar.bz2
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -46,7 +45,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -74,15 +73,6 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_bindir}/*
 %{kde4_libdir}/*.so.*
 %{kde4_libdir}/smokegen/*
-#%{kde4_plugindir}/*
-#%{kde4_iconsdir}/hicolor/*
-#%{kde4_xdgappsdir}/*.desktop
-#%{kde4_appsdir}/*
-#%{kde4_kcfgdir}/*.kcfg
-#%{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_configdir}/*
-#%{kde4_htmldir}/en/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -92,6 +82,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/smokegen/*
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Tue Aug 11 2009 Ni Hui <shuizhuyuanluo@126.com> - 3.2.3-1mgc
 - 更新至 3.2.3
 - 拆出开发包

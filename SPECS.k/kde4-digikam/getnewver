@@ -1,0 +1,14 @@
+#!/bin/bash
+url="http://carroll.aset.psu.edu/pub/kde/stable/digikam/?C=M;O=D"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	newver=`grep "digikam-.*.tar.bz2" index.html -o |head -n 1|sed -e 's/^.*digikam-//'|sed -e 's/.tar.bz2.*$//'`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

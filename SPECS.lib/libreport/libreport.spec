@@ -2,30 +2,40 @@
 # platform-dependent
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
+%define satyr_ver 0.13
+
 Summary: Generic library for reporting various problems
 Name: libreport
-Version: 2.1.4
-Release: 5%{?dist}
+Version: 2.2.2
+Release: 6%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: https://fedorahosted.org/abrt/
 Source: https://fedorahosted.org/released/abrt/%{name}-%{version}.tar.gz
 Source1: autogen.sh
 
-# Remove with 2.1.5
-Patch1:  0001-reporter-bugzilla-support-new-format-keyword-reporte.patch
-Patch2:  0002-reporter-bugzilla-remove-recently-added-aux.-files-f.patch
-Patch3:  0003-do-not-build-or-install-any-piece-of-BZ-when-without.patch
-Patch4:  0004-do-not-build-or-install-BZ-dependencies-when-without.patch
-Patch6:  0006-updated-translation.patch
-Patch8:  0008-create-last_occurrence-at-the-time-of-the-first-cras.patch
+Patch01: 0001-Bugzilla-pass-Bugzilla_token-in-all-relevant-XML-RPC.patch
+Patch02: 0002-Bugzilla-session-parameters-for-XML-RPC-calls.patch
+Patch03: 0003-Worklflow-order-workflows-according-to-their-priorit.patch
+Patch04: 0004-define-priorities-for-the-existing-workflows.patch
+Patch05: 0005-less-confusing-label-for-upload-data-in-Anaconda.patch
+Patch06: 0006-Bugzilla-move-the-advanced-options-to-the-advanced-s.patch
+Patch07: 0007-hide-Don-t-store-password-checkbox.patch
+Patch08: 0008-refactoring-unify-event-configuration-dialogs.patch
+Patch09: 0009-GUI-remove-the-intermediate-configuration-dialog.patch
+Patch10: 0010-reporter-upload-more-descriptive-message-about-missi.patch
+
+# git is need for '%%autosetup -S git' which automatically applies all the
+# patches above. Please, be aware that the patches must be generated
+# by 'git format-patch'
+BuildRequires: git
 
 BuildRequires: dbus-devel
 BuildRequires: gtk3-devel
 BuildRequires: curl-devel
 BuildRequires: desktop-file-utils
-BuildRequires: xmlrpc-c-devel
 BuildRequires: python-devel
+BuildRequires: python3-devel
 BuildRequires: gettext
 BuildRequires: libxml2-devel
 BuildRequires: libtar-devel
@@ -37,22 +47,20 @@ BuildRequires: asciidoc
 BuildRequires: xmlto
 BuildRequires: newt-devel
 BuildRequires: libproxy-devel
-BuildRequires: btparser-devel
+BuildRequires: satyr-devel >= %{satyr_ver}
+
+BuildRequires: xmlrpc-c-devel
 BuildRequires: doxygen
+BuildRequires: systemd-devel
+BuildRequires: augeas-devel
+BuildRequires: augeas
 Requires: libreport-filesystem = %{version}-%{release}
 # required for update from old report library, otherwise we obsolete report-gtk
 # and all it's plugins, but don't provide the python bindings and the sealert
 # end-up with: can't import report.GtkIO
 # FIXME: can be removed when F15 will EOLed, needs to stay in rhel6!
 Requires: libreport-python = %{version}-%{release}
-Conflicts: abrt < 2.1.0
-
-# for rhel6
-%if 0%{?rhel} == 6
-BuildRequires: gnome-keyring-devel
-%else
-BuildRequires: libgnome-keyring-devel
-%endif
+Requires: satyr >= %{satyr_ver}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -77,7 +85,7 @@ Development libraries and headers for libreport
 
 %package web
 Summary: Library providing network API for libreport
-Group: Libraries
+Group: System Environment/Libraries
 Requires: libreport = %{version}-%{release}
 
 %description web
@@ -99,12 +107,21 @@ Requires: libreport = %{version}-%{release}
 Provides: report = 0:0.23-1
 Obsoletes: report < 0:0.23-1
 # in report the rhtsupport is in the main package, so we need to install it too
-%if 0%{?rhel} >= 6
-Requires: libreport-plugin-rhtsupport
+# report is only in RHEL6, we do not need to carry the dependency to newer RHELs
+%if 0%{?rhel} == 6
+Requires: libreport-plugin-rhtsupport = %{version}-%{release}
 %endif
 
 %description python
 Python bindings for report-libs.
+
+%package python3
+Summary: Python 3 bindings for report-libs
+Group: System Environment/Libraries
+Requires: libreport = %{version}-%{release}
+
+%description python3
+Python 3 bindings for report-libs.
 
 %package cli
 Summary: %{name}'s command line interface
@@ -131,6 +148,7 @@ Summary: GTK front-end for libreport
 Group: User Interface/Desktops
 Requires: libreport = %{version}-%{release}
 Requires: libreport-plugin-reportuploader = %{version}-%{release}
+Requires: fros >= 1.0
 %if 0%{?rhel} >= 6
 %else
 Requires: pygobject3
@@ -164,11 +182,6 @@ server, usually to kerneloops.org.
 Summary: %{name}'s logger reporter plugin
 Group: System Environment/Libraries
 Requires: %{name} = %{version}-%{release}
-Obsoletes: abrt-plugin-logger < 2.0.4
-Provides: report-plugin-localsave = 0:0.23-1
-Obsoletes: report-plugin-localsave < 0:0.23-1
-Provides: report-config-localsave = 0:0.23-1
-Obsoletes: report-config-localsave < 0:0.23-1
 
 %description plugin-logger
 The simple reporter plugin which writes a report to a specified file.
@@ -178,7 +191,6 @@ Summary: %{name}'s mailx reporter plugin
 Group: System Environment/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: mailx
-Obsoletes: abrt-plugin-mailx < 2.0.4
 
 %description plugin-mailx
 The simple reporter plugin which sends a report via mailx to a specified
@@ -189,11 +201,9 @@ Summary: %{name}'s bugzilla plugin
 Group: System Environment/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: libreport-web = %{version}-%{release}
-Obsoletes: abrt-plugin-bugzilla < 2.0.4
-Provides: report-plugin-bugzilla = 0:0.23-1
-Obsoletes: report-plugin-bugzilla < 0:0.23-1
-Provides: report-config-bugzilla-redhat-com = 0:0.23-1
-Obsoletes: report-config-bugzilla-redhat-com < 0:0.23-1
+
+%description plugin-bugzilla
+Plugin to report bugs into the bugzilla.
 
 %package plugin-ureport
 Summary: %{name}'s micro report plugin
@@ -205,15 +215,11 @@ Requires: libreport-web = %{version}-%{release}
 %description plugin-ureport
 Uploads micro-report to abrt server
 
-%description plugin-bugzilla
-Plugin to report bugs into the bugzilla.
-
 %package plugin-rhtsupport
 Summary: %{name}'s RHTSupport plugin
 Group: System Environment/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: libreport-web = %{version}-%{release}
-Obsoletes: abrt-plugin-rhtsupport < 2.0.4
 
 %description plugin-rhtsupport
 Plugin to report bugs into RH support system.
@@ -233,62 +239,87 @@ Summary: %{name}'s reportuploader plugin
 Group: System Environment/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: libreport-web = %{version}-%{release}
-Obsoletes: abrt-plugin-reportuploader < 2.0.4
-Provides: report-plugin-ftp = 0:0.23-1
-Obsoletes: report-plugin-ftp < 0:0.23-1
-Provides: report-config-ftp = 0:0.23-1
-Obsoletes: report-config-ftp < 0:0.23-1
-Provides: report-plugin-scp = 0:0.23-1
-Obsoletes: report-plugin-scp < 0:0.23-1
-Provides: report-config-scp = 0:0.23-1
-Obsoletes: report-config-scp < 0:0.23-1
 
 %description plugin-reportuploader
 Plugin to report bugs into anonymous FTP site associated with ticketing system.
 
+%if 0%{?fedora}
 %package fedora
 Summary: Default configuration for reporting bugs via Fedora infrastructure
 Group: Applications/File
+Requires: %{name} = %{version}-%{release}
 
 %description fedora
 Default configuration for reporting bugs via Fedora infrastructure
-used to easy configure the reporting process for Fedora sytems. Just
+used to easily configure the reporting process for Fedora systems. Just
 install this package and you're done.
+%endif
 
+%if 0%{?rhel}
 %package rhel
 Summary: Default configuration for reporting bugs via Red Hat infrastructure
 Group: Applications/File
+Requires: %{name} = %{version}-%{release}
 
 %description rhel
 Default configuration for reporting bugs via Red Hat infrastructure
-used to easy configure the reporting process for Red Hat sytems. Just
+used to easily configure the reporting process for Red Hat systems. Just
 install this package and you're done.
+
+%package rhel-bugzilla
+Summary: Default configuration for reporting bugs to Red Hat Bugzilla
+Group: Applications/File
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-plugin-bugzilla = %{version}-%{release}
+Requires: libreport-plugin-ureport = %{version}-%{release}
+
+%description rhel-bugzilla
+Default configuration for reporting bugs to Red Hat Bugzilla used to easily
+configure the reporting process for Red Hat systems. Just install this package
+and you're done.
+
+%package rhel-anaconda-bugzilla
+Summary: Default configuration for reporting anaconda bugs to Red Hat Bugzilla
+Group: Applications/File
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-plugin-bugzilla = %{version}-%{release}
+
+%description rhel-anaconda-bugzilla
+Default configuration for reporting Anaconda problems to Red Hat Bugzilla used
+to easily configure the reporting process for Red Hat systems. Just install this
+package and you're done.
+%endif
 
 %package anaconda
 Summary: Default configuration for reporting anaconda bugs
 Group: Applications/File
-Requires: libreport-plugin-reportuploader
-Requires: libreport-plugin-bugzilla
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-plugin-reportuploader = %{version}-%{release}
+%if 0%{?rhel}
+Requires: libreport-plugin-rhtsupport = %{version}-%{release}
+%else
+Requires: libreport-plugin-bugzilla = %{version}-%{release}
+%endif
 
 %description anaconda
-Default configuration for reporting Anaconda problems using Fedora
-infrastructure or uploading the gathered data over ftp/scp...
+Default configuration for reporting Anaconda problems or uploading the gathered
+data over ftp/scp...
 
 %prep
-%setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch6 -p1
-%patch8 -p1
+# http://www.rpm.org/wiki/PackagerDocs/Autosetup
+# Default '__scm_apply_git' is 'git apply && git commit' but this workflow
+# doesn't allow us to create a new file within a patch, so we have to use
+# 'git am' (see /usr/lib/rpm/macros for more details)
+%define __scm_apply_git(qp:m:) %{__git} am
+%autosetup -S git
+
 # koji in f19 has new autotools, so we need to regenerate everything
 cp %SOURCE1 %_builddir/%{name}-%{version}
 ./autogen.sh
 
 %build
 # Commented because of deprecated GTK API
-#CFLAGS="%{optflags} -Werror" %configure --disable-silent-rules
+#CFLAGS="%%{optflags} -Werror" %%configure --disable-silent-rules
 CFLAGS="%{optflags}" %configure --enable-doxygen-docs --disable-silent-rules
 make %{?_smp_mflags}
 
@@ -297,14 +328,62 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir}
 %find_lang %{name}
 
+# Remove byte-compiled python files generated by automake.
+# automake uses system's python for all *.py files, even
+# for those which needs to be byte-compiled with different
+# version (python2/python3).
+# rpm can do this work and use the appropriate python version.
+find $RPM_BUILD_ROOT -name "*.py[co]" -delete
+
 # remove all .la and .a files
 find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 mkdir -p $RPM_BUILD_ROOT/%{_initrddir}
 mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/%{name}/events.d/
 mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/%{name}/events/
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/%{name}/events/
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/%{name}/workflows/
 
 # After everything is installed, remove info dir
 rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
+
+# Remove unwanted Fedora specific workflow configuration files
+%if 0%{!?fedora:1}
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraCCpp.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraKerneloops.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraPython.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraPython3.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraVmcore.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraXorg.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraLibreport.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_FedoraJava.xml
+rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/libreport/workflows.d/report_fedora.conf
+rm -f $RPM_BUILD_ROOT%{_mandir}/man5/report_fedora.conf.5
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_AnacondaFedora.xml
+%endif
+
+# Remove unwanted RHEL specific workflow configuration files
+%if 0%{!?rhel:1}
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELCCpp.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELKerneloops.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELPython.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELvmcore.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELxorg.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELLibreport.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELJava.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_AnacondaRHEL.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_AnacondaRHELBugzilla.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELBugzillaCCpp.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELBugzillaKerneloops.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELBugzillaPython.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELBugzillaVmcore.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELBugzillaXorg.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELBugzillaLibreport.xml
+rm -f $RPM_BUILD_ROOT/%{_datadir}/libreport/workflows/workflow_RHELBugzillaJava.xml
+rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/libreport/workflows.d/report_rhel.conf
+rm -f $RPM_BUILD_ROOT/%{_sysconfdir}/libreport/workflows.d/report_rhel_bugzilla.conf
+rm -f $RPM_BUILD_ROOT%{_mandir}/man5/report_rhel.conf.5
+rm -f $RPM_BUILD_ROOT%{_mandir}/man5/report_rhel_bugzilla.conf.5
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -331,26 +410,40 @@ fi
 %posttrans gtk
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
+
+%post web -p /sbin/ldconfig
+
+
+%postun web -p /sbin/ldconfig
+
+
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc README COPYING
 %config(noreplace) %{_sysconfdir}/%{name}/report_event.conf
 %config(noreplace) %{_sysconfdir}/%{name}/forbidden_words.conf
+%config(noreplace) %{_sysconfdir}/%{name}/ignored_words.conf
 %{_libdir}/libreport.so.*
 %{_libdir}/libabrt_dbus.so.*
 %{_mandir}/man5/report_event.conf.5*
+%{_mandir}/man5/forbidden_words.conf.5*
+%{_mandir}/man5/ignored_words.conf.5*
+# filesystem package owns /usr/share/augeas/lenses directory
+%{_datadir}/augeas/lenses/libreport.aug
 
 %files filesystem
 %defattr(-,root,root,-)
 %dir %{_sysconfdir}/%{name}/
 %dir %{_sysconfdir}/%{name}/events.d/
 %dir %{_sysconfdir}/%{name}/events/
+%dir %{_datadir}/%{name}/events/
+%dir %{_datadir}/%{name}/workflows/
 %dir %{_sysconfdir}/%{name}/plugins/
 
 %files devel
 %defattr(-,root,root,-)
 # Public api headers:
-%doc apidoc/html/*
+%doc apidoc/html/*.{html,png,css,js}
 %{_includedir}/libreport/libreport_types.h
 %{_includedir}/libreport/client.h
 %{_includedir}/libreport/dump_dir.h
@@ -372,10 +465,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files web
 %defattr(-,root,root,-)
-%{_libdir}/libreport-web.so*
+%{_libdir}/libreport-web.so.*
 
 %files web-devel
 %defattr(-,root,root,-)
+%{_libdir}/libreport-web.so
 %{_includedir}/libreport/libreport_curl.h
 %{_libdir}/pkgconfig/libreport-web.pc
 
@@ -383,6 +477,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %defattr(-,root,root,-)
 %{python_sitearch}/report/*
 %{python_sitearch}/reportclient/*
+
+%files python3
+%defattr(-,root,root,-)
+%{python3_sitearch}/report/*
 
 %files cli
 %defattr(-,root,root,-)
@@ -392,15 +490,16 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %files newt
 %defattr(-,root,root,-)
 %{_bindir}/report-newt
+%{_mandir}/man1/report-newt.1.gz
 
 %files gtk
 %defattr(-,root,root,-)
 %{_bindir}/report-gtk
-%{_libexecdir}/abrt-screencast
 %{_libdir}/libreport-gtk.so.*
 %config(noreplace) %{_sysconfdir}/libreport/events.d/emergencyanalysis_event.conf
-%{_sysconfdir}/libreport/events/report_EmergencyAnalysis.xml
-
+%{_mandir}/man5/emergencyanalysis_event.conf.5.*
+%{_datadir}/%{name}/events/report_EmergencyAnalysis.xml
+%{_mandir}/man1/report-gtk.1.gz
 
 %files gtk-devel
 %defattr(-,root,root,-)
@@ -410,52 +509,76 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files plugin-kerneloops
 %defattr(-,root,root,-)
-%{_sysconfdir}/libreport/events/report_Kerneloops.xml
+%{_datadir}/%{name}/events/report_Kerneloops.xml
 %{_mandir}/man*/reporter-kerneloops.*
 %{_bindir}/reporter-kerneloops
 
 %files plugin-logger
 %defattr(-,root,root,-)
-%{_sysconfdir}/libreport/events/report_Logger.conf
-%{_sysconfdir}/libreport/events/report_Logger.xml
+%config(noreplace) %{_sysconfdir}/libreport/events/report_Logger.conf
+%{_mandir}/man5/report_Logger.conf.5.*
+%{_datadir}/%{name}/events/report_Logger.xml
 %config(noreplace) %{_sysconfdir}/libreport/events.d/print_event.conf
+%{_mandir}/man5/print_event.conf.5.*
 %{_bindir}/reporter-print
 %{_mandir}/man*/reporter-print.*
 
 %files plugin-mailx
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/libreport/plugins/mailx.conf
-%{_sysconfdir}/libreport/events/report_Mailx.xml
+%{_datadir}/%{name}/conf.d/plugins/mailx.conf
+%{_datadir}/%{name}/events/report_Mailx.xml
+%{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.mailx.xml
 %config(noreplace) %{_sysconfdir}/libreport/events.d/mailx_event.conf
+%{_mandir}/man5/mailx.conf.5.*
+%{_mandir}/man5/mailx_event.conf.5.*
 %{_mandir}/man*/reporter-mailx.*
 %{_bindir}/reporter-mailx
 
 %files plugin-ureport
 %defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/libreport/plugins/ureport.conf
+%{_datadir}/%{name}/conf.d/plugins/ureport.conf
 %{_bindir}/reporter-ureport
-#%{_mandir}/man1/reporter-ureport.1.gz
-%{_sysconfdir}/libreport/events/report_uReport.xml
+%{_mandir}/man1/reporter-ureport.1.gz
+%{_mandir}/man5/ureport.conf.5.gz
+%{_datadir}/%{name}/events/report_uReport.xml
+%{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.ureport.xml
 
 %files plugin-bugzilla
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla.conf
+%{_datadir}/%{name}/conf.d/plugins/bugzilla.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_formatdup.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_libreport.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_kernel.conf
-%{_sysconfdir}/libreport/events/report_Bugzilla.xml
+%{_datadir}/%{name}/events/report_Bugzilla.xml
+%{_datadir}/%{name}/events/watch_Bugzilla.xml
 %config(noreplace) %{_sysconfdir}/libreport/events/report_Bugzilla.conf
 %config(noreplace) %{_sysconfdir}/libreport/events.d/bugzilla_event.conf
+%{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.bugzilla.xml
 # FIXME: remove with the old gui
 %{_mandir}/man1/reporter-bugzilla.1.gz
+%{_mandir}/man5/report_Bugzilla.conf.5.*
+%{_mandir}/man5/bugzilla_event.conf.5.*
+%{_mandir}/man5/bugzilla.conf.5.*
+%{_mandir}/man5/bugzilla_format.conf.5.*
+%{_mandir}/man5/bugzilla_formatdup.conf.5.*
+%{_mandir}/man5/bugzilla_format_libreport.conf.5.*
+%{_mandir}/man5/bugzilla_format_kernel.conf.5.*
 %{_bindir}/reporter-bugzilla
 
 %files plugin-rhtsupport
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/libreport/plugins/rhtsupport.conf
-%{_sysconfdir}/libreport/events/report_RHTSupport.xml
+%{_datadir}/%{name}/conf.d/plugins/rhtsupport.conf
+%{_datadir}/%{name}/events/report_RHTSupport.xml
+%{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.rhtsupport.xml
 %config(noreplace) %{_sysconfdir}/libreport/events.d/rhtsupport_event.conf
 %{_mandir}/man1/reporter-rhtsupport.1.gz
+%{_mandir}/man5/rhtsupport.conf.5.*
+%{_mandir}/man5/rhtsupport_event.conf.5.*
 %{_bindir}/reporter-rhtsupport
 
 %files compat
@@ -466,34 +589,301 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %files plugin-reportuploader
 %defattr(-,root,root,-)
 %{_mandir}/man*/reporter-upload.*
+%{_mandir}/man5/uploader_event.conf.5.*
 %{_bindir}/reporter-upload
-%{_sysconfdir}/libreport/events/report_Uploader.xml
+%{_datadir}/%{name}/events/report_Uploader.xml
 %config(noreplace) %{_sysconfdir}/libreport/events.d/uploader_event.conf
-%{_sysconfdir}/libreport/workflows/workflow_Upload.xml
+%{_datadir}/%{name}/workflows/workflow_Upload.xml
+%config(noreplace) %{_sysconfdir}/libreport/plugins/upload.conf
+%{_datadir}/%{name}/conf.d/plugins/upload.conf
 
+%if 0%{?fedora}
 %files fedora
 %defattr(-,root,root,-)
-%{_sysconfdir}/libreport/workflows/workflow_Fedora.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraCCpp.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraKerneloops.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraPython.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraPython3.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraVmcore.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraXorg.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraLibreport.xml
+%{_datadir}/%{name}/workflows/workflow_FedoraJava.xml
 %config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_fedora.conf
+%{_mandir}/man5/report_fedora.conf.5.*
+%endif
 
+%if 0%{?rhel}
 %files rhel
 %defattr(-,root,root,-)
-%{_sysconfdir}/libreport/workflows/workflow_RHELCCpp.xml
-%{_sysconfdir}/libreport/workflows/workflow_RHELKerneloops.xml
-%{_sysconfdir}/libreport/workflows/workflow_RHELPython.xml
-%{_sysconfdir}/libreport/workflows/workflow_RHELvmcore.xml
-%{_sysconfdir}/libreport/workflows/workflow_RHELxorg.xml
+%{_datadir}/%{name}/workflows/workflow_RHELCCpp.xml
+%{_datadir}/%{name}/workflows/workflow_RHELKerneloops.xml
+%{_datadir}/%{name}/workflows/workflow_RHELPython.xml
+%{_datadir}/%{name}/workflows/workflow_RHELvmcore.xml
+%{_datadir}/%{name}/workflows/workflow_RHELxorg.xml
+%{_datadir}/%{name}/workflows/workflow_RHELLibreport.xml
+%{_datadir}/%{name}/workflows/workflow_RHELJava.xml
 %config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_rhel.conf
+%{_mandir}/man5/report_rhel.conf.5.*
+
+%files rhel-bugzilla
+%defattr(-,root,root,-)
+%{_datadir}/%{name}/workflows/workflow_RHELBugzillaCCpp.xml
+%{_datadir}/%{name}/workflows/workflow_RHELBugzillaKerneloops.xml
+%{_datadir}/%{name}/workflows/workflow_RHELBugzillaPython.xml
+%{_datadir}/%{name}/workflows/workflow_RHELBugzillaVmcore.xml
+%{_datadir}/%{name}/workflows/workflow_RHELBugzillaXorg.xml
+%{_datadir}/%{name}/workflows/workflow_RHELBugzillaLibreport.xml
+%{_datadir}/%{name}/workflows/workflow_RHELBugzillaJava.xml
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_rhel_bugzilla.conf
+%{_mandir}/man5/report_rhel_bugzilla.conf.5.*
+
+%files rhel-anaconda-bugzilla
+%defattr(-,root,root,-)
+%{_datadir}/%{name}/workflows/workflow_AnacondaRHELBugzilla.xml
+%endif
 
 %files anaconda
 %defattr(-,root,root,-)
-%{_sysconfdir}/libreport/workflows/workflow_AnacondaFedora.xml
-%{_sysconfdir}/libreport/workflows/workflow_AnacondaUpload.xml
+%if 0%{?fedora}
+%{_datadir}/%{name}/workflows/workflow_AnacondaFedora.xml
+%endif
+%if 0%{?rhel}
+%{_datadir}/%{name}/workflows/workflow_AnacondaRHEL.xml
+%endif
+%{_datadir}/%{name}/workflows/workflow_AnacondaUpload.xml
 %config(noreplace) %{_sysconfdir}/libreport/workflows.d/anaconda_event.conf
 %config(noreplace) %{_sysconfdir}/libreport/events.d/bugzilla_anaconda_event.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_anaconda.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_formatdup_anaconda.conf
+%{_mandir}/man5/anaconda_event.conf.5.*
+%{_mandir}/man5/bugzilla_anaconda_event.conf.5.*
+%{_mandir}/man5/bugzilla_format_anaconda.conf.5.*
+%{_mandir}/man5/bugzilla_formatdup_anaconda.conf.5.*
 
 
 %changelog
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.2.2-6
+- 为 Magic 3.0 重建
+
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.2.2-5
+- 为 Magic 3.0 重建
+
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.2.2-4
+- 为 Magic 3.0 重建
+
+* Wed Apr 30 2014 Jakub Filak <jfilak@redhat.com> - 2.2.2-3
+- improve User Experience in Anaconda
+
+* Thu Apr 24 2014 Jakub Filak <jfilak@redhat.com> - 2.2.2-2
+- Bugzilla: pass Bugzilla_token in every XML RPC call
+
+* Sun Apr 20 2014 Jakub Filak <jfilak@redhat.com> 2.2.2-1
+- stop using deprecated json-c functions
+- bugzilla: try to avoid usage of 'private' group
+- spec: install ignored_words.conf manual page
+- wizard: extended the manual pages
+- localization: fix gettext
+- wizard: make the custom search case insensitive
+- use a better label for the forbidden words button
+
+* Mon Apr 07 2014 Jakub Filak <jfilak@redhat.com> 2.2.1-2
+- include 'package' in AVC bugzilla bug reports
+
+* Fri Apr 04 2014 Jakub Filak <jfilak@redhat.com> 2.2.1-1
+- update the list of ignored words
+- wizard: introduce the searched words list
+- report-gtk: confirm the ask dialogs on 'Enter'
+- spec: provide default config for reporter-upload
+- Provide default config for reporter-upload
+- config: do not export empty environment variables
+- spec: byte-compile py files with rpm scripts
+
+* Wed Mar 05 2014 Jakub Filak <jfilak@redhat.com> 2.2.0-1
+- python: build python api for py3
+- Bugzilla: fedora_contrib_private group ID for the private bugs
+- remove invalid bytes from 'sv' strings
+- client API: return empty string instead of NULL
+- introduce 'watch_Bugzilla' event
+- ignored words: add SSH_ASKPASS words
+- introduce import-event-options in xml event definitions
+- correct name of RH Customer Portal
+- Fix typos in error messages
+- Translation updates
+
+* Wed Mar 05 2014 Karsten Hopp <karsten@redhat.com> 2.1.12-4
+- don't run tests on ppc* until rhbz 1070892 is fixed
+
+* Tue Feb 18 2014 Jakub Filak <jfilak@redhat.com> 2.1.12-3
+- fix a pair of typos in error messages
+- add libpciaccess.so to the list of ignored keywords
+- translation updates
+- Resolves: #1064209
+
+* Mon Feb 10 2014 Jakub Filak <jfilak@redhat.com> 2.1.12-2
+- fix loading of localized strings from XML files
+- fix loading of default event configuration files
+- provide SYSLOG_FACILITY when logging through journal
+
+* Thu Jan 30 2014 Jakub Filak <jfilak@redhat.com> 2.1.12-1
+- fix loading of the user list of ignored words
+- report-cli: use the Client API for communication to user
+- add more forbidden words
+- a better message for invalid data in backtrace_rating
+- ureport: add support for client-side authentication
+- Export plugin config dir in pkg-config
+- add Java reporting workflows
+- define DBus config interfaces for all plugins
+- add a workflow for libreport type problems
+
+* Wed Jan  8 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.1.11-3
+- Don't use deprecated GTK3 API
+- Fix unit tests
+
+* Wed Jan  8 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.1.11-2
+- Build latest version on F-21/rawhide
+- Fix descriptions
+
+* Wed Jan 08 2014 Jakub Filak <jfilak@redhat.com> 2.1.11-1
+- Update translations
+- add type agnostic functions for map_string_t
+- %%description spelling fix.
+- update titles of RHTS workflows
+- add Anaconda Bugzilla reporting workflows for RHEL
+- add Bugzilla reporting workflows for RHEL
+
+* Wed Dec 11 2013 Jakub Filak <jfilak@redhat.com> 2.1.10-1
+- bugzilla: no extra email notification on URL addition
+- Make make_description() output less confusing
+- Ensure 'long long unsigned' in printf format args
+- make_description: add an option for URLs from reported_to
+- add accountsservice into ignored words
+- Put back VERBn prefixes for few logging calls
+- debuginfo: fix clean_up function call
+- augeas: trim spaces arround '='
+- spec: add augeas-devel to build requires
+- load/save configuration via augeas
+- create augeas lens for libreport
+- Fix typo in a string
+- spec: install ureport conf file and man page
+- Update reporter-ureport manual pages
+- ureport: add the configuration file
+- anaconda: use workflow in the report-cli event
+- report-cli: add support for workflows
+- wizard: do not show 'show log' expander if log is empty
+- ureport: print the error response body only in verbose mode
+- Load a config file from several directories
+- Export EXIT_STOP_EVENT_RUN in python modules
+- reporter-bugzilla: if adding to existing BZ, clearly flag comment as a dup.
+- Fix a small mistake in "Use log_ family instead of VERBn log calls" commit
+- ureport: implement attaching of contact email
+- Do not load "always editable" files if they are HUGE. Fixes rhbz1010167.
+- shorten default Bugzilla bug summary format
+- Update translations
+- XML parser: keep region specific translation texts
+- Resolves: #1009730
+
+* Sat Oct 26 2013 Jakub Filak <jfilak@redhat.com> 2.1.9-1
+- rephrase a message for missing configuration
+- ask for missing configuration instead of dying
+- Client API: introduce non-iteractive mode
+- spec: add systemd-devel to BuildRequires
+- Use log_ family instead of VERBn log calls
+- Add journald support
+- Modify logging to use various logging levels
+- Include hostname in mailx notification
+- enable reporting to Red Hat Support tool for anaconda bugs
+- bugzilla: set URL field
+- fix an overflow condition in parse time fn for x32 arch
+- add a short explanation of private tickets - related rhbz#1011916
+- don't use popup to ask for a private ticket - related rhbz#1011916
+
+* Fri Oct 04 2013 Jakub Filak <jfilak@redhat.com> 2.1.8-1
+- disable rhel/fedora workflows for anaconda
+- added whitelist for sensitive data - rhbz#1009730 rhbz#896246
+- ureport: always add BTHASH link to a report
+- reprot-gtk: underline tab titles with sensitive information
+- introduce FILENAME_EXPLOITABLE; related to abrt/abrt#703
+
+* Wed Sep 11 2013 Jakub Filak <jfilak@redhat.com> 2.1.7-1
+- Fix problem_item_format() to work properly after 2038 on x32. #691
+- Use proper json-c requirement in libreport-web.pc.
+- abrt-cli info: even -s 10 should show one-liners. #690
+- add checks for existing dumpdir items - closes #164
+- Create helper functions for sha1-hashing strings. #694
+- can now use custom repo filters for enabling repos, related abrt/abrt#688
+- add docstrings, remove global variable - related #171
+- fixed exception handling - closes #173
+- added checks for locked dump directory to dd_* functions, closes #133
+- fixed the symlinks handling in get_file_list abrt/abrt#686
+- make the build in the the build directory to not pollute the source tree
+- fixed debugInfoDownload so that it can process local repos - closes #48
+- Increase text size limit from 1Mb to 8 MB. rhbz#887570.
+- print warning when there is not engough free space for debuginfos, closes #170
+- autogen.sh: improve dependency parser
+- ignore directories without type element - rhbz#958968
+- abrt_xmlrpc: increase XML_SIZE_LIMIT to 4 mbytes. rhbz#961520.
+- ask user to create a private report if it contains sensitive data - rhbz#960549
+- updated translation rhbz#860555
+- updated transifex url
+- do not leak file rhbz#997871
+- in KDE session open URLs in kde-open
+- report-gtk: use wrapped text for warning labels
+- spec: remove abrt-screencast
+- remove obsoleted abrt-screencast
+- Fix create_symlink_lockfile() to not emit ENOENT when asked not to.
+- do not store potentially big data in /tmp
+- New public function create_symlink_lockfile()
+
+* Mon Jul 29 2013 Jakub Filak <jfilak@redhat.com> 2.1.6-2
+- link with gobject libraries
+- use RHTSupport in RHEL workflows
+
+* Fri Jul 26 2013 Jakub Filak <jfilak@redhat.com> 2.1.6-1
+- add related packages version in emergency event
+- replace functions deprecated in Gtk-3.10 with their substitutes
+- fixed the bugzilla private group names rhbz#985881
+- workflows: add Anaconda work flow for RHEL
+- add missing manual pages for configuration files, binaries and scripts
+- added options to create private bz tickets rhbz#803772
+- skip the workflow selection if there is only 1 available closes #167
+- added missing workflows for Fedora rhbz#866027
+- spec: double up percent signs in chagelog entries
+- spec: make anaconda package description more generic
+- spec: install RHEL anaconda work flow
+- spec: added new workflow files rhbz#866027
+- spec: build only workflow subpkg relevant for host's OS
+- spec: install all manual pages
+- spec: install only documentation files
+- spec: drop unnecessary Obsoletes and Provides
+- spec: add manual pages to packages
+- spec: specify all config files
+- spec: replace btparser with satyr
+- move non-conf XML files from /etc/libreport/ to /usr/share/libreport/
+- Update satyr support, drop btparser compatibility
+- fixed typo in config file related #866027
+- resize the config window upon collapsing Advanced section
+- rhbz: test xmlrpc env for errors in abrt_xmlrpc_call_params()
+- rhbz: test rhbz_new_bug() return value for errors
+- wizard: show accurate messages
+- spec: add dependency on fros rhbz#958979
+- use fros instead of hard dependency on recordmydesktop rhbz#958979
+
+* Tue Jul 02 2013 Jakub Filak <jfilak@redhat.com> 2.1.5-2
+- reporter-bugzilla: test return values for errors
+- Resolves: #980228
+
+* Fri Jun 14 2013 Jakub Filak <jfilak@redhat.com> 2.1.5-1
+- make the uploader event available for all report types
+- ureport: add conversion from abrt vmcore type to ureport KERNELOOPS type
+- fixed relro flags rhbz#812283
+- rhbz: don't pass NULL in platform argument
+- add function getting information about dump dir for uid
+- anaconda: add proper configuration
+- rhbz: do not try to attach empty files
+- try to delete dump dirs using abrtd in the first step
+- workflow config: use scrollbars instead of enormous window size
+- Resolves: #963020
+
 * Fri May 10 2013 Jiri Moskovcak <jmoskovc@redhat.com> 2.1.4-5
 - removed dependency on recordmydesktop rhbz#959475
 
@@ -559,7 +949,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 * Tue Mar 19 2013 Jakub Filak <jfilak@redhat.com> 2.1.2-1
 - always treat os-release as textual related to rhbz#922433
-- is_text_file(): bump allowable non-ASCII chars from 2% to 10%. Closes rhbz#922433
+- is_text_file(): bump allowable non-ASCII chars from 2%% to 10%%. Closes rhbz#922433
 - report-gtk: don't clear warnings after reporting is finished
 - report-gtk: show tabs only in verbose expert mode
 - report-gtk: prettify the workflow buttons rhbz#917694
@@ -585,7 +975,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 - fix logic of 'Dont ask me again' dialogues (stop returning true for all options)
 - make [p]error_msg[_and_die] more fork-in-multithreaded-app safe
 - Make forking code paths more robust.
-- curl_debug: fix use of "%.*s" (need to pass an int, not size_t)
+- curl_debug: fix use of "%%.*s" (need to pass an int, not size_t)
 - curl_debug: prettify debug output
 - Resolves: #871126, #885055, #890778, #901467, #916389, #917684, #917694, #919536, #922433, #923117
 
@@ -644,7 +1034,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 - don't require recordmydesktop on RHEL rhbz#891512
 - fixed the relro flags rhbz#812283
 - bugzilla_format_kernel.conf: Attach dmesg element. Closes rhbz#826058
-- bugzilla_format_kernel.conf: fix %summary
+- bugzilla_format_kernel.conf: fix %%summary
 - Make get_dirsize_find_largest_dir less talkative.
 - Minor fixes: robustify start_command(), fix style, fix English in msgs
 - Fix typo, remove c-format from a not c-formatted message
@@ -695,7 +1085,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 - added x,--expert cmdline option to enable expert mode
 - switch comment and event selector page
 - use get_ and set_ functions to access event_config_t
-- reporter-bz: don't return NULL on %non_existing_item% - use "" instead
+- reporter-bz: don't return NULL on %%non_existing_item%% - use "" instead
 - refactoring the xml and conf loader code related to trac#822
 - reporter-bugzilla: add a --debug option
 - reporter-bz: fix a summary line formatting bug

@@ -1,7 +1,5 @@
 # Disable -debuginfo package generation
-%define debug_package   %{nil}
-%define rversion %{kde4_kdelibs_version}
-%define release_number 2
+#define debug_package   %{nil}
 %define real_name kdepimlibs
 
 %define apidocs 1
@@ -12,9 +10,10 @@ License: LGPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.3
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -302,6 +301,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2.3
 - 为 Magic 3.0 重建
 

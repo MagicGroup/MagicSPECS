@@ -8,7 +8,7 @@ Summary(zh_CN.UTF-8): Phonon 的 VLC 后端
 Version: 0.7.1
 Release: 9%{?dist}
 URL: http://www.videolan.org/
-Source: http://mirror.bjtu.edu.cn/kde/stable/phonon/%{real_name}/%{version}/%{real_name}-%{version}.tar.xz
+Source: http://download.kde.org/stable/phonon/%{real_name}/%{version}/%{real_name}-%{version}.tar.xz
 License: LGPL v2+
 Group: System/Libraries
 Group(zh_CN.UTF-8): 系统/库

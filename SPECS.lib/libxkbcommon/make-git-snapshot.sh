@@ -1,31 +1,17 @@
 #!/bin/sh
 
-proto=$1
-branch=$2
+DIRNAME=libxkbcommon-$( date +%Y%m%d )
 
-if [ -z "$proto" ]; then
-    echo "Usage: $0 <proto name> [<branch>]"
-    exit 1
-fi
-
-dirname=$proto-$( date +%Y%m%d )
-
-rm -rf $dirname
-git clone git://git.freedesktop.org/git/xorg/proto/$proto $dirname
-cd $dirname
-if [ -z "$branch" ]; then
+rm -rf $DIRNAME
+git clone git://anongit.freedesktop.org/git/xorg/lib/libxkbcommon $DIRNAME
+cd $DIRNAME
+if [ -z "$1" ]; then
     git log | head -1
 else
-    git checkout $branch
+    git checkout $1
 fi
-sha=`git rev-list --max-count=1 --abbrev-commit HEAD`
+git log | head -1 | awk '{ print $2 }' > ../commitid
 git repack -a -d
 cd ..
-
-# append sha to dirname
-mv $dirname $dirname-git$sha
-dirname=$dirname-git$sha
-tarball=$dirname.tar.bz2
-tar jcf $tarball $dirname
-rm -rf $dirname
-echo "$tarball is now available"
+tar jcf $DIRNAME.tar.bz2 $DIRNAME
+rm -rf $DIRNAME

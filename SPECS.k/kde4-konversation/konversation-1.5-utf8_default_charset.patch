@@ -1,0 +1,34 @@
+diff -ur konversation-1.5.orig/src/dcc/chat.cpp konversation-1.5/src/dcc/chat.cpp
+--- konversation-1.5.orig/src/dcc/chat.cpp	2014-06-01 09:55:51.079326832 +0000
++++ konversation-1.5/src/dcc/chat.cpp	2014-06-01 09:56:57.773325123 +0000
+@@ -49,7 +49,7 @@
+             // set default values
+             m_reverse = Preferences::self()->dccPassiveSend();
+ 
+-            setEncoding(Konversation::IRCCharsets::self()->encodingForLocale());
++            setEncoding(QString("UTF-8"));
+         }
+ 
+         Chat::~Chat()
+diff -ur konversation-1.5.orig/src/identity.cpp konversation-1.5/src/identity.cpp
+--- konversation-1.5.orig/src/identity.cpp	2014-06-01 09:55:51.081326832 +0000
++++ konversation-1.5/src/identity.cpp	2014-06-01 09:58:44.887322378 +0000
+@@ -59,7 +59,8 @@
+     setNickservNickname("nickserv");
+     setNickservCommand("identify");
+ 
+-    setCodecName(Konversation::IRCCharsets::self()->encodingForLocale());
++    setCodecName(QString("UTF-8"));
++    //setCodecName(Konversation::IRCCharsets::self()->encodingForLocale());
+ 
+     setInsertRememberLineOnAway(false);
+ 
+@@ -177,7 +178,7 @@
+     // never set an empty or borked codec!
+     QString codecName=newCodecName;
+     if(!Konversation::IRCCharsets::self()->isValidEncoding(codecName))
+-        codecName=Konversation::IRCCharsets::self()->encodingForLocale();
++        codecName=QString("UTF-8")/*Konversation::IRCCharsets::self()->encodingForLocale()*/;
+ 
+     m_codecName=codecName;
+     m_codec=Konversation::IRCCharsets::self()->codecForName(codecName);

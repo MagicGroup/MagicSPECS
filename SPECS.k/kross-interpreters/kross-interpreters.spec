@@ -4,18 +4,11 @@
 ## java needs love
 #define kross_java 1
 
-%if 0%{?fedora} > 16 || 0%{?rhel} > 6
-# busted, 
-# http://bugzilla.redhat.com/794742
 # http://bugs.kde.org/243565
-%global ruby_abi 1.9.1
-%else
-%define kross_ruby 1
-%global ruby_abi 1.8
-%endif
+# define kross_ruby 1
 
 Name:    kross-interpreters 
-Version: %{kde4_kdelibs_version}
+Version: 4.13.1
 Release: 1%{?dist}
 Summary: Kross interpreters 
 
@@ -134,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Mon May 06 2013 Than Ngo <than@redhat.com> - 4.10.3-1
 - 4.10.3
 

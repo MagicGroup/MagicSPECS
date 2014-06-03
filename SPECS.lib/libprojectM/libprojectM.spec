@@ -1,6 +1,6 @@
 Name:		libprojectM
 Version:	2.0.1
-Release:	20%{?dist}
+Release:	23%{?dist}
 Summary:	The libraries for the projectM music visualization plugin
 Group:		Applications/Multimedia
 License:	LGPLv2+
@@ -63,7 +63,7 @@ sed -i 's/\r//' ChangeLog
 
 
 %build
-%cmake -DCMAKE_INSTALL_PREFIX=%{_prefix} -DLIB_INSTALL_DIR=%{_libdir} .
+%cmake -DCMAKE_INSTALL_PREFIX=%{_prefix} -DLIB_INSTALL_DIR=%{_libdir} -DFREETYPE2_INCLUDE_DIR=%{_includedir}/freetype2 .
 make %{?_smp_mflags} VERBOSE=1
 
 
@@ -92,8 +92,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-* Sun Apr 28 2013 Liu Di <liudidi@gmail.com> - 2.0.1-20
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.0.1-23
 - 为 Magic 3.0 重建
+
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.0.1-22
+- 为 Magic 3.0 重建
+
+* Mon Nov 18 2013 Dave Airlie <airlied@redhat.com> - 2.0.1-21
+- rebuilt for GLEW 1.10
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild

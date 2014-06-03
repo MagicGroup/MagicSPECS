@@ -1,9 +1,11 @@
 Summary: KDE filesystem layout
+Summary(zh_CN.UTF-8): KDE4 的文件系统结构
 Name: kde4-filesystem
 Version: 4
-Release: 46%{?dist}
+Release: 47%{?dist}
 
 Group: System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 License: Public Domain
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: kde4-rpm-config
@@ -23,6 +25,8 @@ Requires:  rpm
 %description
 This package provides some directories that are required/used by KDE. 
 
+%description -l zh_CN.UTF-8
+这个包提供了 KDE4 需要并使用的一些目录。
 
 %prep
 
@@ -131,4 +135,7 @@ rm -rf $RPM_BUILD_ROOT %{name}.list
 
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4-47
+- 为 Magic 3.0 重建
+
 

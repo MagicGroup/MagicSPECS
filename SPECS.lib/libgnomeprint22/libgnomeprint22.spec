@@ -3,7 +3,7 @@
 Summary: Printing library for GNOME
 Name:  libgnomeprint22
 Version: 2.18.8
-Release: 5%{?dist}
+Release: 10%{?dist}
 License: LGPLv2+ and BSD
 # BSD applies to ttsubset code that was taken from STSF
 Group:          System Environment/Base
@@ -21,7 +21,6 @@ BuildRequires: pango-devel
 BuildRequires: libxml2-devel 
 BuildRequires: libart_lgpl-devel
 BuildRequires: libbonobo-devel 
-BuildRequires: bonobo-activation-devel
 BuildRequires: freetype 
 BuildRequires: gtk-doc
 BuildRequires: libgnomecups-devel
@@ -80,7 +79,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name *.la -exec rm {} \;
-
+magic_rpm_clean.sh
 %find_lang %{gettext_package}
 
 %post -p /sbin/ldconfig
@@ -102,11 +101,26 @@ find $RPM_BUILD_ROOT -name *.la -exec rm {} \;
 %{_datadir}/gtk-doc/html/libgnomeprint
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.18.8-5
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 2.18.8-10
 - 为 Magic 3.0 重建
 
-* Mon Nov 26 2012 Liu Di <liudidi@gmail.com> - 2.18.8-4
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 2.18.8-9
 - 为 Magic 3.0 重建
+
+* Tue Jan 14 2014 Lubomir Rintel <lkundrak@v3.sk> - 2.18.8-8
+- bonobo-activation has been included in libbonobo and the provide is gone now
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.18.8-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.18.8-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.18.8-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.18.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Nov 30 2011 Marek Kasik <mkasik@redhat.com> - 2.18.8-3
 - Include stdio.h to have FILE defined in gnome-print-cups-transport.c

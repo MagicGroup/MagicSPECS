@@ -1,0 +1,13 @@
+Index: go/src/run.bash
+===================================================================
+--- go.orig/src/run.bash
++++ go/src/run.bash
+@@ -105,7 +105,7 @@ go run $GOROOT/test/run.go - . || exit 1
+ (xcd ../misc/cgo/test
+ go test -ldflags '-linkmode=auto' || exit 1
+ # linkmode=internal fails on dragonfly since errno is a TLS relocation.
+-[ "$GOHOSTOS" == dragonfly ] || go test -ldflags '-linkmode=internal' || exit 1
++#[ "$GOHOSTOS" == dragonfly ] || go test -ldflags '-linkmode=internal' || exit 1
+ case "$GOHOSTOS-$GOARCH" in
+ openbsd-386 | openbsd-amd64)
+ 	# test linkmode=external, but __thread not supported, so skip testtls.

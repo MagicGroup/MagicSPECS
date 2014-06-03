@@ -15,7 +15,7 @@ License: LGPLv2+
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://developer.kde.org/language-bindings/
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{version}/src/pykde4-%{version}.tar.xz
+Source0: http://download.kde.org/stable/%{version}/src/pykde4-%{version}.tar.xz
 
 Patch100: pykde4-pyqt495.patch
 

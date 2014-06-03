@@ -1,4 +1,6 @@
-%define rversion %{kde4_kdelibs_version}
+%ifnarch %{arm}
+%global opengl 1
+%endif
 #define svn_number rc1
 %define real_name analitza
 
@@ -9,15 +11,25 @@ Summary: Library of mathematical features
 Summary(zh_CN.UTF-8): KDE4 用的数学库
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Version: 4.13.1
+Release: 3%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0:  http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+%define rversion %version
+Source0:  http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+# add SHOULD_BUILD_OPENGL option, to be able to disable support
+# on arm because plotter3d assumes qreal=double all over the place
+Patch1: analitza-4.10.1-opengl_optional.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
-BuildRequires: libkdelibs4-devel >= 4.0.82
+BuildRequires: libkdelibs4-devel >= %{version}
+
+%if 0%{?opengl:1}
+BuildRequires: pkgconfig(QtOpenGL)
+%endif
+BuildRequires: readline-devel
 
 %description
 Library of mathematical features
@@ -41,11 +53,14 @@ Contains the development files.
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
+%patch1 -p1 
 
 %build
 mkdir build
 cd build
-%cmake_kde4 ..
+%cmake_kde4 \
+  %{!?opengl:-DSHOULD_BUILD_OPENGL:BOOL=OFF} \
+  ..
 
 make %{?_smp_mflags}
 
@@ -75,6 +90,15 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/*
 
 %changelog
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 4.13.1-3
+- 为 Magic 3.0 重建
+
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-2
+- 更新到 4.13.1
+
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

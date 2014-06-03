@@ -16,7 +16,7 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk3
-Version:	3.13.1
+Version:	3.13.2
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -256,6 +256,10 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_mandir}/man1/broadwayd.1*
 %endif
 
+%{_datadir}/glib-2.0/schemas/org.gtk.Settings.Debug.gschema.xml
+%{_mandir}/man1/gtk3-demo.1.gz
+%{_mandir}/man1/gtk3-widget-factory.1.gz
+
 %files immodules
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-cedilla.so
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-am-et.so
@@ -299,6 +303,9 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/installed-tests
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 3.13.2-1
+- 更新到 3.13.2
+
 * Mon May 19 2014 Liu Di <liudidi@gmail.com> - 3.13.1-1
 - 更新到 3.13.1
 

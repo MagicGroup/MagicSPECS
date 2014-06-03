@@ -1,7 +1,7 @@
 Name:		gambas3
 Summary:	IDE based on a basic interpreter with object extensions
 Version:	3.5.2
-Release:	2%{?dist}
+Release:	4%{?dist}
 License:	GPL+
 Group:		Development/Tools
 URL:		http://gambas.sourceforge.net/
@@ -2439,6 +2439,12 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/%{name}/info/gb.xml.xslt.*
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 3.5.2-4
+- 为 Magic 3.0 重建
+
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 3.5.2-3
+- 为 Magic 3.0 重建
+
 * Wed Jan 15 2014 Dave Airlie <airlied@redhat.com> 3.5.2-2
 - rebuild against llvm 3.4
 

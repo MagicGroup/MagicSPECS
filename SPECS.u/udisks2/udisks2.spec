@@ -7,8 +7,8 @@
 
 Summary: Disk Manager
 Name: udisks2
-Version: 2.1.2
-Release: 1%{?dist}
+Version: 2.1.3
+Release: 3%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://www.freedesktop.org/wiki/Software/udisks
@@ -154,6 +154,19 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 
 # Note: please don't forget the %{?dist} in the changelog. Thanks
 %changelog
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.1.3-3
+- 为 Magic 3.0 重建
+
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.1.3-2
+- 为 Magic 3.0 重建
+
+* Thu Mar 27 2014 Tomas Bzatek <tbzatek@redhat.com> - 2.1.3-1%{?dist}
+- Update to 2.1.3
+
+* Mon Mar 10 2014 Jan Safranek <jsafrane@redhat.com>- 2.1.2-2%{?dist}
+- Fix CVE-2014-0004: stack-based buffer overflow when handling long path names
+  (#1074459)
+
 * Wed Jan 15 2014 Tomas Bzatek <tbzatek@redhat.com> - 2.1.2-1%{?dist}
 - Update to 2.1.2
 

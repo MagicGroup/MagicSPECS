@@ -1,13 +1,14 @@
 %define real_name digikam
 #define pre %{nil}
 Name:	 kde4-digikam
-Version: 3.1.0
+Version: 4.0.0
 Release: 1%{?dist}
 Summary: A digital camera accessing & photo management application
+Summary(zh_CN.UTF-8): 一个数码相机访问和照片管理程序
 
 License: GPLv2+
 URL:	 http://www.digikam.org/
-Source0: http://downloads.sourceforge.net/digikam/digikam-%{version}%{?pre:-%{pre}}.tar.bz2
+Source0: http://download.kde.org/stable/digikam/digikam-%{version}%{?pre:-%{pre}}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # digiKam not listed as a media handler for pictures in Nautilus (#516447)
@@ -288,15 +289,15 @@ update-desktop-database -q &> /dev/null
 %postun libs -p /sbin/ldconfig
 
 %files libs
-%{_kde4_libdir}/libdigikamcore.so.3*
-%{_kde4_libdir}/libdigikamdatabase.so.3*
+%{_kde4_libdir}/libdigikamcore.so.*
+%{_kde4_libdir}/libdigikamdatabase.so.*
 
 %post -n libkface -p /sbin/ldconfig
 %postun -n libkface -p /sbin/ldconfig
 
 %files -n libkface
 %{_kde4_appsdir}/libkface/
-%{_kde4_libdir}/libkface.so.1*
+%{_kde4_libdir}/libkface.so.*
 
 %files -n libkface-devel
 %{_kde4_includedir}/libkface/
@@ -310,7 +311,7 @@ update-desktop-database -q &> /dev/null
 %files -n libkgeomap 
 #%{_kde4_bindir}/libkgeomap_demo
 %{_kde4_appsdir}/libkgeomap/
-%{_kde4_libdir}/libkgeomap.so.1*
+%{_kde4_libdir}/libkgeomap.so.*
 %{kde4_localedir}/zh_*/LC_MESSAGES/libkgeomap.mo
 
 %files -n libkgeomap-devel
@@ -323,7 +324,7 @@ update-desktop-database -q &> /dev/null
 %postun -n libmediawiki -p /sbin/ldconfig
 
 %files -n libmediawiki
-%{_kde4_libdir}/libmediawiki.so.1*
+%{_kde4_libdir}/libmediawiki.so.*
 
 %files -n libmediawiki-devel
 %{_kde4_includedir}/libmediawiki/
@@ -335,7 +336,7 @@ update-desktop-database -q &> /dev/null
 %postun -n libkvkontakte -p /sbin/ldconfig
 
 %files -n libkvkontakte
-%{kde4_libdir}/libkvkontakte.so.1*
+%{kde4_libdir}/libkvkontakte.so.*
 
 %files -n libkvkontakte-devel
 %{kde4_includedir}/libkvkontakte/
@@ -361,9 +362,9 @@ gtk-update-icon-cache %{_kde4_iconsdir}/oxygen >& /dev/null ||:
 update-desktop-database -q &> /dev/null
 
 %files -n kipi-plugins
-%doc extra/kipi-plugins/AUTHORS extra/kipi-plugins/COPYING
-%doc extra/kipi-plugins/COPYING-ADOBE extra/kipi-plugins/ChangeLog
-%doc extra/kipi-plugins/README extra/kipi-plugins/TODO extra/kipi-plugins/NEWS
+#%doc extra/kipi-plugins/AUTHORS extra/kipi-plugins/COPYING
+#%doc extra/kipi-plugins/COPYING-ADOBE extra/kipi-plugins/ChangeLog
+#%doc extra/kipi-plugins/README extra/kipi-plugins/TODO extra/kipi-plugins/NEWS
 %{_kde4_bindir}/dngconverter
 %{_kde4_bindir}/dnginfo
 %{_kde4_bindir}/expoblending
@@ -401,6 +402,15 @@ update-desktop-database -q &> /dev/null
 %{_kde4_libdir}/kde4/kipiplugin_timeadjust.so
 %{_kde4_libdir}/kde4/kipiplugin_vkontakte.so
 %{_kde4_libdir}/kde4/kipiplugin_yandexfotki.so
+%{_kde4_libdir}/kde4/kipiplugin_dropbox.so
+%{_kde4_libdir}/kde4/kipiplugin_googledrive.so
+%{_kde4_libdir}/kde4/kipiplugin_htmlexport.so
+%{_kde4_libdir}/kde4/kipiplugin_jalbumexport.so
+%{_kde4_libdir}/kde4/kipiplugin_videoslideshow.so
+%{_kde4_appsdir}/kipiplugin_htmlexport/THEME_HOWTO
+%{_kde4_appsdir}/kipiplugin_htmlexport/themes/*
+%{kde4_kcfgdir}/photolayoutseditor.kcfg
+%{_kde4_iconsdir}/hicolor/*/apps/kipi-*.png
 %{_kde4_appsdir}/gpssync/
 %{_kde4_appsdir}/kipiplugin_flashexport/
 %{_kde4_appsdir}/kipiplugin_galleryexport/
@@ -418,7 +428,7 @@ update-desktop-database -q &> /dev/null
 %{_kde4_datadir}/kde4/services/kipiplugin*.desktop
 %{_kde4_iconsdir}/hicolor/*/actions/*
 %{_kde4_iconsdir}/hicolor/*/apps/photolayoutseditor*
-%{_kde4_iconsdir}/hicolor/*/apps/dngconverter*
+%{_kde4_iconsdir}/hicolor/*/apps/kipi-*
 %{_kde4_iconsdir}/oxygen/*/apps/rawconverter*
 %{_kde4_libdir}/kde4/kipiplugin_expoblending.so
 %{_kde4_appsdir}/kipiplugin_expoblending/
@@ -426,7 +436,7 @@ update-desktop-database -q &> /dev/null
 %{_kde4_appsdir}/kipiplugin_removeredeyes/
 %{_kde4_libdir}/kde4/kipiplugin_photolayoutseditor.so
 %{_kde4_appsdir}/photolayoutseditor/
-%{_kde4_datadir}/config.kcfg/PLEConfigSkeleton.kcfgc
+#%{_kde4_datadir}/config.kcfg/PLEConfigSkeleton.kcfgc
 %{_kde4_datadir}/kde4/servicetypes/photolayoutseditor*.desktop
 %{kde4_htmldir}/en/kipi-plugins/*
 %{kde4_datadir}/locale/zh_*/LC_MESSAGES/kipiplugin_*.mo
@@ -450,6 +460,9 @@ update-desktop-database -q &> /dev/null
 
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4.0.0-1
+- 更新到 4.0.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.3.0-3
 - 为 Magic 3.0 重建
 

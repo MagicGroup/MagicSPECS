@@ -4,7 +4,7 @@
 %define _unpackaged_files_terminate_build	0
 
 Name:           clementine
-Version:	1.2.2
+Version:	1.2.3
 Release:        4%{?dist}
 Summary:        A music player and library organiser
 Summary(zh_CN.UTF-8):	一个音乐播放器和曲库管理工具
@@ -67,7 +67,14 @@ sed -i '/tests/d' CMakeLists.txt
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
-%{cmake} -DBUILD_WERROR:BOOL=OFF ..
+%{cmake} -DBUILD_WERROR:BOOL=OFF \
+  -DCMAKE_BUILD_TYPE:STRING=Release \
+  -DENABLE_DEVICEKIT:BOOL=OFF \
+  ..
+#  -DUSE_SYSTEM_QTSINGLEAPPLICATION=1 \
+#  -DUSE_SYSTEM_PROJECTM=1 \
+#  -DUSE_SYSTEM_QXT=1 \
+#  ..
 make #%{?_smp_mflags}
 popd
 
@@ -93,6 +100,9 @@ rm -rf %{buildroot}
 %{kde4_servicesdir}/clementine-*.protocol
 
 %changelog
+* Tue May 27 2014 Liu Di <liudidi@gmail.com> - 1.2.3-4
+- 更新到 1.2.3
+
 * Tue Mar 11 2014 Liu Di <liudidi@gmail.com> - 1.2.2-4
 - 更新到 1.2.2
 

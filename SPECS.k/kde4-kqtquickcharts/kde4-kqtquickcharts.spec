@@ -10,10 +10,10 @@ Summary(zh_CN.UTF-8): 查找和管理元数据的框架
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: %{rversion}
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
 BuildRequires: gettext
@@ -60,6 +60,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_plugindir}/imports/org/kde/charts/*
 
 %changelog
+* Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 4.13.1-9
+- 为 Magic 3.0 重建
+
 * Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 4.13.0-8
 - 为 Magic 3.0 重建
 

@@ -1,31 +1,56 @@
-%define rversion %{kde4_kdelibs_version}
+%if 0%{?magic}
+%global p7zip 1
+%endif
 #define svn_number rc1
 %define real_name ark
 
 %define kde4_enable_final_bool ON
 
 Name: kde4-%{real_name}
-Summary: Character selector
-Summary(zh_CN.UTF-8): 字符选择器
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Summary: Archive manager
+Summary(zh_CN.UTF-8): 归档管理器
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Version: 4.13.1
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+%define rversion %version
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
 BuildRequires: gettext
 BuildRequires: libkdelibs4-devel >= 4.0.82
+BuildRequires: bzip2-devel
+BuildRequires: desktop-file-utils
+BuildRequires: kdebase4-devel >= %{version}
+BuildRequires: pkgconfig(libarchive)
+BuildRequires: pkgconfig(liblzma) 
+BuildRequires: zlib-devel
+
+Requires: kdebase4-runtime%{?_kde4_version: >= %{_kde4_version}}
+# Dependencies for archive plugins.
+# could split .desktop like okular to support these via
+# TryExec=<foo> instead someday -- Rex
+Requires: bzip2
+Requires: gzip
+#Requires: lha
+%if 0%{?p7zip}
+Requires: p7zip-plugins
+%endif
+Requires: unzip
 
 %description
-KCharSelect is a tool to select special characters from all installed
-fonts and copy them into the clipboard.
+Ark is a program for managing various archive formats.
+
+Archives can be viewed, extracted, created and modified from within Ark.
+The program can handle various formats such as tar, gzip, bzip2, zip,
+rar and lha (if appropriate command-line programs are installed).
 
 %description -l zh_CN.UTF-8
-这个程序可以从所有安装的字体中选择特殊字符并复制它们到剪贴板。
+支持多种格式的归档管理器，包括 tar, gzip, bzip2, zip, rar 和 lha 等，
+部分格式需要安装相应的命令行程序。
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -52,7 +77,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-%files
+%files 
 %defattr(-,root,root,-)
 %doc COPYING
 %{kde4_bindir}/*
@@ -69,6 +94,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/hicolor/*/apps/ark.*
 
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

@@ -23,7 +23,7 @@ Summary:        Kdebindings Perl-KDE library
 License:        LGPL-2.1+
 Group:          Development/Libraries/KDE
 Url:            https://projects.kde.org/projects/kde/kdebindings/perl/perlkde
-Source0:        http://mirror.bjtu.edu.cn/kde/stable/%{version}/src/perlkde-%{version}.tar.xz
+Source0:        http://download.kde.org/stable/%{version}/src/perlkde-%{version}.tar.xz
 BuildRequires:  kde4-kate-devel
 BuildRequires:  jasper-devel
 BuildRequires:  kdepimlibs4-devel

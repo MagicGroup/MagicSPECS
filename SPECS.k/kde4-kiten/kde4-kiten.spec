@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name kiten
 
-%define kde4_enable_final_bool OFF
+%define kde4_enable_final_bool ON
 
 Name: kde4-%{real_name}
-Summary: Cantor for KDE Edu
-Summary(zh_CN.UTF-8): KDE Edu 的数学组件 
+Summary: Japanese Reference/Study Tool
+Summary(zh_CN.UTF-8): 日语参考、学习工具 
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
-URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+URL: http://www.kde.org
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -23,14 +22,10 @@ BuildRequires: libkdelibs4-devel >= 4.0.82
 
 
 %description
-Cantor is an application that lets you use your favorite mathematical 
-applications from within a nice KDE-integrated Worksheet Interface. 
-It offers assistant dialogs for common tasks and allows you to share 
-your worksheets with others.
+Japanese Reference/Study Tool.
 
 %description -l zh_CN.UTF-8
-Cantor 是一个 KDE 集成程序，可以让你用你喜欢的数学程序做为后端进行
-工作表处理。
+日语参考、学习工具。
 
 %package devel
 Summary: Development files for %{name}
@@ -46,7 +41,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -75,14 +70,10 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %doc COPYING
 %{kde4_bindir}/*
 %{kde4_libdir}/*.so*
-#%{kde4_plugindir}/*
 %{kde4_iconsdir}/hicolor/*
 %{kde4_xdgappsdir}/*.desktop
 %{kde4_appsdir}/*
 %{kde4_kcfgdir}/*.kcfg
-#%{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_configdir}/*
 %{kde4_htmldir}/en/*
 %{kde4_datadir}/fonts/kanjistrokeorders/KanjiStrokeOrders.ttf
 
@@ -92,6 +83,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

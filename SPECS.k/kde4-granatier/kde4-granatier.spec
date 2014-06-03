@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name granatier
 
@@ -7,13 +6,14 @@
 Name: kde4-%{real_name}
 Summary: Place bombs to kill enemies and remove obstacles
 Summary(zh_CN.UTF-8): 一个炸弹人游戏
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Group: Amusements/Games
+Group(zh_CN.UTF-8): 娱乐/游戏
+Version: 4.13.1
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+%define rversion %version
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
@@ -58,20 +58,16 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %defattr(-,root,root,-)
 %doc COPYING
 %{kde4_bindir}/*
-#%{kde4_plugindir}/*
-#%{kde4_libdir}/*.so.*
 %{kde4_appsdir}/*
-#%{kde4_configdir}/*
 %{kde4_xdgappsdir}/*.desktop
-#%{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
 %{kde4_kcfgdir}/*
 %{kde4_htmldir}/en/*
-#%{kde4_mandir}/*
-#%{kde4_libdir}/*.so
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

@@ -1,16 +1,16 @@
 %define real_name kshutdown
-%define beta beta5
+%define beta %{nil}
 Name: kde4-kshutdown
 Summary: An advanced shut down utility for KDE
 Summary(zh_CN.UTF-8): KDE 下的高级关机工具
-Version: 3.0
-Release: 0.%{?beta}%{?dist}.1
+Version:	3.2
+Release: 1%{?beta}%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://kshutdown.sf.net/
 Packager: Konrad Twardowski <kdtonline@poczta.onet.pl>
-Source0: http://downloads.sourceforge.net/project/kshutdown/KShutdown/3.0%20Beta%202/kshutdown-source-%{version}%{?beta}.zip
+Source0: http://downloads.sourceforge.net/project/kshutdown/KShutdown/%{version}/kshutdown-source-%{version}%{?beta}.zip
 Buildroot: %_tmppath/kshutdown-%version-%release-root
 Requires: kdelibs4 >= 3.3.0
 BuildRequires: kdelibs4-devel
@@ -76,6 +76,9 @@ rm -fr $RPM_BUILD_DIR/kshutdown
 %{kde4_xdgappsdir}/*
 
 %changelog
+* Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 3.2-1
+- 更新到 3.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0-0.beta2.1
 - 为 Magic 3.0 重建
 

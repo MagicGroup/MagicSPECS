@@ -2,7 +2,7 @@ Summary: magic-release
 Summary(zh_CN.UTF-8): MagicLinux的发行文件
 Name: magic-release
 Version: 3.0
-Release: 5%{?dist}
+Release: 9%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 License: GPL
@@ -24,6 +24,8 @@ for system Version
 %define fedora_version 21
 %define dist_version 30
 
+%define rpm_macros_dir %{_rpmconfigdir}/macros.d
+
 %prep
 %setup -q
 #%patch
@@ -35,15 +37,15 @@ mkdir -p ${RPM_BUILD_ROOT}/etc
 cp etc/* ${RPM_BUILD_ROOT}/etc
 mkdir -p ${RPM_BUILD_ROOT}/usr/share/doc/magic-release-3.0-Kaibao
 cp releasedoc/* ${RPM_BUILD_ROOT}/usr/share/doc/magic-release-3.0-Kaibao
-ln -s magic-release $RPM_BUILD_ROOT/etc/redhat-release
 ln -s magic-release $RPM_BUILD_ROOT/etc/system-release
 
 # Set up the dist tag macros
-install -d -m 755 $RPM_BUILD_ROOT/etc/rpm
-cat >> $RPM_BUILD_ROOT/etc/rpm/macros.dist << EOF
+install -d -m 755 $RPM_BUILD_ROOT%{rpm_macros_dir}
+cat >> $RPM_BUILD_ROOT%{rpm_macros_dir}/macros.dist << EOF
 # dist macros.
 
 %%fedora                %{fedora_version}
+%%magic			%{dist_version}
 %%dist          	mgc%{dist_version}
 %%fc%{fedora_version}             1
 EOF
@@ -55,10 +57,23 @@ magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
-/etc/*
-/usr/*
+%{_sysconfdir}/*
+%{_docdir}/magic-release-%{version}-Kaibao/GPL
+%{rpm_macros_dir}/*
 
 %changelog
+* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 3.0-9
+- 为 Magic 3.0 重建
+
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 3.0-8
+- 为 Magic 3.0 重建
+
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 3.0-7
+- 为 Magic 3.0 重建
+
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 3.0-6
+- 调整 rpm 宏定义目录及设置
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.0-5
 - 修改以符合 LSB 标准
 

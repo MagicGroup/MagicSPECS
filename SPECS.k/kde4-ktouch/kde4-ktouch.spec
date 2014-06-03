@@ -13,7 +13,7 @@ Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
 Version: %{rversion}
 Release: 3%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 

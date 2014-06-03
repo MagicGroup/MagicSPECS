@@ -1,19 +1,19 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name audiocd-kio
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: KDE volume control 
-Summary(zh_CN.UTF-8): KDE4 音量控制程序
+Summary: Audiocd kio slave
+Summary(zh_CN.UTF-8): 音频 CD KIO 
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+%define rversion %version
+Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -24,10 +24,10 @@ BuildRequires: flac-devel
 BuildRequires: libvorbis-devel
 
 %description
-KDE volume control
+Audiocd kio slave。
 
 %description -l zh_CN.UTF-8
-KDE4 音量控制程序。
+音频 CD KIO。
 
 %package devel
 Summary: Development files for %{name}
@@ -69,22 +69,11 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files
 %defattr(-,root,root,-)
-#%{kde4_bindir}/*
 %{kde4_plugindir}/*
 %{kde4_libdir}/*.so*
 %{kde4_appsdir}/*
-#%{kde4_iconsdir}/hicolor/*
-#%{kde4_xdgappsdir}/*.desktop
 %{kde4_kcfgdir}/*
 %{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_configdir}/*
-#%{kde4_datadir}/mime/*
-#%{kde4_mandir}/*
-#%{kde4_iconsdir}/oxygen/*
-#%{kde4_datadir}/autostart/*.desktop
-#%{kde4_dbus_interfacesdir}/*.xml
-#%{kde4_htmldir}/en/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -92,6 +81,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_htmldir}/en/*
 
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

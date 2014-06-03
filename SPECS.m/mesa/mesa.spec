@@ -55,7 +55,7 @@
 Summary: Mesa graphics libraries
 Name: mesa
 Version: 10.0.2
-Release: 1.%{gitdate}%{?dist}
+Release: 2.%{gitdate}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -596,6 +596,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu May 22 2014 Liu Di <liudidi@gmail.com> - 10.0.2-2.20140110
+- 为 Magic 3.0 重建
+
 * Fri Jan 10 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 10.0.2-1.20140110
 - 10.0.2 upstream release
 

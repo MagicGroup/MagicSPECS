@@ -4,30 +4,35 @@
 %define kde4_enable_final_bool OFF
 
 %define realname k3b
-%define version 2.0.2
 %define testver %{nil}
-%define release 4
+
+%define git 1
+%define vcsdate 20140524
 
 Summary:        Excellent CD-Burner for KDE4
 Summary(zh_CN.UTF-8): KDE4 下优秀的 CD/DVD 刻录程序
 Name:           kde4-k3b
-Version:        %{version}
-Release:        %{release}%{?dist}
+Version:        2.0.2
+%if 0%{?git}
+Release:	9.git%{vcsdate}%{?dist}
+%else
+Release:        9%{?dist}
+%endif
 License:        GPL
 Vendor:         Magic Linux
 URL:            http://www.k3b.org
 Group:          Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
+%if 0%{?git}
+Source0: %{name}-git%{vcsdate}.tar.xz
+%else
 Source0:  http://ncu.dl.sourceforge.net/sourceforge/k3b/%{realname}-%{version}%{testver}.tar.bz2
+%endif
 
-Patch1:		k3b-2.0.2-ffmpeg.patch
-Patch2:		k3b-2.0.2-libavformat54.patch
-Patch3:		http://pkgs.fedoraproject.org/cgit/k3b.git/plain/k3b-2.0.2-overburn-cdr90.patch
-Patch4:		http://pkgs.fedoraproject.org/cgit/k3b.git/plain/k3b-2.0.2-overburn-usedcapacity.patch
-Patch5:		http://pkgs.fedoraproject.org/cgit/k3b.git/plain/k3b-2.0.2-use_growisofs_instead_of_wodim.patch
+Source1:	make_%{name}_git_package.sh
+
 Patch6:		http://pkgs.fedoraproject.org/cgit/k3b.git/plain/k3b-2.0.2-use_vartmp_instead_of_tmp.patch
 Patch7:		http://pkgs.fedoraproject.org/cgit/k3b.git/plain/k3b-2.0.2-no-webkit.patch
-Patch8:		k3b-2.0.2-ffmpeg55.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 
 Provides:       cd-burner
@@ -77,15 +82,14 @@ Contains the development files.
 %{name} 的开发文件。
 
 %prep
+%if 0%{?git}
+%setup -q -n %{name}-git%{vcsdate}
+%else
 %setup -q -n %{realname}-%{version}
-%patch1 -p1
-#%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
+%endif
+
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 rm -rf doc-translations/*
 
@@ -117,11 +121,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING FAQ README
-%{_sysconfdir}/dbus-1/system.d/org.kde.kcontrol.k3bsetup.conf
-%{_datadir}/dbus-1/system-services/org.kde.kcontrol.k3bsetup.service
-%{kde4_datadir}/polkit-1/actions/org.kde.kcontrol.k3bsetup.policy
-
+%doc COPYING
+%{_sysconfdir}/dbus-1/system.d/org.kde.k3b.conf
+%{_datadir}/dbus-1/system-services/org.kde.k3b.service
+%{kde4_datadir}/polkit-1/actions/org.kde.k3b.policy
+%{kde4_datadir}/appdata/k3b.appdata.xml
+%{kde4_iconsdir}/hicolor/*/mimetypes/application-x-k3b.*
 %{kde4_bindir}/*
 %{kde4_plugindir}/*
 %{kde4_libdir}/*.so.*
@@ -134,7 +139,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicetypesdir}/*
 #%{kde4_datadir}/sounds/*
 %{kde4_datadir}/mime/packages/x-k3b.xml
-%{kde4_localedir}/*
+#%{kde4_localedir}/*
 %doc %lang(en) %{kde4_htmldir}/en/k3b
 
 %files devel
@@ -143,6 +148,18 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 2.0.2-9.git20140524
+- 为 Magic 3.0 重建
+
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 2.0.2-8.git20140524
+- 为 Magic 3.0 重建
+
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 2.0.2-7.git20140524
+- 为 Magic 3.0 重建
+
+* Sat May 24 2014 Liu Di <liudidi@gmail.com> - 2.0.2-6.git20140524
+- 更新到 20140524 日期的仓库源码
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.2-2
 - 为 Magic 3.0 重建
 

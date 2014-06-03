@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name smokekde
 
@@ -9,8 +8,8 @@ Summary: Bindings for KDE libraries
 Summary(zh_CN.UTF-8): KDE 库的绑定
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Version: 4.13.1
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirrors.ustc.edu.cn/kde/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -24,8 +23,7 @@ BuildRequires: kde4-okular-devel >= %{version}
 BuildRequires: pkgconfig(akonadi)
 BuildRequires: smokegen-devel >= %{version}
 BuildRequires: smokeqt-devel >= %{version}
-#编译此包出错
-#BuildRequires: attica-devel >= 0.3.0
+BuildRequires: attica-devel >= 0.3.0
 
 Obsoletes: kdebindings < 4.7.0 
 
@@ -54,7 +52,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -86,6 +84,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/smokegen/*
 
 %changelog
+* Wed May 28 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

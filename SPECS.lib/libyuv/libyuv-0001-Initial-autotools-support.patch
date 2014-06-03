@@ -124,12 +124,12 @@ index 0000000..7014cee
 +			 [AC_MSG_ERROR([gtest not found])],
 +			 []
 +			 )
-+	AC_PATH_PROG([GTEST_CONFIG], gtest-config, [no])
-+	if test "$GTEST_CONFIG" = "no" ; then
-+		AC_MSG_ERROR([gtest-config was not found])
-+	fi
-+	GTEST_CXXFLAGS=`$GTEST_CONFIG --cxxflags`
-+	GTEST_LIBS=`$GTEST_CONFIG --libs`
++	#AC_PATH_PROG([GTEST_CONFIG], gtest-config, [no])
++	#if test "$GTEST_CONFIG" = "no" ; then
++	#	AC_MSG_ERROR([gtest-config was not found])
++	#fi
++	GTEST_CXXFLAGS="-I/usr/include/gtest"
++	GTEST_LIBS="-lgtest -lgtest_main"
 +	AC_SUBST([GTEST_CXXFLAGS])
 +	AC_SUBST([GTEST_LIBS])
 +else

@@ -1,17 +1,16 @@
 #global gitdate  20120917
 
 Name:           libxkbcommon
-Version:        0.2.0
-Release:        1%{?gitdate:.%{gitdate}}%{?dist}
+Version:        0.4.2
+Release:        3%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        X.Org X11 XKB parsing library
 License:        MIT
-Group:          System Environment/Libraries
 URL:            http://www.x.org
 
 %if 0%{?gitdate}
 Source0:       %{name}-%{gitdate}.tar.bz2
 %else
-Source0:        http://xkbcommon.org/download/%{name}-%{version}.tar.bz2
+Source0:        http://xkbcommon.org/download/%{name}-%{version}.tar.xz
 %endif
 Source1:        make-git-snapshot.sh
 
@@ -19,6 +18,7 @@ BuildRequires:  autoconf automake libtool
 BuildRequires:  xorg-x11-util-macros byacc flex bison
 BuildRequires:  xorg-x11-proto-devel libX11-devel
 BuildRequires:  xkeyboard-config-devel
+BuildRequires:  pkgconfig(xcb-xkb) >= 1.10
 
 %description
 %{name} is the X.Org library for compiling XKB maps into formats usable by
@@ -26,17 +26,32 @@ the X Server or other display servers.
 
 %package devel
 Summary:        X.Org X11 XKB parsing development package
-Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 X.Org X11 XKB parsing development package
 
+%package x11
+Summary:        X.Org X11 XKB keymap creation library
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description x11
+%{name}-x11 is the X.Org library for creating keymaps by querying the X
+server.
+
+%package x11-devel
+Summary:        X.Org X11 XKB keymap creation library
+Requires:       %{name}-x11%{?_isa} = %{version}-%{release}
+
+%description x11-devel
+X.Org X11 XKB keymap creation library development package
+
 %prep
 %setup -q -n %{name}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 
-%build
 autoreconf -v --install || exit 1
+
+%build
 %configure --disable-static
 
 make %{?_smp_mflags}
@@ -44,25 +59,70 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -name '*.la' -exec rm -fv {} ';'
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/libxkbcommon.so.0.0.0
 %{_libdir}/libxkbcommon.so.0
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/libxkbcommon.so
-%{_includedir}/xkbcommon/xkbcommon*.h
+%dir %{_includedir}/xkbcommon/
+%{_includedir}/xkbcommon/xkbcommon.h
+%{_includedir}/xkbcommon/xkbcommon-compat.h
+%{_includedir}/xkbcommon/xkbcommon-keysyms.h
+%{_includedir}/xkbcommon/xkbcommon-names.h
 %{_libdir}/pkgconfig/xkbcommon.pc
-%{_docdir}/*
+
+%post x11 -p /sbin/ldconfig
+%postun x11 -p /sbin/ldconfig
+
+%files x11
+%{_libdir}/libxkbcommon-x11.so.0.0.0
+%{_libdir}/libxkbcommon-x11.so.0
+
+%files x11-devel
+%{_libdir}/libxkbcommon-x11.so
+%{_includedir}/xkbcommon/xkbcommon-x11.h
+%{_libdir}/pkgconfig/xkbcommon-x11.pc
 
 %changelog
+* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 0.4.2-3
+- 为 Magic 3.0 重建
+
+* Fri May 23 2014 Hans de Goede <hdegoede@redhat.com> - 0.4.2-2
+- Bump release to 2 to avoid confusion with non official non scratch 0.4.2-1
+
+* Thu May 22 2014 Rex Dieter <rdieter@fedoraproject.org> - 0.4.2-1
+- xkbcommon 0.4.2 (#1000497)
+- own %%{_includedir}/xkbcommon/
+- -x11: +ldconfig scriptlets
+- -devel: don't include xkbcommon-x11.h
+- run reautoconf in %%prep (instead of %%build)
+- tighten subpkg deps via %%_isa
+- .spec cleanup, remove deprecated stuff
+- BR: pkgconfig(xcb-xkb) >= 1.10
+
+* Wed Feb 05 2014 Peter Hutterer <peter.hutterer@redhat.com> 0.4.0-1
+- xkbcommon 0.4.0
+- Add new xkbcommon-x11 and xkbcommon-x11-devel subpackages
+
+* Tue Aug 27 2013 Peter Hutterer <peter.hutterer@redhat.com> 0.3.1-1
+- xkbcommon 0.3.1
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Apr 18 2013 Peter Hutterer <peter.hutterer@redhat.com> 0.3.0-1
+- xkbcommon 0.3.0
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Tue Oct 23 2012 Adam Jackson <ajax@redhat.com> 0.2.0-1
 - xkbcommon 0.2.0
 
