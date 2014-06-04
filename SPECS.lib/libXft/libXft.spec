@@ -7,7 +7,6 @@ Group: System Environment/Libraries
 URL: http://www.x.org
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
-Patch0:  libXft-2.3.1-fix-freetype-2.5.1.patch
 
 BuildRequires: pkgconfig(xrender)
 BuildRequires: freetype-devel >= 2.1.9-2
@@ -28,7 +27,6 @@ X.Org X11 libXft development package
 
 %prep
 %setup -q
-%patch0 -p0
 
 %build
 
