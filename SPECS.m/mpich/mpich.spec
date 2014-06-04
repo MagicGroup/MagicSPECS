@@ -14,7 +14,7 @@ Patch0:		mpich-modules.patch
 
 BuildRequires:	gcc-gfortran
 BuildRequires:  hwloc-devel >= 1.8
-%ifnarch s390 s390x aarch64
+%ifnarch s390 s390x aarch64 mips64el
 BuildRequires:	valgrind-devel
 %endif
 Provides:	mpi
@@ -93,6 +93,10 @@ Contains documentations, examples and man-pages for mpich
 %global m_option -m31
 %else
 %global m_option -m%{__isa_bits}
+%endif
+
+%ifarch mips64el
+%global m_option "-mabi=64"
 %endif
 
 %ifarch %{arm} aarch64
