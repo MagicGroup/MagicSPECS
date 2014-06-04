@@ -60,7 +60,7 @@ function set_mirror {
         local r m
         r=`expr $RANDOM % $mirror_count + 1`
         m=`echo $mirrors |cut -d+ -f$r`
-        mirror="http://downloads.sourceforge.net/project/corefonts/the%20fonts/final/"
+        mirror="http://ncu.dl.sourceforge.net/project/corefonts/the%20fonts/final/"
 
 }
 
