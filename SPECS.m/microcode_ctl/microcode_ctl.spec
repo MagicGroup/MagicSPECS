@@ -10,7 +10,7 @@ License:        GPLv2+ and Redistributable, no modification permitted
 URL:            http://fedorahosted.org/microcode_ctl
 Source0:        http://fedorahosted.org/released/microcode_ctl/%{name}-%{upstream_version}.tar.xz
 Buildroot:      %{_tmppath}/%{name}-%{version}-root
-ExclusiveArch:  %{ix86} x86_64
+ExclusiveArch:  %{ix86} x86_64 mips64el
 
 %description
 The microcode_ctl utility is a companion to the microcode driver written
