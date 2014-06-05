@@ -1,3 +1,5 @@
 /SPECS.*/*/build.log
-/SPECS.*/*/buildfail
+/SPECS.*/*/*fail
+/SPECS.*/*/hasupdate
+*fail
 *.swp
