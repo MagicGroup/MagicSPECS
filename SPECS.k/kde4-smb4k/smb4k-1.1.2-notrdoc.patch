@@ -1,0 +1,8 @@
+diff -ur smb4k-1.1.2/CMakeLists.txt smb4k-1.1.2.new/CMakeLists.txt
+--- smb4k-1.1.2/CMakeLists.txt	2014-05-03 15:42:30.000000000 +0000
++++ smb4k-1.1.2.new/CMakeLists.txt	2014-06-05 10:44:56.022393834 +0000
+@@ -93,4 +93,3 @@
+ find_package(Msgfmt REQUIRED)
+ find_package(Gettext REQUIRED)
+ add_subdirectory( po )
+-add_subdirectory( doc-translations )

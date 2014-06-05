@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name libkcddb
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: Advanced Text Editor
-Summary(zh_CN.UTF-8): 高级文本编辑器
+Summary: CDDB retrieval library
+Summary(zh_CN.UTF-8): 攻取 CDDB 信息的库
 License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -41,7 +40,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -67,18 +66,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files
 %defattr(-,root,root,-)
-#%{kde4_bindir}/*
 %{kde4_plugindir}/*
 %{kde4_libdir}/*.so*
-#%{kde4_appsdir}/*
-#%{kde4_iconsdir}/hicolor/*
-#%{kde4_xdgappsdir}/*.desktop
 %{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_configdir}/*
-#%{kde4_datadir}/mime/*
-#%{kde4_mandir}/*
-#%{kde4_iconsdir}/oxygen/*
 %{kde4_kcfgdir}/*
 
 %files devel
@@ -88,6 +78,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/*
 
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

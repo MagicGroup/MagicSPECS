@@ -1,8 +1,6 @@
 # overwrite the default value of macro.kde4
 %define build_type release
 
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name kde-l10n-zh_TW
 
 # no debuginfo package for l10n
@@ -13,12 +11,12 @@ Name: kde4-l10n-zh_TW
 Summary: kde-l10n-zh_TW
 Summary(zh_TW.UTF-8): KDE4 的中文语言包
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_TW.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
-Source0: http://download.kde.org/stable/%{rversion}/src/kde-l10n/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/kde-l10n/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -33,7 +31,7 @@ KDE4 的中文语言包。
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -58,6 +56,9 @@ magic_rpm_clean.sh
 %doc %lang(zh_TW) %{kde4_htmldir}/zh_TW/*
 
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
 - 为 Magic 3.0 重建
 

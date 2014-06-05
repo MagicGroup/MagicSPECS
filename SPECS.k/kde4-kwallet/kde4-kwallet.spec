@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name kwallet
 
@@ -7,10 +6,10 @@
 Name: kde4-%{real_name}
 Summary: Manage KDE passwords 
 Summary(zh_CN.UTF-8): 管理 KDE4 的密码
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 3%{?dist}
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Version: 4.13.0
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirrors.ustc.edu.cn/kde/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -43,7 +42,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build

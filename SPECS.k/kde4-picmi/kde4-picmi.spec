@@ -1,5 +1,4 @@
-%define rversion %{kde4_kdelibs_version}
-#define svn_number rc1
+#define git_number rc1
 %define real_name picmi
 
 %define kde4_enable_final_bool ON
@@ -7,13 +6,13 @@
 Name: kde4-%{real_name}
 Summary: A nonogram logic game
 Summary(zh_CN.UTF-8): 一个古日本拼图逻辑游戏
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Version: 4.13.1
+Release: 1%{?dist}
 License: GPLv2+ and GFDL
 URL:     https://projects.kde.org/projects/kde/kdegames/%{name}
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
@@ -39,7 +38,7 @@ Nonogram是一种逻辑游戏，以猜谜的方式绘画位图。在一个网格
 即使填错了格子，也不会即时出局。Nonogram是一个NP完全的问题。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -81,6 +80,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Wed Jun 04 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Mon Apr 28 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

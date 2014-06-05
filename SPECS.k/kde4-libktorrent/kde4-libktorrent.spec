@@ -1,4 +1,3 @@
-%define rversion 1.3.0
 #define svn_number rc1
 %define real_name libktorrent
 
@@ -13,9 +12,10 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://ktorrent.org/downloads/4.1.3/%{real_name}-%{rversion}.tar.bz2
+Version:	1.3.1
+Release: 1%{?dist}
+%define majorver %(echo %{version} | awk -F. '{print $2"."$3}')
+Source0: http://ktorrent.pwsp.net/downloads/4.%{majorver}/%{real_name}-%{version}.tar.bz2
 
 # recognize more peer id, patch1 written by nihui, Oct.23rd 2010
 Patch1: libktorrent-1.0.4-more-peerid.patch
@@ -68,7 +68,7 @@ format for easy browsing.
 %endif
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 #%patch1 -p1 -b .peerid
 
@@ -123,6 +123,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.3.1-1
+- 更新到 1.3.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3.0-2
 - 为 Magic 3.0 重建
 

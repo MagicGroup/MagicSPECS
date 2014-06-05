@@ -1,6 +1,6 @@
 %define realname smb4k
 Name:		kde4-smb4k
-Version:	1.0.5
+Version:	1.1.2
 Release:	1%{?dist}
 Summary:	The SMB/CIFS Share Browser for KDE
 Summary(zh_CN.UTF-8): KDE下的SMB/CIFS共享浏览器
@@ -8,9 +8,9 @@ Summary(zh_CN.UTF-8): KDE下的SMB/CIFS共享浏览器
 Group:		Applications/Internet
 Group(zh_CN.UTF-8):	应用程序/互联网
 License:	GPL
-URL:		http://smb4k.berlios.de/
-Source0:	http://download.berlios.de/smb4k/%{realname}-%{version}.tar.bz2
-Patch1:		smb4k-1.0.0-notrdoc.patch
+URL:		http://smb4k.sf.net/
+Source0:	http://downloads.sourceforge.net/project/smb4k/%{version}/%{realname}-%{version}.tar.xz
+Patch1:		smb4k-1.1.2-notrdoc.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	kdelibs4-devel kdebase4-devel gettext
@@ -68,24 +68,29 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %defattr(-, root, root)
-%doc AUTHORS BUGS ChangeLog COPYING README TODO
+%doc AUTHORS BUGS ChangeLog COPYING README 
 %{kde4_bindir}/*
 %{kde4_appsdir}/*
 %{kde4_iconsdir}/*
 %{kde4_plugindir}/*
 %{kde4_libdir}/libsmb4k*so*
+%{kde4_libdir}/libkdeinit4_smb4k.so
+%{kde4_servicesdir}/plasma-applet-smb4k-qml.desktop
 %{kde4_kcfgdir}/*
 %{kde4_xdgappsdir}/*.desktop
 %{kde4_localedir}/zh_*
 %{kde4_dbus_system_servicesdir}/*
-%{_sysconfdir}/dbus-1/system.d/de.berlios.smb4k.mounthelper.conf
-%{kde4_auth_policy_filesdir}/de.berlios.smb4k.mounthelper.policy
+%{_sysconfdir}/dbus-1/system.d/*.smb4k.mounthelper.conf
+%{kde4_auth_policy_filesdir}/*.smb4k.mounthelper.policy
 
 %files devel
 %defattr(-, root, root)
 %{kde4_includedir}/*
 %{kde4_htmldir}/en/smb4k/*
 %changelog
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 1.1.2-1
+- 更新到 1.1.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.0-2
 - 为 Magic 3.0 重建
 

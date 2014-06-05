@@ -1,8 +1,9 @@
-%define rversion 4.3.0
 #define svn_number rc1
 %define real_name ktorrent
 
 %define kde4_enable_final_bool OFF
+
+%define libktorrentver 1.3.1
 
 Name: kde4-ktorrent
 Summary: BitTorrent client for KDE
@@ -11,18 +12,18 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: %{real_name}-%{rversion}.tar.bz2
+Version:	4.3.1
+Release: 1%{?dist}
+Source0: http://ktorrent.pwsp.net/downloads/%{version}/%{real_name}-%{version}.tar.bz2
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: cmake >= 2.6.2
 BuildRequires: gettext
 BuildRequires: libkdelibs4-devel >= 4.0.82
-BuildRequires: kde4-libktorrent-devel >= 1.1.2
+BuildRequires: kde4-libktorrent-devel >= %{libktorrentver}
 
-Requires:      kde4-libktorrent >= 1.1.2
+Requires:      kde4-libktorrent >= %{libktorrentver}
 
 %description
 KTorrent is a BitTorrent program for KDE. You can use it to 
@@ -49,7 +50,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -96,6 +97,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 %endif
 %changelog
+* Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 4.3.1-1
+- 更新到 4.3.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.3.0-2
 - 为 Magic 3.0 重建
 

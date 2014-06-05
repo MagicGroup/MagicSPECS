@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name superkaramba
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: KDE volume control 
-Summary(zh_CN.UTF-8): KDE4 音量控制程序
+Summary: Create widgets for your KDE desktop
+Summary(zh_CN.UTF-8): 在 KDE 桌面上创建小部件
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
-URL: http://ktorrent.org
-Version: %{rversion}
-Release: 2%{?dist}
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+URL: http://www.kde.org
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -22,13 +21,13 @@ BuildRequires: gettext
 BuildRequires: libkdelibs4-devel >= 4.0.82
 
 %description
-KDE volume control
+Create widgets for your KDE desktop.
 
 %description -l zh_CN.UTF-8
-KDE4 音量控制程序。
+在 KDE 桌面上创建小部件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -72,6 +71,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_htmldir}/en/*
 
 %changelog
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 
