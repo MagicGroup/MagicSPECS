@@ -2,7 +2,7 @@
 Name:    kwebkitpart
 Summary: A KPart based on QtWebKit
 Version: 1.3.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: LGPLv2+
 URL:     https://projects.kde.org/projects/extragear/base/kwebkitpart
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.3.3-3
+- 为 Magic 3.0 重建
+
 * Sun Dec 29 2013 Rex Dieter <rdieter@fedoraproject.org> 1.3.3-2
 - respin tarball
 

@@ -1,6 +1,6 @@
 Name:          libisf-qt
 Version:       0.1
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       library to handle handwriting data in Microsoft’s Ink Serialized Format (ISF)
 Group:         System/Libraries
 Vendor:        openmamba
@@ -41,7 +41,7 @@ This package contains static libraries and header files need for development.
 
 %prep
 %setup -q -n kmess-%{name}
-%ifarch mips64el
+%ifarch mips64el x86_64
 %patch0 -p1
 %endif
 
@@ -80,5 +80,11 @@ popd
 %{_datadir}/cmake/Modules/FindIsfQt.cmake
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.1-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.1-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 12 2010 gil <puntogil@libero.it> 0.1-1mamba
 - package created by autospec

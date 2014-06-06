@@ -1,5 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name kdewebdev
 
 %define kde4_enable_final_bool OFF
@@ -8,12 +6,12 @@ Name: kdewebdev4
 Summary: The KDE Weddev Components
 Summary(zh_CN.UTF-8): KDE 网络开发组件
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -34,8 +32,8 @@ KDE 网络开发组件。
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package -n %{name}-devel
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: KDE Weddev Libraries: Build Environment
 Requires: libkdelibs4-devel
 Requires: %{name} = %{version}
@@ -46,8 +44,8 @@ to develop KDE Weddev applications.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kfilereplace
 %package -n %{name}-kfilereplace
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kfilereplace
 
 %description -n %{name}-kfilereplace
@@ -55,8 +53,8 @@ kfilereplace.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kimagemapeditor
 %package -n %{name}-kimagemapeditor
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kimagemapeditor
 
 %description -n %{name}-kimagemapeditor
@@ -64,8 +62,8 @@ kimagemapeditor.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- klinkstatus
 %package -n %{name}-klinkstatus
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: klinkstatus
 
 %description -n %{name}-klinkstatus
@@ -73,8 +71,8 @@ klinkstatus.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kommander
 %package -n %{name}-kommander
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kommander
 
 %description -n %{name}-kommander
@@ -82,7 +80,7 @@ kommander.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -180,6 +178,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
 - 为 Magic 3.0 重建
 

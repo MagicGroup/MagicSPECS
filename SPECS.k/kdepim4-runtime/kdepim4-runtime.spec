@@ -1,5 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name kdepim-runtime
 
 %define kde4_enable_final_bool OFF
@@ -8,12 +6,12 @@ Name: kdepim4-runtime
 Summary: The KDE PIM Runtime Components
 Summary(zh_CN.UTF-8): KDE 个人信息套件运行时
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: 11111111112%{?dist}
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -44,8 +42,8 @@ KDE 个人信息套件运行时。
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %package -n %{name}-devel
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: The KDE PIM Runtime Components: Build Environment
 Requires: libkdelibs4-devel
 Requires: akonadi-devel
@@ -57,7 +55,7 @@ to develop KDE PIM Components applications.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 # compile fix
 #%patch800 -p1
@@ -101,6 +99,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_plugindir}/imports/org/kde/*
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-11111111112
 - 为 Magic 3.0 重建
 

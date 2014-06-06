@@ -1,7 +1,7 @@
 %global         git_commit 5cff3c5
 Name:           libnm-qt
 Version:        0.9.8.2
-Release:        1.20140422%{git_commit}%{?dist}
+Release:        2.20140422%{git_commit}%{?dist}
 Epoch:          2
 Summary:        Qt-only wrapper for NetworkManager DBus API
 
@@ -63,6 +63,9 @@ make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 %{_includedir}/NetworkManagerQt/
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 2:0.9.8.2-2.201404225cff3c5
+- 为 Magic 3.0 重建
+
 * Thu May 22 2014 Jan Grulich <jgrulich@redhat.com> - 2:0.9.8.2-1.20140422git5cff3c5
 - update to git snapshot
 

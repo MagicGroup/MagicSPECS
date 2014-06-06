@@ -1,5 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name kdeplasma-addons
 
 # whether to build lancelot applet
@@ -11,12 +9,12 @@
 Name: kdeplasma-addons
 Summary: The KDE plasmoids Components
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.2
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -112,8 +110,8 @@ The KDE plasmoids Components.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- 开发包
 %package -n %{name}-devel
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: KDE plasmoids Libraries: Build Environment
 Requires: libkdelibs4-devel
 Requires: %{name} = %{version}
@@ -125,8 +123,8 @@ to develop KDE plasmoids applications.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %package krunner-plugins
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: krunner-plugins
 Requires: libkdelibs4
 
@@ -135,8 +133,8 @@ krunner-plugins.
 
 
 %package krunner-plugins-konquerorsessions
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: krunner-plugins-konquerorsessions
 Requires: libkdelibs4
 
@@ -145,8 +143,8 @@ krunner-plugins-konquerorsessions.
 
 
 %package wallpaper-plugins
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: wallpaper-plugins
 Requires: libkdelibs4
 Requires: kdeplasma-addons-libplasmaweather
@@ -156,8 +154,8 @@ wallpaper-plugins.
 
 
 %package wallpaper-plugins-marble
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: wallpaper-plugins-marble
 Requires: libkdelibs4
 
@@ -166,8 +164,8 @@ wallpaper-plugins-marble.
 
 
 %package desktoptheme
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: desktoptheme
 Requires: libkdelibs4
 
@@ -176,8 +174,8 @@ desktoptheme.
 
 
 %package libplasmaweather
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: libplasmaweather
 Requires: libkdelibs4
 
@@ -186,8 +184,8 @@ libplasmaweather.
 
 
 %package -n kde-plasma-lancelot
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-lancelot
 Requires: libkdelibs4
 
@@ -196,8 +194,8 @@ kde-plasma-lancelot.
 
 
 %package -n kde-plasma-bball
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-bball
 Requires: libkdelibs4
 
@@ -206,8 +204,8 @@ kde-plasma-bball.
 
 
 %package -n kde-plasma-binaryclock
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-binaryclock
 Requires: libkdelibs4
 
@@ -216,8 +214,8 @@ kde-plasma-binaryclock.
 
 
 %package -n kde-plasma-bubblemon
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-bubblemon
 Requires: libkdelibs4
 
@@ -226,8 +224,8 @@ kde-plasma-bubblemon.
 
 
 %package -n kde-plasma-calculator
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-calculator
 Requires: libkdelibs4
 
@@ -236,8 +234,8 @@ kde-plasma-calculator.
 
 
 %package -n kde-plasma-charselect
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-charselect
 Requires: libkdelibs4
 
@@ -246,8 +244,8 @@ kde-plasma-charselect.
 
 
 %package -n kde-plasma-comic
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-comic
 Requires: libkdelibs4
 
@@ -256,8 +254,8 @@ kde-plasma-comic.
 
 
 %package -n kde-plasma-dict
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-dict
 Requires: libkdelibs4
 
@@ -266,8 +264,8 @@ kde-plasma-dict.
 
 
 %package -n kde-plasma-eyes
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-eyes
 Requires: libkdelibs4
 
@@ -276,8 +274,8 @@ kde-plasma-eyes.
 
 
 %package -n kde-plasma-fifteenPuzzle
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-fifteenPuzzle
 Requires: libkdelibs4
 
@@ -286,8 +284,8 @@ kde-plasma-fifteenPuzzle.
 
 
 %package -n kde-plasma-fileWatcher
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-fileWatcher
 Requires: libkdelibs4
 
@@ -296,8 +294,8 @@ kde-plasma-fileWatcher.
 
 
 %package -n kde-plasma-frame
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-frame
 Requires: libkdelibs4
 
@@ -306,8 +304,8 @@ kde-plasma-frame.
 
 
 %package -n kde-plasma-fuzzy_clock
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-fuzzy_clock
 Requires: libkdelibs4
 
@@ -316,8 +314,8 @@ kde-plasma-fuzzy_clock.
 
 
 %package -n kde-plasma-incomingmsg
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-incomingmsg
 Requires: libkdelibs4
 
@@ -326,8 +324,8 @@ kde-plasma-incomingmsg.
 
 
 %package -n kde-plasma-kolourpicker
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-kolourpicker
 Requires: libkdelibs4
 
@@ -336,8 +334,8 @@ kde-plasma-kolourpicker.
 
 
 %package -n kde-plasma-konqprofiles
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-konqprofiles
 Requires: libkdelibs4
 
@@ -346,8 +344,8 @@ kde-plasma-konqprofiles.
 
 
 %package -n kde-plasma-konsoleprofiles
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-konsoleprofiles
 Requires: libkdelibs4
 
@@ -356,8 +354,8 @@ kde-plasma-konsoleprofiles.
 
 
 %package -n kde-plasma-leavenote
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-leavenote
 Requires: libkdelibs4
 
@@ -366,8 +364,8 @@ kde-plasma-leavenote.
 
 
 %package -n kde-plasma-life
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-life
 Requires: libkdelibs4
 
@@ -376,8 +374,8 @@ kde-plasma-life.
 
 
 %package -n kde-plasma-luna
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-luna
 Requires: libkdelibs4
 
@@ -386,8 +384,8 @@ kde-plasma-luna.
 
 
 %package -n kde-plasma-magnifique
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-magnifique
 Requires: libkdelibs4
 
@@ -396,8 +394,8 @@ kde-plasma-magnifique.
 
 
 %package -n kde-plasma-mediaplayer
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-mediaplayer
 Requires: libkdelibs4
 
@@ -406,8 +404,8 @@ kde-plasma-mediaplayer.
 
 
 %package -n kde-plasma-microblog
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-microblog
 Requires: libkdelibs4
 
@@ -416,8 +414,8 @@ kde-plasma-microblog.
 
 
 %package -n kde-plasma-news
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-news
 Requires: libkdelibs4
 
@@ -426,8 +424,8 @@ kde-plasma-news.
 
 
 %package -n kde-plasma-notes
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-notes
 Requires: libkdelibs4
 
@@ -436,8 +434,8 @@ kde-plasma-notes.
 
 
 %package -n kde-plasma-nowplaying
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-nowplaying
 Requires: libkdelibs4
 
@@ -446,8 +444,8 @@ kde-plasma-nowplaying.
 
 
 %package -n kde-plasma-opendesktop
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-opendesktop
 Requires: libkdelibs4
 
@@ -456,8 +454,8 @@ kde-plasma-opendesktop.
 
 
 %package -n kde-plasma-paste
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-paste
 Requires: libkdelibs4
 
@@ -466,8 +464,8 @@ kde-plasma-paste.
 
 
 %package -n kde-plasma-pastebin
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-pastebin
 Requires: libkdelibs4
 
@@ -476,8 +474,8 @@ kde-plasma-pastebin.
 
 
 %package -n kde-plasma-previewer
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-previewer
 Requires: libkdelibs4
 
@@ -486,8 +484,8 @@ kde-plasma-previewer.
 
 
 %package -n kde-plasma-rssnow
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-rssnow
 Requires: libkdelibs4
 
@@ -496,8 +494,8 @@ kde-plasma-rssnow.
 
 
 %package -n kde-plasma-rtm
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-rtm
 Requires: libkdelibs4
 
@@ -506,8 +504,8 @@ kde-plasma-rtm.
 
 
 %package -n kde-plasma-showdashboard
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-showdashboard
 Requires: libkdelibs4
 
@@ -516,8 +514,8 @@ kde-plasma-showdashboard.
 
 
 %package -n kde-plasma-showdesktop
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-showdesktop
 Requires: libkdelibs4
 
@@ -526,8 +524,8 @@ kde-plasma-showdesktop.
 
 
 %package -n kde-plasma-systemloadviewer
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-systemloadviewer
 Requires: libkdelibs4
 
@@ -536,8 +534,8 @@ kde-plasma-systemloadviewer.
 
 
 %package -n kde-plasma-timer
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-timer
 Requires: libkdelibs4
 
@@ -546,8 +544,8 @@ kde-plasma-timer.
 
 
 %package -n kde-plasma-unitconverter
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-unitconverter
 Requires: libkdelibs4
 
@@ -556,8 +554,8 @@ kde-plasma-unitconverter.
 
 
 %package -n kde-plasma-weather
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-weather
 Requires: libkdelibs4
 Requires: kdeplasma-addons-libplasmaweather
@@ -567,8 +565,8 @@ kde-plasma-weather.
 
 
 %package -n kde-plasma-weatherstation
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-weatherstation
 Requires: libkdelibs4
 Requires: kdeplasma-addons-libplasmaweather
@@ -578,8 +576,8 @@ kde-plasma-weatherstation.
 
 
 %package -n kde-plasma-blackboard
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-blackboard
 Requires: libkdelibs4
 
@@ -588,8 +586,8 @@ kde-plasma-blackboard.
 
 
 %package -n kde-plasma-kdeobservatory
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-kdeobservatory
 Requires: libkdelibs4
 
@@ -598,8 +596,8 @@ kde-plasma-kdeobservatory.
 
 
 %package -n kde-plasma-kimpanel
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-kimpanel
 Requires: libkdelibs4
 
@@ -608,8 +606,8 @@ kde-plasma-kimpanel.
 
 
 %package -n kde-plasma-knowledgebase
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-knowledgebase
 Requires: libkdelibs4
 
@@ -618,8 +616,8 @@ kde-plasma-knowledgebase.
 
 
 %package -n kde-plasma-opendesktop_activities
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-opendesktop_activities
 Requires: libkdelibs4
 
@@ -628,8 +626,8 @@ kde-plasma-opendesktop_activities.
 
 
 %package -n kde-plasma-plasmaboard
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-plasmaboard
 Requires: libkdelibs4
 
@@ -638,8 +636,8 @@ kde-plasma-plasmaboard.
 
 
 %package -n kde-plasma-qalculate
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-qalculate
 Requires: libkdelibs4
 
@@ -648,8 +646,8 @@ kde-plasma-qalculate.
 
 
 %package -n kde-plasma-spellcheck
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-spellcheck
 Requires: libkdelibs4
 
@@ -658,8 +656,8 @@ kde-plasma-spellcheck.
 
 
 %package -n kde-plasma-webslice
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-webslice
 Requires: libkdelibs4
 
@@ -669,8 +667,8 @@ kde-plasma-webslice.
 
 
 %package -n kde-plasma-bookmarks
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kde-plasma-bookmarks
 Requires: libkdelibs4
 
@@ -679,7 +677,7 @@ kde-plasma-bookmarks.
 
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 #pushd applets/dict
 #%patch1 -p1
@@ -1170,6 +1168,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicesdir}/plasma-applet-bookmarks.desktop
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,10 @@
 Name:           kde-plasma-cwp
-Version:        1.5.7
-Release:        2%{?dist}
+Version:	1.11.0
+Release:        1%{?dist}
 Summary:        Customizable Weather Plasmoid
-Summary(zh_CN):	可定制的天气 Plasmoid
+Summary(zh_CN.UTF-8):	可定制的天气 Plasmoid
 Group:          User Interface/Desktops
-Group(zh_CN):	用户界面/桌面
+Group(zh_CN.UTF-8):	用户界面/桌面
 License:        GPLv2+
 URL:            http://www.kde-look.org/content/show.php?content=98925
 Source0:        http://kde-look.org/CONTENT/content-files/98925-cwp-%{version}.tar.bz2
@@ -24,7 +24,7 @@ The information how to extract the information from these html files is
 stored inside xml files.
 Commands like grep, head, tail, sed, awk, ... will do this job.
 
-%description -l zh_CN
+%description -l zh_CN.UTF-8
 可定制的天气 Plasmoid
 
 %prep
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.11.0-1
+- 更新到 1.11.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.5.7-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 %global         git_commit 043bbae
 Name:           kde-plasma-nm
 Version:        0.9.3.4
-Release:        3.20140520git%{git_commit}%{?dist}
+Release:        7.20140520git%{git_commit}%{?dist}
 Summary:        Plasma applet written in QML for managing network connections
 License:        LGPLv2+ and GPLv2+
 URL:            https://projects.kde.org/projects/playground/network/plasma-nm
@@ -15,7 +15,7 @@ Source10: 01-fedora-plasma-nm.js
 
 BuildRequires:  gettext
 BuildRequires:  kdelibs4-devel
-BuildRequires:  kde-workspace-devel
+BuildRequires:  kdebase4-workspace-devel
 BuildRequires:  libmm-qt-devel >= 1.0.2
 BuildRequires:  libnm-qt-devel >= 2:0.9.8.2
 BuildRequires:  pkgconfig(NetworkManager) >= 0.9.8
@@ -124,6 +124,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 rm -rf %{buildroot}
 
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
+magic_rpm_clean.sh
 
 %find_lang plasma_applet_org.kde.networkmanagement
 %find_lang plasmanetworkmanagement-kded
@@ -169,14 +170,14 @@ fi
 # kde-nm-connection-editor
 %{_kde4_bindir}/kde-nm-connection-editor
 %{_kde4_libdir}/libplasmanetworkmanagement-editor.so
-%{_kde4_datadir}/kde4/apps/kde-nm-connection-editor/kde-nm-connection-editorui.rc
+%{_kde4_datadir}/apps/kde-nm-connection-editor/kde-nm-connection-editorui.rc
 %{_kde4_datadir}/applications/kde4/kde-nm-connection-editor.desktop
 # plasma-nm applet
 %{_kde4_libdir}/kde4/imports/org/kde/networkmanagement/libplasmanetworkmanagementplugins.so
 %{_kde4_libdir}/kde4/imports/org/kde/networkmanagement/qmldir
-%dir %{_kde4_datadir}/kde4/apps/plasma/plasmoids/org.kde.networkmanagement/
-%{_kde4_datadir}/kde4/apps/plasma/plasmoids/org.kde.networkmanagement/contents
-%{_kde4_datadir}/kde4/apps/plasma/plasmoids/org.kde.networkmanagement/metadata.desktop
+%dir %{_kde4_datadir}/apps/plasma/plasmoids/org.kde.networkmanagement/
+%{_kde4_datadir}/apps/plasma/plasmoids/org.kde.networkmanagement/contents
+%{_kde4_datadir}/apps/plasma/plasmoids/org.kde.networkmanagement/metadata.desktop
 %{_kde4_datadir}/kde4/services/plasma-applet-networkmanagement.desktop
 %{_kde4_libdir}/kde4/plugins/designer/plasmanetworkmanagementwidgets.so
 %{_kde4_appsdir}/desktoptheme/default/icons/plasma-networkmanagement2.svgz
@@ -185,7 +186,7 @@ fi
 # plasma-nm notifications
 %{_kde4_datadir}/kde4/services/networkmanagement_notifications.desktop
 %{_kde4_libdir}/kde4/networkmanagement_notifications.so
-%{_kde4_datadir}/kde4/apps/networkmanagement/networkmanagement.notifyrc
+%{_kde4_datadir}/apps/networkmanagement/networkmanagement.notifyrc
 # plasma-nm kded
 %{_kde4_libdir}/kde4/kded_networkmanagement.so
 %{_kde4_datadir}/kde4/services/kded/networkmanagement.desktop
@@ -227,6 +228,18 @@ fi
 %endif
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-7.20140520git043bbae
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-6.20140520git043bbae
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-5.20140520git043bbae
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-4.20140520git043bbae
+- 为 Magic 3.0 重建
+
 * Thu May 29 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 0.9.3.4-3.20140522git043bbae
 - fix libnm-qt versioned dependencies (missing Epoch)
 

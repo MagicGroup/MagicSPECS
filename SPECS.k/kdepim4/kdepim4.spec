@@ -1,6 +1,4 @@
-%define rversion %{kde4_kdelibs_version}
-#define rversion 4.4.7
-%define release_number 1
+#define version 4.4.7
 %define real_name kdepim
 
 # do not enable final...
@@ -16,12 +14,12 @@
 Name: kdepim4
 Summary: The KDE PIM Components
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.2
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -92,8 +90,8 @@ The KDE PIM Components.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- 开发包
 %package -n %{name}-devel
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: KDE PIM Libraries: Build Environment
 Requires: libkdelibs4-devel cyrus-sasl-devel openldap-devel boost-devel
 Requires: %{name} = %{version}
@@ -104,8 +102,8 @@ to develop KDE PIM applications.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- akregator
 %package -n %{name}-akregator
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: akregator
 
 %description -n %{name}-akregator
@@ -113,8 +111,8 @@ akregator.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- console
 %package -n %{name}-console
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: console
 
 %description -n %{name}-console
@@ -122,8 +120,8 @@ console.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kaddressbook
 %package -n %{name}-kaddressbook
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kaddressbook
 
 %description -n %{name}-kaddressbook
@@ -131,8 +129,8 @@ kaddressbook.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kalarm
 %package -n %{name}-kalarm
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kalarm
 
 %description -n %{name}-kalarm
@@ -140,8 +138,8 @@ kalarm.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- icons
 %package -n %{name}-icons
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: icons
 
 %description -n %{name}-icons
@@ -149,8 +147,8 @@ icons.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kjots
 %package -n %{name}-kjots
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kjots
 
 %description -n %{name}-kjots
@@ -159,8 +157,8 @@ kjots.
 %if %build_kitchensync
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kitchensync
 %package -n %{name}-kitchensync
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kitchensync
 
 %description -n %{name}-kitchensync
@@ -169,8 +167,8 @@ kitchensync.
 %endif
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kleopatra
 %package -n %{name}-kleopatra
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kleopatra
 
 %description -n %{name}-kleopatra
@@ -178,8 +176,8 @@ kleopatra.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kmail
 %package -n %{name}-kmail
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kmail
 
 %description -n %{name}-kmail
@@ -187,8 +185,8 @@ kmail.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kmailcvt
 %package -n %{name}-kmailcvt
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kmailcvt
 
 %description -n %{name}-kmailcvt
@@ -196,8 +194,8 @@ kmailcvt.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- knode
 %package -n %{name}-knode
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: knode
 
 %description -n %{name}-knode
@@ -205,8 +203,8 @@ knode.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- knotes
 %package -n %{name}-knotes
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: knotes
 
 %description -n %{name}-knotes
@@ -214,8 +212,8 @@ knotes.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kontact
 %package -n %{name}-kontact
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kontact
 
 %description -n %{name}-kontact
@@ -223,8 +221,8 @@ kontact.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- korganizer
 %package -n %{name}-korganizer
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: korganizer
 
 %description -n %{name}-korganizer
@@ -232,8 +230,8 @@ korganizer.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- kresources
 %package -n %{name}-kresources
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: kresources
 
 %description -n %{name}-kresources
@@ -241,8 +239,8 @@ kresources.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- ksendemail
 %package -n %{name}-ksendemail
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: ksendemail
 
 %description -n %{name}-ksendemail
@@ -250,8 +248,8 @@ ksendemail.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- ktimetracker
 %package -n %{name}-ktimetracker
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: ktimetracker
 
 %description -n %{name}-ktimetracker
@@ -259,8 +257,8 @@ ktimetracker.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- libkdepim
 %package -n %{name}-libkdepim
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: libkdepim
 
 %description -n %{name}-libkdepim
@@ -268,8 +266,8 @@ libkdepim.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- libkleo
 %package -n %{name}-libkleo
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: libkleo
 
 %description -n %{name}-libkleo
@@ -277,8 +275,8 @@ libkleo.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- libkpgp
 %package -n %{name}-libkpgp
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: libkpgp
 
 %description -n %{name}-libkpgp
@@ -286,8 +284,8 @@ libkpgp.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- libksieve
 %package -n %{name}-libksieve
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: libksieve
 
 %description -n %{name}-libksieve
@@ -295,8 +293,8 @@ libksieve.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- mimelib
 %package -n %{name}-mimelib
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: mimelib
 
 %description -n %{name}-mimelib
@@ -304,8 +302,8 @@ mimelib.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- plugins
 %package -n %{name}-plugins
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: plugins
 
 %description -n %{name}-plugins
@@ -313,8 +311,8 @@ plugins.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- strigi-analyzer
 %package -n %{name}-strigi-analyzer
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: strigi-analyzer
 
 %description -n %{name}-strigi-analyzer
@@ -322,8 +320,8 @@ strigi-analyzer.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- wizards
 %package -n %{name}-wizards
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: wizards
 
 %description -n %{name}-wizards
@@ -331,8 +329,8 @@ wizards.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- blogilo
 %package -n %{name}-blogilo
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: blogilo
 
 %description -n %{name}-blogilo
@@ -340,8 +338,8 @@ blogilo.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- akonadi
 %package -n %{name}-akonadi
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: akonadi
 
 %description -n %{name}-akonadi
@@ -349,8 +347,8 @@ akonadi.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- akonadiconsole
 %package -n %{name}-akonadiconsole
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: akonadiconsole
 
 %description -n %{name}-akonadiconsole
@@ -358,8 +356,8 @@ akonadiconsole.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- akonadi-mailfilter-agent
 %package -n %{name}-akonadi-mailfilter-agent
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: Akonadi mailfilter agent 
 
 %description -n %{name}-akonadi-mailfilter-agent
@@ -367,8 +365,8 @@ Akonadi mailfilter agent
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- messagecore
 %package -n %{name}-messagecore
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: messagecore
 
 %description -n %{name}-messagecore
@@ -376,8 +374,8 @@ messagecore.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- messagelist
 %package -n %{name}-messagelist
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: messagelist
 
 %description -n %{name}-messagelist
@@ -385,8 +383,8 @@ messagelist.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- messageviewer
 %package -n %{name}-messageviewer
-Group: System/GUI/KDE
-Group(zh_CN): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: messageviewer
 
 %description -n %{name}-messageviewer
@@ -395,7 +393,7 @@ messageviewer.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 #%patch0 -p1
 #%patch1 -p0
@@ -507,13 +505,13 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_bindir}/pimsettingexporter
 %{kde4_libdir}/libpimcommon.so.*
 %{kde4_appsdir}/pimsettingexporter/pimsettingexporter.rc
-%{kde4_plugindir}/kcm_pimactivity.so
+#%{kde4_plugindir}/kcm_pimactivity.so
 %{kde4_plugindir}/plugins/designer/mailcommonwidgets.so
 %{kde4_plugindir}/plugins/designer/pimcommonwidgets.so
 %{kde4_plugindir}/plugins/grantlee/0.4/grantlee_messageheaderfilters.so
 %{kde4_libdir}/libcomposereditorng.so.*
-%{kde4_libdir}/libgrammar.so.*
-%{kde4_libdir}/libpimactivity.so.*
+#%{kde4_libdir}/libgrammar.so.*
+#%{kde4_libdir}/libpimactivity.so.*
 %{kde4_libdir}/libsendlater.so.*
 %{kde4_datadir}/akonadi/agents/sendlateragent.desktop
 %{kde4_appsdir}/akonadi_sendlater_agent/akonadi_sendlater_agent.notifyrc
@@ -529,7 +527,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_htmldir}/en/pimsettingexporter/*
 %{kde4_iconsdir}/hicolor/16x16/actions/knotes_*.png
 #%{kde4_servicesdir}/grammar_link.desktop
-%{kde4_servicesdir}/kcmpimactivity.desktop
+#%{kde4_servicesdir}/kcmpimactivity.desktop
 
 #%{kde4_bindir}/akonadi_folderarchive_agent
 %{kde4_bindir}/calendarjanitor
@@ -563,30 +561,23 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_configdir}/ksieve_script.knsrc
 #%{kde4_htmldir}/en/akonadi_folderarchive_agent/*
 
-   /usr/bin/akonadi_notes_agent
-   /usr/bin/sieveeditor
-   /usr/bin/storageservicemanager
-   /usr/lib64/libnoteshared.so.4
-   /usr/lib64/libnoteshared.so.4.13.0
-   /usr/share/akonadi/agents/folderarchiveagent.desktop
-   /usr/share/akonadi/agents/notesagent.desktop
-   /usr/share/apps/akonadi_notes_agent/akonadi_notes_agent.notifyrc
-   /usr/share/apps/kconf_update/noteglobalsettings.upd
-   /usr/share/apps/sieve/scripts/copy/template.desktop
-   /usr/share/apps/sieve/scripts/copy/template.txt
-   /usr/share/apps/sieveeditor/sieveeditorui.rc
-   /usr/share/apps/storageservicemanager/storageservicemanager.notifyrc
-   /usr/share/apps/storageservicemanager/storageservicemanagerui.rc
-   /usr/share/config/knotes_printing_theme.knsrc
-   /usr/share/doc/HTML/en/akonadi_notes_agent/common
-   /usr/share/doc/HTML/en/akonadi_notes_agent/index.cache.bz2
-   /usr/share/doc/HTML/en/akonadi_notes_agent/index.docbook
-   /usr/share/doc/HTML/en/contactthemeeditor/common
-   /usr/share/doc/HTML/en/contactthemeeditor/index.cache.bz2
-   /usr/share/doc/HTML/en/contactthemeeditor/index.docbook
-   /usr/share/doc/HTML/en/sieveeditor/common
-   /usr/share/doc/HTML/en/sieveeditor/index.cache.bz2
-   /usr/share/doc/HTML/en/sieveeditor/index.docbook
+%{kde4_bindir}/akonadi_notes_agent
+%{kde4_bindir}/sieveeditor
+%{kde4_bindir}/storageservicemanager
+%{kde4_libdir}/libnoteshared.so.*
+%{kde4_datadir}/akonadi/agents/folderarchiveagent.desktop
+%{kde4_datadir}/akonadi/agents/notesagent.desktop
+%{kde4_appsdir}/akonadi_notes_agent/akonadi_notes_agent.notifyrc
+%{kde4_appsdir}/kconf_update/noteglobalsettings.upd
+%{kde4_appsdir}/sieve/scripts/copy/template.desktop
+%{kde4_appsdir}/sieve/scripts/copy/template.txt
+%{kde4_appsdir}/sieveeditor/sieveeditorui.rc
+%{kde4_appsdir}/storageservicemanager/storageservicemanager.notifyrc
+%{kde4_appsdir}/storageservicemanager/storageservicemanagerui.rc
+%{kde4_configdir}/knotes_printing_theme.knsrc
+%{kde4_htmldir}/en/akonadi_notes_agent/*
+%{kde4_htmldir}/en/contactthemeeditor/*
+%{kde4_htmldir}/en/sieveeditor/*
 
 %files -n %{name}-akregator
 %defattr(-,root,root)
@@ -1000,6 +991,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Fri Apr 25 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
 - 为 Magic 3.0 重建
 

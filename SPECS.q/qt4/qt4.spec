@@ -5,7 +5,7 @@
 %define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 %define multilib_basearchs x86_64 ppc64 s390x sparc64
 
-%define real_version 4.8.5
+%define real_version 4.8.6
 %define release_number 1
 
 # switches: whether to build it or not
@@ -48,7 +48,7 @@ done
 
 
 Version: %{real_version}
-Release: %{release_number}%{?dist}
+Release: %{release_number}%{?dist}.4
 %define ver %version
 
 Source0: http://releases.qt-project.org/qt4/source/qt-everywhere-opensource-src-%{version}.tar.gz
@@ -1164,12 +1164,10 @@ Requires: %name-webkit = %version-%release
 #%patch61 -p1 -b .indic-rendering-bz631732
 #%patch62 -p1 -b .indic-rendering-bz636399
 
-%patch80 -p1 -b .gold_ld
+#%patch80 -p1 -b .gold_ld
 
 # upstream patches
-%patch100 -p1 -b .QTgaHandler
 %patch102 -p1 -b .qgtkstyle_disable_gtk_theme_check
-%patch103 -p1 -R -b .QTBUG-15319
 %patch113 -p1 -b .QTBUG-22829
 
 # patches from magic
@@ -1944,7 +1942,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files sqlite
 %defattr(-,root,root)
-%_qtdir/plugins/sqldrivers/libqsqlite.so
+%_qtdir/plugins/sqldrivers/libqsqlite*.so
 
 %if %with_tds
 %files tds
@@ -2072,6 +2070,18 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.4
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.3
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.2
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.8.6-1.1
+- 为 Magic 3.0 重建
+
 * Wed Mar 28 2012 Liu Di <liudidi@gmail.com> - 4.8.0-1.4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		kmod
 Version:	17
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Linux kernel module management utilities
 
 Group:		System Environment/Kernel
@@ -109,6 +109,9 @@ install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/weak-modules
 %{_libdir}/libkmod.so
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 17-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 09 2014 Josh Boyer <jwboyer@fedoraproject.org> - 17-1
 - Update to version 17
 

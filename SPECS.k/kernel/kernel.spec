@@ -62,7 +62,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 4
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -74,7 +74,7 @@ Summary: The Linux kernel
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 31
+%define stable_update 41
 # Is it a -stable RC?
 %define stable_rc 0
 # Set rpm version accordingly
@@ -503,7 +503,7 @@ Group: System Environment/Kernel
 License: GPLv2 and Redistributable, no modification permitted
 URL: http://www.kernel.org/
 Version: %{rpmversion}
-Release: %{pkg_release}
+Release: %{pkg_release}.3
 # DO NOT CHANGE THE 'ExclusiveArch' LINE TO TEMPORARILY EXCLUDE AN ARCHITECTURE BUILD.
 # SET %%nobuildarches (ABOVE) INSTEAD
 ExclusiveArch: noarch %{all_x86} x86_64 ppc ppc64 ppc64p7 s390 s390x %{arm}
@@ -534,7 +534,7 @@ BuildConflicts: rhbuildsys(DiskFree) < 500Mb
 # The -r flag to find-debuginfo.sh to invoke eu-strip --reloc-debug-sections
 # reduces the number of relocations in kernel module .ko.debug files and was
 # introduced with rpm 4.9 and elfutils 0.153.
-BuildRequires: rpm-build >= 4.9.0-1, elfutils >= elfutils-0.153-1
+BuildRequires: rpm-build >= 4.9.0, elfutils >= elfutils-0.153
 %define debuginfo_args --strict-build-id -r
 %endif
 
@@ -2335,6 +2335,15 @@ fi
 #                 ||----w |
 #                 ||     ||
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 3.10.41-4.3
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 3.10.41-3.2
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 3.10.41-2.1
+- 为 Magic 3.0 重建
+
 * Fri Oct 4 2013 Justin M. Forbes <jforbes@fedoraproject.org> 3.10.14-100
 - Linux v3.10.14
 

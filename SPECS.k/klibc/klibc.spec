@@ -1,7 +1,7 @@
 Summary:			A minimal libc subset for use with initramfs.
 Summary(zh_CN.UTF-8):		一个迷你化的用于 initramfs 里面的 libc
 Name:				klibc
-Version:			2.0.2
+Version:	2.0.3
 Release:			1%{?dist}
 License:			BSD/GPL
 
@@ -9,7 +9,7 @@ Group:				Development/Libraries
 Group(zh_CN.UTF-8):		开发/库
 
 URL:				http://www.zytor.com/mailman/listinfo/klibc
-Source0:			http://www.kernel.org/pub/linux/libs/klibc-%{version}.tar.xz
+Source0:			http://www.kernel.org/pub/linux/libs/klibc/2.0/klibc-%{version}.tar.xz
 Source1:			linux-2.6.39.tar.bz2
 
 BuildRoot:			%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -153,6 +153,9 @@ rm -rf $RPM_BUILD_ROOT
 #%doc %{bindocdir}/*
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 2.0.3-1
+- 更新到 2.0.3
+
 * Tue Jun 12 2012 Jiang Tao <jiangtao9999@163.com> - 2.0-1
 - Update to 2.0
 
