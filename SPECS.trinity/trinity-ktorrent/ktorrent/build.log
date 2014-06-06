@@ -1,0 +1,172 @@
+
+
+
+
+
+
+
+Summary:	A Bittorent program for KDE.
+Summary(zh_CN.UTF-8):	KDE 下的 BT 下载程序。
+Name:		ktorrent
+Version:		2.2.8
+
+Release:	1mgc30
+
+
+
+License:		GPL
+Group:		Applications/Internet
+Group(zh_CN.UTF-8):	应用程序/互联网
+Url:		http://ktorrent.org/index.php?page=downloads
+
+Source0:	ktorrent-2.2.8.tar.bz2
+
+
+
+
+
+
+
+Patch1:		ktorrent-2.2.7-cjk.patch
+
+Patch2:		ktorrent-2.2.7-agent.patch
+
+Patch3:		ktorrent-2.2.8-admin.patch
+Packager:	Liu Di <sejishikong{at}263{dot}net>
+BuildRoot:	/var/tmp/ktorrent-2.2.8-1mgc30-buildroot-magic
+Prefix:		/usr
+
+%description
+KTorrent is a BitTorrent program for KDE. It's main features are :
+
+Downloads torrent files
+Upload speed capping, seeing that most people can't upload infinite amounts of data.
+Internet searching using The Bittorrent website's search engine
+UDP Trackers more info
+
+%description -l zh_CN.UTF-8
+KTorrent 是一个 KDE 下的 BT 下载程序。它的主要特性有：
+下载 torrent 文件；
+上传速度控制；
+使用 BT 网页搜索引擎进行互联网搜索；
+支持 UDP Tracker 等。
+
+%prep
+%setup -q
+%patch1 -p1
+%patch3 -p1
+chmod 777 admin/*
+
+%build
+make -f admin/Makefile.common
+
+  CFLAGS="${CFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CFLAGS ; 
+  CXXFLAGS="${CXXFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CXXFLAGS ; 
+  FFLAGS="${FFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FFLAGS ; 
+  FCFLAGS="${FCFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FCFLAGS ; 
+  LDFLAGS="${LDFLAGS:--Wl,-z,relro }"; export LDFLAGS; 
+  for i in $(find . -name config.guess -o -name config.sub) ; do 
+      [ -f /usr/lib/rpm/magic/$(basename $i) ] && /usr/bin/rm -f $i && /usr/bin/cp -fv /usr/lib/rpm/magic/$(basename $i) $i ; 
+  done ; 
+  ./configure --build=x86_64-magic-linux-gnu --host=x86_64-magic-linux-gnu \
+	--program-prefix= \
+	--disable-dependency-tracking \
+	--prefix=/usr \
+	--exec-prefix=/usr \
+	--bindir=/usr/bin \
+	--sbindir=/usr/sbin \
+	--sysconfdir=/etc \
+	--datadir=/usr/share \
+	--includedir=/usr/include \
+	--libdir=/usr/lib64 \
+	--libexecdir=/usr/libexec \
+	--localstatedir=/var \
+	--sharedstatedir=/var/lib \
+	--mandir=/usr/share/man \
+	--infodir=/usr/share/info
+#临时措施
+sed -i 's/\/include\/tqt/\/include\/tqt \-lqt\-mt \-ltdecore \-ltdeui \-lDCOP \-lkio/g' plugins/*/Makefile
+sed -i 's/\/include\/tqt/\/include\/tqt \-lqt\-mt \-ltdecore \-ltdeui \-lDCOP \-lkio/g' apps/*/Makefile
+make #-j16
+
+
+%package debuginfo 
+Summary: Debug information for package ktorrent
+Group: Development/Debug
+AutoReqProv: 0
+%description debuginfo
+This package provides debug information for package ktorrent.
+Debug information is useful when developing applications that use this
+package or when debugging this package.
+%files debuginfo -f debugfiles.list
+%defattr(-,root,root)
+
+%install
+
+rm -rf /home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64
+
+  /usr/bin/make \
+	prefix=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr \
+	exec_prefix=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr \
+	bindir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/bin \
+	sbindir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/sbin \
+	sysconfdir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/etc \
+	datadir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/share \
+	includedir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/include \
+	libdir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/lib64 \
+	libexecdir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/libexec \
+	localstatedir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/var \
+	sharedstatedir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/var/lib \
+	mandir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/share/man \
+	infodir=/home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64/usr/share/info \
+  install
+/usr/bin/magic_rpm_clean.sh
+%clean
+rm -rf /home/magic/rpmbuild/BUILDROOT/ktorrent-2.2.8-1mgc30.x86_64 /home/magic/rpmbuild/BUILD/ktorrent-2.2.8
+
+%files
+%defattr(-,root,root)
+/usr/bin/*
+/usr/lib64/*
+/usr/share/*
+%exclude /usr/lib64/debug
+
+%changelog
+* Fri Jul 25 2008 Liu Di <liudidi@gmail.com> - 2.2.7-4mgc
+- 添加一个修改标识的补丁，也许对加速有用
+
+* Thu Jul 24 2008 Liu Di <liudidi@gmail.com> - 2.2.7-2mgc
+- 添加中文编码修正补丁
+
+* Fri Jun 13 2008 Liu Di <Liudidi@gmail.com> - 2.2.7-1mgc
+- 更新到 2.2.7
+
+* Sun Feb 03 2008 Liu Di <liudidi@gmail.com> - 2.2.5-1mgc
+- update to 2.2.5
+
+* Fri Nov 16 2007 Liu Di <liudidi@gmail.coM> - 2.2.3-1mgc
+- update to 2.2.3
+
+* Fri Nov 09 2007 Liu Di <liudidi@gmail.com> - 2.2.2-1mgc
+- updaet to 2.2.2
+
+* Sat Jun 23 2007 kde <athena_star {at} 163 {dot} com>  - 2.2-0.rc1.1mgc
+- update to 2.2rc1
+
+* Fri Jun 08 2007 Liu Di <liudidi@gmail.com> - 2.2-0.beta1.1mgc
+- update to 2.2beta1
+
+* Tue May 08 2007 kde <athena_star {at} 163 {dot} com> - 2.1.4-1mgc
+- update to 2.1.4
+
+* Sat Jul 16 2005 - 1.0
+- Fix a bug about Chinese lang file
+
+* Thu Jul 14 2005 - 1.0
+- First Build ML 1.2 final
+--2014-05-11 23:46:51--  http://apt.linuxfans.org/magic/3.0/sources/SOURCES.k/ktorrent/ktorrent-2.2.8.tar.bz2
+正在解析主机 apt.linuxfans.org (apt.linuxfans.org)... 219.231.240.68
+正在连接 apt.linuxfans.org (apt.linuxfans.org)|219.231.240.68|:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 404 Not Found
+2014-05-11 23:46:51 错误 404：Not Found。
+
