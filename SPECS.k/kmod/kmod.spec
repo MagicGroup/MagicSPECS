@@ -1,5 +1,5 @@
 Name:		kmod
-Version:	15
+Version:	17
 Release:	1%{?dist}
 Summary:	Linux kernel module management utilities
 
@@ -109,6 +109,12 @@ install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/weak-modules
 %{_libdir}/libkmod.so
 
 %changelog
+* Wed Apr 09 2014 Josh Boyer <jwboyer@fedoraproject.org> - 17-1
+- Update to version 17
+
+* Thu Jan 02 2014 Václav Pavlín <vpavlin@redhat.com> - 16-1
+- Update to version 16
+
 * Thu Aug 22 2013 Josh Boyer <jwboyer@fedoraproject.org> - 15-1
 - Update to version 15
 
