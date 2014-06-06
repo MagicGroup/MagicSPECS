@@ -1,16 +1,16 @@
-# %global         git_commit 5af966a
+%global         git_commit 5cff3c5
 Name:           libnm-qt
-Version:        0.9.8.0
-Release:        1%{?dist}
-Epoch:          1
+Version:        0.9.8.2
+Release:        1.20140422%{git_commit}%{?dist}
+Epoch:          2
 Summary:        Qt-only wrapper for NetworkManager DBus API
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            https://projects.kde.org/projects/extragear/libs/libnm-qt
-Source0:        http://download.kde.org/unstable/networkmanager-qt/%{version}/src/%{name}-%{version}.tar.xz
+# Source0:        http://download.kde.org/unstable/networkmanagement/%{version}/src/%{name}-%{version}.tar.xz
 # # Package from git snapshots using releaseme scripts
-# Source0:        %{name}-%{version}-git%{git_commit}.tar.bz2
+Source0:        %{name}-%{version}.tar.xz
 
 BuildRequires:  cmake >= 2.6
 BuildRequires:  pkgconfig(QtCore)
@@ -19,7 +19,7 @@ BuildRequires:  pkgconfig(NetworkManager) >= 0.9.8
 BuildRequires:  pkgconfig(ModemManager) >= 1.0.0
 BuildRequires:  pkgconfig(libnm-glib) pkgconfig(libnm-util)
 
-Requires:  NetworkManager >= 0.9.8
+Requires:  NetworkManager >= 0.9.9.0
 
 %description
 Qt library for NetworkManager
@@ -54,7 +54,7 @@ make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/libNetworkManagerQt.so.0*
+%{_libdir}/libNetworkManagerQt.so*
 
 
 %files devel
@@ -63,6 +63,12 @@ make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 %{_includedir}/NetworkManagerQt/
 
 %changelog
+* Thu May 22 2014 Jan Grulich <jgrulich@redhat.com> - 2:0.9.8.2-1.20140422git5cff3c5
+- update to git snapshot
+
+* Tue Feb 25 2014 Jan Grulich <jgrulich@redhat.com> - 1:0.9.9.1-1.20140225gitb7f3d65
+- Update to 0.9.9.1 (development version)
+
 * Thu Nov 21 2013 Jan Grulich <jgrulich@redhat.com> - 1:0.9.8.0-1
 - Update to 0.9.8.0 (stable release)
 
