@@ -1,25 +1,65 @@
+%global _hardened_build 1
 %{?!with_python:      %global with_python      1}
+%{?!with_perl:        %global with_perl        1}
+%{?!with_ecc:        %global with_ecc          1}
 
-%if %{with_python}
+%if %{with python}
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{?filter_setup:
+%global _ldns_internal_filter /^_ldns[.]so.*/d;
+%filter_from_requires %{_ldns_internal_filter}
+%filter_from_provides %{_ldns_internal_filter}
+%filter_setup
+}
+%global _ldns_internal _ldns[.]so[.].*
+%global __requires_exclude ^(%{_ldns_internal})$
+%global __provides_exclude ^(%{_ldns_internal})$
 %endif
 
-Summary: Lowlevel DNS(SEC) library with API
+%if %{with_perl}
+%{?perl_default_filter}
+%endif
+
+Summary: Low-level DNS(SEC) library with API
 Name: ldns
-Version: 1.6.11
+Version: 1.6.17
 Release: 4%{?dist}
+
 License: BSD
 Url: http://www.nlnetlabs.nl/%{name}/
-Source: http://www.nlnetlabs.nl/downloads/%{%name}/%{name}-%{version}.tar.gz
+Source0: http://www.nlnetlabs.nl/downloads/%{name}/%{name}-%{version}.tar.gz
+Patch1: ldns-1.6.17-multilib.patch
+Patch2: ldns-1.6.16-dsa-key-failures.patch
+Patch3: ldns-1.6.17-keygen.patch
+
 Group: System Environment/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: perl, libpcap-devel, openssl-devel, gcc-c++, doxygen,
+# Only needed for builds from svn snapshot
+# BuildRequires: libtool
+# BuildRequires: autoconf
+# BuildRequires: automake
+
+BuildRequires: libpcap-devel
+BuildRequires: openssl-devel
+BuildRequires: gcc-c++
+BuildRequires: doxygen
+
 # for snapshots only
 # BuildRequires: libtool, autoconf, automake
-%if %{with_python}
-BuildRequires:  python-devel, swig
+%if %{with python}
+BuildRequires: python-devel, swig
 %endif
+%if %{with perl}
+BuildRequires: perl-ExtUtils-MakeMaker
+%endif
+Requires: ca-certificates
+
+# Transition: To ensure people who installed 'ldns' for binaries don't lose them. Remove in f21
+Obsoletes: ldns < 1.6.17-4
+Conflicts: ldns < 1.6.17-4
+Provides: ldns = %{version}-%{release}
+Provides: ldns%{?_isa} = %{version}-%{release}
+Requires: ldns-utils
 
 %description
 ldns is a library with the aim to simplify DNS programming in C. All
@@ -30,98 +70,267 @@ packets.
 %package devel
 Summary: Development package that includes the ldns header files
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The devel package contains the ldns library and the include files
 
-%if %{with_python}
-%package python
+%package utils
+Summary: DNS(SEC) utilities for querying dns
+Group: Applications/System
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description utils
+Collection of tools to get, check or alter DNS(SEC) data.
+
+%if %{with python}
+%package -n python-ldns
 Summary: Python extensions for ldns
 Group: Applications/System
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Obsoletes: ldns-python < 1.6.17-4
+Conflicts: ldns-python < 1.6.17-4
 
-%description python
+
+%description -n python-ldns
 Python extensions for ldns
 %endif
 
+%if %{with perl}
+%package -n perl-ldns
+Summary: Perl extensions for ldns
+Group: Applications/System
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Obsoletes: ldns-perl < 1.6.17-4
+Conflicts: ldns-perl < 1.6.17-4
+
+%description -n perl-ldns
+Perl extensions for ldns
+%endif
+
+%package doc
+Summary: Documentation for the ldns library
+Group: Development/Libraries
+BuildArch: noarch
+
+%description doc
+This package contains documentation for the ldns library
+
 %prep
-%setup -q 
+%setup -q
+%patch1 -p1
+%patch2 -p1 -b .dsa
+%patch3 -p1 -b .keygen
 # To built svn snapshots
 # rm config.guess config.sub ltmain.sh
 # aclocal
-# libtoolize -c 
-# autoreconf 
+# libtoolize -c --install
+# autoreconf --install
 
 %build
-%configure --disable-rpath --disable-static --with-sha2 --disable-gost \
-%if %{with_python}
- --with-pyldns
+CFLAGS="%{optflags} -fPIC"
+CXXFLAGS="%{optflags} -fPIC"
+LDFLAGS="-Wl,-z,relro,-z,now -pie"
+export CFLAGS CXXFLAGS LDFLAGS
+%configure \
+  --disable-rpath \
+  --disable-static \
+%if %{with ecc}
+  --enable-gost \
+  --enable-ecdsa \
+%else
+  --disable-gost \
+  --disable-ecdsa \
+%endif
+%if %{with python}
+  --with-pyldns \
+%endif
+  --with-ca-file=/etc/pki/tls/certs/ca-bundle.trust.crt \
+  --with-ca-path=/etc/pki/tls/certs/ \
+  --with-trust-anchor=%{_sharedstatedir}/unbound/root.key
+
+pushd drill
+%configure \
+  --disable-rpath \
+%if %{with ecc}
+  --enable-gost \
+  --enable-ecdsa \
+%else
+  --disable-gost \
+  --disable-ecdsa \
+%endif
+  --with-ca-file=/etc/pki/tls/certs/ca-bundle.trust.crt \
+  --with-ca-path=/etc/pki/tls/certs/ \
+  --with-trust-anchor=%{_sharedstatedir}/unbound/root.key
+popd
+
+pushd examples
+%configure \
+  --disable-rpath \
+%if %{with ecc}
+  --enable-gost \
+  --enable-ecdsa \
+%else
+  --disable-gost \
+  --disable-ecdsa \
+%endif
+  --with-ca-file=/etc/pki/tls/certs/ca-bundle.trust.crt \
+  --with-ca-path=/etc/pki/tls/certs/ \
+  --with-trust-anchor=%{_sharedstatedir}/unbound/root.key
+popd
+
+# We cannot use the built-in --with-p5-dns-ldns
+%if %{with perl}
+  pushd contrib/DNS-LDNS
+  perl Makefile.PL INSTALLDIRS=vendor  INC="-I. -I../.."
+  make
+  popd
 %endif
 
-(cd drill ; %configure --disable-rpath --disable-static --with-sha2 --disable-gost --with-ldns=%{buildroot}/lib/ )
-(cd examples ; %configure --disable-rpath --disable-static --with-sha2 --disable-gost --with-ldns=%{buildroot}/lib/ )
-
-make %{?_smp_mflags} 
-( cd drill ; make %{?_smp_mflags} )
-( cd examples ; make %{?_smp_mflags} )
+make %{?_smp_mflags}
+make -C drill %{?_smp_mflags}
+make -C examples %{?_smp_mflags}
 make %{?_smp_mflags} doc
 
 %install
 rm -rf %{buildroot}
 
-make DESTDIR=%{buildroot} INSTALL="%{__install} -p" install 
+make DESTDIR=%{buildroot} INSTALL="%{__install} -p" install
 make DESTDIR=%{buildroot} INSTALL="%{__install} -p" install-doc
 
+# don't package xml files
+rm doc/*.xml
 # don't package building script for install-doc in doc section
 rm doc/doxyparse.pl
-#remove double set of man pages
+# remove double set of man pages
 rm -rf doc/man
 # remove .la files
 rm -rf %{buildroot}%{_libdir}/*.la %{buildroot}%{python_sitearch}/*.la
-(cd drill ; make DESTDIR=%{buildroot} install)
-(cd examples; make DESTDIR=%{buildroot} install)
+make -C drill DESTDIR=%{buildroot} install
+make -C examples DESTDIR=%{buildroot} install
+%if %{with perl}
+  make -C contrib/DNS-LDNS DESTDIR=%{buildroot} pure_install
+  chmod 755 %{buildroot}%{perl_vendorarch}/auto/DNS/LDNS/LDNS.so
+  rm -f %{buildroot}%{perl_vendorarch}/auto/DNS/LDNS/{.packlist,LDNS.bs}
+%endif
 
 %clean
 rm -rf %{buildroot}
-
-%files 
-%defattr(-,root,root)
-%{_libdir}/libldns*so.*
-%{_bindir}/drill
-%{_bindir}/ldnsd
-%{_bindir}/ldns-chaos
-%{_bindir}/ldns-compare-zones
-%{_bindir}/ldns-[d-z]*
-%doc README LICENSE
-%{_mandir}/*/*
-
-%files devel
-%defattr(-,root,root,-)
-%{_libdir}/libldns*so
-%{_bindir}/ldns-config
-%dir %{_includedir}/ldns
-%{_includedir}/ldns/*.h
-%doc doc Changelog README
-
-%if %{with_python}
-%files python
-%defattr(-,root,root)
-%{python_sitearch}/*
-%endif
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
+%files
+%doc README LICENSE
+%{_libdir}/libldns*so.*
+
+%files utils
+%{_bindir}/drill
+%{_bindir}/ldnsd
+%{_bindir}/ldns-chaos
+%{_bindir}/ldns-compare-zones
+%{_bindir}/ldns-[d-z]*
+%{_mandir}/man1/*
+
+%files devel
+%doc Changelog README
+%{_libdir}/libldns*so
+%{_bindir}/ldns-config
+%dir %{_includedir}/ldns
+%{_includedir}/ldns/*.h
+%{_mandir}/man3/*
+
+%if %{with python}
+%files -n python-ldns
+%{python_sitearch}/*
+%endif
+
+%if %{with perl}
+%files -n perl-ldns
+%{perl_vendorarch}/*
+%exclude %dir %{perl_vendorarch}/auto/
+%endif
+
+%files doc
+%doc doc
+
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.6.11-4
-- 为 Magic 3.0 重建
+* Tue May 06 2014 Paul Wouters <pwouters@redhat.com> - 1.6.17-4
+- Rename ldns-python to python-ldns
+- Rename ldns-perl to perl-ldns
+- Ensure ldns-utils is dragged it so an upgrade does not remove utils
 
-* Fri Jan 13 2012 Liu Di <liudidi@gmail.com> - 1.6.11-3
-- 为 Magic 3.0 重建
+* Tue May 06 2014 Paul Wouters <pwouters@redhat.com> - 1.6.17-3
+- CVE-2014-3209 ldns: ldns-keygen generates keys with world readable permissions
+- Fix 1017958 - 32 and 64 bit ldns conflicts on some manual pages
+- Fix rhbz#1062874 - cannot install ldns.x86_64 in parallel to ldns.i686
+- Incorporate fixes from Tuomo Soini <tis@foobar.fi>
+- hardened build
+- fix ldns internal provides and requires filter
+- fix perl-ldns requirement to include %%_isa
+- setup filters for perl and python bindings for internal stuff
+- split utils to separate package
 
-* Thu Oct  5 2011 Paul Wouters <paul@xelerance.com> - 1.6.11-2
+* Mon Mar 24 2014 Tomas Hozza <thozza@redhat.com> - 1.6.17-2
+- Fix error causing ldns to sometimes produce faulty DSA sign (#1077776)
+- Fix FTBFS due to perl modules
+
+* Fri Jan 10 2014 Paul Wouters <pwouters@redhat.com> - 1.6.17-1
+- Updated to 1.6.17
+- Enable perl bindings via new ldns-perl sub-package
+- Enable ECDSA/GOST which is now allowed in Fedora
+- Removed patches merged upstream, ported multilib patch to 1.6.17
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.16-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 23 2013 Tomas Hozza <thozza@redhat.com> - 1.6.16-5
+- Fix compiler warnings and one uninitialized value
+- make ldns-config multilib clean
+- Fix man pages and usages errors
+
+* Mon Jun 03 2013 Paul Wouters <pwouters@redhat.com> - 1.6.16-4
+- Use /var/lib/unbound/root.key for --with-trust-anchor
+
+* Fri Apr 19 2013 Adam Tkac <atkac redhat com> - 1.6.16-3
+- make package multilib clean
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.16-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Oct 30 2012 Paul Wouters <pwouters@redhat.com> - 1.6.16-1
+- Updated to 1.6.16
+- Addresses bug in 1.6.14 and 1.6.15 that affects opendnssec
+  (if you have empty non-terminals and use NSEC3)
+
+* Fri Oct 26 2012 Paul Wouters <pwouters@redhat.com> - 1.6.15-1
+- Updated to 1.6.15, as 1.6.14 accidentally broke ABI
+  (We never released 1.6.14)
+
+* Tue Oct 23 2012 Paul Wouters <pwouters@redhat.com> - 1.6.14-1
+- [pulled before release]
+- Updated to 1.6.14
+- Removed merged in patch
+- Added new dependancy on ca-certificates for ldns-dane PKIX validation
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.13-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 01 2012 Paul Wouters <pwouters@redhat.com> - 1.6.13-2
+- Added reworked ldns-read-zone patch from trunk
+  (adds -p for SOA padding, and -o for zeroizing timestamps/sigs)
+
+* Mon May 21 2012 Paul Wouters <pwouters@redhat.com> - 1.6.13-1
+- Upgraded to 1.6.13, bugfix release
+- Added --disable-ecdsa as ECC is still banned
+- Removed --with-sha2 - it is always enabled and option was removed
+
+* Wed Jan 11 2012 Paul Wouters <paul@nohats.ca> - 1.6.12-1
+- Upgraded to 1.6.12, fixes important end of year handling date bug
+
+* Wed Oct  5 2011 Paul Wouters <paul@xelerance.com> - 1.6.11-2
 - Updated to 1.6.11, fixes rhbz#741026 which is CVE-2011-3581
 - Python goes into sitearch, not sitelib
 - Fix source link and spelling errors in description
@@ -211,7 +420,7 @@ rm -rf %{buildroot}
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Mon Feb 10 2009 Paul Wouters <paul@xelerance.com> - 1.5.1-1
+* Tue Feb 10 2009 Paul Wouters <paul@xelerance.com> - 1.5.1-1
 - Updated to new version, 1.5.0 had a bug preventing
   zone signing.
 
@@ -290,7 +499,7 @@ rm -rf %{buildroot}
 * Sun Dec 18 2005 Paul Wouters <paul@xelerance.com> 1.0.0-7
 - Patched 'make clean' target to get rid of object files shipped with 1.0.0
 
-* Sun Dec 13 2005 Paul Wouters <paul@xelerance.com> 1.0.0-6
+* Tue Dec 13 2005 Paul Wouters <paul@xelerance.com> 1.0.0-6
 - added a make clean for 2.3.3 since .o files were left behind upstream,
   causing failure on ppc platform
 

@@ -1,0 +1,75 @@
+diff -Naur ldns-1.6.17-orig/configure ldns-1.6.17/configure
+--- ldns-1.6.17-orig/configure	2014-01-10 16:04:50.000000000 -0500
++++ ldns-1.6.17/configure	2014-01-10 20:22:39.138190093 -0500
+@@ -662,6 +662,7 @@
+ PYTHON_LDFLAGS
+ PYTHON_CPPFLAGS
+ PYTHON
++PYTHON_LIB
+ PYTHON_VERSION
+ UNINSTALL_CONFIG_MANPAGE
+ UNINSTALL_CONFIG
+@@ -13599,6 +13600,7 @@
+ 			# use the official shared library
+ 			ac_python_library=`echo "$ac_python_library" | sed "s/^lib//"`
+ 			PYTHON_LDFLAGS="-L$ac_python_libdir -l$ac_python_library"
++			PYTHON_LIB="$ac_python_library"
+ 		else
+ 			# old way: use libpython from python_configdir
+ 			ac_python_libdir=`$PYTHON -c \
+@@ -13606,6 +13608,7 @@
+ 			  import os; \
+ 			  print (os.path.join(f(plat_specific=1, standard_lib=1), 'config'));"`
+ 			PYTHON_LDFLAGS="-L$ac_python_libdir -lpython$ac_python_version"
++			PYTHON_LIB="python$ac_python_version"
+ 		fi
+ 
+ 		if test -z "PYTHON_LDFLAGS"; then
+diff -Naur ldns-1.6.17-orig/packaging/ldns-config.in ldns-1.6.17/packaging/ldns-config.in
+--- ldns-1.6.17-orig/packaging/ldns-config.in	2014-01-10 16:04:41.000000000 -0500
++++ ldns-1.6.17/packaging/ldns-config.in	2014-01-10 20:33:13.033665804 -0500
+@@ -3,13 +3,25 @@
+ prefix="@prefix@"
+ exec_prefix="@exec_prefix@"
+ VERSION="@PACKAGE_VERSION@"
+-CFLAGS="@CFLAGS@"
+-CPPFLAGS="@CPPFLAGS@ @LIBSSL_CPPFLAGS@ @PYTHON_CPPFLAGS@"
+-LDFLAGS="@LDFLAGS@ @LIBSSL_LDFLAGS@ @PYTHON_LDFLAGS@"
+ LIBS="@LIBS@ @LIBSSL_LIBS@"
+-LIBDIR="@libdir@"
+ INCLUDEDIR="@includedir@"
+ LIBVERSION="@LIBLDNS_CURRENT@.@LIBLDNS_REVISION@.@LIBLDNS_AGE@"
++ARCH="`uname -m`"
++
++case $ARCH in
++       x86_64 | amd64 | sparc64 | s390x | ppc64)
++
++               LIBDIR="/usr/lib64"
++               LIBDIR_SEC="/usr/lib"
++               ;;
++       * )
++               LIBDIR="/usr/lib"
++               LIBDIR_SEC="usr/lib64"
++               ;;
++esac
++
++LDFLAGS="@LDFLAGS@ @LIBSSL_LDFLAGS@ -L$LIBDIR -l@PYTHON_LIB@"
++LDFLAGS_SEC="@LDFL
+ 
+ for arg in $@
+ do
+@@ -21,9 +33,13 @@
+     then
+         echo "${LDFLAGS} -L${LIBDIR} ${LIBS} -lldns"
+     fi
++    if [ $arg = "--libs_sec" ]
++    then
++        echo "${LDFLAGS_SEC} -L${LIBDIR_SEC} ${LIBS} -lldns"
++    fi
+     if [ $arg = "-h" ] || [ $arg = "--help" ]
+     then
+-        echo "Usage: $0 [--cflags] [--libs] [--version]"
++        echo "Usage: $0 [--cflags] [--libs] [--libs_sec] [--version]"
+     fi
+     if [ $arg = "--version" ]
+     then
