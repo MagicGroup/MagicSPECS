@@ -1,23 +1,17 @@
 
 Name:    lensfun
-Version: 0.2.6
+Version: 0.2.8
 Summary: Library to rectify defects introduced by photographic lenses
-Release: 4%{?dist}
+Release: 1%{?dist}
 
 License: LGPLv3 and CC-BY-SA
-Group: System Environment/Libraries
 URL: http://lensfun.berlios.de/
-# an odd redirect is going on, spectool doesn't work (for 0.2.6 anyway)
-Source0: http://download.berlios.de/lensfun/lensfun-%{version}.tar.bz2
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# sf link doesn't work anymore
+#Source0: http://downloads.sourceforge.net/project/lensfun.berlios/lensfun-%{version}.tar.bz2
+# this one's a bit wierd too, spectool -g gets the filename wrong
+Source0:  http://download.berlios.de/lensfun/lensfun-%{version}.tar.bz2
 
-## upstreamable patches
-# add LIB_SUFFIX support (and not hardcode prefix/lib)
-Patch50: lensfun-0.2.6-cmake_LIB_SUFFIX.patch
-# add pkgconfig support
-Patch51: lensfun-0.2.6-cmake_pkgconfig.patch
-
-BuildRequires: cmake
+BuildRequires: cmake >= 2.8
 BuildRequires: doxygen
 BuildRequires: pkgconfig(glib-2.0) 
 BuildRequires: pkgconfig(libpng) 
@@ -33,7 +27,6 @@ vignetting and color contribution of a lens.
 
 %package devel
 Summary: Development toolkit for %{name}
-Group:   Development/Libraries
 License: LGPLv3
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
@@ -43,9 +36,6 @@ using lensfun.
 
 %prep
 %setup -q 
-
-%patch50 -p1 -b .LIB_SUFFIX
-%patch51 -p1 -b .cmake_pkgconfig
 
 
 %build
@@ -63,20 +53,17 @@ make doc -C %{_target_platform}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
 
-
-%clean
-rm -rf %{buildroot}
+## unpackaged files
+# omit cmake-installed doxygen docs, we handle that manually
+rm -rfv %{buildroot}%{_docdir}/%{name}-%{version}*
 
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc README
 %doc docs/cc-by-sa-3.0.txt docs/lgpl-3.0.txt
 %doc docs/adobe-lens-profile.txt 
@@ -84,7 +71,6 @@ rm -rf %{buildroot}
 %{_libdir}/liblensfun.so.0*
 
 %files devel
-%defattr(-,root,root,-)
 %doc %{_target_platform}/doc_doxygen/*
 %{_includedir}/lensfun/
 %{_libdir}/liblensfun.so
@@ -92,8 +78,17 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.6-4
-- 为 Magic 3.0 重建
+* Mon Jan 06 2014 Rex Dieter <rdieter@fedoraproject.org> 0.2.8-1
+- 0.2.8 (#1048784)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Mar 19 2013 Rex Dieter <rdieter@fedoraproject.org> 0.2.7-1
+- 0.2.7
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Wed Jul 25 2012 Nils Philippsen <nils@redhat.com> - 0.2.6-3
 - pkgconfig: fix cflags so lensfun.h is found
