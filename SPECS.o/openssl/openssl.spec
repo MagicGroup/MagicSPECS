@@ -95,6 +95,9 @@ Patch89: openssl-1.0.1e-ephemeral-key-size.patch
 # upstream patch for CVE-2014-0160
 Patch100: openssl.git-96db902.patch
 
+# Add generic64 use lib64 dir
+Patch1000: openssl-1.0.1e-mips64el.patch
+
 License: OpenSSL
 Group: System Environment/Libraries
 URL: http://www.openssl.org/
@@ -220,6 +223,8 @@ cp %{SOURCE12} %{SOURCE13} crypto/ec/
 %patch89 -p1 -b .ephemeral
 
 %patch100 -p1 -b .CVE-2014-0160
+
+%patch1000 -p1 -b .generic64
 
 sed -i 's/SHLIB_VERSION_NUMBER "1.0.0"/SHLIB_VERSION_NUMBER "%{version}"/' crypto/opensslv.h
 
