@@ -1,0 +1,41 @@
+From d8886e456b6adf59dbbfa4006c96b43312c28918 Mon Sep 17 00:00:00 2001
+From: Hiram Chirino <chirino@gmail.com>
+Date: Fri, 5 Jul 2013 18:32:28 +0400
+Subject: [PATCH 4/6] Allow leveldbjni build
+
+---
+ build_detect_platform   | 5 +++--
+ include/leveldb/slice.h | 1 -
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/build_detect_platform b/build_detect_platform
+index d50869d..08157a1 100755
+--- a/build_detect_platform
++++ b/build_detect_platform
+@@ -203,8 +203,9 @@ echo "CXX=$CXX" >> $OUTPUT
+ echo "PLATFORM=$PLATFORM" >> $OUTPUT
+ echo "PLATFORM_LDFLAGS=$PLATFORM_LDFLAGS" >> $OUTPUT
+ echo "PLATFORM_LIBS=$PLATFORM_LIBS" >> $OUTPUT
+-echo "PLATFORM_CCFLAGS=$PLATFORM_CCFLAGS" >> $OUTPUT
+-echo "PLATFORM_CXXFLAGS=$PLATFORM_CXXFLAGS" >> $OUTPUT
++echo "PLATFORM_CCFLAGS=$PLATFORM_CCFLAGS $PLATFORM_SHARED_CFLAGS" >> $OUTPUT
++echo "PLATFORM_CXXFLAGS=$PLATFORM_CXXFLAGS $PLATFORM_SHARED_CFLAGS" >> $OUTPUT
++echo "PLATFORM_SHARED_CFLAGS=" >> $OUTPUT
+ echo "PLATFORM_SHARED_CFLAGS=$PLATFORM_SHARED_CFLAGS" >> $OUTPUT
+ echo "PLATFORM_SHARED_EXT=$PLATFORM_SHARED_EXT" >> $OUTPUT
+ echo "PLATFORM_SHARED_LDFLAGS=$PLATFORM_SHARED_LDFLAGS" >> $OUTPUT
+diff --git a/include/leveldb/slice.h b/include/leveldb/slice.h
+index 74ea8fa..135bbd7 100644
+--- a/include/leveldb/slice.h
++++ b/include/leveldb/slice.h
+@@ -77,7 +77,6 @@ class Slice {
+             (memcmp(data_, x.data_, x.size_) == 0));
+   }
+ 
+- private:
+   const char* data_;
+   size_t size_;
+ 
+-- 
+1.8.3.1
+

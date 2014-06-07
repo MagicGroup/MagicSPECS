@@ -1,7 +1,7 @@
-From 9a96c7148ee9858feddc764dbb70771a5647e687 Mon Sep 17 00:00:00 2001
+From 64943f95a11adc2f97f4998b36091fcf6029f35b Mon Sep 17 00:00:00 2001
 From: Yehuda Sadeh <yehuda@inktank.com>
 Date: Mon, 2 Jul 2012 14:29:06 -0700
-Subject: [PATCH 3/3] bloom_test failure on big endian archs
+Subject: [PATCH 3/6] bloom_test failure on big endian archs
 
 When running bloom_test on big endian machines it fails due to unacceptable
 false positive rate. I've looked into the issue and it seems that the
@@ -30,5 +30,5 @@ index 0bf8e8d..7593cc2 100644
      else good_filters++;
    }
 -- 
-1.7.12.1
+1.8.3.1
 
