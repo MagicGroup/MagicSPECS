@@ -22,6 +22,14 @@ fi
 
 exec 2>/dev/null
 
+# Allow for user defined filters
+if [ -x ~/.lessfilter ]; then
+	~/.lessfilter "$1"
+	if [ $? -eq 0 ]; then
+		exit 0
+	fi
+fi
+
 case "$1" in
 *.[1-9n].bz2|*.[1-9]x.bz2|*.man.bz2|*.[1-9n].[gx]z|*.[1-9]x.[gx]z|*.man.[gx]z|*.[1-9n].lzma|*.[1-9]x.lzma|*.man.lzma)
 	case "$1" in
@@ -30,12 +38,12 @@ case "$1" in
 	*.xz|*.lzma)	DECOMPRESSOR="xz -dc" ;;
 	esac
 	if [ -n "$DECOMPRESSOR" ] && $DECOMPRESSOR -- "$1" | file - | grep -q troff; then
-		$DECOMPRESSOR -- "$1" | man -l - | cat -s
+		$DECOMPRESSOR -- "$1" | groff -Tascii -mandoc -
 		exit $?
 	fi ;;&
 *.[1-9n]|*.[1-9]x|*.man)
 	if file "$1" | grep -q troff; then
-		man -l "$1" | cat -s
+		groff -Tascii -mandoc "$1" | cat -s
 		exit $?
 	fi ;;&
 *.tar) tar tvvf "$1" ;;
@@ -48,29 +56,35 @@ case "$1" in
 *.zip|*.jar|*.nbm) zipinfo -- "$1" ;;
 *.rpm) rpm -qpivl --changelog -- "$1" ;;
 *.cpi|*.cpio) cpio -itv < "$1" ;;
+*.gpg) gpg -d "$1" ;;
 *.gif|*.jpeg|*.jpg|*.pcd|*.png|*.tga|*.tiff|*.tif)
 	if [ -x /usr/bin/identify ]; then
 		identify "$1"
+		exit $?
 	elif [ -x /usr/bin/gm ]; then
 		gm identify "$1"
+		exit $?
 	else
 		echo "No identify available"
 		echo "Install ImageMagick or GraphicsMagick to browse images"
 		exit 1
 	fi ;;
 *)
-	if [ -x /usr/bin/file -a -x /usr/bin/iconv -a -x /usr/bin/cut ]; then
+	if [ -x /usr/bin/file ] && [ -x /usr/bin/iconv ] && [ -x /usr/bin/cut ]; then
 		case `file -b "$1"` in
 		*UTF-16*) conv='UTF-16' ;;
 		*UTF-32*) conv='UTF-32' ;;
 		esac
-		env=`echo $LANG | cut -d. -f2`
-		if [ -n  "$conv" -a -n "$env" -a "$conv" != "$env" ]; then
-			iconv -f $conv -t $env "$1"
-			exit $?
+		if [ -n "$conv" ]; then
+			env=`echo $LANG | cut -d. -f2`
+			if [ -n "$env" -a "$conv" != "$env" ]; then
+				iconv -f $conv -t $env "$1"
+				exit $?
+			fi
 		fi
 	fi
-	exit 1
+	cat "$1"
+	exit $?
 esac
-exit $?
+
 

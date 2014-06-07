@@ -1,0 +1,22 @@
+diff -upr less-458_orig/less.nro less-458_work/less.nro
+--- less-458_orig/less.nro	2013-05-07 14:20:52.237332235 +0200
++++ less-458_work/less.nro	2013-05-07 14:22:23.142708098 +0200
+@@ -1228,6 +1228,18 @@ Similarly, if the first two characters o
+ the input pipe is used on standard input as well as other files.
+ Again, in this case the dash is not considered to be part of 
+ the input pipe command.
++.PP
++There are used following files to set up default preprocessor:
++.br
++	/etc/profile.d/less.sh
++.br
++	/etc/profile.d/less.csh
++.br
++These files set up /usr/bin/lesspipe.sh as a default filter. An user defined
++filter can be specified in ~/.lessfilter. This file should have an execute bit
++set and accept only one parameter, which represents a filename. If
++the user defined filter process the file, zero should be returned. Otherwise
++~/.lessfilter tries to handle the file.
+ 
+ .SH "NATIONAL CHARACTER SETS"
+ There are three types of characters in the input file:
