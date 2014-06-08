@@ -1,0 +1,17 @@
+Description: Freetype 2.5 change header location, fix our includes accordingly
+Author: Lior Kaplan <kaplan@debian.org>
+Bug-Debian: http://bugs.debian.org/733388
+
+--- a/src/libpaps.c
++++ b/src/libpaps.c
+@@ -25,8 +25,8 @@
+ 
+ #include <pango/pango.h>
+ #include <pango/pangoft2.h>
+-#include <freetype/ftglyph.h>
+-#include <freetype/ftoutln.h>
++#include <ftglyph.h>
++#include <ftoutln.h>
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <stdio.h>
