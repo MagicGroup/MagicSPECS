@@ -1,0 +1,43 @@
+From ebf2be47870510a6348db5fe3419578ec6fea877 Mon Sep 17 00:00:00 2001
+From: Brent Baude <baude@us.ibm.com>
+Date: Thu, 24 Apr 2014 09:32:36 -0500
+Subject: [PATCH] PPC64LE arch support in openjdk-1.8
+
+---
+ jdk8/common/autoconf/platform.m4          | 6 ++++++
+ jdk8/hotspot/src/os/linux/vm/os_linux.cpp | 2 ++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/jdk8/common/autoconf/platform.m4 b/jdk8/common/autoconf/platform.m4
+index 757bf22..2506fc8 100644
+--- a/jdk8/common/autoconf/platform.m4
++++ b/jdk8/common/autoconf/platform.m4
+@@ -60,6 +60,12 @@ AC_DEFUN([PLATFORM_EXTRACT_VARS_FROM_CPU],
+       VAR_CPU_BITS=64
+       VAR_CPU_ENDIAN=big
+       ;;
++    powerpc64le)
++      VAR_CPU=ppc64le
++      VAR_CPU_ARCH=ppc
++      VAR_CPU_BITS=64
++      VAR_CPU_ENDIAN=little
++      ;;
+     s390)
+       VAR_CPU=s390
+       VAR_CPU_ARCH=s390
+diff --git a/jdk8/hotspot/src/os/linux/vm/os_linux.cpp b/jdk8/hotspot/src/os/linux/vm/os_linux.cpp
+index 68314bb..5885d10 100644
+--- a/jdk8/hotspot/src/os/linux/vm/os_linux.cpp
++++ b/jdk8/hotspot/src/os/linux/vm/os_linux.cpp
+@@ -1978,6 +1978,8 @@ void * os::dll_load(const char *filename, char *ebuf, int ebuflen)
+     static  Elf32_Half running_arch_code=EM_SPARC;
+   #elif  (defined __powerpc64__)
+     static  Elf32_Half running_arch_code=EM_PPC64;
++  #elif  (defined __powerpc64le__)
++    static  Elf32_Half running_arch_code=EM_PPC64LE;
+   #elif  (defined __powerpc__)
+     static  Elf32_Half running_arch_code=EM_PPC;
+   #elif  (defined ARM)
+-- 
+1.9.0
+

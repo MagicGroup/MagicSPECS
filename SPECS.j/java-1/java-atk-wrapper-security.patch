@@ -1,0 +1,28 @@
+--- jdk8/jdk/src/share/lib/security/java.security-linux.orig
++++ jdk8/jdk/src/share/lib/security/java.security-linux
+@@ -154,9 +154,11 @@
+                org.jcp.xml.dsig.internal.,\
+                jdk.internal.,\
+                jdk.nashorn.internal.,\
+-               jdk.nashorn.tools.
++               jdk.nashorn.tools,\
++               org.GNOME.Accessibility.,\
++               org.GNOME.Bonobo.
+ 
+ 
+ #
+ # List of comma-separated packages that start with or equal this string
+ # will cause a security exception to be thrown when
+@@ -192,9 +194,11 @@
+                    org.jcp.xml.dsig.internal.,\
+                    jdk.internal.,\
+                    jdk.nashorn.internal.,\
+-                   jdk.nashorn.tools.
++                   jdk.nashorn.tools.,\
++                   org.GNOME.Accessibility.,\
++                   org.GNOME.Bonobo.
+ 
+ 
+ #
+ # Determines whether this properties file can be appended to
+ # or overridden on the command line via -Djava.security.properties

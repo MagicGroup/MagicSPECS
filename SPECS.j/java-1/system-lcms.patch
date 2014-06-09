@@ -1,0 +1,101 @@
+diff -ruN jdk8/common/autoconf/libraries.m4 jdk8/common/autoconf/libraries.m4
+--- jdk8/common/autoconf/libraries.m4	2013-11-14 22:04:38.039440136 -0500
++++ jdk8/common/autoconf/libraries.m4	2013-11-14 22:05:11.474356424 -0500
+@@ -676,6 +676,46 @@
+ 
+   ###############################################################################
+   #
++  # Check for the lcms2 library
++  #
++
++  AC_ARG_WITH(lcms, [AS_HELP_STRING([--with-lcms],
++  	[use lcms2 from build system or OpenJDK source (system, bundled) @<:@bundled@:>@])])
++
++  AC_CHECK_LIB(lcms2, cmsOpenProfileFromFile,
++               [ LCMS_FOUND=yes ],
++               [ LCMS_FOUND=no ])
++
++  AC_MSG_CHECKING([for which lcms to use])
++
++  DEFAULT_LCMS=bundled
++
++  #
++  # If user didn't specify, use DEFAULT_LCMS
++  #
++  if test "x${with_lcms}" = "x"; then
++      with_lcms=${DEFAULT_LCMS}
++  fi
++
++  if test "x${with_lcms}" = "xbundled"; then
++      USE_EXTERNAL_LCMS=false
++      AC_MSG_RESULT([bundled])
++  elif test "x${with_lcms}" = "xsystem"; then
++      if test "x${LCMS_FOUND}" = "xyes"; then
++          USE_EXTERNAL_LCMS=true
++          AC_MSG_RESULT([system])
++      else
++          AC_MSG_RESULT([system not found])
++          AC_MSG_ERROR([--with-lcms=system specified, but no lcms found!])
++      fi
++  else
++      AC_MSG_ERROR([Invalid value for --with-lcms: ${with_lcms}, use 'system' or 'bundled'])
++  fi
++
++  AC_SUBST(USE_EXTERNAL_LCMS)
++
++  ###############################################################################
++  #
+   # Check for the png library
+   #
+ 
+diff -ruN jdk8/jdk/make/lib/Awt2dLibraries.gmk jdk8/jdk/make/lib/Awt2dLibraries.gmk
+--- jdk8/jdk/make/lib/Awt2dLibraries.gmk	2013-11-14 22:04:38.040440133 -0500
++++ jdk8/jdk/make/lib/Awt2dLibraries.gmk	2013-11-14 22:05:11.475356411 -0500
+@@ -661,8 +661,8 @@
+ ##########################################################################################
+ 
+ # TODO: Update awt lib path when awt is converted
+-$(eval $(call SetupNativeCompilation,BUILD_LIBLCMS, \
+-    LIBRARY := lcms, \
++$(eval $(call SetupNativeCompilation,BUILD_LIBJAVALCMS, \
++    LIBRARY := javalcms, \
+     OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
+     SRC := $(JDK_TOPDIR)/src/share/native/sun/java2d/cmm/lcms, \
+     LANG := C, \
+@@ -680,18 +680,18 @@
+     LDFLAGS_windows := $(WIN_AWT_LIB) $(WIN_JAVA_LIB), \
+     LDFLAGS_SUFFIX_solaris := -lawt -ljava -ljvm -lc, \
+     LDFLAGS_SUFFIX_macosx := $(LIBM) -lawt -ljava -ljvm, \
+-    LDFLAGS_SUFFIX_linux := -lm -lawt -ljava -ljvm, \
++    LDFLAGS_SUFFIX_linux := -lm -lawt -ljava -ljvm -llcms2, \
+     VERSIONINFO_RESOURCE := $(JDK_TOPDIR)/src/windows/resource/version.rc, \
+     RC_FLAGS := $(RC_FLAGS) \
+-        -D "JDK_FNAME=lcms.dll" \
+-        -D "JDK_INTERNAL_NAME=lcms" \
++        -D "JDK_FNAME=javalcms.dll" \
++        -D "JDK_INTERNAL_NAME=javalcms" \
+         -D "JDK_FTYPE=0x2L", \
+-    OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/liblcms, \
++    OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libjavalcms, \
+     DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
+ 
+-BUILD_LIBRARIES += $(BUILD_LIBLCMS)
++BUILD_LIBRARIES += $(BUILD_LIBJAVALCMS)
+ 
+-$(BUILD_LIBLCMS): $(BUILD_LIBAWT)
++$(BUILD_LIBJAVALCMS): $(BUILD_LIBAWT)
+ 
+ ##########################################################################################
+ 
+diff -ruN jdk8/jdk/src/share/classes/sun/cmm/lcms/LCMS.java jdk8/jdk/src/share/classes/sun/java2d/cmm/lcms/LCMS.java
+--- jdk8/jdk/src/share/classes/sun/java2d/cmm/lcms/LCMS.java	2013-10-31 19:44:18.000000000 -0400
++++ jdk8/jdk/src/share/classes/sun/java2d/cmm/lcms/LCMS.java	2013-11-14 22:05:11.476356403 -0500
+@@ -207,7 +207,7 @@
+                          * disposer frameworks
+                          */
+                         System.loadLibrary("awt");
+-                        System.loadLibrary("lcms");
++                        System.loadLibrary("javalcms");
+                         return null;
+                     }
+                 });
