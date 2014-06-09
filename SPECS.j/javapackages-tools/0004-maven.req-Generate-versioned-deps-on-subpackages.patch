@@ -1,0 +1,65 @@
+From 8cd3338ddfeef5965f05d5082695d9d72bcf4629 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Thu, 29 May 2014 11:28:57 +0200
+Subject: [PATCH 04/10] [maven.req] Generate versioned deps on subpackages
+
+---
+ depgenerators/maven.req | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/depgenerators/maven.req b/depgenerators/maven.req
+index eecb055..56fd27f 100755
+--- a/depgenerators/maven.req
++++ b/depgenerators/maven.req
+@@ -150,8 +150,8 @@ class TagBuilder(object):
+                provided.artifactId == dependency.artifactId and
+                provided.classifier == dependency.classifier and
+                provided.extension == dependency.extension):
+-                return True
+-        return False
++                return provided.version
++        return None
+ 
+ 
+     def __generate_requires_from_pom(self, pomfile):
+@@ -168,8 +168,11 @@ class TagBuilder(object):
+         for p in plugins:
+             # TODO: namespaces
+             plug = Dependency(p.groupId, p.artifactId, requestedVersion=p.version)
+-            if resolve_artifact(plug.get_mvn_str()) or self.__is_provided_by_subpackage(plug):
++            aver = self.__is_provided_by_subpackage(plug)
++            if resolve_artifact(plug.get_mvn_str()):
+                 print(plug.get_rpm_str())
++            elif aver is not None:
++                print("{rpmstr} = {version}".format(rpmstr=plug.get_rpm_str(), version=aver))
+             else:
+                 unresolvable.append(plug.get_mvn_str())
+             for pd in p.dependencies:
+@@ -183,16 +186,22 @@ class TagBuilder(object):
+         for e in extensions:
+             # TODO: namespaces
+             ext = Dependency(e.groupId, e.artifactId, requestedVersion=e.version)
+-            if resolve_artifact(ext.get_mvn_str()) or self.__is_provided_by_subpackage(ext):
++            aver = self.__is_provided_by_subpackage(ext)
++            if resolve_artifact(ext.get_mvn_str()):
+                 print(ext.get_rpm_str())
++            elif aver is not None:
++                print("{rpmstr} = {version}".format(rpmstr=ext.get_rpm_str(), version=aver))
+             else:
+                 unresolvable.append(plug.get_mvn_str())
+ 
+         if paid and pver:
+             parent_dep = Dependency(pgid, paid, requestedVersion=pver, extension="pom")
+-            if resolve_artifact(parent_dep.get_mvn_str()) or self.__is_provided_by_subpackage(parent_dep):
++            aver = self.__is_provided_by_subpackage(parent_dep)
++            if resolve_artifact(parent_dep.get_mvn_str()):
+                 # TODO: namespaces
+                 print(parent_dep.get_rpm_str())
++            elif aver is not None:
++                print("{rpmstr} = {version}".format(rpmstr=parent_dep.get_rpm_str(), version=aver))
+             else:
+                 unresolvable.append(parent_dep.get_mvn_str())
+ 
+-- 
+1.9.3
+

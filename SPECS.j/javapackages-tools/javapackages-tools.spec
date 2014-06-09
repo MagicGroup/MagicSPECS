@@ -1,6 +1,6 @@
 Name:           javapackages-tools
-Version:        3.5.0
-Release:        6%{?dist}
+Version:        4.0.0
+Release:        4%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -8,15 +8,16 @@ License:        BSD
 URL:            https://fedorahosted.org/javapackages/
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
 
-# Add support for installing Maven artifacts with .hpi extension
-Patch0:         0001-Add-support-for-installing-hpi.patch
-
-Patch1:         0001-depgenerators-Switch-to-require-java-headless-instea.patch
-Patch2:         0002-test-Fix-testsuite-for-java-headless-change.patch
+Patch0:         0001-pom-Add-ability-to-read-parent-s-version.patch
+Patch1:         0002-maven.req-Check-if-dependency-is-not-provided-by-sub.patch
+Patch2:         0004-maven.req-Generate-versioned-deps-on-subpackages.patch
+Patch3:         0006-maven.req-Fix-self-dependency-detection-code.patch
+Patch4:         0008-Fix-javapackages-metadata.xml.patch
+Patch5:         0010-maven.req-When-generating-req-from-POM-file-do-not-b.patch
+Patch6:         add-support-for-xmvn.resolver.disableEffectivePom-property.patch
 
 BuildArch:      noarch
 
-BuildRequires:  jpackage-utils
 BuildRequires:  asciidoc
 BuildRequires:  xmlto
 BuildRequires:  python-lxml
@@ -25,6 +26,9 @@ BuildRequires:  python-setuptools
 BuildRequires:  python-formencode
 BuildRequires:  scl-utils-build
 BuildRequires:  python-nose
+BuildRequires:  dia
+BuildRequires:  PyXB >= 1.2.3
+BuildRequires:  javapackages-tools >= 4.0.0
 
 Requires:       coreutils
 Requires:       libxslt
@@ -41,15 +45,11 @@ This package provides macros and scripts to support Java packaging.
 %package -n maven-local
 Summary:        Macros and scripts for Maven packaging support
 Requires:       %{name} = %{version}-%{release}
+Requires:       javapackages-local = %{version}-%{release}
 Requires:       maven
-Requires:       xmvn >= 1.0.0-0.1
-# We want to use OpenJDK 8 for building packages as it is default
-# implementation used in Fedora.  Due to YUM bugs and limitations,
-# sometimes Java 7 may be installed alone.  To workaround this
-# maven-local explicitly requires version 8 of OpenJDK.  (If needed
-# Maven can still work with Java 7, but this needs to be enabled
-# explicitly in the spec file.)
-Requires:       java-1.8.0-openjdk-devel >= 1:1.8
+Requires:       xmvn >= 2
+Requires:       xmvn-mojo >= 2
+Requires:       xmvn-connector-aether >= 2
 # POM files needed by maven itself
 Requires:       apache-commons-parent
 Requires:       apache-parent
@@ -87,14 +87,9 @@ This package provides macros and scripts to support packaging Maven artifacts.
 %package -n ivy-local
 Summary:        Local mode for Apache Ivy
 Requires:       %{name} = %{version}-%{release}
+Requires:       javapackages-local = %{version}-%{release}
 Requires:       apache-ivy >= 2.3.0-8
-Requires:       guava
-Requires:       maven
-Requires:       plexus-classworlds
-Requires:       plexus-containers-container-default
-Requires:       plexus-utils
-Requires:       xbean
-Requires:       xmvn >= 1.5
+Requires:       xmvn-connector-ivy >= 2
 
 %description -n ivy-local
 This package implements local mode fow Apache Ivy, which allows
@@ -102,6 +97,7 @@ artifact resolution using XMvn resolver.
 
 %package -n python-javapackages
 Summary:        Module for handling various files for Java packaging
+Requires:       PyXB >= 1.2.3
 Requires:       python-lxml
 
 %description -n python-javapackages
@@ -116,7 +112,28 @@ Requires:       fedora-review
 %description -n fedora-review-plugin-java
 %{summary}.
 
+%package doc
+Summary:        Guide for Java packaging
 
+%description doc
+User guide for Java packaging and using utilities from javapackages-tools
+
+%package -n javapackages-local
+Summary:        Non-essential macros and scripts for Java packaging support
+Requires:       %{name} = %{version}-%{release}
+Requires:       xmvn-install >= 2
+Requires:       xmvn-subst >= 2
+Requires:       xmvn-resolve >= 2
+# We want to use OpenJDK 8 for building packages as it is default
+# implementation used in Fedora.  Due to YUM bugs and limitations,
+# sometimes Java 7 may be installed alone.  To workaround this
+# maven-local explicitly requires version 8 of OpenJDK.  (If needed
+# Maven can still work with Java 7, but this needs to be enabled
+# explicitly in the spec file.)
+Requires:       java-1.8.0-openjdk-devel >= 1:1.8
+
+%description -n javapackages-local
+This package provides non-essential macros and scripts to support Java packaging.
 
 %prep
 %setup -q -n javapackages-%{version}
@@ -124,6 +141,10 @@ Requires:       fedora-review
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 %configure
@@ -144,9 +165,10 @@ popd
 ./check
 
 
-
 %files -f files-common
 %doc LICENSE
+
+%files -n javapackages-local -f files-local
 
 %files -n maven-local -f files-maven
 
@@ -159,10 +181,37 @@ popd
 %files -n fedora-review-plugin-java
 %{_datadir}/fedora-review/plugins/*
 
+%files doc -f files-doc
+%doc LICENSE
 
 %changelog
+* Fri May 30 2014 Michal Srb <msrb@redhat.com> - 4.0.0-4
+- Backport patch which adds support for "disableEffectivePom" property
+
+* Thu May 29 2014 Michal Srb <msrb@redhat.com> - 4.0.0-3
+- Add BR: javapackages-tools
+
+* Thu May 29 2014 Michal Srb <msrb@redhat.com> - 4.0.0-2
+- Backport patches for maven.req
+- Remove com.sun:tools and sun.jdk:jconsole provides
+
+* Thu May 29 2014 Michal Srb <msrb@redhat.com> - 4.0.0-1
+- Update to 4.0.0
+
+* Wed May 28 2014 Michal Srb <msrb@redhat.com> - 3.5.0-9
+- Apply the patch from my previous commit
+
+* Wed May 28 2014 Michal Srb <msrb@redhat.com> - 3.5.0-8
+- Generate requires on POM artifacts with "pom" extension
+
+* Wed Apr 30 2014 Michal Srb <msrb@redhat.com> - 3.5.0-7
+- Improve support for SCLs
+
 * Wed Apr 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.5.0-6
 - Add explicit maven-local requires on java-1.8.0-openjdk-devel
+
+* Thu Mar 27 2014 Michael Simacek <msimacek@redhat.com> - 3.5.0-6
+- Install documentation
 
 * Mon Feb 24 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.5.0-5
 - Backport java-headless patches
