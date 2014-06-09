@@ -1,0 +1,2047 @@
+From 7c7d1f459729d60cc4fa96ad723fbfcefaffc9ef Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Wed, 21 May 2014 10:08:34 +0200
+Subject: [PATCH] Revert "Bug 433953 - Remove support for Plexus IoC framework"
+
+This reverts commit c5edb824e8ae5336cf10fc8cbe745a01ca760d6d.
+---
+ aether-connector-basic/pom.xml                     | 15 ++++
+ .../basic/BasicRepositoryConnectorFactory.java     | 16 ++++-
+ .../aether/connector/basic/PlexusSupportTest.java  | 83 ++++++++++++++++++++++
+ aether-impl/pom.xml                                | 16 +++++
+ .../internal/impl/DefaultArtifactResolver.java     | 22 +++++-
+ .../impl/DefaultChecksumPolicyProvider.java        |  6 +-
+ .../internal/impl/DefaultDependencyCollector.java  | 34 ++++++---
+ .../aether/internal/impl/DefaultDeployer.java      | 28 +++++++-
+ .../aether/internal/impl/DefaultFileProcessor.java | 10 +--
+ .../aether/internal/impl/DefaultInstaller.java     | 24 ++++++-
+ .../impl/DefaultLocalRepositoryProvider.java       | 19 ++++-
+ .../internal/impl/DefaultMetadataResolver.java     | 20 +++++-
+ .../internal/impl/DefaultOfflineController.java    | 12 +++-
+ .../impl/DefaultRemoteRepositoryManager.java       | 14 +++-
+ .../impl/DefaultRepositoryConnectorProvider.java   | 19 ++++-
+ .../impl/DefaultRepositoryEventDispatcher.java     | 22 +++++-
+ .../impl/DefaultRepositoryLayoutProvider.java      | 19 ++++-
+ .../internal/impl/DefaultRepositorySystem.java     | 23 +++++-
+ .../internal/impl/DefaultSyncContextFactory.java   |  4 +-
+ .../internal/impl/DefaultTransporterProvider.java  | 19 ++++-
+ .../internal/impl/DefaultUpdateCheckManager.java   | 13 +++-
+ .../internal/impl/DefaultUpdatePolicyAnalyzer.java | 12 +++-
+ .../EnhancedLocalRepositoryManagerFactory.java     | 10 +++
+ .../impl/Maven2RepositoryLayoutFactory.java        |  4 +-
+ .../aether/internal/impl/PlexusLoggerFactory.java  | 78 ++++++++++++++++++++
+ .../impl/SimpleLocalRepositoryManagerFactory.java  | 10 +++
+ .../org/eclipse/aether/impl/PlexusSupportTest.java | 66 +++++++++++++++++
+ aether-transport-classpath/pom.xml                 | 15 ++++
+ .../classpath/ClasspathTransporterFactory.java     | 12 +++-
+ .../transport/classpath/PlexusSupportTest.java     | 42 +++++++++++
+ aether-transport-file/pom.xml                      | 15 ++++
+ .../transport/file/FileTransporterFactory.java     | 12 +++-
+ .../aether/transport/file/PlexusSupportTest.java   | 41 +++++++++++
+ aether-transport-http/pom.xml                      | 15 ++++
+ .../transport/http/HttpTransporterFactory.java     | 12 +++-
+ .../aether/transport/http/PlexusSupportTest.java   | 41 +++++++++++
+ .../transport/wagon/WagonTransporterFactory.java   | 12 ++++
+ 37 files changed, 794 insertions(+), 41 deletions(-)
+ create mode 100644 aether-connector-basic/src/test/java/org/eclipse/aether/connector/basic/PlexusSupportTest.java
+ create mode 100644 aether-impl/src/main/java/org/eclipse/aether/internal/impl/PlexusLoggerFactory.java
+ create mode 100644 aether-impl/src/test/java/org/eclipse/aether/impl/PlexusSupportTest.java
+ create mode 100644 aether-transport-classpath/src/test/java/org/eclipse/aether/transport/classpath/PlexusSupportTest.java
+ create mode 100644 aether-transport-file/src/test/java/org/eclipse/aether/transport/file/PlexusSupportTest.java
+ create mode 100644 aether-transport-http/src/test/java/org/eclipse/aether/transport/http/PlexusSupportTest.java
+
+diff --git a/aether-connector-basic/pom.xml b/aether-connector-basic/pom.xml
+index ee208a8..08429a3 100644
+--- a/aether-connector-basic/pom.xml
++++ b/aether-connector-basic/pom.xml
+@@ -51,6 +51,17 @@
+       <optional>true</optional>
+     </dependency>
+     <dependency>
++      <groupId>org.codehaus.plexus</groupId>
++      <artifactId>plexus-component-annotations</artifactId>
++      <scope>provided</scope>
++      <optional>true</optional>
++    </dependency>
++    <dependency>
++      <groupId>org.eclipse.sisu</groupId>
++      <artifactId>org.eclipse.sisu.plexus</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
+       <groupId>org.sonatype.sisu</groupId>
+       <artifactId>sisu-guice</artifactId>
+       <classifier>no_aop</classifier>
+@@ -80,6 +91,10 @@
+         <artifactId>animal-sniffer-maven-plugin</artifactId>
+       </plugin>
+       <plugin>
++        <groupId>org.codehaus.plexus</groupId>
++        <artifactId>plexus-component-metadata</artifactId>
++      </plugin>
++      <plugin>
+         <groupId>org.eclipse.sisu</groupId>
+         <artifactId>sisu-maven-plugin</artifactId>
+       </plugin>
+diff --git a/aether-connector-basic/src/main/java/org/eclipse/aether/connector/basic/BasicRepositoryConnectorFactory.java b/aether-connector-basic/src/main/java/org/eclipse/aether/connector/basic/BasicRepositoryConnectorFactory.java
+index b1f0576..265a800 100644
+--- a/aether-connector-basic/src/main/java/org/eclipse/aether/connector/basic/BasicRepositoryConnectorFactory.java
++++ b/aether-connector-basic/src/main/java/org/eclipse/aether/connector/basic/BasicRepositoryConnectorFactory.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -13,6 +13,8 @@ package org.eclipse.aether.connector.basic;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.spi.connector.RepositoryConnector;
+@@ -34,18 +36,24 @@ import org.eclipse.aether.transfer.NoRepositoryConnectorException;
+  * {@link org.eclipse.aether.spi.connector.layout.RepositoryLayoutFactory repository layouts} for the transfers.
+  */
+ @Named( "basic" )
++@Component( role = RepositoryConnectorFactory.class, hint = "basic" )
+ public final class BasicRepositoryConnectorFactory
+     implements RepositoryConnectorFactory, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private TransporterProvider transporterProvider;
+ 
++    @Requirement
+     private RepositoryLayoutProvider layoutProvider;
+ 
++    @Requirement
+     private ChecksumPolicyProvider checksumPolicyProvider;
+ 
++    @Requirement
+     private FileProcessor fileProcessor;
+ 
+     private float priority;
+@@ -93,6 +101,12 @@ public final class BasicRepositoryConnectorFactory
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     /**
+      * Sets the transporter provider to use for this component.
+      * 
+diff --git a/aether-connector-basic/src/test/java/org/eclipse/aether/connector/basic/PlexusSupportTest.java b/aether-connector-basic/src/test/java/org/eclipse/aether/connector/basic/PlexusSupportTest.java
+new file mode 100644
+index 0000000..e57e508
+--- /dev/null
++++ b/aether-connector-basic/src/test/java/org/eclipse/aether/connector/basic/PlexusSupportTest.java
+@@ -0,0 +1,83 @@
++/*******************************************************************************
++ * Copyright (c) 2013 Sonatype, Inc.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ *
++ * Contributors:
++ *    Sonatype, Inc. - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.aether.connector.basic;
++
++import org.codehaus.plexus.ContainerConfiguration;
++import org.codehaus.plexus.PlexusTestCase;
++import org.eclipse.aether.RepositorySystemSession;
++import org.eclipse.aether.internal.test.util.TestFileProcessor;
++import org.eclipse.aether.internal.test.util.TestLoggerFactory;
++import org.eclipse.aether.repository.RemoteRepository;
++import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
++import org.eclipse.aether.spi.connector.checksum.ChecksumPolicy;
++import org.eclipse.aether.spi.connector.checksum.ChecksumPolicyProvider;
++import org.eclipse.aether.spi.connector.layout.RepositoryLayout;
++import org.eclipse.aether.spi.connector.layout.RepositoryLayoutProvider;
++import org.eclipse.aether.spi.connector.transport.Transporter;
++import org.eclipse.aether.spi.connector.transport.TransporterProvider;
++import org.eclipse.aether.spi.io.FileProcessor;
++import org.eclipse.aether.spi.log.LoggerFactory;
++import org.eclipse.aether.transfer.TransferResource;
++
++/**
++ */
++public class PlexusSupportTest
++    extends PlexusTestCase
++{
++
++    @Override
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
++    {
++        containerConfiguration.setClassPathScanning( "cache" );
++    }
++
++    public void testExistenceOfPlexusComponentMetadata()
++        throws Exception
++    {
++        RepositoryLayoutProvider layoutProvider = new RepositoryLayoutProvider()
++        {
++            public RepositoryLayout newRepositoryLayout( RepositorySystemSession session, RemoteRepository repository )
++            {
++                return null;
++            }
++        };
++        TransporterProvider transporterProvider = new TransporterProvider()
++        {
++            public Transporter newTransporter( RepositorySystemSession session, RemoteRepository repository )
++            {
++                return null;
++            }
++        };
++        ChecksumPolicyProvider checksumPolicyProvider = new ChecksumPolicyProvider()
++        {
++            public ChecksumPolicy newChecksumPolicy( RepositorySystemSession session, RemoteRepository repository,
++                                                     TransferResource resource, String policy )
++            {
++                return null;
++            }
++
++            public String getEffectiveChecksumPolicy( RepositorySystemSession session, String policy1, String policy2 )
++            {
++                return null;
++            }
++        };
++        getContainer().addComponent( new TestLoggerFactory(), LoggerFactory.class, null );
++        getContainer().addComponent( new TestFileProcessor(), FileProcessor.class, null );
++        getContainer().addComponent( layoutProvider, RepositoryLayoutProvider.class, null );
++        getContainer().addComponent( transporterProvider, TransporterProvider.class, null );
++        getContainer().addComponent( checksumPolicyProvider, ChecksumPolicyProvider.class, null );
++
++        RepositoryConnectorFactory factory = lookup( RepositoryConnectorFactory.class, "basic" );
++        assertNotNull( factory );
++        assertEquals( BasicRepositoryConnectorFactory.class, factory.getClass() );
++    }
++
++}
+diff --git a/aether-impl/pom.xml b/aether-impl/pom.xml
+index 9627aff..a39794f 100644
+--- a/aether-impl/pom.xml
++++ b/aether-impl/pom.xml
+@@ -51,6 +51,18 @@
+       <optional>true</optional>
+     </dependency>
+     <dependency>
++      <groupId>org.codehaus.plexus</groupId>
++      <artifactId>plexus-component-annotations</artifactId>
++      <scope>provided</scope>
++      <optional>true</optional>
++    </dependency>
++    <dependency>
++      <groupId>org.eclipse.sisu</groupId>
++      <artifactId>org.eclipse.sisu.plexus</artifactId>
++      <scope>provided</scope>
++      <optional>true</optional>
++    </dependency>
++    <dependency>
+       <groupId>org.eclipse.sisu</groupId>
+       <artifactId>org.eclipse.sisu.inject</artifactId>
+       <scope>provided</scope>
+@@ -93,6 +105,10 @@
+         <artifactId>animal-sniffer-maven-plugin</artifactId>
+       </plugin>
+       <plugin>
++        <groupId>org.codehaus.plexus</groupId>
++        <artifactId>plexus-component-metadata</artifactId>
++      </plugin>
++      <plugin>
+         <groupId>org.eclipse.sisu</groupId>
+         <artifactId>sisu-maven-plugin</artifactId>
+       </plugin>
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultArtifactResolver.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultArtifactResolver.java
+index 2426b52..9fb8aab 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultArtifactResolver.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultArtifactResolver.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -22,11 +22,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositoryEvent;
+-import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.RequestTrace;
+ import org.eclipse.aether.SyncContext;
++import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.artifact.Artifact;
+ import org.eclipse.aether.artifact.ArtifactProperties;
+ import org.eclipse.aether.impl.ArtifactResolver;
+@@ -71,28 +73,38 @@ import org.eclipse.aether.util.ConfigUtils;
+ /**
+  */
+ @Named
++@Component( role = ArtifactResolver.class )
+ public class DefaultArtifactResolver
+     implements ArtifactResolver, Service
+ {
+ 
+     private static final String CONFIG_PROP_SNAPSHOT_NORMALIZATION = "aether.artifactResolver.snapshotNormalization";
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private FileProcessor fileProcessor;
+ 
++    @Requirement
+     private RepositoryEventDispatcher repositoryEventDispatcher;
+ 
++    @Requirement
+     private VersionResolver versionResolver;
+ 
++    @Requirement
+     private UpdateCheckManager updateCheckManager;
+ 
++    @Requirement
+     private RepositoryConnectorProvider repositoryConnectorProvider;
+ 
++    @Requirement
+     private RemoteRepositoryManager remoteRepositoryManager;
+ 
++    @Requirement
+     private SyncContextFactory syncContextFactory;
+ 
++    @Requirement
+     private OfflineController offlineController;
+ 
+     public DefaultArtifactResolver()
+@@ -137,6 +149,12 @@ public class DefaultArtifactResolver
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultArtifactResolver setFileProcessor( FileProcessor fileProcessor )
+     {
+         if ( fileProcessor == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultChecksumPolicyProvider.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultChecksumPolicyProvider.java
+index b1d2f6a..3ebc07a 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultChecksumPolicyProvider.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultChecksumPolicyProvider.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -13,6 +13,8 @@ package org.eclipse.aether.internal.impl;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.repository.RepositoryPolicy;
+@@ -27,6 +29,7 @@ import org.eclipse.aether.transfer.TransferResource;
+ /**
+  */
+ @Named
++@Component( role = ChecksumPolicyProvider.class )
+ public final class DefaultChecksumPolicyProvider
+     implements ChecksumPolicyProvider, Service
+ {
+@@ -37,6 +40,7 @@ public final class DefaultChecksumPolicyProvider
+ 
+     private static final int ORDINAL_FAIL = 2;
+ 
++    @Requirement( role = LoggerFactory.class )
+     private LoggerFactory loggerFactory = NullLoggerFactory.INSTANCE;
+ 
+     public DefaultChecksumPolicyProvider()
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDependencyCollector.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDependencyCollector.java
+index 404897c..1cb0ceb 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDependencyCollector.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDependencyCollector.java
+@@ -10,17 +10,8 @@
+  *******************************************************************************/
+ package org.eclipse.aether.internal.impl;
+ 
+-import java.util.ArrayList;
+-import java.util.Collection;
+-import java.util.Collections;
+-import java.util.HashSet;
+-import java.util.LinkedHashMap;
+-import java.util.List;
+-import java.util.Map;
+-
+-import javax.inject.Inject;
+-import javax.inject.Named;
+-
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.DefaultRepositorySystemSession;
+ import org.eclipse.aether.RepositoryException;
+ import org.eclipse.aether.RepositorySystemSession;
+@@ -61,9 +52,20 @@ import org.eclipse.aether.util.graph.manager.DependencyManagerUtils;
+ import org.eclipse.aether.util.graph.transformer.TransformationContextKeys;
+ import org.eclipse.aether.version.Version;
+ 
++import javax.inject.Inject;
++import javax.inject.Named;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.HashSet;
++import java.util.LinkedHashMap;
++import java.util.List;
++import java.util.Map;
++
+ /**
+  */
+ @Named
++@Component( role = DependencyCollector.class )
+ public class DefaultDependencyCollector
+     implements DependencyCollector, Service
+ {
+@@ -72,12 +74,16 @@ public class DefaultDependencyCollector
+ 
+     private static final String CONFIG_PROP_MAX_CYCLES = "aether.dependencyCollector.maxCycles";
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private RemoteRepositoryManager remoteRepositoryManager;
+ 
++    @Requirement
+     private ArtifactDescriptorReader descriptorReader;
+ 
++    @Requirement
+     private VersionRangeResolver versionRangeResolver;
+ 
+     public DefaultDependencyCollector()
+@@ -110,6 +116,12 @@ public class DefaultDependencyCollector
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultDependencyCollector setRemoteRepositoryManager( RemoteRepositoryManager remoteRepositoryManager )
+     {
+         if ( remoteRepositoryManager == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDeployer.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDeployer.java
+index b349576..10e3dba 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDeployer.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultDeployer.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -22,12 +22,14 @@ import java.util.Set;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositoryEvent;
+-import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.RepositoryException;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.RequestTrace;
+ import org.eclipse.aether.SyncContext;
++import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.artifact.Artifact;
+ import org.eclipse.aether.deployment.DeployRequest;
+ import org.eclipse.aether.deployment.DeployResult;
+@@ -68,26 +70,36 @@ import org.eclipse.aether.transfer.TransferEvent;
+ /**
+  */
+ @Named
++@Component( role = Deployer.class )
+ public class DefaultDeployer
+     implements Deployer, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private FileProcessor fileProcessor;
+ 
++    @Requirement
+     private RepositoryEventDispatcher repositoryEventDispatcher;
+ 
++    @Requirement
+     private RepositoryConnectorProvider repositoryConnectorProvider;
+ 
++    @Requirement
+     private RemoteRepositoryManager remoteRepositoryManager;
+ 
++    @Requirement
+     private UpdateCheckManager updateCheckManager;
+ 
++    @Requirement( role = MetadataGeneratorFactory.class )
+     private Collection<MetadataGeneratorFactory> metadataFactories = new ArrayList<MetadataGeneratorFactory>();
+ 
++    @Requirement
+     private SyncContextFactory syncContextFactory;
+ 
++    @Requirement
+     private OfflineController offlineController;
+ 
+     public DefaultDeployer()
+@@ -132,6 +144,12 @@ public class DefaultDeployer
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultDeployer setFileProcessor( FileProcessor fileProcessor )
+     {
+         if ( fileProcessor == null )
+@@ -205,6 +223,12 @@ public class DefaultDeployer
+         return this;
+     }
+ 
++    DefaultDeployer setMetadataFactories( List<MetadataGeneratorFactory> metadataFactories )
++    {
++        // plexus support
++        return setMetadataGeneratorFactories( metadataFactories );
++    }
++
+     public DefaultDeployer setSyncContextFactory( SyncContextFactory syncContextFactory )
+     {
+         if ( syncContextFactory == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultFileProcessor.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultFileProcessor.java
+index 04ab2b6..2933e26 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultFileProcessor.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultFileProcessor.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2012 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -21,12 +21,14 @@ import java.nio.ByteBuffer;
+ 
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
+ import org.eclipse.aether.spi.io.FileProcessor;
+ 
+ /**
+  * A utility class helping with file-based operations.
+  */
+ @Named
++@Component( role = FileProcessor.class )
+ public class DefaultFileProcessor
+     implements FileProcessor
+ {
+@@ -47,9 +49,9 @@ public class DefaultFileProcessor
+     }
+ 
+     /**
+-     * Thread-safe variant of {@link File#mkdirs()}. Creates the directory named by the given abstract pathname,
+-     * including any necessary but nonexistent parent directories. Note that if this operation fails it may have
+-     * succeeded in creating some of the necessary parent directories.
++     * Thread-safe variant of {@link File#mkdirs()}. Adapted from Java 6. Creates the directory named by the given
++     * abstract pathname, including any necessary but nonexistent parent directories. Note that if this operation fails
++     * it may have succeeded in creating some of the necessary parent directories.
+      * 
+      * @param directory The directory to create, may be {@code null}.
+      * @return {@code true} if and only if the directory was created, along with all necessary parent directories;
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultInstaller.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultInstaller.java
+index a6e0a29..f0e5086 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultInstaller.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultInstaller.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -20,11 +20,13 @@ import java.util.Set;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositoryEvent;
+-import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.RequestTrace;
+ import org.eclipse.aether.SyncContext;
++import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.artifact.Artifact;
+ import org.eclipse.aether.impl.Installer;
+ import org.eclipse.aether.impl.MetadataGenerator;
+@@ -49,18 +51,24 @@ import org.eclipse.aether.spi.log.NullLoggerFactory;
+ /**
+  */
+ @Named
++@Component( role = Installer.class )
+ public class DefaultInstaller
+     implements Installer, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private FileProcessor fileProcessor;
+ 
++    @Requirement
+     private RepositoryEventDispatcher repositoryEventDispatcher;
+ 
++    @Requirement( role = MetadataGeneratorFactory.class )
+     private Collection<MetadataGeneratorFactory> metadataFactories = new ArrayList<MetadataGeneratorFactory>();
+ 
++    @Requirement
+     private SyncContextFactory syncContextFactory;
+ 
+     public DefaultInstaller()
+@@ -95,6 +103,12 @@ public class DefaultInstaller
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultInstaller setFileProcessor( FileProcessor fileProcessor )
+     {
+         if ( fileProcessor == null )
+@@ -138,6 +152,12 @@ public class DefaultInstaller
+         return this;
+     }
+ 
++    DefaultInstaller setMetadataFactories( List<MetadataGeneratorFactory> metadataFactories )
++    {
++        // plexus support
++        return setMetadataGeneratorFactories( metadataFactories );
++    }
++
+     public DefaultInstaller setSyncContextFactory( SyncContextFactory syncContextFactory )
+     {
+         if ( syncContextFactory == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultLocalRepositoryProvider.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultLocalRepositoryProvider.java
+index 89a705e..342ab38 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultLocalRepositoryProvider.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultLocalRepositoryProvider.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -18,6 +18,8 @@ import java.util.Set;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.impl.LocalRepositoryProvider;
+ import org.eclipse.aether.repository.LocalRepository;
+@@ -33,12 +35,15 @@ import org.eclipse.aether.spi.log.NullLoggerFactory;
+ /**
+  */
+ @Named
++@Component( role = LocalRepositoryProvider.class )
+ public class DefaultLocalRepositoryProvider
+     implements LocalRepositoryProvider, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement( role = LocalRepositoryManagerFactory.class )
+     private Collection<LocalRepositoryManagerFactory> managerFactories = new ArrayList<LocalRepositoryManagerFactory>();
+ 
+     public DefaultLocalRepositoryProvider()
+@@ -65,6 +70,12 @@ public class DefaultLocalRepositoryProvider
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultLocalRepositoryProvider addLocalRepositoryManagerFactory( LocalRepositoryManagerFactory factory )
+     {
+         if ( factory == null )
+@@ -88,6 +99,12 @@ public class DefaultLocalRepositoryProvider
+         return this;
+     }
+ 
++    DefaultLocalRepositoryProvider setManagerFactories( List<LocalRepositoryManagerFactory> factories )
++    {
++        // plexus support
++        return setLocalRepositoryManagerFactories( factories );
++    }
++
+     public LocalRepositoryManager newLocalRepositoryManager( RepositorySystemSession session, LocalRepository repository )
+         throws NoLocalRepositoryManagerException
+     {
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultMetadataResolver.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultMetadataResolver.java
+index c064a0f..e22c0c0 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultMetadataResolver.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultMetadataResolver.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -27,11 +27,13 @@ import java.util.concurrent.TimeUnit;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositoryEvent;
+-import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.RequestTrace;
+ import org.eclipse.aether.SyncContext;
++import org.eclipse.aether.RepositoryEvent.EventType;
+ import org.eclipse.aether.impl.MetadataResolver;
+ import org.eclipse.aether.impl.OfflineController;
+ import org.eclipse.aether.impl.RemoteRepositoryManager;
+@@ -69,24 +71,32 @@ import org.eclipse.aether.util.concurrency.WorkerThreadFactory;
+ /**
+  */
+ @Named
++@Component( role = MetadataResolver.class )
+ public class DefaultMetadataResolver
+     implements MetadataResolver, Service
+ {
+ 
+     private static final String CONFIG_PROP_THREADS = "aether.metadataResolver.threads";
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private RepositoryEventDispatcher repositoryEventDispatcher;
+ 
++    @Requirement
+     private UpdateCheckManager updateCheckManager;
+ 
++    @Requirement
+     private RepositoryConnectorProvider repositoryConnectorProvider;
+ 
++    @Requirement
+     private RemoteRepositoryManager remoteRepositoryManager;
+ 
++    @Requirement
+     private SyncContextFactory syncContextFactory;
+ 
++    @Requirement
+     private OfflineController offlineController;
+ 
+     public DefaultMetadataResolver()
+@@ -127,6 +137,12 @@ public class DefaultMetadataResolver
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultMetadataResolver setRepositoryEventDispatcher( RepositoryEventDispatcher repositoryEventDispatcher )
+     {
+         if ( repositoryEventDispatcher == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultOfflineController.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultOfflineController.java
+index 561ba8c..7bce2be 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultOfflineController.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultOfflineController.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2012, 2014 Sonatype, Inc.
++ * Copyright (c) 2012, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.impl.OfflineController;
+ import org.eclipse.aether.repository.RemoteRepository;
+@@ -27,6 +29,7 @@ import org.eclipse.aether.transfer.RepositoryOfflineException;
+ import org.eclipse.aether.util.ConfigUtils;
+ 
+ @Named
++@Component( role = OfflineController.class )
+ public class DefaultOfflineController
+     implements OfflineController, Service
+ {
+@@ -37,6 +40,7 @@ public class DefaultOfflineController
+ 
+     private static final Pattern SEP = Pattern.compile( "\\s*,\\s*" );
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
+     public DefaultOfflineController()
+@@ -61,6 +65,12 @@ public class DefaultOfflineController
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public void checkOffline( RepositorySystemSession session, RemoteRepository repository )
+         throws RepositoryOfflineException
+     {
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRemoteRepositoryManager.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRemoteRepositoryManager.java
+index ccb618a..fa2cf89 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRemoteRepositoryManager.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRemoteRepositoryManager.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -17,6 +17,8 @@ import java.util.ListIterator;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.impl.RemoteRepositoryManager;
+ import org.eclipse.aether.impl.UpdatePolicyAnalyzer;
+@@ -38,14 +40,18 @@ import org.eclipse.aether.util.StringUtils;
+ /**
+  */
+ @Named
++@Component( role = RemoteRepositoryManager.class )
+ public class DefaultRemoteRepositoryManager
+     implements RemoteRepositoryManager, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private UpdatePolicyAnalyzer updatePolicyAnalyzer;
+ 
++    @Requirement
+     private ChecksumPolicyProvider checksumPolicyProvider;
+ 
+     public DefaultRemoteRepositoryManager()
+@@ -75,6 +81,12 @@ public class DefaultRemoteRepositoryManager
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultRemoteRepositoryManager setUpdatePolicyAnalyzer( UpdatePolicyAnalyzer updatePolicyAnalyzer )
+     {
+         if ( updatePolicyAnalyzer == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryConnectorProvider.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryConnectorProvider.java
+index 40f1100..ab0edc1 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryConnectorProvider.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryConnectorProvider.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2012, 2014 Sonatype, Inc.
++ * Copyright (c) 2012, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -18,6 +18,8 @@ import java.util.Set;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.impl.RepositoryConnectorProvider;
+ import org.eclipse.aether.repository.Authentication;
+@@ -35,12 +37,15 @@ import org.eclipse.aether.transfer.NoRepositoryConnectorException;
+ /**
+  */
+ @Named
++@Component( role = RepositoryConnectorProvider.class )
+ public class DefaultRepositoryConnectorProvider
+     implements RepositoryConnectorProvider, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement( role = RepositoryConnectorFactory.class )
+     private Collection<RepositoryConnectorFactory> connectorFactories = new ArrayList<RepositoryConnectorFactory>();
+ 
+     public DefaultRepositoryConnectorProvider()
+@@ -67,6 +72,12 @@ public class DefaultRepositoryConnectorProvider
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultRepositoryConnectorProvider addRepositoryConnectorFactory( RepositoryConnectorFactory factory )
+     {
+         if ( factory == null )
+@@ -90,6 +101,12 @@ public class DefaultRepositoryConnectorProvider
+         return this;
+     }
+ 
++    DefaultRepositoryConnectorProvider setConnectorFactories( List<RepositoryConnectorFactory> factories )
++    {
++        // plexus support
++        return setRepositoryConnectorFactories( factories );
++    }
++
+     public RepositoryConnector newRepositoryConnector( RepositorySystemSession session, RemoteRepository repository )
+         throws NoRepositoryConnectorException
+     {
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryEventDispatcher.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryEventDispatcher.java
+index 03eabcf..fec70f4 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryEventDispatcher.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryEventDispatcher.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2012 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -12,11 +12,14 @@ package org.eclipse.aether.internal.impl;
+ 
+ import java.util.ArrayList;
+ import java.util.Collection;
++import java.util.List;
+ import java.util.Set;
+ 
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositoryEvent;
+ import org.eclipse.aether.RepositoryListener;
+ import org.eclipse.aether.impl.RepositoryEventDispatcher;
+@@ -29,12 +32,15 @@ import org.eclipse.aether.spi.log.NullLoggerFactory;
+ /**
+  */
+ @Named
++@Component( role = RepositoryEventDispatcher.class )
+ public class DefaultRepositoryEventDispatcher
+     implements RepositoryEventDispatcher, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement( role = RepositoryListener.class )
+     private Collection<RepositoryListener> listeners = new ArrayList<RepositoryListener>();
+ 
+     public DefaultRepositoryEventDispatcher()
+@@ -55,6 +61,12 @@ public class DefaultRepositoryEventDispatcher
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultRepositoryEventDispatcher addRepositoryListener( RepositoryListener listener )
+     {
+         if ( listener == null )
+@@ -78,10 +90,16 @@ public class DefaultRepositoryEventDispatcher
+         return this;
+     }
+ 
++    DefaultRepositoryEventDispatcher setListeners( List<RepositoryListener> listeners )
++    {
++        // plexus support
++        return setRepositoryListeners( listeners );
++    }
++
+     public void initService( ServiceLocator locator )
+     {
+         setLoggerFactory( locator.getService( LoggerFactory.class ) );
+-        setRepositoryListeners( locator.getServices( RepositoryListener.class ) );
++        setListeners( locator.getServices( RepositoryListener.class ) );
+     }
+ 
+     public void dispatch( RepositoryEvent event )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryLayoutProvider.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryLayoutProvider.java
+index 6fff271..efc9c0a 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryLayoutProvider.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositoryLayoutProvider.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -18,6 +18,8 @@ import java.util.Set;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.spi.connector.layout.RepositoryLayout;
+@@ -33,12 +35,15 @@ import org.eclipse.aether.transfer.NoRepositoryLayoutException;
+ /**
+  */
+ @Named
++@Component( role = RepositoryLayoutProvider.class )
+ public final class DefaultRepositoryLayoutProvider
+     implements RepositoryLayoutProvider, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement( role = RepositoryLayoutFactory.class )
+     private Collection<RepositoryLayoutFactory> factories = new ArrayList<RepositoryLayoutFactory>();
+ 
+     public DefaultRepositoryLayoutProvider()
+@@ -65,6 +70,12 @@ public final class DefaultRepositoryLayoutProvider
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultRepositoryLayoutProvider addRepositoryLayoutFactory( RepositoryLayoutFactory factory )
+     {
+         if ( factory == null )
+@@ -88,6 +99,12 @@ public final class DefaultRepositoryLayoutProvider
+         return this;
+     }
+ 
++    DefaultRepositoryLayoutProvider setFactories( List<RepositoryLayoutFactory> factories )
++    {
++        // plexus support
++        return setRepositoryLayoutFactories( factories );
++    }
++
+     public RepositoryLayout newRepositoryLayout( RepositorySystemSession session, RemoteRepository repository )
+         throws NoRepositoryLayoutException
+     {
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositorySystem.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositorySystem.java
+index 8882814..14258bc 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositorySystem.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultRepositorySystem.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -17,6 +17,8 @@ import java.util.List;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystem;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.RequestTrace;
+@@ -78,32 +80,45 @@ import org.eclipse.aether.util.graph.visitor.TreeDependencyVisitor;
+ /**
+  */
+ @Named
++@Component( role = RepositorySystem.class )
+ public class DefaultRepositorySystem
+     implements RepositorySystem, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private VersionResolver versionResolver;
+ 
++    @Requirement
+     private VersionRangeResolver versionRangeResolver;
+ 
++    @Requirement
+     private ArtifactResolver artifactResolver;
+ 
++    @Requirement
+     private MetadataResolver metadataResolver;
+ 
++    @Requirement
+     private ArtifactDescriptorReader artifactDescriptorReader;
+ 
++    @Requirement
+     private DependencyCollector dependencyCollector;
+ 
++    @Requirement
+     private Installer installer;
+ 
++    @Requirement
+     private Deployer deployer;
+ 
++    @Requirement
+     private LocalRepositoryProvider localRepositoryProvider;
+ 
++    @Requirement
+     private SyncContextFactory syncContextFactory;
+ 
++    @Requirement
+     private RemoteRepositoryManager remoteRepositoryManager;
+ 
+     public DefaultRepositorySystem()
+@@ -155,6 +170,12 @@ public class DefaultRepositorySystem
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultRepositorySystem setVersionResolver( VersionResolver versionResolver )
+     {
+         if ( versionResolver == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultSyncContextFactory.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultSyncContextFactory.java
+index 2910131..a00753d 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultSyncContextFactory.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultSyncContextFactory.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2012 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -14,6 +14,7 @@ import java.util.Collection;
+ 
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.SyncContext;
+ import org.eclipse.aether.artifact.Artifact;
+@@ -25,6 +26,7 @@ import org.eclipse.aether.metadata.Metadata;
+  * synchronization but merely completes the repository system.
+  */
+ @Named
++@Component( role = SyncContextFactory.class )
+ public class DefaultSyncContextFactory
+     implements SyncContextFactory
+ {
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultTransporterProvider.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultTransporterProvider.java
+index 60b64b6..2852103 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultTransporterProvider.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultTransporterProvider.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -18,6 +18,8 @@ import java.util.Set;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.spi.connector.transport.Transporter;
+@@ -33,12 +35,15 @@ import org.eclipse.aether.transfer.NoTransporterException;
+ /**
+  */
+ @Named
++@Component( role = TransporterProvider.class )
+ public final class DefaultTransporterProvider
+     implements TransporterProvider, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement( role = TransporterFactory.class )
+     private Collection<TransporterFactory> factories = new ArrayList<TransporterFactory>();
+ 
+     public DefaultTransporterProvider()
+@@ -65,6 +70,12 @@ public final class DefaultTransporterProvider
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultTransporterProvider addTransporterFactory( TransporterFactory factory )
+     {
+         if ( factory == null )
+@@ -88,6 +99,12 @@ public final class DefaultTransporterProvider
+         return this;
+     }
+ 
++    DefaultTransporterProvider setFactories( List<TransporterFactory> factories )
++    {
++        // plexus support
++        return setTransporterFactories( factories );
++    }
++
+     public Transporter newTransporter( RepositorySystemSession session, RemoteRepository repository )
+         throws NoTransporterException
+     {
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdateCheckManager.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdateCheckManager.java
+index 652f026..9ebd3cf 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdateCheckManager.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdateCheckManager.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -22,6 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.SessionData;
+ import org.eclipse.aether.artifact.Artifact;
+@@ -47,12 +49,15 @@ import org.eclipse.aether.util.ConfigUtils;
+ /**
+  */
+ @Named
++@Component( role = UpdateCheckManager.class )
+ public class DefaultUpdateCheckManager
+     implements UpdateCheckManager, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private UpdatePolicyAnalyzer updatePolicyAnalyzer;
+ 
+     private static final String UPDATED_KEY_SUFFIX = ".lastUpdated";
+@@ -95,6 +100,12 @@ public class DefaultUpdateCheckManager
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public DefaultUpdateCheckManager setUpdatePolicyAnalyzer( UpdatePolicyAnalyzer updatePolicyAnalyzer )
+     {
+         if ( updatePolicyAnalyzer == null )
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdatePolicyAnalyzer.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdatePolicyAnalyzer.java
+index adc07f5..7735ea8 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdatePolicyAnalyzer.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/DefaultUpdatePolicyAnalyzer.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2010, 2014 Sonatype, Inc.
++ * Copyright (c) 2010, 2012 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -15,6 +15,8 @@ import java.util.Calendar;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.impl.UpdatePolicyAnalyzer;
+ import org.eclipse.aether.repository.RepositoryPolicy;
+@@ -27,10 +29,12 @@ import org.eclipse.aether.spi.log.NullLoggerFactory;
+ /**
+  */
+ @Named
++@Component( role = UpdatePolicyAnalyzer.class )
+ public class DefaultUpdatePolicyAnalyzer
+     implements UpdatePolicyAnalyzer, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
+     public DefaultUpdatePolicyAnalyzer()
+@@ -55,6 +59,12 @@ public class DefaultUpdatePolicyAnalyzer
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public String getEffectiveUpdatePolicy( RepositorySystemSession session, String policy1, String policy2 )
+     {
+         return ordinalOfUpdatePolicy( policy1 ) < ordinalOfUpdatePolicy( policy2 ) ? policy1 : policy2;
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/EnhancedLocalRepositoryManagerFactory.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/EnhancedLocalRepositoryManagerFactory.java
+index 4ee698b..1c7ab46 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/EnhancedLocalRepositoryManagerFactory.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/EnhancedLocalRepositoryManagerFactory.java
+@@ -13,6 +13,8 @@ package org.eclipse.aether.internal.impl;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.LocalRepository;
+ import org.eclipse.aether.repository.LocalRepositoryManager;
+@@ -32,10 +34,12 @@ import org.eclipse.aether.spi.log.NullLoggerFactory;
+  * emulating physically separated artifact caches per remote repository.
+  */
+ @Named( "enhanced" )
++@Component( role = LocalRepositoryManagerFactory.class, hint = "enhanced" )
+ public class EnhancedLocalRepositoryManagerFactory
+     implements LocalRepositoryManagerFactory, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
+     private float priority = 10;
+@@ -75,6 +79,12 @@ public class EnhancedLocalRepositoryManagerFactory
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public float getPriority()
+     {
+         return priority;
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/Maven2RepositoryLayoutFactory.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/Maven2RepositoryLayoutFactory.java
+index 0d95be2..c48a305 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/Maven2RepositoryLayoutFactory.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/Maven2RepositoryLayoutFactory.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -18,6 +18,7 @@ import java.util.List;
+ 
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.artifact.Artifact;
+ import org.eclipse.aether.metadata.Metadata;
+@@ -31,6 +32,7 @@ import org.eclipse.aether.util.ConfigUtils;
+  * Provides a Maven-2 repository layout for repositories with content type {@code "default"}.
+  */
+ @Named( "maven2" )
++@Component( role = RepositoryLayoutFactory.class, hint = "maven2" )
+ public final class Maven2RepositoryLayoutFactory
+     implements RepositoryLayoutFactory
+ {
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/PlexusLoggerFactory.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/PlexusLoggerFactory.java
+new file mode 100644
+index 0000000..362cca2
+--- /dev/null
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/PlexusLoggerFactory.java
+@@ -0,0 +1,78 @@
++/*******************************************************************************
++ * Copyright (c) 2010, 2011 Sonatype, Inc.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ *
++ * Contributors:
++ *    Sonatype, Inc. - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.aether.internal.impl;
++
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
++import org.codehaus.plexus.logging.LoggerManager;
++import org.eclipse.aether.spi.log.Logger;
++import org.eclipse.aether.spi.log.LoggerFactory;
++
++/**
++ * A logger factory that delegates to Plexus logging.
++ */
++@Component( role = LoggerFactory.class )
++public class PlexusLoggerFactory
++    implements LoggerFactory
++{
++
++    @Requirement
++    private LoggerManager loggerManager;
++
++    public Logger getLogger( String name )
++    {
++        return new PlexusLogger( loggerManager.getLoggerForComponent( name ) );
++    }
++
++    private static final class PlexusLogger
++        implements Logger
++    {
++
++        private final org.codehaus.plexus.logging.Logger logger;
++
++        public PlexusLogger( org.codehaus.plexus.logging.Logger logger )
++        {
++            this.logger = logger;
++        }
++
++        public boolean isDebugEnabled()
++        {
++            return logger.isDebugEnabled();
++        }
++
++        public void debug( String msg )
++        {
++            logger.debug( msg );
++        }
++
++        public void debug( String msg, Throwable error )
++        {
++            logger.debug( msg, error );
++        }
++
++        public boolean isWarnEnabled()
++        {
++            return logger.isWarnEnabled();
++        }
++
++        public void warn( String msg )
++        {
++            logger.warn( msg );
++        }
++
++        public void warn( String msg, Throwable error )
++        {
++            logger.warn( msg, error );
++        }
++
++    }
++
++}
+diff --git a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/SimpleLocalRepositoryManagerFactory.java b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/SimpleLocalRepositoryManagerFactory.java
+index bc2122f..43e1026 100644
+--- a/aether-impl/src/main/java/org/eclipse/aether/internal/impl/SimpleLocalRepositoryManagerFactory.java
++++ b/aether-impl/src/main/java/org/eclipse/aether/internal/impl/SimpleLocalRepositoryManagerFactory.java
+@@ -13,6 +13,8 @@ package org.eclipse.aether.internal.impl;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.LocalRepository;
+ import org.eclipse.aether.repository.LocalRepositoryManager;
+@@ -28,10 +30,12 @@ import org.eclipse.aether.spi.log.NullLoggerFactory;
+  * Creates local repository managers for repository type {@code "simple"}.
+  */
+ @Named( "simple" )
++@Component( role = LocalRepositoryManagerFactory.class, hint = "simple" )
+ public class SimpleLocalRepositoryManagerFactory
+     implements LocalRepositoryManagerFactory, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
+     private float priority;
+@@ -71,6 +75,12 @@ public class SimpleLocalRepositoryManagerFactory
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public float getPriority()
+     {
+         return priority;
+diff --git a/aether-impl/src/test/java/org/eclipse/aether/impl/PlexusSupportTest.java b/aether-impl/src/test/java/org/eclipse/aether/impl/PlexusSupportTest.java
+new file mode 100644
+index 0000000..26324ef
+--- /dev/null
++++ b/aether-impl/src/test/java/org/eclipse/aether/impl/PlexusSupportTest.java
+@@ -0,0 +1,66 @@
++/*******************************************************************************
++ * Copyright (c) 2010, 2011 Sonatype, Inc.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ *
++ * Contributors:
++ *    Sonatype, Inc. - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.aether.impl;
++
++import java.util.List;
++
++import org.codehaus.plexus.ContainerConfiguration;
++import org.codehaus.plexus.PlexusTestCase;
++import org.eclipse.aether.RepositorySystem;
++import org.eclipse.aether.impl.ArtifactDescriptorReader;
++import org.eclipse.aether.impl.VersionRangeResolver;
++import org.eclipse.aether.impl.VersionResolver;
++import org.eclipse.aether.spi.connector.layout.RepositoryLayoutFactory;
++import org.eclipse.aether.spi.connector.layout.RepositoryLayoutProvider;
++import org.eclipse.aether.spi.connector.transport.TransporterProvider;
++import org.eclipse.aether.spi.localrepo.LocalRepositoryManagerFactory;
++
++/**
++ */
++public class PlexusSupportTest
++    extends PlexusTestCase
++{
++
++    @Override
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
++    {
++        containerConfiguration.setClassPathScanning( "cache" );
++    }
++
++    public void testExistenceOfPlexusComponentMetadata()
++        throws Exception
++    {
++        getContainer().addComponent( new StubVersionRangeResolver(), VersionRangeResolver.class, null );
++        getContainer().addComponent( new StubVersionResolver(), VersionResolver.class, null );
++        getContainer().addComponent( new StubArtifactDescriptorReader(), ArtifactDescriptorReader.class, null );
++
++        RepositorySystem repoSystem = lookup( RepositorySystem.class );
++        assertNotNull( repoSystem );
++        assertSame( repoSystem, lookup( RepositorySystem.class ) );
++
++        List<LocalRepositoryManagerFactory> lrmfs = getContainer().lookupList( LocalRepositoryManagerFactory.class );
++        assertNotNull( lrmfs );
++        assertEquals( 2, lrmfs.size() );
++
++        List<RepositoryLayoutFactory> rlfs = getContainer().lookupList( RepositoryLayoutFactory.class );
++        assertNotNull( rlfs );
++        assertEquals( 1, rlfs.size() );
++
++        RepositoryLayoutProvider rlp = lookup( RepositoryLayoutProvider.class );
++        assertNotNull( rlp );
++        assertSame( rlp, lookup( RepositoryLayoutProvider.class ) );
++
++        TransporterProvider tp = lookup( TransporterProvider.class );
++        assertNotNull( tp );
++        assertSame( tp, lookup( TransporterProvider.class ) );
++    }
++
++}
+diff --git a/aether-transport-classpath/pom.xml b/aether-transport-classpath/pom.xml
+index b980591..8d7dc0e 100644
+--- a/aether-transport-classpath/pom.xml
++++ b/aether-transport-classpath/pom.xml
+@@ -51,6 +51,17 @@
+       <optional>true</optional>
+     </dependency>
+     <dependency>
++      <groupId>org.codehaus.plexus</groupId>
++      <artifactId>plexus-component-annotations</artifactId>
++      <scope>provided</scope>
++      <optional>true</optional>
++    </dependency>
++    <dependency>
++      <groupId>org.eclipse.sisu</groupId>
++      <artifactId>org.eclipse.sisu.plexus</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
+       <groupId>org.sonatype.sisu</groupId>
+       <artifactId>sisu-guice</artifactId>
+       <classifier>no_aop</classifier>
+@@ -80,6 +91,10 @@
+         <artifactId>animal-sniffer-maven-plugin</artifactId>
+       </plugin>
+       <plugin>
++        <groupId>org.codehaus.plexus</groupId>
++        <artifactId>plexus-component-metadata</artifactId>
++      </plugin>
++      <plugin>
+         <groupId>org.eclipse.sisu</groupId>
+         <artifactId>sisu-maven-plugin</artifactId>
+       </plugin>
+diff --git a/aether-transport-classpath/src/main/java/org/eclipse/aether/transport/classpath/ClasspathTransporterFactory.java b/aether-transport-classpath/src/main/java/org/eclipse/aether/transport/classpath/ClasspathTransporterFactory.java
+index 4a7c470..06acb89 100644
+--- a/aether-transport-classpath/src/main/java/org/eclipse/aether/transport/classpath/ClasspathTransporterFactory.java
++++ b/aether-transport-classpath/src/main/java/org/eclipse/aether/transport/classpath/ClasspathTransporterFactory.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -13,6 +13,8 @@ package org.eclipse.aether.transport.classpath;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.spi.connector.transport.Transporter;
+@@ -33,6 +35,7 @@ import org.eclipse.aether.transfer.NoTransporterException;
+  * <em>Note:</em> Such repositories are read-only and uploads to them are generally not supported.
+  */
+ @Named( "classpath" )
++@Component( role = TransporterFactory.class, hint = "classpath" )
+ public final class ClasspathTransporterFactory
+     implements TransporterFactory, Service
+ {
+@@ -44,6 +47,7 @@ public final class ClasspathTransporterFactory
+      */
+     public static final String CONFIG_PROP_CLASS_LOADER = "aether.connector.classpath.loader";
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
+     private float priority;
+@@ -81,6 +85,12 @@ public final class ClasspathTransporterFactory
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public float getPriority()
+     {
+         return priority;
+diff --git a/aether-transport-classpath/src/test/java/org/eclipse/aether/transport/classpath/PlexusSupportTest.java b/aether-transport-classpath/src/test/java/org/eclipse/aether/transport/classpath/PlexusSupportTest.java
+new file mode 100644
+index 0000000..c984df6
+--- /dev/null
++++ b/aether-transport-classpath/src/test/java/org/eclipse/aether/transport/classpath/PlexusSupportTest.java
+@@ -0,0 +1,42 @@
++/*******************************************************************************
++ * Copyright (c) 2013 Sonatype, Inc.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ *
++ * Contributors:
++ *    Sonatype, Inc. - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.aether.transport.classpath;
++
++import org.codehaus.plexus.ContainerConfiguration;
++import org.codehaus.plexus.PlexusTestCase;
++import org.eclipse.aether.internal.test.util.TestLoggerFactory;
++import org.eclipse.aether.spi.connector.transport.TransporterFactory;
++import org.eclipse.aether.spi.log.LoggerFactory;
++import org.eclipse.aether.transport.classpath.ClasspathTransporterFactory;
++
++/**
++ */
++public class PlexusSupportTest
++    extends PlexusTestCase
++{
++
++    @Override
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
++    {
++        containerConfiguration.setClassPathScanning( "cache" );
++    }
++
++    public void testExistenceOfPlexusComponentMetadata()
++        throws Exception
++    {
++        getContainer().addComponent( new TestLoggerFactory(), LoggerFactory.class, null );
++
++        TransporterFactory factory = lookup( TransporterFactory.class, "classpath" );
++        assertNotNull( factory );
++        assertEquals( ClasspathTransporterFactory.class, factory.getClass() );
++    }
++
++}
+diff --git a/aether-transport-file/pom.xml b/aether-transport-file/pom.xml
+index 35bf5b1..0d4a252 100644
+--- a/aether-transport-file/pom.xml
++++ b/aether-transport-file/pom.xml
+@@ -51,6 +51,17 @@
+       <optional>true</optional>
+     </dependency>
+     <dependency>
++      <groupId>org.codehaus.plexus</groupId>
++      <artifactId>plexus-component-annotations</artifactId>
++      <scope>provided</scope>
++      <optional>true</optional>
++    </dependency>
++    <dependency>
++      <groupId>org.eclipse.sisu</groupId>
++      <artifactId>org.eclipse.sisu.plexus</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
+       <groupId>org.sonatype.sisu</groupId>
+       <artifactId>sisu-guice</artifactId>
+       <classifier>no_aop</classifier>
+@@ -80,6 +91,10 @@
+         <artifactId>animal-sniffer-maven-plugin</artifactId>
+       </plugin>
+       <plugin>
++        <groupId>org.codehaus.plexus</groupId>
++        <artifactId>plexus-component-metadata</artifactId>
++      </plugin>
++      <plugin>
+         <groupId>org.eclipse.sisu</groupId>
+         <artifactId>sisu-maven-plugin</artifactId>
+       </plugin>
+diff --git a/aether-transport-file/src/main/java/org/eclipse/aether/transport/file/FileTransporterFactory.java b/aether-transport-file/src/main/java/org/eclipse/aether/transport/file/FileTransporterFactory.java
+index 08e337c..0969167 100644
+--- a/aether-transport-file/src/main/java/org/eclipse/aether/transport/file/FileTransporterFactory.java
++++ b/aether-transport-file/src/main/java/org/eclipse/aether/transport/file/FileTransporterFactory.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -13,6 +13,8 @@ package org.eclipse.aether.transport.file;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.spi.connector.transport.Transporter;
+@@ -28,10 +30,12 @@ import org.eclipse.aether.transfer.NoTransporterException;
+  * A transporter factory for repositories using the {@code file:} protocol.
+  */
+ @Named( "file" )
++@Component( role = TransporterFactory.class, hint = "file" )
+ public final class FileTransporterFactory
+     implements TransporterFactory, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
+     private float priority;
+@@ -69,6 +73,12 @@ public final class FileTransporterFactory
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public float getPriority()
+     {
+         return priority;
+diff --git a/aether-transport-file/src/test/java/org/eclipse/aether/transport/file/PlexusSupportTest.java b/aether-transport-file/src/test/java/org/eclipse/aether/transport/file/PlexusSupportTest.java
+new file mode 100644
+index 0000000..f579995
+--- /dev/null
++++ b/aether-transport-file/src/test/java/org/eclipse/aether/transport/file/PlexusSupportTest.java
+@@ -0,0 +1,41 @@
++/*******************************************************************************
++ * Copyright (c) 2013 Sonatype, Inc.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ *
++ * Contributors:
++ *    Sonatype, Inc. - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.aether.transport.file;
++
++import org.codehaus.plexus.ContainerConfiguration;
++import org.codehaus.plexus.PlexusTestCase;
++import org.eclipse.aether.internal.test.util.TestLoggerFactory;
++import org.eclipse.aether.spi.connector.transport.TransporterFactory;
++import org.eclipse.aether.spi.log.LoggerFactory;
++
++/**
++ */
++public class PlexusSupportTest
++    extends PlexusTestCase
++{
++
++    @Override
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
++    {
++        containerConfiguration.setClassPathScanning( "cache" );
++    }
++
++    public void testExistenceOfPlexusComponentMetadata()
++        throws Exception
++    {
++        getContainer().addComponent( new TestLoggerFactory(), LoggerFactory.class, null );
++
++        TransporterFactory factory = lookup( TransporterFactory.class, "file" );
++        assertNotNull( factory );
++        assertEquals( FileTransporterFactory.class, factory.getClass() );
++    }
++
++}
+diff --git a/aether-transport-http/pom.xml b/aether-transport-http/pom.xml
+index feb9adb..c911c0e 100644
+--- a/aether-transport-http/pom.xml
++++ b/aether-transport-http/pom.xml
+@@ -68,6 +68,17 @@
+       <optional>true</optional>
+     </dependency>
+     <dependency>
++      <groupId>org.codehaus.plexus</groupId>
++      <artifactId>plexus-component-annotations</artifactId>
++      <scope>provided</scope>
++      <optional>true</optional>
++    </dependency>
++    <dependency>
++      <groupId>org.eclipse.sisu</groupId>
++      <artifactId>org.eclipse.sisu.plexus</artifactId>
++      <scope>test</scope>
++    </dependency>
++    <dependency>
+       <groupId>org.sonatype.sisu</groupId>
+       <artifactId>sisu-guice</artifactId>
+       <classifier>no_aop</classifier>
+@@ -109,6 +120,10 @@
+         <artifactId>animal-sniffer-maven-plugin</artifactId>
+       </plugin>
+       <plugin>
++        <groupId>org.codehaus.plexus</groupId>
++        <artifactId>plexus-component-metadata</artifactId>
++      </plugin>
++      <plugin>
+         <groupId>org.eclipse.sisu</groupId>
+         <artifactId>sisu-maven-plugin</artifactId>
+       </plugin>
+diff --git a/aether-transport-http/src/main/java/org/eclipse/aether/transport/http/HttpTransporterFactory.java b/aether-transport-http/src/main/java/org/eclipse/aether/transport/http/HttpTransporterFactory.java
+index 2636bdf..69ed839 100644
+--- a/aether-transport-http/src/main/java/org/eclipse/aether/transport/http/HttpTransporterFactory.java
++++ b/aether-transport-http/src/main/java/org/eclipse/aether/transport/http/HttpTransporterFactory.java
+@@ -1,5 +1,5 @@
+ /*******************************************************************************
+- * Copyright (c) 2013, 2014 Sonatype, Inc.
++ * Copyright (c) 2013 Sonatype, Inc.
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+@@ -13,6 +13,8 @@ package org.eclipse.aether.transport.http;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.spi.connector.transport.Transporter;
+@@ -29,10 +31,12 @@ import org.eclipse.aether.transfer.NoTransporterException;
+  * support uploads to WebDAV servers and resumable downloads.
+  */
+ @Named( "http" )
++@Component( role = TransporterFactory.class, hint = "http" )
+ public final class HttpTransporterFactory
+     implements TransporterFactory, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
+     private float priority = 5;
+@@ -70,6 +74,12 @@ public final class HttpTransporterFactory
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     public float getPriority()
+     {
+         return priority;
+diff --git a/aether-transport-http/src/test/java/org/eclipse/aether/transport/http/PlexusSupportTest.java b/aether-transport-http/src/test/java/org/eclipse/aether/transport/http/PlexusSupportTest.java
+new file mode 100644
+index 0000000..a0f6c86
+--- /dev/null
++++ b/aether-transport-http/src/test/java/org/eclipse/aether/transport/http/PlexusSupportTest.java
+@@ -0,0 +1,41 @@
++/*******************************************************************************
++ * Copyright (c) 2013 Sonatype, Inc.
++ * All rights reserved. This program and the accompanying materials
++ * are made available under the terms of the Eclipse Public License v1.0
++ * which accompanies this distribution, and is available at
++ * http://www.eclipse.org/legal/epl-v10.html
++ *
++ * Contributors:
++ *    Sonatype, Inc. - initial API and implementation
++ *******************************************************************************/
++package org.eclipse.aether.transport.http;
++
++import org.codehaus.plexus.ContainerConfiguration;
++import org.codehaus.plexus.PlexusTestCase;
++import org.eclipse.aether.internal.test.util.TestLoggerFactory;
++import org.eclipse.aether.spi.connector.transport.TransporterFactory;
++import org.eclipse.aether.spi.log.LoggerFactory;
++
++/**
++ */
++public class PlexusSupportTest
++    extends PlexusTestCase
++{
++
++    @Override
++    protected void customizeContainerConfiguration( ContainerConfiguration containerConfiguration )
++    {
++        containerConfiguration.setClassPathScanning( "cache" );
++    }
++
++    public void testExistenceOfPlexusComponentMetadata()
++        throws Exception
++    {
++        getContainer().addComponent( new TestLoggerFactory(), LoggerFactory.class, null );
++
++        TransporterFactory factory = lookup( TransporterFactory.class, "http" );
++        assertNotNull( factory );
++        assertEquals( HttpTransporterFactory.class, factory.getClass() );
++    }
++
++}
+diff --git a/aether-transport-wagon/src/main/java/org/eclipse/aether/transport/wagon/WagonTransporterFactory.java b/aether-transport-wagon/src/main/java/org/eclipse/aether/transport/wagon/WagonTransporterFactory.java
+index 5d91358..be57919 100644
+--- a/aether-transport-wagon/src/main/java/org/eclipse/aether/transport/wagon/WagonTransporterFactory.java
++++ b/aether-transport-wagon/src/main/java/org/eclipse/aether/transport/wagon/WagonTransporterFactory.java
+@@ -13,6 +13,8 @@ package org.eclipse.aether.transport.wagon;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+ 
++import org.codehaus.plexus.component.annotations.Component;
++import org.codehaus.plexus.component.annotations.Requirement;
+ import org.eclipse.aether.RepositorySystemSession;
+ import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.spi.connector.transport.Transporter;
+@@ -30,14 +32,18 @@ import org.eclipse.aether.transfer.NoTransporterException;
+  * unless one or more wagon implementations are registered with the {@link WagonProvider}.
+  */
+ @Named( "wagon" )
++@Component( role = TransporterFactory.class, hint = "wagon" )
+ public final class WagonTransporterFactory
+     implements TransporterFactory, Service
+ {
+ 
++    @Requirement( role = LoggerFactory.class )
+     private Logger logger = NullLoggerFactory.LOGGER;
+ 
++    @Requirement
+     private WagonProvider wagonProvider;
+ 
++    @Requirement
+     private WagonConfigurator wagonConfigurator;
+ 
+     private float priority = -1;
+@@ -80,6 +86,12 @@ public final class WagonTransporterFactory
+         return this;
+     }
+ 
++    void setLogger( LoggerFactory loggerFactory )
++    {
++        // plexus support
++        setLoggerFactory( loggerFactory );
++    }
++
+     /**
+      * Sets the wagon provider to use to acquire and release wagon instances.
+      * 
+-- 
+1.9.0
+
