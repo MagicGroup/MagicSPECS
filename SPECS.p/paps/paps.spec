@@ -24,6 +24,7 @@ Patch52:        paps-dsc-compliant.patch
 Patch53:        paps-autoconf262.patch
 Patch54:        paps-fix-cpi.patch
 Patch55:	paps-fix-loop-in-split.patch
+Patch56:        paps-freetype2.5.patch
 
 Summary:        Plain Text to PostScript converter
 Group:          Applications/Publishing
@@ -61,6 +62,7 @@ applications using paps API.
 %patch53 -p1 -b .autoconf262
 %patch54 -p1 -b .fixcpi
 %patch55 -p1 -b .loop
+%patch56 -p1 -b .freetype
 libtoolize -f -c
 autoreconf
 
