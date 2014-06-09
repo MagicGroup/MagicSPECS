@@ -1,0 +1,64 @@
+From 12946e910f70efbe5f8d44e3f94cf5c59fd653d1 Mon Sep 17 00:00:00 2001
+From: Igor Fedorenko <ifedorenko@apache.org>
+Date: Fri, 28 Feb 2014 23:54:45 -0500
+Subject: [PATCH 5/6] MNG-5591 use 'reactor' hint for reactor WorkspaceReader
+
+When maven is invoked from m2e, container.lookup(WorkspaceReader.class)
+returns component with role-hint=ide, which I believe is a bug in Susi
+or Guice (or at least well misunderstood feature). This masks
+ReactorReader workspace reader implementation and breaks reactor
+dependency resolution.
+
+The solution is to use explicit "reactor" role hint for ReactorReader.
+This avoids fuzzy default component lookup logic and guarantees reactor
+reader is always used regardless of presence of other workspace readers.
+
+Signed-off-by: Igor Fedorenko <ifedorenko@apache.org>
+---
+ maven-core/src/main/java/org/apache/maven/DefaultMaven.java  | 2 +-
+ maven-core/src/main/java/org/apache/maven/ReactorReader.java | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/maven-core/src/main/java/org/apache/maven/DefaultMaven.java b/maven-core/src/main/java/org/apache/maven/DefaultMaven.java
+index 58c536c..6328819 100644
+--- a/maven-core/src/main/java/org/apache/maven/DefaultMaven.java
++++ b/maven-core/src/main/java/org/apache/maven/DefaultMaven.java
+@@ -288,7 +288,7 @@ private MavenExecutionResult doExecute( MavenExecutionRequest request )
+         sessionScope.seed( MavenSession.class, session );
+         try
+         {
+-            reactorWorkspace = container.lookup( WorkspaceReader.class );
++            reactorWorkspace = container.lookup( WorkspaceReader.class, ReactorReader.HINT );
+         }
+         catch ( ComponentLookupException e )
+         {
+diff --git a/maven-core/src/main/java/org/apache/maven/ReactorReader.java b/maven-core/src/main/java/org/apache/maven/ReactorReader.java
+index 9aa8385..e7b1f42 100644
+--- a/maven-core/src/main/java/org/apache/maven/ReactorReader.java
++++ b/maven-core/src/main/java/org/apache/maven/ReactorReader.java
+@@ -31,7 +31,6 @@
+ 
+ import javax.inject.Inject;
+ import javax.inject.Named;
+-import javax.inject.Singleton;
+ 
+ import org.apache.maven.artifact.ArtifactUtils;
+ import org.apache.maven.execution.MavenSession;
+@@ -46,11 +45,13 @@
+  * 
+  * @author Jason van Zyl
+  */
+-@Named
++@Named( ReactorReader.HINT )
+ @SessionScoped
+ class ReactorReader
+     implements WorkspaceReader
+ {
++    public static final String HINT = "reactor";
++    
+     private static final Collection<String> COMPILE_PHASE_TYPES = Arrays.asList( "jar", "ejb-client" );
+ 
+     private Map<String, MavenProject> projectsByGAV;
+-- 
+1.9.0
+
