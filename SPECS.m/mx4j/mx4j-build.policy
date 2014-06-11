@@ -1,0 +1,15 @@
+grant codeBase "file:/-" {
+        permission java.security.AllPermission;
+};
+grant {
+	permission java.util.PropertyPermission "*", "read";
+	permission java.io.FilePermission "/-", "read,write";
+	permission java.net.SocketPermission "*", "accept, connect, listen, resolve";
+	permission java.net.SocketPermission "127.0.0.1", "accept, connect, listen, resolve";
+	permission java.lang.RuntimePermission "createSecurityManager";
+	permission java.lang.RuntimePermission "setSecurityManager";
+	permission javax.management.MBeanPermission "*", "*";
+	permission javax.management.remote.SubjectDelegationPermission "*";
+	permission javax.security.auth.AuthPermission "getSubject";
+};
+

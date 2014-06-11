@@ -1,0 +1,15 @@
+--- mx4j/build/build.xml.orig	Thu Dec 23 20:05:06 2004
++++ mx4j/build/build.xml	Thu Dec 23 20:06:16 2004
+@@ -306,9 +306,9 @@
+          <exclude name="mx4j/tools/remote/**" unless="jaas.present"/>
+          <exclude name="mx4j/tools/remote/rmi/SSL*" unless="jdk14.present"/>
+          <exclude name="mx4j/tools/remote/http/jetty/**" unless="jetty.present"/>
+-         <exclude name="mx4j/tools/remote/caucho/**" unless="jdk14.present"/>
+-         <exclude name="mx4j/tools/remote/**/hessian/**" unless="jdk14.present"/>
+-         <exclude name="mx4j/tools/remote/**/burlap/**" unless="jdk14.present"/>
++         <exclude name="mx4j/tools/remote/caucho/**"/>
++         <exclude name="mx4j/tools/remote/**/hessian/**"/>
++         <exclude name="mx4j/tools/remote/**/burlap/**"/>
+          <classpath>
+             <path refid="classpath"/>
+             <pathelement location="${core.classes.dir}"/>

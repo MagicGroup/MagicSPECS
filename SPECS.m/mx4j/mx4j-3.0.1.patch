@@ -1,0 +1,57 @@
+*** src/core/mx4j/remote/resolver/iiop/Resolver.java.orig	2005-05-12 12:13:28.000000000 -0400
+--- src/core/mx4j/remote/resolver/iiop/Resolver.java	2005-05-13 14:38:21.000000000 -0400
+***************
+*** 33,36 ****
+--- 33,37 ----
+  
+     private ORB orb;
++    private static final String ORB_KEY = "java.naming.corba.orb";
+  
+  
+***************
+*** 111,127 ****
+        if (orb == null)
+        {
+!          Properties props = new Properties();
+!          // Using putAll() on a Properties is discouraged, since it expects only Strings
+!          for (Iterator i = environment.entrySet().iterator(); i.hasNext();)
+!          {
+!             Map.Entry entry = (Map.Entry)i.next();
+!             Object key = entry.getKey();
+!             Object value = entry.getValue();
+!             if (key instanceof String && value instanceof String)
+!             {
+!                props.setProperty((String)key, (String)value);
+!             }
+!          }
+!          orb = ORB.init((String[])null, props);
+        }
+        return orb;
+--- 112,138 ----
+        if (orb == null)
+        {
+!           Object candidateORB = environment.get(ORB_KEY);
+!           if (candidateORB != null)
+!           {
+!              // Throw as required by the spec
+!              if (!(candidateORB instanceof ORB)) throw new IllegalArgumentException("Property " + ORB_KEY + " must specify a " + ORB.class.getName() + ", not " + candidateORB.getClass().getName());
+!              orb = (ORB)candidateORB;
+!           }
+!           else
+!           {
+!              Properties props = new Properties();
+!              // Using putAll() on a Properties is discouraged, since it expects only Strings
+!              for (Iterator i = environment.entrySet().iterator(); i.hasNext();)
+!              {
+!                 Map.Entry entry = (Map.Entry)i.next();
+!                 Object key = entry.getKey();
+!                 Object value = entry.getValue();
+!                 if (key instanceof String && value instanceof String)
+!                 {
+!                    props.setProperty((String)key, (String)value);
+!                 }
+!              }
+!              orb = ORB.init((String[])null, props);
+!            }
+        }
+        return orb;
