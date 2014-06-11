@@ -1,0 +1,38 @@
+diff --git openjdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
+--- openjdk/jdk/make/common/Defs-linux.gmk
++++ openjdk/jdk/make/common/Defs-linux.gmk
+@@ -343,8 +343,8 @@
+ 
+   LDFLAG_Z_ORIGIN = $(Z_ORIGIN_FLAG/$(ARCH_FAMILY))
+ 
+-  LDFLAGS_COMMON += $(LDFLAG_Z_ORIGIN) -Xlinker -rpath -Xlinker \$$ORIGIN
+-  LDFLAGS_COMMON += $(LD_RUNPATH_EXTRAS:%=$(LDFLAG_Z_ORIGIN) -Xlinker -rpath -Xlinker \$$ORIGIN/%)
++  LDFLAGS_COMMON += $(LDFLAG_Z_ORIGIN) -Xlinker -rpath -Xlinker \$$ORIGIN:$(INSTALL_LOCATION)/jre/lib/$(LIBARCH)
++  LDFLAGS_COMMON += $(LD_RUNPATH_EXTRAS:%=$(LDFLAG_Z_ORIGIN) -Xlinker -rpath -Xlinker \$$ORIGIN/:$(INSTALL_LOCATION)/jre/lib/$(LIBARCH)%)
+ 
+ endif
+ 
+diff --git openjdk/jdk/make/common/Program.gmk openjdk/jdk/make/common/Program.gmk
+--- openjdk/jdk/make/common/Program.gmk
++++ openjdk/jdk/make/common/Program.gmk
+@@ -110,7 +110,7 @@
+   ifeq ($(PLATFORM), linux)
+     LDFLAGS += $(LDFLAG_Z_ORIGIN)
+     LDFLAGS += -Wl,--allow-shlib-undefined
+-    LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli
++    LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli:$(INSTALL_LOCATION)/jre/lib/$(LIBARCH)/jli
+   endif # PLATFORM LINUX
+ endif # PLATFORM linux solaris
+ 
+diff --git openjdk/jdk/make/java/instrument/Makefile openjdk/jdk/make/java/instrument/Makefile
+--- openjdk/jdk/make/java/instrument/Makefile
++++ openjdk/jdk/make/java/instrument/Makefile
+@@ -123,7 +123,7 @@
+   ifeq ($(PLATFORM), linux)
+     LDFLAGS += $(LDFLAG_Z_ORIGIN)
+     LDFLAGS += -Wl,--allow-shlib-undefined
+-    LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/jli
++    LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/jli:$(INSTALL_LOCATION)/jre/lib/$(LIBARCH)/jli
+   endif
+ endif
+ endif
