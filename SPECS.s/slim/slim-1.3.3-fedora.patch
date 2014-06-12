@@ -1,0 +1,31 @@
+--- slim.conf.orig	2012-02-22 03:59:52.000000000 +0400
++++ slim.conf	2012-03-17 16:03:35.139888942 +0400
+@@ -7,7 +7,7 @@
+ # Commands for halt, login, etc.
+ halt_cmd            /sbin/shutdown -h now
+ reboot_cmd          /sbin/shutdown -r now
+-console_cmd         /usr/bin/xterm -C -fg white -bg black +sb -T "Console login" -e /bin/sh -c "/bin/cat /etc/issue; exec /bin/login"
++console_cmd         /usr/bin/xterm -C -fg white -bg black +sb -T "Console login" -e /bin/sh -c "/bin/cat /etc/issue | sed -e 's/\\\\r/`uname -r`/' -e 's/\\\\m/`uname -m`/'; exec /bin/login"
+ #suspend_cmd        /usr/sbin/suspend
+ 
+ # Full path to the xauth binary
+@@ -33,7 +33,7 @@
+ # to adjust the command according to your preferred shell,
+ # i.e. for freebsd use:
+ # login_cmd           exec /bin/sh - ~/.xinitrc %session
+-login_cmd           exec /bin/bash -login ~/.xinitrc %session
++login_cmd           if [ -r ~/.xinitrc ]; then exec /bin/bash -login ~/.xinitrc %session; else PREFERRED=%session exec /bin/bash -login /etc/X11/xinit/xinitrc; fi
+ 
+ # Commands executed when starting and exiting a session.
+ # They can be used for registering a X11 session with
+@@ -53,8 +53,8 @@
+ # see the xinitrc.sample file shipped with slim sources
+ sessions            xfce4,icewm-session,wmaker,blackbox
+ 
+-# Executed when pressing F11 (requires imagemagick)
+-screenshot_cmd      import -window root /slim.png
++# Executed when pressing F11
++screenshot_cmd      xwd -root > /slim.xwd
+ 
+ # welcome message. Available variables: %host, %domain
+ welcome_msg         Welcome to %host
