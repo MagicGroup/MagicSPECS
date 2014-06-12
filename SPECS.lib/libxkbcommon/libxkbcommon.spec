@@ -2,7 +2,7 @@
 
 Name:           libxkbcommon
 Version:        0.4.2
-Release:        3%{?gitdate:.%{gitdate}}%{?dist}
+Release:        4%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        X.Org X11 XKB parsing library
 License:        MIT
 URL:            http://www.x.org
@@ -18,7 +18,10 @@ BuildRequires:  autoconf automake libtool
 BuildRequires:  xorg-x11-util-macros byacc flex bison
 BuildRequires:  xorg-x11-proto-devel libX11-devel
 BuildRequires:  xkeyboard-config-devel
+%if 0%{?fedora} > 20
+%global x11 1
 BuildRequires:  pkgconfig(xcb-xkb) >= 1.10
+%endif
 
 %description
 %{name} is the X.Org library for compiling XKB maps into formats usable by
@@ -52,7 +55,10 @@ X.Org X11 XKB keymap creation library development package
 autoreconf -v --install || exit 1
 
 %build
-%configure --disable-static
+%configure \
+  --disable-silent-rules \
+  --disable-static \
+  %{?x11:--enable-x11}%{!?x11:--disable-x11}
 
 make %{?_smp_mflags}
 
@@ -78,6 +84,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -fv {} ';'
 %{_includedir}/xkbcommon/xkbcommon-names.h
 %{_libdir}/pkgconfig/xkbcommon.pc
 
+%if 0%{?x11}
 %post x11 -p /sbin/ldconfig
 %postun x11 -p /sbin/ldconfig
 
@@ -89,10 +96,15 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -fv {} ';'
 %{_libdir}/libxkbcommon-x11.so
 %{_includedir}/xkbcommon/xkbcommon-x11.h
 %{_libdir}/pkgconfig/xkbcommon-x11.pc
+%endif
 
 %changelog
-* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 0.4.2-3
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 27 2014 Rex Dieter <rdieter@fedoraproject.org> - 0.4.2-3
+- make -x11 support conditional (f21+, #1000497)
+- --disable-silent-rules
 
 * Fri May 23 2014 Hans de Goede <hdegoede@redhat.com> - 0.4.2-2
 - Bump release to 2 to avoid confusion with non official non scratch 0.4.2-1
