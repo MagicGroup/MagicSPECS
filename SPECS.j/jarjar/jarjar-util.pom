@@ -1,0 +1,13 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>tonic</groupId>
+  <artifactId>jarjar-util</artifactId>
+  <version>1.4</version>
+  <distributionManagement>
+    <relocation>
+      <groupId>com.tonicsystems</groupId>
+      <artifactId>jarjar-util</artifactId>
+      <version>1.4</version>
+    </relocation>
+  </distributionManagement>
+</project>

@@ -1,0 +1,10 @@
+--- build.xml.orig	2013-09-15 17:37:59.398986270 +0100
++++ build.xml	2013-09-15 17:38:27.659100029 +0100
+@@ -102,6 +102,7 @@
+             </zipfileset>
+         	<keep pattern="com.tonicsystems.jarjar.Main"/>
+             <keep pattern="com.tonicsystems.jarjar.JarJarTask"/>
++            <keep pattern="com.tonicsystems.jarjar.JarJarMojo"/>
+             <rule pattern="com.tonicsystems.jarjar.util.**" result="com.tonicsystems.jarjar.ext_util.@1"/>
+             <rule pattern="org.objectweb.asm.**" result="com.tonicsystems.jarjar.asm.@1"/>
+             <manifest>
