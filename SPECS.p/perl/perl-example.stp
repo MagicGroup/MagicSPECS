@@ -10,12 +10,12 @@
 
 probe perl.sub.call
 {
-    printf("%s => sub: %s, filename: %s, line: %d\n", thread_indent(1),
-        sub, filename, lineno)
+    printf("%s => sub: %s, filename: %s, line: %d, package: %s\n",
+        thread_indent(1), sub, filename, lineno, package)
 }
 
 probe perl.sub.return
 {
-    printf("%s <= sub: %s, filename: %s, line: %d\n",
-        thread_indent(-1), sub, filename, lineno)
+    printf("%s <= sub: %s, filename: %s, line: %d, package: %s\n",
+        thread_indent(-1), sub, filename, lineno, package)
 }

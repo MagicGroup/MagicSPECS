@@ -8,6 +8,7 @@ probe perl.sub.call = process("LIBRARY_PATH").mark("sub__entry")
   sub = user_string($arg1)
   filename = user_string($arg2)
   lineno = $arg3
+  package = user_string($arg4)
 
 }
 
@@ -22,5 +23,17 @@ probe perl.sub.return = process("LIBRARY_PATH").mark("sub__return")
   sub = user_string($arg1)
   filename = user_string($arg2)
   lineno = $arg3
+  package = user_string($arg4)
 
+}
+
+/* 
+   This probe will fire when the Perl interperter changes state.
+ */
+
+probe perl.phase.change = process("LIBRARY_PATH").mark("phase__change")
+{
+  newphase = user_string($arg1)
+  oldphase = user_string($arg2)
+  
 }
