@@ -22,7 +22,7 @@
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
 Version: 5.3.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -44,6 +44,9 @@ Source5: qconfig-multilib.h
 # xinitrc script to check for OpenGL 1 only drivers and automatically set
 # QT_XCB_FORCE_SOFTWARE_OPENGL for them
 Source6: 10-qt5-check-opengl2.sh
+
+# drop configure check for xkbcommon-x11
+Patch1: qtbase-opensource-src-5.3.0-no_xkbcommon-x11.patch
 
 # support multilib optflags
 Patch2: qtbase-multilib_optflags.patch
@@ -106,9 +109,13 @@ BuildRequires: pkgconfig(NetworkManager)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libpulse) pkgconfig(libpulse-mainloop-glib)
 %if 0%{?fedora} > 20
+BuildRequires: pkgconfig(xcb-xkb) >= 1.10
+%global xkbcommon -system-xkbcommon
 BuildRequires: pkgconfig(xkbcommon) >= 0.4.1
 BuildRequires: pkgconfig(xkbcommon-x11) >= 0.4.1
-%global xkbcommon -system-xkbcommon
+## if no xcb-xkb > 1.10 or xkbcommon-x11
+## ie, to allow libxkbcommon backport for f19/f20
+#global no_xkbcommon_x11 1
 %else
 Provides: bundled(libxkbcommon) = 0.4.1
 %global xkbcommon -qt-xkbcommon
@@ -127,7 +134,6 @@ BuildRequires: pkgconfig(harfbuzz) >= 0.9.19
 BuildRequires: pkgconfig(icu-i18n)
 BuildRequires: pkgconfig(libpcre) >= 8.30
 %define pcre -system-pcre
-BuildRequires: pkgconfig(xcb-xkb)
 %else
 BuildRequires: libicu-devel
 %define pcre -qt-pcre
@@ -250,6 +256,9 @@ Qt5 libraries used for drawing widgets and OpenGL items.
 %prep
 %setup -q -n qtbase-opensource-src-%{version}%{?pre:-%{pre}}
 
+%if 0%{?no_xkbcommon_x11}
+%patch1 -p1 -b .no_xkbcommon-x11
+%endif
 %patch2 -p1 -b .multilib_optflags
 # drop backup file(s), else they get installed too, http://bugzilla.redhat.com/639463
 rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
@@ -324,6 +333,9 @@ popd
   -no-pch \
   -no-rpath \
   -no-separate-debug-info \
+%ifarch %{ix86}
+  -no-sse2 \
+%endif
   -no-strip \
 %ifarch %{ix86} x86_64
   -reduce-relocations \
@@ -683,11 +695,15 @@ popd
 
 
 %changelog
-* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 5.3.0-6
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Mon May 26 2014 Liu Di <liudidi@gmail.com> - 5.3.0-5
-- 为 Magic 3.0 重建
+* Fri May 30 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.0-6
+- %%ix86: build -no-sse2 (#1103185)
+
+* Tue May 27 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.0-5
+- BR: pkgconfig(xcb-xkb) > 1.10 (f21+)
+- allow possibility for libxkbcommon-0.4.x only
 
 * Fri May 23 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.0-4
 - -system-libxkbcommon (f21+)
