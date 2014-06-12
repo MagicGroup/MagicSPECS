@@ -1,20 +1,23 @@
 Name:           perl-Test-Output
-Version:        1.01
-Release:        6%{?dist}
+Version:        1.03
+Release:        2%{?dist}
 Summary:        Utilities to test STDOUT and STDERR messages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Output/
 Source0:        http://www.cpan.org/authors/id/B/BD/BDFOY/Test-Output-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(Capture::Tiny) >= 0.17
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Temp) >= 0.17
 BuildRequires:  perl(Sub::Exporter)
+BuildRequires:  perl(Test::Builder)
 BuildRequires:  perl(Test::Pod) >= 1.14
 BuildRequires:  perl(Test::Pod::Coverage) >= 1.04
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Tester) >= 0.103
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Test::Output provides a simple interface for testing output sent to STDOUT
@@ -25,28 +28,50 @@ flexible as possible to the tester.
 %setup -q -n Test-Output-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %files
-%doc Changes LICENSE README TODO
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%doc Changes LICENSE README
+%{perl_vendorlib}/Test/
+%{_mandir}/man3/Test::Output.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.01-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jan  6 2014 Paul Howarth <paul@city-fan.org> - 1.03-1
+- Update to 1.03
+  - Get rid of MYMETA
+- Upstream dropped TODO
+
+* Tue Oct 22 2013 Paul Howarth <paul@city-fan.org> - 1.02-1
+- Update to 1.02
+  - Re-do everything with Capture::Tiny rather than ties
+- Make %%files list more explicit
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 1.01-8
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Nov 12 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.01-6
+- Update dependencies
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Don't use macros for commands
+- Don't need to remove empty directories from the buildroot
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
