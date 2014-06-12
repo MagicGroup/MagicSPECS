@@ -1,35 +1,35 @@
 Name:           perl-CPAN-Meta
 Summary:        Distribution metadata for a CPAN dist
-Version:        2.120921
-Release:        5%{?dist}
+Version:        2.140640
+Release:        2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/CPAN-Meta/
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
-
+# Build
+BuildRequires:  perl
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.17
+# Module
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(CPAN::Meta::Requirements) >= 2.121
 BuildRequires:  perl(CPAN::Meta::YAML) >= 0.008
+BuildRequires:  perl(JSON::PP) >= 2.27200
+BuildRequires:  perl(List::Util) >= 1.33
+BuildRequires:  perl(Parse::CPAN::Meta) >= 1.4414
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(version) >= 0.88
+# Main test suite
 BuildRequires:  perl(Data::Dumper)
-BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
 BuildRequires:  perl(File::Basename)
-BuildRequires:  perl(File::Find)
 BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(File::Spec::Functions)
 BuildRequires:  perl(File::Temp) >= 0.20
 BuildRequires:  perl(IO::Dir)
-BuildRequires:  perl(JSON::PP) >= 2.27200
 BuildRequires:  perl(overload)
-BuildRequires:  perl(Parse::CPAN::Meta) >= 1.4403
-BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::More) >= 0.88
-BuildRequires:  perl(version) >= 0.88
-
-# obsolete/provide old tests subpackage
-# can be removed during F19 development cycle
-Obsoletes:      %{name}-tests < 2.113640-3
-Provides:       %{name}-tests = %{version}-%{release}
+# Runtime
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -54,7 +54,6 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
@@ -62,11 +61,63 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 make test
 
 %files
-%doc Changes history LICENSE README Todo t/
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%doc Changes CONTRIBUTING history LICENSE README Todo t/
+%{perl_vendorlib}/CPAN/
+%{_mandir}/man3/CPAN::Meta.3*
+%{_mandir}/man3/CPAN::Meta::Converter.3*
+%{_mandir}/man3/CPAN::Meta::Feature.3*
+%{_mandir}/man3/CPAN::Meta::History.3*
+%{_mandir}/man3/CPAN::Meta::Prereqs.3*
+%{_mandir}/man3/CPAN::Meta::Spec.3*
+%{_mandir}/man3/CPAN::Meta::Validator.3*
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.140640-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Mar 26 2014 Paul Howarth <paul@city-fan.org> - 2.140640-1
+- Update to 2.140640
+  - Improved bad version handling during META conversion
+  - When downgrading multiple licenses to version 1.x META formats, if all the
+    licenses are open source, the downgraded license will be "open_source", not
+    "unknown"
+  - Added a 'load_string' method that guesses whether the string is YAML or
+    JSON
+- Drop obsoletes/provides for old tests sub-package
+- Classify buildreqs by usage
+- Package upstream's CONTRIBUTING file
+- Make %%files list more explicit
+
+* Fri Oct 11 2013 Paul Howarth <paul@city-fan.org> - 2.132830-1
+- Update to 2.132830
+  - Fixed incorrectly encoded META.yml
+  - META validation used to allow a scalar value when a list (i.e. array
+    reference) was required for a field; this has been tightened and
+    validation will now fail if a scalar value is given
+  - Installation on Perls < 5.12 will uninstall older versions installed
+    due to being bundled with ExtUtils::MakeMaker
+  - Updated Makefile.PL logic to support PERL_NO_HIGHLANDER
+  - Dropped ExtUtils::MakeMaker configure_requires dependency to 6.17
+  - CPAN::Meta::Prereqs now has a 'merged_requirements' method for combining
+    requirements across multiple phases and types
+  - Invalid 'meta-spec' is no longer a fatal error: instead, it will usually
+    be treated as spec version "1.0" (prior to formalization of the meta-spec
+    field); conversion has some heuristics for guessing a version depending on
+    other fields if 'meta-spec' is missing or invalid
+- Don't need to remove empty directories from the buildroot
+
+* Thu Sep  5 2013 Paul Howarth <paul@city-fan.org> - 2.132140-1
+- update to latest upstream version
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.120921-291
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Petr Pisar <ppisar@redhat.com> - 2.120921-290
+- Increase release to favour standalone package
+
+* Fri Jul 12 2013 Petr Pisar <ppisar@redhat.com> - 2.120921-6
+- Perl 5.18 rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.120921-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
