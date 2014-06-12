@@ -1,6 +1,6 @@
 Name:      scim
 Version:   1.4.14
-Release:   4%{?dist}
+Release:   8%{?dist}
 Summary:   Smart Common Input Method platform
 
 License:   LGPLv2+
@@ -131,8 +131,7 @@ cp -p %{SOURCE4} configs/global
 %patch7 -p1 -b .7-emacs-ccmode~
 
 # patch17 touches configure.ac and Makefile.am
-#./bootstrap
-gnome-autogen.sh
+./bootstrap
 
 
 %build
@@ -245,9 +244,7 @@ fi
 %{_libdir}/scim-1.0/%{scim_api}/Config
 %dir %{_libdir}/scim-1.0/%{scim_api}/IMEngine
 %{_libdir}/scim-1.0/%{scim_api}/IMEngine/socket.so
-#qt3和qt4，需要分包
-%{_libdir}/qt-3.3/lib/qt3/plugins/inputmethods/im-scim.so
-%{_libdir}/qt4/lib/qt4/plugins/inputmethods/im-scim.so
+
 
 %files rawcode
 %defattr(-,root,root,-)
@@ -255,6 +252,18 @@ fi
 
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Feb 10 2014 Peng Wu <pwu@redhat.com> - 1.4.14-7
+- Fixes rawhide build
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Dec 10 2012 Peng Wu <pwu@redhat.com> - 1.4.14-4
 - Obsoletes scim-python
 
