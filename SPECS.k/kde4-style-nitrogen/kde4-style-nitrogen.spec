@@ -3,13 +3,13 @@ BuildRequires:  kdebase4-workspace-devel
 Requires:       kdebase4-workspace
 License:        GPL v2 or later
 Url:            http://kde-look.org/content/show.php/Nitrogen?content=99551
-Group:          System/GUI/KDE
-Group(zh_CN):	ÓÃ»§½çÃæ/×ÀÃæ
+Group:          User Interface/Desktops
+Group(zh_CN.UTF-8):	ç”¨æˆ·ç•Œé¢/æ¡Œé¢
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Summary:        A fork of the Oxygen/Ozone decoration
-Summary(zh_CN): Oxygen/Ozone ´°¿Ú×°ÊÎµÄÒÆÖ²
+Summary(zh_CN.UTF-8): Oxygen/Ozone çª—å£è£…é¥°çš„ç§»æ¤
 Version:        3.3.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Source:         99551-kde4-windeco-nitrogen-%{version}-Source.tar.gz
 
 %description
@@ -21,8 +21,8 @@ The Nitrogen window decoration is a fork of the Oxygen/Ozone decoration that all
  - select different title bar blending and frame border size depending on the window title or name, in order to have better integration of GTK based windows in the decoration style.
  - add a size-grip handle in the bottom-right corner of windows. This is particularly useful when the no-border option is selected.
 
-%description -l zh_CN
-Oxygen/Ozone ´°¿Ú×°ÊÎµÄÒÆÖ²¡£
+%description -l zh_CN.UTF-8
+Oxygen/Ozone çª—å£è£…é¥°çš„ç§»æ¤ã€‚
 
 %prep
 %setup -n kde4-windeco-nitrogen-%{version}-Source -q
@@ -56,10 +56,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING README
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.3.2-3
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 3.3.2-4
 - ä¸º Magic 3.0 é‡å»º
-
-* Wed Dec 21 2011 Liu Di <liudidi@gmail.com> - 3.3.2-2
-- ä¸º Magic 3.0 é‡å»º
-
 

@@ -1,4 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name sweeper
 
@@ -7,10 +6,10 @@
 Name: kde4-%{real_name}
 Summary: Clean unwanted traces the user leaves on the system
 Summary(zh_CN.UTF-8): 清理不需要的跟踪数据
-Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-Version: %{rversion}
-Release: 2%{?dist}
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Version: 4.13.1
+Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirrors.ustc.edu.cn/kde/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -27,7 +26,7 @@ Clean unwanted traces the user leaves on the system.
 清理不需要的跟踪数据。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -60,6 +59,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_dbus_interfacesdir}/org.kde.sweeper.xml
 
 %changelog
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

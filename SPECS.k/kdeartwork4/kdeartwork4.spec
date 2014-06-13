@@ -1,5 +1,3 @@
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name kdeartwork
 
 %define kde4_wallpapersdir %{kde4_datadir}/wallpapers
@@ -10,12 +8,12 @@ Name: kdeartwork4
 Summary: Artworks for KDE4
 Summary(zh_CN.UTF-8): KDE 4 的美化包
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.1
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -43,8 +41,8 @@ KDE 4 的美化包。
 %package wallpapers
 Summary: KDE Wallpapers
 Summary(zh_CN.UTF-8): KDE 墙纸
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description wallpapers
 %{summary}.
@@ -56,8 +54,8 @@ KDE 墙纸。
 %package IconThemes
 Summary: KDE Icon Themes
 Summary(zh_CN.UTF-8): KDE 图标主题
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description IconThemes
 %{summary}.
@@ -69,8 +67,8 @@ KDE 图标主题。
 %package ColorSchemes
 Summary: KDE Color Schemes
 Summary(zh_CN.UTF-8): KDE 配色方案
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description ColorSchemes
 %{summary}.
@@ -82,8 +80,8 @@ KDE 配色方案。
 %package desktopthemes
 Summary: KDE Desktop Themes
 Summary(zh_CN.UTF-8): KDE 桌面主题
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description desktopthemes
 %{summary}.
@@ -95,8 +93,8 @@ KDE 桌面主题。
 %package emoticons
 Summary: KDE Emotion Icons
 Summary(zh_CN.UTF-8): KDE 表情图标集
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description emoticons
 %{summary}.
@@ -108,8 +106,8 @@ KDE 表情图标集。
 %package kscreensaver
 Summary: KDE Screensaver
 Summary(zh_CN.UTF-8): KDE 屏幕保护
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description kscreensaver
 %{summary}.
@@ -121,8 +119,8 @@ KDE 屏幕保护。
 %package styles
 Summary: KDE Control Styles
 Summary(zh_CN.UTF-8): KDE 控件风格
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 
 %description styles
 %{summary}.
@@ -132,7 +130,7 @@ KDE 控件风格。
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -204,6 +202,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_appsdir}/aurorae/*
 
 %changelog
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Thu Apr 24 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
 - 为 Magic 3.0 重建
 

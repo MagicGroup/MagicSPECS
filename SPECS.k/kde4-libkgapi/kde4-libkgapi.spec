@@ -1,11 +1,13 @@
 %define real_name libkgapi
 #%%global		git_commit f18d699
 Name:		kde4-libkgapi
-Version:	0.4.4
+Version:	2.1.1
 #Release:	1.20120530git%%{git_commit}%%{?dist}
 Release:	2%{?dist}
 Summary:	Library to access to Google services
+Summary(zh_CN.UTF-8): 访问谷歌服务的库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 License:	GPLv2+
 URL:		https://projects.kde.org/projects/extragear/libs/%{real_name}
@@ -19,7 +21,7 @@ URL:		https://projects.kde.org/projects/extragear/libs/%{real_name}
 #	-o ../%%{name}-%%{version}-git%%{git_commit}.tar.gz \\
 #	master
 #Source0:	%%{name}-%%{version}-git%%{git_commit}.tar.gz
-Source0:	http://download.kde.org/stable/%{real_name}/%{version}/%{real_name}-%{version}.tar.bz2
+Source0:	http://download.kde.org/stable/%{real_name}/%{version}/src/%{real_name}-%{version}.tar.bz2
 
 BuildRequires:	kdepimlibs4-devel 
 BuildRequires:	kdelibs4-devel 
@@ -34,10 +36,14 @@ Provides:	libkgoogle = %{version}-%{release}
 Library to access to Google services, this package is needed by kdepim-runtime
 to build akonadi-google resources.
 
+%description -l zh_CN.UTF-8
+访问谷欲服务的库，这个包是 kdepim-runtime 编译 akonadi-google 资源需要的。
 
 %package devel
 Summary: Development files for %{real_name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: kdepimlibs4-devel
 Obsoletes: libkgoogle-devel < 0.3.2
@@ -46,6 +52,8 @@ Provides: libkgoogle-devel = %{version}-%{release}
 Libraries and header files for developing applications that use akonadi-google
 resources.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{real_name}-%{version}
@@ -70,17 +78,21 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %files
-%doc README CHANGELOG LICENSE
-%{_libdir}/libkgapi.so.0*
+%doc README 
+%{_libdir}/libkgapi*.so.*
 
 %files devel
-%{_kde4_includedir}/libkgapi/
-%{_libdir}/pkgconfig/libkgapi.pc
-%{_libdir}/libkgapi.so
-%{_libdir}/cmake/LibKGAPI/
+%{_kde4_includedir}/libkgapi*/
+%{_kde4_includedir}/LibKGAPI2/
+#%{_libdir}/pkgconfig/libkgapi*.pc
+%{_libdir}/libkgapi*.so
+%{_libdir}/cmake/LibKGAPI*/
 
 
 %changelog
+* Wed Jun 04 2014 Liu Di <liudidi@gmail.com> - 2.1.1-2
+- 更新到 2.1.1
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

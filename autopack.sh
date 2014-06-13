@@ -304,6 +304,10 @@ function downvcssources()
 		fi
 		debug_run echo "从 $2 仓库中下载 $1 的源代码"
         	pushd $TOPDIR/SOURCES
+			if ! [ -f make_$1_$2_package.sh ] ; then
+				echo "没有下载源代码的脚本，退出。"
+				exit 1
+			fi
                 	if ! ( sh make_$1_$2_package.sh $VCSDATE ) ; then
                         	echo "无法从 $1 版本控制系统下载 $2 的源代码！退出。"
                         	exit 1

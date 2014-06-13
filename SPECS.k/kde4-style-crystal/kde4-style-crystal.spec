@@ -1,13 +1,12 @@
 Name: kde4-style-crystal
 Summary: Crystal kwin decoration theme to KDE 4.x
-Summary(zh_CN): KDE 4.x µÄ Crystal ´°¿Ú×°ÊÎ
-Version: 2.0.5
-Release: 3%{?dist}
+Summary(zh_CN): KDE 4.x çš„ Crystal çª—å£è£…é¥°
+Version: 2.2.1
+Release: 1%{?dist}
 Source0: http://www.kde-look.org/CONTENT/content-files/75140-crystal-%version.tar.bz2
-Patch0: crystal-fix-compile.patch
 URL: http://www.kde-look.org/content/show.php/crystal?content=75140
 Group: Graphical desktop/KDE
-Group(zh_CN):	ÓÃ»§½çÃæ/×ÀÃæ
+Group(zh_CN):	ç”¨æˆ·ç•Œé¢/æ¡Œé¢
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 License: GPLv2+
 BuildRequires: kdebase4-workspace-devel
@@ -29,11 +28,10 @@ Main features:
   button will send the window to the systemtray.
 
 %description -l zh_CN
-KDE 4.x µÄ Crystal ´°¿Ú×°ÊÎ¡£
+KDE 4.x çš„ Crystal çª—å£è£…é¥°ã€‚
 
 %prep
 %setup -q -n crystal-%version
-%patch0
 
 %build
 pushd build
@@ -49,17 +47,13 @@ popd
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS README COPYING INSTALL
+%doc AUTHORS 
 %{_kde4_libdir}/kde4/kwin3_crystal.so
 %{_kde4_libdir}/kde4/kwin_crystal_config.so
 %{_kde4_appsdir}/kwin/crystal.desktop
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.5-3
-- ä¸º Magic 3.0 é‡å»º
-
-* Wed Dec 21 2011 Liu Di <liudidi@gmail.com> - 2.0.5-2
-- ä¸º Magic 3.0 é‡å»º
-
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 2.2.1-1
+- æ›´æ–°åˆ° 2.2.1
 

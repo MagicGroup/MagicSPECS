@@ -1,33 +1,32 @@
+%global         git_commit 043bbae
 Name:           kde-plasma-nm
-Version:        0.9.3.2
-Release:        3%{?dist}
+Version:        0.9.3.4
+Release:        7.20140520git%{git_commit}%{?dist}
 Summary:        Plasma applet written in QML for managing network connections
 License:        LGPLv2+ and GPLv2+
 URL:            https://projects.kde.org/projects/playground/network/plasma-nm
-Source0:        http://download.kde.org/unstable/plasma-nm//plasma-nm-%{version}.tar.xz
+# Source0:        http://download.kde.org/unstable/plasma-nm//plasma-nm-%{version}.tar.xz
+# # Package from git snapshots using releaseme scripts
+Source0:        plasma-nm-%{version}.tar.xz
 
 # Add plasma-nm to default systray if needed, for upgraders...
 Source10: 01-fedora-plasma-nm.js
 
-## upstream patches
-Patch0: plasma-nm-0.9.3.2-upstream-fixes.patch
 
 BuildRequires:  gettext
 BuildRequires:  kdelibs4-devel
 BuildRequires:  kdebase4-workspace-devel
-BuildRequires:  libmm-qt-devel >= 1.0.0
-BuildRequires:  libnm-qt-devel >= 0.9.1
+BuildRequires:  libmm-qt-devel >= 1.0.2
+BuildRequires:  libnm-qt-devel >= 2:0.9.8.2
 BuildRequires:  pkgconfig(NetworkManager) >= 0.9.8
 BuildRequires:  pkgconfig(ModemManager) >= 1.0.0
 BuildRequires:  pkgconfig(libnm-glib) pkgconfig(libnm-util)
 %if 0%{?fedora} || 0%{?epel}
 BuildRequires:  pkgconfig(openconnect) >= 4.00
 %endif
-BuildRequires: phonon-devel
-BuildRequires: qt4-declarative-devel
 
 Requires:  NetworkManager >= 0.9.8
-Requires:  libnm-qt >= 0.9.1
+Requires:  libnm-qt >= 2:0.9.8.2
 
 Obsoletes: kde-plasma-networkmanagement < 1:0.9.1.0
 Obsoletes: kde-plasma-networkmanagement-libs < 1:0.9.1.0
@@ -43,7 +42,7 @@ the default NetworkManager service.
 Summary: Mobile support for %{name}
 Requires:  ModemManager
 Requires:  mobile-broadband-provider-info
-Requires:  libmm-qt >= 1.0.0
+Requires:  libmm-qt >= 1.0.2
 Obsoletes: kde-plasma-networkmanagement-mobile < 1:0.9.1.0
 Provides:  kde-plasma-networkmanagement-mobile = 1:%{version}-%{release}
 %description mobile
@@ -111,7 +110,6 @@ Provides:       kde-plasma-networkmanagement-pptp = 1:%{version}-%{release}
 %prep
 %setup -qn plasma-nm-%{version}
 
-%patch0 -p1 -b .upstream-fixes
 
 %build
 mkdir -p %{_target_platform}
@@ -126,6 +124,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 rm -rf %{buildroot}
 
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
+magic_rpm_clean.sh
 
 %find_lang plasma_applet_org.kde.networkmanagement
 %find_lang plasmanetworkmanagement-kded
@@ -154,6 +153,17 @@ rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_l2tp*
 rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_pptp*
 %endif
 
+%post
+touch --no-create %{_kde4_iconsdir}/oxygen &> /dev/null || :
+
+%posttrans
+gtk-update-icon-cache %{_kde4_iconsdir}/oxygen &> /dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+touch --no-create %{_kde4_iconsdir}/oxygen &> /dev/null || :
+gtk-update-icon-cache %{_kde4_iconsdir}/oxygen &> /dev/null || :
+fi
 
 %files -f plasma_applet_org.kde.networkmanagement.lang -f plasmanetworkmanagement-kded.lang -f kde-nm-connection-editor.lang -f libplasmanetworkmanagement-editor.lang
 %defattr(-,root,root,-)
@@ -170,7 +180,7 @@ rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_pptp*
 %{_kde4_datadir}/apps/plasma/plasmoids/org.kde.networkmanagement/metadata.desktop
 %{_kde4_datadir}/kde4/services/plasma-applet-networkmanagement.desktop
 %{_kde4_libdir}/kde4/plugins/designer/plasmanetworkmanagementwidgets.so
-%{_kde4_appsdir}/desktoptheme/default/icons/plasma-networkmanagement.svgz
+%{_kde4_appsdir}/desktoptheme/default/icons/plasma-networkmanagement2.svgz
 %{_kde4_iconsdir}/oxygen/*/*/*
 %{_kde4_appsdir}/plasma-desktop/updates/*.js
 # plasma-nm notifications
@@ -218,6 +228,42 @@ rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_pptp*
 %endif
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-7.20140520git043bbae
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-6.20140520git043bbae
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-5.20140520git043bbae
+- 为 Magic 3.0 重建
+
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.9.3.4-4.20140520git043bbae
+- 为 Magic 3.0 重建
+
+* Thu May 29 2014 Kevin Kofler <Kevin@tigcc.ticalc.org> - 0.9.3.4-3.20140522git043bbae
+- fix libnm-qt versioned dependencies (missing Epoch)
+
+* Fri May 23 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-2.20140522git043bbae
+- Update translations
+
+* Thu May 22 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.4-1.20140522git043bbae
+- Update to 0.9.3.4 (git snapshot)
+
+* Tue Apr 15 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.3-4
+- use correct bluetooth icon
+
+* Mon Mar 10 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.3-3
+- fix connection status for mobile connections
+
+* Fri Mar 07 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.3-2
+- fix build with openconnect
+
+* Wed Feb 26 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.3-1
+- Update to 0.9.3.3
+
+* Thu Feb 13 2014 Rex Dieter <rdieter@fedoraproject.org> - 0.9.3.2-4
+- add icon scriptlets
+
 * Fri Jan 03 2014 Jan Grulich <jgrulich@redhat.com> - 0.9.3.2-3
 - More upstream fixes
 

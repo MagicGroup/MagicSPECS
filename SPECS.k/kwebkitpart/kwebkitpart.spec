@@ -1,25 +1,22 @@
 
 Name:    kwebkitpart
 Summary: A KPart based on QtWebKit
-Version: 1.3.0
-Release: 2%{?dist}
+Version: 1.3.3
+Release: 3%{?dist}
 
 License: LGPLv2+
 URL:     https://projects.kde.org/projects/extragear/base/kwebkitpart
-# git clone git://anongit.kde.org/kwebkitpart
-# git archive --prefix=kwebkitpart-%{version}/ v1.3.0 | xz > ../kwebkitpart-%{version}.tar.xz
+# use releaseme script to generate
 Source0: kwebkitpart-%{version}.tar.xz
 
-## upstream patches
-Patch101: 0001-Removed-unnecessary-debug-statements.patch
-Patch102: 0002-Do-not-crash-when-QWebHitTestResult-frame-returns-NU.patch
-Patch103: 0003-Added-the-applet-tag-to-the-ondemand-plugin-loader-l.patch
-Patch104: 0004-Fix-search-shortcuts.patch
-Patch105: 0005-Removed-no-longer-necessary-namespace-use.patch
-Patch106: 0006-On-view-frame-or-document-source-open-the-actual-fil.patch
+## upstreamable patches
 
-BuildRequires: gettext
+## upstream patches
+#define git_patches 1
+%if 0%{?git_patches}
 BuildRequires: git-core
+%endif
+BuildRequires: gettext
 BuildRequires: kdelibs4-devel >= 4.8.3
 BuildRequires: pkgconfig(QtWebKit)
 
@@ -37,6 +34,7 @@ browsing the web in Konqueror.
 %prep
 %setup -q
 
+%if 0%{?git_patches}
 git init
 if [ -z "$GIT_COMMITTER_NAME" ]; then
 git config user.email "kde@lists.fedoraproject.org"
@@ -47,15 +45,24 @@ git commit -a -q -m "%{version} baseline."
 
 # Apply all the patches
 git am -p1 %{patches} < /dev/null
+%else
+%endif
 
-%if 0%{?fedora} < 18
+%ifarch ppc ppc64 s390 s390x
+%define khtml 1
+%endif
+
+%if 0%{?fedora} && 0%{?fedora} < 18
+%define khtml 1
+%endif
+
+%if 0%{?khtml}
 # revert commit that gives kwebkitpart higher priority than khtml
 # https://projects.kde.org/projects/extragear/base/kwebkitpart/repository/revisions/49ea6284cc46e8a24d04a564d4c8680ebd2b0f74
 sed -i.InitialPreference \
   -e 's|^InitialPreference=.*|-InitialPreference=9|g' \
   src/kwebkitpart.desktop
 %endif
-
 
 %build
 mkdir -p %{_target_platform}
@@ -67,7 +74,9 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 %install
 make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
-magic_rpm_clean.sh
+
+%find_lang kwebkitpart --with-kde
+
 
 %post
 touch --no-create %{_kde4_iconsdir}/hicolor &> /dev/null ||:
@@ -81,7 +90,7 @@ if [ $1 -eq 0 ] ; then
   gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &> /dev/null ||:
 fi
 
-%files
+%files -f kwebkitpart.lang
 %doc README COPYING.LIB TODO
 %{_kde4_libdir}/kde4/kwebkitpart.so
 %{_kde4_iconsdir}/hicolor/*/apps/webkit.*
@@ -90,8 +99,32 @@ fi
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3.0-2
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.3.3-3
 - 为 Magic 3.0 重建
+
+* Sun Dec 29 2013 Rex Dieter <rdieter@fedoraproject.org> 1.3.3-2
+- respin tarball
+
+* Wed Dec 04 2013 Rex Dieter <rdieter@fedoraproject.org> 1.3.3-1
+- 1.3.3
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jun 28 2013 Than Ngo <than@redhat.com> 1.3.2-3
+- khtml engine default on s390(x) and ppc(64) 
+
+* Fri May 17 2013 Rex Dieter <rdieter@fedoraproject.org> 1.3.2-2
+- revert workaround for kde bug#313005
+
+* Sat Mar 09 2013 Rex Dieter <rdieter@fedoraproject.org> 1.3.2-1
+- 1.3.2
+
+* Tue Jan 29 2013 Rex Dieter <rdieter@fedoraproject.org> 1.3.1-2
+- Translations are not included in the kwebkitpart package (#905627)
+
+* Thu Jan 03 2013 Rex Dieter <rdieter@fedoraproject.org> 1.3.1-1
+- 1.3.1
 
 * Thu Oct 04 2012 Rex Dieter <rdieter@fedoraproject.org> 1.3.0-1
 - generate tarball from v1.3.0 tag

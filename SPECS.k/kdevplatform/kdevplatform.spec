@@ -1,5 +1,3 @@
-%define rversion 1.4.1
-%define release_number 1
 %define real_name kdevplatform
 
 %define kde4_enable_final_bool OFF
@@ -7,12 +5,13 @@
 Name: kdevplatform
 Summary: The KDE Develop Platform
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
-Source0: %{real_name}-%{rversion}.tar.bz2
+Version: 1.6.0
+Release: 1}%{?dist}
+%define majorver %(echo %{version} | awk -F. '{print $2"."$3}')
+Source0: http://download.kde.org/stable/kdevelop/4.%{majorver}/src/%{real_name}-%{version}.tar.xz
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -23,15 +22,15 @@ BuildRequires: boost-devel
 BuildRequires: subversion-devel
 
 # TODO: for kompare kpart support, please enable it in KDE 4.4.x  --- nihui
-BuildRequires: kdesdk4-devel
+#BuildRequires: kdesdk4-devel
 
 %description
 The KDE Develop Platform.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- 开发包
 %package -n %{name}-devel
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: KDE Develop Platforms: Build Environment
 Requires: libkdelibs4-devel
 Requires: %{name} = %{version}
@@ -43,7 +42,7 @@ to develop KDE Develop Platforms.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -89,8 +88,14 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicesdir}/*
 %{kde4_servicetypesdir}/*
 %{kde4_localedir}/*
+%{kde4_plugindir}/plugins/grantlee/0.4/kdev_filters.so
+%{kde4_configdir}/kdevappwizard.knsrc
+%{kde4_configdir}/kdevfiletemplates.knsrc
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.6.0-1}
+- 更新到 1.6.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.2.3-1.1
 - 为 Magic 3.0 重建
 

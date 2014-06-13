@@ -1,15 +1,12 @@
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
-
 Name: kde4-session
 Summary: The KDE 4 Session
 Summary(zh_CN.UTF-8): KDE 4 会话
 License: GPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.2
+Version: 4.13.1
+Release: 1%{?dist}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: kdebase4-runtime >= %{version}
@@ -47,6 +44,9 @@ rm -rf %{buildroot}
 %{_datadir}/apps/kdm/sessions/kde4.desktop
 
 %changelog
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.2
 - 为 Magic 3.0 重建
 

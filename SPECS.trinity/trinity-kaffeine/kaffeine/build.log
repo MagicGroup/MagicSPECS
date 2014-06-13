@@ -1,0 +1,510 @@
+警告：%changelog （更新日志）中存在虚假的日期：Thu Nov 29 2005 KanKer <kanker@163.com>
+警告：%changelog （更新日志）中存在虚假的日期：Tue Oct 20 2005 KanKer <kanker@163.com>
+警告：%changelog （更新日志）中存在虚假的日期：Tue Aug 25 2005 KanKer <kanker@163.com>
+警告：%changelog （更新日志）中存在虚假的日期：Thu Mar 22 2005 KanKer <kanker@163.com>
+警告：%changelog （更新日志）中存在虚假的日期：Tue Sep 23 2004 KanKer <kanker@163.com>
+
+
+
+
+
+
+
+Name:			kaffeine
+Version:			0.8.9
+
+Release:		0.git.20111215_1mgc30
+
+
+
+Summary:		A xine-based Media Player for KDE
+Summary(zh_CN.UTF-8):	KDE 下基于 xine 引擎的媒体播放器
+Group:			Applications/Multimedia
+Group(zh_CN.UTF-8):		应用程序/多媒体
+License:			GPL
+URL:			http://kaffeine.sourceforge.net
+
+Source0:		kaffeine-git20111215.tar.xz
+Source1:		kaffeine-mozilla-git20111215.tar.xz
+
+
+
+
+Source2:	kaffeine.desktop
+Source3:	kaffeine_part.desktop
+Source4:	kaffeine.zh_CN.po
+Source5:	kaffeine.zh_TW.po
+Source6:	mms.protocol
+Source7:	rtsp.protocol
+
+Patch0:		kaffeine-osd-fonts.patch
+Patch1:		kaffeine-metainfo.patch
+
+Patch2:		kaffeine-kpartlink-remove.patch
+Patch3:		kaffeine_append_file_add_real_and_flv_media.patch
+Patch4:		kaffeine-mozilla-media_support.patch
+Patch5:		kaffeine-0.8.4-msmedia-jscript.patch
+Patch6:		kaffeine-remove-netscapte-plugin-engine.patch
+Patch7:		kaffeine_part_plugin_switch.patch
+Patch8:		kaffeine_part_plugin_switch.po.patch
+
+Patch11:	kaffeine-mozilla-0.2-Xaw_include.patch
+Patch12:	kaffeine-0.8.4-disable_Visual_Plugin.patch
+
+
+
+Patch50: kaffeine-0.8.6-fix_alternatecodec_gb18030.patch
+
+Patch51:	kaffeine-libtool.patch
+Patch52:	kaffeine-tdedir.patch
+Patch53:	kaffeine-mozilla-libtool.patch
+
+Prefix:		/usr
+BuildRoot:	/var/tmp/kaffeine-0.8.9-0.git.20111215_1mgc30-buildroot-magic
+BuildRequires:  xine-lib-devel, gettext, qt-devel, cdparanoia-devel
+Requires:	xine-lib,kdelibs,kdebase, cdparanoia-libs
+
+
+
+%description
+Kaffeine is a xine based media player for KDE3. It plays back CDs,
+DVDs, and VCDs. It also decodes multimedia files like AVI, MOV, WMV,
+and MP3 from local disk drives, and displays multimedia streamed over
+the Internet. It interprets many of the most common multimedia formats
+available - and some of the most uncommon formats, too. Additionally,
+Kaffeine is fully integrated in KDE3, it supports Drag and Drop and
+provides an editable playlist, a bookmark system, a Konqueror plugin,
+a Mozilla plugin, OSD an much more.
+
+%description -l zh_CN.UTF-8
+Kaffeine 是 KDE 3 下基于 xine 的一个媒体播放器。它可以播放 CD，DVD 和 VCD。
+它还可以解码本地磁盘驱动器上的多媒体文件，比如 AVI，MOV，WMV，和 MP3，
+并且还可以播放互联网/卫星频道上的流媒体。它可以解码许多常见的多媒体格式，
+也可以解码一些不常见的格式。而且，Kaffeine 完全集成到 KDE 3 中，它支持拖放，
+提供了一个可编辑的播放列表，有书签系统，Konqueror 插件，Mozilla 插件，OSD
+支持以及更多功能。
+
+
+%package devel
+Summary: Development files for kaffeine
+Summary(zh_CN.UTF-8): kaffeine 的开发文件
+Group:   Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: kaffeine = 0.8.9-0.git.20111215_1mgc30
+Requires: kdelibs-devel
+
+%description devel
+kaffeine 的开发文件.
+
+%description devel -l zh_CN.UTF-8
+kaffeine 的开发文件。
+
+
+%package gstreamer
+Summary: gstreamer files for kaffeine
+Summary(zh_CN.UTF-8): kaffeine 的 gstreamer 文件
+Group: Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
+BuildRequires: gstreamer-devel gstreamer-plugins-base-devel
+Requires: kaffeine = 0.8.9-0.git.20111215_1mgc30
+Requires: gstreamer
+
+%description gstreamer
+kaffeine 的 gstreamer 文件.
+
+%description gstreamer -l zh_CN.UTF-8
+kaffeine 的 gstreamer 文件。
+
+
+%prep
+%setup -q -n kaffeine-git20111215 -b 1
+
+%patch0 -p1
+%patch1 -p1
+%patch3 -p1
+pushd ../kaffeine-mozilla-git20111215
+%patch4 -p1
+%patch53 -p1
+popd
+%patch6 -p1
+%patch7 -p1
+%patch12 -p1
+
+%patch50 -p0 -b .fix_alternatecodec_gb18030
+
+%patch51 -p1
+
+%patch52 -p1
+
+%build
+make -f admin/Makefile.common cvs
+. /etc/profile.d/qt.sh
+
+  CFLAGS="${CFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CFLAGS ; 
+  CXXFLAGS="${CXXFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CXXFLAGS ; 
+  FFLAGS="${FFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FFLAGS ; 
+  FCFLAGS="${FCFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FCFLAGS ; 
+  LDFLAGS="${LDFLAGS:--Wl,-z,relro }"; export LDFLAGS; 
+  for i in $(find . -name config.guess -o -name config.sub) ; do 
+      [ -f /usr/lib/rpm/magic/$(basename $i) ] && /usr/bin/rm -f $i && /usr/bin/cp -fv /usr/lib/rpm/magic/$(basename $i) $i ; 
+  done ; 
+  ./configure --build=x86_64-magic-linux-gnu --host=x86_64-magic-linux-gnu \
+	--program-prefix= \
+	--disable-dependency-tracking \
+	--prefix=/usr \
+	--exec-prefix=/usr \
+	--bindir=/usr/bin \
+	--sbindir=/usr/sbin \
+	--sysconfdir=/etc \
+	--datadir=/usr/share \
+	--includedir=/usr/include \
+	--libdir=/usr/lib64 \
+	--libexecdir=/usr/libexec \
+	--localstatedir=/var \
+	--sharedstatedir=/var/lib \
+	--mandir=/usr/share/man \
+	--infodir=/usr/share/info  --with-gstreamer --with-extra-includes=/usr/include/cdda --with-extra-includes=/usr/include/tqt 
+#临时措施
+sed -i 's/\-lmp3lame/\-lmp3lame \-lqt\-mt \-ltdecore \-ltdeui \-lkparts/g'  kaffeine/src/input/disc/plugins/mp3lame/Makefile
+make 
+
+pushd ../kaffeine-mozilla-git20111215
+cp admin/ltmain.sh .
+make -f admin/Makefile.common
+
+  CFLAGS="${CFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CFLAGS ; 
+  CXXFLAGS="${CXXFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CXXFLAGS ; 
+  FFLAGS="${FFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FFLAGS ; 
+  FCFLAGS="${FCFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FCFLAGS ; 
+  LDFLAGS="${LDFLAGS:--Wl,-z,relro }"; export LDFLAGS; 
+  for i in $(find . -name config.guess -o -name config.sub) ; do 
+      [ -f /usr/lib/rpm/magic/$(basename $i) ] && /usr/bin/rm -f $i && /usr/bin/cp -fv /usr/lib/rpm/magic/$(basename $i) $i ; 
+  done ; 
+  ./configure --build=x86_64-magic-linux-gnu --host=x86_64-magic-linux-gnu \
+	--program-prefix= \
+	--disable-dependency-tracking \
+	--prefix=/usr \
+	--exec-prefix=/usr \
+	--bindir=/usr/bin \
+	--sbindir=/usr/sbin \
+	--sysconfdir=/etc \
+	--datadir=/usr/share \
+	--includedir=/usr/include \
+	--libdir=/usr/lib64 \
+	--libexecdir=/usr/libexec \
+	--localstatedir=/var \
+	--sharedstatedir=/var/lib \
+	--mandir=/usr/share/man \
+	--infodir=/usr/share/info --prefix=/usr/lib64/browser-plugins
+make
+popd
+
+
+%package debuginfo 
+Summary: Debug information for package kaffeine
+Group: Development/Debug
+AutoReqProv: 0
+%description debuginfo
+This package provides debug information for package kaffeine.
+Debug information is useful when developing applications that use this
+package or when debugging this package.
+%files debuginfo -f debugfiles.list
+%defattr(-,root,root)
+
+%install
+
+/usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64
+
+  /usr/bin/make \
+	prefix=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr \
+	exec_prefix=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr \
+	bindir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/bin \
+	sbindir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/sbin \
+	sysconfdir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/etc \
+	datadir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share \
+	includedir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/include \
+	libdir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/lib64 \
+	libexecdir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/libexec \
+	localstatedir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/var \
+	sharedstatedir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/var/lib \
+	mandir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/man \
+	infodir=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/info \
+  install
+[ -x /usr/bin/magic_rpm_clean.sh ] && /usr/bin/magic_rpm_clean.sh
+
+# Unpackaged files
+rm -f /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/lib64/lib*.la
+
+pushd ../kaffeine-mozilla-git20111215
+make  DESTDIR=/home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64 install
+popd
+
+# the kaffeineplugin.so will be installed in /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/lib64/browser-plugins/plugins/, 
+# so we must move it to the uper directory so that the konqueror brower can find it.
+pushd /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/lib64/browser-plugins
+mv plugins/*.so* ./
+rm -rf plugins
+popd
+
+/usr/bin/rm -f /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/applications/kde/kaffeine.desktop
+#mkdir -p $RPM_BUILD_ROOT/usr/share/applicastions/kde
+install -D -m 644 /home/magic/rpmbuild/SOURCES/kaffeine.desktop /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/applications/kde/kaffeine.desktop
+#install -D -m 644 /home/magic/rpmbuild/SOURCES/kaffeine.desktop /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/applnk/Multimedia/kaffeine.desktop
+install -D -m 644 /home/magic/rpmbuild/SOURCES/kaffeine_part.desktop /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/apps/kaffeine/kaffeine_part.desktop
+
+msgfmt /home/magic/rpmbuild/SOURCES/kaffeine.zh_CN.po -o /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/locale/zh_CN/LC_MESSAGES/kaffeine.mo
+##msgfmt /home/magic/rpmbuild/SOURCES/kaffeine.zh_TW.po -o /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/usr/share/locale/zh_TW/LC_MESSAGES/kaffeine.mo
+
+install -D -m 644 /home/magic/rpmbuild/SOURCES/mms.protocol /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/etc/skel/.kde/share/services/mms.protocol
+install -D -m 644 /home/magic/rpmbuild/SOURCES/rtsp.protocol /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64/etc/skel/.kde/share/services/rtsp.protocol
+
+#mkdir -p $RPM_BUILD_ROOT/usr/lib64/opera/plugins
+#pushd $RPM_BUILD_ROOT/usr/lib64/opera/plugins
+#	ln -s ../../../../usr/lib64/mozilla/plugins/*.so* ./
+#popd
+
+#mkdir -p $RPM_BUILD_ROOT/usr/share/icons/crystalsvg
+#cp -r $RPM_BUILD_ROOT/usr/share/icons/hicolor/* $RPM_BUILD_ROOT/usr/share/icons/crystalsvg/
+
+#mkdir -p $RPM_BUILD_ROOT/usr/share/doc/HTML/zh_CN/kaffeine
+#cp -r /home/magic/rpmbuild/SOURCES/kaffeine.desktop $RPM_BUILD_ROOT/usr/share/doc/HTML/zh_CN/kaffeine/
+
+%clean
+/usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/kaffeine-0.8.9-0.git.20111215_1mgc30.x86_64 /home/magic/rpmbuild/BUILD/kaffeine-git20111215 /home/magic/rpmbuild/BUILD/kaffeine-mozilla-0.2
+
+
+%pre
+if [ -f /usr/share/locale/zh_CN/LC_MESSAGES/kaffeine.mo ]; then
+pushd /usr/share/locale/zh_CN/LC_MESSAGES/
+rm -f kaffeine.mo.bak
+mv kaffeine.mo kaffeine.mo.bak
+popd
+fi
+
+%post
+install -D -m 644 /etc/skel/.kde/share/services/mms.protocol /root/.kde/share/services/mms.protocol
+install -D -m 644 /etc/skel/.kde/share/services/rtsp.protocol /root/.kde/share/services/rtsp.protocol
+for D in `cat /etc/passwd | grep ':/home/' | cut -f 6 -d:`; do
+if [ -d $D ];then
+install -D -m 644 /etc/skel/.kde/share/services/mms.protocol $D/.kde/share/services/mms.protocol
+install -D -m 644 /etc/skel/.kde/share/services/rtsp.protocol $D/.kde/share/services/rtsp.protocol
+USRHOME=`ls -la $D | grep "[^\.\.]\.$"`
+OWNER=`echo $USRHOME | cut -f 3 -d\ `
+GROUP=`echo $USRHOME | cut -f 4 -d\ `
+chown -hR ${OWNER}:${GROUP} $D/.kde/share/services/mms.protocol
+chown -hR ${OWNER}:${GROUP} $D/.kde/share/services/rtsp.protocol
+fi
+done
+echo "Rescaning the browsers' plugins..."
+nspluginscan > /dev/null 2>&1 && \
+echo "Done."
+
+%postun
+read -p "kaffeine 已成功卸载，是否同时解除 kaffeine 与 mms 和 rtsp 流媒体协议的关联(默认不解除)[y/n]?" -t 60 ANSWER
+if [ "$ANSWER"="y" -o "$ANSWER"="Y" ]; then
+rm -f /root/.kde/share/services/mms.protocol
+rm -f /root/.kde/share/services/rtsp.protocol
+for D in `cat /etc/passwd | grep ':/home/' | cut -f 6 -d:`; do
+if [ -d $D ];then
+rm -f $D/.kde/share/services/mms.protocol
+rm -f $D/.kde/share/services/rtsp.protocol
+fi
+done
+fi
+if [ "$1" = "0" ] ; then
+echo "Rescaning the browsers' plugins..."
+nspluginscan > /dev/null 2>&1 && \
+echo "Done."
+fi
+
+%files
+%defattr(-,root,root)
+/etc
+%doc AUTHORS ChangeLog COPYING README TODO
+/usr/bin/kaffeine
+/usr/lib64/browser-plugins/*
+/usr/lib64/trinity/libkaffeine*
+/usr/lib64/trinity/libxinepart.*
+/usr/lib64/lib*.so.*
+/usr/lib64/libkaffeinepart.so
+/usr/share/apps/konqueror/servicemenus/kaffeine*.desktop
+/usr/share/apps/profiles/kaffeine.profile.xml
+/usr/share/apps/kaffeine/*
+/usr/share/mimelnk/application/*.desktop
+/usr/share/applications/kde/kaffeine.desktop
+%doc /usr/share/doc/HTML/*/kaffeine
+/usr/share/icons/*/*/*/*.png
+/usr/share/locale/
+/usr/share/services/*.desktop
+%exclude /usr/share/services/gstreamer_part.desktop
+/usr/share/servicetypes/*
+%exclude /usr/share/mimelnk/application/x-mplayer2.desktop
+
+%files devel
+%defattr(-,root,root,-)
+/usr/include/kaffeine/
+/usr/lib64/lib*.so
+%exclude /usr/lib64/libkaffeinepart.so
+
+%files gstreamer
+%defattr(-,root,root,-)
+/usr/lib64/trinity/libgstreamerpart.*
+/usr/share/apps/gstreamerpart/*
+/usr/share/services/gstreamer_part.desktop
+
+%changelog
+* Thu Jul 10 2008 Liu Di <liudidi@gmail.com> - 0.8.7-1mgc
+- 更新到 0.8.7
+
+* Fri Jul 4 2008 Ni Hui <shuizhuyuanluo@126.com> - 0.8.6-3.1mgc
+- 修正 alternate 定义的编码为 GB18030(patch 50 written by nihui, Jul.4th, 2008)
+- 戊子  六月初二
+
+* Sun Jun 29 2008 Ni Hui <shuizhuyuanluo@126.com> - 0.8.6-2.2mgc
+- 拆出 devel & gstreamer 包
+- 戊子  五月廿六
+
+* Mon Feb 04 2008 kde <athena_star {at} 163 {dot} com> - 0.8.6-1mgc
+- update to 0.8.6
+- use --prefix=/usr/lib64/browser-plugins instead of --prefix=/usr/lib64/mozilla for kaffeine-mozilla plugin's configuration, so that the firefox browser will not be disturbed by the kaffeineplugin.so plugin.
+
+* Sun Nov 4 2007 kde <athena_star {at} 163 {dot} com> - 0.8.5-1mgc
+- update to 0.8.5
+- update the zh_CN translation
+- update the kaffeine_append_file_add_real_and_flv_media.patch
+
+* Thu Jun 28 2007 kde <athena_star {at} 163 {dot} com> - 0.8.4-3mgc
+- update the zh_CN translation
+
+* Thu Jun 21 2007 KanKer <kanker@163.com> - 0.8.4-2mgc
+- disable Visual Plugin default
+
+* Sat Apr 21 2007 Liu Di <liudidi@gmail.com> - 0.8.4-1mgc
+- update to 0.8.4
+
+* Sun Apr 8 2007 kde <athena_star {at} 163 {dot} com> - 0.8.4svn20070327-4mgc
+- remove the --without-arts compiling option
+
+* Tue Mar 27 2007 kde <athena_star {at} 163 {dot} com> - 0.8.4svn20070327-3mgc
+- update to 0.8.4svn20070327
+
+* Wed Mar 21 2007 kde <athena_star {at} 163 {dot} com> - 0.8.4svn20070314-2mgc
+- modify the spec file
+- remove the unused link which point to the mozilla's plugin for opera
+
+* Fri Mar 16 2007 kde <athena_star {at} 163 {dot} com> - 0.8.4svn20070314-1mgc
+- update to 0.8.4svn20070314
+- modify the spec file
+
+* Mon Jan 01 2007 Liu Di <liudidi@gmail.com> - 0.8.3-1mgc
+- update to 0.8.3
+
+* Sat Oct 7 2006 kde <jack@linux.net.cn> 0.8.2-2mgc
+- modify the spec file slightly
+- rebuild in new environment
+
+* Tue Sep 12 2006 Liu Di <liudidi@gmail.com> - 0.8.2-1mgc
+- update to 0.8.2
+
+* Thu Jun 15 2006 kde <jack@linux.net.cn> 0.8.1-10mgc
+- fix the desktop files installation script from:
+install -m 644 /home/magic/rpmbuild/SOURCES/kaffeine.desktop $RPM_BUILD_ROOT/usr/share/applications/kde/
+install -m 644 /home/magic/rpmbuild/SOURCES/kaffeine_part.desktop $RPM_BUILD_ROOT/usr/share/apps/kaffeine/
+to: 
+install -D -m 644 /home/magic/rpmbuild/SOURCES/kaffeine.desktop $RPM_BUILD_ROOT/usr/share/applications/kde/kaffeine.desktop
+install -D -m 644 /home/magic/rpmbuild/SOURCES/kaffeine_part.desktop $RPM_BUILD_ROOT/usr/share/apps/kaffeine/kaffeine_part.desktop
+
+- restrain the information when running the nspluginscan command during the %post and %postun stages
+
+* Wed May 3 2006 kde <jack@linux.net.cn> 0.8.1-9mgc
+- move the kaffeine-mozilla plugin's path from /usr/plugins/  to /usr/lib/mozilla/plugins/
+- move the creation of the opera's plugin's path from the "post" to "install" section
+- remove the plugin's .la and .a files
+
+* Tue Apr 04 2006 liudi <liudidi@gmail.com>-8mgc
+- update to 0.8.1
+
+* Thu Nov 29 2005 KanKer <kanker@163.com>
+- add a checkbox to switch plugin and kaffeine_part
+
+* Mon Nov 28 2005 KanKer <kanker@163.com>
+- recover kpart
+- remove netscape-plugin engine
+
+* Sat Oct 22 2005 KanKer <kanker@163.com>
+- add a patch kaffeine-0.7.1-msmedia-jscript.patch from wall_john
+
+* Tue Oct 20 2005 KanKer <kanker@163.com>
+- add some media files support to kaffeine-mozilla plugin.
+
+* Sun Oct 16 2005 KanKer <kanker@163.com>
+- add rn-realmedia type support
+
+* Fri Oct 14 2005 KanKer <kanker@163.com>
+- add kaffeine-kpartlink-remove.patch
+
+* Wed Sep 21 2005 KanKer <kanker@163.com>
+- remove kaffeine-crash.patch
+
+* Sat Sep 17 2005 KanKer <kanker@163.com>
+- update 0.7.1
+
+* Tue Aug 25 2005 KanKer <kanker@163.com>
+- update cvs-20050825
+
+* Fri Aug 12 2005 KanKer <kanker@163.com>
+- update 0.7
+- disable xinit-workaround
+
+* Wed Jul 27 2005 KanKer <kanker@163.com>
+- update cvs-20050727
+
+* Sun Jun 5 2005 KanKer <kanker@163.com>
+- build for xorg
+- add a patch kaffeine-crash.patch
+
+* Thu Mar 22 2005 KanKer <kanker@163.com>
+- 0.6
+
+* Sun Mar 13 2005 KanKer <kanker@163.com>
+- fix kaffeine-mozilla plugin name bug.
+
+* Sat Mar 5 2005 KanKer <kanker@163.com>
+- patch for not read metainfo from wma,wmv,ra,rm etc.
+
+* Thu Mar 3 2005 KanKer <kanker@163.com>
+- build cvs20050303,add a patch for osd font.
+
+* Wed Feb 23 2005 kde <jack@linux.net.cn> 20050202cvs-3mgc
+- remove the header files
+
+* Wed Feb 16 2005 kde <jack@linux.net.cn>
+- optimize the spec file
+- add kaffeine.desktop
+
+* Fri Jan 28 2005 KanKer <kanker@163.com>
+- build cvs-20050202
+
+* Mon Oct 4 2004 KanKer <kanker@163.com>
+- build
+
+* Sun Sep 26 2004 KanKer <kanker@163.com>
+- build with the newest cvs package.
+
+* Fri Sep 24 2004 KanKer <kanker@163.com>
+- Add a chinese docbook,translated by bamfox(bamfox@163.com).
+
+* Tue Sep 23 2004 KanKer <kanker@163.com>
+- add a cmd-line playing patch.
+
+* Wed Sep 22 2004 KanKer <kanker@163.com>
+- add a mmst support patch.
+
+* Fri Sep 17 2004 KanKer <kanker@163.com>
+- add a cjk patch for read metainto currectly
+--2014-05-13 07:11:53--  http://apt.linuxfans.org/magic/3.0/sources/SOURCES.trinity/kaffeine/kaffeine-git20111215.tar.xz
+正在解析主机 apt.linuxfans.org (apt.linuxfans.org)... 219.231.240.68
+正在连接 apt.linuxfans.org (apt.linuxfans.org)|219.231.240.68|:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 404 Not Found
+2014-05-13 07:11:53 错误 404：Not Found。
+

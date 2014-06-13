@@ -1,5 +1,3 @@
-%define rversion 4.4.1
-%define release_number 1
 %define real_name kdevelop
 
 %define kdevplatform_home %{kde4_libdir}/cmake/kdevplatform
@@ -7,12 +5,12 @@
 Name: kdevelop4
 Summary: KDevelop IDE
 License: LGPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
-Source0: %{real_name}-%{rversion}.tar.bz2
+Version: 4.6.0
+Release: 1%{?dist}
+Source0: http://mirror.bjtu.edu.cn/kde/stable/kdevelop/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -27,8 +25,8 @@ KDevelop IDE.
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#     <--- 开发包
 %package -n %{name}-devel
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 Summary: KDevelop IDE: Build Environment
 Requires: libkdelibs4-devel
 Requires: %{name} = %{version}
@@ -40,7 +38,7 @@ to develop KDevelop IDE.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -93,6 +91,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_htmldir}/en/kdevelop/*
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.6.0-1
+- 更新到 4.6.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.2.3-1.1
 - 为 Magic 3.0 重建
 

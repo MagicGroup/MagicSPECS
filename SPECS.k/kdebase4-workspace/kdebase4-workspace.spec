@@ -1,7 +1,5 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name kde-workspace
 
 %define build_wallpaper_smallsize 1
@@ -10,12 +8,12 @@ Name: kdebase4-workspace
 Summary: The KDE Workspace Components
 Summary(zh_CN.UTF-8): KDE 工作空间组件
 License: GPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
-Source0: http://download.kde.org/stable/4.12.4/src/%{real_name}-4.11.8.tar.xz
+Version: 4.13.1
+Release: 3%{?dist}
+Source0: http://download.kde.org/stable/4.12.5/src/%{real_name}-4.11.9.tar.xz
 Source1: extras.tar.gz
 # magic logo for kwin decoration
 Source2: magic.png
@@ -384,7 +382,7 @@ Summary: Performance monitor daemon
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %prep
-%setup -q -n %{real_name}-4.11.8
+%setup -q -n %{real_name}-4.11.9
 
 %patch60 -p1
 
@@ -505,24 +503,25 @@ cp %{buildroot}%{kde4_appsdir}/kdm/sessions/kde-plasma.desktop %{buildroot}%{_da
 # 将 KDE 更改为 KDE 4
 sed -i s/Name\=KDE/Name\=KDE\ 4/g %{buildroot}%{_datadir}/xsessions/kde4.desktop
 
+magic_rpm_clean.sh
+
 %post
 /usr/sbin/ldconfig
 # generate ksplash background images
 echo "Generating ksplash background images..."
 pushd "%{kde4_appsdir}"
+mkdir -p ksplash/Themes/Simple/{1600x1200,1024x768,1280x1024,640x480,800x600}
 convert -resize 1600x1200^ -gravity Center -crop 1600x1200+0+0 +repage ksplash/Themes/Simple/1920x1200/background.png \
     ksplash/Themes/Simple/1600x1200/background.png
 convert -resize 1024x768^ -gravity Center -crop 1024x768+0+0 +repage ksplash/Themes/Simple/1920x1200/background.png \
     ksplash/Themes/Simple/1024x768/background.png
 convert -resize 1280x1024^ -gravity Center -crop 1280x1024+0+0 +repage ksplash/Themes/Simple/1920x1200/background.png \
     ksplash/Themes/Simple/1280x1024/background.png
-convert -resize 600x400^ -gravity Center -crop 600x400+0+0 +repage ksplash/Themes/Simple/1920x1200/background.png \
-    ksplash/Themes/Simple/600x400/background.png
+convert -resize 640x480^ -gravity Center -crop 600x400+0+0 +repage ksplash/Themes/Simple/1920x1200/background.png \
+    ksplash/Themes/Simple/640x480/background.png
 convert -resize 800x600^ -gravity Center -crop 800x600+0+0 +repage ksplash/Themes/Simple/1920x1200/background.png \
     ksplash/Themes/Simple/800x600/background.png
 popd
-
-magic_rpm_clean.sh
 
 %postun -p /usr/sbin/ldconfig
 
@@ -1233,6 +1232,15 @@ fi
 #重打包时要重新处理
 
 %changelog
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-3
+- 为 Magic 3.0 重建
+
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-2
+- 为 Magic 3.0 重建
+
+* Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
+- 更新到 4.13.1
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
 - 为 Magic 3.0 重建
 

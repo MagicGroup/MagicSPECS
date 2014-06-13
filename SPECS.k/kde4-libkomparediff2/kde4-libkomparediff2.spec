@@ -1,19 +1,18 @@
-%define rversion %{kde4_kdelibs_version}
 #define svn_number rc1
 %define real_name libkomparediff2
 
 %define kde4_enable_final_bool OFF
 
 Name: kde4-%{real_name}
-Summary: Cantor for KDE Edu
-Summary(zh_CN.UTF-8): KDE Edu 的数学组件 
+Summary: Library to compare files and strings
+Summary(zh_CN.UTF-8): 比较文件和字符串的库
 License: GPL v2 or Later
-Group: Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://ktorrent.org
-Version: %{rversion}
+Version: 4.13.1
 Release: 2%{?dist}
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -46,7 +45,7 @@ Contains the development files.
 %{name} 的开发文件。包含 libbtcore 的开发文件。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -71,17 +70,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %files
 %defattr(-,root,root,-)
 %doc COPYING
-#%{kde4_bindir}/*
 %{kde4_libdir}/*.so.*
-#%{kde4_plugindir}/*
-#%{kde4_iconsdir}/hicolor/*
-#%{kde4_xdgappsdir}/*.desktop
-#%{kde4_appsdir}/*
-#%{kde4_kcfgdir}/*.kcfg
-#%{kde4_servicesdir}/*
-#%{kde4_servicetypesdir}/*
-#%{kde4_configdir}/*
-#%{kde4_htmldir}/en/*
 
 %files devel
 %defattr(-,root,root,-)
@@ -90,6 +79,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/libkomparediff2/*.cmake
 
 %changelog
+* Wed Jun 04 2014 Liu Di <liudidi@gmail.com> - 4.13.1-2
+- 更新到 4.13.1
+
+* Wed Jun 04 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
+- 为 Magic 3.0 重建
+
 * Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 
