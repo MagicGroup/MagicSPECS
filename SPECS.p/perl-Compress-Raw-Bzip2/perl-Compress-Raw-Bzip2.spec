@@ -1,29 +1,29 @@
 Name:           perl-Compress-Raw-Bzip2
 Summary:        Low-level interface to bzip2 compression library
-Version:        2.045
-Release:        3%{?dist}
+Version:        2.064
+Release:        2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Compress-Raw-Bzip2/
 Source0:        http://search.cpan.org/CPAN/authors/id/P/PM/PMQS/Compress-Raw-Bzip2-%{version}.tar.gz 
 BuildRequires:  bzip2-devel
-BuildRequires:  perl(AutoLoader)
-BuildRequires:  perl(bytes)
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(Config)
 BuildRequires:  perl(constant)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Temp)
+%if !%{defined perl_bootstrap}
 BuildRequires:  perl(Test::Pod)
+%endif
 # XSLoader or DynaLoader; choose wisely
 BuildRequires:  perl(XSLoader)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(Exporter)
-Requires:       perl(File::Temp)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 # see above
 Requires:       perl(XSLoader)
 
+# Don't "provide" private Perl libs
 %{?perl_default_filter}
 
 %description
@@ -38,14 +38,13 @@ BUILD_BZIP2=0
 BZIP2_LIB=%{_libdir}
 export BUILD_BZIP2 BZIP2_LIB
 
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}
 
 %check
@@ -58,8 +57,77 @@ make test
 %{_mandir}/man3/Compress::Raw::Bzip2.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.045-3
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.064-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Feb  2 2014 Paul Howarth <paul@city-fan.org> - 2.064-1
+- Update to 2.064
+  - Handle non-PVs better (CPAN RT#91558)
+
+* Sun Nov  3 2013 Paul Howarth <paul@city-fan.org> - 2.063-1
+- Update to 2.063
+  - gcc -g3: final link failed: Memory exhausted (CPAN RT#88936)
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 2.062-2
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Mon Aug 12 2013 Paul Howarth <paul@city-fan.org> - 2.062-1
+- Update to 2.062 (no changes)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.061-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 12 2013 Petr Pisar <ppisar@redhat.com> - 2.061-2
+- Perl 5.18 rebuild
+
+* Mon May 27 2013 Paul Howarth <paul@city-fan.org> - 2.061-1
+- Update to 2.061
+  - Silence compiler warning by making 2nd parameter to DispStream a const char*
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.060-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan  8 2013 Paul Howarth <paul@city-fan.org> - 2.060-1
+- Update to 2.060 (no changes)
+
+* Sun Nov 25 2012 Paul Howarth <paul@city-fan.org> - 2.059-1
+- Update to 2.059
+  - Copy-on-write support (CPAN RT#81352)
+
+* Tue Nov 13 2012 Paul Howarth <paul@city-fan.org> - 2.058-1
+- Update to 2.058
+  - Compress::Raw::Bzip2 needs to use PERL_NO_GET_CONTEXT (CPAN RT#80318)
+  - Install to 'site' instead of 'perl' when perl version is 5.11+
+    (CPAN RT#79811)
+  - Update to ppport.h that includes SvPV_nomg_nolen (CPAN RT#78080)
+
+* Mon Aug  6 2012 Paul Howarth <paul@city-fan.org> - 2.055-1
+- Update to 2.055
+  - Fix misuse of magic in API (CPAN RT#78080)
+- Drop redundant explicit requires for perl(Exporter) and perl(File::Temp)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.052-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 2.052-4
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 2.052-3
+- Perl 5.16 rebuild
+
+* Fri Jun 01 2012 Petr Pisar <ppisar@redhat.com> - 2.052-2
+- Omit optional Test::Pod tests on bootstrap
+
+* Sun Apr 29 2012 Paul Howarth <paul@city-fan.org> - 2.052-1
+- Update to 2.052 (no changes)
+- Don't need to remove empty directories from buildroot
+
+* Sat Feb 18 2012 Paul Howarth <paul@city-fan.org> - 2.049-1
+- Update to 2.049 (no changes)
+
+* Sun Jan 29 2012 Paul Howarth <paul@city-fan.org> - 2.048-1
+- Update to 2.048 (set minimum Perl version to 5.6)
+- Don't use macros for commands
 
 * Tue Jan 10 2012 Paul Howarth <paul@city-fan.org> - 2.045-2
 - Rebuild for gcc 4.7 in Rawhide
