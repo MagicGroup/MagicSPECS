@@ -1,7 +1,7 @@
---- webkit-qtwebkit-23/Source/WTF/wtf/Platform.h.orig   2014-06-14 15:25:36.498868586 +0000
-+++ webkit-qtwebkit-23/Source/WTF/wtf/Platform.h        2014-06-14 15:27:16.633685480 +0000
+--- webkit-qtwebkit-23/Source/WTF/wtf/Platform.h.orig	2014-06-14 15:25:36.498868586 +0000
++++ webkit-qtwebkit-23/Source/WTF/wtf/Platform.h	2014-06-14 15:27:16.633685480 +0000
 @@ -76,8 +76,7 @@
-
+ 
  /* CPU(MIPS) - MIPS 32-bit */
  /* Note: Only O32 ABI is tested, so we enable it for O32 ABI for now.  */
 -#if (defined(mips) || defined(__mips__) || defined(MIPS) || defined(_MIPS_)) \
@@ -20,7 +20,7 @@
 +#define ENABLE_ASSEMBLER 0
 +#endif
  #endif /* MIPS */
-
+ 
  /* CPU(PPC) - PowerPC 32-bit */
 @@ -874,7 +878,7 @@
      || CPU(ALPHA) \
