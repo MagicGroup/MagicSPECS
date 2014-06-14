@@ -1,8 +1,8 @@
 Name:           perl-Parse-CPAN-Meta
 # dual-lifed module needs to match the epoch in perl.spec
 Epoch:          1
-Version:        1.4404
-Release:        5%{?dist}
+Version:        1.4414
+Release:        3%{?dist}
 Summary:        Parse META.yml and META.json CPAN meta-data files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -10,15 +10,27 @@ URL:            http://search.cpan.org/dist/Parse-CPAN-Meta/
 Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/Parse-CPAN-Meta-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
-BuildRequires:  perl(CPAN::Meta::YAML) >= 0.008
+BuildRequires:  perl(CPAN::Meta::YAML) >= 0.011
+# CPAN::Meta needs Parse::CPAN::Meta
+%if 0%{!?perl_bootstrap:1}
+BuildRequires:  perl(CPAN::Meta)
+BuildRequires:  perl(CPAN::Meta::Requirements)
+%endif
+BuildRequires:  perl(Encode)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec) >= 0.80
 BuildRequires:  perl(File::Spec::Functions)
 BuildRequires:  perl(JSON::PP) >= 2.27200
+BuildRequires:  perl(List::Util)
 BuildRequires:  perl(Test::More) >= 0.47
-Requires:       perl(CPAN::Meta::YAML) >= 0.008
-Requires:       perl(Exporter)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(vars)
+BuildRequires:  perl(version)
+BuildRequires:  perl(warnings)
+
+Requires:       perl(CPAN::Meta::YAML) >= 0.011
 Requires:       perl(JSON::PP) >= 2.27200
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -39,7 +51,6 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=%{buildroot}
 
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
 
@@ -52,6 +63,25 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.4414-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr  8 2014 Paul Howarth <paul@city-fan.org> - 1:1.4414-2
+- Don't BR: CPAN::Meta & CPAN::Meta::Requirements when bootstrapping
+
+* Wed Mar 12 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 1:1.4414-1
+- Upstream update.
+- Reflect upstream R:/BR:-changes.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.4404-291
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Petr Pisar <ppisar@redhat.com> - 1:1.4404-290
+- Increase release to favour standalone package
+
+* Fri Jul 12 2013 Petr Pisar <ppisar@redhat.com> - 1:1.4404-6
+- Perl 5.18 rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.4404-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
