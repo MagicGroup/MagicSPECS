@@ -1,31 +1,41 @@
-%define real_name HTML-Parser
-
-Name:           perl-%{real_name}
+Name:           perl-HTML-Parser
 Summary:        Perl module for parsing HTML
-Version:        3.69
-Release:        9%{?dist}
+Version:        3.71
+Release:        5%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/HTML-Parser-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/HTML-Parser/
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+BuildRequires:  perl
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(FileHandle)
 BuildRequires:  perl(HTML::Tagset) >= 3
 %if %{undefined perl_bootstrap}
 # This creates cycle with perl-HTTP-Message.
 BuildRequires:  perl(HTTP::Headers)
 %endif
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(SelectSaver)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(threads)
 BuildRequires:  perl(URI)
+BuildRequires:  perl(vars)
 BuildRequires:  perl(XSLoader)
 Requires:       perl(HTML::Tagset) >= 3
 Requires:       perl(HTTP::Headers)
+Requires:       perl(IO::File)
 Requires:       perl(URI)
-Requires:       perl(XSLoader)
 
 %{?perl_default_filter}
 %{?perl_default_subpackage_tests}
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(HTML::Tagset\\)$
 
 %description
 The HTML-Parser module for perl to parse and extract information from
@@ -33,25 +43,25 @@ HTML documents, including the HTML::Entities, HTML::HeadParser,
 HTML::LinkExtor, HTML::PullParser, and HTML::TokeParser modules.
 
 %prep
-%setup -q -n %{real_name}-%{version}
+%setup -q -n HTML-Parser-%{version}
 chmod -c a-x eg/*
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 file=%{buildroot}%{_mandir}/man3/HTML::Entities.3pm
-iconv -f iso-8859-1 -t utf-8 <"$file" > "${file}_"
-mv -f "${file}_" "$file"
+iconv -f iso-8859-1 -t utf-8 <"$file" > "${file}_" && \
+    touch -r ${file} ${file}_ && \
+    mv -f "${file}_" "$file"
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes README TODO eg/
@@ -59,10 +69,35 @@ chmod -R u+w %{buildroot}/*
 %{perl_vendorarch}/auto/HTML/
 %{_mandir}/man3/*.3pm*
 
-
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 3.69-9
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.71-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 3.71-4
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.71-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Aug 01 2013 Petr Šabata <contyk@redhat.com> - 3.71-2
+- Fix the dependency list
+- Fix bogus dates in the changelog
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 3.71-2
+- Perl 5.18 rebuild
+
+* Mon May 13 2013 Jitka Plesnikova <jplesnik@redhat.com> - 3.71-1
+- 3.71 bump
+
+* Tue Apr 02 2013 Jitka Plesnikova <jplesnik@redhat.com> - 3.70-1
+- 3.70 bump
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.69-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Nov 23 2012 Petr Šabata <contyk@redhat.com> - 3.69-9
+- Fix the dep list
+- Modernize the spec a bit
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.69-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -175,7 +210,7 @@ chmod -R u+w %{buildroot}/*
 * Mon Jun 05 2006 Jason Vas Dias <jvdias@redhat.com> - 3.54-1
 - upgrade to 3.54
 
-* Mon Mar 22 2006 Jason Vas Dias <jvdias@redhat.com> - 3.51-1
+* Wed Mar 22 2006 Jason Vas Dias <jvdias@redhat.com> - 3.51-1
 - upgrade to 3.51
 
 * Mon Feb 20 2006 Jason Vas Dias <jvdias@redhat.com> - 3.50-1
@@ -238,7 +273,7 @@ chmod -R u+w %{buildroot}/*
 * Wed Jan 09 2002 Tim Powers <timp@redhat.com>
 - automated rebuild
 
-* Thu Jul 18 2001 Crutcher Dunnavant <crutcher@redhat.com> 3.25-2
+* Thu Jul 19 2001 Crutcher Dunnavant <crutcher@redhat.com> 3.25-2
 - imported from mandrake. tweaked man path.
 
 * Tue Jul 03 2001 François Pons <fpons@mandrakesoft.com> 3.25-1mdk
