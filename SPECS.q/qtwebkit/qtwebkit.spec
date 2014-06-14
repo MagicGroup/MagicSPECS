@@ -52,6 +52,9 @@ Patch107: 0007-Correct-range-used-for-Emoji-checks.patch
 Patch108: 0008-Qt-RepaintRequested-signal-sometimes-not-emitted.patch
 Patch109: 0009-TexMap-Remove-ParentChange-in-TextureMapperLayer.patch
 
+Patch200: qtwebkit-2.3.3-mips64el-fix.patch
+Patch201: qtwebkit-2.3.3-fix-ANGLE.patch
+
 BuildRequires: bison
 BuildRequires: chrpath
 BuildRequires: flex
@@ -119,7 +122,8 @@ Provides:  qt4-webkit-devel%{?_isa} = 2:%{version}-%{release}
 %patch108 -p1 -b .0008
 %patch109 -p1 -b .0009
 
-
+%patch200 -p1 -b .mips64el
+%patch201 -p1 -b .angle
 
 %build 
 
