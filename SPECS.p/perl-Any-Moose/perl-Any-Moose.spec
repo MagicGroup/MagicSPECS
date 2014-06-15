@@ -1,6 +1,6 @@
 Name:           perl-Any-Moose
-Summary:        Use Moose or Mouse automagically
-Version:        0.18
+Summary:        Use Moose or Mouse automagically (DEPRECATED)
+Version:        0.21
 Release:        6%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -11,9 +11,11 @@ BuildArch:      noarch
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Moose)
-BuildRequires:  perl(MooseX::Types)
 BuildRequires:  perl(Mouse) >= 0.40
+# MouseX::Types requires Any::Moose
+%if !0%{?perl_bootstrap}
 BuildRequires:  perl(MouseX::Types)
+%endif
 BuildRequires:  perl(Test::More)
 
 # virtual provides in perl-Moose and perl-Mouse
@@ -27,6 +29,8 @@ Provides:       %{name}-tests = %{version}-%{release}
 %{?perl_default_filter}
 
 %description
+Any::Moose is deprecated - please use Moo for new code.
+
 This module allows one to take advantage of the features Moose/Mouse
 provides, while allowing one to let the program author determine if Moose
 or Mouse should be used; when use'd, we load Mouse if Moose isn't already
@@ -50,7 +54,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes LICENSE README t/
@@ -58,17 +62,45 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.18-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.18-5
-- 为 Magic 3.0 重建
+* Tue Jan 28 2014 Lubomir Rintel <lkundrak@v3.sk> - 0.21-6
+- Drop an extra dependency
 
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.18-4
-- 为 Magic 3.0 重建
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.21-5
+- Perl 5.18 re-rebuild of bootstrapped packages
 
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.18-3
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Petr Pisar <ppisar@redhat.com> - 0.21-4
+- Perl 5.18 rebuild
+
+* Sat Aug  3 2013 Jochen Schmitt <Jochen herr-schmitt de> - 0.21-3
+- Rebuilt for perl-5.18.0
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Mar 03 2013 Iain Arnell <iarnell@gmail.com> 0.21-1
+- update to latest upstream version (still deprecated)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Dec 31 2012 Iain Arnell <iarnell@gmail.com> 0.20-1
+- update to latest upstream version which is deprecated in favor of perl-Moo
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.18-5
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 0.18-4
+- Perl 5.16 rebuild
+
+* Fri Apr 06 2012 Iain Arnell <iarnell@gmail.com> 0.18-3
+- avoid circular build-dependency with perl-MooseX-Types (patch from Paul
+  Howarth rhbz#810521)
 
 * Sun Jan 22 2012 Iain Arnell <iarnell@gmail.com> 0.18-2
 - drop tests-subpackage; move tests to main package documentation
