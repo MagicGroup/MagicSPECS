@@ -1,27 +1,30 @@
-# To skip the lengthy test suite, use:
-# rpmbuild --without checks
-
 Summary:	Perl module implementing the Diffie-Hellman key exchange system
 Name:		perl-Crypt-DH
-Version:	0.06
-Release:	19%{?dist}
+Version:	0.07
+Release:	6%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-DH/
-Source0:	http://search.cpan.org/CPAN/authors/id/B/BT/BTROTT/Crypt-DH-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/M/MI/MITHALDU/Crypt-DH-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
-BuildRequires:	perl(ExtUtils::MakeMaker), perl(Test::More)
-# Pull in Math::BigInt::GMP for GMP support for suitably recent versions of Math::BigInt
-# else use Math::GMP
-%if %(perl -MMath::BigInt -e 'use Math::BigInt 1.87;' 2>/dev/null && echo 1 || echo 0)
-BuildRequires:	perl(Math::BigInt::GMP)
-Requires:	perl(Math::BigInt::GMP)
-%else
-BuildRequires:	perl(Math::GMP)
-Requires:	perl(Math::GMP)
-%endif
+# =============== Module Build ==================
+BuildRequires:	perl(base)
+BuildRequires:	perl(Cwd)
+BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(File::Path)
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(Text::ParseWords)
+# =============== Module Runtime ================
+BuildRequires:	perl(Math::BigInt) >= 1.60
+BuildRequires:	perl(Math::BigInt::GMP) >= 1.24
+# =============== Test Suite ====================
+BuildRequires:	perl(Test::Builder::Module)
+# =============== Module Runtime ================
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Math::BigInt) >= 1.60
+Requires:	perl(Math::BigInt::GMP) >= 1.24
 
 %description
 Crypt::DH is a Perl implementation of the Diffie-Hellman key exchange system.
@@ -33,35 +36,67 @@ private keys, between them.
 %prep
 %setup -q -n Crypt-DH-%{version}
 
+# Remove unnecessary exec bits
+find . -type f -print0 | xargs -0 chmod -c -x
+
+# Fix line endings of documentation
+sed -i -e 's/\r$//' README
+
 %build
-perl Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor --skipdeps
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}
 
 %check
-%{!?_without_checks:}
+make test
 
 %clean
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
-%doc Changes ToDo
+%doc Changes README ToDo
 %{perl_vendorlib}/Crypt/
 %{_mandir}/man3/Crypt::DH.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-19
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-18
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 0.07-4
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jul  6 2012 Paul Howarth <paul@city-fan.org> 0.07-1
+- Update to 0.07
+  - Made Math::BigInt::* dependency dynamic to avoid Math::BigInt falling back
+    to BigInt backends that are too slow for practical use
+- This release by MITHALDU -> update source URL
+- Always require perl(Math::BigInt) >= 1.60 and perl(Math::BigInt::GMP) ≥ 1.24
+- Drop BR: perl(Test::More) as it's bundled
+- BR: perl(Test::Builder::Module), requirement of bundled perl(Test::More)
+- BR: perl(base), perl(Cwd), perl(File::Path), perl(File::Spec),
+  perl(File::Temp) and perl(Text::ParseWords) for installer
+- Use --skipdeps with Makefile.PL to stop it trying to download and install
+  Math::BigInt::Pari
+- Drop without-checks conditional as test suite is no longer slow
+- Remove unnecessary exec bits from files in upstream tarball
+- Package README, with fixed line endings
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> 0.06-18
+- Perl 5.16 rebuild
 
 * Tue Jan 10 2012 Paul Howarth <paul@city-fan.org> 0.06-17
 - Nobody else likes macros for commands
