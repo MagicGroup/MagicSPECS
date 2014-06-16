@@ -1,13 +1,13 @@
 Name:           perl-Config-MVP
-Version:        2.200001
-Release:        7%{?dist}
+Version:        2.200003
+Release:        4%{?dist}
 Summary:        Multivalue-property package-oriented configuration
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Config-MVP/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Config-MVP-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(Class::Load) >= 0.06
+BuildRequires:  perl(Class::Load) >= 0.17
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(lib)
@@ -55,28 +55,41 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.200001-7
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.200003-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.200001-6
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Petr Pisar <ppisar@redhat.com> - 2.200003-3
+- Perl 5.18 rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.200001-5
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.200003-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Iain Arnell <iarnell@gmail.com> 2.200003-1
+- update to latest upstream version
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.200002-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.200002-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 2.200002-2
+- Perl 5.16 rebuild
+
+* Mon Mar 19 2012 Iain Arnell <iarnell@gmail.com> 2.200002-1
+- update to latest upstream version
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.200001-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
