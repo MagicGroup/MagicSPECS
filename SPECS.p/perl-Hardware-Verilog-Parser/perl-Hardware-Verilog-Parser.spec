@@ -1,18 +1,23 @@
 Name:           perl-Hardware-Verilog-Parser
 Version:        0.13
-Release:        10%{?dist}
+Release:        16%{?dist}
 Summary:        Complete grammar for parsing Verilog code using perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Hardware-Verilog-Parser/
 Source0:        http://www.cpan.org/authors/id/G/GS/GSLONDON/Hardware-Verilog-Parser-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+Patch0:         Hardware-Verilog-Parser-0.13-grammar.patch
+Patch1:         Hardware-Verilog-Parser-0.13-rt51080.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Parse::RecDescent)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Filter bogus requires/provides of PrecompiledParser
+%global __provides_exclude ^perl\\((Parse::RecDescent::)?PrecompiledParser\\)
+%global __requires_exclude ^perl\\(PrecompiledParser\\)
 
 %description
 This module defines the complete grammar needed to parse any Verilog code.
@@ -22,41 +27,69 @@ which run through Verilog code and perform specific functions.
 %prep
 %setup -q -n Hardware-Verilog-Parser-%{version}
 
-find . -type f | xargs %{__perl} -pi -e 's|#! /bin/perl|#! /usr/bin/perl|'
+# Fix shellbangs
+find . -type f | xargs perl -pi -e 's|#! /bin/perl|#! /usr/bin/perl|'
+
+# Fix FTBFS due to typos in grammar (#839599)
+%patch0
+
+# Fix "Use of uninitialized value in array dereference" (CPAN RT#51080)
+%patch1
 
 %build
 ./generate_precompiled_parser.pl
-
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{perl_vendorlib}/Hardware
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
+# CPAN RT#51080
+perl -Iblib/lib ./parser.pl ./test1.v
 
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc Changes readme.txt test1.v
-%dir %{perl_vendorlib}/Hardware/Verilog/
-%{perl_vendorlib}/Hardware/Verilog/*
-%{_mandir}/man3/*
+%{perl_vendorlib}/Hardware/Verilog/
+%{_mandir}/man3/Hardware::Verilog::Parser.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.13-10
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Petr Pisar <ppisar@redhat.com> - 0.13-14
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Nov  5 2012 Paul Howarth <paul@city-fan.org> - 0.13-12
+- Fix FTBFS due to typos in grammar (#839599)
+- Fix "Use of uninitialized value in array dereference" (CPAN RT#51080)
+- Filter bogus requires/provides of PrecompiledParser
+- BR: perl(Data::Dumper)
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Don't need to remove empty directories from the buildroot
+- Make %%files list more explicit
+- Drop %%defattr, redundant since rpm 4.4
+- Don't use macros for commands
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 0.13-10
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -68,13 +101,13 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Fri Dec 17 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.13-6
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Sun May 02 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.13-5
 - Mass rebuild with perl-5.12.0
 
 * Mon Dec  7 2009 Stepan Kasal <skasal@redhat.com> - 0.13-4
-- rebuild against perl 5.10.1
+- Rebuild against perl 5.10.1
 
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
@@ -83,4 +116,4 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
 * Sun Dec 14 2008 Chitlesh GOORAH <chitlesh [AT] fedoraproject DOT org> 0.13-1
-- Specfile autogenerated by cpanspec 1.77.
+- Specfile autogenerated by cpanspec 1.77

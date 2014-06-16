@@ -1,0 +1,65 @@
+--- generate_precompiled_parser.pl
++++ generate_precompiled_parser.pl
+@@ -277,7 +277,7 @@
+         'input'
+ 	<commit>
+         range(?)
+-        direction_port_identifier_list[$item[1],@{$item{range}->[0]}]
++        direction_port_identifier_list[$item[1],@{$item{q{range(?)}}->[0]}]
+         ';'
+ 	| <error?> <reject>
+ 
+@@ -285,7 +285,7 @@
+         'output'
+ 	<commit>
+         range(?)
+-        direction_port_identifier_list[$item[1],@{$item{range}->[0]}]
++        direction_port_identifier_list[$item[1],@{$item{q{range(?)}}->[0]}]
+        ';'
+ 	| <error?> <reject>
+ 
+@@ -293,7 +293,7 @@
+         'inout'
+ 	<commit>
+         range(?)
+-        direction_port_identifier_list[$item[1],@{$item{range}->[0]}]
++        direction_port_identifier_list[$item[1],@{$item{q{range(?)}}->[0]}]
+        ';'
+ 	| <error?> <reject>
+ 
+@@ -371,7 +371,7 @@
+         'reg'
+  	<commit>
+        range(?) 
+-        declare_register_name_comma_declare_register_name[$item[1],@{$item{range}->[0]}]
++        declare_register_name_comma_declare_register_name[$item[1],@{$item{q{range(?)}}->[0]}]
+         ';'
+ 	| <error?> <reject>
+ 
+@@ -505,7 +505,7 @@
+         vectored_or_scalared(?)
+         range(?)
+         delay3(?)
+-        declaring_net_identifier_comma_declaring_net_identifier[$item{net_type},@{$item{range}->[0]}]
++        declaring_net_identifier_comma_declaring_net_identifier[$item{net_type},@{$item{q{range(?)}}->[0]}]
+         ';'
+ 	| <error?> <reject>
+ 
+@@ -537,7 +537,7 @@
+         charge_strength(?)
+         range(?)
+         delay3(?)                
+-        declaring_net_identifier_comma_declaring_net_identifier[ 'trireg' ,@{$item{range}->[0]}]
++        declaring_net_identifier_comma_declaring_net_identifier[ 'trireg' ,@{$item{q{range(?)}}->[0]}]
+         ';'
+ 	| <error?> <reject>
+ 
+@@ -1100,7 +1100,7 @@
+          module_instance_identifier
+         range(?)
+ 	{
+-	$return = [ $item{module_instance_identifier}, $item{range} ];
++	$return = [ $item{module_instance_identifier}, $item{q{range(?)}} ];
+ 	}
+ 
+ list_of_module_connections :
