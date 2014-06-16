@@ -1,0 +1,40 @@
+From 61d08deaa4ac71102057c17df2b1ee44ebafec02 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 10 Jun 2014 07:31:52 +0200
+Subject: [PATCH] Fix GCC format-security warning
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+RT#96352
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ libiptc.xs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libiptc.xs b/libiptc.xs
+index 313f746..ad36496 100644
+--- a/libiptc.xs
++++ b/libiptc.xs
+@@ -313,7 +313,7 @@ list_rules_IPs(self, type, chain)
+ 	    /* Parse what type was requested */
+ 	    if      (strcasecmp(type, "dst") == 0) the_type = 'd';
+ 	    else if (strcasecmp(type, "src") == 0) the_type = 's';
+-	    else croak(errmsg);
++	    else croak("%s", errmsg);
+ 
+ 	    while(entry) {
+ 		count++;
+@@ -331,7 +331,7 @@ list_rules_IPs(self, type, chain)
+ 			sv = newSVpv(buf, 0);
+ 		        break;
+ 		    default:
+-		        croak(errmsg);
++		        croak("%s", errmsg);
+ 		    }
+ 		    XPUSHs(sv_2mortal(sv));
+ 		}
+-- 
+1.9.3
+
