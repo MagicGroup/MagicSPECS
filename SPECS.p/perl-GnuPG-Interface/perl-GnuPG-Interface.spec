@@ -1,20 +1,43 @@
 Name:           perl-GnuPG-Interface
-Version:        0.44
-Release:        6%{?dist}
+Version:        0.50
+Release:        3%{?dist}
 Summary:        Perl interface to GnuPG
 Group:          Development/Libraries
 License:        GPLv2+ or Artistic
 URL:            http://search.cpan.org/dist/GnuPG-Interface
 Source0:        http://cpan.org/modules/by-module/GnuPG/GnuPG-Interface-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gpg
-BuildRequires:  perl(Any::Moose)
+
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Class::Struct)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(English)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Pod::Perldoc)
+BuildRequires:  perl(Fatal)
+BuildRequires:  perl(Fcntl)
+BuildRequires:  perl(File::Compare)
+BuildRequires:  perl(File::Find)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(IO::Seekable)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Math::BigInt)
+BuildRequires:  perl(Module::Install::Base)
+BuildRequires:  perl(Moo)
+BuildRequires:  perl(Moo::Role)
+BuildRequires:  perl(MooX::HandlesVia)
+BuildRequires:  perl(MooX::late)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Symbol)
+BuildRequires:  perl(vars)
+BuildRequires:  perl(warnings)
 
 Requires:       gpg
-Requires:       perl(Any::Moose)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
@@ -26,7 +49,8 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %setup -q -n GnuPG-Interface-%{version}
 perldoc -t perlgpl > GPL
 perldoc -t perlartistic > Artistic
-
+# gpg as being used by the testsuite requires test to be 0700
+chmod 0700 test
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -35,26 +59,49 @@ make %{?_smp_mflags}
 %install
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-chmod 0700 test
-# GnuPG-Interface needs to read from /dev/tty to run its tests.
-# 
+make test
 
 %files
-%doc ChangeLog README NEWS THANKS COPYING GPL Artistic
+%doc Changes README
 %{perl_vendorlib}/GnuPG
 %{_mandir}/man3/*.3*
 
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.44-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.44-5
-- 为 Magic 3.0 重建
+* Sat Apr 19 2014 Ralf Corsépius <corsepiu@fedoraproject.org> - 0.50-2
+- Rework BR:s (RHBZ #1079473).
+- Reactivate tests.
+
+* Sun Mar 16 2014 Emmanuel Seyman <emmanuel@seyman.fr> - 0.50-1
+- Update to 0.50
+
+* Sun Aug 04 2013 Petr Pisar <ppisar@redhat.com> - 0.46-4
+- Perl 5.18 rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.46-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.46-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Oct 28 2012 Emmanuel Seyman <emmanuel@seyman.fr> - 0.46-1
+- Update to 0.46
+
+* Sun Sep 30 2012 Emmanuel Seyman <emmanuel@seyman.fr> - 0.45-1
+- Update to 0.45
+- Remove BuildRoot definition
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.44-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 0.44-5
+- Perl 5.16 rebuild
 
 * Mon Jan 16 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 0.44-1
 - Add Pod::Perldoc (perldoc) as a BR
@@ -118,7 +165,7 @@ chmod 0700 test
 
 * Mon Feb 13 2006 Matt Domsch <Matt_Domsch@dell.com> 0.33-6
 - add 10 years to expiry date of test gpg keys,
-  lets '' succeed after 2006-02-05.
+  lets 'make test' succeed after 2006-02-05.
 - rebuild for FC5
 
 * Thu Oct 06 2005 Ralf Corsepius <rc040203@freenet.de> - 0.33-5
