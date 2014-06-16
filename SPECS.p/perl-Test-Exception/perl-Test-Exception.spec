@@ -1,18 +1,17 @@
 Name:           perl-Test-Exception
-Version:        0.31
-Release:        9%{?dist}
+Version:        0.32
+Release:        4%{?dist}
 Summary:        Library of test functions for exception based Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Exception/
 Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADIE/Test-Exception-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
-BuildRequires:  perl(Module::Build) >= 0.35
 BuildRequires:  perl(base)
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Exporter)
-BuildRequires:  perl(Pod::Coverage)
+BuildRequires:  perl(Module::Build) >= 0.38
 BuildRequires:  perl(Sub::Uplevel) >= 0.18
 BuildRequires:  perl(Test::Builder) >= 0.7
 BuildRequires:  perl(Test::Builder::Tester) >= 1.07
@@ -20,7 +19,7 @@ BuildRequires:  perl(Test::Harness) >= 2.03
 BuildRequires:  perl(Test::More) >= 0.7
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Simple) >= 0.7
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -32,19 +31,17 @@ Test::More and friends.
 %prep
 %setup -q -n Test-Exception-%{version}
 
-find . -type f -perm +100 -exec chmod a-x {} \;
+# Remove unnecessary exec permissions
+chmod -c -x Changes
 
 %build
-%{__perl} Build.PL installdirs=vendor
+perl Build.PL installdirs=vendor
 ./Build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
 ./Build test
@@ -53,14 +50,31 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%{perl_vendorlib}/Test/
+%{_mandir}/man3/Test::Exception.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.31-9
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.32-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.32-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 0.32-2
+- Perl 5.18 rebuild
+
+* Mon Apr 29 2013 Paul Howarth <paul@city-fan.org> - 0.32-1
+- Update to 0.32
+  - Fixed tests that broke due to diagnostic changes in Test::More 0.99
+- Don't use macros for commands
+- Don't need to remove empty directories from the buildroot
+- Drop %%defattr, redundant since rpm 4.4
+- Make %%files list more explicit
+- Remove bogus exec permission on Changes file
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Thu Oct 18 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.31-8
 - Specify all dependencies.
@@ -81,7 +95,7 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Wed Dec 22 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.31-2
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Fri Dec 10 2010 Steven Pritchard <steve@kspei.com> 0.31-1
 - Update to 0.31.
@@ -139,8 +153,8 @@ rm -rf $RPM_BUILD_ROOT
 - Avoid .packlist creation with Module::Build >= 0.2609.
 - Trust that %%{perl_vendorlib} is defined.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 0.20-2
-- rebuilt
+* Wed Apr  6 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 0.20-2
+- Rebuilt
 
 * Fri Nov  5 2004 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0.20-1
 - Update to 0.20.
