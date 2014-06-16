@@ -3,30 +3,27 @@ Summary:        FastCGI Perl bindings
 # needed to properly replace/obsolete fcgi-perl
 Epoch:          1
 Version:        0.74
-Release:        6%{?dist}
+Release:        11%{?dist}
 # same as fcgi
 License:        OML
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/FCGI-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/FCGI
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+BuildRequires:  perl(constant)
 BuildRequires:  perl(Cwd)
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(ExtUtils::Liblist)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(Getopt::Long)
 BuildRequires:  perl(IO::File)
-# Run-requires:
-BuildRequires:  perl(DynaLoader)
-BuildRequires:  perl(Exporter)
-# Tests:
 BuildRequires:  perl(Test)
-
-Provides:       fcgi-perl =  %{epoch}:%{version}-%{release}
-Obsoletes:      fcgi-perl =< 2.4.0
+# Dropped during f19 development cycle
+Obsoletes:      %{name}-tests <= 1:0.74-6
 
 %{?perl_default_filter}
-%{?perl_subpackage_tests: %perl_subpackage_tests test.pl .proverc test.t }
 
 %description
 %{summary}.
@@ -35,24 +32,18 @@ Obsoletes:      fcgi-perl =< 2.4.0
 %setup -q -n FCGI-%{version}
 find . -type f -exec chmod -c -x {} +
 
-echo "test.pl" > .proverc
-# limitation in the macros, currently -- must have at least one .t :\
-cp test.pl test.t
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
-
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc ChangeLog README LICENSE.TERMS echo.PL remote.PL threaded.PL
@@ -61,8 +52,26 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:0.74-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.74-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Sep 02 2013 Petr Pisar <ppisar@redhat.com> - 1:0.74-10
+- Correct tests sub-package obsoleteness
+- Old fcgi-perl provides removed
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.74-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Petr Pisar <ppisar@redhat.com> - 1:0.74-8
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.74-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Nov 26 2012 Petr Šabata <contyk@redhat.com> - 1:0.74-6
+- Add missing buildtime dependencies
+- Drop command macros
+- Drop the tests subpackage
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.74-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
