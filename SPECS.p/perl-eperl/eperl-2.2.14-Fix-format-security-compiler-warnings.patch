@@ -1,0 +1,53 @@
+From f97b4b836298245e8631ad942d788f3d0a1c3c54 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 13 May 2014 15:47:50 +0200
+Subject: [PATCH] Fix format-security compiler warnings
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Compilation by GCC with -Wall -Werror=format-security flags raises few
+errors. This patch fixes them.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1058664
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ eperl_main.c  | 4 ++--
+ eperl_perl5.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/eperl_main.c b/eperl_main.c
+index e998607..6747cf7 100644
+--- a/eperl_main.c
++++ b/eperl_main.c
+@@ -150,12 +150,12 @@ void give_version(void)
+ 
+ void give_readme(void)
+ {
+-    fprintf(stdout, ePerl_README);
++    fputs(ePerl_README, stdout);
+ }
+ 
+ void give_license(void)
+ {
+-    fprintf(stdout, ePerl_LICENSE);
++    fputs(ePerl_LICENSE, stdout);
+ }
+ 
+ void give_img_logo(void)
+diff --git a/eperl_perl5.c b/eperl_perl5.c
+index d1a981a..045d8cb 100644
+--- a/eperl_perl5.c
++++ b/eperl_perl5.c
+@@ -212,7 +212,7 @@ int Perl5_Run(int myargc, char **myargv, int mode, int fCheck, int keepcwd, char
+             IO_restore_stdout();
+             IO_restore_stderr();
+             if ((cpBuf = ePerl_ReadErrorFile(perlstderr, perlscript, source)) != NULL) {
+-                fprintf(stderr, cpBuf);
++                fputs(cpBuf, stderr);
+             }
+             CU(EX_FAIL);
+         }
+-- 
+1.9.0
+
