@@ -1,23 +1,29 @@
+%global cpan_version 2.12_001
+
 Summary: XS Blowfish implementation for Perl
 Name: perl-Crypt-Blowfish
-Version: 2.10
-Release: 17%{?dist}
+Version: %(echo '%{cpan_version}' | tr _ .)
+Release: 3%{?dist}
 License: Copyright only
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Crypt-Blowfish/
-Source0: http://search.cpan.org/CPAN/authors/id/D/DP/DPARIS/Crypt-Blowfish-%{version}.tar.gz
+Source0: http://search.cpan.org/CPAN/authors/id/D/DA/DAVIDO/Crypt-Blowfish-%{cpan_version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires: perl(Carp)
 # Recommended:
 Requires: perl(Crypt::CBC)
+BuildRequires: perl
 BuildRequires: perl(ExtUtils::MakeMaker)
 # Runt-time:
 BuildRequires: perl(Carp)
 BuildRequires: perl(DynaLoader)
 BuildRequires: perl(Exporter)
+BuildRequires: perl(strict)
+BuildRequires: perl(vars)
 # Tests:
-BuildRequires: perl(Crypt::CBC)
+BuildRequires: perl(Benchmark)
+# Optional tests:
+BuildRequires: perl(Crypt::CBC) >= 1.22
 
 %description
 Crypt::Blowfish is an XS-based implementation of the Blowfish
@@ -26,7 +32,7 @@ take full advantage of Crypt::CBC when desired. Blowfish keys may be
 up to 448 bits (56 bytes) long.
 
 %prep
-%setup -q -n Crypt-Blowfish-%{version}
+%setup -q -n Crypt-Blowfish-%{cpan_version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -41,7 +47,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,8 +60,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.10-17
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.12.001-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.12.001-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 19 2013 Petr Pisar <ppisar@redhat.com> - 2.12.001-1
+- 2.12_001 bump
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 2.10-18
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
