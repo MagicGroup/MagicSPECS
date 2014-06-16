@@ -1,0 +1,10 @@
+--- webkit-qtwebkit-23-orig/Source/ThirdParty/ANGLE/src/compiler/glslang.y	2014-06-14 11:37:18.866855402 +0000
++++ webkit-qtwebkit-23/Source/ThirdParty/ANGLE/src/compiler/glslang.y	2014-06-14 11:45:40.459885655 +0000
+@@ -47,6 +47,7 @@
+ %expect 1 /* One shift reduce conflict because of if | else */
+ %pure-parser
+ %parse-param {TParseContext* context}
++%lex-param {YYLEX_PARAM}
+ 
+ %union {
+     struct {
