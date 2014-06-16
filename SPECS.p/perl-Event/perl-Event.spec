@@ -1,6 +1,6 @@
 Name:		perl-Event
-Version:	1.20
-Release:	4%{?dist}
+Version:	1.21
+Release:	5%{?dist}
 Summary:	Event loop processing
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -47,7 +47,7 @@ find %{buildroot} -depth -type d -exec rmdir --ignore-fail-on-non-empty {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %files
 %doc ANNOUNCE ChangeLog README README.EV TODO
@@ -61,8 +61,22 @@ find %{buildroot} -depth -type d -exec rmdir --ignore-fail-on-non-empty {} ';'
 %{_mandir}/man3/Event::generic.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.20-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.21-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.21-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.21-3
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.21-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Dec 17 2012 Paul Howarth <paul@city-fan.org> - 1.21-1
+- Update to 1.21:
+  - Silence some clang warnings
+    (http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2012-12/msg00424.html)
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
