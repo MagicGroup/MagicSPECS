@@ -1,5 +1,5 @@
 Name:           perl-Devel-Size
-Version:        0.77
+Version:        0.79
 Release:        4%{?dist}
 Summary:        Perl extension for finding the memory usage of Perl variables
 License:        GPL+ or Artistic
@@ -13,10 +13,13 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 # core
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(XSLoader)
 # cpan
 # test
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
+# Required by t/warnings.t, but not on CPAN
+#BuildRequires:  perl(Test::PerlRun)
 
 %?perl_default_filter
 
@@ -43,7 +46,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc CHANGES t/
@@ -52,11 +55,30 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.77-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.79-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.77-3
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.79-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Jul 20 2013 Petr Pisar <ppisar@redhat.com> - 0.79-2
+- Perl 5.18 rebuild
+
+* Tue May 28 2013 Robin Lee <cheeselee@fedoraproject.org> - 0.79-1
+- Update to 0.79
+- BR: perl(XSLoader)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.78-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Aug 22 2012 Robin Lee <cheeselee@fedoraproject.org> 0.78-1
+- Update to 0.78
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.77-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.77-3
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.77-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
