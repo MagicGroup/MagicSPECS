@@ -1,0 +1,23 @@
+From 658895c781a8f42752791e4d6f1b32423d1a36f6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 27 Jun 2012 17:18:48 +0200
+Subject: [PATCH] Work around static XS_Devel__DProf_END mismatch
+
+https://rt.cpan.org/Public/Bug/Display.html?id=70629
+---
+ DProf.xs |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/DProf.xs b/DProf.xs
+index a4bbb4b..9642010 100644
+--- a/DProf.xs
++++ b/DProf.xs
+@@ -1,4 +1,5 @@
+ #define PERL_NO_GET_CONTEXT
++#define PERL_EUPXS_ALWAYS_EXPORT /* Perl 5.16 makes XSUB static, RT #70629 */
+ #include "EXTERN.h"
+ #include "perl.h"
+ #include "XSUB.h"
+-- 
+1.7.7.6
+
