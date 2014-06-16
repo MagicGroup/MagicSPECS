@@ -1,12 +1,12 @@
 Name:           perl-App-Cache
 Summary:        Easy application-level caching
 Version:        0.37
-Release:        11%{?dist}
+Release:        13%{?dist}
 License:        GPL+ or Artistic
-Group:          Development/Libraries
+
 Source0:        http://search.cpan.org/CPAN/authors/id/L/LB/LBROCARD/App-Cache-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/App-Cache
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
 
@@ -46,7 +46,7 @@ uses App::Cache to cache both the file download and data structures,
 providing much faster use when the data is cached. This module stores data
 in the home directory of the user, in a dot directory. For example, the
 Parse::BACKPAN::Packages cache is actually stored underneath
-"~/.parse_backpan_packages/cache/". This is so that permisssions are not a
+"~/.parse_backpan_packages/cache/". This is so that permissions are not a
 problem -- it is a per-user, per-application cache.
 
 %prep
@@ -57,8 +57,6 @@ problem -- it is a per-user, per-application cache.
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
@@ -66,32 +64,35 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-
-
-%clean
-rm -rf %{buildroot}
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc CHANGES README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.37-11
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.37-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.37-10
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.37-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.37-9
-- 为 Magic 3.0 重建
+* Wed Jul 31 2013 Petr Pisar <ppisar@redhat.com> - 0.37-11
+- Perl 5.18 rebuild
 
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.37-8
-- 为 Magic 3.0 重建
+* Sun Feb 24 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 0.37-10
+- Remove no-longer-needed macros
+- Fix a spelling mistake in the package description
 
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.37-7
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.37-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.37-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 0.37-7
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.37-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
