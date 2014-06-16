@@ -1,0 +1,12 @@
+diff -up File-MMagic-XS-0.09006/src/perl-mmagic-xs.c.format-security File-MMagic-XS-0.09006/src/perl-mmagic-xs.c
+--- File-MMagic-XS-0.09006/src/perl-mmagic-xs.c.format-security	2014-06-09 15:14:03.380178779 -0400
++++ File-MMagic-XS-0.09006/src/perl-mmagic-xs.c	2014-06-09 15:14:12.864116497 -0400
+@@ -927,7 +927,7 @@ fmm_parse_magic_line(PerlFMM *state, cha
+         err = newSVpvf(
+             "fmm_parse_magic_line: offset %s invalid", l);
+         FMM_SET_ERROR(state, err);
+-        croak(SvPV_nolen(err));
++        croak("%s", SvPV_nolen(err));
+     }
+ 
+     l = t;
