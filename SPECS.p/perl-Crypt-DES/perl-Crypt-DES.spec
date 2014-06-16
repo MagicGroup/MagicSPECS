@@ -1,22 +1,26 @@
 Name:           perl-Crypt-DES
-Version:        2.05
-Release:        19%{?dist}
+Version:        2.07
+Release:        2%{?dist}
 Summary:        Perl DES encryption module
 License:        BSD
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Crypt-DES/
 Source0:        http://www.cpan.org/authors/id/D/DP/DPARIS/Crypt-DES-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
+BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
 # Run-time:
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(Exporter)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(vars)
 # Tests:
-BuildRequires:  perl(Crypt::CBC) > 1.22
 BuildRequires:  perl(Benchmark)
 BuildRequires:  perl(Data::Dumper)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Optional tests:
+BuildRequires:  perl(Crypt::CBC) > 1.22
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -27,36 +31,54 @@ DES encryption module.
 %setup -q -n Crypt-DES-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc COPYRIGHT README
-%{perl_vendorarch}/auto/*
-%{perl_vendorarch}/Crypt*
-%{_mandir}/man3/*
+%{perl_vendorarch}/auto/Crypt/
+%{perl_vendorarch}/Crypt/
+%{_mandir}/man3/Crypt::DES.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.05-19
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.07-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Oct  3 2013 Paul Howarth <paul@city-fan.org> - 2.07-1
+- Update to 2.07
+  - SvUPGRADE was changed to a statement
+- This release by DPARIS -> update source URL
+- Changes file dropped upstream
+- Drop %%defattr, redundant since rpm 4.4
+- Make %%files list more explicit
+- Don't need to remove empty directories from the buildroot
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Don't use macros for commands
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05.002-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 19 2013 Petr Pisar <ppisar@redhat.com> - 2.05.002-1
+- 2.05_002 bump
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 2.05-20
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -78,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Wed Dec 15 2010 Marcela Maslanova <mmaslano@redhat.com> - 2.05-12
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Fri Apr 30 2010 Marcela Maslanova <mmaslano@redhat.com> - 2.05-11
 - Mass rebuild with perl-5.12.0
