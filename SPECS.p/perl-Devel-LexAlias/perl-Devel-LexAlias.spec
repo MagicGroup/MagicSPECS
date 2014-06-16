@@ -1,23 +1,18 @@
 Name:           perl-Devel-LexAlias
-Version:        0.04
-Release:        14%{?dist}
+Version:        0.05
+Release:        4%{?dist}
 Summary:        Alias lexical variables
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-LexAlias/
 Source0:        http://www.cpan.org/authors/id/R/RC/RCLAMP/Devel-LexAlias-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 BuildRequires:  perl(Devel::Caller) >= 0.03
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
 
-# don't "provide" private Perl libs
-%global _use_internal_dependency_generator 0
-%global __deploop() while read FILE; do /usr/lib/rpm/rpmdeps -%{1} ${FILE}; done | /bin/sort -u
-%global __find_provides /bin/sh -c "%{__grep} -v '%{perl_vendorarch}/.*\\.so$' | %{__deploop P}"
-%global __find_requires /bin/sh -c "%{__deploop R}"
+%{?perl_default_filter}
 
 %description
 Devel::LexAlias provides the ability to alias a lexical variable in a
@@ -33,35 +28,42 @@ perl -pi -e 's|^#!perl|#!/usr/bin/perl|' t/*
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 
 find %{buildroot} -type f -name .packlist -exec rm -f {} +
 find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} +
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
 
 %check
-
-
-%clean
-rm -rf %{buildroot}
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc README t/
+%doc Changes t/
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/Devel*
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.04-14
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-13
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 0.05-2
+- Perl 5.18 rebuild
+
+* Sun Feb 03 2013 Iain Arnell <iarnell@gmail.com> 0.05-1
+- update to latest upstream version
+- clean up spec for modern rpmbuild
+- use perl_default_filter
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.04-13
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
