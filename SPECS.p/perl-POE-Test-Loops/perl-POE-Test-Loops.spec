@@ -1,19 +1,23 @@
 Name:           perl-POE-Test-Loops
 Summary:        Reusable tests for POE::Loop authors
-Version:        1.351
-Release:        4%{?dist}
+Version:        1.354
+Release:        2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RC/RCAPUTO/POE-Test-Loops-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/POE-Test-Loops
 BuildArch:      noarch
-BuildRequires:  perl(constant)
-BuildRequires:  perl(lib)
+BuildRequires:  perl
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+# Config is only needed for <perl-5.10
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Find)
 BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(IO::File)
 BuildRequires:  perl(IO::Handle)
 BuildRequires:  perl(IO::Socket)
 BuildRequires:  perl(IO::Socket::INET)
@@ -21,6 +25,7 @@ BuildRequires:  perl(POE)
 BuildRequires:  perl(POE::Component::Client::TCP)
 BuildRequires:  perl(POE::Component::Server::TCP)
 BuildRequires:  perl(POE::Driver::SysRW)
+BuildRequires:  perl(POE::Filter::Block)
 BuildRequires:  perl(POE::Filter::Line)
 BuildRequires:  perl(POE::Filter::Map)
 BuildRequires:  perl(POE::Filter::Stream)
@@ -33,13 +38,20 @@ BuildRequires:  perl(POE::Wheel::ListenAccept)
 BuildRequires:  perl(POE::Wheel::ReadWrite)
 BuildRequires:  perl(POE::Wheel::Run)
 BuildRequires:  perl(POE::Wheel::SocketFactory)
+BuildRequires:  perl(POSIX)
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Socket)
+# Socket6 is optional
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Symbol)
 BuildRequires:  perl(Test::More) >= 0.94
+BuildRequires:  perl(vars)
+BuildRequires:  perl(warnings)
 Requires:       perl(Carp)
 Requires:       perl(POE::Component::Client::TCP)
 Requires:       perl(POE::Component::Server::TCP)
 Requires:       perl(POE::Driver::SysRW)
+Requires:       perl(POE::Filter::Block)
 Requires:       perl(POE::Filter::Line)
 Requires:       perl(POE::Filter::Map)
 Requires:       perl(POE::Filter::Stream)
@@ -47,7 +59,7 @@ Requires:       perl(POE::Pipe::TwoWay)
 Requires:       perl(POE::Wheel::FollowTail)
 Requires:       perl(POE::Wheel::ListenAccept)
 Requires:       perl(POE::Wheel::SocketFactory)
-Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "$(perl -V:version)"; echo $version))
 
 # RPM 4.8 style
 %{?filter_from_provides: %filter_from_provides /perl([DIFMOSU].*)/d; /perl(POE::MySession)/d; /perl(POE::Kernel)/d; /perl(PoeTestWorker)/d; /perl(Switch)/d }
@@ -77,12 +89,11 @@ make %{?_smp_mflags}
 
 %install
 make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
+find %{buildroot} -type f -name .packlist -exec rm -f {} +
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc CHANGES README
@@ -92,8 +103,26 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man1/poe-gen-tests.1.gz
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.351-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.354-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Oct 24 2013 Petr Šabata <contyk@redhat.com> - 1.354-1
+- 1.354 bump (just meta changes)
+
+* Fri Sep 20 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.353-1
+- 1.353 bump
+
+* Wed Aug 21 2013 Petr Šabata <contyk@redhat.com> - 1.352-1
+- 1.352 bump
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.351-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Petr Pisar <ppisar@redhat.com> - 1.351-5
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.351-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.351-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
