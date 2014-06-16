@@ -2,8 +2,8 @@
 #define pre -%{pre_tag}
 
 # See http://bugzilla.redhat.com/223663
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
-%define multilib_basearchs x86_64 ppc64 s390x sparc64
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 mips64el mipsel
+%define multilib_basearchs x86_64 ppc64 s390x sparc64 mips64el
 
 %define real_version 4.8.6
 %define release_number 1
