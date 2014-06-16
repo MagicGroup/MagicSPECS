@@ -1,3 +1,224 @@
+* Tue Aug 28 2012 Karsten Hopp <karsten@redhat.com> 7.3.638-1
+- patchlevel 638
+
+* Mon Aug 06 2012 Karsten Hopp <karsten@redhat.com> 2:7.3.622-2
+- add epoch to spec.vim and automatic changelog entries
+
+* Mon Aug 06 2012 Karsten Hopp <karsten@redhat.com> 7.3.622-1
+- patchlevel 622
+
+* Mon Aug 06 2012 Karsten Hopp <karsten@redhat.com> 7.3.604-1
+- drop vim-6.1-rh3.patch, (bz #754801)
+
+* Wed Jul 18 2012 Karsten Hopp <karsten@redhat.com> 7.3.604-1
+- patchlevel 604
+
+* Wed Jul 11 2012 Petr Pisar <ppisar@redhat.com> - 2:7.3.594-2
+- Perl 5.16 rebuild
+
+* Tue Jul 10 2012 Karsten Hopp <karsten@redhat.com> 7.3.594-1
+- patchlevel 594
+
+* Tue Jul 10 2012 Karsten Hopp <karsten@redhat.com> 7.3.592-1
+- patchlevel 592
+
+* Mon Jul 09 2012 Petr Pisar <ppisar@redhat.com> - 2:7.3.584-2
+- Perl 5.16 rebuild
+
+* Mon Jul 02 2012 Karsten Hopp <karsten@redhat.com> 7.3.584-1
+- patchlevel 584
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 2:7.3.556-2
+- Perl 5.16 rebuild
+
+* Mon Jun 18 2012 Karsten Hopp <karsten@redhat.com> 7.3.556-1
+- patchlevel 556
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2:7.3.515-2
+- Perl 5.16 rebuild
+
+* Mon May 21 2012 Karsten Hopp <karsten@redhat.com> 7.3.515-1
+- enable highlighting for older log files (#816848)
+
+* Tue May 08 2012 Karsten Hopp <karsten@redhat.com> 7.3.515-1
+- patchlevel 515
+
+* Fri Mar 16 2012 Karsten Hopp <karsten@redhat.com> 7.3.471-1
+- patchlevel 471
+
+* Mon Feb 13 2012 Karsten Hopp <karsten@redhat.com> 7.3.444-1
+- patchlevel 444
+
+* Tue Feb 07 2012 Karsten Hopp <karsten@redhat.com> 7.3.434-1
+- patchlevel 434
+
+* Tue Feb 07 2012 Karsten Hopp <karsten@redhat.com> 7.3.393-3
+- update spec file template, bugzilla 736774
+
+* Thu Jan 26 2012 Harald Hoyer <harald@redhat.com> 7.3.393-3
+- rebuild against the new ruby library
+
+* Thu Jan 26 2012 Harald Hoyer <harald@redhat.com> 7.3.393-2
+- install everything in /usr
+  https://fedoraproject.org/wiki/Features/UsrMove
+
+* Thu Jan 05 2012 Karsten Hopp <karsten@redhat.com> 7.3.393-1
+- patchlevel 393
+- fix boolean key 'Terminal' in gvim.desktop
+
+* Fri Dec 23 2011 Karsten Hopp <karsten@redhat.com> 7.3.386-1
+- patchlevel 386
+
+* Mon Sep 26 2011 Karsten Hopp <karsten@redhat.com> 7.3.322-1
+- patchlevel 322
+
+* Wed Sep 21 2011 Karsten Hopp <karsten@redhat.com> 7.3.315-1
+- patchlevel 315
+
+* Mon Aug 29 2011 Karsten Hopp <karsten@redhat.com> 7.3.289-1
+- patchlevel 289
+
+* Mon Aug 29 2011 Karsten Hopp <karsten@redhat.com> 7.3.244-4
+- Remove old patched files. (Ricky Zhou <ricky@fedoraproject.org>)
+  (bugzilla #709456)
+
+* Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 2:7.3.244-3
+- Perl mass rebuild
+
+* Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 2:7.3.244-2
+- Perl mass rebuild
+
+* Mon Jul 11 2011 Karsten Hopp <karsten@redhat.com> 7.3.244-1
+- patchlevel 244
+
+* Tue Jun 14 2011 Marcela Mašláňová <mmaslano@redhat.com> - 2:7.3.206-3
+- Perl mass rebuild
+
+* Tue May 31 2011 Ville Skyttä <ville.skytta@iki.fi> - 2:7.3.206-2
+- Own the /usr/share/vim/vim73 dir.
+
+* Mon May 30 2011 Karsten Hopp <karsten@redhat.com> 7.3.206-1
+- drop xxd-locale patch
+- update to patchlevel 206
+
+* Wed May 11 2011 Karsten Hopp <karsten@redhat.com> 7.3.189-1
+- patchlevel 189
+
+* Wed Mar 16 2011 Karsten Hopp <karsten@redhat.com> 7.3.138-1
+- patchlevel 138
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:7.3.107-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Mon Jan 24 2011 Karsten Hopp <karsten@redhat.com> 7.3.107-1
+- patchlevel 107
+
+* Mon Jan 10 2011 Karsten Hopp <karsten@redhat.com> 7.3.099-1
+- patchlevel 099
+
+* Mon Jan 03 2011 Karsten Hopp <karsten@redhat.com> 7.3.094-1
+- patchlevel 094
+
+* Thu Dec 09 2010 Karsten Hopp <karsten@redhat.com> 7.3.081-1
+- patchlevel 081
+
+* Wed Dec 08 2010 Karsten Hopp <karsten@redhat.com> 7.3.080-1
+- patchlevel 080
+
+* Fri Dec 03 2010 Karsten Hopp <karsten@redhat.com> 7.3.075-1
+- patchlevel 075
+
+* Thu Dec 02 2010 Karsten Hopp <karsten@redhat.com> 7.3.073-1
+- patchlevel 073
+
+* Thu Nov 25 2010 Karsten Hopp <karsten@redhat.com> 7.3.069-1
+- patchlevel 069
+
+* Wed Nov 24 2010 Karsten Hopp <karsten@redhat.com> 7.3.068-1
+- patchlevel 068
+
+* Wed Nov 24 2010 Karsten Hopp <karsten@redhat.com> 7.3.063-1
+- patchlevel 063
+
+* Wed Nov 17 2010 Karsten Hopp <karsten@redhat.com> 7.3.062-1
+- patchlevel 062
+
+* Tue Nov 16 2010 Karsten Hopp <karsten@redhat.com> 7.3.061-1
+- patchlevel 061
+
+* Tue Nov 16 2010 Karsten Hopp <karsten@redhat.com> 7.3.056-1
+- patchlevel 056
+
+* Thu Nov 11 2010 Karsten Hopp <karsten@redhat.com> 7.3.055-1
+- patchlevel 055
+
+* Wed Nov 10 2010 Karsten Hopp <karsten@redhat.com> 7.3.051-1
+- patchlevel 051
+
+* Thu Nov 04 2010 Karsten Hopp <karsten@redhat.com> 7.3.050-1
+- patchlevel 050
+
+* Thu Nov 04 2010 Karsten Hopp <karsten@redhat.com> 7.3.048-1
+- patchlevel 048
+
+* Thu Oct 28 2010 Karsten Hopp <karsten@redhat.com> 7.3.047-1
+- patchlevel 047
+
+* Wed Oct 27 2010 Karsten Hopp <karsten@redhat.com> 7.3.046-1
+- patchlevel 046
+
+* Wed Oct 27 2010 Karsten Hopp <karsten@redhat.com> 7.3.039-1
+- patchlevel 039
+
+* Sun Oct 24 2010 Karsten Hopp <karsten@redhat.com> 7.3.035-1
+- patchlevel 035
+
+* Sat Oct 23 2010 Karsten Hopp <karsten@redhat.com> 7.3.034-1
+- patchlevel 034
+
+* Sat Oct 23 2010 Karsten Hopp <karsten@redhat.com> 7.3.033-1
+- patchlevel 033
+
+* Thu Oct 21 2010 Karsten Hopp <karsten@redhat.com> 7.3.032-1
+- patchlevel 032
+
+* Wed Oct 20 2010 Karsten Hopp <karsten@redhat.com> 7.3.031-1
+- patchlevel 031
+
+* Sat Oct 16 2010 Karsten Hopp <karsten@redhat.com> 7.3.029-1
+- patchlevel 029
+
+* Fri Oct 15 2010 Karsten Hopp <karsten@redhat.com> 7.3.028-1
+- patchlevel 028
+
+* Thu Oct 14 2010 Karsten Hopp <karsten@redhat.com> 7.3.027-1
+- patchlevel 027
+
+* Wed Oct 13 2010 Karsten Hopp <karsten@redhat.com> 7.3.026-1
+- patchlevel 026
+
+* Sun Oct 10 2010 Karsten Hopp <karsten@redhat.com> 7.3.021-1
+- patchlevel 021
+
+* Sat Oct 09 2010 Karsten Hopp <karsten@redhat.com> 7.3.020-1
+- patchlevel 020
+
+* Fri Oct 01 2010 Karsten Hopp <karsten@redhat.com> 7.3.019-1
+- patchlevel 019
+
+* Thu Sep 30 2010 Karsten Hopp <karsten@redhat.com> 7.3.018-1
+- patchlevel 018
+
+* Thu Sep 30 2010 Karsten Hopp <karsten@redhat.com> 7.3.011-3
+- add filesystem subpackage (#628293)
+
+* Wed Sep 29 2010 jkeating - 2:7.3.011-2
+- Rebuilt for gcc bug 634757
+
+* Wed Sep 22 2010 Karsten Hopp <karsten@redhat.com> 7.3.011-1
+- update to VIM 7.3 patchlevel 011
+
+# vim:nrformats-=octal
 * Tue Jul 27 2010 Mamoru Tasaka <mtasaka@ioa.s.u-tokyo.ac.jp> 7.2.446-2
 - Rebuild against python 2.7
 
