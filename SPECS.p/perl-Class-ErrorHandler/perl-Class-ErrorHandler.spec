@@ -1,15 +1,37 @@
 Name:           perl-Class-ErrorHandler
-Version:        0.01
-Release:        14%{?dist}
+Version:        0.03
+Release:        2%{?dist}
 Summary:        Class::ErrorHandler Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Class-ErrorHandler/
-Source0:        http://www.cpan.org/authors/id/B/BT/BTROTT/Class-ErrorHandler-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://www.cpan.org/authors/id/T/TO/TOKUHIROM/Class-ErrorHandler-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# ---------------------------
+# Module build requirements
+# ---------------------------
+BuildRequires:  perl >= 3:5.8.1
+BuildRequires:  perl(CPAN::Meta)
+BuildRequires:  perl(CPAN::Meta::Prereqs)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(Module::Build)
+BuildRequires:  perl(utf8)
+BuildRequires:  perl(warnings)
+# ---------------------------
+# Module runtime requirements
+# ---------------------------
+BuildRequires:  perl(strict)
+BuildRequires:  perl(vars)
+# ---------------------------
+# Test suite requirements
+# ---------------------------
+BuildRequires:  perl(base)
+BuildRequires:  perl(Test)
+# ---------------------------
+# Runtime requirements
+# ---------------------------
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 This is Class::ErrorHandler, a base class for classes that need to do
@@ -19,40 +41,58 @@ error handling (which is, probably, most of them).
 %setup -q -n Class-ErrorHandler-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+perl Build.PL installdirs=vendor
+./Build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
-
-perldoc -t perlgpl > COPYING
-perldoc -t perlartistic > Artistic
+./Build install destdir=%{buildroot} create_packlist=0
+%{_fixperms} %{buildroot}
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+./Build test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README COPYING Artistic
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%doc Changes LICENSE README.md
+%{perl_vendorlib}/Class/
+%{_mandir}/man3/Class::ErrorHandler.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.01-14
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.01-13
-- 为 Magic 3.0 重建
+* Tue Oct  1 2013 Paul Howarth <paul@city-fan.org> - 0.03-1
+- Update to 0.03
+  - Minl migrate
+- Switch to Module::Build flow
+- Classify build requirements by usage
+- Drop %%defattr, redundant since rpm 4.4
+- Drop EPEL-5 support since there's no CPAN::Meta there
+- Make %%files list more explicit
+- Don't use macros for commands
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 0.02-1
+- 0.02 bump
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 0.01-18
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.01-15
+- Perl 5.16 rebuild
+
+* Thu Mar 22 2012 Tom Callaway <spot@fedoraproject.org> - 0.01-14
+- fix missing BR
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Fri Jun 17 2011 Marcela Mašláňová <mmaslano@redhat.com> - 0.01-12
 - Perl mass rebuild
@@ -61,7 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Wed Dec 15 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.01-10
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Fri Apr 30 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.01-9
 - Mass rebuild with perl-5.12.0
