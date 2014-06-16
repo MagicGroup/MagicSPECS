@@ -1,6 +1,6 @@
 Name:           perl-Directory-Queue
-Version:        1.4
-Release:        4%{?dist}
+Version:        1.8
+Release:        5%{?dist}
 Summary:        Object oriented interface to a directory based queue
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,12 +8,17 @@ URL:            http://search.cpan.org/dist/Directory-Queue/
 Source0:        http://search.cpan.org/CPAN/authors/id/L/LC/LCONS/Directory-Queue-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  perl
+BuildRequires:  perl(Encode)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(No::Worries) >= 0.7
+BuildRequires:  perl(Pod::Coverage) >= 0.18
+BuildRequires:  perl(POSIX)
 BuildRequires:  perl(Test::More)
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
+BuildRequires:  perl(Test::Pod) >= 1.22
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.08
 BuildRequires:  perl(Time::HiRes)
-
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 
@@ -44,7 +49,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,11 +61,38 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.4-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.4-3
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 25 2013 Petr Pisar <ppisar@redhat.com> - 1.8-3
+- Perl 5.18 rebuild
+
+* Mon May 27 2013 Massimo Paladin <massimo.paladin@gmail.com> - 1.8-2
+- rebuilt
+
+* Wed May 22 2013 Massimo Paladin <massimo.paladin@gmail.com> - 1.8-1
+- Update to 1.8 rhbz#965604.
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Nov 20 2012 Massimo Paladin <massimo.paladin@gmail.com> - 1.7-1
+- Update to 1.7 rhbz#877951.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.6-2
+- Perl 5.16 rebuild
+
+* Sat Jun 9 2012 Steve Traylen <steve.traylen@cern.ch> - 1.6-1
+- Update to 1.6 rhbz#828689
+
+* Sat Jan 28 2012 Steve Traylen <steve.traylen@cern.ch> - 1.5-1
+- Update to 1.5 rhbz#785073.
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
