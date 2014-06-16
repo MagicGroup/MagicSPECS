@@ -1,11 +1,13 @@
 Name: 		perl-Date-Pcalc
 Version:	6.1
-Release:	4%{?dist}
+Release:	9%{?dist}
 Summary:	Gregorian calendar date calculations
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL: 		http://search.cpan.org/dist/Date-Pcalc/
 Source0: 	http://search.cpan.org/CPAN/authors/id/S/ST/STBEY/Date-Pcalc-%{version}.tar.gz
+# Perl 5.16 compatibility, CPAN RT #76442
+Patch0:		Date-Pcalc-6.1-boolean.patch
 
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildRequires:  %{_bindir}/iconv
@@ -21,9 +23,10 @@ DIN 1355 and, to some extent, ISO 8601 (where applicable).
 
 %prep
 %setup -q -n Date-Pcalc-%{version}
+%patch0 -p0
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+%{__perl} Makefile.PL INSTALLDIRS=vendor </dev/null
 make %{?_smp_mflags}
 
 %install
@@ -35,7 +38,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 # Interactive build, prompts if binary of PP version should be built
 # Defaults to binary if gcc is found (default Fedora buildroot contains gcc)
@@ -48,8 +51,24 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.1-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 6.1-7
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 6.1-4
+- Perl 5.16 rebuild
+- Fix boolean definition (RT #76442)
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
