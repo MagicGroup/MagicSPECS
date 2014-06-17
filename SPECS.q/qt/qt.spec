@@ -70,6 +70,9 @@ Patch200: qt-x11-free-3.3.4-fullscreen.patch
 # TDE 3.5.13 patches
 Patch300: qt3-3.3.8.d-updates_zh-tw_translations.patch
 
+# Freetype2 fix
+Patch400: qt-x11-free-3.3.8b-freetype251.patch
+
 %define qt_dirname qt-3.3
 %define qtdir %{_libdir}/%{qt_dirname}
 %define qt_docdir %{_docdir}/qt-devel-%{version}
@@ -338,6 +341,9 @@ for the Qt 3 toolkit.
 
 # TDE 3.5.13 patches
 # %patch300 -p1
+
+# Freetype fix
+%patch400 -p1
 
 # convert to UTF-8
 iconv -f iso-8859-1 -t utf-8 < doc/man/man3/qdial.3qt > doc/man/man3/qdial.3qt_

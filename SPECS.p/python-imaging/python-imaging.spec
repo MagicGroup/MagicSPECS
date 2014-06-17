@@ -15,6 +15,7 @@ Patch1:        %{name}-lib64.patch
 Patch2:        %{name}-giftrans.patch
 Patch3:        %{name}-1.1.6-sane-types.patch
 Patch4:        %{name}-shebang.patch
+Patch5:        python-imaging-fix-freetype2.patch
 URL:           http://www.pythonware.com/products/pil/
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -75,6 +76,7 @@ This package contains a Tk interface for python-imaging.
 %patch2 -p1
 %patch3 -p1 -b .sane-types
 %patch4 -p1 -b .shebang
+%patch5 -p1 -b .freetype2
 
 # fix the interpreter path for Scripts/*.py
 cd Scripts
