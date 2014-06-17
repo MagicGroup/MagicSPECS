@@ -12,42 +12,29 @@ server package update, without requiring any existing postgresql.conf
 to be updated.  (Of course, a user who dislikes this behavior can still
 override it via postgresql.conf.)
 
-This patch must be applied after postgresql-multi-sockets.patch, at
-least until 9.3 when that will be part of the upstream package.
 
-
-diff -Naur postgresql-9.2.0.sockets/contrib/pg_upgrade/test.sh postgresql-9.2.0/contrib/pg_upgrade/test.sh
---- postgresql-9.2.0.sockets/contrib/pg_upgrade/test.sh	2012-09-06 17:26:17.000000000 -0400
-+++ postgresql-9.2.0/contrib/pg_upgrade/test.sh	2012-09-06 18:13:18.178092176 -0400
-@@ -62,10 +62,14 @@
- rm -rf "$logdir"
- mkdir "$logdir"
+diff --git a/contrib/pg_upgrade/test.sh b/contrib/pg_upgrade/test.sh
+index 30bc527..4e8f6a4 100644
+--- a/contrib/pg_upgrade/test.sh
++++ b/contrib/pg_upgrade/test.sh
+@@ -107,6 +107,12 @@ done
+ EXTRA_REGRESS_OPTS="$EXTRA_REGRESS_OPTS --port=$PGPORT"
+ export EXTRA_REGRESS_OPTS
  
 +# we want the Unix sockets in $temp_root
 +PGHOST=$temp_root
 +export PGHOST
 +
++POSTMASTER_OPTS="$POSTMASTER_OPTS -c unix_socket_directories='$PGHOST'"
++
+ # enable echo so the user can see what is being executed
  set -x
  
- $oldbindir/initdb
--$oldbindir/pg_ctl start -l "$logdir/postmaster1.log" -w
-+$oldbindir/pg_ctl start -l "$logdir/postmaster1.log" -o "-c unix_socket_directories='$PGHOST'" -w
- if "$MAKE" -C "$oldsrc" installcheck; then
- 	pg_dumpall -f "$temp_root"/dump1.sql || pg_dumpall1_status=$?
- 	if [ "$newsrc" != "$oldsrc" ]; then
-@@ -108,7 +112,7 @@
- 
- pg_upgrade -d "${PGDATA}.old" -D "${PGDATA}" -b "$oldbindir" -B "$bindir"
- 
--pg_ctl start -l "$logdir/postmaster2.log" -w
-+pg_ctl start -l "$logdir/postmaster2.log" -o "-c unix_socket_directories='$PGHOST'" -w
- 
- if [ $testhost = Msys ] ; then
- 	cmd /c analyze_new_cluster.bat
-diff -Naur postgresql-9.2.0.sockets/src/backend/utils/misc/guc.c postgresql-9.2.0/src/backend/utils/misc/guc.c
---- postgresql-9.2.0.sockets/src/backend/utils/misc/guc.c	2012-09-06 18:12:36.458693394 -0400
-+++ postgresql-9.2.0/src/backend/utils/misc/guc.c	2012-09-06 18:13:18.181092327 -0400
-@@ -2901,7 +2901,7 @@
+diff --git a/src/backend/utils/misc/guc.c b/src/backend/utils/misc/guc.c
+index a055231..20b8c87 100644
+--- a/src/backend/utils/misc/guc.c
++++ b/src/backend/utils/misc/guc.c
+@@ -2929,7 +2929,7 @@ static struct config_string ConfigureNamesString[] =
  		},
  		&Unix_socket_directories,
  #ifdef HAVE_UNIX_SOCKETS
@@ -56,10 +43,11 @@ diff -Naur postgresql-9.2.0.sockets/src/backend/utils/misc/guc.c postgresql-9.2.
  #else
  		"",
  #endif
-diff -Naur postgresql-9.2.0.sockets/src/bin/initdb/initdb.c postgresql-9.2.0/src/bin/initdb/initdb.c
---- postgresql-9.2.0.sockets/src/bin/initdb/initdb.c	2012-09-06 18:12:36.460693488 -0400
-+++ postgresql-9.2.0/src/bin/initdb/initdb.c	2012-09-06 18:13:18.183092471 -0400
-@@ -1003,7 +1003,7 @@
+diff --git a/src/bin/initdb/initdb.c b/src/bin/initdb/initdb.c
+index 5fc7291..d871341 100644
+--- a/src/bin/initdb/initdb.c
++++ b/src/bin/initdb/initdb.c
+@@ -1203,7 +1203,7 @@ setup_config(void)
  
  #ifdef HAVE_UNIX_SOCKETS
  	snprintf(repltok, sizeof(repltok), "#unix_socket_directories = '%s'",
@@ -68,9 +56,10 @@ diff -Naur postgresql-9.2.0.sockets/src/bin/initdb/initdb.c postgresql-9.2.0/src
  #else
  	snprintf(repltok, sizeof(repltok), "#unix_socket_directories = ''");
  #endif
-diff -Naur postgresql-9.2.0.sockets/src/include/pg_config_manual.h postgresql-9.2.0/src/include/pg_config_manual.h
---- postgresql-9.2.0.sockets/src/include/pg_config_manual.h	2012-09-06 17:26:17.000000000 -0400
-+++ postgresql-9.2.0/src/include/pg_config_manual.h	2012-09-06 18:13:18.183092471 -0400
+diff --git a/src/include/pg_config_manual.h b/src/include/pg_config_manual.h
+index 02bcd92..8aaf58b 100644
+--- a/src/include/pg_config_manual.h
++++ b/src/include/pg_config_manual.h
 @@ -144,7 +144,7 @@
   * here's where to twiddle it.  You can also override this at runtime
   * with the postmaster's -k switch.
@@ -80,10 +69,11 @@ diff -Naur postgresql-9.2.0.sockets/src/include/pg_config_manual.h postgresql-9.
  
  /*
   * The random() function is expected to yield values between 0 and
-diff -Naur postgresql-9.2.0.sockets/src/test/regress/pg_regress.c postgresql-9.2.0/src/test/regress/pg_regress.c
---- postgresql-9.2.0.sockets/src/test/regress/pg_regress.c	2012-09-06 17:26:17.000000000 -0400
-+++ postgresql-9.2.0/src/test/regress/pg_regress.c	2012-09-06 18:13:18.184092537 -0400
-@@ -772,7 +772,7 @@
+diff --git a/src/test/regress/pg_regress.c b/src/test/regress/pg_regress.c
+index b632326..943165c 100644
+--- a/src/test/regress/pg_regress.c
++++ b/src/test/regress/pg_regress.c
+@@ -772,7 +772,7 @@ initialize_environment(void)
  		if (hostname != NULL)
  			doputenv("PGHOST", hostname);
  		else
@@ -92,7 +82,7 @@ diff -Naur postgresql-9.2.0.sockets/src/test/regress/pg_regress.c postgresql-9.2
  		unsetenv("PGHOSTADDR");
  		if (port != -1)
  		{
-@@ -2233,7 +2233,7 @@
+@@ -2249,7 +2249,7 @@ regression_main(int argc, char *argv[], init_function ifunc, test_function tfunc
  		 */
  		header(_("starting postmaster"));
  		snprintf(buf, sizeof(buf),

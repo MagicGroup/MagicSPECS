@@ -1,0 +1,34 @@
+The error message for undefined names *inside functions* (not for undefined
+names on global level) has changed in Python 3.4 compared to 3.3.
+
+Particularly error string "NameError: global name 'nonsense' is not defined"
+has become "ERROR:  NameError: name 'nonsense' is not defined" in Python 3.4.
+
+This patch also raises an exception, but the exceptin message is the same
+across Python versions.
+
+diff -up postgresql-9.3.4/src/pl/plpython/expected/plpython_do.out.python34 postgresql-9.3.4/src/pl/plpython/expected/plpython_do.out
+--- postgresql-9.3.4/src/pl/plpython/expected/plpython_do.out.python34	2014-05-23 15:42:50.462783074 +0200
++++ postgresql-9.3.4/src/pl/plpython/expected/plpython_do.out	2014-05-23 16:09:28.501654085 +0200
+@@ -4,9 +4,9 @@ CONTEXT:  PL/Python anonymous code block
+ DO $$ plpy.notice("This is plpython2u.") $$ LANGUAGE plpython2u;
+ NOTICE:  This is plpython2u.
+ CONTEXT:  PL/Python anonymous code block
+-DO $$ nonsense $$ LANGUAGE plpythonu;
+-ERROR:  NameError: global name 'nonsense' is not defined
++DO $$ raise Exception("Sample error") $$ LANGUAGE plpythonu;
++ERROR:  Exception: Sample error
+ CONTEXT:  Traceback (most recent call last):
+   PL/Python anonymous code block, line 1, in <module>
+-    nonsense 
++    raise Exception("Sample error") 
+ PL/Python anonymous code block
+diff -up postgresql-9.3.4/src/pl/plpython/sql/plpython_do.sql.python34 postgresql-9.3.4/src/pl/plpython/sql/plpython_do.sql
+--- postgresql-9.3.4/src/pl/plpython/sql/plpython_do.sql.python34	2014-05-23 15:42:24.240756276 +0200
++++ postgresql-9.3.4/src/pl/plpython/sql/plpython_do.sql	2014-05-23 16:10:31.363475875 +0200
+@@ -2,4 +2,4 @@ DO $$ plpy.notice("This is plpythonu.")
+ 
+ DO $$ plpy.notice("This is plpython2u.") $$ LANGUAGE plpython2u;
+ 
+-DO $$ nonsense $$ LANGUAGE plpythonu;
++DO $$ raise Exception("Sample error") $$ LANGUAGE plpythonu;

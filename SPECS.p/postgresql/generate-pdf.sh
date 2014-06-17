@@ -32,7 +32,7 @@ cd postgresql-$VERSION
 
 # Apply any patches that affect the PDF documentation
 
-patch -p1 < ../postgresql-multi-sockets.patch
+# patch -p1 < ../xxx.patch
 
 # Configure ...
 
