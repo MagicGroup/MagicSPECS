@@ -45,7 +45,7 @@
 %global with_systemtap 1
 
 # some arches don't have valgrind so we need to disable its support on them
-%ifarch %{ix86} x86_64 ppc %{power64} s390x
+%ifnarch s390 ppc64le
 %global with_valgrind 1
 %else
 %global with_valgrind 0
@@ -105,8 +105,8 @@
 Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
-Version: 2.7.5
-Release: 10%{?dist}
+Version: 2.7.7
+Release: 2%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -827,10 +827,6 @@ Patch184: 00184-ctypes-should-build-with-libffi-multilib-wrapper.patch
 # when ftp_proxy is set
 Patch185: 00185-urllib2-honors-noproxy-for-ftp.patch
 
-# 00186 #
-# Fix memory leak of variable utf8 in marshal.c
-Patch186: 00186-memory-leak-marshalc.patch
-
 # 00187 #
 # Add an explicit RPATH to pyexpat.so pointing at the directory
 # containing the system expat (which has the extra XML_SetHashSalt
@@ -838,13 +834,6 @@ Patch186: 00186-memory-leak-marshalc.patch
 # LD_LIBRARY_PATH containing a "vanilla" build of expat (without the
 # symbol)
 Patch187: 00187-add-RPATH-to-pyexpat.patch
-
-# 00188 #
-# Fix for CVE-2013-4238 --
-# SSL module fails to handle NULL bytes inside subjectAltNames general names
-# http://bugs.python.org/issue18709
-# rhbz#998430
-Patch188: 00188-CVE-2013-4238-hostname-check-bypass-in-SSL-module.patch
 
 # 00189 #
 # Fixes gdb py-bt command not to raise exception while processing
@@ -857,7 +846,37 @@ Patch189: 00189-gdb-py-bt-dont-raise-exception-from-eval.patch
 # Importing get_python_version in bdist_rpm
 # http://bugs.python.org/issue18045
 # rhbz#1029082
-Patch190: 00190-get_python_version.patch
+# FIXED UPSTREAM
+#Patch190: 00190-get_python_version.patch
+
+# 00191 #
+#
+# Disabling NOOP test as it fails without internet connection
+Patch191: 00191-disable-NOOP.patch
+
+# 00192 #
+#
+# Fixing buffer overflow (upstream patch)
+# rhbz#1062375
+# FIXED UPSTREAM
+#Patch192: 00192-buffer-overflow.patch
+
+# 00193 #
+#
+# Enable loading sqlite extensions. This patch isn't needed for
+# python3.spec, since Python 3 has a configuration option for this.
+# rhbz#1066708
+# Patch provided by John C. Peterson
+Patch193: 00193-enable-loading-sqlite-extensions.patch
+
+# 00194 #
+#
+# Fix tests with SQLite >= 3.8.4
+# http://bugs.python.org/issue20901
+# http://hg.python.org/cpython/raw-rev/1763e27a182d
+# FIXED UPSTREAM
+#Patch194: 00194-fix-tests-with-sqlite-3.8.4.patch
+
 
 # (New patches go here ^^^)
 #
@@ -894,12 +913,15 @@ Provides: Distutils
 Obsoletes: python2
 Provides: python2 = %{version}
 Obsoletes: python-elementtree <= 1.2.6
+Obsoletes: python-ordereddict <= 1.1-8
 Obsoletes: python-sqlite < 2.3.2
 Provides: python-sqlite = 2.3.2
 Obsoletes: python-ctypes < 1.0.1
 Provides: python-ctypes = 1.0.1
 Obsoletes: python-hashlib < 20081120
 Provides: python-hashlib = 20081120
+Obsoletes: python-unittest2 < 0.5.1-9
+Provides: python-unittest2 = 0.5.1-9
 Obsoletes: python-uuid < 1.31
 Provides: python-uuid = 1.31
 # obsolete, not provide PyXML as proposed in feature
@@ -1149,7 +1171,7 @@ done
 %patch133 -p1
 %patch134 -p1
 %patch135 -p1
-%patch136 -p1
+%patch136 -p1 -b .stdin-test
 %patch137 -p1
 %patch138 -p1
 %ifarch %{arm}
@@ -1159,7 +1181,7 @@ done
 %patch140 -p1
 %endif
 %patch141 -p1
-%patch142 -p1
+%patch142 -p1 -b .tty-fail
 %patch143 -p1 -b .tsc-on-ppc
 %if !%{with_gdbm}
 %patch144 -p1
@@ -1205,11 +1227,13 @@ mv Modules/cryptmodule.c Modules/_cryptmodule.c
 # 00183: not for python 2
 %patch184 -p1
 %patch185 -p1
-%patch186 -p1
 %patch187 -p1
-%patch188 -p1
 %patch189 -p1
-%patch190 -p1
+# 00190: upstream as of Python 2.7.7
+%patch191 -p1
+# 00192: upstream as of Python 2.7.7
+%patch193 -p1
+# 00194: upstream as of Python 2.7.7
 
 
 # This shouldn't be necesarry, but is right now (2.2a3)
@@ -1528,7 +1552,7 @@ install -d %{buildroot}/usr/lib/python%{pybasever}/site-packages
 %global _pyconfig32_h pyconfig-32.h
 %global _pyconfig64_h pyconfig-64.h
 
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global _pyconfig_h %{_pyconfig64_h}
 %else
 %global _pyconfig_h %{_pyconfig32_h}
@@ -1569,8 +1593,8 @@ sed -i -e "s/'pyconfig.h'/'%{_pyconfig_h}'/" \
   %{buildroot}%{pylibdir}/sysconfig.py
 
 # Install macros for rpm:
-mkdir -p %{buildroot}/%{_sysconfdir}/rpm
-install -m 644 %{SOURCE6} %{buildroot}/%{_sysconfdir}/rpm
+mkdir -p %{buildroot}/%{_rpmconfigdir}/macros.d/
+install -m 644 %{SOURCE6} %{buildroot}/%{_rpmconfigdir}/macros.d/
 
 # Ensure that the curses module was linked against libncursesw.so, rather than
 # libncurses.so (bug 539917)
@@ -1601,7 +1625,7 @@ done
 # Install a tapset for this libpython into tapsetdir, fixing up the path to the
 # library:
 mkdir -p %{buildroot}%{tapsetdir}
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global libpython_stp_optimized libpython%{pybasever}-64.stp
 %global libpython_stp_debug     libpython%{pybasever}-debug-64.stp
 %else
@@ -1621,6 +1645,11 @@ sed \
    > %{buildroot}%{tapsetdir}/%{libpython_stp_debug}
 %endif # with_debug_build
 %endif # with_systemtap
+
+# Make library-files user writable
+/usr/bin/chmod 755 %{buildroot}%{dynload_dir}/*.so
+/usr/bin/chmod 755 %{buildroot}%{_libdir}/libpython%{pybasever}.so.1.0
+/usr/bin/chmod 755 %{buildroot}%{_libdir}/libpython%{pybasever}_d.so.1.0
 
 
 # ======================================================
@@ -1858,7 +1887,7 @@ rm -fr %{buildroot}
 %endif
 %{_bindir}/python%{pybasever}-config
 %{_libdir}/libpython%{pybasever}.so
-%{_sysconfdir}/rpm/macros.python2
+%{_rpmconfigdir}/macros.d/macros.python2
 
 %files tools
 %defattr(-,root,root,755)
@@ -2039,8 +2068,54 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
-* Mon Jan 06 2014 Liu Di <liudidi@gmail.com> - 2.7.5-10
-- 为 Magic 3.0 重建
+* Sat Jun  7 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.7.7-2
+- aarch64 has valgrind, just list those that don't support it
+
+* Wed Jun 04 2014 Matej Stuchlik <mstuchli@redhat.com> - 2.7.7-1
+- Update to 2.7.7
+- Refreshed patches: #16, #112, #138, #147, #157, #166, #173, #5000
+- Dropped patches: #190, #192, #194
+
+* Tue Jun 03 2014 Dan Horák <dan[at]danny.cz> - 2.7.6-9
+- update the arch list where valgrind exists - %%power64 includes also
+    ppc64le which is not supported yet
+
+* Wed May 21 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.7.6-8
+- Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86
+
+* Fri May 09 2014 Tomas Radej <tradej@redhat.com> - 2.7.6-7
+- Fixed obsoletes on ordereddict (bz #1095434)
+
+* Mon Apr 14 2014 Tomas Radej <tradej@redhat.com> - 2.7.6-6
+- Obsoletes python-ordereddict (bz #1085593, not precisely 1:1 replacement)
+
+* Mon Apr 07 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 2.7.6-5
+- Fix test failure with SQLite > 3.8.4.
+- Obsolete/Provide python-unittest2
+Related: rhbz#1060426
+
+* Wed Feb 19 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 2.7.6-4
+- Enable loading sqlite extensions.
+Resolves: rhbz#1066708
+
+* Mon Feb 10 2014 Tomas Radej <tradej@redhat.com> - 2.7.6-3
+- Fixed buffer overflow (upstream patch)
+Resolves: rhbz#1062375
+
+* Tue Feb 04 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 2.7.6-2
+- Install macros in _rpmconfigdir.
+
+* Wed Jan 29 2014 Tomas Radej <tradej@redhat.com> - 2.7.6-1
+- Updated to v2.7.6
+- Freshened patches 102, 111, 112, 136, and 142
+- Dropped patches 186, 188 (both fixed upstream)
+
+* Wed Jan 15 2014 Matej Stuchlik <mstuchli@redhat.com> - 2.7.5-11
+- Make library-files user writable to get rid of
+  Permission Denied in buildlog from debuginfo-packaging
+
+* Tue Jan 14 2014 Dennis Gilmore <dennis@ausil.us> - 2.7.5-10
+- enable valgrind support on 32 bit arm
 
 * Tue Nov 12 2013 Tomas Radej <tradej@redhat.com> - 2.7.5-9
 - Import get_python_version in bdist_rpm
