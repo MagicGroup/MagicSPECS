@@ -1,0 +1,30 @@
+--- CHANGES
++++ CHANGES
+@@ -639,8 +639,8 @@ Perltidy Change Log
+ 
+      -improved breakpoint choices involving '->'
+ 
+-     -Corrected tokenization of things like ${#} or ${©}. For example,
+-      ${©} is valid, but ${© } is a syntax error.
++     -Corrected tokenization of things like ${#} or ${Â©}. For example,
++      ${Â©} is valid, but ${Â© } is a syntax error.
+ 
+      -Corrected minor tokenization errors with indirect object notation.
+       For example, 'new A::()' works now.
+@@ -813,14 +813,14 @@ Perltidy Change Log
+       closing side comments (-csc) could have incorrect text.  This is
+       annoying but will be correct the next time perltidy is run with -csc.
+ 
+-     -Implemented XHTML patch submitted by Ville Skyttä.
++     -Implemented XHTML patch submitted by Ville SkyttÃ¤.
+ 
+      -Fixed bug where whitespace was being removed between 'Bar' and '()' 
+       in a use statement like:
+ 
+            use Foo::Bar ();
+ 
+-      Thanks to Ville Skyttä for reporting this.
++      Thanks to Ville SkyttÃ¤ for reporting this.
+ 
+      -Whenever possible, if a logical expression is broken with leading
+       '&&', '||', 'and', or 'or', then the leading line will be padded

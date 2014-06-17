@@ -1,55 +1,69 @@
-Name:           perltidy
-Version:        20120714
-Release:        4%{?dist}
-Summary:        Tool for indenting and reformatting Perl scripts
-
-License:        GPLv2+
-URL:            http://perltidy.sourceforge.net/
-Source:         http://downloads.sourceforge.net/perltidy/Perl-Tidy-%{version}.tar.gz
-
-BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Carp)
-BuildRequires:  perl(constant)
-BuildRequires:  perl(Cwd)
-BuildRequires:  perl(Exporter)
-BuildRequires:  perl(IO::File)
-BuildRequires:  perl(Test)
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Name:		perltidy
+Version:	20140328
+Release:	2%{?dist}
+Summary:	Tool for indenting and re-formatting Perl scripts
+License:	GPLv2+
+URL:		http://perltidy.sourceforge.net/
+Source0:	http://www.cpan.org/modules/by-module/Perl/Perl-Tidy-%{version}.tar.gz
+Patch0:		Perl-Tidy-utf8.patch
+BuildArch:	noarch
+# Module Build
+BuildRequires:	perl
+BuildRequires:	perl(ExtUtils::MakeMaker)
+# Module Runtime
+BuildRequires:	perl(Carp)
+BuildRequires:	perl(constant)
+BuildRequires:	perl(Cwd)
+BuildRequires:	perl(Exporter)
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(File::Copy)
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(Getopt::Long)
+BuildRequires:	perl(IO::File)
+BuildRequires:	perl(strict)
+BuildRequires:	perl(vars)
+# Test Suite
+BuildRequires:	perl(Test)
+# Runtime
+Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(File::Spec)
+Provides:	perl-Perl-Tidy = %{version}-%{release}
 
 %description
-Perltidy is a Perl script which indents and reformats Perl scripts to
+Perltidy is a Perl script that indents and re-formats Perl scripts to
 make them easier to read. If you write Perl scripts, or spend much
-time reading them, you will probably find it useful.  The formatting
-can be controlled with command line parameters.  The default parameter
+time reading them, you will probably find it useful. The formatting
+can be controlled with command line parameters. The default parameter
 settings approximately follow the suggestions in the Perl Style Guide.
-Perltidy can also output HTML of both POD and source code.  Besides
-reformatting scripts, Perltidy can be a great help in tracking down
+Perltidy can also output HTML of both POD and source code. Besides
+re-formatting scripts, Perltidy can be a great help in tracking down
 errors with missing or extra braces, parentheses, and square brackets
 because it is very good at localizing errors.
 
-
 %prep
 %setup -q -n Perl-Tidy-%{version}
-rm -f docs/perltidy.1 examples/pt.bat
-f=CHANGES ; iconv -f iso-8859-1 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 
+# Re-format documentation as UTF-8
+%patch0
+
+# Don't need Windows batch file
+rm examples/pt.bat
+
+# We'll ship the perltidy manpage in %%{_mandir} so we don't need another copy
+rm docs/perltidy.1
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-%{_fixperms} $RPM_BUILD_ROOT/*
-magic_rpm_clean.sh
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
 %check
-
-
+make test
 
 %files
 %doc BUGS CHANGES COPYING README TODO docs/ examples/
@@ -58,10 +72,57 @@ magic_rpm_clean.sh
 %{_mandir}/man1/perltidy.1*
 %{_mandir}/man3/Perl::Tidy.3*
 
-
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 20120714-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20140328-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Mar 28 2014 Paul Howarth <paul@city-fan.org> - 20140328-1
+- Update to 20140328
+  - Fixed CPAN RT#94190 and debian Bug #742004: perltidy.LOG file left behind;
+    the problem was caused by the memoization speedup patch in version
+    20121207: an unwanted flag was being set, which caused a LOG to be written
+    if perltidy was called multiple times
+  - New default behavior for LOG files: if the source is from an array or
+    string (through a call to the perltidy module) then a LOG output is only
+    possible if a logfile stream is specified; this is to prevent unexpected
+    perltidy.LOG files
+  - Fixed debian Bug #740670, insecure temporary file usage; File::Temp is now
+    used to get a temporary file (CVE-2014-2277)
+  - Any -b (--backup-and-modify-in-place) flag is silently ignored when a
+    source stream, destination stream, or standard output is used; this is
+    because the -b flag may have been in a .perltidyrc file and warnings break
+    Test::NoWarnings
+- Drop upstreamed patch for CVE-2014-2277
+- Classify buildreqs by usage
+
+* Tue Mar 25 2014 Paul Howarth <paul@city-fan.org> - 20130922-2
+- Cosmetic spec changes:
+  - Use tabs
+  - Comment patch applications
+  - Don't use macros for commands
+  - Use %%{buildroot} rather than $RPM_BUILD_ROOT
+- Provide perl-Perl-Tidy for benefit of people looking for CPAN module
+- Use a patch rather than scripted iconv run to fix character encoding
+- BR: perl(Getopt::Long)
+- Don't need to remove empty directories from the buildroot
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+
+* Wed Mar 12 2014 Ville Skyttä <ville.skytta@iki.fi> - 20130922-1
+- Update to 20130922.
+- Fix for CVE-2014-2277 from Debian (#1074721) + related man page fix.
+- Fix bogus date in %%changelog.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20121207-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 20121207-3
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20121207-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Dec 11 2012 Ville Skyttä <ville.skytta@iki.fi> - 20121207-1
+- Update to 20121207.
 
 * Wed Aug 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 20120714-3
 - Specify all dependencies.
@@ -150,7 +211,7 @@ magic_rpm_clean.sh
 * Thu Jun 15 2006 Ville Skyttä <ville.skytta@iki.fi> - 20060614-1
 - 20060614, specfile cleanups, include examples in docs.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Wed Apr  6 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Thu Dec 16 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:20031021-1
