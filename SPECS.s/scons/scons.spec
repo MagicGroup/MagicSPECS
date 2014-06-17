@@ -1,8 +1,8 @@
 #global posttag .final.0
 
 Name:		    scons
-Version:	    2.1.0
-Release:	    3%{?posttag}%{?dist}
+Version:	    2.3.1
+Release:	    2%{?posttag}%{?dist}
 Summary:	    An Open Source software construction tool
 Group:		    Development/Tools
 License:	    MIT
@@ -39,11 +39,11 @@ for file in *.txt; do
 done
 
 %build
-python setup.py build
+%{__python} setup.py build
 
 %install
 rm -rf %{buildroot}
-python setup.py install -O1 --skip-build \
+%{__python} setup.py install -O1 --skip-build \
     --root=%{buildroot} \
     --no-version-script \
 	--standalone-lib \
@@ -61,14 +61,32 @@ rm -rf %{buildroot}
 %{_mandir}/man?/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.1.0-3
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Mar 05 2014 Fabian Affolter <mail@fabian-affolter.ch> - 2.3.1-1
+- Update to new upstream version 2.3.1
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Mar 09 2013 Fabian Affolter <mail@fabian-affolter.ch> - 2.3.0-1
+- Update to new upstream version 2.3.0
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Aug 29 2012 Fabian Affolter <mail@fabian-affolter.ch> - 2.2.0-1
+- Update to new upstream version 2.2.0
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Sat Sep 10 2011 Fabian Affolter <mail@fabian-affolter.ch> - 2.1.0-1
-- Updated to new upstream version 2.1.0
+- Update to new upstream version 2.1.0
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
@@ -131,7 +149,7 @@ rm -rf %{buildroot}
 * Sat Jun 18 2005 Gerard Milmeister <gemi@bluewin.ch> - 0.96.1-1
 - New Version 0.96.1
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Thu Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Tue Jan 25 2005 Thorsten Leemhuis <fedora[AT]leemhuis[DOT]info> 0.96-4
