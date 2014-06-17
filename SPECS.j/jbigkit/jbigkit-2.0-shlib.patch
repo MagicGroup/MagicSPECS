@@ -1,0 +1,145 @@
+--- jbigkit/pbmtools/Makefile.shlib	2008-08-25 23:26:39.000000000 +0100
++++ jbigkit/pbmtools/Makefile	2008-09-03 16:41:20.000000000 +0100
+@@ -5,23 +5,23 @@
+ CC = gcc
+ 
+ # Options for the compiler
+-CFLAGS = -g -Wall -ansi -pedantic -I../libjbig # --coverage
++CFLAGS ?= -g -Wall -ansi -pedantic -I../libjbig # --coverage
+ 
+ .SUFFIXES: .1 .5 .txt $(SUFFIXES)
+ 
+ all: pbmtojbg jbgtopbm pbmtojbg85 jbgtopbm85 \
+-	pbmtojbg.txt jbgtopbm.txt pbm.txt pgm.txt
++#	pbmtojbg.txt jbgtopbm.txt pbm.txt pgm.txt
+ 
+-pbmtojbg: pbmtojbg.o ../libjbig/libjbig.a
++pbmtojbg: pbmtojbg.o ../libjbig/libjbig.so
+ 	$(CC) $(CFLAGS) -o pbmtojbg pbmtojbg.o -L../libjbig -ljbig
+ 
+-jbgtopbm: jbgtopbm.o ../libjbig/libjbig.a
++jbgtopbm: jbgtopbm.o ../libjbig/libjbig.so
+ 	$(CC) $(CFLAGS) -o jbgtopbm jbgtopbm.o -L../libjbig -ljbig
+ 
+-pbmtojbg85: pbmtojbg85.o ../libjbig/libjbig85.a
++pbmtojbg85: pbmtojbg85.o ../libjbig/libjbig85.so
+ 	$(CC) $(CFLAGS) -o pbmtojbg85 pbmtojbg85.o -L../libjbig -ljbig85
+ 
+-jbgtopbm85: jbgtopbm85.o ../libjbig/libjbig85.a
++jbgtopbm85: jbgtopbm85.o ../libjbig/libjbig85.so
+ 	$(CC) $(CFLAGS) -o jbgtopbm85 jbgtopbm85.o -L../libjbig -ljbig85
+ 
+ jbgtopbm.o: jbgtopbm.c ../libjbig/jbig.h
+@@ -29,13 +29,13 @@ pbmtojbg.o: pbmtojbg.c ../libjbig/jbig.h
+ jbgtopbm85.o: jbgtopbm85.c ../libjbig/jbig85.h
+ pbmtojbg85.o: pbmtojbg85.c ../libjbig/jbig85.h
+ 
+-../libjbig/libjbig.a: ../libjbig/jbig.c ../libjbig/jbig.h \
++../libjbig/libjbig.so: ../libjbig/jbig.c ../libjbig/jbig.h \
+ 	../libjbig/jbig_ar.c ../libjbig/jbig_ar.h
+-	make -C ../libjbig libjbig.a
++	make -C ../libjbig libjbig.so
+ 
+-../libjbig/libjbig85.a: ../libjbig/jbig85.c ../libjbig/jbig85.h \
++../libjbig/libjbig85.so: ../libjbig/jbig85.c ../libjbig/jbig85.h \
+ 	../libjbig/jbig_ar.c ../libjbig/jbig_ar.h
+-	make -C ../libjbig libjbig85.a
++	make -C ../libjbig libjbig85.so
+ 
+ test: test82 test85
+ 
+--- jbigkit/libjbig/Makefile.shlib	2008-08-30 18:20:52.000000000 +0100
++++ jbigkit/libjbig/Makefile	2008-09-03 16:40:43.000000000 +0100
+@@ -5,25 +5,27 @@
+ CC = gcc
+ 
+ # Options for the compiler: A high optimization level is suggested
+-CFLAGS = -g -O -Wall -ansi -pedantic # --coverage
++CFLAGS ?= -g -O -Wall -ansi -pedantic # --coverage
++PICFLAGS := -fPIC -DPIC
+ 
+-all: libjbig.a tstcodec tstcodec85
++all: libjbig.so.$(VERSION) tstcodec tstcodec85
+ 
+-tstcodec: tstcodec.o jbig.o jbig_ar.o
+-	$(CC) $(CFLAGS) -o tstcodec $+
++tstcodec: tstcodec.o libjbig.so
++	$(CC) $(CFLAGS) -o tstcodec $< -L. -ljbig
+ 
+-tstcodec85: tstcodec85.o jbig85.o jbig_ar.o
+-	$(CC) $(CFLAGS) -o tstcodec85 $+
++tstcodec85: tstcodec85.o libjbig85.so
++	$(CC) $(CFLAGS) -o tstcodec85 $^ -L. -ljbig
+ 
+-libjbig.a: jbig.o jbig_ar.o
+-	rm -f libjbig.a
+-	ar rc libjbig.a jbig.o jbig_ar.o
+-	-ranlib libjbig.a
++%.so: %.so.$(VERSION)
++	ln -sf $< $@
+ 
+-libjbig85.a: jbig85.o jbig_ar.o
+-	rm -f libjbig85.a
+-	ar rc libjbig85.a jbig85.o jbig_ar.o
+-	-ranlib libjbig85.a
++libjbig.so.$(VERSION): jbig.o jbig_ar.o
++	$(CC) $(CFLAGS) -shared -Wl,-soname,$@ -o $@ $^
++
++libjbig85.so.$(VERSION): jbig85.o jbig_ar.o
++	$(CC) $(CFLAGS) -shared -Wl,-soname,$@ -o $@ $^
++
++jbig.o jbig85.o jbig_ar.o: CFLAGS += $(PICFLAGS)
+ 
+ jbig.o: jbig.c jbig.h jbig_ar.h
+ jbig85.o: jbig85.c jbig85.h jbig_ar.h
+@@ -37,12 +39,12 @@ jbig.pot: jbig.c
+ 	  --msgid-bugs-address='http://www.cl.cam.ac.uk/~mgk25/jbigkit/' $+
+ 
+ test: tstcodec tstcodec85
+-	./tstcodec
+-	./tstcodec85
++	LD_LIBRARY_PATH=`pwd` ./tstcodec
++	LD_LIBRARY_PATH=`pwd` ./tstcodec85
+ 
+ t82test.pbm: tstcodec
+-	./tstcodec $@
++	LD_LIBRARY_PATH=`pwd` ./tstcodec $@
+ 
+ clean:
+ 	rm -f *.{o,gcda,gcno,gcov} *~ core gmon.out dbg_d\=??.pbm t82test.pbm
+-	rm -f tstcodec tstcodec85
++	rm -f tstcodec tstcodec85 *.so *.so.$(VERSION)
+--- jbigkit/Makefile.shlib	2008-08-30 21:40:22.000000000 +0100
++++ jbigkit/Makefile	2008-09-03 16:40:43.000000000 +0100
+@@ -11,24 +11,25 @@ CCFLAGS = -O2 -W
+ CFLAGS = $(CCFLAGS) -I../libjbig
+ 
+ VERSION=2.0
++export VERSION CFLAGS CC
+ 
+ all: lib pbm
+ 	@echo "Enter 'make test' in order to start some automatic tests."
+ 
+ lib:
+-	(cd libjbig;  make "CC=$(CC)" "CFLAGS=$(CFLAGS)")
++	make -C libjbig
+ 
+ pbm: lib
+-	(cd pbmtools; make "CC=$(CC)" "CFLAGS=$(CFLAGS)")
++	make -C pbmtools
+ 
+ test: lib pbm
+-	(cd libjbig;  make "CC=$(CC)" "CFLAGS=$(CFLAGS)" test)
+-	(cd pbmtools; make "CC=$(CC)" "CFLAGS=$(CFLAGS)" test)
++	LD_LIBRARY_PATH=`pwd`/libjbig make -C libjbig test
++	LD_LIBRARY_PATH=`pwd`/libjbig make -C pbmtools test
+ 
+ clean:
+ 	rm -f *~ core
+-	(cd libjbig; make clean)
+-	(cd pbmtools; make clean)
++	make -C libjbig clean
++	make -C pbmtools clean
+ 
+ distribution: clean
+ 	rm -f libjbig/libjbig*.a
