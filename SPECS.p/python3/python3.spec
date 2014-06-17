@@ -2,10 +2,24 @@
 # Conditionals and other variables controlling the build
 # ======================================================
 
-%global pybasever 3.3
+# NOTES ON BOOTSTRAPING PYTHON 3.4:
+#
+# Due to dependency cycle between Python, pip, setuptools and
+# wheel caused by the rewheel patch, one has to build in the
+# following order:
+#
+# 1) python3 with with_rewheel set to 0
+# 2) python3-setuptools and python3-pip with with_rewheel set to 0
+# 3) python3-wheel
+# 4) python3-setuptools and python3-pip with with_rewheel set to 1
+# 5) python3 with with_rewheel set to 1
+
+%global with_rewheel 1
+
+%global pybasever 3.4
 
 # pybasever without the dot:
-%global pyshortver 33
+%global pyshortver 34
 
 %global pylibdir %{_libdir}/python%{pybasever}
 %global dynload_dir %{pylibdir}/lib-dynload
@@ -35,9 +49,9 @@
 # For example,
 #   foo/bar.py
 # now has bytecode at:
-#   foo/__pycache__/bar.cpython-33.pyc
-#   foo/__pycache__/bar.cpython-33.pyo
-%global bytecode_suffixes .cpython-33.py?
+#   foo/__pycache__/bar.cpython-34.pyc
+#   foo/__pycache__/bar.cpython-34.pyo
+%global bytecode_suffixes .cpython-34.py?
 
 # Python's configure script defines SOVERSION, and this is used in the Makefile
 # to determine INSTSONAME, the name of the libpython DSO:
@@ -57,7 +71,7 @@
 %global with_systemtap 1
 
 # some arches don't have valgrind so we need to disable its support on them
-%ifarch %{ix86} x86_64 ppc %{power64} s390x %{arm}
+%ifnarch s390 ppc64le
 %global with_valgrind 1
 %else
 %global with_valgrind 0
@@ -76,17 +90,17 @@
 # 
 # Unfortunately, rpmbuild's infrastructure requires us to jump through some
 # hoops to avoid byte-compiling with the system python 2 version:
-#   /usr/lib/rpm/magic/macros sets up build policy that (amongst other things)
+#   /usr/lib/rpm/redhat/macros sets up build policy that (amongst other things)
 # defines __os_install_post.  In particular, "brp-python-bytecompile" is
 # invoked without an argument thus using the wrong version of python
 # (/usr/bin/python, rather than the freshly built python), thus leading to
 # numerous syntax errors, and incorrect magic numbers in the .pyc files.  We
 # thus override __os_install_post to avoid invoking this script:
-%global __os_install_post /usr/lib/rpm/magic/brp-compress \
-  %{!?__debug_package:/usr/lib/rpm/magic/brp-strip %{__strip}} \
-  /usr/lib/rpm/magic/brp-strip-static-archive %{__strip} \
-  /usr/lib/rpm/magic/brp-strip-comment-note %{__strip} %{__objdump} \
-  /usr/lib/rpm/magic/brp-python-hardlink 
+%global __os_install_post /usr/lib/rpm/brp-compress \
+  %{!?__debug_package:/usr/lib/rpm/brp-strip %{__strip}} \
+  /usr/lib/rpm/brp-strip-static-archive %{__strip} \
+  /usr/lib/rpm/brp-strip-comment-note %{__strip} %{__objdump} \
+  /usr/lib/rpm/brp-python-hardlink 
 # to remove the invocation of brp-python-bytecompile, whilst keeping the
 # invocation of brp-python-hardlink (since this should still work for python3
 # pyc/pyo files)
@@ -125,8 +139,8 @@
 # ==================
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
-Version: %{pybasever}.2
-Release: 11%{?dist}
+Version: %{pybasever}.1
+Release: 12%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -141,7 +155,7 @@ BuildRequires: autoconf
 BuildRequires: bluez-libs-devel
 BuildRequires: bzip2
 BuildRequires: bzip2-devel
-BuildRequires: libdb-devel >= 4.7
+BuildRequires: db4-devel >= 4.7
 
 # expat 2.1.0 added the symbol XML_SetHashSalt without bumping SONAME.  We use
 # it (in pyexpat) in order to enable the fix in Python-3.2.3 for CVE-2012-0876:
@@ -158,6 +172,8 @@ BuildRequires: libffi-devel
 BuildRequires: libGL-devel
 BuildRequires: libX11-devel
 BuildRequires: ncurses-devel
+# workaround http://bugs.python.org/issue19804 (test_uuid requires ifconfig)
+BuildRequires: net-tools
 BuildRequires: openssl-devel
 BuildRequires: pkgconfig
 BuildRequires: readline-devel
@@ -182,6 +198,11 @@ BuildRequires: valgrind-devel
 BuildRequires: xz-devel
 BuildRequires: zlib-devel
 
+%if 0%{?with_rewheel}
+BuildRequires: python3-setuptools
+BuildRequires: python3-pip
+%endif
+
 
 # =======================
 # Source code and patches
@@ -192,8 +213,8 @@ Source: http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 # Avoid having various bogus auto-generated Provides lines for the various
 # python c modules' SONAMEs:
 Source1: find-provides-without-python-sonames.sh
-#global _use_internal_dependency_generator 0
-#global __find_provides %{SOURCE1}
+%global _use_internal_dependency_generator 0
+%global __find_provides %{SOURCE1}
 
 # Supply various useful macros for building python 3 modules:
 #  __python3, python3_sitelib, python3_sitearch
@@ -237,7 +258,7 @@ Patch1:         Python-3.1.1-rpath.patch
 # (where sys.getfilesystemencoding() == 'ascii')
 Patch55: 00055-systemtap.patch
 
-Patch102: python-3.3.0b1-lib64.patch
+Patch102: 00102-lib64.patch
 
 # 00104 #
 # Only used when "%{_lib}" == "lib64"
@@ -263,10 +284,8 @@ Patch111: 00111-no-static-lib.patch
 Patch113: 00113-more-configuration-flags.patch
 
 # 00114 #
-# Add flags for statvfs.f_flag to the constant list in posixmodule (i.e. "os")
-# (rhbz:553020); partially upstream as http://bugs.python.org/issue7647
-# Not yet sent upstream
-Patch114: 00114-statvfs-f_flag-constants.patch
+# Upstream as of Python 3.4.0.b2
+#  Patch114: 00114-statvfs-f_flag-constants.patch
 
 # 00125 #
 # COUNT_ALLOCS is useful for debugging, but the upstream behaviour of always
@@ -275,17 +294,6 @@ Patch114: 00114-statvfs-f_flag-constants.patch
 # must be set to enable the output on exit
 # Not yet sent upstream
 Patch125: 00125-less-verbose-COUNT_ALLOCS.patch
-
-# In my koji builds, /root/bin is in the PATH for some reason
-# This leads to test_subprocess.py failing, due to "test_leaking_fds_on_error"
-# trying every dir in PATH for "nonexisting_i_hope", which leads to it raising
-#  OSError: [Errno 13] Permission denied
-# when it tries to read /root/bin, rather than raising "No such file"
-#
-# Work around this by specifying an absolute path for the non-existant
-# executable
-# Not yet sent upstream
-Patch129: python-3.2.1-fix-test-subprocess-with-nonreadable-path-dir.patch
 
 # 00130 #
 # Python 2's:
@@ -353,13 +361,11 @@ Patch140: python3-arm-skip-failing-fragile-test.patch
 # to be relevant for python3
 
 # 00141 #
-# Fix test_gc's test_newinstance case when configured with COUNT_ALLOCS:
-# Not yet sent upstream
-Patch141: 00141-fix-test_gc_with_COUNT_ALLOCS.patch
-
-# 00142 #
-# Some pty tests fail when run in mock (rhbz#714627):
-Patch142: 00142-skip-failing-pty-tests-in-rpmbuild.patch
+# Fix tests for case when  tests for case when configured with
+# COUNT_ALLOCS (debug build): http://bugs.python.org/issue19527
+# Applies to: test_gc, test_module, test_io, test_logging, test_warnings,
+#             test_threading
+Patch141: 00141-fix-tests_with_COUNT_ALLOCS.patch
 
 # 00143 #
 # Fix the --with-tsc option on ppc64, and rework it on 32-bit ppc to avoid
@@ -393,6 +399,13 @@ Patch143: 00143-tsc-on-ppc.patch
 # - don't build the _md5 and _sha* modules; rely on the _hashlib implementation
 #   of hashlib
 # (rhbz#563986)
+# Note: Up to Python 3.4.0.b1, upstream had their own implementation of what
+# they assumed would become sha3. This patch was adapted to give it the
+# usedforsecurity argument, even though it did nothing (OpenSSL didn't have
+# sha3 implementation at that time).In 3.4.0.b2, sha3 implementation was reverted
+# (see http://bugs.python.org/issue16113), but the alterations were left in the
+# patch, since they may be useful again if upstream decides to rerevert sha3
+# implementation and OpenSSL still doesn't support it. For now, they're harmless.
 Patch146: 00146-hashlib-fips.patch
 
 # 00147 #
@@ -559,11 +572,8 @@ Patch173: 00173-workaround-ENOPROTOOPT-in-bind_port.patch
 #  Patch176: 00176-upstream-issue16754-so-extension.patch
 
 # 00177 #
-# Patch for potential unicode error when determining OS release names
-# http://bugs.python.org/issue17429
-# (rhbz#922149)
-# Does not affect python2 (python2 uses a byte string so it doesn't need to decode)
-Patch177: 00177-platform-unicode.patch
+# Fixed upstream as of Python 3.4.0.b2
+#  Patch177: 00177-platform-unicode.patch
 
 # 00178 #
 # Don't duplicate various FLAGS in sysconfig values
@@ -595,10 +605,8 @@ Patch180: 00180-python-add-support-for-ppc64p7.patch
 #  Patch182: 00182-fix-test_gdb-test_threads.patch
 
 # 00183 #
-# Upstream fix for CVE-2013-2099 (ssl.match_hostname DOS)
-# http://bugs.python.org/issue17980
-# http://hg.python.org/cpython/rev/c627638753e2
-Patch183: 00183-cve-2013-2099-fix-ssl-match_hostname-dos.patch
+# Fixed upstream as of Python 3.4.0a4
+#  Patch183: 00183-cve-2013-2099-fix-ssl-match_hostname-dos.patch
 
 # 00184 #
 # Fix for https://bugzilla.redhat.com/show_bug.cgi?id=979696
@@ -609,31 +617,77 @@ Patch183: 00183-cve-2013-2099-fix-ssl-match_hostname-dos.patch
 Patch184: 00184-ctypes-should-build-with-libffi-multilib-wrapper.patch
 
 # 00185 #
-# Fix for CVE-2013-4238 --
-# SSL module fails to handle NULL bytes inside subjectAltNames general names
-# http://bugs.python.org/issue18709
-# rhbz#996399
-Patch185: 00185-CVE-2013-4238-hostname-check-bypass-in-SSL-module.patch
+# Fixed upstream as of Python 3.4.0a4
+#  Patch185: 00185-CVE-2013-4238-hostname-check-bypass-in-SSL-module.patch
 
 # 00186 #
 # Fix for https://bugzilla.redhat.com/show_bug.cgi?id=1023607
-# Fixes the problem of some *.py files not being bytecompiled properly
-# during build. This was result of py_compile.compile raising exception
-# when trying to convert test file with bad encoding, and thus not
-# continuing bytecompilation for other files.
+# Previously, this fixed a problem where some *.py files were not being
+# bytecompiled properly during build. This was result of py_compile.compile
+# raising exception when trying to convert test file with bad encoding, and
+# thus not continuing bytecompilation for other files.
+# This was fixed upstream, but the test hasn't been merged yet, so we keep it
 Patch186: 00186-dont-raise-from-py_compile.patch
 
 # 00187 #
-# Fix for rhbz#1023742
-# Change behavior of ssl.match_hostname() to follow RFC 6125
-# See http://bugs.python.org/issue17997#msg194950 for more.
-Patch187: 00187-change-match_hostname-to-follow-RFC-6125.patch
+# Fixed upstream as of Python 3.4.0b1
+#  Patch187: 00187-remove-pthread-atfork.patch
 
-# 00192 #
+# 00188 #
+# Downstream only patch that should be removed when we compile all guaranteed
+# hashlib algorithms properly. The problem is this:
+# - during tests, test_hashlib is imported and executed before test_lib2to3
+# - if at least one hash function has failed, trying to import it triggers an
+#   exception that is being caught and exception is logged:
+#   http://hg.python.org/cpython/file/2de806c8b070/Lib/hashlib.py#l217
+# - logging the exception makes logging module run basicConfig
+# - when lib2to3 tests are run again, lib2to3 runs basicConfig again, which
+#   doesn't do anything, because it was run previously
+#   (logging.root.handlers != []), which means that the default setup
+#   (most importantly logging level) is not overriden. That means that a test
+#   relying on this will fail (test_filename_changing_on_output_single_dir)
+Patch188: 00188-fix-lib2to3-tests-when-hashlib-doesnt-compile-properly.patch
+
+# 00189 #
 #
-# Fixing buffer overflow (upstream patch)
-# rhbz#1062375
-Patch192: 00192-buffer-overflow.patch
+# Add the rewheel module, allowing to recreate wheels from already installed
+# ones
+# https://github.com/bkabrda/rewheel
+%if 0%{with_rewheel}
+Patch189: 00189-add-rewheel-module.patch
+%endif
+
+# 00190 #
+#
+# Fix tests with SQLite >= 3.8.4
+# http://bugs.python.org/issue20901
+# http://hg.python.org/cpython/rev/4d626a9df062
+# FIXED UPSTREAM
+# Patch190: 00190-fix-tests-with-sqlite-3.8.4.patch
+
+# 00193
+#
+# Skip correct number of *.pyc file bytes in ModuleFinder.load_module
+# rhbz#1060338
+# http://bugs.python.org/issue20778
+# FIXED UPSTREAM
+# Patch193: 00193-skip-correct-num-of-pycfile-bytes-in-modulefinder.patch
+
+# Tests requiring SIGHUP to work don't work in Koji
+# see rhbz#1088233
+Patch194: temporarily-disable-tests-requiring-SIGHUP.patch
+
+# 00195
+#
+# Don't declare Werror=declaration-after-statement for extension
+# modules through setup.py
+# http://bugs.python.org/issue21121
+Patch195: 00195-dont-add-Werror-declaration-after-statement.patch
+
+# 00196
+#
+#  Fix test_gdb failure on ppc64le
+Patch196: 00196-test-gdb-match-addr-before-builtin.patch
 
 
 # (New patches go here ^^^)
@@ -674,6 +728,11 @@ Provides: python(abi) = %{pybasever}
 
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
+%if 0%{with_rewheel}
+Requires: python3-setuptools
+Requires: python3-pip
+%endif
+
 %description
 Python 3 is a new version of the language that is incompatible with the 2.x
 line of releases. The language is mostly the same, but many details, especially
@@ -697,7 +756,8 @@ This package contains files used to embed Python 3 into applications.
 %package devel
 Summary: Libraries and header files needed for Python 3 development
 Group: Development/Libraries
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Conflicts: %{name} < %{version}-%{release}
 
 %description devel
@@ -774,7 +834,7 @@ can load its own extensions.
 # ======================================================
 
 %prep
-%setup -q -n Python-%{version}
+%setup -q -n Python-%{version}%{?prerel}
 chmod +x %{SOURCE1}
 
 %if 0%{?with_systemtap}
@@ -801,6 +861,8 @@ rm -r Modules/zlib || exit 1
 #
 # For example, in our builds hashlib.md5 is implemented within _hashlib via
 # OpenSSL (and thus respects FIPS mode), and does not fall back to _md5
+# TODO: there seems to be no OpenSSL support in Python for sha3 so far
+# when it is there, also remove _sha3/ dir
 for f in md5module.c sha1module.c sha256module.c sha512module.c; do
     rm Modules/$f
 done
@@ -824,11 +886,9 @@ done
 %patch111 -p1
 # 112: not for python3
 %patch113 -p1
-%patch114 -p1
+# 00114: Upstream as of Python 3.4.0.b2
 
 %patch125 -p1 -b .less-verbose-COUNT_ALLOCS
-
-%patch129 -p1
 
 %ifarch ppc %{power64}
 %patch131 -p1
@@ -847,7 +907,6 @@ done
 %endif
 # 00140: not for python3
 %patch141 -p1
-%patch142 -p1
 %patch143 -p1 -b .tsc-on-ppc
 # 00144: not for python3
 # 00145: not for python3
@@ -886,18 +945,28 @@ done
 #00174: TODO
 # 00175: upstream as of Python 3.3.2
 # 00176: upstream as of Python 3.3.1
-%patch177 -p1
+# 00177: upstream as of Python 3.4.0.b2
 %patch178 -p1
 %patch179 -p1
 %patch180 -p1
 # 00181: not for python3
 # 00182: upstream as of Python 3.3.2
-%patch183 -p1
-%patch184 -p1
-%patch185 -p1
+# 00183  upstream as of Python 3.4.0a4
+%patch184  -p1
+# 00185  upstream as of Python 3.4.0a4
 %patch186 -p1
-%patch187 -p1
-%patch192 -p1
+# 00187: upstream as of Python 3.4.0b1
+%patch188 -p1
+
+%if 0%{with_rewheel}
+%patch189 -p1
+%endif
+
+# 00190: upstream as of Python 3.4.1
+# 00193: upstream as of Python 3.4.1
+%patch194 -p1
+%patch195 -p1
+%patch196 -p1
 
 # Currently (2010-01-15), http://docs.python.org/library is for 2.6, and there
 # are many differences between 2.6 and the Python 3 library.
@@ -997,7 +1066,8 @@ BuildPython() {
   #    missing symbol AnnotateRWLockDestroy
   #
   # Invoke the build:
-  make EXTRA_CFLAGS="$CFLAGS" %{?_smp_mflags}
+  # TODO: it seems that 3.4.0a4 fails with %{?_smp_flags}, have to figure out why
+  make EXTRA_CFLAGS="$CFLAGS"
 
   popd
   echo FINISHED: BUILD OF PYTHON FOR CONFIGURATION: $ConfDir
@@ -1010,9 +1080,9 @@ BuildPython debug \
   python-debug \
   python%{pybasever}-debug \
 %ifarch %{ix86} x86_64 ppc %{power64}
-  "--with-pydebug --with-tsc --with-count-allocs --with-call-profile" \
+  "--with-pydebug --with-tsc --with-count-allocs --with-call-profile --without-ensurepip" \
 %else
-  "--with-pydebug --with-count-allocs --with-call-profile" \
+  "--with-pydebug --with-count-allocs --with-call-profile --without-ensurepip" \
 %endif
   false
 %endif # with_debug_build
@@ -1020,7 +1090,7 @@ BuildPython debug \
 BuildPython optimized \
   python \
   python%{pybasever} \
-  "" \
+  "--without-ensurepip" \
   true
 
 # ======================================================
@@ -1124,7 +1194,7 @@ install -d -m 0755 %{buildroot}/usr/lib/python%{pybasever}/site-packages/__pycac
 %global _pyconfig32_h pyconfig-32.h
 %global _pyconfig64_h pyconfig-64.h
 
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global _pyconfig_h %{_pyconfig64_h}
 %else
 %global _pyconfig_h %{_pyconfig32_h}
@@ -1283,7 +1353,7 @@ ln -s \
 # Install a tapset for this libpython into tapsetdir, fixing up the path to the
 # library:
 mkdir -p %{buildroot}%{tapsetdir}
-%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64 mips64el
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64 aarch64
 %global libpython_stp_optimized libpython%{pybasever}-64.stp
 %global libpython_stp_debug     libpython%{pybasever}-debug-64.stp
 %else
@@ -1309,6 +1379,13 @@ sed \
 
 %endif # with_systemtap
 
+# Rename the script that differs on different arches to arch specific name
+mv %{buildroot}%{_bindir}/python%{LDVERSION_optimized}-{,`uname -m`-}config
+echo -e '#!/bin/sh\nexec `dirname $0`/python%{LDVERSION_optimized}-`uname -m`-config "$@"' > \
+  %{buildroot}%{_bindir}/python%{LDVERSION_optimized}-config
+echo '[ $? -eq 127 ] && echo "Could not find python%{LDVERSION_optimized}-`uname -m`-config. Look around to see available arches." >&2' >> \
+  %{buildroot}%{_bindir}/python%{LDVERSION_optimized}-config
+  chmod +x %{buildroot}%{_bindir}/python%{LDVERSION_optimized}-config
 
 # ======================================================
 # Running the upstream test suite
@@ -1337,9 +1414,14 @@ CheckPython() {
   # our non-standard decorators take effect on the relevant tests:
   #   @unittest._skipInRpmBuild(reason)
   #   @unittest._expectedFailureInRpmBuild
+  # test_faulthandler.test_register_chain currently fails on ppc64le and
+  #   aarch64, see upstream bug http://bugs.python.org/issue21131
   WITHIN_PYTHON_RPM_BUILD= \
   LD_LIBRARY_PATH=$ConfDir $ConfDir/python -m test.regrtest \
-    --verbose --findleaks
+    --verbose --findleaks \
+    %ifarch ppc64le aarch64
+    -x test_faulthandler
+    %endif
 
   echo FINISHED: CHECKING OF PYTHON FOR CONFIGURATION: $ConfName
 
@@ -1382,7 +1464,7 @@ rm -fr %{buildroot}
 %{_bindir}/python%{pybasever}
 %{_bindir}/python%{pybasever}m
 %{_bindir}/pyvenv
-%{_bindir}/pyvenv-3.3
+%{_bindir}/pyvenv-%{pybasever}
 %{_mandir}/*/*
 
 %files libs
@@ -1416,6 +1498,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/_lzma.%{SOABI_optimized}.so
 %{dynload_dir}/_multibytecodec.%{SOABI_optimized}.so
 %{dynload_dir}/_multiprocessing.%{SOABI_optimized}.so
+%{dynload_dir}/_opcode.%{SOABI_optimized}.so
 %{dynload_dir}/_pickle.%{SOABI_optimized}.so
 %{dynload_dir}/_posixsubprocess.%{SOABI_optimized}.so
 %{dynload_dir}/_random.%{SOABI_optimized}.so
@@ -1424,7 +1507,6 @@ rm -fr %{buildroot}
 %{dynload_dir}/_ssl.%{SOABI_optimized}.so
 %{dynload_dir}/_struct.%{SOABI_optimized}.so
 %{dynload_dir}/array.%{SOABI_optimized}.so
-%{dynload_dir}/atexit.%{SOABI_optimized}.so
 %{dynload_dir}/audioop.%{SOABI_optimized}.so
 %{dynload_dir}/binascii.%{SOABI_optimized}.so
 %{dynload_dir}/cmath.%{SOABI_optimized}.so
@@ -1454,6 +1536,11 @@ rm -fr %{buildroot}
 %{pylibdir}/*.py
 %dir %{pylibdir}/__pycache__/
 %{pylibdir}/__pycache__/*%{bytecode_suffixes}
+
+%dir %{pylibdir}/asyncio/
+%dir %{pylibdir}/asyncio/__pycache__/
+%{pylibdir}/asyncio/*.py
+%{pylibdir}/asyncio/__pycache__/*%{bytecode_suffixes}
 
 %dir %{pylibdir}/collections/
 %dir %{pylibdir}/collections/__pycache__/
@@ -1498,6 +1585,20 @@ rm -fr %{buildroot}
 %doc %{pylibdir}/email/architecture.rst
 
 %{pylibdir}/encodings
+
+%dir %{pylibdir}/ensurepip/
+%dir %{pylibdir}/ensurepip/__pycache__/
+%{pylibdir}/ensurepip/*.py
+%{pylibdir}/ensurepip/__pycache__/*%{bytecode_suffixes}
+%exclude %{pylibdir}/ensurepip/_bundled
+
+%if 0%{?with_rewheel}
+%dir %{pylibdir}/ensurepip/rewheel/
+%dir %{pylibdir}/ensurepip/rewheel/__pycache__/
+%{pylibdir}/ensurepip/rewheel/*.py
+%{pylibdir}/ensurepip/rewheel/__pycache__/*%{bytecode_suffixes}
+%endif
+
 %{pylibdir}/html
 %{pylibdir}/http
 %{pylibdir}/idlelib
@@ -1526,10 +1627,12 @@ rm -fr %{buildroot}
 
 %dir %{pylibdir}/test/
 %dir %{pylibdir}/test/__pycache__/
+%dir %{pylibdir}/test/support/
+%dir %{pylibdir}/test/support/__pycache__/
 %{pylibdir}/test/__init__.py
-%{pylibdir}/test/support.py
 %{pylibdir}/test/__pycache__/__init__%{bytecode_suffixes}
-%{pylibdir}/test/__pycache__/support%{bytecode_suffixes}
+%{pylibdir}/test/support/__init__.py
+%{pylibdir}/test/support/__pycache__/__init__%{bytecode_suffixes}
 
 %exclude %{pylibdir}/turtle.py
 %exclude %{pylibdir}/__pycache__/turtle*%{bytecode_suffixes}
@@ -1582,6 +1685,7 @@ rm -fr %{buildroot}
 %{_bindir}/python3-config
 %{_bindir}/python%{pybasever}-config
 %{_bindir}/python%{LDVERSION_optimized}-config
+%{_bindir}/python%{LDVERSION_optimized}-*-config
 %{_libdir}/libpython%{LDVERSION_optimized}.so
 %{_libdir}/pkgconfig/python-%{LDVERSION_optimized}.pc
 %{_libdir}/pkgconfig/python-%{pybasever}.pc
@@ -1620,6 +1724,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/_ctypes_test.%{SOABI_optimized}.so
 %{dynload_dir}/_testbuffer.%{SOABI_optimized}.so
 %{dynload_dir}/_testcapi.%{SOABI_optimized}.so
+%{dynload_dir}/_testimportmultiple.%{SOABI_optimized}.so
 %{pylibdir}/lib2to3/tests
 %{pylibdir}/tkinter/test
 %{pylibdir}/unittest/test
@@ -1667,6 +1772,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/_lzma.%{SOABI_debug}.so
 %{dynload_dir}/_multibytecodec.%{SOABI_debug}.so
 %{dynload_dir}/_multiprocessing.%{SOABI_debug}.so
+%{dynload_dir}/_opcode.%{SOABI_debug}.so
 %{dynload_dir}/_pickle.%{SOABI_debug}.so
 %{dynload_dir}/_posixsubprocess.%{SOABI_debug}.so
 %{dynload_dir}/_random.%{SOABI_debug}.so
@@ -1675,7 +1781,6 @@ rm -fr %{buildroot}
 %{dynload_dir}/_ssl.%{SOABI_debug}.so
 %{dynload_dir}/_struct.%{SOABI_debug}.so
 %{dynload_dir}/array.%{SOABI_debug}.so
-%{dynload_dir}/atexit.%{SOABI_debug}.so
 %{dynload_dir}/audioop.%{SOABI_debug}.so
 %{dynload_dir}/binascii.%{SOABI_debug}.so
 %{dynload_dir}/cmath.%{SOABI_debug}.so
@@ -1725,6 +1830,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/_ctypes_test.%{SOABI_debug}.so
 %{dynload_dir}/_testbuffer.%{SOABI_debug}.so
 %{dynload_dir}/_testcapi.%{SOABI_debug}.so
+%{dynload_dir}/_testimportmultiple.%{SOABI_debug}.so
 
 %endif # with_debug_build
 
@@ -1747,19 +1853,101 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
-* Wed Feb 19 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 3.3.2-11
-- Enable loading sqlite extensions.
-Resolves: rhbz#1066938
+* Sun Jun  8 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.4.1-12
+- aarch64 has valgrind, just list those that don't support it
 
-* Mon Feb 10 2014 Tomas Radej <tradej@redhat.com> - 3.3.2-10
-- Fixed buffer overflow (upstream patch)
-Resolves: rhbz#1062374
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Tue Feb 04 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 3.3.2-9
-- Install macros in _rpmconfigdir.
+* Wed Jun 04 2014 Karsten Hopp <karsten@redhat.com> 3.4.1-10
+- bump release and rebuild to link with the correct tcl/tk libs on ppcle
 
-* Tue Nov 05 2013 Matej Stuchlik <mstuchli@redhat.com> - 3.3.2-8
-- Changed behavior of ssl.match_hostname() to follow RFC 6125 (rhbz#1023742)
+* Tue Jun 03 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.1-9
+- Change paths to bundled projects in rewheel patch
+
+* Fri May 30 2014 Miro Hrončok <mhroncok@redhat.com> - 3.4.1-8
+- In config script, use uname -m to write the arch
+
+* Thu May 29 2014 Dan Horák <dan[at]danny.cz> - 3.4.1-7
+- update the arch list where valgrind exists - %%power64 includes also
+    ppc64le which is not supported yet
+
+* Thu May 29 2014 Miro Hrončok <mhroncok@redhat.com> - 3.4.1-6
+- Forward arguments to the arch specific config script
+Resolves: rhbz#1102683
+
+* Wed May 28 2014 Miro Hrončok <mhroncok@redhat.com> - 3.4.1-5
+- Rename python3.Xm-config script to arch specific.
+Resolves: rhbz#1091815
+
+* Tue May 27 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 3.4.1-4
+- Use python3-*, not python-* runtime requires on setuptools and pip
+- rebuild for tcl-8.6
+
+* Tue May 27 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.1-3
+- Update the rewheel module
+
+* Mon May 26 2014 Miro Hrončok <mhroncok@redhat.com> - 3.4.1-2
+- Fix multilib dependencies.
+Resolves: rhbz#1091815
+
+* Sun May 25 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.1-1
+- Update to Python 3.4.1
+
+* Sun May 25 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.0-8
+- Fix test_gdb failure on ppc64le
+Resolves: rhbz#1095355
+
+* Thu May 22 2014 Miro Hrončok <mhroncok@redhat.com> - 3.4.0-7
+- Add macro %%python3_version_nodots
+
+* Sun May 18 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.0-6
+- Disable test_faulthandler, test_gdb on aarch64
+Resolves: rhbz#1045193
+
+* Fri May 16 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.0-5
+- Don't add Werror=declaration-after-statement for extension
+  modules through setup.py (PyBT#21121)
+
+* Mon May 12 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.0-4
+- Add setuptools and pip to Requires
+
+* Tue Apr 29 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.0-3
+- Point __os_install_post to correct brp-* files
+
+* Tue Apr 15 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.0-2
+- Temporarily disable tests requiring SIGHUP (rhbz#1088233)
+
+* Tue Apr 15 2014 Matej Stuchlik <mstuchli@redhat.com> - 3.4.0-1
+- Update to Python 3.4 final
+- Add patch adding the rewheel module
+- Merge patches from master
+
+* Wed Jan 08 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 3.4.0-0.1.b2
+- Update to Python 3.4 beta 2.
+- Refreshed patches: 55 (systemtap), 146 (hashlib-fips), 154 (test_gdb noise)
+- Dropped patches: 114 (statvfs constants), 177 (platform unicode)
+
+* Mon Nov 25 2013 Bohuslav Kabrda <bkabrda@redhat.com> - 3.4.0-0.1.b1
+- Update to Python 3.4 beta 1.
+- Refreshed patches: 102 (lib64), 111 (no static lib), 125 (less verbose COUNT
+ALLOCS), 141 (fix COUNT_ALLOCS in test_module), 146 (hashlib fips),
+157 (UID+GID overflows), 173 (ENOPROTOOPT in bind_port)
+- Removed patch 00187 (remove pthread atfork; upstreamed)
+
+* Mon Nov 04 2013 Bohuslav Kabrda <bkabrda@redhat.com> - 3.4.0-0.1.a4
+- Update to Python 3.4 alpha 4.
+- Refreshed patches: 55 (systemtap), 102 (lib64), 111 (no static lib),
+114 (statvfs flags), 132 (unittest rpmbuild hooks), 134 (fix COUNT_ALLOCS in
+test_sys), 143 (tsc on ppc64), 146 (hashlib fips), 153 (test gdb noise),
+157 (UID+GID overflows), 173 (ENOPROTOOPT in bind_port), 186 (dont raise
+from py_compile)
+- Removed patches: 129 (test_subprocess nonreadable dir - no longer fails in
+Koji), 142 (the mock issue that caused this is fixed)
+- Added patch 187 (remove thread atfork) - will be in next version
+- Refreshed script for checking pyc and pyo timestamps with new ignored files.
+- The fips patch is disabled for now until upstream makes a final decision
+what to do with sha3 implementation for 3.4.0.
 
 * Wed Oct 30 2013 Bohuslav Kabrda <bkabrda@redhat.com> - 3.3.2-7
 - Bytecompile all *.py files properly during build (rhbz#1023607)
