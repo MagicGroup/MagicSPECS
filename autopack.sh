@@ -121,7 +121,7 @@ function debug_runsh ()
 	if [ $DEBUG = "1" ];then
 		sh $1
 	else
-		sh $1 2>$1 | tee  "$LOGFILE"
+		sh $1 > "$LOGFILE" 2>&1
 	fi
 }
 function debug_run ()
@@ -129,7 +129,7 @@ function debug_run ()
 	if [ $DEBUG = "1" ];then
 		"$@"
 	else	
-		"$@" 2>$1 | tee "$LOGFILE"
+		"$@" >> "$LOGFILE" 2>&1
 	fi
 }
 

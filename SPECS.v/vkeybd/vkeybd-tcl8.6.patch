@@ -5,7 +5,7 @@
  # Tcl/Tk library -- depends on your distribution
  #
 -TCL_VERSION = 8.4
-+TCL_VERSION = 8.5
++TCL_VERSION = 8.6
  TCLLIB = -ltcl$(TCL_VERSION)
  TCLINC =
  TKLIB = -ltk$(TCL_VERSION)

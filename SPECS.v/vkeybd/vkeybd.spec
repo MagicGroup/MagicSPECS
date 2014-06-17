@@ -7,7 +7,7 @@
 Summary:      Virtual MIDI keyboard
 Name:         vkeybd
 Version:      0.1.18d
-Release:      4%{?dist}
+Release:      7%{?dist}
 License:      GPLv2+
 Group:        Applications/Multimedia
 URL:          http://www.alsa-project.org/~iwai/alsa.html
@@ -15,14 +15,14 @@ Source0:      http://www.alsa-project.org/~iwai/vkeybd-0.1.18d.tar.bz2
 Source1:      vkeybd.png
 Source2:      vkeybd.desktop
 Patch3:       vkeybd-no-OSS.patch
-Patch4:	      vkeybd-tcl8.5.patch
+Patch4:	      vkeybd-tcl8.6.patch
 
-BuildRequires: tk-devel >= 1:8.5, tk-devel < 1:8.6
+BuildRequires: tk-devel >= 1:8.6, tk-devel < 1:8.7
 BuildRequires: lash-devel
 
 BuildRequires: desktop-file-utils
 
-Requires: tk >= 1:8.5, tk > 1:8.5, lash
+Requires: tk >= 1:8.6, tk > 1:8.6, lash
 Requires: hicolor-icon-theme
 
 %description
@@ -37,7 +37,7 @@ Enjoy a music with your mouse and "computer" keyboard :-)
 sed -i -e 's|-Wall -O|$(RPM_OPT_FLAGS)|' Makefile
 
 %build
-make %{?_smp_mflags} USE_LADCCA=1 TCL_VERSION=8.5 PREFIX=%{_prefix}
+make %{?_smp_mflags} USE_LADCCA=1 TCL_VERSION=8.6 PREFIX=%{_prefix}
 
 %install
 make USE_LADCCA=1 PREFIX=%{_prefix} DESTDIR=$RPM_BUILD_ROOT install
@@ -77,6 +77,15 @@ touch --no-create %{_datadir}/icons/hicolor || :
 %{_datadir}/icons/hicolor/64x64/apps/vkeybd.png
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.1.18d-7
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.1.18d-6
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.1.18d-5
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.18d-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
