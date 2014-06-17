@@ -1,0 +1,79 @@
+From b130af4d27aa7d29f2af2b61296abc1bb6ae6d66 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=3D=3FUTF-8=3Fq=3FPetr=3D20P=3DC3=3DADsa=3DC5=3D99=3F=3D?=
+ <ppisar@redhat.com>
+Date: Fri, 8 Nov 2013 02:17:08 +0100
+Subject: [PATCH] Commit 1735f6f53ca19f99c6e9e39496c486af323ba6a8 started to
+ escape all back-slashes which breaks case when lexicon translations contain
+ substition and literals with eval-non-safe characters. E.g. these
+ translations:
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+"[_1]foo\\n\n" => "[_1]bar\\n\n",
+'[_1]foo\n' => '[_1]aÄa\n',
+
+got doubled back-slashes on the maketext() output.
+
+This patch de-escapes escaped backslashes if the literal is compiled as
+function argument.
+
+Fixes RT #120457.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+
+Petr Pisar: Missing test fore-ported to 1.25.
+
+diff --git a/MANIFEST b/MANIFEST
+index 32c65ba..b409558 100644
+--- a/MANIFEST
++++ b/MANIFEST
+@@ -23,5 +23,6 @@ t/50_super.t
+ t/60_super.t
+ t/70_fail_auto.t
+ t/90_utf8.t
++t/91_backslash.t			See if Locale::Maketext works
+ t/pod.t
+ META.json                                Module JSON meta-data (added by MakeMaker)
+diff --git a/t/91_backslash.t b/t/91_backslash.t
+new file mode 100644
+index 0000000..f96edd1
+--- /dev/null
++++ b/t/91_backslash.t
+@@ -0,0 +1,33 @@
++#!/usr/bin/perl -Tw
++
++use strict;
++use Test::More tests => 6;
++
++BEGIN {
++    use_ok( 'Locale::Maketext' );
++}
++
++use utf8;
++
++{
++    package My::Localize;
++    our @ISA = ('Locale::Maketext');
++}
++{
++    package My::Localize::cs_cz;
++    our @ISA = ('My::Localize');
++    our %Lexicon = (
++        '[_1]foo1\n' => '[_1]bar\n',
++        '[_1]foo2\n' => '[_1]běr\n',
++        'foo2\n' => 'aěa\n',
++        "[_1]foo\\n\n" => "[_1]bar\\n\n",
++    );
++    keys %Lexicon; # dodges the 'used only once' warning
++}
++
++my $lh = My::Localize->get_handle('cs_cz');
++isa_ok( $lh, 'My::Localize::cs_cz' );
++is( $lh->maketext('[_1]foo1\n', 'arg'), 'argbar\n', 'Safe parameterized' );
++is( $lh->maketext('[_1]foo2\n', 'arg'), 'argběr\n', 'Unicode parameterized' );
++is( $lh->maketext('foo2\n'), 'aěa\n', 'Unicode literal' );
++is( $lh->maketext("[_1]foo\\n\n", 'arg'), "argbar\\n\n", 'new line parameterized' );
+-- 
+1.8.3.1
+
