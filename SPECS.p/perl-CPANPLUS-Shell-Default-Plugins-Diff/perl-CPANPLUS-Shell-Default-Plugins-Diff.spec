@@ -1,6 +1,6 @@
 Name:           perl-CPANPLUS-Shell-Default-Plugins-Diff
 Version:        0.01
-Release:        14%{?dist}
+Release:        16%{?dist}
 Summary:        Diff module versions from the CPANPLUS shell
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.01-16
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.01-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.01-14
 - 为 Magic 3.0 重建
 

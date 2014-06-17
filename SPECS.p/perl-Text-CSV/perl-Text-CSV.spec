@@ -1,6 +1,6 @@
 Name:		perl-Text-CSV
 Version:	1.21
-Release:	6%{?dist}
+Release:	8%{?dist}
 Summary:	Comma-separated values manipulator
 
 Group:		Development/Libraries
@@ -61,6 +61,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.21-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.21-7
+- 为 Magic 3.0 重建
+
 * Wed Aug 08 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.21-6
 - Specify all dependencies.
 

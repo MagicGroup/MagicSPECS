@@ -1,6 +1,6 @@
 Name:           perl-Dir-Self
 Version:        0.10
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        A __DIR__ constant for the directory your source file is in
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.10-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.10-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.10-7
 - 为 Magic 3.0 重建
 

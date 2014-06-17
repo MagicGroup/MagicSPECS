@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-can
 Version:        1.15
-Release:        10%{?dist}
+Release:        16%{?dist}
 Summary:        Hack around people calling UNIVERSAL::can() as a function
 
 Group:          Development/Libraries
@@ -58,6 +58,24 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.15-16
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.15-15
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.15-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.15-13
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.15-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.15-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.15-10
 - 为 Magic 3.0 重建
 

@@ -4,8 +4,10 @@ Name:           lcms
 Version:        1.19
 Release:        8%{?dist}
 Summary:        Color Management System
+Summary(zh_CN.UTF-8): 颜色管理系统
 
 Group:          Applications/Productivity
+Group(zh_CN.UTF-8): 应用程序/生产力
 License:        MIT
 URL:            http://www.littlecms.com/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -27,28 +29,42 @@ Requires:       %{name}-libs = %{version}-%{release}
 LittleCMS intends to be a small-footprint, speed optimized color management
 engine in open source form.
 
+%description -l zh_CN.UTF-8
+颜色管理系统。
+
 %package        libs
 Summary:        Library for %{name}
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # Introduced in F-9 to solve multilib transition
 Obsoletes:      lcms < 1.17-3
 
 %description    libs
 The %{name}-libs package contains library for %{name}.
 
+%description libs -l zh_CN.UTF-8 
+%{name} 的运行库。
+
 %package     -n python-%{name}
 Summary:        Python interface to LittleCMS
+Summary(zh_CN.UTF-8): %{name} 的 Python 接口
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       python
 Provides:       python-littlecms = %{version}-%{release}
 
 %description -n python-%{name}
 Python interface to LittleCMS.
 
+%description -n python-%{name} -l zh_CN.UTF-8
+%{name} 的 Python 接口。
 
 %package        devel
 Summary:        Development files for LittleCMS
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       pkgconfig
 Provides:       littlecms-devel = %{version}-%{release}
@@ -56,9 +72,14 @@ Provides:       littlecms-devel = %{version}-%{release}
 %description    devel
 Development files for LittleCMS.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        static
 Summary:        Static files for LittleCMS
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       pkgconfig
 Provides:       littlecms-static = %{version}-%{release}
@@ -66,6 +87,8 @@ Provides:       littlecms-static = %{version}-%{release}
 %description    static
 Development files for LittleCMS.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q

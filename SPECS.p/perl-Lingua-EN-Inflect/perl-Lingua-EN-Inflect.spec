@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-Inflect
 Version:        1.892
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Convert singular to plural, select "a" or "an"
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.892-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.892-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Exporter
 Version:        5.70
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Implements default import method for modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 5.70-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 5.70-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.70-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

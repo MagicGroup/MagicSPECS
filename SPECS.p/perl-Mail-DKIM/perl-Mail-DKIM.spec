@@ -1,6 +1,6 @@
 Name:           perl-Mail-DKIM
 Version:        0.39
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Sign and verify Internet mail with DKIM/DomainKey signatures
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.39-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.39-7
 - 为 Magic 3.0 重建
 

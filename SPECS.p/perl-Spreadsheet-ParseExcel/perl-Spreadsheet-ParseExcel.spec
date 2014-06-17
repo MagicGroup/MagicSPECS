@@ -6,7 +6,7 @@
 
 Name:           perl-Spreadsheet-ParseExcel
 Version:        0.5900
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Extract information from an Excel file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Spreadsheet::ParseExcel::Worksheet.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.5900-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5900-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

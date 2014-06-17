@@ -1,0 +1,131 @@
+--- t/06-pp-vs-xs.t
++++ t/06-pp-vs-xs.t
+@@ -2,7 +2,7 @@
+ use strict;
+ use warnings qw(all);
+ 
+-use Test::More;
++use Test::More 'no_plan';
+ 
+ ## no critic (ProhibitPackageVars, ProtectPrivateSubs)
+ 
+@@ -13,7 +13,6 @@ BEGIN {
+ 
+ unless ($Test::Mojibake::use_xs) {
+     diag('No XS module detected, will fallback to PP implementation!');
+-    done_testing(2);
+     exit;
+ }
+ 
+@@ -36,8 +35,6 @@ ok($t0->iters > $t1->iters, 'XS faster t
+ 
+ diag(sprintf('XS/PP speed ratio is %0.2f', $t0->iters / $t1->iters));
+ 
+-done_testing(7);
+-
+ sub run {
+     my $i = 0;
+     for (@buf) {
+--- t/07-broken-utf8.t
++++ t/07-broken-utf8.t
+@@ -27,7 +27,7 @@ my @tests = (
+     ["11-overlong-5"    => 0 => \"\xfc\x80\x80\x80\x80\xaf"],
+ );
+ 
++plan tests => scalar @tests;
++
+ ok(Test::Mojibake::_detect_utf8($_->[2]) == $_->[1], $_->[0])
+     for @tests;
+-
+-done_testing(scalar @tests);
+--- t/release-cpan-changes.t
++++ t/release-cpan-changes.t
+@@ -1,19 +1,17 @@
+ #!perl
+ 
++use Test::More;
++
+ BEGIN {
+-  unless ($ENV{RELEASE_TESTING}) {
+-    require Test::More;
+-    Test::More::plan(skip_all => 'these tests are for release candidate testing');
+-  }
++  plan skip_all => 'these tests are for release candidate testing' unless ($ENV{RELEASE_TESTING});
++  eval 'use Test::CPAN::Changes';
++  plan skip_all => 'Test::CPAN::Changes required for this test' if $@;
++  plan tests => 5;
+ }
+ 
+ 
+ use strict;
+ use warnings;
+ 
+-use Test::More 0.96 tests => 2;
+ use_ok('Test::CPAN::Changes');
+-subtest 'changes_ok' => sub {
+-    changes_file_ok('Changes');
+-};
+-done_testing();
++changes_file_ok('Changes');
+--- t/release-no-tabs.t
++++ t/release-no-tabs.t
+@@ -11,7 +11,7 @@ use warnings;
+ 
+ # this test was generated with Dist::Zilla::Plugin::Test::NoTabs 0.08
+ 
+-use Test::More 0.88;
++use Test::More;
+ use Test::NoTabs;
+ 
+ my @files = (
+@@ -64,5 +64,6 @@ my @files = (
+     't/release-unused-vars.t'
+ );
+ 
++plan tests => scalar @files;
++
+ notabs_ok($_) foreach @files;
+-done_testing;
+--- t/release-test-version.t
++++ t/release-test-version.t
+@@ -26,5 +26,6 @@ push @imports, $params
+ 
+ Test::Version->import(@imports);
+ 
++plan tests => 2;
++
+ version_all_ok;
+-done_testing;
+--- t/release-unused-vars.t
++++ t/release-unused-vars.t
+@@ -1,22 +1,15 @@
+ #!perl
+ 
++use Test::More;
++
+ BEGIN {
+-  unless ($ENV{RELEASE_TESTING}) {
+-    require Test::More;
+-    Test::More::plan(skip_all => 'these tests are for release candidate testing');
+-  }
++  plan(skip_all => 'these tests are for release candidate testing')
++    unless ($ENV{RELEASE_TESTING});
++  eval { require Test::Vars };
++  plan(skip_all => 'Test::Vars required for testing for unused vars')
++    if $@;
+ }
+ 
++Test::Vars->import;
+ 
+-use Test::More 0.96 tests => 1;
+-eval { require Test::Vars };
+-
+-SKIP: {
+-    skip 1 => 'Test::Vars required for testing for unused vars'
+-        if $@;
+-    Test::Vars->import;
+-
+-    subtest 'unused vars' => sub {
+ all_vars_ok();
+-    };
+-};

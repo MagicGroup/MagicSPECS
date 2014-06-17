@@ -1,7 +1,7 @@
 %global libname Math-Calc-Units
 Name:           perl-%{libname}
 Version:        1.07
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Human-readable unit-aware calculator
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -vf %{buildroot}%{perl_vendorlib}/Math/Calc/Units/Grammar.y
 %{_bindir}/ucalc
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.07-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.07-7
 - 为 Magic 3.0 重建
 

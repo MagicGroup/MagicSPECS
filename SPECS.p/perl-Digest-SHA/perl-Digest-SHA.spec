@@ -1,7 +1,7 @@
 Name:           perl-Digest-SHA
 Epoch:          1
 Version:        5.92
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Perl extension for SHA-1/224/256/384/512
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -75,6 +75,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:5.92-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.92-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

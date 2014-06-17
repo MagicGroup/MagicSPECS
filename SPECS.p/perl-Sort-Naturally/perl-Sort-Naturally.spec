@@ -1,6 +1,6 @@
 Name:       perl-Sort-Naturally 
 Version:    1.03
-Release:    3%{?dist}
+Release:    4%{?dist}
 # see lib/Sort/Naturally.pm 
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.03-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

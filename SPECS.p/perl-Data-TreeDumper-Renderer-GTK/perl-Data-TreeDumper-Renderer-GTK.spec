@@ -1,6 +1,6 @@
 Name:       perl-Data-TreeDumper-Renderer-GTK 
 Version:    0.02
-Release:    16%{?dist}
+Release:    18%{?dist}
 # see GTK.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -71,6 +71,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-18
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.02-17
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

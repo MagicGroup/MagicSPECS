@@ -1,6 +1,6 @@
 Name:           perl-Class-Date
 Version:        1.1.9
-Release:        15%{?dist}
+Release:        17%{?dist}
 Summary:        Class for easy date and time manipulation
 
 Group:          Development/Libraries
@@ -57,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1.9-17
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1.9-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.1.9-15
 - 为 Magic 3.0 重建
 

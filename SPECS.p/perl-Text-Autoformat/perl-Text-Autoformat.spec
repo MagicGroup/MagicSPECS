@@ -1,6 +1,6 @@
 Name:           perl-Text-Autoformat
 Version:        1.669004
-Release:        1%{?dist}
+Release:        7%{?dist}
 Summary:        Automatic text wrapping and reformatting
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Text::Autoformat.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.669004-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.669004-6
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.669004-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.669004-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.669004-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.669004-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 25 2013 Paul Howarth <paul@city-fan.org> - 1.669004-1
 - Update to 1.669004
   - Tweaked widow handling to avoid a nasty edge case

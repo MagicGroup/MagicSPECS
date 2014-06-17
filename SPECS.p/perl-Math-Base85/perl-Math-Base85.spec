@@ -1,6 +1,6 @@
 Name:           perl-Math-Base85
 Version:        0.2
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl extension for base 85 numbers, as referenced by RFC 1924
 
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.2-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.2-14
 - 为 Magic 3.0 重建
 

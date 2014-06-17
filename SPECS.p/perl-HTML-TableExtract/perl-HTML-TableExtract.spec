@@ -1,6 +1,6 @@
 Name:           perl-HTML-TableExtract
 Version:        2.10
-Release: 	14%{?dist}
+Release: 	15%{?dist}
 Summary:        A Perl module for extracting content in HTML tables
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.10-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.10-14
 - 为 Magic 3.0 重建
 

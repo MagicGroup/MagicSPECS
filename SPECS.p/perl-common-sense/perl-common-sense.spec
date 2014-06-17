@@ -1,7 +1,7 @@
 Name:		perl-common-sense
 Summary:	"Common sense" Perl defaults 
 Version:	3.6
-Release:	4%{?dist}
+Release:	6%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/common-sense
@@ -60,6 +60,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/common::sense.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.6-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 3.6-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 3.6-4
 - 为 Magic 3.0 重建
 

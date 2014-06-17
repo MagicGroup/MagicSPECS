@@ -1,6 +1,6 @@
 Name:           perl-Sys-Syslog
 Version:        0.33
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Perl interface to the UNIX syslog(3) calls
 # Unused sources fallback/* are covered with BSD license.
 License:        GPL+ or Artistic
@@ -83,6 +83,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.33-7
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.33-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

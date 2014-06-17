@@ -1,6 +1,6 @@
 Name: polarssl
 Version: 1.3.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Light-weight cryptographic and SSL/TLS library
 Group: System Environment/Libraries
 License: GPLv2+
@@ -67,6 +67,9 @@ mv $RPM_BUILD_ROOT%{_bindir} $RPM_BUILD_ROOT%{_libexecdir}/polarssl
 %{_libdir}/*.a
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.3.7-3
+- 为 Magic 3.0 重建
+
 * Mon May 05 2014 Morten Stevens <mstevens@imt-systems.com> - 1.3.7-2
 - Move devel files to polarssl-devel package
 

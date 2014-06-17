@@ -2,7 +2,7 @@
 
 Name:           perl-Pod-Readme
 Version:        0.110
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Convert POD to README file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.110-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.110-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.110-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-MakeMaker-Coverage
 Version:        0.05
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Allows perl modules to check test coverage with Devel::Cover
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/testcover
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.05-21
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

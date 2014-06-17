@@ -6,7 +6,7 @@ Name:           perl-IO-Prompt
 Summary:        Interactively prompt for user input
 %global cpanver 0.997002
 Version:        0.997.002
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DC/DCONWAY/IO-Prompt-%{cpanver}.tar.gz 
@@ -65,6 +65,9 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.997.002-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.997.002-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

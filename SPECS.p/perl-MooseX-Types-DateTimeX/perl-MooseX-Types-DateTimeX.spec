@@ -1,6 +1,6 @@
 Name:           perl-MooseX-Types-DateTimeX
 Version:        0.10
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Extensions to MooseX::Types::DateTime::ButMaintained
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.10-14
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

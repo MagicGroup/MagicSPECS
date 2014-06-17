@@ -1,6 +1,6 @@
 Name:           perl-Browser-Open
 Version:        0.03
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Open a browser in a given URL
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,12 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-8
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.03-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-6
 - 为 Magic 3.0 重建
 

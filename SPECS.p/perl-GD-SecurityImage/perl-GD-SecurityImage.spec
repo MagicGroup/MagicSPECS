@@ -1,6 +1,6 @@
 Name:           perl-GD-SecurityImage
 Version:        1.72
-Release:        1%{?dist}
+Release:        7%{?dist}
 Summary:        Security image (captcha) generator
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,24 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.72-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.72-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.72-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.72-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.72-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.72-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 29 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1.72-1
 - Update to 1.72
 

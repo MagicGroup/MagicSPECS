@@ -1,6 +1,6 @@
 Name:           maven-enforcer
 Version:        1.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Enforcer
 License:        ASL 2.0
 URL:            http://maven.apache.org/enforcer
@@ -84,6 +84,9 @@ sed -e "s|<artifactId>plexus-maven-plugin</artifactId>|<artifactId>plexus-compon
 %doc LICENSE NOTICE
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.3.1-2
+- 为 Magic 3.0 重建
+
 * Fri Aug  9 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.3.1-1
 - Update to upstream version 1.3.1
 

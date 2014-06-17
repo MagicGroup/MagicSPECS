@@ -1,24 +1,19 @@
-%global xfceversion 4.10
 
 Name:           xfdesktop
-Version:        4.10.0
+Version:	4.11.6
 Release:        4%{?dist}
 Summary:        Desktop manager for the Xfce Desktop Environment
+Summary(zh_CN.UTF-8): Xfce 桌面环境的桌面管理器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://www.xfce.org/
 #VCS: git:git://git.xfce.org/xfce/xfdesktop
+%global xfceversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
-# Search new background location in list
-# https://bugzilla.xfce.org/show_bug.cgi?id=8799
-# http://git.xfce.org/xfce/xfdesktop/commit/?id=d77079e0
-Patch0:         xfdesktop-4.10.0-new-background-location.patch
 # Fix desktop file
 Patch1:         xfdesktop-4.9.2-fix-desktop.patch
-## Downstream patches
-# Change default background for Fedora
-Patch10:        xfdesktop-4.9.3-backdrop-image.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libxfce4ui-devel >= %{xfceversion}
@@ -30,7 +25,7 @@ BuildRequires:  dbus-glib-devel >= 0.84
 BuildRequires:  garcon-devel >= 0.1.2
 BuildRequires:  libwnck-devel >= 2.30
 BuildRequires:  libnotify-devel >= 0.4.0
-BuildRequires:  xfconf-devel >= %{xfceversion}
+BuildRequires:  xfconf-devel >= 4.10
 BuildRequires:  intltool
 BuildRequires:  desktop-file-utils
 BuildRequires:  libSM-devel
@@ -38,24 +33,17 @@ BuildRequires:  libICE-devel
 Requires:       xfwm4 >= %{xfceversion}
 Requires:       xfce4-panel >= %{xfceversion}
 Requires:       magic-menus
-%if 0%{?fedora} <= 9
-Requires:       desktop-backgrounds-basic
-%else
-Requires:       desktop-backgrounds-compat
-%endif
-
 
 %description
 This package includes a desktop manager for the Xfce Desktop Environment.
 
+%description -l zh_CN.UTF-8
+Xfce 桌面环境的桌面管理器。
 
 %prep
 %setup -q
 
-%patch0 -p1 -b .new-location
 %patch1 -p1 -b .fix
-%patch10 -p1 -b .backdrop
-
 
 %build
 %configure
@@ -71,6 +59,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 desktop-file-validate \
     $RPM_BUILD_ROOT/%{_datadir}/applications/xfce-backdrop-settings.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -105,6 +94,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 4.11.6-4
+- 更新到 4.11.6
+
 * Sat Oct 06 2012 Christoph Wickert <cwickert@fedoraproject.org> - 4.10.0-4
 - Search new background location in list (bugzilla.xfce.org #8799)
 

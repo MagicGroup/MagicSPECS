@@ -1,6 +1,6 @@
 Name:           perl-Devel-Profiler
 Version:        0.04
-Release:        19%{?dist}
+Release:        21%{?dist}
 Summary:        Perl profiler compatible with dprofpp
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.04-21
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.04-20
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

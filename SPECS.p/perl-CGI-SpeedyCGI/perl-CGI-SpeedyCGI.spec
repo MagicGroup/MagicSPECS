@@ -9,7 +9,7 @@
 Summary:        Speed up perl scripts by running them persistently
 Name:           perl-CGI-SpeedyCGI
 Version:        2.22
-Release:        15%{?dist}
+Release:        17%{?dist}
 License:        GPLv3+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/%{pkgname}/
@@ -103,6 +103,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_httpd_modconfdir}/*.conf
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.22-17
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.22-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.22-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

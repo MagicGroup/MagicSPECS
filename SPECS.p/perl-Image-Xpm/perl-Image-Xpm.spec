@@ -1,6 +1,6 @@
 Name:           perl-Image-Xpm
 Version:        1.09
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Load, create, manipulate and save xpm image files in Perl
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.09-20
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.09-19
 - 为 Magic 3.0 重建
 

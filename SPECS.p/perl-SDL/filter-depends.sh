@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/lib/rpm/redhat/find-requires "$@" | grep -v Pod::ToDemo
+/usr/lib/rpm/magic/find-requires "$@" | grep -v Pod::ToDemo

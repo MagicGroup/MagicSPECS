@@ -1,6 +1,6 @@
 Name:           perl-Carp
 Version:        1.26
-Release:        240%{?dist}
+Release:        242%{?dist}
 Summary:        Alternative warn and die for modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.26-242
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.26-241
+- 为 Magic 3.0 重建
+
 * Mon Aug 13 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.26-240
 - Bump release to override sub-package from perl.spec
 

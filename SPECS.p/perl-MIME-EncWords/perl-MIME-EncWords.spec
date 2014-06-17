@@ -1,6 +1,6 @@
 Name:           perl-MIME-EncWords
 Version:        1.012.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Deal with RFC 2047 encoded words (improved)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.012.4-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.012.4-4
 - 为 Magic 3.0 重建
 

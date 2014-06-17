@@ -1,6 +1,6 @@
 Name:           perl-Config-MVP
 Version:        2.200003
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Multivalue-property package-oriented configuration
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.200003-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.200003-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

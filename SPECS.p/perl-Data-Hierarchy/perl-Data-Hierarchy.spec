@@ -1,6 +1,6 @@
 Name:           perl-Data-Hierarchy
 Version:        0.34
-Release:        14%{?dist}
+Release:        16%{?dist}
 Summary:        Handle data in a hierarchical structure
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -38,6 +38,12 @@ chmod -R u+rwX,go+rX,go-w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.34-16
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.34-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.34-14
 - 为 Magic 3.0 重建
 

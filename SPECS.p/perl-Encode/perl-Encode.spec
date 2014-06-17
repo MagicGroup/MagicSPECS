@@ -1,7 +1,7 @@
 Name:           perl-Encode
 Epoch:          1
 Version:        2.62
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Character encodings in Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -113,6 +113,15 @@ make test
 %{perl_vendorarch}/Encode/encode.h
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:2.62-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:2.62-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:2.62-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.62-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

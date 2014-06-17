@@ -1,6 +1,6 @@
 Name:           perl-Digest-MD5
 Version:        2.53
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl interface to the MD5 algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.53-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.53-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

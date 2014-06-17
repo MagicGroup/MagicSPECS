@@ -1,6 +1,6 @@
 Name:           perl-Alien-wxWidgets
 Version:        0.51
-Release:        12%{?dist}
+Release:        15%{?dist}
 Summary:        Building, finding and using wxWidgets binaries
 
 Group:          Development/Libraries
@@ -9,7 +9,7 @@ URL:            http://search.cpan.org/dist/Alien-wxWidgets/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MB/MBARBON/Alien-wxWidgets-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  wxGTK-devel
+BuildRequires:  wx-gtk2-unicode-devel
 # A lot of stuff used by inc/My/Build/Base.pm.
 BuildRequires:  perl
 BuildRequires:  perl(base)
@@ -70,6 +70,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.51-15
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.51-14
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.51-13
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.51-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

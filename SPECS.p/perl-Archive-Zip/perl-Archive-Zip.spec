@@ -1,6 +1,6 @@
 Name:           perl-Archive-Zip
 Version:        1.31_04
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Perl library for accessing Zip archives
 Summary(zh_CN.UTF-8): 访问 Zip 归档的 Perl 库
 
@@ -71,6 +71,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.31_04-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.31_04-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.31_04-2
 - 为 Magic 3.0 重建
 

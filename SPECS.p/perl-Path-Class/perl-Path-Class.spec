@@ -1,6 +1,6 @@
 Name:		perl-Path-Class
 Version:	0.26
-Release:	4%{?dist}
+Release:	10%{?dist}
 Summary:	Cross-platform path specification manipulation
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -65,6 +65,24 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Path::Class::File.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.26-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.26-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.26-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.26-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.26-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.26-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.26-4
 - 为 Magic 3.0 重建
 

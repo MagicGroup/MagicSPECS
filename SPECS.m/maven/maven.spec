@@ -1,6 +1,6 @@
 Name:           maven
 Version:        3.2.1
-Release:        10%{?dist}
+Release:        12%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
@@ -281,6 +281,12 @@ ln -sf $(build-classpath plexus/classworlds) \
 
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.2.1-12
+- 为 Magic 3.0 重建
+
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.2.1-11
+- 为 Magic 3.0 重建
+
 * Thu Jun  5 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.1-10
 - Fix artifact pattern in %%mvn_file invocation
 

@@ -1,6 +1,6 @@
 Name:           perl-indirect
 Version:        0.26
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Lexically warn about using the indirect object syntax
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.26-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.26-5
 - 为 Magic 3.0 重建
 

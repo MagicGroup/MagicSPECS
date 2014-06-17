@@ -1,7 +1,7 @@
 Name:		perl-parent
 Epoch:		1
 Version:	0.228
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Establish an ISA relationship with base classes at compile time
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/parent.3pm*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.228-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.228-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

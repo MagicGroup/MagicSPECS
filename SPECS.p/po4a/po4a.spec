@@ -1,6 +1,6 @@
 Name: po4a
 Version: 0.45
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A tool maintaining translations anywhere
 License: GPL+
 URL: http://alioth.debian.org/projects/po4a/
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 %{_mandir}/man7/po4a.7*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.45-2
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Petr Pisar <ppisar@redhat.com> - 0.44-11
 - Perl 5.18 rebuild
 

@@ -1,6 +1,6 @@
 Name:		perl-Shell
 Version:	0.72
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Run shell commands transparently within perl
 
 Group:		Development/Libraries
@@ -52,5 +52,8 @@ make test
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.72-2
+- 为 Magic 3.0 重建
+
 * Tue Feb 05 2013 Normunds Neimanis <fedorapkg at rule.lv> 0.72-1
 - Initial package for Fedora

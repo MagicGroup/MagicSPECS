@@ -2,7 +2,7 @@ Name:           perl-Parse-CPAN-Meta
 # dual-lifed module needs to match the epoch in perl.spec
 Epoch:          1
 Version:        1.4414
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Parse META.yml and META.json CPAN meta-data files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:1.4414-5
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:1.4414-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.4414-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

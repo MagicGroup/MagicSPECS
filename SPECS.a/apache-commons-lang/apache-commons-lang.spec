@@ -4,7 +4,7 @@
 
 Name:           apache-%{short_name}
 Version:        2.6
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Provides a host of helper utilities for the java.lang API
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ sed -i 's/\r//' *.txt *.html
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 2.6-16
+- 为 Magic 3.0 重建
+
 * Thu May 29 2014 Alexander Kurtakov <akurtako@redhat.com> 2.6-15
 - Drop old jakarta provides/obsoletes.
 

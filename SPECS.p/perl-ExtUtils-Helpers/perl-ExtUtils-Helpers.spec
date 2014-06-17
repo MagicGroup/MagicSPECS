@@ -3,7 +3,7 @@
 
 Name:		perl-ExtUtils-Helpers
 Version:	0.022
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Various portability utilities for module builders
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -80,6 +80,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ExtUtils::Helpers::Windows.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.022-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.022-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

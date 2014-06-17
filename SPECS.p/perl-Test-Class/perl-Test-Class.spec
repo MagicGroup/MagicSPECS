@@ -1,6 +1,6 @@
 Name:           perl-Test-Class
 Version:        0.38
-Release:        1%{?dist}
+Release:        7%{?dist}
 Summary:        Easily create test classes in an xUnit/JUnit style
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -80,6 +80,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.38-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.38-6
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.38-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.38-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.38-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.38-2
+- 为 Magic 3.0 重建
+
 * Wed Feb 20 2013 Petr Pisar <ppisar@redhat.com> - 0.38-1
 - 0.38 bump
 

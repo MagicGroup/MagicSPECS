@@ -1,6 +1,6 @@
 Name:           perl-Module-Load-Conditional
 Version:        0.62
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Looking up module information and loading at run-time
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.62-4
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.62-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.62-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

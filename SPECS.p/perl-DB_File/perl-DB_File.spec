@@ -1,6 +1,6 @@
 Name:           perl-DB_File
 Version:        1.831
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Perl5 access to Berkeley DB version 1.x
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.831-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.831-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

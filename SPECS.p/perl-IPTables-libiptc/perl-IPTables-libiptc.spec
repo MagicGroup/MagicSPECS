@@ -1,6 +1,6 @@
 Name:           perl-IPTables-libiptc
 Version:        0.52
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Perl extension for iptables libiptc
 License:        GPLv2+
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.52-10
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Petr Pisar <ppisar@redhat.com> - 0.52-9
 - Fix GCC format-security warning (bug #1106081)
 

@@ -1,5 +1,5 @@
 %global VER 6.8.9
-%global Patchlevel 0
+%global Patchlevel 3
 
 Name:           ImageMagick
 Version:        %{VER}.%{Patchlevel}
@@ -306,6 +306,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 6.8.9.3-4
+- 更新到 6.8.9.3
+
 * Tue Apr 29 2014 Liu Di <liudidi@gmail.com> - 6.8.9.0-4
 - 为 Magic 3.0 重建
 

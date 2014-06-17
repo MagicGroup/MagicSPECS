@@ -1,7 +1,7 @@
 Name:           perl-TimeDate
 Version:        1.20
 Epoch:          1
-Release:        10%{?dist}
+Release:        16%{?dist}
 Summary:        A Perl module for time and date manipulation
 
 Group:          Development/Libraries
@@ -55,6 +55,24 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1:1.20-16
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:1.20-15
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:1.20-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.20-13
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.20-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.20-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:1.20-10
 - 为 Magic 3.0 重建
 

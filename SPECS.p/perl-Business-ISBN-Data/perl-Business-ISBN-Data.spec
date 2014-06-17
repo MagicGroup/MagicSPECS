@@ -1,6 +1,6 @@
 Name:           perl-Business-ISBN-Data
 Version:        20120719.001
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        The data pack for Business::ISBN
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -53,6 +53,12 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Business::ISBN::Data.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 20120719.001-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 20120719.001-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 20120719.001-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-SUPER
 Version:	1.20120705
-Release:	3%{?dist}
+Release:	9%{?dist}
 Summary:	Sane superclass method dispatcher
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -55,6 +55,24 @@ rm -rf %{buildroot}
 %{_mandir}/man3/SUPER.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.20120705-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.20120705-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.20120705-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.20120705-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.20120705-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.20120705-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.20120705-3
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 Summary: Tool Command Language, pronounced tickle
 Name: tcl
 Version: %{vers}
-Release: 5%{?dist}
+Release: 6%{?dist}
 Epoch: 1
 License: TCL
 Group: Development/Languages
@@ -136,6 +136,9 @@ rm -rf %{buildroot}/%{_datadir}/%{name}%{majorver}/ldAix
 %{_datadir}/%{name}%{majorver}/tclAppInit.c
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.6.1-6
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1.1-5
 - Re-enabled threads (previously reported bugs are no more reproducible)
 

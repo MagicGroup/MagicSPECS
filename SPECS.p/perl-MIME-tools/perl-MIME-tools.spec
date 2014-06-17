@@ -1,7 +1,7 @@
 Summary:	Modules for parsing and creating MIME entities in Perl
 Name:		perl-MIME-tools
 Version:	5.502
-Release:	7%{?dist}
+Release:	8%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/MIME-tools/
@@ -115,6 +115,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/MIME::Words.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 5.502-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 5.502-7
 - 为 Magic 3.0 重建
 

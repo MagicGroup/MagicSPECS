@@ -1,6 +1,6 @@
 Name:           perl-Image-Base
 Version:        1.07
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Base class for loading, manipulating and saving images in Perl
 
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.07-21
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.07-20
 - 为 Magic 3.0 重建
 

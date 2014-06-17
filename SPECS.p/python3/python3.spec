@@ -140,7 +140,7 @@
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
 Version: %{pybasever}.1
-Release: 12%{?dist}
+Release: 14%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -155,7 +155,7 @@ BuildRequires: autoconf
 BuildRequires: bluez-libs-devel
 BuildRequires: bzip2
 BuildRequires: bzip2-devel
-BuildRequires: db4-devel >= 4.7
+BuildRequires: libdb-devel >= 4.7
 
 # expat 2.1.0 added the symbol XML_SetHashSalt without bumping SONAME.  We use
 # it (in pyexpat) in order to enable the fix in Python-3.2.3 for CVE-2012-0876:
@@ -1853,6 +1853,12 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.1-14
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.1-13
+- 为 Magic 3.0 重建
+
 * Sun Jun  8 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.4.1-12
 - aarch64 has valgrind, just list those that don't support it
 

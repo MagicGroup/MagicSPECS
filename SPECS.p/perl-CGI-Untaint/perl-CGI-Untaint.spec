@@ -1,6 +1,6 @@
 Name:           perl-CGI-Untaint
 Version:        1.26
-Release:        15%{?dist}
+Release:        17%{?dist}
 Summary:        Process CGI input parameters
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -43,6 +43,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.26-17
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.26-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.26-15
 - 为 Magic 3.0 重建
 

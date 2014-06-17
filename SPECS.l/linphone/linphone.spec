@@ -1,12 +1,13 @@
 Name:           linphone
-Version:        3.6.1
-Release:        3%{?dist}
+Version:	3.7.0
+Release:        4%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
 License:        GPLv2+
 URL:            http://www.linphone.org/
 
-Source0:        http://download.savannah.gnu.org/releases/linphone/3.5.x/sources/%{name}-%{version}.tar.gz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.savannah.gnu.org/releases/linphone/%{majorver}.x/sources/%{name}-%{version}.tar.gz
 Patch0:         linphone-3.6.1-rootca.patch
 Patch1:         linphone-3.6.1-arm.patch
 
@@ -209,6 +210,12 @@ mv $RPM_BUILD_ROOT%{_datadir}/doc/mediastreamer*/html doc/mediastreamer
 %{_libdir}/pkgconfig/mediastreamer.pc
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.7.0-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.7.0-3
+- 更新到 3.7.0
+
 * Mon Nov 18 2013 Dave Airlie <airlied@redhat.com> - 3.6.1-3
 - rebuilt for GLEW 1.10
 

@@ -1,6 +1,6 @@
 Name:           perl-Sub-Prototype
 Version:        0.02
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Allows you to set a subs prototype
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Sub-Prototype/
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-11
+- 为 Magic 3.0 重建
+
 * Sun Dec 30 2012 Emmanuel Seyman <emmanuel@seyman.fr> - 0.02-10
 - Remove no-longer-used macros
 

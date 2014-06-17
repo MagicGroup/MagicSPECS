@@ -2,7 +2,7 @@ Name:           perl-Params-Check
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.38
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Generic input parsing/checking mechanism
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.38-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.38-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

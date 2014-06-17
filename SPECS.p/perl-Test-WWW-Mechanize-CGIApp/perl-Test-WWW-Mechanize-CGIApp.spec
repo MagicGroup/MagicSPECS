@@ -1,6 +1,6 @@
 Name:           perl-Test-WWW-Mechanize-CGIApp
 Version:        0.05
-Release:        12%{?dist}
+Release:        18%{?dist}
 Summary:        Test::WWW::Mechanize for CGI::Application
 License:        GPL+ or Artistic
 
@@ -51,6 +51,24 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.05-18
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.05-17
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.05-16
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-15
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-13
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Emmanuel Seyman <emmanuel@seyman.fr> - 0.05-12
 - Remove no-longer-used macros
 

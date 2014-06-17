@@ -1,6 +1,6 @@
 Name:           munge-maven-plugin
 Version:        1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Munge Maven Plugin
 License:        CDDL
 URL:            http://github.com/sonatype/munge-maven-plugin
@@ -55,6 +55,9 @@ This package provides %{summary}.
 %doc LICENSE
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.0-4
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.0-3
 - Use Requires: java-headless rebuild (#1067528)
 

@@ -1,6 +1,6 @@
 Name:		perl-Test-use-ok
 Version:	0.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Alternative to Test::More::use_ok
 License:	CC0 
 Group:		Development/Libraries
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ok.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.11-2
 - 为 Magic 3.0 重建
 

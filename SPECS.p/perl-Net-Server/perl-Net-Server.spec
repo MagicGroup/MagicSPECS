@@ -1,6 +1,6 @@
 Name:           perl-Net-Server
 Version:        2.006
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Extensible, general Perl server engine
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/net-server.1*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.006-2
+- 为 Magic 3.0 重建
+
 * Sat Aug 25 2012 Kevin Fenzi <kevin@scrye.com> 2.006-1
 - Update to 2.006 upstream release
 - Redo spec with current guidelines. 

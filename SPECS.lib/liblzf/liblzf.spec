@@ -1,6 +1,6 @@
 Name:           liblzf
 Version:        3.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Small data compression library
 
 Group:          System Environment/Libraries
@@ -78,6 +78,9 @@ rm -f %{buildroot}%{_libdir}/liblzf.la
 %{_libdir}/pkgconfig/liblzf.pc
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.6-9
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.6-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

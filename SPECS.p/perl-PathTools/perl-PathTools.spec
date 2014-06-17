@@ -1,7 +1,7 @@
 %global cpan_version 3.47
 Name:           perl-PathTools
 Version:        %(echo '%{cpan_version}' | tr _ .)
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        PathTools Perl module (Cwd, File::Spec)
 License:        (GPL+ or Artistic) and BSD
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.47-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.47-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

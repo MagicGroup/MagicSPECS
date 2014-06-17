@@ -4,7 +4,7 @@
 Summary: The graphical toolkit for the Tcl scripting language
 Name: tk
 Version: %{vers}
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch:   1
 License: TCL
 Group: Development/Languages
@@ -113,6 +113,9 @@ sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" %{bu
 %{_datadir}/%{name}%{majorver}/tkAppInit.c
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.6.1-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1-2
 - Re-enabled threads (previously reported bugs are no more reproducible)
 

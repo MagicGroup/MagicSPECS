@@ -1,6 +1,6 @@
 Name:           perl-Env
 Version:        1.04
-Release:        292%{?dist}
+Release:        293%{?dist}
 Summary:        Perl module that imports environment variables as scalars or arrays
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.04-293
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-292
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

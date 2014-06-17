@@ -2,7 +2,7 @@
 
 Name:           perl-CDB_File
 Version:        0.96
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Perl extension for access to cdb databases
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.96-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.96-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.96-7
 - 为 Magic 3.0 重建
 

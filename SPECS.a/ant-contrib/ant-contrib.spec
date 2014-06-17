@@ -3,7 +3,7 @@
 Summary:        Collection of tasks for Ant
 Name:           ant-contrib
 Version:        1.0
-Release:        0.25.%{beta_number}%{?dist}
+Release:        0.26.%{beta_number}%{?dist}
 License:        ASL 2.0 and ASL 1.1
 URL:            http://ant-contrib.sourceforge.net/
 Group:          Development/Libraries
@@ -88,6 +88,9 @@ install -pm 644 %{name}-1.0b3.pom $RPM_BUILD_ROOT/%{_mavenpomdir}/JPP.ant-%{name
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.0-0.26.b3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-0.25.b3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

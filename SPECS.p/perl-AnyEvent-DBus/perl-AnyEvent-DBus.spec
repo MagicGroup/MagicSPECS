@@ -1,6 +1,6 @@
 Name:           perl-AnyEvent-DBus
 Version:        0.31
-Release:        10%{?dist}
+Release:        12%{?dist}
 Summary:        Adapt Net::DBus to AnyEvent
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.31-12
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.31-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.31-10
 - 为 Magic 3.0 重建
 

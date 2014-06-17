@@ -1,6 +1,6 @@
 Name:           perl-IPC-Run
 Version:        0.89
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Perl module for interacting with child processes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man3/IPC::Run::Win32*.3*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.89-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.89-10
 - 为 Magic 3.0 重建
 

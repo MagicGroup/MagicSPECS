@@ -1,6 +1,6 @@
 Name:           perl-Module-Install-ReadmeMarkdownFromPod
 Version:        0.03
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Create README.mkdn from POD
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-2
 - 为 Magic 3.0 重建
 

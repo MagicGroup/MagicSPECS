@@ -1,6 +1,6 @@
 Name:           perl-CSS-Tiny
 Version:        1.19
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Read/Write .css files with as little code as possible
 
 Group:          Development/Libraries
@@ -50,6 +50,12 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.19-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.19-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.19-3
 - 为 Magic 3.0 重建
 

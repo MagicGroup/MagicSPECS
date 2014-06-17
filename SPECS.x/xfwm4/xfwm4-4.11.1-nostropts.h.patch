@@ -1,0 +1,12 @@
+diff -ur xfwm4-4.11.1.orig/src/compositor.c xfwm4-4.11.1/src/compositor.c
+--- xfwm4-4.11.1.orig/src/compositor.c	2014-06-11 18:34:22.654385658 +0000
++++ xfwm4-4.11.1/src/compositor.c	2014-06-11 18:34:41.002385188 +0000
+@@ -41,7 +41,7 @@
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <drm.h>
+-#include <stropts.h>
++//#include <stropts.h>
+ #endif /* HAVE_LIBDRM */
+ 
+ #include "display.h"

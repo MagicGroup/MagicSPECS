@@ -1,6 +1,6 @@
 Name:		perl-Archive-Any-Lite
 Version:	0.09
-Release:	2%{?dist}
+Release:	4%{?dist}
 Summary:	Simple CPAN package extractor 
 License:	GPL+ or Artistic
 URL:		https://metacpan.org/release/Archive-Any-Lite
@@ -64,6 +64,12 @@ make test TEST_POD=1
 %{_mandir}/man3/Archive::Any::Lite.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

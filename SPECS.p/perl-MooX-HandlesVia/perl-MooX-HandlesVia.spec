@@ -1,6 +1,6 @@
 Name:           perl-MooX-HandlesVia
 Version:        0.001005
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        NativeTrait-like behavior for Moo
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.001005-5
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.001005-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.001005-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

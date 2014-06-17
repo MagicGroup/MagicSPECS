@@ -1,6 +1,6 @@
 Name:           perl-CGI-Simple
 Version:        1.113
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Simple totally OO CGI interface that is CGI.pm compliant
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -43,6 +43,12 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.113-10
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.113-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.113-8
 - 为 Magic 3.0 重建
 

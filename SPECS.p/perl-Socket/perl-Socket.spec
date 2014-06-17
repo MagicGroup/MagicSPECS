@@ -2,7 +2,7 @@
 Name:           perl-Socket
 Epoch:          1
 Version:        %(echo '%{cpan_version}' | tr '_' '.')
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Networking constants and support functions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:2.014-5
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:2.014-4
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:2.014-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.014-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

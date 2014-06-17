@@ -1,6 +1,6 @@
 Name:           perl-YAML-Syck
 Version:        1.27
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Fast, lightweight YAML loader and dumper
 License:        BSD and MIT
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/YAML::Syck.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.27-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.27-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

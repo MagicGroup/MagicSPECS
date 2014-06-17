@@ -1,7 +1,7 @@
 Summary:	I/O on in-core objects like strings and arrays for Perl
 Name:		perl-IO-stringy
 Version:	2.110
-Release:	21%{?dist}
+Release:	22%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/IO-stringy/
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::WrapTie.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.110-22
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.110-21
 - 为 Magic 3.0 重建
 

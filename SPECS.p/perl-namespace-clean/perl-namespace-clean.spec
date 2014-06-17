@@ -7,7 +7,7 @@
 Name:		perl-namespace-clean
 Summary:	Keep your namespace tidy
 Version:	0.23
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/namespace-clean/
@@ -90,6 +90,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/namespace::clean.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.23-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.23-4
 - 为 Magic 3.0 重建
 

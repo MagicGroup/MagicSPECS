@@ -30,7 +30,7 @@
 
 Name:           jarjar
 Version:        1.4
-Release:        9%{?dist}
+Release:        13%{?dist}
 Summary:        Jar Jar Links
 License:        ASL 2.0
 URL:            http://code.google.com/p/jarjar/
@@ -44,6 +44,7 @@ BuildRequires:  ant-junit
 BuildRequires:  objectweb-asm
 BuildRequires:  javapackages-local
 BuildRequires:  maven
+BuildRequires:  xmvn-install
 Requires:       objectweb-asm
 
 BuildArch:      noarch
@@ -119,6 +120,18 @@ cp -pr dist/javadoc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4-13
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4-12
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4-11
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4-10
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Mat Booth <mat.booth@redhat.com> - 1.4-9
 - Fix BR on asm and install with maven
 

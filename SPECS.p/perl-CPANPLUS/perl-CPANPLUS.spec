@@ -2,7 +2,7 @@
 Name:           perl-CPANPLUS
 # Keep 2-digit major varion to compete with perl.spec for history
 Version:        %(echo '%{cpan_version}' | sed 's/\(\...\)/\1./')
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Ameliorated interface to the Comprehensive Perl Archive Network
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -120,6 +120,15 @@ make test %{?_smp_mflags}
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.91.52-5
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.91.52-4
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.91.52-3
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Petr Pisar <ppisar@redhat.com> - 0.91.52-2
 - 0.9152 bump
 

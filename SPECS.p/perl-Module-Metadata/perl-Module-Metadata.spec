@@ -1,6 +1,6 @@
 Name:		perl-Module-Metadata
 Version:	1.000024
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Gather package and POD information from perl module files
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Module-Metadata/
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/Module::Metadata.3pm*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.000024-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Paul Howarth <paul@city-fan.org> - 1.000024-1
 - Update to 1.000024
   - Support installations on older perls with an ExtUtils::MakeMaker earlier

@@ -1,7 +1,7 @@
 Summary: Line wrapping with support for several locale setups
 Name: perl-Text-WrapI18N
 Version: 0.06
-Release: 19%{?dist}
+Release: 20%{?dist}
 License: GPL+ or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Text-WrapI18N/
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Text::WrapI18N.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-20
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

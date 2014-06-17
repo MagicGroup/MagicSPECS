@@ -1,6 +1,6 @@
 Name:           perl-HTML-Template
 Version:        2.10
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Perl module to use HTML Templates
 
 Group:          Development/Libraries
@@ -63,6 +63,12 @@ TEST_SHARED_MEMORY=1
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.10-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.10-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.10-7
 - 为 Magic 3.0 重建
 

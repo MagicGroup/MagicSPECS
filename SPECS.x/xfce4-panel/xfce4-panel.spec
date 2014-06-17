@@ -1,25 +1,24 @@
-%global xfceversion 4.10
 
 Name:           xfce4-panel
-Version:        4.10.0
+Version:	4.11.0
 Release:        3%{?dist}
 Summary:        Next generation panel for Xfce
+Summary(zh_CN.UTF-8): Xfce 的下一代面板
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+ and LGPLv2+
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/xfce4-panel
+%global xfceversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
 # clock icon taken from system-config-date, license is GPLv2+
 Source1:        xfce4-clock.png
 Source2:        xfce4-clock.svg
 Patch1:         xfce4-panel-4.9.1-fix-desktopfile.patch
-## Downstream patches
-# FIXME: do the patch once SIG has decided about a panel layout
-Patch10:        xfce4-panel-4.8.2-defaults.patch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  libxfce4ui-devel >= %{xfceversion}
-BuildRequires:  xfconf-devel >= %{xfceversion}
+BuildRequires:  xfconf-devel >= 4.10
 BuildRequires:  garcon-devel >= 0.1.5
 BuildRequires:  libxml2-devel >= 2.4.0
 BuildRequires:  startup-notification-devel
@@ -57,9 +56,14 @@ Obsoletes:      xfce4-xfapplet-plugin <= 0.1.0-10.fc15
 %description
 This package includes the panel for the Xfce desktop environment.
 
+%description -l zh_CN.UTF-8
+Xfce 桌面环境的面板。
+
 %package devel
 Summary:        Development headers for xfce4-panel
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       libxfce4util-devel >= %{xfceversion}
@@ -69,15 +73,11 @@ Requires:       libxfce4ui-devel >= %{xfceversion}
 This package includes the header files you will need to build
 plugins for xfce4-panel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch1 -p1
-#patch10 -p1 -b .default
-
-# Fix icon in 'Add new panel item' dialog
-sed -i 's|Icon=office-calendar|Icon=xfce4-clock|g' plugins/clock/clock.desktop.in
-
 
 %build
 %configure --enable-gtk-doc --disable-static
@@ -161,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/xfce4/libxfce4panel-*/
 
 %changelog
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 4.11.0-3
+- 更新到 4.11.0
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.10.0-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Device-SerialPort
 Version:        1.04
-Release:        14%{?dist}
+Release:        16%{?dist}
 Summary:        Linux/POSIX emulation of Win32::SerialPort functions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.04-16
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.04-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.04-14
 - 为 Magic 3.0 重建
 

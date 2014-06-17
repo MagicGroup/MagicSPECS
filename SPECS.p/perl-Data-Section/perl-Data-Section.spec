@@ -3,7 +3,7 @@
 
 Name:           perl-Data-Section
 Version:        0.101621
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Read multiple hunks of data out of your DATA section
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Data::Section.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.101621-7
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.101621-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.101621-5
 - 为 Magic 3.0 重建
 

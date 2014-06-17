@@ -6,7 +6,7 @@
 Summary: Fast C metadata and tag reader for all common audio file formats  
 Name: perl-Audio-Scan
 Version: 0.93
-Release: 2%{?dist}
+Release: 5%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -47,6 +47,15 @@ Fast C metadata and tag reader for all common audio file formats
 %{perl_vendorarch}
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.93-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.93-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.93-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.93-2
 - 为 Magic 3.0 重建
 

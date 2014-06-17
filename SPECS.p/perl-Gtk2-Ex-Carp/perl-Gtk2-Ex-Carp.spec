@@ -1,6 +1,6 @@
 Name:           perl-Gtk2-Ex-Carp
 Version:        0.01
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        GTK+ friendly die() and warn() functions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.01-18
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.01-17
 - 为 Magic 3.0 重建
 

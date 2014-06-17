@@ -1,6 +1,6 @@
 Name:           perl-IO-All
 Version:        0.63
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        IO::All Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -96,6 +96,9 @@ make %{?_smp_mflags} test RELEASE_TESTING=1
 %{_mandir}/man3/IO::All::Temp.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.63-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Paul Howarth <paul@city-fan.org> - 0.63-1
 - Update to 0.63
   - Convert release to Zilla::Dist

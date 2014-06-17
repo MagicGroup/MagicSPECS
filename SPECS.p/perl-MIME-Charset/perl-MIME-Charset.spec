@@ -1,6 +1,6 @@
 Name:           perl-MIME-Charset
 Version:        1.009.1
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Charset Informations for MIME
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.009.1-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.009.1-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.009.1-7
 - 为 Magic 3.0 重建
 

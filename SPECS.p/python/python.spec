@@ -106,7 +106,7 @@ Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
 Version: 2.7.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -2068,6 +2068,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.7.7-3
+- 为 Magic 3.0 重建
+
 * Sat Jun  7 2014 Peter Robinson <pbrobinson@fedoraproject.org> 2.7.7-2
 - aarch64 has valgrind, just list those that don't support it
 

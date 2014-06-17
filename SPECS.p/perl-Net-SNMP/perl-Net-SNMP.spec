@@ -1,6 +1,6 @@
 Name:           perl-Net-SNMP
 Version:        6.0.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Object oriented interface to SNMP
 
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.0.1-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.0.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

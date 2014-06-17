@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        4.0.0
-Release:        4%{?dist}
+Release:        6%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -185,6 +185,12 @@ popd
 %doc LICENSE
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 4.0.0-6
+- 为 Magic 3.0 重建
+
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 4.0.0-5
+- 为 Magic 3.0 重建
+
 * Fri May 30 2014 Michal Srb <msrb@redhat.com> - 4.0.0-4
 - Backport patch which adds support for "disableEffectivePom" property
 

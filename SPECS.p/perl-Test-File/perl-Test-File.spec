@@ -1,7 +1,7 @@
 Summary:	Test file attributes through Test::Builder
 Name:		perl-Test-File
 Version:	1.34
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-File/
@@ -46,6 +46,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Test::File.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.34-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.34-2
 - 为 Magic 3.0 重建
 

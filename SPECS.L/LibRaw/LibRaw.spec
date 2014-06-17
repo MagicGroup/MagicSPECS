@@ -1,9 +1,11 @@
 Summary: Library for reading RAW files obtained from digital photo cameras
+Summary(zh_CN.UTF-8): 从数码相机中获取 RAW 文件的库
 Name: LibRaw
 Version: 0.16.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL: http://www.libraw.org
 
 BuildRequires: lcms2-devel
@@ -20,9 +22,16 @@ cameras (CRW/CR2, NEF, RAF, DNG, and others).
 LibRaw is based on the source codes of the dcraw utility, where part of
 drawbacks have already been eliminated and part will be fixed in future.
 
+%description -l zh_CN.UTF-8
+从数码相机中获取 RAW 文件的库 (CRW/CR2, NEF, RAF, DNG 和其它)。
+
+这是基于 dcraw 工具的源码编写的。
+
 %package devel
 Summary: LibRaw development libraries
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name} = %{version}-%{release}
 
 %description devel
@@ -31,19 +40,32 @@ LibRaw development libraries.
 This package contains libraries that applications can use to build
 against LibRaw.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: LibRaw static development libraries
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description static
 LibRaw static development libraries.
 
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
+
 %package samples
 Summary: LibRaw sample programs
+Summary(zh_CN.UTF-8): LibRaw 样例程序
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description samples
 LibRaw sample programs
+
+%description samples -l zh_CN.UTF-8
+LibRaw 样例程序。
 
 %prep
 %setup -q -a1 -a2
@@ -89,6 +111,9 @@ make install DESTDIR=%{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.16.0-2
+- 为 Magic 3.0 重建
+
 * Tue Jan 21 2014 Jon Ciesla <limburgher@gmail.com> - 0.16.0-1
 - 0.16.0, BZ 1055281.
 

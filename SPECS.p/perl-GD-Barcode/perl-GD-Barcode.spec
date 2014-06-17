@@ -1,6 +1,6 @@
 Name:           perl-GD-Barcode
 Version:        1.15
-Release:        14%{?dist}
+Release:        17%{?dist}
 Summary:        Create barcode image with GD
 # see Barcode.pm
 License:        GPL+ or Artistic
@@ -55,6 +55,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.15-17
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.15-16
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.15-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.15-14
 - 为 Magic 3.0 重建
 

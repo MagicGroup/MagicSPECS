@@ -1,6 +1,6 @@
 Name:           perl-Authen-Captcha
 Version:        1.023
-Release:        15%{?dist}
+Release:        18%{?dist}
 Summary:        Perl extension for creating captchas
 License:        GPLv2
 Group:          Development/Libraries
@@ -60,6 +60,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.023-18
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.023-17
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.023-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.023-15
 - 为 Magic 3.0 重建
 

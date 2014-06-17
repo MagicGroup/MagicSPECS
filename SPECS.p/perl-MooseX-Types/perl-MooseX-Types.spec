@@ -1,6 +1,6 @@
 Name:       perl-MooseX-Types
 Version:    0.35
-Release:    3%{?dist}
+Release:    5%{?dist}
 # see Makefile.PL, lib/MooseX/Types.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -70,6 +70,12 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.35-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.35-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.35-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

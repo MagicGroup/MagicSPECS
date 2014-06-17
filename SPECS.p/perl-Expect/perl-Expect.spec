@@ -1,6 +1,6 @@
 Name:		perl-Expect
 Version:	1.21
-Release:	13%{?dist}
+Release:	15%{?dist}
 Summary:	Expect for Perl
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -55,6 +55,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Expect.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.21-15
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.21-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.21-13
 - 为 Magic 3.0 重建
 

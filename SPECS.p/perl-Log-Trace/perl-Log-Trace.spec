@@ -1,6 +1,6 @@
 Name:       perl-Log-Trace 
 Version:    1.070 
-Release:    11%{?dist}
+Release:    12%{?dist}
 # lib/Log/Trace.pm -> GPLv2+ 
 License:    GPLv2+
 Group:      Development/Libraries
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.070-12
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.070-11
 - 为 Magic 3.0 重建
 

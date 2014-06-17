@@ -1,6 +1,6 @@
 Name:		perl-Bio-SamTools
 Version:	1.35
-Release:	1%{?dist}
+Release:	12%{?dist}
 Summary:	Bio::SamTools Perl module
 License:	GPL+ or Artistic 2.0
 Group:		Development/Libraries
@@ -57,6 +57,39 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_bindir}/genomeCoverageBed.pl
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.35-12
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.35-11
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.35-10
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.35-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.35-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.35-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.35-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.35-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.35-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.35-3
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.35-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 22 2012  <bloch@verdurin.com> - 1.35-1
 - Update to upstream release 1.35
 

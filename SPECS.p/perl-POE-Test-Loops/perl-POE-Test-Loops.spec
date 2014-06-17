@@ -1,7 +1,7 @@
 Name:           perl-POE-Test-Loops
 Summary:        Reusable tests for POE::Loop authors
 Version:        1.354
-Release:        2%{?dist}
+Release:        4%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RC/RCAPUTO/POE-Test-Loops-%{version}.tar.gz 
@@ -64,7 +64,7 @@ Requires:       perl(:MODULE_COMPAT_%(eval "$(perl -V:version)"; echo $version))
 # RPM 4.8 style
 %{?filter_from_provides: %filter_from_provides /perl([DIFMOSU].*)/d; /perl(POE::MySession)/d; /perl(POE::Kernel)/d; /perl(PoeTestWorker)/d; /perl(Switch)/d }
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 # RPM 4.9 style
 %global __provides_exclude %{?__provides_exclude:__requires_exclude|}^perl\\(POE::MySession\\)
 %global __provides_exclude %__provides_exclude|perl\\(POE::Kernel\\)
@@ -103,6 +103,12 @@ make test
 %{_mandir}/man1/poe-gen-tests.1.gz
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.354-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.354-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.354-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

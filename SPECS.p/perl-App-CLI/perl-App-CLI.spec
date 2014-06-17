@@ -1,6 +1,6 @@
 Name:           perl-App-CLI
 Version:        0.313
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Dispatcher module for command line interface programs
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.313-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.313-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.313-3
 - 为 Magic 3.0 重建
 

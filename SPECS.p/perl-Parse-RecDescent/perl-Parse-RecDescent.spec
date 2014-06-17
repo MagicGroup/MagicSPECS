@@ -1,6 +1,6 @@
 Name:           perl-Parse-RecDescent
 Version:        1.967009
-Release:        4%{?dist}
+Release:        10%{?dist}
 Summary:        Generate Recursive-Descent Parsers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -71,6 +71,24 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/Parse::RecDescent.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.967009-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.967009-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.967009-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.967009-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.967009-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.967009-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.967009-4
 - 为 Magic 3.0 重建
 

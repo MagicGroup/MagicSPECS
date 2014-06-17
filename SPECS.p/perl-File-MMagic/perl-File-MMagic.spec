@@ -1,6 +1,6 @@
 Name:           perl-File-MMagic
 Version:        1.29
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        A Perl module emulating the file(1) command
 Group:          Development/Libraries
 License:        ASL 1.0 and BSD
@@ -40,6 +40,12 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/File::MMagic.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.29-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.29-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.29-3
 - 为 Magic 3.0 重建
 

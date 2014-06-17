@@ -2,7 +2,7 @@
 
 Name:             apache-%{short_name}
 Version:          34
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Apache Commons Parent Pom
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -46,6 +46,9 @@ The Project Object Model files for the apache-commons packages.
 %doc LICENSE.txt NOTICE.txt RELEASE-NOTES.txt
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 34-3
+- 为 Magic 3.0 重建
+
 * Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 34-2
 - Rebuild to regenerate Maven auto-requires
 

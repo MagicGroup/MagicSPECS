@@ -1,6 +1,6 @@
 Name:           perl-YAML
 Version:        0.84
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        YAML Ain't Markup Language (tm)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -f %{buildroot}%{perl_vendorlib}/Test/YAML* \
 %{_mandir}/man3/YAML*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.84-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.84-5
 - 为 Magic 3.0 重建
 

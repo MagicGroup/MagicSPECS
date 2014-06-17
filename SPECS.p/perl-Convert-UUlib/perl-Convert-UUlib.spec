@@ -7,7 +7,7 @@ Summary:	Perl interface to the uulib library
 Name:		perl-Convert-UUlib
 Epoch:		2
 Version:	1.4
-Release:	4%{?dist}
+Release:	6%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/%{pkgname}/
@@ -47,6 +47,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man?/Convert::UUlib*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2:1.4-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2:1.4-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2:1.4-4
 - 为 Magic 3.0 重建
 

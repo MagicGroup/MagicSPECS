@@ -1,30 +1,19 @@
-%global xfceversion 4.10
 
 Name:           xfwm4
-Version:        4.10.0
-Release:        5%{?dist}
+Version:	4.11.1
+Release:        1%{?dist}
 Summary:        Next generation window manager for Xfce
 
 Group:          User Interface/Desktops
 License:        GPLv2+
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/xfwm4
+%global xfceversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
-# Fix window grabbing with gtk3 windows (#845272=
-# Upstream bug: https://bugzilla.xfce.org/show_bug.cgi?id=8949
-# Upstream fix: http://git.xfce.org/xfce/xfwm4/commit/?id=0b39bbe0
-Patch0:         xfwm4-4.10.0-gtk3-windows.patch
-# Fix potential crash in xfce4-settings-manager through wrong xfwm4 settings
-# Upstream bug: https://bugzilla.xfce.org/show_bug.cgi?id=9108
-# Upstream fix: http://git.xfce.org/xfce/xfwm4/commit/?id=f09ea920
-Patch1:         xfwm4-4.10.0-wrong-title-alignment.patch
-# Delete active workspace instead of last workspace
-# Upstream bug: https://bugzilla.xfce.org/show_bug.cgi?id=8827
-# Upstream fix: http://git.xfce.org/xfce/xfwm4/commit/?id=0003144f
-Patch2:         xfwm4-4.10.0-workspace-deletion.patch
-## Downstream patches:
 # Fix desktop categories
 Patch10:        xfwm4-4.9.0-desktop-fix.patch
+
+Patch11:	xfwm4-4.11.1-nostropts.h.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libxfce4ui-devel >= %{xfceversion}
@@ -36,7 +25,7 @@ BuildRequires:  libXdamage-devel
 BuildRequires:  startup-notification-devel >= 0.5
 BuildRequires:  libglade2-devel
 BuildRequires:  libwnck-devel >= 2.22
-BuildRequires:  xfconf-devel >= %{xfceversion}
+BuildRequires:  xfconf-devel >=  4.10
 BuildRequires:  desktop-file-utils
 Provides:       firstboot(windowmanager) = xfwm4
 
@@ -45,11 +34,8 @@ xfwm4 is a window manager compatible with GNOME, GNOME2, KDE2, KDE3 and Xfce.
 
 %prep
 %setup -q
-%patch0 -p1 -b .gtk3
-%patch1 -p1 -b .title-alignment
-%patch2 -p1 -b .workspace-deletion
 %patch10 -p1 -b .categories
-
+%patch11 -p1
 
 %build
 %configure  --disable-static
@@ -103,6 +89,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 4.11.1-1
+- 更新到 4.11.1
+
 * Sun Oct 07 2012 Christoph Wickert <cwickert@fedoraproject.org> - 4.10.0-5
 - Delete active workspace instead of last workspace (bugzilla.xfce.org #8827)
 

@@ -2,9 +2,11 @@
 
 Name:           slim
 Version:        1.3.6
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Simple Login Manager
+Summary(zh_CN.UTF-8): 简单的登录管理器
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        GPLv2+
 URL:            http://slim.berlios.de/
 Source0:        http://download.berlios.de/slim/%{name}-%{version}.tar.gz
@@ -20,18 +22,15 @@ Source6:        slim-tmpfiles.conf
 Source7:        slim.service
 # Fedora-specific patches
 Patch1:         slim-1.3.3-fedora.patch
-Patch2:         slim-1.3.2-selinux.patch
 
 BuildRequires:  libXmu-devel libXft-devel libXrender-devel
 BuildRequires:  libpng-devel libjpeg-devel freetype-devel fontconfig-devel
-BuildRequires:  pkgconfig gettext libselinux-devel pam-devel cmake
+BuildRequires:  pkgconfig gettext pam-devel cmake
 BuildRequires:  xwd xterm freeglut-devel libXrandr-devel
 Requires:       xwd xterm /sbin/shutdown
 Requires:       %{_sysconfdir}/pam.d
 # we use 'include' in the pam file, so
 Requires:       pam >= 0.80
-# reuse the images
-Requires:       desktop-backgrounds-basic
 # for anaconda yum
 Provides:       service(graphical-login)
 
@@ -51,11 +50,13 @@ which determines the available window managers using the freedesktop
 information and modifies the slim configuration file accordingly,
 before launching slim.
 
+%description -l zh_CN.UTF-8
+简单的登录管理器。
+
 %prep
 %setup -q
 
 %patch1 -p0 -b .fedora
-%patch2 -p1 -b .selinux
 cp -p %{SOURCE4} README.Fedora
 
 %build
@@ -70,9 +71,6 @@ chmod 0644 %{buildroot}%{_sysconfdir}/%{name}.conf
 install -d -m755 %{buildroot}%{_sysconfdir}/pam.d
 install -p -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pam.d/%{name}
 mkdir -p %{buildroot}%{_localstatedir}/run/%{name}
-# replace the background image
-rm -f %{buildroot}%{_datadir}/%{name}/themes/default/background.jpg
-ln -s ../../../backgrounds/tiles/default_blue.jpg %{buildroot}%{_datadir}/%{name}/themes/default/background.jpg
 # install logrotate entry
 install -m0644 -D %{SOURCE5} %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
 
@@ -90,6 +88,7 @@ mv %{buildroot}/usr/lib/lib%{name}.so* %{buildroot}/%{_libdir}/ | :
 rm %{buildroot}/lib/systemd/system/%{name}.service
 # devel .so
 rm %{buildroot}/%{_libdir}/lib%{name}.so
+magic_rpm_clean.sh
 
 %post
 /sbin/ldconfig
@@ -121,6 +120,12 @@ rm %{buildroot}/%{_libdir}/lib%{name}.so
 %endif
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.3.6-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.3.6-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

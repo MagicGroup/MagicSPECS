@@ -1,6 +1,6 @@
 Name:           perl-threads-shared
 Version:        1.46
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Perl extension for sharing data structures between threads
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.46-5
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.46-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.46-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

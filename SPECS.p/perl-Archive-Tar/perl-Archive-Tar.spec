@@ -1,6 +1,6 @@
 Name:           perl-Archive-Tar
 Version:        1.96
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        A module for Perl manipulation of .tar files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -73,6 +73,12 @@ make test
 
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.96-4
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.96-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.96-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

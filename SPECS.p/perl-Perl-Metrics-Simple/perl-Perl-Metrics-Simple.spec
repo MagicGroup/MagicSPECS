@@ -1,6 +1,6 @@
 Name:           perl-Perl-Metrics-Simple
 Version:        0.17
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Count packages, subs, lines, etc. of many files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ sed -i '1 s|^#!.*|#!%{__perl}|' bin/countperl
 %{_mandir}/man1/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.17-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.17-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

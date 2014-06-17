@@ -1,6 +1,6 @@
 Name:       perl-Archive-RPM
 Version:    0.07
-Release:    7%{?dist}
+Release:    13%{?dist}
 Summary:    Work with a RPM
 # lib/Archive/RPM.pm -> LGPLv2+
 # lib/Archive/RPM/ChangeLogEntry.pm -> LGPLv2+
@@ -31,7 +31,7 @@ Requires:      perl(MooseX::Traits)
 Requires:      perl(MooseX::Types::DateTime)
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 Archive::RPM provides a more complete method of accessing an RPM's meta-
@@ -61,6 +61,24 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-13
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-12
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-11
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-10
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-9
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.07-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

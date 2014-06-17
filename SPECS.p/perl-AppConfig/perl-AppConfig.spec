@@ -1,6 +1,6 @@
 Name:           perl-AppConfig
 Version:        1.66
-Release:        17%{?dist}
+Release:        19%{?dist}
 Summary:        Perl module for reading configuration files
 
 Group:          Development/Libraries
@@ -66,6 +66,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.66-19
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.66-18
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.66-17
 - 为 Magic 3.0 重建
 

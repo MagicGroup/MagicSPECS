@@ -1,6 +1,6 @@
 Name:  perl-Geo-IP
 Version: 1.38
-Release: 10%{?dist}
+Release: 11%{?dist}
 Summary: Efficient Perl bindings for the GeoIP location database       
 
 Group: Development/Libraries
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Geo::Mirror.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.38-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.38-10
 - 为 Magic 3.0 重建
 

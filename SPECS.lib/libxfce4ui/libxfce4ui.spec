@@ -1,16 +1,18 @@
 # Review at https://bugzilla.redhat.com/show_bug.cgi?id=554599
 
-%global xfceversion 4.10
 
 Name:           libxfce4ui
-Version:        4.10.0
+Version:	4.11.1
 Release:        3%{?dist}
 Summary:        Commonly used Xfce widgets
+Summary(zh_CN.UTF-8): xfce 通用的部件
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://xfce.org/
 #VCS git:git://git.xfce.org/xfce/libxfce4ui
+%global xfceversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -18,7 +20,7 @@ BuildRequires:  pkgconfig(gobject-2.0) >= 2.24.0
 BuildRequires:  pkgconfig(gtk+-2.0) >= 2.20.0
 BuildRequires:  libSM-devel
 BuildRequires:  pkgconfig(libxfce4util-1.0) >= %{xfceversion}
-BuildRequires:  pkgconfig(libxfconf-0) >= %{xfceversion}
+BuildRequires:  pkgconfig(libxfconf-0) >= 4.10
 BuildRequires:  pkgconfig(libstartup-notification-1.0) >= 0.4
 BuildRequires:  gtk-doc
 BuildRequires:  desktop-file-utils
@@ -34,9 +36,14 @@ BuildRequires:  intltool
 Libxfce4ui is used to share commonly used Xfce widgets among the Xfce
 applications.
 
+%description -l zh_CN.UTF-8
+Xfce 程序通用的部件。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk2-devel
 Requires:       libxfce4util-devel
@@ -51,6 +58,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -109,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/48x48/apps/xfce4-logo.png
 
 %changelog
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 4.11.1-3
+- 更新到 4.11.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.10.0-3
 - 为 Magic 3.0 重建
 

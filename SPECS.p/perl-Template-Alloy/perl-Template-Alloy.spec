@@ -1,6 +1,6 @@
 Name:           perl-Template-Alloy
 Version:        1.016
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Templating tool supporting multiple markup formats 
 # see lib/Template/Alloy.pod
 License:        GPL+ or Artistic
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.016-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.016-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

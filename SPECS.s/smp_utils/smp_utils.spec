@@ -1,7 +1,7 @@
 Summary:        Utilities for SAS management protocol (SMP)
 Name:           smp_utils
 Version:        0.98
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          Applications/System
 URL:            http://sg.danny.cz/sg/smp_utils.html
@@ -83,6 +83,9 @@ rm -rf %{buildroot}%{_libdir}/*.la
 
 
 %changelog
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 0.98-2
+- 为 Magic 3.0 重建
+
 * Wed May 28 2014 Dan Horák <dan[at]danny.cz> - 0.98-1
 - updated to 0.98 (#1102035)
 

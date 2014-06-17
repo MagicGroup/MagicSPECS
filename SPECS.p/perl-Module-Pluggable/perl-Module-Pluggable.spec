@@ -4,7 +4,7 @@ Name:           perl-Module-Pluggable
 Epoch:          1
 # Keep two digit decimal part
 Version:        %{cpan_version}0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Automatically give your module the ability to have plugins
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -77,6 +77,9 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:5.10-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

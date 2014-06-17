@@ -2,7 +2,7 @@
 
 Name:		    scons
 Version:	    2.3.1
-Release:	    2%{?posttag}%{?dist}
+Release:	    3%{?posttag}%{?dist}
 Summary:	    An Open Source software construction tool
 Group:		    Development/Tools
 License:	    MIT
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man?/*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.3.1-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

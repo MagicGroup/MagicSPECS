@@ -1,6 +1,6 @@
 Name:           perl-IO-Interface
 Version:        1.05
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Perl extension for accessing network card configuration information
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.05-10
 - 为 Magic 3.0 重建
 

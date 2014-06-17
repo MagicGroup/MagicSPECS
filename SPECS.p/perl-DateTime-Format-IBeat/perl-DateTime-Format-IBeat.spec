@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-IBeat
 Version:        0.161
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Format times in .beat notation 
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ make test
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.161-21
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.161-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

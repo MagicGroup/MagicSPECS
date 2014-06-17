@@ -1,6 +1,6 @@
 Name:           perl-constant-defer
 Version:        5
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Constant subs with deferred value calculation
 License:        GPLv3+
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 5-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

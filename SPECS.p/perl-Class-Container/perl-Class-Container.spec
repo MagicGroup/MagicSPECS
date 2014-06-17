@@ -1,6 +1,6 @@
 Name:           perl-Class-Container
 Version:        0.12
-Release:        16%{?dist}
+Release:        18%{?dist}
 Summary:        Class::Container Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.12-18
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.12-17
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.12-16
 - 为 Magic 3.0 重建
 

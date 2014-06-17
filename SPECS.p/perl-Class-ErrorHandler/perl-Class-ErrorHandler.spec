@@ -1,6 +1,6 @@
 Name:           perl-Class-ErrorHandler
 Version:        0.03
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Class::ErrorHandler Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/Class::ErrorHandler.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.03-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

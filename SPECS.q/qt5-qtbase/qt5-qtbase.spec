@@ -22,7 +22,7 @@
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
 Version: 5.3.0
-Release: 7%{?dist}
+Release: 10%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -519,7 +519,7 @@ popd
 %dir %{_qt5_plugindir}/platformthemes/
 %dir %{_qt5_plugindir}/printsupport/
 %dir %{_qt5_plugindir}/sqldrivers/
-%{_qt5_plugindir}/sqldrivers/libqsqlite.so
+%{_qt5_plugindir}/sqldrivers/libqsqlite*.so
 
 %if 0%{?docs}
 %files doc
@@ -686,6 +686,7 @@ popd
 %{_qt5_plugindir}/platforms/libqkms.so
 %{_qt5_plugindir}/platforms/libqminimalegl.so
 %endif
+%{_qt5_plugindir}/platforms/libqdirectfb.so
 %{_qt5_plugindir}/platforms/libqlinuxfb.so
 %{_qt5_plugindir}/platforms/libqminimal.so
 %{_qt5_plugindir}/platforms/libqoffscreen.so
@@ -695,6 +696,15 @@ popd
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 5.3.0-10
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 5.3.0-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 5.3.0-8
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

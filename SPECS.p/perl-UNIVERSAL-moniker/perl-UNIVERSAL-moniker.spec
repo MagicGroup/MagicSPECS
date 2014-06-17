@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-moniker
 Version:        0.08
-Release:        23%{?dist}
+Release:        25%{?dist}
 Summary:        Real world naming for classes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,6 +42,12 @@ make test
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-25
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.08-24
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.08-23
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

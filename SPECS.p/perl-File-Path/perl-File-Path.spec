@@ -1,6 +1,6 @@
 Name:           perl-File-Path
 Version:        2.09
-Release:        293%{?dist}
+Release:        298%{?dist}
 Summary:        Create or remove directory trees
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,21 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.09-298
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.09-297
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.09-296
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.09-295
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.09-294
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-293
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Exception-Class
 Version:        1.32
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Module that allows you to declare real exception classes in Perl
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -53,6 +53,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.32-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.32-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.32-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-ExtUtils-InstallPaths
 Version:	0.010
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Build.PL install path logic made easy
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ExtUtils::InstallPaths.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.010-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.010-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

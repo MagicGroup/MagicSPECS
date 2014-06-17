@@ -1,6 +1,6 @@
 Name:       perl-MooseX-Types-DateTime
 Version:    0.07
-Release:    5%{?dist}
+Release:    6%{?dist}
 # see, e.g., lib/MooseX/Types/DateTime.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

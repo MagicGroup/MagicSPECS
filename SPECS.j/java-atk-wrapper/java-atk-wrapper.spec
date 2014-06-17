@@ -3,7 +3,7 @@
 
 Name:       java-atk-wrapper
 Version:    %{major_version}.%{minor_version}
-Release:    4%{?dist}
+Release:    5%{?dist}
 Summary:    Java ATK Wrapper
 
 Group:      Development/Libraries
@@ -67,6 +67,9 @@ ln -s %{_libdir}/%{name}/libatk-wrapper.so.0.0.18 \
 
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 0.30.4-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.30.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

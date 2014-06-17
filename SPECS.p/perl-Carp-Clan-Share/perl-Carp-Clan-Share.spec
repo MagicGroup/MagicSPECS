@@ -1,6 +1,6 @@
 Name:           perl-Carp-Clan-Share
 Version:        0.013
-Release:        11%{?dist}
+Release:        13%{?dist}
 Summary:        Share your Carp::Clan settings with your whole Clan
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.013-13
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.013-12
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.013-11
 - 为 Magic 3.0 重建
 

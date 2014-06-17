@@ -1,6 +1,6 @@
 Name:           perl-GnuPG-Interface
 Version:        0.50
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Perl interface to GnuPG
 Group:          Development/Libraries
 License:        GPLv2+ or Artistic
@@ -71,6 +71,12 @@ make test
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.50-5
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.50-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Dist-Zilla
 Version:        5.015
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Distribution builder; installer not included!
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -185,6 +185,12 @@ make test
 %{_sysconfdir}/bash_completion.d
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 5.015-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 5.015-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.015-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

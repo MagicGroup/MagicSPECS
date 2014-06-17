@@ -1,6 +1,6 @@
 Name:           perl-IO-LockedFile
 Version:        0.23
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Something
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.23-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.23-13
 - 为 Magic 3.0 重建
 

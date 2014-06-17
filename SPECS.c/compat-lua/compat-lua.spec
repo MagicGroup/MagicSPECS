@@ -1,8 +1,10 @@
 Name:           compat-lua
 Version:        5.1.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Powerful light-weight programming language (compat version)
+Summary(zh_CN.UTF-8): 强力的轻量级程序语言（兼容版本）
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
@@ -18,23 +20,32 @@ Provides:       lua = 5.1
 %description
 This package contains a compatibility version of the lua-5.1 binaries.
 
+%description -l zh_CN.UTF-8
+这个包包含了 lua-5.1 版本的二进制文件。
 
 %package libs
 Summary:        Powerful light-weight programming language (compat version)
+Summary(zh_CN.UTF-8): %{name} 的运行库
 Provides:       lua(abi) = 5.1
 
 %description libs
 This package contains a compatibility version of the lua-5.1 libraries.
 
+%description libs -l zh_CN.UTF-8
+%{name} 的运行库。
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains development files for compat-lua-libs.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n lua-%{version}
@@ -77,7 +88,7 @@ mv $RPM_BUILD_ROOT%{_includedir}/l*h* $RPM_BUILD_ROOT%{_includedir}/lua-5.1
 rm $RPM_BUILD_ROOT%{_libdir}/liblua.so
 mv $RPM_BUILD_ROOT%{_libdir}/pkgconfig/lua.pc \
   $RPM_BUILD_ROOT%{_libdir}/pkgconfig/lua-5.1.pc
-
+magic_rpm_clean.sh
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
@@ -102,6 +113,9 @@ mv $RPM_BUILD_ROOT%{_libdir}/pkgconfig/lua.pc \
 
 
 %changelog
+* Sun Jun 08 2014 Liu Di <liudidi@gmail.com> - 5.1.4-6
+- 为 Magic 3.0 重建
+
 * Sat Aug  3 2013 Hans de Goede <hdegoede@redhat.com> - 5.1.4-5
 - New Fedora package with full lua-5.1 for use with applications not yet
   ported to 5.2

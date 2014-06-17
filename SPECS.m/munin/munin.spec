@@ -1,6 +1,6 @@
 Name:           munin
 Version:        2.0.21
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Network-wide graphing framework (grapher/gatherer)
 
 Group:          System Environment/Daemons
@@ -796,6 +796,15 @@ exit 0
 
 
 %changelog
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-5
+- 为 Magic 3.0 重建
+
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-4
+- 为 Magic 3.0 重建
+
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.21-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

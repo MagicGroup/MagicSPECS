@@ -4,6 +4,7 @@ Name:           libxkbcommon
 Version:        0.4.2
 Release:        4%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        X.Org X11 XKB parsing library
+Summary(zh_CN.UTF-8): X.Org X11 XKB 解析库
 License:        MIT
 URL:            http://www.x.org
 
@@ -27,27 +28,42 @@ BuildRequires:  pkgconfig(xcb-xkb) >= 1.10
 %{name} is the X.Org library for compiling XKB maps into formats usable by
 the X Server or other display servers.
 
+%description -l zh_CN.UTF-8
+X.Org X11 XKB 解析库。
+
 %package devel
 Summary:        X.Org X11 XKB parsing development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 X.Org X11 XKB parsing development package
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package x11
 Summary:        X.Org X11 XKB keymap creation library
+Summary(zh_CN.UTF-8): X.Org X11 XKB 键盘映射创建库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description x11
 %{name}-x11 is the X.Org library for creating keymaps by querying the X
 server.
 
+%description x11 -l zh_CN.UTF-8
+X.Org X11 XKB 键盘映射创建库。
+
 %package x11-devel
 Summary:        X.Org X11 XKB keymap creation library
+Summary(zh_CN.UTF-8): X.Org X11 XKB 键盘映射创建库的开发文件
 Requires:       %{name}-x11%{?_isa} = %{version}-%{release}
 
 %description x11-devel
 X.Org X11 XKB keymap creation library development package
+
+%description x11-devel -l zh_CN.UTF-8
+X.Org X11 XKB 键盘映射创建库的开发文件。
 
 %prep
 %setup -q -n %{name}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
@@ -66,6 +82,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -fv {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -83,6 +100,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -fv {} ';'
 %{_includedir}/xkbcommon/xkbcommon-keysyms.h
 %{_includedir}/xkbcommon/xkbcommon-names.h
 %{_libdir}/pkgconfig/xkbcommon.pc
+%{_docdir}/libxkbcommon/*
 
 %if 0%{?x11}
 %post x11 -p /sbin/ldconfig

@@ -1,6 +1,6 @@
 Name:           perl-Geo-Forward
 Version:        0.11
-Release:        12%{?dist}
+Release:        15%{?dist}
 Summary:        Calculate geographic location from lat, lon, distance, and heading
 
 Group:          Development/Libraries
@@ -54,6 +54,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-15
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.11-12
 - 为 Magic 3.0 重建
 

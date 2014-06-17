@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-Diff
 Version:        1.1902
-Release:        17%{?dist}
+Release:        19%{?dist}
 Summary:        Algorithm::Diff Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1902-19
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1902-18
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.1902-17
 - 为 Magic 3.0 重建
 

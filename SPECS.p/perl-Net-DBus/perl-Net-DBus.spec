@@ -1,6 +1,6 @@
 Name:           perl-Net-DBus
 Version:        1.0.0
-Release:        5%{?dist}
+Release:        11%{?dist}
 Summary:        Use and provide DBus services
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,24 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.0.0-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.0.0-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.0.0-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.0.0-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.0.0-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.0.0-6
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 1.0.0-5
 - 为 Magic 3.0 重建
 

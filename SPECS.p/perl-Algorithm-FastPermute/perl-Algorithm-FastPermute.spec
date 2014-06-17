@@ -2,7 +2,7 @@
 
 Name:		perl-%{short_name}           
 Version:	0.999
-Release:	12%{?dist}
+Release:	14%{?dist}
 Summary:	Rapid generation of permutations
 
 Group:		Development/Libraries
@@ -58,6 +58,12 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{perl_vendorarch}/Algorithm/perms.pl
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.999-14
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.999-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.999-12
 - 为 Magic 3.0 重建
 

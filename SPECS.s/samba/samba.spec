@@ -54,7 +54,7 @@
 
 Name:           samba
 Version:        %{samba_version}
-Release:        %{samba_release}.1
+Release:        %{samba_release}.3
 
 %if 0%{?rhel}
 Epoch:          0
@@ -808,6 +808,7 @@ rm -rf %{buildroot}
 %{_libdir}/samba/vfs/syncops.so
 %{_libdir}/samba/vfs/time_audit.so
 %{_libdir}/samba/vfs/xattr_tdb.so
+%{_libdir}/samba/vfs/ceph.so
 
 %{_unitdir}/nmb.service
 %{_unitdir}/smb.service
@@ -1578,6 +1579,12 @@ rm -rf %{buildroot}
 %{_mandir}/man8/pam_winbind.8*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2:4.1.6-3.3
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2:4.1.6-3.2
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:4.1.6-3.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

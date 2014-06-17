@@ -2,7 +2,7 @@
 
 Name:      perl-Apache-DBI
 Version:   1.11
-Release:   7%{?dist}
+Release:   9%{?dist}
 Summary:   Persistent database connections with Apache/mod_perl
 
 Group:     Development/Libraries
@@ -72,6 +72,12 @@ rm -rf %{buildroot}
 %{perl_vendorlib}/Apache
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.11-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.11-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.11-7
 - 为 Magic 3.0 重建
 

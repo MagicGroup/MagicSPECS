@@ -3,7 +3,7 @@
 Name:           aether
 Epoch:          1
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library to resolve, install and deploy artifacts the Maven way
 License:        EPL
 URL:            http://eclipse.org/aether
@@ -182,6 +182,9 @@ rm -rf aether-transport-http/src/test
 %doc epl-v10.html notice.html
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1:1.0.0-3
+- 为 Magic 3.0 重建
+
 * Wed May 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1:1.0.0-2
 - Bring back Plexus support
 

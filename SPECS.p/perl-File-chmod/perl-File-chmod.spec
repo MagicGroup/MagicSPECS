@@ -1,6 +1,6 @@
 Name:           perl-File-chmod
 Version:        0.32
-Release:        16%{?dist}
+Release:        18%{?dist}
 Summary:        Implements symbolic and ls chmod modes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -38,6 +38,12 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.32-18
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.32-17
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.32-16
 - 为 Magic 3.0 重建
 

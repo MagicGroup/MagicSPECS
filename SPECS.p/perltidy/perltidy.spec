@@ -1,6 +1,6 @@
 Name:		perltidy
 Version:	20140328
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Tool for indenting and re-formatting Perl scripts
 License:	GPLv2+
 URL:		http://perltidy.sourceforge.net/
@@ -73,6 +73,9 @@ make test
 %{_mandir}/man3/Perl::Tidy.3*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 20140328-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20140328-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

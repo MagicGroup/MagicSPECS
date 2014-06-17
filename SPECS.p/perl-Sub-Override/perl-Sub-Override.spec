@@ -1,6 +1,6 @@
 Name:           perl-Sub-Override
 Version:        0.09
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Perl extension for easily overriding subroutines
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,6 +40,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09-7
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.09-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

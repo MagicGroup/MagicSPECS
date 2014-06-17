@@ -1,6 +1,6 @@
 Name:           perl-Hardware-Verilog-Parser
 Version:        0.13
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Complete grammar for parsing Verilog code using perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Hardware::Verilog::Parser.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.13-17
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

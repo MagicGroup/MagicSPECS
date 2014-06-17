@@ -1,6 +1,6 @@
 Name:		perl-Sub-Exporter
 Version:	0.984
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Sophisticated exporter for custom-built routines
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Exporter::Util.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.984-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.984-4
 - 为 Magic 3.0 重建
 

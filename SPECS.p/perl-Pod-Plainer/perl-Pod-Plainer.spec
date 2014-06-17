@@ -1,6 +1,6 @@
 Name: perl-Pod-Plainer
 Version: 1.03
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Perl extension for converting Pod to old-style Pod
 
 License: GPL+ or Artistic
@@ -48,6 +48,9 @@ ls -lZ $RPM_BUILD_ROOT/*
 %{_mandir}/man3/Pod::Plainer.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.03-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.03-4
 - 为 Magic 3.0 重建
 

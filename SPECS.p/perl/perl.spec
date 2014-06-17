@@ -30,7 +30,7 @@
 Name:           perl
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        299%{?dist}
+Release:        300%{?dist}
 Epoch:          %{perl_epoch}
 Summary:        Practical Extraction and Report Language
 Group:          Development/Languages
@@ -3616,6 +3616,9 @@ sed \
 
 # Old changelog entries are preserved in CVS.
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 4:5.18.2-300
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4:5.18.2-299
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

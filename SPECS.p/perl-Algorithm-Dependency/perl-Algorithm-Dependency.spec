@@ -1,6 +1,6 @@
 Name: 		perl-Algorithm-Dependency
 Version: 	1.110
-Release: 	15%{?dist}
+Release: 	17%{?dist}
 Summary: 	Algorithmic framework for implementing dependency trees
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -53,6 +53,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.110-17
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.110-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.110-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Unicode-LineBreak
 Version:        2013.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        UAX #14 Unicode Line Breaking Algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2013.11-2
+- 为 Magic 3.0 重建
+
 * Mon Dec 02 2013 Xavier Bachelot <xavier@bachelot.org> 2013.11-1
 - Update to 2013.11.
 

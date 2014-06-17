@@ -1,6 +1,6 @@
 Name:           perl-AnyData
 Version:        0.10
-Release:        17%{?dist}
+Release:        19%{?dist}
 Summary:        Easy access to data in many formats
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -69,6 +69,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.10-19
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.10-18
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.10-17
 - 为 Magic 3.0 重建
 

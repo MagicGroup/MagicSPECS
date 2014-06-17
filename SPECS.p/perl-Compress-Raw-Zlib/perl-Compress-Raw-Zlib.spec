@@ -1,6 +1,6 @@
 Name:           perl-Compress-Raw-Zlib
 Version:        2.065
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Low-level interface to the zlib compression library
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/Compress::Raw::Zlib.3pm*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.065-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.065-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

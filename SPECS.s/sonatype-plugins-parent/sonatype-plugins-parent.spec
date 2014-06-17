@@ -2,7 +2,7 @@
 
 Name:           sonatype-plugins-parent
 Version:        8
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Sonatype Plugins Parent POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -34,6 +34,9 @@ cd ./plugins-parent
 %doc LICENSE
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 8-7
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

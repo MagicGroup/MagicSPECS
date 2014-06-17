@@ -1,9 +1,11 @@
 Summary:	A sophisticated file transfer program
+Summary(zh_CN.UTF-8): 文件传输程序
 Name:		lftp
-Version:	4.4.15
+Version:	4.5.1
 Release:	1%{?dist}
 License:	GPLv3+
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source0:	http://lftp.yar.ru/ftp/lftp-%{version}.tar.xz
 URL:		http://lftp.yar.ru/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -19,14 +21,23 @@ control and uses the readline library for input. It has bookmarks, built-in
 mirroring, and can transfer several files in parallel. It is designed with
 reliability in mind.
 
+%description -l zh_CN.UTF-8 
+这是一个 ftp/http 文件传输程序，类似 bash，有任务控制和使用 readline 库的输入。
+支持书签，内建镜像，可以并行传输多个文件。
+
 %package scripts
 Summary:	Scripts for lftp
+Summary(zh_CN.UTF-8): lftp 的脚本
 Group:		Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Requires:	lftp >= %{version}-%{release}
 BuildArch:	noarch
 
 %description scripts
 Utility scripts for use with lftp.
+
+%description scripts -l zh_CN.UTF-8
+使用 lftp 用的工具脚本。
 
 %prep
 %setup -q
@@ -96,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 08 2014 Liu Di <liudidi@gmail.com> - 4.5.1-1
+- 更新到 4.5.1
+
 * Mon Oct 01 2012 Jiri Skala <jskala@redhat.com> - 4.4.0-1
 - updated to latest upstream 4.4.0
 

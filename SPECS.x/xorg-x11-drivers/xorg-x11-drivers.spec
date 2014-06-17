@@ -1,7 +1,7 @@
 Summary: X.Org X11 driver installation package
 Name: xorg-x11-drivers
 Version: 7.7
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: MIT
 Group: User Interface/X Hardware Support
 
@@ -109,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 7.7-9
+- 为 Magic 3.0 重建
+
 * Mon May 05 2014 Dennis Gilmore <dennis@ausil.us> 7.7-8
 - drop sparc section
 - add xorg-x11-drv-freedreno on arm arches

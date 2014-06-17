@@ -1,6 +1,6 @@
 Name:           perl-Inline-Files
 Version:        0.68
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Allows for multiple inline files in a single perl file
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.68-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.68-5
 - 为 Magic 3.0 重建
 

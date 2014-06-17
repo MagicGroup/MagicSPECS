@@ -24,7 +24,7 @@
 Summary: Low-level DNS(SEC) library with API
 Name: ldns
 Version: 1.6.17
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 License: BSD
 Url: http://www.nlnetlabs.nl/%{name}/
@@ -257,6 +257,9 @@ rm -rf %{buildroot}
 %doc doc
 
 %changelog
+* Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 1.6.17-5
+- 为 Magic 3.0 重建
+
 * Tue May 06 2014 Paul Wouters <pwouters@redhat.com> - 1.6.17-4
 - Rename ldns-python to python-ldns
 - Rename ldns-perl to perl-ldns

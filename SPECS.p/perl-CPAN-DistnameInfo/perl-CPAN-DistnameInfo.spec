@@ -1,6 +1,6 @@
 Name:           perl-CPAN-DistnameInfo
 Version:        0.11
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Extract distribution name and version from a distribution filename
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-10
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.11-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.11-8
 - 为 Magic 3.0 重建
 

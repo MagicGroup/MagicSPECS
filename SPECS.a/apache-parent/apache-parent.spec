@@ -1,6 +1,6 @@
 Name:           apache-parent
 Version:        14
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Parent pom file for Apache projects
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -37,6 +37,12 @@ cp %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 14-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 14-3
+- 为 Magic 3.0 重建
+
 * Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 14-2
 - Rebuild to regenerate Maven auto-requires
 

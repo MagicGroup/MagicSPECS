@@ -1,6 +1,6 @@
 Name:           perl-Apache-LogRegex
 Version:        1.5
-Release:        11%{?dist}
+Release:        13%{?dist}
 Summary:        Parse a line from an Apache logfile into a hash
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.5-13
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.5-12
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.5-11
 - 为 Magic 3.0 重建
 

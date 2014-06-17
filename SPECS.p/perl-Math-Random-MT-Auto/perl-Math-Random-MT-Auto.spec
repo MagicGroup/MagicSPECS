@@ -1,6 +1,6 @@
 Name:           perl-Math-Random-MT-Auto
 Version:        6.22
-Release:        1%{?dist}
+Release:        10%{?dist}
 Summary:        Auto-seeded Mersenne Twister PRNGs
 License:        BSD 
 Group:          Development/Libraries
@@ -71,6 +71,33 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 6.22-10
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 6.22-9
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 6.22-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 6.22-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 6.22-6
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 6.22-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.22-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.22-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.22-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 05 2012 Petr Pisar <ppisar@redhat.com> - 6.22-1
 - 6.22 bump
 

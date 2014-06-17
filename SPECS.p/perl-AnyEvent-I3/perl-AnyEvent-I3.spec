@@ -2,7 +2,7 @@
 
 Name:           perl-AnyEvent-I3
 Version:        0.06
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Communicate with the i3 window manager
 
 Group:          Development/Libraries
@@ -53,6 +53,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.06-10
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.06-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-8
 - 为 Magic 3.0 重建
 

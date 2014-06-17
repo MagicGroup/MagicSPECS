@@ -3,7 +3,7 @@
 Summary:      LASH Audio Session Handler
 Name:         lash
 Version:      0.5.4
-Release:      19%{?dist}
+Release:      20%{?dist}
 License:      GPLv2+
 Group:        System Environment/Libraries
 URL:          http://www.nongnu.org/lash/
@@ -161,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{python_sitearch}/lash.py*
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.5.4-20
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Jaromir Capik <jcapik@redhat.com> - 0.5.4-19
 - Fixing FTBFS caused by the swig upgrade 2.0.12 -> 3.0.0 (#1090111)
 - Fixing rpath removal (libtool regenerated during the make phase -> sed didn't work)

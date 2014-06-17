@@ -1,7 +1,7 @@
 Summary: Internationalization library for Perl, compatible with gettext
 Name: perl-libintl
 Version: 1.20
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: LGPLv2+
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/libintl-perl/
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man?/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.20-14
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

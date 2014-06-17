@@ -1,6 +1,6 @@
 Name:           perl-Date-Calc
 Version:        6.3
-Release:        12%{?dist}
+Release:        14%{?dist}
 Summary:        Gregorian calendar date calculations
 
 Group:          Development/Libraries
@@ -73,6 +73,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.3-14
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 6.3-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 6.3-12
 - 为 Magic 3.0 重建
 

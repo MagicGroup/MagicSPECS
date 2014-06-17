@@ -1,7 +1,7 @@
 Name:      	perl-Class-ReturnValue
 Summary:   	Class::ReturnValue Perl module
 Version:   	0.55
-Release:   	12%{?dist}
+Release:   	14%{?dist}
 License:   	GPL+ or Artistic
 Group: 		Development/Libraries
 URL:       	http://search.cpan.org/dist/Class-ReturnValue
@@ -44,6 +44,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.55-14
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.55-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.55-12
 - 为 Magic 3.0 重建
 

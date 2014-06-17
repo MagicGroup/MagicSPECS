@@ -1,0 +1,13 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+        echo "使用方法：$0 新版本号"
+        exit 1
+fi
+pushd $(dirname $0)
+N1=$(echo $1|cut -f1 -d.)
+N2=$(echo $1|cut -f2 -d.)
+N3=$(echo $1|cut -f3 -d.)
+sed -i "s/global shortver.*/global shortver	$N1/g" lapack.spec
+sed -i "s/global mediumver.*/global mediumver       %{shortver}.$N2/" lapack.spec
+sed -i "s/Version: %{mediumver}.*/Version: %{mediumver}.$N3/g" lapack.spec
+popd

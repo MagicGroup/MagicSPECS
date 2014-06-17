@@ -1,13 +1,19 @@
 Name:           ortp
-Version:        0.20.0
+Version:	0.22.0
 Release:        3%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
+Summary(zh_CN.UTF-8): RTP 协议的 C 库实现
 Epoch:          1
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ and VSL
 URL:            http://www.linphone.org/eng/documentation/dev/ortp.html
 Source:         http://download.savannah.gnu.org/releases/linphone/ortp/sources/%{name}-%{version}.tar.gz
+
+# revert libsrtp version check
+# https://bugzilla.redhat.com/show_bug.cgi?id=956340
+Patch0:         ortp-renamed-srtp-warning.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -24,9 +30,14 @@ BuildRequires:  libzrtpcpp-devel >= 2.1.0
 %description
 oRTP is a C library that implements RTP (RFC3550).
 
+%description -l zh_CN.UTF-8
+RTP 协议的 C 库实现。
+
 %package        devel
 Summary:        Development libraries for ortp
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       pkgconfig
 Requires:       libsrtp-devel
@@ -35,8 +46,14 @@ Requires:       libzrtpcpp-devel
 %description    devel
 Libraries and headers required to develop software with ortp.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup0 -q
+
+%patch0 -p1 -R -b .srtp
+autoreconf -i -f
 
 %{__perl} -pi.dot  -e 's/^(HAVE_DOT\s+=)\s+NO$/\1 YES/;s/^(CALL_GRAPH\s+=)\s+NO$/\1 YES/;s/^(CALLER_GRAPH\s+=)\s+NO$/\1 YES/' ortp.doxygen.in
 
@@ -56,7 +73,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name \*.la -exec rm {} \;
 rm doc/html/html.tar
-rm -r %{buildroot}%{_datadir}/doc/ortp
+rm -rf %{buildroot}%{_datadir}/doc/ortp
 magic_rpm_clean.sh
 
 %clean
@@ -68,7 +85,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog TODO
-%{_libdir}/libortp.so.8*
+%{_libdir}/libortp.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -78,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/ortp.pc
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1:0.22.0-3
+- 更新到 0.22.0
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:0.20.0-3
 - 为 Magic 3.0 重建
 

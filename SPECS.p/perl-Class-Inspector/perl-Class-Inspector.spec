@@ -1,6 +1,6 @@
 Name: 		perl-Class-Inspector
 Version: 	1.27
-Release: 	5%{?dist}
+Release: 	7%{?dist}
 Summary: 	Get information about a class and its structure
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -51,6 +51,12 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.27-7
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.27-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.27-5
 - 为 Magic 3.0 重建
 

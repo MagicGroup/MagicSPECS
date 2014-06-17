@@ -1,6 +1,6 @@
 Name:           apache-ivy
 Version:        2.3.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Java-based dependency manager
 
 License:        ASL 2.0
@@ -86,6 +86,9 @@ echo "ivy" > $RPM_BUILD_ROOT%{_sysconfdir}/ant.d/%{name}
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.3.0-10
+- 为 Magic 3.0 重建
+
 * Thu Jan 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.0-9
 - BuildRequire ivy-local >= 3.5.0-2
 

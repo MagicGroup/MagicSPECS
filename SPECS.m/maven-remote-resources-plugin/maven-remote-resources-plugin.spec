@@ -1,6 +1,6 @@
 Name:           maven-remote-resources-plugin
 Version:        1.4
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Maven Remote Resources Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-remote-resources-plugin/
@@ -75,6 +75,9 @@ rm -f src/main/resources/META-INF/plexus/components.xml
 %doc LICENSE NOTICE
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.4-9
+- 为 Magic 3.0 重建
+
 * Wed May 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.4-8
 - Update to current packaging guidelines
 

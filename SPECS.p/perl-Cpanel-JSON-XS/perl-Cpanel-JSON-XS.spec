@@ -1,7 +1,7 @@
 Name:		perl-Cpanel-JSON-XS
 Summary:	JSON::XS for Cpanel, fast and correct serializing
 Version:	3.0104
-Release:	2%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Cpanel-JSON-XS/
 Source0:	http://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-%{version}.tar.gz
@@ -92,6 +92,12 @@ make test IS_MAINTAINER=1 RELEASE_TESTING=1
 %{_mandir}/man3/Cpanel::JSON::XS::Boolean.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.0104-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.0104-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0104-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

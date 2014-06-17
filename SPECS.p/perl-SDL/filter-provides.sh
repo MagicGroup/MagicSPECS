@@ -1,3 +1,3 @@
 #!/bin/sh
-/usr/lib/rpm/redhat/find-provides "$@" | \
+/usr/lib/rpm/magic/find-provides "$@" | \
   grep -vE 'perl\(Walker\)|\.so'

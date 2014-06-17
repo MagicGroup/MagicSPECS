@@ -1,6 +1,6 @@
 Name:           perl-Text-Shellwords
 Version:        1.08
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        A thin wrapper around the shellwords.pl package
 
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

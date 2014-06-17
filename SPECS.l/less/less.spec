@@ -1,9 +1,11 @@
 Summary: A text file browser similar to more, but better
+Summary(zh_CN.UTF-8): 文本文件浏览器，类似 more，但是更好
 Name: less
 Version: 458
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPLv3+
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Source: http://www.greenwoodsoftware.com/less/%{name}-%{version}.tar.gz
 Source1: lesspipe.sh
 Source2: less.sh
@@ -33,6 +35,11 @@ example, vi).
 
 You should install less because it is a basic utility for viewing text
 files, and you'll use it frequently.
+
+%description -l zh_CN.UTF-8
+文本文件浏览器，类似 more，但是更好，拥有更多的功能。
+
+你应该安装 less，因为它是查看文本文件的基本工具。
 
 %prep
 %setup -q
@@ -76,6 +83,9 @@ ls -la $RPM_BUILD_ROOT/etc/profile.d
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 458-9
+- 为 Magic 3.0 重建
+
 * Thu May 22 2014 Jozef Mlich <jmlich@redhat.com> - 458-8
 - (lesspipe) the groff was used just in case of gzipped man pages
 - (lesspipe) the exit $? should be used directly after command; 

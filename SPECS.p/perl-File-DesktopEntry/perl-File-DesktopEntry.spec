@@ -1,6 +1,6 @@
 Name:           perl-File-DesktopEntry
 Version:        0.08
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Object to handle .desktop files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.08-3
+- 为 Magic 3.0 重建
+
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 0.08-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 08 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.08-1
 - 0.08 bump
 - Update patch and BR

@@ -1,6 +1,6 @@
 Name:           perl-Directory-Queue
 Version:        1.8
-Release:        5%{?dist}
+Release:        8%{?dist}
 Summary:        Object oriented interface to a directory based queue
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -23,7 +23,7 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 
 
 
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 The goal of this module is to offer a simple queue system using the
@@ -61,6 +61,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.8-8
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.8-7
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.8-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

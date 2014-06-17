@@ -1,6 +1,6 @@
 Name:           perl-Import-Into
 Version:        1.002002
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Import packages into other packages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ make test
 %{_mandir}/man3/Import::Into.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.002002-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.002002-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

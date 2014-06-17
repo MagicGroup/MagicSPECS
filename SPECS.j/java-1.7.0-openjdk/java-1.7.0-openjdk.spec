@@ -169,7 +169,7 @@
 
 Name:    java-%{javaver}-%{origin}
 Version: %{javaver}.60
-Release: %{icedtea_version}.0.22.%{icedtea_version_presuffix}%{?dist}.1
+Release: %{icedtea_version}.0.22.%{icedtea_version_presuffix}%{?dist}.4
 # java-1.5.0-ibm from jpackage.org set Epoch to 1 for unknown reasons,
 # and this change was brought into RHEL-4.  java-1.5.0-ibm packages
 # also included the epoch in their virtual provides.  This created a
@@ -1573,6 +1573,15 @@ exit 0
 %{_jvmdir}/%{jredir}/lib/accessibility.properties
 
 %changelog
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 1:1.7.0.60-2.5.0.22.pre04.4
+- 为 Magic 3.0 重建
+
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 1:1.7.0.60-2.5.0.22.pre04.3
+- 为 Magic 3.0 重建
+
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 1:1.7.0.60-2.5.0.22.pre04.2
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.7.0.60-2.5.0.22.pre04.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

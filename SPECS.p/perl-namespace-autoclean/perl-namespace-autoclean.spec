@@ -1,6 +1,6 @@
 Name:       perl-namespace-autoclean
 Version:    0.13
-Release:    4%{?dist}
+Release:    5%{?dist}
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Keep imports out of your namespace
@@ -53,6 +53,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.13-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.13-4
 - 为 Magic 3.0 重建
 

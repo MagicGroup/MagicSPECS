@@ -4,7 +4,7 @@
 
 Name:		apache-resource-bundles
 Version:	2
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	Apache Resource Bundles
 
 Group:		Development/Libraries
@@ -78,6 +78,9 @@ popd
 %dir %{_javadir}/%{name}
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 2-14
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2-13
 - Use Requires: java-headless rebuild (#1067528)
 

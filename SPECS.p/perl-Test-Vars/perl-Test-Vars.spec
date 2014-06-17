@@ -1,6 +1,6 @@
 Name:		perl-Test-Vars
 Version:	0.002
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Detects unused variables
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -47,6 +47,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/Test::Vars.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.002-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.002-2
 - 为 Magic 3.0 重建
 

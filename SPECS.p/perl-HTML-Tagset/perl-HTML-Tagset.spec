@@ -1,6 +1,6 @@
 Name:           perl-HTML-Tagset
 Version:        3.20
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        HTML::Tagset - data tables useful in parsing HTML
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -41,6 +41,9 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_mandir}/man3/HTML::Tagset.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.20-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 3.20-14
 - 为 Magic 3.0 重建
 
