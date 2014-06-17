@@ -1,7 +1,8 @@
 diff --git a/configure.ac b/configure.ac
---- ./configure.ac.o	2012-01-24 11:08:48.000000000 +0100
-+++ ./configure.ac	2013-03-26 20:34:06.722121427 +0100
-@@ -782,7 +782,7 @@
+index 059ca8b..2ff18a8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -772,7 +772,7 @@ LUA_EOF
            done
          fi
  
@@ -18,8 +19,8 @@ index c0e8b0f..265191d 100644
  tclpkg_DATA = pkgIndex.tcl
  tclpkg_SCRIPTS = ifOctets.tcl
  else
--pkglib_DATA = pkgIndex.tcl
--pkglib_SCRIPTS = ifOctets.tcl
+-pkgdata_DATA = pkgIndex.tcl
+-pkgdata_SCRIPTS = ifOctets.tcl
 +pkgindexdir = $(pkglibdir)
 +pkgindex_DATA = pkgIndex.tcl
 +pkgindex_SCRIPTS = ifOctets.tcl
