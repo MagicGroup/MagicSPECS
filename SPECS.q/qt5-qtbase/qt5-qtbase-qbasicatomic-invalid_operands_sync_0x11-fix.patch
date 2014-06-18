@@ -1,0 +1,11 @@
+--- qtbase-opensource-src-5.3.0/src/corelib/thread/qbasicatomic.h.orig	2014-06-18 06:51:01.155168890 +0000
++++ qtbase-opensource-src-5.3.0/src/corelib/thread/qbasicatomic.h	2014-06-18 06:52:14.745050318 +0000
+@@ -60,7 +60,7 @@
+ # include "QtCore/qatomic_armv5.h"
+ #elif defined(Q_PROCESSOR_IA64)
+ #  include "QtCore/qatomic_ia64.h"
+-#elif defined(Q_PROCESSOR_MIPS)
++#elif defined(Q_PROCESSOR_MIPS) && !defined(__mips64)
+ #  include "QtCore/qatomic_mips.h"
+ #elif defined(Q_PROCESSOR_SPARC)
+ #  include "QtCore/qatomic_sparc.h"
