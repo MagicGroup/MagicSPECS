@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#
+# Auto-generate requirements for executables (both ELF and a.out) and library
+# sonames, script interpreters, and perl modules.
+#
+
+ulimit -c 0
+
+filelist=`sed "s/[]['\"*?{}]/\\\\\&/g"`
+
+[ -x /usr/lib/rpm/rpmdeps -a -n "$filelist" ] && \
+    echo $filelist | tr '[:blank:]' \\n | /usr/lib/rpm/rpmdeps --requires
+
+#
+# --- Kernel module imported symbols
+#
+# Since we don't (yet) get passed the name of the package being built, we
+# cheat a little here by looking first for a kernel, then for a kmod.
+#
+
+unset is_kmod
+
+for f in $filelist; do
+    if [ $(echo "$f" | sed -r -ne 's:^.*/lib/modules/(.*)/(.*).ko$:\2:p') ]
+    then
+        is_kmod=1;
+    elif [ $(echo "$f" | sed -r -ne 's:^.*/boot/(.*):\1:p') ]
+    then
+	unset is_kmod;
+	break;
+    fi
+done
+
+# Disabling for now while the Fedora kernel doesn't produce kABI deps.
+#[ -x /usr/lib/rpm/magic/find-requires.ksyms ] && [ "$is_kmod" ] &&
+#    printf "%s\n" "${filelist[@]}" | /usr/lib/rpm/magic/find-requires.ksyms
+
+exit 0

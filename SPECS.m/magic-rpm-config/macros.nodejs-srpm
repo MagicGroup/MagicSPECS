@@ -1,0 +1,6 @@
+# nodejs_arches lists what arches Node.js and dependent packages run on.
+#
+# Enabling Node.js on other arches requires porting the V8 JavaScript JIT to
+# those arches.
+
+%nodejs_arches %{ix86} x86_64 %{arm}

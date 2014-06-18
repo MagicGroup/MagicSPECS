@@ -1,0 +1,2 @@
+%__kmod_provides       %{_rpmconfigdir}/kmod.prov
+%__kmod_path           ^/lib/modules/.*$

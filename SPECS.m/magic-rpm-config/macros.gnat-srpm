@@ -1,0 +1,4 @@
+# GNAT_arches lists the architectures where GNAT is available in Fedora. Ada
+# packages won't build on other architectures until GNAT is bootstrapped for
+# them.
+%GNAT_arches %{ix86} x86_64 ia64 ppc ppc64 alpha aarch64 %{arm}

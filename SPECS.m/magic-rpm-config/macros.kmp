@@ -1,0 +1,62 @@
+# Use these macros to differentiate between RH and other KMP implementation(s).
+magic_kernel_module_package	1
+kernel_module_package_release	1
+
+%__find_provides        /usr/lib/rpm/magic/find-provides
+%__find_requires        /usr/lib/rpm/magic/find-requires
+
+#kernel_module_package [ -n name ] [ -v version ] [ -r release ] [ -s script ]
+#                      [ -f filelist] [ -x ] [ -p preamble ] flavor flavor ...
+
+%kernel_module_package_buildreqs	%global kmodtool_generate_buildreqs 1 \
+					kernel-devel
+
+%kernel_module_package(n:v:r:s:f:xp:) %{expand:%( \
+	%define kmodtool %{-s*}%{!-s:/usr/lib/rpm/magic/kmodtool} \
+	%define kmp_version %{-v*}%{!-v:%{version}} \
+	%define kmp_release %{-r*}%{!-r:%{release}} \
+	%define latest_kernel %(rpm -q --qf '%{VERSION}-%{RELEASE}\\\\n' `rpm -q kernel-devel | /usr/lib/rpm/magic/rpmsort -r | head -n 1` | head -n 1) \
+	%{!?kernel_version:%{expand:%%global kernel_version %{latest_kernel}}} \
+	%global kverrel %(%{kmodtool} verrel %{?kernel_version} 2>/dev/null) \
+	flavors="default" \
+	if [ "i686" == "%{_target_cpu}" ] || [ "x86_64" == "%{_target_cpu}" ] \
+	then \
+		xenver=$(rpm -q kernel-xen-devel-%{kverrel}|head -n 1)\
+		kdver=$(rpm -q kernel-kdump-devel-%{kverrel}|head -n 1)\
+		if [ "kernel-xen-devel-%{kverrel}" == "$xenver" ] \
+		then \
+			flavors="$flavors xen" \
+		fi \
+		if [ "kernel-kdump-devel-%{kverrel}" == "$kdver" ] \
+		then \
+			flavors="$flavors kdump" \
+		fi \
+	fi \
+	if [ -z "%*" ]; then \
+		flavors_to_build=$flavors \
+	elif [ -z "%{-x}" ]; then \
+		flavors_to_build="%*" \
+	else \
+		flavors_to_build=" $flavors "\
+		echo "[$flavors_to_build]" >/tmp/tmp.txt
+		for i in %* \
+		do \
+			flavors_to_build=${flavors_to_build//$i /}
+		done \
+	fi \
+	echo "%%global flavors_to_build ${flavors_to_build:-%%nil}" \
+	echo "%%global kernel_source() /usr/src/kernels/%kverrel-\\\$([ %%%%{1} = default ] || echo "%%%%{1}.")%_target_cpu" \
+	if [ ! -z "%{-f*}" ] \
+	then \
+		filelist="%{-f*}" \
+	fi \
+	if [ ! -z "%{-p*}" ] \
+	then \
+		preamble="%{-p*}" \
+	fi \
+	if [ -z "%{kmodtool_generate_buildreqs}" ] \
+	then \
+		nobuildreqs="yes" \
+	fi \
+	kmp_override_filelist="$filelist" kmp_override_preamble="$preamble" kmp_nobuildreqs="$buildreqs" %{kmodtool} rpmtemplate_kmp %{-n*}%{!-n:%name} %{kverrel} $flavors_to_build 2>/dev/null \
+)}
