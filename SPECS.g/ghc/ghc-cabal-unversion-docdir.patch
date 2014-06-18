@@ -1,0 +1,13 @@
+--- ghc-7.6.3/utils/ghc-cabal/Main.hs~	2013-04-19 06:22:47.000000000 +0900
++++ ghc-7.6.3/utils/ghc-cabal/Main.hs	2013-10-29 12:35:18.916340631 +0900
+@@ -180,8 +180,8 @@
+                             libsubdir = toPathTemplate "$pkgid",
+                             docdir    = toPathTemplate $
+                                             if relocatableBuild
+-                                            then "$topdir/../doc/html/libraries/$pkgid"
+-                                            else (myDocdir </> "$pkgid"),
++                                            then "$topdir/../doc/html/libraries/$pkg"
++                                            else (myDocdir </> "$pkg"),
+                             htmldir   = toPathTemplate "$docdir"
+                         }
+                 progs = withPrograms lbi

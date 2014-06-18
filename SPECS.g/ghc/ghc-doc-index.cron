@@ -1,0 +1,9 @@
+#! /bin/bash
+# updates the library documentation index after updates
+
+# This can be disabled by uninstalling ghc-doc-index
+# or adding ghc-doc-index to "./jobs-deny".
+
+/usr/bin/ghc-doc-index
+
+exit 0
