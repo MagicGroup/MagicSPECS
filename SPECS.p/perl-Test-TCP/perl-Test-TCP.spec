@@ -1,6 +1,6 @@
 Name:           perl-Test-TCP
-Version:        1.17
-Release:        8%{?dist}
+Version:        2.02
+Release:        2%{?dist}
 Summary:        Testing TCP program
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,14 +8,12 @@ URL:            http://search.cpan.org/dist/Test-TCP/
 Source0:        http://www.cpan.org/authors/id/T/TO/TOKUHIROM/Test-TCP-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Test::More) >= 0.98
 BuildRequires:  perl(Test::SharedFork) >= 0.19
+BuildRequires:  perl(Time::HiRes)
+BuildRequires:  perl(File::Which)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
-# Get rid of perl-Test-TCP-tests
-Obsoletes: perl-Test-TCP-tests < %{version}-%{release}
-Provides: perl-Test-TCP-tests = %{version}-%{release}
 
 %description
 Test::TCP is test utilities for TCP/IP program.
@@ -24,47 +22,58 @@ Test::TCP is test utilities for TCP/IP program.
 %setup -q -n Test-TCP-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-make %{?_smp_mflags}
+%{__perl} Build.PL installdirs=vendor
+./Build
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
+./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+./Build test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README
+%doc Changes README*
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.17-8
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.02-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.17-7
-- 为 Magic 3.0 重建
+* Thu Nov 07 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.02-1
+- Upstream update.
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.17-6
-- 为 Magic 3.0 重建
+* Tue Sep 24 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.01-1
+- Upstream update.
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.17-5
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.00-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.17-4
-- 为 Magic 3.0 重建
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 2.00-2
+- Perl 5.18 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.17-3
-- 为 Magic 3.0 重建
+* Thu Jun 13 2013 Ralf Corsépius <corsepiu@fedoraproject.org> 2.00-1
+- Upstream update.
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.17-2
-- 为 Magic 3.0 重建
+* Tue May 21 2013 Ralf Corsépius <corsepiu@fedoraproject.org> 1.27-1
+- Upstream update.
+
+* Wed Apr 17 2013 Ralf Corsépius <corsepiu@fedoraproject.org> 1.26-1
+- Upstream update.
+- Reflect upstream having switched to perl(Module::Build).
+
+* Mon Mar 11 2013 Ralf Corsépius <corsepiu@fedoraproject.org> 1.21-1
+- Upstream update.
+- Drop Obs/Prov perl-Test-TCP-tests.
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.18-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Nov 08 2012 Ralf Corsépius <corsepiu@fedoraproject.org> 1.18-1
+- Upstream update.
 
 * Tue Jul 31 2012 Ralf Corsépius <corsepiu@fedoraproject.org> 1.17-1
 - Upstream update.
