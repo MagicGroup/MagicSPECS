@@ -1,0 +1,61 @@
+Date: Tue, 04 Mar 2008 07:39:56 -0800
+From: "Randy J. Ray" <rjray@blackperl.com>
+To: Nick B <nsboyle@gmail.com>
+Subject: Re: Fedora package for RPC-XML
+
+Consider this confirmation that you may distribute it under the Artistic 
+License 2.0, as specified at 
+http://www.opensource.org/licenses/artistic-license-2.0.php
+
+I am in the process of revising the licensing on all of my modules to be 
+dual-licensed under the above and also LGPL 2.1 as specified at 
+http://www.opensource.org/licenses/lgpl-2.1.php
+
+However, because of other patches that have to be applied, integrated and 
+tested, it may be some time before a new RPC-XML release is made. Please take 
+this message as explicit permission to package and release under the licensing 
+terms you require. Thank you.
+
+Randy
+-- 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Randy J. Ray        Sunnyvale, CA    http://www.rjray.org   rjray@blackperl.com
+
+Silicon Valley Scale Modelers: http://www.svsm.org
+
+###############################################################################
+
+Date: Tue, 4 Mar 2008 09:09:04 -0500
+From: "Nick B" <nsboyle@gmail.com>
+To: rjray@blackperl.com
+Subject: Fedora package for RPC-XML
+
+Randy,
+
+I've submitted a review request for RPC-XML with the Fedora project,
+for inclusion in the official repository
+(https://bugzilla.redhat.com/show_bug.cgi?id=435835).
+
+There is one minor obstacle I've encountered in putting together the
+package; here is your licensing specification from XML.pm:
+
+# Copying and distribution are permitted under the terms of the Artistic
+# License as distributed with Perl versions 5.005 and later. See
+# http://www.opensource.org/licenses/artistic-license.php
+
+The link above is broken, and the sentence is open to interpretation
+over whether your intent is to have it licensed under the original
+Artistic license (1.0), or the current (2.0).  The former, 1.0, is
+unfortunately incompatible with Fedora's guidelines regarding
+licensing.  I had originally interpreted "and later" to implicitly
+mean the later versions of licenses to go along with the later
+versions of Perl, but it was suggested that I should confirm with you
+first.
+
+I can package it under 2.0, but I need your confirmation via e-mail
+that this is okay.  Let me know your thoughts on this.
+
+
+Thanks,
+
+Nick
