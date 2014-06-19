@@ -1,24 +1,40 @@
 Name:           perl-Class-Method-Modifiers
 Summary:        Provides Moose-like method modifiers
-Version:        1.09
-Release:        6%{?dist}
+Version:        2.10
+Release:        2%{?dist}
 License:        GPL+ or Artistic
-Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SARTAK/Class-Method-Modifiers-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Class-Method-Modifiers
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Class-Method-Modifiers-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  perl(Class::MOP)
-BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.36
+# Module Build
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
+# Module Runtime
+BuildRequires:  perl(B)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
+# Test Suite
+BuildRequires:  perl(File::Spec::Functions)
+BuildRequires:  perl(List::Util)
 BuildRequires:  perl(Test::Fatal)
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::More) >= 0.88
+BuildRequires:  perl(if)
+BuildRequires:  perl(version)
+# Optional Test Requirements
+%if 0%{!?perl_bootstrap:1}
+BuildRequires:  perl(CPAN::Meta)
+BuildRequires:  perl(CPAN::Meta::Requirements) >= 2.120900
+BuildRequires:  perl(Moose)
+%endif
+# Runtime
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(B)
+Requires:       perl(Carp)
+Requires:       perl(Exporter)
 
-# obsolete/provide old tests subpackage
-# can be removed during F19 development cycle
-Obsoletes:      %{name}-tests < 1.08-3
-Provides:       %{name}-tests = %{version}-%{release}
-
+# Avoid doc-file dependencies
 %{?perl_default_filter}
 
 %description
@@ -40,6 +56,9 @@ particular modifiers work.
 %prep
 %setup -q -n Class-Method-Modifiers-%{version}
 
+# Drop unnecessary exec permissions from test files
+chmod -c -x t/*.t
+
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
@@ -47,26 +66,56 @@ make %{?_smp_mflags}
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-
-%{_fixperms} %{buildroot}/*
+%{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %files
-%doc Changes t/
-%{perl_vendorlib}/*
-%{_mandir}/man3/*.3*
+%doc Changes CONTRIBUTING LICENSE README README.md t/
+%{perl_vendorlib}/Class/
+%{_mandir}/man3/Class::Method::Modifiers.3*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.09-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.09-5
-- 为 Magic 3.0 重建
+* Sun Mar 16 2014 Paul Howarth <paul@city-fan.org> <paul@city-fan.org> - 2.10-1
+- Update to 2.10
+  - Remove erroneous perl 5.8 requirement
+  - Support for handling lvalue methods
+  - Convert to building with Dist::Zilla
+  - Repository migrated to the github moose organization
+  - Refresh configure_requires checking in generated Makefile.PL
+  - New CONTRIBUTING file
+  - Updated tests:
+    - Compile test now only runs for authors
+    - Check-deps test replaced by information-only report-prereqs test
+- Drop obsoletes/provides for old tests sub-package
+- Drop redundant Group tag
+- Classify buildreqs by usage
+- Make %%files list more explicit
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.09-4
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.03-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Aug 02 2013 Petr Pisar <ppisar@redhat.com> - 2.03-2
+- Perl 5.18 rebuild
+
+* Fri Feb 15 2013 Iain Arnell <iarnell@gmail.com> 2.03-1
+- update to latest upstream version
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.00-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Jan 05 2013 Iain Arnell <iarnell@gmail.com> 2.00-1
+- update to latest upstream version
+
+* Sun Oct 28 2012 Iain Arnell <iarnell@gmail.com> 1.12-1
+- update to latest upstream version
+
+* Sat Oct 27 2012 Iain Arnell <iarnell@gmail.com> 1.10-1
+- update to latest upstream version
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
