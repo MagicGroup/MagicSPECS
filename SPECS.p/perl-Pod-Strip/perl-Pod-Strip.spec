@@ -1,6 +1,6 @@
 Name:           perl-Pod-Strip
 Version:        1.02
-Release:        20%{?dist}
+Release:        17%{?dist}
 Summary:        Remove POD from Perl code
 
 Group:          Development/Libraries
@@ -52,26 +52,17 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.02-20
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.02-19
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.02-18
-- 为 Magic 3.0 重建
+* Sat Jul 20 2013 Petr Pisar <ppisar@redhat.com> - 1.02-15
+- Perl 5.18 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-17
-- 为 Magic 3.0 重建
-
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-16
-- 为 Magic 3.0 重建
-
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-15
-- 为 Magic 3.0 重建
-
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.02-14
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
