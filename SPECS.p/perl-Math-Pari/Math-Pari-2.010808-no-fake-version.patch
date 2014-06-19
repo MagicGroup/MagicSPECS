@@ -1,0 +1,11 @@
+--- Makefile.PL
++++ Makefile.PL
+@@ -53,7 +53,7 @@
+ EOP
+ 
+ if ($common::parilib) {
+-  $pari_version = '2001007';	# XXXX How to get a correct one?
++  $pari_version = '@@@OUR-PARI-VERSION@@@';	# XXXX How to get a correct one?
+   $define = '-DNO_HIGHLEVEL_PARI';
+   print <<EOP;
+ Trying to use existing PARI library (at $common::parilib)

@@ -1,0 +1,9 @@
+--- Changes.WINDOWS-1251
++++ Changes
+@@ -886,5 +886,5 @@
+   Store which patches were applied in $dir/.perl.patches.
+   Report which patches were not applied.
+   Export patches_for() from BuildPari.
+-  pari_tgz build option was broken (by LWP-after-NFTP support code — which, apparently, did not help with timeouts).
++  pari_tgz build option was broken (by LWP-after-NFTP support code â€” which, apparently, did not help with timeouts).
+   Ignore 0-size "downloaded" files.
