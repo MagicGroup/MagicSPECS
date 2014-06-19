@@ -1,0 +1,89 @@
+From 9fc8c81a018ba6cb5f3f0ad3fbc836e301468978 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Mon, 16 Jun 2014 15:20:43 +0200
+Subject: [PATCH 1/2] Synchronize to PID in t/07-envdir.t
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The t/07-envdir.t used various sleeps to deal with races. This broke obviously
+when the timing was abnormal like on have loaded machine. This patch
+synchronizes on the status file by checking only the new worker is
+running.
+
+Similar to CPAN RT#73711.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ t/07-envdir-print.pl |  3 ++-
+ t/07-envdir.t        | 29 ++++++++++++++++++++++++++---
+ 2 files changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/t/07-envdir-print.pl b/t/07-envdir-print.pl
+index 22cb01a..fb14225 100755
+--- a/t/07-envdir-print.pl
++++ b/t/07-envdir-print.pl
+@@ -11,6 +11,7 @@ use Server::Starter qw(server_ports);
+ $SIG{TERM} = $SIG{USR1} = sub {
+     exit 0;
+ };
++$ENV{PID} = $$;
+ 
+ my $listener = IO::Socket::INET->new(
+     Proto => 'tcp',
+@@ -21,7 +22,7 @@ $listener->fdopen((values %{server_ports()})[0], 'w')
+ while (1) {
+     if (my $conn = $listener->accept) {
+         my $s = "";
+-        for my $envkey (keys %ENV) {
++        for my $envkey (sort keys %ENV) {
+             $s .= $envkey . "=" . $ENV{$envkey} . "\n";
+         }
+         $conn->syswrite($s);
+diff --git a/t/07-envdir.t b/t/07-envdir.t
+index 8bf2352..2050706 100644
+--- a/t/07-envdir.t
++++ b/t/07-envdir.t
+@@ -46,13 +46,36 @@ test_tcp(
+             $buf;
+         };
+         my $restart = sub {
+-            sleep 1;
++            sub getstatus {
++                my ($file, $value);
++                open($file, '<', "$tempdir/status") or return '';
++                do { local $/ = undef; $value = <$file>; };
++                close $file;
++                $value // '';
++            }
++            sub getsinglegeneration {
++                my $status;
++                do {
++                    sleep 1 if defined $status;
++                    $status = getstatus;
++                } until ($status =~ /\A\d+:\d+\n\z/);
++                chomp $status;
++                $status;
++            }
++            my $previous_generation = getsinglegeneration;
+             kill "HUP", $server_pid;
+-            sleep 2;
++            my $current_generation;
++            while (($current_generation = getsinglegeneration) eq
++                    $previous_generation) {
++                sleep 1;
++            }
++            diag "Server changed from <$previous_generation> ",
++                "to <$current_generation>\n";
+         };
+         # Initial worker does not read envdir
+         my $buf = $fetch_env->();
+-        unlike($buf, qr/^FOO=foo-value1$/m, 'changed env');
++        unlike($buf, qr/^FOO=foo-value1$/m,
++            'environment not read for the first time');
+         # rewrite envdir
+         open my $envfh, ">", "$tempdir/env/FOO" or die $!;
+         print $envfh "foo-value2";
+-- 
+1.9.3
+
