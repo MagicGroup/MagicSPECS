@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-Tagger
-Version:        0.16
-Release:        10%{?dist}
+Version:        0.23
+Release:        5%{?dist}
 Summary:        Part-of-speech tagger for English natural language processing
 License:        GPLv3
 Group:          Development/Libraries
@@ -8,6 +8,7 @@ URL:            http://search.cpan.org/dist/Lingua-EN-Tagger/
 Source0:        http://www.cpan.org/authors/id/A/AC/ACOBURN/Lingua-EN-Tagger-%{version}.tar.gz
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec) >= 0.84
+BuildRequires:  perl(HTML::Tagset) >= 3.20
 BuildRequires:  perl(HTML::TokeParser) >= 3.45
 BuildRequires:  perl(Lingua::Stem) >= 0.81
 BuildRequires:  perl(Memoize) >= 1.01
@@ -41,31 +42,51 @@ morphology or can be set to be treated as nouns or other parts of speech.
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorarch}/*
 %{_mandir}/man3/*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.16-10
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.16-9
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.16-8
-- 为 Magic 3.0 重建
+* Thu Jul 25 2013 Petr Pisar <ppisar@redhat.com> - 0.23-3
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Oct 20 2012 Iain Arnell <iarnell@gmail.com> 0.23-1
+- update to latest upstream version
+
+* Sat Jul 21 2012 Iain Arnell <iarnell@gmail.com> 0.20-1
+- update to latest upstream version
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 0.19-2
+- Perl 5.16 rebuild
+
+* Sat Jun 09 2012 Iain Arnell <iarnell@gmail.com> 0.19-1
+- update to latest upstream version
+
+* Sun May 13 2012 Iain Arnell <iarnell@gmail.com> 0.18-1
+- update to latest upstream version
+- clean up spec for modern rpmbuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.16-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
