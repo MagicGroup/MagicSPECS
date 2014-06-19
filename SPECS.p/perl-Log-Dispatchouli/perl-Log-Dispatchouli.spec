@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatchouli
 Version:        2.005
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Simple wrapper around Log::Dispatch
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,7 +57,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-RELEASE_TESTING=1 
+RELEASE_TESTING=1 make test
 
 %files
 %defattr(-,root,root,-)
@@ -66,14 +66,23 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.005-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.005-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.005-5
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.005-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.005-4
-- 为 Magic 3.0 重建
+* Wed Jul 31 2013 Petr Pisar <ppisar@redhat.com> - 2.005-7
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.005-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.005-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 29 2012 Petr Pisar <ppisar@redhat.com> - 2.005-4
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.005-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
