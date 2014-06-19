@@ -1,24 +1,22 @@
-# We need to patch the test suite if we have an old version of Test::More
-%global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
-
 Name:           perl-Data-Section
-Version:        0.101621
-Release:        7%{?dist}
+Version:        0.200006
+Release:        2%{?dist}
 Summary:        Read multiple hunks of data out of your DATA section
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-Section/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Data-Section-%{version}.tar.gz
-Patch1:         Data-Section-0.101620-old-Test::More.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
+BuildRequires:  perl(lib)
 BuildRequires:  perl(MRO::Compat) >= 0.09
-BuildRequires:  perl(Pod::Coverage::TrustPod)
 BuildRequires:  perl(Sub::Exporter) >= 0.979
-BuildRequires:  perl(Test::More)
-BuildRequires:  perl(Test::Pod) >= 1.00
-BuildRequires:  perl(Test::Pod::Coverage) >= 1.08
+BuildRequires:  perl(Test::FailWarnings)
+BuildRequires:  perl(Test::More) >= 0.96
+BuildRequires:  perl(Test::Pod)
+BuildRequires:  perl(utf8)
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
@@ -29,26 +27,18 @@ modules to store their own templates, but probably has other uses.
 %prep
 %setup -q -n Data-Section-%{version}
 
-# Hack for old Test::More versions
-%if %{old_test_more}
-%patch1 -p1
-%endif
-
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
- RELEASE_TESTING=1
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
+make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 
 %files
 %doc Changes LICENSE README
@@ -56,14 +46,50 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Data::Section.3pm*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.101621-7
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.200006-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.101621-6
-- 为 Magic 3.0 重建
+* Mon Mar 10 2014 Paul Howarth <paul@city-fan.org> - 0.200006-1
+- Update to 0.200006
+  - Skip tests on Win32 pre-5.14 related to line endings; perl munges the data
+    before we're able to get at it
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.101621-5
-- 为 Magic 3.0 重建
+* Wed Dec 11 2013 Paul Howarth <paul@city-fan.org> - 0.200005-1
+- Update to 0.200005
+  - Open DATA handles both :raw and :bytes to avoid content munging on Win32
+  - This is not yet a perfect solution for Win32
+
+* Mon Dec  2 2013 Paul Howarth <paul@city-fan.org> - 0.200004-1
+- Update to 0.200004
+  - Avoid confusion between \n, \x0d\x0a, and Win32
+
+* Mon Nov  4 2013 Paul Howarth <paul@city-fan.org> - 0.200003-1
+- Update to 0.200003
+  [THIS MIGHT BREAK STUFF]
+  - Add an "encoding" parameter to set encoding of data section contents; this
+    defaults to UTF-8
+- Drop support for old distributions as we now need Test::FailWarnings, which
+  isn't available there
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.101622-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 0.101622-2
+- Perl 5.18 rebuild
+
+* Thu Jun 20 2013 Paul Howarth <paul@city-fan.org> - 0.101622-1
+- Update to 0.101622
+  - Add a link to an Advent article about Data-Section
+  - Update bugtracker, repo, etc.
+- Run the release tests separately
+- BR: perl(base), perl(File::Find), perl(File::Temp) and perl(lib) for the test
+  suite
+- Drop BR: perl(Pod::Coverage::TrustPod) and perl(Test::Pod::Coverage) as
+  upstream has dropped their Pod coverage test
+- Update patch for building with old Test::More versions
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.101621-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.101621-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
