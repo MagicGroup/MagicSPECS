@@ -1,0 +1,18 @@
+rpm version comparisons don't work the same way as perl versions,
+so make the version requirement more strict so as to work OK for both
+
+Upstream's META.yml says it wants 0.59 anyway
+
+--- lib/Set/Infinite/_recurrence.pm
++++ lib/Set/Infinite/_recurrence.pm
+@@ -12,7 +12,9 @@
+ use vars qw( @ISA $PRETTY_PRINT $max_iterate );
+ 
+ @ISA = qw( Set::Infinite );
+-use Set::Infinite 0.5502;
++# Actually need Set::Infinite 0.5502 but use 0.59 for the benefit of rpm version comparisons
++# We have Set::Infinite 0.63 or later in all supported Fedora/EPEL releases anyway
++use Set::Infinite 0.59;
+ 
+ BEGIN {
+     $PRETTY_PRINT = 1;   # enable Set::Infinite debug
