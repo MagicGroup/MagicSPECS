@@ -1,6 +1,6 @@
 Name:           perl-Lingua-Stem-Snowball
 Version:        0.952
-Release:        19%{?dist}
+Release:        17%{?dist}
 Summary:        Perl interface to Snowball stemmers
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,29 +55,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.952-19
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.952-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.952-18
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.952-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.952-17
-- 为 Magic 3.0 重建
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 0.952-15
+- Perl 5.18 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.952-16
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.952-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.952-15
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.952-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.952-14
-- 为 Magic 3.0 重建
-
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.952-13
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.952-12
-- 为 Magic 3.0 重建
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.952-12
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.952-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
