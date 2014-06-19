@@ -1,0 +1,24 @@
+diff -ur qterm-0.4.1-orig/qterm/Makefile.am qterm-0.4.1/qterm/Makefile.am
+--- qterm-0.4.1-orig/qterm/Makefile.am	2014-06-19 10:49:34.150067018 +0000
++++ qterm-0.4.1/qterm/Makefile.am	2014-06-19 10:49:48.013355366 +0000
+@@ -43,7 +43,7 @@
+ qterm_METASOURCES = AUTO
+ 
+ # the library search path. 
+-qterm_LDFLAGS = $(all_libraries) -Wl -export-dynamic $(PYTHONLIB) $(SOUNDSERVER_LIB) $(ESD_LIB) $(OPENSSL_LIB)
++qterm_LDFLAGS = $(all_libraries) -export-dynamic $(PYTHONLIB) $(SOUNDSERVER_LIB) $(ESD_LIB) $(OPENSSL_LIB)
+ 
+ # them while "make clean", use CLEANFILES
+ DISTCLEANFILES = $(qterm_METASOURCES) qterm.desktop
+diff -ur qterm-0.4.1-orig/qterm/Makefile.in qterm-0.4.1/qterm/Makefile.in
+--- qterm-0.4.1-orig/qterm/Makefile.in	2014-06-19 10:49:34.183270160 +0000
++++ qterm-0.4.1/qterm/Makefile.in	2014-06-19 10:50:06.464536688 +0000
+@@ -251,7 +251,7 @@
+ #>- qterm_METASOURCES = AUTO
+ 
+ # the library search path. 
+-qterm_LDFLAGS = $(all_libraries) -Wl -export-dynamic $(PYTHONLIB) $(SOUNDSERVER_LIB) $(ESD_LIB) $(OPENSSL_LIB)
++qterm_LDFLAGS = $(all_libraries) -export-dynamic $(PYTHONLIB) $(SOUNDSERVER_LIB) $(ESD_LIB) $(OPENSSL_LIB)
+ 
+ # them while "make clean", use CLEANFILES
+ DISTCLEANFILES = $(qterm_METASOURCES) qterm.desktop
