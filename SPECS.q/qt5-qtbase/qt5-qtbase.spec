@@ -65,6 +65,10 @@ Patch50: qt5-poll.patch
 
 ##upstream patches
 
+# qatomic_mips.h have "sync x0??" code, mips64el is not support
+Patch100: qt5-qtbase-qbasicatomic-invalid_operands_sync_0x11-fix.patch
+Patch101: qt5-mips64el-fix_-m64.patch
+
 # macros
 %define _qt5 %{name}
 %define _qt5_prefix %{_libdir}/qt5
@@ -267,6 +271,10 @@ rm -fv mkspecs/linux-g++*/qmake.conf.multilib-optflags
 %patch12 -p1 -b .enable_ft_lcdfilter
 
 #patch50 -p1 -b .poll
+%ifarch mips64el
+%patch100 -p1 -b .mips64el
+%patch101 -p1 -b .mips64el-m64
+%endif
 
 # drop -fexceptions from $RPM_OPT_FLAGS
 RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`

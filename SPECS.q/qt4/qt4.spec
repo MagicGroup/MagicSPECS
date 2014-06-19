@@ -2,8 +2,8 @@
 #define pre -%{pre_tag}
 
 # See http://bugzilla.redhat.com/223663
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
-%define multilib_basearchs x86_64 ppc64 s390x sparc64
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 mips64el mipsel
+%define multilib_basearchs x86_64 ppc64 s390x sparc64 mips64el
 
 %define real_version 4.8.6
 %define release_number 1
@@ -148,6 +148,7 @@ Patch10216: 0216-allow-isystem-for-headers.diff
 Patch10225: 0225-invalidate-tabbar-geometry-on-refresh.diff
 Patch10289: 0289-context-for-shortcuts-tr.diff
 
+Patch20000: qt4-4.8.6-atomics_not_const.diff
 # compile patches
 
 
@@ -1191,6 +1192,7 @@ Requires: %name-webkit = %version-%release
 #%patch10225 -p1
 #%patch10289 -p1
 
+%patch20000 -p1
 # compile patches
 
 # drop -fexceptions from $RPM_OPT_FLAGS
@@ -1204,7 +1206,7 @@ RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed 's|-fexceptions||g'`
 %endif
 
 # https://bugzilla.redhat.com/478481
-%ifarch x86_64
+%ifarch x86_64 mips64el
 %define platform linux-g++
 %endif
 
@@ -1235,6 +1237,9 @@ done
 %build
 # build shared, threaded (default) libraries
 ./configure -v \
+%ifarch mips64el
+    -platform %{platform} \
+%endif
     -confirm-license \
     -opensource \
 	-optimized-qmake \
