@@ -1,0 +1,11 @@
+--- bisect-1.3/_tags.old	2013-09-14 12:01:31.385768492 +0100
++++ bisect-1.3/_tags	2013-09-14 12:00:59.543725249 +0100
+@@ -21,6 +21,8 @@
+ <src/**>: include
+ 
+ # Options
++<src/**>: debug
++<*>: debug
+ <src/**>: use_unix
+ <src/**> and not "src/threads/bisectThread.ml": for-pack(Bisect)
+ "src/syntax/instrumentCamlp4.ml": pp_camlp4of, use_camlp4
