@@ -12,12 +12,12 @@ URL:            http://github.com/nzjrs/python-gudev
 Version:        147.2
 Release:        4%{?dist}
 
-%global srcname nzjrs-python-gudev-%{version}-0-ga9f8dd2
-%global dirname nzjrs-python-gudev-ee8a644
+%global _srcname nzjrs-python-gudev-%{version}-0-ga9f8dd2
+%global _dirname nzjrs-python-gudev-ee8a644
 
 # Tar.gz can be downloaded from
 # http://github.com/nzjrs/python-gudev/tarball/%{version}
-Source0:        %{srcname}.tar.gz
+Source0:        %{_srcname}.tar.gz
 Group:          Development/Libraries
 License:        LGPLv3+
 Requires:       libgudev1 >= 147
@@ -32,7 +32,7 @@ BuildRequires:  pygobject2-devel
 python-gudev is a Python (PyGObject) binding to the GUDev UDEV library.
 
 %prep
-%setup -q -n %{dirname}
+%setup -q -n %{_dirname}
 
 %build
 sh autogen.sh --prefix %{_prefix} --disable-static
