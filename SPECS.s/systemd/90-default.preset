@@ -68,9 +68,21 @@ enable dkms.service
 enable ipmi.service
 enable ipmievd.service
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=1039351
+enable x509watch.timer
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1060754
+enable dnssec-triggerd.service
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1095353
+enable uuidd.socket
+
 # Hardware
 enable gpm.*
-enable gpsd.*
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1066421
+enable gpsd.socket
+
 enable irqbalance.service
 enable lm_sensors.service
 enable mcelog.*
@@ -90,6 +102,8 @@ enable ksm.service
 enable ksmtuned.service
 enable rootfs-resize.service
 enable sysstat.service
+enable sysstat-collect.timer
+enable sysstat-summary.timer
 enable uuidd.service
 enable xendomains.service
 enable xenstored.service
