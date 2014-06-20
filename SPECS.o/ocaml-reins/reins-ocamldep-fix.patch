@@ -1,0 +1,11 @@
+--- ocaml-reins-0.1a.old/config.omake	2011-01-06 16:24:36.629600652 +0000
++++ ocaml-reins-0.1a/config.omake	2011-01-06 16:26:07.860416206 +0000
+@@ -6,7 +6,7 @@
+ 	  eprintln(ocaml-findlib is required to build this project)
+ 	  exit 1
+ 	OCAMLDEP_MODULES_ENABLED = $(OCAMLDEP_MODULES_AVAILABLE)
+-	OCAMLDEP=$(OCAMLDEP_MODULES)
++	OCAMLDEP=$(OCAMLDEP)
+ 	if $(not $(defined PREFIX))
+ 	  PREFIX=$(shell ocamlc -where)
+ 	  export

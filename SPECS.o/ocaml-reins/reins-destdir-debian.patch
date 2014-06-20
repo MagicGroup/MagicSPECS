@@ -1,0 +1,24 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_DESTDIR.dpatch by Mike Furr <mfurr@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad ocaml-reins-0.1a~/config.omake ocaml-reins-0.1a/config.omake
+--- ocaml-reins-0.1a~/config.omake	2007-10-02 18:09:15.312445370 -0400
++++ ocaml-reins-0.1a/config.omake	2007-10-02 18:09:24.105535886 -0400
+@@ -7,7 +7,12 @@
+ 	  exit 1
+ 	OCAMLDEP_MODULES_ENABLED = $(OCAMLDEP_MODULES_AVAILABLE)
+ 	OCAMLDEP=$(OCAMLDEP_MODULES)
+-	PREFIX=$(shell ocamlc -where)
++	if $(not $(defined PREFIX))
++	  PREFIX=$(shell ocamlc -where)
++	  export
++	if $(defined-env OCAMLFIND_DESTDIR)
++	  PREFIX = $(getenv OCAMLFIND_DESTDIR)
++	  export
+ 	VERSION=0.1a
+ 	ConfMsgChecking(oUnit)
+ 	OUNIT_DIR=$(shell ocamlfind query oUnit)
