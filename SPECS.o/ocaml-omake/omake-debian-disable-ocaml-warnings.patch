@@ -1,0 +1,15 @@
+Patch by Stephane Glondu.
+
+Modified by RWMJ to remove all warnings.
+
+--- omake-0.9.8.6.old/OMakefile	2010-10-27 01:42:37.000000000 +0100
++++ omake-0.9.8.6/OMakefile	2011-01-05 14:33:42.170895298 +0000
+@@ -57,7 +57,7 @@
+ #
+ # OCaml options
+ #
+-OCAMLFLAGS[] += -w Ae$(if $(OCAML_ACCEPTS_Z_WARNING), z)
++OCAMLFLAGS[] += 
+ if $(THREADS_ENABLED)
+     OCAMLFLAGS += -thread
+     export
