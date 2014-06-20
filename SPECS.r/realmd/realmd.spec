@@ -41,7 +41,7 @@ applications that use %{name}.
 %patch0 -p1 -b .packagekit-api-change
 
 %build
-%configure --disable-silent-rules
+%configure --disable-silent-rules --with-distro=redhat
 make %{?_smp_mflags}
 
 %check
