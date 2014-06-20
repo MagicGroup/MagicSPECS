@@ -1,52 +1,106 @@
-%define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")
+%global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")
 
-%define with_adns 0
-%define with_lua 1
+%global with_adns 0
+%global with_lua 1
+%global with_gtk2 1
+
 %if 0%{?rhel} != 0
-%define with_portaudio 0
+#RHEL:
+    %global with_portaudio 0
+    %global with_GeoIP 0
+    %if 0%{?rhel} <= 6
+        # RHEL6: use GTK2
+       %global with_gtk2 1
+    %endif
 %else
-%define with_portaudio 1
+    %global with_portaudio 1
+    %global with_GeoIP 1
 %endif
+
 
 Summary:	Network traffic analyzer
 Name:		wireshark
-Version:	1.6.5
-Release:	2%{?dist}
+Version:	1.10.8
+Release:	1%{?dist}
 License:	GPL+
 Group:		Applications/Internet
 Source0:	http://wireshark.org/download/src/%{name}-%{version}.tar.bz2
-Source2:	wireshark.console
-Source3:	wireshark.desktop
-Source4:	wireshark-autoconf.m4
-Source5:	wireshark-mime-package.xml
-Source6:	wiresharkdoc-16x16.png
-Source7:	wiresharkdoc-32x32.png
-Source8:	wiresharkdoc-48x48.png
-Source9:	wiresharkdoc-256x256.png
-
-Patch1:		wireshark-nfsv41-cleanup.patch
-Patch2:		wireshark-1.2.4-enable_lua.patch
-Patch3:		wireshark-libtool-pie.patch
-Patch4:		wireshark-1.6.1-group-msg.patch
-Patch5:		wireshark-1.6.0-soname.patch
-Patch6:		wireshark-1.6.2-nfsv41-addstatus.patch
-Patch7:		wireshark-gnome3-msgbox.patch
+Source1:	90-wireshark-usbmon.rules
+# Fedora-specific
+Patch1:		wireshark-0001-enable-Lua-support.patch
+# Fedora-specific
+Patch2:		wireshark-0002-Customize-permission-denied-error.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch3:		wireshark-0003-Load-correct-shared-object-name-in-python.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch4:		wireshark-0004-fix-documentation-build-error.patch
+# Will be proposed upstream
+Patch5:		wireshark-0005-fix-string-overrun-in-plugins-profinet.patch
+# Backported from upstream. See https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=8326
+Patch6:		wireshark-0006-From-Peter-Lemenkov-via-https-bugs.wireshark.org-bug.patch
+# Backported from upstream. See also https://bugzilla.redhat.com/1007139
+Patch7:		wireshark-0007-The-beginning-of-an-openflow-dissector.patch
+# Will be proposed upstream
+Patch8:		wireshark-0008-adds-autoconf-macro-file.patch
+# Fedora-specific
+Patch9:		wireshark-0009-Restore-Fedora-specific-groups.patch
+# Will be proposed upstream
+Patch10:	wireshark-0010-Add-pkgconfig-entry.patch
+# Will be proposed upstream
+Patch11:	wireshark-0011-Install-autoconf-related-file.patch
+# Fedora-specific
+Patch12:	wireshark-0012-move-default-temporary-directory-to-var-tmp.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch13:	wireshark-0013-Copy-over-r49999-from-trunk.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch14:	wireshark-0014-Fix-https-bugs.wireshark.org-bugzilla-show_bug.cgi-i.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch15:	wireshark-0015-From-Dirk-Jagdmann-Make-sure-err_str-is-initialized.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch16:	wireshark-0016-Crash-when-selecting-Decode-As-based-on-SCTP-PPID.-B.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch17:	wireshark-0017-Fix-https-bugs.wireshark.org-bugzilla-show_bug.cgi-i.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch18:	wireshark-0018-Copy-over-from-Trunk.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch19:	wireshark-0019-Bugfix-port-number-endianness.-Bug-9530-https-bugs.w.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch20:	wireshark-0020-Something-went-wrong-with-the-backport-of-r53608-r53.patch
+# Applied upstream:
+# https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=9576
+Patch21:	wireshark-0021-Remove-g_memmove.patch
+# W.i.p. patch. See also:
+# https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=9561
+Patch22:	wireshark-0022-Fix-IP-types.patch
+# No longer necessary - will be removed in the next release (1.12.x)
+Patch23:	wireshark-0023-Copy-over-r54544-from-trunk.patch
+# Fedora-specific
+Patch24:	wireshark-0024-Fix-paths-in-a-wireshark.desktop-file.patch
+# Fedora-specific
+Patch25:        wireshark-0025-Fix-Capture-Dialog-layout.patch
+# Applied upstream (unstable branch)
+Patch26:        wireshark-0026-amqp-1.0.patch
 
 Url:		http://www.wireshark.org/
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	libpcap-devel >= 0.9
 BuildRequires:	libsmi-devel
 BuildRequires:	zlib-devel, bzip2-devel
 BuildRequires:	openssl-devel
-BuildRequires:	glib2-devel, gtk2-devel
+BuildRequires:	glib2-devel
 BuildRequires:	elfutils-devel, krb5-devel
-BuildRequires:	python, pcre-devel
+BuildRequires:	pcre-devel, libselinux
 BuildRequires:	gnutls-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	xdg-utils
-BuildRequires:	flex, bison, python, python-devel
-BuildRequires:	GeoIP-devel
+BuildRequires:	flex, bison
 BuildRequires:	libcap-devel
+%if 0%{?fedora} > 18
+BuildRequires:	perl-podlators
+%endif
+BuildRequires:	libgcrypt-devel
+%if %{with_GeoIP}
+BuildRequires:	GeoIP-devel
+%endif
 %if %{with_adns}
 BuildRequires:	adns-devel
 %else
@@ -58,6 +112,15 @@ BuildRequires:	portaudio-devel
 %if %{with_lua}
 BuildRequires:	lua-devel
 %endif
+%if %{with_gtk2}
+BuildRequires:	gtk2-devel
+%else
+BuildRequires:	gtk3-devel
+%endif
+
+# Temporary hack - wireshark-1.8.0 is not compilable with upstream
+# Makefile.in / configure, they need to be regenerated
+BuildRequires: libtool, automake, autoconf
 
 Requires(pre):	shadow-utils
 %if %{with_adns}
@@ -67,28 +130,33 @@ Requires:	adns
 %package	gnome
 Summary:	Gnome desktop integration for wireshark
 Group:		Applications/Internet
-Requires:	gtk2
-Requires:	wireshark = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	xdg-utils
-Requires:	GeoIP
 Requires:	hicolor-icon-theme
-
+%if %{with_gtk2}
+Requires:	gtk2
+%else
+Requires:	gtk3
+%endif
 %if %{with_portaudio}
 Requires:	portaudio
+%endif
+%if %{with_GeoIP}
+Requires:	GeoIP
 %endif
 
 %package devel
 Summary:	Development headers and libraries for wireshark
 Group:		Development/Libraries
-Requires:	%{name} = %{version} glibc-devel glib2-devel
+Requires:	%{name} = %{version}-%{release} glibc-devel glib2-devel
 
 
 %description
 Wireshark is a network traffic analyzer for Unix-ish operating systems.
 
-This package lays base for libpcap, a packet capture and filtering 
-library, contains command-line utilities, contains plugins and 
-documentation for wireshark. A graphical user interface is packaged 
+This package lays base for libpcap, a packet capture and filtering
+library, contains command-line utilities, contains plugins and
+documentation for wireshark. A graphical user interface is packaged
 separately to GTK+ package.
 
 %description gnome
@@ -101,19 +169,37 @@ and plugins.
 
 
 %prep
-%setup -q -n %{name}-%{version}
-# disable NFS patch for now, remove if steved@redhat.com does not complain
-#%patch1 -p1 
+%setup -q
 
 %if %{with_lua}
-%patch2 -p1 -b .enable_lua
+%patch1 -p1 -b .enable_lua
 %endif
 
-%patch3 -p1 -b .v4cleanup
-%patch4 -p1 -b .group-msg
-%patch5 -p1 -b .soname
-%patch6 -p1 -b .v4staus
-%patch7 -p1 -b .gnome3
+%patch2 -p1 -b .perm_denied_customization
+#%patch3 -p1 -b .soname
+#%patch4 -p1 -b .pod2man
+%patch5 -p1 -b .profinet_crash
+%patch6 -p1 -b .rtpproxy
+%patch7 -p1 -b .openflow
+%patch8 -p1 -b .add_autoconf
+%patch9 -p1 -b .restore_group
+%patch10 -p1 -b .add_pkgconfig
+%patch11 -p1 -b .install_autoconf
+%patch12 -p1 -b .tmp_dir
+#%patch13 -p1 -b .allow_64kpackets_for_usb
+#%patch14 -p1 -b .dont_die_during_sip_dissection
+#%patch15 -p1 -b .fix_main_window
+#%patch16 -p1 -b .fix_sctp
+#%patch17 -p1 -b .fix_global_pinfo
+#%patch18 -p1 -b .fix_overflow
+#%patch19 -p1 -b .fix_endianness
+#%patch20 -p1 -b .fix_previous_backport
+%patch21 -p1 -b .remove_g_memmove
+%patch22 -p1 -b .rtpproxy_ip_types
+#%patch23 -p1 -b .rare_bug_with_sniffer_traces
+%patch24 -p1 -b .fix_paths
+%patch25 -p1 -b .fix_capture_dlg_layout
+%patch26 -p1 -b .amqp-1.0
 
 %build
 %ifarch s390 s390x sparcv9 sparc64
@@ -122,10 +208,12 @@ export PIECFLAGS="-fPIE"
 export PIECFLAGS="-fpie"
 %endif
 # FC5+ automatic -fstack-protector-all switch
-export RPM_OPT_FLAGS=${RPM_OPT_FLAGS//-fstack-protector/-fstack-protector-all}
+export RPM_OPT_FLAGS=${RPM_OPT_FLAGS//-fstack-protector-strong/-fstack-protector-all}
 export CFLAGS="$RPM_OPT_FLAGS $CPPFLAGS $PIECFLAGS -D_LARGEFILE64_SOURCE"
 export CXXFLAGS="$RPM_OPT_FLAGS $CPPFLAGS $PIECFLAGS -D_LARGEFILE64_SOURCE"
 export LDFLAGS="$LDFLAGS -pie"
+
+autoreconf -ivf
 
 %configure \
    --bindir=%{_sbindir} \
@@ -133,6 +221,11 @@ export LDFLAGS="$LDFLAGS -pie"
    --with-libsmi \
    --with-gnu-ld \
    --with-pic \
+%if %{with_gtk2}
+   --with-gtk3=no \
+%else
+   --with-gtk3=yes \
+%endif
 %if %{with_adns}
    --with-adns \
 %else
@@ -143,9 +236,18 @@ export LDFLAGS="$LDFLAGS -pie"
 %else
    --with-lua=no \
 %endif
+%if %{with_portaudio}
+   --with-portaudio \
+%else
+  --with-portaudio=no \
+%endif
+%if %{with_GeoIP}
+   --with-geoip \
+%else
+   --with-geoip=no \
+%endif
    --with-ssl \
    --disable-warnings-as-errors \
-   --with-python \
    --with-plugins=%{_libdir}/%{name}/plugins/%{version} \
    --with-dumpcap-group="wireshark" \
    --enable-setcap-install \
@@ -158,33 +260,21 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 # The evil plugins hack
 perl -pi -e 's|-L../../epan|-L../../epan/.libs|' plugins/*/*.la
 
-make DESTDIR=$RPM_BUILD_ROOT install
+make DESTDIR=%{buildroot} install
+make DESTDIR=%{buildroot} install_desktop_files
 
 # Install python stuff.
-mkdir -p $RPM_BUILD_ROOT%{python_sitearch}
-install -m 644 tools/wireshark_be.py tools/wireshark_gen.py  $RPM_BUILD_ROOT%{python_sitearch}
+mkdir -p %{buildroot}%{python_sitearch}
+install -m 644 tools/wireshark_be.py tools/wireshark_gen.py  %{buildroot}%{python_sitearch}
 
-desktop-file-install --vendor fedora				\
-	--dir ${RPM_BUILD_ROOT}%{_datadir}/applications		\
-	--add-category X-Fedora					\
-	%{SOURCE3}
-
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/{16x16,32x32,48x48,64x64,256x256}/apps
-
-install -m 644 image/wsicon16.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/16x16/apps/wireshark.png
-install -m 644 image/wsicon32.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/32x32/apps/wireshark.png
-install -m 644 image/wsicon48.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/48x48/apps/wireshark.png
-install -m 644 image/wsicon64.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/64x64/apps/wireshark.png
-install -m 644 image/wsicon256.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/256x256/apps/wireshark.png
+desktop-file-validate %{buildroot}%{_datadir}/applications/wireshark.desktop
 
 #install devel files (inspired by debian/wireshark-dev.header-files)
-install -d -m 0755  $RPM_BUILD_ROOT/%{_includedir}/wireshark
-IDIR="${RPM_BUILD_ROOT}%{_includedir}/wireshark"
+install -d -m 0755  %{buildroot}%{_includedir}/wireshark
+IDIR="%{buildroot}%{_includedir}/wireshark"
 mkdir -p "${IDIR}/epan"
 mkdir -p "${IDIR}/epan/crypt"
 mkdir -p "${IDIR}/epan/ftypes"
@@ -192,9 +282,11 @@ mkdir -p "${IDIR}/epan/dfilter"
 mkdir -p "${IDIR}/epan/dissectors"
 mkdir -p "${IDIR}/wiretap"
 mkdir -p "${IDIR}/wsutil"
+mkdir -p %{buildroot}/%{_sysconfdir}/udev/rules.d
 install -m 644 color.h config.h register.h	"${IDIR}/"
 install -m 644 cfile.h file.h			"${IDIR}/"
-install -m 644 packet-range.h print.h   	"${IDIR}/"
+install -m 644 frame_data_sequence.h		"${IDIR}/"
+install -m 644 packet-range.h print.h		"${IDIR}/"
 install -m 644 epan/*.h				"${IDIR}/epan/"
 install -m 644 epan/crypt/*.h			"${IDIR}/epan/crypt"
 install -m 644 epan/ftypes/*.h			"${IDIR}/epan/ftypes"
@@ -202,51 +294,22 @@ install -m 644 epan/dfilter/*.h			"${IDIR}/epan/dfilter"
 install -m 644 epan/dissectors/*.h		"${IDIR}/epan/dissectors"
 install -m 644 wiretap/*.h			"${IDIR}/wiretap"
 install -m 644 wsutil/*.h			"${IDIR}/wsutil"
-
-#	Create pkg-config control file.
-mkdir -p "${RPM_BUILD_ROOT}%{_libdir}/pkgconfig"
-cat > "${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/wireshark.pc" <<- "EOF"
-	prefix=%{_prefix}
-	exec_prefix=%{_prefix}
-	libdir=%{_libdir}
-	includedir=%{_includedir}
-
-	Name:		%{name}
-	Description:	Network Traffic Analyzer
-	Version:	%{version}
-	Requires:	glib-2.0 gmodule-2.0
-	Libs:		-L${libdir} -lwireshark -lwiretap
-	Cflags:		-DWS_VAR_IMPORT=extern -DHAVE_STDARG_H -DWS_MSVC_NORETURN= -I${includedir}/wireshark -I${includedir}/wireshark/epan
-EOF
-
-#	Install the autoconf macro.
-mkdir -p "${RPM_BUILD_ROOT}%{_datadir}/aclocal"
-cp "%{SOURCE4}" "${RPM_BUILD_ROOT}%{_datadir}/aclocal/wireshark.m4"
-
-# Install desktop stuff
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/{icons/gnome/{16x16,32x32,48x48,256x256}/mimetypes,mime/packages}
-install -m 644 -T %{SOURCE5} $RPM_BUILD_ROOT/%{_datadir}/mime/packages/wireshark.xml
-install -m 644 -T %{SOURCE6} $RPM_BUILD_ROOT/%{_datadir}/icons/gnome/16x16/mimetypes/application-x-pcap.png
-install -m 644 -T %{SOURCE7} $RPM_BUILD_ROOT/%{_datadir}/icons/gnome/32x32/mimetypes/application-x-pcap.png
-install -m 644 -T %{SOURCE8} $RPM_BUILD_ROOT/%{_datadir}/icons/gnome/48x48/mimetypes/application-x-pcap.png
-install -m 644 -T %{SOURCE9} $RPM_BUILD_ROOT/%{_datadir}/icons/gnome/256x256/mimetypes/application-x-pcap.png
+install -m 644 ws_symbol_export.h               "${IDIR}/"
+install -m 644 %{SOURCE1}                       %{buildroot}/%{_sysconfdir}/udev/rules.d/
 
 # Remove .la files
-rm -f $RPM_BUILD_ROOT/%{_libdir}/%{name}/plugins/%{version}/*.la
+rm -f %{buildroot}%{_libdir}/%{name}/plugins/%{version}/*.la
 
 # Remove .la files in libdir
-rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
-
-# add wspy_dissectors directory for plugins
-mkdir -p $RPM_BUILD_ROOT/%{_libdir}/%{name}/python/%{version}/wspy_dissectors
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+rm -f %{buildroot}%{_libdir}/*.la
 
 %pre
 getent group wireshark >/dev/null || groupadd -r wireshark
+getent group usbmon >/dev/null || groupadd -r usbmon
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+/usr/bin/udevadm trigger --subsystem-match=usbmon
 
 %postun -p /sbin/ldconfig
 
@@ -272,18 +335,18 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
-%defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog INSTALL NEWS README* 
+%doc AUTHORS COPYING ChangeLog INSTALL NEWS README*
 %{_sbindir}/editcap
-#%{_sbindir}/idl2wrs
 %{_sbindir}/tshark
 %{_sbindir}/mergecap
 %{_sbindir}/text2pcap
 %{_sbindir}/dftest
 %{_sbindir}/capinfos
 %{_sbindir}/randpkt
-%attr(0750, root, wireshark) %caps(cap_net_raw,cap_net_admin=eip) %{_sbindir}/dumpcap
+%{_sbindir}/reordercap
+%attr(0750, root, wireshark) %caps(cap_net_raw,cap_net_admin=ep) %{_sbindir}/dumpcap
 %{_sbindir}/rawshark
+%{_sysconfdir}/udev/rules.d/90-wireshark-usbmon.rules
 %{python_sitearch}/*.py*
 %{_libdir}/lib*.so.*
 %{_libdir}/wireshark
@@ -297,6 +360,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man1/rawshark.*
 %{_mandir}/man1/dftest.*
 %{_mandir}/man1/randpkt.*
+%{_mandir}/man1/reordercap.*
 %{_datadir}/wireshark
 %if %{with_lua}
 %exclude %{_datadir}/wireshark/init.lua
@@ -304,35 +368,266 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files gnome
-%defattr(-,root,root)
-%{_datadir}/applications/fedora-wireshark.desktop
+%{_datadir}/applications/wireshark.desktop
 %{_datadir}/icons/hicolor/16x16/apps/wireshark.png
+%{_datadir}/icons/hicolor/24x24/apps/wireshark.png
 %{_datadir}/icons/hicolor/32x32/apps/wireshark.png
 %{_datadir}/icons/hicolor/48x48/apps/wireshark.png
 %{_datadir}/icons/hicolor/64x64/apps/wireshark.png
+%{_datadir}/icons/hicolor/128x128/apps/wireshark.png
 %{_datadir}/icons/hicolor/256x256/apps/wireshark.png
-%{_datadir}/icons/gnome/16x16/mimetypes/application-x-pcap.png
-%{_datadir}/icons/gnome/32x32/mimetypes/application-x-pcap.png
-%{_datadir}/icons/gnome/48x48/mimetypes/application-x-pcap.png
-%{_datadir}/icons/gnome/256x256/mimetypes/application-x-pcap.png
+%{_datadir}/icons/hicolor/16x16/mimetypes/application-wireshark-doc.png
+%{_datadir}/icons/hicolor/24x24/mimetypes/application-wireshark-doc.png
+%{_datadir}/icons/hicolor/32x32/mimetypes/application-wireshark-doc.png
+%{_datadir}/icons/hicolor/48x48/mimetypes/application-wireshark-doc.png
+%{_datadir}/icons/hicolor/64x64/mimetypes/application-wireshark-doc.png
+%{_datadir}/icons/hicolor/128x128/mimetypes/application-wireshark-doc.png
+%{_datadir}/icons/hicolor/256x256/mimetypes/application-wireshark-doc.png
 %{_datadir}/mime/packages/wireshark.xml
 %{_sbindir}/wireshark
 %{_mandir}/man1/wireshark.*
 
 %files devel
-%defattr(-,root,root)
 %doc doc/README.*
+%if %{with_lua}
 %config(noreplace) %{_datadir}/wireshark/init.lua
+%endif
 %{_includedir}/wireshark
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
-%{_mandir}/man1/idl2wrs.*
-%{_sbindir}/idl2wrs
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.6.5-2
-- 为 Magic 3.0 重建
+* Fri Jun 13 2014 Peter Hatina <phatina@redhat.com> - 1.10.8-1
+- Ver. 1.10.8
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 30 2014 Peter Hatina <phatina@redhat.com> - 1.0.7-2
+- add AMQP 1.0 support
+
+* Wed Apr 23 2014 Peter Hatina <phatina@redhat.com> - 1.10.7-1
+- Ver. 1.10.7
+
+* Fri Mar 21 2014 Peter Hatina <phatina@redhat.com> - 1.10.6-2
+- Reload udev rule for usbmon subsystem only
+
+* Sat Mar 08 2014 Peter Lemenkov <lemenkov@gmail.com> - 1.10.6-1
+- Ver. 1.10.6
+
+* Fri Mar  7 2014 Peter Hatina <phatina@redhat.com> - 1.10.5-4
+- Fix Capture Dialog layout on low resolution displays
+- Resolves: #1071313
+
+* Sun Feb  9 2014 Ville Skyttä <ville.skytta@iki.fi>
+- Fix --with-gtk* build option usage.
+
+* Wed Jan 29 2014 Peter Lemenkov <lemenkov@gmail.com> - 1.10.5-3
+- Fixed paths in the desktop-file (see rhbz #1059188)
+
+* Mon Jan 13 2014 Peter Lemenkov <lemenkov@gmail.com> - 1.10.5-2
+- Updated RTPproxy dissector (again)
+- Fix rare issue with the Sniffer traces (patch no. 23)
+
+* Mon Dec 23 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.5-1
+- Ver. 1.10.5
+- Don't apply upstreamed patches no. 18, 19, 20.
+
+* Thu Dec 19 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.4-2
+- Fix endianness in the Bitcoin protocol dissector (patch no. 19)
+- Last-minute fix for wrongly backported change (patch no. 20)
+- Fix FTBFS in Rawhide (see patch no. 21 - recent Glib doesn't provide g_memmove macro anymore)
+
+* Wed Dec 18 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.4-1
+- Ver. 1.10.4
+- Don't apply upsteamed patches no. 13, 14, 15, 16, 17
+- Fix variable overflow (patch no. 18)
+- Updated RTPproxy dissector (backported three more patches from trunk)
+
+* Tue Dec 10 2013 Peter Hatina <phatina@redhat.com> - 1.10-3-9
+- remove python support
+
+* Tue Dec 10 2013 Peter Hatina <phatina@redhat.com> - 1.10-3-8
+- fix read permissions of /dev/usbmon* for non-root users
+
+* Mon Dec 09 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.3-7
+- Fix error in the backported RTPproxy patches
+
+* Fri Dec 06 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.3-6
+- Updated RTPproxy dissector (again), squashed patch no. 15 (applied upstream).
+- Use proper soname in the python scripts
+- Don't apply no longer needed fix for pod2man.
+- Fix for main window. See patch no. 15
+- Fix for SCTP dissection. See patch no. 16
+- Fix for rare issue in Base Station Subsystem GPRS Protocol dissection. See
+  patch no. 17
+- Fix building w/o Lua
+
+* Wed Nov 27 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.3-5
+- Updated RTPproxy dissector (again)
+- Allow packets more than 64k (for USB capture). See patch no. 13
+- Don't die during loading of some SIP capture files. See patch no. 14
+- Backport support for RTPproxy dissector timeouts detection. See patch no. 15
+
+* Wed Nov 13 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.3-4
+- Updated RTPproxy dissector
+
+* Thu Nov 07 2013 Peter Hatina <phatina@redhat.com> - 1.10.3-3
+- fix subpackage requires
+
+* Wed Nov 06 2013 Peter Hatina <phatina@redhat.com> - 1.10.3-2
+- harden dumpcap capabilities
+
+* Sat Nov 02 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.3-1
+- Ver. 1.10.3
+- Dropped upsteamed patch no. 13
+
+* Tue Oct 01 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.2-8
+- Added support for rtpproxy conversations (req/resp matching)
+
+* Tue Sep 24 2013 Peter Hatina <phatina@redhat.com> - 1.10.2-7
+- fix build error caused by symbols clash
+
+* Tue Sep 17 2013 Peter Hatina <phatina@redhat.com> - 1.10.2-6
+- move default temporary directory to /var/tmp
+
+* Fri Sep 13 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.2-5
+- Convert automake/pkgconfig files into patches (better upstream integration)
+- Restored category in the *.desktop file
+- Install another one necessary header file - frame_data_sequence.h
+
+* Thu Sep 12 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.2-4
+- Enhance desktop integration (*.desktop and MIME-related files)
+
+* Thu Sep 12 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.2-3
+- Fix building on Fedora 18 (no perl-podlators)
+
+* Thu Sep 12 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.2-2
+- Add an OpenFlow dissector
+
+* Wed Sep 11 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10-2-1
+- Ver. 1.10.2
+- Actually remove the console helper
+
+* Mon Sep 09 2013 Peter Lemenkov <lemenkov@gmail.com> - 1.10.1-1
+- Ver. 1.10.1
+- Backported rtpproxy dissector module
+
+* Wed Sep 04 2013 Peter Hatina <phatina@redhat.com> - 1.10.0-11
+- fix missing ws_symbol_export.h
+
+* Wed Sep 04 2013 Peter Hatina <phatina@redhat.com> - 1.10.0-10
+- fix tap iostat overflow
+
+* Wed Sep 04 2013 Peter Hatina <phatina@redhat.com> - 1.10.0-9
+- fix sctp bytes graph crash
+
+* Wed Sep 04 2013 Peter Hatina <phatina@redhat.com> - 1.10.0-8
+- fix string overrun in plugins/profinet
+
+* Tue Sep 03 2013 Peter Hatina <phatina@redhat.com> - 1.10.0-7
+- fix BuildRequires - libgcrypt-devel
+
+* Tue Sep 03 2013 Peter Hatina <phatina@redhat.com> - 1.10.0-6
+- fix build parameter -fstack-protector-all
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jun 24 2013 Peter Hatina <phatina@redhat.com> 1.10.0-4
+- fix pod2man build error
+
+* Mon Jun 24 2013 Peter Hatina <phatina@redhat.com> 1.10.0-3
+- fix bogus date
+
+* Mon Jun 17 2013 Peter Hatina <phatina@redhat.com> 1.10.0-2
+- fix flow graph crash
+
+* Mon Jun 17 2013 Peter Hatina <phatina@redhat.com> 1.10.0-1
+- upgrade to 1.10.0
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.10.0.html
+
+* Mon Apr 08 2013 Peter Hatina <phatina@redhat.com> 1.8.6-5
+- fix documentation build error
+
+* Wed Mar 27 2013 Peter Hatina <phatina@redhat.com> 1.8.6-4
+- fix capture crash (#894753)
+
+* Tue Mar 19 2013 Peter Hatina <phatina@redhat.com> 1.8.6-3
+- fix dns resolving crash (#908211)
+
+* Mon Mar 18 2013 Peter Hatina <phatina@redhat.com> 1.8.6-2
+- return to gtk2, stable branch 1.8 is not gtk3 ready
+
+* Tue Mar 12 2013 Peter Hatina <phatina@redhat.com> 1.8.6-1
+- upgrade to 1.8.6
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.8.6.html
+
+* Sun Feb 10 2013 Parag Nemade <paragn AT fedoraproject DOT org> - 1.8.5-3
+- Remove vendor tag from desktop file as per https://fedorahosted.org/fesco/ticket/1077
+
+* Tue Feb 05 2013 Peter Hatina <phatina@redhat.com> - 1.8.5-2
+- fix gtk3 layout issues
+- NOTE: there may be some windows with broken layouts left
+
+* Thu Jan 31 2013 Peter Hatina <phatina@redhat.com> - 1.8.5-1
+- upgrade to 1.8.5
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.8.5.html
+
+* Mon Dec 03 2012 Peter Hatina <phatina@redhat.com> - 1.8.4-1
+- upgrade to 1.8.4
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.8.4.html
+
+* Tue Oct 16 2012 Peter Hatina <phatina@redhat.com> - 1.8.3-2
+- backport dissector table fix
+- TODO: remove this after new release
+
+* Thu Oct 11 2012 Peter Hatina <phatina@redhat.com> - 1.8.3-1
+- upgrade to 1.8.3
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.8.3.html
+
+* Tue Sep  4 2012 Jan Safranek <jsafrane@redhat.com> - 1.8.2-3
+- added back compatibility with RHEL6
+- GeoIP build dependency made also conditional on with_GeoIP variable
+
+* Wed Aug 29 2012 Jan Safranek <jsafrane@redhat.com> - 1.8.2-2
+- fixed "libwireshark.so.1: cannot open shared object file" error
+  message on startup
+
+* Thu Aug 16 2012 Jan Safranek <jsafrane@redhat.com> - 1.8.2-1
+- upgrade to 1.8.2
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.8.2.html
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 24 2012 Jan Safranek <jsafrane@redhat.com> - 1.8.1-1
+- upgrade to 1.8.1
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.8.1.html
+
+* Mon Jun 25 2012 Jan Safranek <jsafrane@redhat.com> - 1.8.0
+- upgrade to 1.8.0
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.8.0.html
+
+* Wed May 23 2012 Jan Safranek <jsafrane@redhat.com> - 1.6.8-1
+- upgrade to 1.6.8
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.6.8.html
+
+* Mon May 21 2012 Jan Safranek <jsafrane@redhat.com> - 1.6.7-2
+- Removed dependency on GeoIP on RHEL.
+
+* Tue Apr 10 2012 Jan Safranek <jsafrane@redhat.com> - 1.6.7-1
+- upgrade to 1.6.7
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.6.7.html
+
+* Wed Mar 28 2012 Jan Safranek <jsafrane@redhat.com> - 1.6.6-1
+- upgrade to 1.6.6
+- see http://www.wireshark.org/docs/relnotes/wireshark-1.6.6.html
+
+* Fri Mar  9 2012 Jan Safranek <jsafrane@redhat.com> - 1.6.5-2
+- fixed wireshark crashing when using combo box in import dialog (#773290)
+- added AES support into netlogon dissector
 
 * Wed Jan 11 2012 Jan Safranek <jsafrane@redhat.com> - 1.6.5-1
 - upgrade to 1.6.5
@@ -370,6 +665,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Fri Sep  9 2011 Jan Safranek <jsafrane@redhat.com> - 1.6.2-1
 - upgrade to 1.6.2
 - see http://www.wireshark.org/docs/relnotes/wireshark-1.6.2.html
+
 
 * Thu Jul 21 2011 Jan Safranek <jsafrane@redhat.com> - 1.6.1-1
 - upgrade to 1.6.1
