@@ -46,8 +46,8 @@ The Project Object Model files for the apache-commons packages.
 %doc LICENSE.txt NOTICE.txt RELEASE-NOTES.txt
 
 %changelog
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 34-3
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 34-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Wed May 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 34-2
 - Rebuild to regenerate Maven auto-requires
