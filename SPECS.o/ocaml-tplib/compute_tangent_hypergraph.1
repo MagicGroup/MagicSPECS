@@ -1,0 +1,26 @@
+.TH "compute_tangent_hypergraph" "1" "Feb 2013" "TPLib 1.3" "User Commands"
+.SH "NAME"
+compute_tangent_hypergraph \- compute tangent hypergraph in a tropical cone
+.SH "DESCRIPTION"
+Computes the tangent directed hypergraph at a given point in a tropical cone.
+.SH "ARGUMENTS"
+.TP
+\fB\-numerical\-data\fP
+Set the type of numerical data used by the algorithm, one of: ocaml_int,
+ocaml_float, ocaml_big_int, ocaml_big_rat, zarith_int, and zarith_rat.
+.TP
+\fB\-generators\fP
+Specify the cone from a generating family.
+.TP
+\fB\-half\-spaces\fP
+Specify the cone from half-spaces.
+.TP
+\fB\-min\-plus\fP
+Use the min\-plus semiring instead of the default max\-plus semiring.
+.TP
+\fB\-help\fP, \fB\-\-help\fP
+Display this list of options.
+.SH "SEE ALSO"
+\fBcompute_ext_rays\fP(1), \fBcompute_ext_rays_polar\fP(1),
+\fBcompute_halfspaces\fP(1), \fBcompute_minimal_external_representations\fP(1),
+\fBcompute_tropical_complex\fP(1)
