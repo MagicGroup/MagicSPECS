@@ -1,0 +1,24 @@
+--- ancient-0.9.0/Makefile.old	2013-09-14 11:04:51.109114454 +0100
++++ ancient-0.9.0/Makefile	2013-09-14 11:05:11.083141905 +0100
+@@ -12,7 +12,7 @@
+ OCAMLCPACKAGES	:= -package unix
+ OCAMLCLIBS	:= -linkpkg
+ 
+-OCAMLOPTFLAGS	:=
++OCAMLOPTFLAGS	:= $(OCAMLCFLAGS)
+ OCAMLOPTPACKAGES := $(OCAMLCPACKAGES)
+ OCAMLOPTLIBS	:= -linkpkg
+ 
+@@ -26,10 +26,10 @@
+ all:	$(TARGETS)
+ 
+ ancient.cma: ancient.cmo ancient_c.o
+-	ocamlmklib -o ancient -Lmmalloc -lmmalloc $^
++	ocamlmklib -g -o ancient -Lmmalloc -lmmalloc $^
+ 
+ ancient.cmxa: ancient.cmx ancient_c.o
+-	ocamlmklib -o ancient -Lmmalloc -lmmalloc $^
++	ocamlmklib -g -o ancient -Lmmalloc -lmmalloc $^
+ 
+ test_ancient_dict_write.opt: ancient.cmxa test_ancient_dict_write.cmx
+ 	LIBRARY_PATH=.:$$LIBRARY_PATH \
