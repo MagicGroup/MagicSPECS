@@ -1,0 +1,10 @@
+--- bin_prot-2.0.9/myocamlbuild.ml.old	2014-06-18 15:09:21.737703940 +0100
++++ bin_prot-2.0.9/myocamlbuild.ml	2014-06-18 15:09:32.988696920 +0100
+@@ -517,7 +517,6 @@
+                 "-pedantic";
+                 "-Wextra";
+                 "-Wunused";
+-                "-Werror";
+                 "-Wno-long-long";
+               ]
+             in
