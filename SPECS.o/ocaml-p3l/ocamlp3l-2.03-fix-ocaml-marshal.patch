@@ -1,0 +1,12 @@
+--- ocamlp3l-2.03.old/Source/commlib.ml	2007-01-23 15:50:04.000000000 +0000
++++ ocamlp3l-2.03/Source/commlib.ml	2013-09-19 10:49:34.850458209 +0100
+@@ -212,7 +212,8 @@
+ let flag_to_string =
+   function
+       Marshal.Closures -> " Closures"
+-    | Marshal.No_sharing -> "No_sharing";;
++    | Marshal.No_sharing -> "No_sharing"
++    | Marshal.Compat_32 -> " Compat_32";;
+ 
+ let flags_to_string fl = List.fold_left (fun s -> fun f -> s^(flag_to_string f)) "" fl;;
+ 

@@ -1,0 +1,3 @@
+The user manual and other documentation that goes with ocamlp3l is
+rather large, so it is split off into a separate 'ocaml-p3l-doc'
+subpackage.
