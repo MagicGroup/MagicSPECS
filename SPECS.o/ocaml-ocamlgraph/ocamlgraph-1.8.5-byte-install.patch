@@ -1,0 +1,23 @@
+--- Makefile.in.orig	2014-04-04 06:45:43.000000000 -0600
++++ Makefile.in	2014-04-21 12:00:00.000000000 -0600
+@@ -422,16 +422,13 @@
+ ifeq (@LABLGNOMECANVAS@,yes)
+ 	$(OCAMLFIND) install ocamlgraph META \
+ 		$(SRCDIR)/*.mli $(VIEWER_DIR)/*.mli $(DGRAPH_DIR)/*.mli \
+-		graph$(OBJEXT) graph$(LIBEXT) graph.cmx graph.cmo graph.cmi \
+-		$(CMA) $(CMXA) \
+-		$(VIEWER_CMXLIB) $(VIEWER_CMOLIB) $(VIEWER_CMILIB) \
+-                $(VIEWER_CMXLIB:.cmx=.o) \
+-                $(DGRAPH_CMXLIB) $(DGRAPH_CMOLIB) $(DGRAPH_CMILIB) \
+-                $(DGRAPH_CMXLIB:.cmx=.o)
++		graph.cmo graph.cmi $(CMA) \
++		$(VIEWER_CMOLIB) $(VIEWER_CMILIB) \
++                $(DGRAPH_CMOLIB) $(DGRAPH_CMILIB)
+ else
+ 	$(OCAMLFIND) install ocamlgraph META \
+ 		$(SRCDIR)/*.mli $(VIEWER_DIR)/*.mli $(DGRAPH_DIR)/*.mli \
+-		graph$(LIBEXT) graph.cmx graph.cmo graph.cmi $(CMA) $(CMXA)
++		graph.cmo graph.cmi $(CMA)
+ endif
+ endif
+ 
