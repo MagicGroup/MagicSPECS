@@ -1,17 +1,15 @@
-%define debug_package %{nil}
-
 Name:           ocaml-lablgl
-Version:        20120306
-Release:        4%{?dist}
-
+Epoch:          1
+Version:        1.05
+Release:        1%{?dist}
 Summary:        LablGL is an OpenGL interface for Objective Caml
-
-Group:          System Environment/Libraries
 License:        BSD
+
 URL:            http://forge.ocamlcore.org/projects/lablgl/
 Source0:        http://forge.ocamlcore.org/frs/download.php/816/lablgl-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-ExcludeArch:    sparc64 s390 s390x
+
+# XXX This could be fixed with some changes to the build system:
+ExclusiveArch:  %{ocaml_native_compiler}
 
 BuildRequires:  freeglut-devel 
 BuildRequires:  ocaml >= 3.12.1-3
@@ -26,10 +24,6 @@ BuildRequires:  mesa-libGLU-devel
 BuildRequires:	ocaml-labltk-devel
 BuildRequires:  ocaml-camlp4-devel
 
-%define _use_internal_dependency_generator 0
-%define __find_requires /usr/lib/rpm/ocaml-find-requires.sh
-%define __find_provides /usr/lib/rpm/ocaml-find-provides.sh
-
 %description
 LablGL is is an Objective Caml interface to OpenGL. Support is
 included for use inside LablTk, and LablGTK also includes specific
@@ -40,7 +34,6 @@ extension, or with open-source Mesa.
 
 %package        devel
 Summary:        Development files for %{name}
-Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 Requires:       ocaml-labltk-devel
 
@@ -50,11 +43,11 @@ developing applications that use %{name}.
 
 
 %prep
-%setup -q -n lablGL
+%setup -q -n lablgl-%{version}
 
 cat > Makefile.config <<EOF
 CAMLC = ocamlc.opt
-CAMLOPT = ocamlopt.opt
+CAMLOPT = ocamlopt.opt -g
 BINDIR = %{_bindir}
 XINCLUDES = -I%{_prefix}/X11R6/include
 XLIBS = -lXext -lXmu -lX11
@@ -72,6 +65,8 @@ EOF
 
 
 %build
+# Parallel builds don't work.
+unset MAKEFLAGS
 make all opt
 
 
@@ -117,12 +112,7 @@ done
 popd
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc README
 %dir %{_libdir}/ocaml/lablGL
 %{_libdir}/ocaml/lablGL/*.cma
@@ -133,7 +123,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc CHANGES COPYRIGHT README LablGlut/examples Togl/examples
 %{_libdir}/ocaml/lablGL/META
 %{_libdir}/ocaml/lablGL/*.a
@@ -144,6 +133,26 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1.05-9
+- New upstream version 1.05.
+- Requires Epoch because upstream version went from 20120306->1.05.
+- Fixes FTBFS (RHBZ#1106619).
+- Use ExclusiveArch and add a comment about how we could fix this.
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120306-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Sep 14 2013 Richard W.M. Jones <rjones@redhat.com> - 20120306-7
+- Rebuild for OCaml 4.01.0.
+- Enable debuginfo.
+- Modernize the spec file.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120306-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120306-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Oct 17 2012 Orion Poplawski <orion@cora.nwra.com> - 20120306-4
 - Rebuild for OCaml 4.00.1.
 
@@ -254,7 +263,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 1.01-5
 - rebuild on all arches
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Fri Apr  8 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Fri Apr  1 2005 Gerard Milmeister <gemi@bluewin.ch> - 1.01-3
