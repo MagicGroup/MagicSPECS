@@ -1,0 +1,47 @@
+From: Iain Arnell <iarnell@gmail.com>
+Date: Wed, 2 Jun 2010 16:34:43 +0000 (+0100)
+Subject: Fix for Perl 5.12: SVt_RV missing.
+X-Git-Url: http://git.annexia.org/?p=perl4caml.git;a=commitdiff_plain;h=4cb12aa05bd5aa69ccfa1c6d41ab10bc79a3c3a3
+
+Fix for Perl 5.12: SVt_RV missing.
+
+Also reported as the following Debian bug:
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=578800
+
+Comment from the author of this patch:
+"It seems simplest to pretend that SVt_RV still exists on the caml
+side; attached patch will do just that."
+---
+
+diff --git a/perl_c.c b/perl_c.c
+index 7970a81..66f2959 100644
+--- a/perl_c.c
++++ b/perl_c.c
+@@ -199,12 +199,17 @@ perl4caml_sv_no (value unit)
+ static int
+ sv_type (SV *sv)
+ {
++#if PERL_VERSION >= 11
++  if (SvROK(sv)) return 4;
++#endif
+   switch (SvTYPE (sv))
+     {
+     case SVt_IV: return 1;
+     case SVt_NV: return 2;
+     case SVt_PV: return 3;
++#if PERL_VERSION < 11
+     case SVt_RV: return 4;
++#endif
+     case SVt_PVAV: return 5;
+     case SVt_PVHV: return 6;
+     case SVt_PVCV: return 7;
+@@ -302,7 +307,9 @@ perl4caml_deref (value svv)
+   case SVt_IV:
+   case SVt_NV:
+   case SVt_PV:
++#if PERL_VERSION < 11
+   case SVt_RV:
++#endif
+   case SVt_PVMG:
+     break;
+   default:
