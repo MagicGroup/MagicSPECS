@@ -1,0 +1,12 @@
+--- ocurl.old/Makefile.in	2009-11-07 21:05:52.000000000 +0000
++++ ocurl/Makefile.in	2013-09-14 17:52:00.063133507 +0100
+@@ -70,7 +70,8 @@
+ install:
+ ifeq ($(FINDLIB),ocamlfind)
+ 		ocamlfind install curl META $(wildcard *.cmi) \
+-			 $(wildcard *.a) $(wildcard *.cma) $(wildcard *.cmxa)
++			$(wildcard *.a) $(wildcard *.cma) $(wildcard *.cmxa) \
++			$(wildcard *.o) $(wildcard *.cmx)
+ else
+ 		mkdir -p $(INSTALLDIR)
+ 		$(INSTALLDATA) curl.cma $(INSTALLDIR)
