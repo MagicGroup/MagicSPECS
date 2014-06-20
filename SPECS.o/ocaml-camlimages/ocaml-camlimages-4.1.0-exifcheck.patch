@@ -1,0 +1,12 @@
+diff -up camlspotter-camlimages-668faa3494fe/OMakefile~ camlspotter-camlimages-668faa3494fe/OMakefile
+--- camlspotter-camlimages-668faa3494fe/OMakefile~	2013-07-09 08:48:13.000000000 +0300
++++ camlspotter-camlimages-668faa3494fe/OMakefile	2013-12-25 13:00:58.554662373 +0200
+@@ -172,7 +172,7 @@ failwith_if_defined(var, msg) =
+   HAVE_EXIF=
+   LDFLAGS_exif=
+   if $(true_if_not_defined ARG_WANT_EXIF)
+-    HAVE_EXIF = $(Check_header_library exif, exif-data.h, exif_data_load_data)
++    HAVE_EXIF = $(Check_header_library exif, libexif/exif-data.h, exif_data_load_data)
+     SUPPORT_EXIF = $(HAVE_EXIF)
+     if $(SUPPORT_EXIF)
+       LDFLAGS_exif=-lexif
