@@ -1,0 +1,19 @@
+--- camlidl-1.05/compiler/Makefile.old	2013-09-14 14:32:50.438355603 +0100
++++ camlidl-1.05/compiler/Makefile	2013-09-14 14:33:08.542375602 +0100
+@@ -23,13 +23,14 @@
+   linenum.cmo parse_aux.cmo parser_midl.cmo lexer_midl.cmo parse.cmo \
+   fixlabels.cmo normalize.cmo \
+   main.cmo
++XOBJS=$(OBJS:.cmo=.cmx)
+ 
+ PROG=camlidl$(EXE)
+ 
+ all: $(PROG)
+ 
+-$(PROG): $(OBJS)
+-	$(OCAMLC) -o $(PROG) $(OBJS)
++$(PROG): $(XOBJS)
++	$(OCAMLOPT) -o $(PROG) $(XOBJS)
+ 
+ clean::
+ 	rm -f $(PROG)
