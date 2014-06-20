@@ -1,0 +1,11 @@
+--- deriving-0.1.1/tests/Makefile.old	2011-01-06 17:44:05.056078740 +0000
++++ deriving-0.1.1/tests/Makefile	2011-01-06 17:44:27.745779764 +0000
+@@ -8,7 +8,7 @@
+ OCAMLFLAGS   = -w Aef
+ 
+ SOURCES = defs.ml               \
+-          bimap.ml bimap.mli    \
++          bimap.ml              \
+           sigs.ml               \
+           pickle_tests.ml       \
+ 	  typeable_tests.ml     \
