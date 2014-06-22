@@ -1,12 +1,12 @@
 Name:           ocaml-lablgl
 Epoch:          1
 Version:        1.05
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        LablGL is an OpenGL interface for Objective Caml
 License:        BSD
 
 URL:            http://forge.ocamlcore.org/projects/lablgl/
-Source0:        http://forge.ocamlcore.org/frs/download.php/816/lablgl-%{version}.tar.gz
+Source0:        https://forge.ocamlcore.org/frs/download.php/1254/lablgl-%{version}.tar.gz
 
 # XXX This could be fixed with some changes to the build system:
 ExclusiveArch:  %{ocaml_native_compiler}
@@ -34,7 +34,7 @@ extension, or with open-source Mesa.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       ocaml-labltk-devel
 
 %description    devel
@@ -133,7 +133,10 @@ popd
 
 
 %changelog
-* Wed Jun 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1.05-9
+* Thu Jun 19 2014 Richard W.M. Jones <rjones@redhat.com> - 1.05-3
+- Make -devel subpackage depend on the epoch + base version.
+
+* Wed Jun 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1.05-1
 - New upstream version 1.05.
 - Requires Epoch because upstream version went from 20120306->1.05.
 - Fixes FTBFS (RHBZ#1106619).
