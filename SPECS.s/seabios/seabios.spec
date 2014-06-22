@@ -1,6 +1,6 @@
 Name:           seabios
-Version:        1.7.4
-Release:        1%{?dist}
+Version:        1.7.5
+Release:        2%{?dist}
 Summary:        Open-source legacy BIOS implementation
 
 Group:          Applications/Emulators
@@ -14,6 +14,10 @@ Source11:       config.vga.isavga
 Source12:       config.vga.qxl
 Source13:       config.vga.stdvga
 Source14:       config.vga.vmware
+Source15:       config.csm
+Source16:       config.coreboot
+Source17:       config.seabios-128k
+Source18:       config.seabios-256k
 
 BuildRequires: python iasl
 BuildRequires: binutils-x86_64-linux-gnu gcc-x86_64-linux-gnu
@@ -75,15 +79,10 @@ sed -i 's,VERSION=%{version}.*,VERSION=%{version},g' Makefile
 export CFLAGS="$RPM_OPT_FLAGS"
 mkdir binaries
 
-# seabios
-echo 'CONFIG_DEBUG_LEVEL=%{debug_level}' > config.template
-echo 'CONFIG_QEMU_HARDWARE=y' >> config.template
-echo 'CONFIG_PERMIT_UNALIGNED_PCIROM=y' >> config.template
-
 build_bios() {
-    make clean
-    cp config.template .config
-    echo CONFIG_`echo $1 | tr a-z A-Z`=y >> .config
+    make clean distclean
+    cp $1 .config
+    echo "CONFIG_DEBUG_LEVEL=%{debug_level}" >> .config
     make oldnoconfig V=1
 
     make V=1 \
@@ -93,39 +92,30 @@ build_bios() {
         LD=x86_64-linux-gnu-ld \
         OBJCOPY=x86_64-linux-gnu-objcopy \
         OBJDUMP=x86_64-linux-gnu-objdump \
-        STRIP=x86_64-linux-gnu-strip
-  cp out/$2 binaries/bios-$1.bin
+        STRIP=x86_64-linux-gnu-strip $4
+
+    cp out/$2 binaries/$3
 }
 
-build_bios csm Csm16.bin
-build_bios coreboot bios.bin.elf
-build_bios qemu bios.bin
+# seabios
+build_bios %{SOURCE15} Csm16.bin bios-csm.bin
+build_bios %{SOURCE16} bios.bin.elf bios-coreboot.bin
+build_bios %{SOURCE17} bios.bin bios.bin
+build_bios %{SOURCE18} bios.bin bios-256k.bin
 cp out/src/fw/*dsdt*.aml binaries
 
 # seavgabios
 for config in %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} %{SOURCE14}; do
-	name=${config#*config.vga.}
-	make clean distclean
-	cp ${config} .config
-	echo "CONFIG_DEBUG_LEVEL=%{debug_level}" >> .config
-	make oldnoconfig
-	make V=1 \
-		HOSTCC=gcc \
-		CC=x86_64-linux-gnu-gcc \
-		AS=x86_64-linux-gnu-as \
-		LD=x86_64-linux-gnu-ld \
-		OBJCOPY=x86_64-linux-gnu-objcopy \
-		OBJDUMP=x86_64-linux-gnu-objdump \
-		STRIP=x86_64-linux-gnu-strip \
-		out/vgabios.bin
-	cp out/vgabios.bin binaries/vgabios-${name}.bin
+    name=${config#*config.vga.}
+    build_bios ${config} vgabios.bin vgabios-${name}.bin out/vgabios.bin
 done
 
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/seabios
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/seavgabios
-install -m 0644 binaries/bios-qemu.bin $RPM_BUILD_ROOT%{_datadir}/seabios/bios.bin
+install -m 0644 binaries/bios.bin $RPM_BUILD_ROOT%{_datadir}/seabios/bios.bin
+install -m 0644 binaries/bios-256k.bin $RPM_BUILD_ROOT%{_datadir}/seabios/bios-256k.bin
 install -m 0644 binaries/bios-csm.bin $RPM_BUILD_ROOT%{_datadir}/seabios/bios-csm.bin
 install -m 0644 binaries/bios-coreboot.bin $RPM_BUILD_ROOT%{_datadir}/seabios/bios-coreboot.bin
 install -m 0644 binaries/*.aml $RPM_BUILD_ROOT%{_datadir}/seabios
@@ -147,6 +137,27 @@ install -m 0644 binaries/vgabios*.bin $RPM_BUILD_ROOT%{_datadir}/seavgabios
 
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat May 31 2014 Cole Robinson <crobinso@redhat.com> - 1.7.5-1
+- Rebased to version 1.7.5
+- Support for obtaining SMBIOS tables directly from QEMU.
+- XHCI USB controller fixes for real hardware
+- seavgabios: New driver for "coreboot native vga" support
+- seavgabios: Improved detection of x86emu versions with incorrect
+  emulation.
+- Several bug fixes and code cleanups
+
+* Wed Mar 26 2014 Matthias Clasen <mclasen@redhat.com> 1.7.4-5
+- Fix booting FreeBSD VMs in virt-manager
+
+* Mon Mar 17 2014 Cole Robinson <crobinso@redhat.com> 1.7.4-3
+- Build 256k bios images for qemu 2.0
+
+* Thu Mar 13 2014 Cole Robinson <crobinso@redhat.com> - 1.7.4-2
+- Fix kvm migration with empty virtio-scsi controller (bz #1032208)
+
 * Mon Jan 06 2014 Cole Robinson <crobinso@redhat.com> - 1.7.4-1
 - Rebased to version 1.7.4
 - Support for obtaining ACPI tables directly from QEMU.
