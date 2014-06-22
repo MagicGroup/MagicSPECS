@@ -1,0 +1,48 @@
+From 6893e96e6b58d809a08c6491f76df221fd1a6473 Mon Sep 17 00:00:00 2001
+From: Kevin Wolf <kwolf@redhat.com>
+Date: Wed, 7 May 2014 17:30:30 +0200
+Subject: [PATCH] qcow1: Check maximum cluster size
+
+Huge values for header.cluster_bits cause unbounded allocations (e.g.
+for s->cluster_cache) and crash qemu this way. Less huge values may
+survive those allocations, but can cause integer overflows later on.
+
+The only cluster sizes that qemu can create are 4k (for standalone
+images) and 512 (for images with backing files), so we can limit it
+to 64k.
+
+Cc: qemu-stable@nongnu.org
+Signed-off-by: Kevin Wolf <kwolf@redhat.com>
+Reviewed-by: Benoit Canet <benoit@irqsave.net>
+(cherry picked from commit 7159a45b2bf2dcb9f49f1e27d1d3d135a0247a2f)
+
+Conflicts:
+	tests/qemu-iotests/group
+---
+ block/qcow.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/block/qcow.c b/block/qcow.c
+index 9018f44..26bb923 100644
+--- a/block/qcow.c
++++ b/block/qcow.c
+@@ -127,11 +127,17 @@ static int qcow_open(BlockDriverState *bs, QDict *options, int flags,
+         goto fail;
+     }
+ 
+-    if (header.size <= 1 || header.cluster_bits < 9) {
+-        error_setg(errp, "invalid value in qcow header");
++    if (header.size <= 1) {
++        error_setg(errp, "Image size is too small (must be at least 2 bytes)");
+         ret = -EINVAL;
+         goto fail;
+     }
++    if (header.cluster_bits < 9 || header.cluster_bits > 16) {
++        error_setg(errp, "Cluster size must be between 512 and 64k");
++        ret = -EINVAL;
++        goto fail;
++    }
++
+     if (header.crypt_method > QCOW_CRYPT_AES) {
+         error_setg(errp, "invalid encryption method in qcow header");
+         ret = -EINVAL;

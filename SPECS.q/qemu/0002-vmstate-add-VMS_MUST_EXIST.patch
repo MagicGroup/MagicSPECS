@@ -1,0 +1,57 @@
+From 105071cc70a454680e6bf11e2d9d7b73c7ce7491 Mon Sep 17 00:00:00 2001
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Date: Thu, 3 Apr 2014 19:50:31 +0300
+Subject: [PATCH] vmstate: add VMS_MUST_EXIST
+
+Can be used to verify a required field exists or validate
+state in some other way.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+Signed-off-by: Juan Quintela <quintela@redhat.com>
+(cherry picked from commit 5bf81c8d63db0216a4d29dc87f9ce530bb791dd1)
+---
+ include/migration/vmstate.h |  1 +
+ vmstate.c                   | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/include/migration/vmstate.h b/include/migration/vmstate.h
+index e7e1705..de970ab 100644
+--- a/include/migration/vmstate.h
++++ b/include/migration/vmstate.h
+@@ -100,6 +100,7 @@ enum VMStateFlags {
+     VMS_MULTIPLY         = 0x200,  /* multiply "size" field by field_size */
+     VMS_VARRAY_UINT8     = 0x400,  /* Array with size in uint8_t field*/
+     VMS_VARRAY_UINT32    = 0x800,  /* Array with size in uint32_t field*/
++    VMS_MUST_EXIST       = 0x1000, /* Field must exist in input */
+ };
+ 
+ typedef struct {
+diff --git a/vmstate.c b/vmstate.c
+index b689f2f..d856319 100644
+--- a/vmstate.c
++++ b/vmstate.c
+@@ -78,6 +78,10 @@ int vmstate_load_state(QEMUFile *f, const VMStateDescription *vmsd,
+                     return ret;
+                 }
+             }
++        } else if (field->flags & VMS_MUST_EXIST) {
++            fprintf(stderr, "Input validation failed: %s/%s\n",
++                    vmsd->name, field->name);
++            return -1;
+         }
+         field++;
+     }
+@@ -138,6 +142,12 @@ void vmstate_save_state(QEMUFile *f, const VMStateDescription *vmsd,
+                     field->info->put(f, addr, size);
+                 }
+             }
++        } else {
++            if (field->flags & VMS_MUST_EXIST) {
++                fprintf(stderr, "Output state validation failed: %s/%s\n",
++                        vmsd->name, field->name);
++                assert(!(field->flags & VMS_MUST_EXIST));
++            }
+         }
+         field++;
+     }

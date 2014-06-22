@@ -70,9 +70,11 @@ KSMCTL () {
 
 committed_memory () {
     # calculate how much memory is committed to running qemu processes
-    local progname
-    progname=${1:-qemu-kvm}
-    ps -C "$progname" -o rsz | awk '{ sum += $1 }; END { print sum }'
+    local pidlist
+    pidlist=$(pgrep -d ' ' -- '^qemu(-(kvm|system-.+)|:.{1,11})$')
+    if [ -n "$pidlist" ]; then
+        ps -p "$pidlist" -o rsz=
+    fi | awk '{ sum += $1 }; END { print 0+sum }'
 }
 
 free_memory () {
