@@ -1,0 +1,43 @@
+diff -up modules-3.2.10/ModuleCmd_Avail.c.format modules-3.2.10/ModuleCmd_Avail.c
+--- modules-3.2.10/ModuleCmd_Avail.c.format	2012-12-13 15:17:27.000000000 -0700
++++ modules-3.2.10/ModuleCmd_Avail.c	2013-12-23 10:03:34.630492517 -0700
+@@ -257,7 +257,7 @@ int ModuleCmd_Avail(	Tcl_Interp	*interp,
+ 	 **/
+ 
+ 	if( sw_format & SW_LONG)
+-	    fprintf( stderr, long_header);
++	    fprintf( stderr, "%s", long_header);
+ 
+ 	/**
+ 	 **  If a module category is specified check whether it is part
+diff -up modules-3.2.10/ModuleCmd_Display.c.format modules-3.2.10/ModuleCmd_Display.c
+--- modules-3.2.10/ModuleCmd_Display.c.format	2012-11-01 16:02:19.000000000 -0600
++++ modules-3.2.10/ModuleCmd_Display.c	2013-12-23 10:03:34.630492517 -0700
+@@ -161,13 +161,13 @@ int ModuleCmd_Display(	Tcl_Interp	*inter
+ 
+         g_current_module = modulename;
+ 
+-        fprintf( stderr, local_line);
++        fprintf( stderr, "%s", local_line);
+ 	fprintf( stderr, "%s:\n\n", modulefile);
+ 
+ 	result = CallModuleProcedure( disp_interp, &cmdbuf, modulefile, 
+ 	    "ModulesDisplay", 0);
+ 
+-        fprintf( stderr, local_line);
++        fprintf( stderr, "%s", local_line);
+ 
+ 	/**
+ 	 **  Remove the Tcl interpreter that has been used for printing ...
+diff -up modules-3.2.10/ModuleCmd_List.c.format modules-3.2.10/ModuleCmd_List.c
+--- modules-3.2.10/ModuleCmd_List.c.format	2012-11-01 16:02:19.000000000 -0600
++++ modules-3.2.10/ModuleCmd_List.c	2013-12-23 10:15:35.457029928 -0700
+@@ -122,7 +122,7 @@ int	ModuleCmd_List(	Tcl_Interp	*interp,
+ 	 **/
+ 
+ 	if( sw_format & SW_LONG ) {
+-	    fprintf( stderr, long_header);
++	    fprintf( stderr, "%s", long_header);
+ 	}
+ 	if( sw_format & (SW_TERSE | SW_LONG | SW_HUMAN) )
+ 	    fprintf( stderr, "Currently Loaded Modulefiles:\n");
