@@ -1,0 +1,16 @@
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 66c02dd..828001a 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -10,9 +10,9 @@ if !HAVE_LIBGCRYPT
+ libiscsi_la_SOURCES += md5.c
+ endif
+ 
+-SOCURRENT=3
++SOCURRENT=4
+ SOREVISON=11
+-SOAGE=1
++SOAGE=0
+ libiscsi_la_LDFLAGS = \
+ 	-version-info $(SOCURRENT):$(SOREVISON):$(SOAGE) -bindir $(bindir) \
+ 	-no-undefined -export-symbols libiscsi.syms
