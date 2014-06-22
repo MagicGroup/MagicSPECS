@@ -7,9 +7,11 @@
 %define svnrev r1190
 #define pretag 1.2.99908020600
 
-# Private libraries are not be exposed globally by RPM
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%if "%{php_version}" < "5.6"
+%global ini_name     %{name}.ini
+%else
+%global ini_name     40-%{name}.ini
+%endif
 
 
 Summary: Round Robin Database Tool to store and display time-series data
@@ -272,7 +274,7 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %{__rm} -rf php4/examples/.svn
 # Put the php config bit into place
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
-%{__cat} << __EOF__ > %{buildroot}%{_sysconfdir}/php.d/rrdtool.ini
+%{__cat} << __EOF__ > %{buildroot}%{_sysconfdir}/php.d/%{ini_name}
 ; Enable rrdtool extension module
 extension=rrdtool.so
 __EOF__
@@ -361,7 +363,7 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %files php
 %defattr(-,root,root,0755)
 %doc php4/examples php4/README
-%config(noreplace) %{_sysconfdir}/php.d/rrdtool.ini
+%config(noreplace) %{_sysconfdir}/php.d/%{ini_name}
 %{php_extdir}/rrdtool.so
 %endif
 
@@ -389,8 +391,10 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %endif
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.4.8-13
-- 为 Magic 3.0 重建
+* Thu Jun 19 2014 Remi Collet <rcollet@redhat.com> - 1.4.8-13
+- rebuild for https://fedoraproject.org/wiki/Changes/Php56
+- add numerical prefix to extension configuration file
+- cleanup filter (no more needed in F20+)
 
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
