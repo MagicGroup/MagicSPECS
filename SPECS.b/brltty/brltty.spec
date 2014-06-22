@@ -1,5 +1,5 @@
-%define pkg_version 5.0
-%define api_version 0.6.1
+%define pkg_version 5.1
+%define api_version 0.6.2
 
 %global with_python3 1
 
@@ -13,19 +13,15 @@
 # with speech dispatcher iff on Fedora:
 %define with_speech_dispatcher 0%{?fedora}
 
-%ifarch %{ocaml_arches}
 %global with_ocaml 1
-%endif
-
-%define with_java 1
 
 Name: brltty
 Version: %{pkg_version}
-Release: 2%{?dist}
+Release: 5%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
 URL: http://mielke.cc/brltty/
-Source0: http://mielke.cc/brltty/releases/%{name}-%{version}.tar.xz
+Source0: http://mielke.cc/brltty/archive/%{name}-%{version}.tar.xz
 Source1: brltty.service
 Patch4: brltty-loadLibrary.patch
 # libspeechd.h moved in latest speech-dispatch (NOT sent upstream)
@@ -156,18 +152,16 @@ Summary: Python 3 binding for BrlAPI
 This package provides the Python 3 binding for BrlAPI.
 %endif
 
-%if 0%{?with_java}
 %package -n brlapi-java
 Version: %{api_version}
 Group: Development/System
 License: LGPLv2+
 Requires: brlapi = %{api_version}-%{release}
 BuildRequires: jpackage-utils
-BuildRequires: jdk
+BuildRequires: java-devel
 Summary: Java binding for BrlAPI
 %description -n brlapi-java
 This package provides the Java binding for BrlAPI.
-%endif
 
 %if 0%{?with_ocaml}
 %package -n ocaml-brlapi
@@ -199,13 +193,11 @@ cp -a . %{py3dir}
 # If MAKEFLAGS=-jN is set it would break local builds.
 unset MAKEFLAGS
 
-%if 0%{?with_java}
-# Add the jdk include directories to CPPFLAGS
-for i in -I/usr/java/default/include{,/linux}; do
+# Add the openjdk include directories to CPPFLAGS
+for i in -I/usr/lib/jvm/java/include{,/linux}; do
       java_inc="$java_inc $i"
 done
 export CPPFLAGS="$java_inc"
-%endif
 
 export CFLAGS="%{optflags} -fno-strict-aliasing"
 export CXXFLAGS="%{optflags} -fno-strict-aliasing"
@@ -219,11 +211,9 @@ configure_opts=" \
   --with-speechd=%{_prefix} \
 %endif
   --with-install-root=$RPM_BUILD_ROOT
-%if 0%{?with_java}
   JAVA_JAR_DIR=%{_jnidir} \
   JAVA_JNI_DIR=%{_libdir}/brltty \
   JAVA_JNI=yes"
-%endif
 
 # First build everything with Python 2 support
 %configure $configure_opts PYTHON=%{__python2}
@@ -332,9 +322,7 @@ fi
 %{_libdir}/brltty/
 %exclude %{_libdir}/brltty/libbrlttybba.so
 %exclude %{_libdir}/brltty/libbrlttybxw.so
-%if 0%{?with_java}
 %exclude %{_libdir}/brltty/libbrlapi_java.so
-%endif
 %if %{with_speech_dispatcher}
 %exclude %{_libdir}/brltty/libbrlttyssd.so
 %endif
@@ -393,11 +381,9 @@ fi
 %{python3_sitearch}/Brlapi-%{api_version}-*.egg-info
 %endif
 
-%if 0%{?with_java}
 %files -n brlapi-java
 %{_libdir}/brltty/libbrlapi_java.so
 %{_jnidir}/brlapi.jar
-%endif
 
 %if 0%{?with_ocaml}
 %files -n ocaml-brlapi
@@ -406,8 +392,21 @@ fi
 %endif
 
 %changelog
-* Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 5.0-2
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 27 2014 Kalev Lember <kalevlember@gmail.com> - 5.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Tue May 20 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 5.1-3
+- Rebuilt for tcl/tk8.6
+
+* Tue Apr 15 2014 Richard W.M. Jones <rjones@redhat.com> - 5.1-2
+- Remove ocaml_arches macro (RHBZ#1087794).
+
+* Thu Mar 27 2014 Jon Ciesla <limburgher@gmail.com> - 5.1-1
+- 5.1, BZ 1081459.
+- Fixed Source URL.
 
 * Thu Feb 20 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 5.0-1
 - New version
