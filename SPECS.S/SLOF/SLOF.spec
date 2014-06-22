@@ -1,9 +1,9 @@
-%global gittagdate 20120731
+%global gittagdate 20140304
 %global gittag qemu-slof-%{gittagdate}
 
 Name:           SLOF
 Version:        0.1.git%{gittagdate}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Slimline Open Firmware
 
 License:        BSD
@@ -12,7 +12,7 @@ BuildArch:      noarch
 
 # There are no upstream tarballs.  To prepare a tarball, do:
 #
-# git clone git://github.com/dgibson/SLOF.git
+# git clone git://github.com/aik/SLOF.git
 # cd SLOF
 # git archive -o ../SLOF-%{gittagdate}.tar.gz \
 #     --prefix=SLOF-%{gittagdate}/ %{gittag}
@@ -58,6 +58,27 @@ cp -a boot_rom.bin $RPM_BUILD_ROOT%{_datadir}/qemu/slof.bin
 
 
 %changelog
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.git20140304-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Mar 16 2014 Cole Robinson <crobinso@redhat.com> - 0.1.git20140304-1
+- Update to qemu 2.0 version of SLOF
+
+* Tue Nov 19 2013 Cole Robinson <crobinso@redhat.com> - 0.1.git20130827-1
+- Update to version intended for qemu 1.7
+
+* Fri Aug 02 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.git20130430-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 21 2013 Cole Robinson <crobinso@redhat.com> - 0.1.git20130430-1
+- Update to version shipped with qemu 1.5
+
+* Tue Feb 19 2013 Cole Robinson <crobinso@redhat.com> 0.1.git20121018-1
+- Update to version shipped with qemu 1.4
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.git20120731-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Tue Oct 16 2012 Paolo Bonzini <pbonzini@redhat.com> - 0.1.git20120731-1
 - Move date from release to version.
 
