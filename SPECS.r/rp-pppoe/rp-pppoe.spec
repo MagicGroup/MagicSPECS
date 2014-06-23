@@ -41,9 +41,9 @@ make
 umask 022
 cd src
 make install DESTDIR=$RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/etc/init.d
-test -f $RPM_BUILD_ROOT/etc/init.d/pppoe || cp ../scripts/pppoe-init $RPM_BUILD_ROOT/etc/init.d/pppoe
-chmod 755 $RPM_BUILD_ROOT/etc/init.d/pppoe
+mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
+test -f $RPM_BUILD_ROOT/etc/rc.d/init.d/pppoe || cp ../scripts/pppoe-init $RPM_BUILD_ROOT/etc/rc.d/init.d/pppoe
+chmod 755 $RPM_BUILD_ROOT/etc/rc.d/init.d/pppoe
 cd ../gui
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/etc/ppp/pppoe.conf-3.10
@@ -82,7 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/pppoe-stop.8*
 %{_mandir}/man8/pppoe-status.8*
 %{_mandir}/man8/pppoe-setup.8*
-/etc/init.d/pppoe
+#/etc/init.d/pppoe
 %dir /etc/ppp/rp-pppoe-gui
 /usr/sbin/pppoe-wrapper
 /usr/bin/tkpppoe
