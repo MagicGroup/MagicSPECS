@@ -1,8 +1,8 @@
 Name:           perl-JSON-XS
-Summary:        JSON serialising/deserialising, done correctly and fast
+Summary:        JSON serializing/deserializing, done correctly and fast
 Epoch:          1
-Version:        2.33
-Release:        2%{?dist}
+Version:        3.01
+Release:        8%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/JSON-XS/
@@ -18,10 +18,11 @@ BuildRequires:  perl(Getopt::Long)
 BuildRequires:  perl(Storable)
 BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Types::Serialiser)
 BuildRequires:  perl(XSLoader)
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 This module converts Perl data structures to JSON and vice versa. Its
@@ -49,7 +50,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes COPYING README eg/
@@ -59,8 +60,41 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man[13]/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:2.33-2
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:3.01-8
 - 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:3.01-7
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:3.01-6
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:3.01-5
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:3.01-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:3.01-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.01-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Nov 03 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 1:3.01-1
+- Update to 3.01
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.34-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 1:2.34-2
+- Perl 5.18 rebuild
+
+* Sun May 26 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 1:2.34-1
+- Update to 2.34
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.33-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Thu Aug 02 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1:2.33-1
 - Update to 2.33

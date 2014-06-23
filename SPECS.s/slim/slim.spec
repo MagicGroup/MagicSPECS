@@ -1,8 +1,12 @@
+%global _hardened_build 1
+
 Name:           slim
-Version:        1.3.2
-Release:        11%{?dist}
+Version:        1.3.6
+Release:        4%{?dist}
 Summary:        Simple Login Manager
+Summary(zh_CN.UTF-8): 简单的登录管理器
 Group:          User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 License:        GPLv2+
 URL:            http://slim.berlios.de/
 Source0:        http://download.berlios.de/slim/%{name}-%{version}.tar.gz
@@ -15,25 +19,25 @@ Source4:        slim-fedora.txt
 # logrotate entry (see bz#573743)
 Source5:        slim.logrotate.d
 Source6:        slim-tmpfiles.conf
+Source7:        slim.service
 # Fedora-specific patches
-Patch0:         slim-1.3.2-make.patch
-Patch1:         slim-1.3.2-fedora.patch
-# I beleave what upstream dead, so patch did not sended anywhere
-# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=649799
-Patch3:         slim-1.3.2-libpng-version.patch
+Patch1:         slim-1.3.3-fedora.patch
 
 BuildRequires:  libXmu-devel libXft-devel libXrender-devel
 BuildRequires:  libpng-devel libjpeg-devel freetype-devel fontconfig-devel
-BuildRequires:  pkgconfig gettext pam-devel
-BuildRequires:  xwd xterm /sbin/shutdown
+BuildRequires:  pkgconfig gettext pam-devel cmake
+BuildRequires:  xwd xterm freeglut-devel libXrandr-devel
 Requires:       xwd xterm /sbin/shutdown
 Requires:       %{_sysconfdir}/pam.d
 # we use 'include' in the pam file, so
 Requires:       pam >= 0.80
-# reuse the images
-Requires:       desktop-backgrounds-basic
 # for anaconda yum
 Provides:       service(graphical-login)
+
+BuildRequires:    systemd
+Requires(post):   systemd
+Requires(preun):  systemd
+Requires(postun): systemd
 
 %description
 SLiM (Simple Login Manager) is a graphical login manager for X11.
@@ -46,54 +50,131 @@ which determines the available window managers using the freedesktop
 information and modifies the slim configuration file accordingly,
 before launching slim.
 
+%description -l zh_CN.UTF-8
+简单的登录管理器。
+
 %prep
 %setup -q
-%patch0 -p1 -b .make
-%patch1 -p1 -b .fedora
-%patch3 -p1 -b .libpng-ver
+
+%patch1 -p0 -b .fedora
 cp -p %{SOURCE4} README.Fedora
 
 %build
-make %{?_smp_mflags} OPTFLAGS="$RPM_OPT_FLAGS" USE_PAM=1
+CXXFLAGS="%{optflags}" cmake -DUSE_PAM=yes -DCMAKE_INSTALL_PREFIX=%{_prefix} .
+make %{?_smp_mflags}
 
 %install
-make install DESTDIR=%{buildroot} INSTALL='install -p' MANDIR=%{_mandir}
+make install DESTDIR=%{buildroot} INSTALL='install -p'
 install -p -m755 %{SOURCE2} %{buildroot}%{_bindir}/update_slim_wmlist
-install -p -m755 %{SOURCE3} %{buildroot}%{_bindir}/slim-dynwm
-chmod 0644 %{buildroot}%{_sysconfdir}/slim.conf
+install -p -m755 %{SOURCE3} %{buildroot}%{_bindir}/%{name}-dynwm
+chmod 0644 %{buildroot}%{_sysconfdir}/%{name}.conf
 install -d -m755 %{buildroot}%{_sysconfdir}/pam.d
-install -p -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pam.d/slim
-mkdir -p %{buildroot}%{_localstatedir}/run/slim
-# replace the background image
-rm -f %{buildroot}%{_datadir}/slim/themes/default/background.jpg
-ln -s ../../../backgrounds/tiles/default_blue.jpg %{buildroot}%{_datadir}/slim/themes/default/background.jpg
+install -p -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pam.d/%{name}
+mkdir -p %{buildroot}%{_localstatedir}/run/%{name}
 # install logrotate entry
-install -m0644 -D %{SOURCE5} %{buildroot}/%{_sysconfdir}/logrotate.d/slim
+install -m0644 -D %{SOURCE5} %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
 
 %if 0%{?fedora} >= 15
-install -p -D %{SOURCE6} %{buildroot}%{_sysconfdir}/tmpfiles.d/slim.conf
+install -p -D %{SOURCE6} %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
 %endif
 
+mkdir -p %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE7} %{buildroot}%{_unitdir}/%{name}.service
+
+# Fix lib dir according to bits of system
+mkdir -p %{buildroot}/%{_libdir}/
+mv %{buildroot}/usr/lib/lib%{name}.so* %{buildroot}/%{_libdir}/ | :
+# rm garbage from instaler
+rm %{buildroot}/lib/systemd/system/%{name}.service
+# devel .so
+rm %{buildroot}/%{_libdir}/lib%{name}.so
+magic_rpm_clean.sh
+
+%post
+/sbin/ldconfig
+%systemd_post %{name}.service
+
+%preun
+%systemd_preun %{name}.service
+
+%postun
+/sbin/ldconfig
+%systemd_postun
+
 %files
-%defattr(-,root,root,-)
 %doc COPYING ChangeLog README* THEMES TODO
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/pam.d/slim
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/slim.conf
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/logrotate.d/slim
-%ghost %dir %{_localstatedir}/run/slim
-%{_bindir}/slim*
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/pam.d/%{name}
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{name}.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/logrotate.d/%{name}
+%ghost %dir %{_localstatedir}/run/%{name}
+%{_bindir}/%{name}*
 %{_bindir}/update_slim_wmlist
-%{_mandir}/man1/slim*.1*
-%dir %{_datadir}/slim
-%{_datadir}/slim/themes/
+%{_mandir}/man1/%{name}*.1*
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/themes/
+%{_unitdir}/%{name}.service
+%{_libdir}/lib%{name}.so.%{version}
 
 %if 0%{?fedora} >= 15
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/slim.conf
+%config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 %endif
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.3.2-11
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.3.6-4
 - 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.3.6-3
+- 为 Magic 3.0 重建
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Nov 16 2013 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.6-1
+- Update to 1.3.6 (bz#1030423)
+- Add libslim.so.%%{version}
+- Add BR libXrandr-devel
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.3.5-4
+- Perl 5.18 rebuild
+
+* Fri Apr 26 2013 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.5-3
+- Harden build - bz#954324
+
+* Thu Feb 7 2013 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.5-2
+- Update to 1.3.5.
+- Fix typo in changelog
+- Replace $RPM_BUILD_ROOT by %%{buildroot}
+- rm garbage from installer /usr/usr/lib/systemd/system/slim.service
+- Remove libpng patch.
+
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 1.3.4-2
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Fri Nov 9 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.4-1
+- Update to 1.3.4 version by Globe Trotter request (bz#868594).
+- Add Patch0 to fix libpng1.5 incompatability..
+
+* Sun Aug 12 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.3-5
+- Display Manager Rework - https://fedoraproject.org/wiki/Features/DisplayManagerRework (bz#846152).
+    Thanks to Lennart Poettering <lpoetter@redhat.com>
+
+* Sun Aug 12 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.3-4
+- Add BR freeglut-devel to fix FBFS on Fedora 18.
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Mar 6 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.3-2
+- Update to 1.3.3 version by request bz#800254
+- Step to cmake build system.
+- Drop libpng and make patches.
+- Rebase to new version Fedora patch.
+
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-11
+- Rebuilt for c++ ABI breakage
 
 * Thu Jan 26 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.2-10
 - Add Patch slim-1.3.2-libpng-version.patch to fix FBFS in rawhide.

@@ -1,6 +1,6 @@
 Name:           perl-Devel-Profiler
 Version:        0.04
-Release:        14%{?dist}
+Release:        21%{?dist}
 Summary:        Perl profiler compatible with dprofpp
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -9,9 +9,13 @@ Source0:        http://www.cpan.org/authors/id/S/SA/SAMTREGAR/Devel-Profiler-%{v
 Patch0:         perl-Devel-Profiler-perl510.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+# dprofpp from perl-Devel-DProf is executed
+BuildRequires:  perl-Devel-DProf
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# dprofpp from perl-Devel-DProf is executed
+Requires:       perl-Devel-DProf
 
 %description
 This module implements a Perl profiler that outputs profiling data in a
@@ -47,7 +51,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,8 +63,30 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-14
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.04-21
 - 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.04-20
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.04-17
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 0.04-14
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,6 +1,6 @@
 Name:			perl-Spreadsheet-WriteExcel
 Version:		2.37
-Release:		11%{?dist}
+Release:		17%{?dist}
 Summary:		Write formatted text and numbers to a cross-platform Excel binary file
 
 Group:			Development/Libraries
@@ -78,6 +78,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.37-17
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.37-16
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.37-15
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.37-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.37-13
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.37-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.37-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

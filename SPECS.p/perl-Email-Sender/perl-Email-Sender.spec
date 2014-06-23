@@ -1,6 +1,6 @@
 Name:           perl-Email-Sender
-Version:        0.110001
-Release:        5%{?dist}
+Version:        0.120002
+Release:        6%{?dist}
 Summary:        A library for sending email
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,25 +60,56 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-RELEASE_TESTING=1 
+RELEASE_TESTING=1 make test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes dist.ini LICENSE META.json README
+%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.110001-5
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.120002-6
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.110001-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.120002-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Aug 05 2013 Petr Pisar <ppisar@redhat.com> - 0.120002-4
+- Perl 5.18 rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.120002-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.120002-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Oct 19 2012 Iain Arnell <iarnell@gmail.com> 0.120002-1
+- update to latest upstream version
+
+* Sat Jul 21 2012 Iain Arnell <iarnell@gmail.com> 0.120001-1
+- update to latest upstream version
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.110005-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 23 2012 Petr Pisar <ppisar@redhat.com> - 0.110005-2
+- Perl 5.16 rebuild
+
+* Sun Mar 11 2012 Iain Arnell <iarnell@gmail.com> 0.110005-1
+- update to latest upstream version
+
+* Thu Feb 23 2012 Iain Arnell <iarnell@gmail.com> 0.110004-1
+- update to latest upstream version
+
+* Fri Feb 03 2012 Iain Arnell <iarnell@gmail.com> 0.110003-1
+- update to latest upstream version
+
+* Wed Feb 01 2012 Iain Arnell <iarnell@gmail.com> 0.110002-1
+- update to latest upstream version
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.110001-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

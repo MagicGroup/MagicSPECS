@@ -4,7 +4,7 @@
 
 Name:           perl-Test-Differences
 Version:        %{RPM_version}
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Test strings and data structures and show differences if not OK
 
 Group:          Development/Libraries
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.5000-10
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.5000-9
 - 为 Magic 3.0 重建
 

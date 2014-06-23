@@ -1,0 +1,24 @@
+--- openjdk/jdk/src/share/lib/security/java.security-linux.orig
++++ openjdk/jdk/src/share/lib/security/java.security-linux
+@@ -154,7 +154,9 @@
+                com.sun.org.apache.xml.internal.security.,\
+                com.sun.org.glassfish.,\
+                org.jcp.xml.dsig.internal.,\
+-               oracle.jrockit.jfr.
++               oracle.jrockit.jfr.,\
++               org.GNOME.Accessibility.,\
++               org.GNOME.Bonobo.
+ #
+ # List of comma-separated packages that start with or equal this string
+ # will cause a security exception to be thrown when
+@@ -192,7 +194,9 @@
+                    com.sun.org.apache.xml.internal.security.,\
+                    com.sun.org.glassfish.,\
+                    org.jcp.xml.dsig.internal.,\
+-                   oracle.jrockit.jfr.
++                   oracle.jrockit.jfr.,\
++                   org.GNOME.Accessibility.,\
++                   org.GNOME.Bonobo.
+ #
+ # Determines whether this properties file can be appended to
+ # or overridden on the command line via -Djava.security.properties

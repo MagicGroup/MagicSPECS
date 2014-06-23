@@ -1,6 +1,6 @@
 Name:           munin
-Version:        2.0.9
-Release:        4%{?dist}
+Version:        2.0.21
+Release:        5%{?dist}
 Summary:        Network-wide graphing framework (grapher/gatherer)
 
 Group:          System Environment/Daemons
@@ -28,20 +28,28 @@ Source17:       munin.cron.d
 Source18:       munin-node.rc
 Source19:       httpd_munin-cgi.conf
 Source20:       Makefile.config-dist
+Source21:       nginx_munin.conf
+Source22:       munin-fcgi-html.rc
+Source23:       munin-fcgi-graph.rc
 
 #Patch1:         munin-1.4.6-restorecon.patch
 #Patch2:         munin-1.4.2-fontfix.patch
 Patch4:         munin-2.0.4-Utils-cluck.patch
 Patch5:         acpi-2.0.5.patch
 #Patch6:         munin-2.0.7-http_loadtime.patch
-Patch7:         munin-2.0-defect-1213.patch
+#Patch7:         munin-2.0-defect-1213.patch
 #Patch8:         munin-2.0.2-defect-1245-LimitsOld.pm-notify_alias.patch
 Patch9:         munin-2.0.8-cgitmp.patch
+# BZ# 877116 Patch using '&' in the URLs instead of '&amp;' in HTMLConfig
 Patch10:        munin-2.0.9_HTMLConfig.pm.patch
 
 BuildArch:      noarch
 
+%if 0%{?fedora} > 20
+BuildRequires:  /usr/bin/hostname
+%else
 BuildRequires:  /bin/hostname
+%endif
 BuildRequires:  perl >= 5.8
 %if 0%{?rhel} > 6 || 0%{?fedora} > 12
 BuildRequires:  perl(Directory::Scratch)
@@ -58,6 +66,10 @@ BuildRequires:  perl(Time::HiRes)
 BuildRequires:  perl(Net::SSLeay)
 BuildRequires:  perl(HTML::Template)
 BuildRequires:  perl(LWP::UserAgent)
+# Work-around for koji
+%if 0%{?rhel} > 6 || 0%{?fedora} > 16
+BuildRequires:  perl-Carp
+%endif
 # RHEL6+ BuildRequires:  perl(Log::Log4perl) >= 1.18
 %if 0%{?rhel} > 5 || 0%{?fedora} > 11
 BuildRequires:  perl(Log::Log4perl) >= 1.18
@@ -88,6 +100,9 @@ Requires:       perl(DateTime)
 Requires:       perl(Time::HiRes)
 Requires:       perl(Taint::Runtime)
 Requires:       sysstat
+Requires:       crontabs
+# BZ#913111 : Removed because it pulls boa .. and no clean way to prefer apache.
+#Requires:       webserver
 
 # SystemD
 %if 0%{?rhel} > 6 || 0%{?fedora} > 15
@@ -96,6 +111,7 @@ BuildRequires:  systemd-units
 
 # Munin node requires
 Requires:       perl(Cache::Memcached)
+Requires:       perl(Carp::Always)
 Requires:       perl(Crypt::DES)
 Requires:       perl(Digest::HMAC)
 Requires:       perl(Digest::SHA1)
@@ -105,8 +121,9 @@ Requires:       perl(Net::Server::Fork)
 Requires:       perl(Net::SNMP)
 Requires:       perl(Net::SSLeay)
 Requires:       perl(Time::HiRes)
+# mysql plugin requires perl(Cache::Cache)
+Requires:       perl(Cache::Cache)
 
-%if 0%{?JAVA}
 # Munin node java monitor requires
 #Requires:       java-jmx # rhel<5
 # java buildrequires on fedora < 17 and rhel 5,6
@@ -118,7 +135,6 @@ BuildRequires:  java-1.6.0-devel
 %endif
 BuildRequires:  mx4j
 BuildRequires:  jpackage-utils
-%endif
 
 # CGI requires
 # RHEL6+ Requires:       dejavu-sans-mono-fonts
@@ -136,6 +152,9 @@ pages, suitable for viewing with your graphical web browser of choice.
 
 Munin is written in Perl, and relies heavily on Tobi Oetiker's excellent
 RRDtool.
+
+Creaete a munin web user after installing:
+htpasswd -bc /etc/munin/munin-htpasswd MUNIN_WEB_USER PASSWORD
 
 
 %package node
@@ -206,7 +225,7 @@ maintaining a rattling ease of installation and configuration.
 This package contains common files that are used by both the server (munin)
 and node (munin-node) packages.
 
-%if 0%{?JAVA}
+
 %package java-plugins
 Group:          System Environment/Daemons
 Summary:        java-plugins for munin
@@ -216,16 +235,28 @@ Requires:       jpackage-utils
 
 %description java-plugins
 java-plugins for munin-node.
-%endif
+
+Install this sub-package for the jmx node plugin.
+
+%package ruby-plugins
+Group:          System Environment/Daemons
+Summary:        ruby-plugins for munin
+Requires:       %{name}-node = %{version}
+BuildArch:      noarch
+
+%description ruby-plugins
+ruby-plugins for munin-node.
+
+Install this sub-package for the tomcat node plugin.
+
 
 # BZ# 861816 munin-2.x CGI support is broken without manual hacks
 %package cgi
 Group:          System Environment/Daemons
-Summary:        Network-wide graphing framework (common files)
+Summary:        Network-wide graphing framework (cgi files for apache)
 BuildArch:      noarch
 Requires:       %{name}-common = %{version}
 Requires:       mod_fcgid
-Requires:       spawn-fcgi
 
 %description cgi
 Munin package uses cron by default.  This package contains the CGI files that
@@ -245,6 +276,36 @@ for svc in httpd munin-node ; do
   service $svc start
 done
 
+# BZ# 905241
+%package nginx
+Group:          System Environment/Daemons
+Summary:        Network-wide graphing framework (cgi files for nginx)
+BuildArch:      noarch
+Requires:       %{name}-common = %{version}
+Requires:       spawn-fcgi
+
+%description nginx
+Munin package uses cron by default.  This package contains the CGI files that
+can generate HTML and graphs dynamically. This enables munin to scale better
+for a master with many nodes.
+
+QUICK-HOWTO:
+sed -i 's/\(.*\)_strategy.*/\1_strategy cgi/;s/#cgiurl_graph/cgiurl_graph/' /etc/munin/munin.conf
+for svc in munin-fcgi-graph munin-fcgi-html nginx ; do
+  service $svc stop
+  chkconfig $svc on
+  service $svc start
+done
+
+%package netip-plugins
+Group:          System Environment/Daemons
+Summary:        Network-wide graphing framework (dhcpd3 and ntp plugins)
+BuildArch:      noarch
+Requires:       %{name}-common = %{version}
+
+%description netip-plugins
+Munin plugins that require Net::IP.  This is only dhcpd3 and ntp currently.
+
 
 %prep
 %setup -q -n munin-%{version}
@@ -255,7 +316,7 @@ install -c %{SOURCE12} ./plugins/node.d.linux/cpuspeed.in
 
 %patch4 -p0
 %patch5 -p0
-%patch7 -p1
+#% patch7 -p1
 %patch9 -p1
 %patch10 -p1
 install -c %{SOURCE13} ./resources/
@@ -266,9 +327,7 @@ sed -i -e 's,^PERLSITELIB := \(.*\),PERLSITELIB := %{perl_vendorlib},;' Makefile
 
 
 %build
-%if 0%{?JAVA}
 export  CLASSPATH=plugins/javalib/org/munin/plugin/jmx:$(build-classpath mx4j):$CLASSPATH
-%endif
 make    CONFIG=Makefile.config-dist
 
 # Convert to utf-8
@@ -288,15 +347,15 @@ done
 rm -rf ${buildroot}
 
 ## Node
-%if 0%{?JAVA}
 export  CLASSPATH=plugins/javalib/org/munin/plugin/jmx:$(build-classpath mx4j):$CLASSPATH
-%endif
 make    CONFIG=Makefile.config-dist \
         DESTDIR=%{buildroot} \
+%if 0%{?rhel} > 7 || 0%{?fedora} > 19
+        DOCDIR=%{buildroot}%{_docdir}/%{name} \
+%else
         DOCDIR=%{buildroot}%{_docdir}/%{name}-%{version} \
-%if 0%{?JAVA}
-        JAVALIBDIR=%{buildroot}%{_datadir}/java \
 %endif
+        JAVALIBDIR=%{buildroot}%{_datadir}/java \
         MANDIR=%{buildroot}%{_mandir} \
         PREFIX=%{buildroot}%{_prefix} \
         USER=nobody GROUP=nobody \
@@ -313,11 +372,16 @@ install -m 0644 %{SOURCE4} %{buildroot}/etc/logrotate.d/munin
 # BZ#821912 - Move .htaccess to apache config to allow easier user-access changes.
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 sed -e 's/# </</g' %{buildroot}/var/www/html/munin/.htaccess > %{buildroot}%{_sysconfdir}/httpd/conf.d/munin.conf
+echo "ScriptAlias /munin-cgi/munin-cgi-graph /var/www/cgi-bin/munin-cgi-graph" >> \
+  %{buildroot}%{_sysconfdir}/httpd/conf.d/munin.conf
 rm %{buildroot}/var/www/html/munin/.htaccess
 
 # install cron script
 mkdir -p %{buildroot}/etc/cron.d
 install -m 0644 %{SOURCE17} %{buildroot}/etc/cron.d/munin
+
+# BZ# 908711
+mv %{buildroot}/usr/share/munin/munin-asyncd %{buildroot}/usr/sbin/munin-asyncd
 
 # SystemD
 %if 0%{?rhel} > 6 || 0%{?fedora} > 15
@@ -336,6 +400,7 @@ install -m 0644 %{SOURCE14} %{buildroot}/lib/systemd/system/munin-asyncd.service
 install -m 0644 %{SOURCE15} %{buildroot}/lib/systemd/system/munin-fcgi-html.service
 install -m 0644 %{SOURCE16} %{buildroot}/lib/systemd/system/munin-fcgi-graph.service
 %endif
+mkdir -p %{buildroot}/var/lib/munin/spool
 
 # install tmpfiles.d entry
 %if 0%{?rhel} > 6 || 0%{?fedora} > 14
@@ -349,6 +414,8 @@ mkdir -p %{buildroot}/etc/rc.d/init.d
 cat %{SOURCE18} | sed -e 's/2345/\-/' > %{buildroot}/etc/rc.d/init.d/munin-node
 chmod 755 %{buildroot}/etc/rc.d/init.d/munin-node
 install -m 0755 %{SOURCE13} %{buildroot}/etc/rc.d/init.d/munin-asyncd
+install -m 0755 %{SOURCE22} %{buildroot}/etc/rc.d/init.d/munin-fcgi-html
+install -m 0755 %{SOURCE23} %{buildroot}/etc/rc.d/init.d/munin-fcgi-graph
 %endif
 
 # Fix default config file
@@ -356,6 +423,7 @@ sed -i '
   s,/etc/munin/munin-conf.d,/etc/munin/conf.d,;
   s,#html_strategy.*,html_strategy cron,;
   s,#graph_strategy.*,graph_strategy cron,;
+  s,#cgiurl_graph,cgiurl_graph,;
   ' %{buildroot}/etc/munin/munin.conf
 mkdir -p %{buildroot}/etc/munin/conf.d
 mkdir -p %{buildroot}/etc/munin/plugin-conf.d
@@ -395,6 +463,12 @@ user munin
 user munin
 EOT.node
 
+# http://munin-monitoring.org/ticket/808
+cat - >> %{buildroot}/etc/munin/plugin-conf.d/fw_ <<EOT.fw
+[fw_*]
+user root
+EOT.fw
+
 # Preload static html files
 mkdir -p %{buildroot}/var/www/html/munin/
 cp -r %{buildroot}/etc/munin/static %{buildroot}/var/www/html/munin/
@@ -411,7 +485,7 @@ touch %{buildroot}/var/lib/munin/plugin-state/yum.state
 # Create CGI tmpdir space
 mkdir -p %{buildroot}/var/lib/munin/cgi-tmp/munin-cgi-graph
 
-# Fix config file so that it no longer references the build host
+# BZ# 881689 - Fix config file so that it no longer references the build host
 sed -i 's/^\[.*/\[localhost\]/' %{buildroot}/etc/munin/munin.conf
 
 # BZ# 885422 Move munin-node logs to /var/log/munin-node/
@@ -421,13 +495,8 @@ sed -i 's,^log_file .*,log_file /var/log/munin-node/munin-node.log,' %{buildroot
 # Create sample fcgi config files
 mkdir -p %{buildroot}/etc/sysconfig %{buildroot}/etc/httpd/conf.d
 cp %{SOURCE19} %{buildroot}/etc/httpd/conf.d/munin-cgi.conf
-cat > %{buildroot}/etc/sysconfig/spawn-fcgi-munin <<EOT.spawn
-# SAMPLE: Rename this file to /etc/sysconfig/spawn-fcgi and edit to fit
-# (Without this, nginx + munin-cgi will not work properly via init script)
-SOCKET=/var/run/mod_fcgid/fcgi-graph.sock
-OPTIONS="-U apache -u apache -g apache -s $SOCKET -S -M 0600 -C 32 -F 1 -P /var/run/spawn-fcgi.pid -- /var/www/cgi-bin/munin-cgi-graph"
-
-EOT.spawn
+mkdir -p %{buildroot}/etc/nginx/conf.d
+cp %{SOURCE21} %{buildroot}/etc/nginx/conf.d/munin.conf
 
 # Create sample htpasswd file
 touch %{buildroot}/etc/munin/munin-htpasswd
@@ -439,6 +508,7 @@ sed -i -e '
   s,owner_ok /var/lib/munin .*,owner_ok /var/lib/munin munin,;
   s,owner_ok /var/lib/munin/plugin-state .*,owner_ok /var/lib/munin/plugin-state root,;
   ' %{buildroot}/usr/bin/munin-check
+
 
 %clean
 rm -rf %{buildroot}
@@ -464,51 +534,74 @@ exit 0
     -c "Munin user" munin
 exit 0
 
+%pre cgi
+#why this? search for BUG above
+chown apache /var/log/munin
+exit 0
+
 %post node
-# sysvinit only in f15 and older and epel
-%if ! 0%{?fedora} > 15 || 0%{?rhel} > 6
-/sbin/chkconfig --add munin-node
+%if 0%{?rhel} > 6 || 0%{?fedora} > 15
+  %if 0%{?systemd_post:1}
+    %systemd_post munin-node.service
+  %else
+    if [ $1 -eq 1 ] ; then
+      # Initial installation
+      /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+    fi
+  %endif
+%else
+  # sysvinit only in f15 and older and epel
+  /sbin/chkconfig --add munin-node
 %endif
 # Only run configure on a new install, not an upgrade.
 if [ "$1" = "1" ]; then
      /usr/sbin/munin-node-configure --shell 2> /dev/null | sh >& /dev/null || :
 fi
 
+%post async
+%if 0%{?rhel} > 6 || 0%{?fedora} > 15
+  %if 0%{?systemd_post:1}
+    %systemd_post munin-asyncd.service
+  %else
+    if [ $1 -eq 1 ] ; then
+      # Initial installation
+      /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+    fi
+  %endif
+%else
+  # sysvinit only in f15 and older and epel
+  /sbin/chkconfig --add munin-asyncd
+%endif
+
 %preun node
 %if 0%{?rhel} > 6 || 0%{?fedora} > 15
 # Newer installs use systemd
   %if 0%{?systemd_preun:1}
-    for svc in node asyncd ; do
-      %systemd_preun munin-${svc}.service
-    done
+    %systemd_preun munin-node.service
   %else
     if [ "$1" = 0 ]; then
-      for svc in node asyncd ; do
-        /bin/systemctl --no-reload disable munin-${svc}.service >/dev/null 2>&1 || :
-        /bin/systemctl stop munin-${svc}.service >/dev/null 2>&1 || :
-      done
+      /bin/systemctl --no-reload disable munin-node.service >/dev/null 2>&1 || :
+      /bin/systemctl stop munin-node.service >/dev/null 2>&1 || :
     fi
   %endif
 %else
 # Older installs use sysvinit / upstart
 if [ "$1" = 0 ]; then
-  for svc in node asyncd fcgi-html fcgi-graph; do
-    service munin-${svc} stop &>/dev/null || :
-    /sbin/chkconfig --del munin-${svc}
-  done
+  service munin-node stop &>/dev/null || :
+  /sbin/chkconfig --del munin-node
 fi
 %endif
 
-%preun cgi
+%preun nginx
 %if 0%{?rhel} > 6 || 0%{?fedora} > 15
 # Newer installs use systemd
   %if 0%{?systemd_preun:1}
-    for svc in fcgi-html fcgi-graph; do
+    for svc in fcgi-html fcgi-graph ; do
       %systemd_preun munin-${svc}.service
     done
   %else
     if [ "$1" = 0 ]; then
-      for svc in node asyncd fcgi-html fcgi-graph; do
+      for svc in fcgi-html fcgi-graph ; do
         /bin/systemctl --no-reload disable munin-${svc}.service >/dev/null 2>&1 || :
         /bin/systemctl stop munin-${svc}.service >/dev/null 2>&1 || :
       done
@@ -564,15 +657,24 @@ exit 0
 %dir %{_sysconfdir}/munin/templates/partial
 %dir %{_datadir}/munin
 %dir %{_datadir}/munin/plugins
+#BUG. User apache does not necessarily exists when installing package munin
+#since httpd is not required. it matters if httpd is later installed and
+#the munin graph or html cgi programs are used - they log here.
+#this is fixed with %%pre cgi, but if user tries to use the cgi programs
+#without the cgi package, it's tough luck.
+#proper fix may be to create the apache user in pre, but I'm not gonna do it.
 %dir %attr(0775,apache,munin) /var/log/munin
 %dir %attr(0775,root,munin) /var/lib/munin/plugin-state
 %attr(0755,munin,munin) %dir /var/www/html/munin
 %attr(0755,munin,munin) %dir /var/www/html/munin/static
+%attr(0755,root,munin) /var/www/cgi-bin/munin-cgi-graph
+%attr(0755,root,munin) /var/www/cgi-bin/munin-cgi-html
 %attr(0644,munin,munin) /var/www/html/munin/static/*
 %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/cron.d/munin
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/munin.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/munin
 %config(noreplace) %{_sysconfdir}/munin/munin.conf
+%config(noreplace) %{_sysconfdir}/munin/munin-htpasswd
 %config(noreplace) %{_sysconfdir}/munin/static/*
 %config(noreplace) %{_sysconfdir}/munin/templates/partial/*.tmpl
 %config(noreplace) %{_sysconfdir}/munin/templates/*.tmpl
@@ -607,6 +709,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/munin-node
 %config(noreplace) %{_sysconfdir}/munin/munin-node.conf
 %config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/df
+%config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/fw_
 %config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/hddtemp_smartctl
 %config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/munin-node
 %config(noreplace) %{_sysconfdir}/munin/plugin-conf.d/postfix
@@ -620,7 +723,10 @@ exit 0
 %attr(0755,root,root) %{_sbindir}/munin-node
 %attr(0755,root,root) %{_sbindir}/munin-node-configure
 %attr(-,munin,munin) /var/lib/munin/plugin-state/yum.state
+%exclude %{_datadir}/munin/plugins/dhcpd3
 %exclude %{_datadir}/munin/plugins/jmx_
+%exclude %{_datadir}/munin/plugins/ntp_
+%exclude %{_datadir}/munin/plugins/tomcat_
 %{_datadir}/munin/plugins/
 %{perl_vendorlib}/Munin/Node
 %{perl_vendorlib}/Munin/Plugin*
@@ -628,7 +734,9 @@ exit 0
 
 %files async
 %defattr(-,root,root)
-%{_datadir}/munin/munin-async*
+%{_sbindir}/munin-asyncd
+%{_datadir}/munin/munin-async
+%dir /var/lib/munin/spool
 %if 0%{?rhel} > 6 || 0%{?fedora} > 15
 /lib/systemd/system/munin-asyncd.service
 %else
@@ -646,20 +754,21 @@ exit 0
 %endif
 %{perl_vendorlib}/Munin/Common
 
-%if 0%{?JAVA}
+
 %files java-plugins
 %defattr(-,root,root)
 %{_datadir}/java/munin-jmx-plugins.jar
 %{_datadir}/munin/plugins/jmx_
-%endif
+
+
+%files ruby-plugins
+%defattr(-,root,root)
+%{_datadir}/munin/plugins/tomcat_
+
 
 %files cgi
 %defattr(-,root,root)
-%attr(0755,root,munin) /var/www/cgi-bin/munin-cgi-graph
-%attr(0755,root,munin) /var/www/cgi-bin/munin-cgi-html
-%config(noreplace) %{_sysconfdir}/sysconfig/spawn-fcgi-munin
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/munin-cgi.conf
-%config(noreplace) %{_sysconfdir}/munin/munin-htpasswd
 %if 0%{?rhel} > 6 || 0%{?fedora} > 15
 /lib/systemd/system/munin-fcgi-html.service
 /lib/systemd/system/munin-fcgi-graph.service
@@ -668,7 +777,135 @@ exit 0
 %attr(0755,apache,apache) %dir /var/lib/munin/cgi-tmp/munin-cgi-graph
 
 
+%files nginx
+%defattr(-,root,root)
+%config(noreplace) %{_sysconfdir}/nginx/conf.d/munin.conf
+%if 0%{?rhel} > 6 || 0%{?fedora} > 15
+/lib/systemd/system/munin-fcgi-html.service
+/lib/systemd/system/munin-fcgi-graph.service
+%else
+%{_sysconfdir}/rc.d/init.d/munin-fcgi-html
+%{_sysconfdir}/rc.d/init.d/munin-fcgi-graph
+%endif
+
+
+%files netip-plugins
+%defattr(-,root,root)
+%{_datadir}/munin/plugins/dhcpd3
+%{_datadir}/munin/plugins/ntp_
+
+
 %changelog
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-5
+- 为 Magic 3.0 重建
+
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-4
+- 为 Magic 3.0 重建
+
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 2.0.21-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.21-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Apr 25 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.21-1
+- Upstream released 2.0.21
+
+* Fri Mar 28 2014 "D. Johnson" <fenris02@fedoraproject.org> - 2.0.20-1
+- Upstream released 2.0.20
+- BZ# 1082162: munin-asyncd doesn't get added to chkconfig
+
+* Wed Mar 26 2014 D. Johnson <fenris02@fedoraproject.org> - 2.0.19-2
+- BZ# 1081254: Start asyncd after node
+- BZ# 1028075: munin-node doesn't get added to chkconfig
+
+* Sun Dec 08 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.19-1
+- Upstream to 2.0.19
+
+* Sun Dec 08 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.18-2
+- Modifying hostname require for f21
+
+* Sat Dec 07 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.18-1
+- BZ# 1037890,1037889,1037888: CVE-2013-6359
+
+* Tue Sep 24 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.17-6
+- Move Net::IP plugins to a subpackage for dep handling
+
+* Fri Aug 16 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.17-5
+- BZ# 993985: munin possibly affected by F-20 unversioned docdir change
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.17-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Aug 01 2013 Petr Pisar <ppisar@redhat.com> - 2.0.17-3
+- Perl 5.18 rebuild
+
+* Sat Jul 27 2013 Jóhann B. Guðmundsson <johannbg@fedoraproject.org> - 2.0.17-2
+- BZ# 989080 Add a missing requirement on crontabs to spec file
+
+* Sat Jul 20 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.17-1
+- Upstream release 2.0.17
+
+* Tue Jun 04 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.16-1
+- Upstream released 2.0.16
+
+* Sat Jun 01 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.15-1
+- Upstream released 2.0.15
+
+* Wed May 22 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.14-2
+- Corrected bugid 905241 references
+
+* Sat May 11 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.14-1
+- Upstream released 2.0.14
+
+* Fri Apr 26 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.13-1
+- Upstream released 2.0.13
+
+* Thu Apr 4 2013 Viljo Viitanen <viljo.viitanen@iki.fi> - 2.0.12-4
+- BZ #905241 add nginx cgi package, removed unnecessary services from apache
+  cgi package
+
+* Mon Apr 01 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.12-3
+- Add fw_ default config
+
+* Sun Mar 24 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.12-2
+- BZ# 917002 minor edits for asyncd
+
+* Fri Mar 22 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.12-1
+- Upstream release 2.0.12
+
+* Sat Mar 09 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.11.1-3
+- Update systemd scriptlets
+
+* Fri Feb 22 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.11.1-2
+- BZ# 913111 Removed R:webserver because it pulls boa .. and no clean way to
+  prefer apache.
+- BZ# 917002 munin-asyncd should wait for munin-node
+
+* Sat Feb 09 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.11.1-1
+- Upstream version 2.0.11.1
+
+* Thu Feb 07 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.11-4
+- BZ# 908711 munin-async: wrong path in init script
+
+* Wed Feb 06 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.11-3
+- Split out tomcat plugin to remove ruby dep from node.
+
+* Mon Feb 04 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.11-2
+- BZ# 907369 revert HTMLOld.pm patch
+
+* Sun Feb 03 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.11-1
+- Upstream release 2.0.11
+
+* Mon Jan 21 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.10-2
+- BZ# 896644 Wrong path to munin jar in jmx plugin
+
+* Wed Jan 09 2013 D. Johnson <fenris02@fedoraproject.org> - 2.0.10-1
+- Update to 2.0.10
+- BZ# 891940,892377 Only stop/restart services provided by sub-package, not deps.
+- BZ# 881689 Fix config file so that it no longer references the build host
+- BZ# 877116 Patch using '&' in the URLs instead of '&amp;' in HTMLConfig
+
 * Fri Dec 21 2012 D. Johnson <fenris02@fedoraproject.org> - 2.0.9-4
 - Use Makefile.config-dist instead of sed.
 - BZ# 890246,890247 "su" directive is not used in epel5/6 logrotate

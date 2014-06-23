@@ -1,6 +1,6 @@
 Name:		perl-Package-Stash-XS
 Version:	0.25
-Release:	8%{?dist}
+Release:	11%{?dist}
 Summary:	Faster and more correct implementation of the Package::Stash API
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -71,6 +71,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::Stash::XS.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.25-11
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.25-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.25-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.25-8
 - 为 Magic 3.0 重建
 

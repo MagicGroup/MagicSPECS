@@ -1,0 +1,146 @@
+From b7282fd199d9ff4169ca62d50606fbe94086f2de Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Thu, 29 Aug 2013 10:11:48 +0200
+Subject: [PATCH 2/6] Migrate from easymock 1 to easymock 3
+
+---
+ maven-compat/pom.xml                               |  2 +-
+ .../maven/artifact/testutils/MockManager.java      | 58 ----------------------
+ .../repository/legacy/DefaultWagonManagerTest.java |  7 ++-
+ pom.xml                                            |  4 +-
+ 4 files changed, 6 insertions(+), 65 deletions(-)
+ delete mode 100644 maven-compat/src/test/java/org/apache/maven/artifact/testutils/MockManager.java
+
+diff --git a/maven-compat/pom.xml b/maven-compat/pom.xml
+index ff75433..7ee01a0 100644
+--- a/maven-compat/pom.xml
++++ b/maven-compat/pom.xml
+@@ -83,7 +83,7 @@
+       <scope>test</scope>
+     </dependency>
+     <dependency>
+-      <groupId>easymock</groupId>
++      <groupId>org.easymock</groupId>
+       <artifactId>easymock</artifactId>
+       <scope>test</scope>
+     </dependency>
+diff --git a/maven-compat/src/test/java/org/apache/maven/artifact/testutils/MockManager.java b/maven-compat/src/test/java/org/apache/maven/artifact/testutils/MockManager.java
+deleted file mode 100644
+index 4b6f637..0000000
+--- a/maven-compat/src/test/java/org/apache/maven/artifact/testutils/MockManager.java
++++ /dev/null
+@@ -1,58 +0,0 @@
+-package org.apache.maven.artifact.testutils;
+-
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements.  See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership.  The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License.  You may obtain a copy of the License at
+- *
+- *  http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing,
+- * software distributed under the License is distributed on an
+- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- * KIND, either express or implied.  See the License for the
+- * specific language governing permissions and limitations
+- * under the License.
+- */
+-
+-import java.util.ArrayList;
+-import java.util.Iterator;
+-import java.util.List;
+-
+-import org.easymock.MockControl;
+-
+-public class MockManager
+-{
+-    
+-    private List mockControls = new ArrayList();
+-    
+-    public void add( MockControl control )
+-    {
+-        mockControls.add( control );
+-    }
+-    
+-    public void replayAll()
+-    {
+-        for ( Object mockControl : mockControls )
+-        {
+-            MockControl control = (MockControl) mockControl;
+-
+-            control.replay();
+-        }
+-    }
+-    
+-    public void verifyAll()
+-    {
+-        for ( Object mockControl : mockControls )
+-        {
+-            MockControl control = (MockControl) mockControl;
+-
+-            control.verify();
+-        }
+-    }
+-
+-}
+diff --git a/maven-compat/src/test/java/org/apache/maven/repository/legacy/DefaultWagonManagerTest.java b/maven-compat/src/test/java/org/apache/maven/repository/legacy/DefaultWagonManagerTest.java
+index bcda50a..37a281c 100644
+--- a/maven-compat/src/test/java/org/apache/maven/repository/legacy/DefaultWagonManagerTest.java
++++ b/maven-compat/src/test/java/org/apache/maven/repository/legacy/DefaultWagonManagerTest.java
+@@ -45,7 +45,7 @@
+ import org.apache.maven.wagon.observers.Debug;
+ import org.codehaus.plexus.PlexusTestCase;
+ import org.codehaus.plexus.util.FileUtils;
+-import org.easymock.MockControl;
++import org.easymock.EasyMock;
+ 
+ /**
+  * @author <a href="michal.maczka@dimatics.com">Michal Maczka</a>
+@@ -162,15 +162,14 @@ public void testGetRemoteJar()
+         StringWagon wagon = (StringWagon) wagonManager.getWagon( "string" );
+         wagon.addExpectedContent( repo.getLayout().pathOf( artifact ), "expected" );
+ 
+-        MockControl control = MockControl.createControl( UpdateCheckManager.class );
+-        control.replay();
++        EasyMock.replay();
+ 
+         wagonManager.getArtifact( artifact, repo, null, false );
+ 
+         assertTrue( artifact.getFile().exists() );
+         assertEquals( "expected", FileUtils.fileRead( artifact.getFile(), "UTF-8" ) );
+ 
+-        control.verify();
++        EasyMock.verify();
+     }
+ 
+     private Artifact createTestPomArtifact( String directory )
+diff --git a/pom.xml b/pom.xml
+index 7e0c305..b3f710f 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -44,7 +44,7 @@
+   <properties>
+     <classWorldsVersion>2.5.1</classWorldsVersion>
+     <commonsCliVersion>1.2</commonsCliVersion>
+-    <easyMockVersion>1.2_Java1.3</easyMockVersion>
++    <easyMockVersion>3.2</easyMockVersion>
+     <junitVersion>3.8.2</junitVersion>
+     <plexusVersion>1.5.5</plexusVersion>
+     <plexusInterpolationVersion>1.19</plexusInterpolationVersion>
+@@ -324,7 +324,7 @@
+       </dependency>
+       <!--bootstrap-start-comment-->
+       <dependency>
+-        <groupId>easymock</groupId>
++        <groupId>org.easymock</groupId>
+         <artifactId>easymock</artifactId>
+         <version>${easyMockVersion}</version>
+         <scope>test</scope>
+-- 
+1.9.0
+

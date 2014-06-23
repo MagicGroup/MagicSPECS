@@ -1,6 +1,6 @@
 Name:           perl-IO-Async
 Version:        0.29
-Release:        10%{?dist}
+Release:        17%{?dist}
 Summary:        A collection of modules that implement asynchronous filehandle IO
 
 Group:          Development/Libraries
@@ -56,6 +56,27 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.29-17
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.29-16
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.29-15
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.29-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.29-13
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.29-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.29-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.29-10
 - 为 Magic 3.0 重建
 

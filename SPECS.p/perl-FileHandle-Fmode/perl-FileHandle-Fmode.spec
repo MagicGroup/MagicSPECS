@@ -1,6 +1,6 @@
 Name:           perl-FileHandle-Fmode
 Version:        0.09
-Release:        17%{?dist}
+Release:        19%{?dist}
 Summary:        FileHandle::Fmode Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.09-19
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.09-18
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.09-17
 - 为 Magic 3.0 重建
 

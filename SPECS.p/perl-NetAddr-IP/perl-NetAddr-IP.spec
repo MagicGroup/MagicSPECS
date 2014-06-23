@@ -1,6 +1,6 @@
 Name:           perl-NetAddr-IP
 Version:        4.066
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Manages IPv4 and IPv6 addresses and subnets
 License:        GPLv2+
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/NetAddr::IP::UtilPP.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 4.066-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 4.066-2
 - 为 Magic 3.0 重建
 

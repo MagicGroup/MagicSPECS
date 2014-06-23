@@ -1,6 +1,6 @@
 Name:           perl-SVG-Graph
 Version:        0.02
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Visualize your data in Scalable Vector Graphics (SVG) format
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

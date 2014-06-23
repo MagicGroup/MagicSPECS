@@ -1,27 +1,35 @@
 Name:           perl-Test-Simple
 Summary:        Basic utilities for writing tests
-Version:        0.98
-Release:        242%{?dist}
+Version:        1.001003
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Simple
-Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSCHWERN/Test-Simple-%{version}.tar.gz 
+Source0:        http://search.cpan.org/CPAN/authors/id/E/EX/EXODIST/Test-Simple-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl
+BuildRequires:  perl(base)
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(IO::Handle)
 BuildRequires:  perl(IO::Pipe)
 BuildRequires:  perl(lib)
+BuildRequires:  perl(overload)
+BuildRequires:  perl(Scalar::Util) >= 1.13
+BuildRequires:  perl(strict)
+BuildRequires:  perl(Symbol)
 BuildRequires:  perl(Test::Harness) >= 2.03
+BuildRequires:  perl(warnings)
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(Data::Dumper)
+Requires:       perl(overload)
+Requires:       perl(Scalar::Util) >= 1.13
 Requires:       perl(Test::Harness) >= 2.03
-
-# Drop old -tests subpackage (can be removed F21 development cycle)
-Obsoletes:      perl-Test-Simple-tests < %{version}-%{release}
-Provides:       perl-Test-Simple-tests = %{version}-%{release}
 
 ## testing
 #Requires:       perl-tests
@@ -48,10 +56,10 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
+make test
 
-
-#cd %{_libexecdir}/perl5-tests/perl-tests/
-#prove -I %{buildroot}/blib -r t/
+#cd %%{_libexecdir}/perl5-tests/perl-tests/
+#prove -I %%{buildroot}/blib -r t/
 
 %files
 %doc Changes README examples/ t/
@@ -71,8 +79,44 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Test::Tutorial.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.98-242
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.001003-3
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001003-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Mar 22 2014 Paul Howarth <paul@city-fan.org> - 1.001003-1
+- Update to 1.001003
+  - Documentation updates for maintainer change
+- This release by EXODIST -> update source URL
+- Drop obsoletes/provides for old tests sub-package
+
+* Tue Nov  5 2013 Paul Howarth <paul@city-fan.org> - 1.001002-1
+- Update to 1.001002
+  - Restore ability to use regex with test_err and test_out (CPAN RT#89655)
+- Drop upstreamed regex patch
+
+* Sat Oct 12 2013 Paul Howarth <paul@city-fan.org> - 0.99-1
+- 0.99 bump
+- This release by RJBS -> update source URL
+
+* Fri Aug 09 2013 Petr Pisar <ppisar@redhat.com> - 0.98.05-3
+- Pass regular expression intact
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.98.05-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Petr Pisar <ppisar@redhat.com> - 0.98.05-1
+- 0.98_05 bump
+
+* Fri Jul 12 2013 Petr Pisar <ppisar@redhat.com> - 0.98-244
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.98-243
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Nov 21 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.98-242
+- Update dependencies and comments
 
 * Thu Aug 23 2012 Paul Howarth <paul@city-fan.org> - 0.98-241
 - Merge tests sub-package back into main package

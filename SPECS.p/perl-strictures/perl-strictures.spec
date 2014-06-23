@@ -1,6 +1,6 @@
 Name:           perl-strictures
 Version:        1.004002
-Release:        2%{?dist}
+Release:        8%{?dist}
 Summary:        Turn on strict and make all warnings fatal
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,24 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.004002-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.004002-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.004002-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.004002-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.004002-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.004002-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.004002-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name:           perl-Crypt-SSLeay
 Summary:        Crypt::SSLeay - OpenSSL glue that provides LWP https support
 Version:        0.58
-Release:        10%{?dist}
+Release:        21%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://www.cpan.org/authors/id/N/NA/NANIS/Crypt-SSLeay-%{version}.tar.gz
@@ -83,6 +83,39 @@ ln -s /etc/pki/tls/certs/ca-bundle.crt certs/ca-bundle.crt
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.58-21
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.58-20
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.58-19
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.58-18
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.58-17
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.58-16
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.58-15
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.58-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.58-13
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.58-12
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.58-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.58-10
 - 为 Magic 3.0 重建
 

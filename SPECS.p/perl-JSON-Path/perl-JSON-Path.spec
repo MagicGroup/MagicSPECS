@@ -1,6 +1,6 @@
 Name:           perl-JSON-Path
 Version:        0.101
-Release:        5%{?dist}
+Release:        11%{?dist}
 Summary:        Search nested hashref/arrayref structures using JSONPath
 
 License:        MIT
@@ -62,6 +62,24 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.101-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.101-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.101-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.101-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.101-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.101-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.101-5
 - 为 Magic 3.0 重建
 

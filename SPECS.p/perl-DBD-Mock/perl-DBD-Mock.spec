@@ -1,6 +1,6 @@
 Name:           perl-DBD-Mock
 Version:        1.45
-Release:        1%{?dist}
+Release:        8%{?dist}
 Summary:        Mock database driver for testing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,27 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.45-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.45-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.45-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.45-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.45-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.45-3
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.45-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 22 2012 Petr Pisar <ppisar@redhat.com> - 1.45-1
 - 1.45 bump
 

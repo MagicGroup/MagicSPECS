@@ -1,10 +1,11 @@
 Name:           lcms2
-Version:        2.5
+Version:	2.6
 Release:        2%{?dist}
 Summary:        Color Management Engine
+Summary(zh_CN.UTF-8): 颜色管理系统
 License:        MIT
 URL:            http://www.littlecms.com/
-Source0:        http://www.littlecms.com/lcms2-2.5.tar.gz
+Source0:        http://www.littlecms.com/lcms2-%{version}.tar.gz
 
 BuildRequires:  libjpeg-devel
 BuildRequires:  libtiff-devel
@@ -15,25 +16,38 @@ LittleCMS intends to be a small-footprint, speed optimized color management
 engine in open source form. LCMS2 is the current version of LCMS, and can be
 parallel installed with the original (deprecated) lcms.
 
+%description -l zh_CN.UTF-8
+颜色管理系统。
+
 %package        utils
 Summary:        Utility applications for %{name}
+Summary(zh_CN.UTF-8): %{name} 工具程序
 Group:          Applications/Productivity
+Group(zh_CN.UTF-8): 应用程序/生产力
 Requires:       %{name} = %{version}-%{release}
 
 %description    utils
 The %{name}-utils package contains utility applications for %{name}.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的工具程序。
+
 %package        devel
 Summary:        Development files for LittleCMS
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Provides:       littlecms-devel = %{version}-%{release}
 
 %description    devel
 Development files for LittleCMS.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
-%setup -q -n lcms2-2.5
+%setup -q -n lcms2-%{version}
 
 %build
 %configure --disable-static --program-suffix=2
@@ -52,9 +66,10 @@ install -D -m 644 include/lcms2.h $RPM_BUILD_ROOT/usr/include/lcms2.h
 install -D -m 644 include/lcms2_plugin.h $RPM_BUILD_ROOT/usr/include/lcms2_plugin.h
 
 # install docs as this is all we've got
-install -D -m 644 doc/LittleCMS2.?\ tutorial.pdf $RPM_BUILD_ROOT/usr/share/doc/lcms2-devel-2.5/tutorial.pdf
-install -D -m 644 doc/LittleCMS2.?\ API.pdf $RPM_BUILD_ROOT/usr/share/doc/lcms2-devel-2.5/api.pdf
-install -D -m 644 doc/LittleCMS2.?\ Plugin\ API.pdf $RPM_BUILD_ROOT/usr/share/doc/lcms2-devel-2.5/plugin-api.pdf
+install -D -m 644 doc/LittleCMS2.?\ tutorial.pdf $RPM_BUILD_ROOT/usr/share/doc/lcms2-devel-%{version}/tutorial.pdf
+install -D -m 644 doc/LittleCMS2.?\ API.pdf $RPM_BUILD_ROOT/usr/share/doc/lcms2-devel-%{version}/api.pdf
+install -D -m 644 doc/LittleCMS2.?\ Plugin\ API.pdf $RPM_BUILD_ROOT/usr/share/doc/lcms2-devel-%{version}/plugin-api.pdf
+magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -75,12 +90,15 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files devel
 %defattr(-,root,root,-)
-%{_datadir}/doc/lcms2-devel-2.5/*.pdf
+%{_datadir}/doc/lcms2-devel-%{version}/*.pdf
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 2.6-2
+- 更新到 2.6
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

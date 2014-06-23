@@ -12,7 +12,7 @@
 Name:           perl-POE-Component-IRC
 Summary:        A POE component for building IRC clients
 Version:        6.81
-Release:        3%{?dist}
+Release:        5%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BI/BINGOS/POE-Component-IRC-%{version}.tar.gz 
@@ -102,6 +102,12 @@ find %{buildroot} -type f -name '*.pm' -exec chmod -x {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.81-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.81-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 26 2012 Petr Šabata <contyk@redhat.com> - 6.81-3
 - Correct the Obsoletes tests version to 6.81, thanks to Ralf Corsepius
 

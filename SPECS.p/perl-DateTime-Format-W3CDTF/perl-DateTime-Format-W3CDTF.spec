@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-W3CDTF
 Version:        0.06
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Parse and format W3CDTF datetime strings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,6 +40,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.06-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-4
 - 为 Magic 3.0 重建
 

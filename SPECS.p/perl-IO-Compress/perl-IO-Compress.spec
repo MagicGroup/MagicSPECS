@@ -2,37 +2,43 @@
 %{?perl_default_filter}
 
 Name:           perl-IO-Compress
-Version:        2.046
-Release:        3%{?dist}
+Version:        2.064
+Release:        4%{?dist}
 Summary:        Read and write compressed data
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/IO-Compress/
-Source0:        http://www.cpan.org/authors/id/P/PM/PMQS/IO-Compress-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PM/PMQS/IO-Compress-%{version}.tar.gz
 BuildArch:      noarch
-Requires:       perl(Exporter)
-BuildRequires:  perl(bytes)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Compress::Raw::Bzip2) >= %{version}
+BuildRequires:  perl(Compress::Raw::Zlib) >= %{version}
 BuildRequires:  perl(constant)
-BuildRequires:  perl(Compress::Raw::Bzip2) >= 2.045
-BuildRequires:  perl(Compress::Raw::Zlib) >= 2.045
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(File::Copy)
-BuildRequires:  perl(File::GlobMapper)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(IO::File)
 BuildRequires:  perl(IO::Handle)
 BuildRequires:  perl(IO::Seekable)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(List::Util)
 BuildRequires:  perl(Scalar::Util)
-BuildRequires:  perl(Symbol)
-BuildRequires:  perl(Test::Pod) >= 1.00, perl(Test::NoWarnings)
-BuildRequires:  perl(Test::Builder), perl(Test::More), perl(Config)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Dual-lived module needs building early in the boot process
+%if !%{defined perl_bootstrap}
+BuildRequires:  perl(Test::NoWarnings)
+BuildRequires:  perl(Test::Pod) >= 1.00
+%endif
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 # this is wrapper for different Compress modules
-Provides:       perl-Compress-Zlib = %{version}-%{release}
 Obsoletes:      perl-Compress-Zlib < %{version}-%{release}
-Provides:       perl-IO-Compress-Base = %{version}-%{release}
+Provides:       perl-Compress-Zlib = %{version}-%{release}
 Obsoletes:      perl-IO-Compress-Base < %{version}-%{release}
-Provides:       perl-IO-Compress-Bzip2 = %{version}-%{release}
+Provides:       perl-IO-Compress-Base = %{version}-%{release}
 Obsoletes:      perl-IO-Compress-Bzip2 < %{version}-%{release}
+Provides:       perl-IO-Compress-Bzip2 = %{version}-%{release}
 Obsoletes:      perl-IO-Compress-Zlib < %{version}-%{release}
 Provides:       perl-IO-Compress-Zlib = %{version}-%{release}
 
@@ -45,7 +51,6 @@ RFC 1952 (i.e. gzip) and zip files/buffers.
 
 The following modules used to be distributed separately, but are now
 included with the IO-Compress distribution:
-
 * Compress-Zlib
 * IO-Compress-Zlib
 * IO-Compress-Bzip2
@@ -55,26 +60,26 @@ included with the IO-Compress distribution:
 %setup -q -n IO-Compress-%{version}
 
 # Remove spurious exec permissions
-chmod -x lib/IO/Uncompress/{Adapter/Identity,RawInflate}.pm
-find examples -type f -exec chmod -x {} +
+chmod -c -x lib/IO/Uncompress/{Adapter/Identity,RawInflate}.pm
+find examples -type f -exec chmod -c -x {} \;
+
 # Fix shellbangs in examples
-%{__perl} -pi -e 's|^#!/usr/local/bin/perl\b|#!%{__perl}|' examples/io/anycat \
+perl -pi -e 's|^#!/usr/local/bin/perl\b|#!%{__perl}|' examples/io/anycat \
         examples/io/bzip2/* examples/io/gzip/* examples/compress-zlib/*
 
 %build
-%{__perl} Makefile.PL
+perl Makefile.PL
 make %{?_smp_mflags}
 
 %install
-make pure_install DESTDIR=%{buildroot}
-find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
+make pure_install DESTDIR=%{buildroot} INSTALLDIRS=perl
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
 # Build using "--without long_tests" to avoid very long tests
 # (full suite can take nearly an hour on an i7)
- %{?with_long_tests:COMPRESS_ZLIB_RUN_ALL=1}
+make test %{?with_long_tests:COMPRESS_ZLIB_RUN_ALL=1}
 
 %files
 %doc Changes README examples/*
@@ -103,8 +108,128 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/IO::Uncompress::*.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.046-3
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.064-4
 - 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.064-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.064-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Feb  2 2014 Paul Howarth <paul@city-fan.org> - 2.064-1
+- Update to 2.064
+  - Use android-compatible flags when calling gzip in
+    IO-Compress/t/050interop-gzip.t (CPAN RT#90216)
+
+* Sun Nov  3 2013 Paul Howarth <paul@city-fan.org> - 2.063-1
+- Update to 2.063
+  - Typo in Compress::Zlib _combine function documentation (CPAN RT#89305)
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 2.062-2
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Mon Aug 12 2013 Paul Howarth <paul@city-fan.org> - 2.062-1
+- Update to 2.062
+  - Fix up tests for imminent bleadperl changes (CPAN RT#87335)
+  - Typo fixes (CPAN RT#84647)
+  - IO::Compress::Gzip test t/100generic-bzip2.t hung on Cygwin (CPAN RT#86814)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.061-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 12 2013 Petr Pisar <ppisar@redhat.com> - 2.061-2
+- Perl 5.18 rebuild
+
+* Mon May 27 2013 Paul Howarth <paul@city-fan.org> - 2.061-1
+- Update to 2.061
+  - zipdetails (1.06)
+    - Get it to cope with Android 'zipalign' non-standard extra fields; these
+      are used to make sure that a non-compressed member starts on a 4 byte
+      boundary
+  - unzip example with IO::Uncompress::Unzip (CPAN RT#84647)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.060-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan  8 2013 Paul Howarth <paul@city-fan.org> - 2.060-1
+- Update to 2.060
+  - Updated POD
+    - CPAN RT#82138: Example code not clear - gunzip() takes filenames!
+  - IO::Compress::Base
+    - Remove the flush call when opening a filehandle
+
+* Sun Dec 16 2012 Paul Howarth <paul@city-fan.org> - 2.059-1
+- Update to 2.059
+  - IO::Compress::Base
+    - Added "Encode" option (fixes the encoding half of CPAN RT#42656)
+
+* Mon Nov 26 2012 Petr Šabata <contyk@redhat.com> - 2.058-2
+- Add missing File::* buildtime dependencies
+
+* Tue Nov 13 2012 Paul Howarth <paul@city-fan.org> - 2.058-1
+- Update to 2.058
+  - IO::Compress::Zip
+    - Allow member name and Zip Comment to be "0"
+  - IO::Compress::Base::Common
+    - Remove "-r" test - the file open will catch this
+    - IO::Compress::Base::Common returned that it could not read readable files
+      in NFS (CPAN RT#80855)
+  - Install to 'site' instead of 'perl' when perl version is 5.11+
+    (CPAN RT#79820)
+  - General performance improvements
+  - Fix failing 01misc.t subtest introduced in 2.057 (CPAN RT#81119)
+- Explicitly install to 'perl' directories
+
+* Mon Aug  6 2012 Paul Howarth <paul@city-fan.org> - 2.055-1
+- Update to 2.055
+  - FAQ: added a few paragraphs on how to deal with pbzip2 files
+    (CPAN RT#77743)
+  - Compress::Zip: speed up compress, uncompress, memGzip and memGunzip
+    (CPAN RT#77350)
+- BR: perl(lib)
+- Drop BR: perl(Test::Builder) and perl(Test::More) as they're bundled
+- Drop BR: perl(Config), perl(Fcntl), perl(File::Copy), perl(File::Glob),
+  perl(POSIX) and perl(Symbol) as they're not dual-lived
+- Drop redundant explicit require for perl(Exporter)
+- Don't use macros for commands
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.052-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 2.052-4
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 2.052-3
+- Perl 5.16 rebuild
+
+* Fri Jun 01 2012 Petr Pisar <ppisar@redhat.com> - 2.052-2
+- Omit optional Test::Pod and Test::NoWarnings tests on bootstrap
+
+* Sun Apr 29 2012 Paul Howarth <paul@city-fan.org> - 2.052-1
+- Update to 2.052
+  - IO::Compress::Zip: force a ZIP64 archive when it contains ≥ 0xFFFF entries
+  - Fix typo in POD (CPAN RT#76130)
+- Don't need to remove empty directories from buildroot
+
+* Sat Feb 18 2012 Paul Howarth <paul@city-fan.org> - 2.049-1
+- Update to 2.049
+  - IO::Compress::Zip:
+    - Error in t/cz-03zlib-v1.t that caused warnings with 5.15 (Perl RT#110736)
+
+* Sun Jan 29 2012 Paul Howarth <paul@city-fan.org> - 2.048-1
+- Update to 2.048
+  - Set minimum Perl version to 5.6
+  - Set minimum zlib version to 1.2.0
+  - IO::Compress::Zip:
+    - In one-shot zip, set the Text Flag if "-T" thinks the file is a text file
+    - In one-shot mode, wrote mod time and access time in wrong order in the
+      "UT" extended field
+  - IO::Compress test suite fails with Compress::Raw::Zlib 2.047 and zlib < 1.2.4
+    (CPAN RT#74503)
+- Resync Compress::Raw::* dependency versions
+- Add buildreqs for core perl modules, which might be dual-lived
+- Don't use macros for commands
 
 * Tue Jan 10 2012 Paul Howarth <paul@city-fan.org> - 2.046-2
 - Fedora 17 mass rebuild

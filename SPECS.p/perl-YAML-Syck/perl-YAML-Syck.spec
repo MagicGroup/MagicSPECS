@@ -1,14 +1,15 @@
 Name:           perl-YAML-Syck
-Version:        1.20 
-Release:        4%{?dist}
+Version:        1.27
+Release:        5%{?dist}
 Summary:        Fast, lightweight YAML loader and dumper
 License:        BSD and MIT
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML-Syck/
 Source0:        http://www.cpan.org/authors/id/T/TO/TODDR/YAML-Syck-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# Keep bundled inc::Module::Install to break cycle perl-Modules-Install
-# → perl-YAML-Tiny → perl-YAML-Syck.
+Patch0:         0001-Recognize-all-wide-unicode-characters.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
+# Keep bundled inc::Module::Install to break cycle
+# perl-Module-Install → perl-YAML-Tiny → perl-YAML-Syck
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Spec)
@@ -27,7 +28,8 @@ BuildRequires:  perl(Tie::Hash)
 # Optional tests
 BuildRequires:  perl(Devel::Leak)
 BuildRequires:  perl(JSON)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(XSLoader)
 
 %{?perl_default_filter}
 
@@ -40,38 +42,89 @@ structures to YAML strings, and the other way around.
 %setup -q -n YAML-Syck-%{version}
 rm -rf inc/parent inc/PerlIO.pm inc/Test
 
+# Work around test failures on PPC and ARM (#919806, CPAN RT#83825)
+%patch0 -p1
+
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc Changes COMPATIBILITY COPYING README
-%{perl_vendorarch}/auto/*
-%{perl_vendorarch}/YAML*
-%{perl_vendorarch}/JSON*
-%{_mandir}/man3/*
+%{perl_vendorarch}/auto/YAML/
+%{perl_vendorarch}/YAML/
+%{perl_vendorarch}/JSON/
+%{_mandir}/man3/JSON::Syck.3pm*
+%{_mandir}/man3/YAML::Syck.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.20-4
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.27-5
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.27-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.27-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 1.27-2
+- Perl 5.18 rebuild
+
+* Tue May 21 2013 Paul Howarth <paul@city-fan.org> 1.27-1
+- Update to 1.27
+  - Fix for hash randomization in yaml-alias.t on perl 5.18.0 (CPAN RT#84882,
+    CPAN RT#84466)
+
+* Mon Mar 11 2013 Paul Howarth <paul@city-fan.org> 1.25-1
+- Update to 1.25
+  - Bump version number and release to fix a MANIFEST mistake in 1.24
+
+* Sun Mar 10 2013 Paul Howarth <paul@city-fan.org> 1.24-2
+- Work around test failures on PPC and ARM (#919806, CPAN RT#83825)
+
+* Thu Mar  7 2013 Paul Howarth <paul@city-fan.org> 1.24-1
+- Update to 1.24
+  - Implement $JSON::Syck::MaxDepth
+  - Prevent failure when the same object is seen twice during Dump
+  - Prevent YAML from being influenced by the previous change
+  - MinGW64 compatibility (CPAN RT#78363)
+
+* Wed Feb 27 2013 Paul Howarth <paul@city-fan.org> 1.23-1
+- Update to 1.23
+  - Synchronize JSON::Syck with YAML::Syck version number
+  - Add DumpInto functions (YAML+Syck), which dump into a provided scalar
+    instead of a newly-allocated one
+  - Modify DumpFile functions to output directly to the specified
+    file/filehandle instead of buffering all output in memory
+  - Avoid modifying numbers into strings when emitting
+  - Fix error message typo: s/existant/existent/g
+  - Fix for non-printable character detection
+  - Quote if non-printable characters are present
+  - Make sure that LoadBlessed=0 blocks all blessing
+  - Start listing primary repo as http://github.com/toddr/YAML-Syck
+  - README refreshed via perldoc -t
+- Require perl(XSLoader) at runtime
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+- Don't use macros for commands
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Make %%files list more explicit
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

@@ -1,6 +1,6 @@
 Name:           perl-Test-File-Contents
 Version:        0.20
-Release:        4%{?dist}
+Release:        10%{?dist}
 Summary:        Test routines for examining the contents of files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.20-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.20-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.20-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.20-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.20-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.20-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.20-4
 - 为 Magic 3.0 重建
 

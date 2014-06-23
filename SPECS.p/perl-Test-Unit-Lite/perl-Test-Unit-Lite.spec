@@ -4,7 +4,7 @@
 Name:		perl-Test-Unit-Lite
 Epoch:		1
 Version:	0.12
-Release:	15%{?dist}
+Release:	21%{?dist}
 Summary:	Unit testing without external dependencies
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -62,6 +62,24 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Unit::Lite.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1:0.12-21
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.12-20
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:0.12-19
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:0.12-18
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:0.12-17
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:0.12-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:0.12-15
 - 为 Magic 3.0 重建
 

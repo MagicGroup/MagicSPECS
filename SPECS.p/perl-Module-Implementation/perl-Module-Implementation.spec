@@ -9,7 +9,7 @@
 
 Name:		perl-Module-Implementation
 Version:	0.06
-Release:	6%{?dist}
+Release:	8%{?dist}
 Summary:	Loads one of several alternate underlying implementations for a module
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -101,6 +101,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Implementation.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-6
 - 为 Magic 3.0 重建
 

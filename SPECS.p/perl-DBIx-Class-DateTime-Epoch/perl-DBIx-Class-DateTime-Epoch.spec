@@ -1,7 +1,7 @@
 Name:           perl-DBIx-Class-DateTime-Epoch
 Summary:        Automatic inflation/deflation of epoch-based DateTime objects for DBIx::Class
 Version:        0.08
-Release:        4%{?dist}
+Release:        15%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BR/BRICAS/DBIx-Class-DateTime-Epoch-%{version}.tar.gz 
@@ -59,6 +59,39 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-15
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.08-14
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.08-13
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.08-12
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.08-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.08-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.08-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.08-4
 - 为 Magic 3.0 重建
 

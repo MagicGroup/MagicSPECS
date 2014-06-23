@@ -1,0 +1,14 @@
+diff -up eperl-2.2.14/eperl_perl5.h.orig eperl-2.2.14/eperl_perl5.h
+--- eperl-2.2.14/eperl_perl5.h.orig	2012-08-06 10:26:49.000000000 +0200
++++ eperl-2.2.14/eperl_perl5.h	2012-08-06 10:38:28.846820349 +0200
+@@ -72,10 +72,6 @@
+ #  define PL_curstash curstash
+ #endif
+ 
+-#ifndef WITH_THR
+-#  define PL_defoutgv defoutgv
+-#endif
+-
+ /*  
+   Initialization of locales when building a new Perl interpreter.
+      Perl 5.003 calls perl_init_i18nl14n

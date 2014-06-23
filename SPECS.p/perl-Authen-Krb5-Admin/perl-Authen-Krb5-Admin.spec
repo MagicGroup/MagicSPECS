@@ -1,6 +1,6 @@
 Name:           perl-Authen-Krb5-Admin
 Version:        0.11
-Release:        14%{?dist}
+Release:        16%{?dist}
 Summary:        Perl extension for MIT Kerberos 5 admin interface
 Group:          Development/Libraries
 # admin.h - MIT
@@ -60,6 +60,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-16
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.11-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.11-14
 - 为 Magic 3.0 重建
 

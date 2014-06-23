@@ -1,6 +1,6 @@
 Name:           perl-Test-YAML-Meta
 Version:        0.19
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Validation of the META.yml file in a distribution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.19-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.19-5
 - 为 Magic 3.0 重建
 

@@ -4,14 +4,17 @@
 setenv PERL_HOMEDIR 1
 
 # load our configs, aka opportunities to set PERL_HOMEDIR=0
-[ -f /etc/sysconfig/perl-homedir ] && . /etc/sysconfig/perl-homedir
-[ -f $HOME/.perl-homedir         ] && . $HOME/.perl-homedir
+if (-f /etc/sysconfig/perl-homedir) then
+	source /etc/sysconfig/perl-homedir
+endif
+if (-f "$HOME/.perl-homedir") then
+	source "$HOME/.perl-homedir"
+endif
 
-alias perlll="eval `perl -Mlocal::lib`"
+alias perlll 'eval "`perl -Mlocal::lib`"'
 
 # if system default
-if [ "x$PERL_HOMEDIR" = "x1" ] ; then
-
-    eval `perl -Mlocal::lib`
-fi
+if ("x$PERL_HOMEDIR" == "x1") then
+	eval "`perl -Mlocal::lib`"
+endif
 

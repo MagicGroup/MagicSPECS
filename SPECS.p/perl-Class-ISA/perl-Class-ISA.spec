@@ -1,6 +1,6 @@
 Name:           perl-Class-ISA
 Version:        0.36
-Release:        1010%{?dist}
+Release:        1012%{?dist}
 Summary:        Report the search path for a class's ISA tree
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,6 +37,12 @@ rm -rf %{buildroot}/%{_mandir}/man3/*
 %{perl_vendorlib}/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.36-1012
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.36-1011
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.36-1010
 - 为 Magic 3.0 重建
 

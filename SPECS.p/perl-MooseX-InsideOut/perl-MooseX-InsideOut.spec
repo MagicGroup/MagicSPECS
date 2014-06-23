@@ -1,6 +1,6 @@
 Name:           perl-MooseX-InsideOut
 Version:        0.106
-Release:        5%{?dist}
+Release:        14%{?dist}
 Summary:        Inside-out objects with Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,33 @@ TEST_POD=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.106-14
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.106-13
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.106-12
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.106-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.106-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.106-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.106-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.106-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.106-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.106-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

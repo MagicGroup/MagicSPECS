@@ -1,7 +1,7 @@
 
 Name:       perl-Tie-ToObject 
 Version:    0.03 
-Release:    15%{?dist}
+Release:    16%{?dist}
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
 Summary:    Tie to an existing object 
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-15
 - 为 Magic 3.0 重建
 

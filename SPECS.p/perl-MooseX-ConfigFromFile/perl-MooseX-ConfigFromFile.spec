@@ -1,6 +1,6 @@
 Name:       perl-MooseX-ConfigFromFile 
 Version:    0.04
-Release:    4%{?dist}
+Release:    5%{?dist}
 # see lib/MooseX/ConfigFromFile.pm
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

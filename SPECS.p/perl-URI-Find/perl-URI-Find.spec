@@ -1,7 +1,7 @@
 Name:           perl-URI-Find
 Summary:        Find URIs in plain text
 Version:        20111103
-Release:        4%{?dist}
+Release:        17%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSCHWERN/URI-Find-%{version}.tar.gz 
@@ -21,7 +21,7 @@ Requires:       perl(URI::URL) >= 5.00
 
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 This module does one thing: Finds URIs and URLs in plain text. It finds
@@ -58,6 +58,45 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 20111103-17
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 20111103-16
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 20111103-15
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 20111103-14
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 20111103-13
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 20111103-12
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 20111103-11
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 20111103-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 20111103-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 20111103-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 20111103-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 20111103-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 20111103-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 20111103-4
 - 为 Magic 3.0 重建
 

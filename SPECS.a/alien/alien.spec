@@ -1,6 +1,6 @@
 
 %define name alien
-%define version 8.89
+%define version 8.91
 %define release 1%{?dist}
 
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_localstatedir}/lib/alien
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 8.91-1
+- 更新到 8.91
+
 * Thu Feb 27 2014 Liu Di <liudidi@gmail.com> - 8.89-1
 - 更新到 8.89
 

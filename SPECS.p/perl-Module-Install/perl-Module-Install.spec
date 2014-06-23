@@ -1,39 +1,42 @@
 Name:           perl-Module-Install
 Version:        1.06
-Release:        2%{?dist}
+Release:        8%{?dist}
 Summary:        Standalone, extensible Perl module installer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Module-Install/
 Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/Module-Install-%{version}.tar.gz
+# Fix tests with Parse::CPAN::Meta >= 1.4413, in 1.08, CPAN RT#93293
+Patch0:         Module-Install-1.06-Resolve-RT-93293-test-failure.patch
 BuildArch:      noarch
-
-# Note, Makefile.PL is going to complain about having lower versions of
-# certain modules than is supported. (Especially under F-10.) However, 
-# all tests pass and AFAICT everything works just fine in normal usage.
-
 BuildRequires:  perl(Archive::Tar) >= 1.44
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(CPAN)
+BuildRequires:  perl(CPANPLUS::Backend)
+BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Devel::PPPort) >= 3.16
 BuildRequires:  perl(ExtUtils::Install) >= 1.52
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(ExtUtils::Manifest)
+BuildRequires:  perl(ExtUtils::MM)
 BuildRequires:  perl(ExtUtils::ParseXS) >= 2.19
 BuildRequires:  perl(File::Remove) >= 1.42
+BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Spec) >= 3.28
+BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(JSON) >= 2.14
+BuildRequires:  perl(lib)
 BuildRequires:  perl(LWP::UserAgent) >= 5.812
 BuildRequires:  perl(Module::Build) >= 0.29
 BuildRequires:  perl(Module::CoreList) >= 2.17
 BuildRequires:  perl(Module::ScanDeps) >= 0.89
 BuildRequires:  perl(PAR::Dist) >= 0.29
-BuildRequires:  perl(Parse::CPAN::Meta) >= 1.39
+BuildRequires:  perl(Parse::CPAN::Meta) >= 1.4413
 BuildRequires:  perl(Test::CPAN::Meta) >= 0.07
 BuildRequires:  perl(Test::Harness) >= 3.13
-BuildRequires:  perl(Test::MinimumVersion)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(YAML::Tiny) >= 1.38
-Requires:       perl(Archive::Tar)
 Requires:       perl(Carp)
 Requires:       perl(CPAN)
 Requires:       perl(CPANPLUS::Backend)
@@ -41,7 +44,7 @@ Requires:       perl(ExtUtils::ParseXS)
 Requires:       perl(Module::Build)
 Requires:       perl(Module::ScanDeps)
 Requires:       perl(PAR::Dist) >= 0.29
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Module::Install is a package for writing installers for CPAN (or CPAN-like)
@@ -51,22 +54,20 @@ version 5.005 or newer.
 
 %prep
 %setup -q -n Module-Install-%{version}
+%patch0 -p1
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-make pure_install DESTDIR=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-rm -rf $RPM_BUILD_ROOT/blib/lib/auto/share/dist/Module-Install/dist_file.txt
-%{_fixperms} $RPM_BUILD_ROOT/*
-find $RPM_BUILD_ROOT%{perl_vendorlib} -type f -perm +100 -exec chmod a-x {} \;
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+rm -rf %{buildroot}/blib/lib/auto/share/dist/Module-Install/dist_file.txt
+%{_fixperms} %{buildroot}/*
 
 %check
- AUTOMATED_TESTING=1
+make test AUTOMATED_TESTING=1
 
 %files
 %doc Changes LICENSE README
@@ -74,8 +75,29 @@ find $RPM_BUILD_ROOT%{perl_vendorlib} -type f -perm +100 -exec chmod a-x {} \;
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.06-2
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.06-8
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.06-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr 01 2014 Petr Pisar <ppisar@redhat.com> - 1.06-6
+- Do not build-require Test::MinimumVersion, xt tests are not performed
+- Fix tests with Parse::CPAN::Meta >= 1.4413 (CPAN RT#93293)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.06-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Aug 01 2013 Petr Pisar <ppisar@redhat.com> - 1.06-4
+- Perl 5.18 rebuild
+
+* Wed Jan 30 2013 Paul Howarth <paul@city-fan.org> - 1.06-3
+- Don't "unbundle" Module::Install as we end up build-requiring ourselves
+
+* Tue Nov 20 2012 Petr Šabata <contyk@redhat.com> - 1.06-2
+- Add missing deps
+- Unbundle Module::Install
+- Modernize the spec
 
 * Fri Oct 05 2012 Petr Šabata <contyk@redhat.com> - 1.06-1
 - 1.06 bump

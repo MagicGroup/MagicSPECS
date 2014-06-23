@@ -1,7 +1,7 @@
 Summary:	Manage IO on many file handles
 Name:		perl-IO-Multiplex
 Version:	1.13
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/IO-Multiplex/
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::Multiplex.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.13-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.13-5
 - 为 Magic 3.0 重建
 

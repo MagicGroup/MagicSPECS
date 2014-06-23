@@ -1,59 +1,100 @@
 Name:           perl-File-DesktopEntry
-Version:        0.04
-Release:        17%{?dist}
+Version:        0.08
+Release:        4%{?dist}
 Summary:        Object to handle .desktop files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/File-DesktopEntry/
-Source0:        http://www.cpan.org/authors/id/P/PA/PARDUS/File-DesktopEntry/File-DesktopEntry-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://www.cpan.org/authors/id/M/MI/MICHIELB/File-DesktopEntry-%{version}.tar.gz
+#http://rt.cpan.org/Public/Bug/Display.html?id=76843
+Patch0:         File-DesktopEntry-encode.patch
 BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker) perl(Module::Build)
-BuildRequires:  perl(Test::More) perl(Test::Pod) perl(Test::Pod::Coverage)
-BuildRequires:  perl(File::BaseDir)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
+# Run-time:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(File::BaseDir) >= 0.03
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(vars)
+# Tests:
+BuildRequires:  perl(Module::Build)
+BuildRequires:  perl(Test::More) 
+# Optional tests
+BuildRequires:  perl(Test::Pod) >= 1.00
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.00
+
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Cwd)
+Requires:       perl(File::Path)
 
 %description
 This module is used to work with .desktop files. The format of these files
-is specified by the freedesktop "Desktop Entry" specification. See
-http://freedesktop.org/wiki/Standards_2fdesktop_2dentry_2dspec. For this
-module version 0.9.4 of the specification was used.
+is specified by the freedesktop "Desktop Entry" specification. This module
+can parse these files but also knows how to run the applications defined by
+these files. For this module version 1.0 of the specification was used.
 
 %prep
 %setup -q -n File-DesktopEntry-%{version}
+%patch0 -p1
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.04-17
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-4
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-16
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.08-3
 - 为 Magic 3.0 重建
+
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 0.08-2
+- 为 Magic 3.0 重建
+
+* Tue Oct 08 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.08-1
+- 0.08 bump
+- Update patch and BR
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 0.05-2
+- Perl 5.18 rebuild
+
+* Fri Jun 07 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.05-1
+- 0.05 bump
+- Clean up spec
+- Update source URL
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.04-17
+- Perl 5.16 rebuild
+
+* Fri Apr 27 2012 Marcela Mašláňová <mmaslano@redhat.com> - 0.04-15
+- apply patch from MozBug for fixing encoding of utf-8 files 816809, cpan#76843
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

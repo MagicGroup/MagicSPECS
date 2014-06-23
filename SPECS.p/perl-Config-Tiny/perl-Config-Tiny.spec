@@ -1,6 +1,6 @@
 Name:		perl-Config-Tiny
 Version:	2.14
-Release:	7%{?dist}
+Release:	9%{?dist}
 Summary:	Perl module for reading and writing .ini style configuration files
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -54,6 +54,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Config::Tiny.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.14-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.14-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.14-7
 - 为 Magic 3.0 重建
 

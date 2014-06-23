@@ -1,6 +1,6 @@
 Name:         perl-NOCpulse-Utils
 Version:      1.14.11
-Release:      12%{?dist}
+Release:      13%{?dist}
 Summary:      NOCpulse utility packages
 URL:          https://fedorahosted.org/spacewalk
 Source0:      https://fedorahosted.org/releases/s/p/spacewalk/%{name}-%{version}.tar.gz
@@ -45,6 +45,9 @@ mkdir -p $RPM_BUILD_ROOT%{_mandir}/man3/
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.14.11-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.14.11-12
 - 为 Magic 3.0 重建
 

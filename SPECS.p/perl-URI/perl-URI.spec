@@ -1,6 +1,6 @@
 Name:           perl-URI
 Version:        1.60
-Release:        6%{?dist}
+Release:        12%{?dist}
 Summary:        A Perl module implementing URI parsing and manipulation
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -67,6 +67,24 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/URI::ldap.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.60-12
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.60-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.60-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.60-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.60-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.60-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.60-6
 - 为 Magic 3.0 重建
 

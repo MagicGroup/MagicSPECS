@@ -1,24 +1,24 @@
-%define majorver 8.5
-%define	vers %{majorver}.13
+%define majorver 8.6
+%define	vers %{majorver}.1
 %{!?sdt:%define sdt 1}
 
 Summary: Tool Command Language, pronounced tickle
 Name: tcl
 Version: %{vers}
-Release: 2%{?dist}
+Release: 6%{?dist}
 Epoch: 1
 License: TCL
 Group: Development/Languages
 URL: http://tcl.sourceforge.net/
-Source0: http://downloads.sourceforge.net/sourceforge/tcl/tcl%{version}-src.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0: http://downloads.sourceforge.net/sourceforge/tcl/tcl-core%{version}-src.tar.gz
 Buildrequires: autoconf
+BuildRequires: zlib-devel
 Provides: tcl(abi) = %{majorver}
 Obsoletes: tcl-tcldict <= %{vers}
 Provides: tcl-tcldict = %{vers}
-Patch0: tcl-8.5.1-autopath.patch
-Patch1: tcl-8.5.10-conf.patch
-Patch2: tcl-8.5.12-hidden.patch
+Patch0: tcl-8.6.1-autopath.patch
+Patch1: tcl-8.6.1-conf.patch
+Patch2: tcl-8.6.1-hidden.patch
 
 %if %sdt
 BuildRequires: systemtap-sdt-devel
@@ -51,7 +51,8 @@ The package contains the development files and man pages for tcl.
 
 %prep
 %setup -q -n %{name}%{version}
-chmod -x generic/tclThreadAlloc.c
+rm -r compat/zlib
+chmod -x generic/tclStrToD.c
 
 %patch0 -p1 -b .autopath
 %patch1 -p1 -b .conf
@@ -64,11 +65,11 @@ autoconf
 %if %sdt
 --enable-dtrace \
 %endif
---disable-threads \
+--enable-threads \
 --enable-symbols \
 --enable-shared
 
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS" TCL_LIBRARY=%{_datadir}/%{name}%{majorver}
+make %{?_smp_mflags} CFLAGS="%{optflags}" TCL_LIBRARY=%{_datadir}/%{name}%{majorver}
 
 %check
 %{?_without_check: %define _without_check 1}
@@ -80,34 +81,30 @@ make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS" TCL_LIBRARY=%{_datadir}/%{name}%{ma
 %endif
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install -C unix INSTALL_ROOT=$RPM_BUILD_ROOT TCL_LIBRARY=%{_datadir}/%{name}%{majorver}
+make install -C unix INSTALL_ROOT=%{buildroot} TCL_LIBRARY=%{_datadir}/%{name}%{majorver}
 
-ln -s tclsh%{majorver} $RPM_BUILD_ROOT%{_bindir}/tclsh
+ln -s tclsh%{majorver} %{buildroot}%{_bindir}/tclsh
 
 # for linking with -lib%%{name}
-ln -s lib%{name}%{majorver}.so $RPM_BUILD_ROOT%{_libdir}/lib%{name}.so
+ln -s lib%{name}%{majorver}.so %{buildroot}%{_libdir}/lib%{name}.so
 
-mkdir -p $RPM_BUILD_ROOT/%{_libdir}/%{name}%{majorver}
+mkdir -p %{buildroot}/%{_libdir}/%{name}%{majorver}
 
 # postgresql and maybe other packages too need tclConfig.sh
-# paths don't look at /usr/lib for efficiency, so we symlink into tcl8.5 for now
-ln -s %{_libdir}/%{name}Config.sh $RPM_BUILD_ROOT/%{_libdir}/%{name}%{majorver}/%{name}Config.sh
+# paths don't look at /usr/lib for efficiency, so we symlink into tcl8.6 for now
+ln -s %{_libdir}/%{name}Config.sh %{buildroot}/%{_libdir}/%{name}%{majorver}/%{name}Config.sh
 
-mkdir -p $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/{generic,unix}
-find generic unix -name "*.h" -exec cp -p '{}' $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/'{}' ';'
-( cd $RPM_BUILD_ROOT/%{_includedir}
+mkdir -p %{buildroot}/%{_includedir}/%{name}-private/{generic,unix}
+find generic unix -name "*.h" -exec cp -p '{}' %{buildroot}/%{_includedir}/%{name}-private/'{}' ';'
+( cd %{buildroot}/%{_includedir}
 	for i in *.h ; do
-		[ -f $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/generic/$i ] && ln -sf ../../$i $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/generic ;
+		[ -f %{buildroot}/%{_includedir}/%{name}-private/generic/$i ] && ln -sf ../../$i %{buildroot}/%{_includedir}/%{name}-private/generic ;
 	done
 )
 
 # remove buildroot traces
-sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" $RPM_BUILD_ROOT/%{_libdir}/%{name}Config.sh
-rm -rf $RPM_BUILD_ROOT/%{_datadir}/%{name}%{majorver}/ldAix
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" %{buildroot}/%{_libdir}/%{name}Config.sh
+rm -rf %{buildroot}/%{_datadir}/%{name}%{majorver}/ldAix
 
 %post -p /sbin/ldconfig
 
@@ -133,12 +130,47 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib%{name}stub%{majorver}.a
 %{_libdir}/lib%{name}.so
 %{_libdir}/%{name}Config.sh
-%{_libdir}/%{name}8.5/%{name}Config.sh
+%{_libdir}/%{name}ooConfig.sh
+%{_libdir}/%{name}%{majorver}/%{name}Config.sh
+%{_libdir}/pkgconfig/tcl.pc
 %{_datadir}/%{name}%{majorver}/tclAppInit.c
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:8.5.13-2
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.6.1-6
 - 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1.1-5
+- Re-enabled threads (previously reported bugs are no more reproducible)
+
+* Mon Jun  2 2014 Ville Skyttä <ville.skytta@iki.fi> - 1:8.6.1-4
+- Use system zlib instead of bundled one
+
+* Tue May 20 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1-3
+- Fixed TCL_PACKAGE_PATH to point to tcl8.6
+
+* Wed Apr 30 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1-2
+- Fixed bogus date in changelog
+
+* Thu Apr 24 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1-1
+- New version
+- Defuzzified patches
+
+* Wed Jan 01 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.0-1
+- New version
+  Resolves: rhbz#889201
+- Minor cleanups
+
+* Fri Dec  6 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1:8.5.15-1
+- Update to 8.5.15
+
+* Thu Aug 15 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.5.14-1
+- New version
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:8.5.13-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:8.5.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Mon Nov 12 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.5.13-1
 - New version
@@ -235,7 +267,7 @@ rm -rf $RPM_BUILD_ROOT
 - update to 8.5.3
 - create vers macro for provides, obsoletes
 
-* Mon Jul  2 2008 Marcela Maslanova <mmaslano@redhat.com> - 1:8.5.2-3
+* Mon Jul 21 2008 Marcela Maslanova <mmaslano@redhat.com> - 1:8.5.2-3
 - tclConfig.sh was fixed again with symlink into libdir/tcl8.5.
 Many packages are looking in /usr/lib, because tcl dir is versioned.
 
@@ -255,7 +287,7 @@ Many packages are looking in /usr/lib, because tcl dir is versioned.
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1:8.5.1-2
 - Autorebuild for GCC 4.3
 
-* Mon Jan 18 2008 Marcela Maslanova <mmaslano@redhat.com> - 1:8.5.1-1
+* Fri Jan 18 2008 Marcela Maslanova <mmaslano@redhat.com> - 1:8.5.1-1
 - new version tcl8.5.1
 - fix 433151 problem with regular expression
 - Version 2.5.3 of the http package requires Tcl 8.4 or better ->
@@ -316,13 +348,13 @@ Many packages are looking in /usr/lib, because tcl dir is versioned.
 * Tue Apr  3 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-15
 - cleaning spec
 
-* Tue Mar 21 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-14
+* Wed Mar 21 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-14
 - multilib problem, rhbz#227200
 
 * Tue Feb 27 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-12
 - review
 
-* Thu Feb 21 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-11
+* Wed Feb 21 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-11
 - review
 
 * Thu Feb 15 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-10
@@ -547,7 +579,7 @@ Many packages are looking in /usr/lib, because tcl dir is versioned.
 * Mon Jan 07 2002 Florian La Roche <Florian.LaRoche@redhat.de>
 - fix config.guess and config.sub to newer versions
 
-* Mon Aug 29 2001 Adrian Havill <havill@redhat.com>
+* Wed Aug 29 2001 Adrian Havill <havill@redhat.com>
 
 * Mon Aug  8 2001 Adrian Havill <havill@redhat.com>
 - re-enable glibc string and math inlines; recent gcc is a-ok.

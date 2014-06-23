@@ -1,8 +1,12 @@
 #!/bin/bash
 #
 ### BEGIN INIT INFO
+# chkconfig: 2345 91 10
+# processname: munin-node
+# config: /etc/munin/munin-node.conf
+# pidfile: /var/run/munin-asyncd.pid
 # Provides: munin-asyncd
-# Required-Start: $local_fs $remote_fs $network
+# Required-Start: $local_fs $remote_fs $network munin-node
 # Required-Stop: $local_fs $remote_fs $network
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6

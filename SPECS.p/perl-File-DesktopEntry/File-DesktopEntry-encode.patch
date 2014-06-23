@@ -1,0 +1,19 @@
+diff -up File-DesktopEntry-0.08/lib/File/DesktopEntry.pm.orig File-DesktopEntry-0.08/lib/File/DesktopEntry.pm
+--- File-DesktopEntry-0.08/lib/File/DesktopEntry.pm.orig	2013-10-07 21:21:51.000000000 +0200
++++ File-DesktopEntry-0.08/lib/File/DesktopEntry.pm	2013-10-08 07:53:05.869360349 +0200
+@@ -5,6 +5,7 @@ use warnings;
+ 
+ use vars qw/$AUTOLOAD/;
+ use Carp;
++use Encode;
+ use File::Spec;
+ use File::BaseDir 0.03 qw/data_files data_home/;
+ 
+@@ -335,6 +336,7 @@ sub parse_Exec {
+ 			push @exec, '--icon', $icon if defined($icon);
+ 		}
+ 		else { # expand with word ( e.g. --input=%f )
++			$_ = encode_utf8($_);
+ 			my $bad;
+ 			s/\%(.)/
+ 				($1 eq '%') ? '%'                :

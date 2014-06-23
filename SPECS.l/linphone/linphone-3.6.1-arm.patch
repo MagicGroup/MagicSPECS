@@ -1,0 +1,81 @@
+--- linphone-3.6.1/mediastreamer2/src/voip/msvideo_neon.c	2013-01-14 17:13:45.990192572 +0200
++++ linphone-3.6.1/mediastreamer2/src/voip/msvideo_neon.c	2013-07-27 12:58:00.366301016 +0300
+@@ -379,8 +379,8 @@
+ #endif
+ }
+ 
+-static void reverse_and_down_scale_32bytes_neon(unsigned char* src, unsigned char* dest) {
+ #ifdef __ARM_NEON__
++static void reverse_and_down_scale_32bytes_neon(unsigned char* src, unsigned char* dest) {
+ 	__asm  (/*load 16x1 pixel
+ 			 [  0,  1,  2,  3,  4,  5,  6,  7, 8, 9, 10, 11, 12, 13, 14, 15]*/
+ 			"vld2.8 {q0,q1},[%0] \n\t"
+@@ -395,11 +395,11 @@
+ 			: "r"(src),"r"(dest)/*in*/
+ 			: "r4","q0","q1","memory" /*modified*/
+ 			);
+-#endif
+ }
++#endif
+ 
+-static void reverse_16bytes_neon(unsigned char* src, unsigned char* dest) {
+ #ifdef __ARM_NEON__
++static void reverse_16bytes_neon(unsigned char* src, unsigned char* dest) {
+ 	__asm  (/*load 16x1 pixel
+ 			[  0,  1,  2,  3,  4,  5,  6,  7, 8, 9, 10, 11, 12, 13, 14, 15]*/
+ 		   "vld1.8 {d0,d1},[%0] \n\t"
+@@ -414,11 +414,11 @@
+ 		   : "r"(src),"r"(dest)/*in*/
+ 		   : "r4","d0","d1","memory" /*modified*/
+ 		   );
+-#endif
+ }
++#endif
+ 
+-static void deinterlace_and_reverse_2x8bytes_neon(unsigned char* src, unsigned char* udest, unsigned char* vdest) {
+ #ifdef __ARM_NEON__
++static void deinterlace_and_reverse_2x8bytes_neon(unsigned char* src, unsigned char* udest, unsigned char* vdest) {
+ 	__asm  (/*load 16x1 values
+ 			[  U0, V0, U1, V1, U2, V2, U3, V3, U4, V4, U5, V5, U6, V6, U7, V7]
+ 			[  U0, U1, U2, U3, U4, U5, U6, U7, V0, V1, V2, V3, V4, V5, V6, V7]*/
+@@ -434,10 +434,10 @@
+ 		   : "r"(src),"r"(udest),"r"(vdest)/*in*/
+ 		   : "r4","d0","d1","memory" /*modified*/
+ 		   );
+-#endif
+ }
+-static void deinterlace_down_scale_and_reverse_2x16bytes_neon(unsigned char* src, unsigned char* udest, unsigned char* vdest) {
++#endif
+ #ifdef __ARM_NEON__
++static void deinterlace_down_scale_and_reverse_2x16bytes_neon(unsigned char* src, unsigned char* udest, unsigned char* vdest) {
+ 	__asm  (/*load 32x1 values*/
+ 			
+ 			"vld4.8 {d0,d1,d2,d3},[%0] \n\t" /*only keep half*/ 
+@@ -453,8 +453,8 @@
+ 			: "r"(src),"r"(udest),"r"(vdest)/*in*/
+ 			: "r4","q0","q1","memory" /*modified*/
+ 			);
+-#endif
+ }
++#endif
+ 
+ void deinterlace_down_scale_neon(uint8_t* ysrc, uint8_t* cbcrsrc, uint8_t* ydst, uint8_t* u_dst, uint8_t* v_dst, int w, int h, int y_byte_per_row,int cbcr_byte_per_row,bool_t down_scale) {
+ #ifdef __ARM_NEON__
+--- linphone-3.6.1/mediastreamer2/src/voip/videostream.c	2013-06-14 18:21:26.654950046 +0300
++++ linphone-3.6.1/mediastreamer2/src/voip/videostream.c	2013-07-27 13:36:17.176984897 +0300
+@@ -223,6 +223,7 @@
+ 	return wished_size;
+ }
+ 
++#ifndef __arm__
+ static MSVideoSize get_with_same_orientation(MSVideoSize size, MSVideoSize refsize){
+ 	if (ms_video_size_get_orientation(refsize)!=ms_video_size_get_orientation(size)){
+ 		int tmp;
+@@ -232,6 +233,7 @@
+ 	}
+ 	return size;
+ }
++#endif
+ 
+ static void configure_video_source(VideoStream *stream){
+ 	MSVideoSize vsize,cam_vsize;

@@ -2,7 +2,7 @@
 %define cpan_version 1.112870
 Name:           perl-%{cpan_name}
 Version:        1.1.1.2.8.7.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Look up the country of an IPv4 Address
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1.1.2.8.7.0-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.1.1.2.8.7.0-4
 - 为 Magic 3.0 重建
 

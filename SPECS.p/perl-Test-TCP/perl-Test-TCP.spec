@@ -1,6 +1,6 @@
 Name:           perl-Test-TCP
 Version:        1.17
-Release:        2%{?dist}
+Release:        8%{?dist}
 Summary:        Testing TCP program
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,24 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.17-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.17-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.17-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.17-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.17-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.17-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.17-2
 - 为 Magic 3.0 重建
 

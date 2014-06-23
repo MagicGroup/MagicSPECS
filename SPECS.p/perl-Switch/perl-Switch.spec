@@ -1,6 +1,6 @@
 Name:		perl-Switch
 Version:	2.16
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	A switch statement for Perl
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.16-9
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.16-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

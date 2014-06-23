@@ -1,11 +1,13 @@
 %define enable_japanese 1
 
 Summary: Converts LaTeX documents to HTML
+Summary(zh_CN.UTF-8): 转换 LaTeX 文档到 HTML 格式
 Name: latex2html
 Version: 2012
 Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 URL: http://www.latex2html.org/
 # main latex2html source
 Source0: http://mirrors.ctan.org/support/latex2html/%{name}-%{version}.tgz
@@ -31,6 +33,9 @@ for printing - can be put on the Web for online viewing.
 
 LATEX2HTML does also a good job in rapid web site deployment. These
 pages are generated from a single LATEX source.
+
+%description -l zh_CN.UTF-8
+转换 LaTeX 文档到 HTML 格式，使用 Perl 编写。
 
 %prep
 %setup -q -n %{name}-%{version} -c -a 0

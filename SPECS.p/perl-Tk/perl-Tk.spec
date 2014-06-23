@@ -4,7 +4,7 @@
 Name:           perl-Tk
 # devel version fix for perl 5.14: 
 Version:        804.031
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Perl Graphical User Interface ToolKit
 
 Group:          Development/Libraries
@@ -126,6 +126,9 @@ find __demos/ -type f -exec chmod -x {} \;
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 804.031-6
+- 为 Magic 3.0 重建
+
 * Tue May 06 2014 Liu Di <liudidi@gmail.com> - 804.031-5
 - 为 Magic 3.0 重建
 

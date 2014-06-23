@@ -1,7 +1,7 @@
 Name:           perl-MooseX-ClassAttribute
 Summary:        Declare class attributes Moose-style
 Version:        0.26
-Release:        7%{?dist}
+Release:        9%{?dist}
 License:        Artistic 2.0
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/MooseX-ClassAttribute-%{version}.tar.gz 
@@ -70,6 +70,12 @@ make test
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.26-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.26-8
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 0.26-7
 - 为 Magic 3.0 重建
 

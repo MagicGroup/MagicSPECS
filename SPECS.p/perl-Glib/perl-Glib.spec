@@ -1,6 +1,6 @@
 Name:           perl-Glib
 Version:        1.260
-Release:        4%{?dist}
+Release:        10%{?dist}
 Summary:        Perl interface to GLib
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -96,6 +96,24 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/Glib::xsapi.3pm.gz
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.260-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.260-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.260-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.260-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.260-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.260-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.260-4
 - 为 Magic 3.0 重建
 

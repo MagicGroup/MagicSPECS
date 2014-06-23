@@ -1,6 +1,6 @@
 Name:           perl-Daemon-Generic
 Version:        0.81
-Release:        4%{?dist}
+Release:        7%{?dist}
 Summary:        Framework to provide start/stop/reload for a daemon
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,15 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.81-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.81-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.81-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.81-4
 - 为 Magic 3.0 重建
 

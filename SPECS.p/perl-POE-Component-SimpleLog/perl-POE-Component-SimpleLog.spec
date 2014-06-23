@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-SimpleLog
 Version:        1.05
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A simple logging system for POE 
 
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.05-12
 - 为 Magic 3.0 重建
 

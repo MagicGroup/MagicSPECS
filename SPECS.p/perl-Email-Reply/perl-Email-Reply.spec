@@ -1,6 +1,6 @@
 Name:           perl-Email-Reply
 Version:        1.202
-Release:        13%{?dist}
+Release:        20%{?dist}
 Summary:        Reply to an email message
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -45,6 +45,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.202-20
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.202-19
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.202-18
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.202-17
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.202-16
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.202-15
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.202-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.202-13
 - 为 Magic 3.0 重建
 

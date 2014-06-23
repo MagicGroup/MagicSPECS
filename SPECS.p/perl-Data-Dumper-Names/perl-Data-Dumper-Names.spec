@@ -1,6 +1,6 @@
 Name:           perl-Data-Dumper-Names
 Version:        0.03
-Release:        13%{?dist}
+Release:        20%{?dist}
 Summary:        Data::Dumper like module for printing and eval data structures
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.03-20
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.03-19
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-18
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-17
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-16
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-15
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.03-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-13
 - 为 Magic 3.0 重建
 

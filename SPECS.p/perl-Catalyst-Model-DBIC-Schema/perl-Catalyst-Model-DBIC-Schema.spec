@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Model-DBIC-Schema
 Summary:        DBIx::Class::Schema Model Class
 Version:        0.59
-Release:        6%{?dist}
+Release:        17%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RK/RKITOVER/Catalyst-Model-DBIC-Schema-%{version}.tar.gz
@@ -84,6 +84,39 @@ TEST_POD=1 C_M_DBIC_SCHEMA_TESTAPP=1
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.59-17
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.59-16
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.59-15
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.59-14
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.59-13
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.59-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.59-11
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.59-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.59-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.59-8
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.59-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.59-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Child
 Version:        1.39        
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Child management component for POE 
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.39-17
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.39-16
 - 为 Magic 3.0 重建
 

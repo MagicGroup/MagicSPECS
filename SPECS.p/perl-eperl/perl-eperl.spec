@@ -1,15 +1,18 @@
 Name:           perl-eperl
 Version:        2.2.14
-Release:        20%{?dist}
+Release:        28%{?dist}
 Summary:        Embedded Perl Language
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://www.ossp.org/pkg/tool/eperl/
 Source0:        ftp://ftp.ossp.org/pkg/tool/eperl/eperl-%{version}.tar.gz
 Patch0:         http://ftp.debian.org/pool/main/e/eperl/eperl_2.2.14-15.1.diff.gz
+Patch1:         perl-eperl-5.16compat.patch
+# Fix format-security compiler warnings, bug #1058664
+Patch2:         eperl-2.2.14-Fix-format-security-compiler-warnings.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  gdbm-devel
-BuildRequires:  db4-devel
+BuildRequires:  libdb-devel
 BuildRequires:  perl(ExtUtils::Embed)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -31,8 +34,10 @@ which is designed for mod_perl 1.x.
 %prep
 %setup -q -n eperl-%{version}
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 chmod u+x etc/shtool
-find contrib/utils -perm +100 -type f -exec chmod 644 {} \;
+find contrib/utils -perm /0100 -type f -exec chmod 644 {} \;
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -59,7 +64,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,8 +81,33 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.2.14-20
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.2.14-28
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.14-27
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 13 2014 Petr Pisar <ppisar@redhat.com> - 2.2.14-26
+- Fix format-security compiler warnings (bug #1058664)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.14-25
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 2.2.14-24
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.14-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Aug  6 2012 Marcela Mašláňová <mmaslano@redhat.com> - 2.2.14-22
+- apply Jitka's patch rhbz#839609
+- change BR from db4-devel to libdb-devel
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.14-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.2.14-20
+- Perl 5.16 rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.14-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

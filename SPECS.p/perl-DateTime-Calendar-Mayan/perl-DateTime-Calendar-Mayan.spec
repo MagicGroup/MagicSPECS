@@ -1,6 +1,6 @@
 Name:		perl-DateTime-Calendar-Mayan 
 Version:	0.0601 
-Release:	13%{?dist}
+Release:	20%{?dist}
 License:	GPL+ or Artistic 
 Group:		Development/Libraries
 Summary:	Mayan Long Count Calendar 
@@ -47,6 +47,27 @@ rm -rf %{buildroot}
 %{_mandir}/man3/DateTime::Calendar::Mayan.3pm*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.0601-20
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.0601-19
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.0601-18
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.0601-17
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.0601-16
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.0601-15
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.0601-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.0601-13
 - 为 Magic 3.0 重建
 

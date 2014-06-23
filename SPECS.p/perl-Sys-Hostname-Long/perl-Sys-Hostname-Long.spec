@@ -1,6 +1,6 @@
 Name:           perl-Sys-Hostname-Long
 Version:        1.4
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Try every conceivable way to get full hostname
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.4-10
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

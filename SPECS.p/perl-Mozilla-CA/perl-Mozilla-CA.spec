@@ -2,7 +2,7 @@ Name:           perl-Mozilla-CA
 # You do not need to back-port new version for list of certificates solely.
 # They are taken from ca-certificates package instead per bug #738383.
 Version:        20130114
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Mozilla's CA cert bundle in PEM format
 License:        MPLv1.1 or LGPLv2+ or GPLv2+
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 20130114-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130114-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

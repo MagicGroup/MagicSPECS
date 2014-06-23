@@ -1,6 +1,6 @@
 Name:           perl-AuthCAS
 Version:        1.5
-Release:        6%{?dist}
+Release:        13%{?dist}
 Summary:        Client library for CAS 2.0 authentication server
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,27 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.5-13
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.5-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5-11
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5-8
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.5-7
+- 为 Magic 3.0 重建
+
 * Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.5-6
 - 为 Magic 3.0 重建
 

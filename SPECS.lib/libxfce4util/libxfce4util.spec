@@ -1,13 +1,13 @@
-%global xfceversion 4.10
 
 Name:           libxfce4util
-Version:        4.10.0
+Version:	4.11.0
 Release:        3%{?dist}
 Summary:        Utility library for the Xfce4 desktop environment
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://www.xfce.org/
+%global xfceversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
 #VCS: git:git://git.xfce.org/xfce/libxfce4util
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 4.11.0-3
+- 更新到 4.11.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.10.0-3
 - 为 Magic 3.0 重建
 

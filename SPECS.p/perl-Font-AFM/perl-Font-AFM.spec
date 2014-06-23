@@ -1,6 +1,6 @@
 Name:           perl-Font-AFM
 Version:        1.20
-Release: 	11%{?dist}
+Release: 	13%{?dist}
 Summary:        Perl interface to Adobe Font Metrics files
 
 Group: 		Development/Libraries
@@ -52,6 +52,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Font*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.20-13
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.20-12
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.20-11
 - 为 Magic 3.0 重建
 

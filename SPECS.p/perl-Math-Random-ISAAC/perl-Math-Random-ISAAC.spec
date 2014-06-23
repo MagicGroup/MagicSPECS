@@ -1,6 +1,6 @@
 Name:           perl-Math-Random-ISAAC
 Version:        1.004
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Perl interface to the ISAAC PRNG algorithm
 License:        MIT or GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,15 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.004-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.004-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.004-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.004-6
 - 为 Magic 3.0 重建
 

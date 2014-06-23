@@ -1,12 +1,12 @@
 Summary:        Utilities for SAS management protocol (SMP)
 Name:           smp_utils
-Version:        0.96
-Release:        3%{?dist}
+Version:        0.98
+Release:        2%{?dist}
 License:        BSD
 Group:          Applications/System
 URL:            http://sg.danny.cz/sg/smp_utils.html
 Source0:        http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 
 %description
@@ -23,35 +23,86 @@ Warning: Some of these tools access the internals of your system
 and the incorrect usage of them may render your system inoperable.
 
 
+%package libs
+Summary: Shared library for %{name}
+Group: System Environment/Libraries
+
+%description libs
+This package contains the shared library for %{name}.
+
+
+%package devel
+Summary: Development library and header files for the sg3_utils library
+Group: Development/Libraries
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: glibc-headers
+
+%description devel
+This package contains the %{name} library and its header files for
+developing applications.
+
+
 %prep
 %setup -q
 
 
 %build
+%configure --disable-static
+
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 make %{?smp_mflags} CFLAGS="%{optflags} -DSMP_UTILS_LINUX"
 
 
 %install
-rm -rf %{buildroot}
-
 make install \
         PREFIX=%{_prefix} \
         DESTDIR=%{buildroot}
 
-%clean
-rm -rf %{buildroot}
+rm -rf %{buildroot}%{_libdir}/*.la
+
+
+%post libs -p /sbin/ldconfig
+
+%postun libs -p /sbin/ldconfig
 
 
 %files
-%defattr(-,root,root,-)
-%doc ChangeLog COPYING COVERAGE CREDITS INSTALL README
+%doc ChangeLog COPYING COVERAGE CREDITS README
 %{_bindir}/*
 %{_mandir}/man8/*
 
+%files libs
+%doc COPYING
+%{_libdir}/*.so.*
+
+%files devel
+%{_includedir}/scsi/*.h
+%{_libdir}/*.so
+
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.96-3
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 0.98-2
 - 为 Magic 3.0 重建
+
+* Wed May 28 2014 Dan Horák <dan[at]danny.cz> - 0.98-1
+- updated to 0.98 (#1102035)
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.97-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Jun 02 2013 Dan Horák <dan[at]danny.cz> - 0.97-4
+- rebuilt for aarch64 (#926546)
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.97-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.97-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Mar 28 2012 Dan Horák <dan[at]danny.cz> 0.97-1
+- updated to 0.97
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.96-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,0 +1,112 @@
+diff --git a/java-utils/maven_depmap.py b/java-utils/maven_depmap.py
+index 9377725..c80ff5b 100644
+--- a/java-utils/maven_depmap.py
++++ b/java-utils/maven_depmap.py
+@@ -280,6 +280,7 @@ if __name__ == "__main__":
+     if namespace:
+         artifact.namespace = namespace
+ 
++    artifact.properties["xmvn.resolver.disableEffectivePom"] = "true"
+ 
+ 
+     buildroot = os.environ.get('RPM_BUILD_ROOT')
+diff --git a/java-utils/mvn_artifact.py b/java-utils/mvn_artifact.py
+index e5e2731..9c0d55a 100644
+--- a/java-utils/mvn_artifact.py
++++ b/java-utils/mvn_artifact.py
+@@ -45,8 +45,6 @@ from javapackages.pom import *
+ from lxml import etree
+ import pyxb
+ 
+-from xml.dom.minidom import getDOMImplementation
+-
+ 
+ usage="usage: %prog [options] <MVN spec | POM path> [artifact path]"
+ epilog="""
+@@ -117,21 +115,17 @@ def add_artifact_elements(root, uart, ppath=None, jpath=None):
+     for path in [ppath, jpath]:
+         if path:
+             a = uart.to_metadata()
++            props = []
+             if path is ppath:
+                 if not is_it_ivy_file(ppath):
+                     a.extension = "pom"
+                 else:
+                     a.extension = os.path.splitext(pom_path)[1][1:]
+-
+-                    # add property "type"
+-                    domimpl = getDOMImplementation()
+-                    doc = domimpl.createDocument(None, None, None)
+-                    ty = doc.createElement('type')
+-                    te = doc.createTextNode('ivy')
+-                    ty.appendChild(te)
+-                    a.properties = pyxb.BIND(ty)
++                    props.append(Depmap.build_property('type', 'ivy'))
+ 
+             a.path = os.path.abspath(path)
++            props.append(Depmap.build_property('xmvn.resolver.disableEffectivePom', 'true'))
++            a.properties = pyxb.BIND(*props)
+             artifacts.append(a)
+ 
+     if root.artifacts is None:
+diff --git a/python/javapackages/artifact.py b/python/javapackages/artifact.py
+index ed8e0ba..33d1583 100644
+--- a/python/javapackages/artifact.py
++++ b/python/javapackages/artifact.py
+@@ -130,7 +130,6 @@ class ProvidedArtifact(object):
+         return result
+ 
+     def to_metadata(self):
+-        # TODO: add support for properties(?)
+         a = m.ArtifactMetadata()
+         a.groupId = self.groupId
+         a.artifactId = self.artifactId
+@@ -149,6 +148,11 @@ class ProvidedArtifact(object):
+             als = [alias.to_metadata() for alias in self.aliases]
+             a.aliases = pyxb.BIND(*als)
+ 
++        if self.properties:
++            import javapackages.depmap
++            prop = [javapackages.depmap.Depmap.build_property(k, v) for k, v in self.properties.iteritems()]
++            a.properties = pyxb.BIND(*prop)
++
+         return a
+ 
+     @classmethod
+diff --git a/python/javapackages/depmap.py b/python/javapackages/depmap.py
+index 356af95..a4b83fb 100644
+--- a/python/javapackages/depmap.py
++++ b/python/javapackages/depmap.py
+@@ -41,6 +41,7 @@ from javapackages.artifact import (Artifact, Dependency, ProvidedArtifact,
+ import pyxb
+ 
+ import javapackages.metadata as metadata
++from xml.dom.minidom import getDOMImplementation
+ 
+ 
+ class MetadataLoadingException(Exception):
+@@ -170,3 +171,12 @@ class Depmap(object):
+                 if prop.tagName == u'requiresJavaDevel':
+                     return prop.firstChild.value
+         return None
++
++    @staticmethod
++    def build_property(name, value):
++        domimpl = getDOMImplementation()
++        doc = domimpl.createDocument(None, None, None)
++        elem = doc.createElement(name)
++        tnode = doc.createTextNode(value)
++        elem.appendChild(tnode)
++        return elem
+diff --git a/test/run_tests.sh b/test/run_tests.sh
+index 55d47cd..8bdc221 100755
+--- a/test/run_tests.sh
++++ b/test/run_tests.sh
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ 
+-PYTHONPATH="../python" nosetests --with-xunit --exclude=maven_prov_test_fuzzed.py
++PYTHONPATH="../python" nosetests --with-xunit --exclude="(maven_prov)|(maven_depmap)|(mvn_artifact)_test.py"
+ r1=$?
+ r2=0
+ 

@@ -1,6 +1,6 @@
 Name:           perl-Test-UseAllModules
 Version:        0.14
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Do use_ok() for all the MANIFESTed modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.14-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.14-2
 - 为 Magic 3.0 重建
 

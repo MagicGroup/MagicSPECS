@@ -2,7 +2,7 @@
 Name:           perl-Pod-Perldoc
 # let's overwrite the module from perl.srpm
 Version:        3.17.00
-Release:        242%{?dist}
+Release:        244%{?dist}
 Summary:        Look up Perl documentation in Pod format
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -92,6 +92,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.17.00-244
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.17.00-243
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 3.17.00-242
 - 为 Magic 3.0 重建
 

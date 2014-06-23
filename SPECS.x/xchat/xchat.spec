@@ -4,7 +4,7 @@
 Summary:   A popular and easy to use graphical IRC (chat) client
 Name:      xchat
 Version:   2.8.8
-Release:   12%{?dist}
+Release:   13%{?dist}
 Epoch:     1
 Group:     Applications/Internet
 License:   GPLv2+
@@ -188,6 +188,9 @@ fi
 %{_libdir}/xchat/plugins/tcl.so
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:2.8.8-13
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:2.8.8-12
 - 为 Magic 3.0 重建
 

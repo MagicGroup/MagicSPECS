@@ -1,6 +1,6 @@
 Name:      scim
 Version:   1.4.14
-Release:   4%{?dist}
+Release:   10%{?dist}
 Summary:   Smart Common Input Method platform
 
 License:   LGPLv2+
@@ -91,6 +91,12 @@ Requires(postun): gtk2 >= 2.9.1-2
 %description gtk
 This package provides a GTK input method module for SCIM.
 
+%package qt
+Summary:    Smart Common Input Method Qt IM module
+Group:      System Environment/Libraries
+
+%description qt
+This package provides a QT input method module for SCIM.
 
 %package libs
 Summary:    Smart Common Input Method libraries
@@ -131,8 +137,7 @@ cp -p %{SOURCE4} configs/global
 %patch7 -p1 -b .7-emacs-ccmode~
 
 # patch17 touches configure.ac and Makefile.am
-#./bootstrap
-gnome-autogen.sh
+./bootstrap
 
 
 %build
@@ -158,7 +163,7 @@ rm -f docs/html/FreeSans.ttf
 # install xinput config file
 mkdir -pm 755 ${RPM_BUILD_ROOT}/%{_sysconfdir}/X11/xinit/xinput.d
 install -pm 644 %{SOURCE1} ${RPM_BUILD_ROOT}/%{_xinputconf}
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -236,6 +241,10 @@ fi
 %{_libdir}/gtk-2.0/*/immodules/im-scim.so
 %{_libdir}/gtk-3.0/*/immodules/im-scim.so
 
+%files qt
+%defattr(-,root,root,-)
+%{_libdir}/qt-3.3/lib/qt3/plugins/inputmethods/im-scim.so
+%{_libdir}/qt4/lib/qt4/plugins/inputmethods/im-scim.so
 
 %files libs
 %defattr(-,root,root,-)
@@ -245,9 +254,7 @@ fi
 %{_libdir}/scim-1.0/%{scim_api}/Config
 %dir %{_libdir}/scim-1.0/%{scim_api}/IMEngine
 %{_libdir}/scim-1.0/%{scim_api}/IMEngine/socket.so
-#qt3和qt4，需要分包
-%{_libdir}/qt-3.3/lib/qt3/plugins/inputmethods/im-scim.so
-%{_libdir}/qt4/lib/qt4/plugins/inputmethods/im-scim.so
+
 
 %files rawcode
 %defattr(-,root,root,-)
@@ -255,6 +262,24 @@ fi
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4.14-10
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4.14-9
+- 为 Magic 3.0 重建
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Feb 10 2014 Peng Wu <pwu@redhat.com> - 1.4.14-7
+- Fixes rawhide build
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.14-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Dec 10 2012 Peng Wu <pwu@redhat.com> - 1.4.14-4
 - Obsoletes scim-python
 

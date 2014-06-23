@@ -1,19 +1,31 @@
 Name:           perl-HTTP-Parser-XS
 Summary:        A fast, primitive HTTP request parser
-Version:        0.14
-Release:        4%{?dist}
+Version:        0.16
+Release:        12%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/K/KA/KAZUHO/HTTP-Parser-XS-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/HTTP-Parser-XS
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
-BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.42
+BuildRequires:  perl(inc::Module::Install)
+BuildRequires:  perl(Module::Install::Metadata)
+# Not yet packaged:  perl(Module::Install::ReadmeFromPod)
+# Not yet packaged:  perl(Module::Install::TestTarget)
+# Unbundle inc after packaging them.
+# Run-time:
+BuildRequires:  perl(base)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(XSLoader)
+# Tests:
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Test::More) >= 0.96
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(XSLoader)
 
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 HTTP::Parser::XS is a fast, primitive HTTP request parser that can
@@ -36,7 +48,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 
 %files
@@ -46,11 +58,54 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.14-4
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-12
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.14-3
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-11
 - 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-10
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-9
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-8
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.16-7
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.16-6
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.16-5
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.16-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.16-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Aug 02 2013 Petr Pisar <ppisar@redhat.com> - 0.16-2
+- Perl 5.18 rebuild
+
+* Sun Apr 28 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 0.16-1
+- Update to 0.16
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sun Nov 11 2012 Emmanuel Seyman <emmanuel@seyman.fr> - 0.15-1
+- Update to 0.15
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 0.14-3
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Thu Jan 12 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 0.14-2
 - Bump to rebuild

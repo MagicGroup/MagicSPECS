@@ -1,6 +1,6 @@
 Name:       perl-Module-Util
 Version:    1.08
-Release:    4%{?dist}
+Release:    10%{?dist}
 # see lib/Module/Util.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -42,6 +42,24 @@ names to relative paths.
 %{_mandir}/man[13]/*.[13]*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.08-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.08-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.08-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-5
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 1.08-4
 - 为 Magic 3.0 重建
 

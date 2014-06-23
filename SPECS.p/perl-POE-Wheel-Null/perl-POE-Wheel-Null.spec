@@ -1,6 +1,6 @@
 Name:           perl-POE-Wheel-Null
 Version:        0.01        
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        POE Wheel that does puts data nowhere, and sends nothing
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.01-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.01-15
 - 为 Magic 3.0 重建
 

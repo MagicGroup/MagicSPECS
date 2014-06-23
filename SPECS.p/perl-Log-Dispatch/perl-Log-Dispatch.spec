@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatch
 Version:        2.29
-Release:        4%{?dist}
+Release:        13%{?dist}
 Summary:        Dispatches messages to one or more outputs
 Group:          Development/Libraries
 License:        Artistic 2.0
@@ -63,6 +63,33 @@ RELEASE_TESTING=1 LOG_DISPATCH_TEST_EMAIL="root@localhost.localdomain" \
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.29-13
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.29-12
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.29-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.29-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.29-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.29-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.29-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.29-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.29-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.29-4
 - 为 Magic 3.0 重建
 

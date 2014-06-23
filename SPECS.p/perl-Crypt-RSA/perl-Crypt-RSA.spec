@@ -1,7 +1,7 @@
 Summary:	RSA public-key cryptosystem
 Name:		perl-Crypt-RSA
 Version:	1.99
-Release:	10%{?dist}
+Release:	21%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-RSA/
@@ -88,6 +88,39 @@ rm -rf %{buildroot}
 %{_mandir}/man3/crypt-rsa-interoperablity-template.3*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.99-21
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.99-20
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.99-19
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.99-18
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.99-17
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.99-16
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.99-15
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.99-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.99-13
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.99-12
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.99-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.99-10
 - 为 Magic 3.0 重建
 

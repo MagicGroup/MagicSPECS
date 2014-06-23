@@ -1,19 +1,21 @@
 Name:           perl-DateTime-Format-IBeat
-Version:        0.161        
-Release:        14%{?dist}
+Version:        0.161
+Release:        21%{?dist}
 Summary:        Format times in .beat notation 
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic 
 URL:            http://search.cpan.org/dist/DateTime-Format-IBeat            
-Source0: http://search.cpan.org/CPAN/authors/id/E/EM/EMARTIN/DateTime-Format-IBeat-%{version}.tar.gz        
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://backpan.perl.org/authors/id/E/EM/EMARTIN/DateTime-Format-IBeat-0.161.tar.gz
 
 BuildArch:      noarch 
 BuildRequires:  perl(Class::ISA)
 BuildRequires:  perl(DateTime) >= 0.18, perl(Test::More) >= 0.47
+BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::Pod) >= 1.00
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%{?perl_default_filter}
 
 %description
 No Time Zones, No Geographical Borders 
@@ -36,31 +38,47 @@ make %{?_smp_mflags}
 mv LICENCE LICENSE
 
 %install
-rm -rf %{buildroot}
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 
 %check
-
-
-
-%clean
-rm -rf %{buildroot}
+make test
 
 
 %files
-%defattr(-,root,root,-)
 %doc Artistic COPYING LICENSE Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.161-14
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.161-21
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.161-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.161-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 31 2013 Petr Pisar <ppisar@redhat.com> - 0.161-18
+- Perl 5.18 rebuild
+
+* Sun Feb 17 2013 Iain Arnell <iarnell@gmail.com> 0.161-17
+- update spec for modern rpmbuild
+- BR ExtUtils::MakeMaker
+- change source link to backpan - it's no longer in cpan
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.161-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.161-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 0.161-14
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.161-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

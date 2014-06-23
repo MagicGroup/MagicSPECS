@@ -1,6 +1,6 @@
 Name:           perl-HTML-Prototype
 Version:        1.48
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Generate HTML and Javascript for the Prototype library
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.48-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.48-10
 - 为 Magic 3.0 重建
 

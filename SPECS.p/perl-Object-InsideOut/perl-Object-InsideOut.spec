@@ -1,6 +1,6 @@
 Name:           perl-Object-InsideOut
 Version:        3.97
-Release:        1%{?dist}
+Release:        10%{?dist}
 Summary:        Comprehensive inside-out object support module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -77,6 +77,33 @@ make test
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.97-10
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.97-9
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 3.97-8
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 3.97-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.97-6
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.97-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.97-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.97-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.97-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 16 2012 Petr Pisar <ppisar@redhat.com> - 3.97-1
 - 3.97 bump
 

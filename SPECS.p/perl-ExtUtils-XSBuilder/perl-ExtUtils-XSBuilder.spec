@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-XSBuilder
 Version:        0.28
-Release:        15%{?dist}
+Release:        17%{?dist}
 Summary:        Modules that parse C header files and create XS glue code
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -51,6 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.28-17
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.28-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.28-15
 - 为 Magic 3.0 重建
 

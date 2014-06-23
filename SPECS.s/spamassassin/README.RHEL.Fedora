@@ -34,3 +34,13 @@ General Warnings
 * DO NOT USE SARE or OpenProtect rules.  They are old and outdated, and
   can be dangerous.  Many of the useful rules have been integrated into
   upstream spamassassin.
+
+Note about -d option
+====================
+
+With spamassassin 3.4.0, this package has switched the way spamd is started. 
+You should no longer use the '-d' option in /etc/sysconfig/spamassassin. Doing 
+so will result in spamd starting and stopping in a loop. The default 
+/etc/sysconfig/spamassassin file has been adjusted for this, please merge 
+this change into that file if you have made any changes to it. 
+

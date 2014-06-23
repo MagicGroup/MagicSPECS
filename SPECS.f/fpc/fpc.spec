@@ -1,3 +1,4 @@
+%define buildpdf 0
 Name:           fpc
 Version:        2.6.4
 Release:        1%{?dist}
@@ -8,7 +9,7 @@ Group:          Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
 License:        GPLv2+ and LGPLv2+ with exceptions
 URL:            http://www.freepascal.org/
-Source0:        ftp://ftp.freepascal.org/pub/fpc/dist/${version}/source/fpcbuild-%{version}.tar.gz
+Source0:        ftp://ftp.freepascal.org/pub/fpc/dist/%{version}/source/fpcbuild-%{version}.tar.gz
 # rc1 version
 #Source0:        ftp://ftp.freepascal.org/pub/fpc/beta/2.6.2-rc1/source/fpcbuild-2.6.2rc1.tar.gz
 # This is only needed when useprebuiltcompiler is defined.
@@ -74,9 +75,9 @@ automatical-code generation purposes.
 
 %prep
 %if %{defined useprebuiltcompiler}
-%setup -a1 -n fpcbuild-%{version}rc1 -q
+%setup -a1 -n fpcbuild-%{version} -q
 %else
-%setup -n fpcbuild-%{version}rc1 -q
+%setup -n fpcbuild-%{version} -q
 %endif
 
 %build
@@ -104,8 +105,11 @@ make %{?_smp_mflags} ide_all FPC=${NEWPP} OPT='%{fpcopt} %{fpcdebugopt}'
 make %{?_smp_mflags} utils_all FPC=${NEWPP} DATA2INC=${DATA2INC} OPT='%{fpcopt} %{fpcdebugopt}'
 
 cd ..
+
+%if 0%{?buildpdf}
 # FIXME: -j1 as there is a race - seen on "missing" `rtl.xct'.
 make -j1 -C fpcdocs pdf FPC=${NEWPP} FPDOC=${NEWFPDOC}
+%endif
 
 %install
 rm -rf %{buildroot}
@@ -129,7 +133,10 @@ cd ../install
 make -C doc ${INSTALLOPTS}
 make -C man ${INSTALLOPTS} INSTALL_MANDIR=%{buildroot}%{_mandir}
 cd ..
+
+%if 0%{?buildpdf}
 make -C fpcdocs pdfinstall ${INSTALLOPTS}
+%endif
 
 # create link
 ln -sf ../%{_lib}/%{name}/%{version}/%{ppcname} %{buildroot}%{_bindir}/%{ppcname}
@@ -167,6 +174,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_bindir}/*
 %{_libdir}/%{name}
+#这是什么？
+%{_prefix}/lib/fpc/%{version}/units/*
 %config(noreplace) %{_sysconfdir}/%{name}.cfg
 %config(noreplace) %{_sysconfdir}/fppkg.cfg
 %config(noreplace) %{_sysconfdir}/fppkg/default_%{_arch}
@@ -181,7 +190,9 @@ rm -rf %{buildroot}
 %files doc
 %defattr(-,root,root,-)
 %dir %{_defaultdocdir}/%{name}-%{version}/
+%if 0%{?buildpdf}
 %doc %{_defaultdocdir}/%{name}-%{version}/*.pdf
+%endif
 %doc %{_defaultdocdir}/%{name}-%{version}/examples
 
 %files src
@@ -189,6 +200,9 @@ rm -rf %{buildroot}
 %{_datadir}/fpcsrc
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 2.6.4-1
+- 更新到 2.6.4
+
 * Sat Nov 24 2012 Bruno Wolff III <bruno@wolff.to> - 2.6.2-0.1.rc1
 - Use standard versioning, so non-rc versions will be higher
 - Fix issue with some things using 'rc1' appended to version name and others not

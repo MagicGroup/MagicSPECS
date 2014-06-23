@@ -5,7 +5,7 @@
 Name:           perl-Module-Build
 Epoch:          2
 Version:        %{cpan_version_major}%{?cpan_version_minor:.%cpan_version_minor}
-Release:        5%{?dist}
+Release:        11%{?dist}
 Summary:        Build and install Perl modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -111,6 +111,24 @@ LANG=C TEST_SIGNATURE=1 MB_TEST_EXPERIMENTAL=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2:0.40.03-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2:0.40.03-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2:0.40.03-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2:0.40.03-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2:0.40.03-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2:0.40.03-6
+- 为 Magic 3.0 重建
+
 * Thu Jan 17 2013 Liu Di <liudidi@gmail.com> - 2:0.40.03-5
 - 为 Magic 3.0 重建
 

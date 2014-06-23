@@ -1,6 +1,6 @@
 Name:           perl-XML-Dumper
 Version:        0.81
-Release:        10%{dist}
+Release:        11%{dist}
 Summary:        Perl module for dumping Perl objects from/to XML
 
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.81-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.81-10
 - 为 Magic 3.0 重建
 

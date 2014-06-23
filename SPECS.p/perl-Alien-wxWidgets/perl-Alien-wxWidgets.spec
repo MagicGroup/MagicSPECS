@@ -1,6 +1,6 @@
 Name:           perl-Alien-wxWidgets
 Version:        0.51
-Release:        8%{?dist}
+Release:        15%{?dist}
 Summary:        Building, finding and using wxWidgets binaries
 
 Group:          Development/Libraries
@@ -10,8 +10,23 @@ Source0:        http://search.cpan.org/CPAN/authors/id/M/MB/MBARBON/Alien-wxWidg
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  wx-gtk2-unicode-devel
-BuildRequires:  perl(Module::Build)
+# A lot of stuff used by inc/My/Build/Base.pm.
+BuildRequires:  perl
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Config)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Fatal)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Glob)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec) >= 1.50
+BuildRequires:  perl(Module::Build) >= 0.28
 BuildRequires:  perl(Module::Pluggable)
+BuildRequires:  perl(strict)
+# Tests:
+BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -55,11 +70,33 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.51-8
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.51-15
 - 为 Magic 3.0 重建
 
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.51-7
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.51-14
 - 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.51-13
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.51-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.51-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Jul 20 2013 Petr Pisar <ppisar@redhat.com> - 0.51-10
+- Perl 5.18 rebuild
+- Specify some dependencies
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.51-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.51-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.51-7
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.51-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

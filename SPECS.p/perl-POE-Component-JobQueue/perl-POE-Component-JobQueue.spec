@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-JobQueue
 Version:        0.571
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Process a large number of tasks with a finite number of workers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.571-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.571-4
 - 为 Magic 3.0 重建
 

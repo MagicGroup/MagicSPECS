@@ -1,7 +1,7 @@
 Name:		perl-Test-Perl-Critic
 Summary:	Use Perl::Critic in test programs
 Version:	1.02
-Release:	10%{?dist}
+Release:	14%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-Perl-Critic/
@@ -61,8 +61,20 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Perl::Critic.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.02-10
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.02-14
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Petr Pisar <ppisar@redhat.com> - 1.02-11
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

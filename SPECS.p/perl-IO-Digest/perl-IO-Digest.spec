@@ -1,6 +1,6 @@
 Name:           perl-IO-Digest
-Version:        0.10
-Release:        18%{?dist}
+Version:        0.11
+Release:        6%{?dist}
 Summary:        Calculate digests while reading or writing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null \;
 chmod -R u+rwX,go+rX,go-w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,11 +50,32 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.10-18
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.11-6
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.10-17
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.11-5
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Aug 02 2013 Petr Pisar <ppisar@redhat.com> - 0.11-2
+- Perl 5.18 rebuild
+
+* Sun Feb 24 2013 Robin Lee <cheeselee@fedoraproject.org> - 0.11-1
+- Update to 0.11
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.10-17
+- Perl 5.16 rebuild
 
 * Mon Jan 16 2012 Robin Lee <cheeselee@fedoraproject.org> - 0.10-16
 - BR: perl(Digest), perl(Digest::MD5)

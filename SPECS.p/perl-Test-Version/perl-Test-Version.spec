@@ -2,19 +2,19 @@
 %global debug_package %{nil}
 
 Name:		perl-Test-Version
-Version:	1.002001
+Version:	1.002004
 Release:	9%{?dist}
 Summary:	Check to see that versions in modules are sane
 License:	Artistic 2.0
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-Version/
 Source0:	http://search.cpan.org/CPAN/authors/id/X/XE/XENO/Test-Version-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
+Patch1:		Test-Version-1.002003-pod-spell.patch
 BuildArch:	noarch
 # ===================================================================
 # Module build requirements
 # ===================================================================
-BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.30
 # ===================================================================
 # Module requirements
 # ===================================================================
@@ -25,17 +25,17 @@ BuildRequires:	perl(Module::Metadata)
 BuildRequires:	perl(parent)
 BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::Builder)
-BuildRequires:	perl(Test::More)
+BuildRequires:	perl(Test::More) >= 0.88
 BuildRequires:	perl(version) >= 0.86
 BuildRequires:	perl(warnings)
 # ===================================================================
 # Regular test suite requirements
 # ===================================================================
-BuildRequires:	perl(File::Find)
-BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(IO::Handle)
+BuildRequires:	perl(IPC::Open3)
 BuildRequires:	perl(Scalar::Util)
 BuildRequires:	perl(Test::Exception)
-BuildRequires:	perl(Test::Requires)
 BuildRequires:	perl(Test::Tester)
 # ===================================================================
 # Author/Release test requirements
@@ -47,6 +47,7 @@ BuildRequires:	perl(Test::Tester)
 %if 0%{!?perl_bootstrap:1}
 BuildRequires:	perl(English)
 BuildRequires:	perl(Pod::Coverage::TrustPod)
+BuildRequires:	perl(Pod::Wordlist)
 BuildRequires:	perl(Test::CPAN::Changes)
 BuildRequires:	perl(Test::CPAN::Meta)
 BuildRequires:	perl(Test::CPAN::Meta::JSON)
@@ -54,19 +55,15 @@ BuildRequires:	perl(Test::DistManifest)
 BuildRequires:	perl(Test::EOL)
 BuildRequires:	perl(Test::MinimumVersion)
 BuildRequires:	perl(Test::Mojibake)
+BuildRequires:	perl(Test::More) >= 0.96
 BuildRequires:	perl(Test::Perl::Critic)
 BuildRequires:	perl(Test::Pod) >= 1.41
 BuildRequires:	perl(Test::Pod::Coverage) >= 1.08
+BuildRequires:	perl(Test::Pod::LinkCheck)
 BuildRequires:	perl(Test::Portability::Files)
+BuildRequires:	perl(Test::Spelling) >= 0.12, hunspell-en
 BuildRequires:	perl(Test::Synopsis)
 BuildRequires:	perl(Test::Vars)
-# RHEL-7+ package cannot BR: packages from EPEL
-%if ! (0%{?rhel} >= 7)
-BuildRequires:	aspell-en
-BuildRequires:	perl(Pod::Wordlist::hanekomu)
-BuildRequires:	perl(Test::Kwalitee)
-BuildRequires:	perl(Test::Spelling) >= 0.12
-%endif
 %endif
 # ===================================================================
 # Runtime requirements
@@ -80,30 +77,83 @@ versions across your dist are sane.
 %prep
 %setup -q -n Test-Version-%{version}
 
+# Some spell checkers check "doesn" rather than "doesn't"
+%patch1
+
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
- %{!?perl_bootstrap:AUTHOR_TESTING=1 RELEASE_TESTING=1}
-
-%clean
-rm -rf %{buildroot}
+make test %{!?perl_bootstrap:AUTHOR_TESTING=1 RELEASE_TESTING=1}
 
 %files
-%doc Changes LICENSE README
+%doc Changes CONTRIBUTING LICENSE README
 %{perl_vendorlib}/Test/
 %{_mandir}/man3/Test::Version.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.002001-9
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.002004-9
 - 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.002004-8
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.002004-7
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.002004-6
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.002004-5
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.002004-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jan 27 2014 Paul Howarth <paul@city-fan.org> - 1.002004-3
+- Bootstrap build for epel7 done
+
+* Mon Jan 27 2014 Paul Howarth <paul@city-fan.org> - 1.002004-2
+- Bootstrap epel7 build
+
+* Thu Nov 21 2013 Paul Howarth <paul@city-fan.org> - 1.002004-1
+- Update to 1.002004
+  - Fix bugs in argument handling
+  - Fix whitespace
+
+* Tue Oct 15 2013 Paul Howarth <paul@city-fan.org> - 1.002003-1
+- Update to 1.002003
+  - Fix synopsis (https://github.com/xenoterracide/Test-Version/pull/6)
+  - Change Dist::Zilla plugins
+  - Remove old documentation that no longer applies
+  - Fix misgithap
+  - More dist.ini updates
+- Update patches and buildreqs as needed
+- Drop support for old rpm versions as this package's requirements will never
+  be satisfied in EPEL-5
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.002001-13
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.002001-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Petr Pisar <ppisar@redhat.com> - 1.002001-11
+- Perl 5.18 rebuild
+
+* Fri Jun 14 2013 Paul Howarth <paul@city-fan.org> - 1.002001-10
+- Fix FTBFS with current test modules
+  - Disable Test::Kwalitee's "use_strict" test
+  - Schwern not in dictionary
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.002001-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.002001-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

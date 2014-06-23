@@ -7,7 +7,7 @@
 
 Name:           perl-WWW-Mechanize
 Version:        1.73
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Automates web page form & link interaction
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -108,6 +108,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.73-3
+- 为 Magic 3.0 重建
+
 * Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1.73-2
 - 为 Magic 3.0 重建
 

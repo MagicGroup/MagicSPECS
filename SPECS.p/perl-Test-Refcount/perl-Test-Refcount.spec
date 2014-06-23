@@ -1,6 +1,6 @@
 Name:           perl-Test-Refcount
 Version:        0.07
-Release:        8%{?dist}
+Release:        14%{?dist}
 Summary:        Assert reference counts on objects
 
 Group:          Development/Libraries
@@ -53,6 +53,24 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.07-14
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.07-13
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.07-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-11
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.07-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.07-8
 - 为 Magic 3.0 重建
 

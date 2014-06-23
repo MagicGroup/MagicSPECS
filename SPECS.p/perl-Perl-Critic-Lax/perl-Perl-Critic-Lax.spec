@@ -1,25 +1,30 @@
 Name:           perl-Perl-Critic-Lax
-Version:        0.009
-Release:        2%{?dist}
+Version:        0.010
+Release:        3%{?dist}
 Summary:        Policies that let you slide on common exceptions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-Lax/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Perl-Critic-Lax-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
 # Run-time:
 BuildRequires:  perl(parent)
+# This is plug-in into Perl::Critic
 BuildRequires:  perl(Perl::Critic)
 BuildRequires:  perl(Perl::Critic::Utils)
 BuildRequires:  perl(Perl::Critic::Policy)
-# Tests only:
-BuildRequires:  perl(File::Temp)
+# Tests:
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(IPC::Open3)
 BuildRequires:  perl(Perl::Critic::TestUtils)
 BuildRequires:  perl(Test::More)
-# Optional tests:
-BuildRequires:  perl(Test::Script) >= 1.05
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+# This is plug-in into Perl::Critic
 Requires:       perl(Perl::Critic)
 Requires:       perl(Perl::Critic::Policy)
 
@@ -33,7 +38,7 @@ reasonable, maybe there's a Lax policy. If there isn't, send one in!
 %setup -q -n Perl-Critic-Lax-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=perl
+perl Makefile.PL INSTALLDIRS=perl
 make %{?_smp_mflags}
 
 %install
@@ -42,7 +47,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes LICENSE README
@@ -50,8 +55,23 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.009-2
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.010-3
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.010-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Oct 10 2013 Petr Pisar <ppisar@redhat.com> - 0.010-1
+- 0.010 bump
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.009-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Petr Pisar <ppisar@redhat.com> - 0.009-3
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.009-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Thu Sep 13 2012 Petr Pisar <ppisar@redhat.com> - 0.009-1
 - 0.009 bump

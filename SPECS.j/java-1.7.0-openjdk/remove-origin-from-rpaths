@@ -1,0 +1,71 @@
+#!/usr/bin/python
+
+# Usage: $0 file1 file2 ....
+#
+# Given binary files, remove all rpath entries from them containing
+# $ORIGIN. Other rpath entries are not modified
+
+import subprocess;
+import sys;
+
+def print_usage(name):
+    print '''Usage: %s file1 file2 ....
+
+    Given binary files, remove all rpath entries from them containing
+    $ORIGIN. Other rpath entries are not modified''' % (name,)
+
+def call(args):
+    pop = subprocess.Popen(args, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = pop.communicate()
+    if (len(stderr.strip())) != 0:
+        print stderr
+    if pop.returncode != 0:
+        raise OSError('Error calling %s' % (str(args),))
+    return stdout
+
+def check_chrpath_present():
+    try:
+        print(call(['/usr/bin/chrpath', '-v']))
+        return True
+    except OSError:
+        return False
+
+def main(args):
+    binaries = args[1:]
+    if len(binaries) == 0:
+        print_usage(args[0])
+        return 1
+
+    if not check_chrpath_present():
+        print('Could not execute "chrpath". Is it installed?')
+        return 1
+
+    for binary in binaries:
+        try:
+            rpath_output = call(['chrpath', '-l', binary])
+        except OSError:
+            continue
+
+        #print '"' + rpath_output + '"'
+        # the output is "file: RUNPATH=path1:path2:path3\n"
+        rpath_output = rpath_output.strip()
+        start = rpath_output.find('RPATH=')
+        rpath = rpath_output[start+len('RPATH='):]
+        rpath_parts = rpath.split(':')
+        modified_rpath = ''
+        for part in rpath_parts:
+            if not '$ORIGIN' in part:
+                modified_rpath = modified_rpath + ':' + part
+        # shave off the last ':'
+        modified_rpath = modified_rpath[1:]
+        #print '"' + modified_rpath + '"'
+        if len(modified_rpath) == 0:
+            call(['chrpath', '-d', binary])
+            print '%s: Deleted RPATH' % (binary,)
+        else:
+            call(['chrpath', '-r', modified_rpath, binary])
+            print '%s: RPATH=%s' % (binary,modified_rpath)
+    return 0
+
+if __name__ == '__main__':
+    exit(main(sys.argv))

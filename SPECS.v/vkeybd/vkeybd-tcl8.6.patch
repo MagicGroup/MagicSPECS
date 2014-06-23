@@ -1,0 +1,11 @@
+--- Makefile~	2008-01-05 06:31:07.000000000 -0500
++++ Makefile	2008-01-05 06:31:34.000000000 -0500
+@@ -35,7 +35,7 @@
+ #
+ # Tcl/Tk library -- depends on your distribution
+ #
+-TCL_VERSION = 8.4
++TCL_VERSION = 8.6
+ TCLLIB = -ltcl$(TCL_VERSION)
+ TCLINC =
+ TKLIB = -ltk$(TCL_VERSION)

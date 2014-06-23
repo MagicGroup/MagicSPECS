@@ -1,6 +1,6 @@
 Name:           perl-Test-Cmd
 Version:        1.05
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl module for portable testing of commands and scripts
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.05-13
 - 为 Magic 3.0 重建
 

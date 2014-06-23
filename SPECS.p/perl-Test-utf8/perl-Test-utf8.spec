@@ -1,6 +1,6 @@
 Name:           perl-Test-utf8
 Version:        1.00
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Handy utf8 tests
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,6 +42,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.00-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.00-4
 - 为 Magic 3.0 重建
 

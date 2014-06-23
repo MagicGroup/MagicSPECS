@@ -1,6 +1,6 @@
 Name:           perl-XML-SAX-Writer
 Version:        0.50
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        SAX2 Writer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.50-17
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.50-16
 - 为 Magic 3.0 重建
 

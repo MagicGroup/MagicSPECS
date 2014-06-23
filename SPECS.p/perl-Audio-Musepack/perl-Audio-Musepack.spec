@@ -6,7 +6,7 @@
 Summary: An OOP interface to Musepack file information and APE tag fields
 Name: perl-Audio-Musepack
 Version: 1.0.1
-Release: 2%{?dist}
+Release: 5%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -49,6 +49,15 @@ See Audio::APETags for more information about the tags.
 %{perl_vendorlib}
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.0.1-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.0.1-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.0.1-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.0.1-2
 - 为 Magic 3.0 重建
 

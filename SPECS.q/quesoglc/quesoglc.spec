@@ -1,9 +1,11 @@
 Name:           quesoglc
 Version:        0.7.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        The OpenGL Character Renderer
+Summary(zh_CN.UTF-8): OpenGL 字符渲染器
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://quesoglc.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}-free.tar.bz2
@@ -17,7 +19,9 @@ BuildRequires:  pkgconfig
 
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libGL-devel
 Requires:       pkgconfig
@@ -27,10 +31,15 @@ The OpenGL Character Renderer (GLC) is a state machine that provides OpenGL
 programs with character rendering services via an application programming
 interface (API).
 
+%description -l zh_CN.UTF-8
+OpenGL 字符渲染器。
+
 %description devel
 This package provides the libraries, include files, and other resources needed
 for developing GLC applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -52,7 +61,7 @@ cd ../
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/libGLC.la
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -70,6 +79,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libGLC.la
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.7.2-7
+- 为 Magic 3.0 重建
+
 * Thu May 02 2013 Liu Di <liudidi@gmail.com> - 0.7.2-6
 - 为 Magic 3.0 重建
 

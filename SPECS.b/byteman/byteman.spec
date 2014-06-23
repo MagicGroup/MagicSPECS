@@ -4,7 +4,7 @@
 
 Name:             byteman
 Version:          2.1.4.1
-Release:          1%{?dist}
+Release:          4%{?dist}
 Summary:          Java agent-based bytecode injection tool
 License:          LGPLv2+
 URL:              http://www.jboss.org/byteman
@@ -21,12 +21,12 @@ BuildRequires:    maven-failsafe-plugin
 BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-surefire-provider-testng
-BuildRequires:    maven-surefire-provider-junit4
+BuildRequires:    maven-surefire-provider-junit
 BuildRequires:    maven-verifier-plugin
 BuildRequires:    java_cup
 BuildRequires:    jarjar
 BuildRequires:    objectweb-asm
-BuildRequires:    junit4
+BuildRequires:    junit
 BuildRequires:    testng
 
 Requires:         jpackage-utils
@@ -35,12 +35,13 @@ Requires:         java-devel
 # Bundling
 #BuildRequires:    java_cup = 1:0.11a-12
 #BuildRequires:    objectweb-asm = 0:3.3.1-7
-Provides:         bundled(java_cup) = 1:0.11a-15
 
 %if 0%{?fedora} > 20
-Provides:         bundled(objectweb-asm) = 0:5.0-0.2.beta
+Provides:         bundled(objectweb-asm) = 0:5.0.1-1
+Provides:         bundled(java_cup) = 1:0.11a-16
 %else
 Provides:         bundled(objectweb-asm) = 0:3.3.1-8
+Provides:         bundled(java_cup) = 1:0.11a-15
 %endif
 
 %description
@@ -118,6 +119,15 @@ ln -s %{_javadir}/byteman/byteman.jar $RPM_BUILD_ROOT%{homedir}/lib/byteman.jar
 %doc docs/copyright.txt
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.1.4.1-4
+- 为 Magic 3.0 重建
+
+* Fri Apr 18 2014 Marek Goldmann <mgoldman@redhat.com> - 2.1.4.1-3
+- Rebuilding for objectweb-asm update, RHBZ#1083570
+
+* Fri Mar 28 2014 Michael Simacek <msimacek@redhat.com> - 2.1.4.1-2
+- Use Requires: java-headless rebuild (#1067528)
+
 * Fri Feb 14 2014 Marek Goldmann <mgoldman@redhat.com> - 2.1.4.1-1
 - Upstream release 2.1.4.1
 

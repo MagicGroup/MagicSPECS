@@ -1,6 +1,6 @@
 Name:           perl-IPTables-libiptc
 Version:        0.52
-Release:        4%{?dist}
+Release:        10%{?dist}
 Summary:        Perl extension for iptables libiptc
 License:        GPLv2+
 Group:          Development/Libraries
@@ -8,7 +8,14 @@ URL:            http://search.cpan.org/dist/IPTables-libiptc/
 Source0:        http://www.cpan.org/authors/id/H/HA/HAWK/IPTables-libiptc-%{version}.tar.gz
 # RT#70639
 Patch0:         %{name}-0.51-Support-iptables-1.4.12.patch
+# RT#70639
+Patch1:         IPTables-libiptc-0.52-Support-for-1.4.16.2.patch
+# RT#70639, bug #992659
+Patch2:         IPTables-libiptc-0.52-Support-for-1.4.18.patch
+# croak() expects formatting string, bug #1106081
+Patch3:         IPTables-libiptc-0.52-Fix-GCC-format-security-warning.patch
 BuildRequires:  iptables-devel >= 1.4.4
+BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Basename)
 # Tests only:
@@ -16,7 +23,7 @@ BuildRequires:  perl(AutoLoader)
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Test::More)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -27,20 +34,22 @@ library libiptc.
 %prep
 %setup -q -n IPTables-libiptc-%{version}
 %patch0 -p1 -b .1412
+%patch1 -p1 -b .1416
+%patch2 -p1 -b .1418
+%patch3 -p1
 
 %build
-%{__perl} Makefile.PL PREFIX=%{_prefix} INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL PREFIX=%{_prefix} INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes README
@@ -49,11 +58,31 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.52-4
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.52-10
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.52-3
-- 为 Magic 3.0 重建
+* Tue Jun 10 2014 Petr Pisar <ppisar@redhat.com> - 0.52-9
+- Fix GCC format-security warning (bug #1106081)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+- Support for iptables-1.4.18 (bug #992659)
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.52-6
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+- Support for iptables-1.4.16.2
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.52-3
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

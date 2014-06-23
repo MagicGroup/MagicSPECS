@@ -1,14 +1,14 @@
-%global xfceversion 4.10
 
 Name:           xfconf
 Version:        4.10.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Hierarchical configuration system for Xfce
 
 Group:          System Environment/Base
 License:        GPLv2
 URL:            http://www.xfce.org/
 #VCS git:git://git.xfce.org/xfce/xfconf
+%global xfceversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/xfce/%{name}/%{xfceversion}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -114,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 4.10.0-5
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.10.0-4
 - 为 Magic 3.0 重建
 

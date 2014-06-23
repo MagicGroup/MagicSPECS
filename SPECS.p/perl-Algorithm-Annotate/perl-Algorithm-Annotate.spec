@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-Annotate
 Version:        0.10
-Release:        17%{?dist}
+Release:        19%{?dist}
 Summary:        Represent a series of changes in annotate form
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,6 +37,12 @@ chmod -R u+rwX,go+rX,go-w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.10-19
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.10-18
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.10-17
 - 为 Magic 3.0 重建
 

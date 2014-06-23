@@ -3,7 +3,7 @@
 
 Name:		perl-Sub-Name
 Version:	0.05
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:	Name - or rename - a sub
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -66,6 +66,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Name.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-10
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.05-9
 - 为 Magic 3.0 重建
 

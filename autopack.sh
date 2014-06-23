@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 # 返回值 
 # 1 = 无法准备源码，即不能下载源码或其它问题
 # 2 = spec 格式错误
@@ -21,7 +21,7 @@ fi
 pushd $(dirname $0)
 # 变量设置
 # 是否记录调试信息
-DEBUG=0
+DEBUG=1
 # 是否记录编译日志
 LOG=1
 # 是否给 release 加 1
@@ -33,6 +33,7 @@ PACKAGER="Magic Group"
 PACKEMAIL="<magicgroup@linuxfans.org>"
 # rpmbuild 中是否执行 check 段
 CHECK=0
+NODEPS=0
 # RPM 下的目录名
 ARCH=$(uname -m)
 if [ "$ARCH" = "mips64" ];then
@@ -56,6 +57,12 @@ if [ "$CHECK" = 1 ] ;then
         NOCHECK=""
 else
         NOCHECK="--nocheck"
+fi
+# rpmbuild 是否忽略依赖关系
+if [ "$NODEPS" = 1 ] ; then
+	BUILDDEPS="--nodeps"
+else
+	BUILDDEPS=""
 fi
 # 使用的下载命令
 DOWNCOMMAND=wget
@@ -114,7 +121,7 @@ function debug_runsh ()
 	if [ $DEBUG = "1" ];then
 		sh $1
 	else
-		sh $1 >> "$LOGFILE" 2>&1
+		sh $1 > "$LOGFILE" 2>&1
 	fi
 }
 function debug_run ()
@@ -347,13 +354,14 @@ function build()
         SPECNAME=$(ls $DIR/*.spec)
 	NAME=$(basename $SPECNAME)
         echo "正在打包 $DIR ...，可能需要一段时间"
-        if ! (debug_run rpmbuild -ba --clean --rmsource --rmspec $NOCHECK $TOPDIR/SOURCES/$NAME ) ; then
+        if ! (debug_run rpmbuild -ba --clean --rmsource --rmspec $BUILDDEPS $NOCHECK $TOPDIR/SOURCES/$NAME ) ; then
                 echo "打包过程出错，请检查 build.log 文件" 
 		touch $DIR/buildfail     
                 exit 3
         fi
         echo "打包完成，清理目录"
 	rm -f $DIR/*fail
+	rm -f $DIR/hasupdate
 }
 
 #安装函数
@@ -482,7 +490,9 @@ downsources $1 || exit 1
 # 下载补丁
 downpatches $1 || exit 1
 # 安装依赖
+if [ "NODEPS" = 0 ]; then
 installbuildrequires $1 || exit 1
+fi
 # 打包
 build $1 || exit 1
 if [ $INSTALLRPMS = "1" ]; then

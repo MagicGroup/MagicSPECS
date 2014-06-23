@@ -1,6 +1,6 @@
 Name:           perl-GTop
 Version:        0.18
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl interface to libgtop
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.18-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.18-4
 - 为 Magic 3.0 重建
 

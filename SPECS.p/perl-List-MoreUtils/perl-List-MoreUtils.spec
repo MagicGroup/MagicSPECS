@@ -1,6 +1,6 @@
 Name:		perl-List-MoreUtils
 Version:	0.33
-Release:	8%{?dist}
+Release:	14%{?dist}
 Summary:	Provide the stuff missing in List::Util
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -69,6 +69,24 @@ rm -rf %{buildroot}
 %{_mandir}/man3/List::MoreUtils.3pm*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.33-14
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.33-13
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.33-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.33-11
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.33-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.33-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.33-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-HTML-Mason
 Version:        1.48
-Release:        3%{?dist}
+Release:        12%{?dist}
 Epoch:          1
 Summary:        Powerful Perl-based web site development and delivery engine
 License:        GPL+ or Artistic
@@ -86,6 +86,33 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cache/mason
 %dir %{_localstatedir}/www/mason
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1:1.48-12
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1:1.48-11
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1:1.48-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:1.48-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:1.48-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.48-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.48-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.48-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.48-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.48-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

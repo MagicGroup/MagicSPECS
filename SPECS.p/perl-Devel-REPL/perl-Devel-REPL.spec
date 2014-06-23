@@ -1,32 +1,30 @@
 Name:           perl-Devel-REPL
-Version:        1.003012
-Release:        6%{?dist}
+Version:        1.003015
+Release:        5%{?dist}
 Summary:        Modern perl interactive shell
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-REPL/
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DO/DOY/Devel-REPL-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Devel-REPL-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(CPAN)
-BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(File::HomeDir)
-BuildRequires:  perl(Moose) >= 0.74
-BuildRequires:  perl(MooseX::AttributeHelpers) >= 0.16
-BuildRequires:  perl(MooseX::Getopt) >= 0.18
-BuildRequires:  perl(MooseX::Object::Pluggable) >= 0.0009
-BuildRequires:  perl(namespace::clean)
-BuildRequires:  perl(Task::Weaken)
-BuildRequires:  perl(Test::More)
-# necessary for optional modules
 BuildRequires:  perl(App::Nopaste)
 BuildRequires:  perl(B::Keywords)
-BuildRequires:  perl(Data::Dump::Streamer)
+BuildRequires:  perl(CPAN)
 BuildRequires:  perl(Data::Dumper::Concise)
+BuildRequires:  perl(Data::Dump::Streamer)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::HomeDir)
 BuildRequires:  perl(File::Next)
 BuildRequires:  perl(Lexical::Persistence)
 BuildRequires:  perl(Module::Refresh)
+BuildRequires:  perl(Moose) >= 0.93
+BuildRequires:  perl(MooseX::Getopt) >= 0.18
+BuildRequires:  perl(MooseX::Object::Pluggable) >= 0.0009
+BuildRequires:  perl(namespace::autoclean)
 BuildRequires:  perl(PPI)
 BuildRequires:  perl(Sys::SigAction)
+BuildRequires:  perl(Task::Weaken)
+BuildRequires:  perl(Test::More)
 # undetected requires
 Requires:       perl(App::Nopaste)
 Requires:       perl(MooseX::Getopt) >= 0.18
@@ -52,26 +50,48 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README examples
 %{perl_vendorlib}/*
 %{_bindir}/*
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.003012-6
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.003015-5
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.003012-5
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003015-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Aug 05 2013 Petr Pisar <ppisar@redhat.com> - 1.003015-3
+- Perl 5.18 rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003015-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Mar 08 2013 Iain Arnell <iarnell@gmail.com> 1.003015-1
+- update to latest upstream version
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003014-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jan 04 2013 Iain Arnell <iarnell@gmail.com> 1.003014-1
+- update to latest upstream version
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003013-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 23 2012 Petr Pisar <ppisar@redhat.com> - 1.003013-2
+- Perl 5.16 rebuild
+
+* Sun May 20 2012 Iain Arnell <iarnell@gmail.com> 1.003013-1
+- update to latest upstream version
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003012-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -2,7 +2,9 @@ Name: linuxconsoletools
 Version: 1.4.7
 Release: 2%{?dist}
 Summary: Tools for connecting joysticks & legacy devices to the kernel's input subsystem
+Summary(zh_CN.UTF-8): 连接游戏摇杆和过时设备到内核输入子系统的工具
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 License: GPLv2+
 URL: http://sourceforge.net/projects/linuxconsole/
 
@@ -20,6 +22,9 @@ Conflicts: gpm < 1.20.6-26
 This package contains utilities for testing and configuring joysticks,
 connecting legacy devices to the kernel's input subsystem (providing support
 for serial mice, touchscreens etc.), and test the input event layer.
+
+%description -l zh_CN.UTF-8
+连接游戏摇杆和过时设备（比如串口鼠标，触摸屏等）到内核输入子系统的测试和配置工具，
 
 %prep
 %setup -q
@@ -40,6 +45,7 @@ mv -f %{buildroot}%{_prefix}/share/joystick/* %{buildroot}%{_libexecdir}/joystic
 
 # fixing man permissions
 chmod -x %{buildroot}%{_mandir}/man1/*
+magic_rpm_clean.sh
 
 %files
 %doc COPYING README NEWS

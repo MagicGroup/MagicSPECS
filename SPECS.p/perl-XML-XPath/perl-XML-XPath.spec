@@ -1,6 +1,6 @@
 Name:           perl-XML-XPath
 Version:        1.13
-Release:        25%{?dist}
+Release:        26%{?dist}
 
 Summary:        XPath parser and evaluator for Perl
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.13-26
+- 为 Magic 3.0 重建
+
 * Tue May 06 2014 Liu Di <liudidi@gmail.com> - 1.13-25
 - 为 Magic 3.0 重建
 

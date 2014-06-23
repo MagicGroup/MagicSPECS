@@ -1,6 +1,6 @@
 Name:           perl-Test-Tester
-Version:        0.107
-Release:        13%{?dist}
+Version:        0.109
+Release:        6%{?dist}
 Summary:        Ease testing test modules built with Test::Builder
 License:        Artistic clarified
 Group:          Development/Libraries
@@ -8,12 +8,22 @@ URL:            http://search.cpan.org/dist/Test-Tester/
 Source0:        http://www.cpan.org/authors/id/F/FD/FDALY/Test-Tester-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(strict)
+# Run-time:
+BuildRequires:  perl(Config)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Test::Builder)
+BuildRequires:  perl(threads::shared)
+BuildRequires:  perl(vars)
+BuildRequires:  perl(warnings)
+# Tests:
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(lib)
 BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(threads::shared)
 
 %description
 If you have written a test module based on Test::Builder then Test::Tester
@@ -37,7 +47,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -49,8 +59,31 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.107-13
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.109-6
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.109-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Feb 18 2014 Petr Pisar <ppisar@redhat.com> - 0.109-4
+- Specify all dependencies
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.109-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.109-2
+- Perl 5.18 rebuild
+
+* Thu Jul 11 2013 Paul Howarth <paul@city-fan.org> - 0.109-1
+- Update to 0.109
+  - Add minimal support for note and explain (i.e. don't crash)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.108-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Nov 23 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.108-1
+- 0.108 bump
+- Add BR perl(lib)
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.107-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -69,7 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Wed Dec 22 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.107-7
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Fri May 07 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.107-6
 - Mass rebuild with perl-5.12.0

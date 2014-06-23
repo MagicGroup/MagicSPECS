@@ -1,6 +1,6 @@
 Name:           perl-AnyEvent-AIO
 Version:        1.1
-Release:        14%{?dist}
+Release:        16%{?dist}
 Summary:        Truly asynchronous file and directrory I/O
 
 Group:          Development/Libraries
@@ -49,6 +49,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1-16
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.1-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.1-14
 - 为 Magic 3.0 重建
 

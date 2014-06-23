@@ -1,6 +1,6 @@
 Name:           perl-PPI-HTML
 Version:        1.08
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Generate syntax-highlighted HTML for Perl using PPI
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.08-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 25 2012 Petr Pisar <ppisar@redhat.com> - 1.08-2
 - Unbundle inc::Module::Install
 

@@ -1,7 +1,7 @@
 Name:           perl-DBD-Pg
 Summary:        A PostgreSQL interface for perl
 Version:        2.19.3
-Release:        3%{?dist}
+Release:        19%{?dist}
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/T/TU/TURNSTEP/DBD-Pg-%{version}.tar.gz 
@@ -46,7 +46,7 @@ Provides:       perl(DBD::Pg) = %{version}
 %{?perl_default_filter}
 %global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(DBD::Pg\\)$
 %global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(DBI\\)$
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 DBD::Pg is a Perl module that works with the DBI module to provide access
@@ -88,6 +88,54 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.19.3-19
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.19.3-18
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.19.3-17
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.19.3-16
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.19.3-15
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.19.3-14
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.19.3-13
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.19.3-12
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 2.19.3-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.19.3-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.19.3-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.19.3-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.19.3-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.19.3-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.19.3-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.19.3-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.19.3-3
 - 为 Magic 3.0 重建
 

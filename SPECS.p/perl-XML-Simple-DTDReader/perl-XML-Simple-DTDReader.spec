@@ -1,6 +1,6 @@
 Name:           perl-XML-Simple-DTDReader
 Version:        0.04
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Simple XML file reading based on their DTDs
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-15
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.04-14
 - 为 Magic 3.0 重建
 

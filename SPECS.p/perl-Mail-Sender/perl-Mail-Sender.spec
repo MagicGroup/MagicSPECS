@@ -1,6 +1,6 @@
 Name:           perl-Mail-Sender
 Version:        0.8.16
-Release:        12%{?dist}
+Release:        18%{?dist}
 Summary:        Module for sending mails with attachments through an SMTP server
 
 Group:          Development/Libraries
@@ -60,6 +60,24 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.8.16-18
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.8.16-17
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.8.16-16
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.8.16-15
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.8.16-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.8.16-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.8.16-12
 - 为 Magic 3.0 重建
 

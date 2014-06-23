@@ -1,6 +1,6 @@
 Name:           perl-Cache-FastMmap
 Version:        1.40
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Uses an mmap'ed file to act as a shared memory interprocess cache
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.40-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.40-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.40-3
 - 为 Magic 3.0 重建
 

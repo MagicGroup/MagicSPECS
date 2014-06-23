@@ -1,6 +1,6 @@
 Name:           perl-App-Nopaste
 Version:        0.90
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Easy access to any pastebin
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -82,6 +82,12 @@ make test
 %{_mandir}/man1/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.90-3
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.90-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 02 2012 Iain Arnell <iarnell@gmail.com> 1:0.90-1
 - update to latest upstream version
 

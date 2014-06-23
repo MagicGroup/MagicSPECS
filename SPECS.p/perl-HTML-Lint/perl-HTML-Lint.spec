@@ -1,6 +1,6 @@
 Name:           perl-HTML-Lint
 Version:        2.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        HTML::Lint Perl module
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.10-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.10-4
 - 为 Magic 3.0 重建
 

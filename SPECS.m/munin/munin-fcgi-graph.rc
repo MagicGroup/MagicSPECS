@@ -1,0 +1,56 @@
+#! /bin/sh
+#
+# munin-fcgi-graph
+#
+# chkconfig: 2345 90 10
+# description: munin fcgi graph service process
+# pidfile: /var/run/munin/fcgi-graph.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+RETVAL=0
+
+mkdir -p /var/run/munin 2>/dev/null
+chown munin /var/run/munin
+restorecon /var/run/munin 2>/dev/null
+
+# See how we were called.
+case "$1" in
+  start)
+	echo -n "Starting Munin fcgi-graph: "
+        /usr/bin/spawn-fcgi -s /var/run/munin/fcgi-graph.sock -U nginx -u munin -g munin /var/www/cgi-bin/munin-cgi-graph -P /var/run/munin/fcgi-graph.pid
+	RETVAL=$?
+	if [ $RETVAL -eq 0 ]
+	then
+		echo_success
+		touch /var/lock/subsys/munin-fcgi-graph
+	else
+		echo_failure
+	fi
+	echo
+	;;
+  stop)
+	echo -n "Stopping Munin fcgi-graph: "
+	kill $(cat /var/run/munin/fcgi-graph.pid)
+	RETVAL=$?
+	if [ $RETVAL -eq 0 ]
+	then
+		echo_success
+		rm -f /var/lock/subsys/munin-fcgi-graph
+	else
+		echo_failure
+	fi
+	echo
+	;;
+  restart|reload)
+  	$0 stop
+	$0 start
+	RETVAL=$?
+	;;
+  *)
+	echo "Usage: munin-fcgi-graph {start|stop|restart}"
+	exit 1
+esac
+
+exit $RETVAL

@@ -1,7 +1,7 @@
 Name:           perl-Business-ISBN
 Version:        2.05.03
 %define module_version 2.05_03
-Release:        2%{?dist}
+Release:        6%{?dist}
 Summary:        Perl module to work with International Standard Book Numbers
 
 Group:          Development/Libraries
@@ -64,6 +64,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.05.03-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.05.03-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.05.03-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.05.03-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.05.03-2
 - 为 Magic 3.0 重建
 

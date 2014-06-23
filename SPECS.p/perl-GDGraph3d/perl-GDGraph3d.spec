@@ -1,6 +1,6 @@
 Name:           perl-GDGraph3d
 Version:        0.63
-Release:        20%{?dist}
+Release:        24%{?dist}
 Summary:        3D graph generation package for Perl
 
 Group:          Development/Libraries
@@ -55,6 +55,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.63-24
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.63-23
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.63-22
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.63-21
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.63-20
 - 为 Magic 3.0 重建
 

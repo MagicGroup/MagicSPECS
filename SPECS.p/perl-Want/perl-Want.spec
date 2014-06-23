@@ -1,6 +1,6 @@
 Name: 		perl-Want
 Version: 	0.21
-Release: 	4%{?dist}
+Release: 	5%{?dist}
 Summary: 	Perl module implementing a generalisation of wantarray
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -43,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.21-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-CGI-FormBuilder
 Version:        3.0501
-Release:        16%{?dist}
+Release:        23%{?dist}
 Summary:        Easily generate and process stateful forms
 
 Group:          Development/Libraries
@@ -52,6 +52,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.0501-23
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.0501-22
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-21
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-20
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-19
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.0501-18
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 3.0501-17
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 3.0501-16
 - 为 Magic 3.0 重建
 

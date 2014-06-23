@@ -1,10 +1,12 @@
 Name:           ladspa
 Version:        1.13
-Release:        9%{?dist}
+Release:        10%{?dist}
 
 Summary:        Linux Audio Developer's Simple Plug-in API, examples and tools
+Summary(zh_CN.UTF-8): Linux 音频开发的简单插件 API，样例和工具
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.ladspa.org/
 Source:         http://www.ladspa.org/download/%{name}_sdk_%{version}.tgz
@@ -23,9 +25,14 @@ against a range of host applications.
 
 This package contains the example plug-ins and tools from the LADSPA SDK.
 
+%description -l zh_CN.UTF-8
+Linux 音频开发的简单插件 API，样例和工具。
+
 %package        devel
 Summary:        Linux Audio Developer's Simple Plug-in API
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
@@ -35,6 +42,8 @@ Definitive technical documentation on LADSPA plug-ins for both the host
 and plug-in is contained within copious comments within the ladspa.h
 header file.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n ladspa_sdk
@@ -91,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.13-10
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.13-9
 - 为 Magic 3.0 重建
 

@@ -28,83 +28,63 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define with()          %{expand:%%{?with_%{1}:1}%%{!?with_%{1}:0}}
-%define without()       %{expand:%%{?with_%{1}:0}%%{!?with_%{1}:1}}
-%define bcond_with()    %{expand:%%{?_with_%{1}:%%global with_%{1} 1}}
-%define bcond_without() %{expand:%%{!?_without_%{1}:%%global with_%{1} 1}}
-
-%bcond_without bootstrap
-
-%if %with bootstrap
-%global build_javadoc        0
-%global _unpackaged_files_terminate_build	0
-%else
-%global build_javadoc        1
-%endif
-
-%global with_manifest_only 0
+%bcond_without tests
+%bcond_without javadoc
 
 %global ant_home %{_datadir}/ant
-
-%global major_version 1.8
+%global major_version 1.9
 
 Name:           ant
-Version:	1.9.3
-Release:        2%{?dist}
+Version:        1.9.4
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Build tool for java
-Summary(zh_CN.UTF-8):   JAVA 的构建工具 
+Summary(it):    Tool per la compilazione di programmi java
+Summary(fr):    Outil de compilation pour java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
-Group:          Development/Tools
-Group(zh_CN.UTF-8): 开发/工具
 Source0:        http://www.apache.org/dist/ant/source/apache-ant-%{version}-src.tar.bz2
-Source2:        apache-ant-%{major_version}.ant.conf
+Source2:        apache-ant-1.8.ant.conf
 
 # Fix some places where copies of classes are included in the wrong jarfiles
-Patch1:         apache-ant-bz163689.patch
-Patch3:         apache-ant-no-test-jar.patch
 Patch4:         apache-ant-class-path-in-manifest.patch
 
 BuildRequires:  jpackage-utils >= 0:1.7.5
-BuildRequires:  java-devel >= 0:1.5.0
-%if %without bootstrap
+BuildRequires:  java-devel >= 1:1.8.0
 BuildRequires:  ant
+BuildRequires:  ant-junit
 BuildRequires:  junit
 BuildRequires:  xalan-j2
 BuildRequires:  xerces-j2
-%endif
+BuildRequires:  xml-commons-apis
 
 Requires:       jpackage-utils >= 0:1.7.5
-Requires:       java-devel >= 0:1.5.0
-%if %without bootstrap
+Requires:       java-devel >= 1:1.8.0
 Requires:       xerces-j2
-%endif
+Requires:       xml-commons-apis
+
+Obsoletes:      %{name}-scripts < %{epoch}:%{version}-%{release}
+Provides:       %{name}-scripts = %{epoch}:%{version}-%{release}
 
 BuildArch:      noarch
-# Allow subpackages not in RHEL to be installed from JPackage
-Provides:       %{name} = %{epoch}:%{version}-%{release}
-#Drop in F-18
-Obsoletes:       %{name}-nodeps < %{epoch}:%{version}-%{release}
-Provides:       %{name}-nodeps = %{epoch}:%{version}-%{release}
-Obsoletes:      %{name}-trax < %{epoch}:%{version}-%{release}
-Provides:       %{name}-trax = %{epoch}:%{version}-%{release}
-
-
 
 %description
 Ant is a platform-independent build tool for java. It's used by apache
 jakarta and xml projects.
 
-%description -l zh_CN.UTF-8
-Ant 是一个平台无关的 JAVA 构建工具，它被 apache jakarta 和 xml 项目使用。
+%description -l fr
+Ant est un outil de compilation multi-plateformes pour java. Il est
+utilisé par les projets apache-jakarta et apache-xml.
+
+%description -l it
+Ant e' un tool indipendente dalla piattaforma creato per faciltare la
+compilazione di programmi java.
+Allo stato attuale viene utilizzato dai progetti apache jakarta ed
+apache xml.
 
 %package jmf
 Summary:        Optional jmf tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       %{name}-nodeps = %{epoch}:%{version}-%{release}
-Provides:       ant-jmf = %{epoch}:%{version}-%{release}
 
 %description jmf
 Optional jmf tasks for %{name}.
@@ -114,9 +94,7 @@ Taches jmf optionelles pour %{name}.
 
 %package swing
 Summary:        Optional swing tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Provides:       ant-swing = %{epoch}:%{version}-%{release}
 
 %description swing
 Optional swing tasks for %{name}.
@@ -124,32 +102,11 @@ Optional swing tasks for %{name}.
 %description swing -l fr
 Taches swing optionelles pour %{name}.
 
-%if %without bootstrap
-%if %{with_manifest_only}
-%package manifest-only
-Summary:        Manifest-only jars for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Provides:       %{name}-icontract = %{epoch}:%{version}-%{release}
-Provides:       %{name}-netrexx = %{epoch}:%{version}-%{release}
-Provides:       %{name}-starteam = %{epoch}:%{version}-%{release}
-Provides:       %{name}-stylebook = %{epoch}:%{version}-%{release}
-Provides:       %{name}-vaj = %{epoch}:%{version}-%{release}
-Provides:       %{name}-weblogic = %{epoch}:%{version}-%{release}
-Provides:       %{name}-xalan1 = %{epoch}:%{version}-%{release}
-Provides:       %{name}-xslp = %{epoch}:%{version}-%{release}
-
-%description  manifest-only
-Manifest-only jars for %{name}.
-%endif
-
 %package antlr
 Summary:        Optional antlr tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       antlr
 BuildRequires:  antlr
-Provides:       ant-antlr = %{epoch}:%{version}-%{release}
 
 %description antlr
 Optional antlr tasks for %{name}.
@@ -159,11 +116,9 @@ Taches antlr optionelles pour %{name}.
 
 %package apache-bsf
 Summary:        Optional apache bsf tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       bsf
 BuildRequires:  bsf
-Provides:       ant-apache-bsf = %{epoch}:%{version}-%{release}
 
 %description apache-bsf
 Optional apache bsf tasks for %{name}.
@@ -173,11 +128,9 @@ Taches apache bsf optionelles pour %{name}.
 
 %package apache-resolver
 Summary:        Optional apache resolver tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       xml-commons-resolver
 BuildRequires:  xml-commons-resolver
-Provides:       ant-apache-resolver = %{epoch}:%{version}-%{release}
 
 %description apache-resolver
 Optional apache resolver tasks for %{name}.
@@ -187,11 +140,9 @@ Taches apache resolver optionelles pour %{name}.
 
 %package commons-logging
 Summary:        Optional commons logging tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       apache-commons-logging
 BuildRequires:  apache-commons-logging
-Provides:       ant-commons-logging = %{epoch}:%{version}-%{release}
 
 %description commons-logging
 Optional commons logging tasks for %{name}.
@@ -201,11 +152,9 @@ Taches commons logging optionelles pour %{name}.
 
 %package commons-net
 Summary:        Optional commons net tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       apache-commons-net
 BuildRequires:  apache-commons-net
-Provides:       ant-commons-net = %{epoch}:%{version}-%{release}
 
 %description commons-net
 Optional commons net tasks for %{name}.
@@ -217,11 +166,9 @@ Taches commons net optionelles pour %{name}.
 %if 0
 %package jai
 Summary:        Optional jai tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jai
 BuildRequires:  jai
-Provides:       ant-jai = %{epoch}:%{version}-%{release}
 
 %description jai
 Optional jai tasks for %{name}.
@@ -232,13 +179,9 @@ Taches jai optionelles pour %{name}.
 
 %package apache-bcel
 Summary:        Optional apache bcel tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       bcel
 BuildRequires:  bcel
-Provides:       ant-apache-bcel = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-bcel = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-bcel < %{epoch}:%{version}-%{release}
 
 %description apache-bcel
 Optional apache bcel tasks for %{name}.
@@ -248,13 +191,9 @@ Taches apache bcel optionelles pour %{name}.
 
 %package apache-log4j
 Summary:        Optional apache log4j tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       log4j
 BuildRequires:  log4j
-Provides:       ant-apache-log4j = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-log4j = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-log4j < %{epoch}:%{version}-%{release}
 
 %description apache-log4j
 Optional apache log4j tasks for %{name}.
@@ -264,13 +203,9 @@ Taches apache log4j optionelles pour %{name}.
 
 %package apache-oro
 Summary:        Optional apache oro tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jakarta-oro
 BuildRequires:  jakarta-oro
-Provides:       ant-apache-oro = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-oro = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-oro < %{epoch}:%{version}-%{release}
 
 %description apache-oro
 Optional apache oro tasks for %{name}.
@@ -280,13 +215,9 @@ Taches apache oro optionelles pour %{name}.
 
 %package apache-regexp
 Summary:        Optional apache regexp tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       regexp
 BuildRequires:  regexp
-Provides:       ant-apache-regexp = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-regexp = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-regexp < %{epoch}:%{version}-%{release}
 
 %description apache-regexp
 Optional apache regexp tasks for %{name}.
@@ -296,12 +227,10 @@ Taches apache regexp optionelles pour %{name}.
 
 %package apache-xalan2
 Summary:        Optional apache xalan2 tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       regexp
 BuildRequires:  regexp
 Requires:       xalan-j2
-Provides:       ant-apache-xalan2 = %{epoch}:%{version}-%{release}
 
 %description apache-xalan2
 Optional apache xalan2 tasks for %{name}.
@@ -311,11 +240,9 @@ Taches apache xalan2 optionelles pour %{name}.
 
 %package javamail
 Summary:        Optional javamail tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       javamail >= 0:1.2-5jpp
 BuildRequires:  javamail >= 0:1.2-5jpp
-Provides:       ant-javamail = %{epoch}:%{version}-%{release}
 
 %description javamail
 Optional javamail tasks for %{name}.
@@ -325,11 +252,9 @@ Taches javamail optionelles pour %{name}.
 
 %package jdepend
 Summary:        Optional jdepend tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jdepend
 BuildRequires:  jdepend
-Provides:       ant-jdepend = %{epoch}:%{version}-%{release}
 
 %description jdepend
 Optional jdepend tasks for %{name}.
@@ -339,11 +264,9 @@ Taches jdepend optionelles pour %{name}.
 
 %package jsch
 Summary:        Optional jsch tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jsch
 BuildRequires:  jsch
-Provides:       ant-jsch = %{epoch}:%{version}-%{release}
 
 %description jsch
 Optional jsch tasks for %{name}.
@@ -353,11 +276,9 @@ Taches jsch optionelles pour %{name}.
 
 %package junit
 Summary:        Optional junit tasks for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       junit
 Requires:       xalan-j2
-Provides:       ant-junit = %{epoch}:%{version}-%{release}
 
 %description junit
 Optional junit tasks for %{name}.
@@ -367,31 +288,14 @@ Taches junit optionelles pour %{name}.
 
 %package testutil
 Summary:        Test utility classes for %{name}
-Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       junit
-Provides:       ant-testutil = %{epoch}:%{version}-%{release}
 
 %description testutil
 Test utility tasks for %{name}.
 
-%package scripts
-Summary:        Additional scripts for %{name}
-Group:          Development/Tools
-AutoReqProv:    no
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       %{_bindir}/perl
-Requires:       %{_bindir}/python
-
-%description scripts
-Additional Perl and Python scripts for %{name}.
-
-%description scripts -l fr
-Scripts additionels pour %{name}.
-
 %package manual
 Summary:        Manual for %{name}
-Group:          Development/Tools
 
 %description manual
 Documentation for %{name}.
@@ -404,14 +308,12 @@ Documentation pour %{name}.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Documentation
 
 %description javadoc
 Javadoc for %{name}.
 
 %description javadoc -l fr
 Javadoc pour %{name}.
-%endif
 
 # -----------------------------------------------------------------------------
 
@@ -419,13 +321,6 @@ Javadoc pour %{name}.
 %setup -q -n apache-ant-%{version}
 #Fixup version
 find -name build.xml -o -name pom.xml | xargs sed -i -e s/-SNAPSHOT//
-# Disable the style and xmlvalidate tasks on ppc64 and s390x (#163689).
-%ifarch ppc64 s390x
-%patch1 -p1
-%endif
-
-# When bootstrapping, we don't have junit
-%patch3 
 
 # Fix class-path-in-manifest rpmlint warning
 %patch4
@@ -433,10 +328,15 @@ find -name build.xml -o -name pom.xml | xargs sed -i -e s/-SNAPSHOT//
 # clean jar files
 find . -name "*.jar" | %{_bindir}/xargs -t rm
 
+# failing testcases. TODO see why
+rm src/tests/junit/org/apache/tools/ant/types/selectors/SignedSelectorTest.java \
+   src/tests/junit/org/apache/tools/ant/taskdefs/condition/IsFileSelectedTest.java \
+   src/tests/junit/org/apache/tools/ant/taskdefs/condition/IsSignedTest.java \
+   src/tests/junit/org/apache/tools/ant/taskdefs/JarTest.java \
+   src/tests/junit/org/apache/tools/mail/MailMessageTest.java
+
 #install jars
-%if %without bootstrap
-build-jar-repository -s -p lib/optional xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
-%endif
+build-jar-repository -s -p lib/optional antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver xalan-j2-serializer xerces-j2 xml-commons-apis
 
 # Fix file-not-utf8 rpmlint warning
 iconv KEYS -f iso-8859-1 -t utf-8 -o KEYS.utf8
@@ -445,16 +345,11 @@ iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
 mv LICENSE.utf8 LICENSE
 
 %build
-%if %without bootstrap
 %{ant} jars test-jar
-%if %{build_javadoc}
-export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
+
+%if %with javadoc
+export CLASSPATH=$(build-classpath antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver xerces-j2 xml-commons-apis)
 %{ant} javadocs
-%endif
-%else
-export JAVA_HOME=%{java_home}
-export CLASSPATH=$JAVA_HOME/lib/tools.jar
-sh ./build.sh --noconfig jars
 %endif
 
 #remove empty jai and netrexx jars. Due to missing dependencies they contain only manifests.
@@ -463,7 +358,7 @@ rm -fr build/lib/ant-jai.jar build/lib/ant-netrexx.jar
 
 %install
 # ANT_HOME and subdirs
-mkdir -p $RPM_BUILD_ROOT%{ant_home}/{lib,etc}
+mkdir -p $RPM_BUILD_ROOT%{ant_home}/{lib,etc,bin}
 
 # jars
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
@@ -471,41 +366,37 @@ install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 
 for jar in build/lib/*.jar
 do
+  # Make sure that installed JARs are not empty
+  jar tf ${jar} | egrep -q *.class
+
   jarname=$(basename $jar .jar)
   pomname="JPP.%{name}-${jarname}.pom"
 
-  #Determine where to put it
-  case $jarname in
-#These go into %%{_javadir}, pom files have different names
-  ant | ant-bootstrap | ant-launcher) destdir=$RPM_BUILD_ROOT%{_javadir}; destname="";pomname="JPP-$jarname.pom";;
-#Bootstracp builds an incomplete ant-junit, don't ship it
-%if %with bootstrap
-  ant-junit) continue;;
-%endif
-#These go into %%{_javadir}/ant
-  *) destdir=$RPM_BUILD_ROOT%{_javadir}/%{name}; destname="/%{name}";
-  esac
-
   #instal jar
-  install -m 644 ${jar} ${destdir}/${jarname}.jar
+  install -m 644 ${jar} $RPM_BUILD_ROOT%{_javadir}/%{name}/${jarname}.jar
   # jar aliases
-  ln -sf ../../java${destname}/${jarname}.jar $RPM_BUILD_ROOT%{ant_home}/lib/${jarname}.jar
+  ln -sf ../../java/%{name}/${jarname}.jar $RPM_BUILD_ROOT%{ant_home}/lib/${jarname}.jar
 
   #bootstrap does not have a pom
   [ $jarname == ant-bootstrap ] && continue
 
+  # add backward compatibility for nodeps jar that is now part of main
+  # jar
+  alias=
+  [ $jarname == ant ] && alias=org.apache.ant:ant-nodeps
+
   #install pom
-  install -m 644 src/etc/poms/${jarname}/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/${pomname}
-  %add_to_maven_depmap org.apache.ant ${jarname} %{version} JPP${destname} ${jarname}
+  install -p -m 644 src/etc/poms/${jarname}/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/${pomname}
+  %add_maven_depmap ${pomname} %{name}/${jarname}.jar -a "${alias}" -f ${jarname/ant-/}
 done
 
-# add backward compatibility for nodeps jar that is now part of
-# main jar
-%add_to_maven_depmap org.apache.ant ant-nodeps %{version} JPP ant
+for mod in ant ant-bootstrap ant-launcher; do
+    ln -sf %{name}/${mod}.jar $RPM_BUILD_ROOT%{_javadir}
+done
 
 #ant-parent pom
-install -m 644 src/etc/poms/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}-parent.pom
-%add_to_maven_depmap org.apache.ant ant-parent %{version} JPP ant-parent
+install -p -m 644 src/etc/poms/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}-parent.pom
+%add_maven_depmap JPP-%{name}-parent.pom
 
 # scripts: remove dos and os/2 scripts
 rm -f src/script/*.bat
@@ -516,11 +407,9 @@ cp -p src/etc/*.xsl $RPM_BUILD_ROOT%{ant_home}/etc
 
 # install everything else
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
-%if %without bootstrap
-cp -p src/script/* $RPM_BUILD_ROOT%{_bindir}
-%else
-cp -p src/script/ant{,Run} $RPM_BUILD_ROOT%{_bindir}
-%endif
+cp -p src/script/{ant,antRun} $RPM_BUILD_ROOT%{_bindir}
+ln -sf %{_bindir}/ant $RPM_BUILD_ROOT%{ant_home}/bin/
+ln -sf %{_bindir}/antRun $RPM_BUILD_ROOT%{ant_home}/bin/
 
 # default ant.conf
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
@@ -530,7 +419,6 @@ cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d
 echo "ant/ant-jmf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jmf
 echo "ant/ant-swing" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/swing
-%if %without bootstrap
 echo "antlr ant/ant-antlr" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/antlr
 echo "bsf ant/ant-apache-bsf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bsf
 echo "xml-commons-resolver ant/ant-apache-resolver" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-resolver
@@ -548,9 +436,8 @@ echo "jsch ant/ant-jsch" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jsch
 echo "junit ant/ant-junit" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit
 echo "junit ant/ant-junit4" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit4
 echo "testutil ant/ant-testutil" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/testutil
-%endif
 
-%if %{build_javadoc}
+%if %with javadoc
 # javadoc
 mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
@@ -559,19 +446,14 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 # fix link between manual and javadoc
 (cd manual; ln -sf %{_javadocdir}/%{name} api)
 
-%if %with bootstrap
-find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
-                                                 -a ! -name ant-update.xsl \
-                                                 -a ! -name changelog.xsl \
-                                                 -a ! -name coverage-frames.xsl \
-                                                 -a ! -name junit-frames-xalan1.xsl \
-                                                 -a ! -name log.xsl \
-                                                 -a ! -name mmetrics-frames.xsl \
-                                                 -a ! -name tagdiff.xsl \
-                                                 | xargs -t rm
+%if %with tests
+%check
+%{ant} test
 %endif
 
-%files
+%files -f .mfiles
+%files -f .mfiles-ant
+%files -f .mfiles-launcher
 %doc KEYS LICENSE NOTICE README WHATSNEW
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 %attr(0755,root,root) %{_bindir}/ant
@@ -580,7 +462,11 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 %{_javadir}/%{name}-launcher.jar
 %{_javadir}/%{name}-bootstrap.jar
 %dir %{_javadir}/%{name}
+%{_javadir}/%{name}/%{name}-bootstrap.jar
 %dir %{ant_home}
+%dir %{ant_home}/bin
+%{ant_home}/bin/ant
+%{ant_home}/bin/antRun
 %dir %{ant_home}/etc
 %{ant_home}/etc/ant-update.xsl
 %{ant_home}/etc/changelog.xsl
@@ -589,121 +475,87 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 %{ant_home}/etc/log.xsl
 %{ant_home}/etc/tagdiff.xsl
 %{ant_home}/etc/junit-frames-xalan1.xsl
-%if %without bootstrap
 %{ant_home}/etc/common2master.xsl
 %{ant_home}/etc/printFailingTests.xsl
-%endif
 %dir %{ant_home}/lib
 %{ant_home}/lib/%{name}.jar
 %{ant_home}/lib/%{name}-launcher.jar
 %{ant_home}/lib/%{name}-bootstrap.jar
 %dir %{_sysconfdir}/%{name}.d
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
 
-%files jmf
-%{_javadir}/%{name}/%{name}-jmf.jar
+%files jmf -f .mfiles-jmf
 %{ant_home}/lib/%{name}-jmf.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jmf
 
-%files swing
-%{_javadir}/%{name}/%{name}-swing.jar
+%files swing -f .mfiles-swing
 %{ant_home}/lib/%{name}-swing.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/swing
 
-%if %without bootstrap
-%if %{with_manifest_only}
-%files manifest-only
-%{_javadir}/%{name}/ant-icontract.jar
-%{_javadir}/%{name}/ant-netrexx.jar
-%{_javadir}/%{name}/ant-starteam.jar
-%{_javadir}/%{name}/ant-stylebook.jar
-%{_javadir}/%{name}/ant-vaj.jar
-%{_javadir}/%{name}/ant-weblogic.jar
-%{_javadir}/%{name}/ant-xalan1.jar
-%{_javadir}/%{name}/ant-xslp.jar
-%endif
-
-%files antlr
-%{_javadir}/%{name}/%{name}-antlr.jar
+%files antlr -f .mfiles-antlr
 %{ant_home}/lib/%{name}-antlr.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/antlr
 
-%files apache-bsf
-%{_javadir}/%{name}/%{name}-apache-bsf.jar
+%files apache-bsf -f .mfiles-apache-bsf
 %{ant_home}/lib/%{name}-apache-bsf.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-bsf
 
-%files apache-resolver
-%{_javadir}/%{name}/%{name}-apache-resolver.jar
+%files apache-resolver -f .mfiles-apache-resolver
 %{ant_home}/lib/%{name}-apache-resolver.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-resolver
 
-%files commons-logging
+%files commons-logging -f .mfiles-commons-logging
 %defattr(-,root,root,-)
-%{_javadir}/%{name}/%{name}-commons-logging.jar
 %{ant_home}/lib/%{name}-commons-logging.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/commons-logging
 
-%files commons-net
-%{_javadir}/%{name}/%{name}-commons-net.jar
+%files commons-net -f .mfiles-commons-net
 %{ant_home}/lib/%{name}-commons-net.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/commons-net
 
 # Disable as we dont ship the dependencies
 %if 0
-%files jai
-%{_javadir}/%{name}/%{name}-jai.jar
+%files jai -f .mfiles-jai
 %{ant_home}/lib/%{name}-jai.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jai
 %endif
 
-%files apache-bcel
-%{_javadir}/%{name}/%{name}-apache-bcel.jar
+%files apache-bcel -f .mfiles-apache-bcel
 %{ant_home}/lib/%{name}-apache-bcel.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-bcel
 
-%files apache-log4j
-%{_javadir}/%{name}/%{name}-apache-log4j.jar
+%files apache-log4j -f .mfiles-apache-log4j
 %{ant_home}/lib/%{name}-apache-log4j.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-log4j
 
-%files apache-oro
-%{_javadir}/%{name}/%{name}-apache-oro.jar
+%files apache-oro -f .mfiles-apache-oro
 %{ant_home}/lib/%{name}-apache-oro.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-oro
 %{ant_home}/etc/maudit-frames.xsl
 
-%files apache-regexp
-%{_javadir}/%{name}/%{name}-apache-regexp.jar
+%files apache-regexp -f .mfiles-apache-regexp
 %{ant_home}/lib/%{name}-apache-regexp.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-regexp
 
-%files apache-xalan2
-%{_javadir}/%{name}/%{name}-apache-xalan2.jar
+%files apache-xalan2 -f .mfiles-apache-xalan2
 %{ant_home}/lib/%{name}-apache-xalan2.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-xalan2
 
-%files javamail
-%{_javadir}/%{name}/%{name}-javamail.jar
+%files javamail -f .mfiles-javamail
 %{ant_home}/lib/%{name}-javamail.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/javamail
 
-%files jdepend
-%{_javadir}/%{name}/%{name}-jdepend.jar
+%files jdepend -f .mfiles-jdepend
 %{ant_home}/lib/%{name}-jdepend.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jdepend
 %{ant_home}/etc/jdepend.xsl
 %{ant_home}/etc/jdepend-frames.xsl
 
-%files jsch
-%{_javadir}/%{name}/%{name}-jsch.jar
+%files jsch -f .mfiles-jsch
 %{ant_home}/lib/%{name}-jsch.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jsch
 
-%files junit
-%{_javadir}/%{name}/%{name}-junit.jar
-%{_javadir}/%{name}/%{name}-junit4.jar
+%files junit -f .mfiles-junit
+%files junit -f .mfiles-junit4
 %{ant_home}/lib/%{name}-junit.jar
 %{ant_home}/lib/%{name}-junit4.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/junit
@@ -711,29 +563,102 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 %{ant_home}/etc/junit-frames.xsl
 %{ant_home}/etc/junit-noframes.xsl
 
-%files testutil
-%{_javadir}/%{name}/%{name}-testutil.jar
+%files testutil -f .mfiles-testutil
 %{ant_home}/lib/%{name}-testutil.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/testutil
 
-%files scripts
-%attr(0755,root,root) %{_bindir}/*.pl
-%attr(0755,root,root) %{_bindir}/*.py*
-
 %files manual
+%doc LICENSE NOTICE
 %doc manual/*
 
-%if %{build_javadoc}
+%if %with javadoc
 %files javadoc
+%doc LICENSE NOTICE
 %{_javadocdir}/%{name}
-%endif
 %endif
 
 # -----------------------------------------------------------------------------
 
 %changelog
-* Fri Feb 28 2014 Liu Di <liudidi@gmail.com> - 0:1.9.3-2
-- 更新到 1.9.3
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.9.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue May 6 2014 Alexander Kurtakov <akurtako@redhat.com> 0:1.9.4-2
+- Reenable tests.
+
+* Tue May 6 2014 Alexander Kurtakov <akurtako@redhat.com> 0:1.9.4-1
+- Update to upstream 1.9.4.
+- Disable tests as they use new junit tas attribute added in this release.
+
+* Fri Feb 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.3-2
+- Skip installation perl and python scripts
+
+* Thu Jan  2 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.3-1
+- Update to upstream version 1.9.3
+
+* Thu Sep 12 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.2-7
+- Install Maven depmaps in appropriate subpackages
+- Resolves: rhbz#996062
+
+* Fri Aug 30 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.2-6
+- Fix antRun script
+- Resolves: rhbz#675949
+
+* Thu Aug 08 2013 Michal Srb <msrb@redhat.com> - 0:1.9.2-5
+- xerces-j2 and xml-commons-apis should be in classpath (Resolves: rhbz#994556)
+
+* Thu Aug 08 2013 Michal Srb <msrb@redhat.com> - 0:1.9.2-4
+- Temporarily add xerces-j2 and xml-commons-apis to classpath, see #994556
+
+* Fri Jul 26 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.2-3
+- Rebuilt to regenerate depmap files
+- Resolves: rhbz#988797
+
+* Thu Jul 25 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.9.2-2
+- Update license after removal of W3C content upstream
+
+* Wed Jul 17 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.2-1
+- Update to upstream version 1.9.2
+- Remove usage of %%add_to_maven_depmap
+
+* Tue Jul  2 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.1-3
+- Remove arch-specific patch as ant is noarch now
+- Remove bcond macro definitions (provided by rpm itself)
+- Remove Group tags
+- Update to current packaging guidelines
+- Run tests in %%check instead of %%build
+- Remove dependencies on xerces-j2 and xml-commons-apis, resolves: rhbz#838711
+- Convert %%global build_javadoc to conditional
+- Remove bootstrap code, resolves: rhbz#915437
+- Fail the build if any of JARs is empty
+- Skip running tests that fail on Koji, resolves: rhbz#979496
+- Merge scripts into main package, resolves: rhbz#798975
+
+* Mon Jun 03 2013 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.9.1-2
+- Enable unit tests
+
+* Wed May 22 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.9.1-1
+- Update to upstream version 1.9.1
+
+* Mon Apr 22 2013 Alexander Kurtakov <akurtako@redhat.com> 0:1.9.0-2
+- Drop a pile of old provider/requires/obsoletes that are no longer usable
+  and cause only problem if ant is scl-ized.
+
+* Mon Mar 11 2013 Michal Srb <msrb@redhat.com> - 0:1.9.0-1
+- Update to upstream version 1.9.0
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.8.4-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Nov 27 2012 Tomas Radej <tradej@redhat.com> - 0:1.8.4-5
+- Requires on jpackage-utils in javadoc
+- Added LICENSE and NOTICE in manual subpackage
+
+* Thu Nov 22 2012 Jaromir Capik <jcapik@redhat.com> 0:1.8.4-4
+- Including LICENSE and NOTICE in the javadoc subpackage
+
+* Thu Nov 22 2012 Jaromir Capik <jcapik@redhat.com> 0:1.8.4-3
+- Fixing the license tag
 
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.8.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
@@ -754,7 +679,7 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 
 * Tue Feb 07 2012 Tomas Radej <tradej@redhat.com> - 0:1.8.2-8
 - Removed checking for classpath duplicates
-- Added ant-junit4.jar into %files and ant.d
+- Added ant-junit4.jar into %%files and ant.d
 
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.8.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -880,7 +805,7 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 - remove Conflicts
 - mark files in %%{_sysconfdir} as %%config(noreplace)
 
-* Thu Jul 03 2007 Ralph Apel <r.apel at r-apel.de> - 0:1.7.0-2.jpp5
+* Tue Jul 03 2007 Ralph Apel <r.apel at r-apel.de> - 0:1.7.0-2.jpp5
 - Add poms and depmap frags
 - (B)R jpackage-utils >= 0:1.7.5
 - BR java-devel = 0:1.5.0
@@ -918,7 +843,7 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 * Mon Sep 06 2004 Fernando Nasser <fnasser at redhat.com> - 0:1.6.2-2jpp
 - Fix to backward compatibility symbolic links.
 
-* Wed Aug 17 2004 Fernando Nasser <fnasser at redhat.com> - 0:1.6.2-1jpp
+* Tue Aug 17 2004 Fernando Nasser <fnasser at redhat.com> - 0:1.6.2-1jpp
 - Update to Ant 1.6.2
 
 * Thu Aug 05 2004 Fernando Nasser <fnasser at redhat.com> - 0:1.6.1-2jpp
@@ -1212,7 +1137,7 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 - changed name to jakarta-ant
 - changed group to Development/Java
 
-* Wed Jan 04 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-2mdk
+* Thu Jan 04 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-2mdk
 - new spec file
 - discarded ugly non-free Sun jaxp library from sources, and used pretty open-source xerces instead
 

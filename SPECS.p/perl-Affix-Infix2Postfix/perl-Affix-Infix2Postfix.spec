@@ -1,6 +1,6 @@
 Name:           perl-Affix-Infix2Postfix
 Version:        0.03
-Release:        12%{?dist}
+Release:        14%{?dist}
 Summary:        Perl extension for converting from infix notation to postfix notation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.03-14
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.03-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-12
 - 为 Magic 3.0 重建
 

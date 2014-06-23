@@ -1,6 +1,6 @@
 Name:           perl-Date-Manip
 Version:        6.36
-Release:        2%{?dist}
+Release:        10%{?dist}
 Summary:        Date manipulation routines
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -58,6 +58,30 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_bindir}/dm_*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 6.36-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 6.36-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 6.36-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.36-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.36-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.36-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.36-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 6.36-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 6.36-2
 - 为 Magic 3.0 重建
 

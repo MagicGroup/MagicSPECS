@@ -3,7 +3,7 @@
 Summary:      LASH Audio Session Handler
 Name:         lash
 Version:      0.5.4
-Release:      17%{?dist}
+Release:      20%{?dist}
 License:      GPLv2+
 Group:        System Environment/Libraries
 URL:          http://www.nongnu.org/lash/
@@ -25,6 +25,7 @@ BuildRequires: python-devel
 BuildRequires: readline-devel
 BuildRequires: swig
 BuildRequires: texi2html
+BuildRequires: chrpath
 
 BuildRequires: libuuid-devel
 
@@ -62,15 +63,13 @@ LASH.
 %patch2 -p1 -b .gcc47
 
 # Hack to build against newer swig
-sed -i 's|1.3.31|2.0.0|g' configure*
+sed -i 's|1.3.31|3.0.0|g' configure*
 
 %build
 export am_cv_python_pythondir=%{python_sitearch}
 CFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" %configure --disable-static --disable-serv-inst
-# remove rpath from libtool
-sed -i.rpath 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i.rpath 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
+
 
 %install
 mkdir -p %{buildroot}%{_sysconfdir}
@@ -94,6 +93,15 @@ mv %{buildroot}%{_datadir}/lash/icons/lash_48px.png %{buildroot}%{_datadir}/icon
 mv %{buildroot}%{_datadir}/lash/icons/lash_96px.png %{buildroot}%{_datadir}/icons/hicolor/96x96/apps/lash.png
 mv %{buildroot}%{_datadir}/lash/icons/lash.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/lash.svg
 
+# Remove rpath
+chrpath --delete %{buildroot}%{_bindir}/lash_control
+chrpath --delete %{buildroot}%{_bindir}/lash_simple_client
+chrpath --delete %{buildroot}%{_bindir}/lashd
+chrpath --delete %{buildroot}%{_bindir}/lash_synth
+chrpath --delete %{buildroot}%{_bindir}/lash_panel
+chrpath --delete %{buildroot}%{_bindir}/lash_save_button
+chrpath --delete %{buildroot}%{python_sitearch}/_lash.so
+
 # Move the dtd file to our Fedora Friendly place
 mkdir -p %{buildroot}%{_datadir}/xml/lash/dtds
 mv %{buildroot}%{_datadir}/lash/dtds/lash-project-1.0.dtd %{buildroot}%{_datadir}/xml/lash/dtds
@@ -103,7 +111,7 @@ rm -rf %{buildroot}%{_datadir}/lash
 
 # install the desktop entry
 mkdir -p %{buildroot}%{_datadir}/applications
-desktop-file-install --vendor fedora         \
+desktop-file-install                         \
   --dir %{buildroot}%{_datadir}/applications \
   %{SOURCE1}
 
@@ -141,7 +149,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/96x96/apps/lash.png
 %{_datadir}/icons/hicolor/scalable/apps/lash.svg
 %{_datadir}/xml/lash
-%{_datadir}/applications/*lash-panel.desktop
+%{_datadir}/applications/lash-panel.desktop
 
 %files devel
 %{_libdir}/liblash.so
@@ -153,6 +161,19 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{python_sitearch}/lash.py*
 
 %changelog
+* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.5.4-20
+- 为 Magic 3.0 重建
+
+* Wed Apr 23 2014 Jaromir Capik <jcapik@redhat.com> - 0.5.4-19
+- Fixing FTBFS caused by the swig upgrade 2.0.12 -> 3.0.0 (#1090111)
+- Fixing rpath removal (libtool regenerated during the make phase -> sed didn't work)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun Feb 10 2013 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.5.4-18
+- remove vendor tag from desktop file. https://fedorahosted.org/fpc/ticket/247
+
 * Sun Jul 22 2012 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.5.4-17
 - Fix build against gcc-4.7
 

@@ -1,6 +1,6 @@
 Name:       perl-Term-Size 
 Version:    0.207
-Release:    3%{?dist}
+Release:    4%{?dist}
 # see Copyright
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -60,6 +60,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.207-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.207-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

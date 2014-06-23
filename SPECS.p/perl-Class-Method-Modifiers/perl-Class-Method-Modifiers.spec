@@ -1,7 +1,7 @@
 Name:           perl-Class-Method-Modifiers
 Summary:        Provides Moose-like method modifiers
 Version:        1.09
-Release:        4%{?dist}
+Release:        6%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SARTAK/Class-Method-Modifiers-%{version}.tar.gz 
@@ -59,6 +59,12 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.09-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.09-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.09-4
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,17 @@
+--- mx4j-2.1.0/build/build.xml.orig	2005-03-04 13:46:19.610032808 +0000
++++ mx4j-2.1.0/build/build.xml	2005-03-04 13:50:12.555578739 +0000
+@@ -254,12 +254,14 @@
+    </target>
+ 
+    <target name="rmic.iiop.poa" description="RMI compiles the remote JMX (JSR 160) classes using the -poa option" if="jdk14.present">
++<!--
+       <rmic base="${core.classes.dir}" classname="javax.management.remote.rmi.RMIServerImpl" classpathref="classpath" debug="yes" iiop="yes">
+          <compilerarg value="-poa"/>
+       </rmic>
+       <rmic base="${core.classes.dir}" classname="javax.management.remote.rmi.RMIConnectionImpl" classpathref="classpath" debug="yes" iiop="yes">
+          <compilerarg value="-poa"/>
+       </rmic>
++-->
+    </target>
+ 
+    <target name="rmic.iiop" description="RMI compiles the remote JMX (JSR 160) classes" unless="jdk14.present">

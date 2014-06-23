@@ -1,7 +1,7 @@
 # set to zero to avoid running test suite
-%define make_check 0
+%define make_check 1
 
-%define with_java 0
+%define with_java 1
 %define with_kwallet 1
 
 # set JDK path to build javahl; default for JPackage
@@ -9,20 +9,18 @@
 
 %define perl_vendorarch %(eval "`%{__perl} -V:installvendorarch`"; echo $installvendorarch)
 
-%define dbdevel libdb-devel
-
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 %{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
-%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo 0-0)}}
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
 
 Summary: A Modern Concurrent Version Control System
 Name: subversion
-Version: 1.7.9
-Release: 3%{?dist}
+Version: 1.8.9
+Release: 5%{?dist}
 License: ASL 2.0
 Group: Development/Tools
 URL: http://subversion.apache.org/
@@ -34,19 +32,19 @@ Source5: psvn-init.el
 Source6: svnserve.service
 Source7: svnserve.tmpfiles
 Source8: svnserve.sysconf
-Patch1: subversion-1.7.0-rpath.patch
-Patch2: subversion-1.7.0-pie.patch
-Patch3: subversion-1.7.0-kwallet.patch
-Patch4: subversion-1.7.2-ruby19.patch
-Patch7: subversion-1.7.4-kwallet2.patch
-Patch8: subversion-1.7.4-sqlitever.patch
-Patch9: subversion-1.7.9-rubybind.patch
-Patch10: subversion-1.7.9-swighash.patch
+Patch1: subversion-1.8.0-rpath.patch
+Patch2: subversion-1.8.0-pie.patch
+Patch3: subversion-1.8.0-kwallet.patch
+Patch4: subversion-1.8.0-rubybind.patch
+Patch5: subversion-1.8.0-aarch64.patch
+Patch8: subversion-1.8.5-swigplWall.patch
 BuildRequires: autoconf, libtool, python, python-devel, texinfo, which
-BuildRequires: %{dbdevel} >= 4.1.25, swig >= 1.3.24, gettext
+BuildRequires: libdb-devel >= 4.1.25, swig >= 1.3.24, gettext
 BuildRequires: apr-devel >= 1.3.0, apr-util-devel >= 1.3.0
-BuildRequires: neon-devel >= 0:0.24.7-1, cyrus-sasl-devel
+BuildRequires: libserf-devel >= 1.2.1, cyrus-sasl-devel
 BuildRequires: sqlite-devel >= 3.4.0, file-devel, systemd-units
+# Any apr-util crypto backend needed
+BuildRequires: apr-util-openssl
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Provides: svn = %{version}-%{release}
 Requires: subversion-libs%{?_isa} = %{version}-%{release}
@@ -142,7 +140,7 @@ This package includes the Perl bindings to the Subversion libraries.
 Group: Development/Libraries
 Summary: JNI bindings to the Subversion libraries
 Requires: subversion%{?_isa} = %{version}-%{release}
-BuildRequires: jdk
+BuildRequires: java-devel-openjdk
 # JAR repacking requires both zip and unzip in the buildroot
 BuildRequires: zip, unzip
 # For the tests
@@ -156,7 +154,8 @@ This package includes the JNI bindings to the Subversion libraries.
 Group: Development/Libraries
 Summary: Ruby bindings to the Subversion libraries
 BuildRequires: ruby-devel >= 1.9.1, ruby >= 1.9.1
-BuildRequires: rubygem(minitest)
+# Test suite is broken with minitest 5
+BuildRequires: rubygem(minitest) < 5
 Requires: subversion%{?_isa} = %{version}-%{release}
 Conflicts: ruby-libs%{?_isa} < 1.8.2
 
@@ -176,11 +175,9 @@ This package includes supplementary tools for use with Subversion.
 %patch1 -p1 -b .rpath
 %patch2 -p1 -b .pie
 %patch3 -p1 -b .kwallet
-%patch4 -p1 -b .ruby
-%patch7 -p1 -b .kwallet2
-%patch8 -p1 -b .sqlitever
-%patch9 -p1 -b .rubybind
-%patch10 -p1 -b .swighash
+%patch4 -p1 -b .rubybind
+%patch5 -p1 -b .aarch64
+%patch8 -p1 -b .swigplWall
 
 %build
 # Regenerate the buildsystem, so that:
@@ -203,14 +200,17 @@ export svn_cv_ruby_sitedir_archsuffix=""
 sed -i 's/-fpie/-fPIE/' Makefile.in
 %endif
 
-export CC=gcc CXX=g++ JAVA_HOME=%{jdk_path} CFLAGS="$RPM_OPT_FLAGS"
+export CFLAGS="$RPM_OPT_FLAGS -DSVN_SQLITE_MIN_VERSION_NUMBER=3007012 \
+       -DSVN_SQLITE_MIN_VERSION=\\\"3.7.12\\\""
+export APACHE_LDFLAGS="-Wl,-z,relro,-z,now"
+export CC=gcc CXX=g++ JAVA_HOME=%{jdk_path}
 %configure --with-apr=%{_prefix} --with-apr-util=%{_prefix} \
-        --with-swig --with-neon=%{_prefix} \
+        --with-swig --with-serf=%{_prefix} \
         --with-ruby-sitedir=%{ruby_vendorarchdir} \
         --with-ruby-test-verbose=verbose \
         --with-apxs=%{_httpd_apxs} --disable-mod-activation \
+        --with-apache-libexecdir=%{_httpd_moddir} \
         --disable-static --with-sasl=%{_prefix} \
-        --disable-neon-version-check \
         --with-libmagic=%{_prefix} \
         --with-gnome-keyring \
 %if %{with_java}
@@ -304,7 +304,11 @@ sed -i "/^dependency_libs/{
 
 # Install bash completion
 install -Dpm 644 tools/client-side/bash_completion \
-        $RPM_BUILD_ROOT%{_sysconfdir}/bash_completion.d/%{name}
+        $RPM_BUILD_ROOT%{_datadir}/bash-completion/completions/svn
+for comp in svnadmin svndumpfilter svnlook svnsync svnversion; do
+    ln -s svn \
+        $RPM_BUILD_ROOT%{_datadir}/bash-completion/completions/${comp}
+done
 
 # Install svnserve bits
 mkdir -p %{buildroot}%{_unitdir} \
@@ -392,12 +396,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 %{_datadir}/emacs/site-lisp/*.el
 %{_datadir}/xemacs/site-packages/lisp/*.el
-%{_sysconfdir}/bash_completion.d
+%{_datadir}/bash-completion/completions/*
 %config(noreplace) %{_sysconfdir}/sysconfig/svnserve
 %dir %{_sysconfdir}/subversion
 %exclude %{_mandir}/man*/*::*
 %{_unitdir}/*.service
-%dir /run/svnserve
+%attr(0700,root,root) %dir /run/svnserve
 %{_prefix}/lib/tmpfiles.d/svnserve.conf
 
 %files tools -f tools.files
@@ -467,6 +471,73 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.8.9-5
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.8.9-4
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.8.9-3
+- 为 Magic 3.0 重建
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Joe Orton <jorton@redhat.com> - 1.8.9-1
+- update to 1.8.9 (#1100779)
+
+* Tue Apr 29 2014 Vít Ondruch <vondruch@redhat.com> - 1.8.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.1
+
+* Tue Apr 22 2014 Joe Orton <jorton@redhat.com> - 1.8.8-2
+- require minitest 4 to fix tests for Ruby bindings (#1089252)
+
+* Fri Feb 28 2014 Joe Orton <jorton@redhat.com> - 1.8.8-1
+- update to 1.8.8
+
+* Thu Jan 23 2014 Joe Orton <jorton@redhat.com> - 1.8.5-4
+- fix _httpd_mmn expansion in absence of httpd-devel
+
+* Mon Jan  6 2014 Joe Orton <jorton@redhat.com> - 1.8.5-3
+- fix permissions of /run/svnserve (#1048422)
+
+* Tue Dec 10 2013 Joe Orton <jorton@redhat.com> - 1.8.5-2
+- don't drop -Wall when building swig Perl bindings (#1037341)
+
+* Tue Nov 26 2013 Joe Orton <jorton@redhat.com> - 1.8.5-1
+- update to 1.8.5 (#1034130)
+- add fix for wc-queries-test breakage (h/t Andreas Stieger, r1542774)
+
+* Mon Nov 18 2013 Joe Orton <jorton@redhat.com> - 1.8.4-2
+- add fix for ppc breakage (Andreas Stieger, #985582)
+
+* Tue Oct 29 2013 Joe Orton <jorton@redhat.com> - 1.8.4-1
+- update to 1.8.4
+
+* Tue Sep  3 2013 Joe Orton <jorton@redhat.com> - 1.8.3-1
+- update to 1.8.3
+- move bash completions out of /etc (#922993)
+
+* Tue Aug 06 2013 Adam Williamson <awilliam@redhat.com> - 1.8.1-2
+- rebuild for perl 5.18 (again; 1.8.1-1 beat out 1.8.0-2)
+
+* Thu Jul 25 2013 Joe Orton <jorton@redhat.com> - 1.8.1-1
+- update to 1.8.1
+
+* Fri Jul 19 2013 Joe Orton <jorton@redhat.com> - 1.8.0-3
+- temporarily ignore test suite failures on ppc* (#985582)
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.8.0-2
+- Perl 5.18 rebuild
+
+* Tue Jun 18 2013 Joe Orton <jorton@redhat.com> - 1.8.0-1
+- update to 1.8.0; switch to serf
+- use full relro in mod_dav_svn build (#973694)
+
+* Mon Jun  3 2013 Joe Orton <jorton@redhat.com> - 1.7.10-1
+- update to 1.7.10 (#970014)
+- fix aarch64 build issues (Dennis Gilmore, #926578)
+
 * Thu May  9 2013 Joe Orton <jorton@redhat.com> - 1.7.9-3
 - fix spurious failures in ruby test suite (upstream r1327373)
 

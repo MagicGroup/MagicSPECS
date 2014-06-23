@@ -1,6 +1,6 @@
 Name:           perl-HTML-Format
 Version:        2.11
-Release:        1%{?dist}
+Release:        7%{?dist}
 Summary:        HTML formatter modules
 
 Group:          Development/Libraries
@@ -98,6 +98,24 @@ cd ..
 %{_mandir}/man3/HTML*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.11-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.11-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.11-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.11-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.11-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.11-2
+- 为 Magic 3.0 重建
+
 * Thu Nov 07 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.11-1
 - Upstream update.
 - Drop perl-HTML-Format-2.10.diff.

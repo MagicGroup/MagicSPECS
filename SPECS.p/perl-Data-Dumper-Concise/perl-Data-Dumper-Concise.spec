@@ -1,7 +1,7 @@
 Name:           perl-Data-Dumper-Concise
 Summary:        A convenient way to reproduce a set of Dumper options
 Version:        2.020
-Release:        5%{?dist}
+Release:        7%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/Data-Dumper-Concise-%{version}.tar.gz
@@ -50,6 +50,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.020-7
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.020-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.020-5
 - 为 Magic 3.0 重建
 

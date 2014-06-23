@@ -1,6 +1,6 @@
 Name:           perl-Time-Piece-MySQL
 Version:        0.05
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        MySQL-specific methods for Time::Piece
 
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.05-18
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

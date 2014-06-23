@@ -1,33 +1,34 @@
-%global novideo 1
-
 Name:           linphone
-Version:        3.5.2
-Release:        5%{?dist}
+Version:	3.7.0
+Release:        4%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
 License:        GPLv2+
 URL:            http://www.linphone.org/
 
-Source0:        http://download.savannah.gnu.org/releases/linphone/3.5.x/sources/%{name}-%{version}.tar.gz
-Patch0:         linphone-3.5.1-unusedvar.patch
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.savannah.gnu.org/releases/linphone/%{majorver}.x/sources/%{name}-%{version}.tar.gz
+Patch0:         linphone-3.6.1-rootca.patch
+Patch1:         linphone-3.6.1-arm.patch
 
-# commit d1d6ab83af4152f9fb719d885a2de20bddcfa96a
-# Allow building against glib 2.31 and later
-Patch1:         linphone-3.5.2-glib-2.31.patch
-Patch2:		linphone-3.5.2-glib2.patch
-
-%if ! 0%{?novideo}
+# for video support
+BuildRequires:  glew-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libv4l-devel
 BuildRequires:  libvpx-devel
-%endif
+# xxd used in mediastreamer2/src/Makefile.in
+BuildRequires:  vim-common
 
 BuildRequires:  libosip2-devel >= 3.6.0
 BuildRequires:  libeXosip2-devel >= 3.6.0
+BuildRequires:  libpcap-devel
 BuildRequires:  libsoup-devel
+BuildRequires:  libudev-devel
+BuildRequires:  libupnp-devel
 BuildRequires:  openssl-devel
 BuildRequires:  pulseaudio-libs-devel
 
+BuildRequires:  sqlite-devel
 BuildRequires:  readline-devel
 BuildRequires:  ncurses-devel
 
@@ -35,6 +36,7 @@ BuildRequires:  libnotify-devel
 BuildRequires:  gtk2-devel >= 2.16
 BuildRequires:  alsa-lib-devel
 
+BuildRequires:  opus-devel
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  spandsp-devel
 BuildRequires:  gsm-devel
@@ -48,8 +50,10 @@ BuildRequires:  libglade2-devel
 BuildRequires:  intltool
 BuildRequires:  doxygen
 
-BuildRequires:  ortp-devel >= 1:0.20.0
-Requires:       ortp%{?_isa} >= 1:0.20.0
+BuildRequires:  libtool
+
+BuildRequires:  ortp-devel >= 1:0.22.0
+Requires:       ortp%{?_isa} >= 1:0.22.0
 
 %description
 Linphone is mostly sip compliant. It works successfully with these
@@ -94,9 +98,12 @@ Libraries and headers required to develop software with mediastreamer2.
 
 %prep
 %setup0 -q
-%patch0 -p1 -b .unusedvar
-%patch1 -p1 -b .glib-2.31
-%patch2 -p1
+%patch0 -p1 -b .rootca
+%ifarch %{arm}
+%patch1 -p1 -b .arm
+%endif
+
+autoreconf -i -f
 
 # remove bundled oRTP
 rm -rf oRTP
@@ -115,9 +122,7 @@ done
 
 %build
 %configure --disable-static \
-%if 0%{?novideo}
-           --disable-video \
-%endif
+           --enable-glx \
            --disable-ffmpeg \
            --disable-rpath \
            --enable-console_ui=yes \
@@ -129,6 +134,7 @@ done
            --enable-nonstandard-gsm \
            --enable-rsvp \
            --enable-ssl \
+           --enable-zrtp \
            --enable-external-ortp
 
 make %{?_smp_mflags}
@@ -139,7 +145,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %find_lang %{name}
 %find_lang mediastreamer
 
-desktop-file-install --vendor=fedora \
+desktop-file-install \
   --delete-original \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications \
   --remove-category Application \
@@ -151,8 +157,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 # move docs to %%doc
 mkdir -p doc/linphone doc/mediastreamer
-mv $RPM_BUILD_ROOT%{_datadir}/doc/linphone/linphone*/html doc/linphone
-mv $RPM_BUILD_ROOT%{_datadir}/doc/mediastreamer/mediastreamer*/html doc/mediastreamer
+mv $RPM_BUILD_ROOT%{_datadir}/doc/linphone*/html doc/linphone
+mv $RPM_BUILD_ROOT%{_datadir}/doc/mediastreamer*/html doc/mediastreamer
 
 %post -p /sbin/ldconfig
 
@@ -167,7 +173,11 @@ mv $RPM_BUILD_ROOT%{_datadir}/doc/mediastreamer/mediastreamer*/html doc/mediastr
 %{_bindir}/linphone
 %{_bindir}/linphonec
 %{_bindir}/linphonecsh
-%{_libdir}/liblinphone.so.4*
+%{_bindir}/lpc2xml_test
+%{_bindir}/xml2lpc_test
+%{_libdir}/liblinphone.so.5*
+%{_libdir}/liblpc2xml.so.0*
+%{_libdir}/libxml2lpc.so.0*
 %{_mandir}/man1/*
 %lang(cs) %{_mandir}/cs/man1/*
 %{_datadir}/applications/*%{name}.desktop
@@ -180,22 +190,51 @@ mv $RPM_BUILD_ROOT%{_datadir}/doc/mediastreamer/mediastreamer*/html doc/mediastr
 %doc doc/linphone/html
 %{_includedir}/linphone
 %{_libdir}/liblinphone.so
+%{_libdir}/liblpc2xml.so
+%{_libdir}/libxml2lpc.so
 %{_libdir}/pkgconfig/linphone.pc
 
 %files mediastreamer -f mediastreamer.lang
 %doc mediastreamer2/AUTHORS mediastreamer2/ChangeLog mediastreamer2/COPYING
 %doc mediastreamer2/NEWS mediastreamer2/README
 %{_bindir}/mediastream
-%{_libdir}/libmediastreamer.so.1*
+%{_libdir}/libmediastreamer_base.so.3*
+%{_libdir}/libmediastreamer_voip.so.3*
 %{_datadir}/images
 
 %files mediastreamer-devel
 %doc doc/mediastreamer/html
 %{_includedir}/mediastreamer2
-%{_libdir}/libmediastreamer.so
+%{_libdir}/libmediastreamer_base.so
+%{_libdir}/libmediastreamer_voip.so
 %{_libdir}/pkgconfig/mediastreamer.pc
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.7.0-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.7.0-3
+- 更新到 3.7.0
+
+* Mon Nov 18 2013 Dave Airlie <airlied@redhat.com> - 3.6.1-3
+- rebuilt for GLEW 1.10
+
+* Sat Jul 27 2013 Alexey Kurov <nucleo@fedoraproject.org> - 3.6.1-2
+- use /etc/ssl/certs/ca-bundle.crt root_ca
+- fix armv7hl compilation
+
+* Sun Jul  7 2013 Alexey Kurov <nucleo@fedoraproject.org> - 3.6.1-1
+- linphone-3.6.1
+
+* Fri Apr 26 2013 Jon Ciesla <limburgher@gmail.com> - 3.5.2-8
+- Drop desktop vendor tag.
+
+* Sat Mar 23 2013 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.2-7
+- autoreconf in %%prep (#926078)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.2-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Dec 31 2012 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.2-5
 - add -mediastreamer and -mediastreamer-devel subpackages
 

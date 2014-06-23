@@ -1,6 +1,6 @@
 Name:           perl-Convert-Bencode_XS
 Version:        0.06
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Faster conversions to/from Bencode format
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-8
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.06-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-6
 - 为 Magic 3.0 重建
 

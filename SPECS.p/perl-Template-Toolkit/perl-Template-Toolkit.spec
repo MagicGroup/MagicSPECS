@@ -1,6 +1,6 @@
 Name:           perl-Template-Toolkit
 Version:        2.24
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Template processing system
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.24-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 09 2012 Petr Pisar <ppisar@redhat.com> - 2.24-2
 - Remove executable bit from documentation
 

@@ -1,6 +1,6 @@
 Name:           perl-Astro-FITS-CFITSIO
 Version:        1.07
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Perl extension for using the cfitsio library
 # tarball m51 doesn't state license https://rt.cpan.org/Public/Bug/Display.html?id=66226
 License:        GPL+ or Artistic
@@ -42,6 +42,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.07-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.07-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.07-3
 - 为 Magic 3.0 重建
 

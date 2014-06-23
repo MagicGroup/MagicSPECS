@@ -1,6 +1,6 @@
 Name:		perl-Regexp-Common
 Version:	2011121001
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Regexp::Common Perl module
 # Old Artistic 1.0 is also valid, but we won't list it here since it is non-free.
 # Also, it would throw off the automated license check and flag this package.
@@ -45,6 +45,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2011121001-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2011121001-5
 - 为 Magic 3.0 重建
 

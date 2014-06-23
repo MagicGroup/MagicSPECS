@@ -3,7 +3,7 @@
 
 Name:           perl-Socket6
 Version:        0.23
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        IPv6 related part of the C socket.h defines and structure manipulators
 
 Group:          Development/Libraries
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.23-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.23-12
 - 为 Magic 3.0 重建
 

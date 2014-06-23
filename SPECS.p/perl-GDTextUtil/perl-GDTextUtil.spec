@@ -1,6 +1,6 @@
 Name:           perl-GDTextUtil
 Version:        0.86
-Release:        23%{?dist}
+Release:        25%{?dist}
 Summary:        Text utilities for use with GD
 
 Group:          Development/Libraries
@@ -57,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.86-25
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.86-24
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.86-23
 - 为 Magic 3.0 重建
 

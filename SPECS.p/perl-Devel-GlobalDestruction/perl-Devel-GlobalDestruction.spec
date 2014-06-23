@@ -3,7 +3,7 @@
 
 Name:		perl-Devel-GlobalDestruction
 Version:	0.09
-Release:	2%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Summary:	Expose PL_dirty, the flag that marks global destruction
@@ -70,6 +70,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Devel::GlobalDestruction.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.09-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.09-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.09-2
 - 为 Magic 3.0 重建
 

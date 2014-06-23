@@ -1,40 +1,61 @@
 Name:           perl-Coro
-Version:        6.10
-Release:        2%{?dist}
+Version:        6.39
+Release:        6%{?dist}
 Summary:        The only real threads in perl
-License:        GPL+ or Artistic
+# Coro/libcoro:    GPLv2 or BSD
+# Rest of package: GPL+ or Artistic
+License:        (GPL+ or Artistic) and (GPLv2 or BSD)
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Coro/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Coro-%{version}.tar.gz
 Patch0:         %{name}-5.25-ucontext-default.patch
-BuildRequires:  perl(AnyEvent) >= 5
+BuildRequires:  libecb
+BuildRequires:  perl
+BuildRequires:  perl(Config)
+BuildRequires:  perl(EV) >= 4
+BuildRequires:  perl(EV::MakeMaker)
+BuildRequires:  perl(Event) >= 1.08
+BuildRequires:  perl(Event::MakeMaker)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(strict)
+# Run-time:
+BuildRequires:  perl(AnyEvent) >= 7
+# AnyEvent::AIO >= 1 not used at tests
+# AnyEvent::BDB >= 1 not used at tests
+# AnyEvent::DNS not used at tests
+BuildRequires:  perl(AnyEvent::Socket)
+BuildRequires:  perl(AnyEvent::Util)
 BuildRequires:  perl(base)
+# BDB not used at tests
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(common::sense)
+BuildRequires:  perl(Errno)
 BuildRequires:  perl(Exporter)
-BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Guard) >= 0.5
+# IO::AIO >= 3.1 not used at tests
+BuildRequires:  perl(IO::Socket::INET)
+# Net::Config not used at tests
+# Net::FTP not used at tests
+# Net::HTTP not used at tests
+# Net::NNTP not used at tests
+BuildRequires:  perl(overload)
 BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Socket)
 BuildRequires:  perl(Storable) >= 2.15
-BuildRequires:  perl(Time::HiRes)
-# Recommended optional modules
-BuildRequires:  perl(AnyEvent::AIO) >= 1
-BuildRequires:  perl(AnyEvent::BDB) >= 1
-BuildRequires:  perl(BDB)
-# perl-EV not packaged
-BuildRequires:  perl(EV) >= 3
-BuildRequires:  perl(Event) >= 1.08
-BuildRequires:  perl(IO::AIO) >= 3.1
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(warnings)
+BuildRequires:  perl(XSLoader)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 # Export correct required versions
-Requires:       perl(AnyEvent) >= 5
+Requires:       perl(AnyEvent) >= 7
 Requires:       perl(AnyEvent::AIO) >= 1
 Requires:       perl(AnyEvent::BDB) >= 1
-Requires:       perl(EV) >= 3
+Requires:       perl(EV) >= 4
 Requires:       perl(Event) >= 1.08
 Requires:       perl(Guard) >= 0.5
 Requires:       perl(Storable) >= 2.15
+Requires:       perl(warnings)
 
+%if 0%{?rhel} && 0%{?rhel} < 7
 # RPM 4.8 style:
 # Filter underspecified dependencies
 %filter_from_requires /^perl(AnyEvent)$/d
@@ -45,10 +66,11 @@ Requires:       perl(Storable) >= 2.15
 %filter_from_requires /^perl(Event)$/d
 %filter_from_requires /^perl(Guard)$/d
 %filter_from_requires /^perl(Storable)$/d
-%filter_from_provides /^perl(Coro)$/d
 # Version unversioned Provides
 %filter_from_provides s/^\(perl(Coro\>[^=]*\)$/\1 = %{version}/
 
+%{?perl_default_filter}
+%else
 %{?perl_default_filter}
 
 # RPM 4.9 style:
@@ -61,8 +83,8 @@ Requires:       perl(Storable) >= 2.15
 %global __requires_exclude %__requires_exclude|^perl\\(Event\\)$
 %global __requires_exclude %__requires_exclude|^perl\\(Guard\\)$
 %global __requires_exclude %__requires_exclude|^perl\\(Storable\\)$
-%global __requires_exclude %__requires_exclude|^perl\\(Coro\\)$
 %global __provides_exclude %{?__provides_exclude:__provides_exclude|}^perl\\(Coro\\)$
+%endif
 
 
 %description
@@ -78,6 +100,11 @@ programming much safer and easier than using other thread models.
 
 %prep
 %setup -q -n Coro-%{version}
+# Unbundle libecb
+rm Coro/ecb.h
+sed -i '/^Coro\/ecb\.h$/d' MANIFEST
+sed -i 's/ecb\.h//' Coro/Makefile.PL
+
 # use ucontext backend on non-x86 (setjmp didn't work on s390(x))
 %ifnarch %{ix86} x86_64 %{arm}
 %patch0 -p1 -b .ucontext-default
@@ -104,20 +131,17 @@ RPM_OPT_FLAGS=$(echo "${RPM_OPT_FLAGS}" | sed -e 's/-Wp,-D_FORTIFY_SOURCE=2/-D_F
 %endif
 
 # Interractive configuration. Use default values.
-%{__perl} Makefile.PL INSTALLDIRS=perl OPTIMIZE="$RPM_OPT_FLAGS" </dev/null
+perl Makefile.PL INSTALLDIRS=perl OPTIMIZE="$RPM_OPT_FLAGS" </dev/null
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes COPYING README README.linux-glibc
@@ -127,8 +151,56 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 6.10-2
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 6.39-6
 - 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 6.39-5
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 6.39-4
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 6.39-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.39-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jun 02 2014 Petr Pisar <ppisar@redhat.com> - 6.39-1
+- 6.39 bump
+
+* Wed Mar 05 2014 Petr Pisar <ppisar@redhat.com> - 6.37-1
+- 6.37 bump
+
+* Tue Nov 19 2013 Petr Pisar <ppisar@redhat.com> - 6.33-1
+- 6.33 bump
+
+* Wed Nov 06 2013 Petr Pisar <ppisar@redhat.com> - 6.32-1
+- 6.32 bump
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.31-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 23 2013 Petr Pisar <ppisar@redhat.com> - 6.31-2
+- Perl 5.18 rebuild
+
+* Mon May 13 2013 Petr Pisar <ppisar@redhat.com> - 6.31-1
+- 6.31 bump
+
+* Thu May 09 2013 Petr Pisar <ppisar@redhat.com> - 6.29-1
+- 6.29 bump
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.23-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Mon Dec 10 2012 Petr Pisar <ppisar@redhat.com> - 6.23-1
+- 6.23 bump
+
+* Mon Oct 22 2012 Petr Pisar <ppisar@redhat.com> - 6.10-3
+- Do not mark this package as bundling libecb
+
+* Mon Oct 22 2012 Petr Pisar <ppisar@redhat.com> - 6.10-2
+- Unbundle libecb (bug #863988)
 
 * Fri Oct 12 2012 Petr Pisar <ppisar@redhat.com> - 6.10-1
 - 6.10 bump

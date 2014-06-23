@@ -1,0 +1,12 @@
+--- t/author-pod-spell.t
++++ t/author-pod-spell.t
+@@ -30,6 +30,9 @@
+ Mike
+ Doherty
+ doherty
++bugtracker
++dist
++doesn
+ particle
+ lib
+ Test

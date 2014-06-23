@@ -1,6 +1,6 @@
 Name:           perl-Archive-Tar
-Version:        1.82
-Release:        3%{?dist}
+Version:        1.96
+Release:        4%{?dist}
 Summary:        A module for Perl manipulation of .tar files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -9,26 +9,36 @@ Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/Archive-Tar-%{version
 BuildArch:      noarch
 # Most of the BRS are needed only for tests, compression support at run-time
 # is optional soft dependency.
+BuildRequires:  perl
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Compress::Zlib) >= 2.015
+BuildRequires:  perl(Config)
 BuildRequires:  perl(constant)
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Find)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Spec::Unix)
 BuildRequires:  perl(File::Path)
+BuildRequires:  perl(Getopt::Std)
 BuildRequires:  perl(IO::Compress::Base) >= 2.015
 BuildRequires:  perl(IO::Compress::Bzip2) >= 2.015
 BuildRequires:  perl(IO::Compress::Gzip) >= 2.015
+BuildRequires:  perl(IO::File)
 BuildRequires:  perl(IO::String)
 BuildRequires:  perl(IO::Zlib) >= 1.01
-BuildRequires:  perl(Package::Constants)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::Harness) >= 2.26
 BuildRequires:  perl(Test::More)
+%if !%{defined perl_bootstrap}
 BuildRequires:  perl(Test::Pod)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+%endif
+BuildRequires:  perl(vars)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(Compress::Zlib) >= 2.015
 Requires:       perl(IO::Zlib) >= 1.01
 
@@ -43,13 +53,12 @@ will also support compressed or gzipped tar files.
 %setup -q -n Archive-Tar-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
@@ -64,8 +73,59 @@ make test
 
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.82-3
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.96-4
 - 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.96-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.96-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Oct 25 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.96-1
+- 1.96 bump
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.92-4
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.92-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Jul 12 2013 Petr Pisar <ppisar@redhat.com> - 1.92-2
+- Perl 5.18 rebuild
+
+* Thu Jun 20 2013 Jitka Plesnikova <jplesnik@redhat.com> - 1.92-1
+- 1.92 bump
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Update dependencies
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.90-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Sep 18 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.90-2
+- Add BRs perl(lib), perl(IO::File)
+
+* Thu Sep 13 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.90-1
+- 1.90 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.88-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.88-4
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 1.88-3
+- Perl 5.16 rebuild
+
+* Mon Jun 04 2012 Petr Šabata <contyk@redhat.com> - 1.88-2
+- 1.88 bump
+- Drop command macros
+
+* Fri Jun 01 2012 Petr Pisar <ppisar@redhat.com> - 1.84-2
+- Omit optional Test::Pod tests on bootstrap
+
+* Wed Mar 14 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.84-1
+- 1.84 bump #802981 
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.82-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -130,7 +190,7 @@ make test
 * Wed Mar 08 2006 Jason Vas Dias <jvdias@redhat.com> - 1.29-1
 - Upgrade to upstream version 1.29
 
-* Fri Feb 02 2006 Jason Vas Dias <jvdias@redhat.com> - 1.28-1
+* Fri Feb 03 2006 Jason Vas Dias <jvdias@redhat.com> - 1.28-1
 - Upgrade to upstream version 1.28
 - Rebuild for perl-5.8.8
 

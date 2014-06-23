@@ -1,7 +1,7 @@
 Summary:	A fast and simple mbox folder reader
 Name:		perl-Mail-Mbox-MessageParser
 Version:	1.5002
-Release:	12%{?dist}
+Release:	14%{?dist}
 License:	GPL+
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Mail-Mbox-MessageParser/
@@ -72,6 +72,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Mail::Mbox::MessageParser::Perl.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5002-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.5002-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.5002-12
 - 为 Magic 3.0 重建
 

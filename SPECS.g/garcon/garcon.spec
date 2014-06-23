@@ -1,9 +1,7 @@
 # Review at https://bugzilla.redhat.com/show_bug.cgi?id=554603
 
-%global minorversion 0.2
-
 Name:           garcon
-Version:        0.2.1
+Version:	0.3.0
 Release:        3%{?dist}
 Summary:        Implementation of the freedesktop.org menu specification
 Summary(zh_CN.UTF-8): freedesktop.org 菜单标准的实现 
@@ -15,6 +13,7 @@ Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ and GFDL
 URL:            http://xfce.org/
 #VCS git:git://git.xfce.org/xfce/garcon
+%global minorversion %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://archive.xfce.org/src/libs/%{name}/%{minorversion}/%{name}-%{version}.tar.bz2
 Source1:        xfce-documentation.directory
 Patch0:         garcon-0.2.0-redhat-menus.patch
@@ -105,6 +104,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 0.3.0-3
+- 更新到 0.3.0
+
 * Wed Aug 28 2013 Kevin Fenzi <kevin@scrye.com> 0.2.1-3
 - Fix obsoletes. Fixes bug #1002131
 

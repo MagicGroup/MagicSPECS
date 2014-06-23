@@ -1,6 +1,6 @@
 Name:       perl-Jemplate 
 Version:    0.261
-Release:    7%{?dist}
+Release:    14%{?dist}
 # lib/Jemplate.pm -> GPL+ or Artistic
 # lib/Jemplate/Directive.pm -> GPL+ or Artistic
 # lib/Jemplate/Parser.pm -> GPL+ or Artistic
@@ -83,6 +83,27 @@ rm -rf %{buildroot}
 %{_mandir}/man1/jemplate.1.gz
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.261-14
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.261-13
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.261-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.261-11
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.261-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.261-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.261-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.261-7
 - 为 Magic 3.0 重建
 

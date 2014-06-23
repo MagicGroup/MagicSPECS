@@ -1,7 +1,7 @@
 Name:		perl-Env-Sanctify
 Summary:	Lexically scoped sanctification of %%ENV
 Version:	1.06
-Release:	4%{?dist}
+Release:	6%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Env-Sanctify/
@@ -52,6 +52,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Env::Sanctify.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.06-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.06-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.06-4
 - 为 Magic 3.0 重建
 

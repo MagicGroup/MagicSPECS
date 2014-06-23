@@ -1,0 +1,32 @@
+--- generate_precompiled_parser.pl
++++ generate_precompiled_parser.pl
+@@ -1407,7 +1407,7 @@
+ disable_statement : 
+         'disable' 
+  	<commit>
+-       ( task_identifier | block_identifer ) 
++       ( task_identifier | block_identifier ) 
+         ';'                
+ 	| <error?> <reject>
+ 
+@@ -1744,8 +1744,8 @@
+ 
+ path_declaration :
+ 	(
+-	  simple_path_declaration |
+-	| edge_sensitive_path_declaration |
++	  simple_path_declaration
++	| edge_sensitive_path_declaration
+ 	| state_dependent_path_declaration 
+ 	)
+         ';'
+@@ -2747,6 +2747,9 @@
+ 
+ use Parse::RecDescent;
+ 
++# Get some hints if grammar compilation fails
++$::RD_HINT = 1;
++
+ system ('rm -f PrecompiledParser.pm');
+ system ('rm -f PrecompiledParserIn.pm');
+ 

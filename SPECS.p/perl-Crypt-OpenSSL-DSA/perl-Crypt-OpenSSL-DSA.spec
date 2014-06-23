@@ -1,6 +1,6 @@
 Name:           perl-Crypt-OpenSSL-DSA
 Version:        0.13
-Release:        22%{?dist}
+Release:        24%{?dist}
 Summary:        Perl interface to OpenSSL for DSA
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -51,6 +51,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.13-24
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.13-23
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.13-22
 - 为 Magic 3.0 重建
 

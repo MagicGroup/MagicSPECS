@@ -1,6 +1,6 @@
 Name:		perl-Module-Find
 Version:	0.11
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Find and use installed modules in a (sub)category
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Find.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.11-4
 - 为 Magic 3.0 重建
 

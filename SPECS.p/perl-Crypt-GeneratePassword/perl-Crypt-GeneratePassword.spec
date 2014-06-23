@@ -1,6 +1,6 @@
 Name:           perl-Crypt-GeneratePassword
 Version:        0.03
-Release:        24%{?dist}
+Release:        26%{?dist}
 Summary:        Generate secure random pronounceable passwords
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-26
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.03-25
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-24
 - 为 Magic 3.0 重建
 

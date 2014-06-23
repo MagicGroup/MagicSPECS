@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-Inflect-Number
 Version:        1.1
-Release:        19%{?dist}
+Release:        21%{?dist}
 Summary:        Force number of words to singular or plural
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1-21
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.1-20
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.1-19
 - 为 Magic 3.0 重建
 

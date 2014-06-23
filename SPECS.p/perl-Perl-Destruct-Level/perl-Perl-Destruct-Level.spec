@@ -1,7 +1,7 @@
 Name:		perl-Perl-Destruct-Level
 Summary:	Allows you to change perl's internal destruction level
 Version:	0.02
-Release:	5%{?dist}
+Release:	6%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Perl-Destruct-Level/
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Perl::Destruct::Level.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.02-5
 - 为 Magic 3.0 重建
 

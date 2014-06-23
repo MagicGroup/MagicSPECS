@@ -1,62 +1,53 @@
 Name:           perl-Module-CPANTS-Analyse
-Version:        0.86
-Release:        5%{?dist}
+Version:        0.92
+Release:        4%{?dist}
 Summary:        Generate Kwalitee ratings for a distribution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Module-CPANTS-Analyse/
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAXIM/Module-CPANTS-Analyse-%{version}.tar.gz
-Source1:        66B25843.asc
+Source0:        http://search.cpan.org/CPAN/authors/id/I/IS/ISHIGAKI/Module-CPANTS-Analyse-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
-BuildRequires:  perl(Archive::Any) >= 0.06
+BuildRequires:  perl(Archive::Any::Lite) >= 0.06
 BuildRequires:  perl(Archive::Tar) >= 1.48
 BuildRequires:  perl(Array::Diff) >= 0.04
 BuildRequires:  perl(Class::Accessor) >= 0.19
 BuildRequires:  perl(CPAN::DistnameInfo) >= 0.06
+BuildRequires:  perl(CPAN::Meta::Validator) >= 2.131490
+BuildRequires:  perl(CPAN::Meta::YAML) >= 0.008
 BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(ExtUtils::Manifest)
-BuildRequires:  perl(File::chdir)
-BuildRequires:  perl(File::Find::Rule)
-BuildRequires:  perl(File::Slurp)
+BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Find::Rule::VCS)
+BuildRequires:  perl(File::Spec::Functions)
+BuildRequires:  perl(File::stat)
 BuildRequires:  perl(IO::Capture) >= 0.05
-BuildRequires:  perl(List::MoreUtils)
-BuildRequires:  perl(LWP::Simple)
-BuildRequires:  perl(Module::ExtractUse) >= 0.18
+BuildRequires:  perl(List::Util)
+BuildRequires:  perl(Module::ExtractUse) >= 0.30
 BuildRequires:  perl(Module::Pluggable) >= 2.96
-BuildRequires:  perl(Module::Signature)
-BuildRequires:  perl(Pod::Simple::Checker) >= 2.02
-BuildRequires:  perl(Readonly)
 BuildRequires:  perl(Set::Scalar)
 BuildRequires:  perl(Software::License) >= 0.003
-BuildRequires:  perl(Test::CPAN::Meta::YAML::Version)
+BuildRequires:  perl(Software::LicenseUtils)
 BuildRequires:  perl(Test::Deep)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::NoWarnings)
-# We need to avoid Perl::Critic when bootstrapping because some of its dependencies
-# such as PPIx::Regexp and Exception::Class may want to use Test::Kwalitee, which of
-# course requires Module::CPANTS::Analyse
-%if 0%{!?perl_bootstrap:1}
-BuildRequires:  perl(Test::Perl::Critic)
-%endif
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
 BuildRequires:  perl(Test::Warn) >= 0.11
-BuildRequires:  perl(Text::CSV_XS) >= 0.45
+BuildRequires:  perl(Text::Balanced)
 BuildRequires:  perl(version) >= 0.73
 BuildRequires:  perl(YAML::Any)
-Requires:       perl(Archive::Any) >= 0.06
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Archive::Any::Lite) >= 0.06
 Requires:       perl(Archive::Tar) >= 1.48
 Requires:       perl(Array::Diff) >= 0.04
 Requires:       perl(Class::Accessor) >= 0.19
 Requires:       perl(CPAN::DistnameInfo) >= 0.06
 Requires:       perl(IO::Capture) >= 0.05
-Requires:       perl(Module::ExtractUse) >= 0.18
+Requires:       perl(Module::ExtractUse) >= 0.30
 Requires:       perl(Module::Pluggable) >= 2.96
-Requires:       perl(Pod::Simple::Checker) >= 2.02
 Requires:       perl(version) >= 0.73
-Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 CPANTS is an acronym for CPAN Testing Service. The goals of the CPANTS project
@@ -65,14 +56,6 @@ metadata for all distributions on CPAN.
 
 %prep
 %setup -q -n Module-CPANTS-Analyse-%{version}
-
-# Fix line endings
-sed -i -e 's/\r$//' bin/cpants_lint.pl Changes README TODO
-
-# Don't want to clobber home directory when using gpg
-mkdir --mode=0700 gpghome
-export GNUPGHOME=$(pwd)/gpghome
-gpg --import %{SOURCE1} || :
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -85,9 +68,8 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
-export GNUPGHOME=$(pwd)/gpghome
-
- AUTHOR_TEST=1 TEST_FILES="xt/*.t"
+make test
+make test TEST_FILES="xt/*.t"
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,8 +104,79 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Version.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.86-5
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.92-4
 - 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.92-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.92-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Sep 22 2013 Paul Howarth <paul@city-fan.org> - 0.92-1
+- Update to 0.92 release
+  - Fixed a case when more than one license section came in a row
+  - Stopped checking auto_features
+
+* Thu Sep  5 2013 Paul Howarth <paul@city-fan.org> - 0.91-1
+- Update to 0.91 release
+  - Add metrics no_dot_underscore_files, portable_filenames
+  - Remove metrics distributed_by_debian, latest_version_distributed_by_debian,
+    has_no_bugs_reported_in_debian, has_no_patches_in_debian, no_cpants_errors,
+    uses_test_nowarnings, has_test_pod, has_test_pod_coverage, has_examples
+  - Removed a few non-portable metrics for Test::Kwalitee
+  - Numerous fixes for a smoother operation of www-cpants
+  - Fixed CPAN RT#87535: incorrect version specification in 0.90_01
+  - Fixed CPAN RT#87534: test failure in 0.90_01
+  - Fixed CPAN RT#87561: t/11_hash_random.t fails due to undeclared test
+    dependency
+  - Fixed CPAN RT#69233: doesn't detect 'use' ≥ 5.012 as 'use strict'
+  - Fixed CPAN RT#83336: fails to detect strict via 'use MooseX::Types'
+  - Fixed CPAN RT#83851: 'use v5.16' and greater not deemed "strict"
+  - Fixed CPAN RT#86504: fix sort order of Kwalitee generators
+  - Fixed CPAN RT#87155: more Module::Install tests needed (1.04 is broken)
+  - Fixed CPAN RT#87597: proper_libs is a dubious test
+  - Fixed CPAN RT#87598: can't use an undefined value as an ARRAY reference at
+    .../FindModules.pm line 115
+  - Fixed CPAN RT#87988: fix use of $Test::Kwalitee::VERSION
+  - Fixed CPAN RT#88216: extracts_nicely metric fails for -TRIAL releases
+  - Fixed CPAN RT#88365: YAML/JSON tests are not failing when improperly
+    encoded characters are seen
+  - Moose::Exporter also provides strict and warnings
+- Don't run the author test (Perl::Critic) as it would fail anyway
+- Module no longer checks signatures, so drop all related hacks
+- No longer need to fix line endings
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.89-3
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.89-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Aug  2 2013 Paul Howarth <paul@city-fan.org> - 0.89-1
+- Update to 0.89 release
+  - Additional tests
+- This release by ISHIGAKI -> update source URL
+- BR: perl(Data::Dump) for the test suite
+
+* Fri Jul 26 2013 Petr Pisar <ppisar@redhat.com> - 0.87-2
+- Perl 5.18 rebuild
+
+* Mon Feb 25 2013 Paul Howarth <paul@city-fan.org> - 0.87-1
+- Update to 0.87 release
+  - Fix test failures due to Test::CPAN::Meta::YAML::Version interface change
+    (CPAN RT#80225)
+  - Fix failure in 10_analyse.t due to hash randomization (CPAN RT#82939)
+  - Module::CPANTS::Kwalitee::Manifest was broken for MANIFESTs containing
+    files with spaces (CPAN RT#44796)
+- Bump version requirements for Module::ExtractUse and
+  Test::CPAN::Meta::YAML::Version as per upstream
+
+* Fri Feb 22 2013 Daniel P. Berrange <berrange@redhat.com> - 0.86-6
+- Fix test suite for newer metayml spec (rhbz #914299)
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.86-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.86-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

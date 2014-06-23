@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Client-DNS
 Version:        1.051
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Non-blocking/concurrent DNS queries using Net::DNS and POE
 
 Group:          Development/Libraries
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.051-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.051-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

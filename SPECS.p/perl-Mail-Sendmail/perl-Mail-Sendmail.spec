@@ -1,6 +1,6 @@
 Name:           perl-Mail-Sendmail
 Version:        0.79
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Simple platform independent mailer for Perl
 
 License:        Copyright only
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.79-22
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.79-21
 - 为 Magic 3.0 重建
 

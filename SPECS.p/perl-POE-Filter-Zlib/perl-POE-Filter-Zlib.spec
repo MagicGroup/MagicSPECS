@@ -1,6 +1,6 @@
 Name:           perl-POE-Filter-Zlib
 Version:        2.02
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        POE filter wrapped around Compress::Zlib
 # note license definition in Makefile.PL
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.02-12
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.02-11
 - 为 Magic 3.0 重建
 

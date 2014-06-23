@@ -1,7 +1,7 @@
 Name:           perl-Data-OptList
 Summary:        Parse and validate simple name/value option pairs
 Version:        0.107
-Release:        8%{?dist}
+Release:        10%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-OptList/
@@ -63,6 +63,12 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/Data::OptList.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.107-10
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.107-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.107-8
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 %global shortver	3
-%global mediumver	%{shortver}.5
+%global mediumver       %{shortver}.5
 
 %ifarch x86_64 ppc64
 %global arch64 1

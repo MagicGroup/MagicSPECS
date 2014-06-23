@@ -4,14 +4,16 @@
 # %global hgdate 20091217
 
 Summary:        A skinned xlib-based gui for xine-lib
+Summary(zh_CN.UTF-8): xine-lib 可换肤的基于 xlib 的图形界面
 Name:           xine-ui
-Version:        0.99.6
-Release:        31%{?dist}
+Version:	0.99.8
+Release:        1%{?dist}
 License:        GPLv2+
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 URL:            http://www.xine-project.org/
 
-Source0:        http://downloads.sourceforge.net/xine/xine-ui-%{version}.tar.bz2
+Source0:        http://sourceforge.net/projects/xine/files/xine-ui/%{version}/xine-ui-%{version}.tar.xz
 
 #Use source from hg for now to fix a few bugs
 #This tarball has been created with
@@ -27,11 +29,6 @@ BuildRequires:	automake
 Patch0:         xine-ui-0.99.5-shared-lirc.patch
 # Patch to use UTF-8 documentation, BZ #512598
 Patch1:         xine-ui-0.99.5-utf8doc.patch
-Patch10:	xine-ui-0.99.6-fix-help-crash.patch
-# curl/types.h has been empty since 2006, MIA 2011
-Patch11:	xine-ui-0.99.6-curl-types.patch
-# libpng-1.5 cares about its private parts
-Patch12:	xine-ui-0.99.6-libpng-1.5.patch
 
 
 #o Sources for -skins. Ugh.
@@ -103,12 +100,16 @@ Requires:       xine-lib
 %description
 xine-ui is the traditional, skinned GUI for xine-lib. 
 
+%description -l zh_CN.UTF-8
+这是 xine-lib 的一个图形界面。
 
 # Skins
 
 %package skins
 Summary:        Extra skins for xine-ui
+Summary(zh_CN.UTF-8): xine-ui 的额外皮肤
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name} = %{version}-%{release}
 # Package in RPMFusion was named skine-skins
 Obsoletes:      xine-skins
@@ -119,14 +120,22 @@ BuildArch:      noarch
 %description skins
 This package contains extra skins for xine-ui.
 
+%description skins -l zh_CN.UTF-8
+xine-ui 的额外皮肤。
+
 %package aaxine
 Summary:	ASCII art player for terminals
+Summary(zh_CN.UTF-8): 终端下的 ASCII 字符播放器
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 Requires:	xine-lib-extras
 
 %description aaxine
 This package contains the ASCII art player for terminals like the vt100
+
+%description aaxine -l zh_CN.UTF-8
+终端下的 ASCII 艺术字符播放器。
 
 %prep
 # Setup xine
@@ -142,10 +151,6 @@ touch -r m4/_xine.m4 m4/_xine.m4.stamp
 %patch1 -p1
 # and restore it
 touch -r m4/_xine.m4.stamp m4/_xine.m4
-
-%patch10 -p0
-%patch11 -p0
-%patch12 -p1
 
 
 # By default aaxine dlopen()'s a nonversioned libX11.so, however in Fedora
@@ -252,7 +257,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %dir %{_datadir}/xine/skins/
 %{_datadir}/xine/skins/xinetic/
-%{_datadir}/xine/skins/xine-ui_logo.mpv
+#%{_datadir}/xine/skins/xine-ui_logo.mpv
 %{_datadir}/xine/skins/xine_splash.png
 %{_datadir}/xine/oxine/
 %{_datadir}/xine/visuals/
@@ -271,7 +276,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %defattr(-,root,root,-)
 %{_datadir}/xine/skins/*
 %exclude %{_datadir}/xine/skins/xinetic/
-%exclude %{_datadir}/xine/skins/xine-ui_logo.mpv
+#%exclude %{_datadir}/xine/skins/xine-ui_logo.mpv
 %exclude %{_datadir}/xine/skins/xine_splash.png
 
 %files aaxine
@@ -279,6 +284,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/aaxine
 
 %changelog
+* Tue Jun 10 2014 Liu Di <liudidi@gmail.com> - 0.99.8-1
+- 更新到 0.99.8
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.99.6-31
 - 为 Magic 3.0 重建
 

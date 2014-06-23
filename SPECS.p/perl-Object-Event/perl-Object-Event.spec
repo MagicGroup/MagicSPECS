@@ -1,6 +1,6 @@
 Name:           perl-Object-Event
 Version:        1.23
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Class that provides an event callback interface
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.23-6
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 1.23-5
 - 为 Magic 3.0 重建
 

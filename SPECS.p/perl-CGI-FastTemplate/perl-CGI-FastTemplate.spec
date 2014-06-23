@@ -1,6 +1,6 @@
 Name:           perl-CGI-FastTemplate
 Version:        1.09
-Release:        15%{?dist}
+Release:        17%{?dist}
 Summary:        Perl extension for managing templates and performing variable interpolation
 
 Group:          Development/Libraries
@@ -46,6 +46,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.09-17
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.09-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.09-15
 - 为 Magic 3.0 重建
 

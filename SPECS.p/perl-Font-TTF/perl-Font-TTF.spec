@@ -1,6 +1,6 @@
 Name:          perl-Font-TTF
 Version:       1.02
-Release:       3%{?dist}
+Release:       5%{?dist}
 Summary:       Perl library for modifying TTF font files
 Group:         Development/Libraries
 License:       Artistic 2.0
@@ -60,6 +60,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %exclude %{perl_vendorlib}/Font/TTF/Win32.pm
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.02-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.02-3
 - 为 Magic 3.0 重建
 

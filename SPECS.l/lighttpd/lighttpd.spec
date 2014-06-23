@@ -1,12 +1,6 @@
 %define webroot /var/www/lighttpd
 
-# RHEL4's rpm doesn't have the bcond macros
-%if 0%{?rhel} <= 4
-%define with()          %{expand:%%{?with_%{1}:1}%%{!?with_%{1}:0}}
-%define without()       %{expand:%%{?with_%{1}:0}%%{!?with_%{1}:1}}
-%define bcond_with()    %{expand:%%{?_with_%{1}:%%global with_%{1} 1}}
-%define bcond_without() %{expand:%%{!?_without_%{1}:%%global with_%{1} 1}}
-%endif
+%global _hardened_build 1
 
 # We have an bunch of --with/--without options to pass, make it easy with bcond
 %define confswitch() %{expand:%%{?with_%{1}:--with-%{1}}%%{!?with_%{1}:--without-%{1}}}
@@ -18,6 +12,7 @@
 %bcond_without kerberos5
 %bcond_without pcre
 %bcond_without fam
+%bcond_without lua
 # We can't have bcond names with hyphens
 %bcond_with    webdavprops
 %bcond_with    webdavlocks
@@ -25,17 +20,10 @@
 %bcond_with    memcache
 
 # No poweredby.png image in EL5 and earlier (it's in Fedora and EL6+)
-%if 0%{?rhel} <= 5
-%bcond_with    systemlogos
+%if 0%{?el5}
+%bcond_without systemlogos
 %else
 %bcond_without systemlogos
-%endif
-
-# LUA support requires lua >= 5.1 but EPEL4 provides only 5.0, so disable
-%if 0%{?rhel} <= 4
-%bcond_with    lua
-%else
-%bcond_without lua
 %endif
 
 # The /var/run/lighttpd directory uses tmpfiles.d when mounted using tmpfs
@@ -45,8 +33,8 @@
 %bcond_with    tmpfiles
 %endif
 
-# Replace sysvinit script with systemd service file for F16+
-%if 0%{?fedora} >= 16
+# Replace sysvinit script with systemd service file for RHEL7+
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %bcond_without systemd
 %else
 %bcond_with    systemd
@@ -54,7 +42,7 @@
 
 Summary: Lightning fast webserver with light system requirements
 Name: lighttpd
-Version: 1.4.31
+Version: 1.4.35
 Release: 2%{?dist}
 License: BSD
 Group: System Environment/Daemons
@@ -72,25 +60,25 @@ Source14: lighttpd-empty.png
 Source100: lighttpd-mod_geoip.c
 Source101: lighttpd-mod_geoip.txt
 Patch0: lighttpd-1.4.28-defaultconf.patch
-Patch1: lighttpd-1.4.31-mod_geoip.patch
+Patch1: lighttpd-1.4.34-mod_geoip.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-# For the target poweredby.png image (skip requirement + provide image on RHEL)
+# For the target poweredby.png image (skip requirement + provide image on EL5)
 %if %{with systemlogos}
 Requires: system-logos >= 7.92.1
 %endif
 Requires(pre): /usr/sbin/useradd
 %if %{with systemd}
-Requires(post): systemd-units
-Requires(post): systemd-sysv
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+BuildRequires: systemd
 %else
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/service, /sbin/chkconfig
 Requires(postun): /sbin/service
 %endif
 Provides: webserver
-BuildRequires: openssl-devel, pcre-devel, bzip2-devel, zlib-devel
+BuildRequires: openssl-devel, pcre-devel, bzip2-devel, zlib-devel, autoconf, automake, libtool
 BuildRequires: /usr/bin/awk
 %{?with_ldap:BuildRequires: openldap-devel}
 %{?with_fam:BuildRequires: gamin-devel}
@@ -98,9 +86,9 @@ BuildRequires: /usr/bin/awk
 %{?with_webdavlocks:BuildRequires: sqlite-devel}
 %{?with_gdbm:BuildRequires: gdbm-devel}
 %{?with_memcache:BuildRequires: memcached-devel}
-%{?with_lua:BuildRequires: lua-devel}
-# On RHEL <= 5 we still need this because of the "broken" lua
-%if 0%{?rhel} <= 5
+%{?with_lua:BuildRequires: compat-lua-devel}
+# On EL5 we still need this because of the "broken" lua
+%if 0%{?el5}
 BuildRequires: readline-devel
 %endif
 
@@ -155,6 +143,7 @@ install -p -m 0644 %{SOURCE101} mod_geoip.txt
 
 
 %build
+autoreconf -if
 %configure \
     --libdir='%{_libdir}/lighttpd' \
     %{confswitch mysql} \
@@ -198,7 +187,7 @@ mkdir -p %{buildroot}%{webroot}
 install -p -m 0644 %{SOURCE10} %{SOURCE11} %{SOURCE12} %{SOURCE13} \
     %{buildroot}%{webroot}/
 
-# Symlink for the powered-by-$DISTRO image (install empty image on RHEL)
+# Symlink for the powered-by-$DISTRO image (install empty image on EL5)
 %if %{with systemlogos}
 ln -s %{_datadir}/pixmaps/poweredby.png \
 %else
@@ -240,30 +229,24 @@ rm -rf %{buildroot}
 
 %post
 %if %{with systemd}
-if [ $1 -eq 1 ] ; then 
-    /bin/systemctl daemon-reload &>/dev/null || :
-fi
+%systemd_post lighttpd.service
 %else
 /sbin/chkconfig --add lighttpd
 %endif
 
 %preun
-if [ $1 -eq 0 ]; then
 %if %{with systemd}
-    /bin/systemctl --no-reload disable lighttpd.service &>/dev/null || :
-    /bin/systemctl stop lighttpd.service &>/dev/null || :
+%systemd_preun lighttpd.service
 %else
+if [ $1 -eq 0 ]; then
     /sbin/service lighttpd stop &>/dev/null || :
     /sbin/chkconfig --del lighttpd
-%endif
 fi
+%endif
 
 %postun
 %if %{with systemd}
-/bin/systemctl daemon-reload &>/dev/null || :
-if [ $1 -ge 1 ]; then
-    /bin/systemctl try-restart lighttpd.service &>/dev/null || :
-fi
+%systemd_postun_with_restart lighttpd.service
 %else
 if [ $1 -ge 1 ]; then
     /sbin/service lighttpd condrestart &>/dev/null || :
@@ -332,6 +315,33 @@ fi
 
 
 %changelog
+* Sun Jun 08 2014 Liu Di <liudidi@gmail.com> - 1.4.35-2
+- 为 Magic 3.0 重建
+
+* Wed Mar 12 2014 Jon Ciesla <limburgher@gmail.com> - 1.4.35-1
+- 1.4.35, SA-2014-01.
+
+* Fri Feb 21 2014 Jon Ciesla <limburgher@gmail.com> - 1.4.34-4
+- Enable lua, BZ 912546.
+
+* Mon Feb 10 2014 Jon Ciesla <limburgher@gmail.com> - 1.4.34-3
+- Enable PIE, BZ 955145.
+
+* Mon Feb 10 2014 Jon Ciesla <limburgher@gmail.com> - 1.4.34-2
+- Apply Ken Dreyer's spec patches from BZ 850188.
+
+* Wed Feb 05 2014 Jon Ciesla <limburgher@gmail.com> - 1.4.34-1
+- 1.4.34, multiple security fixes.
+
+* Mon Aug 26 2013 Jon Ciesla <limburgher@gmail.com> - 1.4.32-1
+- Update to 1.4.32, BZ 878915.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.31-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.31-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.31-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

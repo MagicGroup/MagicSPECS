@@ -1,6 +1,6 @@
 Name:           perl-Locale-Maketext-Fuzzy
 Version:        0.10
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Maketext from already interpolated strings
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.10-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.10-13
 - 为 Magic 3.0 重建
 

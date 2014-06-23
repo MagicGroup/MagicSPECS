@@ -3,7 +3,7 @@
 
 Name:		perl-MRO-Compat
 Version:	0.11
-Release:	12%{?dist}
+Release:	13%{?dist}
 Summary:	Mro::* interface compatibility for Perls < 5.9.5
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/MRO::Compat.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.11-12
 - 为 Magic 3.0 重建
 

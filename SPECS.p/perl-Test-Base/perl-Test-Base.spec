@@ -1,6 +1,6 @@
 Name:           perl-Test-Base
 Version:        0.60
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Data Driven Testing Framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,12 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.60-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.60-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.60-6
 - 为 Magic 3.0 重建
 

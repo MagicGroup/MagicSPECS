@@ -7,7 +7,7 @@ Summary: Access to FLAC audio metadata
 Summary(zh_CN): 对于 FLAC 音频元数据的访问
 Name: perl-Audio-FLAC-Header
 Version: 2.4
-Release: 2%{?dist}
+Release: 4%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -54,6 +54,12 @@ as tag information contained in the FLAC file's Vorbis tags.
 %{perl_archlib}
 
 %changelog
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.4-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.4-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 2.4-2
 - 为 Magic 3.0 重建
 

@@ -7,7 +7,7 @@ PERL_HOMEDIR=1
 [ -f /etc/sysconfig/perl-homedir ] && . /etc/sysconfig/perl-homedir
 [ -f $HOME/.perl-homedir         ] && . $HOME/.perl-homedir
 
-alias perlll="eval `perl -Mlocal::lib`"
+alias perlll='eval `perl -Mlocal::lib`'
 
 # if system default
 if [ "x$PERL_HOMEDIR" = "x1" ] ; then

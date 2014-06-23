@@ -1,6 +1,6 @@
 Name:           perl-Olson-Abbreviations
 Version:        0.03
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Globally unique timezones abbreviation handling
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.03-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 23 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.03-1
 - 0.03 bump
 

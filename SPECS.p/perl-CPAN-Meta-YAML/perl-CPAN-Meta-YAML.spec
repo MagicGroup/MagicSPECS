@@ -1,48 +1,54 @@
-# We need to patch the test suite if we have Test::More < 0.88
-%global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
-
 Name:		perl-CPAN-Meta-YAML
-Version:	0.008
-Release:	14%{?dist}
+Version:	0.012
+Release:	4%{?dist}
 Summary:	Read and write a subset of YAML for CPAN Meta files
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/CPAN-Meta-YAML/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-YAML-%{version}.tar.gz
-Patch1:		CPAN-Meta-YAML-0.006-old-Test::More.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
+# Build:
+BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.17
+# Module Runtime:
+BuildRequires:	perl(B)
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(Exporter)
-BuildRequires:	perl(ExtUtils::MakeMaker)
-BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(Fcntl)
+BuildRequires:	perl(Scalar::Util)
+BuildRequires:	perl(strict)
+BuildRequires:	perl(warnings)
 # Tests:
+# CPAN::Meta requires CPAN::Meta::YAML
+%if 0%{!?perl_bootstrap:1}
+BuildRequires:	perl(CPAN::Meta)
+BuildRequires:	perl(CPAN::Meta::Requirements) >= 2.120900
+%endif
+BuildRequires:	perl(File::Basename)
+BuildRequires:	perl(File::Find)
+BuildRequires:	perl(File::Spec)
 BuildRequires:	perl(File::Spec::Functions)
 BuildRequires:	perl(File::Temp)
-BuildRequires:	perl(Test::More)
+BuildRequires:	perl(Getopt::Long)
+BuildRequires:	perl(IO::Dir)
+BuildRequires:	perl(JSON::PP)
+BuildRequires:	perl(lib)
+BuildRequires:	perl(List::Util)
+BuildRequires:	perl(Test::More) >= 0.99
+BuildRequires:	perl(utf8)
+BuildRequires:	perl(vars)
+BuildRequires:	perl(version)
 BuildRequires:	perl(YAML)
+# Extra Tests:
 # Don't run extra tests when bootstrapping as many of those
 # tests' dependencies build-require this package
 %if 0%{!?perl_bootstrap:1}
-# RHEL-7 package cannot have buildreqs from EPEL-7 (aspell-en, Pod::Wordlist::hanekomu),
-# so skip the spell check there
-%if 0%{?rhel} < 7
-# Version 1.113620 needed for "UTF"
-BuildRequires:	perl(Pod::Wordlist::hanekomu) >= 1.113620
-BuildRequires:	perl(Test::Spelling), aspell-en
-%endif
 BuildRequires:	perl(Test::CPAN::Meta)
 BuildRequires:	perl(Test::Pod)
-BuildRequires:	perl(Test::Requires)
-# RHEL ≤ 6 doesn't have a recent enough perl(version) for perl(Test::Version) in EPEL
-# RHEL ≥ 7 includes this package but does not have perl(Test::Version)
-%if 0%{?fedora}
+BuildRequires:	perl(Test::Portability::Files)
 BuildRequires:	perl(Test::Version)
-%endif
 %endif
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:	perl(Carp)
-Requires:	perl(Exporter)
 
 %description
 This module implements a subset of the YAML specification for use in reading
@@ -52,17 +58,11 @@ used for any other general YAML parsing or generation task.
 %prep
 %setup -q -n CPAN-Meta-YAML-%{version}
 
-# We need to patch the test suite if we have Test::More < 0.88
-%if %{old_test_more}
-%patch1 -p1
-%endif
-
 %build
-perl Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor UNINST=0
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
@@ -73,15 +73,57 @@ make test
 make test TEST_FILES="xt/*/*.t"
 %endif
 
-%clean
-rm -rf %{buildroot}
-
 %files
 %doc Changes LICENSE README
 %{perl_vendorlib}/CPAN/
 %{_mandir}/man3/CPAN::Meta::YAML.3pm*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.012-4
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.012-3
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.012-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Feb 25 2014 Paul Howarth <paul@city-fan.org> - 0.012-1
+- Update to 0.012:
+  - Generated from ETHER/YAML-Tiny-1.61.tar.gz
+
+* Fri Feb 14 2014 Paul Howarth <paul@city-fan.org> - 0.011-1
+- Update to 0.011:
+  - Generated from ETHER/YAML-Tiny-1.60.tar.gz
+- Give up trying to support EPEL (test suite now requires Test::More 0.99)
+
+* Mon Sep 23 2013 Paul Howarth <paul@city-fan.org> - 0.010-1
+- Update to 0.010:
+  - Generated from ETHER/YAML-Tiny-1.55.tar.gz
+  - Makefile.PL will use UNINST=1 on old perls that might have an old version
+    incorrectly installed into the core library path
+  - Updated Makefile.PL logic to support PERL_NO_HIGHLANDER
+- Drop redundant BRs: perl(Pod::Wordlist::hanekomu), perl(Test::Requires),
+  perl(Test::Spelling) and aspell-en
+- Add new test dependencies perl(IO::Handle) and perl(IPC::Open3)
+- Build with UNINST=0 to avoid build failures as we can't remove the system
+  version of the package when building an rpm for a new version
+- Update patch for building with old Test::More, and add new patch to support
+  building with Test::More < 0.94
+- Don't run the extra tests in EPEL as we don't have Test::Version there
+
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.008-292
+- Perl 5.18 re-rebuild of bootstrapped packages
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.008-291
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 15 2013 Petr Pisar <ppisar@redhat.com> - 0.008-290
+- Increase release to favour standalone package
+
+* Fri Jul 12 2013 Petr Pisar <ppisar@redhat.com> - 0.008-15
+- Perl 5.18 rebuild
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.008-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

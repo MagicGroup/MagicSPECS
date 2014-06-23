@@ -1,6 +1,6 @@
 Name:           perl-Socket-GetAddrInfo
 Version:        0.19
-Release:        4%{?dist}
+Release:        10%{?dist}
 Summary:        RFC 2553's "getaddrinfo" and "getnameinfo" functions
 
 Group:          Development/Libraries
@@ -66,6 +66,24 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.19-10
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.19-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.19-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.19-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.19-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.19-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.19-4
 - 为 Magic 3.0 重建
 

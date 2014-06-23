@@ -1,0 +1,127 @@
+--- ./build/build.xml.sav	2005-03-01 05:14:37.000000000 -0500
++++ ./build/build.xml	2006-08-24 16:07:11.000000000 -0400
+@@ -55,6 +55,9 @@
+    <property name="rjmx.jar.file" value="${dist.lib.dir}/${name}-rjmx.jar"/>
+    <property name="rimpl.jar.file" value="${dist.lib.dir}/${name}-rimpl.jar"/>
+    <property name="rmx4j.jar.file" value="${dist.lib.dir}/${name}-remote.jar"/>
++   <property name="rjmx-boa.jar.file" value="${dist.lib.dir}/boa/${name}-rjmx-boa.jar"/>
++   <property name="rimpl-boa.jar.file" value="${dist.lib.dir}/boa/${name}-rimpl-boa.jar"/>
++   <property name="rmx4j-boa.jar.file" value="${dist.lib.dir}/boa/${name}-remote-boa.jar"/>
+ 
+    <property name="tools.jar.file" value="${dist.lib.dir}/${name}-tools.jar"/>
+ 
+@@ -224,6 +227,7 @@
+    <target name="compile.jmx" description="Compiles the JMX (JSR 3) classes" depends="flags">
+       <mkdir dir="${core.classes.dir}"/>
+       <mkdir dir="${dist.lib.dir}"/>
++      <mkdir dir="${dist.lib.dir}/boa"/>
+ 
+       <javac srcdir="${core.src.dir}" destdir="${core.classes.dir}" debug="on" deprecation="on" encoding="US-ASCII">
+          <patternset refid="mx4j.classes"/>
+@@ -270,8 +274,29 @@
+       </javac>
+       <rmic base="${core.classes.dir}" classname="javax.management.remote.rmi.RMIServerImpl" classpathref="classpath" debug="yes" stubversion="1.2"/>
+       <rmic base="${core.classes.dir}" classname="javax.management.remote.rmi.RMIConnectionImpl" classpathref="classpath" debug="yes" stubversion="1.2"/>
++
++      <jar jarfile="${rjmx-boa.jar.file}" manifest="${etc.dir}/MANIFEST.MF">
++         <fileset dir="${core.classes.dir}">
++            <patternset refid="rjmx.classes"/>
++         </fileset>
++      </jar>
++
++      <jar jarfile="${rimpl-boa.jar.file}" manifest="${etc.dir}/MANIFEST.MF">
++         <fileset dir="${core.classes.dir}">
++            <patternset refid="rimpl.classes"/>
++         </fileset>
++      </jar>
++
++      <jar jarfile="${rmx4j-boa.jar.file}" manifest="${etc.dir}/MANIFEST.MF">
++         <fileset dir="${core.classes.dir}">
++            <patternset refid="rmx4j.classes"/>
++         </fileset>
++      </jar>
++
+       <antcall target="rmic.iiop"/>
++<!--
+       <antcall target="rmic.iiop.poa"/>
++-->
+ 
+       <jar jarfile="${rjmx.jar.file}" manifest="${etc.dir}/MANIFEST.MF">
+          <fileset dir="${core.classes.dir}">
+@@ -423,8 +448,7 @@
+          author="true"
+          version="true"
+          use="true"
+-         windowtitle="MX4J API"
+-         classpathref="classpath">
++         windowtitle="MX4J API">
+          <package name="mx4j.*"/>
+ 
+          <bottom><![CDATA[<center><small>Copyright &#169; 2001-2005 The MX4J Contributors. All Rights Reserved.</small></center>]]></bottom>
+@@ -437,8 +461,6 @@
+    </target>
+ 
+    <target name="docs" description="Builds the MX4J documentation">
+-      <unzip src="${docbook.dtd.zip.file}" dest="${docs.src.dir}/docbook"/>
+-      <unzip src="${docbook.xsl.zip.file}" dest="${docs.src.dir}/docbookx"/>
+       <mkdir dir="${dist.docs.dir}"/>
+ 
+       <style processor="trax"
+@@ -447,11 +469,13 @@
+          force="yes"
+          style="${docs.src.dir}/xsl/mx4j-chunk.xsl"
+          includes="${root.document.name}"
+-         classpathref="lib.classpath"
+-         />
+-
+-      <delete dir="${docs.src.dir}/docbook" quiet="true"/>
+-      <delete dir="${docs.src.dir}/docbookx" quiet="true"/>
++         classpathref="lib.classpath">
++        <xmlcatalog>
++          <catalogpath>
++            <pathelement location="/etc/xml/catalog"/>
++          </catalogpath>
++        </xmlcatalog>
++      </style>
+ 
+       <!-- Bug in Ant forces this move, since destdir of the style task does not work -->
+       <move todir="${dist.docs.dir}">
+@@ -583,7 +607,8 @@
+             <include name="wsdl4j.jar"/>
+             <include name="commons-discovery.jar"/>
+             <include name="org.mortbay.jetty.jar"/>
+-            <include name="hessian-3.0.8.jar"/>
++            <include name="hessian3.jar"/>
++            <include name="burlap3.jar"/>
+             <!-- Also jars downloaded apart -->
+             <include name="servlet.jar"/>
+             <include name="jython.jar"/>
+@@ -612,7 +637,9 @@
+ 
+    <target name="single-test" description="Executes the test class defined by the system property 'testname'" depends="tests">
+       <junit printsummary="withOutAndErr" fork="yes" dir="${basedir}" showoutput="yes">
+-         <!--sysproperty key="mx4j.log.priority" value="debug"/-->
++         <sysproperty key="mx4j.log.priority" value="debug"/>
++         <sysproperty key="java.security.manager" value=""/>
++         <sysproperty key="java.security.policy" value="${basedir}/build/mx4j-build.policy"/>
+          <!--sysproperty key="java.security.debug" value="access.failure"/-->
+          <formatter type="plain" usefile="no"/>
+          <test name="${testname}" if="testname" fork="yes"/>
+@@ -639,6 +666,8 @@
+ 
+       <junit printsummary="withOutAndErr" fork="yes" timeout="300000" dir="${basedir}" showoutput="yes">
+          <sysproperty key="mx4j.log.priority" value="warn"/>
++         <sysproperty key="java.security.manager" value=""/>
++         <sysproperty key="java.security.policy" value="${basedir}/build/mx4j-build.policy"/>
+          <!-- sysproperty key="java.security.debug" value="access.failure"/-->
+          <formatter type="xml"/>
+          <batchtest fork="yes" todir="${test.xml.dir}">
+@@ -687,6 +716,8 @@
+ 
+       <junit printsummary="withOutAndErr" fork="yes" timeout="300000" dir="${basedir}" showoutput="yes">
+          <sysproperty key="mx4j.log.priority" value="warn"/>
++         <sysproperty key="java.security.manager" value=""/>
++         <sysproperty key="java.security.policy" value="${basedir}/build/mx4j-build.policy"/>
+          <!-- sysproperty key="java.security.debug" value="access.failure"/-->
+          <formatter type="xml"/>
+          <batchtest fork="yes" todir="${test.xml.dir}">

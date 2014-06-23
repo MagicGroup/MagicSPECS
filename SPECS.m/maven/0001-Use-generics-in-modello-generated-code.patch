@@ -1,0 +1,47 @@
+From 351830b1c83b308e554f48c355f252f62afb3c2c Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Tue, 31 Jan 2012 13:12:32 +0100
+Subject: [PATCH 1/6] Use generics in modello generated code
+
+---
+ maven-model/pom.xml | 2 ++
+ pom.xml             | 3 +++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/maven-model/pom.xml b/maven-model/pom.xml
+index e538c1a..27c92bb 100644
+--- a/maven-model/pom.xml
++++ b/maven-model/pom.xml
+@@ -56,6 +56,7 @@ under the License.
+           <models>
+             <model>src/main/mdo/maven.mdo</model>
+           </models>
++          <useJava5>true</useJava5>
+         </configuration>
+         <executions>
+           <execution>
+@@ -103,6 +104,7 @@ under the License.
+                 <configuration>
+                   <version>3.0.0</version>
+                   <packageWithVersion>true</packageWithVersion>
++                  <useJava5>true</useJava5>
+                 </configuration>
+               </execution>
+             </executions>
+diff --git a/pom.xml b/pom.xml
+index 57ac319..7e0c305 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -389,6 +389,9 @@
+           <groupId>org.codehaus.modello</groupId>
+           <artifactId>modello-maven-plugin</artifactId>
+           <version>${modelloVersion}</version>
++          <configuration>
++            <useJava5>true</useJava5>
++          </configuration>
+           <executions>
+             <execution>
+               <id>site-docs</id>
+-- 
+1.9.0
+

@@ -1,6 +1,6 @@
 Name:           perl-IO-HTML
 Version:        0.04
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Open an HTML file with automatic character set detection
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.04-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
-From 766a980c083ab05809620f81985a96f99eb62a13 Mon Sep 17 00:00:00 2001
+From c34a0153d14127ae189f345b6a4d190e7c8841fe Mon Sep 17 00:00:00 2001
 From: Peter Lemenkov <lemenkov@gmail.com>
 Date: Sat, 19 May 2012 11:33:43 +0400
-Subject: [PATCH 2/3] Add memory barrier on PowerPC
+Subject: [PATCH 2/6] Add memory barrier on PowerPC
 
 Signed-off-by: Peter Lemenkov <lemenkov@gmail.com>
 ---
@@ -24,5 +24,5 @@ index e17bf43..f1ae174 100644
    // See http://gcc.gnu.org/ml/gcc/2003-04/msg01180.html for a discussion on
    // this idiom. Also see http://en.wikipedia.org/wiki/Memory_ordering.
 -- 
-1.7.12.1
+1.8.3.1
 

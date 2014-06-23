@@ -1,6 +1,6 @@
 Name:           perl-Capture-Tiny
 Version:        0.20
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Capture STDOUT and STDERR from Perl, XS or external programs
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -53,6 +53,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.20-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.20-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.20-2
 - 为 Magic 3.0 重建
 

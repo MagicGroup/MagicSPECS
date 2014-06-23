@@ -1,0 +1,32 @@
+diff --git a/examples/ldns-keygen.c b/examples/ldns-keygen.c
+index 316d60d..f4f0116 100644
+--- a/examples/ldns-keygen.c
++++ b/examples/ldns-keygen.c
+@@ -247,9 +247,14 @@ main(int argc, char *argv[])
+ 		LDNS_FREE(filename);
+ 	}
+ 
++	{
++	mode_t oldmask = umask();
++
+ 	/* print the priv key to stderr */
+ 	filename = LDNS_XMALLOC(char, strlen(owner) + 21);
+ 	snprintf(filename, strlen(owner) + 20, "K%s+%03u+%05u.private", owner, algorithm, (unsigned int) ldns_key_keytag(key));
++
++	umask(077); /* ensure only owner can read private key */
+ 	file = fopen(filename, "w");
+ 	if (!file) {
+ 		fprintf(stderr, "Unable to open %s: %s\n", filename, strerror(errno));
+@@ -262,9 +267,12 @@ main(int argc, char *argv[])
+ 	} else {
+ 		ldns_key_print(file, key);
+ 		fclose(file);
++		umask(oldmask);
+ 		LDNS_FREE(filename);
+ 	}
+ 
++	}
++
+ 	/* print the DS to .ds */
+ 	if (algorithm != LDNS_SIGN_HMACMD5 &&
+ 		algorithm != LDNS_SIGN_HMACSHA1 &&

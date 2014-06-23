@@ -1,6 +1,6 @@
 Name:           perl-libxml-perl
 Version:        0.08
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        A collection of Perl modules for working with XML
 
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.08-19
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.08-18
 - 为 Magic 3.0 重建
 

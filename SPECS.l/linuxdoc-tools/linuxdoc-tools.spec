@@ -1,16 +1,17 @@
 %{!?tetex:%global tetex 1}
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global _vendorperllibdir %{_datadir}/perl5/vendor_perl
 
 Summary: A text formatting package based on SGML
 Name: linuxdoc-tools
-Version: 0.9.67
-Release: 2%{?dist}
+Version: 0.9.68
+Release: 6%{?dist}
 License: Copyright only
 Group: Applications/Publishing
 Source: http://http.us.debian.org/debian/pool/main/l/linuxdoc-tools/%{name}_%{version}.tar.gz
 Patch0: linuxdoc-tools-0.9.13-letter.patch
 Patch1: linuxdoc-tools-0.9.20-lib64.patch
-Patch2:	linuxdoc-tools-0.9.67-flex.patch
+Patch2: linuxdoc-tools-0.9.68-flex.patch
 Url: http://packages.qa.debian.org/l/linuxdoc-tools.html
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: flex flex-static sgml-common jade gawk groff autoconf texinfo
@@ -58,17 +59,18 @@ perl -pi -e 's,\$main::prefix/share/sgml/iso-entities-8879.1986/iso-entities.cat
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_vendorperllibdir}
 make install DESTDIR=$RPM_BUILD_ROOT perl5libdir=%{_vendorperllibdir}
-mv $RPM_BUILD_ROOT%{_docdir}/%{name} $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+[ $RPM_BUILD_ROOT%{_docdir}/%{name} = $RPM_BUILD_ROOT%{_pkgdocdir} ] \
+           || mv $RPM_BUILD_ROOT%{_docdir}/%{name} $RPM_BUILD_ROOT%{_pkgdocdir}
 perl -pi -e 's,/usr/share/sgml/iso-entities-8879.1986/iso-entities.cat,\$main::prefix/share/sgml/sgml-iso-entities-8879.1986/catalog,' \
            $RPM_BUILD_ROOT%{_vendorperllibdir}/LinuxDocTools.pm
 #Copy license files for parts into docdir
-mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/sgmls-1.1
-cp -p sgmls-1.1/LICENSE $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/sgmls-1.1/LICENSE
-mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/iso-entities
-cp -p iso-entities/COPYING $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/iso-entities/COPYING
-mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/entity-map
-cp -p entity-map/COPYING $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/entity-map/COPYING
-cp -p COPYING $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/
+mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}/sgmls-1.1
+cp -p sgmls-1.1/LICENSE $RPM_BUILD_ROOT%{_pkgdocdir}/sgmls-1.1/LICENSE
+mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}/iso-entities
+cp -p iso-entities/COPYING $RPM_BUILD_ROOT%{_pkgdocdir}/iso-entities/COPYING
+mkdir -p $RPM_BUILD_ROOT%{_pkgdocdir}/entity-map
+cp -p entity-map/COPYING $RPM_BUILD_ROOT%{_pkgdocdir}/entity-map/COPYING
+cp -p COPYING $RPM_BUILD_ROOT%{_pkgdocdir}/
 
 
 # Some files need moving around.
@@ -91,7 +93,7 @@ exit 0
 
 %files
 %defattr (-,root,root,-)
-%doc %{_docdir}/%{name}-%{version}
+%doc %{_pkgdocdir}
 %{_bindir}/*
 %{_datadir}/%{name}
 %{_datadir}/entity-map
@@ -104,6 +106,25 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Tue Aug 13 2013 Martin Milata <mmilata@redhat.com> - 0.9.68-6
+- Change docs location to conform with
+  https://fedoraproject.org/wiki/Changes/UnversionedDocdirs
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.68-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.9.68-4
+- Perl 5.18 rebuild
+
+* Tue Feb 19 2013 Martin Milata <mmilata@redhat.com> - 0.9.68-3
+- fix build with newer flex versions
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.68-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Aug 10 2012 Ondrej Vasik <ovasik@redhat.com> 0.9.68-1
+- new upstream version 0.9.68
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.67-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

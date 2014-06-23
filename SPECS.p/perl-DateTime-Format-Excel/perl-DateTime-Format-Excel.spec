@@ -4,7 +4,7 @@ Summary:	Convert between DateTime and Excel dates
 Name:		perl-DateTime-Format-Excel 
 Epoch:		1
 Version:	0.31
-Release:	7%{?dist}
+Release:	9%{?dist}
 # lib/DateTime/Format/Excel.pm -> GPL+ or Artistic
 License:	GPL+ or Artistic 
 Group:		Development/Libraries
@@ -57,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:0.31-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1:0.31-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:0.31-7
 - 为 Magic 3.0 重建
 

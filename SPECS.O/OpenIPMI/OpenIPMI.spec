@@ -4,7 +4,7 @@
 Summary: IPMI (Intelligent Platform Management Interface) library and tools
 Name: OpenIPMI
 Version: 2.0.19
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+ and GPLv2+ or BSD
 Group: System Environment/Base
 URL: http://sourceforge.net/projects/openipmi/
@@ -157,6 +157,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.0.19-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.0.19-3
 - 为 Magic 3.0 重建
 

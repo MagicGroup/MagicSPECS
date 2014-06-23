@@ -1,6 +1,6 @@
 Name:           perl-Lingua-Stem-Fr
 Version:        0.02
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Perl French Stemming
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.02-8
 - 为 Magic 3.0 重建
 

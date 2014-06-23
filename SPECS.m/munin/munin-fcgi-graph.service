@@ -5,7 +5,7 @@ Documentation=man:spawn-fcgi
 [Service]
 Type=forking
 PIDFile=/run/munin/fcgi-graph.pid
-ExecStart=/usr/bin/spawn-fcgi -s /run/munin/fcgi-graph.sock -U apache -u munin -g munin /var/www/cgi-bin/munin-cgi-graph -P /run/munin/fcgi-graph.pid
+ExecStart=/usr/bin/spawn-fcgi -s /run/munin/fcgi-graph.sock -U nginx -u munin -g munin /var/www/cgi-bin/munin-cgi-graph -P /run/munin/fcgi-graph.pid
 
 [Install]
 WantedBy=multi-user.target

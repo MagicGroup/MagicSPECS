@@ -1,6 +1,6 @@
 Name:           perl-GD
 Version:        2.44
-Release:        13%{?dist}
+Release:        15%{?dist}
 Summary:        Perl interface to the GD graphics library
 
 Group:          Development/Libraries
@@ -76,6 +76,12 @@ base64 t/test.out.3.png_new
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.44-15
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.44-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.44-13
 - 为 Magic 3.0 重建
 

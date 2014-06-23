@@ -1,6 +1,6 @@
 Name:           perl-SVG
 Version:        2.49
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        An extension to generate stand-alone or inline SGV
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.49-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.49-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Net-DNS-Resolver-Programmable
 Version:        0.003
-Release:        15%{?dist}
+Release:        21%{?dist}
 Summary:        Programmable DNS resolver class for offline emulation of DNS
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
@@ -37,6 +37,24 @@ on the fly.
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.003-21
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.003-20
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.003-19
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.003-18
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.003-17
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.003-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.003-15
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name:           perl-SQL-Translator
 Summary:        Manipulate structured data definitions (SQL and more)
 Version:        0.11012
-Release:        1%{?dist}
+Release:        10%{?dist}
 License:        GPLv2
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/SQL-Translator-%{version}.tar.gz
@@ -107,6 +107,33 @@ make test
 %{_mandir}/man[13]/*
 
 %changelog
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.11012-10
+- 为 Magic 3.0 重建
+
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.11012-9
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.11012-8
+- 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.11012-7
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.11012-6
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.11012-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11012-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11012-3
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.11012-2
+- 为 Magic 3.0 重建
+
 * Sun Jul 29 2012 Iain Arnell <iarnell@gmail.com> 0.11012-1
 - update to latest upstream version
 

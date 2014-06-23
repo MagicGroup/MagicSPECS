@@ -1,6 +1,6 @@
 Name:           perl-LockFile-Simple
 Version:        0.207
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Simple file locking scheme
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.207-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.207-10
 - 为 Magic 3.0 重建
 

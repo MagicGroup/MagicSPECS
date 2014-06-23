@@ -35,17 +35,19 @@ export PERL_MM_USE_DEFAULT=1
 %global __perl_requires /usr/lib/rpm/perl.req
 
 # By default, for perl packages we want to filter all files in _docdir from 
-# req/prov scanning, as well as filtering out any provides caused by private 
-# libs in vendorarch/archlib (vendor/core).
+# req/prov scanning.
+# Filtering out any provides caused by private libs in vendorarch/archlib
+# (vendor/core) is done by rpmbuild since Fedora 20
+# <https://fedorahosted.org/fpc/ticket/353>.
 #
 # Note that this must be invoked in the spec file, preferably as 
 # "%{?perl_default_filter}", before any %description block.
 
 %perl_default_filter %{expand: \
-%global __provides_exclude_from %{perl_vendorarch}/auto/.*\\\\.so$|%{perl_archlib}/.*\\\\.so$|%{_docdir}
-%global __requires_exclude_from %{_docdir}
-%global __provides_exclude perl\\\\(VMS|perl\\\\(Win32|perl\\\\(DB\\\\)|perl\\\\(UNIVERSAL\\\\)
-%global __requires_exclude perl\\\\(VMS|perl\\\\(Win32
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}^%{_docdir}
+%global __requires_exclude_from %{?__requires_exclude_from:%__requires_exclude_from|}^%{_docdir}
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\\\(VMS|^perl\\\\(Win32|^perl\\\\(DB\\\\)|^perl\\\\(UNIVERSAL\\\\)
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\\\(VMS|^perl\\\\(Win32
 }
 
 #############################################################################

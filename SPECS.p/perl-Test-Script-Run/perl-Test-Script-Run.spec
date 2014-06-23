@@ -1,6 +1,6 @@
 Name:           perl-Test-Script-Run
 Version:        0.04
-Release:        10%{?dist}
+Release:        16%{?dist}
 Summary:        Test the script with run
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Test::Script::Run.3pm*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.04-16
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.04-15
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.04-14
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-13
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04-11
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.04-10
 - 为 Magic 3.0 重建
 

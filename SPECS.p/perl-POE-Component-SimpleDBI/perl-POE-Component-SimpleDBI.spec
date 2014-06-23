@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-SimpleDBI
 Version:        1.30
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Asynchronous non-blocking DBI calls in POE made simple
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.30-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.30-4
 - 为 Magic 3.0 重建
 

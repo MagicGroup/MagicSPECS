@@ -1,6 +1,6 @@
 Name:           perl-TeX-Hyphen
 Version:        1.01
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Hyphenate words using TeX's patterns
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.01-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 22 2013 Paul Howarth <paul@city-fan.org> - 1.01-1
 - Update to 1.01
   - Updated the upstream URL to http://www.adelton.com/perl/TeX-Hyphen/

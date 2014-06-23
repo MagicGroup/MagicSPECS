@@ -1,6 +1,6 @@
 Name:       perl-Archive-RPM
-Version:    0.06
-Release:    10%{?dist}
+Version:    0.07
+Release:    13%{?dist}
 Summary:    Work with a RPM
 # lib/Archive/RPM.pm -> LGPLv2+
 # lib/Archive/RPM/ChangeLogEntry.pm -> LGPLv2+
@@ -8,17 +8,15 @@ License:    LGPLv2+
 Group:      Development/Libraries
 Url:        http://search.cpan.org/dist/Archive-RPM
 Source:     http://search.cpan.org/CPAN/authors/id/R/RS/RSRCHBOY/Archive-RPM-%{version}.tar.gz
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
-
 # non-perl
 BuildRequires: rpm, cpio
 Requires:      rpm, cpio
-
 BuildRequires: perl(CPAN)
 BuildRequires: perl(DateTime)
 BuildRequires: perl(ExtUtils::MakeMaker) >= 6.42
+BuildRequires: perl(File::Temp)
 BuildRequires: perl(Moose)
 BuildRequires: perl(MooseX::AttributeHelpers)
 BuildRequires: perl(MooseX::MarkAsMethods)
@@ -27,15 +25,13 @@ BuildRequires: perl(MooseX::Types::DateTime)
 BuildRequires: perl(MooseX::Types::DateTimeX)
 BuildRequires: perl(MooseX::Types::Path::Class)
 BuildRequires: perl(Path::Class)
-BuildRequires: perl(RPM2) >= 0.68
+BuildRequires: perl(RPM2) >= 0.67
 BuildRequires: perl(Test::More)
-
 Requires:      perl(MooseX::Traits)
 Requires:      perl(MooseX::Types::DateTime)
-Requires:      perl(RPM2) >= 0.68
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 Archive::RPM provides a more complete method of accessing an RPM's meta-
@@ -47,45 +43,65 @@ information we can't get through RPM2.
 %setup -q -n Archive-RPM-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
-
 %{_fixperms} %{buildroot}/*
 
 %check
-
-
-%clean
-rm -rf %{buildroot}
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.06-10
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-13
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-9
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-12
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-8
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-11
 - 为 Magic 3.0 重建
 
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.06-7
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-10
 - 为 Magic 3.0 重建
 
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.06-6
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.07-9
 - 为 Magic 3.0 重建
+
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.07-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Aug 05 2013 Petr Pisar <ppisar@redhat.com> - 0.07-6
+- Perl 5.18 rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 23 2012 Petr Pisar <ppisar@redhat.com> - 0.07-2
+- Perl 5.16 rebuild
+
+* Mon Jan 30 2012 Petr Šabata <contyk@redhat.com> - 0.07-1
+- 0.07 bump
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 0.06-5
 - Perl mass rebuild

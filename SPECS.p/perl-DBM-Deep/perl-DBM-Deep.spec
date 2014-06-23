@@ -1,6 +1,6 @@
 Name:           perl-DBM-Deep
 Version:        2.0008
-Release:        4%{?dist}
+Release:        11%{?dist}
 Summary:        A pure perl multi-level hash/array DBM
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -65,6 +65,27 @@ LONG_TESTS=1 TEST_SQLITE=1 ./Build test
 %{_mandir}/man3/DBM::Deep*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.0008-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 2.0008-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.0008-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.0008-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.0008-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 2.0008-6
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 2.0008-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.0008-4
 - 为 Magic 3.0 重建
 

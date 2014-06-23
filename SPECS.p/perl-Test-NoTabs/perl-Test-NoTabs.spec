@@ -1,6 +1,6 @@
 Name:		perl-Test-NoTabs
 Version:	1.3
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Check the presence of tabs in your project
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::NoTabs.3pm*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.3-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.3-4
 - 为 Magic 3.0 重建
 

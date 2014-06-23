@@ -62,20 +62,20 @@ Requires: portreserve
 %define real_name Mail-SpamAssassin
 %{!?perl_vendorlib: %define perl_vendorlib %(eval "`%{__perl} -V:installvendorlib`"; echo $installvendorlib)}
 
-%global saversion 3.003002
+%global saversion 3.004000
 #%global prerev rc2
 
 Summary: Spam filter for email which can be invoked from mail delivery agents
 Name: spamassassin
-Version: 3.3.2
+Version: 3.4.0
 #Release: 0.8.%{prerev}%{?dist}
-Release: 14%{?dist}
+Release: 6%{?dist}
 License: ASL 2.0
 Group: Applications/Internet
 URL: http://spamassassin.apache.org/
 Source0: http://www.apache.org/dist/%{name}/%{real_name}-%{version}.tar.bz2
 #Source0: %{real_name}-%{version}-%{prerev}.tar.bz2
-Source1: %{real_name}-rules-%{version}-r1104058.tar.gz
+Source1: http://www.apache.org/dist/%{name}/%{real_name}-rules-%{version}.r1565117.tgz
 #Source1: %{real_name}-rules-%{version}.%{prerev}.tgz
 Source2: redhat_local.cf
 Source3: spamassassin-default.rc
@@ -92,8 +92,11 @@ Source13: README.RHEL.Fedora
 %if %{use_systemd}
 Source14: spamassassin.service
 %endif
+Source15: spamassassin.sysconfig.el
 # Patches 0-99 are RH specific
-# none yet
+# https://bugzilla.redhat.com/show_bug.cgi?id=1055593
+# Switch to using gnupg2 instead of gnupg1
+Patch0: spamassassin-3.3.2-gnupg2.patch
 # Patches 100+ are SVN backports (DO NOT REUSE!)
 # end of patches
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -121,7 +124,7 @@ Requires: perl(Mail::SPF)
 Requires: perl(Encode::Detect)
 %endif
 Requires: procmail
-Requires: gnupg
+Requires: gnupg2
 
 # Hard requirements
 BuildRequires: perl-HTML-Parser >= 3.43
@@ -172,9 +175,8 @@ To filter spam for all users, add that line to /etc/procmailrc
 %prep
 %setup -q -n Mail-SpamAssassin-%{version}
 # Patches 0-99 are RH specific
-# none yet
+%patch0 -p1
 # Patches 100+ are SVN backports (DO NOT REUSE!)
-
 # end of patches
 
 echo "RHEL=%{rhel} FEDORA=%{fedora}"
@@ -202,7 +204,11 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/cron.d
 install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/mail/spamassassin/local.cf
+%if %{use_systemd}
 install -m644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/spamassassin
+%else
+install -m644 %{SOURCE15} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/spamassassin
+%endif
 
 install -m 0644 %{SOURCE3} %buildroot/etc/mail/spamassassin
 install -m 0644 %{SOURCE4} %buildroot/etc/mail/spamassassin
@@ -254,7 +260,6 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/portreserve
 echo 783 > $RPM_BUILD_ROOT%{_sysconfdir}/portreserve/spamd
 
 install -m 0644 %{SOURCE13} $RPM_BUILD_DIR/Mail-SpamAssassin-%{version}/
-magic_rpm_clean.sh
 
 %files -f %{name}-%{version}-filelist
 %defattr(-,root,root)
@@ -365,8 +370,45 @@ fi
 %endif
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.3.2-14
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.0-6
 - 为 Magic 3.0 重建
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 23 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-4
+- Fix versioning on initial rules. 
+- Add note to README.RHEL.Fedora to note -d option in sysconfig
+
+* Wed Mar 19 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-3
+- Cleaned up spec, added conditionals to build on el again.
+
+* Sun Feb 16 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-2
+- Simplify systemd unit file. Thanks misc. Fixes bug #1065762
+
+* Tue Feb 11 2014 Kevin Fenzi <kevin@scrye.com> 3.4.0-1
+- Update to 3.4.0
+
+* Sun Feb 02 2014 Kevin Fenzi <kevin@scrye.com> 3.3.2-19
+- Use pgrep -f for full command line. Fixes bug #1057926
+- Patch to use gnupg2 instead of gnupg1. Fixes bug #1055593
+- Use pgrep for spampd as well. Fixes bug #1058976
+
+* Sat Jan 04 2014 Kevin Fenzi <kevin@scrye.com> 3.3.2-18
+- Add patch to fix warning to syslog with recent perl.·
+- Fixes bug #1023670
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.2-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Mon Jul 22 2013 Petr Pisar <ppisar@redhat.com> - 3.3.2-16
+- Perl 5.18 rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.2-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Nov 15 2012 Kevin Fenzi <kevin@scrye.com> 3.3.2-14
+- Fix incorrect pgrep path. Fixes bug #875844
 
 * Sat Aug 25 2012 Kevin Fenzi <kevin@scrye.com> 3.3.2-13
 - Add systemd macros for presets. Fixes bug #850320
@@ -562,10 +604,10 @@ fi
 * Wed May 02 2007 Warren Togami <wtogami@redhat.com> 3.2.0-1
 - 3.2.0
 
-* Mon Apr 13 2007 Warren Togami <wtogami@redhat.com> 3.2.0-0.5.rc3
+* Fri Apr 13 2007 Warren Togami <wtogami@redhat.com> 3.2.0-0.5.rc3
 - 3.2.0 rc3
 
-* Mon Apr 13 2007 Warren Togami <wtogami@redhat.com> 3.2.0-0.4.rc2
+* Fri Apr 13 2007 Warren Togami <wtogami@redhat.com> 3.2.0-0.4.rc2
 - 3.2.0 rc2
 
 * Mon Apr 02 2007 Warren Togami <wtogami@redhat.com> 3.2.0-0.3.rc1
@@ -642,7 +684,7 @@ fi
 * Tue May 09 2006 Warren Togami <wtogami@redhat.com> - 3.0.5-4
 - Preserve timestamp and context of /etc/sysconfig/spamassassin (#178580)
 
-* Mon Mar 11 2006 Warren Togami <wtogami@redhat.com> - 3.1.1-1
+* Sat Mar 11 2006 Warren Togami <wtogami@redhat.com> - 3.1.1-1
 - 3.1.1
 
 * Fri Feb 10 2006 Jesse Keating <jkeating@redhat.com> - 3.1.0-5
@@ -699,7 +741,7 @@ fi
 - Own /usr/share/spamassassin (#152534).
 - Drop no longer needed dependency filter script.
 
-* Sun Apr 02 2005 Warren Togami <wtogami@redhat.com> 3.0.2-7
+* Sat Apr 02 2005 Warren Togami <wtogami@redhat.com> 3.0.2-7
 - req DB_File (#143186)
 
 * Sat Apr 02 2005 Warren Togami <wtogami@redhat.com> 3.0.2-6
@@ -759,7 +801,7 @@ fi
 * Wed Jul 28 2004 Warren Togami <wtogami@redhat.com> - 3.0-3.pre2
 - 3.0 pre2
 
-* Mon Jun 20 2004 Warren Togami <wtogami@redhat.com> - 3.0-2.pre1
+* Sun Jun 20 2004 Warren Togami <wtogami@redhat.com> - 3.0-2.pre1
 - 3.0.0 pre1
 - remove unnecessary patches applied upstream
 - update krb5 backcompat patch
@@ -773,7 +815,7 @@ fi
 - #124871 more docs
 - #124872 unowned directories
 
-* Tue May 24 2004 Warren Togami <wtogami@redhat.com> - 3.0-svn20040524
+* Mon May 24 2004 Warren Togami <wtogami@redhat.com> - 3.0-svn20040524
 - #123432 do not start service by default
 - #122488 remove CRLF's
 - #123706 correct license

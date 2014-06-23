@@ -1,0 +1,26 @@
+From a48fe9f51512fe367d44519e41c94b24ef8af983 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Thu, 29 May 2014 13:38:56 +0200
+Subject: [PATCH 08/10] Fix javapackages-metadata.xml
+
+s/com.jdk:jconsole/sun.jdk:jconsole/
+---
+ etc/javapackages-metadata.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/etc/javapackages-metadata.xml b/etc/javapackages-metadata.xml
+index 6f6c98e..1126a69 100644
+--- a/etc/javapackages-metadata.xml
++++ b/etc/javapackages-metadata.xml
+@@ -9,7 +9,7 @@
+             <path>${JAVA_HOME}/../lib/tools.jar</path>
+         </artifact>
+         <artifact>
+-            <groupId>com.jdk</groupId>
++            <groupId>sun.jdk</groupId>
+             <artifactId>jconsole</artifactId>
+             <version>SYSTEM</version>
+             <path>${JAVA_HOME}/../lib/jconsole.jar</path>
+-- 
+1.9.3
+

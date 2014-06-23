@@ -1,6 +1,6 @@
 Name:           perl-Data-Properties
 Version:        0.02
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Persistent properties
 
 # The upstream source itself does not specify a license.
@@ -51,6 +51,12 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.02-9
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.02-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.02-7
 - 为 Magic 3.0 重建
 

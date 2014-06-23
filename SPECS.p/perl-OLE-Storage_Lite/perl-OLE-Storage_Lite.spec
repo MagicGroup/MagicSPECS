@@ -1,6 +1,6 @@
 Name:		perl-OLE-Storage_Lite
 Version:	0.19
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	Simple Class for OLE document interface
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.19-9
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

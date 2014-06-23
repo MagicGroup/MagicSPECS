@@ -1,6 +1,6 @@
 Name:           perl-Inline
 Version:        0.51
-Release:        2%{?dist}
+Release:        8%{?dist}
 Summary:        Inline Perl module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -79,6 +79,24 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.51-8
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.51-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.51-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.51-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.51-4
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.51-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.51-2
 - 为 Magic 3.0 重建
 

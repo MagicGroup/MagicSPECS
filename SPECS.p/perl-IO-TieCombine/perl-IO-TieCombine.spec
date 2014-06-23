@@ -1,6 +1,6 @@
 Name:       perl-IO-TieCombine 
 Version:    1.000 
-Release:    12%{?dist}
+Release:    13%{?dist}
 # see lib/IO/TieCombine.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.000-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.000-12
 - 为 Magic 3.0 重建
 

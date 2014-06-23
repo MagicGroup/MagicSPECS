@@ -1,10 +1,10 @@
-%define majorver 8.5
-%define vers %{majorver}.13
+%define majorver 8.6
+%define vers %{majorver}.1
 
 Summary: The graphical toolkit for the Tcl scripting language
 Name: tk
 Version: %{vers}
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch:   1
 License: TCL
 Group: Development/Languages
@@ -21,12 +21,10 @@ BuildRequires: libXft-devel
 Conflicts: itcl <= 3.2
 Obsoletes: tile <= 0.8.2
 Provides: tile = 0.8.2
-Patch1: tk8.5-make.patch
-Patch2: tk-8.5.10-conf.patch
-# this patch isn't needed since tk8.6b1
-Patch3: tk-seg_input.patch
+Patch1: tk-8.6.1-make.patch
+Patch2: tk-8.6.1-conf.patch
 # fix implicit linkage of freetype that breaks xft detection (#677692)
-Patch4: tk-8.5.9-fix-xft.patch
+Patch3: tk-8.6.1-fix-xft.patch
 
 %description
 When paired with the Tcl scripting language, Tk provides a fast and powerful
@@ -50,14 +48,13 @@ The package contains the development files and man pages for tk.
 
 %patch1 -p1 -b .make
 %patch2 -p1 -b .conf
-%patch3 -p1 -b .seg
-%patch4 -p1 -b .fix-xft
+%patch3 -p1 -b .fix-xft
 
 %build
 cd unix
 autoconf
-%configure
-make %{?_smp_mflags} TK_LIBRARY=%{_datadir}/%{name}%{majorver}
+%configure --enable-threads
+make %{?_smp_mflags} CFLAGS="%{optflags}" TK_LIBRARY=%{_datadir}/%{name}%{majorver}
 
 %check
 # do not run "make test" by default since it requires an X display
@@ -69,27 +66,23 @@ make %{?_smp_mflags} TK_LIBRARY=%{_datadir}/%{name}%{majorver}
 %endif
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install -C unix INSTALL_ROOT=$RPM_BUILD_ROOT TK_LIBRARY=%{_datadir}/%{name}%{majorver}
+make install -C unix INSTALL_ROOT=%{buildroot} TK_LIBRARY=%{_datadir}/%{name}%{majorver}
 
-ln -s wish%{majorver} $RPM_BUILD_ROOT%{_bindir}/wish
+ln -s wish%{majorver} %{buildroot}%{_bindir}/wish
 
 # for linking with -l%%{name}
-ln -s lib%{name}%{majorver}.so $RPM_BUILD_ROOT%{_libdir}/lib%{name}.so
+ln -s lib%{name}%{majorver}.so %{buildroot}%{_libdir}/lib%{name}.so
 
-mkdir -p $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/{generic/ttk,unix}
-find generic unix -name "*.h" -exec cp -p '{}' $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/'{}' ';'
-( cd $RPM_BUILD_ROOT/%{_includedir}
+mkdir -p %{buildroot}/%{_includedir}/%{name}-private/{generic/ttk,unix}
+find generic unix -name "*.h" -exec cp -p '{}' %{buildroot}/%{_includedir}/%{name}-private/'{}' ';'
+( cd %{buildroot}/%{_includedir}
   for i in *.h ; do
-    [ -f $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/generic/$i ] && ln -sf ../../$i $RPM_BUILD_ROOT/%{_includedir}/%{name}-private/generic ;
+    [ -f %{buildroot}/%{_includedir}/%{name}-private/generic/$i ] && ln -sf ../../$i %{buildroot}/%{_includedir}/%{name}-private/generic ;
   done
 )
 
 # remove buildroot traces
-sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" $RPM_BUILD_ROOT/%{_libdir}/%{name}Config.sh
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+sed -i -e "s|$PWD/unix|%{_libdir}|; s|$PWD|%{_includedir}/%{name}-private|" %{buildroot}/%{_libdir}/%{name}Config.sh
 
 %pre
 [ ! -h %{_prefix}/%{_lib}/%{name}%{majorver} ] || rm %{_prefix}/%{_lib}/%{name}%{majorver}
@@ -115,12 +108,38 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib%{name}.so
 %{_libdir}/lib%{name}stub%{majorver}.a
 %{_libdir}/%{name}Config.sh
+%{_libdir}/pkgconfig/tk.pc
 %{_mandir}/man3/*
 %{_datadir}/%{name}%{majorver}/tkAppInit.c
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:8.5.13-2
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.6.1-3
 - 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1-2
+- Re-enabled threads (previously reported bugs are no more reproducible)
+
+* Thu Apr 24 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.1-1
+- New version
+- Defuzzified patches
+
+* Wed Jan 01 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.6.0-1
+- New version
+  Resolves: rhbz#889201
+- Removed seg_input patch (upstreamed)
+- Minor cleanups
+
+* Fri Dec  6 2013 Peter Robinson <pbrobinson@fedoraproject.org> 1:8.5.15-1
+- Update to 8.5.15
+
+* Thu Aug 15 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.5.14-1
+- New version
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:8.5.13-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:8.5.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Mon Nov 12 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 1:8.5.13-1
 - New version
@@ -254,10 +273,10 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Jul 31 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.15-1
 - Update tk8.4.15
 
-* Thu Feb 20 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-5
+* Tue Feb 20 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-5
 - rhbz#226494 review again
 
-* Thu Feb 14 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-4
+* Wed Feb 14 2007 Marcela Maslanova <mmaslano@redhat.com> - 1:8.4.13-4
 - rhbz#226494 review
 
 * Sat Feb 10 2007 David Cantrell <dcantrell@redhat.com> - 1:8.4.13-3
@@ -450,7 +469,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Jan 07 2002 Florian La Roche <Florian.LaRoche@redhat.de>
 - fix config.guess and config.sub to newer versions
 
-* Mon Aug 29 2001 Adrian Havill <havill@redhat.com>
+* Wed Aug 29 2001 Adrian Havill <havill@redhat.com>
 
 * Mon Aug  8 2001 Adrian Havill <havill@redhat.com>
 - re-enable glibc string and math inlines; recent gcc is a-ok.

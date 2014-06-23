@@ -1,7 +1,7 @@
 Name:           perl-HTML-Tree
 Epoch:          1
 Version:        5.02
-Release:        7%{?dist}
+Release:        13%{?dist}
 Summary:        HTML tree handling modules for Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -56,6 +56,24 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/HTML::*3*
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:5.02-13
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1:5.02-12
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:5.02-11
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:5.02-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:5.02-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:5.02-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:5.02-7
 - 为 Magic 3.0 重建
 

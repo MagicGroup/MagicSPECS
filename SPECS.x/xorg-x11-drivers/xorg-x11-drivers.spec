@@ -1,44 +1,37 @@
 Summary: X.Org X11 driver installation package
 Name: xorg-x11-drivers
-Version: 7.4
-Release: 16%{?dist}
+Version: 7.7
+Release: 9%{?dist}
 License: MIT
 Group: User Interface/X Hardware Support
 
-# Xorg is not (yet) buildable for s390.  When it is, we'll probably only
-# want dummy and void anyway.  Maybe evdev for uinput stuff?
 ExcludeArch: s390 s390x
-
-# Notable things missing:
-# - imstt, not packaged yet, probably ppc only
-# - impact, since we don't have a mips port
-# - vermilion, the hardware is fictional
-# - poulsbo, likewise
-# - ark/chips/s3/tseng/vga, here's a nickel.
 
 # relevant hardware 
 
-#Requires: xorg-x11-drv-ast
 Requires: xorg-x11-drv-ati
-Requires: xorg-x11-drv-cirrus
 Requires: xorg-x11-drv-dummy
 Requires: xorg-x11-drv-evdev
 Requires: xorg-x11-drv-fbdev
-Requires: xorg-x11-drv-mga
+Requires: xorg-x11-drv-modesetting
 Requires: xorg-x11-drv-nouveau
 Requires: xorg-x11-drv-qxl
 Requires: xorg-x11-drv-synaptics
 Requires: xorg-x11-drv-v4l
-Requires: xorg-x11-drv-vesa
 Requires: xorg-x11-drv-void
 Requires: xorg-x11-drv-wacom
 
+# only build vesa on machines where we support vbe
+%ifarch %{ix86} x86_64
+Requires: xorg-x11-drv-vesa
+%endif
+
 # So far intel is onboard-only.
-%ifarch %{ix86} x86_64 ia64
+%ifarch %{ix86} x86_64
 Requires: xorg-x11-drv-intel
 %endif
 
-# vmware soft drivers.  yes, vmmouse really isn't ia64-enabled yet.
+# vmware soft drivers.  yes, vmmouse really isn't ia64-enabled.
 %ifarch %{ix86} x86_64 ia64
 Requires: xorg-x11-drv-vmware
 %endif
@@ -50,14 +43,15 @@ Requires: xorg-x11-drv-vmmouse
 
 %if !0%{?rhel}
 
+# These have KMS drivers for everything RHEL cares about
+Requires: xorg-x11-drv-cirrus
+Requires: xorg-x11-drv-mga
+
 Requires: xorg-x11-drv-apm
 Requires: xorg-x11-drv-glint
 Requires: xorg-x11-drv-i128
 Requires: xorg-x11-drv-i740
-Requires: xorg-x11-drv-keyboard
 Requires: xorg-x11-drv-mach64
-Requires: xorg-x11-drv-mouse
-#Requires: xorg-x11-drv-nv
 Requires: xorg-x11-drv-r128
 Requires: xorg-x11-drv-rendition
 Requires: xorg-x11-drv-s3virge
@@ -87,17 +81,12 @@ Requires: xorg-x11-drv-neomagic
 Requires: xorg-x11-drv-openchrome
 %endif
 
-# Sun kit, sparc-only.
-%ifarch sparc sparcv9 sparc64
-Requires: xorg-x11-drv-suntcx
-Requires: xorg-x11-drv-suncg3
-Requires: xorg-x11-drv-suncg6
-Requires: xorg-x11-drv-suncg14
-Requires: xorg-x11-drv-sunffb
-Requires: xorg-x11-drv-sunleo
-Requires: xorg-x11-drv-sunbw2
+# ARM kit
+%ifarch %{arm}
+Requires: xorg-x11-drv-omap
+Requires: xorg-x11-drv-armsoc
+Requires: xorg-x11-drv-freedreno
 %endif
-
 %endif
 
 %description
@@ -120,6 +109,54 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 7.7-9
+- 为 Magic 3.0 重建
+
+* Mon May 05 2014 Dennis Gilmore <dennis@ausil.us> 7.7-8
+- drop sparc section
+- add xorg-x11-drv-freedreno on arm arches
+
+* Tue Apr 22 2014 Peter Hutterer <peter.hutterer@redhat.com> 7.7-7
+- Drop mouse and keyboard, use evdev from now on
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.7-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri May 10 2013 Adam Jackson <ajax@redhat.com> 7.7-5
+- Drop ast, handled by -modesetting now
+
+* Tue Mar 19 2013 Adam Jackson <ajax@redhat.com> 7.7-4
+- Less RHEL conditionals
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Jan 09 2013 Adam Jackson <ajax@redhat.com> 7.7-2
+- Drop nv
+
+* Thu Jan 03 2013 Adam Jackson <ajax@redhat.com> 7.7-2
+- Hide ast/cirrus/mga in RHEL
+
+* Wed Jan 02 2013 Adam Jackson <ajax@redhat.com> 7.7-1
+- Superstition bump to 7.7
+- Drop intel from ia64, apparently that was never a thing
+
+* Fri Dec 21 2012 Dennis Gilmore <dennis@ausil.us> - 7.4-11
+- arm has omap and armsoc drivers
+
+* Wed Aug 15 2012 Adam Jackson <ajax@redhat.com> 7.4-10
+- Only build vesa on arches where xserver builds VBE support
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Apr 30 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 7.4-8
+- Add options for ARM
+
+* Wed Mar 21 2012 Adam Jackson <ajax@redhat.com> 7.4-7
+- More %%rhel conditionals
+- Add -modesetting
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

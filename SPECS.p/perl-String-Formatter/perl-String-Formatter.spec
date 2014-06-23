@@ -1,6 +1,6 @@
 Name:           perl-String-Formatter
 Version:        0.102082
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Build sprintf-like functions of your own
 License:        GPLv2
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.102082-8
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.102082-7
 - 为 Magic 3.0 重建
 

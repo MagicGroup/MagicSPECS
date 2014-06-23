@@ -1,6 +1,6 @@
 Name:           perl-Net-IP
 Version:        1.25
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Perl module for manipulation of IPv4 and IPv6 addresses
 
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.25-22
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.25-21
 - 为 Magic 3.0 重建
 

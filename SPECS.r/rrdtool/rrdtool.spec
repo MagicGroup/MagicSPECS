@@ -8,17 +8,14 @@
 #define pretag 1.2.99908020600
 
 # Private libraries are not be exposed globally by RPM
-# RPM 4.8
-%{?filter_provides_in: %filter_provides_in %{php_extdir}/.*\.so$}
-%{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 Summary: Round Robin Database Tool to store and display time-series data
 Name: rrdtool
-Version: 1.4.7
-Release: 16%{?dist}
+Version: 1.4.8
+Release: 13%{?dist}
 License: GPLv2+ with exceptions
 Group: Applications/Databases
 URL: http://oss.oetiker.ch/rrdtool/
@@ -31,6 +28,10 @@ Patch2: rrdtool-1.4.7-ruby-2-fix.patch
 Patch3: rrdtool-1.4.7-php55.patch
 Patch4: rrdtool-1.4.7-autoconf-fix.patch
 Patch5: rrdtool-1.4.7-lua-5.2.patch
+# patch merged upstream, http://github.com/oetiker/rrdtool-1.x/pull/397
+Patch6: rrdtool-1.4.8-imginfo-check.patch
+# patch sent upstream
+Patch7: rrdtool-1.4.8-doc-fix.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: dejavu-sans-mono-fonts
@@ -38,7 +39,7 @@ BuildRequires: gcc-c++, openssl-devel, freetype-devel
 BuildRequires: libpng-devel, zlib-devel, intltool >= 0.35.0
 BuildRequires: cairo-devel >= 1.4.6, pango-devel >= 1.17
 BuildRequires: libtool, groff
-BuildRequires: gettext, libxml2-devel
+BuildRequires: gettext, libxml2-devel, libdbi-devel
 BuildRequires: perl-ExtUtils-MakeMaker, perl-devel, automake, autoconf
 
 %description
@@ -99,7 +100,7 @@ Provides: python-%{name} = %{version}-%{release}
 Python RRDtool bindings.
 %endif
 
-%ifarch ppc64
+%ifarch %{power64}
 # php bits busted on ppc64 at the moment
 %define with_php 0
 %endif
@@ -157,7 +158,7 @@ The %{name}-ruby package includes RRDtool bindings for Ruby.
 Summary: Lua RRDtool bindings
 Group: Development/Languages
 BuildRequires: lua, lua-devel
-Requires: lua = %{luaver}
+Requires: lua(abi) = %{luaver}
 Requires: %{name} = %{version}-%{release}
 
 %description lua
@@ -173,6 +174,8 @@ The %{name}-lua package includes RRDtool bindings for Lua.
 %patch2 -p1 -b .ruby-2-fix
 %patch4 -p1 -b .autoconf-fix
 %patch5 -p1 -b .lua-52
+%patch6 -p1 -b .imginfo-check
+%patch7 -p1 -b .doc-fix
 
 # Fix to find correct python dir on lib64
 %{__perl} -pi -e 's|get_python_lib\(0,0,prefix|get_python_lib\(1,0,prefix|g' \
@@ -331,7 +334,7 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %defattr(-,root,root,-)
 %{_includedir}/*.h
 %exclude %{_libdir}/*.la
-%{_libdir}/*.so
+%{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
 
 %files doc
@@ -386,6 +389,53 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.4.8-13
+- 为 Magic 3.0 重建
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 28 2014 Vít Ondruch <vondruch@redhat.com> - 1.4.8-11
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.1
+
+* Mon Feb 17 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-10
+- Used macro to detect all ppc64 host variants
+  Resolves: rhbz#1054300
+
+* Tue Jan 21 2014 Tom Callaway <spot@fedoraproject.org> - 1.4.8-9
+- rebuild for new libdbi
+
+* Mon Dec  9 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-8
+- Enabled libdbi support
+  Resolves: rhbz#1039326
+
+* Mon Nov  4 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-7
+- Fixed multilib problems
+
+* Fri Oct 11 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-6
+- Fixed twice packaging of tclrrd1.4.8.so
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.8-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 1.4.8-4
+- Perl 5.18 rebuild
+
+* Mon Jul  1 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-3
+- Minor doc / man fixes
+
+* Fri Jun  7 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-2
+- Added imginfo format check
+  Resolves: CVE-2013-2131
+
+* Thu May 23 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.8-1
+- New version
+  Resolves: rhbz#966639
+- Updated and defuzzified patches
+
+* Mon May 20 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 1.4.7-17
+- Require lua abi instead of package version
+
 * Wed May 15 2013 Tom Callaway <spot@fedoraproject.org> - 1.4.7-16
 - lua 5.2
 

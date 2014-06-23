@@ -1,6 +1,6 @@
 Name:           perl-Class-Data-Accessor
 Version:        0.04004
-Release:        12%{?dist}
+Release:        14%{?dist}
 Summary:        Inheritable, overridable class and instance data accessor creation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -73,6 +73,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.04004-14
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.04004-13
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.04004-12
 - 为 Magic 3.0 重建
 

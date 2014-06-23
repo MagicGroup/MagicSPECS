@@ -1,6 +1,6 @@
 Name:           perl-Module-Install-AuthorTests
 Version:        0.002
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Designate tests only run by module authors
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.002-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.002-4
 - 为 Magic 3.0 重建
 

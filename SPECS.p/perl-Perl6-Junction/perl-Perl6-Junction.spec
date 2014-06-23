@@ -1,7 +1,7 @@
 %define tarname Perl6-Junction
 Name:           perl-Perl6-Junction
 Version:        1.50000
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Perl6 style Junction operators in Perl5
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ make test
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.50000-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 16 2012 Emmanuel Seyman <emmanuel@seyman.fr> - 1.50000-1
 - Update to 1.50000
 - Clean up spec file

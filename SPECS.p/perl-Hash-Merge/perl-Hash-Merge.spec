@@ -1,6 +1,6 @@
 Name:           perl-Hash-Merge
 Version:        0.12
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Merges arbitrary deep hashes into a single hash
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.12-9
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.12-8
 - 为 Magic 3.0 重建
 

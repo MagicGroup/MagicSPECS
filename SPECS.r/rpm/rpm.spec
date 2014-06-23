@@ -21,7 +21,7 @@
 Summary: The RPM package management system
 Name: rpm
 Version: %{rpmver}
-Release: %{?snapver:0.%{snapver}.}11%{?dist}.1
+Release: 13%{?dist}
 Group: System Environment/Base
 Url: http://www.rpm.org/
 Source0: http://rpm.org/releases/rpm-4.11.x/%{name}-%{srcver}.tar.bz2
@@ -294,6 +294,8 @@ CPPFLAGS="$CPPFLAGS `pkg-config --cflags nss`"
 CFLAGS="$RPM_OPT_FLAGS"
 export CPPFLAGS CFLAGS LDFLAGS
 
+autoreconf -fisv
+
 # Using configure macro has some unwanted side-effects on rpm platform
 # setup, use the old-fashioned way for now only defining minimal paths.
 ./configure \
@@ -523,6 +525,12 @@ exit 0
 %doc COPYING doc/librpm/html/*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.11.2-13
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.11.2-11.2
+- 为 Magic 3.0 重建
+
 * Fri Jan 03 2014 Liu Di <liudidi@gmail.com> - 4.11.1-11.1
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,21 @@
+--- zfs-fuse-0.7.0.orig/src/lib/libumem/Makefile.in	2012-01-09 03:31:29.000000000 -0500
++++ zfs-fuse-0.7.0.orig/src/lib/libumem/Makefile.in	2013-02-15 08:54:29.520166292 -0500
+@@ -126,6 +126,7 @@ 
+ CCASFLAGS = @CCASFLAGS@
+ CCDEPMODE = @CCDEPMODE@
+ CFLAGS = @CFLAGS@
++AM_CFLAGS = -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
+ CXX = @CXX@
+--- zfs-fuse-0.7.0.orig/src/SConstruct	2012-01-09 03:31:29.000000000 -0500
++++ zfs-fuse-0.7.0.orig/src/SConstruct	2013-02-15 08:53:24.286560774 -0500
+@@ -32,7 +32,7 @@ 
+ env.CacheDir('/tmp/.zfs-fuse.scons')
+ env['CC'] = 'gcc'
+ env['LINKFLAGS'] = Split('-pipe -Wall')
+-env['CCFLAGS'] = Split('-pipe -Wall -std=c99 -Wno-switch -Wno-unused -Wno-missing-braces -Wno-parentheses -Wno-uninitialized -fno-strict-aliasing -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -DTEXT_DOMAIN=\\"zfs-fuse\\" ')
++env['CCFLAGS'] = Split('-pipe -Wall -std=c99 -Wno-switch -Wno-unused -Wno-missing-braces -Wno-parentheses -Wno-uninitialized -fno-strict-aliasing -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -DTEXT_DOMAIN=\\"zfs-fuse\\" -O2 -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 ')
+ 
+ if osname == "Linux":
+   env.Append(CPPFLAGS = " -DLINUX_AIO")

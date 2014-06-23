@@ -1,6 +1,6 @@
 Name:           perl-Tree-DAG_Node
 Version:        1.06
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Class for representing nodes in a tree
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.06-16
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.06-15
 - 为 Magic 3.0 重建
 

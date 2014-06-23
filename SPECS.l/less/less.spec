@@ -1,23 +1,29 @@
 Summary: A text file browser similar to more, but better
+Summary(zh_CN.UTF-8): 文本文件浏览器，类似 more，但是更好
 Name: less
-Version: 444
-Release: 6%{?dist}
+Version: 458
+Release: 9%{?dist}
 License: GPLv3+
 Group: Applications/Text
+Group(zh_CN.UTF-8): 应用程序/文本
 Source: http://www.greenwoodsoftware.com/less/%{name}-%{version}.tar.gz
 Source1: lesspipe.sh
 Source2: less.sh
 Source3: less.csh
-Patch1:	less-443-Foption.patch
+Patch1:	less-444-Foption.v2.patch
+Patch2: less-394-search.patch
 Patch4: less-394-time.patch
 Patch5: less-418-fsync.patch
 Patch6: less-436-manpage-add-old-bot-option.patch
-Patch8: less-436-help.patch
-Patch9: less-436-empty-lessopen-pipe.patch
+Patch7: less-436-help.patch
+Patch8: less-458-lessecho-usage.patch
+Patch9: less-458-less-filters-man.patch
+Patch10: less-458-lesskey-usage.patch
+Patch11: less-458-old-bot-in-help.patch
+Patch12: less-458-outdated-unicode-data.patch
 URL: http://www.greenwoodsoftware.com/less/
-Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n) 
+Requires: groff-base
 BuildRequires: ncurses-devel
-BuildRequires: pcre-devel
 BuildRequires: autoconf automake libtool
 
 %description
@@ -30,22 +36,31 @@ example, vi).
 You should install less because it is a basic utility for viewing text
 files, and you'll use it frequently.
 
+%description -l zh_CN.UTF-8
+文本文件浏览器，类似 more，但是更好，拥有更多的功能。
+
+你应该安装 less，因为它是查看文本文件的基本工具。
+
 %prep
 %setup -q
 %patch1 -p1 -b .Foption
+%patch2 -p1 -b .search
 %patch4 -p1 -b .time
 %patch5 -p1 -b .fsync
 %patch6 -p1 -b .manpage-add-old-bot-option
-%patch8 -p1 -b .help
-%patch9 -p1 -b .empty-lessopen-pipe
-
+%patch7 -p1 -b .help
+%patch8 -p1 -b .lessecho-usage
+%patch9 -p1 -b .less-filters-man
+%patch10 -p1 -b .lesskey-usage
+%patch11 -p1 -b .old-bot
+%patch12 -p1 -b .outdated-unicode-data
 autoreconf
 
 chmod -R a+w *
 chmod 644 *.c *.h LICENSE README
 
 %build
-%configure --with-regex=pcre
+%configure
 make CC="gcc $RPM_OPT_FLAGS -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64" datadir=%{_docdir}
 
 %install
@@ -68,16 +83,73 @@ ls -la $RPM_BUILD_ROOT/etc/profile.d
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 444-6
+* Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 458-9
 - 为 Magic 3.0 重建
 
-* Fri Mar 09 2012 Liu Di <liudidi@gmail.com> - 444-5
-- 为 Magic 3.0 重建
+* Thu May 22 2014 Jozef Mlich <jmlich@redhat.com> - 458-8
+- (lesspipe) the groff was used just in case of gzipped man pages
+- (lesspipe) the exit $? should be used directly after command; 
+  otherwise may return unexpected value.
+- (lesspipe) not preprocessed output was returning 1
 
-* Fri Mar 09 2012 Liu Di <liudidi@gmail.com> - 444-4
-- 为 Magic 3.0 重建
+* Mon Mar 31 2014 Jozef Mlich <jmlich@redhat.com> - 458-7
+- FIXES outdated ubin_table in charset.c; 
+  Kudos to Akira TAGOH
+  Resolves: #1074489
 
-* Mon Aug 23 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 444-3
+* Mon Feb 10 2014 Jozef Mlich <jmlich@redhat.com> - 458-6
+- The data in less-458-old-bot-in-help.patch was not
+  preprocessed by mkhelp (i.e. not applied)
+
+* Mon Dec 02 2013 Jozef Mlich <jmlich@redhat.com> - 458-5
+- Resolves #1036326 fixing command line parsing in lesskey
+- changed day of week in order to avoid bogus date in changelog
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 458-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 07 2013 Fridolin Pokorny <fpokorny@redhat.com> - 458-3
+- Expanded lessecho usage (#948597)
+- Added lessfilter info to man (#948597)
+- Expanded lesskey usage (#948597)
+- Added --old-bot to help (#948597)
+
+* Thu Apr 11 2013 Fridolin Pokorny <fpokorny@redhat.com> - 458-2
+- Added gpg support to lesspipe.sh (#885122)
+- Added ~/.lessfilter support (#885122)
+
+* Thu Apr 11 2013 Fridolin Pokorny <fpokorny@redhat.com> - 458-1
+- Update to 458
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 451-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Oct 25 2012 Martin Briza <mbriza@redhat.com> - 451-2
+- Changed unnecessary groff dependency to groff-base (#868376)
+
+* Tue Sep 11 2012 Martin Briza <mbriza@redhat.com> - 451-1
+- Rebase to 451 (#835802)
+- Removed the empty-lessopen-pipe patch as the issue is now fixed upstream.
+
+* Mon May 14 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 444-7
+- Fix less.sh not to override user-defined LESSOPEN variable (#802757)
+- Use POSIX regcomp instead of PCRE - revert 406-11, commit 4b961c7 (#643233)
+- Merge Foption changes by Colin Guthrie to Foption.v2.patch (#805735)
+
+* Fri Feb 10 2012 Petr Pisar <ppisar@redhat.com> - 444-6
+- Rebuild against PCRE 8.30
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 444-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Thu Dec 08 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 444-4
+- Avoid some unnecessary stat calls and commands in lesspipe.sh,
+  patch by Ville Skyttä (#741440)
+- Use `groff' instead of `man -s' for rendering manpages to prevent
+  options incompatibility between man and man-db packages (#718498)
+- Add groff to Requires
+
+* Tue Aug 23 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 444-3
 - Substitute %%makeinstall macro with make DESTDIR* install (#732557)
 
 * Fri Aug 12 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 444-2
@@ -126,7 +198,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Jan 4 2010 Nikola Pajkovsky <npajkovs@redhat.com> - 436-5
 - patched wrong manpage. Resolves: #537746.
 
-* Mon Dec 12 2009 Nikola Pajkovsky <npajkovs@redhat.com> - 436-4
+* Sat Dec 12 2009 Nikola Pajkovsky <npajkovs@redhat.com> - 436-4
 - #546613 - RFE: add *.jar *.nbm to lesspipe.sh
 
 * Wed Dec 9 2009 Nikola Pajkovsky <npajkovs@redhat.com> - 436-3
@@ -135,7 +207,7 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 436-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
-* Tue Jul 10 2009 Zdenek Prikryl <zprikryl@redhat.com> - 436-1
+* Fri Jul 10 2009 Zdenek Prikryl <zprikryl@redhat.com> - 436-1
 - Foption patch is more optimal now
 - Update to 436
 
@@ -216,7 +288,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - 394-4.1
 - rebuild
 
-* Thu May  5 2006 Ivana Varekova <varekova@redhat.com> - 394-4
+* Fri May  5 2006 Ivana Varekova <varekova@redhat.com> - 394-4
 - fix problem with unassigned variable DECOMPRESSOR (#190619)
 
 * Wed Feb 15 2006 Ivana Varekova <varekova@redhat.com> - 394-3
@@ -416,7 +488,7 @@ rm -rf $RPM_BUILD_ROOT
 - fix up lesspipe stuff (Bug #8750 and a couple of non-reported bugs)
   (Karsten, did I mention I'll kill you when you return from SAP? ;) )
 
-* Sun Jan 07 2000 Karsten Hopp <karsten@redhat.de>
+* Fri Jan 7 2000 Karsten Hopp <karsten@redhat.de>
 - added lesspipe.sh to show listings of package
   contents instead of binary output.
 

@@ -1,6 +1,6 @@
 Name:           perl-Digest-Nilsimsa
 Version:        0.06
-Release:        21%{?dist}
+Release:        23%{?dist}
 
 Summary:        Perl interface to the Nilsima Algorithm
 
@@ -51,6 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.06-23
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.06-22
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-21
 - 为 Magic 3.0 重建
 

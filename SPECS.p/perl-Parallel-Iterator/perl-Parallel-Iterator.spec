@@ -1,6 +1,6 @@
 Name:           perl-Parallel-Iterator
 Version:        1.00
-Release:        6%{?dist}
+Release:        12%{?dist}
 Summary:        Simple parallel execution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,24 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.00-12
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.00-11
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 1.00-10
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.00-9
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.00-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.00-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 24 2012 Petr Pisar <ppisar@redhat.com> - 1.00-6
 - Specify all dependencies
 

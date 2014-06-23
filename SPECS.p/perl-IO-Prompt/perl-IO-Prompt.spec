@@ -1,89 +1,95 @@
-Name:           perl-IO-Prompt
-Summary:        Interactively prompt for user input
-%global cpanver 0.997001
-Version:        0.997.001
-Release:        4%{?dist}
-License:        GPL+ or Artistic
-Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/D/DC/DCONWAY/IO-Prompt-%{cpanver}.tar.gz 
-# doesn't work on 5.14 if you call prompt() in non-"main" package
-# see https://rt.cpan.org/Public/Bug/Display.html?id=69084
-# and https://github.com/gfx/p5-IO-Prompt-patched/commit/8300962b0235803287777f78b86aa1776d369769.patch
-Patch0:         perl-IO-Prompt-rt69084.patch
-URL:            http://search.cpan.org/dist/IO-Prompt
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-BuildArch:      noarch
-
 # tests require working /dev/tty - disabled by default for koji
 # see https://rt.cpan.org/Public/Bug/Display.html?id=54807
 %bcond_with     check
 
+Name:           perl-IO-Prompt
+Summary:        Interactively prompt for user input
+%global cpanver 0.997002
+Version:        0.997.002
+Release:        6%{?dist}
+License:        GPL+ or Artistic
+Group:          Development/Libraries
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DC/DCONWAY/IO-Prompt-%{cpanver}.tar.gz 
+URL:            http://search.cpan.org/dist/IO-Prompt
+BuildArch:      noarch
+BuildRequires:  perl(ExtUtils::MakeMaker)
+%if %{with check}
+# Run-time:
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(IO::Handle)
 BuildRequires:  perl(POSIX)
+BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Term::ReadKey)
-BuildRequires:  perl(Test::More)
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
-BuildRequires:  perl(version)
 BuildRequires:  perl(Want)
-
+# Tests:
+BuildRequires:  perl(Test::More)
+# Optional tests:
+BuildRequires:  perl(Test::Pod) >= 1.14
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.04
+%endif
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
 
 %description
 An object-oriented way to prompt for user input -- and control how the user is
 prompted.
 
+This module is no longer being maintained. Use the IO::Prompter module instead.
 
 %prep
 %setup -q -n IO-Prompt-%{cpanver}
-%patch0 -p1
-
-sed -i 's/\r//' t/*.t
-
-find . -type f -exec chmod -c -x {} ';'
+find examples -type f -exec chmod -x {} +
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
-rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
-
 
 %check
 %if %{with check}
-    
+    make test
 %else
     echo "Not running tests unless --with check is specified"
 %endif
 
-
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes README examples/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.997.001-4
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.997.002-6
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.997.001-3
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.997.002-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.997.002-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.997.002-3
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.997.002-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Nov 07 2012 Petr Pisar <ppisar@redhat.com> - 0.997.002-1
+- 0.997002 bump
+- Drop tests sub-package
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.997.001-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.997.001-3
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.997.001-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

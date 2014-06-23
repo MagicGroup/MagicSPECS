@@ -2,7 +2,7 @@
 # - libstk:  http://www.libstk.net/ - probably not, see 1.1.5 ChangeLog
 # - drop the opengl video out plugin?
 
-%define         plugin_abi  2.3
+%define         plugin_abi  2.4
 %define         codecdir    %{_libdir}/codecs
 
 %ifarch %{ix86}
@@ -20,19 +20,19 @@
 %define _without_esound 1
 
 Summary:        A multimedia engine
+Summary(zh_CN.UTF-8): 多媒体引擎
 Name:           xine-lib
-Version:        1.2.3
+Version:	1.2.5
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.xine-project.org/
 # The tarball is generated from the upstream tarball using
 # the script in SOURCE1. It prunes potentially patented code
 #Source0:        http://downloads.sourceforge.net/xine/xine-lib-%{version}.tar.xz
-Source0:        xine-lib-%{version}.tar.xz
+Source0:        http://sourceforge.net/projects/xine/files/xine-lib/%{version}/xine-lib-%{version}.tar.xz
 Source1:        xine-lib-cleanup-sources.sh
-#少了一个文件 
-Source2:	accel_vaapi.h
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Patch0:         xine-lib-1.1.19-no_autopoint.patch
@@ -106,18 +106,28 @@ various media, decode multimedia files from local disk drives, and display
 multimedia streamed over the Internet. It interprets many of the most
 common multimedia formats available - and some uncommon formats, too. 
 
+%description -l zh_CN.UTF-8
+这可以回放多种媒体，解码多媒体文件，播放互联网上的流媒体等。
+
 %package        devel
 Summary:        Xine library development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       zlib-devel
 %description    devel
 This package contains development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package        extras
 Summary:        Additional plugins for %{name} 
+Summary(zh_CN.UTF-8): %{name} 的附加插件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 #Requires:      xine-lib(plugin-abi) = %{plugin_abi}
 %description    extras
@@ -136,6 +146,9 @@ This package contains extra plugins for %{name}:
   - DirectFB output
 %endif # directfb
 
+%description extras -l zh_CN.UTF-8
+%{name} 的附加插件。
+
 
 %prep
 %setup -q
@@ -149,8 +162,6 @@ rm -f configure ltmain.sh libtool m4/libtool.m4 m4/ltoptions.m4 m4/ltversion.m4
 %ifarch mips64el
 %patch11 -p0 -b .non-x86
 %endif
-
-cp %{SOURCE2} src/xine-engine
 
 ./autogen.sh noconfig
 
@@ -397,6 +408,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/xine/plugins/%{plugin_abi}/xineplug_inp_test.so
 %{_libdir}/xine/plugins/%{plugin_abi}/xineplug_vo_out_opengl2.so
 %{_libdir}/xine/plugins/%{plugin_abi}/xineplug_vo_out_vaapi.so
+%{_libdir}/xine/plugins/%{plugin_abi}/xineplug_decode_libvpx.so
 
 %files devel
 %defattr(-,root,root,-)
@@ -413,6 +425,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1.2.5-1
+- 更新到 1.2.5
+
 * Mon Jan 14 2013 Liu Di <liudidi@gmail.com> - 1.2.2-5
 - 为 Magic 3.0 重建
 

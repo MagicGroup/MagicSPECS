@@ -1,6 +1,6 @@
 Name:           perl-Parse-Yapp
 Version:        1.05
-Release:        50%{?dist}
+Release:        51%{?dist}
 Summary:        Perl extension for generating and using LALR parsers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.05-51
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.05-50
 - 为 Magic 3.0 重建
 

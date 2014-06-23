@@ -1,6 +1,6 @@
 Name:           perl-Devel-NYTProf
 Version:        4.06
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Powerful feature-rich perl source code profiler
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT/%{perl_vendorarch}/Devel/auto/
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 4.06-8
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 4.06-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 4.06-6
 - 为 Magic 3.0 重建
 

@@ -1,65 +1,104 @@
 Name:           perl-Compress-Bzip2
-Version:        2.09
-Release:        16%{?dist}
+Version:        2.17
+Release:        3%{?dist}
 Summary:        Interface to Bzip2 compression library
-
 Group:          Development/Libraries
-License:        GPL+
+License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Compress-Bzip2/
-Source0:        http://www.cpan.org/authors/id/A/AR/ARJAY/Compress-Bzip2-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildRequires:  perl(Test::More)
+Source0:        http://www.cpan.org/authors/id/R/RU/RURBAN/Compress-Bzip2-%{version}.tar.gz
+BuildRequires:  bzip2-devel >= 1.0.6
+BuildRequires:  perl
+BuildRequires:  perl(Config)
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(File::Spec::Functions)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  bzip2-devel
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(strict)
+# VMS::Filespec not needed
+# Run-time:
+BuildRequires:  perl(AutoLoader)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Fcntl)
+BuildRequires:  perl(Getopt::Std)
+BuildRequires:  perl(warnings)
+BuildRequires:  perl(XSLoader)
+# Tests:
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Test::More)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+
+%{?perl_default_filter}
 
 %description
-The Compress::Bzip2 module provides a Perl interface to the Bzip2
-compression library.  A relevant subset of the functionality provided
-by Bzip2 is available in Compress::Bzip2.
-
+The Compress::Bzip2 module provides a Perl interface to the Bzip2 compression
+library. A relevant subset of the functionality provided by Bzip2 is available
+in Compress::Bzip2.
 
 %prep
 %setup -q -n Compress-Bzip2-%{version}
-
+# Remove bundled bzip2 library
+find bzlib-src -mindepth 1 -type f \! -name 'sample*' -exec rm -rf {} +
+sed -i -e '/^bzlib-src\//d' MANIFEST
+find bzlib-src -type f >>MANIFEST
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-
 %check
-
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc ANNOUNCE Changes COPYING NEWS README
 %{perl_vendorarch}/Compress/
 %{perl_vendorarch}/auto/Compress/
 %{_mandir}/man3/*.3pm*
 
-
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.09-16
+* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 2.17-3
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.09-15
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.17-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Sep 02 2013 Petr Pisar <ppisar@redhat.com> - 2.17-1
+- 2.17 bump
+- License changed to (GPL+ or Artistic)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.16-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 2.16-2
+- Perl 5.18 rebuild
+
+* Thu Jun 20 2013 Petr Pisar <ppisar@redhat.com> - 2.16-1
+- 2.16 bump
+
+* Mon Apr 08 2013 Petr Pisar <ppisar@redhat.com> - 2.15-1
+- 2.15 bump
+
+* Thu Apr 04 2013 Petr Pisar <ppisar@redhat.com> - 2.13-1
+- 2.13 bump
+
+* Wed Mar 27 2013 Petr Pisar <ppisar@redhat.com> - 2.10-1
+- 2.10 bump
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.09-15
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

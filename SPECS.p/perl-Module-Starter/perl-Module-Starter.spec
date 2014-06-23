@@ -1,7 +1,7 @@
 Name:           perl-Module-Starter
 Epoch:          1
 Version:        1.60
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A simple starter kit for any module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -64,6 +64,9 @@ make test
 
 
 %changelog
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1:1.60-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 26 2012 Petr Pisar <ppisar@redhat.com> - 1:1.60-2
 - Drop build-time dependencies for unused author tests
 

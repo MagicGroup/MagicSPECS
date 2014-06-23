@@ -1,0 +1,54 @@
+From 58d583f98d3730f1f75389f7d25f6079cab91357 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 2 Jul 2013 10:28:15 +0200
+Subject: [PATCH] Link to libperl explicitly on Linux
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<https://bugzilla.redhat.com/show_bug.cgi?id=960048>
+<http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=327585#50>
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ lib/ExtUtils/MM_Unix.pm | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/lib/ExtUtils/MM_Unix.pm b/lib/ExtUtils/MM_Unix.pm
+index a889217..0896ea5 100644
+--- a/lib/ExtUtils/MM_Unix.pm
++++ b/lib/ExtUtils/MM_Unix.pm
+@@ -31,6 +31,7 @@ BEGIN {
+     $Is{IRIX}    = $^O eq 'irix';
+     $Is{NetBSD}  = $^O eq 'netbsd';
+     $Is{Interix} = $^O eq 'interix';
++    $Is{Linux}   = $^O eq 'linux';
+     $Is{SunOS4}  = $^O eq 'sunos';
+     $Is{Solaris} = $^O eq 'solaris';
+     $Is{SunOS}   = $Is{SunOS4} || $Is{Solaris};
+@@ -934,7 +935,7 @@ $(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DFSEP).exists $(EXPO
+ 
+     my $libs = '$(LDLOADLIBS)';
+ 
+-    if (($Is{NetBSD} || $Is{Interix} || $Is{Android}) && $Config{'useshrplib'} eq 'true') {
++    if (($Is{Linux} || $Is{NetBSD} || $Is{Interix} || $Is{Android}) && $Config{'useshrplib'} eq 'true') {
+ 	# Use nothing on static perl platforms, and to the flags needed
+ 	# to link against the shared libperl library on shared perl
+ 	# platforms.  We peek at lddlflags to see if we need -Wl,-R
+@@ -947,7 +948,12 @@ $(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DFSEP).exists $(EXPO
+             # The Android linker will not recognize symbols from
+             # libperl unless the module explicitly depends on it.
+             $libs .= ' -L$(PERL_INC) -lperl';
+-        }
++	} else {
++	    if ($ENV{PERL_CORE}) {
++		$libs .= ' -L$(PERL_INC)';
++	    }
++	    $libs .= ' -lperl';
++	}
+     }
+ 
+     my $ld_run_path_shell = "";
+-- 
+1.8.5.3
+

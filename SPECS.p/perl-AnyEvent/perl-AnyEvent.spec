@@ -5,7 +5,7 @@
 
 Name:           perl-AnyEvent
 Version:        7.02
-Release:        2%{?dist}
+Release:        9%{?dist}
 Summary:        Framework for multiple event loops
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -147,6 +147,27 @@ export PERL_ANYEVENT_LOOP_TESTS=1
 
 
 %changelog
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 7.02-9
+- 为 Magic 3.0 重建
+
+* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 7.02-8
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 7.02-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 7.02-6
+- 为 Magic 3.0 重建
+
+* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 7.02-5
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 7.02-4
+- 为 Magic 3.0 重建
+
+* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 7.02-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 7.02-2
 - 为 Magic 3.0 重建
 
