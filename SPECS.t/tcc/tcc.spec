@@ -14,6 +14,7 @@ License: LGPL
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
 URL: http://bellard.org/tcc/
+ExcludeArch:    mips64el
 
 %if %{git}
 Source0: tinycc-git%{gitdate}.tar.xz
