@@ -7,7 +7,7 @@
 %{!?rubylang:%global rubylang 1}
 %{!?javalang:%global javalang 1}
 
-%ifarch aarch64 %{arm} ppc64le ppc %{power64} s390 s390x
+%ifarch aarch64 %{arm} ppc64le ppc %{power64} s390 s390x mips64el
 %{!?golang:%global golang 0}
 %else
 %{!?golang:%global golang 1}

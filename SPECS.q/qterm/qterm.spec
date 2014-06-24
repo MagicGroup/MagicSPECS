@@ -13,6 +13,7 @@ Group(zh_CN.UTF-8): 应用程序/互联网
 Source:    qterm-%{realver}.tar.bz2
 Patch0: qterm.cfg-magic.patch
 Patch1:	qterm-0.4.1-lcrypto.patch
+Patch2: qterm-0.4.1-fix-Wl.patch
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -25,6 +26,7 @@ QTerm是一个Linux下的BBS客户端。
 %setup -q -n %{name}-%{realver}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 #make -f admin/Makefile.common
