@@ -757,11 +757,11 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 2.10.9-3
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.9-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Wed May 07 2014 Liu Di <liudidi@gmail.com> - 2.10.9-2
-- 为 Magic 3.0 重建
+* Tue May 20 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 2.10.9-2
+- Rebuilt for tcl/tk8.6
 
 * Mon Feb 03 2014 Dan Mashal <dan.mashal@fedoraproject.org> 2.10.9-1
 - Update to 2.10.9
