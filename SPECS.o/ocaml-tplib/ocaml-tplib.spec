@@ -2,7 +2,7 @@
 
 Name:           ocaml-tplib
 Version:        1.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Tropical Polyhedra Library
 
 License:        LGPLv2+
@@ -98,6 +98,9 @@ _build/tests/test_tplib_rational
 %doc %{_mandir}/man1/*
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.3-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

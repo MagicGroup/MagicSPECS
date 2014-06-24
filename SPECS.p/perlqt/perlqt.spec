@@ -17,11 +17,13 @@
 
 
 Name:           perlqt
-Version:        %{kde4_kdelibs_version}
-Release:        2%{?dist}
+Version: 4.13.2
+Release:        1%{?dist}
 Summary:        PerlQt kdebindings library
+Summary(zh_CN.UTF-8): Perl 的 Qt 绑定
 License:        GPL-2.0+
-Group:          Development/Languages/Perl
+Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Url:            https://projects.kde.org/projects/kde/kdebindings/perl/perlqt
 Source0:        http://download.kde.org/stable/%{version}/src/perlqt-%{version}.tar.xz
 BuildRequires:  cmake
@@ -43,13 +45,21 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %description
 Perl bindings for the Qt4 libraries from the kdebindings project.
 
+%description -l zh_CN.UTF-8
+Perl 的 Qt 绑定。
+
 %package devel
 Summary:        Development libraries for Perl-Qt4
-Group:          Development/Languages/Perl
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}
 
 %description devel
 This package contains development files for the Perl bindings for the Qt4 libraries.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n perlqt-%{version}
@@ -64,6 +74,7 @@ This package contains development files for the Perl bindings for the Qt4 librar
 %install
   cd build
   make DESTDIR=%{buildroot} install
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root)
@@ -82,6 +93,9 @@ This package contains development files for the Perl bindings for the Qt4 librar
 %{_kde4_includedir}/perlqt/
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

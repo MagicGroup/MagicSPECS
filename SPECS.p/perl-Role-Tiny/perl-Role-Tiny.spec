@@ -1,6 +1,6 @@
 Name:           perl-Role-Tiny
 Version:        1.003003
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A nouvelle cuisine portion size slice of Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/Role::Tiny::With.3pm*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.003003-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.003003-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -7,7 +7,7 @@
 
 Name:           %{pkg_name}
 Version:        1.20.3
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Colorize Haskell code
 
 # the source does not state intended GPL version
@@ -80,6 +80,9 @@ This package provides the Haskell %{name} library development files.
 
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1.20.3-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20.3-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

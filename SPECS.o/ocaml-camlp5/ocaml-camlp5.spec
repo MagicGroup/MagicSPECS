@@ -2,7 +2,7 @@
 
 Name:           ocaml-camlp5
 Version:        6.11
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Classical version of camlp4 OCaml preprocessor
 
 Group:          Development/Libraries
@@ -109,6 +109,9 @@ rm -f doc/html/.cvsignore doc/htmlp/{.cvsignore,*.sh,Makefile,html2*}
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 6.11-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.11-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

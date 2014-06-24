@@ -5,7 +5,7 @@
 
 Name:           ocaml-xml-light
 Version:        2.3
-Release:        0.7.svn%{svnrev}%{?dist}
+Release:        0.8.svn%{svnrev}%{?dist}
 Summary:        Minimal XML parser and printer for OCaml
 
 Group:          Development/Libraries
@@ -112,6 +112,9 @@ ocamlfind install xml-light META *.mli *.cmi *.cma *.a *.cmxa *.cmx
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.3-0.8.svn234
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3-0.7.svn234
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -4,13 +4,18 @@
 
 Name: python3-cairo
 Version: 1.10.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MPLv1.1 or LGPLv2
 Group: Development/Languages
 Summary: Python 3 bindings for the cairo library
 URL: http://cairographics.org/pycairo
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Source: http://cairographics.org/releases/pycairo-%{version}.tar.bz2
+
+# Since Python 3.4, pythonX.Y-config is shell script, not Python script,
+#  so prevent waf from trying to invoke it as a Python script
+Patch0: cairo-waf-use-python-config-as-shell-script.patch
+Patch1: pycairo-1.10.0-test-python3.patch
 
 ### Build Dependencies ###
 
@@ -41,6 +46,9 @@ libraries so that they interoperate with python3-cairo.
 # This will be created to a subdirectory like
 #    .waf3-1.5.18-a7b91e2a913ce55fa6ecdf310df95752
 python3 ./waf --version
+
+%patch0 -p0
+%patch1 -p1
 
 %build
 # FIXME: we should be using the system version of waf (e.g. %{_bindir}/waf)
@@ -83,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/py3cairo.pc
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1.10.0-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.10.0-2
 - 为 Magic 3.0 重建
 

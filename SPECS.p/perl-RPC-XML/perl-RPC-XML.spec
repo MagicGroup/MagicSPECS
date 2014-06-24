@@ -2,7 +2,7 @@
 
 Name:    perl-%{cpan_name}
 Version: 0.78
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Set of classes for core data, message and XML handling
 Group:   Development/Libraries
 License: Artistic 2.0 or LGPLv2
@@ -118,6 +118,9 @@ make test
 %{perl_vendorlib}/Apache
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.78-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.78-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

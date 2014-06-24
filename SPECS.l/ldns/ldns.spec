@@ -24,7 +24,7 @@
 Summary: Low-level DNS(SEC) library with API
 Name: ldns
 Version: 1.6.17
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: BSD
 Url: http://www.nlnetlabs.nl/%{name}/
@@ -257,6 +257,9 @@ rm -rf %{buildroot}
 %doc doc
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.6.17-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 1.6.17-5
 - 为 Magic 3.0 重建
 

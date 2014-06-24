@@ -44,7 +44,7 @@
 
 Name:           git
 Version:        2.0.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Fast Version Control System
 License:        GPLv2
 Group:          Development/Tools
@@ -633,6 +633,9 @@ rm -rf %{buildroot}
 # No files for you!
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.0.0-5
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Ondrej Oprala <ooprala@redhat.com> - 2.0.0-4
 - Change source URLs, as googlecode doesn't have up-to-date tarballs
 

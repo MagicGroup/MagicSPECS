@@ -12,7 +12,7 @@
 
 Name:           libkolab
 Version:        0.5.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Kolab Object Handling Library
 
 License:        LGPLv3+
@@ -166,6 +166,9 @@ popd
 %{python_sitearch}/kolab/shared.py*
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.5.0-5
+- 为 Magic 3.0 重建
+
 * Fri May 02 2014 Liu Di <liudidi@gmail.com> - 0.5.0-4
 - 为 Magic 3.0 重建
 

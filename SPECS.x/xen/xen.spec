@@ -5,7 +5,7 @@
 %define build_ocaml %(test -x %{_bindir}/ocamlopt && echo %{with_ocaml} || echo 0)
 # build xsm support unless rpmbuild was run with --without xsm
 # or required packages are missing
-%define with_xsm  %{?_without_xsm: 0} %{?!_without_xsm: 1}
+%define with_xsm  0
 %define build_xsm %(test -x %{_bindir}/checkpolicy && test -x %{_bindir}/m4 && echo %{with_xsm} || echo 0)
 # cross compile 64-bit hypervisor on ix86 unless rpmbuild was run
 #	with --without crosshyp
@@ -53,7 +53,7 @@
 Summary: Xen is a virtual machine monitor
 Name:    xen
 Version: 4.4.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group:   Development/Libraries
 License: GPLv2+ and LGPLv2+ and BSD
 URL:     http://xen.org/
@@ -773,6 +773,8 @@ rm -rf %{buildroot}
 /usr/lib/xen/boot/ioemu-stubdom.gz
 /usr/lib/xen/boot/xenstore-stubdom.gz
 /usr/lib/xen/boot/pv-grub*.gz
+/usr/lib/xen/boot/vtpm-stubdom.gz
+/usr/lib/xen/boot/vtpmmgr-stubdom.gz
 %endif
 # General Xen state
 %dir %{_localstatedir}/lib/%{name}
@@ -798,7 +800,9 @@ rm -rf %{buildroot}
 # blktap daemon
 %{_sbindir}/tapdisk*
 # XSM
+%if %build_xsm
 %{_sbindir}/flask-*
+%endif
 # Disk utils
 %{_sbindir}/qcow-create
 %{_sbindir}/qcow2raw
@@ -894,6 +898,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 4.4.0-8
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Michael Young <m.a.young@durham.ac.uk> - 4.4.0-7
 - Hypervisor heap contents leaked to guest [XSA-100, CVE-2014-4021]
 	(#1110316) with extra patch to avoid regression

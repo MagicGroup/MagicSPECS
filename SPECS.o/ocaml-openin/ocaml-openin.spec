@@ -3,7 +3,7 @@
 
 Name:           ocaml-openin
 Version:        20070524
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        OCaml syntax to locally open modules
 
 License:        Public Domain
@@ -61,6 +61,9 @@ ocamlfind install openin META pa_openin.cmo
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 20070524-22
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20070524-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Template-Timer
 Version:        1.00
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Template::Timer Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.00-14
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.00-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

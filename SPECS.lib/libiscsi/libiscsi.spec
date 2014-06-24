@@ -1,7 +1,7 @@
 Name: libiscsi
 Summary: iSCSI client library
 Version: 1.11.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: https://github.com/sahlberg/%{name}
@@ -77,7 +77,7 @@ to iSCSI servers without having to set up the Linux iSCSI initiator.
 %{_bindir}/iscsi-inq
 %{_bindir}/iscsi-readcapacity16
 %{_bindir}/iscsi-swp
-%{_bindir}/iscsi-test-cu
+#%{_bindir}/iscsi-test-cu
 %{_mandir}/man1/iscsi-ls.1.gz
 %{_mandir}/man1/iscsi-inq.1.gz
 %{_mandir}/man1/iscsi-swp.1.gz
@@ -100,6 +100,9 @@ The libiscsi-devel package includes the header files for libiscsi.
 %{_libdir}/pkgconfig/libiscsi.pc
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Paolo Bonzini <pbonzini@redhat.com> - 1.11.0-1
 - Rebased to version 1.11.0
 - Most patches removed

@@ -5,7 +5,7 @@
 
 Name:           babel
 Version:        1.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tools for internationalizing Python applications
 Summary(zh_CN.UTF-8): 国际化 Python 程序的工具
 
@@ -161,6 +161,9 @@ rm -rf %{buildroot}
 %doc docs/*
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1.3-3
+- 为 Magic 3.0 重建
+
 * Sun Oct 06 2013 Felix Schwarz <fschwarz@fedoraproject.org> - 1.3-2
 - enable python3 subpackage
 

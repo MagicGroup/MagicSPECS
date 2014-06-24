@@ -2,7 +2,7 @@
 
 Name:           ocaml-ssl
 Version:        0.4.6
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        SSL bindings for OCaml
 
 License:        LGPLv2+ with exceptions
@@ -82,6 +82,9 @@ cp examples/*.ml $RPM_BUILD_ROOT%{_docdir}/%{name}-devel/examples
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.4.6-11
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.6-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           bibutils
 Version:        5.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Bibliography conversion tools
 License:        GPLv2
 URL:            http://sourceforge.net/p/bibutils/home/Bibutils/
@@ -83,6 +83,9 @@ done
 
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 5.0-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

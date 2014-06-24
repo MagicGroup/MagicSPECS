@@ -5,7 +5,7 @@
 
 Name:           ocaml-easy-format
 Version:        1.0.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        High-level and functional interface to the Format module
 
 License:        BSD
@@ -96,6 +96,9 @@ make test
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.0.2-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

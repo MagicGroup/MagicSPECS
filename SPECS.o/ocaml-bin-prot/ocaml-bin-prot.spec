@@ -4,7 +4,7 @@
 
 Name:           ocaml-bin-prot
 Version:        2.0.9
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Read and write OCaml values in a type-safe binary protocol
 License:        LGPLv2+ with exceptions
 
@@ -102,6 +102,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.9-9
+- 为 Magic 3.0 重建
+
 * Wed Jun 18 2014 Richard W.M. Jones <rjones@redhat.com> - 2.0.9-8
 - Remove -Werror from compiler flags.  Fixes FTBFS (RHBZ#1106613).
 - Move configure into build section (instead of prep).

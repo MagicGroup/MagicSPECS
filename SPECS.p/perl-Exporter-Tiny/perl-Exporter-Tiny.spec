@@ -1,6 +1,6 @@
 Name:		perl-Exporter-Tiny
 Version:	0.038
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	An exporter with the features of Sub::Exporter but only core dependencies
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Exporter::Shiny.3pm*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.038-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.038-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

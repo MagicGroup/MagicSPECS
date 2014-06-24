@@ -1,6 +1,6 @@
 Name: 		perl-Tree-Simple
 Version: 	1.23
-Release: 	2%{?dist}
+Release: 	3%{?dist}
 Summary: 	Tree::Simple Perl module
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.23-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.23-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

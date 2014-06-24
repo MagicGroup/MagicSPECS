@@ -6,7 +6,7 @@
 
 Name:           ocaml-pgocaml
 Version:        1.6
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        OCaml library for type-safe access to PostgreSQL databases
 License:        LGPLv2+ with exceptions
 
@@ -89,6 +89,9 @@ install -m 0755 pgocaml_prof $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.6-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

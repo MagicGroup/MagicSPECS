@@ -3,7 +3,7 @@
 
 Name:           SLOF
 Version:        0.1.git%{gittagdate}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Slimline Open Firmware
 
 License:        BSD
@@ -58,6 +58,9 @@ cp -a boot_rom.bin $RPM_BUILD_ROOT%{_datadir}/qemu/slof.bin
 
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.1.git20140304-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.git20140304-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

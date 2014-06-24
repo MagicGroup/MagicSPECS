@@ -9,7 +9,7 @@
 
 Name:           numpy
 Version:        1.8.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          1
 Summary:        A fast multidimensional array facility for Python
 
@@ -241,6 +241,9 @@ popd &> /dev/null
 
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1:1.8.0-5
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Thomas Spura <tomspur@fedoraproject.org> - 1:1.8.0-4
 - Fix CVE-2014-1858, CVE-2014-1859: #1062009, #1062359
 

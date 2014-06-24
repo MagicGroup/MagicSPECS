@@ -874,6 +874,7 @@ OPENSSL_ENABLE_MD5_VERIFY=1 make check TESTS="-v $DISABLE_TESTS"
 %{gem_dir}/gems/psych-%{psych_version}
 %{gem_dir}/specifications/psych-%{psych_version}.gemspec
 
+%if 0
 %files tcltk
 %{ruby_libdir}/*-tk.rb
 %{ruby_libdir}/tcltk.rb
@@ -882,6 +883,7 @@ OPENSSL_ENABLE_MD5_VERIFY=1 make check TESTS="-v $DISABLE_TESTS"
 %{ruby_libarchdir}/tkutil.so
 %{ruby_libdir}/tk
 %{ruby_libdir}/tkextlib
+%endif
 
 %changelog
 * Wed Apr 23 2014 Vít Ondruch <vondruch@redhat.com> - 2.1.1-19

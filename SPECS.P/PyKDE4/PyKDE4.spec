@@ -1,12 +1,11 @@
-%define rversion %{kde4_kdelibs_version}
 %define pykde4_akonadi 1
 %define pyqt4_version_min 4.8.4
 %define sip_version_min 4.12
 %global python_ver %(%{__python} -c "import sys ; print sys.version[:3]")
 
 Name: PyKDE4 
-Version: %{rversion}
-Release: 2%{?dist}
+Version: 4.13.0
+Release: 1%{?dist}
 Summary: Python bindings for KDE4 
 Summary(zh_CN.UTF-8): KDE4 的 Python 绑定
 

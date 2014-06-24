@@ -1,6 +1,6 @@
 Name:       perl-MooseX-MultiInitArg 
 Version:    0.02 
-Release:    2%{?dist}
+Release:    3%{?dist}
 # lib/MooseX/MultiInitArg.pm -> GPL+ or Artistic
 # lib/MooseX/MultiInitArg/Attribute.pm -> GPL+ or Artistic
 # lib/MooseX/MultiInitArg/Trait.pm -> GPL+ or Artistic
@@ -51,6 +51,9 @@ perl Build.PL --installdirs vendor
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.02-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

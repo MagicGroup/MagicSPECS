@@ -23,8 +23,8 @@
 
 Summary: The RPM package management system
 Name: rpm
-Version: %{rpmver}
-Release: %{?snapver:0.%{snapver}.}13%{?dist}
+Version: 4.11.2
+Release: 15%{?dist}
 Group: System Environment/Base
 Url: http://www.rpm.org/
 Source0: http://rpm.org/releases/rpm-4.11.x/%{name}-%{srcver}.tar.bz2
@@ -99,7 +99,7 @@ BuildRequires: fakechroot
 
 # XXX generally assumed to be installed but make it explicit as rpm
 # is a bit special...
-BuildRequires: redhat-rpm-config
+BuildRequires: magic-rpm-config
 BuildRequires: gawk
 BuildRequires: elfutils-devel >= 0.112
 BuildRequires: elfutils-libelf-devel
@@ -110,9 +110,6 @@ BuildRequires: nss-softokn-freebl-devel
 BuildRequires: popt-devel >= 1.10.2
 BuildRequires: file-devel
 BuildRequires: gettext-devel
-BuildRequires: libselinux-devel
-# XXX semanage is only used by sepolicy plugin but configure requires it...
-BuildRequires: libsemanage-devel
 BuildRequires: ncurses-devel
 BuildRequires: bzip2-devel >= 0.9.0c-2
 BuildRequires: python-devel >= 2.6
@@ -319,11 +316,11 @@ autoreconf -i -f
     --libdir=%{_libdir} \
     --build=%{_target_platform} \
     --host=%{_target_platform} \
-    --with-vendor=redhat \
+    --with-vendor=magic \
     %{!?with_int_bdb: --with-external-db} \
     %{!?with_plugins: --disable-plugins} \
     --with-lua \
-    --with-selinux \
+    --without-selinux \
     --with-cap \
     --with-acl \
     --enable-python
@@ -533,6 +530,12 @@ exit 0
 %doc COPYING doc/librpm/html/*
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.11.2-15
+- 为 Magic 3.0 重建
+
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.11.2-14
+- 为 Magic 3.0 重建
+
 * Tue Jun 10 2014 Panu Matilainen <pmatilai@redhat.com> - 4.11.2-13
 - Rawhide broke our test-suite, disable for now to allow builds to be done
 

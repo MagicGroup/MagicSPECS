@@ -1,6 +1,6 @@
 Name:           perl-Test-FailWarnings
 Version:        0.008
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Add test failures if warnings are caught
 License:        ASL 2.0 
 
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.008-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.008-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

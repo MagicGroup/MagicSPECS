@@ -1,7 +1,7 @@
 Summary: Enhanced seccomp library
 Name: libseccomp
 Version: 2.1.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 ExclusiveArch: %{ix86} x86_64 %{arm}
 License: LGPLv2
 Group: System Environment/Libraries
@@ -64,6 +64,9 @@ make check
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.1.1-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 27 2014 Paul Moore <pmoore@redhat.com> - 2.1.1-2
 - Build with CFLAGS="${optflags}"
 * Mon Feb 17 2014 Paul Moore <pmoore@redhat.com> - 2.1.1-1

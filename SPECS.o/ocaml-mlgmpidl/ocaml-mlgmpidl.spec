@@ -4,7 +4,7 @@
 
 Name:           ocaml-mlgmpidl
 Version:        1.2.1
-Release:        0.7.%{svndate}%{?dist}
+Release:        0.8.%{svndate}%{?dist}
 Summary:        OCaml interface to GMP and MPFR libraries
 Group:          Development/Libraries
 License:        LGPLv2
@@ -149,6 +149,9 @@ cp -pr html %{buildroot}%{doc_dir}
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.1-0.8.20120830
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-0.7.20120830
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -2,7 +2,7 @@ Name:    kde4-kactivities
 %define real_name kactivities
 Summary: API for using and interacting with Activities 
 Summary(zh_CN.UTF-8): 使用和与 Activities 交互的 API
-Version: 4.13.1
+Version: 4.13.2
 Release: 1%{?dist}
 
 License: GPLv2+ and LGPLv2+
@@ -112,6 +112,9 @@ magic_rpm_clean.sh
 %{_kde4_libdir}/pkgconfig/libkactivities-models.pc
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Sat May 24 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
 - 更新到 4.13.1
 

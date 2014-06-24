@@ -1,6 +1,6 @@
 Name:           perl-QWizard
 Version:        3.15
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        A very portable graphical question and answer wizard system
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 3.15-17
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.15-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

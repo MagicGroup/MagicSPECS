@@ -1,6 +1,6 @@
 Name:           perl-SQL-Abstract-Limit
 Version:        0.141
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Portable LIMIT Emulation
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/SQL::Abstract::Limit.3pm*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.141-17
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.141-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           seabios
 Version:        1.7.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Open-source legacy BIOS implementation
 
 Group:          Applications/Emulators
@@ -137,6 +137,9 @@ install -m 0644 binaries/vgabios*.bin $RPM_BUILD_ROOT%{_datadir}/seavgabios
 
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.7.5-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name:           ocaml-bitstring
 Version:        2.0.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        OCaml library for matching and constructing bitstrings
 License:        LGPLv2+ with exceptions and GPLv2+
 
@@ -115,6 +115,9 @@ install -m 0755 bitstring-objinfo $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.4-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

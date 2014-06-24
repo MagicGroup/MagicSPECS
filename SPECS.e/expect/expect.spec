@@ -6,7 +6,7 @@ Summary: A program-script interaction and testing utility
 Summary(zh_CN.UTF-8): 一个程序脚本交互测试工具
 Name: expect
 Version: %{majorver}
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: Public Domain
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -170,6 +170,9 @@ rm -rf "$RPM_BUILD_ROOT"
 %{_mandir}/man1/tknewsbiff.1*
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 5.45-6
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 5.45-5
 - 为 Magic 3.0 重建
 

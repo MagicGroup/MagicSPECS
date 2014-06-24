@@ -1,6 +1,6 @@
 Name:           perl-Type-Tiny
 Version:        0.042
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tiny, yet Moo(se)-compatible type constraint
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -97,6 +97,9 @@ make test
 %{_mandir}/man3/Test::TypeTiny.3pm*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.042-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.042-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

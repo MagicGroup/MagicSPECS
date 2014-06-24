@@ -8,8 +8,8 @@ Summary: Snake duel game
 Summary(zh_CN.UTF-8): 贪吃蛇游戏
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.13.1
-Release: 1%{?dist}
+Version: 4.13.2
+Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -76,6 +76,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-2
+- 为 Magic 3.0 重建
+
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
 - 更新到 4.13.1
 

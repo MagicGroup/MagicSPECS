@@ -4,7 +4,7 @@
 
 Name:           ocaml-type-conv
 Version:        3.0.5
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        OCaml base library for type conversion
 License:        LGPLv2+ with exceptions and BSD
 
@@ -61,6 +61,9 @@ ocaml setup.ml -install
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 3.0.5-9
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.5-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

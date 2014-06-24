@@ -1,6 +1,6 @@
 Name:           perl-PAR
 Version:        1.007
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Perl Archive Toolkit
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.007-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.007-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

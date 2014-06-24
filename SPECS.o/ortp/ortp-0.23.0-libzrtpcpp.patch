@@ -1,0 +1,12 @@
+diff -ur ortp-0.23.0.orig/configure.ac ortp-0.23.0/configure.ac
+--- ortp-0.23.0.orig/configure.ac	2014-06-23 18:06:33.300920068 +0000
++++ ortp-0.23.0/configure.ac	2014-06-23 18:06:49.448919654 +0000
+@@ -290,7 +290,7 @@
+ )
+ 
+ if test "$zrtp" = "true" ; then
+-	PKG_CHECK_MODULES(LIBZRTPCPP, libzrtpcppcore >= 4.0.0)
++	PKG_CHECK_MODULES(LIBZRTPCPP, libzrtpcpp >= 4.0.0)
+ 	if test "$have_srtp" = "no" ; then
+ 		AC_MSG_ERROR("ZRTP requires SRTP")
+ 	fi

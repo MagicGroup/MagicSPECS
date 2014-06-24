@@ -11,7 +11,7 @@ Summary: Library of mathematical features
 Summary(zh_CN.UTF-8): KDE4 用的数学库
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: 4.13.1
+Version: 4.13.2
 Release: 3%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -90,6 +90,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/*
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-3
+- 更新到 4.13.2
+
 * Sat May 24 2014 Liu Di <liudidi@gmail.com> - 4.13.1-3
 - 为 Magic 3.0 重建
 

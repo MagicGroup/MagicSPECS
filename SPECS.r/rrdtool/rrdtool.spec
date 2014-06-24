@@ -281,7 +281,7 @@ __EOF__
 %endif
 
 # Pesky RRDp.pm...
-%{__mv} $RPM_BUILD_ROOT%{perl_vendorlib}/RRDp.pm $RPM_BUILD_ROOT%{perl_vendorarch}/
+# %{__mv} $RPM_BUILD_ROOT%{perl_vendorlib}/RRDp.pm $RPM_BUILD_ROOT%{perl_vendorarch}/
 
 # Dunno why this is getting installed here...
 %{__rm} -f $RPM_BUILD_ROOT%{perl_vendorlib}/leaktest.pl
@@ -348,8 +348,8 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %defattr(-,root,root,-)
 %doc doc3/html
 %{_mandir}/man3/*
-%{perl_vendorarch}/*.pm
-%attr(0755,root,root) %{perl_vendorarch}/auto/RRDs/
+#%{perl_vendorarch}/*.pm
+#%attr(0755,root,root) %{perl_vendorarch}/auto/RRDs/
 
 %if %{with_python}
 %files python

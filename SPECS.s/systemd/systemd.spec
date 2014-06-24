@@ -16,7 +16,7 @@
 Name:           systemd
 Url:            http://www.freedesktop.org/wiki/Software/systemd
 Version:        214
-Release:        1%{?gitcommit:.git%{gitcommit}}%{?dist}
+Release:        2%{?gitcommit:.git%{gitcommit}}%{?dist}
 # For a breakdown of the licensing, see README
 License:        LGPLv2+ and MIT and GPLv2+
 Summary:        A System and Service Manager
@@ -726,6 +726,9 @@ getent passwd systemd-journal-gateway >/dev/null 2>&1 || useradd -r -l -u 191 -g
 %{_datadir}/systemd/gatewayd
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 214-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 11 2014 Lennart Poettering <lpoetter@redhat.com> - 214-1
 - New upstream release
 - Get rid of "floppy" group, since udev uses "disk" now

@@ -10,7 +10,7 @@
 
 Name:		python-jinja2
 Version:	2.6
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	General purpose template engine
 Group:		Development/Languages
 License:	BSD
@@ -155,6 +155,9 @@ popd
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.6-7
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.6-6
 - 为 Magic 3.0 重建
 

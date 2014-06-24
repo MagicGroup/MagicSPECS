@@ -7,7 +7,7 @@
 Summary: Small Footprint CIM Client Library
 Name: sblim-sfcc
 Version: 2.2.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Applications/System
 License: EPL
 URL: http://www.sblim.org
@@ -61,6 +61,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libcmpisfcc.so.1.0.0
 %{_libdir}/libcmpisfcc.so
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.2.7-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

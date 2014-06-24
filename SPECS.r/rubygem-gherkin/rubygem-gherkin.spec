@@ -54,7 +54,7 @@ cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
 mkdir -p %{buildroot}%{gem_extdir_mri}
-cp -a .%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
+#cp -a .%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
 
 rm -rf %{buildroot}%{gem_instdir}/ext
 
@@ -104,6 +104,8 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 %{gem_cache}
 %{gem_spec}
+#有问题
+%{_datadir}/gems/extensions/x86_64-linux/gherkin-2.12.2/*
 
 %files doc
 %doc %{gem_instdir}/History.md
@@ -112,6 +114,8 @@ popd
 %{gem_instdir}/Rakefile
 %{gem_instdir}/examples
 %{gem_instdir}/tasks
+#有问题
+%{_datadir}/gems/doc/extensions/x86_64-linux/gherkin-2.12.2/*
 
 %changelog
 * Thu Jun 19 2014 Josef Stribny <jstribny@redhat.com> - 2.12.2-1

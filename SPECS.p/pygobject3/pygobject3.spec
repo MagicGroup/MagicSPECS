@@ -22,7 +22,7 @@
 
 Name: pygobject3
 Version: 3.11.90
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: LGPLv2+ and MIT
 Group: Development/Languages
 Summary: Python 2 bindings for GObject Introspection
@@ -258,6 +258,12 @@ xvfb-run make DESTDIR=$RPM_BUILD_ROOT check %{verbosity}
 %endif # with_python3
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.11.90-3
+- 为 Magic 3.0 重建
+
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.11.90-2
+- 为 Magic 3.0 重建
+
 * Tue Feb 18 2014 Richard Hughes <rhughes@redhat.com> - 3.11.90-1
 - Update to 3.11.90
 

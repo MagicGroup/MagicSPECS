@@ -2,7 +2,7 @@
 
 Name:           ocaml-pcre
 Version:        7.0.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Perl compatibility regular expressions (PCRE) for OCaml
 
 License:        LGPLv2
@@ -86,6 +86,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/api .
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 7.0.2-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.0.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

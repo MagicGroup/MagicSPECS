@@ -3,7 +3,7 @@
 
 Name:           libdmtx
 Version:        0.7.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Library for working with Data Matrix 2D bar-codes
 
 Group:          System Environment/Libraries
@@ -213,6 +213,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.7.2-11
+- 为 Magic 3.0 重建
+
 * Tue Mar 19 2013 Vít Ondruch <vondruch@redhat.com> - 0.7.2-10
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 

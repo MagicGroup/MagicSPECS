@@ -8,7 +8,7 @@ Summary: Puzzle cube solving game
 Summary(zh_CN.UTF-8): 魔方游戏
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.13.1
+Version: 4.13.2
 Release: 1%{?dist}
 License: GPLv2+ and GFDL
 URL:     https://projects.kde.org/projects/kde/kdegames/%{name}
@@ -78,6 +78,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
 - 更新到 4.13.1
 

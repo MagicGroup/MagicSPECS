@@ -2,7 +2,7 @@
 
 Name:           ocaml-lacaml
 Version:        7.0.9
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        BLAS/LAPACK-interface for OCaml
 
 Group:          Development/Libraries
@@ -88,6 +88,9 @@ install -m 0644 _build/lib/*.cmx $RPM_BUILD_ROOT%{_libdir}/ocaml/lacaml
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 7.0.9-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.0.9-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

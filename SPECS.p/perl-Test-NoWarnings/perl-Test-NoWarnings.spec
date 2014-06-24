@@ -1,6 +1,6 @@
 Name:           perl-Test-NoWarnings
 Version:        1.04
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Make sure you didn't emit any warnings while testing
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.04-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

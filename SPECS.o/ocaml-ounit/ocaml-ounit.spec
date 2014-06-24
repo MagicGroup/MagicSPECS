@@ -2,7 +2,7 @@
 
 Name:           ocaml-ounit
 Version:        1.1.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Unit test framework for OCaml
 
 License:        MIT
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT/usr/local/share/doc
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1.2-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

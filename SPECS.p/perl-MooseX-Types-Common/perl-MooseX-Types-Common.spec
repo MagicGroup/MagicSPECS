@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Types-Common 
 Summary:        A library of commonly used type constraints 
 Version:        0.001008
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Types-Common-%{version}.tar.gz
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.001008-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.001008-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

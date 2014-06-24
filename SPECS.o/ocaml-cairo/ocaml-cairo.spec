@@ -16,7 +16,7 @@
 Name:           ocaml-cairo
 Epoch:          1
 Version:        1.2.0
-Release:        0.12.git%{commit}%{?dist}
+Release:        0.13.git%{commit}%{?dist}
 Summary:        OCaml library for accessing cairo graphics
 
 ExcludeArch:    sparc64 s390 s390x
@@ -115,6 +115,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dll*.so
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.13.git08b40192975
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.2.0-0.12.git08b40192975
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

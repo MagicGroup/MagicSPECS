@@ -2,7 +2,7 @@
 
 Name:           ocaml-gettext
 Version:        0.3.4
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        OCaml library for i18n
 
 License:        LGPLv2+ with exceptions
@@ -198,6 +198,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.3.4-13
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.4-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

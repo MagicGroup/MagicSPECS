@@ -71,7 +71,7 @@
 
 Name:        torque
 Version:     4.2.6.1
-Release:     1%{?dist}
+Release:     4%{?dist}
 Summary:     Tera-scale Open-source Resource and QUEue manager
 Source0:     http://www.clusterresources.com/downloads/%{name}/%{name}-%{version}.tar.gz
 Source2:     xpbs.desktop
@@ -353,7 +353,7 @@ install -pm 644 %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} \
 chmod 644 torque.setup
 
 %build
-CFLAGS="%{optflags} -Wno-overlength-strings"
+CFLAGS="%{optflags} -Wno-overlength-strings  -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE"
 %configure --includedir=%{_includedir}/torque \
   --with-server-home=%{torquehomedir} --with-pam=/%{_lib}/security \
   --with-sendmail=%{_sbindir}/sendmail --disable-static \
@@ -797,6 +797,15 @@ fi
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-4
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-3
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-2
+- 为 Magic 3.0 重建
+
 * Sun Jan 12 2014 Haïkel Guémar <hguemar@fedoraproject.org> - 4.2.6.1-1
 - upstream 4.2.6.1
 

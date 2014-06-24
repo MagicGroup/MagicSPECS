@@ -2,7 +2,7 @@
 
 Name:           ocaml-pa-do
 Version:        0.8.16
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        OCaml syntax extension for delimited overloading
 License:        LGPLv2+ with exceptions
 
@@ -93,6 +93,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/api .
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.8.16-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.16-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

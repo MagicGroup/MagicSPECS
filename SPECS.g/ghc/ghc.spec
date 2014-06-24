@@ -497,6 +497,8 @@ fi
 %{ghclibdir}/unlit
 %{_mandir}/man1/ghc.*
 %dir %{_docdir}/ghc
+%{_docdir}/ghc/haddock.*
+%{_docdir}/ghc/users_guide.*
 %dir %{ghcdocbasedir}
 %if %{undefined without_haddock}
 %{_bindir}/ghc-doc-index

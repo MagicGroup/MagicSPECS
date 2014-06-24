@@ -3,7 +3,7 @@
 
 Name:           plexus-velocity
 Version:        1.1.8
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Plexus Velocity Component
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/
@@ -54,6 +54,9 @@ done
 %doc LICENSE
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1.8-18
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.8-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

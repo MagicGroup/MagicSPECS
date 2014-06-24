@@ -74,7 +74,7 @@ Summary: The Linux kernel
 %if 0%{?released_kernel}
 
 # Do we have a -stable update to apply?
-%define stable_update 41
+%define stable_update 44
 # Is it a -stable RC?
 %define stable_rc 0
 # Set rpm version accordingly
@@ -230,7 +230,7 @@ Summary: The Linux kernel
 
 %define using_upstream_branch 0
 %if 0%{?upstream_branch:1}
-%define stable_update 0
+%define stable_update 44
 %define using_upstream_branch 1
 %define variant -%{upstream_branch}%{?variant_fedora}
 %define pkg_release 0.%{fedora_build}%{upstream_branch_tag}%{?buildid}%{?dist}
@@ -2334,7 +2334,11 @@ fi
 #             (__)\       )\/\
 #                 ||----w |
 #                 ||     ||
+
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 3.10.44-4.3
+- 更新到 3.10.44
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 3.10.41-4.3
 - 为 Magic 3.0 重建
 

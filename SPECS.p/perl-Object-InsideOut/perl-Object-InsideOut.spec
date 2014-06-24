@@ -1,6 +1,6 @@
 Name:           perl-Object-InsideOut
 Version:        3.98
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Comprehensive inside-out object support module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -82,6 +82,9 @@ make test
 
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 3.98-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.98-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

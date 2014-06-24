@@ -3,7 +3,7 @@
 
 Name:           ocaml-deriving
 Version:        0.1.1a
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Extension to OCaml for deriving functions from types
 License:        MIT
 
@@ -136,6 +136,9 @@ install -m 0755 syntax/deriving $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.1.1a-22
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1a-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

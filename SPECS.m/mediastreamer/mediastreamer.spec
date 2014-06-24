@@ -8,18 +8,17 @@ Summary:	Audio/Video real-time streaming
 Summary(pl.UTF-8):	Przesyłanie strumieni audio/video w czasie rzeczywistym 
 Name:		mediastreamer
 Version:	2.10.0
-Release:	1
+Release:	7
 License:	GPL v2+
 Group:		Libraries
 Source0:	http://download-mirror.savannah.gnu.org/releases/linphone/mediastreamer/%{name}-%{version}.tar.gz
 # Source0-md5:	5a4e7545e212068534b56fdf41c961e9
-Patch0:		%{name}-imagedir.patch
 URL:		http://www.linphone.org/eng/documentation/dev/mediastreamer2.html
-%{?with_opengl:BuildRequires:	OpenGL-GLX-devel}
+%{?with_opengl:BuildRequires:	mesa-libGL-devel}
 BuildRequires:	SDL-devel >= 1.2.0
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 2.53
-BuildRequires:	automake >= 1:1.9
+BuildRequires:	automake >= 1.9
 BuildRequires:	doxygen
 # libavcodec >= 51.0.0, libswscale >= 0.7.0
 BuildRequires:	ffmpeg-devel
@@ -27,10 +26,10 @@ BuildRequires:	gettext-devel
 %{?with_opengl:BuildRequires:	glew-devel >= 1.5}
 BuildRequires:	jack-audio-connection-kit-devel
 BuildRequires:	intltool >= 0.40
-BuildRequires:	libgsm-devel
+BuildRequires:	gsm-devel
 %{?with_pcap:BuildRequires:	libpcap-devel}
 BuildRequires:	libtheora-devel >= 1.0-0.alpha7
-BuildRequires:	libtool >= 2:2
+BuildRequires:	libtool >= 2
 BuildRequires:	libupnp-devel >= 1.6
 BuildRequires:	libupnp-devel < 1.7
 BuildRequires:	libv4l-devel
@@ -38,13 +37,13 @@ BuildRequires:	libvpx-devel >= 0.9.6
 BuildRequires:	opus-devel >= 0.9.0
 BuildRequires:	ortp-devel >= 0.23.0
 BuildRequires:	pkgconfig
-%{?with_pulseaudio:BuildRequires:	pulseaudio-devel >= 0.9.21}
+%{?with_pulseaudio:BuildRequires:	pulseaudio-libs-devel >= 0.9.21}
 BuildRequires:	sed >= 4.0
 BuildRequires:	spandsp-devel >= 0.0.6
 BuildRequires:	speex-devel >= 1.2-beta3
-BuildRequires:	xorg-lib-libX11-devel
-BuildRequires:	xorg-lib-libXv-devel
-BuildRequires:	xxd
+BuildRequires:	libX11-devel
+BuildRequires:	libXv-devel
+#BuildRequires:	xxd
 %{?with_opengl:Requires:	glew >= 1.5}
 Requires:	libtheora >= 1.0-0.alpha7
 Requires:	libupnp >= 1.6
@@ -71,7 +70,7 @@ Summary:	Header files and development documentation for mediastreamer library
 Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do biblioteki mediastreamer
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-%{?with_opengl:Requires:	OpenGL-devel}
+%{?with_opengl:Requires:	mesa-libGL-devel}
 Requires:	alsa-lib-devel
 Requires:	ffmpeg-devel
 %{?with_opengl:Requires:	glew-devel >= 1.5}
@@ -82,11 +81,11 @@ Requires:	libv4l-devel
 Requires:	libvpx-devel >= 0.9.6
 Requires:	opus-devel >= 0.9.0
 Requires:	ortp-devel >= 0.23.0
-%{?with_pulseaudio:Requires:	pulseaudio-devel >= 0.9.21}
+%{?with_pulseaudio:Requires:	pulseaudio-libs-devel >= 0.9.21}
 Requires:	spandsp-devel >= 0.0.6
 Requires:	speex-devel >= 1.2-beta3
-Requires:	xorg-lib-libX11-devel
-Requires:	xorg-lib-libXv-devel
+Requires:	libX11-devel
+Requires:	libXv-devel
 
 %description devel
 Header files and development documentation for mediastreamer library.
@@ -108,14 +107,9 @@ Statyczna biblioteka mediastreamer.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__autoheader}
-%{__automake}
+autoreconf -fisv
 %configure \
 	--enable-external-ortp \
 	%{!?with_opengl:--disable-glx} \
@@ -137,7 +131,7 @@ install -d $RPM_BUILD_ROOT%{_libdir}/mediastreamer/plugins
 
 # Remove duplicated documentation
 %{__rm} -r $RPM_BUILD_ROOT/usr/share/doc/%{name}-%{version}/html
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -157,7 +151,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libmediastreamer_voip.so.3
 %dir %{_libdir}/mediastreamer
 %dir %{_libdir}/mediastreamer/plugins
-%{_pixmapsdir}/%{name}
+%{_datadir}/images/*
 
 %files devel
 %defattr(644,root,root,755)
@@ -167,7 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libmediastreamer_base.la
 %{_libdir}/libmediastreamer_voip.la
 %{_includedir}/mediastreamer2
-%{_pkgconfigdir}/mediastreamer.pc
+%{_libdir}/pkgconfig/mediastreamer.pc
 
 %files static
 %defattr(644,root,root,755)

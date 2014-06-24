@@ -2,7 +2,7 @@
 
 Name:           ocaml-findlib
 Version:        1.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Objective CAML package manager and build helper
 License:        BSD
 
@@ -101,6 +101,9 @@ mv $RPM_BUILD_ROOT/$RPM_BUILD_ROOT%{_bindir}/* $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.4-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

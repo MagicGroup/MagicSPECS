@@ -140,7 +140,7 @@
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
 Version: %{pybasever}.1
-Release: 14%{?dist}
+Release: 15%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -1853,6 +1853,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.4.1-15
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4.1-14
 - 为 Magic 3.0 重建
 

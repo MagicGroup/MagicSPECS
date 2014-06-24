@@ -2,7 +2,7 @@
 
 Name:           ocaml-lwt
 Version:        2.4.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        OCaml lightweight thread library
 
 # The openssl linking exception is granted.
@@ -96,6 +96,9 @@ OCAMLPATH=$RPM_BUILD_ROOT%{_libdir}/ocaml ocamlfind query lwt.react
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.4.3-9
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.3-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

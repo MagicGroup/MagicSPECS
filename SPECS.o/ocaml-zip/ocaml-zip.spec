@@ -2,7 +2,7 @@
 
 Name:           ocaml-zip
 Version:        1.05
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        OCaml library for reading and writing zip, jar and gzip files
 License:        LGPLv2 with exceptions
 
@@ -90,6 +90,9 @@ ocamlfind install zip *.cma *.cmxa *.a *.cmx *.cmi *.mli dll*.so META
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.05-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

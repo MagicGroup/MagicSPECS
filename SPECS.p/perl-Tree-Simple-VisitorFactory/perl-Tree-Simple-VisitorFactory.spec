@@ -1,6 +1,6 @@
 Name:           perl-Tree-Simple-VisitorFactory
 Version:        0.10
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Factory object for dispensing Visitor objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.10-18
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

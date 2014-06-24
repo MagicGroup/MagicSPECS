@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-#spec 中需删除的文档和po 列表
+#spec 涓渶鍒犻櫎鐨勬枃妗ｅ拰po 鍒楄〃
 
 dir_base="
 $RPM_BUILD_ROOT/usr/share/doc/HTML/
 $RPM_BUILD_ROOT/usr/share/locale/
 $RPM_BUILD_ROOT/usr/share/man/
-$RPM_BUILD_ROOT/opt/kde4/share/doc/HTML/
-$RPM_BUILD_ROOT/opt/kde4/share/locale/
-$RPM_BUILD_ROOT/opt/kde4/share/man/
+$RPM_BUILD_ROOT/opt/trinity/share/doc/HTML/
+$RPM_BUILD_ROOT/opt/trinity/share/locale/
+$RPM_BUILD_ROOT/opt/trinity/share/man/
 "
 
 for d in $dir_base;
@@ -28,4 +28,3 @@ find $d -type f | grep -v "^$d\(en/\|zh_..\|man\)" | \
         xargs rm -rfv
 fi
 done
-

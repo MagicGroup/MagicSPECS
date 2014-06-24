@@ -2,7 +2,7 @@
 
 Name:           ocaml-calendar
 Version:        2.03.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Objective Caml library for managing dates and times
 License:        LGPLv2
 
@@ -77,6 +77,9 @@ make install
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.03.2-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.03.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

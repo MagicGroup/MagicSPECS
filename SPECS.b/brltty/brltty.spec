@@ -17,7 +17,7 @@
 
 Name: brltty
 Version: %{pkg_version}
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
 URL: http://mielke.cc/brltty/
@@ -392,6 +392,9 @@ fi
 %endif
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 5.1-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -6,9 +6,9 @@
 
 Summary: Magic specific rpm configuration files
 Summary(zh_CN.UTF-8): Magic 特定的 rpm 配置文件
-Name: redhat-rpm-config
+Name: magic-rpm-config
 Version: 3.0
-Release: 2%{?dist}
+Release: 8%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -22,6 +22,9 @@ Source1: rpmrc
 # gcc specs files for hardened builds
 Source50: magic-hardened-cc1
 Source51: magic-hardened-ld
+
+# 清理无用语言文件脚本
+Source60: magic_rpm_clean.sh
 
 # The macros defined by these files are for things that need to be defined
 # at srpm creation time when it is not feasible to require the base packages
@@ -110,8 +113,12 @@ mkdir -p %{buildroot}%{_fileattrsdir}
 install -p -m 644 -t %{buildroot}%{_fileattrsdir} *.attr
 install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 
+mkdir -p %{buildroot}%{_bindir}
+install -p -m 755 -t %{buildroot}%{_bindir} magic_rpm_clean.sh
+
 %files
 %dir %{rrcdir}
+%{_bindir}/magic_rpm_clean.sh
 %{rrcdir}/macros
 %{rrcdir}/rpmrc
 %{rrcdir}/brp-*
@@ -137,4 +144,13 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.0-8
+- 为 Magic 3.0 重建
+
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.0-7
+- 为 Magic 3.0 重建
+
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 3.0-3
+- 为 Magic 3.0 重建
+
 

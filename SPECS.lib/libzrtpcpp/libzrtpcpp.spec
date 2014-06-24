@@ -1,12 +1,13 @@
 Name:           libzrtpcpp
-Version:        2.3.4
-Release:        4%{?dist}
+Version:	4.2.3
+Release:        5%{?dist}
 Summary:        ZRTP support library for the GNU ccRTP stack
 
 Group:          System Environment/Libraries
 License:        GPLv3+
 URL:            https://github.com/wernerd/ZRTPCPP
-Source0:        http://ftp.gnu.org/pub/gnu/ccrtp/%{name}-%{version}.tar.gz
+#Source0:        https://github.com/wernerd/ZRTPCPP/archive/V%{version}.tar.gz
+Source0:	ZRTPCPP-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	ccrtp-devel 
@@ -35,10 +36,11 @@ developing applications that use %{name}.
 
 
 %prep
-%setup -q
+%setup -q -n ZRTPCPP-%{version}
+
 
 sed -i '/CMAKE_VERBOSE_MAKEFILE/d' CMakeLists.txt
-
+sed -i 's/%{_lib}/lib/g' CMakeLists.txt
 
 %build
 %cmake .
@@ -64,7 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc README.md AUTHORS COPYING NEWS
-%{_libdir}/libzrtpcpp.so.2*
+%{_libdir}/libzrtpcpp.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -74,6 +76,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 4.2.3-5
+- 更新到 4.2.3
+
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 2.3.4-5
+- 更新到 4.2.3
+
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 2.3.4-5
+- 更新到 4.2.3
+
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 2.3.4-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

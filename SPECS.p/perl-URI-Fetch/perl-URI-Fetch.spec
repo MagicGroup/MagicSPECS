@@ -1,6 +1,6 @@
 Name:           perl-URI-Fetch
 Version:        0.09
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Smart URI fetching/caching
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.09-20
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

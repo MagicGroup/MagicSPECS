@@ -1,7 +1,7 @@
 Name:           perl-MooseX-SemiAffordanceAccessor
 Summary:        Name your accessors foo() and set_foo()
 Version:        0.09
-Release:        9%{?dist}
+Release:        10%{?dist}
 License:        Artistic 2.0
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/MooseX-SemiAffordanceAccessor-%{version}.tar.gz 
@@ -16,7 +16,7 @@ BuildRequires:  perl(Test::More) >= 0.88
 Requires:       perl(Moose) >= 1.16
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 This module does not provide any methods. Simply loading it changes the
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.09-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

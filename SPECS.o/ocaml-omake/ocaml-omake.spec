@@ -1,6 +1,6 @@
 Name:           ocaml-omake
 Version:        0.9.8.6
-Release:        0.rc1%{?dist}.9
+Release:        0.rc1%{?dist}.10
 Summary:        Build system with automated dependency analysis
 License:        LGPLv2+ with exceptions and GPLv2+ and BSD
 
@@ -75,6 +75,9 @@ chmod 0755 $RPM_BUILD_ROOT%{_bindir}/*
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.8.6-0.rc1.10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.8.6-0.rc1.9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           netcf
 Version:        0.2.4
-Release:        2%{?dist}%{?extra_release}
+Release:        3%{?dist}%{?extra_release}
 Summary:        Cross-platform network configuration library
 
 Group:          System Environment/Libraries
@@ -105,7 +105,7 @@ The libraries for %{name}.
 
 %configure --disable-static \
            %{?_with_libnl1} \
-           %{sysinit}
+           %{sysinit} --with-driver=redhat
 make %{?_smp_mflags}
 
 %install
@@ -169,6 +169,9 @@ fi
 %{_libdir}/pkgconfig/netcf.pc
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.2.4-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

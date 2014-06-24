@@ -18,10 +18,12 @@
 
 Name:           lxdm
 Version:        0.4.1
-Release:        4%{?git_version:.%{?git_version}}%{?dist}
+Release:        5%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Lightweight X11 Display Manager
+Summary(zh_CN.UTF-8): 轻量级的 X11 登录管理器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+ and LGPLv2+
 URL:            http://lxde.org
 
@@ -90,7 +92,6 @@ BuildRequires:  pam-devel
 BuildRequires:  intltool >= 0.40.0
 Requires:       pam
 Requires:       /sbin/shutdown
-Requires:       desktop-backgrounds-compat
 # needed for anaconda to boot into runlevel 5 after install
 Provides:       service(graphical-login) = lxdm
 
@@ -107,6 +108,8 @@ LXDM is the future display manager of LXDE, the Lightweight X11 Desktop
 environment. It is designed as a lightweight alternative to replace GDM or 
 KDM in LXDE distros. It's still in very early stage of development.
 
+%description -l zh_CN.UTF-8
+LXDE 下的一个轻量级的登录管理器，类似 GDM 或 KDM。
 
 %prep
 %setup -q %{?git_version:-n %{name}}
@@ -124,7 +127,7 @@ KDM in LXDE distros. It's still in very early stage of development.
 %patch11 -p1 -b .restart-xserver
 
 %patch50 -p1 -b .config
-%patch51 -p1 -b .orig
+#patch51 -p1 -b .orig
 
 
 cat << EOF > tempfiles.lxdm.conf
@@ -133,12 +136,13 @@ EOF
 
 %build
 %{?git_version:sh autogen.sh}
-%configure
-make %{?_smp_mflags} V=1
+%configure CFLAGS="-Wno-error=format-security"
+make %{?_smp_mflags} V=1 
 
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL='install -p'
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # these files are not in the package, but should be owned by lxdm 
@@ -219,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 0.4.1-5
+- 为 Magic 3.0 重建
+
 * Fri Sep 07 2012 Adam Williamson <awilliam@redhat.com> - 0.4.1-4
 - ship a systemd preset for lxdm (#855470)
 - add After: livesys-late.service to the service file, testing of other

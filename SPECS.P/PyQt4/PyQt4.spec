@@ -6,7 +6,7 @@
 Summary: Python bindings for Qt4
 Name: 	 PyQt4
 Version: 4.9.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # GPLv2 exceptions(see GPL_EXCEPTIONS*.txt)
 License: GPLv3 or GPLv2 with exceptions
@@ -287,6 +287,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.9.6-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.6-1
 - 4.9.6
 

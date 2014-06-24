@@ -1,6 +1,6 @@
 Name:           perl-MooseX-StrictConstructor 
 Version:        0.19
-Release:        6%{?dist}
+Release:        7%{?dist}
 # see lib/MooseX/StrictConstructor.pm
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.19-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -2,7 +2,7 @@
 
 Name:           ocaml-cil
 Version:        1.7.3
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        CIL - Infrastructure for C Program Analysis and Transformation
 License:        BSD
 
@@ -21,6 +21,10 @@ Patch1:         0002-Do-not-fail-testsuite-on-new-gcc-behaviour.patch
 
 # Enable ocamlopt -g.
 Patch2:         cil-1.7.3-enable-ocamlopt-g.patch
+
+# A%description -l zh_CN.UTF-8 package directive to App::Cilly::CilConfig so that perl
+# dependencies are calculated properly.
+Patch3:         cil-1.7.3-add-package-cilconfig.patch
 
 %description
 CIL (C Intermediate Language) is a high-level representation along
@@ -102,6 +106,7 @@ for gcc.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 
@@ -176,6 +181,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.7.3-7
+- 为 Magic 3.0 重建
+
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.7.3-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Richard W.M. Jones <rjones@redhat.com> - 1.7.3-5
 - Bump and rebuild to attempt to fix broken dependencies.
 

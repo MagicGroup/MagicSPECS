@@ -2,7 +2,7 @@
 
 Name:           ocaml-p3l
 Version:        2.03
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        OCaml compiler for parallel programs
 License:        LGPLv2+ with exceptions
 
@@ -123,6 +123,9 @@ cp %{SOURCE1} README.Fedora
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.03-17
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.03-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -11,7 +11,7 @@
 Summary: SIP - Python/C++ Bindings Generator
 Name: sip
 Version: 4.14.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # sipgen/parser.{c.h} is GPLv3+ with exceptions (bison)
 License: GPLv2 or GPLv3 and (GPLv3+ with exceptions)
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.14.2-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Rex Dieter <rdieter@fedoraproject.org> 4.14.2-1
 - sip-4.14.2
 

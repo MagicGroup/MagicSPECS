@@ -6,7 +6,7 @@
 
 Name:           python-decorator
 Version:        3.3.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Module to simplify usage of decorators
 
 Group:          Development/Languages
@@ -107,6 +107,9 @@ popd
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.3.3-6
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.3.3-5
 - 为 Magic 3.0 重建
 

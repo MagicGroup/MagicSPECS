@@ -3,7 +3,7 @@
 Summary: Library for using OBEX
 Name: openobex
 Version: 1.7.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Libraries
 URL: http://openobex.sourceforge.net
@@ -100,6 +100,9 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man1/obex_test.1*
 %{_mandir}/man1/obex_push.1*
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.7.1-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,5 @@
 %define shared_desktop_ontologies_ver 0.10.0
 %define soprano_ver 2.8.0
-%define rversion %{kde4_kdelibs_version}
 
 %global shared_desktop_ontologies_version %(pkg-config --modversion shared-desktop-ontologies 2>/dev/null || echo %{shared_desktop_ontologies_ver})
 %global soprano_version %(pkg-config --modversion soprano 2>/dev/null || echo %{soprano_ver})
@@ -9,8 +8,8 @@
 #global tests 1
 
 Name:    nepomuk-widgets
-Version: %{rversion}
-Release: 2%{?dist}
+Version: 4.13.2
+Release: 1%{?dist}
 Summary: Nepomuk  Widgets
 Summary(zh_CN.UTF-8): Nepomuk 小工具
 
@@ -110,6 +109,9 @@ make -C %{_target_platform}/autotests/test test  ||:
 %{kde4_libdir}/libnepomukwidgets.so.*
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-2
 - 为 Magic 3.0 重建
 

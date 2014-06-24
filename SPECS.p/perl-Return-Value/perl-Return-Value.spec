@@ -1,6 +1,6 @@
 Name:           perl-Return-Value
 Version:        1.666004
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Polymorphic Return Values
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.666004-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.666004-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

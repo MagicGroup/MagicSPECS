@@ -1,4 +1,0 @@
-%rename cc1_options rh_cc1_options_old
-
-*cc1_options:
-%{!fpie:%{!fPIE:%{!fpic:%{!fPIC:%{!fno-pic:-fPIE}}}}} %(rh_cc1_options_old)

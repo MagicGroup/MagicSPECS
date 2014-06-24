@@ -9,16 +9,16 @@ Summary(zh_CN.UTF-8): 一组 Tk 的扩展组件
 Name: tix
 Epoch: 1
 Version: %{tixmajor}.3
-Release: 5%{?dist}
+Release: 12%{?dist}
 License: BSD
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
 URL: http://tix.sourceforge.net/
 Source0: http://dl.sourceforge.net/sourceforge/tix/Tix%{version}-src.tar.gz
 Patch0: tix-8.4.2-link.patch
-Patch1: tix-8.4.2-tcl8.5.patch
+Patch1: tix-8.4.3-tcl86.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: tcl(abi) = 8.5
+Requires: tcl(abi) = 8.6
 Requires: tcl >= %{tcltkver}, tk >= %{tcltkver}
 #Requires: /etc/ld.so.conf.d
 Buildrequires: tcl-devel >= %{tcltkver}, tk-devel >= %{tcltkver}
@@ -81,7 +81,7 @@ This package contains the tix documentation
 %prep
 %setup -q -n Tix%{version}
 %patch0 -p1 -b .link
-# %%patch1 -p1 -b .err
+%patch1 -p1 -b .tcl86
 
 %build
 %configure --with-tcl=%{_libdir} --with-tk=%{_libdir} --libdir=%{tcl_sitearch}
@@ -151,6 +151,27 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{tcl_sitelib}/Tix%{tixmajor}
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1:8.4.3-12
+- 为 Magic 3.0 重建
+
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1:8.4.3-11
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.4.3-10
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.4.3-9
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.4.3-8
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.4.3-7
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1:8.4.3-6
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:8.4.3-5
 - 为 Magic 3.0 重建
 

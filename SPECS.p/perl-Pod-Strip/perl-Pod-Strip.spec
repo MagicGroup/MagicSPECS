@@ -1,6 +1,6 @@
 Name:           perl-Pod-Strip
 Version:        1.02
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Remove POD from Perl code
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.02-18
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

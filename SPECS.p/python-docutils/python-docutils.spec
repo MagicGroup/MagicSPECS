@@ -11,7 +11,7 @@
 
 Name:           python-%{srcname}
 Version:        0.10
-Release:        0.7.20120824svn7502%{?dist}
+Release:        0.8.20120824svn7502%{?dist}
 Summary:        System for processing plaintext documentation
 
 Group:          Development/Languages
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.10-0.8.20120824svn7502
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.10-0.7.20120824svn7502
 - 为 Magic 3.0 重建
 

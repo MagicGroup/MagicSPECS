@@ -3,7 +3,7 @@
 
 Name:           ocaml-perl4caml
 Version:        0.9.5
-Release:        29%{?dist}
+Release:        30%{?dist}
 Summary:        OCaml library for calling Perl libraries and code
 License:        LGPLv2+ with exceptions
 
@@ -116,6 +116,9 @@ make install
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.5-30
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.5-29
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

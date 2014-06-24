@@ -5,7 +5,7 @@
 
 Name:           ocaml-zarith
 Version:        1.2.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        OCaml interface to GMP
 
 # The license has a static linking exception
@@ -111,6 +111,9 @@ make tests
 %{_libdir}/ocaml/zarith/*.h
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.1-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

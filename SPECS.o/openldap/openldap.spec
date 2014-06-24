@@ -5,7 +5,7 @@
 
 Name: openldap
 Version: 2.4.39
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: LDAP support libraries
 Group: System Environment/Daemons
 License: OpenLDAP
@@ -571,6 +571,9 @@ exit 0
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.4.39-4
+- 为 Magic 3.0 重建
+
 * Wed Feb 19 2014 Jan Synáček <jsynacek@redhat.com> - 2.4.39-3
 - remove redundant sysconfig-related stuff
 - add documentation reference to service file

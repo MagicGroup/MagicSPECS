@@ -1,6 +1,6 @@
 Name:           perl-Spoon
 Version:        0.24
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Spiffy Application Building Framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.24-23
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.24-22
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

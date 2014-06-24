@@ -4,7 +4,7 @@
 
 Name:           python-httplib2
 Version:        0.6.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A comprehensive HTTP client library
 Group:          System Environment/Libraries
 License:        MIT
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with_python3
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.6.0-8
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.0-7
 - 为 Magic 3.0 重建
 

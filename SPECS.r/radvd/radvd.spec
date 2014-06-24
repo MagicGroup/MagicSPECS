@@ -1,7 +1,7 @@
 Summary:    A Router Advertisement daemon
 Name:       radvd
 Version:    1.12
-Release: 1%{?dist}
+Release: 2%{?dist}
 # The code includes the advertising clause, so it's GPL-incompatible
 License:    BSD with advertising
 Group:      System Environment/Daemons
@@ -88,6 +88,9 @@ exit 0
 %{_sbindir}/radvdump
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.12-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Pavel Šimerda <psimerda@redhat.com> - 1.12-1
 - new version 1.12
 

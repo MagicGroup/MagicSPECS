@@ -2,7 +2,7 @@
 
 Name:           ocaml-expat
 Version:        0.9.1
-Release:        28%{?dist}
+Release:        29%{?dist}
 Summary:        OCaml wrapper for the Expat XML parsing library
 License:        MIT
 
@@ -78,6 +78,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/*.so
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.9.1-29
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.1-28
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

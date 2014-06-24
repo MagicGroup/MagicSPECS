@@ -1,6 +1,6 @@
 Name:           perl-Snowball-Swedish
 Version:        1.2
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Porter's stemming algorithm for Swedish
 License:        GPLv2 or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.2-13
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -7,7 +7,7 @@
 Name:           python-dtopt
 Summary:        Add options to doctest examples while they are running
 Version:        0.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 URL:            http://pypi.python.org/pypi/dtopt/
@@ -98,6 +98,9 @@ popd
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.1-14
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

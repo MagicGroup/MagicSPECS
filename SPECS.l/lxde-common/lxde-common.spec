@@ -18,10 +18,12 @@
 
 Name:           lxde-common
 Version:        0.5.5
-Release:        0.6%{?git_version:.%{?git_version}}%{?dist}
+Release:        0.7%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Default configuration files for LXDE
+Summary(zh_CN.UTF-8): LXDE 的默认配置文件
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.sourceforge.net/
 %if 0%{?git_snapshot}
@@ -51,11 +53,6 @@ Requires:       xorg-x11-xinit
 Requires:       xorg-x11-utils
 # Use vendor's artwork
 Requires:       system-logos
-%if 0%{?fedora} < 9
-Requires:       desktop-backgrounds-basic
-%else
-Requires:       desktop-backgrounds-compat
-%endif
 Obsoletes:      %{name}-data <= 0.3.2.1-5
 # needed because the lxde-common and lxde-common-data 
 # required each other with full n-v-r on F-11
@@ -67,6 +64,8 @@ BuildArch:      noarch
 This package contains the configuration files for LXDE, the Lightweight X11 
 Desktop Environment.
 
+%description -l zh_CN.UTF-8
+这个包包含了 LXDE 的配置文件。
 
 %prep
 %setup -q %{?git_version:-n %{name}}
@@ -75,7 +74,7 @@ Desktop Environment.
 %patch11 -p1 -b .orig
 %patch12 -p1 -b .orig
 %patch13 -p1 -b .logout-banner
-%patch15 -p1 -b .vendor
+#patch15 -p1 -b .vendor
 
 # Calling autotools must be done before executing
 # configure if needed
@@ -97,7 +96,7 @@ desktop-file-install                                           \
       %{SOURCE1}
 # cannot use desktop-file-utils because it is out of date
 install -pm 0644 %{SOURCE2} %{buildroot}%{_datadir}/applications/
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,6 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 0.5.5-0.7.20110328git87c368d7
+- 为 Magic 3.0 重建
+
 * Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 0.5.5-0.6.20110328git87c368d7
 - 为 Magic 3.0 重建
 

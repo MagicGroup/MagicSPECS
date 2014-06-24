@@ -4,7 +4,7 @@
 Summary: A utility for determining file types
 Name: file
 Version: 5.14
-Release: 16%{?dist}
+Release: 17%{?dist}
 License: BSD
 Group: Applications/File
 Source0: ftp://ftp.astron.com/pub/file/file-%{version}.tar.gz
@@ -196,6 +196,9 @@ cd %{py3dir}
 %endif
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 5.14-17
+- 为 Magic 3.0 重建
+
 * Tue Feb 25 2014 Jan Kaluza <jkaluza@redhat.com> - 5.14-16
 - fix potential memory leak introduced in previous commit
 

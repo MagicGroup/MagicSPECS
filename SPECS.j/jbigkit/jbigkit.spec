@@ -1,6 +1,6 @@
 Name:           jbigkit
 Version:        2.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        JBIG1 lossless image compression tools
 
 Group:          Development/Libraries
@@ -94,6 +94,9 @@ make test
 %{_includedir}/jbig*.h
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.0-12
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -8,7 +8,7 @@
 
 Name:           ocaml-preludeml
 Version:        0.1
-Release:        0.26.%{gitdate}%{?dist}
+Release:        0.27.%{gitdate}%{?dist}
 Summary:        OCaml utility functions
 License:        MIT
 
@@ -110,6 +110,9 @@ ocamlfind install preludeml \
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.1-0.27.20100314
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1-0.26.20100314
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

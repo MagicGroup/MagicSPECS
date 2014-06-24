@@ -12,7 +12,7 @@
 
 Name:           sanlock
 Version:        3.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A shared storage lock manager
 
 Group:          System Environment/Base
@@ -296,6 +296,9 @@ if [ $1 -ge 1 ] ; then
 fi
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 3.1.0-3
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

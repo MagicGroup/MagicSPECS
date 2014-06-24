@@ -1,6 +1,6 @@
 Name:           plexus-classworlds
 Version:        2.5.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Plexus Classworlds Classloader Framework
 License:        ASL 2.0 and Plexus
 URL:            http://plexus.codehaus.org/
@@ -47,6 +47,9 @@ API documentation for %{name}.
 %doc LICENSE.txt LICENSE-2.0.txt
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.5.1-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5.1-5
 - Obsolete classworlds
 

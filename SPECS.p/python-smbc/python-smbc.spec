@@ -10,7 +10,7 @@
 Summary:       Python bindings for libsmbclient API from Samba
 Name:          python-smbc
 Version:       1.0.13
-Release:       6%{?dist}
+Release:       7%{?dist}
 URL:           http://cyberelk.net/tim/software/pysmbc/
 Source:        http://pypi.python.org/packages/source/p/pysmbc/pysmbc-%{version}.tar.bz2
 Patch1:        python-smbc-pkg-config.patch
@@ -102,6 +102,9 @@ chmod 755 %{buildroot}%{python_sitearch}/smbc.so
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.0.13-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 21 2012 Tim Waugh <twaugh@redhat.com> - 1.0.13-6
 - Use pkg-config for smbclient include_dirs, fixing rebuild failure.
 

@@ -1,7 +1,7 @@
 Name:           perl-Class-Method-Modifiers
 Summary:        Provides Moose-like method modifiers
 Version:        2.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Class-Method-Modifiers
 Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/Class-Method-Modifiers-%{version}.tar.gz
@@ -77,6 +77,9 @@ make test
 %{_mandir}/man3/Class::Method::Modifiers.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.10-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:		libpari23
 Version:	2.3.5
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Number Theory-oriented Computer Algebra Library
 Group:		System Environment/Libraries
 # No version is specified
@@ -165,6 +165,9 @@ make dotest-round4
 %{_datadir}/%{name}/
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.3.5-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.5-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

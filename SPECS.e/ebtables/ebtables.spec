@@ -2,10 +2,12 @@
 
 Name:			ebtables
 Version:		2.0.10
-Release:		14%{?dist}
+Release:		15%{?dist}
 Summary:		Ethernet Bridge frame table administration tool
+Summary(zh_CN.UTF-8): 	以太网桥接帧表管理工具
 License:		GPLv2+
 Group:			System Environment/Base
+Group(zh_CN.UTF-8): 	系统环境/基本
 URL:			http://ebtables.sourceforge.net/
 Source0:		http://downloads.sourceforge.net/ebtables/ebtables-v%{version}-%{ebminor}.tar.gz
 Source1:		ebtables-save
@@ -32,6 +34,9 @@ components (built by default in Fedora kernels).
 
 The ebtables tool can be used together with the other Linux filtering tools,
 like iptables. There are no known incompatibility issues.
+
+%description -l zh_CN.UTF-8
+以太网桥接帧表管理工具。
 
 %prep
 %setup -q -n ebtables-v%{version}-%{ebminor}
@@ -98,6 +103,9 @@ mv %{buildroot}/%{_lib}/ebtables/libebtc.so %{buildroot}/%{_lib}/
 %ghost %{_sysconfdir}/sysconfig/ebtables.broute
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.10-15
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.10-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

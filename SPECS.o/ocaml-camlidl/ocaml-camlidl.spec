@@ -2,7 +2,7 @@
 
 Name:           ocaml-camlidl
 Version:        1.05
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        Stub code generator and COM binding for Objective Caml
 License:        QPL and LGPLv2 with exceptions
 
@@ -125,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.05-24
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-23
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

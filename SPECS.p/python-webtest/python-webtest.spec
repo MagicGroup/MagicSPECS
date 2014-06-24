@@ -6,7 +6,7 @@
 
 Name:           python-webtest
 Version:        1.3.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Helper to test WSGI applications
 
 Group:          Development/Languages
@@ -110,6 +110,9 @@ popd
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.3.4-7
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

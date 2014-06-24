@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Traits-Pluggable 
 Summary:        A pluggable extension to MooseX::Traits 
 Version:        0.10
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RK/RKITOVER/MooseX-Traits-Pluggable-%{version}.tar.gz 
@@ -29,7 +29,7 @@ Requires:       perl(Scalar::Util)
 
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 This module adds support for class precedence search for traits and some
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.10-9
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

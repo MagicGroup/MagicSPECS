@@ -17,7 +17,7 @@ BuildRequires:  perl-devel pkgconfig openssl-devel
 BuildRequires:  cmake
 BuildRequires:  systemd-units
 Version:        2.4.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Url:            http://www.openwsman.org/
 License:        BSD
 Group:          Applications/System
@@ -328,6 +328,9 @@ rm -f /var/log/wsmand.log
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.4.6-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -5,7 +5,7 @@
 
 Name:           ocaml-yojson
 Version:        1.1.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        An optimized parsing and printing library for the JSON format
 
 License:        BSD
@@ -97,6 +97,9 @@ $RPM_BUILD_ROOT%{_bindir}/ydump %{SOURCE1} >/dev/null 2>valid-err.log
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1.8-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.8-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

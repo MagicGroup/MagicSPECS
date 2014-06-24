@@ -10,7 +10,7 @@
 Name:           python-webob
 Summary:        WSGI request and response object
 Version:        1.2.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 URL:            http://pythonpaste.org/webob/
@@ -115,6 +115,9 @@ popd
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.2.3-8
+- 为 Magic 3.0 重建
+
 * Mon Sep 16 2013 Michael Schwendt <mschwendt@fedoraproject.org> - 1.2.3-7
 - correct python-webob1.2 obs_ver
 

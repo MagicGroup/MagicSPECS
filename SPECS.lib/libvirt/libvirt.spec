@@ -105,7 +105,7 @@
     %define with_storage_gluster 0
 %endif
 %define with_numactl          0%{!?_without_numactl:%{server_drivers}}
-%define with_selinux          0%{!?_without_selinux:%{server_drivers}}
+%define with_selinux          0
 
 # Just hardcode to off, since few people ever have apparmor RPMs installed
 %define with_apparmor         0%{!?_without_apparmor:0}
@@ -122,7 +122,7 @@
 %define with_libpcap       0%{!?_without_libpcap:0}
 %define with_macvtap       0%{!?_without_macvtap:0}
 %define with_libnl         0%{!?_without_libnl:0}
-%define with_audit         0%{!?_without_audit:0}
+%define with_audit         0
 %define with_dtrace        0%{!?_without_dtrace:0}
 %define with_cgconfig      0%{!?_without_cgconfig:0}
 %define with_sanlock       0%{!?_without_sanlock:0}
@@ -321,9 +321,7 @@
     %define with_libnl 1
 %endif
 
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 5
-    %define with_audit    0%{!?_without_audit:1}
-%endif
+%define with_audit    0
 
 %if 0%{?fedora} >= 13 || 0%{?rhel} >= 6
     %define with_dtrace 1
@@ -385,7 +383,7 @@
 Summary: Library providing a simple virtualization API
 Name: libvirt
 Version: 1.2.5
-Release: 2%{?dist}%{?extra_release}
+Release: 3%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -2225,6 +2223,9 @@ exit 0
 %doc examples/systemtap
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.2.5-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

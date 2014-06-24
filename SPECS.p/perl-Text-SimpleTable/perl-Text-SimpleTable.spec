@@ -1,7 +1,7 @@
 Name:           perl-Text-SimpleTable
 Summary:        Simple Eyecandy ASCII Tables
 Version:        2.03
-Release:        12%{?dist}
+Release:        13%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MR/MRAMBERG/Text-SimpleTable-%{version}.tar.gz 
@@ -15,7 +15,7 @@ BuildRequires:  perl(Test::More)
 
 
 %{?perl_default_filter}
-%{?perl_default_subpackage_tests}
+#{?perl_default_subpackage_tests}
 
 %description
 Simple eyecandy ASCII tables, as seen in Catalyst.
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.03-13
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.03-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

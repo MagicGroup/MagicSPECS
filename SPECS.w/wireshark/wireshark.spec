@@ -21,7 +21,7 @@
 Summary:	Network traffic analyzer
 Name:		wireshark
 Version:	1.10.8
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+
 Group:		Applications/Internet
 Source0:	http://wireshark.org/download/src/%{name}-%{version}.tar.bz2
@@ -88,7 +88,7 @@ BuildRequires:	zlib-devel, bzip2-devel
 BuildRequires:	openssl-devel
 BuildRequires:	glib2-devel
 BuildRequires:	elfutils-devel, krb5-devel
-BuildRequires:	pcre-devel, libselinux
+BuildRequires:	pcre-devel
 BuildRequires:	gnutls-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	xdg-utils
@@ -398,6 +398,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/aclocal/*
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.10.8-2
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Peter Hatina <phatina@redhat.com> - 1.10.8-1
 - Ver. 1.10.8
 

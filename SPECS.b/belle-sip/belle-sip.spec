@@ -28,7 +28,8 @@ Libraries and headers required to develop software with belle-sip.
 autoreconf -ifv
 
 %build
-%configure --disable-tests --disable-silent-rules
+#这是一个临时性的措施，后续需要修改。
+%configure --with-antlr=/usr/share/local/java --disable-tests --disable-silent-rules
 make %{?_smp_mflags}
 
 
@@ -49,6 +50,7 @@ find %{buildroot} -name '*.la' -delete
 %files devel
 %{_includedir}/belle-sip
 %{_libdir}/libbellesip.so
+%{_libdir}/libbellesip.a
 %{_libdir}/pkgconfig/belle-sip.pc
 
 %changelog

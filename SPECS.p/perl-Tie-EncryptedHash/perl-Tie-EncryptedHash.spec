@@ -1,7 +1,7 @@
 Summary:	Hashes (and objects based on hashes) with encrypting fields
 Name:		perl-Tie-EncryptedHash
 Version:	1.24
-Release:	15%{?dist}
+Release:	16%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Tie-EncryptedHash/
@@ -64,6 +64,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Tie::EncryptedHash.3pm*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.24-16
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.24-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

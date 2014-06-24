@@ -1,7 +1,7 @@
 Name:           perl-App-Cmd
 Summary:        Write command line apps with less suffering
 Version:        0.323
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/App-Cmd-%{version}.tar.gz 
@@ -69,6 +69,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.323-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.323-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

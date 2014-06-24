@@ -2,7 +2,7 @@
 
 Name:           ocaml-augeas
 Version:        0.5
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        OCaml bindings for Augeas configuration API
 License:        LGPLv2+ with exceptions
 
@@ -88,6 +88,9 @@ chrpath --delete $OCAMLFIND_DESTDIR/stublibs/dll*.so
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 0.5-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

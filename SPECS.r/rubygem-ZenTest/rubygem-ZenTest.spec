@@ -4,7 +4,7 @@
 Summary: Automated test scaffolding for Ruby
 Name: rubygem-%{gem_name}
 Version: 4.9.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.zenspider.com/ZSS/Products/ZenTest/
@@ -99,6 +99,9 @@ popd
 %doc %{gem_instdir}/example.txt
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 4.9.0-3
+- 为 Magic 3.0 重建
+
 * Fri Feb 22 2013 Vít Ondruch <vondruch@redhat.com> - 4.9.0-2
 - Rebuid due to error in RubyGems stub shebang.
 

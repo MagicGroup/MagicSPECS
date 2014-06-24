@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-Natural
 Version:        1.01
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Create machine readable date/time with natural parsing logic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -77,6 +77,9 @@ done
 
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.01-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

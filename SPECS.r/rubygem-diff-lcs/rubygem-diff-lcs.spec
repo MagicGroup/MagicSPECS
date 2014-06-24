@@ -7,7 +7,7 @@
 Summary: Provide a list of changes between two sequenced collections
 Name: rubygem-%{gem_name}
 Version: 1.1.3
-Release: 2.2%{?dist}
+Release: 3.2%{?dist}
 Group: Development/Languages
 License: GPLv2+ or Ruby or Artistic
 URL: http://rubyforge.org/projects/ruwiki/
@@ -101,6 +101,9 @@ popd
 
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.1.3-3.2
+- 为 Magic 3.0 重建
+
 * Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 1.1.3-3
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 - Change the dependency to rubygem(rspec).
