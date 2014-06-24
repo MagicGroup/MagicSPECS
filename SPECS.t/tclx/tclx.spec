@@ -85,6 +85,8 @@ This package contains the tclx documentation
 autoconf
 
 %build
+export CFLAGS=" $RPM_OPT_FLAGS -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE "
+export CXXFLAGS=" $RPM_OPT_FLAGS -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE "
 %configure \
    --enable-tk=YES \
    --with-tclconfig=%{_libdir} \
