@@ -119,6 +119,7 @@ Patch10006: xim2-no_immodule.patch
 Patch10007: qt-x11-free-3.3.8-xim_fix.patch
 Patch10008: qt-x11-free-3.3.6-fakebold.patch
 Patch10009: qt3-gcc46.patch
+Patch20000: qt-x11-free-3.3.8b-freetype251.patch
 
 #3.3.8c
 Patch99999: http://www.trinitydesktop.org/wiki/pub/Developers/Qt3/qt3_3.3.8c.diff
@@ -366,6 +367,7 @@ qt-designer 软件包包括用于 Qt 工具包的用户界面设计工具。
 #%patch10005 -p1
 #%patch10008 -p1
 #%patch10009 -p1
+%patch20000 -p1
 
 #%patch99999 -p0
 
