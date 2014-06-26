@@ -8,7 +8,7 @@
 %define immodule 0
 
 # 64bit arch
-%define arch64 x86_64 s390x ppc64
+%define arch64 x86_64 s390x ppc64 mips64el
 
 # build Motif extention
 %define motif_extention 0 
@@ -119,6 +119,7 @@ Patch10006: xim2-no_immodule.patch
 Patch10007: qt-x11-free-3.3.8-xim_fix.patch
 Patch10008: qt-x11-free-3.3.6-fakebold.patch
 Patch10009: qt3-gcc46.patch
+Patch20000: qt-x11-free-3.3.8b-freetype251.patch
 
 #3.3.8c
 Patch99999: http://www.trinitydesktop.org/wiki/pub/Developers/Qt3/qt3_3.3.8c.diff
@@ -366,12 +367,13 @@ qt-designer 软件包包括用于 Qt 工具包的用户界面设计工具。
 #%patch10005 -p1
 #%patch10008 -p1
 #%patch10009 -p1
+%patch20000 -p1
 
 #%patch99999 -p0
 
 %build
 export QTDIR=$(pwd)
-export LD_LIBRARY_PATH="$QTDIR/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$QTDIR/%{_lib}:$LD_LIBRARY_PATH"
 export PATH="$QTDIR/bin:$PATH"
 export QTDEST=%{qtdir}
 
@@ -405,6 +407,7 @@ echo yes | ./configure \
   -docdir %{_docdir}/qt-devel-%{version}/ \
 %if %{_lib} == lib64
   -platform linux-g++-64 \
+  -libdir $QTDEST/%{_lib} \
 %else
   -platform linux-g++ \
 %endif
@@ -493,6 +496,7 @@ mv bin-bld bin
 
 echo yes | ./configure \
   -prefix $QTDEST \
+  -libdir $QTDEST/%{_lib} \
 %if %{debug}
   -debug \
 %else
@@ -549,7 +553,7 @@ rm -rf $RPM_BUILD_ROOT
 export QTDIR=$(pwd)
 export PATH=$QTDIR/bin:$PATH
 export MANPATH=$QTDIR/doc/man:$MANPATH
-export LD_LIBRARY_PATH=$QTDIR/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$QTDIR/%{_lib}:$LD_LIBRARY_PATH
 export QTDEST=%{qtdir}
 
 mkdir -p $RPM_BUILD_ROOT{%{_bindir},%{_docdir}/qt{,-devel}-%{version},%{_mandir}/{man1,man3}}
@@ -578,7 +582,7 @@ cp -aR mkspecs %{buildroot}%{qtdir}
 
 # Handle pkgconfig file
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/pkgconfig/
-cp -lf $RPM_BUILD_ROOT%{qtdir}/lib/pkgconfig/*.pc \
+cp -lf $RPM_BUILD_ROOT%{qtdir}/%{_lib}/pkgconfig/*.pc \
         $RPM_BUILD_ROOT%{_libdir}/pkgconfig/
 
 # install man pages
@@ -692,7 +696,7 @@ touch   $RPM_BUILD_ROOT%{qtdir}/etc/settings/tqtrc
 
 # remove some crud
 rm -rf $RPM_BUILD_ROOT%{qtdir}/plugins/src \
-       $RPM_BUILD_ROOT%{qtdir}/lib/README 
+       $RPM_BUILD_ROOT%{qtdir}/%{_lib}/README 
 #       $RPM_BUILD_ROOT%{qtdir}/lib/*.prl \
 #       $RPM_BUILD_ROOT%{qtdir}/plugins/*.prl 
 #       $RPM_BUILD_ROOT%{qtdir}/lib/*.la
@@ -719,7 +723,7 @@ rm -f %{buildroot}%{qtdir}/mkspecs/default/linux-g++*
 																 
 # for newer ld.so's
 mkdir -p %{buildroot}/etc/ld.so.conf.d
-echo "%{qtdir}/lib" > %{buildroot}/etc/ld.so.conf.d/tqt.conf
+echo "%{qtdir}/%{_lib}" > %{buildroot}/etc/ld.so.conf.d/tqt.conf
 
 magic_rpm_clean.sh
 
@@ -748,8 +752,8 @@ exit 0
 %attr(0755,root,root) %config /etc/profile.d/*
 %dir %{qtdir}
 %dir %{qtdir}/bin
-%dir %{qtdir}/lib
-%{qtdir}/lib/lib*.so.*
+%dir %{qtdir}/%{_lib}
+%{qtdir}/%{_lib}/lib*.so.*
 %dir %{qtdir}/etc
 %dir %{qtdir}/etc/settings
 # qt-theme
@@ -803,13 +807,13 @@ exit 0
 #结束
 %{qtdir}/include
 %{qtdir}/mkspecs
-%{qtdir}/lib/libtqt*.so
-%{qtdir}/lib/libtqui.so
-%{qtdir}/lib/libtqt-mt.la
-%{qtdir}/lib/libeditor.a
-%{qtdir}/lib/libdesigner*.a
-%{qtdir}/lib/libqassistantclient.a
-%{qtdir}/lib/*.prl
+%{qtdir}/%{_lib}/libtqt*.so
+%{qtdir}/%{_lib}/libtqui.so
+%{qtdir}/%{_lib}/libtqt-mt.la
+%{qtdir}/%{_lib}/libeditor.a
+%{qtdir}/%{_lib}/libdesigner*.a
+%{qtdir}/%{_lib}/libqassistantclient.a
+%{qtdir}/%{_lib}/*.prl
 %exclude %{_mandir}/*
 %{qtdir}/translations
 %{qtdir}/phrasebooks
@@ -826,7 +830,7 @@ exit 0
 #%{_bindir}/tqt-lupdate
 #%{_bindir}/tqt-conv2ui
 %{_libdir}/pkgconfig/*
-%{qtdir}/lib/pkgconfig
+%{qtdir}/%{_lib}/pkgconfig
 %{qtdir}/doc
 %doc doc/html
 %doc examples
@@ -838,7 +842,7 @@ exit 0
 
 %files Xt
 %defattr(-,root,root,-)
-%{qtdir}/lib/libqmotif.so*
+%{qtdir}/%{_lib}/libqmotif.so*
 %endif
 
 %if %{styleplugins}
@@ -871,7 +875,7 @@ exit 0
 %if %{buildstatic}
 %files static
 %defattr(-,root,root,-)
-%{qtdir}/lib/*.a
+%{qtdir}/%{_lib}/*.a
 %endif
 
 %files designer

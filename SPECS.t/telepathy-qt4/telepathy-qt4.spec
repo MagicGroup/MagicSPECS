@@ -15,6 +15,7 @@ Source0: http://telepathy.freedesktop.org/releases/telepathy-qt/telepathy-qt-%{v
 ## upstreamable patches
 # kinda sorta, help find fedora's compat-telepathy-farstream pkg
 Patch50: telepathy-qt-0.9.3-farstream_compat.patch
+Patch100: telepathy-qt-Qt4Macros-fix.patch
 
 Provides: telepathy-qt = %{version}-%{release} 
 Provides: telepathy-qt%{?_isa} = %{version}-%{release}
@@ -81,6 +82,7 @@ Provides:  telepathy-qt-farstream = %{version}-%{release}
 %if 0%{?compat_telepathy_farstream}
 # should be safe to apply this unconditionally, but...
 %patch50 -p1 -b .farstream_compat
+%patch100 -p1 -b .findqt
 sed -i.farstream_compat \
   -e 's|telepathy-farstream|telepathy-farstream-0.4|g' \
   TelepathyQt/Farstream/TelepathyQtFarstream.pc.in \
