@@ -123,7 +123,6 @@ Patch20000: qt-x11-free-3.3.8b-freetype251.patch
 
 #3.3.8c
 Patch99999: http://www.trinitydesktop.org/wiki/pub/Developers/Qt3/qt3_3.3.8c.diff
-Patch100000: qt-x11-free-3.3.8b-freetype251.patch
 
 %define theme %{name}
 
@@ -371,8 +370,6 @@ qt-designer 软件包包括用于 Qt 工具包的用户界面设计工具。
 %patch20000 -p1
 
 #%patch99999 -p0
-
-%patch100000 -p1
 
 %build
 export QTDIR=$(pwd)
