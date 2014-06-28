@@ -5,26 +5,46 @@
 %endif
 
 # Assume not modern. Override if needed.
-%global	modern 0
+%global modern 0
+
+%global with_lto 0
+%global with_java_headless 0
+
+%global system_tre 0
+# We need to use system tre on F21+/RHEL7
+%if 0%{?fedora} >= 21
+%global system_tre 1
+%global with_java_headless 1
+%endif
+
+%if 0%{?fedora} >= 19
+%global with_lto 1
+%endif
+
+%if 0%{?rhel} >= 7
+%global system_tre 1
+%global with_lto 1
+%global with_java_headless 1
+%endif
 
 %if 0%{?fedora}
 %global modern 1
 %endif
 
 %if 0%{?rhel} >= 6
-%global	modern 1
+%global modern 1
 %endif
 
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
 Name: R
-Version: 3.0.2
-Release: 2%{?dist}
+Version: 3.1.0
+Release: 9%{?dist}
 Summary: A language for data analysis and graphics
 URL: http://www.r-project.org
 Source0: ftp://cran.r-project.org/pub/R/src/base/R-3/R-%{version}.tar.gz
 Source1: macros.R
 Source2: R-make-search-index.sh
-# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=679180
-Patch0: R-3.0.1-arm-compile-fix.patch
 License: GPLv2+
 Group: Applications/Engineering
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -32,11 +52,19 @@ BuildRequires: gcc-gfortran
 BuildRequires: gcc-c++, tex(latex), texinfo-tex 
 BuildRequires: libpng-devel, libjpeg-devel, readline-devel
 BuildRequires: tcl-devel, tk-devel, ncurses-devel
-BuildRequires: blas >= 3.0, pcre-devel, zlib-devel
+BuildRequires: blas-devel >= 3.0, pcre-devel, zlib-devel
+%if %{with_java_headless}
+BuildRequires: java-headless
+%else
 %if %{modern}
 BuildRequires: java-1.5.0-gcj
 %else
 BuildRequires: java-1.4.2-gcj-compat
+%endif
+%endif
+%if %{system_tre}
+BuildRequires: tre-devel
+BuildRequires: autoconf, automake, libtool
 %endif
 BuildRequires: lapack-devel
 BuildRequires: libSM-devel, libX11-devel, libICE-devel, libXt-devel
@@ -48,6 +76,7 @@ BuildRequires: libicu-devel
 BuildRequires: less
 %if 0%{?fedora} >= 18
 BuildRequires: tex(inconsolata.sty)
+BuildRequires: tex(upquote.sty)
 %endif
 # R-devel will pull in R-core
 Requires: R-devel = %{version}-%{release}
@@ -90,31 +119,31 @@ Requires: perl, sed, gawk, tex(latex), less
 # depend on one of these submodules rather than just R. These are provided for 
 # packager convenience.
 Provides: R-base = %{version}
-Provides: R-boot = 1.3.9
-Provides: R-class = 7.3.9
-Provides: R-cluster = 1.14.4
+Provides: R-boot = 1.3.11
+Provides: R-class = 7.3.10
+Provides: R-cluster = 1.15.2
 Provides: R-codetools = 0.2.8
 Provides: R-datasets = %{version}
-Provides: R-foreign = 0.8.55
+Provides: R-foreign = 0.8.61
 Provides: R-graphics = %{version}
 Provides: R-grDevices = %{version}
 Provides: R-grid = %{version}
-Provides: R-KernSmooth = 2.23.10
-Provides: R-lattice = 0.20.23
-Provides: R-MASS = 7.3.29
-Provides: R-Matrix = 1.0.14
+Provides: R-KernSmooth = 2.23.12
+Provides: R-lattice = 0.20.29
+Provides: R-MASS = 7.3.31
+Provides: R-Matrix = 1.1.3
 Obsoletes: R-Matrix < 0.999375-7
 Provides: R-methods = %{version}
-Provides: R-mgcv = 1.7.26
-Provides: R-nlme = 3.1.111
-Provides: R-nnet = 7.3.7
+Provides: R-mgcv = 1.7.29
+Provides: R-nlme = 3.1.117
+Provides: R-nnet = 7.3.8
 Provides: R-parallel = %{version}
-Provides: R-rpart = 4.1.3
-Provides: R-spatial = 7.3.7
+Provides: R-rpart = 4.1.8
+Provides: R-spatial = 7.3.8
 Provides: R-splines = %{version}
 Provides: R-stats = %{version}
 Provides: R-stats4 = %{version}
-Provides: R-survival = 2.37.4
+Provides: R-survival = 2.37.7
 Provides: R-tcltk = %{version}
 Provides: R-tools = %{version}
 Provides: R-utils = %{version}
@@ -140,7 +169,14 @@ Requires: R-core = %{version}-%{release}
 # You need all the BuildRequires for the development version
 Requires: gcc-c++, gcc-gfortran, tex(latex), texinfo-tex
 Requires: bzip2-devel, libX11-devel, pcre-devel, zlib-devel
-Requires: tcl-devel, tk-devel, pkgconfig
+Requires: tcl-devel, tk-devel, pkgconfig, xz-devel
+Requires: blas-devel >= 3.0, lapack-devel
+%if %{modern}
+Requires: libicu-devel
+%endif
+%if %{system_tre}
+Requires: tre-devel
+%endif
 # TeX files needed
 %if 0%{?fedora} >= 18
 Requires: tex(ecrm1000.tfm)
@@ -153,7 +189,7 @@ Requires: tex(ptmri8t.tfm)
 Requires: tex(ptmro8t.tfm)
 Requires: tex(cm-super-ts1.enc)
 %endif
-Provides: R-Matrix-devel = 1.0.14
+Provides: R-Matrix-devel = 1.1.3
 Obsoletes: R-Matrix-devel < 0.999375-7
 
 %if %{modern}
@@ -167,10 +203,12 @@ Install R-core-devel if you are going to develop or compile R packages.
 %endif
 
 %package devel
-Summary:	Full R development environment metapackage
-Requires:	R-core-devel = %{version}-%{release}
+Summary: Full R development environment metapackage
+Requires: R-core-devel = %{version}-%{release}
 %if %{modern}
-Requires:	R-java-devel = %{version}-%{release}
+Requires: R-java-devel = %{version}-%{release}
+%else
+Group: Development/Libraries
 %endif
 
 %description devel
@@ -182,7 +220,11 @@ environment.
 Summary: R with Fedora provided Java Runtime Environment
 Group: Applications/Engineering
 Requires(post): R-core = %{version}-%{release}
-Requires(post): java
+%if %{with_java_headless}
+Requires(post): java-headless
+%else
+Requires(post): java-1.5.0-gcj
+%endif
 
 %description java
 A language and environment for statistical computing and graphics.
@@ -240,7 +282,6 @@ from the R project.  This package provides the static libRmath library.
 
 %prep
 %setup -q
-%patch0 -p1 -b .armfix
 
 # Filter false positive provides.
 cat <<EOF > %{name}-prov
@@ -273,13 +314,13 @@ export R_PRINTCMD="lpr"
 export R_BROWSER="%{_bindir}/xdg-open"
 
 case "%{_target_cpu}" in
-      x86_64|mips64|ppc64|powerpc64|sparc64|s390x)
+      x86_64|mips64|ppc64|powerpc64|sparc64|s390x|powerpc64le|ppc64le)
           export CC="gcc -m64"
           export CXX="g++ -m64"
           export F77="gfortran -m64"
           export FC="gfortran -m64"
       ;;
-      ia64|alpha|arm*|sh*)
+      ia64|alpha|arm*|aarch64|sh*)
           export CC="gcc"
           export CXX="g++"
           export F77="gfortran"
@@ -291,12 +332,6 @@ case "%{_target_cpu}" in
           export F77="gfortran -m31"
           export FC="gfortran -m31"
       ;;    
-      mips64*)
-          export CC="gcc -mabi=64"
-          export CXX="g++ -mabi=64"
-          export F77="gfortran -mabi=64"
-          export FC="gfortran -mabi=64"
-      ;;
       *)
           export CC="gcc -m32"
           export CXX="g++ -m32"
@@ -305,18 +340,36 @@ case "%{_target_cpu}" in
       ;;    
 esac
 
+%if 0%{?fedora} >= 21
+# With gcc 4.9, if we don't pass -ffat-lto-objects along with -flto, Matrix builds without the needed object code
+# ... and doesn't work at all as a result.
+export CFLAGS="%{optflags} -ffat-lto-objects"
+export CXXFLAGS="%{optflags} -ffat-lto-objects"
+export FCFLAGS="%{optflags} -ffat-lto-objects"
+%else
 export FCFLAGS="%{optflags}"
+%endif
 ( %configure \
+%if %{system_tre}
+    --with-system-tre \
+%endif
     --with-system-zlib --with-system-bzlib --with-system-pcre \
     --with-lapack \
+    --with-blas \
     --with-tcl-config=%{_libdir}/tclConfig.sh \
     --with-tk-config=%{_libdir}/tkConfig.sh \
     --enable-R-shlib \
     --enable-prebuilt-html \
+%if %{with_lto}
+%ifnarch %{arm}
+    --enable-lto \
+%endif
+%endif
     rdocdir=%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}} \
     rincludedir=%{_includedir}/R \
     rsharedir=%{_datadir}/R) \
- | grep -A30 'R is now' - > CAPABILITIES
+ > CONFIGURE.log
+cat CONFIGURE.log | grep -A30 'R is now' - > CAPABILITIES
 make 
 (cd src/nmath/standalone; make)
 #make check-all
@@ -327,7 +380,7 @@ make pdf
 cp doc/manual/R-exts.texi doc/manual/R-exts.texi.spot
 cp doc/manual/R-intro.texi doc/manual/R-intro.texi.spot
 sed -i 's|@eqn|@math|g' doc/manual/R-exts.texi
-sed -i 's|@eqn|@math|g'	doc/manual/R-intro.texi
+sed -i 's|@eqn|@math|g' doc/manual/R-intro.texi
 %endif
 make info
 
@@ -348,6 +401,7 @@ make DESTDIR=${RPM_BUILD_ROOT} install-pdf
 
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir.old
+mkdir -p ${RPM_BUILD_ROOT}%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}
 install -p CAPABILITIES ${RPM_BUILD_ROOT}%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}
 
 #Install libRmath files
@@ -359,17 +413,17 @@ echo "%{_libdir}/R/lib" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/R/library
 
 # Install rpm helper macros
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/rpm/
-install -m0644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/
+mkdir -p $RPM_BUILD_ROOT%{macrosdir}/
+install -m0644 %{SOURCE1} $RPM_BUILD_ROOT%{macrosdir}/
 
 # Install rpm helper script
 mkdir -p $RPM_BUILD_ROOT/usr/lib/rpm/
 install -m0755 %{SOURCE2} $RPM_BUILD_ROOT/usr/lib/rpm/
 
 # Fix multilib
-touch -r NEWS ${RPM_BUILD_ROOT}%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}/CAPABILITIES
-touch -r NEWS doc/manual/*.pdf
-touch -r NEWS $RPM_BUILD_ROOT%{_bindir}/R
+touch -r README ${RPM_BUILD_ROOT}%{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}/CAPABILITIES
+touch -r README doc/manual/*.pdf
+touch -r README $RPM_BUILD_ROOT%{_bindir}/R
 
 # Fix html/packages.html
 # We can safely use RHOME here, because all of these are system packages.
@@ -406,7 +460,12 @@ popd
 # Have to break this out for the translations
 %dir %{_libdir}/R/
 %{_libdir}/R/bin/
-%{_libdir}/R/etc/
+%dir %{_libdir}/R/etc
+%config(noreplace) %{_libdir}/R/etc/Makeconf
+%config(noreplace) %{_libdir}/R/etc/Renviron
+%config(noreplace) %{_libdir}/R/etc/javaconf
+%config(noreplace) %{_libdir}/R/etc/ldpaths
+%config(noreplace) %{_libdir}/R/etc/repositories
 %{_libdir}/R/lib/
 %dir %{_libdir}/R/library/
 %dir %{_libdir}/R/library/translations/
@@ -430,6 +489,7 @@ popd
 %{_libdir}/R/library/base/
 # boot
 %dir %{_libdir}/R/library/boot/
+%{_libdir}/R/library/boot/bd.q
 %{_libdir}/R/library/boot/CITATION
 %{_libdir}/R/library/boot/data/
 %{_libdir}/R/library/boot/DESCRIPTION
@@ -479,6 +539,7 @@ popd
 %dir %{_libdir}/R/library/cluster/po/
 %lang(de) %{_libdir}/R/library/cluster/po/de/
 %lang(en) %{_libdir}/R/library/cluster/po/en*/
+%lang(fr) %{_libdir}/R/library/cluster/po/fr/
 %lang(pl) %{_libdir}/R/library/cluster/po/pl/
 # codetools
 %dir %{_libdir}/R/library/codetools/
@@ -528,6 +589,7 @@ popd
 %dir %{_libdir}/R/library/KernSmooth/po/
 %lang(de) %{_libdir}/R/library/KernSmooth/po/de/
 %lang(en) %{_libdir}/R/library/KernSmooth/po/en*/
+%lang(fr) %{_libdir}/R/library/KernSmooth/po/fr/
 %lang(ko) %{_libdir}/R/library/KernSmooth/po/ko/
 %lang(pl) %{_libdir}/R/library/KernSmooth/po/pl/
 %{_libdir}/R/library/KernSmooth/R/
@@ -589,6 +651,7 @@ popd
 %dir %{_libdir}/R/library/Matrix/po/
 %lang(de) %{_libdir}/R/library/Matrix/po/de/
 %lang(en) %{_libdir}/R/library/Matrix/po/en*/
+%lang(fr) %{_libdir}/R/library/Matrix/po/fr/
 %lang(pl) %{_libdir}/R/library/Matrix/po/pl/
 %{_libdir}/R/library/Matrix/R/
 %{_libdir}/R/library/Matrix/test-tools.R
@@ -693,11 +756,11 @@ popd
 %{_libdir}/R/library/utils/
 %{_libdir}/R/modules
 %{_libdir}/R/COPYING
-%{_libdir}/R/NEWS*
+# %{_libdir}/R/NEWS*
 %{_libdir}/R/SVN-REVISION
 /usr/lib/rpm/R-make-search-index.sh
 %{_infodir}/R-*.info*
-%{_sysconfdir}/rpm/macros.R
+%{macrosdir}/macros.R
 %{_mandir}/man1/*
 %{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}
 %docdir %{?_pkgdocdir}%{!?_pkgdocdir:%{_docdir}/%{name}-%{version}}
@@ -817,8 +880,60 @@ R CMD javareconf \
 %postun -n libRmath -p /sbin/ldconfig
 
 %changelog
-* Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 3.0.2-2
-- 为 Magic 3.0 重建
+* Tue Jun 24 2014 Tom Callaway <spot@fedoraproject.org> - 3.1.0-9
+- mark files in %%{_libdir}/R/etc as config(noreplace), resolves 1098663
+
+* Fri Jun 06 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 3.1.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86
+
+* Thu May 15 2014 Peter Robinson <pbrobinson@fedoraproject.org> 3.1.0-6
+- Add aarch64 to target CPU specs
+
+* Wed May  7 2014 Tom Callaway <spot@fedoraproject.org> - 3.1.0-5
+- add blas-devel and lapack-devel as Requires for R-devel/R-core-devel
+  to ease rebuild pain
+
+* Tue Apr 29 2014 Tom Callaway <spot@fedoraproject.org> - 3.1.0-4
+- unified spec file for all targets
+
+* Tue Apr 29 2014 Tom Callaway <spot@fedoraproject.org> - 3.1.0-3
+- epel fixes
+
+* Fri Apr 25 2014 Tom Callaway <spot@fedoraproject.org> - 3.1.0-2
+- fix core-devel Requires
+
+* Mon Apr 21 2014 Tom Callaway <spot@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+
+* Mon Mar 24 2014 Brent Baude <baude@us.ibm.com> - 3.0.3-2
+- add ppc64le support
+- rhbz #1077819
+
+* Thu Mar 20 2014 Tom Callaway <spot@fedoraproject.org> - 3.0.3-1
+- update to 3.0.3
+- switch to java-headless
+
+* Fri Feb 14 2014 David Tardon <dtardon@redhat.com> - 3.0.2-7
+- rebuild for new ICU
+
+* Sat Feb  8 2014 Ville Skyttä <ville.skytta@iki.fi> - 3.0.2-6
+- Install macros to %%{_rpmconfigdir}/macros.d where available.
+- Fix rpmlint spaces vs tabs warnings.
+
+* Fri Feb  7 2014 Tom Callaway <spot@fedoraproject.org> - 3.0.2-5
+- add support for system tre (f21+, rhel 7+)
+
+* Fri Feb  7 2014 Orion Poplawski <orion@cora.nwra.com> - 3.0.2-4
+- Use BR java
+
+* Fri Jan 24 2014 Tom Callaway <spot@fedoraproject.org> - 3.0.2-3
+- disable lto on non-modern targets (not just ppc)
+
+* Fri Dec 20 2013 Tom Callaway <spot@fedoraproject.org> - 3.0.2-2
+- add --with-blas, --enable-lto to configure
 
 * Tue Oct 15 2013 Tom Callaway <spot@fedoraproject.org> - 3.0.2-1
 - update to 3.0.2
