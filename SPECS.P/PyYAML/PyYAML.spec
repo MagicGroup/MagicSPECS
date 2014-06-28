@@ -6,7 +6,7 @@
 
 Name:           PyYAML
 Version:        3.10
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        YAML parser and emitter for Python
 
 Group:          Development/Libraries
@@ -104,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.10-8
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.10-7
 - 为 Magic 3.0 重建
 

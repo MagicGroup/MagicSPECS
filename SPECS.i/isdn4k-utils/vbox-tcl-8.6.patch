@@ -1,0 +1,12 @@
+diff -up isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in.vboxgetty-config isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in
+--- isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in.vboxgetty-config	2009-10-20 11:07:28.000000000 +0200
++++ isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in	2014-06-18 16:15:47.000000000 +0200
+@@ -53,7 +53,7 @@ INSTALL_DIRS	= @INSTALL@ -d
+ #----------------------------------------------------------------------------#
+ 
+ CC		= @CC@
+-VBOX_CFLAGS	= @CFLAGS@ @LINK_NCURSES_INCL@ @LINK_TCL_INCL@
++VBOX_CFLAGS	= -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE @CFLAGS@ @LINK_NCURSES_INCL@ @LINK_TCL_INCL@
+ LDFLAGS		= @LDFLAGS@
+ 
+ #----------------------------------------------------------------------------#

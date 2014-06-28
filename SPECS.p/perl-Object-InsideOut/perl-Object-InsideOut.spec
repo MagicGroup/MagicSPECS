@@ -1,26 +1,30 @@
 Name:           perl-Object-InsideOut
-Version:        3.97
-Release:        10%{?dist}
+Version:        3.98
+Release:        3%{?dist}
 Summary:        Comprehensive inside-out object support module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Object-InsideOut
 Source0:        http://search.cpan.org/CPAN/authors/id/J/JD/JDHEDDEN/Object-InsideOut-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
 # Run-time
 BuildRequires:  perl(attributes)
 BuildRequires:  perl(B)
 BuildRequires:  perl(Data::Dumper) >= 2.131
 BuildRequires:  perl(Exception::Class) >= 1.32
-BuildRequires:  perl(Scalar::Util) >= 1.25
-BuildRequires:  perl(warnings)
+# The correct minimal Scalar::Util version is 1.23, CPAN RT#89325
+BuildRequires:  perl(Scalar::Util) >= 1.23
 # Optional run-time
 %if %{undefined perl_bootstrap}
 BuildRequires:  perl(Math::Random::MT::Auto) >= 6.18
 %endif
 BuildRequires:  perl(Want) >= 0.21
 # Test only
+BuildRequires:  perl(base)
 BuildRequires:  perl(Config)
 BuildRequires:  perl(lib)
 BuildRequires:  perl(overload)
@@ -28,9 +32,12 @@ BuildRequires:  perl(Test::More) >= 0.98
 BuildRequires:  perl(threads)
 BuildRequires:  perl(Thread::Queue)
 BuildRequires:  perl(threads::shared)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Optional tests:
+BuildRequires:  perl(Storable)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(Data::Dumper) >= 2.131
-Requires:       perl(Scalar::Util) >= 1.25
+# The correct minimal Scalar::Util version is 1.23, CPAN RT#89325
+Requires:       perl(Scalar::Util) >= 1.23
 
 %{?perl_default_filter}
 # Remove underspecified dependencies
@@ -47,10 +54,9 @@ inside-out object model.
 
 This module implements inside-out objects as anonymous scalar references that
 are blessed into a class with the scalar containing the ID for the object
-(usually a sequence number). For Perl 5.8.3 and later, the scalar reference is
-set as read-only to prevent accidental modifications to the ID. Object data
-(i.e., fields) are stored within the class's package in either arrays indexed
-by the object's ID, or hashes keyed to the object's ID.
+(usually a sequence number). Object data (i.e., fields) are stored within the
+class's package in either arrays indexed by the object's ID, or hashes keyed
+to the object's ID.
 
 %prep
 %setup -q -n Object-InsideOut-%{version}
@@ -58,51 +64,44 @@ by the object's ID, or hashes keyed to the object's ID.
 find lib -type f -print0 | xargs -0 chmod 0644
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
 make test
 
 %files
-%doc Changes README
+%doc examples Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.97-10
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 3.98-3
 - 为 Magic 3.0 重建
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 3.97-9
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.98-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 3.97-8
-- 为 Magic 3.0 重建
+* Tue Oct 08 2013 Petr Pisar <ppisar@redhat.com> - 3.98-1
+- 3.98 bump
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 3.97-7
-- 为 Magic 3.0 重建
+* Wed Aug 14 2013 Jitka Plesnikova <jplesnik@redhat.com> - 3.97-5
+- Perl 5.18 re-rebuild of bootstrapped packages
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.97-6
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.97-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 3.97-5
-- 为 Magic 3.0 重建
+* Sun Jul 21 2013 Petr Pisar <ppisar@redhat.com> - 3.97-3
+- Perl 5.18 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.97-4
-- 为 Magic 3.0 重建
-
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.97-3
-- 为 Magic 3.0 重建
-
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 3.97-2
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.97-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Fri Nov 16 2012 Petr Pisar <ppisar@redhat.com> - 3.97-1
 - 3.97 bump

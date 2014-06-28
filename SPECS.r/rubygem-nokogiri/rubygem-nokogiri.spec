@@ -3,7 +3,7 @@
 %global        ruby_sitearch           %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")
 %endif
 
-%global	mainver		1.5.9
+%global	mainver		1.6.2.1
 #%%global	prever			.beta.4
 
 %global	mainrel		1
@@ -35,11 +35,11 @@
 Summary:	An HTML, XML, SAX, and Reader parser
 Name:		rubygem-%{gemname}
 Version:	%{mainver}
-Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}
+Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}.1
 Group:		Development/Languages
 License:	MIT
 URL:		http://nokogiri.rubyforge.org/nokogiri/
-Source0:	http://gems.rubyforge.org/gems/%{gemname}-%{mainver}%{?prever}.gem
+Source0:	https://rubygems.org/gems/%{gemname}-%{mainver}%{?prever}.gem
 # ./test/html/test_element_description.rb:62 fails, as usual......
 # Patch0:		rubygem-nokogiri-1.5.0.beta3-test-failure.patch
 #Patch0:		rubygem-nokogiri-1.5.0-allow-non-crosscompile.patch
@@ -58,9 +58,7 @@ BuildRequires:	ruby(rubygems)
 ## For %%check
 BuildRequires:	rubygem(minitest)
 BuildRequires:	rubygems-devel
-%if 0%{?ruby19} > 0
 Obsoletes:		ruby-%{gemname} <= 1.5.2-2
-%endif
 #BuildRequires:	ruby(racc)
 ##
 ## Others
@@ -121,6 +119,14 @@ cd %{gem_name}-%{version}
 
 gem specification -l --ruby %{SOURCE0} > %{gem_name}.gemspec
 
+# remove bundled external libraries
+sed -i \
+	-e 's|, "ports/archives/[^"][^"]*"||g' \
+	-e 's|, "ports/patches/[^"][^"]*"||g' \
+	%{gem_name}.gemspec
+# Actually not needed when using system libraries
+sed -i -e '\@mini_portile@d' %{gem_name}.gemspec
+
 # Ummm...
 env LANG=ja_JP.UTF-8 gem build %{gem_name}.gemspec
 mv %{gem_name}-%{version}.gem $TOPDIR
@@ -130,6 +136,9 @@ rm -rf tmpunpackdir
 
 %build
 mkdir -p ./%{gemdir}
+# 1.6.0 needs this
+export NOKOGIRI_USE_SYSTEM_LIBRARIES=yes
+
 %gem_install
 
 
@@ -150,9 +159,19 @@ cp -a ./%{gemdir}/* %{buildroot}%{gemdir}
 find %{buildroot} -name \*.orig_\* | xargs rm -vf
 
 # move arch dependent files to %%gem_extdir
+%if 0%{?fedora} >= 21
+mkdir -p %{buildroot}%{gem_extdir_mri}
+cp -a ./%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
+
+pushd %{buildroot}
+rm -f .%{gem_extdir_mri}/{gem_make.out,mkmf.log}
+popd
+
+%else
 mkdir -p %{buildroot}%{gemsodir}/%{gemname}
 mv %{buildroot}%{geminstdir}/lib/%{gemname}/*.so \
 	%{buildroot}%{gemsodir}/%{gemname}/
+%endif
 
 # move bin/ files
 mkdir -p %{buildroot}%{_bindir}
@@ -169,71 +188,10 @@ done
 # cleanups
 rm -rf %{buildroot}%{geminstdir}/ext/%{gemname}/
 rm -rf %{buildroot}%{geminstdir}/tmp/
-rm -f %{buildroot}%{geminstdir}/{.autotest,.require_paths,.gemtest}
-rm -f %{buildroot}%{geminstdir}/{build_all,test_all}
-
-%if 0%{?ruby19} < 1
-# The following method is completely copied from rubygem-gettext
-# spec file
-#
-# Create symlinks
-##
-## Note that before switching to gem %%{ruby_sitelib}/%%{gemname}
-## already existed as a directory, so this cannot be replaced
-## by symlink (cpio fails)
-## Similarly, all directories under %%{ruby_sitelib} cannot be
-## replaced by symlink
-#
-
-create_symlink_rec(){
-
-ORIGBASEDIR=$1
-TARGETBASEDIR=$2
-
-## First calculate relative path of ORIGBASEDIR 
-## from TARGETBASEDIR
-TMPDIR=$TARGETBASEDIR
-BACKDIR=
-DOWNDIR=
-num=0
-nnum=0
-while true
-do
-	num=$((num+1))
-	TMPDIR=$(echo $TMPDIR | sed -e 's|/[^/][^/]*$||')
-	DOWNDIR=$(echo $ORIGBASEDIR | sed -e "s|^$TMPDIR||")
-	if [ x$DOWNDIR != x$ORIGBASEDIR ]
-	then
-		nnum=0
-		while [ $nnum -lt $num ]
-		do
-			BACKDIR="../$BACKDIR"
-			nnum=$((nnum+1))
-		done
-		break
-	fi
-done
-
-RELBASEDIR=$( echo $BACKDIR/$DOWNDIR | sed -e 's|//*|/|g' )
-
-## Next actually create symlink
-pushd %{buildroot}/$ORIGBASEDIR
-find . -type f | while read f
-do
-	DIRNAME=$(dirname $f)
-	BACK2DIR=$(echo $DIRNAME | sed -e 's|/[^/][^/]*|/..|g')
-	mkdir -p %{buildroot}${TARGETBASEDIR}/$DIRNAME
-	LNNAME=$(echo $BACK2DIR/$RELBASEDIR/$f | \
-		sed -e 's|^\./||' | sed -e 's|//|/|g' | \
-		sed -e 's|/\./|/|' )
-	ln -s -f $LNNAME %{buildroot}${TARGETBASEDIR}/$f
-done
-popd
-
-}
-
-create_symlink_rec %{geminstdir}/lib %{ruby_sitelib}
-%endif
+rm -f %{buildroot}%{geminstdir}/{.autotest,.require_paths,.gemtest,.travis.yml}
+rm -f %{buildroot}%{geminstdir}/{build_all,dependencies.yml,test_all}
+rm -f %{buildroot}%{geminstdir}/.editorconfig
+rm -rf %{buildroot}%{geminstdir}/suppressions/
 
 
 %check
@@ -242,26 +200,19 @@ create_symlink_rec %{geminstdir}/lib %{ruby_sitelib}
 # fails without TZ on sparc
 export TZ="Asia/Tokyo"
 #???
-%if 0%{?ruby19} > 0
 LANG=ja_JP.UTF-8
-%endif
 
 pushd ./%{geminstdir}
-# Some files are missing and due to it some tests fail, skip
-SKIPTEST="test/xml/test_xinclude.rb"
-for f in $SKIPTEST
-do
-	mv $f $f.skip
-done
 
-# Observed fail on test_subclass_parse(Nokogiri::XML::TestDocument)
 # Need investigation. For now anyway build
-ruby -I.:lib:test \
-%if ! 0%{?ruby19} < 1
-	-rubygems \
+ruby \
+%if 0%{?fedora} >= 21
+	-I.:lib:test:ext \
+%else
+	-I.:lib:test \
 %endif
 	-e \
-	"require 'minitest/autorun' ; Dir.glob('test/**/test_*.rb'){|f| require f}" || \
+	"require 'test/helper' ; Dir.glob('test/**/test_*.rb'){|f| require f}" || \
 	echo "Please investigate this"
 
 for f in $SKIPTEST
@@ -274,18 +225,19 @@ popd
 %files
 %defattr(-,root, root,-)
 %{_bindir}/%{gemname}
-%if 0%{?ruby19} < 1
-%{ruby_sitearch}/%{gemname}
-%else
 %{gem_extdir_mri}/
-%endif
 %dir	%{geminstdir}/
 %doc	%{geminstdir}/[A-Z]*
 #%%doc	%{geminstdir}/nokogiri_help_responses.md
 %exclude %{geminstdir}/Rakefile
+%exclude %{geminstdir}/Gemfile
 %{geminstdir}/bin/
 %{geminstdir}/lib/
+%if 0%{?fedora} >= 21
+%exclude	%{gemdir}/cache/%{gemname}-%{mainver}%{?prever}.gem
+%else
 %{gemdir}/cache/%{gemname}-%{mainver}%{?prever}.gem
+%endif
 %{gemdir}/specifications/%{gemname}-%{mainver}%{?prever}.gemspec
 
 %if 0
@@ -303,15 +255,25 @@ popd
 %{geminstdir}/test/
 %{gemdir}/doc/%{gemname}-%{mainver}%{?prever}/
 
-%if 0%{?ruby19} < 1
-%files	-n ruby-%{gemname}
-%defattr(-,root,root,-)
-%{ruby_sitelib}/*%{gemname}.rb
-%{ruby_sitelib}/%{gemname}/
-%{ruby_sitelib}/xsd/
-%endif
-
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.2.1-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 14 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.2.1-1
+- 1.6.2.1
+
+* Thu Apr 17 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.1-2
+- F-21: rebuild for ruby 2.1 / rubygems 2.2
+
+* Wed Dec 25 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.1-1
+- 1.6.1
+
+* Fri Oct  4 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.6.0-1
+- 1.6.0
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.9-1.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Mar 28 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.5.9-1
 - 1.5.9
 

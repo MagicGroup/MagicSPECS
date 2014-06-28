@@ -1,13 +1,13 @@
 Summary: Enhanced seccomp library
 Name: libseccomp
-Version: 1.0.0
-Release: 0%{?dist}
-ExclusiveArch: %{ix86} x86_64
+Version: 2.1.1
+Release: 3%{?dist}
+ExclusiveArch: %{ix86} x86_64 %{arm}
 License: LGPLv2
 Group: System Environment/Libraries
 Source: http://downloads.sf.net/project/libseccomp/%{name}-%{version}.tar.gz
 URL: http://libseccomp.sourceforge.net
-Requires: kernel >= 3.4
+BuildRequires: valgrind
 
 %description
 The libseccomp library provides an easy to use interface to the Linux Kernel's
@@ -33,7 +33,7 @@ Kernel.
 
 %build
 ./configure --prefix="%{_prefix}" --libdir="%{_libdir}"
-make V=1 %{?_smp_mflags}
+CFLAGS="%{optflags}" make V=1 %{?_smp_mflags}
 
 %install
 rm -rf "%{buildroot}"
@@ -41,6 +41,9 @@ mkdir -p "%{buildroot}/%{_libdir}"
 mkdir -p "%{buildroot}/%{_includedir}"
 mkdir -p "%{buildroot}/%{_mandir}"
 make V=1 DESTDIR="%{buildroot}" install
+
+%check
+make check
 
 %post -p /sbin/ldconfig
 
@@ -56,9 +59,31 @@ make V=1 DESTDIR="%{buildroot}" install
 %{_includedir}/seccomp.h
 %{_libdir}/libseccomp.so
 %{_libdir}/pkgconfig/libseccomp.pc
+%{_bindir}/scmp_sys_resolver
+%{_mandir}/man1/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.1.1-3
+- 为 Magic 3.0 重建
+
+* Thu Feb 27 2014 Paul Moore <pmoore@redhat.com> - 2.1.1-2
+- Build with CFLAGS="${optflags}"
+* Mon Feb 17 2014 Paul Moore <pmoore@redhat.com> - 2.1.1-1
+- Removed the kernel dependency (RHBZ #1065572)
+* Thu Oct 31 2013 Paul Moore <pmoore@redhat.com> - 2.1.1-0
+- New upstream version
+- Added a %check procedure for self-test during build
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 11 2013 Paul Moore <pmoore@redhat.com> - 2.1.0-0
+- New upstream version
+- Added support for the ARM architecture
+- Added the scmp_sys_resolver tool
+* Mon Jan 28 2013 Paul Moore <pmoore@redhat.com> - 2.0.0-0
+- New upstream version
 * Tue Nov 13 2012 Paul Moore <pmoore@redhat.com> - 1.0.1-0
 - New upstream version with several important fixes
 * Tue Jul 31 2012 Paul Moore <pmoore@redhat.com> - 1.0.0-0

@@ -22,7 +22,7 @@
 
 Name:           python-pygments
 Version:        1.4
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Syntax highlighting engine written in Python
 
 Group:          Development/Libraries
@@ -205,6 +205,9 @@ popd
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.4-9
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4-8
 - 为 Magic 3.0 重建
 

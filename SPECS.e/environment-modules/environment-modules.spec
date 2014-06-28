@@ -1,6 +1,8 @@
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
 Name:           environment-modules
-Version:	3.2.10
-Release:        5%{?dist}
+Version:        3.2.10
+Release:        11%{?dist}
 Summary:        Provides dynamic modification of a user's environment
 
 Group:          System Environment/Base
@@ -9,17 +11,33 @@ URL:            http://modules.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/modules/modules-%{version}.tar.bz2
 Source1:        modules.sh
 Source2:        createmodule.sh
+Source3:        createmodule.py
+Source4:        macros.%{name}
 Patch0:         environment-modules-3.2.7-bindir.patch
-# Patch to fix segfault in module unload due to Tcl RegExp handling
-# https://bugzilla.redhat.com/show_bug.cgi?id=834580
-Patch1:         environment-modules-regex.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Comment out stray module use in modules file when not using versioning
+# https://bugzilla.redhat.com/show_bug.cgi?id=895555
+Patch1:         environment-modules-versioning.patch
+# Fix module clear command
+# https://bugzilla.redhat.com/show_bug.cgi?id=895551
+Patch2:         environment-modules-clear.patch
+# Patch from modules list to add completion to avail command
+Patch3:         environment-modules-avail.patch
+# Fix -Werror=format-security
+# https://bugzilla.redhat.com/show_bug.cgi?id=1037053
+# https://sourceforge.net/p/modules/patches/13/
+Patch4:         environment-modules-format.patch
+# Support Tcl 8.6
+# https://sourceforge.net/p/modules/feature-requests/14/
+Patch5:         environment-modules-tcl86.patch
 
 BuildRequires:  tcl-devel, tclx-devel, libX11-devel
 BuildRequires:  dejagnu
 BuildRequires:  man
 #For ps in startup script
 Requires:       procps
+Requires(post): %{_sbindir}/update-alternatives
+Requires(postun): %{_sbindir}/update-alternatives
+Provides:	environment(modules)
 
 %description
 The Environment Modules package provides for the dynamic modification of
@@ -49,7 +67,12 @@ have access to the module alias.
 %prep
 %setup -q -n modules-%{version}
 %patch0 -p1 -b .bindir
-#%patch1 -p1 -b .regex
+%patch1 -p1 -b .versioning
+%patch2 -p1 -b .clear
+%patch3 -p1 -b .avail
+%patch4 -p1 -b .format
+%patch5 -p1 -b .tcl86
+
 
 %build
 export CFLAGS=" $RPM_OPT_FLAGS -DUSE_INTERP_ERRORLINE "
@@ -58,51 +81,103 @@ export CXXFLAGS=" $RPM_OPT_FLAGS -DUSE_INTERP_ERRORLINE "
            --prefix=%{_datadir} \
            --exec-prefix=%{_datadir}/Modules \
            --with-man-path=$(manpath) \
-           --with-module-path=%{_sysconfdir}/modulefiles
+           --with-module-path=%{_sysconfdir}/modulefiles:%{_datadir}/modulefiles
 #           --with-debug=42 --with-log-facility-debug=stderr
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
-cp -p %SOURCE1 $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/modules.sh
-cp -p %SOURCE2 $RPM_BUILD_ROOT%{_datadir}/Modules/bin
-ln -s %{_datadir}/Modules/init/csh $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/modules.csh
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/modulefiles
-magic_rpm_clean.sh
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+touch %{buildroot}%{_sysconfdir}/profile.d/modules.{csh,sh}
+cp -p %SOURCE1 $RPM_BUILD_ROOT%{_datadir}/Modules/init/modules.sh
+cp -p %SOURCE2 %SOURCE3 $RPM_BUILD_ROOT%{_datadir}/Modules/bin
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/modulefiles \
+         $RPM_BUILD_ROOT%{_datadir}/modulefiles
+# Install the rpm config file
+install -Dpm 644 %{SOURCE4} %{buildroot}/%{macrosdir}/macros.%{name}
 
 
 %check
 make test
 
 
+%post
+# Cleanup from pre-alternatives
+[ ! -L %{_bindir}/modules.sh ] && rm -f %{_sysconfdir}/profile.d/modules.sh
+%{_sbindir}/update-alternatives --install %{_sysconfdir}/profile.d/modules.sh modules.sh %{_datadir}/Modules/init/modules.sh 40 \
+                                --slave %{_sysconfdir}/profile.d/modules.csh modules.csh %{_datadir}/Modules/init/csh
+
+%postun
+if [ $1 -eq 0 ] ; then
+  %{_sbindir}/update-alternatives --remove modules.sh %{_datadir}/Modules/init/modules.sh
+fi
+
+
 %files
-%defattr(-,root,root,-)
 %doc LICENSE.GPL README TODO
 %{_sysconfdir}/modulefiles
-%{_sysconfdir}/profile.d/*
+%ghost %{_sysconfdir}/profile.d/modules.csh
+%ghost %{_sysconfdir}/profile.d/modules.sh
 %{_bindir}/modulecmd
 %dir %{_datadir}/Modules
 %{_datadir}/Modules/bin/
 %dir %{_datadir}/Modules/init
-%{_datadir}/Modules/init/*
+%config(noreplace) %{_datadir}/Modules/init/*
 %config(noreplace) %{_datadir}/Modules/init/.modulespath
 %{_datadir}/Modules/modulefiles
+%{_datadir}/modulefiles
 %{_mandir}/man1/module.1.gz
 %{_mandir}/man4/modulefile.4.gz
+%{macrosdir}/macros.%{name}
 
 
 %changelog
-* Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.2.10-5
-- 更新到 3.2.10
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.10-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.2.9c-5
-- 为 Magic 3.0 重建
+* Tue May 27 2014 Orion Poplwski <orion@cora.nwra.com> - 3.2.10-10
+- Add patch to support Tcl 8.6
+
+* Wed May 21 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 3.2.10-10
+- Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86
+
+* Mon Apr 14 2014 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-9
+- Use alternatives for /etc/profile.d/modules.{csh,sh}
+- Add /usr/share/modulefiles to MODULEPATH
+- Add rpm macro to define %%_modulesdir
+
+* Mon Dec 23 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-8
+- Fix -Werror=format-security (bug #1037053)
+
+* Wed Sep 4 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-7
+- Update createmodule scripts to handle more path like variables (bug #976647)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.10-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue May 14 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-5
+- Really do not replace modified profile.d scripts (bug #962762)
+- Specfile cleanup
+
+* Wed Apr 17 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-4
+- Do not replace modified profile.d scripts (bug #953199)
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.10-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan 15 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-2
+- Add patch to comment out stray module use in modules file when not using
+  versioning (bug #895555)
+- Add patch to fix module clear command (bug #895551)
+- Add patch from modules list to add completion to avail command
+
+* Fri Dec 21 2012 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-1
+- Update to 3.2.10
+- Drop regex patch
+
+* Wed Oct 31 2012 Orion Poplawski <orion@cora.nwra.com> - 3.2.9c-5
+- Updated createmodule.sh, added createmodule.py, can handle path prefixes
 
 * Fri Aug 24 2012 Orion Poplawski <orion@cora.nwra.com> - 3.2.9c-4
 - Add patch to fix segfault from Tcl RexExp handling (bug 834580)
@@ -210,7 +285,7 @@ make test
 * Wed Dec 20 2006 - Orion Poplawski <orion@cora.nwra.com> - 3.2.3-3
 - Add --with-version-path to set VERSIONPATH (bug 220260)
 
-* Tue Aug 28 2006 - Orion Poplawski <orion@cora.nwra.com> - 3.2.3-2
+* Tue Aug 29 2006 - Orion Poplawski <orion@cora.nwra.com> - 3.2.3-2
 - Rebuild for FC6
 
 * Fri Jun  2 2006 - Orion Poplawski <orion@cora.nwra.com> - 3.2.3-1

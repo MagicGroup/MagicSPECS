@@ -4,8 +4,8 @@
 
 Summary: Dynamic inspection of the hierarchy of method definitions on a Ruby object
 Name: rubygem-%{gem_name}
-Version: 0.0.2
-Release: 8%{?dist}
+Version: 0.0.3
+Release: 3%{?dist}
 Group: Development/Languages
 # https://github.com/floehopper/introspection/issues/1
 License: MIT
@@ -31,7 +31,8 @@ BuildRequires: rubygem(metaclass) < 0.1
 # Required to satisfy the 'blankslate' require. May be replaced
 # by rubygem(blankslate) when available in Fedora.
 BuildRequires: rubygem(builder)
-BuildRequires: rubygem(minitest)
+# There is no #assert_nothing_raised in minitest 5.x
+BuildRequires: rubygem(minitest) < 5
 BuildArch: noarch
 Provides: rubygem(%{gem_name}) = %{version}
 
@@ -66,13 +67,22 @@ cp -a .%{gem_dir}/* \
 
 %check
 pushd .%{gem_instdir}
-# Disable Bundler
-sed -i '2,2d' test/test_helper.rb
-testrb -Ilib test/*_test.rb
+# Disable Bundler.
+sed -i '/bundler\/setup/ d' test/test_helper.rb
+
+# Possible conversion to minitest 5.x. Unfortunately, one test fails.
+# sed -i \
+#   -e 's|Test::Unit::TestCase|Minitest::Test|' \
+#   -e 's|test/unit|minitest/autorun|' \
+#   test/test_helper.rb \
+#   test/*_test.rb
+
+ruby -Ilib:test -e 'Dir.glob "./test/**/*_test.rb", &method(:require)'
 popd
 
 
 %files
+%doc %{gem_instdir}/COPYING.txt
 %dir %{gem_instdir}
 %exclude %{gem_instdir}/.gitignore
 %exclude %{gem_instdir}/.travis.yml
@@ -91,6 +101,18 @@ popd
 
 
 %changelog
+* Thu Jun 19 2014 Vít Ondruch <vondruch@redhat.com> - 0.0.3-3
+- Fix FTBFS in Rawhide (rhbz#1107144).
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 07 2014 Vít Ondruch <vondruch@redhat.com> - 0.0.3-1
+- Update to introspection 0.0.3.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.2-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Mon Feb 25 2013 Vít Ondruch <vondruch@redhat.com> - 0.0.2-8
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 

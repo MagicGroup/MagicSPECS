@@ -1,0 +1,11 @@
+--- config/get_cc
++++ config/get_cc
+@@ -118,7 +118,7 @@
+   esac
+   OPTFLAGS="$OPTFLAGS $warn"
+   case "$__gnuc__" in
+-    2.95.[3-9]*|[3-9].*) OPTFLAGS="$OPTFLAGS -fno-strict-aliasing";;
++    2.95.[3-9]*|[3-9].*) OPTFLAGS="@OPTFLAGS@ -fno-strict-aliasing";;
+   esac
+ 
+   DBGFLAGS=${DBGFLAGS:-"-g $warn"}

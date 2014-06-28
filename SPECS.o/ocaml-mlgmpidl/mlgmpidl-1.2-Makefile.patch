@@ -1,0 +1,79 @@
+--- Makefile.orig	2012-10-17 14:54:46.000000000 -0600
++++ Makefile	2012-10-17 15:10:05.568018643 -0600
+@@ -22,16 +22,34 @@
+ endif
+ 
+ 
++# Location of includes
++GMP_INCLUDEDIR = $(GMP_PREFIX)/include
++MPFR_INCLUDEDIR = $(MPFR_PREFIX)/include
++
++# Location of C libraries
++GMP_LIBDIR = $(GMP_PREFIX)/lib
++MPFR_LIBDIR = $(MPFR_PREFIX)/lib
++
++# Location of OCaml libraries
++CAML_LIBDIR = $(CAML_PREFIX)/lib/ocaml
++CAMLIDL_LIBDIR = $(CAMLIDL_PREFIX)/lib/ocaml
++MLGMPIDL_LIBDIR = $(MLGMPIDL_PREFIX)/lib
++
++# Eventual installation destination directories
++INSTALL_INCLUDEDIR = $(PREFIX)/include
++INSTALL_OCAML_LIBDIR = $(PREFIX)/lib/ocaml/mlgmpidl
++INSTALL_BINDIR = $(PREFIX)/bin
++
+ #---------------------------------------
+ # CAML part
+ #---------------------------------------
+ 
+ 
+ OCAMLCCOPT += \
+--ccopt -L$(CAMLIDL_PREFIX)/lib/ocaml \
+--ccopt -L$(CAML_PREFIX)/lib/ocaml \
+--ccopt -L$(GMP_PREFIX)/lib \
+--ccopt -L$(MPFR_PREFIX)/lib
++-ccopt -L$(CAMLIDL_LIBDIR)/ocaml \
++-ccopt -L$(CAML_LIBDIR)/ocaml \
++-ccopt -L$(GMP_LIBDIR) \
++-ccopt -L$(MPFR_LIBDIR)
+ 
+ IDLMODULES = mpz mpq mpf mpfr gmp_random
+ MLMODULES = $(IDLMODULES) mpzf mpqf mpfrf
+@@ -43,12 +61,12 @@
+ ICFLAGS = \
+ -I$(GMP_PREFIX)/include \
+ -I$(MPFR_PREFIX)/include \
+--I$(CAML_PREFIX)/lib/ocaml -I$(CAMLIDL_PREFIX)/lib/ocaml
++-I$(CAML_LIBDIR) -I$(CAMLIDL_LIBDIR)/ocaml
+ 
+ LDFLAGS = \
+--L$(GMP_PREFIX)/lib \
+--L$(MPFR_PREFIX)/lib \
+--L$(CAML_PREFIX)/lib/ocaml -L$(CAML_PREFIX)/lib/ocaml/stublibs -L$(CAMLIDL_PREFIX)/lib/ocaml
++-L$(GMP_LIBDIR) \
++-L$(MPFR_LIBDIR) \
++-L$(CAML_LIBDIR) -L$(CAML_LIBDIR)/ocaml/stublibs -L$(CAMLIDL_LIBDIR)/ocaml
+ 
+ CCMODULES = $(IDLMODULES:%=%_caml) gmp_caml
+ 
+@@ -162,17 +180,17 @@
+ ifeq ($(OCAMLFIND),)
+ install:
+ 	$(INSTALLd) $(MLGMPIDL_PREFIX)/include
+-	$(INSTALLd) $(MLGMPIDL_PREFIX)/lib
++	$(INSTALLd) $(MLGMPIDL_LIBDIR)
+ 	$(INSTALL) gmp_caml.h $(MLGMPIDL_PREFIX)/include
+ 	$(INSTALL) \
+ 		$(IDLMODULES:%=%.idl) \
+ 		$(MLMODULES:%=%.ml) $(MLMODULES:%=%.mli) \
+ 		$(MLMODULES:%=%.cmi) gmp.cma \
+ 		$(MLLIBx) $(CCLIB) \
+-		$(MLGMPIDL_PREFIX)/lib
++		$(MLGMPIDL_LIBDIR)
+ uninstall:
+ 	(cd $(MLGMPIDL_PREFIX)/include; /bin/rm -f gmp_caml.h)
+-	(cd $(MLGMPIDL_PREFIX)/lib; /bin/rm -f \
++	(cd $(MLGMPIDL_LIBDIR); /bin/rm -f \
+ 		$(IDLMODULES:%=%.idl) \
+ 		$(MLMODULES:%=%.ml) $(MLMODULES:%=%.mli) \
+ 		$(MLMODULES:%=%.cmi) gmp.cma \

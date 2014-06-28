@@ -7,7 +7,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(zh_CN.UTF-8):	MPEG4IP - 编码，发布和播放 MPEG-4 音频/视频的系统
 Name:		mpeg4ip
 Version:	1.6.1
-Release:	11%{?dist}
+Release:	12%{?dist}
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications/Multimedia
@@ -133,9 +133,10 @@ touch bootstrapped
 %configure \
 	%{!?with_alsa:--disable-alsa} \
 	--enable-ffmpeg=%{_includedir} \
-	--enable-ipv6
+	--enable-ipv6 CFLAGS="-I/usr/include/SDL" CPPFLAGS="-I/usr/include/SDL"
 
-for i in `find . -name Makefile`;do sed -i 's/\-Werror//g' $i;done
+for i in `find . -name Makefile`;do sed -i 's/\-Werror.* //g' $i;done
+sed -i 's/\-Werror//g' lib/rtp/Makefile
 
 %{__make} \
 	CCAS="%{__cc}"
@@ -249,6 +250,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libsrtpif.a
 
 %changelog
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 1:1.6.1-12
+- 为 Magic 3.0 重建
+
 * Thu Jul 04 2013 Liu Di <liudidi@gmail.com> - 1:1.6.1-11
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,39 @@
+From 64da031fc17ca93efd5beabcf0b7ea49bcd645a0 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 10 May 2014 03:20:35 -0400
+Subject: [PATCH 14/14] arm, arm64: Mark stack as non-executable.
+
+The same fix as this one, which was only fully applied to
+i686 & x86-64:
+
+http://caml.inria.fr/mantis/view.php?id=4564
+---
+ asmrun/arm.S   | 3 +++
+ asmrun/arm64.S | 3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/asmrun/arm.S b/asmrun/arm.S
+index 2ce244a..90f5b6e 100644
+--- a/asmrun/arm.S
++++ b/asmrun/arm.S
+@@ -489,3 +489,6 @@ caml_system__frametable:
+         .align  2
+         .type   caml_system__frametable, %object
+         .size   caml_system__frametable, .-caml_system__frametable
++
++    /* Mark stack as non-executable, PR#4564 */
++        .section .note.GNU-stack,"",%progbits
+diff --git a/asmrun/arm64.S b/asmrun/arm64.S
+index de670e6..84e18ba 100644
+--- a/asmrun/arm64.S
++++ b/asmrun/arm64.S
+@@ -533,3 +533,6 @@ caml_system__frametable:
+         .align  3
+         .type   caml_system__frametable, %object
+         .size   caml_system__frametable, .-caml_system__frametable
++
++    /* Mark stack as non-executable, PR#4564 */
++        .section .note.GNU-stack,"",%progbits
+-- 
+1.9.0
+

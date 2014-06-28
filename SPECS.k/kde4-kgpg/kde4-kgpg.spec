@@ -9,7 +9,7 @@ Summary: Manage GPG encryption keys
 Summary(zh_CN.UTF-8): 管理 GPG 加密
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.13.1
+Version: 4.13.2
 Release: 1%{?dist}
 License: LGPL
 URL: http://www.kde.org/apps
@@ -65,8 +65,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/autostart/*.desktop
 %{kde4_iconsdir}/hicolor/*/apps/kgpg.png
 %{kde4_dbus_interfacesdir}/*
+%{kde4_datadir}/appdata/kgpg.appdata.xml
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Wed May 28 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
 - 更新到 4.13.1
 

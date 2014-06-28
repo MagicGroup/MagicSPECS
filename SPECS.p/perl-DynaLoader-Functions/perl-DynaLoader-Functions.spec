@@ -1,29 +1,35 @@
 # This file is licensed under the terms of GNU GPLv2+.
 Name:           perl-DynaLoader-Functions
-Version:        0.000
-Release:        16%{?dist}
+Version:        0.002
+Release:        3%{?dist}
 Summary:        Deconstructed dynamic C library loading
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/DynaLoader-Functions/
 Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/DynaLoader-Functions-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl
 BuildRequires:  perl(Module::Build)
-# Tests:
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
+# Run-time:
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(constant)
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(Exporter)
-BuildRequires:  perl(Module::Runtime) >= 0.007
-BuildRequires:  perl(Params::Classify) >= 0.008
 BuildRequires:  perl(parent)
+# Tests:
 BuildRequires:  perl(Test::More)
 # Optional tests:
-BuildRequires:  perl(ExtUtils::CBuilder)
+BuildRequires:  perl(ExtUtils::CBuilder) >= 0.280209
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(Test::Pod) >= 1.00
 BuildRequires:  perl(Test::Pod::Coverage)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(Exporter)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Carp)
+Requires:       perl(DynaLoader)
+
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(VMS::Filespec\\)
 
 %description
 This module provides a function-based interface to dynamic loading as used
@@ -35,13 +41,12 @@ space of platform variations.
 %setup -q -n DynaLoader-Functions-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor optimize="$RPM_OPT_FLAGS"
+perl Build.PL installdirs=vendor optimize="$RPM_OPT_FLAGS"
 ./Build
 
 %install
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
@@ -53,44 +58,39 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.000-16
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.002-3
 - 为 Magic 3.0 重建
 
-* Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.000-15
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.002-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.000-14
-- 为 Magic 3.0 重建
+* Wed Aug 21 2013 Jitka Plesnikova <jplesnik@redhat.com> - 0.002-1
+- 0.002 bump
 
-* Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.000-13
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.001-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.000-12
-- 为 Magic 3.0 重建
+* Fri Jul 19 2013 Petr Pisar <ppisar@redhat.com> - 0.001-7
+- Perl 5.18 rebuild
 
-* Sat Jun 14 2014 Liu Di <liudidi@gmail.com> - 0.000-11
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.001-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.000-10
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.001-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.000-9
-- 为 Magic 3.0 重建
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 0.001-4
+- Perl 5.16 rebuild
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.000-8
-- 为 Magic 3.0 重建
+* Thu Jun 28 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.001-3
+- Update Requires
+- Exclude requires VMS::Filespec.
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 0.000-7
-- 为 Magic 3.0 重建
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.001-2
+- Perl 5.16 rebuild
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.000-6
-- 为 Magic 3.0 重建
-
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.000-5
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.000-4
-- 为 Magic 3.0 重建
+* Thu Feb 09 2012 Petr Pisar <ppisar@redhat.com> - 0.001-1
+- 0.001 bump
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.000-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,0 +1,20 @@
+--- Math-Pari-2.010802/Makefile.PL.orig	2009-10-29 10:47:15.349216927 +0000
++++ Math-Pari-2.010802/Makefile.PL	2009-10-29 11:12:54.651293844 +0000
+@@ -102,11 +102,13 @@
+ }
+ 
+ my %opts;
++
++# We want to build the docs and the test suite even though we're using the system pari lib
++build_tests $paridir;				# Convert the test suite
++make_pod 'libPARI.pod', '-to_pod', $paridir;	# Now the docs
++make_pod 'libPARI.dumb.pod', '-to_dumb_pod', $paridir;
++
+ unless ($common::parilib) {
+-  build_tests $paridir;		# Convert the test suite
+-  make_pod 'libPARI.pod', '-to_pod', $paridir; # Now the docs
+-  make_pod 'libPARI.dumb.pod', '-to_dumb_pod', $paridir;
+-  # ... and paricfg.h
+   %opts = build_paricfg($paridir, $common::do_configure, $pari_version);
+ 
+   if ($ENV{MATH_PARI_REPORT_CODES}) {

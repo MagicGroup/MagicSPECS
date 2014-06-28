@@ -1,0 +1,39 @@
+From: Stephane Glondu <steph@glondu.net>
+Date: Fri, 22 Jul 2011 00:32:59 +0200
+Subject: Compile with ocamlnet 3.3.5
+
+---
+ XmlRpcServer.ml |    8 +++-----
+ 1 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/XmlRpcServer.ml b/XmlRpcServer.ml
+index 3d4f130..47d6a8b 100644
+--- a/XmlRpcServer.ml
++++ b/XmlRpcServer.ml
+@@ -331,13 +331,11 @@ object (self)
+     Netcgi_cgi.run ~config ~output_type:(`Transactional buffered) self#process
+ end
+ 
+-open Netcgi1_compat
+-
+ class netplex ?(parallelizer=Netplex_mp.mp()) ?(handler="xmlrpc") () =
+ object (self)
+   inherit base
+ 
+-  method private process env (cgi : Netcgi_types.cgi_activation) =
++  method private process env (cgi : Netcgi.cgi_activation) =
+     match cgi#request_method with
+       | `POST ->
+           let input = cgi#argument_value "BODY" in
+@@ -377,8 +375,8 @@ object (self)
+       } in
+ 
+     let config_cgi =
+-      { Netcgi_env.default_config with
+-          Netcgi_env.permitted_input_content_types = [ "text/xml" ]
++      { Netcgi.default_config with
++          Netcgi.permitted_input_content_types = [ "text/xml" ]
+       } in
+ 
+     let handlers = [handler, xmlrpc] in
+-- 

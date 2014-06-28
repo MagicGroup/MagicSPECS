@@ -1,19 +1,30 @@
 Summary: Library of functions for manipulating TIFF format image files
 Name: libtiff
-Version: 4.0.1
-Release: 4%{?dist}
+Version: 4.0.3
+Release: 16%{?dist}
 
 License: libtiff
 Group: System Environment/Libraries
 URL: http://www.remotesensing.org/libtiff/
 
-Source: http://download.osgeo.org/libtiff/tiff-%{version}.tar.gz
+Source: ftp://ftp.remotesensing.org/pub/libtiff/tiff-%{version}.tar.gz
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: zlib-devel libjpeg-devel
-BuildRequires: libtool automake autoconf
+Patch0: libtiff-am-version.patch
+Patch1: libtiff-CVE-2012-4447.patch
+Patch2: libtiff-CVE-2012-4564.patch
+Patch3: libtiff-printdir-width.patch
+Patch4: libtiff-jpeg-test.patch
+Patch5: libtiff-CVE-2013-1960.patch
+Patch6: libtiff-CVE-2013-1961.patch
+Patch7: libtiff-manpage-update.patch
+Patch8: libtiff-CVE-2013-4231.patch
+Patch9: libtiff-CVE-2013-4232.patch
+Patch10: libtiff-CVE-2013-4244.patch
+Patch11: libtiff-make-check.patch
+Patch12: libtiff-CVE-2013-4243.patch
 
-%global LIBVER %(echo %{version} | cut -f 1-2 -d .)
+BuildRequires: zlib-devel libjpeg-devel jbigkit-devel
+BuildRequires: libtool automake autoconf pkgconfig
 
 %description
 The libtiff package contains a library of functions for manipulating
@@ -27,7 +38,8 @@ format image files.
 %package devel
 Summary: Development tools for programs which will use the libtiff library
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: pkgconfig%{?_isa}
 
 %description devel
 This package contains the header files and documentation necessary for
@@ -41,7 +53,7 @@ install the libtiff package.
 %package static
 Summary: Static TIFF image format file library
 Group: Development/Libraries
-Requires: %{name}-devel = %{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 The libtiff-static package contains the statically linkable version of libtiff.
@@ -51,7 +63,7 @@ necessary for some boot packages.
 %package tools
 Summary: Command-line utility programs for manipulating TIFF files
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 This package contains command-line programs for manipulating TIFF format
@@ -59,6 +71,20 @@ image files using the libtiff library.
 
 %prep
 %setup -q -n tiff-%{version}
+
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
 
 # Use build system's libtool.m4, not the one in the package.
 rm -f libtool.m4
@@ -71,36 +97,28 @@ autoheader
 
 %build
 export CFLAGS="%{optflags} -fno-strict-aliasing"
-%configure
+%configure --enable-ld-version-script
 make %{?_smp_mflags}
 
-LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH make check
-
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # remove what we didn't want installed
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/
 
-# 建立 .so.4 的链接，临时性措施
-pushd %{buildroot}%{_libdir}
-ln -s libtiff.so.5 libtiff.so.4
-popd
-
 # no libGL dependency, please
 rm -f $RPM_BUILD_ROOT%{_bindir}/tiffgt
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/tiffgt.1
-rm -f html/man/tiffgt.1.html
 
 # no sgi2tiff or tiffsv, either
 rm -f $RPM_BUILD_ROOT%{_bindir}/sgi2tiff
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/sgi2tiff.1
-rm -f html/man/sgi2tiff.1.html
 rm -f $RPM_BUILD_ROOT%{_bindir}/tiffsv
+
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/tiffgt.1
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/sgi2tiff.1
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/tiffsv.1
+rm -f html/man/tiffgt.1.html
+rm -f html/man/sgi2tiff.1.html
 rm -f html/man/tiffsv.1.html
 
 # multilib header hack
@@ -141,49 +159,133 @@ EOF
 
 fi
 
-# don't include documentation Makefiles, they are a multilib hazard
-find html -name 'Makefile*' | xargs rm
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
+%check
+LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH make check
+
+# don't include documentation Makefiles, they are a multilib hazard
+find html -name 'Makefile*' | xargs rm
+
 %files
-%defattr(-,root,root,0755)
 %doc COPYRIGHT README RELEASE-DATE VERSION
 %{_libdir}/libtiff.so.*
 %{_libdir}/libtiffxx.so.*
 
 %files devel
-%defattr(-,root,root,0755)
 %doc TODO ChangeLog html
 %{_includedir}/*
 %{_libdir}/libtiff.so
 %{_libdir}/libtiffxx.so
+%{_libdir}/pkgconfig/libtiff*.pc
 %{_mandir}/man3/*
-%{_libdir}/pkgconfig/libtiff-4.pc
 
 %files static
-%defattr(-,root,root)
 %{_libdir}/*.a
 
 %files tools
-%defattr(-,root,root,0755)
 %{_bindir}/*
 %{_mandir}/man1/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.0.1-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.3-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Thu Mar 29 2012 Liu Di <liudidi@gmail.com> - 4.0.1-3
-- 为 Magic 3.0 重建
+* Wed May 21 2014 Petr Hracek <phracek@redhat.com> - 4.0.3-15
+- Add upstream patches for CVE-2013-4243 (#996832)
 
-* Thu Jan 12 2012 Liu Di <liudidi@gmail.com> - 3.9.5-2
-- 为 Magic 3.0 重建
+* Thu Dec 19 2013 Petr Hracek <phracek@redhat.com> - 4.0.3-14
+- Fix: #1044609 Can't install both architectures
+
+* Wed Dec 18 2013 Petr Hracek <phracek@redhat.com> - 4.0.3-13
+- Fix #510240 Correct tiff2ps man option -W
+
+* Wed Oct 16 2013 Petr Hracek <phracek@redhat.com> - 4.0.3-12
+- make check moved to %check section (#1017070)
+
+* Tue Oct 08 2013 Petr Hracek <phracek@redhat.com> - 4.0.3-11
+- Resolves: #510258, #510240 - man page corrections
+
+* Mon Aug 19 2013 Petr Hracek <phracek@redhat.com> 4.0.3-10
+- Add upstream patches for CVE-2013-4244
+Resolves: #996468
+
+* Wed Aug 14 2013 Petr Hracek <phracek@redhat.com> 4.0.3-9
+- Add upstream patches for CVE-2013-4231 CVE-2013-4232
+Resolves: #995965 #995975
+
+* Mon Aug 12 2013 Petr Hracek <phracek@redhat.com> - 4.0.3-8
+- Manpage fixing (#510240, #510258)
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.3-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu May  2 2013 Tom Lane <tgl@redhat.com> 4.0.3-6
+- Add upstream patches for CVE-2013-1960, CVE-2013-1961
+Resolves: #958609
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jan 18 2013 Adam Tkac <atkac redhat com> - 4.0.3-4
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Wed Dec 19 2012 Tom Lane <tgl@redhat.com> 4.0.3-3
+- Add upstream patch to avoid bogus self-test failure with libjpeg-turbo v8
+
+* Thu Dec 13 2012 Tom Lane <tgl@redhat.com> 4.0.3-2
+- Add upstream patches for CVE-2012-4447, CVE-2012-4564
+  (note: CVE-2012-5581 is already fixed in 4.0.3)
+Resolves: #880907
+
+* Thu Oct  4 2012 Tom Lane <tgl@redhat.com> 4.0.3-1
+- Update to libtiff 4.0.3
+
+* Fri Aug  3 2012 Tom Lane <tgl@redhat.com> 4.0.2-6
+- Remove compat subpackage; no longer needed
+- Minor specfile cleanup per suggestions from Tom Callaway
+Related: #845110
+
+* Thu Aug  2 2012 Tom Lane <tgl@redhat.com> 4.0.2-5
+- Add accessor functions for opaque type TIFFField (backport of not-yet-released
+  upstream feature addition; needed to fix freeimage)
+
+* Sun Jul 22 2012 Tom Lane <tgl@redhat.com> 4.0.2-4
+- Add patches for CVE-2012-3401
+Resolves: #841736
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 03 2012 Karsten Hopp <karsten@redhat.com> 4.0.2-2
+- add opensuse bigendian patch to fix raw_decode self check failure on ppc*, s390*
+
+* Thu Jun 28 2012 Tom Lane <tgl@redhat.com> 4.0.2-1
+- Update to libtiff 4.0.2, includes fix for CVE-2012-2113
+  (note that CVE-2012-2088 does not apply to 4.0.x)
+- Update libtiff-compat to 3.9.6 and add patches to it for
+  CVE-2012-2088, CVE-2012-2113
+Resolves: #832866
+
+* Fri Jun  1 2012 Tom Lane <tgl@redhat.com> 4.0.1-2
+- Enable JBIG support
+Resolves: #826240
+
+* Sun May  6 2012 Tom Lane <tgl@redhat.com> 4.0.1-1
+- Update to libtiff 4.0.1, adds BigTIFF support and other features;
+  library soname is bumped from libtiff.so.3 to libtiff.so.5
+Resolves: #782383
+- Temporarily package 3.9.5 shared library (only) in libtiff-compat subpackage
+  so that dependent packages won't be broken while rebuilding proceeds
+
+* Thu Apr  5 2012 Tom Lane <tgl@redhat.com> 3.9.5-3
+- Add fix for CVE-2012-1173
+Resolves: #CVE-2012-1173
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Apr 12 2011 Tom Lane <tgl@redhat.com> 3.9.5-1
 - Update to libtiff 3.9.5, incorporating all our previous patches plus other
@@ -445,7 +547,7 @@ Resolves: bz #222729
 * Tue Dec 19 2000 Philipp Knirsch <pknirsch@redhat.de>
 - rebuild
 
-* Tue Aug  7 2000 Crutcher Dunnavant <crutcher@redhat.com>
+* Mon Aug  7 2000 Crutcher Dunnavant <crutcher@redhat.com>
 - added a tiff-to-ps.fpi filter for printing
 
 * Thu Jul 13 2000 Prospector <bugzilla@redhat.com>

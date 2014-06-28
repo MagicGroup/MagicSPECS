@@ -1,0 +1,15 @@
+diff -up openwsman-2.4.0/etc/pam/openwsman.pamsetup openwsman-2.4.0/etc/pam/openwsman
+--- openwsman-2.4.0/etc/pam/openwsman.pamsetup	2013-09-27 17:14:39.147565052 +0200
++++ openwsman-2.4.0/etc/pam/openwsman	2013-09-27 17:15:12.744578165 +0200
+@@ -1,7 +1,7 @@
+ #%PAM-1.0
+-auth       required	pam_unix2.so	nullok
++auth       required	pam_unix.so	nullok
+ auth       required	pam_nologin.so
+-account    required	pam_unix2.so
++account    required	pam_unix.so
+ password   required	pam_pwcheck.so	nullok
+-password   required	pam_unix2.so	nullok use_first_pass use_authtok
+-session    required	pam_unix2.so	none
++password   required	pam_unix.so	nullok use_first_pass use_authtok
++session    required	pam_unix.so	none

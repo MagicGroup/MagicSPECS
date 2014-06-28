@@ -1,17 +1,15 @@
-%define rversion %{kde4_kdelibs_version}
-%define release_number 1
 %define real_name oxygen-icons
 
 Name: %{real_name}
 Summary: The KDE 4 Oxygen Icon Set
 Summary(zh_CN.UTF-8): KDE 4 的 Oxygen 图标集
 License: GPL v2 or later
-Group: System/GUI/KDE
-Group(zh_CN.UTF-8): 系统/GUI/KDE
+Group: User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: %{rversion}
-Release: %{release_number}%{?dist}.1
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Version: 4.13.2
+Release: 1%{?dist}
+Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 Source10: 16-start-here-magic.png
 Source11: 22-start-here-magic.png
@@ -37,7 +35,7 @@ The KDE 4 Oxygen icon set.
 KDE 4 Oxygen 图标。
 
 %prep
-%setup -q -n %{real_name}-%{rversion}
+%setup -q -n %{real_name}-%{version}
 
 %build
 mkdir build
@@ -70,6 +68,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/oxygen
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Sun Apr 27 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1.1
 - 为 Magic 3.0 重建
 

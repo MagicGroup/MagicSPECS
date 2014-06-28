@@ -1,0 +1,24 @@
+.TH "compute_halfspaces" "1" "Feb 2013" "TPLib 1.3" "User Commands"
+.SH "NAME"
+compute_halfspaces \- use half-spaces to represent a tropical cone
+.SH "DESCRIPTION"
+Computes a minimal representation of a tropical cone given by a generating
+set, by means of half-spaces.
+.SH "ARGUMENTS"
+.TP
+\fB\-numerical\-data\fP
+Set the type of numerical data used by the algorithm, one of: ocaml_int,
+ocaml_float, ocaml_big_int, ocaml_big_rat, zarith_int, and zarith_rat.
+.TP
+\fB\-min\-plus\fP
+Use the min\-plus semiring instead of the default max\-plus semiring.
+.TP
+\fB\-no\-ordering\fP
+The constraints are not dynamically ordered during the execution.
+.TP
+\fB\-help\fP, \fB\-\-help\fP
+Display this list of options.
+.SH "SEE ALSO"
+\fBcompute_ext_rays\fP(1), \fBcompute_ext_rays_polar\fP(1),
+\fBcompute_minimal_external_representations\fP(1),
+\fBcompute_tangent_hypergraph\fP(1), \fBcompute_tropical_complex\fP(1)

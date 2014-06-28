@@ -1,18 +1,13 @@
-%define debug_package %{nil}
-
 Name:           ocaml-lablgtk
-Version:        2.16.0
-Release:        1%{?dist}
+Version:        2.18.0
+Release:        2%{?dist}
 
 Summary:        Objective Caml interface to gtk+
 
 License:        LGPLv2 with exceptions
 
 URL:            http://lablgtk.forge.ocamlcore.org/
-Source:         http://forge.ocamlcore.org/frs/download.php/979/lablgtk-%{version}.tar.gz
-
-# Patch sent upstream 2011-07-27 by RWMJ.
-Patch0:         lablgtk-2.16.0-avoid-queue-empty-in-gtkThread.patch
+Source:         https://forge.ocamlcore.org/frs/download.php/1261/lablgtk-%{version}.tar.gz
 
 ExcludeArch:    sparc64 s390 s390x
 
@@ -20,7 +15,6 @@ Obsoletes:      lablgtk <= 2.6.0-7
 Provides:       lablgtk = 2.6.0-7
 
 BuildRequires:  ncurses-devel
-BuildRequires:  gnome-panel-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  gtkglarea2-devel
 BuildRequires:  gtkspell-devel
@@ -72,14 +66,15 @@ developing applications that use %{name}.
 
 %prep
 %setup -q -n lablgtk-%{version}
-%patch0 -p1
 
 
 %build
+# Parallel builds don't work.
+unset MAKEFLAGS
 %configure --with-gl --enable-debug
 perl -pi -e "s|-O|$RPM_OPT_FLAGS|" src/Makefile
-make world
-make opt
+make world CAMLOPT="ocamlopt.opt -g"
+make opt CAMLOPT="ocamlopt.opt -g"
 make doc CAMLP4O="camlp4o -I %{_libdir}/ocaml/camlp4/Camlp4Parsers"
 
 
@@ -97,6 +92,9 @@ make install \
      INSTALLDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml/lablgtk2 \
      DLLDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs
 cp META $RPM_BUILD_ROOT%{_libdir}/ocaml/lablgtk2
+
+# Remove ld.conf (part of main OCaml dist).
+rm $RPM_BUILD_ROOT%{_libdir}/ocaml/ld.conf
 
 # Remove unnecessary *.ml files (ones which have a *.mli).
 pushd $RPM_BUILD_ROOT%{_libdir}/ocaml/lablgtk2
@@ -148,6 +146,26 @@ find examples -name .cvsignore -exec rm {} \;
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.18.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Oct  1 2013 Richard W.M. Jones <rjones@redhat.com> - 2.18.0-1
+- New upstream version 2.18.0.
+
+* Sat Sep 14 2013 Richard W.M. Jones <rjones@redhat.com> - 2.16.0-5
+- Rebuild for OCaml 4.01.0.
+- Enable debuginfo.
+- Remove bogus (and not accepted upstream) patch.
+
+* Sun Aug  4 2013 Richard W.M. Jones <rjones@redhat.com> - 2.16.0-4
+- gnome-panel is dead, apparently.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.16.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.16.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Oct 17 2012 Richard W.M. Jones <rjones@redhat.com> - 2.16.0-2
 - Clean up the spec file.
 - Set OCAMLFIND_DESTDIR so the ocamlfind install works.
@@ -310,7 +328,7 @@ find examples -name .cvsignore -exec rm {} \;
 * Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 2.4.0-4
 - rebuild on all arches
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Fri Apr  8 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Sat Feb 12 2005 Gerard Milmeister <gemi@bluewin.ch> - 0:2.4.0-2

@@ -1,0 +1,25 @@
+--- Math-Pari-2.01080604/pari-2.3.4/src/test/in/intnum	2008-01-16 15:45:16.000000000 +0000
++++ Math-Pari-2.01080604/pari-2.3.4/src/test/in/intnum	2010-06-22 13:53:30.711784407 +0100
+@@ -1,5 +1,5 @@
+ default(echo,1);
+-allocatemem(20 * 10^6);
++allocatemem(40 * 10^6);
+ gettime; oo = [1];
+ \p96
+ intcirc(s=1, 0.5, zeta(s)) - 1
+--- Math-Pari-2.01080604/pari-2.3.4/src/test/32/intnum	2008-01-16 15:45:01.000000000 +0000
++++ Math-Pari-2.01080604/pari-2.3.4/src/test/32/intnum	2010-06-22 14:11:00.678792014 +0100
+@@ -1,4 +1,4 @@
+-? allocatemem(20*10^6);
++? allocatemem(40*10^6);
+ ? gettime;oo=[1];
+ ? \p96
+    realprecision = 96 significant digits
+--- Math-Pari-2.01080604/pari-2.3.4/src/test/64/intnum	2008-01-16 15:45:28.000000000 +0000
++++ Math-Pari-2.01080604/pari-2.3.4/src/test/64/intnum	2010-06-22 14:11:10.119846014 +0100
+@@ -1,4 +1,4 @@
+-? allocatemem(20*10^6);
++? allocatemem(40*10^6);
+ ? gettime;oo=[1];
+ ? \p96
+    realprecision = 96 significant digits

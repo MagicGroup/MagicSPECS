@@ -8,7 +8,7 @@
 
 Name:           python-setuptools
 Version:        0.6.28
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Easily build and distribute Python packages
 
 Group:          Applications/System
@@ -152,6 +152,9 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.6.28-5
+- 为 Magic 3.0 重建
+
 * Wed Jan 16 2013 Liu Di <liudidi@gmail.com> - 0.6.28-4
 - 为 Magic 3.0 重建
 

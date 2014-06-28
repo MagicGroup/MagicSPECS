@@ -1,0 +1,17 @@
+#!/bin/sh +x
+
+IFS=$'\n'
+
+for i in $(grep -E '(/lib/modules/.*\.ko|/lib/modules/.*/modules.builtin)');
+do
+	kmod=$(basename $i | sed -e 's/.[xg]z//');
+
+	if [ $kmod == "modules.builtin" ]; then
+		for j in $(cat $i); do
+			j=$(basename $j);
+			echo "kmod($j)"
+		done
+	else
+		echo "kmod($kmod)"
+	fi
+done

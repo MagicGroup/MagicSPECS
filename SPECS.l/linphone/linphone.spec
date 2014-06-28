@@ -1,6 +1,22 @@
+# TODO:
+# - --enable-tunnel (BR: pkgconfig(tunnel) >= 0.3.3)
+# - fill in dependencies for !system_ortp, !system_mediastreamer
+# - check if all this configure option I've set are really needed
+# - separate libraries that do not require gnome into subpackages for Jingle support in kopete
+# - if system_mediastreamerpackages copies for "libmediastreamer.so.1", "libortp.so.8" libraries
+#   those should be installed to private path and LD_LIBARY_PATH setup with wrappers.
+#   without doing so do not stbr it to Th!
+#
+# Conditional build:
+%bcond_without	ldap			# LDAP support
+%bcond_without	openssl			# SSL support
+%bcond_without	system_ortp		# use custom ortp
+%bcond_without	system_mediastreamer	# use custom mediastreamer
+
+
 Name:           linphone
 Version:	3.7.0
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
 License:        GPLv2+
@@ -18,6 +34,8 @@ BuildRequires:  libv4l-devel
 BuildRequires:  libvpx-devel
 # xxd used in mediastreamer2/src/Makefile.in
 BuildRequires:  vim-common
+
+BuildRequires:	belle-sip-devel
 
 BuildRequires:  libosip2-devel >= 3.6.0
 BuildRequires:  libeXosip2-devel >= 3.6.0
@@ -55,6 +73,16 @@ BuildRequires:  libtool
 BuildRequires:  ortp-devel >= 1:0.22.0
 Requires:       ortp%{?_isa} >= 1:0.22.0
 
+%if %{without system_ortp}
+%define		_noautoreq_1	libortp\.so.*
+%endif
+%if %{without system_mediastreamer}
+%define		_noautoreq_2	libmediastreamer\.so.*
+%endif
+
+%filter_requires_in %{?_noautoreq_1} %{?_noautoreq_2}
+%filter_provides_in %{?_noautoreq_1} %{?_noautoreq_2}
+
 %description
 Linphone is mostly sip compliant. It works successfully with these
 implementations:
@@ -74,27 +102,42 @@ Linphone may work also with other sip phones, but this has not been tested yet.
 %package devel
 Summary:        Development libraries for linphone
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       linphone-mediastreamer-devel%{?_isa} = %{version}-%{release}
+Requires:       mediastreamer-devel%{?_isa} >= 2.10.0
 Requires:       glib2-devel%{?_isa}
 
 %description    devel
 Libraries and headers required to develop software with linphone.
 
-%package mediastreamer
-Summary:        A media streaming library for telephony applications
+%package -n linphonec
+Summary:	Linphone Internet Phone console interface
+Group:		Applications/Communications
+Requires:	%{name}-libs = %{version}-%{release}
 
-%description mediastreamer
-Mediastreamer2 is a GPL licensed library to make audio and video
-real-time streaming and processing. Written in pure C, it is based
-upon the oRTP library.
+%description -n linphonec
+Linphonec is the console version of originally GNOME Internet phone
+Linphone.
 
-%package mediastreamer-devel
-Summary:        Development libraries for mediastreamer2
-Requires:       linphone-mediastreamer%{?_isa} = %{version}-%{release}
-Requires:       ortp-devel%{?_isa}
+%package libs
+Summary:	Linphone libraries
+Group:		Libraries
+Requires(post,postun):	/sbin/ldconfig
+Requires:	belle-sip >= 1.3.0
+Requires:	libsoup-devel >= 2.26
+%{?with_system_mediastreamer:Requires:	mediastreamer%{?_isa} >= 2.10.0}
+%{?with_system_ortp:Requires:	ortp%{?_isa} >= 0.23.0}
+Requires:	sqlite >= 3.7.0
 
-%description mediastreamer-devel
-Libraries and headers required to develop software with mediastreamer2.
+%description libs
+Linphone libraries.
+
+
+%package static
+Summary:	Linphone static libraries
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+Static version of Linphone libraries.
 
 %prep
 %setup0 -q
@@ -105,8 +148,24 @@ Libraries and headers required to develop software with mediastreamer2.
 
 autoreconf -i -f
 
+find '(' -name '*.c' -o -name '*.h' ')' -print0 | xargs -0 %{__sed} -i -e 's,\r$,,'
+
+%if %{without system_ortp}
+cd oRTP
+autoreconf -fisv
+cd ..
+%else
 # remove bundled oRTP
 rm -rf oRTP
+%endif
+
+%if %{without system_ortp}
+cd mediastreamer2
+autoreconf -fisv
+cd ..
+%else
+rm -rf mediastreamer2
+%endif
 
 # Fix encoding
 for f in share/cs/*.1; do
@@ -121,95 +180,165 @@ done
 
 
 %build
-%configure --disable-static \
-           --enable-glx \
-           --disable-ffmpeg \
-           --disable-rpath \
-           --enable-console_ui=yes \
-           --enable-gtk_ui=yes \
-           --enable-ipv6 \
-           --enable-truespeech \
-           --enable-alsa \
-           --enable-strict \
-           --enable-nonstandard-gsm \
-           --enable-rsvp \
-           --enable-ssl \
-           --enable-zrtp \
-           --enable-external-ortp
+%configure \
+	--with-html-dir=%{_gtkdocdir} \
+	--enable-alsa \
+	%{?with_system_mediastreamer:--enable-external-mediastreamer} \
+	%{?with_system_ortp:--enable-external-ortp} \
+	--enable-ipv6 \
+	%{?with_ldap:--enable-ldap} \
+	--disable-silent-rules \
+	%{?with_openssl:--enable-ssl} \
+	--enable-static \
+	--disable-strict
 
-make %{?_smp_mflags}
+# although main configure already calls {oRTP,mediastreamer2}/configure,
+# reconfigure them with different dirs
+%if %{without system_ortp}
+cd oRTP
+%configure \
+	--enable-static \
+	--enable-ipv6 \
+	--libdir=%{_libdir}/%{name} \
+	--includedir=%{_libdir}/%{name}/include
+cd ..
+%endif
+%if %{without system_ortp}
+cd mediastreamer2
+%configure \
+	--enable-static \
+	--disable-libv4l \
+	--libdir=%{_libdir}/%{name} \
+	--includedir=%{_libdir}/%{name}/include
+cd ..
+%endif
+
+make %{?_smp_mflags} \
+	GITDESCRIBE=/bin/true \
+	GIT_TAG=%{version}
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
+%{__make} install \
+	GITDESCRIBE=/bin/true \
+	GIT_TAG=%{version} \
+	DESTDIR=$RPM_BUILD_ROOT
 
-%find_lang %{name}
-%find_lang mediastreamer
+install pixmaps/%{name}.png $RPM_BUILD_ROOT%{_datadir}/pixmaps/
 
-desktop-file-install \
-  --delete-original \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-  --remove-category Application \
-  --add-category Telephony \
-  --add-category GTK \
-  $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+%{!?with_system_mediastreamer:%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/mediastreamer}
+%{!?with_system_ortp:%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/ortp}
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+# the executable is missing, so the manual is useless
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man1/sipomatic.1*
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/cs/man1/sipomatic.1*
 
-# move docs to %%doc
-mkdir -p doc/linphone doc/mediastreamer
-mv $RPM_BUILD_ROOT%{_datadir}/doc/linphone*/html doc/linphone
-mv $RPM_BUILD_ROOT%{_datadir}/doc/mediastreamer*/html doc/mediastreamer
+# some tests
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/*_test
 
-%post -p /sbin/ldconfig
+install -d $RPM_BUILD_ROOT%{_examplesdir}
+mv $RPM_BUILD_ROOT%{_datadir}/tutorials/%{name} $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+magic_rpm_clean.sh
+%find_lang %{name} --with-gnome --all-name
 
-%postun -p /sbin/ldconfig
+%clean
+rm -rf $RPM_BUILD_ROOT
 
-%post mediastreamer -p /sbin/ldconfig
+%post
+%{_bindir}/scrollkeeper-update
 
-%postun mediastreamer -p /sbin/ldconfig
+%if %{without system_mediastreamer} || %{without system_ortp}
+%post libs
+/sbin/ldconfig %{_libdir}/%{name}
+%else
+%post libs -p /sbin/ldconfig
+%endif
+
+%postun
+%{_bindir}/scrollkeeper-update
+
+%postun libs -p /sbin/ldconfig
 
 %files -f %{name}.lang
-%doc AUTHORS ChangeLog COPYING NEWS README TODO
-%{_bindir}/linphone
-%{_bindir}/linphonec
-%{_bindir}/linphonecsh
-%{_bindir}/lpc2xml_test
-%{_bindir}/xml2lpc_test
-%{_libdir}/liblinphone.so.5*
-%{_libdir}/liblpc2xml.so.0*
-%{_libdir}/libxml2lpc.so.0*
-%{_mandir}/man1/*
-%lang(cs) %{_mandir}/cs/man1/*
-%{_datadir}/applications/*%{name}.desktop
-%{_datadir}/gnome/help/linphone
-%{_datadir}/pixmaps/linphone
-%{_datadir}/sounds/linphone
+%defattr(644,root,root,755)
+%doc AUTHORS BUGS ChangeLog NEWS README TODO
+%attr(755,root,root) %{_bindir}/linphone
+%{_datadir}/applications/linphone.desktop
+%{_datadir}/pixmaps/linphone.png
+%{_datadir}/pixmaps/linphone/*
 %{_datadir}/linphone
+%{_mandir}/man1/linphone.1*
+
+%files -n linphonec
+%defattr(644,root,root,755)
+%doc AUTHORS BUGS ChangeLog NEWS README TODO
+%attr(755,root,root) %{_bindir}/linphonec
+%attr(755,root,root) %{_bindir}/linphonecsh
+%{_mandir}/man1/linphonec.1*
+%{_mandir}/man1/linphonecsh.1*
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/liblinphone.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblinphone.so.6
+%if %{without system_mediastreamer} || %{without system_ortp}
+%dir %{_libdir}/%{name}
+%endif
+%if %{without system_mediastreamer}
+%attr(755,root,root) %{_libdir}/%{name}/libmediastreamer.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/%{name}/libmediastreamer.so.?
+%{_libdir}/%{name}/mediastream
+%endif
+%if %{without system_ortp}
+%attr(755,root,root) %{_libdir}/%{name}/libortp.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/%{name}/libortp.so.?
+%endif
+%{_datadir}/sounds/linphone
 
 %files devel
-%doc doc/linphone/html
+%defattr(644,root,root,755)
+%doc coreapi/help/doc/html
+%attr(755,root,root) %{_libdir}/liblinphone.so
+%attr(755,root,root) %{_bindir}/lp-gen-wrappers
 %{_includedir}/linphone
-%{_libdir}/liblinphone.so
-%{_libdir}/liblpc2xml.so
-%{_libdir}/libxml2lpc.so
 %{_libdir}/pkgconfig/linphone.pc
+%{_libdir}/liblinphone.la
+%if %{without system_mediastreamer} || %{without system_ortp}
+%dir %{_libdir}/%{name}/include
+%dir %{_libdir}/%{name}/pkgconfig
+%endif
+%if %{without system_mediastreamer}
+%attr(755,root,root) %{_libdir}/%{name}/libmediastreamer.so
+%{_libdir}/%{name}/libmediastreamer.la
+%{_libdir}/%{name}/include/mediastreamer2
+%{_libdir}/%{name}/pkgconfig/mediastreamer.pc
+%endif
+%if %{without system_ortp}
+%attr(755,root,root) %{_libdir}/%{name}/libortp.so
+%{_libdir}/%{name}/libortp.la
+%{_libdir}/%{name}/include/ortp
+%{_libdir}/%{name}/pkgconfig/ortp.pc
+%endif
+#%{_datadir}/exmaples/%{name}-%{version}
 
-%files mediastreamer -f mediastreamer.lang
-%doc mediastreamer2/AUTHORS mediastreamer2/ChangeLog mediastreamer2/COPYING
-%doc mediastreamer2/NEWS mediastreamer2/README
-%{_bindir}/mediastream
-%{_libdir}/libmediastreamer_base.so.3*
-%{_libdir}/libmediastreamer_voip.so.3*
-%{_datadir}/images
-
-%files mediastreamer-devel
-%doc doc/mediastreamer/html
-%{_includedir}/mediastreamer2
-%{_libdir}/libmediastreamer_base.so
-%{_libdir}/libmediastreamer_voip.so
-%{_libdir}/pkgconfig/mediastreamer.pc
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/liblinphone.a
+%if %{without system_mediastreamer}
+%{_libdir}/%{name}/libmediastreamer.a
+%endif
+%if %{without system_ortp}
+%{_libdir}/%{name}/libortp.a
+%endif
 
 %changelog
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 3.7.0-6
+- 为 Magic 3.0 重建
+
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 3.7.0-5
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 3.7.0-4
 - 为 Magic 3.0 重建
 

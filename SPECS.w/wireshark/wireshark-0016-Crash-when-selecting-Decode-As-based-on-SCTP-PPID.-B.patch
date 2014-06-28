@@ -1,0 +1,32 @@
+From: Michael Mann <mmann78@netscape.net>
+Date: Thu, 28 Nov 2013 16:51:08 +0000
+Subject: [PATCH] Crash when selecting "Decode As" based on SCTP PPID.  Bug
+ 8976 (https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=8976)
+
+Fixed by defaulting PPID value to LAST_PPID (which should make Decode As a no-op)
+
+svn path=/trunk-1.10/; revision=53627
+
+diff --git a/ui/gtk/decode_as_dlg.c b/ui/gtk/decode_as_dlg.c
+index e772099..4e863f1 100644
+--- a/ui/gtk/decode_as_dlg.c
++++ b/ui/gtk/decode_as_dlg.c
+@@ -970,7 +970,7 @@ decode_transport(GtkWidget *notebook_pg)
+     gchar *table_name;
+     gint requested_srcdst, requested_port, ppid;
+     gpointer portp;
+-    gpointer ptr;
++    gpointer ptr = GUINT_TO_POINTER(LAST_PPID);
+ #ifdef DEBUG
+     gchar *string;
+ #endif
+@@ -980,8 +980,7 @@ decode_transport(GtkWidget *notebook_pg)
+         gtk_tree_selection_unselect_all(gtk_tree_view_get_selection(GTK_TREE_VIEW(list)));
+ 
+     combo_box = (GtkWidget *)g_object_get_data(G_OBJECT(notebook_pg), E_COMBO_BOX_SRCDST);
+-    if (!ws_combo_box_get_active_pointer(GTK_COMBO_BOX(combo_box), &ptr))
+-        g_assert_not_reached();  /* Programming error if no active item in combo_box */
++    ws_combo_box_get_active_pointer(GTK_COMBO_BOX(combo_box), &ptr);
+     requested_srcdst = GPOINTER_TO_INT(ptr);
+ 
+ #ifdef DEBUG

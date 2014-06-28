@@ -1,0 +1,18 @@
+From: =?UTF-8?q?Radek=20Vok=C3=A1l?= <rvokal@fedoraproject.org>
+Date: Tue, 15 Dec 2009 08:36:27 +0000
+Subject: [PATCH] enable Lua support
+
+
+diff --git a/epan/wslua/template-init.lua b/epan/wslua/template-init.lua
+index e6ec4ae..2538c4c 100644
+--- a/epan/wslua/template-init.lua
++++ b/epan/wslua/template-init.lua
+@@ -43,7 +43,7 @@ if running_superuser then
+     local disabled_lib = {}
+     setmetatable(disabled_lib,{ __index = function() error("this package ".. hint) end } );
+ 
+-    dofile = function() error("dofile " .. hint) end
++--    dofile = function() error("dofile " .. hint) end
+     loadfile = function() error("loadfile " .. hint) end
+     loadlib = function() error("loadlib " .. hint) end
+     require = function() error("require " .. hint) end

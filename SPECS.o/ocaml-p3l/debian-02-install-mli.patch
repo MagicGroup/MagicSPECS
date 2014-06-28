@@ -1,0 +1,21 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 02-install-mli.dpatch by Sylvain Le Gall <gildor@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Install mli file in destination directory.
+
+@DPATCH@
+diff -urNad ocamlp3l~/Source/Makefile ocamlp3l/Source/Makefile
+--- ocamlp3l~/Source/Makefile	2008-06-17 18:37:14.000000000 +0000
++++ ocamlp3l/Source/Makefile	2008-08-09 17:01:08.000000000 +0000
+@@ -61,8 +61,9 @@
+ 
+ all: $(CAMLBYTOBJS) $(CAMLBINOBJS)
+ 
+-install: $(CAMLIOBJS) $(CAMLBYTOBJS) $(CAMLBINOBJS)
++install: $(CAMLIOBJS) $(CAMLBYTOBJS) $(CAMLBINOBJS) $(ALLMLISOURCES)
+ 	$(MKDIR) $(PACKAGELIBDIR)
++	$(CP) $(ALLMLISOURCES) $(PACKAGELIBDIR)
+ 	$(CP) $(CAMLIOBJS) $(PACKAGELIBDIR)
+ 	$(CP) $(CAMLBYTOBJS) $(PACKAGELIBDIR)
+ 	$(CP) $(CAMLBINOBJS) $(CAMLOOBJS) $(PACKAGELIBDIR)

@@ -1,6 +1,6 @@
 Name:           ortp
-Version:	0.22.0
-Release:        3%{?dist}
+Version:	0.23.0
+Release:        1%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
 Summary(zh_CN.UTF-8): RTP 协议的 C 库实现
 Epoch:          1
@@ -9,11 +9,9 @@ Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+ and VSL
 URL:            http://www.linphone.org/eng/documentation/dev/ortp.html
-Source:         http://download.savannah.gnu.org/releases/linphone/ortp/sources/%{name}-%{version}.tar.gz
+Source:         http://download.savannah.gnu.org/releases/linphone/ortp/%{name}-%{version}.tar.gz
 
-# revert libsrtp version check
-# https://bugzilla.redhat.com/show_bug.cgi?id=956340
-Patch0:         ortp-renamed-srtp-warning.patch
+Patch1:		ortp-0.23.0-libzrtpcpp.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -51,8 +49,8 @@ Libraries and headers required to develop software with ortp.
 
 %prep
 %setup0 -q
+%patch1 -p1
 
-%patch0 -p1 -R -b .srtp
 autoreconf -i -f
 
 %{__perl} -pi.dot  -e 's/^(HAVE_DOT\s+=)\s+NO$/\1 YES/;s/^(CALL_GRAPH\s+=)\s+NO$/\1 YES/;s/^(CALLER_GRAPH\s+=)\s+NO$/\1 YES/' ortp.doxygen.in
@@ -63,7 +61,7 @@ autoreconf -i -f
            --enable-zrtp=yes \
 %endif
            --enable-ipv6 \
-           --enable-ssl-hmac
+           --enable-ssl-hmac CFLAGS="-Wno-error=cpp"
 
 
 make %{?_smp_mflags}
@@ -93,8 +91,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}
 %{_libdir}/libortp.so
 %{_libdir}/pkgconfig/ortp.pc
+%{_docdir}/*
 
 %changelog
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 1:0.23.0-1
+- 更新到 0.23.0
+
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 1:0.22.0-4
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1:0.22.0-3
 - 更新到 0.22.0
 

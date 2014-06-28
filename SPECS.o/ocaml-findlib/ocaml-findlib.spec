@@ -1,22 +1,18 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
-%global debug_package %{nil}
-%if !%opt
-%global __strip /bin/true
-%endif
 
 Name:           ocaml-findlib
-Version:        1.3.3
-Release:        2%{?dist}
+Version:        1.4
+Release:        4%{?dist}
 Summary:        Objective CAML package manager and build helper
-
-Group:          Development/Libraries
 License:        BSD
+
 URL:            http://projects.camlcity.org/projects/findlib.html
 Source0:        http://download.camlcity.org/download/findlib-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-ExcludeArch:    sparc64 s390 s390x
 
-BuildRequires:  ocaml >= 4.00.0
+# Use ocamlopt -g patch to include debug information.
+Patch1:         findlib-1.4-add-debug.patch
+
+BuildRequires:  ocaml >= 4.01.0
 BuildRequires:  ocaml-camlp4-devel
 BuildRequires:  ocaml-labltk-devel
 BuildRequires:  ocaml-compiler-libs
@@ -34,7 +30,6 @@ Objective CAML package manager and build helper.
 
 %package        devel
 Summary:        Development files for %{name}
-Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -45,6 +40,7 @@ developing applications that use %{name}.
 
 %prep
 %setup -q -n findlib-%{version}
+%patch1 -p2
 
 
 %build
@@ -66,31 +62,13 @@ rm doc/guide-html/TIMESTAMP
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 # Grrr destdir grrrr
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 make install prefix=$RPM_BUILD_ROOT OCAMLFIND_BIN=$RPM_BUILD_ROOT%{_bindir}
 mv $RPM_BUILD_ROOT/$RPM_BUILD_ROOT%{_bindir}/* $RPM_BUILD_ROOT%{_bindir}
 
-%if %opt
-strip $RPM_BUILD_ROOT%{_bindir}/ocamlfind
-%endif
-
-# If ocamlfind is bytecode, don't strip it and prevent prelink from
-# stripping it as well (RHBZ#435559).
-%if !%opt
-mkdir -p $RPM_BUILD_ROOT/etc/prelink.conf.d
-echo '-b /usr/bin/ocamlfind' \
-  > $RPM_BUILD_ROOT/etc/prelink.conf.d/ocaml-ocamlfind.conf
-%endif
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 
 %files
-%defattr(-,root,root,-)
 %doc LICENSE doc/README
 %config(noreplace) %{_sysconfdir}/ocamlfind.conf
 %{_bindir}/*
@@ -108,13 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_libdir}/ocaml/findlib/make_wizard
 %exclude %{_libdir}/ocaml/findlib/make_wizard.pattern
 %{_libdir}/ocaml/num-top
-%if !%opt
-%config(noreplace) %{_sysconfdir}/prelink.conf.d/ocaml-ocamlfind.conf
-%endif
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc LICENSE doc/README doc/guide-html
 %if %opt
 %{_libdir}/ocaml/findlib/*.a
@@ -127,6 +101,31 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.4-4
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Dan Horák <dan[at]danny.cz> - 1.4-2
+- drop ExcludeArch
+
+* Fri Sep 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1.4-1
+- New upstream version 1.4.
+- Build debuginfo.
+- Add -g option when running ocamlopt to generate debuginfo.
+- Don't need anti-prelink / stripping hacks for modern OCaml.
+- Modernize spec file.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Nov 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1.3.3-3
+- BR >= OCaml 4.00.1 so we can't build against the wrong OCaml version.
+
 * Tue Oct 16 2012 Richard W.M. Jones <rjones@redhat.com> - 1.3.3-2
 - Rebuild for OCaml 4.00.1.
 
@@ -200,7 +199,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Nov 26 2008 Richard W.M. Jones <rjones@redhat.com> - 1.2.3-3
 - Rebuild for OCaml 3.11.0+rc1.
 
-* Fri Nov 20 2008 Richard W.M. Jones <rjones@redhat.com> - 1.2.3-2
+* Fri Nov 21 2008 Richard W.M. Jones <rjones@redhat.com> - 1.2.3-2
 - Force rebuild.
 
 * Thu Nov 20 2008 Richard W.M. Jones <rjones@redhat.com> - 1.2.3-1

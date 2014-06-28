@@ -10,7 +10,7 @@
 
 Name:           python-six
 Version:        1.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Python 2 and 3 compatibility utilities
 
 Group:          Development/Languages
@@ -101,6 +101,9 @@ popd
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.4.1-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 16 2013 Bohuslav Kabrda <bkabrda@redhat.com> - 1.4.1-1
 - 1.4.1
 

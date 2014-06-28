@@ -1,0 +1,12 @@
+diff -up openwsman-2.2.7/src/server/shttpd/compat_unix.h.orig openwsman-2.2.7/src/server/shttpd/compat_unix.h
+--- openwsman-2.2.7/src/server/shttpd/compat_unix.h.orig	2012-02-09 13:04:47.528527681 +0100
++++ openwsman-2.2.7/src/server/shttpd/compat_unix.h	2012-02-09 13:05:31.582568867 +0100
+@@ -21,7 +21,7 @@
+ #include <dirent.h>
+ #include <dlfcn.h>
+ #ifndef SSL_LIB
+-#define	SSL_LIB				"libssl.so"
++#define	SSL_LIB				"libssl.so.10"
+ #endif
+ #define	DIRSEP				'/'
+ #define	IS_DIRSEP_CHAR(c)		((c) == '/')

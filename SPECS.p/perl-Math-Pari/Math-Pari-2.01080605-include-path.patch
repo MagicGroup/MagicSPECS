@@ -1,0 +1,11 @@
+--- Pari.xs
++++ Pari.xs
+@@ -3,7 +3,7 @@
+ #  include <windows.h>
+ #endif
+ 
+-#  include <pari.h>
++#  include <pari/pari.h>
+ #  include <graph/rect.h>
+ #  include <language/anal.h>
+ 

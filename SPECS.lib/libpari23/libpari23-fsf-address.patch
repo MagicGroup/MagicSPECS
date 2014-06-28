@@ -1,0 +1,1384 @@
+COPYING file intentionally not patched for legal reasons.
+
+http://fedoraproject.org/wiki/Common_Rpmlint_issues#incorrect-fsf-address
+
+diff -ur pari-2.3.5.orig/Configure pari-2.3.5/Configure
+--- pari-2.3.5.orig/Configure	2009-09-19 10:55:00.000000000 +0100
++++ pari-2.3.5/Configure	2012-07-02 16:43:32.853516688 +0100
+@@ -9,7 +9,7 @@
+ # 
+ # Check the License for details. You should have received a copy of it, along
+ # with the package; see the file 'COPYING'. If not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ 
+ # Configuration file for GP/PARI.  Run Configure --help for Usage.
+ #
+diff -ur pari-2.3.5.orig/doc/gphelp.in pari-2.3.5/doc/gphelp.in
+--- pari-2.3.5.orig/doc/gphelp.in	2008-03-31 12:44:00.000000000 +0100
++++ pari-2.3.5/doc/gphelp.in	2012-07-02 16:43:32.858516690 +0100
+@@ -13,7 +13,7 @@
+ #
+ # Check the License for details. You should have received a copy of it, along
+ # with the package; see the file 'COPYING'. If not, write to the Free Software
+-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ 
+ # Output extended help corresponding to a given GP command. By default,
+ # extract relevant information from  from the PARI manual, run TeX, then open
+diff -ur pari-2.3.5.orig/README pari-2.3.5/README
+--- pari-2.3.5.orig/README	2008-03-31 12:44:00.000000000 +0100
++++ pari-2.3.5/README	2012-07-02 16:43:32.330516510 +0100
+@@ -73,7 +73,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ 
+ 
+ (*) Version numbers have the shape: MAJOR.MINOR.patchlevel.status. The status
+diff -ur pari-2.3.5.orig/src/basemath/alglin1.c pari-2.3.5/src/basemath/alglin1.c
+--- pari-2.3.5.orig/src/basemath/alglin1.c	2008-12-16 17:52:50.000000000 +0000
++++ pari-2.3.5/src/basemath/alglin1.c	2012-07-02 16:43:32.438516547 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/alglin2.c pari-2.3.5/src/basemath/alglin2.c
+--- pari-2.3.5.orig/src/basemath/alglin2.c	2008-11-22 18:56:37.000000000 +0000
++++ pari-2.3.5/src/basemath/alglin2.c	2012-07-02 16:43:32.558516588 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/arith1.c pari-2.3.5/src/basemath/arith1.c
+--- pari-2.3.5.orig/src/basemath/arith1.c	2010-02-03 00:15:22.000000000 +0000
++++ pari-2.3.5/src/basemath/arith1.c	2012-07-02 16:43:32.508516571 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*********************************************************************/
+ /**                                                                 **/
+diff -ur pari-2.3.5.orig/src/basemath/arith2.c pari-2.3.5/src/basemath/arith2.c
+--- pari-2.3.5.orig/src/basemath/arith2.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/arith2.c	2012-07-02 16:43:32.613516607 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*********************************************************************/
+ /**                                                                 **/
+diff -ur pari-2.3.5.orig/src/basemath/base1.c pari-2.3.5/src/basemath/base1.c
+--- pari-2.3.5.orig/src/basemath/base1.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/base1.c	2012-07-02 16:43:32.496516567 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /**************************************************************/
+ /*                                                            */
+diff -ur pari-2.3.5.orig/src/basemath/base2.c pari-2.3.5/src/basemath/base2.c
+--- pari-2.3.5.orig/src/basemath/base2.c	2008-06-10 18:41:47.000000000 +0100
++++ pari-2.3.5/src/basemath/base2.c	2012-07-02 16:43:32.638516615 +0100
+@@ -10,7 +10,7 @@
+ ANY WARRANTY WHATSOEVER.
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/basemath/base3.c pari-2.3.5/src/basemath/base3.c
+--- pari-2.3.5.orig/src/basemath/base3.c	2009-09-08 19:54:37.000000000 +0100
++++ pari-2.3.5/src/basemath/base3.c	2012-07-02 16:43:32.622516610 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/basemath/base4.c pari-2.3.5/src/basemath/base4.c
+--- pari-2.3.5.orig/src/basemath/base4.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/base4.c	2012-07-02 16:43:32.589516599 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/basemath/base5.c pari-2.3.5/src/basemath/base5.c
+--- pari-2.3.5.orig/src/basemath/base5.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/base5.c	2012-07-02 16:43:32.521516576 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/basemath/bibli1.c pari-2.3.5/src/basemath/bibli1.c
+--- pari-2.3.5.orig/src/basemath/bibli1.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/bibli1.c	2012-07-02 16:43:32.375516527 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/bibli2.c pari-2.3.5/src/basemath/bibli2.c
+--- pari-2.3.5.orig/src/basemath/bibli2.c	2008-06-10 18:41:47.000000000 +0100
++++ pari-2.3.5/src/basemath/bibli2.c	2012-07-02 16:43:32.456516554 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/basemath/buch1.c pari-2.3.5/src/basemath/buch1.c
+--- pari-2.3.5.orig/src/basemath/buch1.c	2010-01-09 18:30:51.000000000 +0000
++++ pari-2.3.5/src/basemath/buch1.c	2012-07-02 16:43:32.527516578 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ #include "pari.h"
+ #include "paripriv.h"
+ 
+diff -ur pari-2.3.5.orig/src/basemath/buch2.c pari-2.3.5/src/basemath/buch2.c
+--- pari-2.3.5.orig/src/basemath/buch2.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/buch2.c	2012-07-02 16:43:32.649516619 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ #include "pari.h"
+ #include "paripriv.h"
+ /********************************************************************/
+diff -ur pari-2.3.5.orig/src/basemath/buch3.c pari-2.3.5/src/basemath/buch3.c
+--- pari-2.3.5.orig/src/basemath/buch3.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/buch3.c	2012-07-02 16:43:32.535516581 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/basemath/buch4.c pari-2.3.5/src/basemath/buch4.c
+--- pari-2.3.5.orig/src/basemath/buch4.c	2010-01-29 16:31:57.000000000 +0000
++++ pari-2.3.5/src/basemath/buch4.c	2012-07-02 16:43:32.625516610 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/basemath/Flx.c pari-2.3.5/src/basemath/Flx.c
+--- pari-2.3.5.orig/src/basemath/Flx.c	2008-11-12 16:15:27.000000000 +0000
++++ pari-2.3.5/src/basemath/Flx.c	2012-07-02 16:43:32.657516622 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/basemath/galconj.c pari-2.3.5/src/basemath/galconj.c
+--- pari-2.3.5.orig/src/basemath/galconj.c	2009-07-21 15:38:46.000000000 +0100
++++ pari-2.3.5/src/basemath/galconj.c	2012-07-02 16:43:32.451516553 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/basemath/gen1.c pari-2.3.5/src/basemath/gen1.c
+--- pari-2.3.5.orig/src/basemath/gen1.c	2008-12-19 19:54:08.000000000 +0000
++++ pari-2.3.5/src/basemath/gen1.c	2012-07-02 16:43:32.424516543 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/gen2.c pari-2.3.5/src/basemath/gen2.c
+--- pari-2.3.5.orig/src/basemath/gen2.c	2008-06-09 12:54:59.000000000 +0100
++++ pari-2.3.5/src/basemath/gen2.c	2012-07-02 16:43:32.463516557 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/gen3.c pari-2.3.5/src/basemath/gen3.c
+--- pari-2.3.5.orig/src/basemath/gen3.c	2009-09-24 10:47:52.000000000 +0100
++++ pari-2.3.5/src/basemath/gen3.c	2012-07-02 16:43:32.569516593 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/ifactor1.c pari-2.3.5/src/basemath/ifactor1.c
+--- pari-2.3.5.orig/src/basemath/ifactor1.c	2008-12-16 18:18:59.000000000 +0000
++++ pari-2.3.5/src/basemath/ifactor1.c	2012-07-02 16:43:32.607516604 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/perm.c pari-2.3.5/src/basemath/perm.c
+--- pari-2.3.5.orig/src/basemath/perm.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/perm.c	2012-07-02 16:43:32.593516601 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/basemath/polarit1.c pari-2.3.5/src/basemath/polarit1.c
+--- pari-2.3.5.orig/src/basemath/polarit1.c	2009-09-19 13:01:14.000000000 +0100
++++ pari-2.3.5/src/basemath/polarit1.c	2012-07-02 16:43:32.485516564 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /***********************************************************************/
+ /**                                                                   **/
+diff -ur pari-2.3.5.orig/src/basemath/polarit2.c pari-2.3.5/src/basemath/polarit2.c
+--- pari-2.3.5.orig/src/basemath/polarit2.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/polarit2.c	2012-07-02 16:43:32.394516533 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /***********************************************************************/
+ /**                                                                   **/
+diff -ur pari-2.3.5.orig/src/basemath/polarit3.c pari-2.3.5/src/basemath/polarit3.c
+--- pari-2.3.5.orig/src/basemath/polarit3.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/polarit3.c	2012-07-02 16:43:32.409516538 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /***********************************************************************/
+ /**                                                                   **/
+diff -ur pari-2.3.5.orig/src/basemath/Qfb.c pari-2.3.5/src/basemath/Qfb.c
+--- pari-2.3.5.orig/src/basemath/Qfb.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/Qfb.c	2012-07-02 16:43:32.518516574 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ #include "pari.h"
+ #include "paripriv.h"
+ /*******************************************************************/
+diff -ur pari-2.3.5.orig/src/basemath/RgX.c pari-2.3.5/src/basemath/RgX.c
+--- pari-2.3.5.orig/src/basemath/RgX.c	2008-12-08 11:59:28.000000000 +0000
++++ pari-2.3.5/src/basemath/RgX.c	2012-07-02 16:43:32.413516539 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/basemath/rootpol.c pari-2.3.5/src/basemath/rootpol.c
+--- pari-2.3.5.orig/src/basemath/rootpol.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/rootpol.c	2012-07-02 16:43:32.545516584 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/basemath/subcyclo.c pari-2.3.5/src/basemath/subcyclo.c
+--- pari-2.3.5.orig/src/basemath/subcyclo.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/basemath/subcyclo.c	2012-07-02 16:43:32.361516521 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/basemath/subgroup.c pari-2.3.5/src/basemath/subgroup.c
+--- pari-2.3.5.orig/src/basemath/subgroup.c	2009-09-19 12:52:30.000000000 +0100
++++ pari-2.3.5/src/basemath/subgroup.c	2012-07-02 16:43:32.537516581 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/basemath/trans1.c pari-2.3.5/src/basemath/trans1.c
+--- pari-2.3.5.orig/src/basemath/trans1.c	2010-02-03 22:59:18.000000000 +0000
++++ pari-2.3.5/src/basemath/trans1.c	2012-07-02 16:43:32.473516559 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/trans2.c pari-2.3.5/src/basemath/trans2.c
+--- pari-2.3.5.orig/src/basemath/trans2.c	2008-06-09 12:54:59.000000000 +0100
++++ pari-2.3.5/src/basemath/trans2.c	2012-07-02 16:43:32.514516574 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/basemath/trans3.c pari-2.3.5/src/basemath/trans3.c
+--- pari-2.3.5.orig/src/basemath/trans3.c	2009-09-24 10:47:52.000000000 +0100
++++ pari-2.3.5/src/basemath/trans3.c	2012-07-02 16:43:32.578516594 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/desc/PARI/822.pm pari-2.3.5/src/desc/PARI/822.pm
+--- pari-2.3.5.orig/src/desc/PARI/822.pm	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/desc/PARI/822.pm	2012-07-02 16:43:32.657516622 +0100
+@@ -10,7 +10,7 @@
+ #
+ #Check the License for details. You should have received a copy of it, along
+ #with the package; see the file 'COPYING'. If not, write to the Free Software
+-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ 
+ #Based on Debconf::Format::822 by Joey Hess <joey@kitenet.net>.
+ 
+diff -ur pari-2.3.5.orig/src/gp/gp.c pari-2.3.5/src/gp/gp.c
+--- pari-2.3.5.orig/src/gp/gp.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/gp/gp.c	2012-07-02 16:43:32.722516644 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /**                                                               **/
+diff -ur pari-2.3.5.orig/src/gp/gp.h pari-2.3.5/src/gp/gp.h
+--- pari-2.3.5.orig/src/gp/gp.h	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/gp/gp.h	2012-07-02 16:43:32.722516644 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*************************************************************************/
+ /*                                                                       */
+diff -ur pari-2.3.5.orig/src/gp/gp_init.c pari-2.3.5/src/gp/gp_init.c
+--- pari-2.3.5.orig/src/gp/gp_init.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/gp/gp_init.c	2012-07-02 16:43:32.712516641 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/gp/gp_rl.c pari-2.3.5/src/gp/gp_rl.c
+--- pari-2.3.5.orig/src/gp/gp_rl.c	2010-01-29 13:40:26.000000000 +0000
++++ pari-2.3.5/src/gp/gp_rl.c	2012-07-02 16:43:32.726516644 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/gp/highlvl.c pari-2.3.5/src/gp/highlvl.c
+--- pari-2.3.5.orig/src/gp/highlvl.c	2010-02-04 10:55:42.000000000 +0000
++++ pari-2.3.5/src/gp/highlvl.c	2012-07-02 16:43:32.715516641 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/gp/whatnow.c pari-2.3.5/src/gp/whatnow.c
+--- pari-2.3.5.orig/src/gp/whatnow.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/gp/whatnow.c	2012-07-02 16:43:32.714516641 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/graph/plotfltk.c pari-2.3.5/src/graph/plotfltk.c
+--- pari-2.3.5.orig/src/graph/plotfltk.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/graph/plotfltk.c	2012-07-02 16:43:32.358516521 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ /////////////////////////////////////////////////////////////////////////////
+ //
+ //  High resolution plot using FLTK library
+diff -ur pari-2.3.5.orig/src/graph/plotnull.c pari-2.3.5/src/graph/plotnull.c
+--- pari-2.3.5.orig/src/graph/plotnull.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/graph/plotnull.c	2012-07-02 16:43:32.357516521 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "rect.h"
+diff -ur pari-2.3.5.orig/src/graph/plotport.c pari-2.3.5/src/graph/plotport.c
+--- pari-2.3.5.orig/src/graph/plotport.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/graph/plotport.c	2012-07-02 16:43:32.355516519 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/graph/plotQt.c pari-2.3.5/src/graph/plotQt.c
+--- pari-2.3.5.orig/src/graph/plotQt.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/graph/plotQt.c	2012-07-02 16:43:32.344516516 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ /////////////////////////////////////////////////////////////////////////////
+ //
+ //  High resolution plot using Trolltech's Qt library
+diff -ur pari-2.3.5.orig/src/graph/plotX.c pari-2.3.5/src/graph/plotX.c
+--- pari-2.3.5.orig/src/graph/plotX.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/graph/plotX.c	2012-07-02 16:43:32.340516514 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/graph/rect.h pari-2.3.5/src/graph/rect.h
+--- pari-2.3.5.orig/src/graph/rect.h	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/graph/rect.h	2012-07-02 16:43:32.357516521 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ BEGINEXTERN
+ 
+diff -ur pari-2.3.5.orig/src/headers/paricast.h pari-2.3.5/src/headers/paricast.h
+--- pari-2.3.5.orig/src/headers/paricast.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/paricast.h	2012-07-02 16:43:32.773516661 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #define mael2(m,x1,x2)          (((GEN*)   (m))[x1][x2])
+ #define mael3(m,x1,x2,x3)       (((GEN**)  (m))[x1][x2][x3])
+diff -ur pari-2.3.5.orig/src/headers/paricom.h pari-2.3.5/src/headers/paricom.h
+--- pari-2.3.5.orig/src/headers/paricom.h	2010-02-02 20:01:24.000000000 +0000
++++ pari-2.3.5/src/headers/paricom.h	2012-07-02 16:43:32.779516663 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /******************************************************************/
+ /*                                                                */
+diff -ur pari-2.3.5.orig/src/headers/paridecl.h pari-2.3.5/src/headers/paridecl.h
+--- pari-2.3.5.orig/src/headers/paridecl.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/paridecl.h	2012-07-02 16:43:32.771516661 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/headers/parierr.h pari-2.3.5/src/headers/parierr.h
+--- pari-2.3.5.orig/src/headers/parierr.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/parierr.h	2012-07-02 16:43:32.772516661 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ enum {
+   cant_deflate = 1,	/* Force errors into non-0 */
+diff -ur pari-2.3.5.orig/src/headers/parigen.h pari-2.3.5/src/headers/parigen.h
+--- pari-2.3.5.orig/src/headers/parigen.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/parigen.h	2012-07-02 16:43:32.772516661 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file defines the parameters of the GEN type               */
+ 
+diff -ur pari-2.3.5.orig/src/headers/pari.h pari-2.3.5/src/headers/pari.h
+--- pari-2.3.5.orig/src/headers/pari.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/pari.h	2012-07-02 16:43:32.774516661 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #ifndef __GENPARI__
+ #define __GENPARI__
+diff -ur pari-2.3.5.orig/src/headers/parinf.h pari-2.3.5/src/headers/parinf.h
+--- pari-2.3.5.orig/src/headers/parinf.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/parinf.h	2012-07-02 16:43:32.780516664 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ typedef struct {
+   GEN x; /* defining polynomial (monic, integral) */
+diff -ur pari-2.3.5.orig/src/headers/pariold.h pari-2.3.5/src/headers/pariold.h
+--- pari-2.3.5.orig/src/headers/pariold.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/pariold.h	2012-07-02 16:43:32.764516659 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* For compatibility with 1.x.x */
+ /*functions renamed*/
+diff -ur pari-2.3.5.orig/src/headers/pariport.h pari-2.3.5/src/headers/pariport.h
+--- pari-2.3.5.orig/src/headers/pariport.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/pariport.h	2012-07-02 16:43:32.773516661 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/headers/paripriv.h pari-2.3.5/src/headers/paripriv.h
+--- pari-2.3.5.orig/src/headers/paripriv.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/paripriv.h	2012-07-02 16:43:32.777516663 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ BEGINEXTERN
+ 
+diff -ur pari-2.3.5.orig/src/headers/paristio.h pari-2.3.5/src/headers/paristio.h
+--- pari-2.3.5.orig/src/headers/paristio.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/paristio.h	2012-07-02 16:43:32.765516659 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file contains memory and I/O management definitions       */
+ 
+diff -ur pari-2.3.5.orig/src/headers/parisys.h pari-2.3.5/src/headers/parisys.h
+--- pari-2.3.5.orig/src/headers/parisys.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/parisys.h	2012-07-02 16:43:32.774516661 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This files contains macros depending on system and compiler    */
+ 
+diff -ur pari-2.3.5.orig/src/headers/paritype.h pari-2.3.5/src/headers/paritype.h
+--- pari-2.3.5.orig/src/headers/paritype.h	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/headers/paritype.h	2012-07-02 16:43:32.779516663 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* DO NOT REORDER THESE
+  * actual values can be changed. Adapt lontyp/lontyp2 in gen2.c */
+diff -ur pari-2.3.5.orig/src/kernel/alpha/asm0.h pari-2.3.5/src/kernel/alpha/asm0.h
+--- pari-2.3.5.orig/src/kernel/alpha/asm0.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/alpha/asm0.h	2012-07-02 16:43:32.736516649 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*
+ ASM addll mulll
+diff -ur pari-2.3.5.orig/src/kernel/alpha/asm1.h pari-2.3.5/src/kernel/alpha/asm1.h
+--- pari-2.3.5.orig/src/kernel/alpha/asm1.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/alpha/asm1.h	2012-07-02 16:43:32.735516648 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file is a slight adaptation of source code extracted from gmp-3.1.1
+   (from T. Granlund), files longlong.h and gmp-impl.h
+diff -ur pari-2.3.5.orig/src/kernel/gmp/gcd.c pari-2.3.5/src/kernel/gmp/gcd.c
+--- pari-2.3.5.orig/src/kernel/gmp/gcd.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/gmp/gcd.c	2012-07-02 16:43:32.728516646 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ GEN
+ gcdii(GEN a, GEN b)
+diff -ur pari-2.3.5.orig/src/kernel/gmp/int.h pari-2.3.5/src/kernel/gmp/int.h
+--- pari-2.3.5.orig/src/kernel/gmp/int.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/gmp/int.h	2012-07-02 16:43:32.732516647 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #define int_MSW(x) ((x)+lgefint((x))-1)
+ /*x being a t_INT, return a pointer to the most significant word of x.*/
+diff -ur pari-2.3.5.orig/src/kernel/gmp/mp.c pari-2.3.5/src/kernel/gmp/mp.c
+--- pari-2.3.5.orig/src/kernel/gmp/mp.c	2008-06-10 18:41:47.000000000 +0100
++++ pari-2.3.5/src/kernel/gmp/mp.c	2012-07-02 16:43:32.732516647 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /***********************************************************************/
+ /**								      **/
+diff -ur pari-2.3.5.orig/src/kernel/hppa/asm0.h pari-2.3.5/src/kernel/hppa/asm0.h
+--- pari-2.3.5.orig/src/kernel/hppa/asm0.h	2009-09-19 12:52:30.000000000 +0100
++++ pari-2.3.5/src/kernel/hppa/asm0.h	2012-07-02 16:43:32.727516645 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file was made using idea from Bruno Haible ix86 asm inline kernel
+  * and code from Nigel Smart hppa asm kernel. mulll was inspired from
+diff -ur pari-2.3.5.orig/src/kernel/hppa64/asm0.h pari-2.3.5/src/kernel/hppa64/asm0.h
+--- pari-2.3.5.orig/src/kernel/hppa64/asm0.h	2009-09-19 12:52:30.000000000 +0100
++++ pari-2.3.5/src/kernel/hppa64/asm0.h	2012-07-02 16:43:32.726516644 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file was made using idea from Bruno Haible ix86 asm inline kernel
+  * and code from Nigel Smart hppa asm kernel. mulll was inspired from
+diff -ur pari-2.3.5.orig/src/kernel/ia64/asm0.h pari-2.3.5/src/kernel/ia64/asm0.h
+--- pari-2.3.5.orig/src/kernel/ia64/asm0.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/ia64/asm0.h	2012-07-02 16:43:32.735516648 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*
+ ASM mulll bfffo
+diff -ur pari-2.3.5.orig/src/kernel/ix86/asm0.h pari-2.3.5/src/kernel/ix86/asm0.h
+--- pari-2.3.5.orig/src/kernel/ix86/asm0.h	2009-09-19 12:52:30.000000000 +0100
++++ pari-2.3.5/src/kernel/ix86/asm0.h	2012-07-02 16:43:32.734516647 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file defines some "level 0" kernel functions for Intel ix86  */
+ /* It is intended for use with an external "asm" definition          */
+diff -ur pari-2.3.5.orig/src/kernel/m68k/asm0.h pari-2.3.5/src/kernel/m68k/asm0.h
+--- pari-2.3.5.orig/src/kernel/m68k/asm0.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/m68k/asm0.h	2012-07-02 16:43:32.735516648 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* Written by Bill Allombert and dedicated to thoses who wrote the original 
+  * m68k kernel mp.s */
+diff -ur pari-2.3.5.orig/src/kernel/none/add.c pari-2.3.5/src/kernel/none/add.c
+--- pari-2.3.5.orig/src/kernel/none/add.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/add.c	2012-07-02 16:43:32.753516654 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* prototype of positive small ints */
+ static long pos_s[] = {
+diff -ur pari-2.3.5.orig/src/kernel/none/addll.h pari-2.3.5/src/kernel/none/addll.h
+--- pari-2.3.5.orig/src/kernel/none/addll.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/addll.h	2012-07-02 16:43:32.739516650 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file originally adapted from gmp-3.1.1 (from T. Granlund), files
+  * longlong.h and gmp-impl.h
+diff -ur pari-2.3.5.orig/src/kernel/none/asm0.h pari-2.3.5/src/kernel/none/asm0.h
+--- pari-2.3.5.orig/src/kernel/none/asm0.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/asm0.h	2012-07-02 16:43:32.762516657 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*
+ NOASM addll mulll bfffo divll
+diff -ur pari-2.3.5.orig/src/kernel/none/bfffo.h pari-2.3.5/src/kernel/none/bfffo.h
+--- pari-2.3.5.orig/src/kernel/none/bfffo.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/bfffo.h	2012-07-02 16:43:32.741516650 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #if !defined(INLINE)
+ extern int  bfffo(ulong x);
+diff -ur pari-2.3.5.orig/src/kernel/none/cmp.c pari-2.3.5/src/kernel/none/cmp.c
+--- pari-2.3.5.orig/src/kernel/none/cmp.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/cmp.c	2012-07-02 16:43:32.738516650 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ 
+ /********************************************************************/
+diff -ur pari-2.3.5.orig/src/kernel/none/divll.h pari-2.3.5/src/kernel/none/divll.h
+--- pari-2.3.5.orig/src/kernel/none/divll.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/divll.h	2012-07-02 16:43:32.762516657 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file originally adapted from gmp-3.1.1 (from T. Granlund), files
+  * longlong.h and gmp-impl.h
+diff -ur pari-2.3.5.orig/src/kernel/none/gcd.c pari-2.3.5/src/kernel/none/gcd.c
+--- pari-2.3.5.orig/src/kernel/none/gcd.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/gcd.c	2012-07-02 16:43:32.737516650 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* assume y > x > 0. return y mod x */
+ static ulong
+diff -ur pari-2.3.5.orig/src/kernel/none/gcdll.c pari-2.3.5/src/kernel/none/gcdll.c
+--- pari-2.3.5.orig/src/kernel/none/gcdll.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/gcdll.c	2012-07-02 16:43:32.760516657 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /***********************************************************************/
+ /**								      **/
+diff -ur pari-2.3.5.orig/src/kernel/none/int.h pari-2.3.5/src/kernel/none/int.h
+--- pari-2.3.5.orig/src/kernel/none/int.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/int.h	2012-07-02 16:43:32.762516657 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #define int_MSW(x) ((x)+2)
+ /*x being a t_INT, return a pointer to the most significant word of x.*/
+diff -ur pari-2.3.5.orig/src/kernel/none/invmod.c pari-2.3.5/src/kernel/none/invmod.c
+--- pari-2.3.5.orig/src/kernel/none/invmod.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/invmod.c	2012-07-02 16:43:32.739516650 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*==================================
+  * invmod(a,b,res)
+diff -ur pari-2.3.5.orig/src/kernel/none/level1.h pari-2.3.5/src/kernel/none/level1.h
+--- pari-2.3.5.orig/src/kernel/none/level1.h	2010-02-02 20:01:38.000000000 +0000
++++ pari-2.3.5/src/kernel/none/level1.h	2012-07-02 16:43:32.752516654 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file defines "level 1" kernel functions.
+  * These functions can be inline; if not they are defined externally in
+diff -ur pari-2.3.5.orig/src/kernel/none/mp.c pari-2.3.5/src/kernel/none/mp.c
+--- pari-2.3.5.orig/src/kernel/none/mp.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/mp.c	2012-07-02 16:43:32.748516653 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /***********************************************************************/
+ /**								      **/
+diff -ur pari-2.3.5.orig/src/kernel/none/mp_indep.c pari-2.3.5/src/kernel/none/mp_indep.c
+--- pari-2.3.5.orig/src/kernel/none/mp_indep.c	2010-01-29 11:57:53.000000000 +0000
++++ pari-2.3.5/src/kernel/none/mp_indep.c	2012-07-02 16:43:32.756516655 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* Find c such that 1=c*b mod 2^BITS_IN_LONG, assuming b odd (unchecked) */
+ ulong
+diff -ur pari-2.3.5.orig/src/kernel/none/mpinl.c pari-2.3.5/src/kernel/none/mpinl.c
+--- pari-2.3.5.orig/src/kernel/none/mpinl.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/mpinl.c	2012-07-02 16:43:32.762516657 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ #define INLINE
+ #define DISABLE_INLINE
+ #include "pari.h"
+diff -ur pari-2.3.5.orig/src/kernel/none/mulll.h pari-2.3.5/src/kernel/none/mulll.h
+--- pari-2.3.5.orig/src/kernel/none/mulll.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/mulll.h	2012-07-02 16:43:32.761516657 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #undef  LOCAL_HIREMAINDER
+ #define LOCAL_HIREMAINDER
+diff -ur pari-2.3.5.orig/src/kernel/none/ratlift.c pari-2.3.5/src/kernel/none/ratlift.c
+--- pari-2.3.5.orig/src/kernel/none/ratlift.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/none/ratlift.c	2012-07-02 16:43:32.741516650 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*==========================================================
+  * ratlift(GEN x, GEN m, GEN *a, GEN *b, GEN amax, GEN bmax)
+diff -ur pari-2.3.5.orig/src/kernel/ppc/asm0.h pari-2.3.5/src/kernel/ppc/asm0.h
+--- pari-2.3.5.orig/src/kernel/ppc/asm0.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/ppc/asm0.h	2012-07-02 16:43:32.763516658 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ /*
+ ASM addll mulll bfffo
+ NOASM divll
+diff -ur pari-2.3.5.orig/src/kernel/sparcv8_micro/asm0-common.h pari-2.3.5/src/kernel/sparcv8_micro/asm0-common.h
+--- pari-2.3.5.orig/src/kernel/sparcv8_micro/asm0-common.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/sparcv8_micro/asm0-common.h	2012-07-02 16:43:32.733516647 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file is common to SuperSparc and MicroSparc */
+ /*
+diff -ur pari-2.3.5.orig/src/kernel/sparcv8_micro/asm0.h pari-2.3.5/src/kernel/sparcv8_micro/asm0.h
+--- pari-2.3.5.orig/src/kernel/sparcv8_micro/asm0.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/sparcv8_micro/asm0.h	2012-07-02 16:43:32.733516647 +0100
+@@ -10,7 +10,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ /*
+ ASM divll
+ */
+diff -ur pari-2.3.5.orig/src/kernel/x86_64/asm0.h pari-2.3.5/src/kernel/x86_64/asm0.h
+--- pari-2.3.5.orig/src/kernel/x86_64/asm0.h	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/kernel/x86_64/asm0.h	2012-07-02 16:43:32.734516647 +0100
+@@ -12,7 +12,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*
+ ASM addll mulll bfffo divll
+diff -ur pari-2.3.5.orig/src/language/anal.c pari-2.3.5/src/language/anal.c
+--- pari-2.3.5.orig/src/language/anal.c	2008-07-08 21:02:09.000000000 +0100
++++ pari-2.3.5/src/language/anal.c	2012-07-02 16:43:32.671516627 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/language/anal.h pari-2.3.5/src/language/anal.h
+--- pari-2.3.5.orig/src/language/anal.h	2008-06-10 16:43:14.000000000 +0100
++++ pari-2.3.5/src/language/anal.h	2012-07-02 16:43:32.707516639 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*************************************************************************/
+ /*                                                                       */
+diff -ur pari-2.3.5.orig/src/language/compat.c pari-2.3.5/src/language/compat.c
+--- pari-2.3.5.orig/src/language/compat.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/compat.c	2012-07-02 16:43:32.707516639 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/language/default.c pari-2.3.5/src/language/default.c
+--- pari-2.3.5.orig/src/language/default.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/default.c	2012-07-02 16:43:32.711516641 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ #include "pari.h"
+ #include "paripriv.h"
+ #include "anal.h"
+diff -ur pari-2.3.5.orig/src/language/errmsg.c pari-2.3.5/src/language/errmsg.c
+--- pari-2.3.5.orig/src/language/errmsg.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/errmsg.c	2012-07-02 16:43:32.708516639 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ char *errmessage[]=
+ {
+diff -ur pari-2.3.5.orig/src/language/es.c pari-2.3.5/src/language/es.c
+--- pari-2.3.5.orig/src/language/es.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/es.c	2012-07-02 16:43:32.685516631 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /**                                                               **/
+diff -ur pari-2.3.5.orig/src/language/init.c pari-2.3.5/src/language/init.c
+--- pari-2.3.5.orig/src/language/init.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/init.c	2012-07-02 16:43:32.704516638 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/language/intnum.c pari-2.3.5/src/language/intnum.c
+--- pari-2.3.5.orig/src/language/intnum.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/intnum.c	2012-07-02 16:43:32.692516634 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/language/members.c pari-2.3.5/src/language/members.c
+--- pari-2.3.5.orig/src/language/members.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/members.c	2012-07-02 16:43:32.673516627 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/language/sumiter.c pari-2.3.5/src/language/sumiter.c
+--- pari-2.3.5.orig/src/language/sumiter.c	2008-03-31 12:43:58.000000000 +0100
++++ pari-2.3.5/src/language/sumiter.c	2012-07-02 16:43:32.696516634 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/modules/aprcl.c pari-2.3.5/src/modules/aprcl.c
+--- pari-2.3.5.orig/src/modules/aprcl.c	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/modules/aprcl.c	2012-07-02 16:43:32.809516674 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/modules/elldata.c pari-2.3.5/src/modules/elldata.c
+--- pari-2.3.5.orig/src/modules/elldata.c	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/modules/elldata.c	2012-07-02 16:43:32.847516687 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/modules/elliptic.c pari-2.3.5/src/modules/elliptic.c
+--- pari-2.3.5.orig/src/modules/elliptic.c	2010-02-03 15:04:11.000000000 +0000
++++ pari-2.3.5/src/modules/elliptic.c	2012-07-02 16:43:32.837516683 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /********************************************************************/
+ /**                                                                **/
+diff -ur pari-2.3.5.orig/src/modules/galois.c pari-2.3.5/src/modules/galois.c
+--- pari-2.3.5.orig/src/modules/galois.c	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/modules/galois.c	2012-07-02 16:43:32.823516679 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /**************************************************************/
+ /*                                                            */
+diff -ur pari-2.3.5.orig/src/modules/groupid.c pari-2.3.5/src/modules/groupid.c
+--- pari-2.3.5.orig/src/modules/groupid.c	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/modules/groupid.c	2012-07-02 16:43:32.806516673 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/modules/kummer.c pari-2.3.5/src/modules/kummer.c
+--- pari-2.3.5.orig/src/modules/kummer.c	2008-06-09 12:55:00.000000000 +0100
++++ pari-2.3.5/src/modules/kummer.c	2012-07-02 16:43:32.851516687 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/modules/mpqs.c pari-2.3.5/src/modules/mpqs.c
+--- pari-2.3.5.orig/src/modules/mpqs.c	2010-01-29 15:38:26.000000000 +0000
++++ pari-2.3.5/src/modules/mpqs.c	2012-07-02 16:43:32.803516671 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* Written by Thomas Papanikolaou and Xavier Roblot
+  *
+diff -ur pari-2.3.5.orig/src/modules/nffactor.c pari-2.3.5/src/modules/nffactor.c
+--- pari-2.3.5.orig/src/modules/nffactor.c	2009-09-19 12:52:30.000000000 +0100
++++ pari-2.3.5/src/modules/nffactor.c	2012-07-02 16:43:32.842516684 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/modules/part.c pari-2.3.5/src/modules/part.c
+--- pari-2.3.5.orig/src/modules/part.c	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/modules/part.c	2012-07-02 16:43:32.803516671 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* Original code contributed by: Ralf Stephan (ralf@ark.in-berlin.de).
+  * 
+diff -ur pari-2.3.5.orig/src/modules/stark.c pari-2.3.5/src/modules/stark.c
+--- pari-2.3.5.orig/src/modules/stark.c	2008-03-31 12:43:59.000000000 +0100
++++ pari-2.3.5/src/modules/stark.c	2012-07-02 16:43:32.790516667 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/modules/subfield.c pari-2.3.5/src/modules/subfield.c
+--- pari-2.3.5.orig/src/modules/subfield.c	2008-06-09 12:55:00.000000000 +0100
++++ pari-2.3.5/src/modules/subfield.c	2012-07-02 16:43:32.846516686 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /*******************************************************************/
+ /*                                                                 */
+diff -ur pari-2.3.5.orig/src/modules/thue.c pari-2.3.5/src/modules/thue.c
+--- pari-2.3.5.orig/src/modules/thue.c	2008-12-08 18:38:04.000000000 +0000
++++ pari-2.3.5/src/modules/thue.c	2012-07-02 16:43:32.814516674 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ #include "pari.h"
+ #include "paripriv.h"
+diff -ur pari-2.3.5.orig/src/test/tune.c pari-2.3.5/src/test/tune.c
+--- pari-2.3.5.orig/src/test/tune.c	2008-03-31 12:43:57.000000000 +0100
++++ pari-2.3.5/src/test/tune.c	2012-07-02 16:43:32.659516623 +0100
+@@ -11,7 +11,7 @@
+ 
+ Check the License for details. You should have received a copy of it, along
+ with the package; see the file 'COPYING'. If not, write to the Free Software
+-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
++Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+ 
+ /* This file is a quick hack adapted from gmp-4.0 tuning utilities
+  * (T. Granlund et al.)

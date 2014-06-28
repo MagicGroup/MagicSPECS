@@ -1,0 +1,45 @@
+# RPM Macros for packaging Haskell packages with multiple libs  -*-rpm-spec-*-
+
+# ghc_lib_subpackage [-c cdepslist] [-l licensetag] [-x] [name] [version]
+%ghc_lib_subpackage(c:l:x)\
+%define pkgname %{?1}%{!?1:%{pkg_name}}\
+%define pkgver %{?2}%{!?2:%{version}}\
+%define pkgnamever %{pkgname}-%{pkgver}\
+%{!-x:%{?1:%global ghc_packages_list %{?ghc_packages_list} %{pkgnamever}}}\
+%define basepkg ghc-%{pkgname}\
+%package -n %{basepkg}\
+Summary:        Haskell %{pkgname} library\
+%{?1:Version:        %{pkgver}}\
+%{-l:License:        %{-l*}}\
+Url:            http://hackage.haskell.org/package/%{pkgname}\
+%{?ghc_pkg_obsoletes:Obsoletes:      %(echo "%{ghc_pkg_obsoletes}" | sed -e "s/\\(ghc-[^, ]*\\)-devel/\\1/g")}\
+\
+%description -n %{basepkg}\
+This package provides the Haskell %{pkgname} library.\
+\
+%package -n %{basepkg}-devel\
+Summary:        Haskell %{pkgname} library development files\
+%{?1:Version:        %{pkgver}}\
+%{-l:License:        %{-l*}}\
+Requires(post): ghc-compiler = %{ghc_version}\
+Requires(postun): ghc-compiler = %{ghc_version}\
+Requires:       ghc-%{pkgname}%{?_isa} = %{pkgver}-%{release}\
+%{?ghc_pkg_c_deps:Requires:       %{ghc_pkg_c_deps}}\
+%{-c:Requires:       %{-c*}}\
+%{?ghc_pkg_obsoletes:Obsoletes:      %{ghc_pkg_obsoletes}}\
+\
+%description -n %{basepkg}-devel\
+This package provides the Haskell %{pkgname} library development files.\
+\
+%post -n %{basepkg}-devel\
+%ghc_pkg_recache\
+\
+%postun -n %{basepkg}-devel\
+%ghc_pkg_recache\
+\
+%files -n %{basepkg} -f %{basepkg}.files\
+%{?base_doc_files:%doc %base_doc_files}\
+\
+%files -n %{basepkg}-devel -f %{basepkg}-devel.files\
+%{?devel_doc_files:%doc %devel_doc_files}\
+%{nil}

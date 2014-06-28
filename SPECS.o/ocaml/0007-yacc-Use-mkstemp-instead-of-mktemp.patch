@@ -1,0 +1,25 @@
+From 761242718c3a7513d3b93ca96d24d1f61a4126f0 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 13 Sep 2013 21:29:58 +0100
+Subject: [PATCH 07/14] yacc: Use mkstemp instead of mktemp.
+
+---
+ yacc/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/yacc/main.c b/yacc/main.c
+index f6cac60..3067000 100644
+--- a/yacc/main.c
++++ b/yacc/main.c
+@@ -53,7 +53,7 @@ char *text_file_name;
+ char *union_file_name;
+ char *verbose_file_name;
+ 
+-#if defined(__OpenBSD__) || defined(__NetBSD__) || defined(__FreeBSD__) || defined(__DragonFly__) || (__APPLE__)
++#if defined(__linux__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__FreeBSD__) || defined(__DragonFly__) || (__APPLE__)
+ #define HAVE_MKSTEMP
+ #endif
+ 
+-- 
+1.9.0
+

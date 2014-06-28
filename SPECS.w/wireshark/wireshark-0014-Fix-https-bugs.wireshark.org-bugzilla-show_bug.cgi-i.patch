@@ -1,0 +1,22 @@
+From: Pascal Quantin <pascal.quantin@gmail.com>
+Date: Sat, 9 Nov 2013 15:44:01 +0000
+Subject: [PATCH] Fix https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=9388
+ : Avoid an infinite loop in SIP dissector (backport of r51738)
+
+svn path=/trunk-1.10/; revision=53195
+
+diff --git a/epan/dissectors/packet-sip.c b/epan/dissectors/packet-sip.c
+index a3ceec2..b012837 100644
+--- a/epan/dissectors/packet-sip.c
++++ b/epan/dissectors/packet-sip.c
+@@ -2134,6 +2134,10 @@ dissect_sip_common(tvbuff_t *tvb, int offset, packet_info *pinfo, proto_tree *tr
+ 	 */
+ 	orig_offset = offset;
+ 	linelen = tvb_find_line_end(tvb, offset, -1, &next_offset, FALSE);
++	if(linelen==0){
++		return -2;
++	}
++
+ 	if (tvb_strnlen(tvb, offset, linelen) > -1)
+ 	{
+ 		/*

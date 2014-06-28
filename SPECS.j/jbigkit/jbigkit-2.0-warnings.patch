@@ -1,0 +1,256 @@
+diff -up jbigkit/libjbig/tstcodec85.c.warnings jbigkit/libjbig/tstcodec85.c
+--- jbigkit/libjbig/tstcodec85.c.warnings	2008-08-23 22:06:31.000000000 +0200
++++ jbigkit/libjbig/tstcodec85.c	2012-07-17 16:18:42.326419366 +0200
+@@ -334,7 +334,7 @@ int main(int argc, char **argv)
+   for (i = 0; i < 16 * 16 && !trouble; i++) {
+     pix = arith_decode(sd, (t82cx[i >> 4] >> ((15 - i) & 15)) & 1);
+     if (pix < 0) {
+-      printf("Problem at pixel %ld, byte %d.\n\n",
++      printf("Problem at pixel %ld, byte %td.\n\n",
+ 	     i+1, sd->pscd_ptr - sd->pscd_end);
+       trouble++;
+       break;
+@@ -346,7 +346,7 @@ int main(int argc, char **argv)
+     }
+   }
+   if (!trouble && sd->pscd_ptr != sd->pscd_end - 2) {
+-    printf("%d bytes left after decoder finished.\n\n",
++    printf("%td bytes left after decoder finished.\n\n",
+ 	   sd->pscd_end - sd->pscd_ptr - 2);
+     trouble++;
+   }
+@@ -374,7 +374,7 @@ int main(int argc, char **argv)
+       pix = arith_decode(sd, (t82cx[i >> 4] >> ((15 - i) & 15)) & 1);
+     }
+     if (pix < 0) {
+-      printf("Problem at pixel %ld, byte %d.\n\n",
++      printf("Problem at pixel %ld, byte %td.\n\n",
+ 	     i+1, sd->pscd_ptr - sd->pscd_end);
+       trouble++;
+       break;
+@@ -386,7 +386,7 @@ int main(int argc, char **argv)
+     }
+   }
+   if (!trouble && sd->pscd_ptr != sd->pscd_end - 2) {
+-    printf("%d bytes left after decoder finished.\n\n",
++    printf("%td bytes left after decoder finished.\n\n",
+ 	   sd->pscd_end - sd->pscd_ptr - 2);
+     trouble++;
+   }
+diff -up jbigkit/libjbig/tstcodec.c.warnings jbigkit/libjbig/tstcodec.c
+--- jbigkit/libjbig/tstcodec.c.warnings	2008-08-30 19:20:58.000000000 +0200
++++ jbigkit/libjbig/tstcodec.c	2012-07-17 16:17:28.649420322 +0200
+@@ -399,7 +399,7 @@ int main(int argc, char **argv)
+   for (i = 0; i < 16 * 16 && !trouble; i++) {
+     pix = arith_decode(sd, (t82cx[i >> 4] >> ((15 - i) & 15)) & 1);
+     if (pix < 0) {
+-      printf("Problem at pixel %ld, byte %d.\n\n",
++      printf("Problem at pixel %ld, byte %td.\n\n",
+ 	     i+1, sd->pscd_ptr - sd->pscd_end);
+       trouble++;
+       break;
+@@ -411,7 +411,7 @@ int main(int argc, char **argv)
+     }
+   }
+   if (!trouble && sd->pscd_ptr != sd->pscd_end - 2) {
+-    printf("%d bytes left after decoder finished.\n\n",
++    printf("%td bytes left after decoder finished.\n\n",
+ 	   sd->pscd_end - sd->pscd_ptr - 2);
+     trouble++;
+   }
+@@ -439,7 +439,7 @@ int main(int argc, char **argv)
+       pix = arith_decode(sd, (t82cx[i >> 4] >> ((15 - i) & 15)) & 1);
+     }
+     if (pix < 0) {
+-      printf("Problem at pixel %ld, byte %d.\n\n",
++      printf("Problem at pixel %ld, byte %td.\n\n",
+ 	     i+1, sd->pscd_ptr - sd->pscd_end);
+       trouble++;
+       break;
+@@ -451,7 +451,7 @@ int main(int argc, char **argv)
+     }
+   }
+   if (!trouble && sd->pscd_ptr != sd->pscd_end - 2) {
+-    printf("%d bytes left after decoder finished.\n\n",
++    printf("%td bytes left after decoder finished.\n\n",
+ 	   sd->pscd_end - sd->pscd_ptr - 2);
+     trouble++;
+   }
+diff -up jbigkit/pbmtools/jbgtopbm.c.warnings jbigkit/pbmtools/jbgtopbm.c
+--- jbigkit/pbmtools/jbgtopbm.c.warnings	2008-08-27 23:37:45.000000000 +0200
++++ jbigkit/pbmtools/jbgtopbm.c	2012-07-17 16:21:19.501283868 +0200
+@@ -110,7 +110,7 @@ void fprint_bytes(FILE *f, unsigned char
+   for (i = 0; i < len && i < max; i++)
+     fprintf(f, "%02x ", p[i]);
+   if (len > i)
+-    fprintf(f, "... %d bytes total", len);
++    fprintf(f, "... %zd bytes total", len);
+   fprintf(f, "\n");
+ }
+ 
+@@ -134,7 +134,7 @@ void diagnose_bie(FILE *fin)
+   /* read BIH */
+   read_file(&bie, &buflen, &len, fin);
+   if (len < 20) {
+-    fprintf(f, "Error: Input file is %d < 20 bytes long and therefore "
++    fprintf(f, "Error: Input file is %zd < 20 bytes long and therefore "
+ 	    "does not contain an intact BIE header!\n", len);
+     return;
+   }
+@@ -188,18 +188,18 @@ void diagnose_bie(FILE *fin)
+       == (JBG_DPON | JBG_DPPRIV))
+     p += 1728;  /* skip DPTABLE */
+   if (p > bie + len) {
+-    fprintf(f, "Error: Input file is %d < 20+1728 bytes long and therefore "
++    fprintf(f, "Error: Input file is %zd < 20+1728 bytes long and therefore "
+ 	    "does not contain an intact BIE header with DPTABLE!\n", len);
+     return;
+   }
+   while (p != bie + len) {
+     if (p > bie + len - 2) {
+-      fprintf(f, "%06x: Error: single byte 0x%02x left\n", p - bie, *p);
++      fprintf(f, "%06tx: Error: single byte 0x%02x left\n", p - bie, *p);
+       return;
+     }
+     pnext = jbg_next_pscdms(p, len - (p - bie));
+     if (p[0] != MARKER_ESC || p[1] == MARKER_STUFF) {
+-      fprintf(f, "%06x: PSCD: ", p - bie);
++      fprintf(f, "%06tx: PSCD: ", p - bie);
+       fprint_bytes(f, p, pnext ? (size_t) (pnext - p) : len - (p - bie), 60);
+       if (!pnext) {
+ 	fprintf(f, "Error: PSCD not terminated by SDNORM or SDRST marker\n");
+@@ -209,7 +209,7 @@ void diagnose_bie(FILE *fin)
+       switch (p[1]) {
+       case MARKER_SDNORM:
+       case MARKER_SDRST:
+-	fprintf(f, "%06x: ESC %s, ending SDE #%lu", p - bie,
++	fprintf(f, "%06tx: ESC %s, ending SDE #%lu", p - bie,
+ 		(p[1] == MARKER_SDNORM) ? "SDNORM" : "SDRST", ++sde);
+ 	if (sde == sdes)
+ 	  fprintf(f, " (final SDE)");
+@@ -219,10 +219,10 @@ void diagnose_bie(FILE *fin)
+ 	fprintf(f, "\n");
+ 	break;
+       case MARKER_ABORT:
+-	fprintf(f, "%06x: ESC ABORT\n", p - bie);
++	fprintf(f, "%06tx: ESC ABORT\n", p - bie);
+ 	break;
+       case MARKER_NEWLEN:
+-	fprintf(f, "%06x: ESC NEWLEN ", p - bie);
++	fprintf(f, "%06tx: ESC NEWLEN ", p - bie);
+ 	if (p + 5 < bie + len) {
+ 	  fprintf(f, "YD = %lu\n",
+ 		  yd = (((long) p[2] << 24) | ((long) p[3] << 16) |
+@@ -242,7 +242,7 @@ void diagnose_bie(FILE *fin)
+ 	  fprintf(f, "unexpected EOF\n");
+ 	break;
+       case MARKER_ATMOVE:
+-	fprintf(f, "%06x: ESC ATMOVE ", p - bie);
++	fprintf(f, "%06tx: ESC ATMOVE ", p - bie);
+ 	if (p + 7 < bie + len)
+ 	  fprintf(f, "YAT = %lu, tX = %d, tY = %d\n",
+ 		  (((long) p[2] << 24) | ((long) p[3] << 16) |
+@@ -251,7 +251,7 @@ void diagnose_bie(FILE *fin)
+ 	  fprintf(f, "unexpected EOF\n");
+ 	break;
+       case MARKER_COMMENT:
+-	fprintf(f, "%06x: ESC COMMENT ", p - bie);
++	fprintf(f, "%06tx: ESC COMMENT ", p - bie);
+ 	if (p + 5 < bie + len)
+ 	  fprintf(f, "LC = %lu\n",
+ 		  (((long) p[2] << 24) | ((long) p[3] << 16) |
+@@ -260,7 +260,7 @@ void diagnose_bie(FILE *fin)
+ 	  fprintf(f, "unexpected EOF\n");
+ 	break;
+       default:
+-	fprintf(f, "%06x: ESC 0x%02x\n", p - bie, p[1]);
++	fprintf(f, "%06tx: ESC 0x%02x\n", p - bie, p[1]);
+       }
+     if (!pnext) {
+       fprintf(f, "Error encountered!\n");
+@@ -372,7 +372,7 @@ int main (int argc, char **argv)
+   /* read BIH first to check VLENGTH */
+   len = fread(buffer, 1, 20, fin);
+   if (len < 20) {
+-    fprintf(stderr, "Input file '%s' (%d bytes) must be at least "
++    fprintf(stderr, "Input file '%s' (%zd bytes) must be at least "
+ 	    "20 bytes long\n", fnin, len);
+     if (fout != stdout) {
+       fclose(fout);
+diff -up jbigkit/pbmtools/pbmtojbg85.c.warnings jbigkit/pbmtools/pbmtojbg85.c
+--- jbigkit/pbmtools/pbmtojbg85.c.warnings	2008-08-26 00:26:39.000000000 +0200
++++ jbigkit/pbmtools/pbmtojbg85.c	2012-07-17 16:24:56.741332942 +0200
+@@ -72,9 +72,12 @@ static unsigned long getint(FILE *f)
+       while ((c = getc(f)) != EOF && !(c == 13 || c == 10)) ;
+   if (c != EOF) {
+     ungetc(c, f);
+-    fscanf(f, "%lu", &i);
++    if (fscanf(f, "%lu", &i) != 1) {
++      /* should never fail, since c must be a digit */
++      fprintf(stderr, "Unexpected failure reading digit '%c'\n", c);
++      exit(1);
++    }
+   }
+-
+   return i;
+ }
+ 
+@@ -239,7 +242,9 @@ int main (int argc, char **argv)
+       break;
+     case '4':
+       /* PBM raw binary format */
+-      fread(next_line, bpl, 1, fin);
++      if (fread(next_line, bpl, 1, fin) != 1) {
++	/* silence compiler warnings; ferror/feof checked below */
++      }
+       break;
+     default:
+       fprintf(stderr, "Unsupported PBM type P%c!\n", type);
+diff -up jbigkit/pbmtools/pbmtojbg.c.warnings jbigkit/pbmtools/pbmtojbg.c
+--- jbigkit/pbmtools/pbmtojbg.c.warnings	2008-07-16 22:59:41.000000000 +0200
++++ jbigkit/pbmtools/pbmtojbg.c	2012-07-17 16:23:46.584285686 +0200
+@@ -88,7 +88,11 @@ static unsigned long getint(FILE *f)
+       while ((c = getc(f)) != EOF && !(c == 13 || c == 10)) ;
+   if (c != EOF) {
+     ungetc(c, f);
+-    fscanf(f, "%lu", &i);
++    if (fscanf(f, "%lu", &i) != 1) {
++      /* should never fail, since c must be a digit */
++      fprintf(stderr, "Unexpected failure reading digit '%c'\n", c);
++      exit(1);
++    }
+   }
+ 
+   return i;
+@@ -302,7 +306,9 @@ int main (int argc, char **argv)
+     break;
+   case '4':
+     /* PBM raw binary format */
+-    fread(bitmap[0], bitmap_size, 1, fin);
++    if (fread(bitmap[0], bitmap_size, 1, fin) != 1) {
++      /* silence compiler warnings; ferror/feof checked below */
++    }
+     break;
+   case '2':
+   case '5':
+@@ -314,8 +320,18 @@ int main (int argc, char **argv)
+ 	for (j = 0; j < bpp; j++)
+ 	  image[x * bpp + (bpp - 1) - j] = v >> (j * 8);
+       }
+-    } else
+-      fread(image, width * height, bpp, fin);
++    } else {
++      if (fread(image, width * height, bpp, fin) != (size_t) bpp) {
++	if (ferror(fin)) {
++	  fprintf(stderr, "Problem while reading input file '%s", fnin);
++	  perror("'");
++	  exit(1);
++	} else {
++	  fprintf(stderr, "Unexpected end of input file '%s'!\n", fnin);
++	  exit(1);
++	}
++      }
++    }
+     jbg_split_planes(width, height, planes, encode_planes, image, bitmap,
+ 		     use_graycode);
+     free(image);

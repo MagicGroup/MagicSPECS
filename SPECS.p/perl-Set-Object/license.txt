@@ -1,0 +1,71 @@
+Set-Object used to be licensed under the Perl Artistic license, and
+the documentation still says so (I expect it being updated with the
+next upstream release).  Due to the artistic license not being
+accepted as free license by the FSF I've asked the authors whenever
+they agree to relicense the package and fortunaly they did, so the
+package now carries the same license as perl itself (which is the
+choice between Artistic and GPL).
+
+See also:
+  http://dev.perl.org/licenses/
+  https://fedoraproject.org/wiki/Licensing
+  https://bugzilla.redhat.com/show_bug.cgi?id=467175
+
+The relevant messages from the authors (Jean-Louis Leroy and Sam
+Vilain) are listed below.
+
+-------------------------------------------------------------------------
+
+From: "jl" <jl@yorel.be>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: Set-Object license question
+Date: Sat, 08 Nov 2008 08:51:51 +0100
+
+Hello Gerd. 
+
+I agree to relicense Set::Object under the same terms as (current) Perl 
+itself - which is probably the choice between two licenses: Artistic 2.0 and 
+GPL. 
+
+Cordially,
+Jean-Louis 
+
+-------------------------------------------------------------------------
+
+Subject: Re: Set-Object license question
+From: Sam Vilain <sam@vilain.net>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Date: Fri, 24 Oct 2008 00:33:23 +1300
+
+On Wed, 2008-10-22 at 11:58 +0200, Gerd Hoffmann wrote:
+> Sam Vilain wrote:
+> > AFAIK the original author has not responded to requests for relicensing
+> > under GPLv2.
+> 
+> You are refering to Jean-Louis Leroy I guess?
+
+That's right, of Sound Object Logic.
+
+> > Could get a notary public to serve them notice of the intention to
+> > relicense Set::Object as GPL under the requirements of the license for
+> > Tangram.  If they don't make claim, then it should be able to be
+> > relicensed, I'd guess.
+> 
+> I think I'll better try again asking by email first.
+> 
+> Given you apparently tried already to get it re-licenced I assume you
+> are fine with GPL, right?
+> 
+> What about "Catalyst IT (NZ) Limited" listed in the man-page?  Given you
+> are still listed as maintainer @ CPAN I assume this is the company you
+> are working for?
+
+Yes, I can speak for that copyright holder, and they are happy to
+license under any FSF-approved Free Software license, including the Perl
+Artistic/GPL disjunction.
+
+Contact Jean-Louis - if nothing comes back I might have to investigate a
+rewrite.
+
+Cheers,
+Sam.

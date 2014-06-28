@@ -695,7 +695,7 @@
 -VBOX_DOCDIR='/usr/doc/vbox'
 -VBOX_TCL='tcl8.0'
 +VBOX_DOCDIR='/usr/share/doc/vbox'
-+VBOX_TCL='tcl8.5'
++VBOX_TCL='tcl8.6'
 +# VBOX_SUSPEND_ID is not set
  CONFIG_IPPPD=y
  

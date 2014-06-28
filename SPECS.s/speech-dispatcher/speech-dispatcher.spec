@@ -1,6 +1,6 @@
 Name:          speech-dispatcher
 Version:       0.8
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       To provide a high-level device independent layer for speech synthesis
 Group:         System Environment/Libraries
 
@@ -205,6 +205,9 @@ fi
 %{python3_sitearch}/speechd*
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 0.8-6
+- 为 Magic 3.0 重建
+
 * Tue Aug 13 2013 Peter Robinson <pbrobinson@fedoraproject.org> 0.8-5
 - Install clients as not longer installed by default (fixes RHBZ 996337)
 

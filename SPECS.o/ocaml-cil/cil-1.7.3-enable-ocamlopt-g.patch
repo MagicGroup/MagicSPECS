@@ -1,0 +1,7 @@
+--- cil-1.7.3/_tags~	2013-07-24 16:07:11.000000000 +0100
++++ cil-1.7.3/_tags	2013-09-14 16:23:32.520889558 +0100
+@@ -4,3 +4,4 @@
+ "test": not_hygienic
+ # build every cmo in debug mode (for cil.cma)
+ <**/*.cmo>: debug
++<**/*.cmx>: debug

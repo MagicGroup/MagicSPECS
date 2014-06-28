@@ -11,7 +11,7 @@ Summary: Archive manager
 Summary(zh_CN.UTF-8): 归档管理器
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.13.1
+Version: 4.13.2
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -94,6 +94,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/hicolor/*/apps/ark.*
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
 - 更新到 4.13.1
 

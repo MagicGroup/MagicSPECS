@@ -8,7 +8,7 @@
 
 Name:           python-feedparser
 Version:        5.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Parse RSS and Atom feeds in Python
 
 Group:          Development/Languages
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 5.1-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5.1-2
 - 为 Magic 3.0 重建
 

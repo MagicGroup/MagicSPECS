@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.7.7
-Release:        100%{?dist}
+Release:        101%{?dist}
 
 Summary:        A JSON implementation in Ruby
 
@@ -80,7 +80,6 @@ rm -fr .%{gem_instdir}/lib/json/pure*
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{gem_dir}
-mkdir -p $RPM_BUILD_ROOT%{gem_extdir_mri}/ext/%{gem_name}/ext
  
 cp -a .%{gem_dir}/* %{buildroot}/%{gem_dir}
 
@@ -135,6 +134,9 @@ popd
 
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.7-101
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Mar 26 2013 Josef Stribny <jstribny@redhat.com> - 1.7.7-100
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 - Update to JSON 1.7.7

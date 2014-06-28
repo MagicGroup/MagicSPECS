@@ -6,7 +6,7 @@
 
 Name: python-markupsafe
 Version: 0.11
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: Implements a XML/HTML/XHTML Markup safe string for Python
 
 Group: Development/Languages
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.11-9
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.11-8
 - 为 Magic 3.0 重建
 

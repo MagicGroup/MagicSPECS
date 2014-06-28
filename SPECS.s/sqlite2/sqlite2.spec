@@ -3,7 +3,7 @@
 
 Name:           sqlite2
 Version:        2.8.17
-Release:        13%{?dist}
+Release:        14%{?dist}
 
 Summary:        Embeddable SQL engine in a C library
 Group:          System Environment/Libraries
@@ -19,6 +19,7 @@ Patch6:         sqlite-2.8.17-test.patch
 Patch7:         sqlite-2.8.17-tcl.patch
 Patch8:         sqlite-2.8.17-ppc64.patch
 Patch9:         sqlite-2.8.17-format-security.patch
+Patch10:	sqlite-2.8.17-tcl86.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  ncurses-devel, readline-devel, %{_includedir}/tcl.h
@@ -73,6 +74,7 @@ This package contains tcl bindings for sqlite.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 sed -i.rpath 's!__VERSION__!%{version}!g' Makefile.in
 # Patch additional /usr/lib locations where we don't have $(libdir)
 # to substitute with.
@@ -127,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 %{tcl_sitearch}/sqlite2/
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 2.8.17-14
+- 为 Magic 3.0 重建
+
 * Sun Dec 08 2013 Robert Scheck <robert@fedoraproject.org> 2.8.17-13
 - Solved build failures with "-Werror=format-security" (#1037335)
 

@@ -8,7 +8,7 @@ Summary: SANE Library interface for KDE
 Summary(zh_CN.UTF-8): KDE 的 SANE 库接口
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: 4.13.1
+Version: 4.13.2
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -85,6 +85,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Wed Jun 04 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
 - 更新到 4.13.1
 

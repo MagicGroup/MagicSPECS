@@ -1,14 +1,15 @@
 Name:           perl-App-Cmd
 Summary:        Write command line apps with less suffering
-Version:        0.314
-Release:        9%{?dist}
+Version:        0.323
+Release:        3%{?dist}
 License:        GPL+ or Artistic
-Group:          Development/Libraries
+
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/App-Cmd-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/App-Cmd
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
 
+BuildRequires:  perl(parent)
 BuildRequires:  perl(Capture::Tiny)
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Class::Load) >= 0.06
@@ -27,16 +28,12 @@ BuildRequires:  perl(Sub::Exporter::Util)
 BuildRequires:  perl(Sub::Install)
 BuildRequires:  perl(Test::Fatal)
 BuildRequires:  perl(Test::More) >= 0.96
+BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Text::Abbrev)
 
 Requires:       perl(Getopt::Long::Descriptive) >= 0.084
 Requires:       perl(IO::TieCombine) >= 1
 Requires:       perl(Sub::Exporter) >= 0.975
-
-# obsolete/provide old tests subpackage
-# can be removed during F19 development cycle
-Obsoletes:      %{name}-tests < 0.314-2
-Provides:       %{name}-tests = %{version}-%{release}
 
 %{?perl_default_filter}
 
@@ -64,7 +61,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes LICENSE README t/
@@ -72,26 +69,53 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.314-9
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 0.323-3
 - 为 Magic 3.0 重建
 
-* Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 0.314-8
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.323-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.314-7
-- 为 Magic 3.0 重建
+* Sun Dec 15 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 0.323-1
+- Update to 0.323
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.314-6
-- 为 Magic 3.0 重建
+* Sun Nov 03 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 0.322-1
+- Update to 0.322
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.314-5
-- 为 Magic 3.0 重建
+* Sun Oct 27 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 0.321-1
+- Update to 0.321
 
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.314-4
-- 为 Magic 3.0 重建
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.320-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.314-3
-- 为 Magic 3.0 重建
+* Tue Jul 30 2013 Petr Pisar <ppisar@redhat.com> - 0.320-2
+- Perl 5.18 rebuild
+
+* Sat Feb 02 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 0.320-1
+- Update to 0.320
+
+* Sun Jan 27 2013 Emmanuel Seyman <emmanuel@seyman.fr> - 0.319-1
+- Update to 0.319
+- Remove the obsoletes/provides macro for the tests subpackage
+- Remove the group macro
+- Add Test::Pod to the BuildRequires
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.318-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 0.318-2
+- Perl 5.16 rebuild
+
+* Sat May 05 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 0.318-1
+- Update to 0.318
+
+* Mon Mar 26 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 0.317-1
+- Update to 0.317
+
+* Sun Feb 12 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 0.316-1
+- Update to 0.316
+
+* Sat Feb 11 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 0.315-1
+- Update to 0.315
 
 * Sun Jan 22 2012 Iain Arnell <iarnell@gmail.com> 0.314-2
 - drop tests-subpackage; move tests to main package documentation

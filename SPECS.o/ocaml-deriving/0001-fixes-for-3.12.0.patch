@@ -1,0 +1,313 @@
+From c7b9cea3eb4bbfb9e09673faf725f70247c9df78 Mon Sep 17 00:00:00 2001
+From: Jake Donham <jake@donham.org>
+Date: Fri, 3 Sep 2010 19:33:49 -0400
+Subject: [PATCH] fixes for 3.12.0
+
+---
+ syntax/Makefile          |    2 +-
+ syntax/base.ml           |    4 ++--
+ syntax/bounded_class.ml  |    6 +++---
+ syntax/dump_class.ml     |    2 +-
+ syntax/enum_class.ml     |    5 +++--
+ syntax/eq_class.ml       |   12 ++++++------
+ syntax/extend.ml         |    2 +-
+ syntax/pickle_class.ml   |    6 +++---
+ syntax/show_class.ml     |    4 ++--
+ syntax/type.ml           |   10 +++++-----
+ syntax/typeable_class.ml |    6 +++---
+ syntax/utils.ml          |    1 +
+ 12 files changed, 31 insertions(+), 29 deletions(-)
+
+diff --git a/syntax/Makefile b/syntax/Makefile
+index 2542efa..3884644 100644
+--- a/syntax/Makefile
++++ b/syntax/Makefile
+@@ -6,7 +6,7 @@ OCAMLDEP   = ocamldep.opt
+ ANNOTATE   = yes
+ PPFLAGS    = -loc loc
+ USE_CAMLP4 = yes
+-LIBS       = camlp4lib unix
++LIBS       = dynlink camlp4lib unix
+ 
+ CAMLP4_PRE_NOPRINTER = 
+ 
+diff --git a/syntax/base.ml b/syntax/base.ml
+index 16e50de..6848eaf 100644
+--- a/syntax/base.ml
++++ b/syntax/base.ml
+@@ -77,13 +77,13 @@ struct
+        <:expr<
+          let module M = 
+              struct
+-               type t = $t$
++               type $Ast.TyDcl (loc, "t", [], t, [])$
+                let test = function #t -> true | _ -> false
+              end in M.test $lid:param$ >>,
+        <:expr<
+          (let module M = 
+               struct
+-                type t = $t$
++                type $Ast.TyDcl (loc, "t", [], t, [])$
+                 let cast = function #t as t -> t | _ -> assert false
+               end in M.cast $lid:param$ )>>)
+ 
+diff --git a/syntax/bounded_class.ml b/syntax/bounded_class.ml
+index dbccfb0..7a523ed 100644
+--- a/syntax/bounded_class.ml
++++ b/syntax/bounded_class.ml
+@@ -24,7 +24,7 @@ struct
+                     (fun t -> let e = self#expr ctxt t in 
+                        <:expr< let module M = $e$ in M.min_bound >>,
+                        <:expr< let module M = $e$ in M.max_bound >>) ts) in
+-    <:module_expr< struct type a = $atype_expr ctxt (`Tuple ts)$
++    <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype_expr ctxt (`Tuple ts), [])$
+                           let min_bound = $tuple_expr minBounds$ 
+                           let max_bound = $tuple_expr maxBounds$ end >>
+ 
+@@ -35,7 +35,7 @@ struct
+               | (name,_) -> raise (Underivable ("Bounded cannot be derived for the type "^
+                                                   tname ^" because the constructor "^
+                                                   name^" is not nullary"))) in
+-        <:module_expr< struct type a = $atype ctxt decl$
++        <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+                        let min_bound = $uid:List.hd names$ 
+                        and max_bound = $uid:List.last names$ end >>
+ 
+@@ -47,7 +47,7 @@ struct
+                                                       name^" is not nullary"))
+              | _ -> raise (Underivable ("Bounded cannot be derived for this "
+                                         ^"polymorphic variant type"))) in
+-      <:module_expr< struct type a = $atype ctxt decl$
++      <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+                      let min_bound = `$List.hd names$ 
+                      and max_bound = `$List.last names$ end >>
+ 
+diff --git a/syntax/dump_class.ml b/syntax/dump_class.ml
+index 798875a..1eab673 100644
+--- a/syntax/dump_class.ml
++++ b/syntax/dump_class.ml
+@@ -16,7 +16,7 @@ struct
+   let classname = "Dump"
+ 
+   let wrap ~atype ~dumpers ~undump =
+-    <:module_expr< struct type a = $atype$
++    <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype, [])$
+                           let to_buffer buffer = function $list:dumpers$
+                           let from_stream stream = $undump$ end >>
+ 
+diff --git a/syntax/enum_class.ml b/syntax/enum_class.ml
+index ac92833..feef7d0 100644
+--- a/syntax/enum_class.ml
++++ b/syntax/enum_class.ml
+@@ -30,7 +30,8 @@ struct
+         (List.range 0 (List.length summands))
+         summands
+         <:expr< [] >> in
+-      <:module_expr< Enum.Defaults(struct type a = $atype ctxt decl$ let numbering = $numbering$ end) >>
++      <:module_expr< Enum.Defaults(struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
++                                          let numbering = $numbering$ end) >>
+ 
+     method variant ctxt decl (_, tags) = 
+     let numbering = 
+@@ -45,7 +46,7 @@ struct
+         (List.range 0 (List.length tags))
+         tags
+         <:expr< [] >> in
+-      <:module_expr< Enum.Defaults(struct type a = $atype ctxt decl$ let numbering = $numbering$ end) >>
++      <:module_expr< Enum.Defaults(struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$ let numbering = $numbering$ end) >>
+ 
+     method tuple context _ = raise (Underivable "Enum cannot be derived for tuple types")
+     method record ?eq _ (tname,_,_,_,_) = raise (Underivable
+diff --git a/syntax/eq_class.ml b/syntax/eq_class.ml
+index 1d8de1b..a008785 100644
+--- a/syntax/eq_class.ml
++++ b/syntax/eq_class.ml
+@@ -22,7 +22,7 @@ struct
+   let tup ctxt ts mexpr exp = 
+       match ts with
+         | [t] -> 
+-            <:module_expr< struct type a = $atype_expr ctxt (`Tuple ts)$
++            <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype_expr ctxt (`Tuple ts), [])$
+                                   let eq l r = let module M = $exp ctxt t$ 
+                                    in $mexpr$ l r end >>
+         | ts ->
+@@ -38,7 +38,7 @@ struct
+                 ts
+                 (0, (<:patt< >>, <:patt< >>), <:expr< true >>)
+             in 
+-              <:module_expr< struct type a = $atype_expr ctxt (`Tuple ts)$
++              <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype_expr ctxt (`Tuple ts), [])$
+                                     let eq $Ast.PaTup (loc, lpatt)$ $Ast.PaTup (loc, rpatt)$ = $expr$ end >>
+ 
+ 
+@@ -80,14 +80,14 @@ struct
+   method sum ?eq ctxt decl summands =
+     let wildcard = match summands with [_] -> [] | _ -> [ <:match_case< _ -> false >>] in
+   <:module_expr< 
+-      struct type a = $atype ctxt decl$
++      struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+              let eq l r = match l, r with 
+                           $list:List.map (self#case ctxt) summands @ wildcard$
+   end >>
+ 
+   method record ?eq ctxt decl fields = 
+     if List.exists (function (_,_,`Mutable) -> true | _ -> false) fields then
+-       <:module_expr< struct type a = $atype ctxt decl$ let eq = (==) end >>
++       <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$ let eq = (==) end >>
+     else
+     let lpatt = record_pattern ~prefix:"l" fields
+     and rpatt = record_pattern ~prefix:"r" fields 
+@@ -96,11 +96,11 @@ struct
+         (fun f e -> <:expr< $self#field ctxt f$ && $e$ >>)
+         fields
+         <:expr< true >>
+-    in <:module_expr< struct type a = $atype ctxt decl$
++    in <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+                              let eq $lpatt$ $rpatt$ = $expr$ end >>
+ 
+   method variant ctxt decl (spec, tags) = 
+-    <:module_expr< struct type a = $atype ctxt decl$
++    <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+                           let eq l r = match l, r with
+                                        $list:List.map (self#polycase ctxt) tags$
+                                        | _ -> false end >>
+diff --git a/syntax/extend.ml b/syntax/extend.ml
+index 059c6e9..934e880 100644
+--- a/syntax/extend.ml
++++ b/syntax/extend.ml
+@@ -68,7 +68,7 @@ struct
+   EXTEND Gram
+   expr: LEVEL "simple"
+   [
+-  [e1 = val_longident ; "<" ; t = ctyp; ">" ->
++  [e1 = TRY val_longident ; "<" ; t = ctyp; ">" ->
+      match e1 with
+        | <:ident< $uid:classname$ . $lid:methodname$ >> ->
+          if not (Base.is_registered classname) then
+diff --git a/syntax/pickle_class.ml b/syntax/pickle_class.ml
+index ca62c70..aab92d8 100644
+--- a/syntax/pickle_class.ml
++++ b/syntax/pickle_class.ml
+@@ -26,9 +26,9 @@ struct
+ 
+   let unpickle_record_bindings ctxt (tname,params,rhs,cs,_) (fields : field list) e = <:expr<
+       let module Mutable = struct
+-        type t = $UT.repr 
++        type $Ast.TyDcl (loc, "t", [], UT.repr 
+             (instantiate_modargs_repr ctxt 
+-               (Record (List.map (fun (n,p,_) -> (n,p,`Mutable)) fields)))$
++               (Record (List.map (fun (n,p,_) -> (n,p,`Mutable)) fields))), [])$
+       end in $e$ >>
+ 
+   let unpickle_record ctxt (tname,_,_,_,_ as decl) fields expr = 
+@@ -89,7 +89,7 @@ struct
+     <:module_expr< struct open Eq open Typeable
+                           module T = $tymod$
+                           module E = $eqmod$
+-                          type a = $atype$
++                          type $Ast.TyDcl (loc, "a", [], atype, [])$
+                           open Write
+                           let pickle = let module W = Utils(T)(E) in function $list:picklers$
+                           open Read
+diff --git a/syntax/show_class.ml b/syntax/show_class.ml
+index 6217690..ec78a61 100644
+--- a/syntax/show_class.ml
++++ b/syntax/show_class.ml
+@@ -15,7 +15,7 @@ struct
+   let classname = "Show"
+     
+   let wrap (ctxt:Base.context) (decl : Type.decl) matches = <:module_expr< 
+-  struct type a = $atype ctxt decl$
++  struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+          let format formatter = function $list:matches$ end >>
+     
+   let in_a_box box e =
+@@ -61,7 +61,7 @@ struct
+     method tuple ctxt args = 
+       let n = List.length args in
+       let tpatt, _ = tuple n in
+-      <:module_expr< Defaults (struct type a = $atype_expr ctxt (`Tuple args)$
++      <:module_expr< Defaults (struct type $Ast.TyDcl (loc, "a", [], atype_expr ctxt (`Tuple args), [])$
+                             let format formatter $tpatt$ = 
+                               $self#nargs ctxt 
+                                 (List.mapn (fun t n -> Printf.sprintf "v%d" n, t) args)$ end) >>
+diff --git a/syntax/type.ml b/syntax/type.ml
+index 736ca9a..e42cf78 100644
+--- a/syntax/type.ml
++++ b/syntax/type.ml
+@@ -1,4 +1,4 @@
+-(*pp camlp4of *)
++(*pp camlp4orf *)
+ 
+ (* Copyright Jeremy Yallop 2007.
+    This file is free software, distributed under the MIT license.
+@@ -422,8 +422,8 @@ struct
+       | _ -> assert false
+     and app f = function
+       | []    -> f
+-      | [x]   -> <:ctyp< $expr x$ $f$ >>
+-      | x::xs -> app (<:ctyp< $expr x$ $f$ >>) xs
++      | [x]   -> <:ctyp< $f$ $expr x$ >>
++      | x::xs -> app (<:ctyp< $f$ $expr x$ >>) xs
+     in expr
+          
+   let poly (params, t) =
+@@ -436,10 +436,10 @@ struct
+   let rec rhs : rhs -> Ast.ctyp = function
+       | `Fresh (None, t, `Private) -> <:ctyp< private $repr t$ >>
+       | `Fresh (None, t, `Public) -> repr t
+-      | `Fresh (Some e, t, `Private) -> <:ctyp< $expr e$ = private $repr t$ >>
++      | `Fresh (Some e, t, `Private) -> <:ctyp< $expr e$ == private $repr t$ >>
+       | `Fresh (Some e, t, `Public) -> Ast.TyMan (loc, expr e, repr t)
+       | `Expr t          -> expr t
+-      | `Variant (`Eq, tags) -> <:ctyp< [  $unlist bar tags tagspec$ ] >>
++      | `Variant (`Eq, tags) -> <:ctyp< [= $unlist bar tags tagspec$ ] >>
+       | `Variant (`Gt, tags) -> <:ctyp< [> $unlist bar tags tagspec$ ] >>
+       | `Variant (`Lt, tags) -> <:ctyp< [< $unlist bar tags tagspec$ ] >>
+       | `Nothing -> <:ctyp< >>
+diff --git a/syntax/typeable_class.ml b/syntax/typeable_class.ml
+index 21c069f..64039fc 100644
+--- a/syntax/typeable_class.ml
++++ b/syntax/typeable_class.ml
+@@ -26,7 +26,7 @@ struct
+              <:expr< $uid:NameMap.find p ctxt.argmap$.type_rep::$cdr$ >>)
+         ctxt.params
+       <:expr< [] >>
+-    in <:module_expr< struct type a = $atype ctxt decl$
++    in <:module_expr< struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+           let type_rep = TypeRep.mkFresh $str:mkName tname$ $paramList$ end >>
+ 
+   let tup ctxt ts mexpr expr = 
+@@ -34,7 +34,7 @@ struct
+         expr_list 
+           (List.map (fun t -> <:expr< let module M = $expr ctxt t$ 
+                                        in $mexpr$ >>) ts) in
+-        <:module_expr< Defaults(struct type a = $atype_expr ctxt (`Tuple ts)$
++        <:module_expr< Defaults(struct type $Ast.TyDcl (loc, "a", [], atype_expr ctxt (`Tuple ts), [])$
+                                        let type_rep = Typeable.TypeRep.mkTuple $params$ end) >>
+ 
+   let instance = object(self)
+@@ -56,7 +56,7 @@ struct
+                <:expr< $mproject (self#expr ctxt t) "type_rep"$::$extends$ >>)
+         (<:expr< [] >>, <:expr< [] >>) tags in
+       <:module_expr< Defaults(
+-        struct type a = $atype ctxt decl$
++        struct type $Ast.TyDcl (loc, "a", [], atype ctxt decl, [])$
+                let type_rep = Typeable.TypeRep.mkPolyv $tags$ $extends$
+         end) >>
+   end
+diff --git a/syntax/utils.ml b/syntax/utils.ml
+index 6c963bb..3b4b653 100644
+--- a/syntax/utils.ml
++++ b/syntax/utils.ml
+@@ -126,6 +126,7 @@ struct
+     | TyVrnInfSup (_, c1, c2) -> "TyVrnInfSup ("^ ctyp c1 ^ ", " ^ ctyp c2 ^")"
+     | TyAmp (_, c1, c2) -> "TyAmp ("^ ctyp c1 ^ ", " ^ ctyp c2 ^")"
+     | TyOfAmp (_, c1, c2) -> "TyOfAmp ("^ ctyp c1 ^ ", " ^ ctyp c2 ^")"
++    | TyPkg (_, mt) -> failwith "first-class modules not supported"
+     | TyAnt (_, s) -> "TyAnt("^s^")"
+ end
+ 
+-- 
+1.7.3.4
+

@@ -1,0 +1,129 @@
+diff -ur omake-0.9.8.6.old/src/libmojave-external/stdlib/lm_array_util.ml omake-0.9.8.6/src/libmojave-external/stdlib/lm_array_util.ml
+--- omake-0.9.8.6.old/src/libmojave-external/stdlib/lm_array_util.ml	2006-07-15 18:23:37.000000000 +0100
++++ omake-0.9.8.6/src/libmojave-external/stdlib/lm_array_util.ml	2013-09-19 13:12:58.851096621 +0100
+@@ -85,7 +85,7 @@
+ let mem i v =
+    let l = Array.length v in
+    let rec aux j =
+-      j < l & ( i = v.(j) or
++      j < l && ( i = v.(j) ||
+                 aux (j + 1) )
+    in
+       aux 0
+@@ -112,7 +112,7 @@
+ let exists f v =
+    let l = Array.length v in
+    let rec aux j =
+-      j < l & ( f v.(j) or
++      j < l && ( f v.(j) ||
+                 aux (j + 1) )
+    in
+       aux 0
+diff -ur omake-0.9.8.6.old/src/libmojave-external/util/lm_filename_util.ml omake-0.9.8.6/src/libmojave-external/util/lm_filename_util.ml
+--- omake-0.9.8.6.old/src/libmojave-external/util/lm_filename_util.ml	2007-01-29 20:14:42.000000000 +0000
++++ omake-0.9.8.6/src/libmojave-external/util/lm_filename_util.ml	2013-09-19 13:14:00.082153118 +0100
+@@ -412,7 +412,7 @@
+ let simplify_path path =
+    let rec simplify path' = function
+       dir::tl ->
+-         if dir = "" or dir = "." then
++         if dir = "" || dir = "." then
+             simplify path' tl
+          else if dir = ".." then
+             match path' with
+diff -ur omake-0.9.8.6.old/src/libmojave-external/stdlib/lm_list_util.ml omake-0.9.8.6/src/libmojave-external/stdlib/lm_list_util.ml
+--- omake-0.9.8.6.old/src/libmojave-external/stdlib/lm_list_util.ml	2007-05-14 04:12:14.000000000 +0100
++++ omake-0.9.8.6/src/libmojave-external/stdlib/lm_list_util.ml	2013-09-19 13:12:26.120066393 +0100
+@@ -576,7 +576,7 @@
+ 
+ let rec intersects l = function
+    h :: t ->
+-      List.mem h l or intersects l t
++      List.mem h l || intersects l t
+  | [] ->
+       false
+ 
+@@ -763,7 +763,7 @@
+ let rec compare_eq l1 l2 =
+    match l1, l2 with
+       h1::t1, h2::t2 ->
+-         h1 == h2 & compare_eq t1 t2
++         h1 == h2 && compare_eq t1 t2
+     | [], [] ->
+          true
+     | _ ->
+@@ -813,7 +813,7 @@
+  *)
+ let rec for_all2 f l1 l2 =
+    match (l1,l2) with
+-      h1::t1, h2::t2 -> f h1 h2 & for_all2 f t1 t2
++      h1::t1, h2::t2 -> f h1 h2 && for_all2 f t1 t2
+     | [], [] -> true
+     | _ -> false
+ 
+@@ -822,7 +822,7 @@
+  *)
+ let rec exists2 f l1 l2 = match (l1,l2) with
+    h1::t1, h2::t2 ->
+-      f h1 h2 or exists2 f t1 t2
++      f h1 h2 || exists2 f t1 t2
+  | _ -> false
+ 
+ (*
+diff -ur omake-0.9.8.6.old/src/libmojave-external/stdlib/lm_string_util.ml omake-0.9.8.6/src/libmojave-external/stdlib/lm_string_util.ml
+--- omake-0.9.8.6.old/src/libmojave-external/stdlib/lm_string_util.ml	2008-06-28 02:21:34.000000000 +0100
++++ omake-0.9.8.6/src/libmojave-external/stdlib/lm_string_util.ml	2013-09-19 13:13:38.745133434 +0100
+@@ -97,7 +97,7 @@
+ let for_all f s =
+    let len = String.length s in
+    let rec check i =
+-      (i = len) or (f s.[i] & check (succ i))
++      (i = len) || (f s.[i] && check (succ i))
+    in
+       check 0
+ 
+@@ -1239,7 +1239,7 @@
+ let sub name s i len =
+    if !debug_string then
+       let len' = String.length s in
+-         if i >= 0 & len >= 0 & i + len < len' then
++         if i >= 0 && len >= 0 && i + len < len' then
+             String.sub s i len
+          else
+             begin
+@@ -1253,7 +1253,7 @@
+    if !debug_string then
+       let from_len = String.length froms in
+       let to_len = String.length tos in
+-         if i >= 0 & j >= 0 & len >= 0 & i + len < from_len & j + len < to_len then
++         if i >= 0 && j >= 0 && len >= 0 && i + len < from_len && j + len < to_len then
+             String.blit froms i tos j len
+          else
+             begin
+@@ -1266,7 +1266,7 @@
+ let set name s i c =
+    if !debug_string then
+       let len = String.length s in
+-         if i >= 0 & i < len then
++         if i >= 0 && i < len then
+             String.set s i c
+          else
+             begin
+@@ -1278,7 +1278,7 @@
+ 
+ let get name s i =
+    let len = String.length s in
+-      if i >= 0 & i < len then
++      if i >= 0 && i < len then
+          String.get s i
+       else
+          begin
+@@ -1534,7 +1534,7 @@
+             buf.[i] <- ' ';
+             convert (i + 1) (j + 1)
+          end
+-      else if uri.[j] = '%' & j < len - 2 then
++      else if uri.[j] = '%' && j < len - 2 then
+          begin
+             buf.[i] <- unhex_char uri.[j + 1] uri.[j + 2];
+             convert (i + 1) (j + 3)

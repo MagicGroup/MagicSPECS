@@ -1,6 +1,5 @@
 %define shared_desktop_ontologies_ver 0.10.0
 %define soprano_ver 2.8.0
-%define rversion %{kde4_kdelibs_version}
 
 %global shared_desktop_ontologies_version %(pkg-config --modversion shared-desktop-ontologies 2>/dev/null || echo %{shared_desktop_ontologies_ver})
 %global soprano_version %(pkg-config --modversion soprano 2>/dev/null || echo %{soprano_ver})
@@ -9,8 +8,8 @@
 #global tests 1
 
 Name:    nepomuk-core
-Version: %{rversion}
-Release: 8%{?dist}
+Version: 4.13.2
+Release: 1%{?dist}
 Summary: Nepomuk Core utilities and libraries
 Summary(zh_CN.UTF-8): Nepomuk 核心工具和库
 License: LGPLv2 or LGPLv3
@@ -26,10 +25,6 @@ Source0: ftp://ftp.kde.org/pub/kde/%{stable}/%{version}/src/%{name}-%{version}.t
 
 %define sysctl 1
 Source1: nepomuk-inotify.conf
-
-## upstream patches
-# proposed by dfaure, should help fix http://bugzilla.redhat.com/858271
-Patch100: nepomuk-core-4.9.2-isEmpty_crash.patch
 
 BuildRequires:  doxygen
 BuildRequires:  kdelibs4-devel >= %{version}
@@ -84,9 +79,6 @@ Requires: %{name} = %{version}-%{release}
 %prep
 %setup -q
 
-#%patch100 -p1 -b .isEmpty_crash
-
-
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
@@ -123,6 +115,8 @@ make -C %{_target_platform}/autotests/test test  ||:
 %endif
 %{_kde4_bindir}/nepomuk2-rcgen
 %{_kde4_bindir}/nepomukcleaner
+%{_kde4_bindir}/nepomukbaloomigrator
+%{_kde4_datadir}/autostart/nepomukbaloomigrator.desktop
 %{kde4_xdgappsdir}/nepomukcleaner.desktop
 %{kde4_servicetypesdir}/nepomukextractor.desktop
 %{_kde4_appsdir}/fileindexerservice/
@@ -177,6 +171,9 @@ make -C %{_target_platform}/autotests/test test  ||:
 
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 4.13.0-8
 - 为 Magic 3.0 重建
 

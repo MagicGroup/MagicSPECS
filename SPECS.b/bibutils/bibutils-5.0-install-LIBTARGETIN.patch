@@ -1,0 +1,10 @@
+--- bibutils_5.0/Makefile_start~	2013-05-28 14:21:47.000000000 +0900
++++ bibutils_5.0/Makefile_start	2013-06-05 19:06:09.049404329 +0900
+@@ -68,6 +68,7 @@
+ 
+ install: all FORCE
+ 	$(MAKE) -C lib \
++                LIBTARGETIN=$(LIBTARGET) \
+                 MAJORVERSION=$(MAJORVERSION) \
+                 MINORVERSION=$(MINORVERSION) \
+                 LIBINSTALLDIR=$(LIBINSTALLDIR) \

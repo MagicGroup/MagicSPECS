@@ -15,7 +15,7 @@
 
 Name:           python-py
 Version:        1.4.18
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library with cross-python path, ini-parsing, io, code, log facilities
 Group:          Development/Languages
 License:        MIT and Public Domain
@@ -161,6 +161,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.4.18-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 10 2013 Thomas Moschny <thomas.moschny@gmx.de> - 1.4.18-1
 - Update to 1.4.18.
 

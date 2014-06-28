@@ -1,6 +1,6 @@
 Name:           CUnit
 Version:        2.1.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Unit testing framework for C
 Summary(zh_CN.UTF-8): C 语言的单元测试框架
 
@@ -78,6 +78,9 @@ done
 %{_mandir}/man3/CUnit.3*
 
 %changelog
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 2.1.3-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 29 2013 Michael Schwendt <mschwendt@fedoraproject.org> - 2.1.3-8
 - Add %%_isa to -devel base package dependency.
 - Headers get installed by "make install", copying them from the HTML

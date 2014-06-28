@@ -10,7 +10,7 @@
 
 Name: python-beaker
 Version: 1.5.4
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: WSGI middleware layer to provide sessions
 
 Group: Development/Languages
@@ -135,6 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.5.4-9
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

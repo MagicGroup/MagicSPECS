@@ -43,22 +43,20 @@
 %endif
 
 Name:           git
-Version:	1.9.0
-Release:        1%{?dist}
+Version:        2.0.0
+Release:        5%{?dist}
 Summary:        Fast Version Control System
-Summary(zh_CN.UTF-8): 快速版本控制系统
 License:        GPLv2
 Group:          Development/Tools
-Group(zh_CN.UTF-8): 开发/工具
 URL:            http://git-scm.com/
-Source0:        http://git-core.googlecode.com/files/%{name}-%{version}.tar.gz
+Source0:        http://www.kernel.org/pub/software/scm/git/%{name}-%{version}.tar.gz
 Source2:        git-init.el
 Source3:        git.xinetd.in
 Source4:        git.conf.httpd
 Source5:        git-gui.desktop
 Source6:        gitweb.conf.in
-Source10:       http://git-core.googlecode.com/files/%{name}-manpages-%{version}.tar.gz
-Source11:       http://git-core.googlecode.com/files/%{name}-htmldocs-%{version}.tar.gz
+Source10:       http://www.kernel.org/pub/software/scm/git/%{name}-manpages-%{version}.tar.gz
+Source11:       http://www.kernel.org/pub/software/scm/git/%{name}-htmldocs-%{version}.tar.gz
 Source12:       git.service
 Source13:       git.socket
 Patch0:         git-1.8-gitweb-home-link.patch
@@ -99,7 +97,9 @@ Requires:       rsync
 Requires:       zlib >= 1.2
 
 Provides:       git-core = %{version}-%{release}
+%if 0%{?rhel} && 0%{?rhel} <= 5
 Obsoletes:      git-core <= 1.5.4.3
+%endif
 
 # Obsolete git-arch
 Obsoletes:      git-arch < %{version}-%{release}
@@ -633,8 +633,23 @@ rm -rf %{buildroot}
 # No files for you!
 
 %changelog
-* Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
-- 更新到 1.9.1
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 2.0.0-5
+- 为 Magic 3.0 重建
+
+* Tue Jun 10 2014 Ondrej Oprala <ooprala@redhat.com> - 2.0.0-4
+- Change source URLs, as googlecode doesn't have up-to-date tarballs
+
+* Tue Jun 10 2014 Ondrej Oprala <ooprala@redhat.com> - 2.0.0-3
+- Conditionalize an ancient obsolete
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 29 2014 Ondrej Oprala <ooprala@redhat.com> - 2.0.0-1
+- Update to 2.0.0
+
+* Mon May 19 2014 Jon Ciesla <limburgher@gmail.com> - 1.9.3-1
+- Update to 1.9.3
 
 * Mon Feb 17 2014 Ondrej Oprala <ooprala@redhat.com> - 1.9.0-1
 - Update to 1.9.0

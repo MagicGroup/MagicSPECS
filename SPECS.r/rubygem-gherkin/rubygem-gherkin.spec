@@ -5,25 +5,19 @@
 
 Summary: Fast Gherkin lexer/parser
 Name: rubygem-%{gem_name}
-Version: 2.11.6
-Release: 2%{?dist}
+Version: 2.12.2
+Release: 1%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/cucumber/gherkin
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-
-Patch1: gherkin-2.11.6-relax-json-dependency.patch
-
-Requires: ruby(release)
-Requires: ruby(rubygems)
-Requires: rubygem(json)
 BuildRequires: rubygems-devel
 BuildRequires: ruby-devel
+BuildRequires: rubygem(multi_json)
 %if 0%{?need_bootstrap} < 1
 BuildRequires: rubygem(cucumber)
 %endif
 BuildRequires: rubygem(rspec)
-Provides: rubygem(%{gem_name}) = %{version}
 
 %package doc
 Summary: Documentation for %{name}
@@ -40,10 +34,6 @@ A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.
 
 %prep
 %gem_install -n %{SOURCE0}
-
-pushd .%{gem_dir}
-%patch1 -p0
-popd
 
 %build
 pushd .%{gem_instdir}
@@ -63,9 +53,9 @@ mkdir -p %{buildroot}%{gem_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
-mkdir -p %{buildroot}%{gem_extdir_mri}/lib
-# the .so files go in the extdir, so remove them from lib
-find %{buildroot}%{gem_instdir}/lib -iname '*.so' -exec mv {} %{buildroot}%{gem_extdir_mri}/lib \;
+mkdir -p %{buildroot}%{gem_extdir_mri}
+#cp -a .%{gem_extdir_mri}/* %{buildroot}%{gem_extdir_mri}/
+
 rm -rf %{buildroot}%{gem_instdir}/ext
 
 # remove hidden dirs
@@ -85,17 +75,15 @@ pushd .%{gem_instdir}
 export GEM_HOME="../../"
 # kill bundler for features and specs
 sed -i '7,8d' features/support/env.rb
-sed -i '7,8d' spec/spec_helper.rb
+sed -i '21,22d' spec/spec_helper.rb
 # link the cucumber here for two features
 ln -s %{gem_dir}/gems/cucumber-`cucumber --version`/ ../cucumber
-# There is some encoding error runnign test suite with Ruby 2.0 in both,
-# Cucumber and RSpec test suites:
-# https://github.com/cucumber/gherkin/issues/232
-# run cucumber features - 16 failed because they test fallback ruby lexers
+# 2 failed on arm because they test fallback ruby lexers
 # but these are not installed by default (even if using normal gem install)
-LANG=en_US.utf8 cucumber | grep '16 failed'
-# run specs, 93 fail because of the reason mentioned above
-LANG=en_US.utf8 rspec spec | grep '280 examples, 93 failures'
+LANG=en_US.utf8 cucumber || LANG=en_US.utf8 cucumber | grep '2 failed' || exit 1
+# 4 failed (15 on arm) because they test fallback ruby lexers
+LANG=en_US.utf8 rspec spec | grep '286 examples, 4 failures' || \
+LANG=en_US.utf8 rspec spec | grep '286 examples, 15 failures' || LANG=en_US.utf8 rspec spec
 popd
 %endif
 
@@ -116,6 +104,8 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 %{gem_cache}
 %{gem_spec}
+#有问题
+%{_datadir}/gems/extensions/x86_64-linux/gherkin-2.12.2/*
 
 %files doc
 %doc %{gem_instdir}/History.md
@@ -124,8 +114,28 @@ popd
 %{gem_instdir}/Rakefile
 %{gem_instdir}/examples
 %{gem_instdir}/tasks
+#有问题
+%{_datadir}/gems/doc/extensions/x86_64-linux/gherkin-2.12.2/*
 
 %changelog
+* Thu Jun 19 2014 Josef Stribny <jstribny@redhat.com> - 2.12.2-1
+- Update to gherkin 2.12.2
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.11.6-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 14 2014 Vít Ondruch <vondruch@redhat.com> - 2.11.6-5
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.1
+
+* Tue Aug  6 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.11.6-5
+- Again enable test suite
+
+* Tue Aug  6 2013 Mamoru TASAKA <mtasaka@fedoraproject.org> - 2.11.6-4
+- Bootstrap
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.11.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Wed Feb 20 2013 Vít Ondruch <vondruch@redhat.com> - 2.11.6-2
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 - Add bootstrap code.

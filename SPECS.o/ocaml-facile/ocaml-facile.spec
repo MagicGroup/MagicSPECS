@@ -1,15 +1,14 @@
-%define opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
-%define debug_package %{nil}
-%define _default_patch_fuzz 2
+%global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
+%global debug_package %{nil}
+%global _default_patch_fuzz 2
 
 Name:          ocaml-facile
 Version:       1.1
-Release:       19%{?dist}
+Release:       25%{?dist}
 Summary:       OCaml library for constraint programming
 Summary(fr):   Librairie OCaml de programmation par contraintes
-
-Group:         Development/Libraries
 License:       LGPLv2+
+
 URL:           http://www.recherche.enac.fr/log/facile/
 Source0:       http://www.recherche.enac.fr/log/facile/distrib/facile-1.1.tar.gz
 
@@ -20,9 +19,6 @@ Patch0:        facile-1.1-makefile-fixes.patch
 
 # Fix for OCaml 4.00.0.
 Patch1:        ocaml-facile-ocaml-4.patch
-
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-ExclusiveArch: %{ocaml_arches}
 
 BuildRequires: ocaml >= 3.02
 BuildRequires: ocaml-findlib-devel
@@ -84,15 +80,10 @@ developing applications that use %{name}.
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/ocaml
 make install
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc LICENSE README
 %{_libdir}/ocaml/facile/
 %if %opt
@@ -102,7 +93,6 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_libdir}/ocaml/facile/*.mli
 
 %files devel
-%defattr(-,root,root,-)
 %if %opt
 %{_libdir}/ocaml/facile/*.a
 %{_libdir}/ocaml/facile/*.cmxa
@@ -110,6 +100,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ocaml/facile/*.mli
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1-25
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-24
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1.1-23
+- Remove ocaml_arches macro (RHBZ#1087794).
+
+* Sat Sep 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1.1-22
+- Rebuild for OCaml 4.01.0.
+- Modernize the spec file.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Sun Oct 28 2012 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.1-19
 - Rebuild for OCaml 4.00.1.
 

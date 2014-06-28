@@ -6,7 +6,7 @@
 Summary: Utilities for configuring an ISDN subsystem
 Name: isdn4k-utils
 Version: 3.2
-Release: 94%{?dist}
+Release: 98%{?dist}
 License: GPLv2+ and GPL+ and MIT and BSD and zlib
 Group: Applications/System
 Url: http://www.isdn4linux.de/
@@ -47,6 +47,7 @@ Patch25: isdn4k-utils-capi20-link.patch
 Patch26: isdn4k-utils-CVS-2010-05-01-patched-legal-fixes.patch
 Patch27: isdn4k-utils-CVS-2010-05-01-patched-strict-aliasing.patch
 Patch28: isdn4k-fix-Werror-format-security-ftbfs.patch
+patch29: vbox-tcl-8.6.patch
 
 Requires: udev >= 039-10.14.EL4
 Requires: hwdata >= 0.146.18.EL-1
@@ -155,6 +156,7 @@ The isdn4k-utils-doc package contains the documentation for isdn4k-utils.
 %patch26 -p1 -b .legal
 %patch27 -p1 -b .no-strict-aliasing
 %patch28 -p1 -b .format-security
+%patch29 -p1 -b .tcl8.6
 
 # remove useless files
 find -type d -name "CVS" | xargs rm -rf
@@ -398,6 +400,18 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 3.2-98
+- 为 Magic 3.0 重建
+
+* Wed Jun 18 2014 Than Ngo <than@redhat.com> - 3.2-97
+- fix bz#1106807, FTBFS
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-96
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 3.2-95
+- Rebuilt for https://fedoraproject.org/wiki/Changes/f21tcl86
+
 * Tue Jan 28 2014 Kyle McMartin <kyle@fedoraproject.org> - 3.2-94
 - isdn4k-fix-ipppd.patch: fix build on aarch64 (and future arches)
 - isdn4k-fix-Werror-format-security-ftbfs.patch: fix FTBFS with

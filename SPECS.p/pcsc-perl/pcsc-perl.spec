@@ -6,7 +6,7 @@
 
 Name:           pcsc-perl
 Version:        1.4.12
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Perl interface to the PC/SC smart card library
 
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.4.12-7
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.12-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

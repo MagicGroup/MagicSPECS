@@ -1,14 +1,15 @@
 Name:           perl-Test-NoWarnings
-Version:        1.02
-Release:        9%{?dist}
+Version:        1.04
+Release:        6%{?dist}
 Summary:        Make sure you didn't emit any warnings while testing
 License:        LGPLv2+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-NoWarnings/
 Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/Test-NoWarnings-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(Devel::StackTrace)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::Builder) >= 0.86
 BuildRequires:  perl(Test::More)
@@ -19,7 +20,7 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 In general, your tests shouldn't produce warnings. This module causes any
 warnings to be captured and stored. It automatically adds an extra test
 that will run when your script ends to check that there were no warnings.
-If there were any warings, the test will give a "not ok" and diagnostics of
+If there were any warnings, the test will give a "not ok" and diagnostics of
 where, when and what the warning was, including a stack trace of what was
 going on when the it occurred.
 
@@ -31,36 +32,42 @@ going on when the it occurred.
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-9
+* Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 1.04-6
 - 为 Magic 3.0 重建
 
-* Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.02-8
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.02-7
-- 为 Magic 3.0 重建
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 1.04-3
+- Perl 5.18 rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Jan 05 2013 Iain Arnell <iarnell@gmail.com> 1.04-1
+- update to latest upstream version
+- clean up spec for modern rpmbuild
+
+* Thu Nov 08 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.02-7
+- Update dependencies
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

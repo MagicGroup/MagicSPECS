@@ -1,0 +1,34 @@
+From: Guy Harris <guy@alum.mit.edu>
+Date: Wed, 1 Jan 2014 23:24:27 +0000
+Subject: [PATCH] Copy over r54544 from trunk:
+
+  ------------------------------------------------------------------------
+  r54544 | guy | 2014-01-01 15:22:53 -0800 (Wed, 01 Jan 2014) | 11 lines
+
+  If the uncompression buffers are empty, they have no data; set the count
+  of bytes in them to 0, as there's no data in them, and set the offset in
+  that buffer of the stream's current position, to 0, as we're currently
+  at the beginning of the file in both streams.
+
+  This fixes some tricky-to-reproduce errors (which show up only if the
+  ngsniffer_t structure is allocated from data that's been allocated,
+  written to in those variables, and freed).
+
+svn path=/trunk-1.10/; revision=54545
+
+diff --git a/wiretap/ngsniffer.c b/wiretap/ngsniffer.c
+index 92e451d..096ee00 100644
+--- a/wiretap/ngsniffer.c
++++ b/wiretap/ngsniffer.c
+@@ -740,7 +740,11 @@ ngsniffer_open(wtap *wth, int *err, gchar **err_info)
+ 
+ 	/* We haven't allocated any uncompression buffers yet. */
+ 	ngsniffer->seq.buf = NULL;
++	ngsniffer->seq.nbytes = 0;
++	ngsniffer->seq.nextout = 0;
+ 	ngsniffer->rand.buf = NULL;
++	ngsniffer->rand.nbytes = 0;
++	ngsniffer->rand.nextout = 0;
+ 
+ 	/* Set the current file offset; the offset in the compressed file
+ 	   and in the uncompressed data stream currently the same. */

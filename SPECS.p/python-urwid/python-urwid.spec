@@ -9,7 +9,7 @@
 
 Name:          python-urwid
 Version:       1.0.0
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Console user interface library
 
 Group:         Development/Libraries
@@ -115,6 +115,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.0.0-5
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.0-4
 - 为 Magic 3.0 重建
 

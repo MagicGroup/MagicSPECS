@@ -1,0 +1,168 @@
+# Per-platform rpm configuration file.
+
+#==============================================================================
+# ---- per-platform macros.
+#
+%_vendor		magic
+%_os			linux
+%_target_platform	%{_target_cpu}-%{_vendor}-%{_target_os}%{?_gnu}
+
+#==============================================================================
+# ---- configure macros.  note that most of these are inherited
+#      from the defaults.
+#
+%_localstatedir		/var
+
+%_pkgdocdir             %{_docdir}/%{name}
+%_docdir_fmt            %%{NAME}
+
+%_fmoddir		%{_libdir}/gfortran/modules
+
+%_enable_debug_packages 1
+%_include_minidebuginfo 1
+
+#==============================================================================
+# ---- configure and makeinstall.
+#
+%_configure_gnuconfig_hack	1
+%_configure_libtool_hardening_hack	1
+%configure \
+  CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+  CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+  FFLAGS="${FFLAGS:-%optflags -I%_fmoddir}" ; export FFLAGS ; \
+  FCFLAGS="${FCFLAGS:-%optflags -I%_fmoddir}" ; export FCFLAGS ; \
+  LDFLAGS="${LDFLAGS:-%__global_ldflags}"; export LDFLAGS; \
+  [ "%_configure_gnuconfig_hack" = 1 ] && for i in $(find . -name config.guess -o -name config.sub) ; do \
+      [ -f /usr/lib/rpm/magic/$(basename $i) ] && %{__rm} -f $i && %{__cp} -fv /usr/lib/rpm/magic/$(basename $i) $i ; \
+  done ; \
+  [ "%_configure_libtool_hardening_hack" = 1 ] && [ x != "x%{_hardened_ldflags}" ] && \
+      for i in $(find . -name ltmain.sh) ; do \
+        %{__sed} -i.backup -e 's~compiler_flags=$~compiler_flags="%{_hardened_ldflags}"~' $i \
+      done ; \
+  %{_configure} --build=%{_build} --host=%{_host} \\\
+	--program-prefix=%{?_program_prefix} \\\
+	--disable-dependency-tracking \\\
+	--prefix=%{_prefix} \\\
+	--exec-prefix=%{_exec_prefix} \\\
+	--bindir=%{_bindir} \\\
+	--sbindir=%{_sbindir} \\\
+	--sysconfdir=%{_sysconfdir} \\\
+	--datadir=%{_datadir} \\\
+	--includedir=%{_includedir} \\\
+	--libdir=%{_libdir} \\\
+	--libexecdir=%{_libexecdir} \\\
+	--localstatedir=%{_localstatedir} \\\
+	--sharedstatedir=%{_sharedstatedir} \\\
+	--mandir=%{_mandir} \\\
+	--infodir=%{_infodir}
+
+# Maximum number of CPU's to use when building, 0 for unlimited.
+%_smp_ncpus_max 16
+%_smp_mflags %([ -z "$RPM_BUILD_NCPUS" ] \\\
+	&& RPM_BUILD_NCPUS="`/usr/bin/getconf _NPROCESSORS_ONLN`"; \\\
+        ncpus_max=%{?_smp_ncpus_max}; \\\
+        if [ -n "$ncpus_max" ] && [ "$ncpus_max" -gt 0 ] && [ "$RPM_BUILD_NCPUS" -gt "$ncpus_max" ]; then RPM_BUILD_NCPUS="$ncpus_max"; fi; \\\
+        if [ "$RPM_BUILD_NCPUS" -gt 1 ]; then echo "-j$RPM_BUILD_NCPUS"; fi)
+
+#==============================================================================
+# ---- Build policy macros.
+#
+#
+#---------------------------------------------------------------------
+#	Expanded at beginning of %install scriptlet.
+#
+
+%__spec_install_pre %{___build_pre}\
+    [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf "${RPM_BUILD_ROOT}"\
+    mkdir -p `dirname "$RPM_BUILD_ROOT"`\
+    mkdir "$RPM_BUILD_ROOT"\
+%{nil}
+
+#---------------------------------------------------------------------
+#	Expanded at end of %install scriptlet.
+#
+
+%__arch_install_post   /usr/lib/rpm/check-buildroot
+
+%__os_install_post    \
+    /usr/lib/rpm/brp-compress \
+    %{!?__debug_package:\
+    /usr/lib/rpm/brp-strip %{__strip} \
+    /usr/lib/rpm/brp-strip-comment-note %{__strip} %{__objdump} \
+    } \
+    /usr/lib/rpm/brp-strip-static-archive %{__strip} \
+    /usr/lib/rpm/brp-python-bytecompile %{__python} %{?_python_bytecompile_errors_terminate_build} \
+    /usr/lib/rpm/brp-python-hardlink \
+    %{!?__jar_repack:/usr/lib/rpm/magic/brp-java-repack-jars} \
+%{nil}
+
+#    /usr/lib/rpm/magic/brp-implant-ident-static
+
+%__spec_install_post\
+    %{?__debug_package:%{__debug_install_post}}\
+    %{__arch_install_post}\
+    %{__os_install_post}\
+%{nil}
+
+%install %{?_enable_debug_packages:%{?buildsubdir:%{debug_package}}}\
+%%install\
+%{nil}
+
+#
+# Should missing buildids terminate a build?
+%_missing_build_ids_terminate_build    1
+
+#
+## Should python bytecompilation errors terminate a build?
+%_python_bytecompile_errors_terminate_build 1
+
+# Use SHA-256 for FILEDIGESTS instead of default MD5
+%_source_filedigest_algorithm 8
+%_binary_filedigest_algorithm 8
+
+# Use XZ compression for binary payloads
+%_binary_payload w2.xzdio
+
+%_hardening_cflags	-specs=/usr/lib/rpm/magic/magic-hardened-cc1
+# we don't escape symbols '~', '"', etc. so be careful when changing this
+%_hardening_ldflags	-specs=/usr/lib/rpm/magic/magic-hardened-ld
+
+#_hardened_build	0
+%_hardened_cflags	%{?_hardened_build:%{_hardening_cflags}}
+%_hardened_ldflags	%{?_hardened_build:%{_hardening_ldflags}}
+
+%__global_cflags	-O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches %{_hardened_cflags}
+%__global_ldflags	-Wl,-z,relro %{_hardened_ldflags}
+
+#==============================================================================
+# ---- Generic auto req/prov filtering macros
+#
+# http://fedoraproject.org/wiki/PackagingDrafts/AutoProvidesAndRequiresFiltering
+
+# prevent anything matching from being scanned for provides
+%filter_provides_in(P) %{expand: \
+%global __filter_prov_cmd %{?__filter_prov_cmd} %{__grep} -v %{-P} '%*' | \
+}
+
+# prevent anything matching from being scanned for requires
+%filter_requires_in(P) %{expand: \
+%global __filter_req_cmd %{?__filter_req_cmd} %{__grep} -v %{-P} '%*' | \
+}
+
+# filter anything matching out of the provides stream
+%filter_from_provides() %{expand: \
+%global __filter_from_prov %{?__filter_from_prov} | %{__sed} -e '%*' \
+}
+
+# filter anything matching out of the requires stream
+%filter_from_requires() %{expand: \
+%global __filter_from_req %{?__filter_from_req} | %{__sed} -e '%*' \
+}
+
+# actually set up the filtering bits
+%filter_setup %{expand: \
+%global _use_internal_dependency_generator 0 \
+%global __deploop() while read FILE; do echo "${FILE}" | /usr/lib/rpm/rpmdeps -%{1}; done | /bin/sort -u \
+%global __find_provides /bin/sh -c "%{?__filter_prov_cmd} %{__deploop P} %{?__filter_from_prov}" \
+%global __find_requires /bin/sh -c "%{?__filter_req_cmd}  %{__deploop R} %{?__filter_from_req}" \
+}

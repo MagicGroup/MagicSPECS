@@ -1,7 +1,7 @@
-From 5b518e4ccac2ab99508f98b0d6a03dc1613a91f9 Mon Sep 17 00:00:00 2001
+From a85437a0d2ffdf7a340d379789500eb583ae4708 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 May 2012 20:47:07 +0100
-Subject: [PATCH 6/6] Add support for ppc64.
+Subject: [PATCH 06/14] Add support for ppc64.
 
 Note (1): This patch was rejected upstream because they don't have
 appropriate hardware for testing.
@@ -18,19 +18,19 @@ when there are more than 8 parameters (RHBZ#829187).
 Includes fix for minor heap corruption because of unaligned minor heap
 register (RHBZ#826649).
 
-Includes updates for OCaml 4.00.0.
+Includes updates for OCaml 4.01.0.
 ---
- asmcomp/power64/arch.ml       |  87 ++++
- asmcomp/power64/emit.mlp      | 989 ++++++++++++++++++++++++++++++++++++++++++
- asmcomp/power64/proc.ml       | 241 ++++++++++
+ asmcomp/power64/arch.ml       |  88 ++++
+ asmcomp/power64/emit.mlp      | 988 ++++++++++++++++++++++++++++++++++++++++++
+ asmcomp/power64/proc.ml       | 240 ++++++++++
  asmcomp/power64/reload.ml     |  18 +
  asmcomp/power64/scheduling.ml |  65 +++
- asmcomp/power64/selection.ml  | 103 +++++
+ asmcomp/power64/selection.ml  | 101 +++++
  asmrun/Makefile               |   6 +
  asmrun/power64-elf.S          | 486 +++++++++++++++++++++
  asmrun/stack.h                |   9 +
  configure                     |   3 +
- 10 files changed, 2007 insertions(+)
+ 10 files changed, 2004 insertions(+)
  create mode 100644 asmcomp/power64/arch.ml
  create mode 100644 asmcomp/power64/emit.mlp
  create mode 100644 asmcomp/power64/proc.ml
@@ -41,10 +41,10 @@ Includes updates for OCaml 4.00.0.
 
 diff --git a/asmcomp/power64/arch.ml b/asmcomp/power64/arch.ml
 new file mode 100644
-index 0000000..6a14864
+index 0000000..73c516d
 --- /dev/null
 +++ b/asmcomp/power64/arch.ml
-@@ -0,0 +1,87 @@
+@@ -0,0 +1,88 @@
 +(***********************************************************************)
 +(*                                                                     *)
 +(*                           Objective Caml                            *)
@@ -61,7 +61,6 @@ index 0000000..6a14864
 +
 +(* Specific operations for the PowerPC processor *)
 +
-+open Misc
 +open Format
 +
 +(* Machine-specific command-line options *)
@@ -89,6 +88,8 @@ index 0000000..6a14864
 +let size_addr = 8
 +let size_int = size_addr
 +let size_float = 8
++
++let allow_unaligned_access = false
 +
 +(* Behavior of division *)
 +
@@ -134,10 +135,10 @@ index 0000000..6a14864
 +      fprintf ppf "alloc_far %d" n
 diff --git a/asmcomp/power64/emit.mlp b/asmcomp/power64/emit.mlp
 new file mode 100644
-index 0000000..42f585d
+index 0000000..d84ac5c
 --- /dev/null
 +++ b/asmcomp/power64/emit.mlp
-@@ -0,0 +1,989 @@
+@@ -0,0 +1,988 @@
 +(***********************************************************************)
 +(*                                                                     *)
 +(*                           Objective Caml                            *)
@@ -156,7 +157,6 @@ index 0000000..42f585d
 +
 +module StringSet = Set.Make(struct type t = string let compare = compare end)
 +
-+open Location
 +open Misc
 +open Cmm
 +open Arch
@@ -176,7 +176,7 @@ index 0000000..42f585d
 +(* We have a stack frame of our own if we call other functions (including 
 +   use of exceptions, or if we need more than the red zone *)
 +let has_stack_frame () =
-+  if !contains_calls or (num_stack_slots.(0) + num_stack_slots.(1)) > (288-16)/8 then
++  if !contains_calls || (num_stack_slots.(0) + num_stack_slots.(1)) > (288-16)/8 then
 +    true
 +  else 
 +    false
@@ -960,7 +960,7 @@ index 0000000..42f585d
 +  match i with
 +    {desc = Lend} -> ()
 +  | {next = {desc = (Lcondbranch(_, _) | Lcondbranch3(_, _, _))}}
-+    when is_simple_instr i & no_interference i.res i.next.arg ->
++    when is_simple_instr i && no_interference i.res i.next.arg ->
 +      emit_instr i.next (Some i);
 +      emit_all i.next.next
 +  | _ ->
@@ -1129,10 +1129,10 @@ index 0000000..42f585d
 +  frame_descriptors := []
 diff --git a/asmcomp/power64/proc.ml b/asmcomp/power64/proc.ml
 new file mode 100644
-index 0000000..119ad93
+index 0000000..372303d
 --- /dev/null
 +++ b/asmcomp/power64/proc.ml
-@@ -0,0 +1,241 @@
+@@ -0,0 +1,240 @@
 +(***********************************************************************)
 +(*                                                                     *)
 +(*                           Objective Caml                            *)
@@ -1372,8 +1372,7 @@ index 0000000..119ad93
 +  Ccomp.command (Config.asm ^ " -o " ^
 +                 Filename.quote outfile ^ " " ^ Filename.quote infile)
 +
-+open Clflags;;
-+open Config;;
++let init () = ()
 diff --git a/asmcomp/power64/reload.ml b/asmcomp/power64/reload.ml
 new file mode 100644
 index 0000000..abcac6c
@@ -1471,10 +1470,10 @@ index 0000000..b7bba9b
 +let fundecl f = (new scheduler)#schedule_fundecl f
 diff --git a/asmcomp/power64/selection.ml b/asmcomp/power64/selection.ml
 new file mode 100644
-index 0000000..d2325e1
+index 0000000..53b7828
 --- /dev/null
 +++ b/asmcomp/power64/selection.ml
-@@ -0,0 +1,103 @@
+@@ -0,0 +1,101 @@
 +(***********************************************************************)
 +(*                                                                     *)
 +(*                           Objective Caml                            *)
@@ -1491,9 +1490,7 @@ index 0000000..d2325e1
 +
 +(* Instruction selection for the Power PC processor *)
 +
-+open Misc
 +open Cmm
-+open Reg
 +open Arch
 +open Mach
 +
@@ -1579,10 +1576,10 @@ index 0000000..d2325e1
 +
 +let fundecl f = (new selector)#emit_fundecl f
 diff --git a/asmrun/Makefile b/asmrun/Makefile
-index d4f0c56..d58d451 100644
+index 5ebf7aa..6a8ed98 100644
 --- a/asmrun/Makefile
 +++ b/asmrun/Makefile
-@@ -89,6 +89,12 @@ power.o: power-$(SYSTEM).o
+@@ -90,6 +90,12 @@ power.o: power-$(SYSTEM).o
  power.p.o: power-$(SYSTEM).o
  	cp power-$(SYSTEM).o power.p.o
  
@@ -2088,10 +2085,10 @@ index 0000000..b2c24d6
 +        .align  3
 +
 diff --git a/asmrun/stack.h b/asmrun/stack.h
-index a801405..59a7bf2 100644
+index 57c87fa..756db95 100644
 --- a/asmrun/stack.h
 +++ b/asmrun/stack.h
-@@ -47,6 +47,15 @@
+@@ -46,6 +46,15 @@
  #define Callback_link(sp) ((struct caml_context *)((sp) + Trap_frame_size))
  #endif
  
@@ -2108,26 +2105,26 @@ index a801405..59a7bf2 100644
  #define Saved_return_address(sp) *((intnat *)((sp) - 4))
  #define Callback_link(sp) ((struct caml_context *)((sp) + 8))
 diff --git a/configure b/configure
-index cda73fd..314d1e9 100755
+index 39b38dc..9b02664 100755
 --- a/configure
 +++ b/configure
-@@ -686,6 +686,7 @@ case "$host" in
+@@ -694,6 +694,7 @@ case "$host" in
                                    arch=i386; system=macosx
                                  fi;;
    i[3456]86-*-gnu*)             arch=i386; system=gnu;;
 +  powerpc64-*-linux*)           arch=power64; model=ppc64; system=elf;;
    powerpc*-*-linux*)            arch=power; model=ppc; system=elf;;
    powerpc-*-netbsd*)            arch=power; model=ppc; system=elf;;
-   powerpc-*-rhapsody*)          arch=power; model=ppc; system=rhapsody;;
-@@ -757,6 +758,8 @@ case "$arch,$model,$system" in
+   powerpc-*-openbsd*)           arch=power; model=ppc; system=bsd_elf;;
+@@ -776,6 +777,8 @@ case "$arch,$model,$system" in
                      aspp='gcc -c';;
-   power,*,elf)      as='as -u -m ppc'
+   power,*,bsd*)     as='as'
                      aspp='gcc -c';;
 +  power64,*,elf)    as='as -u -m ppc64'
-+                   aspp='gcc -c';;
-   power,*,bsd)      as='as'
-                     aspp='gcc -c';;
++                    aspp='gcc -c';;
    power,*,rhapsody) as="as -arch $model"
+                     aspp="$bytecc -c";;
+   sparc,*,solaris)  as='as'
 -- 
-1.7.11.4
+1.9.0
 

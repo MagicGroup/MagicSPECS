@@ -1,0 +1,17 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 20_INSTALL_CMI.dpatch by Mike Furr <mfurr@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad ocaml-reins-0.1a~/src/OMakefile ocaml-reins-0.1a/src/OMakefile
+--- ocaml-reins-0.1a~/src/OMakefile	2007-10-02 17:26:23.000000000 -0400
++++ ocaml-reins-0.1a/src/OMakefile	2007-10-02 17:26:54.705359854 -0400
+@@ -52,5 +52,5 @@
+ 
+ install: META $(REINS_LIB)
+ 	mkdir -p $(PREFIX)/reins
+-	ocamlfind install reins META $(REINS_LIB) $(REINS_CMX) \
++	ocamlfind install reins META $(REINS_LIB) $(REINS_CMX) reins.cmi \
+ 	  $(filter-exists $(addsuffix .mli, $(FILES)))

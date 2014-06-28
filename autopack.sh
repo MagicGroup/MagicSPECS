@@ -447,10 +447,14 @@ if [ $AUTOBUMP = "1" ]; then
 			autoupdate $1 || echo "$1 版本更新未成功，请检查网络环境和相关配置"
 			if [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
 				echo "暂不更新 release "			
+			elif [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
+                                echo "暂不更新 release "     
 			else
 				autobumpspec $1
 			fi
-		else
+		elif [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
+                        echo "暂不更新 release "
+		else     
 			autobumpspec $1
 		fi
 	else

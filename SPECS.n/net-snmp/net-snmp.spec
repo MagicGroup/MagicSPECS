@@ -11,7 +11,7 @@
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
 Version: 5.7.2
-Release: 11%{?dist}
+Release: 12%{?dist}
 Epoch: 1
 
 License: BSD
@@ -504,6 +504,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_initrddir}/snmptrapd
 
 %changelog
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1:5.7.2-12
+- 为 Magic 3.0 重建
+
 * Mon May  6 2013 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-11
 - added aarch64 to multilib architectures.
 

@@ -3,7 +3,7 @@
 Summary:        Ruby library that colors strings using ANSI escape sequences
 Name:           rubygem-%{gem_name}
 Version:        1.0.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Group:          Development/Languages
 License:        GPLv2
 URL:            http://term-ansicolor.rubyforge.org
@@ -83,6 +83,9 @@ popd
 
 
 %changelog
+* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 1.0.7-7
+- 为 Magic 3.0 重建
+
 * Sat Feb 23 2013 Vít Ondruch <vondruch@redhat.com> - 1.0.7-6
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 

@@ -1,14 +1,13 @@
 Name:           libzrtpcpp
-Version:        2.1.2
-Release:        3%{?dist}
+Version:	4.2.3
+Release:        5%{?dist}
 Summary:        ZRTP support library for the GNU ccRTP stack
 
 Group:          System Environment/Libraries
 License:        GPLv3+
 URL:            https://github.com/wernerd/ZRTPCPP
-Source0:        https://github.com/downloads/wernerd/ZRTPCPP/%{name}-%{version}.tar.bz2
-# remove ec ecryption, our ssl doesn't ship with it. 
-Patch0:         libzrtpcpp-2.0.0-remove-ec.patch
+#Source0:        https://github.com/wernerd/ZRTPCPP/archive/V%{version}.tar.gz
+Source0:	ZRTPCPP-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	ccrtp-devel 
@@ -37,12 +36,11 @@ developing applications that use %{name}.
 
 
 %prep
-%setup -q
+%setup -q -n ZRTPCPP-%{version}
+
 
 sed -i '/CMAKE_VERBOSE_MAKEFILE/d' CMakeLists.txt
-
-%patch0 -p1
-
+sed -i 's/%{_lib}/lib/g' CMakeLists.txt
 
 %build
 %cmake .
@@ -55,7 +53,6 @@ chmod 644 NEWS
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -69,7 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc README.md AUTHORS COPYING NEWS
-%{_libdir}/libzrtpcpp.so.2*
+%{_libdir}/libzrtpcpp.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -79,8 +76,39 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.1.2-3
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 4.2.3-5
+- 更新到 4.2.3
+
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 2.3.4-5
+- 更新到 4.2.3
+
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 2.3.4-5
+- 更新到 4.2.3
+
+* Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 2.3.4-5
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Oct 18 2013 Alexey Kurov <nucleo@fedoraproject.org> - 2.3.4-3
+- re-enable ec encryption
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 03 2013 Kevin Fenzi <kevin@scrye.com> 2.3.4-1
+- Update to 2.3.4
+- Fixes CVE-2013-2221 CVE-2013-2222 CVE-2013-2223
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Wed Nov 21 2012 Kevin Fenzi <kevin@scrye.com> 2.3.2-1
+- Update to 2.3.2
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.2-2
 - Rebuilt for c++ ABI breakage

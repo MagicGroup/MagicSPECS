@@ -7,7 +7,7 @@
 Name:			python-ply
 Summary: 		Python Lex-Yacc
 Version:		3.4
-Release:		4%{?dist}
+Release:		5%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
 URL:			http://www.dabeaz.com/ply/
@@ -115,6 +115,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with_python3
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 3.4-5
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

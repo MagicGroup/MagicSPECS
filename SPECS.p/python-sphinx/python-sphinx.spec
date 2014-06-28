@@ -11,7 +11,7 @@
 
 Name:       python-sphinx
 Version:    1.1.3
-Release:    6%{?dist}
+Release:    7%{?dist}
 Summary:    Python documentation generator
 
 Group:      Development/Tools
@@ -272,6 +272,9 @@ popd
 
 
 %changelog
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.1.3-7
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.3-6
 - 为 Magic 3.0 重建
 

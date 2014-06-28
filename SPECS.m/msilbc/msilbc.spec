@@ -5,7 +5,7 @@
 Summary:	msiLBC is low bitrate audio codec - plugin for mediastreamer
 Name:		msilbc
 Version:	2.0.3
-Release:	3%{?dist}
+Release:	5%{?dist}
 License:	GPL2
 Group:		System/Libraries
 URL:		http://www.linphone.org
@@ -81,6 +81,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 2.0.3-5
+- 为 Magic 3.0 重建
+
+* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.3-4
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.3-3
 - 为 Magic 3.0 重建
 

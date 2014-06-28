@@ -1,4 +1,4 @@
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 7
 %global ruby_archdir   %{ruby_vendorarchdir}
 %else
 %global ruby_archdir   %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["sitearchdir"]')
@@ -6,7 +6,7 @@
 
 Name:           ruby-shadow
 Version:        1.4.1
-Release:        19%{?dist}
+Release:        24%{?dist}
 Summary:        Ruby bindings for shadow password access
 Group:          System Environment/Libraries
 License:        Public Domain
@@ -17,12 +17,8 @@ Patch1:         ruby-shadow-1.4.1-cflags.patch
 Patch2:         ruby-shadow-2.2.0-Add-support-for-ruby-2.0.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  ruby-devel
-%if 0%{?fedora}
-%if 0%{?fedora} <= 18
-Requires:       ruby(abi) = 1.9.1
-%else
+%if 0%{?fedora} || 0%{?rhel} >= 7
 Requires:       ruby(release)
-%endif
 %else
 Requires:       ruby(abi) = 1.8
 %endif
@@ -55,6 +51,21 @@ rm -rf %{buildroot}
 %{ruby_archdir}/shadow.so
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-24
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat May 31 2014 Sam Kottler <skottler@fedoraproject.org> - 1.4.1-23
+- Fix conditional so shadow.so gets installed to the proper location (BZ#1094046)
+
+* Mon Apr 28 2014 Vít Ondruch <vondruch@redhat.com> - 1.4.1-22
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Ruby_2.1
+
+* Thu Jan 23 2014 Orion Poplawski <orion@cora.nwra.com> - 1.4.1-21
+- Update ruby requires conditionals for EPEL7
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Mon Mar 18 2013 Vít Ondruch <vondruch@redhat.com> - 1.4.1-19
 - Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
 

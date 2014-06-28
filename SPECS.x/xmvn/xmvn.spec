@@ -1,6 +1,6 @@
 Name:           xmvn
 Version:        2.0.1
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Local Extensions for Apache Maven
 License:        ASL 2.0
 URL:            http://mizdebsk.fedorapeople.org/xmvn
@@ -283,9 +283,6 @@ end
 %doc LICENSE NOTICE
 
 %changelog
-* Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 2.0.1-2
-- 为 Magic 3.0 重建
-
 * Fri Jun  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.0.1-1
 - Update to upstream version 2.0.1
 

@@ -1,0 +1,14 @@
+--- ocaml-cairo-1.2.0/Makefile.rules~	2011-09-11 16:09:06.000000000 +0100
++++ ocaml-cairo-1.2.0/Makefile.rules	2013-09-14 14:51:18.682632883 +0100
+@@ -1,8 +1,8 @@
+ %.cmo : %.ml
+-	$(OCAMLC) -c $(INCFLAGS) $<
++	$(OCAMLC) -g -c $(INCFLAGS) $<
+ %.cmx : %.ml
+-	$(OCAMLOPT) -c $(INCFLAGS) $<
++	$(OCAMLOPT) -g -c $(INCFLAGS) $<
+ %.cmi : %.mli
+-	$(OCAMLC) $(INCFLAGS) $<
++	$(OCAMLC) -g $(INCFLAGS) $<
+ %.o : %.c
+ 	$(OCAMLC) -ccopt "$(CPPFLAGS)" $<

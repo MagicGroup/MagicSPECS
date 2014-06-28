@@ -13,7 +13,7 @@ License: LGPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: 4.13.1
+Version: 4.13.2
 Release: 1%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
@@ -508,6 +508,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
+- 更新到 4.13.2
+
 * Thu May 22 2014 Liu Di <liudidi@gmail.com> - 4.13.1-1
 - 更新到 4.13.1
 

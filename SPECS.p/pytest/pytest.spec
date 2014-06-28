@@ -9,7 +9,7 @@
 
 Name:           pytest
 Version:        2.4.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple powerful testing with Python
 
 Group:          Development/Languages
@@ -168,6 +168,9 @@ popd
 
 
 %changelog
+* Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 2.4.2-3
+- 为 Magic 3.0 重建
+
 * Mon Oct  7 2013 Thomas Moschny <thomas.moschny@gmx.de> - 2.4.2-2
 - Only run tests from the 'testing' subdir in %%check.
 

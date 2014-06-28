@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index e1d01c6..72a5019 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -9,7 +9,7 @@ LT_INIT
+ 
+ AC_CANONICAL_HOST
+ AM_CONDITIONAL(LD_ISCSI,
+-               [expr "$host_os" : linux > /dev/null 2>&1])
++               [false])
+ AM_PROG_CC_C_O
+ 
+ enable_write_strings="yes"

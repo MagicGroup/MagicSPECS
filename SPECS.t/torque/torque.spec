@@ -15,8 +15,6 @@
 # that $PBS_SERVER_HOME/server_name contains the correct hostname.
 %global server_name localhost
 
-%define _unpackaged_files_terminate_build	0
-
 # Build doxygen docs
 %global doxydoc 1
 
@@ -72,8 +70,8 @@
 %global server_nameflags --with-default-server=%{server_name}
 
 Name:        torque
-Version:     3.0.4
-Release:     2%{?dist}
+Version:     4.2.6.1
+Release:     4%{?dist}
 Summary:     Tera-scale Open-source Resource and QUEue manager
 Source0:     http://www.clusterresources.com/downloads/%{name}/%{name}-%{version}.tar.gz
 Source2:     xpbs.desktop
@@ -91,9 +89,6 @@ Source8:     config
 # https://bugzilla.redhat.com/show_bug.cgi?id=713996
 Patch1:      torque-munge-size.patch
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=744138
-Patch2:      torque-initd-hangs-rhbz-744138.patch
-
 License:     OpenPBS and TORQUEv1.1
 Group:       System Environment/Daemons
 URL:         http://www.clusterresources.com/products/torque/
@@ -105,6 +100,9 @@ BuildRequires: pam-devel
 BuildRequires: xauth
 BuildRequires: readline-devel
 BuildRequires: ncurses-devel
+BuildRequires: gperf
+BuildRequires: openssl-devel
+BuildRequires: libxml2-devel
 %if %{use_tcl}
 BuildRequires: tcl-devel
 %endif
@@ -122,6 +120,10 @@ BuildRequires: graphviz-gd
 %endif
 %if %{?fedora}%{!?fedora:0} >= 9
 BuildRequires:  tex(latex)
+BuildRequires:  tex-xtab
+BuildRequires:  tex-sectsty
+BuildRequires:  tex-tocloft
+BuildRequires:  tex-multirow
 %else
 %if %{?rhel}%{!?rhel:0} >= 6
 BuildRequires:  tex(latex)
@@ -344,21 +346,20 @@ DRMAA is "Distributed Resource Management Application API"
 %prep
 %setup -q -n torque-%{version}
 %patch1 -p 1
-%patch2 -p 1
+sed -i '/LATEX_BATCHMODE/d' src/drmaa/Doxyfile.in
 install -pm 644 %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} \
    %{SOURCE6} %{SOURCE8} .
 # rm x bit on some documentation.
 chmod 644 torque.setup
 
 %build
-CFLAGS="%{optflags} -Wno-overlength-strings"
+CFLAGS="%{optflags} -Wno-overlength-strings  -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE"
 %configure --includedir=%{_includedir}/torque \
   --with-server-home=%{torquehomedir} --with-pam=/%{_lib}/security \
   --with-sendmail=%{_sbindir}/sendmail --disable-static \
   --with-tcp-retry-limit=2 \
   --enable-drmaa --enable-munge-auth \
   %{server_nameflags} %{guiflags} %{tclflags} %{rcpflags}
-
 
 make %{?_smp_mflags}
 
@@ -456,6 +457,7 @@ popd
 # and delete the three copies of the same documentation.
 
 %if 0%{?doxydoc}
+rm %{buildroot}%{_defaultdocdir}/torque-drmaa/man/man3/*_src_drmaa_src_.3
 mv %{buildroot}%{_defaultdocdir}/torque-drmaa/man/man3/* %{buildroot}%{_mandir}/man3/.
 rm -rf %{buildroot}%{_defaultdocdir}/torque-drmaa/html/*
 rm -rf %{buildroot}%{_defaultdocdir}/torque-drmaa/latex/*
@@ -465,7 +467,9 @@ rm %{buildroot}%{_defaultdocdir}/torque-drmaa/drmaa.pdf
 
 #Remove man page for binary that is not included.
 rm %{buildroot}%{_mandir}/man1/basl2c.1
-magic_rpm_clean.sh
+
+# fix permissions for some directories in /var/lib/torque
+chmod 755 `find %{buildroot}/var/lib/torque -type d`
 
 %clean
 rm -rf %{buildroot}
@@ -522,36 +526,36 @@ fi
 
 
 %post mom
-/usr/sbin/chkconfig --add pbs_mom
+/sbin/chkconfig --add pbs_mom
 
 %preun mom
 if [ $1 -eq 0 ]; then
    /sbin/service pbs_mom stop >/dev/null 2>&1
-   /usr/sbin/chkconfig --del pbs_mom
+   /sbin/chkconfig --del pbs_mom
 fi
 
 %post scheduler
-/usr/sbin/chkconfig --add pbs_sched
+/sbin/chkconfig --add pbs_sched
 
 %preun scheduler
 if [ $1 -eq 0 ]; then
    /sbin/service pbs_sched stop >/dev/null 2>&1
-   /usr/sbin/chkconfig --del pbs_sched
+   /sbin/chkconfig --del pbs_sched
 fi
 
 %post server
-/usr/sbin/chkconfig --add pbs_server
+/sbin/chkconfig --add pbs_server
 
 %preun server
 if [ $1 -eq 0 ]; then
    /sbin/service pbs_server stop >/dev/null 2>&1
-   /usr/sbin/chkconfig --del pbs_server
+   /sbin/chkconfig --del pbs_server
 fi
 
 %files
 %defattr(-, root, root, -)
 %doc               README.torque torque.setup Release_Notes 
-%doc               CHANGELOG PBS_License_2.5.txt README.Fedora contrib/PBS_License_2.3.txt
+%doc               CHANGELOG PBS_License.txt README.Fedora contrib/PBS_License_2.3.txt
 %dir %{torquehomedir} 
 %dir %{torquehomedir}/aux
 %dir %{torquehomedir}/spool
@@ -576,7 +580,6 @@ fi
 %{_bindir}/printtracking
 %{_bindir}/tracejob
 %{_sbindir}/momctl
-%attr(4755, root, root) %{_sbindir}/pbs_iff
 %{_sbindir}/pbs_demux
 %if %{use_tcl}
 %{_bindir}/pbs_tclsh
@@ -668,6 +671,7 @@ fi
 %{_includedir}/torque/rpp.h
 %{_includedir}/torque/tm.h
 %{_includedir}/torque/tm_.h
+%{_includedir}/torque/*.h
 %{_bindir}/pbs-config
 %{_mandir}/man3/pbs_alterjob.3.*
 %{_mandir}/man3/pbs_connect.3.*
@@ -701,7 +705,6 @@ fi
 %{_mandir}/man3/pbs_get_server_list.3.gz
 %{_mandir}/man3/pbs_gpumode.3.gz
 %{_mandir}/man3/pbs_gpureset.3.gz
-%{_mandir}/man3/rpp.3.*
 %{_mandir}/man3/tm.3.*
 
 
@@ -752,6 +755,7 @@ fi
 %defattr(-, root, root, -)
 %attr(0755, root, root) %{_sbindir}/pbs_server
 %attr(0755, root, root) %{_sbindir}/momctl
+%attr(0755, root, root) %{_sbindir}/trqauthd
 %{_sbindir}/qserverd
 %{_initrddir}/pbs_server
 %dir %{_var}/log/torque/server_logs
@@ -793,8 +797,32 @@ fi
 %endif
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.0.4-2
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-4
 - 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-3
+- 为 Magic 3.0 重建
+
+* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 4.2.6.1-2
+- 为 Magic 3.0 重建
+
+* Sun Jan 12 2014 Haïkel Guémar <hguemar@fedoraproject.org> - 4.2.6.1-1
+- upstream 4.2.6.1
+
+* Wed Nov 13 2013 Haïkel Guémar <hguemar@fedoraproject.org> - 4.2.6-1
+- upstream 4.2.6
+
+* Fri Aug 16 2013 Orion Poplawski <orion@cora.nwra.com> - 3.0.4-4
+- Add missing BRs for latex docs
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Sun Feb 5 2012 Steve Traylen <steve.traylen@cern.ch> - 3.0.4-1
 - New upstream.
@@ -814,7 +842,7 @@ fi
 * Mon Sep 19 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.2-3
 - Add --with-tcp-retry-limit=2 to build, rhbz#738576.
 
-* Wed Aug 30 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.2-2
+* Tue Aug 30 2011 Steve Traylen <steve.traylen@cern.ch> - 3.0.2-2
 - Move checkpoint directory from torque-mom to torque package.
   rhbz#734878.
 
@@ -911,7 +939,7 @@ fi
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.10-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Mon Apr 16 2008 Garrick Staples <garrick@usc.edu> 2.1.10-6
+* Wed Apr 16 2008 Garrick Staples <garrick@usc.edu> 2.1.10-6
 - add alternatives system
 
 * Thu Feb 14 2008 Garrick Staples <garrick@usc.edu> 2.1.10-5

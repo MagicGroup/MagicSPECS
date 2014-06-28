@@ -1,0 +1,11 @@
+--- xen-4.3.0-rc5/Config.mk.orig	2013-06-22 16:36:48.531767690 +0100
++++ xen-4.3.0-rc5/Config.mk	2013-06-22 17:31:21.021855934 +0100
+@@ -188,7 +188,7 @@
+ EMBEDDED_EXTRA_CFLAGS += -fno-exceptions
+ 
+ # Enable XSM security module (by default, Flask).
+-XSM_ENABLE ?= n
++XSM_ENABLE ?= y
+ FLASK_ENABLE ?= $(XSM_ENABLE)
+ 
+ XEN_EXTFILES_URL ?= http://xenbits.xen.org/xen-extfiles
