@@ -50,7 +50,7 @@
 %{!?xml:%global xml 1}
 %{!?pam:%global pam 1}
 %{!?sdt:%global sdt 1}
-%{!?selinux:%global selinux 0}
+%{!?selinux:%global selinux 1}
 %{!?runselftest:%global runselftest 1}
 
 # By default, patch(1) creates backup files when chunks apply with offsets.
@@ -64,7 +64,7 @@ Summary: PostgreSQL client programs
 Name: postgresql
 %global majorversion 9.3
 Version: 9.3.4
-Release: 8%{?dist}
+Release: 6%{?dist}
 
 # The PostgreSQL license is very similar to other MIT licenses, but the OSI
 # recognizes it as an independent license, so we do as well.
@@ -1133,12 +1133,6 @@ fi
 %endif
 
 %changelog
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 9.3.4-8
-- 为 Magic 3.0 重建
-
-* Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 9.3.4-7
-- 为 Magic 3.0 重建
-
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.3.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
