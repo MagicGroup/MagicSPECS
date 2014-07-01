@@ -5,7 +5,7 @@ Summary: Tools for using the foomatic database of printers and printer drivers
 Summary(zh_CN.UTF-8): 使用 foomatic 打印机数据库和驱动的工具
 Name:       foomatic
 Version:    %{enginever}
-Release:    8%{?dist}
+Release:    9%{?dist}
 License:    GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -135,6 +135,9 @@ exit 0
 
 
 %changelog
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 4.0.11-9
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 4.0.11-8
 - 为 Magic 3.0 重建
 

@@ -17,7 +17,7 @@
 Summary: Round Robin Database Tool to store and display time-series data
 Name: rrdtool
 Version: 1.4.8
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: GPLv2+ with exceptions
 Group: Applications/Databases
 URL: http://oss.oetiker.ch/rrdtool/
@@ -281,7 +281,7 @@ __EOF__
 %endif
 
 # Pesky RRDp.pm...
-# %{__mv} $RPM_BUILD_ROOT%{perl_vendorlib}/RRDp.pm $RPM_BUILD_ROOT%{perl_vendorarch}/
+%{__mv} $RPM_BUILD_ROOT%{perl_vendorlib}/RRDp.pm $RPM_BUILD_ROOT%{perl_vendorarch}/
 
 # Dunno why this is getting installed here...
 %{__rm} -f $RPM_BUILD_ROOT%{perl_vendorlib}/leaktest.pl
@@ -348,8 +348,8 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %defattr(-,root,root,-)
 %doc doc3/html
 %{_mandir}/man3/*
-#%{perl_vendorarch}/*.pm
-#%attr(0755,root,root) %{perl_vendorarch}/auto/RRDs/
+%{perl_vendorarch}/*.pm
+%attr(0755,root,root) %{perl_vendorarch}/auto/RRDs/
 
 %if %{with_python}
 %files python
@@ -391,6 +391,9 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} php -n \
 %endif
 
 %changelog
+* Mon Jun 30 2014 Liu Di <liudidi@gmail.com> - 1.4.8-14
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Remi Collet <rcollet@redhat.com> - 1.4.8-13
 - rebuild for https://fedoraproject.org/wiki/Changes/Php56
 - add numerical prefix to extension configuration file

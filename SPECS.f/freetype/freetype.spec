@@ -8,7 +8,7 @@ Summary: A free and portable font rendering engine
 Summary(zh_CN.UTF-8): 自由的可移植的 TrueType 字体绘制引擎。
 Name: freetype
 Version:	2.5.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: FTL or GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -266,6 +266,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libfreetype.a
 
 %changelog
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 2.5.3-2
+- 为 Magic 3.0 重建
+
 * Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 2.5.3-1
 - 更新到 2.5.3
 

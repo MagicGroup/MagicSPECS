@@ -9,7 +9,7 @@
 %endif
 
 Name:           gstreamer1-plugins-bad
-Version:        1.2.3
+Version:	1.3.3
 Release:        2%{?dist}
 Summary:        GStreamer streaming media framework "bad" plugins
 
@@ -21,8 +21,8 @@ URL:            http://gstreamer.freedesktop.org/
 Source0:        http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-%{version}.tar.xz
 Source1:        gst-p-bad-cleanup.sh
 
-Patch1:         gst1-plugins-bad-fix-dfb-example.patch
-Patch2:         gst1-plugins-bad-fix-dfb-test.patch
+Patch1:		gst1-plugins-bad-fix-dfb-example.patch
+Patch2:		gst1-plugins-bad-fix-dfb-test.patch
 
 BuildRequires:  gstreamer1-devel >= %{version}
 BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
@@ -129,10 +129,11 @@ aren't tested well enough, or the code is not of good enough quality.
 
 %prep
 %setup -q -n gst-plugins-bad-%{version}
-%patch1 -p1 -b .fix-dfb
-%patch2 -p1 -b .fix-dfb1
+%patch1 -p1
+%patch2 -p1
 
 %build
+autoreconf -fisv
 %configure \
     --with-package-name="Fedora GStreamer-plugins-bad package" \
     --with-package-origin="http://download.fedoraproject.org" \
@@ -140,7 +141,7 @@ aren't tested well enough, or the code is not of good enough quality.
     --enable-debug --disable-static --enable-experimental \
     --disable-dts --disable-faac --disable-faad --disable-nas \
     --disable-mimic --disable-libmms --disable-mpeg2enc --disable-mplex \
-    --disable-neon --disable-openal --disable-rtmp --disable-xvid
+    --disable-neon --disable-openal --disable-rtmp --disable-xvid CFLAGS="-Wno-error=redundant-decls"
 make %{?_smp_mflags}
 
 
@@ -166,13 +167,18 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 
 %{_libdir}/libgstbasecamerabinsrc-%{majorminor}.so.*
 %{_libdir}/libgstcodecparsers-%{majorminor}.so.*
-%{_libdir}/libgstegl-%{majorminor}.so.*
+#%{_libdir}/libgstegl-%{majorminor}.so.*
 %{_libdir}/libgstinsertbin-%{majorminor}.so.*
 %{_libdir}/libgstmpegts-%{majorminor}.so.*
 %{_libdir}/libgstphotography-%{majorminor}.so.*
 %{_libdir}/libgsturidownloader-%{majorminor}.so.*
 
-%{_libdir}/girepository-1.0/GstEGL-1.0.typelib
+%{_libdir}/libgstbadbase-%{majorminor}.so.*
+%{_libdir}/libgstbadvideo-%{majorminor}.so.*
+%{_libdir}/libgstgl-%{majorminor}.so.*
+%{_libdir}/libgstwayland-%{majorminor}.so.*
+
+#%{_libdir}/girepository-1.0/GstEGL-1.0.typelib
 %{_libdir}/girepository-1.0/GstInsertBin-1.0.typelib
 %{_libdir}/girepository-1.0/GstMpegts-1.0.typelib
 
@@ -204,7 +210,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/gstreamer-%{majorminor}/libgstivtc.so
 %{_libdir}/gstreamer-%{majorminor}/libgstjpegformat.so
 %{_libdir}/gstreamer-%{majorminor}/libgstliveadder.so
-%{_libdir}/gstreamer-%{majorminor}/libgstmfc.so
+#%{_libdir}/gstreamer-%{majorminor}/libgstmfc.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmidi.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmpegpsdemux.so
 %{_libdir}/gstreamer-%{majorminor}/libgstmpegtsdemux.so
@@ -261,7 +267,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/gstreamer-%{majorminor}/libgstzbar.so
 %{_libdir}/gstreamer-%{majorminor}/libgstwildmidi.so
 
-%{_libdir}/gstreamer-%{majorminor}/libgsteglglessink.so
+#%{_libdir}/gstreamer-%{majorminor}/libgsteglglessink.so
 %{_libdir}/gstreamer-%{majorminor}/libgstflite.so
 %{_libdir}/gstreamer-%{majorminor}/libgstuvch264.so
 %{_libdir}/gstreamer-%{majorminor}/libgstwebp.so
@@ -272,6 +278,20 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/gstreamer-%{majorminor}/libgstgme.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopenjpeg.so
 %{_libdir}/gstreamer-%{majorminor}/libgstsiren.so
+
+%{_libdir}/gstreamer-%{majorminor}/libgstaudiomixer.so
+%{_libdir}/gstreamer-%{majorminor}/libgstcompositor.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdfbvideosink.so
+%{_libdir}/gstreamer-%{majorminor}/libgstivfparse.so
+%{_libdir}/gstreamer-%{majorminor}/libgstjp2kdecimator.so
+%{_libdir}/gstreamer-%{majorminor}/libgstopenexr.so
+%{_libdir}/gstreamer-%{majorminor}/libgstopengl.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsbc.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsndfile.so
+%{_libdir}/gstreamer-%{majorminor}/libgstspandsp.so
+%{_libdir}/gstreamer-%{majorminor}/libgststereo.so
+%{_libdir}/gstreamer-%{majorminor}/libgstvideosignal.so
+%{_libdir}/gstreamer-%{majorminor}/libgstvmnc.so
 
 %{_libdir}/gstreamer-%{majorminor}/libgstofa.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopencv.so
@@ -284,34 +304,54 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 #%doc %{_datadir}/gtk-doc/html/gst-plugins-bad-plugins-%{majorminor}
 %doc %{_datadir}/gtk-doc/html/gst-plugins-bad-libs-%{majorminor}
 
-%{_datadir}/gir-1.0/GstEGL-%{majorminor}.gir
+#%{_datadir}/gir-1.0/GstEGL-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstInsertBin-%{majorminor}.gir
 %{_datadir}/gir-1.0/GstMpegts-%{majorminor}.gir
+%{_datadir}/gir-%{majorminor}/GstWayland-%{majorminor}.gir
+%{_datadir}/gtk-doc/html/gst-plugins-bad-plugins-%{majorminor}/*
 
 %{_libdir}/libgstbasecamerabinsrc-%{majorminor}.so
 %{_libdir}/libgstcodecparsers-%{majorminor}.so
-%{_libdir}/libgstegl-%{majorminor}.so
+#%{_libdir}/libgstegl-%{majorminor}.so
 %{_libdir}/libgstinsertbin-%{majorminor}.so
 %{_libdir}/libgstmpegts-%{majorminor}.so
 %{_libdir}/libgstphotography-%{majorminor}.so
 %{_libdir}/libgsturidownloader-%{majorminor}.so
 
+%{_libdir}/libgstbadbase-%{majorminor}.so
+%{_libdir}/libgstbadvideo-%{majorminor}.so
+%{_libdir}/libgstgl-%{majorminor}.so
+%{_libdir}/libgstwayland-%{majorminor}.so
+
 %{_includedir}/gstreamer-%{majorminor}/gst/basecamerabinsrc
 %{_includedir}/gstreamer-%{majorminor}/gst/codecparsers
-%{_includedir}/gstreamer-%{majorminor}/gst/egl
+#%{_includedir}/gstreamer-%{majorminor}/gst/egl
 %{_includedir}/gstreamer-%{majorminor}/gst/insertbin
 %{_includedir}/gstreamer-%{majorminor}/gst/interfaces/photography*
 %{_includedir}/gstreamer-%{majorminor}/gst/mpegts
 %{_includedir}/gstreamer-%{majorminor}/gst/uridownloader
+%{_includedir}/gstreamer-%{majorminor}/gst/base/gstaggregator.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/egl/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/glprototypes/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/gl/x11/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/wayland/*.h
+%{_libdir}/girepository-%{majorminor}/GstWayland-%{majorminor}.typelib
 
 # pkg-config files
 %{_libdir}/pkgconfig/gstreamer-codecparsers-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-egl-%{majorminor}.pc
+#%{_libdir}/pkgconfig/gstreamer-egl-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-insertbin-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-mpegts-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-plugins-bad-%{majorminor}.pc
+%{_libdir}/pkgconfig/gstreamer-gl-%{majorminor}.pc
+%{_libdir}/pkgconfig/gstreamer-wayland-%{majorminor}.pc
 
 %changelog
+* Wed Jun 25 2014 Liu Di <liudidi@gmail.com> - 1.3.3-2
+- 更新到 1.3.3
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
 - 为 Magic 3.0 重建
 

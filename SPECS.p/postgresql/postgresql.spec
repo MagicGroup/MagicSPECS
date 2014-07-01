@@ -50,8 +50,8 @@
 %{!?xml:%global xml 1}
 %{!?pam:%global pam 1}
 %{!?sdt:%global sdt 1}
-%{!?selinux:%global selinux 1}
-%{!?runselftest:%global runselftest 1}
+%{!?selinux:%global selinux 0}
+%{!?runselftest:%global runselftest 0}
 
 # By default, patch(1) creates backup files when chunks apply with offsets.
 # Turn that off to ensure such files don't get included in RPMs.

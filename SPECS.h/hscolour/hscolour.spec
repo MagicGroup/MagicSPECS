@@ -77,7 +77,7 @@ This package provides the Haskell %{name} library development files.
 
 
 %files -n ghc-%{name}-devel -f ghc-%{name}-devel.files
-
+%{_datadir}/doc/hscolour-%{version}/LICENCE-GPL
 
 %changelog
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1.20.3-10

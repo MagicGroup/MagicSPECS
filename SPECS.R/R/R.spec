@@ -39,7 +39,7 @@
 
 Name: R
 Version: 3.1.0
-Release: 9%{?dist}
+Release: 10%{?dist}
 Summary: A language for data analysis and graphics
 URL: http://www.r-project.org
 Source0: ftp://cran.r-project.org/pub/R/src/base/R-3/R-%{version}.tar.gz
@@ -880,6 +880,9 @@ R CMD javareconf \
 %postun -n libRmath -p /sbin/ldconfig
 
 %changelog
+* Sat Jun 28 2014 Liu Di <liudidi@gmail.com> - 3.1.0-10
+- 为 Magic 3.0 重建
+
 * Tue Jun 24 2014 Tom Callaway <spot@fedoraproject.org> - 3.1.0-9
 - mark files in %%{_libdir}/R/etc as config(noreplace), resolves 1098663
 

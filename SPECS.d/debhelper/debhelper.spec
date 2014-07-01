@@ -7,7 +7,7 @@
 }
 
 Name:           debhelper
-Version:	9.20140228
+Version:	9.20140613
 Release:        1%{?dist}
 Summary:        Helper programs for Debian rules
 Summary(zh_CN.UTF-8): Debian 打包用的辅助程序
@@ -91,6 +91,9 @@ make test
 %{perl_vendorlib}/Debian/Debhelper
 
 %changelog
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 9.20140613-1
+- 更新到 9.20140613
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 9.20140228-1
 - 更新到 9.20140228
 

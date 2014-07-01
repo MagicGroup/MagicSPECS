@@ -1,4 +1,3 @@
-%global with_zeitgeist 1
 %global __python %{__python3}
 
 %define glib2_version 2.28.0
@@ -8,13 +7,12 @@
 %define enchant_version 1.2.0
 %define isocodes_version 0.35
 %define libpeas_version 1.7.0
-%define zeitgeist_version 0.9.12
 
 Summary:	Text editor for the GNOME desktop
 Summary(zh_CN.UTF-8): GNOME 桌面下的文本编辑器
 Name:		gedit
 Epoch:		2
-Version:	3.12.0
+Version:	3.13.2
 Release:	1%{?dist}
 License:	GPLv2+ and GFDL
 Group:		Applications/Editors
@@ -93,24 +91,6 @@ Install gedit-devel if you want to write plugins for gedit.
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
-%if %{with_zeitgeist}
-%package zeitgeist
-Summary: Zeitgeist plugin for gedit
-Summary(zh_CN.UTF-8): %{name} 的 zeitgeist 插件
-Group: Applications/Editors
-Group(zh_CN.UTF-8): 应用程序/编辑器
-Requires: %{name} = %{epoch}:%{version}-%{release}
-Requires: zeitgeist >= %{zeitgeist_version}
-BuildRequires: zeitgeist-devel >= %{zeitgeist_version}
-
-%description zeitgeist
-This packages brings the Zeitgeist dataprovider - a plugin that logs
-access and leave event for documents used with gedit.
-
-%description zeitgeist -l zh_CN.UTF-8
-%{name} 的 zeitgeist 插件。
-%endif
-
 %prep
 %setup -q
 
@@ -166,7 +146,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_libdir}/gedit/girepository-1.0
 %dir %{_libdir}/gedit
 %dir %{_libdir}/gedit/plugins
-%{_libdir}/gedit/libgedit-private.so
+%{_libdir}/gedit/libgedit.so
 #%{_libdir}/gedit/plugins/changecase.plugin
 #%{_libdir}/gedit/plugins/libchangecase.so
 %{_libdir}/gedit/plugins/docinfo.plugin
@@ -208,13 +188,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/gtk-doc
 %{_datadir}/vala/vapi/gedit.*
 
-%if %{with_zeitgeist}
-%files zeitgeist
-%{_libdir}/gedit/plugins/zeitgeist.plugin
-%{_libdir}/gedit/plugins/libzeitgeist.so
-%endif
-
 %changelog
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 2:3.13.2-1
+- 更新到 3.13.2
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 2:3.12.0-1
 - 更新到 3.12.0
 

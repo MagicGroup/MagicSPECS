@@ -1,0 +1,34 @@
+diff -ur libprojectM-2.0.1.orig/cmake/FindFreetype2.cmake libprojectM-2.0.1/cmake/FindFreetype2.cmake
+--- libprojectM-2.0.1.orig/cmake/FindFreetype2.cmake	2014-06-24 19:58:11.266534023 +0000
++++ libprojectM-2.0.1/cmake/FindFreetype2.cmake	2014-06-24 19:58:34.929533416 +0000
+@@ -52,7 +52,7 @@
+ #
+ 
+ 
+-FIND_PATH(FREETYPE2_INCLUDE_DIR freetype/config/ftheader.h
++FIND_PATH(FREETYPE2_INCLUDE_DIR freetype2/config/ftheader.h
+        ${ADDITIONAL_INCLUDE_PATH}
+       /usr/include
+       /usr/include/freetype2
+@@ -70,6 +70,7 @@
+ FIND_PATH(FREETYPE2_FT2BUILD ft2build.h
+        ${ADDITIONAL_INCLUDE_PATH}
+       /usr/include
++      /usr/include/freetype2
+       /usr/X11/include
+       /usr/X11R6/include
+       /sw/include
+diff -ur libprojectM-2.0.1.orig/Renderer/CMakeLists.txt libprojectM-2.0.1/Renderer/CMakeLists.txt
+--- libprojectM-2.0.1.orig/Renderer/CMakeLists.txt	2014-06-24 19:58:11.251534023 +0000
++++ libprojectM-2.0.1/Renderer/CMakeLists.txt	2014-06-24 20:24:32.917493486 +0000
+@@ -7,8 +7,8 @@
+ Filters.cpp PerlinNoise.cpp PipelineContext.cpp  Renderable.cpp BeatDetect.cpp Shader.cpp TextureManager.cpp VideoEcho.cpp 
+ RenderItemDistanceMetric.cpp RenderItemMatcher.cpp ${SOIL_SOURCES})
+ 
+-SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+-SET (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
++SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -I/usr/include/freetype2")
++SET (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -I/usr/include/freetyp2")
+ 
+ INCLUDE_DIRECTORIES(${projectM_SOURCE_DIR})
+ ADD_LIBRARY(Renderer STATIC ${Renderer_SOURCES})

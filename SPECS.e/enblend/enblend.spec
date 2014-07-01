@@ -63,6 +63,7 @@ PDF usage documentation for the enblend and enfuse command line tools
 %setup -q -n enblend-enfuse-%{version} %{!?doc:-a 1}
 
 %build
+sed -i 's/can_build_doc=yes/can_build_doc=no/g' configure
 %configure --with-boost-filesystem
 
 make %{?_smp_mflags}

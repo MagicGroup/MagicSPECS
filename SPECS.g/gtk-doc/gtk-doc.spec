@@ -1,7 +1,7 @@
 Summary: API documentation generation tool for GTK+ and GNOME
 Summary(zh_CN.UTF-8): GTK+ 和 GNOME 的 API 文档生成工具
 Name: gtk-doc
-Version: 1.19
+Version:	1.20
 Release: 4%{?dist}
 License: GPLv2+ and GFDL
 Group: Development/Tools
@@ -9,9 +9,6 @@ Group(zh_CN.UTF-8): 开发/工具
 #VCS: git:git://git.gnome.org/gtk-doc
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source: http://download.gnome.org/sources/gtk-doc/%{majorver}/gtk-doc-%{version}.tar.xz
-
-# upstream fix
-Patch0: 0001-gtkdoc-mkdb-sort-entries-in-the-glossary.patch
 
 BuildArch: noarch
 URL: http://www.gtk.org/gtk-doc
@@ -49,7 +46,6 @@ GTK+ 和 GNOME 的 API 文档生成工具。
 
 %prep
 %setup -q
-%patch0 -p1
 # Move this doc file to avoid name collisions
 mv doc/README doc/README.docs
 
@@ -75,6 +71,12 @@ magic_rpm_clean.sh
 %{_datadir}/help/*/gtk-doc-manual/
 
 %changelog
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 1.20-4
+- 更新到 1.20
+
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 1.19-4
+- 更新到 1.20
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.19-4
 - 更新到 1.20
 

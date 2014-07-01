@@ -5,11 +5,7 @@
 %global SHARP  1
 %endif
 
-%ifarch %{ocaml_arches}
 %global OCAML  1
-%else
-%global OCAML  0
-%endif
 
 %global DEVIL  1
 %ifarch aarch64
@@ -54,7 +50,7 @@
 Name:			graphviz
 Summary:		Graph Visualization Tools
 Version:	2.38.0
-Release:		8%{?dist}
+Release:		10%{?dist}
 Group:			Applications/Multimedia
 License:		EPL
 URL:			http://www.graphviz.org/
@@ -572,6 +568,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 2.38.0-10
+- 为 Magic 3.0 重建
+
+* Wed Jun 25 2014 Liu Di <liudidi@gmail.com> - 2.38.0-9
+- 为 Magic 3.0 重建
+
 * Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 2.38.0-8
 - 更新到 2.38.0
 

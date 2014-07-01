@@ -8,7 +8,7 @@
 %endif
 
 Name:           gstreamer1-plugins-good
-Version:	1.2.3
+Version:	1.3.3
 Release:        2%{?dist}
 Summary:        GStreamer plugins with good code and licensing
 Summary(zh_CN.UTF-8): 具有良好代码和授权支持的 GStreamer 插件
@@ -212,6 +212,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Wed Jun 25 2014 Liu Di <liudidi@gmail.com> - 1.3.3-2
+- 更新到 1.3.3
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
 - 为 Magic 3.0 重建
 

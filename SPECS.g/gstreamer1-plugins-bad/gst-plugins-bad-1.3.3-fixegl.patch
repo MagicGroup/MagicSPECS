@@ -1,0 +1,12 @@
+diff -ur gst-plugins-bad-1.3.3.orig/configure.ac gst-plugins-bad-1.3.3/configure.ac
+--- gst-plugins-bad-1.3.3.orig/configure.ac	2014-06-25 08:58:21.486334305 +0000
++++ gst-plugins-bad-1.3.3/configure.ac	2014-06-25 09:27:16.206289845 +0000
+@@ -664,7 +664,7 @@
+     old_CFLAGS=$CFLAGS
+ 
+     dnl FIXME: Mali EGL depends on GLESv1 or GLESv2
+-    AC_CHECK_HEADER([EGL/fbdev_window.h],
++    AC_CHECK_HEADER([EGL/eglplatform.h],
+       [
+         LIBS="$LIBS -lUMP"
+         AC_CHECK_LIB([Mali], [mali_image_create],
