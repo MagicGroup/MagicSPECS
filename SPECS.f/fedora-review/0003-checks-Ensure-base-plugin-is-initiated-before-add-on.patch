@@ -1,0 +1,29 @@
+From 5b472057ab8aab0b386abde07a28cfdf514cf753 Mon Sep 17 00:00:00 2001
+From: Alec Leamas <alec@tests.notat.diaspora.com>
+Date: Fri, 27 Dec 2013 18:06:43 +0100
+Subject: [PATCH 3/3] checks: Ensure base plugin is initiated before add-ons
+ (bz 1044580).
+
+Also: skip plugins.plugins which just is a symlinked dir.
+---
+ src/FedoraReview/checks.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/FedoraReview/checks.py b/src/FedoraReview/checks.py
+index de877fb..50faf02 100644
+--- a/src/FedoraReview/checks.py
++++ b/src/FedoraReview/checks.py
+@@ -199,7 +199,9 @@ class _ChecksLoader(object):
+         sys.path.insert(0, appdir)
+         sys.path.insert(0, XdgDirs.app_datadir)
+         plugins = load('plugins')
+-        for plugin in plugins:
++        for plugin in sorted(plugins, key=lambda p: len(p.__name__)):
++            if plugin.__name__ == 'plugins.plugins':
++                continue
+             registry = plugin.Registry(self)
+             tests = registry.register(plugin)
+             self.checkdict.extend(tests)
+-- 
+1.8.4.2
+
