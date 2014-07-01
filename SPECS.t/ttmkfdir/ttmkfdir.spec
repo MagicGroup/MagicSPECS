@@ -16,6 +16,7 @@ Patch6: ttmkfdir-3.0.9-segfaults.patch
 Patch7: ttmkfdir-3.0.9-encoding-dir.patch
 Patch8: ttmkfdir-3.0.9-font-scale.patch
 Patch9: ttmkfdir-3.0.9-bug434301.patch
+Patch10: ttmkfdir-3.0.9-freetype-fix.patch
 # Only licensing attribution is in README, no version.
 License: LGPLv2+
 Group: Applications/System
@@ -45,6 +46,7 @@ by the font server.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 %build
 make OPTFLAGS="$RPM_OPT_FLAGS"

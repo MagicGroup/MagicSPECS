@@ -75,6 +75,8 @@ have access to the module alias.
 
 
 %build
+export CFLAGS=" $RPM_OPT_FLAGS -DUSE_INTERP_ERRORLINE "
+export CXXFLAGS=" $RPM_OPT_FLAGS -DUSE_INTERP_ERRORLINE "
 %configure --disable-versioning \
            --prefix=%{_datadir} \
            --exec-prefix=%{_datadir}/Modules \
