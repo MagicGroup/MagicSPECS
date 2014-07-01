@@ -1,37 +1,46 @@
-%global checkout 7560108
-%global iwlwifi_release 11
+%global checkout a4f3bc03
+%global firmware_release 38
+
+%global _firmwarepath	/usr/lib/firmware
 
 Name:		linux-firmware
-Version:	20120720
-Release:	0.2.git%{checkout}%{?dist}
+Version:	20140605
+Release:	%{firmware_release}.git%{checkout}%{?dist}.1
 Summary:	Firmware files used by the Linux kernel
 
 Group:		System Environment/Kernel
 License:	GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL:		http://www.kernel.org/
-Source0:	ftp://ftp.kernel.org/pub/linux/kernel/people/dwmw2/firmware/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 Provides:	kernel-firmware = %{version} xorg-x11-drv-ati-firmware = 7.0
 Obsoletes:	kernel-firmware < %{version} xorg-x11-drv-ati-firmware < 6.13.0-0.22
 Obsoletes:	ueagle-atm4-firmware < 1.0-5
-# The netxen firmware gets independently updated, so we'll use it instead of 
-# whatever happens to be in the last checkout.
-Requires:	netxen-firmware
+Obsoletes:	netxen-firmware < 4.0.534-9
+Obsoletes:	ql2100-firmware < 1.19.38-8
+Obsoletes:	ql2200-firmware < 2.02.08-8
+Obsoletes:	ql23xx-firmware < 3.03.28-6
+Obsoletes:	ql2400-firmware < 5.08.00-2
+Obsoletes:	ql2500-firmware < 5.08.00-2
+Obsoletes:	rt61pci-firmware < 1.2-11
+Obsoletes:	rt73usb-firmware < 1.8-11
+Conflicts:	microcode_ctl < 2.1-0
+
 BuildRequires: git
 
 %description
-Kernel-firmware includes firmware files required for some devices to
+This package includes firmware files required for some devices to
 operate.
 
 %package -n iwl100-firmware
 Summary:	Firmware for Intel(R) Wireless WiFi Link 100 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	39.31.5.1
-Release:	%{iwlwifi_release}%{?dist}
-Obsoletes:	iwl100-firmware < iwl100-firmware-39.31.5.1-4
+Release:	%{firmware_release}%{?dist}.1
+Obsoletes:	iwl100-firmware < 39.31.5.1-4
 %description -n iwl100-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux to support the iwl100 hardware.  Usage of the firmware
 is subject to the terms and conditions contained inside the provided
 LICENSE file. Please read it carefully.
@@ -40,9 +49,9 @@ LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Centrino Wireless-N 105 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	18.168.6.1
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 %description -n iwl105-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux to support the iwl105 hardware.  Usage of the firmware
 is subject to the terms and conditions contained inside the provided
 LICENSE file. Please read it carefully.
@@ -51,9 +60,9 @@ LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Centrino Wireless-N 135 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	18.168.6.1
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 %description -n iwl135-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux to support the iwl135 hardware.  Usage of the firmware
 is subject to the terms and conditions contained inside the provided
 LICENSE file. Please read it carefully.
@@ -62,10 +71,11 @@ LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel® PRO/Wireless 1000 B/G/N network adaptors
 License:	Redistributable, no modification permitted
 Version:	39.31.5.1
-Release:	%{iwlwifi_release}%{?dist}
+Epoch:		1
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl1000-firmware < 1:39.31.5.1-3
 %description -n iwl1000-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux to support the iwl1000 hardware.  Usage of the firmware
 is subject to the terms and conditions contained inside the provided
 LICENSE file. Please read it carefully.
@@ -74,9 +84,9 @@ LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Centrino Wireless-N 2000 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	18.168.6.1
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 %description -n iwl2000-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux to support the iwl2000 hardware.  Usage of the firmware
 is subject to the terms and conditions contained inside the provided
 LICENSE file. Please read it carefully.
@@ -85,9 +95,9 @@ LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Centrino Wireless-N 2030 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	18.168.6.1
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 %description -n iwl2030-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux to support the iwl2030 hardware.  Usage of the firmware
 is subject to the terms and conditions contained inside the provided
 LICENSE file. Please read it carefully.
@@ -96,7 +106,7 @@ LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel® PRO/Wireless 3945 A/B/G network adaptors
 License:	Redistributable, no modification permitted
 Version:	15.32.2.9
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl3945-firmware < 15.32.2.9-7
 %description -n iwl3945-firmware
 This package contains the firmware required by the iwl3945 driver
@@ -107,7 +117,7 @@ contained inside the provided LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel® PRO/Wireless 4965 A/G/N network adaptors
 License:	Redistributable, no modification permitted
 Version:	228.61.2.24
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl4965-firmware < 228.61.2.24-5
 %description -n iwl4965-firmware
 This package contains the firmware required by the iwl4965 driver
@@ -118,7 +128,7 @@ contained inside the provided LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel® PRO/Wireless 5000 A/G/N network adaptors
 License:	Redistributable, no modification permitted
 Version:	8.83.5.1_1
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl5000-firmware < 8.83.5.1_1-3
 %description -n iwl5000-firmware
 This package contains the firmware required by the iwl5000 driver
@@ -129,7 +139,7 @@ contained inside the provided LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel® PRO/Wireless 5150 A/G/N network adaptors
 License:	Redistributable, no modification permitted
 Version:	8.24.2.2
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl5150-firmware < 8.24.2.2-4
 %description -n iwl5150-firmware
 This package contains the firmware required by the iwl5150 driver
@@ -140,10 +150,10 @@ contained inside the provided LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Wireless WiFi Link 6000 AGN Adapter
 License:	Redistributable, no modification permitted
 Version:	9.221.4.1
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl6000-firmware < 9.221.4.1-4
 %description -n iwl6000-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux.  Usage of the firmware is subject to the terms and conditions
 contained inside the provided LICENSE file. Please read it carefully.
 
@@ -151,10 +161,10 @@ contained inside the provided LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Wireless WiFi Link 6005 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	17.168.5.3
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl6000g2a-firmware < 17.168.5.3-3
 %description -n iwl6000g2a-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux.  Usage of the firmware is subject to the terms and conditions
 contained inside the provided LICENSE file. Please read it carefully.
 
@@ -162,10 +172,10 @@ contained inside the provided LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Wireless WiFi Link 6030 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	17.168.5.2
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl6000g2b-firmware < 17.168.5.2-3
 %description -n iwl6000g2b-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux.  Usage of the firmware is subject to the terms and conditions
 contained inside the provided LICENSE file. Please read it carefully.
 
@@ -173,19 +183,67 @@ contained inside the provided LICENSE file. Please read it carefully.
 Summary:	Firmware for Intel(R) Wireless WiFi Link 6050 Series Adapters
 License:	Redistributable, no modification permitted
 Version:	41.28.5.1
-Release:	%{iwlwifi_release}%{?dist}
+Release:	%{firmware_release}%{?dist}.1
 Obsoletes:	iwl6050-firmware < 41.28.5.1-5
 %description -n iwl6050-firmware
-This package contains the firmware required by the iwlagn driver
+This package contains the firmware required by the Intel wireless drivers
 for Linux.  Usage of the firmware is subject to the terms and conditions
 contained inside the provided LICENSE file. Please read it carefully.
+
+%package -n iwl7260-firmware
+Summary:	Firmware for Intel(R) Wireless WiFi Link 7260 Series Adapters
+License:	Redistributable, no modification permitted
+Version:	23.214.9.0
+Release:	%{firmware_release}%{?dist}.1
+%description -n iwl7260-firmware
+This package contains the firmware required by the Intel wireless drivers
+for Linux.  Usage of the firmware is subject to the terms and conditions
+contained inside the provided LICENSE file. Please read it carefully.
+
+%package -n iwl3160-firmware
+Summary:	Firmware for Intel(R) Wireless WiFi Link 3160 Series Adapters
+License:	Redistributable, no modification permitted
+Version:	23.214.9.0
+Release:	%{firmware_release}%{?dist}.1
+%description -n iwl3160-firmware
+This package contains the firmware required by the Intel wireless drivers
+for Linux.  Usage of the firmware is subject to the terms and conditions
+contained inside the provided LICENSE file. Please read it carefully.
+
+%package -n libertas-usb8388-firmware
+Summary:	Firmware for Marvell Libertas USB 8388 Network Adapter
+License:	Redistributable, no modification permitted
+Epoch:		2 
+Obsoletes:	libertas-usb8388-firmware < 2:5.110.22.p23-8
+%description -n libertas-usb8388-firmware
+Firmware for Marvell Libertas USB 8388 Network Adapter
+
+%package -n libertas-usb8388-olpc-firmware
+Summary:	OLPC firmware for Marvell Libertas USB 8388 Network Adapter
+License:	Redistributable, no modification permitted
+%description -n libertas-usb8388-olpc-firmware
+Firmware for Marvell Libertas USB 8388 Network Adapter with OLPC mesh network
+support.
+
+%package -n libertas-sd8686-firmware
+Summary:	Firmware for Marvell Libertas SD 8686 Network Adapter
+License:	Redistributable, no modification permitted
+Obsoletes:	libertas-sd8686-firmware < 9.70.20.p0-4
+%description -n libertas-sd8686-firmware
+Firmware for Marvell Libertas SD 8686 Network Adapter
+
+%package -n libertas-sd8787-firmware
+Summary:	Firmware for Marvell Libertas SD 8787 Network Adapter
+License:	Redistributable, no modification permitted
+%description -n libertas-sd8787-firmware
+Firmware for Marvell Libertas SD 8787 Network Adapter
 
 %prep
 %setup -q -n linux-firmware-%{checkout}
 git init .
 if [ -z "$GIT_COMMITTER_NAME" ]; then
     git config user.email "nobody@fedoraproject.org"
-    git config user.name "Fedora X Ninjas"
+    git config user.name "Fedora linux-firmware packagers"
 fi
 git add .
 git commit -m init .
@@ -193,29 +251,43 @@ git commit -m init .
 %build
 # Remove firmware shipped in separate packages already
 # Perhaps these should be built as subpackages of linux-firmware?
-rm ql2???_fw.bin LICENCE.qla2xxx
 rm -rf ess korg sb16 yamaha
-# We have _some_ ralink firmware in separate packages already.
-rm rt73.bin rt2561.bin rt2561s.bin rt2661.bin
 # And _some_ conexant firmware.
 rm v4l-cx23418-apu.fw v4l-cx23418-cpu.fw v4l-cx23418-dig.fw v4l-cx25840.fw
-# Netxen firmware
-rm phanfw.bin LICENCE.phanfw
 
 # Remove source files we don't need to install
 rm -f usbdux/*dux */*.asm
+rm -rf carl9170fw
+
+# No need to install old firmware versions where we also provide newer versions
+# which are preferred and support the same (or more) hardware
+rm -f libertas/sd8686_v8*
+rm -f libertas/usb8388_v5.bin
+
+# Remove firmware for Creative CA0132 HD as it's in alsa-firmware
+rm -f ctefx.bin ctspeq.bin
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/usr/lib/firmware
-cp -r * $RPM_BUILD_ROOT/usr/lib/firmware
-rm $RPM_BUILD_ROOT/usr/lib/firmware/{WHENCE,LICENCE.*,LICENSE.*}
+mkdir -p $RPM_BUILD_ROOT/%{_firmwarepath}
+mkdir -p $RPM_BUILD_ROOT/%{_firmwarepath}/updates
+cp -r * $RPM_BUILD_ROOT/%{_firmwarepath}
+rm $RPM_BUILD_ROOT/%{_firmwarepath}/{WHENCE,LICENCE.*,LICENSE.*}
+
+# Create file list but exclude firmwares that we place in subpackages
 FILEDIR=`pwd`
-pushd $RPM_BUILD_ROOT/usr/lib/firmware
-find . \! -type d \! -name iwlwifi\* > $FILEDIR/linux-firmware.files.tmp
+pushd $RPM_BUILD_ROOT/%{_firmwarepath}
+find . \! -type d > $FILEDIR/linux-firmware.files
+find . -type d | sed -e '/^.$/d' > $FILEDIR/linux-firmware.dirs
 popd
-sed -e 's/\./\/usr\/lib\/firmware\//' linux-firmware.files.tmp > linux-firmware.files
-magic_rpm_clean.sh
+sed -i -e 's:^./::' linux-firmware.{files,dirs}
+sed -i -e '/^iwlwifi/d' \
+	-i -e '/^libertas\/sd8686/d' \
+	-i -e '/^libertas\/usb8388/d' \
+	-i -e '/^mrvl\/sd8787/d' \
+	linux-firmware.files
+sed -i -e 's!^!/usr/lib/firmware/!' linux-firmware.{files,dirs}
+sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -223,80 +295,209 @@ rm -rf $RPM_BUILD_ROOT
 %files -n iwl100-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-100-5.ucode
+%{_firmwarepath}/iwlwifi-100-5.ucode
 
 %files -n iwl105-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-105-*.ucode
+%{_firmwarepath}/iwlwifi-105-*.ucode
 
 %files -n iwl135-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-135-*.ucode
+%{_firmwarepath}/iwlwifi-135-*.ucode
 
 %files -n iwl1000-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-1000-*.ucode
+%{_firmwarepath}/iwlwifi-1000-*.ucode
 
 %files -n iwl2000-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-2000-*.ucode
+%{_firmwarepath}/iwlwifi-2000-*.ucode
 
 %files -n iwl2030-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-2030-*.ucode
+%{_firmwarepath}/iwlwifi-2030-*.ucode
 
 %files -n iwl3945-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-3945-*.ucode
+%{_firmwarepath}/iwlwifi-3945-*.ucode
 
 %files -n iwl4965-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-4965-*.ucode
+%{_firmwarepath}/iwlwifi-4965-*.ucode
 
 %files -n iwl5000-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-5000-*.ucode
+%{_firmwarepath}/iwlwifi-5000-*.ucode
 
 %files -n iwl5150-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-5150-*.ucode
+%{_firmwarepath}/iwlwifi-5150-*.ucode
 
 %files -n iwl6000-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-6000-*.ucode
+%{_firmwarepath}/iwlwifi-6000-*.ucode
 
 %files -n iwl6000g2a-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-6000g2a-*.ucode
+%{_firmwarepath}/iwlwifi-6000g2a-*.ucode
 
 %files -n iwl6000g2b-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-6000g2b-*.ucode
+%{_firmwarepath}/iwlwifi-6000g2b-*.ucode
 
 %files -n iwl6050-firmware
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.iwlwifi_firmware
-/usr/lib/firmware/iwlwifi-6050-*.ucode
+%{_firmwarepath}/iwlwifi-6050-*.ucode
+
+%files -n iwl7260-firmware
+%defattr(-,root,root,-)
+%doc WHENCE LICENCE.iwlwifi_firmware
+%{_firmwarepath}/iwlwifi-7260-*.ucode
+%{_firmwarepath}/iwlwifi-7265-*.ucode
+
+%files -n iwl3160-firmware
+%defattr(-,root,root,-)
+%doc WHENCE LICENCE.iwlwifi_firmware
+%{_firmwarepath}/iwlwifi-3160-*.ucode
+
+%files -n libertas-usb8388-firmware
+%defattr(-,root,root,-)
+%doc WHENCE LICENCE.Marvell
+%dir %{_firmwarepath}/libertas
+%{_firmwarepath}/libertas/usb8388_v9.bin
+
+%files -n libertas-usb8388-olpc-firmware
+%defattr(-,root,root,-)
+%doc WHENCE LICENCE.Marvell
+%dir %{_firmwarepath}/libertas
+%{_firmwarepath}/libertas/usb8388_olpc.bin
+
+%files -n libertas-sd8686-firmware
+%defattr(-,root,root,-)
+%doc WHENCE LICENCE.Marvell
+%dir %{_firmwarepath}/libertas
+%{_firmwarepath}/libertas/sd8686*
+
+%files -n libertas-sd8787-firmware
+%defattr(-,root,root,-)
+%doc WHENCE LICENCE.Marvell
+%dir %{_firmwarepath}/mrvl
+%{_firmwarepath}/mrvl/sd8787*
 
 %files -f linux-firmware.files
 %defattr(-,root,root,-)
+%dir %{_firmwarepath}
 %doc WHENCE LICENCE.* LICENSE.*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 20120720-0.2.git7560108
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20140605-38.gita4f3bc03.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jun 05 2014 Josh Boyer <jwboyer@fedoraproject.org> - 20140605-38.gita4f3bc03
+- Updates for Intel 3160/7260/7265 firmware (1087717)
+- Add firmware for rtl8723be (rhbz 1091753)
+- Updates for radeon CIK, SI/CI, and Mullins/Beema GPUs (rhbz 1094153)
+- Various other firmware updates
+
+* Mon Mar 17 2014 Josh Boyer <jwboyer@fedoraproject.org>
+- Updates for Intel 3160/7260 and BCM43362 (rhbz 1071590)
+
+* Tue Mar 04 2014 Josh Boyer <jwboyer@fedoraproject.org>
+- Fixup Intel wireless package descriptions and Source0 (rhbz 1070600)
+
+* Fri Jan 31 2014 Josh Boyer <jwboyer@fedoraproject.org> - 20140131-35.gitd7f8a7c8
+- Update to new snapshot
+- Updates for Intel 3160/7260, radeon HAWAII GPUs, and some rtlwifi chips
+- Fixes bugs 815579 1046935
+
+* Tue Oct 01 2013 Kyle McMartin <kyle@fedoraproject.org> - 20131001-32.gitb8ac7c7e
+- Update to a new git snapshot, drop radeon patches.
+
+* Mon Sep 16 2013 Josh Boyer <jwboyer@fedoraproject.org> - 20130724-31.git31f6b30
+- Obsolete ql2x00-firmware packages again (rhbz 864959)
+
+* Sat Jul 27 2013 Josh Boyer <jwboyer@redhat.com> - 20130724-30.git31f6b30
+- Add AMD ucode back in now that microcode_ctl doesn't provide it
+
+* Fri Jul 26 2013 Dave Airlie <airlied@redhat.com> 20130724-29.git31f6b30
+- add radeon firmware which are lost on the way upstream (#988268)
+
+* Thu Jul 25 2013 Josh Boyer <jwboyer@redhat.com> - 20130724-28.git31f6b30
+- Temporarily remove AMD microcode (rhbz 988263)
+- Remove Creative CA0132 HD-audio files as they're in alsa-firmware
+
+* Wed Jul 24 2013 Josh Boyer <jwboyer@redhat.com> - 20130724-27.git31f6b30
+- Update to latest upstream
+- New rtl, iwl, and amd firmware
+
+* Fri Jun 07 2013 Josh Boyer <jwboyer@redhat.com> - 20130607-26.git2892af0
+- Update to latest upstream release
+- New radeon, bluetooth, rtl, and wl1xxx firmware
+
+* Mon May 20 2013 Kyle McMartin <kyle@redhat.com> - 20130418-25.gitb584174
+- Use a common version number for both the iwl*-firmware packages and
+  linux-firmware itself.
+- Don't reference old kernel-firmware package in %description
+
+* Mon May 20 2013 Kyle McMartin <kyle@redhat.com> - 20130418-0.3.gitb584174
+- Bump iwl* version numbers as well...
+
+* Mon May 20 2013 Kyle McMartin <kyle@redhat.com> - 20130418-0.2.gitb584174
+- UsrMove: move firmware to /usr/lib/firmware
+- Remove duplicate /usr/lib/firmware/updates entry (already in linux-firmware.dirs)
+- Simplify sed by using '!' instead of '/' as regexp delimiter
+- Fix date error (commited on Mon Feb 04, so change that entry)
+
+* Thu Apr 18 2013 Josh Boyer <jwboyer@redhat.com> - 20130418-0.1.gitb584174
+- Update to latest upstream git tree
+
+* Tue Mar 19 2013 Josh Boyer <jwboyer@redhat.com>
+- Own the firmware directories (rhbz 919249)
+
+* Thu Feb 21 2013 Josh Boyer <jwboyer@redhat.com> - 20130201-0.4.git65a5163
+- Obsolete netxen-firmware.  Again.  (rhbz 913680)
+
+* Mon Feb 04 2013 Josh Boyer <jwboyer@redhat.com> - 20130201-0.3.git65a5163
+- Obsolete ql2[45]00-firmware packages (rhbz 906898)
+ 
+* Fri Feb 01 2013 Josh Boyer <jwboyer@redhat.com> 
+- Update to latest upstream release
+- Provide firmware for carl9170 (rhbz 866051)
+
+* Wed Jan 23 2013 Ville Skyttä <ville.skytta@iki.fi> - 20121218-0.2.gitbda53ca
+- Own subdirs created in /lib/firmware (rhbz 902005)
+
+* Wed Jan 23 2013 Josh Boyer <jwboyer@redhat.com>
+- Correctly obsolete the libertas-usb8388-firmware packages (rhbz 902265)
+
+* Tue Dec 18 2012 Josh Boyer <jwboyer@redhat.com>
+- Update to latest upstream.  Adds brcm firmware updates
+
+* Wed Oct 10 2012 Josh Boyer <jwboyer@redhat.com>
+- Consolidate rt61pci-firmware and rt73usb-firmware packages (rhbz 864959)
+- Consolidate netxen-firmware and ql2[123]xx-firmware packages (rhbz 864959)
+
+* Tue Sep 25 2012 Josh Boyer <jwboyer@redhat.com>
+- Update to latest upstream.  Adds marvell wifi updates (rhbz 858388)
+
+* Tue Sep 18 2012 Josh Boyer <jwboyer@redhat.com>
+- Add patch to create libertas subpackages from Daniel Drake (rhbz 853198)
+
+* Fri Sep 07 2012 Josh Boyer <jwboyer@redhat.com> 20120720-0.2.git7560108
+- Add epoch to iwl1000 subpackage to preserve upgrade patch (rhbz 855426)
 
 * Fri Jul 20 2012 Josh Boyer <jwboyer@redhat.com> 20120720-0.1.git7560108
 - Update to latest upstream.  Adds more realtek firmware and bcm4334
