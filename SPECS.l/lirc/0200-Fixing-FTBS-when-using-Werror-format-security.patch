@@ -1,0 +1,72 @@
+From ca8ef3bb75fb5759e13702f456680fc30fdc7df7 Mon Sep 17 00:00:00 2001
+From: Alec Leamas <alec@tests.notat.diaspora.com>
+Date: Tue, 3 Dec 2013 16:56:09 +0100
+Subject: [PATCH] Fixing FTBS when using -Werror=format-security
+
+Fedora moves to using above flag for security reasons. Simple
+fix to get rid of compilation error.
+---
+ doc/man2html.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/doc/man2html.c b/doc/man2html.c
+index e1cce31..6898f64 100644
+--- a/doc/man2html.c
++++ b/doc/man2html.c
+@@ -29,7 +29,7 @@
+ ** found, that page will be displayed.
+ **
+ ** man2html will add links to the converted manpages. The function add_links
+-** is used for that. At the moment it will add links as follows, where   
++** is used for that. At the moment it will add links as follows, where
+ **     indicates what should match to start with:
+ ** ^^^
+ ** Recognition           Item            Link
+@@ -748,7 +748,7 @@ char *scan_escape(char *c)
+ 	h = expand_string(i);
+ 	break;
+     case 'f':
+-	c++;	
++	c++;
+ 	if (*c=='\\') {
+ 	    c++;
+ 	    c=scan_escape(c);
+@@ -1579,7 +1579,7 @@ char *section_list[] = {
+     "8S", "Maintenance Commands",
+     "8V", "Maintenance Commands",
+     "L", "Local Commands",
+-/* for Solaris: 
++/* for Solaris:
+     "1", "User Commands",
+     "1B", "SunOS/BSD Compatibility Package Commands",
+     "1b", "SunOS/BSD Compatibility Package Commands",
+@@ -1924,7 +1924,7 @@ char *scan_request(char *c)
+ 		c=skip_till_newline(c+j);
+ 	    break;
+ 	case V('i','e'):
+-	    /* .ie c anything : then part of if else */	
++	    /* .ie c anything : then part of if else */
+ 	case V('i','f'):
+ 	    /* .if c anything
+ 	     * .if !c anything
+@@ -2031,7 +2031,7 @@ char *scan_request(char *c)
+ 		    f=fopen(h,"r");
+ 		    if (!f || !buf || !l)
+ 			fprintf(stderr, "Unable to open or read file %s.\n",
+-				h); 
++				h);
+ 		    else {
+ 			i=fread(buf+1,1,l,f);
+ 			fclose(f);
+@@ -3027,7 +3027,7 @@ int main(int argc, char **argv)
+ 	/* &nbsp; for mosaic users */
+ 	printf("<HR>\n<A NAME=\"index\">&nbsp;</A><H2>Index</H2>\n<DL>\n");
+ 	manidx[mip]=0;
+-	printf(manidx);
++	printf("%s", manidx);
+ 	if (subs) printf("</DL>\n");
+ 	printf("</DL>\n");
+ 	print_sig();
+-- 
+1.8.3.1
+

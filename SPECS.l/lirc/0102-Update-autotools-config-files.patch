@@ -1,0 +1,114 @@
+From cc6bb81503e7ad71de97c49d9b6adfaca8aeef4b Mon Sep 17 00:00:00 2001
+From: Alec Leamas <alec@tests.notat.diaspora.com>
+Date: Thu, 10 Oct 2013 09:28:34 +0200
+Subject: [PATCH 102/105] Update autotools config files.
+
+Kills some warnings while running autoconf and also
+replaces some other macros which are deprecated. Add the
+standard aclocal include path m4 - without it there is
+warnings or worse.
+---
+ Makefile.am         | 1 +
+ configure.ac        | 8 ++++----
+ daemons/Makefile.am | 3 ++-
+ doc/Makefile.am     | 1 +
+ tools/Makefile.am   | 5 ++---
+ 5 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 409a4df..e237945 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,6 +2,7 @@
+ 
+ ## Process this file with automake to produce Makefile.in
+ ## Makefile.am, (c)1999 Tom Wheeley <tw104@york.ac.uk>
++ACLOCAL_AMFLAGS             = -I m4
+ 
+ ## we need version 1.5 of automake for DIST_SUBDIRS to work and dist-bzip2.
+ AUTOMAKE_OPTIONS = 1.5 check-news dist-bzip2
+diff --git a/configure.ac b/configure.ac
+index e130f1e..af28e4f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3,12 +3,12 @@ dnl $Id: configure.ac,v 1.44 2010/07/12 03:25:55 jarodwilson Exp $
+ dnl Process this file with autoconf to produce a configure script.
+ dnl configure.ac, (c)1999 Tom Wheeley <tw104@york.ac.uk>
+ 
+-AC_INIT
++AC_INIT([lirc], [0.9.1-git])
+ AC_CONFIG_SRCDIR([daemons/lircd.c])
+ AC_CONFIG_MACRO_DIR([m4])
+ 
+-AM_INIT_AUTOMAKE(lirc, 0.9.1-git)
+-AM_CONFIG_HEADER(config.h)
++AM_INIT_AUTOMAKE
++AC_CONFIG_HEADERS(config.h)
+ 
+ CFLAGS="${CFLAGS--O2 -g -Wall}"
+ 
+@@ -21,7 +21,7 @@ AC_PATH_PROG(mknod, mknod, /bin/mknod)
+ AC_PATH_PROG(mkfifo, mkfifo, /usr/bin/mkfifo)
+ AC_PATH_PROG(depmod, depmod, /sbin/depmod, $PATH:/sbin)
+ AC_PROG_LN_S
+-AC_PROG_LIBTOOL
++LT_INIT([disable-static])
+ AM_PATH_PYTHON(,, [:])
+ AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != ""])
+ LIBUSB_CONFIG="pkg-config libusb"
+diff --git a/daemons/Makefile.am b/daemons/Makefile.am
+index 42873af..314048f 100644
+--- a/daemons/Makefile.am
++++ b/daemons/Makefile.am
+@@ -1,11 +1,12 @@
+ ## $Id: Makefile.am,v 5.73 2010/05/13 16:23:23 lirc Exp $
+ 
+ ## Process this file with automake to produce Makefile.in
++ACLOCAL_AMFLAGS             = -I m4
+ 
+ ## these are used by programs in the tools directory, but not by
+ ## programs in this directory.  So we must make sure they get distributed
+ 
+-INCLUDES = -I$(top_srcdir)
++AM_CPPFLAGS = -I$(top_srcdir)
+ 
+ BUILT_SOURCES = input_map.inc
+ 
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+index c970876..cb02678 100644
+--- a/doc/Makefile.am
++++ b/doc/Makefile.am
+@@ -1,6 +1,7 @@
+ ## $Id: Makefile.am,v 1.12 2007/11/08 20:58:56 lirc Exp $
+ 
+ ## Process this file with automake to produce Makefile.in
++ACLOCAL_AMFLAGS             = -I m4
+ 
+ EXTRA_DIST=lirc.css irxevent.keys lirc.hwdb
+ 
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index 3326707..978c388 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -1,16 +1,15 @@
+ ## $Id: Makefile.am,v 5.20 2009/12/27 19:04:10 lirc Exp $
+ 
+ ## Process this file with automake to produce Makefile.in
++ACLOCAL_AMFLAGS             = -I m4
+ 
+-INCLUDES = -I$(top_srcdir)
++AM_CPPFLAGS = -I$(top_srcdir) @X_CFLAGS@
+ 
+ EXTRA_PROGRAMS = smode2 xmode2 irxevent
+ bin_PROGRAMS = irw irpty irexec ircat mode2 irsend \
+ 	lircrcd \
+ 	@vga_progs@ @x_progs@
+ 
+-AM_CPPFLAGS = @X_CFLAGS@
+-
+ ## simple programs
+ irw_SOURCES = irw.c
+ irpty_SOURCES = irpty.c
+-- 
+1.8.3.1
+

@@ -8,16 +8,24 @@ LIRCD_OPTIONS=""
 # The infrared receiver (and/or transmitter) driver to be used by lircd(8),
 # similar to passing "-H driver" to lircd(8).
 # Run "/usr/sbin/lircd -H help" to get a listing of supported drivers.
-LIRC_DRIVER=""
+LIRC_DRIVER="default"
 
 # Which lirc device will be used by lircd(8).
-# This is the same as passing "-d device" to lircd.
-# An empty value will use the default /dev/lirc0 device.
-LIRC_DEVICE=""
+# This is the same as passing "-d device" to lircd. It must be set.
+LIRC_DEVICE="/dev/lirc0"
 
-# If "yes", the init script will try to start lircmd(8) too.
-ENABLE_LIRCMD="no"
-
-# Options to lircmd(8).
+# Options to lircmd(8). lircmd always runs with --nodaemon added
+# to LIRCMD_OPTIONS.
 LIRCMD_OPTIONS=""
+
+# The infrared device used by lirc, if any. If this is set, lircd will
+# enable the lirc protocol and disable kernel built-in handling using
+# "echo lirc > /sys/class/rc/$LIRCD_IR_DEVICE/protocols" at startup.
+# If unset, this is ignored.
+# - The common case when there is just one ir device: LIRCD_IR_DEVICE="rc0".
+# - Non-IR devices e. g., RF ones typically don't need this set.
+# - If not set when required, the typical symptom is duobled key-presses.
+# - If installing the lirc-disable-kernel-rc subpackage this setting is not
+#   needed.
+LIRCD_IR_DEVICE=""
 

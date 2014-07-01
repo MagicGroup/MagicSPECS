@@ -1,14 +1,10 @@
-# TODO:
-# - caraca driver (req: caraca, http://caraca.sf.net/)
-# - irman driver (req: libirman, http://lirc.sf.net/software/snapshots/)
-# - iguanaIR driver (req: http://iguanaworks.net/ir/usb/installation.shtml)
-#   -> would cause license change to "GPLv2"
-# - move to -devel (?): irw, *mode2, others?
-#   note: xmode2 inflicts a dependency on X, and smode2 on svgalib
-#   - does someone actually need xmode2/smode2 for something?
-# - split utils into subpackage (keep daemons in main package)
-# - don't run as root and/or create dedicated group, reduce fifo permissions?
-# - Fixup /etc/lirc(m)d.conf %%ghost'ification, existence after erase etc.
+#
+# rpmlint warnings:
+#     only-non-binary-in-usr-lib:
+#         https://bugzilla.redhat.com/show_bug.cgi?id=794777
+#     incorrect-fsf-address :
+#         https://sf.net/mailarchive/forum.php?forum_name=lirc-list&viewmonth=201310
+#
 
 %bcond_without  alsa
 %bcond_without  portaudio
@@ -16,7 +12,9 @@
 %bcond_with     svgalib
 %bcond_without  irman
 %bcond_without  ftdi
-%bcond_with     iguanaIR
+%bcond_without  iguanaIR
+
+%global _hardened_build 1
 
 %global released 1
 %define pre     pre1
@@ -24,53 +22,90 @@
 Name:           lirc
 Version:        0.9.0
 %if 0%{?released}
-Release:        5%{?dist}
+Release:        26%{?dist}
 %else
-Release:        0.1.%{pre}%{?dist}
+Release:        0.7.%{pre}%{?dist}
 %endif
 Summary:        The Linux Infrared Remote Control package
 
 Group:          System Environment/Daemons
-License:        GPLv2+
+                # Some LGPLv2 files in iguanaIR promoted to GPLv2
+License:        GPLv2
 URL:            http://www.lirc.org/
 %if 0%{?released}
 Source0:        http://downloads.sourceforge.net/lirc/%{name}-%{version}.tar.bz2
 %else
 Source0:        http://www.lirc.org/software/snapshots/%{name}-%{version}-%{pre}.tar.bz2
 %endif
-Source1:        %{name}.init
-Source2:        %{name}.sysconfig
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source1:        lircd.service
+Source2:        lirc.sysconfig
+Source3:        lircmd.service
+Source4:        lircd.socket
+Source5:        lirc.conf
+Source6:        README.fedora
+Source7:        99-remote-control-lirc.rules
+                # Patches 7..17 are from upstream.
+Patch7:         0007-Make-lirc_wpc8769l-functional-again.patch
+Patch8:         0008-lirc_sir-fix-resource-busy-error-from-bunk-lirc_open.patch
+Patch9:         0009-lircd-handle-larger-config-files-in-write_socket-bet.patch
+Patch10:        0010-lirc_atiusb-fix-buffer-alloc-to-work-with-new-kfifo.patch
+Patch11:        0011-libusb-has-no-libusb-config-any-longer-use-pkg-confi.patch
+Patch12:        0012-Silence-some-clang-warnings-courtesy-of-nox.patch
+Patch13:        0013-userspace-use-dev-lirc0-as-default-device.patch
+Patch14:        0014-lirc-make-chardev-nonseekable.patch
+Patch15:        0015-media-lirc_dev-fixes-in-lirc_dev_fop_read.patch
+Patch16:        0016-media-lirc_dev-add-some-__user-annotations.patch
+Patch17:        0017-media-media-rc-lirc_dev-check-kobject_set_name-resul.patch
+Patch18:        0018-Start-lirc-0.9.1-git.patch
+Patch19:        0019-lircs-use-systemctl-instead-of-sysV-init.patch
+                # 101-104: upstream merge request:
+                #    https://sourceforge.net/p/lirc/git/merge-requests/3/
+Patch101:       0101-Stripping-some-eol-whitespace.patch
+Patch102:       0102-Update-autotools-config-files.patch
+Patch103:       0103-xmode2.c-Use-generic-fixed-font-instead-of-Courier.patch
+Patch104:       0104-Add-systemd-socket-activation-support.patch
+                # local glue which should not go upstream.
+Patch105:       0105-configure-ac-back-to-0.9.0.patch
+                #https://sourceforge.net/p/lirc/mailman/message/31710217/
+Patch200:       0200-Fixing-FTBS-when-using-Werror-format-security.patch
 
-BuildRequires:  %{__perl}
-BuildRequires:  libusb-devel, python-devel
-BuildRequires:  automake libtool
-%if %{with irman}
-BuildRequires:  libirman-devel
-%endif
-%if %{with ftdi}
-BuildRequires:  libftdi-devel
-%endif
+Buildrequires:  autoconf
+BuildRequires:  automake
+
 %if %{with alsa}
 BuildRequires:  alsa-lib-devel
-%endif
-%if %{with portaudio}
-BuildRequires:  portaudio-devel >= 19
-%endif
-%if %{with svgalib}
-BuildRequires:  svgalib-devel
-%endif
-%if %{with x}
-BuildRequires:  libXt-devel
 %endif
 %if %{with iguanaIR}
 BuildRequires:  iguanaIR-devel
 %endif
-Requires:       %{name}-libs = %{version}-%{release}
-Requires(post): /sbin/chkconfig
-Requires(post): /sbin/ldconfig
-Requires(preun): /sbin/chkconfig
-Requires(postun): /sbin/ldconfig
+%if %{with ftdi}
+BuildRequires:  libftdi-devel
+%endif
+%if %{with irman}
+BuildRequires:  libirman-devel
+%endif
+BuildRequires:  libtool
+BuildRequires:  libusb-devel
+BuildRequires:  libusb1-devel
+%if %{with x}
+BuildRequires:  libXt-devel
+%endif
+%if %{with portaudio}
+BuildRequires:  portaudio-devel >= 19
+%endif
+BuildRequires:  python2-devel
+%if %{with svgalib}
+BuildRequires:  svgalib-devel
+%endif
+BuildRequires:  systemd-devel
+
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+
+Requires(post):    systemd
+                   #for triggerun
+Requires(post):    systemd-sysv
+Requires(postun):  systemd
+Requires(preun):   systemd
 
 %description
 LIRC is a package that allows you to decode and send infra-red and
@@ -82,8 +117,6 @@ computer with a remote control.
 %package        libs
 Summary:        LIRC libraries
 Group:          System Environment/Libraries
-# Fix old F8 multilib upgrade path issue
-Obsoletes:      %{name} < 0.8.3
 
 %description    libs
 LIRC is a package that allows you to decode and send infra-red and
@@ -96,7 +129,7 @@ that applications use to interface with LIRC.
 %package        devel
 Summary:        Development files for LIRC
 Group:          Development/Libraries
-Requires:       %{name}-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description    devel
 LIRC is a package that allows you to decode and send infra-red and
@@ -130,6 +163,20 @@ signals as well as user space applications which allow controlling a
 computer with a remote control.  This package contains a collection
 of remote control configuration files.
 
+%package        disable-kernel-rc
+Summary:        Disable kernel ir device handling in favor of lirc
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description  disable-kernel-rc
+Udev rule which disables the kernel built-in handling of infrared devices
+(i. e., rc* ones) by making lirc the only used protocol. An alternative is
+to use the LIRCD_IR_DEVICE option in /etc/sysconfig/lirc
+
+
+# Don't provide or require anything from _docdir, per policy.
+%global __provides_exclude_from ^%{_docdir}/.*$
+%global __requires_exclude_from ^%{_docdir}/.*$
+
 
 %prep
 %if 0%{?released}
@@ -138,47 +185,48 @@ of remote control configuration files.
 %setup -q -n %{name}-%{version}-%{pre}
 %endif
 
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+
+%patch101 -p1
+%patch102 -p1
+%patch103 -p1
+%patch104 -p1
+%patch105 -p1
+
+%patch200 -p1
+
 chmod 644 contrib/*
 chmod +x contrib/hal
+chmod +x daemons/input_map.sh
 
 sed -i -e 's|/usr/local/etc/|/etc/|' contrib/irman2lirc
 
-sed -i -e 's|/sbin/init.d/lircd|%{_initrddir}/lirc|' contrib/lircs
-
 for f in remotes/chronos/lircd.conf.chronos \
     remotes/creative/lircd.conf.livedrive remotes/atiusb/lircd.conf.atiusb \
-    NEWS ChangeLog AUTHORS contrib/lircrc ; do
+    NEWS ChangeLog AUTHORS contrib/lircrc
+do
     iconv -f iso-8859-1 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 done
 
-# use /dev/lirc0 by default instead of /dev/lirc
-sed -i -e 's|#define DEV_LIRC	"lirc"|#define DEV_LIRC	"lirc0"|' config.h.in
-
-# use fixed instead of Courier w/xmode2, should be more prevalent on linux boxen
-sed -i -e 's|char.*font1_name.*Courier.*$|char		font1_name[]="-misc-fixed-*-r-*-*-12-*-*-*-*-*-iso8859-1";|g' tools/xmode2.c
-
-sed -i -e 's|"/lib /usr/lib |"/%{_lib} %{_libdir} |' configure # lib64 rpath
-
-# *cough* I wish there was a good way to disable alsa/portaudio/svgalib...
-%if ! %{with alsa}
-sed -i -e 's/asoundlib.h/ALSA_DISABLED/g' configure*
-%endif
-%if ! %{with portaudio}
-sed -i -e 's/portaudio.h/PORTAUDIO_DISABLED/g' configure*
-%endif
-%if ! %{with svgalib}
-sed -i -e 's/vga.h/SVGALIB_DISABLED/g' configure*
-%endif
-
-touch -r aclocal.m4 configure.ac # avoid autofoo re-run
-
-# Re-run autofoo for new cvs features
-#autoreconf -i -f
-#automake
-chmod +x daemons/input_map.sh
 
 %build
+mkdir m4 || :
+autoreconf -fi
+export CFLAGS="%{optflags} -Werror=format-security"
 %configure \
+  --libdir=%{_libdir} \
   --disable-static \
   --disable-dependency-tracking \
   --enable-sandboxed \
@@ -187,15 +235,29 @@ chmod +x daemons/input_map.sh
 %endif
   --with-syslog=LOG_DAEMON \
   --with-driver=userspace
-# make %{?_smp_mflags}
+# make %%{?_smp_mflags}
 # parallel makes are currently busted, do single-threaded for now
 make
 
-%install
-rm -rf $RPM_BUILD_ROOT __docs
 
+%install
 make install DESTDIR=$RPM_BUILD_ROOT
 install -pm 755 contrib/irman2lirc $RPM_BUILD_ROOT%{_bindir}
+install -Dpm 644 doc/lirc.hwdb $RPM_BUILD_ROOT%{_datadir}/lirc/lirc.hwdb
+install -Dpm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}/lircd.service
+install -Dpm 644 %{SOURCE3} $RPM_BUILD_ROOT%{_unitdir}/lircmd.service
+install -Dpm 644 %{SOURCE4} $RPM_BUILD_ROOT%{_unitdir}/lircd.socket
+install -Dpm 644 %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/lirc
+install -Dpm 644 %{SOURCE5} $RPM_BUILD_ROOT/etc/lirc/lircd.conf
+install -Dpm 644 %{SOURCE5} $RPM_BUILD_ROOT/etc/lirc/lircmd.conf
+install -Dpm 644 %{SOURCE7} \
+    $RPM_BUILD_ROOT%{_udevrulesdir}/99-remote-control-lirc.rules
+cp -a %{SOURCE6} README.fedora
+
+# Put remote definitions in place
+cp -ar remotes $RPM_BUILD_ROOT%{_datadir}/lirc-remotes
+
+rm $RPM_BUILD_ROOT%{_libdir}/liblirc_client.la
 %if ! %{with svgalib}
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/smode2.1*
 %endif
@@ -204,112 +266,168 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man1/irxevent.1*
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/xmode2.1*
 %endif
 
-install -Dpm 644 doc/lirc.hwdb $RPM_BUILD_ROOT%{_datadir}/lirc/lirc.hwdb
-
-install -Dpm 755 %{SOURCE1} $RPM_BUILD_ROOT%{_initrddir}/lirc
-%{__perl} -pi -e \
-  's|/etc/|%{_sysconfdir}/|g ;
-   s|/var/|%{_localstatedir}/|g ;
-   s|/usr/sbin/|%{_sbindir}/|g' \
-  $RPM_BUILD_ROOT%{_initrddir}/lirc
-install -Dpm 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/lirc
-
-mkdir __docs
+rm -rf __docs; mkdir __docs
 cp -pR doc contrib __docs
 cd __docs
 rm -rf doc/Makefile* doc/.libs doc/man* doc/lirc.hwdb
 rm -rf contrib/irman2lirc contrib/lirc.* contrib/sendxevent.c
 cd ..
 
-install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/lirc
-for f in lircd.conf lircmd.conf
-do
-  echo "# Populated config files can be found in the lirc-remotes sub-package
-# or at http://lirc.sourceforge.net/remotes/" > $RPM_BUILD_ROOT%{_sysconfdir}/lirc/$f
-done
-
-install -dm 755 $RPM_BUILD_ROOT%{_localstatedir}/run/lirc/
-touch $RPM_BUILD_ROOT%{_localstatedir}/run/lirc/lirc{d,m}
-
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
-echo "d	%{_localstatedir}/run/lirc	0755	root	root	10d" > $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/lirc.conf
-
-rm $RPM_BUILD_ROOT%{_libdir}/liblirc_client.la
-
-# Put remote definitions in place
-cp -ar remotes $RPM_BUILD_ROOT%{_datadir}/lirc-remotes
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/%{_tmpfilesdir}
+echo "d /var/run/lirc  0755  root  root  10d" \
+    > $RPM_BUILD_ROOT/%{_tmpfilesdir}/lirc.conf
 
 
 %post
-/sbin/chkconfig --add lirc
-# If we're upgrading, move config files into their new location, if need be
-if [ $1 -ge 2 ] ; then
-  if [ -e %{_sysconfdir}/lircd.conf -a ! -e %{_sysconfdir}/lirc/lircd.conf ]; then
-    mv %{_sysconfdir}/lircd.conf %{_sysconfdir}/lirc/lircd.conf
-  fi
-  if [ -e %{_sysconfdir}/lircmd.conf -a ! -e %{_sysconfdir}/lirc/lircmd.conf ]; then
-    mv %{_sysconfdir}/lircmd.conf %{_sysconfdir}/lirc/lircmd.conf
-  fi
-fi
+%systemd_post lircd.service lircmd.service
+systemd-tmpfiles --create %{_tmpfilesdir}/lirc.conf
+# Remove stale links after service name change lirc -> lircd:
+find /etc/systemd -name lirc.service -xtype l -delete || :
 
 %post libs -p /sbin/ldconfig
 
 %preun
-if [ $1 -eq 0 ] ; then
-  %{_initrddir}/lirc stop >/dev/null || :
-  /sbin/chkconfig --del lirc || :
-fi
+%systemd_preun lircd.service lircmd.service
+
+%postun
+%systemd_postun_with_restart lircd.service lircmd.servic
 
 %postun libs -p /sbin/ldconfig
 
 
 %files
-%defattr(-,root,root,-)
-%doc ANNOUNCE AUTHORS ChangeLog COPYING NEWS README TODO
-%config(noreplace) %{_sysconfdir}/lirc/lirc*d.conf
-%config(noreplace) %{_sysconfdir}/sysconfig/lirc
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/lirc.conf
-%{_initrddir}/lirc
+%doc ANNOUNCE AUTHORS ChangeLog COPYING NEWS README TODO README.fedora
+%dir  /etc/lirc
+%config(noreplace) /etc/lirc/lirc*d.conf
+%config(noreplace) /etc/sysconfig/lirc
+%{_tmpfilesdir}/lirc.conf
+%{_unitdir}/lirc*
 %{_bindir}/*ir*
 %{_bindir}/*mode2
 %{_sbindir}/lirc*d
-%dir %{_datadir}/lirc/
 %{_datadir}/lirc/
 %{_mandir}/man1/*ir*.1*
 %{_mandir}/man1/*mode2*.1*
 %{_mandir}/man8/lirc*d.8*
-%ghost %dir %{_localstatedir}/run/lirc/
-%ghost %{_localstatedir}/run/lirc/lirc*
 
 %files libs
-%defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/liblirc_client.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/lirc/
 %{_libdir}/liblirc_client.so
 
 %files doc
-%defattr(-,root,root,-)
 %doc __docs/* COPYING
 
 %files remotes
-%defattr(-,root,root,-)
-%dir %{_datadir}/lirc-remotes
-%{_datadir}/lirc-remotes/*
+%doc AUTHORS ChangeLog COPYING README
+%{_datadir}/lirc-remotes
+
+%files disable-kernel-rc
+%{_udevrulesdir}/99-remote-control-lirc.rules
 
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.0-5
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.0-26
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jan 13 2012 Liu Di <liudidi@gmail.com> - 0.9.0-4
-- 为 Magic 3.0 重建
+* Thu May 29 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 0.9.0-25
+- enable BR iguanaIR again
+- add missing isa tags
+
+* Thu May 29 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 0.9.0-24
+- rebuild for libftdi soname bump
+- disable BR iguanaIR temporary, it pulls in lirc-0.9.0-23 and build fails
+
+* Wed Jan 08 2014 Alec Leamas <leamas.alec@nowhere.net> - 0.9.0-23
+- Remove f16 systemd upgrade snippets.
+
+* Sun Nov 17 2013 leamas.alec@gmail.com - 0.9.0-22
+- Fix -Werror=format-security build error (#1037178).
+- Not yet built.
+
+* Sun Nov 17 2013 leamas.alec@gmail.com - 0.9.0-21
+- lircd.service: add sh wrapper to handle empty argumentes.
+
+* Sun Nov 17 2013 leamas.alec@gmail.com - 0.9.0-20
+- Fixing typo in -20.
+- Ignore errors in PreExec/PostExec.
+
+* Sat Nov 16 2013 Alec Leamas <leamas.alec@gmail.com> - 0.9.0-19
+- Fix missing {} in lircd.service (bz 1025030, comment 24)
+
+* Tue Nov 12 2013 Alec Leamas <leamas.alec@nowhere.net> - 0.9.0-18
+- Remove old nowadays stale links to lirc.service.
+- Fix broken reference to lirc.service in lircmd.service
+- Update README
+
+* Thu Oct 17 2013 Alec Leamas <leamas.alec@nowhere.net> - 0.9.0-17
+- Add a udev "Only use lirc" subpackage.
+- Revise enabling of lirc protocol.
+- Documenting upstream merge request.
+- Resurrect contrib/lircs, use systemctl.
+- Force creation of /run/lirc after installation.
+- Use /lib/tmpfiles.d, not /etc/tmpfiles.d with _tmpfilesdir macro.
+
+* Tue Oct 15 2013 Wolfgang Ulbrich <chat-to-me@raveit.de> - 0.9.0-16
+- fix build for f18
+- remove BR perl, already called in build system
+- fix bogus in changelog date
+
+* Thu Oct 10 2013 Alec Leamas <leamas.alec@nowhere.net> - 0.9.0-15
+- Actually use sysconfig files (881976).
+- Modify lirc.service to not fork.
+- Add support for iguanaIR driver (#954146).
+- Add hardened build flag (955144).
+- Use actual systemd macros (850191).
+- Clean up some nowadays not used directives.
+- Run autoreconf by default (926082).
+- Cleanup some obsoleted autotools usage, two new patches.
+- Deactivate other decoders on start (923978).
+- Filter away docdir dependencies.
+- Remove obsolete F8 upgrade Obsoletes: (sic!).
+- Fix inconsistent/duplicate /usr/share/lirc in %%files.
+- Add %%doc (notably COPYING) to remotes subpackage.
+- Claim /etc/lirc.
+- Update to latest upstream (10 patches).
+- Use /var and /etc instead of %%{_sysconfdir} and %%{localstatedir}.
+- Removed obsolete code to move config files to /etc/lirc in %%post.
+- Renamed main systemd service: lirc.service -> lircd.service.
+- Added socket activation support.
+- Don't claim temporary files in /run/lirc, they are just transient.
+- Initiate lircd.conf, lircmd.conf from external template.
+- Bumping release, 14 is published.
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.0-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.0-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Apr 19 2012 Jon Ciesla <limburgher@gmail.com> - 0.9.0-9
+- Migrate to systemd, BZ 789760.
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Jun 21 2011 Jarod Wilson <jarod@redhat.com> 0.9.0-7
+- Only alter protocols for the device lirc is configured to talk to
+  and don't try to poke protocols on non-rc-core lirc devices
+
+* Mon Jun 06 2011 Jarod Wilson <jarod@redhat.com> 0.9.0-6
+- And now take out the libusb1-devel bit, its actually the removal of
+  libusb-config from libusb-devel that broke things, so we need some
+  fixage upstream, backported here.
+
+* Tue May 31 2011 Jarod Wilson <jarod@redhat.com> 0.9.0-5
+- Add explict BR: libusb1-devel, as some userspace drivers require it, and
+  its apparently not getting into the build root any longer
+
+* Sat May 28 2011 Jarod Wilson <jarod@redhat.com> 0.9.0-4
+- Apparently, the title of bz656613 wasn't quite correct, some stuff
+  in /var/run does need to be installed, not ghosted...
 
 * Tue May 03 2011 Jarod Wilson <jarod@redhat.com> 0.9.0-3
 - Properly support tmpfs /var/run/lirc in new systemd world (#656613)
@@ -573,14 +691,14 @@ fi
 * Sun Apr 17 2005 Ville Skyttä <ville.skytta at iki.fi> 0.7.1-2
 - 0.7.1.
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Thu Apr 7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
 * Sun Dec  5 2004 Ville Skyttä <ville.skytta at iki.fi> 0.7.0-1
 - Update to 0.7.0; major rework of the package:
 - Change default driver to "any".
 - Add -devel subpackage.
-- Improve init script, add %%{_sysconfdir}/sysconfig/lirc for options.
+- Improve init script, add /etc/sysconfig/lirc for options.
 - Rename init script to "lirc" to follow upstream; the script is not only
   for lircd, but lircmd as well.
 - Log to syslog instead of separate log file.
