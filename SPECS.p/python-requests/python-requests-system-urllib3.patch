@@ -1,0 +1,92 @@
+diff -up ./requests/adapters.py.orig ./requests/adapters.py
+--- ./requests/adapters.py.orig	2014-05-30 00:27:36.151074219 -0700
++++ ./requests/adapters.py	2014-05-30 00:31:26.712662414 -0700
+@@ -11,18 +11,18 @@ and maintain connections.
+ import socket
+ 
+ from .models import Response
+-from .packages.urllib3.poolmanager import PoolManager, proxy_from_url
+-from .packages.urllib3.response import HTTPResponse
+-from .packages.urllib3.util import Timeout as TimeoutSauce
++from urllib3.poolmanager import PoolManager, proxy_from_url
++from urllib3.response import HTTPResponse
++from urllib3.util import Timeout as TimeoutSauce
+ from .compat import urlparse, basestring, urldefrag, unquote
+ from .utils import (DEFAULT_CA_BUNDLE_PATH, get_encoding_from_headers,
+                     prepend_scheme_if_needed, get_auth_from_url)
+ from .structures import CaseInsensitiveDict
+-from .packages.urllib3.exceptions import MaxRetryError
+-from .packages.urllib3.exceptions import TimeoutError
+-from .packages.urllib3.exceptions import SSLError as _SSLError
+-from .packages.urllib3.exceptions import HTTPError as _HTTPError
+-from .packages.urllib3.exceptions import ProxyError as _ProxyError
++from urllib3.exceptions import MaxRetryError
++from urllib3.exceptions import TimeoutError
++from urllib3.exceptions import SSLError as _SSLError
++from urllib3.exceptions import HTTPError as _HTTPError
++from urllib3.exceptions import ProxyError as _ProxyError
+ from .cookies import extract_cookies_to_jar
+ from .exceptions import ConnectionError, Timeout, SSLError, ProxyError
+ from .auth import _basic_auth_str
+diff -up ./requests/compat.py.orig ./requests/compat.py
+--- ./requests/compat.py.orig	2014-05-30 00:46:53.888049149 -0700
++++ ./requests/compat.py	2014-05-30 00:54:17.647105931 -0700
+@@ -89,7 +89,10 @@ if is_py2:
+     import cookielib
+     from Cookie import Morsel
+     from StringIO import StringIO
+-    from .packages.urllib3.packages.ordered_dict import OrderedDict
++    try:
++        from collections import OrderedDict
++    except ImportError:
++        from ordereddict import OrderedDict
+     from httplib import IncompleteRead
+ 
+     builtin_str = str
+diff -up ./requests/exceptions.py.orig ./requests/exceptions.py
+--- ./requests/exceptions.py.orig	2014-05-30 00:59:00.825056566 -0700
++++ ./requests/exceptions.py	2014-05-30 00:59:13.416143297 -0700
+@@ -7,7 +7,7 @@ requests.exceptions
+ This module contains the set of Requests' exceptions.
+ 
+ """
+-from .packages.urllib3.exceptions import HTTPError as BaseHTTPError
++from urllib3.exceptions import HTTPError as BaseHTTPError
+ 
+ 
+ class RequestException(IOError):
+diff -up ./requests/__init__.py.orig ./requests/__init__.py
+--- ./requests/__init__.py.orig	2014-05-30 00:27:56.025211120 -0700
++++ ./requests/__init__.py	2014-05-30 00:54:37.009239302 -0700
+@@ -48,13 +48,6 @@ __author__ = 'Kenneth Reitz'
+ __license__ = 'Apache 2.0'
+ __copyright__ = 'Copyright 2014 Kenneth Reitz'
+ 
+-# Attempt to enable urllib3's SNI support, if possible
+-try:
+-    from .packages.urllib3.contrib import pyopenssl
+-    pyopenssl.inject_into_urllib3()
+-except ImportError:
+-    pass
+-
+ from . import utils
+ from .models import Request, Response, PreparedRequest
+ from .api import request, get, head, post, patch, put, delete, options
+diff -up ./requests/models.py.orig ./requests/models.py
+--- ./requests/models.py.orig	2014-05-30 00:27:18.926955573 -0700
++++ ./requests/models.py	2014-05-30 00:31:12.714565990 -0700
+@@ -16,10 +16,10 @@ from .structures import CaseInsensitiveD
+ 
+ from .auth import HTTPBasicAuth
+ from .cookies import cookiejar_from_dict, get_cookie_header
+-from .packages.urllib3.fields import RequestField
+-from .packages.urllib3.filepost import encode_multipart_formdata
+-from .packages.urllib3.util import parse_url
+-from .packages.urllib3.exceptions import DecodeError
++from urllib3.fields import RequestField
++from urllib3.filepost import encode_multipart_formdata
++from urllib3.util import parse_url
++from urllib3.exceptions import DecodeError
+ from .exceptions import (
+     HTTPError, RequestException, MissingSchema, InvalidURL,
+     ChunkedEncodingError, ContentDecodingError)
