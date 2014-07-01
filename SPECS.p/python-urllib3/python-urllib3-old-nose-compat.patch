@@ -1,0 +1,26 @@
+From d1b64a6dc91bc9c350ac503febc34340c94c9066 Mon Sep 17 00:00:00 2001
+From: Ralph Bean <rbean@redhat.com>
+Date: Wed, 25 Sep 2013 13:28:37 -0400
+Subject: [PATCH 3/3] old nose compat
+
+---
+ setup.cfg | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/setup.cfg b/setup.cfg
+index 8f1fee7..a8b1d1d 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -1,9 +1,6 @@
+ [nosetests]
+-logging-clear-handlers = true
+ with-coverage = true
+ cover-package = urllib3
+-cover-min-percentage = 100
+-cover-erase = true
+ 
+ [egg_info]
+ tag_build = 
+-- 
+1.8.3.1
+
