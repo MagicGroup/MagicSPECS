@@ -1,0 +1,43 @@
+From 55870fd91d8e36927f6807931ecd1cfa49ce4ed1 Mon Sep 17 00:00:00 2001
+From: Alec Leamas <leamas.alec@gmail.com>
+Date: Fri, 18 Oct 2013 00:21:44 +0200
+Subject: [PATCH] lircs: use systemctl instead of sysV init.
+
+---
+ lirc-0.9.0/contrib/lircs | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/contrib/lircs b/contrib/lircs
+index 1db2f2a..47350f9 100755
+--- a/contrib/lircs
++++ b/contrib/lircs
+@@ -24,7 +24,7 @@
+ CONFIG_FILE=${HOME}/.lircrc
+
+ # any editor to edit LIRC config file
+-FILE_EDITOR=vim
++FILE_EDITOR=${EDITOR:-vim}
+
+
+
+@@ -48,7 +48,7 @@ start_clients () {
+ restart_lircd () {
+ 	if [ "${USER}" = "root" ]; then
+ 		# change this if your Linux system keeps the init scripts elsewhere
+-		/sbin/init.d/lircd restart
++		systemctl restart lircd.service
+ 	else
+ 		echo "`basename ${0}`: you must be 'root' to restart the LIRC daemon (lircd)."
+ 		exit 1
+@@ -58,7 +58,7 @@ restart_lircd () {
+ stop_lircd () {
+ 	if [ "${USER}" = "root" ]; then
+ 		# change this if your Linux system keeps the init scripts elsewhere
+-		/sbin/init.d/lircd stop
++		systemctl stop lircd.service
+ 	else
+ 		echo "`basename ${0}`: you must be 'root' to stop the LIRC daemon (lircd)."
+ 		exit 1
+--
+1.8.3.1
+

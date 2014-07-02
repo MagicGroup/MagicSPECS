@@ -1,0 +1,43 @@
+From e0ab92be1fa293b8593a77636b3d025fa2aefb82 Mon Sep 17 00:00:00 2001
+From: Jarod Wilson <jarod@redhat.com>
+Date: Tue, 7 Feb 2012 11:47:31 -0500
+Subject: [PATCH 17/17] [media] media: rc: lirc_dev: check kobject_set_name()
+ result
+
+Backport from upstream kernel:
+
+commit b395cbac36e58a55729fe7e6262a3f0b1691bced
+Author: Vasiliy Kulikov <segoon@openwall.com>
+Date:   Fri Nov 26 14:06:41 2010 -0300
+
+    [media] media: rc: lirc_dev: check kobject_set_name() result
+
+    kobject_set_name() may fail with -ENOMEM, check for it.
+
+    Signed-off-by: Vasiliy Kulikov <segoon@openwall.com>
+    Acked-by: Jarod Wilson <jarod@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+ drivers/lirc_dev/lirc_dev.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/lirc_dev/lirc_dev.c b/drivers/lirc_dev/lirc_dev.c
+index 5b25c5f..9d52188 100644
+--- a/drivers/lirc_dev/lirc_dev.c
++++ b/drivers/lirc_dev/lirc_dev.c
+@@ -236,7 +236,9 @@ static int lirc_cdev_add(struct irctl *ir)
+ 		cdev_init(cdev, &lirc_dev_fops);
+ 		cdev->owner = THIS_MODULE;
+ 	}
+-	kobject_set_name(&cdev->kobj, "lirc%d", d->minor);
++	retval = kobject_set_name(&cdev->kobj, "lirc%d", d->minor);
++	if (retval)
++		return retval;
+ 
+ 	retval = cdev_add(cdev, MKDEV(MAJOR(lirc_base_dev), d->minor), 1);
+ 	if (retval)
+-- 
+1.8.3.1
+

@@ -20,7 +20,7 @@
 Summary: A Modern Concurrent Version Control System
 Name: subversion
 Version: 1.8.9
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: ASL 2.0
 Group: Development/Tools
 URL: http://subversion.apache.org/
@@ -471,6 +471,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Mon Jun 30 2014 Liu Di <liudidi@gmail.com> - 1.8.9-6
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 1.8.9-5
 - 为 Magic 3.0 重建
 

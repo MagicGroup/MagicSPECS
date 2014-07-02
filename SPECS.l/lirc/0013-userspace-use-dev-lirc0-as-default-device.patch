@@ -1,0 +1,34 @@
+From d0175df5cd2ac4a261332ea21a67179f2c85072c Mon Sep 17 00:00:00 2001
+From: Jarod Wilson <jarod@redhat.com>
+Date: Fri, 2 Dec 2011 14:10:21 -0500
+Subject: [PATCH 13/17] userspace: use /dev/lirc0 as default device
+
+The lirc_dev kernel driver results in a first lirc chardev of
+/dev/lirc0, not /dev/lirc, so lets default to that now. The old way is
+from pre-udev days or something, I think... While we're at it, update
+the adjacent comment about the daemon socket locations to reflect
+current reality too.
+
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+ configure.ac | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 1a3347e..ff4780f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1708,7 +1708,9 @@ AC_DEFINE_UNQUOTED(LIRC_SYSLOG, $facility)
+ 
+ AH_TOP([
+ /* device file names - beneath DEVDIR (default /dev) */
+-#define DEV_LIRC	"lirc"
++#define DEV_LIRC	"lirc0"
++
++/* daemon socket file names - beneath $varrundir (default /var/run/lirc) */
+ #define DEV_LIRCD	"lircd"
+ #define DEV_LIRCM	"lircm"
+ 
+-- 
+1.8.3.1
+

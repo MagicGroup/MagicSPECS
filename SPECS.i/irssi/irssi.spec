@@ -1,20 +1,17 @@
 %define		perl_vendorarch	%(eval "`perl -V:installvendorarch`"; echo $installvendorarch)
 
-%global pretag rc1
-
 Summary:	Modular text mode IRC client with Perl scripting
 Name:		irssi
 Version:	0.8.16
-Release:	0.2%{?pretag:.%{pretag}}%{?dist}
+Release:	1%{?dist}
 
 License:	GPLv2+
 Group:		Applications/Communications
 URL:		http://irssi.org/
-Source0:	http://irssi.org/files/irssi-%{version}%{?pretag:-%{pretag}}.tar.bz2
+Source0:	http://irssi.org/files/irssi-%{version}.tar.bz2
 Source1:	irssi-config.h
 Patch0:		irssi-0.8.15-no-static-unload.patch
 Patch1:		irssi-0.8.15-man-fix.patch
-Patch2:		irssi-0.8.16-format-security.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires:	ncurses-devel openssl-devel zlib-devel
 BuildRequires:	pkgconfig glib2-devel perl-devel perl(ExtUtils::Embed)
@@ -40,10 +37,9 @@ being maintained.
 
 
 %prep
-%setup -q -n %{name}-%{version}%{?pretag:-%{?pretag}}
+%setup -q
 %patch0 -p1 -b .no-static-unload
 %patch1 -p1 -b .man-fix
-%patch2 -p1 -b .format-security
 
 %build
 autoreconf -i
@@ -94,7 +90,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Dec  4 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.16-0.2rc1:.%{pretag}}%{?dist}
+* Tue Jun 10 2014 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.16-1
+- New version
+  Resolves: rhbz#1107342
+- Dropped format-security patch (not needed)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.16-0.4.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Dec  4 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.16-0.3.rc1
+- Fixed change log
+
+* Wed Dec  4 2013 Jaroslav Škarvada <jskarvad@redhat.com> - 0.8.16-0.2.rc1
 - Fixed compilation with -Werror=format-security
   Resolves: rhbz#1037139
 

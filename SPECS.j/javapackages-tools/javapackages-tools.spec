@@ -1,6 +1,6 @@
 Name:           javapackages-tools
 Version:        4.0.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -104,6 +104,7 @@ Requires:       python-lxml
 Module for handling, querying and manipulating of various files for Java
 packaging in Linux distributions
 
+%if 0
 %package -n fedora-review-plugin-java
 Summary:        fedora-review plugin for checking Java packaging guidelines
 License:        GPLv2+
@@ -111,6 +112,7 @@ Requires:       fedora-review
 
 %description -n fedora-review-plugin-java
 %{summary}.
+%endif
 
 %package doc
 Summary:        Guide for Java packaging
@@ -161,6 +163,8 @@ pushd python
 %{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 
+rm -rf %{buildroot}%{_datadir}/fedora-review
+
 %check
 ./check
 
@@ -178,13 +182,18 @@ popd
 %doc LICENSE
 %{python_sitelib}/javapackages*
 
+%if 0
 %files -n fedora-review-plugin-java
 %{_datadir}/fedora-review/plugins/*
+%endif
 
 %files doc -f files-doc
 %doc LICENSE
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 4.0.0-7
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 4.0.0-6
 - 为 Magic 3.0 重建
 

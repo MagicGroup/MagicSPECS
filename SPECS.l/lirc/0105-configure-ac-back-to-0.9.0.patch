@@ -1,0 +1,27 @@
+From 6470e34d1be9e8be5c275a1e10929cd0f973478b Mon Sep 17 00:00:00 2001
+From: Alec Leamas <leamas@nowhere.net>
+Date: Fri, 11 Oct 2013 06:00:28 +0200
+Subject: [PATCH] Revert to 0.9.0
+
+Technically, current release is 0.9.0 + some patches rather than
+a 0.9.1 pre-release.
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 7df186a..46380a3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3,7 +3,7 @@ dnl $Id: configure.ac,v 1.44 2010/07/12 03:25:55 jarodwilson Exp $
+ dnl Process this file with autoconf to produce a configure script.
+ dnl configure.ac, (c)1999 Tom Wheeley <tw104@york.ac.uk>
+ 
+-AC_INIT([lirc], [0.9.1-git])
++AC_INIT([lirc], [0.9.0])
+ AC_CONFIG_SRCDIR([daemons/lircd.c])
+ AC_CONFIG_MACRO_DIR([m4])
+ 
+-- 
+1.8.3.1
+

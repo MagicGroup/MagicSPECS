@@ -1,5 +1,5 @@
 Name:           debconf
-Version:	1.5.52
+Version:	1.5.53
 Release:        1%{?dist}
 Summary:        Debian configuration management system
 Summary(zh_CN.UTF-8): Debina 的配置管理系统
@@ -248,6 +248,9 @@ done
 
 
 %changelog
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 1.5.53-1
+- 更新到 1.5.53
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com>
 - 更新到 不能正常取得新版本号
 

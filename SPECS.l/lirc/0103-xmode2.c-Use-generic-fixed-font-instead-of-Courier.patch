@@ -1,0 +1,28 @@
+From c913583f3d7d166a1cf8505dcb695b88b980a1fc Mon Sep 17 00:00:00 2001
+From: Alec Leamas <alec@tests.notat.diaspora.com>
+Date: Tue, 8 Oct 2013 21:59:01 +0200
+Subject: [PATCH 103/105] xmode2.c: Use generic fixed font instead of Courier.
+
+This used to be a sed command in the Fedora spec file. Using
+the generic fixed font is simply a better default more
+generally available.
+---
+ tools/xmode2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/xmode2.c b/tools/xmode2.c
+index b7d858e..27ae7fc 100644
+--- a/tools/xmode2.c
++++ b/tools/xmode2.c
+@@ -69,7 +69,7 @@ Display *d1;
+ Window w0, w1;			/*w0 = root */
+ char w1_wname[] = "xmode2";
+ char w1_iname[] = "xmode2";
+-char font1_name[] = "-*-Courier-medium-r-*-*-8-*-*-m-*-iso8859-1";
++char font1_name[]= "-misc-fixed-*-r-*-*-12-*-*-*-*-*-iso8859-1";
+ 
+ int w1_x = 0, w1_y = 0;
+ unsigned int w1_w = 640, w1_h = 480, w1_border = 0;
+-- 
+1.8.3.1
+

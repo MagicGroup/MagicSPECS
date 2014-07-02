@@ -7,7 +7,7 @@
 Summary: Generic library for reporting various problems
 Name: libreport
 Version: 2.2.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: https://fedorahosted.org/abrt/
@@ -662,6 +662,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 2.2.2-7
+- 为 Magic 3.0 重建
+
 * Tue May 27 2014 Liu Di <liudidi@gmail.com> - 2.2.2-6
 - 为 Magic 3.0 重建
 

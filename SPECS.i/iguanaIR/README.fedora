@@ -1,0 +1,13 @@
+Fedora README
+=============
+
+On recent kernels (F17+) you will need to disable the kernel ir stuff
+to make the iguanaIR driver work. Basically, blacklist all rc_* 
+modules using a file in /etc/modprobe.d. The list varies, my 
+own file is:
+
+    blacklist rc_medion_x10_or2x
+    blacklist rc_pinnacle_pctv_hd
+    blacklist ati_remote
+    blacklist rc_core
+

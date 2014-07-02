@@ -1,6 +1,6 @@
 Name:           libjingle
 Version:        0.6.14
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GoogleTalk implementation of Jingle
 Group:          System Environment/Libraries
 License:        BSD
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 0.6.14-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.14-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

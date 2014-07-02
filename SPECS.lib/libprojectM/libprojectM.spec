@@ -17,6 +17,8 @@ Patch2:		libprojectM-USE_THREADS.patch
 Patch3:		01-change-texture-size.patch
 Patch4:		04-change-preset-duration.patch
 
+Patch5:		libprojectM-2.0.1-freetype253.patch
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	ftgl-devel, cmake, glew-devel
 
@@ -59,11 +61,12 @@ done
 %patch2 -p1
 %patch3 -p0
 %patch4 -p0
+%patch5 -p1
 sed -i 's/\r//' ChangeLog
 
 
 %build
-%cmake -DCMAKE_INSTALL_PREFIX=%{_prefix} -DLIB_INSTALL_DIR=%{_libdir} -DFREETYPE2_INCLUDE_DIR=%{_includedir}/freetype2 .
+%cmake -DCMAKE_INSTALL_PREFIX=%{_prefix} -DLIB_INSTALL_DIR=%{_libdir} .
 make %{?_smp_mflags} VERBOSE=1
 
 

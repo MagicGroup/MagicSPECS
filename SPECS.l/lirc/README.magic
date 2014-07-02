@@ -1,0 +1,117 @@
+## Magic README
+
+#### New service name: lirc -> lircd.
+
+For reasons of consistency we have renamed the lirc service to
+lircd. Basically, this means that to start the service one need
+to use systemctl start lircd.service instead of lirc.service etc.
+Sorry for the inconvenience.
+
+#### Enable lirc protocol
+
+For lirc to work with ir devices, the lirc protocol must be enabled
+for the actual device used. This only applies to ir devices which
+are visible as /sys/class/rc/rc? devices. E. g., I have an RF remote
+which is just an usb device (driver atilibusb) and this one does
+*not* require the the lirc protocol to be enabled in this way.
+
+If you have a "classic" ir device needing lirc to be enabled one option
+is to install the lirc-disable-kernel-rc subpackage. This is an udev
+rule which disables the kernel built-in ir device handling and makes
+lirc the only protocol used. This might or might not be what you want.
+
+Another option is to set the LIRCD_IR_DEVICE in /etc/sysconfig/lirc. This
+will enable the lirc protocol for that device when lirc is running. The
+kernel built-in protocols are still in place, but not used. Again, this
+might or might not be what you want.
+
+#### Socket activation
+
+As of 0.9.4-15+, the Magic lirc package sports systemd socket
+activation. This should fix the problems at startup when clients can't
+connect to /var/run/lircd because the lircd service is yet not started.
+
+To start the lircd service using socket activation:
+```
+    # systemctl enable lircd.socket
+    # systemctl start lircd.socket
+```
+The lircmd is started the usual way:
+```
+    # systemctl enable lircmd.service
+    # systemctl start lircmd.service
+```
+#### Running another instance.
+
+Sometimes another lircd instance is required to handle some other input
+device. This could be done by creating a new service definition in
+/etc/systemd/system.
+
+In my case I have an extra instance handling ir output to the transciever.
+This is accomplished with  a file /etc/systemd/system/lirc-tx:
+----------------
+[Unit]
+Description=LIRC Infrared Signal Decoder
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/lircd --driver=iguanaIR \
+                          --device=/var/run/iguanaIR/0 \
+                          --output=/var/run/lirc/lircd-tx \
+                          --pidfile=/run/lirc/dont-use-lircd-tx.pid \
+                          --nodaemon \
+                          --allow-simulate
+
+[Install]
+WantedBy=multi-user.target
+
+-----------------------
+
+This defines a new service which can be started using
+'systemctl start lirc-tx' etc. It's essential that each service has an
+unique output socket. You should probably also think twice before running
+two instances with the same input device.
+
+## Troubleshooting
+
+Getting lircd logs from last boot cycle:
+```
+    # journalctl -b /usr/sbin/lircd
+```
+
+If lircd fails to start or dies after restart, first check logs for errors:
+```
+    # journalctl -f &
+    # systemctl restart lircd.service
+```
+
+You could also run lircd in foreground after stopping service:
+```
+    # systemctl stop lircd.service
+    # bash
+    # source /etc/systconfig/lirc
+    # /usr/sbin/lircd $LIRCD_OPTIONS --driver $LIRC_DRIVER \
+    > --device $LIRC_DEVICE  --nodaemon
+```
+
+Sometimes kernel complains about multiple clients trying to access the
+same device. In this case you need to blacklist some kernel module
+to make the kernel device available for lircd. One example is my RF
+remote using the atilibusb driver. This needs to blacklist the built_in
+ati_remote module. This is is done by creating the file
+/etc/modprobe.conf.d/blacklist-ati-remote.conf as:
+```
+# Block built-in handling of ati-remote (use lircd instead).
+blacklist ati_remote
+```
+
+
+
+
+
+
+
+
+
+

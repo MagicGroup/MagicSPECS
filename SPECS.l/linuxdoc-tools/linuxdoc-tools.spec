@@ -5,7 +5,7 @@
 Summary: A text formatting package based on SGML
 Name: linuxdoc-tools
 Version: 0.9.68
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: Copyright only
 Group: Applications/Publishing
 Source: http://http.us.debian.org/debian/pool/main/l/linuxdoc-tools/%{name}_%{version}.tar.gz
@@ -106,6 +106,9 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 0.9.68-7
+- 为 Magic 3.0 重建
+
 * Tue Aug 13 2013 Martin Milata <mmilata@redhat.com> - 0.9.68-6
 - Change docs location to conform with
   https://fedoraproject.org/wiki/Changes/UnversionedDocdirs

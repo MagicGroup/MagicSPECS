@@ -1,0 +1,25 @@
+From 2877272703e7b9f59cd5c690c70555b101c69815 Mon Sep 17 00:00:00 2001
+From: Alec Leamas <leamas.alec@gmail.com>
+Date: Tue, 25 Dec 2012 11:54:55 +0100
+Subject: [PATCH 3/7] Use platform specific python extension dir
+
+---
+ configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index f901211..1a51327 100755
+--- a/configure
++++ b/configure
+@@ -5167,7 +5167,7 @@ $as_echo "$PYTHON_LDFLAGS" >&6; }
+ $as_echo_n "checking for Python site-packages path... " >&6; }
+ 	if test -z "$PYTHON_SITE_PKG"; then
+ 		PYTHON_SITE_PKG=`$PYTHON -c "import distutils.sysconfig; \
+-		        print distutils.sysconfig.get_python_lib(0,0);"`
++		        print distutils.sysconfig.get_python_lib(1,0);"`
+ 	fi
+ 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $PYTHON_SITE_PKG" >&5
+ $as_echo "$PYTHON_SITE_PKG" >&6; }
+-- 
+1.7.11.7
+

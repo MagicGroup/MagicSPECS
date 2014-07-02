@@ -1,13 +1,14 @@
+Name:    lksctp-tools
 Summary: User-space access to Linux Kernel SCTP
-Name: lksctp-tools
-Version: 1.0.11
-Release: 5%{?dist}
+Version: 1.0.16
+Release: 2%{?dist}
 # src/apps/bindx_test.C is GPLv2, I've asked upstream for clarification
 License: GPLv2 and GPLv2+ and LGPLv2 and MIT
-Group: System Environment/Libraries
-URL: http://lksctp.sourceforge.net
-Source0:  http://downloads.sourceforge.net/lksctp/%{name}-%{version}.tar.gz
-Patch0: lksctp-tools-1.0.6-libdir.patch
+Group:   System Environment/Libraries
+URL:     http://lksctp.sourceforge.net
+
+Source0: http://downloads.sourceforge.net/lksctp/%{name}-%{version}.tar.gz
+Patch0: lksctp-tools-1.0.16-libdir.patch
 BuildRequires: libtool, automake, autoconf
 
 %description
@@ -25,7 +26,7 @@ This package contains the base run-time library and command-line tools.
 %package devel
 Summary: Development files for lksctp-tools
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development files for lksctp-tools which include man pages, header files,
@@ -34,7 +35,7 @@ static libraries, symlinks to dynamic libraries and some tutorial source code.
 %package doc
 Summary: Documents pertaining to SCTP
 Group: System Environment/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description doc
 Documents pertaining to LKSCTP & SCTP in general (IETF RFC's & Internet
@@ -57,23 +58,21 @@ make %{?_smp_mflags}
 rm -f doc/rfc2960.txt doc/states.txt
 make install DESTDIR="$RPM_BUILD_ROOT" INSTALL="install -p"
 
-find $RPM_BUILD_ROOT/%{_libdir}/ -name "*.la"  | xargs rm -f
+find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING* README
 %{_bindir}/*
-%{_libdir}/libsctp.so.*
+%{_libdir}/libsctp.so.1*
 %dir %{_libdir}/lksctp-tools/
-%{_libdir}/lksctp-tools/libwithsctp.so.*
+%{_libdir}/lksctp-tools/libwithsctp.so.1*
 %{_mandir}/man7/*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/libsctp.so
 %{_libdir}/lksctp-tools/libwithsctp.so
@@ -81,15 +80,36 @@ find $RPM_BUILD_ROOT/%{_libdir}/ -name "*.la"  | xargs rm -f
 %{_mandir}/man3/*
 
 %files doc
-%defattr(-,root,root,-)
 %doc doc/*.txt
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.11-5
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.16-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jan 13 2012 Liu Di <liudidi@gmail.com> - 1.0.11-4
-- 为 Magic 3.0 重建
+* Tue May  6 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.0.16-1
+- Update to 1.0.16
+- Spec cleanups
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.15-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sun May 12 2013 Daniel Borkmann <dborkman@redhat.com> - 1.0.15-1
+- Update to 1.0.15
+
+* Tue Apr 09 2013 Daniel Borkmann <dborkman@redhat.com> - 1.0.14-1
+- Update to 1.0.14
+
+* Fri Jan 25 2013 Daniel Borkmann <dborkman@redhat.com> - 1.0.13-1
+- Update to 1.0.13
+
+* Mon Jan 21 2013 Jan Safranek <jsafrane@redhat.com> - 1.0.12-1
+- Update to 1.0.12
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.11-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.11-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild

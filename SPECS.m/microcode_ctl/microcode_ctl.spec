@@ -1,16 +1,16 @@
-%define upstream_version 2.0-2
+%define upstream_version 2.1-4
 
 Summary:        Tool to transform and deploy CPU microcode update for x86.
 Name:           microcode_ctl
-Version:        2.0
-Release:        3%{?dist}
+Version:        2.1
+Release:        6%{?dist}
 Epoch:          2
 Group:          System Environment/Base
 License:        GPLv2+ and Redistributable, no modification permitted
 URL:            http://fedorahosted.org/microcode_ctl
 Source0:        http://fedorahosted.org/released/microcode_ctl/%{name}-%{upstream_version}.tar.xz
 Buildroot:      %{_tmppath}/%{name}-%{version}-root
-ExclusiveArch:  %{ix86} x86_64 mips64el
+ExclusiveArch:  %{ix86} x86_64
 
 %description
 The microcode_ctl utility is a companion to the microcode driver written
@@ -40,6 +40,30 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2:2.1-6
+- 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 01 2014 Anton Arapov <anton@redhat.com> 2.1-4
+- Update to upstream 2.1-4.
+
+* Fri Jan 24 2014 Anton Arapov <anton@redhat.com> 2.1-3
+- Update to upstream 2.1-3.
+
+* Mon Sep 09 2013 Anton Arapov <anton@redhat.com> 2.1-2
+- Update to upstream 2.1-2.
+
+* Wed Aug 14 2013 Anton Arapov <anton@redhat.com> 2.1-1
+- Update to upstream 2.1-1.
+
+* Sat Jul 27 2013 Anton Arapov <anton@redhat.com> 2.1-0
+- Update to upstream 2.1. AMD microcode has been removed, find it in linux-firmware.
+
+* Wed Apr 03 2013 Anton Arapov <anton@redhat.com> 2.0-3.1
+- Update to upstream 2.0-3
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

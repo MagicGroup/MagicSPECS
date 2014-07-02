@@ -1,0 +1,89 @@
+From 9592bb4a2bccedf5ef205cf93c4d17f5b27edf5c Mon Sep 17 00:00:00 2001
+From: Jarod Wilson <jarod@redhat.com>
+Date: Wed, 29 Jun 2011 17:31:28 -0400
+Subject: [PATCH 12/17] Silence some clang warnings, courtesy of nox
+
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+ daemons/dump_config.c | 12 ++++++------
+ daemons/ir_remote.c   |  3 ++-
+ daemons/lircd.c       |  4 ++--
+ 3 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/daemons/dump_config.c b/daemons/dump_config.c
+index a83c27e..56fb183 100644
+--- a/daemons/dump_config.c
++++ b/daemons/dump_config.c
+@@ -120,11 +120,11 @@ void fprint_remote_head(FILE * f, struct ir_remote *rem)
+ 	if (!is_raw(rem)) {
+ 		if (rem->pre_data_bits > 0) {
+ 			fprintf(f, "  pre_data_bits   %d\n", rem->pre_data_bits);
+-			fprintf(f, "  pre_data       0x%llX\n", rem->pre_data);
++			fprintf(f, "  pre_data       0x%llX\n", (unsigned long long)rem->pre_data);
+ 		}
+ 		if (rem->post_data_bits > 0) {
+ 			fprintf(f, "  post_data_bits  %d\n", rem->post_data_bits);
+-			fprintf(f, "  post_data      0x%llX\n", rem->post_data);
++			fprintf(f, "  post_data      0x%llX\n", (unsigned long long)rem->post_data);
+ 		}
+ 		if (rem->pre_p != 0 && rem->pre_s != 0) {
+ 			fprintf(f, "  pre         %5u %5u\n", (__u32) rem->pre_p, (__u32) rem->pre_s);
+@@ -151,15 +151,15 @@ void fprint_remote_head(FILE * f, struct ir_remote *rem)
+ 		if (rem->min_code_repeat > 0) {
+ 			fprintf(f, "  min_code_repeat %d\n", rem->min_code_repeat);
+ 		}
+-		fprintf(f, "  toggle_bit_mask 0x%llX\n", rem->toggle_bit_mask);
++		fprintf(f, "  toggle_bit_mask 0x%llX\n", (unsigned long long)rem->toggle_bit_mask);
+ 		if (has_toggle_mask(rem)) {
+-			fprintf(f, "  toggle_mask    0x%llX\n", rem->toggle_mask);
++			fprintf(f, "  toggle_mask    0x%llX\n", (unsigned long long)rem->toggle_mask);
+ 		}
+ 		if (rem->rc6_mask != 0) {
+-			fprintf(f, "  rc6_mask    0x%llX\n", rem->rc6_mask);
++			fprintf(f, "  rc6_mask    0x%llX\n", (unsigned long long)rem->rc6_mask);
+ 		}
+ 		if (has_ignore_mask(rem)) {
+-			fprintf(f, "  ignore_mask 0x%llX\n", rem->ignore_mask);
++			fprintf(f, "  ignore_mask 0x%llX\n", (unsigned long long)rem->ignore_mask);
+ 		}
+ 		if (is_serial(rem)) {
+ 			fprintf(f, "  baud            %d\n", rem->baud);
+diff --git a/daemons/ir_remote.c b/daemons/ir_remote.c
+index 3e9e0f6..e5f60f9 100644
+--- a/daemons/ir_remote.c
++++ b/daemons/ir_remote.c
+@@ -490,7 +490,8 @@ int write_message(char *buffer, size_t size, const char *remote_name, const char
+ {
+ 	int len;
+ 
+-	len = snprintf(buffer, size, "%016llx %02x %s%s %s\n", code, reps, button_name, button_suffix, remote_name);
++	len = snprintf(buffer, size, "%016llx %02x %s%s %s\n",
++		(unsigned long long)code, reps, button_name, button_suffix, remote_name);
+ 
+ 	return len;
+ }
+diff --git a/daemons/lircd.c b/daemons/lircd.c
+index ddcca05..8ace7af 100644
+--- a/daemons/lircd.c
++++ b/daemons/lircd.c
+@@ -1314,7 +1314,7 @@ int send_remote(int fd, char *message, struct ir_remote *remote)
+ 
+ 	codes = remote->codes;
+ 	while (codes->name != NULL) {
+-		len = snprintf(buffer, PACKET_SIZE, "%016llx %s\n", codes->code, codes->name);
++		len = snprintf(buffer, PACKET_SIZE, "%016llx %s\n", (unsigned long long)codes->code, codes->name);
+ 		if (len >= PACKET_SIZE + 1) {
+ 			len = sprintf(buffer, "code_too_long\n");
+ 		}
+@@ -1334,7 +1334,7 @@ int send_name(int fd, char *message, struct ir_ncode *code)
+ 	    (write_socket_len(fd, protocol_string[P_BEGIN]) && write_socket_len(fd, message)
+ 	     && write_socket_len(fd, protocol_string[P_SUCCESS]) && write_socket_len(fd, protocol_string[P_DATA])))
+ 		return (0);
+-	len = snprintf(buffer, PACKET_SIZE, "1\n%016llx %s\n", code->code, code->name);
++	len = snprintf(buffer, PACKET_SIZE, "1\n%016llx %s\n", (unsigned long long)code->code, code->name);
+ 	if (len >= PACKET_SIZE + 1) {
+ 		len = sprintf(buffer, "1\ncode_too_long\n");
+ 	}
+-- 
+1.8.3.1
+

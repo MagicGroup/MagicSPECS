@@ -11,7 +11,7 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://ktorrent.org
 Version: 4.13.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 %define rversion %version
 Source0:  http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
@@ -90,6 +90,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_includedir}/*
 
 %changelog
+* Mon Jun 30 2014 Liu Di <liudidi@gmail.com> - 4.13.2-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
 - 更新到 4.13.2
 

@@ -1,0 +1,20 @@
+diff -ur imake-1.0.7.orig/imake.c imake-1.0.7/imake.c
+--- imake-1.0.7.orig/imake.c	2014-07-02 15:26:21.658236986 +0000
++++ imake-1.0.7/imake.c	2014-07-02 15:28:14.691234089 +0000
+@@ -1049,6 +1049,7 @@
+ 
+   static const char*   suse = "/etc/SuSE-release";
+   static const char* redhat = "/etc/redhat-release";
++  static const char* magic  = "/ect/magic-release";
+   static const char* debian = "/etc/debian_version";
+ 
+   fprintf (inFile, "%s\n", "#define LinuxUnknown    0");
+@@ -1078,7 +1079,7 @@
+     fprintf (inFile, "%s\n", "#define DefaultLinuxDistName SuSE");
+     return;
+   }
+-  if (lstat (redhat, &sb) == 0) {
++  if ((lstat (redhat, &sb) == 0) || (lstat (magic, &sb) == 0)) {
+     fprintf (inFile, "%s\n", "#define DefaultLinuxDistribution LinuxRedHat");
+     fprintf (inFile, "%s\n", "#define DefaultLinuxDistName RedHat");
+     return;

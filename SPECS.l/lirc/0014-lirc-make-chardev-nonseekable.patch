@@ -1,0 +1,41 @@
+From 441e4879e694b18ca10a7c107e81362790c7bd25 Mon Sep 17 00:00:00 2001
+From: Jarod Wilson <jarod@redhat.com>
+Date: Tue, 7 Feb 2012 10:29:58 -0500
+Subject: [PATCH 14/17] lirc: make chardev nonseekable
+
+Merge change from upstream kernel
+
+commit d9d2e9d5c9eead1f73f92f5fc03424dab90b6c95
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Sun Aug 15 18:51:56 2010 +0200
+
+    lirc: make chardev nonseekable
+
+    There does not seem to be a need for lirc to
+    allow seeking on the file descriptor, so let's
+    just disallow this before users start relying
+    on it.
+
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+ drivers/lirc_dev/lirc_dev.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/lirc_dev/lirc_dev.c b/drivers/lirc_dev/lirc_dev.c
+index d4a5114..95ba25e 100644
+--- a/drivers/lirc_dev/lirc_dev.c
++++ b/drivers/lirc_dev/lirc_dev.c
+@@ -583,6 +583,8 @@ error:
+ 
+ 	mutex_unlock(&lirc_dev_lock);
+ 
++	nonseekable_open(inode, file);
++
+ 	return retval;
+ }
+ EXPORT_SYMBOL(lirc_dev_fop_open);
+-- 
+1.8.3.1
+

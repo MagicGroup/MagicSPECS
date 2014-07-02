@@ -7,16 +7,14 @@
 %endif
 
 Name:		libpeas
-Version:	1.9.0
+Version:	1.10.0
 Release:	3%{?dist}
 Summary:	Plug-ins implementation convenience library
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		http://ftp.acc.umu.se/pub/GNOME/sources/libpeas/
-Source0:	http://ftp.acc.umu.se/pub/GNOME/sources/%{name}/1.9/%{name}-%{version}.tar.xz
-# Upstream 730edb65d6 , drop gjs plugin support as apparently no-one wants it
-Patch0:    libpeas-1.9.0-drop_gjs.patch
+Source0:	http://ftp.acc.umu.se/pub/GNOME/sources/%{name}/1.10/%{name}-%{version}.tar.xz
 
 BuildRequires:	chrpath
 BuildRequires:	gtk3-devel >= 3.0.0
@@ -51,7 +49,6 @@ that are needed to write applications that use libpeas.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %configure %{seed_option}
@@ -110,6 +107,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/glade/catalogs/libpeas-gtk.xml
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 22 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 1.10.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
+* Mon Mar 31 2014 Richard Hughes <rhughes@redhat.com> - 1.10.0-1
+- Update to 1.10.0
+
 * Wed Feb 05 2014 Adam Williamson <awilliam@redhat.com> - 1.9.0-3
 - drop gjs plugin support (backported from upstream; no-one wants it)
 

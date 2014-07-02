@@ -16,7 +16,7 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk3
-Version:	3.13.2
+Version:	3.13.3
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -24,6 +24,8 @@ URL: http://www.gtk.org
 #VCS: git:git://git.gnome.org/gtk+
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source: http://download.gnome.org/sources/gtk+/%{majorver}/gtk+-%{version}.tar.xz
+
+Patch1:	gtk3-3.13.3-test.patch
 
 BuildRequires: gnome-common autoconf automake intltool gettext
 BuildRequires: atk-devel >= %{atk_version}
@@ -137,9 +139,9 @@ the functionality of the installed %{name} package.
 
 %prep
 %setup -q -n gtk+-%{version}
+%patch1 -p1
 
 %build
-
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; CONFIGFLAGS=--enable-gtk-doc; fi;
  %configure $CONFIGFLAGS \
         --enable-gtk2-dependency \
@@ -168,7 +170,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT        \
              RUN_QUERY_IMMODULES_TEST=false
-
+magic_rpm_clean.sh
 %find_lang gtk30
 %find_lang gtk30-properties
 
@@ -299,10 +301,13 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/gtk-doc
 
 %files tests
-%{_libexecdir}/gtk+/installed-tests
+%{_libexecdir}/installed-tests/gtk+/*
 %{_datadir}/installed-tests
 
 %changelog
+* Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
+- 更新到 3.13.3
+
 * Wed May 28 2014 Liu Di <liudidi@gmail.com> - 3.13.2-1
 - 更新到 3.13.2
 

@@ -1,19 +1,21 @@
 Summary: imake source code configuration and build system
+Summary(zh_CN.UTF-8): imake 源代码配置和构建系统
 Name: imake
-Version: 1.0.6
-Release: 1%{?dist}
+Version: 1.0.7
+Release: 3%{?dist}
 License: MIT
 Group: User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL: http://www.x.org
 
-Source0: ftp://ftp.x.org/pub/individual/util/imake-1.0.6.tar.bz2
-Source1: ftp://ftp.x.org/pub/individual/util/makedepend-1.0.4.tar.bz2
-Source2: ftp://ftp.x.org/pub/individual/util/gccmakedep-1.0.2.tar.bz2
-Source3: ftp://ftp.x.org/pub/individual/util/xorg-cf-files-1.0.4.tar.bz2
+Source0: ftp://ftp.x.org/pub/individual/util/imake-1.0.7.tar.bz2
+Source1: ftp://ftp.x.org/pub/individual/util/makedepend-1.0.5.tar.bz2
+Source2: ftp://ftp.x.org/pub/individual/util/gccmakedep-1.0.3.tar.bz2
+Source3: ftp://ftp.x.org/pub/individual/util/xorg-cf-files-1.0.5.tar.bz2
 Source4: ftp://ftp.x.org/pub/individual/util/lndir-1.0.3.tar.bz2
 Patch2: xorg-cf-files-1.0.2-redhat.patch
 Patch11: imake-1.0.2-abort.patch
-Patch12: imake-fputs.patch
+Patch12: imake-1.0.7-magic.patch
 
 BuildRequires: pkgconfig
 BuildRequires: xorg-x11-util-macros
@@ -31,6 +33,11 @@ build system, and the Imake system is now deprecated, and should not be
 used by new software projects.  Software developers are encouraged to
 migrate software to the GNU autotools system.
 
+%description -l zh_CN.UTF-8
+imake 源代码配置和构建系统。在 X11R6 以前是 X 窗口系统使用的构建系统，
+在 X11R7 以后，X 窗口系统已经转向 GNU autotools 做为主要的构建系统。
+现在 Imake 系统已经过时，新软件项目不应该再使用它。
+
 %prep
 %setup -q -c %{name}-%{version} -a1 -a2 -a3 -a4
 %patch2 -p0 -b .redhat
@@ -38,7 +45,7 @@ migrate software to the GNU autotools system.
 # imake patches
 pushd %{name}-%{version}
 %patch11 -p1 -b .abort
-%patch12 -p1 -b .fputs
+%patch12 -p1 -b .magic
 popd
 
 %build
@@ -116,6 +123,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xmkmf.1*
 
 %changelog
+* Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 1.0.7-3
+- 为 Magic 3.0 重建
+
+* Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 1.0.7-2
+- 为 Magic 3.0 重建
+
+* Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 1.0.6-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 20 2014 Adam Jackson <ajax@redhat.com> 1.0.6-1
 - imake 1.0.6
 

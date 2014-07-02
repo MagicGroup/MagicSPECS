@@ -1,6 +1,6 @@
 Name:           inkscape
 Version:        0.48.4
-Release:        11%{?dist}
+Release:        13%{?dist}
 Summary:        Vector-based drawing program using SVG
 
 Group:          Applications/Productivity
@@ -237,6 +237,12 @@ fi
 
 
 %changelog
+* Mon Jun 30 2014 Liu Di <liudidi@gmail.com> - 0.48.4-13
+- 为 Magic 3.0 重建
+
+* Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 0.48.4-12
+- 为 Magic 3.0 重建
+
 * Wed Oct 09 2013 Jon Ciesla <limburgher@gmail.com> - 0.48.4-11
 - ImageMagick rebuild.
 

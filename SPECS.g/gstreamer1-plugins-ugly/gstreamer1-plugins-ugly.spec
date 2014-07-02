@@ -9,7 +9,7 @@
 %endif
 
 Name:           gstreamer1-plugins-ugly
-Version:        1.2.3
+Version:	1.3.3
 Release:        2%{?dist}
 Summary:        GStreamer streaming media framework "ugly" plugins
 
@@ -133,10 +133,15 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/gstreamer-%{majorminor}/libgstrmdemux.so
 %{_libdir}/gstreamer-%{majorminor}/libgstx264.so
 %{_libdir}/gstreamer-%{majorminor}/libgstxingmux.so
+%{_libdir}/gstreamer-%{majorminor}/libgsttwolame.so
+%{_datadir}/gtk-doc/html/gst-plugins-ugly-plugins-%{majorminor}/*
 %{_datadir}/gstreamer-%{majorminor}/presets/GstAmrnbEnc.prs
 %{_datadir}/gstreamer-%{majorminor}/presets/GstX264Enc.prs
 
 %changelog
+* Wed Jun 25 2014 Liu Di <liudidi@gmail.com> - 1.3.3-2
+- 更新到 1.3.3
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.3-2
 - 为 Magic 3.0 重建
 
