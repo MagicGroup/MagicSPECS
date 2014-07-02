@@ -58,3 +58,23 @@ diff -urpN uClibc-0.9.33.2.old/libc/sysdeps/linux/x86_64/bits/kernel_types.h uCl
  typedef unsigned long	__kernel_size_t;
  typedef long		__kernel_ssize_t;
  typedef long		__kernel_ptrdiff_t;
+--- uClibc-0.9.33.2/libc/sysdeps/linux/mips/bits/kernel_types.h.orig	2014-06-28 03:09:14.870472936 +0000
++++ uClibc-0.9.33.2/libc/sysdeps/linux/mips/bits/kernel_types.h	2014-06-28 03:10:38.444734476 +0000
+@@ -33,6 +33,8 @@
+ typedef __kernel_gid_t	__kernel_old_gid_t;
+ typedef __kernel_dev_t	__kernel_old_dev_t;
+ typedef long long      __kernel_loff_t;
++typedef long            __kernel_long_t;
++typedef unsigned long   __kernel_ulong_t;
+ #else
+ typedef unsigned int	__kernel_dev_t;
+ typedef unsigned long	__kernel_ino_t;
+@@ -69,6 +71,8 @@
+ typedef __kernel_gid_t	__kernel_old_gid_t;
+ typedef __kernel_dev_t	__kernel_old_dev_t;
+ typedef long long      __kernel_loff_t;
++typedef long            __kernel_long_t;
++typedef unsigned long   __kernel_ulong_t;
+ #endif
+ 
+ 

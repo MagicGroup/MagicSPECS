@@ -16,7 +16,7 @@ BuildRequires: autoconf automake libtool pkgconfig
 # does not build on ppc, ppc64 and sparc arches, see #285361 (RedHat Bugzilla)
 # on ppc sys/io.h is missing, on ppc64 there are more complaints
 # build.logs are attached in the bug report
-ExcludeArch:    ppc ppc64 %{sparc} s390 s390x
+ExcludeArch:    ppc ppc64 %{sparc} s390 s390x mips64el
 # vbetool is included in (some of) these pm-utils releases
 Conflicts:      pm-utils <= 0.99.3-11
 
