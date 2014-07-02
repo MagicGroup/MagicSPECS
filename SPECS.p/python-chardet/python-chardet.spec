@@ -2,7 +2,7 @@
 
 Name:           python-chardet
 Version:        2.0.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Character encoding auto-detection in Python
 
 Group:          Development/Languages
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2.0.1-9
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

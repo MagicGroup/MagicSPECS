@@ -2,7 +2,7 @@
 
 Name:           python-backports-ssl_match_hostname
 Version:        3.4.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        The ssl.match_hostname() function from Python 3
 
 License:        Python
@@ -49,6 +49,9 @@ rm %{buildroot}%{python_sitelib}/backports/__init__.py*
 
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 3.4.0.2-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4.0.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

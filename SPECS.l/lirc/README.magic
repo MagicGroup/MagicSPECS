@@ -1,4 +1,4 @@
-## Fedora README
+## Magic README
 
 #### New service name: lirc -> lircd.
 
@@ -27,7 +27,7 @@ might or might not be what you want.
 
 #### Socket activation
 
-As of 0.9.4-15+, the Fedora lirc package sports systemd socket
+As of 0.9.4-15+, the Magic lirc package sports systemd socket
 activation. This should fix the problems at startup when clients can't
 connect to /var/run/lircd because the lircd service is yet not started.
 

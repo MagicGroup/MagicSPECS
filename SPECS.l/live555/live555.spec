@@ -1,15 +1,14 @@
-%define		date	2013.01.05
 %define		live_soversion 0
 
 Name:		live555
-Version:	0
-Release:	0.25.%{date}%{?dist}
+Version:	2014.06.28
+Release:	1%{?dist}
 Summary:	Live555.com streaming libraries
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		http://live555.com/liveMedia/
-Source0:	http://live555.com/liveMedia/public/live.%{date}.tar.gz
+Source0:	http://live555.com/liveMedia/public/live.%{version}.tar.gz
 Patch0:		live.2013.01.05-unified.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -67,6 +66,7 @@ This package contains the live555.com streaming server
 (live555MediaServer), the example programs (openRTSP, playSIP, sapWatch,
 vobStreamer) and a variety of test tools.
 
+%if 0
 %package	static
 Summary:	Static libraries for %{name}
 Group:		Development/Libraries
@@ -75,6 +75,7 @@ Requires:	%{name}-devel = %{version}-%{release}
 %description	static
 The %{name}-static package contains static libraries for
 developing applications that use %{name}.
+%endif
 
 %prep
 %setup -q -n live
@@ -130,9 +131,9 @@ for i in BasicUsageEnvironment groupsock liveMedia UsageEnvironment ; do
   install -pm 644 lib${i}.a $RPM_BUILD_ROOT%{_libdir}/lib${i}.a
   install -pm 644 lib${i}_pic.a $RPM_BUILD_ROOT%{_libdir}/lib${i}_pic.a
 %endif
-  install -pm 755 $i/lib${i}.so $RPM_BUILD_ROOT%{_libdir}/lib${i}.so.%{date}
-  ln -sf lib${i}.so.%{date} $RPM_BUILD_ROOT%{_libdir}/lib${i}.so.%{live_soversion}
-  ln -sf lib${i}.so.%{date} $RPM_BUILD_ROOT%{_libdir}/lib${i}.so
+  install -pm 755 $i/lib${i}.so $RPM_BUILD_ROOT%{_libdir}/lib${i}.so.%{version}
+  ln -sf lib${i}.so.%{version} $RPM_BUILD_ROOT%{_libdir}/lib${i}.so.%{live_soversion}
+  ln -sf lib${i}.so.%{version} $RPM_BUILD_ROOT%{_libdir}/lib${i}.so
 done
 
 install -pm755 mediaServer/live555MediaServer $RPM_BUILD_ROOT%{_bindir}
@@ -147,7 +148,6 @@ for i in \
   testMP3Receiver \
   testMP3Streamer \
   testMPEG1or2AudioVideoStreamer \
-  testMPEG1or2AudioVideoToDarwin \
   testMPEG1or2ProgramToTransportStream \
   testMPEG1or2Splitter \
   testMPEG1or2VideoReceiver \
@@ -155,7 +155,6 @@ for i in \
   testMPEG2TransportStreamTrickPlay \
   testMPEG2TransportStreamer \
   testMPEG4VideoStreamer \
-  testMPEG4VideoToDarwin \
   testOnDemandRTSPServer \
   testRelay \
   testWAVAudioStreamer \
@@ -205,6 +204,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2014.06.28-1
+- 更新到 2014.06.28
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0-0.25.2011.06.16
 - 为 Magic 3.0 重建
 
@@ -246,7 +248,7 @@ rm -rf $RPM_BUILD_ROOT
 - 2007.11.18
 - fix CVE-2007-6036 (bug #1728)
 - fix license tag
-- store changelog.txt locally, because the one on the website is constantly updated
+- store changelog.txt locally, because the one on the website is constantly upversiond
 
 * Sun May 17 2007 Dominik Mierzejewski <rpm[AT]greysector.net> - 0-0.15.2007.04.24a
 - 2007.04.24a
@@ -276,10 +278,10 @@ rm -rf $RPM_BUILD_ROOT
 - add dist
 
 * Thu Feb 23 2006 Ville Skyttä <ville.skytta at iki.fi> 0-0.lvn.11.2006.02.15
-- Update to 2006.02.15.
+- Upversion to 2006.02.15.
 
 * Mon Jan 16 2006 Adrian Reber <adrian@lisas.de> - 0-0.lvn.11.2006.01.05
-- Updated to 2006.01.05
+- Upversiond to 2006.01.05
 - Drop Epoch
 
 * Tue Aug  9 2005 Ville Skyttä <ville.skytta at iki.fi> 0:0-0.lvn.10.2005.08.09
@@ -289,23 +291,23 @@ rm -rf $RPM_BUILD_ROOT
 - Clean up unused stuff from specfile.
 
 * Tue Dec 28 2004 Dams <anvil[AT]livna.org> - 0:0-0.lvn.10.2004.12.23
-- Updated to version 2004.12.23
+- Upversiond to version 2004.12.23
 
 * Fri Nov 12 2004 Dams <anvil[AT]livna.org> - 0:0-0.lvn.9.2004.11.11a
-- Updated to version 2004.11.11a
+- Upversiond to version 2004.11.11a
 
 * Thu May 20 2004 Dams <anvil[AT]livna.org> - 0:0-0.lvn.8.2004.05.19
 - Added Source1:changelog.txt
 
 * Thu May 20 2004 Dams <anvil[AT]livna.org> - 0:0-0.lvn.7.2004.05.19
-- Updated version
+- Upversiond version
 - URL in Source0
 
 * Sun Apr  4 2004 Dams <anvil[AT]livna.org> 0:0-0.lvn.6.2004.03.31
 - Removed testprograms package
 
 * Wed Mar 31 2004 Dams <anvil[AT]livna.org> 0:0-0.lvn.5.2004.03.31
-- Updated version 2004-03-31
+- Upversiond version 2004-03-31
 
 * Wed Jan  7 2004 Dams <anvil[AT]livna.org> 0:0-0.fdr.4.2003.11.25
 - Patch from Marius to make makefile honor rpm optflags

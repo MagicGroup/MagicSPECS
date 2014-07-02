@@ -8,7 +8,7 @@
 
 Name:           python-%{pkgname}
 Version:        3.2.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Scalable, non-blocking web server and tools
 
 Group:          Development/Libraries
@@ -156,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 3.2.1-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

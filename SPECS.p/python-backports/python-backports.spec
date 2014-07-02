@@ -2,7 +2,7 @@
 
 Name:           python-backports
 Version:        1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Namespace for backported Python features
 
 # Only code is sourced from http://www.python.org/dev/peps/pep-0382/
@@ -47,6 +47,9 @@ install -pm 644 %{SOURCE0} %{buildroot}%{python_sitearch}/backports/__init__.py
 
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.0-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

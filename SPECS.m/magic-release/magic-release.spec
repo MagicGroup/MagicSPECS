@@ -2,7 +2,7 @@ Summary: magic-release
 Summary(zh_CN.UTF-8): MagicLinux的发行文件
 Name: magic-release
 Version: 3.0
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 License: GPL
@@ -22,9 +22,11 @@ for system Version
 描述系统版本的发行文件
 
 %define fedora_version 21
-%define dist_version 30
+%define dist_version 3
 
 %define rpm_macros_dir %{_rpmconfigdir}/macros.d
+%define release_name Kaibao
+%define bug_version Kaibao
 
 %prep
 %setup -q
@@ -33,11 +35,34 @@ for system Version
 %build
 
 %install
-mkdir -p ${RPM_BUILD_ROOT}/etc
-cp etc/* ${RPM_BUILD_ROOT}/etc
-mkdir -p ${RPM_BUILD_ROOT}/usr/share/doc/magic-release-3.0-Kaibao
-cp releasedoc/* ${RPM_BUILD_ROOT}/usr/share/doc/magic-release-3.0-Kaibao
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc
+echo "Magic release %{version} (%{release_name})" > $RPM_BUILD_ROOT/etc/magic-release
+echo "cpe:/o:magicgroup:magic:%{version}" > $RPM_BUILD_ROOT/etc/system-release-cpe
+cp -p $RPM_BUILD_ROOT/etc/magic-release $RPM_BUILD_ROOT/etc/issue
+echo "Kernel \r on an \m (\l)" >> $RPM_BUILD_ROOT/etc/issue
+cp -p $RPM_BUILD_ROOT/etc/issue $RPM_BUILD_ROOT/etc/issue.net
+echo >> $RPM_BUILD_ROOT/etc/issue
+ln -s magic-release $RPM_BUILD_ROOT/etc/redhat-release
 ln -s magic-release $RPM_BUILD_ROOT/etc/system-release
+
+cat << EOF >>$RPM_BUILD_ROOT/etc/os-release
+NAME=Magic
+VERSION="%{dist_version} (%{release_name})"
+ID=magic
+VERSION_ID=%{dist_version}
+PRETTY_NAME="Magic %{dist_version} (%{release_name})"
+ANSI_COLOR="0;34"
+CPE_NAME="cpe:/o:magicgroup:magic:%{dist_version}"
+HOME_URL="http://www.magiclinux.org/"
+BUG_REPORT_URL="https://www.magiclinux.org/bugs/"
+REDHAT_BUGZILLA_PRODUCT="Magic"
+REDHAT_BUGZILLA_PRODUCT_VERSION=%{bug_version}
+REDHAT_SUPPORT_PRODUCT="Magic"
+REDHAT_SUPPORT_PRODUCT_VERSION=%{bug_version}
+EOF
+
+install -D -m 644 releasedoc/GPL %{buildroot}%{_docdir}/magic-release-%{version}-Kaibao/GPL
 
 # Set up the dist tag macros
 install -d -m 755 $RPM_BUILD_ROOT%{rpm_macros_dir}
@@ -62,6 +87,9 @@ magic_rpm_clean.sh
 %{rpm_macros_dir}/*
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 3.0-10
+- 为 Magic 3.0 重建
+
 * Mon May 26 2014 Liu Di <liudidi@gmail.com> - 3.0-9
 - 为 Magic 3.0 重建
 

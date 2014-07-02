@@ -22,9 +22,9 @@
 Name:           lirc
 Version:        0.9.0
 %if 0%{?released}
-Release:        26%{?dist}
+Release:        27%{?dist}
 %else
-Release:        0.7.%{pre}%{?dist}
+Release:        0.8.%{pre}%{?dist}
 %endif
 Summary:        The Linux Infrared Remote Control package
 
@@ -42,7 +42,7 @@ Source2:        lirc.sysconfig
 Source3:        lircmd.service
 Source4:        lircd.socket
 Source5:        lirc.conf
-Source6:        README.fedora
+Source6:        README.magic
 Source7:        99-remote-control-lirc.rules
                 # Patches 7..17 are from upstream.
 Patch7:         0007-Make-lirc_wpc8769l-functional-again.patch
@@ -252,7 +252,7 @@ install -Dpm 644 %{SOURCE5} $RPM_BUILD_ROOT/etc/lirc/lircd.conf
 install -Dpm 644 %{SOURCE5} $RPM_BUILD_ROOT/etc/lirc/lircmd.conf
 install -Dpm 644 %{SOURCE7} \
     $RPM_BUILD_ROOT%{_udevrulesdir}/99-remote-control-lirc.rules
-cp -a %{SOURCE6} README.fedora
+cp -a %{SOURCE6} README.magic
 
 # Put remote definitions in place
 cp -ar remotes $RPM_BUILD_ROOT%{_datadir}/lirc-remotes
@@ -296,7 +296,7 @@ find /etc/systemd -name lirc.service -xtype l -delete || :
 
 
 %files
-%doc ANNOUNCE AUTHORS ChangeLog COPYING NEWS README TODO README.fedora
+%doc ANNOUNCE AUTHORS ChangeLog COPYING NEWS README TODO README.magic
 %dir  /etc/lirc
 %config(noreplace) /etc/lirc/lirc*d.conf
 %config(noreplace) /etc/sysconfig/lirc
@@ -330,6 +330,9 @@ find /etc/systemd -name lirc.service -xtype l -delete || :
 
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 0.9.0-27
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.0-26
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

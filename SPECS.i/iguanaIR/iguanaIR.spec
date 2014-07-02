@@ -1,6 +1,6 @@
 Name:           iguanaIR
 Version:        1.0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Driver for Iguanaworks USB IR transceiver
 
 Group:          System Environment/Daemons
@@ -162,6 +162,9 @@ fi
 %{_bindir}/%{name}-reflasher
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.0.5-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

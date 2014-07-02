@@ -3,7 +3,7 @@
 Summary:        Tool to transform and deploy CPU microcode update for x86.
 Name:           microcode_ctl
 Version:        2.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          2
 Group:          System Environment/Base
 License:        GPLv2+ and Redistributable, no modification permitted
@@ -40,6 +40,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2:2.1-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

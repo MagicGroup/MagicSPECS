@@ -6,7 +6,7 @@
 
 Name:           python-straight-plugin
 Version:        1.4.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python plugin loader
 
 License:        BSD
@@ -113,6 +113,9 @@ popd
 %endif
 
 %changelog
+* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.4.0-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
