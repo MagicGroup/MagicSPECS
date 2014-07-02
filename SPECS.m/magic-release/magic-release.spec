@@ -2,7 +2,7 @@ Summary: magic-release
 Summary(zh_CN.UTF-8): MagicLinux的发行文件
 Name: magic-release
 Version: 3.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 License: GPL
@@ -43,7 +43,6 @@ cp -p $RPM_BUILD_ROOT/etc/magic-release $RPM_BUILD_ROOT/etc/issue
 echo "Kernel \r on an \m (\l)" >> $RPM_BUILD_ROOT/etc/issue
 cp -p $RPM_BUILD_ROOT/etc/issue $RPM_BUILD_ROOT/etc/issue.net
 echo >> $RPM_BUILD_ROOT/etc/issue
-ln -s magic-release $RPM_BUILD_ROOT/etc/redhat-release
 ln -s magic-release $RPM_BUILD_ROOT/etc/system-release
 
 cat << EOF >>$RPM_BUILD_ROOT/etc/os-release
@@ -87,6 +86,9 @@ magic_rpm_clean.sh
 %{rpm_macros_dir}/*
 
 %changelog
+* Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 3.0-11
+- 为 Magic 3.0 重建
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 3.0-10
 - 为 Magic 3.0 重建
 
