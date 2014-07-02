@@ -24,6 +24,7 @@ Patch0: 	webkit-1.3.10-nspluginwrapper.patch
 # https://bugs.webkit.org/show_bug.cgi?id=103128
 Patch4:         webkit-2.1.90-double2intsPPC32.patch
 Patch10:        webkitgtk-aarch64.patch
+Patch100:       webkitgtk-2.4.1-mips64el.patch
 
 BuildRequires:	bison
 BuildRequires:	chrpath
@@ -92,6 +93,9 @@ This package contains developer documentation for %{name}.
 %patch4 -p1 -b .double2intsPPC32
 %endif
 %patch10 -p1 -b .aarch64
+%ifarch mips64el
+%patch100 -p1 -b .mips64el
+%endif
 
 %build
 %ifarch s390 %{arm} ppc
@@ -115,7 +119,7 @@ This package contains developer documentation for %{name}.
 CFLAGS="%{optflags} -DLIBSOUP_I_HAVE_READ_BUG_594377_AND_KNOW_SOUP_PASSWORD_MANAGER_MIGHT_GO_AWAY" %configure                                                   \
                         --with-gtk=2.0                          \
                         --disable-webkit2                       \
-%ifarch s390 s390x ppc ppc64 aarch64
+%ifarch s390 s390x ppc ppc64 aarch64 mips64el
                         --disable-jit                           \
 %else
                         --enable-jit                            \
