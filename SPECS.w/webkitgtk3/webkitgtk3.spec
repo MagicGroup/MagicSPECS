@@ -100,7 +100,7 @@ This package contains developer documentation for %{name}.
 %ifarch mips64el
 %patch100 -p1 -b .mips64el
 %endif
- 
+
 %build
 # Use linker flags to reduce memory consumption
 %global optflags %{optflags} -Wl,--no-keep-memory -Wl,--reduce-memory-overheads
