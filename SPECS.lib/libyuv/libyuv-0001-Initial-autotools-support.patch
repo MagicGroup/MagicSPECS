@@ -1,6 +1,6 @@
 diff -Nuri libyuv-svn20140603-orig/autogen.sh libyuv-svn20140603/autogen.sh
 --- libyuv-svn20140603-orig/autogen.sh	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/autogen.sh	2014-07-03 05:54:47.797728837 +0000
++++ libyuv-svn20140603/autogen.sh	2014-07-03 07:09:29.198460813 +0000
 @@ -0,0 +1,7 @@
 +#!/bin/sh
 +LIBTOOLIZE=`which libtoolize || which glibtoolize`
@@ -11,7 +11,7 @@ diff -Nuri libyuv-svn20140603-orig/autogen.sh libyuv-svn20140603/autogen.sh
 +autoconf
 diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 --- libyuv-svn20140603-orig/configure.ac	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/configure.ac	2014-07-03 05:54:47.801635089 +0000
++++ libyuv-svn20140603/configure.ac	2014-07-03 07:09:29.243382711 +0000
 @@ -0,0 +1,152 @@
 +AC_INIT([libyuv], [0], [http://groups.google.com/group/discuss-libyuv], [libyuv], [http://code.google.com/p/libyuv/])
 +
@@ -167,7 +167,7 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +])
 diff -Nuri libyuv-svn20140603-orig/Makefile.am libyuv-svn20140603/Makefile.am
 --- libyuv-svn20140603-orig/Makefile.am	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/Makefile.am	2014-07-03 05:54:47.803588215 +0000
++++ libyuv-svn20140603/Makefile.am	2014-07-03 07:09:29.246312400 +0000
 @@ -0,0 +1,25 @@
 +SUBDIRS = source
 +
@@ -196,7 +196,7 @@ diff -Nuri libyuv-svn20140603-orig/Makefile.am libyuv-svn20140603/Makefile.am
 +endif
 diff -Nuri libyuv-svn20140603-orig/source/libyuv.pc.in libyuv-svn20140603/source/libyuv.pc.in
 --- libyuv-svn20140603-orig/source/libyuv.pc.in	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/source/libyuv.pc.in	2014-07-03 05:54:47.806517904 +0000
++++ libyuv-svn20140603/source/libyuv.pc.in	2014-07-03 07:09:29.249242089 +0000
 @@ -0,0 +1,9 @@
 +prefix=@prefix@
 +exec_prefix=@exec_prefix@
@@ -209,8 +209,8 @@ diff -Nuri libyuv-svn20140603-orig/source/libyuv.pc.in libyuv-svn20140603/source
 +Libs: -lyuv @LIBJPEG_LIBS@
 diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/Makefile.am
 --- libyuv-svn20140603-orig/source/Makefile.am	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/source/Makefile.am	2014-07-03 05:55:19.697159232 +0000
-@@ -0,0 +1,76 @@
++++ libyuv-svn20140603/source/Makefile.am	2014-07-03 07:12:32.652656304 +0000
+@@ -0,0 +1,79 @@
 +lib_LTLIBRARIES = libyuv.la
 +
 +pkgconfigdir = $(libdir)/pkgconfig
@@ -220,7 +220,7 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +libyuvnobase_includedir = $(includedir)/libyuv
 +
 +if WITH_MJPEG
-+mjpeg_SOURCES = mjpeg_decoder.cc mjpeg_validate.cc
++mjpeg_SOURCES = mjpeg_decoder.cc mjpeg_validate.cc convert_jpeg.cc
 +mjpeg_HDRS = ../include/libyuv/mjpeg_decoder.h
 +endif
 +
@@ -265,6 +265,9 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +		    convert.cc \
 +		    convert_argb.cc \
 +		    convert_from.cc \
++		    convert_from_argb.cc \
++		    convert_to_argb.cc \
++		    convert_to_i420.cc \
 +		    cpu_id.cc \
 +		    format_conversion.cc \
 +		    planar_functions.cc \
@@ -272,12 +275,12 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +		    rotate_argb.cc \
 +		    rotate_priv.h \
 +		    row.h \
++		    row_any.cc \
 +		    row_common.cc \
 +		    scale.cc \
 +		    scale_argb.cc \
-+		    video_common.cc \
-+		    convert_from_argb.cc \
 +		    scale_common.cc \
++		    video_common.cc \
 +		    $(posix_SOURCES) \
 +		    $(windows_SOURCES) \
 +		    $(mjpeg_SOURCES) \
