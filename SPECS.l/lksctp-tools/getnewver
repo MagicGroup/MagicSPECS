@@ -1,6 +1,6 @@
 #!/bin/bash
-url="http://live555.com/liveMedia/public"
-new1="live."
+url="http://sourceforge.net/projects/lksctp/"
+new1="lksctp-tools-"
 new2=".tar.gz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null

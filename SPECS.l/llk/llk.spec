@@ -4,7 +4,7 @@ Summary: Lian Lian Kan for Linux
 Summary(zh_CN.UTF-8): Linux下的连连看
 Name: llk
 Version: %{ver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 URL: http://llk-linux.sourceforge.net
 Group: Amusements/Games
@@ -13,6 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{ver}-%{release}-buildroot
 Source0:%{name}_linux-%{ver}beta1.tar.gz
 Source1:llk_linux.desktop
 Patch1:	llk_linux-libX11.patch
+Patch2:	llk-2.3-gtk2.patch
 Prefix: %{_prefix}
 Requires: glib2,gtk2
 Packager: KanKer<kanker@163.com>
@@ -39,6 +40,7 @@ Requires: %{name} = %{version}-%{release}
 %prep
 %setup -q -n %{name}_linux-%{version}
 %patch1 -p1
+%patch2 -p1
 
 %build
 %configure
@@ -70,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 2.3-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.3-2
 - 为 Magic 3.0 重建
 

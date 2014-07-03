@@ -1,0 +1,39 @@
+diff -ur llk_linux-2.3.orig/src/main.c llk_linux-2.3/src/main.c
+--- llk_linux-2.3.orig/src/main.c	2014-07-02 18:05:39.851992015 +0000
++++ llk_linux-2.3/src/main.c	2014-07-02 18:05:59.355991515 +0000
+@@ -641,7 +641,7 @@
+             break;
+         }
+         type = GTK_MESSAGE_WARNING;
+-      dialog = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,type,GTK_BUTTONS_OK,message);
++      dialog = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,type,GTK_BUTTONS_OK,"%s",message);
+       gtk_dialog_run(GTK_DIALOG(dialog));
+       gtk_widget_destroy(dialog);
+       g_free(message);
+@@ -677,7 +677,7 @@
+       gchar *message = NULL;
+       message = g_strdup(_("Read saved game data error,Maybe you have not saved a game before.\n"));
+       type = GTK_MESSAGE_WARNING;
+-      dialog = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,type,GTK_BUTTONS_OK,message);
++      dialog = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,type,GTK_BUTTONS_OK,"%s",message);
+       gtk_dialog_run(GTK_DIALOG(dialog));
+       gtk_widget_destroy(dialog);
+       g_free(message);
+@@ -955,7 +955,7 @@
+ 			}
+ 		}
+ 	}
+-	dialog = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,type,GTK_BUTTONS_OK,message);
++	dialog = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,type,GTK_BUTTONS_OK,"%s",message);
+   gtk_dialog_run(GTK_DIALOG(dialog));
+   gtk_widget_destroy(dialog);
+   g_free(message);
+@@ -2320,7 +2320,7 @@
+ 	{
+ 		GtkWidget *dialog;
+ 		dialog = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+-				GTK_MESSAGE_ERROR,GTK_BUTTONS_OK,message);
++				GTK_MESSAGE_ERROR,GTK_BUTTONS_OK,"%s",message);
+ 		gtk_dialog_run(GTK_DIALOG(dialog));
+ 		g_free(message);
+ 		gtk_widget_destroy(dialog);
