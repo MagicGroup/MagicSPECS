@@ -18,6 +18,7 @@ Source0:	%{name}-svn%{vcsdate}.tar.xz
 Source1:	make_libyuv_svn_package.sh
 # Fedora-specific. Upstream isn't interested in this.
 Patch1:		libyuv-0001-Initial-autotools-support.patch
+Patch2:         libyuv-disable-mips64-COPYROW_MIPS.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
@@ -48,6 +49,7 @@ Additional header files for development with %{name}.
 %prep
 %setup -q -n %{name}-svn%{vcsdate}
 %patch1 -p1 -b .autotools
+%patch2 -p1 -b .COPYROW_MIPS
 
 
 %build
