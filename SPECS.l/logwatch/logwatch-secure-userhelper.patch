@@ -1,0 +1,25 @@
+Fix misparsing of userhelper log entries for hddtemp that specify a device
+using a name that includes a slash (e.g. '/usr/sbin/hddtemp -n -q /dev/sda').
+Additional slashes after the process name confuse logwatch as it considers the
+last word behind the last slash the process' name.
+
+Author: Jan Synacek <jsynacek@redhat.com>
+RH-Bugzilla: #867290
+
+--- logwatch-svn110/scripts/services/secure.orig	2012-10-18 11:13:33.000000000 +0200
++++ logwatch-svn110/scripts/services/secure	2012-10-18 11:31:08.987571713 +0200
+@@ -843,8 +843,13 @@ if (keys %Executed_app) {
+    print "\nUserhelper executed applications:\n";
+    foreach (keys %Executed_app) {
+      ($longapp,$asuser,$user) = split ",";
++     $longapp_orig = $longapp;
++     $i = index($longapp, " ");
++     if ($i > 0) {
++        $longapp = substr($longapp, 0, $i);
++     }
+      $app = substr($longapp,rindex($longapp,"/")+1);
+-     print "   $user -> $app as $asuser:  ".$Executed_app{"$longapp,$asuser,$user"}." Time(s)\n";
++     print "   $user -> $app as $asuser:  ".$Executed_app{"$longapp_orig,$asuser,$user"}." Time(s)\n";
+    }
+ }
+ 

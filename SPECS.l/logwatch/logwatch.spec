@@ -1,32 +1,35 @@
 Summary: A log file analysis program
 Name: logwatch
 Version: 7.4.0
-Release: 7.20110328svn50%{?dist}
+Release: 31.20130522svn140%{?dist}
 License: MIT
 Group: Applications/System
 URL: http://www.logwatch.org/
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
-#  svn export -r 50 https://logwatch.svn.sourceforge.net/svnroot/logwatch logwatch-svn50
-#  tar cJvf logwatch-svn50.tar.xz logwatch-svn50
-Source0: logwatch-svn50.tar.xz
+#  svn export -r 140 https://logwatch.svn.sourceforge.net/svnroot/logwatch logwatch-svn140
+#  tar cJvf logwatch-svn140.tar.xz logwatch-svn140
+Source0: logwatch-svn140.tar.xz
 #Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 # Needs proper fix. Not applied by the upstream.
 Patch0: logwatch-vsftpd.patch
 # Not applied by upstream.
 Patch1: logwatch-oldfiles.patch
-# Fixes not yet in upstream for /var/log/secure (rhbz#673760)
-Patch2: logwatch-secure.patch
 # Fixes not yet in upstream for DNSSEC messages in named service (rhbz#666394)
 Patch3: logwatch-named-dnssec.patch
-# Manpage typo
-Patch4: logwatch-manpage.patch
 Patch5: logwatch-xntpd.patch
-Patch6: logwatch-smartd.patch
 Patch7: logwatch-dovecot.patch
-Patch8: logwatch-sshd.patch
+# Rootkit Hunter patch - not applied by upstream
+Patch9: logwatch-rkhunter.patch
+# Not yet upstreamed
+Patch16: logwatch-secure-userhelper.patch
+Patch18: logwatch-secure-username.patch
+Patch19: logwatch-man.patch
 Requires: textutils sh-utils grep mailx
 Requires: perl(Date::Manip)
+Requires: perl(Sys::CPU)
+Requires: perl(Sys::MemInfo)
+Requires: crontabs
 BuildArchitectures: noarch
 
 %description
@@ -36,16 +39,16 @@ that you wish with the detail that you wish.  Easy to use - works right out
 of the package on many systems.
 
 %prep
-%setup -q -n logwatch-svn50
+%setup -q -n logwatch-svn140
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
+%patch5 -p0
 %patch7 -p1
-%patch8 -p1
+%patch9 -p0
+%patch16 -p1
+%patch18 -p1
+%patch19 -p1
 rm -f scripts/services/*.orig
 
 %build
@@ -112,36 +115,147 @@ echo "# Local configuration options go here (defaults are in %{_datadir}/logwatc
 echo "# Configuration overrides for specific logfiles/services may be placed here." > %{buildroot}%{_sysconfdir}/logwatch/conf/override.conf
 
 %files
-%defattr(-,root,root)
 %doc README HOWTO-Customize-LogWatch LICENSE
 %dir %{_var}/cache/logwatch
+%dir %{_sysconfdir}/logwatch
 %dir %{_sysconfdir}/logwatch/scripts
+%dir %{_sysconfdir}/logwatch/conf
 %dir %{_sysconfdir}/logwatch/conf/logfiles
 %dir %{_sysconfdir}/logwatch/conf/services
 %dir %{_sysconfdir}/logwatch/scripts/services
-%{_sysconfdir}/cron.daily/0logwatch
+%config(noreplace) %{_sysconfdir}/cron.daily/0logwatch
 %config(noreplace) %{_sysconfdir}/logwatch/conf/*.conf
+%dir %{_datadir}/logwatch
 %dir %{_datadir}/logwatch/dist.conf
 %dir %{_datadir}/logwatch/dist.conf/services
 %dir %{_datadir}/logwatch/dist.conf/logfiles
 %{_datadir}/logwatch/scripts/logwatch.pl
 %config(noreplace) %{_datadir}/logwatch/default.conf/*.conf
 %{_sbindir}/logwatch
+%dir %{_datadir}/logwatch/scripts
 %{_datadir}/logwatch/scripts/shared
 %{_datadir}/logwatch/scripts/services
 %{_datadir}/logwatch/scripts/logfiles
+%dir %{_datadir}/logwatch/lib
 %{_datadir}/logwatch/lib/Logwatch.pm
+%dir %{_datadir}/logwatch/default.conf
+%dir %{_datadir}/logwatch/default.conf/services
 %{_datadir}/logwatch/default.conf/services/*.conf
+%dir %{_datadir}/logwatch/default.conf/logfiles
 %{_datadir}/logwatch/default.conf/logfiles/*.conf
+%dir %{_datadir}/logwatch/default.conf/html
 %{_datadir}/logwatch/default.conf/html/*.html
 %{_mandir}/man*/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 7.4.0-7.20110328svn50
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4.0-31.20130522svn140
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Sat Jan 14 2012 Liu Di <liudidi@gmail.com> - 7.4.0-6.20110328svn50
-- 为 Magic 3.0 重建
+* Wed Aug 07 2013 Pierre-Yves Chibon <pingou@pingoured.fr> 7.4.0-30.20130522svn140
+- Add missing requires on crontabs
+- Mark cron job as config(noreplace)
+- Fix RHBZ#989075
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4.0-29.20130522svn140
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 7.4.0-28.20130522svn140
+- Perl 5.18 rebuild
+
+* Mon Jul  1 2013 Jan Synáček <jsynacek@redhat.com> - 7.4.0-27.20130522svn140
+- Remove unused patch
+
+* Thu May 23 2013 Jan Synáček <jsynacek@redhat.com> - 7.4.0-26.20130522svn140
+- Add missing options to logwatch.8
+
+* Wed May 22 2013 Jan Synáček <jsynacek@redhat.com> - 7.4.0-25.20130522svn140
+- Update to revision 140 and drop upstreamed patches
+- Own directories correctly
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4.0-24.20130102svn127
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan 22 2013 Jan Synáček <jsynacek@redhat.com> - 7.4.0-23.20130102svn127
+- Improve mdadm script
+
+* Fri Jan 11 2013 Jan Synáček <jsynacek@redhat.com> - 7.4.0-22.20130102svn127
+- Add secure-username patch to properly ignore "password check failed for user"
+  (rhbz#894272)
+- Fix dovecot timestamp misparsing (related: rhbz#886193)
+
+* Wed Jan 09 2013 Jan Synáček <jsynacek@redhat.com> - 7.4.0-21.20130102svn127
+- Update to revision 127 and drop ustreamed patches
+- Update dovecot patch
+
+* Mon Dec 10 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-20.20120619svn110
+- Comment patches
+
+* Tue Dec 04 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-19.20120619svn110
+- Don't use ApplyhttpDate (rhbz#881111)
+
+* Mon Oct 22 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-18.20120619svn110
+- Add secure-userhelper patch: Fix misparsing userhelper log entries
+  (rhbz#867290)
+
+* Thu Sep 27 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-17.20120619svn110
+- Add secure patch (rhbz#836189)
+- Add pam_unix patch (rhbz#836183, rhbz#846725)
+
+* Wed Aug 29 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-16.20120619svn110
+- Add applystddate patch - support rsyslog timestamps
+- Add http patch - count .hdr files as archives
+- Add pluto patch - update openswan parsing
+- Add xvc patch - support xen virtual console logins
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.4.0-15.20120619svn110
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jul 19 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-14.20120619svn110
+- Remove defattr to comply with Fedora Packaging Guidelines
+
+* Wed Jun 27 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-14.20120619svn110
+- Add rhhunter patch (rhbz#818926)
+
+* Tue Jun 19 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-13.20120619svn110
+- Update to revision 110
+- Drop unnecessary patches
+- Add proper requires
+
+* Fri May 04 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-12.20120425svn100
+- Update secure-update patch
+- Update systemd-logind patch
+
+* Fri Apr 27 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-11.20120425svn100
+- Add dovecot-proxy patch (rhbz#812883)
+- Add secure-update patch (rhbz#809314)
+- Add mail-headers patch (rhbz#811185)
+- Add systemd-logind patch (rhbz#812880)
+- Add sshd-undef patch (rhbz#783528)
+
+* Wed Apr 25 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-10.20120425svn100
+- Update to revision 100
+- Update logwatch-named-dnssec.patch
+
+* Thu Mar 01 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-9.20120229svn85
+- Get the release version right this time
+
+* Thu Mar 01 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-7.20120229svn85
+- Bump release version, so yum doesn't get confused when upgrading
+
+* Wed Feb 29 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-1.20120229svn85
+- Update to revision 85
+- Drop sendmail patch
+- Update xntpd,secure and dovecot patches
+
+* Wed Jan 04 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-8.20110328svn50
+- Updated -manpage patch (rhbz#719061)
+
+* Wed Jan 04 2012 Jan Synáček <jsynacek@redhat.com> - 7.4.0-7.20110328svn50
+- Renamed sendmail patch to match other patches' naming convention
+- Added -secure-grammar patch (rhbz#716224)
+
+* Mon Dec 19 2011 Jan Synáček <jsynacek@redhat.com> - 7.4.0-6.20110328svn50
+- Added -sendmail-typo patch (rhbz#708183)
 
 * Sat Apr 30 2011 Frank Crawford <frank@crawford.emu.id.au> - 7.4.0-5.20110328svn50
 - Added -sshd patch to match more pam_systemd messages (rhbz#699558)
