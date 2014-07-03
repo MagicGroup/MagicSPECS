@@ -1,6 +1,6 @@
 diff -Nuri libyuv-svn20140603-orig/autogen.sh libyuv-svn20140603/autogen.sh
 --- libyuv-svn20140603-orig/autogen.sh	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/autogen.sh	2014-07-03 04:53:42.927688362 +0000
++++ libyuv-svn20140603/autogen.sh	2014-07-03 05:54:47.797728837 +0000
 @@ -0,0 +1,7 @@
 +#!/bin/sh
 +LIBTOOLIZE=`which libtoolize || which glibtoolize`
@@ -11,7 +11,7 @@ diff -Nuri libyuv-svn20140603-orig/autogen.sh libyuv-svn20140603/autogen.sh
 +autoconf
 diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 --- libyuv-svn20140603-orig/configure.ac	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/configure.ac	2014-07-03 04:54:47.086900899 +0000
++++ libyuv-svn20140603/configure.ac	2014-07-03 05:54:47.801635089 +0000
 @@ -0,0 +1,152 @@
 +AC_INIT([libyuv], [0], [http://groups.google.com/group/discuss-libyuv], [libyuv], [http://code.google.com/p/libyuv/])
 +
@@ -167,7 +167,7 @@ diff -Nuri libyuv-svn20140603-orig/configure.ac libyuv-svn20140603/configure.ac
 +])
 diff -Nuri libyuv-svn20140603-orig/Makefile.am libyuv-svn20140603/Makefile.am
 --- libyuv-svn20140603-orig/Makefile.am	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/Makefile.am	2014-07-03 04:53:42.925735236 +0000
++++ libyuv-svn20140603/Makefile.am	2014-07-03 05:54:47.803588215 +0000
 @@ -0,0 +1,25 @@
 +SUBDIRS = source
 +
@@ -196,7 +196,7 @@ diff -Nuri libyuv-svn20140603-orig/Makefile.am libyuv-svn20140603/Makefile.am
 +endif
 diff -Nuri libyuv-svn20140603-orig/source/libyuv.pc.in libyuv-svn20140603/source/libyuv.pc.in
 --- libyuv-svn20140603-orig/source/libyuv.pc.in	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/source/libyuv.pc.in	2014-07-03 04:59:59.093896584 +0000
++++ libyuv-svn20140603/source/libyuv.pc.in	2014-07-03 05:54:47.806517904 +0000
 @@ -0,0 +1,9 @@
 +prefix=@prefix@
 +exec_prefix=@exec_prefix@
@@ -209,8 +209,8 @@ diff -Nuri libyuv-svn20140603-orig/source/libyuv.pc.in libyuv-svn20140603/source
 +Libs: -lyuv @LIBJPEG_LIBS@
 diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/Makefile.am
 --- libyuv-svn20140603-orig/source/Makefile.am	1970-01-01 00:00:00.000000000 +0000
-+++ libyuv-svn20140603/source/Makefile.am	2014-07-03 04:59:38.010877977 +0000
-@@ -0,0 +1,75 @@
++++ libyuv-svn20140603/source/Makefile.am	2014-07-03 05:55:19.697159232 +0000
+@@ -0,0 +1,76 @@
 +lib_LTLIBRARIES = libyuv.la
 +
 +pkgconfigdir = $(libdir)/pkgconfig
@@ -258,7 +258,7 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +			       ../include/libyuv/video_common.h \
 +			       ../include/libyuv/convert_from_argb.h \
 +			       ../include/libyuv/scale_row.h \
-+			       $(mjpeg_HDRS) $(mips_SOURCES)
++			       $(mjpeg_HDRS)
 +
 +libyuv_la_SOURCES = compare.cc \
 +		    compare_common.cc \
@@ -281,7 +281,8 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +		    $(posix_SOURCES) \
 +		    $(windows_SOURCES) \
 +		    $(mjpeg_SOURCES) \
-+		    $(neon_SOURCES)
++		    $(neon_SOURCES) \
++		    $(mips_SOURCES)
 +
 +libyuv_la_CXXFLAGS = $(AM_LDFLAGS) -I$(top_srcdir)/include -I$(top_srcdir)
 +libyuv_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(LIBYUV_VERSION_INFO)
