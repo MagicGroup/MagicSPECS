@@ -237,7 +237,7 @@ diff -Nuri libyuv-svn20140603-orig/source/Makefile.am libyuv-svn20140603/source/
 +endif
 +
 +if WITH_CPU_MIPS
-+mips_SOURCES = rotate_mips.cc
++mips_SOURCES = rotate_mips.cc row_mips.cc scale_mips.cc
 +endif
 +
 +libyuvinclude_HEADERS = ../include/libyuv.h
