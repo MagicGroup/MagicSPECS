@@ -20,6 +20,7 @@ Patch0:         webkit-1.1.14-nspluginwrapper.patch
 # https://bugs.webkit.org/show_bug.cgi?id=103128
 Patch4:         webkit-2.1.90-double2intsPPC32.patch
 Patch10:        webkitgtk-aarch64.patch
+Patch100:       webkitgtk-2.4.1-mips64el.patch
 
 BuildRequires:  at-spi2-core-devel
 BuildRequires:  bison
@@ -96,6 +97,9 @@ This package contains developer documentation for %{name}.
 %patch4 -p1 -b .double2intsPPC32
 %endif
 %patch10 -p1 -b .aarch64
+%ifarch mips64el
+%patch100 -p1 -b .mips64el
+%endif
 
 %build
 # Use linker flags to reduce memory consumption
@@ -117,7 +121,7 @@ This package contains developer documentation for %{name}.
 
 %configure                                                      \
                         --with-gtk=3.0                          \
-%ifarch s390 s390x ppc ppc64 aarch64
+%ifarch s390 s390x ppc ppc64 aarch64 mips64el
                         --disable-jit                           \
 %else
                         --enable-jit                            \
