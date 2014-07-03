@@ -262,6 +262,8 @@ index 0000000..ef46e90
 +			       ../include/libyuv/scale_argb.h \
 +			       ../include/libyuv/version.h \
 +			       ../include/libyuv/video_common.h \
++          ../include/libyuv/convert_from_argb.h \
++          ../include/libyuv/scale_row.h \
 +			       $(mjpeg_HDRS)
 +
 +libyuv_la_SOURCES = compare.cc \
