@@ -57,6 +57,8 @@ Patch4:         %{name}-21.5.28-courier-default.patch
 Patch5:         %{name}-21.5.29-x-server.patch
 # Applied upstream.  Fix a crash if given a bad menu specification.
 Patch6:         %{name}-21.5.33-menubar.patch
+# texinfo 5
+Patch7:         xemacs-21.5.33-info.patch
 
 BuildRequires:  sed >= 3.95
 BuildRequires:  texinfo
@@ -246,6 +248,7 @@ sed -i -e /tetris/d lisp/menubar-items.el
 %patch4
 %patch5
 %patch6
+%patch7
 
 sed -i -e 's/"lib"/"%{_lib}"/' lisp/setup-paths.el
 
