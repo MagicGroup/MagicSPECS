@@ -10,6 +10,7 @@ Source: ftp://ftp.gnu.org/gnu/wget/wget-%{version}.tar.xz
 Patch1: wget-rh-modified.patch
 Patch2: wget-1.12-path.patch
 Patch3: wget-1.14-sslreadtimeout.patch
+Patch4: 0001-Fix-itemx-issue-when-building-doc.patch
 
 Provides: webclient
 Provides: bundled(gnulib) 
@@ -32,6 +33,7 @@ support for Proxy servers, and configurability.
 %patch1 -p0
 %patch2 -p1
 %patch3 -p1 -b .sslreadtimeout
+%patch4 -p1 -b .itemx
 
 %build
 if pkg-config openssl ; then
