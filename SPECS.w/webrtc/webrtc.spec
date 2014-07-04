@@ -22,6 +22,7 @@ BuildRequires:	libXext-devel, libX11-devel, alsa-lib-devel
 Patch0:		webrtc-20130531svn3704-build-sanity.patch
 # // in include paths breaks debuginfo generation
 Patch1:		webrtc-20130326svn3237-no-double-slashes-in-include-paths.patch
+Patch2:		webrtc-20130531svn3704-disable-sse2.patch
 
 %description
 WebRTC is a free, open project that enables web browsers with Real-Time 
@@ -42,6 +43,9 @@ touch NEWS README ChangeLog
 ln -s LICENSE COPYING
 %patch0 -p1 -b .SANITY
 %patch1 -p1 -b .doubleslash
+%ifarch mips64el
+%patch2 -p1 -b .sse
+%endif
 autoreconf -if
 
 %build
