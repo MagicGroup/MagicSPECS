@@ -13,6 +13,7 @@ URL:            http://www.xemacs.org/Documentation/packageGuide.html
 # Tarball created with Source99
 Source0:        %{name}-%{version}.tar.xz
 Source99:       %{name}-checkout.sh
+Patch1:         xemacs-packages-base-texi.patch
 
 BuildArch:      noarch
 BuildRequires:  xemacs-nox
@@ -43,6 +44,7 @@ developing or debugging the packages.
 
 %prep
 %setup -q
+%patch1
 [ ! "%(%{xemver})" '<' "21.5" ] && x215="XEMACS_21_5=t" || x215=
 cat << EOF > make.sh
 #!/bin/sh
