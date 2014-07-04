@@ -1,0 +1,537 @@
+--- ./man/widget.texi.orig	2013-01-04 09:57:14.000000000 -0700
++++ ./man/widget.texi	2013-04-08 17:08:44.901272694 -0600
+@@ -120,7 +120,7 @@ Sexp Types
+ 
+ @node  Introduction, User Interface, Top, Top
+ @comment  node-name,  next,  previous,  up
+-@section Introduction
++@chapter Introduction
+ 
+ @c XEmacs changes to reflect history, native widgets, and GTK
+ Most graphical user interface toolkits provide
+@@ -234,7 +234,7 @@ it will be autoloaded when needed.
+ 
+ @node User Interface, Programming Example, Introduction, Top
+ @comment  node-name,  next,  previous,  up
+-@section User Interface
++@chapter User Interface
+ 
+ A form consists of read only text for documentation and some fields,
+ where each field contains two parts, a tag and a value.  The tags are
+@@ -280,7 +280,7 @@ The top level widgets in this example ar
+ within a form, namely editing the editable text fields and activating
+ the buttons.
+ 
+-@subsection Editable Text Fields
++@section Editable Text Fields
+ 
+ In the example, the value for the @samp{Name} is most likely displayed
+ in an editable text field, and so are values for each of the members of
+@@ -317,7 +317,7 @@ The editing text fields are highlighted
+ Face used for other editing fields.
+ @end deffn
+ 
+-@subsection Buttons
++@section Buttons
+ 
+ @cindex widget buttons
+ @cindex button widgets
+@@ -388,7 +388,7 @@ Face used for highlighting a button when
+ it.
+ @end defopt
+ 
+-@subsection Navigation
++@section Navigation
+ 
+ You can use all the normal Emacs commands to move around in a form
+ buffer, plus you will have these additional commands:
+@@ -407,7 +407,7 @@ Move point @var{count} buttons or editin
+ 
+ @node Programming Example, Setting Up the Buffer, User Interface, Top
+ @comment  node-name,  next,  previous,  up
+-@section Programming Example
++@chapter Programming Example
+ 
+ @cindex widgets, programming example
+ @cindex example of using widgets
+@@ -503,7 +503,7 @@ Interface}).
+ 
+ @node Setting Up the Buffer, Basic Types, Programming Example, Top
+ @comment  node-name,  next,  previous,  up
+-@section Setting Up the Buffer
++@chapter Setting Up the Buffer
+ 
+ Widgets are created with @code{widget-create}, which returns a
+ @dfn{widget} object.  This object can be queried and manipulated by
+@@ -558,7 +558,7 @@ when not on a button.  By default this i
+ 
+ @node Basic Types, Sexp Types, Setting Up the Buffer, Top
+ @comment  node-name,  next,  previous,  up
+-@section Basic Types
++@chapter Basic Types
+ 
+ This is the general syntax of a type specification:
+ 
+@@ -803,7 +803,7 @@ If non-@code{nil}, allow glyphs to appea
+ 
+ @node link, url-link, Basic Types, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{link} Widget
++@section The @code{link} Widget
+ @findex link@r{ widget}
+ 
+ Syntax:
+@@ -828,7 +828,7 @@ String to suffix links.
+ 
+ @node url-link, info-link, link, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{url-link} Widget
++@section The @code{url-link} Widget
+ @findex url-link@r{ widget}
+ 
+ Syntax:
+@@ -843,7 +843,7 @@ When this link is invoked, the @acronym{
+ 
+ @node info-link, push-button, url-link, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{info-link} Widget
++@section The @code{info-link} Widget
+ @findex info-link@r{ widget}
+ 
+ Syntax:
+@@ -857,7 +857,7 @@ When this link is invoked, the built-in
+ 
+ @node  push-button, editable-field, info-link, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{push-button} Widget
++@section The @code{push-button} Widget
+ @findex push-button@r{ widget}
+ 
+ Syntax:
+@@ -882,7 +882,7 @@ String to suffix push buttons.
+ 
+ @node editable-field, text, push-button, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{editable-field} Widget
++@section The @code{editable-field} Widget
+ @findex editable-field@r{ widget}
+ 
+ Syntax:
+@@ -934,7 +934,7 @@ them.  Pressing @key{RET} invokes the fu
+ 
+ @node text, menu-choice, editable-field, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{text} Widget
++@section The @code{text} Widget
+ @findex text@r{ widget}
+ 
+ @vindex widget-text-keymap
+@@ -944,7 +944,7 @@ does not rebind the @key{RET} key.
+ 
+ @node menu-choice, radio-button-choice, text, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{menu-choice} Widget
++@section The @code{menu-choice} Widget
+ @findex menu-choice@r{ widget}
+ 
+ Syntax:
+@@ -985,7 +985,7 @@ The list of types.
+ 
+ @node radio-button-choice, item, menu-choice, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{radio-button-choice} Widget
++@section The @code{radio-button-choice} Widget
+ @findex radio-button-choice@r{ widget}
+ 
+ Syntax:
+@@ -1052,7 +1052,7 @@ you call @code{widget-delete}.
+ 
+ @node item, choice-item, radio-button-choice, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{item} Widget
++@section The @code{item} Widget
+ @findex item@r{ widget}
+ 
+ Syntax:
+@@ -1067,7 +1067,7 @@ buffer.  This widget will only match the
+ 
+ @node choice-item, toggle, item, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{choice-item} Widget
++@section The @code{choice-item} Widget
+ @findex choice-item@r{ widget}
+ 
+ Syntax:
+@@ -1084,7 +1084,7 @@ the specified value.
+ 
+ @node toggle, checkbox, choice-item, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{toggle} Widget
++@section The @code{toggle} Widget
+ @findex toggle@r{ widget}
+ 
+ Syntax:
+@@ -1117,7 +1117,7 @@ emacsen that supports this.
+ 
+ @node checkbox, checklist, toggle, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{checkbox} Widget
++@section The @code{checkbox} Widget
+ @findex checkbox@r{ widget}
+ 
+ This widget has two possible states, @samp{selected} and
+@@ -1131,7 +1131,7 @@ Syntax:
+ 
+ @node checklist, editable-list, checkbox, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{checklist} Widget
++@section The @code{checklist} Widget
+ @findex checklist@r{ widget}
+ 
+ Syntax:
+@@ -1189,7 +1189,7 @@ The list of types.
+ 
+ @node editable-list, group, checklist, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{editable-list} Widget
++@section The @code{editable-list} Widget
+ @findex editable-list@r{ widget}
+ 
+ Syntax:
+@@ -1247,7 +1247,7 @@ List whose @sc{car} is the type of the l
+ 
+ @node group,  , editable-list, Basic Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The @code{group} Widget
++@section The @code{group} Widget
+ @findex group@r{ widget}
+ 
+ This widget simply groups other widgets together.
+@@ -1262,7 +1262,7 @@ The value is a list, with one member for
+ 
+ @node Sexp Types, Widget Properties, Basic Types, Top
+ @comment
+-@section Sexp Types
++@chapter Sexp Types
+ @cindex sexp types
+ 
+ A number of widgets for editing @dfn{s-expressions} (Lisp types), sexp
+@@ -1278,7 +1278,7 @@ categories described in this section.
+ 
+ @node constants, generic, Sexp Types, Sexp Types
+ @comment  node-name,  next,  previous,  up
+-@subsection The Constant Widgets
++@section The Constant Widgets
+ @cindex constant widgets
+ 
+ The @code{const} widget can contain any Lisp expression, but the user is
+@@ -1315,7 +1315,7 @@ An immutable symbol that is bound as a f
+ 
+ @node generic, atoms, constants, Sexp Types
+ @comment  node-name,  next,  previous,  up
+-@subsection Generic Sexp Widget
++@section Generic Sexp Widget
+ @cindex generic sexp widget
+ 
+ The @code{sexp} widget can contain any Lisp expression, and allows the
+@@ -1337,7 +1337,7 @@ The @code{sexp} widget takes the same ke
+ 
+ @node atoms, composite, generic, Sexp Types
+ @comment  node-name,  next,  previous,  up
+-@subsection Atomic Sexp Widgets
++@section Atomic Sexp Widgets
+ @cindex atomic sexp widget
+ 
+ The atoms are s-expressions that do not consist of other s-expressions.
+@@ -1415,7 +1415,7 @@ either @code{nil} meaning false, or non-
+ 
+ @node composite,  , atoms, Sexp Types
+ @comment  node-name,  next,  previous,  up
+-@subsection Composite Sexp Widgets
++@section Composite Sexp Widgets
+ @cindex composite sexp widgets
+ 
+ The syntax for the composite widget construct is:
+@@ -1517,7 +1517,7 @@ Specifies a list of any number of elemen
+ 
+ @node Widget Properties, Defining New Widgets, Sexp Types, Top
+ @comment  node-name,  next,  previous,  up
+-@section Properties
++@chapter Properties
+ @cindex properties of widgets
+ @cindex widget properties
+ 
+@@ -1612,7 +1612,7 @@ its ancestors have been deactivated.  Do
+ 
+ @node Defining New Widgets, Widget Browser, Widget Properties, Top
+ @comment  node-name,  next,  previous,  up
+-@section Defining New Widgets
++@chapter Defining New Widgets
+ @cindex new widgets
+ @cindex defining new widgets
+ 
+@@ -1856,7 +1856,7 @@ is called implicitly through the @samp{w
+ 
+ @node Widget Browser, Widget Minor Mode, Defining New Widgets, Top
+ @comment  node-name,  next,  previous,  up
+-@section Widget Browser
++@chapter Widget Browser
+ @cindex widget browser
+ 
+ There is a separate package to browse widgets.  This is intended to help
+@@ -1881,7 +1881,7 @@ When called interactively, use the posit
+ 
+ @node  Widget Minor Mode, Utilities, Widget Browser, Top
+ @comment  node-name,  next,  previous,  up
+-@section Widget Minor Mode
++@chapter Widget Minor Mode
+ @cindex widget minor mode
+ 
+ There is a minor mode for manipulating widgets in major modes that
+@@ -1899,7 +1899,7 @@ Keymap used in @code{widget-minor-mode}.
+ 
+ @node  Utilities, Widget Wishlist, Widget Minor Mode, Top
+ @comment  node-name,  next,  previous,  up
+-@section Utilities.
++@chapter Utilities.
+ @cindex utility functions for widgets
+ 
+ @defun widget-prompt-value widget prompt [ value unbound ]
+@@ -1915,7 +1915,7 @@ This is only meaningful for radio button
+ 
+ @node Widget Wishlist, Widget Internals, Utilities, Top
+ @comment  node-name,  next,  previous,  up
+-@section Wishlist
++@chapter Wishlist
+ @cindex todo
+ 
+ @itemize @bullet
+@@ -1987,7 +1987,7 @@ symbol, it should pop up a menu.
+ @end itemize
+ 
+ @node Widget Internals, GNU Free Documentation License, Widget Wishlist, Top
+-@section Internals
++@chapter Internals
+ 
+ This (very brief!) section provides a few notes on the internal
+ structure and implementation of Emacs widgets.  Avoid relying on this
+@@ -1995,7 +1995,7 @@ information.  (We intend to improve it,
+ To the extent that it actually describes APIs, the information will be
+ moved to appropriate sections of the manual in due course.
+ 
+-@subsection The @dfn{Widget} and @dfn{Type} Structures
++@section The @dfn{Widget} and @dfn{Type} Structures
+ 
+ Widgets and types are currently both implemented as lists.
+ 
+--- ./man/texinfo/texinfo.texi.orig	2013-01-04 09:57:14.000000000 -0700
++++ ./man/texinfo/texinfo.texi	2013-04-08 17:08:44.901272694 -0600
+@@ -13717,14 +13717,14 @@ At present, Texinfo supports only these
+ @item US-ASCII
+ This has no particular effect, but it's included for completeness.
+ 
+-@itemx UTF-8
++@item UTF-8
+ The vast global character encoding, expressed in 8-bit bytes.
+ The Texinfo processors have no deep knowledge of Unicode; for the most
+ part, they just pass along the input they are given to the output.
+ 
+-@itemx ISO-8859-1
++@item ISO-8859-1
+ @itemx ISO-8859-15
+-@item ISO-8859-2
++@itemx ISO-8859-2
+ These specify the standard encodings for Western European (the first
+ two) and Eastern European languages (the third), respectively.  ISO
+ 8859-15 replaces some little-used characters from 8859-1 (e.g.,
+@@ -17428,7 +17428,7 @@ Indicate an acronym in all capital lette
+ Generate the uppercase and lowercase AE ligatures, respectively:
+ @AE{}, @ae{}.  @xref{Inserting Accents}.
+ 
+-@itemx @@afivepaper
++@item @@afivepaper
+ Change page dimensions for the A5 paper size.  @xref{A4 Paper}.
+ 
+ @item @@afourlatex
+@@ -17955,7 +17955,7 @@ Begin text to be ignored in one output f
+ the corresponding @code{@@end ifnot@var{format}}.
+ @xref{Conditionals}.
+ 
+-@itemx @@ifnotinfo
++@item @@ifnotinfo
+ Begin text to appear in output other than Info and (for historical
+ compatibility) plain text.  Pair with @code{@@end ifnotinfo}.
+ @xref{Conditionals}.
+--- ./man/lispref/edebug-inc.texi.orig	2013-01-04 09:57:14.000000000 -0700
++++ ./man/lispref/edebug-inc.texi	2013-04-08 17:08:44.895272706 -0600
+@@ -1103,7 +1103,7 @@ by an alternative, equivalent specificat
+ Here is a table of the possibilities for @var{specification} and how each
+ directs processing of arguments.
+ 
+-@table @bullet
++@itemize @bullet
+ 
+ @item @code{t}
+ All arguments are instrumented for evaluation.
+@@ -1120,7 +1120,7 @@ found.  This allows you to inherit the s
+ The elements of the list describe the types of the arguments of a
+ calling form.  The possible elements of a specification list are
+ described in the following sections.
+-@end table
++@end itemize
+ 
+ @menu
+ * Specification List::		How to specify complex patterns of evaluation.
+--- ./man/lispref/packaging.texi.orig	2013-01-04 09:57:14.000000000 -0700
++++ ./man/lispref/packaging.texi	2013-04-08 17:08:44.896272704 -0600
+@@ -600,7 +600,7 @@ Builds the HTML versions of the document
+ Does most of the work.  Builds the elcs, infos at a minimum.
+ @end table
+ 
+-@subsection The targets that most people would be interested in would be:
++@section The targets that most people would be interested in would be:
+ 
+ @itemize @bullet
+ @item @code{all}
+--- ./man/internals/internals.texi.orig	2013-01-04 09:57:14.000000000 -0700
++++ ./man/internals/internals.texi	2013-04-08 17:08:44.894272708 -0600
+@@ -21337,7 +21337,7 @@ or @code{nil} if it is using pipes.
+ 
+ 
+ @node Ben's separate stderr notes,  , Subprocesses, Subprocesses
+-@subsection Ben's separate stderr notes (probably obsolete)
++@section Ben's separate stderr notes (probably obsolete)
+ 
+ This node contains some notes that Ben kept on his separate subprocess
+ workspace.  These notes probably describe changes and features that have
+--- ./man/beta.texi.orig	2013-01-04 09:57:14.000000000 -0700
++++ ./man/beta.texi	2013-04-08 17:07:18.970443919 -0600
+@@ -34,7 +34,8 @@ FITNESS FOR A PARTICULAR PURPOSE.  See t
+ for more details.
+ 
+ You should have received a copy of the GNU General Public License
+-along with XEmacs.  If not, see <http://www.gnu.org/licenses/>.@end ifinfo
++along with XEmacs.  If not, see <http://www.gnu.org/licenses/>.
++@end ifinfo
+ 
+ @c Combine indices.
+ @syncodeindex fn cp
+--- ./man/xemacs-faq.texi.orig	2013-01-04 09:57:14.000000000 -0700
++++ ./man/xemacs-faq.texi	2013-04-08 17:08:44.903272690 -0600
+@@ -8848,7 +8848,7 @@ keep the history of XEmacs development.
+ 
+ 
+ @node Q11.0.1, Q11.0.2, Bleeding Edge, Bleeding Edge
+-@unnumberedsubsec Where is the most recent XEmacs development code?
++@unnumberedsec Where is the most recent XEmacs development code?
+ 
+ The most recent XEmacs @emph{development} code is kept in a Mercurial
+ repository, hosted by the Debian project.  The read-only URL, for
+@@ -8871,7 +8871,7 @@ Yes, Virginia, that doubled slash is cor
+ @xref{Q11.2.1, What is Mercurial?}.
+ 
+ @node Q11.0.2, Q11.0.3, Q11.0.1, Bleeding Edge
+-@unnumberedsubsec Where is the most recent XEmacs stable code?
++@unnumberedsec Where is the most recent XEmacs stable code?
+ 
+ The most recent XEmacs @emph{stable} code is kept in a Mercurial
+ repository, hosted by the Debian project.  The read-only URL is
+@@ -8887,7 +8887,7 @@ If you're @emph{not} Vin, you don't need
+ 
+ 
+ @node Q11.0.3, Q11.0.4, Q11.0.2, Bleeding Edge
+-@unnumberedsubsec Where is the most recent XEmacs package code?
++@unnumberedsec Where is the most recent XEmacs package code?
+ 
+ The most recent XEmacs @emph{packages} code is kept in a CVS
+ repository, hosted by the Debian project.  The read-only @code{CVSROOT},
+@@ -8919,7 +8919,7 @@ on the website.
+ 
+ 
+ @node Q11.0.4, Q11.0.5, Q11.0.3, Bleeding Edge
+-@unnumberedsubsec Why isn't @var{package} available? and what to do about it.
++@unnumberedsec Why isn't @var{package} available? and what to do about it.
+ 
+ If a package isn't available from the Packages repository, probably
+ nobody has shown enough interest to add it yet.  (Occasionally, there is
+@@ -8937,7 +8937,7 @@ of the package @ref{(xemacs-devguide)XEm
+ 
+ 
+ @node Q11.0.5, Q11.1.1, Q11.0.4, Bleeding Edge
+-@unnumberedsubsec How do I get commit access?
++@unnumberedsec How do I get commit access?
+ 
+ To get commit access to XEmacs code, write to
+ @email{xemacs-review@@xemacs.org, the XEmacs Review Board} and request
+@@ -8966,7 +8966,7 @@ submitted to @email{xemacs-patches@@xema
+ 
+ 
+ @node Q11.1.1, Q11.2.1, Q11.0.5, Bleeding Edge
+-@unnumberedsubsec How do I keep cool using CVS?
++@unnumberedsec How do I keep cool using CVS?
+ 
+ You don't.  CVS is just basically and in detail @emph{un}-cool.
+ 
+@@ -8981,7 +8981,7 @@ Please update this FAQ with one or two o
+ 
+ 
+ @node Q11.2.1, Q11.2.2, Q11.1.1, Bleeding Edge
+-@unnumberedsubsec What is Mercurial?
++@unnumberedsec What is Mercurial?
+ 
+ Mercurial is a @dfn{distributed version control system}, or DVCS.  This
+ means that versioning information can be easily exchanged between
+@@ -9013,7 +9013,7 @@ the advantages.
+ 
+ 
+ @node Q11.2.2, Q11.2.3, Q11.2.1, Bleeding Edge
+-@unnumberedsubsec Where do I get Mercurial?
++@unnumberedsec Where do I get Mercurial?
+ 
+ Most OS distributions (including add-on distributions like
+ @uref{http://www.cygwin.com/, Cygwin} and
+@@ -9024,7 +9024,7 @@ packages for most major platforms, from
+ 
+ 
+ @node Q11.2.3, Q11.2.4, Q11.2.2, Bleeding Edge
+-@unnumberedsubsec Do I really have to waste space on history?
++@unnumberedsec Do I really have to waste space on history?
+ 
+ Yes, you do.  It's really not that much, though.  In one of my current
+ workspaces, I see
+@@ -9044,7 +9044,7 @@ all of the Mercurial-specific informatio
+ 
+ 
+ @node Q11.2.4, Q11.2.5, Q11.2.3, Bleeding Edge
+-@unnumberedsubsec @code{hg diff} gives bizarre output.
++@unnumberedsec @code{hg diff} gives bizarre output.
+ 
+ You may see an unreasonable diff (often large) that doesn't seem to
+ reflect your work.
+@@ -9098,7 +9098,7 @@ and it doesn't show your work.  Unfortun
+ result of diffing against the "previous" commit.
+ 
+ @node Q11.2.5, Q11.2.6, Q11.2.4, Bleeding Edge
+-@unnumberedsubsec How do I recover from a bad commit?  (I already pushed.)
++@unnumberedsec How do I recover from a bad commit?  (I already pushed.)
+ 
+ Once upon a time, an XEmacs developer wrote:
+ 
+@@ -9270,7 +9270,7 @@ Mercurial (the revert command)!
+ 
+ 
+ @node Q11.2.6, Q11.2.7, Q11.2.5, Bleeding Edge
+-@unnumberedsubsec How do I recover from a bad commit?  (I haven't pushed yet.)
++@unnumberedsec How do I recover from a bad commit?  (I haven't pushed yet.)
+ 
+ If you hadn't yet pushed the commit you now regret, and realize it
+ before doing further commits, you can use @code{hg strip tip}.  Then
+@@ -9287,7 +9287,7 @@ When in doubt, use the safer method @ref
+ 
+ 
+ @node Q11.2.7, , Q11.2.6, Bleeding Edge
+-@unnumberedsubsec Testing patches with Mercurial Queues.
++@unnumberedsec Testing patches with Mercurial Queues.
+ 
+ When testing a patch proposed on xemacs-beta or xemacs-patches,
+ conflicts or new heads often appear later, when using @code{hg pull -u}.
