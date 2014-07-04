@@ -5,13 +5,13 @@
 Name:			xmms2
 Summary: 		A modular audio framework and plugin architecture
 Version:		0.8
-Release:		10%{?dist}
+Release:		19%{?dist}
 License:		LGPLv2+ and GPLv2+ and BSD
 Group:			Applications/Multimedia
 # We can't use the upstream source tarball as-is, because it includes an mp4 decoder.
 # http://downloads.sourceforge.net/xmms2/%{name}-%{version}%{codename}.tar.bz2
 # Cleaning it is simple, just rm -rf src/plugins/mp4
-Source0:		%{name}-%{version}%{codename}.tar.bz2
+Source0:		%{name}-%{version}%{codename}-clean.tar.bz2
 Source1:		xmms2-client-launcher.sh
 # Use libdir properly for Fedora multilib
 Patch1:			xmms2-0.8DrO_o-use-libdir.patch
@@ -21,8 +21,12 @@ Patch2:			xmms2-0.8DrO_o-pulse-output-default.patch
 Patch4:			xmms2-0.8DrO_o-no-O0.patch
 # More sane versioning
 Patch5:			xmms2-0.8DrO_o-moresaneversioning.patch
-
-Patch6:			xmms2-0.8DrO_o-avcodecinit.patch
+# Fix xsubpp location
+Patch6:			xmms2-0.8DrO_o-xsubpp-fix.patch
+# libmodplug 0.8.8.5 changed pkgconfig includedir output
+Patch7:			xmms2-0.8DrO_o-libmodplug-pkgconfig-change.patch
+# libvorbis 1.3.4 changed pkgconfig libs output
+Patch8:			xmms2-0.8DrO_o-vorbis-pkgconfig-libs.patch
 URL:			http://wiki.xmms2.xmms.se/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:		sqlite-devel, flac-devel, libofa-devel
@@ -30,11 +34,14 @@ BuildRequires:		libcdio-paranoia-devel, libdiscid-devel, libsmbclient-devel
 BuildRequires:		libmpcdec-devel, gnome-vfs2-devel, jack-audio-connection-kit-devel
 BuildRequires:		fftw-devel, libsamplerate-devel, libxml2-devel, alsa-lib-devel
 BuildRequires:		libao-devel, libshout-devel, Pyrex, ruby-devel, ruby
-BuildRequires:		perl-devel, boost-devel, pulseaudio-libs-devel, avahi-glib-devel
+BuildRequires:		perl-devel, boost-devel, pulseaudio-libs-devel
 BuildRequires:		libmodplug-devel, ecore-devel, gamin-devel
-BuildRequires:		avahi-compat-libdns_sd-devel, doxygen
+BuildRequires:		doxygen, perl-Pod-Parser
+BuildRequires:		pkgconfig(avahi-client), pkgconfig(avahi-glib), pkgconfig(avahi-compat-libdns_sd)
 BuildRequires:		libvisual-devel, wavpack-devel, SDL-devel
 BuildRequires:		glib2-devel, readline-devel, ncurses-devel
+# For /usr/share/perl5/ExtUtils/xsubpp
+BuildRequires:		perl-ExtUtils-ParseXS
 
 %description
 XMMS2 is an audio framework, but it is not a general multimedia player - it 
@@ -109,7 +116,8 @@ it executes the command passed as argument directly.
 %patch2 -p1 -b .default-output-pulse
 %patch4 -p1 -b .noO0
 %patch5 -p1 -b .versionsanity
-%patch6 -p1
+%patch7 -p1 -b .modplug_header
+%patch8 -p1 -b .vorbis_libs
 
 # This header doesn't need to be executable
 chmod -x src/include/xmmsclient/xmmsclient++/dict.h
@@ -126,6 +134,11 @@ export CFLAGS="%{optflags}"
 export CPPFLAGS="%{optflags}"
 export LIBDIR="%{_libdir}"
 export PYTHONDIR="%{python_sitearch}"
+export XSUBPP="%{_bindir}/xsubpp"
+./waf configure --prefix=%{_prefix} --libdir=%{_libdir} --with-ruby-libdir=%{ruby_vendorlibdir} --with-ruby-archdir=%{ruby_vendorarchdir} \
+  --with-perl-archdir=%{perl_archlib} --with-pkgconfigdir=%{_libdir}/pkgconfig -j1
+# Hacky, hacky, hacky.
+patch -p0 < %{_sourcedir}/xmms2-0.8DrO_o-xsubpp-fix.patch
 ./waf configure --prefix=%{_prefix} --libdir=%{_libdir} --with-ruby-libdir=%{ruby_vendorlibdir} --with-ruby-archdir=%{ruby_vendorarchdir} \
   --with-perl-archdir=%{perl_archlib} --with-pkgconfigdir=%{_libdir}/pkgconfig -j1
 ./waf build -v %{?_smp_mflags}
@@ -203,14 +216,45 @@ rm -rf %{buildroot}
 %{_bindir}/nyxmms2
 
 %changelog
-* Fri Jul 05 2013 Liu Di <liudidi@gmail.com> - 0.8-10
-- 为 Magic 3.0 重建
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Fri Jul 05 2013 Liu Di <liudidi@gmail.com> - 0.8-9
-- 为 Magic 3.0 重建
+* Fri May 23 2014 Petr Machata <pmachata@redhat.com> - 0.8-18
+- Rebuild for boost 1.55.0
 
-* Tue Jun 04 2013 Liu Di <liudidi@gmail.com> - 0.8-8
-- 为 Magic 3.0 重建
+* Wed May  7 2014 Mamoru TASAKA <mtasaka@fedoraproject.org> - 0.8-17
+- Patch for libmodplug pkgconfig header dir output change
+  (c.f. Debian bug 652139, 724487)
+- Patch for vorbisenc pkgconfig libs dir output change
+
+* Tue May  6 2014 Tom Callaway <spot@fedoraproject.org> - 0.8-16
+- rebuild for new ruby
+
+* Mon Dec 16 2013 Adrian Reber <adrian@lisas.de> - 0.8-15
+- Rebuilt for libcdio-0.92
+
+* Thu Sep 26 2013 Rex Dieter <rdieter@fedoraproject.org> 0.8-14
+- add explicit avahi build deps
+
+* Sun Aug 11 2013 Tom Callaway <spot@fedoraproject.org> - 0.8-13
+- add missing BuildRequires
+- add disgusting hack to this awful package to get it building again. whoever invented waf 
+  should be forced to endure severe punishment.
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jul 30 2013 Petr Machata <pmachata@redhat.com> - 0.8-11
+- Rebuild for boost 1.54.0
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 0.8-10
+- Perl 5.18 rebuild
+
+* Tue Apr 02 2013 Vít Ondruch <vondruch@redhat.com> - 0.8-9
+- Rebuild for https://fedoraproject.org/wiki/Features/Ruby_2.0.0
+
+* Sat Feb 09 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 0.8-8
+- Rebuild for Boost-1.53.0
 
 * Mon Jan 07 2013 Adrian Reber <adrian@lisas.de> - 0.8-7
 - Rebuilt for libcdio-0.90
