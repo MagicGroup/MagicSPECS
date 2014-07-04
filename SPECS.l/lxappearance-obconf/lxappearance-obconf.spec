@@ -16,10 +16,12 @@
 
 Name:           lxappearance-obconf
 Version:        0.2.0
-Release:        1%{?git_version:.%{?git_version}}%{?dist}
+Release:        2%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Plugin to configure Openbox inside LXAppearance
+Summary(zh_CN.UTF-8): 在 LXAppearance 配置 Openbox 的插件
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxappearance-obconf
@@ -44,6 +46,9 @@ Requires:       openbox >= 3.5.0
 This plugin adds an additional tab called "Window Border" to LXAppearance.
 It is only visible when the plugin is installed and Openbox is in use.
 
+%description -l zh_CN.UTF-8
+在 LXAppearance 配置 Openbox 的插件。
+
 %prep
 %setup -q %{?git_version:-n %{name}}
 
@@ -58,6 +63,7 @@ make %{?_smp_mflags} V=1
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -74,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.2.0-2
+- 为 Magic 3.0 重建
+
 * Sat Aug 04 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.2.0-1
 - Update to 0.2.0
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

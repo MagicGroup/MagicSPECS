@@ -2,9 +2,11 @@
 
 Name:           lv2core
 Version:        6.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Audio Plugin Standard
+Summary(zh_CN.UTF-8): 音频插件标准
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        ISC
 URL:            http://lv2plug.in
 Source:         http://lv2plug.in/spec/lv2core-%{version}.tar.bz2
@@ -25,9 +27,14 @@ plugin to communicate completely through this interface.
 LV2 is a successor to LADSPA, created to address the limitations of
 LADSPA which many hosts have outgrown.
 
+%description -l zh_CN.UTF-8
+音频插件标准。
+
 %package        devel
 Summary:        API for the LV2 Audio Plugin Standard
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
@@ -36,6 +43,9 @@ lv2-devel contains the lv2.h header file.
 Definitive technical documentation on LV2 plug-ins for both the host
 and plug-in is contained within copious comments within the lv2.h
 header file.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -47,6 +57,7 @@ header file.
 %install
 rm -rf $RPM_BUILD_ROOT
 DESTDIR=$RPM_BUILD_ROOT ./waf -vv install
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lv2core.pc
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 6.0-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 6.0-2
 - 为 Magic 3.0 重建
 

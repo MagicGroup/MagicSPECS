@@ -1,14 +1,14 @@
 Summary: Rotates, compresses, removes and mails system log files
 Name: logrotate
 Version: 3.8.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL+
 Group: System Environment/Base
 Url: https://fedorahosted.org/logrotate/
 Source: https://fedorahosted.org/releases/l/o/logrotate/logrotate-%{version}.tar.gz
 
 Requires: coreutils >= 5.92 popt
-BuildRequires: libselinux-devel popt-devel libacl-devel acl
+BuildRequires: popt-devel libacl-devel acl
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -26,7 +26,7 @@ log files on your system.
 %setup -q
 
 %build
-make %{?_smp_mflags} RPM_OPT_FLAGS="$RPM_OPT_FLAGS" WITH_SELINUX=yes WITH_ACL=yes
+make %{?_smp_mflags} RPM_OPT_FLAGS="$RPM_OPT_FLAGS" WITH_SELINUX=no WITH_ACL=yes
 
 %check
 make test
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0644, root, root) %verify(not size md5 mtime) %config(noreplace) %{_localstatedir}/lib/logrotate.status
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 3.8.7-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

@@ -16,10 +16,12 @@
  
 Name:           lxappearance
 Version:        0.5.2
-Release:        2%{?git_version:.%{?git_version}}%{?dist}
+Release:        3%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Feature-rich GTK+ theme switcher for LXDE
+Summary(zh_CN.UTF-8): LXDE 下的具有丰富特性的 GTK+ 主题切换器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxappearance
@@ -41,16 +43,22 @@ immediately in the preview area. After clicking the "Apply" button, the
 settings will be written to gtkrc, and all running programs will be asked to 
 reload their themes.
 
+%description -l zh_CN.UTF-8
+LXDE 下的具有丰富特性的 GTK+ 主题切换器。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains header files for developing plug-ins 
 for LXAppearance.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q %{?git_version:-n %{name}}
@@ -66,10 +74,11 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
-desktop-file-install --vendor="fedora" \
+desktop-file-install --vendor="magic" \
   --delete-original \
   --dir=%{buildroot}%{_datadir}/applications \
   %{buildroot}%{_datadir}/applications/%{name}.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -81,7 +90,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
 %{_bindir}/%{name}
-%{_datadir}/applications/fedora-%{name}.desktop
+%{_datadir}/applications/magic-%{name}.desktop
 %{_datadir}/%{name}/
 %{_mandir}/man1/%{name}*.1.*
 
@@ -93,6 +102,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.5.2-3
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

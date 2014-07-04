@@ -1,6 +1,6 @@
 Name:           perl-Sys-MemInfo
 Version:        0.91
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Memory information as Perl module
 # README:       GPLv1+ or Artistic
 # MemInfo.pm    LGPLv2+
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 0.91-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.91-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

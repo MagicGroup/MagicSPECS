@@ -3,10 +3,12 @@
 
 Name:           loudmouth
 Version:        1.4.3
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        XMPP/Jabber C programming library
+Summary(zh_CN.UTF-8): XMPP/Jabber C 程序库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.loudmouth-project.org/
 Source0:        http://ftp.imendio.com/pub/imendio/%{name}/src/%{name}-%{version}.tar.bz2
@@ -31,10 +33,14 @@ Loudmouth is a lightweight and easy-to-use C library for programming
 with the XMPP/Jabber protocol. It's designed to be easy to get started
 with and yet extensible to let you do anything the XMPP protocol allows.
 
+%description -l zh_CN.UTF-8
+这是一个轻量易用的 XMPP/Jabber 协议的 C 程序库。
 
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	glib2-devel
 Requires:	libidn-devel
@@ -48,6 +54,8 @@ Requires:	gnutls-devel >= %{gnutls_ver}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -79,7 +87,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 # different on different builds
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
 cp -a docs/reference/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/%{name}/
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -110,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 1.4.3-14
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

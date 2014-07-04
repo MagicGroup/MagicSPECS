@@ -1,16 +1,14 @@
 Name: lrcShow-X
 Summary: lrcShow-X script
 Summary(zh_CN.UTF-8): lrcShow-X 动态歌词显示脚本
-Version:	 2.0.0
+Version:	 2.1.1
 Release: 3%{?dist}
 License:	 GPL
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Url: http://www.sanfanling.cn/
-Source0: http://www.kde-apps.org/CONTENT/content-files/103055-lrcShow-X_2_0_0.tar.bz2
+Source0: http://kde-apps.org/CONTENT/content-files/103055-lrcShow-X_2_1_1.tar.bz2
 Source1: lrcShow-X.desktop
-# 当没有找到可用播放器是显示错误提示
-Patch1: 1305124868_276954fe.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -27,14 +25,8 @@ lrcShow-X 动态歌词显示脚本。
 %prep
 %setup -q -n %{name}
 
-%patch1 -p0 -b .auto_quit
-
-# remove patch stuff
-rm -f mainGuiQt4.py.orig
-rm -f players/__init__.py.no_player_messagebox
-
 # we do not need chardet
-rm -rf chardet
+#rm -rf chardet
 
 # clean other languages
 pushd locale
@@ -85,6 +77,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 2.1.1-3
+- 为 Magic 3.0 重建
+
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 2.1.1-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.0-3
 - 为 Magic 3.0 重建
 

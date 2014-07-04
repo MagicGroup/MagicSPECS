@@ -2,10 +2,11 @@
 
 Name:           lxmenu-data
 Version:        0.1.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Data files for the LXDE menu
-
+Summary(zh_CN.UTF-8): LXDE 菜单的数据文件
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        LGPLv2+
 URL:            http://lxde.org
 Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
@@ -21,6 +22,8 @@ BuildArch:      noarch
 The lxmenu-data contains files used to build the menu in LXDE according to 
 the freedesktop-org menu spec. Currently it's used by LXPanel and LXLauncher.
 
+%description -l zh_CN.UTF-8
+LXDE 菜单的数据文件，LXPanel 和 LXLauncher 需要它。
 
 %prep
 %setup -q
@@ -38,7 +41,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -53,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.1.1-7
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

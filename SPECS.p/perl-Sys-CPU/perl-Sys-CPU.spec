@@ -1,6 +1,6 @@
 Name:           perl-Sys-CPU
 Version:        0.61
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Getting CPU information
 
 # Some code was copied from Unix::Processors, which is LGPLv3 or Artistic 2.0
@@ -48,6 +48,9 @@ find %{buildroot} -type f -name CPU.bs -exec rm -f {} ';'
 
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 0.61-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.61-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

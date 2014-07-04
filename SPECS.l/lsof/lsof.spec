@@ -1,7 +1,7 @@
 Summary: A utility which lists open files on a Linux/UNIX system
 Name: lsof
 Version: 4.87
-Release: 4%{?dist}
+Release: 5%{?dist}
 # Sendmail .. lib/snpf.c
 # LGPLv2+  .. lib/regex.c, regex.h
 License: zlib and Sendmail and LGPLv2+
@@ -17,8 +17,6 @@ Group: Development/Debuggers
 URL: http://people.freebsd.org/~abe/
 Source0: %{lsofrh}.tar.xz
 Source1: upstream2downstream.sh
-
-BuildRequires: libselinux-devel
 
 %description
 Lsof stands for LiSt Open Files, and it does just that: it lists
@@ -44,6 +42,9 @@ install -p -m 0644 lsof.8 ${RPM_BUILD_ROOT}%{_mandir}/man8
 %{_mandir}/man*/*
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 4.87-5
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.87-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

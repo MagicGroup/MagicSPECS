@@ -40,7 +40,7 @@
 Summary: Userland logical volume management tools 
 Name: lvm2
 Version: 2.02.107
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Base
 URL: http://sources.redhat.com/lvm2
@@ -49,7 +49,6 @@ Patch0: lvm2-set-default-preferred_names.patch
 Patch1: lvm2-enable-lvmetad-by-default.patch
 Patch2: lvm2-remove-mpath-device-handling-from-udev-rules.patch
 
-BuildRequires: libselinux-devel >= %{libselinux_version}, libsepol-devel
 BuildRequires: libblkid-devel >= %{util_linux_version}
 BuildRequires: ncurses-devel
 BuildRequires: readline-devel
@@ -628,6 +627,9 @@ the device-mapper event library.
 %{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 2.02.107-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 24 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.107-1
 - Add cmirror-standalone subpackage containing new lvm2-cmirrord.service
   systemd unit for standalone cmirrord daemon management without cluster

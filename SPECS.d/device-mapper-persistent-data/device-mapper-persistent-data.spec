@@ -4,7 +4,7 @@
 Summary: Device-mapper thin provisioning tools
 Summary(zh_CN.UTF-8):  设备映射器自动精简配置工具
 Name: device-mapper-persistent-data
-Version: 0.2.8
+Version: 0.3.2
 Release: 3%{?dist}
 License: GPLv3+
 Group: System Environment/Base
@@ -40,6 +40,17 @@ magic_rpm_clean.sh
 %{_mandir}/man8/thin_dump.8.gz
 %{_mandir}/man8/thin_check.8.gz
 %{_mandir}/man8/thin_restore.8.gz
+%{_mandir}/man8/cache_check.8.gz
+%{_mandir}/man8/cache_dump.8.gz
+%{_mandir}/man8/cache_repair.8.gz
+%{_mandir}/man8/cache_restore.8.gz
+%{_sbindir}/cache_check
+%{_sbindir}/cache_dump
+%{_sbindir}/cache_repair
+%{_sbindir}/cache_restore
+%{_sbindir}/era_check
+%{_sbindir}/era_dump
+%{_sbindir}/era_invalidate
 %{_sbindir}/thin_dump
 %{_sbindir}/thin_check
 %{_sbindir}/thin_restore
@@ -51,6 +62,9 @@ magic_rpm_clean.sh
 %{_datadir}/man/man8/thin_rmap.8.gz
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.3.2-3
+- 更新到 0.3.2
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 0.2.8-3
 - 更新到 0.2.8
 

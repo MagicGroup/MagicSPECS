@@ -4,10 +4,13 @@
 
 Name:			xmms2
 Summary: 		A modular audio framework and plugin architecture
+Summary(zh_CN.UTF-8): 	一个模块化的音频框架和插件架构
+
 Version:		0.8
-Release:		19%{?dist}
+Release:		20%{?dist}
 License:		LGPLv2+ and GPLv2+ and BSD
 Group:			Applications/Multimedia
+Group(zh_CN.UTF-8): 	应用程序/多媒体
 # We can't use the upstream source tarball as-is, because it includes an mp4 decoder.
 # http://downloads.sourceforge.net/xmms2/%{name}-%{version}%{codename}.tar.bz2
 # Cleaning it is simple, just rm -rf src/plugins/mp4
@@ -27,6 +30,10 @@ Patch6:			xmms2-0.8DrO_o-xsubpp-fix.patch
 Patch7:			xmms2-0.8DrO_o-libmodplug-pkgconfig-change.patch
 # libvorbis 1.3.4 changed pkgconfig libs output
 Patch8:			xmms2-0.8DrO_o-vorbis-pkgconfig-libs.patch
+# Cython 0.20.2 
+Patch9:			xmms2-0.8-fixcython.patch
+# ffmpeg 2.2
+Patch10:		xmms2-0.8DrO_o-ffmpeg-2.2.patch
 URL:			http://wiki.xmms2.xmms.se/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:		sqlite-devel, flac-devel, libofa-devel
@@ -54,9 +61,14 @@ formats, which is expandable via plugins. It includes a basic CLI interface
 to the XMMS2 framework, but most users will want to install a graphical XMMS2 
 client (such as gxmms2 or esperanza).
 
+%description -l zh_CN.UTF-8
+一个模块化的音频框架和插件架构。
+
 %package devel
 Summary:	Development libraries and headers for XMMS2
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	glib2-devel, boost-devel
 Requires:	pkgconfig
 Requires:	%{name}%{?_isa} = %{version}-%{release}
@@ -65,50 +77,78 @@ Requires:	%{name}%{?_isa} = %{version}-%{release}
 Development libraries and headers for XMMS2. You probably need this to develop
 or build new plugins for XMMS2.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary:	Development documentation for XMMS2
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:	%{name} = %{version}-%{release}
 
 %description docs
 API documentation for the XMMS2 modular audio framework architecture.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的开发文档。
+
 %package python
 Summary:	Python support for XMMS2
+Summary(zh_CN.UTF-8): %{name} 的 Python 支持
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 
 %description python
 Python bindings for XMMS2.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %package perl
 Summary:	Perl support for XMMS2
+Summary(zh_CN.UTF-8): %{name} 的 Perl 支持
 License:	GPL+ or Artistic
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description perl
 Perl bindings for XMMS2.
 
+%description perl -l zh_CN.UTF-8
+%{name} 的 Perl 绑定。
+
 %package ruby
 Summary:	Ruby support for XMMS2
+Summary(zh_CN.UTF-8): %{name} 的 Ruby 支持
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 Requires:	ruby(release)
 
 %description ruby
 Ruby bindings for XMMS2.
 
+%description ruby -l zh_CN.UTF-8
+%{name} 的 Ruby 绑定。
+
 %package -n nyxmms2
 Summary:	Commandline client for XMMS2
+Summary(zh_CN.UTF-8): %{name} 的命令行客户端
 Group:		Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:	%{name} = %{version}-%{release}
 
 %description -n nyxmms2
 nyxmms2 is the new official commandline client for XMMS2. It can be run in
 either shell-mode (if started without arguments), or in inline-mode where
 it executes the command passed as argument directly.
+
+%description -n nyxmms2 -l zh_CN.UTF-8
+%{name} 的命令行客户端。
 
 %prep
 %setup -q -n %{name}-%{version}%{codename}
@@ -118,6 +158,8 @@ it executes the command passed as argument directly.
 %patch5 -p1 -b .versionsanity
 %patch7 -p1 -b .modplug_header
 %patch8 -p1 -b .vorbis_libs
+%patch9 -p1
+%patch10 -p1
 
 # This header doesn't need to be executable
 chmod -x src/include/xmmsclient/xmmsclient++/dict.h
@@ -144,6 +186,7 @@ patch -p0 < %{_sourcedir}/xmms2-0.8DrO_o-xsubpp-fix.patch
 ./waf build -v %{?_smp_mflags}
 # make the docs
 doxygen
+magic_rpm_clean.sh
 
 %install
 rm -rf %{buildroot}
@@ -216,6 +259,9 @@ rm -rf %{buildroot}
 %{_bindir}/nyxmms2
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.8-20
+- 为 Magic 3.0 重建
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8-19
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
