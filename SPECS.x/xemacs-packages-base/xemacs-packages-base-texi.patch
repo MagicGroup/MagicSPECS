@@ -1,0 +1,19 @@
+--- xemacs-packages/efs/efs.texi.orig	2011-10-11 09:04:55.000000000 -0600
++++ xemacs-packages/efs/efs.texi	2013-04-09 09:24:19.974293888 -0600
+@@ -42,13 +42,13 @@
+ @end ifinfo
+ 
+ @titlepage
+-@sp5
++@sp 5
+ @center @titlefont{EFS}
+ @center version 1.20
+-@sp2
++@sp 2
+ @center A transparent remote file system, by Sandy Rutherford, Andy
+ Norman, and Mike Sperber
+-@sp7
++@sp 7
+ @center This documentation based on ange-ftp documentation by David Smith
+ @center and on documentation in the EFS source code
+ @center It was put together by Mike Sperber.
