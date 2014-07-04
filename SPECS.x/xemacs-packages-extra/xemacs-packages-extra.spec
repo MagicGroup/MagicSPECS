@@ -1,10 +1,10 @@
 %global pkgdir  %{_datadir}/xemacs
 %global xemver  %(pkg-config --modversion xemacs 2>/dev/null || echo 0)
-%global basever 20121228
+%global basever 20130408
 
 Name:           xemacs-packages-extra
-Version:        20130208
-Release:        3%{?dist}
+Version:        20130408
+Release:        4%{?dist}
 Summary:        Collection of XEmacs lisp packages
 
 Group:          Applications/Editors
@@ -38,9 +38,11 @@ Patch5:         %{name}-20090217-auctex-texjp-platex.patch
 Patch6:         %{name}-20090217-browsers.patch
 # do not use the unsupported :risky keyword to defcustom
 Patch7:         %{name}-20121228-risky.patch
+# fix problems with texinfo 5
+Patch8:         %{name}-20130408-texi.patch
 
 BuildArch:      noarch
-BuildRequires:  xemacs >= 21.5.29-11
+BuildRequires:  xemacs >= 21.5.30
 BuildRequires:  texinfo
 # For building auctex docs
 BuildRequires:  tex(latex)
@@ -67,7 +69,7 @@ environments.
 %package        el
 Summary:        Emacs lisp source files for XEmacs packages collection
 Group:          Development/Libraries
-Requires:       xemacs-packages-extra = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
 Requires:       xemacs-packages-base-el >= %{basever}
 
 %description    el
@@ -78,7 +80,7 @@ developing or debugging the packages.
 %package        info
 Summary:        XEmacs packages documentation in GNU texinfo format
 Group:          Documentation
-Requires:       xemacs-packages-extra = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
 
 %description    info
 This package contains optional documentation for the XEmacs packages
@@ -95,6 +97,7 @@ collection in GNU texinfo format
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8
 
 chmod -c -x \
     xemacs-packages/auctex/style/babel.el \
@@ -223,6 +226,19 @@ sed -i -e 's/^\(.*[_-]ja\.info.*\)$/%lang(ja) \1/' info-files
 
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130408-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130408-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 20130408-2
+- Perl 5.18 rebuild
+
+* Tue Apr  9 2013 Jerry James <loganjerry@gmail.com> - 20130408-1
+- Update to new package release
+- Add -texi patch to fix issues with texinfo 5
+
 * Mon Feb 11 2013 Jerry James <loganjerry@gmail.com> - 20130208-3
 - Fix version dependency in the -el subpackage
 
