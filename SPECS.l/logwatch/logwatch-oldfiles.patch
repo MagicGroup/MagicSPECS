@@ -1,3 +1,9 @@
+Add '--no-oldfiles-log' option that suppresses a warning about old files in the
+logwatch temporary directory.
+
+Author: Ivana Varekova <varekova@redhat.com>
+RH-Bugzilla: #230974
+
 --- logwatch-20110113/logwatch.8.orig	2010-05-01 04:32:20.000000000 +0200
 +++ logwatch-20110113/logwatch.8	2011-01-13 11:49:28.631589520 +0100
 @@ -31,7 +31,7 @@

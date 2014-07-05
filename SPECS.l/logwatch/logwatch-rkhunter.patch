@@ -1,0 +1,48 @@
+RootkitHunter support.
+
+Author: Jan Synacek <jsynacek@redhat.com>
+RH-Bugzilla: #818926
+
+Index: scripts/services/secure
+===================================================================
+--- scripts/services/secure	(revision 110)
++++ scripts/services/secure	(working copy)
+@@ -180,6 +180,7 @@
+ $PwdChange = 0;
+ $RequestKeyFailures = 0;
+ %OtherList = ();
++%RootkitHunter = ();
+ use Logwatch ':ip';
+ 
+ while (defined($ThisLine = <STDIN>)) {
+@@ -519,6 +520,14 @@
+         $e='';
+      }
+      $KerbList{$response}{$type}{$from}{$service}{$client}{$e}++;
++   } elsif ($ThisLine =~ /Rootkit Hunter:/ ) {
++      if ($ThisLine =~ /Please inspect this machine/) {
++         $RootkitHunter{'inspect'}++;
++      } elsif ($ThisLine =~ /check started/) {
++         $RootkitHunter{'runs'}++;
++      } elsif (my ($mins, $secs) = ($ThisLine =~ /Scanning took ([0-9]*) minutes? and ([0-9]*) seconds?/)) {
++         $RootkitHunter{'time'}+= $mins*60 + $secs;
++      }
+    } else {
+       # Unmatched entries...
+       $ThisLine =~ s/\[\d+\]:/:/;
+@@ -908,6 +917,15 @@
+    }
+ }
+ 
++if (keys %RootkitHunter) {
++   use integer;
++   my ($mins, $secs) = ($RootkitHunter{'time'} / 60, $RootkitHunter{'time'} % 60);
++   print "\nRootkitHunter:\n";
++   print "   Runs: $RootkitHunter{'runs'}\n";
++   print "   Suggested Inspection: $RootkitHunter{'inspect'} Time(s)\n";
++   print "   Total Runtime: $mins minute(s) $secs second(s)\n";
++}
++
+ if (keys %OtherList) {
+    print "\n**Unmatched Entries**\n";
+    foreach $line (sort {$a cmp $b} keys %OtherList) {

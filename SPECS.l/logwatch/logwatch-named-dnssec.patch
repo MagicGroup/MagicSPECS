@@ -1,3 +1,8 @@
+Handle DNSSEC messages in named.
+
+Author: Frank Crawford <frank@crawford.emu.id.au>
+RH-Bugzilla: #666394
+
 diff -up logwatch-svn46/scripts/services/named.dnssec logwatch-svn46/scripts/services/named
 --- logwatch-svn46/scripts/services/named.dnssec	2011-03-28 13:54:24.212725223 +0200
 +++ logwatch-svn46/scripts/services/named	2011-03-28 14:08:21.044509429 +0200
@@ -9,7 +14,7 @@ diff -up logwatch-svn46/scripts/services/named.dnssec logwatch-svn46/scripts/ser
        ($ThisLine =~ /success resolving '.*' \(in '.*'?\) after disabling EDNS/) or
        ($ThisLine =~ /success resolving '.*' \(in '.*'?\) after reducing the advertised EDNS UDP packet size to 512 octets/) or
        ($ThisLine =~ /the working directory is not writable/) or
-@@ -249,6 +250,11 @@ while (defined($ThisLine = <STDIN>)) {
+@@ -250,6 +250,11 @@ while (defined($ThisLine = <STDIN>)) {
        ($ThisLine =~ /refresh in progress, refresh check queued/) or
        ($ThisLine =~ /refresh: NODATA response from master/) or
        ($ThisLine =~ /update with no effect/) or
@@ -18,9 +23,9 @@ diff -up logwatch-svn46/scripts/services/named.dnssec logwatch-svn46/scripts/ser
 +      ($ThisLine =~ /set up managed keys zone/) or
 +      # the following seems okay since it says "success"
 +      ($ThisLine =~ /managed-keys-zone .*: No DNSKEY RRSIGs found for '.*': success/) or
+       ($ThisLine =~ /validating \@0x[[:xdigit:]]+: .* no valid signature found/) or
        # ignore this line because the following line describes the error
        ($ThisLine =~ /unexpected error/)
-    ) {
 @@ -269,7 +275,8 @@ while (defined($ThisLine = <STDIN>)) {
        $ShutdownNamed++;
     } elsif ( $ThisLine =~ /named shutdown failed/ ) {

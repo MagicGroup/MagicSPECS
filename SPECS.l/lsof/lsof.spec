@@ -1,8 +1,10 @@
 Summary: A utility which lists open files on a Linux/UNIX system
 Name: lsof
-Version: 4.85
-Release: 2%{?dist}
-License: zlib
+Version: 4.87
+Release: 5%{?dist}
+# Sendmail .. lib/snpf.c
+# LGPLv2+  .. lib/regex.c, regex.h
+License: zlib and Sendmail and LGPLv2+
 Group: Development/Debuggers
 
 # lsof contains licensed code that we cannot ship.  Therefore we use
@@ -10,12 +12,11 @@ Group: Development/Debuggers
 #
 # The script you can found in SCM or download from:
 # http://pkgs.fedoraproject.org/gitweb/?p=lsof.git;a=blob_plain;f=upstream2downstream.sh
-#
-%define lsofrh lsof_%{version}-rh
-Source0: %{lsofrh}.tar.bz2
-URL: ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%global lsofrh lsof_%{version}-rh
+URL: http://people.freebsd.org/~abe/
+Source0: %{lsofrh}.tar.xz
+Source1: upstream2downstream.sh
 
 %description
 Lsof stands for LiSt Open Files, and it does just that: it lists
@@ -24,32 +25,54 @@ UNIX system.
 
 %prep
 %setup -q -n %{lsofrh}
-#%patch0 -p1
 
 %build
-LSOF_VSTR=2.6.16 LINUX_BASE=/proc ./Configure -n linux
-
+./Configure -n linux
 make DEBUG="$RPM_OPT_FLAGS" %{?_smp_mflags}
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}
-install -p -m 0755 lsof ${RPM_BUILD_ROOT}%{_prefix}/sbin
+install -p -m 0755 lsof ${RPM_BUILD_ROOT}%{_sbindir}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man8
-install -p -m 0644 lsof.8 ${RPM_BUILD_ROOT}%{_mandir}/man8/
-
-%clean
-rm -rf ${RPM_BUILD_ROOT}
+install -p -m 0644 lsof.8 ${RPM_BUILD_ROOT}%{_mandir}/man8
 
 %files
-%defattr(-,root,root,-)
-%doc 00*
+%doc 00* README.lsof_*
 %{_sbindir}/lsof
 %{_mandir}/man*/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.85-2
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 4.87-5
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.87-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.87-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.87-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jan  3 2013 Peter Schiffer <pschiffe@redhat.com> - 4.87-1
+- resolves: #891508
+  updated to 4.87
+
+* Tue Aug 28 2012 Peter Schiffer <pschiffe@redhat.com> - 4.86-4
+- .spec file cleanup
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.86-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 04 2012 Peter Schiffer <pschiffe@redhat.com> - 4.86-2
+- added support for files on anon_inodefs
+
+* Fri Apr 20 2012 Peter Schiffer <pschiffe@redhat.com> - 4.86-1
+- resolves: #811520
+  update to 4.86
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.85-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Fri Sep 30 2011 Peter Schiffer <pschiffe@redhat.com> - 4.85-1
 - resolves: #741882

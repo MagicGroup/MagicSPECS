@@ -1,0 +1,21 @@
+diff -ur xmms2-0.8DrO_o.orig/src/clients/lib/python/xmmsapi.pyx xmms2-0.8DrO_o/src/clients/lib/python/xmmsapi.pyx
+--- xmms2-0.8DrO_o.orig/src/clients/lib/python/xmmsapi.pyx	2014-07-04 18:24:37.726534091 +0000
++++ xmms2-0.8DrO_o/src/clients/lib/python/xmmsapi.pyx	2014-07-04 18:26:26.999531291 +0000
+@@ -1359,7 +1359,7 @@
+ 		return self.create_result(cb, res)
+ 
+ 	@deprecated
+-	def medialib_path_import(self, path, cb = None, encoded=False):
++	def medialib_import_path(self, path, cb = None, encoded=False):
+ 		"""
+ 		@deprecated
+ 		Use medialib_import_path(path, ...) instead
+@@ -1367,7 +1367,7 @@
+ 		return self.medialib_import_path(self, path, cb=cb, encoded=encoded)
+ 
+ 	@deprecated
+-	def medialib_path_import_encoded(self, path, cb = None):
++	def medialib_import_path(self, path, cb = None, encoded=True):
+ 		"""
+ 		@deprecated
+ 		Use medialib_import_path(path, ..., encoded=True) instead

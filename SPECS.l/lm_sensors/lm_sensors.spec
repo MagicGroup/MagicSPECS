@@ -1,6 +1,6 @@
 Name: lm_sensors
-Version: 3.3.1
-Release: 2%{?dist}
+Version:	3.3.5
+Release: 1%{?dist}
 URL: http://www.lm-sensors.org/
 Source: http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
 Source1: lm_sensors.sysconfig
@@ -143,6 +143,9 @@ fi
 
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 3.3.5-1
+- 更新到 3.3.5
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.3.1-2
 - 为 Magic 3.0 重建
 

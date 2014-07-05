@@ -1,6 +1,6 @@
 --- ./Makefile.in.in.orig	2012-08-02 12:38:27.000000000 -0600
 +++ ./Makefile.in.in	2012-08-06 20:27:16.084145753 -0600
-@@ -393,7 +393,7 @@ etc/PROBLEMS: $(srcdir)/PROBLEMS
+@@ -394,7 +394,7 @@ etc/PROBLEMS: $(srcdir)/PROBLEMS
  
  install-only: ${MAKE_SUBDIR} check-features install-arch-dep install-arch-indep
  

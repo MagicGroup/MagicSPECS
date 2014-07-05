@@ -1,0 +1,64 @@
+--- etc/Emacs.ad.orig	2013-08-21 11:43:43.000000000 -0600
++++ etc/Emacs.ad	2013-10-24 20:00:00.000000000 -0600
+@@ -222,36 +222,40 @@
+ ! *menubar*FontSet:	-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*, \
+ !			-*-*-*-*-*-*-*-120-*-jisx0208.1983-0
+ !
+-*menubar*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+-*popup*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+-*menubar*FontSet:		-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*, \
++*menubar*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*
++*popup*Font:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*
++
++XEmacs*FontSet:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso10646-1, \
++				-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*, \
++				*
++*menubar*FontSet:		-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*, \
+  			        -*-*-*-*-*-*-*-120-*-iso10646-1, \
+  			        -*-*-*-*-*-*-*-120-*-jisx0208.1983-0, \
+  			        -*-*-*-*-*-*-*-120-*-jisx0201.1976-0
+-*popup*FontSet:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*, \
++*popup*FontSet:			-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*, \
+    			        -*-*-*-*-*-*-*-120-*-iso10646-1, \
+  			        -*-*-*-*-*-*-*-120-*-jisx0208.1983-0, \
+  			        -*-*-*-*-*-*-*-120-*-jisx0201.1976-0
+ 
+ ! Gui elements share this font
+ !
+-Emacs.gui-element.attributeFont:  -*-helvetica-medium-r-*-*-*-120-*-*-*-*-iso8859-*
++Emacs.gui-element.attributeFont:  -*-helvetica-medium-r-*-*-*-120-*-*-*-*-*-*
+ 
+ ! Font in the Motif dialog boxes.
+ ! (Motif uses `fontList' while most other things use `font' - if you don't
+ ! know why you probably don't want to.)
+ ! 
+-*XmDialogShell*FontList:	-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-*
+-*XmTextField*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-*
+-*XmText*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-*
+-*XmList*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-*
++*XmDialogShell*FontList:	-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-*
++*XmTextField*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-*-*
++*XmText*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-*-*
++*XmList*FontList:		-*-courier-medium-r-*-*-*-120-*-*-*-*-*-*
+ 
+ ! Font in the Athena dialog boxes.
+ ! I think 14-point looks nicer than 12-point.
+ ! Some people use 12-point anyway because you get more text, but
+ ! there's no purpose at all in doing this for dialog boxes.
+ 
+-*Dialog*Font:			-*-helvetica-bold-r-*-*-*-140-*-*-*-*-iso8859-*
++*Dialog*Font:			-*-helvetica-bold-r-*-*-*-140-*-*-*-*-*-*
+ 
+ ! Dialog box translations.
+ ! =======================
+--- lwlib/xlwmenu.c.orig	2013-08-21 11:43:43.000000000 -0600
++++ lwlib/xlwmenu.c	2013-10-24 20:00:00.000000000 -0600
+@@ -108,7 +108,7 @@
+      /* We must use an iso8859-1 font here, or people without $LANG set lose.
+ 	It's fair to assume that those who do have $LANG set also have the
+ 	*fontList resource set, or at least know how to deal with this. */
+-     XtRString, (XtPointer) "-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-1"),
++     XtRString, (XtPointer) "-*-helvetica-bold-r-*-*-*-120-*-*-*-*-*-1"),
+ #else
+   fontres (XtNfont, XtCFont, XtRFontStruct, XFontStruct *, font,
+ 	   "XtDefaultFont"),

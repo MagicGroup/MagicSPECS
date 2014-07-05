@@ -6,9 +6,9 @@
 %bcond_with     wnn
 %bcond_with     xaw3d
 %bcond_with     xfs
+%bcond_with     xim
 %bcond_without  mule
 %bcond_without  nox
-%bcond_without  xim
 %ifarch ia64
 # no-expdyn-ia64 patch, https://bugzilla.redhat.com/show_bug.cgi?id=106744#c39
 %bcond_with     modules
@@ -16,13 +16,14 @@
 %bcond_without  modules
 %endif
 
-#global snap    20090311hg4626
-%global majver  21.5
+%global snap    20140605hgacf1c26e3019
 
 Name:           xemacs
-Version:        21.5.33
-Release:        4%{?snap:.%{snap}}%{?dist}
+Version:        21.5.34
+Release:        7%{?snap:.%{snap}}%{?dist}
 Summary:        Different version of Emacs
+
+%global majver %(cut -d. -f1-2 <<<%{version})
 
 Group:          Applications/Editors
 License:        GPLv3+
@@ -38,6 +39,7 @@ Source3:        dotxemacs-init.el
 Source4:        default.el
 Source5:        xemacs-sitestart.el
 Source6:        gnuclient.desktop
+Source7:        %{name}.appdata.xml
 
 # Fedora-specific.  Don't run the check-features Makefile target.  It checks
 # that necessary packages are installed, but they aren't installed while
@@ -47,7 +49,7 @@ Patch0:         %{name}-21.5.25-mk-nochk-features.patch
 # WNN still doesn't work.
 Patch1:         %{name}-21.5.25-wnnfix-128362.patch
 # Fedora-specific.  Don't force ISO-8859 fonts.
-Patch2:         %{name}-21.5.26-utf8-fonts.patch
+Patch2:         %{name}-21.5.34-utf8-fonts.patch
 # Experimental patch, to be sent upstream eventually.  Don't use
 # -export-dynamic on IA64; leads to segfaults due to function pointer issues.
 Patch3:         %{name}-21.5.27-no-expdyn-ia64-106744.patch
@@ -55,10 +57,7 @@ Patch3:         %{name}-21.5.27-no-expdyn-ia64-106744.patch
 Patch4:         %{name}-21.5.28-courier-default.patch
 # Fedora-specific.  Recognize the Fedora X server.
 Patch5:         %{name}-21.5.29-x-server.patch
-# Applied upstream.  Fix a crash if given a bad menu specification.
-Patch6:         %{name}-21.5.33-menubar.patch
 
-BuildRequires:  sed >= 3.95
 BuildRequires:  texinfo
 BuildRequires:  ncurses-devel
 BuildRequires:  gpm-devel
@@ -245,9 +244,10 @@ sed -i -e /tetris/d lisp/menubar-items.el
 %patch3
 %patch4
 %patch5
-%patch6
 
-sed -i -e 's/"lib"/"%{_lib}"/' lisp/setup-paths.el
+sed -e 's/"lib"/"%{_lib}"/' lisp/setup-paths.el > lisp/setup-paths.el.new
+touch -r lisp/setup-paths.el lisp/setup-paths.el.new
+mv -f lisp/setup-paths.el.new lisp/setup-paths.el
 
 for f in man/lispref/mule.texi man/xemacs-faq.texi CHANGES-beta ; do
     iconv -f iso-8859-1 -t utf-8 -o $f.utf8 $f
@@ -431,6 +431,7 @@ mv $RPM_BUILD_ROOT%{_bindir}/etags{,.xemacs}
 rm -f $RPM_BUILD_ROOT%{_bindir}/{ctags,rcs-checkin,b2m}
 mv $RPM_BUILD_ROOT%{_mandir}/man1/etags{,.xemacs}.1
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/ctags.1
+rm -f $RPM_BUILD_ROOT%{_infodir}/{cl,widget}.info*
 
 # these clash with other packages
 rm -f $RPM_BUILD_ROOT%{_infodir}/info*
@@ -443,6 +444,10 @@ desktop-file-install --mode=644 --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
 
 desktop-file-install --mode=644 --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
     %{SOURCE6}
+
+# AppData file
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/appdata
+install -pm 644 %{SOURCE7} $RPM_BUILD_ROOT%{_datadir}/appdata
 
 # site-start.el
 install -dm 755 \
@@ -461,7 +466,7 @@ install -Dpm 644 %{SOURCE1} \
     $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/xemacs.png
 
 # macro file
-install -Dpm 644 macros.xemacs $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.xemacs
+install -Dpm 644 macros.xemacs $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d/macros.%{name}
 
 # Empty directories for external packages to use
 mkdir -m 0755 $RPM_BUILD_ROOT%{_datadir}/xemacs/site-packages/etc
@@ -551,14 +556,14 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_sbindir}/alternatives --remove etags %{_bindir}/etags.xemacs || :
 
 %post info
-for file in xemacs cl internals lispref new-users-guide ; do
+for file in xemacs internals lispref new-users-guide ; do
     /sbin/install-info %{_infodir}/$file.info %{_infodir}/dir
 done
 :
 
 %preun info
 if [ $1 -eq 0 ] ; then
-    for file in xemacs cl internals lispref new-users-guide ; do
+    for file in xemacs internals lispref new-users-guide ; do
         /sbin/install-info --delete %{_infodir}/$file.info %{_infodir}/dir
     done
 fi
@@ -578,6 +583,7 @@ fi
 %{_libdir}/xemacs-%{xver}/%{xbuild}/modules/canna_api.ell
 %endif
 %endif
+%{_datadir}/appdata/%{name}.appdata.xml
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/applications/gnuclient.desktop
 %{_datadir}/icons/hicolor/48x48/apps/xemacs.png
@@ -617,7 +623,7 @@ fi
 %dir %{_libdir}/xemacs-%{xver}/%{xbuild}/modules/
 %{_libdir}/xemacs-%{xver}/%{xbuild}/modules/auto-autoloads.elc
 %endif
-%config(noreplace) %{_sysconfdir}/rpm/macros.xemacs
+%{_rpmconfigdir}/macros.d/macros.%{name}
 %config(noreplace) %{_sysconfdir}/skel/.xemacs/
 %{_mandir}/man1/etags.xemacs.1*
 %{_mandir}/man1/gnuserv.1*
@@ -652,6 +658,46 @@ fi
 %dir %{_datadir}/xemacs/site-packages/pkginfo
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21.5.34-7.20140605hgacf1c26e3019
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Jun  5 2014 Jerry James <loganjerry@gmail.com> - 21.5.34-6.20140605hgacf1c26e3019
+- Update to snapshot: fixes bz 1095405 and allows diagnosis of bz 1078159
+- Update snapshot creating script to use bitbucket and maximally compress
+- Don't need to exclude texinfo info files; upstream has dropped them
+
+* Wed Feb  5 2014 Jerry James <loganjerry@gmail.com> - 21.5.34-5
+- Disable XIM by default.  It hasn't worked since the release of Fedora 19 due
+  to a fixed size buffer inside libX11 that is too small (see _XimProtoCreateIC
+  in modules/im/ximcp/imDefIc.c), and nobody has complained.
+- Update location of rpm macro file for rpm >= 4.11
+
+* Tue Nov 12 2013 Jerry James <loganjerry@gmail.com> - 21.5.34-4
+- Add an AppData file
+
+* Fri Oct 25 2013 Jerry James <loganjerry@gmail.com> - 21.5.34-3
+- Update the -utf8-fonts patch to remove more references to iso8859 fonts
+
+* Wed Oct  2 2013 Jerry James <loganjerry@gmail.com> - 21.5.34-2
+- Don't package the texinfo info files; they clash with texinfo 5.2
+
+* Thu Aug 22 2013 Jerry James <loganjerry@gmail.com> - 21.5.34-1
+- New upstream version
+- Drop upstreamed -menubar, -aarch64, and -texinfo patches
+- Drop unnecessary sed BR
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 21.5.33-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jun 19 2013 Jerry James <loganjerry@gmail.com> - 21.5.33-6
+- Rebuild for libpng 1.6
+
+* Mon Apr  8 2013 Jerry James <loganjerry@gmail.com> - 21.5.33-5
+- Add -texinfo patch to fix problems with texinfo 5 (bz 923365)
+- Add -aarch64 patch (bz 926766)
+- Build with libdb version 5
+- Emacs started shipping cl and widget info files, so we drop them
+
 * Tue Feb  5 2013 Jerry James <loganjerry@gmail.com> - 21.5.33-4
 - Update -menubar patch so :visible keyword is accepted in menus (bz 890565)
 

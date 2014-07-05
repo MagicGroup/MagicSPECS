@@ -1,9 +1,11 @@
 Summary: The lrz and lsz modem communications programs
+Summary(zh_CN.UTF-8): lrz 和 lsz 通信程序
 Name: lrzsz
 Version: 0.12.20
-Release: 31%{?dist}
+Release: 32%{?dist}
 License: GPLv2+
 Group: Applications/Communications
+Group(zh_CN.UTF-8): 应用程序/通信
 Source: http://www.ohse.de/uwe/releases/%{name}-%{version}.tar.gz
 Patch1: lrzsz-0.12.20-glibc21.patch
 Patch2: lrzsz-0.12.20.patch
@@ -17,6 +19,9 @@ Lrzsz (consisting of lrz and lsz) is a cosmetically modified
 zmodem/ymodem/xmodem package built from the public-domain version of
 the rzsz package. Lrzsz was created to provide a working GNU
 copylefted Zmodem solution for Linux systems.
+
+%description -l zh_CN.UTF-8
+这是使用 zmodem/ymodem/xmodem 协议的文件传输程序.
 
 %prep
 %setup -q
@@ -49,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 0.12.20-32
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.12.20-31
 - 为 Magic 3.0 重建
 

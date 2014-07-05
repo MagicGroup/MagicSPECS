@@ -1,0 +1,37 @@
+Add --hostlimit and --html_wrap to the logwatch.8 manpage.
+
+Author: Jan Synacek <jsynacek@redhat.com>
+
+--- logwatch-svn140/logwatch.8	2013-05-22 15:29:09.779339911 +0200
++++ logwatch-svn140-dist/logwatch.8	2013-05-22 15:48:03.248311264 +0200
+@@ -21,8 +21,12 @@ logwatch \- system log analyzer and repo
+ .I file-name
+ .B ] [--logdir
+ .I directory
++.B ] [--hostlimit
++.I hosts
+ .B ] [--hostname
+ .I hostname
++.B ] [--html_wrap
++.I number of characters
+ .B ] [--hostformat 
+ .I host based options
+ .B ] [--output
+@@ -94,6 +98,8 @@ instead of displaying or mailing it.
+ Look in
+ .I directory
+ for log subdirectories or log files instead of the default directory.
++.IP "\fB--hostlimit\fR host1,host2"
++Limit report to hostname - host1, host2.
+ .IP "\fB--hostname\fR hostname"
+ Use
+ .I hostname
+@@ -101,6 +107,8 @@ for the reports instead of this system's
+ if HostLimit is set in the logwatch.conf configuration file (see
+ \fBMORE INFORMATION\fR, below),
+ then only logs from this hostname will be processed (where appropriate).
++.IP "\fB--html_wrap\fR num-characters"
++Number of characters that html output should be wrapped to. Default is 80.
+ .IP "\fB--numeric\fR"
+ Inhibits additional name lookups, displaying IP addresses numerically.
+ .IP "\fB--no-oldfiles-log\fR"

@@ -2,8 +2,8 @@
 %define xemver  v=$(rpm -q --qf=%%{VERSION} xemacs-nox) ; case $v in 2*) echo $v ;; *) echo 0 ;; esac
 
 Name:           xemacs-packages-base
-Version:        20121228
-Release:        2%{?dist}
+Version:        20130408
+Release:        3%{?dist}
 Summary:        Base lisp packages for XEmacs
 
 Group:          Applications/Editors
@@ -13,6 +13,8 @@ URL:            http://www.xemacs.org/Documentation/packageGuide.html
 # Tarball created with Source99
 Source0:        %{name}-%{version}.tar.xz
 Source99:       %{name}-checkout.sh
+# Fix the build with texinfo 5
+Patch0:         %{name}-texi.patch
 
 BuildArch:      noarch
 BuildRequires:  xemacs-nox
@@ -43,6 +45,7 @@ developing or debugging the packages.
 
 %prep
 %setup -q
+%patch0
 [ ! "%(%{xemver})" '<' "21.5" ] && x215="XEMACS_21_5=t" || x215=
 cat << EOF > make.sh
 #!/bin/sh
@@ -99,6 +102,16 @@ sed -i -e 's/^\(.*\(\.ja\|-ja\.texi\)\)$/%lang(ja) \1/' base-files
 
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130408-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20130408-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Apr  9 2013 Jerry James <loganjerry@gmail.com> - 20130408-1
+- Update to latest package releases
+- Add -texi patch to fix build with texinfo 5
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20121228-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

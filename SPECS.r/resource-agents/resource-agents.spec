@@ -9,15 +9,18 @@
 # published by the Open Source Initiative.
 #
 
-
-
-
-
-
-# 
-# Since this spec file supports multiple distributions, ensure we
-# use the correct group for each.
+# Below is the script used to generate a new source file
+# from the resource-agent upstream git repo.
 #
+# TAG=$(git log --pretty="format:%h" -n 1)
+# distdir="ClusterLabs-resource-agents-${TAG}"
+# TARFILE="${distdir}.tar.gz"
+# rm -rf $TARFILE $distdir
+# git archive --prefix=$distdir/ HEAD | gzip > $TARFILE
+#
+
+%global upstream_prefix ClusterLabs-resource-agents
+%global upstream_version 39c1f6e
 
 # SSLeay (required by ldirectord)
 %if 0%{?suse_version}
@@ -27,21 +30,21 @@
 %endif
 
 # determine the ras-set to process based on configure invokation
-%bcond_without rgmanager
+%bcond_with rgmanager
 %bcond_without linuxha
 
 Name:		resource-agents
 Summary:	Open Source HA Reusable Cluster Resource Scripts
-Version:	3.9.2
-Release:	3%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:.%{alphatag}}%{?dirty:.%{dirty}}%{?dist}.4
+Version:	3.9.5
+Release:	12%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:.%{alphatag}}%{?dirty:.%{dirty}}%{?dist}.2
 License:	GPLv2+ and LGPLv2+
-URL:		http://to.be.defined.com/
+URL:		https://github.com/ClusterLabs/resource-agents
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel}
 Group:		System Environment/Base
 %else
 Group:		Productivity/Clustering/HA
 %endif
-Source0:	%{name}-%{version}%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:-%{alphatag}}%{?dirty:-%{dirty}}.tar.bz2
+Source0:	%{upstream_prefix}-%{upstream_version}.tar.gz
 Obsoletes:	heartbeat-resources <= %{version}
 Provides:	heartbeat-resources = %{version}
 
@@ -55,7 +58,7 @@ BuildRequires: libxslt glib2-devel
 BuildRequires: which
 
 %if 0%{?fedora} || 0%{?centos_version} || 0%{?rhel}
-BuildRequires: cluster-glue-libs-devel
+#BuildRequires: cluster-glue-libs-devel
 BuildRequires: docbook-style-xsl docbook-dtds
 %if 0%{?rhel} == 0
 BuildRequires: libnet-devel
@@ -93,10 +96,10 @@ Requires: /sbin/ip /usr/sbin/ethtool
 Requires: /sbin/rdisc /usr/sbin/arping /bin/ping /bin/ping6
 
 # lvm.sh
-Requires: /sbin/lvm
+Requires: /usr/sbin/lvm
 
 # netfs.sh
-Requires: /sbin/mount.nfs /sbin/mount.nfs4 /sbin/mount.cifs
+Requires: /sbin/mount.nfs /sbin/mount.nfs4 /usr/sbin/mount.cifs
 Requires: /usr/sbin/rpc.nfsd /sbin/rpc.statd /usr/sbin/rpc.mountd
 %endif
 
@@ -116,12 +119,15 @@ Group:		Productivity/Clustering/HA
 %endif
 Obsoletes:	heartbeat-ldirectord <= %{version}
 Provides:	heartbeat-ldirectord = %{version}
+%if 0%{?fedora} > 18 || 0%{?centos_version} > 6 || 0%{?rhel} > 6
+BuildRequires: perl-podlators
+%endif
 Requires:       %{SSLeay} perl-libwww-perl perl-MailTools
 Requires:       ipvsadm logrotate
 %if 0%{?fedora_version}
 Requires:	perl-Net-IMAP-Simple-SSL
-Requires(post):	/usr/sbin/chkconfig
-Requires(preun):/usr/sbin/chkconfig
+Requires(post):	/sbin/chkconfig
+Requires(preun):/sbin/chkconfig
 %endif
 
 %description -n ldirectord
@@ -141,7 +147,7 @@ See 'ldirectord -h' and linux-ha/doc/ldirectord for more information.
 %{error:Unable to determine the distribution/version. This is generally caused by missing /etc/rpm/macros.dist. Please install the correct build packages or define the required macros manually.}
 exit 1
 %endif
-%setup -q -n %{name}-%{version}%{?rcver:%{rcver}}%{?numcomm:.%{numcomm}}%{?alphatag:-%{alphatag}}%{?dirty:-%{dirty}}
+%setup -q -n %{upstream_prefix}-%{upstream_version}
 
 %build
 if [ ! -f configure ]; then
@@ -150,7 +156,6 @@ fi
 
 %if 0%{?fedora} >= 11 || 0%{?centos_version} > 5 || 0%{?rhel} > 5
 CFLAGS="$(echo '%{optflags}')"
-%global conf_opt_rsctmpdir "--with-rsctmpdir=%{_var}/run/heartbeat/rsctmp"
 %global conf_opt_fatal "--enable-fatal-warnings=no"
 %else
 CFLAGS="${CFLAGS} ${RPM_OPT_FLAGS}"
@@ -170,7 +175,6 @@ CFLAGS="${CFLAGS} ${RPM_OPT_FLAGS}"
 export CFLAGS
 
 %configure \
-	%{?conf_opt_rsctmpdir:%conf_opt_rsctmpdir} \
 	%{conf_opt_fatal} \
 	--with-pkg-name=%{name} \
 	--with-ras-set=%{rasset}
@@ -200,8 +204,6 @@ test -d %{buildroot}/sbin || mkdir %{buildroot}/sbin
 ) || true
 %endif
 %endif
-
-magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -245,11 +247,7 @@ rm -rf %{buildroot}
 
 %{_includedir}/heartbeat
 
-%if 0%{?fedora} >= 11 || 0%{?centos_version} > 5 || 0%{?rhel} > 5
-%dir %{_var}/run/heartbeat/rsctmp
-%else
 %dir %attr (1755, root, root)	%{_var}/run/resource-agents
-%endif
 
 %{_mandir}/man7/*.7*
 %{_mandir}/man8/ocf-tester.8*
@@ -259,7 +257,7 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/ha.d
 %{_sysconfdir}/ha.d/shellfuncs
 
-%{_libdir}/heartbeat
+%{_libexecdir}/heartbeat
 
 %if %{with rgmanager}
 %post -n resource-agents
@@ -275,12 +273,14 @@ ccs_update_schema > /dev/null 2>&1 ||:
 
 %if 0%{?fedora}
 %preun -n ldirectord
-/usr/sbin/chkconfig --del ldirectord
+/sbin/chkconfig --del ldirectord
 %postun -n ldirectord -p /sbin/ldconfig
 %post -n ldirectord
-/usr/sbin/chkconfig --add ldirectord
+/sbin/chkconfig --add ldirectord
+%endif
 %endif
 
+%if %{with linuxha}
 %files -n ldirectord
 %defattr(-,root,root)
 %{_sbindir}/ldirectord
@@ -291,14 +291,78 @@ ccs_update_schema > /dev/null 2>&1 ||:
 %dir %{_sysconfdir}/ha.d/resource.d
 %{_sysconfdir}/ha.d/resource.d/ldirectord
 %{_sysconfdir}/init.d/ldirectord
+%if 0%{?suse_version}
+/sbin/rcldirectord
+%endif
 %if 0%{?fedora}
 /usr/lib/ocf/resource.d/heartbeat/ldirectord
 %endif
 %endif
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.9.2-3.4
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 3.9.5-12.2
 - 为 Magic 3.0 重建
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.5-12.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Apr 30 2014 David Vossel <dvossel@redhat.com> - 3.9.5-12
+- Sync with latest upstream.
+
+* Thu Jan 2 2014 David Vossel <dvossel@redhat.com> - 3.9.5-11
+- Sync with latest upstream.
+
+* Wed Oct 20 2013 David Vossel <dvossel@redhat.com> - 3.9.5-10
+- Fix build system for rawhide.
+
+* Wed Oct 16 2013 David Vossel <dvossel@redhat.com> - 3.9.5-9
+- Remove rgmanager agents from build. 
+
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Wed Jul 17 2013 Petr Pisar <ppisar@redhat.com> - 3.9.5-7
+- Perl 5.18 rebuild
+
+* Tue Jun 18 2013 David Vossel <dvossel@redhat.com> - 3.9.5-6
+- Restores rsctmp directory to upstream default.
+
+* Tue Jun 18 2013 David Vossel <dvossel@redhat.com> - 3.9.5-5
+- Merges redhat provider into heartbeat provider. Remove
+  rgmanager's redhat provider.
+
+  Resolves: rhbz#917681
+  Resolves: rhbz#928890
+  Resolves: rhbz#952716
+  Resolves: rhbz#960555
+
+* Tue Mar 12 2013 David Vossel <dvossel@redhat.com> - 3.9.5-3
+- Fixes build system error with conditional logic involving
+  IPv6addr and updates spec file to build against rhel 7 as
+  well as fedora 19.
+
+* Mon Mar 11 2013 David Vossel <dvossel@redhat.com> - 3.9.5-2
+- Resolves rhbz#915050
+
+* Mon Mar 11 2013 David Vossel <dvossel@redhat.com> - 3.9.5-1
+- New upstream release.
+
+* Fri Jan 25 2013 Kevin Fenzi <kevin@scrye.com> - 3.9.2-5
+- Fix cifs mount requires
+
+* Mon Nov 12 2012 Chris Feist <cfeist@redhat.com> - 3.9.2-4
+- Removed version number after dist
+
+* Mon Oct 29 2012 Chris Feist <cfeist@redhat.com> - 3.9.2-3.8
+- Remove cluster-glue-libs-devel
+- Disable IPv6addr & sfex to fix deps on libplumgpl & libplum (due to
+  disappearance of cluster-glue in F18)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.9.2-3.5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jul 05 2012 Chris Feist <cfeist@redhat.com> - 3.9.2-3.4
+- Fix location of lvm (change from /sbin to /usr/sbin)
 
 * Tue Apr 04 2012 Jon Ciesla <limburgher@gmail.com> - 3.9.2-3.3
 - Rebuilt to fix rawhide dependency issues (caused by move of fsck from

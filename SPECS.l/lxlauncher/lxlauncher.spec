@@ -2,10 +2,12 @@
 
 Name:           lxlauncher
 Version:        0.2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Open source replacement for Launcher on the EeePC
+Summary(zh_CN.UTF-8): EeePC 上的 Launcher 的开源替代品
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org/
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
@@ -23,6 +25,9 @@ included in their EeePC. It is desktop-independent and follows
 freedesktop.org specs, so newly added applications will automatically show 
 up in the launcher, and vice versa for the removed ones.
 LXLauncher is part of LXDE, the Lightweight X11 Desktop Environment.
+
+%description -l zh_CN.UTF-8
+EeePC 上的 Launcher 的开源替代品。
 
 %prep
 %setup -q
@@ -42,6 +47,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 mkdir -m 755 $RPM_BUILD_ROOT%{_datadir}/%{name}
 mkdir -m 755 $RPM_BUILD_ROOT%{_datadir}/%{name}/backgrounds
 mkdir -m 755 $RPM_BUILD_ROOT%{_datadir}/%{name}/icons
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -62,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.2.2-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 25 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.2.2-1
 - Update to 0.2.2
 - Drop upstreamed patches

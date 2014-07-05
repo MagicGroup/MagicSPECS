@@ -2,8 +2,10 @@ Name:           lxmusic
 Version:        0.4.4
 Release:        8%{?dist}
 Summary:        Lightweight XMMS2 client with simple user interface
+Summary(zh_CN.UTF-8): 带有简单用户界面的轻量级 XMMS2 客户端
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://lxde.org
 Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
@@ -25,6 +27,9 @@ functionality, and can do nothing more than play the music. The UI is very
 clean and simple. This is currently aimed to be used as the default music 
 player of LXDE (Lightweight X11 Desktop Environment) project.
 
+%description -l zh_CN.UTF-8
+带有简单用户界面的轻量级 XMMS2 客户端。
+
 %prep
 %setup -q
 %patch0 -p1 -b .no-tools
@@ -45,6 +50,7 @@ desktop-file-install                                       \
   --delete-original                                        \
   --dir=${RPM_BUILD_ROOT}%{_datadir}/applications          \
   ${RPM_BUILD_ROOT}%{_datadir}/applications/%{name}.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 

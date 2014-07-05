@@ -1,9 +1,11 @@
 Name:           lxde-icon-theme
 Version:        0.4.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Default icon theme for LXDE
+Summary(zh_CN.UTF-8): LXDE 的默认图标主题
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        LGPLv3
 URL:            http://nuovext.pwsp.net/
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/lxde-common-%{version}.tar.bz2
@@ -17,6 +19,8 @@ Provides:       nuoveXT2-icon-theme = 2.2
 nuoveXT2 is a very complete set of icons for several operating systems. It is 
 also the default icon-theme of LXDE, the Lightweight X11 Desktop Environment.
 
+%description -l zh_CN.UTF-8
+LXDE 的默认图标主题。
 
 %prep
 %setup -qn lxde-common-%{version}
@@ -31,7 +35,7 @@ rm -rf $RPM_BUILD_ROOT
 cd icon-theme
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 touch $RPM_BUILD_ROOT%{_datadir}/icons/nuoveXT2/icon-theme.cache
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -62,6 +66,9 @@ gtk-update-icon-cache %{_datadir}/icons/nuoveXT2 &>/dev/null || :
 
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.4.2-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

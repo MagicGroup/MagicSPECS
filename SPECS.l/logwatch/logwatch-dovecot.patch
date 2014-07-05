@@ -1,15 +1,21 @@
---- logwatch-svn50.dist/scripts/services/dovecot	2011-02-23 09:20:30.000000000 +1100
-+++ logwatch-svn50/scripts/services/dovecot	2011-04-26 14:07:53.000000000 +1000
-@@ -121,7 +121,7 @@
+Update dovecot log parsing.
+
+Author: Frank Crawford <frank@crawford.emu.id.au>
+Author: Karel Klic <kklic@redhat.com>
+RH-Bugzilla: #645962
+
+--- logwatch-svn127/scripts/services/dovecot.orig	2012-12-30 17:24:53.000000000 +0100
++++ logwatch-svn127/scripts/services/dovecot	2013-01-09 09:09:45.256236296 +0100
+@@ -150,7 +150,7 @@ while (defined($ThisLine = <STDIN>)) {
           # We don't care about these
       } elsif ( $ThisLine =~ /Killed with signal /) {
           $End++;
--     } elsif ( $ThisLine =~ /Dovecot (v\d[^ ]* |)starting up$/) {
+-     } elsif ( $ThisLine =~ /Dovecot (v\d[^ ]* |)starting up( \(core dumps disabled\))?$/) {
 +     } elsif ( $ThisLine =~ /Dovecot (v\d[^ ]* |)starting up( \(.*\))?$/) {
           $Restarts++;
           $End = 0;
-      } elsif ( ($User, $Host) = ( $ThisLine =~ /^pop3-login: Login: (.*?) \[(.*)\]/ ) ) {
-@@ -147,15 +147,15 @@
+      } elsif ( ( ($User, $Host) = ( $ThisLine =~ /^pop3-login: Login: (.*?) \[(.*)\]/ ) ) or
+@@ -181,15 +181,15 @@ while (defined($ThisLine = <STDIN>)) {
        }
  
  # 'lda' for dovecot 2.0, 'deliver' for earlier versions
@@ -18,7 +24,7 @@
        $Deliver{$User}{$Mailbox}++;
  
  # For Sieve-based delivery
--    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag (?:lda|deliver)\((.*)\): sieve: msgid=.*: stored mail into mailbox '(\S+)'/ ) ) {
+-    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag (?:lda\(|deliver\(|lmtp\(\d+, )(.*)\): (?:[^:]+: )?sieve: msgid=.*: stored mail into mailbox '([^']*)'/ ) ) {
 +    } elsif ( ($User, $Mailbox) = ( $ThisLine =~ /^$dovecottag (?:lda|deliver)\((.*)\): sieve: msgid=.*: stored mail into mailbox '(.*)'/ ) ) {
        $Deliver{$User}{$Mailbox}++;
  

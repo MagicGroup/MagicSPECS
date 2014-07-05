@@ -1,16 +1,14 @@
 Summary: Rotates, compresses, removes and mails system log files
 Name: logrotate
-Version: 3.8.1
-Release: 4%{?dist}
+Version: 3.8.7
+Release: 3%{?dist}
 License: GPL+
 Group: System Environment/Base
 Url: https://fedorahosted.org/logrotate/
 Source: https://fedorahosted.org/releases/l/o/logrotate/logrotate-%{version}.tar.gz
-Patch1: logrotate-3.8.1-man.patch
-Patch2: logrotate-3.8.1-syntax-check.patch
 
-Requires: coreutils >= 5.92 popt libacl
-BuildRequires: popt-devel libacl-devel
+Requires: coreutils >= 5.92 popt
+BuildRequires: popt-devel libacl-devel acl
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -26,11 +24,12 @@ log files on your system.
 
 %prep
 %setup -q
-%patch1 -b .man
-%patch2 -p1 -b .syntax-check
 
 %build
 make %{?_smp_mflags} RPM_OPT_FLAGS="$RPM_OPT_FLAGS" WITH_SELINUX=no WITH_ACL=yes
+
+%check
+make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -58,8 +57,44 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0644, root, root) %verify(not size md5 mtime) %config(noreplace) %{_localstatedir}/lib/logrotate.status
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.8.1-4
+* Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 3.8.7-3
 - 为 Magic 3.0 重建
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Oct 10 2013 Jan Kaluza <jkaluza@redhat.com> - 3.8.7-1
+- new usptream version 3.8.7
+
+* Wed Jul 31 2013 Jan Kaluza <jkaluza@redhat.com> - 3.8.6-1
+- new upstream version 3.8.6
+
+* Wed Jul 10 2013 Jan Kaluza <jkaluza@redhat.com> - 3.8.5-2
+- fix #982409 - do not crash when no logs are rotated and "sharedscripts" and
+  "prerotate" is used
+
+* Mon Jun 10 2013 Jan Kaluza <jkaluza@redhat.com> - 3.8.5-1
+- new upstream version 3.8.5
+
+* Tue May 14 2013 Jan Kaluza <jkaluza@redhat.com> - 3.8.4-2
+- do not try to parse config files bigger than 16MB
+- remove unused patches
+
+* Tue Apr 30 2013 Jan Kaluza <jkaluza@redhat.com> - 3.8.4-1
+- new upstream version 3.8.4
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Oct 04 2012 Jan Kaluza <jkaluza@redhat.com> 3.8.3-1
+- new upstream version 3.8.3
+
+* Thu Jul 19 2012 Jan Kaluza <jkaluza@redhat.com> 3.8.2-1
+- new upstream version 3.8.2
+- tests are enabled during build
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.8.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Wed Jan 04 2012 Jan Kaluza <jkaluza@redhat.com> 3.8.1-3
 - fix #736054 - check for missing '{' in config file

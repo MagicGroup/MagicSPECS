@@ -1,0 +1,12 @@
+diff -up .waf-1.6.7-b271784c448ab906d5606267fb7f92c0/waflib/Tools/perl.py.fixme .waf-1.6.7-b271784c448ab906d5606267fb7f92c0/waflib/Tools/perl.py
+--- .waf-1.6.7-b271784c448ab906d5606267fb7f92c0/waflib/Tools/perl.py.fixme	2013-08-11 16:41:03.730842318 -0400
++++ .waf-1.6.7-b271784c448ab906d5606267fb7f92c0/waflib/Tools/perl.py	2013-08-11 16:41:18.575842955 -0400
+@@ -60,7 +60,7 @@ def check_perl_ext_devel(self):
+ 	env['LINKFLAGS_PERLEXT']=read_out(" -MConfig -e'print $Config{lddlflags}'")
+ 	env['INCLUDES_PERLEXT']=read_out(" -MConfig -e'print \"$Config{archlib}/CORE\"'")
+ 	env['CFLAGS_PERLEXT']=read_out(" -MConfig -e'print \"$Config{ccflags} $Config{cccdlflags}\"'")
+-	env['XSUBPP']=read_out(" -MConfig -e'print \"$Config{privlib}/ExtUtils/xsubpp$Config{exe_ext}\"'")
++	env['XSUBPP']="/usr/bin/xsubpp"
+ 	env['EXTUTILS_TYPEMAP']=read_out(" -MConfig -e'print \"$Config{privlib}/ExtUtils/typemap\"'")
+ 	if not getattr(Options.options,'perlarchdir',None):
+ 		env['ARCHDIR_PERL']=self.cmd_and_log(perl+" -MConfig -e'print $Config{sitearch}'")

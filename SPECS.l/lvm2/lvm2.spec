@@ -1,18 +1,21 @@
-%define device_mapper_version 1.02.84
+%define device_mapper_version 1.02.86
 
-%define enable_thin 1
-%define enable_lvmetad 1
+%define enable_cache 1
 %define enable_cluster 1
 %define enable_cmirror 1
+%define enable_lvmetad 1
+%define enable_python 1
+%define enable_thin 1
 
 %define systemd_version 189-3
 %define dracut_version 002-18
 %define util_linux_version 2.24
 %define bash_version 4.0
 %define corosync_version 1.99.9-1
+%define resource_agents_version 3.9.5-12
 %define dlm_version 3.99.1-1
 %define libselinux_version 1.30.19-4
-%define persistent_data_version 0.2.7-1
+%define persistent_data_version 0.3.2-1
 
 %if 0%{?rhel}
   %ifnarch i686 x86_64
@@ -36,7 +39,7 @@
 
 Summary: Userland logical volume management tools 
 Name: lvm2
-Version: 2.02.105
+Version: 2.02.107
 Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Base
@@ -44,8 +47,7 @@ URL: http://sources.redhat.com/lvm2
 Source0: ftp://sources.redhat.com/pub/lvm2/releases/LVM2.%{version}.tgz
 Patch0: lvm2-set-default-preferred_names.patch
 Patch1: lvm2-enable-lvmetad-by-default.patch
-Patch2: lvm2-udev-remove-rules-to-handle-inappropriate-events.patch
-Patch3: lvm2-2_02_106-avoid-exposing-temporary-devices-when-initializing-thin-pool-volume.patch
+Patch2: lvm2-remove-mpath-device-handling-from-udev-rules.patch
 
 BuildRequires: libblkid-devel >= %{util_linux_version}
 BuildRequires: ncurses-devel
@@ -58,8 +60,10 @@ BuildRequires: module-init-tools
 BuildRequires: pkgconfig
 BuildRequires: systemd-devel
 BuildRequires: systemd-units
+%if %{enable_python}
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
+%endif
 Requires: %{name}-libs = %{version}-%{release}
 Requires: bash >= %{bash_version}
 Requires(post): systemd-units >= %{systemd_version}, systemd-sysv
@@ -82,8 +86,7 @@ or more physical volumes and creating one or more logical volumes
 %setup -q -n LVM2.%{version}
 %patch0 -p1 -b .preferred_names
 %patch1 -p1 -b .enable_lvmetad
-%patch2 -p1 -b .udev_inappropriate_events
-%patch3 -p1 -b .thin_temp_no_expose
+%patch2 -p1 -b .udev_no_mpath
 
 %build
 %define _default_pid_dir /run
@@ -96,22 +99,29 @@ or more physical volumes and creating one or more logical volumes
 
 %define configure_udev --with-udevdir=%{_udevdir} --enable-udev_sync
 
+%if %{enable_cache}
+%define configure_cache --with-cache=internal
+%endif
+
 %if %{enable_thin}
 %define configure_thin --with-thin=internal --with-thin-check=%{_sbindir}/thin_check --with-thin-dump=%{_sbindir}/thin_dump --with-thin-repair=%{_sbindir}/thin_repair
 %endif
 
 %if %{enable_lvmetad}
-%define configure_lvmetad --enable-lvmetad --enable-udev-systemd-background-jobs
+%define configure_lvmetad --enable-lvmetad
 %endif
 
-%configure --with-default-dm-run-dir=%{_default_dm_run_dir} --with-default-run-dir=%{_default_run_dir} --with-default-pid-dir=%{_default_pid_dir} --with-default-locking-dir=%{_default_locking_dir} --with-usrlibdir=%{_libdir} --enable-lvm1_fallback --enable-fsadm --with-pool=internal --enable-write_install --with-user= --with-group= --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-python-bindings --enable-dmeventd %{?configure_cluster} %{?configure_cmirror} %{?configure_udev} %{?configure_thin} %{?configure_lvmetad}
+%if %{enable_python}
+%define configure_python --enable-python-bindings
+%endif
+
+%configure --with-default-dm-run-dir=%{_default_dm_run_dir} --with-default-run-dir=%{_default_run_dir} --with-default-pid-dir=%{_default_pid_dir} --with-default-locking-dir=%{_default_locking_dir} --with-usrlibdir=%{_libdir} --enable-lvm1_fallback --enable-fsadm --with-pool=internal --enable-write_install --with-user= --with-group= --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-dmeventd --enable-blkid_wiping %{?configure_python} %{?configure_cluster} %{?configure_cmirror} %{?configure_udev} %{?configure_thin} %{?configure_lvmetad} %{?configure_cache}
 
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 make install_system_dirs DESTDIR=$RPM_BUILD_ROOT
-make install_initscripts DESTDIR=$RPM_BUILD_ROOT
 make install_systemd_units DESTDIR=$RPM_BUILD_ROOT
 make install_systemd_generators DESTDIR=$RPM_BUILD_ROOT
 make install_tmpfiles_configuration DESTDIR=$RPM_BUILD_ROOT
@@ -133,7 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %postun
-%systemd_postun_with_restart lvm2-monitor.service
+%systemd_postun lvm2-monitor.service
 %if %{enable_lvmetad}
 %systemd_postun_with_restart lvm2-lvmetad.service
 %endif
@@ -149,7 +159,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING COPYING.LIB README VERSION WHATS_NEW
 %doc doc/lvm_fault_handling.txt
 
-#Main binaries
+# Main binaries
 %defattr(555,root,root,-)
 %{_sbindir}/blkdeactivate
 %{_sbindir}/fsadm
@@ -206,6 +216,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/vgscan
 %{_sbindir}/vgsplit
 %{_mandir}/man5/lvm.conf.5.gz
+%{_mandir}/man7/lvmcache.7.gz
+%{_mandir}/man7/lvmthin.7.gz
 %{_mandir}/man8/blkdeactivate.8.gz
 %{_mandir}/man8/fsadm.8.gz
 %{_mandir}/man8/lvchange.8.gz
@@ -214,6 +226,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/lvdisplay.8.gz
 %{_mandir}/man8/lvextend.8.gz
 %{_mandir}/man8/lvm.8.gz
+%{_mandir}/man8/lvm2-activation-generator.8.gz
+%{_mandir}/man8/lvm-dumpconfig.8.gz
 %{_mandir}/man8/lvmchange.8.gz
 %{_mandir}/man8/lvmconf.8.gz
 %{_mandir}/man8/lvmdiskscan.8.gz
@@ -263,7 +277,9 @@ rm -rf $RPM_BUILD_ROOT
 %ghost %{_sysconfdir}/lvm/cache/.cache
 %attr(644, -, -) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lvm/lvm.conf
 %dir %{_sysconfdir}/lvm/profile
-%{_sysconfdir}/lvm/profile/default.profile
+%{_sysconfdir}/lvm/profile/command_profile_template.profile
+%{_sysconfdir}/lvm/profile/metadata_profile_template.profile
+%{_sysconfdir}/lvm/profile/thin-generic.profile
 %{_sysconfdir}/lvm/profile/thin-performance.profile
 %dir %{_sysconfdir}/lvm/backup
 %dir %{_sysconfdir}/lvm/cache
@@ -273,7 +289,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_tmpfilesdir}/%{name}.conf
 %{_unitdir}/blk-availability.service
 %{_unitdir}/lvm2-monitor.service
- %attr(555, -, -) %{_prefix}/lib/systemd/system-generators/lvm2-activation-generator
+%attr(555, -, -) %{_prefix}/lib/systemd/system-generators/lvm2-activation-generator
 %if %{enable_lvmetad}
 %{_unitdir}/lvm2-lvmetad.socket
 %{_unitdir}/lvm2-lvmetad.service
@@ -288,8 +304,8 @@ Summary: Development libraries and headers
 Group: Development/Libraries
 License: LGPLv2
 Requires: %{name} = %{version}-%{release}
-Requires: device-mapper-devel >= %{device_mapper_version}-%{release}
-Requires: device-mapper-event-devel >= %{device_mapper_version}-%{release}
+Requires: device-mapper-devel = %{device_mapper_version}-%{release}
+Requires: device-mapper-event-devel = %{device_mapper_version}-%{release}
 Requires: pkgconfig
 
 %description devel
@@ -300,16 +316,16 @@ the lvm2 libraries.
 %defattr(444,root,root,-)
 %{_libdir}/liblvm2app.so
 %{_libdir}/liblvm2cmd.so
+%{_libdir}/libdevmapper-event-lvm2.so
 %{_includedir}/lvm2app.h
 %{_includedir}/lvm2cmd.h
 %{_libdir}/pkgconfig/lvm2app.pc
-%{_libdir}/libdevmapper-event-lvm2.so
 
 %package libs
 Summary: Shared libraries for lvm2
 License: LGPLv2
 Group: System Environment/Libraries
-Requires: device-mapper-event >= %{device_mapper_version}-%{release}
+Requires: device-mapper-event = %{device_mapper_version}-%{release}
 
 %description libs
 This package contains shared lvm2 libraries for applications.
@@ -336,13 +352,15 @@ This package contains shared lvm2 libraries for applications.
 %{_libdir}/device-mapper/libdevmapper-event-lvm2thin.so
 %endif
 
+%if %{enable_python}
+
 %package python-libs
 Summary: Python module to access LVM
 License: LGPLv2
 Group: Development/Libraries
 Provides: python-lvm = %{version}-%{release}
 Obsoletes: python-lvm < 2.02.98-2
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libs = %{version}-%{release}
 
 %description python-libs
 Python module to allow the creation and use of LVM
@@ -351,8 +369,11 @@ logical volumes, physical volumes, and volume groups.
 %files python-libs
 %{python_sitearch}/*
 
+%endif
+
 ##############################################################################
 # Cluster subpackage
+# The 'clvm' OCF script to manage clvmd instance is part of resource-agents.
 ##############################################################################
 %if %{enable_cluster}
 
@@ -360,92 +381,116 @@ logical volumes, physical volumes, and volume groups.
 Summary: Cluster extensions for userland logical volume management tools
 License: GPLv2
 Group: System Environment/Base
-Requires: lvm2 >= %{version}-%{release}
-Requires(post): chkconfig
-Requires(preun): chkconfig
+Requires: lvm2 = %{version}-%{release}
 Requires(preun): device-mapper >= %{device_mapper_version}
 Requires(preun): lvm2 >= 2.02
 Requires: corosync >= %{corosync_version}
 Requires: dlm >= %{dlm_version}
+Requires: resource-agents >= %{resource_agents_version}
 
 %description cluster
 
 Extensions to LVM2 to support clusters.
 
 %post cluster
-/sbin/chkconfig --add clvmd
-
-if [ "$1" -gt "1" ] ; then
-	/usr/sbin/clvmd -S >/dev/null 2>&1 || :
+if [ -e %{_default_pid_dir}/clvmd.pid ]; then
+	/usr/sbin/clvmd -S || echo "Failed to restart clvmd daemon. Please, try manual restart."
 fi
 
 %preun cluster
-if [ "$1" = 0 ]; then
-	/sbin/chkconfig --del clvmd
+if [ "$1" = "0" ]; then
 	/sbin/lvmconf --disable-cluster
 fi
 
 %files cluster
 %defattr(555,root,root,-)
 %{_sbindir}/clvmd
-%{_sysconfdir}/rc.d/init.d/clvmd
 %attr(444, -, -) %{_mandir}/man8/clvmd.8.gz
+
+##############################################################################
+# Cluster-standalone subpackage
+##############################################################################
+%package cluster-standalone
+Summary: Additional files to support clustered LVM2 in standalone mode
+License: GPLv2
+Group: System Environment/Base
+Requires: lvm2-cluster = %{version}-%{release}
+
+%description cluster-standalone
+
+Additional files needed to run clustered LVM2 daemon and clustered volume
+activation in standalone mode as services without cluster resource manager
+involvement (e.g. pacemaker).
+
+%post cluster-standalone
+%systemd_post lvm2-clvmd.service lvm2-cluster-activation.service
+
+%preun cluster-standalone
+%systemd_preun lvm2-clvmd.service lvm2-cluster-activation.service
+
+%postun cluster-standalone
+%systemd_postun lvm2-clvmd.service lvm2-cluster-activation.service
+
+%files cluster-standalone
+%defattr(555,root,root,-)
+%{_prefix}/lib/systemd/lvm2-cluster-activation
+%defattr(444,root,root,-)
+%{_unitdir}/lvm2-clvmd.service
+%{_unitdir}/lvm2-cluster-activation.service
 
 %endif
 
-##############################################################################
+###############################################################################
 # Cluster mirror subpackage
-##############################################################################
+# The 'clvm' OCF script to manage cmirrord instance is part of resource-agents.
+###############################################################################
 %if %{enable_cluster}
 %if %{enable_cmirror}
 
 %package -n cmirror
 Summary: Daemon for device-mapper-based clustered mirrors
 Group: System Environment/Base
-Requires(post): chkconfig
-Requires(preun): chkconfig
 Requires: corosync >= %{corosync_version}
-Requires: device-mapper >= %{device_mapper_version}-%{release}
+Requires: device-mapper = %{device_mapper_version}-%{release}
+Requires: resource-agents >= %{resource_agents_version}
 
 %description -n cmirror
 Daemon providing device-mapper-based mirrors in a shared-storage cluster.
 
-%post -n cmirror
-/sbin/chkconfig --add cmirrord
-
-%preun -n cmirror
-if [ "$1" = 0 ]; then
-	/sbin/chkconfig --del cmirrord
-fi
-
 %files -n cmirror
 %defattr(555,root,root,-)
 %{_sbindir}/cmirrord
-%{_sysconfdir}/rc.d/init.d/cmirrord
 %attr(444, -, -) %{_mandir}/man8/cmirrord.8.gz
 
-%endif
-%endif
-
 ##############################################################################
-# Legacy SysV init subpackage
+# Cmirror-standalone subpackage
 ##############################################################################
-%package sysvinit
-Summary: SysV style init script for LVM2.
+%package -n cmirror-standalone
+Summary: Additional files to support device-mapper-based clustered mirrors in standalone mode
+License: GPLv2
 Group: System Environment/Base
-Requires: %{name} = %{version}-%{release}
-Requires: initscripts
+Requires: cmirror >= %{epoch}:%{version}-%{release}
 
-%description sysvinit
-SysV style init script for LVM2. It needs to be installed only if systemd
-is not used as the system init process.
+%description -n cmirror-standalone
 
-%files sysvinit
-%defattr(555,root,root,-)
-%{_sysconfdir}/rc.d/init.d/blk-availability
-%{_sysconfdir}/rc.d/init.d/lvm2-monitor
-%if %{enable_lvmetad}
-%{_sysconfdir}/rc.d/init.d/lvm2-lvmetad
+Additional files needed to run daemon for device-mapper-based clustered
+mirrors in standalone mode as a service without cluster resource manager
+involvement (e.g. pacemaker).
+
+%post -n cmirror-standalone
+%systemd_post lvm2-cmirrord.service
+
+%preun -n cmirror-standalone
+%systemd_preun lvm2-cmirrord.service
+
+%postun -n cmirror-standalone
+%systemd_postun lvm2-cmirrord.service
+
+%files -n cmirror-standalone
+%defattr(444,root,root,-)
+%{_unitdir}/lvm2-cmirrord.service
+
+%endif
 %endif
 
 ##############################################################################
@@ -454,7 +499,6 @@ is not used as the system init process.
 %package -n device-mapper
 Summary: Device mapper utility
 Version: %{device_mapper_version}
-Release: %{release}
 License: GPLv2
 Group: System Environment/Base
 URL: http://sources.redhat.com/dm
@@ -474,7 +518,7 @@ for the kernel device-mapper.
 %doc COPYING COPYING.LIB WHATS_NEW_DM VERSION_DM README
 %doc udev/12-dm-permissions.rules
 %defattr(444,root,root,-)
-%attr(555,root,root) %{_sbindir}/dmsetup
+%attr(555, -, -) %{_sbindir}/dmsetup
 %{_mandir}/man8/dmsetup.8.gz
 %{_udevdir}/10-dm.rules
 %{_udevdir}/13-dm-disk.rules
@@ -483,7 +527,6 @@ for the kernel device-mapper.
 %package -n device-mapper-devel
 Summary: Development libraries and headers for device-mapper
 Version: %{device_mapper_version}
-Release: %{release}
 License: LGPLv2
 Group: Development/Libraries
 Requires: device-mapper = %{device_mapper_version}-%{release}
@@ -502,7 +545,6 @@ the device-mapper libraries.
 %package -n device-mapper-libs
 Summary: Device-mapper shared library
 Version: %{device_mapper_version}
-Release: %{release}
 License: LGPLv2
 Group: System Environment/Libraries
 Requires: device-mapper = %{device_mapper_version}-%{release}
@@ -522,7 +564,6 @@ This package contains the device-mapper shared library, libdevmapper.
 Summary: Device-mapper event daemon
 Group: System Environment/Base
 Version: %{device_mapper_version}
-Release: %{release}
 Requires: device-mapper = %{device_mapper_version}-%{release}
 Requires: device-mapper-event-libs = %{device_mapper_version}-%{release}
 Requires(post): systemd-units
@@ -535,15 +576,12 @@ of device-mapper devices.
 
 %post -n device-mapper-event
 %systemd_post dm-event.socket
+if [ -e %{_default_pid_dir}/dmeventd.pid ]; then
+	%{_sbindir}/dmeventd -R || echo "Failed to restart dmeventd daemon. Please, try manual restart."
+fi
 
 %preun -n device-mapper-event
 %systemd_preun dm-event.service dm-event.socket
-
-%postun -n device-mapper-event
-/bin/systemctl daemon-reload > /dev/null 2>&1 || :
-if [ $1 -ge 1 ]; then
-	/bin/systemctl reload dm-event.service > /dev/null 2>&1 || :
-fi
 
 %files -n device-mapper-event
 %defattr(444,root,root,-)
@@ -555,7 +593,6 @@ fi
 %package -n device-mapper-event-libs
 Summary: Device-mapper event daemon shared library
 Version: %{device_mapper_version}
-Release: %{release}
 License: LGPLv2
 Group: System Environment/Libraries
 
@@ -574,7 +611,6 @@ libdevmapper-event.
 %package -n device-mapper-event-devel
 Summary: Development libraries and headers for the device-mapper event daemon
 Version: %{device_mapper_version}
-Release: %{release}
 License: LGPLv2
 Group: Development/Libraries
 Requires: device-mapper-event = %{device_mapper_version}-%{release}
@@ -591,6 +627,225 @@ the device-mapper event library.
 %{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
+* Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 2.02.107-2
+- 为 Magic 3.0 重建
+
+* Tue Jun 24 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.107-1
+- Add cmirror-standalone subpackage containing new lvm2-cmirrord.service
+  systemd unit for standalone cmirrord daemon management without cluster
+  resource manager involvement.
+- Add lvm2-cluster-standalone subpackage containing new lvm2-clvmd.service
+  and lvm2-cluster-activation.service systemd unit for standalone clvmd
+  daemon management without cluster resource manager involvement.
+- Add Requires: resource-agents for lvm2-cluster and cmirror subpackages.
+  The resource-agents package provides "clvm" cluster resource to manage
+  clvmd and cmirrord instances. This replaces obsolete clvmd and cmirrord
+  initscripts.
+- Introduce LCK_ACTIVATION to avoid concurrent activation of basic LV types.
+- Fix open_count test for lvchange --refresh or mirrors and raids.
+- Update pvs,vgs,lvs and lvm man page for selection support.
+- Add -S/--select to lvm devtypes for report selection.
+- Add -S/--select to pvs,vgs,lvs and {pv,vg,lv}display -C for report selection.
+- Use dm_report_init_with_selection now, implicit "selected" field appears.
+- Make use of libdm's DM_REPORT_FIELD_TYPE{SIZE,PERCENT,STRING_LIST} for fields.
+- Support all-or-nothing pvmove --atomic.
+- Automatically add snapshot metadata size for -l %ORIGIN calculation.
+- When converting RAID origin to cache LV, properly rename sub-LVs.
+- Use RemoveOnStop for lvm2-lvmetad.socket systemd unit.
+- Add thin-generic configuration profile for generic thin settings.
+- Fix crash when reporting empty labels on pvs.
+- Use retry_deactivation also when cleaning orphan devices.
+- Wait for client threads when shutting down lvmetad.
+- Remove PV from cache on pvremove.
+- Avoid repeatedly reporting of failure to connect to lvmetad.
+- Introduce MDA_FAILED to permit metadata updates even if some mdas are missing.
+- Prompt when setting the VG cluster attr if the cluster is not setup.
+- Allow --yes to skip prompt in vgextend (worked only with -f).
+- Don't use name mangling for LVM - it never uses dm names with wrong char set.
+- Remove default.profile and add {command,metadata}_profile_template.profile.
+- Use proper umask for systemd units generated by lvm2-activation-generator.
+- Check for failing mirror_remove_missing() function.
+- Prompt before converting volumes to thin pool and thin pool metadata.
+- Add dumpconfig --type profilable-{metadata,command} to select profile type.
+- Exit immediately with error if command profile is found invalid.
+- Separate --profile cmd line arg into --commandprofile and --metadataprofile.
+- Strictly separate command profiles and per-VG/LV profiles referenced in mda.
+- Fix dumpconfig --type diff when run as second and later cmd in lvm shell.
+- Fix wrong profile reuse from previous run if another cmd is run in lvm shell.
+- Move cache description from lvm(8) to new lvmcache(7) man page.
+- Display skipped prompt in silent mode.
+- Make reporting commands show help about possible sort keys on '-O help'.
+- Add metadata_percent to lvs_cols.
+- Take account of parity areas with alloc anywhere in _calc_required_extents.
+- Use proper uint64 casting for calculation of cache metadata size.
+- Better support for nesting of blocking signals.
+- Use only sigaction handler and drop duplicate signal handler.
+- Separate signal handling and flock code out into lib/misc.
+- Don't start dmeventd checking seg_monitor and monitoring is disabled.
+- Catch CTRL-c during pvremove prompts.
+- Show correct availability status for snapshot origin in lvscan.
+- Move segment thin pool/volume info into segment display 'lvdisplay --maps'.
+- Display thin pool usage even when just thin volume is available.
+- Display monitoring status for monitorable segments in 'lvdisplay --maps'.
+- Display virtual extents for virtual LVs in 'lvdisplay --maps'.
+- Make vgsplit fail cleanly when not all PVs are specified for RAID 4/5/6.
+- Make vgsplit work on mirrors with logs that share PVs with images.
+- Use devices/ignore_suspended_devices=0 by default if not defined in lvm.conf.
+- Use proper libmem mempool for allocation of unknown segment name.
+- Add --readonly to reporting and display tools for lock-free metadata access.
+- Add locking_type 5 for dummy locking for tools that do not need any locks.
+- Fix _recover_vg() error path when lock conversion fails.
+- Use X for LV attributes that are unknown when activation disabled.
+- Only output lvdisplay 'LV Status' field when activation is enabled.
+- Use lvmetad_used() in pvscan instead of config_tree.
+- Configure --enable-udev-systemd-background-jobs if not disabled explicitly.
+- Add lvmdump -s to collect system info and context (currently systemd only).
+- Refactor allocation code to make A_POSITIONAL_FILL explicit.
+- Use thread-safe ctime_r() for clvmd debug logging.
+- Skip adding replies to already finished reply thread.
+- Use mutex to check number of replies in request_timed_out() in clvmd.
+- Drop usage of extra reply_mutex for localsock in clvmd.
+- Protect manipulation with finished flag with mutex in clvmd.
+- Shift mutex creation and destroy for localsock in clvmd to correct place.
+- Fix usage of --test option in clvmd.
+- Skip more libraries to be mlocked in memory.
+- Remove LOCKED flag for pvmove replaced with error target.
+- Return invalid command when specifying negative polling interval.
+- Make "help" and "?" reporting fields implicit.
+- Recognize implicit "selected" field if using dm_report_init_with_selection.
+- Add support for implicit reporting fields which are predefined in libdm.
+- Add DM_REPORT_FIELD_TYPE_PERCENT: separate number and percent fields.
+- Add dm_percent_range_t,dm_percent_to_float,dm_make_percent to libdm for reuse.
+- Add dm_report_reserved_value to libdevmapper for reserved value definition.
+- Also display field types when listing all fields in selection help.
+- Recognize "help" keyword in selection string to show brief help for selection.
+- Always order items reported as string list field lexicographically.
+- Add dm_report_field_string_list to libdevmapper for direct string list report.
+- Add DM_REPORT_FIELD_TYPE_STRING_LIST: separate string and string list fields.
+- Add dm_str_list to libdevmapper for string list type definition and its reuse.
+- Add dmsetup -S/--select to define selection criteria for dmsetup reports.
+- Add dm_report_init_with_selection to intialize report with selection criteria.
+- Add DM_REPORT_FIELD_TYPE_SIZE: separate number and size reporting fields.
+- Use RemoveOnStop for dm-event.socket systemd unit.
+- Document env var 'DM_DEFAULT_NAME_MANGLING_MODE' in dmsetup man page.
+- Warn user about incorrect use of cookie with 'dmsetup remove --force'.
+- Also recognize 'help'/'?' as reserved sort key name to show help.
+- Add dm_units_to_factor for size unit parsing.
+- Increase bitset size for minors for thin dmeventd plugin.
+
+* Mon Jun 09 2014 Alasdair Kergon <agk@redhat.com> - 2.02.106-5
+- Remove separate sub-package release tags to fix last commit.
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.02.106-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Apr 29 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.106-3
+- Remove obsolete lvm2-sysvinit subpackage.
+
+* Thu Apr 24 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.106-2
+- Require exact lvm2/device-mapper version among LVM2 subpackages
+  so all of them are always updated synchronously within one update.
+
+* Fri Apr 11 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.106-1
+- Require latest device-mapper-persistent-data 0.3.2-1.
+- Fix ignored --dataalignment/dataalignmentoffset for pvcreate --restorefile.
+- Fix lost information about bootloader area when using lvmetad.
+- Don't require --major to be specified when using -My option on kernels > 2.4.
+- Add configure --disable-thin_check_needs_check to support old thin_check.
+- Use thin_check --clear-needs-check-flag by default.
+- Add lvmthin man page to section 7.
+- Ensure mapped device names are not too long in vg_validate and lvrename.
+- Ensure resume failure in lvrename results in command failure.
+- Add explicit error message when using lvdisplay -c -m.
+- Report error if superfluous argument (e.g. PV name) supplied to pvscan.
+- Fix error message for pvdisplay -c -m and add one for pvdisplay -c -s.
+- Use EINVALID_CMD_LINE correctly instead of ECMD_FAILED in vgimport/export.
+- Obtain list of known VGs from lvmetad for pvchange --all.
+- Add man page for lvm-dumpconfig to section 8.
+- Validate name for renamed sub LVs.
+- When lvrename fails on argument parsing return EINVALID_CMD_LINE.
+- Fix exit code regression in failing pvchange command (2.02.66).
+- Include 'lvm dumpconfig --type missing' and '--type diff' output to lvmdump.
+- Return failure when specifying negative size for pvresize.
+- Fix memory corruption in cmd context refresh if clvmd leaks opened device.
+- Reinitialise lvmcache properly on fork to fix premature polldaemon exit.
+- Add 'lvm dumpconfig --type diff' to show differences from defaults.
+- Fix swap signature detection for devices smaller then 2MB.
+- Resolve memory release order for clvmd shutdown.
+- Report error when lvm2 activation is released in critical_section.
+- Fix memory corruption when pvscan reports long pv names.
+- Do not report internal orphan VG names when reporting pvdisplay/pvscan.
+- Fix pvdisplay -c man page referencing KB instead of sectors.
+- Skip redundant synchronization calls on local clvmd.
+- Use correct PATH_MAX for locking dir path.
+- Do not check for backups when when its creation is disabled.
+- Don't allow --mergedconfig without --type current in dumpconfig. Fix memleak.
+- Make global/lvdisplay_shows_full_device_path lvm.conf setting profilable.
+- Make global/{units|si_unit_consistency|suffix} lvm.conf setting profilable.
+- Validate minimal chunk size for snapshot COW volume in lvconvert.
+- Disallow lvconvert of origin to snapshot COW volume.
+- Make report lvm.conf settings profilable.
+- Add existing report settings to lvm.conf.
+- Use VG read lock during 'pvscan --cache -aay' autoactivation.
+- Issue a VG refresh before autoactivation only if the PV has changed/is new.
+- Add flag to lvmetad protocol to indicate the PV scanned has changed/is new.
+- Also add vgname to lvmetad protocol when referencing VGs for PVs scanned.
+- Add man page for lvm2-activation-generator.
+- Don't print an error and accept empty value for global/thin_disabled_features.
+- Do not try to check empty pool with scheduled messages.
+- Fix return value in pool_has_message() when quering for any message.
+- Cleanup all client resources on clvmd exit.
+- Use BLKID_CFLAGS when compiling with blkid support.
+- Make lvm 'dumpconfig --type default' complete for it to be consumed by lvm.
+- Run pvscan --cache via systemd-run in udev if the PV label is detected lost.
+- Fix memleak when lvmetad discovers PV to appear on another device.
+- Fix calculation of maximum size of COW device for snapshot (2.02.99).
+- Do not allow stripe size to be bigger then extent size for lvresize.
+- Zero snapshot COW header when creating read-only snapshot.
+- Comment out config lines in dumpconfig output without default values defined.
+- Improve detection of clustered mirror support.
+- Enhance raid code with feature flags, for now checks for raid10.
+- Move parsing of VG metadata from vg_commit() back to vg_write() (2.02.99)
+- Avoid a PV label scan while in a critical section.
+- Create /dev/disk/by-id/lvm-pv-uuid-<PV_UUID> symlink for each PV via udev.
+- lvcreate computes RAID4/5/6 stripes if not given from # of allocatable PVs.
+- Fix merging of old snapshot into thin volume origin.
+- Use --ignoreskippedcluster in lvm2-monitor initscript/systemd unit.
+- Do not use VG read/write state for LV read/write state.
+- Use --ignoreskippedcluster in activation systemd units if use_lvmetad=0.
+- Allow approximate allocation when specifying size in percentage terms.
+- Add basic LVM support for cache[pool] segment types.
+- Use local exclusive activation for creation of raid in cluster.
+- Use correctly signed 64b constant when selecting raid volumes.
+- Remove ExecReload from lvmetad systemd unit: lvmetad -R undefined. (2.02.98)
+- Do not fork lvmetad if running under systemd.
+- Wipe DM_snapshot_cow signature without prompt in new LVs with blkid wiping.
+- Avoid exposing temporary devices when initializing raid metadata volumes.
+- Add internal tags command to display any tags defined on the host.
+- Prohibit use of external origin with size incompatible with thin pool.
+- Avoid trying to convert single to thin pool and volume at the same time.
+- Add support for partitions on ZFS zvol.
+- Fix unwanted drop of hold flocks on forked children.
+- Respect LVM_LVMETAD_PIDFILE env var for lvm command.
+- Fix test when checking target version for available thin features.
+- Detect thin feature external_origin_extend and limit extend when missing.
+- Issue error if libbblkid detects signature and fails to return offset/length.
+- Update autoconf config.guess/sub to 2014-01-01.
+- Online thin pool metadata resize requires 1.10 kernel thin pool target.
+- Check for sprintf error when building internal device path.
+- Check for sprintf error when creating path for dm control node.
+- When buffer for dm_get_library_version() is too small, return error code.
+- Always reinitialize _name_mangling_mode in dm_lib_init().
+- Stop timeout thread immediately when the last worker thread is finished.
+- Fix dmeventd logging with parallel wait event processing.
+- Reuse _node_send_messages() for validation of transaction_id in preload.
+- Transaction_id could be lower by one only when messages are prepared.
+- Wrap is_selinux_enabled() to be called just once.
+- Use correctly signed 64b constant when working with raid volumes.
+- Exit dmeventd with pidfile cleanup instead of raising SIGKILL on DIE request.
+- Add new DM_EVENT_GET_PARAMETERS request to dmeventd protocol.
+- Do not use systemd's reload for dmeventd restart, use dmeventd -R instead.
+
 * Mon Jan 27 2014 Peter Rajnoha <prajnoha@redhat.com> - 2.02.105-2
 - Avoid exposing temporary devices when initializing thin pool volume.
 - Remove udev rule for multipath's PATH_FAILED event processing,

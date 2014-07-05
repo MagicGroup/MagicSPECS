@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+ <id type="desktop">xemacs.desktop</id>
+ <licence>CC0</licence>
+ <description>
+  <p>
+   XEmacs is a highly customizable open source text editor and application
+   development system.
+  </p>
+  <p>XEmacs is protected under the GNU General Public License.  It is related
+   to other versions of Emacs, in particular GNU Emacs.  Its emphasis is on
+   modern graphical user interface support and an open software development
+   model, similar to Linux.
+  </p>
+ </description>
+ <screenshots>
+  <screenshot type="default">http://www.xemacs.org/Images/gnus.png</screenshot>
+  <screenshot>http://www.xemacs.org/Images/custom.png</screenshot>
+ </screenshots>
+ <url type="homepage">http://www.xemacs.org/</url>
+ <updatecontact>james@xemacs.org</updatecontact>
+</application>
