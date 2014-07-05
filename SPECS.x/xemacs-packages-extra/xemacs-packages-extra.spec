@@ -38,8 +38,6 @@ Patch5:         %{name}-20090217-auctex-texjp-platex.patch
 Patch6:         %{name}-20090217-browsers.patch
 # do not use the unsupported :risky keyword to defcustom
 Patch7:         %{name}-20121228-risky.patch
-# Texinfo 5
-Patch8:         xemacs-packages-extra-20130408-texi.patch
 
 BuildArch:      noarch
 BuildRequires:  xemacs >= 21.5.29-11
@@ -97,7 +95,6 @@ collection in GNU texinfo format
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8
 
 chmod -c -x \
     xemacs-packages/auctex/style/babel.el \
