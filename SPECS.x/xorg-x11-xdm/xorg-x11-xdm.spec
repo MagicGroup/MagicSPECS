@@ -27,6 +27,9 @@ Patch15: xdm-1.1.10-add-audit-event.patch
 # systemd unit file update
 Patch16: xdm-service.patch
 
+# fix "implicit declaration of function 'setproctitle'"
+Patch20: xdm-1.1.11-setproctitle-include.patch
+
 # FIXME: Temporary build dependencies for autotool dependence.
 BuildRequires: autoconf, automake, libtool
 
@@ -78,6 +81,7 @@ X.Org X11 xdm - X Display Manager
 #%_patch14 -p1 -b .add-needed
 #%patch15 -p1 -b .add-audit-events
 %patch16 -p1 -b .systemd
+%patch20 -p1 -b .setproctitle
 
 %build
 autoreconf -v --install
