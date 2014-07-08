@@ -106,6 +106,9 @@ Patch7064: 0001-mieq-Bump-default-queue-size-to-512.patch
 Patch7071: 0001-os-use-libunwind-to-generate-backtraces.patch
 %endif
 
+# Mips64el
+Patch8000: xorg-server-1.12.4-mips64-fix.patch
+
 %global moduledir	%{_libdir}/xorg/modules
 %global drimoduledir	%{_libdir}/dri
 %global sdkdir		%{_includedir}/xorg
