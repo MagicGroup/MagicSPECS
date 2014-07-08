@@ -1,9 +1,11 @@
 Name:		lxsplit
 Version:	0.2.4
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	File split / merge utility
+Summary(zh_CN.UTF-8): 文件分割/合并工具
 
 Group:		Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 License:	GPLv2+
 URL:		http://lxsplit.sourceforge.net/
 Source:		http://downloads.sourceforge.net/lxsplit/%{name}-%{version}.tar.gz
@@ -15,7 +17,9 @@ on linux and unix-like platforms. Splitting is done without compression and
 large files (> 4 GB) are supported. lxSplit is fully compatible with the 
 HJSplit utility which is available for other operating systems.
 
-
+%description -l zh_CN.UTF-8
+这是一个分割合并文件的简单工具，不压缩并支持大文件 ( > 4GB )。
+它和 HJSplit 工具是完全兼容的。
 
 %prep
 %setup -q
@@ -27,6 +31,7 @@ HJSplit utility which is available for other operating systems.
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{_bindir}
 %{__install} -D -m755 lxsplit %{buildroot}/%{_bindir}/lxsplit
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -37,6 +42,9 @@ HJSplit utility which is available for other operating systems.
 %{_bindir}/lxsplit
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.2.4-7
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.4-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

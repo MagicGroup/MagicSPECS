@@ -1,9 +1,11 @@
 Name:           lxrandr
 Version:        0.1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Simple monitor configuration tool
+Summary(zh_CN.UTF-8): 简单的监视器配置工具
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv3+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxrandr
@@ -27,6 +29,9 @@ to quickly configure the external device.
 LXRandR is the standard screen manager of LXDE, the Lightweight X11 Desktop 
 Environment, but can be used in other desktop environments as well.
 
+%description -l zh_CN.UTF-8
+这是一个使用 X RandR 扩散的简单监视器配置工具。
+它是命令行程序 xrandr 的图形界面前端，可以管理屏幕分辨率和外接监视器等。
 
 %prep
 %setup -q
@@ -47,6 +52,7 @@ desktop-file-install                                       \
   --add-category="HardwareSettings;GTK;"                   \
   --dir=${RPM_BUILD_ROOT}%{_datadir}/applications          \
   ${RPM_BUILD_ROOT}%{_datadir}/applications/%{name}.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -63,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.1.2-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,9 +1,11 @@
 Name:           lxshortcut
 Version:        0.1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Small utility to edit application shortcuts
+Summary(zh_CN.UTF-8): 编辑应用程序快捷方式的简单工具
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxshortcut
@@ -19,6 +21,8 @@ LXShortcut is a small utility to edit application shortcuts created with
 freedesktop.org Desktop Entry spec. Now editing of application shortcuts 
 becomes quite easy.
 
+%description -l zh_CN.UTF-8
+编辑应用程序快捷方式的简单工具.
 
 %prep
 %setup -q
@@ -32,6 +36,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -47,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.1.2-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

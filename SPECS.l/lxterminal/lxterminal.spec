@@ -2,9 +2,10 @@ Name:           lxterminal
 Version:        0.1.11
 Release:        4%{?dist}
 Summary:        Desktop-independent VTE-based terminal emulator
-Summary(de):    Desktop-unabhängiger VTE-basierter Terminal Emulator
+Summary(zh_CN.UTF-8): 基于 VTE 的桌面无关的终端模拟器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.sourceforge.net/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxterminal
@@ -21,11 +22,8 @@ It is completely desktop-independent and does not have any unnecessary
 dependencies. In order to reduce memory usage and increase the performance 
 all instances of the terminal are sharing a single process.
 
-%description -l de
-LXTerminal ist ein VTE-basierter Terminalemulator mit Unterstützung für 
-mehrere Reiter. Er ist komplett desktop-unabhängig und hat keine unnötigen 
-Abhängigkeiten. Um den Speicherverbrauch zu reduzieren und die Leistung zu
-erhöhen teilen sich alle Instanzen des Terminals einen einzigen Prozess.
+%description -l zh_CN.UTF-8
+基于 VTE 的桌面无关的终端模拟器。
 
 %prep
 %setup -q
@@ -39,12 +37,13 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-desktop-file-install --vendor="fedora"                     \
+desktop-file-install                     \
   --delete-original                                        \
   --remove-category=Utility                                \
   --add-category=System                                    \
   --dir=${RPM_BUILD_ROOT}%{_datadir}/applications          \
   ${RPM_BUILD_ROOT}%{_datadir}/applications/%{name}.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -57,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING README
 %{_bindir}/%{name}
 %{_datadir}/%{name}/
-%{_datadir}/applications/fedora-%{name}.desktop
+%{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
 %{_mandir}/man1/%{name}*.1.gz
 

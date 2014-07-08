@@ -1,0 +1,12 @@
+diff -ur lxpolkit-0.1.0.orig/src/lxpolkit.c lxpolkit-0.1.0/src/lxpolkit.c
+--- lxpolkit-0.1.0.orig/src/lxpolkit.c	2014-07-08 09:57:27.352456482 +0000
++++ lxpolkit-0.1.0/src/lxpolkit.c	2014-07-08 09:57:41.765456113 +0000
+@@ -37,7 +37,7 @@
+ 
+ void show_msg(GtkWindow* parent, GtkMessageType type, const char* msg)
+ {
+-    GtkWidget* dlg = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, type, GTK_BUTTONS_OK, msg);
++    GtkWidget* dlg = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, type, GTK_BUTTONS_OK, "%s", msg);
+     const char* title = NULL;
+     switch(type)
+     {

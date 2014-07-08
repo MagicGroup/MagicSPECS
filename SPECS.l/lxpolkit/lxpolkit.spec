@@ -2,14 +2,19 @@
 
 Name:           lxpolkit
 Version:        0.1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Simple PolicyKit authentication agent
+Summary(zh_CN.UTF-8): 简单的 PolicyKit 认证代理
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpolkit
 Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
+
+Patch1:		lxpolkit-fix-compile.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  gtk2-devel
@@ -25,9 +30,12 @@ Provides:       PolicyKit-authentication-agent
 LXPolKit is a simple PolicyKit authentication agent developed for LXDE, the 
 Lightweight X11 Desktop Environment.
 
+%description -l zh_CN.UTF-8
+LXDE 下简单的 PolicyKit 认证代理。
 
 %prep
 %setup -q
+%patch1 -p1
 # Don't start in Xfce to avoid bugs like
 # https://bugzilla.redhat.com/show_bug.cgi?id=616730
 sed -i 's/^NotShowIn=GNOME;KDE;/NotShowIn=GNOME;KDE;XFCE;/g' data/lxpolkit.desktop.in.in
@@ -41,6 +49,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
+magic_rpm_clean.sh
 %find_lang %{name}
 desktop-file-validate %{buildroot}%{_sysconfdir}/xdg/autostart/%{name}.desktop
 
@@ -59,6 +68,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.1.0-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

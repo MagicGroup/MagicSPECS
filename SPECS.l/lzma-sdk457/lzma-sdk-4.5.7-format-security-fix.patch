@@ -1,0 +1,71 @@
+diff -up lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaAlone.cpp.format-security lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaAlone.cpp
+--- lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaAlone.cpp.format-security	2007-12-11 22:54:27.000000000 -0800
++++ lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaAlone.cpp	2014-02-21 06:32:08.798397024 -0800
+@@ -467,7 +467,7 @@ int main2(int n, const char *args[])
+       Byte b = Byte(fileSize >> (8 * i));
+       if (outStream->Write(&b, 1, 0) != S_OK)
+       {
+-        fprintf(stderr, kWriteError);
++        fprintf(stderr, "%s", kWriteError);
+         return 1;
+       }
+     }
+@@ -492,12 +492,12 @@ int main2(int n, const char *args[])
+     UInt32 processedSize;
+     if (ReadStream(inStream, properties, kPropertiesSize, &processedSize) != S_OK)
+     {
+-      fprintf(stderr, kReadError);
++      fprintf(stderr, "%s", kReadError);
+       return 1;
+     }
+     if (processedSize != kPropertiesSize)
+     {
+-      fprintf(stderr, kReadError);
++      fprintf(stderr, "%s", kReadError);
+       return 1;
+     }
+     if (decoderSpec->SetDecoderProperties2(properties, kPropertiesSize) != S_OK)
+@@ -511,12 +511,12 @@ int main2(int n, const char *args[])
+       Byte b;
+       if (inStream->Read(&b, 1, &processedSize) != S_OK)
+       {
+-        fprintf(stderr, kReadError);
++        fprintf(stderr, "%s", kReadError);
+         return 1;
+       }
+       if (processedSize != 1)
+       {
+-        fprintf(stderr, kReadError);
++        fprintf(stderr, "%s", kReadError);
+         return 1;
+       }
+       fileSize |= ((UInt64)b) << (8 * i);
+diff -up lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaBenchCon.cpp.format-security lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaBenchCon.cpp
+--- lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaBenchCon.cpp.format-security	2014-02-21 06:32:48.257127570 -0800
++++ lzma457/CPP/7zip/Compress/LZMA_Alone/LzmaBenchCon.cpp	2014-02-21 06:33:23.381887698 -0800
+@@ -142,7 +142,7 @@ HRESULT CBenchCallback::SetDecodeResult(
+   if (final)
+   {
+     UInt64 rating = GetDecompressRating(info.GlobalTime, info.GlobalFreq, info.UnpackSize, info.PackSize, info.NumIterations);
+-    fprintf(f, kSep);
++    fprintf(f, "%s", kSep);
+     CBenchInfo info2 = info;
+     info2.UnpackSize *= info2.NumIterations;
+     info2.PackSize *= info2.NumIterations;
+@@ -201,14 +201,14 @@ HRESULT LzmaBenchCon(
+   {
+     fprintf(f, "   Speed Usage    R/U Rating");
+     if (j == 0)
+-      fprintf(f, kSep);
++      fprintf(f, "%s", kSep);
+   }
+   fprintf(f, "\n   ");
+   for (j = 0; j < 2; j++)
+   {
+     fprintf(f, "    KB/s     %%   MIPS   MIPS");
+     if (j == 0)
+-      fprintf(f, kSep);
++      fprintf(f, "%s", kSep);
+   }
+   fprintf(f, "\n\n");
+   for (UInt32 i = 0; i < numIterations; i++)

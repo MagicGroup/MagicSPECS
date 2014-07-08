@@ -1,32 +1,26 @@
 # Review: https://bugzilla.redhat.com/show_bug.cgi?id=219930
 
 Name:           lxpanel
-Version:        0.5.10
-Release:        4%{?dist}
+Version:	0.6.2
+Release:        1%{?dist}
 Summary:        A lightweight X11 desktop panel
+Summary(zh_CN.UTF-8): 轻量级的 X11 桌面面板
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpanel
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
 
-# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=564746
-Patch0:         lxpanel-0.5.9-dsofix.patch
-
 # Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=746063
-Patch1:         lxpanel-0.5.6-Fix-pager-scroll.patch
-
-# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=587430
-# Upstream bug: https://sourceforge.net/tracker/index.php?func=detail&aid=3573069&group_id=180858&atid=894871
-# Patch: http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxpanel;a=commit;h=3a02bd0
-Patch2:         lxpanel-0.5-10-taskbar-segfault-fix-ID-3573069.patch
+Patch0:         lxpanel-0.5.6-Fix-pager-scroll.patch
+Patch1:		lxpanel-fix-compile.patch
 
 ## distro specific patches
-# default configuration
-Patch100:       lxpanel-0.5.9-default.patch
 # use nm-connection-editor to edit network connections
 Patch101:       lxpanel-0.3.8.1-nm-connection-editor.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -42,6 +36,8 @@ BuildRequires:  pkgconfig(alsa)
 BuildRequires:  wireless-tools-devel
 BuildRequires:  pkgconfig(libmenu-cache) >= 0.3.0
 BuildRequires:  pkgconfig(libwnck-1.0)
+# required for the battery plugin with Patch102
+Requires:       zenity
 
 
 %description
@@ -49,9 +45,14 @@ lxpanel is a lightweight X11 desktop panel. It works with any ICCCM / NETWM
 compliant window manager (eg sawfish, metacity, xfwm4, kwin) and features a 
 tasklist, pager, launchbar, clock, menu and sytray.
 
+%description -l zh_CN.UTF-8
+轻量级的 X11 桌面面板。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk2-devel 
 Requires:       libXpm-devel
@@ -60,16 +61,15 @@ Requires:       libXpm-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch0 -p1 -b .dsofix
-%patch1 -p1 -b .revert
-%patch2 -p1 -b .taskbar-segfault
+%patch0 -p1 -b .revert
+%patch1 -p1
 
-%patch100 -p1 -b .default
 %patch101 -p1 -b .system-config-network
-
 
 %build
 %configure
@@ -79,7 +79,7 @@ make %{?_smp_mflags} V=1
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -100,8 +100,31 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
-* Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 0.5.10-4
-- 为 Magic 3.0 重建
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.6.2-1
+- 更新到 0.6.2
+
+* Fri Nov 29 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.6.1-3
+- Rebuild against menu-cache 0.5.x (#1035902)
+
+* Tue Nov 26 2013  Christoph Wickert <cwickert@fedoraproject.org> - 0.6.1-2
+- Fix conditional to actually apply the fix for the quicklauncher (#1035004)
+
+* Mon Nov 11 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.6.1-1
+- Update to 0.6.1
+- Fix some changelog dates
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.12-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Sat Aug 03 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.12-3
+- Use zenity instead of xmessage to display low battery warnings
+
+* Sun May 12 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.12-2
+- Another patch for to fix the "flash_window_timeout" crash (#587430)
+- Make sure launchers in default config work on Fedora >= 19
+
+* Tue Feb 12 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.12-1
+- Update to 0.5.12, should finally fix #587430 (fingers crossed)
 
 * Sun Nov 25 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.10-3
 - Fix annoying crash of the taskbar (#587430)
@@ -112,7 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Jun 11 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.10-1
 - Update to 0.5.10
 
-* Wed Jun 07 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.9-1
+* Sun Jun 10 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.9-1
 - Update to 0.5.9 (#827779)
 - Fix the netstat plugin (#750400)
 - Correctly show 'Application launch bar' settings window (#830198)
@@ -128,7 +151,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
-* Wed Jun 21 2010 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.6-1
+* Fri Jul 23 2010 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.6-1
 - Update to 0.5.6 (fixes at least #600763 and #607129, possibly more) 
 - Remove all patches from GIT
 
@@ -214,7 +237,7 @@ rm -rf $RPM_BUILD_ROOT
 - new upstream version: 0.3.5.4
 - update lxpanel-default.patch
 
-* Sun Mar 31 2008 Sebastian Vahl <fedora@deadbabylon.de> - 0.2.9.0-1
+* Mon Mar 31 2008 Sebastian Vahl <fedora@deadbabylon.de> - 0.2.9.0-1
 - new upstream version: 0.2.9.0
 
 * Wed Mar 26 2008 Sebastian Vahl <fedora@deadbabylon.de> - 0.2.8-2

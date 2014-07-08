@@ -1,9 +1,11 @@
 Name:           lzip
 Version:        1.15
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        LZMA compressor with integrity checking
+Summary(zh_CN.UTF-8): 带校验的 LZMA 压缩器
 
 Group:          Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 License:        GPLv3+
 URL:            http://www.nongnu.org/lzip/lzip.html
 Source0:        http://download.savannah.gnu.org/releases/lzip/lzip-%{version}.tar.gz
@@ -19,6 +21,8 @@ supports integrity checking using CRC (Cyclic Redundancy Check). To archive
 multiple files, tar can be used with lzip. Please note, that the lzip file
 format (.lz) is not compatible with the lzma file format (.lzma).
 
+%description -l zh_CN.UTF-8
+带校验的 LZMA 压缩器。
 
 %prep
 %setup -q
@@ -39,7 +43,7 @@ make install install-man DESTDIR=$RPM_BUILD_ROOT
 
 # if install-info is present, this is created by upstream's makefile
 rm -Rf $RPM_BUILD_ROOT%{_infodir}/dir
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -71,6 +75,9 @@ fi
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 1.15-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 01 2013 Jon Ciesla <limburgher@gmail.com> - 1.15-1
 - New upstream, 1014165.
 

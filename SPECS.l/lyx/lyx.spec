@@ -11,14 +11,17 @@ BuildRequires: fontpackages-devel
 %define _without_included_boost --without-included-boost
 
 Summary: WYSIWYM (What You See Is What You Mean) document processor
+Summary(zh_CN.UTF-8): 所见即所得的文档处理器
 Name:	 lyx
-Version: 2.0.5
-Release: 4%{?dist}
+Version:	2.1.0
+Release: 1%{?dist}
 
 License: GPLv2+
 Group: 	 Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 Url: 	 http://www.lyx.org/
-Source0: ftp://ftp.lyx.org/pub/lyx/stable/2.0.x/lyx-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: ftp://ftp.lyx.org/pub/lyx/stable/%{majorver}.x/lyx-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source1: lyxrc.dist
@@ -26,7 +29,7 @@ Source10: lyx.desktop
 
 ## upstreamable patches
 # submitted, but upstream rejected it.  we currently agree to disagree.
-Patch50: lyx-2.0.1-xdg_open.patch
+Patch50: lyx-2.1.0-xdg_open.patch
 # Do we need to rebuild configuration files?
 %global autotools 0
 
@@ -114,17 +117,27 @@ to the backends (like LaTeX) that are specifically designed for the task.
 With LyX, the author can concentrate on the contents of his writing,
 and let the computer take care of the rest.
 
+%description -l zh_CN.UTF-8
+所见即所得的文档处理器。
+
 %package common
 Summary:  Common files of %{name}
+Summary(zh_CN.UTF-8): %{name} 的通用文件
 Group:    Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
 %description common
 {summary}.
 
+%description common -l zh_CN.UTF-8
+%{name} 的通用文件。
+
 %package fonts
 Summary: Lyx/MathML fonts
+Summary(zh_CN.UTF-8): Lyx/MathML 字体
 Group:   Applications/Publishing
+Group(zh_CN.UTF-8): 应用程序/出版
 # The actual license says "The author of these fonts, Basil K. Malyshev, has
 # kindly granted permission to use and modify these fonts."
 # One of the font files (wasy10) is separately licensed GPL+.
@@ -151,6 +164,8 @@ BuildArch: noarch
 %description  fonts
 A collection of Math symbol fonts for %{name}.
 
+%description fonts -l zh_CN.UTF-8
+%{name} 的数学符号字体集合。
 
 %prep
 
@@ -208,7 +223,7 @@ touch %{buildroot}%{_datadir}/lyx/{packages,textclass}.lst
 install -m 0755 -d %{buildroot}%{_fontdir}
 mv %{buildroot}%{_datadir}/lyx/fonts/*.ttf %{buildroot}%{_fontdir}/
 rm -rf %{buildroot}%{_datadir}/lyx/fonts
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # bash completion
@@ -289,6 +304,9 @@ fc-cache %{_fontdir} 2> /dev/null ||:
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 2.1.0-1
+- 更新到 2.1.0
+
 * Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 2.0.5-4
 - 为 Magic 3.0 重建
 
