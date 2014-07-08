@@ -1,8 +1,10 @@
 Name:           lzo
-Version:        2.06
-Release:        2%{?dist}
+Version:	2.08
+Release:        1%{?dist}
 Summary:        Data compression library with very fast (de)compression
+Summary(zh_CN.UTF-8): 非常快速的压缩/解压库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.oberhumer.com/opensource/lzo/
 Source0:        http://www.oberhumer.com/opensource/lzo/download/%{name}-%{version}.tar.gz
@@ -17,19 +19,28 @@ Decompression requires no memory. In addition there are slower
 compression levels achieving a quite competitive compression ratio
 while still decompressing at this very high speed.
 
+%description -l zh_CN.UTF-8
+非常快速的压缩/解压库。解压不需要内存。如果调慢压缩时间可以获得更高
+的压缩率，但解压仍然一样的快速。
 
 %package minilzo
 Summary:        Mini version of lzo for apps which don't need the full version
+Summary(zh_CN.UTF-8): 不需要完全版本的 lzo 的程序使用的迷你版本
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description minilzo
 A small (mini) version of lzo for embedding into applications which don't need
 full blown lzo compression support.
 
+%description minilzo -l zh_CN.UTF-8
+不需要完全版本的 lzo 的程序使用的迷你版本。
 
 %package devel
 Summary:        Development files for the lzo library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       %{name}-minilzo = %{version}-%{release}
 Requires:       zlib-devel
@@ -39,6 +50,8 @@ LZO is a portable lossless data compression library written in ANSI C.
 It offers pretty fast compression and very fast decompression.
 This package contains development files needed for lzo.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -67,6 +80,7 @@ install -p -m 644 minilzo/minilzo.h $RPM_BUILD_ROOT%{_includedir}/lzo
 
 #Remove doc
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/lzo
+magic_rpm_clean.sh
 
 %check
 make check test
@@ -103,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 2.08-1
+- 更新到 2.08
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.06-2
 - 为 Magic 3.0 重建
 

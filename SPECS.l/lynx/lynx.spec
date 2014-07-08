@@ -1,40 +1,29 @@
 Summary: A text-based Web browser
+Summary(zh_CN.UTF-8): 文本界面的网页浏览器
 Name: lynx
-Version: 2.8.7
-Release: 8%{?dist}
+Version: 2.8.8
+Release: 2%{?dist}
 License: GPLv2
 Group: Applications/Internet
+Group(zh_CN.UTF-8): 应用程序/互联网
 Source: http://lynx.isc.org/lynx%{version}/lynx%{version}.tar.bz2
 URL: http://lynx.isc.org/
 
-# RH specific tweaks - directory layout, utf-8 by default, misc. configuration
-# and home page
-Patch0: lynx-2.8.6-redhat.patch
-
-# tweaks colors
-Patch1: lynx-2.8.6-backgrcolor.patch
+%define mver %(echo %{version} | sed -e "s/\\./-/g")
+# Magic specific tweaks - directory layout, utf-8 by default, misc. configuration
+Patch0: lynx-2.8.8-magic.patch
 
 # patch preparing upstream sources for rpmbuild, in particular for parallel make
-Patch2: lynx-build-fixes.patch
+Patch1: lynx-2.8.8-build.patch
 
 # prompt user before executing command via a lynxcgi link even in advanced mode,
-# as the actual URL may not be shown but hidden behind an HTTP redirect and set
+# as the actual URL may not be shown but hi%description -l zh_CN.UTF-8en behind an HTTP redirect and set
 # TRUSTED_LYNXCGI:none in lynx.cfg to disable all lynxcgi URLs by default
 # [CVE-2008-4690]
-Patch3: lynx-CVE-2008-4690.patch
-
-# make it possible to delete a bookmark when ~/lynx_bookmarks.html is writable
-# by group (#486070)
-Patch4: lynx-2.8.7-bm-del.patch
+Patch2: lynx-CVE-2008-4690.patch
 
 # avoid build failure caused by mistakenly excluded <locale.h>
-Patch5: lynx-2.8.7-locale.patch
-
-# bz #425879
-Patch6: lynx-2.8.7-ipv6arg.patch
-
-# bz #605286
-Patch7: lynx-2.8.7-alloca.patch
+Patch3: lynx-2.8.8-locale.patch
 
 Provides: webclient
 Provides: text-www-browser
@@ -55,17 +44,17 @@ but it does support frames, tables, and most other HTML tags. One
 advantage Lynx has over graphical browsers is speed; Lynx starts and
 exits quickly and swiftly displays web pages.
 
+%description -l zh_CN.UTF-8
+这是一个文本界面的网页浏览器，它不显示任何图片，但它支持框架，表格及
+大多数其它 HTML 标签。
+
 %prep
-%setup -q -n lynx2-8-7
+%setup -q -n lynx%{mver}
 
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
 
 perl -pi -e "s,^HELPFILE:.*,HELPFILE:file://localhost/usr/share/doc/lynx-%{version}/lynx_help/lynx_help_main.html,g" lynx.cfg
 perl -pi -e "s,^DEFAULT_INDEX_FILE:.*,DEFAULT_INDEX_FILE:http://www.google.com/,g" lynx.cfg
@@ -136,7 +125,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/applnk/Internet
 cat >$RPM_BUILD_ROOT%{_sysconfdir}/lynx-site.cfg <<EOF
 # Place any local lynx configuration options (proxies etc.) here.
 EOF
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -153,6 +142,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace,missingok) %{_sysconfdir}/lynx-site.cfg
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 2.8.8-2
+- 为 Magic 3.0 重建
+
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 2.8.8-1
+- 更新到 2.8.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.8.7-8
 - 为 Magic 3.0 重建
 

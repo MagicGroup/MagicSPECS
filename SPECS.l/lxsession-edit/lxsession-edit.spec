@@ -1,9 +1,11 @@
 Name:           lxsession-edit
 Version:        0.2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Simple GUI to configure what’s automatically started in LXDE
+Summary(zh_CN.UTF-8): 简单的图形界面来配置 LXDE 中自动启动的程序
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org
 Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
@@ -21,6 +23,8 @@ LXSession-edit is a tool to manage freedesktop.org compliant desktop session
 autostarts. Currently adding and removing applications from the startup list 
 is not yet available, but it will be support in the next release.
 
+%description -l zh_CN.UTF-8
+简单的图形界面来配置 LXDE 中自动启动的程序。
 
 %prep
 %setup -q
@@ -43,6 +47,7 @@ desktop-file-install                                       \
   --delete-original                                        \
   --dir=${RPM_BUILD_ROOT}%{_datadir}/applications          \
   ${RPM_BUILD_ROOT}%{_datadir}/applications/%{name}.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -59,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.2.0-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,11 +1,13 @@
 # Review: https://bugzilla.redhat.com/show_bug.cgi?id=219930
 
 Name:           lxpanel
-Version:        0.6.1
-Release:        3%{?dist}
+Version:	0.6.2
+Release:        1%{?dist}
 Summary:        A lightweight X11 desktop panel
+Summary(zh_CN.UTF-8): 轻量级的 X11 桌面面板
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpanel
@@ -13,14 +15,11 @@ Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{vers
 
 # Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=746063
 Patch0:         lxpanel-0.5.6-Fix-pager-scroll.patch
+Patch1:		lxpanel-fix-compile.patch
 
 ## distro specific patches
-# default configuration
-Patch100:       lxpanel-0.5.9-default.patch
 # use nm-connection-editor to edit network connections
 Patch101:       lxpanel-0.3.8.1-nm-connection-editor.patch
-# use zenity instead of xmessage to display low battery warning
-Patch102:       lxpanel-0.5.12-battery-plugin-use-zenity.patch
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -46,9 +45,14 @@ lxpanel is a lightweight X11 desktop panel. It works with any ICCCM / NETWM
 compliant window manager (eg sawfish, metacity, xfwm4, kwin) and features a 
 tasklist, pager, launchbar, clock, menu and sytray.
 
+%description -l zh_CN.UTF-8
+轻量级的 X11 桌面面板。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gtk2-devel 
 Requires:       libXpm-devel
@@ -57,24 +61,15 @@ Requires:       libXpm-devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 %patch0 -p1 -b .revert
+%patch1 -p1
 
-%patch100 -p1 -b .default
 %patch101 -p1 -b .system-config-network
-%patch102 -p1 -b .zenity
-
-# Fedora >= 19 doesn't use vendor prefixes for desktop files. Instead of
-# maintaining two patches we just strip the prefixes from the files we just
-# patched with patch 100.
-%if (0%{?fedora} && 0%{?fedora} >= 19) || (0%{?rhel} && 0%{?rhel} >= 7)
-sed -i 's|id=fedora-|id=|' data/default/panels/panel.in \
-    data/two_panels/panels/bottom.in \
-    data/two_panels/panels/top.in
-%endif
-
 
 %build
 %configure
@@ -84,7 +79,7 @@ make %{?_smp_mflags} V=1
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %clean
@@ -105,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.6.2-1
+- 更新到 0.6.2
+
 * Fri Nov 29 2013 Christoph Wickert <cwickert@fedoraproject.org> - 0.6.1-3
 - Rebuild against menu-cache 0.5.x (#1035902)
 

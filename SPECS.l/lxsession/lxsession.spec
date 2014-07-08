@@ -4,11 +4,12 @@
 
 Name:           lxsession
 Version:        0.4.6.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Lightweight X11 session manager
-Summary(de):    Leichtgewichtiger X11 Sitzungsverwalter
+Summary(zh_CN.UTF-8): 轻量级的 X11 会话管理器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
@@ -37,21 +38,11 @@ LXSession is derived from XSM and is developed as default X11 session manager
 of LXDE, the Lightweight X11 Desktop Environment. Though being part of LXDE, 
 it's totally desktop-independent and only has few dependencies.
 
-%description -l de
-LXSession Lite ist ein Standard konformer X11 Sitzungsverwalter mit 
-Unterstützung für Herunterfahren, Neustart und Schlafmodus mittels HAL. 
-Zusammen mit GDM unterstützt auch Benutzerwechsel.
-
-LXSession Lite ist von XSM abgeleitet und wird als Sitzungsverwalter von LXDE,
-der leichtgewichtigen X11 Desktop Umgebung, entwickelt. Obwohl er Teil von 
-LXDE ist, ist er komplett Desktop unabhängig und hat nur wenige 
-Abhängigkeiten.
-
+%description -l zh_CN.UTF-8
+轻量级的 X11 会话管理器。
 
 %prep
 %setup -q
-#%patch0 -p1 -b .dsofix
-
 
 %build
 %configure --enable-man
@@ -61,6 +52,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+magic_rpm_clean.sh
 %find_lang %{name}
 mkdir -p -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/xdg/%{name}
 
@@ -80,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/xdg/%{name}
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.4.6.1-8
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.4.6.1-7
 - 为 Magic 3.0 重建
 

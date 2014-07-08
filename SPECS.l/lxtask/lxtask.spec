@@ -1,9 +1,11 @@
 Name:           lxtask
 Version:        0.1.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Lightweight and desktop independent task manager
+Summary(zh_CN.UTF-8): 轻量及桌面无关的任务管理器
 
 Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
 License:        GPLv2+
 URL:            http://lxde.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
@@ -42,6 +44,10 @@ xfce4 dependencies removed, some bugs fixed, and some improvement of UI.
 Although being part of LXDE, the Lightweight X11 Desktop Environment, it's 
 totally desktop independent and only requires pure gtk+.
 
+%description -l zh_CN.UTF-8
+这是从 xfce4 的任务管理器中移除与 xfce4 相关内容的一个移植，并修正了一些 Bugs，
+增强了界面。
+尽管它是 LXDE 的一部分，但它是完全桌面无关的，只需要纯 gtk+。
 
 %prep
 %setup -q
@@ -61,10 +67,11 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-desktop-file-install --vendor="fedora"                     \
+desktop-file-install                      \
   --delete-original                                        \
   --dir=${RPM_BUILD_ROOT}%{_datadir}/applications          \
   ${RPM_BUILD_ROOT}%{_datadir}/applications/%{name}.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -76,10 +83,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING README TODO
 %{_bindir}/%{name}
-%{_datadir}/applications/fedora-%{name}.desktop
+%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.1.4-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

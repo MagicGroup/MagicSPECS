@@ -1,13 +1,16 @@
 Name:		lzma-sdk457
 Version:	4.57
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	SDK for lzma compression
+Summary(zh_CN.UTF-8): lzma 压缩的 SDK
 Group:		Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 License:	LGPLv2+
 URL:		http://sourceforge.net/projects/sevenzip/
 Source0:	http://downloads.sourceforge.net/sevenzip/lzma457.tar.bz2
 Source1:	http://www.gnu.org/licenses/lgpl-2.1.txt
 Patch0:		lzma-sdk-4.5.7-sharedlib.patch
+Patch1:		lzma-sdk-4.5.7-format-security-fix.patch
 
 %description
 LZMA SDK provides the documentation, samples, header files, libraries,
@@ -22,16 +25,24 @@ It was improved in way of maximum increasing of compression ratio,
 keeping high decompression speed and low memory requirements for
 decompressing.
 
+%description -l zh_CN.UTF-8
+lzma 压缩的 SDK，这是 4.57 版本。
+
 %package devel
 Summary:	Development libraries and headers for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries and headers for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -c -n lzma457
 %patch0 -p1 -b .shared
+%patch1 -p1 -b .format-security
 # Fix FSF mailing address
 rm LGPL.txt
 cp %{SOURCE1} LGPL.txt
@@ -79,6 +90,7 @@ ln -s liblzmasdk457.so.4.5.7 liblzmasdk457.so
 popd
 mkdir -p %{buildroot}/%{_includedir}/lzma457/
 find -iname '*.h' | xargs -I {} install -m0644 -D {} %{buildroot}/%{_includedir}/lzma457/{}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -93,6 +105,9 @@ find -iname '*.h' | xargs -I {} install -m0644 -D {} %{buildroot}/%{_includedir}
 %{_libdir}/liblzmasdk457.so
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 4.57-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.57-3
 - 为 Magic 3.0 重建
 

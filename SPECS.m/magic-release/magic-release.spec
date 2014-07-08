@@ -2,7 +2,7 @@ Summary: magic-release
 Summary(zh_CN.UTF-8): MagicLinux的发行文件
 Name: magic-release
 Version: 3.0
-Release: 11%{?dist}
+Release: 13%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 License: GPL
@@ -22,7 +22,7 @@ for system Version
 描述系统版本的发行文件
 
 %define fedora_version 21
-%define dist_version 3
+%define dist_version 30
 
 %define rpm_macros_dir %{_rpmconfigdir}/macros.d
 %define release_name Kaibao
@@ -86,6 +86,12 @@ magic_rpm_clean.sh
 %{rpm_macros_dir}/*
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 3.0-13
+- 为 Magic 3.0 重建
+
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 3.0-12
+- 为 Magic 3.0 重建
+
 * Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 3.0-11
 - 为 Magic 3.0 重建
 

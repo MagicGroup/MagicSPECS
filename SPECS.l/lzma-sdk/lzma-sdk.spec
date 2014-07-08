@@ -1,14 +1,17 @@
 Name:           lzma-sdk
 Version:        4.6.5
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        SDK for lzma compression
+Summary(zh_CN.UTF-8): lzma 压缩的 SDK
 
 Group:          Applications/Archiving
+Group(zh_CN.UTF-8): 应用程序/归档
 License:        LGPLv2
 URL:            http://sourceforge.net/projects/sevenzip/
 Source0:        http://downloads.sourceforge.net/sevenzip/lzma465.tar.bz2
 Source1:        lzma-sdk-LICENSE.fedora
 Patch0:         lzma-sdk-4.6.5-sharedlib.patch
+Patch1:         lzma-sdk-fprintf-format.patch
 
 %description
 LZMA SDK provides the documentation, samples, header files, libraries,
@@ -23,16 +26,24 @@ It was improved in way of maximum increasing of compression ratio,
 keeping high decompression speed and low memory requirements for
 decompressing.
 
+%description -l zh_CN.UTF-8
+lzma 压缩的 SDK。
+
 %package devel
 Summary:        Development libraries and headers for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Development libraries and headers for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -c -n lzma465
 %patch0 -p1 -b .shared
+%patch1 -p0 -b .fprintf
 rm lzma.exe
 
 for f in .h .c .cpp .dsw .dsp .java .cs .txt makefile; do
@@ -83,6 +94,7 @@ ln -s liblzmasdk.so.4.6.5 liblzmasdk.so
 popd
 mkdir -p %{buildroot}/%{_includedir}/lzma465/
 find -iname '*.h' | xargs -I {} install -m0644 -D {} %{buildroot}/%{_includedir}/lzma465/{}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -97,6 +109,9 @@ find -iname '*.h' | xargs -I {} install -m0644 -D {} %{buildroot}/%{_includedir}
 %{_libdir}/liblzmasdk.so
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 4.6.5-9
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.6.5-8
 - 为 Magic 3.0 重建
 

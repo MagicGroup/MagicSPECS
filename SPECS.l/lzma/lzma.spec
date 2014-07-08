@@ -1,9 +1,11 @@
 Summary: 	LZMA utils
+Summary(zh_CN.UTF-8): LZMA 工具
 Name: 		lzma
 Version: 	4.32.7
-Release: 	11%{?dist}
+Release: 	12%{?dist}
 License: 	GPLv2+
 Group:		Applications/File
+Group(zh_CN.UTF-8): 应用程序/文件
 Source0:	http://tukaani.org/%{name}/%{name}-%{version}.tar.lzma
 URL:		http://tukaani.org/%{name}/
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -16,22 +18,37 @@ LZMA encoder/decoder. LZMA utils add a few scripts which provide
 gzip-like command line interface and a couple of other LZMA related
 tools. 
 
+%description -l zh_CN.UTF-8
+LZMA 是一个非常高压缩率和快速解压的算法。这是 LZMA SDK 所包含的 LZMA 
+压缩/解压核心工具。它还添加了一些脚本，可以使用类似 gzip 的命令行接口，
+并且有有一些其它的 LZMA 相关工具。
+
 %package 	libs
 Summary:	Libraries for decoding LZMA compression
+Summary(zh_CN.UTF-8): %name 的运行库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 
 %description 	libs
 Libraries for decoding LZMA compression.
 
+%description libs -l zh_CN.UTF-8
+%name 的运行库。
+
 %package 	devel
 Summary:	Devel libraries & headers for liblzmadec
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:	LGPLv2+
 Requires:	%{name}-libs	= %{version}-%{release}
 
 %description  devel
 Devel libraries & headers for liblzmadec.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q  -n %{name}-%{version}
@@ -50,6 +67,7 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 rm -f %{buildroot}/%{_libdir}/*.a
 rm -f %{buildroot}/%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -75,6 +93,9 @@ rm -rf %{buildroot}
 %{_libdir}/*.so
 
 %changelog
+* Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 4.32.7-12
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.32.7-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
