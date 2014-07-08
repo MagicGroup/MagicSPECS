@@ -20,6 +20,7 @@ Source7: zshprompt.pl
 Patch0: zsh-serial.patch
 Patch4: zsh-4.3.6-8bit-prompts.patch
 Patch5: zsh-test-C02-dev_fd-mock.patch
+Patch6: zsh-5.0.2.texi-itemx.patch
 BuildRequires: coreutils sed ncurses-devel libcap-devel
 BuildRequires: texinfo tetex texi2html gawk /bin/hostname
 Requires(post): /usr/sbin/install-info grep
@@ -55,6 +56,7 @@ This package contains the Zsh manual in html format.
 %patch0 -p1 -b .serial
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 cp -p %SOURCE7 .
 
