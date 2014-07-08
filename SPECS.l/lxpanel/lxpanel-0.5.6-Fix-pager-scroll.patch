@@ -1,7 +1,7 @@
 diff -dur lxpanel-0.5.6.orig/src/plugins/pager.c lxpanel-0.5.6/src/plugins/pager.c
 --- lxpanel-0.5.6.orig/src/plugins/pager.c	2011-10-13 13:32:30.709231295 -0500
 +++ lxpanel-0.5.6/src/plugins/pager.c	2011-10-13 13:33:12.474768952 -0500
-@@ -336,7 +336,7 @@
+@@ -377,7 +377,7 @@
  {
      /* Compute the new desktop from the scroll direction, wrapping at either extreme. */
      int current_desktop = d->pg->current_desktop;
