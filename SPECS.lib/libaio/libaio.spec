@@ -1,14 +1,12 @@
 Name: libaio
-Version: 0.3.109
-Release: 6%{?dist}
+Version: 0.3.110
+Release: 3%{?dist}
 Summary: Linux-native asynchronous I/O access library
 License: LGPLv2+
 Group:  System Environment/Libraries
-Source: ftp://ftp.kernel.org/pub/linux/libs/aio/%{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-root
-Patch1: libaio-install-to-slash.patch
-Patch2: libaio-0.3.109-generic-arch.patch
-Patch3: libaio-0.3.109-mips64-libaio_h.patch
+Source: https://fedorahosted.org/releases/l/i/libaio/libaio-0.3.110.tar.gz
+
+Patch1: libaio-install-to-destdir-slash-usr.patch
 
 %description
 The Linux-native asynchronous I/O facility ("async I/O", or "aio") has a
@@ -18,7 +16,7 @@ The POSIX async I/O facility requires this library in order to provide
 kernel-accelerated async I/O capabilities, as do applications which
 require the Linux-native async I/O API.
 
-%define libdir %{_prefix}/%{_lib}
+%define libdir /%{_lib}
 %define usrlibdir %{_prefix}/%{_lib}
 
 %package devel
@@ -31,10 +29,9 @@ This package provides header files to include and libraries to link with
 for the Linux-native asynchronous I/O facility ("async I/O", or "aio").
 
 %prep
-%setup -a 0
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
+%setup -q -a 0
+%patch1 -p0 -b .install-to-destdir-slash-usr
+%patch1 -p1 -b .install-to-destdir-slash-usr
 mv %{name}-%{version} compat-%{name}-%{version}
 
 %build
@@ -51,40 +48,51 @@ make
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 cd compat-%{name}-%{version}
 install -D -m 755 src/libaio.so.1.0.0 \
-  $RPM_BUILD_ROOT/%{libdir}/libaio.so.1.0.0
+  $RPM_BUILD_ROOT/%{usrlibdir}/libaio.so.1.0.0
 cd ..
-make destdir=$RPM_BUILD_ROOT prefix=%{_prefix} libdir=%{libdir} usrlibdir=%{usrlibdir} \
+make destdir=$RPM_BUILD_ROOT prefix=/ libdir=%{libdir} usrlibdir=%{usrlibdir} \
 	includedir=%{_includedir} install
 
-magic_rpm_clean.sh
-
-%clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+find %{buildroot} -name '*.a' -exec rm -f {} ';'
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root)
-%attr(0755,root,root) %{libdir}/libaio.so.*
+%attr(0755,root,root) %{usrlibdir}/libaio.so.*
 %doc COPYING TODO
 
 %files devel
-%defattr(-,root,root)
 %attr(0644,root,root) %{_includedir}/*
-%attr(0755,root,root) %{usrlibdir}/libaio.so*
-%exclude %{_libdir}/libaio.a
+%attr(0755,root,root) %{usrlibdir}/libaio.so
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.109-6
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.110-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Wed Apr 18 2012 Liu Di <liudidi@gmail.com> - 0.3.109-5
-- 为 Magic 3.0 重建
+* Wed Mar  5 2014 Jeff Moyer <jmoyer@redhat.com> - 0.3.110-2
+- Rebase to 0.3.110 which adds support for aarch64 and other arches (Jeff Moyer)
+- Move to /usr
+- Resolves: bz#969680
 
-* Wed Jan 04 2012 Liu Di <liudidi@gmail.com> - 0.3.109-4
-- 为 Magic 3.0 重建
+* Tue Mar 4  2014 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 0.3.109-9
+- Initial aarch64 compatibility patch.
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.109-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.109-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.109-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.109-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Apr 04 2011 Dennis Gilmore <dennis@ausil.us> - 0.3.109-4
+-patch in sparc support 
 
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.109-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
@@ -250,7 +258,7 @@ magic_rpm_clean.sh
 - make the post scriptlet not use /bin/sh
 
 * Sat Apr 12 2002 Benjamin LaHaise <bcrl@redhat.com>
-- add /lib/libredhat-kernel* to %files.
+- add /lib/libredhat-kernel* to %%files.
 
 * Fri Apr 12 2002 Benjamin LaHaise <bcrl@redhat.com>
 - make the dummy install as /lib/libredhat-kernel.so.1.0.0 so 
