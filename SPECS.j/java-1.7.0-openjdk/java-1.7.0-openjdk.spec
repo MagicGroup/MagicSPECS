@@ -11,7 +11,7 @@
 #sometimes we need to distinguish big and little endian PPC64
 %global ppc64le			ppc64le
 %global ppc64be			ppc64 ppc64p7
-%global multilib_arches %{power64} sparc64 x86_64 
+%global multilib_arches %{power64} sparc64 x86_64 mips64el
 %global jit_arches		%{ix86} x86_64 sparcv9 sparc64 %{ppc64be} %{aarch64}
 
 #if 0, then links are set forcibly, if 1 ten only if status is auto
@@ -63,6 +63,11 @@
 %global archbuild aarch64
 %global archinstall aarch64
 %global archdef AARCH64
+%endif
+%ifarch mips64el
+%global archbuild mips64el
+%global archinstall mips64el
+%global archdef MIPS64EL
 %endif
 # 32 bit sparc, optimized for v9
 %ifarch sparcv9
@@ -295,6 +300,9 @@ Patch4120: add-final-location-rpaths-aarch64.patch
 # Temporary copy of RH1064383 fix; remove after release of 2.4.8
 Patch413: rh1064383-prelink_fix.patch
 
+# mips64el fix
+Patch500: java-1.7.0-openjdk-1.7.0.60-mips64el-fix.patch
+
 BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: gcc-c++
@@ -317,7 +325,9 @@ BuildRequires: xorg-x11-proto-devel
 BuildRequires: ant
 BuildRequires: libXinerama-devel
 BuildRequires: rhino
+%ifnarch mips64el
 BuildRequires: redhat-lsb
+%endif
 BuildRequires: zip
 BuildRequires: fontconfig
 BuildRequires: xorg-x11-fonts-Type1
@@ -590,13 +600,15 @@ tar xzf %{SOURCE9}
 
 %patch413
 
+%patch500
+
 %build
 # How many cpu's do we have?
 export NUM_PROC=`/usr/bin/getconf _NPROCESSORS_ONLN 2> /dev/null || :`
 export NUM_PROC=${NUM_PROC:-1}
 
 # Build IcedTea and OpenJDK.
-%ifarch s390x sparc64 alpha %{power64} %{aarch64}
+%ifarch s390x sparc64 alpha %{power64} %{aarch64} mips64el
 export ARCH_DATA_MODEL=64
 %endif
 %ifarch alpha
