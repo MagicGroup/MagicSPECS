@@ -1,5 +1,5 @@
---- texlive.tlpdb.orig	2014-03-05 10:32:51.339406966 +0100
-+++ texlive.tlpdb	2014-03-05 10:32:51.428407281 +0100
+--- texlive.tlpdb.orig	2014-05-09 06:00:14.065003389 +0100
++++ texlive.tlpdb	2014-05-14 08:06:39.583267360 +0100
 @@ -76,7 +76,7 @@
  catalogue-ctan /macros/latex/contrib/abc
  catalogue-date 2008-03-08 20:47:21 +0100
@@ -9,7 +9,7 @@
  
  name abntex2
  category Package
-@@ -9853,7 +9853,7 @@
+@@ -9852,7 +9852,7 @@
  catalogue-license pd
  catalogue-version 1.0a
  
@@ -18,7 +18,7 @@
  category Package
  revision 31750
  shortdesc A font to typeset maths in Xe(La)TeX and Lua(La)TeX.
-@@ -14578,38 +14578,6 @@
+@@ -15095,38 +15095,6 @@
  catalogue-date 2006-12-29 13:11:21 +0100
  catalogue-license gpl
  
@@ -57,7 +57,7 @@
  name bibexport
  category Package
  revision 29349
-@@ -28780,7 +28748,6 @@
+@@ -29596,7 +29564,6 @@
  depend tex
  depend texconfig
  depend texlive-common
@@ -65,7 +65,7 @@
  depend texlive-en
  depend texlive-msg-translations
  depend texlive-scripts
-@@ -29002,7 +28969,7 @@
+@@ -29820,7 +29787,7 @@
  shortdesc Additional fonts
  relocated 1
  depend collection-basic
@@ -74,7 +74,7 @@
  depend accanthis
  depend adforn
  depend adfsymbols
-@@ -29131,7 +29098,7 @@
+@@ -29953,7 +29920,7 @@
  depend librebaskerville
  depend librecaslon
  depend libris
@@ -83,7 +83,7 @@
  depend lobster2
  depend lxfonts
  depend ly1
-@@ -31205,7 +31172,7 @@
+@@ -32040,7 +32007,7 @@
  depend m-tx
  depend musixguit
  depend musixtex
@@ -92,7 +92,7 @@
  depend pmx
  depend pmxchords
  depend songbook
-@@ -31678,25 +31645,6 @@
+@@ -32518,25 +32485,6 @@
  depend xymtex
  depend youngtab
  
@@ -118,7 +118,7 @@
  name collection-xetex
  category Collection
  revision 30396
-@@ -40862,7 +40810,7 @@
+@@ -41736,7 +41684,7 @@
   texmf-dist/source/support/dosepsbin/install-sh
  catalogue-ctan /support/dosepsbin
  catalogue-date 2012-03-22 21:51:23 +0100
@@ -127,7 +127,7 @@
  catalogue-version 1.2
  
  name dosepsbin.i386-linux
-@@ -67838,13 +67786,6 @@
+@@ -69599,13 +69547,6 @@
  catalogue-license lppl
  catalogue-version v1.7
  
@@ -141,16 +141,16 @@
  name interactiveworkbook
  category Package
  revision 15878
-@@ -78736,7 +78677,7 @@
+@@ -80497,7 +80438,7 @@
  catalogue-ctan /macros/latex/contrib/labels
  catalogue-date 2009-09-29 00:01:21 +0200
  catalogue-license lppl1.2
 -catalogue-version .13
 +catalogue-version 13
  
- name lacheck
- category TLCore
-@@ -80055,73 +79996,6 @@
+ name labyrinth
+ category Package
+@@ -81837,73 +81778,6 @@
  binfiles arch=i386-linux size=1
   bin/i386-linux/latexindent
  
@@ -224,7 +224,7 @@
  name latexmp
  category Package
  revision 15878
-@@ -85492,7 +85366,7 @@
+@@ -87297,7 +87171,7 @@
  catalogue-date 2007-01-08 23:14:30 +0100
  catalogue-license lppl
  
@@ -233,7 +233,7 @@
  category Package
  revision 15878
  shortdesc Linear A script fonts.
-@@ -97040,7 +96914,7 @@
+@@ -98850,7 +98724,7 @@
   texmf-dist/source/generic/mkjobtexmf/install-sh
  catalogue-ctan /support/mkjobtexmf
  catalogue-date 2011-11-16 11:07:17 +0100
@@ -242,7 +242,7 @@
  catalogue-version 0.8
  
  name mkjobtexmf.i386-linux
-@@ -99101,7 +98975,7 @@
+@@ -100911,7 +100785,7 @@
  catalogue-license lppl1.3
  catalogue-version 1.2.2
  
@@ -251,7 +251,15 @@
  category Package
  revision 28934
  shortdesc Fonts used by MusixTeX.
-@@ -117345,7 +117219,7 @@
+@@ -111584,6 +111458,7 @@
+ longdesc LuaTeX).
+ depend kpathsea
+ depend pdftex.ARCH
++depend pdftex-def
+ execute AddFormat name=pdftex  engine=pdftex patterns=language.def                     options="-translate-file=cp227.tcx *pdfetex.ini"
+ execute AddFormat name=etex    engine=pdftex patterns=language.def                     options="-translate-file=cp227.tcx *etex.ini"
+ execute AddFormat name=pdfetex engine=pdftex patterns=language.def                     options="-translate-file=cp227.tcx *pdfetex.ini"
+@@ -119632,7 +119507,7 @@
  catalogue-ctan /graphics/pstricks/contrib/pst-layout
  catalogue-date 2012-04-27 12:45:13 +0200
  catalogue-license lppl
@@ -260,7 +268,7 @@
  
  name pst-lens
  category Package
-@@ -130062,7 +129936,7 @@
+@@ -132434,7 +132309,7 @@
  depend kurier
  depend poltawski
  depend xits
@@ -269,7 +277,7 @@
  depend gentium-tug
  depend txfonts
  depend pxfonts
-@@ -137423,7 +137297,7 @@
+@@ -139799,7 +139674,7 @@
   texmf-dist/doc/man/man1/texdirflatten.man1.pdf
  catalogue-ctan /support/texdirflatten
  catalogue-date 2012-01-12 19:29:56 +0100
@@ -278,7 +286,7 @@
  catalogue-version 1.1
  
  name texdirflatten.i386-linux
-@@ -138971,7 +138845,6 @@
+@@ -141373,7 +141248,6 @@
  revision 29741
  shortdesc i386-linux files of texlive-scripts
  binfiles arch=i386-linux size=2
@@ -286,7 +294,7 @@
   bin/i386-linux/rungs
  
  name texlive-sr
-@@ -148242,7 +148115,7 @@
+@@ -150645,7 +150519,7 @@
  catalogue-ctan /macros/latex209/contrib/trees/tree-dvips
  catalogue-date 2011-03-14 14:09:23 +0100
  catalogue-license lppl1
@@ -295,7 +303,7 @@
  
  name treetex
  category Package
-@@ -160455,7 +160328,6 @@
+@@ -162874,7 +162748,6 @@
  revision 30845
  shortdesc i386-linux files of xetex
  binfiles arch=i386-linux size=5465
