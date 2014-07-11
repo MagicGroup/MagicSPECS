@@ -1,7 +1,7 @@
 %global         majorminor      1.0
 
 Name:           gstreamer1-plugins-base
-Version:	1.3.3
+Version:	1.3.90
 Release:        2%{?dist}
 Summary:        GStreamer streaming media framework base plugins
 
@@ -206,6 +206,8 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 %files tools
 %{_bindir}/gst-discoverer-%{majorminor}
 %{_bindir}/gst-play-%{majorminor}
+%{_bindir}/gst-device-monitor-%{majorminor}
+%{_mandir}/man1/gst-device-monitor-*.gz
 %{_mandir}/man1/gst-discoverer-*.gz
 %{_mandir}/man1/gst-play-*.gz
 
@@ -353,6 +355,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 1.3.90-2
+- 更新到 1.3.90
+
 * Wed Jun 25 2014 Liu Di <liudidi@gmail.com> - 1.3.3-2
 - 更新到 1.3.3
 

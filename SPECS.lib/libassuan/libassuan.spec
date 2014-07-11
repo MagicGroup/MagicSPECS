@@ -1,7 +1,8 @@
 Name:    libassuan
 Summary: GnuPG IPC library
-Version: 2.0.3
-Release: 2%{?dist}
+Summary(zh_CN.UTF-8): GnuPG IPC 库
+Version: 2.1.1
+Release: 1%{?dist}
 
 # The library is LGPLv2+, the documentation GPLv3+
 License: LGPLv2+ and GPLv3+
@@ -9,6 +10,7 @@ Source0: ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-%{version}.tar.bz2.sig
 URL:     http://www.gnupg.org/
 Group:   System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Patch1:  libassuan-1.0.5-multilib.patch
@@ -21,9 +23,14 @@ BuildRequires: pth-devel
 This is the IPC library used by GnuPG 2, GPGME and a few other
 packages.
 
+%description -l zh_CN.UTF-8
+GnuPG IPC 库。
+
 %package devel 
 Summary: GnuPG IPC library 
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Provides: libassuan2-devel = %{version}-%{release}
 Provides: libassuan2-devel%{?_isa} = %{version}-%{release}
 Requires: pth-devel
@@ -35,6 +42,8 @@ packages.
 
 This package contains files needed to develop applications using %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -94,6 +103,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 2.1.1-1
+- 更新到 2.1.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.3-2
 - 为 Magic 3.0 重建
 

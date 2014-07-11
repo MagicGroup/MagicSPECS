@@ -1,8 +1,10 @@
 Name: libasyncns
 Version: 0.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Asynchronous Name Service Library
+Summary(zh_CN.UTF-8): 异步名称服务库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://0pointer.de/lennart/projects/libasyncns/libasyncns-%{version}.tar.gz
 License: LGPLv2+
 Url: http://0pointer.de/lennart/projects/libasyncns/
@@ -12,14 +14,22 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 A small and lightweight library that implements easy to use asynchronous
 wrappers around the libc NSS functions getaddrinfo(), res_query() and related.
 
+%description -l zh_CN.UTF-8
+异步名称服务库。
+
 %package devel
 Summary: Development Files for libasyncns Client Development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 Development Files for libasyncns Client Development
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -36,6 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 find $RPM_BUILD_ROOT \( -name *.a -o -name *.la \) -exec rm {} \;
 rm -rf $RPM_BUILD_ROOT/usr/share/doc/libasyncns/
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -52,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libasyncns.pc
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.8-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8-4
 - 为 Magic 3.0 重建
 
