@@ -4,7 +4,7 @@
 %global aarch64_hg_tag  992
 
 %global aarch64         aarch64 arm64 armv8
-%global multilib_arches %{power64} sparc64 x86_64 %{aarch64}
+%global multilib_arches %{power64} sparc64 x86_64 %{aarch64} mips64el
 %global jit_arches      %{ix86} x86_64 sparcv9 sparc64 %{aarch64}
 
 # sometimes we need to distinguish big and little endian PPC64
@@ -41,6 +41,9 @@
 %endif
 %ifarch %{aarch64}
 %global archinstall aarch64
+%endif
+%ifarch mips64el
+%global archinstall mips64el
 %endif
 # 32 bit sparc, optimized for v9
 %ifarch sparcv9
@@ -226,6 +229,7 @@ Patch202: system-libpng.patch
 Patch203: system-lcms.patch
 
 Patch999: 0001-PPC64LE-arch-support-in-openjdk-1.8.patch
+Patch1000: java-1.8.0-openjdk-mips64el-fix.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -453,6 +457,10 @@ sh %{SOURCE12}
 # PPC fixes
 %patch103
 %patch999 -p1
+%endif
+
+%ifarch mips64el
+%patch1000
 %endif
 
 # Extract systemtap tapsets
