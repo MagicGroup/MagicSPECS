@@ -1,8 +1,10 @@
 Name: libatasmart
 Version: 0.19
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: ATA S.M.A.R.T. Disk Health Monitoring Library
+Summary(zh_CN.UTF-8): ATA S.M.A.R.T. 磁盘健康监视库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://0pointer.de/public/libatasmart-%{version}.tar.xz
 License: LGPLv2+
 Url: http://git.0pointer.de/?p=libatasmart.git;a=summary
@@ -12,15 +14,23 @@ BuildRequires: systemd-devel
 A small and lightweight parser library for ATA S.M.A.R.T. hard disk
 health monitoring.
 
+%description -l zh_CN.UTF-8
+轻量的解析 ATA S.M.A.R.T. 硬盘健康监视信息的库。
+
 %package devel
 Summary: Development Files for libatasmart Client Development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 Requires: vala
 
 %description devel
 Development Files for libatasmart Client Development
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -54,6 +64,9 @@ magic_rpm_clean.sh
 %doc blob-examples/SAMSUNG* blob-examples/ST* blob-examples/Maxtor* blob-examples/WDC* blob-examples/FUJITSU* blob-examples/INTEL* blob-examples/TOSHIBA* blob-examples/MCC*
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.19-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.19-3
 - 为 Magic 3.0 重建
 

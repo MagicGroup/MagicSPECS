@@ -1,8 +1,10 @@
 Name:           libcacard
 Version:        0.1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Common Access Card (CAC) Emulation
+Summary(zh_CN.UTF-8): 通用访问卡片 (CAC) 仿真
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.spice-space.org/download
 Source0:        http://www.spice-space.org/download/libcacard/libcacard-%{version}.tar.bz2
@@ -11,21 +13,34 @@ BuildRequires:  nss-devel >= 3.12.8-2
 %description
 Common Access Card (CAC) emulation library.
 
+%description -l zh_CN.UTF-8
+通用访问卡片 (CAC) 仿真库。
+
 %package tools
 Summary:        CAC Emulation tools
+Summary(zh_CN.UTF-8): CAC 仿真工具
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description tools
 CAC emulation tools.
 
+%description tools -l zh_CN.UTF-8
+CAC 仿真工具。
+
 %package devel
 Summary:        CAC Emulation devel
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description devel
 CAC emulation development files.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -38,6 +53,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -59,6 +75,9 @@ find $RPM_BUILD_ROOT -name '*.la' -or -name '*.a' | xargs rm -f
 %{_bindir}/vscclient
 
 %changelog
+* Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.1.2-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.1.2-3
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,8 @@
 Name:           adwaita-icon-theme
 Version:        3.13.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Adwaita icon theme
+Summary(zh_CN.UTF-8): Adwaita 图标主题
 
 License:        LGPLv3+ or CC-BY-SA
 URL:            http://www.gnome.org
@@ -19,13 +20,20 @@ Obsoletes:      adwaita-cursor-theme < 3.13.1-2
 %description
 This package contains the Adwaita icon theme used by the GNOME desktop.
 
+%description -l zh_CN.UTF-8
+Adwaita 图标主题。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains the pkgconfig file for
 developing applications that use %{name}.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -38,6 +46,7 @@ make %{?_smp_mflags}
 %make_install
 
 touch $RPM_BUILD_ROOT%{_datadir}/icons/Adwaita/icon-theme.cache
+magic_rpm_clean.sh
 
 %post
 touch --no-create %{_datadir}/icons/Adwaita &>/dev/null || :
@@ -70,6 +79,9 @@ gtk-update-icon-cache %{_datadir}/icons/Adwaita &>/dev/null || :
 %{_datadir}/pkgconfig/adwaita-icon-theme.pc
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 26 2014 Richard Hughes <rhughes@redhat.com> - 3.13.3-1
 - Update to 3.13.3
 

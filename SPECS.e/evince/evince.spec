@@ -4,7 +4,7 @@
 %global gxps_version 0.2.1
 
 Name:           evince
-Version:	3.12.0
+Version:	3.13.3
 Release:        1%{?dist}
 Summary:        Document viewer
 Summary(zh_CN.UTF-8): 文档查看器
@@ -218,6 +218,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 %{_libdir}/evince/4/backends/xpsdocument.evince-backend
 %{_libdir}/girepository-1.0/EvinceDocument-3.0.typelib
 %{_libdir}/girepository-1.0/EvinceView-3.0.typelib
+%{_datadir}/appdata/evince-comicsdocument.metainfo.xml
+%{_datadir}/appdata/evince-pdfdocument.metainfo.xml
+%{_datadir}/appdata/evince-psdocument.metainfo.xml
+%{_datadir}/appdata/evince-tiffdocument.metainfo.xml
+%{_datadir}/appdata/evince-xpsdocument.metainfo.xml
+%{_datadir}/appdata/evince.appdata.xml
 
 %files devel
 %{_datadir}/gtk-doc/html/evince/
@@ -232,20 +238,23 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 %{_datadir}/gir-1.0/EvinceDocument-3.0.gir
 %{_datadir}/gir-1.0/EvinceView-3.0.gir
 
-%if 0
 %files dvi
 %{_libdir}/evince/4/backends/libdvidocument.so*
 %{_libdir}/evince/4/backends/dvidocument.evince-backend
-%endif
+%{_datadir}/appdata/evince-dvidocument.metainfo.xml
 
 %files djvu
 %{_libdir}/evince/4/backends/libdjvudocument.so
 %{_libdir}/evince/4/backends/djvudocument.evince-backend
+%{_datadir}/appdata/evince-djvudocument.metainfo.xml
 
 %files nautilus
 %{_libdir}/nautilus/extensions-3.0/libevince-properties-page.so
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
+- 更新到 3.13.3
+
 * Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

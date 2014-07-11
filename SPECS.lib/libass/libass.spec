@@ -1,12 +1,14 @@
 Name:           libass
-Version:        0.10.0
+Version:	0.11.2
 Release:        3%{?dist}
 Summary:        Portable library for SSA/ASS subtitles rendering
+Summary(zh_CN.UTF-8): 可移植的 SSA/ASS 字幕渲染库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        ISC
-URL:            http://code.google.com/p/libass/
-Source0:        http://libass.googlecode.com/files/%{name}-%{version}.tar.xz
+URL:            https://github.com/libass/libass
+Source0:        https://github.com/libass/libass/releases/download/%{version}/libass-%{version}.tar.xz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -19,9 +21,14 @@ BuildRequires:  fribidi-devel
 %description
 Libass is a portable library for SSA/ASS subtitles rendering.
 
+%description -l zh_CN.UTF-8
+可移植的 SSA/ASS 字幕渲染库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -29,6 +36,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -42,11 +51,10 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
 
 %post -p /sbin/ldconfig
 
@@ -65,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libass.pc
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.11.2-3
+- 更新到 0.11.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.10.0-3
 - 为 Magic 3.0 重建
 

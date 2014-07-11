@@ -1,8 +1,10 @@
 Name: libcanberra
-Version: 0.29
+Version: 0.30
 Release: 4%{?dist}
 Summary: Portable Sound Event Library
+Summary(zh_CN.UTF-8): 可移植的声音事件库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://0pointer.de/lennart/projects/libcanberra/libcanberra-%{version}.tar.xz
 
 License: LGPLv2+
@@ -28,9 +30,14 @@ Requires(postun): systemd
 A small and lightweight implementation of the XDG Sound Theme Specification
 (http://0pointer.de/public/sound-theme-spec.html).
 
+%description -l zh_CN.UTF-8
+小且轻理级的 XDG 声音主题标准实现。
+
 %package gtk2
 Summary: Gtk+ 2.x Bindings for libcanberra
+Summary(zh_CN.UTF-8): %{name} 的 GTK+ 2.x 绑定
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 # Some other stuff is included in the gtk3 package, so always pull that in.
 Requires: %{name}-gtk3 = %{version}-%{release}
@@ -38,22 +45,35 @@ Requires: %{name}-gtk3 = %{version}-%{release}
 %description gtk2
 Gtk+ 2.x bindings for libcanberra
 
+%description gtk2 -l zh_CN.UTF-8
+%{name} 的 GTK+ 2.x 绑定。
+
 %package gtk3
 Summary: Gtk+ 3.x Bindings for libcanberra
+Summary(zh_CN.UTF-8): %{name} 的 GTK+ 3.x 绑定
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires: %{name} = %{version}-%{release}
 
 %description gtk3
 Gtk+ 3.x bindings for libcanberra
 
+%description gtk3 -l zh_CN.UTF-8
+%{name} 的 GTK+ 3.x 绑定。
+
 %package devel
 Summary: Development Files for libcanberra Client Development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: gtk2-devel
 
 %description devel
 Development Files for libcanberra Client Development
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %post
 /usr/sbin/ldconfig
@@ -146,6 +166,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/libcanberra.vapi
 
 %changelog
+* Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.30-4
+- 更新到 0.30
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.29-4
 - 为 Magic 3.0 重建
 

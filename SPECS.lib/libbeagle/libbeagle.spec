@@ -2,7 +2,7 @@
 
 Name: 		libbeagle
 Version: 	0.3.9
-Release: 	6%{?dist}
+Release: 	7%{?dist}
 Summary:	Beagle C interface
 Summary(zh_CN): Beagle C 接口
 Group: 		Development/Libraries
@@ -20,6 +20,7 @@ BuildRequires:	pygobject2-devel
 Patch0:		libbeagle-pyexec.patch
 # http://bugzilla.gnome.org/show_bug.cgi?id=588994
 Patch1:		fix-install.patch
+Patch2:		libbeagle-0.3.9-fixcompile.patch
 
 BuildRequires: 	automake, autoconf, libtool
 
@@ -64,6 +65,7 @@ Beagle 的 Python 接口.
 %setup -q
 %patch0 -p1 -b .pyexec
 %patch1 -p1 -b .fix-install
+%patch2 -p1
 
 # patch 0 touches .am
 autoreconf -i -f
@@ -114,6 +116,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.3.9-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.9-6
 - 为 Magic 3.0 重建
 

@@ -1,9 +1,11 @@
 Name: libaio
 Version: 0.3.110
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Linux-native asynchronous I/O access library
+Summary(zh_CN.UTF-8): Linux 本地异步 I/O 访问库
 License: LGPLv2+
 Group:  System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source: https://fedorahosted.org/releases/l/i/libaio/libaio-0.3.110.tar.gz
 
 Patch1: libaio-install-to-destdir-slash-usr.patch
@@ -16,17 +18,25 @@ The POSIX async I/O facility requires this library in order to provide
 kernel-accelerated async I/O capabilities, as do applications which
 require the Linux-native async I/O API.
 
+%description -l zh_CN.UTF-8
+Linux 本地异步 I/O 访问库。
+
 %define libdir /%{_lib}
 %define usrlibdir %{_prefix}/%{_lib}
 
 %package devel
 Summary: Development files for Linux-native asynchronous I/O access
+Group(zh_CN.UTF-8): 开发/库
 Group: Development/System
+Group(zh_CN.UTF-8): 开发/系统
 Requires: libaio
 
 %description devel
 This package provides header files to include and libraries to link with
 for the Linux-native asynchronous I/O facility ("async I/O", or "aio").
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -a 0
@@ -54,6 +64,7 @@ make destdir=$RPM_BUILD_ROOT prefix=/ libdir=%{libdir} usrlibdir=%{usrlibdir} \
 	includedir=%{_includedir} install
 
 find %{buildroot} -name '*.a' -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -68,6 +79,9 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 %attr(0755,root,root) %{usrlibdir}/libaio.so
 
 %changelog
+* Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 0.3.110-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.110-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

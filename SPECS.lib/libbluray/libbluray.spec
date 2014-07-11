@@ -2,17 +2,19 @@
 %global tarball_date 20111023
 %global git_hash e037110f11e707e223b715f70920913afecfe297
 %global git_short %(echo '%{git_hash}' | cut -c -13)
-%define JAVA 0
+%define JAVA 1
 
 Name:           libbluray
-Version:        0.2.1
+Version: 0.6.0
 %if %{snapshot}
 Release:        0.9.%{tarball_date}git%{git_short}%{?dist}
 %else
 Release:        3%{?dist}
 %endif
 Summary:        Library to access Blu-Ray disks for video playback 
+Summary(zh_CN.UTF-8): 为视频回放访问蓝光光盘的库
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.videolan.org/developers/libbluray.html
 %if %{snapshot}
@@ -54,12 +56,17 @@ navigation and playback on Linux. It will eventually be compatible with all
 current titles, and will be easily portable and embeddable in standard players
 such as mplayer and vlc.
 
+%description -l zh_CN.UTF-8
+这个包的目的是提供一个完全可移植的开源蓝光库。它可以嵌入到标准的播放器，比如
+mplayer 或 vlc 中。
 
 %if %{JAVA}
 %ifnarch ppc64
 %package        java
 Summary:        BDJ support for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 BDJ 支持
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       java >= 1:1.6.0 
 Requires:       jpackage-utils
@@ -67,18 +74,25 @@ Requires:       jpackage-utils
 %description    java
 The %{name}-java package contains the jar file needed to add BDJ support to
 %{name}.
+
+%description java -l zh_CN.UTF-8
+%{name} 的 BDJ 支持需要的 jar 文件。
 %endif
 %endif
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %if %{snapshot}
@@ -130,6 +144,7 @@ do install -Dp -m755 src/examples/.libs/$i %{buildroot}%{_bindir}/$i; done
 install -Dp -m755 src/examples/.libs/bdj_test %{buildroot}%{_bindir}/bdj_test;
 %endif
 %endif
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -164,6 +179,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.6.0-3
+- 更新到 0.6.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.1-3
 - 为 Magic 3.0 重建
 
