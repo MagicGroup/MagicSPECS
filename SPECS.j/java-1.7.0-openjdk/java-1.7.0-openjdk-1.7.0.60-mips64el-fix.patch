@@ -1,0 +1,38 @@
+--- openjdk/jdk/make/jdk_generic_profile.sh.orig	2014-07-09 07:02:17.967493257 +0000
++++ openjdk/jdk/make/jdk_generic_profile.sh	2014-07-09 07:06:54.010603341 +0000
+@@ -261,6 +261,7 @@
+     arm*)    ZERO_LIBARCH=arm       ;;
+     sh*)     ZERO_LIBARCH=sh        ;;
+     ppc64le) ZERO_LIBARCH=ppc64le   ;;
++    mips64*) ZERO_LIBARCH=mips64el  ;;
+     *)       ZERO_LIBARCH="$(arch)"
+   esac
+   export ZERO_LIBARCH
+@@ -270,7 +271,7 @@
+     arm|i386|ppc|s390|sh|sparc)
+       ARCH_DATA_MODEL=32
+       ;;
+-    aarch64|alpha|amd64|ia64|ppc64*|s390x|sparcv9)
++    aarch64|alpha|amd64|ia64|ppc64*|s390x|sparcv9|mips64*)
+       ARCH_DATA_MODEL=64
+       ;;
+     *)
+@@ -281,7 +282,7 @@
+ 
+   # ZERO_ENDIANNESS is the endianness of the processor
+   case "${ZERO_LIBARCH}" in
+-    arm|aarch64|amd64|i386|ia64|mipsel|ppc64le)
++    arm|aarch64|amd64|i386|ia64|mipsel|ppc64le|mips64el)
+       ZERO_ENDIANNESS=little
+       ;;
+     ppc*|s390*|sparc*|alpha)
+@@ -311,6 +312,9 @@
+     arm|aarch64|ppc64le)
+       ZERO_ARCHFLAG="-D_LITTLE_ENDIAN"
+       ;;
++    mips64*)
++      ZERO_ARCHFLAG="-mabi=64"
++      ;;
+     *)
+       ZERO_ARCHFLAG="-m${ARCH_DATA_MODEL}"
+   esac
