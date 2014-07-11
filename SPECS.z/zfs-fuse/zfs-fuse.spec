@@ -24,6 +24,7 @@ Requires(postun): systemd-units
 ExcludeArch:      s390
 ExcludeArch:      s390x
 ExcludeArch:      %{arm}
+ExcludeArch:      mips64el
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description

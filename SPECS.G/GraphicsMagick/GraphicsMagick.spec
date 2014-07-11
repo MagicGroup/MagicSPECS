@@ -164,7 +164,7 @@ rm -rf %{buildroot}%{_datadir}/%{name}-%{version}/[a-b,d-z,A-Z]*
 rm -vf  %{buildroot}%{_libdir}/lib*.la
 
 # fix multilib issues
-%ifarch x86_64 s390x ia64 ppc64 sparc64
+%ifarch x86_64 s390x ia64 ppc64 sparc64 mips64el
 %define wordsize 64
 %else
 %define wordsize 32
