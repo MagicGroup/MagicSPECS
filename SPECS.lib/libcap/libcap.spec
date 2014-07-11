@@ -1,17 +1,15 @@
 Name: libcap
-Version: 2.22
-Release: 7%{?dist}
+Version: 2.24
+Release: 5%{?dist}
 Summary: Library for getting and setting POSIX.1e capabilities
-# Original tarball should be here, but got deleted:
-#Source: http://www.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/libcap-2.22.tar.bz2
-Source: http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.bz2
+#Source: http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.bz2
+Source: https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.gz
 # http://manned.org/getpcaps/299a4949/src:
 Source1: getpcaps.8
-Patch0: %{name}-2.22-buildflags.patch
-Patch1: libcap-2.22-signed-sizeof-compare.patch
+Patch0: %{name}-2.24-buildflags.patch
 
-URL: http://ftp.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.6/
-License: LGPLv2+
+URL: https://sites.google.com/site/fullycapable/
+License: GPLv2
 Group: System Environment/Libraries
 BuildRequires: libattr-devel pam-devel
 
@@ -36,11 +34,10 @@ libcap.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
 # libcap can not be build with _smp_mflags:
-make PREFIX=%{_prefix} LIBDIR=%{_libdir} SBINDIR=%{_sbindir} \
+make prefix=%{_prefix} lib=%{_lib} LIBDIR=%{_libdir} SBINDIR=%{_sbindir} \
      INCDIR=%{_includedir} MANDIR=%{_mandir}
 
 %install
@@ -49,7 +46,8 @@ make install RAISE_SETFCAP=no \
              LIBDIR=%{buildroot}/%{_libdir} \
              SBINDIR=%{buildroot}/%{_sbindir} \
              INCDIR=%{buildroot}/%{_includedir} \
-             MANDIR=%{buildroot}/%{_mandir}/
+             MANDIR=%{buildroot}/%{_mandir}/ \
+             PKGCONFIGDIR=%{buildroot}/%{_libdir}/pkgconfig/
 mkdir -p %{buildroot}/%{_mandir}/man{2,3,8}
 mv -f doc/*.3 %{buildroot}/%{_mandir}/man3/
 cp -f %{SOURCE1} %{buildroot}/%{_mandir}/man8/
@@ -76,11 +74,28 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
 %{_includedir}/*
 /%{_libdir}/*.so
 %{_mandir}/man3/*
+%{_libdir}/pkgconfig/libcap.pc
 
 %clean
 rm -rf %{buildroot}
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Apr 25 2014 Karsten Hopp <karsten@redhat.com> 2.24-4
+- fix libdir in libcap.pc
+
+* Wed Apr 23 2014 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 2.24-3
+- set pkg-config dir to proper value to get it built on AArch64
+
+* Wed Apr 16 2014 Karsten Hopp <karsten@redhat.com> 2.24-2
+- fix URL and license
+
+* Wed Apr 16 2014 Karsten Hopp <karsten@redhat.com> 2.24-1
+- update to 2.24
+- dropped patch for rhbz#911878, it is upstream now
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.22-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
