@@ -17,6 +17,6 @@ rm -rf $DIRNAME
 git clone ${REF:+--reference $REF} \
 	git://git.freedesktop.org/git/wayland/${REPO}/ $DIRNAME/${REPO}/
 GIT_DIR=$DIRNAME/${REPO}/.git git archive --format=tar --prefix=${REPO}-${DIRNAME#wayland-}/ ${1:-HEAD} \
-	| bzip2 > ${REPO}-${DIRNAME#wayland-}.tar.bz2
+	| xz > ${REPO}-${DIRNAME#wayland-}.tar.xz
 
 # rm -rf $DIRNAME

@@ -1,8 +1,8 @@
 #global gitdate 20130515
 
 Name:           wayland
-Version:        1.4.0
-Release:        1%{?gitdate:.%{gitdate}}%{?dist}
+Version:        1.5.0
+Release:        4%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        Wayland Compositor Infrastructure
 
 Group:          User Interface/X
@@ -14,10 +14,8 @@ Source0:        wayland-%{gitdate}.tar.xz
 Source0:        http://wayland.freedesktop.org/releases/%{name}-%{version}.tar.xz
 %endif
 Source1:        make-git-snapshot.sh
-# If this code throws -EAGAIN then wl_proxy_marshal can die, and take your
-# Xwayland server (and thus session) with it.  Probably wants to be solved
-# in some other way, but this will do for now.
-Patch0:		wayland-1.2.0-blocking-flush.patch
+
+Patch1: 0001-protocol-add-wl_surface-errors-enum-for-bad-scale-an.patch
 
 BuildRequires:  autoconf automake libtool
 BuildRequires:  doxygen
@@ -86,7 +84,7 @@ Headers and symlinks for developing wayland server applications.
 
 %prep
 %setup -q -n %{name}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch0 -p1 -b .flush
+%patch1 -p1
 
 %build
 autoreconf -v --install
@@ -132,7 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/wayland-egl.h
 %{_includedir}/wayland-version.h
 %{_datadir}/aclocal/wayland-scanner.m4
-%{_datadir}/pkgconfig/wayland-scanner.pc
+%{_libdir}/pkgconfig/wayland-scanner.pc
 %dir %{_datadir}/wayland
 %{_datadir}/wayland/wayland-scanner.mk
 %{_datadir}/wayland/wayland.xml
@@ -170,6 +168,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/wayland-server.pc
 
 %changelog
+* Wed Jul 02 2014 Adam Jackson <ajax@redhat.com> 1.5.0-4
+- Update protocol: new surface error enums
+
+* Mon Jun 30 2014 Adam Jackson <ajax@redhat.com> 1.5.0-3
+- Remove blocking flush patch as it actually introduces deadlocks now
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Richard Hughes <rhughes@redhat.com> - 1.5.0-1
+- Wayland 1.5.0
+
+* Tue May 13 2014 Richard Hughes <rhughes@redhat.com> - 1.4.93-1
+- Wayland 1.4.93
+
 * Fri Jan 24 2014 Richard Hughes <rhughes@redhat.com> - 1.4.0-1
 - Wayland 1.4.0
 
