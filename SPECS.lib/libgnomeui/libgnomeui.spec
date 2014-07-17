@@ -1,6 +1,7 @@
 %define po_package libgnomeui-2.0
 
 Summary: GNOME base GUI library
+Summary(zh_CN.UTF-8): GNOME 基本图形界面库
 Name: libgnomeui
 Version: 2.24.5
 Release: 5%{?dist}
@@ -12,6 +13,7 @@ Patch0: libgnomeui-2.23.4-disable-event-sounds.patch
 
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 BuildRequires: glib2-devel
 BuildRequires: gvfs-devel
@@ -44,9 +46,14 @@ includes GUI-related libraries that are needed to run GNOME. (The
 libgnome package includes the library features that don\'t use the X
 Window System.)
 
+%description -l zh_CN.UTF-8
+GNOME 基本图形界面库。
+
 %package devel
 Summary: Libraries and headers for libgnome
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: libSM-devel
 Requires: libICE-devel
@@ -57,12 +64,15 @@ compile GNOME applications. You do not need to install
 libgnomeui-devel if you just want to use the GNOME desktop
 environment.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 %patch0 -p1 -b .disable-sound-events
 
 libtoolize --force --copy
-autoreconf
+autoreconf -fisv
 
 %build
 %configure --disable-gtk-doc --disable-static

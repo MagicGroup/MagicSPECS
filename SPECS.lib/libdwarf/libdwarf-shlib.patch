@@ -1,0 +1,24 @@
+commit 0d8046d607d5d7b40fa64c3717506f24b166529d
+Author: Tom Hughes <tom@compton.nu>
+Date:   Thu May 22 21:00:47 2014 +0100
+
+    Allow the soname to be set when linking
+
+diff --git a/libdwarf/Makefile.in b/libdwarf/Makefile.in
+index c1d15c2..857b924 100644
+--- a/libdwarf/Makefile.in
++++ b/libdwarf/Makefile.in
+@@ -131,8 +131,11 @@ all: @build_shared@ @build_nonshared@
+ libdwarf.a: dwarf_names.h dwarf_names.c  $(OBJS) dwarf_names.o
+ 	$(AR) $(ARFLAGS) $@ $(OBJS)  dwarf_names.o > ar-output-temp
+ 
+-libdwarf.so: dwarf_names.h dwarf_names.c $(OBJS) dwarf_names.o
+-	$(CC) $(CFLAGS) -shared $(OBJS)  dwarf_names.o -o $@
++libdwarf.so: $(SONAME)
++	ln -s $(SONAME) $@
++
++$(SONAME): dwarf_names.h dwarf_names.c $(OBJS) dwarf_names.o
++	$(CC) $(CFLAGS) -shared $(OBJS) -Wl,-soname,$(SONAME)  dwarf_names.o -lelf -o $@
+ 
+ none:
+ 	echo "do nothing " $@

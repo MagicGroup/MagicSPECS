@@ -4,8 +4,10 @@ Name: libiptcdata
 Version: 1.0.4
 Release: 6%{?dist}
 Summary: IPTC tag library
+Summary(zh_CN.UTF-8): IPTC 标签库
 
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2+
 URL: http://libiptcdata.sourceforge.net/
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -21,9 +23,14 @@ as captions, titles, locations, etc. in the headers of an image file.
 libiptcdata also includes a command-line utility for modifying the
 metadata.
 
+%description -l zh_CN.UTF-8
+IPTC 标签库。
+
 %package devel
 Summary: Headers and libraries for libiptcdata application development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 Requires: gtk-doc
@@ -32,9 +39,14 @@ Requires: gtk-doc
 The libiptcdata-devel package contains the libraries and include files
 that you can use to develop libiptcdata applications.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python bindings for libiptcdata
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 BuildRequires: python-devel
 
@@ -42,6 +54,9 @@ BuildRequires: python-devel
 The libiptcdata-python package contains a Python module that allows Python
 applications to use the libiptcdata API for reading and writing IPTC
 metadata in images.
+
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q
@@ -55,6 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=%{buildroot} INSTALL="%{__install} -c -p" install
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}.la
 rm -f $RPM_BUILD_ROOT%{python_sitearch}/iptcdata.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

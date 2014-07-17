@@ -1,9 +1,10 @@
-%global rcver -rc2
+#global rcver -rc2
 
 Name:		libgadu
 Version:	1.12.0
-Release:	0.5.rc2%{?dist}
+Release:	3%{?dist}
 Summary:	A Gadu-gadu protocol compatible communications library
+Summary(zh_CN.UTF-8): Gadu-gadu 协议兼容通信库
 License:	LGPLv2
 Source0:	https://github.com/wojtekka/libgadu/releases/download/%{version}%{?rcver}/libgadu-%{version}%{?rcver}.tar.gz
 URL:		http://libgadu.net/
@@ -19,15 +20,14 @@ BuildRequires:	zlib-devel
 libgadu is intended to make it easy to add Gadu-Gadu communication
 support to your software.
 
-%description -l pl
-libgadu umożliwia łatwe dodanie do różnych aplikacji komunikacji
-bazującej na protokole Gadu-Gadu.
+%description -l zh_CN.UTF-8
+Gadu-gadu 协议兼容通信库
 
 %package devel
 Summary:	Libgadu development library
-Summary(es):	Biblioteca de desarrollo de libgadu
-Summary(pl):	Część biblioteki libgadu dla programistów
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libgadu = %{version}-%{release}
 Requires:	pkgconfig
 
@@ -35,14 +35,14 @@ Requires:	pkgconfig
 The libgadu-devel package contains the header files necessary
 to develop applications with libgadu.
 
-%description devel -l pl
-Pakiet libgadu-devel zawiera pliki nagłówkowe potrzebne
-do kompilowania aplikacji korzystających z libgadu.
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary:	Libgadu library developer documentation
-Summary(pl):	Dokumentacja biblioteki libgadu dla programistów
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:		Documentation
+Group(zh_CN.UTF-8): 文档
 Requires:	libgadu = %{version}-%{release}
 BuildArch:	noarch
 
@@ -50,8 +50,8 @@ BuildArch:	noarch
 The libgadu-doc package contains the documentation for the
 libgadu library.
 
-%description doc -l pl
-Pakiet libgadu-doc zawiera dokumentację biblioteki libgadu.
+%description doc -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q -n %{name}-%{version}%{?rcver}
@@ -69,6 +69,7 @@ make %{?_smp_mflags}
 make install INSTALL="install -p" DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %check
 make check
@@ -89,6 +90,12 @@ make check
 %doc docs/protocol.html docs/html
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.12.0-3
+- 为 Magic 3.0 重建
+
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.12.0-0.5.rc2
 - 为 Magic 3.0 重建
 

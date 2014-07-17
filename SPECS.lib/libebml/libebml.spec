@@ -1,7 +1,8 @@
 Summary:    Extensible Binary Meta Language library
+Summary(zh_CN.UTF-8): 可扩展二进制元语言库
 Name:       libebml
-Version:    1.2.2
-Release:    2%{?dist}
+Version: 1.3.0
+Release:    1%{?dist}
 License:    LGPLv2+
 Group:      System Environment/Libraries
 URL:        http://www.matroska.org/
@@ -13,10 +14,14 @@ Extensible Binary Meta Language access library A library for reading
 and writing files with the Extensible Binary Meta Language, a binary
 pendant to XML.
 
+%description -l zh_CN.UTF-8
+可扩展二进制元语言库。
 
 %package    devel
 Summary:    Development files for the Extensible Binary Meta Language library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:   %{name} = %{version}-%{release}
 
 %description devel
@@ -27,6 +32,8 @@ pendant to XML.
 This package contains the files required to rebuild applications which
 will use the Extensible Binary Meta Language library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -50,7 +57,7 @@ make -C make/linux \
 rm $RPM_BUILD_ROOT%{_libdir}/%{name}.a
 # Needed for proper stripping of the library (still in 0.7.6)
 chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}.so.*
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -73,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.3.0-1
+- 更新到 1.3.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.2.2-2
 - 为 Magic 3.0 重建
 

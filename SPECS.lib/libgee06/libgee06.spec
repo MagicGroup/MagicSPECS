@@ -1,9 +1,11 @@
 Name:           libgee06
 Version:        0.6.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        GObject collection library
+Summary(zh_CN.UTF-8): GObject 集合库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/Libgee
 #VCS:           git:git://git.gnome.org/libgee
@@ -44,16 +46,22 @@ mutable iterators depending on the collection type.
 
 libgee is written in Vala and can be used like any GObject-based C library.
 
+%description -l zh_CN.UTF-8
+GObject 集合库的 0.6.x 版本.
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libgee-%{version}
@@ -80,7 +88,7 @@ make check
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -106,6 +114,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.6.1-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.6.1-6
 - 为 Magic 3.0 重建
 

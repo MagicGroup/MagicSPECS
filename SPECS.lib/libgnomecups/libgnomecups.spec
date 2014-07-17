@@ -1,9 +1,11 @@
 Summary:  GNOME library for CUPS integration
+Summary(zh_CN.UTF-8): 集成 CUPS 的 GNOME 库
 Name:     libgnomecups
 Version:  0.2.3
-Release:  15%{?dist}
+Release:  16%{?dist}
 License:  LGPLv2
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 URL:      http://www.gnome.org
 Requires: cups-libs
 Requires: dbus-glib
@@ -22,21 +24,30 @@ Patch5: libgnomecups-0.1.14-go-direct.patch
 # http://bugzilla.gnome.org/show_bug.cgi?id=520449
 Patch6: libgnomecups-lpoptions.patch
 Patch7: libgnomecups-glib-header.patch
-Patch8: libgnomecups-0.2.3-g_list_find_custom.patch
-Patch9: libgnomecups-0.2.3-pkgconfig.patch 
-Patch10: libgnomecups-0.2.3-cups-1.6.patch
+Patch8: libgnomecups-0.2.3-cups-1.6.patch
+Patch9: libgnomecups-0.2.3-g_list_find_custom.patch
+Patch10: libgnomecups-0.2.3-pkgconfig.patch
+Patch11: libgnomecups-format-string.patch
 
 %description
 GNOME library for CUPS integration
 
+%description -l zh_CN.UTF-8
+集成 CUPS 的 GNOME 库。
+
 %package devel
 Summary: GNOME library for CUPS integration
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:  Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: cups-devel glib2-devel
 
 %description devel
 GNOME library for CUPS integration
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -45,8 +56,9 @@ GNOME library for CUPS integration
 %patch6 -p1 -b .lpoptions
 %patch7 -p1 -b .glib-header
 %patch8 -p1
-%patch9 -p0
-%patch10 -p1
+%patch9 -p1
+%patch10 -p0
+%patch11 -p1
 
 %build
 autoreconf -f -i
@@ -57,7 +69,7 @@ make  %{?_smp_mflags}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post -p /sbin/ldconfig
@@ -76,6 +88,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/*.so
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.2.3-16
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.3-15
 - 为 Magic 3.0 重建
 

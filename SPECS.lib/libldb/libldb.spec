@@ -9,7 +9,7 @@
 
 Name: libldb
 Version: 1.1.16
-Release: 4%{?dist}
+Release: 1%{?dist}
 Group: Development/Libraries
 Summary: A schema-less, ldap like, API and database
 Requires: libtalloc%{?_isa} >= %{talloc_version}

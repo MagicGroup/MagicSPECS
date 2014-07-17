@@ -1,12 +1,12 @@
 Name:           libdiscid
-Version:        0.2.2
+Version: 0.6.1
 Release:        7%{?dist}
 Summary:        A Library for creating MusicBrainz DiscIDs
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://musicbrainz.org/doc/libdiscid
-Source0:        http://users.musicbrainz.org/~matt/%{name}-%{version}.tar.gz
+Source0:        http://ftp.musicbrainz.org/pub/musicbrainz/libdiscid/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: pkgconfig
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.6.1-7
+- 更新到 0.6.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.2-7
 - 为 Magic 3.0 重建
 

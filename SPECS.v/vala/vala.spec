@@ -3,7 +3,7 @@
 
 Name:           vala
 Version:        0.24.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A modern programming language for GNOME
 
 # Most files are LGPLv2.1+, curses.vapi is 2-clause BSD
@@ -277,6 +277,9 @@ done
 
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.24.0-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 27 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 0.24.0-3
 - Fix clutter-gst-1.0 deps (#1106673, #1112424)
 

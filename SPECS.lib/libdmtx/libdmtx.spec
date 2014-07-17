@@ -3,10 +3,12 @@
 
 Name:           libdmtx
 Version:        0.7.2
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Library for working with Data Matrix 2D bar-codes
+Summary(zh_CN.UTF-8): 处理数据矩阵 2D 条形码的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.libdmtx.org/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
@@ -39,29 +41,42 @@ for programmers who wish to write their own programs that interact with
 libdmtx. All of the software in the libdmtx package is distributed under
 the LGPLv2 and can be used freely under these terms.
 
+%description -l zh_CN.UTF-8
+处理数据矩阵 2D 条形码的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        utils
 Summary:        Utilities for %{name}
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group:          Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires:       %{name} = %{version}-%{release}
 
 %description    utils
 The %{name}-utils package contains utilities that use %{name}.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的工具。
+
 # language bindings
 %package -n     php-libdmtx
 Summary:        PHP bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 PHP 绑定
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 Requires:       %{name} = %{version}-%{release}
 Requires:       php-common
@@ -69,23 +84,35 @@ Requires:       php-common
 %description -n php-libdmtx
 The php-%{name} package contains bindings for using %{name} from PHP.
 
+%description -n php-libdmtx -l zh_CN.UTF-8
+%{name} 的 PHP 绑定。
+
 %package -n     python-libdmtx
 Summary:        Python bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{version}-%{release}
 
 %description -n python-libdmtx
 The python-%{name} package contains bindings for using %{name} from Python.
 
+%description -n python-libdmtx -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %package -n     ruby-libdmtx
 Summary:        Ruby bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Ruby 绑定
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{version}-%{release}
 Provides:       ruby(%{name}) = %{version}
 
 %description -n ruby-libdmtx
 The ruby-%{name} package contains bindings for using %{name} from Ruby.
 
+%description -n ruby-libdmtx -l zh_CN.UTF-8
+%{name} 的 Ruby 绑定。
 
 %prep
 %setup -q
@@ -157,7 +184,7 @@ popd
 #pushd java
 #popd
 popd
-
+magic_rpm_clean.sh
 
 %check
 make check
@@ -213,6 +240,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.7.2-12
+- 为 Magic 3.0 重建
+
 * Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.7.2-11
 - 为 Magic 3.0 重建
 

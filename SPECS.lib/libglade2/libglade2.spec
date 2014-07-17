@@ -1,9 +1,11 @@
 Summary: The libglade library for loading user interfaces
+Summary(zh_CN.UTF-8): 载入用户界面的 libglade 库
 Name: libglade2
 Version: 2.6.4
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source: http://download.gnome.org/sources/libglade/2.6/libglade-%{version}.tar.bz2
 URL: http://www.gnome.org
 Requires: xml-common
@@ -31,14 +33,22 @@ handlers with a single function call). Once the interface has been
 instantiated, libglade gives no overhead, so other than the short
 initial interface loading time, there is no performance tradeoff.
 
+%description -l zh_CN.UTF-8
+载入用户界面的 libglade 库。
+
 %package devel
 Summary: The files needed for libglade application development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 The libglade-devel package contains the libraries and include files
 that you can use to develop libglade applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libglade-%{version}
@@ -54,7 +64,7 @@ make %{?_smp_mflags}
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/libglade/2.0
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -77,6 +87,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/libglade
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.6.4-8
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.6.4-7
 - 为 Magic 3.0 重建
 

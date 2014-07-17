@@ -1,0 +1,548 @@
+
+
+
+
+
+Name:		libcarddav
+Version:	0.6.2
+Release:	3debian2.1mgc30
+
+Vendor:		Trinity Project
+URL:		http://www.trinitydesktop.org/
+Packager:	Francois Andriot <francois.andriot@free.fr>
+
+License:	GPL
+Group:		System Environment/Libraries
+Summary:	A portable CardDAV client implementation originally developed for the Trinity PIM suite.
+
+BuildRoot: /var/tmp/libcarddav-0.6.2-3debian2.1mgc30-root-magic
+
+Source0:	libcarddav_0.6.2-2debian2.tar.gz
+
+
+BuildRequires:	libcurl-devel
+
+
+
+
+%description
+Libcarddav is a portable CardDAV client implementation originally developed for the Trinity PIM suite.
+It incorporates full list, get, add, modify, and delete functionality per the latest CardDAV standards.
+Build dependencies are minimal, requiring only libcurl.
+
+%package devel
+Summary:	Development files for libcarddav
+Group:		Development/Libraries
+Requires:	libcarddav
+
+%description devel
+Development files for libcarddav
+
+
+%prep
+%setup -q
+
+%build
+autoreconf --force --install --symlink
+
+  CFLAGS="${CFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CFLAGS ; 
+  CXXFLAGS="${CXXFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CXXFLAGS ; 
+  FFLAGS="${FFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FFLAGS ; 
+  FCFLAGS="${FCFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FCFLAGS ; 
+  LDFLAGS="${LDFLAGS:--Wl,-z,relro }"; export LDFLAGS; 
+  for i in $(find . -name config.guess -o -name config.sub) ; do 
+      [ -f /usr/lib/rpm/magic/$(basename $i) ] && /usr/bin/rm -f $i && /usr/bin/cp -fv /usr/lib/rpm/magic/$(basename $i) $i ; 
+  done ; 
+  ./configure --build=x86_64-magic-linux-gnu --host=x86_64-magic-linux-gnu \
+	--program-prefix= \
+	--disable-dependency-tracking \
+	--prefix=/usr \
+	--exec-prefix=/usr \
+	--bindir=/usr/bin \
+	--sbindir=/usr/sbin \
+	--sysconfdir=/etc \
+	--datadir=/usr/share \
+	--includedir=/usr/include \
+	--libdir=/usr/lib64 \
+	--libexecdir=/usr/libexec \
+	--localstatedir=/var \
+	--sharedstatedir=/var/lib \
+	--mandir=/usr/share/man \
+	--infodir=/usr/share/info
+/usr/bin/make -j16
+
+
+%package debuginfo 
+Summary: Debug information for package libcarddav
+Group: Development/Debug
+AutoReqProv: 0
+%description debuginfo
+This package provides debug information for package libcarddav.
+Debug information is useful when developing applications that use this
+package or when debugging this package.
+%files debuginfo -f debugfiles.list
+%defattr(-,root,root)
+
+%install
+
+/usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
+/usr/bin/make install DESTDIR=/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
+
+# The include files do not go in the correct directory
+/usr/bin/mv -f /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include/libcarddav-0.6.1/*.h /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include
+/usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include/libcarddav-0.6.1
+
+%clean
+/usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
+
+
+%files
+/usr/lib64/*.so.*
+
+%files devel
+/usr/include/*.h
+/usr/lib64/*.a
+/usr/lib64/*.la
+/usr/lib64/*.so
+/usr/lib64/pkgconfig/libcarddav.pc
+
+
+%Changelog
+* Sun Oct 30 2011 Francois Andriot <francois.andriot@free.fr> - 0.6.5-2debian2 .1
+- Initial build for RHEL 6, RHEL 5, and Fedora 15
+--2014-05-12 00:59:55--  http://apt.linuxfans.org/magic/3.0/sources/SOURCES.lib/libcarddav/libcarddav_0.6.2-2debian2.tar.gz
+正在解析主机 apt.linuxfans.org (apt.linuxfans.org)... 219.231.240.68
+正在连接 apt.linuxfans.org (apt.linuxfans.org)|219.231.240.68|:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 200 OK
+长度：503086 (491K) [application/x-gzip]
+正在保存至: “/home/magic/rpmbuild/SOURCES/libcarddav_0.6.2-2debian2.tar.gz”
+
+     0K .......... .......... .......... .......... .......... 10% 14.2M 0s
+    50K .......... .......... .......... .......... .......... 20% 1.86M 0s
+   100K .......... .......... .......... .......... .......... 30% 11.2M 0s
+   150K .......... .......... .......... .......... .......... 40% 11.0M 0s
+   200K .......... .......... .......... .......... .......... 50% 11.8M 0s
+   250K .......... .......... .......... .......... .......... 61% 10.5M 0s
+   300K .......... .......... .......... .......... .......... 71% 11.8M 0s
+   350K .......... .......... .......... .......... .......... 81% 11.2M 0s
+   400K .......... .......... .......... .......... .......... 91% 11.0M 0s
+   450K .......... .......... .......... .......... .         100% 11.7M=0.06s
+
+2014-05-12 00:59:55 (7.53 MB/s) - 已保存 “/home/magic/rpmbuild/SOURCES/libcarddav_0.6.2-2debian2.tar.gz” [503086/503086])
+
+执行(%prep): /bin/sh -e /var/tmp/rpm-tmp.zG0uEi
++ umask 022
++ cd /home/magic/rpmbuild/BUILD
++ cd /home/magic/rpmbuild/BUILD
++ rm -rf libcarddav-0.6.2
++ /usr/bin/gzip -dc /home/magic/rpmbuild/SOURCES/libcarddav_0.6.2-2debian2.tar.gz
++ /usr/bin/tar -xf -
++ STATUS=0
++ '[' 0 -ne 0 ']'
++ cd libcarddav-0.6.2
++ /usr/bin/chmod -Rf a+rX,u+w,g-w,o-w .
++ exit 0
+执行(%build): /bin/sh -e /var/tmp/rpm-tmp.taL6co
++ umask 022
++ cd /home/magic/rpmbuild/BUILD
++ cd libcarddav-0.6.2
++ autoreconf --force --install --symlink
+configure.ac:55: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+../../lib/autoconf/lang.m4:193: AC_LANG_CONFTEST is expanded from...
+../../lib/autoconf/general.m4:2661: _AC_LINK_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2678: AC_LINK_IFELSE is expanded from...
+m4/libtool.m4:1022: _LT_SYS_MODULE_PATH_AIX is expanded from...
+m4/libtool.m4:4170: _LT_LINKER_SHLIBS is expanded from...
+m4/libtool.m4:5253: _LT_LANG_C_CONFIG is expanded from...
+m4/libtool.m4:138: _LT_SETUP is expanded from...
+m4/libtool.m4:67: LT_INIT is expanded from...
+m4/libtool.m4:103: AM_PROG_LIBTOOL is expanded from...
+configure.ac:55: the top level
+configure.ac:55: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+../../lib/autoconf/lang.m4:193: AC_LANG_CONFTEST is expanded from...
+../../lib/autoconf/general.m4:2661: _AC_LINK_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2678: AC_LINK_IFELSE is expanded from...
+m4/libtool.m4:4170: _LT_LINKER_SHLIBS is expanded from...
+m4/libtool.m4:5253: _LT_LANG_C_CONFIG is expanded from...
+m4/libtool.m4:138: _LT_SETUP is expanded from...
+m4/libtool.m4:67: LT_INIT is expanded from...
+m4/libtool.m4:103: AM_PROG_LIBTOOL is expanded from...
+configure.ac:55: the top level
+configure.ac:55: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+../../lib/autoconf/lang.m4:193: AC_LANG_CONFTEST is expanded from...
+../../lib/autoconf/general.m4:2661: _AC_LINK_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2678: AC_LINK_IFELSE is expanded from...
+m4/libtool.m4:1022: _LT_SYS_MODULE_PATH_AIX is expanded from...
+m4/libtool.m4:4170: _LT_LINKER_SHLIBS is expanded from...
+m4/libtool.m4:5253: _LT_LANG_C_CONFIG is expanded from...
+m4/libtool.m4:138: _LT_SETUP is expanded from...
+m4/libtool.m4:67: LT_INIT is expanded from...
+m4/libtool.m4:103: AM_PROG_LIBTOOL is expanded from...
+configure.ac:55: the top level
+configure.ac:55: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+../../lib/autoconf/lang.m4:193: AC_LANG_CONFTEST is expanded from...
+../../lib/autoconf/general.m4:2661: _AC_LINK_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2678: AC_LINK_IFELSE is expanded from...
+m4/libtool.m4:4170: _LT_LINKER_SHLIBS is expanded from...
+m4/libtool.m4:5253: _LT_LANG_C_CONFIG is expanded from...
+m4/libtool.m4:138: _LT_SETUP is expanded from...
+m4/libtool.m4:67: LT_INIT is expanded from...
+m4/libtool.m4:103: AM_PROG_LIBTOOL is expanded from...
+configure.ac:55: the top level
+configure.ac:55: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+../../lib/autoconf/lang.m4:193: AC_LANG_CONFTEST is expanded from...
+../../lib/autoconf/general.m4:2661: _AC_LINK_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2678: AC_LINK_IFELSE is expanded from...
+m4/libtool.m4:1022: _LT_SYS_MODULE_PATH_AIX is expanded from...
+m4/libtool.m4:4170: _LT_LINKER_SHLIBS is expanded from...
+m4/libtool.m4:5253: _LT_LANG_C_CONFIG is expanded from...
+m4/libtool.m4:138: _LT_SETUP is expanded from...
+m4/libtool.m4:67: LT_INIT is expanded from...
+m4/libtool.m4:103: AM_PROG_LIBTOOL is expanded from...
+configure.ac:55: the top level
+configure.ac:55: warning: AC_LANG_CONFTEST: no AC_LANG_SOURCE call detected in body
+../../lib/autoconf/lang.m4:193: AC_LANG_CONFTEST is expanded from...
+../../lib/autoconf/general.m4:2661: _AC_LINK_IFELSE is expanded from...
+../../lib/autoconf/general.m4:2678: AC_LINK_IFELSE is expanded from...
+m4/libtool.m4:4170: _LT_LINKER_SHLIBS is expanded from...
+m4/libtool.m4:5253: _LT_LANG_C_CONFIG is expanded from...
+m4/libtool.m4:138: _LT_SETUP is expanded from...
+m4/libtool.m4:67: LT_INIT is expanded from...
+m4/libtool.m4:103: AM_PROG_LIBTOOL is expanded from...
+configure.ac:55: the top level
+libtoolize: putting auxiliary files in `.'.
+libtoolize: linking file `./ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `m4'.
+libtoolize: linking file `m4/libtool.m4'
+libtoolize: linking file `m4/ltoptions.m4'
+libtoolize: linking file `m4/ltsugar.m4'
+libtoolize: linking file `m4/ltversion.m4'
+libtoolize: linking file `m4/lt~obsolete.m4'
+configure.ac:47: installing './compile'
+src/Makefile.am:3: warning: 'INCLUDES' is the old name for 'AM_CPPFLAGS' (or '*_CPPFLAGS')
++ CFLAGS='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic'
++ export CFLAGS
++ CXXFLAGS='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic'
++ export CXXFLAGS
++ FFLAGS='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules'
++ export FFLAGS
++ FCFLAGS='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules'
++ export FCFLAGS
++ LDFLAGS='-Wl,-z,relro '
++ export LDFLAGS
+++ find . -name config.guess -o -name config.sub
++ for i in '$(find . -name config.guess -o -name config.sub)'
+++ basename ./config.guess
++ '[' -f /usr/lib/rpm/magic/config.guess ']'
++ /usr/bin/rm -f ./config.guess
+++ basename ./config.guess
++ /usr/bin/cp -fv /usr/lib/rpm/magic/config.guess ./config.guess
+'/usr/lib/rpm/magic/config.guess' -> './config.guess'
++ for i in '$(find . -name config.guess -o -name config.sub)'
+++ basename ./config.sub
++ '[' -f /usr/lib/rpm/magic/config.sub ']'
++ /usr/bin/rm -f ./config.sub
+++ basename ./config.sub
++ /usr/bin/cp -fv /usr/lib/rpm/magic/config.sub ./config.sub
+'/usr/lib/rpm/magic/config.sub' -> './config.sub'
++ ./configure --build=x86_64-magic-linux-gnu --host=x86_64-magic-linux-gnu --program-prefix= --disable-dependency-tracking --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib64 --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/var/lib --mandir=/usr/share/man --infodir=/usr/share/info
+checking build system type... x86_64-magic-linux-gnu
+checking host system type... x86_64-magic-linux-gnu
+checking target system type... x86_64-magic-linux-gnu
+checking for x86_64-magic-linux-gnu-doxygen... no
+checking for doxygen... /usr/bin/doxygen
+checking for x86_64-magic-linux-gnu-perl... no
+checking for perl... /usr/bin/perl
+checking for x86_64-magic-linux-gnu-dot... no
+checking for dot... /usr/bin/dot
+checking for x86_64-magic-linux-gnu-pdflatex... no
+checking for pdflatex... /usr/bin/pdflatex
+checking for x86_64-magic-linux-gnu-makeindex... no
+checking for makeindex... /usr/bin/makeindex
+checking for x86_64-magic-linux-gnu-egrep... no
+checking for egrep... /usr/bin/egrep
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether to enable maintainer-specific portions of Makefiles... no
+checking whether to enable maintainer-specific portions of Makefiles... no
+checking for x86_64-magic-linux-gnu-gcc... no
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking for style of include used by make... GNU
+checking dependency style of gcc... none
+checking for library containing strerror... none required
+checking whether ln -s works... yes
+checking whether make sets $(MAKE)... (cached) yes
+checking how to run the C preprocessor... gcc -E
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking how to run the C preprocessor... gcc -E
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking the maximum length of command line arguments... 1572864
+checking whether the shell understands some XSI constructs... yes
+checking whether the shell understands "+="... yes
+checking how to convert x86_64-magic-linux-gnu file names to x86_64-magic-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-magic-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for x86_64-magic-linux-gnu-objdump... no
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for x86_64-magic-linux-gnu-dlltool... no
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for x86_64-magic-linux-gnu-ar... no
+checking for ar... ar
+checking for archiver @FILE support... @
+checking for x86_64-magic-linux-gnu-strip... no
+checking for strip... strip
+checking for x86_64-magic-linux-gnu-ranlib... no
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for x86_64-magic-linux-gnu-mt... no
+checking for mt... no
+checking if : is a manifest tool... no
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... no
+checking for gcc option to produce PIC... -fPIC -DPIC
+checking if gcc PIC flag -fPIC -DPIC works... yes
+checking if gcc static flag -static works... yes
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking for x86_64-magic-linux-gnu-pkg-config... no
+checking for pkg-config... /usr/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+checking for CURL... yes
+checking for GLIB... yes
+checking for ANSI C header files... (cached) yes
+checking for an ANSI C-conforming const... yes
+checking for size_t... yes
+checking whether struct tm is in sys/time.h or time.h... time.h
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating libcarddav.pc
+config.status: creating src/Makefile
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+config.status: executing summary commands
+
+libcarddav will be compiled with these settings:
+
+	CFLAGS:				-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT
+	Build API documentation:	false
+	Library is linked:		Dynamic
+
+Now run make to build the library
+
+Please send bugs or feature requests to the maintainer(s).
+Email addresses can be found in the AUTHORS file.
+
++ /usr/bin/make -j16
+/usr/bin/make  all-recursive
+make[1]: Entering directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
+Making all in src
+make[2]: Entering directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2/src'
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o carddav.lo carddav.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o add-carddav-object.lo add-carddav-object.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o delete-carddav-object.lo delete-carddav-object.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o modify-carddav-object.lo modify-carddav-object.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o get-carddav-report.lo get-carddav-report.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o get-display-name.lo get-display-name.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o carddav-utils.lo carddav-utils.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o md5.lo md5.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o options-carddav-server.lo options-carddav-server.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I..    -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c -o lock-carddav-object.lo lock-carddav-object.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c carddav.c  -fPIC -DPIC -o .libs/carddav.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c add-carddav-object.c  -fPIC -DPIC -o .libs/add-carddav-object.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c delete-carddav-object.c  -fPIC -DPIC -o .libs/delete-carddav-object.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c modify-carddav-object.c  -fPIC -DPIC -o .libs/modify-carddav-object.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c get-display-name.c  -fPIC -DPIC -o .libs/get-display-name.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c get-carddav-report.c  -fPIC -DPIC -o .libs/get-carddav-report.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c md5.c  -fPIC -DPIC -o .libs/md5.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c carddav-utils.c  -fPIC -DPIC -o .libs/carddav-utils.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c options-carddav-server.c  -fPIC -DPIC -o .libs/options-carddav-server.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c lock-carddav-object.c  -fPIC -DPIC -o .libs/lock-carddav-object.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c options-carddav-server.c -o options-carddav-server.o >/dev/null 2>&1
+In file included from get-display-name.c:25:0:
+get-carddav-report.h:34:15: warning: 'carddav_dirlist' declared 'static' but never defined [-Wunused-function]
+ static gchar* carddav_dirlist(carddav_settings* settings, carddav_error* error);
+               ^
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c get-display-name.c -o get-display-name.o >/dev/null 2>&1
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c add-carddav-object.c -o add-carddav-object.o >/dev/null 2>&1
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c md5.c -o md5.o >/dev/null 2>&1
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c lock-carddav-object.c -o lock-carddav-object.o >/dev/null 2>&1
+carddav.c: In function 'carddav_get_object':
+carddav.c:432:30: warning: argument to 'sizeof' in 'memset' call is the same pointer type 'struct response *' as the destination; expected 'response' or an explicit length [-Wsizeof-pointer-memaccess]
+   memset(result, '\0', sizeof(response *));
+                              ^
+carddav.c: In function 'carddav_getall_object':
+carddav.c:496:30: warning: argument to 'sizeof' in 'memset' call is the same pointer type 'struct response *' as the destination; expected 'response' or an explicit length [-Wsizeof-pointer-memaccess]
+   memset(result, '\0', sizeof(response *));
+                              ^
+carddav.c: In function 'carddav_getall_object_by_uri':
+carddav.c:560:30: warning: argument to 'sizeof' in 'memset' call is the same pointer type 'struct response *' as the destination; expected 'response' or an explicit length [-Wsizeof-pointer-memaccess]
+   memset(result, '\0', sizeof(response *));
+                              ^
+carddav.c: In function 'carddav_get_displayname':
+carddav.c:623:30: warning: argument to 'sizeof' in 'memset' call is the same pointer type 'struct response *' as the destination; expected 'response' or an explicit length [-Wsizeof-pointer-memaccess]
+   memset(result, '\0', sizeof(response *));
+                              ^
+In file included from carddav.c:27:0:
+carddav.c: At top level:
+get-carddav-report.h:34:15: warning: 'carddav_dirlist' declared 'static' but never defined [-Wunused-function]
+ static gchar* carddav_dirlist(carddav_settings* settings, carddav_error* error);
+               ^
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c carddav.c -o carddav.o >/dev/null 2>&1
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c carddav-utils.c -o carddav-utils.o >/dev/null 2>&1
+modify-carddav-object.c: In function 'carddav_modify_by_uri':
+modify-carddav-object.c:312:9: warning: unused variable 'search' [-Wunused-variable]
+  gchar* search;
+         ^
+modify-carddav-object.c:446:18: warning: 'code' may be used uninitialized in this function [-Wmaybe-uninitialized]
+      error->code = code;
+                  ^
+get-carddav-report.c: In function 'carddav_dirlist':
+get-carddav-report.c:89:3: warning: return makes pointer from integer without a cast [enabled by default]
+   return TRUE;
+   ^
+get-carddav-report.c:147:4: warning: zero-length gnu_printf format string [-Wformat-zero-length]
+    all_href = g_strdup_printf("");
+    ^
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c modify-carddav-object.c -o modify-carddav-object.o >/dev/null 2>&1
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c get-carddav-report.c -o get-carddav-report.o >/dev/null 2>&1
+delete-carddav-object.c: In function 'carddav_delete_by_uri':
+delete-carddav-object.c:301:9: warning: unused variable 'search' [-Wunused-variable]
+  gchar* search;
+         ^
+delete-carddav-object.c:432:17: warning: 'code' may be used uninitialized in this function [-Wmaybe-uninitialized]
+     error->code = code;
+                 ^
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -pthread -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I.. -I.. -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -O2 -Wall -D_REENTRANT -c delete-carddav-object.c -o delete-carddav-object.o >/dev/null 2>&1
+/bin/sh ../libtool  --tag=CC   --mode=link gcc  -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -O2 -Wall -D_REENTRANT -version-info 0:6 -Wl,-z,relro  -o libcarddav.la -rpath /usr/lib64 carddav.lo add-carddav-object.lo delete-carddav-object.lo modify-carddav-object.lo get-carddav-report.lo get-display-name.lo carddav-utils.lo md5.lo options-carddav-server.lo lock-carddav-object.lo -lcurl -pthread -lgthread-2.0 -lglib-2.0   
+libtool: link: gcc -shared  -fPIC -DPIC  .libs/carddav.o .libs/add-carddav-object.o .libs/delete-carddav-object.o .libs/modify-carddav-object.o .libs/get-carddav-report.o .libs/get-display-name.o .libs/carddav-utils.o .libs/md5.o .libs/options-carddav-server.o .libs/lock-carddav-object.o   -lcurl -lgthread-2.0 -lglib-2.0  -O2 -m64 -mtune=generic -O2 -Wl,-z -Wl,relro -pthread   -pthread -Wl,-soname -Wl,libcarddav.so.0 -o .libs/libcarddav.so.0.0.6
+libtool: link: (cd ".libs" && rm -f "libcarddav.so.0" && ln -s "libcarddav.so.0.0.6" "libcarddav.so.0")
+libtool: link: (cd ".libs" && rm -f "libcarddav.so" && ln -s "libcarddav.so.0.0.6" "libcarddav.so")
+libtool: link: ar cru .libs/libcarddav.a  carddav.o add-carddav-object.o delete-carddav-object.o modify-carddav-object.o get-carddav-report.o get-display-name.o carddav-utils.o md5.o options-carddav-server.o lock-carddav-object.o
+libtool: link: ranlib .libs/libcarddav.a
+libtool: link: ( cd ".libs" && rm -f "libcarddav.la" && ln -s "../libcarddav.la" "libcarddav.la" )
+make[2]: Leaving directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2/src'
+make[2]: Entering directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
+make[2]: Leaving directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
+make[1]: Leaving directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
++ exit 0
+执行(%install): /bin/sh -e /var/tmp/rpm-tmp.1OAaWr
++ umask 022
++ cd /home/magic/rpmbuild/BUILD
++ '[' /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64 '!=' / ']'
++ rm -rf /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
+++ dirname /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
++ mkdir -p /home/magic/rpmbuild/BUILDROOT
++ mkdir /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
++ cd libcarddav-0.6.2
++ /usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
++ /usr/bin/make install DESTDIR=/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
+Making install in src
+make[1]: Entering directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2/src'
+make[2]: Entering directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2/src'
+ /usr/bin/mkdir -p '/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64'
+ /bin/sh ../libtool   --mode=install /usr/bin/install -c   libcarddav.la '/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64'
+libtool: install: /usr/bin/install -c .libs/libcarddav.so.0.0.6 /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/libcarddav.so.0.0.6
+libtool: install: (cd /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64 && { ln -s -f libcarddav.so.0.0.6 libcarddav.so.0 || { rm -f libcarddav.so.0 && ln -s libcarddav.so.0.0.6 libcarddav.so.0; }; })
+libtool: install: (cd /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64 && { ln -s -f libcarddav.so.0.0.6 libcarddav.so || { rm -f libcarddav.so && ln -s libcarddav.so.0.0.6 libcarddav.so; }; })
+libtool: install: /usr/bin/install -c .libs/libcarddav.lai /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/libcarddav.la
+libtool: install: /usr/bin/install -c .libs/libcarddav.a /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/libcarddav.a
+libtool: install: chmod 644 /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/libcarddav.a
+libtool: install: ranlib /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/libcarddav.a
+libtool: install: warning: remember to run `libtool --finish /usr/lib64'
+ /usr/bin/mkdir -p '/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include/libcarddav-0.6.1'
+ /usr/bin/install -c -m 644 carddav.h '/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include/libcarddav-0.6.1'
+make[2]: Leaving directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2/src'
+make[1]: Leaving directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2/src'
+make[1]: Entering directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
+make[2]: Entering directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
+make[2]: Nothing to be done for `install-exec-am'.
+ /usr/bin/mkdir -p '/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/pkgconfig'
+ /usr/bin/install -c -m 644 libcarddav.pc '/home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/pkgconfig'
+make[2]: Leaving directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
+make[1]: Leaving directory `/home/magic/rpmbuild/BUILD/libcarddav-0.6.2'
++ /usr/bin/mv -f /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include/libcarddav-0.6.1/carddav.h /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include
++ /usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/include/libcarddav-0.6.1
++ /usr/lib/rpm/find-debuginfo.sh --strict-build-id -m --run-dwz --dwz-low-mem-die-limit 10000000 --dwz-max-die-limit 110000000 /home/magic/rpmbuild/BUILD/libcarddav-0.6.2
+extracting debug info from /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64/usr/lib64/libcarddav.so.0.0.6
+dwz: Too few files for multifile optimization
+/usr/lib/rpm/sepdebugcrcfix: Updated 1 CRC32s, 0 CRC32s did match.
+symlinked /usr/lib/debug/usr/lib64/libcarddav.so.0.0.6.debug to /usr/lib/debug/usr/lib64/libcarddav.so.debug
+symlinked /usr/lib/debug/usr/lib64/libcarddav.so.0.0.6.debug to /usr/lib/debug/usr/lib64/libcarddav.so.0.debug
+299 blocks
++ /usr/lib/rpm/check-buildroot
++ /usr/lib/rpm/magic/brp-compress
++ /usr/lib/rpm/magic/brp-strip-static-archive /usr/bin/strip
++ /usr/lib/rpm/brp-python-bytecompile /usr/bin/python 1
++ /usr/lib/rpm/magic/brp-python-hardlink
++ /usr/lib/rpm/magic/brp-java-repack-jars
+处理文件：libcarddav-0.6.2-3debian2.1mgc30.x86_64
+Provides: libcarddav = 0.6.2-3debian2.1mgc30 libcarddav(x86-64) = 0.6.2-3debian2.1mgc30 libcarddav.so.0()(64bit)
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires: libc.so.6()(64bit) libc.so.6(GLIBC_2.14)(64bit) libc.so.6(GLIBC_2.2.5)(64bit) libc.so.6(GLIBC_2.3)(64bit) libc.so.6(GLIBC_2.3.4)(64bit) libc.so.6(GLIBC_2.4)(64bit) libcurl.so.4()(64bit) libglib-2.0.so.0()(64bit) libgthread-2.0.so.0()(64bit) libpthread.so.0()(64bit) rtld(GNU_HASH)
+处理文件：libcarddav-devel-0.6.2-3debian2.1mgc30.x86_64
+Provides: libcarddav-devel = 0.6.2-3debian2.1mgc30 libcarddav-devel(x86-64) = 0.6.2-3debian2.1mgc30 pkgconfig(libcarddav) = 0.6.1
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires: /usr/bin/pkg-config libcarddav.so.0()(64bit)
+处理文件：libcarddav-debuginfo-0.6.2-3debian2.1mgc30.x86_64
+Provides: libcarddav-debuginfo = 0.6.2-3debian2.1mgc30 libcarddav-debuginfo(x86-64) = 0.6.2-3debian2.1mgc30
+Requires(rpmlib): rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1 rpmlib(CompressedFileNames) <= 3.0.4-1
+检查未打包文件：/usr/lib/rpm/check-files /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
+写道:/home/magic/rpmbuild/SRPMS/libcarddav-0.6.2-3debian2.1mgc30.src.rpm
+写道:/home/magic/rpmbuild/RPMS/x86_64/libcarddav-0.6.2-3debian2.1mgc30.x86_64.rpm
+写道:/home/magic/rpmbuild/RPMS/x86_64/libcarddav-devel-0.6.2-3debian2.1mgc30.x86_64.rpm
+写道:/home/magic/rpmbuild/RPMS/x86_64/libcarddav-debuginfo-0.6.2-3debian2.1mgc30.x86_64.rpm
+执行(%clean): /bin/sh -e /var/tmp/rpm-tmp.aIS5nV
++ umask 022
++ cd /home/magic/rpmbuild/BUILD
++ cd libcarddav-0.6.2
++ /usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libcarddav-0.6.2-3debian2.1mgc30.x86_64
++ exit 0
+执行(--clean): /bin/sh -e /var/tmp/rpm-tmp.mJU0r1
++ umask 022
++ cd /home/magic/rpmbuild/BUILD
++ rm -rf libcarddav-0.6.2
++ exit 0

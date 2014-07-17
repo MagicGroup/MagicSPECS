@@ -1,13 +1,14 @@
-%global _default_patch_fuzz 2
-
 Summary:	Map view for Clutter
+Summary(zh_CN.UTF-8): Clutter 的地图查看
 Name:		libchamplain
-Version:	0.12.7
-Release:	2%{?dist}
+Version:	0.12.8
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://projects.gnome.org/libchamplain/
-Source0:	http://download.gnome.org/sources/libchamplain/0.12/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://download.gnome.org/sources/libchamplain/%{majorver}/%{name}-%{version}.tar.xz
 
 Requires:	gobject-introspection
 
@@ -25,45 +26,70 @@ BuildRequires:	vala-tools
 Libchamplain is a C library aimed to provide a ClutterActor to display
 rasterized maps.
 
+%description -l zh_CN.UTF-8
+Clutter 的地图查看。
+
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	gobject-introspection-devel
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 This package contains development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package gtk
 Summary:	Gtk+ widget wrapper for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Gtk+ 部件绑定
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:	%{name} = %{version}-%{release}
 
 %description gtk
 Libchamplain-gtk is a library providing a GtkWidget to embed %{name}
 into Gtk+ applications.
 
+%description gtk -l zh_CN.UTF-8
+%{name} 的 Gtk+ 部件绑定。
+
 %package gtk-devel
 Summary:	Development files for %{name}-gtk
+Summary(zh_CN.UTF-8): %{name}-gtk 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	%{name}-gtk = %{version}-%{release}
 
 %description gtk-devel
 This package contains development files for %{name}-gtk.
 
+%description gtk-devel -l zh_CN.UTF-8
+%{name}-gtk 的开发包。
+
 %package vala
 Summary:	Vala bindings for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 Vala 绑定
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	vala
 
 %description vala
 This package contains vala bindings for development %{name}.
 
+%description vala -l zh_CN.UTF-8
+%{name} 的 Vala 绑定。
+
 %package demos
 Summary:	Demo apps for %{name}
+Summary(zh_CN.UTF-8): %{name} 的样例程序
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	%{name}-gtk-devel = %{version}-%{release}
@@ -71,6 +97,9 @@ BuildArch:      noarch
 
 %description demos
 This package contains demos for development using %{name}.
+
+%description demos -l zh_CN.UTF-8
+%{name} 的样例程序。
 
 %prep
 %setup -q
@@ -91,6 +120,7 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 
 # Remove rpaths.
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/%{name}-gtk-*.so.*
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -143,6 +173,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/%{name}-gtk-*.so.*
 %doc demos/*.osm
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.12.8-1
+- 更新到 0.12.8
+
 * Thu Feb 20 2014 Kalev Lember <kalevlember@gmail.com> - 0.12.7-2
 - Rebuilt for cogl soname bump
 

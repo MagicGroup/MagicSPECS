@@ -1,15 +1,18 @@
 Name:           libgdata
-Version:        0.11.0
+Version:	0.15.1
 Release:        4%{?dist}
 Summary:        Library for the GData protocol
+Summary(zh_CN.UTF-8): GData 协议的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/libgdata
-Source0:        http://download.gnome.org/sources/%{name}/0.11/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:  glib2-devel libsoup-devel libxml2-devel gtk-doc intltool
-BuildRequires:  libgnome-keyring-devel
+BuildRequires:  libgnome-keyring-devel uhttpmock-devel
 BuildRequires:  gobject-introspection-devel liboauth-devel
 Requires:       gobject-introspection
 
@@ -18,9 +21,14 @@ libgdata is a GLib-based library for accessing online service APIs using the
 GData protocol --- most notably, Google's services. It provides APIs to access
 the common Google services, and has full asynchronous support.
 
+%description -l zh_CN.UTF-8
+这是基于 GLib 通过 GData 协议访问在线服务 API 的库，比如 Google 的服务。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       gtk-doc
@@ -33,6 +41,9 @@ BuildRequires:  libtool
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 
@@ -43,7 +54,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang gdata
 
 
@@ -69,8 +80,12 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/%{name}.pc
 %{_datadir}/gtk-doc/html/gdata/
 %{_datadir}/gir-1.0/GData-0.0.gir
+%{_datadir}/vala/vapi/libgdata.*
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.15.1-4
+- 更新到 0.15.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.11.0-4
 - 为 Magic 3.0 重建
 

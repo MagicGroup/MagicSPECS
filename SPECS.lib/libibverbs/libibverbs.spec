@@ -2,7 +2,9 @@ Name: libibverbs
 Version: 1.1.6
 Release: 3%{?dist}
 Summary: A library for direct userspace use of RDMA (InfiniBand/iWARP) hardware
+Summary(zh_CN.UTF-8): 用户空间直接使用 RDMA 硬件的库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2 or BSD
 Url: http://openfabrics.org/
 Source: http://openfabrics.org/downloads/verbs/libibverbs-%{version}.tar.gz

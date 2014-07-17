@@ -1,0 +1,155 @@
+
+
+
+Name: libkipi
+Version: 0.1.6
+
+Release: 0.git20111209mgc30
+
+
+
+Summary: Common plugin infrastructure for KDE image applications
+Summary(zh_CN.UTF-8): KDE 图像程序的公共插件基础构架
+Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
+License: LGPL
+URL: http://extragear.kde.org/apps/kipi
+
+Source0: libkipi-git20111209.tar.xz
+
+
+
+Source1: make_libkipi_git_package.sh
+Patch1:	libkipi-libtool.patch
+BuildRoot: /var/tmp/libkipi-0.1.6-0.git20111209mgc30-root-magic
+BuildRequires: kdelibs-devel >= 3.0
+BuildRequires: gettext, libacl-devel
+
+%description
+Kipi (KDE Image Plugin Interface) is an effort to develop a common plugin
+structure for Digikam, KimDaBa, Showimg and Gwenview. Its aim is to share
+image plugins among graphic applications.
+
+%description -l zh_CN.UTF-8
+Kipi (KDE 图像插件接口) 是为 Digikam，KimDaBa，Showimg 和 Gwenview 开发公共插件构架的。其旨在和图像程序之间共享图像插件。
+
+%package devel
+Summary: Common plugin infrastructure for KDE image applications
+Summary(zh_CN.UTF-8): KDE 图像程序的公共插件基础构架
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: libkipi = 0.1.6-0.git20111209mgc30
+Requires: kdelibs-devel
+Requires: pkgconfig
+
+%description devel
+Kipi (KDE Image Plugin Interface) is an effort to develop a common plugin
+structure for Digikam, KimDaBa, Showimg and Gwenview. Its aim is to share
+image plugins among graphic applications.
+This package contains the files needed to build applications with Kipi
+support
+
+%description devel -l zh_CN.UTF-8
+Kipi (KDE 图像插件接口) 是为 Digikam，KimDaBa，Showimg 和 Gwenview 开发公共插件构架的。其旨在和图像程序之间共享图像插件。
+本软件包包含需要 Kipi 支持构建程序用的开发文件
+
+%prep
+%setup -q -n libkipi-git20111209
+#临时修正
+%patch1 -p1
+
+%build
+unset QTDIR && . /etc/profile.d/qt.sh
+# work around an improper ${kdelibsuff}
+export QTLIB=${QTDIR}/lib QTINC=${QTDIR}/include
+make -f admin/Makefile.common
+
+  CFLAGS="${CFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CFLAGS ; 
+  CXXFLAGS="${CXXFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic}" ; export CXXFLAGS ; 
+  FFLAGS="${FFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FFLAGS ; 
+  FCFLAGS="${FCFLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -I/usr/lib64/gfortran/modules}" ; export FCFLAGS ; 
+  LDFLAGS="${LDFLAGS:--Wl,-z,relro }"; export LDFLAGS; 
+  for i in $(find . -name config.guess -o -name config.sub) ; do 
+      [ -f /usr/lib/rpm/magic/$(basename $i) ] && /usr/bin/rm -f $i && /usr/bin/cp -fv /usr/lib/rpm/magic/$(basename $i) $i ; 
+  done ; 
+  ./configure --build=x86_64-magic-linux-gnu --host=x86_64-magic-linux-gnu \
+	--program-prefix= \
+	--disable-dependency-tracking \
+	--prefix=/usr \
+	--exec-prefix=/usr \
+	--bindir=/usr/bin \
+	--sbindir=/usr/sbin \
+	--sysconfdir=/etc \
+	--datadir=/usr/share \
+	--includedir=/usr/include \
+	--libdir=/usr/lib64 \
+	--libexecdir=/usr/libexec \
+	--localstatedir=/var \
+	--sharedstatedir=/var/lib \
+	--mandir=/usr/share/man \
+	--infodir=/usr/share/info --disable-rpath --disable-debug --enable-final
+/usr/bin/make -j16
+
+
+%package debuginfo 
+Summary: Debug information for package libkipi
+Group: Development/Debug
+AutoReqProv: 0
+%description debuginfo
+This package provides debug information for package libkipi.
+Debug information is useful when developing applications that use this
+package or when debugging this package.
+%files debuginfo -f debugfiles.list
+%defattr(-,root,root)
+
+%install
+
+/usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libkipi-0.1.6-0.git20111209mgc30.x86_64
+/usr/bin/make DESTDIR=/home/magic/rpmbuild/BUILDROOT/libkipi-0.1.6-0.git20111209mgc30.x86_64 install
+mv /home/magic/rpmbuild/BUILDROOT/libkipi-0.1.6-0.git20111209mgc30.x86_64/usr/lib64/pkgconfig/libkipi.pc /home/magic/rpmbuild/BUILDROOT/libkipi-0.1.6-0.git20111209mgc30.x86_64/usr/lib64/pkgconfig/tde-libkipi.pc
+magic_rpm_clean.sh
+/usr/lib/rpm/find-lang.sh /home/magic/rpmbuild/BUILDROOT/libkipi-0.1.6-0.git20111209mgc30.x86_64 libkipi
+# 删除包中的 *.la 文件（非开发必需）
+find /home/magic/rpmbuild/BUILDROOT/libkipi-0.1.6-0.git20111209mgc30.x86_64 -type f -name "*.la" -exec rm -f {} ';'
+
+%clean
+/usr/bin/rm -rf /home/magic/rpmbuild/BUILDROOT/libkipi-0.1.6-0.git20111209mgc30.x86_64 /home/magic/rpmbuild/BUILD/libkipi-git20111209
+
+%post 
+/sbin/ldconfig
+touch --no-create /usr/share/icons/hicolor ||:
+gtk-update-icon-cache -q /usr/share/icons/hicolor 2> /dev/null ||:
+
+%postun
+/sbin/ldconfig
+touch --no-create /usr/share/icons/hicolor ||:
+gtk-update-icon-cache -q /usr/share/icons/hicolor 2> /dev/null ||:
+
+
+%files -f libkipi.lang
+%defattr(-,root,root,-)
+%doc AUTHORS COPYING ChangeLog README TODO
+/usr/lib64/*.so.*
+/usr/share/apps/kipi
+/usr/share/icons/hicolor/*/apps/kipi.png
+/usr/share/servicetypes/*.desktop
+
+%files devel
+%defattr(-,root,root,-)
+/usr/lib64/*.so
+/usr/lib64/pkgconfig/*.pc
+/usr/include/libkipi
+
+%changelog
+* Fri Dec 09 2011 Liu Di <liudidi@gmail.com> - 0.1.5-3
+- 为 Magic 3.0 重建
+
+* Tue Oct 2 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.1.5-0.1mgc
+- first spec file and package for MagicLinux-2.1
+- update to 0.1.5
+--2014-05-12 02:06:30--  http://apt.linuxfans.org/magic/3.0/sources/SOURCES.lib/libkipi/libkipi-git20111209.tar.xz
+正在解析主机 apt.linuxfans.org (apt.linuxfans.org)... 219.231.240.68
+正在连接 apt.linuxfans.org (apt.linuxfans.org)|219.231.240.68|:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 404 Not Found
+2014-05-12 02:06:30 错误 404：Not Found。
+

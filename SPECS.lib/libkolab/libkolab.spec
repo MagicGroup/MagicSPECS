@@ -12,8 +12,9 @@
 
 Name:           libkolab
 Version:        0.5.0
-Release:        5%{?dist}
+Release:        1%{?dist}
 Summary:        Kolab Object Handling Library
+Summary(zh_CN.UTF-8): Kolab 对象处理库
 
 License:        LGPLv3+
 URL:            http://git.kolab.org/libkolab
@@ -41,8 +42,12 @@ BuildRequires:  qt-devel
 %description
 The libkolab library is an advanced library to  handle Kolab objects.
 
+%description -l zh_CN.UTF-8
+Kolab 对象处理库。
+
 %package devel
 Summary:        Kolab library development headers
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?rhel} > 6 || 0%{?fedora} > 16
 BuildRequires:  kdepimlibs4-devel >= 4.9
@@ -59,8 +64,12 @@ Requires:       python-devel
 %description devel
 Development headers for the Kolab object libraries.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n php-kolab
 Summary:        PHP Bindings for libkolab
+Summary(zh_CN.UTF-8): %{name} 的 PHP 绑定
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %if 0%{?rhel} > 5 || 0%{?fedora} > 15
 Requires:       php(zend-abi) = %{php_zend_api}
@@ -72,13 +81,20 @@ Requires:       php-api = %{php_apiver}
 %description -n php-kolab
 PHP Bindings for libkolab
 
+%description -n php-kolab -l zh_CN.UTF-8
+%{name} 的 PHP 绑定。
+
 %package -n python-kolab
 Summary:        Python bindings for libkolab
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       python-kolabformat >= 1.0.0
 
 %description -n python-kolab
 Python bindings for libkolab
+
+%description -n python-kolab -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
 
 %prep
 %setup -q -n libkolab-%{version}
@@ -117,6 +133,7 @@ extension=kolabicalendar.so
 EOF
 
 touch %{buildroot}/%{python_sitearch}/kolab/__init__.py
+magic_rpm_clean.sh
 
 %check
 pushd build/tests

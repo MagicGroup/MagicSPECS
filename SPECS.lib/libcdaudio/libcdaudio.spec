@@ -1,11 +1,13 @@
 Summary: Control operation of a CD-ROM when playing audio CDs
+Summary(zh_CN.UTF-8): 当播放音频 CD 时控制光驱
 Name: libcdaudio
 Version: 0.99.12p2
-Release: 16%{?dist}
+Release: 17%{?dist}
 # COPYING is a copy of GPLv2, but the code and the README clearly indicate
 # that the code is LGPLv2+. Probably want to let upstream know about COPYING.
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://libcdaudio.sourceforge.net/
 Source0: http://prdownloads.sourceforge.net/libcdaudio/%{name}-%{version}.tar.gz
 Patch0: libcdaudio-0.99.12-buffovfl.patch
@@ -19,14 +21,22 @@ libcdaudio is a library designed to provide functions to control
 operation of a CD-ROM when playing audio CDs.  It also contains
 functions for CDDB and CD Index lookup.
 
+%description -l zh_CN.UTF-8
+当播放音频 CD 时控制光驱，它也包括了 CDDB 和 CD 索引查找函数。
+
 %package devel
 Summary: Development files for libcdaudio
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 This package contains development files for linking against libcdaudio.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,6 +54,7 @@ make
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -67,6 +78,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libcdaudio.pc
 
 %changelog
+* Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.99.12p2-17
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.99.12p2-16
 - 为 Magic 3.0 重建
 

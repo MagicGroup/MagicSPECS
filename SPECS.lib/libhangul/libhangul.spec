@@ -8,7 +8,9 @@ URL:		http://kldp.net/projects/hangul/
 Source0:	http://kldp.net/frs/download.php/5417/libhangul-%{version}.tar.gz
 
 Summary:	Hangul input library
+Summary(zh_CN.UTF-8): 韩文输入库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires(post):	/sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires: gettext
@@ -17,16 +19,22 @@ BuildRequires: gettext
 %description
 libhangul provides common features for Hangul input method programs.
 
+%description -l zh_CN.UTF-8
+韩文输入库。
 
 %package devel
 Summary:	Development files for libhangul
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 %description devel
 This package contains development files necessary to develop programs
 providing Hangul input.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -42,6 +50,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 rm $RPM_BUILD_ROOT%{_libdir}/%{name}.la
+magic_rpm_clean.sh
 %find_lang %{name}
 
 

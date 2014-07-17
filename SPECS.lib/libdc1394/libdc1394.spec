@@ -6,13 +6,14 @@
 %define svn_build %{?svn_snapshot:1}%{!?svn_snapshot:0}
 
 Summary: 1394-based digital camera control library
+Summary(zh_CN.UTF-8): 基于 1394 的数码相机控制库
 Name: libdc1394
-Version: 2.2.0
+Version: 2.2.1
 Release: 2%{?svn_snapshot}%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://sourceforge.net/projects/libdc1394/
-Source: http://dl.sf.net/libdc1394/libdc1394-%{version}.tar.gz
+Source: http://downloads.sourceforge.net/project/libdc1394/libdc1394-2/%{version}/libdc1394-%{version}.tar.gz
 Patch1: libdc1394-videodev.h.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 ExcludeArch: s390 s390x
@@ -30,9 +31,14 @@ Libdc1394 is a library that is intended to provide a high level programming
 interface for application developers who wish to control IEEE 1394 based
 cameras that conform to the 1394-based Digital Camera Specification.
 
+%description -l zh_CN.UTF-8
+基于 1394 的数码相机控制库。
+
 %package devel
 Summary: Header files and libraries for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}, libraw1394-devel
 Requires: pkgconfig
 
@@ -41,21 +47,34 @@ This package contains the header files and libraries
 for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package docs
 Summary: Development documentation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 
 %description docs
 This package contains the development documentation for %{name}.
 
+%description docs -l zh_CN.UTF-8
+%{name} 的文档。
+
 %package tools
 Summary: Tools for use with %{name}
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group: Applications/System
+Group(zh_CN.UTF-8): 应用程序/系统
 Requires: %{name} = %{version}
 
 %description tools
 This package contains tools that are useful when working and
 developing with %{name}.
+
+%description tools -l zh_CN.UTF-8
+%{name} 的工具。
 
 %prep
 %setup -q -n libdc1394-%{version}
@@ -118,6 +137,9 @@ done
 %{_mandir}/man1/dc1394_*.1.gz
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 2.2.1-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.2.0-2
 - 为 Magic 3.0 重建
 

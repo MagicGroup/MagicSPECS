@@ -1,9 +1,11 @@
 Summary: A library for interfacing IEEE 1284-compatible devices
+Summary(zh_CN.UTF-8): IEEE 1284 兼容设备接口库
 Name: libieee1284
 Version: 0.2.11
 Release: 12%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://cyberelk.net/tim/libieee1284/
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Patch1: libieee1284-strict-aliasing.patch
@@ -13,23 +15,36 @@ BuildRequires: xmlto, python-devel
 %description
 The libieee1284 library is for communicating with parallel port devices.
 
+%description -l zh_CN.UTF-8
+IEEE 1284 兼容设备接口库。
+
 %package devel
 Summary: Files for developing applications that use libieee1284
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description devel
 The header files, static library, libtool library and man pages for
 developing applications that use libieee1284.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python extension module for libieee1284
+Summary(zh_CN.UTF-8): %{name} 的 Python 扩展模块
 Requires: %{name} = %{version}-%{release}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description python
 Python extension module for libieee1284.  To use libieee1284 with Python,
 use 'import ieee1284'.
+
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 扩展模块。
 
 %prep
 %setup -q
@@ -46,6 +61,7 @@ make DESTDIR=%{buildroot} INSTALL="install -p" install
 rm -f %{buildroot}%{_libdir}/python*/*/*a
 rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

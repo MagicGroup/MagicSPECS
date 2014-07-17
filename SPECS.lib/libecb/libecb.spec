@@ -1,9 +1,11 @@
 %global snapshot 20130509
 Name:       libecb
 Version:    0.%{snapshot}
-Release:    4%{?dist}
+Release:    5%{?dist}
 Summary:    Compiler built-ins
+Summary(zh_CN.UTF-8): 编译器插件
 Group:      Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:    BSD
 URL:        http://software.schmorp.de/pkg/libecb
 # Snapshot from CVS :pserver:anonymous@cvs.schmorp.de/schmorpforge libecb 
@@ -16,6 +18,9 @@ This project delivers you many GCC built-ins, attributes and a number of
 generally useful low-level functions, such as popcount, expect, prefetch,
 noinline, assume, unreachable and so on.
 
+%description -l zh_CN.UTF-8
+这个包提供了很多 GCC 插件和一些低级功能。
+
 %prep
 %setup -q -n %{name}-%{snapshot}
 
@@ -25,12 +30,16 @@ noinline, assume, unreachable and so on.
 %install
 install -d %{buildroot}%{_includedir}
 install -m 0644 -t %{buildroot}%{_includedir} *.h 
+magic_rpm_clean.sh
 
 %files
 %doc Changes ecb.pod LICENSE README
 %{_includedir}/*
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.20130509-5
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.20130509-4
 - 为 Magic 3.0 重建
 

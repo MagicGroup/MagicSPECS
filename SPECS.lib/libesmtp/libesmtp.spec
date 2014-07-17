@@ -1,11 +1,13 @@
 %define plugindir %{_libdir}/esmtp-plugins
 
 Summary:        SMTP client library
+Summary(zh_CN.UTF-8): SMTP 客户端库
 Name:           libesmtp
 Version:        1.0.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Source:         http://www.stafford.uklinux.net/libesmtp/%{name}-%{version}.tar.bz2
 URL:            http://www.stafford.uklinux.net/libesmtp/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,11 +20,16 @@ Exim. It may be used as part of a Mail User Agent (MUA) or another
 program that must be able to post electronic mail but where mail
 functionality is not the program's primary purpose.
 
+%description -l zh_CN.UTF-8
+SMTP 客户端库。
+
 %package devel
 Summary: Headers and development libraries for libESMTP
+Summary(zh_CN.UTF-8): %{name} 的开发包
 # example file is under the GPLv2+
 License: LGPLv2+ and GPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}, openssl-devel
 
 %description devel
@@ -32,6 +39,9 @@ Exim.
 
 The libesmtp-devel package contains headers and development libraries
 necessary for building programs against libesmtp.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep 
 %setup -q
@@ -76,7 +86,7 @@ make DESTDIR=$RPM_BUILD_ROOT install INSTALL='install -p'
 rm $RPM_BUILD_ROOT/%{_libdir}/*.la
 rm $RPM_BUILD_ROOT/%{_libdir}/esmtp-plugins/*.la
 install -p -m644 -D libesmtp.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig/libesmtp.pc
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libesmtp.pc
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.0.6-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.6-5
 - 为 Magic 3.0 重建
 

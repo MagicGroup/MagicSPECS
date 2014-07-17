@@ -8,7 +8,7 @@
 
 Name:           uhttpmock
 Version:        0.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        HTTP web service mocking library
 License:        LGPLv2
 URL:            http://gitorious.org/uhttpmock/
@@ -76,6 +76,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %doc %{_datadir}/gtk-doc/html/libuhttpmock-%{uhm_api_version}/
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.3.0-2
+- 为 Magic 3.0 重建
+
 * Sun Jun 22 2014 Philip Withnall <philip@tecnocode.co.uk> - 0.3.0-1
 - Update to 0.3.0
 

@@ -1,9 +1,11 @@
 Summary:	Reference implementation of the iCalendar data type and serialization format
+Summary(zh_CN.UTF-8): iCalendar 数据类型和序列格式的实现
 Name:		libical
 Version:	0.48
 Release:	2%{?dist}
 License:	LGPLv2 or MPLv1.1
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://freeassociation.sourceforge.net/
 Source:		http://downloads.sourceforge.net/freeassociation/%{name}-%{version}.tar.gz
 Requires:	tzdata
@@ -14,14 +16,22 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Reference implementation of the iCalendar data type and serialization format
 used in dozens of calendaring and scheduling products.
 
+%description -l zh_CN.UTF-8
+iCalendar 数据类型和序列格式的实现。
+
 %package devel
 Summary:	Development files for libical
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}, pkgconfig
 
 %description devel
 The libical-devel package contains libraries and header files for developing 
 applications that use libical.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -36,6 +46,7 @@ make DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p' install
 
 # Don't install any libtool .la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

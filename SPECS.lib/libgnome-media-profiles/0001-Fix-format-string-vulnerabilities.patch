@@ -1,0 +1,56 @@
+From 1451acdacb11fdc2eb23fce10a9affa844f9527c Mon Sep 17 00:00:00 2001
+From: Michael Biebl <biebl@debian.org>
+Date: Wed, 22 Feb 2012 12:55:43 +0100
+Subject: [PATCH] Fix format string vulnerabilities
+
+which causes build failures with -Werror=format-security.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=661722
+---
+ libgnome-media-profiles/audio-profile-edit.c  | 2 +-
+ libgnome-media-profiles/audio-profiles-edit.c | 2 +-
+ libgnome-media-profiles/gmp-util.c            | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libgnome-media-profiles/audio-profile-edit.c b/libgnome-media-profiles/audio-profile-edit.c
+index 745ee71..a68a1e6 100644
+--- a/libgnome-media-profiles/audio-profile-edit.c
++++ b/libgnome-media-profiles/audio-profile-edit.c
+@@ -230,7 +230,7 @@ gm_audio_profile_edit_new (GConfClient *conf, const char *id)
+   /* get the dialog */
+   builder = gmp_util_load_builder_file ("gnome-audio-profile-edit.ui", NULL, &error);
+   if (error != NULL) {
+-    g_warning (error->message);
++    g_warning ("%s", error->message);
+     g_error_free (error);
+     return NULL;
+   }
+diff --git a/libgnome-media-profiles/audio-profiles-edit.c b/libgnome-media-profiles/audio-profiles-edit.c
+index ba5c207..379bb83 100644
+--- a/libgnome-media-profiles/audio-profiles-edit.c
++++ b/libgnome-media-profiles/audio-profiles-edit.c
+@@ -912,7 +912,7 @@ gm_audio_profiles_edit_new_profile (GMAudioProfilesEdit *dialog,
+     builder = gmp_util_load_builder_file ("gnome-audio-profile-new.ui", transient_parent, &error);
+ 
+     if (error != NULL) {
+-      g_warning (error->message);
++      g_warning ("%s", error->message);
+       g_error_free (error);
+       return;
+     }
+diff --git a/libgnome-media-profiles/gmp-util.c b/libgnome-media-profiles/gmp-util.c
+index 38f6797..2095401 100644
+--- a/libgnome-media-profiles/gmp-util.c
++++ b/libgnome-media-profiles/gmp-util.c
+@@ -47,7 +47,7 @@ gmp_util_load_builder_file (const char *filename,
+     goto end;
+ 
+   if (error != NULL) {
+-    g_warning (error->message);
++    g_warning ("%s", error->message);
+     g_error_free (error);
+     error = NULL;
+   }
+-- 
+1.8.4.2
+

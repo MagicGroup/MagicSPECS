@@ -1,5 +1,5 @@
 Name:           gnome-shell
-Version:	3.12.0
+Version:	3.13.3
 Release:        3%{?dist}
 Summary:        Window management and application launching for GNOME
 Summary(zh_CN.UTF-8): GNOME 的窗口管理器和程序载入器
@@ -114,7 +114,7 @@ GNOME 3 的窗口管理器。
 
 %prep
 %setup -q
-%patch1 -p1 -b .firefox
+#patch1 -p1 -b .firefox
 
 %build
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; fi;
@@ -180,6 +180,9 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-3
+- 更新到 3.13.3
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.12.0-3
 - 为 Magic 3.0 重建
 

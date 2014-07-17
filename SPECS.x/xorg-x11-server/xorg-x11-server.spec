@@ -41,8 +41,8 @@
 
 Summary:   X.Org X11 X server
 Name:      xorg-x11-server
-Version:   1.14.5
-Release:   1%{?gitdate:.%{gitdate}}%{dist}
+Version:   1.14.7
+Release:   2%{?gitdate:.%{gitdate}}%{dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X
@@ -580,6 +580,9 @@ rm -rf $RPM_BUILD_ROOT
 %{xserver_source_dir}
 
 %changelog
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 1.14.7-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 06 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.14.1.901-2
 - Backport the touch grab race condition patches from fdo #56578
 
