@@ -1,5 +1,5 @@
 Name:           libgweather
-Version:	3.12.0
+Version:	3.13.3
 Release:        1%{?dist}
 Summary:        A library for weather information
 Summary(zh_CN.UTF-8): 天气信息库
@@ -107,6 +107,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
+- 更新到 3.13.3
+
 * Thu Apr 10 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

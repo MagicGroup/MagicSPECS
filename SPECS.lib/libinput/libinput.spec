@@ -1,7 +1,8 @@
 Name:           libinput
-Version:        0.1.0
+Version: 0.4.0
 Release:        1%{?dist}
 Summary:        Input device library
+Summary(zh_CN.UTF-8): 输入设备库
 
 License:        MIT
 URL:            http://www.freedesktop.org/wiki/Software/libinput/
@@ -19,15 +20,20 @@ It provides device detection, device handling, input device event processing
 and abstraction so minimize the amount of custom input code the user of
 libinput need to provide the common set of functionality that users expect.
 
+%description -l zh_CN.UTF-8
+输入设备库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -36,7 +42,7 @@ developing applications that use %{name}.
 %build
 %configure --disable-static
 make %{?_smp_mflags}
-
+magic_rpm_clean.sh
 
 %install
 %make_install
@@ -59,5 +65,8 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 
 
 %changelog
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 0.4.0-1
+- 更新到 0.4.0
+
 * Fri Feb 28 2014 Kalev Lember <kalevlember@gmail.com> - 0.1.0-1
 - Initial Fedora packaging

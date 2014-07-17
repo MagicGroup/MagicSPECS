@@ -2,7 +2,7 @@ Summary:	Software decoder for DV format video
 Summary(zh_CN.UTF-8): DV 格式视频的软件解码器
 Name:		libdv
 Version:	1.0.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	LGPL
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libdv.pc
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.0.0-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.0-4
 - 为 Magic 3.0 重建
 

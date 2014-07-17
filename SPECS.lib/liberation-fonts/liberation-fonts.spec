@@ -11,7 +11,8 @@ New.
 
 Name:             %{fontname}-fonts
 Summary:          Fonts to replace commonly used Microsoft Windows fonts
-Version:          1.07.3
+Summary(zh_CN.UTF-8): 替换微软视察字体的字体
+Version:          1.07.4
 Release:          2%{?dist}
 Epoch:          1
 # The license of the Liberation Fonts is a EULA that contains GPLv2 and two
@@ -21,6 +22,7 @@ Epoch:          1
 # GPLv3. This license is Free, but GPLv2 and GPLv3 incompatible.
 License:          Liberation
 Group:            User Interface/X
+Group(zh_CN.UTF-8): 用户界面/X
 URL:              http://fedorahosted.org/liberation-fonts/
 Source0:          https://fedorahosted.org/releases/l/i/liberation-fonts/%{archivename}.tar.gz
 Source2:          %{name}-mono.conf
@@ -30,7 +32,6 @@ Source5:          %{name}-narrow.conf
 BuildArch:        noarch
 BuildRequires:    fontpackages-devel >= 1.13, xorg-x11-font-utils
 BuildRequires:    fontforge
-Patch1: %{name}-bug-715309.patch
 
 %description
 %common_desc
@@ -109,7 +110,6 @@ Arial Narrow.
 
 %prep
 %setup -q -n %{archivename}
-%patch1 -p1 -b .1-resolved-u-hinting
 
 %build
 make %{?_smp_mflags} 
@@ -150,6 +150,9 @@ mkfontscale %{buildroot}%{_fontdir}
 mkfontdir %{buildroot}%{_fontdir}
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1:1.07.4-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 28 2013 Pravin Satpute <psatpute@redhat.com> - 1:1.07.3-2
 - Resolved #715309: Improved Bold 'u' hinting
 

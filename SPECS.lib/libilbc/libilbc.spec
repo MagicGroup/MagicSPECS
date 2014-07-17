@@ -66,10 +66,7 @@ Statyczna biblioteka iLBC.
 cp %{SOURCE1} .
 
 %build
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__automake}
+autoreconf -fisv
 %configure \
 	%{!?with_static_libs:--disable-static}
 %{__make}

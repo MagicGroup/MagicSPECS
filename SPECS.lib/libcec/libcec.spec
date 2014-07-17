@@ -1,12 +1,15 @@
 %define git 1
-%define gitdate 20120709
+%define vcsdate 20140714
 
 Name:		libcec
-Version:	1.5
-Release:	0.git%{gitdate}.1%{?dist}.1
-Summary:	Pulse-Eight CEC adapter control library
+Version:	2.1.4
+Release:	4%{?dist}
+Summary:	Library and utilities for HDMI-CEC device control
+Summary(zh_CN.UTF-8): HDMI-CEC 设备控制的库和工具
+
 License:	GPLv2+
-Group:		System/Libraries
+Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://libcec.pulse-eight.com/
 Source0:	%{name}-%{gitdate}.tar.xz
 Source1:	make_libcec_git_package.sh
@@ -15,22 +18,14 @@ BuildRequires:	pkgconfig(libudev)
 %description
 With libcec you can access your Pulse-Eight CEC adapter.
 
-%package -n cec-utils
-Summary:	Utilities for Pulse-Eight CEC adapter control
-Group:		System/Configuration/Hardware
-# the binaries require the library, but automatic dependency generation doesn't
-# catch that
-Requires:	%{name} = %{version}
-
-%description -n cec-utils
-With libcec you can access your Pulse-Eight CEC adapter.
-
-This package contains the command-line tools to configure and test your
-Pulse-Eight CEC adapter.
+%description -l zh_CN.UTF-8
+HDMI-CEC 设备控制的库和工具。
 
 %package devel
 Summary:	Development files for %{name}
-Group:		Development/C
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}
 Provides:	cec-devel = %{version}
 
@@ -39,6 +34,9 @@ With libcec you can access your Pulse-Eight CEC adapter.
 
 This package contains the files for developing applications which
 will use libcec.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n %{name}-%{gitdate}
@@ -57,13 +55,16 @@ magic_rpm_clean.sh
 %clean
 rm -rf %{buildroot}
 
-%files -n cec-utils
-%defattr(-,root,root)
-%{_bindir}/cec-client
-%{_bindir}/cec-config
+%post 
+/usr/sbin/ldconfig
+
+%postun
+/usr/sbin/ldconfig
 
 %files
 %defattr(-,root,root)
+%{_bindir}/cec-client
+%{_bindir}/cec-config
 %{_libdir}/%{name}.so.*
 
 %files devel
@@ -73,6 +74,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 2.1.4-4
+- 更新到 20140714 日期的仓库源码
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.5-0.git20120709.1.1
 - 为 Magic 3.0 重建
 

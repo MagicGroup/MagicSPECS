@@ -1,0 +1,14 @@
+#!/bin/bash
+url="http://download.videolan.org/pub/libdvbpsi"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand "$url" -O index.html
+if [ -f index.html ];then
+	newver=`cat index.html|grep -o "[0-9]\.[0-9]\.[0-9]" | tail -n 1`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

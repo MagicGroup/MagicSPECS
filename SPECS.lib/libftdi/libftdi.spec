@@ -1,44 +1,53 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 Name:		libftdi
-Version:	0.19
-Release:	3%{?dist}
+Version:	1.1
+Release:	1%{?dist}
 Summary:	Library to program and control the FTDI USB controller
+Summary(zh_CN.UTF-8): 编程和控制 FTDI USB 控制器的库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2
 URL:		http://www.intra2net.com/de/produkte/opensource/ftdi/
-Source0:	http://www.intra2net.com/de/produkte/opensource/ftdi/TGZ/%{name}-%{version}.tar.gz
-Source1:	no_date_footer.html
-Patch0:		libftdi-0.17-multilib.patch
-# update to recent libusb
-Patch1:		libftdi-0.19-libusb.patch
+Source0:	http://www.intra2net.com/en/developer/libftdi/download/%{name}1-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	libusb-devel, doxygen, boost-devel, python-devel, swig
-BuildRequires:	autoconf, automake, libtool
-Requires:	pkgconfig, udev
-Requires(pre):	shadow-utils
-
+BuildRequires:	boost-devel
+BuildRequires:	cmake
+BuildRequires:	doxygen
+BuildRequires:	libconfuse-devel
+BuildRequires:	libusbx-devel
+BuildRequires:	python-devel
+BuildRequires:	swig
+Requires:	systemd
 
 %package devel
 Summary:	Header files and static libraries for libftdi
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libftdi = %{version}-%{release}
 Requires:	libusb-devel
 
 %package python
 Summary:	Libftdi library Python binding
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libftdi = %{version}-%{release}
 
 %package c++
 Summary:	Libftdi library C++ binding
+Summary(zh_CN.UTF-8): %{name} 的 C++ 绑定
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libftdi = %{version}-%{release}
 
 %package c++-devel
 Summary:	Libftdi library C++ binding development headers and libraries
+Summary(zh_CN.UTF-8): %{name}-c++ 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	libftdi-devel = %{version}-%{release}, libftdi-c++ = %{version}-%{release}
 
 
@@ -46,46 +55,59 @@ Requires:	libftdi-devel = %{version}-%{release}, libftdi-c++ = %{version}-%{rele
 A library (using libusb) to talk to FTDI's FT2232C,
 FT232BM and FT245BM type chips including the popular bitbang mode.
 
+%description -l zh_CN.UTF-8
+编程和控制 FTDI USB 控制器的库，使用 libusb
+
 %description devel
 Header files and static libraries for libftdi
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %description python
 Libftdi Python Language bindings.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %description c++
 Libftdi library C++ language binding.
+
+%description c++ -l zh_CN.UTF-8
+%{name} 的 C++ 绑定。
 
 %description c++-devel
 Libftdi library C++ binding development headers and libraries
 for building C++ applications with libftdi.
 
+%description c++-devel -l zh_CN.UTF-8
+%{name}-c++ 的开发包。
 
 %prep
-%setup -q
-sed -i -e 's/HTML_FOOTER            =/HTML_FOOTER            = no_date_footer.html/g' doc/Doxyfile.in
+%setup -q -n %{name}1-%{version}
+
 #kernel does not provide usb_device anymore
 sed -i -e 's/usb_device/usb/g' packages/99-libftdi.rules
-%patch0 -p1 -b .multilib
-%patch1 -p1 -b .libusb
-
+sed -i -e 's/GROUP="plugdev"/TAG+="uaccess"/g' packages/99-libftdi.rules
 
 %build
-autoreconf -if
-%configure --enable-python-binding --enable-libftdipp --disable-static
-cp %{SOURCE1} %{_builddir}/%{name}-%{version}/doc
+export CMAKE_PREFIX_PATH=/usr
+%{cmake} .
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-find %{buildroot} -name \*\.la -print | xargs rm -f
-mkdir -p $RPM_BUILD_ROOT%{_mandir}/man3
-#no man install
-install -p -m 644 doc/man/man3/*.3 $RPM_BUILD_ROOT%{_mandir}/man3
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
-install -p -m 644 packages/99-libftdi.rules $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
 
+mkdir -p $RPM_BUILD_ROOT/lib/udev/rules.d/
+install -p -m 644 packages/99-libftdi.rules $RPM_BUILD_ROOT/lib/udev/rules.d/99-libftdi.rules
+
+find $RPM_BUILD_ROOT -type f -name "*.la" -delete
+find $RPM_BUILD_ROOT -type f -name "*.a" -delete
+
+#no man install
+mkdir -p $RPM_BUILD_ROOT%{_mandir}/man3
+install -p -m 644 doc/man/man3/*.3 $RPM_BUILD_ROOT%{_mandir}/man3
 
 # Cleanup examples
 rm -f $RPM_BUILD_ROOT/%{_bindir}/simple
@@ -97,6 +119,9 @@ rm -f $RPM_BUILD_ROOT/%{_bindir}/find_all
 rm -f $RPM_BUILD_ROOT/%{_bindir}/find_all_pp
 rm -f $RPM_BUILD_ROOT/%{_bindir}/baud_test
 rm -f $RPM_BUILD_ROOT/%{_bindir}/serial_read
+rm -f $RPM_BUILD_ROOT/%{_bindir}/serial_test
+rm -rf $RPM_BUILD_ROOT/%{_libdir}/cmake*
+rm -rf $RPM_BUILD_ROOT/%{_datadir}/libftdi/examples
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -104,16 +129,17 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING.LIB README
-%{_libdir}/libftdi.so.*
-%config(noreplace) %{_sysconfdir}/udev/rules.d/99-libftdi.rules
+%{_libdir}/libftdi1.so.*
+%config(noreplace) /lib/udev/rules.d/99-libftdi.rules
 
 %files devel
 %defattr(-,root,root,-)
 %doc doc/html
-%{_bindir}/libftdi-config
-%{_libdir}/libftdi.so
-%{_includedir}/*.h
-%{_libdir}/pkgconfig/libftdi.pc
+%{_bindir}/libftdi1-config
+%{_bindir}/ftdi_eeprom
+%{_libdir}/libftdi1.so
+%{_includedir}/libftdi1/*.h
+%{_libdir}/pkgconfig/libftdi1.pc
 %{_mandir}/man3/*
 
 %files python
@@ -124,14 +150,14 @@ rm -rf $RPM_BUILD_ROOT
 %files c++
 %defattr(-, root, root, -)
 %doc AUTHORS ChangeLog COPYING.LIB README
-%{_libdir}/libftdipp.so.*
+%{_libdir}/libftdipp1.so.*
 
 %files c++-devel
 %defattr(-, root, root, -)
 %doc doc/html
-%{_libdir}/libftdipp.so
-%{_includedir}/*.hpp
-%{_libdir}/pkgconfig/libftdipp.pc
+%{_libdir}/libftdipp1.so
+%{_includedir}/libftdi1/*.hpp
+%{_libdir}/pkgconfig/libftdipp1.pc
 
 %pre
 getent group plugdev >/dev/null || groupadd -r plugdev
@@ -144,6 +170,9 @@ exit 0
 %postun c++ -p /sbin/ldconfig
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.1-1
+- 更新到 1.1
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.19-3
 - 为 Magic 3.0 重建
 

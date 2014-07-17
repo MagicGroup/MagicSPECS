@@ -1,7 +1,8 @@
 Summary:   GLib wrapper around libusb1
+Summary(zh_CN.UTF-8): libusb1 的 GLib 接口
 Name:      libgusb
 Version:   0.1.6
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   LGPLv2+
 URL:       https://gitorious.org/gusb/
 Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
@@ -19,12 +20,19 @@ GUsb is a GObject wrapper for libusb1 that makes it easy to do
 asynchronous control, bulk and interrupt transfers with proper
 cancellation and integration into a mainloop.
 
+%description -l zh_CN.UTF-8
+libusb1 的 GLib 接口。
+
 %package devel
 Summary: Libraries and headers for gusb
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 GLib headers and libraries for gusb.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -44,6 +52,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/libgusb.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -65,6 +74,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libgusb.la
 %{_datadir}/vala/vapi/gusb.vapi
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.1.6-2
+- 为 Magic 3.0 重建
+
 * Tue Feb 06 2013 Richard Hughes <richard@hughsie.com> 0.1.6-1
 - New upstream version
 - Do not use deprecated GLib functionality

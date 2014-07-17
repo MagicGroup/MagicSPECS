@@ -1,6 +1,6 @@
 Name:		libgcroots
 Version:	0.2.3
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	MIT
 URL:		http://code.google.com/p/sigscheme/wiki/libgcroots
 
@@ -9,7 +9,9 @@ Patch0:		%{name}-aarch64.patch
 
 
 Summary:	Roots acquisition library for Garbage Collector
+Summary(zh_CN.UTF-8): 垃圾回收的根采集库
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description
 libgcroots abstracts architecture-dependent part of garbage collector
@@ -19,9 +21,14 @@ This library encourages to have own GC such as for small-footprint,
 some application-specific optimizations, just learning or to test
 experimental ideas.
 
+%description -l zh_CN.UTF-8
+垃圾回收的根采集库。
+
 %package devel
 Summary:	Development files for libgcroots
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	pkgconfig
 
@@ -32,6 +39,9 @@ backing store of IA-64.
 
 This package contains a header file and development library to help you
 to develop any own GC.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -47,6 +57,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 # Remove unnecessary files
 rmdir $RPM_BUILD_ROOT%{_includedir}/libgcroots
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -63,6 +74,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/gcroots.pc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.2.3-7
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

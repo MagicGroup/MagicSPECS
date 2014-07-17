@@ -1,10 +1,13 @@
 Name:             libcroco
 Summary:          A CSS2 parsing library
+Summary(zh_CN.UTF-8): CSS2 解析库
 Version:          0.6.8
-Release:          2%{?dist}
+Release:          3%{?dist}
 License:          LGPLv2
 Group:            System Environment/Libraries
-Source:           http://download.gnome.org/sources/libcroco/0.6/%{name}-%{version}.tar.xz
+Group(zh_CN.UTF-8): 系统环境/库
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:           http://download.gnome.org/sources/libcroco/%{majorver}/%{name}-%{version}.tar.xz
 #Fedora specific patch
 Patch0:    libcroco-0.6.1-multilib.patch
 
@@ -15,9 +18,14 @@ BuildRequires:    libxml2-devel
 %description
 CSS2 parsing and manipulation library for GNOME
 
+%description -l zh_CN.UTF-8
+GNOME 下的 CSS2 解析库.
+
 %package devel
 Summary:          Libraries and include files for developing with libcroco
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:            Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:         %{name} = %{version}-%{release}
 Requires:         glib2-devel
 Requires:         libxml2-devel
@@ -25,6 +33,9 @@ Requires:         libxml2-devel
 %description devel
 This package provides the necessary development libraries and include
 files to allow you to develop with libcroco.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -59,6 +70,9 @@ make check
 %{_datadir}/gtk-doc/html/libcroco
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.6.8-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.6.8-2
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,13 @@
 #define gitdate 20130117
 
 Summary: Direct Rendering Manager runtime library
+Summary(zh_CN.UTF-8): 直接渲染管理运行库
 Name: libdrm
-Version: 2.4.50
+Version: 2.4.54
 Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://dri.sourceforge.net
 %if 0%{?gitdate}
 Source0: %{name}-%{gitdate}.tar.bz2
@@ -40,9 +42,14 @@ Patch5: libdrm-2.4.25-check-programs.patch
 %description
 Direct Rendering Manager runtime library
 
+%description -l zh_CN.UTF-8
+直接渲染管理运行库。
+
 %package devel
 Summary: Direct Rendering Manager development package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: kernel-headers >= 2.6.27-0.144.rc0.git2.fc10
 Requires: pkgconfig
@@ -50,12 +57,20 @@ Requires: pkgconfig
 %description devel
 Direct Rendering Manager development package
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package -n drm-utils
 Summary: Direct Rendering Manager utilities
+Summary(zh_CN.UTF-8): 直接渲染管理工具
 Group: Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 
 %description -n drm-utils
 Utility programs for the kernel DRM interface.  Will void your warranty.
+
+%description -n drm-utils -l zh_CN.UTF-8
+内核 DRM 接口使用的工具程序。
 
 %prep
 %setup -q %{?gitdate:-n %{name}-%{gitdate}}
@@ -95,6 +110,7 @@ for i in r300_reg.h via_3d_reg.h
 do
 rm -f $RPM_BUILD_ROOT/usr/include/libdrm/$i
 done
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -203,6 +219,9 @@ done
 %{_mandir}/man7/drm*.7*
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 2.4.54-1
+- 更新到 2.4.54
+
 * Thu Dec 05 2013 Dave Airlie <airlied@redhat.com> 2.4.50-1
 - libdrm 2.4.50
 

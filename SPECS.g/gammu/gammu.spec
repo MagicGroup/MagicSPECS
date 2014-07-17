@@ -2,7 +2,7 @@
 
 Name:       gammu
 Version:        1.33.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Command Line utility to work with mobile phones
 Summary(zh_CN.UTF-8): 操作手机的命令行工具
 
@@ -170,6 +170,9 @@ cat lib%{name}.lang >> %{name}.lang
 
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 1.33.0-3
+- 为 Magic 3.0 重建
+
 * Wed Jan 22 2014 Sérgio Basto <sergio@serjux.com> - 1.33.0-2
 - Rebuild for newer libdbi
 

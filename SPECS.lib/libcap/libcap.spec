@@ -1,7 +1,8 @@
 Name: libcap
 Version: 2.24
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Library for getting and setting POSIX.1e capabilities
+Summary(zh_CN.UTF-8): 获取和设置 POSIX.1e 能力的库
 #Source: http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.bz2
 Source: https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.gz
 # http://manned.org/getpcaps/299a4949/src:
@@ -11,15 +12,21 @@ Patch0: %{name}-2.24-buildflags.patch
 URL: https://sites.google.com/site/fullycapable/
 License: GPLv2
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRequires: libattr-devel pam-devel
 
 %description
 libcap is a library for getting and setting POSIX.1e (formerly POSIX 6)
 draft 15 capabilities.
 
+%description -l zh_CN.UTF-8
+获取和设置 POSIX.1e 能力的库。
+
 %package devel
 Summary: Development files for libcap
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -30,6 +37,9 @@ draft 15 capabilities.
 
 Install libcap-devel if you want to develop or compile applications using
 libcap.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -56,6 +66,7 @@ cp -f %{SOURCE1} %{buildroot}/%{_mandir}/man8/
 rm -f %{buildroot}/%{_libdir}/libcap.a
 
 chmod +x %{buildroot}/%{_libdir}/*.so.*
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -80,6 +91,9 @@ chmod +x %{buildroot}/%{_libdir}/*.so.*
 rm -rf %{buildroot}
 
 %changelog
+* Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 2.24-6
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

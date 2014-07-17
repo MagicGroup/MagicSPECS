@@ -1,13 +1,16 @@
 Name:           libgee
-Version:        0.10.1
+Version:	0.15.3
 Release:        1%{?dist}
 Summary:        GObject collection library
+Summary(zh_CN.UTF-8): GObject 收集库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://live.gnome.org/Libgee
 #VCS:           git:git://git.gnome.org/libgee
-Source0:        http://download.gnome.org/sources/libgee/0.10/libgee-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/libgee/%{majorver}/libgee-%{version}.tar.xz
 
 BuildRequires:  glib2-devel
 BuildRequires:  gobject-introspection-devel
@@ -53,10 +56,14 @@ iterators depending on the collection type.
 Libgee is written in Vala and can be used like any GObject-based C
 library. It's planned to provide bindings for further languages.
 
+%description -l zh_CN.UTF-8
+GObject 集合库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -64,6 +71,8 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -91,7 +100,7 @@ make check
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -116,6 +125,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.15.3-1
+- 更新到 0.15.3
+
 * Mon Apr 15 2013 Michel Salim <salimma@fedoraproject.org> - 0.10.1-1
 - Update to 0.10.1
 

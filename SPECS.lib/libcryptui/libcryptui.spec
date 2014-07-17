@@ -1,12 +1,15 @@
 Name: libcryptui
 Version: 3.12.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Interface components for OpenPGP
+Summary(zh_CN.UTF-8): OpenPGP 的接口组件
 
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
 URL: http://projects.gnome.org/seahorse/
-Source0: http://download.gnome.org/sources/libcryptui/3.12/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0: http://download.gnome.org/sources/libcryptui/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires: dbus-glib-devel
 BuildRequires: gnome-doc-utils
@@ -22,15 +25,23 @@ BuildRequires: libSM-devel
 %description
 libcryptui is a library used for prompting for PGP keys.
 
+%description -l zh_CN.UTF-8
+OpenPGP 的接口组件
+
 %package devel
 Summary: Header files required to develop with libcryptui
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 The libcryptui-devel package contains the header files and developer
 documentation for the libcryptui library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -77,6 +88,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gir-1.0/*
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.12.2-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.12.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

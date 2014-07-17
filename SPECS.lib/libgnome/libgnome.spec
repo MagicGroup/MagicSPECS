@@ -24,15 +24,16 @@
 	desktop_gnome_typing_break
 
 Summary: GNOME base library
+Summary(zh_CN.UTF-8): GNOME 基本库
 Name: libgnome
 Version: 2.32.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 URL: http://www.gnome.org
 Source0: http://download.gnome.org/sources/libgnome/2.32/%{name}-%{version}.tar.bz2
 Source1: desktop_gnome_peripherals_monitor.schemas
 License: LGPLv2+
 Group: System Environment/Libraries
-
+Group(zh_CN.UTF-8): 系统环境/库
 # Added to avoid the warning messages about utmp group, bug #24171
 # fixme, just libzvt?
 Requires(pre): utempter
@@ -79,16 +80,23 @@ window manager for the X Window System. The libgnome package includes
 non-GUI-related libraries that are needed to run GNOME. The libgnomeui
 package contains X11-dependent GNOME library features.
 
+%description -l zh_CN.UTF-8
+GNOME2 的基础库。
 
 %package devel
 Summary: Libraries and headers for libgnome
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 You should install the libgnome-devel package if you would like to
 compile GNOME applications. You do not need to install libgnome-devel
 if you just want to use the GNOME desktop environment.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -137,7 +145,7 @@ done
 # http://bugzilla.gnome.org/show_bug.cgi?id=477846
 rm -rf $RPM_BUILD_ROOT%{_datadir}/gnome-background-properties
 rm -rf $RPM_BUILD_ROOT%{_datadir}/pixmaps
-
+magic_rpm_clean.sh
 %find_lang %{po_package}
 
 %post
@@ -172,6 +180,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/pixmaps
 %{_datadir}/gtk-doc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.32.1-8
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.32.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:		libgxim
 Version:	0.5.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	LGPLv2+
 URL:		http://tagoh.bitbucket.org/libgxim/
 BuildRequires:	intltool gettext ruby
@@ -8,7 +8,9 @@ BuildRequires:	glib2-devel >= 2.26, gtk2-devel
 Source0:	http://bitbucket.org/tagoh/%{name}/downloads/%{name}-%{version}.tar.bz2
 
 Summary:	GObject-based XIM protocol library
+Summary(zh_CN.UTF-8): 基于 GObject 的 XIM 协议库
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 %description
 libgxim is a X Input Method protocol library that is implemented by GObject.
@@ -18,9 +20,14 @@ if your application uses GObject-based main loop.
 
 This package contains the shared library.
 
+%description -l zh_CN.UTF-8
+基于 GObject 的 XIM 协议库。
+
 %package	devel
 Summary:	Development files for libgxim
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 Requires:	glib2-devel >= 2.26.0
@@ -34,6 +41,9 @@ if your application uses GObject-based main loop.
 
 This package contains the development files to make any applications with
 libgxim.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -50,7 +60,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 # clean up the unnecessary files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 
@@ -70,6 +80,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_datadir}/gtk-doc/html/libgxim
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.5.0-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

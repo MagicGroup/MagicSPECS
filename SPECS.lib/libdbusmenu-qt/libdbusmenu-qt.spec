@@ -2,7 +2,7 @@ Summary: A Qt implementation of the DBusMenu protocol
 Summary(zh_CN.UTF-8): DBusMenu 协议的 Qt 实现
 Name: libdbusmenu-qt
 Version: 0.8.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
@@ -80,6 +80,9 @@ rm -rf %{buildroot}
 %{_docdir}/*
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.8.3-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8.3-3
 - 为 Magic 3.0 重建
 

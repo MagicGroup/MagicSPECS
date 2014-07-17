@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/gphoto2.1*
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.4.11-3
+- 更新到 2.5.4
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.4.11-3
 - 更新到 2.5.4
 

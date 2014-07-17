@@ -2,8 +2,10 @@ Name:           libirman
 Version:        0.4.5
 Release:        7%{?dist}
 Summary:        Library for IRMAN hardware
+Summary(zh_CN.UTF-8): IRMAN 硬件的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #The files which make up the library are covered under the GNU Library
 #General Public License, which is in the file COPYING.lib.
 #The files which make up the test programs and the documentation are covered
@@ -18,15 +20,22 @@ BuildRequires:  autoconf, automake, libtool
 %description
 A library for accessing the IRMAN hardware from Linux and other Unix systems.
 
+%description -l zh_CN.UTF-8
+IRMAN 硬件的库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -46,7 +55,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

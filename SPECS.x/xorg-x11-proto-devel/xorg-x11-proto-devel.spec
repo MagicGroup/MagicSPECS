@@ -7,7 +7,7 @@
 Summary: X.Org X11 Protocol headers
 Name: xorg-x11-proto-devel
 Version: 7.7
-Release: 12%{?dist}
+Release: 13%{?dist}
 License: MIT
 Group: Development/System
 URL: http://www.x.org
@@ -287,6 +287,9 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/*/*.{html,svg}
 %{_datadir}/pkgconfig/xproxymngproto.pc
 
 %changelog
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 7.7-13
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Hans de Goede <hdegoede@redhat.com> - 7.7-12
 - inputproto-2.3.1
 

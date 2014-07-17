@@ -7,7 +7,7 @@
 
 Name:		libdbusmenu
 Version:	12.10.2
-Release:	1.1
+Release:	2.1
 License:	GPL-3.0 and LGPL-2.0 and LGPL-3.0
 Summary:	Small library that passes a menu structure across DBus
 Url:		https://launchpad.net/dbusmenu
@@ -394,6 +394,9 @@ mv $RPM_BUILD_ROOT%{_datadir}/doc/%{name}/examples/glib-server-nomenu.c \
 
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 12.10.2-2.1
+- 为 Magic 3.0 重建
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2-1
 - Version 12.10.2
 

@@ -2,7 +2,7 @@
 
 Name:           wayland
 Version:        1.5.0
-Release:        4%{?gitdate:.%{gitdate}}%{?dist}
+Release:        5%{?gitdate:.%{gitdate}}%{?dist}
 Summary:        Wayland Compositor Infrastructure
 
 Group:          User Interface/X
@@ -87,7 +87,8 @@ Headers and symlinks for developing wayland server applications.
 %patch1 -p1
 
 %build
-autoreconf -v --install
+#libtoolize -f 
+#autoreconf -fisv 
 %configure --disable-static --enable-documentation
 make %{?_smp_mflags}
 
@@ -168,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/wayland-server.pc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.5.0-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 02 2014 Adam Jackson <ajax@redhat.com> 1.5.0-4
 - Update protocol: new surface error enums
 

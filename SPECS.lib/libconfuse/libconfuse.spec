@@ -1,12 +1,14 @@
 Name:           libconfuse
 Version:        2.7
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A configuration file parser library
+Summary(zh_CN.UTF-8): 一个配置文件解析库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        ISC
 URL:            http://www.nongnu.org/confuse/
-Source0:        http://bzero.se/confuse/confuse-%{version}.tar.gz
+Source0:        http://savannah.nongnu.org/download/confuse/confuse-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  check-devel, pkgconfig
@@ -25,15 +27,22 @@ The goal of libConfuse is not to be the configuration file parser
 library with a gazillion of features. Instead, it aims to be
 easy to use and quick to integrate with your code.
 
+%description -l zh_CN.UTF-8
+一个配置文件解析库，以 C 编写并按 ISC 协议授权使用。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description devel
 Development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n confuse-%{version}
@@ -58,7 +67,7 @@ cp -p doc/man/man3/*.3 $RPM_BUILD_ROOT%{_mandir}/man3/
 mkdir -p ex2/examples
 cp -p examples/{ftpconf.c,ftp.conf,simple.c,simple.conf,reread.c,reread.conf} \
     ex2/examples/
-
+magic_rpm_clean.sh
 %find_lang confuse
 
 %clean
@@ -87,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.7-8
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

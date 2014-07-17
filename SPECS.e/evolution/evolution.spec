@@ -13,7 +13,7 @@
 %define clutter_gtk_version 0.10
 %define webkit_version 1.8.0
 
-%define evo_base_version 3.12
+%define evo_base_version 3.14
 
 %define last_anjal_version 0.3.2-3
 %define last_libgal2_version 2:2.5.3-2
@@ -31,7 +31,7 @@
 ### Abstract ###
 
 Name: evolution
-Version:	3.12.0
+Version:	3.13.3
 Release: 2%{?dist}
 Group: Applications/Productivity
 Summary: Mail and calendar client for GNOME
@@ -398,6 +398,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/evolution/%{evo_base_version}/modules/module-text-highlight.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-vcard-inline.so
 %{_libdir}/evolution/%{evo_base_version}/modules/module-web-inspector.so
+%{_libdir}/evolution/%{evo_base_version}/modules/module-tnef-attachment.so
 
 # Shared libraries:
 %{_libdir}/evolution/%{evo_base_version}/libevolution-mail-composer.so
@@ -519,6 +520,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-2
+- 更新到 3.13.3
+
 * Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
 - 更新到 3.12.0
 

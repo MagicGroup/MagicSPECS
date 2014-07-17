@@ -1,7 +1,7 @@
 #!/bin/bash
 url="http://wammu.eu/download/gammu/source/"
-new1="Gammu stable release "
-new2="<"
+new1="gammu-"
+new2=".tar.xz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

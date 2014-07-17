@@ -10,7 +10,7 @@
 Summary: GStreamer streaming media framework "bad" plug-ins
 Name: gstreamer-plugins-bad
 Version: 0.10.23
-Release: 8%{?dist}
+Release: 9%{?dist}
 # The freeze and nfs plugins are LGPLv2 (only)
 License: LGPLv2+ and LGPLv2
 Group: Applications/Multimedia
@@ -305,7 +305,7 @@ sed -i 's/opencv <= 2.2.0/opencv <= 2.4.0/g' configure
 %{_libdir}/gstreamer-%{majorminor}/libgstmythtvsrc.so
 #%{_libdir}/gstreamer-%{majorminor}/libgstopencv.so
 %{_libdir}/gstreamer-%{majorminor}/libgstschro.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstsdl.so
+%{_libdir}/gstreamer-%{majorminor}/libgstsdl.so
 %{_libdir}/gstreamer-%{majorminor}/libgstsoundtouch.so
 %{_libdir}/gstreamer-%{majorminor}/libgsttimidity.so
 %{_libdir}/gstreamer-%{majorminor}/libgstvdpau.so
@@ -316,27 +316,27 @@ sed -i 's/opencv <= 2.2.0/opencv <= 2.4.0/g' configure
 %{_libdir}/gstreamer-%{majorminor}/libgstfbdevsink.so
 %{_libdir}/gstreamer-%{majorminor}/libgstlinsys.so
 
-#%{_libdir}/gstreamer-%{majorminor}/libgstdtsdec.so
+%{_libdir}/gstreamer-%{majorminor}/libgstdtsdec.so
 %{_libdir}/gstreamer-%{majorminor}/libgstdvbsuboverlay.so
 %{_libdir}/gstreamer-%{majorminor}/libgstdvdspu.so
 %{_libdir}/gstreamer-%{majorminor}/libgstfaac.so
 %{_libdir}/gstreamer-%{majorminor}/libgstfaad.so
 %{_libdir}/gstreamer-%{majorminor}/libgstflite.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstmms.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmms.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopenal.so
 %{_libdir}/gstreamer-%{majorminor}/libgstopus.so
 %ifnarch mips64el
 %{_libdir}/gstreamer-%{majorminor}/libgstreal.so
 %endif
-#%{_libdir}/gstreamer-%{majorminor}/libgstrtmp.so
+%{_libdir}/gstreamer-%{majorminor}/libgstrtmp.so
 %{_libdir}/gstreamer-%{majorminor}/libgstsiren.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstspandsp.so
+%{_libdir}/gstreamer-%{majorminor}/libgstspandsp.so
 %{_libdir}/gstreamer-%{majorminor}/libgstteletextdec.so
-#%{_libdir}/gstreamer-%{majorminor}/libgsttrm.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstxvid.so
+%{_libdir}/gstreamer-%{majorminor}/libgsttrm.so
+%{_libdir}/gstreamer-%{majorminor}/libgstxvid.so
 %{_libdir}/gstreamer-%{majorminor}/libgstgme.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstmpeg2enc.so
-#%{_libdir}/gstreamer-%{majorminor}/libgstmplex.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmpeg2enc.so
+%{_libdir}/gstreamer-%{majorminor}/libgstmplex.so
 %endif
 
 
@@ -370,6 +370,9 @@ sed -i 's/opencv <= 2.2.0/opencv <= 2.4.0/g' configure
 %doc %{_datadir}/gtk-doc/html/gst-plugins-bad-libs-%{majorminor}
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.10.23-9
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.23-8
 - 为 Magic 3.0 重建
 

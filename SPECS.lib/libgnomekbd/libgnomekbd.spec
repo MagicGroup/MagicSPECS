@@ -1,13 +1,16 @@
 Name:           libgnomekbd
 Version:        3.6.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A keyboard configuration library
+Summary(zh_CN.UTF-8): 键盘配置库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://gswitchit.sourceforge.net
 # VCS: git:git://git.gnome.org/libgnomekbd
-Source0:        http://download.gnome.org/sources/libgnomekbd/3.6/libgnomekbd-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://download.gnome.org/sources/libgnomekbd/%{majorver}/libgnomekbd-%{version}.tar.xz
 
 BuildRequires:  gtk3-devel >= 3.0.0
 BuildRequires:  cairo-devel
@@ -27,10 +30,14 @@ The libgnomekbd package contains a GNOME library which manages
 keyboard configuration and offers various widgets related to
 keyboard configuration.
 
+%description -l zh_CN.UTF-8
+键盘配置库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 
@@ -38,6 +45,8 @@ Requires:       %{name} = %{version}-%{release}
 The libgnomekbd-devel package contains libraries and header files for
 developing applications that use libgnomekbd.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -58,7 +67,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgnomekbdui.so.8.0.0
 desktop-file-install --delete-original       \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications             \
   $RPM_BUILD_ROOT%{_datadir}/applications/gkbd-keyboard-display.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %preun
@@ -99,6 +108,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.6.0-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.6.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

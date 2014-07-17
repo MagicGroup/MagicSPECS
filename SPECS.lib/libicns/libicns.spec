@@ -2,8 +2,10 @@ Name:           libicns
 Version:        0.8.1
 Release:        5%{?dist}
 Summary:        Library for manipulating Macintosh icns files
+Summary(zh_CN.UTF-8): 处理 Macintosh icns 文件的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 # libicns, icns2png and icontainer2icns are under LGPLv2+
 # png2icns is under GPLv2+
 License:        LGPLv2+ and GPLv2+
@@ -18,10 +20,14 @@ BuildRequires:  jasper-devel
 libicns is a library providing functionality for easily reading and 
 writing Macintosh icns files
 
+%description -l zh_CN.UTF-8
+处理 Macintosh icns 文件的库。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -29,10 +35,14 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package        utils
 Summary:        Utilities for %{name}
+Summary(zh_CN.UTF-8): %{name} 的工具
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name} = %{version}-%{release}
 
 %description    utils
@@ -40,6 +50,10 @@ icns2png - convert Mac OS icns files to png images
 png2icns - convert png images to Mac OS icns files
 icontainer2icns - extract icns files from icontainers 
 
+%description utils -l zh_CN.UTF-8
+icns2png - 转换 Mac OS icns 文件到 png 图像
+png2icns - 转换 png 图形到 Mac OS icns 格式
+icontainer2icns - 从 icontainers 中解压 icns
 
 %prep
 %setup -q

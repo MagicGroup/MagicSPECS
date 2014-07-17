@@ -1,9 +1,11 @@
 Name:                   libconfig
 Summary:                C/C++ configuration file library
+Summary(zh_CN.UTF-8): 	C/C++ 配置文件库
 Version:                1.4.9
-Release:                1%{?dist}
+Release:                2%{?dist}
 License:                LGPLv2+
 Group:                  System Environment/Libraries
+Group(zh_CN.UTF-8): 	系统环境/库
 Source0:                http://www.hyperrealm.com/libconfig/libconfig-%{version}.tar.gz
 URL:                    http://www.hyperrealm.com/libconfig/
 BuildRequires:          texinfo-tex
@@ -15,9 +17,14 @@ files. This file format is more compact and more readable than XML. And
 unlike XML, it is type-aware, so it is not necessary to do string parsing
 in application code.
 
+%description -l zh_CN.UTF-8
+这是一个用来处理结构化配置文件的简单库。这个文件格式比 XML 更紧凑和可读。
+
 %package devel
 Summary:                Development files for libconfig
+Summary(zh_CN.UTF-8): 	%{name} 的开发包
 Group:                  Development/Libraries
+Group(zh_CN.UTF-8): 	开发/库
 Requires:               %{name} = %{version}-%{release}
 Requires:               pkgconfig
 Requires(post):         /sbin/install-info
@@ -27,6 +34,9 @@ Requires(preun):        /sbin/install-info
 Development libraries and headers for developing software against
 libconfig.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS{.utf8,}
@@ -35,16 +45,16 @@ mv AUTHORS{.utf8,}
 %build
 %configure --disable-static
 make %{?_smp_mflags}
-#make pdf
+make pdf
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -rf $RPM_BUILD_ROOT%{_infodir}/dir
 # Prevent multilib conflicts
-#sed -i '/^\/CreationDate/d' $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}/libconfig.pdf
-#sed -i '/^\/ModDate/d' $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}/libconfig.pdf
-#sed -i '/^\/ID /d' $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}/libconfig.pdf
+sed -i '/^\/CreationDate/d' doc/libconfig.pdf
+sed -i '/^\/ModDate/d' doc/libconfig.pdf
+sed -i '/^\/ID /d' doc/libconfig.pdf
 
 %post -p /sbin/ldconfig
 
@@ -66,13 +76,17 @@ fi
 
 %files devel
 %defattr(-,root,root,-)
+%doc doc/libconfig.pdf
 %{_includedir}/libconfig*
 %{_libdir}/libconfig*.so
 %{_libdir}/pkgconfig/libconfig*.pc
-#%{_defaultdocdir}/%{name}/
+%{_defaultdocdir}/%{name}/
 %{_infodir}/libconfig.info*
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 1.4.9-2
+- 为 Magic 3.0 重建
+
 * Mon Oct  1 2012 Tom Callaway <spot@fedoraproject.org> - 1.4.9-1
 - update to 1.4.9
 

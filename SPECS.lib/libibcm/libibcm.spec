@@ -2,7 +2,9 @@ Name: libibcm
 Version: 1.0.5
 Release: 7%{?dist}
 Summary: Userspace InfiniBand Connection Manager
+Summary(zh_CN.UTF-8): 用户空间的 InfiniBand 连接管理器
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2 or BSD
 Url: http://www.openfabrics.org/
 Source: http://www.openfabrics.org/downloads/rdmacm/%{name}-%{version}.tar.gz
@@ -13,19 +15,32 @@ ExcludeArch: s390 s390x
 libibcm provides a userspace library that handles the majority of the low
 level work required to open an RDMA connection between two machines.
 
+%description -l zh_CN.UTF-8
+用户空间的 InfiniBand 连接管理器。
+
 %package devel
 Summary: Development files for the libibcm library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}, libibverbs-devel >= 1.1
 %description devel
 Development files for the libibcm library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package static
 Summary: Static version of libibcm libraries
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}-devel = %{version}-%{release}
 %description static
 Static version of libibcm library.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %prep
 %setup -q
