@@ -1,25 +1,25 @@
 #global indice   a
 
 Name:           opencv
-Version:        2.4.7
-Release:        9%{?dist}
+Version:        2.4.9
+Release:        1%{?dist}
 Summary:        Collection of algorithms for computer vision
 Group:          Development/Libraries
 # This is normal three clause BSD.
 License:        BSD
 URL:            http://opencv.org
 # Need to remove SIFT/SURF from source tarball, due to legal concerns
-# rm -rf opencv-%%{version}/modules/nonfree/src/sift.cpp
-# rm -rf opencv-%%{version}/modules/nonfree/src/surf.cpp
+# rm -f opencv-%%{version}/modules/nonfree/src/sift.cpp
+# rm -f opencv-%%{version}/modules/nonfree/src/surf.cpp
 # Removed because we don't use pre-built contribs
 # rm -rf 3rdparty
-Source0:        http://downloads.sourceforge.net/opencvlibrary/opencv-unix/%{version}/%{name}-%{version}%{?indice}.tar.gz
-#Source0:	%{name}-clean-%{version}%{?indice}.tar.xz
+#Source0:        http://downloads.sourceforge.net/opencvlibrary/opencv-unix/%{version}/%{name}-%{version}%{?indice}.zip
+Source0:	%{name}-clean-%{version}%{?indice}.tar.xz
 Source1:        opencv-samples-Makefile
 Patch0:         opencv-pkgcmake.patch
 #http://code.opencv.org/issues/2720
 Patch2:         OpenCV-2.4.4-pillow.patch
-Patch3:         opencv-2.4.7-ts_static.patch
+Patch3:         opencv-2.4.9-ts_static.patch
 # fix/simplify cmake config install location (upstreamable)
 # https://bugzilla.redhat.com/1031312
 Patch4:         opencv-2.4.7-cmake_paths.patch
@@ -133,6 +133,7 @@ pushd build
 %cmake CMAKE_VERBOSE=1 \
  -DPYTHON_PACKAGES_PATH=%{python_sitearch} \
  -DCMAKE_SKIP_RPATH=ON \
+ -DENABLE_PRECOMPILED_HEADERS:BOOL=OFF \
 %ifnarch x86_64 ia64
  -DENABLE_SSE=0 \
  -DENABLE_SSE2=0 \
@@ -207,7 +208,7 @@ popd
 %postun -p /sbin/ldconfig
 
 %files
-%doc doc/license.txt
+%doc LICENSE
 %{_bindir}/opencv_*
 %{_libdir}/libopencv_calib3d.so.2.4*
 %{_libdir}/libopencv_contrib.so.2.4*
@@ -249,14 +250,11 @@ popd
 %{python2_sitearch}/cv2.so
 
 %changelog
-* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 2.4.7-9
-- 为 Magic 3.0 重建
+* Thu Jul 03 2014 Nicolas Chauvet <kwizart@gmail.com> - 2.4.9-1
+- Update to 2.4.9
 
-* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 2.4.7-8
-- 为 Magic 3.0 重建
-
-* Fri May 23 2014 Liu Di <liudidi@gmail.com> - 2.4.7-7
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.7-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Sat Apr 26 2014 Rex Dieter <rdieter@fedoraproject.org> 2.4.7-6
 - revert pkgcmake2 patch (#1070428)
