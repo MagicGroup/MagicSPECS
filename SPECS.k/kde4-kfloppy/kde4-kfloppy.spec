@@ -8,7 +8,7 @@ Summary: Floppy formatting tool
 Summary(zh_CN.UTF-8): 软盘格式化工具
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.13.2
+Version: 4.13.3
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -60,6 +60,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_htmldir}/en/kfloppy/*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
+- 更新到 4.13.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
 - 更新到 4.13.2
 

@@ -1,13 +1,13 @@
 Name:           liblockfile
 Version:        1.08
-Release:        13%{?dist}
+Release:        1%{?dist}
 Summary:        This implements a number of functions found in -lmail on SysV systems
 
 Group:          Applications/System
 # regarding license please see file COPYRIGHT
 License:        GPLv2+ 
 URL:            http://packages.qa.debian.org/libl/liblockfile.html
-Source0:        http://ftp.de.debian.org/debian/pool/main/libl/liblockfile/liblockfile_1.08.orig.tar.gz
+Source0:        http://ftp.de.debian.org/debian/pool/main/libl/liblockfile/liblockfile_%{version}.orig.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description

@@ -11,7 +11,7 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.13.2
+Version: 4.13.3
 Release: 3%{?dist}
 Source0: http://download.kde.org/stable/4.12.5/src/%{real_name}-4.11.9.tar.xz
 Source1: extras.tar.gz
@@ -1232,6 +1232,9 @@ fi
 #重打包时要重新处理
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-3
+- 更新到 4.13.3
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 4.13.2-3
 - 更新到 4.13.2
 

@@ -3,7 +3,7 @@
 
 Name:		grilo-plugins
 Version:	0.2.12
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Plugins for the Grilo framework
 Summary(zh_CN.UTF-8): Grilo 框架的插件
 
@@ -131,6 +131,9 @@ magic_rpm_clean.sh
                                                          
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.2.12-4
+- 为 Magic 3.0 重建
+
 * Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 0.2.12-3
 - 更新到 0.2.12
 

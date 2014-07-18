@@ -10,7 +10,7 @@ License: GPL v2 or Later
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL: http://ktorrent.org
-Version: 4.13.2
+Version: 4.13.3
 Release: 2%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
@@ -79,6 +79,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/cmake/libkomparediff2/*.cmake
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-2
+- 更新到 4.13.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-2
 - 更新到 4.13.2
 

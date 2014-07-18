@@ -1,7 +1,7 @@
 Summary:	Framework providing Desktop activity awareness
 Name:		zeitgeist
 Version:	0.9.14
-Release:	2%{?dist}
+Release:	4%{?dist}
 
 # most of the source code is LGPLv2+, except:
 # datahub/ is LGPLv3+
@@ -13,6 +13,7 @@ Release:	2%{?dist}
 License:	LGPLv2+ and LGPLv3+ and GPLv2+
 URL:		https://launchpad.net/zeitgeist
 Source0:	http://launchpad.net/%{name}/0.9/%{version}/+download/%{name}-%{version}.tar.xz
+Patch0:		zeitgeist-fix-giodeps.patch
 
 BuildRequires:	dbus-devel
 BuildRequires:	gettext
@@ -63,6 +64,7 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
 
 ## nuke unwanted rpaths, see also
 ## https://fedoraproject.org/wiki/Packaging/Guidelines#Beware_of_Rpath
@@ -116,6 +118,12 @@ rm -rf %{buildroot}%{_datadir}/zeitgeist/doc
 %{_datadir}/vala/vapi/zeitgeist-datamodel-2.0.vapi
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.9.14-4
+- 为 Magic 3.0 重建
+
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.9.14-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.14-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
