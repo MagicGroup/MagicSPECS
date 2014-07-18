@@ -8,7 +8,7 @@
 # define kross_ruby 1
 
 Name:    kross-interpreters 
-Version: 4.13.2
+Version: 4.13.3
 Release: 1%{?dist}
 Summary: Kross interpreters 
 
@@ -127,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
+- 更新到 4.13.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
 - 更新到 4.13.2
 

@@ -5,7 +5,7 @@
 
 Name:           folks
 Epoch:          1
-Version:	0.9.7
+Version:	0.9.7.1
 Release:        4%{?dist}
 Summary:        GObject contact aggregation library
 Summary(zh_CN.UTF-8): GObject 联系人聚合库
@@ -125,9 +125,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gir-1.0/FolksEds-0.6.gir
 %{_datadir}/gir-1.0/FolksTelepathy-0.6.gir
 %{_datadir}/vala/vapi/%{name}*
+%{_libdir}/girepository-1.0/FolksDummy-0.6.typelib
+%{_datadir}/gir-1.0/FolksDummy-0.6.gir
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1:0.9.7.1-4
+- 更新到 0.9.7.1
+
 * Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 1:0.9.7-4
 - 更新到 0.9.7
 

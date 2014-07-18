@@ -74,6 +74,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1
+- 更新到 4.13.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.0-1
 - 更新到 4.13.2
 

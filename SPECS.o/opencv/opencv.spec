@@ -2,7 +2,7 @@
 
 Name:           opencv
 Version:        2.4.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Collection of algorithms for computer vision
 Group:          Development/Libraries
 # This is normal three clause BSD.
@@ -250,6 +250,9 @@ popd
 %{python2_sitearch}/cv2.so
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 2.4.9-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 03 2014 Nicolas Chauvet <kwizart@gmail.com> - 2.4.9-1
 - Update to 2.4.9
 

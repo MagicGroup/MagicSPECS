@@ -1,8 +1,8 @@
 Summary: Software for accessing digital cameras
 Summary(zh_CN.UTF-8): 访问数码相机的软件
 Name: gphoto2
-Version: 2.4.11
-Release: 3%{?dist}
+Version:	2.5.4
+Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -56,6 +56,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/gphoto2.1*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 2.5.4-1
+- 更新到 2.5.4
+
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 2.4.11-3
+- 更新到 2.5.4
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.4.11-3
 - 更新到 2.5.4
 
