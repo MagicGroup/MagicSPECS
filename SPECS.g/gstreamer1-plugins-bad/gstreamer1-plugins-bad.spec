@@ -9,7 +9,7 @@
 %endif
 
 Name:           gstreamer1-plugins-bad
-Version:	1.3.3
+Version:	1.3.90
 Release:        2%{?dist}
 Summary:        GStreamer streaming media framework "bad" plugins
 
@@ -349,6 +349,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_libdir}/pkgconfig/gstreamer-wayland-%{majorminor}.pc
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 1.3.90-2
+- 更新到 1.3.90
+
 * Wed Jun 25 2014 Liu Di <liudidi@gmail.com> - 1.3.3-2
 - 更新到 1.3.3
 

@@ -1,9 +1,11 @@
 Summary:	Open audio/video container format library
+Summary(zh_CN.UTF-8): 开源的音频、视频容器格式库
 Name:		libmatroska
 Version:	1.3.0
-Release:	2%{?dist}
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.matroska.org/
 Source0:	http://dl.matroska.org/downloads/%{name}/%{name}-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
@@ -15,10 +17,14 @@ aims to become THE standard of multimedia container formats.  Matroska
 is usually found as .mkv files (matroska video) and .mka files
 (matroska audio).
 
+%description -l zh_CN.UTF-8
+开源的音频、视频容器格式库。
 
 %package	devel
 Summary:	Matroska container format library development files
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:	libebml-devel >= 1.2.1
 
@@ -31,6 +37,8 @@ is usually found as .mkv files (matroska video) and .mka files
 This package contains the files required to rebuild applications which
 will use the Matroska container format.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -49,7 +57,7 @@ make -C make/linux \
 rm $RPM_BUILD_ROOT%{_libdir}/%{name}.a
 # Needed for proper stripping of the library (still in 0.8.0)
 chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}.so.*
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

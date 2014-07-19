@@ -1,9 +1,11 @@
 Name:		libechonest
-Version: 	2.0.2
+Version: 2.2.0
 Release:	2%{?dist}
 Summary:	C++ wrapper for the Echo Nest API
+Summary(zh_CN.UTF-8): Echo Nest APi 的 C++ 接口
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv2+
 URL:		https://projects.kde.org/projects/playground/libs/libechonest
 Source0:	http://files.lfranchi.com/libechonest-%{version}.tar.bz2
@@ -21,19 +23,25 @@ BuildRequires:	pkgconfig(QtNetwork)
 libechonest is a collection of C++/Qt classes designed to make a developer's
 life easy when trying to use the APIs provided by The Echo Nest.
 
+%description -l zh_CN.UTF-8
+这是让开发人员更容易使用 Echo Nest 提供的 API 的 C++/Qt 类库。
+
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description	devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
-%patch0 -p0
 
 %build
 mkdir -p %{_target_platform}
@@ -47,7 +55,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,6 +85,9 @@ test "$(pkg-config --modversion libechonest)" = "%{version}"
 
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 2.2.0-2
+- 更新到 2.2.0
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

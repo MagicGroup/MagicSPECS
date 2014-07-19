@@ -1,7 +1,7 @@
 Summary: Backends for the gio framework in GLib
 Name: gvfs
-Version:	1.15.4
-Release: 4%{?dist}
+Version:	1.21.3
+Release: 5%{?dist}
 License: GPLv3 and LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
@@ -181,12 +181,12 @@ make %{?_smp_mflags} V=1
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
-rm $RPM_BUILD_ROOT%{_libdir}/*.la
-rm $RPM_BUILD_ROOT%{_libdir}/gio/modules/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gvfs/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gio/modules/*.la
 
 # trashlib is GPLv3, include the license
 cp -p daemon/trashlib/COPYING COPYING.GPL3
-
+magic_rpm_clean.sh
 %find_lang gvfs
 
 %post
@@ -248,7 +248,7 @@ killall -USR1 gvfsd >&/dev/null || :
 %dir %{_datadir}/bash-completion
 %dir %{_datadir}/bash-completion/completions
 %{_datadir}/bash-completion/completions/gvfs
-%{_libdir}/libgvfscommon.so.*
+%{_libdir}/gvfs/libgvfs*.so
 %{_libdir}/gio/modules/libgioremote-volume-monitor.so
 %{_libdir}/gio/modules/libgvfsdbus.so
 %{_libexecdir}/gvfsd
@@ -294,7 +294,7 @@ killall -USR1 gvfsd >&/dev/null || :
 %dir %{_includedir}/gvfs-client/gvfs
 %{_includedir}/gvfs-client/gvfs/gvfsurimapper.h
 %{_includedir}/gvfs-client/gvfs/gvfsuriutils.h
-%{_libdir}/libgvfscommon.so
+#%{_libdir}/gvfs/libgvfscommon.so
 
 
 %files fuse
@@ -355,6 +355,12 @@ killall -USR1 gvfsd >&/dev/null || :
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.21.3-5
+- 为 Magic 3.0 重建
+
+* Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 1.21.3-4
+- 更新到 1.21.3
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.15.4-4
 - 为 Magic 3.0 重建
 

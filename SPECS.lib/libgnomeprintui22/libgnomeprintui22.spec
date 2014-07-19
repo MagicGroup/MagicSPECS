@@ -1,13 +1,15 @@
 %define gettext_package libgnomeprintui-2.2
 
 Summary: GUI support for libgnomeprint
+Summary(zh_CN.UTF-8): libgnomeprint 的图形界面支持
 Name: libgnomeprintui22
 Version: 2.18.6
-Release: 6%{?dist}
+Release: 7%{?dist}
 Source0: http://ftp.gnome.org/pub/gnome/sources/libgnomeprintui/2.18/libgnomeprintui-%{version}.tar.bz2
 URL: http://ftp.gnome.org/pub/gnome/sources/libgnomeprintui/
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
 BuildRequires: gtk2-devel
 BuildRequires:  libgnomeprint22-devel
@@ -20,9 +22,14 @@ BuildRequires:  intltool
 %description
 The libgnomeprintui package contains GTK+ widgets related to printing.
 
+%description -l zh_CN.UTF-8
+libgnomeprint 的图形界面支持。
+
 %package devel
 Summary: Libraries and headers for libgnomeprintui
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name = %{version}-%{release}
 
 %description devel
@@ -30,6 +37,9 @@ You should install the libgnomeprintui-devel package if you would like
 to compile applications that use the widgets in libgnomeprintui. You
 do not need to install it if you just want to use precompiled
 applications.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libgnomeprintui-%{version}
@@ -41,7 +51,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang %{gettext_package}
 
 %post -p /sbin/ldconfig
@@ -62,6 +72,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/libgnomeprintui
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.18.6-7
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.18.6-6
 - 为 Magic 3.0 重建
 

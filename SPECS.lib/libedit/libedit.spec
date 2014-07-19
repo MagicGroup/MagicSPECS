@@ -1,14 +1,15 @@
-%define snap 20110802
-
 Summary:	The NetBSD Editline library
+Summary(zh_CN.UTF-8): NetBSD 行编辑库
 Name:		libedit
-Version:	3.0
-Release:	6.%{snap}cvs%{?dist}
+Version: 3.1.20140620
+Release:	1%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.thrysoee.dk/editline/
-Source0:	http://www.thrysoee.dk/editline/%{name}-%{snap}-%{version}.tar.gz
-Patch0:		libedit-20110802-3.0-coverity.patch
+%define snap %(echo %{version} | awk -F. '{print $3}')
+%define ver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://www.thrysoee.dk/editline/%{name}-%{snap}-%{ver}.tar.gz
 
 BuildRequires:	ncurses-devel
 
@@ -17,9 +18,14 @@ Libedit is an autotool- and libtoolized port of the NetBSD Editline library.
 It provides generic line editing, history, and tokenization functions, similar
 to those found in GNU Readline.
 
+%description -l zh_CN.UTF-8
+NetBSD 行编辑库。
+
 %package devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
@@ -28,9 +34,11 @@ Requires:	ncurses-devel
 %description devel
 This package contains development files for %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
-%setup -q -n %{name}-%{snap}-%{version}
-%patch0 -p1
+%setup -q -n %{name}-%{snap}-%{ver}
 
 # Suppress rpmlint error.
 iconv -f ISO8859-1 -t UTF-8 -o ChangeLog.utf-8 ChangeLog
@@ -50,6 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 
 make install INSTALL="%{__install} -p" DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -delete
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/editline/readline.h
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 3.1.20140620-1
+- 更新到 3.1.20140620
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0-6.20110802cvs
 - 为 Magic 3.0 重建
 

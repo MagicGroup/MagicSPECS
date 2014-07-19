@@ -2,13 +2,16 @@
 
 Name:     libgtop2
 Summary:  LibGTop library (version 2)
-Version:  2.28.4
-Release:  2%{?dist}
+Summary(zh_CN.UTF-8): LibGTop 库 （版本 2）
+Version:	2.30.0
+Release:  1%{?dist}
 License:  GPLv2+
 URL:      http://download.gnome.org/sources/libgtop/2.28
 Group:    System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #VCS: git://git.gnome.org/libgtop
-Source:   http://download.gnome.org/sources/libgtop/2.28/libgtop-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source:   http://download.gnome.org/sources/libgtop/%{majorver}/libgtop-%{version}.tar.xz
 BuildRequires:  glib2-devel
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  libtool gettext
@@ -18,14 +21,22 @@ BuildRequires:  intltool libtool
 LibGTop is a library for portably obtaining information about processes,
 such as their PID, memory usage, etc.
 
+%description -l zh_CN.UTF-8
+这个库是用来获取进程信息的，比如 PID, 内存使用等。
+
 %package devel
 Summary:  Libraries and include files for developing with libgtop
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:    Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 This package provides the necessary development libraries and include
 files to allow you to develop with LibGTop.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libgtop-%{version}
@@ -38,7 +49,7 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-
+magic_rpm_clean.sh
 %find_lang %{po_package}
 
 %post -p /sbin/ldconfig
@@ -64,6 +75,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %exclude %{_datadir}/info
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.30.0-1
+- 更新到 2.30.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.28.4-2
 - 为 Magic 3.0 重建
 

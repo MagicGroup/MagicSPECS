@@ -1,10 +1,12 @@
 Name:           libgnomeuimm26
 Version:        2.28.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 Summary:        C++ interface for Gnome libs (a GUI library for X)
+Summary(zh_CN.UTF-8): Gnome 库的 C++ 接口
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/libgnomeuimm/2.28/libgnomeuimm-%{version}.tar.bz2
@@ -25,9 +27,14 @@ of the Gtk-- project.  The interface provides a convenient interface for C++
 programmers to create Gnome GUIs with GTK+'s flexible object-oriented
 framework.
 
+%description -l zh_CN.UTF-8
+Gnome 库的 C++ 接口。
+
 %package devel
 Summary:        Headers for developing programs that will use Gnome--
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       libgnomeui-devel
 Requires:       libgnomemm26-devel
@@ -41,6 +48,8 @@ This package contains the headers that programmers will need to develop
 applications which will use Gnome--, part of Gtk-- the C++ interface to
 the GTK+ (the Gimp ToolKit) GUI library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libgnomeuimm-%{version}
@@ -55,7 +64,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=${RPM_BUILD_ROOT} install
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -82,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.28.0-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.28.0-4
 - 为 Magic 3.0 重建
 

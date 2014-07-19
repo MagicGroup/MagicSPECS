@@ -1,28 +1,30 @@
-Summary: Library for accessing digital cameras
-Name: libgphoto2
-Version: 2.4.13
-Release: 3%{?dist}
+%global udevdir %(pkg-config --variable=udevdir udev)
+
+Name:           libgphoto2
+Version: 2.5.4
+Release:        8%{?dist}
+Summary:        Library for accessing digital cameras
+Summary(zh_CN.UTF-8): 访问数码相机的库
+Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 # GPLV2+ for the main lib (due to exif.c) and most plugins, some plugins GPLv2
-License: GPLv2+ and GPLv2
-Group: Development/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source0: http://downloads.sourceforge.net/gphoto/libgphoto2-%{version}.tar.bz2
-Patch1: gphoto2-pkgcfg.patch
-Patch2: gphoto2-storage.patch
-Patch3: gphoto2-ixany.patch
-Patch4: gphoto2-maxentries.patch
-Patch5: gphoto2-device-return.patch
-Url: http://www.gphoto.org/
-Requires: lockdev
-BuildRequires: libusb-devel >= 0.1.5
-BuildRequires: lockdev-devel
-BuildRequires: libexif-devel
-BuildRequires: libjpeg-devel
-BuildRequires: pkgconfig, sharutils
-BuildRequires: libtool-ltdl-devel, popt-devel
-BuildRequires: gd-devel
-Obsoletes: gphoto2 < 2.4.0-11
-Obsoletes: gphoto2-devel < 2.4.0-11
+License:        GPLv2+ and GPLv2
+URL:            http://www.gphoto.org/
+Source0:        http://downloads.sourceforge.net/gphoto/%{name}-%{version}.tar.bz2
+Patch1:         gphoto2-pkgcfg.patch
+Patch2:         gphoto2-storage.patch
+Patch3:         gphoto2-ixany.patch
+Patch4:         gphoto2-device-return.patch
+BuildRequires:  libusbx-devel
+BuildRequires:  lockdev-devel
+BuildRequires:  libexif-devel
+BuildRequires:  libjpeg-devel
+BuildRequires:  pkgconfig, sharutils
+BuildRequires:  libtool-ltdl-devel, popt-devel
+BuildRequires:  gd-devel
+BuildRequires:  systemd
+Requires:       lockdev
+Obsoletes:      gphoto2 < 2.4.0-11
 
 %description
 libgphoto2 is a library that can be used by applications to access
@@ -30,14 +32,17 @@ various digital cameras. libgphoto2 itself is not a GUI application,
 opposed to gphoto. There are GUI frontends for the gphoto2 library,
 however, such as gtkam for example.
 
+%description -l zh_CN.UTF-8
+访问数码相机的库。
+
 %package devel
-Summary: Headers and links to compile against the libgphoto2 library
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-Requires: pkgconfig, libusb-devel >= 0.1.5, libexif-devel
-Obsoletes: gphoto2 < 2.4.0-11
-Obsoletes: gphoto2-devel < 2.4.0-11
-Provides: gphoto2-devel = %{version}-%{release}
+Summary:        Headers and links to compile against the libgphoto2 library
+Summary(zh_CN.UTF-8): %{name} 的开发包
+Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Obsoletes:      gphoto2-devel < 2.4.0-11
+Provides:       gphoto2-devel = %{version}-%{release}
 
 %description devel
 libgphoto2 is a library that can be used by applications to access
@@ -48,47 +53,33 @@ however, such as gtkam for example.
 This package contains files needed to compile applications that
 use libgphoto2.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
+
 %prep
 %setup -q
 %patch1 -p1 -b .pkgcfg
 %patch2 -p1 -b .storage
 %patch3 -p1 -b .ixany
-%patch4 -p1 -b .maxentries
-%patch5 -p1 -b .device-return
+%patch4 -p1 -b .device-return
 
-for i in AUTHORS COPYING libgphoto2_port/AUTHORS libgphoto2_port/COPYING.LIB `find -name 'README.*'`; do
-	mv ${i} ${i}.old
-	iconv -f ISO-8859-1 -t UTF-8 < ${i}.old > ${i}
-	touch -r ${i}.old ${i} || :
-	rm -f ${i}.old
+for i in AUTHORS ChangeLog COPYING libgphoto2_port/AUTHORS libgphoto2_port/COPYING.LIB `find -name 'README.*'`; do
+    mv ${i} ${i}.old
+    iconv -f ISO-8859-1 -t UTF-8 < ${i}.old > ${i}
+    touch -r ${i}.old ${i} || :
+    rm -f ${i}.old
 done
 
-# FIXME: These .pc.in files aren't actually being installed?
-cat > gphoto2.pc.in << \EOF
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-libdir=@libdir@
-includedir=@includedir@
-VERSION=@VERSION@
-
-Name: gphoto2
-Description: Library for easy access to digital cameras
-Requires:
-Version: @VERSION@
-Libs: -L${libdir} -lgphoto2 -lgphoto2_port -lm
-Cflags: -I${includedir} -I${includedir}/gphoto2
-EOF
-sed 's/Name: gphoto2/Name: gphoto2-port/' < gphoto2.pc.in > gphoto2-port.pc.in
 
 %build
-#libusb and libusb have shoved their .pc files into /lib[64]/pkgconfig
-export PKG_CONFIG_PATH=/%{_lib}/pkgconfig
+export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 %configure \
-	udevscriptdir='%{_prefix}/lib/udev' \
-	--with-drivers=all \
-	--with-doc-dir=%{_docdir}/%{name} \
-	--disable-static \
-	--disable-rpath
+    udevscriptdir='%{udevdir}' \
+    --with-drivers=all \
+    --with-doc-dir=%{_docdir}/%{name} \
+    --disable-static \
+    --disable-rpath
 
 # Don't use rpath!
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
@@ -98,26 +89,20 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libgphoto2_port/
 
 make %{?_smp_mflags}
 
-%install
-rm -rf "${RPM_BUILD_ROOT}"
 
-make mandir=%{_mandir} DESTDIR=$RPM_BUILD_ROOT install
+%install
+%make_install INSTALL="install -p" mandir=%{_mandir}
 
 pushd packaging/linux-hotplug/
-install -d -m755 %{buildroot}/usr/share/hal/fdi/information/20thirdparty/
 export LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 export CAMLIBS=$RPM_BUILD_ROOT%{_libdir}/%{name}/%{version}
 export LD_LIBRARY_PATH=$RPM_BUILD_ROOT%{_libdir}
-$RPM_BUILD_ROOT%{_libdir}/%{name}/print-camera-list hal-fdi | \
-grep -v "<!-- This file was generated" > $RPM_BUILD_ROOT/%{_datadir}/hal/fdi/information/20thirdparty/10-camera-libgphoto2.fdi
 
 # Output udev rules for device identification; this is used by GVfs gphoto2
 # backend and others.
 #
-# Btw, since it's /lib/udev, never e.g. /lib64/udev, we hardcode the path
-#
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
-$RPM_BUILD_ROOT%{_libdir}/%{name}/print-camera-list udev-rules version 136 > $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d/40-libgphoto2.rules
+mkdir -p $RPM_BUILD_ROOT%{_udevrulesdir}
+$RPM_BUILD_ROOT%{_libdir}/%{name}/print-camera-list udev-rules version 136 > $RPM_BUILD_ROOT%{_udevrulesdir}/40-libgphoto2.rules
 popd
 
 # remove circular symlink in /usr/include/gphoto2 (#460807)
@@ -130,17 +115,21 @@ rm -rf %{buildroot}%{_libdir}/libgphoto2/*/*a
 rm -rf %{buildroot}%{_libdir}/libgphoto2_port/*/*a
 rm -rf %{buildroot}%{_libdir}/*.a
 rm -rf %{buildroot}%{_libdir}/*.la
-
 magic_rpm_clean.sh
-%find_lang %{name}-2 || touch %{name}-2.lang
-%find_lang %{name}_port-0 || touch %{name}_port-0.lang
+%find_lang %{name}-6
+%find_lang %{name}_port-10
 cat libgphoto2*.lang >> %{name}.lang
 
-%clean
-rm -rf "${RPM_BUILD_ROOT}"
+# https://fedoraproject.org/wiki/Packaging_tricks#With_.25doc
+mkdir __doc
+mv %{buildroot}%{_defaultdocdir}/%{name}/* __doc
+rm -rf %{buildroot}%{_defaultdocdir}/%{name}
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
 
 %files -f %{name}.lang
-%defattr(-,root,root)
 %doc AUTHORS COPYING README NEWS
 %dir %{_libdir}/libgphoto2_port
 %dir %{_libdir}/libgphoto2_port/*
@@ -149,18 +138,12 @@ rm -rf "${RPM_BUILD_ROOT}"
 %{_libdir}/libgphoto2_port/*/*.so
 %{_libdir}/libgphoto2/*/*.so
 %{_libdir}/*.so.*
-%{_datadir}/hal/fdi/information/20thirdparty/10-camera-libgphoto2.fdi
-%{_prefix}/lib/udev/rules.d/40-libgphoto2.rules
-%{_prefix}/lib/udev/check-ptp-camera
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%{_udevrulesdir}/40-libgphoto2.rules
+%{udevdir}/check-ptp-camera
+%{_datadir}/libgphoto2
 
 %files devel
-%defattr(-,root,root)
-%doc %{_docdir}/%{name}
-%{_datadir}/libgphoto2
+%doc __doc/*
 %{_bindir}/gphoto2-config*
 %{_bindir}/gphoto2-port-config
 %{_includedir}/gphoto2
@@ -169,13 +152,77 @@ rm -rf "${RPM_BUILD_ROOT}"
 %{_mandir}/man3/*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.4.13-3
-- 为 Magic 3.0 重建
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.5.4-8
+- 更新到 2.5.4
 
-* Wed Apr 18 2012 Liu Di <liudidi@gmail.com> - 2.4.13-2
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.3-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
-* Thu Mar 21 2012 Jindrich Novy <jnovy@redhat.com> 2.4.13-1
+* Fri Apr 11 2014 Tim Waugh <twaugh@redhat.com> - 2.5.3-7
+- Moved runtime-required files to main package (bug #1086411).
+
+* Wed Feb 12 2014 Jon Disnard <jdisnard@gmail.com> - 2.5.3-6
+- Bump to latest upstream version.
+
+* Wed Aug 28 2013 Tim Waugh <twaugh@redhat.com> - 2.5.2-5
+- Fixed documentation issue due to unversioned doc dirs (bug #1001263).
+
+* Fri Aug 16 2013 Tim Waugh <twaugh@redhat.com> - 2.5.2-4
+- Build against libusbx instead of libusb (bug #997880).
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Tue Jun 11 2013 Remi Collet <rcollet@redhat.com> - 2.5.2-2
+- rebuild for new GD 2.1.0
+
+* Mon May  6 2013 Hans de Goede <hdegoede@redhat.com> - 2.5.2-1
+- New upstream release bugfix 2.5.2
+- Drop bugfix patches (merged upstream)
+
+* Sat May  4 2013 Hans de Goede <hdegoede@redhat.com> - 2.5.1.1-4
+- Fix crash when dealing with PTP devices without a memory card (rhbz#915688)
+
+* Thu May  2 2013 Hans de Goede <hdegoede@redhat.com> - 2.5.1.1-3
+- Fix PTP devices not working in USB-3 ports (rhbz#819918)
+- Cleanup spec-file
+
+* Tue Apr 23 2013 Tim Waugh <twaugh@redhat.com> 2.5.1.1-2
+- Use _udevrulesdir macro.
+
+* Tue Feb 19 2013 Jindrich Novy <jnovy@redhat.com> 2.5.1.1-1
+- update to 2.5.1.1
+
+* Sun Feb 17 2013 Jindrich Novy <jnovy@redhat.com> 2.5.0-8
+- fix camera detection - thanks to Panu Matilainen (#912040)
+
+* Wed Jan 30 2013 Jindrich Novy <jnovy@redhat.com> 2.5.0-7
+- move /lib files to /usr/lib
+- fix changelog
+
+* Fri Jan 18 2013 Adam Tkac <atkac redhat com> - 2.5.0-6
+- rebuild due to "jpeg8-ABI" feature drop
+
+* Sun Jan 13 2013 Jindrich Novy <jnovy@redhat.com> 2.5.0-5
+- remove deprecated HAL file (#894527)
+
+* Sat Dec 01 2012 Jindrich Novy <jnovy@redhat.com> 2.5.0-4
+- compile with -fno-strict-aliasing (because of ptp.c)
+
+* Wed Sep 19 2012 Hans de Goede <hdegoede@redhat.com> 2.5.0-3
+- Fix the usbscsi port driver not working, this fixes many miniature
+  (keychain) photo frames no longer being accessible
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Jindrich Novy <jnovy@redhat.com> 2.5.0-1
+- update to 2.5.0
+
+* Mon Apr 16 2012 Jindrich Novy <jnovy@redhat.com> 2.4.14-1
+- update to 2.4.14
+
+* Wed Mar 21 2012 Jindrich Novy <jnovy@redhat.com> 2.4.13-1
 - update to 2.4.13
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.11-3
@@ -199,7 +246,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 * Wed Oct 20 2010 Jindrich Novy <jnovy@redhat.com> 2.4.10-3
 - move udev helper scripts to /lib/udev (#644552)
 
-* Tue Sep 06 2010 Jindrich Novy <jnovy@redhat.com> 2.4.10-2
+* Mon Sep 06 2010 Jindrich Novy <jnovy@redhat.com> 2.4.10-2
 - BR: gd-devel because of ax203 and st2205 camlibs (#630570)
 
 * Tue Aug 17 2010 Jindrich Novy <jnovy@redhat.com> 2.4.10-1

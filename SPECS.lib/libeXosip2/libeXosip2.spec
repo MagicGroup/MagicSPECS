@@ -1,9 +1,11 @@
 Summary: A library that hides the complexity of using the SIP protocol
+Summary(zh_CN.UTF-8): 隐藏使用 SIP 协议复杂性的库
 Name: libeXosip2
-Version: 3.6.0
-Release: 3%{?dist}
+Version: 4.1.0
+Release: 1%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://savannah.nongnu.org/projects/eXosip
 Source0: http://download.savannah.nongnu.org/releases/exosip/libeXosip2-%{version}.tar.gz
 
@@ -11,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: c-ares-devel
 BuildRequires: ortp-devel >= 0.14.2
-BuildRequires: libosip2-devel >= 3.6.0
+BuildRequires: libosip2-devel >= 4.0.0
 BuildRequires: openssl-devel
 BuildRequires: doxygen
 
@@ -22,14 +24,22 @@ by VoIP telephony applications (endpoints or conference server) but
 might be also useful for any application that wish to establish
 sessions like multiplayer games.
 
+%description -l zh_CN.UTF-8
+隐藏使用 SIP 协议复杂性的库。
+
 %package devel
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary: Development files for libeXosip2
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name} = %{version}-%{release}
 Requires: libosip2-devel
 
 %description devel
 Development files for libeXosip2.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -48,6 +58,7 @@ rm %{buildroot}%{_libdir}/%{name}.la
 
 mkdir -p %{buildroot}%{_mandir}/man3
 cp help/doxygen/doc/man/man3/*.3* %{buildroot}%{_mandir}/man3
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -61,7 +72,7 @@ rm -rf %{buildroot}
 %doc AUTHORS ChangeLog COPYING NEWS README
 
 %{_bindir}/sip_reg
-%{_libdir}/libeXosip2.so.7*
+%{_libdir}/libeXosip2.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -72,6 +83,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 4.1.0-1
+- 更新到 4.1.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.6.0-3
 - 为 Magic 3.0 重建
 

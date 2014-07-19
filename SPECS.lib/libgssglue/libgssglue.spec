@@ -1,13 +1,15 @@
 %define _root_libdir    %{_libdir}
 
 Summary: Generic Security Services Application Programming Interface Library
+Summary(zh_CN.UTF-8): 通用安全服务应用程序编程接口库
 Name: libgssglue
-Version: 0.3
-Release: 2%{?dist}
+Version: 0.4
+Release: 1%{?dist}
 URL: http://www.citi.umich.edu/projects/nfsv4/linux/
 License: GPL+
 Source0:http://www.citi.umich.edu/projects/nfsv4/linux/%{name}/%{name}-%{version}.tar.gz
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires: krb5-libs >= 1.5
 
@@ -22,15 +24,23 @@ This library exports a gssapi interface, but doesn't implement any gssapi
 mechanisms itself; instead it calls gssapi routines in other libraries,
 depending on the mechanism.
 
+%description -l zh_CN.UTF-8
+通用安全服务应用程序编程接口库。
+
 %package devel
 Summary: Development files for the gssclug library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
 This package includes header files and libraries necessary for
 developing programs which use the gssapi library.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -75,6 +85,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libgssglue.pc
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.4-1
+- 更新到 0.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3-2
 - 为 Magic 3.0 重建
 

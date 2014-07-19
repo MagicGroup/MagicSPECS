@@ -1,0 +1,48 @@
+diff -urN libev-4.15.orig/configure.ac libev-4.15.new/configure.ac
+--- libev-4.15.orig/configure.ac	2014-07-16 08:59:49.769830056 +0000
++++ libev-4.15.new/configure.ac	2014-07-16 09:08:02.652817423 +0000
+@@ -5,7 +5,9 @@
+ AC_CONFIG_SRCDIR([ev_epoll.c])
+ 
+ AM_INIT_AUTOMAKE(libev,4.15) dnl also update ev.h!
++
+ AC_CONFIG_HEADERS([config.h])
++
+ AM_MAINTAINER_MODE
+ 
+ AC_PROG_CC
+@@ -22,5 +24,5 @@
+ 
+ m4_include([libev.m4])
+ 
+-AC_CONFIG_FILES([Makefile])
++AC_CONFIG_FILES([Makefile libev.pc])
+ AC_OUTPUT
+diff -urN libev-4.15.orig/libev.pc.in libev-4.15.new/libev.pc.in
+--- libev-4.15.orig/libev.pc.in	1970-01-01 00:00:00.000000000 +0000
++++ libev-4.15.new/libev.pc.in	2014-07-16 09:02:41.628825651 +0000
+@@ -0,0 +1,11 @@
++prefix=@prefix@
++exec_prefix=@prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libev
++Description: High-performance event loop/event model
++Version: @VERSION@
++Libs: -L${libdir} -lev
++Libs.private: 
++Cflags: -I${includedir}
+diff -urN libev-4.15.orig/Makefile.am libev-4.15.new/Makefile.am
+--- libev-4.15.orig/Makefile.am	2014-07-16 08:59:49.767830056 +0000
++++ libev-4.15.new/Makefile.am	2014-07-16 09:02:41.623825651 +0000
+@@ -11,6 +11,9 @@
+ 
+ include_HEADERS = ev.h ev++.h event.h
+ 
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = libev.pc
++
+ lib_LTLIBRARIES = libev.la
+ 
+ libev_la_SOURCES = ev.c event.c

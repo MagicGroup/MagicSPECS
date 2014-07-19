@@ -1,6 +1,6 @@
 Name:           liblqr-1
-Version:        0.4.1
-Release:        3%{?dist}
+Version:        0.4.2
+Release:        1%{?dist}
 Summary:        LiquidRescale library
 Summary(zh_CN.UTF-8): LiquidRescale 库
 Group:          System Environment/Libraries

@@ -1,11 +1,11 @@
 Name:		liblognorm
-Version:	0.3.4
-Release:	4%{?dist}
+Version:	1.0.1
+Release:	1%{?dist}
 Summary:	Fast samples-based log normalization library
 
 License:	LGPLv2+
 URL:		http://www.liblognorm.com
-Source0:	http://www.liblognorm.com/files/download/%{name}-%{version}.tar.gz
+Source0:	http://www.liblognorm.com/download/files/download/%{name}-%{version}.tar.gz
 Patch0:		liblognorm-0.3.4-rename-to-lognormalizer.patch
 Patch1:		liblognorm-0.3.4-pc-file.patch
 

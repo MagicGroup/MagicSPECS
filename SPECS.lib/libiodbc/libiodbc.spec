@@ -3,10 +3,12 @@
 #define _enable_gui --enable-gui
 
 Summary: iODBC Driver Manager
+Summary(zh_CN.UTF-8): iODBC 驱动管理器
 Name: libiodbc
 Version: 3.52.7
-Release: 5%{?dist}
+Release: 1%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2 or BSD
 URL: http://www.iodbc.org/
 Source0: http://www.iodbc.org/downloads/iODBC/libiodbc-%{version}.tar.gz
@@ -23,23 +25,35 @@ ODBC compliant driver manager which allows developers to write ODBC
 compliant applications that can connect to various databases using
 appropriate backend drivers.
 
+%description -l zh_CN.UTF-8
+iODBC 驱动管理器。
+
 %package devel
 Summary: Header files and libraries for iODBC development
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release} 
 Requires: pkgconfig
 %description devel
 This package contains the header files and libraries needed to develop
 programs that use the driver manager.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package admin
 Summary: Gui administrator for iODBC development
+Summary(zh_CN.UTF-8): iODBC 开发使用的图形界面管理器
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 %description admin
 This package contains a Gui administrator program for maintaining
 DSN information in odbc.ini and odbcinst.ini files.
 
+%description admin -l zh_CN.UTF-8
+iODBC 开发使用的图形界面管理器.
 
 %prep
 %setup -q

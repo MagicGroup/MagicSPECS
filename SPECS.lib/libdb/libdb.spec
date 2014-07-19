@@ -6,7 +6,7 @@
 Summary: The Berkeley DB database library for C
 Name: libdb
 Version: 5.3.28
-Release: 8%{?dist}
+Release: 9%{?dist}
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
 # For mt19937db.c
@@ -28,7 +28,7 @@ URL: http://www.oracle.com/database/berkeley-db/
 License: BSD and LGPLv2 and Sleepycat
 Group: System Environment/Libraries
 BuildRequires: perl libtool
-BuildRequires: tcl-devel >= 8.5.2-3
+BuildRequires: tcl-devel >= 8.6
 %if 0%{?with_java}
 BuildRequires: java-devel >= 1:1.6.0
 %endif
@@ -248,7 +248,7 @@ pushd dist/dist-tls
 %endif
 	--enable-test \
 	--disable-rpath \
-	--with-tcl=%{_libdir}/tcl8.5
+	--with-tcl=%{_libdir}/tcl8.6
 
 # Remove libtool predep_objects and postdep_objects wonkiness so that
 # building without -nostdlib doesn't include them twice.  Because we
@@ -428,6 +428,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 5.3.28-9
+- 为 Magic 3.0 重建
+
 * Tue May 20 2014 Liu Di <liudidi@gmail.com> - 5.3.28-8
 - 为 Magic 3.0 重建
 

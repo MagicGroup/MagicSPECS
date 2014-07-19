@@ -2,7 +2,9 @@ Name:          libisf-qt
 Version:       0.1
 Release:       3%{?dist}
 Summary:       library to handle handwriting data in Microsoft’s Ink Serialized Format (ISF)
-Group:         System/Libraries
+Summary(zh_CN.UTF-8): 处理微软 ISF 格式手写数据的库
+Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Vendor:        openmamba
 Distribution:  openmamba
 Packager:      gil <puntogil@libero.it>
@@ -29,8 +31,12 @@ used by the Windows.Ink C# library and by the TabletPC platform,
 but also by applications like Windows Live Messenger - which
 uses ISF to transfer handwriting messages. 
 
+%description -l zh_CN.UTF-8
+处理微软 ISF 格式手写数据的库。
+
 %package devel
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Summary:       Static libraries and headers for %{name}
 Requires:      %{name} = %{?epoch:%epoch:}%{version}-%{release}
 
@@ -38,6 +44,9 @@ Requires:      %{name} = %{?epoch:%epoch:}%{version}-%{release}
 Library to handle handwriting data in Microsoft’s Ink Serialized Format (ISF)
 
 This package contains static libraries and header files need for development.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n kmess-%{name}
@@ -57,6 +66,7 @@ popd
 pushd build
 make install DESTDIR=%{buildroot}
 popd
+magic_rpm_clean.sh
 
 %clean
 [ "%{buildroot}" != / ] && rm -rf "%{buildroot}"

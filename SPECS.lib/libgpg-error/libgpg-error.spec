@@ -1,11 +1,13 @@
 Summary: Library for error values used by GnuPG components
+Summary(zh_CN.UTF-8): GnuPG 组件使用的错误值
 Name: libgpg-error
-Version: 1.12
+Version: 1.13
 Release: 1%{?dist}
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -21,9 +23,14 @@ This is a library that defines common error values for all GnuPG
 components.  Among these are GPG, GPGSM, GPGME, GPG-Agent, libgcrypt,
 pinentry, SmartCard Daemon and possibly more in the future.
 
+%description -l zh_CN.UTF-8
+GnuPG 组件使用的错误值库。
+
 %package devel
 Summary: Development files for the %{name} package
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -31,6 +38,9 @@ This is a library that defines common error values for all GnuPG
 components.  Among these are GPG, GPGSM, GPGME, GPG-Agent, libgcrypt,
 pinentry, SmartCard Daemon and possibly more in the future. This package
 contains files necessary to develop applications using libgpg-error.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -50,7 +60,7 @@ make %{?_smp_mflags}
 rm -fr $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # Relocate the shared libraries to /%{_lib}.
@@ -104,6 +114,9 @@ rm -fr $RPM_BUILD_ROOT
 %{_datadir}/aclocal/gpg-error.m4
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.13-1
+- 更新到 1.13
+
 * Fri Aug 23 2013 Tomáš Mráz <tmraz@redhat.com> 1.12-1
 - new upstream release
 

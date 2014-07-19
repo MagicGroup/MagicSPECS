@@ -6,10 +6,7 @@
 %global         usegit      0
 %global         mainrel     2
 
-%global         usegtk3     0
-%if 0%{?fedora} >= 18
 %global         usegtk3     1
-%endif
 
 %global         githash     d22b41fd2f738164c2cc89f6ae5d08c8bea6c65c
 %global         shorthash   %(TMP=%githash ; echo ${TMP:0:10})
@@ -25,20 +22,20 @@
 %global         build_doc   1
 
 Name:           libfm
-Version:        1.1.0
+Version: 1.2.1
 Release:        %{fedorarel}%{?dist}
 Summary:        GIO-based library for file manager-like programs
+Summary(zh_CN.UTF-8): 基于 GIO 的文件管理类程序的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://pcmanfm.sourceforge.net/
 %if 0%{?usegit} >= 1
 Source0:        %{name}-%{version}-D%{gitdate_num}git%{shorthash}.tar.gz
 %else
-Source0:        http://downloads.sourceforge.net/pcmanfm/%{name}-%{version}.tar.gz
+Source0:        http://downloads.sourceforge.net/pcmanfm/%{name}-%{version}.tar.xz
 %endif
-# Fedora specific patches
-Patch0:         libfm-0.1.9-pref-apps.patch
 
 BuildRequires:  libexif-devel
 %if %{usegtk3}
@@ -82,10 +79,14 @@ file systems supported by gvfs.
 
 This package contains the generic non-gui functions of libfm.
 
+%description -l zh_CN.UTF-8
+基于 GIO 的文件管理类程序的库，它是下一代 PCManFM 的核心。
 
 %package        gtk
 Summary:        File manager-related GTK+ widgets of %{name}
+Summary(zh_CN.UTF-8): %{name} 的 GTK+ 部件
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 Requires:       %{name} = %{version}-%{release}
 Requires:       gvfs
 
@@ -98,20 +99,45 @@ file systems supported by gvfs.
 
 This package provides useful file manager-related GTK+ widgets.
 
+%description gtk -l zh_CN.UTF-8
+%{name} 的 GTK+ 部件。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
+%package        gtk-utils
+Summary:        GTK+ related utility package for %{name}
+Summary(zh_CN.UTF-8): %{name} 的 GTK+ 相关工具
+Group:          User Interface/Desktops
+Group(zh_CN.UTF-8): 用户界面/桌面
+Requires:       %{name}-gtk%{?isa} = %{version}-%{release}
+Obsoletes:      lxshortcut < 0.1.3
+Provides:       lxshortcut = %{version}-%{release}
+Provides:       lxshortcut%{?_isa} = %{version}-%{release}
+
+%description    gtk-utils
+This package contains some GTK+ related utility files for
+%{name}.
+
+%description gtk-utils -l zh_CN.UTF-8
+%{name} 的 GTK+ 相关工具。
 
 %package        gtk-devel
 Summary:        Development files for %{name}-gtk
+Summary(zh_CN.UTF-8): %{name}-gtk 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}-gtk = %{version}-%{release}
 Requires:       %{name}-devel = %{version}-%{release}
 
@@ -119,28 +145,23 @@ Requires:       %{name}-devel = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}-gtk.
 
+%description gtk-devel -l zh_CN.UTF-8
+%{name}-gtk 的开发包。
+
 %package        devel-docs
 Summary:        Development documation for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 %description    devel-docs
 This package containg development documentation files for %{name}.
 
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
-%setup -q
-%patch0 -p1 -b .orig
-
-%if %{usegtk3}
-sed -i.gtk3 \
-   -e 's|libfm-gtk.la|libfm-gtk3.la|' \
-   docs/reference/libfm/Makefile.am
-%endif
-autoreconf -fi
-
-# ???
-#mkdir m4 || :
-#sh autogen.sh
+%setup -q -n %{name}-%{version}%{?prever}
 
 # treak rpath
 sed -i.libdir_syssearch \
@@ -150,13 +171,14 @@ sed -i.libdir_syssearch \
 %build
 %configure \
     --enable-gtk-doc \
-%if 0%{?fedora} >= 18
     --enable-udisks \
-%endif
-%if %{usegtk3}
     --with-gtk=3 \
+%if 0
+    --enable-demo \
 %endif
+    --disable-silent-rules \
     --disable-static
+
 # To show translation status
 make -C po -j1 GMSGFMT="msgfmt --statistics"
 make %{?_smp_mflags} -k
@@ -165,14 +187,11 @@ make %{?_smp_mflags} -k
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 
-%if %{usegtk3}
 rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/libfm-gtk.pc
-%else
-rm -f $RPM_BUILD_ROOT%{_libdir}/pkgconfig/libfm-gtk3.pc
-%endif
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
+magic_rpm_clean.sh
 %find_lang %{name}
 
 echo '%%defattr(-,root,root,-)' > base-header.files
@@ -181,7 +200,7 @@ echo '%%defattr(-,root,root,-)' > gtk-header.files
 for f in $RPM_BUILD_ROOT%_includedir/%name-1.0/*.h
 do
   bf=$(basename $f)
-  for dir in actions base job
+  for dir in actions base job extra .
   do
     if [ -f src/$dir/$bf ]
     then
@@ -198,6 +217,9 @@ do
 done
 
 /usr/lib/rpm/check-rpaths
+
+%check
+make check
 
 %post
 /sbin/ldconfig
@@ -218,30 +240,36 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-# FIXME: Add ChangeLog and NEWS if not empty
+# FIXME: Add ChangeLog if not empty
 %doc AUTHORS
 %doc COPYING
+%doc NEWS
 %doc README
 %dir %{_sysconfdir}/xdg/libfm/
-%config(noreplace) %{_sysconfdir}/xdg/libfm/pref-apps.conf
 %config(noreplace) %{_sysconfdir}/xdg/libfm/libfm.conf
-%{_libdir}/%{name}.so.3*
+%{_libdir}/%{name}.so.4*
+%{_libdir}/%{name}-extra.so.4*
+%dir %{_libdir}/libfm
+%dir %{_libdir}/libfm/modules
+%{_libdir}/libfm/modules/vfs-*.so
 %{_datadir}/mime/packages/libfm.xml
 
 
 %files gtk
-%defattr(-,root,root,-)
-%{_mandir}/man1/libfm-pref-apps.1.*
-%{_bindir}/libfm-pref-apps
-%if %{usegtk3}
-%{_libdir}/%{name}-gtk3.so.3*
-%else
-%{_libdir}/%{name}-gtk.so.3*
-%endif
+%{_libdir}/%{name}-gtk3.so.4*
 #%%dir %%{_libdir}/libfm/
 #%%{_libdir}/libfm/gnome-terminal
 %{_datadir}/libfm/
+%{_libdir}/libfm/modules/gtk-*.so
+
+%files gtk-utils
+%defattr(-,root,root,-)
+%{_mandir}/man1/libfm-pref-apps.1.*
+%{_mandir}/man1/lxshortcut.1.*
+%{_bindir}/libfm-pref-apps
+%{_bindir}/lxshortcut
 %{_datadir}/applications/libfm-pref-apps.desktop
+%{_datadir}/applications/lxshortcut.desktop
 
 
 %files devel -f base-header.files
@@ -249,20 +277,15 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %doc TODO
 %{_includedir}/libfm
 %dir %{_includedir}/libfm-1.0/
-%{_includedir}/libfm-1.0/fm.h
 %{_libdir}/%{name}.so
+%{_libdir}/%{name}-extra.so
 %{_libdir}/pkgconfig/libfm.pc
 
 %files gtk-devel -f gtk-header.files
 %defattr(-,root,root,-)
 %{_includedir}/libfm-1.0/fm-gtk.h
-%if %{usegtk3}
 %{_libdir}/%{name}-gtk3.so
 %{_libdir}/pkgconfig/libfm-gtk3.pc
-%else
-%{_libdir}/%{name}-gtk.so
-%{_libdir}/pkgconfig/libfm-gtk.pc
-%endif
 
 %if 0%{?build_doc}
 %files devel-docs
@@ -272,7 +295,11 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/gtk-doc/html/%{name}
 %endif
 
+
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.2.1-2
+- 更新到 1.2.1
+
 * Sun Nov 25 2012 Christoph Wickert <cwickert@fedoraproject.org> - 1.1.0-2
 - Rebuild against menu-cache 0.4.x
 

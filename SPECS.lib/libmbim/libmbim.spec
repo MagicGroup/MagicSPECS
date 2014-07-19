@@ -4,6 +4,7 @@
 
 Name: libmbim
 Summary: Support library for the Mobile Broadband Interface Model protocol
+Summary(zh_CN.UTF-8): 移动宽带接口模型协议的支持库
 Version: %{?realversion}
 Release: 1%{?dist}
 License: LGPLv2+
@@ -25,9 +26,12 @@ BuildRequires: pkgconfig(gudev-1.0) >= 147
 This package contains the libraries that make it easier to use MBIM
 functionality from applications that use glib.
 
+%description -l zh_CN.UTF-8
+移动宽带接口模型协议的支持库。
 
 %package devel
 Summary: Header files for adding MBIM support to applications that use glib
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: glib2-devel%{?_isa}
 
@@ -35,8 +39,12 @@ Requires: glib2-devel%{?_isa}
 This package contains the header and pkg-config files for developing
 applications using MBIM functionality from applications that use glib.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package utils
 Summary: Utilities to use the MBIM protocol from the command line
+Summary(zh_CN.UTF-8): %{name} 的命令行工具
 Requires: %{name}%{?_isa} = %{version}-%{release}
 License: GPLv2+
 
@@ -44,6 +52,8 @@ License: GPLv2+
 This package contains the utilities that make it easier to use MBIM
 functionality from the command line.
 
+%description utils -l zh_CN.UTF-8
+%{name} 的命令行工具。
 
 %prep
 # NOTE: the documentation is pre-generated and shipped in the dist tarball;

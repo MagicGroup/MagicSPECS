@@ -8,7 +8,7 @@ Summary: Space arcade game
 Summary(zh_CN.UTF-8): 太空街机游戏
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: 4.13.2
+Version: 4.13.3
 Release: 1%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
@@ -76,6 +76,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
+- 更新到 4.13.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
 - 更新到 4.13.2
 

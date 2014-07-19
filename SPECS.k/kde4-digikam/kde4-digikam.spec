@@ -1,8 +1,8 @@
 %define real_name digikam
 #define pre %{nil}
 Name:	 kde4-digikam
-Version: 4.0.0
-Release: 1%{?dist}
+Version: 4.1.0
+Release: 2%{?dist}
 Summary: A digital camera accessing & photo management application
 Summary(zh_CN.UTF-8): 一个数码相机访问和照片管理程序
 
@@ -119,7 +119,7 @@ Summary: Development files for libkface
 Summary: A world map library
 # when libs were split 
 Conflicts: digikam-libs < 2.0.0-2
-Requires: kde4-marble%{?_kde4_version: >= 1:%{_kde4_version}}
+Requires: kde4-marble%{?_kde4_version: >= %{_kde4_version}}
 %description -n libkgeomap
 %{summary}.
 
@@ -258,7 +258,7 @@ update-desktop-database -q &> /dev/null
 %files
 %doc core/AUTHORS core/ChangeLog core/COPYING
 %doc core/NEWS core/README core/TODO
-%doc core/README.FACE core/TODO.FACE core/TODO.MYSQLPORT
+%doc core/TODO.FACE core/TODO.MYSQLPORT
 %{_kde4_bindir}/digikam
 %{_kde4_bindir}/digitaglinktree
 %{_kde4_bindir}/cleanup_digikamdb
@@ -460,6 +460,12 @@ update-desktop-database -q &> /dev/null
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.1.0-2
+- 为 Magic 3.0 重建
+
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.1.0-1
+- 更新到 4.1.0
+
 * Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4.0.0-1
 - 更新到 4.0.0
 

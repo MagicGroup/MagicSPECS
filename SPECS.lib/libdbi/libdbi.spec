@@ -1,13 +1,15 @@
 Summary: Database Independent Abstraction Layer for C
+Summary(zh_CN.UTF-8): C 下的数据库无关抽象层
 Name: libdbi
-Version: 0.8.3
+Version: 0.9.0
 Release: 6%{?dist}
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2+
 URL: http://libdbi.sourceforge.net/
 
 Source: http://prdownloads.sourceforge.net/libdbi/%{name}-%{version}.tar.gz
-Patch1: libdbi-cflags.patch
+Patch1: libdbi-aarch64.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf openjade docbook-style-dsssl
@@ -24,14 +26,22 @@ The libdbi package contains just the libdbi framework.  To make use of
 libdbi you will also need one or more plugins from libdbi-drivers, which
 contains the plugins needed to interface to specific database servers.
 
+%description -l zh_CN.UTF-8
+C 下的数据库无关抽象层，类似 Perl 下的 DBI/DBD 层。
+
 %package devel
 Summary: Development files for libdbi (Database Independent Abstraction Layer for C)
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 The libdbi-devel package contains the header files and documentation
 needed to develop applications with libdbi.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %clean 
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
@@ -54,6 +64,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/libdbi.a
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/libdbi.la
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -74,10 +85,15 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/libdbi.la
 %doc doc/programmers-guide/
 %doc doc/driver-guide.pdf
 %doc doc/driver-guide/
-/usr/include/dbi/
+%{_includedir}/dbi/
 %{_libdir}/libdbi.so
+%{_libdir}/pkgconfig/dbi.pc
+%{_docdir}/libdbi-%{version}
 
 %changelog
+* Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.9.0-6
+- 更新到 0.9.0
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8.3-6
 - 为 Magic 3.0 重建
 

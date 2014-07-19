@@ -1,17 +1,13 @@
-%if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from
-distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from
-distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
 Summary: GNOME Structured File library
+Summary(zh_CN.UTF-8): GNOME 结构文件库
 Name: libgsf
-Version: 1.14.21
+Version:	1.14.30
 Release: 3%{?dist}
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2
-Source: ftp://ftp.gnome.org/pub/GNOME/sources/%{name}/1.14/%{name}-%{version}.tar.bz2
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: https://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 URL: http://www.gnome.org/projects/libgsf/
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: glib2-devel, perl-XML-Parser
@@ -21,66 +17,40 @@ BuildRequires: libbonobo-devel, pygtk2-devel, intltool, gnome-vfs2-devel
 %description
 A library for reading and writing structured files (e.g. MS OLE and Zip)
 
-%package gnome
-Summary: GNOME integration bits for libgsf
-Group: System Environment/Libraries
-Requires: libgsf = %{version}-%{release}
-Requires: gnome-vfs2
-Requires(pre): GConf2
-Requires(post): GConf2
-Requires(preun): GConf2
-
-%description gnome
-Libraries for using libgsf in conjunction with the GNOME applications
+%description -l zh_CN.UTF-8
+GNOME 结构文件（如 MS OLE 或 Zip等）库。
 
 %package devel
 Summary: Support files necessary to compile applications with libgsf
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libgsf = %{version}-%{release}, glib2-devel, libxml2-devel
 Requires: pkgconfig
+Obsoletes: libgsf-gnome-devel < 1.14.22
 
 %description devel
 Libraries, headers, and support files necessary to compile applications using 
 libgsf.
 
-%package gnome-devel
-Summary: Support files necessary to compile applications with libgsf and GNOME
-Group: Development/Libraries
-Requires: libgsf-gnome = %{version}-%{release}
-Requires: libgsf-devel = %{version}-%{release}
-
-%description gnome-devel
-Libraries, headers, and support files necessary to compile applications using
-libgsf and GNOME libraries
-
-%package python
-Summary: Python bindings for libgsf
-Group: Development/Libraries
-
-%description python
-Python bindings for libgsf
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 
 %build
-%configure --disable-gtk-doc --disable-static
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+%configure --disable-gtk-doc --disable-static  --enable-introspection=yes
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make DESTDIR=$RPM_BUILD_ROOT install
+magic_rpm_clean.sh
 %find_lang libgsf
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{python_sitearch}/gsf/*.la
-
-if [ "%{python_sitelib}" != "%{python_sitearch}" ]; then
-  mv $RPM_BUILD_ROOT%{python_sitelib}/gsf/* $RPM_BUILD_ROOT%{python_sitearch}/gsf
-  rm -r $RPM_BUILD_ROOT%{python_sitelib}/gsf
-fi
 
 %post -p /sbin/ldconfig
 
@@ -90,28 +60,11 @@ fi
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING COPYING.LIB README
 %{_libdir}/libgsf-1.so.*
-
-%files gnome
-%defattr(-,root,root,-)
-%{_libdir}/libgsf-gnome-1.so.*
+%{_libdir}/girepository-1.0/Gsf-1.typelib
 %{_bindir}/gsf-office-thumbnailer
 %{_mandir}/man1/gsf-office-thumbnailer.1.gz
-%{_sysconfdir}/gconf/schemas/gsf-office-thumbnailer.schemas
-
-%post gnome
-/sbin/ldconfig
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-gconftool-2 --makefile-install-rule \
-  %{_sysconfdir}/gconf/schemas/gsf-office-thumbnailer.schemas > /dev/null
-
-%preun gnome
-if [ "$1" -eq 0 ]; then
-    export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-    gconftool-2 --makefile-uninstall-rule \
-      %{_sysconfdir}/gconf/schemas/gsf-office-thumbnailer.schemas > /dev/null
-fi
-
-%postun gnome -p /sbin/ldconfig
+%dir %{_datadir}/thumbnailers
+%{_datadir}/thumbnailers/gsf-office.thumbnailer
 
 %files devel
 %defattr(-,root,root,-)
@@ -122,23 +75,18 @@ fi
 %dir %{_includedir}/libgsf-1
 %{_includedir}/libgsf-1/gsf
 %{_datadir}/gtk-doc/html/gsf
+%{_datadir}/gir-1.0/Gsf-1.gir
 %{_mandir}/man1/gsf.1.gz
 %{_mandir}/man1/gsf-vba-dump.1.gz
 
-%files gnome-devel
-%defattr(-,root,root,-)
-%{_libdir}/libgsf-gnome-1.so
-%{_libdir}/pkgconfig/libgsf-gnome-1.pc
-%{_includedir}/libgsf-1/gsf-gnome
-
-%files python
-%defattr(-,root,root,-)
-%{python_sitearch}/gsf/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.14.30-3
+- 更新到 1.14.30
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.14.21-3
 - 为 Magic 3.0 重建
 

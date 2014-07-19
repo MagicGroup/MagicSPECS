@@ -1,18 +1,21 @@
 %global multilib_arches %{ix86} ppc %{power64} s390 s390x x86_64
 
 Name:		libffi
-Version:	3.0.13
-Release:	5%{?dist}
+Version: 3.1
+Release:	6%{?dist}
 Summary:	A portable foreign function interface library
+Summary(zh_CN.UTF-8): 可移植的外部函数接口库
 
 Group:		System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:	BSD
 URL:		http://sourceware.org/libffi
 Source0:	ftp://sourceware.org/pub/libffi/libffi-%{version}.tar.gz
 # part of upstream commit 5feacad4
 Source1:	ffi-multilib.h
 Source2:	ffitarget-multilib.h
-Patch0:		libffi-3.0.13-fix-include-path.patch
+Patch0:		libffi-3.1-fix-include-path.patch
+Patch1:		libffi-3.1-fix-exec-stack.patch
 # part of upstream commit 5feacad4
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -43,10 +46,14 @@ layer of a fully featured foreign function interface.  A layer must
 exist above `libffi' that handles type conversions for values passed
 between the two languages.  
 
+%description -l zh_CN.UTF-8
+可移植的外部函数接口库。
 
 %package	devel
 Summary:	Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:	%{name} = %{version}-%{release}
 Requires:       pkgconfig
 Requires(post): /sbin/install-info
@@ -56,14 +63,19 @@ Requires(preun): /sbin/install-info
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
 %patch0 -p1 -b .fixpath
-
+%patch1 -p1
 
 %build
+autoreconf -fisv
 %configure --disable-static
+#临时性措施
+sed -i "s/libffi-3.1\/include//g" x86_64-magic-linux-gnu/include/Makefile
 make %{?_smp_mflags}
 
 
@@ -89,7 +101,7 @@ done
 install -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/ffi.h
 install -m644 %{SOURCE2} $RPM_BUILD_ROOT%{_includedir}/ffitarget.h
 %endif
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,6 +134,12 @@ fi
 %{_infodir}/libffi.info.gz
 
 %changelog
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 3.1-6
+- 为 Magic 3.0 重建
+
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.1-5
+- 更新到 3.1
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.13-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

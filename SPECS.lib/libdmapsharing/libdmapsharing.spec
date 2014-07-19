@@ -1,18 +1,23 @@
 Name: libdmapsharing
-Version: 2.9.14
-Release: 3%{?dist}
+Version: 2.9.24
+Release: 1%{?dist}
 License: LGPLv2+
 Source: http://www.flyn.org/projects/libdmapsharing/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL: http://www.flyn.org/projects/libdmapsharing/
 Summary: A DMAP client and server library
+Summary(zh_CN.UTF-8): DMAP 客户端和服务器库
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildRequires: pkgconfig, glib2-devel, libsoup-devel >= 2.32
 BuildRequires: avahi-glib-devel, gdk-pixbuf2-devel, gstreamer-plugins-base-devel >= 0.10.23.2
 
 %description 
 libdmapsharing implements the DMAP protocols. This includes support for
 DAAP and DPAP.
+
+%description -l zh_CN.UTF-8
+DMAP 协议的实现，包括了 DAAP 和 DRAP 的支持。
 
 %files 
 %defattr(-, root, root, -)
@@ -22,7 +27,9 @@ DAAP and DPAP.
 
 %package devel
 Summary: Files needed to develop applications using libdmapsharing
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: libdmapsharing = %{version}-%{release}, pkgconfig, glib2-devel, libsoup-devel >= 2.32
 Requires: avahi-glib-devel, gdk-pixbuf2-devel, gstreamer-plugins-base-devel >= 0.10.23.2
 
@@ -30,6 +37,9 @@ Requires: avahi-glib-devel, gdk-pixbuf2-devel, gstreamer-plugins-base-devel >= 0
 libdmapsharing implements the DMAP protocols. This includes support for
 DAAP and DPAP.  This package provides the libraries, include files, and
 other resources needed for developing applications using libdmapsharing.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %files devel
 %defattr(-, root, root, -)
@@ -50,6 +60,7 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/libdmapsharing-3.0.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 2.9.24-1
+- 更新到 2.9.24
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.9.14-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

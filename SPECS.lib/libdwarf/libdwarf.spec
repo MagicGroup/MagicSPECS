@@ -1,35 +1,43 @@
-%define soversion 0
+%define soversion 1
 %define soname libdwarf.so.%{soversion}
 %define sofullname libdwarf.so.%{soversion}.%{version}.0
 
 Name:          libdwarf
-Version:       20130207
+Version: 20140519
 Release:       1%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
+Summary(zh_CN.UTF-8): 访问 DWARF 调试文件格式的库
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 
 License:       LGPLv2
-URL:           http://reality.sgiweb.org/davea/dwarf.html
-Source0:       http://reality.sgiweb.org/davea/%{name}-%{version}.tar.gz
-Patch0:        libdwarf-soname.patch
+URL:           http://www.prevanders.net/dwarf.html
+Source0:       http://www.prevanders.net/%{name}-%{version}.tar.gz
+Patch0:        libdwarf-shlib.patch
 
 BuildRequires: binutils-devel elfutils-libelf-devel
 
 %package devel
 Summary:       Library and header files of libdwarf
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2
 Requires:      %{name} = %{version}-%{release}
 
 %package static
 Summary:       Static libdwarf library
+Summary(zh_CN.UTF-8): %{name} 的静态库
 Group:         Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:       LGPLv2
 Requires:      %{name}-devel = %{version}-%{release}
 
 %package tools
 Summary:       Tools for accessing DWARF debugging information
+Summary(zh_CN.UTF-8): 访问 DWARF 调试信息的工具
 Group:         Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:       GPLv2
 Requires:      %{name} = %{version}-%{release}
 
@@ -38,15 +46,27 @@ Library to access the DWARF debugging file format which supports
 source level debugging of a number of procedural languages, such as C, C++,
 and Fortran.  Please see http://www.dwarfstd.org for DWARF specification.
 
+%description -l zh_CN.UTF-8
+访问 DWARF 调试文件格式的库，支持一些语言的源代码级调试，比如 C, C++, Fortran。
+
 %description static
 Static libdwarf library.
+
+%description static -l zh_CN.UTF-8
+%{name} 的静态库。
 
 %description devel
 Development package containing library and header files of libdwarf.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %description tools
 C++ version of dwarfdump (dwarfdump2) command-line utilities 
 to access DWARF debug information.
+
+%description tools -l zh_CN.UTF-8
+C++ 版本的命令行工具 dwarfdump，用来访问 DWARF 调试信息。
 
 %prep
 %setup -q -n dwarf-%{version}
@@ -65,6 +85,7 @@ install -pDm 0755 libdwarf/libdwarf.so     %{buildroot}%{_libdir}/%{sofullname}
 ln      -s        %{sofullname}            %{buildroot}%{_libdir}/%{soname}
 ln      -s        %{sofullname}            %{buildroot}%{_libdir}/libdwarf.so
 install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
+magic_rpm_clean.sh
 
 %post -n libdwarf -p /sbin/ldconfig
 
@@ -87,6 +108,9 @@ install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
 %{_bindir}/dwarfdump
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 20140519-1
+- 更新到 20140519
+
 * Fri Feb  8 2013 Tom Hughes <tom@compton.nu> - 20130207-1
 - Update to 20130207 release
 

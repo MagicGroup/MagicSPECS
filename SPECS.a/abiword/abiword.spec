@@ -1,6 +1,6 @@
-%define majorversion 2
-%define minorversion 9
-%define microversion 4
+%define majorversion 3
+%define minorversion 0
+%define microversion 0
 
 Summary: The AbiWord word processor
 Summary(zh_CN): AbiWord 字处理程序
@@ -39,6 +39,8 @@ Patch3: abiword-plugins-2.6.0-boolean.patch
 Patch103: abiword-2.8.6-libwpd.patch
 Patch104: abiword-2.8.6-no-undefined.patch
 Patch105: abiword-2.9.3-ebook.patch
+Patch106: abiword-3.0.0-fix-boost154.patch 
+Patch107: abiword-3.0.0-fix-libgcrypt160.patch
 
 BuildRequires: autoconf, libtool
 BuildRequires: desktop-file-utils
@@ -85,7 +87,7 @@ Includes and definitions for developing with libabiword.
 # setup abiword
 %setup -q
 #临时性措施
-cp %{SOURCE50} plugins/collab/backends/telepathy/unix/
+# cp %{SOURCE50} plugins/collab/backends/telepathy/unix/
 
 # patch abiword
 %patch1 -p1 -b .desktop
@@ -95,6 +97,8 @@ cp %{SOURCE50} plugins/collab/backends/telepathy/unix/
 #%patch103 -p0 -b .libwpd
 #%patch104 -p1 -b .no-undefined
 %patch105 -p1
+%patch106 -p1
+%patch107 -p1
 
 # patch abiword plugins
 #%patch3 -p1 -b .boolean
@@ -189,8 +193,14 @@ update-desktop-database %{_datadir}/applications > /dev/null 2>&1 || :
 %{_libdir}/pkgconfig/%{name}-%{majorversion}.%{minorversion}.pc
 
 %changelog
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1:2.9.3-4
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 1:3.0.0-4
 - 为 Magic 3.0 重建
+
+* Sun Jul 13 2014 Liu Di <liudidi@gmail.com> - 1:3.0.0-3
+- 更新到 3.0.0
+
+* Sun Jul 13 2014 Liu Di <liudidi@gmail.com> - 1:2.9.4-3
+- 更新到 2.9.4
 
 * Tue Dec 04 2012 Liu Di <liudidi@gmail.com> - 1:2.9.3-3
 - 为 Magic 3.0 重建

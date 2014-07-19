@@ -3,16 +3,16 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 # python/Cython support busted on rawhide atm
-%if 0%{?fedora} < 21
-%global python 1
-%endif
+%global python 0
 
 Name:          libimobiledevice
 Version:       1.1.5
-Release:       6%{?dist}
+Release:       1%{?dist}
 Summary:       Library for connecting to mobile devices
+Summary(zh_CN.UTF-8): 连接移动设备的库
 
 Group:         System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2+
 URL:           http://www.libimobiledevice.org/
 Source0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
@@ -35,14 +35,23 @@ BuildRequires: swig
 libimobiledevice is a library for connecting to mobile devices including phones 
 and music players
 
+%description -l zh_CN.UTF-8
+连接移动设备，包括手机和音乐播放器的库。
+
 %package devel
 Summary: Development package for libimobiledevice
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Files for development with libimobiledevice.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
+%if 0%{?python}
 %package python
 Summary: Python bindings for libimobiledevice
 Group: Development/Libraries
@@ -50,6 +59,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description python
 Python bindings for libimobiledevice.
+%endif
 
 %prep
 %setup -q

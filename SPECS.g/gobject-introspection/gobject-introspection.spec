@@ -1,5 +1,5 @@
 Name:           gobject-introspection
-Version:	1.40.0
+Version:	1.41.3
 Release:        1%{?dist}
 Summary:        Introspection system for GObject-based libraries
 Summary(zh_CN.UTF-8): 基于 GObject 库的自检系统
@@ -106,6 +106,9 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/gi/*
 
 %changelog
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 1.41.3-1
+- 更新到 1.41.3
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.40.0-1
 - 更新到 1.40.0
 

@@ -1,9 +1,11 @@
 Name: libiscsi
 Summary: iSCSI client library
+Summary(zh_CN.UTF-8): iSCSI 客户端库
 Version: 1.11.0
 Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: https://github.com/sahlberg/%{name}
 
 Source: https://github.com/downloads/sahlberg/%{name}/%{name}-%{version}.tar.gz
@@ -21,6 +23,9 @@ BuildRequires: libgcrypt-devel
 %description
 libiscsi is a library for attaching to iSCSI resources across
 a network.
+
+%description -l zh_CN.UTF-8
+iSCSI 客户端库。
 
 
 #######################################################################

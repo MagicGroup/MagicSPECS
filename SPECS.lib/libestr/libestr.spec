@@ -1,7 +1,8 @@
 Name:           libestr
 Version:        0.1.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        String handling essentials library
+Summary(zh_CN.UTF-8): 字符串处理要素库
 
 License:        LGPLv2+
 URL:            http://libestr.adiscon.com/
@@ -11,13 +12,20 @@ Source0:        http://libestr.adiscon.com/files/download/libestr-%{version}.tar
 This package compiles the string handling essentials library
 used by the Rsyslog daemon.
 
+%description -l zh_CN.UTF-8
+这是 Rsyslog 服务使用的字条串处理库。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The package contains libraries and header files for
 developing applications that use libestr.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -29,6 +37,7 @@ V=1 make %{?_smp_mflags}
 %install
 make install INSTALL="install -p" DESTDIR=%{buildroot}
 rm -f %{buildroot}/%{_libdir}/*.{a,la}
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -44,6 +53,9 @@ rm -f %{buildroot}/%{_libdir}/*.{a,la}
 %{_libdir}/pkgconfig/libestr.pc
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.1.9-3
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.1.9-2
 - 为 Magic 3.0 重建
 

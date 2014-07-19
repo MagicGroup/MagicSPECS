@@ -2,8 +2,10 @@ Name:           libmatheval
 Version:        1.1.11
 Release:        1%{?dist}
 Summary:        Library for parsing and evaluating symbolic expressions input as text
+Summary(zh_CN.UTF-8): 用户于解析和计算符号表达式输入文本的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv3+
 URL:            http://www.gnu.org/software/libmatheval/
 Source0:        http://ftp.gnu.org/gnu/libmatheval/libmatheval-%{version}.tar.gz
@@ -22,9 +24,14 @@ mathematical functions.  In addition to parsing and evaluation,
 libmatheval can also compute symbolic derivatives and output
 expressions to strings.
 
+%description -l zh_CN.UTF-8
+用户于解析和计算符号表达式输入文本的库。
+
 %package devel
 Summary:        Development files for libmatheval
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name} = %{version}-%{release}
 Requires(post):  /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -33,6 +40,8 @@ Requires:       pkgconfig
 %description devel
 This package contains the development files for libmatheval.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -53,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT

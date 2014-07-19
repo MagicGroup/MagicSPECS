@@ -13,11 +13,13 @@
 %endif
 
 Summary: Library to access the contents of an iPod
+Summary(zh_CN.UTF-8): 访问 iPod 内容的库
 Name: libgpod
 Version: 0.8.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.gtkpod.org/libgpod.html
 Source0: http://downloads.sourceforge.net/gtkpod/%{name}-%{version}.tar.bz2
 
@@ -52,10 +54,14 @@ Requires: udev
 Libgpod is a library to access the contents of an iPod. It supports playlists,
 smart playlists, playcounts, ratings, podcasts, album artwork, photos, etc.
 
+%description -l zh_CN.UTF-8
+访问 iPod 内容的库。
 
 %package devel
 Summary: Development files for the libgpod library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -65,10 +71,14 @@ smart playlists, playcounts, ratings, podcasts, album artwork, photos, etc.
 This package contains the files required to develop programs that will use
 libgpod.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package doc
 Summary: API documentation for the libgpod library
+Summary(zh_CN.UTF-8): %{name} 库的 API 文档
 Group: Documentation
+Group(zh_CN.UTF-8): 文档
 License: GFDL
 %if 0%{?fedora}
 BuildArch: noarch
@@ -81,10 +91,14 @@ smart playlists, playcounts, ratings, podcasts, album artwork, photos, etc.
 
 This package contains the API documentation.
 
+%description doc -l zh_CN.UTF-8
+%{name} 库的 API 文档。
 
 %package -n python-gpod
 Summary: Python module to access iPod content
+Summary(zh_CN.UTF-8): 访问 iPod 内容的 Python 模块
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: python-mutagen
 
@@ -92,22 +106,29 @@ Requires: python-mutagen
 A python module to access iPod content.  This module provides bindings to the
 libgpod library.
 
+%description -n python-gpod -l zh_CN.UTF-8
+访问 iPod 内容的 Python 模块
 
 %if %{with_mono}
 %package sharp
 Summary: C#/.NET library to access iPod content
+Summary(zh_CN.UTF-8): 访问 iPod 内容的 C#/.NET 库
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description sharp
 C#/.NET library to access iPod content.  Provides bindings to the libgpod
 library.
 
+%description sharp -l zh_CN.UTF-8
+访问 iPod 内容的 C#/.NET 库。
 
 %package sharp-devel
 Summary: Development files for libgpod-sharp
-Summary: C#/.NET library to access iPod content
+Summary(zh_CN.UTF-8): %{name}-sharp 的开发包
 Group: Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 Requires: %{name}-sharp%{?_isa} = %{version}-%{release}
 
 %description sharp-devel
@@ -116,6 +137,9 @@ library.
 
 This package contains the files required to develop programs that will use
 libgpod-sharp.
+
+%description sharp-devel -l zh_CN.UTF-8
+%{name}-sharp 的开发包。
 %endif
 
 
@@ -137,6 +161,7 @@ make %{?_smp_mflags}
 
 %install
 make DESTDIR=%{buildroot} install
+magic_rpm_clean.sh
 %find_lang %{name}
 
 mkdir -p %{buildroot}/%{_libdir}/libgpod
@@ -211,6 +236,9 @@ echo "D /var/run/%{name} 0755 root root -" > \
 %endif
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.8.3-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 04 2013 Christophe Fergeau <cfergeau@redhat.com> 0.8.3-1
 - Update to libgpod 0.8.3, this is a bugfix release which should fix
   rhbz#921831 rhbz#925750 rhbz#951167

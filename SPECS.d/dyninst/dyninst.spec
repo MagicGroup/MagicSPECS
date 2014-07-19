@@ -2,7 +2,7 @@ Summary: An API for Run-time Code Generation
 License: LGPLv2+
 Name: dyninst
 Group: Development/Libraries
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL: http://www.dyninst.org
 Version: 8.1.2
 Exclusiveos: linux
@@ -163,6 +163,9 @@ magic_rpm_clean.sh
 %attr(755,root,root) %{_libdir}/dyninst/testsuite/*
 
 %changelog
+* Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 8.1.2-7
+- 为 Magic 3.0 重建
+
 * Wed Dec 11 2013 Josh Stone <jistone@redhat.com> 8.1.2-6
 - Fix rhbz1040715 (testsuite g++ optimization)
 

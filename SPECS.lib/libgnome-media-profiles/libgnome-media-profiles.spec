@@ -1,12 +1,13 @@
 Name:           libgnome-media-profiles
 Version:        3.0.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        GNOME Media Profiles library
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://git.gnome.org/browse/libgnome-media-profiles
 Source0:        http://download.gnome.org/sources/%{name}/3.0/%{name}-%{version}.tar.bz2
+Patch0:		0001-Fix-format-string-vulnerabilities.patch
 
 BuildRequires: gtk3-devel >= 2.99.0
 BuildRequires: GConf2-devel glib2-devel
@@ -40,7 +41,7 @@ for developing applications that use %{name}.
 
 %prep
 %setup -q
-
+%patch0 -p1
 
 %build
 %configure --disable-static --disable-schemas-install --disable-scrollkeeper
@@ -50,7 +51,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 %find_lang libgnome-media-profiles
 %find_lang gnome-audio-profiles --with-gnome
 
@@ -85,6 +86,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.0.0-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0.0-5
 - 为 Magic 3.0 重建
 

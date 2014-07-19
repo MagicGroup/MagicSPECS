@@ -1,16 +1,19 @@
 %define gettext_package libgnomeprint-2.2
 
 Summary: Printing library for GNOME
+Summary(zh_CN.UTF-8): GNOME 打印库
 Name:  libgnomeprint22
 Version: 2.18.8
 Release: 10%{?dist}
 License: LGPLv2+ and BSD
 # BSD applies to ttsubset code that was taken from STSF
 Group:          System Environment/Base
+Group(zh_CN.UTF-8): 系统环境/基本
 Source:  http://download.gnome.org/sources/libgnomeprint/2.18/libgnomeprint-%{version}.tar.bz2
 URL:            http://www.gnome.org
 Patch0:  libgnomeprint22-stdio.patch
 Patch1:  libgnomeprint-2.18.8-freetype-2.5.1.patch
+Patch2:  libgnomeprint22-2.18.8-bison.patch
 
 Requires: urw-fonts
 Requires: ghostscript
@@ -45,9 +48,14 @@ the GNOME applications that can print. If you would like to develop
 GNOME applications that can print you will also need to install the
 gnome-print devel package.
 
+%description -l zh_CN.UTF-8
+GNOME 打印库。
+
 %package devel
 Summary: Libraries and include files for developing GNOME printing applications
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 # for /usr/share/gtk-doc/html
 Requires:       gtk-doc
@@ -58,10 +66,14 @@ develop GNOME applications that will use the GNOME print capabilities.
 You do not need to install the gnome-print-devel package if you just
 want to use the GNOME desktop environment.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %prep
 %setup -q -n libgnomeprint-%{version}
 %patch0 -p1 -b .stdio
 %patch1 -p1 -b .freetype
+%patch2 -p1
 
 # Convert to utf-8
 for file in NEWS; do

@@ -21,7 +21,7 @@
 %define sqlite_version 3.5
 %define nss_version 3.14
 
-%define eds_base_version 3.12
+%define eds_base_version 3.14
 
 %define camel_provider_dir %{_libdir}/evolution-data-server/camel-providers
 %define ebook_backends_dir %{_libdir}/evolution-data-server/addressbook-backends
@@ -31,7 +31,7 @@
 ### Abstract ###
 
 Name: evolution-data-server
-Version:	3.12.1
+Version:	3.13.3
 Release: 1%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -345,6 +345,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{ecal_backends_dir}/libecalbackendfile.so
 %{ecal_backends_dir}/libecalbackendhttp.so
 %{ecal_backends_dir}/libecalbackendweather.so
+%{ecal_backends_dir}/libecalbackendgtasks.so
 %{modules_dir}/module-cache-reaper.so
 %{modules_dir}/module-google-backend.so
 %{modules_dir}/module-gnome-online-accounts.so
@@ -393,6 +394,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %endif
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
+- 更新到 3.13.3
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.12.1-1
 - 更新到 3.12.1
 

@@ -1,9 +1,11 @@
 Name:           libburn
-Version:        1.1.8
-Release:        2%{?dist}
+Version: 1.3.8
+Release:        1%{?dist}
 Summary:        Library for reading, mastering and writing optical discs
+Summary(zh_CN.UTF-8): 读取、管理和写入光盘的库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2
 URL:            http://libburnia-project.org/
 Source0:        http://files.libburnia-project.org/releases/%{name}-%{version}.tar.gz
@@ -21,10 +23,14 @@ together strive to be a usable foundation for application development.
 These are libraries, language bindings, and middleware binaries which emulate
 classical (and valuable) Linux tools.
 
+%description -l zh_CN.UTF-8
+读取、管理和写入光盘的库，现在支持 CD-R 和 CD-RW。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
@@ -32,16 +38,22 @@ Requires:       pkgconfig
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %package -n     cdrskin
 Summary:        Limited cdrecord compatibility wrapper to ease migration to libburn
+Summary(zh_CN.UTF-8): 有限兼容 cdrecord 的 libburn 集成
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description -n cdrskin
 A limited cdrecord compatibility wrapper which allows to use some libburn 
 features from the command line.
 
+%description -n cdrskin -l zh_CN.UTF-8
+有限兼容 cdrecord 的 libburn 集成，可以允许你在命令行下使用 libburn 功能。
 
 %prep
 %setup -q
@@ -59,7 +71,7 @@ doxygen doc/doxygen.conf
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p' install
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -91,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 1.3.8-1
+- 更新到 1.3.8
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.8-2
 - 为 Magic 3.0 重建
 

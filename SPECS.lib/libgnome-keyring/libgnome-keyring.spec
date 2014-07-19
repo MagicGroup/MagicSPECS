@@ -3,13 +3,16 @@
 %define gcrypt_version 1.2.2
 
 Summary: Framework for managing passwords and other secrets
+Summary(zh_CN.UTF-8): 管理密码和其它机密的框架
 Name: libgnome-keyring
-Version: 3.8.0
+Version:	3.12.0
 Release: 2%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 #VCS: git:git://git.gnome.org/libgnome-keyring
-Source: http://download.gnome.org/sources/libgnome-keyring/3.8/libgnome-keyring-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source: http://download.gnome.org/sources/libgnome-keyring/%{majorver}/libgnome-keyring-%{version}.tar.xz
 URL: http://live.gnome.org/GnomeKeyring
 
 
@@ -26,10 +29,15 @@ gnome-keyring is a program that keep password and other secrets for
 users. The library libgnome-keyring is used by applications to integrate
 with the gnome-keyring system.
 
+%description -l zh_CN.UTF-8
+管理密码和其它机密的框架。
+
 %package devel
 Summary: Development files for libgnome-keyring
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %name = %{version}-%{release}
 Requires: glib2-devel
 Conflicts: gnome-keyring-devel < 2.29.4
@@ -38,6 +46,8 @@ Conflicts: gnome-keyring-devel < 2.29.4
 The libgnome-keyring-devel package contains the libraries and
 header files needed to develop applications that use libgnome-keyring.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q -n libgnome-keyring-%{version}
@@ -54,7 +64,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang libgnome-keyring
 
 
@@ -78,6 +88,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 
 
 %changelog
+* Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 更新到 3.12.0
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 3.8.0-2
 - 为 Magic 3.0 重建
 

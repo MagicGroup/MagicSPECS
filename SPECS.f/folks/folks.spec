@@ -5,7 +5,7 @@
 
 Name:           folks
 Epoch:          1
-Version:        0.9.6
+Version:	0.9.7.1
 Release:        4%{?dist}
 Summary:        GObject contact aggregation library
 Summary(zh_CN.UTF-8): GObject 联系人聚合库
@@ -16,7 +16,6 @@ License:        LGPLv2+
 URL:            http://telepathy.freedesktop.org/wiki/Folks
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
-Patch0:         Remove_Assert.patch
 
 BuildRequires:  telepathy-glib-devel >= %{tp_glib_ver}
 BuildRequires:  telepathy-glib-vala
@@ -77,9 +76,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1 -b .assert
-
-
 
 %build
 %configure --disable-static --disable-fatal-warnings --enable-eds-backend --enable-vala --enable-inspect-tool --disable-libsocialweb-backend
@@ -129,9 +125,17 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gir-1.0/FolksEds-0.6.gir
 %{_datadir}/gir-1.0/FolksTelepathy-0.6.gir
 %{_datadir}/vala/vapi/%{name}*
+%{_libdir}/girepository-1.0/FolksDummy-0.6.typelib
+%{_datadir}/gir-1.0/FolksDummy-0.6.gir
 
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1:0.9.7.1-4
+- 更新到 0.9.7.1
+
+* Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 1:0.9.7-4
+- 更新到 0.9.7
+
 * Mon Feb 03 2014 Milan Crha <mcrha@redhat.com> - 1:0.9.6-4
 - Rebuild against newer evolution-data-server
 

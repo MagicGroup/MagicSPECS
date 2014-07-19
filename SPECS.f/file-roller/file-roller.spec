@@ -1,7 +1,7 @@
 Summary:        Tool for viewing and creating archives
 Summary(zh_CN.UTF-8): 查看和创建压缩包的工具
 Name:           file-roller
-Version:        3.12.0
+Version:	3.13.1
 Release:        3%{?dist}
 License:        GPLv2+
 Group:          Applications/Archiving
@@ -103,7 +103,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %doc README COPYING NEWS AUTHORS
 %{_bindir}/file-roller
 %{_datadir}/file-roller
-%{_datadir}/applications/gnome-file-roller.desktop
+#%{_datadir}/applications/gnome-file-roller.desktop
+%{_datadir}/applications/gnome-org.gnome.FileRoller.desktop
+%{_datadir}/dbus-1/services/org.gnome.FileRoller.ArchiveManager1.service
 %{_libexecdir}/file-roller
 #%{_libexecdir}/file-roller-server
 %{_datadir}/dbus-1/services/org.gnome.FileRoller.service
@@ -117,6 +119,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 
 
 %changelog
+* Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 3.13.1-3
+- 更新到 3.13.1
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.2.1-3
 - 为 Magic 3.0 重建
 

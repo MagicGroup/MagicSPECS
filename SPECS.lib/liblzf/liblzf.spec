@@ -2,8 +2,10 @@ Name:           liblzf
 Version:        3.6
 Release:        9%{?dist}
 Summary:        Small data compression library
+Summary(zh_CN.UTF-8): 小数据压缩库
 
 Group:          System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 License:        BSD or GPLv2+
 URL:            http://oldhome.schmorp.de/marc/liblzf.html
 Source0:        http://dist.schmorp.de/liblzf/liblzf-%{version}.tar.gz
@@ -21,19 +23,27 @@ of only two .c and two .h files and is very easy to
 incorporate into your own programs.  The compression algorithm 
 is very, very fast, yet still written in portable C.
 
+%description -l zh_CN.UTF-8
+LibLZF 是一个非常小的数据压缩库，它只包括两个 .c 和 .h 文件。
+可以非常容易的合并到你的程序中。压缩算法非常、非常快。
+
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %if 0%{?el4}%{?el5}
 Requires:       pkgconfig
 %endif
 
-
 %description    devel
 The liblzf-devel package contains libraries and header files for
 developing applications that use liblzf.
+
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q

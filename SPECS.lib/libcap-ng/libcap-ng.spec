@@ -1,11 +1,13 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Summary: An alternate posix capabilities library
+Summary(zh_CN.UTF-8): 另一个  posix 能力库
 Name: libcap-ng
-Version: 0.6.6
-Release: 4%{?dist}
+Version: 0.7.4
+Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 URL: http://people.redhat.com/sgrubb/libcap-ng
 Source0: http://people.redhat.com/sgrubb/libcap-ng/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -15,10 +17,15 @@ BuildRequires: libattr-devel
 %description
 Libcap-ng is a library that makes using posix capabilities easier
 
+%description -l zh_CN.UTF-8
+另一个  posix 能力库。
+
 %package devel
 Summary: Header files for libcap-ng library
+Summary(zh_CN.UTF-8): %{name} 的开发包
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: kernel-headers >= 2.6.11
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
@@ -27,10 +34,15 @@ Requires: pkgconfig
 The libcap-ng-devel package contains the files needed for developing
 applications that need to use the libcap-ng library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package python
 Summary: Python bindings for libcap-ng library
+Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 License: LGPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 BuildRequires: python-devel swig
 Requires: %{name} = %{version}-%{release}
 
@@ -38,16 +50,24 @@ Requires: %{name} = %{version}-%{release}
 The libcap-ng-python package contains the bindings so that libcap-ng
 and can be used by python applications.
 
+%description python -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
 %package utils
 Summary: Utilities for analysing and setting file capabilities
+Summary(zh_CN.UTF-8): 分析和设置文件能力的工具
 License: GPLv2+
 Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 Requires: %{name} = %{version}-%{release}
 
 %description utils
 The libcap-ng-utils package contains applications to analyse the
 posix capabilities of all the program running on a system. It also
 lets you set the file system based capabilities.
+
+%description utils -l zh_CN.UTF-8
+分析和设置文件能力的工具。
 
 %prep
 %setup -q
@@ -115,6 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0644,root,root) %{_mandir}/man8/*
 
 %changelog
+* Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.7.4-1
+- 更新到 0.7.4
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.6.6-4
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.13.2
+Version: 4.13.3
 Release: 1%{?dist}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 %{_datadir}/apps/kdm/sessions/kde4.desktop
 
 %changelog
+* Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 4.13.3-1
+- 更新到 4.13.3
+
 * Thu Jun 19 2014 Liu Di <liudidi@gmail.com> - 4.13.2-1
 - 更新到 4.13.2
 

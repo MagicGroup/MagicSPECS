@@ -1,5 +1,5 @@
 Name:           gstreamer1-libav
-Version:	1.3.3
+Version:	1.3.90
 Release:        1%{?dist}
 Summary:        GStreamer FFmpeg-based plug-ins
 Summary(zh_CN.UTF-8): GStreamer FFmpeg 插件
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/gst-libav-plugins-1.0/*
 
 %changelog
+* Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 1.3.90-1
+- 更新到 1.3.90
+
 * Wed Jun 25 2014 Liu Di <liudidi@gmail.com> - 1.3.3-1
 - 更新到 1.3.3
 
